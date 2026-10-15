@@ -15,9 +15,7 @@ vi.mock('@lobechat/const', async (importOriginal) => ({
 
 vi.mock('@/hooks/useQueryRoute', () => ({ useQueryRoute: () => ({ push: vi.fn() }) }));
 
-vi.mock('@/libs/trpc/client', () => ({
-  lambdaQuery: { market: { creds: { listForContext: { useQuery: mockListForContext } } } },
-}));
+vi.mock('@/hooks/useScopedCreds', () => ({ useCredsForContext: mockListForContext }));
 
 vi.mock('@/store/agent', () => ({
   useAgentStore: (selector: (s: unknown) => unknown) => selector({}),
@@ -40,7 +38,7 @@ describe('useHeteroAgentCloudConfig', () => {
       env: { CLAUDE_CODE_CRED_KEY: 'CLAUDE_CODE_OAUTH_TOKEN' },
       type: 'claude-code',
     };
-    mockListForContext.mockReturnValue({ data: { data: [] }, isLoading: false });
+    mockListForContext.mockReturnValue({ data: [], isLoading: false });
 
     const { result } = renderHook(() => useHeteroAgentCloudConfig('agt_1'));
 
@@ -49,7 +47,7 @@ describe('useHeteroAgentCloudConfig', () => {
 
   it('is configured when the token exists in the run scope', () => {
     mockListForContext.mockReturnValue({
-      data: { data: [{ key: 'CLAUDE_CODE_OAUTH_TOKEN', name: 'Claude Code OAuth Token' }] },
+      data: [{ key: 'CLAUDE_CODE_OAUTH_TOKEN', name: 'Claude Code OAuth Token' }],
       isLoading: false,
     });
 
@@ -65,6 +63,6 @@ describe('useHeteroAgentCloudConfig', () => {
     const { result } = renderHook(() => useHeteroAgentCloudConfig('agt_1'));
 
     expect(result.current.isConfigured).toBe(true);
-    expect(mockListForContext).toHaveBeenCalledWith(undefined, { enabled: false });
+    expect(mockListForContext).toHaveBeenCalledWith(false);
   });
 });

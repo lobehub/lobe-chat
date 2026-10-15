@@ -3,7 +3,17 @@
 import { type HeterogeneousProviderConfig, type UserCredSummary } from '@lobechat/types';
 import { Github } from '@lobehub/icons';
 import { Flexbox } from '@lobehub/ui';
-import { Avatar, Button, Input, InputPassword, Select, Spin, Tag, Text } from '@lobehub/ui/base-ui';
+import {
+  Avatar,
+  Button,
+  Input,
+  InputPassword,
+  Select,
+  Spin,
+  Tag,
+  Text,
+  toast,
+} from '@lobehub/ui/base-ui';
 import { createStaticStyles, cssVar } from 'antd-style';
 import { CheckCircle2, KeyRound, X } from 'lucide-react';
 import { memo, useState } from 'react';
@@ -17,7 +27,8 @@ import {
   resolveClaudeCodeTokenStatus,
 } from '@/helpers/claudeCodeTokenCred';
 import { usePermission } from '@/hooks/usePermission';
-import { lambdaClient, lambdaQuery } from '@/libs/trpc/client';
+import { refreshScopedCreds, useCredsForContext, usePersonalCreds } from '@/hooks/useScopedCreds';
+import { saveClaudeCodeToken } from '@/services/claudeCodeToken';
 
 const styles = createStaticStyles(({ css }) => ({
   card: css`
@@ -139,31 +150,26 @@ const TokenSection = memo<TokenSectionProps>(
       const token = tokenInput.trim();
       if (!token) return;
       setSaving(true);
-      try {
-        const values = { [CLAUDE_CODE_TOKEN_CRED_KEY]: token };
-        const credId =
-          personalCredId ??
-          (
-            await lambdaClient.market.creds.createKV.mutate({
-              key: CLAUDE_CODE_TOKEN_CRED_KEY,
-              name: 'Claude Code OAuth Token',
-              type: 'kv-env',
-              values,
-            })
-          ).id;
-        if (personalCredId !== undefined) {
-          await lambdaClient.market.creds.update.mutate({ id: personalCredId, values });
-        }
-        // Runs inside a workspace read the workspace's credentials, so a personal
-        // token is only usable there once it is shared in.
-        if (inWorkspace) await lambdaClient.market.creds.share.mutate({ id: credId });
-        onEnvChange({ CLAUDE_CODE_CRED_KEY: CLAUDE_CODE_TOKEN_CRED_KEY });
-        setTokenInput('');
-        setEditing(false);
-        onSaved();
-      } finally {
-        setSaving(false);
+      const result = await saveClaudeCodeToken({ inWorkspace, personalCredId, token });
+      setSaving(false);
+      // Refetch either way: a failed share leaves the token saved but unusable
+      // here, which the refreshed status shows as the "not shared" warning.
+      onSaved();
+
+      if (!result.ok) {
+        toast.error(
+          t(
+            result.failedStep === 'share'
+              ? 'creds.share.error'
+              : 'heterogeneousStatus.cloud.tokenSaveError',
+          ),
+        );
+        return;
       }
+
+      onEnvChange({ CLAUDE_CODE_CRED_KEY: CLAUDE_CODE_TOKEN_CRED_KEY });
+      setTokenInput('');
+      setEditing(false);
     };
 
     return (
@@ -327,20 +333,12 @@ const CloudHeterogeneousConfig = memo<CloudHeterogeneousConfigProps>(
       }
     })();
 
-    const {
-      data: credsData,
-      isLoading,
-      refetch,
-    } = lambdaQuery.market.creds.list.useQuery(undefined);
-    const {
-      data: contextCredsData,
-      isLoading: isContextLoading,
-      refetch: refetchContext,
-    } = lambdaQuery.market.creds.listForContext.useQuery(undefined);
-    const allCreds: UserCredSummary[] = credsData?.data ?? [];
+    const { data: personalCreds, isLoading } = usePersonalCreds();
+    const { data: contextCreds, isLoading: isContextLoading } = useCredsForContext();
+    const allCreds: UserCredSummary[] = personalCreds ?? [];
 
     const tokenStatus = resolveClaudeCodeTokenStatus({
-      contextCreds: contextCredsData?.data ?? [],
+      contextCreds: contextCreds ?? [],
       inWorkspace,
       personalCreds: allCreds,
     });
@@ -391,10 +389,7 @@ const CloudHeterogeneousConfig = memo<CloudHeterogeneousConfigProps>(
             personalCredId={personalTokenCredId}
             tokenStatus={tokenStatus}
             onEnvChange={saveEnv}
-            onSaved={() => {
-              void refetch();
-              void refetchContext();
-            }}
+            onSaved={() => void refreshScopedCreds()}
           />
 
           <div className={styles.sectionDivider} />

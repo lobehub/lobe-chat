@@ -3,7 +3,7 @@ import urlJoin from 'url-join';
 
 import { CLAUDE_CODE_TOKEN_CRED_KEY } from '@/helpers/claudeCodeTokenCred';
 import { useQueryRoute } from '@/hooks/useQueryRoute';
-import { lambdaQuery } from '@/libs/trpc/client';
+import { useCredsForContext } from '@/hooks/useScopedCreds';
 import { useAgentStore } from '@/store/agent';
 import { agentByIdSelectors } from '@/store/agent/selectors';
 
@@ -27,8 +27,7 @@ export const useHeteroAgentCloudConfig = (agentId: string): HeteroAgentCloudConf
   // same scope the cloud run reads (the workspace's organization view inside a
   // workspace, the personal vault otherwise) — the personal list would report
   // a token the run can't see.
-  const { data: credsData, isLoading: isCredsLoading } =
-    lambdaQuery.market.creds.listForContext.useQuery(undefined, { enabled: needsCredCheck });
+  const { data: contextCreds, isLoading: isCredsLoading } = useCredsForContext(needsCredCheck);
 
   // isConfigured is true when:
   // 1. Running on desktop (local execution, no cloud creds needed), or
@@ -39,7 +38,7 @@ export const useHeteroAgentCloudConfig = (agentId: string): HeteroAgentCloudConf
   //    runtime only reads the credential itself.
   // 5. Credentials are still loading — treat as configured to avoid a flash of the
   //    "not configured" alert that immediately disappears once the query resolves
-  const hasCredInScope = (credsData?.data ?? []).some((c) => c.key === CLAUDE_CODE_TOKEN_CRED_KEY);
+  const hasCredInScope = (contextCreds ?? []).some((c) => c.key === CLAUDE_CODE_TOKEN_CRED_KEY);
   const isConfigured = !needsCredCheck || hasCredInScope || isCredsLoading;
 
   const goToConfig = () => {

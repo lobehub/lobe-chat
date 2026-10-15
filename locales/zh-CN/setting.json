@@ -825,6 +825,7 @@
   "heterogeneousStatus.cloud.tokenNotShared": "你的个人 Claude Code Token 尚未共享到当前工作区，这里的云端运行无法使用它。保存 Token 后会自动共享到当前工作区。",
   "heterogeneousStatus.cloud.tokenPlaceholder": "粘贴你的 OAuth Token",
   "heterogeneousStatus.cloud.tokenSave": "保存",
+  "heterogeneousStatus.cloud.tokenSaveError": "Claude Code Token 保存失败，请重试。",
   "heterogeneousStatus.command.edit": "编辑指令",
   "heterogeneousStatus.command.label": "启动指令",
   "heterogeneousStatus.command.placeholder": "指令名称或绝对路径",
