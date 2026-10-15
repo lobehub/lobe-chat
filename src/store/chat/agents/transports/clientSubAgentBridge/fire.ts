@@ -390,7 +390,7 @@ const fireSubAgentBridge = async (
   const parentOp = get().operations[parentOperationId];
   const parentParked = parentOp
     ? parentOp.status === 'running'
-    : isDeferredPlaceholderStillRunning(get, registration.parentContext, toolMessageId);
+    : isParentResumable(get, registration.parentContext, toolMessageId);
   if (!parentParked) {
     log(
       'parent %s no longer parked (op status: %s), skipping resume',
@@ -415,11 +415,16 @@ const fireSubAgentBridge = async (
   // P2 (round-7): MERGE over the current plugin state — the deferred state's
   // threadId carries the Open Thread coordinates; a blind replace drops it
   // the moment the child settles.
+  // P1 (round-15): `resumePending: true` rides along — once the backfill
+  // overwrites the `running` placeholder, this marker is the ONLY durable
+  // park signal left. `optimisticUpdatePluginState` replaces the whole state
+  // object, so the merged value below preserves every surviving key.
   const parentToolRows: Array<{ id?: string; pluginState?: Record<string, any> }> =
     get().dbMessagesMap[messageMapKey(registration.parentContext)] || [];
   const parentToolRow = parentToolRows.find((m) => m.id === toolMessageId);
   await get().optimisticUpdatePluginState(toolMessageId, {
     ...parentToolRow?.pluginState,
+    resumePending: true,
     status: succeeded ? 'completed' : 'error',
     ...stats,
   });
@@ -445,6 +450,13 @@ const fireSubAgentBridge = async (
   // running until re-entry succeeds makes every retry retryable.
   await resumeClientSubAgentParent(get, parentContext, toolMessageId);
 
+  // P1 (round-15): re-entry succeeded — clear the durable resume-pending
+  // marker now, BEFORE retiring the op. A re-park during the resumed turn
+  // rewrites a fresh marker with the next backfill; a re-entry failure keeps
+  // the old one, which is exactly the stranded-parent signature the
+  // reconstruction path looks for.
+  await clearResumePendingMarker(get, parentContext, toolMessageId, parentOperationId);
+
   get().completeOperation(parentOperationId);
 
   log('parent %s resumed with child result (%d chars)', parentOperationId, resultContent.length);
@@ -452,20 +464,67 @@ const fireSubAgentBridge = async (
 
 /**
  * Durable park signal for the post-reload path: the parent operation is gone,
- * but the deferred placeholder's plugin state (`{ status: 'running', threadId
- * }`) is persisted on the tool row. `running` means the parent never settled
- * — still parked. Anything else (completed / error) means it settled
- * out-of-band and a resume would be a phantom.
+ * so the deferred placeholder's plugin state persisted on the tool row is the
+ * only signal left. Two surviving shapes mean the parent never resumed:
+ *
+ * - `status: 'running'` — the deferred placeholder itself, the park (the
+ *   pre-marker shape is retained so in-flight runs keep working).
+ * - `status: 'completed' | 'error'` WITH `resumePending: true` (P1 round-15) —
+ *   the bridge backfilled the child result but the re-entry failed or the
+ *   renderer reloaded before it succeeded. The backfill used to overwrite
+ *   `running`, leaving no park signal at all, so reconstruction rejected the
+ *   bridge and the parent was stranded forever. The marker is written with the
+ *   backfill and cleared only after re-entry succeeds.
+ *
+ * Anything else means the parent settled out-of-band and a resume would be a
+ * phantom.
  */
-const isDeferredPlaceholderStillRunning = (
+const isParentResumable = (
   get: () => any,
   parentContext: ClientSubAgentBridgeRegistration['childContext'],
   toolMessageId: string,
 ): boolean => {
-  const messages: Array<{ id?: string; pluginState?: { status?: string } }> =
-    get().dbMessagesMap[messageMapKey(parentContext)] || [];
+  const messages: Array<{
+    id?: string;
+    pluginState?: { resumePending?: boolean; status?: string };
+  }> = get().dbMessagesMap[messageMapKey(parentContext)] || [];
   const toolRow = messages.find((m) => m.id === toolMessageId);
-  return toolRow?.pluginState?.status === 'running';
+  const pluginState = toolRow?.pluginState;
+  if (!pluginState) return false;
+  if (pluginState.status === 'running') return true;
+  return (
+    (pluginState.status === 'completed' || pluginState.status === 'error') &&
+    pluginState.resumePending === true
+  );
+};
+
+/**
+ * P1 (round-15): clear the durable resume-pending marker after the parent
+ * re-entry succeeded. Best-effort: a failure only leaves a stale marker on a
+ * row whose bridge has already settled, and the persisted-coordinates cleanup
+ * (the real re-fire guard) runs right after in the caller's success path.
+ */
+const clearResumePendingMarker = async (
+  get: () => any,
+  parentContext: ClientSubAgentBridgeRegistration['childContext'],
+  toolMessageId: string,
+  operationId?: string,
+): Promise<void> => {
+  try {
+    const chatKey = messageMapKey(parentContext);
+    const messages: Array<{ id?: string; pluginState?: Record<string, any> }> =
+      get().dbMessagesMap[chatKey] || [];
+    const toolRow = messages.find((m) => m.id === toolMessageId);
+    if (!toolRow?.pluginState || toolRow.pluginState.resumePending !== true) return;
+    const { resumePending: _cleared, ...rest } = toolRow.pluginState;
+    await get().optimisticUpdatePluginState(
+      toolMessageId,
+      rest,
+      operationId ? { operationId } : undefined,
+    );
+  } catch (error) {
+    log('bridge: failed to clear resume-pending marker on %s: %O', toolMessageId, error);
+  }
 };
 
 /**
@@ -504,7 +563,7 @@ const fireGroupOrchestrationBridge = async (
   const parkedOp = get().operations[orchestrationOperationId];
   const orchestrationParked = parkedOp
     ? parkedOp.status === 'running'
-    : isDeferredPlaceholderStillRunning(get, messageContext, toolMessageId);
+    : isParentResumable(get, messageContext, toolMessageId);
   if (!orchestrationParked) {
     log(
       'orchestration op %s not running (status: %s), skipping re-entry',
@@ -527,11 +586,14 @@ const fireGroupOrchestrationBridge = async (
   // flat spend stats the usage tray reads.
   // P2 (round-7): MERGE over the current plugin state — same contract as the
   // sub-agent kind (see above).
+  // P1 (round-15): `resumePending: true` — the durable park signal after the
+  // backfill overwrites the `running` placeholder (see the sub-agent kind).
   const groupToolRows: Array<{ id?: string; pluginState?: Record<string, any> }> =
     get().dbMessagesMap[messageMapKey(registration.messageContext)] || [];
   const groupToolRow = groupToolRows.find((m) => m.id === toolMessageId);
   await get().optimisticUpdatePluginState(toolMessageId, {
     ...groupToolRow?.pluginState,
+    resumePending: true,
     status: succeeded ? 'completed' : 'error',
     ...stats,
   });
@@ -567,6 +629,10 @@ const fireGroupOrchestrationBridge = async (
     supervisorAgentId,
     topicId: messageContext.topicId,
   });
+
+  // P1 (round-15): re-entry succeeded — clear the durable resume-pending
+  // marker (same contract as the sub-agent kind above).
+  await clearResumePendingMarker(get, messageContext, toolMessageId, orchestrationOperationId);
 
   get().completeOperation(orchestrationOperationId);
 

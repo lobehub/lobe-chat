@@ -2,7 +2,6 @@ import {
   type GroupOrchestrationEvent,
   type GroupOrchestrationExecutor,
   type GroupOrchestrationExecutorOutput,
-  type GroupOrchestrationSupervisorSnapshot,
   type SupervisorInstruction,
   type SupervisorInstructionBatchExecAsyncTasks,
   type SupervisorInstructionCallAgent,
@@ -16,6 +15,7 @@ import { type ConversationContext, type UIChatMessage } from '@lobechat/types';
 import debug from 'debug';
 
 import { aiAgentService } from '@/services/aiAgent';
+import type { GroupOrchestrationExecutorsContext } from '@/store/chat/agents/GroupOrchestration/executorsContext';
 import {
   formatGroupAsyncTaskResultContent,
   type GroupAsyncTaskResultContentItem,
@@ -23,7 +23,6 @@ import {
 } from '@/store/chat/agents/GroupOrchestration/groupAsyncTaskResult';
 import { handleMemberRunParkExit } from '@/store/chat/agents/GroupOrchestration/memberRunParkExit';
 import { dbMessageSelectors } from '@/store/chat/slices/message/selectors';
-import { type ChatStore } from '@/store/chat/store';
 import { messageMapKey } from '@/store/chat/utils/messageMapKey';
 
 const log = debug('lobe-store:group-orchestration-executors');
@@ -32,27 +31,6 @@ const sleep = (ms: number) =>
   new Promise<void>((resolve) => {
     setTimeout(resolve, ms);
   });
-
-type SupervisorSnapshot = GroupOrchestrationSupervisorSnapshot;
-
-export interface GroupOrchestrationExecutorsContext {
-  get: () => ChatStore;
-  /**
-   * Message context for fetching messages
-   * Contains agentId (groupId for group chat), topicId, scope, etc.
-   */
-  messageContext: ConversationContext;
-  orchestrationOperationId: string;
-  /**
-   * Capture the supervisor state machine's counters. The member-run park exit
-   * snapshots them into the completion-bridge registration so the bridge's
-   * re-entry can restore the machine to its pre-park decision point instead
-   * of resetting to a fresh supervisor (which would replay consumed decisions
-   * and restart the round budget).
-   */
-  snapshotSupervisor?: () => SupervisorSnapshot | undefined;
-  supervisorAgentId: string;
-}
 
 /**
  * Creates executors for Group Orchestration
