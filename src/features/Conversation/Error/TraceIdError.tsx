@@ -68,7 +68,6 @@ const TraceIdError = memo<TraceIdErrorProps>(({ id, onRetry, showRetry = true, t
               disabled={!onRetry && disabled}
               icon={<Icon icon={RotateCw} />}
               loading={!onRetry && loading}
-              size={'small'}
               type={'primary'}
               onClick={handleRetry}
             >
