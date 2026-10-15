@@ -3640,9 +3640,13 @@ When I am ___, I need ___
     'Once a team computer is connected, {{name}} can run Claude Code, Codex and other coding agents on it to write code and run commands.',
   'workspace.onboarding.flow.devices.quote': 'Lend me a computer, ',
   'workspace.onboarding.flow.devices.highlight': "and I'll write the code.",
-  'workspace.onboarding.flow.devices.installStep': '1. Install and sign in to the LobeHub CLI',
+  'workspace.onboarding.flow.devices.toolStep': '1. Install an AI coding tool on the computer',
+  'workspace.onboarding.flow.devices.toolSignIn':
+    'Then run <code>{{command}}</code> once to sign in to {{name}}.',
+  'workspace.onboarding.flow.devices.toolDocs': 'Install docs',
+  'workspace.onboarding.flow.devices.installStep': '2. Install and sign in to the LobeHub CLI',
   'workspace.onboarding.flow.devices.connectStep':
-    '2. Connect the computer to the workspace for every member',
+    '3. Connect the computer to the workspace for every member',
   'workspace.onboarding.flow.devices.listTitle': 'Team devices',
   'workspace.onboarding.flow.devices.count': '{{online}} of {{count}} online',
   'workspace.onboarding.flow.devices.viewAll': 'View all devices',
