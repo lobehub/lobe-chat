@@ -433,6 +433,7 @@
   "supportAgent.starter.feedback": "أريد الإبلاغ عن مشكلة أو اقتراح ميزة",
   "supportAgent.starter.modelError": "فشل استدعاء النموذج. كيف يمكنني استكشاف المشكلة؟",
   "supportAgent.title": "دعم Lobe",
+  "supportAgent.troubleshoot.question": "فشلت هذه الرسالة. يرجى مساعدتي في استكشاف المشكلة.",
   "supportAgent.welcome": "مرحبًا، أنا مساعد دعم Lobe. اسألني كيف يعمل شيء ما، أخبرني بما حدث خطأ، أو اترك تعليقًا للفريق. أنا ذكاء اصطناعي، لذا تحقق من أي شيء مهم.",
   "supportAgent.working": "أبحث في الأمر...",
   "switch": "تبديل",

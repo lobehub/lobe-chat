@@ -433,6 +433,7 @@
   "supportAgent.starter.feedback": "問題を報告したり、機能を提案したいです",
   "supportAgent.starter.modelError": "モデル呼び出しが失敗しました。トラブルシューティングするにはどうすればよいですか？",
   "supportAgent.title": "Lobeサポート",
+  "supportAgent.troubleshoot.question": "このメッセージは送信に失敗しました。トラブルシューティングを手伝ってください。",
   "supportAgent.welcome": "こんにちは、私はLobeサポートアシスタントです。何かの使い方を尋ねたり、問題を報告したり、チームにフィードバックを残したりしてください。私はAIなので、重要なことは必ず確認してください。",
   "supportAgent.working": "調査中です…",
   "switch": "切り替え",

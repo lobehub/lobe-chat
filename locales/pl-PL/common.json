@@ -433,6 +433,7 @@
   "supportAgent.starter.feedback": "Chcę zgłosić problem lub zasugerować funkcję",
   "supportAgent.starter.modelError": "Wywołanie modelu nie powiodło się. Jak mogę to rozwiązać?",
   "supportAgent.title": "Wsparcie Lobe",
+  "supportAgent.troubleshoot.question": "Ta wiadomość nie powiodła się. Proszę pomóż mi rozwiązać problem.",
   "supportAgent.welcome": "Cześć, jestem asystentem wsparcia Lobe. Zapytaj mnie, jak coś działa, powiedz, co poszło nie tak, lub zostaw opinię dla zespołu. Jestem AI, więc sprawdź wszystko, co ważne.",
   "supportAgent.working": "Sprawdzam to…",
   "switch": "Przełącznik",

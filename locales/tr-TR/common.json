@@ -433,6 +433,7 @@
   "supportAgent.starter.feedback": "Bir sorun bildirmek veya bir özellik önermek istiyorum",
   "supportAgent.starter.modelError": "Bir model çağrısı başarısız oldu. Bunu nasıl çözebilirim?",
   "supportAgent.title": "Lobe Destek",
+  "supportAgent.troubleshoot.question": "Bu mesaj başarısız oldu. Lütfen bunu çözmeme yardım edin.",
   "supportAgent.welcome": "Merhaba, ben Lobe destek asistanıyım. Bana bir şeyin nasıl çalıştığını sorabilir, neyin yanlış gittiğini anlatabilir veya ekibe geri bildirim bırakabilirsiniz. Ben bir yapay zekayım, bu yüzden önemli bir şeyi mutlaka kontrol edin.",
   "supportAgent.working": "İnceleniyor…",
   "switch": "Değiştir",

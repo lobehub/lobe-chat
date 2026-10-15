@@ -433,6 +433,7 @@
   "supportAgent.starter.feedback": "我想報告問題或建議功能",
   "supportAgent.starter.modelError": "模型調用失敗。我該如何排除故障？",
   "supportAgent.title": "Lobe 支援",
+  "supportAgent.troubleshoot.question": "此訊息失敗。請協助我進行故障排除。",
   "supportAgent.welcome": "您好，我是 Lobe 支援助理。問我某些功能如何運作，告訴我出現了什麼問題，或向團隊提供回饋。我是 AI，因此請再次確認任何重要內容。",
   "supportAgent.working": "正在調查中…",
   "switch": "切換",
