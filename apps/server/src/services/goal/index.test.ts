@@ -8,7 +8,7 @@ import {
 } from '@lobechat/const/goal';
 import type { ChatTopicMetadata } from '@lobechat/types';
 import * as goalGraphUtils from '@lobechat/utils/goalGraph';
-import { eq, sql } from 'drizzle-orm';
+import { and, eq, sql } from 'drizzle-orm';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { getTestDB } from '@/database/core/getTestDB';
@@ -2085,6 +2085,95 @@ describe('GoalService', () => {
     expect(after.nodes.filter((n) => n.kind === 'batch')).toHaveLength(0);
     // All 12 units are planned, not only the 3 the planner listed as probes.
     expect(after.nodes.filter((n) => n.kind === 'task')).toHaveLength(12);
+  });
+
+  /**
+   * Regression: a planner failure was swallowed whole — the goal quietly
+   * became one task built from the raw requirement, and nothing anywhere said
+   * the planner had failed or why.
+   */
+  it('records why the planner failed on the task it fell back to', async () => {
+    vi.spyOn(GoalCriteriaGeneratorService.prototype, 'decompose').mockRejectedValue({
+      error: { message: 'Insufficient Balance' },
+      errorType: 'InsufficientQuota',
+    });
+    const service = new GoalService(serverDB, userId);
+    const graph = await service.create({ requirement: '迁移 12 个 store', title: 'Migrate' });
+    await service.tick(graph.goal.id);
+
+    const task = (await service.graph(graph.goal.id)).nodes.find((n) => n.kind === 'task');
+    const [created] = await serverDB
+      .select()
+      .from(goalEvents)
+      .where(and(eq(goalEvents.entityId, task.id), eq(goalEvents.eventType, 'created')));
+    expect(created.reason).toBe(
+      'Planner failed (InsufficientQuota: Insufficient Balance); no main Agent could take the goal; started from the raw requirement',
+    );
+  });
+
+  it('records why a batch claim was refused on the first task it planned instead', async () => {
+    vi.spyOn(GoalCriteriaGeneratorService.prototype, 'decompose').mockResolvedValue({
+      problemStatement: '把 8 个 store 迁移到 replica',
+      rollout: {
+        recipeOutline: '把 store 换成 replica 支撑的实现',
+        repeatable: true,
+        unitCount: 8,
+        units: Array.from({ length: 8 }, (_, i) => `Unit ${i + 1}`),
+        variants: [],
+      },
+      tasks: Array.from({ length: 3 }, (_, i) => ({
+        dependsOn: [],
+        instruction: `把 src/store/store${i + 1}.ts 换成 replica 实现`,
+        title: `Unit ${i + 1}`,
+      })),
+    });
+    const service = new GoalService(serverDB, userId);
+    const graph = await service.create({ title: 'Migrate 8 stores' });
+    await service.tick(graph.goal.id);
+
+    const tasks = (await service.graph(graph.goal.id)).nodes.filter((n) => n.kind === 'task');
+    const reasons = await serverDB
+      .select({ entityId: goalEvents.entityId, reason: goalEvents.reason })
+      .from(goalEvents)
+      .where(eq(goalEvents.eventType, 'created'));
+    const reasonOf = (id: string) => reasons.find((event) => event.entityId === id)?.reason;
+    expect(reasonOf(tasks[0].id)).toBe(
+      'Batch claim refused (unitCount 8 is below the threshold 10); planned unit by unit',
+    );
+    // Said once, not on every task.
+    expect(reasonOf(tasks[1].id)).toBeNull();
+  });
+
+  /**
+   * Regression: a model titles its probes around the unit — "迁移 device store
+   * （探针）" for unit `device` — and the roster de-duplicated on exact titles,
+   * so every probed unit was queued again and would run twice.
+   */
+  it('does not queue a probed unit again when the probe title wraps its name', async () => {
+    const units = Array.from({ length: 12 }, (_, i) => `store${i + 1}`);
+    vi.spyOn(GoalCriteriaGeneratorService.prototype, 'decompose').mockResolvedValue({
+      problemStatement: '把 12 个同构的 store 迁移到 replica',
+      rollout: {
+        recipeOutline: '把 store 换成 replica 支撑的实现',
+        repeatable: true,
+        unitCount: 12,
+        units,
+        variants: [],
+      },
+      tasks: units.slice(0, 3).map((unit) => ({
+        dependsOn: [],
+        instruction: `把 src/store/${unit}.ts 换成 replica 实现，并补冷启动回归测试`,
+        title: `迁移 ${unit} store（探针）`,
+      })),
+    });
+    const service = new GoalService(serverDB, userId);
+    const graph = await service.create({ title: 'Migrate 12 stores' });
+    await service.tick(graph.goal.id);
+
+    const roster = (await service.graph(graph.goal.id)).goal.config!.rolloutState!.unitTitles!;
+    expect(roster).toHaveLength(12);
+    expect(roster.slice(0, 3)).toEqual(units.slice(0, 3).map((u) => `迁移 ${u} store（探针）`));
+    expect(roster.slice(3)).toEqual(units.slice(3));
   });
 
   it('materializes a fallback roster above the batch cap without trimming it', async () => {

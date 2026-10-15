@@ -169,7 +169,7 @@ const MessageList = memo<MessageListProps>(({ apis, mode }) => {
   }
 
   return (
-    <ConversationProvider hasInitMessages skipFetch context={context} messages={messages}>
+    <ConversationProvider context={context} messages={messages}>
       <InnerList />
     </ConversationProvider>
   );

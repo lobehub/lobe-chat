@@ -41,7 +41,6 @@ import { useOperationState } from '@/hooks/useOperationState';
 import { usePermission } from '@/hooks/usePermission';
 import { useAgentStore } from '@/store/agent';
 import { useChatStore } from '@/store/chat';
-import { messageMapKey } from '@/store/chat/utils/messageMapKey';
 import { useServerConfigStore } from '@/store/serverConfig';
 import { serverConfigSelectors } from '@/store/serverConfig/selectors';
 import { useTaskStore } from '@/store/task';
@@ -100,9 +99,6 @@ export const TopicChatDrawerBody = memo<TopicChatDrawerBodyProps>(
       [agentId, topicId],
     );
 
-    const chatKey = messageMapKey(context);
-    const messages = useChatStore((s) => s.dbMessagesMap[chatKey]);
-    const replaceMessages = useChatStore((s) => s.replaceMessages);
     const operationState = useOperationState(context);
 
     const drawerRunningOperation = useTaskStore(
@@ -118,15 +114,7 @@ export const TopicChatDrawerBody = memo<TopicChatDrawerBodyProps>(
     );
 
     return (
-      <ConversationProvider
-        context={context}
-        hasInitMessages={!!messages}
-        messages={messages}
-        operationState={operationState}
-        onMessagesChange={(msgs, ctx, meta) => {
-          replaceMessages(msgs, { context: ctx, source: meta?.source });
-        }}
-      >
+      <ConversationProvider context={context} operationState={operationState}>
         <TaskCardScopeProvider value={true}>
           <Flexbox height={'100%'} style={{ overflow: 'hidden' }}>
             <Flexbox flex={1} style={{ minHeight: 0, overflow: 'hidden' }}>
