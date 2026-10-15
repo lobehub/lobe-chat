@@ -7,7 +7,7 @@ vi.mock('@/server/services/oidc', () => ({
   OIDCService: { initialize: async () => ({ findAuthorizationCodeResource }) },
 }));
 
-const SITE = 'urn:lobehub:site:site_7f3k9q2mAbCd:https%3A%2F%2Ffieldnotes.app';
+const SITE = 'urn:lobehub:site:psite_7f3k9q2mAbCd:https%3A%2F%2Ffieldnotes.app';
 
 const call = async (query: string) => {
   const { GET } = await import('./route');

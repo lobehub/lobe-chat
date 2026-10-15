@@ -34,6 +34,7 @@ import { TaskModel } from '@/database/models/task';
 import { ThreadModel } from '@/database/models/thread';
 import { TopicModel } from '@/database/models/topic';
 import { UserModel } from '@/database/models/user';
+import { createStreamEventManager } from '@/server/modules/AgentRuntime/factory';
 import { AgentService } from '@/server/services/agent';
 import { AgentDocumentsService } from '@/server/services/agentDocuments';
 import type {
@@ -83,6 +84,8 @@ import { startOperation } from './pipeline/startOperation';
 import { resolveNewTopicSnapshot, setupTurn } from './pipeline/turnSetup';
 import { createRunFacts, type RunFacts } from './runFacts';
 import { applyShareGateToAgentConfig } from './shareGate';
+import type { SubAgentLlmRelayRequest } from './subAgentLlmRelay';
+import { closeSubAgentLlmRelay, openSubAgentLlmRelay } from './subAgentLlmRelay';
 import type { SubAgentRunDeps } from './subAgentRuns';
 import { execAgentMember, execAgentThreadRun } from './subAgentRuns';
 import { acquireTopicStartReservation, TopicStartReservationError } from './topicStartReservation';
@@ -955,6 +958,7 @@ export class AiAgentService {
       resumeToolResult,
       approvalResolutionRequestId: providedApprovalResolutionRequestId,
       approvalSourceOperationId: providedApprovalSourceOperationId,
+      selectedSkillIds,
       selectedToolIds,
       shareGate,
       mentionedAgents,
@@ -1248,6 +1252,7 @@ export class AiAgentService {
           resolvedAgentId,
           resume,
           runFromHistory,
+          selectedSkillIds,
           shareGate,
           steer,
           throwIfExecutionAborted,
@@ -1461,6 +1466,7 @@ export class AiAgentService {
       resumeFromHistory: runFromHistory,
       resumeToolResult: resolvedToolResult,
       runAttachments,
+      selectedSkillIds,
       selectedToolIds,
       topicBoundDeviceId: turn.topicBoundDeviceId,
     });
@@ -1703,11 +1709,30 @@ export class AiAgentService {
    * virtual sub-agent and it does not install the async completion bridge.
    */
   // Arrow field (not a method) so it stays bound when handed to AgentRuntimeService.
-  execSubAgent = async (params: ExecSubAgentParams): Promise<ExecSubAgentResult> =>
-    execAgentThreadRun(this.subAgentRunDeps, params, {
+  execSubAgent = async (
+    params: ExecSubAgentParams,
+    options: {
+      /** The dispatching tab stands by on this channel to run the child's device-only LLM calls. */
+      llmRelay?: SubAgentLlmRelayRequest;
+    } = {},
+  ): Promise<ExecSubAgentResult> => {
+    const llmExecutor = await openSubAgentLlmRelay(options.llmRelay, {
+      streamManager: createStreamEventManager(),
+      userId: this.userId,
+      workspaceId: this.workspaceId,
+    });
+
+    return execAgentThreadRun(this.subAgentRunDeps, params, {
       isSubAgent: false,
+      llmExecutor,
       logScope: 'execSubAgent',
     });
+  };
+
+  /** The tab stopped standing by on a sub-agent's relay channel: end it on the gateway. */
+  releaseSubAgentLlmRelay = async (channel: string): Promise<{ success: boolean }> => ({
+    success: await closeSubAgentLlmRelay(channel, this.userId, createStreamEventManager()),
+  });
 
   /**
    * Execute a virtual sub-agent created by `lobe-agent.callSubAgent`.

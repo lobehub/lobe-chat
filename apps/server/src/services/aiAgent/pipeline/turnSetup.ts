@@ -9,12 +9,12 @@ import type {
   FileAccessScope,
   HeterogeneousProviderConfig,
   HeterogeneousTopicPin,
+  RequestTrigger,
 } from '@lobechat/types';
 import {
   agentShareFileAccessScope,
   ChatErrorType,
   ordinaryFileAccessScope,
-  RequestTrigger,
   resolveHeterogeneousProviderTopicModel,
 } from '@lobechat/types';
 import { TRPCError } from '@trpc/server';
@@ -40,7 +40,9 @@ import { ingestAttachment } from '../ingestAttachment';
 import type { AgentShareGate } from '../shareGate';
 import { reserveShareVisitorTopic, reserveShareVisitorTurn } from '../shareVisitorAbuseGuards';
 import type { InternalExecAgentParams } from '../types';
+import { createUserTurnAnchor } from './resolveUserMessageParentId';
 import { createStageTracer, openStageMark } from './sendTracing';
+import { buildUserTurnMetadata } from './userTurnMetadata';
 
 const log = debug('lobe-server:ai-agent-service');
 
@@ -349,6 +351,8 @@ export interface TurnSetupInput {
   /** Raw resume flag — a resume run must land on an existing topic. */
   resume?: boolean;
   runFromHistory: boolean;
+  /** Skills the user selected for this turn; see `ExecAgentParams.selectedSkillIds`. */
+  selectedSkillIds?: string[];
   /** Shared-agent visitor gate — set only by the shareChat router. */
   shareGate?: AgentShareGate;
   /** The prompt was queued behind a running turn; see `ExecAgentParams.steer`. */
@@ -437,6 +441,7 @@ export const setupTurn = async (
     resolvedAgentId,
     resume,
     runFromHistory,
+    selectedSkillIds,
     shareGate,
     steer,
     throwIfExecutionAborted,
@@ -798,22 +803,14 @@ export const setupTurn = async (
   const heteroType = (heteroProviderType ?? model) as HeterogeneousAgentType;
 
   // ── Shared turn setup (runs for BOTH hetero and normal agents) ──────────
-  const requestTriggerMetadata = {
-    ...(trigger && Object.values(RequestTrigger).includes(trigger as RequestTrigger)
-      ? { trigger: trigger as RequestTrigger }
-      : undefined),
-    ...(appContext?.conversationAgentId && appContext.scope === 'sub_agent'
-      ? { agentDispatch: { kind: 'callAgent' as const, visibility: 'internal' as const } }
-      : undefined),
-    // Bot-channel turns are inserted under the OWNER's userId; keep the real
-    // platform author alongside so the UI can attribute the bubble correctly.
-    ...(botSender ? { botSender } : undefined),
-    // A provider event that injected this turn keeps its source on the row.
-    ...(externalOrigin ? { externalOrigin } : undefined),
-    // A follow-up queued behind a running turn renders as that turn's
-    // continuation; the client's optimistic row is replaced by this one.
-    ...(steer ? { steer: true as const } : undefined),
-  };
+  const requestTriggerMetadata = buildUserTurnMetadata({
+    appContext,
+    botSender,
+    externalOrigin,
+    selectedSkillIds,
+    steer,
+    trigger,
+  });
 
   // Attachment ingestion: raw bot/IM `files` → S3, pre-uploaded
   // `attachedFileIds` → signed URLs + classification.
@@ -840,16 +837,17 @@ export const setupTurn = async (
     'messages',
     async () => {
       const selfMessageIds = new Set<string>();
-      // Anchor the new user turn on the conversation tail. Never leave it
-      // undefined for a topic that already has messages: `parentId: undefined`
-      // persists a second ROOT, and the renderer walks the parentId forest
-      // depth-first — an earlier root's still-growing subtree is emitted before a
-      // later root, so the newest reply lands ABOVE older messages.
-      //
-      // `getLatestSpineMessageId` skips tool rows and toolless signal turns, so it
-      // can come back empty on a topic built entirely from signal callbacks; fall
-      // back to the latest non-tool row rather than orphaning the turn.
-      const resolveUserMessageParentId = async () => {
+      // Anchor the new user turn on the selected branch's tail (see
+      // `createUserTurnAnchor` for why it is never left undefined).
+      const anchor = createUserTurnAnchor(deps.messageModel, {
+        allowShareVisitor: !!shareGate,
+        clientParentId: clientIds?.userMessageParentId,
+        groupId: appContext?.groupId ?? undefined,
+        sessionId: appContext?.sessionId,
+        threadId: appContext?.threadId ?? null,
+        topicId,
+      });
+      const resolveParentId = async () => {
         if (runFromHistory) return undefined;
         if (parentMessageId) return parentMessageId;
         // A thread created for THIS turn is empty, so there is no spine head to
@@ -859,21 +857,9 @@ export const setupTurn = async (
         // of order.
         if (createdThreadId) return appContext?.newThread?.sourceMessageId;
 
-        const threadId = appContext?.threadId ?? null;
-        const spineId = await deps.messageModel.getLatestSpineMessageId({ threadId, topicId });
-        if (spineId) return spineId;
-
-        const fallbackId = await deps.messageModel.getLatestNonToolMessageId({ threadId, topicId });
-        if (fallbackId) {
-          log(
-            'execAgent: no spine head for topic %s, anchoring user turn on latest non-tool message %s',
-            topicId,
-            fallbackId,
-          );
-        }
-        return fallbackId;
+        return anchor.resolveParentId();
       };
-      const userMessageParentId = await resolveUserMessageParentId();
+      const userMessageParentId = await resolveParentId();
       const userMessageParams = {
         agentId: conversationAgentId,
         content: prompt,
@@ -918,6 +904,7 @@ export const setupTurn = async (
       if (userMessageRecord) {
         selfMessageIds.add(userMessageRecord.id);
         log('execAgent: created user message %s', userMessageRecord.id);
+        await anchor.selectBranchOf(userMessageRecord);
       }
 
       // Snapshot the author's group orchestration role onto the assistant message

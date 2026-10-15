@@ -10,14 +10,14 @@ describe('reviewTargetView', () => {
         kind: 'site',
         origin: 'https://fieldnotes.app',
         projectName: 'Fieldnotes',
-        role: 'maintainer',
+        role: 'admin',
         siteName: 'Marketing site',
       }),
     ).toEqual({
       kind: 'site',
       origin: 'https://fieldnotes.app',
       project: 'Fieldnotes',
-      role: 'maintainer',
+      role: 'admin',
       site: 'Marketing site',
     });
   });

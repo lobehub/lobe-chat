@@ -11,6 +11,7 @@ import { useTranslation } from 'react-i18next';
 
 import { resolveExecutionTarget } from '@/helpers/executionTarget';
 import { useIsGatewayModeEnabled } from '@/helpers/gatewayMode';
+import { useEffectiveAgencyConfig } from '@/hooks/useEffectiveAgencyConfig';
 import { useEffectiveWorkingDirectory } from '@/hooks/useEffectiveWorkingDirectory';
 import { useFetchProjectSkills } from '@/hooks/useFetchProjectSkills';
 import { useAgentStore } from '@/store/agent';
@@ -21,6 +22,7 @@ import { agentDocumentSkillsSelectors } from '@/store/tool/selectors';
 import type { AgentDocumentSkillItem } from '@/store/tool/slices/agentDocumentSkills/initialState';
 
 import { useAgentId } from '../../hooks/useAgentId';
+import { useTopicId } from '../../hooks/useTopicId';
 import { useChatInputStore } from '../../store';
 import { INSERT_ACTION_TAG_COMMAND, type InsertActionTagPayload } from './command';
 import { insertGoalTag } from './goalTag';
@@ -55,7 +57,9 @@ export const useSlashActionItems = (): SlashOptions['items'] => {
   // Unified cwd: topic > agent's per-device choice > device default > home.
   // This is what makes project skills load even when only a device default is
   // set (and for local-device runs), not just an explicit agent/topic pick.
-  const workingDirectory = useEffectiveWorkingDirectory(agentId);
+  // Scoped to this composer's topic (see `useTopicId`), not the global one.
+  const topicId = useTopicId();
+  const workingDirectory = useEffectiveWorkingDirectory(agentId, { topicId });
 
   // Device-bound (remote) runs scan filesystem skills on that device over the
   // `device.listProjectSkills` RPC; the local desktop reads over Electron IPC.
@@ -64,22 +68,19 @@ export const useSlashActionItems = (): SlashOptions['items'] => {
   // effective target matters because a hetero agent saved as desktop "This
   // device" (`local` + boundDeviceId) coerces to `device` when opened on web —
   // reading the raw stored target would miss that and leave the menu empty even
-  // though the sidebar lists the skills.
-  const agencyConfig = useAgentStore((s) =>
-    agentId ? agentByIdSelectors.getAgencyConfigById(agentId)(s) : undefined,
-  );
+  // though the sidebar lists the skills. The config is the same effective one
+  // the working directory above resolved against (member override + this
+  // topic's device binding), so the path is read on the machine it lives on.
+  const { agencyConfig, workspaceScoped } = useEffectiveAgencyConfig(agentId, { topicId });
   const isHetero = useAgentStore((s) =>
     agentId ? agentByIdSelectors.isAgentHeterogeneousById(agentId)(s) : false,
   );
   const deviceRoutingAvailable = useIsGatewayModeEnabled(agentId);
-  const isWorkspaceAgent = useAgentStore((s) =>
-    agentId ? agentByIdSelectors.isWorkspaceAgentById(agentId)(s) : false,
-  );
   const effectiveTarget = resolveExecutionTarget(agencyConfig, {
     clientExecutionAvailable: isDesktop,
     deviceRoutingAvailable,
     isHetero,
-    workspaceScoped: isWorkspaceAgent,
+    workspaceScoped,
   });
   const isDeviceMode = effectiveTarget === 'device' && !!agencyConfig?.boundDeviceId;
   const remoteDeviceId = isDeviceMode ? agencyConfig.boundDeviceId : undefined;

@@ -14,7 +14,7 @@ export function SitesSettings({ projectId }: { projectId: string }) {
   const { t } = useTranslation('project');
   const { data: sites, error, mutate } = useProjectSites(projectId);
 
-  if (isForbidden(error)) return <Empty description={t('review.manageForbidden')} />;
+  if (isForbidden(error)) return <Empty description={t('review.accessForbidden')} />;
 
   return (
     <Flexbox gap={20}>

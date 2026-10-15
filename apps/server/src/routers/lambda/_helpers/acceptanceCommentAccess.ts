@@ -78,16 +78,14 @@ export async function resolveAcceptanceCommentAccess(
 
   const canApprove =
     isOwner ||
-    (Boolean(member) && member!.role !== 'viewer') ||
-    projectRole === 'creator' ||
-    projectRole === 'maintainer';
+    (project
+      ? projectRole === 'admin' || projectRole === 'member'
+      : Boolean(member) && member!.role !== 'viewer');
 
   return {
     acceptance,
     canApprove,
-    canComment:
-      Boolean(userId) &&
-      (canApprove || acceptance.visibility === 'public' || projectRole === 'reviewer'),
+    canComment: Boolean(userId) && (canApprove || acceptance.visibility === 'public'),
     isOwner,
     /*
      * Membership of the acceptance's workspace is what earns the right to speak
@@ -113,12 +111,12 @@ async function resolveSiteReviewAccess(
   const role = project ? await resolveProjectReviewRole(db, userId, project) : null;
   if (!role) throw new TRPCError({ code: 'NOT_FOUND', message: 'Acceptance not found' });
 
-  const canApprove = role === 'creator' || role === 'maintainer';
+  const canApprove = role === 'admin';
   return {
     acceptance,
     canApprove,
-    canComment: true,
-    isOwner: role === 'creator',
+    canComment: role !== 'viewer',
+    isOwner: project?.userId === userId,
     memberOfWorkspaceId: project?.workspaceId ?? undefined,
   };
 }

@@ -287,6 +287,7 @@ export const MessageMetadataSchema = ModelUsageSchema.merge(ModelPerformanceSche
   performance: ModelPerformanceSchema.optional(),
   reactions: z.array(EmojiReactionSchema).optional(),
   scope: z.string().optional(),
+  selectedSkillIds: z.array(z.string()).optional(),
   // External-signal lineage for Monitor-style callback turns ().
   signal: MessageSignalSchema.optional(),
   steer: z.boolean().optional(),
@@ -523,6 +524,11 @@ export interface MessageMetadata {
    * See MessageMapScope for available values
    */
   scope?: string;
+  /**
+   * Skills the user selected for this user turn, injected with their bodies
+   * on this and every later turn of the topic by the server runtime.
+   */
+  selectedSkillIds?: string[];
   /**
    * External-signal lineage for messages produced as reactive replies
    * to an out-of-band trigger (Monitor stdout push, webhook callback,

@@ -47,7 +47,7 @@ export function SiteCard({ onChanged, site }: { onChanged: () => void; site: Pro
   const { t } = useTranslation('project');
   const [deleting, setDeleting] = useState(false);
   const link = reviewLink(site.origins);
-  const snippet = siteSnippet(site.siteKey, reviewServer());
+  const snippet = siteSnippet(site.id, reviewServer());
 
   const remove = () =>
     confirmModal({

@@ -144,10 +144,21 @@ describe('ProjectReviewService', () => {
       ).toEqual([]);
     });
 
-    it('lets a workspace admin manage sites but not a plain member', async () => {
+    it('lets writable members edit sites and keeps viewers read-only', async () => {
       await expect(
         as(adminId).createSite(projectId, { name: 'A', origins: ['https://a.fieldnotes.app'] }),
       ).resolves.toBeTruthy();
+      await expect(
+        as(memberId).createSite(projectId, {
+          name: 'Member site',
+          origins: ['https://m.fieldnotes.app'],
+        }),
+      ).resolves.toBeTruthy();
+      await db
+        .update(workspaceMembers)
+        .set({ role: 'viewer' })
+        .where(eq(workspaceMembers.userId, memberId));
+      await expect(as(memberId).listSites(projectId)).resolves.toHaveLength(2);
       await expect(
         as(memberId).createSite(projectId, { name: 'B', origins: ['https://b.fieldnotes.app'] }),
       ).rejects.toMatchObject({ code: 'FORBIDDEN' });
@@ -155,34 +166,34 @@ describe('ProjectReviewService', () => {
   });
 
   describe('members', () => {
-    it('links an existing workspace member and lists available members', async () => {
+    it('stores only role overrides and clearing one restores inheritance', async () => {
       const service = as(ownerId);
-      const member = await service.addMember(projectId, { userId: memberId, role: 'reviewer' });
+      expect((await service.listMembers(projectId)).members).toEqual([]);
+      const member = await service.setMemberRole(projectId, memberId, 'viewer');
+      expect(member).toMatchObject({ userId: memberId, role: 'viewer' });
       const result = await service.listMembers(projectId);
       expect(result.workspaceId).toBe(workspaceId);
-      expect(result.owner).toMatchObject({ name: 'Innei' });
       expect(result.members).toEqual([
-        expect.objectContaining({ id: member.id, userId: memberId, role: 'reviewer' }),
+        expect.objectContaining({ userId: memberId, role: 'viewer' }),
       ]);
-      expect(result.availableMembers.map((person) => person.userId)).toEqual([adminId]);
-      expect(result.members[0]).not.toHaveProperty('inviteToken');
-      await service.updateMemberRole(member.id, 'maintainer');
-      expect((await service.listMembers(projectId)).members[0].role).toBe('maintainer');
-      await service.removeMember(member.id);
+      expect(result.availableMembers.map((person) => person.userId)).not.toContain(memberId);
+      await service.setMemberRole(projectId, memberId, 'admin');
+      expect((await service.listMembers(projectId)).members[0].role).toBe('admin');
+      await service.setMemberRole(projectId, memberId, null);
       expect((await service.listMembers(projectId)).members).toEqual([]);
     });
 
     it('rejects outsiders and soft-deleted workspace members', async () => {
-      await expect(
-        as(ownerId).addMember(projectId, { userId: guestId, role: 'reviewer' }),
-      ).rejects.toMatchObject({ code: 'BAD_REQUEST' });
+      await expect(as(ownerId).setMemberRole(projectId, guestId, 'member')).rejects.toMatchObject({
+        code: 'BAD_REQUEST',
+      });
       await db
         .update(workspaceMembers)
         .set({ deletedAt: new Date() })
         .where(eq(workspaceMembers.userId, memberId));
-      await expect(
-        as(ownerId).addMember(projectId, { userId: memberId, role: 'reviewer' }),
-      ).rejects.toMatchObject({ code: 'BAD_REQUEST' });
+      await expect(as(ownerId).setMemberRole(projectId, memberId, 'member')).rejects.toMatchObject({
+        code: 'BAD_REQUEST',
+      });
       expect(
         (await as(ownerId).listMembers(projectId)).availableMembers.map((person) => person.userId),
       ).not.toContain(memberId);
@@ -199,29 +210,32 @@ describe('ProjectReviewService', () => {
         availableMembers: [],
       });
       await expect(
-        as(ownerId).addMember(personal.id, { userId: memberId, role: 'reviewer' }),
+        as(ownerId).setMemberRole(personal.id, memberId, 'member'),
       ).rejects.toMatchObject({ code: 'BAD_REQUEST' });
     });
 
-    it('refuses member management to people who cannot manage the project', async () => {
+    it('requires the effective project admin role to manage members', async () => {
       await expect(as(memberId).listMembers(projectId)).rejects.toBeInstanceOf(TRPCError);
-      await expect(
-        as(guestId).addMember(projectId, { userId: memberId, role: 'reviewer' }),
-      ).rejects.toMatchObject({ code: 'FORBIDDEN' });
+      await expect(as(guestId).setMemberRole(projectId, memberId, 'member')).rejects.toMatchObject({
+        code: 'FORBIDDEN',
+      });
+      await as(ownerId).setMemberRole(projectId, memberId, 'admin');
+      await expect(as(memberId).listMembers(projectId)).resolves.toBeTruthy();
+      await as(ownerId).setMemberRole(projectId, adminId, 'viewer');
+      await expect(as(adminId).listMembers(projectId)).rejects.toMatchObject({ code: 'FORBIDDEN' });
     });
 
-    it('does not let a maintainer change a member of a different project', async () => {
+    it('keeps a project override scoped to its project', async () => {
       const service = as(ownerId);
-      await service.addMember(projectId, { userId: memberId, role: 'maintainer' });
+      await service.setMemberRole(projectId, memberId, 'admin');
       const other = await new ProjectModel(db, ownerId, workspaceId).create({
         identifier: 'OTH',
         name: 'Other',
       });
-      const otherMember = await service.addMember(other.id, { userId: adminId, role: 'reviewer' });
-      await expect(
-        as(memberId).updateMemberRole(otherMember.id, 'maintainer'),
-      ).rejects.toMatchObject({ code: 'FORBIDDEN' });
-      await expect(as(memberId).removeMember(otherMember.id)).rejects.toMatchObject({
+      await expect(as(memberId).setMemberRole(other.id, adminId, 'viewer')).rejects.toMatchObject({
+        code: 'FORBIDDEN',
+      });
+      await expect(as(memberId).setMemberRole(other.id, adminId, null)).rejects.toMatchObject({
         code: 'FORBIDDEN',
       });
     });

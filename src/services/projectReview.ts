@@ -17,9 +17,6 @@ export interface ProjectSiteInput {
 }
 
 class ProjectReviewService {
-  addMember = (projectId: string, userId: string, role: ProjectMemberRole) =>
-    lambdaClient.projectReview.addMember.mutate({ projectId, userId, role });
-
   createSite = (projectId: string, input: ProjectSiteInput) =>
     lambdaClient.projectReview.createSite.mutate({ projectId, ...input });
 
@@ -29,10 +26,8 @@ class ProjectReviewService {
 
   listSites = (projectId: string) => lambdaClient.projectReview.listSites.query({ projectId });
 
-  removeMember = (id: string) => lambdaClient.projectReview.removeMember.mutate({ id });
-
-  updateMemberRole = (id: string, role: ProjectMemberRole) =>
-    lambdaClient.projectReview.updateMemberRole.mutate({ id, role });
+  setMemberRole = (projectId: string, userId: string, role: ProjectMemberRole | null) =>
+    lambdaClient.projectReview.setMemberRole.mutate({ projectId, userId, role });
 
   updateSite = (id: string, input: Partial<ProjectSiteInput>) =>
     lambdaClient.projectReview.updateSite.mutate({ id, ...input });

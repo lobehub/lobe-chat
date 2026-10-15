@@ -66,7 +66,7 @@ describe('isAcceptanceReviewAudience', () => {
 });
 
 describe('site review resources', () => {
-  const SITE = 'urn:lobehub:site:site_7f3k9q2mAbCd:https%3A%2F%2Ffieldnotes.app';
+  const SITE = 'urn:lobehub:site:psite_7f3k9q2mAbCd:https%3A%2F%2Ffieldnotes.app';
 
   it('issues an eight hour JWT for a site through the browser code flow', () => {
     expect(reviewResourceServer('lobehub-review', SITE, SITE, { route: 'authorization' })).toEqual({

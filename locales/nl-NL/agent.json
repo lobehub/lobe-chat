@@ -424,6 +424,8 @@
   "share.settings.tools.loading": "Tools laden…",
   "share.settings.tools.needsMemoryPermission": "Schakel ook 'Sta lezen van mijn geheugen toe' hierboven in, anders blijft deze tool inactief voor bezoekers.",
   "share.settings.tools.notAvailableToVisitors": "Deze tool kan nooit worden gebruikt in een gedeelde sessie — bezoekersacties worden geblokkeerd van uw kennisbank en Agent-bestanden.",
+  "share.settings.tools.onDemandDesc": "Niet ingeschakeld op deze Agent. Zodra toestemming is verleend, schakelt het model dit alleen in tijdens een bezoeker-run wanneer nodig.",
+  "share.settings.tools.showOnDemand": "Toon tools op aanvraag",
   "share.settings.tools.title": "Tools die bezoekers kunnen gebruiken",
   "share.settings.updateError": "De wijziging kon niet worden opgeslagen. Probeer het opnieuw.",
   "share.settings.usage.conversations": "Gesprekken",

@@ -83,10 +83,6 @@ export default {
     'You have successfully authorized the application to access your account. You may now close this page.',
   'success.title': 'Authorization Successful',
   'consent.acceptanceReview.registered': 'Registered',
-  'consent.acceptanceReview.role.creator': 'Owner',
-  'consent.acceptanceReview.role.maintainer': 'Maintainer',
-  'consent.acceptanceReview.role.reviewer': 'Reviewer',
-  'consent.acceptanceReview.role.workspace': 'Workspace member',
   'consent.acceptanceReview.siteDenied':
     'You’re not a member of this project, so you can’t review this site. Ask a project maintainer to invite you, or switch accounts.',
   'consent.acceptanceReview.siteProject': 'Project {{project}}',
@@ -97,4 +93,7 @@ export default {
   'consent.acceptanceReview.unregisteredTitle': 'This address isn’t registered for the site',
   'consent.scope.acceptance-review-site':
     'Comment on this site’s review from the site itself, for 8 hours',
+  'consent.acceptanceReview.role.viewer': 'Read-only',
+  'consent.acceptanceReview.role.member': 'Can edit',
+  'consent.acceptanceReview.role.admin': 'Administrator',
 };

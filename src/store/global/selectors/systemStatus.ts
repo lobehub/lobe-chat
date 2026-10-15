@@ -1,6 +1,7 @@
 import { type TopicGroupMode } from '@/types/topic';
 
 import type {
+  AgentDocumentSort,
   GlobalState,
   ModelDetailPanelExpandedKey,
   ProjectTopicSubGroupMode,
@@ -439,6 +440,13 @@ const filePanelWidth = (s: GlobalState) => s.status.filePanelWidth;
 const groupAgentBuilderPanelWidth = (s: GlobalState) => s.status.groupAgentBuilderPanelWidth || 360;
 const imagePanelWidth = (s: GlobalState) => s.status.imagePanelWidth;
 const agentListViewMode = (s: GlobalState) => s.status.agentListViewMode || 'list';
+const DEFAULT_AGENT_DOCUMENT_SORT: AgentDocumentSort = {
+  by: 'name',
+  foldersFirst: true,
+  order: 'asc',
+};
+const agentDocumentSort = (s: GlobalState): AgentDocumentSort =>
+  s.status.agentDocumentSort ?? DEFAULT_AGENT_DOCUMENT_SORT;
 const agentListViewOptions = (s: GlobalState) => s.status.agentListViewOptions;
 const agentListExpandedGroupKeys = (s: GlobalState) => s.status.agentListExpandedGroupKeys ?? [];
 const agentListSidebarSectionCollapsed = (s: GlobalState) =>
@@ -487,6 +495,7 @@ const homeSelectedAgentId = (s: GlobalState) => s.status.homeSelectedAgentId;
 
 export const systemStatusSelectors = {
   agentBuilderPanelWidth,
+  agentDocumentSort,
   agentListExpandedGroupKeys,
   agentListSidebarSectionCollapsed,
   agentListViewMode,

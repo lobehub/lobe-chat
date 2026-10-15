@@ -22,6 +22,7 @@ import { AGENT_SKILL_TEMPLATE_ID, agentDocuments, documents } from '../../schema
 import type { LobeChatDatabase, Transaction } from '../../type';
 import { documentMatchesAccessScope } from '../../utils/documentVisibility';
 import { buildWorkspaceWhere } from '../../utils/workspace';
+import { buildCopyParams } from './copyDocument';
 import { deriveAgentDocumentFields } from './deriveFields';
 import { buildDocumentFilename } from './filename';
 import {
@@ -90,9 +91,29 @@ interface ConvertAgentDocumentToSkillIndexParams {
   title: string;
 }
 
+/** Columns of one document-tree row (agent binding joined to its document). */
+const listItemColumns = {
+  createdAt: documents.createdAt,
+  description: documents.description,
+  documentId: agentDocuments.documentId,
+  documentUpdatedAt: documents.updatedAt,
+  fileId: documents.fileId,
+  fileType: documents.fileType,
+  filename: documents.filename,
+  id: agentDocuments.id,
+  parentId: documents.parentId,
+  policy: agentDocuments.policy,
+  sourceType: documents.sourceType,
+  templateId: agentDocuments.templateId,
+  title: documents.title,
+  updatedAt: agentDocuments.updatedAt,
+};
+
 interface AgentDocumentListQueryRow {
+  createdAt: Date;
   description: string | null;
   documentId: string;
+  documentUpdatedAt: Date;
   fileId: string | null;
   filename: string | null;
   fileType: string;
@@ -272,8 +293,10 @@ export class AgentDocumentModel {
     const filename = row.filename ?? '';
     const policy = (row.policy as AgentDocumentPolicy | null) ?? null;
     const item = {
+      createdAt: row.createdAt,
       description: row.description ?? null,
       documentId: row.documentId,
+      documentUpdatedAt: row.documentUpdatedAt,
       fileId: row.fileId,
       fileType: row.fileType,
       filename,
@@ -983,18 +1006,15 @@ export class AgentDocumentModel {
       ? buildDocumentFilename(title)
       : `copy-${Date.now()}-${existing.filename}`;
 
-    return this.create(existing.agentId, filename, existing.content, {
-      editorData: existing.editorData || undefined,
-      title,
-      loadPosition:
-        (existing.policy?.context?.position as DocumentLoadPosition | undefined) ||
-        DocumentLoadPosition.BEFORE_FIRST_USER,
-      loadRules: parseLoadRules(existing),
-      metadata: existing.metadata || undefined,
-      policy: existing.policy || undefined,
-      policyLoad: existing.policyLoad as PolicyLoad | undefined,
-      templateId: existing.templateId || undefined,
-    });
+    // Empty-parse shells must not be duplicated as another shell (the clone
+    // reads as Lexical error #38 and blocks cleanup); see `copyDocument.ts`
+    // for the shell detection and raw-text downgrade.
+    return this.create(
+      existing.agentId,
+      filename,
+      existing.content,
+      buildCopyParams(existing, title),
+    );
   }
 
   async updateToolLoadRule(
@@ -1163,20 +1183,7 @@ export class AgentDocumentModel {
     const parentId = options?.parentId;
     const excludeWeb = options?.excludeWeb;
     const results = await this.db
-      .select({
-        description: documents.description,
-        documentId: agentDocuments.documentId,
-        fileId: documents.fileId,
-        fileType: documents.fileType,
-        filename: documents.filename,
-        id: agentDocuments.id,
-        parentId: documents.parentId,
-        policy: agentDocuments.policy,
-        sourceType: documents.sourceType,
-        templateId: agentDocuments.templateId,
-        title: documents.title,
-        updatedAt: agentDocuments.updatedAt,
-      })
+      .select(listItemColumns)
       .from(agentDocuments)
       .innerJoin(documents, eq(agentDocuments.documentId, documents.id))
       .where(
@@ -1348,20 +1355,7 @@ export class AgentDocumentModel {
 
     const sourceType = options?.sourceType;
     const results = await this.db
-      .select({
-        description: documents.description,
-        documentId: agentDocuments.documentId,
-        fileId: documents.fileId,
-        fileType: documents.fileType,
-        filename: documents.filename,
-        id: agentDocuments.id,
-        parentId: documents.parentId,
-        policy: agentDocuments.policy,
-        sourceType: documents.sourceType,
-        templateId: agentDocuments.templateId,
-        title: documents.title,
-        updatedAt: agentDocuments.updatedAt,
-      })
+      .select(listItemColumns)
       .from(agentDocuments)
       .innerJoin(documents, eq(agentDocuments.documentId, documents.id))
       .where(

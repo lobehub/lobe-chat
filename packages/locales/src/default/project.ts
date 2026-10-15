@@ -246,21 +246,8 @@ export default {
   'sidebar.newConversation': 'New conversation',
   'sidebar.title': 'Projects',
   'sidebar.untitledConversation': 'Untitled conversation',
-  'review.manageForbidden':
-    'Only the project owner, maintainers and workspace admins can manage review access.',
-  'review.members.add': 'Add member',
-  'review.members.addError': 'Could not add the member',
   'review.members.selectMember': 'Select a workspace member',
   'review.members.workspaceOnly': 'Project members are available only in a workspace.',
-  'review.members.workspaceMembersDescription':
-    'Add existing workspace members to give them review access. Invite new people from workspace settings first.',
-  'review.members.allAccess': 'All access',
-  'review.members.owner': 'Owner',
-  'review.members.removeOf': 'Remove {{name}}',
-  'review.members.revoke': 'Remove',
-  'review.members.revokeDescription':
-    '{{name}} will lose review access to every site in this project. Open review sessions end on their next request.',
-  'review.members.revokeTitle': 'Remove {{name}}?',
   'review.members.role': 'Role',
   'review.members.roleOf': 'Role of {{name}}',
   'review.members.title': 'Members',
@@ -270,8 +257,6 @@ export default {
   'review.origin.path': 'Use the origin only, without a path, query or hash.',
   'review.origin.sharedHostWildcard':
     'This is a shared host where anyone can deploy, so * isn’t allowed. Add the exact address instead.',
-  'review.role.maintainer': 'Maintainer',
-  'review.role.reviewer': 'Reviewer',
   'review.sites.add': 'Add site',
   'review.sites.addOrigin': 'Add origin',
   'review.sites.copySnippet': 'Copy script',
@@ -301,4 +286,13 @@ export default {
   'review.sites.saveError': 'Could not save the site',
   'review.sites.title': 'Sites',
   'review.sites.viewReview': 'View in Acceptance',
+  'review.accessForbidden': 'Your project role does not allow this action.',
+  'review.members.setRole': 'Set project role',
+  'review.members.setRoleError': 'Could not update the project role',
+  'review.members.inheritRole': 'Follow workspace role',
+  'review.members.roleInheritance':
+    'Workspace roles apply by default. Set a project role below to override a member’s access, or choose “Follow workspace role” to restore inheritance.',
+  'review.role.viewer': 'Read-only',
+  'review.role.member': 'Can edit',
+  'review.role.admin': 'Administrator',
 };

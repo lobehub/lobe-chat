@@ -228,6 +228,8 @@
   "acceptance.predict.nonePending": "Niets meer te beoordelen — elke controle heeft al een uitspraak.",
   "acceptance.predict.proposals": "AI-beoordeling voltooid: {{count}} controle(s) gemarkeerd voor jou.",
   "acceptance.predict.stillRunning": "AI-beoordeling is nog bezig — ververs over een moment om de resultaten te zien.",
+  "acceptance.preview.review": "Beoordeling van preview",
+  "acceptance.preview.reviewHint": "Open de gepubliceerde preview met de beoordelingswerkbalk om opmerkingen te maken op de live pagina",
   "acceptance.proposal.confirm": "Bevestigen en terugsturen",
   "acceptance.proposal.misidentified": "Echt probleem, verkeerde plek",
   "acceptance.proposal.notAnIssue": "Geen probleem",

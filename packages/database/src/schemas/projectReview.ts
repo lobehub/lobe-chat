@@ -33,9 +33,6 @@ export const projectSites = pgTable(
       onDelete: 'set null',
     }),
 
-    siteKey: text('site_key')
-      .$defaultFn(() => idGenerator('projectSiteKeys'))
-      .notNull(),
     name: varchar('name', { length: 255 }).notNull(),
     origins: text('origins').array().notNull(),
     acceptanceId: uuid('acceptance_id').references(() => acceptances.id, { onDelete: 'set null' }),
@@ -43,7 +40,6 @@ export const projectSites = pgTable(
     ...timestamps,
   },
   (t) => [
-    uniqueIndex('project_sites_site_key_unique').on(t.siteKey),
     index('project_sites_project_id_idx').on(t.projectId),
     index('project_sites_workspace_id_idx').on(t.workspaceId),
     check('project_sites_name_not_empty', sql`length(btrim(${t.name})) > 0`),
@@ -54,6 +50,7 @@ export const projectSites = pgTable(
 export type NewProjectSite = typeof projectSites.$inferInsert;
 export type ProjectSiteItem = typeof projectSites.$inferSelect;
 
+/** Role overrides for existing workspace members; no row inherits the workspace role. */
 export const projectMembers = pgTable(
   'project_members',
   {
@@ -65,7 +62,7 @@ export const projectMembers = pgTable(
       onDelete: 'set null',
     }),
 
-    role: text('role').$type<ProjectMemberRole>().notNull().default('reviewer'),
+    role: text('role').$type<ProjectMemberRole>().notNull().default('member'),
 
     ...timestamps,
   },

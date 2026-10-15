@@ -161,7 +161,7 @@ export const createOIDCProvider = async (db: LobeChatDatabase): Promise<Provider
           );
           if (review === 'reject') throw new errors.InvalidTarget();
           const site = review ? siteReviewFromResource(resourceIndicator) : undefined;
-          if (site && !(await findSiteForOrigin(db, site.siteKey, site.origin))) {
+          if (site && !(await findSiteForOrigin(db, site.siteId, site.origin))) {
             throw new errors.InvalidTarget('site is not registered for this origin');
           }
           if (review) return review;

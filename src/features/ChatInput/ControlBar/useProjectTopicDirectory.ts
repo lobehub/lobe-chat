@@ -6,19 +6,25 @@ import {
   useProjectDirectoryStore,
 } from '@/store/projectWorkingDirectory';
 
+import { useTopicId } from '../hooks/useTopicId';
+
 const EMPTY: ProjectDirectory[] = [];
 
 /**
- * The open conversation's id when it runs in a project directory, otherwise
- * undefined. Such a conversation only chooses among its project's devices and
- * shows its directory read-only, so the control bars branch on this.
+ * This composer's conversation id (see `useTopicId`) when it runs in a project
+ * directory, otherwise undefined. Such a conversation only chooses among its
+ * project's devices and shows its directory read-only, so the control bars
+ * branch on this.
  */
-export const useActiveProjectDirectoryTopicId = (): string | undefined =>
-  useChatStore((s) =>
-    s.activeTopicId && topicSelectors.getTopicById(s.activeTopicId)(s)?.projectWorkingDirectoryId
-      ? s.activeTopicId
+export const useActiveProjectDirectoryTopicId = (): string | undefined => {
+  const topicId = useTopicId();
+
+  return useChatStore((s) =>
+    topicId && topicSelectors.getTopicById(topicId)(s)?.projectWorkingDirectoryId
+      ? topicId
       : undefined,
   );
+};
 
 /**
  * The project directory a conversation runs in, and the project's other

@@ -55,29 +55,26 @@ describe('projectReviewRouter', () => {
       origins: ['https://fieldnotes.app'],
       projectId,
     });
-    expect(site.siteKey).toMatch(/^site_/);
+    expect(site.id).toMatch(/^psite_/);
     expect(await caller(ownerId).listSites({ projectId })).toEqual([
       expect.objectContaining({ id: site.id }),
     ]);
   });
 
-  it('adds a workspace member, changes the project role and removes the association', async () => {
-    const member = await caller(ownerId).addMember({
-      userId: memberId,
-      projectId,
-      role: 'reviewer',
-    });
-    await caller(ownerId).updateMemberRole({ id: member.id, role: 'maintainer' });
+  it('sets and clears a workspace member project role', async () => {
+    await caller(ownerId).setMemberRole({ userId: memberId, projectId, role: 'viewer' });
     expect(await caller(ownerId).listMembers({ projectId })).toMatchObject({
-      members: [expect.objectContaining({ userId: memberId, role: 'maintainer' })],
+      members: [expect.objectContaining({ userId: memberId, role: 'viewer' })],
     });
-    await caller(ownerId).removeMember({ id: member.id });
+    await caller(ownerId).setMemberRole({ userId: memberId, projectId, role: 'admin' });
+    await expect(caller(memberId).listMembers({ projectId })).resolves.toBeTruthy();
+    await caller(ownerId).setMemberRole({ userId: memberId, projectId, role: null });
     expect((await caller(ownerId).listMembers({ projectId })).members).toEqual([]);
   });
 
   it('rejects a user outside the project workspace', async () => {
     await expect(
-      caller(ownerId).addMember({ userId: strangerId, projectId, role: 'reviewer' }),
+      caller(ownerId).setMemberRole({ userId: strangerId, projectId, role: 'member' }),
     ).rejects.toMatchObject({ code: 'BAD_REQUEST' });
   });
 
@@ -89,7 +86,7 @@ describe('projectReviewRouter', () => {
 
   it('rejects an unknown role', async () => {
     await expect(
-      caller(ownerId).addMember({ userId: memberId, projectId, role: 'owner' as any }),
+      caller(ownerId).setMemberRole({ userId: memberId, projectId, role: 'owner' as any }),
     ).rejects.toMatchObject({ code: 'BAD_REQUEST' });
   });
 });

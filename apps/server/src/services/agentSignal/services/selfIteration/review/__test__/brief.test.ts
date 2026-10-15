@@ -33,9 +33,6 @@ const zhCNBriefText: Record<string, string> = {
   'brief.agentSignal.selfReview.applied.summary': '已应用 {{count}} 条夜间回顾更新。',
   'brief.agentSignal.selfReview.applied.summary_plural': '已应用 {{count}} 条夜间回顾更新。',
   'brief.agentSignal.selfReview.applied.title': '夜间回顾已更新资源',
-  'brief.agentSignal.selfReview.error.heading': '问题',
-  'brief.agentSignal.selfReview.error.summary': '部分夜间回顾内容未能完成。',
-  'brief.agentSignal.selfReview.error.title': '夜间回顾遇到了问题',
   'brief.agentSignal.selfReview.ideas.summary': '已保存夜间回顾记录，供后续查看。',
   'brief.agentSignal.selfReview.ideas.title': '夜间回顾记录',
   'brief.agentSignal.selfReview.proposal.heading': '建议',
@@ -576,9 +573,10 @@ describe('briefSelfReviewService', () => {
 
   /**
    * @example
-   * Failed nightly runs produce an error brief when there is a user-actionable failure.
+   * Failed nightly runs stay silent: a run failure is not something the user
+   * can decide on, so it must not land in "Needs you".
    */
-  it('projects failed nightly outcomes to error briefs', () => {
+  it('does not project failed nightly outcomes to error briefs', () => {
     const service = createBriefSelfReviewService();
 
     const brief = service.projectNightlyReviewBrief({
@@ -600,17 +598,7 @@ describe('briefSelfReviewService', () => {
       userId: 'user-1',
     });
 
-    expect(brief).toMatchObject({
-      priority: 'normal',
-      type: 'error',
-    });
-    expect(brief?.metadata).toMatchObject({
-      agentSignal: {
-        nightlySelfReview: {
-          outcome: 'error',
-        },
-      },
-    });
+    expect(brief).toBeUndefined();
   });
 
   /**

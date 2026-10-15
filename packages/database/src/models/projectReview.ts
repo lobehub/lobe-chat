@@ -1,7 +1,6 @@
-import type { ProjectMemberRole } from '@lobechat/types';
 import { and, asc, eq, isNull } from 'drizzle-orm';
 
-import type { NewProjectMember, NewProjectSite } from '../schemas';
+import type { NewProjectMember, NewProjectSite, ProjectMemberItem } from '../schemas';
 import { projectMembers, projects, projectSites, workspaceMembers } from '../schemas';
 import type { LobeChatDatabase } from '../type';
 import { WorkspaceMemberModel } from './workspaceMember';
@@ -24,15 +23,6 @@ export class ProjectSiteModel {
       .select()
       .from(projectSites)
       .where(eq(projectSites.id, id))
-      .limit(1);
-    return site ?? null;
-  }
-
-  async findBySiteKey(siteKey: string) {
-    const [site] = await this.db
-      .select()
-      .from(projectSites)
-      .where(eq(projectSites.siteKey, siteKey))
       .limit(1);
     return site ?? null;
   }
@@ -116,7 +106,7 @@ export class ProjectMemberModel {
     return member ?? null;
   }
 
-  async findActive(projectId: string, userId: string) {
+  async findActive(projectId: string, userId: string): Promise<ProjectMemberItem | null> {
     const [row] = await this.db
       .select({ member: projectMembers })
       .from(projectMembers)
@@ -138,19 +128,10 @@ export class ProjectMemberModel {
     return row?.member ?? null;
   }
 
-  async updateRole(id: string, role: ProjectMemberRole) {
-    const [member] = await this.db
-      .update(projectMembers)
-      .set({ role, updatedAt: new Date() })
-      .where(eq(projectMembers.id, id))
-      .returning();
-    return member ?? null;
-  }
-
-  async remove(id: string) {
+  async clearRole(projectId: string, userId: string) {
     const [member] = await this.db
       .delete(projectMembers)
-      .where(eq(projectMembers.id, id))
+      .where(and(eq(projectMembers.projectId, projectId), eq(projectMembers.userId, userId)))
       .returning();
     return member ?? null;
   }

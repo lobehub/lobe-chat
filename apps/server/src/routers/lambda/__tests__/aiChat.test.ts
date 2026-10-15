@@ -1202,7 +1202,7 @@ describe('aiChatRouter', () => {
 
       const result = await caller.outputJSON(input);
 
-      expect(initModelRuntimeFromDB).toHaveBeenCalledWith({}, 'u1', 'openai');
+      expect(initModelRuntimeFromDB).toHaveBeenCalledWith({}, 'u1', 'openai', undefined);
       expect(mockGenerateObject).toHaveBeenCalledWith(
         {
           messages: input.messages,

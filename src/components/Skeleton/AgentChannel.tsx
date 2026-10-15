@@ -60,7 +60,7 @@ const styles = createStaticStyles(({ css }) => ({
 }));
 
 /**
- * Body of the agent channel list (`routes/(main)/agent/channel/list.tsx`):
+ * Body of the agent channel list (`features/AgentChannel/PlatformGrid.tsx`):
  * 24px section padding around a 1024px column, the 24px/600 h1 with its inline
  * 28px agent avatar, then the 3/2/1-column grid of outlined platform cards
  * (24px icon + bold name, two 12px description lines). Also the page's own
@@ -95,7 +95,7 @@ export const AgentChannelListBodySkeleton = () => (
 );
 
 /**
- * Body of a platform detail (`routes/(main)/agent/channel/detail`): the 1024px
+ * Body of a platform detail (`features/AgentChannel/PlatformDetail`): the 1024px
  * outlined credential block — field rows with a 20px icon + label on the left
  * and a half-width input on the right, then the collapsed advanced-settings
  * group — followed by the right-aligned save button of the footer.

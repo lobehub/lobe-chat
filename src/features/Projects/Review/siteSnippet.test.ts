@@ -4,14 +4,14 @@ import { checkOrigins, originErrorFromServer, reviewLink, siteSnippet } from './
 
 describe('siteSnippet', () => {
   it('omits the server for LobeHub cloud', () => {
-    expect(siteSnippet('site_7f3k9q2mAbCd', 'https://app.lobehub.com')).toBe(
-      '<script src="https://web-assets.lobehub.com/review-sdk/assets/v1/lobehub-review.js" data-site="site_7f3k9q2mAbCd"></script>',
+    expect(siteSnippet('psite_7f3k9q2mAbCd', 'https://app.lobehub.com')).toBe(
+      '<script src="https://web-assets.lobehub.com/review-sdk/assets/v1/lobehub-review.js" data-site="psite_7f3k9q2mAbCd"></script>',
     );
   });
 
   it('names a self-hosted server', () => {
-    expect(siteSnippet('site_7f3k9q2mAbCd', 'http://localhost:3010')).toContain(
-      'data-site="site_7f3k9q2mAbCd" data-server="http://localhost:3010"',
+    expect(siteSnippet('psite_7f3k9q2mAbCd', 'http://localhost:3010')).toContain(
+      'data-site="psite_7f3k9q2mAbCd" data-server="http://localhost:3010"',
     );
   });
 });

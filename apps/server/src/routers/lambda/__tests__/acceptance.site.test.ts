@@ -69,19 +69,13 @@ describe('acceptanceRouter on a site review', () => {
     });
   });
 
-  it('reads only while the user has a project association', async () => {
+  it('inherits workspace access and applies the project role override', async () => {
     const service = new ProjectReviewService(serverDB, ownerId);
-    await expect(caller(memberId).getBundle({ id: acceptanceId })).rejects.toMatchObject({
-      code: 'NOT_FOUND',
-    });
-    const member = await service.addMember(projectId, { userId: memberId, role: 'reviewer' });
     await expect(caller(memberId).getBundle({ id: acceptanceId })).resolves.toBeTruthy();
-    await service.removeMember(member.id);
-    await expect(caller(memberId).getBundle({ id: acceptanceId })).rejects.toMatchObject({
-      code: 'NOT_FOUND',
-    });
-    await expect(caller(adminId).getBundle({ id: acceptanceId })).rejects.toMatchObject({
-      code: 'NOT_FOUND',
-    });
+    await service.setMemberRole(projectId, memberId, 'viewer');
+    await expect(caller(memberId).getBundle({ id: acceptanceId })).resolves.toBeTruthy();
+    await service.setMemberRole(projectId, memberId, null);
+    await expect(caller(memberId).getBundle({ id: acceptanceId })).resolves.toBeTruthy();
+    await expect(caller(adminId).getBundle({ id: acceptanceId })).resolves.toBeTruthy();
   });
 });

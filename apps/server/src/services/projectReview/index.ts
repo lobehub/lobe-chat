@@ -1,4 +1,4 @@
-import type { ProjectMemberRole } from '@lobechat/types';
+import { PROJECT_MEMBER_ROLES, type ProjectMemberRole } from '@lobechat/types';
 import { normalizeSiteOrigin } from '@lobechat/utils/siteOrigin';
 import { TRPCError } from '@trpc/server';
 import { and, asc, eq, isNull } from 'drizzle-orm';
@@ -7,9 +7,9 @@ import { ProjectMemberModel, ProjectSiteModel } from '@/database/models/projectR
 import { acceptances, projectSites, users, verifyRuns, workspaceMembers } from '@/database/schemas';
 import type { LobeChatDatabase } from '@/database/type';
 import {
-  canManageProjectReview,
   findProjectReviewScope,
   type ProjectReviewScope,
+  resolveProjectReviewRole,
 } from '@/server/services/acceptanceReview/projectAccess';
 
 const siteReviewTitle = (name: string) => `Site review · ${name}`;
@@ -32,12 +32,12 @@ export class ProjectReviewService {
   }
 
   async listSites(projectId: string) {
-    await this.assertManager(projectId);
+    await this.assertRole(projectId, PROJECT_MEMBER_ROLES);
     return this.sites.listByProject(projectId);
   }
 
   async createSite(projectId: string, input: SiteInput) {
-    const project = await this.assertManager(projectId);
+    const project = await this.assertRole(projectId, ['member', 'admin']);
     const origins = this.normalizeOrigins(input.origins);
     const name = input.name.trim();
     const previewUrl = origins.find((origin) => !origin.includes('://*.'));
@@ -84,7 +84,7 @@ export class ProjectReviewService {
 
   async updateSite(siteId: string, input: Partial<SiteInput>) {
     const site = await this.findSite(siteId);
-    await this.assertManager(site.projectId);
+    await this.assertRole(site.projectId, ['member', 'admin']);
     const name = input.name?.trim();
     const origins = input.origins ? this.normalizeOrigins(input.origins) : undefined;
 
@@ -104,7 +104,7 @@ export class ProjectReviewService {
 
   async deleteSite(siteId: string) {
     const site = await this.findSite(siteId);
-    await this.assertManager(site.projectId);
+    await this.assertRole(site.projectId, ['member', 'admin']);
     await this.db.transaction(async (tx) => {
       await tx.delete(projectSites).where(eq(projectSites.id, siteId));
       if (site.acceptanceId)
@@ -113,7 +113,7 @@ export class ProjectReviewService {
   }
 
   async listMembers(projectId: string) {
-    const project = await this.assertManager(projectId);
+    const project = await this.assertRole(projectId, ['admin']);
     const rows = await this.members.listByProject(projectId);
     const people = project.workspaceId
       ? await this.db
@@ -139,38 +139,28 @@ export class ProjectReviewService {
       name: fullName || username || person.email || person.userId,
     }));
     const peopleById = new Map(profiles.map((person) => [person.userId, person]));
-    const assigned = new Set([project.userId, ...rows.map((row) => row.userId)]);
+    const overridden = new Set(rows.map((row) => row.userId));
     return {
-      availableMembers: profiles.filter((person) => !assigned.has(person.userId)),
+      availableMembers: profiles.filter((person) => !overridden.has(person.userId)),
       members: rows.map((row) => ({ ...row, user: peopleById.get(row.userId) ?? null })),
-      owner: peopleById.get(project.userId) ?? null,
       workspaceId: project.workspaceId,
     };
   }
 
-  async addMember(projectId: string, input: { userId: string; role: ProjectMemberRole }) {
-    const project = await this.assertManager(projectId);
+  async setMemberRole(projectId: string, userId: string, role: ProjectMemberRole | null) {
+    const project = await this.assertRole(projectId, ['admin']);
     if (!project.workspaceId)
       throw new TRPCError({ code: 'BAD_REQUEST', message: 'Project members require a workspace' });
-    const member = await this.members.add({ ...input, addedByUserId: this.userId, projectId });
-    if (!member)
+    const member =
+      role === null
+        ? await this.members.clearRole(projectId, userId)
+        : await this.members.add({ projectId, userId, role, addedByUserId: this.userId });
+    if (role !== null && !member)
       throw new TRPCError({
         code: 'BAD_REQUEST',
         message: 'Select an active member of this project workspace',
       });
     return member;
-  }
-
-  async updateMemberRole(memberId: string, role: ProjectMemberRole) {
-    const member = await this.findMember(memberId);
-    await this.assertManager(member.projectId);
-    return this.members.updateRole(memberId, role);
-  }
-
-  async removeMember(memberId: string) {
-    const member = await this.findMember(memberId);
-    await this.assertManager(member.projectId);
-    return this.members.remove(memberId);
   }
 
   private normalizeOrigins(input: string[]) {
@@ -189,10 +179,14 @@ export class ProjectReviewService {
     return [...new Set(origins)];
   }
 
-  private async assertManager(projectId: string): Promise<ProjectReviewScope> {
+  private async assertRole(
+    projectId: string,
+    roles: readonly ProjectMemberRole[],
+  ): Promise<ProjectReviewScope> {
     const project = await findProjectReviewScope(this.db, projectId);
     if (!project) throw new TRPCError({ code: 'NOT_FOUND', message: 'Project not found' });
-    if (!(await canManageProjectReview(this.db, this.userId, project))) {
+    const role = await resolveProjectReviewRole(this.db, this.userId, project);
+    if (!role || !roles.includes(role)) {
       throw new TRPCError({ code: 'FORBIDDEN', message: 'Cannot manage review access' });
     }
     return project;
@@ -202,11 +196,5 @@ export class ProjectReviewService {
     const site = await this.sites.findById(siteId);
     if (!site) throw new TRPCError({ code: 'NOT_FOUND', message: 'Site not found' });
     return site;
-  }
-
-  private async findMember(memberId: string) {
-    const member = await this.members.findById(memberId);
-    if (!member) throw new TRPCError({ code: 'NOT_FOUND', message: 'Member not found' });
-    return member;
   }
 }

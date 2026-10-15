@@ -15,7 +15,7 @@ import { findSiteForOrigin } from './sites';
 describe('findSiteForOrigin', () => {
   let db: LobeChatDatabase;
   let ownerId: string;
-  let siteKey: string;
+  let siteId: string;
 
   beforeEach(async () => {
     db = await getTestDB();
@@ -26,7 +26,7 @@ describe('findSiteForOrigin', () => {
       origins: ['https://fieldnotes.app', 'https://*.fieldnotes.app'],
       projectId: project.id,
     });
-    siteKey = site.siteKey;
+    siteId = site.id;
   });
 
   afterEach(async () => {
@@ -34,17 +34,17 @@ describe('findSiteForOrigin', () => {
   });
 
   it('returns the site when the origin is registered, exactly or by wildcard', async () => {
-    expect(await findSiteForOrigin(db, siteKey, 'https://fieldnotes.app')).toMatchObject({
-      siteKey,
+    expect(await findSiteForOrigin(db, siteId, 'https://fieldnotes.app')).toMatchObject({
+      id: siteId,
     });
-    expect(await findSiteForOrigin(db, siteKey, 'https://pr-3.fieldnotes.app')).toMatchObject({
-      siteKey,
+    expect(await findSiteForOrigin(db, siteId, 'https://pr-3.fieldnotes.app')).toMatchObject({
+      id: siteId,
     });
   });
 
-  it('returns null for an unregistered origin or an unknown key', async () => {
-    expect(await findSiteForOrigin(db, siteKey, 'https://fieldnotes-mirror.net')).toBeNull();
-    expect(await findSiteForOrigin(db, 'site_000000000000', 'https://fieldnotes.app')).toBeNull();
-    expect(await findSiteForOrigin(db, siteKey, undefined)).toBeNull();
+  it('returns null for an unregistered origin or an unknown site ID', async () => {
+    expect(await findSiteForOrigin(db, siteId, 'https://fieldnotes-mirror.net')).toBeNull();
+    expect(await findSiteForOrigin(db, 'psite_000000000000', 'https://fieldnotes.app')).toBeNull();
+    expect(await findSiteForOrigin(db, siteId, undefined)).toBeNull();
   });
 });

@@ -30,7 +30,7 @@ describe('site review access', () => {
   let workspaceId: string;
   let siteAcceptanceId: string;
 
-  const add = (userId: string, role: 'maintainer' | 'reviewer') =>
+  const add = (userId: string, role: 'viewer' | 'member' | 'admin') =>
     new ProjectMemberModel(db).add({ projectId, userId, role });
 
   const notFound = (userId: string) =>
@@ -86,8 +86,8 @@ describe('site review access', () => {
     expect(access).toMatchObject({ canApprove: true, canComment: true });
   });
 
-  it('lets a linked workspace reviewer comment but not moderate', async () => {
-    await add(teammateId, 'reviewer');
+  it('lets a project member comment but not moderate', async () => {
+    await add(teammateId, 'member');
     expect(await resolveAcceptanceCommentAccess(db, teammateId, siteAcceptanceId)).toMatchObject({
       canApprove: false,
       canComment: true,
@@ -95,28 +95,48 @@ describe('site review access', () => {
     });
   });
 
-  it('lets a linked maintainer moderate', async () => {
-    await add(teammateId, 'maintainer');
+  it('lets a project admin moderate', async () => {
+    await add(teammateId, 'admin');
     expect(await resolveAcceptanceCommentAccess(db, teammateId, siteAcceptanceId)).toMatchObject({
       canApprove: true,
       canComment: true,
     });
   });
 
-  it('revokes access when the project association is removed', async () => {
-    const member = await add(teammateId, 'reviewer');
-    await new ProjectMemberModel(db).remove(member!.id);
-    await notFound(teammateId);
+  it('inherits writable workspace roles without a project override', async () => {
+    expect(await resolveAcceptanceCommentAccess(db, teammateId, siteAcceptanceId)).toMatchObject({
+      canComment: true,
+      canApprove: false,
+    });
+    expect(await resolveAcceptanceCommentAccess(db, viewerId, siteAcceptanceId)).toMatchObject({
+      canComment: false,
+      canApprove: false,
+    });
   });
 
-  it('requires an explicit project association for workspace members', async () => {
-    await notFound(teammateId);
-    await notFound(viewerId);
-    await expect(resolveReviewAccess(db, teammateId, siteAcceptanceId)).resolves.toBeNull();
+  it('lets a project read-only override take precedence and clearing it restores workspace access', async () => {
+    await add(teammateId, 'viewer');
+    expect(await resolveAcceptanceCommentAccess(db, teammateId, siteAcceptanceId)).toMatchObject({
+      canComment: false,
+      canApprove: false,
+    });
+    await new ProjectMemberModel(db).clearRole(projectId, teammateId);
+    expect(await resolveAcceptanceCommentAccess(db, teammateId, siteAcceptanceId)).toMatchObject({
+      canComment: true,
+      canApprove: false,
+    });
+  });
+
+  it('can give a workspace viewer write access in this project', async () => {
+    await add(viewerId, 'member');
+    expect(await resolveAcceptanceCommentAccess(db, viewerId, siteAcceptanceId)).toMatchObject({
+      canComment: true,
+      canApprove: false,
+    });
   });
 
   it('rejects departed workspace members, including the project creator', async () => {
-    await add(teammateId, 'maintainer');
+    await add(teammateId, 'admin');
     for (const userId of [teammateId, ownerId]) {
       await db
         .update(workspaceMembers)
@@ -147,11 +167,11 @@ describe('site review access', () => {
 
   it('names the role each person holds on the project', async () => {
     const project = (await db.select().from(projects).where(eq(projects.id, projectId)))[0];
-    await add(teammateId, 'maintainer');
+    await add(teammateId, 'admin');
 
-    expect(await resolveProjectReviewRole(db, ownerId, project)).toBe('creator');
-    expect(await resolveProjectReviewRole(db, teammateId, project)).toBe('maintainer');
-    expect(await resolveProjectReviewRole(db, viewerId, project)).toBeNull();
+    expect(await resolveProjectReviewRole(db, ownerId, project)).toBe('admin');
+    expect(await resolveProjectReviewRole(db, teammateId, project)).toBe('admin');
+    expect(await resolveProjectReviewRole(db, viewerId, project)).toBe('viewer');
     expect(await resolveProjectReviewRole(db, strangerId, project)).toBeNull();
   });
 });

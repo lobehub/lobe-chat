@@ -1,6 +1,6 @@
 // @vitest-environment node
 import type { LobeChatDatabase } from '@lobechat/database';
-import { projectSites, users } from '@lobechat/database/schemas';
+import { projectSites, users, workspaceMembers, workspaces } from '@lobechat/database/schemas';
 import { getTestDB } from '@lobechat/database/test-utils';
 import { eq } from 'drizzle-orm';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
@@ -18,14 +18,9 @@ let serverDB: LobeChatDatabase;
 vi.mock('@/database/core/db-adaptor', () => ({ getServerDB: async () => serverDB }));
 vi.mock('@/libs/oidc-provider/jwt', () => ({
   verifyAcceptanceReviewJWT: async (token: string) => {
-    const [userId, siteKey, origin] = token.split('|');
+    const [userId, siteId, origin] = token.split('|');
     if (!origin) throw new Error('invalid');
-    return { expiresAt: 2_000_000_000, site: { origin, siteKey }, userId };
-  },
-}));
-vi.mock('@/server/services/email', () => ({
-  EmailService: class {
-    sendMail = vi.fn().mockResolvedValue({});
+    return { expiresAt: 2_000_000_000, site: { origin, siteId }, userId };
   },
 }));
 vi.mock('@/server/workflows/expertiseRejection', () => ({
@@ -41,12 +36,13 @@ describe('site review tokens', () => {
   let ownerId: string;
   let guestId: string;
   let projectId: string;
-  let site: { acceptanceId: string | null; id: string; siteKey: string };
+  let workspaceId: string;
+  let site: { acceptanceId: string | null; id: string };
 
   const call = (userId: string, path: string, origin = ORIGIN, tokenOrigin = ORIGIN) =>
     app.request(`${BASE}${path}`, {
       headers: {
-        authorization: `Bearer ${userId}|${site.siteKey}|${tokenOrigin}`,
+        authorization: `Bearer ${userId}|${site.id}|${tokenOrigin}`,
         origin,
       },
     });
@@ -60,8 +56,14 @@ describe('site review tokens', () => {
       .update(users)
       .set({ email: 'alex@studio-north.co' })
       .where(eq(users.id, guestId));
+    const [workspace] = await serverDB
+      .insert(workspaces)
+      .values({ name: 'Fieldnotes', primaryOwnerId: ownerId, slug: ownerId })
+      .returning();
+    workspaceId = workspace.id;
+    await serverDB.insert(workspaceMembers).values({ workspaceId, userId: ownerId, role: 'owner' });
     projectId = (
-      await new ProjectModel(serverDB, ownerId).create({
+      await new ProjectModel(serverDB, ownerId, workspaceId).create({
         identifier: 'SITE',
         name: 'Fieldnotes 官网',
       })
@@ -84,8 +86,8 @@ describe('site review tokens', () => {
       acceptance: { id: site.acceptanceId, title: 'Site review · Marketing site' },
       can: { comment: true, decide: false, moderate: true },
       project: { id: projectId, name: 'Fieldnotes 官网' },
-      role: 'creator',
-      site: { key: site.siteKey, name: 'Marketing site' },
+      role: 'admin',
+      site: { id: site.id, name: 'Marketing site' },
     });
   });
 
@@ -105,29 +107,27 @@ describe('site review tokens', () => {
     expect(await response.json()).toMatchObject({ error: { code: 'SITE_GONE' } });
   });
 
-  it('cuts a revoked member off on the next request', async () => {
-    const members = new ProjectMemberModel(serverDB);
-    const invite = await members.invite({
-      email: 'alex@studio-north.co',
-      projectId,
-      role: 'reviewer',
-    });
-    await members.accept(invite.inviteToken!, { email: 'alex@studio-north.co', userId: guestId });
+  it('applies role overrides on the next request and clearing them restores workspace access', async () => {
+    await serverDB
+      .insert(workspaceMembers)
+      .values({ workspaceId, userId: guestId, role: 'member' });
     expect((await call(guestId, '/session')).status).toBe(200);
-
-    await members.revoke(invite.id);
+    const members = new ProjectMemberModel(serverDB);
+    await members.add({ projectId, userId: guestId, role: 'viewer' });
     const response = await call(guestId, '/session');
     expect(response.status).toBe(403);
     expect(await response.json()).toMatchObject({ error: { code: 'SITE_ACCESS_REVOKED' } });
+    await members.clearRole(projectId, guestId);
+    expect((await call(guestId, '/session')).status).toBe(200);
   });
 
-  it('names a site publicly for the connect pill and hides unknown keys', async () => {
-    const response = await app.request(`${BASE}/sites/${site.siteKey}`);
+  it('names a site publicly for the connect pill and hides unknown site IDs', async () => {
+    const response = await app.request(`${BASE}/sites/${site.id}`);
     expect(response.status).toBe(200);
     expect(await response.json()).toEqual({
       name: 'Marketing site',
       project: { name: 'Fieldnotes 官网' },
     });
-    expect((await app.request(`${BASE}/sites/site_000000000000`)).status).toBe(404);
+    expect((await app.request(`${BASE}/sites/psite_000000000000`)).status).toBe(404);
   });
 });

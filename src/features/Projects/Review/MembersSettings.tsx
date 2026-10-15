@@ -8,18 +8,18 @@ import AsyncError from '@/components/AsyncError';
 import SkeletonBar from '@/components/Skeleton/Bar';
 import { projectReviewService } from '@/services/projectReview';
 
-import { MemberRow, OwnerRow } from './MemberRow';
+import { MemberRow } from './MemberRow';
 import { isForbidden, useProjectMembers } from './useProjectReview';
 
 export function MembersSettings({ projectId }: { projectId: string }) {
   const { t } = useTranslation('project');
   const { data, error, mutate } = useProjectMembers(projectId);
   const [userId, setUserId] = useState<string | null>(null);
-  const [role, setRole] = useState<ProjectMemberRole>('reviewer');
+  const [role, setRole] = useState<ProjectMemberRole>('member');
   const [busyId, setBusyId] = useState<string>();
   const [adding, setAdding] = useState(false);
 
-  if (isForbidden(error)) return <Empty description={t('review.manageForbidden')} />;
+  if (isForbidden(error)) return <Empty description={t('review.accessForbidden')} />;
   if (error) return <AsyncError error={error} onRetry={() => mutate()} />;
   if (!data) return <SkeletonBar height={120} />;
   if (!data.workspaceId) return <Empty description={t('review.members.workspaceOnly')} />;
@@ -41,12 +41,12 @@ export function MembersSettings({ projectId }: { projectId: string }) {
     if (!userId) return;
     setAdding(true);
     try {
-      await projectReviewService.addMember(projectId, userId, role);
+      await projectReviewService.setMemberRole(projectId, userId, role);
       setUserId(null);
       await mutate();
     } catch (error) {
       console.error('Failed to add project member', error);
-      toast.error(t('review.members.addError'));
+      toast.error(t('review.members.setRoleError'));
     } finally {
       setAdding(false);
     }
@@ -58,7 +58,7 @@ export function MembersSettings({ projectId }: { projectId: string }) {
         <Text fontSize={16} weight={600}>
           {t('review.members.title')}
         </Text>
-        <Text type="secondary">{t('review.members.workspaceMembersDescription')}</Text>
+        <Text type="secondary">{t('review.members.roleInheritance')}</Text>
       </Flexbox>
       <Block variant="outlined">
         <form
@@ -96,18 +96,18 @@ export function MembersSettings({ projectId }: { projectId: string }) {
             onChange={(value) => value && setRole(value as ProjectMemberRole)}
           />
           <Button disabled={!userId} htmlType="submit" loading={adding} type="primary">
-            {t('review.members.add')}
+            {t('review.members.setRole')}
           </Button>
         </form>
-        {data.owner && <OwnerRow owner={data.owner} />}
         {data.members.map((member) => (
           <MemberRow
             busy={busyId === member.id}
             key={member.id}
             member={member}
-            onRevoke={() => run(member.id, () => projectReviewService.removeMember(member.id))}
             onRoleChange={(next) =>
-              run(member.id, () => projectReviewService.updateMemberRole(member.id, next))
+              run(member.id, () =>
+                projectReviewService.setMemberRole(projectId, member.userId, next),
+              )
             }
           />
         ))}

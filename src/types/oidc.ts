@@ -1,3 +1,5 @@
+import type { ProjectMemberRole } from '@lobechat/types';
+
 export interface OidcClientMetadata {
   clientName?: string;
   developerName?: string;
@@ -13,7 +15,7 @@ export interface OidcInteractionDetailsResponse {
     origin?: string;
     projectName?: string;
     reason?: 'noAccess' | 'unregistered';
-    role?: 'creator' | 'maintainer' | 'reviewer' | 'workspace' | null;
+    role?: ProjectMemberRole | null;
     siteName?: string;
     title?: string;
   };

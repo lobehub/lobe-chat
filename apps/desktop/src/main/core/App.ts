@@ -25,6 +25,7 @@ import {
   runtimeEnvironmentBinaries,
 } from '@/modules/binaries';
 import { generateCliWrapper, getCliWrapperDir } from '@/modules/cliEmbedding';
+import { PermissionGuide } from '@/modules/permissionGuide/PermissionGuide';
 import { ScreenCaptureManager } from '@/modules/screenCapture/ScreenCaptureManager';
 import { BUILD_CHANNEL, UPDATE_SERVER_URL } from '@/modules/updater/configs';
 import type { IServiceModule, ServiceLifecycle, ServiceModule } from '@/services';
@@ -77,6 +78,7 @@ export class App {
   localFileProtocolManager: LocalFileProtocolManager;
   binaryManager: BinaryManager;
   screenCaptureManager: ScreenCaptureManager;
+  permissionGuide: PermissionGuide;
   chromeFlags: string[] = ['OverlayScrollbar', 'FluentOverlayScrollbar', 'FluentScrollbar'];
 
   /**
@@ -172,6 +174,7 @@ export class App {
     this.protocolManager = new ProtocolManager(this);
     this.binaryManager = new BinaryManager(this);
     this.screenCaptureManager = new ScreenCaptureManager(this);
+    this.permissionGuide = new PermissionGuide(this);
 
     this.coreUpdateManager = new CoreUpdateManager(this);
     this.coreUpdateManager.initialize();

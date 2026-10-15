@@ -4,8 +4,8 @@ const REVIEW_SDK_SRC = 'https://web-assets.lobehub.com/review-sdk/assets/v1/lobe
 const REVIEW_DEFAULT_SERVER = 'https://app.lobehub.com';
 const SITE_WAKE_PARAM = 'lh-review';
 
-export const siteSnippet = (siteKey: string, server: string) =>
-  `<script src="${REVIEW_SDK_SRC}" data-site="${siteKey}"${
+export const siteSnippet = (siteId: string, server: string) =>
+  `<script src="${REVIEW_SDK_SRC}" data-site="${siteId}"${
     server === REVIEW_DEFAULT_SERVER ? '' : ` data-server="${server}"`
   }></script>`;
 

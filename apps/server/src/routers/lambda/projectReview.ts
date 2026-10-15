@@ -19,12 +19,6 @@ const siteFields = {
 };
 
 export const projectReviewRouter = router({
-  addMember: procedure
-    .input(projectInput.extend({ userId: z.string().min(1), role: roleSchema }))
-    .mutation(({ ctx, input }) =>
-      ctx.reviewService.addMember(input.projectId, { userId: input.userId, role: input.role }),
-    ),
-
   createSite: procedure
     .input(projectInput.extend(siteFields))
     .mutation(({ ctx, input }) =>
@@ -43,13 +37,11 @@ export const projectReviewRouter = router({
     .input(projectInput)
     .query(({ ctx, input }) => ctx.reviewService.listSites(input.projectId)),
 
-  removeMember: procedure
-    .input(z.object({ id: z.uuid() }))
-    .mutation(({ ctx, input }) => ctx.reviewService.removeMember(input.id)),
-
-  updateMemberRole: procedure
-    .input(z.object({ id: z.uuid(), role: roleSchema }))
-    .mutation(({ ctx, input }) => ctx.reviewService.updateMemberRole(input.id, input.role)),
+  setMemberRole: procedure
+    .input(projectInput.extend({ userId: z.string().min(1), role: roleSchema.nullable() }))
+    .mutation(({ ctx, input }) =>
+      ctx.reviewService.setMemberRole(input.projectId, input.userId, input.role),
+    ),
 
   updateSite: procedure
     .input(

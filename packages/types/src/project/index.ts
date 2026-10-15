@@ -25,6 +25,6 @@ export const PROJECT_COMPLETION_DECISIONS = ['accepted', 'rejected'] as const;
 
 export type ProjectCompletionDecision = (typeof PROJECT_COMPLETION_DECISIONS)[number];
 
-export const PROJECT_MEMBER_ROLES = ['reviewer', 'maintainer'] as const;
+export const PROJECT_MEMBER_ROLES = ['viewer', 'member', 'admin'] as const;
 
 export type ProjectMemberRole = (typeof PROJECT_MEMBER_ROLES)[number];

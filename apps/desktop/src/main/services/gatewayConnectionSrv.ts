@@ -8,6 +8,7 @@ import type {
   EnrollWorkspaceResult,
   UnenrollWorkspaceParams,
 } from '@lobechat/device-control';
+import { COMPUTER_USE_IDENTIFIER } from '@lobechat/device-control/computer-use';
 import type { DeviceMetricsSampler } from '@lobechat/device-control/metrics';
 import type {
   AgentRunRequestMessage,
@@ -867,7 +868,7 @@ export default class GatewayConnectionService extends ServiceModule {
   private async collectSystemInfo(): Promise<DeviceSystemInfo> {
     const { getShellInfo } = await import('@lobechat/local-file-shell/shell');
     return {
-      supportedTools: ['lobe-computer-use'],
+      supportedTools: [COMPUTER_USE_IDENTIFIER],
       arch: os.arch(),
       // Tell the server-side prompt builder which shell runCommand spawns here.
       defaultShell: (await getShellInfo()).displayName,

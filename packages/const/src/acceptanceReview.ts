@@ -15,20 +15,20 @@ export const acceptanceIdFromReviewResource = (resource: unknown): string | unde
 
 export const SITE_REVIEW_RESOURCE_PREFIX = 'urn:lobehub:site:';
 
-const SITE_RESOURCE_PATTERN = /^urn:lobehub:site:(site_\w{12}):([^:]+)$/;
+const SITE_RESOURCE_PATTERN = /^urn:lobehub:site:(psite_\w{12}):([^:]+)$/;
 
-export const siteReviewResource = (siteKey: string, origin: string) =>
-  `${SITE_REVIEW_RESOURCE_PREFIX}${siteKey}:${encodeURIComponent(origin)}`;
+export const siteReviewResource = (siteId: string, origin: string) =>
+  `${SITE_REVIEW_RESOURCE_PREFIX}${siteId}:${encodeURIComponent(origin)}`;
 
 export const siteReviewFromResource = (
   resource: unknown,
-): { origin: string; siteKey: string } | undefined => {
+): { origin: string; siteId: string } | undefined => {
   const value = Array.isArray(resource) ? resource[0] : resource;
   if (typeof value !== 'string') return undefined;
   const match = SITE_RESOURCE_PATTERN.exec(value);
   if (!match) return undefined;
   try {
-    return { origin: decodeURIComponent(match[2]), siteKey: match[1] };
+    return { origin: decodeURIComponent(match[2]), siteId: match[1] };
   } catch {
     return undefined;
   }

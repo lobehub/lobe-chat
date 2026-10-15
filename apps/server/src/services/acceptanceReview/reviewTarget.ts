@@ -32,7 +32,7 @@ export async function describeReviewTarget(
   const site = siteReviewFromResource(indicator);
 
   if (site) {
-    const record = await findSiteForOrigin(db, site.siteKey, site.origin);
+    const record = await findSiteForOrigin(db, site.siteId, site.origin);
     if (!record) {
       return { allowed: false, kind: 'site', origin: site.origin, reason: 'unregistered' };
     }

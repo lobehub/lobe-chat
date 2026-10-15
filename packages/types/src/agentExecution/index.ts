@@ -239,6 +239,12 @@ export interface ExecAgentClientIds {
   topicId?: string;
   /** Id for the user message row this run creates. */
   userMessageId?: string;
+  /**
+   * Tail of the branch the client renders the new user row under. The server
+   * keeps the turn on this branch unless its newer spine head extends it, so a
+   * turn sent while an older branch is selected stays visible.
+   */
+  userMessageParentId?: string;
 }
 
 /** A client's declaration that it can run relayed LLM attempts (`llm_execute`). */

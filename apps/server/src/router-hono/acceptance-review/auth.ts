@@ -22,7 +22,7 @@ export interface ReviewEnv {
     expiresAt: number;
     project?: { id: string; name: string };
     role?: ProjectReviewRole | null;
-    site?: { key: string; name: string };
+    site?: { id: string; name: string };
     userId: string;
   };
 }
@@ -47,7 +47,7 @@ export const reviewAuth: MiddlewareHandler<ReviewEnv> = async (c, next) => {
     if (!origin || !siteOriginMatches(claims.site.origin, origin)) {
       return reviewError(c, 403, 'FORBIDDEN', 'Origin not allowed for this token');
     }
-    const site = await findSiteForOrigin(db, claims.site.siteKey, claims.site.origin);
+    const site = await findSiteForOrigin(db, claims.site.siteId, claims.site.origin);
     if (!site?.acceptanceId) return reviewError(c, 404, 'SITE_GONE', 'Site not found');
     const access = await resolveReviewAccess(db, claims.userId, site.acceptanceId);
     if (!access?.can.comment)
@@ -56,7 +56,7 @@ export const reviewAuth: MiddlewareHandler<ReviewEnv> = async (c, next) => {
     c.set('access', access);
     c.set('project', project ? { id: project.id, name: project.name } : undefined);
     c.set('role', project ? await resolveProjectReviewRole(db, claims.userId, project) : null);
-    c.set('site', { key: site.siteKey, name: site.name });
+    c.set('site', { id: site.id, name: site.name });
   } else {
     const access = claims.acceptanceId
       ? await resolveReviewAccess(db, claims.userId, claims.acceptanceId)

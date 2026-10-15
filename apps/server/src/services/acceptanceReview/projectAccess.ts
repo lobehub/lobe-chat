@@ -1,3 +1,4 @@
+import type { ProjectMemberRole } from '@lobechat/types';
 import { eq } from 'drizzle-orm';
 
 import { ProjectMemberModel } from '@/database/models/projectReview';
@@ -10,7 +11,7 @@ export type ProjectReviewScope = Pick<
   'id' | 'name' | 'userId' | 'workspaceId'
 >;
 
-export type ProjectReviewRole = 'creator' | 'maintainer' | 'reviewer';
+export type ProjectReviewRole = ProjectMemberRole;
 
 export async function findProjectReviewScope(
   db: LobeChatDatabase,
@@ -35,30 +36,14 @@ export async function resolveProjectReviewRole(
   project: ProjectReviewScope,
 ): Promise<ProjectReviewRole | null> {
   if (!userId) return null;
-  if (project.workspaceId) {
-    const teammate = await new WorkspaceMemberModel(db, userId).getMember(
-      project.workspaceId,
-      userId,
-    );
-    if (!teammate) return null;
-  }
-  if (project.userId === userId) return 'creator';
-  if (!project.workspaceId) return null;
-  const member = await new ProjectMemberModel(db).findActive(project.id, userId);
-  return member?.role ?? null;
-}
-
-export const canManageProjectReview = async (
-  db: LobeChatDatabase,
-  userId: string,
-  project: ProjectReviewScope,
-) => {
-  const role = await resolveProjectReviewRole(db, userId, project);
-  if (role === 'creator' || role === 'maintainer') return true;
-  if (!project.workspaceId) return false;
+  if (!project.workspaceId) return project.userId === userId ? 'admin' : null;
   const teammate = await new WorkspaceMemberModel(db, userId).getMember(
     project.workspaceId,
     userId,
   );
-  return teammate?.role === 'owner' || teammate?.role === 'admin';
-};
+  if (!teammate) return null;
+  const override = await new ProjectMemberModel(db).findActive(project.id, userId);
+  const role = override?.role ?? teammate.role;
+  if (role === 'owner' || role === 'admin') return 'admin';
+  return role === 'member' || role === 'viewer' ? role : null;
+}

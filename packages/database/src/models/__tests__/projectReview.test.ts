@@ -30,7 +30,7 @@ afterEach(async () => {
 describe('ProjectSiteModel', () => {
   const sites = new ProjectSiteModel(serverDB);
 
-  it('creates a site with a public key and finds it by that key', async () => {
+  it('finds a registered site by its ID', async () => {
     const project = await createProject();
     const site = await sites.create({
       createdByUserId: ownerId,
@@ -39,11 +39,10 @@ describe('ProjectSiteModel', () => {
       projectId: project.id,
     });
 
-    expect(site.siteKey).toMatch(/^site_\w{12}$/);
-    expect(await sites.findBySiteKey(site.siteKey)).toEqual(
+    expect(await sites.findById(site.id)).toEqual(
       expect.objectContaining({ id: site.id, projectId: project.id }),
     );
-    expect(await sites.findBySiteKey('site_missing')).toBeNull();
+    expect(await sites.findById('psite_missing')).toBeNull();
   });
 
   it('lists, updates and deletes the sites of one project', async () => {
@@ -99,27 +98,27 @@ describe('ProjectMemberModel', () => {
   });
 
   it('links an existing workspace member once and updates the project role', async () => {
-    const first = await members.add({ projectId, userId: guestId, role: 'reviewer' });
-    const second = await members.add({ projectId, userId: guestId, role: 'maintainer' });
+    const first = await members.add({ projectId, userId: guestId, role: 'member' });
+    const second = await members.add({ projectId, userId: guestId, role: 'admin' });
     expect(second!.id).toBe(first!.id);
-    expect(await members.findActive(projectId, guestId)).toMatchObject({ role: 'maintainer' });
+    expect(await members.findActive(projectId, guestId)).toMatchObject({ role: 'admin' });
     expect(await members.listByProject(projectId)).toHaveLength(1);
-    await members.updateRole(first!.id, 'reviewer');
-    expect(await members.findActive(projectId, guestId)).toMatchObject({ role: 'reviewer' });
-    await members.remove(first!.id);
+    await members.add({ projectId, userId: guestId, role: 'member' });
+    expect(await members.findActive(projectId, guestId)).toMatchObject({ role: 'member' });
+    await members.clearRole(projectId, guestId);
     expect(await members.findActive(projectId, guestId)).toBeNull();
   });
 
   it('rejects a personal project and an inactive workspace member', async () => {
     const personal = await createProject();
     await expect(
-      members.add({ projectId: personal.id, userId: guestId, role: 'reviewer' }),
+      members.add({ projectId: personal.id, userId: guestId, role: 'member' }),
     ).resolves.toBeNull();
     await serverDB
       .update(workspaceMembers)
       .set({ deletedAt: new Date() })
       .where(eq(workspaceMembers.userId, guestId));
-    await expect(members.add({ projectId, userId: guestId, role: 'reviewer' })).resolves.toBeNull();
+    await expect(members.add({ projectId, userId: guestId, role: 'member' })).resolves.toBeNull();
   });
 
   it('rejects a member of another workspace, including a direct insert', async () => {
@@ -133,14 +132,14 @@ describe('ProjectMemberModel', () => {
       .returning();
     await serverDB.insert(workspaceMembers).values({ workspaceId: other.id, userId: guestId });
     await serverDB.delete(workspaceMembers).where(eq(workspaceMembers.workspaceId, workspaceId));
-    await expect(members.add({ projectId, userId: guestId, role: 'reviewer' })).resolves.toBeNull();
+    await expect(members.add({ projectId, userId: guestId, role: 'member' })).resolves.toBeNull();
     await expect(
       serverDB.insert(projectMembers).values({ projectId, workspaceId: other.id, userId: guestId }),
     ).rejects.toThrow();
   });
 
   it('revokes project access on workspace departure and does not restore it on rejoin', async () => {
-    await members.add({ projectId, userId: guestId, role: 'maintainer' });
+    await members.add({ projectId, userId: guestId, role: 'admin' });
     const workspace = new WorkspaceMemberModel(serverDB, ownerId);
     await workspace.removeMember(workspaceId, guestId);
     expect(await members.findActive(projectId, guestId)).toBeNull();

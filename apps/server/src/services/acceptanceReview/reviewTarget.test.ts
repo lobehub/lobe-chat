@@ -17,7 +17,7 @@ describe('describeReviewTarget for sites', () => {
   let db: LobeChatDatabase;
   let ownerId: string;
   let strangerId: string;
-  let siteKey: string;
+  let siteId: string;
 
   beforeEach(async () => {
     db = await getTestDB();
@@ -31,7 +31,7 @@ describe('describeReviewTarget for sites', () => {
       name: 'Marketing site',
       origins: ['https://fieldnotes.app'],
     });
-    siteKey = site.siteKey;
+    siteId = site.id;
   });
 
   afterEach(async () => {
@@ -41,17 +41,13 @@ describe('describeReviewTarget for sites', () => {
 
   it('names the site, project, origin and role for someone who may review it', async () => {
     expect(
-      await describeReviewTarget(
-        db,
-        ownerId,
-        siteReviewResource(siteKey, 'https://fieldnotes.app'),
-      ),
+      await describeReviewTarget(db, ownerId, siteReviewResource(siteId, 'https://fieldnotes.app')),
     ).toEqual({
       allowed: true,
       kind: 'site',
       origin: 'https://fieldnotes.app',
       projectName: 'Fieldnotes 官网',
-      role: 'creator',
+      role: 'admin',
       siteName: 'Marketing site',
     });
   });
@@ -61,7 +57,7 @@ describe('describeReviewTarget for sites', () => {
       await describeReviewTarget(
         db,
         strangerId,
-        siteReviewResource(siteKey, 'https://fieldnotes.app'),
+        siteReviewResource(siteId, 'https://fieldnotes.app'),
       ),
     ).toEqual({ allowed: false, kind: 'site', reason: 'noAccess' });
   });
@@ -71,7 +67,7 @@ describe('describeReviewTarget for sites', () => {
       await describeReviewTarget(
         db,
         ownerId,
-        siteReviewResource(siteKey, 'https://fieldnotes-mirror.net'),
+        siteReviewResource(siteId, 'https://fieldnotes-mirror.net'),
       ),
     ).toEqual({
       allowed: false,
@@ -83,7 +79,7 @@ describe('describeReviewTarget for sites', () => {
 
   it('refuses a missing user', async () => {
     expect(
-      await describeReviewTarget(db, null, siteReviewResource(siteKey, 'https://fieldnotes.app')),
+      await describeReviewTarget(db, null, siteReviewResource(siteId, 'https://fieldnotes.app')),
     ).toEqual({ allowed: false, kind: 'site', reason: 'noAccess' });
   });
 });
