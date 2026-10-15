@@ -20,6 +20,7 @@ import { settingsSelectors } from '@/store/user/selectors';
 
 import { useAgentId } from '../../hooks/useAgentId';
 import { useEffectiveModel } from '../../hooks/useEffectiveModel';
+import { useTopicId } from '../../hooks/useTopicId';
 import { useStoreApi } from '../../store';
 import { getToolContextRefreshKey, getToolExcludeDefaultToolIds } from './utils';
 
@@ -82,9 +83,21 @@ export interface TokenBreakdown {
 
 export const useTokenBreakdown = (): TokenBreakdown => {
   const { input, messages } = useComposerSource();
-  const historySummary = useChatStore(
-    (s) => topicSelectors.currentActiveTopicSummary(s)?.content || '',
-  );
+  // The summary of this composer's own conversation (see `useTopicId`), never
+  // the global active topic's: an embedded composer would otherwise count the
+  // outer chat's history against its context window.
+  const topicId = useTopicId();
+  const [historySummary, isUnlistedTopic, useFetchTopicDetail] = useChatStore((s) => {
+    const topic = topicId ? topicSelectors.getTopicById(topicId)(s) : undefined;
+    return [topic?.historySummary || '', !!topicId && !topic, s.useFetchTopicDetail] as const;
+  });
+  // A topic that never reaches the loaded lists (a document's chat panel runs on
+  // a `trigger='document'` system topic, a goal's supervision topic is excluded
+  // from the sidebar) still has a persisted summary the run includes, so load it
+  // by id instead of counting it as empty. This holds for the global active topic
+  // too: not every route mounts `useFetchActiveTopicDetail`, and the by-id fetch
+  // dedupes with it where it does.
+  useFetchTopicDetail(isUnlistedTopic ? topicId : undefined);
 
   const agentId = useAgentId();
   const { model, provider } = useEffectiveModel(agentId);
