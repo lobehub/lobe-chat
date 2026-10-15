@@ -70,6 +70,14 @@ export interface ChatTopicState {
   inSearchingMode?: boolean;
   isSearchingTopic: boolean;
   /**
+   * The active topic, when the user archived it while on it. The sidebar keeps
+   * the active topic visible even when archived (so a search hit or direct URL
+   * still shows the selection), but one just archived must disappear at once.
+   * Cleared whenever `activeTopicId` changes, so reopening it later pins it
+   * again. Maintained by `subscribeJustArchivedTopic`.
+   */
+  justArchivedTopicId?: string;
+  /**
    * Project working directory the *next* topic creation should bind to.
    *
    * Set when a project group's "+" opens a blank conversation and cleared by
