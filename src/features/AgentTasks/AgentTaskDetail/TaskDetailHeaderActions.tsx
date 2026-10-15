@@ -1,6 +1,15 @@
 import { type DropdownItem, DropdownMenu, Icon } from '@lobehub/ui';
 import { ActionIcon, confirmModal, toast } from '@lobehub/ui/base-ui';
-import { CopyIcon, EyeOffIcon, LinkIcon, MoreHorizontal, Trash, UsersIcon } from 'lucide-react';
+import {
+  ArchiveIcon,
+  ArchiveRestoreIcon,
+  CopyIcon,
+  EyeOffIcon,
+  LinkIcon,
+  MoreHorizontal,
+  Trash,
+  UsersIcon,
+} from 'lucide-react';
 import { memo, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -27,6 +36,8 @@ const TaskDetailHeaderActions = memo(() => {
   const createdByUserId = useTaskStore(taskDetailSelectors.activeTaskCreatedByUserId);
   const currentUserId = useUserStore(userProfileSelectors.userId);
   const deleteTask = useTaskStore((s) => s.deleteTask);
+  const archiveTask = useTaskStore((s) => s.archiveTask);
+  const isArchived = !!useTaskStore(taskDetailSelectors.activeTaskArchivedAt);
   const updateTaskVisibility = useTaskStore((s) => s.updateTaskVisibility);
   const transferItems = useTaskTransferMenuItem(taskId) as DropdownItem[] | null;
 
@@ -44,6 +55,18 @@ const TaskDetailHeaderActions = memo(() => {
       title: t('taskDetail.deleteConfirm.title'),
     });
   }, [canEditTask, taskId, t, deleteTask, navigate]);
+
+  const toggleArchive = useCallback(async () => {
+    if (!canEditTask || !taskId) return;
+    await archiveTask(taskId, !isArchived);
+    toast.success(
+      t(
+        isArchived
+          ? 'taskList.contextMenu.unarchiveSuccess'
+          : 'taskList.contextMenu.archiveSuccess',
+      ),
+    );
+  }, [archiveTask, canEditTask, isArchived, t, taskId]);
 
   const triggerPublish = useCallback(() => {
     if (!canEditTask) return;
@@ -110,6 +133,14 @@ const TaskDetailHeaderActions = memo(() => {
       },
       { type: 'divider' },
       {
+        disabled: !canEditTask,
+        icon: <Icon icon={isArchived ? ArchiveRestoreIcon : ArchiveIcon} />,
+        key: 'archive',
+        label: t(isArchived ? 'taskList.contextMenu.unarchive' : 'taskList.contextMenu.archive'),
+        onClick: toggleArchive,
+      },
+      { type: 'divider' },
+      {
         danger: true,
         disabled: !canEditTask,
         icon: <Icon icon={Trash} />,
@@ -171,6 +202,8 @@ const TaskDetailHeaderActions = memo(() => {
     currentUserId,
     t,
     triggerDelete,
+    toggleArchive,
+    isArchived,
     triggerPublish,
     triggerMakePrivate,
     canEditTask,

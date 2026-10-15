@@ -37,6 +37,16 @@ export class TaskLifecycleSliceActionImpl {
     this.#get = get;
   }
 
+  /** User-only: archived tasks drop out of every list until shown or restored. */
+  archiveTask = async (id: string, archived: boolean): Promise<void> => {
+    await taskService.archive(id, archived);
+    const { activeTaskId, internal_refreshTaskDetail, refreshTaskList } = this.#get();
+    await Promise.all([
+      activeTaskId === id ? internal_refreshTaskDetail(id) : undefined,
+      refreshTaskList(),
+    ]);
+  };
+
   cancelTopic = async (topicId: string): Promise<void> => {
     await taskService.cancelTopic(topicId);
     const { activeTaskId, internal_refreshTaskDetail } = this.#get();

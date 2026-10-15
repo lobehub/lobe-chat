@@ -7,6 +7,7 @@ import { canGoNative } from '@/libs/contextMenu/canGoNative';
 import { useTaskItemContextMenu } from './useTaskItemContextMenu';
 
 const mocks = vi.hoisted(() => ({
+  archiveTask: vi.fn(),
   closeContextMenu: vi.fn(),
   copyToClipboard: vi.fn(),
   deleteTask: vi.fn(),
@@ -63,6 +64,7 @@ vi.mock('@/store/agent/selectors', () => ({
 vi.mock('@/store/task', () => ({
   useTaskStore: (
     selector: (state: {
+      archiveTask: typeof mocks.archiveTask;
       deleteTask: typeof mocks.deleteTask;
       refreshTaskList: typeof mocks.refreshTaskList;
       runTask: typeof mocks.runTask;
@@ -71,6 +73,7 @@ vi.mock('@/store/task', () => ({
     }) => unknown,
   ) =>
     selector({
+      archiveTask: mocks.archiveTask,
       deleteTask: mocks.deleteTask,
       refreshTaskList: mocks.refreshTaskList,
       runTask: mocks.runTask,
@@ -107,6 +110,41 @@ describe('useTaskItemContextMenu', () => {
     expect(
       itemTypes.some((type, index) => type === 'divider' && itemTypes[index + 1] === 'divider'),
     ).toBe(false);
+  });
+
+  describe('archive action', () => {
+    const findArchiveItem = (archivedAt?: Date | null) => {
+      const { result } = renderHook(() =>
+        useTaskItemContextMenu({ archivedAt, identifier: 'T-1', priority: 0, status: 'completed' }),
+      );
+      return result.current.items.find(
+        (item) => item && typeof item === 'object' && 'key' in item && item.key === 'archive',
+      ) as { label: string; onClick: (info: unknown) => Promise<void> } | undefined;
+    };
+    const click = (item?: { onClick: (info: unknown) => Promise<void> }) =>
+      item!.onClick({ domEvent: { stopPropagation: vi.fn() } });
+
+    it('archives an unarchived task', async () => {
+      const item = findArchiveItem(null);
+      expect(item?.label).toBe('taskList.contextMenu.archive');
+
+      await click(item);
+
+      expect(mocks.archiveTask).toHaveBeenCalledWith('T-1', true);
+    });
+
+    it('restores an archived task', async () => {
+      const item = findArchiveItem(new Date());
+      expect(item?.label).toBe('taskList.contextMenu.unarchive');
+
+      await click(item);
+
+      expect(mocks.archiveTask).toHaveBeenCalledWith('T-1', false);
+    });
+
+    it('leaves the action out when the caller does not know the archive state', () => {
+      expect(findArchiveItem(undefined)).toBeUndefined();
+    });
   });
 
   it('copies the global task detail link in global route scope', async () => {

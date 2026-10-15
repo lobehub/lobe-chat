@@ -3,6 +3,8 @@ import { type ContextMenuItem, copyToClipboard, Icon, type MenuInfo } from '@lob
 import { confirmModal, toast } from '@lobehub/ui/base-ui';
 import { cssVar } from 'antd-style';
 import {
+  ArchiveIcon,
+  ArchiveRestoreIcon,
   BarChart3Icon,
   CircleDashedIcon,
   CopyIcon,
@@ -41,6 +43,8 @@ interface TaskItemContextMenu {
 }
 
 export interface TaskContextMenuTarget {
+  /** Omitted when the caller doesn't know it, which leaves the archive action out. */
+  archivedAt?: Date | string | null;
   assigneeAgentId?: string | null;
   assigneeUserId?: string | null;
   identifier: string;
@@ -70,6 +74,7 @@ export const useTaskContextMenuActions = (
   const updateTask = useTaskStore((s) => s.updateTask);
   const refreshTaskList = useTaskStore((s) => s.refreshTaskList);
   const deleteTask = useTaskStore((s) => s.deleteTask);
+  const archiveTask = useTaskStore((s) => s.archiveTask);
   const runTask = useTaskStore((s) => s.runTask);
   const inboxAgentId = useAgentStore(builtinAgentSelectors.inboxAgentId);
 
@@ -146,6 +151,34 @@ export const useTaskContextMenuActions = (
         activeWorkspaceSlug,
       )}`;
       const canRunNow = RUN_NOW_STATUSES.has(currentStatus);
+      const isArchived = !!task.archivedAt;
+      const archiveItems: NativeContextMenuItem[] =
+        task.archivedAt === undefined
+          ? []
+          : [
+              { type: 'divider' },
+              {
+                disabled: !canEditTask,
+                icon: <Icon icon={isArchived ? ArchiveRestoreIcon : ArchiveIcon} />,
+                key: 'archive',
+                label: t(
+                  isArchived ? 'taskList.contextMenu.unarchive' : 'taskList.contextMenu.archive',
+                ),
+                onClick: async ({ domEvent }: MenuInfo) => {
+                  domEvent.stopPropagation();
+                  if (!canEditTask) return;
+                  await archiveTask(task.identifier, !isArchived);
+                  toast.success(
+                    t(
+                      isArchived
+                        ? 'taskList.contextMenu.unarchiveSuccess'
+                        : 'taskList.contextMenu.archiveSuccess',
+                    ),
+                  );
+                },
+                sfSymbol: isArchived ? 'tray.and.arrow.up' : 'archivebox',
+              },
+            ];
 
       return [
         ...(canRunNow
@@ -211,6 +244,7 @@ export const useTaskContextMenuActions = (
           },
           sfSymbol: 'doc.on.doc',
         },
+        ...archiveItems,
         { type: 'divider' },
         {
           danger: true,
@@ -311,6 +345,7 @@ export const useTaskContextMenuActions = (
     updateTask,
     refreshTaskList,
     deleteTask,
+    archiveTask,
     runTask,
     inboxAgentId,
     routeScope,

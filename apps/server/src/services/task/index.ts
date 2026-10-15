@@ -44,6 +44,7 @@ import { TaskRunnerService } from '../taskRunner';
 import { createTaskSchedulerModule } from '../taskScheduler';
 import { resolveTaskAcceptance } from '../verify/taskAcceptance';
 import { collapseActivityLog } from './collapseActivityLog';
+import { projectTaskDetailState } from './detailProjection';
 import { resolveMissingTaskModelConfig } from './modelSnapshot';
 
 const emptyWorkspace: WorkspaceData = { nodeMap: {}, tree: [] };
@@ -1423,10 +1424,9 @@ export class TaskService {
     });
 
     const taskConfig = task.config ? (task.config as Record<string, unknown>) : undefined;
-    const taskContext = task.context ? (task.context as TaskContext) : undefined;
-    const scheduleConfig = (taskConfig?.schedule ?? {}) as { maxExecutions?: number | null };
 
     return {
+      ...projectTaskDetailState(task, taskConfig),
       agentId: task.assigneeAgentId,
       automationMode: task.automationMode ?? null,
       checkpoint: this.taskModel.getCheckpointConfig(task),
@@ -1446,29 +1446,12 @@ export class TaskService {
       error: task.error,
       goal: goal ?? null,
       files: taskFiles.length > 0 ? taskFiles : undefined,
-      heartbeat:
-        task.heartbeatInterval || task.heartbeatTimeout || task.lastHeartbeatAt
-          ? {
-              interval: task.heartbeatInterval,
-              lastAt: task.lastHeartbeatAt ? new Date(task.lastHeartbeatAt).toISOString() : null,
-              scheduledAt: taskContext?.scheduler?.scheduledAt,
-              timeout: task.heartbeatTimeout,
-            }
-          : undefined,
       id: task.id,
       identifier: task.identifier,
       instruction: task.instruction,
       name: task.name,
       parent,
       priority: task.priority,
-      schedule:
-        task.schedulePattern || task.scheduleTimezone || scheduleConfig.maxExecutions != null
-          ? {
-              maxExecutions: scheduleConfig.maxExecutions ?? null,
-              pattern: task.schedulePattern,
-              timezone: task.scheduleTimezone,
-            }
-          : undefined,
       startedAt: task.startedAt ? new Date(task.startedAt).toISOString() : undefined,
       status: task.status,
       userId: task.assigneeUserId,

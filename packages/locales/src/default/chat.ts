@@ -2822,6 +2822,7 @@ export default {
   'goalTurn.trigger.takeover': 'Takeover',
   'taskList.activeTasks': 'Active Tasks',
   'taskList.all': 'All tasks',
+  'taskList.archived': 'Archived',
   'taskList.visibility.all': 'All',
   'taskList.visibility.label': 'Visibility',
   'taskList.breadcrumb.task': 'Task',
@@ -2833,6 +2834,7 @@ export default {
   'taskList.form.nestedSubTasks': 'Nested sub-tasks',
   'taskList.form.orderCompletedByRecency': 'Sort completed tasks by recency',
   'taskList.form.ordering': 'Ordering',
+  'taskList.form.showArchived': 'Show archived',
   'taskList.form.showCompleted': 'Show completed & canceled',
   'taskList.form.showSubTasks': 'Show sub-tasks',
   'taskList.form.subGrouping': 'Sub-grouping',
@@ -2873,6 +2875,8 @@ export default {
   'taskList.assigneeSearch.placeholder': 'Search Assignee or Agent...',
   'taskList.assigneeSelector.agentGroup': 'Agents',
   'taskList.assigneeSelector.workspaceMemberGroup': 'Workspace members',
+  'taskList.contextMenu.archive': 'Archive',
+  'taskList.contextMenu.archiveSuccess': 'Task archived',
   'taskList.contextMenu.copyConfirm': 'Copy',
   'taskList.contextMenu.copyDescription':
     'Clone this task (and all its subtasks) into another workspace. Status resets to backlog.',
@@ -2896,6 +2900,8 @@ export default {
   'taskList.contextMenu.transferTo': 'Move to…',
   'taskList.contextMenu.transferWarning':
     'Cross-workspace references like assigned agent and active topic will be cleared.',
+  'taskList.contextMenu.unarchive': 'Unarchive',
+  'taskList.contextMenu.unarchiveSuccess': 'Task restored from archive',
   'taskList.kanban.addTask': 'Create task',
   'taskList.kanban.backlog': 'Backlog',
   'taskList.kanban.canceled': 'Canceled',

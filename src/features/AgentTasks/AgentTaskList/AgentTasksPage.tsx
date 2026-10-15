@@ -195,6 +195,8 @@ const AgentTasksPage = memo<AgentTasksPageProps>(({ agentId, projectId }) => {
   // gated off while it is up.
   const isBoardView = resolveTaskCollectionView(collection, viewMode) === 'board';
   const isMineBoard = isMineCollection && isBoardView;
+  const rawViewOptions = useGlobalStore(systemStatusSelectors.taskListViewOptions);
+  const viewOptions = useMemo(() => normalizeTaskListViewOptions(rawViewOptions), [rawViewOptions]);
   const useFetchTaskList = useTaskStore((s) => s.useFetchTaskList);
   // Keep the sync handle for `error` + `mutate` (the error/Retry state) and the
   // `queryKey` the rows are read by. Every scope splits automated work out of the ordinary tab — it is the
@@ -206,24 +208,17 @@ const AgentTasksPage = memo<AgentTasksPageProps>(({ agentId, projectId }) => {
   // gated to the ordinary tab; and the kanban view fetches its own server
   // groups, so there only the single page behind the empty-hero decision runs.
   const isListView = !isBoardView;
-  const { error, isLoading, mutate, queryKey } = useFetchTaskList(
-    projectId
-      ? {
-          automated: false,
-          complete: isListView,
-          enabled: isOrdinaryCollection,
-          projectId,
-          visibility: 'all',
-        }
+  const { error, isLoading, mutate, queryKey } = useFetchTaskList({
+    ...(projectId
+      ? { projectId, visibility: 'all' as const }
       : agentId
-        ? { agentId, automated: false, complete: isListView, enabled: isOrdinaryCollection }
-        : {
-            allAgents: true,
-            automated: false,
-            complete: isListView,
-            enabled: isOrdinaryCollection,
-          },
-  );
+        ? { agentId }
+        : { allAgents: true }),
+    automated: false,
+    complete: isListView,
+    enabled: isOrdinaryCollection,
+    includeArchived: viewOptions.showArchived,
+  });
   // Drive the loading/empty boundary off the store entry of this exact query:
   // each scope / visibility is its own entry, so the settled signal and the
   // rows always describe the same list (a persisted entry paints at once).
@@ -243,13 +238,12 @@ const AgentTasksPage = memo<AgentTasksPageProps>(({ agentId, projectId }) => {
     offset: (collectionPage - 1) * COLLECTION_PAGE_SIZE,
     projectId,
   });
-  const rawViewOptions = useGlobalStore(systemStatusSelectors.taskListViewOptions);
-  const viewOptions = useMemo(() => normalizeTaskListViewOptions(rawViewOptions), [rawViewOptions]);
   const useFetchMyTaskList = useTaskStore((s) => s.useFetchMyTaskList);
   const mineSWR = useFetchMyTaskList({
     enabled: isMineCollection && !isMineBoard,
     limit: COLLECTION_PAGE_SIZE,
     offset: (collectionPage - 1) * COLLECTION_PAGE_SIZE,
+    includeArchived: viewOptions.showArchived,
     scope: myTaskScope,
     statuses: getVisibleTaskStatuses(viewOptions),
   });

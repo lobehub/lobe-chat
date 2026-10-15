@@ -327,6 +327,8 @@ export interface TaskSubtaskProgress {
 
 export interface TaskItem {
   accessedAt: Date;
+  /** Set when the user archives the task; archived tasks are hidden from lists by default. */
+  archivedAt: Date | null;
   assigneeAgentId: string | null;
   assigneeUserId: string | null;
   automationMode: TaskAutomationMode | null;
@@ -376,6 +378,7 @@ export type TaskListItem = TaskItem & {
 
 export interface NewTask {
   accessedAt?: Date;
+  archivedAt?: Date | null;
   assigneeAgentId?: string | null;
   assigneeUserId?: string | null;
   automationMode?: TaskAutomationMode | null;
@@ -596,6 +599,8 @@ export interface TaskRunVerifySummary {
 export interface TaskDetailData {
   activities?: TaskDetailActivity[];
   agentId?: string | null;
+  /** ISO time the user archived the task; null when it is not archived. */
+  archivedAt?: string | null;
   // null/undefined = no automation configured
   automationMode?: TaskAutomationMode | null;
   checkpoint?: CheckpointConfig;

@@ -33,6 +33,8 @@ const activeTaskVisibility = (s: TaskStoreState): 'private' | 'public' =>
 
 const activeTaskCreatedByUserId = (s: TaskStoreState) => activeTaskDetail(s)?.createdByUserId;
 
+const activeTaskArchivedAt = (s: TaskStoreState) => activeTaskDetail(s)?.archivedAt;
+
 const activeTaskInstruction = (s: TaskStoreState) => activeTaskDetail(s)?.instruction;
 
 const activeTaskInstructionRevision = (s: TaskStoreState) =>
@@ -165,6 +167,7 @@ export const taskDetailSelectors = {
   activeTaskAssigneeUserId,
   activeTaskAutomationMode,
   activeTaskCheckpoint,
+  activeTaskArchivedAt,
   activeTaskCreatedByUserId,
   activeTaskDatabaseId,
   activeTaskModel,
