@@ -17,8 +17,10 @@ import {
   normalizeResponsesRequest,
   SERVER_DEFAULT_MODEL_ALIAS,
 } from '../services/heterogeneous-direct.service';
+import { heterogeneousChatCompletionsRoutes } from './heterogeneous-chat-completions.route';
 
 const app = new Hono();
+app.route('/', heterogeneousChatCompletionsRoutes);
 
 app.post('/v1/responses', requireHeteroModelInvocation('openai-responses'), async (c) => {
   const request = await c.req.json().catch(() => null);
