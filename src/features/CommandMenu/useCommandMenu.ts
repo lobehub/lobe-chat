@@ -213,6 +213,8 @@ export const useCommandMenu = () => {
       onCreated: (task) => {
         navigate(taskDetailPath(task.identifier, undefined, task.name));
       },
+      // The inline composer only mounts in task views; from the command menu it would drop the draft.
+      showInlineToggle: false,
     });
   }, [canCreate, onClose, navigate]);
 
