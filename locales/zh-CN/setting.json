@@ -3143,6 +3143,7 @@
   "workspace.onboarding.flow.starterTasks.description": "把这些任务交给团队助手，在 Workspace 里就能看到它逐项推进。",
   "workspace.onboarding.flow.starterTasks.empty": "暂时没有推荐的任务，可以直接完成设置。",
   "workspace.onboarding.flow.starterTasks.highlight": "帮团队省下重复的同步工作。",
+  "workspace.onboarding.flow.starterTasks.partialFailed": "{{count}} 项任务没能添加，请重试。",
   "workspace.onboarding.flow.starterTasks.quote": "我会推荐一些任务，",
   "workspace.onboarding.flow.starterTasks.title": "团队的第一批任务",
   "workspace.onboarding.flow.summary.maxSeats": "最多 {{count}} 位成员",

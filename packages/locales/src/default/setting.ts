@@ -3589,6 +3589,8 @@ When I am ___, I need ___
   'workspace.onboarding.flow.starterTasks.empty':
     'No suggested tasks yet. You can finish setup now.',
   'workspace.onboarding.flow.starterTasks.addFailed': "Couldn't add the tasks. Please try again.",
+  'workspace.onboarding.flow.starterTasks.partialFailed':
+    "{{count}} tasks couldn't be added. Try again.",
   'workspace.onboarding.flow.channels.title': "Bring the assistant into your team's chats",
   'workspace.onboarding.flow.channels.description':
     'Connect a bot your team owns to {{name}}. Everyone in the group can @{{name}} to hand off work — nobody has to link an account.',

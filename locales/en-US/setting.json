@@ -3143,6 +3143,7 @@
   "workspace.onboarding.flow.starterTasks.description": "Hand these tasks to the team assistant and watch it work through them in the workspace.",
   "workspace.onboarding.flow.starterTasks.empty": "No suggested tasks yet. You can finish setup now.",
   "workspace.onboarding.flow.starterTasks.highlight": "to save your team repetitive sync work.",
+  "workspace.onboarding.flow.starterTasks.partialFailed": "{{count}} tasks couldn't be added. Try again.",
   "workspace.onboarding.flow.starterTasks.quote": "I'll suggest a few tasks",
   "workspace.onboarding.flow.starterTasks.title": "Your team's first tasks",
   "workspace.onboarding.flow.summary.maxSeats": "Up to {{count}} members",
