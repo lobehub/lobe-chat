@@ -13,7 +13,9 @@ import type { ComputerUseDevice } from '../tools/computerUse';
  * opt-in tools this device can run; the server refuses those tools on a
  * device that does not list them.
  */
-export function collectSystemInfo(computerUse?: ComputerUseDevice): DeviceSystemInfo {
+export async function collectSystemInfo(
+  computerUse?: ComputerUseDevice,
+): Promise<DeviceSystemInfo> {
   const home = os.homedir();
   const platform = process.platform;
   const videosDir = platform === 'linux' ? 'Videos' : 'Movies';
@@ -21,7 +23,7 @@ export function collectSystemInfo(computerUse?: ComputerUseDevice): DeviceSystem
   return {
     arch: os.arch(),
     // Tell the server-side prompt builder which shell runCommand spawns here.
-    defaultShell: getShellInfo().displayName,
+    defaultShell: (await getShellInfo()).displayName,
     desktopPath: path.join(home, 'Desktop'),
     documentsPath: path.join(home, 'Documents'),
     downloadsPath: path.join(home, 'Downloads'),

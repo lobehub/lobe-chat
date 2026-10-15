@@ -971,9 +971,9 @@ function bindGatewayClientHandlers(
     ctx;
 
   // Handle system info requests
-  client.on('system_info_request', (request: SystemInfoRequestMessage) => {
+  client.on('system_info_request', async (request: SystemInfoRequestMessage) => {
     info(`Received system_info_request: requestId=${request.requestId}`);
-    const systemInfo = collectSystemInfo(computerUse);
+    const systemInfo = await collectSystemInfo(computerUse);
     client.sendSystemInfoResponse({
       requestId: request.requestId,
       result: { success: true, systemInfo },

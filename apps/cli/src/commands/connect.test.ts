@@ -385,7 +385,7 @@ describe('connect command', () => {
     const program = createProgram();
     await program.parseAsync(['node', 'test', 'connect']);
 
-    clientEventHandlers['system_info_request']?.({
+    await clientEventHandlers['system_info_request']?.({
       requestId: 'req-2',
       type: 'system_info_request',
     });
@@ -395,6 +395,8 @@ describe('connect command', () => {
     expect(lastSentSystemInfoResponse.result.success).toBe(true);
     expect(lastSentSystemInfoResponse.result.systemInfo).toHaveProperty('homePath');
     expect(lastSentSystemInfoResponse.result.systemInfo).toHaveProperty('arch');
+    // `getShellInfo` is async; reading `displayName` off the promise sent nothing.
+    expect(lastSentSystemInfoResponse.result.systemInfo.defaultShell).toEqual(expect.any(String));
   });
 
   it('should handle auth_failed', async () => {
@@ -587,7 +589,7 @@ describe('connect command', () => {
     const program = createProgram();
     await program.parseAsync(['node', 'test', 'connect']);
 
-    clientEventHandlers['system_info_request']?.({
+    await clientEventHandlers['system_info_request']?.({
       requestId: 'req-3',
       type: 'system_info_request',
     });
@@ -629,7 +631,10 @@ describe('connect command', () => {
     it('advertises Computer Use and runs it with the given binary', async () => {
       await createProgram().parseAsync(['node', 'test', 'connect', '--auv', auvBinary]);
 
-      clientEventHandlers['system_info_request']?.({ requestId: 'r', type: 'system_info_request' });
+      await clientEventHandlers['system_info_request']?.({
+        requestId: 'r',
+        type: 'system_info_request',
+      });
       expect(lastSentSystemInfoResponse.result.systemInfo.supportedTools).toEqual([
         'lobe-computer-use',
       ]);
@@ -646,7 +651,10 @@ describe('connect command', () => {
     it('does not advertise or run Computer Use without --auv', async () => {
       await createProgram().parseAsync(['node', 'test', 'connect']);
 
-      clientEventHandlers['system_info_request']?.({ requestId: 'r', type: 'system_info_request' });
+      await clientEventHandlers['system_info_request']?.({
+        requestId: 'r',
+        type: 'system_info_request',
+      });
       expect(lastSentSystemInfoResponse.result.systemInfo).not.toHaveProperty('supportedTools');
 
       await clientEventHandlers['tool_call_request']?.(computerUseCall);
