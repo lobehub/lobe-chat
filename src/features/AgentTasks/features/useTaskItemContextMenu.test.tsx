@@ -169,6 +169,21 @@ describe('useTaskItemContextMenu', () => {
       expect(mocks.toastInfo).toHaveBeenCalledWith('taskList.contextMenu.archiveBlocked');
     });
 
+    it('offers no Run now on an archived task', () => {
+      const { result } = renderHook(() =>
+        useTaskItemContextMenu({
+          archivedAt: new Date(),
+          identifier: 'T-1',
+          priority: 0,
+          status: 'backlog',
+        }),
+      );
+      const keys = result.current.items.map((entry) =>
+        entry && typeof entry === 'object' && 'key' in entry ? entry.key : undefined,
+      );
+      expect(keys).not.toContain('runNow');
+    });
+
     it('leaves the action out when the caller does not know the archive state', () => {
       expect(findArchiveItem(undefined)).toBeUndefined();
     });

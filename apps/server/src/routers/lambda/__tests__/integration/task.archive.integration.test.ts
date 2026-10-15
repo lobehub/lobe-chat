@@ -90,6 +90,17 @@ describe('Task Router archive', () => {
     expect(restored.data.archivedAt).toBeNull();
   });
 
+  it('refuses to run an archived task until it is restored', async () => {
+    const created = await caller.create({ instruction: 'Ship the weekly report' });
+    await caller.archive({ archived: true, id: created.data.id });
+
+    await expect(caller.run({ id: created.data.id })).rejects.toMatchObject({
+      code: 'PRECONDITION_FAILED',
+    });
+    const [stored] = (await caller.list({ includeArchived: true })).data;
+    expect(stored.status).toBe('backlog');
+  });
+
   it('rejects an unknown task', async () => {
     await expect(caller.archive({ archived: true, id: 'T-404' })).rejects.toMatchObject({
       code: 'NOT_FOUND',

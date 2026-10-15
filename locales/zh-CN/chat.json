@@ -2394,6 +2394,7 @@
   "taskList.contextMenu.copyTitle": "复制任务",
   "taskList.contextMenu.copyTo": "复制到…",
   "taskList.contextMenu.priority": "优先级",
+  "taskList.contextMenu.runArchivedBlocked": "请先取消归档，再运行此任务",
   "taskList.contextMenu.runNow": "立即运行",
   "taskList.contextMenu.status": "状态",
   "taskList.contextMenu.transferConfirm": "移动",

@@ -119,6 +119,14 @@ export class TaskRunnerService {
     if (!task) {
       throw new TRPCError({ code: 'NOT_FOUND', message: 'Task not found' });
     }
+    // Archived tasks are hidden from every list, so a run would go unseen.
+    // Every execution path (manual, tick, dependency unlock, goal) lands here.
+    if (task.archivedAt) {
+      throw new TRPCError({
+        code: 'PRECONDITION_FAILED',
+        message: 'Restore this archived task before running it',
+      });
+    }
 
     // Track whether *this* invocation transitioned the task to 'running'. The
     // catch-block rollback must only fire when we own the running state —

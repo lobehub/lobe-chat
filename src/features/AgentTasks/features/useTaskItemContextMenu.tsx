@@ -154,7 +154,8 @@ export const useTaskContextMenuActions = (
         ),
         activeWorkspaceSlug,
       )}`;
-      const canRunNow = RUN_NOW_STATUSES.has(currentStatus);
+      // An archived task must be restored first; the runner refuses it.
+      const canRunNow = RUN_NOW_STATUSES.has(currentStatus) && !task.archivedAt;
       const isArchived = !!task.archivedAt;
       const archiveItems: NativeContextMenuItem[] =
         task.archivedAt === undefined

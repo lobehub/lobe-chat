@@ -2891,6 +2891,7 @@ export default {
   'taskList.contextMenu.copyTitle': 'Copy task',
   'taskList.contextMenu.copyTo': 'Copy to…',
   'taskList.contextMenu.priority': 'Priority',
+  'taskList.contextMenu.runArchivedBlocked': 'Unarchive this task before running it',
   'taskList.contextMenu.runNow': 'Run now',
   'taskList.contextMenu.status': 'Status',
   'taskList.contextMenu.transferConfirm': 'Move',
