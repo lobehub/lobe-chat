@@ -6,13 +6,12 @@ import type { HeterogeneousReasoningEffort } from '../agent/heteroSelectorCapabi
 import type { SerializedAgentHook } from '../agentHook';
 import type { WorkingDirConfig } from '../device';
 import { workingDirConfigSchema } from '../device';
+import type { BotSenderMetadata } from '../message';
 import type { BaseDataModel } from '../meta';
 import type { OnboardingUnderstandingSession } from '../understanding';
 import type { OnboardingTaskRecommendationSession } from '../user/onboardingTasks';
 
-// Type definitions
 export type ShareVisibility = 'private' | 'link';
-
 export type TimeGroupId =
   'today' | 'yesterday' | 'week' | 'month' | `${number}-${string}` | `${number}`;
 
@@ -122,6 +121,7 @@ export interface ChatTopicMetadata {
   };
 
   bot?: ChatTopicBotContext;
+  botCreator?: BotSenderMetadata | null;
   boundDeviceId?: string;
   cronJobId?: string;
   /**

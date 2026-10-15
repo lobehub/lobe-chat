@@ -337,8 +337,7 @@ export default {
     'Your {{plan}} subscription has been upgraded successfully. Enjoy AI chatting. Your current plan includes:',
   'limitation.chat.success.title': 'Upgrade Successful',
   'limitation.chat.topupSuccess.action': 'Continue Chatting',
-  'limitation.chat.topupSuccess.desc':
-    'Your top-up credits are now active. Enjoy AI chatting. Your current plan includes:',
+  'limitation.chat.topupSuccess.desc': 'Your top-up credits are now active. Enjoy AI chatting.',
   'limitation.chat.topupSuccess.title': 'Top-up Successful',
   'limitation.expired.desc':
     'Your {{plan}} credits expired on {{expiredAt}}. Upgrade your plan now to get credits.',
@@ -401,7 +400,7 @@ export default {
   'limitation.image.success.title': 'Upgrade Successful',
   'limitation.image.topupSuccess.action': 'Continue Generating',
   'limitation.image.topupSuccess.desc':
-    'Your top-up credits are now active. Enjoy AI image generation. Your current plan includes:',
+    'Your top-up credits are now active. Enjoy AI image generation.',
   'limitation.image.topupSuccess.title': 'Top-up Successful',
   'limitation.video.budgetReady.action': 'Continue Generating',
   'limitation.video.budgetReady.desc': 'Your available credits now cover this generation.',
@@ -412,7 +411,7 @@ export default {
   'limitation.video.success.title': 'Upgrade Successful',
   'limitation.video.topupSuccess.action': 'Continue Generating',
   'limitation.video.topupSuccess.desc':
-    'Your top-up credits are now active. Enjoy AI video generation. Your current plan includes:',
+    'Your top-up credits are now active. Enjoy AI video generation.',
   'limitation.video.topupSuccess.title': 'Top-up Successful',
   'limitation.limited.action': 'Upgrade Now',
   'limitation.limited.advanceFeature': 'Upgrade to enjoy premium features:',

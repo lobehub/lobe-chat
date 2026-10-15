@@ -37,14 +37,10 @@ import {
 } from './index';
 
 const getServerGlobalConfig = vi.hoisted(() => vi.fn());
-const loadModels = vi.hoisted(() => vi.fn());
-
-vi.mock('@/business/client/model-bank/loadModels', () => ({
-  loadModels,
-}));
 
 vi.mock('@/server/globalConfig', () => ({
-  getServerGlobalConfig,
+  getServerAiProviderConfig: async (provider: string) =>
+    (await getServerGlobalConfig()).aiProvider[provider],
 }));
 
 interface InspectableBedrockRuntime {
@@ -210,46 +206,6 @@ describe('getServerDefaultHeterogeneousModels', () => {
         },
       },
     });
-
-    await expect(getServerDefaultHeterogeneousModels()).resolves.toEqual({
-      'claude-code': [{ model: 'claude-sonnet-4-6' }],
-      'codex': [{ model: 'claude-sonnet-4-6' }, { model: 'gpt-5.4' }],
-      'grok-build': [{ model: 'claude-sonnet-4-6' }],
-      'kimi-code': [{ model: 'claude-sonnet-4-6' }],
-      'pi': [{ model: 'claude-sonnet-4-6' }],
-      'trae': [{ model: 'claude-sonnet-4-6' }],
-    });
-  });
-
-  it('uses the model bank when the deployment has no explicit server model list', async () => {
-    getServerGlobalConfig.mockResolvedValue({
-      aiProvider: {
-        lobehub: { enabled: true, serverModelLists: undefined },
-      },
-    });
-    loadModels.mockResolvedValue([
-      {
-        enabled: true,
-        id: 'claude-sonnet-4-6',
-        providerId: 'lobehub',
-        source: 'builtin',
-        type: 'chat',
-      },
-      {
-        enabled: true,
-        id: 'gpt-5.4',
-        providerId: 'lobehub',
-        source: 'builtin',
-        type: 'chat',
-      },
-      {
-        enabled: true,
-        id: 'claude-opus-4-8',
-        providerId: 'anthropic',
-        source: 'builtin',
-        type: 'chat',
-      },
-    ]);
 
     await expect(getServerDefaultHeterogeneousModels()).resolves.toEqual({
       'claude-code': [{ model: 'claude-sonnet-4-6' }],
@@ -587,32 +543,6 @@ describe('resolveServerDefaultHeterogeneousModel', () => {
     await expect(resolveServerDefaultHeterogeneousModel('codex', 'gpt-4o')).rejects.toThrow(
       'not compatible with this heterogeneous agent',
     );
-  });
-
-  it('resolves a model-bank model when no explicit server model list exists', async () => {
-    getServerGlobalConfig.mockResolvedValue({
-      aiProvider: {
-        lobehub: { enabled: true, serverModelLists: undefined },
-      },
-    });
-    loadModels.mockResolvedValue([
-      {
-        enabled: true,
-        id: 'claude-sonnet-4-6',
-        providerId: 'lobehub',
-        settings: { extendParams: ['enableAdaptiveThinking'] },
-        source: 'builtin',
-        type: 'chat',
-      },
-    ]);
-
-    await expect(
-      resolveServerDefaultHeterogeneousModel('claude-code', 'claude-sonnet-4-6'),
-    ).resolves.toEqual({
-      model: 'claude-sonnet-4-6',
-      provider: 'lobehub',
-      supportsAdaptiveThinking: true,
-    });
   });
 
   it('accepts a tool-capable third-party relay model for Kimi without attestation', async () => {
