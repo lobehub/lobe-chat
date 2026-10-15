@@ -13,15 +13,16 @@ import {
   truncate,
 } from '../../utils/format';
 import { log } from '../../utils/logger';
-import { resolveAssigneeUserId } from './assignee';
 import { registerCheckpointCommands } from './checkpoint';
 import { registerDepCommands } from './dep';
 import { registerDocCommands } from './doc';
 import { briefIcon, priorityLabel, statusBadge } from './helpers';
 import { registerLifecycleCommands } from './lifecycle';
 import { registerReviewCommands } from './review';
+import { formatSchedule } from './schedule';
 import { registerTopicCommands } from './topic';
-import { resolveAppUrl, resolveAppUrlBuilder, taskPath } from './url';
+import { resolveAppUrl, taskPath } from './url';
+import { registerWriteCommands } from './write';
 
 export function registerTaskCommand(program: Command) {
   const task = program.command('task').description('Manage agent tasks');
@@ -297,6 +298,8 @@ export function registerTaskCommand(program: Command) {
           `${pc.dim('Heartbeat:')} ${isStuck ? pc.red(hb) : hb}  ${pc.dim('interval:')} ${interval}  ${pc.dim('timeout:')} ${t.heartbeat.timeout}s${isStuck ? pc.red('  ⚠ TIMEOUT') : ''}`,
         );
       }
+      const scheduleSummary = formatSchedule(t);
+      if (scheduleSummary) console.log(`${pc.dim('Schedule:')} ${scheduleSummary}`);
       if (t.error) console.log(`${pc.red('Error:')} ${t.error}`);
 
       // ── Subtasks (nested tree) ──
@@ -516,137 +519,9 @@ export function registerTaskCommand(program: Command) {
       console.log();
     });
 
-  // ── create ──────────────────────────────────────────────
+  // ── create / edit (write.ts) ──────────────────────────
 
-  task
-    .command('create')
-    .description('Create a new task')
-    .requiredOption('-i, --instruction <text>', 'Task instruction')
-    .option('-n, --name <name>', 'Task name')
-    .option('--agent <id>', 'Assign to agent')
-    .option('--user <idOrEmail>', 'Assign to a workspace member (user id, email or username)')
-    .option('--parent <id>', 'Parent task ID')
-    .option('--priority <n>', 'Priority (0=none, 1=urgent, 2=high, 3=normal, 4=low)', '0')
-    .option('--json [fields]', 'Output JSON')
-    .action(
-      async (options: {
-        agent?: string;
-        instruction: string;
-        json?: string | boolean;
-        name?: string;
-        parent?: string;
-        priority?: string;
-        user?: string;
-      }) => {
-        const client = await getTrpcClient();
-        const buildUrl = await resolveAppUrlBuilder(client);
-        const assigneeUserId = await resolveUserOption(client, options.user);
-        if (assigneeUserId === false) return;
-
-        const input: Parameters<typeof client.task.create.mutate>[0] = {
-          instruction: options.instruction,
-        };
-        if (options.name) input.name = options.name;
-        if (options.agent) input.assigneeAgentId = options.agent;
-        if (assigneeUserId) input.assigneeUserId = assigneeUserId;
-        if (options.parent) input.parentTaskId = options.parent;
-        if (options.priority) input.priority = Number.parseInt(options.priority, 10);
-
-        const result = await client.task.create.mutate(input);
-        const url = buildUrl(taskPath(result.data.identifier, result.data.name));
-
-        if (options.json !== undefined) {
-          outputJson({ ...result.data, url }, options.json);
-          return;
-        }
-
-        log.info(`Task created: ${pc.bold(result.data.identifier)} ${result.data.name || ''}`);
-        console.log(`${pc.bold('task')}: ${url}`);
-      },
-    );
-
-  // ── edit ──────────────────────────────────────────────
-
-  task
-    .command('edit <id>')
-    .description('Update a task')
-    .option('-n, --name <name>', 'Task name')
-    .option('-i, --instruction <text>', 'Task instruction')
-    .option('--agent <id>', 'Assign to agent')
-    .option('--user <idOrEmail>', 'Assign to a workspace member (user id, email or username)')
-    .option('--priority <n>', 'Priority (0-4)')
-    .option('--heartbeat-interval <n>', 'Heartbeat interval in seconds')
-    .option('--heartbeat-timeout <n>', 'Heartbeat timeout in seconds (0 to disable)')
-    .option('--description <text>', 'Task description')
-    .option(
-      '--status <status>',
-      'Set status (backlog, running, paused, completed, failed, canceled)',
-    )
-    .option('--json [fields]', 'Output JSON')
-    .action(
-      async (
-        id: string,
-        options: {
-          agent?: string;
-          description?: string;
-          heartbeatInterval?: string;
-          heartbeatTimeout?: string;
-          instruction?: string;
-          json?: string | boolean;
-          name?: string;
-          priority?: string;
-          status?: string;
-          user?: string;
-        },
-      ) => {
-        const client = await getTrpcClient();
-        const assigneeUserId = await resolveUserOption(client, options.user);
-        if (assigneeUserId === false) return;
-
-        const input: Record<string, any> = { id };
-        if (options.name) input.name = options.name;
-        if (options.instruction) input.instruction = options.instruction;
-        if (options.description) input.description = options.description;
-        if (options.agent) input.assigneeAgentId = options.agent;
-        if (assigneeUserId) input.assigneeUserId = assigneeUserId;
-        if (options.priority) input.priority = Number.parseInt(options.priority, 10);
-        if (options.heartbeatInterval)
-          input.heartbeatInterval = Number.parseInt(options.heartbeatInterval, 10);
-        if (options.heartbeatTimeout !== undefined) {
-          const val = Number.parseInt(options.heartbeatTimeout, 10);
-          input.heartbeatTimeout = val === 0 ? null : val;
-        }
-        const hasFieldEdits = Object.keys(input).length > 1;
-
-        // Status-only edits use the lifecycle API. Combined edits go through
-        // task.update so the server can apply the fields and lifecycle change
-        // atomically.
-        if (options.status) {
-          const valid = ['backlog', 'running', 'paused', 'completed', 'failed', 'canceled'];
-          if (!valid.includes(options.status)) {
-            log.error(`Invalid status "${options.status}". Must be one of: ${valid.join(', ')}`);
-            return;
-          }
-          if (!hasFieldEdits) {
-            const result = await client.task.updateStatus.mutate({ id, status: options.status });
-            log.info(`${pc.bold(result.data.identifier)} → ${options.status}`);
-            return;
-          }
-
-          input.status = options.status;
-        }
-
-        const result = await client.task.update.mutate(input as any);
-
-        if (options.json !== undefined) {
-          outputJson(result.data, typeof options.json === 'string' ? options.json : undefined);
-          return;
-        }
-
-        const statusSuffix = options.status ? ` → ${options.status}` : '';
-        log.info(`Task updated: ${pc.bold(result.data.identifier)}${statusSuffix}`);
-      },
-    );
+  registerWriteCommands(task);
 
   // ── delete ──────────────────────────────────────────────
 
@@ -768,21 +643,3 @@ export function registerTaskCommand(program: Command) {
   registerTopicCommands(task);
   registerDocCommands(task);
 }
-
-/**
- * `undefined` = flag not passed; `false` = resolution failed and was reported,
- * so the caller should stop without sending a half-applied edit.
- */
-const resolveUserOption = async (
-  client: Awaited<ReturnType<typeof getTrpcClient>>,
-  value: string | undefined,
-): Promise<string | undefined | false> => {
-  if (!value) return undefined;
-  try {
-    return await resolveAssigneeUserId(client, value);
-  } catch (error) {
-    log.error((error as Error).message);
-    process.exitCode = 1;
-    return false;
-  }
-};
