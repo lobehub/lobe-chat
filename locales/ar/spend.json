@@ -93,9 +93,7 @@
   "usageStats.chart.spend": "التكلفة",
   "usageStats.chart.title": "وقت إنفاق هذا الوكيل",
   "usageStats.chart.tokens": "الرمز",
-  "usageStats.dimension": "البُعد",
   "usageStats.entry": "الإحصائيات",
-  "usageStats.range": "النطاق الزمني",
   "usageStats.rangeSuffix": "آخر {{count}} يوم",
   "usageStats.title": "الإحصائيات"
 }

@@ -66,12 +66,14 @@ const AgentProfileTabs = memo<AgentProfileTabsProps>(({ active, agentId }) => {
   const canManageShare =
     !!isAgentEditable && isAccessResolved && canEditContent && canManageResource;
   const { visible: shareVisible } = useAgentShareSupported(agentId);
+  const isHeterogeneous = useAgentStore(agentByIdSelectors.isAgentHeterogeneousById(agentId));
 
   const options = useMemo(
     () =>
       buildAgentProfileTabOptions({
         active,
         canConfigure,
+        isHeterogeneous,
         labels: {
           channel: t('tab.integration'),
           // Inside the profile group the whole surface *is* the agent profile,
@@ -83,7 +85,7 @@ const AgentProfileTabs = memo<AgentProfileTabsProps>(({ active, agentId }) => {
         },
         shareSupported: shareVisible === true && canManageShare,
       }),
-    [active, canConfigure, canManageShare, shareVisible, t],
+    [active, canConfigure, canManageShare, isHeterogeneous, shareVisible, t],
   );
 
   // A lone segment is a label, not a switcher.

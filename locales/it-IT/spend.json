@@ -93,9 +93,7 @@
   "usageStats.chart.spend": "Costo",
   "usageStats.chart.title": "Quando questo agente ha speso",
   "usageStats.chart.tokens": "Token",
-  "usageStats.dimension": "Dimensione",
   "usageStats.entry": "Statistiche",
-  "usageStats.range": "Intervallo di tempo",
   "usageStats.rangeSuffix": "Ultimi {{count}}g",
   "usageStats.title": "Statistiche"
 }

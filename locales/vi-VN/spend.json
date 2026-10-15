@@ -93,9 +93,7 @@
   "usageStats.chart.spend": "Chi phí",
   "usageStats.chart.title": "Khi tác nhân này đã chi tiêu",
   "usageStats.chart.tokens": "Token",
-  "usageStats.dimension": "Kích thước",
   "usageStats.entry": "Thống kê",
-  "usageStats.range": "Khoảng thời gian",
   "usageStats.rangeSuffix": "{{count}} ngày qua",
   "usageStats.title": "Thống kê"
 }

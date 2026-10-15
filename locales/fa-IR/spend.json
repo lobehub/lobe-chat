@@ -93,9 +93,7 @@
   "usageStats.chart.spend": "هزینه",
   "usageStats.chart.title": "زمانی که این عامل هزینه کرد",
   "usageStats.chart.tokens": "توکن",
-  "usageStats.dimension": "بُعد",
   "usageStats.entry": "آمار",
-  "usageStats.range": "بازه زمانی",
   "usageStats.rangeSuffix": "{{count}} روز گذشته",
   "usageStats.title": "آمار"
 }

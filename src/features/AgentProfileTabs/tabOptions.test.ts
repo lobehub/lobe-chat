@@ -20,6 +20,7 @@ describe('buildAgentProfileTabOptions', () => {
     const options = buildAgentProfileTabOptions({
       active: 'profile',
       canConfigure: true,
+      isHeterogeneous: false,
       labels,
       shareSupported: true,
     });
@@ -36,6 +37,7 @@ describe('buildAgentProfileTabOptions', () => {
     const options = buildAgentProfileTabOptions({
       active: 'profile',
       canConfigure: true,
+      isHeterogeneous: false,
       labels,
       shareSupported: false,
     });
@@ -47,6 +49,7 @@ describe('buildAgentProfileTabOptions', () => {
     const options = buildAgentProfileTabOptions({
       active: 'statistics',
       canConfigure: false,
+      isHeterogeneous: false,
       labels,
       shareSupported: true,
     });
@@ -58,6 +61,7 @@ describe('buildAgentProfileTabOptions', () => {
     const options = buildAgentProfileTabOptions({
       active: 'channel',
       canConfigure: false,
+      isHeterogeneous: false,
       labels,
       shareSupported: false,
     });
@@ -69,8 +73,21 @@ describe('buildAgentProfileTabOptions', () => {
     const options = buildAgentProfileTabOptions({
       active: 'profile',
       canConfigure: true,
+      isHeterogeneous: false,
       labels,
       shareSupported: false,
+    });
+
+    expect(options.map((option) => option.value)).toEqual(['profile', 'channel', 'statistics']);
+  });
+
+  it('drops share for a heterogeneous agent even when sharing is supported', () => {
+    const options = buildAgentProfileTabOptions({
+      active: 'statistics',
+      canConfigure: true,
+      isHeterogeneous: true,
+      labels,
+      shareSupported: true,
     });
 
     expect(options.map((option) => option.value)).toEqual(['profile', 'channel', 'statistics']);
@@ -80,6 +97,7 @@ describe('buildAgentProfileTabOptions', () => {
     const options = buildAgentProfileTabOptions({
       active: 'share',
       canConfigure: false,
+      isHeterogeneous: false,
       labels,
       shareSupported: false,
     });

@@ -25,11 +25,14 @@ export const buildAgentProfileTabPath = (agentId: string, tab: AgentProfileTab) 
 export const buildAgentProfileTabOptions = ({
   active,
   canConfigure,
+  isHeterogeneous,
   labels,
   shareSupported,
 }: {
   active: AgentProfileTab;
   canConfigure: boolean;
+  /** Driven by an external runtime (e.g. Claude Code), which visitors can't run. */
+  isHeterogeneous: boolean;
   labels: Record<AgentProfileTab, string>;
   shareSupported: boolean;
 }): AgentProfileTabOption[] => {
@@ -39,7 +42,8 @@ export const buildAgentProfileTabOptions = ({
   // Sharing hands visitors real execution on the owner's account, so the
   // segment follows the same configure gate as Profile / Channels on top of the
   // capability gate (personal, non-builtin agents on deployments that allow it).
-  const showShare = (canConfigure && shareSupported) || active === 'share';
+  // Heterogeneous agents execute on the owner's own runtime, so they are never shareable.
+  const showShare = (canConfigure && shareSupported && !isHeterogeneous) || active === 'share';
 
   return [
     showProfile ? { label: labels.profile, value: 'profile' as const } : null,

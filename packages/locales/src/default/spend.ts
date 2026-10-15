@@ -94,9 +94,7 @@ export default {
   'usageStats.chart.spend': 'Cost',
   'usageStats.chart.title': 'Usage over time',
   'usageStats.chart.tokens': 'Token',
-  'usageStats.dimension': 'Dimension',
   'usageStats.entry': 'Statistics',
-  'usageStats.range': 'Time range',
   'usageStats.rangeSuffix': 'Last {{count}}d',
   'usageStats.title': 'Statistics',
 };

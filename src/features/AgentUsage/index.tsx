@@ -1,7 +1,7 @@
 'use client';
 
 import { Block, Flexbox } from '@lobehub/ui';
-import { Segmented, Text } from '@lobehub/ui/base-ui';
+import { Segmented } from '@lobehub/ui/base-ui';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -87,42 +87,33 @@ const AgentUsage = memo(() => {
           <Flexbox gap={16} paddingBlock={16}>
             <Block gap={16} padding={20} variant={'outlined'}>
               <Flexbox horizontal align={'center'} gap={16} justify={'space-between'} wrap={'wrap'}>
-                <Flexbox horizontal align={'center'} gap={8}>
-                  <Text fontSize={13} type={'secondary'}>
-                    {t('usageStats.dimension')}
-                  </Text>
-                  <Segmented
-                    size={'small'}
-                    value={granularity}
-                    options={[
-                      { label: t('usageStats.byDay'), value: 'day' },
-                      { label: t('usageStats.byWeek'), value: 'week' },
-                    ]}
-                    onChange={(v) => handleGranularityChange(v as AgentUsageGranularity)}
-                  />
-                </Flexbox>
-                <Flexbox horizontal align={'center'} gap={8}>
-                  <Text fontSize={13} type={'secondary'}>
-                    {t('usageStats.range')}
-                  </Text>
-                  <Segmented
-                    size={'small'}
-                    value={range}
-                    options={
-                      granularity === 'week'
-                        ? [
-                            { label: '30d', value: '30d' },
-                            { label: '90d', value: '90d' },
-                          ]
-                        : [
-                            { label: '7d', value: '7d' },
-                            { label: '30d', value: '30d' },
-                            { label: '90d', value: '90d' },
-                          ]
-                    }
-                    onChange={(v) => setRange(v as TimeRange)}
-                  />
-                </Flexbox>
+                {/* The option labels (By day / 7d …) name their own axis, so no caption. */}
+                <Segmented
+                  size={'small'}
+                  value={granularity}
+                  options={[
+                    { label: t('usageStats.byDay'), value: 'day' },
+                    { label: t('usageStats.byWeek'), value: 'week' },
+                  ]}
+                  onChange={(v) => handleGranularityChange(v as AgentUsageGranularity)}
+                />
+                <Segmented
+                  size={'small'}
+                  value={range}
+                  options={
+                    granularity === 'week'
+                      ? [
+                          { label: '30d', value: '30d' },
+                          { label: '90d', value: '90d' },
+                        ]
+                      : [
+                          { label: '7d', value: '7d' },
+                          { label: '30d', value: '30d' },
+                          { label: '90d', value: '90d' },
+                        ]
+                  }
+                  onChange={(v) => setRange(v as TimeRange)}
+                />
               </Flexbox>
               {showError ? (
                 <AsyncError error={error} variant={'metric'} onRetry={() => mutate()} />

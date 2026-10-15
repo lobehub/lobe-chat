@@ -373,6 +373,15 @@ describe('Agent profile Header', () => {
       expect(screen.getByTestId('share-entry-icon')).toBeInTheDocument();
     });
 
+    it('offers no share entry for a heterogeneous agent', () => {
+      mocks.shareSupport = { publishable: true, supported: true, visible: true };
+      mocks.agentState.isCurrentAgentHeterogeneous = true;
+
+      render(<Header />);
+
+      expect(screen.queryByTestId('share-entry-icon')).toBeNull();
+    });
+
     // Share settings are a sibling tab of the profile group, so the entry
     // navigates instead of opening a modal.
     it('navigates to the share tab', () => {
