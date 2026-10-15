@@ -4216,6 +4216,9 @@ export const aiAgentRouter = router({
     )
     .mutation(async ({ ctx, input }) => {
       const controlled = await ctx.agentRuntimeService.controlCompletedToolResult({
+        // preserveUsage: keep the child's cost/tokens when a hook denies the
+        // result (same contract as the server sub-agent/group bridges).
+        preserveUsage: true,
         operationId: input.operationId,
         toolMessageId: input.toolMessageId,
         result: {
