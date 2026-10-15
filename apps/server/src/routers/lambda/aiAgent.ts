@@ -1793,6 +1793,8 @@ const HeteroFinishSchema = z.object({
     })
     .optional(),
   operationId: z.string().min(1),
+  /** True only after the producer has exited; omitted by legacy intermediate signals. */
+  finalCancellation: z.boolean().optional(),
   result: z.enum(['success', 'error', 'cancelled']),
   sessionId: z.string().optional(),
   topicId: z.string().min(1),
@@ -1823,6 +1825,7 @@ const WaitInterventionResponseSchema = z.object({
 const SubmitHeteroInterventionSchema = z.object({
   cancelReason: z.enum(['timeout', 'user_cancelled', 'session_ended']).optional(),
   cancelled: z.boolean().optional(),
+  interventionId: z.string().min(1).optional(),
   operationId: z.string().min(1),
   /** Optional only for backward compatibility with pre-contract Web clients. */
   resolutionRequestId: z.string().uuid().optional(),
@@ -3604,7 +3607,16 @@ export const aiAgentRouter = router({
    * CLI's own end-event was lost mid-flight.
    */
   heteroFinish: heteroAgentProcedure.input(HeteroFinishSchema).mutation(async ({ input, ctx }) => {
-    const { agentType, assistantMessageId, error, operationId, result, sessionId, topicId } = input;
+    const {
+      agentType,
+      assistantMessageId,
+      error,
+      finalCancellation,
+      operationId,
+      result,
+      sessionId,
+      topicId,
+    } = input;
 
     // A terminal row is the normal state for a finish that lost a race (gateway
     // completion, a settle from another tab). The service already has the stale
@@ -3636,6 +3648,7 @@ export const aiAgentRouter = router({
         agentType,
         assistantMessageId,
         error,
+        finalCancellation,
         operationId,
         result,
         sessionId,
@@ -3921,6 +3934,7 @@ export const aiAgentRouter = router({
       const {
         operationId,
         toolCallId,
+        interventionId,
         stepIndex,
         result,
         cancelled,
@@ -3973,6 +3987,7 @@ export const aiAgentRouter = router({
           cancelReason: cancelled ? 'user_cancelled' : undefined,
           cancelled,
           producerAck: false,
+          interventionId,
           result: cancelled ? undefined : result,
           resolutionRequestId,
           toolCallId,

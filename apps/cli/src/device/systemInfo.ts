@@ -29,6 +29,7 @@ export async function collectSystemInfo(
     downloadsPath: path.join(home, 'Downloads'),
     homePath: home,
     musicPath: path.join(home, 'Music'),
+    nativeCodexPermissions: true,
     picturesPath: path.join(home, 'Pictures'),
     ...(computerUse && { supportedTools: [COMPUTER_USE_IDENTIFIER] }),
     userDataPath: path.join(home, CLI_CONFIG_DIR_NAME),

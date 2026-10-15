@@ -9,12 +9,24 @@ import {
   isRemoteHeterogeneousType,
 } from '@lobechat/heterogeneous-agents/client';
 import type {
+  CodexPermissionMode,
   HeterogeneousApiConfig,
   HeterogeneousAuthMode,
   HeterogeneousProviderConfig,
 } from '@lobechat/types';
+import { CODEX_PERMISSION_MODES, parseCodexPermissionArgs } from '@lobechat/types';
 import { CopyButton, Flexbox, Icon, Tooltip, TooltipGroup } from '@lobehub/ui';
-import { ActionIcon, Button, Input, Segmented, Select, Spin, Tag, Text } from '@lobehub/ui/base-ui';
+import {
+  ActionIcon,
+  Button,
+  confirmModal,
+  Input,
+  Segmented,
+  Select,
+  Spin,
+  Tag,
+  Text,
+} from '@lobehub/ui/base-ui';
 import { createStaticStyles, cssVar } from 'antd-style';
 import { CheckCircle2, KeyRound, PencilLine, RefreshCw, XCircle } from 'lucide-react';
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -195,18 +207,22 @@ interface HeterogeneousAgentStatusCardProps {
    * the reference in the personal scope only.
    */
   apiModeWorkspaceBlocked?: boolean;
+  isLocalExecution?: boolean;
   onApiConfigChange?: (apiConfig: HeterogeneousApiConfig | undefined) => Promise<void> | void;
   onAuthModeChange?: (
     authMode: HeterogeneousAuthMode,
     apiConfig?: HeterogeneousApiConfig,
   ) => Promise<void> | void;
   onCommandChange?: (command: string) => Promise<void> | void;
+  onPermissionModeChange?: (permissionMode: CodexPermissionMode) => Promise<void> | void;
   onServerDefaultRetry?: () => void;
   provider: HeterogeneousProviderConfig;
   serverDefaultAvailable?: boolean;
   serverDefaultLoading?: boolean;
   serverDefaultModels?: ServerDefaultModel[];
   serverDefaultUnavailableReason?: string;
+  /** Whether the selected host can execute native Codex approvals. Defaults to local support. */
+  supportsCodexPermissions?: boolean;
 }
 
 const LocalRuntimeStatusCard = memo<{ provider: HeterogeneousProviderConfig }>(({ provider }) => {
@@ -265,6 +281,9 @@ const CliHeterogeneousAgentStatusCard = memo<HeterogeneousAgentStatusCardProps>(
   ({
     apiModeAvailable = false,
     apiModeWorkspaceBlocked = false,
+    isLocalExecution = false,
+    supportsCodexPermissions = isLocalExecution,
+    onPermissionModeChange,
     provider,
     serverDefaultAvailable = false,
     serverDefaultLoading = false,
@@ -790,7 +809,7 @@ const CliHeterogeneousAgentStatusCard = memo<HeterogeneousAgentStatusCardProps>(
                 placeholder={t('heterogeneousStatus.apiMode.providerPlaceholder')}
                 style={MODEL_PICKER_STYLE}
                 value={selectedProviderValue}
-                onChange={(value) => {
+                onChange={(value: unknown) => {
                   if (typeof value === 'string') void handleApiProviderChange(value);
                 }}
               />
@@ -908,6 +927,83 @@ const CliHeterogeneousAgentStatusCard = memo<HeterogeneousAgentStatusCardProps>(
       );
     };
 
+    const renderCodexPermission = () => {
+      if (provider.type !== 'codex') return null;
+
+      const permissionMode =
+        provider.permissionMode ?? parseCodexPermissionArgs(provider.args).mode;
+      const permissionDescription = t(
+        `heterogeneousStatus.codexPermission.description.${permissionMode}`,
+      );
+      const permissionTooltip = supportsCodexPermissions
+        ? permissionDescription
+        : `${permissionDescription} ${t('heterogeneousStatus.codexPermission.localOnly')}`;
+      const options = [
+        ...(['ask', 'auto-review', 'read-only', 'full-access'] as const).map((mode) => ({
+          disabled: !supportsCodexPermissions && mode !== 'full-access',
+          label: t(`heterogeneousStatus.codexPermission.mode.${mode}`),
+          title: t(`heterogeneousStatus.codexPermission.description.${mode}`),
+          value: mode,
+        })),
+        ...(permissionMode === 'custom'
+          ? [
+              {
+                disabled: true,
+                label: [
+                  parseCodexPermissionArgs(provider.args).sandbox,
+                  parseCodexPermissionArgs(provider.args).approvalPolicy,
+                ].join(' · '),
+                title: t('heterogeneousStatus.codexPermission.description.custom'),
+                value: 'custom' as const,
+              },
+            ]
+          : []),
+      ];
+
+      return (
+        <div className={styles.detailRow}>
+          <span className={styles.detailLabel}>
+            {t('heterogeneousStatus.codexPermission.label')}
+          </span>
+          <div className={styles.detailContent}>
+            <Tooltip title={permissionTooltip}>
+              <Select
+                disabled={!canEdit}
+                options={options}
+                popupMatchSelectWidth={260}
+                size="small"
+                style={{ minWidth: 180 }}
+                value={permissionMode}
+                onChange={(value: unknown) => {
+                  if (
+                    typeof value !== 'string' ||
+                    !CODEX_PERMISSION_MODES.includes(value as CodexPermissionMode) ||
+                    !canEdit ||
+                    (!supportsCodexPermissions && value !== 'full-access')
+                  )
+                    return;
+                  const nextMode = value as CodexPermissionMode;
+                  if (nextMode !== 'full-access' || permissionMode === 'full-access') {
+                    void onPermissionModeChange?.(nextMode);
+                    return;
+                  }
+
+                  confirmModal({
+                    cancelText: t('cancel', { ns: 'common' }),
+                    content: t('heterogeneousStatus.codexPermission.fullAccessConfirm.description'),
+                    okButtonProps: { danger: true },
+                    okText: t('heterogeneousStatus.codexPermission.fullAccessConfirm.confirm'),
+                    onOk: () => onPermissionModeChange?.(nextMode),
+                    title: t('heterogeneousStatus.codexPermission.fullAccessConfirm.title'),
+                  });
+                }}
+              />
+            </Tooltip>
+          </div>
+        </div>
+      );
+    };
+
     return (
       <Flexbox className={styles.card} gap={12}>
         <div className={styles.cardHeader}>
@@ -937,6 +1033,7 @@ const CliHeterogeneousAgentStatusCard = memo<HeterogeneousAgentStatusCardProps>(
           {renderAuthMode()}
           {renderSubscriptionAccount()}
           {renderApiConfig()}
+          {renderCodexPermission()}
         </div>
         {showCliInstallGuide && (
           <HeterogeneousAgentStatusGuide

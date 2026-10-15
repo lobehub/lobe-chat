@@ -79,10 +79,11 @@ export function createCodexAppServerMocks(
   }
 
   class MockCodexThreadSession {
-    canFallbackToExec = true;
+    canFallbackToExec: boolean;
     private closed = false;
 
     constructor(private readonly options: ConstructorParameters<typeof CodexThreadSession>[0]) {
+      this.canFallbackToExec = options.allowExecFallback !== false;
       codexAppServerConsumerCount.value += 1;
       codexAppServerConstructMock(options);
     }

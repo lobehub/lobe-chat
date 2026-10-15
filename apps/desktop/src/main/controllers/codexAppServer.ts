@@ -14,6 +14,7 @@ import {
   resolveCodexInitialModel,
 } from '@lobechat/heterogeneous-agents/spawn';
 import { truncateTitle } from '@lobechat/heterogeneous-agents/transcript';
+import { codexPermissionModeRequiresAppServer } from '@lobechat/types';
 import { app as electronApp } from 'electron';
 
 import type { HeteroInflightRunRegistry } from '@/modules/heterogeneousAgent/inflightRunRegistry';
@@ -177,6 +178,8 @@ export async function sendPromptWithCodexAppServer(
   const appServerSession =
     session.appServerSession ??
     new CodexThreadSession({
+      // Approval presets must not silently lose their bridge on a cold handshake failure.
+      allowExecFallback: !codexPermissionModeRequiresAppServer(session.codexPermissionMode),
       client,
       initialCumulativeUsage,
       initialModel: session.model,
@@ -203,7 +206,12 @@ export async function sendPromptWithCodexAppServer(
         host.getInflightRuns()?.patch(session.sessionId, { agentSessionId });
       },
       sessionId: session.sessionId,
-      threadParams: buildCodexAppServerThreadParams(session.args, cwd, session.model),
+      threadParams: buildCodexAppServerThreadParams(
+        session.args,
+        cwd,
+        session.model,
+        session.codexPermissionMode,
+      ),
     });
   session.appServerSession = appServerSession;
   // No pid: the app-server process is shared, so reaping this run stops its session instead.
