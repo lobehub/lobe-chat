@@ -26,7 +26,7 @@ describe('resolveClaudeCodeTokenStatus', () => {
         inWorkspace: false,
         personalCreds: [cred],
       }),
-    ).toEqual({ display: 'sk-a****DgAA', status: 'configured' });
+    ).toEqual({ display: 'sk-a****DgAA', editable: true, status: 'configured' });
   });
 
   it('reports a personal token that is not shared to the active workspace', () => {
@@ -44,7 +44,7 @@ describe('resolveClaudeCodeTokenStatus', () => {
         inWorkspace: true,
         personalCreds: [personalToken({ sharedToActiveWorkspace: true })],
       }),
-    ).toEqual({ display: 'sk-a****DgAA', status: 'configured' });
+    ).toEqual({ display: 'sk-a****DgAA', editable: true, status: 'configured' });
   });
 
   it('does not show an unshared personal preview for a workspace-owned token', () => {
@@ -54,7 +54,17 @@ describe('resolveClaudeCodeTokenStatus', () => {
         inWorkspace: true,
         personalCreds: [personalToken()],
       }),
-    ).toEqual({ display: 'Team token', status: 'configured' });
+    ).toEqual({ display: 'Team token', editable: false, status: 'configured' });
+  });
+
+  it('cannot edit a workspace-owned token the caller has no personal copy of', () => {
+    expect(
+      resolveClaudeCodeTokenStatus({
+        contextCreds: [{ ...contextToken, ownerType: 'organization' }],
+        inWorkspace: true,
+        personalCreds: [],
+      }),
+    ).toEqual({ display: 'Claude Code OAuth Token', editable: false, status: 'configured' });
   });
 
   it('is missing when no scope holds the token', () => {

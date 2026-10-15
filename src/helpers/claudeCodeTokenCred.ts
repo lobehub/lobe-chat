@@ -15,10 +15,17 @@ export interface ContextCredSummary {
 }
 
 export type ClaudeCodeTokenStatus =
-  | { display: string; status: 'configured' }
+  /**
+   * `editable`: the token the run reads is the caller's own personal credential.
+   * Saving only writes that credential, so a workspace- or other-member-owned
+   * token can't be changed from here.
+   */
+  | { display: string; editable: boolean; status: 'configured' }
   /** The caller owns a token, but runs in the active workspace can't read it. */
   | { personalCred: UserCredSummary; status: 'personalNotShared' }
-  | { status: 'missing' };
+  | { status: 'missing' }
+  /** The credential lookup failed; whether the run can read a token is unknown. */
+  | { status: 'unknown' };
 
 interface ResolveClaudeCodeTokenStatusParams {
   /** `market.creds.listForContext`: the credentials a run in this scope reads. */
@@ -48,7 +55,11 @@ export const resolveClaudeCodeTokenStatus = ({
     const isOwnCred = !inWorkspace || !!personalCred?.sharedToActiveWorkspace;
     const preview = isOwnCred ? personalCred?.maskedPreview : undefined;
 
-    return { display: preview ?? contextCred.name, status: 'configured' };
+    return {
+      display: preview ?? contextCred.name,
+      editable: isOwnCred && !!personalCred,
+      status: 'configured',
+    };
   }
 
   if (personalCred) return { personalCred, status: 'personalNotShared' };

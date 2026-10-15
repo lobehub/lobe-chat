@@ -144,6 +144,25 @@ const TokenSection = memo<TokenSectionProps>(
     const [tokenInput, setTokenInput] = useState('');
     const [saving, setSaving] = useState(false);
 
+    if (tokenStatus.status === 'unknown') {
+      return (
+        <Flexbox gap={8}>
+          <Flexbox horizontal align="center" gap={6}>
+            <KeyRound size={12} />
+            <span className={styles.sectionLabel}>{t('heterogeneousStatus.cloud.tokenLabel')}</span>
+          </Flexbox>
+          <Flexbox horizontal align="center" gap={8}>
+            <Text fontSize={12} type={'warning'}>
+              {t('heterogeneousStatus.cloud.tokenLookupError')}
+            </Text>
+            <Button size={'small'} onClick={onSaved}>
+              {t('heterogeneousStatus.cloud.tokenRetry')}
+            </Button>
+          </Flexbox>
+        </Flexbox>
+      );
+    }
+
     const handleSave = async () => {
       if (!canEdit) return;
 
@@ -179,7 +198,7 @@ const TokenSection = memo<TokenSectionProps>(
             <KeyRound size={12} />
             <span className={styles.sectionLabel}>{t('heterogeneousStatus.cloud.tokenLabel')}</span>
           </Flexbox>
-          {configured && !editing && (
+          {configured && tokenStatus.editable && !editing && (
             <span
               className={styles.manageLink}
               onClick={() => {
@@ -333,15 +352,23 @@ const CloudHeterogeneousConfig = memo<CloudHeterogeneousConfigProps>(
       }
     })();
 
-    const { data: personalCreds, isLoading } = usePersonalCreds();
-    const { data: contextCreds, isLoading: isContextLoading } = useCredsForContext();
+    const { data: personalCreds, error: personalError, isLoading } = usePersonalCreds();
+    const {
+      data: contextCreds,
+      error: contextError,
+      isLoading: isContextLoading,
+    } = useCredsForContext();
     const allCreds: UserCredSummary[] = personalCreds ?? [];
 
-    const tokenStatus = resolveClaudeCodeTokenStatus({
-      contextCreds: contextCreds ?? [],
-      inWorkspace,
-      personalCreds: allCreds,
-    });
+    // A failed lookup is unknown, not missing: offering save/share can't fix it.
+    const tokenStatus: ClaudeCodeTokenStatus =
+      contextError || personalError
+        ? { status: 'unknown' }
+        : resolveClaudeCodeTokenStatus({
+            contextCreds: contextCreds ?? [],
+            inWorkspace,
+            personalCreds: allCreds,
+          });
     const personalTokenCredId = allCreds.find((c) => c.key === CLAUDE_CODE_TOKEN_CRED_KEY)?.id;
     const githubCreds = allCreds.filter(
       (c) => c.type === 'oauth' && c.oauthProvider?.toLowerCase().includes('github'),
