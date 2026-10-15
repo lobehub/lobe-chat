@@ -4,11 +4,12 @@ import { getTestDB } from '@lobechat/database/test-utils';
 import { eq } from 'drizzle-orm';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
+import { GoalModel } from '@/database/models/goal';
 import { TaskModel } from '@/database/models/task';
 import { TaskArchiveModel } from '@/database/models/taskArchive';
-import { tasks, users } from '@/database/schemas';
+import { goals, tasks, users } from '@/database/schemas';
 
-import { writeKeepingArchivedIdle } from './archiveGuard';
+import { assertNotInOpenGoal, writeKeepingArchivedIdle } from './archiveGuard';
 
 const userId = 'archive-guard-integration-user';
 
@@ -75,5 +76,39 @@ describe('writeKeepingArchivedIdle (real PostgreSQL)', () => {
       new TaskModel(tx, userId).update(task.id, { name: 'Renamed' }),
     );
     expect(renamed?.name).toBe('Renamed');
+  });
+
+  describe('assertNotInOpenGoal', () => {
+    it('refuses an unfinished task on an open goal, and allows it once the goal ends', async () => {
+      const task = await new TaskModel(db, userId).create({ instruction: 'Goal task' });
+      const goal = await new GoalModel(db, userId).create({
+        subjectId: task.id,
+        subjectType: 'task',
+        title: 'Open goal',
+      });
+
+      await expect(assertNotInOpenGoal(db, { userId }, task)).rejects.toMatchObject({
+        code: 'CONFLICT',
+      });
+
+      await db.update(goals).set({ status: 'achieved' }).where(eq(goals.id, goal.id));
+      await expect(assertNotInOpenGoal(db, { userId }, task)).resolves.toBeUndefined();
+    });
+
+    it('allows a finished task and a task with no goal', async () => {
+      const model = new TaskModel(db, userId);
+      const done = await model.create({ instruction: 'Done goal task' });
+      await new GoalModel(db, userId).create({
+        subjectId: done.id,
+        subjectType: 'task',
+        title: 'Open goal',
+      });
+      const loose = await model.create({ instruction: 'Loose task' });
+
+      await expect(
+        assertNotInOpenGoal(db, { userId }, { ...done, status: 'completed' }),
+      ).resolves.toBeUndefined();
+      await expect(assertNotInOpenGoal(db, { userId }, loose)).resolves.toBeUndefined();
+    });
   });
 });

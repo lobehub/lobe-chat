@@ -24,6 +24,7 @@ import { taskDetailSelectors } from '@/store/task/selectors';
 import { useUserStore } from '@/store/user';
 import { userProfileSelectors } from '@/store/user/selectors';
 
+import { getArchiveErrorKey } from '../features/archiveErrorKey';
 import { useTaskCopyActions } from './useTaskCopyActions';
 
 const TaskDetailHeaderActions = memo(() => {
@@ -68,8 +69,8 @@ const TaskDetailHeaderActions = memo(() => {
     }
     try {
       await archiveTask(taskId, !isArchived);
-    } catch {
-      toast.error(t('taskList.contextMenu.archiveFailed'));
+    } catch (error) {
+      toast.error(t(getArchiveErrorKey(error)));
       return;
     }
     toast.success(

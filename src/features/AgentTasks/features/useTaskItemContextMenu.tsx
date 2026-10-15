@@ -29,6 +29,7 @@ import { builtinAgentSelectors } from '@/store/agent/selectors';
 import { useTaskStore } from '@/store/task';
 
 import { taskDetailPath } from '../shared/taskDetailPath';
+import { getArchiveErrorKey } from './archiveErrorKey';
 import { renderMenuExtra } from './menuExtra';
 import { PRIORITY_META } from './TaskPriorityTag';
 import { STATUS_META, USER_SELECTABLE_STATUSES } from './taskStatusMeta';
@@ -184,8 +185,8 @@ export const useTaskContextMenuActions = (
                   }
                   try {
                     await archiveTask(task.identifier, !isArchived);
-                  } catch {
-                    toast.error(t('taskList.contextMenu.archiveFailed'));
+                  } catch (error) {
+                    toast.error(t(getArchiveErrorKey(error)));
                     return;
                   }
                   toast.success(

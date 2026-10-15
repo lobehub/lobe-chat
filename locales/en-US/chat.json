@@ -2383,6 +2383,7 @@
   "taskList.contextMenu.archive": "Archive",
   "taskList.contextMenu.archiveBlocked": "Stop the running task or its schedule/heartbeat before archiving it",
   "taskList.contextMenu.archiveFailed": "Couldn't update the archive state. Refresh the task and try again.",
+  "taskList.contextMenu.archiveGoalBlocked": "This task is part of an active goal. Finish or close the goal before archiving it.",
   "taskList.contextMenu.archiveSuccess": "Task archived",
   "taskList.contextMenu.copyConfirm": "Copy",
   "taskList.contextMenu.copyDescription": "Clone this task (and all its subtasks) into another workspace. Status resets to backlog.",

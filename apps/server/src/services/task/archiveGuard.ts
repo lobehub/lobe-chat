@@ -1,7 +1,11 @@
 import { isTaskArchiveBlocked } from '@lobechat/types';
 import { TRPCError } from '@trpc/server';
 
+import { GoalModel } from '@/database/models/goal';
+import { GoalGraphModel } from '@/database/models/goalGraph';
 import type { LobeChatDatabase } from '@/database/type';
+
+import { TERMINAL_GOAL_STATUSES } from '../goal/goalTraceRecorder';
 
 interface ArchiveGuardTask {
   archivedAt?: Date | string | null;
@@ -55,3 +59,32 @@ export const writeKeepingArchivedIdle = <T extends ArchiveGuardTask | null>(
     if (row) assertArchivedTaskStaysIdle(row, {});
     return row;
   });
+
+const FINISHED_TASK_STATUSES = new Set(['canceled', 'completed']);
+
+/**
+ * An unfinished task owned by an open Goal is still on the Goal's plan: its
+ * coordinator would keep claiming it, and the runner would keep refusing the
+ * archived task, stalling the Goal. Such a task must wait until the Goal
+ * finishes (or the task does). Throws CONFLICT so clients can tell it apart.
+ */
+export const assertNotInOpenGoal = async (
+  db: LobeChatDatabase,
+  scope: { userId: string; workspaceId?: string },
+  task: { id: string; status: string },
+): Promise<void> => {
+  if (FINISHED_TASK_STATUSES.has(task.status)) return;
+
+  const owner = await new GoalGraphModel(db, scope.userId, scope.workspaceId).findGoalByTaskId(
+    task.id,
+  );
+  if (!owner) return;
+
+  const goal = await new GoalModel(db, scope.userId, scope.workspaceId).findById(owner.id);
+  if (goal && !TERMINAL_GOAL_STATUSES.has(goal.status)) {
+    throw new TRPCError({
+      code: 'CONFLICT',
+      message: 'This task is part of an active goal; finish or close the goal before archiving it',
+    });
+  }
+};

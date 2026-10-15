@@ -174,6 +174,20 @@ describe('Task Router archive', () => {
     }
   });
 
+  it('refuses to archive an unfinished task its open goal still plans to run', async () => {
+    const created = await caller.create({ instruction: 'Goal step' });
+    const { GoalModel } = await import('@/database/models/goal');
+    await new GoalModel(serverDB, userId).create({
+      subjectId: created.data.id,
+      subjectType: 'task',
+      title: 'Open goal',
+    });
+
+    await expect(caller.archive({ archived: true, id: created.data.id })).rejects.toMatchObject({
+      code: 'CONFLICT',
+    });
+  });
+
   it('rejects an unknown task', async () => {
     await expect(caller.archive({ archived: true, id: 'T-404' })).rejects.toMatchObject({
       code: 'NOT_FOUND',

@@ -2876,6 +2876,8 @@ export default {
   'taskList.assigneeSelector.agentGroup': 'Agents',
   'taskList.assigneeSelector.workspaceMemberGroup': 'Workspace members',
   'taskList.contextMenu.archive': 'Archive',
+  'taskList.contextMenu.archiveGoalBlocked':
+    'This task is part of an active goal. Finish or close the goal before archiving it.',
   'taskList.contextMenu.archiveFailed':
     "Couldn't update the archive state. Refresh the task and try again.",
   'taskList.contextMenu.archiveBlocked':

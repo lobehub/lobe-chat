@@ -23,6 +23,7 @@ import { markSilentTRPCErrorLog } from '@/libs/trpc/utils/errorLogger';
 import { EditLockService } from '@/server/services/editLock';
 import { publishResourceEvent } from '@/server/services/resourceEvents';
 import { TaskService } from '@/server/services/task';
+import { assertNotInOpenGoal } from '@/server/services/task/archiveGuard';
 import { notifyAssignedBestEffort } from '@/server/services/task/assignmentNotification';
 import { TaskIntentService } from '@/server/services/task/intent';
 import {
@@ -707,6 +708,13 @@ export const taskRouter = router({
         // Archiving hides a shared task from every member's lists: same
         // creator-or-owner scope as delete.
         assertWorkspaceRowManageable(ctx, task.createdByUserId, 'task');
+        if (input.archived) {
+          await assertNotInOpenGoal(
+            ctx.serverDB,
+            { userId: ctx.userId, workspaceId: ctx.workspaceId ?? undefined },
+            task,
+          );
+        }
         const archiveModel = new TaskArchiveModel(
           ctx.serverDB,
           ctx.userId,
