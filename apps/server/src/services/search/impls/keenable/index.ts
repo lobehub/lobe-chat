@@ -36,6 +36,25 @@ const resultContent = (result: { description?: string; snippet?: string }): stri
     .slice(0, MAX_CONTENT_CHARS);
 
 /**
+ * How far back each `searchTimeRange` reaches, in days. Same mapping as the
+ * Exa and Anspire impls.
+ */
+const TIME_RANGE_DAYS: Record<string, number> = { day: 1, month: 30, week: 7, year: 365 };
+
+/**
+ * Maps `searchTimeRange` to Keenable's `published_after`, a `YYYY-MM-DD` date.
+ * `anytime` and unknown values add no filter. Keenable keeps pages that carry
+ * no publish date, so the filter only drops pages dated before the cutoff.
+ */
+const publishedAfter = (searchTimeRange?: string): string | undefined => {
+  if (!searchTimeRange || !Object.hasOwn(TIME_RANGE_DAYS, searchTimeRange)) return undefined;
+
+  const days = TIME_RANGE_DAYS[searchTimeRange];
+
+  return new Date(Date.now() - days * 86_400 * 1000).toISOString().slice(0, 10);
+};
+
+/**
  * Keenable implementation of the search service.
  *
  * Keenable is a web search API built for AI agents. Unlike the other providers,
@@ -58,10 +77,14 @@ export class KeenableImpl implements SearchServiceImpl {
     const path = this.apiKey ? '/v1/search' : '/v1/search/public';
     const endpoint = urlJoin(this.baseUrl, path);
 
+    const after = publishedAfter(params?.searchTimeRange);
     const body: KeenableSearchParameters = {
       mode: 'pro',
       query,
+      ...(after ? { published_after: after } : {}),
     };
+
+    log('Constructed request body: %o', body);
 
     const headers: Record<string, string> = {
       'Content-Type': 'application/json',

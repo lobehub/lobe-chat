@@ -1,6 +1,8 @@
 export interface KeenableSearchParameters {
   mode?: 'pro';
+  /** `YYYY-MM-DD`; pages without a publish date are kept. */
   published_after?: string;
+  /** `YYYY-MM-DD`; pages without a publish date are kept. */
   published_before?: string;
   query: string;
   site?: string;

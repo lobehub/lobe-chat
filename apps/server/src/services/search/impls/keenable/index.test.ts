@@ -147,6 +147,43 @@ describe('KeenableImpl', () => {
       expect(url).toBe('https://staging.keenable.ai/v1/search/public');
     });
 
+    describe('searchTimeRange', () => {
+      const sentBody = () =>
+        JSON.parse((vi.mocked(fetch).mock.calls[0][1] as RequestInit).body as string);
+
+      beforeEach(() => {
+        vi.useFakeTimers({ now: new Date('2026-03-15T12:00:00Z'), toFake: ['Date'] });
+        vi.mocked(fetch).mockResolvedValueOnce(createMockResponse(makeKeenableResponse([])));
+      });
+
+      afterEach(() => {
+        vi.useRealTimers();
+      });
+
+      it.each([
+        ['day', '2026-03-14'],
+        ['week', '2026-03-08'],
+        ['month', '2026-02-13'],
+        ['year', '2025-03-15'],
+      ])('sends published_after for %s', async (searchTimeRange, expected) => {
+        await impl.query('test', { searchTimeRange });
+
+        const body = sentBody();
+        expect(body.published_after).toBe(expected);
+        expect(body.published_before).toBeUndefined();
+      });
+
+      it.each([['anytime'], ['decade'], ['constructor'], [undefined]])(
+        'sends no date filter for %s',
+        async (searchTimeRange) => {
+          await impl.query('test', { searchTimeRange });
+
+          const body = sentBody();
+          expect(body).toEqual({ mode: 'pro', query: 'test' });
+        },
+      );
+    });
+
     it('should throw SERVICE_UNAVAILABLE when fetch throws a network error', async () => {
       vi.mocked(fetch).mockRejectedValue(new Error('Network error'));
 
