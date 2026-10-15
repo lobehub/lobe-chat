@@ -57,6 +57,28 @@ export const __resetBridgeForTests = (): void => {
   registry.clear();
   pendingByParentOp.clear();
   clearScheduledBridgeRetries();
+  // The persist queue is durable (localStorage) — tests must start empty and
+  // a pending flush timer must not leak across cases.
+  try {
+    localStorage.removeItem(BRIDGE_PERSIST_QUEUE_KEY);
+  } catch {
+    // jsdom-less environments may not have localStorage at all
+  }
+  if (persistFlushTimer) {
+    clearTimeout(persistFlushTimer);
+    persistFlushTimer = undefined;
+  }
+  persistFlushAttempts = 0;
+};
+
+/**
+ * Test-only: simulate a renderer reload — the in-memory registry dies while
+ * the durable persist queue (localStorage) survives. `__resetBridgeForTests`
+ * clears BOTH, so it cannot model a reload that keeps the queue.
+ */
+export const __clearRegistryForTests = (): void => {
+  registry.clear();
+  pendingByParentOp.clear();
 };
 
 export const trackPending = (registration: ClientSubAgentBridgeRegistration) => {
@@ -118,13 +140,185 @@ const toPersistedCoordinates = (
  * whole-blob replace raced thread settlement: a settlement landing between
  * the read and the write clobbered the just-written terminal fields
  * (completedAt / cost / token totals) with the stale pre-settlement snapshot.
+ *
+ * P1 (bridge round-21): the write is no longer a bare fire-and-forget. A
+ * transient failure (or an in-flight request cancelled by a reload) used to
+ * be swallowed here while `metadata.bridge` is the ONLY durable coordinate
+ * source for the post-reload reconstruction — that thread would then
+ * reconstruct nothing after the reload and the parked parent stayed parked
+ * forever. The coordinates are now write-ahead enqueued into a durable
+ * localStorage queue BEFORE the request fires, and every failure keeps the
+ * entry queued for the flush driver (`flushPendingBridgeCoordinates`), which
+ * reconstruction runs BEFORE reading the thread rows.
  */
+const BRIDGE_PERSIST_QUEUE_KEY = 'LOBE_CLIENT_SUB_AGENT_BRIDGE_PERSIST_QUEUE';
+/** ≈1h of slow-poll (4×5s..20s burst + 60s poll) before an entry is dropped. */
+const PERSIST_FLUSH_MAX_ATTEMPTS = 60;
+
+interface QueuedBridgePersist {
+  attempts: number;
+  childThreadId: string;
+  childTopicId?: string;
+  enqueuedAt: number;
+  registration: ClientSubAgentBridgeRegistration;
+}
+
+const readPersistQueue = (): QueuedBridgePersist[] => {
+  try {
+    const raw = localStorage.getItem(BRIDGE_PERSIST_QUEUE_KEY);
+    return raw ? (JSON.parse(raw) as QueuedBridgePersist[]) : [];
+  } catch {
+    return [];
+  }
+};
+
+const writePersistQueue = (queue: QueuedBridgePersist[]): void => {
+  try {
+    if (queue.length === 0) localStorage.removeItem(BRIDGE_PERSIST_QUEUE_KEY);
+    else localStorage.setItem(BRIDGE_PERSIST_QUEUE_KEY, JSON.stringify(queue));
+  } catch (error) {
+    log('bridge: failed to write the persist queue: %O', error);
+  }
+};
+
+const enqueueBridgePersist = (
+  childThreadId: string,
+  childTopicId: string | undefined,
+  registration: ClientSubAgentBridgeRegistration,
+): number => {
+  const queue = readPersistQueue().filter((entry) => entry.childThreadId !== childThreadId);
+  const enqueuedAt = Date.now();
+  queue.push({
+    attempts: 0,
+    childThreadId,
+    childTopicId,
+    enqueuedAt,
+    registration,
+  });
+  writePersistQueue(queue);
+  return enqueuedAt;
+};
+
+/**
+ * Remove one queued entry by thread id. When `enqueuedAt` is given, the
+ * removal only applies to THAT enqueue: a re-registration of the same thread
+ * during an in-flight flush (fresh `enqueuedAt`) survives the flush's drain.
+ */
+export const removeQueuedBridgePersist = (childThreadId: string, enqueuedAt?: number): void => {
+  writePersistQueue(
+    readPersistQueue().filter(
+      (entry) =>
+        !(
+          entry.childThreadId === childThreadId &&
+          (enqueuedAt === undefined || entry.enqueuedAt === enqueuedAt)
+        ),
+    ),
+  );
+};
+
+/**
+ * Durably increment one entry's attempt counter (matched on `enqueuedAt`).
+ * Returns the new count, or 0 when the entry was replaced / removed
+ * mid-flight — a stale counter bump must not land on a fresh enqueue.
+ */
+const bumpQueuedEntryAttempts = (childThreadId: string, enqueuedAt: number): number => {
+  const queue = readPersistQueue();
+  const entry = queue.find((e) => e.childThreadId === childThreadId && e.enqueuedAt === enqueuedAt);
+  if (!entry) return 0;
+  entry.attempts += 1;
+  writePersistQueue(queue);
+  return entry.attempts;
+};
+
+let persistFlushTimer: ReturnType<typeof setTimeout> | undefined;
+let persistFlushAttempts = 0;
+
+const schedulePersistFlush = (): void => {
+  // Single queue-level driver (not per key): every exit reschedules the next
+  // burst step, mirroring the fire retry's bounded-burst + slow-poll shape.
+  if (persistFlushTimer) return;
+  persistFlushAttempts += 1;
+  const delay = persistFlushAttempts <= 4 ? 5000 * persistFlushAttempts : 60_000;
+  persistFlushTimer = setTimeout(() => {
+    persistFlushTimer = undefined;
+    void flushPendingBridgeCoordinates();
+  }, delay);
+  log('bridge persist flush %d scheduled in %dms', persistFlushAttempts, delay);
+};
+
+/**
+ * Re-write every queued coordinate entry. Success (or a `processing`-guard
+ * rejection — the row settled or is gone, the coordinates are stale) drains
+ * the entry; a failure keeps it queued and schedules the next flush. Never
+ * throws: reconstruction runs this ahead of its own reads, and a flush
+ * failure must not be conflated with "no bridge on this thread".
+ *
+ * Drain is PER-ENTRY removal against a fresh queue read (never a whole-blob
+ * rewrite of a stale snapshot): a registration enqueueing while a flush is
+ * mid-flight must not lose its entry to the flush's write — the same
+ * read-modify-write race the round-18 P2 fix removed from the metadata
+ * merge itself.
+ */
+export const flushPendingBridgeCoordinates = async (): Promise<void> => {
+  const queue = readPersistQueue();
+  if (queue.length === 0) {
+    persistFlushAttempts = 0;
+    return;
+  }
+  let failed = false;
+  for (const entry of queue) {
+    const attempts = bumpQueuedEntryAttempts(entry.childThreadId, entry.enqueuedAt);
+    // 0 = the entry was replaced or removed mid-flight — its successor owns
+    // the retry, this loop iteration is operating on a stale snapshot.
+    if (attempts === 0) continue;
+    if (attempts > PERSIST_FLUSH_MAX_ATTEMPTS) {
+      log(
+        'bridge: persist queue entry for %s dropped after %d attempts (enqueued at %d)',
+        entry.childThreadId,
+        attempts,
+        entry.enqueuedAt,
+      );
+      removeQueuedBridgePersist(entry.childThreadId, entry.enqueuedAt);
+      continue;
+    }
+    if (!entry.childTopicId) {
+      removeQueuedBridgePersist(entry.childThreadId, entry.enqueuedAt);
+      continue;
+    }
+    try {
+      const applied = await threadService.mergeThreadMetadata(entry.childThreadId, {
+        bridge: toPersistedCoordinates(entry.registration),
+      });
+      if (applied) log('bridge: queued coordinates flushed to thread %s', entry.childThreadId);
+      else
+        log(
+          'bridge: queued coordinates flush skipped for %s (thread settled or gone)',
+          entry.childThreadId,
+        );
+      // Success AND stale-rejection both drain: the row's coordinates are
+      // either persisted or correctly absent — nothing left to retry. The
+      // enqueuedAt guard keeps a same-thread re-registration (fresh
+      // enqueue) that landed during the await intact.
+      removeQueuedBridgePersist(entry.childThreadId, entry.enqueuedAt);
+    } catch (error) {
+      log('bridge: queued coordinates flush failed for %s: %O', entry.childThreadId, error);
+      failed = true;
+    }
+  }
+  if (failed) schedulePersistFlush();
+  else if (readPersistQueue().length === 0) persistFlushAttempts = 0;
+};
+
 const persistBridgeCoordinates = async (
   childThreadId: string,
   childTopicId: string | undefined,
   registration: ClientSubAgentBridgeRegistration,
 ): Promise<void> => {
   if (!childTopicId) return;
+  // Write-ahead: the queue entry is durable BEFORE the request fires, so a
+  // reload cancelling the in-flight request still leaves it behind for the
+  // next flush.
+  const enqueuedAt = enqueueBridgePersist(childThreadId, childTopicId, registration);
   try {
     const applied = await threadService.mergeThreadMetadata(childThreadId, {
       bridge: toPersistedCoordinates(registration),
@@ -134,13 +328,20 @@ const persistBridgeCoordinates = async (
     // row.
     if (!applied) {
       log('bridge coordinates persistence skipped for %s (thread already settled)', childThreadId);
+      removeQueuedBridgePersist(childThreadId, enqueuedAt);
       return;
     }
+    removeQueuedBridgePersist(childThreadId, enqueuedAt);
     log('bridge coordinates persisted to thread %s', childThreadId);
   } catch (error) {
-    // Best-effort: without persistence the bridge still works in-session;
-    // only the post-reload reconstruction is lost. Loud log for diagnosis.
-    log('bridge: failed to persist coordinates for %s: %O', childThreadId, error);
+    // P1 (round-21): recoverable instead of swallowed — the entry stays
+    // queued and the flush driver retries. Loud log for diagnosis.
+    log(
+      'bridge: failed to persist coordinates for %s (queued for flush retry): %O',
+      childThreadId,
+      error,
+    );
+    schedulePersistFlush();
   }
 };
 

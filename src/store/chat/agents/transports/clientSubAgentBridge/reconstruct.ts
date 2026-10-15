@@ -3,7 +3,7 @@ import debug from 'debug';
 import { threadService } from '@/services/thread';
 import { type ThreadItem } from '@/types/topic';
 
-import { registry, trackPending } from './registry';
+import { flushPendingBridgeCoordinates, registry, trackPending } from './registry';
 import {
   type ClientSubAgentBridgeRegistration,
   type PersistedBridgeCoordinates,
@@ -152,6 +152,13 @@ export const reconstructRegistrationFromThread = async (
   const settledSiblings: SettledSiblingReplay[] = [];
   try {
     if (!childTopicId) return { registration: undefined, settledSiblings };
+    // P1 (round-21): drain the durable persist queue BEFORE reading the
+    // thread rows — a previous session's swallowed / cancelled coordinate
+    // write lands here, so this very read can still reconstruct from it.
+    // The flush never throws; a failed drain keeps the entry queued and the
+    // flush driver will retry, while reconstruction continues with whatever
+    // is on the row now.
+    await flushPendingBridgeCoordinates();
     const threads = knownThreads ?? (await threadService.getThreads(childTopicId));
     const thread = threads.find((t) => t.id === childThreadId);
     if (!thread) return { registration: undefined, settledSiblings };

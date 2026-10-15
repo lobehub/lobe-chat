@@ -42,7 +42,11 @@
 
 export { fireClientSubAgentBridge } from './fire';
 export { armClientSubAgentBridgesForContext } from './fire';
-export { __resetBridgeForTests } from './registry';
+export {
+  __clearRegistryForTests,
+  __resetBridgeForTests,
+  flushPendingBridgeCoordinates,
+} from './registry';
 export {
   registerClientSubAgentBridge,
   registerGroupBridgeFromParkExit,
