@@ -692,10 +692,10 @@ export class MarketService {
   /**
    * Get skill categories
    */
-  async getSkillCategories(params?: { locale?: string; q?: string }) {
-    log('getSkillCategories: %O', params);
+  async getSkillCategories() {
+    log('getSkillCategories');
 
-    return this.market.marketSkills.getCategories(params);
+    return this.market.marketSkills.getCategories();
   }
 
   /**
