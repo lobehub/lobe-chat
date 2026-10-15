@@ -25,6 +25,7 @@ const testState = vi.hoisted(() => ({
   toolUseByModel: {} as Record<string, boolean>,
   topic: {
     pinned: undefined as { model: string; provider: string } | undefined,
+    useFetchTopicDetail: vi.fn(),
   },
   user: {
     fetchedPreference: undefined as
@@ -79,6 +80,7 @@ vi.mock('@/store/chat', () => ({
 
 vi.mock('@/store/chat/slices/topic/selectors', () => ({
   topicSelectors: {
+    getTopicById: () => (s: typeof testState.topic) => s.pinned,
     getTopicModelById: () => (s: typeof testState.topic) => s.pinned,
   },
 }));

@@ -13,6 +13,7 @@ const testState = vi.hoisted(() => ({
   composerTopicId: undefined as string | null | undefined,
   globalActiveTopicId: undefined as string | undefined,
   topicModels: {} as Record<string, ModelPin>,
+  useFetchTopicDetail: vi.fn(),
 }));
 
 vi.mock('../store', () => ({
@@ -33,6 +34,7 @@ vi.mock('@/store/chat', () => ({
     selector({
       activeTopicId: testState.globalActiveTopicId,
       topicDataMap: {},
+      useFetchTopicDetail: testState.useFetchTopicDetail,
       topicDetailMap: Object.fromEntries(
         Object.entries(testState.topicModels).map(([id, pin]) => [id, { id, ...pin }]),
       ),
@@ -46,6 +48,7 @@ beforeEach(() => {
   testState.composerTopicId = undefined;
   testState.globalActiveTopicId = 'outer-topic';
   testState.topicModels = { 'outer-topic': outerPin, 'own-topic': ownPin };
+  testState.useFetchTopicDetail.mockReset();
 });
 
 describe('useEffectiveModel', () => {
@@ -79,5 +82,40 @@ describe('useEffectiveModel', () => {
     const { result } = renderHook(() => useEffectiveModel('agent-1'));
 
     expect(result.current).toEqual({ model: 'agent-model', provider: 'agent-provider' });
+  });
+
+  // A document's chat panel runs on a `trigger='document'` system topic and a
+  // goal's supervision topic is sidebar-excluded: neither reaches the loaded
+  // lists, yet the run reads the persisted pin.
+  it('loads a cold unlisted composer topic by id and switches to its pin once it lands', () => {
+    testState.composerTopicId = 'cold-topic';
+
+    const { rerender, result } = renderHook(() => useEffectiveModel('agent-1'));
+
+    expect(testState.useFetchTopicDetail).toHaveBeenLastCalledWith('cold-topic');
+    expect(result.current).toEqual({ model: 'agent-model', provider: 'agent-provider' });
+
+    testState.topicModels['cold-topic'] = ownPin;
+    rerender();
+
+    expect(result.current).toEqual(ownPin);
+  });
+
+  it('loads the global active topic by id when no list or detail holds it', () => {
+    testState.globalActiveTopicId = 'cold-topic';
+
+    renderHook(() => useEffectiveModel('agent-1'));
+
+    expect(testState.useFetchTopicDetail).toHaveBeenLastCalledWith('cold-topic');
+  });
+
+  it('requests no detail for a topic that is already loaded or when there is none', () => {
+    testState.composerTopicId = 'own-topic';
+    const { rerender } = renderHook(() => useEffectiveModel('agent-1'));
+
+    testState.composerTopicId = null;
+    rerender();
+
+    for (const [id] of testState.useFetchTopicDetail.mock.calls) expect(id).toBeUndefined();
   });
 });

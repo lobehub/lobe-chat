@@ -13,8 +13,11 @@ interface EnabledAiModel extends ModelPin {
 }
 
 const state = vi.hoisted(() => ({
+  /** An active topic that no list or detail holds yet. */
+  coldTopicId: undefined as string | undefined,
   enabledAiModels: [] as { contextWindowTokens?: number; id: string; providerId: string }[],
   topicModel: undefined as ModelPin | undefined,
+  useFetchTopicDetail: vi.fn(),
 }));
 
 vi.mock('../../hooks/useAgentId', () => ({ useAgentId: () => 'agent-1' }));
@@ -35,8 +38,9 @@ vi.mock('@/store/agent', () => ({
 vi.mock('@/store/chat', () => ({
   useChatStore: (selector: (s: object) => unknown) =>
     selector({
-      activeTopicId: state.topicModel ? 'topic-1' : undefined,
+      activeTopicId: state.topicModel ? 'topic-1' : state.coldTopicId,
       topicDataMap: {},
+      useFetchTopicDetail: state.useFetchTopicDetail,
       topicDetailMap: state.topicModel ? { 'topic-1': { id: 'topic-1', ...state.topicModel } } : {},
     }),
 }));
@@ -58,7 +62,9 @@ const setEnabledModels = (...models: EnabledAiModel[]) => {
 const topicModel = { model: 'topic-model', provider: 'topic-provider' };
 
 beforeEach(() => {
+  state.coldTopicId = undefined;
   state.topicModel = undefined;
+  state.useFetchTopicDetail.mockReset();
   setEnabledModels({ contextWindowTokens: 8000, model: 'agent-model', provider: 'agent-provider' });
 });
 
@@ -91,5 +97,25 @@ describe('useShowContextWindow', () => {
     );
 
     expect(renderHook(() => useShowContextWindow()).result.current).toBe(false);
+  });
+
+  // `Token` returns before `TokenTag` (and its token-breakdown fetch) mounts
+  // while this is false, so the gate itself has to load the topic it judges.
+  it('loads a cold unlisted topic by id so its pinned model can unlock the ring', () => {
+    state.coldTopicId = 'cold-topic';
+    setEnabledModels(
+      { model: 'agent-model', provider: 'agent-provider' },
+      { contextWindowTokens: 16_000, ...topicModel },
+    );
+
+    const { rerender, result } = renderHook(() => useShowContextWindow());
+
+    expect(state.useFetchTopicDetail).toHaveBeenLastCalledWith('cold-topic');
+    expect(result.current).toBe(false);
+
+    state.topicModel = topicModel;
+    rerender();
+
+    expect(result.current).toBe(true);
   });
 });
