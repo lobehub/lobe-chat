@@ -14,8 +14,10 @@ import { GOAL_TURN_TAG } from '@lobechat/const';
  * answers (and, on a takeover, what each answer does to the blocked Task).
  * v9 teaches the batch: a tasks plan may declare `rollout`, so one recipe over
  * many units runs a few probes first and the rest wave by wave behind a gate.
+ * v10 has the batch name its recipe: `rollout.skillName` is the recipe's name
+ * as a skill in the user's library, which every unit loads.
  */
-export const GOAL_MANAGER_PROMPT_VERSION = 'v9';
+export const GOAL_MANAGER_PROMPT_VERSION = 'v10';
 
 export interface GoalManagerFeedbackNote {
   /** `user`, or `agent <id>` for an agent-written comment. */
@@ -153,7 +155,7 @@ const takeoverRules =
  * server only checks the declaration is well formed.
  */
 export const GOAL_BATCH_PLANNING_RULE =
-  'Batch (one repeated mould): when the remaining work applies one recipe to many units — migrate N stores to one mechanism, give N resources the same caching, update N callers — and the first units will likely need a person (unsettled conventions, review, acceptance), do not plan every unit as a task. Add "rollout" to the tasks plan instead: "tasks" become 2-5 probes, the most representative units covering every variant, each with a full brief; "rollout.recipe" is the one procedure every unit follows; "rollout.units" lists every other unit in delivery order, as a title or as {"title","description"} when the unit has its own pointers; "rollout.variants" names the axes the units differ along, and the gate holds until the probes cover each value. The probes run first; the rest are released wave by wave only after every probe ran through without a person, and any rejection revises the recipe and starts a new probe round. Units that differ only in names, files or details are still one mould; work whose steps differ from task to task is not, so plan it as ordinary tasks. Never declare a batch on a Goal whose rollout is off. While a batch is in flight no planning turn starts; the next one comes after its roster is delivered.';
+  'Batch (one repeated mould): when the remaining work applies one recipe to many units — migrate N stores to one mechanism, give N resources the same caching, update N callers — and the first units will likely need a person (unsettled conventions, review, acceptance), do not plan every unit as a task. Add "rollout" to the tasks plan instead: "tasks" become 2-5 probes, the most representative units covering every variant, each with a full brief; "rollout.recipe" is the one procedure every unit follows; "rollout.skillName" names it — the recipe is kept as a skill in the user library, loaded by every unit and reusable after this Goal, so use 2-5 lowercase English words joined by hyphens that say what one unit does (e.g. "migrate-store-to-replica"), never the Goal id or a generic "goal-plan"; "rollout.units" lists every other unit in delivery order, as a title or as {"title","description"} when the unit has its own pointers; "rollout.variants" names the axes the units differ along, and the gate holds until the probes cover each value. The probes run first; the rest are released wave by wave only after every probe ran through without a person, and any rejection revises the recipe and starts a new probe round. Units that differ only in names, files or details are still one mould; work whose steps differ from task to task is not, so plan it as ordinary tasks. Never declare a batch on a Goal whose rollout is off. While a batch is in flight no planning turn starts; the next one comes after its roster is delivered.';
 
 const contract = (input: GoalManagerPromptInput) =>
   [
@@ -171,7 +173,7 @@ const contract = (input: GoalManagerPromptInput) =>
     'When useful work must wait for time or external evidence, submit wait and exit; never sleep or poll. until is a future UTC ISO instant and a fallback check even if the optional event is lost. Events match type, key and current turn token; producers deliver using lh goal wake. A wake asks you to reconsider evidence, never proves success. Measured shortfalls are feedback: plan useful work or a bounded wait; do not lower the original target.',
     'Choose exactly one schema:',
     '{"action":"tasks","reason":"evidence-based rationale","tasks":[{"title":"specific task","description":"self-contained contract, inputs, output and acceptance","dependsOn":["task node ID from an earlier round", 0]}]}',
-    '{"action":"tasks","reason":"why these units are one mould","tasks":[{"title":"probe unit","description":"full brief for this unit"}],"rollout":{"recipe":"the procedure every unit follows","units":["unit title",{"title":"unit title","description":"this unit\'s own pointers"}],"variants":[{"axis":"what the units differ in","values":["value a","value b"]}]}}',
+    '{"action":"tasks","reason":"why these units are one mould","tasks":[{"title":"probe unit","description":"full brief for this unit"}],"rollout":{"recipe":"the procedure every unit follows","skillName":"what-one-unit-does","units":["unit title",{"title":"unit title","description":"this unit\'s own pointers"}],"variants":[{"axis":"what the units differ in","values":["value a","value b"]}]}}',
     '{"action":"wait","reason":"why evidence must arrive later","until":"future UTC ISO instant","event":{"type":"external.result","key":"correlated job ID"}}',
     '{"action":"verify","reason":"why the existing evidence warrants independent Goal verification"}',
     '{"action":"retry","taskId":"failed Task ID","failedOperationId":"latest confirmed failure ID","reason":"diagnosis and checkpoint-aware recovery instruction"}',

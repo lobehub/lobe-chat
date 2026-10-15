@@ -65,7 +65,7 @@ export const GOAL_CRITERIA_DRAFT_JSON_SCHEMA = {
 };
 
 /** Bump when the goal decomposition planning prompt meaningfully changes. */
-export const GOAL_DECOMPOSE_PROMPT_VERSION = 'v8';
+export const GOAL_DECOMPOSE_PROMPT_VERSION = 'v9';
 
 export const GOAL_DECOMPOSE_JSON_SCHEMA = {
   name: 'goal_decomposition',
@@ -83,6 +83,8 @@ export const GOAL_DECOMPOSE_JSON_SCHEMA = {
         properties: {
           recipeOutline: { maxLength: 280, type: 'string' },
           repeatable: { type: 'boolean' },
+          /** The recipe's name as a skill in the user's library: lowercase words and hyphens. */
+          skillName: { maxLength: 48, type: 'string' },
           /** Honest count of the homogeneous units in the whole goal. */
           unitCount: { minimum: 1, type: 'integer' },
           /** Roster of every homogeneous unit, probes first, in delivery order. */
@@ -102,7 +104,7 @@ export const GOAL_DECOMPOSE_JSON_SCHEMA = {
             type: 'array',
           },
         },
-        required: ['repeatable', 'unitCount', 'recipeOutline', 'variants', 'units'],
+        required: ['repeatable', 'unitCount', 'recipeOutline', 'skillName', 'variants', 'units'],
         type: ['object', 'null'],
       },
       questions: {
@@ -191,10 +193,10 @@ export const chainGoalDecompose = ({
         '- assumptions lists the non-obvious readings the plan relies on that the user may want to correct; skip the obvious. Write every assumption and every answered clarification into the instructions of the tasks it affects.',
         '- rollout is how you flag ONE repeated mould: many structurally identical units that share a single reusable transformation — for example migrating fifty sibling stores the same way, or applying one cross-cutting change to many files. If the requirement applies the same transformation to many structurally identical sibling units (a cross-cutting change to N files or modules), you MUST set rollout instead of collapsing it into a single "apply to all" task plus a verification pipeline. Leave it null for every ordinary goal that is not such a repeated mould — one whose directions differ, or a genuine sequence of different steps. Setting it is a claim you must be able to defend, not a way to list more tasks.',
         "- When you set rollout, repeatable must be true only if, after replacing the concrete file / module / symbol names with placeholders, every unit's transformation steps are still the same. If they differ, it is not one batch: leave rollout null and decompose the directions normally.",
-        '- rollout.unitCount is your honest count of the homogeneous units in the WHOLE goal (it will usually exceed the few tasks you list). recipeOutline names that single reusable transformation in one sentence. variants lists the axes the units vary along (e.g. axis "cold-start" with values ["yes","no"]); name an axis only if some unit actually takes each value you list.',
+        '- rollout.unitCount is your honest count of the homogeneous units in the WHOLE goal (it will usually exceed the few tasks you list). recipeOutline names that single reusable transformation in one sentence. skillName names it too: the recipe is kept as a skill in the user skill library, loaded by every unit and reusable after this goal, so give it 2-5 lowercase English words joined by hyphens that say what one unit does (e.g. "migrate-store-to-replica"), never the goal id or a generic "goal-plan". variants lists the axes the units vary along (e.g. axis "cold-start" with values ["yes","no"]); name an axis only if some unit actually takes each value you list.',
         '- rollout.units is the full roster of every homogeneous unit as short titles, probes first and in delivery order (list all of them, up to 60). The coordinator promotes the units after the probes from this roster one wave at a time; a unit missing here will never be delivered.',
         '- When rollout is set, tasks lists only the few REPRESENTATIVE units to run first — 3–5 probes, not every unit. Choose probes that cover the declared variant axes and MUST include the hardest unit. The coordinator releases the remaining units in waves once the probes prove the class runs fully automatically; do not enumerate them here.',
-        '- Write all fields in the language used by the goal.',
+        '- Write all fields in the language used by the goal, except rollout.skillName, which is always lowercase English words joined by hyphens.',
       ].join('\n'),
       role: 'system',
     },

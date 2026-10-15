@@ -3844,6 +3844,7 @@ export class GoalService {
             recipeOutline: rolloutClaim.recipeOutline,
             repeatable: rolloutClaim.repeatable,
             roster,
+            skillName: rolloutClaim.skillName ?? undefined,
             trigger: rolloutTrigger === 'full' ? 'full' : 'canary',
             variants: rolloutClaim.variants,
             writer,

@@ -103,6 +103,7 @@ recipe to many units (migrate N stores, cache N resources, update N callers):
   "reason": "...",
   "rollout": {
     "recipe": "<procedure every unit follows>",
+    "skillName": "<what-one-unit-does>",
     "units": ["<unit>", { "title": "<unit>", "description": "<its own pointers>" }],
     "variants": [{ "axis": "...", "values": ["...", "..."] }]
   },
@@ -112,7 +113,11 @@ recipe to many units (migrate N stores, cache N resources, update N callers):
 
 `tasks` then hold 2-5 representative probes; `units` list every other unit. The
 probes run first, the rest are released wave by wave once the probes ran through
-without a person, and a rejection revises the recipe and re-probes. Whether the
+without a person, and a rejection revises the recipe and re-probes. The recipe
+is kept as a skill in the user library that every unit loads and that stays
+reusable after the Goal; `skillName` is its name — 2-5 lowercase English words
+joined by hyphens saying what one unit does (`migrate-store-to-replica`), not the
+Goal id. Omitted, it is derived from the Goal title. Whether the
 units are one mould is the planning agent's call; the server refuses only a
 malformed declaration, a Goal with `--rollout off`, or a batch already in flight.
 No planning turn starts while a batch is in flight.
@@ -158,7 +163,7 @@ dispatched until it is started. Arrange it first — seed tasks with `-t` or
 `--task-file` (titles with descriptions), adjust with `add-node` / `add-edge` —
 then launch it with `lh goal start <id>`; the owner can also start it from the
 goal page. Many tasks of one recipe start as a batch:
-`lh goal start <id> --rollout canary --recipe-file <md> --probes <2-5 node ids>`
+`lh goal start <id> --rollout canary --recipe-file <md> --skill-name <name> --probes <2-5 node ids>`
 moves the probes into a batch and turns every other seed (or only `--units`)
 into roster units released wave by wave behind the gate. Inside a batch a seed
 may depend only on a probe, and every folded seed needs its own title; start

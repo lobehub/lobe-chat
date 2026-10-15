@@ -21,8 +21,8 @@ export const conversationGoalPrompt = `The user sent this request with LobeHub's
 3. Start it from the graph lh goal create printed (do not run lh goal show or other lh goal commands: this run's credentials only allow creating or binding this goal, planning it and starting it):
    lh goal start <goalId> --json
    If the tasks apply one recipe to many units (migrate N stores to one mechanism, give N resources the same caching, update N callers), start them as a batch instead:
-   lh goal start <goalId> --rollout canary --recipe-file <recipe.md> --probes <2-5 task node ids> --json
-   The recipe is the procedure every unit follows; the probes are the most representative units, covering every way the units differ. The probes run first, and the other tasks are released wave by wave only after the probes ran through without a person; a rejection revises the recipe and re-probes. Tasks that differ only in names, files or details are one recipe; tasks whose steps differ are not, so start those without --rollout.
+   lh goal start <goalId> --rollout canary --recipe-file <recipe.md> --skill-name <what-one-unit-does> --probes <2-5 task node ids> --json
+   The recipe is the procedure every unit follows, kept as a skill in the user library that every unit loads and that stays reusable after the goal, so name it with --skill-name after what one unit does (2-5 lowercase English words joined by hyphens, e.g. migrate-store-to-replica); the probes are the most representative units, covering every way the units differ. The probes run first, and the other tasks are released wave by wave only after the probes ran through without a person; a rejection revises the recipe and re-probes. Tasks that differ only in names, files or details are one recipe; tasks whose steps differ are not, so start those without --rollout.
    If lh has no goal start command, the goal already runs: skip this step.
 4. Then end the run with one or two sentences in the user's language: the goal is running, and what runs first.
 

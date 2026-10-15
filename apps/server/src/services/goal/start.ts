@@ -19,6 +19,8 @@ export interface StartGoalRolloutInput {
   probeNodeIds: string[];
   /** The one procedure every unit follows; the batch's Template. */
   recipe: string;
+  /** Name for the recipe's skill in the user's library; derived when omitted. */
+  skillName?: string;
   /** Overrides the goal's own `config.rollout.trigger`; `off` is not a way to start a batch. */
   trigger?: 'canary' | 'full';
   /** Seeds that become roster units; every other seed when omitted. Seeds left out stay ordinary tasks. */
@@ -305,6 +307,7 @@ export class GoalStartService {
       recipeOutline: rollout.recipe.trim(),
       repeatable: true,
       roster,
+      skillName: rollout.skillName,
       trigger,
       unitBriefs,
       variants: rollout.variants,

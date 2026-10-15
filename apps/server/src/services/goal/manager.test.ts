@@ -423,6 +423,29 @@ describe('CLI main Agent planning', () => {
           'Home inbox': 'HomeInbox/useHomeInboxTopics.ts:39',
           'Project skills': 'src/hooks/useFetchProjectSkills.ts:17',
         });
+        // Unnamed, the plan skill reads as the goal it serves, not as a node id.
+        expect(config.rolloutState?.planSkill?.name).toBe('cache-the-resources');
+      });
+
+      it('names the plan skill as the starter asks', async () => {
+        await startConversationRun();
+        const { graph } = await service().createFromConversation(conversationOpId, {
+          draft: true,
+          tasks: seeds,
+          title: 'Cache the resources',
+        });
+
+        await starter().start(graph.goal.id, {
+          operationId: conversationOpId,
+          rollout: {
+            probeNodeIds: [seedId(graph, 'Device list'), seedId(graph, 'Tool payload')],
+            recipe: 'Persist the resource and show stale data first',
+            skillName: 'Persist resource in replica',
+          },
+        });
+
+        const config = (await model().findById(graph.goal.id))!.config!;
+        expect(config.rolloutState?.planSkill?.name).toBe('persist-resource-in-replica');
       });
 
       /**
@@ -1961,6 +1984,21 @@ describe('a batch the main Agent declares', () => {
       trigger: 'canary',
       unitBriefs: { 'Project skills': 'src/hooks/useFetchProjectSkills.ts:17' },
     });
+  });
+
+  /**
+   * Regression: the plan skill was named `goal-plan-<batch id>`, which says
+   * nothing in the library or on the graph; the Agent's own name now wins.
+   */
+  it('names the plan skill after what the Agent says one unit does', async () => {
+    const { id, state, op } = await start();
+    await manager().submit(id, state.token, op.id, {
+      ...batchPlan,
+      rollout: { ...batchPlan.rollout, skillName: 'cache-resource-in-replica' },
+    });
+
+    const config = (await model().findById(id))!.config!;
+    expect(config.rolloutState?.planSkill?.name).toBe('cache-resource-in-replica');
   });
 
   it('lets the gate release the next wave instead of starting a planning turn', async () => {

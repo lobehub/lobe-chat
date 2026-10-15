@@ -29,6 +29,8 @@ const { mockClient } = vi.hoisted(() => ({
       resume: { mutate: vi.fn() },
       retireNodes: { mutate: vi.fn() },
       setBudget: { mutate: vi.fn() },
+      start: { mutate: vi.fn() },
+      startOperation: { mutate: vi.fn() },
       supervision: { query: vi.fn() },
       tick: { mutate: vi.fn() },
     },
@@ -190,6 +192,41 @@ describe('goal resume', () => {
     expect(mockClient.goal.resume.mutate).toHaveBeenLastCalledWith({
       confirmExit: true,
       id: 'goal-1',
+    });
+  });
+});
+
+describe('goal start command', () => {
+  const startArgs = ['node', 'test', 'goal', 'start', 'goal-1', '--rollout', 'canary'];
+  const batch = ['--recipe', 'Move the store onto replica', '--probes', 'node-1', 'node-2'];
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+    mockClient.goal.start.mutate.mockResolvedValue({ data: {}, message: 'Goal started' });
+  });
+
+  /**
+   * Regression: the rollout always carried a `skillName` key, undefined when
+   * the flag was omitted. A server from before the flag validates the rollout
+   * strictly and refused every batch start with "Unrecognized key".
+   */
+  it('sends no skill name unless one is given, so an older server still starts the batch', async () => {
+    await createProgram().parseAsync([...startArgs, ...batch]);
+
+    const { rollout } = mockClient.goal.start.mutate.mock.lastCall![0];
+    expect(Object.keys(rollout)).not.toContain('skillName');
+  });
+
+  it('passes the skill name the starter gives', async () => {
+    await createProgram().parseAsync([
+      ...startArgs,
+      ...batch,
+      '--skill-name',
+      'move-store-onto-replica',
+    ]);
+
+    expect(mockClient.goal.start.mutate.mock.lastCall![0].rollout).toMatchObject({
+      skillName: 'move-store-onto-replica',
     });
   });
 });
