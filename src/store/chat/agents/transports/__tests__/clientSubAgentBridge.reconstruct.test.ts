@@ -341,4 +341,237 @@ describe('clientSubAgentBridge reconstruction', () => {
     // but no resume was attempted.
     expect(store.executeClientAgent).not.toHaveBeenCalled();
   });
+
+  // ─── Round-19: pre-fire replay retry, parent-bucket hydration, failure fidelity ───
+
+  // P1 (round-19): `messageService.getMessages` rejecting inside the replay
+  // used to only log — the fire's own catch (which installs the retry
+  // driver) was never reached, so the settled sibling's barrier slot stayed
+  // pending forever and the parent never resumed. The replay failure now
+  // schedules the bounded retry burst.
+  it('schedules a retry when the settled-sibling replay fails before firing', async () => {
+    vi.useFakeTimers();
+    try {
+      const { threadService } = await import('@/services/thread');
+      const { messageService } = await import('@/services/message');
+      (threadService.getThreads as any).mockResolvedValue([
+        {
+          agentId: 'agent-child',
+          id: 'thd_child',
+          metadata: {
+            bridge: {
+              kind: 'sub-agent',
+              parentContext: { agentId: 'agent-parent', topicId: 'topic-1' },
+              parentOperationId: 'op_parent',
+              toolMessageId: 'tool-msg-1',
+            },
+          },
+          status: 'processing',
+          topicId: 'topic-1',
+        },
+        {
+          agentId: 'agent-sibling',
+          id: 'thd_sibling',
+          metadata: {
+            bridge: {
+              kind: 'sub-agent',
+              parentContext: { agentId: 'agent-parent', topicId: 'topic-1' },
+              parentOperationId: 'op_parent',
+              toolMessageId: 'tool-msg-2',
+            },
+          },
+          status: 'completed',
+          topicId: 'topic-1',
+        },
+      ]);
+      const getMessages = (messageService.getMessages as any)
+        .mockRejectedValueOnce(new Error('network glitch'))
+        .mockResolvedValue([{ content: 'sibling final answer', role: 'assistant' }]);
+      const { get, store } = makeGet({
+        dbMessagesMap: {
+          'thread_agent-child_topic-1_thd_child': [
+            { content: 'child final answer', role: 'assistant' },
+          ],
+          'main_agent-parent_topic-1': [
+            {
+              id: 'tool-msg-1',
+              pluginState: { status: 'running', threadId: 'thd_child' },
+              role: 'tool',
+            },
+            {
+              id: 'tool-msg-2',
+              pluginState: { status: 'running', threadId: 'thd_sibling' },
+              role: 'tool',
+            },
+          ],
+        },
+        operations: {},
+      });
+
+      await fireClientSubAgentBridge(get, childContext);
+      expect(getMessages).toHaveBeenCalledTimes(1);
+      // The replay never fired: the sibling's row (tool-msg-2) stays untouched
+      // — the backfill that DID happen is the current child's own (tool-msg-1).
+      expect(
+        store.optimisticUpdateMessageContent.mock.calls.some(
+          (call: unknown[]) => call[0] === 'tool-msg-2',
+        ),
+      ).toBe(false);
+
+      // The scheduled retry (5s × attempt 1) re-runs the WHOLE replay —
+      // refetch included — and backfills the sibling's tool message.
+      await vi.advanceTimersByTimeAsync(5_000);
+      expect(getMessages).toHaveBeenCalledTimes(2);
+      expect(store.optimisticUpdateMessageContent).toHaveBeenCalledWith(
+        'tool-msg-2',
+        'sibling final answer',
+        undefined,
+        { operationId: 'op_parent' },
+      );
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  // P2 (round-19): a FAILED sibling's replay must not resurrect a stale
+  // pre-failure assistant answer as the tool result — the failure formatting
+  // (persisted error text) reaches the parent instead.
+  it('replays a failed settled sibling with its persisted failure text, not stale content', async () => {
+    const { threadService } = await import('@/services/thread');
+    const { messageService } = await import('@/services/message');
+    (threadService.getThreads as any).mockResolvedValue([
+      {
+        agentId: 'agent-child',
+        id: 'thd_child',
+        metadata: {
+          bridge: {
+            kind: 'sub-agent',
+            parentContext: { agentId: 'agent-parent', topicId: 'topic-1' },
+            parentOperationId: 'op_parent',
+            toolMessageId: 'tool-msg-1',
+          },
+        },
+        status: 'processing',
+        topicId: 'topic-1',
+      },
+      {
+        agentId: 'agent-sibling',
+        id: 'thd_sibling',
+        metadata: {
+          bridge: {
+            kind: 'sub-agent',
+            parentContext: { agentId: 'agent-parent', topicId: 'topic-1' },
+            parentOperationId: 'op_parent',
+            toolMessageId: 'tool-msg-2',
+          },
+          completedAt: 't',
+          error: 'context window exhausted',
+          totalCost: 0.1,
+        },
+        status: 'failed',
+        topicId: 'topic-1',
+      },
+    ]);
+    (messageService.getMessages as any).mockResolvedValue([
+      { content: 'stale pre-failure answer', role: 'assistant' },
+    ]);
+    const { get, store } = makeGet({
+      dbMessagesMap: {
+        'thread_agent-child_topic-1_thd_child': [
+          { content: 'child final answer', role: 'assistant' },
+        ],
+        'main_agent-parent_topic-1': [
+          {
+            id: 'tool-msg-1',
+            pluginState: { status: 'running', threadId: 'thd_child' },
+            role: 'tool',
+          },
+          {
+            id: 'tool-msg-2',
+            pluginState: { status: 'running', threadId: 'thd_sibling' },
+            role: 'tool',
+          },
+        ],
+      },
+      operations: {},
+    });
+
+    await fireClientSubAgentBridge(get, childContext);
+
+    // The stale assistant content never reaches the tool row — the failure
+    // formatting (`Sub-agent run failed: <persisted error>`) does.
+    expect(store.optimisticUpdateMessageContent).toHaveBeenCalledWith(
+      'tool-msg-2',
+      'Sub-agent run failed: context window exhausted',
+      undefined,
+      { operationId: 'op_parent' },
+    );
+  });
+
+  // P1 (round-19): after a reload while viewing the child thread, the
+  // parent bucket is NOT loaded — a missing tool row used to be read as
+  // "parent settled", skipping backfill/resume and stranding the parent.
+  // The guard now hydrates the parent bucket from the server first and only
+  // then interprets the persisted park marker.
+  it('hydrates an unloaded parent bucket before treating a missing tool row as settled', async () => {
+    const { threadService } = await import('@/services/thread');
+    const { messageService } = await import('@/services/message');
+    (threadService.getThreads as any).mockResolvedValue([
+      {
+        agentId: 'agent-child',
+        id: 'thd_child',
+        metadata: {
+          bridge: {
+            kind: 'sub-agent',
+            parentContext: { agentId: 'agent-parent', topicId: 'topic-1' },
+            parentOperationId: 'op_parent',
+            toolMessageId: 'tool-msg-1',
+          },
+        },
+        status: 'completed', // settled by a fire that crashed before re-entry
+        topicId: 'topic-1',
+      },
+    ]);
+    // Only the child bucket is loaded (the reloaded renderer was viewing the
+    // child thread); the server holds the parent's deferred placeholder.
+    (messageService.getMessages as any).mockImplementation(async (params: any) => {
+      if (params.threadId === 'thd_child') {
+        return [{ content: 'child final answer', role: 'assistant' }];
+      }
+      return [
+        {
+          id: 'tool-msg-1',
+          pluginState: {
+            resumePending: true,
+            status: 'completed', // backfilled, re-entry failed → resumable
+            threadId: 'thd_child',
+          },
+          role: 'tool',
+        },
+      ];
+    });
+    const { get, store } = makeGet({
+      // Reload: only the CHILD bucket is present — no parent bucket at all.
+      dbMessagesMap: {
+        'thread_agent-child_topic-1_thd_child': [
+          { content: 'child final answer', role: 'assistant' },
+        ],
+      },
+      operations: {},
+      replaceMessages: vi.fn().mockImplementation((_messages: any, params: any) => {
+        // Mirror the store write so the resume path (which re-reads
+        // dbMessagesMap) sees the hydrated history.
+        const context = params?.context ?? {};
+        const key = ['main', context.agentId, context.topicId, context.threadId]
+          .filter(Boolean)
+          .join('_');
+        store.dbMessagesMap[key] = _messages;
+      }),
+    });
+
+    await fireClientSubAgentBridge(get, childContext);
+
+    // The hydrated marker said `resumePending: true` → the resume went ahead.
+    expect(store.executeClientAgent).toHaveBeenCalledTimes(1);
+  });
 });

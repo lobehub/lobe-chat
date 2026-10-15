@@ -8,6 +8,7 @@ import { messageMapKey } from '@/store/chat/utils/messageMapKey';
 import { aggregateSubagentMetrics } from '@/utils/subagentMetrics';
 
 import { backfillChildResult } from './backfill';
+import { isParentResumable } from './parentGuard';
 import { reconstructRegistrationFromThread, type SettledSiblingReplay } from './reconstruct';
 import {
   heldCompletions,
@@ -36,6 +37,18 @@ const log = debug('lobe-store:client-subagent-bridge');
  * cleanup — with the settlement SKIPPED (the original fire already settled
  * the thread; re-settling would clobber the persisted result/error with
  * re-derived values).
+ *
+ * P1 (round-19): a replay failure BEFORE `fireClientSubAgentBridge` (e.g.
+ * `messageService.getMessages` rejecting) used to only log — the fire's own
+ * catch (which installs the retry driver) was never reached, so the sibling's
+ * barrier slot stayed pending forever. The failure now schedules the same
+ * bounded-burst + slow-poll retry driver the fire path uses.
+ *
+ * P2 (round-19): a FAILED / interrupted sibling keeps its persisted failure
+ * text — the fetched assistant message (often stale pre-failure content) is
+ * only used for a `done` outcome, so the failure formatting in
+ * `fireRegistration` reaches the parent instead of a misleading success
+ * snapshot.
  */
 const replaySettledSibling = async (
   get: () => any,
@@ -51,20 +64,50 @@ const replaySettledSibling = async (
       threadId: key,
       topicId: topicId ?? null,
     });
+    // A failed replay must not resurrect a stale pre-failure assistant
+    // answer as the tool result: `fireRegistration`'s failure formatting
+    // takes over when no `settledContent` is supplied (P2 round-19).
     const lastAssistant = messages.findLast?.((m: any) => m.role === 'assistant');
-    const content =
-      (typeof lastAssistant?.content === 'string' && lastAssistant.content) ||
-      'Sub-agent finished without a text answer. Check its thread for details.';
+    const settledContent =
+      replay.outcome.status === 'done' &&
+      typeof lastAssistant?.content === 'string' &&
+      lastAssistant.content
+        ? lastAssistant.content
+        : undefined;
     await fireClientSubAgentBridge(get, replay.registration.childContext, replay.outcome, {
-      settledContent: content,
+      settledContent,
       settledStats: replay.stats,
       skipSettlement: true,
     });
   } catch (error) {
     // A failed replay restores its registry claim + schedules the automatic
-    // retry (the fire catch), so the slot is never silently dropped.
+    // retry (the fire catch), so the slot is never silently dropped. The
+    // retry re-runs the WHOLE replay — the refetched answer is the piece that
+    // failed, and the fire's own retry driver never engaged.
     log('bridge: settled-sibling replay failed for %s: %O', key, error);
+    scheduleBridgeRetry(key, error, () => void replaySettledSibling(get, replay));
   }
+};
+
+/**
+ * The automatic retry driver for a failed fire / replay (P1 round-10): a
+ * bounded burst of retries first (4 × 5s×attempt), then a slow 60s poll that
+ * never stops. Every exit from the fire path cancels the timer (success) or
+ * reschedules it (failure) — no entry is ever left without a driver. The
+ * `refire` closure carries the caller's exact re-entry (options included —
+ * the bare re-fire used to drop them, P1 round-19).
+ */
+const scheduleBridgeRetry = (key: string, error: unknown, refire: () => void): void => {
+  const previous = scheduledBridgeRetries.get(key);
+  if (previous) clearTimeout(previous.timer);
+  const attempt = (previous?.attempt ?? 0) + 1;
+  const delay = attempt <= 4 ? 5000 * attempt : 60_000;
+  const timer = setTimeout(() => {
+    log('bridge scheduled retry %d firing for key %s (delay %dms)', attempt, key, delay);
+    refire();
+  }, delay);
+  scheduledBridgeRetries.set(key, { attempt, timer });
+  log('bridge retry %d scheduled in %dms for key %s (last error: %O)', attempt, delay, key, error);
 };
 
 /**
@@ -200,24 +243,15 @@ export const fireClientSubAgentBridge = async (
     log('bridge failed for key %s (claim + barrier slot restored for retry): %O', key, error);
     // P1 (round-10/11): a restored claim has no driver — the child's terminal
     // boundary was the only production caller and has already completed, so
-    // without a scheduled re-fire the parent stays parked forever. Schedule a
-    // bounded burst of automatic retries first (4 × 5s×attempt), then fall
-    // back to a slow 60s poll that never stops (clearing any earlier timer
-    // for this key first, so failures don't stack timers). The poll IS the
-    // production driver after exhaustion: reconstruction only runs inside a
-    // fire, so a restored claim + persisted coordinates alone cannot initiate
-    // recovery. Every exit from the fire path cancels the timer (success) or
-    // reschedules it (failure) — no entry is ever left without a driver.
-    const previous = scheduledBridgeRetries.get(key);
-    if (previous) clearTimeout(previous.timer);
-    const attempt = (previous?.attempt ?? 0) + 1;
-    const delay = attempt <= 4 ? 5000 * attempt : 60_000;
-    const timer = setTimeout(() => {
-      log('bridge scheduled retry %d firing for key %s (delay %dms)', attempt, key, delay);
-      void fireClientSubAgentBridge(get, context, outcome);
-    }, delay);
-    scheduledBridgeRetries.set(key, { attempt, timer });
-    log('bridge retry %d scheduled in %dms for key %s', attempt, delay, key);
+    // without a scheduled re-fire the parent stays parked forever. The driver
+    // re-fires with the ORIGINAL options (P1 round-19: the bare re-fire used
+    // to drop them, so a replay-initiated fire lost its skipSettlement /
+    // settledStats contract and re-settled the settled sibling).
+    scheduleBridgeRetry(
+      key,
+      error,
+      () => void fireClientSubAgentBridge(get, context, outcome, options),
+    );
   }
 };
 
@@ -380,7 +414,7 @@ const fireSubAgentBridge = async (
   const parentOp = get().operations[parentOperationId];
   const parentParked = parentOp
     ? parentOp.status === 'running'
-    : isParentResumable(get, registration.parentContext, toolMessageId);
+    : await isParentResumable(get, registration.parentContext, toolMessageId);
   if (!parentParked) {
     log(
       'parent %s no longer parked (op status: %s), skipping resume',
@@ -399,7 +433,7 @@ const fireSubAgentBridge = async (
     // A MISSING op with an already-consumed placeholder (the post-reload
     // shape — the parent settled normally long ago) stays a no-op:
     // backfilling would overwrite the settled row with stale child output.
-    if (parentOp || isParentResumable(get, registration.parentContext, toolMessageId)) {
+    if (parentOp || (await isParentResumable(get, registration.parentContext, toolMessageId))) {
       await backfillChildResult(get, registration.parentContext, toolMessageId, {
         context: registration.parentContext,
         resultContent,
@@ -459,42 +493,6 @@ const fireSubAgentBridge = async (
   get().completeOperation(parentOperationId);
 
   log('parent %s resumed with child result (%d chars)', parentOperationId, resultContent.length);
-};
-
-/**
- * Durable park signal for the post-reload path: the parent operation is gone,
- * so the deferred placeholder's plugin state persisted on the tool row is the
- * only signal left. Two surviving shapes mean the parent never resumed:
- *
- * - `status: 'running'` — the deferred placeholder itself, the park (the
- *   pre-marker shape is retained so in-flight runs keep working).
- * - `status: 'completed' | 'error'` WITH `resumePending: true` (P1 round-15) —
- *   the bridge backfilled the child result but the re-entry failed or the
- *   renderer reloaded before it succeeded. The backfill used to overwrite
- *   `running`, leaving no park signal at all, so reconstruction rejected the
- *   bridge and the parent was stranded forever. The marker is written with the
- *   backfill and cleared only after re-entry succeeds.
- *
- * Anything else means the parent settled out-of-band and a resume would be a
- * phantom.
- */
-const isParentResumable = (
-  get: () => any,
-  parentContext: ClientSubAgentBridgeRegistration['childContext'],
-  toolMessageId: string,
-): boolean => {
-  const messages: Array<{
-    id?: string;
-    pluginState?: { resumePending?: boolean; status?: string };
-  }> = get().dbMessagesMap[messageMapKey(parentContext)] || [];
-  const toolRow = messages.find((m) => m.id === toolMessageId);
-  const pluginState = toolRow?.pluginState;
-  if (!pluginState) return false;
-  if (pluginState.status === 'running') return true;
-  return (
-    (pluginState.status === 'completed' || pluginState.status === 'error') &&
-    pluginState.resumePending === true
-  );
 };
 
 /**
@@ -562,7 +560,7 @@ const fireGroupOrchestrationBridge = async (
   const parkedOp = get().operations[orchestrationOperationId];
   const orchestrationParked = parkedOp
     ? parkedOp.status === 'running'
-    : isParentResumable(get, messageContext, toolMessageId);
+    : await isParentResumable(get, messageContext, toolMessageId);
   if (!orchestrationParked) {
     log(
       'orchestration op %s not running (status: %s), skipping re-entry',
@@ -575,7 +573,7 @@ const fireGroupOrchestrationBridge = async (
     // Backfill WITHOUT the `resumePending` marker (same phantom-marker
     // reasoning — see the sub-agent kind); a missing op with an
     // already-consumed placeholder stays a no-op.
-    if (parkedOp || isParentResumable(get, messageContext, toolMessageId)) {
+    if (parkedOp || (await isParentResumable(get, messageContext, toolMessageId))) {
       await backfillChildResult(get, messageContext, toolMessageId, {
         context: messageContext,
         resultContent,
