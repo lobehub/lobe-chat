@@ -94,6 +94,19 @@ describe('GatewayHttpClient clientKinds', () => {
       for (const call of [0, 1, 2]) expect(bodyOf(call).clientKinds).toEqual(['desktop']);
     });
 
+    it('sends clientKinds given by the caller instead of resolving them from the tool', async () => {
+      const { kindsClient, resolveClientKinds } = withResolver();
+      mockFetch({ json: vi.fn().mockResolvedValue({ content: 'ok', success: true }), ok: true });
+
+      await kindsClient.executeToolCall(
+        { clientKinds: ['cli'], deviceId: 'device-1', userId: 'user-1' },
+        { apiName: 'runCommand', arguments: '{}', identifier: 'lobe-computer-use' },
+      );
+
+      expect(bodyOf()).toMatchObject({ clientKinds: ['cli'] });
+      expect(resolveClientKinds).not.toHaveBeenCalled();
+    });
+
     it('omits clientKinds when any client can serve the request', async () => {
       const { kindsClient } = withResolver();
       mockFetch({ json: vi.fn().mockResolvedValue({ success: true }), ok: true });
