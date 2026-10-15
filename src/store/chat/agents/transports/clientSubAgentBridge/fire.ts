@@ -2,11 +2,13 @@ import type { ConversationContext } from '@lobechat/types';
 import debug from 'debug';
 
 import { aiAgentService } from '@/services/aiAgent';
+import { messageService } from '@/services/message';
 import { threadService } from '@/services/thread';
 import { messageMapKey } from '@/store/chat/utils/messageMapKey';
 import { aggregateSubagentMetrics } from '@/utils/subagentMetrics';
 
 import { backfillChildResult } from './backfill';
+import { reconstructRegistrationFromThread, type SettledSiblingReplay } from './reconstruct';
 import {
   heldCompletions,
   registry,
@@ -17,7 +19,6 @@ import {
 import {
   type ClientSubAgentBridgeRegistration,
   type GroupOrchestrationBridgeRegistration,
-  type PersistedBridgeCoordinates,
   type SubAgentBridgeOutcome,
   type SubAgentBridgeRegistration,
 } from './types';
@@ -25,113 +26,71 @@ import {
 const log = debug('lobe-store:client-subagent-bridge');
 
 /**
- * Post-reload reconstruction: the in-memory registry has no claim for this
- * child thread, but a parked child outlives a reload — its isolation thread
- * row still carries the persisted bridge coordinates and is still
- * `processing` (settling the child clears it). Rebuild an ARMED registration
- * from the coordinates and re-arm the barrier slot. Armed because the
- * persisted coordinates only exist once the parent parked; the `processing`
- * status check is what prevents a settled bridge from re-firing.
+ * P1 (round-18): replay a SETTLED sibling reconstructed after a reload. The
+ * sibling has no future terminal event of its own, so its barrier slot would
+ * stay passive forever and the parent would never resume (the current child
+ * releases only its own slot). The replay reads the settled thread's final
+ * answer from the server (the reloaded renderer may not hold that thread's
+ * message bucket) and re-fires through the full public lifecycle — CAS
+ * single-fire, armed guard, idempotent backfill, persisted-coordinate
+ * cleanup — with the settlement SKIPPED (the original fire already settled
+ * the thread; re-settling would clobber the persisted result/error with
+ * re-derived values).
  */
-const reconstructRegistrationFromThread = async (
-  childThreadId: string,
-  childTopicId: string | undefined,
-  // P2 (round-8): the sibling-rebuild loop already holds the full topic
-  // thread list — pass it through instead of re-fetching the whole topic
-  // once per sibling (N serial round-trips before the parent can resume).
-  knownThreads?: Awaited<ReturnType<typeof threadService.getThreads>>,
-): Promise<ClientSubAgentBridgeRegistration | undefined> => {
-  if (!childTopicId) return undefined;
+const replaySettledSibling = async (
+  get: () => any,
+  replay: SettledSiblingReplay,
+): Promise<void> => {
+  const key = replay.registration.childContext.threadId;
+  if (!key) return;
   try {
-    const threads = knownThreads ?? (await threadService.getThreads(childTopicId));
-    const thread = threads.find((t) => t.id === childThreadId);
-    if (!thread) return undefined;
-
-    // P1 (round-12): a settled child with SURVIVING coordinates is the
-    // signature of a fire that crashed AFTER settlement (backfill / plugin
-    // state / re-entry throw) — the success path clears the coordinates
-    // right after `fireRegistration` resolves. A reload in that window used
-    // to strand the parent forever, because this check rejected every
-    // non-`processing` thread. Allow the continuation: re-firing settles an
-    // already-settled child idempotently, and the parentParked guard (op
-    // status / deferred placeholder) blocks phantom resumes of a parent that
-    // already settled out-of-band.
-    if (thread.status !== 'processing') {
-      log(
-        'bridge reconstruction on settled child %s (status=%s) — fire crashed after settlement, continuing the parent resume',
-        childThreadId,
-        thread.status,
-      );
-    }
-
-    const bridge = (thread.metadata as { bridge?: PersistedBridgeCoordinates } | undefined)?.bridge;
-    if (!bridge) return undefined;
-
-    const childContext = {
-      agentId: thread.agentId ?? undefined,
-      ...(thread.groupId ? { groupId: thread.groupId } : {}),
-      scope: 'thread',
-      threadId: childThreadId,
-      topicId: childTopicId,
-    } as ClientSubAgentBridgeRegistration['childContext'];
-
-    const registration: ClientSubAgentBridgeRegistration | undefined =
-      bridge.kind === 'sub-agent'
-        ? {
-            armed: true,
-            childContext,
-            childOperationId: '',
-            kind: 'sub-agent',
-            parentContext:
-              bridge.parentContext ?? ({} as ClientSubAgentBridgeRegistration['childContext']),
-            parentOperationId: bridge.parentOperationId ?? '',
-            toolMessageId: bridge.toolMessageId,
-          }
-        : {
-            armed: true,
-            childContext,
-            childOperationId: '',
-            kind: 'group-orchestration',
-            memberAgentId: bridge.memberAgentId ?? childContext.agentId ?? '',
-            messageContext:
-              bridge.messageContext ?? ({} as ClientSubAgentBridgeRegistration['childContext']),
-            orchestrationOperationId: bridge.orchestrationOperationId ?? '',
-            supervisorAgentId: bridge.supervisorAgentId ?? '',
-            supervisorSnapshot: bridge.supervisorSnapshot,
-            toolMessageId: bridge.toolMessageId,
-          };
-
-    trackPending(registration);
-    registry.set(childThreadId, registration);
-    // P1 (round-7): a reload wipes the whole registry — reconstruct EVERY
-    // parallel sibling parked on the same parent op too, or the first child
-    // to finish tracks only itself and the barrier releases the parent while
-    // its siblings are still running.
-    // P1 (round-12): settled siblings with surviving coordinates are the
-    // post-settlement-crash signature (see the top-of-function note) — they
-    // must also reconstruct, or the barrier never releases for them.
-    if (bridge.kind === 'sub-agent' && bridge.parentOperationId) {
-      for (const sibling of threads) {
-        if (sibling.id === childThreadId || registry.has(sibling.id)) continue;
-        const siblingBridge = (
-          sibling.metadata as { bridge?: PersistedBridgeCoordinates } | undefined
-        )?.bridge;
-        if (
-          siblingBridge?.kind !== 'sub-agent' ||
-          siblingBridge.parentOperationId !== bridge.parentOperationId
-        )
-          continue;
-        await reconstructRegistrationFromThread(sibling.id, childTopicId, threads);
-        log('bridge sibling reconstructed from thread row: key=%s', sibling.id);
-      }
-    }
-    log('bridge reconstructed from thread row (armed): key=%s kind=%s', childThreadId, bridge.kind);
-    return registration;
+    const { agentId, topicId } = replay.registration.childContext;
+    const messages = await messageService.getMessages({
+      agentId: agentId ?? null,
+      skipWorks: true,
+      threadId: key,
+      topicId: topicId ?? null,
+    });
+    const lastAssistant = messages.findLast?.((m: any) => m.role === 'assistant');
+    const content =
+      (typeof lastAssistant?.content === 'string' && lastAssistant.content) ||
+      'Sub-agent finished without a text answer. Check its thread for details.';
+    await fireClientSubAgentBridge(get, replay.registration.childContext, replay.outcome, {
+      settledContent: content,
+      settledStats: replay.stats,
+      skipSettlement: true,
+    });
   } catch (error) {
-    log('bridge: failed to reconstruct registration for %s: %O', childThreadId, error);
-    return undefined;
+    // A failed replay restores its registry claim + schedules the automatic
+    // retry (the fire catch), so the slot is never silently dropped.
+    log('bridge: settled-sibling replay failed for %s: %O', key, error);
   }
 };
+
+/**
+ * Options for an internal re-fire of an already-settled bridge (P1 round-18).
+ */
+interface FireOptions {
+  /**
+   * Final answer fetched from the settled sibling's thread — the reloaded
+   * renderer may not hold that thread's message bucket, so the local
+   * `dbMessagesMap` read in `fireRegistration` would fall back to the
+   * "finished without a text answer" placeholder.
+   */
+  settledContent?: string;
+  /**
+   * The flat stats the ORIGINAL fire settled with (model / cost / tokens) —
+   * re-aggregating the unloaded message bucket of a reloaded renderer would
+   * zero them.
+   */
+  settledStats?: Record<string, number | string | undefined>;
+  /**
+   * The sibling was already settled by the original fire — skip
+   * `updateClientTaskThreadStatus` so the persisted result / error / stats
+   * are not clobbered with re-derived values.
+   */
+  skipSettlement?: boolean;
+}
 
 /**
  * Fire the completion bridge for a child run that just reached a terminal
@@ -151,18 +110,33 @@ export const fireClientSubAgentBridge = async (
   get: () => any,
   context: ClientSubAgentBridgeRegistration['childContext'],
   outcome: SubAgentBridgeOutcome = { status: 'done' },
+  options: FireOptions = {},
 ): Promise<void> => {
   const key = context.threadId;
   if (!key) return;
 
   let registration = registry.get(key);
+  let settledSiblings: SettledSiblingReplay[] = [];
   if (!registration) {
     // Post-reload path: the registry died with the renderer. The child
     // thread row still carries the persisted coordinates.
-    registration =
-      (await reconstructRegistrationFromThread(key, context.topicId ?? undefined)) ?? undefined;
+    const reconstructed = await reconstructRegistrationFromThread(
+      key,
+      context.topicId ?? undefined,
+    );
+    registration = reconstructed.registration;
+    settledSiblings = reconstructed.settledSiblings;
   }
   if (!registration) return;
+
+  // P1 (round-18): a settled sibling reconstructed alongside this fire has no
+  // future terminal event — replay it now so its backfill lands and its
+  // barrier slot is released. The current child's own slot is still pending,
+  // so a replay can never release the barrier into a parent resume; the last
+  // releaser is whichever fire completes last (this one or a replay).
+  for (const replay of settledSiblings) {
+    await replaySettledSibling(get, replay);
+  }
 
   // Two-phase activation (round-6): the spawner registers BEFORE the parent's
   // runtime assembles its deferred pause — with parallel tool lanes that gap
@@ -188,7 +162,7 @@ export const fireClientSubAgentBridge = async (
   }
 
   try {
-    await fireRegistration(get, registration, outcome);
+    await fireRegistration(get, registration, outcome, options);
     // Settlement fully succeeded — only now is the claim final. On failure
     // the registration AND its barrier slot are put back below: a terminal
     // child run has no natural re-fire, so a dropped claim would leave the
@@ -251,26 +225,34 @@ const fireRegistration = async (
   get: () => any,
   registration: ClientSubAgentBridgeRegistration,
   outcome: SubAgentBridgeOutcome,
+  options: FireOptions = {},
 ): Promise<void> => {
   const childOp = get().operations[registration.childOperationId];
   const childThreadId = registration.childContext.threadId;
 
-  // The child's final output: read from its isolation thread messages.
-  const threadMessages = childThreadId
-    ? get().dbMessagesMap[messageMapKey(registration.childContext)] || []
-    : [];
+  // The child's final output: read from its isolation thread messages. For a
+  // replayed settled sibling (P1 round-18) the bucket may not be loaded in
+  // the reloaded renderer — the caller fetched the settled answer from the
+  // server instead.
+  const threadMessages = options.settledContent
+    ? []
+    : childThreadId
+      ? get().dbMessagesMap[messageMapKey(registration.childContext)] || []
+      : [];
   const lastAssistant = threadMessages.findLast?.((m: any) => m.role === 'assistant');
 
   // Preserve terminal disposition: a failed/interrupted continuation must
   // not reach the parent disguised as a successful answer (which could even
   // be stale pre-failure content). The parent sees the failure honestly.
   const succeeded = outcome.status === 'done';
-  const resultContent = succeeded
-    ? lastAssistant?.content ||
-      'Sub-agent finished without a text answer. Check its thread for details.'
-    : outcome.error
-      ? `Sub-agent run ${outcome.status === 'interrupted' ? 'was interrupted' : 'failed'}: ${outcome.error}`
-      : `Sub-agent run ${outcome.status === 'interrupted' ? 'was interrupted' : 'failed'}. Check its thread for details.`;
+  const resultContent =
+    options.settledContent ??
+    (succeeded
+      ? lastAssistant?.content ||
+        'Sub-agent finished without a text answer. Check its thread for details.'
+      : outcome.error
+        ? `Sub-agent run ${outcome.status === 'interrupted' ? 'was interrupted' : 'failed'}: ${outcome.error}`
+        : `Sub-agent run ${outcome.status === 'interrupted' ? 'was interrupted' : 'failed'}. Check its thread for details.`);
 
   // Terminal stats from the child's own thread messages — the same
   // aggregation the normal completion path and the inspector chip use, so
@@ -280,8 +262,10 @@ const fireRegistration = async (
   // can't see cost), matching the normal path's flat stats exactly — once
   // flat totals exist, calculateOperationUsageMetrics stops falling back to
   // the live progress object, so a missing split would report zero cost.
+  // A replayed settled sibling (P1 round-18) carries the stats the ORIGINAL
+  // fire settled with — re-aggregating an unloaded bucket would zero them.
   const metrics = aggregateSubagentMetrics(threadMessages);
-  const stats = {
+  const stats = options.settledStats ?? {
     model: metrics.model,
     totalCost: outcome.cost,
     totalInputTokens: outcome.usage?.input,
@@ -355,7 +339,12 @@ const fireRegistration = async (
     }
   };
 
-  await settleThread();
+  // P1 (round-18): a replayed settled sibling was already settled by the
+  // original fire — skip the settlement so the persisted result / error /
+  // stats are not clobbered with re-derived values.
+  if (!options.skipSettlement) {
+    await settleThread();
+  }
 
   if (registration.kind === 'sub-agent') {
     await fireSubAgentBridge(get, registration, resultContent, succeeded, stats);

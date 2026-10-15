@@ -17,7 +17,14 @@ vi.mock('@/services/aiAgent', () => ({
 vi.mock('@/services/thread', () => ({
   threadService: {
     getThreads: vi.fn().mockResolvedValue([]),
+    mergeThreadMetadata: vi.fn().mockResolvedValue(true),
     updateThread: vi.fn().mockResolvedValue(undefined),
+  },
+}));
+
+vi.mock('@/services/message', () => ({
+  messageService: {
+    getMessages: vi.fn().mockResolvedValue([]),
   },
 }));
 

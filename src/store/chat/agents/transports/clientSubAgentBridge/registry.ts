@@ -111,9 +111,13 @@ const toPersistedCoordinates = (
       };
 
 /**
- * Merge the bridge coordinates into the child thread's metadata. Read-modify-
- * write: the server replaces the whole jsonb blob, so a blind write would
- * clobber `startedAt` and friends.
+ * Merge the bridge coordinates into the child thread's metadata.
+ * P2 (bridge round-18): the write is an ATOMIC top-level merge executed
+ * server-side (`mergeThreadMetadata` → `ThreadModel.mergeMetadata`), guarded
+ * on the thread still being `processing`. The old read-modify-write with a
+ * whole-blob replace raced thread settlement: a settlement landing between
+ * the read and the write clobbered the just-written terminal fields
+ * (completedAt / cost / token totals) with the stale pre-settlement snapshot.
  */
 const persistBridgeCoordinates = async (
   childThreadId: string,
@@ -122,19 +126,16 @@ const persistBridgeCoordinates = async (
 ): Promise<void> => {
   if (!childTopicId) return;
   try {
-    const threads = await threadService.getThreads(childTopicId);
-    const thread = threads.find((t) => t.id === childThreadId);
-    // The row must still be mid-run: a settled thread means the child already
-    // completed through a path that settled it — persisting now would let a
-    // stale bridge re-fire after a later reload.
-    if (!thread || thread.status !== 'processing') return;
-
-    await threadService.updateThread(childThreadId, {
-      metadata: {
-        ...thread.metadata,
-        bridge: toPersistedCoordinates(registration),
-      },
+    const applied = await threadService.mergeThreadMetadata(childThreadId, {
+      bridge: toPersistedCoordinates(registration),
     });
+    // Skipped = the thread already settled (the `processing` guard) — the
+    // coordinates are stale and were correctly NOT resurrected on a settled
+    // row.
+    if (!applied) {
+      log('bridge coordinates persistence skipped for %s (thread already settled)', childThreadId);
+      return;
+    }
     log('bridge coordinates persisted to thread %s', childThreadId);
   } catch (error) {
     // Best-effort: without persistence the bridge still works in-session;
