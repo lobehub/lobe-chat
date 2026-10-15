@@ -346,7 +346,7 @@ const BranchSwitcher = memo<BranchSwitcherProps>(
           setBusyBranch(branch);
           onOpenChange(false);
           try {
-            await switchWorktree(owner.path);
+            await switchWorktree(owner.path, branch);
           } finally {
             onAfterCheckout?.();
             setBusyBranch(null);

@@ -1915,6 +1915,18 @@ export class TopicModel {
   };
 
   /**
+   * Hard delete by id that also reaches rows already in the recycle bin —
+   * same ownership + share-visitor guards as {@link batchDelete}, scoped with
+   * {@link trashScope} (`includeTrashed`) instead of {@link ownership}. For
+   * cascade paths that own their id list: a linked topic sitting in the
+   * recycle bin must not survive its parent's deletion and resurrect as a
+   * sidebar orphan when the user later restores it.
+   */
+  batchDeleteIncludingTrashed = async (ids: string[]) => {
+    return this.db.delete(topics).where(and(inArray(topics.id, ids), this.trashScope()));
+  };
+
+  /**
    * Creator-facing "clear all my topics".
    *
    * Agent-share visitor topics live under the creator's `userId` but are hidden

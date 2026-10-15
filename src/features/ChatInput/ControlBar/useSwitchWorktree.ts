@@ -19,10 +19,14 @@ export const useSwitchWorktree = ({ agentId, isGithub, sourcePath }: UseSwitchWo
   const { commit } = useCommitWorkingDirectory(agentId);
 
   return useCallback(
-    async (worktreePath: string) => {
+    async (worktreePath: string, branch?: string) => {
       const entry: WorkingDirEntry = {
-        // Selecting the source repo itself clears the worktree override.
-        ...(worktreePath === sourcePath ? {} : { git: { activeWorktree: worktreePath } }),
+        // Selecting the source repo itself clears the worktree override. The
+        // branch is recorded with the worktree because it is the only label the
+        // control bar has left once the worktree directory is deleted.
+        ...(worktreePath === sourcePath
+          ? {}
+          : { git: { activeWorktree: worktreePath, ...(branch ? { branch } : {}) } }),
         path: sourcePath,
         repoType: isGithub ? 'github' : 'git',
       };

@@ -17,7 +17,6 @@ import WideScreenContainer from '@/features/WideScreenContainer';
 import { useClientDataSWR } from '@/libs/swr';
 import { portalKeys } from '@/libs/swr/keys';
 import { documentService } from '@/services/document';
-import { useAgentStore } from '@/store/agent';
 import { useDocumentStore } from '@/store/document';
 import { getDocumentRenderMode } from '@/utils/documentRenderMode';
 import {
@@ -25,13 +24,8 @@ import {
   parseSkillMarkdownFrontmatterFields,
 } from '@/utils/skillMarkdown';
 
-import {
-  useDocumentViewFullPage,
-  useResolvedAgentDocumentId,
-  useResolvedDocumentId,
-} from './documentViewContext';
+import { useDocumentViewFullPage, useResolvedDocumentId } from './documentViewContext';
 import EditorCanvas from './EditorCanvas';
-import FooterActions from './FooterActions';
 import SkillFrontmatterCard from './SkillFrontmatterCard';
 import TodoList from './TodoList';
 import { useHighlightSave } from './useHighlightSave';
@@ -225,14 +219,7 @@ HighlightEditor.displayName = 'HighlightEditor';
 
 const DocumentBody = memo(() => {
   const documentId = useResolvedDocumentId();
-  const agentDocumentId = useResolvedAgentDocumentId();
   const fullPage = useDocumentViewFullPage();
-  const activeAgentId = useAgentStore((s) => s.activeAgentId);
-  // `agentDocumentId` is what marks this as an *agent* document: only the agent-doc
-  // openers pass it. The notebook opens plain topic documents with the id alone, and
-  // the footer's chat entry (which resolves a doc-anchored topic) must stay out of
-  // the way there — `getOrCreateChatTopic` throws NOT_FOUND without the binding row.
-  const footerEligible = !fullPage && !!activeAgentId && !!documentId && !!agentDocumentId;
   const [skillFrontmatter, contentFormat] = useDocumentStore((s) =>
     documentId
       ? [s.documents[documentId]?.skillFrontmatter ?? '', s.documents[documentId]?.contentFormat]
@@ -308,20 +295,6 @@ const DocumentBody = memo(() => {
         )}
       </div>
       {renderMode.mode !== 'file' && <TodoList />}
-      {/* The compact portal closes with two entry buttons instead of an inline
-          conversation: "chat to edit" opens the doc-anchored chat on the right
-          panel, "export" downloads the markdown. The full-page route keeps its
-          own layout (the working sidebar already provides chat), and plain
-          notebook documents have no `agent_documents` row to anchor a chat
-          topic, so the footer only renders for agent documents. */}
-      {footerEligible && (
-        <FooterActions
-          agentId={activeAgentId}
-          documentId={documentId}
-          fileBacked={renderMode.mode === 'file'}
-          title={documentMeta?.title ?? documentMeta?.filename ?? undefined}
-        />
-      )}
     </Flexbox>
   );
 });
