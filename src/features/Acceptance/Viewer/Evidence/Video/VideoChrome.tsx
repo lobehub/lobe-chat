@@ -132,7 +132,7 @@ export const VideoControlBar = ({
   const step = stepAt(chapters, time);
 
   return (
-    <Flexbox horizontal align={'center'} gap={2}>
+    <Flexbox horizontal align={'center'} gap={2} wrap={'wrap'}>
       <button
         aria-label={paused ? t('acceptance.video.play') : t('acceptance.video.pause')}
         className={styles.barButton}
@@ -167,7 +167,6 @@ export const VideoControlBar = ({
         {t('acceptance.video.frame', { frame: frameOf(time) })}
         {step?.label ? ` · ${step.label}` : ''}
       </span>
-      <div style={{ flex: 1 }} />
       {onToggleCaptions && claimsOf(chapters).length > 0 && (
         <button
           aria-pressed={captions}

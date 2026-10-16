@@ -20,10 +20,18 @@ export const styles = createStaticStyles(({ css }) => ({
     &:focus-visible {
       box-shadow: 0 0 0 2px ${cssVar.colorPrimaryBorder};
     }
+
+    &:fullscreen > :first-child {
+      max-width: 100%;
+    }
   `,
   frame: css`
     position: relative;
+
     width: 100%;
+    max-width: var(--acceptance-video-frame-width, 100%);
+    margin-inline: auto;
+
     background: #000;
 
     video {
@@ -185,7 +193,9 @@ export const styles = createStaticStyles(({ css }) => ({
   `,
   frameNo: css`
     overflow: hidden;
+    flex: 1;
 
+    min-width: 0;
     margin-inline-start: 8px;
 
     font-family: ${cssVar.fontFamilyCode};
