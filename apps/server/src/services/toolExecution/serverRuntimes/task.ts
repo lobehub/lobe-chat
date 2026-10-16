@@ -41,6 +41,7 @@ import { resolveTaskWorkspaceId } from './resolveWorkspaceScope';
 import { type ServerRuntimeRegistration } from './types';
 
 export interface TaskRuntimeDeps {
+  activeDeviceId?: string;
   agentId?: string;
   agentModel: AgentModel;
   // Assistant message that carried the createTask tool call — the tool-call
@@ -75,6 +76,7 @@ export interface TaskRuntimeDeps {
 
 export const createTaskRuntime = (deps: TaskRuntimeDeps) => {
   const {
+    activeDeviceId,
     agentId,
     assistantMessageId,
     operationId,
@@ -804,6 +806,16 @@ export const createTaskRuntime = (deps: TaskRuntimeDeps) => {
       try {
         const result = await taskCaller().run({
           continueTopicId: args.continueTopicId,
+          // Inherit the dispatching run's device when it executes on one: a
+          // task topic spawned from a device-routed session must reach the
+          // same machine (its engagement/workspace paths live there), not
+          // fall back to the assignee agent's stored target or the cloud
+          // sandbox. Mirrors the callSubAgent device inheritance in
+          // executorHelpers.buildServerVirtualSubAgentRunner. The task's own
+          // pin (readTaskExecutionConfig) still wins inside the runner — this
+          // only fills the gap when the task pins nothing — and an agent
+          // whose selection policy is `fixed` overrides it at plan resolve.
+          ...(activeDeviceId ? { deviceId: activeDeviceId } : {}),
           id,
           prompt: args.prompt,
         });
@@ -836,7 +848,12 @@ export const createTaskRuntime = (deps: TaskRuntimeDeps) => {
 
       for (const [index, identifier] of identifiers.entries()) {
         try {
-          const result = await taskCaller().run({ id: identifier });
+          // Same device inheritance as runTask: a batch dispatched from a
+          // device-routed run lands its task topics on the same machine.
+          const result = await taskCaller().run({
+            ...(activeDeviceId ? { deviceId: activeDeviceId } : {}),
+            id: identifier,
+          });
           const topicId = (result as { topicId?: string } | undefined)?.topicId;
           succeeded += 1;
           lines.push(
@@ -956,6 +973,7 @@ export const taskRuntime: ServerRuntimeRegistration = {
     const db = context.serverDB;
     const userId = context.userId;
     const {
+      activeDeviceId,
       agentId,
       assistantMessageId,
       operationId,
@@ -987,6 +1005,7 @@ export const taskRuntime: ServerRuntimeRegistration = {
     // `deps` object, so re-assigning the fields below propagates into every
     // method without re-creating the runtime.
     const deps = {
+      activeDeviceId,
       agentId,
       assistantMessageId,
       operationId,
