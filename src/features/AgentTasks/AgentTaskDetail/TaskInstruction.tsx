@@ -15,6 +15,7 @@ import { lambdaClient } from '@/libs/trpc/client';
 import { useTaskStore } from '@/store/task';
 import { taskDetailSelectors } from '@/store/task/selectors';
 
+import { TASK_INSTRUCTION_EXTRA_PLUGINS } from './taskInstructionPlugins';
 import { useTaskInstructionAutosave } from './useTaskInstructionAutosave';
 
 // Stable lock RPC binding for the task resource.
@@ -141,6 +142,7 @@ const TaskInstruction = memo(() => {
             editor={editor}
             editorData={editorData}
             entityId={taskId}
+            extraPlugins={TASK_INSTRUCTION_EXTRA_PLUGINS}
             placeholder={t('taskDetail.instructionPlaceholder')}
             onContentChange={handleContentChange}
           />
