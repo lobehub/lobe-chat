@@ -77,6 +77,11 @@ const triggerStyle: CSSProperties = {
   minWidth: 0,
 };
 
+// `display: contents` keeps the disabled wrapper out of layout, so the trigger
+// lays out exactly as when enabled (e.g. a full-width property row stays
+// left-aligned instead of shrinking and being centered).
+const blockedContentStyle: CSSProperties = { display: 'contents', pointerEvents: 'none' };
+
 const AssigneeAgentSelector = memo<AssigneeAgentSelectorProps>(
   ({ children, currentAgentId, disabled, onChange, taskIdentifier, taskVisibility }) => {
     const { t } = useTranslation(['chat', 'common', 'topic']);
@@ -283,7 +288,7 @@ const AssigneeAgentSelector = memo<AssigneeAgentSelectorProps>(
           style={{ ...triggerStyle, cursor: 'not-allowed', opacity: 0.5 }}
           onClick={(event) => event.stopPropagation()}
         >
-          <span style={{ pointerEvents: 'none' }}>{children}</span>
+          <span style={blockedContentStyle}>{children}</span>
         </div>
       </Tooltip>
     ) : (
