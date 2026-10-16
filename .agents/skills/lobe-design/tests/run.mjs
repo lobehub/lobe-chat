@@ -178,12 +178,26 @@ console.log('== copy profiles');
     t('copy: product.md 存在时不被列表外的触发词带偏', JSON.stringify(loaded(f2)) === '["consumer"]', JSON.stringify(f2.copyProfile));
   } finally { rmSync(root, { recursive: true, force: true }); }
   t('copy: 其他 stage 不加载 profile 文件', resolveRefs('把列表页的间距调一下').stages.every((s) => s.stage === '75-copy' || !s.refs.some((x) => x.tier === 'profile')));
+  {
+    const cwdRoot = mkdtempSync(join(tmpdir(), 'ld-copy-cwd-'));
+    try {
+      mkdirSync(join(cwdRoot, '.agents', 'ux'), { recursive: true });
+      writeFileSync(join(cwdRoot, '.agents', 'ux', 'product.md'), '# 产品画像\n\ncopy-profile: consumer\n');
+      const r = spawnSync(process.execPath, [join(skill, 'scripts', 'refs.mjs'), '把提示文案改一下', '--stage', '75-copy', '--json'], { encoding: 'utf8', cwd: cwdRoot });
+      const cp = r.status === 0 ? JSON.parse(r.stdout).copyProfile : null;
+      t('refs.mjs 不带 --root 时读当前目录的 product.md', JSON.stringify(cp?.selected) === '["consumer"]' && cp?.source === 'product.md', r.stderr || JSON.stringify(cp));
+    } finally { rmSync(cwdRoot, { recursive: true, force: true }); }
+  }
   t('refs.mjs --profile 未知 → exit 2', run('refs.mjs', ['改文案', '--stage', '75-copy', '--profile', 'nope']).status === 2);
   // zh-CN 语言包：只跑 locale 规则；同样内容的 tsx 会跑全部规则
   const zh = '{\n  "save": "已保存API密钥",\n  "fail": "保存失败,请重试",\n  "ok": "已保存 API 密钥",\n  "color": "#ff0000"\n}\n';
   const zf = lintText(zh, 'locales/zh-CN/common.json').map((x) => `${x.line}:${x.id}`);
   t('copy: zh-CN 语言包报 CJK 留白与半角标点', JSON.stringify(zf) === '["2:LOBE-CJK-LATIN-SPACE","3:LOBE-HALFWIDTH-PUNCT"]', zf.join(','));
   t('copy: 语言包不跑非文案规则（#ff0000 不报 RAW-COLOR）', !zf.some((x) => x.includes('RAW-COLOR')));
+  const rawColor = (src) => lintText(src, 'src/x.ts').filter((x) => x.id === 'LOBE-RAW-COLOR').map((x) => x.line);
+  t('RAW-COLOR: 全透明哨兵值不报', rawColor("const BLANK = new Set(['transparent', 'rgba(0,0,0,0)', '#0000', '#00000000']);\n").length === 0);
+  t('RAW-COLOR: 颜色作为比较操作数不报', rawColor("if (bg === 'rgba(0, 0, 0, 0.5)' || '#fff' !== fg) return;\n").length === 0);
+  t('RAW-COLOR: 半透明 / 不透明颜色照报', JSON.stringify(rawColor("const a = { color: 'rgba(0,0,0,0.45)' };\nconst b = { color: '#1677ff' };\nconst c = { color: x === 'a' ? '#fff' : '#000' };\n")) === '[1,2,3]');
   t('copy: 非 zh-CN 的 json 不被扫描', !lintPathsHas('locales/en-US/common.json') && lintPathsHas('locales/zh-CN/common.json') && lintPathsHas('src/locales/zh_CN.json'));
 }
 
@@ -339,7 +353,8 @@ console.log('== install.sh backup');
   const repoRoot = join(skill, '..', '..');
   const installSh = join(repoRoot, 'install.sh');
   if (!existsSync(installSh)) {
-    t('install.sh present at repo root', false, installSh);
+    // 以 install.sh --copy 装进项目（.agents/skills/lobe-design）时没有 skill 仓库根的 install.sh，跳过
+    console.log(`SKIP install.sh 不在 ${installSh}（非 skill 源仓库布局）`);
   } else {
     const cacheHome = mkdtempSync(join(tmpdir(), 'ld-xdg-'));
     const proj = mkdtempSync(join(tmpdir(), 'my-app-'));

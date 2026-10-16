@@ -73,6 +73,21 @@ function fontFamilyViolation(l) {
   return !branches.every((b) => FONT_OK.test(b.trim().replace(/[;,]$/, '')));
 }
 
+// LOBE-RAW-COLOR：只报会被渲染出来的颜色。全透明（alpha 为 0，如 rgba(0,0,0,0) / #0000）不报，
+// 它等同 transparent，常作「无背景」哨兵值；作为 === / !== 比较操作数的颜色字符串也不报，它是输入判断不是样式。
+const RAW_HEX = /(^|[^&\w])#([0-9a-fA-F]{8}|[0-9a-fA-F]{6}|[0-9a-fA-F]{3,4})\b/g;
+const RAW_RGB = /\brgba?\(\s*\d[^)]*\)?/g;
+const COLOR_COMPARE = /[!=]==?\s*(['"`])(?:#|rgba?\()[^'"`]*\1|(['"`])(?:#|rgba?\()[^'"`]*\2\s*[!=]==?/g;
+function rawColorViolation(l) {
+  if (/^\s*import\b/.test(l)) return false;
+  const rest = l.replace(COLOR_COMPARE, '');
+  const hexes = [...rest.matchAll(RAW_HEX)].map((m) => m[2]);
+  const rgbs = [...rest.matchAll(RAW_RGB)].map((m) => m[0]);
+  const transparentHex = (h) => (h.length === 4 && h[3] === '0') || (h.length === 8 && h.slice(6) === '00');
+  const transparentRgb = (c) => { const p = c.replace(/^rgba?\(|\)$/g, '').split(/[\s,/]+/).filter(Boolean); return p.length === 4 && parseFloat(p[3]) === 0; };
+  return hexes.some((h) => !transparentHex(h)) || rgbs.some((c) => !transparentRgb(c));
+}
+
 // LOBE-OUTLINE-NONE：只在可能被键盘聚焦的元素上报。看所在样式块（css`` 模板，或前后 12 行）：
 // - 块里是不可聚焦的 SVG 图形（path / Geography 等）且没有 tabIndex、交互元素时，不报；
 // - 块里有 :focus-visible / focus 态的可见替代（box-shadow、border、非 none 的 outline）时，不报。
@@ -141,7 +156,7 @@ export const RULES = [
   // ---- 50-visual (D-/K-/A-) ----
   { id: 'LOBE-RAW-COLOR', level: 'FAIL', ref: 'D-10', stage: '50-visual', kind: 'line',
     msg: '裸 hex / rgba；改用 cssVar token，找不到就按 D-11 写缺口',
-    test: (l) => !/^\s*import\b/.test(l) && (/(^|[^&\w])#(?:[0-9a-fA-F]{3,4}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})\b/.test(l) || /\brgba?\(\s*\d/.test(l)) },
+    test: (l) => rawColorViolation(l) },
   { id: 'LOBE-FONT-FAMILY', level: 'FAIL', ref: 'K-02', stage: '50-visual', kind: 'line',
     msg: '组件里写了 font-family；字体由主题提供（theme.css，自定义字体走 ConfigProvider customFonts；代码用 cssVar.fontFamilyCode）',
     test: (l) => fontFamilyViolation(l) },

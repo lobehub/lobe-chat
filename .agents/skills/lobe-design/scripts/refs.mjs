@@ -165,7 +165,7 @@ const HELP = `lobe-design refs — 渐进式披露解析器（零依赖）
   node scripts/refs.mjs "<指令>" --stage 50-visual  只看某个 stage
   node scripts/refs.mjs "<指令>" --json            JSON 输出
   node scripts/refs.mjs "<指令>" --profile admin   75-copy：指定文案 profile（consumer | saas | admin | devtool）
-  node scripts/refs.mjs "<指令>" --root <项目根>   75-copy：从 .agents/ux/product.md 的 copy-profile 选 profile
+  node scripts/refs.mjs "<指令>" --root <项目根>   75-copy：从 .agents/ux/product.md 的 copy-profile 选 profile（默认当前目录）
   node scripts/refs.mjs --audit                    审计全部 reference 的 tier / always 预算
 
 tier
@@ -192,7 +192,8 @@ if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
   const json = args.includes('--json');
   const stage = args.includes('--stage') ? args[args.indexOf('--stage') + 1] : undefined;
   const profile = args.includes('--profile') ? args[args.indexOf('--profile') + 1] : undefined;
-  const root = args.includes('--root') ? args[args.indexOf('--root') + 1] : undefined;
+  // 不带 --root 时默认当前目录，和 bootstrap / project-scan 一致：项目根下运行即可读到 .agents/ux/product.md
+  const root = args.includes('--root') ? args[args.indexOf('--root') + 1] : process.cwd();
   const instruction = args.filter((a, i) => !a.startsWith('--') && !['--stage', '--profile', '--root'].includes(args[i - 1])).join(' ');
   if (!instruction) { console.error(`用法错误：缺少指令。\n\n${HELP}`); process.exit(2); }
   if (stage && !PIPELINE.stages[stage]) {
