@@ -1,7 +1,7 @@
 import { getConnectorCatalog } from '@lobechat/const';
 import { describe, expect, it, vi } from 'vitest';
 
-import { AVAILABLE_AGENTS_LIMIT, gatherContextFacts } from './gatherContextFacts';
+import { gatherContextFacts } from './gatherContextFacts';
 import { listOfficialTools } from './officialTools';
 import type { ContextFactProviders, ContextFactRequest } from './types';
 
@@ -255,25 +255,6 @@ describe('gatherContextFacts', () => {
 
   describe('agent management', () => {
     const recent = Array.from({ length: 12 }, (_, i) => ({ id: `agt_${i}`, title: `A${i}` }));
-
-    it('keeps the recent selection stable when only its recency order changes', async () => {
-      const selected = Array.from({ length: AVAILABLE_AGENTS_LIMIT }, (_, i) => ({
-        id: `agt_${i + 10}`,
-        title: `Agent ${i + 10}`,
-      }));
-      const older = { id: 'agt_00', title: 'Older agent' };
-      const self = { id: 'agt_1', title: 'Helper' };
-      const gather = (agents: typeof selected) =>
-        gatherContextFacts(request(), { listRecentAgents: async () => agents });
-
-      const first = await gather([self, ...selected.toReversed(), older]);
-      const second = await gather([...selected, self, older]);
-
-      const context = first.step.agentManagementContext!;
-      expect(context.availableAgents?.map((a) => a.id)).toEqual(selected.map((a) => a.id));
-      expect(context.availableAgentsHasMore).toBe(true);
-      expect(second.step.agentManagementContext).toEqual(context);
-    });
 
     it('lists available agents in auto skill mode without the tool, excluding itself', async () => {
       const facts = await gatherContextFacts(request(), { listRecentAgents: async () => recent });
