@@ -16,9 +16,9 @@ import UsageMeter, {
 import { latestUsageView } from '@/features/DeviceManager/DeviceHealth/viewState';
 import { getDeviceIcon, getPlatformLabel } from '@/features/DeviceManager/getDeviceIcon';
 import { useDeviceActivityText } from '@/features/DeviceManager/useDeviceActivityText';
-import { useDeviceList } from '@/features/DeviceManager/useDeviceList';
 
 import { sectionStyles } from './sectionStyles';
+import { useBoundDevice } from './useBoundDevice';
 
 const styles = createStaticStyles(({ css }) => ({
   body: css`
@@ -79,7 +79,7 @@ const styles = createStaticStyles(({ css }) => ({
 }));
 
 interface DeviceStatusSectionProps {
-  /** Polls the device's CPU / memory series only while the Overview is on screen. */
+  /** Polls the device's presence and CPU / memory series only while the Overview is on screen. */
   active: boolean;
   deviceId: string;
 }
@@ -90,8 +90,7 @@ interface DeviceStatusSectionProps {
  * machine doing this work healthy and busy?" without leaving the conversation.
  */
 const DeviceStatusSection = memo<DeviceStatusSectionProps>(({ active, deviceId }) => {
-  const { data: devices } = useDeviceList();
-  const device = devices?.find((item) => item.deviceId === deviceId);
+  const device = useBoundDevice(deviceId, active);
   const { data, error } = useDeviceMetricSeries(deviceId, active && !!device);
 
   // Not in the list yet (still loading, or removed): nothing to describe.
