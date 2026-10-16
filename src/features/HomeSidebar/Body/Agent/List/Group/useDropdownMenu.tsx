@@ -1,7 +1,7 @@
 import type { SFSymbol } from '@lobechat/electron-client-ipc';
 import { type SidebarVisibility } from '@lobechat/types';
 import { type DropdownItem } from '@lobehub/ui';
-import { confirmModal, Icon, toast  } from '@lobehub/ui';
+import { confirmModal, Icon, toast } from '@lobehub/ui';
 import { EyeOffIcon, GlobeIcon } from 'lucide-react';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';

@@ -1,6 +1,6 @@
 'use client';
 
-import { createStaticStyles, cssVar, cx,Icon  } from '@lobehub/ui';
+import { createStaticStyles, cssVar, cx, Icon } from '@lobehub/ui';
 import { ChevronRight } from 'lucide-react';
 import { memo, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';

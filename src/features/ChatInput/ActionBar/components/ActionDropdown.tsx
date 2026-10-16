@@ -9,13 +9,17 @@ import {
   type PopoverTrigger,
 } from '@lobehub/ui';
 import {
-createGlobalStyle, createStaticStyles, cssVar, cx, 
+  createGlobalStyle,
+  createStaticStyles,
+  cssVar,
+  cx,
   DropdownMenuPopup,
   DropdownMenuPortal,
   DropdownMenuPositioner,
   DropdownMenuRoot,
   DropdownMenuTrigger,
-  renderDropdownMenuItems} from '@lobehub/ui';
+  renderDropdownMenuItems,
+} from '@lobehub/ui';
 import { type CSSProperties, type ReactNode } from 'react';
 import {
   isValidElement,

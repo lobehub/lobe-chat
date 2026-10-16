@@ -1,7 +1,7 @@
 'use client';
 
 import type { WidgetLevelFilter } from '@lobechat/types';
-import { ActionIcon, Flexbox, Icon, Text  } from '@lobehub/ui';
+import { ActionIcon, Flexbox, Icon, Text } from '@lobehub/ui';
 import { ChevronLeftIcon, LayoutDashboardIcon } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';

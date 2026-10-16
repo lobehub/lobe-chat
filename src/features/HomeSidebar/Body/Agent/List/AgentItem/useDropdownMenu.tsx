@@ -6,7 +6,7 @@ import {
   type SidebarVisibility,
 } from '@lobechat/types';
 import { type DropdownItem } from '@lobehub/ui';
-import { confirmModal, Icon, toast  } from '@lobehub/ui';
+import { confirmModal, Icon, toast } from '@lobehub/ui';
 import isEqual from 'fast-deep-equal';
 import {
   Check,

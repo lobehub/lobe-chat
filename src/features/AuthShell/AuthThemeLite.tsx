@@ -4,7 +4,7 @@ import '@lobehub/ui/theme.css';
 import '@lobehub/ui/global.css';
 import '@lobehub/ui/style.css';
 
-import { ConfigProvider, ToastHost  } from '@lobehub/ui';
+import { ConfigProvider, ToastHost } from '@lobehub/ui';
 import { domMax, LazyMotion } from 'motion/react';
 import * as m from 'motion/react-m';
 import { type PropsWithChildren } from 'react';

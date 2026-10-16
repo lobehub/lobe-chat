@@ -1,6 +1,6 @@
 'use client';
 
-import { type DropdownItem,Flexbox, Icon } from '@lobehub/ui';
+import { type DropdownItem, Flexbox, Icon } from '@lobehub/ui';
 import { createStaticStyles } from '@lobehub/ui';
 import { Crown, Sparkles, Users, UsersRound } from 'lucide-react';
 import { memo, useMemo, useState } from 'react';

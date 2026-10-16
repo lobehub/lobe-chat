@@ -1,4 +1,4 @@
-import { Button, createStaticStyles, cssVar,Flexbox, Skeleton, Text   } from '@lobehub/ui';
+import { Button, createStaticStyles, cssVar, Flexbox, Skeleton, Text } from '@lobehub/ui';
 import { ArrowUpRightIcon, LayoutDashboardIcon } from 'lucide-react';
 import { memo, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';

@@ -1,6 +1,6 @@
 'use client';
 
-import { confirmModal, Icon, toast,Tooltip  } from '@lobehub/ui';
+import { confirmModal, Icon, toast, Tooltip } from '@lobehub/ui';
 import { type DropdownItem } from '@lobehub/ui';
 import { EyeOffIcon, Trash, UsersIcon } from 'lucide-react';
 import type { CSSProperties } from 'react';

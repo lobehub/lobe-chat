@@ -2,7 +2,7 @@
 
 import { SOCIAL_URL } from '@lobechat/business-const';
 import { type DropdownItem } from '@lobehub/ui';
-import { ActionIcon,DropdownMenu, Flexbox, Icon  } from '@lobehub/ui';
+import { ActionIcon, DropdownMenu, Flexbox, Icon } from '@lobehub/ui';
 import { DiscordIcon, GithubIcon } from '@lobehub/ui/icons';
 import {
   Book,

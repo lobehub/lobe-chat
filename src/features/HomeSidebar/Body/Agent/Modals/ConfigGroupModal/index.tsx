@@ -1,4 +1,4 @@
-import { Button , createStaticStyles,Flexbox, Icon , SortableList  } from '@lobehub/ui';
+import { Button, createStaticStyles, Flexbox, Icon, SortableList } from '@lobehub/ui';
 import isEqual from 'fast-deep-equal';
 import { Plus } from 'lucide-react';
 import { memo, useState } from 'react';

@@ -1,7 +1,7 @@
 'use client';
 
 import { type DropdownItem } from '@lobehub/ui';
-import { ActionIcon,DropdownMenu  } from '@lobehub/ui';
+import { ActionIcon, DropdownMenu } from '@lobehub/ui';
 import { MoreHorizontal } from 'lucide-react';
 import { memo } from 'react';
 

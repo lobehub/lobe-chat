@@ -1,7 +1,7 @@
 'use client';
 
 import type { WidgetManifest } from '@lobechat/types';
-import { createStaticStyles, cssVar,Flexbox, Tag, Text   } from '@lobehub/ui';
+import { createStaticStyles, cssVar, Flexbox, Tag, Text } from '@lobehub/ui';
 import { memo, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 

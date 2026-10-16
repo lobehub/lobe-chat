@@ -5,7 +5,7 @@ import '@lobehub/ui/global.css';
 import '@lobehub/ui/style.css';
 
 import { type NeutralColors, type PrimaryColors } from '@lobehub/ui';
-import { ConfigProvider, createStaticStyles, cx,FontLoader, setLobeTheme  } from '@lobehub/ui';
+import { ConfigProvider, createStaticStyles, cx, FontLoader, setLobeTheme } from '@lobehub/ui';
 import * as m from 'motion/react-m';
 import { type ReactNode } from 'react';
 import { memo, useEffect, useMemo, useState } from 'react';

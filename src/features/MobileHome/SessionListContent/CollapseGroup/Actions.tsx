@@ -4,7 +4,14 @@ import {
   type MenuInfo,
   type MenuItemType,
 } from '@lobehub/ui';
-import { ActionIcon, confirmModal, createStaticStyles,DropdownMenu, Icon, toast   } from '@lobehub/ui';
+import {
+  ActionIcon,
+  confirmModal,
+  createStaticStyles,
+  DropdownMenu,
+  Icon,
+  toast,
+} from '@lobehub/ui';
 import { MoreVertical, PencilLine, Plus, Settings2, Trash, UsersRound } from 'lucide-react';
 import { memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';

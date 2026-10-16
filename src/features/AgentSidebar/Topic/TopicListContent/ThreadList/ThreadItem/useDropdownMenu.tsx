@@ -1,5 +1,5 @@
 import { type DropdownItem } from '@lobehub/ui';
-import { confirmModal,Icon  } from '@lobehub/ui';
+import { confirmModal, Icon } from '@lobehub/ui';
 import { PanelRight, PencilLine, Trash } from 'lucide-react';
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';

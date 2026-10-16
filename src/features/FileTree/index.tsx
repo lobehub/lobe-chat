@@ -2,7 +2,7 @@
 
 import type { SkillResourceTreeNode } from '@lobechat/types';
 import type { DropdownItem } from '@lobehub/ui';
-import { ContextMenuTrigger, createStaticStyles,Icon, Input   } from '@lobehub/ui';
+import { ContextMenuTrigger, createStaticStyles, Icon, Input } from '@lobehub/ui';
 import { ChevronDown, ChevronRight, File, FolderIcon, FolderOpenIcon } from 'lucide-react';
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 

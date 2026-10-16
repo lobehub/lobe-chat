@@ -1,6 +1,6 @@
 'use client';
 
-import { Button, createStaticStyles, cssVar,Flexbox, Text, Tooltip   } from '@lobehub/ui';
+import { Button, createStaticStyles, cssVar, Flexbox, Text, Tooltip } from '@lobehub/ui';
 import dayjs from 'dayjs';
 import { LayoutGridIcon, RefreshCwIcon } from 'lucide-react';
 import { memo, useMemo } from 'react';

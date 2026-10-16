@@ -1,6 +1,17 @@
 'use client';
 
-import { Button, createStaticStyles, cssVar,Flexbox, Icon, Skeleton, Tag, Text, toast, Tooltip   } from '@lobehub/ui';
+import {
+  Button,
+  createStaticStyles,
+  cssVar,
+  Flexbox,
+  Icon,
+  Skeleton,
+  Tag,
+  Text,
+  toast,
+  Tooltip,
+} from '@lobehub/ui';
 import { ArrowUpRightIcon, PanelRightOpenIcon, RocketIcon } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';

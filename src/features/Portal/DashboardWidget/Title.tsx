@@ -1,4 +1,4 @@
-import { cssVar,Flexbox, Icon, Text   } from '@lobehub/ui';
+import { cssVar, Flexbox, Icon, Text } from '@lobehub/ui';
 import { ChartNoAxesColumnIcon } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';

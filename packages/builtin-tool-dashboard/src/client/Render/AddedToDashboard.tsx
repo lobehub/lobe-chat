@@ -1,6 +1,6 @@
 'use client';
 
-import { Block, Button, cssVar,Flexbox, Icon, Text   } from '@lobehub/ui';
+import { Block, Button, cssVar, Flexbox, Icon, Text } from '@lobehub/ui';
 import { ArrowUpRightIcon, LayoutDashboardIcon } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';

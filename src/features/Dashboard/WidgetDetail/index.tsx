@@ -1,6 +1,6 @@
 'use client';
 
-import { Alert, createStaticStyles, cssVar,Drawer, Flexbox, Tabs, Text   } from '@lobehub/ui';
+import { Alert, createStaticStyles, cssVar, Drawer, Flexbox, Tabs, Text } from '@lobehub/ui';
 import dayjs from 'dayjs';
 import { memo, type ReactNode, useState } from 'react';
 import { useTranslation } from 'react-i18next';

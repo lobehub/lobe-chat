@@ -1,7 +1,7 @@
 'use client';
 
 import type { AcceptanceCommentItem, AcceptanceCommentThread } from '@lobechat/types';
-import { createStaticStyles, cssVar, cx,Flexbox, Icon  } from '@lobehub/ui';
+import { createStaticStyles, cssVar, cx, Flexbox, Icon } from '@lobehub/ui';
 import { GitCommitHorizontal, MessageSquare } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';

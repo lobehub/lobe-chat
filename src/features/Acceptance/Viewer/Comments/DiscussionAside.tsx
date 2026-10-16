@@ -1,7 +1,7 @@
 'use client';
 
 import type { AcceptanceCommentItem } from '@lobechat/types';
-import { Button, createStaticStyles, cssVar,Flexbox, Tooltip   } from '@lobehub/ui';
+import { Button, createStaticStyles, cssVar, Flexbox, Tooltip } from '@lobehub/ui';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 

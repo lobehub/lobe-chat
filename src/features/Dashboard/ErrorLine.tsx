@@ -1,6 +1,6 @@
 'use client';
 
-import { Button, createStaticStyles, cssVar,Flexbox, Icon, Text   } from '@lobehub/ui';
+import { Button, createStaticStyles, cssVar, Flexbox, Icon, Text } from '@lobehub/ui';
 import { CircleAlertIcon } from 'lucide-react';
 import { memo, type ReactNode, useState } from 'react';
 import { useTranslation } from 'react-i18next';

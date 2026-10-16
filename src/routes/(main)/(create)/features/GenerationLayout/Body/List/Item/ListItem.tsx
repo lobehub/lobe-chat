@@ -1,7 +1,7 @@
 'use client';
 
 import { type DropdownItem } from '@lobehub/ui';
-import { ActionIcon, Avatar, cssVar  } from '@lobehub/ui';
+import { ActionIcon, Avatar, cssVar } from '@lobehub/ui';
 import { Trash } from 'lucide-react';
 import type { CSSProperties, MouseEvent } from 'react';
 import { memo } from 'react';

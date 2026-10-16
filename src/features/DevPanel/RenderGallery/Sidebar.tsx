@@ -1,6 +1,6 @@
 'use client';
 
-import { type DropdownItem, List, type ListItem, Text  } from '@lobehub/ui';
+import { type DropdownItem, List, type ListItem, Text } from '@lobehub/ui';
 import { createStaticStyles } from '@lobehub/ui';
 import { memo, useMemo } from 'react';
 

@@ -1,7 +1,7 @@
 'use client';
 
 import { type DropdownItem, DropdownMenu, Flexbox, Tooltip } from '@lobehub/ui';
-import { Avatar, createStaticStyles, cx  } from '@lobehub/ui';
+import { Avatar, createStaticStyles, cx } from '@lobehub/ui';
 import { Plus } from 'lucide-react';
 import { type ReactNode } from 'react';
 import { memo, useEffect, useRef } from 'react';

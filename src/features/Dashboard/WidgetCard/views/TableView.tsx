@@ -1,7 +1,7 @@
 'use client';
 
 import type { WidgetTableOutput } from '@lobechat/types';
-import { createStaticStyles, cssVar,Text  } from '@lobehub/ui';
+import { createStaticStyles, cssVar, Text } from '@lobehub/ui';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 

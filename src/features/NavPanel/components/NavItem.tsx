@@ -1,7 +1,18 @@
 'use client';
 
 import { type BlockProps, type DropdownItem, type IconProps } from '@lobehub/ui';
-import { Block, Center, ContextMenuTrigger, createStaticStyles, cssVar, cx,Flexbox, Icon, Spin, Text   } from '@lobehub/ui';
+import {
+  Block,
+  Center,
+  ContextMenuTrigger,
+  createStaticStyles,
+  cssVar,
+  cx,
+  Flexbox,
+  Icon,
+  Spin,
+  Text,
+} from '@lobehub/ui';
 import { type FocusEvent, type PointerEvent, type ReactNode } from 'react';
 import { memo } from 'react';
 

@@ -1,6 +1,6 @@
 import { isDesktop } from '@lobechat/const';
 import { type DropdownItem } from '@lobehub/ui';
-import { ActionIcon, confirmModal, DropdownMenu, Flexbox, Text,Tooltip  } from '@lobehub/ui';
+import { ActionIcon, confirmModal, DropdownMenu, Flexbox, Text, Tooltip } from '@lobehub/ui';
 import { ArrowRight, Plus, Unlink } from 'lucide-react';
 import { type CSSProperties } from 'react';
 import { memo, useMemo } from 'react';

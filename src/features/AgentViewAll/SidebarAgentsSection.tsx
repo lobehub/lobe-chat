@@ -3,8 +3,8 @@
 import { AGENT_CHAT_URL, GROUP_CHAT_URL } from '@lobechat/const';
 import type { SidebarAgentItem } from '@lobechat/types';
 import { agentDisplayName, agentSecondaryDisplayName } from '@lobechat/types';
-import { Block, ContextMenuTrigger, type DropdownItem,Flexbox, Icon } from '@lobehub/ui';
-import { createStaticStyles, cssVar, responsive,Tag, Text  } from '@lobehub/ui';
+import { Block, ContextMenuTrigger, type DropdownItem, Flexbox, Icon } from '@lobehub/ui';
+import { createStaticStyles, cssVar, responsive, Tag, Text } from '@lobehub/ui';
 import { ChevronDownIcon, ChevronUpIcon } from 'lucide-react';
 import { memo, useCallback, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';

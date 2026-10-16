@@ -1,7 +1,7 @@
 'use client';
 
 import type { WidgetListOutput } from '@lobechat/types';
-import { createStaticStyles, cssVar,Flexbox, Tag, Text   } from '@lobehub/ui';
+import { createStaticStyles, cssVar, Flexbox, Tag, Text } from '@lobehub/ui';
 import dayjs from 'dayjs';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';

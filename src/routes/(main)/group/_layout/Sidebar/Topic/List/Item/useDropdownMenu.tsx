@@ -1,7 +1,7 @@
 import { GROUP_CHAT_TOPIC_URL } from '@lobechat/const';
 import type { ChatTopicStatus } from '@lobechat/types';
 import { type DropdownItem } from '@lobehub/ui';
-import { Icon, toast  } from '@lobehub/ui';
+import { Icon, toast } from '@lobehub/ui';
 import {
   Archive,
   ArchiveRestore,

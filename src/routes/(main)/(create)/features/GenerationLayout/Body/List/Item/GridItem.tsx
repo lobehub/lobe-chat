@@ -1,7 +1,7 @@
 'use client';
 
 import { ContextMenuTrigger, type DropdownItem, Flexbox, Tooltip } from '@lobehub/ui';
-import { Avatar, createStaticStyles, cx  } from '@lobehub/ui';
+import { Avatar, createStaticStyles, cx } from '@lobehub/ui';
 import type { CSSProperties, MouseEvent } from 'react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';

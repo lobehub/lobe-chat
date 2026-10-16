@@ -1,5 +1,13 @@
 import { type DropdownItem } from '@lobehub/ui';
-import { Button , Center, createStaticStyles,DropdownMenu, Flexbox, Icon, Tooltip  } from '@lobehub/ui';
+import {
+  Button,
+  Center,
+  createStaticStyles,
+  DropdownMenu,
+  Flexbox,
+  Icon,
+  Tooltip,
+} from '@lobehub/ui';
 import { Check, ChevronDown, Hand, ListChecks, Zap } from 'lucide-react';
 import { type LucideIcon } from 'lucide-react';
 import { memo, useCallback, useMemo, useState } from 'react';

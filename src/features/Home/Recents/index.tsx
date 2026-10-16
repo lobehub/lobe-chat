@@ -1,13 +1,19 @@
 import { type DropdownItem } from '@lobehub/ui';
-import {   AccordionHeader,
+import {
+  AccordionHeader,
   AccordionItem,
   AccordionPanel,
   accordionStyles,
   AccordionTrigger,
   ActionIcon,
-ContextMenuTrigger, cx,DropdownMenu, Flexbox, Icon,
+  ContextMenuTrigger,
+  cx,
+  DropdownMenu,
+  Flexbox,
+  Icon,
   Spin,
-  Text  } from '@lobehub/ui';
+  Text,
+} from '@lobehub/ui';
 import {
   ArrowDownIcon,
   ArrowUpIcon,

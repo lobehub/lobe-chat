@@ -1,7 +1,7 @@
 // FormKit migration is blocked on inline-validation support: `FormFieldProps` has no
 // `help`/`validateStatus`, which this form uses for the slug field.
- 
-import { Button, confirmModal, Flexbox, Form, toast  } from '@lobehub/ui';
+
+import { Button, confirmModal, Flexbox, Form, toast } from '@lobehub/ui';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 

@@ -18,7 +18,7 @@ import {
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import type { DashboardItemLayout } from '@lobechat/types';
-import { ActionIcon, Button, cx,Flexbox, Icon, toast   } from '@lobehub/ui';
+import { ActionIcon, Button, cx, Flexbox, Icon, toast } from '@lobehub/ui';
 import {
   ChevronDownIcon,
   ChevronLeftIcon,

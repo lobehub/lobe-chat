@@ -1,6 +1,15 @@
 'use client';
 
-import { createStaticStyles, cssVar,Flexbox, Highlighter, Icon, Tag, Text, Tooltip   } from '@lobehub/ui';
+import {
+  createStaticStyles,
+  cssVar,
+  Flexbox,
+  Highlighter,
+  Icon,
+  Tag,
+  Text,
+  Tooltip,
+} from '@lobehub/ui';
 import dayjs from 'dayjs';
 import { BotIcon, ChevronDownIcon, ChevronRightIcon, UserIcon } from 'lucide-react';
 import { memo, useState } from 'react';

@@ -1,4 +1,4 @@
-import { Avatar, createStaticStyles, cx  } from '@lobehub/ui';
+import { Avatar, createStaticStyles, cx } from '@lobehub/ui';
 import { useHover } from 'ahooks';
 import { memo, useMemo, useRef } from 'react';
 
