@@ -42,19 +42,48 @@ const unresolvedToolContent = (names: string) =>
   `Tool call rejected: no available tool is named ${names}. Copy a name exactly as declared in the tools schema and call it again.`;
 
 /**
+ * Whether the tool's declared parameter schema makes this a legal no-argument
+ * call. A tool whose schema has no required properties can be invoked with
+ * `{}` (or with the `arguments` field omitted entirely — several
+ * provider/gateway serialization paths drop an empty arguments string when
+ * streaming a tool call), so an empty `arguments` there is not the T-673
+ * serialization-loss shape and must not be rejected. Manifests without a
+ * parameters schema stay loss-shaped: absence of a schema proves nothing.
+ */
+const toolExpectsNoArguments = (toolCalling: ChatToolPayload, state: AgentState): boolean => {
+  const manifest = selectToolManifestMap(state)[toolCalling.identifier];
+  if (!manifest) return false;
+
+  const api = manifest.api?.find((a: any) => a.name === toolCalling.apiName);
+  // API-level schema takes precedence over tool-level, mirroring getToolInterventionConfig.
+  const parameters = api?.parameters ?? manifest.parameters;
+  if (!parameters || typeof parameters !== 'object') return false;
+
+  const required = (parameters as { required?: unknown }).required;
+  return !Array.isArray(required) || required.length === 0;
+};
+
+/**
  * Splits a batch into calls the executor can attempt and calls that arrived
  * with no `arguments` at all. `{}` stays executable — it is a legal
  * no-argument call and JSON-parses fine; only a missing arguments string is
  * the serialization-loss shape, and it cannot survive `JSON.parse` in the
- * executor anyway.
+ * executor anyway. Exception: a tool whose manifest declares no required
+ * parameters accepts an empty `arguments` — providers may omit the field for
+ * no-parameter calls, and rejecting it blocks legal listCriteria-style calls
+ * (vent T-800), so those calls are normalized to `{}` and executed.
  */
-const partitionEmptyArgumentsCalls = (toolsCalling: ChatToolPayload[]) => {
+const partitionEmptyArgumentsCalls = (toolsCalling: ChatToolPayload[], state: AgentState) => {
   const emptyArgsCalls: ChatToolPayload[] = [];
   const executableCalls: ChatToolPayload[] = [];
   for (const toolCalling of toolsCalling) {
-    if (toolCalling.arguments && toolCalling.arguments.trim().length > 0)
+    if (toolCalling.arguments && toolCalling.arguments.trim().length > 0) {
       executableCalls.push(toolCalling);
-    else emptyArgsCalls.push(toolCalling);
+    } else if (toolExpectsNoArguments(toolCalling, state)) {
+      executableCalls.push({ ...toolCalling, arguments: '{}' });
+    } else {
+      emptyArgsCalls.push(toolCalling);
+    }
   }
   return { emptyArgsCalls, executableCalls };
 };
@@ -769,7 +798,10 @@ export class GeneralChatAgent implements Agent {
           // (see EMPTY_ARGS_TOOL_CONTENT). Executable calls in the same batch
           // still run, and the feedback rides the resolve_blocked_tools path
           // so the model sees one rejected tool row per lost call.
-          const { emptyArgsCalls, executableCalls } = partitionEmptyArgumentsCalls(toolsCalling);
+          const { emptyArgsCalls, executableCalls } = partitionEmptyArgumentsCalls(
+            toolsCalling,
+            state,
+          );
 
           const instructions: AgentInstruction[] = [];
 

@@ -1122,6 +1122,104 @@ describe('GeneralChatAgent', () => {
         },
       ]);
     });
+
+    it('executes a no-required-parameter tool whose arguments field was omitted (vent T-800)', async () => {
+      const agent = new GeneralChatAgent({
+        agentConfig: { maxSteps: 100 },
+        operationId: 'test-session',
+        modelRuntimeConfig: mockModelRuntimeConfig,
+      });
+
+      // The T-800 shape: several provider/gateway serialization paths drop an
+      // empty arguments string entirely, so the call arrives with no
+      // `arguments` field at all. For a tool whose schema has no required
+      // properties this is a legal no-argument call, not the T-673 loss shape.
+      const omittedArgsCall = {
+        apiName: 'listCriteria',
+        id: 'call-1',
+        identifier: 'lobe-acceptance-evidence',
+        type: 'builtin',
+      } as unknown as ChatToolPayload;
+
+      const result = await agent.runner(
+        createMockContext('llm_result', {
+          hasToolsCalling: true,
+          parentMessageId: 'msg-1',
+          toolsCalling: [omittedArgsCall],
+        }),
+        createMockState({
+          toolManifestMap: {
+            'lobe-acceptance-evidence': {
+              api: [{ name: 'listCriteria', parameters: { properties: {}, type: 'object' } }],
+              identifier: 'lobe-acceptance-evidence',
+            },
+          },
+        }),
+      );
+
+      expect(result).toEqual([
+        {
+          type: 'call_tool',
+          payload: {
+            parentMessageId: 'msg-1',
+            toolCalling: { ...omittedArgsCall, arguments: '{}' },
+          },
+        },
+      ]);
+    });
+
+    it('still rejects an empty-arguments call to a tool with required parameters', async () => {
+      const agent = new GeneralChatAgent({
+        agentConfig: { maxSteps: 100 },
+        operationId: 'test-session',
+        modelRuntimeConfig: mockModelRuntimeConfig,
+      });
+
+      const requiredArgsCall = {
+        apiName: 'submitEvidence',
+        arguments: '',
+        id: 'call-1',
+        identifier: 'lobe-acceptance-evidence',
+        type: 'builtin',
+      } as unknown as ChatToolPayload;
+
+      const result = await agent.runner(
+        createMockContext('llm_result', {
+          hasToolsCalling: true,
+          parentMessageId: 'msg-1',
+          toolsCalling: [requiredArgsCall],
+        }),
+        createMockState({
+          toolManifestMap: {
+            'lobe-acceptance-evidence': {
+              api: [
+                {
+                  name: 'submitEvidence',
+                  parameters: {
+                    properties: { content: { type: 'string' } },
+                    required: ['content'],
+                    type: 'object',
+                  },
+                },
+              ],
+              identifier: 'lobe-acceptance-evidence',
+            },
+          },
+        }),
+      );
+
+      expect(result).toEqual([
+        {
+          payload: {
+            blockedContent: expect.stringContaining('arguments of this call arrived empty'),
+            blockedReason: 'tool_arguments_empty',
+            parentMessageId: 'msg-1',
+            toolsCalling: [requiredArgsCall],
+          },
+          type: 'resolve_blocked_tools',
+        },
+      ]);
+    });
   });
 
   describe('tool_result phase', () => {
