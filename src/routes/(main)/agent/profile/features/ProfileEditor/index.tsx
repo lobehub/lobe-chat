@@ -140,7 +140,6 @@ const ProfileEditor = memo(() => {
   const localDesktopAvailable =
     isDesktop &&
     !!heterogeneousProvider &&
-    isHeterogeneousProviderBindingSupported(heterogeneousProvider.type) &&
     resolveExecutionTarget(effectiveAgencyConfig, {
       clientExecutionAvailable: true,
       isHetero: true,
@@ -152,7 +151,10 @@ const ProfileEditor = memo(() => {
   // `selectRuntimeType`'s personal-scope guard). The deployment-default API
   // source is not a user-provider binding, so it stays available whenever
   // local Desktop execution is available.
-  const apiModeAvailable = localDesktopAvailable && !isWorkspaceAgent;
+  const apiModeAvailable =
+    localDesktopAvailable &&
+    !isWorkspaceAgent &&
+    isHeterogeneousProviderBindingSupported(heterogeneousProvider.type);
   const useFetchServerDefaultCapability = useAgentStore(
     (s) => s.useFetchServerDefaultHeterogeneousCapability,
   );

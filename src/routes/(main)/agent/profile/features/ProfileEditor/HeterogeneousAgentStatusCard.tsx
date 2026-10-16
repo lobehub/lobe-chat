@@ -2,7 +2,6 @@
 
 import { isDesktop } from '@lobechat/const';
 import { type BinaryStatus, type ClaudeAuthStatus } from '@lobechat/electron-client-ipc';
-import { isHeterogeneousProviderBindingSupported } from '@lobechat/heterogeneous-agents';
 import {
   getHeterogeneousAgentClientConfig,
   isLocalRuntimeHeterogeneousType,
@@ -22,6 +21,7 @@ import { useTranslation } from 'react-i18next';
 
 import { ProviderItemRender } from '@/components/ModelSelect';
 import HeterogeneousAgentStatusGuide from '@/features/Electron/HeterogeneousAgent/StatusGuide';
+import { supportsHeterogeneousApiMode } from '@/features/HeterogeneousAgent/apiMode';
 import { useProviderBindingCompatibleProviders } from '@/features/HeterogeneousAgent/hooks/useProviderBinding';
 import {
   buildServerDefaultModelOptions,
@@ -303,7 +303,7 @@ const CliHeterogeneousAgentStatusCard = memo<HeterogeneousAgentStatusCardProps>(
     const selectedServerDefaultModel =
       serverDefaultModels.find(({ model }) => model === provider.apiConfig?.model) ??
       firstServerDefaultModel;
-    const providerBindingSupported = isHeterogeneousProviderBindingSupported(provider.type);
+    const apiModeSupported = supportsHeterogeneousApiMode(provider.type);
     const { modelsByProvider, providers: compatibleProviders } =
       useProviderBindingCompatibleProviders(provider.type);
     const providerOptions = useMemo(
@@ -676,7 +676,7 @@ const CliHeterogeneousAgentStatusCard = memo<HeterogeneousAgentStatusCardProps>(
     };
 
     const renderAuthMode = () => {
-      if (!providerBindingSupported || detecting || !status?.available) return null;
+      if (!apiModeSupported || detecting || !status?.available) return null;
       const localProviderApiAvailable = apiModeAvailable;
       const runnableApiAvailable = serverDefaultAvailable || localProviderApiAvailable;
       const showLocalProviderUnavailable =
@@ -768,8 +768,7 @@ const CliHeterogeneousAgentStatusCard = memo<HeterogeneousAgentStatusCardProps>(
     };
 
     const renderApiConfig = () => {
-      if (!providerBindingSupported || authMode !== 'api' || detecting || !status?.available)
-        return null;
+      if (!apiModeSupported || authMode !== 'api' || detecting || !status?.available) return null;
 
       const selectedProviderValue = serverDefaultSelected
         ? SERVER_DEFAULT_PROVIDER_VALUE
