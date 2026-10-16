@@ -306,8 +306,20 @@ function walk(p, out = [], top = true) {
 
 const isCommentLine = (l) => /^\s*(\/\/|\/\*|\*)/.test(l);
 // A suppression only counts when it carries a reason: `lobe-design-ignore ID[,ID]: <reason>`.
-const IGNORE_RE = /lobe-design-ignore(-file)?\s+([A-Z0-9-]+(?:\s*,\s*[A-Z0-9-]+)*)(\s*:\s*\S.*)?/g;
-const ignores = (line) => [...(line ?? '').matchAll(IGNORE_RE)].map((m) => ({ file: !!m[1], ids: m[2].split(/\s*,\s*/), reason: !!m[3] }));
+// 只认真正的注释：标记前要有 // 或 /*（或块注释续行的 *），且注释起点之前的引号成对（不在字符串里）。
+// 理由要有实际文字：冒号后到行尾 / */ 之间至少一个字母或数字。
+const IGNORE_RE = /lobe-design-ignore(-file)?[ \t]+([A-Z0-9-]+(?:[ \t]*,[ \t]*[A-Z0-9-]+)*)([ \t]*:([^\n]*))?/g;
+const inComment = (line, idx) => {
+  const prefix = line.slice(0, idx);
+  if (/^\s*\*/.test(prefix)) return true;
+  const opener = Math.max(prefix.lastIndexOf('//'), prefix.lastIndexOf('/*'));
+  if (opener === -1) return false;
+  const code = prefix.slice(0, opener).replace(/\\./g, '');
+  return ["'", '"', '`'].every((q) => code.split(q).length % 2 === 1);
+};
+export const ignores = (line) => [...(line ?? '').matchAll(IGNORE_RE)]
+  .filter((m) => inComment(line, m.index))
+  .map((m) => ({ file: !!m[1], ids: m[2].split(/\s*,\s*/), reason: m[3] !== undefined && /[\p{L}\p{N}]/u.test(m[4].split('*/')[0]) }));
 const ignoredOn = (line, id) => ignores(line).some((g) => !g.file && g.reason && g.ids.includes(id));
 
 export function lintText(text, file = '<text>') {

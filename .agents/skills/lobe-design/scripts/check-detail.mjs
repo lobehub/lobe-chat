@@ -6,6 +6,7 @@
 import { existsSync, lstatSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import { extname, join, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { ignores } from './lint-lobe.mjs';
 
 const FETCH = /\b(useSWR\w*|useQuery|useInfiniteQuery|useRequest|useClientDataSWR|\.useQuery\(|fetch\(|axios\.|lambdaClient\.|trpc\.)/;
 const LOADING = /\b(isLoading|loading|isFetching|isValidating|Skeleton|Spin|LoadingDots|pending|isPending)\b/;
@@ -56,9 +57,8 @@ function walk(p, out = [], top = true) {
   return out;
 }
 
-// 豁免必须是注释里的 `lobe-design-ignore ID[,ID]: <理由>`；没写理由不生效（与 lint-lobe 一致）
-const IGNORE_RE = /(?:\/\/|\/\*|^\s*\*)\s*lobe-design-ignore(?:-file)?\s+([A-Z0-9-]+(?:\s*,\s*[A-Z0-9-]+)*)\s*:\s*\S/gm;
-const suppressedIds = (raw) => new Set([...raw.matchAll(IGNORE_RE)].flatMap((m) => m[1].split(/\s*,\s*/)));
+// 豁免必须是注释里的 `lobe-design-ignore ID[,ID]: <理由>`；没写理由不生效（解析与 lint-lobe 共用）
+const suppressedIds = (raw) => new Set(raw.split('\n').flatMap((l) => ignores(l).filter((g) => g.reason).flatMap((g) => g.ids)));
 
 export function checkText(raw, file = '<text>') {
   const findings = [];

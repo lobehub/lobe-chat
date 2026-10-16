@@ -104,21 +104,26 @@ function listFiles(root, rel, max = 40) {
   return out.sort();
 }
 
-// 不设上限地数源码文件：样本有上限，但指纹要靠真实数量才能发现增删
-function countFiles(root, rel) {
-  let n = 0;
-  const walk = (dir) => {
+// 不设上限地列出源码文件：样本有上限，但指纹要靠全量的数量与相对路径才能发现增删和改名
+function allFiles(root, rel) {
+  const out = [];
+  const walk = (dir, prefix) => {
     let entries;
     try { entries = readdirSync(dir, { withFileTypes: true }); } catch { return; }
     for (const e of entries) {
       if (e.name.startsWith('.') || e.name === 'node_modules') continue;
-      if (e.isDirectory()) walk(join(dir, e.name));
-      else if (/\.(tsx?|jsx?|vue|svelte)$/.test(e.name)) n++;
+      const relPath = prefix ? `${prefix}/${e.name}` : e.name;
+      if (e.isDirectory()) walk(join(dir, e.name), relPath);
+      else if (/\.(tsx?|jsx?|vue|svelte)$/.test(e.name)) out.push(relPath);
     }
   };
-  walk(join(root, rel));
-  return n;
+  walk(join(root, rel), '');
+  return out.sort();
 }
+const fileFacts = (root, rel) => {
+  const all = allFiles(root, rel);
+  return { fileCount: all.length, filesHash: createHash('sha256').update(all.join('\n')).digest('hex').slice(0, 12) };
+};
 
 function depsOf(pkg) {
   return {
@@ -177,7 +182,7 @@ export function detectComponentDirs(root) {
     const files = listFiles(root, rel, 50);
     found.push({
       dir: rel,
-      fileCount: countFiles(root, rel),
+      ...fileFacts(root, rel),
       sampleFiles: files.slice(0, 20),
     });
   }
@@ -189,7 +194,7 @@ export function detectComponentDirs(root) {
       if (COMPONENT_DIR_CANDIDATES.includes(rel)) continue;
       if (!existsSync(join(root, rel))) continue;
       const files = listFiles(root, rel, 30);
-      found.push({ dir: rel, fileCount: countFiles(root, rel), sampleFiles: files.slice(0, 15) });
+      found.push({ dir: rel, ...fileFacts(root, rel), sampleFiles: files.slice(0, 15) });
     }
   }
   return found;
@@ -239,8 +244,8 @@ export function fingerprintOf(facts) {
     frameworks: facts.stack?.frameworks,
     platforms: facts.stack?.platforms,
     uiLibs: facts.stack?.uiLibs,
-    // 带上采样文件名与路由子目录：文件数不变的改名 / 替换也要让指纹变化
-    componentDirs: (facts.components ?? []).map((c) => [c.dir, c.fileCount, c.sampleFiles]),
+    // 带上全量文件路径的哈希与路由子目录：文件数不变的改名 / 替换也要让指纹变化
+    componentDirs: (facts.components ?? []).map((c) => [c.dir, c.fileCount, c.filesHash]),
     routeDirs: (facts.routes ?? []).map((r) => [r.dir, r.subdirs]),
     i18n: facts.docs?.i18nDirs,
   };

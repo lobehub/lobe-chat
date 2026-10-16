@@ -105,7 +105,18 @@ const detailGood = checkText(readFileSync(join(fx, 'detail-good.tsx'), 'utf8'), 
   const ids = (src) => checkText(src, 'x.tsx').map((f) => f.id);
   t('detail: 没写理由的豁免不生效', ids(`// lobe-design-ignore DETAIL-NO-LOADING\n${fetchSrc}`).includes('DETAIL-NO-LOADING'));
   t('detail: 字符串里出现的豁免文字不生效', ids(`const s = 'lobe-design-ignore DETAIL-NO-LOADING: x';\n${fetchSrc}`).includes('DETAIL-NO-LOADING'));
+  t('detail: 块注释里冒号后为空不算理由', ids(`/* lobe-design-ignore DETAIL-NO-LOADING: */\n${fetchSrc}`).includes('DETAIL-NO-LOADING'));
+  t('detail: 冒号后为空不会借用下一行当理由', ids(`// lobe-design-ignore DETAIL-NO-LOADING:\nexport ${fetchSrc}`).includes('DETAIL-NO-LOADING'));
+  t('detail: 理由只有注释符不算', ids(`// lobe-design-ignore DETAIL-NO-LOADING: //\n${fetchSrc}`).includes('DETAIL-NO-LOADING'));
   t('detail: 带理由的注释豁免生效', !ids(`// lobe-design-ignore DETAIL-NO-LOADING, DETAIL-NO-ERROR: 由父组件处理\n${fetchSrc}`).some((x) => x === 'DETAIL-NO-LOADING' || x === 'DETAIL-NO-ERROR'));
+}
+{
+  const raw = (src) => lintText(src, 'src/x.ts').map((f) => f.id);
+  t('lint: 字符串里的整文件豁免不生效', raw("const docs = 'lobe-design-ignore-file LOBE-RAW-COLOR: example';\nconst c = '#1677ff';\n").includes('LOBE-RAW-COLOR'));
+  t('lint: 字符串里没理由的豁免文字不报 IGNORE-NO-REASON', !raw("const docs = 'lobe-design-ignore LOBE-RAW-COLOR';\n").includes('LOBE-IGNORE-NO-REASON'));
+  t('lint: 行尾注释豁免仍生效', !raw("const c = '#1677ff'; // lobe-design-ignore LOBE-RAW-COLOR: 品牌色由设计稿指定\n").includes('LOBE-RAW-COLOR'));
+  t('lint: 块注释豁免冒号后为空 → IGNORE-NO-REASON 且不生效', (() => { const r = raw("/* lobe-design-ignore LOBE-RAW-COLOR: */\nconst c = '#1677ff';\n"); return r.includes('LOBE-IGNORE-NO-REASON') && r.includes('LOBE-RAW-COLOR'); })());
+  t('lint: 注释在字符串之后仍识别', !raw("const a = 'x'; const c = '#1677ff'; // lobe-design-ignore LOBE-RAW-COLOR: 演示\n").includes('LOBE-RAW-COLOR'));
 }
 {
   // 遍历时跳过软链目录：同一份文件只扫一次
@@ -279,9 +290,11 @@ console.log('== bootstrap');
     // --check 语义
     t('bootstrap fs: --check 已接入 → 0', run('bootstrap.mjs', ['--check', '--root', tmp]).status === 0);
     // 格式化工具只改空白 / 表格分隔线时不算过期；托管块内容真正变了才算
-    const fmt = readFileSync(guide, 'utf8').replace(/\| --- \|/g, '| ------ |').replace(/ \|\n/g, '  |\n').replace('修误报 · minor', '修误报・minor');
+    const fmt = readFileSync(guide, 'utf8').replace(/\| --- \|/g, '| ------ |').replace(/ \|\n/g, '  |\n').replace('修误报 · minor', '修误报・minor').replace('入口与顺序', '入口 与顺序');
     writeFileSync(guide, fmt);
     t('bootstrap fs: --check 只是重新格式化 → 0', run('bootstrap.mjs', ['--check', '--root', tmp]).status === 0);
+    writeFileSync(guide, once.replace('node "$LOBE_DESIGN/scripts/route.mjs"', 'node"$LOBE_DESIGN/scripts/route.mjs"'));
+    t('bootstrap fs: --check 命令里删掉空格算过期 → 1', run('bootstrap.mjs', ['--check', '--root', tmp]).status === 1);
     writeFileSync(guide, once.replace('## 1.', '## 1. 过期'));
     const drift = run('bootstrap.mjs', ['--check', '--json', '--root', tmp]);
     t('bootstrap fs: --check 托管块内容过期 → 1', drift.status === 1 && JSON.parse(drift.stdout).blockCurrent === false, drift.stdout);
@@ -357,6 +370,13 @@ console.log('== project-scan');
     const rerouted = scanProject(tmp).fingerprint;
     t('project-scan: 同数量改名 / 路由替换改变指纹', base !== renamed && renamed !== rerouted, `${base} ${renamed} ${rerouted}`);
     writeFileSync(join(tmp, 'src/components/Foo.tsx'), 'export const Foo = () => null;\n'); unlinkSync(join(tmp, 'src/components/Bar.tsx'));
+    // 超过样本上限的目录里，样本之外的同数量改名也要改变指纹
+    for (let i = 0; i < 30; i++) writeFileSync(join(tmp, `src/components/F${String(i).padStart(2, '0')}.tsx`), 'export {};\n');
+    const before30 = scanProject(tmp).fingerprint;
+    unlinkSync(join(tmp, 'src/components/F25.tsx')); writeFileSync(join(tmp, 'src/components/Z25.tsx'), 'export {};\n');
+    t('project-scan: 样本之外的改名也改变指纹', scanProject(tmp).fingerprint !== before30);
+    for (let i = 0; i < 30; i++) if (i !== 25) unlinkSync(join(tmp, `src/components/F${String(i).padStart(2, '0')}.tsx`));
+    unlinkSync(join(tmp, 'src/components/Z25.tsx'));
     rmdirSync(join(tmp, 'app/profile')); mkdirSync(join(tmp, 'app/settings'));
 
     t('project-scan --check 缺文件 → 1', run('project-scan.mjs', ['--check', '--root', tmp]).status === 1);

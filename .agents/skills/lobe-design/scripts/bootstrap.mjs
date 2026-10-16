@@ -185,12 +185,17 @@ ${renderInstall(localSkill)}${renderUx(ux)}
 
 
 /** 把托管块插入 / 替换到 fileText，返回 { text, action }。块外内容不变。 */
-// 比较托管块内容时忽略空白、表格分隔线长度和中点写法（· / ・）：格式化工具（prettier、remark 等）重排后不算漂移。
+// 比较托管块内容时只抹平格式化工具（prettier、remark 等）会做的改写：行首尾空白、空行、连续空白、
+// 表格单元格两侧的补齐空格与分隔线长度、中点写法（· / ・）、中文与其他字符之间的空格（remark 的中英文间距）。
+// 两个 ASCII 字符之间的空白保留：命令里删掉空格仍算漂移。
 export function blockMatches(fileText, block) {
   const start = fileText.indexOf(BEGIN);
   const end = fileText.indexOf(END);
   if (start === -1 || end === -1 || end < start) return false;
-  const norm = (s) => s.replace(/\s+/g, '').replace(/-{3,}/g, '---').replace(/・/g, '·');
+  const norm = (s) => s.split('\n')
+    .map((l) => l.trim().replace(/\s+/g, ' ').replace(/ ?\| ?/g, '|').replace(/-{3,}/g, '---').replace(/ ?[·・] ?/g, '·').replace(/ (?=[^\x00-\x7f])|(?<=[^\x00-\x7f]) /g, ''))
+    .filter(Boolean)
+    .join('\n');
   return norm(fileText.slice(start + BEGIN.length, end)) === norm(block);
 }
 
