@@ -11,7 +11,6 @@ export interface LinearConnectionCredentials {
 
 /** Display facts about the organization and the person who connected it. */
 export interface LinearConnectionMetadata {
-  [key: string]: unknown;
   /** Avatar of the Linear user who authorized the connection. */
   actorAvatarUrl?: string;
   organizationLogoUrl?: string;
