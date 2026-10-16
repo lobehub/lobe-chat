@@ -103,6 +103,22 @@ function listFiles(root, rel, max = 40) {
   return out.sort();
 }
 
+// 不设上限地数源码文件：样本有上限，但指纹要靠真实数量才能发现增删
+function countFiles(root, rel) {
+  let n = 0;
+  const walk = (dir) => {
+    let entries;
+    try { entries = readdirSync(dir, { withFileTypes: true }); } catch { return; }
+    for (const e of entries) {
+      if (e.name.startsWith('.') || e.name === 'node_modules') continue;
+      if (e.isDirectory()) walk(join(dir, e.name));
+      else if (/\.(tsx?|jsx?|vue|svelte)$/.test(e.name)) n++;
+    }
+  };
+  walk(join(root, rel));
+  return n;
+}
+
 function depsOf(pkg) {
   return {
     ...(pkg?.dependencies ?? {}),
@@ -160,7 +176,7 @@ export function detectComponentDirs(root) {
     const files = listFiles(root, rel, 50);
     found.push({
       dir: rel,
-      fileCount: files.length,
+      fileCount: countFiles(root, rel),
       sampleFiles: files.slice(0, 20),
     });
   }
@@ -172,7 +188,7 @@ export function detectComponentDirs(root) {
       if (COMPONENT_DIR_CANDIDATES.includes(rel)) continue;
       if (!existsSync(join(root, rel))) continue;
       const files = listFiles(root, rel, 30);
-      found.push({ dir: rel, fileCount: files.length, sampleFiles: files.slice(0, 15) });
+      found.push({ dir: rel, fileCount: countFiles(root, rel), sampleFiles: files.slice(0, 15) });
     }
   }
   return found;

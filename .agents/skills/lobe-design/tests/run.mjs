@@ -175,6 +175,9 @@ console.log('== copy profiles');
     const e = resolveRefs('把 /admin 下的提示文案改一下', { stage: '75-copy', root });
     t('copy: product.md 按路由分区选 profile', JSON.stringify(loaded(e)) === '["admin"]', JSON.stringify(e.copyProfile));
     const f2 = resolveRefs('把开发者 api 页的文案改一下', { stage: '75-copy', root });
+    writeFileSync(join(root, '.agents', 'ux', 'product.md'), '# 产品画像\n\ncopy-profile: consumer; /settings, /resource → saas\n');
+    const g = resolveRefs('把 /resource 页的文案改一下', { stage: '75-copy', root });
+    t('copy: 一条分区可列多条路由', JSON.stringify(loaded(g)) === '["saas"]' && g.copyProfile.source.includes('/resource'), JSON.stringify(g.copyProfile));
     t('copy: product.md 存在时不被列表外的触发词带偏', JSON.stringify(loaded(f2)) === '["consumer"]', JSON.stringify(f2.copyProfile));
   } finally { rmSync(root, { recursive: true, force: true }); }
   t('copy: 其他 stage 不加载 profile 文件', resolveRefs('把列表页的间距调一下').stages.every((s) => s.stage === '75-copy' || !s.refs.some((x) => x.tier === 'profile')));
@@ -253,6 +256,14 @@ console.log('== bootstrap');
     t('bootstrap fs: 重复运行文件不变（幂等）', readFileSync(guide, 'utf8') === once);
     // --check 语义
     t('bootstrap fs: --check 已接入 → 0', run('bootstrap.mjs', ['--check', '--root', tmp]).status === 0);
+    // 格式化工具只改空白 / 表格分隔线时不算过期；托管块内容真正变了才算
+    const fmt = readFileSync(guide, 'utf8').replace(/\| --- \|/g, '| ------ |').replace(/ \|\n/g, '  |\n');
+    writeFileSync(guide, fmt);
+    t('bootstrap fs: --check 只是重新格式化 → 0', run('bootstrap.mjs', ['--check', '--root', tmp]).status === 0);
+    writeFileSync(guide, once.replace('## 1.', '## 1. 过期'));
+    const drift = run('bootstrap.mjs', ['--check', '--json', '--root', tmp]);
+    t('bootstrap fs: --check 托管块内容过期 → 1', drift.status === 1 && JSON.parse(drift.stdout).blockCurrent === false, drift.stdout);
+    writeFileSync(guide, once);
     const fresh = mkdtempSync(join(tmpdir(), 'lobe-fresh-'));
     t('bootstrap fs: --check 未接入 → 1', run('bootstrap.mjs', ['--check', '--root', fresh]).status === 1);
     rmdirSync(fresh, { recursive: true });
@@ -309,6 +320,13 @@ console.log('== project-scan');
     t('project-scan: 发现组件目录', facts.components.some((c) => c.dir === 'src/components'));
     t('project-scan: 发现路由目录', facts.routes.some((r) => r.dir === 'app'));
     t('project-scan: 指纹稳定', fingerprintOf(facts) === facts.fingerprint && facts.fingerprint.length === 12);
+    // 组件目录超过样本上限后，增删文件仍要改变指纹
+    for (let i = 0; i < 60; i++) writeFileSync(join(tmp, `src/components/Gen${i}.tsx`), 'export {};\n');
+    const many = scanProject(tmp);
+    writeFileSync(join(tmp, 'src/components/Gen60.tsx'), 'export {};\n');
+    const more = scanProject(tmp);
+    t('project-scan: 超过样本上限时文件数仍计全量且影响指纹', more.components.find((c) => c.dir === 'src/components')?.fileCount === 62 && more.fingerprint !== many.fingerprint, JSON.stringify(more.components));
+    for (let i = 0; i <= 60; i++) unlinkSync(join(tmp, `src/components/Gen${i}.tsx`));
 
     t('project-scan --check 缺文件 → 1', run('project-scan.mjs', ['--check', '--root', tmp]).status === 1);
     const layer0 = detectProjectLayer(tmp);
@@ -335,6 +353,7 @@ console.log('== project-scan');
     run('bootstrap.mjs', ['--root', tmp]);
     // 恢复齐全 meta 后缺 components 应 WARN
     unlinkSync(join(tmp, '.agents/ux/components.md'));
+    run('bootstrap.mjs', ['--root', tmp]);
     const bchk = run('bootstrap.mjs', ['--check', '--root', tmp]);
     t('bootstrap --check 已接入但缺 components → 0 + WARN', bchk.status === 0 && /WARN/.test(bchk.stderr + bchk.stdout), bchk.stderr + bchk.stdout);
 

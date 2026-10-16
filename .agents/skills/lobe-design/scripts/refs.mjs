@@ -68,8 +68,9 @@ export function readCopyProfile(root) {
   const areas = [];
   let def = null;
   for (const p of parts) {
-    const m = p.match(/^(\S+)\s*(?:→|->|=>|:)\s*([a-z-]+)$/);
-    if (m) areas.push({ path: m[1], id: m[2] });
+    // 一个 profile 可以对应多条路由：`/settings, /resource → saas`
+    const m = p.match(/^(\S.*?)\s*(?:→|->|=>|:)\s*([a-z-]+)$/);
+    if (m) for (const path of m[1].split(/[,，\s]+/).filter(Boolean)) areas.push({ path, id: m[2] });
     else if (!def && /^[a-z-]+$/.test(p)) def = p;
   }
   return { default: def, areas };

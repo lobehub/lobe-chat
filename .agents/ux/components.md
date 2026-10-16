@@ -1,4 +1,4 @@
-<!-- lobe-design-init: version=5.4.2 fingerprint=6fe08fbc2fac -->
+<!-- lobe-design-init: version=5.4.2 fingerprint=dc89a21ff461 -->
 
 # 组件盘点（lobe-design・Round 2）
 

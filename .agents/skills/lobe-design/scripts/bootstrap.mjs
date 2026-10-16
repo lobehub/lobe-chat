@@ -185,6 +185,15 @@ ${renderInstall(localSkill)}${renderUx(ux)}
 
 
 /** 把托管块插入 / 替换到 fileText，返回 { text, action }。块外内容不变。 */
+// 比较托管块内容时忽略空白与表格分隔线长度：格式化工具（prettier 等）重排后不算漂移。
+export function blockMatches(fileText, block) {
+  const start = fileText.indexOf(BEGIN);
+  const end = fileText.indexOf(END);
+  if (start === -1 || end === -1 || end < start) return false;
+  const norm = (s) => s.replace(/\s+/g, '').replace(/-{3,}/g, '---');
+  return norm(fileText.slice(start + BEGIN.length, end)) === norm(block);
+}
+
 export function applyBlock(fileText, block) {
   const managed = `${BEGIN}\n${block}\n${END}`;
   const start = fileText.indexOf(BEGIN);
@@ -206,7 +215,7 @@ function main() {
 
 用法
   node scripts/bootstrap.mjs                    探测并写入托管块（已有内容不动）
-  node scripts/bootstrap.mjs --check            只检查，不写；块缺失或版本落后 → exit 1；项目层缺失/过期 → WARN
+  node scripts/bootstrap.mjs --check            只检查，不写；块缺失、版本落后或内容过期 → exit 1；项目层缺失/过期 → WARN
   node scripts/bootstrap.mjs --print            打印将要写入的内容，不落盘
   node scripts/bootstrap.mjs --root <dir>       指定项目根目录（默认当前目录）
   --json                                        JSON 输出
@@ -218,7 +227,7 @@ function main() {
 
 退出码
   0  成功 / 已是最新（项目层 WARN 不改变退出码）
-  1  --check 失败（未接入或版本落后）
+  1  --check 失败（未接入、版本落后或托管块内容过期）
   2  用法错误`);
     process.exit(0);
   }
@@ -237,13 +246,15 @@ function main() {
   if (args.includes('--print')) { console.log(block); process.exit(0); }
 
   if (args.includes('--check')) {
-    // --check 的语义是「已接入且版本最新」：文件不存在、块缺失、版本落后都算没接入。
+    // --check 的语义是「已接入且托管块最新」：文件不存在、块缺失、版本落后、块内容与当前渲染结果不一致都算没接入。
     // 项目层缺失 / 过期只 WARN，不单独把已接入判成 FAIL（由 project-scan --check 严格查）。
-    const ok = Boolean(guide.existed) && before.includes(BEGIN) && versionLine === SKILL_VERSION;
-    const out = { root, file: guide.name, existed: guide.existed, action, version: SKILL_VERSION, foundVersion: versionLine ?? null, ok, projectLayer };
+    const blockCurrent = blockMatches(before, block);
+    const ok = Boolean(guide.existed) && before.includes(BEGIN) && versionLine === SKILL_VERSION && blockCurrent;
+    const out = { root, file: guide.name, existed: guide.existed, action, version: SKILL_VERSION, foundVersion: versionLine ?? null, blockCurrent, ok, projectLayer };
     if (json) console.log(JSON.stringify(out, null, 2));
     else {
       if (ok) console.log(`OK  ${guide.name} 已接入（skill ${SKILL_VERSION}，托管块最新）`);
+      else if (before.includes(BEGIN) && versionLine === SKILL_VERSION) console.error(`FAIL ${guide.name} 托管块内容已过期（与当前渲染结果不一致，例如项目层变化后未重跑）。运行 node scripts/bootstrap.mjs 修复。`);
       else console.error(`FAIL ${guide.name} 未接入或版本落后（当前 ${versionLine ?? '无托管块'} → ${SKILL_VERSION}）。运行 node scripts/bootstrap.mjs 修复。`);
       if (projectLayer.missing.length) console.warn(`WARN 项目层缺失：${projectLayer.missing.join(', ')}（对 Agent 说「初始化 lobe-design」跑 05-init 两轮）`);
       for (const s of projectLayer.stale) console.warn(`WARN 项目层过期：${s}`);

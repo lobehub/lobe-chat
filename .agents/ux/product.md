@@ -1,4 +1,4 @@
-<!-- lobe-design-init: version=5.4.2 fingerprint=6fe08fbc2fac -->
+<!-- lobe-design-init: version=5.4.2 fingerprint=dc89a21ff461 -->
 
 # 产品画像（lobe-design・Round 1）
 
