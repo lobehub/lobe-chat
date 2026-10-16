@@ -24,7 +24,7 @@ import { VideoTimeline } from './VideoTimeline';
 const MAX_HEIGHT = 360;
 
 interface VideoEvidencePlayerProps {
-  /** The evidence description — laid out under the player, at the player's width. */
+  /** The evidence description — laid out under the player, at the content area's width. */
   caption?: ReactNode;
   chapters?: VerifyEvidenceChapter[];
   /** Reviewer notes already made on this video, pinned to the timeline. */
@@ -53,10 +53,11 @@ export const VideoEvidencePlayer = memo<VideoEvidencePlayerProps>(
     const aspect = size ? size.width / size.height : 16 / 9;
 
     return (
-      <Flexbox gap={8} style={{ maxWidth: `min(100%, ${Math.round(MAX_HEIGHT * aspect)}px)` }}>
+      <Flexbox gap={8} width={'100%'}>
         <div
           className={styles.player}
           ref={rootRef}
+          style={{ maxWidth: `min(100%, ${Math.round(MAX_HEIGHT * aspect)}px)` }}
           tabIndex={0}
           onKeyDown={(event) => {
             if (status === 'ready' && handlePlaybackKey(event, clock)) event.preventDefault();
@@ -137,7 +138,7 @@ export const VideoEvidencePlayer = memo<VideoEvidencePlayerProps>(
             />
           </div>
         </div>
-        {caption}
+        {caption && <div style={{ overflowWrap: 'anywhere' }}>{caption}</div>}
         <VideoClaimList
           chapters={chapters}
           onSeek={(seconds) => {
