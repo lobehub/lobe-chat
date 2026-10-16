@@ -376,6 +376,34 @@ name: skill-name
       });
     });
 
+    it('should treat a childless-root Lexical shell as no editor data', () => {
+      const { result } = renderHook(() => useDocumentStore());
+      const mockEditor = createMockEditor() as any;
+
+      act(() => {
+        result.current.initDocumentWithEditor({
+          content: '# Body',
+          documentId: 'doc-1',
+          editor: mockEditor,
+          editorData: { root: { children: [], type: 'root' } },
+          sourceType: 'page',
+        });
+      });
+
+      act(() => {
+        result.current.onEditorInit(mockEditor);
+      });
+
+      // The empty-parse shell must not reach setDocument('json') — it would
+      // throw Lexical error #38 on hydration — so the markdown fallback runs.
+      expect(mockEditor.setDocument).not.toHaveBeenCalledWith(
+        'json',
+        JSON.stringify({ root: { children: [], type: 'root' } }),
+        { keepId: true },
+      );
+      expect(mockEditor.setDocument).toHaveBeenCalledWith('markdown', '# Body');
+    });
+
     it('should reset editor content when target document is empty', () => {
       const { result } = renderHook(() => useDocumentStore());
       const mockEditor = createMockEditor() as any;

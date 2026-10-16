@@ -19,15 +19,22 @@ const loadEditorContent = (
   editorInstance: IEditor,
   editorData: EditorDataModeProps['editorData'],
 ): boolean => {
+  const editorDataRoot = (editorData.editorData as { root?: { children?: unknown[] } } | null)
+    ?.root;
+  // A childless root (empty-parse shell) throws Lexical error #38 on hydration;
+  // treat it as no editor data so the content fallbacks take over. Only the
+  // targeted Lexical shell shape (root node present with an empty children
+  // array) is rejected — legacy non-Lexical payloads without a root node
+  // (e.g. { type: 'doc', content: [] }) keep loading via setDocument('json').
+  const isEmptyParseShell =
+    !!editorDataRoot &&
+    Array.isArray(editorDataRoot.children) &&
+    editorDataRoot.children.length === 0;
   const hasValidEditorData =
     editorData.editorData &&
     typeof editorData.editorData === 'object' &&
     Object.keys(editorData.editorData as object).length > 0 &&
-    // A childless root (empty-parse shell) throws Lexical error #38 on
-    // hydration; treat it as no editor data so the content fallbacks take over.
-    Array.isArray((editorData.editorData as { root?: { children?: unknown[] } }).root?.children) &&
-    ((editorData.editorData as { root?: { children?: unknown[] } }).root?.children?.length ?? 0) >
-      0;
+    !isEmptyParseShell;
 
   try {
     if (hasValidEditorData) {
