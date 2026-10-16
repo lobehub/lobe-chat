@@ -1,5 +1,5 @@
 import type { TaskStatus } from '@lobechat/types';
-import { Block, ContextMenuTrigger, cssVar,Flexbox, Icon, Text, Tooltip } from '@lobehub/ui';
+import { Block, ContextMenuTrigger, cssVar, Flexbox, Icon, Text, Tooltip } from '@lobehub/ui';
 import { ArchiveIcon, LockIcon } from 'lucide-react';
 import { memo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';

@@ -23,6 +23,8 @@ import {
 import { mutate, useClientDataSWR } from '@/libs/swr';
 import { getCacheScope, isScopeTrusted, useCacheScope } from '@/libs/swr/useCacheScope';
 
+import { notifyReplicaDevtools, registerReplicaDevtools } from './devtools';
+
 /**
  * LobeHub wiring of `@lobechat/replica`: replicas are partitioned like the SWR
  * cache (`${userId}:${workspaceId}`), persist to IndexedDB by default and
@@ -157,7 +159,20 @@ export const readReplicaStoredKeys = async (
 export const createReplicaSlice = <TStore, TParams, TData, TFetched = TData>(
   resource: ReplicaResource<TParams, TData, TFetched>,
   options: Omit<CreateReplicaSliceOptions<TStore, TParams, TData, TFetched>, 'driver'>,
-) => createCoreReplicaSlice(resource, { driver: replicaSWRDriver, ...options });
+) => {
+  const { get, set, stateKey, view } = options;
+  const slice = createCoreReplicaSlice(resource, {
+    driver: replicaSWRDriver,
+    ...options,
+    set: (partial, replace, action) => {
+      set(partial, replace, action);
+      notifyReplicaDevtools();
+    },
+  });
+
+  registerReplicaDevtools(resource, { get, slice, stateKey, view });
+  return slice;
+};
 
 export * from '@lobechat/replica';
 export {

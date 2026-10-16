@@ -1,5 +1,5 @@
 import type { TaskPriority, TaskStatus } from '@lobechat/types';
-import { Block, cssVar,Icon, Text } from '@lobehub/ui';
+import { Block, cssVar, Icon, Text } from '@lobehub/ui';
 import { ArchiveIcon } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';

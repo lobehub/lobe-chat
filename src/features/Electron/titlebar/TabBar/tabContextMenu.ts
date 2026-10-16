@@ -67,7 +67,6 @@ export const buildTabContextMenuItems = ({
       : null,
     { type: 'divider' },
     {
-      disabled: totalCount === 1,
       key: 'closeCurrentTab',
       label: t('tab.closeCurrentTab'),
       onClick: () => onClose(id),
