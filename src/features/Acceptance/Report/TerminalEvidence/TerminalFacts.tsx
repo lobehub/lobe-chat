@@ -118,7 +118,10 @@ ExecutionResult.displayName = 'ExecutionResult';
 export const TerminalFacts = memo<{ terminal: VerifyTerminalEvidenceMetadata }>(({ terminal }) => {
   const { t } = useTranslation('verify');
   const { capture, execution, processing, source } = terminal;
-  const env = execution.environmentSummary;
+  // `parseTerminalEvidenceMetadata` already fills these; the defaults keep the
+  // card safe for any record that reaches it some other way.
+  const { environmentSummary: env = {} } = execution;
+  const { missingFields = [], notes = [], redactions = [], truncation = [] } = processing;
   const capturer = capture.capturer
     ? [capture.capturer.name, capture.capturer.version].filter(Boolean).join(' ')
     : undefined;
@@ -188,11 +191,11 @@ export const TerminalFacts = memo<{ terminal: VerifyTerminalEvidenceMetadata }>(
             </dd>
           </>
         )}
-        {processing.redactions.length > 0 && (
+        {redactions.length > 0 && (
           <>
             <dt>{t('report.terminal.processing.redacted')}</dt>
             <dd className={styles.inlineList}>
-              {processing.redactions.map((redaction) => (
+              {redactions.map((redaction) => (
                 <span key={redaction.rule}>
                   <span className={styles.mono}>{redaction.rule}</span> ×{redaction.count}
                 </span>
@@ -200,11 +203,11 @@ export const TerminalFacts = memo<{ terminal: VerifyTerminalEvidenceMetadata }>(
             </dd>
           </>
         )}
-        {processing.truncation.length > 0 && (
+        {truncation.length > 0 && (
           <>
             <dt>{t('report.terminal.processing.truncated')}</dt>
             <dd className={styles.inlineList}>
-              {processing.truncation.map((item) => (
+              {truncation.map((item) => (
                 <span key={item.stream}>
                   {t('report.terminal.processing.truncatedItem', {
                     dropped: formatSize(item.droppedBytes),
@@ -216,17 +219,17 @@ export const TerminalFacts = memo<{ terminal: VerifyTerminalEvidenceMetadata }>(
             </dd>
           </>
         )}
-        {processing.missingFields.length > 0 && (
+        {missingFields.length > 0 && (
           <>
             <dt>{t('report.terminal.processing.missing')}</dt>
-            <dd className={styles.mono}>{processing.missingFields.join(', ')}</dd>
+            <dd className={styles.mono}>{missingFields.join(', ')}</dd>
           </>
         )}
-        {processing.notes.length > 0 && (
+        {notes.length > 0 && (
           <>
             <dt>{t('report.terminal.processing.notes')}</dt>
             <dd>
-              {processing.notes.map((note, index) => (
+              {notes.map((note, index) => (
                 <div key={index}>{note}</div>
               ))}
             </dd>
