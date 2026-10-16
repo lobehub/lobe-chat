@@ -496,6 +496,7 @@
   "devices.empty.methodDesktop.desc": "데스크톱 앱을 다운로드하고 로그인하면 장치가 자동으로 연결됩니다.",
   "devices.empty.methodDesktop.title": "데스크톱을 통해 연결",
   "devices.empty.title": "첫 번째 장치를 연결하세요",
+  "devices.errors.boundToFixedAgent": "이 장치는 하나 이상의 작업 공간 에이전트에 대해 고정 실행 장치로 설정되어 있습니다. 해당 에이전트의 실행 장치 설정을 먼저 변경하세요.",
   "devices.fallbackBadge": "불안정한 ID",
   "devices.fallbackTooltip": "이 장치는 머신 ID로 식별할 수 없으므로 앱을 재설치하면 중복 항목이 생성될 수 있습니다.",
   "devices.health.cpu": "CPU",

@@ -496,6 +496,7 @@
   "devices.empty.methodDesktop.desc": "Téléchargez l'application de bureau, connectez-vous, et votre appareil se connecte automatiquement.",
   "devices.empty.methodDesktop.title": "Connecter via Desktop",
   "devices.empty.title": "Connectez votre premier appareil",
+  "devices.errors.boundToFixedAgent": "Cet appareil est défini comme l'appareil d'exécution fixe pour un ou plusieurs agents de l'espace de travail. Modifiez d'abord les paramètres de l'appareil d'exécution de ces agents.",
   "devices.fallbackBadge": "Identité instable",
   "devices.fallbackTooltip": "Cet appareil n'a pas pu être identifié par son ID machine, donc la réinstallation de l'application peut créer une entrée en double.",
   "devices.health.cpu": "Processeur",

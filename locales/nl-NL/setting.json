@@ -496,6 +496,7 @@
   "devices.empty.methodDesktop.desc": "Download de desktop-app, meld u aan en uw apparaat wordt automatisch verbonden.",
   "devices.empty.methodDesktop.title": "Verbind via Desktop",
   "devices.empty.title": "Verbind uw eerste apparaat",
+  "devices.errors.boundToFixedAgent": "Dit apparaat is ingesteld als het vaste uitvoerapparaat voor een of meer werkruimte-agents. Wijzig eerst de uitvoerapparaatinstellingen van die agents.",
   "devices.fallbackBadge": "Onstabiele identiteit",
   "devices.fallbackTooltip": "Dit apparaat kon niet worden geïdentificeerd via zijn machine-ID, dus het opnieuw installeren van de app kan een dubbele vermelding creëren.",
   "devices.health.cpu": "CPU",

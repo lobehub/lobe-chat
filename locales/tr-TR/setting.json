@@ -496,6 +496,7 @@
   "devices.empty.methodDesktop.desc": "Masaüstü uygulamasını indirin, giriş yapın ve cihazınız otomatik olarak bağlanır.",
   "devices.empty.methodDesktop.title": "Masaüstü ile Bağlan",
   "devices.empty.title": "İlk cihazınızı bağlayın",
+  "devices.errors.boundToFixedAgent": "Bu cihaz, bir veya daha fazla çalışma alanı ajanı için sabit çalışma cihazı olarak ayarlanmış. Önce bu ajanların çalışma cihazı ayarlarını değiştirin.",
   "devices.fallbackBadge": "Kararsız kimlik",
   "devices.fallbackTooltip": "Bu cihaz makine kimliğiyle tanımlanamadı, bu nedenle uygulamayı yeniden yüklemek bir kopya giriş oluşturabilir.",
   "devices.health.cpu": "CPU",

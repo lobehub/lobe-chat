@@ -496,6 +496,7 @@
   "devices.empty.methodDesktop.desc": "Descarga la aplicación de escritorio, inicia sesión y tu dispositivo se conecta automáticamente.",
   "devices.empty.methodDesktop.title": "Conectar a través de la aplicación de escritorio",
   "devices.empty.title": "Conecta tu primer dispositivo",
+  "devices.errors.boundToFixedAgent": "Este dispositivo está configurado como el dispositivo fijo de ejecución para uno o más agentes del espacio de trabajo. Cambia primero la configuración del dispositivo de ejecución de esos agentes.",
   "devices.fallbackBadge": "Identidad inestable",
   "devices.fallbackTooltip": "Este dispositivo no pudo ser identificado por su ID de máquina, por lo que reinstalar la aplicación puede crear una entrada duplicada.",
   "devices.health.cpu": "CPU",

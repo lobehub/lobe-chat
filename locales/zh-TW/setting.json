@@ -496,6 +496,7 @@
   "devices.empty.methodDesktop.desc": "下載桌面應用程式，登入後您的設備會自動連接。",
   "devices.empty.methodDesktop.title": "透過桌面應用程式連接",
   "devices.empty.title": "連接您的第一個設備",
+  "devices.errors.boundToFixedAgent": "此裝置已設定為一個或多個工作區代理的固定執行裝置。請先更改那些代理的執行裝置設定。",
   "devices.fallbackBadge": "不穩定的身份",
   "devices.fallbackTooltip": "此裝置無法通過其機器 ID 識別，因此重新安裝應用程式可能會創建重複的條目。",
   "devices.health.cpu": "CPU",
