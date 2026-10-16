@@ -26,7 +26,7 @@ import {
   type SubAgentResultPayload,
   type SubAgentsBatchResultPayload,
 } from '../types';
-import { selectRunTools, selectToolManifestMap } from '../utils/operationToolSet';
+import { selectEffectiveToolManifestMap, selectRunTools } from '../utils/operationToolSet';
 import { selectSecurityBlacklist, selectUserInterventionConfig } from '../utils/stateSlots';
 import { shouldCompress } from '../utils/tokenCounter';
 
@@ -51,7 +51,10 @@ const unresolvedToolContent = (names: string) =>
  * parameters schema stay loss-shaped: absence of a schema proves nothing.
  */
 const toolExpectsNoArguments = (toolCalling: ChatToolPayload, state: AgentState): boolean => {
-  const manifest = selectToolManifestMap(state)[toolCalling.identifier];
+  // Effective lookup (static map + step-activated manifests): a tool exposed
+  // only through `state.activatedStepTools` has no static entry, and a lookup
+  // that misses it degrades a legal no-argument call to the rejection path.
+  const manifest = selectEffectiveToolManifestMap(state)[toolCalling.identifier];
   if (!manifest) return false;
 
   const api = manifest.api?.find((a: any) => a.name === toolCalling.apiName);
@@ -174,7 +177,7 @@ export class GeneralChatAgent implements Agent {
     state: AgentState,
   ): ExtendedHumanInterventionConfig | undefined {
     const { identifier, apiName } = toolCalling;
-    const manifest = selectToolManifestMap(state)[identifier];
+    const manifest = selectEffectiveToolManifestMap(state)[identifier];
 
     if (!manifest) return undefined;
 
@@ -283,7 +286,7 @@ export class GeneralChatAgent implements Agent {
       }
 
       // Phase 2.5: Get manifest for later use
-      const manifest = selectToolManifestMap(state)[identifier];
+      const manifest = selectEffectiveToolManifestMap(state)[identifier];
 
       // Phase 3: Per-tool dynamic resolver
       const config = this.getToolInterventionConfig(toolCalling, state);
@@ -338,7 +341,7 @@ export class GeneralChatAgent implements Agent {
       // Only applies to manual/allow-list modes; auto-run users accept the risk
       if (!manifest) {
         console.warn(
-          `[InterventionGuard] Unknown tool "${identifier}/${apiName}" not found in toolManifestMap (keys: ${Object.keys(selectToolManifestMap(state)).join(', ')}), requiring intervention`,
+          `[InterventionGuard] Unknown tool "${identifier}/${apiName}" not found in effective toolManifestMap (keys: ${Object.keys(selectEffectiveToolManifestMap(state)).join(', ')}), requiring intervention`,
         );
         toolsNeedingIntervention.push(toolCalling);
         continue;

@@ -1168,6 +1168,60 @@ describe('GeneralChatAgent', () => {
       ]);
     });
 
+    it('resolves a no-required-parameter tool manifest only exposed via activatedStepTools (Codex P2 on PR #21013)', async () => {
+      const agent = new GeneralChatAgent({
+        agentConfig: { maxSteps: 100 },
+        operationId: 'test-session',
+        modelRuntimeConfig: mockModelRuntimeConfig,
+      });
+
+      // Codex P2 on PR #21013: `serverCallLlmTooling.ts` exposes step-activated
+      // tools to the model and `executors/tool.ts` merges their manifests for
+      // execution, but the no-param pre-check read the static manifest map
+      // only. A step-activated tool missing from the static map fell through
+      // to the serialization-loss rejection even when its schema declares no
+      // required parameters.
+      const activatedOnlyCall = {
+        apiName: 'listCriteria',
+        id: 'call-1',
+        identifier: 'lobe-acceptance-evidence',
+        type: 'builtin',
+      } as unknown as ChatToolPayload;
+
+      const result = await agent.runner(
+        createMockContext('llm_result', {
+          hasToolsCalling: true,
+          parentMessageId: 'msg-1',
+          toolsCalling: [activatedOnlyCall],
+        }),
+        createMockState({
+          activatedStepTools: [
+            {
+              activatedAtStep: 1,
+              id: 'lobe-acceptance-evidence',
+              manifest: {
+                api: [{ name: 'listCriteria', parameters: { properties: {}, type: 'object' } }],
+                identifier: 'lobe-acceptance-evidence',
+              },
+              source: 'tool' as any,
+            },
+          ],
+          // Static map deliberately does NOT contain the tool.
+          toolManifestMap: {},
+        }),
+      );
+
+      expect(result).toEqual([
+        {
+          type: 'call_tool',
+          payload: {
+            parentMessageId: 'msg-1',
+            toolCalling: { ...activatedOnlyCall, arguments: '{}' },
+          },
+        },
+      ]);
+    });
+
     it('still rejects an empty-arguments call to a tool with required parameters', async () => {
       const agent = new GeneralChatAgent({
         agentConfig: { maxSteps: 100 },
