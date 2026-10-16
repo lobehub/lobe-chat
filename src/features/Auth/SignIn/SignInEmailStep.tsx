@@ -145,7 +145,7 @@ export const SignInEmailStep = ({
                 (oAuthSSOProviders.length === 1 && !disableEmailPassword));
             return showLastUsed ? (
               <Badge
-                color="var(--ant-color-info)"
+                color="var(--lobe-color-info)"
                 count={t('betterAuth.signin.lastUsed')}
                 key={provider}
                 style={{ display: 'block', width: '100%' }}

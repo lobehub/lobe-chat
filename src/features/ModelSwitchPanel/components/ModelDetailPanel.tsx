@@ -344,7 +344,7 @@ const ModelDetailPanel: FC<ModelDetailPanelProps> = memo(
                             {t(`ModelSwitchPanel.detail.abilities.${ability.key}` as any)}
                           </span>
                         </Flexbox>
-                        <span style={{ color: 'var(--ant-color-text-tertiary)', fontSize: 11 }}>
+                        <span style={{ color: 'var(--lobe-color-text-tertiary)', fontSize: 11 }}>
                           {t(
                             `ModelSelect.featureTag.${ability.key === 'files' ? 'file' : ability.key}` as any,
                           )}

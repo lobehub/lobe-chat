@@ -59,7 +59,7 @@ const ImportFromGithubContent = memo(() => {
           <Icon
             icon={ArrowLeftRight}
             size={16}
-            style={{ color: 'var(--ant-color-text-tertiary)' }}
+            style={{ color: 'var(--lobe-color-text-tertiary)' }}
           />
           <Icon icon={Sparkles} size={28} />
         </Flexbox>

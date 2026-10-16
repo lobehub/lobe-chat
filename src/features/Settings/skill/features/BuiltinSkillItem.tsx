@@ -125,7 +125,7 @@ const BuiltinSkillItem = memo<BuiltinSkillItemProps>(
         gap={8}
         justify="space-between"
         style={{
-          ...(isSelected ? { background: 'var(--ant-color-primary-bg)', borderRadius: 6 } : {}),
+          ...(isSelected ? { background: 'var(--lobe-color-primary-bg)', borderRadius: 6 } : {}),
           ...(onSelect ? { cursor: 'pointer' } : {}),
         }}
         onClick={onSelect}

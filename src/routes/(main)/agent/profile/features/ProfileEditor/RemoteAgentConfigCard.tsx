@@ -190,7 +190,7 @@ const ChangeDeviceContent = memo<ChangeDeviceContentProps>(
           )}
           {capabilityOk && (
             <Flexbox horizontal align="center" gap={4}>
-              <Icon color="var(--ant-color-success)" icon={CheckCircle2} size={14} />
+              <Icon color="var(--lobe-color-success)" icon={CheckCircle2} size={14} />
               <Tag color="success" style={{ marginInlineEnd: 0 }}>
                 {capabilityResult?.version ?? t('platformAgentConfig.availability.available')}
               </Tag>
@@ -198,7 +198,7 @@ const ChangeDeviceContent = memo<ChangeDeviceContentProps>(
           )}
           {capabilityBad && (
             <Flexbox horizontal align="center" gap={4}>
-              <Icon color="var(--ant-color-error)" icon={XCircle} size={14} />
+              <Icon color="var(--lobe-color-error)" icon={XCircle} size={14} />
               <Tag color="error" style={{ marginInlineEnd: 0 }}>
                 {t('platformAgentConfig.availability.notInstalled')}
               </Tag>
@@ -339,7 +339,7 @@ const RemoteAgentConfigCard = memo<RemoteAgentConfigCardProps>(
       if (capabilityResult.available) {
         return (
           <Flexbox horizontal align="center" gap={4}>
-            <Icon color="var(--ant-color-success)" icon={CheckCircle2} size={14} />
+            <Icon color="var(--lobe-color-success)" icon={CheckCircle2} size={14} />
             <Tag color="success" style={{ marginInlineEnd: 0 }}>
               {capabilityResult.version ?? t('platformAgentConfig.availability.available')}
             </Tag>
@@ -348,7 +348,7 @@ const RemoteAgentConfigCard = memo<RemoteAgentConfigCardProps>(
       }
       return (
         <Flexbox horizontal align="center" gap={4}>
-          <Icon color="var(--ant-color-error)" icon={XCircle} size={14} />
+          <Icon color="var(--lobe-color-error)" icon={XCircle} size={14} />
           <Tag color="error" style={{ marginInlineEnd: 0 }}>
             {t('platformAgentConfig.availability.notInstalled')}
           </Tag>

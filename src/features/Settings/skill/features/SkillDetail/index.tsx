@@ -388,7 +388,7 @@ const SkillDetail = memo<SkillDetailProps>(({ identifier, type, onDelete }) => {
         <div
           style={{
             alignItems: 'center',
-            borderBlockEnd: '1px solid var(--ant-color-border-secondary)',
+            borderBlockEnd: '1px solid var(--lobe-color-border-secondary)',
             display: 'flex',
             flexShrink: 0,
             justifyContent: 'flex-end',

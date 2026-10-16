@@ -19,7 +19,7 @@ import { readBootShellGeometry } from './geometry';
 
 // antd emits its design tokens as `.lobe-vars{--ant-*: …}` — a plain global
 // class rule, not a `:root` one. The shell renders outside `AppTheme`, so it has
-// to opt into that class itself or every `var(--ant-*)` below resolves to its
+// to opt into that class itself or every `var(--lobe-*)` below resolves to its
 // fallback.
 const CSS_VAR_CLASS = 'lobe-vars';
 

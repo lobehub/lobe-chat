@@ -89,7 +89,7 @@ const ToolStatusDisplay = memo<ToolStatusDisplayProps>(({ status, isDetecting })
   if (!status) {
     return (
       <Flexbox horizontal align="center" gap={8}>
-        <Icon color="var(--ant-color-text-quaternary)" icon={XCircle} size={16} />
+        <Icon color="var(--lobe-color-text-quaternary)" icon={XCircle} size={16} />
         <Text type="secondary">{t('settingSystemTools.status.notDetected')}</Text>
       </Flexbox>
     );
@@ -98,7 +98,7 @@ const ToolStatusDisplay = memo<ToolStatusDisplayProps>(({ status, isDetecting })
   if (!status.available) {
     return (
       <Flexbox horizontal align="center" gap={8} justify="center">
-        <Icon color="var(--ant-color-error)" icon={XCircle} size={16} />
+        <Icon color="var(--lobe-color-error)" icon={XCircle} size={16} />
         <Text type="secondary">{t('settingSystemTools.status.unavailable')}</Text>
       </Flexbox>
     );
@@ -107,7 +107,7 @@ const ToolStatusDisplay = memo<ToolStatusDisplayProps>(({ status, isDetecting })
   return (
     <Flexbox align="flex-end" gap={4}>
       <Flexbox horizontal align="center" gap={8} justify="flex-end">
-        <Icon color="var(--ant-color-success)" icon={CheckCircle2} size={16} />
+        <Icon color="var(--lobe-color-success)" icon={CheckCircle2} size={16} />
         <Text type="success">{t('settingSystemTools.status.available')}</Text>
       </Flexbox>
       {status.path && (

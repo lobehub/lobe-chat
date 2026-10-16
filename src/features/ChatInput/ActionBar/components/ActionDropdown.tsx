@@ -40,7 +40,7 @@ import { type MenuOpenChangeDetails, shouldVetoMenuClose } from './menuCloseVeto
 const styles = createStaticStyles(({ css, cssVar }) => ({
   dropdownMenu: css`
     .ant-avatar {
-      margin-inline-end: var(--ant-margin-xs);
+      margin-inline-end: var(--lobe-margin-xs);
     }
   `,
   trigger: css`

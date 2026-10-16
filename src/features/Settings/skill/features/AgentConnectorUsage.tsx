@@ -27,7 +27,7 @@ const AgentConnectorUsage = memo<{
       gap={12}
       justify="space-between"
       style={{
-        background: 'var(--ant-color-fill-quaternary)',
+        background: 'var(--lobe-color-fill-quaternary)',
         borderRadius: 8,
         marginBottom: 16,
         padding: '10px 12px',
