@@ -10,7 +10,12 @@ export const createTaskModal = (props?: CreateTaskContentProps): ModalInstance =
     footer: null,
     maskClosable: true,
     styles: {
+      // The popup caps itself at the viewport height; let the body shrink into
+      // it so the instruction area scrolls while the toolbar stays pinned.
       content: {
+        display: 'flex',
+        flexDirection: 'column',
+        minHeight: 0,
         overflow: 'hidden',
         padding: 0,
       },
