@@ -7,7 +7,7 @@ import { TopicModel } from '@/database/models/topic';
 import type { LobeChatDatabase } from '@/database/type';
 import type { AgentRuntimeService } from '@/server/services/agentRuntime';
 
-import type { FunctionCallOutputItem } from '../types/responses.type';
+import type { FunctionCallOutputItem, OutputItem } from '../types/responses.type';
 
 /**
  * A request the caller sent wrong: an output for a call nobody made, or a call
@@ -20,7 +20,11 @@ export class ClientToolResumeError extends Error {
   }
 }
 
-/** The assistant message that issued `callId`, which its result row hangs off. */
+/**
+ * The assistant message that issued `callId`, which its result row hangs off.
+ * A parked state is usually saved without its messages; the last model call's
+ * assistant (`workAssistantMessageId`) is then the one that made the calls.
+ */
 const findCallingAssistantId = (state: AgentState, callId: string): string | undefined => {
   for (const message of [...(state.messages ?? [])].reverse()) {
     if (message?.role !== 'assistant') continue;
@@ -61,7 +65,7 @@ export const resumeParkedClientTools = async ({
   topicId,
   userId,
   workspaceId,
-}: ResumeParams): Promise<{ operationId: string } | undefined> => {
+}: ResumeParams): Promise<{ callIds: string[]; operationId: string } | undefined> => {
   const topic = await new TopicModel(db, userId, workspaceId).findById(topicId);
   const operationId = topic?.metadata?.runningOperation?.operationId;
   if (!operationId) return;
@@ -117,7 +121,47 @@ export const resumeParkedClientTools = async ({
   if (!(await operationModel.tryResumeFromAsyncTool(operationId)))
     throw new ClientToolResumeError('These function call outputs were already submitted.');
 
-  return { operationId };
+  return { callIds: pending.map((tool) => tool.id), operationId };
+};
+
+/**
+ * Narrow a resumed run's messages to the turn this response produced, in the
+ * raw shape output items are built from. The resume reloads the conversation
+ * from the database as display groups (`assistantGroup` with `children`), and
+ * everything up to the answered calls was already returned by the response
+ * that asked for them; returning those calls again would ask the caller to run
+ * its tools a second time.
+ */
+const withResumedTurn = (state: AgentState, callIds: string[] = []): AgentState => {
+  if (!state?.messages?.length) return state;
+
+  const answered = new Set(callIds);
+  const flat = state.messages.flatMap((message: any) =>
+    message.role === 'assistantGroup'
+      ? (message.children ?? []).map((child: any) => ({ ...child, role: 'assistant' }))
+      : [message],
+  );
+  const callsOf = (message: any): { id?: string }[] => message.tool_calls ?? message.tools ?? [];
+  const resumeIndex = flat.findLastIndex((message: any) =>
+    callsOf(message).some((call) => !!call.id && answered.has(call.id)),
+  );
+  if (resumeIndex === -1) return state;
+
+  const messages = flat.slice(resumeIndex + 1).map((message: any) =>
+    message.tools
+      ? {
+          content: message.content,
+          id: message.id,
+          role: message.role,
+          tool_calls: message.tools.map((tool: any) => ({
+            function: { arguments: tool.arguments, name: `${tool.identifier}____${tool.apiName}` },
+            id: tool.id,
+            type: 'function',
+          })),
+        }
+      : message,
+  );
+  return { ...state, messages };
 };
 
 /**
@@ -127,7 +171,7 @@ export const resumeParkedClientTools = async ({
  */
 export const executeResponseRun = async (
   agentRuntimeService: AgentRuntimeService,
-  run: { operationId: string; resumed?: boolean },
+  run: { callIds?: string[]; operationId: string; resumed?: boolean },
 ): Promise<AgentState> => {
   if (!run.resumed) return agentRuntimeService.executeSync(run.operationId);
 
@@ -137,8 +181,38 @@ export const executeResponseRun = async (
     resumeAsyncTool: true,
     stepIndex: state?.stepCount ?? 0,
   });
+  // Stopped already (answered, or parked again): nothing is left to run, and
+  // executeSync would hand back the saved state rather than this step's.
   const nextContext = first.stepResult?.nextContext;
-  if (!nextContext) return first.state as AgentState;
+  if (!nextContext || first.state?.status !== 'running')
+    return withResumedTurn(first.state as AgentState, run.callIds);
 
-  return agentRuntimeService.executeSync(run.operationId, { initialContext: nextContext });
+  const final = await agentRuntimeService.executeSync(run.operationId, {
+    initialContext: nextContext,
+  });
+  return withResumedTurn(final, run.callIds);
+};
+
+/**
+ * The function calls a run parked on, as output items the caller can answer.
+ * A parked state is saved without its messages, so the calls cannot be read
+ * back from them; without these items a non-streaming caller gets an
+ * `incomplete` response with no `call_id` to send outputs for.
+ */
+export const pendingFunctionCallItems = (
+  state: AgentState,
+  output: OutputItem[],
+  responseId: string,
+): OutputItem[] => {
+  const listed = new Set(output.map((item) => (item as { call_id?: string }).call_id));
+  return ((state.pendingToolsCalling ?? []) as ChatToolPayload[])
+    .filter((tool) => !listed.has(tool.id))
+    .map((tool, index) => ({
+      arguments: tool.arguments || '{}',
+      call_id: tool.id,
+      id: `fc_${responseId}_pending_${index}`,
+      name: tool.apiName,
+      status: 'completed' as const,
+      type: 'function_call' as const,
+    }));
 };

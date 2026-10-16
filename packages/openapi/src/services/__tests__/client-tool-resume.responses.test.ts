@@ -3,6 +3,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import {
   ClientToolResumeError,
   executeResponseRun,
+  pendingFunctionCallItems,
   resumeParkedClientTools,
 } from '../client-tool-resume.responses';
 
@@ -82,7 +83,10 @@ describe('resumeParkedClientTools', () => {
   });
 
   it('answers the parked call with its output and claims the run', async () => {
-    await expect(resume(runtime())).resolves.toEqual({ operationId: 'op_parked' });
+    await expect(resume(runtime())).resolves.toEqual({
+      callIds: ['call_1'],
+      operationId: 'op_parked',
+    });
 
     expect(db.createMessage).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -96,6 +100,17 @@ describe('resumeParkedClientTools', () => {
       }),
     );
     expect(db.tryResume).toHaveBeenCalledWith('op_parked');
+  });
+
+  // A parked state is saved without its messages.
+  it('hangs the result off the last model call when the state has no messages', async () => {
+    await resume(
+      runtime({ ...parkedState(), messages: [], metadata: { workAssistantMessageId: 'msg_work' } }),
+    );
+
+    expect(db.createMessage).toHaveBeenCalledWith(
+      expect.objectContaining({ parentId: 'msg_work' }),
+    );
   });
 
   it('fills a result row that already exists instead of adding another', async () => {
@@ -148,7 +163,10 @@ describe('executeResponseRun', () => {
   it('takes the first step of a resumed run as the async-tool resume', async () => {
     const service = runtime();
     const nextContext = { phase: 'llm_result' };
-    service.executeStep.mockResolvedValue({ state: {}, stepResult: { nextContext } });
+    service.executeStep.mockResolvedValue({
+      state: { status: 'running' },
+      stepResult: { nextContext },
+    });
     service.executeSync.mockResolvedValue({ status: 'done' });
 
     await expect(
@@ -163,6 +181,55 @@ describe('executeResponseRun', () => {
     expect(service.executeSync).toHaveBeenCalledWith('op_parked', { initialContext: nextContext });
   });
 
+  // Regression: the resumed non-streaming response came back with no output.
+  it('returns the step state when the resume step already finished the run', async () => {
+    const service = runtime();
+    const answered = { messages: [{ content: 'sunny', role: 'assistant' }], status: 'done' };
+    service.executeStep.mockResolvedValue({
+      state: answered,
+      stepResult: { nextContext: { phase: 'done' } },
+    });
+
+    await expect(
+      executeResponseRun(service as any, { operationId: 'op_parked', resumed: true }),
+    ).resolves.toBe(answered);
+    expect(service.executeSync).not.toHaveBeenCalled();
+  });
+
+  // Regression: a resume reloads the conversation as display groups, which
+  // produced no output at all; returning the whole group would also repeat the
+  // answered call and make the caller run its tool again.
+  it('returns only the turn after the answered calls', async () => {
+    const service = runtime();
+    service.executeStep.mockResolvedValue({
+      state: {
+        messages: [
+          { content: 'weather?', id: 'msg_user', role: 'user' },
+          {
+            children: [
+              { content: '', id: 'msg_call', tools: [{ apiName: 'get_weather', id: 'call_1' }] },
+              { content: 'It is sunny.', id: 'msg_answer' },
+            ],
+            id: 'msg_call',
+            role: 'assistantGroup',
+          },
+        ],
+        status: 'done',
+      },
+      stepResult: {},
+    });
+
+    const state = await executeResponseRun(service as any, {
+      callIds: ['call_1'],
+      operationId: 'op_parked',
+      resumed: true,
+    });
+
+    expect(state.messages).toEqual([
+      { content: 'It is sunny.', id: 'msg_answer', role: 'assistant' },
+    ]);
+  });
+
   it('runs a new operation as before', async () => {
     const service = runtime();
     service.executeSync.mockResolvedValue({ status: 'done' });
@@ -171,5 +238,31 @@ describe('executeResponseRun', () => {
 
     expect(service.executeStep).not.toHaveBeenCalled();
     expect(service.executeSync).toHaveBeenCalledWith('op_new');
+  });
+});
+
+describe('pendingFunctionCallItems', () => {
+  // Regression: a non-streaming response parked on a client tool had no
+  // function_call item, so the caller had no call_id to answer.
+  it('lists the parked calls the output does not already carry', () => {
+    const state = { messages: [], pendingToolsCalling: [weatherCall] } as any;
+
+    expect(pendingFunctionCallItems(state, [], 'tpc_1')).toEqual([
+      {
+        arguments: '{}',
+        call_id: 'call_1',
+        id: 'fc_tpc_1_pending_0',
+        name: 'get_weather',
+        status: 'completed',
+        type: 'function_call',
+      },
+    ]);
+    expect(
+      pendingFunctionCallItems(
+        state,
+        [{ call_id: 'call_1', type: 'function_call' } as any],
+        'tpc_1',
+      ),
+    ).toEqual([]);
   });
 });

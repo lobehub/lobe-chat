@@ -192,6 +192,27 @@ describe('ResponsesService function call outputs', () => {
     expect(drainPushesMock).toHaveBeenCalledWith('op_parked');
   });
 
+  it('returns the parked call to a non-streaming caller', async () => {
+    resumeParkedClientToolsMock.mockResolvedValue(undefined);
+    execAgentMock.mockResolvedValue({ operationId: 'op_new', success: true, topicId: 'tpc_2' });
+    executeResponseRunMock.mockResolvedValue({
+      interruption: { reason: 'client_tool_execution' },
+      messages: [],
+      pendingToolsCalling: [
+        { apiName: 'get_weather', arguments: '{"city":"Hangzhou"}', id: 'call_9' },
+      ],
+      status: 'waiting_for_async_tool',
+    });
+
+    const response = await buildService().createResponse({ input: 'weather?', model: 'agt_1' });
+
+    expect(response).toMatchObject({
+      incomplete_details: { reason: 'client_tool_execution' },
+      output: [{ call_id: 'call_9', name: 'get_weather', type: 'function_call' }],
+      status: 'incomplete',
+    });
+  });
+
   it('falls back to a new turn when nothing is parked on the topic', async () => {
     resumeParkedClientToolsMock.mockResolvedValue(undefined);
     execAgentMock.mockResolvedValue({ operationId: 'op_new', success: true, topicId: 'tpc_1' });

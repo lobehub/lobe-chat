@@ -20,7 +20,11 @@ import type {
   ResponseUsage,
   Tool,
 } from '../types/responses.type';
-import { executeResponseRun, resumeParkedClientTools } from './client-tool-resume.responses';
+import {
+  executeResponseRun,
+  pendingFunctionCallItems,
+  resumeParkedClientTools,
+} from './client-tool-resume.responses';
 
 /**
  * Response API Service
@@ -350,6 +354,8 @@ export class ResponsesService extends BaseService {
       const isClientToolInterrupt =
         finalState.status === 'waiting_for_async_tool' &&
         finalState.interruption?.reason === 'client_tool_execution';
+      if (isClientToolInterrupt)
+        output.push(...pendingFunctionCallItems(finalState, output, responseId));
 
       return this.buildResponseObject({
         completedAt: isClientToolInterrupt ? null : Math.floor(Date.now() / 1000),
