@@ -281,14 +281,44 @@ export interface HeterogeneousTopicModel {
 
 /**
  * Everything a topic pins for a heterogeneous run: the model/provider pair from
- * the top-level `topics.model`/`provider` columns plus the reasoning effort
- * from `topics.metadata.heteroEffort`. Each part is optional — a topic may pin
- * an effort without a model (runtimes without a model selector) or the other
- * way round.
+ * the top-level `topics.model`/`provider` columns plus the reasoning effort and
+ * speed from `topics.metadata.heteroEffort` / `heteroSpeed`. Each part is
+ * optional — a topic may pin an effort or speed without a model (runtimes
+ * without a model selector) or the other way round.
  */
 export interface HeterogeneousTopicPin extends Partial<HeterogeneousTopicModel> {
   effort?: HeterogeneousReasoningEffort;
+  speed?: HeterogeneousSpeedMode;
 }
+
+/**
+ * The effort and speed a newly created topic snapshots from the agent, so later
+ * agent edits do not change a running conversation. Speed is resolved through
+ * the selector capability, which also reads legacy `service_tier` CLI args.
+ *
+ * Like effort, speed is snapshotted only when the agent sets it explicitly. An
+ * agent without a speed emits no CLI flag, so the CLI's own config (for Codex,
+ * `service_tier` in `~/.codex/config.toml`) decides; pinning a resolved
+ * Standard there would claim a choice that never reaches the CLI.
+ */
+export const resolveHeterogeneousTopicRuntimeSnapshot = (
+  config: HeterogeneousProviderConfig | undefined,
+): { heteroEffort?: HeterogeneousReasoningEffort; heteroSpeed?: HeterogeneousSpeedMode } => {
+  if (!config) return {};
+  const speedCapability = getHeteroSelectorCapability(config.type)?.speed;
+  const hasExplicitSpeed =
+    config.speed !== undefined ||
+    !!speedCapability?.encodings.some((encoding) =>
+      encoding.kind === 'flag'
+        ? hasAnyCliFlag(config.args ?? [], encoding.flags)
+        : hasCliConfigKey(config.args ?? [], encoding.key),
+    );
+  const speed = hasExplicitSpeed ? speedCapability?.resolve(config) : undefined;
+  return {
+    ...(config.effort === undefined ? {} : { heteroEffort: config.effort }),
+    ...(speed === undefined ? {} : { heteroSpeed: speed }),
+  };
+};
 
 /**
  * Resolve the topic-level model snapshot for a heterogeneous provider.
@@ -308,6 +338,65 @@ export const resolveHeterogeneousProviderTopicModel = (
 
   const model = getHeteroSelectorCapability(config.type)?.model?.resolve(config);
   return model ? { model, provider: config.type } : undefined;
+};
+
+/**
+ * Resolves the provider for an explicit model-only Task override.
+ *
+ * Use when:
+ * - Creating a Task or filling missing fields on an older Task.
+ *
+ * Expects:
+ * - The assignee's current heterogeneous runtime configuration.
+ *
+ * Returns:
+ * - The runtime provider for subscription/local auth, or the personal API binding ID.
+ * - Null when API auth has no Topic-compatible binding; do not infer a wrapper provider.
+ * - Undefined for a regular Agent, which uses its model/provider snapshot.
+ *
+ * The previous native-only lookup deliberately omitted API auth. Task callers
+ * also need the API binding identity so model-only input cannot become codex/openai.
+ */
+export const getHeterogeneousTaskModelProvider = (
+  config: HeterogeneousProviderConfig | null | undefined,
+): string | null | undefined => {
+  if (!config) return undefined;
+  if (config.authMode !== 'api') return config.type;
+  return resolveHeterogeneousProviderTopicModel(config)?.provider || null;
+};
+
+/**
+ * Narrows a per-run model override (a Task's `model`/`provider`) to one the
+ * external runtime can execute.
+ *
+ * Use when:
+ * - Applying a Task override to a heterogeneous Agent before dispatch or display.
+ *
+ * Expects:
+ * - The Agent's heterogeneous provider and the raw override pair.
+ *
+ * Returns:
+ * - The pair to apply: the runtime's own provider under subscription/local auth,
+ *   or the Agent's current personal API binding under API auth.
+ * - Undefined for anything else. Agent rows keep a wrapper `model`/`provider`
+ *   (a runtime ID such as `codex/openai`, or an ordinary chat model from an
+ *   earlier configuration). Neither names a CLI model, so it must not become
+ *   `--model` or replace an API binding.
+ */
+export const resolveHeterogeneousModelOverride = (
+  config: HeterogeneousProviderConfig,
+  override: { model?: string | null; provider?: string | null },
+): HeterogeneousTopicModel | undefined => {
+  const model = override.model?.trim();
+  if (!model || HETEROGENEOUS_AGENT_TYPES.has(model)) return undefined;
+  const provider = override.provider || undefined;
+
+  if (config.authMode === 'api') {
+    const binding = resolveHeterogeneousProviderTopicModel(config);
+    return binding && provider === binding.provider ? { model, provider } : undefined;
+  }
+
+  return !provider || provider === config.type ? { model, provider: config.type } : undefined;
 };
 
 const applyTopicModelPin = (
@@ -342,34 +431,46 @@ const applyTopicModelPin = (
 };
 
 /**
- * Overlay a topic's pins (model/provider + reasoning effort) on the agent's
- * heterogeneous provider config. The model pin follows the auth-mode rules of
- * {@link applyTopicModelPin}; the effort pin is a plain CLI-level override, so
- * it applies when supported by the effective model — independent of whether
- * a model was pinned. `'default'` is a real pin (it means "drop the
- * agent's effort flag for this topic"), only `undefined` keeps the agent value.
+ * Overlay a topic's pins (model/provider, reasoning effort and speed) on the
+ * agent's heterogeneous provider config. The model pin follows the auth-mode
+ * rules of {@link applyTopicModelPin}; effort and speed are plain CLI-level
+ * overrides, so they apply when supported by the effective model — independent
+ * of whether a model was pinned. `'default'` is a real pin (it drops the
+ * agent's effort or Fast flag for this topic), only `undefined` keeps the agent
+ * value.
  */
 export const applyTopicModelToHeterogeneousProvider = (
   config: HeterogeneousProviderConfig,
   topicModel: HeterogeneousTopicPin | undefined,
 ): HeterogeneousProviderConfig => {
   const withModel = applyTopicModelPin(config, topicModel);
-  let effort = topicModel?.effort;
-  if (effort === undefined) return withModel;
   const capability = getHeteroSelectorCapability(withModel.type);
-  if (!capability?.effort) return withModel;
+  if (!capability) return withModel;
   const model =
-    withModel.authMode === 'api'
+    (withModel.authMode === 'api'
       ? withModel.apiConfig?.model
-      : capability.model?.resolve(withModel);
-  /** Auth-mode changes can reject the topic model while leaving its old effort behind. */
-  if (effort !== 'default' && !capability.effort.levels(model ?? 'default').includes(effort)) {
-    effort = 'default';
+      : capability.model?.resolve(withModel)) ?? HETEROGENEOUS_AGENT_DEFAULT_SELECTION;
+
+  // Only overridden dimensions may enter the selection: a present key also
+  // clears that dimension's inherited CLI args.
+  const selection: { effort?: HeterogeneousReasoningEffort; speed?: HeterogeneousSpeedMode } = {};
+  const { effort, speed } = topicModel ?? {};
+  /** Auth-mode changes can reject the topic model while leaving its old pins behind. */
+  if (effort !== undefined && capability.effort) {
+    selection.effort =
+      effort === HETEROGENEOUS_AGENT_DEFAULT_SELECTION ||
+      capability.effort.levels(model).includes(effort)
+        ? effort
+        : HETEROGENEOUS_AGENT_DEFAULT_SELECTION;
   }
-  return {
-    ...withModel,
-    ...applyHeteroSelection(withModel, { effort }),
-  };
+  if (speed !== undefined && capability.speed) {
+    selection.speed = capability.speed.supported(model)
+      ? speed
+      : HETEROGENEOUS_AGENT_DEFAULT_SELECTION;
+  }
+  if (Object.keys(selection).length === 0) return withModel;
+
+  return { ...withModel, ...applyHeteroSelection(withModel, selection) };
 };
 
 const HETEROGENEOUS_AGENT_TYPES = new Set<string>([

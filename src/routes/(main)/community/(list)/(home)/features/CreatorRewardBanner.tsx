@@ -4,7 +4,7 @@ import { Button, createStaticStyles, cx, Flexbox, responsive } from '@lobehub/ui
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { OFFICIAL_SITE } from '@/const/url';
+import { imageUrl, OFFICIAL_SITE } from '@/const/url';
 import { useIsDark } from '@/hooks/useIsDark';
 
 const styles = createStaticStyles(({ css }) => ({
@@ -55,7 +55,7 @@ const styles = createStaticStyles(({ css }) => ({
     width: 50%;
     border-radius: 0 12px 12px 0;
 
-    background: url('/app-images/banner_creator.png') right center / auto 100% no-repeat;
+    background: url(${imageUrl('banner_creator.png')}) right center / auto 100% no-repeat;
 
     ${responsive.sm} {
       display: none;

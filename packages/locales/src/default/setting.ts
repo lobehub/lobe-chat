@@ -760,6 +760,8 @@ export default {
     'Download the desktop app, sign in, and your device connects automatically.',
   'devices.empty.methodDesktop.title': 'Connect via Desktop',
   'devices.empty.title': 'Connect your first device',
+  'devices.errors.boundToFixedAgent':
+    "This device is set as the fixed run device for one or more workspace agents. Change those agents' run device settings first.",
   'devices.fallbackBadge': 'Unstable identity',
   'devices.fallbackTooltip':
     "This device couldn't be identified by its machine ID, so reinstalling the app may create a duplicate entry.",

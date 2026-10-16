@@ -127,6 +127,20 @@ const TasksGroupConfig = memo<TasksHeaderProps>(({ options, pinnedOptions, setOp
     label: t('taskList.form.showCompleted'),
   } satisfies FormFieldProps;
 
+  const showArchivedFormItem = {
+    children: (
+      <Switch
+        checked={options.showArchived}
+        size={'small'}
+        onChange={(checked) => {
+          setOptions((prev) => ({ ...prev, showArchived: checked }));
+        }}
+      />
+    ),
+    minWidth: undefined,
+    label: t('taskList.form.showArchived'),
+  } satisfies FormFieldProps;
+
   const formItems: FormFieldProps[] = [
     groupingFormItem,
     ...(isSubGroupingEnabled
@@ -191,6 +205,7 @@ const TasksGroupConfig = memo<TasksHeaderProps>(({ options, pinnedOptions, setOp
       label: t('taskList.form.orderCompletedByRecency'),
     },
     showCompletedFormItem,
+    showArchivedFormItem,
     ...(isPinned('showSubTasks')
       ? []
       : [
@@ -228,7 +243,7 @@ const TasksGroupConfig = memo<TasksHeaderProps>(({ options, pinnedOptions, setOp
         ]
       : []),
   ];
-  const boardFormItems = [groupingFormItem, showCompletedFormItem];
+  const boardFormItems = [groupingFormItem, showCompletedFormItem, showArchivedFormItem];
 
   const panelContent = (
     <Flexbox gap={12} width={280}>

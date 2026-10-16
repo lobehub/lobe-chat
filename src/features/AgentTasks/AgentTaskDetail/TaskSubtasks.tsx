@@ -12,7 +12,7 @@ import {
   toast,
   Tree,
 } from '@lobehub/ui';
-import { ListTodoIcon, PlayCircle, Plus } from 'lucide-react';
+import { ArchiveIcon, ListTodoIcon, PlayCircle, Plus } from 'lucide-react';
 import type { MouseEvent } from 'react';
 import { memo, useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -102,6 +102,7 @@ const SubtaskTitle = memo<{ task: TaskDetailSubtask }>(({ task }) => {
           {task.identifier}
         </Text>
       )}
+      {task.archivedAt && <Icon color={cssVar.colorTextDescription} icon={ArchiveIcon} size={14} />}
       <Text ellipsis fontSize={13} style={{ flex: 1, minWidth: 0 }}>
         {task.name || task.identifier}
       </Text>
@@ -226,18 +227,28 @@ const TaskSubtasks = memo(() => {
       event.preventDefault();
       showContextMenu(
         buildItems({
+          archivedAt: subtask.archivedAt ?? null,
           assigneeAgentId: subtask.assignee?.id,
           assigneeUserId: subtask.assigneeUserId,
+          automationMode: subtask.automationMode,
+          createdByUserId: subtask.createdByUserId,
+          heartbeatInterval: subtask.heartbeat?.interval,
           identifier: subtask.identifier,
           priority: subtask.priority,
+          schedulePattern: subtask.schedule?.pattern,
           status: subtask.status,
         }),
       );
       installKeyboardHandlers({
+        archivedAt: subtask.archivedAt ?? null,
         assigneeAgentId: subtask.assignee?.id,
         assigneeUserId: subtask.assigneeUserId,
+        automationMode: subtask.automationMode,
+        createdByUserId: subtask.createdByUserId,
+        heartbeatInterval: subtask.heartbeat?.interval,
         identifier: subtask.identifier,
         priority: subtask.priority,
+        schedulePattern: subtask.schedule?.pattern,
         status: subtask.status,
       });
     },

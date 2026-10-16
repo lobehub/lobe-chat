@@ -13,6 +13,7 @@ import {
   Switch,
   Tabs,
   Text,
+  toast,
 } from '@lobehub/ui';
 import dayjs from 'dayjs';
 import { CalendarClockIcon, CalendarDays, Clock, RefreshCw, TimerIcon, Zap } from 'lucide-react';
@@ -197,6 +198,8 @@ const TaskScheduleConfig = memo(function TaskScheduleConfig({
 }: TaskScheduleConfigProps) {
   const { t, i18n } = useTranslation('chat');
   const { allowed: canEditTask, reason } = usePermission('create_content');
+  // An archived task stays idle; scheduling needs it restored first.
+  const isArchived = !!useTaskStore(taskDetailSelectors.activeTaskArchivedAt);
   const activeTaskId = useTaskStore(taskDetailSelectors.activeTaskId);
   const activeTaskInterval = useTaskStore(taskDetailSelectors.activeTaskPeriodicInterval);
   const automationMode = useTaskStore(taskDetailSelectors.activeTaskAutomationMode);
@@ -296,6 +299,14 @@ const TaskScheduleConfig = memo(function TaskScheduleConfig({
     }
   }, [canEditTask, finalTaskId, updateTaskStatus]);
 
+  const handleTriggerClick = useCallback(
+    (e: { stopPropagation: () => void }) => {
+      e.stopPropagation();
+      if (canEditTask && isArchived) toast.info(t('taskList.contextMenu.scheduleArchivedBlocked'));
+    },
+    [canEditTask, isArchived, t],
+  );
+
   const content = (
     <Flexbox gap={16} style={{ padding: 4, width: 440 }} onClick={(e) => e.stopPropagation()}>
       <Flexbox horizontal align="center" gap={12}>
@@ -392,12 +403,12 @@ const TaskScheduleConfig = memo(function TaskScheduleConfig({
     <Popover
       className={styles.popover}
       content={content}
-      disabled={!canEditTask}
+      disabled={!canEditTask || isArchived}
       placement="bottomRight"
       trigger="click"
     >
       {children ? (
-        <div title={canEditTask ? undefined : reason} onClick={(e) => e.stopPropagation()}>
+        <div title={canEditTask ? undefined : reason} onClick={handleTriggerClick}>
           {children}
         </div>
       ) : (
@@ -406,7 +417,7 @@ const TaskScheduleConfig = memo(function TaskScheduleConfig({
           icon={TimerIcon}
           size="small"
           title={t('taskSchedule.title')}
-          onClick={(e) => e.stopPropagation()}
+          onClick={handleTriggerClick}
         />
       )}
     </Popover>

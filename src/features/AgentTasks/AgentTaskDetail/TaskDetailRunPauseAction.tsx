@@ -1,4 +1,4 @@
-import { Button, Flexbox, SplitButton, Text } from '@lobehub/ui';
+import { Button, Flexbox, SplitButton, Text, toast } from '@lobehub/ui';
 import { CalendarOffIcon, PlayIcon, RotateCcwIcon } from 'lucide-react';
 import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -57,6 +57,7 @@ const TaskDetailRunPauseAction = memo(() => {
   const assigneeUserId = useTaskStore(taskDetailSelectors.activeTaskAssigneeUserId);
   const inboxAgentId = useAgentStore(builtinAgentSelectors.inboxAgentId);
   const isRerun = status === 'completed';
+  const isArchived = !!useTaskStore(taskDetailSelectors.activeTaskArchivedAt);
   const runTask = useTaskStore((s) => s.runTask);
   const updateTask = useTaskStore((s) => s.updateTask);
   const updateTaskStatus = useTaskStore((s) => s.updateTaskStatus);
@@ -74,6 +75,11 @@ const TaskDetailRunPauseAction = memo(() => {
       return;
     }
     if (!canRun) return;
+    // Archived tasks are hidden from lists; the server refuses to run them.
+    if (isArchived) {
+      toast.info(t('taskList.contextMenu.runArchivedBlocked'));
+      return;
+    }
     setIsStarting(true);
     try {
       if (shouldPersistFallbackAssignee(assigneeAgentId, assigneeUserId, inboxAgentId)) {
@@ -87,6 +93,8 @@ const TaskDetailRunPauseAction = memo(() => {
     taskId,
     canRun,
     canPause,
+    isArchived,
+    t,
     assigneeAgentId,
     assigneeUserId,
     inboxAgentId,
@@ -99,6 +107,10 @@ const TaskDetailRunPauseAction = memo(() => {
   const handleRunNow = useCallback(async () => {
     if (!canEditTask) return;
     if (!taskId) return;
+    if (isArchived) {
+      toast.info(t('taskList.contextMenu.runArchivedBlocked'));
+      return;
+    }
     setIsRunningNow(true);
     try {
       if (shouldPersistFallbackAssignee(assigneeAgentId, assigneeUserId, inboxAgentId)) {
@@ -108,7 +120,17 @@ const TaskDetailRunPauseAction = memo(() => {
     } finally {
       setIsRunningNow(false);
     }
-  }, [canEditTask, taskId, assigneeAgentId, assigneeUserId, inboxAgentId, runTask, updateTask]);
+  }, [
+    canEditTask,
+    taskId,
+    isArchived,
+    t,
+    assigneeAgentId,
+    assigneeUserId,
+    inboxAgentId,
+    runTask,
+    updateTask,
+  ]);
 
   const handleCancelSchedule = useCallback(async () => {
     if (!canEditTask) return;

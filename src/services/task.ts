@@ -26,6 +26,8 @@ class TaskService {
     after?: { at: Date | string; seq: number };
     assigneeAgentId?: string;
     automated?: boolean;
+    /** Archived tasks are left out unless this is set. */
+    includeArchived?: boolean;
     orderBy?: 'createdAt' | 'updatedAt';
     limit?: number;
     offset?: number;
@@ -50,6 +52,7 @@ class TaskService {
       offset?: number;
       statuses: string[];
     }>;
+    includeArchived?: boolean;
     parentTaskId?: string | null;
     projectId?: string;
     /** "My tasks" narrowing: assigned to the caller, or created by them. */
@@ -165,6 +168,9 @@ class TaskService {
   ) => lambdaClient.task.update.mutate({ id, ...data });
 
   delete = async (id: string) => lambdaClient.task.delete.mutate({ id });
+
+  archive = async (id: string, archived: boolean) =>
+    lambdaClient.task.archive.mutate({ archived, id });
 
   clearAll = async () => lambdaClient.task.clearAll.mutate();
 
