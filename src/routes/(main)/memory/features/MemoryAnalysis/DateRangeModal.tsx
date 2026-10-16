@@ -11,7 +11,7 @@ import {
   toast,
   useModalContext,
 } from '@lobehub/ui/base-ui';
-import dayjs from 'dayjs';
+import dayjs, { type Dayjs } from 'dayjs';
 import { t as i18nT } from 'i18next';
 import { memo, useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -27,14 +27,14 @@ const DateRangeContent = memo(() => {
   const [range, setRange] = useState<DateRangeValue>([null, null]);
   const [submitting, setSubmitting] = useState(false);
 
-  const disabledDate = useCallback((current: Date) => dayjs(current).isAfter(dayjs(), 'day'), []);
+  const disabledDate = useCallback((current: Dayjs) => current.isAfter(dayjs(), 'day'), []);
 
   const footerNote = useMemo(
     () =>
       range[0] || range[1]
         ? t('analysis.modal.rangeSelected', {
-            end: range[1] ? dayjs(range[1]).format('YYYY/MM/DD') : t('analysis.range.end'),
-            start: range[0] ? dayjs(range[0]).format('YYYY/MM/DD') : t('analysis.range.start'),
+            end: range[1] ? range[1].format('YYYY/MM/DD') : t('analysis.range.end'),
+            start: range[0] ? range[0].format('YYYY/MM/DD') : t('analysis.range.start'),
           })
         : t('analysis.modal.rangePlaceholder'),
     [range, t],
@@ -45,8 +45,8 @@ const DateRangeContent = memo(() => {
     try {
       const [from, to] = range;
       const result = await memoryExtractionService.requestFromChatTopics({
-        fromDate: from ?? undefined,
-        toDate: to ? dayjs(to).endOf('day').toDate() : undefined,
+        fromDate: from ? from.toDate() : undefined,
+        toDate: to ? to.endOf('day').toDate() : undefined,
       });
 
       await refresh();
@@ -70,7 +70,7 @@ const DateRangeContent = memo(() => {
           format={'YYYY/MM/DD'}
           style={{ width: '100%' }}
           value={range}
-          onChange={setRange}
+          onChange={(dates) => setRange(dates ?? [null, null])}
         />
         <Text fontSize={12} type={'secondary'}>
           {footerNote}
