@@ -9,14 +9,12 @@ import { AgentRuntimeErrorType } from '@lobechat/model-runtime';
 import type {
   VerifyCheckItem,
   VerifyCheckResultMetadata,
-  VerifyEvidenceType,
   VerifyRunContext,
   VerifyRunScenario,
 } from '@lobechat/types';
 import { verifyCheckDefinitionSchema } from '@lobechat/types';
 import { TRPCError } from '@trpc/server';
 import { asc, eq } from 'drizzle-orm';
-import pMap from 'p-map';
 import { z } from 'zod';
 
 import {
@@ -49,11 +47,10 @@ import { GoalCriteriaGeneratorService } from '@/server/services/goal/criteriaGen
 import {
   AcceptanceService,
   createEvidenceFileResolver,
-  evidenceTypeForStoredFile,
   finalizeVerifyRun,
+  prepareEvidenceRows,
   purgeVerifyRun,
   resolveEvidenceFiles,
-  resolveEvidenceMetadata,
   resolveLiveRoundForItem,
   VerifyExecutorService,
   VerifyFeedbackService,
@@ -330,21 +327,6 @@ const resolveRunByOperation = async (ctx: { runModel: VerifyRunModel }, operatio
 
   return run;
 };
-
-/** Evidence entries of one submission resolved at a time (file lookups, record checks). */
-const EVIDENCE_RESOLVE_CONCURRENCY = 5;
-
-/** Owner-scoped file lookup for the artifacts a terminal evidence references. */
-const findOwnFile = (ctx: { fileModel: FileModel }) => (fileId: string) =>
-  ctx.fileModel.findById(fileId);
-
-/** Store a file-backed artifact under the medium of the file itself, not the caller's label. */
-const storedEvidenceType = async (
-  ctx: { fileModel: FileModel },
-  type: VerifyEvidenceType,
-  fileId?: string | null,
-): Promise<VerifyEvidenceType> =>
-  fileId ? evidenceTypeForStoredFile(type, await ctx.fileModel.findById(fileId)) : type;
 
 export const verifyRouter = router({
   // ---- criteria (reusable atomic standards) ----
@@ -983,19 +965,8 @@ export const verifyRouter = router({
       // Attaching evidence mutates another member's result — creator-scoped,
       // mirroring submitCheckEvidence.
       assertWorkspaceRowManageable(ctx, result.userId, 'verify result');
-      const type = await storedEvidenceType(ctx, input.type, input.fileId);
-      const metadata = await resolveEvidenceMetadata(findOwnFile(ctx), type, input.metadata);
-
-      return ctx.evidenceModel.create({
-        capturedAt: new Date(),
-        capturedBy: input.capturedBy ?? null,
-        checkResultId: result.id,
-        content: input.content ?? null,
-        description: input.description ?? null,
-        fileId: input.fileId ?? null,
-        metadata: metadata ?? null,
-        type,
-      });
+      const [row] = await prepareEvidenceRows(ctx.fileModel, [input]);
+      return ctx.evidenceModel.create({ ...row, checkResultId: result.id });
     }),
 
   /**
@@ -1077,21 +1048,8 @@ export const verifyRouter = router({
             .join('; ')}`,
         });
 
-      // Resolve every evidence's medium and metadata before touching the result:
-      // a rejected terminal record must fail the whole submission, not leave a
-      // verdict behind without the evidence that was meant to back it.
-      const evidenceRows = await pMap(
-        input.evidence ?? [],
-        async (e) => {
-          const type = await storedEvidenceType(ctx, e.type, e.fileId);
-          return {
-            ...e,
-            metadata: await resolveEvidenceMetadata(findOwnFile(ctx), type, e.metadata),
-            type,
-          };
-        },
-        { concurrency: EVIDENCE_RESOLVE_CONCURRENCY },
-      );
+      // Resolved up front: a rejected record fails the submission before any write.
+      const evidenceRows = await prepareEvidenceRows(ctx.fileModel, input.evidence ?? []);
 
       const checkResult = await ctx.resultModel.upsertByCheckItem({
         checkItemId: input.checkItemId,
@@ -1113,16 +1071,7 @@ export const verifyRouter = router({
         evidenceRows.length === 0
           ? []
           : await ctx.evidenceModel.createMany(
-              evidenceRows.map((e) => ({
-                capturedAt: new Date(),
-                capturedBy: e.capturedBy ?? null,
-                checkResultId: checkResult.id,
-                content: e.content ?? null,
-                description: e.description ?? null,
-                fileId: e.fileId ?? null,
-                metadata: e.metadata ?? null,
-                type: e.type,
-              })),
+              evidenceRows.map((row) => ({ ...row, checkResultId: checkResult.id })),
             );
 
       return { checkResult, evidence };

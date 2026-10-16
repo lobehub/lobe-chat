@@ -30,6 +30,7 @@ export {
   resolveEvidenceFiles,
   type TerminalArtifactLink,
 } from './evidenceFiles';
+export { prepareEvidenceRows } from './evidenceIntake';
 export { evidenceTypeForStoredFile } from './evidenceMedium';
 export {
   type ExecuteVerifyParams,
