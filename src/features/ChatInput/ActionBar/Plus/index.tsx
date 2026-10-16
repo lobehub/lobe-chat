@@ -20,6 +20,7 @@ import type { ReactNode } from 'react';
 import { memo, Suspense, useCallback, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { imageUrl } from '@/const/url';
 import { openAttachKnowledgeModal } from '@/features/LibraryModal';
 import { useIsDark } from '@/hooks/useIsDark';
 import { useMediaUploadAbility } from '@/hooks/useMediaUploadAbility';
@@ -335,9 +336,7 @@ const usePlusMenuItems = ({ close }: { close: () => void }): ActionDropdownMenuI
         <img
           alt=""
           className="cover"
-          src={
-            isDark ? '/app-images/agent_gateway_dark.webp' : '/app-images/agent_gateway_light.webp'
-          }
+          src={imageUrl(isDark ? 'agent_gateway_dark.webp' : 'agent_gateway_light.webp')}
         />
         <div className="body">
           <div className="title">{t('gatewayMode.cardTitle')}</div>
