@@ -4,8 +4,10 @@ import { createElement, type PropsWithChildren } from 'react';
 import { SWRConfig } from 'swr';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { createReplicaState } from '@/libs/replica';
 import { messageService } from '@/services/message';
 import { clearMessageListClientCacheState } from '@/services/message/cache';
+import { conversationMessagesKey } from '@/services/message/replica';
 import { topicService } from '@/services/topic';
 import { useChatStore } from '@/store/chat';
 import { operationSelectors, topicSelectors } from '@/store/chat/selectors';
@@ -13,8 +15,7 @@ import {
   hasPendingInterventions,
   INTERVENTION_REFRESH_INTERVAL,
 } from '@/store/chat/utils/interventionSync';
-
-import { createStore } from '../../index';
+import { messageMapKey } from '@/store/chat/utils/messageMapKey';
 
 vi.mock('@/services/message', () => {
   const getMessages = vi.fn();
@@ -46,6 +47,17 @@ const pending: UIChatMessage = {
   pluginIntervention: { status: 'pending' },
 };
 
+const key = messageMapKey(context);
+const rows = () => useChatStore.getState().dbMessagesMap[key] ?? [];
+/** A conversation whose loaded transcript holds one unanswered approval. */
+const seedPending = () =>
+  useChatStore.setState({
+    dbMessagesMap: { [key]: [pending] },
+    messagePagingMap: {},
+    messageReplica: createReplicaState(),
+    messagesMap: {},
+  });
+
 describe('pending approval message polling', () => {
   beforeEach(() => {
     vi.useFakeTimers();
@@ -65,13 +77,14 @@ describe('pending approval message polling', () => {
   });
 
   const mountPolling = async () => {
-    const store = createStore({ context });
-    store.setState({ dbMessages: [pending] });
+    seedPending();
     const cache = new Map();
     renderHook(
       () => {
-        const hasPending = store((state) => hasPendingInterventions(state.dbMessages));
-        store.getState().useFetchMessages(context, {
+        const hasPending = useChatStore((state) =>
+          hasPendingInterventions(state.dbMessagesMap[key] ?? []),
+        );
+        useChatStore.getState().useFetchMessages(context, {
           refreshInterval: hasPending ? INTERVENTION_REFRESH_INTERVAL : 0,
           syncInterventions: true,
         });
@@ -84,7 +97,6 @@ describe('pending approval message polling', () => {
     await act(async () => {
       await Promise.resolve();
     });
-    return store;
   };
 
   it('keeps loaded history and its exhausted cursor after the final approval refresh', async () => {
@@ -92,7 +104,7 @@ describe('pending approval message polling', () => {
       messages: await messageService.getMessages(context),
       olderCursor: { createdAt: new Date(1).toISOString(), id: pending.id },
     }));
-    const store = await mountPolling();
+    await mountPolling();
     const older: UIChatMessage = {
       id: 'older',
       role: 'user',
@@ -105,9 +117,9 @@ describe('pending approval message polling', () => {
       olderCursor: null,
     });
     await act(async () => {
-      await store.getState().loadEarlierMessages();
+      await useChatStore.getState().loadEarlierMessages(context);
     });
-    expect(store.getState().dbMessages.map((m) => m.id)).toEqual(['older', 'question']);
+    expect(rows().map((m) => m.id)).toEqual(['older', 'question']);
     const answered = { ...pending, pluginIntervention: { status: 'approved' as const } };
     const reply: UIChatMessage = {
       id: 'reply',
@@ -120,13 +132,15 @@ describe('pending approval message polling', () => {
     await act(async () => {
       await vi.advanceTimersByTimeAsync(2000);
     });
-    expect(store.getState().dbMessages).toEqual([older, answered, reply]);
-    expect(store.getState().messagePaging?.hasMore).toBe(false);
+    expect(rows()).toEqual([older, answered, reply]);
+    expect(
+      useChatStore.getState().messagePagingMap[conversationMessagesKey(context)]?.hasMore,
+    ).toBe(false);
     expect(messageService.getMessageListPage).toHaveBeenCalledTimes(3);
   });
 
   it('waits for a startup reservation and publishes the new operation for the existing reconnect hook', async () => {
-    const store = await mountPolling();
+    await mountPolling();
     const answered = { ...pending, pluginIntervention: { status: 'approved' as const } };
     vi.mocked(messageService.getMessages).mockResolvedValue([answered]);
     vi.mocked(topicService.getTopicDetail).mockResolvedValue({
@@ -139,7 +153,7 @@ describe('pending approval message polling', () => {
     await act(async () => {
       await vi.advanceTimersByTimeAsync(2000);
     });
-    expect(store.getState().dbMessages[0].pluginIntervention?.status).toBe('approved');
+    expect(rows()[0].pluginIntervention?.status).toBe('approved');
     const requests = vi.mocked(messageService.getMessages).mock.calls.length;
     await act(async () => {
       await vi.advanceTimersByTimeAsync(10_000);
@@ -162,7 +176,7 @@ describe('pending approval message polling', () => {
 
   it('reads final messages after the decision and topic, even with a stale local streaming flag', async () => {
     vi.spyOn(operationSelectors, 'isAgentRuntimeRunningByContext').mockReturnValue(() => true);
-    const store = await mountPolling();
+    await mountPolling();
     const order: string[] = [];
     const answered = { ...pending, pluginIntervention: { status: 'approved' as const } };
     vi.mocked(messageService.getMessages).mockImplementation(async () => {
@@ -188,7 +202,7 @@ describe('pending approval message polling', () => {
       await vi.advanceTimersByTimeAsync(2000);
     });
     expect(order).toEqual(['messages', 'topic', 'messages']);
-    expect(store.getState().dbMessages.at(-1)?.content).toBe('Final reply');
+    expect(rows().at(-1)?.content).toBe('Final reply');
     const requests = vi.mocked(messageService.getMessages).mock.calls.length;
     await act(async () => {
       await vi.advanceTimersByTimeAsync(10_000);
@@ -197,13 +211,14 @@ describe('pending approval message polling', () => {
   });
 
   it('follows a slow remote continuation after the Ask closes without focus or remount', async () => {
-    const store = createStore({ context });
-    store.setState({ dbMessages: [pending] });
+    seedPending();
     const cache = new Map();
     renderHook(
       () => {
-        const hasPending = store((state) => hasPendingInterventions(state.dbMessages));
-        store.getState().useFetchMessages(context, {
+        const hasPending = useChatStore((state) =>
+          hasPendingInterventions(state.dbMessagesMap[key] ?? []),
+        );
+        useChatStore.getState().useFetchMessages(context, {
           refreshInterval: hasPending ? INTERVENTION_REFRESH_INTERVAL : 0,
           syncInterventions: true,
         });
@@ -226,7 +241,7 @@ describe('pending approval message polling', () => {
     await act(async () => {
       await vi.advanceTimersByTimeAsync(2000);
     });
-    expect(store.getState().dbMessages[0].pluginIntervention?.status).toBe('approved');
+    expect(rows()[0].pluginIntervention?.status).toBe('approved');
     await act(async () => {
       await vi.advanceTimersByTimeAsync(60_000);
     });
@@ -244,7 +259,7 @@ describe('pending approval message polling', () => {
     await act(async () => {
       await vi.advanceTimersByTimeAsync(2000);
     });
-    expect(store.getState().dbMessages.at(-1)?.content).toBe('Late continuation');
+    expect(rows().at(-1)?.content).toBe('Late continuation');
     const requests = vi.mocked(messageService.getMessages).mock.calls.length;
     await act(async () => {
       await vi.advanceTimersByTimeAsync(10_000);
@@ -255,12 +270,15 @@ describe('pending approval message polling', () => {
   it.each(['approved', 'rejected', 'aborted'] as const)(
     'updates the mounted peer on remote %s, then stops polling',
     async (status) => {
-      const store = createStore({ context });
-      store.setState({ dbMessages: [pending] });
+      seedPending();
       const usePollingMessages = () => {
-        const hasPending = store((state) => hasPendingInterventions(state.dbMessages));
-        const result = store((state) => state.dbMessages[0]?.pluginIntervention?.status);
-        store.getState().useFetchMessages(context, {
+        const hasPending = useChatStore((state) =>
+          hasPendingInterventions(state.dbMessagesMap[key] ?? []),
+        );
+        const result = useChatStore(
+          (state) => state.dbMessagesMap[key]?.[0]?.pluginIntervention?.status,
+        );
+        useChatStore.getState().useFetchMessages(context, {
           refreshInterval: hasPending ? INTERVENTION_REFRESH_INTERVAL : 0,
           syncInterventions: true,
         });
@@ -286,7 +304,7 @@ describe('pending approval message polling', () => {
         await vi.advanceTimersByTimeAsync(2000);
       });
       expect(result.current).toBe(status);
-      expect(store.getState().dbMessages).toEqual([answered]);
+      expect(rows()).toEqual([answered]);
       const requests = vi.mocked(messageService.getMessages).mock.calls.length;
       await act(async () => {
         await vi.advanceTimersByTimeAsync(10_000);
@@ -294,4 +312,57 @@ describe('pending approval message polling', () => {
       expect(messageService.getMessages).toHaveBeenCalledTimes(requests);
     },
   );
+
+  it('polls a card a stream delivered after the first read, within the poll interval', async () => {
+    // Regression: the topic's first read ran under the 30s list dedupe window.
+    // A card that arrived over the stream afterwards switched the sync to the
+    // 2s poll, but every tick was deduped against that first read, so another
+    // device's answer only showed up ~30s later.
+    useChatStore.setState({
+      dbMessagesMap: {},
+      messagePagingMap: {},
+      messageReplica: createReplicaState(),
+      messagesMap: {},
+    });
+    vi.mocked(messageService.getMessages).mockResolvedValue([]);
+    const cache = new Map();
+    renderHook(
+      () => {
+        const hasPending = useChatStore((state) =>
+          hasPendingInterventions(state.dbMessagesMap[key] ?? []),
+        );
+        useChatStore.getState().useFetchMessages(context, {
+          refreshInterval: hasPending ? INTERVENTION_REFRESH_INTERVAL : 0,
+          syncInterventions: true,
+        });
+      },
+      {
+        wrapper: ({ children }: PropsWithChildren) =>
+          createElement(SWRConfig, { value: { provider: () => cache } }, children),
+      },
+    );
+    await act(async () => {
+      await Promise.resolve();
+    });
+    expect(messageService.getMessages).toHaveBeenCalledTimes(1);
+
+    // The run parks on a question: the card arrives over the stream, and the
+    // server still reports it pending for a while.
+    vi.mocked(messageService.getMessages).mockResolvedValue([pending]);
+    await act(async () => {
+      useChatStore.getState().replaceMessages([pending], { context });
+    });
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(INTERVENTION_REFRESH_INTERVAL + 500);
+    });
+
+    // Another device answers; the next poll picks it up.
+    const answered = { ...pending, pluginIntervention: { status: 'approved' as const } };
+    vi.mocked(messageService.getMessages).mockResolvedValue([answered]);
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(2 * INTERVENTION_REFRESH_INTERVAL + 500);
+    });
+
+    expect(rows()[0].pluginIntervention?.status).toBe('approved');
+  });
 });

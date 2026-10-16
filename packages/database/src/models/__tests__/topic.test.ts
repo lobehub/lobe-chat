@@ -1595,6 +1595,22 @@ describe('TopicModel', () => {
 
       expect(updated.metadata).toEqual({ heteroEffort: 'high' });
     });
+
+    it('writes a speed pin with the model and keeps it when a later switch omits it', async () => {
+      const topic = await topicModel.create({ model: 'a', provider: 'codex', title: 'pin' });
+
+      await topicModel.updateModelPin(topic.id, {
+        metadata: { heteroSpeed: 'fast' },
+        model: 'b',
+        provider: 'codex',
+      });
+      const [updated] = await topicModel.updateModelPin(topic.id, {
+        model: 'c',
+        provider: 'codex',
+      });
+
+      expect(updated.metadata).toEqual({ heteroSpeed: 'fast' });
+    });
   });
 
   describe('updateMetadata', () => {

@@ -394,8 +394,15 @@ const managerTurnToken = (goalId: string) => `${goalId}_${randomUUID()}`;
  */
 export const managerSnapshot = (graph: GoalGraphSnapshot) => {
   // Coordinator receipts are not planning input: arming a Task's quota wake while a
-  // turn runs must not make that turn's plan stale.
-  const { managerState: _state, quotaRetryWakeAt: _quotaWake, ...config } = graph.goal.config ?? {};
+  // turn runs must not make that turn's plan stale, and neither may the system
+  // planner's lease — a hand-over starts the turn while the lease is still held
+  // and releases it right after.
+  const {
+    managerState: _state,
+    planningCheckpoint: _lease,
+    quotaRetryWakeAt: _quotaWake,
+    ...config
+  } = graph.goal.config ?? {};
   return createHash('sha256')
     .update(
       JSON.stringify({
@@ -964,6 +971,28 @@ export class GoalManagerService {
     return this.startTurn(graph, problem);
   };
 
+  /**
+   * Plan a goal the system planner handed over in its first pass — it failed, or
+   * judged one pass not enough. Nothing runs yet, so this is an ordinary first
+   * turn; the reason reaches the Agent as the turn's continuation.
+   */
+  async planInstead(graph: GoalGraphSnapshot, reason: string): Promise<GoalTickResult | null> {
+    if (!this.eligible(graph)) return null;
+    const settled = await this.settleInFlight(graph);
+    if (settled) return settled;
+    // An offer, not an obligation: with no turn or budget left the hand-over is
+    // declined, and the system planner's own plan runs. Left to `startTurn`, the
+    // limit would pause the goal instead and drop that plan.
+    const policy = graph.goal.config!.manager!;
+    if (
+      (graph.goal.config?.managerState?.turns ?? 0) >=
+        (policy.maxTurns ?? DEFAULT_MANAGER_MAX_TURNS) ||
+      (await this.budgetBlocked(graph))
+    )
+      return null;
+    return this.startTurn(graph, undefined, reason, { declineRefused: true });
+  }
+
   /** Return measured shortfalls to planning without weakening acceptance. */
   reconsiderAcceptance = async (
     graph: GoalGraphSnapshot,
@@ -1168,6 +1197,9 @@ export class GoalManagerService {
     graph: GoalGraphSnapshot,
     problem?: { reason: string; taskId?: string },
     continuation?: string,
+    // A hand-over has the system planner's plan to fall back on, so a dispatch
+    // proven never started declines instead of waiting out the turn.
+    { declineRefused = false }: { declineRefused?: boolean } = {},
   ): Promise<GoalTickResult | null> => {
     const { goal } = graph;
     const policy = goal.config!.manager!;
@@ -1381,10 +1413,17 @@ export class GoalManagerService {
       // call has returned. Any other failure may come after a run went live, so
       // it stays unconfirmed. Decided from the error, never from rows the owner
       // can edit or delete.
-      if (error instanceof TopicStartReservationError)
-        await this.recordUnstartedDispatch(goal.id, claimed.token).catch((saveError) =>
-          console.error('[goal:manager] failed to record the refused dispatch', saveError),
-        );
+      if (error instanceof TopicStartReservationError) {
+        const recorded = await this.recordUnstartedDispatch(
+          goal.id,
+          claimed.token,
+          declineRefused,
+        ).catch((saveError) => {
+          console.error('[goal:manager] failed to record the refused dispatch', saveError);
+          return false;
+        });
+        if (recorded && declineRefused) return null;
+      }
     }
     return this.wait(goal.id, 'Main Agent dispatched with CLI planning access');
   };
@@ -1414,12 +1453,20 @@ export class GoalManagerService {
       return true;
     });
 
-  /** Mark a turn whose dispatch was refused its topic reservation as never started. */
-  private recordUnstartedDispatch = async (goalId: string, token: string) =>
+  /**
+   * Mark a turn whose dispatch was refused its topic reservation as never
+   * started; `settle` also consumes it, for a caller that will not wait it out.
+   */
+  private recordUnstartedDispatch = async (goalId: string, token: string, settle: boolean) =>
     this.db.transaction(async (db) => {
       const fresh = await new GoalModel(db, this.userId, this.workspaceId).lockById(goalId);
-      if (fresh?.config?.managerState?.token === token)
-        await this.save(db, goalId, { ...fresh.config.managerState, dispatchNeverStarted: true });
+      if (fresh?.config?.managerState?.token !== token) return false;
+      await this.save(db, goalId, {
+        ...fresh.config.managerState,
+        dispatchNeverStarted: true,
+        ...(settle && { consumed: true }),
+      });
+      return true;
     });
 
   /**

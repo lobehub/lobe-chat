@@ -163,6 +163,8 @@ const getCatalogErrorKey = (name: string) => {
 
 interface ModelCatalogSelectorProps {
   agentId?: string;
+  /** Secondary line under the submenu label, e.g. where the current model comes from. */
+  desc?: string;
   disabled: boolean;
   model: string;
   onSelect: (model: string) => void;
@@ -172,7 +174,16 @@ interface ModelCatalogSelectorProps {
 }
 
 export const ModelCatalogSelector = memo<ModelCatalogSelectorProps>(
-  ({ agentId, disabled, model, onSelect, permissionReason, type, variant = 'standalone' }) => {
+  ({
+    agentId,
+    desc,
+    disabled,
+    model,
+    onSelect,
+    permissionReason,
+    type,
+    variant = 'standalone',
+  }) => {
     const { t } = useTranslation('chat');
     const agentName = getHeterogeneousTypeLabel(type) ?? type;
     const [search, setSearch] = useState('');
@@ -386,7 +397,18 @@ export const ModelCatalogSelector = memo<ModelCatalogSelectorProps>(
             openOnHover={false}
           >
             <DropdownMenuItemContent>
-              <DropdownMenuItemLabel>{t('heteroAgent.modelSelector.model')}</DropdownMenuItemLabel>
+              {desc ? (
+                <DropdownMenuItemLabelGroup>
+                  <DropdownMenuItemLabel>
+                    {t('heteroAgent.modelSelector.model')}
+                  </DropdownMenuItemLabel>
+                  <DropdownMenuItemDesc>{desc}</DropdownMenuItemDesc>
+                </DropdownMenuItemLabelGroup>
+              ) : (
+                <DropdownMenuItemLabel>
+                  {t('heteroAgent.modelSelector.model')}
+                </DropdownMenuItemLabel>
+              )}
               <DropdownMenuItemExtra className={styles.submenuMeta}>
                 {currentModel === HETEROGENEOUS_AGENT_DEFAULT_SELECTION
                   ? t('heteroAgent.modelSelector.default')
