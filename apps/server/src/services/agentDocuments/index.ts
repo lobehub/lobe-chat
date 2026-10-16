@@ -25,7 +25,6 @@ import {
   buildDocumentFilename,
   deriveAgentDocumentFields,
   extractMarkdownH1Title,
-  isEmptyParseShell,
 } from '@/database/models/agentDocuments';
 import { FileModel } from '@/database/models/file';
 import { TopicDocumentModel } from '@/database/models/topicDocument';
@@ -37,6 +36,11 @@ import { DocumentService } from '../document';
 import { FileService } from '../file';
 import { TOOL_RESULTS_DIR_NAME } from '../toolExecution/constants';
 import { isRawTextAgentDocument } from './contentFormat';
+import {
+  attachEmptyParseShellLiteXML,
+  isEmptyParseShellDocument,
+  projectEmptyParseShell,
+} from './emptyParseShell';
 import {
   type AgentDocumentLiteXMLOperation,
   applyLiteXMLOperations,
@@ -229,12 +233,10 @@ export class AgentDocumentsService {
     if (!doc?.editorData) return doc;
     if (doc.fileType === DOCUMENT_FOLDER_TYPE) return doc;
     if (isManagedSkillDocument(doc)) return doc;
-    // An empty-parse shell (childless root editorData, empty content) hydrates
-    // to an empty Lexical state, which throws Lexical error #38 on every
-    // editorData load (2026-10-16 recurrence: pre-#20914 shells block
-    // removeDocument/replaceDocumentContent). Project it as the empty document
-    // it is instead of re-entering the editor.
-    if (isEmptyParseShell(doc)) return { ...doc, content: doc.content ?? '' };
+    // An empty-parse shell hydrates to an empty Lexical state, which throws
+    // Lexical error #38 on every editorData load. Project it as the empty
+    // document it is instead of re-entering the editor.
+    if (isEmptyParseShellDocument(doc)) return projectEmptyParseShell(doc);
 
     try {
       const snapshot = await exportEditorDataSnapshot({
@@ -275,34 +277,7 @@ export class AgentDocumentsService {
     // empty LiteXML document instead of re-entering the editor, so reads and
     // the remove/rename pre-reads stay addressable; a later modifyNodes on
     // these ids still reports a precise "did not change the document" error.
-    if (isEmptyParseShell(doc)) {
-      return {
-        ...doc,
-        content: doc.content ?? '',
-        editorData: {
-          root: {
-            children: [
-              {
-                children: [],
-                direction: null,
-                format: '',
-                indent: 0,
-                textFormat: 0,
-                textStyle: '',
-                type: 'paragraph',
-                version: 1,
-              },
-            ],
-            direction: null,
-            format: '',
-            indent: 0,
-            type: 'root',
-            version: 1,
-          },
-        },
-        litexml: '<?xml version="1.0" encoding="UTF-8"?>\n<root>\n  <p id="42">\n  </p>\n</root>',
-      };
-    }
+    if (isEmptyParseShellDocument(doc)) return attachEmptyParseShellLiteXML(doc);
 
     const snapshot = await exportEditorDataSnapshot({
       editorData: doc.editorData,

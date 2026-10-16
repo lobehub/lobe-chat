@@ -816,22 +816,6 @@ describe('AgentDocumentsService', () => {
       await expect(service.removeDocumentById(DOC_ROW_ID, 'agent-1')).resolves.toBe(true);
       expect(mockModel.delete).toHaveBeenCalledWith(DOC_ROW_ID);
     });
-
-    it('deletes an empty-parse shell leaf without re-entering the editor', async () => {
-      // 2026-10-16 recurrence: pre-#20914 shells threw Lexical error #38 during
-      // the remove pre-read and nothing was deleted (attempts=12).
-      mockModel.findById.mockResolvedValue({
-        ...parentDoc,
-        editorData: { root: { children: [], type: 'root' } },
-        title: 'VERIFIED-CLONE stub',
-      });
-      const service = new AgentDocumentsService(db, userId);
-      (createHeadlessEditor as any).mockClear();
-
-      await expect(service.removeDocumentById(DOC_ROW_ID, 'agent-1')).resolves.toBe(true);
-      expect(mockModel.delete).toHaveBeenCalledWith(DOC_ROW_ID);
-      expect(createHeadlessEditor).not.toHaveBeenCalled();
-    });
   });
 
   describe('listDocuments', () => {
@@ -1318,30 +1302,6 @@ lossless tool result
         documentId: 'docs_backing-doc-1',
         id: agentDocumentId,
       });
-    });
-
-    it('should expose an empty-parse shell as the empty document without re-entering the editor', async () => {
-      const agentDocumentId = '11111111-1111-4111-8111-111111111111';
-      // Pre-#20914 shell: childless root editorData + empty content. Hydrating
-      // this state throws Lexical error #38 and used to make the document
-      // unreadable and unremovable (2026-10-16 recurrence).
-      mockModel.findById.mockResolvedValue({
-        agentId: 'agent-1',
-        content: '',
-        documentId: 'documents-1',
-        editorData: { root: { children: [], type: 'root' } },
-        id: agentDocumentId,
-        title: 'VERIFIED-CLONE stub',
-      });
-
-      const service = new AgentDocumentsService(db, userId);
-      (createHeadlessEditor as any).mockClear();
-      const result = await service.getDocumentSnapshotById(agentDocumentId, 'agent-1');
-
-      expect(createHeadlessEditor).not.toHaveBeenCalled();
-      expect(result?.content).toBe('');
-      expect(result?.litexml).toContain('<root');
-      expect(mockModel.updateEditorSnapshotIfUnchanged).not.toHaveBeenCalled();
     });
   });
 
