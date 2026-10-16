@@ -496,6 +496,7 @@
   "devices.empty.methodDesktop.desc": "デスクトップアプリをダウンロードしてサインインすると、デバイスが自動的に接続されます。",
   "devices.empty.methodDesktop.title": "デスクトップ経由で接続",
   "devices.empty.title": "最初のデバイスを接続",
+  "devices.errors.boundToFixedAgent": "このデバイスは、1つ以上のワークスペースエージェントの固定実行デバイスとして設定されています。まず、それらのエージェントの実行デバイス設定を変更してください。",
   "devices.fallbackBadge": "不安定なアイデンティティ",
   "devices.fallbackTooltip": "このデバイスはマシンIDで識別できなかったため、アプリを再インストールすると重複エントリが作成される可能性があります。",
   "devices.health.cpu": "CPU",

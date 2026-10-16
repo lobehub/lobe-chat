@@ -496,6 +496,7 @@
   "devices.empty.methodDesktop.desc": "Laden Sie die Desktop-App herunter, melden Sie sich an, und Ihr Gerät wird automatisch verbunden.",
   "devices.empty.methodDesktop.title": "Über Desktop verbinden",
   "devices.empty.title": "Verbinden Sie Ihr erstes Gerät",
+  "devices.errors.boundToFixedAgent": "Dieses Gerät ist als festgelegtes Ausführungsgerät für einen oder mehrere Arbeitsbereichsagenten festgelegt. Ändern Sie zuerst die Ausführungsgeräteeinstellungen dieser Agenten.",
   "devices.fallbackBadge": "Instabile Identität",
   "devices.fallbackTooltip": "Dieses Gerät konnte nicht anhand seiner Maschinen-ID identifiziert werden, daher kann eine Neuinstallation der App einen doppelten Eintrag erstellen.",
   "devices.health.cpu": "CPU",

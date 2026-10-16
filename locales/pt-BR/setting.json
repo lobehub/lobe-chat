@@ -496,6 +496,7 @@
   "devices.empty.methodDesktop.desc": "Baixe o aplicativo desktop, faça login e seu dispositivo se conecta automaticamente.",
   "devices.empty.methodDesktop.title": "Conectar via Desktop",
   "devices.empty.title": "Conecte seu primeiro dispositivo",
+  "devices.errors.boundToFixedAgent": "Este dispositivo está configurado como o dispositivo fixo de execução para um ou mais agentes do espaço de trabalho. Altere as configurações de dispositivo de execução desses agentes primeiro.",
   "devices.fallbackBadge": "Identidade instável",
   "devices.fallbackTooltip": "Este dispositivo não pôde ser identificado pelo ID da máquina, então reinstalar o aplicativo pode criar uma entrada duplicada.",
   "devices.health.cpu": "CPU",

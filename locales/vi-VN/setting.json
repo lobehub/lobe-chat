@@ -496,6 +496,7 @@
   "devices.empty.methodDesktop.desc": "Tải xuống ứng dụng desktop, đăng nhập và thiết bị của bạn sẽ tự động kết nối.",
   "devices.empty.methodDesktop.title": "Kết nối qua Desktop",
   "devices.empty.title": "Kết nối thiết bị đầu tiên của bạn",
+  "devices.errors.boundToFixedAgent": "Thiết bị này được đặt làm thiết bị chạy cố định cho một hoặc nhiều tác nhân trong không gian làm việc. Hãy thay đổi cài đặt thiết bị chạy của các tác nhân đó trước.",
   "devices.fallbackBadge": "Danh tính không ổn định",
   "devices.fallbackTooltip": "Thiết bị này không thể được nhận diện bằng ID máy, vì vậy việc cài đặt lại ứng dụng có thể tạo ra một mục trùng lặp.",
   "devices.health.cpu": "CPU",
