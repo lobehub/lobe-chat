@@ -215,9 +215,11 @@ const CreateTaskContent = memo<CreateTaskContentProps>(
     const handleTitleKeyDown = useTitleEnterToInstruction(editor);
 
     return (
-      <Flexbox onKeyDown={handleKeyDown}>
-        <Flexbox horizontal style={{ padding: '16px 24px 0' }}>
-          <Flexbox flex={1} style={{ minHeight: 180 }}>
+      <Flexbox flex={1} style={{ minHeight: 0 }} onKeyDown={handleKeyDown}>
+        <Flexbox horizontal style={{ minHeight: 0, padding: '16px 24px 0' }}>
+          {/* A block (not flex) scroller: the editor's overflow-hidden wrapper
+              would otherwise shrink to fit and clip instead of scrolling. */}
+          <div style={{ flex: 1, minHeight: 180, minWidth: 0, overflowY: 'auto' }}>
             <input
               autoFocus={canCreateTask}
               disabled={!canCreateTask}
@@ -246,7 +248,7 @@ const CreateTaskContent = memo<CreateTaskContentProps>(
               style={{ fontSize: 14, paddingBottom: 16 }}
               onContentChange={handleContentChange}
             />
-          </Flexbox>
+          </div>
           <Flexbox horizontal gap={4} style={{ flexShrink: 0 }}>
             {showInlineToggle && (
               <ActionIcon
@@ -263,7 +265,11 @@ const CreateTaskContent = memo<CreateTaskContentProps>(
           horizontal
           align={'center'}
           justify={'space-between'}
-          style={{ borderTop: `1px solid ${cssVar.colorBorderSecondary}`, padding: '8px 16px' }}
+          style={{
+            borderTop: `1px solid ${cssVar.colorBorderSecondary}`,
+            flexShrink: 0,
+            padding: '8px 16px',
+          }}
         >
           <Flexbox horizontal gap={2} wrap={'wrap'}>
             <TaskPriorityTag priority={priority} onChange={setPriority}>
