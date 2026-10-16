@@ -1,7 +1,8 @@
 import { AGENT_CHAT_URL, isDesktop } from '@lobechat/const';
-import { ActionIcon, toast } from '@lobehub/ui/base-ui';
+import { Icon, type MenuProps } from '@lobehub/ui';
+import { toast } from '@lobehub/ui/base-ui';
 import { FolderPlusIcon } from 'lucide-react';
-import { memo, useMemo } from 'react';
+import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useActiveWorkspaceSlug } from '@/business/client/hooks/useActiveWorkspaceSlug';
@@ -21,15 +22,21 @@ import { useElectronStore } from '@/store/electron';
 
 import { buildPrefixedAgentRoutePath, parseAgentPathname } from '../utils/agentPathname';
 
+type MenuItem = NonNullable<MenuProps['items']>[number];
+
 /**
- * Topics header action for heterogeneous agents: pick (or create) a folder on
- * the agent's target device and open a new conversation in it — the header
+ * Topics menu action for heterogeneous agents: pick (or create) a folder on
+ * the agent's target device and open a new conversation in it — the menu
  * counterpart of a project group's "+". The folder becomes the agent's default
  * for that device and joins the device's recent list; the topic row (and so
  * the folder group) appears once the first message is sent.
+ *
+ * Only heterogeneous (CLI) agents work inside folders, so others get `null`.
  */
-const AddFolderAction = memo<{ agentId: string }>(({ agentId }) => {
+export const useAddFolderMenuItem = (): MenuItem | null => {
   const { t } = useTranslation('device');
+  const agentId = useAgentStore((s) => s.activeAgentId) ?? '';
+  const isHeterogeneous = !!useAgentStore(agentSelectors.currentAgentHeterogeneousProviderType);
   const { agencyConfig, workspaceScoped } = useEffectiveAgencyConfig(agentId, { topicId: null });
   const currentDeviceId = useElectronStore((s) => s.gatewayDeviceInfo?.deviceId);
   const targetDeviceId = resolveTargetDeviceId(agencyConfig, currentDeviceId, {
@@ -82,32 +89,13 @@ const AddFolderAction = memo<{ agentId: string }>(({ agentId }) => {
     }
   };
 
-  if (!targetDeviceId) return null;
+  if (!agentId || !isHeterogeneous || !targetDeviceId) return null;
 
-  return (
-    <ActionIcon
-      aria-label={t('workingDirectory.addFolder')}
-      disabled={isPreferenceLoading}
-      icon={FolderPlusIcon}
-      size={'small'}
-      title={t('workingDirectory.addFolder')}
-      onClick={() => void handleClick()}
-    />
-  );
-});
-
-AddFolderAction.displayName = 'AddFolderAction';
-
-/** Only heterogeneous (CLI) agents work inside folders, so others get no action. */
-const AddFolder = memo(() => {
-  const agentId = useAgentStore((s) => s.activeAgentId);
-  const isHeterogeneous = !!useAgentStore(agentSelectors.currentAgentHeterogeneousProviderType);
-
-  if (!agentId || !isHeterogeneous) return null;
-
-  return <AddFolderAction agentId={agentId} />;
-});
-
-AddFolder.displayName = 'AddFolder';
-
-export default AddFolder;
+  return {
+    disabled: isPreferenceLoading,
+    icon: <Icon icon={FolderPlusIcon} />,
+    key: 'addFolder',
+    label: t('workingDirectory.addFolder'),
+    onClick: () => void handleClick(),
+  };
+};
