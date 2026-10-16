@@ -226,8 +226,11 @@ export default defineConfig({
             ],
           },
           // Setting `exclude` here replaces the root optimizeDeps.exclude; the node
-          // builtins must stay listed or vite swaps them for browser shims
-          exclude: ['crypto', 'util', 'tty'],
+          // builtins must stay listed or vite swaps them for browser shims.
+          // Vitest itself excludes `react`, which externalizes every `react/*`
+          // subpath, but vite only builds a `require()` facade for exact entries,
+          // so CJS deps in the chunk (re-resizable) need the jsx runtimes listed.
+          exclude: ['crypto', 'util', 'tty', 'react/jsx-runtime', 'react/jsx-dev-runtime'],
           // Every imported subpath must be prebundled together: a subpath left to
           // vite-node loads a second copy of the library whose MotionProvider /
           // modal-stack contexts don't match the chunk's
