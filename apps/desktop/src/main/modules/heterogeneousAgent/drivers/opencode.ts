@@ -30,7 +30,8 @@ const sanitizeBindingArgs = (source: string[]) => {
       if (arg === flag) index += 1;
       continue;
     }
-    if (CONTROLLED_BOOLEAN_FLAGS.includes(arg)) continue;
+    if (CONTROLLED_BOOLEAN_FLAGS.some((flag) => arg === flag || arg.startsWith(`${flag}=`)))
+      continue;
     args.push(arg);
   }
   return args;

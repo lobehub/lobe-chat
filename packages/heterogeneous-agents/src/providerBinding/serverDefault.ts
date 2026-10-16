@@ -32,7 +32,6 @@ export const SERVER_DEFAULT_HETEROGENEOUS_AGENT_CONFIG = {
   },
   'opencode': {
     ingress: 'openai-responses',
-    modelPolicy: 'tool-capable',
     tokenHeader: 'bearer',
   },
   'trae': {

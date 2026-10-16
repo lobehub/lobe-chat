@@ -1,6 +1,11 @@
+import { mkdtemp, readFile, rm, stat } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import path from 'node:path';
+
 import { describe, expect, it, vi } from 'vitest';
 
 import { getHeterogeneousAgentDriver } from '../index';
+import { prepareHostedServerDefaultBinding } from '../providerBindingHost';
 import type {
   HeterogeneousAgentBuildPlanHelpers,
   HeterogeneousAgentBuildPlanParams,
@@ -32,6 +37,9 @@ describe('opencodeDriver', () => {
         '--server',
         'https://other.test',
         '--continue',
+        '--continue=true',
+        '--standalone=false',
+        '--fork=true',
         '--session',
         'other-session',
         '--agent',
@@ -85,6 +93,42 @@ describe('opencodeDriver', () => {
       },
     });
     expect(JSON.stringify(plan)).not.toContain('stale-token');
+  });
+
+  it('retains private session storage across turns and isolates model changes', async () => {
+    const root = await mkdtemp(path.join(tmpdir(), 'opencode-binding-'));
+    const prepare = (model: string, sessionId: string) =>
+      prepareHostedServerDefaultBinding({
+        agentType: 'opencode',
+        appStoragePath: root,
+        args: [],
+        driver: opencodeDriver,
+        endpoint: 'https://example.test',
+        model,
+        sessionId,
+      });
+    try {
+      const first = await prepare('model-a', 'turn-1');
+      const resumed = await prepare('model-a', 'turn-2');
+      const switched = await prepare('model-b', 'turn-3');
+      expect(resumed.bindingKey).toBe(first.bindingKey);
+      expect(resumed.env.XDG_DATA_HOME).toBe(first.env.XDG_DATA_HOME);
+      expect(switched.bindingKey).not.toBe(first.bindingKey);
+      expect(switched.env.XDG_DATA_HOME).not.toBe(first.env.XDG_DATA_HOME);
+      expect((await stat(first.profileDir)).mode & 0o777).toBe(0o700);
+      expect(await readFile(first.env.OPENCODE_CONFIG, 'utf8')).toBe('{}\n');
+      expect((await stat(first.env.OPENCODE_CONFIG)).mode & 0o777).toBe(0o600);
+      const spawn = await opencodeDriver.buildSpawnPlan(
+        buildParams({ args: resumed.args, resumeSessionId: 'native-session' }),
+      );
+      expect(spawn.args).toEqual(expect.arrayContaining(['--session', 'native-session']));
+      expect(spawn.args).toContain('--standalone');
+      await first.cleanup();
+      await expect(stat(first.runDir)).rejects.toThrow();
+      await expect(stat(first.profileDir)).resolves.toBeDefined();
+    } finally {
+      await rm(root, { force: true, recursive: true });
+    }
   });
 
   it('uses conservative model capabilities when the deployment has no model card', async () => {

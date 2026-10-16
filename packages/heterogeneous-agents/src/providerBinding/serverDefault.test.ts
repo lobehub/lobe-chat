@@ -41,7 +41,6 @@ describe('server-default heterogeneous agent matrix', () => {
       },
       'opencode': {
         ingress: 'openai-responses',
-        modelPolicy: 'tool-capable',
         tokenHeader: 'bearer',
       },
       'trae': {
