@@ -13,11 +13,12 @@ import { assertNotInOpenGoal, writeKeepingArchivedIdle } from './archiveGuard';
 
 const userId = 'archive-guard-integration-user';
 
-describe('writeKeepingArchivedIdle (real PostgreSQL)', () => {
-  let db: LobeChatDatabase;
+// Module-level, like the database model tests: the first call migrates a
+// fresh database, which can outlast a hook timeout on a loaded CI shard.
+const db: LobeChatDatabase = await getTestDB();
 
+describe('writeKeepingArchivedIdle (real PostgreSQL)', () => {
   beforeEach(async () => {
-    db = await getTestDB();
     await db.delete(users).where(eq(users.id, userId));
     await db.insert(users).values({ id: userId });
   });
