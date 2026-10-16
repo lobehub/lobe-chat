@@ -203,13 +203,6 @@ export default defineConfig({
         client: {
           enabled: true,
           rolldownOptions: {
-            // CJS deps bundled into the chunk (antd-style) call `require('react/jsx-runtime')`.
-            // Rolldown's ESM interop only works when a real `require` is in scope, and the dep
-            // optimizer cannot set `output.banner`, so inject the shim through `output.intro`.
-            output: {
-              intro:
-                'import { createRequire as __vitestCreateRequire } from "node:module"; const require = __vitestCreateRequire(import.meta.url);',
-            },
             // Dep optimization bypasses Vite plugins, so mirror the resolveId hacks here.
             plugins: [
               {

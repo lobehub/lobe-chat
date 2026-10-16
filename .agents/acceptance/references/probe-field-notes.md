@@ -1183,7 +1183,7 @@ permissions`, which raw member rows never create. And even after RBAC, a raw
   the cause; clearing `node_modules/.vite` does NOT fix it.
 - **Doesn't work:** clearing the Vite deps cache, restarting the dev server,
   `pnpm dedupe @lobehub/ui` (peer sets differ, instances survive).
-- **Works:** temporarily add `resolve: { dedupe: ['@lobehub/ui', 'antd-style',
+- **Works:** temporarily add `resolve: { dedupe: ['@lobehub/ui',
 'motion', 'react', 'react-dom'] }` to the cloud root `vite.config.ts` +
   `rm -rf node_modules/.vite`, and REVERT the config after capturing evidence
   (snapshot the file first — it may carry uncommitted edits).

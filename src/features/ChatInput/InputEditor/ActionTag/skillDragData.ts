@@ -25,7 +25,7 @@ export const writeSkillDragData = (dataTransfer: DataTransfer, payload: SkillDra
 };
 
 /**
- * Resolve a `var(--x)` reference (e.g. from antd-style `cssVar.*`) to its
+ * Resolve a `var(--x)` reference (e.g. from `@lobehub/ui` `cssVar.*`) to its
  * concrete computed value in the context of `ctx`. Lets the drag preview live
  * on `document.body` (free of transformed ancestors that would break
  * fixed-position cursor tracking) while still picking up the themed token.

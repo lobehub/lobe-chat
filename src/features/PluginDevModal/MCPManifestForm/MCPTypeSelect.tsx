@@ -5,7 +5,6 @@ import { useTranslation } from 'react-i18next';
 
 import { isDesktop } from '@/const/version';
 
-// Define styles using antd-style (moved from MCPManifestForm)
 const styles = createStaticStyles(({ css }) => ({
   active: css`
     border-color: ${cssVar.colorPrimary};
