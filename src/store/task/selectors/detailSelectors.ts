@@ -4,7 +4,7 @@ import type {
   TaskDetailData,
   TaskVerifyConfig,
 } from '@lobechat/types';
-import { resolveHeterogeneousRuntimeConfig } from '@lobechat/types';
+import { isTaskArchiveBlocked, resolveHeterogeneousRuntimeConfig } from '@lobechat/types';
 
 import type { SaveStatus } from '@/types/saveState';
 
@@ -32,6 +32,19 @@ const activeTaskVisibility = (s: TaskStoreState): 'private' | 'public' =>
   activeTaskDetail(s)?.visibility ?? 'public';
 
 const activeTaskCreatedByUserId = (s: TaskStoreState) => activeTaskDetail(s)?.createdByUserId;
+
+const activeTaskArchivedAt = (s: TaskStoreState) => activeTaskDetail(s)?.archivedAt;
+
+const isActiveTaskArchiveBlocked = (s: TaskStoreState) => {
+  const detail = activeTaskDetail(s);
+  if (!detail) return false;
+  return isTaskArchiveBlocked({
+    automationMode: detail.automationMode,
+    heartbeatInterval: detail.heartbeat?.interval,
+    schedulePattern: detail.schedule?.pattern,
+    status: detail.status,
+  });
+};
 
 const activeTaskInstruction = (s: TaskStoreState) => activeTaskDetail(s)?.instruction;
 
@@ -165,6 +178,7 @@ export const taskDetailSelectors = {
   activeTaskAssigneeUserId,
   activeTaskAutomationMode,
   activeTaskCheckpoint,
+  activeTaskArchivedAt,
   activeTaskCreatedByUserId,
   activeTaskDatabaseId,
   activeTaskModel,
@@ -196,6 +210,7 @@ export const taskDetailSelectors = {
   activeTaskWorkspaceId,
   activeTopicDrawerTopicId,
   canCancelActiveTask,
+  isActiveTaskArchiveBlocked,
   canPauseActiveTask,
   canRunActiveTask,
   isTaskDetailLoading,

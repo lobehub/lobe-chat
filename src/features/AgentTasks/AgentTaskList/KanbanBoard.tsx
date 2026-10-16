@@ -86,9 +86,10 @@ const KanbanBoard = memo<KanbanBoardProps>((props) => {
   const useFetchTaskGroupList = useTaskStore((s) => s.useFetchTaskGroupList);
   // Keep the sync handle for `error` + `mutate` (the error/Retry state) and the
   // `queryKey` the groups are read by.
-  const { error, isLoading, mutate, queryKey } = useFetchTaskGroupList(
-    buildKanbanGroupQuery({ agentId, excludeStatuses, groupBy, myTaskScope, projectId }),
-  );
+  const { error, isLoading, mutate, queryKey } = useFetchTaskGroupList({
+    ...buildKanbanGroupQuery({ agentId, excludeStatuses, groupBy, myTaskScope, projectId }),
+    includeArchived: options.showArchived,
+  });
   // Each board query (scope, dimension, filters) is its own store entry, so the
   // settled signal and the groups always describe the same board.
   const isTaskGroupListInit = useTaskStore(taskListSelectors.isTaskGroupListInit(queryKey));

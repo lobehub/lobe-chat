@@ -43,7 +43,9 @@ import { type ReviewResult, TaskReviewService } from '../taskReview';
 import { TaskRunnerService } from '../taskRunner';
 import { createTaskSchedulerModule } from '../taskScheduler';
 import { resolveTaskAcceptance } from '../verify/taskAcceptance';
+import { assertArchivedTaskStaysIdle, writeKeepingArchivedIdle } from './archiveGuard';
 import { collapseActivityLog } from './collapseActivityLog';
+import { projectTaskDetailState } from './detailProjection';
 import { resolveMissingTaskModelConfig } from './modelSnapshot';
 
 const emptyWorkspace: WorkspaceData = { nodeMap: {}, tree: [] };
@@ -558,6 +560,7 @@ export class TaskService {
     }
 
     const resolved = await this.resolveOrThrow(id);
+    assertArchivedTaskStaysIdle(resolved, { status });
 
     if (resolved.status === 'running' && status !== 'running') {
       const topics = await this.taskTopicModel.findByTaskId(resolved.id);
@@ -605,9 +608,12 @@ export class TaskService {
       extra.completedAt = new Date();
     if (errorMsg) extra.error = errorMsg;
 
-    const task = actor
-      ? await this.taskModel.updateWithLog(resolved.id, { status, ...extra }, actor)
-      : await this.taskModel.updateStatus(resolved.id, status, extra);
+    const task = await writeKeepingArchivedIdle(this.db, (tx) => {
+      const model = new TaskModel(tx, this.userId, this.workspaceId);
+      return actor
+        ? model.updateWithLog(resolved.id, { status, ...extra }, actor)
+        : model.updateStatus(resolved.id, status, extra);
+    });
     if (!task) throw new TRPCError({ code: 'NOT_FOUND', message: 'Task not found' });
 
     // Stamp the schedule run-count window each time the user (re)starts a
@@ -1000,7 +1006,14 @@ export class TaskService {
     options: Parameters<TaskModel['updateWithLog']>[3] = {},
   ): Promise<TaskItem | null> {
     return this.withAssigneeUserLock(data.assigneeUserId, (db) =>
-      new TaskModel(db, this.userId, this.workspaceId).updateWithLog(taskId, data, actor, options),
+      writeKeepingArchivedIdle(db, (tx) =>
+        new TaskModel(tx, this.userId, this.workspaceId).updateWithLog(
+          taskId,
+          data,
+          actor,
+          options,
+        ),
+      ),
     );
   }
 
@@ -1169,6 +1182,7 @@ export class TaskService {
                 },
               }
             : {}),
+          ...(s.archivedAt ? { archivedAt: new Date(s.archivedAt).toISOString() } : {}),
           assigneeUserId: s.assigneeUserId,
           automationMode: s.automationMode,
           blockedBy: depMap.get(s.id),
@@ -1423,10 +1437,9 @@ export class TaskService {
     });
 
     const taskConfig = task.config ? (task.config as Record<string, unknown>) : undefined;
-    const taskContext = task.context ? (task.context as TaskContext) : undefined;
-    const scheduleConfig = (taskConfig?.schedule ?? {}) as { maxExecutions?: number | null };
 
     return {
+      ...projectTaskDetailState(task, taskConfig),
       agentId: task.assigneeAgentId,
       automationMode: task.automationMode ?? null,
       checkpoint: this.taskModel.getCheckpointConfig(task),
@@ -1446,29 +1459,12 @@ export class TaskService {
       error: task.error,
       goal: goal ?? null,
       files: taskFiles.length > 0 ? taskFiles : undefined,
-      heartbeat:
-        task.heartbeatInterval || task.heartbeatTimeout || task.lastHeartbeatAt
-          ? {
-              interval: task.heartbeatInterval,
-              lastAt: task.lastHeartbeatAt ? new Date(task.lastHeartbeatAt).toISOString() : null,
-              scheduledAt: taskContext?.scheduler?.scheduledAt,
-              timeout: task.heartbeatTimeout,
-            }
-          : undefined,
       id: task.id,
       identifier: task.identifier,
       instruction: task.instruction,
       name: task.name,
       parent,
       priority: task.priority,
-      schedule:
-        task.schedulePattern || task.scheduleTimezone || scheduleConfig.maxExecutions != null
-          ? {
-              maxExecutions: scheduleConfig.maxExecutions ?? null,
-              pattern: task.schedulePattern,
-              timezone: task.scheduleTimezone,
-            }
-          : undefined,
       startedAt: task.startedAt ? new Date(task.startedAt).toISOString() : undefined,
       status: task.status,
       userId: task.assigneeUserId,
