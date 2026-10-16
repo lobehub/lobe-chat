@@ -6,7 +6,13 @@ import { droidDriver } from './droid';
 describe('droidDriver', () => {
   it('prepares a runtime-only Anthropic model with an environment credential reference', async () => {
     const plan = await droidDriver.prepareServerDefaultBinding!({
-      args: ['--settings', '/other/settings.json', '--tag', 'keep'],
+      args: [
+        '--settings',
+        '/other/settings.json',
+        '--settings=/another/settings.json',
+        '--tag',
+        'keep',
+      ],
       endpoint: 'https://example.test',
       env: { FACTORY_API_KEY: 'native-identity', LOBEHUB_DROID_API_KEY: 'stale-token' },
       model: 'vendor/model',

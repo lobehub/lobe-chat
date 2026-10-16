@@ -22,7 +22,6 @@ describe('server-default heterogeneous agent matrix', () => {
     expect(SERVER_DEFAULT_HETEROGENEOUS_AGENT_CONFIG).toEqual({
       'droid': {
         ingress: 'anthropic-messages',
-        modelPolicy: 'tool-capable',
         tokenHeader: 'x-api-key',
       },
       'claude-code': {
