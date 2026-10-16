@@ -11,6 +11,7 @@ import { useTranslation } from 'react-i18next';
 import DeviceHoverPanel from '@/features/DeviceManager/DeviceHoverPanel';
 import { ExecutionTargetDeviceStatus, ExecutionTargetIcon } from '@/features/ExecutionTargetPicker';
 
+import { handleDeviceRowKeyDown } from './deviceRowKeyDown';
 import OptionRow from './OptionRow';
 
 const styles = createStaticStyles(({ css }) => ({
@@ -61,7 +62,10 @@ const DeviceOptionRow = ({
       styles={{ content: { padding: 4 } }}
       trigger={'hover'}
     >
-      <div data-testid={`device-option-${device.deviceId}`}>
+      <div
+        data-testid={`device-option-${device.deviceId}`}
+        onKeyDown={(event) => handleDeviceRowKeyDown(event, { disabled: !device.online, onSelect })}
+      >
         <OptionRow
           active={active}
           disabled={!device.online}

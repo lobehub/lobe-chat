@@ -27,8 +27,8 @@ import { latestUsageView } from './DeviceHealth/viewState';
 import { getDeviceIcon, getPlatformLabel } from './getDeviceIcon';
 import { openShareDeviceModal } from './ShareDeviceModal';
 import { useCanEditDevice } from './useCanEditDevice';
-import { useDeviceCardMutations } from './useDeviceCardMutations';
 import { useDeviceActivityText } from './useDeviceActivityText';
+import { useDeviceCardMutations } from './useDeviceCardMutations';
 
 const styles = createStaticStyles(({ css }) => ({
   body: css`
