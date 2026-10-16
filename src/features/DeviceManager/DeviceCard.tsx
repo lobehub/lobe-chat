@@ -1,10 +1,20 @@
 'use client';
 
 import type { DeviceListItem } from '@lobechat/types';
-import { DropdownMenu, Flexbox, Icon, Tooltip } from '@lobehub/ui';
-import { ActionIcon, Avatar, confirmModal, Tag, Text } from '@lobehub/ui/base-ui';
+import {
+  ActionIcon,
+  Avatar,
+  confirmModal,
+  createStaticStyles,
+  cssVar,
+  DropdownMenu,
+  Flexbox,
+  Icon,
+  Tag,
+  Text,
+  Tooltip,
+} from '@lobehub/ui';
 import { useInViewport } from 'ahooks';
-import { createStaticStyles, cssVar } from 'antd-style';
 import {
   EyeOffIcon,
   GlobeIcon,

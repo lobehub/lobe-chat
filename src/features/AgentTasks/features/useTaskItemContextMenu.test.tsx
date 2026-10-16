@@ -26,15 +26,11 @@ const mocks = vi.hoisted(() => ({
   updateTaskStatus: vi.fn(),
 }));
 
-vi.mock('@lobehub/ui', async (importOriginal) => ({
-  ...(await importOriginal<object>()),
-  copyToClipboard: mocks.copyToClipboard,
-}));
-
-vi.mock('@lobehub/ui/base-ui', async (importOriginal) => {
+vi.mock('@lobehub/ui', async (importOriginal) => {
   const actual = await importOriginal<{ toast: Record<string, unknown> }>();
   return {
     ...actual,
+    copyToClipboard: mocks.copyToClipboard,
     toast: { ...actual.toast, error: mocks.toastError, info: mocks.toastInfo, success: vi.fn() },
   };
 });

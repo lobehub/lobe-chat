@@ -11,7 +11,7 @@ const state = vi.hoisted(() => ({
   updateTopicMetadata: vi.fn(),
 }));
 
-vi.mock('@lobehub/ui/base-ui', () => ({
+vi.mock('@lobehub/ui', () => ({
   confirmModal: state.confirmModal,
   toast: { error: vi.fn() },
 }));

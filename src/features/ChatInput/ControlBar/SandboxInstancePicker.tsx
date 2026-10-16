@@ -2,9 +2,19 @@
 
 import { environmentKind } from '@lobechat/types';
 import { Github } from '@lobehub/icons';
-import { Flexbox, Icon, Tooltip } from '@lobehub/ui';
-import { confirmModal, Popover, Skeleton, Text, toast } from '@lobehub/ui/base-ui';
-import { createStaticStyles, cssVar, cx } from 'antd-style';
+import {
+  confirmModal,
+  createStaticStyles,
+  cssVar,
+  cx,
+  Flexbox,
+  Icon,
+  Popover,
+  Skeleton,
+  Text,
+  toast,
+  Tooltip,
+} from '@lobehub/ui';
 import {
   ChevronDownIcon,
   FolderClockIcon,

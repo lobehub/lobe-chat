@@ -1,8 +1,15 @@
 'use client';
 
-import { Flexbox, Icon, Popover, Tooltip } from '@lobehub/ui';
-import { confirmModal, toast } from '@lobehub/ui/base-ui';
-import { createStaticStyles, cssVar } from 'antd-style';
+import {
+  confirmModal,
+  createStaticStyles,
+  cssVar,
+  Flexbox,
+  Icon,
+  Popover,
+  toast,
+  Tooltip,
+} from '@lobehub/ui';
 import { ChevronDownIcon } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';

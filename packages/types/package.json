@@ -23,7 +23,7 @@
     "zustand": "5.0.4"
   },
   "peerDependencies": {
-    "@lobehub/ui": "^5",
+    "@lobehub/ui": "^6.0.4",
     "react": "*",
     "zod": "^4.4.3"
   }

@@ -1,7 +1,6 @@
 'use client';
 
-import { Block, Flexbox } from '@lobehub/ui';
-import { createStaticStyles, cssVar, responsive } from 'antd-style';
+import { Block, createStaticStyles, cssVar, Flexbox, responsive } from '@lobehub/ui';
 
 import type { RouteSkeletonProps } from '@/spa/router/routeMeta';
 

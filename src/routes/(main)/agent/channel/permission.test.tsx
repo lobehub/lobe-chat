@@ -1,7 +1,7 @@
 /**
  * @vitest-environment happy-dom
  */
-import { useForm } from '@lobehub/ui/base-ui/form';
+import { useForm } from '@lobehub/ui/form';
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import { describe, expect, it, vi } from 'vitest';
@@ -30,27 +30,6 @@ vi.mock('react-router', async (importOriginal) => ({
   ...(await importOriginal<Record<string, unknown>>()),
   Link: ({ children }: { children?: ReactNode }) => <a>{children}</a>,
 }));
-
-vi.mock('antd', async (importOriginal) => {
-  const actual = (await importOriginal()) as { App: Record<string, unknown> } & Record<
-    string,
-    unknown
-  >;
-
-  return {
-    ...actual,
-    App: {
-      ...actual.App,
-      useApp: () => ({
-        message: {
-          error: vi.fn(),
-          success: vi.fn(),
-          warning: vi.fn(),
-        },
-      }),
-    },
-  };
-});
 
 vi.mock('@/business/client/hooks/useActiveWorkspaceId', () => ({
   useActiveWorkspaceId: () => mocks.activeWorkspaceId,
@@ -112,7 +91,7 @@ vi.mock('@/hooks/useAppOrigin', () => ({
   useAppOrigin: () => 'https://example.test',
 }));
 
-vi.mock('@lobehub/ui/base-ui', async (importOriginal) => ({
+vi.mock('@lobehub/ui', async (importOriginal) => ({
   ...((await importOriginal()) as Record<string, unknown>),
   ActionIcon: ({
     'aria-label': ariaLabel,

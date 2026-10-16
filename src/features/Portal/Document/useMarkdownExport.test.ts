@@ -14,7 +14,7 @@ vi.mock('@lobechat/const', async (importOriginal) => ({
   isDesktop: false,
 }));
 
-vi.mock('@lobehub/ui/base-ui', () => ({
+vi.mock('@lobehub/ui', () => ({
   toast: { error: vi.fn(), success: mocks.toastSuccess },
 }));
 

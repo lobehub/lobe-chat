@@ -12,9 +12,23 @@ import type {
   HeterogeneousAuthMode,
   HeterogeneousProviderConfig,
 } from '@lobechat/types';
-import { CopyButton, Flexbox, Icon, Tooltip, TooltipGroup } from '@lobehub/ui';
-import { ActionIcon, Button, Input, Segmented, Select, Spin, Tag, Text } from '@lobehub/ui/base-ui';
-import { createStaticStyles, cssVar } from 'antd-style';
+import {
+  ActionIcon,
+  Button,
+  CopyButton,
+  createStaticStyles,
+  cssVar,
+  Flexbox,
+  Icon,
+  Input,
+  Segmented,
+  Select,
+  Spin,
+  Tag,
+  Text,
+  Tooltip,
+  TooltipGroup,
+} from '@lobehub/ui';
 import { CheckCircle2, KeyRound, PencilLine, RefreshCw, XCircle } from 'lucide-react';
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -239,7 +253,7 @@ const LocalRuntimeStatusCard = memo<{ provider: HeterogeneousProviderConfig }>((
           <Flexbox horizontal align="center" flex={1} gap={8} justify="space-between">
             <Flexbox horizontal align="center" gap={8}>
               <Icon
-                color={configured ? 'var(--ant-color-success)' : 'var(--ant-color-warning)'}
+                color={configured ? 'var(--lobe-color-success)' : 'var(--lobe-color-warning)'}
                 icon={configured ? CheckCircle2 : KeyRound}
                 size={16}
               />
@@ -589,7 +603,7 @@ const CliHeterogeneousAgentStatusCard = memo<HeterogeneousAgentStatusCardProps>(
       if (!status || !status.available) {
         return (
           <Flexbox horizontal align="center" gap={8} style={{ flexWrap: 'wrap' }}>
-            <Icon color="var(--ant-color-error)" icon={XCircle} size={16} />
+            <Icon color="var(--lobe-color-error)" icon={XCircle} size={16} />
             <Text className={styles.unavailableText}>
               {t('heterogeneousStatus.unavailable', { name: displayName })}
             </Text>

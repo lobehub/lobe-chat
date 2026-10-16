@@ -1,5 +1,11 @@
-import { type DropdownItem, DropdownMenu, Icon } from '@lobehub/ui';
-import { ActionIcon, confirmModal, toast } from '@lobehub/ui/base-ui';
+import {
+  ActionIcon,
+  confirmModal,
+  type DropdownItem,
+  DropdownMenu,
+  Icon,
+  toast,
+} from '@lobehub/ui';
 import {
   ArchiveIcon,
   ArchiveRestoreIcon,

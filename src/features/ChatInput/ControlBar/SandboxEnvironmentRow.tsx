@@ -2,9 +2,16 @@
 
 import { type EnvironmentKind } from '@lobechat/types';
 import { Github } from '@lobehub/icons';
-import { Flexbox, Icon, Tooltip } from '@lobehub/ui';
-import { ActionIcon, DropdownMenu, Popover } from '@lobehub/ui/base-ui';
-import { createStaticStyles, cssVar } from 'antd-style';
+import {
+  ActionIcon,
+  createStaticStyles,
+  cssVar,
+  DropdownMenu,
+  Flexbox,
+  Icon,
+  Popover,
+  Tooltip,
+} from '@lobehub/ui';
 import {
   ChevronDownIcon,
   ChevronRightIcon,

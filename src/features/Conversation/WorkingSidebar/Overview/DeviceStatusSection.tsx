@@ -1,9 +1,7 @@
 'use client';
 
 import type { DeviceListItem, DeviceMetricSeries } from '@lobechat/types';
-import { Flexbox, Icon } from '@lobehub/ui';
-import { Button, Skeleton, Text } from '@lobehub/ui/base-ui';
-import { createStaticStyles, cssVar } from 'antd-style';
+import { Button, createStaticStyles, cssVar, Flexbox, Icon, Skeleton, Text } from '@lobehub/ui';
 import { RefreshCwIcon, TriangleAlertIcon } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';

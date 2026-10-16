@@ -1,6 +1,6 @@
 'use client';
 
-import { Button, Spin } from '@lobehub/ui/base-ui';
+import { Button, Spin } from '@lobehub/ui';
 import { useMemo, useState } from 'react';
 
 import { devDockPanelStyles } from '@/features/DevDock/panelStyles';

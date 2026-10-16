@@ -1,9 +1,18 @@
 'use client';
 
 import type { DeviceListItem, DeviceWorkspaceShare } from '@lobechat/types';
-import { Flexbox, Icon } from '@lobehub/ui';
-import { ActionIcon, Avatar, confirmModal, Tag, Text, toast } from '@lobehub/ui/base-ui';
-import { createStaticStyles, cssVar } from 'antd-style';
+import {
+  ActionIcon,
+  Avatar,
+  confirmModal,
+  createStaticStyles,
+  cssVar,
+  Flexbox,
+  Icon,
+  Tag,
+  Text,
+  toast,
+} from '@lobehub/ui';
 import dayjs from 'dayjs';
 import {
   ActivityIcon,
