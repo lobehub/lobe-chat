@@ -7,6 +7,7 @@ import {
   buildKanbanGroupQuery,
   canDropTaskIntoKanbanColumn,
   getKanbanAssigneeUpdate,
+  getKanbanColumnCreateDefaults,
   getKanbanColumnHeaderVariant,
   getKanbanTaskPatch,
   moveTaskBetweenKanbanGroups,
@@ -270,6 +271,54 @@ describe('kanbanBoardModel', () => {
       expect(buildKanbanGroupQuery({ excludeStatuses, groupBy: 'status' })).toMatchObject({
         excludeStatuses,
       });
+    });
+  });
+
+  describe('getKanbanColumnCreateDefaults', () => {
+    it('pins the column priority on tasks created from a priority column', () => {
+      const groups = [
+        { ...group('priority:2', []), priority: 2 },
+        { ...group('priority:0', []), priority: 0 },
+      ] as TaskGroupItem[];
+      const columns = buildKanbanColumns(groups, 'priority');
+
+      expect(
+        columns.map((column) => getKanbanColumnCreateDefaults('priority', column)?.priority),
+      ).toEqual([2, 0]);
+    });
+
+    it('offers status creation only from the backlog column, without pinned fields', () => {
+      const columns = buildKanbanColumns([], 'status');
+
+      expect(columns.map((column) => getKanbanColumnCreateDefaults('status', column))).toEqual([
+        {},
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+      ]);
+    });
+
+    it('pins the column agent on tasks created from an agent column', () => {
+      const [agentColumn] = buildKanbanColumns(
+        [group('assignee:agent-1', [], 'agent-1')],
+        'assignee',
+      );
+
+      expect(getKanbanColumnCreateDefaults('assignee', agentColumn)).toEqual({
+        assigneeAgentId: 'agent-1',
+      });
+    });
+
+    it('offers no create entry on the unassigned and member columns', () => {
+      const [unassignedColumn] = buildKanbanColumns([group('assignee:unassigned', [])], 'assignee');
+      const [memberColumn] = buildKanbanColumns(
+        [group('member:user-1', [], undefined, 'user-1')],
+        'member',
+      );
+
+      expect(getKanbanColumnCreateDefaults('assignee', unassignedColumn)).toBeUndefined();
+      expect(getKanbanColumnCreateDefaults('member', memberColumn)).toBeUndefined();
     });
   });
 });
