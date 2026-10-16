@@ -2,8 +2,7 @@
 
 import type { VerifyTerminalEvidenceMetadata } from '@lobechat/types';
 import { formatSize } from '@lobechat/utils/format';
-import { CopyButton } from '@lobehub/ui';
-import { Alert, Tag } from '@lobehub/ui/base-ui';
+import { Alert, CopyButton, Tag } from '@lobehub/ui';
 import dayjs from 'dayjs';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -79,6 +78,38 @@ const EnvironmentSummary = memo<{ env: Record<string, string> }>(({ env }) => {
 EnvironmentSummary.displayName = 'EnvironmentSummary';
 
 /**
+ * The result row: the outcome badge is the readable summary ("failed to
+ * start", "capture failed"); the capturer's raw error stays one click away
+ * instead of being dumped beside it.
+ */
+const ExecutionResult = memo<{ execution: VerifyTerminalEvidenceMetadata['execution'] }>(
+  ({ execution }) => {
+    const { t } = useTranslation('verify');
+    const [open, setOpen] = useState(false);
+    return (
+      <>
+        <div className={styles.inlineList}>
+          <TerminalOutcomeBadge execution={execution} />
+          {execution.error && (
+            <button
+              aria-expanded={open}
+              className={styles.linkButton}
+              type={'button'}
+              onClick={() => setOpen(!open)}
+            >
+              {t(open ? 'report.terminal.error.hide' : 'report.terminal.error.show')}
+            </button>
+          )}
+        </div>
+        {open && execution.error && <div className={styles.mono}>{execution.error}</div>}
+      </>
+    );
+  },
+);
+
+ExecutionResult.displayName = 'ExecutionResult';
+
+/**
  * The execution record: the command (copyable, never runnable), where and when
  * it ran, how it ended, how it was observed, and everything processing did to
  * the output — redactions, truncation, unknown fields — so a reader judges the
@@ -114,9 +145,8 @@ export const TerminalFacts = memo<{ terminal: VerifyTerminalEvidenceMetadata }>(
       </div>
       <dl className={styles.facts}>
         <dt>{t('report.terminal.fact.result')}</dt>
-        <dd className={styles.inlineList}>
-          <TerminalOutcomeBadge execution={execution} />
-          {execution.error && <span className={styles.mono}>{execution.error}</span>}
+        <dd>
+          <ExecutionResult execution={execution} />
         </dd>
         <dt>{t('report.terminal.fact.cwd')}</dt>
         <dd className={execution.cwd ? styles.mono : undefined}>

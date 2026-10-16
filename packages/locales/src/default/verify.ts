@@ -837,6 +837,8 @@ export default {
   'report.terminal.download': 'Download',
   'report.terminal.downloadRecording': 'Download recording',
   'report.terminal.env.hide': 'Hide',
+  'report.terminal.error.hide': 'Hide details',
+  'report.terminal.error.show': 'Show details',
   'report.terminal.env.show_one': 'Show {{count}} entry',
   'report.terminal.env.show_other': 'Show {{count}} entries',
   'report.terminal.fact.capture': 'Capture',

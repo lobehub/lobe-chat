@@ -2,8 +2,7 @@
 
 import { downloadFile } from '@lobechat/utils/client/downloadFile';
 import { terminalTextFromStream } from '@lobechat/utils/verify/terminalEvidence';
-import { CopyButton } from '@lobehub/ui';
-import { ActionIcon, Input, Spin } from '@lobehub/ui/base-ui';
+import { ActionIcon, CopyButton, Input, Spin } from '@lobehub/ui';
 import { Download, Search } from 'lucide-react';
 import { Fragment, memo, type ReactNode, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';

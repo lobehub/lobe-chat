@@ -5,10 +5,19 @@ import '@xterm/xterm/css/xterm.css';
 import { formatSize } from '@lobechat/utils/format';
 import { ASCIICAST_LIMITS } from '@lobechat/utils/verify/asciicast';
 import { createTerminalSanitizer } from '@lobechat/utils/verify/terminalEvidence';
-import { Flexbox, Icon } from '@lobehub/ui';
-import { ActionIcon, DropdownMenu, Slider, Spin } from '@lobehub/ui/base-ui';
+import {
+  ActionIcon,
+  createStaticStyles,
+  cssVar,
+  cx,
+  DropdownMenu,
+  Flexbox,
+  Icon,
+  Slider,
+  Spin,
+  useTheme,
+} from '@lobehub/ui';
 import { Terminal } from '@xterm/xterm';
-import { createStaticStyles, cssVar, cx, useTheme } from 'antd-style';
 import { Check, Pause, Play, RotateCcw } from 'lucide-react';
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';

@@ -1,4 +1,4 @@
-import { createStaticStyles, cssVar } from 'antd-style';
+import { createStaticStyles, cssVar } from '@lobehub/ui';
 
 export const styles = createStaticStyles(({ css }) => ({
   /* The collapsed row — same fold dialect as prose evidence: no fill, no

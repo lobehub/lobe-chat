@@ -1,8 +1,6 @@
 'use client';
 
-import { Icon } from '@lobehub/ui';
-import { Alert, Segmented, type SegmentedOption, Spin } from '@lobehub/ui/base-ui';
-import { cx } from 'antd-style';
+import { Alert, cx, Icon, Segmented, type SegmentedOption, Spin } from '@lobehub/ui';
 import { ChevronRight, SquareTerminal } from 'lucide-react';
 import { lazy, memo, Suspense, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';

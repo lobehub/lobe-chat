@@ -16,6 +16,7 @@ import type {
 import { verifyCheckDefinitionSchema } from '@lobechat/types';
 import { TRPCError } from '@trpc/server';
 import { asc, eq } from 'drizzle-orm';
+import pMap from 'p-map';
 import { z } from 'zod';
 
 import {
@@ -329,6 +330,9 @@ const resolveRunByOperation = async (ctx: { runModel: VerifyRunModel }, operatio
 
   return run;
 };
+
+/** Evidence entries of one submission resolved at a time (file lookups, record checks). */
+const EVIDENCE_RESOLVE_CONCURRENCY = 5;
 
 /** Owner-scoped file lookup for the artifacts a terminal evidence references. */
 const findOwnFile = (ctx: { fileModel: FileModel }) => (fileId: string) =>
@@ -1076,15 +1080,17 @@ export const verifyRouter = router({
       // Resolve every evidence's medium and metadata before touching the result:
       // a rejected terminal record must fail the whole submission, not leave a
       // verdict behind without the evidence that was meant to back it.
-      const evidenceRows = await Promise.all(
-        (input.evidence ?? []).map(async (e) => {
+      const evidenceRows = await pMap(
+        input.evidence ?? [],
+        async (e) => {
           const type = await storedEvidenceType(ctx, e.type, e.fileId);
           return {
             ...e,
             metadata: await resolveEvidenceMetadata(findOwnFile(ctx), type, e.metadata),
             type,
           };
-        }),
+        },
+        { concurrency: EVIDENCE_RESOLVE_CONCURRENCY },
       );
 
       const checkResult = await ctx.resultModel.upsertByCheckItem({
@@ -1102,20 +1108,22 @@ export const verifyRouter = router({
         verifyRunId: run.id,
       });
 
-      const evidence = await Promise.all(
-        evidenceRows.map((e) =>
-          ctx.evidenceModel.create({
-            capturedAt: new Date(),
-            capturedBy: e.capturedBy ?? null,
-            checkResultId: checkResult.id,
-            content: e.content ?? null,
-            description: e.description ?? null,
-            fileId: e.fileId ?? null,
-            metadata: e.metadata ?? null,
-            type: e.type,
-          }),
-        ),
-      );
+      // One multi-row insert, however many artifacts the submission carries.
+      const evidence =
+        evidenceRows.length === 0
+          ? []
+          : await ctx.evidenceModel.createMany(
+              evidenceRows.map((e) => ({
+                capturedAt: new Date(),
+                capturedBy: e.capturedBy ?? null,
+                checkResultId: checkResult.id,
+                content: e.content ?? null,
+                description: e.description ?? null,
+                fileId: e.fileId ?? null,
+                metadata: e.metadata ?? null,
+                type: e.type,
+              })),
+            );
 
       return { checkResult, evidence };
     }),

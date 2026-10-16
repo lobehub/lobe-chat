@@ -771,6 +771,8 @@
   "report.terminal.env.hide": "收起",
   "report.terminal.env.show_one": "展开 {{count}} 项",
   "report.terminal.env.show_other": "展开 {{count}} 项",
+  "report.terminal.error.hide": "收起详情",
+  "report.terminal.error.show": "查看详情",
   "report.terminal.fact.capture": "采集方式",
   "report.terminal.fact.cwd": "工作目录",
   "report.terminal.fact.environment": "环境",

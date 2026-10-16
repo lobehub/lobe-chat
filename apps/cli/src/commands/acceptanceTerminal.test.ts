@@ -35,6 +35,8 @@ describe('terminal evidence', () => {
       uploadEvidence: { mutate: vi.fn() },
       upsertReport: { mutate: vi.fn() },
     },
+    // Submit and ingest check report text against the reader's language first.
+    user: { getUserState: { query: vi.fn() } },
   };
   let dir: string;
   let printed: string[];
@@ -62,6 +64,9 @@ describe('terminal evidence', () => {
     vi.mocked(uploadLocalFile).mockImplementation(async (_client, file) => {
       uploads.push(path.basename(file));
       return { id: `file-${path.basename(file)}`, url: '' } as any;
+    });
+    client.user.getUserState.query.mockResolvedValue({
+      settings: { general: { responseLanguage: 'en-US' } },
     });
     client.acceptance.ensure.mutate.mockResolvedValue({ id: 'acceptance-1' });
     client.acceptance.getBundle.query.mockResolvedValue({});
