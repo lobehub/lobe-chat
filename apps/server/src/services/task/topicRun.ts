@@ -83,7 +83,8 @@ export class TopicRunService {
     if (!run?.topicId || run.status === 'running') return undefined;
 
     const task = await new TaskModel(this.db, this.userId, this.workspaceId).findById(run.taskId);
-    if (!task || task.status === 'canceled') return undefined;
+    // An archived task is hidden from every list; its topic stays a plain chat.
+    if (!task || task.status === 'canceled' || task.archivedAt) return undefined;
 
     return {
       ownerUserId: task.createdByUserId ?? this.userId,
@@ -123,8 +124,10 @@ export class TopicRunService {
       // have a live run reopened underneath it.
       if (!(await taskModel.lockForUpdate(link.taskId))) return 'refused';
 
+      // Re-checked under the row lock: an archive that committed meanwhile is
+      // seen here, and one still pending finds the task running and refuses.
       const task = await taskModel.findById(link.taskId);
-      if (!task || task.status === 'canceled') return 'refused';
+      if (!task || task.status === 'canceled' || task.archivedAt) return 'refused';
 
       if (!(await taskTopicModel.reopenSettledRun(topicId, operationId))) return 'already-running';
 

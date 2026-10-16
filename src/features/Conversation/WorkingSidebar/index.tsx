@@ -85,6 +85,7 @@ import Files from './Files';
 import { sidebarWidthBudget } from './fitsBesidePortal';
 import { MAX_PANEL_WIDTH, MIN_PANEL_WIDTH, OVERVIEW_PANEL_WIDTH } from './layout';
 import Overview from './Overview';
+import { getStatusDeviceId } from './Overview/overviewData';
 import OverviewSlot from './OverviewSlot';
 import PullRequest from './PullRequest';
 import ResourcesSection from './ResourcesSection';
@@ -368,10 +369,8 @@ const AgentWorkingSidebar = memo<AgentWorkingSidebarProps>(({ availableWidth }) 
   // tree + git reads go over RPC, so both Review and Files are reachable even
   // when runtimeMode isn't `local`.
   const isDeviceMode = effectiveTarget === 'device' && !!agencyConfig?.boundDeviceId;
-  // `targetDeviceId` also identifies the local desktop for per-device working
-  // directory state. Files/Review only need a deviceId when routing through a
-  // remote device RPC; local "This device" must keep Electron IPC + file-open
-  // actions enabled.
+  // `targetDeviceId` also names the local desktop (directory state, Overview status).
+  // Files/Review route a deviceId only for remote RPC; "This device" keeps Electron IPC.
   const remoteDeviceId = isDeviceMode ? agencyConfig.boundDeviceId : undefined;
   const isLocalExecution = effectiveTarget === 'local';
   // A cloud-sandbox run keeps its files in the persistent workspace, so it has a
@@ -1043,6 +1042,7 @@ const AgentWorkingSidebar = memo<AgentWorkingSidebarProps>(({ availableWidth }) 
                   pullRequest={pullRequest}
                   repoType={environmentRepoType}
                   sourcePath={sourceWorkingDirectory}
+                  statusDeviceId={getStatusDeviceId(effectiveTarget, agencyConfig?.boundDeviceId)}
                   workingDirectory={environmentWorkingDirectory}
                   onOpenTab={openTab}
                   onRefreshPullRequest={refreshPullRequest}

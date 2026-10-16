@@ -168,7 +168,7 @@ const InterventionConversationHost = memo<InterventionConversationHostProps>(
     }, [api, derived.args, messageId, toolCallId]);
 
     return (
-      <ConversationProvider hasInitMessages skipFetch context={context} messages={messages}>
+      <ConversationProvider context={context} messages={messages}>
         {children}
       </ConversationProvider>
     );

@@ -51,6 +51,9 @@ export const resolveTabScope = (url: string): TabScope => {
   return { slug: firstSegment, type: 'workspace' };
 };
 
+export const tabScopeHomeUrl = (scope: TabScope): string =>
+  scope.type === 'workspace' ? `/${scope.slug}` : '/';
+
 export const tabScopeKey = (scope: TabScope): string =>
   scope.type === 'personal' ? 'personal' : `workspace:${encodeURIComponent(scope.slug)}`;
 

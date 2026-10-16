@@ -19,6 +19,7 @@ import { systemStatusSelectors } from '@/store/global/selectors';
 import { useUserStore } from '@/store/user';
 import { labPreferSelectors, userProfileSelectors } from '@/store/user/selectors';
 
+import { useAddFolderMenuItem } from './useAddFolderMenuItem';
 import { getMergedPullRequestTopics } from './utils/mergedPullRequestTopics';
 
 const hotArea = css`
@@ -109,6 +110,7 @@ export const useTopicActionsDropdownMenu = (
   ]);
 
   const enableHeteroSessionImport = useUserStore(labPreferSelectors.enableHeteroSessionImport);
+  const addFolderItem = useAddFolderMenuItem();
 
   return useCallback((): MenuProps['items'] => {
     const pageSizeOptions = [20, 40, 60, 100];
@@ -122,6 +124,7 @@ export const useTopicActionsDropdownMenu = (
     }));
 
     return [
+      ...(addFolderItem ? [addFolderItem, { type: 'divider' as const }] : []),
       {
         children: pageSizeItems,
         extra: topicPageSize,
@@ -232,6 +235,7 @@ export const useTopicActionsDropdownMenu = (
         : []),
     ].filter(Boolean) as MenuProps['items'];
   }, [
+    addFolderItem,
     topicPageSize,
     updateSystemStatus,
     handleImport,

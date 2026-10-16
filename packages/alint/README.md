@@ -30,6 +30,7 @@ This is Phase 0: the rule set is a private workspace package (`@lobechat/alint`)
 | `no-privileged-untrusted-electron` | warn     | Electron main/preload                                         | remote content with Node privileges or unrestricted IPC bridges         |
 | `no-removal-only-tests`            | warn     | app/package/client test and spec files                        | tests should prove behavior, not merely that a retired option is absent |
 | `no-redundant-api-copy`            | warn     | usage guides, builtin skills, CLI commands, public schemas    | keep ordinary instructions focused on supported actions                 |
+| `static-app-image-namespace`       | warn     | web client, image URL helpers and asset packaging             | fixed product images use `/static/app-images`                           |
 
 Package-level rules, kept next to the package they describe:
 

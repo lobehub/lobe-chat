@@ -4,6 +4,7 @@ import { createStaticStyles, cx } from 'antd-style';
 import { memo, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { imageUrl } from '@/const/url';
 import DefaultFooter from '@/features/Setting/Footer';
 import { useIsDark } from '@/hooks/useIsDark';
 import { useMarketAuth } from '@/layout/AuthProvider/MarketAuth';
@@ -18,11 +19,11 @@ const styles = createStaticStyles(({ css }) => ({
     background-size: 512px auto;
   `,
   footer_dark: css`
-    background-image: url('/app-images/community_footer_dark.webp');
+    background-image: url(${imageUrl('community_footer_dark.webp')});
     background-blend-mode: screen;
   `,
   footer_light: css`
-    background-image: url('/app-images/community_footer_light.webp');
+    background-image: url(${imageUrl('community_footer_light.webp')});
     background-blend-mode: multiply;
   `,
 }));

@@ -208,6 +208,7 @@ const TaskSubtaskProgressTag = memo<TaskSubtaskProgressTagProps>(
         style={{
           borderRadius: 24,
           cursor: hasDropdown || onRequestSubtasks ? 'pointer' : undefined,
+          flex: 'none',
         }}
         onClick={hasDropdown || onRequestSubtasks ? handleTagClick : undefined}
         onContextMenu={onRequestSubtasks ? handleTagClick : undefined}
@@ -219,7 +220,7 @@ const TaskSubtaskProgressTag = memo<TaskSubtaskProgressTagProps>(
           strokeColor={cssVar.colorSuccess}
           type={'circle'}
         />
-        <Text fontSize={12} type={'secondary'}>
+        <Text fontSize={12} style={{ whiteSpace: 'nowrap' }} type={'secondary'}>
           {data.text}
         </Text>
       </Block>

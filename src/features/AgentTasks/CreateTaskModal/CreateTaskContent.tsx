@@ -38,6 +38,8 @@ import { useTitleEnterToInstruction } from './useTitleEnterToInstruction';
 
 export interface CreateTaskContentProps {
   agentId?: string;
+  /** Initial priority, e.g. the Kanban priority column the modal was opened from. */
+  defaultPriority?: number;
   /**
    * Locks the assignee to `agentId` and hides the agent picker. Used on the
    * agent-scoped task list where every task belongs to that agent.
@@ -53,7 +55,14 @@ export interface CreateTaskContentProps {
 }
 
 const CreateTaskContent = memo<CreateTaskContentProps>(
-  ({ agentId, lockAssignee, onCreated, projectId, showInlineToggle = true }) => {
+  ({
+    agentId,
+    defaultPriority = 0,
+    lockAssignee,
+    onCreated,
+    projectId,
+    showInlineToggle = true,
+  }) => {
     const { t } = useTranslation('chat');
     const { close } = useModalContext();
     const { allowed: canCreateTask, reason } = usePermission('create_content');
@@ -65,7 +74,7 @@ const CreateTaskContent = memo<CreateTaskContentProps>(
     const activeWorkspaceId = useActiveWorkspaceId();
 
     const [title, setTitle] = useState('');
-    const [priority, setPriority] = useState(0);
+    const [priority, setPriority] = useState(defaultPriority);
     const [assigneeAgentId, setAssigneeAgentId] = useState<string | undefined>(agentId);
     const [assigneeUserId, setAssigneeUserId] = useState<string | undefined>();
     // Where this task will run, if not simply wherever the assignee runs.
@@ -206,9 +215,11 @@ const CreateTaskContent = memo<CreateTaskContentProps>(
     const handleTitleKeyDown = useTitleEnterToInstruction(editor);
 
     return (
-      <Flexbox onKeyDown={handleKeyDown}>
-        <Flexbox horizontal style={{ padding: '16px 24px 0' }}>
-          <Flexbox flex={1} style={{ minHeight: 180 }}>
+      <Flexbox flex={1} style={{ minHeight: 0 }} onKeyDown={handleKeyDown}>
+        <Flexbox horizontal style={{ minHeight: 0, padding: '16px 24px 0' }}>
+          {/* A block (not flex) scroller: the editor's overflow-hidden wrapper
+              would otherwise shrink to fit and clip instead of scrolling. */}
+          <div style={{ flex: 1, minHeight: 180, minWidth: 0, overflowY: 'auto' }}>
             <input
               autoFocus={canCreateTask}
               disabled={!canCreateTask}
@@ -237,7 +248,7 @@ const CreateTaskContent = memo<CreateTaskContentProps>(
               style={{ fontSize: 14, paddingBottom: 16 }}
               onContentChange={handleContentChange}
             />
-          </Flexbox>
+          </div>
           <Flexbox horizontal gap={4} style={{ flexShrink: 0 }}>
             {showInlineToggle && (
               <ActionIcon
@@ -254,7 +265,11 @@ const CreateTaskContent = memo<CreateTaskContentProps>(
           horizontal
           align={'center'}
           justify={'space-between'}
-          style={{ borderTop: `1px solid ${cssVar.colorBorderSecondary}`, padding: '8px 16px' }}
+          style={{
+            borderTop: `1px solid ${cssVar.colorBorderSecondary}`,
+            flexShrink: 0,
+            padding: '8px 16px',
+          }}
         >
           <Flexbox horizontal gap={2} wrap={'wrap'}>
             <TaskPriorityTag priority={priority} onChange={setPriority}>

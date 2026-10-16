@@ -11,7 +11,7 @@ import { createStaticStyles, cssVar, useTheme } from 'antd-style';
 import dayjs from 'dayjs';
 import isEqual from 'fast-deep-equal';
 import { MessageSquareDashed } from 'lucide-react';
-import type { CSSProperties, DragEvent, RefObject } from 'react';
+import type { CSSProperties, DragEvent, MouseEvent, RefObject } from 'react';
 import { memo, Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -37,7 +37,6 @@ import { agentSelectors, builtinAgentSelectors } from '@/store/agent/selectors';
 import { useChatStore } from '@/store/chat';
 import { operationSelectors } from '@/store/chat/selectors';
 import { messageMapKey } from '@/store/chat/utils/messageMapKey';
-import { useElectronStore } from '@/store/electron';
 
 import { useTopicNavigation } from '../../hooks/useTopicNavigation';
 import ThreadList from '../../TopicListContent/ThreadList';
@@ -52,6 +51,7 @@ import {
   PR_STATE_VISUAL,
 } from './metaCardData';
 import MetaHoverCard from './MetaHoverCard';
+import { openTopicInNewTab, recordTopicClickOrigin } from './openTopicTab';
 
 // Base UI Popover plays an opacity/scale enter+exit transition driven by these
 // CSS vars on the positioner. Zero them so the meta hover card appears instantly
@@ -111,11 +111,6 @@ const styles = createStaticStyles(({ css }) => ({
   `,
 }));
 
-// Module-scoped so a click on any topic cancels a pending click on another.
-// Per-item refs can't do that, which lets rapid clicks across items all
-// fire — each racing to write activeTopicId (see ).
-let pendingSingleClickTimer: ReturnType<typeof setTimeout> | null = null;
-
 /**
  * The mobile surface renders its topic list in a modal and never mounts the
  * working sidebar — the desktop host of a topic's thread list. Without nesting
@@ -132,13 +127,6 @@ let pendingSingleClickTimer: ReturnType<typeof setTimeout> | null = null;
 const isMobileSurface = () => typeof __MOBILE__ !== 'undefined' && __MOBILE__;
 // Nesting cue: keeps the rows visually under their topic row.
 const NESTED_THREAD_LIST_INDENT = 32;
-
-const cancelPendingSingleClick = () => {
-  if (pendingSingleClickTimer) {
-    clearTimeout(pendingSingleClickTimer);
-    pendingSingleClickTimer = null;
-  }
-};
 
 const getWorkingDirectoryDisplay = (metadata: ChatTopicMetadata | undefined) => {
   const config = metadata?.workingDirectoryConfig;
@@ -322,29 +310,24 @@ const TopicItemRow = memo<TopicItemRowProps>(
     const handleDragStart = useCallback(
       (event: DragEvent) => {
         if (!id) return;
-        cancelPendingSingleClick();
         startTopicDrag(event, { topicId: id, topicTitle: title });
       },
       [id, title],
     );
 
-    const handleClick = useCallback(() => {
-      if (isDesktop) {
-        cancelPendingSingleClick();
-        pendingSingleClickTimer = setTimeout(() => {
-          pendingSingleClickTimer = null;
-          void navRef.current.navigateToTopic(id);
-        }, 250);
-      } else {
+    const handleClick = useCallback(
+      (event?: MouseEvent) => {
+        if (event && event.detail > 1) return;
+        if (isDesktop && id) recordTopicClickOrigin(id);
         void navRef.current.navigateToTopic(id);
-      }
-    }, [id, navRef]);
+      },
+      [id, navRef],
+    );
 
     const handleDoubleClick = useCallback(async () => {
       if (!id || !activeAgentId || !isDesktop) return;
-      cancelPendingSingleClick();
       if (scope && href) {
-        useElectronStore.getState().addTab(href);
+        openTopicInNewTab(id, href);
         void navRef.current.navigateToTopic(id);
         return;
       }
@@ -352,11 +335,10 @@ const TopicItemRow = memo<TopicItemRowProps>(
         void navRef.current.navigateToTopic(id, { skipPopupFocus: true });
         return;
       }
-      useElectronStore
-        .getState()
-        .addTab(
-          buildWorkspaceAwarePath(AGENT_CHAT_TOPIC_URL(activeAgentId, id), activeWorkspaceSlug),
-        );
+      openTopicInNewTab(
+        id,
+        buildWorkspaceAwarePath(AGENT_CHAT_TOPIC_URL(activeAgentId, id), activeWorkspaceSlug),
+      );
       void navRef.current.navigateToTopic(id);
     }, [id, activeAgentId, activeWorkspaceSlug, navRef, scope, href]);
 

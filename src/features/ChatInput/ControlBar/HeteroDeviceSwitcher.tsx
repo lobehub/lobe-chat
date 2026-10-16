@@ -11,7 +11,6 @@ import {
   ExternalLinkIcon,
   InfoIcon,
   MonitorDownIcon,
-  RefreshCwIcon,
   SettingsIcon,
   ShieldCheckIcon,
 } from 'lucide-react';
@@ -26,7 +25,6 @@ import { useSelectExecutionTarget } from '@/features/ChatInput/hooks/useSelectEx
 import { useDeviceList } from '@/features/DeviceManager/useDeviceList';
 import {
   devicePoolForAgent,
-  ExecutionTargetDeviceStatus,
   ExecutionTargetIcon,
   groupExecutionTargetDevices,
 } from '@/features/ExecutionTargetPicker';
@@ -44,6 +42,7 @@ import { useElectronStore } from '@/store/electron';
 
 import { useTopicId } from '../hooks/useTopicId';
 import { formatLockedControlTooltip } from '../utils/lockedControlTooltip';
+import DeviceOptionRow from './DeviceOptionRow';
 import OptionRow from './OptionRow';
 import { useSandboxNetworkToggle } from './useSandboxNetworkToggle';
 import { useTopicAwareTargetSelect } from './useTopicAwareTargetSelect';
@@ -168,12 +167,6 @@ const styles = createStaticStyles(({ css }) => ({
     gap: 1px;
 
     min-width: 0;
-  `,
-  reconnectButton: css`
-    min-height: 18px;
-    padding-block: 0;
-    padding-inline: 2px;
-    font-size: 11px;
   `,
   optionTitle: css`
     overflow: hidden;
@@ -571,52 +564,21 @@ const HeteroDeviceSwitcher = memo<HeteroDeviceSwitcherProps>(({ agentId }) => {
     return executionTarget === target;
   };
 
-  const renderDeviceStatus = (d: NonNullable<typeof devices>[number]) => (
-    <ExecutionTargetDeviceStatus
-      offlineLabel={t('heteroAgent.executionTarget.offline')}
-      online={d.online}
-      onlineLabel={t('heteroAgent.executionTarget.onlineConnections', {
-        count: d.channels.length,
-      })}
-    />
-  );
-
   const renderDeviceRow = (d: NonNullable<typeof devices>[number]) => {
     const isCurrentMachine = d.deviceId === currentDeviceId;
     return (
-      <OptionRow
+      <DeviceOptionRow
         active={isActive('device', d.deviceId)}
-        disabled={!d.online}
-        icon={<ExecutionTargetIcon devicePlatform={d.platform} target={'device'} />}
+        device={d}
+        isCurrentMachine={isCurrentMachine}
         key={d.deviceId}
-        label={d.friendlyName || d.hostname || d.deviceId}
-        desc={
-          <>
-            {isCurrentMachine
-              ? t('heteroAgent.executionTarget.gatewayDesc')
-              : renderDeviceStatus(d)}
-            {d.online ? null : (
-              <Button
-                className={styles.reconnectButton}
-                icon={<Icon icon={RefreshCwIcon} size={10} />}
-                loading={reconnectingDeviceId === d.deviceId}
-                size={'small'}
-                type={'text'}
-                onClick={(event) => {
-                  event.stopPropagation();
-                  void handleReconnectDevice(d.deviceId);
-                }}
-              >
-                {t('heteroAgent.executionTarget.reconnect')}
-              </Button>
-            )}
-          </>
-        }
+        reconnecting={reconnectingDeviceId === d.deviceId}
         tags={tagsFor(
           isActive('device', d.deviceId),
           isCurrentMachine ? [t('heteroAgent.executionTarget.gateway')] : [],
         )}
-        onClick={() => void handleSelect('device', d.deviceId)}
+        onReconnect={() => void handleReconnectDevice(d.deviceId)}
+        onSelect={() => void handleSelect('device', d.deviceId)}
       />
     );
   };

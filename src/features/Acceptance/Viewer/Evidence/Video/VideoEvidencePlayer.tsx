@@ -26,7 +26,7 @@ const MAX_HEIGHT = 360;
 const MIN_PLAYER_WIDTH = 480;
 
 interface VideoEvidencePlayerProps {
-  /** The evidence description — laid out under the player, at the player's width. */
+  /** The evidence description — laid out under the player, at the content area's width. */
   caption?: ReactNode;
   chapters?: VerifyEvidenceChapter[];
   /** Reviewer notes already made on this video, pinned to the timeline. */
@@ -56,15 +56,17 @@ export const VideoEvidencePlayer = memo<VideoEvidencePlayerProps>(
     const frameWidth = Math.round(MAX_HEIGHT * aspect);
 
     return (
-      <Flexbox
-        gap={8}
-        style={{ maxWidth: `min(100%, ${Math.max(MIN_PLAYER_WIDTH, frameWidth)}px)` }}
-      >
+      <Flexbox gap={8} width={'100%'}>
         <div
           className={styles.player}
           ref={rootRef}
-          style={{ '--acceptance-video-frame-width': `${frameWidth}px` } as CSSProperties}
           tabIndex={0}
+          style={
+            {
+              '--acceptance-video-frame-width': `${frameWidth}px`,
+              'maxWidth': `min(100%, ${Math.max(MIN_PLAYER_WIDTH, frameWidth)}px)`,
+            } as CSSProperties
+          }
           onKeyDown={(event) => {
             if (status === 'ready' && handlePlaybackKey(event, clock)) event.preventDefault();
           }}
@@ -144,7 +146,7 @@ export const VideoEvidencePlayer = memo<VideoEvidencePlayerProps>(
             />
           </div>
         </div>
-        {caption}
+        {caption && <div style={{ overflowWrap: 'anywhere' }}>{caption}</div>}
         <VideoClaimList
           chapters={chapters}
           onSeek={(seconds) => {

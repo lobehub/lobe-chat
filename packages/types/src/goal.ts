@@ -236,6 +236,12 @@ export const summarizeGoalSupervision = (state?: GoalSupervisionState): GoalSupe
 export interface GoalManagerPolicy {
   instruction?: string;
   maxTurns?: number;
+  /**
+   * Set when the coordinator opened this policy to hand its planning over; the
+   * token lets a hand-over that could not start remove its own policy and
+   * nothing a person set meanwhile.
+   */
+  openedForHandoff?: string;
 }
 
 /** Bounded wait on time or one correlated external result. */
