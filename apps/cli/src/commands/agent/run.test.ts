@@ -1,11 +1,13 @@
 import { Command } from 'commander';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { resolveLocalDeviceId } from '../../utils/device';
 import { registerAgentRunCommand } from './run';
 
-const { mockExecAgent, mockGetTrpcClient } = vi.hoisted(() => ({
+const { mockExecAgent, mockGetTrpcClient, mockListDevices } = vi.hoisted(() => ({
   mockExecAgent: vi.fn(),
   mockGetTrpcClient: vi.fn(),
+  mockListDevices: vi.fn(),
 }));
 
 vi.mock('../../api/client', () => ({ getTrpcClient: mockGetTrpcClient }));
@@ -28,7 +30,15 @@ const runAgent = async (...args: string[]) => {
 describe('lh agent run', () => {
   beforeEach(() => {
     mockExecAgent.mockResolvedValue({ operationId: 'op-1', success: true, topicId: 'tpc-1' });
-    mockGetTrpcClient.mockResolvedValue({ aiAgent: { execAgent: { mutate: mockExecAgent } } });
+    mockGetTrpcClient.mockResolvedValue({
+      aiAgent: { execAgent: { mutate: mockExecAgent } },
+      device: { listDevices: { query: mockListDevices } },
+    });
+    vi.mocked(resolveLocalDeviceId).mockReturnValue('local-device');
+    mockListDevices.mockResolvedValue([
+      { deviceId: 'local-device', online: true },
+      { deviceId: 'remote-device', online: true },
+    ]);
     vi.spyOn(console, 'log').mockImplementation(() => {});
   });
 
@@ -73,4 +83,47 @@ describe('lh agent run', () => {
     expect(input).not.toHaveProperty('selectedToolIds');
     expect(input).not.toHaveProperty('selectedSkillIds');
   });
+
+  it('seeds a new local topic with the calling directory', async () => {
+    const cwd = process.cwd();
+    const input = await runAgent('--agent-id', 'agt-1', '--prompt', 'Hello', '--device', 'local');
+
+    expect(input.deviceId).toBe('local-device');
+    expect(input.appContext).toEqual({
+      initialTopicMetadata: {
+        workingDirectory: cwd,
+        workingDirectoryConfig: { path: cwd },
+      },
+    });
+  });
+
+  it('preserves an existing topic directory when run locally', async () => {
+    const input = await runAgent(
+      '--agent-id',
+      'agt-1',
+      '--prompt',
+      'Continue',
+      '--device',
+      'local',
+      '--topic-id',
+      'existing-topic',
+    );
+
+    expect(input.appContext).toEqual({ topicId: 'existing-topic' });
+  });
+
+  it.each([undefined, 'remote-device'])(
+    'does not seed the local directory without an explicit local target (%s)',
+    async (device) => {
+      const input = await runAgent(
+        '--agent-id',
+        'agt-1',
+        '--prompt',
+        'Hello',
+        ...(device ? ['--device', device] : []),
+      );
+
+      expect(input).not.toHaveProperty('appContext');
+    },
+  );
 });
