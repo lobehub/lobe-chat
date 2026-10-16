@@ -3142,6 +3142,7 @@
   "workingPanel.overview.changes.none": "无改动",
   "workingPanel.overview.ci.failure": "失败",
   "workingPanel.overview.ci.pending": "运行中",
+  "workingPanel.overview.deviceError": "无法加载设备状态",
   "workingPanel.overview.empty": "Agent 开始工作后，工作区活动和产物会显示在这里。",
   "workingPanel.overview.emptyTitle": "准备就绪",
   "workingPanel.overview.environmentError": "无法加载仓库状态",

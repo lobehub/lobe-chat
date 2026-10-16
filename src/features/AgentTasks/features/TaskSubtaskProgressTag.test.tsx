@@ -83,6 +83,16 @@ describe('TaskSubtaskProgressTag', () => {
     expect(screen.getByText('2/3')).toBeInTheDocument();
   });
 
+  it('keeps the progress badge on one line when a narrow card row squeezes it', () => {
+    render(<TaskSubtaskProgressTag progress={{ completed: 1, total: 2 }} />);
+
+    const text = screen.getByText('1/2');
+    const badge = text.parentElement!;
+
+    expect(text).toHaveStyle({ whiteSpace: 'nowrap' });
+    expect(badge).toHaveStyle({ flex: 'none' });
+  });
+
   it('uses the list summary until detail is refreshed, then yields to a newer list summary', async () => {
     const onRequestSubtasks = vi
       .fn()

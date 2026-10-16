@@ -2827,12 +2827,12 @@ describe('HeterogeneousAgentCtr', () => {
       return { cliArgs, command, ctr, options, sessionId, writes };
     };
 
-    it('identifies Codex when beginning a server-default operation', async () => {
+    it.each(['codex', 'opencode'] as const)('runs %s via relay', async (agentType) => {
       const { proc } = createFakeProc();
       nextFakeProc = proc;
       const relayInvocation = {
         acceptedAt: '2026-09-01T00:00:00.000Z',
-        agentType: 'codex',
+        agentType,
         ingress: 'openai-responses',
         model: 'gpt-5.4',
         operationId: 'op-server-default',
@@ -2847,8 +2847,8 @@ describe('HeterogeneousAgentCtr', () => {
         storeManager: { get: vi.fn() },
       } as any);
       const { sessionId } = await ctr.startSession({
-        agentType: 'codex',
-        command: 'codex',
+        agentType,
+        command: agentType,
         providerBinding: {
           apiConfig: { model: 'gpt-5.4', source: 'server-default' },
           kind: 'server-default',
@@ -2862,16 +2862,16 @@ describe('HeterogeneousAgentCtr', () => {
         sessionId,
         topicId: 'topic-1',
       });
-
       expect(beginServerDefaultOperationMock).toHaveBeenCalledWith(expect.any(Object), {
         agentId: 'agent-1',
-        agentType: 'codex',
+        agentType,
         model: 'gpt-5.4',
         operationId: 'op-server-default',
         topicId: 'topic-1',
       });
-      expect(spawnCalls[0].args).toEqual(expect.arrayContaining(['--model', 'lobehub/gpt-5.4']));
-      expect(spawnCalls[0].options.env.LOBEHUB_HETERO_TOKEN).toBe('operation-token');
+      expect(spawnCalls[0].args.join(' ')).toContain('lobehub/gpt-5.4');
+      const key = agentType === 'codex' ? 'LOBEHUB_HETERO_TOKEN' : 'LOBEHUB_OPENCODE_API_KEY';
+      expect(spawnCalls[0].options.env[key]).toBe('operation-token');
       expect(settleServerDefaultOperationMock).toHaveBeenCalledWith(expect.any(Object), {
         cancelled: false,
         operationId: 'op-server-default',

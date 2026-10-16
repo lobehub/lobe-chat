@@ -1584,11 +1584,11 @@ export default class HeterogeneousAgentCtr {
         .catch((error) => logger.warn('Provider-binding profile GC failed:', error));
     } else if (driver && params.providerBinding?.kind === 'server-default') {
       const model = params.providerBinding.apiConfig.model;
-      // Codex and Pi describe the model to the CLI from its card. Best-effort:
+      // Describe the model to CLIs with managed catalogs. Best-effort:
       // a model described without its card still runs (on default window and
       // modalities), and the operation begin re-validates the model.
       const modelDescriptor =
-        agentType === 'codex' || agentType === 'pi'
+        agentType === 'codex' || agentType === 'pi' || agentType === 'opencode'
           ? await describeServerDefaultModel(this.remoteServerAuth, { agentType, model }).catch(
               (error) => {
                 logger.warn('Server-default model description unavailable:', error);

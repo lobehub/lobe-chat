@@ -30,6 +30,10 @@ export const SERVER_DEFAULT_HETEROGENEOUS_AGENT_CONFIG = {
     ingress: 'openai-responses',
     tokenHeader: 'bearer',
   },
+  'opencode': {
+    ingress: 'openai-responses',
+    tokenHeader: 'bearer',
+  },
   'trae': {
     ingress: 'openai-responses',
     tokenHeader: 'bearer',

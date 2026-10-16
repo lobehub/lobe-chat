@@ -3142,6 +3142,7 @@
   "workingPanel.overview.changes.none": "No changes",
   "workingPanel.overview.ci.failure": "Failed",
   "workingPanel.overview.ci.pending": "Running",
+  "workingPanel.overview.deviceError": "Could not load the device status",
   "workingPanel.overview.empty": "Workspace activity and outputs will appear here as the agent works.",
   "workingPanel.overview.emptyTitle": "Ready to work",
   "workingPanel.overview.environmentError": "Could not load the repository status",
