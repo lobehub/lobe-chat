@@ -254,7 +254,12 @@ export class EditorActionImpl {
     const hasValidEditorData =
       doc.editorData &&
       typeof doc.editorData === 'object' &&
-      Object.keys(doc.editorData).length > 0;
+      Object.keys(doc.editorData).length > 0 &&
+      // A childless root (empty-parse shell) throws Lexical error #38 on
+      // hydration; treat it as no editor data so the markdown/empty fallbacks
+      // below take over.
+      Array.isArray((doc.editorData as { root?: { children?: unknown[] } }).root?.children) &&
+      ((doc.editorData as { root?: { children?: unknown[] } }).root?.children?.length ?? 0) > 0;
 
     // SKILL.md frontmatter is metadata, not editable document body. Keep it out of the rich
     // Markdown editor because `---` fences are otherwise parsed as Markdown dividers/headings,

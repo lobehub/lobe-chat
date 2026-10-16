@@ -22,7 +22,12 @@ const loadEditorContent = (
   const hasValidEditorData =
     editorData.editorData &&
     typeof editorData.editorData === 'object' &&
-    Object.keys(editorData.editorData as object).length > 0;
+    Object.keys(editorData.editorData as object).length > 0 &&
+    // A childless root (empty-parse shell) throws Lexical error #38 on
+    // hydration; treat it as no editor data so the content fallbacks take over.
+    Array.isArray((editorData.editorData as { root?: { children?: unknown[] } }).root?.children) &&
+    ((editorData.editorData as { root?: { children?: unknown[] } }).root?.children?.length ?? 0) >
+      0;
 
   try {
     if (hasValidEditorData) {
