@@ -3,7 +3,6 @@ import { codeInspectorPlugin } from 'code-inspector-plugin';
 import type { ModulePreloadOptions, Plugin } from 'vite';
 
 import { viteCompletionSounds } from './completionSounds';
-import { viteEmotionSpeedy } from './emotionSpeedy';
 import { lobeIconImports } from './lobeIconImports';
 import { lobeUiImports } from './lobeUiImports';
 import { viteMarkdownImport } from './markdownImport';
@@ -490,7 +489,6 @@ interface SharedRendererOptions {
 export function sharedRendererPlugins(options: SharedRendererOptions) {
   return [
     viteCompletionSounds(),
-    viteEmotionSpeedy(),
     viteMarkdownImport(),
     viteNodeModuleStub(),
     vitePlatformResolve(options.platform),
