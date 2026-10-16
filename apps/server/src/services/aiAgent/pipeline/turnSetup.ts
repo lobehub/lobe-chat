@@ -531,13 +531,8 @@ export const setupTurn = async (
       agentConfig.agencyConfig.boundDeviceId !== directory.deviceId
     )
       throw new Error('Agent is fixed to another execution target');
-    // Reject an unavailable device *here*, before the user/assistant rows are
-    // persisted: the client treats a rejected send as never accepted, keeps the
-    // draft and rolls back its optimistic pair, so a later rejection would leave
-    // a failed turn durable server-side that the client disagrees with.
-    // Liveness comes from the gateway's device listing — not a device round
-    // trip — so the send path keeps the latency fix, and the dispatch remains
-    // the authority on whether the directory still exists on the device.
+    // Reject before persisting turn rows so a failed send leaves no durable turn.
+    // Read gateway liveness; dispatch checks whether the directory exists.
     const { canUseDevice: canUseProjectDevice } = resolveDeviceAccessPolicy({ botContext });
     const projectDevices = canUseProjectDevice
       ? await getScopedOnlineDevices(deps.db, deps.userId, deps.workspaceId)
@@ -555,9 +550,7 @@ export const setupTurn = async (
     };
   };
 
-  // Topic resolution assigns the turn's narrowed bindings (topic id, pinned
-  // model, device targets), so it is a marked block rather than a callback:
-  // every exit, including a throw, records the error and closes the span.
+  // Trace topic resolution, including failures and narrowed model/device bindings.
   const topicStage = openTurnStage('topic');
   try {
     if (!topicId) {
@@ -565,8 +558,7 @@ export const setupTurn = async (
         throw new Error('Resume mode requires the parent message to belong to a topic');
       }
 
-      // A blank conversation opened from a project group's "+" is born inside
-      // that directory: bound to it, and run on the device it lives on.
+      // Bind the new topic to the selected directory's device.
       let projectDirectory:
         Awaited<ReturnType<ProjectWorkingDirectoryModel['resolve']>> | undefined;
       if (appContext?.projectWorkingDirectoryId) {
@@ -577,6 +569,13 @@ export const setupTurn = async (
           deps.workspaceId,
         ).resolve(appContext.projectWorkingDirectoryId);
         await routeToProjectDirectory(projectDirectory);
+      } else if (
+        requestedDeviceId &&
+        (appContext?.initialTopicMetadata?.workingDirectory ||
+          appContext?.initialTopicMetadata?.workingDirectoryConfig?.path)
+      ) {
+        assertProjectDirectoryAccess();
+        await routeToProjectDirectory({ deviceId: requestedDeviceId });
       }
 
       // Prepare metadata with cronJobId, taskId, botContext, bound device, and any

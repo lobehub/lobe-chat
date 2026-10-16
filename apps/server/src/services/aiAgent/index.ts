@@ -913,7 +913,7 @@ export class AiAgentService {
       agentId,
       slug,
       prompt,
-      appContext: requestAppContext,
+      appContext,
       autoStart = true,
       botContext,
       botSender,
@@ -1011,7 +1011,7 @@ export class AiAgentService {
 
     log('execAgent: identifier=%s, prompt=%s', identifier, prompt.slice(0, 50));
 
-    const operationTaskId = await this.resolveOperationTaskId(taskId ?? requestAppContext?.taskId);
+    const operationTaskId = await this.resolveOperationTaskId(taskId ?? appContext?.taskId);
 
     const assistantMessageRef: { current?: string } = {};
     const updateAbortedAssistantMessage = async (errorMessage: string) => {
@@ -1051,7 +1051,6 @@ export class AiAgentService {
     const {
       agentConfig,
       agentSlug,
-      appContext,
       assistantAgentId,
       canManageAgent,
       conversationAgentId,
@@ -1069,22 +1068,22 @@ export class AiAgentService {
           workspaceId: this.workspaceId,
         },
         {
-          appContext: requestAppContext,
+          appContext,
           chatConfigOverride,
           identifier,
           instructions,
           modelOverride,
           providerOverride,
-          requestedDeviceId,
           shareVisitorUserId: shareGate?.visitorUserId,
           throwIfExecutionAborted,
           toolModeOverride,
-          trigger,
         },
       ),
     );
 
-    // Apply share restrictions before downstream stages read files/knowledge bases.
+    // Share-visitor runs must never see the creator's files/knowledge bases.
+    // Applied to the resolved config before anything downstream (knowledge
+    // flags, tools engine, context snapshot) reads it.
     if (shareGate) applyShareGateToAgentConfig(agentConfig);
 
     let resumeParentMessage: Awaited<ReturnType<MessageModel['findById']>>;
@@ -1216,7 +1215,9 @@ export class AiAgentService {
     );
     if (reusedContinuation) return reusedContinuation;
 
-    // Stage 3: topic/device bindings, attachments and turn rows (pipeline/turnSetup).
+    // Stage 3 + shared turn setup — topic creation/reuse (with the pinned
+    // model), device-access policy, hetero detection, attachment ingestion, and
+    // the persisted user/assistant rows (see `pipeline/turnSetup`).
     const turn = await traceSendStage('turn_setup', () =>
       setupTurn(
         {

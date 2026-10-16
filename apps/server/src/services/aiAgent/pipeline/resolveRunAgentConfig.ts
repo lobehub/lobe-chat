@@ -34,7 +34,6 @@ export interface ResolveRunAgentConfigInput {
   instructions?: string;
   modelOverride?: string;
   providerOverride?: string;
-  requestedDeviceId?: string;
   /**
    * The share visitor actually driving a shared-agent run. The service is
    * constructed as the share owner, so caller-scoped facts (the reply
@@ -43,7 +42,6 @@ export interface ResolveRunAgentConfigInput {
   shareVisitorUserId?: string;
   throwIfExecutionAborted: (stage: string) => Promise<void>;
   toolModeOverride?: InternalExecAgentParams['toolModeOverride'];
-  trigger?: string;
 }
 
 export interface ResolvedRunAgentConfig {
@@ -54,7 +52,6 @@ export interface ResolvedRunAgentConfig {
    */
   agentConfig: AgentConfigWithId;
   agentSlug?: string | null;
-  appContext?: InternalExecAgentParams['appContext'];
   /** Agent id stamped on the assistant row (conversation-aware). */
   assistantAgentId: string;
   canManageAgent: boolean;
@@ -337,29 +334,9 @@ export const resolveRunAgentConfig = async (
     log('execAgent: appended additional instructions to systemRole');
   }
 
-  // CLI cwd belongs to the requested device, even when workspace policy routes elsewhere.
-  const discardCallerDirectory =
-    input.trigger === 'cli' &&
-    input.requestedDeviceId &&
-    deps.workspaceId &&
-    agentConfig.agencyConfig?.executionTargetSelectionPolicy === 'fixed' &&
-    (agentConfig.agencyConfig.executionTarget !== 'device' ||
-      agentConfig.agencyConfig.boundDeviceId !== input.requestedDeviceId);
-
   return {
     agentConfig,
     agentSlug: row.slug,
-    appContext:
-      discardCallerDirectory && appContext?.initialTopicMetadata
-        ? {
-            ...appContext,
-            initialTopicMetadata: {
-              ...appContext.initialTopicMetadata,
-              workingDirectory: undefined,
-              workingDirectoryConfig: undefined,
-            },
-          }
-        : appContext,
     assistantAgentId,
     canManageAgent,
     conversationAgentId,
