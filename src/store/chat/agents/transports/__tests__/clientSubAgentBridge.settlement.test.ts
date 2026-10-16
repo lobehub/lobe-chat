@@ -56,6 +56,25 @@ describe('clientSubAgentBridge settlement', () => {
     );
   });
 
+  // P1 (round-25): the settlement must settle STATUS only — the thread's
+  // `sourceMessageId` is the parent's tool message, and a `resultContent`
+  // here made the server publish the RAW child output over it before the
+  // result-control review could deny it. The controlled result is published
+  // later by the backfill; the settlement must never carry content.
+  it('settlement never carries resultContent (raw output must not bypass result control)', async () => {
+    registerArmedSubAgentBridge(subAgentRegistration);
+    const { get } = makeGet();
+    const { aiAgentService } = await import('@/services/aiAgent');
+
+    await fireClientSubAgentBridge(get, childContext);
+
+    const settleCall = (aiAgentService.updateClientTaskThreadStatus as any).mock.calls[0]?.[0];
+    expect(settleCall).toBeDefined();
+    expect(settleCall.resultContent).toBeUndefined();
+    // Failure disposition still rides the metadata-only `error` field.
+    expect(settleCall.completionReason).toBe('done');
+  });
+
   // P2 (round-9): a transiently failing settlement must be retried within
   // bounds — the fire continues to the parent resume once it succeeds.
   it('settlement transient failure: retries within bounds and completes the fire', async () => {

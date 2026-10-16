@@ -192,12 +192,23 @@ export const reconstructRegistrationFromThread = async (
     // entry would strand the parent after a reload. Reconstruction reads the
     // queue entry (kept until the fire's success path drains it) before
     // concluding "no coordinates".
+    // P1 (round-25): a normally completed (non-parked) child reaches this
+    // same lookup with NEITHER source — registration only happens for
+    // `{ parked: true }`, so the thread has no `metadata.bridge` and no
+    // queue entry. The old fallthrough cast the `undefined` coordinates and
+    // dereferenced `bridge.kind` inside `buildRegistrationFromRow`, and the
+    // fire path's catch retried that deterministic throw forever (5/10/15/20s
+    // then every 60s, refetching the topic's threads each pass). Absent
+    // coordinates on both sources IS the "no bridge on this thread" shape —
+    // return the silent no-op the fire path already handles.
+    const queuedBridge = readQueuedBridgePersist(childThreadId)?.registration as
+      PersistedBridgeCoordinates | undefined;
+    if (!bridge && !queuedBridge) {
+      return { registration: undefined, settledSiblings };
+    }
     const registration = bridge
       ? buildRegistrationFromRow(thread, bridge)
-      : buildRegistrationFromRow(
-          thread,
-          readQueuedBridgePersist(childThreadId)?.registration as PersistedBridgeCoordinates,
-        );
+      : buildRegistrationFromRow(thread, queuedBridge!);
 
     // P1 (round-7): a reload wipes the whole registry — reconstruct EVERY
     // parallel sibling parked on the same parent op too, or the first child

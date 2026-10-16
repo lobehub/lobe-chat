@@ -641,4 +641,34 @@ describe('clientSubAgentBridge reconstruction', () => {
     // The hydrated marker said `resumePending: true` → the resume went ahead.
     expect(store.executeClientAgent).toHaveBeenCalledTimes(1);
   });
+
+  // P1 (round-25): a normally completed (non-parked) child fires the bridge
+  // BEFORE `runClientSubAgent` can register anything — registration only
+  // happens for `{ parked: true }`, so the thread has neither `metadata.bridge`
+  // nor a queue entry. Reconstruction must return the silent no-op instead of
+  // casting the missing coordinates and dereferencing `bridge.kind`: the
+  // deterministic throw used to arm the 5s/10s/15s/20s→60s retry loop that
+  // refetched the topic's threads forever.
+  it('no bridge on a normally completed thread: silent no-op, no retry loop', async () => {
+    const { threadService } = await import('@/services/thread');
+    (threadService.getThreads as any).mockResolvedValue([
+      {
+        agentId: 'agent-child',
+        id: 'thd_child',
+        metadata: {}, // no bridge — the child was never parked
+        status: 'completed',
+        topicId: 'topic-1',
+      },
+    ]);
+    const { get, store } = makeGet();
+
+    await fireClientSubAgentBridge(get, childContext);
+
+    // A clean no-op: no retry driver armed, no parent resume attempted.
+    const { scheduledBridgeRetries } = await import('../clientSubAgentBridge/registry');
+    expect(scheduledBridgeRetries.size).toBe(0);
+    expect(store.executeClientAgent).not.toHaveBeenCalled();
+    // One reconstruction read — no repeated topic refetch polling.
+    expect(threadService.getThreads).toHaveBeenCalledTimes(1);
+  });
 });

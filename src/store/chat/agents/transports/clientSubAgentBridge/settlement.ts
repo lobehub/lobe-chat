@@ -44,15 +44,22 @@ export const settleChildThread = async (params: {
         error: succeeded ? undefined : resultContent,
         metadata: {
           // P2 (round-8): include the child's final cost — the settlement
-          // overwrites thread.metadata.totalCost, so omitting it zeroed the
-          // parked child's spend on refresh (ordinary completion paths
-          // persist it).
+          // omits fields it doesn't overwrite, so omitting cost here would
+          // zero the parked child's spend on refresh (ordinary completion
+          // paths persist it).
           totalCost: outcome.cost,
           totalMessages: threadMessageCount,
           totalTokens: metrics.totalTokens,
           totalToolCalls: metrics.toolCalls,
         },
-        resultContent,
+        // P1 (round-25): settle status WITHOUT publishing content. The
+        // thread's `sourceMessageId` IS the parent's tool message (set at
+        // thread creation) — passing `resultContent` made the server
+        // overwrite that message with the raw child output BEFORE the
+        // result-control review ran, exposing it during any denial/retry
+        // window. Only the controlled result may be published, and it is —
+        // later in the fire path — by the backfill. The `error` field above
+        // persists into thread metadata only (never a message body).
         threadId: childThreadId,
       });
       return;
