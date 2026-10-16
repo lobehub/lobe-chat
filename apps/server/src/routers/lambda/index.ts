@@ -71,6 +71,7 @@ import { importerRouter } from './importer';
 import { klavisRouter } from './klavis';
 import { knowledgeRouter } from './knowledge';
 import { knowledgeBaseRouter } from './knowledgeBase';
+import { linearRouter } from './linear';
 import { llmGenerationTracingRouter } from './llmGenerationTracing';
 import { marketRouter } from './market';
 import { messageRouter } from './message';
@@ -169,6 +170,7 @@ export const lambdaRouter = router({
   klavis: klavisRouter,
   knowledge: knowledgeRouter,
   knowledgeBase: knowledgeBaseRouter,
+  linear: linearRouter,
   llmGenerationTracing: llmGenerationTracingRouter,
   market: marketRouter,
   message: messageRouter,
