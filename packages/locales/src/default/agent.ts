@@ -28,24 +28,23 @@ export default {
   'channel.quickSetup.feishu.scan.error': "Couldn't create the app. Try a new code.",
   'channel.quickSetup.feishu.create.title': 'Create a custom app',
   'channel.quickSetup.feishu.create.desc':
-    'In the developer console, create a custom app and copy its App ID and App Secret from Credentials & Basic Info.',
+    'Copy the App ID and App Secret from Credentials & Basic Info.',
   'channel.quickSetup.feishu.bot.title': 'Turn on the bot',
   'channel.quickSetup.feishu.bot.desc': 'Under App Capabilities, add Bot.',
   'channel.quickSetup.feishu.events.title': 'Subscribe to messages',
   'channel.quickSetup.feishu.events.desc':
-    'In Events & Callbacks, choose long connection, add im.message.receive_v1 and grant im:message.',
+    'Choose long connection, add im.message.receive_v1 and grant im:message.',
   'channel.quickSetup.feishu.publish.title': 'Publish a version',
-  'channel.quickSetup.feishu.publish.desc':
-    'Create a version and publish it; permission changes only take effect after publishing.',
+  'channel.quickSetup.feishu.publish.desc': 'Permission changes take effect once published.',
   'channel.quickSetup.slack.create.title': 'Create the app in one click',
   'channel.quickSetup.slack.create.desc':
-    'Opens Slack with scopes, events and Socket Mode already set. Pick a workspace and create.',
+    'Scopes, events and Socket Mode are pre-filled; pick a workspace and create.',
   'channel.quickSetup.slack.install.title': 'Install it and copy the Bot Token',
   'channel.quickSetup.slack.install.desc':
-    'In OAuth & Permissions, Install to Workspace, then copy the Bot User OAuth Token (xoxb-).',
+    'Install it from OAuth & Permissions, then copy the Bot User OAuth Token.',
   'channel.quickSetup.slack.tokens.title': 'Copy the App ID, Signing Secret and App Token',
   'channel.quickSetup.slack.tokens.desc':
-    'In Basic Information, copy the App ID and Signing Secret, then generate an App-Level Token with connections:write (xapp-).',
+    'All on Basic Information; the App Token needs connections:write.',
   'channel.quickSetup.discord.create.title': 'Create an application',
   'channel.quickSetup.discord.create.desc':
     'In the Developer Portal, click New Application and name it.',

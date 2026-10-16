@@ -10,7 +10,7 @@ import { useTranslation } from 'react-i18next';
 import { useClientDataSWR } from '@/libs/swr';
 import { agentBotProviderService } from '@/services/agentBotProvider';
 
-const QR_SIZE = 168;
+const QR_SIZE = 148;
 
 const styles = createStaticStyles(({ css }) => ({
   qrSlot: css`
@@ -19,8 +19,8 @@ const styles = createStaticStyles(({ css }) => ({
     align-items: center;
     justify-content: center;
 
-    width: ${QR_SIZE + 24}px;
-    height: ${QR_SIZE + 24}px;
+    width: ${QR_SIZE + 16}px;
+    height: ${QR_SIZE + 16}px;
     border: 1px solid ${cssVar.colorBorderSecondary};
     border-radius: ${cssVar.borderRadiusLG};
 
