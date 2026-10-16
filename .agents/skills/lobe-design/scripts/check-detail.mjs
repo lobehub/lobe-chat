@@ -3,7 +3,7 @@
 // Usage: node scripts/check-detail.mjs <path...> [--json]   (see --help)
 // Per-file heuristics: "if the file does X, it must also handle Y". FAIL only for loading / error;
 // everything else is WARN because it is a heuristic and may be handled in a parent component.
-import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
+import { existsSync, lstatSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import { extname, join, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -47,18 +47,25 @@ ${CHECKS.map((c) => `  ${c.level.padEnd(4)} ${c.id.padEnd(27)} ${c.ref.padEnd(6)
 豁免：文件内写 // lobe-design-ignore DETAIL-NO-EMPTY: <理由>（例如空态由父组件处理）`;
 
 const EXTS = new Set(['.tsx', '.jsx']);
-function walk(p, out = []) {
+// 与 lint-lobe 一致：遍历中遇到的软链目录跳过，避免重复扫描
+function walk(p, out = [], top = true) {
+  if (!top && lstatSync(p).isSymbolicLink() && statSync(p).isDirectory()) return out;
   const st = statSync(p);
-  if (st.isDirectory()) { for (const n of readdirSync(p)) if (!['node_modules', '.git', 'dist', '.backup'].includes(n)) walk(join(p, n), out); }
+  if (st.isDirectory()) { for (const n of readdirSync(p)) if (!['node_modules', '.git', 'dist', '.backup'].includes(n)) walk(join(p, n), out, false); }
   else if (EXTS.has(extname(p)) && !/\.(test|spec|stories)\.[jt]sx?$/.test(p)) out.push(p);
   return out;
 }
 
+// 豁免必须是注释里的 `lobe-design-ignore ID[,ID]: <理由>`；没写理由不生效（与 lint-lobe 一致）
+const IGNORE_RE = /(?:\/\/|\/\*|^\s*\*)\s*lobe-design-ignore(?:-file)?\s+([A-Z0-9-]+(?:\s*,\s*[A-Z0-9-]+)*)\s*:\s*\S/gm;
+const suppressedIds = (raw) => new Set([...raw.matchAll(IGNORE_RE)].flatMap((m) => m[1].split(/\s*,\s*/)));
+
 export function checkText(raw, file = '<text>') {
   const findings = [];
+  const suppressed = suppressedIds(raw);
   const text = raw.replace(/\/\*[\s\S]*?\*\//g, '').replace(/^\s*\/\/.*$/gm, '');
   for (const c of CHECKS) {
-    if (raw.includes(`lobe-design-ignore ${c.id}`)) continue;
+    if (suppressed.has(c.id)) continue;
     if (c.when.test(text) && !c.need.test(text)) findings.push({ file, id: c.id, level: c.level, ref: c.ref, dim: c.dim, msg: c.msg });
   }
   return findings;

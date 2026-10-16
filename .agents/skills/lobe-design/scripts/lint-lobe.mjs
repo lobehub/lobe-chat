@@ -4,7 +4,7 @@
 // Exit 1 when any FAIL. Suppress a finding with a comment on the same or previous line:
 //   // lobe-design-ignore LOBE-RAW-COLOR: <reason>
 // Every rule names the reference rule it enforces, so a finding routes to exactly one stage.
-import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
+import { existsSync, lstatSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import { extname, join, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -294,10 +294,12 @@ const EXTS = new Set(['.ts', '.tsx', '.js', '.jsx', '.mjs', '.css', '.less', '.s
 export const isZhLocaleJson = (p) => extname(p) === '.json' && /(?:^|[\\/._-])zh[-_]?(?:cn|hans)(?:[\\/._-]|$)/i.test(p);
 const SKIP_DIRS = new Set(['node_modules', '.git', 'dist', 'build', '.next', '.backup']);
 
-function walk(p, out = []) {
+// 显式传入的路径可以是软链；遍历中遇到的软链目录跳过（如 .claude/skills → .agents/skills），避免重复扫描或扫出目标树
+function walk(p, out = [], top = true) {
+  if (!top && lstatSync(p).isSymbolicLink() && statSync(p).isDirectory()) return out;
   const st = statSync(p);
   if (st.isDirectory()) {
-    for (const name of readdirSync(p)) if (!SKIP_DIRS.has(name)) walk(join(p, name), out);
+    for (const name of readdirSync(p)) if (!SKIP_DIRS.has(name)) walk(join(p, name), out, false);
   } else if ((EXTS.has(extname(p)) || isZhLocaleJson(p)) && !/\.(test|spec|stories)\.[jt]sx?$/.test(p)) out.push(p);
   return out;
 }

@@ -100,6 +100,28 @@ const got = checkText(detailBad, 'detail-bad.tsx').map((f) => f.id);
 for (const id of want) t(`detail-bad.tsx → ${id}`, got.includes(id));
 t('detail-bad.tsx has no unexpected findings', got.every((id) => want.includes(id)), got.filter((id) => !want.includes(id)).join(','));
 const detailGood = checkText(readFileSync(join(fx, 'detail-good.tsx'), 'utf8'), 'detail-good.tsx');
+{
+  const fetchSrc = 'const X = () => { fetch("/api"); return <div />; };\n';
+  const ids = (src) => checkText(src, 'x.tsx').map((f) => f.id);
+  t('detail: 没写理由的豁免不生效', ids(`// lobe-design-ignore DETAIL-NO-LOADING\n${fetchSrc}`).includes('DETAIL-NO-LOADING'));
+  t('detail: 字符串里出现的豁免文字不生效', ids(`const s = 'lobe-design-ignore DETAIL-NO-LOADING: x';\n${fetchSrc}`).includes('DETAIL-NO-LOADING'));
+  t('detail: 带理由的注释豁免生效', !ids(`// lobe-design-ignore DETAIL-NO-LOADING, DETAIL-NO-ERROR: 由父组件处理\n${fetchSrc}`).some((x) => x === 'DETAIL-NO-LOADING' || x === 'DETAIL-NO-ERROR'));
+}
+{
+  // 遍历时跳过软链目录：同一份文件只扫一次
+  const tmp = mkdtempSync(join(tmpdir(), 'ld-symlink-'));
+  try {
+    mkdirSync(join(tmp, 'real'));
+    writeFileSync(join(tmp, 'real', 'a.tsx'), 'const a = { color: \'#1677ff\' };\nconst X = () => { fetch("/api"); return <div />; };\n');
+    symlinkSync(join(tmp, 'real'), join(tmp, 'alias'), 'dir');
+    const lint = spawnSync(process.execPath, [join(skill, 'scripts', 'lint-lobe.mjs'), tmp, '--json'], { encoding: 'utf8' });
+    const detail = spawnSync(process.execPath, [join(skill, 'scripts', 'check-detail.mjs'), tmp, '--json'], { encoding: 'utf8' });
+    const lintFiles = new Set(JSON.parse(lint.stdout).findings?.map?.((f) => f.file) ?? JSON.parse(lint.stdout).map((f) => f.file));
+    const detailHits = JSON.parse(detail.stdout).filter((f) => f.id === 'DETAIL-NO-LOADING').length;
+    t('lint-lobe: 不进入软链目录', lintFiles.size === 1, [...lintFiles].join(','));
+    t('check-detail: 不进入软链目录', detailHits === 1, String(detailHits));
+  } finally { rmSync(tmp, { recursive: true, force: true }); }
+}
 t('detail-good.tsx has 0 findings', detailGood.length === 0, detailGood.map((f) => f.id).join(','));
 
 // 5b) 3.0.0 · 抽象指令翻译：归一化成可执行表述，或转成追问（不猜着动手）
@@ -327,6 +349,15 @@ console.log('== project-scan');
     const more = scanProject(tmp);
     t('project-scan: 超过样本上限时文件数仍计全量且影响指纹', more.components.find((c) => c.dir === 'src/components')?.fileCount === 62 && more.fingerprint !== many.fingerprint, JSON.stringify(more.components));
     for (let i = 0; i <= 60; i++) unlinkSync(join(tmp, `src/components/Gen${i}.tsx`));
+    // 文件数不变的改名 / 路由子目录替换也要改变指纹
+    const base = scanProject(tmp).fingerprint;
+    writeFileSync(join(tmp, 'src/components/Bar.tsx'), 'export {};\n'); unlinkSync(join(tmp, 'src/components/Foo.tsx'));
+    const renamed = scanProject(tmp).fingerprint;
+    rmdirSync(join(tmp, 'app/settings')); mkdirSync(join(tmp, 'app/profile'));
+    const rerouted = scanProject(tmp).fingerprint;
+    t('project-scan: 同数量改名 / 路由替换改变指纹', base !== renamed && renamed !== rerouted, `${base} ${renamed} ${rerouted}`);
+    writeFileSync(join(tmp, 'src/components/Foo.tsx'), 'export const Foo = () => null;\n'); unlinkSync(join(tmp, 'src/components/Bar.tsx'));
+    rmdirSync(join(tmp, 'app/profile')); mkdirSync(join(tmp, 'app/settings'));
 
     t('project-scan --check 缺文件 → 1', run('project-scan.mjs', ['--check', '--root', tmp]).status === 1);
     const layer0 = detectProjectLayer(tmp);

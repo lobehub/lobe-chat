@@ -90,7 +90,8 @@ function listFiles(root, rel, max = 40) {
   const walk = (dir, prefix) => {
     if (out.length >= max) return;
     let entries;
-    try { entries = readdirSync(dir, { withFileTypes: true }); } catch { return; }
+    // 按名字排序再截断：样本进指纹，不能依赖文件系统的 readdir 顺序
+    try { entries = readdirSync(dir, { withFileTypes: true }).sort((a, b) => (a.name < b.name ? -1 : a.name > b.name ? 1 : 0)); } catch { return; }
     for (const e of entries) {
       if (out.length >= max) break;
       if (e.name.startsWith('.') || e.name === 'node_modules') continue;
@@ -238,8 +239,9 @@ export function fingerprintOf(facts) {
     frameworks: facts.stack?.frameworks,
     platforms: facts.stack?.platforms,
     uiLibs: facts.stack?.uiLibs,
-    componentDirs: (facts.components ?? []).map((c) => [c.dir, c.fileCount]),
-    routeDirs: (facts.routes ?? []).map((r) => r.dir),
+    // 带上采样文件名与路由子目录：文件数不变的改名 / 替换也要让指纹变化
+    componentDirs: (facts.components ?? []).map((c) => [c.dir, c.fileCount, c.sampleFiles]),
+    routeDirs: (facts.routes ?? []).map((r) => [r.dir, r.subdirs]),
     i18n: facts.docs?.i18nDirs,
   };
   return createHash('sha256').update(JSON.stringify(slim)).digest('hex').slice(0, 12);
