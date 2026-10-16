@@ -19,13 +19,59 @@ export const EMPTY_ARGS_TOOL_CONTENT =
 export const EMPTY_ARGS_TOOL_REASON = 'tool_arguments_empty';
 
 /**
+ * JSON Schema keywords that cannot make an object with no properties
+ * invalid, and are therefore safe to ignore when proving that `{}` is a
+ * valid input. Any keyword outside this set — combinators (`oneOf` /
+ * `allOf` / `anyOf` / `not`), `minProperties`, `enum` / `const`,
+ * `if` / `then`, `dependent*`, … — can constrain the shape in ways a
+ * missing top-level `required` does not reveal (e.g. connector/MCP schemas
+ * like `{ oneOf: [{ required: ['path'] }, { required: ['url'] }] }` accept
+ * no empty object even though `required` is absent), so such schemas stay
+ * loss-shaped and take the rejection path.
+ */
+const EMPTY_OBJECT_SAFE_KEYWORDS = new Set([
+  'type',
+  'properties',
+  'required',
+  'additionalProperties',
+  'patternProperties',
+  'propertyNames',
+  '$schema',
+  '$id',
+  '$defs',
+  'definitions',
+  'title',
+  'description',
+  'default',
+  'examples',
+]);
+
+/**
+ * Conservative JSON Schema proof that an empty object is a valid input.
+ * Only schemas proven to accept `{}` normalize an omitted-arguments call;
+ * anything unrecognized or combinator-shaped is not proven.
+ */
+const schemaProvesEmptyObjectValid = (parameters: object): boolean => {
+  const schema = parameters as Record<string, unknown>;
+  for (const key of Object.keys(schema)) {
+    if (!EMPTY_OBJECT_SAFE_KEYWORDS.has(key)) return false;
+  }
+  // A non-object type (string, array, number, …) rejects `{}`.
+  if (schema.type !== undefined && schema.type !== 'object') return false;
+  const required = schema.required;
+  if (required !== undefined && (!Array.isArray(required) || required.length > 0)) return false;
+  return true;
+};
+
+/**
  * Whether the tool's declared parameter schema makes this a legal no-argument
- * call. A tool whose schema has no required properties can be invoked with
- * `{}` (or with the `arguments` field omitted entirely — several
- * provider/gateway serialization paths drop an empty arguments string when
- * streaming a tool call), so an empty `arguments` there is not the T-673
- * serialization-loss shape and must not be rejected. Manifests without a
- * parameters schema stay loss-shaped: absence of a schema proves nothing.
+ * call. A tool whose schema is proven to accept `{}` can also be invoked
+ * with the `arguments` field omitted entirely — several provider/gateway
+ * serialization paths drop an empty arguments string when streaming a tool
+ * call — so an empty `arguments` there is not the T-673 serialization-loss
+ * shape and must not be rejected. Schemas that are missing, combinator-
+ * shaped, or otherwise not proven to accept an empty object stay loss-shaped
+ * and take the rejection path.
  */
 export const toolExpectsNoArguments = (
   toolCalling: ChatToolPayload,
@@ -40,10 +86,9 @@ export const toolExpectsNoArguments = (
   const api = manifest.api?.find((a: any) => a.name === toolCalling.apiName);
   // API-level schema takes precedence over tool-level, mirroring getToolInterventionConfig.
   const parameters = api?.parameters ?? manifest.parameters;
-  if (!parameters || typeof parameters !== 'object') return false;
+  if (!parameters || typeof parameters !== 'object' || Array.isArray(parameters)) return false;
 
-  const required = (parameters as { required?: unknown }).required;
-  return !Array.isArray(required) || required.length === 0;
+  return schemaProvesEmptyObjectValid(parameters);
 };
 
 /**
@@ -51,10 +96,11 @@ export const toolExpectsNoArguments = (
  * with no `arguments` at all. `{}` stays executable — it is a legal
  * no-argument call and JSON-parses fine; only a missing arguments string is
  * the serialization-loss shape, and it cannot survive `JSON.parse` in the
- * executor anyway. Exception: a tool whose manifest declares no required
- * parameters accepts an empty `arguments` — providers may omit the field for
- * no-parameter calls, and rejecting it blocks legal listCriteria-style calls
- * (vent T-800), so those calls are normalized to `{}` and executed.
+ * executor anyway. Exception: a tool whose schema is proven to accept an
+ * empty object accepts an empty `arguments` — providers may omit the field
+ * for no-parameter calls, and rejecting it blocks legal listCriteria-style
+ * calls (vent T-800), so those calls are normalized to `{}` and executed.
+ * Combinator schemas (oneOf/allOf/anyOf) are not proven and stay rejected.
  */
 export const partitionEmptyArgumentsCalls = (
   toolsCalling: ChatToolPayload[],

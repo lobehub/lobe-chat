@@ -86,6 +86,49 @@ describe('toolExpectsNoArguments', () => {
     const state = makeState({ 'tool-a': { identifier: 'tool-a' } });
     expect(toolExpectsNoArguments(call({ apiName: 'run' }), state)).toBe(false);
   });
+
+  it('rejects oneOf combinator schemas that accept no empty object (Codex P2 on PR #21013)', () => {
+    const state = makeState({
+      'tool-a': {
+        identifier: 'tool-a',
+        parameters: {
+          oneOf: [
+            { required: ['path'], type: 'object' },
+            { required: ['url'], type: 'object' },
+          ],
+          type: 'object',
+        },
+      },
+    });
+    expect(toolExpectsNoArguments(call({ apiName: 'run' }), state)).toBe(false);
+  });
+
+  it('rejects allOf/anyOf/not/if combinators and minProperties', () => {
+    const variants = [
+      { allOf: [{ required: ['x'] }] },
+      { anyOf: [{ required: ['x'] }] },
+      { not: { required: ['x'] } },
+      { unevaluatedProperties: false, type: 'object' },
+      { minProperties: 1, type: 'object' },
+      { enum: [{}, { a: 1 }] },
+      { dependentRequired: { a: ['b'] }, properties: { a: { type: 'string' } }, type: 'object' },
+    ];
+    for (const parameters of variants) {
+      const state = makeState({ 'tool-a': { identifier: 'tool-a', parameters } });
+      expect(toolExpectsNoArguments(call({ apiName: 'run' }), state)).toBe(false);
+    }
+  });
+
+  it('rejects a non-object type and a non-array required', () => {
+    const state = makeState({
+      'tool-a': { identifier: 'tool-a', parameters: { type: 'string' } },
+      'tool-b': { identifier: 'tool-b', parameters: { required: 'x', type: 'object' } },
+    });
+    expect(toolExpectsNoArguments(call({ apiName: 'run' }), state)).toBe(false);
+    expect(toolExpectsNoArguments(call({ apiName: 'run', identifier: 'tool-b' }), state)).toBe(
+      false,
+    );
+  });
 });
 
 describe('partitionEmptyArgumentsCalls', () => {
