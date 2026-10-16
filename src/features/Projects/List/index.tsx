@@ -33,10 +33,12 @@ import TopicCreatorAvatar from '@/features/TopicCreatorAvatar';
 import UserAvatar from '@/features/User/UserAvatar';
 import WideScreenContainer from '@/features/WideScreenContainer';
 import WorkspaceLink from '@/features/Workspace/WorkspaceLink';
-import { useCurrentProjectList, useProjectStore } from '@/store/project';
+import { useLoadedProjectList, useProjectStore } from '@/store/project';
 import type { ProjectListItem } from '@/store/project/store';
 import { useUserStore } from '@/store/user';
 import { labPreferSelectors, userProfileSelectors } from '@/store/user/selectors';
+
+import { resolveProjectListState } from '../projectListState';
 
 const styles = createStaticStyles(({ css, cssVar }) => ({
   actions: css`
@@ -196,15 +198,15 @@ const ProjectListPage = memo(() => {
   const { t } = useTranslation('project');
   const [keyword, setKeyword] = useState('');
   const enabled = useUserStore(labPreferSelectors.enableProjects);
-  const projects = useCurrentProjectList();
+  const projects = useLoadedProjectList();
   const { error, isHydrated, isValidating, revalidate } = useProjectStore(
     (s) => s.useFetchProjectList,
   )(enabled);
-  // Rows come from the store; the hook only reports fetch progress.
-  const isLoading = !isHydrated || isValidating;
+  const listState = resolveProjectListState({ error, isHydrated, isValidating, projects });
 
   const filteredProjects = useMemo(() => {
     const normalizedKeyword = keyword.trim().toLocaleLowerCase();
+    if (!projects) return [];
     return normalizedKeyword
       ? projects.filter((project) =>
           [project.name, project.identifier, project.description]
@@ -238,9 +240,9 @@ const ProjectListPage = memo(() => {
             {t('create.action')}
           </Button>
         </Flexbox>
-        {error && projects.length === 0 ? (
+        {listState === 'error' ? (
           <AsyncError error={error} onRetry={() => revalidate()} />
-        ) : isLoading && projects.length === 0 ? (
+        ) : listState === 'loading' ? (
           <SkeletonList rows={8} />
         ) : filteredProjects.length === 0 ? (
           <Center flex={1} padding={48}>
