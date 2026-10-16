@@ -169,6 +169,32 @@ export const getKanbanTaskPatch = (
   }
 };
 
+/** Pinned on the new task, so it lands in the column it was created from. */
+export interface KanbanColumnCreateDefaults {
+  assigneeAgentId?: string;
+  priority?: number;
+}
+
+/**
+ * Whether a column offers a create entry, and what the new task is pinned to.
+ * `undefined` means no entry: a task created there could not be guaranteed to
+ * land in that column.
+ */
+export const getKanbanColumnCreateDefaults = (
+  groupBy: TaskKanbanGroupBy,
+  column: KanbanColumnDefinition,
+): KanbanColumnCreateDefaults | undefined => {
+  if (groupBy === 'status' && column.key === 'backlog') return {};
+  if (groupBy === 'priority' && column.groupMeta?.groupBy === 'priority') {
+    return { priority: column.groupMeta.priority ?? 0 };
+  }
+  // The unassigned column has no entry: the modal cannot pin "no agent".
+  if (groupBy === 'assignee' && column.groupMeta?.groupBy === 'assignee') {
+    const { assigneeId } = column.groupMeta;
+    return assigneeId ? { assigneeAgentId: assigneeId } : undefined;
+  }
+};
+
 export const canDropTaskIntoKanbanColumn = (
   task: TaskListItem,
   groupBy: TaskKanbanGroupBy,

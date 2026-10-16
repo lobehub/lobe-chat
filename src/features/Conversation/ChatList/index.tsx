@@ -125,13 +125,11 @@ const ChatList = memo<ChatListProps>(
     messageDeepLink,
     showWelcome,
   }) => {
-    // Fetch messages (SWR key is null when skipFetch is true)
+    // The chat store owns the transcript; this view keeps its sync mounted.
     const context = useConversationStore((s) => s.context);
     const enableUserMemories = useUserStore(settingsSelectors.memoryEnabled);
-    const [skipFetch, useFetchMessages] = useConversationStore((s) => [
-      dataSelectors.skipFetch(s),
-      s.useFetchMessages,
-    ]);
+    const skipFetch = useConversationStore(dataSelectors.skipFetch);
+    const useFetchMessages = useChatStore((s) => s.useFetchMessages);
     const activeAgentId = useChatStore((s) => s.activeAgentId);
     // Pending cards still refresh during streaming; the data slice merges only
     // intervention changes so lagging DB snapshots cannot replace live text.

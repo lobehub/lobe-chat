@@ -3725,6 +3725,7 @@ table tasks {
   visibility text [not null, default: 'public']
   started_at "timestamp with time zone"
   completed_at "timestamp with time zone"
+  archived_at "timestamp with time zone"
   deleted_at "timestamp with time zone"
   is_deleted boolean
   accessed_at "timestamp with time zone" [not null, default: `now()`]

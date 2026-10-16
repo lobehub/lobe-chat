@@ -433,6 +433,7 @@
   "supportAgent.starter.feedback": "Quiero reportar un problema o sugerir una función",
   "supportAgent.starter.modelError": "Falló una llamada al modelo. ¿Cómo lo soluciono?",
   "supportAgent.title": "Soporte de Lobe",
+  "supportAgent.troubleshoot.question": "Este mensaje falló. Por favor, ayúdame a solucionarlo.",
   "supportAgent.welcome": "Hola, soy el asistente de soporte de Lobe. Pregúntame cómo funciona algo, dime qué salió mal o deja comentarios para el equipo. Soy una IA, así que verifica cualquier cosa importante.",
   "supportAgent.working": "Investigando…",
   "switch": "Interruptor",
