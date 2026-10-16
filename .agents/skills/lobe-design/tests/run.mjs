@@ -257,7 +257,7 @@ console.log('== bootstrap');
     // --check 语义
     t('bootstrap fs: --check 已接入 → 0', run('bootstrap.mjs', ['--check', '--root', tmp]).status === 0);
     // 格式化工具只改空白 / 表格分隔线时不算过期；托管块内容真正变了才算
-    const fmt = readFileSync(guide, 'utf8').replace(/\| --- \|/g, '| ------ |').replace(/ \|\n/g, '  |\n');
+    const fmt = readFileSync(guide, 'utf8').replace(/\| --- \|/g, '| ------ |').replace(/ \|\n/g, '  |\n').replace('修误报 · minor', '修误报・minor');
     writeFileSync(guide, fmt);
     t('bootstrap fs: --check 只是重新格式化 → 0', run('bootstrap.mjs', ['--check', '--root', tmp]).status === 0);
     writeFileSync(guide, once.replace('## 1.', '## 1. 过期'));

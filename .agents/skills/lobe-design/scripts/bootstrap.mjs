@@ -185,12 +185,12 @@ ${renderInstall(localSkill)}${renderUx(ux)}
 
 
 /** 把托管块插入 / 替换到 fileText，返回 { text, action }。块外内容不变。 */
-// 比较托管块内容时忽略空白与表格分隔线长度：格式化工具（prettier 等）重排后不算漂移。
+// 比较托管块内容时忽略空白、表格分隔线长度和中点写法（· / ・）：格式化工具（prettier、remark 等）重排后不算漂移。
 export function blockMatches(fileText, block) {
   const start = fileText.indexOf(BEGIN);
   const end = fileText.indexOf(END);
   if (start === -1 || end === -1 || end < start) return false;
-  const norm = (s) => s.replace(/\s+/g, '').replace(/-{3,}/g, '---');
+  const norm = (s) => s.replace(/\s+/g, '').replace(/-{3,}/g, '---').replace(/・/g, '·');
   return norm(fileText.slice(start + BEGIN.length, end)) === norm(block);
 }
 
