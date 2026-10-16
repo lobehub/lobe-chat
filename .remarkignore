@@ -1,2 +1,5 @@
 # Generated from lobehub/acceptance releases; preserve the upstream bytes.
 .agents/skills/acceptance/**
+
+# Vendored from lobehub/lobe-design-skill via its install.sh --copy; preserve the upstream bytes.
+.agents/skills/lobe-design/**
