@@ -3604,18 +3604,6 @@ When I am ___, I need ___
   'workspace.onboarding.flow.channels.connect.category': 'Bot channel',
   'workspace.onboarding.flow.channels.connect.description':
     "Use your own {{platform}} app to bring {{name}} into your team's chats as a bot.",
-  'workspace.onboarding.flow.channels.connect.methodLabel': 'How it connects',
-  'workspace.onboarding.flow.channels.connect.method.credentials':
-    'Enter the bot credentials; they are verified before saving',
-  'workspace.onboarding.flow.channels.connect.permissionsLabel': 'What the bot can do',
-  'workspace.onboarding.flow.channels.connect.permission.websocket':
-    'Receive messages over WebSocket',
-  'workspace.onboarding.flow.channels.connect.permission.webhook':
-    'Receive messages through a webhook',
-  'workspace.onboarding.flow.channels.connect.permission.polling':
-    'Receive messages over a long-lived connection',
-  'workspace.onboarding.flow.channels.connect.permission.reply':
-    'Reply as the bot in group chats and direct messages',
   'workspace.onboarding.flow.channels.connect.guide': 'Setup guide',
   'workspace.onboarding.flow.channels.connect.section': 'Connect',
   'workspace.onboarding.flow.channels.connect.status.idle': 'Not connected',
