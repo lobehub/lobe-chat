@@ -45,15 +45,16 @@ describe('resolveSelectorShape', () => {
   });
 
   it('gives catalog-only providers the bare picker', () => {
-    expect(resolveSelectorShape({ type: 'kimi-code' }, true).kind).toBe('catalog');
-    expect(resolveSelectorShape({ type: 'opencode' }, true).kind).toBe('catalog');
-    expect(resolveSelectorShape({ type: 'pi' }, true).kind).toBe('catalog');
+    expect(resolveSelectorShape({ type: 'cursor' }, true).kind).toBe('catalog');
+    expect(resolveSelectorShape({ type: 'devin' }, true).kind).toBe('catalog');
   });
 
   it('gives a catalog provider with another dimension the full menu', () => {
     expect(resolveSelectorShape({ type: 'codebuddy' }, true).kind).toBe('menu');
     expect(resolveSelectorShape({ type: 'codex' }, true).kind).toBe('menu');
     expect(resolveSelectorShape({ type: 'qoder' }, true).kind).toBe('menu');
+    for (const type of ['kimi-code', 'opencode', 'pi', 'trae', 'droid'])
+      expect(resolveSelectorShape({ type }, true).kind).toBe('menu');
   });
 
   it('gives static providers the full menu', () => {
@@ -63,6 +64,39 @@ describe('resolveSelectorShape', () => {
 });
 
 describe('dimensions per provider', () => {
+  it('offers only the selected model’s advertised variants, preserving custom labels', () => {
+    const provider = { type: 'opencode', model: 'team/model', effort: 'team-budget' };
+    const capability = selectorCapabilityOf('opencode');
+    const models = [
+      {
+        id: 'team/model',
+        modelId: 'model',
+        providerId: 'team',
+        reasoningEfforts: ['high', 'team-budget'],
+      },
+    ];
+    const view = buildSelectorView({ capability, models, provider, t });
+    expect(view.dimensions[0].options.map((option) => option.value)).toEqual([
+      'default',
+      'high',
+      'team-budget',
+    ]);
+    expect(view.triggerLabel.secondaryText).toBe('team-budget');
+    expect(
+      buildSelectorView({ capability, provider, t }).dimensions[0].options.map(
+        (option) => option.value,
+      ),
+    ).toEqual(['default']);
+    expect(
+      resolveModelSwitchSelection({
+        capability: capabilityOf('opencode'),
+        effort: 'team-budget',
+        isFastSpeed: false,
+        value: 'other/model',
+      }),
+    ).toEqual({ effort: 'default', model: 'other/model' });
+  });
+
   it('uses the Codex catalog while preserving reasoning levels through max', () => {
     expect(viewOf({ type: 'codex' }).isCatalogModel).toBe(true);
 

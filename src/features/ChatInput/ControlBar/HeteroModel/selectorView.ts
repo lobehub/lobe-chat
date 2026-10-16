@@ -1,4 +1,5 @@
 import type {
+  HeterogeneousAgentModel,
   HeterogeneousProviderConfig,
   HeterogeneousReasoningEffort,
   HeterogeneousSpeedMode,
@@ -97,7 +98,7 @@ export const resolveModelSwitchSelection = ({
     !!effort &&
     effort !== HETEROGENEOUS_AGENT_DEFAULT_SELECTION &&
     !!capability.effort &&
-    !capability.effort.levels(value).includes(effort);
+    (capability.effort.catalog || !capability.effort.levels(value).includes(effort));
 
   return {
     ...(resetEffort ? { effort: HETEROGENEOUS_AGENT_DEFAULT_SELECTION } : {}),
@@ -108,12 +109,14 @@ export const resolveModelSwitchSelection = ({
 
 export const buildSelectorView = ({
   capability,
+  models,
   provider,
   t,
   topicPin,
   topicScoped = false,
 }: {
   capability: HeteroSelectorCapability;
+  models?: HeterogeneousAgentModel[];
   /** The effective config, with any topic pins already applied. */
   provider: HeterogeneousProviderConfig;
   t: Translate;
@@ -134,7 +137,14 @@ export const buildSelectorView = ({
   const defaultLabel = t('heteroAgent.modelSelector.default');
   const modelLabel = getModelLabel(model, defaultLabel);
   const effortLabelKeys = getEffortLabelKeys(provider.type);
-  const effortLabel = effort ? t(effortLabelKeys[effort]) : undefined;
+  const effortLabel = effort
+    ? effortLabelKeys[effort]
+      ? t(effortLabelKeys[effort])
+      : effort
+    : undefined;
+  const effortLevels = capability.effort?.catalog
+    ? (models?.find((entry) => entry.id === model)?.reasoningEfforts ?? [])
+    : (capability.effort?.levels(model) ?? []);
   const modeLabel = mode ? t(getModeLabelKey(mode)) : undefined;
   const isCatalogModel = capability.model?.source === 'catalog';
   const isModeOnly =
@@ -198,8 +208,8 @@ export const buildSelectorView = ({
       source: getSource(topicPin?.effort !== undefined),
       options: [
         { label: defaultLabel, value: HETEROGENEOUS_AGENT_DEFAULT_SELECTION },
-        ...capability.effort.levels(model).map((level) => ({
-          label: t(effortLabelKeys[level]),
+        ...effortLevels.map((level) => ({
+          label: effortLabelKeys[level] ? t(effortLabelKeys[level]) : level,
           value: level,
         })),
       ],

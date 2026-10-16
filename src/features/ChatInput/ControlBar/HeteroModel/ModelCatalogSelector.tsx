@@ -1,7 +1,7 @@
 'use client';
 
 import { getHeterogeneousTypeLabel } from '@lobechat/heterogeneous-agents';
-import type { ListHeterogeneousAgentModelsParams } from '@lobechat/types';
+import type { HeterogeneousAgentModel, ListHeterogeneousAgentModelsParams } from '@lobechat/types';
 import { HETEROGENEOUS_AGENT_DEFAULT_SELECTION } from '@lobechat/types';
 import { Icon, Tooltip } from '@lobehub/ui';
 import {
@@ -36,7 +36,7 @@ import {
   RefreshCwIcon,
   SearchIcon,
 } from 'lucide-react';
-import { memo, useCallback, useState } from 'react';
+import { memo, useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { isDesktop } from '@/const/version';
@@ -167,6 +167,7 @@ interface ModelCatalogSelectorProps {
   desc?: string;
   disabled: boolean;
   model: string;
+  onCatalog?: (models: HeterogeneousAgentModel[] | undefined) => void;
   onSelect: (model: string) => void;
   permissionReason?: string;
   type: ListHeterogeneousAgentModelsParams['type'];
@@ -179,6 +180,7 @@ export const ModelCatalogSelector = memo<ModelCatalogSelectorProps>(
     desc,
     disabled,
     model,
+    onCatalog,
     onSelect,
     permissionReason,
     type,
@@ -231,6 +233,10 @@ export const ModelCatalogSelector = memo<ModelCatalogSelectorProps>(
       targetReady,
       type,
     });
+
+    useEffect(() => {
+      onCatalog?.(data?.models);
+    }, [data, onCatalog]);
 
     const { groups, rows, selectedIsStale } = useModelCatalogView({
       currentModel,

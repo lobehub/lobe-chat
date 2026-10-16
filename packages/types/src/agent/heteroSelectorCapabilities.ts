@@ -94,7 +94,13 @@ export type HeterogeneousReasoningEffortLevel =
   | ClaudeCodeReasoningEffort
   | CodexReasoningEffort
   | GrokBuildReasoningEffort
-  | QoderReasoningEffort;
+  | QoderReasoningEffort
+  | 'off'
+  | 'none'
+  | 'minimal'
+  | 'dynamic'
+  // OpenCode variants may have user-defined names.
+  | (string & {});
 
 export type HeterogeneousReasoningEffort =
   HeterogeneousReasoningEffortLevel | HeterogeneousAgentDefaultSelection;
@@ -197,6 +203,7 @@ export const codexModelSupportsFastSpeed = (model: string): boolean =>
 export interface HeteroSelectionSource {
   args?: string[];
   effort?: string | null;
+  env?: Record<string, string>;
   mode?: string | null;
   model?: string | null;
   speed?: string | null;
@@ -316,6 +323,8 @@ export interface HeteroSelectorModelCapability {
 }
 
 export interface HeteroSelectorEffortCapability {
+  /** Read the selected model's advertised options rather than guessing variants. */
+  catalog?: boolean;
   encodings: readonly HeteroCliEncoding[];
   levels: (model: string) => readonly HeterogeneousReasoningEffortLevel[];
   resolve: (source: HeteroSelectionSource | null | undefined) => HeterogeneousReasoningEffort;
@@ -341,6 +350,33 @@ export interface HeteroSelectorCapability {
 }
 
 const MODEL_FLAGS_ENCODING = { flags: ['-m', '--model'], kind: 'flag' } as const;
+
+const PI_THINKING_LEVELS = ['off', 'minimal', 'low', 'medium', 'high', 'xhigh', 'max'] as const;
+const DROID_REASONING_LEVELS = [
+  'off',
+  'none',
+  'dynamic',
+  'minimal',
+  'low',
+  'medium',
+  'high',
+  'xhigh',
+  'max',
+] as const;
+export const KIMI_THINKING_EFFORT_ENV = 'KIMI_MODEL_THINKING_EFFORT';
+
+/** Kimi's print transport has no effort flag. Never write the user's config. */
+export const buildHeteroSpawnEnv = (
+  provider: HeteroSelectionSource & { type?: string },
+): Record<string, string> => {
+  const effort = provider.effort?.trim();
+  return provider.type === 'kimi-code' && effort && effort !== HETEROGENEOUS_AGENT_DEFAULT_SELECTION
+    ? { ...provider.env, [KIMI_THINKING_EFFORT_ENV]: effort }
+    : { ...provider.env };
+};
+
+const resolvePersistedEffort = (source: HeteroSelectionSource | null | undefined) =>
+  source?.effort?.trim() || HETEROGENEOUS_AGENT_DEFAULT_SELECTION;
 
 /**
  * Which selector dimensions each CLI agent exposes, and how each dimension is
@@ -408,6 +444,13 @@ export const HETERO_SELECTOR_CAPABILITIES = {
     },
   },
   'droid': {
+    effort: {
+      encodings: [{ flags: ['-r', '--reasoning-effort'], kind: 'flag' }],
+      levels: () => DROID_REASONING_LEVELS,
+      resolve: (source) =>
+        getAnyCliFlagValue(source?.args, ['-r', '--reasoning-effort']) ??
+        resolvePersistedEffort(source),
+    },
     model: { encodings: [], resolve: resolvePersistedModel, source: 'catalog' },
   },
   'devin': {
@@ -430,12 +473,31 @@ export const HETERO_SELECTOR_CAPABILITIES = {
     },
   },
   'kimi-code': {
+    effort: {
+      catalog: true,
+      encodings: [],
+      levels: () => ['low', 'medium', 'high', 'xhigh', 'max'],
+      resolve: resolvePersistedEffort,
+    },
     model: { encodings: [MODEL_FLAGS_ENCODING], resolve: resolvePersistedModel, source: 'catalog' },
   },
   'opencode': {
+    effort: {
+      catalog: true,
+      encodings: [{ flags: ['--variant'], kind: 'flag' }],
+      levels: () => [],
+      resolve: (source) =>
+        getCliFlagValue(source?.args, '--variant') ?? resolvePersistedEffort(source),
+    },
     model: { encodings: [MODEL_FLAGS_ENCODING], resolve: resolvePersistedModel, source: 'catalog' },
   },
   'pi': {
+    effort: {
+      encodings: [{ flags: ['--thinking'], kind: 'flag' }],
+      levels: () => PI_THINKING_LEVELS,
+      resolve: (source) =>
+        getCliFlagValue(source?.args, '--thinking') ?? resolvePersistedEffort(source),
+    },
     model: {
       encodings: [{ flags: ['--model'], kind: 'flag' }],
       extraStripFlags: ['--provider'],
@@ -452,6 +514,13 @@ export const HETERO_SELECTOR_CAPABILITIES = {
     model: { encodings: [MODEL_FLAGS_ENCODING], resolve: resolvePersistedModel, source: 'catalog' },
   },
   'trae': {
+    effort: {
+      encodings: [{ key: CODEX_REASONING_EFFORT_CONFIG_KEY, kind: 'config' }],
+      levels: () => ['minimal', 'low', 'medium', 'high', 'xhigh', 'max'],
+      resolve: (source) =>
+        getCliConfigValue(source?.args, CODEX_REASONING_EFFORT_CONFIG_KEY) ??
+        resolvePersistedEffort(source),
+    },
     model: { encodings: [], resolve: resolvePersistedModel, source: 'catalog' },
   },
 } satisfies Record<LocalHeterogeneousAgentType, HeteroSelectorCapability>;

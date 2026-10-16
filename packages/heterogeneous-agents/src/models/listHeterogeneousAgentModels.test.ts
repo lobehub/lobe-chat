@@ -125,6 +125,38 @@ describe('heterogeneous agent model discovery', () => {
     ]);
   });
 
+  it('keeps plain OpenCode model discovery when verbose metadata is unsupported', async () => {
+    rejectExecFile(new Error('Unknown argument: verbose'));
+    resolveExecFile('openai/gpt-model');
+    const { listHeterogeneousAgentModels } = await importModule();
+    await expect(
+      listHeterogeneousAgentModels({ command: '/custom/opencode', type: 'opencode' }),
+    ).resolves.toMatchObject({
+      models: [{ id: 'openai/gpt-model', modelId: 'gpt-model', providerId: 'openai' }],
+      status: 'success',
+    });
+  });
+
+  it('reads model-specific OpenCode variants without guessing options for plain catalogs', async () => {
+    const { parseOpenCodeModelCatalog } = await importModule();
+    const metadata = JSON.stringify(
+      { variants: { 'high': { reasoningEffort: 'high' }, 'team-budget': { budget: 8192 } } },
+      null,
+      2,
+    );
+    expect(parseOpenCodeModelCatalog(`openai/gpt-model\r\n${metadata}\r\nother/plain\r\n`)).toEqual(
+      [
+        {
+          id: 'openai/gpt-model',
+          providerId: 'openai',
+          modelId: 'gpt-model',
+          reasoningEfforts: ['high', 'team-budget'],
+        },
+        { id: 'other/plain', providerId: 'other', modelId: 'plain' },
+      ],
+    );
+  });
+
   it('discovers only model IDs accepted by CodeBuddy --model', async () => {
     const stdout = [
       'Usage: codebuddy [options]',
@@ -440,7 +472,7 @@ describe('heterogeneous agent model discovery', () => {
     });
     expect(execFileMock).toHaveBeenCalledWith(
       '/custom/opencode',
-      ['models'],
+      ['models', '--verbose'],
       expect.objectContaining({
         cwd: '/repo',
         env: { OPENCODE_CONFIG_DIR: '/config', PATH: '/custom/bin' },
@@ -487,7 +519,7 @@ describe('heterogeneous agent model discovery', () => {
         { env: NodeJS.ProcessEnv },
       ];
       expect(command).toBe('/login/bin/opencode');
-      expect(args).toEqual(['models']);
+      expect(args).toEqual(['models', '--verbose']);
       expect(options.env.PATH?.split(path.delimiter)).toEqual(
         expect.arrayContaining(['/inherited/bin', '/login/bin', '/usr/bin']),
       );
@@ -640,6 +672,7 @@ describe('heterogeneous agent model discovery', () => {
     const stdout = JSON.stringify({
       models: {
         'kimi-code/k3': {
+          capabilities: ['thinking', 'always_thinking'],
           defaultEffort: 'high',
           displayName: 'K3',
           model: 'k3',
@@ -650,6 +683,7 @@ describe('heterogeneous agent model discovery', () => {
           displayName: 'K2.7 Code Highspeed',
           model: 'kimi-for-coding-highspeed',
           provider: 'managed:kimi-code',
+          supportEfforts: ['high'],
         },
         'broken-alias': { provider: 'managed:kimi-code' },
       },
@@ -666,6 +700,7 @@ describe('heterogeneous agent model discovery', () => {
         label: 'K3',
         modelId: 'k3',
         providerId: 'kimi-code',
+        reasoningEfforts: ['low', 'high', 'max'],
       },
       {
         id: 'kimi-code/kimi-for-coding-highspeed',

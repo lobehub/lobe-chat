@@ -429,7 +429,6 @@ describe('buildHeteroSpawnArgs', () => {
   it('keeps TRAE model selection in the wrapper instead of native process arguments', () => {
     const provider: HeterogeneousProviderConfig = {
       args: ['--feature', 'test'],
-      effort: 'high',
       model: 'ignored-selector',
       type: 'trae',
     };
@@ -486,7 +485,6 @@ describe('buildHeteroSpawnArgs', () => {
   it('forwards Kimi Code native args and an explicit model through both spawn paths', () => {
     const provider: HeterogeneousProviderConfig = {
       args: ['--verbose'],
-      effort: 'high',
       model: 'kimi-for-coding',
       type: 'kimi-code',
     };
@@ -632,7 +630,6 @@ describe('buildHeteroSpawnArgs', () => {
   it('forwards Pi native args and an explicit provider/model selection', () => {
     const provider = {
       args: ['--offline'],
-      effort: 'high',
       model: 'anthropic/claude-sonnet-4-5',
       type: 'pi',
     } satisfies HeterogeneousProviderConfig;

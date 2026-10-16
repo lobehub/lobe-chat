@@ -55,6 +55,8 @@ export interface HeterogeneousAgentModel {
   modelId: string;
   /** Provider or CLI family, used only for display grouping. */
   providerId: string;
+  /** Native reasoning options advertised by this model, including custom variants. */
+  reasoningEfforts?: string[];
 }
 
 export interface ListHeterogeneousAgentModelsParams {
@@ -459,6 +461,7 @@ export const applyTopicModelToHeterogeneousProvider = (
   if (effort !== undefined && capability.effort) {
     selection.effort =
       effort === HETEROGENEOUS_AGENT_DEFAULT_SELECTION ||
+      capability.effort.catalog ||
       capability.effort.levels(model).includes(effort)
         ? effort
         : HETEROGENEOUS_AGENT_DEFAULT_SELECTION;
@@ -583,9 +586,7 @@ const modelFlagsOf = (
 const CODEX_MODEL_FLAGS = modelFlagsOf('codex');
 const CURSOR_MODEL_FLAGS = ['--model'] as const;
 const GROK_BUILD_MODEL_FLAGS = modelFlagsOf('grok-build');
-const KIMI_CODE_MODEL_FLAGS = modelFlagsOf('kimi-code');
 const OPENCODE_MODEL_FLAGS = modelFlagsOf('opencode');
-const PI_MODEL_FLAGS = modelFlagsOf('pi');
 const QODER_MODEL_FLAGS = modelFlagsOf('qoder');
 
 const getExplicitAmpAgentMode = (
@@ -734,7 +735,7 @@ export const buildHeteroSpawnArgs = (
     }
   }
 
-  if (provider.type === 'opencode') {
+  if (provider.type === 'opencode' || provider.type === 'kimi-code' || provider.type === 'pi') {
     const model = provider.model?.trim();
     if (
       model &&
@@ -756,25 +757,18 @@ export const buildHeteroSpawnArgs = (
     }
   }
 
-  if (provider.type === 'kimi-code') {
-    const model = provider.model?.trim();
-    if (
-      model &&
-      model !== HETEROGENEOUS_AGENT_DEFAULT_SELECTION &&
-      !hasAnyCliFlag(baseArgs, KIMI_CODE_MODEL_FLAGS)
-    ) {
-      extraArgs.push('--model', model);
-    }
-  }
-
-  if (provider.type === 'pi') {
-    const model = provider.model?.trim();
-    if (
-      model &&
-      model !== HETEROGENEOUS_AGENT_DEFAULT_SELECTION &&
-      !hasAnyCliFlag(baseArgs, PI_MODEL_FLAGS)
-    ) {
-      extraArgs.push('--model', model);
+  if (['droid', 'opencode', 'pi', 'trae'].includes(provider.type)) {
+    const capability = getHeteroSelectorCapability(provider.type)?.effort;
+    const effort = capability?.resolve(provider);
+    if (effort && effort !== HETEROGENEOUS_AGENT_DEFAULT_SELECTION) {
+      for (const encoding of capability!.encodings) {
+        if (encoding.kind === 'config') {
+          if (!hasCliConfigKey(baseArgs, encoding.key))
+            extraArgs.push('-c', `${encoding.key}=${JSON.stringify(effort)}`);
+        } else if (!hasAnyCliFlag(baseArgs, encoding.flags)) {
+          extraArgs.push(encoding.flags.at(-1)!, effort);
+        }
+      }
     }
   }
 
@@ -834,6 +828,27 @@ export const buildHeteroExecArgs = (
   const baseArgs = provider.args ?? [];
   const wrapperArgs = baseArgs.map((arg) => `${HETERO_EXEC_AGENT_ARG_FLAG}=${arg}`);
   const selectorArgs: string[] = [];
+
+  if (['droid', 'kimi-code', 'opencode', 'pi', 'trae'].includes(provider.type)) {
+    const args = (buildHeteroSpawnArgs({ ...provider, model: undefined }) ?? []).map(
+      (arg) => `${HETERO_EXEC_AGENT_ARG_FLAG}=${arg}`,
+    );
+    if (
+      provider.model &&
+      provider.model !== HETEROGENEOUS_AGENT_DEFAULT_SELECTION &&
+      (provider.type === 'droid' ||
+        provider.type === 'trae' ||
+        !hasAnyCliFlag(baseArgs, OPENCODE_MODEL_FLAGS))
+    )
+      args.push('--model', provider.model);
+    if (
+      provider.type === 'kimi-code' &&
+      provider.effort &&
+      provider.effort !== HETEROGENEOUS_AGENT_DEFAULT_SELECTION
+    )
+      args.push('--effort', provider.effort);
+    return args.length ? args : undefined;
+  }
 
   if (provider.type === 'amp') {
     const mode = getExplicitAmpAgentMode(provider);
@@ -902,45 +917,12 @@ export const buildHeteroExecArgs = (
     }
   }
 
-  if (provider.type === 'opencode') {
-    const model = provider.model?.trim();
-    if (
-      model &&
-      model !== HETEROGENEOUS_AGENT_DEFAULT_SELECTION &&
-      !hasAnyCliFlag(baseArgs, OPENCODE_MODEL_FLAGS)
-    ) {
-      selectorArgs.push('--model', model);
-    }
-  }
-
   if (provider.type === 'cursor' || provider.type === 'devin') {
     const model = provider.model?.trim();
     if (
       model &&
       model !== HETEROGENEOUS_AGENT_DEFAULT_SELECTION &&
       !hasAnyCliFlag(baseArgs, CURSOR_MODEL_FLAGS)
-    ) {
-      selectorArgs.push('--model', model);
-    }
-  }
-
-  if (provider.type === 'kimi-code') {
-    const model = provider.model?.trim();
-    if (
-      model &&
-      model !== HETEROGENEOUS_AGENT_DEFAULT_SELECTION &&
-      !hasAnyCliFlag(baseArgs, KIMI_CODE_MODEL_FLAGS)
-    ) {
-      selectorArgs.push('--model', model);
-    }
-  }
-
-  if (provider.type === 'pi') {
-    const model = provider.model?.trim();
-    if (
-      model &&
-      model !== HETEROGENEOUS_AGENT_DEFAULT_SELECTION &&
-      !hasAnyCliFlag(baseArgs, PI_MODEL_FLAGS)
     ) {
       selectorArgs.push('--model', model);
     }
@@ -958,13 +940,6 @@ export const buildHeteroExecArgs = (
     const effort = getExplicitQoderReasoningEffort(provider);
     if (effort && !hasCliFlag(baseArgs, QODER_REASONING_EFFORT_FLAG)) {
       selectorArgs.push('--effort', effort);
-    }
-  }
-
-  if (provider.type === 'droid' || provider.type === 'trae') {
-    const model = provider.model?.trim();
-    if (model && model !== HETEROGENEOUS_AGENT_DEFAULT_SELECTION) {
-      selectorArgs.push('--model', model);
     }
   }
 

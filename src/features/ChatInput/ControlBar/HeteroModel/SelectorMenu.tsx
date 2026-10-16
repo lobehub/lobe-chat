@@ -1,5 +1,6 @@
 import type {
   HeterogeneousAgentMode,
+  HeterogeneousAgentModel,
   HeterogeneousProviderConfig,
   HeterogeneousReasoningEffort,
   HeterogeneousSpeedMode,
@@ -16,7 +17,7 @@ import {
   DropdownMenuTrigger,
   renderDropdownMenuItems,
 } from '@lobehub/ui/base-ui';
-import { memo, useCallback, useMemo } from 'react';
+import { memo, useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { buildSelectorSubmenu } from '../../components/buildSelectorSubmenu';
@@ -37,10 +38,11 @@ interface SelectorMenuProps {
 const SelectorMenu = memo<SelectorMenuProps>(
   ({ agentId, capability, patch, permissionReason, provider, topicPin, topicScoped }) => {
     const { t } = useTranslation('chat');
+    const [models, setModels] = useState<HeterogeneousAgentModel[]>();
 
     const view = useMemo(
-      () => buildSelectorView({ capability, provider, t, topicPin, topicScoped }),
-      [capability, provider, t, topicPin, topicScoped],
+      () => buildSelectorView({ capability, models, provider, t, topicPin, topicScoped }),
+      [capability, models, provider, t, topicPin, topicScoped],
     );
 
     const select = useCallback(
@@ -99,6 +101,7 @@ const SelectorMenu = memo<SelectorMenuProps>(
                   permissionReason={permissionReason}
                   type={provider.type as ListHeterogeneousAgentModelsParams['type']}
                   variant="submenu"
+                  onCatalog={setModels}
                   onSelect={(value) => select('model', value)}
                 />
               )}
