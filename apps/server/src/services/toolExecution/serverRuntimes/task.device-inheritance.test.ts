@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 
-import { createTaskRuntime } from '../task';
+import { createTaskRuntime } from './task';
 
 // Device-inheritance scenario tests for the runTask / runTasks dispatch
 // (source-layout §2: `Foo.<scenario>.test.ts`). Split out of task.test.ts so
@@ -62,7 +62,7 @@ vi.mock('@/server/services/verify/planGenerator', () => ({
 }));
 
 describe('runTask / runTasks device inheritance', () => {
-  it('inherits the dispatching run device via deviceId when the runtime context carries one', async () => {
+  it('inherits the dispatching run device via deviceId for a fresh topic when the runtime context carries one', async () => {
     const taskCaller = {
       run: vi.fn().mockResolvedValue({ operationId: 'op', topicId: 'tpc' }),
     };
@@ -79,6 +79,25 @@ describe('runTask / runTasks device inheritance', () => {
     expect(taskCaller.run).toHaveBeenCalledWith(
       expect.objectContaining({ deviceId: 'device-parent', id: 'T-1' }),
     );
+  });
+
+  it('does not inherit the device when continuing a topic: turnSetup keeps the existing topic binding', async () => {
+    const taskCaller = {
+      run: vi.fn().mockResolvedValue({ operationId: 'op', topicId: 'tpc' }),
+    };
+    const runtime = createTaskRuntime({
+      activeDeviceId: 'device-parent',
+      agentModel: { existsById: vi.fn() } as any,
+      taskCaller: taskCaller as any,
+      taskModel: {} as any,
+      taskService: {} as any,
+    });
+
+    await runtime.runTask({ continueTopicId: 'tpc_existing', identifier: 'T-1' });
+
+    const call = taskCaller.run.mock.calls[0][0] as Record<string, unknown>;
+    expect('deviceId' in call).toBe(false);
+    expect(call.continueTopicId).toBe('tpc_existing');
   });
 
   it('omits deviceId entirely when the dispatching run has no active device', async () => {

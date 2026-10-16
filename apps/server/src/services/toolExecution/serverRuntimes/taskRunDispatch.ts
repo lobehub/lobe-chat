@@ -33,18 +33,27 @@ export const runTaskDispatch = async (
   }
 
   try {
+    // A continuation keeps the topic it continues on: turnSetup restores the
+    // existing topic's metadata.boundDeviceId only when no device was
+    // requested (execAgent: "routing topic %s to its bound device"), and an
+    // explicit request would move an unpinned topic created on device A to
+    // device B, stranding its device-local cwd / CLI session. Fresh topics
+    // have no binding yet — that is where the dispatching run's device
+    // inheritance applies. Same carve-outs as the fresh path: the task's own
+    // pin (readTaskExecutionConfig) wins inside the runner, and an agent
+    // whose selection policy is `fixed` overrides the request at plan
+    // resolve.
+    const continueTopicId = args.continueTopicId;
+    const inheritDevice = !continueTopicId && !!activeDeviceId;
     const result = await deps.taskCaller.run({
-      continueTopicId: args.continueTopicId,
+      ...(continueTopicId ? { continueTopicId } : {}),
       // Inherit the dispatching run's device when it executes on one: a
       // task topic spawned from a device-routed session must reach the
       // same machine (its engagement/workspace paths live there), not
       // fall back to the assignee agent's stored target or the cloud
       // sandbox. Mirrors the callSubAgent device inheritance in
-      // executorHelpers.buildServerVirtualSubAgentRunner. The task's own
-      // pin (readTaskExecutionConfig) still wins inside the runner — this
-      // only fills the gap when the task pins nothing — and an agent
-      // whose selection policy is `fixed` overrides it at plan resolve.
-      ...(activeDeviceId ? { deviceId: activeDeviceId } : {}),
+      // executorHelpers.buildServerVirtualSubAgentRunner.
+      ...(inheritDevice ? { deviceId: activeDeviceId } : {}),
       id,
       prompt: args.prompt,
     });
@@ -80,8 +89,8 @@ export const runTasksDispatch = async (
 
   for (const [index, identifier] of identifiers.entries()) {
     try {
-      // Same device inheritance as runTask: a batch dispatched from a
-      // device-routed run lands its task topics on the same machine.
+      // Same device inheritance as runTask's fresh-topic path (runTasks never
+      // continues a topic, so the continuation carve-out does not apply).
       const result = await deps.taskCaller.run({
         ...(deps.activeDeviceId ? { deviceId: deps.activeDeviceId } : {}),
         id: identifier,
