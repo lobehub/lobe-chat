@@ -38,6 +38,8 @@ import { useTitleEnterToInstruction } from './useTitleEnterToInstruction';
 
 export interface CreateTaskContentProps {
   agentId?: string;
+  /** Initial priority, e.g. the Kanban priority column the modal was opened from. */
+  defaultPriority?: number;
   /**
    * Locks the assignee to `agentId` and hides the agent picker. Used on the
    * agent-scoped task list where every task belongs to that agent.
@@ -53,7 +55,14 @@ export interface CreateTaskContentProps {
 }
 
 const CreateTaskContent = memo<CreateTaskContentProps>(
-  ({ agentId, lockAssignee, onCreated, projectId, showInlineToggle = true }) => {
+  ({
+    agentId,
+    defaultPriority = 0,
+    lockAssignee,
+    onCreated,
+    projectId,
+    showInlineToggle = true,
+  }) => {
     const { t } = useTranslation('chat');
     const { close } = useModalContext();
     const { allowed: canCreateTask, reason } = usePermission('create_content');
@@ -65,7 +74,7 @@ const CreateTaskContent = memo<CreateTaskContentProps>(
     const activeWorkspaceId = useActiveWorkspaceId();
 
     const [title, setTitle] = useState('');
-    const [priority, setPriority] = useState(0);
+    const [priority, setPriority] = useState(defaultPriority);
     const [assigneeAgentId, setAssigneeAgentId] = useState<string | undefined>(agentId);
     const [assigneeUserId, setAssigneeUserId] = useState<string | undefined>();
     // Where this task will run, if not simply wherever the assignee runs.
