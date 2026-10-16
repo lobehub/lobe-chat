@@ -49,6 +49,7 @@ import { labPreferSelectors } from '@/store/user/selectors';
 
 import GoalSection from '../GoalSection';
 import ProgressSection from '../ProgressSection';
+import DeviceStatusSection from './DeviceStatusSection';
 import { collectChangeStats, isLinkedWorktreeCheckout, shouldShowCiLabel } from './overviewData';
 import OverviewHeader from './OverviewHeader';
 import { ChevronRight, OverviewRow, PickerGlyph, rowStyles } from './OverviewRow';
@@ -418,6 +419,9 @@ const Overview = memo<OverviewProps>(
             </Flexbox>
           </>
         )}
+
+        {/* The bound machine's live state, as its device card shows it. */}
+        {deviceId && <DeviceStatusSection active={active} deviceId={deviceId} />}
 
         <TopicBackgroundActivity topicId={topicId} />
         {environmentAvailable && !workingDirectory && (
