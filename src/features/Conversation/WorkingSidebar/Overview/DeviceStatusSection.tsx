@@ -1,9 +1,10 @@
 'use client';
 
 import type { DeviceListItem, DeviceMetricSeries } from '@lobechat/types';
-import { Flexbox } from '@lobehub/ui';
-import { Text } from '@lobehub/ui/base-ui';
+import { Flexbox, Icon } from '@lobehub/ui';
+import { Button, Skeleton, Text } from '@lobehub/ui/base-ui';
 import { createStaticStyles, cssVar } from 'antd-style';
+import { RefreshCwIcon, TriangleAlertIcon } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -17,6 +18,7 @@ import { latestUsageView } from '@/features/DeviceManager/DeviceHealth/viewState
 import { getDeviceIcon, getPlatformLabel } from '@/features/DeviceManager/getDeviceIcon';
 import { useDeviceActivityText } from '@/features/DeviceManager/useDeviceActivityText';
 
+import { OverviewRow } from './OverviewRow';
 import { sectionStyles } from './sectionStyles';
 import { useBoundDevice } from './useBoundDevice';
 
@@ -90,10 +92,44 @@ interface DeviceStatusSectionProps {
  * machine doing this work healthy and busy?" without leaving the conversation.
  */
 const DeviceStatusSection = memo<DeviceStatusSectionProps>(({ active, deviceId }) => {
-  const device = useBoundDevice(deviceId, active);
+  const { t } = useTranslation('chat');
+  const { t: tCommon } = useTranslation('common');
+  const bound = useBoundDevice(deviceId, active);
+  const device = bound.status === 'ready' ? bound.device : undefined;
   const { data, error } = useDeviceMetricSeries(deviceId, active && !!device);
 
-  // Not in the list yet (still loading, or removed): nothing to describe.
+  if (bound.status === 'loading')
+    return (
+      <Flexbox className={sectionStyles.section}>
+        <div className={sectionStyles.skeleton}>
+          <Skeleton.Text rows={2} />
+        </div>
+      </Flexbox>
+    );
+
+  // A failed read is not a removed device: say so and offer a retry.
+  if (bound.status === 'error')
+    return (
+      <Flexbox className={sectionStyles.section}>
+        <OverviewRow
+          danger
+          icon={TriangleAlertIcon}
+          iconColor={cssVar.colorError}
+          value={t('workingPanel.overview.deviceError')}
+          trailing={
+            <Button
+              icon={<Icon icon={RefreshCwIcon} size={12} />}
+              size={'small'}
+              onClick={bound.retry}
+            >
+              {tCommon('retry')}
+            </Button>
+          }
+        />
+      </Flexbox>
+    );
+
+  // Removed, or not visible in this workspace: nothing to describe.
   if (!device) return null;
 
   return <DeviceStatusContent data={data} device={device} error={error} />;
