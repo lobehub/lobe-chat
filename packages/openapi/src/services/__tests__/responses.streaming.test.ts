@@ -199,7 +199,12 @@ describe('ResponsesService function call outputs', () => {
       interruption: { reason: 'client_tool_execution' },
       messages: [],
       pendingToolsCalling: [
-        { apiName: 'get_weather', arguments: '{"city":"Hangzhou"}', id: 'call_9' },
+        {
+          apiName: 'get_weather',
+          arguments: '{"city":"Hangzhou"}',
+          id: 'call_9',
+          identifier: 'lobe-client-fn',
+        },
       ],
       status: 'waiting_for_async_tool',
     });

@@ -22,6 +22,7 @@ import type {
 } from '../types/responses.type';
 import {
   executeResponseRun,
+  parkedOnToolsReason,
   pendingFunctionCallItems,
   resumeParkedClientTools,
 } from './client-tool-resume.responses';
@@ -351,9 +352,8 @@ export class ResponsesService extends BaseService {
       const { output, outputText } = this.extractOutputItems(finalState, responseId);
       const usage = this.extractUsage(finalState);
 
-      const isClientToolInterrupt =
-        finalState.status === 'waiting_for_async_tool' &&
-        finalState.interruption?.reason === 'client_tool_execution';
+      const parkedReason = parkedOnToolsReason(finalState);
+      const isClientToolInterrupt = !!parkedReason;
       if (isClientToolInterrupt)
         output.push(...pendingFunctionCallItems(finalState, output, responseId));
 
@@ -361,7 +361,7 @@ export class ResponsesService extends BaseService {
         completedAt: isClientToolInterrupt ? null : Math.floor(Date.now() / 1000),
         createdAt,
         id: responseId,
-        incompleteDetails: isClientToolInterrupt ? { reason: 'client_tool_execution' } : undefined,
+        incompleteDetails: parkedReason ? { reason: parkedReason } : undefined,
         output,
         outputText,
         params,
@@ -788,17 +788,16 @@ export class ResponsesService extends BaseService {
         ? this.extractOutputItems(finalState, responseId)
         : { output: [], outputText: accumulatedText };
 
-      // Determine if agent was interrupted for client tool execution
-      const isClientToolInterrupt =
-        finalState?.status === 'waiting_for_async_tool' &&
-        finalState?.interruption?.reason === 'client_tool_execution';
+      // Determine if the agent stopped to wait on tools (the caller's, or a mixed batch)
+      const parkedReason = parkedOnToolsReason(finalState);
+      const isClientToolInterrupt = !!parkedReason;
 
       if (isClientToolInterrupt) {
         yield {
           response: {
             ...response,
             completed_at: null,
-            incomplete_details: { reason: 'client_tool_execution' },
+            incomplete_details: { reason: parkedReason },
             output: fullOutput.output,
             output_text: fullOutput.outputText || accumulatedText,
             status: 'incomplete' as any,
