@@ -1,4 +1,5 @@
 import type { HeterogeneousAgentModel } from '@lobechat/types';
+import { getAnyCliFlagValue, stripCliFlags } from '@lobechat/types';
 import { isRecord } from '@lobechat/utils/object';
 
 import type { AskUserBridge, InterventionAnswer } from '../askUser/AskUserBridge';
@@ -47,6 +48,8 @@ export type DroidAcpPromptBlock = DroidAcpImagePromptBlock | DroidAcpTextPromptB
  */
 export const buildDroidAcpArgs = (extraArgs: string[] = []): string[] => {
   const safeArgs: string[] = [];
+  // Reasoning is applied after ACP model selection, not as an ignored CLI flag.
+  extraArgs = stripCliFlags(extraArgs, ['-r', '--reasoning-effort']) ?? [];
 
   for (let index = 0; index < extraArgs.length; index += 1) {
     const argument = extraArgs[index]!;
@@ -316,6 +319,7 @@ export class DroidAcpSession extends AcpAgentSession<
     this.options.onSessionId(sessionId);
 
     const model = await this.applyInitialModel(sessionId, sessionResult);
+    await this.applyInitialEffort(sessionId, sessionResult);
     if (model) {
       this.pipeline.configureSession({ model });
       this.options.onModel?.(model);
@@ -401,6 +405,41 @@ export class DroidAcpSession extends AcpAgentSession<
     return buildDroidAcpPrompt(prompt as AgentPromptInput, this.options.inputOptions);
   }
 
+  private async applyInitialEffort(
+    sessionId: string,
+    result: DroidAcpSessionResult,
+  ): Promise<void> {
+    const effort = getAnyCliFlagValue(this.options.args, ['-r', '--reasoning-effort']);
+    if (!effort || effort === 'default') return;
+    const option = Array.isArray(result.configOptions)
+      ? result.configOptions
+          .filter(isRecord)
+          .find((value) => value.id === 'reasoning_effort' || value.category === 'thought_level')
+      : undefined;
+    if (!option || typeof option.id !== 'string') {
+      throw new Error(
+        'Factory Droid ACP did not expose reasoning effort; update Droid or use Default',
+      );
+    }
+    const values = Array.isArray(option.options)
+      ? option.options.flatMap((value) =>
+          isRecord(value) && Array.isArray(value.options) ? value.options : [value],
+        )
+      : [];
+    if (!values.some((value) => isRecord(value) && value.value === effort)) {
+      throw new Error(
+        `Factory Droid ACP reasoning effort is unavailable for the selected model: ${effort}`,
+      );
+    }
+    if (option.currentValue !== effort) {
+      await this.client.request('session/set_config_option', {
+        configId: option.id,
+        sessionId,
+        value: effort,
+      });
+    }
+  }
+
   private async applyInitialModel(
     sessionId: string,
     sessionResult: DroidAcpSessionResult,
@@ -428,6 +467,8 @@ export class DroidAcpSession extends AcpAgentSession<
         value: selected.id,
       },
     );
+    // Changing models can change the available reasoning levels.
+    sessionResult.configOptions = response?.configOptions;
     return (
       parseDroidAcpModelCatalog({ configOptions: response?.configOptions })?.currentModelId ??
       selected.id

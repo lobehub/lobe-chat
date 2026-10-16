@@ -46,6 +46,7 @@ import type {
 import {
   AgentRuntimeErrorType,
   buildHeteroSpawnArgs,
+  buildHeteroSpawnEnv,
   HETEROGENEOUS_AGENT_DEFAULT_SELECTION,
   normalizeHeterogeneousProviderConfig,
   ThreadStatus,
@@ -2019,9 +2020,8 @@ export const executeHeterogeneousAgent = async (
         topicId: context.topicId,
       }),
       ...quotaAccountPlan.env,
-      // The agent's own env is the most specific choice and keeps winning —
-      // over both provenance and account routing.
-      ...heterogeneousProvider.env,
+      // Provider environment, including Kimi's process-local effort override.
+      ...buildHeteroSpawnEnv(heterogeneousProvider),
     };
     if (adapterType === 'deepseek-harness' && !sessionEnv.DEEPSEEK_API_KEY) {
       const deepSeekAuth = createPayloadWithKeyVaults('deepseek');

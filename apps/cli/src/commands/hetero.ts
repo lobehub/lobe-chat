@@ -35,6 +35,7 @@ import {
   spawnAgent,
   spawnDshAcpSession,
 } from '@lobechat/heterogeneous-agents/spawn';
+import { buildHeteroSpawnArgs, buildHeteroSpawnEnv } from '@lobechat/types';
 import { isRecord } from '@lobechat/utils/object';
 import type { Command } from 'commander';
 
@@ -87,8 +88,6 @@ const SUPPORTED_AGENT_TITLES = [
 const SUPPORTED_AGENT_COMMANDS = HETEROGENEOUS_AGENT_CONFIGS.map(
   ({ defaultCommand }) => `\`${defaultCommand}\``,
 ).join(', ');
-const CODEX_REASONING_EFFORT_CONFIG_KEY = 'model_reasoning_effort';
-const CODEX_SERVICE_TIER_CONFIG_KEY = 'service_tier';
 
 /**
  * Runtime selection registry for `lh hetero exec` — the CLI counterpart of
@@ -248,43 +247,14 @@ const collectAgentArg = (value: string, previous: string[] = []): string[] => [.
 const buildExtraArgs = (
   options: Pick<ExecOptions, 'agentArg' | 'effort' | 'mode' | 'model' | 'speed' | 'type'>,
 ): string[] | undefined => {
-  const selectorArgs =
-    options.type === 'amp'
-      ? [...(options.mode ? ['--mode', options.mode] : [])]
-      : options.type === 'droid' || options.type === 'trae'
-        ? []
-        : options.type === 'codex'
-          ? [
-              ...(options.model ? ['--model', options.model] : []),
-              ...(options.effort
-                ? ['-c', `${CODEX_REASONING_EFFORT_CONFIG_KEY}="${options.effort}"`]
-                : []),
-              ...(options.speed
-                ? ['-c', `${CODEX_SERVICE_TIER_CONFIG_KEY}="${options.speed}"`]
-                : []),
-            ]
-          : options.type === 'claude-code' ||
-              options.type === 'codebuddy' ||
-              options.type === 'grok-build'
-            ? [
-                ...(options.model ? ['--model', options.model] : []),
-                ...(options.effort ? ['--effort', options.effort] : []),
-              ]
-            : options.type === 'cursor' ||
-                options.type === 'devin' ||
-                options.type === 'kimi-code' ||
-                options.type === 'opencode' ||
-                options.type === 'pi'
-              ? [...(options.model ? ['--model', options.model] : [])]
-              : options.type === 'qoder'
-                ? [
-                    ...(options.model ? ['--model', options.model] : []),
-                    ...(options.effort ? ['--reasoning-effort', options.effort] : []),
-                  ]
-                : [];
-  const extraArgs = [...(options.agentArg ?? []), ...selectorArgs];
-
-  return extraArgs.length > 0 ? extraArgs : undefined;
+  return buildHeteroSpawnArgs({
+    args: options.agentArg,
+    effort: options.effort,
+    mode: options.mode as 'default' | 'low' | 'medium' | 'high' | 'ultra' | undefined,
+    model: options.model,
+    speed: options.speed as 'default' | 'fast' | undefined,
+    type: options.type,
+  });
 };
 
 const readStdin = async (): Promise<string> => {
@@ -1247,10 +1217,14 @@ const exec = async (options: ExecOptions): Promise<void> => {
   // a broken `codex` shim shadows PATH — so sandbox/terminal runs no longer
   // ENOENT on a stale global install. Custom commands are used verbatim.
   const resolvedCommand = await resolveHeteroSpawnCommand(agentType, options.command);
-  const commandEnv = buildAgentProcessEnv({
-    operationId: serverIngest ? operationId : undefined,
-    pathEnv: resolvedCommand.pathEnv,
-    topicId: options.topic,
+  const commandEnv = buildHeteroSpawnEnv({
+    type: options.type,
+    effort: options.effort,
+    env: buildAgentProcessEnv({
+      operationId: serverIngest ? operationId : undefined,
+      pathEnv: resolvedCommand.pathEnv,
+      topicId: options.topic,
+    }),
   });
   // Devin ACP's `--permission-mode` is a global flag; default to bypass so
   // headless connected-device runs do not block on permission prompts. The mode

@@ -5,10 +5,14 @@ import { MODEL_LABELS } from './modelOptions';
 
 const EFFORT_LABEL_KEYS = {
   [HETEROGENEOUS_AGENT_DEFAULT_SELECTION]: 'heteroAgent.modelSelector.default',
+  dynamic: 'heteroAgent.modelSelector.reasoning.dynamic',
   high: 'heteroAgent.modelSelector.reasoning.high',
   low: 'heteroAgent.modelSelector.reasoning.low',
   max: 'heteroAgent.modelSelector.reasoning.max',
   medium: 'heteroAgent.modelSelector.reasoning.medium',
+  minimal: 'heteroAgent.modelSelector.reasoning.minimal',
+  none: 'heteroAgent.modelSelector.reasoning.off',
+  off: 'heteroAgent.modelSelector.reasoning.off',
   ultra: 'heteroAgent.modelSelector.reasoning.ultra',
   xhigh: 'heteroAgent.modelSelector.reasoning.xhigh',
 } as const satisfies Record<HeterogeneousReasoningEffort, string>;
@@ -31,12 +35,12 @@ const MODE_LABEL_KEYS = {
 } as const satisfies Record<HeterogeneousAgentMode, string>;
 
 type EffortLabelKey =
-  | (typeof CODEX_EFFORT_LABEL_KEYS)[HeterogeneousReasoningEffort]
-  | (typeof EFFORT_LABEL_KEYS)[HeterogeneousReasoningEffort];
+  | (typeof CODEX_EFFORT_LABEL_KEYS)[keyof typeof CODEX_EFFORT_LABEL_KEYS]
+  | (typeof EFFORT_LABEL_KEYS)[keyof typeof EFFORT_LABEL_KEYS];
 
 export const getEffortLabelKeys = (
   type: string | undefined,
-): Record<HeterogeneousReasoningEffort, EffortLabelKey> =>
+): Partial<Record<HeterogeneousReasoningEffort, EffortLabelKey>> =>
   type === 'codex' ? CODEX_EFFORT_LABEL_KEYS : EFFORT_LABEL_KEYS;
 
 export const getModeLabelKey = (mode: HeterogeneousAgentMode) => MODE_LABEL_KEYS[mode];

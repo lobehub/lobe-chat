@@ -1,9 +1,14 @@
 import { describe, expect, it } from 'vitest';
 
 import type { HeterogeneousProviderConfig } from './agencyConfig';
-import { buildHeteroSpawnArgs } from './agencyConfig';
+import {
+  applyTopicModelToHeterogeneousProvider,
+  buildHeteroExecArgs,
+  buildHeteroSpawnArgs,
+} from './agencyConfig';
 import {
   applyHeteroSelection,
+  buildHeteroSpawnEnv,
   CODEX_SERVER_DEFAULT_CUSTOM_MODELS,
   getHeteroSelectorCapability,
   HETEROGENEOUS_AGENT_DEFAULT_SELECTION,
@@ -52,7 +57,7 @@ describe('selector availability', () => {
       'high',
       'xhigh',
     ]);
-    expect(getHeteroSelectorCapability('opencode')?.effort).toBeUndefined();
+    expect(getHeteroSelectorCapability('opencode')?.effort?.catalog).toBe(true);
     expect(getHeteroSelectorCapability('qoder')?.effort).toBeDefined();
     expect(getHeteroSelectorCapability('codex')?.model?.source).toBe('catalog');
     expect(getHeteroSelectorCapability('codebuddy')?.model?.source).toBe('catalog');
@@ -81,6 +86,45 @@ describe('selector availability', () => {
 });
 
 describe('applyHeteroSelection', () => {
+  it.each([
+    ['pi', ['--thinking', 'high']],
+    ['trae', ['-c', 'model_reasoning_effort="high"']],
+    ['opencode', ['--variant', 'high']],
+    ['droid', ['--reasoning-effort', 'high']],
+  ])(
+    'forwards %s effort through local and device launches, with Default restoring native settings',
+    (type, args) => {
+      const provider = { effort: 'high', type };
+      expect(buildHeteroSpawnArgs(provider)).toEqual(args);
+      expect(buildHeteroExecArgs(provider)).toEqual(args.map((arg) => `--agent-arg=${arg}`));
+      const manual = { args: [...args, '--other'], effort: 'low', type };
+      expect(buildHeteroSpawnArgs(manual)).toEqual(manual.args);
+      const reset = applyTopicModelToHeterogeneousProvider(manual, { effort: 'default' });
+      expect(buildHeteroSpawnArgs(reset)).toEqual(['--other']);
+    },
+  );
+
+  it('keeps custom OpenCode variants through topic pins and clears contradictory flags', () => {
+    const config = applyTopicModelToHeterogeneousProvider(
+      { type: 'opencode', args: ['--variant=high'] },
+      { effort: 'team-budget' },
+    );
+    expect(buildHeteroSpawnArgs(config)).toEqual(['--variant', 'team-budget']);
+  });
+
+  it('sets Kimi effort only in the child environment and preserves Default', () => {
+    const provider = { effort: 'max', env: { OTHER: 'value' }, type: 'kimi-code' };
+    expect(buildHeteroSpawnEnv(provider)).toEqual({
+      OTHER: 'value',
+      KIMI_MODEL_THINKING_EFFORT: 'max',
+    });
+    expect(provider.env).toEqual({ OTHER: 'value' });
+    expect(buildHeteroSpawnArgs(provider)).toBeUndefined();
+    expect(buildHeteroExecArgs(provider)).toEqual(['--effort', 'max']);
+    expect(buildHeteroSpawnEnv({ ...provider, effort: 'default' })).toEqual({ OTHER: 'value' });
+    expect(buildHeteroSpawnEnv({ ...provider, type: 'pi' })).toEqual({ OTHER: 'value' });
+  });
+
   it('passes the selection through untouched for providers with no selector', () => {
     expect(
       applyHeteroSelection({ args: ['--model', 'x'], type: 'openclaw' }, { model: 'y' }),

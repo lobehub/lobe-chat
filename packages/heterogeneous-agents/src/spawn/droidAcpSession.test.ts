@@ -226,6 +226,91 @@ describe('Factory Droid ACP helpers', () => {
 });
 
 describe('DroidAcpSession', () => {
+  it.each([undefined, 'saved-session'])(
+    'sets advertised effort after selecting the model (resume=%s)',
+    async (resumeSessionId) => {
+      const model = {
+        id: 'model',
+        type: 'select',
+        currentValue: 'old',
+        options: [{ value: 'old' }, { value: 'new' }],
+      };
+      const fake = createAcpProcess({
+        onMessage: (message, { send }) => {
+          if (message.method === 'session/new' || message.method === 'session/load') {
+            send({
+              id: message.id,
+              result: { sessionId: 'native-session', configOptions: [model] },
+            });
+            return true;
+          }
+          if (
+            message.method === 'session/set_config_option' &&
+            message.params?.configId === 'model'
+          ) {
+            send({
+              id: message.id,
+              result: {
+                configOptions: [
+                  { ...model, currentValue: 'new' },
+                  {
+                    id: 'reasoning_effort',
+                    type: 'select',
+                    currentValue: 'low',
+                    options: [{ value: 'low' }, { value: 'max' }],
+                  },
+                ],
+              },
+            });
+            return true;
+          }
+        },
+      });
+      spawnMock.mockReturnValue(fake.child);
+      vi.spyOn(process, 'kill').mockImplementation(() => true);
+      await new DroidAcpSession(
+        createSessionOptions({
+          args: ['--reasoning-effort=max'],
+          initialModel: 'new',
+          resumeSessionId,
+        }),
+      ).run();
+      const updates = fake.requests.filter(
+        (request) => request.method === 'session/set_config_option',
+      );
+      expect(updates.map((request) => request.params)).toEqual([
+        { configId: 'model', sessionId: 'native-session', value: 'new' },
+        { configId: 'reasoning_effort', sessionId: 'native-session', value: 'max' },
+      ]);
+      expect(fake.requests.at(-1)?.method).toBe('session/prompt');
+      expect(spawnMock.mock.calls[0][1]).toEqual(['exec', '--output-format', 'acp']);
+    },
+  );
+
+  it('does not send a prompt when the selected model rejects the requested effort', async () => {
+    const fake = createAcpProcess({
+      onMessage: (message, { send }) => {
+        if (message.method !== 'session/new') return;
+        send({
+          id: message.id,
+          result: {
+            sessionId: 'native-session',
+            configOptions: [
+              { id: 'reasoning_effort', options: [{ value: 'low' }], currentValue: 'low' },
+            ],
+          },
+        });
+        return true;
+      },
+    });
+    spawnMock.mockReturnValue(fake.child);
+    vi.spyOn(process, 'kill').mockImplementation(() => true);
+    await expect(
+      new DroidAcpSession(createSessionOptions({ args: ['-r', 'max'] })).run(),
+    ).rejects.toThrow('reasoning effort is unavailable');
+    expect(fake.requests.some((request) => request.method === 'session/prompt')).toBe(false);
+  });
+
   it('runs the ACP v1 lifecycle and streams the current prompt updates', async () => {
     const fake = createAcpProcess({
       onMessage: (message, { send }) => {

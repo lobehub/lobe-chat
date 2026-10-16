@@ -153,17 +153,33 @@ export const parseGrokBuildModelCatalog = (stdout: string): HeterogeneousAgentMo
 export const parseOpenCodeModelCatalog = (stdout: string): HeterogeneousAgentModel[] => {
   const seen = new Set<string>();
   const models: HeterogeneousAgentModel[] = [];
+  // v1 --verbose emits an ID followed by pretty-printed JSON, not JSONL.
+  const lines = stdout.split(/\r?\n/);
 
-  for (const rawLine of stdout.split(/\r?\n/)) {
-    const id = rawLine.trim();
+  for (let index = 0; index < lines.length; index += 1) {
+    const id = lines[index].trim();
     const separatorIndex = id.indexOf('/');
     if (!OPENCODE_MODEL_ID_PATTERN.test(id) || separatorIndex <= 0 || seen.has(id)) continue;
 
+    let reasoningEfforts: string[] | undefined;
+    if (lines[index + 1]?.trim() === '{') {
+      let end = index + 2;
+      while (end < lines.length && !OPENCODE_MODEL_ID_PATTERN.test(lines[end].trim())) end += 1;
+      try {
+        const metadata: unknown = JSON.parse(lines.slice(index + 1, end).join('\n'));
+        if (isRecord(metadata))
+          reasoningEfforts = isRecord(metadata.variants) ? Object.keys(metadata.variants) : [];
+      } catch {
+        // Older/plain catalogs still provide usable model IDs, not invented variants.
+      }
+      index = end - 1;
+    }
     seen.add(id);
     models.push({
       id,
       modelId: id.slice(separatorIndex + 1),
       providerId: id.slice(0, separatorIndex),
+      ...(reasoningEfforts ? { reasoningEfforts } : {}),
     });
   }
 
@@ -208,6 +224,19 @@ export const parseKimiCodeModelCatalog = (stdout: string): HeterogeneousAgentMod
     if (!alias || !isRecord(entry) || typeof entry.model !== 'string' || !entry.model) continue;
 
     const separatorIndex = alias.indexOf('/');
+    const provider =
+      isRecord(result.providers) && typeof entry.provider === 'string'
+        ? result.providers[entry.provider]
+        : undefined;
+    const efforts =
+      (isRecord(entry.overrides)
+        ? (entry.overrides.supportEfforts ?? entry.overrides.support_efforts)
+        : undefined) ??
+      entry.supportEfforts ??
+      entry.support_efforts;
+    // The env override cannot turn thinking on when the user's config disables it.
+    const alwaysThinking =
+      Array.isArray(entry.capabilities) && entry.capabilities.includes('always_thinking');
     models.push({
       id: alias,
       ...(typeof entry.displayName === 'string' && entry.displayName
@@ -215,6 +244,13 @@ export const parseKimiCodeModelCatalog = (stdout: string): HeterogeneousAgentMod
         : undefined),
       modelId: entry.model,
       providerId: separatorIndex > 0 ? alias.slice(0, separatorIndex) : alias,
+      ...(isRecord(provider) && provider.type === 'kimi' && alwaysThinking && Array.isArray(efforts)
+        ? {
+            reasoningEfforts: efforts.filter(
+              (value): value is string => typeof value === 'string' && !!value,
+            ),
+          }
+        : {}),
     });
   }
 
@@ -348,19 +384,38 @@ export const listHeterogeneousAgentModels = async (
         ? ['--help']
         : params.type === 'devin'
           ? ['models', 'list', '--format', 'json']
-          : params.type === 'grok-build' || params.type === 'opencode'
-            ? ['models']
-            : params.type === 'kimi-code'
-              ? ['provider', 'list', '--json']
-              : ['--list-models'];
+          : params.type === 'opencode'
+            ? ['models', '--verbose']
+            : params.type === 'grok-build'
+              ? ['models']
+              : params.type === 'kimi-code'
+                ? ['provider', 'list', '--json']
+                : ['--list-models'];
     const spawnPlan = await resolveCliSpawnPlan(resolved.command, args);
-    const { stderr, stdout } = await execFilePromise(spawnPlan.command, spawnPlan.args, {
+    const execOptions = {
       cwd: params.cwd,
-      encoding: 'utf8',
+      encoding: 'utf8' as const,
       env: env as NodeJS.ProcessEnv,
       maxBuffer: MODEL_CATALOG_MAX_BUFFER,
       timeout: MODEL_CATALOG_TIMEOUT_MS,
       windowsHide: true,
+    };
+    const { stderr, stdout } = await execFilePromise(
+      spawnPlan.command,
+      spawnPlan.args,
+      execOptions,
+    ).catch(async (error: unknown) => {
+      // Newer OpenCode builds may only expose plain model IDs. Keep model
+      // selection working, but do not invent unavailable variant metadata.
+      const message = [getErrorRecord(error).message, getErrorRecord(error).stderr].join('\n');
+      if (
+        params.type !== 'opencode' ||
+        !/unknown|unrecognized|unexpected/i.test(message) ||
+        !message.includes('verbose')
+      )
+        throw error;
+      const fallback = await resolveCliSpawnPlan(resolved.command, ['models']);
+      return execFilePromise(fallback.command, fallback.args, execOptions);
     });
 
     if (params.type === 'codebuddy') {
