@@ -3,7 +3,15 @@ import { type MenuProps } from '@lobehub/ui';
 import { Icon } from '@lobehub/ui';
 import { confirmModal, toast, Upload } from '@lobehub/ui/base-ui';
 import { css, cx } from 'antd-style';
-import { Archive, HardDriveDownload, Hash, Import, LucideCheck, Trash } from 'lucide-react';
+import {
+  Archive,
+  FolderPlusIcon,
+  HardDriveDownload,
+  Hash,
+  Import,
+  LucideCheck,
+  Trash,
+} from 'lucide-react';
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -19,6 +27,7 @@ import { systemStatusSelectors } from '@/store/global/selectors';
 import { useUserStore } from '@/store/user';
 import { labPreferSelectors, userProfileSelectors } from '@/store/user/selectors';
 
+import { useAddFolderAction } from './useAddFolderAction';
 import { getMergedPullRequestTopics } from './utils/mergedPullRequestTopics';
 
 const hotArea = css`
@@ -45,6 +54,7 @@ export const useTopicActionsDropdownMenu = (
   const isWorkspaceOwner = useIsWorkspaceOwner();
   const currentUserId = useUserStore(userProfileSelectors.userId);
   const { allowed: canCreateTopic } = usePermission('create_content');
+  const addFolder = useAddFolderAction();
   const { allowed: canEditTopic } = usePermission('edit_own_content');
 
   const topics = useChatStore(topicSelectors.currentTopics);
@@ -132,6 +142,19 @@ export const useTopicActionsDropdownMenu = (
       {
         type: 'divider' as const,
       },
+      // starting a conversation in a picked folder is a topic action, so it sits
+      // with the other actions instead of taking a header icon of its own
+      ...(addFolder.canAddFolder
+        ? [
+            {
+              disabled: addFolder.disabled,
+              icon: <Icon icon={FolderPlusIcon} />,
+              key: 'addFolder',
+              label: addFolder.label,
+              onClick: addFolder.run,
+            },
+          ]
+        : []),
       {
         disabled: !canCreateTopic,
         icon: <Icon icon={Import} />,
@@ -235,6 +258,10 @@ export const useTopicActionsDropdownMenu = (
     topicPageSize,
     updateSystemStatus,
     handleImport,
+    addFolder.canAddFolder,
+    addFolder.disabled,
+    addFolder.label,
+    addFolder.run,
     canCreateTopic,
     canEditTopic,
     onUploadClose,
