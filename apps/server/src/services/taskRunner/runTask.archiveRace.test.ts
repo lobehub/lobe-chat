@@ -58,6 +58,7 @@ describe('TaskRunnerService.runTask vs. archiving', () => {
       getReviewConfig: vi.fn().mockReturnValue(undefined),
       incrementTopicCount: vi.fn(),
       findById: vi.fn().mockResolvedValue({ ...task, status: 'running' }),
+      getUnlockedTasksForMany: vi.fn().mockResolvedValue([]),
       lockForUpdate: vi.fn().mockResolvedValue(true),
       resolve: vi.fn().mockResolvedValue({ ...task }),
       update: vi.fn(),
@@ -114,5 +115,30 @@ describe('TaskRunnerService.runTask vs. archiving', () => {
       { error: null },
     );
     expect(mocks.execAgent).not.toHaveBeenCalled();
+  });
+
+  describe('completion cascade', () => {
+    it('leaves an archived dependent idle instead of marking it failed', async () => {
+      taskModel.getUnlockedTasksForMany.mockResolvedValue([
+        { ...task, archivedAt: new Date(), id: 'task-2', identifier: 'T-2' },
+      ]);
+
+      const result = await new TaskRunnerService(db, 'user-1').cascadeOnCompletionMany(['task-0']);
+
+      expect(result).toEqual({ failed: [], paused: [], started: [] });
+      expect(taskModel.updateStatus).not.toHaveBeenCalled();
+      expect(mocks.execAgent).not.toHaveBeenCalled();
+    });
+
+    it('treats a dependent archived after discovery as skipped, not failed', async () => {
+      taskModel.getUnlockedTasksForMany.mockResolvedValue([{ ...task, id: 'task-2' }]);
+      // The runner re-reads the task and finds it archived.
+      taskModel.resolve.mockResolvedValue({ ...task, archivedAt: new Date(), id: 'task-2' });
+
+      const result = await new TaskRunnerService(db, 'user-1').cascadeOnCompletionMany(['task-0']);
+
+      expect(result.failed).toEqual([]);
+      expect(taskModel.updateStatus).not.toHaveBeenCalled();
+    });
   });
 });

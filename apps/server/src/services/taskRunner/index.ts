@@ -508,6 +508,8 @@ export class TaskRunnerService {
     const result: CascadeResult = { failed: [], paused: [], started: [] };
 
     for (const task of unlocked) {
+      // An archived dependent stays idle; restoring it leaves it ready to run.
+      if (task.archivedAt) continue;
       if (await this.shouldHoldForCheckpoint(task)) {
         await this.taskModel.updateStatus(task.id, 'paused');
         result.paused.push(task.identifier);
@@ -518,6 +520,8 @@ export class TaskRunnerService {
         await this.runTask({ taskId: task.id });
         result.started.push(task.identifier);
       } catch (error) {
+        // Archived after discovery: the runner refused it, nothing failed.
+        if (error instanceof TRPCError && error.code === 'PRECONDITION_FAILED') continue;
         const message = error instanceof Error ? error.message : 'Failed to start task';
         log('cascadeOnCompletion: runTask failed for %s: %s', task.identifier, message);
         // Best-effort: mark as paused so the user can see why it didn't run.
