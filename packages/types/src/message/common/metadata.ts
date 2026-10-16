@@ -266,6 +266,7 @@ export const MessageMetadataSchema = ModelUsageSchema.merge(ModelPerformanceSche
   // NOT strip them from writes going through UpdateMessageParamsSchema /
   // CreateMessageParamsSchema (the renderer executor's `messageService` path).
   heteroMessageId: z.string().optional(),
+  codexTurnId: z.string().optional(),
   heteroSessionId: z.string().optional(),
   // Durable watermark for replace-only heterogeneous tool-state snapshots.
   // The pair is scoped by operation so a later run may restart seq at 1.
@@ -287,6 +288,7 @@ export const MessageMetadataSchema = ModelUsageSchema.merge(ModelPerformanceSche
   performance: ModelPerformanceSchema.optional(),
   reactions: z.array(EmojiReactionSchema).optional(),
   scope: z.string().optional(),
+  selectedSkillIds: z.array(z.string()).optional(),
   // External-signal lineage for Monitor-style callback turns ().
   signal: MessageSignalSchema.optional(),
   steer: z.boolean().optional(),
@@ -363,6 +365,8 @@ export interface MessageMetadata {
    * Real platform author of a bot-channel user message; see `BotSenderMetadata`.
    */
   botSender?: BotSenderMetadata;
+  /** Native Codex turn, distinct from an assistant item inside that turn. */
+  codexTurnId?: string;
   /**
    * Message collapse state
    * true: collapsed, false/undefined: expanded
@@ -523,6 +527,11 @@ export interface MessageMetadata {
    * See MessageMapScope for available values
    */
   scope?: string;
+  /**
+   * Skills the user selected for this user turn, injected with their bodies
+   * on this and every later turn of the topic by the server runtime.
+   */
+  selectedSkillIds?: string[];
   /**
    * External-signal lineage for messages produced as reactive replies
    * to an out-of-band trigger (Monitor stdout push, webhook callback,

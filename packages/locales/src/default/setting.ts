@@ -518,6 +518,17 @@ export default {
   'heterogeneousStatus.cloud.tokenLabel': 'Claude Code Token',
   'heterogeneousStatus.cloud.tokenDesc':
     'Your Claude Code OAuth token. Saved securely to Credentials once submitted. Run `claude setup-token` in your terminal to generate one.',
+  'heterogeneousStatus.cloud.tokenLookupError':
+    "Couldn't check whether this token is available here. Retry to load it again.",
+  'heterogeneousStatus.cloud.tokenRetry': 'Retry',
+  'heterogeneousStatus.cloud.tokenSharedElsewhere':
+    'Your personal Claude Code token is shared to another workspace. Saving a token here moves it to this workspace, and cloud runs in the other workspace will no longer be able to use it.',
+  'heterogeneousStatus.cloud.tokenTypeMismatch':
+    'A credential with the key CLAUDE_CODE_OAUTH_TOKEN already exists with a different type. Remove or rename it in Credentials, then save again.',
+  'heterogeneousStatus.cloud.tokenNotShared':
+    'Your personal Claude Code token is not shared to this workspace, so cloud runs here cannot use it. Save a token to share it to this workspace.',
+  'heterogeneousStatus.cloud.tokenSaveError':
+    'Failed to save the Claude Code token. Please try again.',
   'heterogeneousStatus.cloud.tokenPlaceholder': 'Paste your OAuth token here',
   'heterogeneousStatus.cloud.tokenChange': 'Change',
   'heterogeneousStatus.cloud.tokenSave': 'Save',
@@ -749,6 +760,8 @@ export default {
     'Download the desktop app, sign in, and your device connects automatically.',
   'devices.empty.methodDesktop.title': 'Connect via Desktop',
   'devices.empty.title': 'Connect your first device',
+  'devices.errors.boundToFixedAgent':
+    "This device is set as the fixed run device for one or more workspace agents. Change those agents' run device settings first.",
   'devices.fallbackBadge': 'Unstable identity',
   'devices.fallbackTooltip':
     "This device couldn't be identified by its machine ID, so reinstalling the app may create a duplicate entry.",
@@ -992,6 +1005,7 @@ export default {
   'notification.category.workspace.title': 'Workspace',
   'notification.item.agent_cron_job_completed': 'Scheduled task completed',
   'notification.item.agent_cron_job_failed': 'Scheduled task failed',
+  'notification.item.agent_task_run_failed': 'Task failed',
   'notification.item.agent_run_completed': 'Agent task completed',
   'notification.item.agent_transfer_result': 'Transfer request result',
   'notification.item.checkout_abandoned': 'Unfinished checkout reminders',
@@ -3525,6 +3539,72 @@ When I am ___, I need ___
     'Your plan includes {{includedSeats}} free seats, expandable up to {{maxSeats}} with purchased extras.',
   'workspace.onboarding.step4Invite.subtitleWithLimit':
     'Free includes up to {{maxSeats}} seats, including you.',
+  'workspace.onboarding.flow.summary.maxSeats': 'Up to {{count}} members',
+  'workspace.onboarding.flow.welcome.title': 'Welcome to {{name}} 👋',
+  'workspace.onboarding.flow.welcome.description':
+    "I'm your team's agent steward. In the next few steps we'll connect your work apps, hire a team assistant and invite members, so agents become part of how your team works.",
+  'workspace.onboarding.flow.welcome.adminOnly':
+    'Only admins see this setup. Members who join later use the configured workspace right away.',
+  'workspace.onboarding.flow.connectApps.title': "Connect your team's work apps",
+  'workspace.onboarding.flow.connectApps.description':
+    'Connect the apps your team uses so the assistant can learn its projects and who does what. Authorization applies to the whole workspace.',
+  'workspace.onboarding.flow.connectApps.skip': 'Skip for now, connect later',
+  'workspace.onboarding.flow.connectApps.more':
+    'You can connect more apps anytime in Settings → Connectors.',
+  'workspace.onboarding.flow.learnYourTeam.title': 'Get to know your team',
+  'workspace.onboarding.flow.learnYourTeam.description': 'Building your team profile',
+  'workspace.onboarding.flow.learnYourTeam.hint':
+    '💡 You can skip ahead; the analysis keeps running in the background',
+  'workspace.onboarding.flow.learnYourTeam.error':
+    "Couldn't finish the team analysis. Retry or skip for now.",
+  'workspace.onboarding.flow.learnYourTeam.progress.review':
+    'Reading team data from connected apps',
+  'workspace.onboarding.flow.learnYourTeam.progress.build':
+    "Mapping the team's projects, roles and ways of working",
+  'workspace.onboarding.flow.learnYourTeam.progress.explore':
+    'Writing the team profile and first task ideas',
+  'workspace.onboarding.flow.teamProfile.title': 'Team profile',
+  'workspace.onboarding.flow.teamProfile.empty':
+    'No team profile yet. Add team details, or go back to run the analysis again.',
+  'workspace.onboarding.flow.teamProfile.supplementLabel': '**Added by an admin:** {{text}}',
+  'workspace.onboarding.flow.teamProfile.supplement.title': 'Add team details',
+  'workspace.onboarding.flow.teamProfile.supplement.description':
+    "Add the team's business, current projects or ways of working to help the assistant understand the team. Every member can see this profile.",
+  'workspace.onboarding.flow.teamProfile.supplement.placeholder':
+    "For example: we're an 8-person product team building B2B SaaS, shipping every two weeks.",
+  'workspace.onboarding.flow.teamProfile.supplement.cancel': 'Cancel',
+  'workspace.onboarding.flow.teamProfile.supplement.save': 'Update profile',
+  'workspace.onboarding.flow.teamProfile.supplement.saveFailed': "Couldn't save. Please try again.",
+  'workspace.onboarding.flow.assistant.hint':
+    '💡 This assistant is shared by the whole team. Members can @ it in chats and group chats.',
+  'workspace.onboarding.flow.invite.quote': 'Bring your teammates in,',
+  'workspace.onboarding.flow.invite.highlight': 'and I can start helping everyone.',
+  'workspace.onboarding.flow.invite.send_one': 'Invite {{count}} member',
+  'workspace.onboarding.flow.invite.send_other': 'Invite {{count}} members',
+  'workspace.onboarding.flow.invite.skip': 'Skip for now, invite later',
+  'workspace.onboarding.flow.invite.invalidEmails': 'Invalid email address: {{emails}}',
+  'workspace.onboarding.flow.starterTasks.title': "Your team's first tasks",
+  'workspace.onboarding.flow.starterTasks.description':
+    'Hand these tasks to the team assistant and watch it work through them in the workspace.',
+  'workspace.onboarding.flow.starterTasks.quote': "I'll suggest a few tasks",
+  'workspace.onboarding.flow.starterTasks.highlight': 'to save your team repetitive sync work.',
+  'workspace.onboarding.flow.starterTasks.empty':
+    'No suggested tasks yet. You can finish setup now.',
+  'workspace.onboarding.flow.starterTasks.addFailed': "Couldn't add the tasks. Please try again.",
+  'workspace.onboarding.flow.channels.title': "Bring the assistant into your team's chats",
+  'workspace.onboarding.flow.channels.description':
+    'Connect a bot your team owns to {{name}}. Everyone in the group can @{{name}} to hand off work — nobody has to link an account.',
+  'workspace.onboarding.flow.channels.quote': "Add me to your team's group chats,",
+  'workspace.onboarding.flow.channels.highlight': 'and anyone can hand me work.',
+  'workspace.onboarding.flow.channels.more': 'You can change channels anytime in Agent → Channels.',
+  'workspace.onboarding.flow.channels.configTitle': 'Connect {{platform}}',
+  'workspace.onboarding.flow.devices.title': 'Connect team devices',
+  'workspace.onboarding.flow.devices.subtitle':
+    'Enroll the team’s computers so the assistant can use Claude Code, Codex and other local agents on them.',
+  'workspace.onboarding.flow.devices.connect': 'Connect device',
+  'workspace.onboarding.flow.devices.count': '{{online}} of {{count}} online',
+  'workspace.onboarding.flow.devices.empty':
+    'No team devices yet. Install the desktop app or run lh connect on a team computer to add one.',
   'workspace.onboarding.step4.heading': '{{name}} is ready!',
   'workspace.onboarding.step4.subtitle':
     'Your workspace is set up. Jump in and start collaborating with your team.',

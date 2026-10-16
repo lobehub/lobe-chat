@@ -11,27 +11,26 @@ import {
   executeDeviceRpc,
   pushMetrics,
 } from '@lobechat/device-control';
+import { COMPUTER_USE_IDENTIFIER } from '@lobechat/device-control/computer-use';
 import type {
   AgentRunRequestMessage,
-  DeviceSystemInfo,
   RpcRequestMessage,
   SystemInfoRequestMessage,
   ToolCallRequestMessage,
 } from '@lobechat/device-gateway-client';
 import { GatewayClient } from '@lobechat/device-gateway-client';
 import { listHeterogeneousAgentModels } from '@lobechat/heterogeneous-agents/models';
-import { getShellInfo } from '@lobechat/local-file-shell';
+import {
+  createRuntimeProbeCache,
+  type RuntimeProbeCache,
+} from '@lobechat/heterogeneous-agents/runtimeProbeCache';
 import type { Command } from 'commander';
 
 import { createLambdaClient } from '../api/client';
+import { scheduleProactiveRefresh } from '../auth/proactiveRefresh';
 import { resolveToken } from '../auth/resolveToken';
 import { CLI_API_KEY_ENV } from '../constants/auth';
-import {
-  CLI_CONFIG_DIR_NAME,
-  CLI_CONNECT_SERVICE_NAME,
-  CLI_DISPLAY_NAME,
-  CLI_PRIMARY_BIN,
-} from '../constants/identity';
+import { CLI_CONNECT_SERVICE_NAME, CLI_DISPLAY_NAME, CLI_PRIMARY_BIN } from '../constants/identity';
 import { OFFICIAL_GATEWAY_URL } from '../constants/urls';
 import { CliMaintenance } from '../daemon/maintenance';
 import {
@@ -56,6 +55,7 @@ import {
   resolveDeviceIdentity,
   resolveWorkspaceDeviceIdentity,
 } from '../device/register';
+import { collectSystemInfo, probeNativeRuntimes } from '../device/systemInfo';
 import { TerminalSessionManager } from '../device/terminal';
 import {
   CONNECT_RETRYABLE_EXIT_CODE,
@@ -78,6 +78,7 @@ import {
   saveSettings,
 } from '../settings';
 import { executeToolCall } from '../tools';
+import { executeComputerUseCall, resolveComputerUseDevice } from '../tools/computerUse';
 import { cleanupAllProcesses, getActiveShellCount } from '../tools/shell';
 import { log, setVerbose } from '../utils/logger';
 import { sweepLocalTraces } from '../utils/traceMaintenance';
@@ -87,6 +88,8 @@ const SHUTDOWN_METRICS_FLUSH_MS = 3000;
 const CONNECT_SERVICE_NAME = CLI_CONNECT_SERVICE_NAME;
 
 interface ConnectOptions {
+  /** `auv` binary that runs Computer Use on this device; see `resolveComputerUseDevice`. */
+  auv?: string;
   daemon?: boolean;
   daemonChild?: boolean;
   deviceId?: string;
@@ -112,6 +115,7 @@ export function registerConnectCommand(program: Command) {
       '--public',
       'With --workspace: enroll into the shared pool visible to every member (default: private, visible only to you)',
     )
+    .option('--auv <binary>', 'Offer Computer Use by running this AUV binary (`auv invoke`)')
     .option('-v, --verbose', 'Enable verbose logging')
     .option('-d, --daemon', 'Run as a background daemon process')
     .option('--daemon-child', 'Internal: runs as the daemon child process')
@@ -129,6 +133,15 @@ export function registerConnectCommand(program: Command) {
         options.daemonChild || isServiceChild || process.env.LOBEHUB_DAEMON === '1';
 
       await runConnect(options, isDaemonChild);
+    });
+
+  // Capability discovery runs without login or opening a gateway connection. Desktop
+  // invokes its bundled CLI here so the probe and subsequent dispatch share a runtime.
+  connectCmd
+    .command('capabilities')
+    .description('Report native agent runtimes supported by this CLI and installed binaries')
+    .action(async () => {
+      console.log(JSON.stringify({ supportedAgentRuntimes: await probeNativeRuntimes() }));
     });
 
   // Subcommands
@@ -188,6 +201,7 @@ export function registerConnectCommand(program: Command) {
     .option('--token <jwt>', 'JWT access token')
     .option('--gateway <url>', 'Device gateway URL')
     .option('--device-id <id>', 'Device ID')
+    .option('--auv <binary>', 'Offer Computer Use by running this AUV binary (`auv invoke`)')
     .option('-v, --verbose', 'Enable verbose logging')
     .action(async (options: ConnectOptions) => {
       const wasStopped = stopDaemon();
@@ -209,6 +223,7 @@ export function registerConnectCommand(program: Command) {
       '--public',
       'With --workspace: enroll into the shared pool visible to every member (default: private, visible only to you)',
     )
+    // TODO: `--auv` is not forwarded to the service unit; add it when a service-mode device needs Computer Use.
     .action((options: Pick<ConnectOptions, 'public' | 'workspace'>) => {
       installConnectService({ public: options.public, workspace: options.workspace });
       log.info(
@@ -332,6 +347,7 @@ function buildDaemonArgs(options: ConnectOptions): string[] {
   if (options.deviceId) args.push('--device-id', options.deviceId);
   if (options.workspace) args.push('--workspace', options.workspace);
   if (options.public) args.push('--public');
+  if (options.auv) args.push('--auv', path.resolve(options.auv));
   if (options.verbose) args.push('--verbose');
 
   return args;
@@ -356,6 +372,13 @@ async function runConnect(options: ConnectOptions, isDaemonChild: boolean) {
   }
 
   const resolvedGatewayUrl = gatewayUrl || OFFICIAL_GATEWAY_URL;
+
+  // Fail before connecting rather than advertise a tool this device cannot run.
+  const computerUse = await resolveComputerUseDevice(options.auv).catch((err: Error) => {
+    log.error(err.message);
+    process.exit(1);
+    throw err;
+  });
 
   // Workspace enrollment: the device joins a workspace pool (reachable by all
   // members) instead of the personal pool. It authenticates with a minted
@@ -513,14 +536,20 @@ async function runConnect(options: ConnectOptions, isDaemonChild: boolean) {
     writeTerminal: (params) => Promise.resolve(terminals.write(params)),
   };
 
+  // One native runtime probe per connection: system info is queried by tool runs and
+  // agent dispatch alike, and each probe starts a Codex app-server process.
+  const nativeRuntimes = createRuntimeProbeCache(probeNativeRuntimes);
+
   const handlerContext: GatewayHandlerContext = {
+    computerUse,
     deps: deviceControlDeps,
     error,
     // Read at dispatch time — `auth` may be refreshed mid-session.
-    getServerUrl: () => auth.serverUrl,
+    getAuth: () => auth,
     info,
     isDaemonChild,
     maintenance,
+    nativeRuntimes,
     recordRequest,
   };
 
@@ -551,6 +580,10 @@ async function runConnect(options: ConnectOptions, isDaemonChild: boolean) {
   client.on('connected', () => {
     updateStatus('connected');
     void metricsSampler?.flush();
+    // A (re)connection reprobes so an upgraded or downgraded Codex is reported, and
+    // warms the cache before the gateway's first system_info_request.
+    nativeRuntimes.invalidate();
+    void nativeRuntimes.get();
   });
 
   client.on('disconnected', () => {
@@ -934,13 +967,17 @@ async function runConnect(options: ConnectOptions, isDaemonChild: boolean) {
 
 /** Everything a gateway connection's request handlers need from the host process. */
 interface GatewayHandlerContext {
+  /** Present when `--auv` enabled Computer Use on this device. */
+  computerUse?: Awaited<ReturnType<typeof resolveComputerUseDevice>>;
   deps: DeviceControlDeps;
   error: (msg: string) => void;
   /** Read at dispatch time — the underlying auth may be refreshed mid-session. */
-  getServerUrl: () => string;
+  getAuth: () => Awaited<ReturnType<typeof resolveToken>>;
   info: (msg: string) => void;
   isDaemonChild: boolean;
   maintenance: CliMaintenance;
+  /** Process-wide native runtime probe, shared by every gateway connection. */
+  nativeRuntimes: RuntimeProbeCache;
   recordRequest: () => void;
 }
 
@@ -955,12 +992,13 @@ function bindGatewayClientHandlers(
   ctx: GatewayHandlerContext,
   connectionWorkspaceId?: string,
 ) {
-  const { deps, error, getServerUrl, info, isDaemonChild, maintenance, recordRequest } = ctx;
+  const { computerUse, deps, error, getAuth, info, isDaemonChild, maintenance, recordRequest } =
+    ctx;
 
   // Handle system info requests
-  client.on('system_info_request', (request: SystemInfoRequestMessage) => {
+  client.on('system_info_request', async (request: SystemInfoRequestMessage) => {
     info(`Received system_info_request: requestId=${request.requestId}`);
-    const systemInfo = collectSystemInfo();
+    const systemInfo = await collectSystemInfo(ctx.nativeRuntimes, computerUse);
     client.sendSystemInfoResponse({
       requestId: request.requestId,
       result: { success: true, systemInfo },
@@ -984,7 +1022,12 @@ function bindGatewayClientHandlers(
     // slow transport.
     const startedAt = performance.now();
     const result = await maintenance
-      .run(() => executeToolCall(toolCall.apiName, toolCall.arguments, timeout))
+      .run(() =>
+        // Computer Use's `runCommand` shares its apiName with the shell tool.
+        toolCall.identifier === COMPUTER_USE_IDENTIFIER
+          ? executeComputerUseCall(computerUse, toolCall.apiName, toolCall.arguments, timeout)
+          : executeToolCall(toolCall.apiName, toolCall.arguments, timeout, getAuth()),
+      )
       .catch((err: Error) => ({
         content: '',
         error: err.message,
@@ -1060,7 +1103,7 @@ function bindGatewayClientHandlers(
             prompt: request.prompt,
             resumeFallbackSystemContext: request.resumeFallbackSystemContext,
             resumeSessionId: request.resumeSessionId,
-            serverUrl: getServerUrl(),
+            serverUrl: getAuth().serverUrl,
             systemContext: request.systemContext,
             topicId: request.topicId,
             workspaceId: request.ingestWorkspaceId ?? request.workspaceId ?? connectionWorkspaceId,
@@ -1097,90 +1140,4 @@ function formatUptime(startedAt: Date): string {
   if (hours > 0) return `${hours}h ${minutes % 60}m ${seconds % 60}s`;
   if (minutes > 0) return `${minutes}m ${seconds % 60}s`;
   return `${seconds}s`;
-}
-
-// How far before expiry to proactively refresh (1 hour)
-const PROACTIVE_REFRESH_BUFFER = 60 * 60;
-
-/**
- * Parse the `exp` claim from a JWT without verifying the signature.
- */
-function parseJwtExp(token: string): number | undefined {
-  try {
-    const payload = JSON.parse(Buffer.from(token.split('.')[1], 'base64url').toString());
-    return typeof payload.exp === 'number' ? payload.exp : undefined;
-  } catch {
-    return undefined;
-  }
-}
-
-/**
- * Schedule a proactive token refresh before the (connect) token expires.
- * `refresh` performs the actual refresh — re-minting a workspace token or
- * refreshing the user token — and returns the new token. Returns a cleanup
- * function that cancels the scheduled timer.
- */
-function scheduleProactiveRefresh(
-  token: string,
-  tokenType: string,
-  refresh: () => Promise<string | undefined>,
-  info: (msg: string) => void,
-  error: (msg: string) => void,
-): (() => void) | null {
-  if (tokenType !== 'jwt') return null;
-
-  const exp = parseJwtExp(token);
-  if (!exp) return null;
-
-  const lifetimeMs = exp * 1000 - Date.now();
-  if (lifetimeMs <= 0) {
-    // Token already expired — refresh once on next tick.
-    void doRefresh();
-    return null;
-  }
-
-  // Refresh ahead of expiry, but never let the buffer meet or exceed the token's
-  // remaining lifetime: a buffer >= lifetime collapses the refresh window to <=0
-  // and busy-loops re-minting (e.g. a 1h token with a 1h buffer). Cap the buffer
-  // at half the remaining lifetime so a short-lived token refreshes about once per
-  // half-life instead of spinning.
-  const bufferMs = Math.min(PROACTIVE_REFRESH_BUFFER * 1000, lifetimeMs / 2);
-  const delay = lifetimeMs - bufferMs;
-
-  const timer = setTimeout(() => void doRefresh(), delay);
-  return () => clearTimeout(timer);
-
-  async function doRefresh() {
-    try {
-      const newToken = await refresh();
-      if (!newToken) {
-        error('Proactive token refresh failed — no valid credentials.');
-        return;
-      }
-      if (newToken !== token) info('Proactively refreshed token.');
-    } catch {
-      error('Proactive token refresh failed.');
-    }
-  }
-}
-
-function collectSystemInfo(): DeviceSystemInfo {
-  const home = os.homedir();
-  const platform = process.platform;
-  const videosDir = platform === 'linux' ? 'Videos' : 'Movies';
-
-  return {
-    arch: os.arch(),
-    // Tell the server-side prompt builder which shell runCommand spawns here.
-    defaultShell: getShellInfo().displayName,
-    desktopPath: path.join(home, 'Desktop'),
-    documentsPath: path.join(home, 'Documents'),
-    downloadsPath: path.join(home, 'Downloads'),
-    homePath: home,
-    musicPath: path.join(home, 'Music'),
-    picturesPath: path.join(home, 'Pictures'),
-    userDataPath: path.join(home, CLI_CONFIG_DIR_NAME),
-    videosPath: path.join(home, videosDir),
-    workingDirectory: process.cwd(),
-  };
 }

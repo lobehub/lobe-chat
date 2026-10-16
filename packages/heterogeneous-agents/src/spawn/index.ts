@@ -16,14 +16,17 @@ export {
   buildCodexAppServerArgs,
   buildCodexAppServerInput,
   buildCodexAppServerThreadParams,
+  type CodexAgentHandleOptions,
   CodexAppServerClient,
   type CodexAppServerClientOptions,
   CodexAppServerConnectionError,
   CodexAppServerRpcError,
   CodexThreadSession,
   type CodexThreadSessionOptions,
+  createCodexAgentHandle,
   getCodexAppServerUnsupportedArgs,
   isCodexAppServerCompatibilityError,
+  pickCodexRunProvenance,
 } from '../codex';
 export type { UsageData } from '../types';
 export {

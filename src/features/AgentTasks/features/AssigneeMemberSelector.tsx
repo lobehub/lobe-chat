@@ -89,6 +89,11 @@ const triggerStyle: CSSProperties = {
   minWidth: 0,
 };
 
+// `display: contents` keeps the disabled wrapper out of layout, so the trigger
+// lays out exactly as when enabled (e.g. a full-width property row stays
+// left-aligned instead of shrinking and being centered).
+const blockedContentStyle: CSSProperties = { display: 'contents', pointerEvents: 'none' };
+
 const AssigneeMemberSelector = memo<AssigneeMemberSelectorProps>(
   ({
     children,
@@ -266,7 +271,7 @@ const AssigneeMemberSelector = memo<AssigneeMemberSelectorProps>(
           style={{ ...currentTriggerStyle, cursor: 'not-allowed', opacity: 0.5 }}
           onClick={(event) => event.stopPropagation()}
         >
-          <span style={{ pointerEvents: 'none' }}>{children}</span>
+          <span style={blockedContentStyle}>{children}</span>
         </div>
       </Tooltip>
     ) : (

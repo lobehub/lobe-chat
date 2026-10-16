@@ -3,6 +3,7 @@ import { CLIENT_PROTOCOL_VERSION } from '@lobechat/agent-gateway-client';
 import type {
   ClientLlmWaitItem,
   ExecAgentAppContext,
+  ExecAgentClientIds,
   ExecAgentLlmExecutor,
   ExecAgentResult,
   ResumeClientLlmWaitResult,
@@ -138,7 +139,7 @@ export interface ExecAgentTaskParams {
    * `newTopic.id` / `newUserMessage.id` / `newAssistantMessage.id`. Fresh
    * sends only; resume / regeneration must not replay them.
    */
-  clientIds?: { assistantMessageId?: string; topicId?: string; userMessageId?: string };
+  clientIds?: ExecAgentClientIds;
   /**
    * Server runs the composer tracked on this conversation at send time. The
    * server records them only when this send has to stop a run the client left
@@ -171,6 +172,8 @@ export interface ExecAgentTaskParams {
   resumeApprovals?: ResumeApprovalParam[];
   /** Resume a previous op paused on a human-intervention tool by carrying the human answer as the tool result. */
   resumeToolResult?: ResumeToolResultParam;
+  /** Skill identifiers the user selected in this message; the server injects their bodies. */
+  selectedSkillIds?: string[];
   /** Tool identifiers the user @-mentioned in this message; the server enables them for this run. */
   selectedToolIds?: string[];
   slug?: string;

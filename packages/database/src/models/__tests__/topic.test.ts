@@ -1595,6 +1595,22 @@ describe('TopicModel', () => {
 
       expect(updated.metadata).toEqual({ heteroEffort: 'high' });
     });
+
+    it('writes a speed pin with the model and keeps it when a later switch omits it', async () => {
+      const topic = await topicModel.create({ model: 'a', provider: 'codex', title: 'pin' });
+
+      await topicModel.updateModelPin(topic.id, {
+        metadata: { heteroSpeed: 'fast' },
+        model: 'b',
+        provider: 'codex',
+      });
+      const [updated] = await topicModel.updateModelPin(topic.id, {
+        model: 'c',
+        provider: 'codex',
+      });
+
+      expect(updated.metadata).toEqual({ heteroSpeed: 'fast' });
+    });
   });
 
   describe('updateMetadata', () => {
@@ -1657,6 +1673,19 @@ describe('TopicModel', () => {
 
       const remaining = await topicModel.queryTopics();
       expect(remaining.map((t) => t.id)).toEqual(['b3']);
+    });
+
+    it('batchDeleteIncludingTrashed also removes topics sitting in the recycle bin', async () => {
+      await serverDB.insert(topics).values([
+        { id: 'bt-live', title: 'live', userId },
+        { id: 'bt-trash', isDeleted: true, title: 'trashed', userId },
+        { id: 'bt-other', title: 'keep', userId },
+      ]);
+
+      await topicModel.batchDeleteIncludingTrashed(['bt-live', 'bt-trash']);
+
+      const remaining = await serverDB.select().from(topics);
+      expect(remaining.map((t) => t.id)).toEqual(['bt-other']);
     });
 
     it('deleteAll removes only the calling user rows', async () => {

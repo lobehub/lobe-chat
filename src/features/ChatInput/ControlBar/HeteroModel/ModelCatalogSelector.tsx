@@ -49,6 +49,7 @@ import { useElectronStore } from '@/store/electron';
 import { useUserStore } from '@/store/user';
 import { authSelectors } from '@/store/user/selectors';
 
+import { useTopicId } from '../../hooks/useTopicId';
 import { useMenuContentLifecycle } from '../useMenuContentLifecycle';
 import { useModelCatalog } from './useModelCatalog';
 import { useModelCatalogView } from './useModelCatalogView';
@@ -162,6 +163,8 @@ const getCatalogErrorKey = (name: string) => {
 
 interface ModelCatalogSelectorProps {
   agentId?: string;
+  /** Secondary line under the submenu label, e.g. where the current model comes from. */
+  desc?: string;
   disabled: boolean;
   model: string;
   onSelect: (model: string) => void;
@@ -171,7 +174,16 @@ interface ModelCatalogSelectorProps {
 }
 
 export const ModelCatalogSelector = memo<ModelCatalogSelectorProps>(
-  ({ agentId, disabled, model, onSelect, permissionReason, type, variant = 'standalone' }) => {
+  ({
+    agentId,
+    desc,
+    disabled,
+    model,
+    onSelect,
+    permissionReason,
+    type,
+    variant = 'standalone',
+  }) => {
     const { t } = useTranslation('chat');
     const agentName = getHeterogeneousTypeLabel(type) ?? type;
     const [search, setSearch] = useState('');
@@ -181,13 +193,16 @@ export const ModelCatalogSelector = memo<ModelCatalogSelectorProps>(
       handleOpenChangeComplete: completeOpenChange,
       open,
     } = useMenuContentLifecycle(onSelect);
-    const { agencyConfig, isPreferenceLoading, workspaceScoped } =
-      useEffectiveAgencyConfig(agentId);
+    const topicId = useTopicId();
+    const { agencyConfig, isPreferenceLoading, workspaceScoped } = useEffectiveAgencyConfig(
+      agentId,
+      { topicId },
+    );
     const isLogin = useUserStore(authSelectors.isLogin);
     const { isLoading: isDeviceListLoading } = useDeviceStore((s) => s.useFetchDevices)(
       isLogin || isDesktop,
     );
-    const cwd = useEffectiveWorkingDirectory(agentId);
+    const cwd = useEffectiveWorkingDirectory(agentId, { topicId });
     const provider = agencyConfig?.heterogeneousProvider;
     useElectronStore((s) => s.useFetchGatewayDeviceInfo)();
     const currentDeviceId = useElectronStore((s) => s.gatewayDeviceInfo?.deviceId);
@@ -382,7 +397,18 @@ export const ModelCatalogSelector = memo<ModelCatalogSelectorProps>(
             openOnHover={false}
           >
             <DropdownMenuItemContent>
-              <DropdownMenuItemLabel>{t('heteroAgent.modelSelector.model')}</DropdownMenuItemLabel>
+              {desc ? (
+                <DropdownMenuItemLabelGroup>
+                  <DropdownMenuItemLabel>
+                    {t('heteroAgent.modelSelector.model')}
+                  </DropdownMenuItemLabel>
+                  <DropdownMenuItemDesc>{desc}</DropdownMenuItemDesc>
+                </DropdownMenuItemLabelGroup>
+              ) : (
+                <DropdownMenuItemLabel>
+                  {t('heteroAgent.modelSelector.model')}
+                </DropdownMenuItemLabel>
+              )}
               <DropdownMenuItemExtra className={styles.submenuMeta}>
                 {currentModel === HETEROGENEOUS_AGENT_DEFAULT_SELECTION
                   ? t('heteroAgent.modelSelector.default')

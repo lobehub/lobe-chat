@@ -22,6 +22,7 @@ import { TOPIC_STATUS_VISUALS } from '@/components/ExecutionStatus';
 import RingLoadingIcon from '@/components/RingLoading';
 import UnreadDot from '@/components/UnreadDot';
 import { isDesktop } from '@/const/version';
+import { getPlatformIcon } from '@/features/AgentChannel/const';
 import { TopicMigrationIndicator } from '@/features/AgentTransferMigration';
 import DirIcon from '@/features/ChatInput/ControlBar/DirIcon';
 import { useHasDraft } from '@/features/ChatInput/draftStorage';
@@ -31,7 +32,6 @@ import { getProjectConversationPath } from '@/features/Projects/Layout/navigatio
 import TopicCreatorAvatar, { useTopicCreator } from '@/features/TopicCreatorAvatar';
 import { buildWorkspaceAwarePath } from '@/features/Workspace/workspaceAwarePath';
 import { getWorkingDirectoryName } from '@/helpers/workingDirectoryPath';
-import { getPlatformIcon } from '@/routes/(main)/agent/channel/const';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors, builtinAgentSelectors } from '@/store/agent/selectors';
 import { useChatStore } from '@/store/chat';
@@ -281,7 +281,10 @@ const TopicItemRow = memo<TopicItemRowProps>(
     const activeWorkspaceSlug = useActiveWorkspaceSlug();
     // Creator of the topic — resolves only inside an active workspace; drives
     // the identity-first icon layout below.
-    const author = useTopicCreator(isSharedAgent ? userId : undefined);
+    const author = useTopicCreator(
+      isSharedAgent && !metadata?.bot ? userId : undefined,
+      metadata?.botCreator,
+    );
 
     const loadingRingColor = isDarkMode
       ? cssVar.colorWarningBorder
@@ -572,7 +575,11 @@ const TopicItemRow = memo<TopicItemRowProps>(
           }
         />
       ) : author ? (
-        <TopicCreatorAvatar corner={ownIconNode} userId={userId} />
+        <TopicCreatorAvatar
+          botCreator={metadata?.botCreator}
+          corner={ownIconNode}
+          userId={userId}
+        />
       ) : (
         (ownIconNode ?? idleIconPlaceholder)
       );

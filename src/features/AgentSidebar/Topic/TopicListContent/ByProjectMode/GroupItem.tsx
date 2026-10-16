@@ -31,6 +31,7 @@ import { useActiveWorkspaceSlug } from '@/business/client/hooks/useActiveWorkspa
 import Avatar from '@/components/Avatar';
 import { TOPIC_STATUS_VISUALS } from '@/components/ExecutionStatus';
 import RingLoadingIcon from '@/components/RingLoading';
+import TailMarquee from '@/components/TailMarquee';
 import UnreadDot from '@/components/UnreadDot';
 import { useCommitWorkingDirectory } from '@/features/ChatInput/ControlBar/useCommitWorkingDirectory';
 import { AgentDirectoryActions } from '@/features/Projects/WorkingDirectories/AgentDirectoryActions';
@@ -112,9 +113,19 @@ const styles = createStaticStyles(({ css }) => ({
       max-width 150ms ${cssVar.motionEaseOut},
       opacity 150ms ${cssVar.motionEaseOut};
 
-    /* Holds the grouping menu, the "more" menu and the start "+" (3 × 24px) */
+    /* Holds the grouping menu, the "more" menu and the start "+" (3 × 24px).
+       Stays open while one of its menus is, so the popup keeps its anchor. */
     &:focus-within,
+    &:has([data-popup-open]),
     .accordion-header:hover & {
+      pointer-events: auto;
+      max-width: 72px;
+      opacity: 1;
+    }
+
+    /* Touch-only screens have no hover to reveal the actions with, so they
+       keep their width there, as before the actions collapsed at rest. */
+    @media (hover: none) {
       pointer-events: auto;
       max-width: 72px;
       opacity: 1;
@@ -371,12 +382,14 @@ const GroupItem = memo<GroupItemComponentProps>(({ group, expanded }) => {
   const hasCollapsedIndicators = hasCollapsedStatus || hasCollapsedUnread;
   const ProjectFolderIcon = expanded ? FolderOpenIcon : FolderClosedIcon;
   // Sub-grouping is its own row action: it needs no directory, so it stays
-  // available even when the directory actions below can't render.
+  // available even when the directory actions below can't render. The buttons
+  // collapse to zero width until the row is hovered, so a resting title gets
+  // the full row instead of a gap reserved for invisible actions.
   const action = (
     <Flexbox horizontal align={'center'} gap={4}>
       {hasCollapsedStatus && <CollapsedStatusBadges counts={statusCounts} />}
       {hasCollapsedUnread && <CollapsedUnreadDot count={unreadCount} />}
-      <span className={hasCollapsedIndicators ? styles.addTopicAction : undefined}>
+      <span className={styles.addTopicAction}>
         <DropdownMenu items={subGroupMenuItems}>
           <ActionIcon
             icon={ListFilter}
@@ -439,40 +452,44 @@ const GroupItem = memo<GroupItemComponentProps>(({ group, expanded }) => {
                 />
               )}
             </Center>
-            <Text
-              ellipsis
-              fontSize={14}
-              style={{ color: project ? cssVar.colorText : cssVar.colorTextSecondary, flex: 1 }}
-            >
-              {project && !scope ? (
-                <a
-                  style={{ color: 'inherit', textDecoration: 'none' }}
-                  href={buildWorkspaceAwarePath(
-                    `/project/${project.projectSlug ?? project.projectId}`,
-                    activeWorkspaceSlug,
-                  )}
-                  onClick={(event) => {
-                    // Keep the accordion closed either way; leave modified clicks
-                    // (new tab / window) to the browser's native link handling.
-                    event.stopPropagation();
-                    if (
-                      event.button !== 0 ||
-                      event.metaKey ||
-                      event.ctrlKey ||
-                      event.shiftKey ||
-                      event.altKey
-                    )
-                      return;
-                    event.preventDefault();
-                    navigate(`/project/${project.projectSlug ?? project.projectId}`);
-                  }}
-                >
-                  {project.projectName}
-                </a>
-              ) : (
-                title
-              )}
-            </Text>
+            {project ? (
+              <Text ellipsis fontSize={14} style={{ color: cssVar.colorText, flex: 1 }}>
+                {scope ? (
+                  title
+                ) : (
+                  <a
+                    style={{ color: 'inherit', textDecoration: 'none' }}
+                    href={buildWorkspaceAwarePath(
+                      `/project/${project.projectSlug ?? project.projectId}`,
+                      activeWorkspaceSlug,
+                    )}
+                    onClick={(event) => {
+                      // Keep the accordion closed either way; leave modified clicks
+                      // (new tab / window) to the browser's native link handling.
+                      event.stopPropagation();
+                      if (
+                        event.button !== 0 ||
+                        event.metaKey ||
+                        event.ctrlKey ||
+                        event.shiftKey ||
+                        event.altKey
+                      )
+                        return;
+                      event.preventDefault();
+                      navigate(`/project/${project.projectSlug ?? project.projectId}`);
+                    }}
+                  >
+                    {project.projectName}
+                  </a>
+                )}
+              </Text>
+            ) : (
+              // A bare path reads from its end: keep the tail in view and
+              // scroll to the head on hover.
+              <TailMarquee style={{ color: cssVar.colorTextSecondary, fontSize: 14 }}>
+                {title}
+              </TailMarquee>
+            )}
           </Flexbox>
         </AccordionTrigger>
         <div

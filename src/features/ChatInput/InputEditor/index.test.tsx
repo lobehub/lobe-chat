@@ -159,9 +159,12 @@ vi.mock('@/services/aiChat', () => ({
   },
 }));
 vi.mock('@/store/chat', () => ({
-  useChatStore: Object.assign(<T,>(selector: StoreSelector<T>) => selector({}), {
-    getState: () => ({ activeTopicId: undefined }),
-  }),
+  useChatStore: Object.assign(
+    <T,>(selector: StoreSelector<T>) => selector({ useFetchTopicDetail: () => {} }),
+    {
+      getState: () => ({ activeTopicId: undefined }),
+    },
+  ),
 }));
 vi.mock('@/store/serverConfig', () => ({
   useServerConfigStore: <T,>(selector: StoreSelector<T>) =>

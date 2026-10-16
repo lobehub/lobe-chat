@@ -145,40 +145,30 @@ const toFileDocumentsMap = (
   }, {});
 
 const createChatImageItem = ({
+  fileType,
   id,
   metadata,
   name,
   url,
 }: {
+  fileType?: string | null;
   id: string;
   metadata: unknown;
   name: string;
   url: string;
 }): ChatImageItem => {
   const imageMetadata = isPlainRecord(metadata) ? metadata : {};
-  const height =
-    typeof imageMetadata.height === 'number' &&
-    Number.isFinite(imageMetadata.height) &&
-    imageMetadata.height > 0
-      ? imageMetadata.height
-      : undefined;
-  const ratio =
-    typeof imageMetadata.ratio === 'number' &&
-    Number.isFinite(imageMetadata.ratio) &&
-    imageMetadata.ratio > 0
-      ? imageMetadata.ratio
-      : undefined;
-  const width =
-    typeof imageMetadata.width === 'number' &&
-    Number.isFinite(imageMetadata.width) &&
-    imageMetadata.width > 0
-      ? imageMetadata.width
-      : undefined;
+  const toPositiveNumber = (value: unknown) =>
+    typeof value === 'number' && Number.isFinite(value) && value > 0 ? value : undefined;
+  const height = toPositiveNumber(imageMetadata.height);
+  const ratio = toPositiveNumber(imageMetadata.ratio);
+  const width = toPositiveNumber(imageMetadata.width);
 
   return {
     alt: name,
     ...(height && { height }),
     id,
+    ...(fileType && { mimeType: fileType }),
     ...(ratio && { ratio }),
     url,
     ...(width && { width }),
@@ -1884,8 +1874,8 @@ export class MessageModel {
                 ),
               imageList: imageList
                 .filter((relation) => relation.messageId === item.id)
-                .map(({ id, metadata, name, url }) =>
-                  createChatImageItem({ id, metadata, name: name!, url }),
+                .map(({ fileType, id, metadata, name, url }) =>
+                  createChatImageItem({ fileType, id, metadata, name: name!, url }),
                 ),
 
               model,
@@ -2783,8 +2773,8 @@ export class MessageModel {
             ),
           imageList: imageList
             .filter((relation) => relation.messageId === item.id)
-            .map(({ id, metadata, name, url }) =>
-              createChatImageItem({ id, metadata, name: name!, url }),
+            .map(({ fileType, id, metadata, name, url }) =>
+              createChatImageItem({ fileType, id, metadata, name: name!, url }),
             ),
 
           model,

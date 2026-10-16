@@ -215,6 +215,75 @@ describe('GitStatus', () => {
       expect(screen.queryByTestId('worktree-switcher')).not.toBeInTheDocument();
     });
 
+    // Worktrees picked from the bar were persisted without a branch. The dead
+    // worktree alone must still hand off, or the reset-to-source action vanishes
+    // with the rest of the cluster and the conversation is stuck on a missing cwd.
+    describe('snapshot that recorded only the worktree, no branch', () => {
+      const branchless = { activeWorktree: '/tmp/lobehub-wt-subtask', isWorktree: true };
+      const source = { branch: 'canary', current: false, path: '/repo' };
+
+      const mockSourceListing = (listing: unknown[] | undefined) => {
+        gitHookMocks.useFetchGitWorktrees.mockImplementation(
+          (_deviceId: string | undefined, path?: string) => ({
+            data: path === '/repo' ? listing : [],
+            mutate: gitHookMocks.mutateWorktrees,
+          }),
+        );
+      };
+
+      const renderBranchless = () =>
+        render(
+          <GitStatus
+            isGithub
+            agentId="agent-1"
+            deviceId="device-1"
+            fallbackGit={branchless}
+            path="/tmp/lobehub-wt-subtask"
+            sourcePath="/repo"
+          />,
+        );
+
+      // Worktrees picked from the bar were persisted without a branch. Requiring
+      // one collapsed the whole cluster — reset-to-source action included.
+      it('hands off once the source repo no longer lists the worktree', () => {
+        mockSourceListing([source]);
+
+        renderBranchless();
+
+        expect(screen.getByTestId('stale-git-snapshot')).toBeInTheDocument();
+      });
+
+      it('hands off when the source lists the worktree only as prunable', () => {
+        mockSourceListing([
+          source,
+          { current: false, path: '/tmp/lobehub-wt-subtask', prunable: true },
+        ]);
+
+        renderBranchless();
+
+        expect(screen.getByTestId('stale-git-snapshot')).toBeInTheDocument();
+      });
+
+      // A remote read that fails in transit on a device still marked online comes
+      // back as empty as a deleted path; the server turns the failed listing into
+      // `[]`. Neither proves the worktree is gone.
+      it('does not condemn the worktree when the source listing failed', () => {
+        mockSourceListing([]);
+
+        const { container } = renderBranchless();
+
+        expect(container).toBeEmptyDOMElement();
+      });
+
+      it('does not condemn a worktree the source still lists as live', () => {
+        mockSourceListing([source, { current: false, path: '/tmp/lobehub-wt-subtask' }]);
+
+        const { container } = renderBranchless();
+
+        expect(container).toBeEmptyDOMElement();
+      });
+    });
+
     it('skips the linked-PR lookup, which has no directory to run `gh` in', () => {
       render(
         <GitStatus

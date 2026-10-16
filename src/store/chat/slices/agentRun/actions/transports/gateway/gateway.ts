@@ -19,6 +19,7 @@ import type {
   ChatTopicMetadata,
   ChatTopicStatus,
   ConversationContext,
+  ExecAgentClientIds,
   ExecAgentResult,
   MessageMetadata,
   RuntimeMentionedAgent,
@@ -1032,11 +1033,10 @@ export class GatewayActionImpl {
    */
   executeGatewayAgent = async (params: {
     /**
-     * Client-minted ids for the rows this run creates (fresh sends only). The
-     * server honours them verbatim, so the optimistic topic / message rows keep
-     * their ids instead of diverging from the server-minted ones.
+     * Client-minted ids for the rows this run creates (fresh sends only), honoured
+     * verbatim so optimistic rows keep their ids — see `ExecAgentClientIds`.
      */
-    clientIds?: { assistantMessageId?: string; topicId?: string; userMessageId?: string };
+    clientIds?: ExecAgentClientIds;
     /** Agent/runtime context used to execute the server operation. */
     context: ConversationContext;
     /** File IDs of already-uploaded attachments to attach to the new user message */
@@ -1105,6 +1105,8 @@ export class GatewayActionImpl {
      * `phase: 'tool_result'` WITHOUT re-executing the tool.
      */
     resumeToolResult?: ResumeToolResultParam;
+    /** Skills the user selected in this message; forwarded as `selectedSkillIds`. */
+    selectedSkillIds?: string[];
     /**
      * Tool identifiers the user @-mentioned in this message. Forwarded to the
      * server as `selectedToolIds` so the server runtime enables them for this
@@ -1150,6 +1152,7 @@ export class GatewayActionImpl {
       resumeApproval,
       resumeApprovals,
       resumeToolResult,
+      selectedSkillIds,
       selectedToolIds,
       mentionedAgents,
       tempMessageIds,
@@ -1343,6 +1346,7 @@ export class GatewayActionImpl {
               resumeApproval,
               resumeApprovals,
               resumeToolResult,
+              selectedSkillIds,
               selectedToolIds,
               // A queued follow-up keeps its continuation mark on the row the
               // server persists, which replaces the optimistic one.
@@ -1664,6 +1668,17 @@ export class GatewayActionImpl {
         });
         this.disconnectFromGateway(staleOpId);
       }
+    }
+
+    // A mounted Task drawer reads the by-id topic detail, independently of the
+    // sidebar list. Dispatch has persisted a new receipt; revalidate that detail
+    // after the optimistic marker patch without delaying stream connection.
+    if (result.heteroType && result.topicId && !agentShareId && !continuesGroupMember) {
+      void this.#get()
+        .refreshTopicDetail(result.topicId)
+        .catch((error) =>
+          console.error('[Gateway] Failed to refresh dispatched Topic configuration:', error),
+        );
     }
 
     // When the local operation is cancelled (e.g. user clicks stop), forward

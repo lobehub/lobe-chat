@@ -1990,6 +1990,8 @@ export class DeviceGateway {
     assistantMessageId: string;
     /** Resolved `lh hetero exec` wrapper args. */
     args?: string[];
+    /** Restricts the run to connections of these clients; omitted means any client. */
+    clientKinds?: DeviceClient[];
     cwd?: string;
     deviceId?: string;
     /** Image attachments forwarded to the device as fetchable (signed) URLs. */
@@ -2019,7 +2021,13 @@ export class DeviceGateway {
   }
 
   async executeToolCall(
-    params: { deviceId: string; operationId?: string; userId: string; workspaceId?: string },
+    params: {
+      clientKinds?: DeviceClient[];
+      deviceId: string;
+      operationId?: string;
+      userId: string;
+      workspaceId?: string;
+    },
     toolCall: { apiName: string; arguments: string; identifier: string },
     timeout = 30_000,
   ): Promise<DeviceToolCallResult> {
@@ -2042,16 +2050,7 @@ export class DeviceGateway {
     );
 
     try {
-      return await client.executeToolCall(
-        {
-          deviceId: params.deviceId,
-          operationId: params.operationId,
-          timeout,
-          userId: params.userId,
-          workspaceId: params.workspaceId,
-        },
-        toolCall,
-      );
+      return await client.executeToolCall({ ...params, timeout }, toolCall);
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
       log('executeToolCall: error — %s', message);
