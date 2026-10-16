@@ -38,6 +38,7 @@ import { TaskService } from '@/server/services/task';
 import { after } from '@/server/utils/scheduleAfterResponse';
 
 import { resolveTaskWorkspaceId } from './resolveWorkspaceScope';
+import { runTaskDispatch, runTasksDispatch } from './taskRunDispatch';
 import { type ServerRuntimeRegistration } from './types';
 
 export interface TaskRuntimeDeps {
@@ -794,88 +795,10 @@ export const createTaskRuntime = (deps: TaskRuntimeDeps) => {
       return { content: formatTaskEdited(task.identifier, changes), success: true };
     },
 
-    runTask: async (args: { continueTopicId?: string; identifier?: string; prompt?: string }) => {
-      const id = args.identifier?.trim() || taskId;
-      if (!id) {
-        return {
-          content: 'No task identifier provided and no current task context.',
-          success: false,
-        };
-      }
+    runTask: (args: { continueTopicId?: string; identifier?: string; prompt?: string }) =>
+      runTaskDispatch(deps, args),
 
-      try {
-        const result = await taskCaller().run({
-          continueTopicId: args.continueTopicId,
-          // Inherit the dispatching run's device when it executes on one: a
-          // task topic spawned from a device-routed session must reach the
-          // same machine (its engagement/workspace paths live there), not
-          // fall back to the assignee agent's stored target or the cloud
-          // sandbox. Mirrors the callSubAgent device inheritance in
-          // executorHelpers.buildServerVirtualSubAgentRunner. The task's own
-          // pin (readTaskExecutionConfig) still wins inside the runner — this
-          // only fills the gap when the task pins nothing — and an agent
-          // whose selection policy is `fixed` overrides it at plan resolve.
-          ...(activeDeviceId ? { deviceId: activeDeviceId } : {}),
-          id,
-          prompt: args.prompt,
-        });
-
-        const topicId = (result as { topicId?: string } | undefined)?.topicId;
-        const operationId = (result as { operationId?: string } | undefined)?.operationId;
-        const lines = [`Task ${id} started.`];
-        if (topicId) lines.push(`  Topic: ${topicId}`);
-        if (operationId) lines.push(`  Operation: ${operationId}`);
-
-        return { content: lines.join('\n'), success: true };
-      } catch (error) {
-        const message = error instanceof Error ? error.message : 'Failed to run task';
-        return { content: `Failed to run task ${id}: ${message}`, success: false };
-      }
-    },
-
-    runTasks: async (args: { identifiers: string[] }) => {
-      const identifiers = Array.isArray(args.identifiers)
-        ? args.identifiers.map((value) => value?.trim()).filter((value): value is string => !!value)
-        : [];
-
-      if (identifiers.length === 0) {
-        return { content: 'No task identifiers provided.', success: false };
-      }
-
-      const lines: string[] = [];
-      let succeeded = 0;
-      let failed = 0;
-
-      for (const [index, identifier] of identifiers.entries()) {
-        try {
-          // Same device inheritance as runTask: a batch dispatched from a
-          // device-routed run lands its task topics on the same machine.
-          const result = await taskCaller().run({
-            ...(activeDeviceId ? { deviceId: activeDeviceId } : {}),
-            id: identifier,
-          });
-          const topicId = (result as { topicId?: string } | undefined)?.topicId;
-          succeeded += 1;
-          lines.push(
-            `${index + 1}. ${identifier} — started${topicId ? ` (topic ${topicId})` : ''}`,
-          );
-        } catch (error) {
-          failed += 1;
-          const message = error instanceof Error ? error.message : 'Unknown error';
-          lines.push(`${index + 1}. ${identifier} — failed: ${message}`);
-        }
-      }
-
-      const header =
-        failed === 0
-          ? `Started ${succeeded} task${succeeded === 1 ? '' : 's'}:`
-          : `Started ${succeeded}/${identifiers.length} tasks (${failed} failed):`;
-
-      return {
-        content: [header, ...lines].join('\n'),
-        success: failed === 0,
-      };
-    },
+    runTasks: (args: { identifiers: string[] }) => runTasksDispatch(deps, args),
 
     updateTaskComment: async (args: { commentId: string; content: string }) => {
       try {

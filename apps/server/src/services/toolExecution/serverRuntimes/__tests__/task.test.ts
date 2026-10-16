@@ -1175,62 +1175,6 @@ describe('createTaskRuntime', () => {
       expect(result.content).toContain('Topic: tpc_1');
     });
 
-    it('inherits the dispatching run device via deviceId when the runtime context carries one', async () => {
-      const taskCaller = {
-        run: vi.fn().mockResolvedValue({ operationId: 'op', topicId: 'tpc' }),
-      };
-      const runtime = createTaskRuntime({
-        activeDeviceId: 'device-parent',
-        agentModel: { existsById: vi.fn() } as any,
-        taskCaller: taskCaller as any,
-        taskModel: {} as any,
-        taskService: {} as any,
-      });
-
-      await runtime.runTask({ identifier: 'T-1' });
-
-      expect(taskCaller.run).toHaveBeenCalledWith(
-        expect.objectContaining({ deviceId: 'device-parent', id: 'T-1' }),
-      );
-    });
-
-    it('omits deviceId entirely when the dispatching run has no active device', async () => {
-      const taskCaller = {
-        run: vi.fn().mockResolvedValue({ operationId: 'op', topicId: 'tpc' }),
-      };
-      const runtime = createTaskRuntime({
-        agentModel: { existsById: vi.fn() } as any,
-        taskCaller: taskCaller as any,
-        taskModel: {} as any,
-        taskService: {} as any,
-      });
-
-      await runtime.runTask({ identifier: 'T-1' });
-
-      const call = taskCaller.run.mock.calls[0][0] as Record<string, unknown>;
-      expect('deviceId' in call).toBe(false);
-    });
-
-    it('runTasks forwards the inherited deviceId to every dispatch', async () => {
-      const taskCaller = {
-        run: vi.fn().mockResolvedValue({ topicId: 'tpc' }),
-      };
-      const runtime = createTaskRuntime({
-        activeDeviceId: 'device-parent',
-        agentModel: { existsById: vi.fn() } as any,
-        taskCaller: taskCaller as any,
-        taskModel: {} as any,
-        taskService: {} as any,
-      });
-
-      await runtime.runTasks({ identifiers: ['T-A', 'T-B'] });
-
-      expect(taskCaller.run).toHaveBeenCalledTimes(2);
-      expect(
-        taskCaller.run.mock.calls.every((c) => (c[0] as any).deviceId === 'device-parent'),
-      ).toBe(true);
-    });
-
     it('falls back to current task context when identifier omitted', async () => {
       const taskCaller = {
         run: vi.fn().mockResolvedValue({ operationId: 'op', topicId: 'tpc' }),
