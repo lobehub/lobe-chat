@@ -1,6 +1,11 @@
 import { describe, expect, it } from 'vitest';
 
-import { collectChangeStats, isLinkedWorktreeCheckout, shouldShowCiLabel } from '../overviewData';
+import {
+  collectChangeStats,
+  getStatusDeviceId,
+  isLinkedWorktreeCheckout,
+  shouldShowCiLabel,
+} from '../overviewData';
 
 describe('collectChangeStats', () => {
   it('sums additions/deletions across repo and submodule patches', () => {
@@ -66,5 +71,23 @@ describe('shouldShowCiLabel', () => {
     expect(shouldShowCiLabel('success')).toBe(false);
     expect(shouldShowCiLabel('unknown')).toBe(false);
     expect(shouldShowCiLabel(undefined)).toBe(false);
+  });
+});
+
+describe('getStatusDeviceId', () => {
+  it('shows the bound remote device', () => {
+    expect(getStatusDeviceId('device', 'dev-1')).toBe('dev-1');
+  });
+
+  it('shows the bound local desktop, which has no RPC routing id', () => {
+    expect(getStatusDeviceId('local', 'desktop-1')).toBe('desktop-1');
+  });
+
+  it.each(['auto', 'none', 'sandbox'] as const)('shows nothing for %s', (target) => {
+    expect(getStatusDeviceId(target, 'dev-1')).toBeUndefined();
+  });
+
+  it('shows nothing when no device is bound', () => {
+    expect(getStatusDeviceId('device', undefined)).toBeUndefined();
   });
 });
