@@ -1574,9 +1574,7 @@ export default class HeterogeneousAgentCtr {
         sessionId,
       });
 
-      // Opportunistic sweep of long-unused binding profiles (provider deleted,
-      // endpoint changed, identity version bumped). The profile in use was just
-      // touched by prepare, so it is never a candidate. Never blocks the run.
+      // Sweep idle profiles without blocking; prepare just marked the current profile as active.
       gcHostedProviderBindingProfiles(this.app.appStoragePath)
         .then((removedProfiles) => {
           if (removedProfiles.length > 0)
@@ -1587,7 +1585,10 @@ export default class HeterogeneousAgentCtr {
       const model = params.providerBinding.apiConfig.model;
       // Model-card lookup is best-effort; operation begin validates the selection.
       const modelDescriptor =
-        ['codex', 'pi', 'opencode', 'droid'].includes(agentType)
+        agentType === 'codex' ||
+        agentType === 'pi' ||
+        agentType === 'opencode' ||
+        agentType === 'droid'
           ? await describeServerDefaultModel(this.remoteServerAuth, { agentType, model }).catch(
               (error) => {
                 logger.warn('Server-default model description unavailable:', error);
@@ -1616,7 +1617,6 @@ export default class HeterogeneousAgentCtr {
     });
 
     this.sessions.set(sessionId, {
-      // If resuming, pre-set the agent session ID so sendPrompt adds --resume
       agentSessionId: resumeSessionId,
       agentType,
       args: hostedProviderBinding?.args ?? params.args ?? [],
