@@ -412,6 +412,9 @@ if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
   if (missing.length) { console.error(`用法错误：路径不存在：${missing.join(', ')}`); process.exit(2); }
   const unknown = (only ?? []).filter((id) => !RULES.some((r) => r.id === id));
   if (unknown.length) { console.error(`用法错误：未知规则：${unknown.join(', ')}（--rules 查看全部）`); process.exit(2); }
+  // stage 拼错会把所有结果过滤掉并 exit 0，等于跳过检查；只接受规则里出现过的 stage
+  const stages = [...new Set(RULES.map((r) => r.stage))];
+  if (stage !== undefined && !stages.includes(stage)) { console.error(`用法错误：未知 stage：${stage}（可用：${stages.join(', ')}）`); process.exit(2); }
   const res = lintPaths(paths);
   res.findings = res.findings.filter((f) => (!stage || f.stage === stage) && (!only || only.includes(f.id)));
   if (args.includes('--json')) {

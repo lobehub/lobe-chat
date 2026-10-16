@@ -577,6 +577,8 @@ t('check-learnings.mjs missing log → exit 2', run('check-learnings.mjs', ['--l
 for (const s of ['refs.mjs', 'intent.mjs', 'bootstrap.mjs', 'upstream.mjs', 'project-scan.mjs']) {
   t(`${s} --help → exit 0`, run(s, ['--help']).status === 0, `exit ${run(s, ['--help']).status}`);
 }
+t('lint-lobe.mjs 未知 --stage → exit 2', run('lint-lobe.mjs', ['tests/fixtures/bad-visual.tsx', '--stage', '50-visua']).status === 2);
+t('lint-lobe.mjs 合法 --stage 照常报 FAIL', run('lint-lobe.mjs', ['tests/fixtures/bad-visual.tsx', '--stage', '50-visual']).status === 1);
 t('refs.mjs (no instruction) → exit 2', run('refs.mjs', []).status === 2);
 t('intent.mjs (no instruction) → exit 2', run('intent.mjs', []).status === 2);
 t('refs.mjs --audit → exit 0', run('refs.mjs', ['--audit']).status === 0);
