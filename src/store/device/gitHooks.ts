@@ -224,12 +224,13 @@ const useGitStatusRead = <T>(
       if (data === undefined || options?.revalidate !== false) {
         const pending = optimistic.current;
         await revalidate();
-        // Settle the overlay once the probe has answered. Commit without a
-        // `confirm`: a successful response already made its value the base (and
-        // persisted it), while a failed read leaves the persisted confirmed
-        // value in place — the overlay only ever lived in memory.
+        // Settle the overlay once the probe has answered, by rolling it back to
+        // the confirmed base: the head response already persisted that value.
+        // Committing would re-apply the optimistic mutation to the base, so a
+        // FAILED checkout (the probe answers with the old branch) would be
+        // re-persisted as if it had landed.
         if (pending && optimistic.current === pending) {
-          pending.token.commit();
+          pending.token.rollback();
           optimistic.current = null;
         }
       }

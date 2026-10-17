@@ -327,6 +327,57 @@ describe('git status replicas', () => {
     );
   });
 
+  // Review P1: the settlement after a checkout must roll back to the confirmed
+  // base. Committing would re-apply the optimistic branch to the base, so a
+  // failed checkout would be persisted as if it had landed.
+  it('rolls the optimistic branch back when the probe still reports the old branch', async () => {
+    await seed(gitBranchResource, REMOTE, { branch: 'main', detached: false });
+    vi.mocked(gitService.getGitBranch).mockResolvedValue({ branch: 'main', detached: false });
+    const { result } = renderHook(() => useFetchGitBranch('device-1', '/repo'), { wrapper });
+    await waitFor(() => expect(result.current.data?.branch).toBe('main'));
+
+    await act(() =>
+      result.current.mutate({ branch: 'feat/x', detached: false }, { revalidate: false }),
+    );
+    expect(result.current.data?.branch).toBe('feat/x');
+
+    // `onAfterCheckout` revalidates regardless of success; the probe answers
+    // with the branch that is actually checked out.
+    await act(() => result.current.mutate());
+    expect(result.current.data?.branch).toBe('main');
+    expect(
+      (
+        await gitBranchResource.storage!.get({
+          queryKey: gitBranchResource.storageKey(REMOTE),
+          scope,
+        })
+      )?.data,
+    ).toEqual({ value: { branch: 'main', detached: false } });
+  });
+
+  it('keeps the new branch once the probe confirms it', async () => {
+    await seed(gitBranchResource, REMOTE, { branch: 'main', detached: false });
+    vi.mocked(gitService.getGitBranch).mockResolvedValue({ branch: 'main', detached: false });
+    const { result } = renderHook(() => useFetchGitBranch('device-1', '/repo'), { wrapper });
+    await waitFor(() => expect(result.current.data?.branch).toBe('main'));
+
+    await act(() =>
+      result.current.mutate({ branch: 'feat/x', detached: false }, { revalidate: false }),
+    );
+    vi.mocked(gitService.getGitBranch).mockResolvedValue({ branch: 'feat/x', detached: false });
+
+    await act(() => result.current.mutate());
+    await waitFor(() => expect(result.current.data?.branch).toBe('feat/x'));
+    expect(
+      (
+        await gitBranchResource.storage!.get({
+          queryKey: gitBranchResource.storageKey(REMOTE),
+          scope,
+        })
+      )?.data,
+    ).toEqual({ value: { branch: 'feat/x', detached: false } });
+  });
+
   it('revalidates the mounted reads of a directory', async () => {
     vi.mocked(gitService.getGitAheadBehind).mockResolvedValue({ ahead: 0, behind: 0 } as any);
     const { result } = renderHook(() => useFetchGitAheadBehind('device-1', '/repo'), {
