@@ -511,8 +511,7 @@ export class ConversationLifecycleActionImpl {
         ? pendingDirectory.projectWorkingDirectoryId
         : undefined;
     const projectDirectoryId = boundTopic?.projectWorkingDirectoryId ?? stagedDirectoryId;
-    let stagedDirectory: { id: string; projectId: string } | undefined;
-    let projectCwd: string | undefined;
+    let stagedDirectory: { id: string; path: string; projectId: string } | undefined;
     if (projectDirectoryId) {
       // The sidebar's directory replica already holds the row; read it locally
       // so the optimistic pair is not held behind a network round trip. The
@@ -522,7 +521,6 @@ export class ConversationLifecycleActionImpl {
         findProjectDirectory(projectDirectoryId) ??
         (await projectWorkingDirectoryService.resolve(projectDirectoryId)).data;
       if (stagedDirectoryId) stagedDirectory = directory;
-      projectCwd = directory.path;
       if (!isGatewayMode)
         throw new Error('Enable Gateway Mode to run in a project working directory');
       if (
@@ -1291,7 +1289,9 @@ export class ConversationLifecycleActionImpl {
           workspaceScoped,
         }
       : undefined;
-    const agentCwdParams = projectCwd ? { topicWorkingDirectory: projectCwd } : runCwdParams;
+    const agentCwdParams = stagedDirectory
+      ? { topicWorkingDirectory: stagedDirectory.path }
+      : runCwdParams;
     const agentWorkingDirectory = agentCwdParams && resolveAgentWorkingDirectory(agentCwdParams);
     const agentWorkingDirectoryConfig =
       agentCwdParams && resolveAgentWorkingDirectoryConfig(agentCwdParams);

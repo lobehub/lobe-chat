@@ -119,4 +119,70 @@ describe('sendMessage in a project directory', () => {
       }),
     );
   });
+
+  // `/newTopic` from a project topic creates a topic outside the project, so it
+  // must not inherit the directory it was sent from.
+  it('keeps a /newTopic sent from a project topic on the agent default', async () => {
+    mockConstEnv.isDesktop = true;
+    setupMockSelectors({
+      agentConfig: {
+        agencyConfig: {
+          boundDeviceId: DEVICE_ID,
+          executionTarget: 'device',
+          workingDirByDevice: { [DEVICE_ID]: AGENT_DEFAULT_PATH },
+        },
+      },
+    });
+    const executeGatewayAgentSpy = vi.fn().mockResolvedValue({ topicId: 'tpc_new' });
+    const agentId = TEST_IDS.SESSION_ID;
+
+    act(() => {
+      useChatStore.setState({
+        activeAgentId: agentId,
+        executeGatewayAgent: executeGatewayAgentSpy,
+        isGatewayModeEnabled: () => true,
+        topicDetailMap: {
+          tpc_bound: {
+            createdAt: Date.now(),
+            id: 'tpc_bound',
+            projectWorkingDirectoryId: 'dir-85',
+            title: 'Bound',
+            updatedAt: Date.now(),
+          } as any,
+        },
+      });
+    });
+
+    const editorData = {
+      root: {
+        children: [
+          {
+            children: [
+              { actionCategory: 'command', actionType: 'newTopic', type: 'action-tag' },
+              { text: ' Start fresh', type: 'text' },
+            ],
+            type: 'paragraph',
+          },
+        ],
+        type: 'root',
+      },
+    };
+    const { result } = renderHook(() => useChatStore());
+    await act(async () => {
+      await result.current.sendMessage({
+        context: { agentId, threadId: null, topicId: 'tpc_bound' },
+        editorData,
+        message: 'Start fresh',
+      });
+    });
+
+    const params = executeGatewayAgentSpy.mock.calls[0][0];
+    expect(params.projectWorkingDirectoryId).toBeUndefined();
+    expect(params.optimisticTopic.metadata).toEqual(
+      expect.objectContaining({
+        workingDirectory: AGENT_DEFAULT_PATH,
+        workingDirectoryConfig: { path: AGENT_DEFAULT_PATH },
+      }),
+    );
+  });
 });
