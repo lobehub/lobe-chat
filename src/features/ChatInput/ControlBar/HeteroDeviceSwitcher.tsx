@@ -279,6 +279,7 @@ const HeteroDeviceSwitcher = memo<HeteroDeviceSwitcherProps>(({ agentId }) => {
     canDisplayExecutionTarget,
     canSelectExecutionTarget,
     isPreferenceLoading: isWorkspacePreferenceLoading,
+    topicDeviceUnknown,
     workspaceScoped,
   } = useEffectiveAgencyConfig(agentId, { topicId });
   const canShowExecutionTarget = canUseResource && canDisplayExecutionTarget;
@@ -481,21 +482,13 @@ const HeteroDeviceSwitcher = memo<HeteroDeviceSwitcherProps>(({ agentId }) => {
       : undefined;
 
   // The picker splits by whether the caller is inside a workspace agent:
-  //
   // - **Personal agent** — flat list of the caller's personal-scope devices
-  //   only; there is no workspace context so no group split makes sense.
-  //   Never show `scope: 'workspace'` rows here (they belong to a workspace
-  //   the personal-mode agent has nothing to do with).
-  //
-  // - **Workspace agent** — split into `Private` and `Workspace` groups by
-  //   workspace-scope visibility, and drop `scope: 'personal'` entirely.
-  //   Personal devices are the caller's account-tier machines: they belong
-  //   to a different identity than the workspace agent runs under
-  //   (per-user `sha256(machineUUID + userId)` vs
-  //   `sha256(machineUUID + workspace:<id>)`), so binding one to a workspace
-  //   agent conflates identities. The `local` chip already covers "run on my
-  // machine" as a per-user override without needing to expose
-  //   the raw personal deviceId.
+  //   only; never `scope: 'workspace'` rows (no workspace context here).
+  // - **Workspace agent** — `Private` / `Workspace` groups by workspace-scope
+  //   visibility, dropping `scope: 'personal'`: personal devices run under a
+  //   different identity (`sha256(machineUUID + userId)` vs
+  //   `sha256(machineUUID + workspace:<id>)`), and the `local` chip already
+  //   covers "run on my machine" as a per-user override.
   //
   // Naming — Personal is reserved for the account-tier concept; workspace
   // groupings say Private/Workspace (私人/工作区) instead.
@@ -552,6 +545,13 @@ const HeteroDeviceSwitcher = memo<HeteroDeviceSwitcherProps>(({ agentId }) => {
         boundDevice?.hostname ??
         t('heteroAgent.executionTarget.unknownDevice'))
       : t('heteroAgent.executionTarget.workspaceGroup');
+  }
+  // A cwd with no recorded machine: naming the agent default here would pair
+  // it with a path that may live on another computer.
+  const isMachineChip = chipExecutionTarget === 'local' || chipExecutionTarget === 'device';
+  if (topicDeviceUnknown && canShowExecutionTargetSelector && isMachineChip) {
+    chipIcon = <ExecutionTargetIcon target={'device'} />;
+    chipLabel = t('heteroAgent.executionTarget.unknownDevice');
   }
 
   // Tag the row that runs this topic, so it reads as the conversation's own

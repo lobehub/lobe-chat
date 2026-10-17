@@ -1235,7 +1235,7 @@ export class ConversationLifecycleActionImpl {
           : undefined,
       topicId: willCreateNewTopic ? undefined : operationContext.topicId,
     });
-    const currentDeviceId = getElectronStoreState().gatewayDeviceInfo?.deviceId;
+    const currentDeviceId = await getElectronStoreState().resolveGatewayDeviceId();
     // Resolve the cwd for every run that lands on a MACHINE — a hetero CLI
     // (in-process `hetero` runtime) and a NATIVE agent alike, as long as the
     // effective target routes to a device. The server can only honour a cwd the
