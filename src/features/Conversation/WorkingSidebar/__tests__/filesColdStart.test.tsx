@@ -1,6 +1,6 @@
 import { act, render, screen } from '@testing-library/react';
 import type { ComponentType } from 'react';
-import { beforeAll, describe, expect, it } from 'vitest';
+import { beforeAll, describe, expect, it, vi } from 'vitest';
 
 import { useDeviceStore } from '@/store/device';
 import { DEVICE_LIST_KEY } from '@/store/device/projection';
@@ -14,6 +14,12 @@ import {
   globalStore,
   reviewState,
 } from './harness';
+
+// The first frame is what the cold start is about: the deferred follow-up pass
+// that gates the other panes has not run yet. Most cases assert the settled
+// state; the cold-mount case flips this to false.
+const deferredMount = vi.hoisted(() => ({ value: true }));
+vi.mock('@/hooks/useDeferredMount', () => ({ useDeferredMount: () => deferredMount.value }));
 
 // Loaded after the harness so its module mocks are registered first.
 let AgentWorkingSidebar: ComponentType<{ availableWidth?: number }>;
@@ -45,6 +51,22 @@ describe('AgentWorkingSidebar — Files cold start', () => {
 
     expect(filesProps.current).toMatchObject({ workingDirectory: '/repo' });
     expect(screen.queryByTestId('files-prefetch')).not.toBeInTheDocument();
+  });
+
+  it('mounts the Files pane on the first frame instead of the deferred skeleton', () => {
+    agentStore.activeAgentId = 'agent';
+    effectiveConfig.agencyConfig = { executionTarget: 'local' };
+    reviewState.workingDirectory = '/repo';
+    globalStore.status.workingSidebarTab = 'files';
+    deferredMount.value = false;
+
+    render(<AgentWorkingSidebar />);
+
+    // The pane owns its own "no saved tree" spinner, so the sidebar's deferred
+    // skeleton would only cover the tree that is already saved for this folder.
+    expect(screen.getByTestId('files')).toBeInTheDocument();
+    expect(screen.queryByTestId('sidebar-skeleton')).not.toBeInTheDocument();
+    deferredMount.value = true;
   });
 
   it('opens the tree where the conversation last was until the device list is confirmed', () => {

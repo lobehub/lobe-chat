@@ -56,7 +56,6 @@ import {
 } from '@/features/AgentSidebar/Topic/List/Item/metaCardData';
 import { useRepoType } from '@/features/ChatInput/ControlBar/useRepoType';
 import { useSandboxMode } from '@/features/ChatInput/ControlBar/useSandboxMode';
-import SkeletonList from '@/features/NavPanel/components/SkeletonList';
 import { getPortalViewWidth } from '@/features/Portal/portalWidth';
 import TopicCommentsSidebar from '@/features/Portal/TopicComments/Sidebar';
 import RightPanel from '@/features/RightPanel';
@@ -82,6 +81,7 @@ import { systemStatusSelectors } from '@/store/global/selectors';
 import { sandboxActions, sandboxSelectors, useSandboxStore } from '@/store/sandbox';
 
 import { type ComposerTarget, createComposerTarget, resolveThreadComposerTarget } from '../types';
+import DeferredSkeleton from './DeferredSkeleton';
 import FilesPane from './Files/FilesPane';
 import { useFilesPaneLocation } from './Files/useFilesPaneLocation';
 import { sidebarWidthBudget } from './fitsBesidePortal';
@@ -708,7 +708,6 @@ const AgentWorkingSidebar = memo<AgentWorkingSidebarProps>(({ availableWidth }) 
     },
     [availableTabs, updateOpenedTabs, updatePinnedTabs],
   );
-
   const unpinTab = useCallback(
     (tab: string) => {
       // A tab restored only through its agent pin should remain open in the
@@ -718,7 +717,6 @@ const AgentWorkingSidebar = memo<AgentWorkingSidebarProps>(({ availableWidth }) 
     },
     [updateOpenedTabs, updatePinnedTabs],
   );
-
   const closeTabs = useCallback(
     (tabs: string[], fallbackTab = 'overview') => {
       const removableTabs = new Set(tabs.filter((tab) => !pinnedTabsSet.has(tab)));
@@ -1117,12 +1115,14 @@ const AgentWorkingSidebar = memo<AgentWorkingSidebarProps>(({ availableWidth }) 
             />
           </Flexbox>
           <Flexbox className={styles.body} width={'100%'}>
-            {!contentReady && <SkeletonList paddingBlock={8} paddingInline={8} rows={6} />}
+            {!contentReady && storedTab !== 'files' && activeTab !== 'files' && (
+              <DeferredSkeleton />
+            )}
             <FilesPane
               active={!!showRightPanel && activeTab === 'files'}
               available={filesAvailable}
               className={styles.pane}
-              contentReady={contentReady}
+              contentReady={contentReady || (activeTab === 'files' && filesAvailable)}
               deviceId={filesDeviceId}
               directory={filesDirectory}
               prefetch={activeTab === 'files' && (!showRightPanel || !contentReady)}
