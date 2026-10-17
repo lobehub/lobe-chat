@@ -1,7 +1,6 @@
 'use client';
 
-import { Icon, Tooltip } from '@lobehub/ui';
-import { createStaticStyles } from 'antd-style';
+import { createStaticStyles, Icon, Tooltip } from '@lobehub/ui';
 import { Link2 } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';

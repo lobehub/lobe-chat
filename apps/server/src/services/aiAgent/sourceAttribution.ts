@@ -15,6 +15,7 @@ export interface SourceOperationRow {
   threadId?: null | string;
   topicId?: null | string;
   userId: string;
+  workspaceId?: null | string;
 }
 
 /** The slice of a `topics` row this decision reads. */

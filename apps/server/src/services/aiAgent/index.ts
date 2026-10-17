@@ -1221,7 +1221,7 @@ export class AiAgentService {
     // display snapshot once, before the turn rows exist, so the persisted user
     // message carries a self-contained sender block.
     const agentSender = await this.resolveSourceAgentSnapshot(
-      params.agentId,
+      resolvedAgentId,
       params.sourceOperationId,
     );
 

@@ -14,7 +14,7 @@ import { useAgentMeta } from '../../hooks';
 import ContentBlock from '../AssistantGroup/components/ContentBlock';
 import Group from '../AssistantGroup/components/Group';
 import UserMessageContent from '../User/components/MessageContent';
-import { getBotSender, resolveSenderIdentity } from '../User/resolveSenderIdentity';
+import { resolveSenderIdentity } from '../User/resolveSenderIdentity';
 import { resolveCompressedMessageView } from './resolveCompressedMessageView';
 
 interface CompressedMessageItemProps {
