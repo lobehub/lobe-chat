@@ -413,6 +413,19 @@ describe('useFileItemDropdown — row without a stored URL', () => {
     );
   });
 
+  it('closes the loading toast and reports the failure when the URL lookup fails', async () => {
+    const close = vi.fn();
+    const { toast } = await import('@lobehub/ui');
+    vi.mocked(toast.loading).mockReturnValueOnce({ close } as any);
+    mocks.getFile.mockRejectedValueOnce(new Error('offline'));
+
+    await click('download');
+
+    expect(mocks.downloadFile).not.toHaveBeenCalled();
+    expect(close).toHaveBeenCalled();
+    expect(toast.error).toHaveBeenCalledWith('FileManager.actions.downloadError');
+  });
+
   it('uses the row URL without a request when it has one', async () => {
     await click('download', { url: 'https://storage.example.com/notes.md' });
     expect(mocks.getFile).not.toHaveBeenCalled();

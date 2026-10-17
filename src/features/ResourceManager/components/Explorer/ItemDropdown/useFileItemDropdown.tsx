@@ -376,12 +376,17 @@ export const useFileItemDropdown = ({
             // routes are mounted under `/:workspaceSlug`, so the shared link must
             // carry the active slug or recipients land in the personal scope
             // where the page does not resolve.
-            const urlToCopy = isPage
-              ? `${appOrigin}${buildPagePath(id, activeWorkspaceSlug, libraryId)}`
-              : await resolveFileUrl();
+            try {
+              const urlToCopy = isPage
+                ? `${appOrigin}${buildPagePath(id, activeWorkspaceSlug, libraryId)}`
+                : await resolveFileUrl();
 
-            await copyToClipboard(urlToCopy);
-            toast.success(t('FileManager.actions.copyUrlSuccess'));
+              await copyToClipboard(urlToCopy);
+              toast.success(t('FileManager.actions.copyUrlSuccess'));
+            } catch (error) {
+              console.error('Failed to copy file url:', error);
+              toast.error(t('FileManager.actions.copyUrlError'));
+            }
           },
           sfSymbol: 'doc.on.doc',
         },
@@ -420,8 +425,14 @@ export const useFileItemDropdown = ({
                 toast.error(t('FileManager.actions.downloadPageError'));
               }
             } else {
-              // For regular files, download from URL
-              await downloadFile(await resolveFileUrl(), filename);
+              // For regular files, download from URL (resolved first for a row
+              // restored without one, which can fail offline or once deleted).
+              try {
+                await downloadFile(await resolveFileUrl(), filename);
+              } catch (error) {
+                console.error('Failed to download file:', error);
+                toast.error(t('FileManager.actions.downloadError'));
+              }
             }
 
             downloadingToast.close();

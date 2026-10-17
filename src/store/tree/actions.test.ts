@@ -95,6 +95,7 @@ const createState = (): TreeState => ({
   reconcile: vi.fn(),
   removeItems: vi.fn(),
   renameItem: vi.fn(),
+  forgetSnapshot: vi.fn(),
   reset: vi.fn(),
   preHydrate: vi.fn(),
   revalidate: vi.fn(),

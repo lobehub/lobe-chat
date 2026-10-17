@@ -287,6 +287,70 @@ describe('TreeActionImpl — sidebar transactions and the snapshot', () => {
   });
 });
 
+describe('TreeActionImpl — reset during a sidebar transaction', () => {
+  beforeEach(() => {
+    mockGetKnowledgeItems.mockReset();
+    mockUpdateResource.mockReset();
+  });
+
+  it("does not roll a previous library's failed rename back onto the new tree", async () => {
+    const { actions, state } = setup();
+    mockGetKnowledgeItems.mockResolvedValue({ items: [serverRow('doc-1')] });
+    actions.init('kb-1');
+    await vi.waitFor(() => expect(state.children['']).toHaveLength(1));
+
+    let reject!: (error: Error) => void;
+    mockUpdateResource.mockReturnValue(
+      new Promise((_resolve, r) => {
+        reject = r;
+      }),
+    );
+    const renaming = actions.renameItem('doc-1', '', 'renamed');
+    await vi.waitFor(() => expect(mockUpdateResource).toHaveBeenCalled());
+
+    mockGetKnowledgeItems.mockResolvedValue({ items: [serverRow('other-doc')] });
+    actions.init('kb-2');
+    await vi.waitFor(() => expect(state.children[''][0].id).toBe('other-doc'));
+    mockGetKnowledgeItems.mockClear();
+
+    reject(new Error('rename failed'));
+    await renaming.catch(() => {});
+
+    expect(state.children[''].map((i) => i.id)).toEqual(['other-doc']);
+    // Nor does the settled transaction refresh the previous library's folders.
+    expect(mockGetKnowledgeItems).not.toHaveBeenCalled();
+  });
+});
+
+describe('TreeActionImpl — abandoned optimistic folders', () => {
+  beforeEach(() => {
+    mockGetKnowledgeItems.mockReset();
+  });
+
+  it('keeps persisting the rest of the tree when a folder left mid-mutation stays unconfirmed', async () => {
+    const { actions, state } = setup();
+    mockGetKnowledgeItems.mockImplementation(({ parentId }) =>
+      Promise.resolve({
+        items: parentId ? [serverRow('doc-a')] : [serverRow('folder-a', true), serverRow('doc-1')],
+      }),
+    );
+    actions.init('kb-1');
+    await vi.waitFor(() => expect(state.children['']).toHaveLength(2));
+    actions.toggle('folder-a');
+    await vi.waitFor(() => expect(state.snapshotMap['kb-1'].children['folder-a']).toBeDefined());
+
+    // A create in folder A, then the user navigates away before it settles.
+    actions.reconcile('folder-a', [file('doc-a'), file('temp-row')], { confirmed: false });
+
+    // A later confirmed write elsewhere still reaches the snapshot...
+    actions.reconcile('', [folder('folder-a'), file('doc-1'), file('doc-2')], { confirmed: true });
+    const stored = state.snapshotMap['kb-1'].children;
+    expect(stored[''].map((i) => i.id)).toEqual(['folder-a', 'doc-1', 'doc-2']);
+    // ...while folder A keeps its last confirmed rows.
+    expect(stored['folder-a'].map((i) => i.id)).toEqual(['doc-a']);
+  });
+});
+
 describe('TreeActionImpl — cache scope switch', () => {
   beforeEach(() => {
     mockGetKnowledgeItems.mockReset();

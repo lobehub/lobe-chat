@@ -55,6 +55,8 @@ export interface TreeState extends TreeDataState {
   errors: Record<string, unknown>;
   expandAncestors: (folderIds: string[]) => Promise<void>;
   expanded: Record<string, boolean>;
+  /** Drop the open library's persisted tree (a server-side bulk delete, see `forgetSnapshot`). */
+  forgetSnapshot: () => void;
 
   // actions
   init: (knowledgeBaseId: string) => void;
