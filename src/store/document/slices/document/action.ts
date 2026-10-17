@@ -103,6 +103,14 @@ export class DocumentActionImpl {
    * before that row was written, so it must not replace it.
    */
   readonly #adoptions = new Map<string, number>();
+  /**
+   * Editor entries (`documents[id]`) adopted from this replica. Tracked apart
+   * from `documentDetailMap` because a bounded replica evicts unmounted entries
+   * (`persist.maxEntries`) while their editor rows stay; a scope reset must
+   * still drop those, or reopening the id under another identity would treat
+   * the previous identity's body as loaded.
+   */
+  readonly #derivedIds = new Set<string>();
   readonly #detail;
 
   constructor(set: Setter, get: () => DocumentStore, _api?: unknown) {
@@ -154,7 +162,10 @@ export class DocumentActionImpl {
    * never flushed under the new one.
    */
   #clearDetailView = (state: DocumentStore): Partial<DocumentStore> => {
-    const derivedIds = Object.keys(state.documentDetailMap).filter((id) => state.documents[id]);
+    const derivedIds = [
+      ...new Set([...Object.keys(state.documentDetailMap), ...this.#derivedIds]),
+    ].filter((id) => state.documents[id]);
+    this.#derivedIds.clear();
     if (derivedIds.length === 0) return detailLens.clear(state);
 
     const documents = { ...state.documents };
@@ -339,6 +350,7 @@ export class DocumentActionImpl {
    * previous identity and must not be sent under the new one.
    */
   #clearDerivedDocument = (documentId: string): void => {
+    this.#derivedIds.delete(documentId);
     if (!this.#get().documents[documentId]) return;
     this.cancelDebouncedSave(documentId);
     this.#get().internal_dispatchDocument(
@@ -374,6 +386,7 @@ export class DocumentActionImpl {
     const currentActiveId = this.#get().activeDocumentId;
     if (currentActiveId && currentActiveId !== documentId) return;
 
+    this.#derivedIds.add(documentId);
     if (this.#get().documents[documentId]) {
       this.#get().reconcileRemote(documentId, document);
       if (sourceType === 'notebook' && topicId) {

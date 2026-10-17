@@ -16,7 +16,7 @@ import { cacheScope, replicaSWRDriver } from '@/libs/replica';
 import { documentService } from '@/services/document';
 
 import { useDocumentStore } from '../../store';
-import { documentDetailResource } from './projection';
+import { documentDetailResource, MAX_PERSISTED_DOCUMENT_DETAILS } from './projection';
 import {
   baseEditorData,
   detailSliceState,
@@ -322,6 +322,37 @@ describe('document detail replica', () => {
     // derived from the reset scope: revisiting it must not paint the old body.
     expect(useDocumentStore.getState().documents['doc-1']).toBeUndefined();
     expect(useDocumentStore.getState().documents['doc-2']).toBeUndefined();
+  });
+
+  it('drops an editor entry whose detail entry was evicted before the scope reset', async () => {
+    vi.mocked(documentService.getDocumentById).mockImplementation(
+      async (id: string) => documentRow({ id }) as any,
+    );
+    const first = renderDocument('doc-1', createEditor());
+    await waitFor(() => expect(useDocumentStore.getState().documents['doc-1']).toBeDefined());
+    first.unmount();
+    act(() => useDocumentStore.setState({ activeDocumentId: undefined }));
+
+    // Opening more documents than the persisted cap evicts the unmounted doc-1
+    // detail entry, while its editor row stays behind.
+    for (let index = 0; index <= MAX_PERSISTED_DOCUMENT_DETAILS; index += 1) {
+      await act(async () => {
+        await useDocumentStore.getState().prefetchDocument(`doc-extra-${index}`);
+      });
+    }
+    await waitFor(() =>
+      expect(useDocumentStore.getState().documentDetailMap['doc-1']).toBeUndefined(),
+    );
+    expect(useDocumentStore.getState().documents['doc-1']).toBeDefined();
+
+    vi.mocked(documentService.getDocumentById).mockImplementation(pending as any);
+    useScope(`document-user-${randomUUID()}:personal`);
+    const next = renderDocument('doc-2', createEditor());
+    next.rerender();
+
+    await waitFor(() => expect(useDocumentStore.getState().documentDetailMap).toEqual({}));
+    // Reopening doc-1 in the new identity must not find the old body loaded.
+    expect(useDocumentStore.getState().documents['doc-1']).toBeUndefined();
   });
 
   it('keeps no previous-identity editor state when the new scope’s fetch fails', async () => {
