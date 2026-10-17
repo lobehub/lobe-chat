@@ -1,6 +1,5 @@
 import { AGENT_CHAT_URL, isDesktop } from '@lobechat/const';
-import { Icon, type MenuProps } from '@lobehub/ui';
-import { toast } from '@lobehub/ui/base-ui';
+import { type DropdownItem, Icon, toast } from '@lobehub/ui';
 import { FolderPlusIcon } from 'lucide-react';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -22,8 +21,6 @@ import { useElectronStore } from '@/store/electron';
 
 import { buildPrefixedAgentRoutePath, parseAgentPathname } from '../utils/agentPathname';
 
-type MenuItem = NonNullable<MenuProps['items']>[number];
-
 /**
  * Topics menu action for heterogeneous agents: pick (or create) a folder on
  * the agent's target device and open a new conversation in it — the menu
@@ -33,7 +30,7 @@ type MenuItem = NonNullable<MenuProps['items']>[number];
  *
  * Only heterogeneous (CLI) agents work inside folders, so others get `null`.
  */
-export const useAddFolderMenuItem = (): MenuItem | null => {
+export const useAddFolderMenuItem = (): DropdownItem | null => {
   const { t } = useTranslation('device');
   const agentId = useAgentStore((s) => s.activeAgentId) ?? '';
   const isHeterogeneous = !!useAgentStore(agentSelectors.currentAgentHeterogeneousProviderType);

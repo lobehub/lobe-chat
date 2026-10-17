@@ -1,4 +1,3 @@
-import { Center, Flexbox, Icon } from '@lobehub/ui';
 import {
   AccordionHeader,
   AccordionItem,
@@ -7,9 +6,13 @@ import {
   accordionStyles,
   AccordionTrigger,
   ActionIcon,
+  Center,
+  cssVar,
+  cx,
+  Flexbox,
+  Icon,
   Text,
-} from '@lobehub/ui/base-ui';
-import { cssVar, cx } from 'antd-style';
+} from '@lobehub/ui';
 import isEqual from 'fast-deep-equal';
 import { LaptopIcon, PlusIcon } from 'lucide-react';
 import { memo, useCallback, useMemo, useState } from 'react';

@@ -93,10 +93,6 @@ vi.mock('@lobehub/ui', async (importOriginal) => ({
       )}
     </>
   ),
-}));
-
-vi.mock('@lobehub/ui/base-ui', async (importOriginal) => ({
-  ...(await importOriginal<object>()),
   ActionIcon: ({
     disabled,
     icon,
@@ -439,7 +435,7 @@ describe('TopicChatDrawer', () => {
 
     expect(getByTestId('topic-panel')).toHaveAttribute(
       'data-panel-background',
-      'var(--ant-color-bg-container)',
+      'var(--lobe-color-bg-container)',
     );
   });
 

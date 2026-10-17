@@ -1,5 +1,4 @@
-import { Flexbox, Icon } from '@lobehub/ui';
-import { Text } from '@lobehub/ui/base-ui';
+import { Flexbox, Icon, Text } from '@lobehub/ui';
 import { DoorOpen } from 'lucide-react';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';

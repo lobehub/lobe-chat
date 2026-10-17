@@ -1,7 +1,11 @@
 'use client';
 
-import { ActionIcon, FloatingSheet, type FloatingSheetProps } from '@lobehub/ui/base-ui';
-import { createStaticStyles } from 'antd-style';
+import {
+  ActionIcon,
+  createStaticStyles,
+  FloatingSheet,
+  type FloatingSheetProps,
+} from '@lobehub/ui';
 import { ChevronDown } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { memo, useCallback, useMemo, useState } from 'react';

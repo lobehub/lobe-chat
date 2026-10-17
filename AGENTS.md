@@ -6,7 +6,7 @@ Guidelines for using AI coding agents in this opensource LobeHub repository.
 
 - Next.js 16 + React 19 + TypeScript
 - SPA inside Next.js with `react-router-dom`
-- `@lobehub/ui`, antd, and antd-style for UI implementation
+- `@lobehub/ui` for UI implementation (components plus `createStaticStyles` / `cssVar` for styles)
 - react-i18next for i18n; zustand for state management
 - SWR for data fetching; TRPC for type-safe backend
 - Drizzle ORM with PostgreSQL; Vitest for testing

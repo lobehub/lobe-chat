@@ -2,8 +2,7 @@
 
 import { isDesktop } from '@lobechat/const';
 import type { DeviceListItem, DeviceScope } from '@lobechat/types';
-import { Flexbox, Icon } from '@lobehub/ui';
-import { Button, Skeleton, Text } from '@lobehub/ui/base-ui';
+import { Button, Flexbox, Icon, Skeleton, Text } from '@lobehub/ui';
 import { ArrowLeftIcon, MonitorXIcon } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';

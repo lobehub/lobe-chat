@@ -34,7 +34,7 @@
     "@lobechat/agent-gateway-client": "workspace:*",
     "@lobechat/types": "workspace:*",
     "@lobechat/utils": "workspace:*",
-    "@lobehub/icons": "^5.15.0",
+    "@lobehub/icons": "^6.0.0",
     "@modelcontextprotocol/sdk": "^1.29.0",
     "diff": "^8.0.4",
     "zod": "^4.4.3"

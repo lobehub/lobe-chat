@@ -1,6 +1,6 @@
 'use client';
 
-import { Button, Input } from '@lobehub/ui/base-ui';
+import { Button, Input } from '@lobehub/ui';
 import { RefreshCw } from 'lucide-react';
 
 import { devDockPanelStyles } from '@/features/DevDock/panelStyles';

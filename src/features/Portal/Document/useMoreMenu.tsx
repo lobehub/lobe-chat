@@ -1,5 +1,4 @@
-import { Icon } from '@lobehub/ui';
-import { confirmModal, toast } from '@lobehub/ui/base-ui';
+import { confirmModal, Icon, toast } from '@lobehub/ui';
 import { DownloadIcon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 

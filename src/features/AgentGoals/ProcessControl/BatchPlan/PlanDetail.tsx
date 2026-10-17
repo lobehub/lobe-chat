@@ -1,7 +1,5 @@
 import { useEditor } from '@lobehub/editor/react';
-import { Flexbox } from '@lobehub/ui';
-import { ActionIcon, Text } from '@lobehub/ui/base-ui';
-import { createStaticStyles, cssVar, cx } from 'antd-style';
+import { ActionIcon, createStaticStyles, cssVar, cx, Flexbox, Text } from '@lobehub/ui';
 import { PanelRightCloseIcon, PanelRightOpenIcon } from 'lucide-react';
 import { memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';

@@ -1,17 +1,20 @@
 'use client';
 
 import type { EnvironmentKind, EnvironmentVisibility } from '@lobechat/types';
-import { Flexbox, Icon } from '@lobehub/ui';
 import {
   Button,
   confirmModal,
   createModal,
+  createStaticStyles,
+  cssVar,
+  cx,
+  Flexbox,
+  Icon,
   Input,
   ModalFooter,
   Text,
   useModalContext,
-} from '@lobehub/ui/base-ui';
-import { createStaticStyles, cssVar, cx } from 'antd-style';
+} from '@lobehub/ui';
 import { t as translate } from 'i18next';
 import { CodeXmlIcon, FolderIcon, type LucideIcon } from 'lucide-react';
 import { memo, useState } from 'react';

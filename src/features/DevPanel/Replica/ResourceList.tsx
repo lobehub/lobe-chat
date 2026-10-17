@@ -1,7 +1,6 @@
 'use client';
 
-import { Input } from '@lobehub/ui/base-ui';
-import { cx } from 'antd-style';
+import { cx, Input } from '@lobehub/ui';
 import { Boxes } from 'lucide-react';
 
 import { devDockPanelStyles } from '@/features/DevDock/panelStyles';

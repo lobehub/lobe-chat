@@ -1,5 +1,4 @@
 import { AGENT_CHAT_URL } from '@lobechat/const';
-import { Center, Flexbox, Icon, Tooltip } from '@lobehub/ui';
 import {
   AccordionHeader,
   AccordionItem,
@@ -7,12 +6,18 @@ import {
   accordionStyles,
   AccordionTrigger,
   ActionIcon,
+  Center,
+  createStaticStyles,
+  cssVar,
+  cx,
   type DropdownItem,
   DropdownMenu,
+  Flexbox,
+  Icon,
   Text,
   toast,
-} from '@lobehub/ui/base-ui';
-import { createStaticStyles, cssVar, cx } from 'antd-style';
+  Tooltip,
+} from '@lobehub/ui';
 import isEqual from 'fast-deep-equal';
 import {
   Archive,

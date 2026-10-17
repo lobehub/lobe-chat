@@ -27,23 +27,17 @@ vi.mock('react-i18next', () => ({
   useTranslation: () => ({ t: (key: string) => key }),
 }));
 
-vi.mock('antd-style', () => ({
-  createStaticStyles: () => ({}),
-  cssVar: new Proxy({}, { get: () => 'var(--x)' }),
-  cx: (...args: unknown[]) => args.filter(Boolean).join(' '),
-}));
-
 vi.mock('@lobechat/builtin-tools', () => ({ builtinTools: [] }));
 
 vi.mock('@lobehub/ui', () => ({
+  Avatar: () => null,
   Block: ({ children }: { children?: ReactNode }) => <div>{children}</div>,
+  createStaticStyles: () => ({}),
+  cssVar: new Proxy({}, { get: () => 'var(--x)' }),
+  cx: (...args: unknown[]) => args.filter(Boolean).join(' '),
   Flexbox: ({ children }: { children?: ReactNode }) => <div>{children}</div>,
   Icon: () => null,
   Image: () => null,
-}));
-
-vi.mock('@lobehub/ui/base-ui', () => ({
-  Avatar: () => null,
   Skeleton: { Text: () => <div data-testid="skeleton" /> },
   Tag: ({ children }: { children?: ReactNode }) => <span>{children}</span>,
   Text: ({ children }: { children?: ReactNode }) => <span>{children}</span>,

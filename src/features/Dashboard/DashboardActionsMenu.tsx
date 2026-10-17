@@ -2,13 +2,7 @@
 
 import type { WidgetLevelFilter } from '@lobechat/types';
 import { Icon } from '@lobehub/ui';
-import {
-  ActionIcon,
-  confirmModal,
-  type DropdownItem,
-  DropdownMenu,
-  toast,
-} from '@lobehub/ui/base-ui';
+import { ActionIcon, confirmModal, type DropdownItem, DropdownMenu, toast } from '@lobehub/ui';
 import { MoreHorizontalIcon, PencilIcon, TrashIcon } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';

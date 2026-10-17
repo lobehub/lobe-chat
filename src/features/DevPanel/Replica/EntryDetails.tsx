@@ -1,7 +1,6 @@
 'use client';
 
-import { Button, Switch, TextArea } from '@lobehub/ui/base-ui';
-import { cx } from 'antd-style';
+import { Button, cx, Switch, TextArea } from '@lobehub/ui';
 import { Pencil, RefreshCw, Trash2 } from 'lucide-react';
 
 import { devDockPanelStyles } from '@/features/DevDock/panelStyles';
