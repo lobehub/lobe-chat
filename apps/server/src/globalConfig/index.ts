@@ -159,8 +159,13 @@ export const getServerGlobalConfig = async () => {
     enableBusinessFeatures: ENABLE_BUSINESS_FEATURES,
     enableEmailVerification: authEnv.AUTH_EMAIL_VERIFICATION,
     enableComposio: !!composioEnv.COMPOSIO_API_KEY,
+    // A self-host also needs the service token: without it the server never forwards
+    // run events to the Gateway, so a Gateway-mode run would never reach the client.
     enableGatewayMode:
-      ENABLE_BUSINESS_FEATURES || (!!appEnv.ENABLE_AGENT_GATEWAY && !!appEnv.AGENT_GATEWAY_URL),
+      ENABLE_BUSINESS_FEATURES ||
+      (!!appEnv.ENABLE_AGENT_GATEWAY &&
+        !!appEnv.AGENT_GATEWAY_URL &&
+        !!appEnv.AGENT_GATEWAY_SERVICE_TOKEN),
     enableLobehubSkill: !!(appEnv.MARKET_TRUSTED_CLIENT_SECRET && appEnv.MARKET_TRUSTED_CLIENT_ID),
     enableMagicLink: authEnv.AUTH_ENABLE_MAGIC_LINK,
     enableMarketTrustedClient: !!(
