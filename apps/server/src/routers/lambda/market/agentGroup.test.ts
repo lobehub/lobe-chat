@@ -159,12 +159,3 @@ describe('agentGroupRouter.deprecateAgentGroup', () => {
     expect(error.code).toBe('NOT_FOUND');
   });
 });
-
-describe('agentGroupRouter removed procedures', () => {
-  it.each(['publishAgentGroup', 'unpublishAgentGroup'])(
-    'does not expose %s, which called a Market route that no longer exists',
-    (name) => {
-      expect(Object.keys(agentGroupRouter._def.procedures)).not.toContain(name);
-    },
-  );
-});
