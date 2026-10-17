@@ -1,7 +1,7 @@
 import { useLayoutEffect } from 'react';
-import { useParams } from 'react-router';
 
 import { useResourceManagerStore } from '@/features/ResourceManager/store';
+import { useActiveRouteParams } from '@/hooks/useActiveRouteParams';
 import { useTreeStore } from '@/store/tree';
 
 /**
@@ -10,7 +10,9 @@ import { useTreeStore } from '@/store/tree';
  * The page segment copies the route's library into the ResourceManager store
  * only once its own (lazy) chunk mounts. The sidebar mounts with the layout, so
  * it reads the route first: waiting for the store kept the persisted tree behind
- * a skeleton for as long as the page took to load.
+ * a skeleton for as long as the page took to load. It reads the *active* route:
+ * Electron portals the sidebar into the shell's frozen root router, where raw
+ * `useParams` keeps answering with the boot tab's library.
  *
  * The same pre-paint effect copies the route's library into the store: the
  * sidebar's row actions (navigate, create, upload) read it from there, and must
@@ -20,7 +22,7 @@ import { useTreeStore } from '@/store/tree';
  * snapshot is already in the first painted frame.
  */
 export const useInitLibraryTree = (): string | undefined => {
-  const { id: routeLibraryId } = useParams<{ id: string }>();
+  const { id: routeLibraryId } = useActiveRouteParams<{ id?: string }>();
   const storeLibraryId = useResourceManagerStore((s) => s.libraryId);
   const setLibraryId = useResourceManagerStore((s) => s.setLibraryId);
   const init = useTreeStore((s) => s.init);

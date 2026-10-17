@@ -67,7 +67,8 @@ export interface TreeState extends TreeDataState {
    * paints it on its first frame. Called from the route loader.
    */
   preHydrate: (knowledgeBaseId: string) => Promise<boolean>;
-  reconcile: (folderId: string, items: TreeItem[]) => void;
+  /** `confirmed: false` renders the rows without persisting them (pending explorer overlays). */
+  reconcile: (folderId: string, items: TreeItem[], options?: { confirmed?: boolean }) => void;
   removeItems: (itemIds: string[], parentId: string) => Promise<void>;
   renameItem: (itemId: string, parentId: string, newName: string) => Promise<void>;
   reset: () => void;

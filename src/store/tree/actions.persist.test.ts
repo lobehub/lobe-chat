@@ -229,6 +229,29 @@ describe('TreeActionImpl.init — persisted snapshot', () => {
   });
 });
 
+describe('TreeActionImpl.reconcile — optimistic explorer rows', () => {
+  beforeEach(() => {
+    mockGetKnowledgeItems.mockReset();
+  });
+
+  it('renders an unconfirmed explorer list without persisting it, then persists once it settles', async () => {
+    const { actions, state } = setup();
+    mockGetKnowledgeItems.mockResolvedValue({ items: [serverRow('doc-1')] });
+    actions.init('kb-1');
+    await vi.waitFor(() => expect(state.snapshotMap['kb-1']).toBeDefined());
+
+    // A pending create: the row shows, but a reload must not repaint it.
+    actions.reconcile('', [file('doc-1'), file('temp-row')], { confirmed: false });
+    expect(state.children[''].map((i) => i.id)).toEqual(['doc-1', 'temp-row']);
+    // Nor may an unrelated write persist it meanwhile.
+    actions.toggle('folder-x');
+    expect(state.snapshotMap['kb-1'].children[''].map((i) => i.id)).toEqual(['doc-1']);
+
+    actions.reconcile('', [file('doc-1'), file('doc-2')], { confirmed: true });
+    expect(state.snapshotMap['kb-1'].children[''].map((i) => i.id)).toEqual(['doc-1', 'doc-2']);
+  });
+});
+
 describe('TreeActionImpl — cache scope switch', () => {
   beforeEach(() => {
     mockGetKnowledgeItems.mockReset();

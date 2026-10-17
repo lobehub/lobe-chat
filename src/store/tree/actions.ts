@@ -192,6 +192,13 @@ export class TreeActionImpl {
    */
   #queuedRevalidate = new Set<string>();
 
+  /**
+   * Folders whose rendered rows came from an explorer list with optimistic
+   * overlays still pending (see `reconcile`). The snapshot is not written while
+   * any is set; the explorer's settle or a server answer for the folder clears it.
+   */
+  #unconfirmedFolders = new Set<string>();
+
   #runQueuedRevalidate = (folderId: string) => {
     if (!this.#queuedRevalidate.delete(folderId)) return;
     void this.revalidate(folderId);
@@ -225,6 +232,9 @@ export class TreeActionImpl {
    * change, so a revalidation that confirms the tree costs no storage write.
    */
   #persistSnapshot = () => {
+    // A folder still showing the explorer's optimistic overlay holds rows the
+    // server has not confirmed; persisting it would repaint them after a reload.
+    if (this.#unconfirmedFolders.size > 0) return;
     const { children, expanded, knowledgeBaseId } = this.#get();
     if (!knowledgeBaseId) return;
     const snapshot = buildLibraryTreeSnapshot(children, expanded);
@@ -279,6 +289,7 @@ export class TreeActionImpl {
     }
 
     this.#queuedRevalidate.clear();
+    this.#unconfirmedFolders.clear();
     this.#treeScope = getCacheScope();
     const epoch = current.epoch + 1;
     this.#set(
@@ -349,6 +360,7 @@ export class TreeActionImpl {
 
   reset = () => {
     this.#queuedRevalidate.clear();
+    this.#unconfirmedFolders.clear();
     this.#set(
       {
         children: {},
@@ -409,6 +421,7 @@ export class TreeActionImpl {
         false,
         'tree/loadChildren/success',
       );
+      this.#unconfirmedFolders.delete(folderId);
       this.#persistSnapshot();
       this.#runQueuedRevalidate(folderId);
     } catch (error) {
@@ -472,6 +485,7 @@ export class TreeActionImpl {
         false,
         'tree/revalidate/success',
       );
+      this.#unconfirmedFolders.delete(folderId);
       this.#persistSnapshot();
       this.#runQueuedRevalidate(folderId);
     } catch {
@@ -485,7 +499,12 @@ export class TreeActionImpl {
     }
   };
 
-  reconcile = (folderKey: string, items: TreeItem[]) => {
+  /**
+   * `confirmed: false` — the explorer list still carries optimistic overlays
+   * (a pending create, rename, move or delete): render the rows, but keep them
+   * out of the persisted snapshot until the explorer settles.
+   */
+  reconcile = (folderKey: string, items: TreeItem[], options?: { confirmed?: boolean }) => {
     const folderId = this.#resolveFolderKey(folderKey);
     // The explorer list can hold a row just created for ANOTHER folder (a folder
     // row's "+" while a different folder is open): it cannot tell without the
@@ -502,6 +521,11 @@ export class TreeActionImpl {
       false,
       'tree/reconcile',
     );
+    if (options?.confirmed === false) {
+      this.#unconfirmedFolders.add(folderId);
+      return;
+    }
+    this.#unconfirmedFolders.delete(folderId);
     this.#persistSnapshot();
   };
 
@@ -578,6 +602,7 @@ export class TreeActionImpl {
       delete expanded[id];
       delete status[id];
       delete errors[id];
+      this.#unconfirmedFolders.delete(id);
     }
 
     this.#set({ children, errors, expanded, status }, false, 'tree/dropNodes');
