@@ -21,7 +21,7 @@ const styles = stylex.create({
   },
   title: {
     color: cssVar.colorText,
-    flex: 1,
+    flex: '1',
     fontSize: { default: 16, [media.sm]: 14 },
     fontWeight: 500,
     lineHeight: { default: '32px', [media.sm]: '16px' },
