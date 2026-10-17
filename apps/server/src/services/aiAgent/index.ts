@@ -14,7 +14,7 @@ import type {
   ScheduleAgentRunResult,
   UserInterventionConfig,
 } from '@lobechat/types';
-import { getWorkingDirEffectivePath, RequestTrigger } from '@lobechat/types';
+import { RequestTrigger } from '@lobechat/types';
 import { nanoid } from '@lobechat/utils';
 import { TRPCError } from '@trpc/server';
 import debug from 'debug';
@@ -48,12 +48,6 @@ import type {
 } from '@/server/services/agentRuntime';
 import { AgentRuntimeService } from '@/server/services/agentRuntime';
 import { getAbortError, throwIfAborted } from '@/server/services/agentRuntime/abort';
-// Imported from the module itself: tests mock the `agentRuntime` barrel.
-import {
-  isComposerSupersedableTrigger,
-  type SupersedeKind,
-  type SupersedeRecord,
-} from '@/server/services/agentRuntime/foregroundOperation';
 import type {
   ExecGroupMemberParams,
   ExecGroupMemberResult,
@@ -73,16 +67,24 @@ import { InterventionController } from './intervention/InterventionController';
 import type { ApprovalClaimState } from './pipeline/approvalResume';
 import { claimApprovalResume, tryReuseInterventionContinuation } from './pipeline/approvalResume';
 import {
+  type ForegroundSupersedeDeps,
+  recordSupersede,
+  resolveReplacedOperationId,
+  supersedeRunningForegroundOperation,
+} from './pipeline/foregroundSupersede';
+import {
   type GroupMemberBridgeParams,
   resolveGroupMemberApprovalContinuation,
 } from './pipeline/groupMemberApproval';
 import { dispatchHeteroAgent } from './pipeline/heteroDispatch';
+import { resolveNewThread } from './pipeline/newThread';
 import { buildOperationInitRequest, runOperationInit } from './pipeline/operationInit';
 import { createHistoryMessagesLoader } from './pipeline/operationPrep';
 import { type PrecreatedTopicDeps, resolvePrecreatedTopicConfig } from './pipeline/precreatedTopic';
 import { resolveRunAgentConfig } from './pipeline/resolveRunAgentConfig';
 import { traceSendStage } from './pipeline/sendTracing';
 import { startOperation } from './pipeline/startOperation';
+import { bindTopicWorkingDirectory } from './pipeline/topicWorkingDirectory';
 import { resolveNewTopicSnapshot, setupTurn } from './pipeline/turnSetup';
 import { createRunFacts, type RunFacts } from './runFacts';
 import { applyShareGateToAgentConfig } from './shareGate';
@@ -92,11 +94,7 @@ import { closeSubAgentLlmRelay, openSubAgentLlmRelay } from './subAgentLlmRelay'
 import type { SubAgentRunDeps } from './subAgentRuns';
 import { execAgentMember, execAgentThreadRun } from './subAgentRuns';
 import { acquireTopicStartReservation, TopicStartReservationError } from './topicStartReservation';
-import type {
-  BindTopicWorkingDirectoryParams,
-  ExecRunContext,
-  InternalExecAgentParams,
-} from './types';
+import type { ExecRunContext, InternalExecAgentParams } from './types';
 
 const log = debug('lobe-server:ai-agent-service');
 
@@ -227,6 +225,16 @@ export class AiAgentService {
     };
   }
 
+  /** Dependency bundle for the topic-start supersede helpers in `pipeline/foregroundSupersede.ts`. */
+  private get foregroundSupersedeDeps(): ForegroundSupersedeDeps {
+    return {
+      agentOperationModel: this.agentOperationModel,
+      agentRuntimeService: this.agentRuntimeService,
+      interruptTask: (p) => this.interruptTask(p),
+      topicModel: this.topicModel,
+    };
+  }
+
   private async getMarketService(
     runFacts?: RunFacts,
     options?: { sandboxStorage: SandboxStorageClaim },
@@ -291,69 +299,6 @@ export class AiAgentService {
       this.workspaceId,
     ).findWorkspaceDeviceById(deviceId);
     return row ? this.workspaceId : undefined;
-  }
-
-  /**
-   * Pin a topic to the directory its run actually executes in.
-   *
-   * A topic created by a device-bound run starts with no cwd of its own: the
-   * directory was only ever recorded at agent level
-   * (`agencyConfig.workingDirByDevice`) or on the device (`defaultCwd`). Without
-   * this write the topic stays unbound — By-Project grouping files it under "No
-   * directory", and every later turn re-resolves from the agent config, so
-   * changing the agent's directory silently moves an old conversation to a new
-   * project (and makes hetero `--resume` unsafe).
-   *
-   * Shared by BOTH execution paths — hetero device dispatch and the normal
-   * agent runtime — so a native agent bound to a device gets the same binding a
-   * CLI agent does. Purely additive: a topic that already carries a cwd (the
-   * client resolved one and sent it as `initialTopicMetadata`, or an earlier
-   * turn bound it) is never rewritten, so the historical pin always wins.
-   *
-   * The pin is a bare path that only holds on the machine it came from, so the
-   * device is stamped alongside it (`boundDeviceId`, unless the topic already
-   * names one) — that is what lets another device skip it. A topic already
-   * bound to a different device is left unpinned rather than given this
-   * device's path.
-   *
-   * An unbound topic that already carries a cwd (the client's initial
-   * metadata, or a pre-binding row) still gets the device stamped: the run
-   * just used that cwd here, and the binding is what keeps later turns and the
-   * device picker on this machine.
-   */
-  private async bindTopicWorkingDirectory(params: BindTopicWorkingDirectoryParams): Promise<void> {
-    const { config, currentDeviceId, currentWorkingDirectory, deviceId, topicId } = params;
-    if (!config) {
-      // No directory resolved on this machine (no agent pick, no device
-      // default), so the caller never read the topic either. The run still
-      // happened here — pin an unbound topic to it all the same.
-      if (deviceId) await this.stampTopicDevice(topicId, deviceId);
-      return;
-    }
-    if (currentDeviceId && deviceId && currentDeviceId !== deviceId) return;
-    const stampDevice = !!deviceId && !currentDeviceId;
-    const path = currentWorkingDirectory ? undefined : getWorkingDirEffectivePath(config);
-    if (!path && !stampDevice) return;
-
-    try {
-      await this.topicModel.updateMetadata(topicId, {
-        ...(stampDevice && { boundDeviceId: deviceId }),
-        ...(path && { workingDirectory: path, workingDirectoryConfig: config }),
-      });
-    } catch (err) {
-      // Metadata bookkeeping must never fail a run that is otherwise fine.
-      log('execAgent: bindTopicWorkingDirectory failed (non-fatal): %O', err);
-    }
-  }
-
-  private async stampTopicDevice(topicId: string, deviceId: string): Promise<void> {
-    try {
-      const topic = await this.topicModel.findById(topicId);
-      if (!topic || topic.metadata?.boundDeviceId) return;
-      await this.topicModel.updateMetadata(topicId, { boundDeviceId: deviceId });
-    } catch (err) {
-      log('execAgent: stampTopicDevice failed (non-fatal): %O', err);
-    }
   }
 
   /**
@@ -608,7 +553,10 @@ export class AiAgentService {
     // asked for one is already a thread run by the time the reservation check
     // below reads `appContext.threadId` — same isolation as a follow-up inside
     // an existing thread.
-    const { createdThreadId, params } = await this.resolveNewThread(inputParams);
+    const { createdThreadId, params } = await resolveNewThread(
+      { threadModel: this.threadModel },
+      inputParams,
+    );
     // The client needs the id back to pivot its optimistic `_new` thread bucket
     // and refresh the sidebar; every return path below must carry it.
     const withCreatedThread = (result: ExecAgentResult): ExecAgentResult =>
@@ -647,7 +595,7 @@ export class AiAgentService {
 
     const replacesOperationId = isInterventionThreadStart
       ? undefined
-      : await this.resolveReplacedOperationId(params, topicId);
+      : await resolveReplacedOperationId(this.foregroundSupersedeDeps, params, topicId);
 
     // A replacement is allowed to take over the topic marker, but the device
     // process that owned the old marker may still hold a native Codex/CC writer.
@@ -681,137 +629,24 @@ export class AiAgentService {
     try {
       const superseded =
         params.interactiveStart && !isInterventionThreadStart
-          ? await this.supersedeRunningForegroundOperation(topicId, [
+          ? await supersedeRunningForegroundOperation(this.foregroundSupersedeDeps, topicId, [
               replacesOperationId,
               params.topicStartOwnerOperationId,
             ])
           : undefined;
       const result = await this.execAgentWithApprovalRollback(params);
       if (superseded) {
-        await this.recordSupersede(topicId, result.operationId, superseded, params);
+        await recordSupersede(
+          this.foregroundSupersedeDeps,
+          topicId,
+          result.operationId,
+          superseded,
+          params,
+        );
       }
       return withCreatedThread(result);
     } finally {
       await this.topicModel.releaseTaskCallbackReservation(topicId, reservationId);
-    }
-  }
-
-  /**
-   * The run this start replaces. A composer send names it from client state, so
-   * it is honored only when it is one of this user's runs on the same topic;
-   * server-derived continuations are trusted as given.
-   */
-  private async resolveReplacedOperationId(
-    params: InternalExecAgentParams,
-    topicId: string,
-  ): Promise<string | undefined> {
-    const { replacesOperationId } = params;
-    if (!replacesOperationId || !params.interactiveStart) return replacesOperationId;
-
-    const replaced = await this.agentOperationModel.findById(replacesOperationId);
-    return replaced?.topicId === topicId ? replacesOperationId : undefined;
-  }
-
-  /**
-   * Retire the foreground run that still owns the topic's `runningOperation`
-   * before an interactive send starts the next one.
-   *
-   * The client is expected to stop a live run before sending (Stop / Send now)
-   * or to queue the send until the run yields. When it misses one, nothing else
-   * stops that run: `startOperation` overwrites the marker, and both runs keep
-   * reading the same topic, interleave writes, and invalidate each other's
-   * prompt cache, multiplying the conversation's cost for as long as the old
-   * run lives.
-   *
-   * Runs inside the topic-start reservation so two fast sends cannot both read
-   * the same stale holder. Only a `running` foreground run is retired; these
-   * keep the existing behavior:
-   * - a parked run (`waiting_for_human` etc.) — the send may be its answer;
-   * - a background producer's run (task, cron, bot, …), see
-   *   `isComposerSupersedableTrigger` in `agentRuntime/foregroundOperation`.
-   *   An Agent Signal run on the main spine (task-result wakeup) is retired
-   *   like a foreground run: the client never tracks it, so it cannot queue;
-   * - a device-hosted Claude Code / Codex run: cancelling it waits up to 10s
-   *   for the device, far past the reservation's ~3s retry budget, so a
-   *   concurrent send would fail. Those settle through `replacesOperationId`
-   *   before reserving.
-   *
-   * @returns the retired run and whether it had already been asked to stop, so
-   * the caller can record the overlap on the new run.
-   */
-  private async supersedeRunningForegroundOperation(
-    topicId: string,
-    alreadyHandledOperationIds: (string | undefined)[],
-  ): Promise<{ holderId: string; kind: SupersedeKind } | undefined> {
-    const topic = await this.topicModel.findById(topicId);
-    const marker = topic?.metadata?.runningOperation;
-    const holderId = marker?.operationId;
-    if (!holderId || marker.heteroType || alreadyHandledOperationIds.includes(holderId)) return;
-
-    const holder = await this.agentOperationModel.findById(holderId);
-    if (holder?.status !== 'running') return;
-    if (!isComposerSupersedableTrigger(holder.trigger)) return;
-
-    // Read before interrupting: afterwards the sentinel is always set. The
-    // read is diagnostic only, so a failure must not fail the send.
-    let kind: SupersedeKind;
-    try {
-      kind = (await this.agentRuntimeService.isOperationInterrupted(holderId))
-        ? 'already_stopping'
-        : 'client_missed';
-    } catch (error) {
-      console.error('[execAgent] failed to read interrupt state of %s:', holderId, error);
-      kind = 'unknown';
-    }
-
-    log(
-      'execAgent: superseding running foreground operation %s on topic %s (%s)',
-      holderId,
-      topicId,
-      kind,
-    );
-    const interrupted = await this.interruptTask({ operationId: holderId, topicId });
-    // Unconfirmed only when the run has no runtime state left but its row has
-    // not settled yet: nothing executes its next step, so the send proceeds
-    // rather than failing on a run that cannot spend any more.
-    if (!interrupted.success) {
-      console.warn('[execAgent] supersede of %s was not confirmed', holderId, { topicId });
-    }
-    return { holderId, kind };
-  }
-
-  /**
-   * Persist the supersede on the new run's `metadata.supersede`, with the
-   * client's view of its runs at send time. A `client_missed` supersede means
-   * the client let a live run keep going — the case to investigate — so it is
-   * also warned. Diagnostic only: a failure here never fails the send.
-   */
-  private async recordSupersede(
-    topicId: string,
-    operationId: string,
-    superseded: { holderId: string; kind: SupersedeKind },
-    params: InternalExecAgentParams,
-  ): Promise<void> {
-    const record: SupersedeRecord = {
-      client: params.clientRunSnapshot,
-      kind: superseded.kind,
-      supersededAt: new Date().toISOString(),
-      supersededOperationId: superseded.holderId,
-    };
-
-    if (superseded.kind === 'client_missed') {
-      console.warn('[execAgent] client missed a running foreground operation', {
-        client: params.clientRunSnapshot,
-        operationId,
-        supersededOperationId: superseded.holderId,
-        topicId,
-      });
-    }
-
-    try {
-      await this.agentOperationModel.mergeMetadata(operationId, { supersede: record });
-    } catch (error) {
-      console.error('[execAgent] failed to record supersede on %s:', operationId, error);
     }
   }
 
@@ -845,65 +680,6 @@ export class AiAgentService {
         );
       }
     }
-  }
-
-  /**
-   * Materialise an `appContext.newThread` intent into a real thread row.
-   *
-   * The composer stages a subtopic client-side and the non-gateway send path
-   * creates it inside `sendMessageInServer` (`newThread`). The gateway path
-   * never makes that call, so the intent arrives here instead — without this
-   * the turn would persist onto the topic's main spine, no thread row would
-   * exist, and the subtopic would silently collapse back into the main
-   * conversation.
-   *
-   * Returns the params to run with: `appContext.threadId` rebound to the new
-   * thread so every downstream read (message writes, history queries, operation
-   * context) lands inside it. A no-op for every caller that doesn't ask for one.
-   */
-  private async resolveNewThread(params: InternalExecAgentParams): Promise<{
-    createdThreadId?: string;
-    params: InternalExecAgentParams;
-  }> {
-    const { appContext } = params;
-    const newThread = appContext?.newThread;
-
-    // `threadId` wins: that is a follow-up inside a thread that already exists,
-    // and creating a second row would orphan the earlier turns.
-    if (!newThread || appContext?.threadId) return { params };
-
-    // A subtopic branches off a persisted message, so its topic always exists by
-    // the time the send reaches here. Refusing is better than silently creating
-    // a thread on a topic this run is about to mint under a different id.
-    if (!appContext?.topicId) {
-      throw new Error('appContext.newThread requires an existing appContext.topicId');
-    }
-
-    const thread = await this.threadModel.create({
-      parentThreadId: newThread.parentThreadId,
-      sourceMessageId: newThread.sourceMessageId,
-      title: newThread.title,
-      topicId: appContext.topicId,
-      type: newThread.type,
-    });
-
-    // `ThreadModel.create` swallows insert conflicts and returns undefined.
-    // Falling through would persist the turn to the main spine — exactly the
-    // failure this path exists to prevent — so fail loudly instead.
-    if (!thread) {
-      throw new Error(`Failed to create thread on topic ${appContext.topicId}`);
-    }
-
-    log('execAgent: created thread %s on topic %s', thread.id, appContext.topicId);
-
-    return {
-      createdThreadId: thread.id,
-      params: {
-        ...params,
-        appContext: { ...appContext, threadId: thread.id },
-        createdThreadId: thread.id,
-      },
-    };
   }
 
   private async execAgentWithReservation(
@@ -1324,7 +1100,8 @@ export class AiAgentService {
     if (isHeteroAgent) {
       return dispatchHeteroAgent(
         {
-          bindTopicWorkingDirectory: (p) => this.bindTopicWorkingDirectory(p),
+          bindTopicWorkingDirectory: (p) =>
+            bindTopicWorkingDirectory({ topicModel: this.topicModel }, p),
           db: this.db,
           getMarketService: (options) => this.getMarketService(runFacts, options),
           messageModel: this.messageModel,
@@ -1489,7 +1266,8 @@ export class AiAgentService {
         {
           agentDocumentsService: this.agentDocumentsService,
           agentModel: this.agentModel,
-          bindTopicWorkingDirectory: (p) => this.bindTopicWorkingDirectory(p),
+          bindTopicWorkingDirectory: (p) =>
+            bindTopicWorkingDirectory({ topicModel: this.topicModel }, p),
           composioService: this.composioService,
           connectorModel: this.connectorModel,
           connectorToolModel: this.connectorToolModel,
