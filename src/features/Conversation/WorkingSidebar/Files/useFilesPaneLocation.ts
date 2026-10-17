@@ -32,6 +32,14 @@ export interface FilesPaneLocation {
  * is known. A device-backed directory is only final once the device list has
  * loaded; until then the tree opens where this conversation last was, so its
  * cached index can paint instead of a home-directory read or a missing tab.
+ *
+ * A directory is only showable when something can actually read it: the
+ * sandbox through its workspace API, a device or this machine through the
+ * filesystem. A topic can carry a path persisted on a desktop the web client
+ * has no way to reach, and that path is not a tree — it is a string. An
+ * instance is what makes a sandbox tree addressable; persistent mode with none
+ * picked is the workspace root, which the execution plane can only resolve
+ * through a conversation, so that one still waits for the topic.
  */
 export const useFilesPaneLocation = ({
   activeAgentId,
