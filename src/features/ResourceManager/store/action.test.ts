@@ -8,17 +8,27 @@ import { useResourceManagerStore } from '.';
 import { initialState } from './initialState';
 import { explorerSearchResource } from './projection';
 
-const { mockDeleteResourcesByQuery, mockDropNodes, mockResolveSelectionIds, mockRevalidateTree } =
-  vi.hoisted(() => ({
-    mockDeleteResourcesByQuery: vi.fn(),
-    mockDropNodes: vi.fn(async () => undefined),
-    mockResolveSelectionIds: vi.fn(),
-    mockRevalidateTree: vi.fn(async () => undefined),
-  }));
+const {
+  mockDeleteResourcesByQuery,
+  mockDropNodes,
+  mockForgetSnapshot,
+  mockResolveSelectionIds,
+  mockRevalidateTree,
+} = vi.hoisted(() => ({
+  mockDeleteResourcesByQuery: vi.fn(),
+  mockDropNodes: vi.fn(async () => undefined),
+  mockForgetSnapshot: vi.fn(),
+  mockResolveSelectionIds: vi.fn(),
+  mockRevalidateTree: vi.fn(async () => undefined),
+}));
 
 vi.mock('@/store/tree', () => ({
   useTreeStore: {
-    getState: () => ({ dropNodes: mockDropNodes, revalidate: mockRevalidateTree }),
+    getState: () => ({
+      dropNodes: mockDropNodes,
+      forgetSnapshot: mockForgetSnapshot,
+      revalidate: mockRevalidateTree,
+    }),
   },
 }));
 
@@ -262,6 +272,8 @@ describe('resource manager store actions', () => {
     // Individual ids never reach the client here, so the whole folder is refetched.
     expect(mockRevalidateTree).toHaveBeenCalledWith('folder-a');
     expect(mockDropNodes).not.toHaveBeenCalled();
+    // A refetch that never lands must not leave the deleted rows in the persisted tree.
+    expect(mockForgetSnapshot).toHaveBeenCalledTimes(1);
   });
 });
 

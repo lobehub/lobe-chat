@@ -155,6 +155,11 @@ export class KnowledgeBaseCrudActionImpl {
       knowledgeBaseService.deleteKnowledgeBase(id),
     );
 
+    // The library sidebar persists its tree per library: a revisit of the old
+    // URL must not repaint the deleted library's rows.
+    const { useTreeStore } = await import('@/store/tree');
+    useTreeStore.getState().forgetLibrary(id);
+
     await this.#get().refreshKnowledgeBaseList();
   };
 
