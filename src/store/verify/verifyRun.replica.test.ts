@@ -166,6 +166,39 @@ describe('verify run replica', () => {
     await waitFor(async () => expect((await stored())?.state?.verifyStatus).toBe('failed'));
   });
 
+  it('does not persist a settled status paired with results that are still pending', async () => {
+    // State and results are two requests: a check can finish between them, so
+    // the terminal status may arrive with the pre-commit pending rows.
+    const torn = run('passed', 'pending');
+    torn.state!.verifyPlan = [{ id: 'item-1', required: true, title: 'Renders the card' }] as never;
+    serve(torn);
+
+    renderHook(() => useVerifyStore.getState().useFetchVerifyRun(OP), { wrapper });
+
+    await waitFor(() =>
+      expect(useVerifyStore.getState().verifyRunMap[OP]?.state?.verifyStatus).toBe('passed'),
+    );
+    await new Promise((resolve) => setTimeout(resolve, 50));
+    expect(await stored()).toBeUndefined();
+  });
+
+  it('does not persist a settled status missing a required result', async () => {
+    const missing = run('failed', 'failed');
+    missing.state!.verifyPlan = [
+      { id: 'item-1', onFail: 'manual', required: true, title: 'Renders the card' },
+      { id: 'item-2', onFail: 'manual', required: true, title: 'Not reported yet' },
+    ] as never;
+    serve(missing);
+
+    renderHook(() => useVerifyStore.getState().useFetchVerifyRun(OP), { wrapper });
+
+    await waitFor(() =>
+      expect(useVerifyStore.getState().verifyRunMap[OP]?.state?.verifyStatus).toBe('failed'),
+    );
+    await new Promise((resolve) => setTimeout(resolve, 50));
+    expect(await stored()).toBeUndefined();
+  });
+
   it('keeps an unsettled run out of the replica index', async () => {
     serve(run('verifying', 'running'));
 

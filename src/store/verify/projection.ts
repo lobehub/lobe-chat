@@ -80,10 +80,29 @@ const awaitsAutoRepair = ({ results, state }: VerifyRunSnapshot): boolean => {
   );
 };
 
+const UNFINISHED_RESULT_STATUSES = new Set(['pending', 'running']);
+
+/**
+ * State and results are two requests with no shared snapshot: a check that
+ * finishes between them can pair the terminal status with its pre-commit
+ * pending row (or no row). Only a snapshot where every required check has a
+ * finished result is consistent enough to replay.
+ */
+const hasFinishedRequiredResults = ({ results, state }: VerifyRunSnapshot): boolean => {
+  const byItem = new Map(results.map((result) => [result.checkItemId, result]));
+  return (state?.verifyPlan ?? [])
+    .filter((item) => item.required !== false)
+    .every((item) => {
+      const result = byItem.get(item.id);
+      return !!result && !UNFINISHED_RESULT_STATUSES.has(result.status);
+    });
+};
+
 /** A run whose verdict no longer moves — the only kind worth replaying after a reload. */
 export const isSettledVerifyRun = (run: VerifyRunSnapshot | undefined): boolean => {
   const status = run?.state?.verifyStatus;
-  if (!status || !SETTLED_VERIFY_STATUSES.has(status)) return false;
+  if (!run || !status || !SETTLED_VERIFY_STATUSES.has(status)) return false;
+  if (!hasFinishedRequiredResults(run)) return false;
   return status !== 'failed' || !awaitsAutoRepair(run);
 };
 
