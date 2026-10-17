@@ -1,7 +1,6 @@
 'use client';
 
-import { CopyButton, Flexbox, Icon } from '@lobehub/ui';
-import { ActionIcon, Tag, Text } from '@lobehub/ui/base-ui';
+import { ActionIcon, CopyButton, Flexbox, Icon, Tag, Text } from '@lobehub/ui';
 import { Trash2 } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';

@@ -16,7 +16,7 @@ const ui = vi.hoisted(() => ({
 
 vi.mock('@/services/agentAccount', () => ({ agentAccountService: service }));
 
-vi.mock('@lobehub/ui/base-ui', async (importOriginal) => ({
+vi.mock('@lobehub/ui', async (importOriginal) => ({
   ...(await importOriginal<Record<string, unknown>>()),
   confirmModal: ui.confirmModal,
   createModal: ui.createModal,
