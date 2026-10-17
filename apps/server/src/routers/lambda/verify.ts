@@ -16,7 +16,6 @@ import type {
 } from '@lobechat/types';
 import { verifyCheckDefinitionSchema } from '@lobechat/types';
 import { TRPCError } from '@trpc/server';
-import { asc, eq } from 'drizzle-orm';
 import { z } from 'zod';
 
 import {
@@ -33,14 +32,6 @@ import { VerifyEvidenceModel } from '@/database/models/verifyEvidence';
 import { VerifyReportModel } from '@/database/models/verifyReport';
 import { VerifyRubricModel } from '@/database/models/verifyRubric';
 import { VerifyRunModel } from '@/database/models/verifyRun';
-import { WorkspaceMemberModel } from '@/database/models/workspaceMember';
-import {
-  verifyCheckResults,
-  verifyEvidence,
-  verifyReports,
-  verifyRuns,
-} from '@/database/schemas/verify';
-import { isUuid } from '@/database/utils/uuid';
 import { publicProcedure, router } from '@/libs/trpc/lambda';
 import { serverDatabase } from '@/libs/trpc/lambda/middleware';
 import { markSilentTRPCErrorLog } from '@/libs/trpc/utils/errorLogger';
@@ -48,7 +39,6 @@ import { FileService } from '@/server/services/file';
 import { GoalCriteriaGeneratorService } from '@/server/services/goal/criteriaGenerator';
 import {
   AcceptanceService,
-  createEvidenceFileResolver,
   evidenceTypeForStoredFile,
   finalizeVerifyRun,
   purgeVerifyRun,
@@ -60,6 +50,7 @@ import {
 } from '@/server/services/verify';
 
 import { assertWorkspaceRowManageable } from './_helpers/assertWorkspaceRowManageable';
+import { verifyRunReportProcedures } from './verifyRunReport';
 
 const verifierTypeSchema = z.enum(['program', 'agent', 'llm']);
 const onFailSchema = z.enum(['manual', 'auto_repair']);
@@ -290,8 +281,6 @@ const verifyProcedure = wsCompatProcedure.use(serverDatabase).use(async (opts) =
 // Writes: workspace mode requires at least the member role, gating viewers
 // out (read-only role) while personal mode passes through unrestricted.
 const verifyWriteProcedure = verifyProcedure.use(requireWorkspaceRoleWhenScoped('member'));
-
-const publicVerifyReportProcedure = publicProcedure.use(serverDatabase);
 
 const resolveVerifyRun = async (ctx: { runModel: VerifyRunModel }, verifyRunId: string) => {
   const run = await ctx.runModel.findById(verifyRunId);
@@ -1216,78 +1205,5 @@ export const verifyRouter = router({
       await ctx.runModel.setVisibility(run.id, input.visibility);
     }),
 
-  /**
-   * One-shot payload for the standalone report viewer: the session, its report,
-   * and every check result with its evidence — addressed purely by verifyRunId
-   * (no operation / chat context required).
-   *
-   * Public like the acceptance page: a `public` run's report URL is readable by
-   * anyone holding the id; `private` stays gated to the owner and (for
-   * workspace scope) workspace members. A denied read looks exactly like a
-   * missing run (`null`) — existence must not leak. `isOwner` additionally
-   * gates what only the author may see — today the origin conversation,
-   * which is redacted for everyone else.
-   */
-  getReportBundle: publicVerifyReportProcedure
-    .input(verifyRunIdInputSchema)
-    .query(async ({ ctx, input }) => {
-      // Public entry fed by shared links: a chat autolinker can glue trailing
-      // CJK punctuation onto the URL, so a malformed uuid must read as absent
-      // instead of aborting in Postgres (22P02 → 500).
-      if (!isUuid(input.verifyRunId)) return null;
-      const found = await ctx.serverDB.query.verifyRuns.findFirst({
-        where: eq(verifyRuns.id, input.verifyRunId),
-      });
-      if (!found) return null;
-
-      const isOwner = Boolean(ctx.userId) && ctx.userId === found.userId;
-      let canRead = isOwner || found.visibility === 'public';
-      if (!canRead && ctx.userId && found.workspaceId) {
-        const member = await new WorkspaceMemberModel(ctx.serverDB, ctx.userId).getMember(
-          found.workspaceId,
-          ctx.userId,
-        );
-        canRead = Boolean(member);
-      }
-      if (!canRead) return null;
-      // `origin` points at the author's private topic/agent — never hand it to a
-      // visitor holding nothing but the shared link.
-      const { origin: _origin, ...publicMetadata } = found.metadata ?? {};
-      const run =
-        isOwner || !found.metadata?.origin ? found : { ...found, metadata: publicMetadata };
-      const [report, results] = await Promise.all([
-        ctx.serverDB.query.verifyReports.findFirst({
-          where: eq(verifyReports.verifyRunId, input.verifyRunId),
-        }),
-        ctx.serverDB
-          .select()
-          .from(verifyCheckResults)
-          .where(eq(verifyCheckResults.verifyRunId, input.verifyRunId))
-          .orderBy(asc(verifyCheckResults.checkItemIndex)),
-      ]);
-
-      // Resolve display metadata for each file-backed evidence artifact.
-      const resolveFileMeta = createEvidenceFileResolver(
-        ctx.serverDB,
-        run.userId,
-        run.workspaceId ?? undefined,
-      );
-
-      const resultsWithEvidence = await Promise.all(
-        results.map(async (r) => {
-          const evidence = await ctx.serverDB
-            .select()
-            .from(verifyEvidence)
-            .where(eq(verifyEvidence.checkResultId, r.id))
-            .orderBy(asc(verifyEvidence.createdAt));
-          return {
-            ...r,
-            evidence: await Promise.all(
-              evidence.map(async (e) => ({ ...e, ...(await resolveFileMeta(e.fileId)) })),
-            ),
-          };
-        }),
-      );
-      return { isOwner, report: report ?? null, results: resultsWithEvidence, run };
-    }),
+  ...verifyRunReportProcedures,
 });

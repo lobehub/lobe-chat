@@ -13,23 +13,11 @@ import {
   useAcceptanceList,
   useRubrics,
   useVerifyReportBundle,
-  useVerifyReportSummariesInfinite,
 } from './hooks';
 
 const useSWRInfiniteMock = vi.hoisted(() => vi.fn());
 
 vi.mock('swr/infinite', () => ({ default: useSWRInfiniteMock }));
-
-const mockInfiniteResponse = (overrides: Record<string, unknown> = {}) => ({
-  data: undefined,
-  error: undefined,
-  isLoading: false,
-  isValidating: false,
-  mutate: vi.fn(),
-  setSize: vi.fn(),
-  size: 1,
-  ...overrides,
-});
 
 const createSWRWrapper = (cache: Cache) =>
   function SWRTestWrapper({ children }: PropsWithChildren) {
@@ -141,29 +129,5 @@ describe('Verify data hooks', () => {
     await act(() => new Promise((resolve) => setTimeout(resolve, 20)));
 
     expect(listRubrics).not.toHaveBeenCalled();
-  });
-
-  it('keeps loaded reports visible while SWR revalidates after a remount', () => {
-    useSWRInfiniteMock.mockReturnValue(
-      mockInfiniteResponse({
-        data: [{ items: [], nextCursor: null }],
-        isLoading: true,
-        isValidating: true,
-      }),
-    );
-
-    const { result } = renderHook(() => useVerifyReportSummariesInfinite(''));
-
-    expect(result.current.isLoadingInitial).toBe(false);
-    expect(result.current.isLoadingMore).toBe(false);
-  });
-
-  it('reports initial loading only before the first page is available', () => {
-    useSWRInfiniteMock.mockReturnValue(mockInfiniteResponse({ isLoading: true }));
-
-    const { result } = renderHook(() => useVerifyReportSummariesInfinite(''));
-
-    expect(result.current.isLoadingInitial).toBe(true);
-    expect(result.current.isLoadingMore).toBe(false);
   });
 });
