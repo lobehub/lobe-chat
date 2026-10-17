@@ -42,6 +42,15 @@ describe('createStylexEntryCss', () => {
     expect((plugins[1].generateBundle as { order: string }).order).toBe('post');
   });
 
+  it('runs only in client environments, not in an SSR build', () => {
+    const { plugins } = createStylexEntryCss('lh');
+    for (const plugin of plugins) {
+      const applies = plugin.applyToEnvironment as (env: unknown) => boolean;
+      expect(applies({ config: { consumer: 'client' } })).toBe(true);
+      expect(applies({ config: { consumer: 'server' } })).toBe(false);
+    }
+  });
+
   it('targets the CSS carrying the stylex.css marker, not a lazy index chunk', () => {
     const { cssInjectionTarget, plugins } = createStylexEntryCss('lh');
     run(
