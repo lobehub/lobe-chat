@@ -1,6 +1,6 @@
 'use client';
 
-import { createModal, useModalContext } from '@lobehub/ui/base-ui';
+import { createModal, useModalContext } from '@lobehub/ui';
 
 import { AcceptanceBundleGate, AcceptanceScope } from '../AcceptanceScope';
 import { useAcceptanceBundle } from '../useAcceptanceBundle';

@@ -1,9 +1,19 @@
 'use client';
 
 import type { GoalReleaseGateDossier, GoalReleaseGateUnit } from '@lobechat/types';
-import { Flexbox, Icon, Markdown } from '@lobehub/ui';
-import { ActionIcon, Button, Text, TextArea, toast } from '@lobehub/ui/base-ui';
-import { createStaticStyles, cssVar, cx } from 'antd-style';
+import {
+  ActionIcon,
+  Button,
+  createStaticStyles,
+  cssVar,
+  cx,
+  Flexbox,
+  Icon,
+  Markdown,
+  Text,
+  TextArea,
+  toast,
+} from '@lobehub/ui';
 import {
   CircleCheck,
   CircleDashed,

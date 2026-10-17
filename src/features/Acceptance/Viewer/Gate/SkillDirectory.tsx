@@ -1,7 +1,6 @@
 'use client';
 
-import { Flexbox, Highlighter, Markdown } from '@lobehub/ui';
-import { createStaticStyles, cssVar } from 'antd-style';
+import { createStaticStyles, cssVar, Flexbox, Highlighter, Markdown } from '@lobehub/ui';
 import { memo, useMemo, useState } from 'react';
 
 import Loading from '@/components/Loading/CircleLoading';
