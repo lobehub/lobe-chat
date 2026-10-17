@@ -44,7 +44,9 @@ const collectIdentifiers = (input: AgentPluginsInput): string[] => {
 /**
  * Identifiers the local catalog already resolves to something that is not a
  * Market skill to install: builtin tools and skills, installed plugins,
- * connectors and installed Market skills. A same-named skill from another
+ * connectors and, once the skills list is server-confirmed, installed Market
+ * skills (a list hydrated from the persisted copy can miss what was installed
+ * elsewhere, and the server answers `installed` for those anyway). A same-named skill from another
  * source is deliberately not listed — the server reports it as a conflict.
  */
 const getResolvedIdentifiers = (): Set<string> => {
@@ -66,8 +68,10 @@ const getResolvedIdentifiers = (): Set<string> => {
   for (const item of getConnectorCatalog({ composio: true, lobehub: true })) {
     resolved.add(item.type === 'lobehub' ? item.provider.id : item.serverType.identifier);
   }
-  for (const skill of agentSkillsSelectors.getMarketAgentSkills(state)) {
-    resolved.add(skill.identifier);
+  if (agentSkillsSelectors.isAgentSkillListSynced(state)) {
+    for (const skill of agentSkillsSelectors.getMarketAgentSkills(state)) {
+      resolved.add(skill.identifier);
+    }
   }
 
   return resolved;

@@ -6,7 +6,7 @@ import { useSingleton } from '@/hooks/useSingleton';
 import { ensureAgentMarketSkills } from '@/services/ensureAgentMarketSkills';
 import type { EnsureMarketSkillResult } from '@/services/skill';
 import type { ToolStoreState } from '@/store/tool/initialState';
-import { AGENT_SKILL_LIST_KEY } from '@/store/tool/slices/agentSkills/projection';
+import { agentSkillsSelectors } from '@/store/tool/slices/agentSkills/selectors';
 import { UNINSTALLED_BUILTIN_TOOLS_KEY } from '@/store/tool/slices/builtin/projection';
 import { CONNECTOR_LIST_KEY } from '@/store/tool/slices/connector/projection';
 import { INSTALLED_PLUGINS_KEY } from '@/store/tool/slices/plugin/projection';
@@ -25,7 +25,7 @@ export const selectProfileToolCatalogsSynced = (s: ToolStoreState): boolean =>
   s.installedPluginsReplica.entries[INSTALLED_PLUGINS_KEY]?.source === 'server' &&
   s.connectorsReplica.entries[CONNECTOR_LIST_KEY]?.source === 'server' &&
   s.uninstalledBuiltinToolsReplica.entries[UNINSTALLED_BUILTIN_TOOLS_KEY]?.source === 'server' &&
-  s.agentSkillListReplica.entries[AGENT_SKILL_LIST_KEY]?.source === 'server';
+  agentSkillsSelectors.isAgentSkillListSynced(s);
 
 export interface StalePluginCleanupInput {
   /**

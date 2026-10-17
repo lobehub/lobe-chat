@@ -37,10 +37,20 @@ describe('ensureAgentMarketSkills', () => {
   const refreshAgentSkills = vi.fn();
   let ensureFromMarket: MockInstance<typeof agentSkillService.ensureFromMarket>;
 
-  const mockCatalog = (skills: { identifier: string; source: 'market' | 'user' }[] = []) => {
+  /** `listSource` is where the skills list came from: the server, or the persisted copy. */
+  const mockCatalog = (
+    skills: { identifier: string; source: 'market' | 'user' }[] = [],
+    listSource: 'server' | 'storage' = 'server',
+  ) => {
     vi.spyOn(useToolStore, 'getState').mockReturnValue({
       ...initialState,
       agentSkillListMap: { [AGENT_SKILL_LIST_KEY]: skills },
+      agentSkillListReplica: {
+        ...initialState.agentSkillListReplica,
+        entries: {
+          [AGENT_SKILL_LIST_KEY]: { pending: [], source: listSource, updatedAt: 1 },
+        },
+      },
       refreshAgentSkills,
     } as unknown as ReturnType<typeof useToolStore.getState>);
   };
@@ -100,6 +110,16 @@ describe('ensureAgentMarketSkills', () => {
     // a same-named skill from another source still goes to the server, which
     // reports the conflict instead of silently overwriting it
     expect(ensureFromMarket).toHaveBeenCalledWith(['my-own-skill', 'fresh-skill']);
+  });
+
+  it('still asks the server about installed Market skills while the list is only the persisted copy', async () => {
+    // A hydrated list can predate a skill installed elsewhere; the server is
+    // idempotent and answers `installed` for the ones already there.
+    mockCatalog([{ identifier: 'installed-market', source: 'market' }], 'storage');
+
+    await ensureAgentMarketSkills(['installed-market', 'fresh-skill']);
+
+    expect(ensureFromMarket).toHaveBeenCalledWith(['installed-market', 'fresh-skill']);
   });
 
   it('sends nothing when every identifier is already resolved locally', async () => {

@@ -28,6 +28,7 @@ import {
   type AgentSkillListItem,
   agentSkillListResource,
 } from './projection';
+import { agentSkillsSelectors } from './selectors';
 
 /** The skills list has a single entry; its params carry no filter. */
 const LIST_PARAMS = {} as Record<string, never>;
@@ -167,12 +168,13 @@ export class AgentSkillsActionImpl {
   /**
    * Make sure the installed skills list is in the store, for callers that need
    * it while no list view is mounted (assembling a chat request right after a
-   * page load). A loaded list is not requested again and a request in flight
-   * is joined. Rejects when the fetch fails; callers decide whether that is
+   * page load). A list the server has confirmed is not requested again, while
+   * one hydrated from the persisted copy is: it can miss a skill installed on
+   * another device. A request in flight is joined. Rejects when the fetch fails; callers decide whether that is
    * fatal.
    */
   ensureAgentSkillsLoaded = async (): Promise<void> => {
-    if (this.#get().agentSkillListMap[AGENT_SKILL_LIST_KEY]) return;
+    if (agentSkillsSelectors.isAgentSkillListSynced(this.#get())) return;
     await this.#list.fetch(LIST_PARAMS);
   };
 
