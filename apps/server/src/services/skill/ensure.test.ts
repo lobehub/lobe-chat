@@ -107,6 +107,52 @@ describe('ensureMarketSkills', () => {
     ]);
   });
 
+  describe('when the import fails', () => {
+    // The unique constraint rejects the loser of two concurrent installs.
+    const uniqueViolation = Object.assign(new Error('duplicate key value'), { code: '23505' });
+
+    it('reports installed when a concurrent request already installed the Market skill', async () => {
+      deps.skillModel.findByIdentifier
+        .mockResolvedValueOnce(undefined)
+        .mockResolvedValueOnce({ identifier: 'new', source: 'market' });
+      deps.skillImporter.importFromUrl.mockRejectedValue(uniqueViolation);
+
+      expect(await ensureMarketSkills(['new'], deps)).toEqual([
+        { identifier: 'new', status: 'installed' },
+      ]);
+    });
+
+    it('keeps the download failure when nothing was installed meanwhile', async () => {
+      deps.skillImporter.importFromUrl.mockRejectedValue(uniqueViolation);
+
+      expect(await ensureMarketSkills(['new'], deps)).toEqual([
+        { identifier: 'new', reason: 'download', status: 'failed' },
+      ]);
+    });
+
+    it('reports a conflict when the identifier is now taken by another source', async () => {
+      deps.skillModel.findByIdentifier
+        .mockResolvedValueOnce(undefined)
+        .mockResolvedValueOnce({ identifier: 'new', source: 'user' });
+      deps.skillImporter.importFromUrl.mockRejectedValue(uniqueViolation);
+
+      expect(await ensureMarketSkills(['new'], deps)).toEqual([
+        { identifier: 'new', reason: 'conflict', status: 'failed' },
+      ]);
+    });
+
+    it('keeps the original classification when the re-check itself fails', async () => {
+      deps.skillModel.findByIdentifier
+        .mockResolvedValueOnce(undefined)
+        .mockRejectedValueOnce(new Error('DB unavailable'));
+      deps.skillImporter.importFromUrl.mockRejectedValue(new Error('Invalid manifest'));
+
+      expect(await ensureMarketSkills(['new'], deps)).toEqual([
+        { identifier: 'new', reason: 'download', status: 'failed' },
+      ]);
+    });
+  });
+
   it('isolates per-item storage lookup errors', async () => {
     deps.skillModel.findByIdentifier.mockRejectedValueOnce(new Error('DB unavailable'));
     const result = await ensureMarketSkills(['broken', 'new'], deps);

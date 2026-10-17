@@ -53,6 +53,19 @@ interface EnsureMarketSkillsDependencies {
   skillModel: Pick<AgentSkillModel, 'findByIdentifier'>;
 }
 
+/** The scope's record for `identifier` after a failed import; a failed lookup counts as none. */
+const findAfterFailedImport = async (
+  identifier: string,
+  skillModel: EnsureMarketSkillsDependencies['skillModel'],
+) => {
+  try {
+    return await skillModel.findByIdentifier(identifier);
+  } catch (error) {
+    logEnsureFailure(identifier, 'lookup', error);
+    return undefined;
+  }
+};
+
 /** Ensure dependencies without replacing any skill already in the caller's scope. */
 export const ensureMarketSkills = async (
   identifiers: string[],
@@ -94,6 +107,17 @@ export const ensureMarketSkills = async (
         return { identifier, status: 'installed' };
       } catch (error) {
         logEnsureFailure(identifier, 'import', error);
+
+        // A concurrent request may have installed the same skill between our
+        // lookup and the insert, which the per-scope unique constraint rejects.
+        // Whatever the error was, the scope's current state decides the result.
+        const raced = await findAfterFailedImport(identifier, skillModel);
+        if (raced) {
+          return raced.source === 'market'
+            ? { identifier, status: 'installed' }
+            : { identifier, reason: 'conflict', status: 'failed' };
+        }
+
         return {
           identifier,
           reason:
