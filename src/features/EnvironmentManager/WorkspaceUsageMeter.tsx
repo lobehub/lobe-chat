@@ -37,11 +37,23 @@ const styles = createStaticStyles(({ css }) => ({
  * account that has none has no meter to read; the page's own upgrade prompt is
  * what speaks to that.
  */
-const WorkspaceUsageMeter = memo(() => {
+interface WorkspaceUsageMeterProps {
+  refreshError?: boolean;
+}
+
+const WorkspaceUsageMeter = memo<WorkspaceUsageMeterProps>(({ refreshError }) => {
   const { t } = useTranslation('setting');
   const { data, error } = useWorkspaceUsage();
 
-  if (error || !data) return null;
+  if (refreshError || error) {
+    return (
+      <Text fontSize={12} role={'alert'} type={'danger'}>
+        {t('environments.storage.refreshFailed')}
+      </Text>
+    );
+  }
+
+  if (!data) return null;
 
   const { quotaBytes, usageBytes, usageCheckedAt } = data;
 
