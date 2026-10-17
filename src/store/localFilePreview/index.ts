@@ -111,9 +111,22 @@ export const initialLocalFilePreviewState: LocalFilePreviewStoreState = {
 export const useLocalFilePreviewStore: UseBoundStoreWithEqualityFn<
   StoreApi<LocalFilePreviewStore>
 > = createWithEqualityFn<LocalFilePreviewStore>()((set, get) => {
+  /**
+   * Saves folded into each preview (by key). A read started before a save may
+   * still hold the pre-save file; once the save lands it must not replace the
+   * confirmed content — the same guard as the document detail's adoptions.
+   */
+  const saveGenerations = new Map<string, number>();
+
   const previews = createReplicaSlice(localFilePreviewResource, {
     actionPrefix: 'localFilePreview/previews',
-    fetcher: fetchLocalFilePreview,
+    fetcher: async (key) => {
+      const savedBefore = saveGenerations.get(key) ?? 0;
+      const preview = await fetchLocalFilePreview(key);
+      const current = get().previewMap[key];
+      if ((saveGenerations.get(key) ?? 0) !== savedBefore && current) return current;
+      return preview;
+    },
     get,
     set,
     stateKey: 'previewReplica',
@@ -125,7 +138,9 @@ export const useLocalFilePreviewStore: UseBoundStoreWithEqualityFn<
     ...initialLocalFilePreviewState,
 
     applySavedContent: (target, content) => {
-      previews.update(localFilePreviewKey(target), (preview) =>
+      const key = localFilePreviewKey(target);
+      saveGenerations.set(key, (saveGenerations.get(key) ?? 0) + 1);
+      previews.update(key, (preview) =>
         preview?.type === 'text' ? { ...preview, content } : preview,
       );
     },

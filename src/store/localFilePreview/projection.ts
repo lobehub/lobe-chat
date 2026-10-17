@@ -27,6 +27,10 @@ export const MAX_PERSISTED_PREVIEWS = 30;
  * working directory + path, plus the external-file flag that changes what the
  * read is allowed to reach. A string, so two mounts of the same tab share one
  * entry and one sync query.
+ *
+ * The source kind and its id are separate fields: a device id is user-chosen
+ * (`lh connect --device-id`), so a device named `local` or `sandbox:x` must
+ * still decode as that device rather than this machine or a sandbox.
  */
 export const localFilePreviewKey = ({
   allowExternalFile,
@@ -36,7 +40,11 @@ export const localFilePreviewKey = ({
   workingDirectory,
 }: LocalFilePreviewTarget): string =>
   JSON.stringify([
-    sandboxTopicId ? `sandbox:${sandboxTopicId}` : (deviceId ?? 'local'),
+    ...(sandboxTopicId
+      ? ['sandbox', sandboxTopicId]
+      : deviceId
+        ? ['device', deviceId]
+        : ['local', null]),
     workingDirectory,
     filePath,
     allowExternalFile ? 'external' : 'workspace',
@@ -44,17 +52,18 @@ export const localFilePreviewKey = ({
 
 /** The target a {@link localFilePreviewKey} was built from (fetcher side). */
 export const localFilePreviewTargetFromKey = (key: string): LocalFilePreviewTarget => {
-  const [source, workingDirectory, filePath, access] = JSON.parse(key) as [
-    string,
+  const [kind, id, workingDirectory, filePath, access] = JSON.parse(key) as [
+    'device' | 'local' | 'sandbox',
+    string | null,
     string,
     string,
     string,
   ];
   return {
     allowExternalFile: access === 'external' || undefined,
-    deviceId: source === 'local' || source.startsWith('sandbox:') ? undefined : source,
+    deviceId: kind === 'device' ? (id ?? undefined) : undefined,
     filePath,
-    sandboxTopicId: source.startsWith('sandbox:') ? source.slice('sandbox:'.length) : undefined,
+    sandboxTopicId: kind === 'sandbox' ? (id ?? undefined) : undefined,
     workingDirectory,
   };
 };
@@ -97,5 +106,6 @@ export const localFilePreviewResource = defineReplica<string, LocalFilePreview>(
   persist: { maxEntries: MAX_PERSISTED_PREVIEWS },
   persistKey: isPersistableLocalFilePreviewKey,
   storage: 'indexedDB',
-  version: 1,
+  // v2: the key splits the source kind from its id; v1 rows are dropped.
+  version: 2,
 });

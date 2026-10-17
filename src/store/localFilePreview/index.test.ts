@@ -168,6 +168,30 @@ describe('local file preview replica', () => {
     );
   });
 
+  it.each(['local', 'sandbox:build'])(
+    'reads a device whose id is %s from that device, not a reserved source',
+    async (deviceId) => {
+      const target = { ...NOTES, deviceId };
+      vi.mocked(projectFileService.getLocalFilePreview).mockResolvedValue(
+        textPreview('on device') as never,
+      );
+
+      const { result } = renderPreview(target);
+
+      await waitFor(() => expect(result.current.preview).toEqual(textPreview('on device')));
+      expect(projectFileService.getLocalFilePreview).toHaveBeenCalledWith({
+        allowExternalFile: undefined,
+        deviceId,
+        path: '/repo/notes.md',
+        workingDirectory: '/repo',
+      });
+      expect(cloudSandboxService.callTool).not.toHaveBeenCalled();
+      expect(localFilePreviewKey(target)).not.toBe(
+        localFilePreviewKey({ ...NOTES, deviceId: undefined }),
+      );
+    },
+  );
+
   it('never persists the preview token URL', async () => {
     const html = { ...NOTES, filePath: '/repo/index.html' };
     vi.mocked(projectFileService.getLocalFilePreview).mockResolvedValue(
@@ -299,5 +323,28 @@ describe('local file preview replica', () => {
 
     expect(result.current.preview).toEqual(textPreview('after'));
     await waitFor(async () => expect((await storedRow(NOTES))?.data).toEqual(textPreview('after')));
+  });
+
+  it('does not let a read started before a save replace the saved content', async () => {
+    await seedRow(NOTES, textPreview('v1'));
+    let answer: (preview: unknown) => void = () => {};
+    vi.mocked(projectFileService.getLocalFilePreview).mockImplementation(
+      () => new Promise((resolve) => (answer = resolve)) as never,
+    );
+    const { result } = renderPreview(NOTES);
+    await waitFor(() => expect(result.current.preview).toEqual(textPreview('v1')));
+
+    // The mount-time read is still in flight when the user saves.
+    act(() => useLocalFilePreviewStore.getState().applySavedContent(NOTES, 'saved'));
+    // …and it settles afterwards with the pre-save file.
+    await act(async () => {
+      answer(textPreview('v1'));
+    });
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve, 20));
+    });
+
+    expect(result.current.preview).toEqual(textPreview('saved'));
+    await waitFor(async () => expect((await storedRow(NOTES))?.data).toEqual(textPreview('saved')));
   });
 });
