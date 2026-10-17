@@ -11,12 +11,10 @@ import type {
   AcceptanceListFilter,
   AcceptanceListPage,
   AcceptanceListQuery,
-  VerifyReportSummaryPage,
 } from '@/services/verify';
 import { verifyService } from '@/services/verify';
 import { useVerifyStore } from '@/store/verify';
 
-const VERIFY_REPORT_PAGE_SIZE = 30;
 const ACCEPTANCE_PAGE_SIZE = 30;
 const VERIFY_REPORT_SWR_CONFIG = {
   revalidateIfStale: false,
@@ -278,76 +276,6 @@ export const useAcceptanceStatuses = (
     () => verifyService.listAcceptanceStatuses(subjectType, subjectIds),
     ACCEPTANCE_BUNDLE_SWR_CONFIG,
   );
-
-/**
- * Cursor-paginated, infinite-scrolling report summaries. `q` drives a
- * server-side title search (spanning the whole history, not just loaded pages);
- * changing it collapses back to the first page.
- */
-export const useVerifyReportSummariesInfinite = (q: string) => {
-  const workspaceId = useActiveWorkspaceId();
-
-  const getKey = useCallback(
-    (_index: number, previous: VerifyReportSummaryPage | null) => {
-      // Stop paging once the previous page reported no further cursor.
-      if (previous && previous.nextCursor === null) return null;
-      return verifyKeys.reportSummaries(workspaceId, q, previous?.nextCursor ?? undefined);
-    },
-    [q, workspaceId],
-  );
-
-  const { data, error, isLoading, isValidating, mutate, setSize, size } = useSWRInfinite(
-    getKey,
-    ([, , query, cursor]: readonly [string, string, string, string]) =>
-      verifyService.listReportSummaries({
-        cursor: cursor || undefined,
-        limit: VERIFY_REPORT_PAGE_SIZE,
-        q: query || undefined,
-      }),
-    { ...VERIFY_REPORT_SWR_CONFIG, revalidateFirstPage: false },
-  );
-
-  // A new search term starts a fresh key series; collapse size back to 1 so we
-  // don't cascade-fetch as many pages as the previous query had loaded.
-  useEffect(() => {
-    setSize(1);
-  }, [q, setSize]);
-
-  const loadMore = useCallback(() => {
-    void setSize((s) => s + 1);
-  }, [setSize]);
-  const reload = useCallback(() => {
-    void mutate();
-  }, [mutate]);
-
-  // SWR leaves a failed/pending page's slot `undefined`, so guard the holes.
-  const items = data?.flatMap((page) => page?.items ?? []) ?? [];
-  const lastLoadedPage = data?.findLast(Boolean);
-  const reachedEnd = lastLoadedPage ? lastLoadedPage.nextCursor === null : false;
-  const hasLoadedPages = data !== undefined;
-
-  // Keep already-loaded rows visible while SWR revalidates after a focus/remount.
-  // A subsequent page is genuinely in flight only when the loaded page array has
-  // an unresolved tail slot; raw `isLoading` also covers first-load revalidation.
-  const isLoadingInitial = !error && isLoading && !hasLoadedPages;
-  const isLoadingMore =
-    !error && hasLoadedPages && size > 0 && typeof data[size - 1] === 'undefined';
-
-  // Pause the sentinel while an error is showing so it can't hot-loop the failed
-  // page; the panel offers a manual retry (`reload`) instead.
-  const hasMore = !reachedEnd && !error;
-
-  return {
-    error,
-    hasMore,
-    isLoadingInitial,
-    isLoadingMore,
-    isValidating,
-    items,
-    loadMore,
-    reload,
-  };
-};
 
 /** Model / token / latency for an LLM verifier judgment. Pass null to skip. */
 export const useVerifierTracing = (tracingId: string | null | undefined) =>

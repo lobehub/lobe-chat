@@ -46,6 +46,7 @@ import { useIsGatewayModeEnabled } from '@/helpers/gatewayMode';
 import { useEffectiveAgencyConfig } from '@/hooks/useEffectiveAgencyConfig';
 import { localFileService } from '@/services/electron/localFileService';
 import { useAgentStore } from '@/store/agent';
+import { deviceSelectors, useDeviceStore } from '@/store/device';
 import { useElectronStore } from '@/store/electron';
 
 import { useTopicId } from '../hooks/useTopicId';
@@ -296,6 +297,10 @@ const HeteroDeviceSwitcher = memo<HeteroDeviceSwitcherProps>(({ agentId }) => {
   // dimension, so the picker kept showing the previous workspace's pool after
   // a switch.
   const { data: devices, isLoading, mutate: refreshDevices } = useDeviceList();
+  // Until `useDeviceList` answers, name the bound device from the device store,
+  // whose replica paints the persisted device list first — otherwise the chip
+  // reads "Unknown device" on every reload.
+  const storedBoundDevice = useDeviceStore(deviceSelectors.getDeviceById(boundDeviceId));
 
   // The current machine's own gateway deviceId (desktop only), used to badge the
   // matching device row with a "This device" tag and show the local-process
@@ -471,7 +476,8 @@ const HeteroDeviceSwitcher = memo<HeteroDeviceSwitcherProps>(({ agentId }) => {
 
   const boundDevice =
     canShowExecutionTargetSelector && executionTarget === 'device'
-      ? devices?.find((d) => d.deviceId === boundDeviceId)
+      ? (devices?.find((d) => d.deviceId === boundDeviceId) ??
+        (devices ? undefined : storedBoundDevice))
       : undefined;
 
   // The picker splits by whether the caller is inside a workspace agent:

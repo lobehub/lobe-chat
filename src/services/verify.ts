@@ -149,30 +149,10 @@ export interface VerifyReportBundle {
   run: VerifyRunItem;
 }
 
-export interface VerifyReportSummary {
-  report: Pick<
-    VerifyReport,
-    | 'createdAt'
-    | 'failedChecks'
-    | 'generatedAt'
-    | 'id'
-    | 'overallConfidence'
-    | 'passedChecks'
-    | 'reviewedByUser'
-    | 'summary'
-    | 'totalChecks'
-    | 'uncertainChecks'
-    | 'verdict'
-    | 'verifyRunId'
-  > | null;
-  run: VerifyRunItem;
-}
-
-/** One cursor-paginated page of report summaries. */
-export interface VerifyReportSummaryPage {
-  items: VerifyReportSummary[];
-  /** Opaque token for the next page, or `null` when this is the last page. */
-  nextCursor: string | null;
+/** The acceptance round a verify run belongs to — where its old `/verify/:runId` link lands. */
+export interface VerifyRunAcceptanceRound {
+  acceptanceId: string;
+  roundIndex: number | null;
 }
 
 export interface GenerateDraftPlanInput {
@@ -446,16 +426,11 @@ export class VerifyService {
     }) as Promise<VerifyReportBundle | null>;
 
   /**
-   * One cursor-paginated page of the current user's verification sessions with
-   * report rollup fields. `cursor` comes from the previous page's `nextCursor`;
-   * `q` filters by title on the server so search spans the whole history.
+   * The acceptance round a run belongs to, under the same access rule as
+   * `getReportBundle`. `null` for a missing, denied or standalone run.
    */
-  listReportSummaries = (params?: {
-    cursor?: string;
-    limit?: number;
-    q?: string;
-  }): Promise<VerifyReportSummaryPage> =>
-    lambdaClient.verify.listReportSummaries.query(params) as Promise<VerifyReportSummaryPage>;
+  getRunAcceptanceRound = (verifyRunId: string): Promise<VerifyRunAcceptanceRound | null> =>
+    lambdaClient.verify.getRunAcceptanceRound.query({ verifyRunId });
 
   deleteRun = (verifyRunId: string): Promise<unknown> =>
     lambdaClient.verify.deleteRun.mutate({ verifyRunId });

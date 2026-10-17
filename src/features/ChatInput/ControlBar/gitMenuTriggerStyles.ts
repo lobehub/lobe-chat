@@ -22,5 +22,12 @@ export const gitMenuTriggerStyles = createStaticStyles(({ css }) => ({
     &[data-popup-open] > * {
       background: ${cssVar.colorFillTertiary};
     }
+
+    /* Stale-first: the trigger stays in place (no layout jump) but cannot
+       checkout until the current probe confirms the branch. */
+    &[aria-disabled='true'] > * {
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
   `,
 }));
