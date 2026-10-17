@@ -5,6 +5,7 @@
  *   bun run stylex:migration --list C        # files in one tier
  *   bun run stylex:migration --json          # full per-file report
  *   bun run stylex:migration --prune-legacy  # drop migrated files from legacyFiles.json
+ *   bun run stylex:migration --baseline <distDir> [html]  # sizes of a built SPA
  *
  * legacyFiles.json is the ESLint allowlist for emotion style imports. It only
  * shrinks: pruning keeps files that still use them and never adds new ones.
@@ -13,6 +14,7 @@ import { execFileSync } from 'node:child_process';
 import { readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 
+import { formatBaseline, measureBuild } from './baseline';
 import { classifySource, type StyleFileReport } from './classify';
 
 const repoRoot = path.resolve(import.meta.dirname, '../..');
@@ -34,7 +36,8 @@ export const scanRepo = (root = repoRoot): FileReport[] => {
     maxBuffer: 64 * 1024 * 1024,
   })
     .split('\n')
-    .filter(Boolean);
+    // This directory's own test fixtures contain emotion imports as strings.
+    .filter((file) => file && !file.startsWith('scripts/stylexMigration/'));
 
   const reports: FileReport[] = [];
   for (const file of files) {
@@ -96,6 +99,15 @@ const main = () => {
   if (listIndex !== -1) {
     const tier = args[listIndex + 1];
     for (const r of reports.filter((item) => item.tier === tier)) console.log(r.file);
+    return;
+  }
+
+  const baselineIndex = args.indexOf('--baseline');
+  if (baselineIndex !== -1) {
+    const distDir = args[baselineIndex + 1] ?? 'dist/desktop';
+    const htmlFile = args[baselineIndex + 2] ?? 'index.html';
+    const build = measureBuild(path.resolve(repoRoot, distDir), htmlFile);
+    console.log(formatBaseline(build, reports, distDir));
     return;
   }
 
