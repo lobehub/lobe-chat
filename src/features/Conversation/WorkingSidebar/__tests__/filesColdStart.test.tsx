@@ -3,6 +3,7 @@ import type { ComponentType } from 'react';
 import { beforeAll, describe, expect, it } from 'vitest';
 
 import { useDeviceStore } from '@/store/device';
+import { DEVICE_LIST_KEY } from '@/store/device/projection';
 import { projectFileActions } from '@/store/projectFile';
 
 import {
@@ -46,7 +47,7 @@ describe('AgentWorkingSidebar — Files cold start', () => {
     expect(screen.queryByTestId('files-prefetch')).not.toBeInTheDocument();
   });
 
-  it('opens the tree where the conversation last was until the device list loads', () => {
+  it('opens the tree where the conversation last was until the device list is confirmed', () => {
     agentStore.activeAgentId = 'agent';
     effectiveConfig.agencyConfig = { executionTarget: 'local' };
     // Without the device default the cwd falls back to home.
@@ -58,9 +59,24 @@ describe('AgentWorkingSidebar — Files cold start', () => {
     expect(filesProps.current).toEqual({ deviceId: undefined, workingDirectory: '/repo' });
 
     act(() => {
-      useDeviceStore.setState({ deviceListMap: { all: [] } });
+      // A hydrated list already counts as loaded but its `workingDirs` are
+      // stale, so only the server-confirmed state may replace the remembered
+      // directory.
+      useDeviceStore.setState((state) => ({
+        deviceListMap: { [DEVICE_LIST_KEY]: [] },
+        deviceListReplica: {
+          ...state.deviceListReplica,
+          entries: {
+            ...state.deviceListReplica.entries,
+            [DEVICE_LIST_KEY]: { pending: [], source: 'server', updatedAt: Date.now() },
+          },
+        },
+      }));
     });
     rerender(<AgentWorkingSidebar />);
-    expect(filesProps.current).toEqual({ deviceId: undefined, workingDirectory: '/Users/me' });
+    expect(filesProps.current).toMatchObject({
+      deviceId: undefined,
+      workingDirectory: '/Users/me',
+    });
   });
 });
