@@ -35,6 +35,7 @@ import { type ChatTopic, type GroupedTopic } from '@/types/topic';
 
 import TopicItem from '../../List/Item';
 import { formatTimeGroupId } from '../ByTimeMode/timeGroupTitle';
+import { indicatorStyles, useCollapsedIndicators } from './CollapsedIndicators';
 import {
   DEVICE_SUB_GROUP_PREFIX,
   groupProjectTopics,
@@ -59,6 +60,78 @@ const renderTopic = (topic: ChatTopic) => (
   />
 );
 
+interface SubGroupItemProps {
+  expanded: boolean;
+  group: GroupedTopic;
+  icon?: Pick<ExecutionStatusVisual, 'color' | 'icon'>;
+  onStartInDirectory?: (projectWorkingDirectoryId: string) => void;
+  startDirectoryId?: string;
+  title: string;
+}
+
+const SubGroupItem = memo<SubGroupItemProps>(
+  ({ expanded, group, icon, onStartInDirectory, startDirectoryId, title }) => {
+    const { t: tProject } = useTranslation('project');
+    // A folded section keeps the project row's running / awaiting / failed
+    // counts and unread dot, so a device section still says how much it does.
+    const { hasIndicators, indicators } = useCollapsedIndicators(group.children, expanded);
+
+    return (
+      <AccordionItem value={group.id}>
+        <AccordionHeader className={'accordion-header'}>
+          {/* Same icon column and gap as the project row, so the section
+              title lines up with the project name and the topics below. */}
+          <AccordionTrigger style={{ paddingBlock: 2, paddingInline: 4 }}>
+            <Flexbox horizontal align="center" gap={8} height={24} style={{ overflow: 'hidden' }}>
+              <Center flex={'none'} height={24} width={28}>
+                {icon && <Icon color={icon.color} icon={icon.icon} size={{ size: 12 }} />}
+              </Center>
+              <Text ellipsis fontSize={12} type={'secondary'} weight={500}>
+                {title}
+              </Text>
+            </Flexbox>
+          </AccordionTrigger>
+          {(startDirectoryId || hasIndicators) && (
+            <div
+              className={cx(
+                'accordion-action',
+                accordionStyles.action,
+                accordionStyles.actionBorderless,
+                hasIndicators && accordionStyles.actionAlwaysVisible,
+              )}
+            >
+              <Flexbox horizontal align={'center'} gap={4}>
+                {indicators}
+                {startDirectoryId && (
+                  <span className={indicatorStyles.hoverActions}>
+                    <ActionIcon
+                      icon={PlusIcon}
+                      size={'small'}
+                      title={tProject('directories.start')}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onStartInDirectory?.(startDirectoryId);
+                      }}
+                    />
+                  </span>
+                )}
+              </Flexbox>
+            </div>
+          )}
+        </AccordionHeader>
+        <AccordionPanel contentStyle={{ padding: 0 }}>
+          <Flexbox gap={1} paddingBlock={1}>
+            {group.children.map(renderTopic)}
+          </Flexbox>
+        </AccordionPanel>
+      </AccordionItem>
+    );
+  },
+  isEqual,
+);
+
+SubGroupItem.displayName = 'ProjectTopicSubGroupItem';
+
 interface ProjectTopicListProps {
   /** The group's effective sub-group mode (folders never get `byDevice`). */
   mode: ProjectTopicSubGroupMode;
@@ -76,7 +149,6 @@ interface ProjectTopicListProps {
 const ProjectTopicList = memo<ProjectTopicListProps>((props) => {
   const { mode, onStartInDirectory, startDirectories, topics } = props;
   const { t } = useTranslation('topic');
-  const { t: tProject } = useTranslation('project');
   const topicSortBy = useUserStore(preferenceSelectors.topicSortBy);
   const field = topicSortBy === 'createdAt' ? 'createdAt' : 'updatedAt';
 
@@ -173,63 +245,23 @@ const ProjectTopicList = memo<ProjectTopicListProps>((props) => {
       value={expandedIds}
       onValueChange={handleExpandedChange}
     >
-      {groups.map((group) => {
-        const icon =
-          mode === 'byStatus'
-            ? STATUS_ICON[group.id]
-            : mode === 'byDevice'
-              ? { color: cssVar.colorTextTertiary, icon: LaptopIcon }
-              : undefined;
-        const startDirectoryId = getStartDirectoryId(group);
-        return (
-          <AccordionItem key={group.id} value={group.id}>
-            <AccordionHeader className={'accordion-header'}>
-              {/* Same icon column and gap as the project row, so the section
-                  title lines up with the project name and the topics below. */}
-              <AccordionTrigger style={{ paddingBlock: 2, paddingInline: 4 }}>
-                <Flexbox
-                  horizontal
-                  align="center"
-                  gap={8}
-                  height={24}
-                  style={{ overflow: 'hidden' }}
-                >
-                  <Center flex={'none'} height={24} width={28}>
-                    {icon && <Icon color={icon.color} icon={icon.icon} size={{ size: 12 }} />}
-                  </Center>
-                  <Text ellipsis fontSize={12} type={'secondary'} weight={500}>
-                    {getTitle(group)}
-                  </Text>
-                </Flexbox>
-              </AccordionTrigger>
-              {startDirectoryId && (
-                <div
-                  className={cx(
-                    'accordion-action',
-                    accordionStyles.action,
-                    accordionStyles.actionBorderless,
-                  )}
-                >
-                  <ActionIcon
-                    icon={PlusIcon}
-                    size={'small'}
-                    title={tProject('directories.start')}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onStartInDirectory?.(startDirectoryId);
-                    }}
-                  />
-                </div>
-              )}
-            </AccordionHeader>
-            <AccordionPanel contentStyle={{ padding: 0 }}>
-              <Flexbox gap={1} paddingBlock={1}>
-                {group.children.map(renderTopic)}
-              </Flexbox>
-            </AccordionPanel>
-          </AccordionItem>
-        );
-      })}
+      {groups.map((group) => (
+        <SubGroupItem
+          expanded={!!expandedIds?.includes(group.id)}
+          group={group}
+          key={group.id}
+          startDirectoryId={getStartDirectoryId(group)}
+          title={getTitle(group)}
+          icon={
+            mode === 'byStatus'
+              ? STATUS_ICON[group.id]
+              : mode === 'byDevice'
+                ? { color: cssVar.colorTextTertiary, icon: LaptopIcon }
+                : undefined
+          }
+          onStartInDirectory={onStartInDirectory}
+        />
+      ))}
     </AccordionRoot>
   );
 }, isEqual);
