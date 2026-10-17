@@ -3,6 +3,7 @@ import type {
   GitWorkingTreePatch,
   SubmoduleWorkingTreePatches,
 } from '@lobechat/electron-client-ipc';
+import type { ReplicaOptimisticToken } from '@lobechat/replica';
 import type { ReplicaSlice, ReplicaSyncSchedule } from '@lobechat/replica/zustand';
 import type {
   DeviceGitAheadBehind,
@@ -13,7 +14,7 @@ import type {
   DeviceGitWorkingTreeStatus,
   DeviceGitWorktreeListItem,
 } from '@lobechat/types';
-import { useCallback, useMemo } from 'react';
+import { useCallback, useMemo, useRef } from 'react';
 
 import { mutate, useClientDataSWR } from '@/libs/swr';
 import { deviceKeys, localFileKeys } from '@/libs/swr/keys';
@@ -141,19 +142,26 @@ export const useReviewPatches = (
 interface GitStatusReadResult<T> {
   data: T | undefined;
   error: unknown;
+  /**
+   * The current probe answered. A row hydrated from storage (or an optimistic
+   * write) is good enough to paint, but not to act on: the device read is the
+   * only thing that proves the persisted branch still exists.
+   */
+  isConfirmed: boolean;
   /** Nothing to paint yet (no persisted row, no response) and a read is pending. */
   isLoading: boolean;
   isValidating: boolean;
   /**
-   * SWR-shaped: no argument re-runs the read; a value writes it into the
-   * replica (persisted) and, unless `revalidate: false`, re-runs the read.
+   * SWR-shaped: no argument re-runs the read; a value starts an optimistic
+   * overlay (memory only, never persisted) and, unless `revalidate: false`,
+   * re-runs the read that settles it.
    */
   mutate: (data?: T, options?: { revalidate?: boolean }) => Promise<unknown>;
 }
 
 type GitStatusSlice<T> = Pick<
   ReplicaSlice<GitStatusStore, GitStatusParams, GitStatusRead<T>, any>,
-  'revalidate' | 'update' | 'useSync'
+  'beginOptimistic' | 'revalidate' | 'useSync'
 >;
 
 /**
@@ -164,6 +172,7 @@ type GitStatusSlice<T> = Pick<
 const useGitStatusRead = <T>(
   slice: GitStatusSlice<T>,
   selectMap: (state: GitStatusStore) => Record<string, GitStatusRead<T>>,
+  selectEntries: (state: GitStatusStore) => Record<string, { source?: string } | undefined>,
   deviceId: string | undefined,
   path: string | undefined,
   schedule: ReplicaSyncSchedule,
@@ -174,22 +183,49 @@ const useGitStatusRead = <T>(
   );
   const key = params ? gitStatusKey(params) : undefined;
   const stored = useGitStatusStore((s) => (key ? selectMap(s)[key] : undefined));
+  // Only a head response makes the row authoritative (`source: 'server'`); a
+  // hydrated or optimistic row is a paint-only stand-in. Consumers use this to
+  // gate checkout / pull / push and the dead-directory hand-off.
+  const isConfirmed = useGitStatusStore((s) => !!key && selectEntries(s)[key]?.source === 'server');
   // The driver forwards SWR options as given: a failed git read (dead path,
   // unreachable device) is not retried, like the SWR hooks these replaced.
   const syncOptions = { ...schedule, shouldRetryOnError: false };
   const { error, isHydrated, isValidating, revalidate } = slice.useSync(params, syncOptions);
 
+  /**
+   * An optimistic write whose probe has not settled yet. Overlays are rebased
+   * onto every server response and are never persisted, so a read that started
+   * before the checkout cannot repaint the previous branch.
+   */
+  const optimistic = useRef<{
+    key: string;
+    token: ReplicaOptimisticToken<GitStatusRead<T>>;
+  } | null>(null);
+
   const mutate = useCallback(
     async (data?: T, options?: { revalidate?: boolean }) => {
       if (!key) return;
       if (data !== undefined) {
-        // Explicit writes are optimistic (an in-flight checkout). Keep them out
-        // of persistent storage: the checkout can fail, or the app can close
-        // before `onAfterCheckout` revalidates, and the next launch must not
-        // paint a branch that never landed. Only a confirmed read persists.
-        slice.update(key, () => ({ value: data }), { persist: false });
+        // The checkout can fail, or the app can close before `onAfterCheckout`
+        // revalidates: keep the value in an overlay so the next launch paints
+        // the confirmed branch, not one that never landed.
+        optimistic.current = {
+          key,
+          token: slice.beginOptimistic(key, (current) => ({ ...current, value: data })),
+        };
       }
-      if (data === undefined || options?.revalidate !== false) return revalidate();
+      if (data === undefined || options?.revalidate !== false) {
+        const pending = optimistic.current;
+        await revalidate();
+        // Settle the overlay once the probe has answered. Commit without a
+        // `confirm`: a successful response already made its value the base (and
+        // persisted it), while a failed read leaves the persisted confirmed
+        // value in place — the overlay only ever lived in memory.
+        if (pending && optimistic.current === pending) {
+          pending.token.commit();
+          optimistic.current = null;
+        }
+      }
     },
     [key, slice, revalidate],
   );
@@ -197,6 +233,7 @@ const useGitStatusRead = <T>(
   return {
     data: stored?.value,
     error,
+    isConfirmed,
     isLoading: !!params && stored === undefined && !error && (!isHydrated || isValidating),
     isValidating,
     mutate,
@@ -207,6 +244,11 @@ const selectBranchMap = (s: GitStatusStore) => s.gitBranchMap;
 const selectAheadBehindMap = (s: GitStatusStore) => s.gitAheadBehindMap;
 const selectWorkingTreeStatusMap = (s: GitStatusStore) => s.gitWorkingTreeStatusMap;
 const selectWorktreesMap = (s: GitStatusStore) => s.gitWorktreesMap;
+
+const selectBranchEntries = (s: GitStatusStore) => s.gitBranchReplica.entries;
+const selectAheadBehindEntries = (s: GitStatusStore) => s.gitAheadBehindReplica.entries;
+const selectWorkingTreeStatusEntries = (s: GitStatusStore) => s.gitWorkingTreeStatusReplica.entries;
+const selectWorktreesEntries = (s: GitStatusStore) => s.gitWorktreesReplica.entries;
 
 /**
  * Current branch + detached state. A cheap local git read, so use a short
@@ -220,6 +262,7 @@ export const useFetchGitBranch = (deviceId: string | undefined, path?: string) =
   useGitStatusRead<GitBranchSummary>(
     useGitStatusStore.getState().slices.branch,
     selectBranchMap,
+    selectBranchEntries,
     deviceId,
     path,
     { dedupingInterval: 2 * 1000 },
@@ -255,6 +298,7 @@ export const useFetchGitWorkingTreeStatus = (deviceId: string | undefined, path?
   useGitStatusRead<DeviceGitWorkingTreeStatus>(
     useGitStatusStore.getState().slices.workingTreeStatus,
     selectWorkingTreeStatusMap,
+    selectWorkingTreeStatusEntries,
     deviceId,
     path,
     { focusThrottleInterval: 5 * 1000, revalidateOnFocus: true },
@@ -268,6 +312,7 @@ export const useFetchGitAheadBehind = (deviceId: string | undefined, path?: stri
   useGitStatusRead<DeviceGitAheadBehind>(
     useGitStatusStore.getState().slices.aheadBehind,
     selectAheadBehindMap,
+    selectAheadBehindEntries,
     deviceId,
     path,
     { focusThrottleInterval: 5 * 1000, revalidateOnFocus: true },
@@ -282,6 +327,7 @@ export const useFetchGitWorktrees = (deviceId: string | undefined, path?: string
   useGitStatusRead<DeviceGitWorktreeListItem[]>(
     useGitStatusStore.getState().slices.worktrees,
     selectWorktreesMap,
+    selectWorktreesEntries,
     deviceId,
     path,
     { focusThrottleInterval: 5 * 1000, revalidateOnFocus: true },

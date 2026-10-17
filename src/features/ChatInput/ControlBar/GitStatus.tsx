@@ -137,15 +137,19 @@ const GitStatus = memo<GitStatusProps>(
     const {
       data: branchData,
       error: branchError,
+      isConfirmed: branchConfirmed,
       mutate: mutateBranch,
     } = useFetchGitBranch(deviceId, path);
     const branch = branchData?.branch;
     const detached = branchData?.detached;
-    // The persisted snapshot only stands in once the probe has actually ANSWERED.
-    // `getGitBranch` resolves to `{}` for a path it can't read, so a settled probe
-    // is `data !== undefined` (or an errored one) — keying off `!branch` alone
+    // The persisted snapshot only stands in once the current probe has actually
+    // ANSWERED. A hydrated row (`data !== undefined`) is a paint-only stand-in,
+    // not an answer: treating it as settled would classify a dead directory
+    // from the last session before this session's read returns.
+    // `getGitBranch` resolves to `{}` for a path it can't read, so a settled
+    // probe is a confirmed read (or an errored one) — keying off `!branch` alone
     // would flash the snapshot cluster on every mount while loading.
-    const probeSettled = branchData !== undefined || !!branchError;
+    const probeSettled = branchConfirmed || !!branchError;
     // …and only when the probe could reach the directory at all. A remote read
     // whose device is offline (or whose RPC failed) comes back `undefined`, which
     // the service normalizes into the SAME empty shape a deleted path produces —
@@ -156,7 +160,10 @@ const GitStatus = memo<GitStatusProps>(
       (s) => !!deviceSelectors.getDeviceById(deviceId)(s)?.online,
     );
     const probeReachedDirectory = !deviceId || deviceOnline;
-    const probeFoundNothing = !branch && probeSettled && probeReachedDirectory;
+    // Only a CONFIRMED empty probe may declare the directory gone. A hydrated
+    // empty row (`{}`) means the last session couldn't read it, not that it is
+    // gone now.
+    const probeFoundNothing = !branch && branchConfirmed && probeReachedDirectory;
     // Worktrees picked from the bar were persisted without a branch, so the
     // recorded worktree is all such a snapshot has. An empty probe alone can't
     // condemn it: a remote read that fails in transit on a device still marked
@@ -257,6 +264,10 @@ const GitStatus = memo<GitStatusProps>(
     );
 
     const syncBusy = pulling || pushing;
+    // Stale-first paints the last branch immediately, but checkout / pull / push
+    // assume that branch is still current. Keep them inert until this session's
+    // probe confirms it; the chips stay visible either way.
+    const actionsBlocked = syncBusy || !branchConfirmed;
 
     const handlePull = useCallback(async () => {
       if (pulling || pushing) return;
@@ -393,7 +404,7 @@ const GitStatus = memo<GitStatusProps>(
       </div>
     );
 
-    const hasWorktreeMenu = worktrees.length > 0;
+    const hasWorktreeMenu = worktrees.length > 0 && branchConfirmed;
 
     const worktreeNode = hasWorktreeMenu ? (
       <WorktreeSwitcher
@@ -413,6 +424,11 @@ const GitStatus = memo<GitStatusProps>(
     const branchNode = detached ? (
       // Detached HEAD → plain branch label (nothing to switch to).
       <Tooltip title={branchTooltip}>{branchTrigger}</Tooltip>
+    ) : !branchConfirmed ? (
+      // Hydrated from the last session: hold the checkout entry until this
+      // session's probe confirms the branch, so the switcher's "current" branch
+      // is not a stale guess.
+      <Tooltip title={t('workingDirectory.branchConfirming')}>{branchTrigger}</Tooltip>
     ) : (
       // Local switches over IPC; a remote device switches over RPC (deviceId set).
       <BranchSwitcher
@@ -458,10 +474,10 @@ const GitStatus = memo<GitStatusProps>(
       <Tooltip title={pullTooltip}>
         <div
           aria-busy={pulling}
-          aria-disabled={syncBusy}
-          className={`${styles.syncTrigger} ${styles.behindStat} ${syncBusy ? styles.syncTriggerDisabled : ''}`}
+          aria-disabled={actionsBlocked}
+          className={`${styles.syncTrigger} ${styles.behindStat} ${actionsBlocked ? styles.syncTriggerDisabled : ''}`}
           role="button"
-          onClick={syncBusy ? undefined : handlePull}
+          onClick={actionsBlocked ? undefined : handlePull}
         >
           <span className={styles.aheadBehindStat}>
             {pulling ? <RingLoadingIcon size={10} /> : <Icon icon={ArrowDownIcon} size={10} />}
@@ -475,10 +491,10 @@ const GitStatus = memo<GitStatusProps>(
       <Tooltip title={pushTooltip}>
         <div
           aria-busy={pushing}
-          aria-disabled={syncBusy}
-          className={`${styles.syncTrigger} ${styles.aheadStat} ${syncBusy ? styles.syncTriggerDisabled : ''}`}
+          aria-disabled={actionsBlocked}
+          className={`${styles.syncTrigger} ${styles.aheadStat} ${actionsBlocked ? styles.syncTriggerDisabled : ''}`}
           role="button"
-          onClick={syncBusy ? undefined : handlePush}
+          onClick={actionsBlocked ? undefined : handlePush}
         >
           <span className={styles.aheadBehindStat}>
             {pushing ? <RingLoadingIcon size={10} /> : <Icon icon={ArrowUpIcon} size={10} />}

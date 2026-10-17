@@ -2,6 +2,8 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { gitService } from '@/services/git';
+
 import GitStatus from '../GitStatus';
 
 const globalStoreMock = vi.hoisted(() => ({
@@ -99,6 +101,7 @@ beforeEach(() => {
 
   gitHookMocks.useFetchGitBranch.mockReturnValue({
     data: { branch: 'fix/remote-review', detached: false },
+    isConfirmed: true,
     mutate: gitHookMocks.mutateBranch,
   });
   gitHookMocks.useFetchGitLinkedPR.mockReturnValue({
@@ -177,6 +180,43 @@ describe('GitStatus', () => {
     });
   });
 
+  // Review P1: the stale-first branch is a paint-only stand-in. Checkout, pull
+  // and push must wait until this session's probe confirms it.
+  it('keeps checkout, pull and push inert until the current probe confirms the branch', () => {
+    gitHookMocks.useFetchGitBranch.mockReturnValue({
+      data: { branch: 'fix/remote-review', detached: false },
+      isConfirmed: false,
+      mutate: gitHookMocks.mutateBranch,
+    });
+    gitHookMocks.useFetchGitAheadBehind.mockReturnValue({
+      data: { ahead: 2, behind: 1, hasUpstream: true, upstream: 'origin/fix/remote-review' },
+      mutate: gitHookMocks.mutateAheadBehind,
+    });
+    gitHookMocks.useFetchGitWorktrees.mockReturnValue({
+      data: [
+        { branch: 'fix/remote-review', current: true, path: '/repo' },
+        { branch: 'canary', current: false, path: '/repo-canary' },
+      ],
+      mutate: gitHookMocks.mutateWorktrees,
+    });
+
+    render(<GitStatus isGithub agentId="agent-1" path="/repo" sourcePath="/repo" />);
+
+    // The branch label still paints…
+    expect(screen.getByText('fix/remote-review')).toBeInTheDocument();
+    // …but no checkout entry (worktree menu) and no working sync.
+    expect(screen.queryByTestId('worktree-switcher')).not.toBeInTheDocument();
+    const push = screen.getByText('2').closest('[role="button"]')!;
+    const pull = screen.getByText('1').closest('[role="button"]')!;
+    expect(push).toHaveAttribute('aria-disabled', 'true');
+    expect(pull).toHaveAttribute('aria-disabled', 'true');
+
+    fireEvent.click(push);
+    fireEvent.click(pull);
+    expect(gitService.pushGitBranch).not.toHaveBeenCalled();
+    expect(gitService.pullGitBranch).not.toHaveBeenCalled();
+  });
+
   describe('deleted working directory', () => {
     // The recorded worktree gets removed once its task is done, but the topic
     // keeps pointing at it — the live branch probe then reads nothing and the
@@ -193,6 +233,7 @@ describe('GitStatus', () => {
       // probe that found no branch, not a pending one.
       gitHookMocks.useFetchGitBranch.mockReturnValue({
         data: {},
+        isConfirmed: true,
         mutate: gitHookMocks.mutateBranch,
       });
     });

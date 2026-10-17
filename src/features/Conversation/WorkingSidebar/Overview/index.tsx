@@ -129,6 +129,7 @@ const Overview = memo<OverviewProps>(
     const {
       data: branchData,
       error: branchError,
+      isConfirmed: branchConfirmed,
       isLoading: branchLoading,
       mutate: mutateBranch,
     } = useFetchGitBranch(deviceId, gitPath);
@@ -198,6 +199,10 @@ const Overview = memo<OverviewProps>(
     );
 
     const syncBusy = pulling || pushing;
+    // The branch row may be a stale-first paint from the last session. Checkout,
+    // pull and push assume it is current, so they stay inert until this
+    // session's probe confirms it.
+    const actionsBlocked = syncBusy || !branchConfirmed;
 
     const handlePull = useCallback(async () => {
       if (syncBusy || !workingDirectory) return;
@@ -246,12 +251,13 @@ const Overview = memo<OverviewProps>(
     const showAhead = !!aheadBehind?.hasUpstream && aheadBehind.ahead > 0;
     const showBehind = !!aheadBehind?.hasUpstream && aheadBehind.behind > 0;
 
+    const canSwitchBranch = !detached && !!agentId && !!workingDirectory && branchConfirmed;
     const branchRow = (
       <OverviewRow
         icon={GitBranchIcon}
-        interactive={!detached && !!agentId && !!workingDirectory}
+        interactive={canSwitchBranch}
         title={detached ? tDevice('workingDirectory.detachedHead', { sha: branch ?? '' }) : branch}
-        trailing={!detached && agentId ? <PickerGlyph /> : undefined}
+        trailing={canSwitchBranch ? <PickerGlyph /> : undefined}
         value={
           detached ? (
             <>
@@ -268,7 +274,7 @@ const Overview = memo<OverviewProps>(
     const gitRows = (
       <>
         {branch &&
-          (!detached && agentId && workingDirectory ? (
+          (canSwitchBranch ? (
             <BranchSwitcher
               agentId={agentId}
               currentBranch={branch}
@@ -303,7 +309,7 @@ const Overview = memo<OverviewProps>(
                 <span className={rowStyles.rowAction}>{t('workingPanel.overview.sync.pull')}</span>
               )
             }
-            onClick={syncBusy ? undefined : handlePull}
+            onClick={actionsBlocked ? undefined : handlePull}
           />
         )}
         {showAhead && (
@@ -319,11 +325,11 @@ const Overview = memo<OverviewProps>(
                 <span className={rowStyles.rowAction}>{t('workingPanel.overview.sync.push')}</span>
               )
             }
-            onClick={syncBusy ? undefined : handlePush}
+            onClick={actionsBlocked ? undefined : handlePush}
           />
         )}
 
-        {isLinkedWorktree && branch && workingDirectory && agentId && (
+        {isLinkedWorktree && branch && workingDirectory && agentId && branchConfirmed && (
           <WorktreeSwitcher
             agentId={agentId}
             currentBranch={branch}
