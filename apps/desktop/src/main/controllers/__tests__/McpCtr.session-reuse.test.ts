@@ -384,4 +384,77 @@ describe('McpCtr stdio session reuse (T-801 stateful MCP servers)', () => {
     // replacement stays pooled, never disconnected.
     expect(fresh.disconnect).not.toHaveBeenCalled();
   });
+
+  it('reaps idle sessions past the TTL but keeps actively used ones (config change cleanup)', async () => {
+    vi.useFakeTimers();
+    try {
+      const oldSession = makeClientInstance('old');
+      const activeSession = makeClientInstance('active');
+      const freshSession = makeClientInstance('fresh');
+      mcpClientMocks
+        .mockReturnValueOnce(oldSession)
+        .mockReturnValueOnce(activeSession)
+        .mockReturnValue(freshSession);
+
+      const oldParams = {
+        args: '',
+        env: { TOKEN: 'v1' },
+        params: { args: ['--stdio'], command: 'ida-mcp', name: 'ida-mcp' },
+        toolName: 'open_database',
+      } as any;
+      await ctr.runStdioMcpTool(oldParams);
+
+      // User rotates the token → new cache key, new session; the old entry
+      // (now obsolete) stays connected until the idle reaper collects it.
+      const newParams = {
+        args: '',
+        env: { TOKEN: 'v2' },
+        params: { args: ['--stdio'], command: 'ida-mcp', name: 'ida-mcp' },
+        toolName: 'open_database',
+      } as any;
+      await ctr.runStdioMcpTool(newParams);
+      expect(mcpClientMocks).toHaveBeenCalledTimes(2);
+
+      // The v2 session is actively used again within the TTL window.
+      await ctr.runStdioMcpTool(newParams);
+      expect(activeSession.disconnect).not.toHaveBeenCalled();
+
+      // Advance past the TTL: the untouched v1 entry is reaped, the
+      // refreshed v2 entry survives.
+      await vi.advanceTimersByTimeAsync(31 * 60 * 1000);
+      await ctr.runStdioMcpTool(newParams);
+
+      expect(oldSession.disconnect).toHaveBeenCalledTimes(1);
+      expect(activeSession.disconnect).not.toHaveBeenCalled();
+      // v2 was still pooled (not rebuilt after reaping).
+      expect(mcpClientMocks).toHaveBeenCalledTimes(2);
+      void freshSession;
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it('dispose-all disconnects every pooled session (app shutdown path)', async () => {
+    const a = makeClientInstance('a');
+    const b = makeClientInstance('b');
+    mcpClientMocks.mockReturnValueOnce(a).mockReturnValueOnce(b);
+
+    await ctr.runStdioMcpTool({
+      args: '',
+      env: undefined,
+      params: { args: ['--stdio'], command: 'ida-mcp', name: 'ida-mcp' },
+      toolName: 't',
+    } as any);
+    await ctr.runStdioMcpTool({
+      args: '',
+      env: { TOKEN: 'x' },
+      params: { args: ['--stdio'], command: 'ida-mcp', name: 'ida-mcp' },
+      toolName: 't',
+    } as any);
+
+    await (ctr as any).reapIdleClients(true);
+
+    expect(a.disconnect).toHaveBeenCalledTimes(1);
+    expect(b.disconnect).toHaveBeenCalledTimes(1);
+  });
 });

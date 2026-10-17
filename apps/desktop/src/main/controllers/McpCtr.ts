@@ -277,8 +277,54 @@ export default class McpCtr extends ControllerModule {
   private mcpClientPool = new Map<string, MCPClient>();
   private mcpClientInitialization?: Map<string, Promise<MCPClient>>;
 
+  /**
+   * Idle-reap policy for the pool: sessions untouched for longer than this
+   * are disconnected and dropped at the next acquire/dispose sweep.
+   *
+   * Rationale: stdio subprocesses are cheap to respawn but leak when kept
+   * forever — a changed token/env/command produces a NEW cache key while the
+   * old entry stays connected for the life of the desktop process, so a
+   * long-running session could accumulate every obsolete client. The TTL is
+   * deliberately long (30 min ≫ any realistic think-turn between tool calls)
+   * so actively used stateful sessions are never reaped mid-workflow: every
+   * acquire refreshes lastUsedAt.
+   */
+  private static readonly MCP_POOL_IDLE_TTL_MS = 30 * 60 * 1000;
+
+  private mcpClientLastUsedAt = new Map<string, number>();
+
+  /**
+   * App shutdown hook: disconnect every pooled stdio session so no MCP
+   * subprocess outlives the desktop process.
+   */
+  async beforeAppReady() {
+    const { app } = await import('electron');
+    app.once('will-quit', () => {
+      void this.reapIdleClients(true);
+    });
+  }
+
   private get fileService() {
     return this.app.getService(FileService);
+  }
+
+  /**
+   * Disconnect and drop every pooled session that has been idle for longer
+   * than the TTL, or all of them when disposing. Never throws.
+   */
+  private async reapIdleClients(disposeAll = false): Promise<void> {
+    const now = Date.now();
+    for (const [key, client] of this.mcpClientPool) {
+      const lastUsed = this.mcpClientLastUsedAt.get(key) ?? 0;
+      if (!disposeAll && now - lastUsed < McpCtr.MCP_POOL_IDLE_TTL_MS) continue;
+      this.mcpClientPool.delete(key);
+      this.mcpClientLastUsedAt.delete(key);
+      try {
+        await client.disconnect();
+      } catch (error) {
+        logger.warn('Failed to reap idle MCP client:', error);
+      }
+    }
   }
 
   /**
@@ -288,6 +334,12 @@ export default class McpCtr extends ControllerModule {
    */
   private async acquireClient(params: MCPClientParams): Promise<MCPClient> {
     const key = serializeMcpClientParams(params);
+
+    // Every acquire refreshes the session's idle clock (fire-and-forget —
+    // reaping must never delay or fail the tool call it runs alongside).
+    this.mcpClientLastUsedAt.set(key, Date.now());
+    void this.reapIdleClients().catch(() => {});
+
     const cached = this.mcpClientPool.get(key);
     if (cached) return cached;
 
@@ -301,6 +353,7 @@ export default class McpCtr extends ControllerModule {
     const creating = this.createClient(params)
       .then((client) => {
         this.mcpClientPool.set(key, client);
+        this.mcpClientLastUsedAt.set(key, Date.now());
         return client;
       })
       .finally(() => {
@@ -328,6 +381,7 @@ export default class McpCtr extends ControllerModule {
     // a concurrent recreate may have already replaced it.
     if (pooled && pooled === client) {
       this.mcpClientPool.delete(key);
+      this.mcpClientLastUsedAt.delete(key);
     }
     try {
       await client.disconnect();
