@@ -4,7 +4,7 @@ import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import type { useSelectExecutionTarget } from '@/features/ChatInput/hooks/useSelectExecutionTarget';
-import { getTopicBoundDeviceId } from '@/helpers/executionTarget';
+import { getTopicBoundDeviceId, isTopicDeviceUnknown } from '@/helpers/executionTarget';
 import { useEffectiveWorkingDirectory } from '@/hooks/useEffectiveWorkingDirectory';
 import { localFileService } from '@/services/electron/localFileService';
 import { useChatStore } from '@/store/chat';
@@ -87,6 +87,13 @@ export const useTopicAwareTargetSelect = ({
   const topicDeviceId = useChatStore((s) =>
     getTopicBoundDeviceId(topicId ? topicSelectors.getTopicById(topicId)(s) : undefined, agentId),
   );
+  const topicDeviceUnknown = useChatStore((s) =>
+    isTopicDeviceUnknown(
+      topicId ? topicSelectors.getTopicById(topicId)(s) : undefined,
+      agentId,
+      undefined,
+    ),
+  );
   const updateTopicMetadata = useChatStore((s) => s.updateTopicMetadata);
 
   const selectTarget = useCallback(
@@ -103,6 +110,11 @@ export const useTopicAwareTargetSelect = ({
       const machineKnown = target !== 'local' || !!currentDeviceId;
       if (!topicId || !topicDeviceId || !machineKnown || nextMachineId === topicDeviceId) {
         await apply();
+        // A topic whose cwd never recorded its machine: this pick is the user
+        // naming it, so pin it — nothing on another machine is left behind.
+        if (topicId && topicDeviceUnknown && machineKnown && nextMachineId) {
+          await updateTopicMetadata(topicId, { boundDeviceId: nextMachineId });
+        }
         return;
       }
 
@@ -149,6 +161,7 @@ export const useTopicAwareTargetSelect = ({
       selectExecutionTarget,
       t,
       topicDeviceId,
+      topicDeviceUnknown,
       topicId,
       updateTopicMetadata,
     ],

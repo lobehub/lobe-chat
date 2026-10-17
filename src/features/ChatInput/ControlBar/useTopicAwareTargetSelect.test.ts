@@ -7,7 +7,7 @@ const state = vi.hoisted(() => ({
   activeTopicId: undefined as string | undefined,
   confirmModal: vi.fn(),
   selectExecutionTarget: vi.fn(),
-  topics: {} as Record<string, { boundDeviceId?: string }>,
+  topics: {} as Record<string, { boundDeviceId?: string; workingDirectory?: string }>,
   updateTopicMetadata: vi.fn(),
 }));
 
@@ -119,5 +119,31 @@ describe('useTopicAwareTargetSelect', () => {
     expect(state.selectExecutionTarget).toHaveBeenCalledWith('device', 'device-a', {
       localSandbox: undefined,
     });
+  });
+
+  // Regression: a cwd with no recorded machine kept following the agent
+  // default, so the chip named whichever device was picked last.
+  it('pins a topic with an unrecorded machine to the device the user picks', async () => {
+    state.topics = { 'legacy-topic': { workingDirectory: '/Users/other/repo' } };
+    const { result } = renderSelect('legacy-topic');
+
+    await act(() => result.current.selectTarget('device', 'device-a'));
+
+    expect(state.confirmModal).not.toHaveBeenCalled();
+    expect(state.selectExecutionTarget).toHaveBeenCalledWith('device', 'device-a', {
+      localSandbox: undefined,
+    });
+    expect(state.updateTopicMetadata).toHaveBeenCalledWith('legacy-topic', {
+      boundDeviceId: 'device-a',
+    });
+  });
+
+  it('does not pin a topic with an unrecorded machine to the cloud sandbox', async () => {
+    state.topics = { 'legacy-topic': { workingDirectory: '/Users/other/repo' } };
+    const { result } = renderSelect('legacy-topic');
+
+    await act(() => result.current.selectTarget('sandbox'));
+
+    expect(state.updateTopicMetadata).not.toHaveBeenCalled();
   });
 });

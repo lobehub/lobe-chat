@@ -20,11 +20,12 @@ export interface GatewayDeviceInfo {
 }
 
 export class ElectronGatewayActionImpl {
+  readonly #get: () => ElectronStore;
   readonly #set: Setter;
 
-  constructor(set: Setter, _get: () => ElectronStore, _api?: unknown) {
-    void _get;
+  constructor(set: Setter, get: () => ElectronStore, _api?: unknown) {
     void _api;
+    this.#get = get;
     this.#set = set;
   }
 
@@ -52,6 +53,26 @@ export class ElectronGatewayActionImpl {
 
   setGatewayConnectionStatus = (status: GatewayConnectionStatus): void => {
     this.#set({ gatewayConnectionStatus: status }, false, 'setGatewayConnectionStatus');
+  };
+
+  /**
+   * This desktop's gateway device id, asked over IPC when the SWR hook has not
+   * filled the store yet. Writes that pin a topic's cwd must name its machine,
+   * and a send or CLI session can land before any picker has mounted.
+   */
+  resolveGatewayDeviceId = async (): Promise<string | undefined> => {
+    if (!isDesktop) return;
+    const cached = this.#get().gatewayDeviceInfo?.deviceId;
+    if (cached) return cached;
+    try {
+      const info = (await gatewayConnectionService.getDeviceInfo()) as GatewayDeviceInfo;
+      if (!info?.deviceId) return;
+      this.#set({ gatewayDeviceInfo: info }, false, 'setGatewayDeviceInfo');
+      return info.deviceId;
+    } catch (error) {
+      console.error('Gateway device info fetch failed:', error);
+      return;
+    }
   };
 
   useFetchGatewayDeviceInfo = (): SWRResponse<GatewayDeviceInfo> => {
