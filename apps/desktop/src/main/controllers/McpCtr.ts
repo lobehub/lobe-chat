@@ -1,7 +1,5 @@
-import { exec } from 'node:child_process';
 import { createHash, randomUUID } from 'node:crypto';
 import path from 'node:path';
-import { promisify } from 'node:util';
 
 import {
   deserializeMcpIpcPayload,
@@ -22,8 +20,8 @@ import type {
   ToolCallResult,
 } from '../libs/mcp/types';
 import { ControllerModule, IpcMethod } from './index';
+import { checkDeployOption } from './mcpInstallCheck';
 
-const execPromise = promisify(exec);
 const logger = createLogger('controllers:McpCtr');
 const loadMcpClient = () => import('../libs/mcp/client');
 
@@ -32,8 +30,7 @@ const loadMcpClient = () => import('../libs/mcp/client');
  *
  * We intentionally keep it local to avoid pulling the web app's path-alias
  * expectations (e.g. `@/config/*`) into the desktop `tsgo` typecheck.
- */
-interface CheckMcpInstallResult {
+ */ interface CheckMcpInstallResult {
   allDependenciesMet?: boolean;
   allOptions?: Array<{
     allDependenciesMet?: boolean;
@@ -179,6 +176,22 @@ const getFileExtensionFromMimeType = (mimeType: string, mediaType: MediaContentT
 
 const todayShard = () => new Date().toISOString().split('T')[0];
 
+/**
+ * Serialize MCP client params into a stable cache key (sorted keys so that
+ * key order in the manifest does not defeat reuse). `env` participates in the
+ * key: a changed secret/config must spawn a fresh session rather than reuse
+ * one authenticated with the old values.
+ */
+const serializeMcpClientParams = (params: MCPClientParams): string => {
+  const source = params as unknown as Record<string, unknown>;
+  const sorted: Record<string, unknown> = {};
+  for (const key of Object.keys(source).sort()) {
+    const value = source[key];
+    sorted[key] = key === 'args' && Array.isArray(value) ? [...value].sort() : value;
+  }
+  return JSON.stringify(sorted);
+};
+
 const toMarkdown = async (
   blocks: ToolCallContent[] | null | undefined,
   getHTTPURL: (key: string) => Promise<string>,
@@ -219,8 +232,59 @@ const toMarkdown = async (
 export default class McpCtr extends ControllerModule {
   static override readonly groupName = 'mcp';
 
+  /**
+   * Long-lived MCP client pool keyed by serialized connection params.
+   *
+   * Stateful stdio MCP servers (e.g. IDA's `ida-mcp`: `open_database` sets a
+   * current database that later `execute_python` calls depend on) lose their
+   * in-process state when the session is torn down between tool calls. The
+   * cloud-side MCPService already caches clients; the desktop / device-tunnel
+   * path used to spawn a fresh process per call and kill it right after
+   * (`finally disconnect()`), silently dropping all server-side state. We now
+   * reuse one session per unique connection params, and only rebuild it when
+   * a call fails.
+   */
+  private mcpClientPool = new Map<string, MCPClient>();
+
   private get fileService() {
     return this.app.getService(FileService);
+  }
+
+  /**
+   * Return a pooled client for the given params, creating (and caching) a new
+   * one when the pool has no healthy entry. Callers must NOT disconnect the
+   * returned client — pooled sessions outlive a single tool call.
+   */
+  private async acquireClient(params: MCPClientParams): Promise<MCPClient> {
+    const key = serializeMcpClientParams(params);
+    const cached = this.mcpClientPool.get(key);
+    if (cached) return cached;
+
+    const client = await this.createClient(params);
+    this.mcpClientPool.set(key, client);
+    return client;
+  }
+
+  /**
+   * Drop a pooled session after a failed call so the next attempt starts
+   * fresh. Never throws — the original call error matters more than cleanup.
+   */
+  private async evictClient(params: MCPClientParams, client?: MCPClient): Promise<void> {
+    const key = serializeMcpClientParams(params);
+    const pooled = this.mcpClientPool.get(key);
+    // Only evict when the failing call actually ran on the pooled instance —
+    // a concurrent recreate may have already replaced it.
+    if (pooled && pooled === client) {
+      this.mcpClientPool.delete(key);
+    }
+    const toDisconnect = client ?? pooled;
+    if (toDisconnect) {
+      try {
+        await toDisconnect.disconnect();
+      } catch (error) {
+        logger.warn('Failed to disconnect evicted MCP client:', error);
+      }
+    }
   }
 
   private async createClient(params: MCPClientParams) {
@@ -297,7 +361,7 @@ export default class McpCtr extends ControllerModule {
 
     let client: MCPClient | undefined;
     try {
-      client = await this.createClient(params);
+      client = await this.acquireClient(params);
       const manifest = await client.listManifests();
       const identifier = input.name;
 
@@ -342,9 +406,7 @@ export default class McpCtr extends ControllerModule {
       }
       throw error;
     } finally {
-      if (client) {
-        await client.disconnect();
-      }
+      // Manifest listing shares the pooled session; nothing to clean up here.
     }
   }
 
@@ -450,21 +512,31 @@ export default class McpCtr extends ControllerModule {
     toolName: string,
     rawArgs: unknown,
   ): Promise<{ content: string; state: unknown; success: boolean }> {
-    let client: MCPClient | undefined;
     try {
-      client = await this.createClient(params);
       const args = safeParseToRecord(rawArgs);
 
-      const raw = (await client.callTool(toolName, args)) as ToolCallResult;
-      const processed = raw.isError ? raw.content : await this.processContentBlocks(raw.content);
-
-      const content = await toMarkdown(processed, (key) => this.fileService.getFileHTTPURL(key));
-
-      return {
-        content,
-        state: { ...raw, content: processed },
-        success: true,
+      // Reuse the pooled session (stateful stdio servers keep per-process
+      // state such as a selected database). Retry once on a fresh session if
+      // the pooled one turned stale between calls.
+      const runOn = async (client: MCPClient) => {
+        const raw = (await client.callTool(toolName, args)) as ToolCallResult;
+        const processed = raw.isError ? raw.content : await this.processContentBlocks(raw.content);
+        const content = await toMarkdown(processed, (key) => this.fileService.getFileHTTPURL(key));
+        return { content, state: { ...raw, content: processed }, success: true };
       };
+
+      try {
+        return await runOn(await this.acquireClient(params));
+      } catch (firstError) {
+        logger.warn('MCP tool call failed on pooled session, retrying with a fresh one:', {
+          message: (firstError as Error).message,
+          toolName,
+        });
+        await this.evictClient(params);
+        const retryClient = await this.createClient(params);
+        this.mcpClientPool.set(serializeMcpClientParams(params), retryClient);
+        return await runOn(retryClient);
+      }
     } catch (error) {
       // If it's an MCPConnectionError with stderr logs, enhance the error message
       const { MCPConnectionError } = await loadMcpClient();
@@ -482,207 +554,7 @@ export default class McpCtr extends ControllerModule {
       }
       logger.error('callTool failed:', error);
       throw error;
-    } finally {
-      if (client) {
-        await client.disconnect();
-      }
     }
-  }
-
-  // ---------- MCP Install Check (local system) ----------
-
-  private getInstallInstructions(installInstructions: any) {
-    if (!installInstructions) return undefined;
-
-    let current: string | undefined;
-
-    switch (process.platform) {
-      case 'darwin': {
-        current = installInstructions.macos;
-        break;
-      }
-      case 'linux': {
-        current = installInstructions.linux_debian || installInstructions.linux;
-        break;
-      }
-      case 'win32': {
-        current = installInstructions.windows;
-        break;
-      }
-    }
-
-    return { current, manual: installInstructions.manual };
-  }
-
-  private async checkSystemDependency(dependency: any) {
-    const checkCommand = dependency.checkCommand || `${dependency.name} --version`;
-
-    try {
-      const { stdout, stderr } = await execPromise(checkCommand);
-
-      if (stderr && !stdout) {
-        return {
-          error: stderr,
-          installInstructions: this.getInstallInstructions(dependency.installInstructions),
-          installed: false,
-          meetRequirement: false,
-          name: dependency.name,
-          requiredVersion: dependency.requiredVersion,
-        };
-      }
-
-      const output = String(stdout || '').trim();
-      let version = output;
-
-      if (dependency.versionParsingRequired) {
-        const versionMatch = output.match(/V?(\d+(\.\d+)*)/i);
-        if (versionMatch) version = versionMatch[0];
-      }
-
-      let meetRequirement = true;
-
-      if (dependency.requiredVersion) {
-        const currentVersion = String(version).replace(/^V/i, '');
-        const currentNum = Number.parseFloat(currentVersion);
-
-        const requirementMatch = String(dependency.requiredVersion).match(/([<=>]+)?(\d+(\.\d+)*)/);
-        if (requirementMatch) {
-          const [, operator = '=', requiredVersion] = requirementMatch;
-          const requiredNum = Number.parseFloat(requiredVersion);
-          switch (operator) {
-            case '>=': {
-              meetRequirement = currentNum >= requiredNum;
-              break;
-            }
-            case '>': {
-              meetRequirement = currentNum > requiredNum;
-              break;
-            }
-            case '<=': {
-              meetRequirement = currentNum <= requiredNum;
-              break;
-            }
-            case '<': {
-              meetRequirement = currentNum < requiredNum;
-              break;
-            }
-            default: {
-              meetRequirement = currentNum === requiredNum;
-              break;
-            }
-          }
-        }
-      }
-
-      return {
-        installInstructions: this.getInstallInstructions(dependency.installInstructions),
-        installed: true,
-        meetRequirement,
-        name: dependency.name,
-        requiredVersion: dependency.requiredVersion,
-        version,
-      };
-    } catch (error) {
-      return {
-        error: error instanceof Error ? error.message : 'Unknown error',
-        installInstructions: this.getInstallInstructions(dependency.installInstructions),
-        installed: false,
-        meetRequirement: false,
-        name: dependency.name,
-        requiredVersion: dependency.requiredVersion,
-      };
-    }
-  }
-
-  private async checkPackageInstalled(installationMethod: string, details: any) {
-    if (installationMethod === 'npm') {
-      const packageName = details?.packageName;
-      if (!packageName) return { installed: false };
-
-      // Only check global npm list - do NOT use npx as it may download packages
-      try {
-        const { stdout } = await execPromise(`npm list -g ${packageName} --depth=0`);
-        if (!stdout.includes('(empty)') && stdout.includes(packageName)) {
-          return { installed: true };
-        }
-      } catch {
-        // ignore - package not found in global list
-      }
-
-      // For npm packages, we don't require pre-installation
-      // npx will handle downloading and running on-demand during actual MCP connection
-      return { installed: false };
-    }
-
-    if (installationMethod === 'python') {
-      const packageName = details?.packageName;
-      if (!packageName) return { installed: false };
-
-      const pythonCommand = details?.pythonCommand || 'python';
-
-      try {
-        const command = `${pythonCommand} -m pip list | grep -i "${packageName}"`;
-        const { stdout } = await execPromise(command);
-        if (stdout.trim() && stdout.toLowerCase().includes(String(packageName).toLowerCase())) {
-          return { installed: true };
-        }
-      } catch {
-        // ignore
-      }
-
-      try {
-        const importCommand = `${pythonCommand} -c "import ${String(packageName).replace('-', '_')}; print('Package installed')"`;
-        const { stdout } = await execPromise(importCommand);
-        if (stdout.includes('Package installed')) return { installed: true };
-      } catch {
-        // ignore
-      }
-
-      return { installed: false };
-    }
-
-    // manual or unknown
-    return { installed: false };
-  }
-
-  private async checkDeployOption(option: any) {
-    const systemDependenciesResults = [];
-
-    if (Array.isArray(option.systemDependencies) && option.systemDependencies.length > 0) {
-      for (const dep of option.systemDependencies) {
-        systemDependenciesResults.push(await this.checkSystemDependency(dep));
-      }
-    }
-
-    const packageResult = await this.checkPackageInstalled(
-      option.installationMethod,
-      option.installationDetails,
-    );
-    const packageInstalled = Boolean((packageResult as any).installed);
-
-    const allDependenciesMet = systemDependenciesResults.every((dep: any) => dep.meetRequirement);
-
-    const configSchema = option.connection?.configSchema;
-    const needsConfig = Boolean(
-      configSchema &&
-      ((Array.isArray(configSchema.required) && configSchema.required.length > 0) ||
-        (configSchema.properties &&
-          Object.values(configSchema.properties).some((prop: any) => prop.required === true))),
-    );
-
-    const connection = option.connection?.url
-      ? { ...option.connection, type: 'http' }
-      : { ...option.connection, type: 'stdio' };
-
-    return {
-      allDependenciesMet,
-      configSchema,
-      connection,
-      isRecommended: option.isRecommended,
-      needsConfig,
-      packageInstalled,
-      systemDependencies: systemDependenciesResults,
-    };
   }
 
   @IpcMethod()
@@ -697,7 +569,7 @@ export default class McpCtr extends ControllerModule {
       const results = [];
 
       for (const option of options) {
-        results.push(await this.checkDeployOption(option));
+        results.push(await checkDeployOption(option));
       }
 
       const recommendedResult = results.find((r: any) => r.isRecommended && r.allDependenciesMet);
