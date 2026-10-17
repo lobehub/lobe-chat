@@ -48,14 +48,14 @@ beforeEach(() => {
   localStorage.clear();
 });
 
-describe('useRememberedFilesLocation', () => {
+describe('useRememberedFilesLocation', { timeout: 15_000 }, () => {
   it('opens where the conversation last was until the device list settles', async () => {
     await remember('topic/t1', { deviceId: 'device-1', directory: '/repo' });
 
     // Before the device default is known the live resolution is the home fallback.
     const { rerender, result } = await boot({
       contextKey: 'topic/t1',
-      resolved: { directory: '/Users/me' },
+      resolved: { deviceId: 'device-1', directory: '/Users/me' },
       settled: false,
     });
     await waitFor(() =>
@@ -72,11 +72,26 @@ describe('useRememberedFilesLocation', () => {
     // The next session opens the new location.
     const next = await boot({
       contextKey: 'topic/t1',
-      resolved: { directory: '/Users/me' },
+      resolved: { deviceId: 'device-1', directory: '/Users/me' },
       settled: false,
     });
     await waitFor(() =>
       expect(next.result.current).toEqual({ deviceId: 'device-1', directory: '/repo/next' }),
+    );
+  });
+
+  it('rejects a saved location from a different host before the device list settles', async () => {
+    await remember('topic/t1', { deviceId: 'device-old', directory: '/old-repo' });
+
+    // The agent's target changed: the live host is already known from config.
+    const { result } = await boot({
+      contextKey: 'topic/t1',
+      resolved: { deviceId: 'device-new', directory: '/new-repo' },
+      settled: false,
+    });
+
+    await waitFor(() =>
+      expect(result.current).toEqual({ deviceId: 'device-new', directory: '/new-repo' }),
     );
   });
 

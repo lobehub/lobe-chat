@@ -221,7 +221,7 @@ const Files = memo<FilesProps>(
     // to reveal in a file manager.
     const isSandbox = !!sandboxTopicId || !!sandboxInstanceId;
     const {
-      git: { data: gitFiles },
+      git: { data: gitFiles, error: gitError },
       project: { data, error, isLoading, isValidating },
     } = useFilesTreeSources(deviceId, workingDirectory, {
       instanceId: sandboxInstanceId,
@@ -506,6 +506,10 @@ const Files = memo<FilesProps>(
     // refresh replaces it within moments; only when that refresh is not running
     // (it failed, or has not been retried) is the partial tree worth flagging.
     const showsPartialIndex = isPersistedPartialIndex(data) && !isValidating;
+    // A restored tree / overlay is painted before the host answers again. When
+    // that refresh fails the saved view stays on screen, so it must say that it
+    // could not be revalidated instead of reading as the current directory.
+    const showsRefreshFailure = !!data && !!(error || gitError);
 
     if (!data && isLoading) {
       return (
@@ -620,7 +624,9 @@ const Files = memo<FilesProps>(
             />
           </div>
         )}
-        {showsPartialIndex ? (
+        {showsRefreshFailure ? (
+          <div className={styles.truncated}>{t('workingPanel.files.refreshFailed')}</div>
+        ) : showsPartialIndex ? (
           <div className={styles.truncated}>{t('workingPanel.files.partialIndexNotice')}</div>
         ) : (
           truncatedCount > 0 && (

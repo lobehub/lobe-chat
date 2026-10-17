@@ -27,7 +27,7 @@ const SANDBOX_LIVE_REFRESH_INTERVAL = 15 * 1000;
 export const useProjectFiles = (
   deviceId: string | undefined,
   dirPath: string | undefined,
-  sandbox?: { instanceId?: string; topicId?: string },
+  sandbox?: { instanceId?: string; live?: boolean; topicId?: string },
 ) => {
   const isSandbox = !!sandbox?.instanceId || !!sandbox?.topicId;
   const enabled = isSandbox ? dirPath !== undefined : Boolean(dirPath) && (!!deviceId || isDesktop);
@@ -52,7 +52,7 @@ export const useProjectFiles = (
   // Refetching on focus alone means a user watching a run in progress sees a
   // tree from before it started, so a run is what makes this tree live.
   const isRunning = useChatStore(operationSelectors.isAgentRuntimeRunning);
-  const live = isSandbox && isRunning;
+  const live = isSandbox && isRunning && (sandbox?.live ?? true);
 
   const { error, isHydrated, isValidating, revalidate } = projectFileActions.useFetchProjectIndex(
     params,

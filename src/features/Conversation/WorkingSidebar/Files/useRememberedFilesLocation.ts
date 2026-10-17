@@ -75,5 +75,9 @@ export const useRememberedFilesLocation = (
   }, [contextKey, remembered, resolvedDeviceId, resolvedDirectory, scopeTrusted, settled]);
 
   if (settled) return resolved;
+  // The live host is already known from the agent's config before the device
+  // list settles. A tree saved on another machine must not stand in for it, or
+  // the pane would read and mutate the previously bound host until then.
+  if (remembered && remembered.deviceId !== resolvedDeviceId) return resolved;
   return remembered ?? resolved;
 };

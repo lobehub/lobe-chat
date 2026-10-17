@@ -30,6 +30,7 @@ const gitFilesMock = vi.hoisted(() => ({
     deleted: ['deleted.ts'],
     modified: ['src/foo/bar.ts'],
   },
+  error: undefined as Error | undefined,
 }));
 const openLocalFileMock = vi.hoisted(() => vi.fn());
 const searchProjectFilesMock = vi.hoisted(() => vi.fn());
@@ -129,6 +130,7 @@ const projectFilesMock = vi.hoisted(() => {
       root: '/repo',
       source: 'git' as 'git' | 'glob',
     },
+    error: undefined as Error | undefined,
     isValidating: false,
   };
 });
@@ -169,7 +171,7 @@ vi.mock('../useGitWorkingTreeFiles', () => ({
           ...files.deleted.map((path) => ({ path, status: 'deleted' })),
         ]
       : [],
-  useGitWorkingTreeFiles: () => ({ data: gitFilesMock.data }),
+  useGitWorkingTreeFiles: () => ({ data: gitFilesMock.data, error: gitFilesMock.error }),
 }));
 
 vi.mock('../useProjectFiles', () => ({
@@ -180,6 +182,7 @@ vi.mock('../useProjectFiles', () => ({
       source: workingDirectory === '/non-git' ? 'glob' : projectFilesMock.data.source,
     },
     isLoading: false,
+    error: projectFilesMock.error,
     isValidating: projectFilesMock.isValidating,
     mutate: vi.fn(),
   }),
@@ -316,7 +319,9 @@ const expandSearch = () => {
 beforeEach(() => {
   projectFilesMock.data.source = 'git';
   projectFilesMock.data.persistedPartial = undefined;
+  projectFilesMock.error = undefined;
   projectFilesMock.isValidating = false;
+  gitFilesMock.error = undefined;
   projectFilesMock.data.entries = [...projectFilesMock.baseEntries];
   explorerTreeProps.current = undefined;
   handleSpies.focus.mockClear();
