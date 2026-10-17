@@ -95,6 +95,20 @@ describe('useRememberedFilesLocation', { timeout: 15_000 }, () => {
     );
   });
 
+  it('does not use a remembered filesystem location when nothing can read it', async () => {
+    await remember('topic/t1', { directory: '/repo' });
+
+    // A sandbox / cloud-only target: no filesystem environment, so the old
+    // local path must not enable Files or route mutations through IPC.
+    const { result } = await boot({
+      contextKey: undefined,
+      resolved: undefined,
+      settled: false,
+    });
+
+    expect(result.current).toBeUndefined();
+  });
+
   it('answers with the saved location on the first render, before the replica hydrates', async () => {
     await remember('topic/t1', { directory: '/repo' });
 

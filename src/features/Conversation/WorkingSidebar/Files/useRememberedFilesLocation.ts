@@ -11,6 +11,12 @@ import {
 
 export type { FilesLocation } from '@/store/projectFile';
 
+/** The live resolution can know the host before it knows the directory. */
+export interface ResolvedFilesLocation {
+  deviceId?: string;
+  directory?: string;
+}
+
 /**
  * The conversation a remembered location belongs to. `/` rather than `:` keeps
  * the replica's own SWR keys clear of the `topic:` / `agent:` prefixes the SWR
@@ -35,7 +41,7 @@ export const filesLocationContextKey = (
  */
 export const useRememberedFilesLocation = (
   contextKey: string | undefined,
-  resolved: FilesLocation | undefined,
+  resolved: ResolvedFilesLocation | undefined,
   settled: boolean,
 ): FilesLocation | undefined => {
   const scope = cacheScope.use();
@@ -74,10 +80,21 @@ export const useRememberedFilesLocation = (
     });
   }, [contextKey, remembered, resolvedDeviceId, resolvedDirectory, scopeTrusted, settled]);
 
-  if (settled) return resolved;
+  if (settled) {
+    return resolvedDirectory === undefined
+      ? undefined
+      : { deviceId: resolvedDeviceId, directory: resolvedDirectory };
+  }
   // The live host is already known from the agent's config before the device
   // list settles. A tree saved on another machine must not stand in for it, or
   // the pane would read and mutate the previously bound host until then.
-  if (remembered && remembered.deviceId !== resolvedDeviceId) return resolved;
-  return remembered ?? resolved;
+  if (remembered && remembered.deviceId !== resolvedDeviceId) {
+    return resolvedDirectory === undefined
+      ? undefined
+      : { deviceId: resolvedDeviceId, directory: resolvedDirectory };
+  }
+  if (remembered) return remembered;
+  return resolvedDirectory === undefined
+    ? undefined
+    : { deviceId: resolvedDeviceId, directory: resolvedDirectory };
 };

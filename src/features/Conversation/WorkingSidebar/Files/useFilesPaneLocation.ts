@@ -54,26 +54,29 @@ export const useFilesPaneLocation = ({
   workingDirectory,
 }: FilesPaneLocationParams): FilesPaneLocation => {
   const isSandbox = isSandboxExecution && !!(sandboxInstanceId || sandboxTopicId);
-  const liveDirectory = isSandbox
+  // The empty string IS the workspace root, so only an unresolved instance
+  // withholds the directory.
+  const sandboxLiveDirectory = isSandbox
     ? sandboxDirectoryKnown
       ? sandboxDirectory
       : undefined
-    : filesystemEnvironmentAvailable
-      ? workingDirectory
-      : undefined;
+    : undefined;
 
   const devicesSettled = useDeviceStore(deviceSelectors.isDeviceListLoaded);
+  // A sandbox has its own backend, and without a filesystem environment there
+  // is nothing this client can read or mutate: never open a remembered path in
+  // either case. A device id is still passed while its directory resolves so a
+  // same-host saved tree can paint before the device list answers.
+  const canReadFilesystem = !isSandbox && filesystemEnvironmentAvailable;
   const filesLocation = useRememberedFilesLocation(
-    isSandbox ? undefined : filesLocationContextKey(topicId, activeAgentId),
-    liveDirectory === undefined
-      ? undefined
-      : { deviceId: remoteDeviceId, directory: liveDirectory },
+    canReadFilesystem ? filesLocationContextKey(topicId, activeAgentId) : undefined,
+    canReadFilesystem ? { deviceId: remoteDeviceId, directory: workingDirectory } : undefined,
     devicesSettled,
   );
 
   return {
     deviceId: filesLocation?.deviceId,
-    directory: filesLocation?.directory,
+    directory: isSandbox ? sandboxLiveDirectory : filesLocation?.directory,
     isSandbox,
   };
 };
