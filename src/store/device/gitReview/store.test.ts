@@ -520,6 +520,48 @@ describe('Review / PR tab replicas', () => {
       expect(await readRow(gitLinkedPRResource, LINKED)).toEqual(cached);
     });
 
+    // Regression: a transient `gh` failure answers `{ pullRequest: null,
+    // status: 'error' }`; that was committed as "no PR" over the cached one.
+    it('keeps the persisted linked PR when the lookup reports an error', async () => {
+      const cached = { value: { pullRequest: { number: 42 }, pullRequestStatus: 'ok' } };
+      await seed(gitLinkedPRResource, LINKED, cached);
+      vi.mocked(gitService.getLinkedPullRequest).mockResolvedValue({
+        pullRequest: null,
+        pullRequestStatus: 'error',
+      } as any);
+
+      const { result } = renderHook(
+        () => useFetchGitLinkedPR('device-1', '/repo', 'feat/x', true),
+        { wrapper },
+      );
+
+      await waitFor(() => expect(result.current.error).toBeTruthy());
+      expect(result.current.data?.pullRequest?.number).toBe(42);
+      expect(result.current.isConfirmed).toBe(false);
+      expect(await readRow(gitLinkedPRResource, LINKED)).toEqual(cached);
+    });
+
+    // A persisted row paints, but only the device's answer makes it actionable.
+    it('reports a hydrated detail as unconfirmed until gh answers', async () => {
+      await seed(gitPullRequestDetailResource, PR, { value: detailResult });
+      let answer!: (value: DeviceGitPullRequestDetailResult) => void;
+      vi.mocked(gitService.getPullRequestDetail).mockReturnValue(
+        new Promise((resolve) => {
+          answer = resolve;
+        }),
+      );
+
+      const { result } = renderHook(() => useFetchGitPullRequestDetail('device-1', '/repo', 42), {
+        wrapper,
+      });
+
+      await waitFor(() => expect(result.current.data?.detail?.title).toBe('Cached PR title'));
+      expect(result.current.isConfirmed).toBe(false);
+
+      await act(async () => answer(detailResult));
+      await waitFor(() => expect(result.current.isConfirmed).toBe(true));
+    });
+
     // Regression: the service maps a failed remote detail read to
     // `{ detail: null, status: 'error' }`, which replaced the persisted PR.
     it('keeps the persisted detail when the detail read fails', async () => {

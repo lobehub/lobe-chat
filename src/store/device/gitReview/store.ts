@@ -112,10 +112,18 @@ const createSlices = (
 ) => ({
   linkedPR: createReplicaSlice(gitLinkedPRResource, {
     actionPrefix: 'gitReview/linkedPR',
-    // "No PR" is an answer (`pullRequest: null`); `undefined` is a failed read.
-    fetcher: async (params: GitLinkedPRParams) => ({
-      value: requireAnswer(await gitService.getLinkedPullRequest(params), 'linked pull request'),
-    }),
+    // "No PR" is an answer (`pullRequest: null`, status `ok`); `undefined` (a
+    // failed remote read) and status `error` (a transient `gh` failure) are not.
+    // `gh-missing` stays an answer: the composer shows it.
+    fetcher: async (params: GitLinkedPRParams) => {
+      const value = requireAnswer(
+        await gitService.getLinkedPullRequest(params),
+        'linked pull request',
+      );
+      if (value.pullRequestStatus === 'error')
+        throw new Error('Unable to load linked pull request');
+      return { value };
+    },
     get,
     set,
     stateKey: 'gitLinkedPRReplica',

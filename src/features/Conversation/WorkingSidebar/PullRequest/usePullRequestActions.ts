@@ -19,6 +19,11 @@ const DOCK_KINDS = new Set<PullRequestBusy>([
 
 interface UsePullRequestActionsParams {
   deviceId?: string;
+  /**
+   * The PR is only known from persisted rows so far: refuse every mutation so
+   * a click on stale content cannot act on a PR the branch has moved off.
+   */
+  locked?: boolean;
   mutateDetail: () => Promise<unknown>;
   number: number;
   workingDirectory: string;
@@ -26,6 +31,7 @@ interface UsePullRequestActionsParams {
 
 export const usePullRequestActions = ({
   deviceId,
+  locked = false,
   mutateDetail,
   number,
   workingDirectory,
@@ -34,10 +40,12 @@ export const usePullRequestActions = ({
   const [error, setError] = useState<string>();
   const busyRef = useRef(false);
   const retryRef = useRef<() => Promise<boolean>>(undefined);
+  const lockedRef = useRef(locked);
+  lockedRef.current = locked;
 
   const perform = useCallback(
     async (kind: PullRequestBusy, request: () => Promise<DeviceGitPullRequestActionResult>) => {
-      if (busyRef.current) return false;
+      if (busyRef.current || lockedRef.current) return false;
       busyRef.current = true;
       setBusy(kind);
       const isDockAction = DOCK_KINDS.has(kind);

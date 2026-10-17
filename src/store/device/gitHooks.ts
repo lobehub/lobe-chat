@@ -95,6 +95,11 @@ export const invalidateGitReviewCaches = async ({
 export interface GitReplicaReadResult<T> {
   data: T | undefined;
   error: unknown;
+  /**
+   * The device answered this session. A row hydrated from storage paints, but
+   * is not proof enough to act on (e.g. mutate the PR it names).
+   */
+  isConfirmed: boolean;
   /** Nothing to paint yet (no persisted row, no response) and a read is pending. */
   isLoading: boolean;
   isValidating: boolean;
@@ -124,15 +129,22 @@ interface ReplicaReadSlice<TParams, TStored> {
  * paints first, the device read confirms it in the background. Returns the
  * SWR-like shape the Review / PR tabs were written against.
  */
+type ReplicaEntriesSelector = (
+  state: GitReviewStore,
+) => Record<string, { source?: string } | undefined>;
+
 const useGitReviewReplica = <TParams, TStored>(
   pick: (slices: GitReviewStore['slices']) => ReplicaReadSlice<TParams, TStored>,
   selectMap: (state: GitReviewStore) => Record<string, TStored>,
+  selectEntries: ReplicaEntriesSelector,
   toKey: (params: TParams) => string,
   params: TParams | null,
   schedule: GitReplicaSyncOptions<TStored>,
 ) => {
   const key = params ? toKey(params) : undefined;
   const stored = useGitReviewStore((s) => (key ? selectMap(s)[key] : undefined));
+  // Only a head response makes the row authoritative (`source: 'server'`).
+  const isConfirmed = useGitReviewStore((s) => !!key && selectEntries(s)[key]?.source === 'server');
   // The driver forwards SWR options as given: a failed git read (dead path,
   // unreachable device, missing `gh`) is not retried, like the SWR hooks these replaced.
   const { error, isHydrated, isValidating, revalidate } = pick(
@@ -141,6 +153,7 @@ const useGitReviewReplica = <TParams, TStored>(
 
   return {
     error,
+    isConfirmed,
     isLoading: !!params && stored === undefined && !error && (!isHydrated || isValidating),
     isValidating,
     mutate: revalidate,
@@ -152,11 +165,19 @@ const useGitReviewReplica = <TParams, TStored>(
 const useGitReviewRead = <TParams, T>(
   pick: (slices: GitReviewStore['slices']) => ReplicaReadSlice<TParams, GitReviewRead<T>>,
   selectMap: (state: GitReviewStore) => Record<string, GitReviewRead<T>>,
+  selectEntries: ReplicaEntriesSelector,
   toKey: (params: TParams) => string,
   params: TParams | null,
   schedule: GitReplicaSyncOptions<GitReviewRead<T>>,
 ): GitReplicaReadResult<T> => {
-  const { stored, ...rest } = useGitReviewReplica(pick, selectMap, toKey, params, schedule);
+  const { stored, ...rest } = useGitReviewReplica(
+    pick,
+    selectMap,
+    selectEntries,
+    toKey,
+    params,
+    schedule,
+  );
   return { ...rest, data: stored?.value };
 };
 
@@ -180,6 +201,7 @@ export const useReviewPatches = (
   const { stored, ...rest } = useGitReviewReplica(
     (slices) => slices.reviewPatches,
     (s) => s.gitReviewPatchesMap,
+    (s) => s.gitReviewPatchesReplica.entries,
     gitReviewPatchesKey,
     params,
     {
@@ -381,6 +403,7 @@ export const useFetchGitLinkedPR = (
   return useGitReviewRead(
     (slices) => slices.linkedPR,
     (s) => s.gitLinkedPRMap,
+    (s) => s.gitLinkedPRReplica.entries,
     gitLinkedPRKey,
     params,
     {
@@ -484,6 +507,7 @@ export const useFetchGitPullRequestDetail = (
   return useGitReviewRead(
     (slices) => slices.pullRequestDetail,
     (s) => s.gitPullRequestDetailMap,
+    (s) => s.gitPullRequestDetailReplica.entries,
     gitPullRequestKey,
     params,
     {
@@ -511,6 +535,7 @@ export const useFetchGitPullRequestActivity = (
   return useGitReviewRead<GitPullRequestParams, DeviceGitPullRequestActivity>(
     (slices) => slices.pullRequestActivity,
     (s) => s.gitPullRequestActivityMap,
+    (s) => s.gitPullRequestActivityReplica.entries,
     gitPullRequestKey,
     params,
     {
@@ -555,6 +580,7 @@ export const useFetchGitPullRequestMergeContext = (
   >(
     (slices) => slices.pullRequestMergeContext,
     (s) => s.gitPullRequestMergeContextMap,
+    (s) => s.gitPullRequestMergeContextReplica.entries,
     gitPullRequestMergeContextKey,
     params,
     { dedupingInterval: 30_000, focusThrottleInterval: 60 * 1000, revalidateOnFocus: true },

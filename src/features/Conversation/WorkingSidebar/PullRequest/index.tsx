@@ -40,6 +40,11 @@ const styles = createStaticStyles(({ css }) => ({
 
 interface PullRequestProps {
   active: boolean;
+  /**
+   * This session's branch and linked-PR reads confirmed `number`. Until then
+   * the pane may paint persisted rows, but must not mutate the PR.
+   */
+  confirmed: boolean;
   deviceId?: string;
   number: number;
   onOpenTab: (tab: string) => void;
@@ -49,12 +54,13 @@ interface PullRequestProps {
 }
 
 const PullRequest = memo<PullRequestProps>(
-  ({ active, deviceId, number, onOpenTab, summary, url, workingDirectory }) => {
+  ({ active, confirmed, deviceId, number, onOpenTab, summary, url, workingDirectory }) => {
     const { t } = useTranslation('chat');
     const { t: tCommon } = useTranslation('common');
     const {
       data,
       error: fetchError,
+      isConfirmed: detailConfirmed,
       isLoading,
       mutate,
     } = useFetchGitPullRequestDetail(deviceId, workingDirectory, number, { active });
@@ -70,8 +76,11 @@ const PullRequest = memo<PullRequestProps>(
       data?.detail ?? undefined,
     );
     const { data: aheadBehind } = useFetchGitAheadBehind(deviceId, workingDirectory);
+    // Stale content stays paintable; actions wait for the live reads.
+    const actionsLocked = !confirmed || !detailConfirmed;
     const actions = usePullRequestActions({
       deviceId,
+      locked: actionsLocked,
       mutateDetail: mutate,
       number,
       workingDirectory,
@@ -153,6 +162,7 @@ const PullRequest = memo<PullRequestProps>(
           viewportProps={{ className: styles.viewport, style: { overflowX: 'hidden' } }}
         >
           <Header
+            actionsDisabled={actionsLocked}
             activityLoaded={!!activity.data}
             detail={detail}
             deviceId={deviceId}
@@ -160,6 +170,7 @@ const PullRequest = memo<PullRequestProps>(
             onAction={actions.run}
           />
           <Sections
+            actionsDisabled={actionsLocked}
             activity={activity}
             busy={actions.busy}
             detail={detail}
@@ -169,7 +180,7 @@ const PullRequest = memo<PullRequestProps>(
         </ScrollArea>
         <MergeDock
           busy={actions.busy}
-          contextLoading={context === undefined}
+          contextLoading={context === undefined || actionsLocked}
           detail={detail}
           error={actions.error}
           local={local}
