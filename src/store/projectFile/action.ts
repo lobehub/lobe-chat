@@ -49,12 +49,12 @@ export class ProjectFileActionImpl {
 
   useFetchGitWorkingTreeFiles = (
     params: GitWorkingTreeFilesParams | null,
-    options?: SyncOptions<GitWorkingTreeFiles | undefined, GitWorkingTreeFiles>,
+    options?: SyncOptions<GitWorkingTreeFiles | null | undefined, GitWorkingTreeFiles>,
   ): ReplicaSyncResult => this.#private.gitWorkingTreeFiles.useSync(params, options);
 
   useFetchProjectIndex = (
     params: ProjectIndexParams | null,
-    options?: SyncOptions<ProjectFileIndexResult | undefined, ProjectFileIndexResult>,
+    options?: SyncOptions<ProjectFileIndexResult | null | undefined, ProjectFileIndexResult>,
   ): ReplicaSyncResult => this.#private.projectIndex.useSync(params, options);
 }
 
