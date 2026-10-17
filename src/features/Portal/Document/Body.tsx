@@ -279,8 +279,9 @@ const DocumentBody = memo(() => {
   // The persisted row is still being read: paint nothing rather than a spinner
   // that the cached document replaces a few frames later.
   if (documentLoading) return documentHydrated ? <Loading /> : null;
-  // The document is a persisted replica (stale-while-revalidate): a failed
-  // background refresh keeps the cached document on screen instead of replacing it.
+  // The document is a persisted replica (stale-while-revalidate): a transient
+  // refresh failure keeps the cached document on screen. A denial (FORBIDDEN /
+  // UNAUTHORIZED) purges the cached row, so it lands here with no data.
   if (documentError && !documentMeta)
     return (
       <AsyncError

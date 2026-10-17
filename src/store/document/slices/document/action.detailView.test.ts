@@ -100,6 +100,45 @@ describe('document detail without an editor (portal / goal / preview views)', ()
     );
   });
 
+  it.each(['FORBIDDEN', 'UNAUTHORIZED'])(
+    'purges the cached document when the refresh is denied (%s)',
+    async (code) => {
+      await documentDetailResource.storage!.set(
+        { queryKey: 'doc-1', scope },
+        { data: { document: documentRow({ title: 'Revoked' }) }, updatedAt: 1 },
+      );
+      let deny: (error: unknown) => void = () => {};
+      vi.mocked(documentService.getDocumentById).mockImplementation(
+        () => new Promise((_, reject) => (deny = reject)) as any,
+      );
+
+      const { result } = renderDetail('doc-1');
+      await waitFor(() => expect(result.current.data?.title).toBe('Revoked'));
+
+      await act(async () => {
+        deny(Object.assign(new Error(code), { data: { code } }));
+      });
+
+      await waitFor(() => expect(result.current.data).toBeUndefined());
+      expect(result.current.error).toBeDefined();
+      await waitFor(async () => expect(await storedRow('doc-1', scope)).toBeUndefined());
+    },
+  );
+
+  it('keeps the cached document when the refresh fails transiently', async () => {
+    await documentDetailResource.storage!.set(
+      { queryKey: 'doc-1', scope },
+      { data: { document: documentRow({ title: 'Cached' }) }, updatedAt: 1 },
+    );
+    vi.mocked(documentService.getDocumentById).mockRejectedValue(new Error('Failed to fetch'));
+
+    const { result } = renderDetail('doc-1');
+
+    await waitFor(() => expect(result.current.error).toBeDefined());
+    expect(result.current.data?.title).toBe('Cached');
+    expect((await storedRow('doc-1', scope))?.data.document?.title).toBe('Cached');
+  });
+
   it('reports loading only once the persisted row is known to be absent', async () => {
     vi.mocked(documentService.getDocumentById).mockImplementation(pending as any);
 

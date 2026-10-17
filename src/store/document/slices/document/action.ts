@@ -12,6 +12,7 @@ import { pageActions } from '@/store/page';
 import type { StoreSetter } from '@/store/types';
 import { isSkillMarkdownDocument, parseSkillMarkdownFrontmatter } from '@/utils/skillMarkdown';
 import { setNamespace } from '@/utils/storeDebug';
+import { isTrpcErrorCode } from '@/utils/trpcError';
 
 import type { DocumentStore } from '../../store';
 import { useDocumentStore } from '../../store';
@@ -119,6 +120,16 @@ export class DocumentActionImpl {
         const current = this.#get().documentDetailMap[id];
         if ((this.#adoptions.get(id) ?? 0) !== adoptedBefore && current) return current;
         return this.#keepNewerDetail(id, { document });
+      },
+      effects: {
+        // The server now denies this document (access revoked, session ended):
+        // the cached copy must stop rendering — on screen and after a reload.
+        // Transient failures keep it (stale-while-revalidate).
+        onError: (error, _id, { key, scope }) => {
+          if (!key) return;
+          if (isTrpcErrorCode(error, 'FORBIDDEN') || isTrpcErrorCode(error, 'UNAUTHORIZED'))
+            this.#detail.remove(key, scope);
+        },
       },
       get,
       set,
