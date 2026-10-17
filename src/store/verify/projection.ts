@@ -57,16 +57,40 @@ export interface VerifyRunSnapshot {
 
 const SETTLED_VERIFY_STATUSES = new Set(['delivered', 'errored', 'failed', 'passed']);
 
+/** Mirrors the server's repair gate: an `errored` check is infra, not a delivery fault. */
+const isFailedResult = (result: VerifyCheckResultItem | undefined): boolean =>
+  !!result &&
+  result.status !== 'errored' &&
+  (result.status === 'failed' || result.verdict === 'failed' || result.verdict === 'uncertain');
+
+/**
+ * A `failed` run with a failed required `auto_repair` check is about to flip to
+ * `repairing` (the server spawns the repair right after settling the verdict),
+ * so that verdict is not final yet.
+ */
+const awaitsAutoRepair = ({ results, state }: VerifyRunSnapshot): boolean => {
+  const byItem = new Map(results.map((result) => [result.checkItemId, result]));
+  return (state?.verifyPlan ?? []).some(
+    (item) =>
+      item.required !== false &&
+      item.onFail === 'auto_repair' &&
+      isFailedResult(byItem.get(item.id)),
+  );
+};
+
 /** A run whose verdict no longer moves — the only kind worth replaying after a reload. */
-export const isSettledVerifyRun = (run: VerifyRunSnapshot | undefined): boolean =>
-  !!run?.state?.verifyStatus && SETTLED_VERIFY_STATUSES.has(run.state.verifyStatus);
+export const isSettledVerifyRun = (run: VerifyRunSnapshot | undefined): boolean => {
+  const status = run?.state?.verifyStatus;
+  if (!status || !SETTLED_VERIFY_STATUSES.has(status)) return false;
+  return status !== 'failed' || !awaitsAutoRepair(run);
+};
 
 const VERIFY_RUN_NAME = 'verifyRun';
 const VERIFY_RUN_VERSION = 1;
 
 /**
- * IndexedDB rows of settled runs only. A planned / verifying / repairing run is
- * never written, so a reload cannot replay a stale spinner or a premature
+ * IndexedDB rows of settled runs only. A planned / verifying / repairing run,
+ * or a failed run whose auto-repair is still to come, is never written, so a reload cannot replay a stale spinner or a premature
  * verdict; a settled run that starts moving again has its row dropped. The
  * replica index row passes through untouched.
  */

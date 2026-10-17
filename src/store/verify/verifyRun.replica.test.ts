@@ -135,6 +135,35 @@ describe('verify run replica', () => {
     expect(await stored()).toBeUndefined();
   });
 
+  it('keeps a failed run that is about to auto-repair memory-only', async () => {
+    const autoRepair = run('failed', 'failed');
+    autoRepair.state!.verifyPlan = [
+      { id: 'item-1', onFail: 'auto_repair', required: true, title: 'Renders the card' },
+    ] as never;
+    serve(autoRepair);
+
+    renderHook(() => useVerifyStore.getState().useFetchVerifyRun(OP), { wrapper });
+
+    await waitFor(() =>
+      expect(useVerifyStore.getState().verifyRunMap[OP]?.state?.verifyStatus).toBe('failed'),
+    );
+    // The server flips this run to `repairing` next: its verdict must not replay.
+    await new Promise((resolve) => setTimeout(resolve, 50));
+    expect(await stored()).toBeUndefined();
+  });
+
+  it('persists a failed run whose failed checks are manual', async () => {
+    const manual = run('failed', 'failed');
+    manual.state!.verifyPlan = [
+      { id: 'item-1', onFail: 'manual', required: true, title: 'Renders the card' },
+    ] as never;
+    serve(manual);
+
+    renderHook(() => useVerifyStore.getState().useFetchVerifyRun(OP), { wrapper });
+
+    await waitFor(async () => expect((await stored())?.state?.verifyStatus).toBe('failed'));
+  });
+
   it('drops the persisted row of a settled run that starts repairing', async () => {
     await persist(run('failed', 'failed'));
     serve(run('repairing', 'failed'));
