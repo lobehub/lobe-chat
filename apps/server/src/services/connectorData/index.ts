@@ -7,6 +7,8 @@ import type { GitHubConnectorClient } from '@lobechat/connector-data/github';
 import { createGitHubMarketConnectorClient } from '@lobechat/connector-data/github';
 import type { GmailConnectorClient } from '@lobechat/connector-data/gmail';
 import { createGmailConnectorClient, hasGmailReadPermission } from '@lobechat/connector-data/gmail';
+import type { LinearConnectorClient } from '@lobechat/connector-data/linear';
+import { createLinearMarketConnectorClient } from '@lobechat/connector-data/linear';
 import type { NotionConnectorClient } from '@lobechat/connector-data/notion';
 import { createNotionConnectorClient } from '@lobechat/connector-data/notion';
 import type { TwitterConnectorClient } from '@lobechat/connector-data/twitter';
@@ -80,6 +82,7 @@ export class ConnectorDataService {
     const resolvers: Record<ConnectorDataProvider, () => Promise<unknown>> = {
       github: () => this.getGitHubClient(),
       gmail: () => this.getGmailClient(),
+      linear: () => this.getLinearClient(),
       notion: () => this.getNotionClient(),
       twitter: () => this.getTwitterClient(),
     };
@@ -142,6 +145,29 @@ export class ConnectorDataService {
     if (!status.success || !status.connected) throw unavailable('github');
 
     return createGitHubMarketConnectorClient({ market });
+  };
+
+  /**
+   * Resolves the current user's LobeHub Market Linear connection.
+   *
+   * Use when:
+   * - A server workflow needs read-only Linear teams, projects or issues
+   *
+   * Expects:
+   * - Trusted Client authentication is configured for the Market service
+   * - The current Market user has connected the `linear` provider
+   *
+   * Returns:
+   * - A user-scoped Linear connector client backed by Market's OAuth proxy
+   */
+  getLinearClient = async (): Promise<LinearConnectorClient> => {
+    const market = new MarketService({
+      userInfo: { userId: this.userId, workspaceId: this.workspaceId },
+    });
+    const status = await market.market.skills.getStatus('linear');
+    if (!status.success || !status.connected) throw unavailable('linear');
+
+    return createLinearMarketConnectorClient({ market });
   };
 
   getGmailClient = async (): Promise<GmailConnectorClient> => {

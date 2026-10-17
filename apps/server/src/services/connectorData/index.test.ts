@@ -8,6 +8,7 @@ const mocks = vi.hoisted(() => ({
   composioConnectedAccountGet: vi.fn(),
   createGitHubMarketClient: vi.fn(),
   createGmailClient: vi.fn(),
+  createLinearMarketClient: vi.fn(),
   createNotionClient: vi.fn(),
   createTwitterClient: vi.fn(),
   getAccount: vi.fn(),
@@ -28,6 +29,10 @@ vi.mock('@lobechat/connector-data/gmail', () => ({
   createGmailConnectorClient: mocks.createGmailClient,
   hasGmailReadPermission: (scopes: readonly string[]) =>
     scopes.some((scope) => scope.endsWith('gmail.readonly')),
+}));
+
+vi.mock('@lobechat/connector-data/linear', () => ({
+  createLinearMarketConnectorClient: mocks.createLinearMarketClient,
 }));
 
 vi.mock('@lobechat/connector-data/notion', () => ({
@@ -96,6 +101,7 @@ describe('ConnectorDataService', () => {
       );
     });
     mocks.createGitHubMarketClient.mockReturnValue({ kind: 'github-market-client' });
+    mocks.createLinearMarketClient.mockReturnValue({ kind: 'linear-market-client' });
     mocks.markComposioUnavailable.mockResolvedValue(false);
     mocks.marketCallTool.mockResolvedValue({ data: { data: [] }, success: true });
     mocks.marketGetStatus.mockResolvedValue({ connected: true, success: true });
@@ -125,6 +131,29 @@ describe('ConnectorDataService', () => {
       new ConnectorDataService(authDb([]), 'user-1').getGitHubClient(),
     ).rejects.toMatchObject({ code: 'github_authorization_unavailable' });
     expect(mocks.createGitHubMarketClient).not.toHaveBeenCalled();
+  });
+
+  /** @example A connected Market Linear provider resolves through the OAuth proxy adapter. */
+  it('creates Linear from the active Market connector', async () => {
+    const client = await new ConnectorDataService(authDb([]), 'user-1', 'ws-1').getLinearClient();
+
+    expect(client).toEqual({ kind: 'linear-market-client' });
+    expect(mocks.marketGetStatus).toHaveBeenCalledWith('linear');
+    expect(mocks.createLinearMarketClient).toHaveBeenCalledWith({
+      market: expect.objectContaining({ proxyOAuthRequest: mocks.marketProxyOAuthRequest }),
+    });
+  });
+
+  it('leaves a disconnected Linear out of the available sources', async () => {
+    mocks.marketGetStatus.mockImplementation(async (provider: string) => ({
+      connected: provider !== 'linear',
+      success: true,
+    }));
+
+    await expect(
+      new ConnectorDataService(authDb([]), 'user-1').listAvailableProviderIds(['github', 'linear']),
+    ).resolves.toEqual(['github']);
+    expect(mocks.createLinearMarketClient).not.toHaveBeenCalled();
   });
 
   it('creates Gmail from the first active connector and validates account ownership', async () => {

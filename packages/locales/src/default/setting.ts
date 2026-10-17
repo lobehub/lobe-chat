@@ -3553,13 +3553,20 @@ When I am ___, I need ___
   'workspace.onboarding.flow.connectApps.apps.notion':
     "Reads the team's docs and wiki to learn your projects and ways of working",
   'workspace.onboarding.flow.connectApps.apps.linear':
-    "Lets the assistant read and work on the team's issues and project progress",
+    "Reads the team's projects, cycles and issues to learn how you plan work and who owns what",
   'workspace.onboarding.flow.connectApps.apps.google-drive':
     "Lets the assistant find and read the team's shared files",
   'workspace.onboarding.flow.connectApps.apps.jira':
     "Lets the assistant read and work on the team's tickets and sprints",
   'workspace.onboarding.flow.connectApps.apps.confluence':
     "Lets the assistant look up the team's pages in Confluence",
+  'workspace.onboarding.flow.connectApps.apps.twitter':
+    "Reads the team account's posts and interactions to learn what you share and who you engage with",
+  'workspace.onboarding.flow.connectApps.linearPrivate.title': 'Include private Linear teams',
+  'workspace.onboarding.flow.connectApps.linearPrivate.desc':
+    "Off: only public teams are read. On: private teams' issues and projects can appear in the team profile every member sees.",
+  'workspace.onboarding.flow.connectApps.linearPrivate.saveFailed':
+    "Couldn't save this setting. Try again.",
   'workspace.onboarding.flow.connectApps.more':
     'You can connect more apps anytime in Settings → Connectors.',
   'workspace.onboarding.flow.learnYourTeam.title': 'Get to know your team',
