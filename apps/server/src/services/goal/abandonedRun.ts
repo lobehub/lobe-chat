@@ -1,7 +1,9 @@
 import { isAgentOperationInFlight } from '@lobechat/types';
 
-import type { AgentOperationModel } from '@/database/models/agentOperation';
+import { AgentOperationModel } from '@/database/models/agentOperation';
+import { TopicModel } from '@/database/models/topic';
 import type { LobeChatDatabase } from '@/database/type';
+import { AgentRuntimeCoordinator } from '@/server/modules/AgentRuntime/AgentRuntimeCoordinator';
 import { AiAgentService } from '@/server/services/aiAgent';
 
 /**
@@ -30,25 +32,63 @@ export const isOrphanedRun = async (
   return new Date(endedAt) < staleBefore;
 };
 
-/**
- * Stop a run the lease reclaim just declared dead, before its replacement starts.
- *
- * The reclaim only settles the operation row. A run stuck on a tool call stops
- * heartbeating, but it is not gone: when the call finally returns it carries on,
- * working the same branch as the attempt that replaced it. Interrupting it makes
- * the runtime stop at its next step. Best-effort — a device that cannot be
- * reached is the offline-device recovery's to handle, so the reclaim proceeds.
- */
-export const interruptReclaimedRun = async (
+/** Whether the runtime still holds the run's state, or a device hosts its process. */
+const hasLiveExecutor = async (
   db: LobeChatDatabase,
   owner: { userId: string; workspaceId?: string },
   run: { operationId: string; topicId: string },
-): Promise<void> => {
+): Promise<boolean> => {
+  if (await new AgentRuntimeCoordinator().loadAgentState(run.operationId)) return true;
+  const topic = await new TopicModel(db, owner.userId, owner.workspaceId).findById(run.topicId);
+  const marker = topic?.metadata?.runningOperation;
+  const target =
+    marker?.operationId === run.operationId
+      ? marker
+      : marker?.childOperations?.find((child) => child.operationId === run.operationId);
+  return !!target?.deviceId;
+};
+
+/**
+ * Stop a run whose lease expired, before its replacement starts.
+ *
+ * The lease reclaim only settles the operation row. A run stuck on a tool call
+ * stops heartbeating, but it is not gone: when the call finally returns it
+ * carries on, working the same branch as the attempt that replaced it. So the
+ * run is interrupted first, and only a confirmed stop lets the reclaim proceed.
+ *
+ * - `not_running`: no stale `running` row to stop — the reclaim decides on its
+ *   own as before.
+ * - `stopped`: the runtime (and the device, for a device-hosted process)
+ *   acknowledged the stop.
+ * - `unconfirmed`: the stop was refused, unconfirmed or failed; the run may still
+ *   be writing. `interruptTask` reports this as a resolved result, not a throw.
+ */
+export const stopStaleRun = async (
+  db: LobeChatDatabase,
+  owner: { userId: string; workspaceId?: string },
+  run: { operationId: string; staleBefore: Date; topicId: string },
+): Promise<'not_running' | 'stopped' | 'unconfirmed'> => {
+  const operation = await new AgentOperationModel(db, owner.userId, owner.workspaceId).findById(
+    run.operationId,
+  );
+  // Only a `running` row is the lease's to reclaim; a run parked for a person or
+  // a client is legitimately quiet and must not be stopped.
+  if (operation?.status !== 'running' || new Date(operation.updatedAt) >= run.staleBefore)
+    return 'not_running';
+  // With no runtime state and no device hosting it, nothing executes the run any
+  // more. Interrupting it then would only retire the row outside the reclaim's
+  // transaction, skipping its cost charge and its rollback.
+  if (!(await hasLiveExecutor(db, owner, run))) return 'not_running';
+
   try {
-    await new AiAgentService(db, owner.userId, { workspaceId: owner.workspaceId }).interruptTask(
-      run,
-    );
+    const result = await new AiAgentService(db, owner.userId, {
+      workspaceId: owner.workspaceId,
+    }).interruptTask({ operationId: run.operationId, topicId: run.topicId });
+    return result.success && result.deviceCancellationConfirmed !== false
+      ? 'stopped'
+      : 'unconfirmed';
   } catch (error) {
-    console.error('[GoalService] failed to interrupt reclaimed run %s:', run.operationId, error);
+    console.error('[GoalService] failed to interrupt stale run %s:', run.operationId, error);
+    return 'unconfirmed';
   }
 };

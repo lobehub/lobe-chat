@@ -69,7 +69,7 @@ import { TaskService } from '../task';
 import { TaskRunnerService } from '../taskRunner';
 import { AcceptanceService } from '../verify/acceptanceService';
 import { VerifyPlanGeneratorService } from '../verify/planGenerator';
-import { interruptReclaimedRun, isOrphanedRun } from './abandonedRun';
+import { isOrphanedRun, stopStaleRun } from './abandonedRun';
 import { BatchPlanSkillService, learnedRulesClause, planSkillIdentifier } from './batchPlanSkill';
 import { GoalCriteriaGeneratorService, type GoalDecompositionDraft } from './criteriaGenerator';
 import {
@@ -3296,6 +3296,13 @@ export class GoalService {
       };
     }
 
+    // A run that may still be writing must not get a replacement beside it; only
+    // a device known to be offline is left to the offline-device recovery below.
+    const owner = { userId: this.userId, workspaceId: this.workspaceId };
+    const stop = await stopStaleRun(this.db, owner, { operationId, staleBefore, topicId });
+    if (stop === 'unconfirmed' && (await this.readRunDevicePresence(runningTopic)) !== 'offline')
+      return undefined;
+
     const latestUsage = await new AgentRuntimeCoordinator().getOperationMetadata(operationId);
     const reclaimed = await this.db.transaction(async (tx) => {
       const operationModel = new AgentOperationModel(tx, this.userId, this.workspaceId);
@@ -3304,7 +3311,12 @@ export class GoalService {
         staleBefore,
         latestUsage?.totalCost,
       );
-      if (!settled && !(await isOrphanedRun(operationModel, operationId, staleBefore)))
+      // A confirmed device stop settles the row itself, so it no longer reads stale.
+      if (
+        !settled &&
+        stop !== 'stopped' &&
+        !(await isOrphanedRun(operationModel, operationId, staleBefore))
+      )
         return false;
 
       await new TaskTopicModel(tx, this.userId, this.workspaceId).updateStatus(
@@ -3318,8 +3330,6 @@ export class GoalService {
       return true;
     });
     if (!reclaimed) return undefined;
-    const owner = { userId: this.userId, workspaceId: this.workspaceId };
-    await interruptReclaimedRun(this.db, owner, { operationId, topicId });
 
     return this.recoverLostRun(graph, nodeId, task, effects);
   };

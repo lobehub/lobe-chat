@@ -89,8 +89,16 @@ const resolveGoalLoopContext = async (
     // the newest round is often still unjudged when the next attempt starts. Take
     // each check's newest JUDGED result across the chain instead; reading only
     // the newest round handed that attempt "close the gaps below" with no gaps.
-    type PlanItem = { id: string; sourceCriterionId?: string | null; title: string };
-    const logicalId = (item: PlanItem) => item.sourceCriterionId ?? item.id;
+    // Keyed like the acceptance union: a flow node's check is its own occurrence
+    // even when several nodes reuse one criterion asset.
+    type PlanItem = {
+      id: string;
+      sourceCriterionId?: string | null;
+      sourceFlowNode?: unknown;
+      title: string;
+    };
+    const logicalId = (item: PlanItem) =>
+      item.sourceFlowNode ? item.id : (item.sourceCriterionId ?? item.id);
     const logicalByCheckItem = new Map<string, string>();
     for (const run of runs) {
       for (const item of (run.plan ?? []) as PlanItem[]) {

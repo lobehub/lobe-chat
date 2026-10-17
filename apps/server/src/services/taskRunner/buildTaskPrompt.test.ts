@@ -163,6 +163,61 @@ describe('buildTaskPrompt unresolved checks', () => {
     );
     expect(result.prompt).not.toContain('Check rebased');
   });
+  it('keeps flow nodes that reuse one criterion as separate checks', async () => {
+    // Two flow nodes can point at the same criterion asset; folding them onto
+    // the criterion id let one node's failure stand in for the node that passed.
+    const taskModel = new TaskModel(db, userId);
+    const task = await taskModel.create({ instruction: 'Verify both branches.' });
+    await taskModel.update(task.id, { totalTopics: 1 });
+    const goal = await new GoalModel(db, userId).create({
+      subjectType: 'standalone',
+      title: 'Repeated flow asset',
+    });
+    const graphModel = new GoalGraphModel(db, userId);
+    const taskNode = await graphModel.createNode(goal.id, { kind: 'task', title: 'Verify' });
+    await graphModel.bindTask(goal.id, taskNode!.id, task.id);
+    const acceptance = await new AcceptanceModel(db, userId).create({
+      subjectId: task.id,
+      subjectType: 'task',
+    });
+    const flowItem = (id: string, node: string) => ({
+      ...planItem(id),
+      sourceCriterionId: 'shared-criterion',
+      sourceFlowNode: { flowId: 'flow-1', nodeId: node },
+      title: `Branch ${node}`,
+    });
+    const [run] = await db
+      .insert(verifyRuns)
+      .values({
+        acceptanceId: acceptance.id,
+        plan: [flowItem('occurrence-a', 'a'), flowItem('occurrence-b', 'b')],
+        roundIndex: 1,
+        userId,
+      } as never)
+      .returning();
+    await db.insert(verifyCheckResults).values(
+      [
+        { checkItemId: 'occurrence-a', status: 'passed' as const, verdict: 'passed' as const },
+        {
+          checkItemId: 'occurrence-b',
+          status: 'failed' as const,
+          suggestion: 'Branch b never reached the confirmation step.',
+          verdict: 'failed' as const,
+        },
+      ].map((row) => ({ ...row, userId, verifierType: 'agent' as const, verifyRunId: run.id })),
+    );
+
+    const result = await buildTaskPrompt((await taskModel.findById(task.id))!, {
+      briefModel: new BriefModel(db, userId),
+      db,
+      taskModel,
+      taskTopicModel: new TaskTopicModel(db, userId),
+      userId,
+    });
+
+    expect(result.prompt).toContain('1. Branch b — Branch b never reached the confirmation step.');
+    expect(result.prompt).not.toContain('Branch a');
+  });
 });
 
 describe('buildTaskPrompt owner change request', () => {

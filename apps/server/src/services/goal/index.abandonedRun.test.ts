@@ -1,4 +1,5 @@
 // @vitest-environment node
+import type { ChatTopicMetadata } from '@lobechat/types';
 import { eq } from 'drizzle-orm';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -22,6 +23,7 @@ import type { LobeChatDatabase } from '@/database/type';
 import { AgentRuntimeCoordinator } from '@/server/modules/AgentRuntime/AgentRuntimeCoordinator';
 import { AiAgentService } from '@/server/services/aiAgent';
 
+import { deviceGateway } from '../deviceGateway';
 import { TaskRunnerService } from '../taskRunner';
 import { GoalService } from './index';
 import { VERIFY_SETTLE_GRACE_MS } from './recoveryPolicy';
@@ -132,18 +134,24 @@ describe('GoalService verify repair in a delivered topic', () => {
 });
 
 describe('GoalService lease reclaim of a running topic', () => {
-  const seedStaleRun = async (title: string) => {
-    vi.spyOn(TaskRunnerService.prototype, 'runTask').mockResolvedValue({
+  const seedStaleRun = async (title: string, metadata?: ChatTopicMetadata) => {
+    const runSpy = vi.spyOn(TaskRunnerService.prototype, 'runTask').mockResolvedValue({
       operationId: 'op-next',
       success: true,
     } as never);
-    vi.spyOn(TaskTopicModel.prototype, 'findRunningByTaskIds').mockResolvedValue([
-      { operationId: 'op-stuck', topicId: 'tpc_stuck' } as never,
+    const stuckTopic = { metadata, operationId: 'op-stuck', topicId: 'tpc_stuck' } as never;
+    vi.spyOn(TaskTopicModel.prototype, 'findRunningByTaskIds').mockResolvedValue([stuckTopic]);
+    vi.spyOn(TaskTopicModel.prototype, 'findWithHandoff').mockResolvedValue([
+      { ...(stuckTopic as object), status: 'timeout' } as never,
     ]);
     vi.spyOn(TaskTopicModel.prototype, 'updateStatus').mockResolvedValue(undefined);
     vi.spyOn(AgentRuntimeCoordinator.prototype, 'getOperationMetadata').mockResolvedValue(
       undefined as never,
     );
+    // The runtime still holds the stuck step: something is executing the run.
+    vi.spyOn(AgentRuntimeCoordinator.prototype, 'loadAgentState').mockResolvedValue({
+      status: 'running',
+    } as never);
     const service = new GoalService(serverDB, userId);
     const taskModel = new TaskModel(serverDB, userId);
     const graph = await service.create({
@@ -163,10 +171,10 @@ describe('GoalService lease reclaim of a running topic', () => {
       .update(agentOperations)
       .set({ updatedAt: new Date(Date.now() - 10 * 60_000) })
       .where(eq(agentOperations.id, 'op-stuck'));
-    return { goalId: graph.goal.id, service };
+    return { goalId: graph.goal.id, runSpy, service, taskId: created.taskId!, taskModel };
   };
 
-  it('interrupts the reclaimed run before the next attempt starts', async () => {
+  it('stops the stale run before reclaiming it', async () => {
     // A run stuck on a tool call stops heartbeating, so its lease expires and
     // the next attempt starts. Settling only the row left the stuck run alive:
     // when its tool call returned it kept working beside its replacement.
@@ -183,16 +191,46 @@ describe('GoalService lease reclaim of a running topic', () => {
     });
   });
 
-  it('still recovers the Task when the interrupt cannot reach the run', async () => {
-    vi.spyOn(AiAgentService.prototype, 'interruptTask').mockRejectedValue(
-      new Error('device unreachable'),
-    );
+  it.each([
+    ['refused', () => Promise.resolve({ success: false })],
+    [
+      'device exit unconfirmed',
+      () => Promise.resolve({ deviceCancellationConfirmed: false, success: true }),
+    ],
+    ['unreachable', () => Promise.reject(new Error('gateway down'))],
+  ])('starts no replacement while the stale run may still be writing (%s)', async (_, outcome) => {
+    // `interruptTask` reports an unconfirmed stop as a resolved result. Reading
+    // only a throw as failure dispatched the replacement beside a live writer.
+    vi.spyOn(AiAgentService.prototype, 'interruptTask').mockImplementation(outcome as never);
     vi.spyOn(console, 'error').mockImplementation(() => {});
-    const { goalId, service } = await seedStaleRun('Interrupt unreachable');
+    const { goalId, runSpy, service, taskId, taskModel } = await seedStaleRun('Still writing');
 
-    const recovered = await service.tick(goalId);
+    await service.tick(goalId);
 
-    expect(recovered.outcome).not.toBe('no_progress');
+    expect(runSpy).not.toHaveBeenCalled();
+    expect((await taskModel.findById(taskId))?.status).toBe('running');
+    expect(await new AgentOperationModel(serverDB, userId).findById('op-stuck')).toMatchObject({
+      status: 'running',
+    });
+  });
+
+  it('still reclaims a run whose device is offline', async () => {
+    // An offline device can never confirm the stop; holding for it would strand
+    // the goal. The reclaim proceeds and the offline-device recovery takes over.
+    vi.spyOn(deviceGateway, 'isConfigured', 'get').mockReturnValue(true);
+    vi.spyOn(deviceGateway, 'queryDeviceList').mockResolvedValue([]);
+    vi.spyOn(AiAgentService.prototype, 'interruptTask').mockResolvedValue({ success: false });
+    const { goalId, service } = await seedStaleRun('Device asleep', {
+      boundDeviceId: 'device-laptop',
+    });
+
+    await service.tick(goalId);
+
+    expect(TaskTopicModel.prototype.updateStatus).toHaveBeenCalledWith(
+      expect.any(String),
+      'tpc_stuck',
+      'timeout',
+    );
     expect(await new AgentOperationModel(serverDB, userId).findById('op-stuck')).toMatchObject({
       status: 'abandoned',
     });
