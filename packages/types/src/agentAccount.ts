@@ -244,6 +244,13 @@ export interface AgentAccountProvisionInput {
   /** Human label for the new account, when the provider can set one. */
   displayName?: string;
   /**
+   * Whether a live account already routes on `identifier` for this provider.
+   * An idempotent provider (Agent Mail keys inboxes by agent) can be handed back
+   * the resource a committed row already holds after a lost response; this
+   * tells it not to mint a second credential for that resource.
+   */
+  isIdentifierHeld?: (identifier: string) => Promise<boolean>;
+  /**
    * Preferred handle the caller asks for, when the provider can honour it —
    * the local part of a `mail` address, for example. A provider that cannot
    * honour a preference ignores it and mints its own identifier; a provider

@@ -298,6 +298,9 @@ describe('AgentAccountService — provisioning', () => {
 
     expect(retry.id).toBe(first.id);
     expect(retry.identifier).toBe('agent-7@lobe.id');
+    // The live row already stores the first webhook's secret: the retry must
+    // not register a second webhook whose secret nothing would store.
+    expect(calls.filter((c) => c.method === 'POST' && c.path === '/v1/webhooks')).toHaveLength(1);
     expect(calls.some((c) => c.method === 'DELETE')).toBe(false);
     expect(await service.list()).toHaveLength(1);
   });

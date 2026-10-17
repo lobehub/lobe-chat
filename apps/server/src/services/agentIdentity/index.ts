@@ -196,6 +196,8 @@ export class AgentAccountService {
     const issued = await provider.provision({
       agentId: params.agentId,
       displayName: params.displayName,
+      isIdentifierHeld: (identifier) =>
+        AgentAccountModel.isRoutingKeyHeld(this.db, provider.provider, identifier),
       prefix: params.prefix,
       userId: this.userId,
       workspaceId: this.options.workspaceId,
