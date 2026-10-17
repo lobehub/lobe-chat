@@ -31,14 +31,14 @@ import {
   assertCanUseMessageTargets,
   assertCanUseTopicTargets,
   assertCanViewMessageTargets,
-} from './_helpers/conversationResourceGuard';
-import { projectSharedTopicMessages } from './_helpers/projectSharedTopicMessages';
-import { resolveAgentIdFromSession, resolveContext } from './_helpers/resolveContext';
+} from '../_helpers/conversationResourceGuard';
+import { projectSharedTopicMessages } from '../_helpers/projectSharedTopicMessages';
+import { resolveAgentIdFromSession, resolveContext } from '../_helpers/resolveContext';
 import {
   assertCreatorMessageTargets,
   assertCreatorTopicTargets,
-} from './_helpers/shareVisitorTargetGuard';
-import { basicContextSchema } from './_schema/context';
+} from '../_helpers/shareVisitorTargetGuard';
+import { basicContextSchema } from '../_schema/context';
 
 const { logTiming, runTimedStage } = createTimingHelpers('lobe-server:chat:lobehub:timing');
 
