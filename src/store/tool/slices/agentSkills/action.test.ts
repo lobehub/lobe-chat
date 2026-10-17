@@ -298,6 +298,47 @@ describe('agentSkills replicas', () => {
       expect(useToolStore.getState().agentSkillListMap[AGENT_SKILL_LIST_KEY]?.[0]?.id).toBe('db-9');
     });
 
+    describe('ensureAgentSkillsLoaded', () => {
+      it('fetches the list when it has not been loaded', async () => {
+        vi.mocked(agentSkillService.list).mockResolvedValue({ data: [skill('db-1')], total: 1 });
+
+        await act(() => useToolStore.getState().ensureAgentSkillsLoaded());
+
+        expect(agentSkillService.list).toHaveBeenCalledTimes(1);
+        expect(useToolStore.getState().agentSkillListMap[AGENT_SKILL_LIST_KEY]?.[0]?.id).toBe(
+          'db-1',
+        );
+      });
+
+      it('does not request again once the list is loaded', async () => {
+        await seed();
+        vi.mocked(agentSkillService.list).mockClear();
+
+        await act(() => useToolStore.getState().ensureAgentSkillsLoaded());
+
+        expect(agentSkillService.list).not.toHaveBeenCalled();
+      });
+
+      it('shares one request between concurrent callers', async () => {
+        vi.mocked(agentSkillService.list).mockResolvedValue({ data: [skill('db-1')], total: 1 });
+
+        await act(() =>
+          Promise.all([
+            useToolStore.getState().ensureAgentSkillsLoaded(),
+            useToolStore.getState().ensureAgentSkillsLoaded(),
+          ]),
+        );
+
+        expect(agentSkillService.list).toHaveBeenCalledTimes(1);
+      });
+
+      it('rejects when the request fails so the caller can degrade', async () => {
+        vi.mocked(agentSkillService.list).mockRejectedValue(new Error('boom'));
+
+        await expect(useToolStore.getState().ensureAgentSkillsLoaded()).rejects.toThrow('boom');
+      });
+    });
+
     it('drops a refresh response that resolves after the scope switched', async () => {
       let resolveList!: (value: unknown) => void;
       vi.mocked(agentSkillService.list).mockImplementation(
