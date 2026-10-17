@@ -12,17 +12,11 @@ import type {
   ExecVirtualSubAgentParams,
   ScheduleAgentRunParams,
   ScheduleAgentRunResult,
-  UserInterventionConfig,
 } from '@lobechat/types';
 import { RequestTrigger } from '@lobechat/types';
-import { nanoid } from '@lobechat/utils';
 import { TRPCError } from '@trpc/server';
 import debug from 'debug';
 
-import {
-  deriveAgentInterventionContinuationMessageId,
-  deriveAgentInterventionContinuationOperationId,
-} from '@/business/server/agent-run/agentInterventionIdentity';
 import { AgentModel } from '@/database/models/agent';
 import { AgentOperationModel } from '@/database/models/agentOperation';
 import { AgentShareModel } from '@/database/models/agentShare';
@@ -47,7 +41,6 @@ import type {
   SubAgentBridgeParams,
 } from '@/server/services/agentRuntime';
 import { AgentRuntimeService } from '@/server/services/agentRuntime';
-import { getAbortError, throwIfAborted } from '@/server/services/agentRuntime/abort';
 import type {
   ExecGroupMemberParams,
   ExecGroupMemberResult,
@@ -55,47 +48,27 @@ import type {
 } from '@/server/services/agentRuntime/types';
 import { ComposioService } from '@/server/services/composio';
 import { MarketService } from '@/server/services/market';
-import { markdownToTxt } from '@/utils/markdownToTxt';
 
 import { createGraphAwareAgentFactory } from './helpers/agentFactory';
-import {
-  createGroupActionMemberBridgeHook,
-  createThreadHooks,
-  pickThreadUsageBaseline,
-} from './hooks/threadRunHooks';
 import { InterventionController } from './intervention/InterventionController';
 import type { ApprovalClaimState } from './pipeline/approvalResume';
-import { claimApprovalResume, tryReuseInterventionContinuation } from './pipeline/approvalResume';
+import { execAgentTurn, type ExecAgentTurnDeps } from './pipeline/execTurn';
 import {
-  type ForegroundSupersedeDeps,
-  recordSupersede,
-  resolveReplacedOperationId,
-  supersedeRunningForegroundOperation,
-} from './pipeline/foregroundSupersede';
-import {
+  createGroupMemberApprovalDeps,
   rearmGroupMemberDeadline,
   resolveGroupMemberApprovalContinuation,
 } from './pipeline/groupMemberApproval';
-import { dispatchHeteroAgent } from './pipeline/heteroDispatch';
 import { resolveNewThread } from './pipeline/newThread';
-import { buildOperationInitRequest, runOperationInit } from './pipeline/operationInit';
-import { createHistoryMessagesLoader } from './pipeline/operationPrep';
-import { type PrecreatedTopicDeps, resolvePrecreatedTopicConfig } from './pipeline/precreatedTopic';
-import { resolveRunAgentConfig } from './pipeline/resolveRunAgentConfig';
+import { createGroupAgentTopic, type PrecreatedTopicDeps } from './pipeline/precreatedTopic';
 import { scheduleAgentRun } from './pipeline/scheduleAgentRun';
-import { traceSendStage } from './pipeline/sendTracing';
-import { startOperation } from './pipeline/startOperation';
-import { bindTopicWorkingDirectory } from './pipeline/topicWorkingDirectory';
-import { resolveNewTopicSnapshot, setupTurn } from './pipeline/turnSetup';
-import { createRunFacts, type RunFacts } from './runFacts';
-import { applyShareGateToAgentConfig } from './shareGate';
+import { runWithTopicStart, type TopicStartDeps } from './pipeline/topicStart';
+import type { RunFacts } from './runFacts';
 import { resolveAgentSenderFromOperation } from './sourceAttribution';
 import type { SubAgentLlmRelayRequest } from './subAgentLlmRelay';
 import { closeSubAgentLlmRelay, openSubAgentLlmRelay } from './subAgentLlmRelay';
 import type { SubAgentRunDeps } from './subAgentRuns';
 import { execAgentMember, execAgentThreadRun, execIsolatedAgentMember } from './subAgentRuns';
-import { acquireTopicStartReservation, TopicStartReservationError } from './topicStartReservation';
-import type { ExecRunContext, InternalExecAgentParams } from './types';
+import type { InternalExecAgentParams } from './types';
 
 const log = debug('lobe-server:ai-agent-service');
 
@@ -226,13 +199,42 @@ export class AiAgentService {
     };
   }
 
-  /** Dependency bundle for the topic-start supersede helpers in `pipeline/foregroundSupersede.ts`. */
-  private get foregroundSupersedeDeps(): ForegroundSupersedeDeps {
+  /** Dependency bundle for one turn of `execAgent` (`pipeline/execTurn.ts`). */
+  private get execAgentTurnDeps(): ExecAgentTurnDeps {
+    return {
+      agentDocumentsService: this.agentDocumentsService,
+      agentModel: this.agentModel,
+      agentOperationModel: this.agentOperationModel,
+      agentRuntimeService: this.agentRuntimeService,
+      composioService: this.composioService,
+      connectorModel: this.connectorModel,
+      connectorToolModel: this.connectorToolModel,
+      db: this.db,
+      getMarketService: (runFacts, options) => this.getMarketService(runFacts, options),
+      messageModel: this.messageModel,
+      pluginModel: this.pluginModel,
+      resolveAgentConfigOrThrow: (id) => this.resolveAgentConfigOrThrow(id),
+      resolveDeviceWorkspaceId: (deviceId) => this.resolveDeviceWorkspaceId(deviceId),
+      resolveOperationTaskId: (id) => this.resolveOperationTaskId(id),
+      resolveSourceAgentSnapshot: (agentId, sourceOperationId) =>
+        this.resolveSourceAgentSnapshot(agentId, sourceOperationId),
+      retirePendingApprovalOperation: (opId) => this.retirePendingApprovalOperation(opId),
+      topicModel: this.topicModel,
+      userId: this.userId,
+      withholdGatewayToken: this.withholdGatewayToken,
+      workspaceId: this.workspaceId,
+    };
+  }
+
+  /** Dependency bundle for the topic-start stage in `pipeline/topicStart.ts`. */
+  private get topicStartDeps(): TopicStartDeps {
     return {
       agentOperationModel: this.agentOperationModel,
       agentRuntimeService: this.agentRuntimeService,
       interruptTask: (p) => this.interruptTask(p),
       topicModel: this.topicModel,
+      userId: this.userId,
+      workspaceId: this.workspaceId,
     };
   }
 
@@ -402,14 +404,6 @@ export class AiAgentService {
     };
   }
 
-  /** Resolve caller model policy before a pre-created topic permanently pins its model. */
-  private resolvePrecreatedTopicConfig(
-    identifier: string,
-    overrides?: { model?: string; provider?: string },
-  ) {
-    return resolvePrecreatedTopicConfig(this.precreatedTopicDeps(), identifier, overrides);
-  }
-
   /** Defer an agent run to a future time. See `pipeline/scheduleAgentRun`. */
   scheduleAgentRun(params: ScheduleAgentRunParams): Promise<ScheduleAgentRunResult> {
     return scheduleAgentRun(
@@ -439,27 +433,11 @@ export class AiAgentService {
     // An approval on a group member's tool continues that member, not the
     // conversation's supervisor (see `resolveGroupMemberApprovalContinuation`).
     const memberContinuation = await resolveGroupMemberApprovalContinuation(
-      {
-        createBridgeHook: (bridge) =>
-          createGroupActionMemberBridgeHook(this.agentRuntimeService, bridge),
-        createThreadHooks: async (threadId) => {
-          const thread = await this.threadModel.findById(threadId);
-          if (!thread?.sourceMessageId) return [];
-          return createThreadHooks(
-            this.agentRuntimeService,
-            this.threadModel,
-            this.messageModel,
-            thread.id,
-            thread.metadata?.startedAt ?? new Date().toISOString(),
-            // The recovered group-member bridge owns result publication.
-            undefined,
-            'execVirtualSubAgent',
-            pickThreadUsageBaseline(thread.metadata),
-          );
-        },
-        findMessagePlugin: (messageId) => this.messageModel.findMessagePlugin(messageId),
-        loadMember: (operationId) => this.agentRuntimeService.loadGroupMemberBridge(operationId),
-      },
+      createGroupMemberApprovalDeps({
+        agentRuntimeService: this.agentRuntimeService,
+        messageModel: this.messageModel,
+        threadModel: this.threadModel,
+      }),
       inputParams,
     );
     if (memberContinuation) {
@@ -494,92 +472,11 @@ export class AiAgentService {
     const withCreatedThread = (result: ExecAgentResult): ExecAgentResult =>
       createdThreadId ? { ...result, createdThreadId } : result;
 
-    const topicId = params.appContext?.topicId;
-    const interventionReservationId = params.approvalResolutionRequestId
-      ? deriveAgentInterventionContinuationOperationId({
-          resolutionRequestId: params.approvalResolutionRequestId,
-          userId: this.userId,
-          workspaceId: this.workspaceId,
-        })
-      : undefined;
-    if (
-      interventionReservationId &&
-      params.topicStartReservationId &&
-      params.topicStartReservationId !== interventionReservationId
-    ) {
-      throw new Error('Intervention continuation reservation identity conflict');
-    }
-    const reservationId =
-      interventionReservationId ?? params.topicStartReservationId ?? `agent-start-${nanoid()}`;
-    const isInterventionThreadStart = Boolean(
-      topicId &&
-      params.appContext?.threadId &&
-      interventionReservationId &&
-      params.approvalResolutionRequestId,
+    return withCreatedThread(
+      await runWithTopicStart(this.topicStartDeps, params, (p) =>
+        this.execAgentWithApprovalRollback(p),
+      ),
     );
-    // Thread runs are isolated under an explicit parent message and do not
-    // advance the topic's main spine. They may start while their parent
-    // operation owns `runningOperation` (for example callAgent/callSubAgent),
-    // so making them wait for the topic-start claim deadlocks the child start.
-    if (!topicId || (params.appContext?.threadId && !isInterventionThreadStart)) {
-      return withCreatedThread(await this.execAgentWithApprovalRollback(params));
-    }
-
-    const replacesOperationId = isInterventionThreadStart
-      ? undefined
-      : await resolveReplacedOperationId(this.foregroundSupersedeDeps, params, topicId);
-
-    // A replacement is allowed to take over the topic marker, but the device
-    // process that owned the old marker may still hold a native Codex/CC writer.
-    // Settle that physical run before reserving and dispatching the replacement;
-    // otherwise two `lh hetero exec` wrappers can resume the same thread.
-    if (replacesOperationId) {
-      const interruption = await this.interruptTask({
-        operationId: replacesOperationId,
-        topicId,
-      });
-      if (interruption.deviceCancellationConfirmed === false) {
-        throw new Error('Replaced heterogeneous agent process did not confirm termination');
-      }
-    }
-    const reserved = await acquireTopicStartReservation({
-      allowSameReservationReentry: !params.approvalResolutionRequestId,
-      replacesOperationId,
-      allowRunningOperationId: params.topicStartOwnerOperationId,
-      // A thread continuation shares the topic row but never owns/replaces its
-      // main runningOperation anchor. It uses only the short initializer fence.
-      ignoreRunningOperation: isInterventionThreadStart || params.interactiveStart,
-      reservationId,
-      topicId,
-      topicModel: this.topicModel,
-    });
-
-    if (!reserved) {
-      throw new TopicStartReservationError(`Topic not found: ${topicId}`);
-    }
-
-    try {
-      const superseded =
-        params.interactiveStart && !isInterventionThreadStart
-          ? await supersedeRunningForegroundOperation(this.foregroundSupersedeDeps, topicId, [
-              replacesOperationId,
-              params.topicStartOwnerOperationId,
-            ])
-          : undefined;
-      const result = await this.execAgentWithApprovalRollback(params);
-      if (superseded) {
-        await recordSupersede(
-          this.foregroundSupersedeDeps,
-          topicId,
-          result.operationId,
-          superseded,
-          params,
-        );
-      }
-      return withCreatedThread(result);
-    } finally {
-      await this.topicModel.releaseTaskCallbackReservation(topicId, reservationId);
-    }
   }
 
   /**
@@ -598,7 +495,7 @@ export class AiAgentService {
     };
 
     try {
-      return await this.execAgentWithReservation(params, approvalClaim);
+      return await execAgentTurn(this.execAgentTurnDeps, params, approvalClaim);
     } finally {
       if (
         !approvalClaim.continuationPrepared &&
@@ -612,717 +509,6 @@ export class AiAgentService {
         );
       }
     }
-  }
-
-  private async execAgentWithReservation(
-    params: InternalExecAgentParams,
-    approvalClaim: ApprovalClaimState,
-  ): Promise<ExecAgentResult> {
-    const {
-      additionalPluginIds,
-      exclusivePluginIds,
-      agentId,
-      slug,
-      prompt,
-      appContext,
-      autoStart = true,
-      botContext,
-      botSender,
-      createdThreadId,
-      externalOrigin,
-      clientIp,
-      userAgent,
-      deviceId: requestedDeviceId,
-      localDeviceId,
-      botPlatformContext,
-      discordContext,
-      existingMessageIds = [],
-      fileIds: attachedFileIds,
-      files,
-      functionTools,
-      hooks,
-      instructions,
-      chatConfigOverride,
-      toolModeOverride,
-      model: modelOverride,
-      provider: providerOverride,
-      stream,
-      title,
-      steer,
-      trigger,
-      cronJobId,
-      taskId,
-      evalContext,
-      evalRuntime,
-      maxSteps,
-      disableLocalSystem,
-      initialStepCount,
-      signal,
-      userInterventionConfig: requestedUserInterventionConfig = { approvalMode: 'headless' },
-      queueRetries,
-      queueRetryDelay,
-      parentMessageId,
-      parentOperationId,
-      resume,
-      resumeApproval,
-      resumeApprovals,
-      resumeToolResult,
-      approvalResolutionRequestId: providedApprovalResolutionRequestId,
-      approvalSourceOperationId: providedApprovalSourceOperationId,
-      selectedSkillIds,
-      selectedToolIds,
-      shareGate,
-      mentionedAgents,
-      suppressUserMessage,
-      ephemeralUserMessage,
-    } = params;
-
-    // Agent Share visitor runs execute under the CREATOR's credentials but are
-    // approved by the VISITOR: granting a tool grants its normal approval
-    // flow, so the run honors the visitor's own approval mode (sent by the
-    // share client, see `shareChat.execAgent`) and parks intervention-gated
-    // calls for the visitor to resolve on the share page.
-    //
-    // A share caller that sends no config falls back to `manual`, never to
-    // this method's `headless` default: `headless` auto-runs `'required'`
-    // calls, which would grant a consent nobody gave.
-    const userInterventionConfig: UserInterventionConfig = shareGate
-      ? (params.userInterventionConfig ?? { approvalMode: 'manual' })
-      : requestedUserInterventionConfig;
-
-    // Honour client-minted row ids on a FRESH send only. Resume / regeneration
-    // replays reach this method too (resumeApproval, resumeToolResult,
-    // parentMessageId), and a replayed id there would collide with the row the
-    // original send already created — so those paths drop the ids defensively
-    // rather than trusting every caller to omit them.
-    const interventionResumeCount = [resumeApproval, resumeApprovals, resumeToolResult].filter(
-      Boolean,
-    ).length;
-    if (interventionResumeCount > 1) {
-      throw new Error(
-        'Only one of resumeApproval, resumeApprovals, or resumeToolResult may be provided',
-      );
-    }
-
-    const isResumeLike =
-      !!resume ||
-      !!resumeApproval ||
-      !!resumeApprovals?.length ||
-      !!resumeToolResult ||
-      !!parentMessageId;
-    const clientIds = isResumeLike ? undefined : params.clientIds;
-
-    // Validate that either agentId or slug is provided
-    if (!agentId && !slug) {
-      throw new Error('Either agentId or slug must be provided');
-    }
-
-    // Determine the identifier to use (agentId takes precedence)
-    const identifier = agentId || slug!;
-
-    log('execAgent: identifier=%s, prompt=%s', identifier, prompt.slice(0, 50));
-
-    const operationTaskId = await this.resolveOperationTaskId(taskId ?? appContext?.taskId);
-
-    const assistantMessageRef: { current?: string } = {};
-    const updateAbortedAssistantMessage = async (errorMessage: string) => {
-      if (!assistantMessageRef.current) return;
-
-      try {
-        await this.messageModel.update(assistantMessageRef.current, {
-          content: '',
-          error: {
-            body: {
-              detail: errorMessage,
-            },
-            message: errorMessage,
-            type: 'ServerAgentRuntimeError',
-          },
-        });
-      } catch (error) {
-        log(
-          'execAgent: failed to update aborted assistant message %s: %O',
-          assistantMessageRef.current,
-          error,
-        );
-      }
-    };
-    const throwIfExecutionAborted = async (stage: string) => {
-      if (!signal?.aborted) return;
-
-      const error = getAbortError(signal, `Agent execution aborted during ${stage}`);
-      await updateAbortedAssistantMessage(error.message);
-      throw error;
-    };
-
-    throwIfAborted(signal, 'Agent execution aborted before startup');
-
-    // Stages 1–2.5 — resolve the effective agent config for this run
-    // (see `pipeline/resolveRunAgentConfig`).
-    const {
-      agentConfig,
-      agentSlug,
-      assistantAgentId,
-      canManageAgent,
-      conversationAgentId,
-      disabledPluginIds,
-      isPublicWorkspaceAgent,
-      memberDeviceOverride,
-      persistAgentId,
-      resolvedAgentId,
-    } = await traceSendStage('agent_config', () =>
-      resolveRunAgentConfig(
-        {
-          db: this.db,
-          resolveAgentConfigOrThrow: (id) => this.resolveAgentConfigOrThrow(id),
-          userId: this.userId,
-          workspaceId: this.workspaceId,
-        },
-        {
-          appContext,
-          chatConfigOverride,
-          identifier,
-          instructions,
-          modelOverride,
-          providerOverride,
-          shareVisitorUserId: shareGate?.visitorUserId,
-          throwIfExecutionAborted,
-          toolModeOverride,
-        },
-      ),
-    );
-
-    // Share-visitor runs must never see the creator's files/knowledge bases.
-    // Applied to the resolved config before anything downstream (knowledge
-    // flags, tools engine, context snapshot) reads it.
-    if (shareGate) applyShareGateToAgentConfig(agentConfig);
-
-    let resumeParentMessage: Awaited<ReturnType<MessageModel['findById']>>;
-
-    // `resumeApproval` implies the same "load parent message + skip user
-    // message creation" semantics as `resume`. Callers that go through the
-    // tRPC router get `resume: true` via the router, but the service-level
-    // API allows resumeApproval alone — fold both into a single effective
-    // flag so downstream resume branches don't need to know about approval.
-    // Normalize the single and batch approval forms into one list so every
-    // branch below (validation, DB writes, resume context) has a single shape
-    // to reason about. `resumeApproval` stays the wire format for one decision.
-    const approvalDecisions = resumeApprovals?.length
-      ? resumeApprovals
-      : resumeApproval
-        ? [resumeApproval]
-        : [];
-
-    const effectiveResume = resume || approvalDecisions.length > 0 || !!resumeToolResult;
-
-    // Both resume and suppressUserMessage run the turn off existing history
-    // instead of appending a new user message — share the message-construction
-    // branches below. Resume-specific validation/approval stays gated on
-    // `effectiveResume` only.
-    const runFromHistory = effectiveResume || !!suppressUserMessage;
-
-    if (effectiveResume) {
-      if (!parentMessageId) {
-        throw new Error('parentMessageId is required when resume is true');
-      }
-
-      if (!appContext) {
-        throw new Error('appContext is required when resume is true');
-      }
-
-      if (!appContext.topicId) {
-        throw new Error('appContext.topicId is required when resume is true');
-      }
-
-      resumeParentMessage = await this.messageModel.findById(parentMessageId);
-
-      if (!resumeParentMessage) {
-        throw new Error(`Parent message not found: ${parentMessageId}`);
-      }
-
-      if (resumeParentMessage.topicId !== appContext.topicId) {
-        throw new Error('appContext.topicId does not match parent message');
-      }
-
-      if (
-        resumeParentMessage.threadId &&
-        resumeParentMessage.threadId !== (appContext.threadId ?? undefined)
-      ) {
-        throw new Error('appContext.threadId does not match parent message');
-      }
-
-      if (resumeParentMessage.sessionId && resumeParentMessage.sessionId !== appContext.sessionId) {
-        throw new Error('appContext.sessionId does not match parent message');
-      }
-    }
-
-    // Stages 2.6–2.7 — claim the human decision(s) before anything below reads
-    // message history (see `pipeline/approvalResume`).
-    const {
-      approvalOwnerAssistantId,
-      approvalSourceOperationId,
-      approvalSourceToolMessageIds,
-      approvedToolEntries,
-      batchApprovalAnchorId,
-      resumeApprovalPlugin,
-      resolvedToolResult,
-    } = await traceSendStage('approval_claim', () =>
-      claimApprovalResume(
-        {
-          controlToolResult: (input) => this.agentRuntimeService.controlCompletedToolResult(input),
-          messageModel: this.messageModel,
-        },
-        {
-          appContext,
-          approvalClaim,
-          approvalDecisions,
-          parentMessageId,
-          providedApprovalResolutionRequestId,
-          providedApprovalSourceOperationId,
-          resumeApprovals,
-          resumeParentMessage,
-          resumeToolResult,
-        },
-      ),
-    );
-
-    // Deterministic continuation identity for a generic (v2) approval claim.
-    // Also consumed by the turn setup below: a crash-safe re-entry must find
-    // the SAME assistant placeholder instead of minting a second turn.
-    const continuationIdentity = providedApprovalResolutionRequestId
-      ? {
-          resolutionRequestId: providedApprovalResolutionRequestId,
-          userId: this.userId,
-          workspaceId: this.workspaceId,
-        }
-      : undefined;
-    const continuationOperationId = continuationIdentity
-      ? deriveAgentInterventionContinuationOperationId(continuationIdentity)
-      : undefined;
-    const continuationAssistantId = continuationIdentity
-      ? deriveAgentInterventionContinuationMessageId(continuationIdentity)
-      : undefined;
-
-    const reusedContinuation = await tryReuseInterventionContinuation(
-      {
-        agentOperationModel: this.agentOperationModel,
-        agentRuntimeService: this.agentRuntimeService,
-        messageModel: this.messageModel,
-        userId: this.userId,
-        withholdGatewayToken: this.withholdGatewayToken,
-        workspaceId: this.workspaceId,
-      },
-      {
-        approvalClaim,
-        approvalSourceOperationId,
-        approvalSourceToolMessageIds,
-        continuationAssistantId,
-        continuationOperationId,
-        parentMessageId,
-        providedApprovalResolutionRequestId,
-        resolvedAgentId,
-        topicId: appContext?.topicId,
-      },
-    );
-    if (reusedContinuation) return reusedContinuation;
-
-    // Agent → agent attribution: resolve the launching run's agent into a
-    // display snapshot once, before the turn rows exist, so the persisted user
-    // message carries a self-contained sender block.
-    const agentSender = await this.resolveSourceAgentSnapshot(
-      resolvedAgentId,
-      params.sourceOperationId,
-    );
-
-    // Stage 3 + shared turn setup — topic creation/reuse (with the pinned
-    // model), device-access policy, hetero detection, attachment ingestion, and
-    // the persisted user/assistant rows (see `pipeline/turnSetup`).
-    const turn = await traceSendStage('turn_setup', () =>
-      setupTurn(
-        {
-          db: this.db,
-          messageModel: this.messageModel,
-          topicModel: this.topicModel,
-          userId: this.userId,
-          workspaceId: this.workspaceId,
-        },
-        {
-          agentConfig,
-          agentSender,
-          agentSlug,
-          appContext,
-          assistantAgentId,
-          attachedFileIds,
-          batchApprovalAnchorId,
-          botContext,
-          botSender,
-          clientIds,
-          continuationAssistantId,
-          conversationAgentId,
-          createdThreadId,
-          externalOrigin,
-          cronJobId,
-          files,
-          modelOverride,
-          operationTaskId,
-          parentMessageId,
-          prompt,
-          providerOverride,
-          requestedDeviceId,
-          resolvedAgentId,
-          resume,
-          runFromHistory,
-          selectedSkillIds,
-          shareGate,
-          steer,
-          throwIfExecutionAborted,
-          title,
-          trigger,
-        },
-      ),
-    );
-    assistantMessageRef.current = turn.assistantMessageId;
-    const {
-      canUseDevice,
-      deviceAccessReason,
-      isHeteroAgent,
-      model,
-      provider,
-      requestTriggerMetadata,
-      runAttachments,
-      selfMessageIds,
-      topicId,
-    } = turn;
-
-    // Shared context for the extracted execAgent pipeline stages
-    // (`pipeline/*`). Built after the turn rows exist so every stage sees the
-    // persisted anchors; `agentConfig` stays the same mutable object so stage
-    // systemRole appends remain visible to `createOperation` below.
-    // One reader for the facts that cannot change within this turn, so the
-    // send window asks the routed device and the user's row once each.
-    const runFacts = createRunFacts({
-      db: this.db,
-      userId: this.userId,
-      workspaceId: this.workspaceId,
-    });
-
-    const runContext: ExecRunContext = {
-      agentConfig,
-      appContext:
-        turn.editingAgentId && turn.editingAgentId !== appContext?.editingAgentId
-          ? { ...appContext, editingAgentId: turn.editingAgentId }
-          : appContext,
-      assistantMessageId: turn.assistantMessageId,
-      canUseDevice,
-      deviceAccessReason,
-      model,
-      parentMessageId,
-      persistAgentId,
-      prompt,
-      provider,
-      resolvedAgentId,
-      runFacts,
-      shareGate,
-      topicEditingGroupId: turn.topicEditingGroupId,
-      topicId,
-      trigger,
-      userMessageId: turn.userMessageId,
-    };
-
-    if (isHeteroAgent) {
-      return dispatchHeteroAgent(
-        {
-          bindTopicWorkingDirectory: (p) =>
-            bindTopicWorkingDirectory({ topicModel: this.topicModel }, p),
-          db: this.db,
-          getMarketService: (options) => this.getMarketService(runFacts, options),
-          messageModel: this.messageModel,
-          resolveDeviceWorkspaceId: (deviceId) => this.resolveDeviceWorkspaceId(deviceId),
-          topicModel: this.topicModel,
-          userId: this.userId,
-          withholdGatewayToken: this.withholdGatewayToken,
-          workspaceId: this.workspaceId,
-        },
-        runContext,
-        {
-          canManageAgent,
-          effectiveRequestedDeviceId: turn.effectiveRequestedDeviceId,
-          heteroType: turn.heteroType,
-          heterogeneousProvider: turn.heterogeneousProvider,
-          hooks,
-          isPublicWorkspaceAgent,
-          localDeviceId,
-          maxSteps,
-          memberDeviceOverride,
-          operationTaskId,
-          onOperationCreated: params.onOperationCreated,
-          parentOperationId,
-          pinnedHeterogeneousTopicModel: turn.pinnedHeterogeneousTopicModel,
-          pinnedHeterogeneousTopicSources: turn.pinnedHeterogeneousTopicSources,
-          requestTrigger: requestTriggerMetadata.trigger,
-          requestedDeviceId: turn.requestedDeviceId,
-          runAttachments,
-          selfMessageIds,
-          topicStartOwnerOperationId: params.topicStartOwnerOperationId,
-        },
-      );
-    }
-
-    // 4. Fetch user settings (memory config + timezone)
-    // Agent-level memory config takes priority; fallback to user-level setting
-    const agentMemoryEnabled = agentConfig.chatConfig?.memory?.enabled;
-    let globalMemoryEnabled = agentMemoryEnabled ?? false;
-    let enableExpertise = false;
-    let userTimezone: string | undefined;
-    await traceSendStage('run_settings', async () => {
-      try {
-        const settings = await runFacts.userSettings();
-        const memorySettings = settings?.memory as { enabled?: boolean } | undefined;
-
-        globalMemoryEnabled = agentMemoryEnabled ?? memorySettings?.enabled !== false;
-
-        // Timezone drives the session-date placeholder rendered back to whoever
-        // is actually conversing. In a share-visitor run that is the VISITOR,
-        // not the creator whose settings this block otherwise reads — memory /
-        // expertise intentionally stay creator-scoped below (gated by
-        // `allowReadMemory`), but the timezone has no such gate and must not
-        // leak the creator's own setting into a visitor's turn.
-        if (shareGate) {
-          const visitorSettings = await runFacts.userSettings(shareGate.visitorUserId);
-          const visitorGeneralSettings = visitorSettings?.general as
-            { timezone?: string } | undefined;
-          userTimezone = visitorGeneralSettings?.timezone;
-        } else {
-          const generalSettings = settings?.general as { timezone?: string } | undefined;
-          userTimezone = generalSettings?.timezone;
-        }
-      } catch (error) {
-        log('execAgent: failed to fetch user settings: %O', error);
-      }
-      try {
-        const preference = await runFacts.userPreference();
-        enableExpertise = preference?.lab?.enableSelfLearning === true;
-      } catch (error) {
-        console.error('Failed to resolve expertise injection Lab preference:', error);
-      }
-      // Share visitors only get the creator's memory (persona + learned
-      // expertise) when the share explicitly allows it — both surfaces would
-      // otherwise leak the creator's personal context into visitor turns.
-      if (shareGate && !shareGate.shareConfig.allowReadMemory) {
-        globalMemoryEnabled = false;
-        enableExpertise = false;
-      }
-    });
-    log(
-      'execAgent: globalMemoryEnabled=%s, timezone=%s',
-      globalMemoryEnabled,
-      userTimezone ?? 'default',
-    );
-
-    // History loader shared by tool discovery (media-availability probe) and
-    // the operation-prep message assembly (see `pipeline/operationPrep`).
-    const loadHistoryMessages = createHistoryMessagesLoader(
-      {
-        db: this.db,
-        isShareVisitorRun: !!shareGate,
-        messageModel: this.messageModel,
-        userId: this.userId,
-        workspaceId: this.workspaceId,
-      },
-      {
-        appContext,
-        effectiveResume,
-        existingMessageIds,
-        parentMessageId,
-        resumeParentMessage,
-        selfMessageIds,
-      },
-    );
-
-    // When the user @-mentions agents (multi-mention, non-group), enable the
-    // agent-management tool for this run so the supervisor can `callAgent` to
-    // delegate. Mirrors the client runtime, which injects a callAgent manifest.
-    // Single-mention takes a client-only deterministic-router path and never
-    // reaches here. The delegation *context* (which agents were mentioned) is
-    // injected separately via `initialContext.mentionedAgents` below.
-    const hasMentionedAgents = !appContext?.groupId && !!mentionedAgents?.length;
-
-    // 15. Generate operation ID: op_{timestamp}_{agentId}_{topicId}_{random}
-    const operationId =
-      continuationOperationId ?? `op_${Date.now()}_${resolvedAgentId}_${topicId}_${nanoid(8)}`;
-
-    // Stages 5–18 — the run's init: the tool surface, the message/context
-    // assembly, and the human decision a resumed approval turns into the first
-    // context. One call so the same work can later run in the step-0 worker
-    // instead of on the send path.
-    const initRequest = buildOperationInitRequest({
-      additionalPluginIds,
-      taskId: operationTaskId,
-      agentSlug,
-      approvalOwnerAssistantId,
-      approvedToolEntries,
-      attachedFileIds,
-      botContext,
-      botPlatformContext,
-      disableLocalSystem,
-      disableSelfFeedbackIntentTool: params.disableSelfFeedbackIntentTool,
-      disableTools: params.disableTools,
-      disabledPluginIds,
-      discordContext,
-      ephemeralUserMessage,
-      exclusivePluginIds,
-      files,
-      functionTools,
-      globalMemoryEnabled,
-      hasMentionedAgents,
-      isFixedDeviceTarget: turn.isFixedDeviceTarget,
-      localDeviceId,
-      mentionedAgents,
-      operationId,
-      parentMessageId,
-      requestTrigger: requestTriggerMetadata.trigger,
-      requestedDeviceId: turn.requestedDeviceId,
-      resumeApproval,
-      resumeApprovalPlugin,
-      resumeApprovals,
-      resumeFromHistory: runFromHistory,
-      resumeToolResult: resolvedToolResult,
-      runAttachments,
-      selectedSkillIds,
-      selectedToolIds,
-      topicBoundDeviceId: turn.topicBoundDeviceId,
-    });
-
-    const { discovery, initialContext, prep } = await traceSendStage('operation_init', () =>
-      runOperationInit(
-        {
-          agentDocumentsService: this.agentDocumentsService,
-          agentModel: this.agentModel,
-          bindTopicWorkingDirectory: (p) =>
-            bindTopicWorkingDirectory({ topicModel: this.topicModel }, p),
-          composioService: this.composioService,
-          connectorModel: this.connectorModel,
-          connectorToolModel: this.connectorToolModel,
-          db: this.db,
-          getMarketService: () => this.getMarketService(runFacts),
-          loadHistoryMessages,
-          messageModel: this.messageModel,
-          pluginModel: this.pluginModel,
-          throwIfExecutionAborted,
-          topicModel: this.topicModel,
-          userId: this.userId,
-          workspaceId: this.workspaceId,
-        },
-        runContext,
-        initRequest,
-      ),
-    );
-
-    // 17. Log final operation parameters summary
-    log(
-      'execAgent: creating operation %s with params: model=%s, provider=%s, tools=%d, messages=%d, manifests=%d',
-      operationId,
-      model,
-      provider,
-      discovery.tools?.length ?? 0,
-      prep.allMessages.length,
-      Object.keys(discovery.toolManifestMap).length,
-    );
-
-    // Claim the child slot on the supervisor's runningOperation marker LAST,
-    // immediately before startup. The marker vanishes when the supervisor is
-    // cancelled or settled, so every awaited preparation step above widens the
-    // claim→start race window — an orphaned child would start against a
-    // marker that no longer lists it. Claiming here keeps the window minimal;
-    // a failed claim only wastes the preparation reads (its lone write — the
-    // topic cwd pin — is additive and idempotent).
-    if (params.topicStartOwnerOperationId) {
-      const attached = await this.topicModel.appendRunningOperationChild(
-        topicId,
-        params.topicStartOwnerOperationId,
-        {
-          assistantMessageId: turn.assistantMessageId,
-          operationId,
-          orchestrationRole: appContext?.orchestrationRole,
-          scope: appContext?.scope ?? undefined,
-          threadId: appContext?.threadId ?? undefined,
-        },
-      );
-      if (!attached) {
-        const errorMessage = 'Group supervisor finished before this member could start.';
-        await updateAbortedAssistantMessage(errorMessage);
-        return {
-          agentId: resolvedAgentId,
-          assistantMessageId: turn.assistantMessageId,
-          autoStarted: false,
-          createdAt: new Date().toISOString(),
-          error: errorMessage,
-          message: errorMessage,
-          operationId,
-          status: 'error',
-          success: false,
-          timestamp: new Date().toISOString(),
-          topicId,
-          userMessageId: turn.userMessageId ?? parentMessageId ?? '',
-        };
-      }
-    }
-
-    // 19. Create the operation via AgentRuntimeService, persist the reconnect
-    // marker, and mint the gateway token (see `pipeline/startOperation`).
-    return traceSendStage('start_operation', () =>
-      startOperation(
-        {
-          agentRuntimeService: this.agentRuntimeService,
-          messageModel: this.messageModel,
-          retirePendingApprovalOperation: (opId) => this.retirePendingApprovalOperation(opId),
-          topicModel: this.topicModel,
-          userId: this.userId,
-          withholdGatewayToken: this.withholdGatewayToken,
-          workspaceId: this.workspaceId,
-        },
-        runContext,
-        {
-          acceptsFileWorks: params.acceptsFileWorks,
-          acceptsMemberRuntimeEnd: params.acceptsMemberRuntimeEnd,
-          approvalClaim,
-          approvalSourceOperationId,
-          approvalSourceToolMessageIds,
-          autoStart,
-          onOperationCreated: params.onOperationCreated,
-          botContext,
-          botPlatformContext,
-          clientIp,
-          disabledPluginIds,
-          discordContext,
-          discovery,
-          enableExpertise,
-          evalContext,
-          evalRuntime,
-          hooks,
-          initialContext,
-          initialStepCount,
-          maxSteps,
-          operationId,
-          operationTaskId,
-          parentOperationId,
-          prep,
-          providedApprovalResolutionRequestId,
-          queueRetries,
-          queueRetryDelay,
-          signal,
-          stream,
-          clientProtocol: params.clientProtocol,
-          includeFinalState: params.includeFinalState,
-          llmExecutor: params.llmExecutor,
-          topicStartOwnerOperationId: params.topicStartOwnerOperationId,
-          updateAbortedAssistantMessage,
-          userAgent,
-          userInterventionConfig,
-          userTimezone,
-        },
-      ),
-    );
   }
 
   /**
@@ -1353,24 +539,10 @@ export class AiAgentService {
     // - newTopic is explicitly provided, OR
     // - no topicId is provided (default behavior for group chat)
     if (newTopic || !inputTopicId) {
-      const fallbackTitleSource = markdownToTxt(message);
-      const topicTitle =
-        newTopic?.title ||
-        fallbackTitleSource.slice(0, 50) + (fallbackTitleSource.length > 50 ? '...' : '');
-      const agentConfig = await this.resolvePrecreatedTopicConfig(agentId);
-      const snapshot = await resolveNewTopicSnapshot(
-        { db: this.db, userId: this.userId, workspaceId: this.workspaceId },
-        agentConfig,
+      topicId = await createGroupAgentTopic(
+        { ...this.precreatedTopicDeps(), topicModel: this.topicModel },
+        { agentId, groupId, message, newTopic },
       );
-      const topicItem = await this.topicModel.create({
-        ...snapshot,
-        agentId,
-        groupId,
-        messages: newTopic?.topicMessageIds,
-        title: topicTitle,
-        // Note: execGroupAgent doesn't have trigger param yet, defaults to null
-      });
-      topicId = topicItem.id;
       isCreateNewTopic = true;
       log('execGroupAgent: created new topic %s with groupId %s', topicId, groupId);
     }

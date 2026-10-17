@@ -1,5 +1,8 @@
+import type { ExecAgentResult } from '@lobechat/types';
+import { nanoid } from '@lobechat/utils';
 import debug from 'debug';
 
+import { deriveAgentInterventionContinuationOperationId } from '@/business/server/agent-run/agentInterventionIdentity';
 import type { AgentOperationModel } from '@/database/models/agentOperation';
 import type { TopicModel } from '@/database/models/topic';
 import type { AgentRuntimeService } from '@/server/services/agentRuntime';
@@ -10,18 +13,21 @@ import {
   type SupersedeRecord,
 } from '@/server/services/agentRuntime/foregroundOperation';
 
+import { acquireTopicStartReservation, TopicStartReservationError } from '../topicStartReservation';
 import type { InternalExecAgentParams } from '../types';
 
 const log = debug('lobe-server:ai-agent-service');
 
-export interface ForegroundSupersedeDeps {
+export interface TopicStartDeps {
   agentOperationModel: AgentOperationModel;
   agentRuntimeService: AgentRuntimeService;
   interruptTask: (params: {
     operationId?: string;
     topicId?: string;
-  }) => Promise<{ success: boolean }>;
+  }) => Promise<{ deviceCancellationConfirmed?: boolean; success: boolean }>;
   topicModel: TopicModel;
+  userId: string;
+  workspaceId?: string;
 }
 
 export interface SupersededOperation {
@@ -35,7 +41,7 @@ export interface SupersededOperation {
  * server-derived continuations are trusted as given.
  */
 export const resolveReplacedOperationId = async (
-  deps: ForegroundSupersedeDeps,
+  deps: TopicStartDeps,
   params: InternalExecAgentParams,
   topicId: string,
 ): Promise<string | undefined> => {
@@ -74,7 +80,7 @@ export const resolveReplacedOperationId = async (
  * the caller can record the overlap on the new run.
  */
 export const supersedeRunningForegroundOperation = async (
-  deps: ForegroundSupersedeDeps,
+  deps: TopicStartDeps,
   topicId: string,
   alreadyHandledOperationIds: (string | undefined)[],
 ): Promise<SupersededOperation | undefined> => {
@@ -122,7 +128,7 @@ export const supersedeRunningForegroundOperation = async (
  * also warned. Diagnostic only: a failure here never fails the send.
  */
 export const recordSupersede = async (
-  deps: ForegroundSupersedeDeps,
+  deps: TopicStartDeps,
   topicId: string,
   operationId: string,
   superseded: SupersededOperation,
@@ -148,5 +154,100 @@ export const recordSupersede = async (
     await deps.agentOperationModel.mergeMetadata(operationId, { supersede: record });
   } catch (error) {
     console.error('[execAgent] failed to record supersede on %s:', operationId, error);
+  }
+};
+
+/**
+ * Claim the topic for a new run, then start it through `run`.
+ *
+ * Thread runs and topic-less runs start directly. A topic run first settles
+ * the run it replaces, takes the topic-start reservation, retires a live
+ * foreground run on an interactive send, and releases the reservation once
+ * `run` returns.
+ */
+export const runWithTopicStart = async (
+  deps: TopicStartDeps,
+  params: InternalExecAgentParams,
+  run: (params: InternalExecAgentParams) => Promise<ExecAgentResult>,
+): Promise<ExecAgentResult> => {
+  const topicId = params.appContext?.topicId;
+  const interventionReservationId = params.approvalResolutionRequestId
+    ? deriveAgentInterventionContinuationOperationId({
+        resolutionRequestId: params.approvalResolutionRequestId,
+        userId: deps.userId,
+        workspaceId: deps.workspaceId,
+      })
+    : undefined;
+  if (
+    interventionReservationId &&
+    params.topicStartReservationId &&
+    params.topicStartReservationId !== interventionReservationId
+  ) {
+    throw new Error('Intervention continuation reservation identity conflict');
+  }
+  const reservationId =
+    interventionReservationId ?? params.topicStartReservationId ?? `agent-start-${nanoid()}`;
+  const isInterventionThreadStart = Boolean(
+    topicId &&
+    params.appContext?.threadId &&
+    interventionReservationId &&
+    params.approvalResolutionRequestId,
+  );
+  // Thread runs are isolated under an explicit parent message and do not
+  // advance the topic's main spine. They may start while their parent
+  // operation owns `runningOperation` (for example callAgent/callSubAgent),
+  // so making them wait for the topic-start claim deadlocks the child start.
+  if (!topicId || (params.appContext?.threadId && !isInterventionThreadStart)) {
+    return run(params);
+  }
+
+  const replacesOperationId = isInterventionThreadStart
+    ? undefined
+    : await resolveReplacedOperationId(deps, params, topicId);
+
+  // A replacement is allowed to take over the topic marker, but the device
+  // process that owned the old marker may still hold a native Codex/CC writer.
+  // Settle that physical run before reserving and dispatching the replacement;
+  // otherwise two `lh hetero exec` wrappers can resume the same thread.
+  if (replacesOperationId) {
+    const interruption = await deps.interruptTask({
+      operationId: replacesOperationId,
+      topicId,
+    });
+    if (interruption.deviceCancellationConfirmed === false) {
+      throw new Error('Replaced heterogeneous agent process did not confirm termination');
+    }
+  }
+  const reserved = await acquireTopicStartReservation({
+    allowSameReservationReentry: !params.approvalResolutionRequestId,
+    replacesOperationId,
+    allowRunningOperationId: params.topicStartOwnerOperationId,
+    // A thread continuation shares the topic row but never owns/replaces its
+    // main runningOperation anchor. It uses only the short initializer fence.
+    ignoreRunningOperation: isInterventionThreadStart || params.interactiveStart,
+    reservationId,
+    topicId,
+    topicModel: deps.topicModel,
+  });
+
+  if (!reserved) {
+    throw new TopicStartReservationError(`Topic not found: ${topicId}`);
+  }
+
+  try {
+    const superseded =
+      params.interactiveStart && !isInterventionThreadStart
+        ? await supersedeRunningForegroundOperation(deps, topicId, [
+            replacesOperationId,
+            params.topicStartOwnerOperationId,
+          ])
+        : undefined;
+    const result = await run(params);
+    if (superseded) {
+      await recordSupersede(deps, topicId, result.operationId, superseded, params);
+    }
+    return result;
+  } finally {
+    await deps.topicModel.releaseTaskCallbackReservation(topicId, reservationId);
   }
 };
