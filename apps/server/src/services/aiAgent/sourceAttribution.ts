@@ -37,6 +37,7 @@ export interface SourceAttributionDeps {
   destinationAgentId: string;
   findAgentDisplayFields: (agentId: string) => Promise<SourceAgentDisplayRow | null | undefined>;
   findAgentVisibility: (agentId: string) => Promise<'private' | 'public' | null>;
+  findChatGroupVisibility: (chatGroupId: string) => Promise<'private' | 'public' | null>;
   findOperation: (operationId: string) => Promise<null | SourceOperationRow | undefined>;
   findTopic: (topicId: string) => Promise<null | SourceTopicRow | undefined>;
   /** The authenticated caller — attribution may only rest on THEIR OWN work. */
@@ -57,17 +58,30 @@ export interface SourceAttributionDeps {
  * is.
  */
 const isSourceShareableWithDestination = async (
-  deps: Pick<SourceAttributionDeps, 'destinationAgentId' | 'findAgentVisibility' | 'workspaceId'>,
-  source: { sourceAgentId: string; sourceWorkspaceId: null | string },
+  deps: Pick<
+    SourceAttributionDeps,
+    'destinationAgentId' | 'findAgentVisibility' | 'findChatGroupVisibility' | 'workspaceId'
+  >,
+  source: { chatGroupId?: string; sourceWorkspaceId: null | string; topicAgentId?: string },
 ): Promise<boolean> => {
   const destinationVisibility = await deps.findAgentVisibility(deps.destinationAgentId);
   const sharedDestination = Boolean(deps.workspaceId) && destinationVisibility === 'public';
   // Personal scope: the bubble is readable by the caller alone, who ran the source.
   if (!sharedDestination) return true;
+  if (source.sourceWorkspaceId !== deps.workspaceId) return false;
 
-  const sourceVisibility = await deps.findAgentVisibility(source.sourceAgentId);
+  // Who can read the source is decided by the conversation the link opens, not
+  // by the agent that ran: a group route is the group's, an agent route is the
+  // topic owner's. A public `callSubAgent` child on a private parent's topic, or
+  // a public member inside a private group, must not make that origin shareable.
+  let sourceVisibility: 'private' | 'public' | null = null;
+  if (source.chatGroupId) {
+    sourceVisibility = await deps.findChatGroupVisibility(source.chatGroupId);
+  } else if (source.topicAgentId) {
+    sourceVisibility = await deps.findAgentVisibility(source.topicAgentId);
+  }
 
-  return sourceVisibility === 'public' && source.sourceWorkspaceId === deps.workspaceId;
+  return sourceVisibility === 'public';
 };
 
 /**
@@ -128,8 +142,9 @@ export const resolveAgentSenderFromOperation = async (
   // member can read would leak the source to people who cannot open it. Keep the
   // authorship, drop the origin they have no access to.
   const shareable = await isSourceShareableWithDestination(deps, {
-    sourceAgentId: senderAgentId,
+    chatGroupId: operation.chatGroupId ?? undefined,
     sourceWorkspaceId: topic?.workspaceId ?? operation.workspaceId ?? null,
+    topicAgentId: topic?.agentId ?? undefined,
   });
 
   const base: AgentSenderMetadata = {

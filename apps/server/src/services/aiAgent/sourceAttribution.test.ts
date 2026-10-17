@@ -12,6 +12,8 @@ const buildDeps = (overrides?: {
    * when the source and the destination differ.
    */
   agentVisibility?: 'private' | 'public' | Record<string, 'private' | 'public' | null>;
+  /** Visibility per chat group id. */
+  groupVisibility?: Record<string, 'private' | 'public' | null>;
   operation?:
     | null
     | undefined
@@ -37,6 +39,11 @@ const buildDeps = (overrides?: {
     if (!visibility) return null;
     return typeof visibility === 'string' ? visibility : (visibility[agentId] ?? null);
   }),
+  findChatGroupVisibility: vi
+    .fn()
+    .mockImplementation(
+      async (chatGroupId: string) => overrides?.groupVisibility?.[chatGroupId] ?? null,
+    ),
   findOperation: vi.fn().mockResolvedValue(
     overrides?.operation === undefined || overrides.operation === null
       ? null
@@ -201,6 +208,74 @@ describe('resolveAgentSenderFromOperation', () => {
     expect(result).toMatchObject({ agentId: 'agt-coco' });
     expect(result?.topicId).toBeUndefined();
     expect(result?.topicTitle).toBeUndefined();
+  });
+
+  /**
+   * The executing agent is not who can read the source: a public `callSubAgent`
+   * child runs on its private parent's topic, and the link opens the parent's
+   * conversation — so the parent's visibility decides.
+   */
+  it("drops the origin when a public child runs on a private parent's topic", async () => {
+    const deps = buildDeps({
+      agentVisibility: {
+        'agt-child': 'public',
+        'agt-destination': 'public',
+        'agt-parent': 'private',
+      },
+      operation: { agentId: 'agt-child', topicId: 'tpc-1', userId: CALLER, workspaceId: 'ws_1' },
+      topic: { agentId: 'agt-parent', title: 'Private parent topic', workspaceId: 'ws_1' },
+      workspaceId: 'ws_1',
+    });
+
+    const result = await resolveAgentSenderFromOperation('op-1', deps);
+
+    expect(result).toMatchObject({ agentId: 'agt-child' });
+    expect(result?.topicId).toBeUndefined();
+    expect(result?.topicTitle).toBeUndefined();
+  });
+
+  it('drops the origin when a public member runs inside a private group', async () => {
+    const deps = buildDeps({
+      agentVisibility: 'public',
+      groupVisibility: { 'grp-1': 'private' },
+      operation: {
+        agentId: 'agt-coco',
+        chatGroupId: 'grp-1',
+        topicId: 'tpc-1',
+        userId: CALLER,
+        workspaceId: 'ws_1',
+      },
+      topic: { agentId: 'agt-coco', title: 'Private group topic', workspaceId: 'ws_1' },
+      workspaceId: 'ws_1',
+    });
+
+    const result = await resolveAgentSenderFromOperation('op-1', deps);
+
+    expect(result).toMatchObject({ agentId: 'agt-coco', chatGroupId: 'grp-1' });
+    expect(result?.topicId).toBeUndefined();
+    expect(result?.topicTitle).toBeUndefined();
+  });
+
+  it('keeps the origin of a public group even when its topic has no owning agent', async () => {
+    const deps = buildDeps({
+      agentVisibility: { 'agt-destination': 'public' },
+      groupVisibility: { 'grp-1': 'public' },
+      operation: {
+        agentId: 'agt-coco',
+        chatGroupId: 'grp-1',
+        topicId: 'tpc-1',
+        userId: CALLER,
+        workspaceId: 'ws_1',
+      },
+      topic: { agentId: null, title: 'Group topic', workspaceId: 'ws_1' },
+      workspaceId: 'ws_1',
+    });
+
+    await expect(resolveAgentSenderFromOperation('op-1', deps)).resolves.toMatchObject({
+      topicId: 'tpc-1',
+      topicTitle: 'Group topic',
+    });
+    expect(deps.findChatGroupVisibility).toHaveBeenCalledWith('grp-1');
   });
 
   it("drops the origin when the source lives outside the destination's workspace", async () => {

@@ -26,6 +26,7 @@ import {
 import { AgentModel } from '@/database/models/agent';
 import { AgentOperationModel } from '@/database/models/agentOperation';
 import { AgentShareModel } from '@/database/models/agentShare';
+import { ChatGroupModel } from '@/database/models/chatGroup';
 import { ConnectorModel } from '@/database/models/connector';
 import { ConnectorToolModel } from '@/database/models/connectorTool';
 import { DeviceModel } from '@/database/models/device';
@@ -1694,13 +1695,9 @@ export class AiAgentService {
   }
 
   /**
-   * Resolve the agent that launched an agent → agent run into the snapshot the
-   * UI renders as the message author (`metadata.agentSender`).
-   *
-   * The client names only the operation its launcher's run belongs to; the topic
-   * and the agent are read from that operation row, which this server wrote.
-   * `resolveAgentSenderFromOperation` owns the trust rule (the row must be the
-   * caller's own, not merely visible to them).
+   * Snapshot the agent that launched an agent → agent run (`metadata.agentSender`)
+   * from the caller's own operation row; `resolveAgentSenderFromOperation` owns the
+   * trust and shareability rules.
    */
   private resolveSourceAgentSnapshot = (
     destinationAgentId: string,
@@ -1710,6 +1707,9 @@ export class AiAgentService {
       destinationAgentId,
       findAgentDisplayFields: (agentId) => this.agentModel.getAgentDisplayFields(agentId),
       findAgentVisibility: (agentId) => this.agentModel.getAgentVisibility(agentId),
+      findChatGroupVisibility: async (chatGroupId) =>
+        (await new ChatGroupModel(this.db, this.userId, this.workspaceId).findById(chatGroupId))
+          ?.visibility ?? null,
       findOperation: (operationId) => this.agentOperationModel.findById(operationId),
       findTopic: (topicId) => this.topicModel.findById(topicId),
       userId: this.userId,

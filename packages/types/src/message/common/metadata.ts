@@ -372,6 +372,21 @@ export const MessageMetadataSchema = ModelUsageSchema.merge(ModelPerformanceSche
   usage: ModelUsageSchema.optional(),
 });
 
+/**
+ * `agentSender` is written only by the server, from a verified source operation
+ * (see `resolveAgentSenderFromOperation`), and the renderer trusts it over the
+ * persisted human sender. A client-supplied copy would let any caller make a
+ * message read as another agent's, so client-writable inputs drop it.
+ */
+export const ClientMessageMetadataSchema = MessageMetadataSchema.omit({ agentSender: true });
+
+/** Drops server-owned blocks from metadata a client sent untyped (passthrough / record inputs). */
+export const omitServerOwnedMessageMetadata = <T>(metadata: T): T => {
+  if (!metadata || typeof metadata !== 'object' || !('agentSender' in metadata)) return metadata;
+  const { agentSender: _agentSender, ...rest } = metadata as Record<string, unknown>;
+  return rest as T;
+};
+
 export interface ModelUsage extends ModelTokensUsage {
   /**
    * dollar
