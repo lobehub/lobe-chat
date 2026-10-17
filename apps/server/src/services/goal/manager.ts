@@ -17,6 +17,7 @@ import type {
   GoalTickResult,
   TaskItem,
 } from '@lobechat/types';
+import { isAgentOperationInFlight } from '@lobechat/types';
 import { TRPCError } from '@trpc/server';
 import { eq, sql } from 'drizzle-orm';
 import pMap from 'p-map';
@@ -196,7 +197,6 @@ export const goalPlanSchema = z.discriminatedUnion('action', [
 ]);
 type GoalPlan = z.infer<typeof goalPlanSchema>;
 const activeStatuses = new Set(['planning', 'running']);
-const terminalOperations = new Set(['done', 'error', 'interrupted']);
 const terminalNodes = new Set(['resolved', 'retired', 'rejected']);
 const TIMEOUT_MS = 20 * 60_000;
 /** Task comments listed in one planning turn's message; older ones are counted, not shown. */
@@ -943,7 +943,7 @@ export class GoalManagerService {
         message:
           'Main Agent dispatch is unconfirmed; retain the Goal until its execution can be reconciled',
       });
-    if (terminalOperations.has(op.status)) return;
+    if (!isAgentOperationInFlight(op.status)) return;
     const result = await new AiAgentService(this.db, this.userId, {
       workspaceId: this.workspaceId,
     }).interruptTask({ operationId: op.id, topicId: state.topicId });
@@ -1103,7 +1103,7 @@ export class GoalManagerService {
       if (
         !settledLocally &&
         !neverStarted &&
-        (!operation || !terminalOperations.has(operation.status))
+        (!operation || isAgentOperationInFlight(operation.status))
       ) {
         if (operation?.status === 'waiting_for_human') {
           await this.wait(goal.id, 'Main Agent is waiting for a human decision');
@@ -1479,7 +1479,7 @@ export class GoalManagerService {
         new AgentOperationModel(db, this.userId, this.workspaceId),
         state,
       );
-      if (operation && !terminalOperations.has(operation.status))
+      if (operation && isAgentOperationInFlight(operation.status))
         throw new TRPCError({
           code: 'CONFLICT',
           message: `The main Agent run ${operation.id} is still ${operation.status}; interrupt it before confirming its exit`,
