@@ -61,12 +61,12 @@ import {
 import { after } from '@/server/utils/scheduleAfterResponse';
 import { TransferErrorCode } from '@/types/transferError';
 
-import { isWorkspaceNonOwner } from './_helpers/assertWorkspaceRowManageable';
+import { isWorkspaceNonOwner } from '../_helpers/assertWorkspaceRowManageable';
 import {
   getRestrictedKnowledgeBaseIds,
   getUseLevelKnowledgeBaseIds,
-} from './_helpers/knowledgeBaseAccess';
-import { getResourceConfigAccess, redactAgentConfig } from './_helpers/resourceConfigGuard';
+} from '../_helpers/knowledgeBaseAccess';
+import { getResourceConfigAccess, redactAgentConfig } from '../_helpers/resourceConfigGuard';
 
 const getAgentPermissionPolicyPatch = (value: Record<string, unknown>) => {
   const agencyConfig = value.agencyConfig;
