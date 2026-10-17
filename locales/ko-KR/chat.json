@@ -681,7 +681,6 @@
   "goalPage.filteredEmptyDescription": "완료되거나 취소된 목표를 검토하려면 '모두'로 전환하세요.",
   "goalPage.filteredEmptyTitle": "진행 중인 목표가 없습니다",
   "goalPage.listTitle": "목표 목록",
-  "goalPage.loadMore": "더 보기",
   "goalPage.loadingProgress": "수락 진행 상황 로드 중…",
   "goalPage.metrics.delivered": "전달됨",
   "goalPage.metrics.pursuing": "진행 중",
