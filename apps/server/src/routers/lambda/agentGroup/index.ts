@@ -51,14 +51,14 @@ import {
 import { after } from '@/server/utils/scheduleAfterResponse';
 import { TransferErrorCode } from '@/types/transferError';
 
-import { isWorkspaceNonOwner } from './_helpers/assertWorkspaceRowManageable';
+import { isWorkspaceNonOwner } from '../_helpers/assertWorkspaceRowManageable';
 import {
   getResourceConfigAccess,
   redactAgentConfig,
   redactGroupConfig,
   type ResourceConfigAccess,
-} from './_helpers/resourceConfigGuard';
-import { getWorkspaceGroupVirtualAgentIds } from './_helpers/workspaceAgentGuard';
+} from '../_helpers/resourceConfigGuard';
+import { getWorkspaceGroupVirtualAgentIds } from '../_helpers/workspaceAgentGuard';
 
 const resourceConfigGuardCtx = (ctx: {
   serverDB: Parameters<typeof getResourceConfigAccess>[0]['db'];
