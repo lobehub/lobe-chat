@@ -2,7 +2,8 @@
 
 import type { BuiltinRenderProps } from '@lobechat/types';
 import { Icon, Markdown } from '@lobehub/ui';
-import { createStaticStyles, cssVar } from '@lobehub/ui';
+import { cssVar } from '@lobehub/ui/stylex/cssVar.stylex';
+import * as stylex from '@stylexjs/stylex';
 import { Check, ShieldCheck, X } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -10,38 +11,32 @@ import { useTranslation } from 'react-i18next';
 import type { SetTaskVerifyParams, SetTaskVerifyState } from '../../../types';
 import { TaskResultCard } from '../shared';
 
-const styles = createStaticStyles(({ css, cssVar }) => ({
-  offBadge: css`
-    display: inline-flex;
-    flex-shrink: 0;
-    gap: 4px;
-    align-items: center;
-
-    padding-block: 2px;
-    padding-inline: 8px;
-    border-radius: 999px;
-
-    font-size: 12px;
-    color: ${cssVar.colorTextTertiary};
-
-    background: ${cssVar.colorFillTertiary};
-  `,
-  onBadge: css`
-    display: inline-flex;
-    flex-shrink: 0;
-    gap: 4px;
-    align-items: center;
-
-    padding-block: 2px;
-    padding-inline: 8px;
-    border-radius: 999px;
-
-    font-size: 12px;
-    color: ${cssVar.colorSuccess};
-
-    background: ${cssVar.colorSuccessBg};
-  `,
-}));
+const styles = stylex.create({
+  offBadge: {
+    display: 'inline-flex',
+    flexShrink: 0,
+    gap: '4px',
+    alignItems: 'center',
+    paddingBlock: '2px',
+    paddingInline: '8px',
+    borderRadius: '999px',
+    fontSize: '12px',
+    color: cssVar.colorTextTertiary,
+    background: cssVar.colorFillTertiary,
+  },
+  onBadge: {
+    display: 'inline-flex',
+    flexShrink: 0,
+    gap: '4px',
+    alignItems: 'center',
+    paddingBlock: '2px',
+    paddingInline: '8px',
+    borderRadius: '999px',
+    fontSize: '12px',
+    color: cssVar.colorSuccess,
+    background: cssVar.colorSuccessBg,
+  },
+});
 
 export const SetTaskVerifyRender = memo<
   BuiltinRenderProps<SetTaskVerifyParams, SetTaskVerifyState>
@@ -57,7 +52,7 @@ export const SetTaskVerifyRender = memo<
   // The on/off state lives in the header; the body is just the acceptance
   // requirement rendered as markdown.
   const statusBadge = showStatus ? (
-    <span className={enabled ? styles.onBadge : styles.offBadge}>
+    <span {...stylex.props(enabled ? styles.onBadge : styles.offBadge)}>
       <Icon icon={enabled ? Check : X} size={13} />
       {t(enabled ? 'builtins.lobe-task.verify.on' : 'builtins.lobe-task.verify.off')}
     </span>

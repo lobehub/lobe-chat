@@ -1,9 +1,9 @@
 'use client';
 
 import type { BuiltinRenderProps } from '@lobechat/types';
-import { Markdown } from '@lobehub/ui';
-import { Text } from '@lobehub/ui';
-import { createStaticStyles } from '@lobehub/ui';
+import { Markdown, Text } from '@lobehub/ui';
+import { cssVar } from '@lobehub/ui/stylex/cssVar.stylex';
+import * as stylex from '@stylexjs/stylex';
 import { Pencil } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -20,36 +20,30 @@ import {
   TaskResultCard,
 } from '../shared';
 
-const styles = createStaticStyles(({ css, cssVar }) => ({
-  addChip: css`
-    padding-block: 1px;
-    padding-inline: 8px;
-    border-radius: 999px;
-
-    font-family: ${cssVar.fontFamilyCode};
-    font-size: 12px;
-    color: ${cssVar.colorSuccess};
-
-    background: ${cssVar.colorSuccessBg};
-  `,
-  deps: css`
-    display: inline-flex;
-    flex-wrap: wrap;
-    gap: 4px;
-    align-items: center;
-  `,
-  removeChip: css`
-    padding-block: 1px;
-    padding-inline: 8px;
-    border: 1px dashed ${cssVar.colorErrorBorder};
-    border-radius: 999px;
-
-    font-family: ${cssVar.fontFamilyCode};
-    font-size: 12px;
-    color: ${cssVar.colorError};
-    text-decoration: line-through;
-  `,
-}));
+const styles = stylex.create({
+  addChip: {
+    paddingBlock: '1px',
+    paddingInline: '8px',
+    borderRadius: '999px',
+    fontFamily: cssVar.fontFamilyCode,
+    fontSize: '12px',
+    color: cssVar.colorSuccess,
+    background: cssVar.colorSuccessBg,
+  },
+  deps: { display: 'inline-flex', flexWrap: 'wrap', gap: '4px', alignItems: 'center' },
+  removeChip: {
+    paddingBlock: '1px',
+    paddingInline: '8px',
+    borderWidth: '1px',
+    borderStyle: 'dashed',
+    borderColor: cssVar.colorErrorBorder,
+    borderRadius: '999px',
+    fontFamily: cssVar.fontFamilyCode,
+    fontSize: '12px',
+    color: cssVar.colorError,
+    textDecoration: 'line-through',
+  },
+});
 
 export const EditTaskRender = memo<BuiltinRenderProps<EditTaskParams, EditTaskState>>(
   ({ args, pluginState }) => {
@@ -130,9 +124,9 @@ export const EditTaskRender = memo<BuiltinRenderProps<EditTaskParams, EditTaskSt
             )}
             {hasAddDeps && (
               <InlineField label={t('builtins.lobe-task.edit.blocksOn')}>
-                <div className={styles.deps}>
+                <div {...stylex.props(styles.deps)}>
                   {params.addDependencies!.map((dep) => (
-                    <span className={styles.addChip} key={`add-${dep}`}>
+                    <span {...stylex.props(styles.addChip)} key={`add-${dep}`}>
                       {dep}
                     </span>
                   ))}
@@ -141,9 +135,9 @@ export const EditTaskRender = memo<BuiltinRenderProps<EditTaskParams, EditTaskSt
             )}
             {hasRemoveDeps && (
               <InlineField label={t('builtins.lobe-task.edit.unblocks')}>
-                <div className={styles.deps}>
+                <div {...stylex.props(styles.deps)}>
                   {params.removeDependencies!.map((dep) => (
-                    <span className={styles.removeChip} key={`remove-${dep}`}>
+                    <span {...stylex.props(styles.removeChip)} key={`remove-${dep}`}>
                       {dep}
                     </span>
                   ))}
