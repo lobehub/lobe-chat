@@ -2,8 +2,6 @@ import type { LobeChatDatabase } from '@lobechat/database';
 import { buildTaskDetailPrompt, buildTaskManagerDefaultsPrompt } from '@lobechat/prompts';
 import debug from 'debug';
 
-import { TaskService } from '@/server/services/task';
-
 import type { InternalExecAgentParams } from '../types';
 
 const log = debug('lobe-server:ai-agent-service');
@@ -33,6 +31,8 @@ export const buildViewedTaskContextPrompt = async (
 
   if (taskId) {
     try {
+      // Lazy: TaskService imports AiAgentService, which imports this pipeline.
+      const { TaskService } = await import('@/server/services/task');
       const task = await new TaskService(deps.db, deps.userId, deps.workspaceId).getTaskDetail(
         taskId,
       );
