@@ -51,8 +51,16 @@ export class ProjectFilePrivateAction {
     });
     this.gitWorkingTreeFiles = createReplicaSlice(gitWorkingTreeFilesResource, {
       actionPrefix: 'projectFile/gitWorkingTreeFiles',
-      fetcher: async ({ deviceId, dirPath }) =>
-        (await gitService.getGitWorkingTreeFiles({ deviceId, path: dirPath })) ?? null,
+      fetcher: async ({ deviceId, dirPath }) => {
+        const result = await gitService.getGitWorkingTreeFiles({ deviceId, path: dirPath });
+        // Same remote contract as the tree: an absent overlay from a device is
+        // a transport failure, not a confirmed clean working tree. Throw so a
+        // hydrated overlay survives and `gitError` is exposed.
+        if (deviceId && !result) {
+          throw new Error('The device did not return a git overlay');
+        }
+        return result ?? null;
+      },
       get,
       isMissing: (incoming) => incoming === null,
       set,

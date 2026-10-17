@@ -187,6 +187,34 @@ describe('Files tab replicas', () => {
     view.unmount();
   });
 
+  it('keeps a remote overlay when the device read fails', async () => {
+    services.getProjectFileIndex.mockResolvedValue(tree(['a.ts']));
+    services.getGitWorkingTreeFiles.mockResolvedValue({
+      added: [],
+      deleted: [],
+      modified: ['a.ts'],
+    });
+
+    const view = await boot();
+    await waitFor(() => expect(view.result.current.git.data?.modified).toEqual(['a.ts']));
+
+    services.getGitWorkingTreeFiles.mockResolvedValue(undefined);
+    await act(async () => {
+      await view.result.current.git.mutate().catch(() => {});
+    });
+
+    await waitFor(() => expect(view.result.current.git.error).toBeTruthy());
+    expect(view.result.current.git.data?.modified).toEqual(['a.ts']);
+
+    const db = await readRows();
+    const rows = await db.entriesByPrefix<{ data: unknown }>(
+      'query-projections',
+      'replica:gitWorkingTreeFiles:v1:',
+    );
+    expect(rows.filter(({ key }) => !key.includes('__replica'))).toHaveLength(1);
+    view.unmount();
+  });
+
   it('keeps trees apart per identity, device and directory', async () => {
     services.getProjectFileIndex.mockResolvedValue(tree(['a.ts']));
     services.getGitWorkingTreeFiles.mockResolvedValue({ added: [], deleted: [], modified: [] });
