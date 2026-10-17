@@ -218,6 +218,64 @@ describe('buildTaskPrompt unresolved checks', () => {
     expect(result.prompt).toContain('1. Branch b — Branch b never reached the confirmation step.');
     expect(result.prompt).not.toContain('Branch a');
   });
+  it('carries a failed check into the unjudged successor that supersedes it', async () => {
+    // A repair round may reword a failed check as a new item that `supersedes`
+    // it. Looking up only the successor id lost the failure it inherits.
+    const taskModel = new TaskModel(db, userId);
+    const task = await taskModel.create({ instruction: 'Reword and retry.' });
+    await taskModel.update(task.id, { totalTopics: 2 });
+    const goal = await new GoalModel(db, userId).create({
+      subjectType: 'standalone',
+      title: 'Superseded check',
+    });
+    const graphModel = new GoalGraphModel(db, userId);
+    const taskNode = await graphModel.createNode(goal.id, { kind: 'task', title: 'Retry' });
+    await graphModel.bindTask(goal.id, taskNode!.id, task.id);
+    const acceptance = await new AcceptanceModel(db, userId).create({
+      subjectId: task.id,
+      subjectType: 'task',
+    });
+    const [judged, reworded] = await db
+      .insert(verifyRuns)
+      .values([
+        { acceptanceId: acceptance.id, plan: [planItem('old-wording')], roundIndex: 1, userId },
+        {
+          acceptanceId: acceptance.id,
+          plan: [{ ...planItem('new-wording'), supersedes: ['old-wording'] }],
+          roundIndex: 2,
+          userId,
+        },
+      ] as never)
+      .returning();
+    await db.insert(verifyCheckResults).values([
+      {
+        checkItemId: 'old-wording',
+        status: 'failed' as const,
+        suggestion: 'The export still drops the table.',
+        userId,
+        verdict: 'failed' as const,
+        verifierType: 'agent' as const,
+        verifyRunId: judged.id,
+      },
+      {
+        checkItemId: 'new-wording',
+        status: 'pending' as const,
+        userId,
+        verifierType: 'agent' as const,
+        verifyRunId: reworded.id,
+      },
+    ]);
+
+    const result = await buildTaskPrompt((await taskModel.findById(task.id))!, {
+      briefModel: new BriefModel(db, userId),
+      db,
+      taskModel,
+      taskTopicModel: new TaskTopicModel(db, userId),
+      userId,
+    });
+
+    expect(result.prompt).toContain('1. Check new-wording — The export still drops the table.');
+  });
 });
 
 describe('buildTaskPrompt owner change request', () => {

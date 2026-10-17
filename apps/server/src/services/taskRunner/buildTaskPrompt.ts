@@ -95,6 +95,7 @@ const resolveGoalLoopContext = async (
       id: string;
       sourceCriterionId?: string | null;
       sourceFlowNode?: unknown;
+      supersedes?: string[];
       title: string;
     };
     const logicalId = (item: PlanItem) =>
@@ -109,7 +110,8 @@ const resolveGoalLoopContext = async (
     const results = await new VerifyCheckResultModel(db, userId, workspaceId).listByRuns(
       runs.map((run) => run.id),
     );
-    const latestJudged = new Map<string, { result: (typeof results)[number]; round: number }>();
+    type JudgedEntry = { result: (typeof results)[number]; round: number };
+    const latestJudged = new Map<string, JudgedEntry>();
     for (const result of results) {
       if (!isJudgedResult(result)) continue;
       const id = logicalByCheckItem.get(result.checkItemId) ?? result.checkItemId;
@@ -118,8 +120,27 @@ const resolveGoalLoopContext = async (
       if (!current || round >= current.round) latestJudged.set(id, { result, round });
     }
 
+    // As in the acceptance union, a successor that never ran inherits the verdict
+    // of the checks it `supersedes` (and of what those superseded, in turn).
+    const supersedesById = new Map<string, string[]>();
+    for (const run of runs) {
+      for (const item of (run.plan ?? []) as PlanItem[]) {
+        if (item.supersedes?.length) supersedesById.set(logicalId(item), item.supersedes);
+      }
+    }
+    const judgedFor = (id: string, seen = new Set<string>()): JudgedEntry | undefined => {
+      if (seen.has(id)) return undefined;
+      seen.add(id);
+      const own = latestJudged.get(id);
+      if (own) return own;
+      const inherited = (supersedesById.get(id) ?? [])
+        .map((oldId) => judgedFor(logicalByCheckItem.get(oldId) ?? oldId, seen))
+        .filter((entry): entry is JudgedEntry => !!entry);
+      return inherited.sort((a, b) => b.round - a.round)[0];
+    };
+
     const failed = ((last.plan ?? []) as PlanItem[]).flatMap((item) => {
-      const r = latestJudged.get(logicalId(item))?.result;
+      const r = judgedFor(logicalId(item))?.result;
       if (!r || (r.status !== 'failed' && r.verdict !== 'failed' && r.verdict !== 'uncertain'))
         return [];
       return [{ title: item.title, why: r.suggestion || r.toulmin?.reasoning || undefined }];

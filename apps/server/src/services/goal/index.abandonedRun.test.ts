@@ -131,6 +131,57 @@ describe('GoalService verify repair in a delivered topic', () => {
     expect(released.outcome).toBe('advanced');
     expect((await taskModel.findById(taskId))?.status).toBe('backlog');
   });
+  it('holds while the repair is parked, however long it has been quiet', async () => {
+    // A repair waiting for a person or a client stops heartbeating on purpose
+    // and can still resume; its old heartbeat must not read as a dead repair.
+    const runSpy = vi.spyOn(TaskRunnerService.prototype, 'runTask').mockResolvedValue({} as never);
+    const { goalId, service, taskId, taskModel } = await seedRepairedDelivery('Repair parked');
+    await serverDB
+      .update(agentOperations)
+      .set({
+        status: 'waiting_for_human',
+        updatedAt: new Date(Date.now() - VERIFY_SETTLE_GRACE_MS - 60_000),
+      })
+      .where(eq(agentOperations.id, 'op-repair'));
+
+    const waiting = await service.tick(goalId);
+
+    expect(waiting).toMatchObject({ outcome: 'waiting_external', taskId });
+    expect((await taskModel.findById(taskId))?.status).toBe('running');
+    expect(runSpy).not.toHaveBeenCalled();
+  });
+
+  it('finds a live repair root behind more than five newer child runs', async () => {
+    const runSpy = vi.spyOn(TaskRunnerService.prototype, 'runTask').mockResolvedValue({} as never);
+    const { goalId, service, taskId } = await seedRepairedDelivery('Repair with children');
+    const longAgo = new Date(Date.now() - 3 * VERIFY_SETTLE_GRACE_MS);
+    await serverDB
+      .update(agentOperations)
+      .set({ createdAt: longAgo })
+      .where(eq(agentOperations.id, 'op-repair'));
+    const operationModel = new AgentOperationModel(serverDB, userId);
+    for (let i = 0; i < 6; i++) {
+      const operationId = `op-repair-child-${i}`;
+      await operationModel.recordStart({
+        operationId,
+        parentOperationId: 'op-repair',
+        topicId: 'tpc_delivered',
+      });
+      await serverDB
+        .update(agentOperations)
+        .set({
+          completedAt: new Date(longAgo.getTime() + 60_000),
+          createdAt: new Date(longAgo.getTime() + (i + 1) * 1000),
+          status: 'done',
+        })
+        .where(eq(agentOperations.id, operationId));
+    }
+
+    const waiting = await service.tick(goalId);
+
+    expect(waiting).toMatchObject({ outcome: 'waiting_external', taskId });
+    expect(runSpy).not.toHaveBeenCalled();
+  });
 });
 
 describe('GoalService lease reclaim of a running topic', () => {
@@ -209,6 +260,44 @@ describe('GoalService lease reclaim of a running topic', () => {
 
     expect(runSpy).not.toHaveBeenCalled();
     expect((await taskModel.findById(taskId))?.status).toBe('running');
+    expect(TaskTopicModel.prototype.updateStatus).not.toHaveBeenCalled();
+  });
+
+  it('retries the stop on the next tick and reclaims once it is confirmed', async () => {
+    const interruptSpy = vi
+      .spyOn(AiAgentService.prototype, 'interruptTask')
+      .mockResolvedValueOnce({ success: false })
+      .mockResolvedValueOnce({ success: true });
+    const { goalId, service } = await seedStaleRun('Stop confirmed later');
+
+    await service.tick(goalId);
+    expect(TaskTopicModel.prototype.updateStatus).not.toHaveBeenCalled();
+
+    await service.tick(goalId);
+
+    expect(interruptSpy).toHaveBeenCalledTimes(2);
+    expect(TaskTopicModel.prototype.updateStatus).toHaveBeenCalledWith(
+      expect.any(String),
+      'tpc_stuck',
+      'timeout',
+    );
+  });
+
+  it('leaves a run alone when it heartbeats between the staleness read and the claim', async () => {
+    // Interrupting on a stale read alone cancelled a run whose heartbeat landed
+    // a moment later; the claim's compare-and-set must decide, before the stop.
+    const interruptSpy = vi.spyOn(AiAgentService.prototype, 'interruptTask');
+    const { goalId, runSpy, service } = await seedStaleRun('Heartbeat wins');
+    vi.spyOn(AgentRuntimeCoordinator.prototype, 'loadAgentState').mockImplementation(async () => {
+      await new AgentOperationModel(serverDB, userId).touchRunning('op-stuck');
+      return { status: 'running' } as never;
+    });
+
+    await service.tick(goalId);
+
+    expect(interruptSpy).not.toHaveBeenCalled();
+    expect(runSpy).not.toHaveBeenCalled();
+    expect(TaskTopicModel.prototype.updateStatus).not.toHaveBeenCalled();
     expect(await new AgentOperationModel(serverDB, userId).findById('op-stuck')).toMatchObject({
       status: 'running',
     });

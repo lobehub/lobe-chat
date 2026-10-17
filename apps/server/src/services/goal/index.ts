@@ -3298,23 +3298,30 @@ export class GoalService {
 
     // A run that may still be writing must not get a replacement beside it; only
     // a device known to be offline is left to the offline-device recovery below.
+    const latestUsage = await new AgentRuntimeCoordinator().getOperationMetadata(operationId);
     const owner = { userId: this.userId, workspaceId: this.workspaceId };
-    const stop = await stopStaleRun(this.db, owner, { operationId, staleBefore, topicId });
+    const latestTotalCost = latestUsage?.totalCost;
+    const stop = await stopStaleRun(this.db, owner, {
+      latestTotalCost,
+      operationId,
+      staleBefore,
+      topicId,
+    });
+    if (stop === 'fresh') return undefined;
     if (stop === 'unconfirmed' && (await this.readRunDevicePresence(runningTopic)) !== 'offline')
       return undefined;
 
-    const latestUsage = await new AgentRuntimeCoordinator().getOperationMetadata(operationId);
     const reclaimed = await this.db.transaction(async (tx) => {
       const operationModel = new AgentOperationModel(tx, this.userId, this.workspaceId);
       const settled = await operationModel.settleStaleRunning(
         operationId,
         staleBefore,
-        latestUsage?.totalCost,
+        latestTotalCost,
       );
-      // A confirmed device stop settles the row itself, so it no longer reads stale.
+      // `stopStaleRun` already claimed the lease atomically when it had to stop.
       if (
         !settled &&
-        stop !== 'stopped' &&
+        stop === 'not_running' &&
         !(await isOrphanedRun(operationModel, operationId, staleBefore))
       )
         return false;

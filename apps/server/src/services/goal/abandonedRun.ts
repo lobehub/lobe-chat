@@ -49,36 +49,58 @@ const hasLiveExecutor = async (
 };
 
 /**
- * Stop a run whose lease expired, before its replacement starts.
+ * Claim a run whose lease expired and stop it, before its replacement starts.
  *
  * The lease reclaim only settles the operation row. A run stuck on a tool call
  * stops heartbeating, but it is not gone: when the call finally returns it
- * carries on, working the same branch as the attempt that replaced it. So the
- * run is interrupted first, and only a confirmed stop lets the reclaim proceed.
+ * carries on, working the same branch as the attempt that replaced it. So a run
+ * something still executes is stopped first, and only a confirmed stop lets the
+ * reclaim proceed.
  *
- * - `not_running`: no stale `running` row to stop — the reclaim decides on its
- *   own as before.
- * - `stopped`: the runtime (and the device, for a device-hosted process)
- *   acknowledged the stop.
- * - `unconfirmed`: the stop was refused, unconfirmed or failed; the run may still
- *   be writing. `interruptTask` reports this as a resolved result, not a throw.
+ * The lease is claimed before the interrupt, with the same compare-and-set the
+ * reclaim uses: it moves the row out of `running`, so a heartbeat landing after
+ * the staleness read can no longer revive it — and a heartbeat that landed first
+ * makes the claim fail, leaving the healthy run untouched.
+ *
+ * - `not_running`: no stale run with a live executor — the reclaim decides on its
+ *   own, in its transaction, as before.
+ * - `fresh`: the run heartbeated before the claim; it is alive, reclaim nothing.
+ * - `stopped`: claimed, and the runtime (and the device, for a device-hosted
+ *   process) acknowledged the stop — or nothing executes it any more.
+ * - `unconfirmed`: claimed, but the stop was refused, unconfirmed or failed; the
+ *   run may still be writing. `interruptTask` reports this as a resolved result,
+ *   not a throw. The next tick finds the claimed row and retries the stop.
  */
 export const stopStaleRun = async (
   db: LobeChatDatabase,
   owner: { userId: string; workspaceId?: string },
-  run: { operationId: string; staleBefore: Date; topicId: string },
-): Promise<'not_running' | 'stopped' | 'unconfirmed'> => {
-  const operation = await new AgentOperationModel(db, owner.userId, owner.workspaceId).findById(
-    run.operationId,
-  );
+  run: { latestTotalCost?: number; operationId: string; staleBefore: Date; topicId: string },
+): Promise<'fresh' | 'not_running' | 'stopped' | 'unconfirmed'> => {
+  const operationModel = new AgentOperationModel(db, owner.userId, owner.workspaceId);
+  const operation = await operationModel.findById(run.operationId);
+  // A row this reclaim already claimed on an earlier tick, whose stop was not
+  // confirmed then.
+  const claimedEarlier =
+    operation?.status === 'abandoned' && operation.completionReason === 'lease_expired';
   // Only a `running` row is the lease's to reclaim; a run parked for a person or
   // a client is legitimately quiet and must not be stopped.
-  if (operation?.status !== 'running' || new Date(operation.updatedAt) >= run.staleBefore)
-    return 'not_running';
+  const stale = operation?.status === 'running' && new Date(operation.updatedAt) < run.staleBefore;
+  if (!claimedEarlier && !stale) return 'not_running';
+
   // With no runtime state and no device hosting it, nothing executes the run any
   // more. Interrupting it then would only retire the row outside the reclaim's
   // transaction, skipping its cost charge and its rollback.
-  if (!(await hasLiveExecutor(db, owner, run))) return 'not_running';
+  if (!(await hasLiveExecutor(db, owner, run))) return claimedEarlier ? 'stopped' : 'not_running';
+
+  if (
+    stale &&
+    !(await operationModel.settleStaleRunning(
+      run.operationId,
+      run.staleBefore,
+      run.latestTotalCost,
+    ))
+  )
+    return 'fresh';
 
   try {
     const result = await new AiAgentService(db, owner.userId, {

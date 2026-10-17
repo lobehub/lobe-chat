@@ -4,8 +4,13 @@ import type { AgentOperationModel } from '@/database/models/agentOperation';
 
 import { VERIFY_SETTLE_GRACE_MS } from './recoveryPolicy';
 
-/** Operations of the delivered topic read when dating its last activity. */
-const TOPIC_OPERATION_LOOKBACK = 5;
+/**
+ * Bound on the delivered topic's operations read when dating its last activity.
+ * A repair spawns child operations into the same topic, so a small newest-first
+ * sample could miss the long-lived root that is still heartbeating; a topic
+ * never holds anywhere near this many runs.
+ */
+const MAX_TOPIC_OPERATIONS = 500;
 
 interface DeliveredTopic {
   completedAt: Date | null;
@@ -35,13 +40,18 @@ export const isDeliverySettling = async (
 
   let lastActivity = new Date(topic.completedAt ?? topic.createdAt).getTime();
   if (topic.topicId) {
-    const recent = await operationModel.listByTopic(topic.topicId, TOPIC_OPERATION_LOOKBACK);
+    const recent = await operationModel.listByTopic(topic.topicId, MAX_TOPIC_OPERATIONS);
     const operations = await operationModel.findByIds(recent.map((operation) => operation.id));
     for (const operation of operations) {
-      const at = isAgentOperationInFlight(operation.status)
-        ? operation.updatedAt
-        : (operation.completedAt ?? operation.updatedAt);
-      lastActivity = Math.max(lastActivity, new Date(at).getTime());
+      if (!isAgentOperationInFlight(operation.status)) {
+        const endedAt = operation.completedAt ?? operation.updatedAt;
+        lastActivity = Math.max(lastActivity, new Date(endedAt).getTime());
+        continue;
+      }
+      // A repair parked for a person, a client or an async tool is legitimately
+      // quiet and can still resume: its stale heartbeat says nothing about it.
+      if (operation.status.startsWith('waiting_for_')) return true;
+      lastActivity = Math.max(lastActivity, new Date(operation.updatedAt).getTime());
     }
   }
 
