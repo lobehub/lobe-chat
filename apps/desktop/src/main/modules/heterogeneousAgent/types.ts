@@ -70,6 +70,8 @@ export interface ProviderBindingPlan {
   /** Best-effort synchronous release for app shutdown. */
   cleanupSync?: () => void;
   env: Record<string, string>;
+  /** Native selector ID for transports that select models after the handshake. */
+  model?: string;
   /** Environment variable that receives the per-prompt server operation token. */
   operationTokenEnvKey?: string;
   profileFiles?: ProviderBindingFilePlan[];
