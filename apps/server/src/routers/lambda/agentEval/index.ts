@@ -20,7 +20,7 @@ import { FileService } from '@/server/services/file';
 import { FileUploadService } from '@/server/services/fileUpload';
 import { AgentEvalRunWorkflow } from '@/server/workflows/agentEvalRun';
 
-import { evalRunInputConfigSchema } from './evalRunConfig.schema';
+import { evalRunInputConfigSchema } from '../evalRunConfig.schema';
 
 const rubricTypeSchema = z.enum([
   'equals',
