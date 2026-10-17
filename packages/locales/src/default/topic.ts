@@ -98,6 +98,7 @@ export default {
   'metaCard.pr.open': 'Open',
   'filter.filter': 'Filter',
   'filter.groupMode.byAgent': 'By agent',
+  'filter.groupMode.byDevice': 'By device',
   'filter.groupMode.byProject': 'By project',
   'filter.groupMode.byStatus': 'By status',
   'filter.groupMode.byTime': 'By time',
