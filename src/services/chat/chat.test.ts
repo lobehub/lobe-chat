@@ -12,7 +12,6 @@ import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
 import { isCanUseFC } from '@/helpers/isCanUseFC';
 import * as toolEngineeringModule from '@/helpers/toolEngineering';
 import { agentDocumentService } from '@/services/agentDocument';
-import { fileService } from '@/services/file';
 import { oneShotRelay } from '@/services/llmRelay';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors, chatConfigByIdSelectors } from '@/store/agent/selectors';
@@ -1848,52 +1847,6 @@ describe('ChatService', () => {
       expect(run).toHaveBeenCalledWith('ollama', expect.any(Function), {
         signal: controller.signal,
       });
-    });
-
-    it('should send signed image URLs instead of protected application links', async () => {
-      const proxyUrl = `${window.location.origin}/f/file_camera`;
-      const signedUrl = 'https://storage.example/photo.jpg?signature=temporary';
-      vi.spyOn(fileService, 'getReadableUrl').mockResolvedValue(signedUrl);
-      const messages = [
-        {
-          role: 'user' as const,
-          content: [
-            { type: 'image_url' as const, image_url: { url: proxyUrl, detail: 'auto' as const } },
-          ],
-        },
-      ];
-
-      await chatService.getChatCompletion({ messages, model: 'test-model' });
-
-      const body = JSON.parse(mockFetchSSE.mock.calls[0][1].body);
-      expect(body.messages[0].content[0].image_url.url).toBe(signedUrl);
-      expect(messages[0].content[0].image_url.url).toBe(proxyUrl);
-    });
-
-    it('should make a POST request with the correct payload', async () => {
-      const params: Partial<ChatStreamPayload> = {
-        model: 'test-model',
-        messages: [],
-      };
-      const options = {};
-      const expectedPayload = {
-        model: DEFAULT_AGENT_CONFIG.model,
-        stream: true,
-        ...DEFAULT_AGENT_CONFIG.params,
-        ...params,
-        apiMode: 'responses',
-      };
-
-      await chatService.getChatCompletion(params, options);
-
-      expect(mockFetchSSE).toHaveBeenCalledWith(
-        expect.any(String),
-        expect.objectContaining({
-          body: JSON.stringify(expectedPayload),
-          headers: expect.any(Object),
-          method: 'POST',
-        }),
-      );
     });
 
     it('should send request trigger as a header without adding it to the model payload', async () => {

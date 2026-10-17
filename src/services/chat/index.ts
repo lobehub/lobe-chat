@@ -450,7 +450,8 @@ class ChatService {
       payload.messages = await resolveChatImageUrls(
         payload.messages,
         window.location.origin,
-        fileService.getReadableUrl,
+        fileService.getReadableUrls,
+        signal,
       );
     }
 
