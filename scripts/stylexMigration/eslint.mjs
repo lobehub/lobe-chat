@@ -6,7 +6,11 @@ import { builtinRules } from 'eslint/use-at-your-own-risk';
 const readJson = (file) => JSON.parse(readFileSync(new URL(file, import.meta.url), 'utf8'));
 
 const legacyImports = readJson('./legacyImports.json');
-const legacyFiles = readJson('./legacyFiles.json');
+// `ignores` entries are globs: route segments like `[benchmarkId]` and `(main)`
+// would otherwise be read as character classes and groups.
+const legacyFiles = readJson('./legacyFiles.json').map((file) =>
+  file.replaceAll(/[!()*+?@[\]{}]/g, String.raw`\$&`),
+);
 
 /**
  * StyleX migration guard. New code may not import the emotion-backed style APIs
@@ -20,7 +24,9 @@ const legacyFiles = readJson('./legacyFiles.json');
 export const stylexMigrationConfig = [
   {
     files: ['**/*.{ts,tsx}'],
-    ignores: legacyFiles,
+    // Tests mock @lobehub/ui, including its style factories; the guard is about
+    // shipped code.
+    ignores: [...legacyFiles, '**/*.test.{ts,tsx}', '**/__tests__/**'],
     plugins: {
       'stylex-migration': {
         rules: { 'no-emotion-styles': builtinRules.get('no-restricted-imports') },
@@ -32,6 +38,7 @@ export const stylexMigrationConfig = [
         {
           paths: [
             {
+              allowTypeImports: true,
               importNames: legacyImports,
               message:
                 'Emotion styles are being migrated to StyleX. Use stylex.create with @lobehub/ui/stylex/cssVar.stylex (see the react skill).',
