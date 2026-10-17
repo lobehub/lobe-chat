@@ -50,8 +50,8 @@ import {
 import { after } from '@/server/utils/scheduleAfterResponse';
 import { TransferErrorCode } from '@/types/transferError';
 
-import { assertWorkspaceRowManageable } from './_helpers/assertWorkspaceRowManageable';
-import { groupListSchema, listSchema } from './_helpers/taskListSchemas';
+import { assertWorkspaceRowManageable } from '../_helpers/assertWorkspaceRowManageable';
+import { groupListSchema, listSchema } from '../_helpers/taskListSchemas';
 
 const taskProcedure = wsCompatProcedure.use(serverDatabase).use(async (opts) => {
   const { ctx } = opts;
