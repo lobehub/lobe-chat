@@ -103,14 +103,6 @@ export class DocumentActionImpl {
    * before that row was written, so it must not replace it.
    */
   readonly #adoptions = new Map<string, number>();
-  /**
-   * Editor entries (`documents[id]`) adopted from this replica. Tracked apart
-   * from `documentDetailMap` because a bounded replica evicts unmounted entries
-   * (`persist.maxEntries`) while their editor rows stay; a scope reset must
-   * still drop those, or reopening the id under another identity would treat
-   * the previous identity's body as loaded.
-   */
-  readonly #derivedIds = new Set<string>();
   readonly #detail;
 
   constructor(set: Setter, get: () => DocumentStore, _api?: unknown) {
@@ -151,6 +143,18 @@ export class DocumentActionImpl {
   }
 
   /**
+   * Advance the adoption generation of `documentId` for a write confirmed under
+   * `scope`. A write that settles after an account / workspace switch is dropped
+   * by the replica, so it must not advance the guard either: a read of the same
+   * id already in flight under the new identity would otherwise discard its
+   * fresh response for the hydrated row.
+   */
+  #countAdoption = (documentId: string, scope: string): void => {
+    if (scope !== documentDetailResource.scope.get()) return;
+    this.#adoptions.set(documentId, (this.#adoptions.get(documentId) ?? 0) + 1);
+  };
+
+  /**
    * Scope reset (account / workspace switch): drop the projection together with
    * every editor entry derived from it, in the same commit.
    *
@@ -162,14 +166,15 @@ export class DocumentActionImpl {
    * never flushed under the new one.
    */
   #clearDetailView = (state: DocumentStore): Partial<DocumentStore> => {
-    const derivedIds = [
-      ...new Set([...Object.keys(state.documentDetailMap), ...this.#derivedIds]),
-    ].filter((id) => state.documents[id]);
-    this.#derivedIds.clear();
-    if (derivedIds.length === 0) return detailLens.clear(state);
+    // Every editor row, not only those whose detail entry is still in the map:
+    // a bounded replica evicts unmounted entries (`persist.maxEntries`) and the
+    // highlight editor creates its row directly (`addDocument`), yet each row
+    // still holds the previous identity's body.
+    const editorIds = Object.keys(state.documents);
+    if (editorIds.length === 0) return detailLens.clear(state);
 
     const documents = { ...state.documents };
-    for (const id of derivedIds) {
+    for (const id of editorIds) {
       this.#cleanupDebouncedSave(id);
       delete documents[id];
     }
@@ -350,7 +355,6 @@ export class DocumentActionImpl {
    * previous identity and must not be sent under the new one.
    */
   #clearDerivedDocument = (documentId: string): void => {
-    this.#derivedIds.delete(documentId);
     if (!this.#get().documents[documentId]) return;
     this.cancelDebouncedSave(documentId);
     this.#get().internal_dispatchDocument(
@@ -386,7 +390,6 @@ export class DocumentActionImpl {
     const currentActiveId = this.#get().activeDocumentId;
     if (currentActiveId && currentActiveId !== documentId) return;
 
-    this.#derivedIds.add(documentId);
     if (this.#get().documents[documentId]) {
       this.#get().reconcileRemote(documentId, document);
       if (sourceType === 'notebook' && topicId) {
@@ -552,11 +555,12 @@ export class DocumentActionImpl {
       documentId,
       (detail) => (detail.document ? { document: { ...detail.document, ...patch } } : detail),
       async () => {
+        const scope = documentDetailResource.scope.get();
         const result = await serverCall();
         // Confirmed: a read started before this write may return the pre-write
         // row with the same `updatedAt`, so count it as an adoption (see
         // `#adoptions`) — that read keeps the committed entry instead.
-        this.#adoptions.set(documentId, (this.#adoptions.get(documentId) ?? 0) + 1);
+        this.#countAdoption(documentId, scope);
         return result;
       },
     );
@@ -594,7 +598,7 @@ export class DocumentActionImpl {
     document: DocumentItem | null,
     scope?: string,
   ): void => {
-    this.#adoptions.set(documentId, (this.#adoptions.get(documentId) ?? 0) + 1);
+    this.#countAdoption(documentId, scope ?? documentDetailResource.scope.get());
     this.#detail.replace(documentId, { document }, scope);
   };
 }

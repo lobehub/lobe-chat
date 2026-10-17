@@ -84,6 +84,21 @@ describe('localFileService', () => {
     expect(isTerminalLocalFileError(new Error('Failed to load local file: 404'))).toBe(false);
   });
 
+  it('treats a file that vanished before its preview URL exists as terminal', async () => {
+    mockLocalSystem.getLocalFilePreviewUrl.mockResolvedValue({
+      code: 'not_found',
+      error: 'ENOENT: no such file or directory',
+      success: false,
+    });
+
+    const error = await localFileService
+      .getLocalFilePreview({ path: '/repo/gone.md', workingDirectory: '/repo' })
+      .catch((reason: unknown) => reason);
+
+    expect(isTerminalLocalFileError(error)).toBe(true);
+    expect((error as LocalFileResponseError).status).toBe(404);
+  });
+
   it('returns the entry directory as the HTML workspace resource base URL', async () => {
     mockLocalSystem.getLocalFilePreviewUrl.mockResolvedValue({
       success: true,

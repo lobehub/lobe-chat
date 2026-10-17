@@ -355,6 +355,30 @@ describe('document detail replica', () => {
     expect(useDocumentStore.getState().documents['doc-1']).toBeUndefined();
   });
 
+  it('drops editor rows created outside the replica (highlight editor) on a scope reset', async () => {
+    vi.mocked(documentService.getDocumentById).mockImplementation(
+      async (id: string) => documentRow({ id }) as any,
+    );
+    // The highlight editor mirrors its buffer with `addDocument`, never through
+    // `useFetchDocument`, so no detail entry is tied to this row.
+    act(() =>
+      useDocumentStore.getState().internal_dispatchDocument({
+        id: 'doc-highlight',
+        type: 'addDocument',
+        value: { content: 'previous identity', lastSavedContent: 'previous identity' } as any,
+      }),
+    );
+    const mounted = renderDocument('doc-2', createEditor());
+    await waitFor(() => expect(useDocumentStore.getState().documents['doc-2']).toBeDefined());
+
+    vi.mocked(documentService.getDocumentById).mockImplementation(pending as any);
+    useScope(`document-user-${randomUUID()}:personal`);
+    mounted.rerender();
+
+    await waitFor(() => expect(useDocumentStore.getState().documentDetailMap).toEqual({}));
+    expect(useDocumentStore.getState().documents['doc-highlight']).toBeUndefined();
+  });
+
   it('keeps no previous-identity editor state when the new scope’s fetch fails', async () => {
     vi.mocked(documentService.getDocumentById).mockResolvedValue(documentRow() as any);
     const editor = createEditor();

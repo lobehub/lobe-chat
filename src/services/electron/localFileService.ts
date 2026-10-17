@@ -169,12 +169,25 @@ const isTextPreviewMimeType = (mimeType: string): boolean =>
 export class LocalFileResponseError extends Error {
   readonly status: number;
 
-  constructor(status: number) {
-    super(`Failed to load local file: ${status}`);
+  constructor(status: number, message?: string) {
+    super(message || `Failed to load local file: ${status}`);
     this.name = 'LocalFileResponseError';
     this.status = status;
   }
 }
+
+/**
+ * The error for a failed preview result: a terminal `code` (set by the desktop
+ * main process or a remote device) becomes a {@link LocalFileResponseError} with
+ * the matching status, anything else stays a plain (transient) error.
+ */
+export const localFilePreviewResultError = (
+  result: { code?: 'forbidden' | 'not_found'; error?: string },
+  fallback: string,
+): Error =>
+  result.code
+    ? new LocalFileResponseError(result.code === 'not_found' ? 404 : 403, result.error)
+    : new Error(result.error || fallback);
 
 /** The file no longer exists or may no longer be read (deleted, moved, denied). */
 export const isTerminalLocalFileError = (error: unknown): boolean =>
@@ -363,7 +376,7 @@ class LocalFileService {
     const result = await ensureElectronIpc().localSystem.getLocalFilePreviewUrl(params);
 
     if (!result.success || !result.url) {
-      throw new Error(result.error || 'Missing local file preview URL');
+      throw localFilePreviewResultError(result, 'Missing local file preview URL');
     }
 
     return fetchLocalFilePreview(result.url, params.accept, params.resourceScope);

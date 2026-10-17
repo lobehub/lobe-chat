@@ -222,6 +222,54 @@ describe('document detail without an editor (portal / goal / preview views)', ()
     );
   });
 
+  it('does not let a rename confirmed after an identity switch hold back the new scope’s read', async () => {
+    vi.mocked(documentService.getDocumentById).mockResolvedValue(
+      documentRow({ title: 'Old' }) as any,
+    );
+    const { rerender, result } = renderDetail('doc-1');
+    await waitFor(() => expect(result.current.data?.title).toBe('Old'));
+
+    // A rename starts under this identity…
+    let confirm: () => void = () => {};
+    let rename: Promise<unknown> = Promise.resolve();
+    act(() => {
+      rename = useDocumentStore
+        .getState()
+        .optimisticDocumentDetail(
+          'doc-1',
+          { title: 'Renamed' },
+          () => new Promise<void>((resolve) => (confirm = resolve)),
+        );
+    });
+
+    // …the user switches identity, and that identity reads the same id.
+    let answer: (row: unknown) => void = () => {};
+    vi.mocked(documentService.getDocumentById).mockImplementation(
+      () => new Promise((resolve) => (answer = resolve)) as any,
+    );
+    const nextScope = `document-detail-user-${randomUUID()}:personal`;
+    // That identity has its own persisted copy, hydrated before its read answers.
+    await documentDetailResource.storage!.set(
+      { queryKey: 'doc-1', scope: nextScope },
+      { data: { document: documentRow({ title: 'Other identity (cached)' }) }, updatedAt: 1 },
+    );
+    useScope(nextScope);
+    rerender();
+    await waitFor(() => expect(result.current.data?.title).toBe('Other identity (cached)'));
+    await waitFor(() => expect(documentService.getDocumentById).toHaveBeenCalledTimes(2));
+
+    // The old rename settles first, then the new identity's read answers.
+    await act(async () => {
+      confirm();
+      await rename.catch(() => undefined);
+    });
+    await act(async () => {
+      answer(documentRow({ title: 'Other identity (fresh)' }));
+    });
+
+    await waitFor(() => expect(result.current.data?.title).toBe('Other identity (fresh)'));
+  });
+
   it('keeps a confirmed rename over a read that started before it', async () => {
     await documentDetailResource.storage!.set(
       { queryKey: 'doc-1', scope },
