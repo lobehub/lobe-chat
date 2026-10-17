@@ -66,7 +66,7 @@ import {
 } from '@/store/agent/selectors';
 import { agentGroupByIdSelectors, getChatGroupStoreState } from '@/store/agentGroup';
 import { getPendingSandboxSelection } from '@/store/chat/pendingSandboxSelection';
-import { getPendingTopicRepos } from '@/store/chat/pendingTopicRepos';
+import { consumePendingTopicRepos, getPendingTopicRepos } from '@/store/chat/pendingTopicRepos';
 import {
   dbMessageSelectors,
   displayMessageSelectors,
@@ -521,6 +521,7 @@ export class ConversationLifecycleActionImpl {
         findProjectDirectory(projectDirectoryId) ??
         (await projectWorkingDirectoryService.resolve(projectDirectoryId)).data;
       if (stagedDirectoryId) stagedDirectory = directory;
+      if (stagedDirectory) consumePendingTopicRepos(ownerAgentId); // a cloud repo pick conflicts
       if (!isGatewayMode)
         throw new Error('Enable Gateway Mode to run in a project working directory');
       if (
@@ -1286,15 +1287,14 @@ export class ConversationLifecycleActionImpl {
             deviceSelectors.getDeviceDefaultCwd(runCwdDeviceId)(getDeviceStoreState()),
           fallback: heteroCwdContext?.desktopPath ?? heteroCwdContext?.homePath,
           legacyAgentWorkingDirectory: agentState.localAgentWorkingDirectoryMap[agentId],
+          // A project's staged directory, not the agent default, is the new topic's cwd.
+          topicWorkingDirectory: stagedDirectory?.path,
           workspaceScoped,
         }
       : undefined;
-    const agentCwdParams = stagedDirectory
-      ? { topicWorkingDirectory: stagedDirectory.path }
-      : runCwdParams;
-    const agentWorkingDirectory = agentCwdParams && resolveAgentWorkingDirectory(agentCwdParams);
+    const agentWorkingDirectory = runCwdParams && resolveAgentWorkingDirectory(runCwdParams);
     const agentWorkingDirectoryConfig =
-      agentCwdParams && resolveAgentWorkingDirectoryConfig(agentCwdParams);
+      runCwdParams && resolveAgentWorkingDirectoryConfig(runCwdParams);
     // Heterogeneous CLI agents (Claude Code, Codex, …) store sessions per-cwd
     // (`~/.claude/projects/<encoded-cwd>/`). Anchor their session cwd to the
     // SOURCE repo, NOT the selected worktree, so switching worktree keeps cwd +

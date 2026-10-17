@@ -3,6 +3,7 @@ import { act, renderHook } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { agentService } from '@/services/agent';
+import { getPendingTopicRepos, setPendingTopicRepos } from '@/store/chat/pendingTopicRepos';
 import { type ProjectDirectory, useProjectDirectoryStore } from '@/store/projectWorkingDirectory';
 import { getSessionStoreState } from '@/store/session';
 import { useUserStore } from '@/store/user';
@@ -66,6 +67,7 @@ beforeEach(() => {
 
 afterEach(() => {
   mockConstEnv.isDesktop = false;
+  setPendingTopicRepos(TEST_IDS.SESSION_ID, []);
   useProjectDirectoryStore.setState({ directoriesMap: {} });
   vi.restoreAllMocks();
 });
@@ -118,6 +120,49 @@ describe('sendMessage in a project directory', () => {
         projectWorkingDirectoryId: 'dir-85',
       }),
     );
+  });
+
+  // A cloud repo picked in the composer before the project "+" would otherwise
+  // win both metadata paths, binding the topic to one directory but starting it
+  // in another.
+  it('lets the staged project directory win over a pending cloud repo pick', async () => {
+    mockConstEnv.isDesktop = true;
+    setupMockSelectors({
+      agentConfig: { agencyConfig: { boundDeviceId: DEVICE_ID, executionTarget: 'device' } },
+    });
+    const agentId = TEST_IDS.SESSION_ID;
+    setPendingTopicRepos(agentId, ['lobehub/cloud-repo']);
+    let pendingAtDispatch: string[] | undefined;
+    const executeGatewayAgentSpy = vi.fn().mockImplementation(async () => {
+      pendingAtDispatch = getPendingTopicRepos(agentId);
+      return { topicId: 'tpc_new' };
+    });
+
+    act(() => {
+      useChatStore.setState({
+        activeAgentId: agentId,
+        activeTopicId: undefined,
+        executeGatewayAgent: executeGatewayAgentSpy,
+        isGatewayModeEnabled: () => true,
+        pendingNewTopicDirectory: { agentId, projectWorkingDirectoryId: 'dir-85' },
+      });
+    });
+
+    const { result } = renderHook(() => useChatStore());
+    await act(async () => {
+      await result.current.sendMessage({
+        context: { agentId, threadId: null, topicId: null },
+        message: 'Start in the project',
+      });
+    });
+
+    const params = executeGatewayAgentSpy.mock.calls[0][0];
+    expect(params.projectWorkingDirectoryId).toBe('dir-85');
+    expect(params.optimisticTopic.metadata).not.toHaveProperty('repos');
+    expect(params.optimisticTopic.metadata).toEqual(
+      expect.objectContaining({ workingDirectoryConfig: { path: PROJECT_PATH } }),
+    );
+    expect(pendingAtDispatch).toEqual([]);
   });
 
   // `/newTopic` from a project topic creates a topic outside the project, so it
