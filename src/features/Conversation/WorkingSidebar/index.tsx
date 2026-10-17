@@ -84,10 +84,7 @@ import { sandboxActions, sandboxSelectors, useSandboxStore } from '@/store/sandb
 import { type ComposerTarget, createComposerTarget, resolveThreadComposerTarget } from '../types';
 import Files from './Files';
 import FilesPrefetch from './Files/FilesPrefetch';
-import {
-  filesLocationContextKey,
-  useRememberedFilesLocation,
-} from './Files/useRememberedFilesLocation';
+import { useFilesPaneLocation } from './Files/useFilesPaneLocation';
 import { sidebarWidthBudget } from './fitsBesidePortal';
 import { MAX_PANEL_WIDTH, MIN_PANEL_WIDTH, OVERVIEW_PANEL_WIDTH } from './layout';
 import Overview from './Overview';
@@ -426,27 +423,18 @@ const AgentWorkingSidebar = memo<AgentWorkingSidebarProps>(({ availableWidth }) 
   // An instance is what makes a sandbox tree addressable. Persistent mode with
   // none picked is the workspace root, which the execution plane can only
   // resolve through a conversation — so that one still waits for the topic.
-  const isSandboxFiles = isSandboxExecution && !!(sandboxInstanceId || sandboxTopicId);
-  const liveFilesDirectory = isSandboxFiles
-    ? sandboxDirectoryKnown
-      ? sandboxDirectory
-      : undefined
-    : filesystemEnvironmentAvailable
-      ? workingDirectory
-      : undefined;
-  // A device-backed directory is only final once the device list has loaded;
-  // until then the tree opens where this conversation last was, so its cached
-  // index can paint instead of a home-directory read or a missing tab.
-  const devicesSettled = useDeviceStore((s) => s.isDevicesInit);
-  const filesLocation = useRememberedFilesLocation(
-    isSandboxFiles ? undefined : filesLocationContextKey(topicId, activeAgentId),
-    liveFilesDirectory === undefined
-      ? undefined
-      : { deviceId: remoteDeviceId, directory: liveFilesDirectory },
-    devicesSettled,
-  );
-  const filesDirectory = filesLocation?.directory;
-  const filesDeviceId = filesLocation?.deviceId;
+  const { deviceId: filesDeviceId, directory: filesDirectory } = useFilesPaneLocation({
+    activeAgentId,
+    filesystemEnvironmentAvailable,
+    isSandboxExecution,
+    remoteDeviceId,
+    sandboxDirectory,
+    sandboxDirectoryKnown,
+    sandboxInstanceId,
+    sandboxTopicId,
+    topicId,
+    workingDirectory,
+  });
   const filesAvailable = !isChatMode && filesDirectory !== undefined;
   const reviewAvailable = (isLocalExecution || isDeviceMode) && !!workingDirectory && !!repoType;
   const snapshotConfig =
