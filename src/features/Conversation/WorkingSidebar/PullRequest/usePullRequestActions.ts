@@ -26,6 +26,11 @@ interface UsePullRequestActionsParams {
   locked?: boolean;
   mutateDetail: () => Promise<unknown>;
   number: number;
+  /**
+   * The merge context (permissions, required checks) is still last session's:
+   * refuse policy-driven mutations, but let comments through.
+   */
+  policyLocked?: boolean;
   workingDirectory: string;
 }
 
@@ -33,6 +38,7 @@ export const usePullRequestActions = ({
   deviceId,
   locked = false,
   mutateDetail,
+  policyLocked = false,
   number,
   workingDirectory,
 }: UsePullRequestActionsParams) => {
@@ -42,10 +48,13 @@ export const usePullRequestActions = ({
   const retryRef = useRef<() => Promise<boolean>>(undefined);
   const lockedRef = useRef(locked);
   lockedRef.current = locked;
+  const policyLockedRef = useRef(policyLocked);
+  policyLockedRef.current = policyLocked;
 
   const perform = useCallback(
     async (kind: PullRequestBusy, request: () => Promise<DeviceGitPullRequestActionResult>) => {
       if (busyRef.current || lockedRef.current) return false;
+      if (policyLockedRef.current && kind !== 'comment') return false;
       busyRef.current = true;
       setBusy(kind);
       const isDockAction = DOCK_KINDS.has(kind);

@@ -14,6 +14,7 @@ import {
 
 import { OverviewRow } from '../Overview/OverviewRow';
 import { sectionStyles } from '../Overview/sectionStyles';
+import { resolvePullRequestActionLock } from './actionLock';
 import Header from './Header';
 import MergeDock from './MergeDock';
 import Sections from './Sections';
@@ -70,17 +71,28 @@ const PullRequest = memo<PullRequestProps>(
       data?.detail?.number,
       active && data?.detail?.state === 'open',
     );
-    const { data: context } = useFetchGitPullRequestMergeContext(
-      deviceId,
-      workingDirectory,
-      data?.detail ?? undefined,
-    );
+    const {
+      data: cachedContext,
+      error: contextError,
+      isConfirmed: contextConfirmed,
+    } = useFetchGitPullRequestMergeContext(deviceId, workingDirectory, data?.detail ?? undefined);
     const { data: aheadBehind } = useFetchGitAheadBehind(deviceId, workingDirectory);
     // Stale content stays paintable; actions wait for the live reads.
-    const actionsLocked = !confirmed || !detailConfirmed;
+    const {
+      context,
+      locked: actionsLocked,
+      policyLocked,
+    } = resolvePullRequestActionLock({
+      confirmed,
+      context: cachedContext,
+      contextConfirmed,
+      contextError,
+      detailConfirmed,
+    });
     const actions = usePullRequestActions({
       deviceId,
       locked: actionsLocked,
+      policyLocked,
       mutateDetail: mutate,
       number,
       workingDirectory,
@@ -162,7 +174,7 @@ const PullRequest = memo<PullRequestProps>(
           viewportProps={{ className: styles.viewport, style: { overflowX: 'hidden' } }}
         >
           <Header
-            actionsDisabled={actionsLocked}
+            actionsDisabled={actionsLocked || policyLocked}
             activityLoaded={!!activity.data}
             detail={detail}
             deviceId={deviceId}
@@ -180,7 +192,7 @@ const PullRequest = memo<PullRequestProps>(
         </ScrollArea>
         <MergeDock
           busy={actions.busy}
-          contextLoading={context === undefined || actionsLocked}
+          contextLoading={context === undefined || actionsLocked || policyLocked}
           detail={detail}
           error={actions.error}
           local={local}

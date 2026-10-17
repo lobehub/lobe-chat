@@ -64,6 +64,23 @@ describe('usePullRequestActions', () => {
     expect(runPullRequestAction).toHaveBeenCalledTimes(1);
   });
 
+  it('lets comments through but refuses policy actions while the merge context is stale', async () => {
+    runPullRequestAction.mockResolvedValue({ success: true });
+    const mutateDetail = vi.fn().mockResolvedValue(undefined);
+    const { result } = renderHook(() =>
+      usePullRequestActions({ ...params, mutateDetail, policyLocked: true }),
+    );
+
+    await act(async () => {
+      expect(
+        await result.current.run({ headRefOid: 'a'.repeat(40), method: 'squash', type: 'merge' }),
+      ).toBe(false);
+      expect(await result.current.run({ body: 'hi', type: 'comment' })).toBe(true);
+    });
+    expect(runPullRequestAction).toHaveBeenCalledTimes(1);
+    expect(runPullRequestAction.mock.calls[0][0].action.type).toBe('comment');
+  });
+
   it('marks busy during the action and clears it afterwards', async () => {
     const pending = deferred<{ success: boolean }>();
     runPullRequestAction.mockReturnValue(pending.promise);
