@@ -2,9 +2,9 @@
 
 import { DEFAULT_AVATAR } from '@lobechat/const';
 import type { BuiltinStreamingProps } from '@lobechat/types';
-import { Flexbox, Markdown } from '@lobehub/ui';
-import { Avatar } from '@lobehub/ui';
-import { createStaticStyles, useTheme } from '@lobehub/ui';
+import { Avatar, Flexbox, Markdown, useTheme } from '@lobehub/ui';
+import { cssVar } from '@lobehub/ui/stylex/cssVar.stylex';
+import * as stylex from '@stylexjs/stylex';
 import { memo } from 'react';
 
 import { useAgentGroupStore } from '@/store/agentGroup';
@@ -12,22 +12,11 @@ import { agentGroupSelectors } from '@/store/agentGroup/selectors';
 
 import type { ExecuteTaskParams } from '../../../types';
 
-const styles = createStaticStyles(({ css, cssVar }) => ({
-  agentTitle: css`
-    font-size: 14px;
-    font-weight: 500;
-    color: ${cssVar.colorText};
-  `,
-  container: css`
-    padding: 12px;
-    border-radius: 8px;
-    background: ${cssVar.colorFillQuaternary};
-  `,
-  task: css`
-    font-size: 13px;
-    color: ${cssVar.colorTextSecondary};
-  `,
-}));
+const styles = stylex.create({
+  agentTitle: { fontSize: '14px', fontWeight: 500, color: cssVar.colorText },
+  container: { padding: '12px', borderRadius: '8px', background: cssVar.colorFillQuaternary },
+  task: { fontSize: '13px', color: cssVar.colorTextSecondary },
+});
 
 export const ExecuteTaskStreaming = memo<BuiltinStreamingProps<ExecuteTaskParams>>(({ args }) => {
   const { agentId, instruction } = args || {};
@@ -44,7 +33,7 @@ export const ExecuteTaskStreaming = memo<BuiltinStreamingProps<ExecuteTaskParams
   if (!instruction) return null;
 
   return (
-    <div className={styles.container}>
+    <div {...stylex.props(styles.container)}>
       <Flexbox gap={8}>
         <Flexbox horizontal align={'center'} gap={8}>
           <Avatar
@@ -53,9 +42,9 @@ export const ExecuteTaskStreaming = memo<BuiltinStreamingProps<ExecuteTaskParams
             shape={'square'}
             size={24}
           />
-          <span className={styles.agentTitle}>{agent?.title || 'Agent'}</span>
+          <span {...stylex.props(styles.agentTitle)}>{agent?.title || 'Agent'}</span>
         </Flexbox>
-        <div className={styles.task}>
+        <div {...stylex.props(styles.task)}>
           <Markdown animated variant={'chat'}>
             {instruction}
           </Markdown>
