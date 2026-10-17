@@ -248,6 +248,38 @@ describe('copyInstance', () => {
     expect(await instancesOf(created.id)).toHaveLength(1);
   });
 
+  it('copies Files from the owned persisted directory and keeps Code snapshot-only', async () => {
+    for (const kind of ['files', 'code'] as const) {
+      const created = await createEnvironment({ configuration: { kind }, name: kind });
+      const copy = await caller().copyInstance({
+        id: created.defaultInstance.id,
+        name: 'copy',
+        workingDirectory: `${kind}-copy`,
+      });
+      expect(plane.copyInstance).toHaveBeenLastCalledWith({
+        from: created.defaultInstance.id,
+        instanceDir: `${kind}-copy`,
+        ...(kind === 'files' && { sourceInstanceDir: created.defaultInstance.workingDirectory }),
+        to: copy.id,
+      });
+    }
+  });
+
+  it('removes a new Files row and preserves the source when the backend refuses the copy', async () => {
+    const created = await createEnvironment({ configuration: { kind: 'files' }, name: 'Files' });
+    plane.copyInstance.mockRejectedValue(new Error('copy-files unsupported'));
+    await expect(
+      caller().copyInstance({
+        id: created.defaultInstance.id,
+        name: 'copy',
+        workingDirectory: 'failed-copy',
+      }),
+    ).rejects.toThrow();
+    const remaining = await instancesOf(created.id);
+    expect(remaining).toHaveLength(1);
+    expect(remaining[0].id).toBe(created.defaultInstance.id);
+  });
+
   it('copies an idle source into a ready instance', async () => {
     const created = await createEnvironment({ name: 'Idle' });
 
