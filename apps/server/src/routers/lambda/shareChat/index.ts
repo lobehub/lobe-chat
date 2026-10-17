@@ -49,11 +49,11 @@ import { FileService } from '@/server/services/file';
 import { FileUploadService } from '@/server/services/fileUpload';
 import { reserveUpload } from '@/server/services/fileUploadReservation';
 
-import { mapAgentInterventionTRPCError } from './_helpers/agentInterventionError';
-import { assertAgentShareVisitorEnabled } from './_helpers/agentShareFeatureGate';
-import { execAgentClientIdsSchema } from './_helpers/execAgentClientIds';
-import { toClientExecAgentResult } from './_helpers/groupMemberContinuationResult';
-import { ResolveAgentInterventionBySourceSchema } from './_schema/agentIntervention';
+import { mapAgentInterventionTRPCError } from '../_helpers/agentInterventionError';
+import { assertAgentShareVisitorEnabled } from '../_helpers/agentShareFeatureGate';
+import { execAgentClientIdsSchema } from '../_helpers/execAgentClientIds';
+import { toClientExecAgentResult } from '../_helpers/groupMemberContinuationResult';
+import { ResolveAgentInterventionBySourceSchema } from '../_schema/agentIntervention';
 import {
   type AgentInterventionDispatchContext,
   bridgeLegacyResumeToSourceIntervention,
@@ -61,7 +61,7 @@ import {
   ResumeApprovalDecisionSchema,
   ResumeToolResultSchema,
   validateResumePayload,
-} from './aiAgent';
+} from '../aiAgent';
 
 const log = debug('lobe-server:router:shareChat');
 
