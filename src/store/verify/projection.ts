@@ -2,7 +2,7 @@ import type { AcceptanceSubjectType } from '@lobechat/types';
 
 import type { VerifyCheckResultItem } from '@/database/schemas/verify';
 import { IndexedDBQueryProjectionStorage } from '@/libs/queryProjectionStorage';
-import { defineReplica, REPLICA_INDEX_KEY, type ReplicaStorage } from '@/libs/replica';
+import { defineReplica } from '@/libs/replica';
 import type { AcceptanceBundle, AcceptanceBySubject, VerifyStateResponse } from '@/services/verify';
 
 /**
@@ -66,9 +66,11 @@ const isFailedResult = (result: VerifyCheckResultItem | undefined): boolean =>
 /**
  * A `failed` run with a failed required `auto_repair` check is about to flip to
  * `repairing` (the server spawns the repair right after settling the verdict),
- * so that verdict is not final yet.
+ * so that verdict is not final yet — unless the server recorded that it
+ * declined the repair (cap reached, superseded round, no spawner, spawn failed).
  */
 const awaitsAutoRepair = ({ results, state }: VerifyRunSnapshot): boolean => {
+  if (state?.verifyAutoRepair === 'declined') return false;
   const byItem = new Map(results.map((result) => [result.checkItemId, result]));
   return (state?.verifyPlan ?? []).some(
     (item) =>
@@ -89,22 +91,14 @@ const VERIFY_RUN_NAME = 'verifyRun';
 const VERIFY_RUN_VERSION = 1;
 
 /**
- * IndexedDB rows of settled runs only. A planned / verifying / repairing run,
- * or a failed run whose auto-repair is still to come, is never written, so a reload cannot replay a stale spinner or a premature
- * verdict; a settled run that starts moving again has its row dropped. The
- * replica index row passes through untouched.
+ * Persist settled runs only. A planned / verifying / repairing run, or a failed
+ * run whose auto-repair is still to come, maps to `null`: the engine then drops
+ * any earlier row and keeps the key out of its index (so filtered runs never
+ * count toward `persist.maxEntries`). A reload cannot replay a stale spinner or
+ * a premature verdict.
  */
-const settledRunsOnly = (
-  storage: ReplicaStorage<VerifyRunSnapshot>,
-): ReplicaStorage<VerifyRunSnapshot> => ({
-  get: (key) => storage.get(key),
-  getStrict: (key) => storage.getStrict!(key),
-  remove: (key) => storage.remove(key),
-  set: (key, row) =>
-    key.queryKey === REPLICA_INDEX_KEY || isSettledVerifyRun(row.data)
-      ? storage.set(key, row)
-      : storage.remove(key),
-});
+export const toPersistedVerifyRun = (run: VerifyRunSnapshot): VerifyRunSnapshot | null =>
+  isSettledVerifyRun(run) ? run : null;
 
 /**
  * The verify card of one Agent Run (`verifyRunMap[operationId]`), read by the
@@ -120,10 +114,8 @@ export const verifyRunResource = defineReplica<string, VerifyRunSnapshot>({
   key: (operationId) => operationId,
   name: VERIFY_RUN_NAME,
   persist: { maxEntries: 100 },
-  storage: settledRunsOnly(
-    new IndexedDBQueryProjectionStorage<VerifyRunSnapshot>({
-      namespace: `replica:${VERIFY_RUN_NAME}:v${VERIFY_RUN_VERSION}`,
-    }),
-  ),
+  storage: new IndexedDBQueryProjectionStorage<VerifyRunSnapshot>({
+    namespace: `replica:${VERIFY_RUN_NAME}:v${VERIFY_RUN_VERSION}`,
+  }),
   version: VERIFY_RUN_VERSION,
 });

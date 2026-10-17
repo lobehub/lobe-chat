@@ -152,6 +152,34 @@ describe('verify run replica', () => {
     expect(await stored()).toBeUndefined();
   });
 
+  it('persists a failed auto-repair run once the server declined the repair', async () => {
+    const declined = run('failed', 'failed');
+    declined.state!.verifyPlan = [
+      { id: 'item-1', onFail: 'auto_repair', required: true, title: 'Renders the card' },
+    ] as never;
+    // Repair cap reached / superseded / no spawner: the failure is the final verdict.
+    declined.state!.verifyAutoRepair = 'declined';
+    serve(declined);
+
+    renderHook(() => useVerifyStore.getState().useFetchVerifyRun(OP), { wrapper });
+
+    await waitFor(async () => expect((await stored())?.state?.verifyStatus).toBe('failed'));
+  });
+
+  it('keeps an unsettled run out of the replica index', async () => {
+    serve(run('verifying', 'running'));
+
+    renderHook(() => useVerifyStore.getState().useFetchVerifyRun(OP), { wrapper });
+
+    await waitFor(() =>
+      expect(useVerifyStore.getState().verifyRunMap[OP]?.state?.verifyStatus).toBe('verifying'),
+    );
+    await new Promise((resolve) => setTimeout(resolve, 50));
+    // A ghost index key would count toward `persist.maxEntries` and evict real rows.
+    const index = (await storage.get({ queryKey: REPLICA_INDEX_KEY, scope }))?.data as unknown;
+    expect((index as string[] | undefined) ?? []).not.toContain(OP);
+  });
+
   it('persists a failed run whose failed checks are manual', async () => {
     const manual = run('failed', 'failed');
     manual.state!.verifyPlan = [

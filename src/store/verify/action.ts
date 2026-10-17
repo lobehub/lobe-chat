@@ -17,6 +17,7 @@ import {
   acceptanceBundleResource,
   acceptanceBySubjectKey,
   acceptanceBySubjectResource,
+  toPersistedVerifyRun,
   verifyRunResource,
   type VerifyRunSnapshot,
 } from './projection';
@@ -102,6 +103,7 @@ export class ActionImpl {
       merge: (incoming, confirmed) => (isEqual(incoming, confirmed) ? undefined : incoming),
       set,
       stateKey: 'verifyRunReplica',
+      toPersisted: toPersistedVerifyRun,
       view: verifyRunLens,
     });
   }
