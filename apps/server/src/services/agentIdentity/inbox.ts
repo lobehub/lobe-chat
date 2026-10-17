@@ -52,6 +52,9 @@ export class AgentInboxService {
 
   markRead = (ids: string[]) => this.model.markRead(ids);
 
+  markWaitConsumed = (id: string, operationId: string) =>
+    this.model.markWaitConsumed(id, operationId);
+
   markAllRead = (agentId: string) => this.model.markAllRead(agentId);
 
   listSince = (params: Parameters<AgentInboxModel['listSince']>[0]) => this.model.listSince(params);

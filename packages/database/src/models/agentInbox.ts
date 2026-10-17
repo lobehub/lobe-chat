@@ -39,6 +39,13 @@ export interface RecordInboxMessageResult {
  * this narrow is what lets the webhook path be idempotent by construction —
  * `(account_id, provider_message_id)` is unique, so a redelivery is a no-op.
  */
+/**
+ * How long a wake claim holds. Starting a run returns once its operation
+ * exists, so a live wake finishes in seconds; ten minutes only ever expires on
+ * a worker that died holding the claim.
+ */
+export const WAKE_CLAIM_LEASE_SECONDS = 10 * 60;
+
 export class AgentInboxModel {
   private db: LobeChatDatabase;
   private userId: string;
@@ -151,6 +158,13 @@ export class AgentInboxModel {
    * stamped only while it is unread and unclaimed, so when two webhook workers
    * process the same delivery concurrently exactly one of them starts a run.
    * Returns whether this caller won.
+   *
+   * The claim is a lease. A worker that dies after claiming — before the wake
+   * finishes or hands the claim back — would otherwise leave the delivery
+   * claimed forever, and every provider retry would be acknowledged as already
+   * handled while the message sat unread. A claim older than
+   * {@link WAKE_CLAIM_LEASE_SECONDS} on a still-unread row can be taken over;
+   * a wake that succeeds marks the row read, so a finished wake never repeats.
    */
   static claimWake = async (db: LobeChatDatabase, id: string): Promise<boolean> => {
     const rows = await db
@@ -162,7 +176,10 @@ export class AgentInboxModel {
         and(
           eq(agentInboxMessages.id, id),
           isNull(agentInboxMessages.readAt),
-          sql`not (coalesce(${agentInboxMessages.metadata}, '{}'::jsonb) ? 'wakeClaimedAt')`,
+          or(
+            sql`not (coalesce(${agentInboxMessages.metadata}, '{}'::jsonb) ? 'wakeClaimedAt')`,
+            sql`(${agentInboxMessages.metadata}->>'wakeClaimedAt')::timestamptz < now() - make_interval(secs => ${WAKE_CLAIM_LEASE_SECONDS})`,
+          ),
         ),
       )
       .returning({ id: agentInboxMessages.id });
@@ -215,6 +232,21 @@ export class AgentInboxModel {
       .returning({ id: agentInboxMessages.id });
 
     return rows.length;
+  };
+
+  /**
+   * Record that a wait in `operationId` handed this message to the model, so the
+   * same run's next wait moves on to the next delivery. Kept apart from `readAt`:
+   * a message read elsewhere (a wake, `readInbox`) must still satisfy a wait.
+   */
+  markWaitConsumed = async (id: string, operationId: string): Promise<void> => {
+    await this.db
+      .update(agentInboxMessages)
+      .set({
+        metadata: sql`jsonb_set(coalesce(${agentInboxMessages.metadata}, '{}'::jsonb), '{waitConsumedBy}', coalesce(${agentInboxMessages.metadata}->'waitConsumedBy', '[]'::jsonb) || to_jsonb(${operationId}::text))`,
+        updatedAt: new Date(),
+      })
+      .where(and(eq(agentInboxMessages.id, id), this.ownership()));
   };
 
   markAllRead = async (agentId: string): Promise<number> => {
@@ -287,6 +319,8 @@ export class AgentInboxModel {
     from?: string;
     limit?: number;
     since: Date;
+    /** Skip messages a wait in this operation already returned (see {@link markWaitConsumed}). */
+    notConsumedBy?: string;
     /** Case-insensitive substring of the subject. */
     subjectIncludes?: string;
   }): Promise<AgentInboxMessageItem[]> => {
@@ -302,6 +336,11 @@ export class AgentInboxModel {
     // Filters run in the query, not on the fetched page: filtering after
     // `limit` would keep re-reading the same oldest non-matching rows.
     if (params.from) conditions.push(eq(agentInboxMessages.from, params.from));
+    if (params.notConsumedBy) {
+      conditions.push(
+        sql`not (coalesce(${agentInboxMessages.metadata}->'waitConsumedBy', '[]'::jsonb) ? ${params.notConsumedBy})`,
+      );
+    }
     if (params.subjectIncludes) {
       const pattern = `%${params.subjectIncludes.replaceAll(/[%_\\]/g, '\\$&')}%`;
       conditions.push(ilike(agentInboxMessages.subject, pattern));

@@ -1,10 +1,29 @@
 import debug from 'debug';
 import type { Context } from 'hono';
+import { bodyLimit } from 'hono/body-limit';
 
 import { getServerDB } from '@/database/core/db-adaptor';
 import { createAgentInboundService } from '@/server/services/agentIdentity/inbound';
 
 const log = debug('lobe-server:agent:account-webhook');
+
+/**
+ * Largest delivery the route will buffer. Provider webhooks carry a summary
+ * (Agent Mail's body is fetched back separately) or a short text, so this is
+ * far above any real delivery and far below what an unauthenticated caller
+ * could otherwise make the server hold before the signature is even checked.
+ */
+export const AGENT_ACCOUNT_WEBHOOK_MAX_BYTES = 512 * 1024;
+
+/**
+ * Runs before {@link agentAccountWebhook} reads the body. Checks the declared
+ * length and the streamed bytes alike, so an oversized or unbounded stream is
+ * cut off at the cap instead of buffered whole.
+ */
+export const agentAccountWebhookBodyLimit = bodyLimit({
+  maxSize: AGENT_ACCOUNT_WEBHOOK_MAX_BYTES,
+  onError: (c) => c.json({ error: 'payload too large', success: false }, 413),
+});
 
 /**
  * Inbound webhook for the agent's own accounts.

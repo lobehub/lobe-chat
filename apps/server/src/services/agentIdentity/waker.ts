@@ -2,9 +2,11 @@ import { RequestTrigger } from '@lobechat/types';
 
 import type { AgentAccountView } from '@/database/models/agentAccount';
 import { AgentInboxModel } from '@/database/models/agentInbox';
+import { TopicModel } from '@/database/models/topic';
 import type { AgentInboxMessageItem } from '@/database/schemas';
 import type { LobeChatDatabase } from '@/database/type';
 import { AiAgentService } from '@/server/services/aiAgent';
+import { TopicStartReservationError } from '@/server/services/aiAgent/topicStartReservation';
 
 import type { AgentInboundWakeInput, AgentInboundWaker } from './inbound';
 import { fenceUntrustedInbox, toUntrustedInboxEntry } from './untrusted';
@@ -17,7 +19,10 @@ const WAKE_BODY_PREVIEW_CHARS = 2000;
  * message itself is attacker-controlled, so it rides on the user side inside
  * an `<untrusted_inbox>` fence and never reaches the system prompt.
  */
-export const buildInboundPrompt = (account: AgentAccountView, message: AgentInboxMessageItem): string =>
+export const buildInboundPrompt = (
+  account: AgentAccountView,
+  message: AgentInboxMessageItem,
+): string =>
   [
     `A new message arrived for your ${account.kind} account ${account.identifier}. Decide whether it needs anything from you.`,
     fenceUntrustedInbox([
@@ -59,12 +64,37 @@ export const createAgentInboundWaker = (db: LobeChatDatabase): AgentInboundWaker
         trigger: RequestTrigger.Inbox,
       });
 
-    let result = await start(threadTopicId);
-    // The thread's topic may have been deleted since; a fresh topic beats no wake.
-    if (result.error && threadTopicId) result = await start();
+    /**
+     * Continue the thread in its topic. A topic the user deleted since is
+     * refused by the start's reservation — thrown before anything of the run is
+     * written — and a fresh topic beats never waking. A topic that still exists
+     * but is busy is left alone: forking the thread into a second topic is
+     * worse than the provider retrying the delivery a moment later.
+     */
+    const startInThread = async () => {
+      if (!threadTopicId) return start();
+
+      try {
+        const inThread = await start(threadTopicId);
+        return inThread.error ? start() : inThread;
+      } catch (error) {
+        if (!(error instanceof TopicStartReservationError)) throw error;
+
+        const topicModel = new TopicModel(db, account.userId, account.workspaceId ?? undefined);
+        if (await topicModel.findById(threadTopicId))
+          return { error: error.message, topicId: undefined };
+        return start();
+      }
+    };
+
+    const result = await startInThread();
 
     if (result.error) {
-      console.error('[agentInbound] run did not start for account %s: %s', account.id, result.error);
+      console.error(
+        '[agentInbound] run did not start for account %s: %s',
+        account.id,
+        result.error,
+      );
       return { reason: 'start-failed', started: false };
     }
 
@@ -75,7 +105,11 @@ export const createAgentInboundWaker = (db: LobeChatDatabase): AgentInboundWaker
     try {
       await AgentInboxModel.markWoken(db, message.id, result.topicId);
     } catch (error) {
-      console.error('[agentInbound] run started but marking message %s woken failed:', message.id, error);
+      console.error(
+        '[agentInbound] run started but marking message %s woken failed:',
+        message.id,
+        error,
+      );
     }
 
     return { reason: 'started', started: true, topicId: result.topicId };

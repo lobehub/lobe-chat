@@ -65,7 +65,45 @@ const secretCandidates = (text: string): string[] => {
   const tokens = (text.match(/[\w+./=-]{6,}/g) ?? []).filter(
     (token) => token.length >= 20 || (/\d/.test(token) && /[A-Z]/i.test(token)),
   );
-  return [...new Set([...urls, ...tokens])].slice(0, 100);
+  return [...new Set([...urls, ...tokens, ...splitTokenCandidates(text)])].slice(0, 200);
+};
+
+/** Shortest a regrouped token must be once joined; shorter joins are ordinary words and times. */
+const MIN_SPLIT_TOKEN_CHARS = 8;
+const MAX_SPLIT_TOKEN_CHARS = 40;
+
+/**
+ * Tokens regrouped on the way out — `AB 12 CD 34 EF`, `ab-12-cd-34`. Each group
+ * is shorter than a token the extractor above recognises, so it never yields a
+ * candidate there. Runs of short letter/digit groups joined by one separator
+ * are re-assembled at every start and length, so the secret is found wherever
+ * it sits in the sentence; only joins long enough and mixing letters and digits
+ * count, which keeps ordinary prose out.
+ */
+const splitTokenCandidates = (text: string): string[] => {
+  const candidates: string[] = [];
+  const runs = text.match(/[\dA-Z]{1,5}(?:[\s.-][\dA-Z]{1,5})+/gi) ?? [];
+
+  for (const run of runs) {
+    const groups = run.split(/[\s.-]/).slice(0, 24);
+    for (let start = 0; start < groups.length; start += 1) {
+      let joined = '';
+      for (let end = start; end < groups.length; end += 1) {
+        joined += groups[end];
+        if (joined.length > MAX_SPLIT_TOKEN_CHARS) break;
+        if (
+          end > start &&
+          joined.length >= MIN_SPLIT_TOKEN_CHARS &&
+          /\d/.test(joined) &&
+          /[A-Z]/i.test(joined)
+        ) {
+          candidates.push(joined);
+        }
+      }
+    }
+  }
+
+  return candidates;
 };
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -365,6 +403,10 @@ export const agentAccountRuntime: ServerRuntimeRegistration = {
             agentId: requireAgentId(),
             from: args?.from,
             limit: 1,
+            // Without an explicit cursor every wait in this run starts from the
+            // run's start, so a message one wait already returned would satisfy
+            // the next wait too — the second OTP would never be waited for.
+            notConsumedBy: context.operationId,
             since,
             subjectIncludes: args?.subjectIncludes,
           });
@@ -373,8 +415,13 @@ export const agentAccountRuntime: ServerRuntimeRegistration = {
             // The model now holds this message, so it no longer counts as
             // unread in the identity block of the following steps.
             await inbox.markRead([hit.id]);
+            if (context.operationId) await inbox.markWaitConsumed(hit.id, context.operationId);
             return {
-              content: `matched: true\n${fenceUntrustedInbox([toUntrustedInboxEntry(hit)])}`,
+              // Same body budget as a read: one attacker-sized match must not
+              // spend the context window. The full body stays in the inbox.
+              content: `matched: true\n${fenceUntrustedInbox([
+                toUntrustedInboxEntry(hit, { maxBodyChars: MAX_READ_BODY_CHARS }),
+              ])}`,
               state: { inboxMessageId: hit.id },
               success: true,
             };

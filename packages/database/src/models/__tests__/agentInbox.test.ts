@@ -1,11 +1,12 @@
 // @vitest-environment node
+import { eq, sql } from 'drizzle-orm';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { getTestDB } from '../../core/getTestDB';
 import { agentAccounts, agentInboxMessages, agents, users, workspaces } from '../../schemas';
 import type { LobeChatDatabase } from '../../type';
 import { AgentAccountModel } from '../agentAccount';
-import { AgentInboxModel } from '../agentInbox';
+import { AgentInboxModel, WAKE_CLAIM_LEASE_SECONDS } from '../agentInbox';
 
 const serverDB: LobeChatDatabase = await getTestDB();
 
@@ -116,6 +117,35 @@ describe('AgentInboxModel.claimWake', () => {
     // Once woken (read), it can never be claimed again.
     await AgentInboxModel.markWoken(serverDB, message.id, undefined);
     await AgentInboxModel.releaseWake(serverDB, message.id);
+    expect(await AgentInboxModel.claimWake(serverDB, message.id)).toBe(false);
+  });
+
+  it('lets a retry take over a claim whose worker died before waking or releasing it', async () => {
+    const message = await deliver(publicAgentId, 'lease@lobe.id', 'msg_lease');
+    expect(await AgentInboxModel.claimWake(serverDB, message.id)).toBe(true);
+
+    // A live claim still refuses the retry.
+    expect(await AgentInboxModel.claimWake(serverDB, message.id)).toBe(false);
+
+    // The worker died: nothing released the claim, and its lease ran out.
+    await serverDB
+      .update(agentInboxMessages)
+      .set({
+        metadata: sql`jsonb_set(${agentInboxMessages.metadata}, '{wakeClaimedAt}', to_jsonb(now() - make_interval(secs => ${WAKE_CLAIM_LEASE_SECONDS + 60})))`,
+      })
+      .where(eq(agentInboxMessages.id, message.id));
+
+    expect(await AgentInboxModel.claimWake(serverDB, message.id)).toBe(true);
+    expect(await AgentInboxModel.claimWake(serverDB, message.id)).toBe(false);
+
+    // A finished wake is never taken over, however old its claim.
+    await AgentInboxModel.markWoken(serverDB, message.id, undefined);
+    await serverDB
+      .update(agentInboxMessages)
+      .set({
+        metadata: sql`jsonb_set(${agentInboxMessages.metadata}, '{wakeClaimedAt}', to_jsonb(now() - make_interval(secs => ${WAKE_CLAIM_LEASE_SECONDS + 60})))`,
+      })
+      .where(eq(agentInboxMessages.id, message.id));
     expect(await AgentInboxModel.claimWake(serverDB, message.id)).toBe(false);
   });
 });
