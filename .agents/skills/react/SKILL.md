@@ -8,11 +8,12 @@ user-invocable: false
 
 ## Styling
 
-| Scenario                                                   | Approach                                                       |
-| ---------------------------------------------------------- | -------------------------------------------------------------- |
-| Most cases                                                 | `createStaticStyles` + `cssVar.*` (zero-runtime, module-level) |
-| Simple one-off                                             | Inline `style` attribute                                       |
-| Truly dynamic (JS color fns like `readableColor`/`chroma`) | `createStyles` + `token` — **last resort**                     |
+| Scenario                                                   | Approach                                                                                                                                                                                                                  |
+| ---------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Files already on StyleX, and new SPA styles                | `stylex.create` + `@lobehub/ui/stylex/cssVar.stylex` / `@lobehub/ui/stylex/media.stylex`. The SPA compiler is `plugins/vite/stylex.ts` (`@stylexjs/unplugin`, prefix `lh`). Do not copy those token modules into the app. |
+| Existing styles not yet migrated                           | `createStaticStyles` + `cssVar.*` (zero-runtime, module-level)                                                                                                                                                            |
+| Simple one-off                                             | Inline `style` attribute                                                                                                                                                                                                  |
+| Truly dynamic (JS color fns like `readableColor`/`chroma`) | `createStyles` + `token` — **last resort**                                                                                                                                                                                |
 
 ## Component Priority
 
