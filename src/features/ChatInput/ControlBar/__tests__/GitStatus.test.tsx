@@ -255,6 +255,47 @@ describe('GitStatus', () => {
     expect(gitService.pullGitBranch).not.toHaveBeenCalled();
   });
 
+  // Review P1: after a reload where the repository was switched externally from
+  // A to B, the faster branch probe confirms B while the persisted ahead/behind
+  // row still describes A. Enabling sync there would pull/push the ACTUAL branch
+  // B using A's counts and target text, so that read must confirm too.
+  it('keeps pull and push inert while ahead/behind is still the previous snapshot', async () => {
+    gitHookMocks.useFetchGitAheadBehind.mockReturnValue({
+      data: { ahead: 2, behind: 1, hasUpstream: true, upstream: 'origin/previous' },
+      isConfirmed: false,
+      mutate: gitHookMocks.mutateAheadBehind,
+    });
+
+    const { unmount } = render(
+      <GitStatus isGithub agentId="agent-1" path="/repo" sourcePath="/repo" />,
+    );
+
+    // The previous snapshot keeps painting (that is the point of stale-first)…
+    const push = screen.getByText('2').closest('[role="button"]')!;
+    const pull = screen.getByText('1').closest('[role="button"]')!;
+    expect(push).toHaveAttribute('aria-disabled', 'true');
+    expect(pull).toHaveAttribute('aria-disabled', 'true');
+
+    // …but neither action may run against it.
+    fireEvent.click(push);
+    fireEvent.click(pull);
+    expect(gitService.pushGitBranch).not.toHaveBeenCalled();
+    expect(gitService.pullGitBranch).not.toHaveBeenCalled();
+
+    // Once the live ahead/behind read answers, the same chips become actionable.
+    gitHookMocks.useFetchGitAheadBehind.mockReturnValue({
+      data: { ahead: 2, behind: 1, hasUpstream: true, upstream: 'origin/current' },
+      isConfirmed: true,
+      mutate: gitHookMocks.mutateAheadBehind,
+    });
+    // `GitStatus` is memoized, so a same-prop rerender bails out; remount instead.
+    unmount();
+    render(<GitStatus isGithub agentId="agent-1" path="/repo" sourcePath="/repo" />);
+
+    const readyPush = screen.getByText('2').closest('[role="button"]')!;
+    expect(readyPush).toHaveAttribute('aria-disabled', 'false');
+  });
+
   // Review P1: the branch picker routes through the worktree list. A confirmed
   // branch alone must not enable a picker that still holds last session's
   // worktrees — it could point at a worktree removed externally.

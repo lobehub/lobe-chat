@@ -138,6 +138,7 @@ const Overview = memo<OverviewProps>(
     const {
       data: aheadBehind,
       error: aheadBehindError,
+      isConfirmed: aheadBehindConfirmed,
       mutate: mutateAheadBehind,
     } = useFetchGitAheadBehind(deviceId, gitPath);
     const {
@@ -200,10 +201,12 @@ const Overview = memo<OverviewProps>(
     );
 
     const syncBusy = pulling || pushing;
-    // The branch row may be a stale-first paint from the last session. Checkout,
-    // pull and push assume it is current, so they stay inert until this
-    // session's probe confirms it.
-    const actionsBlocked = syncBusy || !branchConfirmed;
+    // The branch and its counts may be stale-first paints from the last
+    // session. Checkout, pull and push assume both still describe the live
+    // branch, so they stay inert until this session confirms both reads — a
+    // faster branch probe must not enable sync against the previous branch's
+    // ahead/behind snapshot.
+    const actionsBlocked = syncBusy || !branchConfirmed || !aheadBehindConfirmed;
 
     const handlePull = useCallback(async () => {
       if (syncBusy || !workingDirectory) return;

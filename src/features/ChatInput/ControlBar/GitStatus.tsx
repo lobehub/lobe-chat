@@ -209,10 +209,11 @@ const GitStatus = memo<GitStatusProps>(
     // session's chip instead of growing the cluster after the diff arrives.
     const { data: cachedDiffStats, set: setDiffStats } = useFetchGitDiffStats(deviceId, path);
     const livePath = isStale ? undefined : path;
-    const { data: aheadBehind, mutate: mutateAheadBehind } = useFetchGitAheadBehind(
-      deviceId,
-      livePath,
-    );
+    const {
+      data: aheadBehind,
+      isConfirmed: aheadBehindConfirmed,
+      mutate: mutateAheadBehind,
+    } = useFetchGitAheadBehind(deviceId, livePath);
     const {
       data: worktrees = [],
       isConfirmed: worktreesConfirmed,
@@ -273,10 +274,14 @@ const GitStatus = memo<GitStatusProps>(
     );
 
     const syncBusy = pulling || pushing;
-    // Stale-first paints the last branch immediately, but checkout / pull / push
-    // assume that branch is still current. Keep them inert until this session's
-    // probe confirms it; the chips stay visible either way.
-    const actionsBlocked = syncBusy || !branchConfirmed;
+    // Stale-first paints the last branch and its counts immediately, but
+    // checkout / pull / push assume both still describe the live branch. When
+    // the repo was switched externally, the faster branch probe can confirm the
+    // NEW branch while the ahead/behind snapshot still belongs to the OLD one —
+    // acting then would pull/push the actual branch while the label and counts
+    // describe another. Keep them inert until BOTH reads answer; the chips stay
+    // visible either way.
+    const actionsBlocked = syncBusy || !branchConfirmed || !aheadBehindConfirmed;
     // Both pickers consume the worktree list (the branch picker routes to the
     // worktree that already holds the branch), so it must be this session's
     // listing too — a stale one can point at a removed worktree.
