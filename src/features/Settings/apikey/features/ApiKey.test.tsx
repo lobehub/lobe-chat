@@ -177,7 +177,7 @@ describe('ApiKey', () => {
     expect(onSelectedChange).toHaveBeenCalledWith(['mcp:write', 'mcp:read']);
   });
 
-  it('offers the account-credential scope without inventing a read twin', () => {
+  it('offers the account-credential scope with the agent scopes it relies on, without inventing a read twin', () => {
     const onSelectedChange = vi.fn();
     render(
       <ScopeSelector
@@ -196,9 +196,11 @@ describe('ApiKey', () => {
       within(agentGroup).getByRole('checkbox', { name: 'apikey.scopes.agentCredential' }),
     );
 
-    // `agent:credential:write` stands alone: it must NOT derive the
+    // A credential write is still an agent write, so ticking it brings
+    // `agent:write` (and its read) along — but it must NOT derive the
     // non-existent `agent:credential:read`, which the API would reject.
-    expect(onSelectedChange).toHaveBeenCalledWith(['agent:credential:write']);
+    const [selected] = onSelectedChange.mock.calls.at(-1)!;
+    expect([...selected].sort()).toEqual(['agent:credential:write', 'agent:read', 'agent:write']);
   });
 
   it('shows loading, then empty state when the first fetch returns no keys', async () => {
