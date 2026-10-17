@@ -1,0 +1,161 @@
+/**
+ * @vitest-environment happy-dom
+ *
+ * Read-only views (portal document, goal result / deliverable reader, resource
+ * page preview) read the document detail replica without an editor through
+ * `useFetchDocumentDetail`: they share the editor's persisted row, paint it
+ * after a reload and fold renames / saves into the same entry.
+ */
+import { randomUUID } from 'node:crypto';
+
+import { act, renderHook, waitFor } from '@testing-library/react';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+
+import { cacheScope } from '@/libs/replica';
+import { documentService } from '@/services/document';
+
+import { useDocumentStore } from '../../store';
+import { documentDetailResource } from './projection';
+import { detailSliceState, documentRow, pending, storedRow, wrapper } from './testUtils';
+
+vi.mock('@/business/client/hooks/useActiveWorkspaceId', () => ({
+  getActiveWorkspaceId: () => null,
+  useActiveWorkspaceId: () => null,
+}));
+
+vi.mock('@/services/document', () => ({
+  documentService: {
+    getDocumentById: vi.fn(),
+    updateDocument: vi.fn(),
+  },
+}));
+
+vi.mock('@/store/page', () => ({
+  pageActions: { upsertDocument: vi.fn() },
+}));
+
+describe('document detail without an editor (portal / goal / preview views)', () => {
+  const scopes = new Set<string>();
+  let scope = '';
+
+  const useScope = (next: string) => {
+    scope = next;
+    scopes.add(next);
+    vi.spyOn(cacheScope, 'get').mockImplementation(() => scope);
+    vi.spyOn(cacheScope, 'use').mockImplementation(() => scope);
+    vi.spyOn(cacheScope, 'canPersist').mockReturnValue(true);
+  };
+
+  const renderDetail = (documentId: string) =>
+    renderHook(() => useDocumentStore.getState().useFetchDocumentDetail(documentId), { wrapper });
+
+  beforeEach(() => {
+    useScope(`document-detail-user-${randomUUID()}:personal`);
+    act(() => useDocumentStore.setState(detailSliceState()));
+    vi.mocked(documentService.getDocumentById).mockReset();
+  });
+
+  afterEach(async () => {
+    await Promise.all(
+      [...scopes].map((value) =>
+        documentDetailResource.storage!.remove({ queryKey: 'doc-1', scope: value }),
+      ),
+    );
+    scopes.clear();
+    vi.restoreAllMocks();
+    vi.clearAllMocks();
+  });
+
+  it('bounds the persisted documents it shares with the editor', () => {
+    expect(documentDetailResource.maxPersistedEntries).toBeGreaterThan(0);
+  });
+
+  it('paints the persisted document after a reload, then swaps in the refreshed row', async () => {
+    // A previous session left this row behind; the network is slow.
+    await documentDetailResource.storage!.set(
+      { queryKey: 'doc-1', scope },
+      { data: { document: documentRow({ title: 'Cached title' }) }, updatedAt: 1 },
+    );
+    let answer: (row: unknown) => void = () => {};
+    vi.mocked(documentService.getDocumentById).mockImplementation(
+      () => new Promise((resolve) => (answer = resolve)) as any,
+    );
+
+    const { result } = renderDetail('doc-1');
+
+    await waitFor(() => expect(result.current.data?.title).toBe('Cached title'));
+    expect(result.current.isLoading).toBe(false);
+    expect(result.current.isHydrated).toBe(true);
+    expect(result.current.isValidating).toBe(true);
+
+    await act(async () => {
+      answer(
+        documentRow({ title: 'Fresh title', updatedAt: new Date('2026-01-03T00:00:00.000Z') }),
+      );
+    });
+
+    await waitFor(() => expect(result.current.data?.title).toBe('Fresh title'));
+    await waitFor(async () =>
+      expect((await storedRow('doc-1', scope))?.data.document?.title).toBe('Fresh title'),
+    );
+  });
+
+  it('reports loading only once the persisted row is known to be absent', async () => {
+    vi.mocked(documentService.getDocumentById).mockImplementation(pending as any);
+
+    const { result } = renderDetail('doc-1');
+
+    await waitFor(() => expect(result.current.isHydrated).toBe(true));
+    expect(result.current.data).toBeUndefined();
+    expect(result.current.isLoading).toBe(true);
+  });
+
+  it('rolls an optimistic rename back when the server rejects it', async () => {
+    vi.mocked(documentService.getDocumentById).mockResolvedValue(
+      documentRow({ title: 'Old' }) as any,
+    );
+    const { result } = renderDetail('doc-1');
+    await waitFor(() => expect(result.current.data?.title).toBe('Old'));
+
+    let reject: (error: Error) => void = () => {};
+    let rename: Promise<unknown> = Promise.resolve();
+    act(() => {
+      rename = useDocumentStore
+        .getState()
+        .optimisticDocumentDetail(
+          'doc-1',
+          { title: 'New' },
+          () => new Promise((_, fail) => (reject = fail)),
+        );
+    });
+    expect(result.current.data?.title).toBe('New');
+
+    await act(async () => {
+      reject(new Error('rename failed'));
+      await rename.catch(() => undefined);
+    });
+    expect(result.current.data?.title).toBe('Old');
+  });
+
+  it('folds a confirmed save into the entry without a refetch', async () => {
+    vi.mocked(documentService.getDocumentById).mockResolvedValue(
+      documentRow({ content: 'before' }) as any,
+    );
+    const { result } = renderDetail('doc-1');
+    await waitFor(() => expect(result.current.data?.content).toBe('before'));
+    const calls = vi.mocked(documentService.getDocumentById).mock.calls.length;
+
+    act(() =>
+      useDocumentStore.getState().patchDocumentDetail('doc-1', {
+        content: 'saved',
+        updatedAt: new Date('2026-01-04T00:00:00.000Z'),
+      }),
+    );
+
+    expect(result.current.data?.content).toBe('saved');
+    expect(vi.mocked(documentService.getDocumentById).mock.calls.length).toBe(calls);
+    await waitFor(async () =>
+      expect((await storedRow('doc-1', scope))?.data.document?.content).toBe('saved'),
+    );
+  });
+});
