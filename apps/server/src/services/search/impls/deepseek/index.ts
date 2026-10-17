@@ -36,14 +36,11 @@ export class DeepSeekImpl implements SearchServiceImpl {
       const days = { day: 1, month: 30, week: 7, year: 365 }[params.searchTimeRange];
       if (days !== undefined) {
         const afterDate = new Date(Date.now() - days * 86_400 * 1000).toISOString().split('T')[0];
-        const withAfter = `${formattedQuery} after:${afterDate}`;
-        if (withAfter.length <= 128) {
-          formattedQuery = withAfter;
-        }
+        const afterSuffix = ` after:${afterDate}`;
+        const maxQueryLen = Math.max(0, 128 - afterSuffix.length);
+        formattedQuery = `${formattedQuery.slice(0, maxQueryLen).trim()}${afterSuffix}`;
       }
-    }
-
-    if (formattedQuery.length > 128) {
+    } else if (formattedQuery.length > 128) {
       formattedQuery = formattedQuery.slice(0, 128);
     }
 
@@ -103,6 +100,7 @@ export class DeepSeekImpl implements SearchServiceImpl {
         content: result.summary || result.snippet || '',
         engines: ['deepseek'],
         parsedUrl: result.url ? new URL(result.url).hostname : '',
+        publishedDate: result.date || undefined,
         score: result.rerank_score || 0,
         title: result.title || '',
         url: result.url,

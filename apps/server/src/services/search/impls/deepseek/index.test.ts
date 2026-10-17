@@ -72,11 +72,12 @@ describe('DeepSeekImpl', () => {
         content: 'Long summary',
         engines: ['deepseek'],
         parsedUrl: 'example.com',
+        publishedDate: '2026-06-01T00:00:00+00:00',
         score: 2.5,
         title: 'Example Title',
         url: 'https://example.com/page',
       });
-      // Second result uses summary text
+      // Second result uses summary text, date is null so publishedDate is undefined
       expect(result.results[1]).toMatchObject({
         content: 'Summary text',
         engines: ['deepseek'],
@@ -85,6 +86,7 @@ describe('DeepSeekImpl', () => {
         title: 'Second Title',
         url: 'https://another.com/article',
       });
+      expect(result.results[1].publishedDate).toBeUndefined();
 
       const fetchCall = vi.mocked(fetch).mock.calls[0];
       expect(fetchCall[0]).toBe('https://api.deepseek.com/v1/tools/search');
@@ -130,6 +132,19 @@ describe('DeepSeekImpl', () => {
       const options = fetchCall[1] as RequestInit;
       const parsedBody = JSON.parse(options.body as string);
       expect(parsedBody.query).toBe('artificial intelligence after:2025-01-01');
+    });
+
+    it('should truncate query and preserve after: date syntax for long queries', async () => {
+      vi.mocked(fetch).mockResolvedValueOnce(createMockResponse(makeDeepSeekResponse([])));
+
+      const longQuery = 'artificial intelligence '.repeat(10); // > 200 chars
+      await impl.query(longQuery, { searchTimeRange: 'week' });
+
+      const fetchCall = vi.mocked(fetch).mock.calls[0];
+      const options = fetchCall[1] as RequestInit;
+      const parsedBody = JSON.parse(options.body as string);
+      expect(parsedBody.query).toMatch(/after:\d{4}-\d{2}-\d{2}$/);
+      expect(parsedBody.query.length).toBeLessThanOrEqual(128);
     });
 
     it('should truncate query if exceeding 128 characters', async () => {

@@ -1,3 +1,5 @@
+import urlJoin from 'url-join';
+
 import type { CrawlImpl, CrawlSuccessResult } from '../type';
 import { PageNotFoundError, toFetchError } from '../utils/errorType';
 import { createHTTPStatusError, parseJSONResponse } from '../utils/response';
@@ -11,13 +13,14 @@ interface DeepSeekFetchResponse {
 export const deepseek: CrawlImpl = async (url) => {
   const apiKey = process.env.DEEPSEEK_SEARCH_API_KEY;
   const baseUrl = process.env.DEEPSEEK_SEARCH_API_URL || 'https://api.deepseek.com';
+  const endpoint = urlJoin(baseUrl, '/v1/tools/fetch');
 
   let res: Response;
 
   try {
     res = await withTimeout(
       (signal) =>
-        fetch(`${baseUrl}/v1/tools/fetch`, {
+        fetch(endpoint, {
           body: JSON.stringify({ url }),
           headers: {
             'Authorization': apiKey ? `Bearer ${apiKey}` : '',

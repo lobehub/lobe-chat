@@ -41,9 +41,9 @@ describe('deepseek crawler', () => {
     expect(withTimeout).toHaveBeenCalledWith(expect.any(Function), 30000);
   });
 
-  it('should support custom DEEPSEEK_SEARCH_API_URL', async () => {
+  it('should support custom DEEPSEEK_SEARCH_API_URL and normalize trailing slashes', async () => {
     process.env.DEEPSEEK_SEARCH_API_KEY = 'test-deepseek-key';
-    process.env.DEEPSEEK_SEARCH_API_URL = 'https://custom.deepseek.proxy';
+    process.env.DEEPSEEK_SEARCH_API_URL = 'https://custom.deepseek.proxy/';
 
     const mockResponse = createMockResponse({
       content: 'Custom endpoint content',
@@ -51,10 +51,22 @@ describe('deepseek crawler', () => {
     });
 
     const { withTimeout } = await import('../../utils/withTimeout');
-    vi.mocked(withTimeout).mockResolvedValue(mockResponse as any);
+    vi.mocked(withTimeout).mockImplementation(async (fn: any) => {
+      return fn(new AbortController().signal);
+    });
+
+    const fetchSpy = vi.fn().mockResolvedValue(mockResponse);
+    vi.stubGlobal('fetch', fetchSpy);
 
     const result = await deepseek('https://example.com', { filterOptions: {} });
     expect(result?.title).toBe('Custom Title');
+    expect(fetchSpy).toHaveBeenCalledWith(
+      'https://custom.deepseek.proxy/v1/tools/fetch',
+      expect.objectContaining({
+        method: 'POST',
+      }),
+    );
+    vi.unstubAllGlobals();
   });
 
   it('should return undefined when content is empty', async () => {
