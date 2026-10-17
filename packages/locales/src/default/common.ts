@@ -15,6 +15,8 @@ export default {
   'agentLabel.create': 'New label',
   'agentLabel.manage': 'Manage labels',
   'agentLabel.menuTitle': 'Labels',
+  'agentSkills.ensureFailed':
+    'Some skills this agent relies on could not be installed automatically: {{skills}}. You can add them manually in the Skill Store.',
   'agentViewAll.groupBy.author': 'Author',
   'agentViewAll.groupBy.label': 'Label',
   'agentViewAll.groupBy.noLabel': 'No label',
