@@ -504,15 +504,25 @@ export class DocumentActionImpl {
   };
 
   /**
-   * Fold a confirmed server write (e.g. a highlight-editor save) into the
-   * document's replica entry, so the views reading it — and the next reload —
-   * show the saved revision without a refetch. A read already in flight started
-   * before the write and is not allowed to replace it.
+   * Start a server write (e.g. a highlight-editor save) of one document and
+   * return the commit that folds its confirmed result into the replica entry,
+   * so the views reading it — and the next reload — show the saved revision
+   * without a refetch. A read already in flight started before the write and
+   * is not allowed to replace it.
+   *
+   * The identity (user / workspace scope) is captured here, before the request:
+   * a write that settles after an account / workspace switch belongs to the
+   * previous identity, so the commit is a no-op instead of planting that
+   * document in the new scope's memory and IndexedDB partition.
    */
-  patchDocumentDetail = (documentId: string, patch: Partial<DocumentItem>): void => {
-    const current = this.#get().documentDetailMap[documentId]?.document;
-    if (!current) return;
-    this.internal_adoptDocumentDetail(documentId, { ...current, ...patch });
+  beginDocumentDetailPatch = (documentId: string): ((patch: Partial<DocumentItem>) => void) => {
+    const scope = documentDetailResource.scope.get();
+    return (patch) => {
+      if (documentDetailResource.scope.get() !== scope) return;
+      const current = this.#get().documentDetailMap[documentId]?.document;
+      if (!current) return;
+      this.internal_adoptDocumentDetail(documentId, { ...current, ...patch }, scope);
+    };
   };
 
   /**

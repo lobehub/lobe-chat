@@ -161,6 +161,25 @@ const normalizeContentType = (contentType: string | null): string =>
 const isTextPreviewMimeType = (mimeType: string): boolean =>
   mimeType.startsWith('text/') || TEXT_PREVIEW_MIME_TYPES.has(mimeType);
 
+/**
+ * The desktop preview protocol answered with an HTTP error. `status` tells a
+ * terminal answer (404 gone, 403 denied) from a transient one, so a cached
+ * preview can be dropped only when the file is really gone or denied.
+ */
+export class LocalFileResponseError extends Error {
+  readonly status: number;
+
+  constructor(status: number) {
+    super(`Failed to load local file: ${status}`);
+    this.name = 'LocalFileResponseError';
+    this.status = status;
+  }
+}
+
+/** The file no longer exists or may no longer be read (deleted, moved, denied). */
+export const isTerminalLocalFileError = (error: unknown): boolean =>
+  error instanceof LocalFileResponseError && (error.status === 403 || error.status === 404);
+
 const fetchLocalFilePreview = async (
   url: string,
   accept?: LocalFilePreviewUrlParams['accept'],
@@ -169,7 +188,7 @@ const fetchLocalFilePreview = async (
   const response = await fetch(url);
 
   if (!response.ok) {
-    throw new Error(`Failed to load local file: ${response.status}`);
+    throw new LocalFileResponseError(response.status);
   }
 
   const contentType = normalizeContentType(response.headers.get('content-type'));
@@ -375,7 +394,7 @@ class LocalFileService {
     }
 
     const response = await fetch(result.url, { signal });
-    if (!response.ok) throw new Error(`Failed to load local file: ${response.status}`);
+    if (!response.ok) throw new LocalFileResponseError(response.status);
     if (isOversizedVideo(response)) {
       void response.body?.cancel().catch(() => {});
       return { ok: false, reason: 'oversized' };

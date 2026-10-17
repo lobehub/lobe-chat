@@ -15,7 +15,12 @@ const isConflictError = (error: unknown) =>
 export interface UseHighlightSaveParams {
   content: string;
   documentId: string;
-  onSaved: (content: string, updatedAt?: string) => void;
+  /**
+   * Called when a write starts; returns the commit for its confirmed result.
+   * The caller captures what the write belongs to (e.g. the active identity)
+   * before the request is awaited.
+   */
+  onSaveStart: () => (content: string, updatedAt?: string) => void;
   updatedAt?: Date;
 }
 
@@ -28,7 +33,7 @@ export interface UseHighlightSaveResult {
 export const useHighlightSave = ({
   content,
   documentId,
-  onSaved,
+  onSaveStart,
   updatedAt,
 }: UseHighlightSaveParams): UseHighlightSaveResult => {
   const { t } = useTranslation('portal');
@@ -37,14 +42,14 @@ export const useHighlightSave = ({
 
   const bufferRef = useRef(buffer);
   const documentIdRef = useRef(documentId);
-  const onSavedRef = useRef(onSaved);
+  const onSaveStartRef = useRef(onSaveStart);
   const expectedUpdatedAtRef = useRef(updatedAt);
   const baseContentRef = useRef(content);
   const pendingSaveRef = useRef<Promise<void> | undefined>(undefined);
   const tRef = useRef(t);
   bufferRef.current = buffer;
   documentIdRef.current = documentId;
-  onSavedRef.current = onSaved;
+  onSaveStartRef.current = onSaveStart;
   tRef.current = t;
 
   const saveBuffer = useCallback(async (source: 'manual' | 'autosave') => {
@@ -52,6 +57,7 @@ export const useHighlightSave = ({
     if (toWrite === undefined) return;
     const expectedUpdatedAt = expectedUpdatedAtRef.current;
     try {
+      const commitSaved = onSaveStartRef.current();
       const result = await documentService.updateDocument({
         content: toWrite,
         id: documentIdRef.current,
@@ -64,7 +70,7 @@ export const useHighlightSave = ({
         expectedUpdatedAtRef.current = savedAt;
       }
       baseContentRef.current = toWrite;
-      onSavedRef.current(toWrite, result?.updatedAt);
+      commitSaved(toWrite, result?.updatedAt);
       if (bufferRef.current === toWrite) {
         bufferRef.current = undefined;
         setBuffer(undefined);

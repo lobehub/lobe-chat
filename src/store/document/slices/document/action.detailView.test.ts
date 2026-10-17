@@ -185,7 +185,7 @@ describe('document detail without an editor (portal / goal / preview views)', ()
     const calls = vi.mocked(documentService.getDocumentById).mock.calls.length;
 
     act(() =>
-      useDocumentStore.getState().patchDocumentDetail('doc-1', {
+      useDocumentStore.getState().beginDocumentDetailPatch('doc-1')({
         content: 'saved',
         updatedAt: new Date('2026-01-04T00:00:00.000Z'),
       }),
@@ -195,6 +195,30 @@ describe('document detail without an editor (portal / goal / preview views)', ()
     expect(vi.mocked(documentService.getDocumentById).mock.calls.length).toBe(calls);
     await waitFor(async () =>
       expect((await storedRow('doc-1', scope))?.data.document?.content).toBe('saved'),
+    );
+  });
+
+  it('drops a save that settles under another identity', async () => {
+    vi.mocked(documentService.getDocumentById).mockResolvedValue(
+      documentRow({ content: 'before' }) as any,
+    );
+    const { result } = renderDetail('doc-1');
+    await waitFor(() => expect(result.current.data?.content).toBe('before'));
+    const previous = scope;
+
+    // The save starts in one identity…
+    const commit = useDocumentStore.getState().beginDocumentDetailPatch('doc-1');
+    // …and settles after a switch, while the old row is still in memory.
+    useScope(`document-detail-user-${randomUUID()}:personal`);
+    act(() => commit({ content: 'saved-by-previous-identity' }));
+
+    expect(result.current.data?.content).not.toBe('saved-by-previous-identity');
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve, 20));
+    });
+    expect(await storedRow('doc-1', scope)).toBeUndefined();
+    expect((await storedRow('doc-1', previous))?.data.document?.content).not.toBe(
+      'saved-by-previous-identity',
     );
   });
 

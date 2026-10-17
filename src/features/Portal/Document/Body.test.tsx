@@ -119,7 +119,7 @@ const mockDocumentState = vi.hoisted(() => ({
       'document-1': {},
     },
     internal_dispatchDocument: vi.fn(),
-    patchDocumentDetail: vi.fn(),
+    beginDocumentDetailPatch: vi.fn(() => vi.fn()),
     performSave: vi.fn(),
     updateSkillFrontmatter: vi.fn(),
     // The document's replica entry, as the store's read hook reports it.

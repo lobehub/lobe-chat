@@ -441,8 +441,9 @@ const ActiveFileView = memo<ActiveFileViewProps>(
     // spinner that the cached text replaces a few frames later.
     if (isLoading) return isHydrated ? <Loading /> : null;
 
-    // Text previews are persisted (stale-while-revalidate): a failed background
-    // refresh keeps the cached text. Any other preview type surfaces the error
+    // Text previews are persisted (stale-while-revalidate): a transiently failed
+    // background refresh keeps the cached text, while a deleted / denied file
+    // evicts it in the store (so `preview` is gone). Any other preview type surfaces the error
     // (a deleted file / disconnected device), and so does a sandbox — a recycled
     // sandbox has no file left to show.
     if (!preview || (error && (sandboxTopicId || preview.type !== 'text'))) {

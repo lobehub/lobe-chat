@@ -17,6 +17,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { cacheScope } from '@/libs/replica';
 import { setScopedMutate } from '@/libs/swr/mutate';
 import { cloudSandboxService } from '@/services/cloudSandbox';
+import { LocalFileResponseError } from '@/services/electron/localFileService';
 import { projectFileService } from '@/services/projectFile';
 
 import {
@@ -346,6 +347,77 @@ describe('local file preview replica', () => {
 
     expect(result.current.preview).toEqual(textPreview('saved'));
     await waitFor(async () => expect((await storedRow(NOTES))?.data).toEqual(textPreview('saved')));
+  });
+
+  it('keeps the fresh read metadata (HTML base URL) when a save races it', async () => {
+    const PAGE: LocalFilePreviewTarget = {
+      filePath: '/repo/index.html',
+      workingDirectory: '/repo',
+    };
+    // The persisted copy carries no short-lived `resourceBaseUrl`.
+    await seedRow(PAGE, textPreview('<p>v1</p>', { contentType: 'text/html' }));
+    let answer: (preview: unknown) => void = () => {};
+    vi.mocked(projectFileService.getLocalFilePreview).mockImplementation(
+      () => new Promise((resolve) => (answer = resolve)) as never,
+    );
+    const { result } = renderPreview(PAGE);
+    await waitFor(() => expect(result.current.preview?.type).toBe('text'));
+
+    act(() => useLocalFilePreviewStore.getState().beginSave(PAGE)('<p>saved</p>'));
+    await act(async () => {
+      answer(
+        textPreview('<p>v1</p>', {
+          contentType: 'text/html',
+          resourceBaseUrl: 'lobe-local://preview/token/',
+        }),
+      );
+    });
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve, 20));
+    });
+
+    expect(result.current.preview).toEqual(
+      textPreview('<p>saved</p>', {
+        contentType: 'text/html',
+        resourceBaseUrl: 'lobe-local://preview/token/',
+      }),
+    );
+  });
+
+  it.each([404, 403])('evicts the cached text when the file read answers %i', async (status) => {
+    await seedRow(NOTES, textPreview('# obsolete'));
+    let fail: (error: unknown) => void = () => {};
+    vi.mocked(projectFileService.getLocalFilePreview).mockImplementation(
+      () => new Promise((_, reject) => (fail = reject)) as never,
+    );
+    const { result } = renderPreview(NOTES);
+    await waitFor(() => expect(result.current.preview).toEqual(textPreview('# obsolete')));
+
+    await act(async () => {
+      fail(new LocalFileResponseError(status));
+    });
+
+    await waitFor(() => expect(result.current.preview).toBeUndefined());
+    expect(result.current.sync.error).toBeInstanceOf(LocalFileResponseError);
+    await waitFor(async () => expect(await storedRow(NOTES)).toBeUndefined());
+  });
+
+  it('keeps the cached text when the file read fails transiently', async () => {
+    await seedRow(NOTES, textPreview('# cached'));
+    let fail: (error: unknown) => void = () => {};
+    vi.mocked(projectFileService.getLocalFilePreview).mockImplementation(
+      () => new Promise((_, reject) => (fail = reject)) as never,
+    );
+    const { result } = renderPreview(NOTES);
+    await waitFor(() => expect(result.current.preview).toEqual(textPreview('# cached')));
+
+    await act(async () => {
+      fail(new LocalFileResponseError(500));
+    });
+    await waitFor(() => expect(result.current.sync.error).toBeInstanceOf(LocalFileResponseError));
+
+    expect(result.current.preview).toEqual(textPreview('# cached'));
+    expect((await storedRow(NOTES))?.data).toEqual(textPreview('# cached'));
   });
 
   it('drops a save that settles under another identity', async () => {

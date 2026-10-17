@@ -12,6 +12,7 @@ import {
   type ReplicaSyncResult,
 } from '@/libs/replica';
 import { cloudSandboxService } from '@/services/cloudSandbox';
+import { isTerminalLocalFileError } from '@/services/electron/localFileService';
 import { type LocalFilePreview, projectFileService } from '@/services/projectFile';
 
 import {
@@ -130,8 +131,23 @@ export const useLocalFilePreviewStore: UseBoundStoreWithEqualityFn<
       const savedBefore = saveGenerations.get(key) ?? 0;
       const preview = await fetchLocalFilePreview(key);
       const current = get().previewMap[key];
-      if ((saveGenerations.get(key) ?? 0) !== savedBefore && current) return current;
-      return preview;
+      if ((saveGenerations.get(key) ?? 0) === savedBefore || !current) return preview;
+      // A save landed while this read was in flight: keep the saved body, but
+      // take the rest of the fresh read — notably the `resourceBaseUrl` an HTML
+      // preview needs for its relative assets (never persisted, so the cached
+      // copy has none).
+      return preview.type === 'text' && current.type === 'text'
+        ? { ...preview, content: current.content }
+        : current;
+    },
+    effects: {
+      // The file was deleted or may no longer be read (desktop protocol 404 /
+      // 403): drop the cached text — on screen and in IndexedDB — so the portal
+      // reports it instead of rehydrating the obsolete body after a reload.
+      // Transient failures keep it (stale-while-revalidate).
+      onError: (error, _key, { key, scope }) => {
+        if (key && isTerminalLocalFileError(error)) previews.remove(key, scope);
+      },
     },
     get,
     set,

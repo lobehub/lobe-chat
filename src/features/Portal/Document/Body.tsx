@@ -173,16 +173,16 @@ interface HighlightEditorProps {
   content: string;
   documentId: string;
   filename: string;
-  onSaved: (newContent: string, updatedAt?: string) => void;
+  onSaveStart: () => (newContent: string, updatedAt?: string) => void;
   updatedAt?: Date;
 }
 
 const HighlightEditor = memo<HighlightEditorProps>(
-  ({ content, documentId, filename, onSaved, updatedAt }) => {
+  ({ content, documentId, filename, onSaveStart, updatedAt }) => {
     const { editingValue, handleChange, handleSave } = useHighlightSave({
       content,
       documentId,
-      onSaved,
+      onSaveStart,
       updatedAt,
     });
 
@@ -231,7 +231,7 @@ const DocumentBody = memo(() => {
   const isSkillMarkdown = contentFormat === 'skillMarkdown';
 
   const useFetchDocumentDetail = useDocumentStore((s) => s.useFetchDocumentDetail);
-  const patchDocumentDetail = useDocumentStore((s) => s.patchDocumentDetail);
+  const beginDocumentDetailPatch = useDocumentStore((s) => s.beginDocumentDetailPatch);
   const {
     data: documentMeta,
     error: documentError,
@@ -243,16 +243,14 @@ const DocumentBody = memo(() => {
     ? getDocumentRenderMode(documentMeta)
     : { mode: 'editor' as const };
 
-  const handleHighlightSaved = useCallback(
-    (saved: string, updatedAt?: string) => {
-      if (!documentId) return;
-      patchDocumentDetail(documentId, {
-        content: saved,
-        ...(updatedAt ? { updatedAt: new Date(updatedAt) } : {}),
-      });
-    },
-    [documentId, patchDocumentDetail],
-  );
+  // Captured when the save starts, so a save that settles after an account /
+  // workspace switch never lands in the new identity's replica.
+  const handleHighlightSaveStart = useCallback(() => {
+    if (!documentId) return () => {};
+    const commit = beginDocumentDetailPatch(documentId);
+    return (saved: string, updatedAt?: string) =>
+      commit({ content: saved, ...(updatedAt ? { updatedAt: new Date(updatedAt) } : {}) });
+  }, [documentId, beginDocumentDetailPatch]);
 
   const editorContent = (
     <>
@@ -268,7 +266,7 @@ const DocumentBody = memo(() => {
           filename={documentMeta?.filename ?? ''}
           key={documentId}
           updatedAt={documentMeta?.updatedAt}
-          onSaved={handleHighlightSaved}
+          onSaveStart={handleHighlightSaveStart}
         />
       ) : (
         <EditorCanvas />
