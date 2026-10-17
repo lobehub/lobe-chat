@@ -46,6 +46,16 @@ export const performanceRestrictedImportPaths = [
   },
 ];
 
+// Relative imports inside a feature never match a `paths` name, so the modal
+// seams that features reach through relative paths are guarded by pattern.
+export const performanceRestrictedImportPatterns = [
+  {
+    message:
+      'Import the facade from "ShareMessageModal" (openShareMessageModal), which loads the modal with its screenshot and PDF libraries on click.',
+    regex: String.raw`(^|/)ShareMessageModal/Modal$`,
+  },
+];
+
 // Bundle boundary for browser code: these entries work there but drag a large
 // graph into every chunk that reaches them. Server-side trees opt out with
 // `serverSide: true`, where the full runtime is the point.
