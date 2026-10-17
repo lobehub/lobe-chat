@@ -30,19 +30,19 @@ import { hasWorkspaceScopedPermission } from '@/server/services/workspacePermiss
 import { after } from '@/server/utils/scheduleAfterResponse';
 import { TransferErrorCode } from '@/types/transferError';
 
-import { isWorkspaceNonOwner } from './_helpers/assertWorkspaceRowManageable';
+import { isWorkspaceNonOwner } from '../_helpers/assertWorkspaceRowManageable';
 import {
   assertContentsNotInRestrictedKnowledgeBase,
   getRestrictedKnowledgeBaseIds,
-} from './_helpers/knowledgeBaseAccess';
-import { resolveRootOperation } from './_helpers/runProvenance';
+} from '../_helpers/knowledgeBaseAccess';
+import { resolveRootOperation } from '../_helpers/runProvenance';
 import {
   compareDocumentHistoryItemsInputSchema,
   getDocumentHistoryItemInputSchema,
   listDocumentHistoryInputSchema,
   saveDocumentHistoryInputSchema,
   updateDocumentInputSchema,
-} from './_schema/documentHistory';
+} from '../_schema/documentHistory';
 
 /**
  * Creating a child or moving a row requires the parent to be visible in the
