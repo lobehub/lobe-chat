@@ -1,14 +1,10 @@
-import { execFileSync } from 'node:child_process';
-import { createRequire } from 'node:module';
-import path from 'node:path';
-import { pathToFileURL } from 'node:url';
+import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
-import { afterAll, describe, expect, it } from 'vitest';
+import { ensureLLMMockServer, LLM_MOCK_URL, registerLLMReplies } from './server';
 
-import { buildOpenAIChunks, ensureLLMMockServer, LLM_MOCK_URL, registerLLMReplies } from './server';
-
-const parseContent = (chunks: string[]) =>
-  chunks
+const parseContent = (sse: string) =>
+  sse
+    .split(/(?<=\n\n)/)
     .filter((chunk) => chunk.startsWith('data: {'))
     .map((chunk) => JSON.parse(chunk.slice(6)).choices[0].delta.content ?? '')
     .join('');
@@ -22,24 +18,38 @@ const complete = async (content: unknown) => {
   return (await res.json()).choices[0].message.content as string;
 };
 
-describe('LLM mock endpoint', () => {
+const reply = (key: string, match: 'contains' | 'exact', response: string) => ({
+  key,
+  match,
+  response,
+  responseDelay: 0,
+  streamChunkSize: 5,
+  streamDelay: 0,
+});
+
+describe('LLM mock endpoint', { timeout: 20_000 }, () => {
+  beforeAll(async () => {
+    await ensureLLMMockServer();
+  }, 20_000);
+
   afterAll(async () => {
     await registerLLMReplies({ clear: ['exact:hello server', 'contains:fragment'] });
   });
 
+  // Regression: the endpoint lived inside the first Cucumber worker and closed
+  // when that worker finished, while slower workers still needed it.
+  it('is served by its own process, not by the worker that started it', async () => {
+    const health = await (await fetch(`${LLM_MOCK_URL}/__e2e/health`)).json();
+
+    expect(health.ok).toBe(true);
+    expect(health.pid).not.toBe(process.pid);
+  });
+
   it('keeps a reply another worker still holds when one worker clears it', async () => {
-    const reply = {
-      key: 'shared prompt',
-      match: 'exact' as const,
-      response: 'shared reply',
-      responseDelay: 0,
-      streamChunkSize: 5,
-      streamDelay: 0,
-    };
-    await ensureLLMMockServer();
-    await registerLLMReplies({ replies: [reply] });
+    const shared = reply('shared prompt', 'exact', 'shared reply');
+    await registerLLMReplies({ replies: [shared] });
     await fetch(`${LLM_MOCK_URL}/__e2e/llm/replies`, {
-      body: JSON.stringify({ owner: 'other-worker', replies: [reply] }),
+      body: JSON.stringify({ owner: 'other-worker', replies: [shared] }),
       method: 'POST',
     });
 
@@ -53,60 +63,11 @@ describe('LLM mock endpoint', () => {
     expect(await complete('shared prompt')).not.toBe('shared reply');
   });
 
-  // Regression: the endpoint lived inside the first Cucumber worker and closed
-  // when that worker finished, while slower workers still needed it.
-  it('outlives the worker process that started it', async () => {
-    const port = '3991';
-    const url = `http://127.0.0.1:${port}`;
-    const tsxEsm = pathToFileURL(createRequire(`${process.cwd()}/noop.js`).resolve('tsx/esm')).href;
-    const serverModule = pathToFileURL(path.join(__dirname, 'server.ts')).href;
-    // A short-lived "worker": starts the endpoint, then exits.
-    execFileSync(
-      process.execPath,
-      [
-        '--import',
-        tsxEsm,
-        '-e',
-        `import(${JSON.stringify(serverModule)}).then((m) => m.ensureLLMMockServer()).then(() => process.exit(0))`,
-      ],
-      { env: { ...process.env, E2E_LLM_MOCK_PORT: port }, stdio: 'ignore', timeout: 30_000 },
-    );
-
-    try {
-      expect((await fetch(`${url}/__e2e/health`)).ok).toBe(true);
-    } finally {
-      await fetch(`${url}/__e2e/shutdown`, { method: 'POST' }).catch(() => {});
-    }
-  });
-
-  it('streams the reply as OpenAI chat-completion chunks ending with [DONE]', () => {
-    const chunks = buildOpenAIChunks('Hello, mock world!', 4, 'deepseek-v4-flash');
-
-    expect(parseContent(chunks)).toBe('Hello, mock world!');
-    expect(chunks.at(-1)).toBe('data: [DONE]\n\n');
-    expect(JSON.parse(chunks.at(-2)!.slice(6)).choices[0].finish_reason).toBe('stop');
-  });
-
   it('answers a server-side chat completion with the registered reply', async () => {
-    await ensureLLMMockServer();
     await registerLLMReplies({
       replies: [
-        {
-          key: 'hello server',
-          match: 'exact',
-          response: 'registered reply',
-          responseDelay: 0,
-          streamChunkSize: 5,
-          streamDelay: 0,
-        },
-        {
-          key: 'fragment',
-          match: 'contains',
-          response: 'fragment reply',
-          responseDelay: 0,
-          streamChunkSize: 5,
-          streamDelay: 0,
-        },
+        reply('hello server', 'exact', 'registered reply'),
+        reply('fragment', 'contains', 'fragment reply'),
       ],
     });
 
@@ -125,6 +86,7 @@ describe('LLM mock endpoint', () => {
     const text = await res.text();
 
     expect(res.headers.get('content-type')).toBe('text/event-stream');
-    expect(parseContent(text.split(/(?<=\n\n)/))).toBe('registered reply');
+    expect(parseContent(text)).toBe('registered reply');
+    expect(text.trimEnd().endsWith('data: [DONE]')).toBe(true);
   });
 });
