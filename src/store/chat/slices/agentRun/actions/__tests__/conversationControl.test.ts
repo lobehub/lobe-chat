@@ -80,6 +80,8 @@ beforeEach(() => {
     .mockReset()
     .mockResolvedValue({ operationId: 'operation-share', success: true } as any);
   useChatStore.setState({
+    // Resumes need Gateway mode; the gateway-off refusal is in conversationControl.gatewayMode.test.ts.
+    isGatewayModeEnabled: () => true,
     updateTopicStatus: vi.fn().mockResolvedValue(undefined),
     questionSubmissions: {},
   });
@@ -815,7 +817,6 @@ describe('ConversationControl actions', () => {
           });
         });
 
-        vi.spyOn(result.current, 'isGatewayModeEnabled').mockReturnValue(true);
         vi.spyOn(result.current, 'optimisticUpdateMessagePlugin').mockResolvedValue(undefined);
         const executeGatewayAgentSpy = vi
           .spyOn(result.current, 'executeGatewayAgent')
@@ -905,7 +906,6 @@ describe('ConversationControl actions', () => {
           }).operationId;
         });
 
-        vi.spyOn(result.current, 'isGatewayModeEnabled').mockReturnValue(true);
         vi.spyOn(result.current, 'optimisticUpdateMessagePlugin').mockResolvedValue(undefined);
         const executeGatewayAgentSpy = vi
           .spyOn(result.current, 'executeGatewayAgent')
@@ -961,7 +961,6 @@ describe('ConversationControl actions', () => {
             messagesMap: { [chatKey]: [toolMessage] },
           });
         });
-        vi.spyOn(result.current, 'isGatewayModeEnabled').mockReturnValue(true);
         const executeGatewayAgentSpy = vi
           .spyOn(result.current, 'executeGatewayAgent')
           .mockResolvedValue({} as any);
@@ -1040,7 +1039,6 @@ describe('ConversationControl actions', () => {
             type: 'execServerAgentRuntime',
           }).operationId;
         });
-        vi.spyOn(result.current, 'isGatewayModeEnabled').mockReturnValue(true);
         const executeGatewayAgentSpy = vi
           .spyOn(result.current, 'executeGatewayAgent')
           .mockResolvedValue({} as any);
@@ -1102,7 +1100,6 @@ describe('ConversationControl actions', () => {
             messagesMap: { [chatKey]: [toolMessage] },
           });
         });
-        vi.spyOn(result.current, 'isGatewayModeEnabled').mockReturnValue(true);
         const mutation = vi.mocked(lambdaClient.aiAgent.resolveAgentInterventionBySource.mutate);
         mutation.mockRejectedValue(new Error('claim unavailable'));
 
@@ -1148,7 +1145,6 @@ describe('ConversationControl actions', () => {
             messagesMap: { [chatKey]: [toolMessage] },
           });
         });
-        vi.spyOn(result.current, 'isGatewayModeEnabled').mockReturnValue(true);
         const executeGatewayAgentSpy = vi
           .spyOn(result.current, 'executeGatewayAgent')
           .mockResolvedValue({} as any);
@@ -1267,7 +1263,6 @@ describe('ConversationControl actions', () => {
 
         expect(result.current.operations[serverOpId!]!.status).toBe('completed');
 
-        vi.spyOn(result.current, 'isGatewayModeEnabled').mockReturnValue(true);
         vi.spyOn(result.current, 'optimisticUpdateMessagePlugin').mockResolvedValue(undefined);
         const executeGatewayAgentSpy = vi
           .spyOn(result.current, 'executeGatewayAgent')
@@ -1327,7 +1322,6 @@ describe('ConversationControl actions', () => {
           });
         });
 
-        vi.spyOn(result.current, 'isGatewayModeEnabled').mockReturnValue(true);
         vi.spyOn(result.current, 'optimisticUpdateMessagePlugin').mockResolvedValue(undefined);
         const executeGatewayAgentSpy = vi
           .spyOn(result.current, 'executeGatewayAgent')
@@ -1356,10 +1350,10 @@ describe('ConversationControl actions', () => {
         executeGatewayAgentSpy.mockRestore();
       });
 
-      it('still resumes through executeGatewayAgent with resumeApproval when gateway mode is reported off', async () => {
-        // Regression: the browser client runtime is gone. Even when the gateway
-        // flag reads false and no server op is running, approval must go through
-        // the Gateway resume — there is no local executeClientAgent fallback.
+      it('resumes through executeGatewayAgent with resumeApproval when no server op is running', async () => {
+        // Regression: the browser client runtime is gone. Even with no server op
+        // running, approval must go through the Gateway resume — there is no
+        // local executeClientAgent fallback (Gateway mode off: gatewayMode test).
         const { result } = renderHook(() => useChatStore());
 
         const agentId = 'local-agent';
@@ -1382,7 +1376,6 @@ describe('ConversationControl actions', () => {
           });
         });
 
-        vi.spyOn(result.current, 'isGatewayModeEnabled').mockReturnValue(false);
         const executeGatewayAgentSpy = vi
           .spyOn(result.current, 'executeGatewayAgent')
           .mockResolvedValue({} as any);
@@ -1447,7 +1440,6 @@ describe('ConversationControl actions', () => {
           });
         });
 
-        vi.spyOn(result.current, 'isGatewayModeEnabled').mockReturnValue(true);
         vi.spyOn(result.current, 'optimisticUpdateMessagePlugin').mockResolvedValue(undefined);
         const executeGatewayAgentSpy = vi
           .spyOn(result.current, 'executeGatewayAgent')
@@ -1617,7 +1609,6 @@ describe('ConversationControl actions', () => {
         }).operationId;
       });
 
-      vi.spyOn(result.current, 'isGatewayModeEnabled').mockReturnValue(true);
       return pausedOperationId;
     };
 
@@ -1774,7 +1765,6 @@ describe('ConversationControl actions', () => {
         });
       });
 
-      vi.spyOn(result.current, 'isGatewayModeEnabled').mockReturnValue(true);
       vi.spyOn(result.current, 'optimisticUpdateMessagePlugin').mockResolvedValue(undefined);
       vi.spyOn(result.current, 'optimisticUpdateMessageContent').mockResolvedValue(undefined);
       const executeGatewayAgentSpy = vi
@@ -1831,7 +1821,6 @@ describe('ConversationControl actions', () => {
         });
       });
 
-      vi.spyOn(result.current, 'isGatewayModeEnabled').mockReturnValue(true);
       vi.spyOn(result.current, 'optimisticUpdateMessagePlugin').mockResolvedValue(undefined);
       vi.spyOn(result.current, 'optimisticUpdateMessageContent').mockResolvedValue(undefined);
       const executeGatewayAgentSpy = vi
@@ -2078,7 +2067,6 @@ describe('ConversationControl actions', () => {
           });
         });
 
-        vi.spyOn(result.current, 'isGatewayModeEnabled').mockReturnValue(true);
         vi.spyOn(result.current, 'optimisticUpdateMessagePlugin').mockResolvedValue(undefined);
         vi.spyOn(result.current, 'optimisticUpdateMessageContent').mockResolvedValue(undefined);
         const executeGatewayAgentSpy = vi
@@ -2143,7 +2131,6 @@ describe('ConversationControl actions', () => {
           });
         });
 
-        vi.spyOn(result.current, 'isGatewayModeEnabled').mockReturnValue(true);
         vi.spyOn(result.current, 'optimisticUpdateMessagePlugin').mockResolvedValue(undefined);
         vi.spyOn(result.current, 'optimisticUpdateMessageContent').mockResolvedValue(undefined);
         vi.spyOn(result.current, 'optimisticUpdatePluginState').mockResolvedValue(undefined);
@@ -2198,7 +2185,6 @@ describe('ConversationControl actions', () => {
             messagesMap: { [chatKey]: [toolMessage] },
           });
         });
-        vi.spyOn(result.current, 'isGatewayModeEnabled').mockReturnValue(true);
         const legacySideEffect = vi.fn().mockResolvedValue({
           response: { selectedTemplateIds: ['template-1'] },
         });
@@ -3593,7 +3579,6 @@ describe('ConversationControl actions', () => {
         });
       });
 
-      vi.spyOn(result.current, 'isGatewayModeEnabled').mockReturnValue(true);
       vi.spyOn(result.current, 'optimisticUpdateMessagePlugin').mockResolvedValue(undefined);
     };
 

@@ -7,6 +7,7 @@ import {
   type ToolIntervention,
   type UIChatMessage,
 } from '@lobechat/types';
+import { t } from 'i18next';
 
 import { type ChatInputEditor } from '@/features/ChatInput';
 import { lambdaClient } from '@/libs/trpc/client';
@@ -604,6 +605,16 @@ export class ConversationControlActionImpl {
     });
   };
 
+  /**
+   * Resumes start a Gateway run. With Gateway mode off (ENABLE_AGENT_GATEWAY=0
+   * or no service token) refuse before claiming the pending row, as send and
+   * regenerate do; a share run always goes through the share gateway.
+   */
+  #assertGatewayResume = (context: ConversationContext) => {
+    if (!context.agentShareId && !this.#get().isGatewayModeEnabled())
+      throw new Error(t('gateway.notConfigured', { ns: 'chat' }));
+  };
+
   approveToolCalling = async (
     toolMessageId: string,
     _assistantGroupId: string,
@@ -675,6 +686,7 @@ export class ConversationControlActionImpl {
       // list instead, which their share runs send as `userInterventionConfig`.
       const remembersOnServer = !!options?.rememberToolKey && !effectiveContext.agentShareId;
       try {
+        this.#assertGatewayResume(effectiveContext);
         const sourceResolution = await this.tryResolveAgentInterventionBySource({
           action: {
             ...(options?.editedArguments && {
@@ -879,6 +891,7 @@ export class ConversationControlActionImpl {
     const pausedOpIds = this.#getRunningServerOps(effectiveContext).map((op) => op.id);
 
     try {
+      this.#assertGatewayResume(effectiveContext);
       const sourceResolution = await this.tryResolveAgentInterventionBySource({
         action: { scope: 'once', type: 'approve_tool' },
         context: effectiveContext,
@@ -996,6 +1009,7 @@ export class ConversationControlActionImpl {
       // marker intact for a retry.
       const pausedOpIds = this.#getRunningServerOps(effectiveContext).map((op) => op.id);
       try {
+        this.#assertGatewayResume(effectiveContext);
         const answerResult = toAgentInterventionAnswerResult(resolvedResponse);
         const sourceAction =
           resolvedOptions?.agentInterventionAction ??
@@ -1111,6 +1125,7 @@ export class ConversationControlActionImpl {
       const requestMetadata = this.#getRequestMetadataFromMessageChain(toolMessageId);
       const pausedOpIds = this.#getRunningServerOps(effectiveContext).map((op) => op.id);
       try {
+        this.#assertGatewayResume(effectiveContext);
         const sourceResolution = await this.tryResolveAgentInterventionBySource({
           action: { type: 'skip_interaction' },
           context: effectiveContext,
@@ -1629,6 +1644,7 @@ export class ConversationControlActionImpl {
       }
       const pausedOpIds = this.#getRunningServerOps(effectiveContext).map((op) => op.id);
       try {
+        this.#assertGatewayResume(effectiveContext);
         const sourceResolution = await this.tryResolveAgentInterventionBySource({
           action: { reason, type: 'reject_continue' },
           context: effectiveContext,
@@ -1728,6 +1744,7 @@ export class ConversationControlActionImpl {
       });
 
       try {
+        this.#assertGatewayResume(effectiveContext);
         const sourceResolution = await this.tryResolveAgentInterventionBySource({
           action: { reason, type: 'reject_continue' },
           context: effectiveContext,
