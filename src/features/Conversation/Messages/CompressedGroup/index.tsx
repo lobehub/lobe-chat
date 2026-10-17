@@ -52,11 +52,6 @@ const styles = createStaticStyles(({ css, cssVar }) => ({
   divider: css`
     margin: 0;
   `,
-  header: css`
-    .ant-tabs-nav {
-      margin-block-end: 0;
-    }
-  `,
   messagesContainer: css`
     padding-block: 8px;
   `,
@@ -155,7 +150,6 @@ const CompressedGroupMessage = memo<CompressedGroupMessageProps>(({ id }) => {
           <Flexbox horizontal align={'center'} distribution={'space-between'} width={'100%'}>
             <Tabs
               activeKey={activeTab}
-              className={styles.header}
               items={tabItems}
               variant={'rounded'}
               onChange={setActiveTab}
