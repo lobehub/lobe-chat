@@ -1,4 +1,5 @@
 import { createProjectCoordinatorAgentConfig } from '@lobechat/builtin-agents';
+import { INBOX_SESSION_ID } from '@lobechat/const';
 import type { ProjectStatus, ProjectVisibility } from '@lobechat/types';
 import { and, asc, desc, eq, inArray, isNull, max, or, sql } from 'drizzle-orm';
 
@@ -131,11 +132,33 @@ export class ProjectModel {
         .delete(projects)
         .where(and(eq(projects.id, id), this.manageable()))
         .returning();
-      await new AgentModel(tx as LobeChatDatabase, this.userId, this.workspaceId).delete(
-        project.coordinatorAgentId,
-      );
+      if (project.coordinatorAgentId) {
+        await new AgentModel(tx as LobeChatDatabase, this.userId, this.workspaceId).delete(
+          project.coordinatorAgentId,
+        );
+      }
       return deleted ?? null;
     });
+  }
+
+  /**
+   * Fill each project's main agent. The column is cleared when that agent is
+   * deleted (`ON DELETE SET NULL`); such projects fall back to LobeAI.
+   */
+  async resolveCoordinatorAgents<T extends { coordinatorAgentId: string | null }>(
+    items: T[],
+  ): Promise<(T & { coordinatorAgentId: string })[]> {
+    if (items.every((item) => item.coordinatorAgentId)) {
+      return items as (T & { coordinatorAgentId: string })[];
+    }
+    const inbox = await new AgentModel(this.db, this.userId, this.workspaceId).getBuiltinAgent(
+      INBOX_SESSION_ID,
+    );
+    if (!inbox) throw new Error('Project main agent not found');
+    return items.map((item) => ({
+      ...item,
+      coordinatorAgentId: item.coordinatorAgentId ?? inbox.id,
+    }));
   }
 
   async findById(id: string) {
