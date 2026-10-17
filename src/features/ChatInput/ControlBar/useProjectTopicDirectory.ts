@@ -1,4 +1,4 @@
-import { useChatStore } from '@/store/chat';
+import { type ChatStoreState, useChatStore } from '@/store/chat';
 import { topicSelectors } from '@/store/chat/selectors';
 import {
   type ProjectDirectory,
@@ -27,6 +27,20 @@ export const useActiveProjectDirectoryTopicId = (): string | undefined => {
 };
 
 /**
+ * The staged directory of the blank conversation `agentId` / `topicId`
+ * describes — see `useStagedProjectDirectoryId`. Shared with the welcome
+ * screen, which reads its ids from the conversation rather than the composer.
+ */
+export const stagedProjectDirectoryIdSelector =
+  (agentId: string | undefined, topicId: string | null | undefined) =>
+  (s: ChatStoreState): string | undefined => {
+    const pending = s.pendingNewTopicDirectory;
+    return agentId && !topicId && pending?.agentId === agentId
+      ? pending.projectWorkingDirectoryId
+      : undefined;
+  };
+
+/**
  * The project directory a blank conversation was opened in by a project
  * group's "+" (`pendingNewTopicDirectory`). Its first send binds the new topic
  * there, so until then the composer has to show that directory rather than
@@ -36,10 +50,7 @@ export const useActiveProjectDirectoryTopicId = (): string | undefined => {
 export const useStagedProjectDirectoryId = (agentId: string): string | undefined => {
   const topicId = useTopicId();
 
-  return useChatStore((s) => {
-    const pending = s.pendingNewTopicDirectory;
-    return !topicId && pending?.agentId === agentId ? pending.projectWorkingDirectoryId : undefined;
-  });
+  return useChatStore(stagedProjectDirectoryIdSelector(agentId, topicId));
 };
 
 /**
