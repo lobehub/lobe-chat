@@ -1,9 +1,9 @@
 import { RequestTrigger } from '@lobechat/types';
 
 import type { AgentAccountView } from '@/database/models/agentAccount';
+import type { AgentInboxEntry } from '@/database/models/agentInbox';
 import { AgentInboxModel } from '@/database/models/agentInbox';
 import { TopicModel } from '@/database/models/topic';
-import type { AgentInboxMessageItem } from '@/database/schemas';
 import type { LobeChatDatabase } from '@/database/type';
 import { AiAgentService } from '@/server/services/aiAgent';
 import { TopicStartReservationError } from '@/server/services/aiAgent/topicStartReservation';
@@ -19,10 +19,7 @@ const WAKE_BODY_PREVIEW_CHARS = 2000;
  * message itself is attacker-controlled, so it rides on the user side inside
  * an `<untrusted_inbox>` fence and never reaches the system prompt.
  */
-export const buildInboundPrompt = (
-  account: AgentAccountView,
-  message: AgentInboxMessageItem,
-): string =>
+export const buildInboundPrompt = (account: AgentAccountView, message: AgentInboxEntry): string =>
   [
     `A new message arrived for your ${account.kind} account ${account.identifier}. Decide whether it needs anything from you.`,
     fenceUntrustedInbox([

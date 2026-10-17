@@ -1,9 +1,14 @@
-import type { AgentAccountInboundMessage, AgentAccountInboundRequest } from '@lobechat/types';
+import type {
+  AgentAccountInboundEvent,
+  AgentAccountInboundMessage,
+  AgentAccountInboundRequest,
+} from '@lobechat/types';
 
 import type { AgentAccountView } from '@/database/models/agentAccount';
 import { AgentAccountModel } from '@/database/models/agentAccount';
+import type { AgentInboxEntry } from '@/database/models/agentInbox';
 import { AgentInboxModel } from '@/database/models/agentInbox';
-import type { AgentInboxMessageItem } from '@/database/schemas';
+import { SignalModel } from '@/database/models/signal';
 import type { LobeChatDatabase } from '@/database/type';
 import { KeyVaultsGateKeeper } from '@/server/modules/KeyVaultsEncrypt';
 
@@ -24,7 +29,7 @@ import { createAgentInboundWaker } from './waker';
  */
 export interface AgentInboundWakeInput {
   account: AgentAccountView;
-  message: AgentInboxMessageItem;
+  message: AgentInboxEntry;
 }
 
 export interface AgentInboundWakeResult {
@@ -90,19 +95,26 @@ const NOOP_WAKER: AgentInboundWaker = {
   wake: async () => ({ reason: 'waker-not-configured', started: false }),
 };
 
+/** A signal's payload is the source's own event; anything else is wrapped. */
+const toSignalPayload = (payload: unknown): Record<string, unknown> =>
+  payload && typeof payload === 'object' && !Array.isArray(payload)
+    ? (payload as Record<string, unknown>)
+    : { value: payload ?? null };
+
 /**
- * The inbound edge: one provider webhook delivery becomes one inbox message and
- * (optionally) one agent wake.
+ * The inbound edge: one provider webhook delivery becomes one signal, one mail,
+ * one inbox item and (optionally) one agent wake.
  *
- * It composes the three pieces that must stay separate:
+ * It composes the pieces that must stay separate:
  *
  * 1. **Verify** — {@link AgentAccountService.handleInbound} routes by an
  *    untrusted identifier and verifies the signature; only a `delivered`
  *    outcome is trusted.
- * 2. **Persist** — the normalized message is recorded as a first-class inbox
- *    row. `(accountId, providerMessageId)` is unique, so a provider retry
- *    returns the same message with `created: false` instead of duplicating it
- *    or waking the agent twice.
+ * 2. **Persist** — every authentic delivery is recorded as a signal (what the
+ *    outside world sent, kept with how its processing ended); a delivered one
+ *    is then recorded as an `agent_mails` row and put in the inbox. Each step
+ *    is idempotent, so a provider retry returns the same item with
+ *    `created: false` instead of duplicating it or waking the agent twice.
  * 3. **Wake** — a genuinely new delivery wakes the agent through the injected
  *    waker, within {@link INBOUND_WAKE_LIMITS}. A duplicate of a message that
  *    was already woken never reaches this step; a wake that failed transiently
@@ -135,6 +147,11 @@ export class AgentInboundService {
         return { accountId: decision.accountId, outcome: 'rejected', status: 401 };
       }
       case 'ignored': {
+        // A duplicate is a signal already on record; anything else authentic is
+        // a new one that deliberately produced nothing, kept with the reason.
+        if (decision.reason !== 'duplicate') {
+          await this.recordIgnored(provider, decision.accountId, decision.event, decision.reason);
+        }
         return { accountId: decision.accountId, outcome: 'ignored', status: 200 };
       }
       case 'unknown-account':
@@ -142,22 +159,28 @@ export class AgentInboundService {
         return { outcome: decision.outcome, status: 404 };
       }
       default: {
+        const { eventId } = decision.event;
         let result: AgentInboundResult;
         try {
-          result = await this.deliver(decision.accountId, decision.message);
+          result = await this.deliver(
+            provider,
+            decision.accountId,
+            decision.event,
+            decision.message,
+          );
         } catch (error) {
           // The event id is already claimed: without giving it back, every
           // retry during the claim's lifetime would be acknowledged as a
           // duplicate and the message never stored.
           await this.options.accountService
-            .releaseInbound(provider, decision.eventId)
+            .releaseInbound(provider, eventId)
             .catch(() => undefined);
           throw error;
         }
         // Stored but not woken for a transient reason: forget the replay claim
         // so the provider's retry is processed and wakes the agent then.
         if (result.status === 503) {
-          await this.options.accountService.releaseInbound(provider, decision.eventId);
+          await this.options.accountService.releaseInbound(provider, eventId);
         }
         return result;
       }
@@ -172,30 +195,44 @@ export class AgentInboundService {
    * no caller identity to borrow.
    */
   private deliver = async (
+    provider: string,
     accountId: string,
+    event: AgentAccountInboundEvent,
     message: AgentAccountInboundMessage,
   ): Promise<AgentInboundResult> => {
     const account = await this.loadAccount(accountId);
     if (!account) return { outcome: 'unknown-account', status: 404 };
 
+    const { signal } = await this.recordSignal(provider, account, event);
+
+    try {
+      const result = await this.deliverMail(account, message, signal.id);
+      if (result.status === 503) {
+        await SignalModel.markFailed(this.db, signal.id, `wake: ${result.wake.reason}`);
+      } else {
+        await SignalModel.markProcessed(this.db, signal.id);
+      }
+      return result;
+    } catch (error) {
+      await SignalModel.markFailed(
+        this.db,
+        signal.id,
+        error instanceof Error ? error.message : String(error),
+      ).catch(() => undefined);
+      throw error;
+    }
+  };
+
+  /** Record the mail and its inbox item, then wake the agent if the item is new. */
+  private deliverMail = async (
+    account: AgentAccountView,
+    message: AgentAccountInboundMessage,
+    signalId: string,
+  ): Promise<AgentInboundResult> => {
+    const accountId = account.id;
     const inbox = new AgentInboxService(this.db, account.userId, account.workspaceId ?? undefined);
 
-    const { created, message: row } = await inbox.record({
-      accountId,
-      agentId: account.agentId,
-      from: message.from,
-      kind: account.kind,
-      // Media the normalizer accepted (a photo-only iMessage carries nothing
-      // else) — dropping it here would leave the agent an empty message.
-      metadata: message.attachments?.length ? { attachments: message.attachments } : {},
-      provider: account.provider,
-      providerMessageId: message.providerMessageId,
-      receivedAt: message.receivedAt,
-      subject: message.subject ?? null,
-      text: message.text,
-      threadKey: message.threadKey ?? null,
-      to: message.to,
-    });
+    const { created, entry: row } = await inbox.recordInboundMail({ account, message, signalId });
 
     // Idempotent ack: the provider retried a delivery we already handled, so
     // there is nothing new to wake the agent about. A stored row that is still
@@ -251,6 +288,40 @@ export class AgentInboundService {
     };
   };
 
+  /** Record an authentic delivery as a signal, owned by the account's owner. */
+  private recordSignal = (
+    provider: string,
+    account: AgentAccountView,
+    event: AgentAccountInboundEvent,
+  ) =>
+    SignalModel.record(
+      this.db,
+      {
+        accountId: account.id,
+        agentId: account.agentId,
+        externalId: event.eventId,
+        occurredAt: event.occurredAt,
+        payload: toSignalPayload(event.payload),
+        source: provider,
+        type: event.type ?? 'unknown',
+      },
+      { userId: account.userId, workspaceId: account.workspaceId ?? undefined },
+    );
+
+  /** Keep an authentic delivery that produced nothing, with why. */
+  private recordIgnored = async (
+    provider: string,
+    accountId: string,
+    event: AgentAccountInboundEvent,
+    reason: string,
+  ): Promise<void> => {
+    const account = await this.loadAccount(accountId);
+    if (!account) return;
+
+    const { signal } = await this.recordSignal(provider, account, event);
+    await SignalModel.markIgnored(this.db, signal.id, reason);
+  };
+
   /**
    * Whether this account (or this sender on it) already used up its wake
    * budget. The just-recorded row counts, so the limit is the number of
@@ -273,7 +344,7 @@ export class AgentInboundService {
    */
   private wake = async (
     account: AgentAccountView,
-    message: AgentInboxMessageItem,
+    message: AgentInboxEntry,
   ): Promise<AgentInboundWakeResult> => {
     const waker = this.options.waker ?? NOOP_WAKER;
     try {

@@ -1,6 +1,6 @@
-import type { AgentAccountAttachment } from '@lobechat/types';
+import type { AgentMailAttachment } from '@lobechat/types';
 
-import type { AgentInboxMessageItem } from '@/database/schemas';
+import type { AgentInboxEntry } from '@/database/models/agentInbox';
 
 /**
  * Fencing for inbound message content.
@@ -22,8 +22,8 @@ const neutralizeFence = (value: string): string =>
   value.replaceAll(new RegExp(`<[\\s/]*${FENCE_TAG}[^>]*>`, 'gi'), '[removed]');
 
 export interface UntrustedInboxEntry {
-  /** Media the sender attached, as the provider hosts it. */
-  attachments?: AgentAccountAttachment[];
+  /** What the sender attached, as the provider holds it (descriptors only). */
+  attachments?: AgentMailAttachment[];
   codes: string[];
   from: string;
   id: string;
@@ -36,8 +36,8 @@ export interface UntrustedInboxEntry {
 
 export const toUntrustedInboxEntry = (
   row: Pick<
-    AgentInboxMessageItem,
-    'codes' | 'from' | 'id' | 'metadata' | 'receivedAt' | 'subject' | 'text' | 'threadKey' | 'to'
+    AgentInboxEntry,
+    'attachments' | 'codes' | 'from' | 'id' | 'receivedAt' | 'subject' | 'text' | 'threadKey' | 'to'
   >,
   options: { maxBodyChars?: number } = {},
 ): UntrustedInboxEntry => {
@@ -47,13 +47,8 @@ export const toUntrustedInboxEntry = (
       ? `${row.text.slice(0, maxBodyChars)}…`
       : row.text;
 
-  const attachments = row.metadata?.attachments;
-
   return {
-    attachments:
-      Array.isArray(attachments) && attachments.length > 0
-        ? (attachments as AgentAccountAttachment[])
-        : undefined,
+    attachments: row.attachments?.length ? row.attachments : undefined,
     codes: row.codes ?? [],
     from: row.from,
     id: row.id,

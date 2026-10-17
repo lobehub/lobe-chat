@@ -7,7 +7,14 @@ import { getTestDB } from '@lobechat/database/test-utils';
 import { eq } from 'drizzle-orm';
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { agentAccounts, agentInboxMessages, agents, users } from '@/database/schemas';
+import {
+  agentAccounts,
+  agentInboxMessages,
+  agentMails,
+  agents,
+  signals,
+  users,
+} from '@/database/schemas';
 import type { LobeChatDatabase } from '@/database/type';
 
 import type * as AgentIdentityProviders from '../providers';
@@ -38,8 +45,10 @@ const agentCalls = vi.hoisted(() => [] as Array<{ execAgent: any; userId: string
 const execAgentFailure = vi.hoisted(() => ({ next: undefined as Error | undefined }));
 vi.mock('@/server/services/aiAgent', () => ({
   AiAgentService: class {
+    private readonly db: any;
     private readonly userId: string;
-    constructor(_db: unknown, userId: string) {
+    constructor(db: unknown, userId: string) {
+      this.db = db;
       this.userId = userId;
     }
     async execAgent(params: any) {
@@ -49,13 +58,20 @@ vi.mock('@/server/services/aiAgent', () => ({
         execAgentFailure.next = undefined;
         throw error;
       }
+      // A real run starts in a real topic; the inbox remembers it by foreign key.
+      const topicId = params.appContext?.topicId ?? `tpc_inbox_${agentCalls.length}`;
+      const { topics } = await import('@/database/schemas');
+      await this.db
+        .insert(topics)
+        .values({ id: topicId, userId: this.userId })
+        .onConflictDoNothing();
       return {
         agentId: 'agent-inbound-chain',
         assistantMessageId: 'msg_assistant_inbox',
         autoStarted: true,
         createdAt: new Date().toISOString(),
         operationId: 'op_inbox_1',
-        topicId: params.appContext?.topicId ?? `tpc_inbox_${agentCalls.length}`,
+        topicId,
       };
     }
   },
@@ -249,22 +265,48 @@ describe('Agent inbound webhook — end to end over the real route', () => {
     expect(first.status).toBe(200);
     expect(firstJson).toMatchObject({ created: true, outcome: 'delivered', success: true });
 
+    // The delivery is kept as a signal, the mail as an `agent_mails` row, and
+    // the inbox gets one item pointing at that mail.
+    const received = await serverDB.select().from(signals);
+    expect(received).toEqual([
+      expect.objectContaining({
+        accountId,
+        externalId: 'evt_chain_1',
+        source: 'agent-mail',
+        status: 'processed',
+        type: 'message.received',
+      }),
+    ]);
+    const mails = await serverDB
+      .select()
+      .from(agentMails)
+      .where(eq(agentMails.accountId, accountId));
+    expect(mails).toEqual([
+      expect.objectContaining({
+        agentId,
+        codes: ['839201'],
+        direction: 'inbound',
+        fromAddress: 'login@service.com',
+        provider: 'agent-mail',
+        providerMessageId: 'msg_in_chain',
+        signalId: received[0].id,
+        subject: 'Your verification code',
+      }),
+    ]);
     const rows = await serverDB
       .select()
       .from(agentInboxMessages)
       .where(eq(agentInboxMessages.accountId, accountId));
     expect(rows).toHaveLength(1);
     transcript.push(
-      `2. agent_inbox_messages -> ${rows.length} row(s) from=${rows[0].from} subject=${JSON.stringify(rows[0].subject)} codes=${JSON.stringify(rows[0].codes)} readAt=${rows[0].readAt}`,
+      `2. signal ${received[0].status} -> agent_mails from=${mails[0].fromAddress} subject=${JSON.stringify(mails[0].subject)} codes=${JSON.stringify(mails[0].codes)} -> inbox readAt=${rows[0].readAt}`,
     );
     expect(rows[0]).toMatchObject({
       agentId,
-      codes: ['839201'],
-      from: 'login@service.com',
-      kind: 'mail',
-      provider: 'agent-mail',
-      providerMessageId: 'msg_in_chain',
-      subject: 'Your verification code',
+      sender: 'login@service.com',
+      sourceId: mails[0].id,
+      sourceType: 'mail',
+      title: 'Your verification code',
     });
     // The woken run received the message, so it no longer counts as unread
     // and will not be announced again on the agent's next step.
@@ -406,7 +448,7 @@ describe('Agent inbound webhook — end to end over the real route', () => {
         accountService: {
           handleInbound: async () => ({
             accountId,
-            eventId: 'evt_race',
+            event: { eventId: 'evt_race', payload: {}, type: 'message.received' },
             message: {
               from: 'login@service.com',
               providerMessageId: 'msg_race',
@@ -439,7 +481,7 @@ describe('Agent inbound webhook — end to end over the real route', () => {
         handleInbound: async () => ({
           // Not a uuid: the account lookup fails inside deliver().
           accountId: 'not-a-uuid',
-          eventId: 'evt_throws',
+          event: { eventId: 'evt_throws', payload: {}, type: 'message.received' },
           message: {
             from: 'a@example.com',
             providerMessageId: 'msg_throws',
@@ -477,16 +519,52 @@ describe('Agent inbound webhook — end to end over the real route', () => {
     markWoken.mockRestore();
   });
 
-  it('keeps the media a photo-only message carried', async () => {
+  it('keeps an authentic delivery that produced nothing as an ignored signal, once', async () => {
+    const { AgentInboundService } = await import('../inbound');
+    const ignored = (reason: string) =>
+      new AgentInboundService(serverDB, {
+        accountService: {
+          handleInbound: async () => ({
+            accountId,
+            event: { eventId: 'evt_robot', payload: { id: 'evt_robot' }, type: 'message.received' },
+            outcome: 'ignored',
+            reason,
+          }),
+          hasProvider: () => true,
+          releaseInbound: async () => undefined,
+        } as any,
+      });
+
+    // A robot reply the provider filtered: kept as a signal with why, no mail, no wake.
+    const result = await ignored('filtered').handle('agent-mail', { body: '{}', headers: {} });
+    expect(result).toMatchObject({ outcome: 'ignored', status: 200 });
+
+    // Its redelivery is acknowledged as a duplicate and not recorded again.
+    await ignored('duplicate').handle('agent-mail', { body: '{}', headers: {} });
+
+    expect(await serverDB.select().from(signals)).toEqual([
+      expect.objectContaining({ error: 'filtered', externalId: 'evt_robot', status: 'ignored' }),
+    ]);
+    expect(await serverDB.select().from(agentMails)).toHaveLength(0);
+    expect(agentCalls).toHaveLength(0);
+  });
+
+  it('keeps what an attachment-only mail carried', async () => {
     const { AgentInboundService } = await import('../inbound');
     const service = new AgentInboundService(serverDB, {
       accountService: {
         handleInbound: async () => ({
           accountId,
-          eventId: 'evt_photo',
+          event: { eventId: 'evt_photo', payload: {}, type: 'message.received' },
           message: {
-            attachments: [{ mimeType: 'image/jpeg', url: 'https://cdn.linq.test/p.jpg' }],
-            from: '+15550001111',
+            from: 'sender@example.com',
+            mail: {
+              attachments: [{ contentType: 'image/jpeg', filename: 'p.jpg', index: 0, size: 2048 }],
+              cc: [],
+              references: [],
+              replyTo: [],
+              to: [{ address: 'toby-agent@lobe.id' }],
+            },
             providerMessageId: 'msg_photo_only',
             receivedAt: new Date(),
             text: '',
@@ -503,11 +581,11 @@ describe('Agent inbound webhook — end to end over the real route', () => {
 
     const [row] = await serverDB
       .select()
-      .from(agentInboxMessages)
-      .where(eq(agentInboxMessages.providerMessageId, 'msg_photo_only'));
-    expect(row.metadata).toMatchObject({
-      attachments: [{ mimeType: 'image/jpeg', url: 'https://cdn.linq.test/p.jpg' }],
-    });
+      .from(agentMails)
+      .where(eq(agentMails.providerMessageId, 'msg_photo_only'));
+    expect(row.attachments).toEqual([
+      { contentType: 'image/jpeg', filename: 'p.jpg', index: 0, size: 2048 },
+    ]);
   });
 
   it('summarizes the inbox as an unread count and nothing a sender wrote', async () => {

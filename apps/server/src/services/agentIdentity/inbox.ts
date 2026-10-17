@@ -1,10 +1,12 @@
-import type { AgentInboxSummary } from '@lobechat/types';
-
 import type {
-  RecordInboxMessageParams,
-  RecordInboxMessageResult,
-} from '@/database/models/agentInbox';
+  AgentAccountInboundMessage,
+  AgentInboxSummary,
+  AgentMailAddress,
+} from '@lobechat/types';
+
+import type { AgentInboxEntry } from '@/database/models/agentInbox';
 import { AgentInboxModel } from '@/database/models/agentInbox';
+import { AgentMailModel } from '@/database/models/agentMail';
 import type { LobeChatDatabase } from '@/database/type';
 
 /**
@@ -25,16 +27,42 @@ export const extractVerificationCodes = (text: string): string[] => {
   return [...new Set(matches)];
 };
 
+/** Characters of body the inbox list shows; the full body stays on the mail. */
+const PREVIEW_CHARS = 200;
+
+const toPreview = (text: string): string | null => {
+  const flat = text.replaceAll(/\s+/g, ' ').trim();
+  if (!flat) return null;
+  return flat.length > PREVIEW_CHARS ? `${flat.slice(0, PREVIEW_CHARS)}…` : flat;
+};
+
+/** The inbound mail an account received, and the account it arrived at. */
+export interface RecordInboundMailParams {
+  account: { agentId: string; id: string; identifier: string; provider: string };
+  message: AgentAccountInboundMessage;
+  /** The signal the mail was parsed from, when it came in through one. */
+  signalId?: string | null;
+}
+
+export interface RecordInboundMailResult {
+  /** False when the mail was already in the inbox (a provider retry). */
+  created: boolean;
+  entry: AgentInboxEntry;
+}
+
 /**
- * The agent's inbox, as the runtime and the account tool read it.
+ * The agent's inbox and mail, as the runtime and the account tool read them.
  *
- * A thin, credential-free wrapper over {@link AgentInboxModel}: it owns code
- * extraction on ingest and the agent-scoped summary the context injector
- * consumes. It never verifies signatures — that is the account service's job —
- * and never wakes the agent — that is the inbound service's.
+ * A thin, credential-free layer over {@link AgentInboxModel} and
+ * {@link AgentMailModel}: it owns code extraction and turning a mail into an
+ * inbox item on ingest, recording sent mail, and the agent-scoped summary the
+ * context injector consumes. It never verifies signatures — that is the
+ * account service's job — and never wakes the agent — that is the inbound
+ * service's.
  */
 export class AgentInboxService {
   private readonly db: LobeChatDatabase;
+  private readonly mail: AgentMailModel;
   private readonly model: AgentInboxModel;
   private readonly userId: string;
   private readonly workspaceId?: string;
@@ -43,7 +71,12 @@ export class AgentInboxService {
     this.db = db;
     this.userId = userId;
     this.workspaceId = workspaceId;
+    this.mail = new AgentMailModel(db, userId, workspaceId);
     this.model = new AgentInboxModel(db, userId, workspaceId);
+  }
+
+  private get scope() {
+    return { userId: this.userId, workspaceId: this.workspaceId };
   }
 
   list = (params?: Parameters<AgentInboxModel['list']>[0]) => this.model.list(params);
@@ -59,24 +92,103 @@ export class AgentInboxService {
 
   listSince = (params: Parameters<AgentInboxModel['listSince']>[0]) => this.model.listSince(params);
 
-  findTextFromOtherSender = (params: Parameters<AgentInboxModel['findTextFromOtherSender']>[0]) =>
-    this.model.findTextFromOtherSender(params);
+  findTextFromOtherSender = (params: Parameters<AgentMailModel['findTextFromOtherSender']>[0]) =>
+    this.mail.findTextFromOtherSender(params);
 
   listCodesFromOtherSenders = (
-    params: Parameters<AgentInboxModel['listCodesFromOtherSenders']>[0],
-  ) => this.model.listCodesFromOtherSenders(params);
+    params: Parameters<AgentMailModel['listCodesFromOtherSenders']>[0],
+  ) => this.mail.listCodesFromOtherSenders(params);
 
   countForAccount = (accountId: string) => this.model.countForAccount(accountId);
 
   /**
-   * Ingest one normalized inbound message. Codes are extracted here so the row
-   * carries them; the model handles idempotency by provider message id.
+   * Ingest one inbound mail: record it as an `agent_mails` row (codes extracted
+   * here), then put it in the inbox. Both steps are idempotent, so a provider
+   * retry returns the existing item with `created: false`.
    */
-  record = (params: Omit<RecordInboxMessageParams, 'codes'>): Promise<RecordInboxMessageResult> =>
-    AgentInboxModel.record(
+  recordInboundMail = async ({
+    account,
+    message,
+    signalId,
+  }: RecordInboundMailParams): Promise<RecordInboundMailResult> => {
+    const detail = message.mail;
+    const { mail } = await AgentMailModel.record(
       this.db,
-      { ...params, codes: extractVerificationCodes(params.text) },
-      { userId: this.userId, workspaceId: this.workspaceId },
+      {
+        accountId: account.id,
+        agentId: account.agentId,
+        attachments: detail?.attachments,
+        cc: detail?.cc,
+        codes: extractVerificationCodes(message.text),
+        deliveredAt: message.receivedAt,
+        direction: 'inbound',
+        fromAddress: message.from,
+        fromName: detail?.fromName,
+        inReplyTo: detail?.inReplyTo,
+        messageId: detail?.messageId,
+        provider: account.provider,
+        providerMessageId: message.providerMessageId,
+        references: detail?.references,
+        replyTo: detail?.replyTo,
+        signalId,
+        subject: message.subject,
+        text: message.text,
+        threadKey: message.threadKey,
+        to: detail?.to ?? [{ address: message.to }],
+      },
+      this.scope,
+    );
+
+    const { created, item } = await AgentInboxModel.deliver(
+      this.db,
+      {
+        accountId: account.id,
+        agentId: account.agentId,
+        preview: toPreview(mail.text),
+        receivedAt: mail.deliveredAt,
+        sender: mail.fromAddress,
+        sourceId: mail.id,
+        sourceType: 'mail',
+        threadKey: mail.threadKey,
+        title: mail.subject,
+      },
+      this.scope,
+    );
+
+    const entry = await AgentInboxModel.findEntry(this.db, item.id);
+    return { created, entry: entry! };
+  };
+
+  /**
+   * Record mail the agent sent, once the provider accepted it, so its thread
+   * reads whole from LobeHub's side. Sent mail is not an inbox item.
+   */
+  recordSentMail = (params: {
+    account: { agentId: string; id: string; identifier: string; provider: string };
+    inReplyTo?: string | null;
+    providerMessageId: string;
+    subject?: string | null;
+    text: string;
+    threadKey?: string | null;
+    to: AgentMailAddress[];
+  }) =>
+    AgentMailModel.record(
+      this.db,
+      {
+        accountId: params.account.id,
+        agentId: params.account.agentId,
+        deliveredAt: new Date(),
+        direction: 'outbound',
+        fromAddress: params.account.identifier,
+        inReplyTo: params.inReplyTo,
+        provider: params.account.provider,
+        providerMessageId: params.providerMessageId,
+        subject: params.subject,
+        text: params.text,
+        threadKey: params.threadKey,
+        to: params.to,
+      },
+      this.scope,
     );
 
   /**

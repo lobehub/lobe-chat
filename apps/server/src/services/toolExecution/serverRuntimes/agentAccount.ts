@@ -7,8 +7,8 @@ import type {
 import { AgentAccountApiName, AgentAccountIdentifier } from '@lobechat/builtin-tool-agent-account';
 
 import { AgentAccountModel } from '@/database/models/agentAccount';
+import type { AgentInboxEntry } from '@/database/models/agentInbox';
 import { AgentOperationModel } from '@/database/models/agentOperation';
-import type { AgentInboxMessageItem } from '@/database/schemas';
 import { KeyVaultsGateKeeper } from '@/server/modules/KeyVaultsEncrypt';
 import { AgentAccountService } from '@/server/services/agentIdentity';
 import { AgentInboxService } from '@/server/services/agentIdentity/inbox';
@@ -176,7 +176,7 @@ export const agentAccountRuntime: ServerRuntimeRegistration = {
     const checkThreadReply = async (
       accountId: string,
       args: SendMessageArgs & { threadKey: string },
-    ): Promise<{ refusal: string } | { replyTo: AgentInboxMessageItem }> => {
+    ): Promise<{ refusal: string } | { replyTo: AgentInboxEntry }> => {
       const recipient = normalizeAddress(args.to);
       const thread = await inbox.list({
         accountId,
@@ -325,7 +325,7 @@ export const agentAccountRuntime: ServerRuntimeRegistration = {
           };
         }
 
-        let replyTo: AgentInboxMessageItem | undefined;
+        let replyTo: AgentInboxEntry | undefined;
         if (args.threadKey) {
           const checked = await checkThreadReply(target.id, {
             ...args,
@@ -343,12 +343,29 @@ export const agentAccountRuntime: ServerRuntimeRegistration = {
           });
 
           const { providerMessageId } = await service.send(target.id, {
-            replyToProviderMessageId: replyTo?.providerMessageId,
+            replyToProviderMessageId: replyTo?.providerMessageId ?? undefined,
             subject: args.subject,
             text: args.text,
             threadKey: args.threadKey,
             to: args.to,
           });
+
+          // The provider accepted it: keep the sent mail so the thread reads whole.
+          // Recording is bookkeeping — the mail is already out, so a failure here
+          // must not turn a successful send into a reported failure.
+          await inbox
+            .recordSentMail({
+              account: target,
+              inReplyTo: replyTo?.messageId,
+              providerMessageId,
+              subject: args.subject,
+              text: args.text,
+              threadKey: replyTo?.threadKey ?? args.threadKey,
+              to: [{ address: args.to }],
+            })
+            .catch((error) => {
+              console.error('[agentAccount] sent mail %s not recorded:', providerMessageId, error);
+            });
           return {
             content: asJson({ from: target.identifier, providerMessageId, to: args.to }),
             success: true,

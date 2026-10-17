@@ -1,44 +1,79 @@
-import { and, asc, count, desc, eq, gt, gte, ilike, inArray, isNull, or, sql } from 'drizzle-orm';
+import type { AgentInboxSourceType, AgentMailAttachment } from '@lobechat/types';
+import {
+  and,
+  asc,
+  count,
+  desc,
+  eq,
+  gt,
+  gte,
+  ilike,
+  inArray,
+  isNotNull,
+  isNull,
+  lt,
+  or,
+  sql,
+} from 'drizzle-orm';
 
 import type { AgentInboxMessageItem, NewAgentInboxMessage } from '../schemas';
-import { agentInboxMessages } from '../schemas';
+import { agentInboxMessages, agentMails } from '../schemas';
 import type { LobeChatDatabase } from '../type';
 import { agentUsableBy } from '../utils/agent-access';
 import { buildWorkspacePayload, buildWorkspaceWhere } from '../utils/workspace';
 
-/** What a caller may supply when a delivery lands in the inbox. */
-export interface RecordInboxMessageParams {
-  accountId: string;
+/** What the inbound edge supplies when an item lands in the inbox. */
+export interface DeliverInboxItemParams {
+  accountId?: string | null;
   agentId: string;
-  /** Verification codes already extracted from `text`. */
-  codes?: string[];
-  from: string;
-  kind: AgentInboxMessageItem['kind'];
-  metadata?: Record<string, unknown>;
-  provider: string;
-  providerMessageId: string;
+  preview?: string | null;
   receivedAt: Date;
-  subject?: string | null;
-  text: string;
+  sender: string;
+  sourceId: string;
+  sourceType: AgentInboxSourceType;
   threadKey?: string | null;
-  to: string;
+  title?: string | null;
 }
 
-export interface RecordInboxMessageResult {
-  /** False when the same provider delivery had already been recorded. */
+export interface DeliverInboxItemResult {
+  /** False when this source record was already in the inbox. */
   created: boolean;
-  message: AgentInboxMessageItem;
+  item: AgentInboxMessageItem;
 }
 
 /**
- * The agent's own inbox — one row per inbound provider delivery.
- *
- * Storage only: it records, reads and marks read. It never decides whether an
- * inbound is trusted (the account service verifies the signature first) and
- * never wakes the agent (the inbound service owns that). Keeping the model
- * this narrow is what lets the webhook path be idempotent by construction —
- * `(account_id, provider_message_id)` is unique, so a redelivery is a no-op.
+ * One inbox item together with the content of the record it points at — what
+ * the account tool, the wake prompt and the detail view read. The inbox owns
+ * the state (`readAt`, `topicId`, …); the content comes from the source (for
+ * `mail`: the `agent_mails` row).
  */
+export interface AgentInboxEntry {
+  accountId: string | null;
+  agentId: string;
+  attachments: AgentMailAttachment[];
+  codes: string[];
+  createdAt: Date;
+  /** Who it is from (the inbox's `sender`). */
+  from: string;
+  id: string;
+  /** RFC `Message-ID` of the mail, for threading a reply. */
+  messageId: string | null;
+  preview: string | null;
+  /** The provider's id for the content, for provider-side replies. */
+  providerMessageId: string | null;
+  readAt: Date | null;
+  receivedAt: Date;
+  sourceId: string;
+  sourceType: AgentInboxSourceType;
+  /** The item's title (a mail's subject). */
+  subject: string | null;
+  text: string;
+  threadKey: string | null;
+  /** Where it was delivered (the agent's own address). */
+  to: string;
+  topicId: string | null;
+}
+
 /**
  * How long a wake claim holds. Starting a run returns once its operation
  * exists, so a live wake finishes in seconds; ten minutes only ever expires on
@@ -46,6 +81,41 @@ export interface RecordInboxMessageResult {
  */
 export const WAKE_CLAIM_LEASE_SECONDS = 10 * 60;
 
+const mailOfItem = and(
+  eq(agentInboxMessages.sourceType, 'mail'),
+  eq(agentMails.id, agentInboxMessages.sourceId),
+);
+
+const entryColumns = {
+  accountId: agentInboxMessages.accountId,
+  agentId: agentInboxMessages.agentId,
+  attachments: sql<AgentMailAttachment[]>`coalesce(${agentMails.attachments}, '[]'::jsonb)`,
+  codes: sql<string[]>`coalesce(${agentMails.codes}, '[]'::jsonb)`,
+  createdAt: agentInboxMessages.createdAt,
+  from: agentInboxMessages.sender,
+  id: agentInboxMessages.id,
+  messageId: agentMails.messageId,
+  preview: agentInboxMessages.preview,
+  providerMessageId: agentMails.providerMessageId,
+  readAt: agentInboxMessages.readAt,
+  receivedAt: agentInboxMessages.receivedAt,
+  sourceId: agentInboxMessages.sourceId,
+  sourceType: agentInboxMessages.sourceType,
+  subject: agentInboxMessages.title,
+  text: sql<string>`coalesce(${agentMails.text}, '')`,
+  threadKey: agentInboxMessages.threadKey,
+  to: sql<string>`coalesce(${agentMails.to}->0->>'address', '')`,
+  topicId: agentInboxMessages.topicId,
+};
+
+/**
+ * The agent's inbox — one row per item that arrived for its attention.
+ *
+ * Storage only: it delivers, reads and marks state. It never decides whether
+ * an arrival is trusted (the account service verifies the signature first)
+ * and never wakes the agent (the inbound service owns that). Content lives in
+ * the source record; reads that need it join through {@link entryColumns}.
+ */
 export class AgentInboxModel {
   private db: LobeChatDatabase;
   private userId: string;
@@ -71,80 +141,89 @@ export class AgentInboxModel {
     )!;
   };
 
+  private selectEntries = () =>
+    this.db.select(entryColumns).from(agentInboxMessages).leftJoin(agentMails, mailOfItem);
+
   // --------------- Writes (inbound ingest, unscoped by user) ---------------
 
   /**
-   * Record one inbound delivery. Idempotent: a provider retry whose
-   * `providerMessageId` was already stored returns the existing row with
-   * `created: false` and writes nothing.
+   * Put one source record in the inbox. Idempotent: a record that is already
+   * there returns its item with `created: false` and writes nothing.
    *
-   * This is a **static** write because the inbound path resolves the account
-   * before any user is known — the delivery belongs to whoever owns the
-   * account, not to the caller of the webhook.
+   * Static because the inbound edge resolves the account before any user is
+   * known — the item belongs to whoever owns the account.
    */
-  static record = async (
+  static deliver = async (
     db: LobeChatDatabase,
-    params: RecordInboxMessageParams,
+    params: DeliverInboxItemParams,
     scope: { userId: string; workspaceId?: string },
-  ): Promise<RecordInboxMessageResult> => {
+  ): Promise<DeliverInboxItemResult> => {
     const values = buildWorkspacePayload(scope, {
-      accountId: params.accountId,
+      accountId: params.accountId ?? null,
       agentId: params.agentId,
-      codes: params.codes ?? [],
-      from: params.from,
-      kind: params.kind,
-      metadata: params.metadata ?? {},
-      provider: params.provider,
-      providerMessageId: params.providerMessageId,
+      preview: params.preview ?? null,
       receivedAt: params.receivedAt,
-      subject: params.subject ?? null,
-      text: params.text,
+      sender: params.sender,
+      sourceId: params.sourceId,
+      sourceType: params.sourceType,
       threadKey: params.threadKey ?? null,
-      to: params.to,
+      title: params.title ?? null,
     } as NewAgentInboxMessage);
 
     const [inserted] = await db
       .insert(agentInboxMessages)
       .values(values)
       .onConflictDoNothing({
-        target: [agentInboxMessages.accountId, agentInboxMessages.providerMessageId],
+        target: [agentInboxMessages.sourceType, agentInboxMessages.sourceId],
       })
       .returning();
+    if (inserted) return { created: true, item: inserted };
 
-    if (inserted) return { created: true, message: inserted };
-
-    // Conflict: somebody (a retry) already stored this delivery. Return the row.
     const [existing] = await db
       .select()
       .from(agentInboxMessages)
       .where(
         and(
-          eq(agentInboxMessages.accountId, params.accountId),
-          eq(agentInboxMessages.providerMessageId, params.providerMessageId),
+          eq(agentInboxMessages.sourceType, params.sourceType),
+          eq(agentInboxMessages.sourceId, params.sourceId),
         ),
       )
       .limit(1);
 
-    return { created: false, message: existing };
+    return { created: false, item: existing };
+  };
+
+  /** One item with its content, unscoped — for the inbound edge and the waker. */
+  static findEntry = async (
+    db: LobeChatDatabase,
+    id: string,
+  ): Promise<AgentInboxEntry | undefined> => {
+    const [row] = await db
+      .select(entryColumns)
+      .from(agentInboxMessages)
+      .leftJoin(agentMails, mailOfItem)
+      .where(eq(agentInboxMessages.id, id))
+      .limit(1);
+
+    return row;
   };
 
   /**
    * The topic an earlier wake on this thread ran in, if any. Unscoped like
-   * {@link record}: the waker learns the account from the webhook, before any
-   * user is known, and the thread belongs to that account's owner.
+   * {@link deliver}: the waker learns the account from the webhook.
    */
   static findThreadTopicId = async (
     db: LobeChatDatabase,
     params: { accountId: string; threadKey: string },
   ): Promise<string | undefined> => {
     const [row] = await db
-      .select({ topicId: sql<string | null>`${agentInboxMessages.metadata}->>'topicId'` })
+      .select({ topicId: agentInboxMessages.topicId })
       .from(agentInboxMessages)
       .where(
         and(
           eq(agentInboxMessages.accountId, params.accountId),
           eq(agentInboxMessages.threadKey, params.threadKey),
-          sql`${agentInboxMessages.metadata} ? 'topicId'`,
+          isNotNull(agentInboxMessages.topicId),
         ),
       )
       .orderBy(desc(agentInboxMessages.receivedAt))
@@ -154,31 +233,28 @@ export class AgentInboxModel {
   };
 
   /**
-   * Take the right to wake this delivery. Atomic across instances: the row is
-   * stamped only while it is unread and unclaimed, so when two webhook workers
-   * process the same delivery concurrently exactly one of them starts a run.
-   * Returns whether this caller won.
+   * Take the right to wake this item. Atomic across instances: it is stamped
+   * only while unread and unclaimed, so when two webhook workers process the
+   * same delivery concurrently exactly one of them starts a run.
    *
-   * The claim is a lease. A worker that dies after claiming — before the wake
-   * finishes or hands the claim back — would otherwise leave the delivery
-   * claimed forever, and every provider retry would be acknowledged as already
-   * handled while the message sat unread. A claim older than
-   * {@link WAKE_CLAIM_LEASE_SECONDS} on a still-unread row can be taken over;
-   * a wake that succeeds marks the row read, so a finished wake never repeats.
+   * The claim is a lease: a claim older than {@link WAKE_CLAIM_LEASE_SECONDS}
+   * on a still-unread item — left by a worker that died — can be taken over. A
+   * wake that succeeds marks the item read, so a finished wake never repeats.
    */
   static claimWake = async (db: LobeChatDatabase, id: string): Promise<boolean> => {
     const rows = await db
       .update(agentInboxMessages)
-      .set({
-        metadata: sql`coalesce(${agentInboxMessages.metadata}, '{}'::jsonb) || jsonb_build_object('wakeClaimedAt', now())`,
-      })
+      .set({ wakeClaimedAt: sql`now()` })
       .where(
         and(
           eq(agentInboxMessages.id, id),
           isNull(agentInboxMessages.readAt),
           or(
-            sql`not (coalesce(${agentInboxMessages.metadata}, '{}'::jsonb) ? 'wakeClaimedAt')`,
-            sql`(${agentInboxMessages.metadata}->>'wakeClaimedAt')::timestamptz < now() - make_interval(secs => ${WAKE_CLAIM_LEASE_SECONDS})`,
+            isNull(agentInboxMessages.wakeClaimedAt),
+            lt(
+              agentInboxMessages.wakeClaimedAt,
+              sql`now() - make_interval(secs => ${WAKE_CLAIM_LEASE_SECONDS})`,
+            ),
           ),
         ),
       )
@@ -191,14 +267,12 @@ export class AgentInboxModel {
   static releaseWake = async (db: LobeChatDatabase, id: string): Promise<void> => {
     await db
       .update(agentInboxMessages)
-      .set({
-        metadata: sql`coalesce(${agentInboxMessages.metadata}, '{}'::jsonb) - 'wakeClaimedAt'`,
-      })
+      .set({ wakeClaimedAt: null })
       .where(eq(agentInboxMessages.id, id));
   };
 
   /**
-   * Stamp a delivery whose wake started: the run received its content, so it is
+   * Stamp an item whose wake started: the run received its content, so it is
    * read, and the topic it ran in is remembered so its thread can continue there.
    */
   static markWoken = async (
@@ -209,18 +283,16 @@ export class AgentInboxModel {
     await db
       .update(agentInboxMessages)
       .set({
-        metadata: topicId
-          ? sql`coalesce(${agentInboxMessages.metadata}, '{}'::jsonb) || ${JSON.stringify({ topicId })}::jsonb`
-          : undefined,
         readAt: sql`coalesce(${agentInboxMessages.readAt}, now())`,
+        ...(topicId ? { topicId } : {}),
       })
       .where(eq(agentInboxMessages.id, id));
   };
 
   /**
-   * Mark messages read. Scoped to the caller's own rows; an id that is not
-   * theirs is silently skipped rather than reported, so the call cannot be
-   * used to probe another inbox.
+   * Mark items read. Scoped to the caller's own rows; an id that is not theirs
+   * is silently skipped rather than reported, so the call cannot be used to
+   * probe another inbox.
    */
   markRead = async (ids: string[]): Promise<number> => {
     if (ids.length === 0) return 0;
@@ -235,16 +307,16 @@ export class AgentInboxModel {
   };
 
   /**
-   * Record that a wait in `operationId` handed this message to the model, so the
-   * same run's next wait moves on to the next delivery. Kept apart from `readAt`:
-   * a message read elsewhere (a wake, `readInbox`) must still satisfy a wait.
+   * Record that a wait in `operationId` handed this item to the model, so the
+   * same run's next wait moves on to the next arrival. Kept apart from `readAt`:
+   * an item read elsewhere (a wake, `readInbox`) must still satisfy a wait.
    */
   markWaitConsumed = async (id: string, operationId: string): Promise<void> => {
     await this.db
       .update(agentInboxMessages)
       .set({
-        metadata: sql`jsonb_set(coalesce(${agentInboxMessages.metadata}, '{}'::jsonb), '{waitConsumedBy}', coalesce(${agentInboxMessages.metadata}->'waitConsumedBy', '[]'::jsonb) || to_jsonb(${operationId}::text))`,
         updatedAt: new Date(),
+        waitConsumedBy: sql`${agentInboxMessages.waitConsumedBy} || to_jsonb(${operationId}::text)`,
       })
       .where(and(eq(agentInboxMessages.id, id), this.ownership()));
   };
@@ -267,15 +339,16 @@ export class AgentInboxModel {
 
   // --------------- Reads (credential-free, always) ---------------
 
+  /** Items with their content, newest first. */
   list = async (params?: {
     accountId?: string;
     agentId?: string;
     limit?: number;
-    /** Only messages received at or after this instant. */
+    /** Only items received at or after this instant. */
     receivedAfter?: Date;
     threadKey?: string;
     unreadOnly?: boolean;
-  }): Promise<AgentInboxMessageItem[]> => {
+  }): Promise<AgentInboxEntry[]> => {
     const conditions = [this.ownership()];
     if (params?.agentId) conditions.push(eq(agentInboxMessages.agentId, params.agentId));
     if (params?.accountId) conditions.push(eq(agentInboxMessages.accountId, params.accountId));
@@ -284,9 +357,7 @@ export class AgentInboxModel {
       conditions.push(gte(agentInboxMessages.receivedAt, params.receivedAfter));
     if (params?.unreadOnly) conditions.push(isNull(agentInboxMessages.readAt));
 
-    return this.db
-      .select()
-      .from(agentInboxMessages)
+    return this.selectEntries()
       .where(and(...conditions))
       .orderBy(desc(agentInboxMessages.receivedAt))
       .limit(params?.limit ?? 20);
@@ -308,9 +379,8 @@ export class AgentInboxModel {
   };
 
   /**
-   * Messages that arrived on an account at or after `since`, oldest first.
-   * Backs the `wait` primitive's poll loop — a wait that started at T only
-   * ever sees deliveries the provider stamped at or after T.
+   * Items that arrived at or after `since`, oldest first, with their content.
+   * Backs the `wait` primitive's poll loop.
    */
   listSince = async (params: {
     accountId?: string;
@@ -318,110 +388,36 @@ export class AgentInboxModel {
     /** Exact sender address. */
     from?: string;
     limit?: number;
-    since: Date;
-    /** Skip messages a wait in this operation already returned (see {@link markWaitConsumed}). */
+    /** Skip items a wait in this operation already returned (see {@link markWaitConsumed}). */
     notConsumedBy?: string;
-    /** Case-insensitive substring of the subject. */
+    since: Date;
+    /** Case-insensitive substring of the title (a mail's subject). */
     subjectIncludes?: string;
-  }): Promise<AgentInboxMessageItem[]> => {
+  }): Promise<AgentInboxEntry[]> => {
     const conditions = [
       eq(agentInboxMessages.agentId, params.agentId),
-      // Local ingestion time, not the provider's clock: a delivery whose
-      // reported receivedAt predates the cursor (webhook delay, clock skew)
-      // still arrived after it and must be seen by the poll.
+      // Local ingestion time, not the source's clock: an item whose reported
+      // receivedAt predates the cursor (webhook delay, clock skew) still arrived
+      // after it and must be seen by the poll.
       gt(agentInboxMessages.createdAt, params.since),
       this.ownership(),
     ];
     if (params.accountId) conditions.push(eq(agentInboxMessages.accountId, params.accountId));
     // Filters run in the query, not on the fetched page: filtering after
     // `limit` would keep re-reading the same oldest non-matching rows.
-    if (params.from) conditions.push(eq(agentInboxMessages.from, params.from));
+    if (params.from) conditions.push(eq(agentInboxMessages.sender, params.from));
     if (params.notConsumedBy) {
-      conditions.push(
-        sql`not (coalesce(${agentInboxMessages.metadata}->'waitConsumedBy', '[]'::jsonb) ? ${params.notConsumedBy})`,
-      );
+      conditions.push(sql`not (${agentInboxMessages.waitConsumedBy} ? ${params.notConsumedBy})`);
     }
     if (params.subjectIncludes) {
       const pattern = `%${params.subjectIncludes.replaceAll(/[%_\\]/g, '\\$&')}%`;
-      conditions.push(ilike(agentInboxMessages.subject, pattern));
+      conditions.push(ilike(agentInboxMessages.title, pattern));
     }
 
-    return this.db
-      .select()
-      .from(agentInboxMessages)
+    return this.selectEntries()
       .where(and(...conditions))
       .orderBy(asc(agentInboxMessages.createdAt))
       .limit(params.limit ?? 10);
-  };
-
-  /**
-   * The newest message from someone other than `recipient`, received at or
-   * after `since`, whose body contains any of `candidates` once case and
-   * separators are stripped from both sides. The counterpart of
-   * {@link listCodesFromOtherSenders} for secrets the code extractor does not
-   * recognise: links, alphanumeric tokens, credentials.
-   *
-   * `candidates` must already be normalised the same way (lowercased, non
-   * alphanumerics removed): a secret reformatted on the way out would otherwise
-   * slip past a verbatim comparison.
-   */
-  findTextFromOtherSender = async (params: {
-    agentId: string;
-    candidates: string[];
-    recipient: string;
-    since: Date;
-  }): Promise<AgentInboxMessageItem | undefined> => {
-    if (params.candidates.length === 0) return undefined;
-
-    const [row] = await this.db
-      .select()
-      .from(agentInboxMessages)
-      .where(
-        and(
-          this.ownership(),
-          eq(agentInboxMessages.agentId, params.agentId),
-          gte(agentInboxMessages.receivedAt, params.since),
-          sql`lower(trim(${agentInboxMessages.from})) <> ${params.recipient}`,
-          or(
-            ...params.candidates.map(
-              (candidate) =>
-                sql`strpos(lower(regexp_replace(${agentInboxMessages.text}, '[^0-9A-Za-z]', '', 'g')), ${candidate}) > 0`,
-            ),
-          ),
-        ),
-      )
-      .orderBy(desc(agentInboxMessages.receivedAt))
-      .limit(1);
-
-    return row;
-  };
-
-  /**
-   * Every distinct code extracted from mail sent by someone other than
-   * `recipient` at or after `since`, with its sender. The whole window is read
-   * in one query (codes only), so a flood of later mail cannot hide one, and
-   * the caller can compare them however the outgoing text reformats them.
-   */
-  listCodesFromOtherSenders = async (params: {
-    agentId: string;
-    recipient: string;
-    since: Date;
-  }): Promise<{ code: string; from: string }[]> => {
-    const code = sql<string>`jsonb_array_elements_text(coalesce(${agentInboxMessages.codes}, '[]'::jsonb))`;
-
-    const rows = await this.db
-      .selectDistinct({ code, from: agentInboxMessages.from })
-      .from(agentInboxMessages)
-      .where(
-        and(
-          this.ownership(),
-          eq(agentInboxMessages.agentId, params.agentId),
-          gte(agentInboxMessages.receivedAt, params.since),
-          sql`lower(trim(${agentInboxMessages.from})) <> ${params.recipient}`,
-        ),
-      );
-
-    return rows;
   };
 
   static unreadCountForAgent = async (db: LobeChatDatabase, agentId: string): Promise<number> => {
@@ -434,8 +430,8 @@ export class AgentInboxModel {
   };
 
   /**
-   * How many deliveries an account received at or after `since`, optionally
-   * from one sender. Unscoped like {@link record}: the inbound edge uses it to
+   * How many items an account received at or after `since`, optionally from
+   * one sender. Unscoped like {@link deliver}: the inbound edge uses it to
    * rate-limit wakes before any user is known.
    */
   static countRecent = async (
@@ -446,7 +442,7 @@ export class AgentInboxModel {
       eq(agentInboxMessages.accountId, params.accountId),
       gte(agentInboxMessages.createdAt, params.since),
     ];
-    if (params.from) conditions.push(eq(agentInboxMessages.from, params.from));
+    if (params.from) conditions.push(eq(agentInboxMessages.sender, params.from));
 
     const [row] = await db
       .select({ value: count() })
@@ -456,7 +452,7 @@ export class AgentInboxModel {
     return row?.value ?? 0;
   };
 
-  /** Count rows for an account — used by tests and the inbox panel. */
+  /** Count items for an account — used by tests and the inbox panel. */
   countForAccount = async (accountId: string): Promise<number> => {
     const [row] = await this.db
       .select({ value: sql<number>`count(*)::int` })

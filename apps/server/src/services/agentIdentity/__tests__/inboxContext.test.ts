@@ -3,6 +3,7 @@ import type { AgentState } from '@lobechat/agent-runtime';
 import { AgentAccountIdentifier } from '@lobechat/builtin-tool-agent-account';
 import { getTestDB } from '@lobechat/database/test-utils';
 import { gatherContextFacts } from '@lobechat/mecha';
+import type { AgentMailAttachment } from '@lobechat/types';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { agentAccounts, agentInboxMessages, agents, users } from '@/database/schemas';
@@ -25,6 +26,51 @@ import { AgentAccountProviderRegistry } from '@/server/services/agentIdentity/re
  */
 
 const serverDB: LobeChatDatabase = await getTestDB();
+
+/**
+ * Record one inbound mail the way the inbound edge does (mail row, then inbox
+ * item), from the flat shape these tests describe a delivery with.
+ */
+const recordInbound = (params: {
+  accountId: string;
+  agentId: string;
+  attachments?: AgentMailAttachment[];
+  from: string;
+  kind?: string;
+  provider?: string;
+  providerMessageId: string;
+  receivedAt: Date;
+  subject?: string;
+  text: string;
+  threadKey?: string;
+  to: string;
+}) =>
+  new AgentInboxService(serverDB, userId).recordInboundMail({
+    account: {
+      agentId: params.agentId,
+      id: params.accountId,
+      identifier: params.to,
+      provider: params.provider ?? 'user',
+    },
+    message: {
+      from: params.from,
+      mail: params.attachments
+        ? {
+            attachments: params.attachments,
+            cc: [],
+            references: [],
+            replyTo: [],
+            to: [{ address: params.to }],
+          }
+        : undefined,
+      providerMessageId: params.providerMessageId,
+      receivedAt: params.receivedAt,
+      subject: params.subject,
+      text: params.text,
+      threadKey: params.threadKey,
+      to: params.to,
+    },
+  });
 
 const userId = 'agent-inbox-context-user';
 const agentId = 'agent-inbox-context';
@@ -69,8 +115,7 @@ describe('Agent identity as first-class runtime state', () => {
       provider: 'user',
     });
 
-    const inbox = new AgentInboxService(serverDB, userId);
-    await inbox.record({
+    await recordInbound({
       accountId: account.id,
       agentId,
       from: 'login@service.com',

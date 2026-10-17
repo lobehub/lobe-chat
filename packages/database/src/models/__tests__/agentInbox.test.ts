@@ -7,6 +7,7 @@ import { agentAccounts, agentInboxMessages, agents, users, workspaces } from '..
 import type { LobeChatDatabase } from '../../type';
 import { AgentAccountModel } from '../agentAccount';
 import { AgentInboxModel, WAKE_CLAIM_LEASE_SECONDS } from '../agentInbox';
+import { AgentMailModel } from '../agentMail';
 
 const serverDB: LobeChatDatabase = await getTestDB();
 
@@ -28,25 +29,39 @@ const deliver = async (agentId: string, identifier: string, providerMessageId: s
     provider: 'agent-mail',
   });
 
-  const { message } = await AgentInboxModel.record(
+  const { mail } = await AgentMailModel.record(
     serverDB,
     {
       accountId: account.id,
       agentId,
       codes: ['839201'],
-      from: 'login@service.com',
-      kind: 'mail',
+      deliveredAt: new Date('2026-10-02T12:00:00.000Z'),
+      direction: 'inbound',
+      fromAddress: 'login@service.com',
       provider: 'agent-mail',
       providerMessageId,
-      receivedAt: new Date('2026-10-02T12:00:00.000Z'),
       subject: 'Your verification code',
       text: 'Your verification code is 839201.',
-      to: identifier,
+      to: [{ address: identifier }],
     },
     scope,
   );
 
-  return message;
+  const { item } = await AgentInboxModel.deliver(
+    serverDB,
+    {
+      accountId: account.id,
+      agentId,
+      receivedAt: mail.deliveredAt,
+      sender: mail.fromAddress,
+      sourceId: mail.id,
+      sourceType: 'mail',
+      title: mail.subject,
+    },
+    scope,
+  );
+
+  return item;
 };
 
 beforeEach(async () => {
@@ -131,7 +146,7 @@ describe('AgentInboxModel.claimWake', () => {
     await serverDB
       .update(agentInboxMessages)
       .set({
-        metadata: sql`jsonb_set(${agentInboxMessages.metadata}, '{wakeClaimedAt}', to_jsonb(now() - make_interval(secs => ${WAKE_CLAIM_LEASE_SECONDS + 60})))`,
+        wakeClaimedAt: sql`now() - make_interval(secs => ${WAKE_CLAIM_LEASE_SECONDS + 60})`,
       })
       .where(eq(agentInboxMessages.id, message.id));
 
@@ -143,7 +158,7 @@ describe('AgentInboxModel.claimWake', () => {
     await serverDB
       .update(agentInboxMessages)
       .set({
-        metadata: sql`jsonb_set(${agentInboxMessages.metadata}, '{wakeClaimedAt}', to_jsonb(now() - make_interval(secs => ${WAKE_CLAIM_LEASE_SECONDS + 60})))`,
+        wakeClaimedAt: sql`now() - make_interval(secs => ${WAKE_CLAIM_LEASE_SECONDS + 60})`,
       })
       .where(eq(agentInboxMessages.id, message.id));
     expect(await AgentInboxModel.claimWake(serverDB, message.id)).toBe(false);
