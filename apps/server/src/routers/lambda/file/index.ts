@@ -51,14 +51,14 @@ import { TransferErrorCode } from '@/types/transferError';
 import {
   assertWorkspaceRowManageable,
   isWorkspaceNonOwner,
-} from './_helpers/assertWorkspaceRowManageable';
-import type { KnowledgeBaseAccessCtx } from './_helpers/knowledgeBaseAccess';
+} from '../_helpers/assertWorkspaceRowManageable';
+import type { KnowledgeBaseAccessCtx } from '../_helpers/knowledgeBaseAccess';
 import {
   assertContentsNotInRestrictedKnowledgeBase,
   assertFileNotInRestrictedKnowledgeBase,
   assertKnowledgeBaseBrowsable,
   getRestrictedKnowledgeBaseIds,
-} from './_helpers/knowledgeBaseAccess';
+} from '../_helpers/knowledgeBaseAccess';
 
 const fileTransferEntityTypeSchema = z.enum(['document', 'file', 'folder']);
 const deleteKnowledgeItemsByQuerySchema = QueryFileListSchema.extend({
