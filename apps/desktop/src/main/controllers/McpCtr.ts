@@ -11,6 +11,11 @@ import FileService from '@/services/fileSrv';
 import { createLogger } from '@/utils/logger';
 
 import type { MCPClient } from '../libs/mcp/client';
+import {
+  isDeadTransportError,
+  isStaleSessionError,
+  serializeMcpClientParams,
+} from '../libs/mcp/sessionGuards';
 import type {
   AudioContent,
   ImageContent,
@@ -176,52 +181,6 @@ const getFileExtensionFromMimeType = (mimeType: string, mediaType: MediaContentT
 
 const todayShard = () => new Date().toISOString().split('T')[0];
 
-/**
- * Serialize MCP client params into a stable cache key. Object keys are
- * canonicalized (sorted) so that key order in the manifest does not defeat
- * reuse, while array order is preserved: CLI argv is positional, and sorting
- * `args` would let distinct invocations made of the same tokens (reordered
- * flags / positional arguments) silently share a session launched with the
- * previous command line. `env` participates in the key: a changed
- * secret/config must spawn a fresh session rather than reuse one
- * authenticated with the old values.
- */
-const canonicalizeForCacheKey = (value: unknown): unknown => {
-  if (Array.isArray(value)) return value.map((item) => canonicalizeForCacheKey(item));
-  if (value !== null && typeof value === 'object') {
-    const source = value as Record<string, unknown>;
-    const sorted: Record<string, unknown> = {};
-    for (const key of Object.keys(source).sort()) {
-      sorted[key] = canonicalizeForCacheKey(source[key]);
-    }
-    return sorted;
-  }
-  return value;
-};
-
-const serializeMcpClientParams = (params: MCPClientParams): string =>
-  JSON.stringify(canonicalizeForCacheKey(params as unknown as Record<string, unknown>));
-
-/**
- * Whether a failed `callTool` is a confirmed stale-session / transport-level
- * failure, i.e. safe to retry on a fresh session. App-level tool failures
- * (the tool ran and rejected the arguments, the server returned an error
- * result, post-processing failed, …) must NOT be retried: a mutating tool
- * could apply its side effect (write / delete / send) a second time.
- *
- * The signal set is deliberately narrow and mirrors the server-side
- * `MCPClient.isNoValidSessionError` (src/libs/mcp/client.ts): only the
- * `MCPConnectionError` transport wrapper and the SDK's exact
- * "No valid session ID provided" message qualify. Generic JSON-RPC `-32000`
- * errors are server-side application errors and do NOT trigger a retry.
- */
-const isStaleSessionError = (error: unknown): boolean => {
-  if (!error) return false;
-  if (error instanceof Error && error.name === 'MCPConnectionError') return true;
-  const message = error instanceof Error ? error.message : String(error);
-  return message.includes('No valid session ID provided');
-};
-
 const toMarkdown = async (
   blocks: ToolCallContent[] | null | undefined,
   getHTTPURL: (key: string) => Promise<string>,
@@ -300,13 +259,27 @@ export default class McpCtr extends ControllerModule {
 
   /**
    * App shutdown hook: disconnect every pooled stdio session so no MCP
-   * subprocess outlives the desktop process.
+   * subprocess outlives the desktop process. Electron does not await
+   * Promise-returning listeners: every disconnect is initiated
+   * synchronously before the first await (never throws).
    */
   async beforeAppReady() {
     const { app } = await import('electron');
     app.once('will-quit', () => {
-      void this.reapIdleClients(true);
+      void this.disposeAllPooledClients();
     });
+  }
+
+  private async disposeAllPooledClients(): Promise<void> {
+    const entries = [...this.mcpClientPool.entries()];
+    this.mcpClientPool.clear();
+    this.mcpClientLastUsedAt.clear();
+    const teardowns = entries.map(([, client]) =>
+      client.disconnect().catch((error: unknown) => {
+        logger.warn('Failed to disconnect MCP client on dispose:', error);
+      }),
+    );
+    await Promise.all(teardowns);
   }
 
   private get fileService() {
@@ -315,17 +288,17 @@ export default class McpCtr extends ControllerModule {
 
   /**
    * Disconnect and drop every pooled session that has been idle for longer
-   * than the TTL, or all of them when disposing. Never throws.
+   * than the TTL. Never throws.
    */
-  private async reapIdleClients(disposeAll = false): Promise<void> {
+  private async reapIdleClients(): Promise<void> {
     const now = Date.now();
     for (const [key, client] of this.mcpClientPool) {
       const lastUsed = this.mcpClientLastUsedAt.get(key) ?? 0;
-      if (!disposeAll && now - lastUsed < McpCtr.MCP_POOL_IDLE_TTL_MS) continue;
+      if (now - lastUsed < McpCtr.MCP_POOL_IDLE_TTL_MS) continue;
       // A session with active in-flight calls is still working: disconnecting
       // it mid-call would kill a valid long-running tool invocation (the
       // idle clock only refreshes at acquisition, not during the call).
-      if (!disposeAll && this.mcpClientLeases.has(client)) continue;
+      if (this.mcpClientLeases.has(client)) continue;
       this.mcpClientPool.delete(key);
       this.mcpClientLastUsedAt.delete(key);
       try {
@@ -380,7 +353,9 @@ export default class McpCtr extends ControllerModule {
 
   /**
    * Run `fn` while holding a lease: eviction and idle reaping are deferred
-   * while any lease is active. The last release performs the disconnect.
+   * while any lease is active. The last release refreshes the idle clock
+   * (a call may outlast the TTL — the session is fresh the moment its work
+   * ends, not when it started) and then performs any pending disconnect.
    */
   private async withClientLease<T>(client: MCPClient, fn: () => Promise<T>): Promise<T> {
     this.mcpClientLeases.set(client, (this.mcpClientLeases.get(client) ?? 0) + 1);
@@ -391,6 +366,13 @@ export default class McpCtr extends ControllerModule {
       if (remaining > 0) this.mcpClientLeases.set(client, remaining);
       else {
         this.mcpClientLeases.delete(client);
+        // The idle clock must reflect when the LAST lease ended, not when
+        // the call started: an invocation longer than the TTL would
+        // otherwise release an already-expired timestamp and an unrelated
+        // same-key sweep would disconnect this just-used session.
+        for (const [key, pooled] of this.mcpClientPool) {
+          if (pooled === client) this.mcpClientLastUsedAt.set(key, Date.now());
+        }
         if (this.mcpClientPendingDisconnect.delete(client)) {
           try {
             await client.disconnect();
@@ -703,10 +685,24 @@ export default class McpCtr extends ControllerModule {
       } catch (firstError) {
         const failedClient = (firstError as { ranOnClient?: MCPClient })?.ranOnClient;
         if (!isStaleSessionError(firstError)) {
-          logger.warn('MCP tool call failed (no retry for app-level error):', {
-            message: (firstError as Error).message,
-            toolName,
-          });
+          // A dead stdio subprocess must still be evicted even though the
+          // failed call is NOT replayed: the request may have reached the
+          // server before the pipe died, so re-running a mutating tool
+          // could apply its side effect twice. Without eviction the dead
+          // client stays pooled and every later same-key acquisition
+          // refreshes and returns the same unusable session until restart.
+          if (isDeadTransportError(firstError)) {
+            logger.warn('MCP tool call failed on a dead transport, evicting pooled session:', {
+              message: (firstError as Error).message,
+              toolName,
+            });
+            await this.evictClient(params, failedClient);
+          } else {
+            logger.warn('MCP tool call failed (no retry for app-level error):', {
+              message: (firstError as Error).message,
+              toolName,
+            });
+          }
           throw firstError;
         }
         logger.warn('MCP tool call failed on pooled session, retrying with a fresh one:', {
@@ -722,13 +718,13 @@ export default class McpCtr extends ControllerModule {
         try {
           return await runOn(retryClient);
         } catch (retryError) {
-          // Evict the replacement only when its failure is itself a
-          // stale/transport error — the replacement is then proven dead and
-          // must not be handed to the next call. A post-processing failure
-          // (media upload, URL conversion) after a SUCCESSFUL tool call is
-          // not a session problem: the tool already ran and established
-          // server-side state, so the healthy replacement stays pooled.
-          if (isStaleSessionError(retryError)) {
+          // Evict the replacement on a transport-level failure — stale
+          // errors authorize a further retry, dead transports prove the
+          // replacement dead: neither is handed to the next call. A
+          // post-processing failure after a SUCCESSFUL tool call is not a
+          // session problem — the tool already ran, so the healthy
+          // replacement stays pooled.
+          if (isStaleSessionError(retryError) || isDeadTransportError(retryError)) {
             await this.evictClient(params, retryClient);
           }
           throw retryError;

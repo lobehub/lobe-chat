@@ -452,7 +452,7 @@ describe('McpCtr stdio session reuse (T-801 stateful MCP servers)', () => {
       toolName: 't',
     } as any);
 
-    await (ctr as any).reapIdleClients(true);
+    await (ctr as any).disposeAllPooledClients();
 
     expect(a.disconnect).toHaveBeenCalledTimes(1);
     expect(b.disconnect).toHaveBeenCalledTimes(1);
@@ -564,5 +564,155 @@ describe('McpCtr stdio session reuse (T-801 stateful MCP servers)', () => {
 
     const clocks = (ctr as any).mcpClientLastUsedAt as Map<string, number>;
     expect(clocks.size).toBe(0);
+  });
+
+  it('evicts a dead stdio subprocess WITHOUT replaying the call (P1: dead transport)', async () => {
+    // SDK surfaces an exited subprocess as "Connection closed" (in-flight
+    // request) or "Not connected" (request issued after close). Neither
+    // may be retried blindly (a mutating tool could double-apply), but the
+    // dead client MUST leave the pool — otherwise every later call
+    // refreshes and reuses the corpse.
+    const dead = makeClientInstance('dead');
+    dead.callTool.mockRejectedValue(new Error('Connection closed'));
+    const replacement = makeClientInstance('replacement');
+    mcpClientMocks.mockReturnValueOnce(dead).mockReturnValue(replacement);
+
+    await expect(
+      ctr.runStdioMcpTool({
+        args: '',
+        env: undefined,
+        params: { args: ['--stdio'], command: 'ida-mcp', name: 'ida-mcp' },
+        toolName: 'delete_record',
+      } as any),
+    ).rejects.toThrow('Connection closed');
+
+    // Dead session evicted + disconnected; the failure was still surfaced
+    // (no silent replay of the mutating call).
+    expect(dead.disconnect).toHaveBeenCalledTimes(1);
+    expect(dead.callTool).toHaveBeenCalledTimes(1);
+    expect(replacement.callTool).not.toHaveBeenCalled();
+    expect(mcpClientMocks).toHaveBeenCalledTimes(1);
+
+    // The next call builds a FRESH session instead of reusing the corpse.
+    await ctr.runStdioMcpTool({
+      args: '',
+      env: undefined,
+      params: { args: ['--stdio'], command: 'ida-mcp', name: 'ida-mcp' },
+      toolName: 'open_database',
+    } as any);
+    expect(mcpClientMocks).toHaveBeenCalledTimes(2);
+    expect(replacement.callTool).toHaveBeenCalledTimes(1);
+  });
+
+  it('does NOT evict on a server-side app error that merely mentions "Connection closed"', async () => {
+    // Exact-match guard: only the SDK's exact transport-failure messages
+    // qualify; a server application error containing the words must not
+    // kill a healthy pooled session.
+    const pooled = makeClientInstance('pooled');
+    pooled.callTool.mockRejectedValue(
+      Object.assign(new Error('Connection closed by tool sandbox'), { code: -32000 }),
+    );
+    mcpClientMocks.mockReturnValue(pooled);
+
+    await expect(
+      ctr.runStdioMcpTool({
+        args: '',
+        env: undefined,
+        params: { args: ['--stdio'], command: 'ida-mcp', name: 'ida-mcp' },
+        toolName: 't',
+      } as any),
+    ).rejects.toThrow('Connection closed by tool sandbox');
+
+    expect(pooled.disconnect).not.toHaveBeenCalled();
+    expect(mcpClientMocks).toHaveBeenCalledTimes(1);
+  });
+
+  it('refreshes the idle clock when the last lease is released (long call past TTL)', async () => {
+    vi.useFakeTimers();
+    try {
+      const longCall = makeClientInstance('long');
+      const unrelated = makeClientInstance('unrelated');
+      mcpClientMocks
+        .mockReturnValueOnce(longCall)
+        .mockReturnValueOnce(unrelated)
+        .mockReturnValue(unrelated);
+
+      longCall.callTool.mockImplementation(
+        () =>
+          new Promise((resolve) => {
+            setTimeout(
+              () =>
+                resolve({
+                  content: [{ text: 'done', type: 'text' }],
+                  isError: false,
+                }),
+              40 * 60 * 1000,
+            );
+          }),
+      );
+
+      const longParams = {
+        args: '',
+        env: undefined,
+        params: { args: ['--stdio'], command: 'ida-mcp', name: 'ida-mcp' },
+        toolName: 't',
+      } as any;
+      const callPromise = ctr.runStdioMcpTool(longParams);
+      await vi.advanceTimersByTimeAsync(40 * 60 * 1000);
+      await callPromise;
+
+      // The long call ended NOW. A different MCP key acquiring afterwards
+      // triggers a sweep: the just-finished session must survive because
+      // its clock was refreshed at lease release, not at acquisition.
+      await ctr.runStdioMcpTool({
+        args: '',
+        env: { TOKEN: 'other' },
+        params: { args: ['--stdio'], command: 'ida-mcp', name: 'ida-mcp' },
+        toolName: 't',
+      } as any);
+
+      expect(longCall.disconnect).not.toHaveBeenCalled();
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it('will-quit disposal initiates every disconnect synchronously (Electron cannot await listeners)', async () => {
+    const a = makeClientInstance('a');
+    const b = makeClientInstance('b');
+    let releaseA: () => void = () => {};
+    const gateA = new Promise<void>((resolve) => {
+      releaseA = resolve;
+    });
+    a.disconnect.mockImplementation(async () => {
+      await gateA;
+    });
+    mcpClientMocks.mockReturnValueOnce(a).mockReturnValueOnce(b);
+
+    await ctr.runStdioMcpTool({
+      args: '',
+      env: undefined,
+      params: { args: ['--stdio'], command: 'ida-mcp', name: 'ida-mcp' },
+      toolName: 't',
+    } as any);
+    await ctr.runStdioMcpTool({
+      args: '',
+      env: { TOKEN: 'x' },
+      params: { args: ['--stdio'], command: 'ida-mcp', name: 'ida-mcp' },
+      toolName: 't',
+    } as any);
+
+    // The disposal promise resolves only after BOTH teardowns settle, and
+    // both were initiated up front (b's disconnect is called before a's
+    // gated one resolves) — so Electron's non-awaiting will-quit still
+    // reaches every stdio child.
+    const disposal = (ctr as any).disposeAllPooledClients();
+    await vi.waitFor(() => expect(b.disconnect).toHaveBeenCalledTimes(1));
+    expect(a.disconnect).toHaveBeenCalledTimes(1);
+    releaseA();
+    await disposal;
+
+    expect(a.disconnect).toHaveBeenCalledTimes(1);
+    expect(b.disconnect).toHaveBeenCalledTimes(1);
   });
 });
