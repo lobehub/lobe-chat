@@ -117,11 +117,7 @@ const Sections = memo<SectionsProps>(
     const activityPlaceholder = activity.error ? (
       <Flexbox gap={8}>
         <span>{t('workingPanel.pr.error.load')}</span>
-        <Button
-          loading={activity.isValidating}
-          size={'small'}
-          onClick={() => void activity.mutate()}
-        >
+        <Button loading={activity.isValidating} onClick={() => void activity.mutate()}>
           {tCommon('retry')}
         </Button>
       </Flexbox>

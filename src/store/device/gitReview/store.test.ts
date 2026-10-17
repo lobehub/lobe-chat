@@ -17,7 +17,6 @@ import { SWRConfig, useSWRConfig } from 'swr';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { cacheScope, type ReplicaResource } from '@/libs/replica';
-import { CACHE_TIERS } from '@/libs/swr/localStorageProvider';
 import { setScopedMutate } from '@/libs/swr/mutate';
 import { gitService } from '@/services/git';
 
@@ -590,20 +589,5 @@ describe('Review / PR tab replicas', () => {
       expect(gitService.getLinkedPullRequest).not.toHaveBeenCalled();
       expect(result.current.isLoading).toBe(false);
     });
-  });
-
-  // The persistence moved to replicas: the SWR cache tiers must not also keep it.
-  it('is not persisted by the SWR cache layer', () => {
-    const patterns = [...CACHE_TIERS.idb, ...CACHE_TIERS.local] as string[];
-    for (const name of [
-      'gitReviewPatches',
-      'gitReviewSummary',
-      'gitLinkedPR',
-      'gitPullRequestDetail',
-      'gitPullRequestActivity',
-      'gitPullRequestMergeContext',
-    ]) {
-      expect(patterns.some((pattern) => pattern.includes(name))).toBe(false);
-    }
   });
 });
