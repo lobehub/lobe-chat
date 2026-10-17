@@ -175,12 +175,13 @@ const Actions = memo<ActionsProps>(
       <>
         <DropdownMenu items={menuItems} onOpenChange={onOpenChange}>
           <ActionIcon
-            active={isMobile ? true : false}
+            aria-label={t('more', { ns: 'common' })}
             icon={MoreVertical}
             loading={isCreatingGroup}
-            size={{ blockSize: 22, size: 16 }}
-            style={{ background: isMobile ? 'transparent' : '', marginRight: -8 }}
+            size={{ blockSize: isMobile ? 44 : 22, size: 16 }}
+            style={isMobile ? undefined : { marginRight: -8 }}
             title={t('more', { ns: 'common' })}
+            variant={isMobile ? 'filled' : 'borderless'}
             onClick={(e) => {
               e.stopPropagation();
             }}
