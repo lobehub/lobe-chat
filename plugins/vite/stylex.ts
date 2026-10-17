@@ -78,3 +78,20 @@ export function stylexPlugin(): PluginOption {
   const [locateEntryCss, verifyEntryCss] = entryCss.plugins;
   return [locateEntryCss, ...plugins, verifyEntryCss, stylexProxiedDevCssPlugin()] as PluginOption;
 }
+
+/**
+ * stylexPlugin for a package's own Vitest config. Vitest hands node_modules to
+ * Node untransformed, and the token modules are uncompiled defineConsts calls
+ * that throw at runtime, so they are inlined into the Vite transform instead.
+ */
+export function stylexPluginForVitest(): PluginOption {
+  return [
+    stylexPlugin(),
+    {
+      config: () => ({
+        test: { server: { deps: { inline: [/@lobehub[/\\]ui[/\\]es[/\\]stylex[/\\]/] } } },
+      }),
+      name: 'lobe-stylex-vitest-deps',
+    },
+  ];
+}
