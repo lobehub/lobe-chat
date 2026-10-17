@@ -82,6 +82,7 @@ import {
   rendersAsMarkdown,
 } from './MarkdownEvidence';
 import { originTopicHref } from './originLink';
+import { TerminalEvidenceCard } from './TerminalEvidence';
 import { readVisualizationManifest } from './visualization';
 import { VisualizationRenderer } from './VisualizationRenderer';
 
@@ -729,13 +730,20 @@ const isInlineVisualEvidence = (evidence: VerifyEvidenceWithUrl) =>
   );
 
 /**
+ * A command execution folds itself to one row and loads its output files on
+ * demand, so it sits in the check body whether its transcript is inline or a
+ * file — never behind the generic file card that would open it as a document.
+ */
+const isTerminalEvidence = (evidence: VerifyEvidenceWithUrl) => evidence.type === 'terminal';
+
+/**
  * Evidence with a directly renderable payload in the check body, no
  * click-to-open. File-backed documents stay behind the file card on purpose —
  * an uploaded artifact is long by definition, and rendering it inline drowns
  * the check list.
  */
 const isInlineEvidence = (evidence: VerifyEvidenceWithUrl) =>
-  Boolean(evidence.content) || isInlineVisualEvidence(evidence);
+  Boolean(evidence.content) || isInlineVisualEvidence(evidence) || isTerminalEvidence(evidence);
 
 /** Coarse attachment bucket for the type marker: image / video / audio / everything else. */
 type EvidenceCategory = 'audio' | 'file' | 'image' | 'video';
@@ -777,8 +785,9 @@ const evidenceDisplayName = (
 type EvidenceComparison = EvidenceComparisonMeta;
 
 const evidenceComparison = (evidence: VerifyEvidenceWithUrl): EvidenceComparison | null => {
-  // Only inline media pairs — a text artifact can't sit in a visual diptych.
-  if (!isInlineVisualEvidence(evidence)) return null;
+  // Inline media pairs, and so do two runs of one command; a plain text
+  // artifact can't sit in a visual diptych.
+  if (!isInlineVisualEvidence(evidence) && !isTerminalEvidence(evidence)) return null;
   return readEvidenceComparison(evidence.metadata);
 };
 
@@ -795,9 +804,11 @@ const EvidenceItem = memo<{
   // Inline media (image/gif/video) speaks for itself — the raw filename header
   // is visual noise, so only keep a meaningful caption (description) for it.
   const isMedia = isInlineVisualEvidence(e);
-  const isDocument = Boolean(e.fileUrl) && !isMedia && e.type !== 'audio';
+  const isTerminal = isTerminalEvidence(e);
+  const isDocument = Boolean(e.fileUrl) && !isMedia && e.type !== 'audio' && !isTerminal;
   const isInlineProse = Boolean(e.content) && markdownTextEvidenceTypes.has(e.type);
   const hideLabel =
+    isTerminal ||
     isDocument ||
     isMedia ||
     (markdownTextEvidenceTypes.has(e.type) && isFilenameLike(label)) ||
@@ -810,14 +821,17 @@ const EvidenceItem = memo<{
           {label}
         </Text>
       )}
-      {description && !flat && !isInlineProse && (
+      {description && !flat && !isInlineProse && !isTerminal && (
         // Inline prose is excluded: its authored description becomes the fold
         // row's title below, so a standalone line here would say it twice.
         <Text fontSize={13} type={'secondary'}>
           {description}
         </Text>
       )}
-      {e.fileUrl && imageEvidenceTypes.has(e.type) ? (
+      {isTerminal ? (
+        // The card titles itself with the command and shows the description under it.
+        <TerminalEvidenceCard defaultExpanded={flat} evidence={e} />
+      ) : e.fileUrl && imageEvidenceTypes.has(e.type) ? (
         <Flexbox align={flat ? undefined : 'flex-start'} style={{ maxWidth: '100%' }}>
           <Image
             preview
@@ -1080,6 +1094,9 @@ const CheckRow = memo<{ defaultOpen: boolean; row: CheckRowData }>(({ defaultOpe
                       <span className={styles.surfaceChip} key={spec.type} title={spec.hint}>
                         <Icon icon={CATEGORY_ICON[evidenceCategory(spec.type)]} size={12} />
                         {t(`report.evidence.medium.${spec.type}`)}
+                        {/* Says why an authored example or a bare log leaves it uncovered. */}
+                        {spec.provenance === 'execution' &&
+                          ` · ${t('report.plan.requiredEvidenceExecution')}`}
                       </span>
                     ))}
                   </span>

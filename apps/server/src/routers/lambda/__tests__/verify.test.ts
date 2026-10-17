@@ -10,6 +10,7 @@ import type * as VerifyServiceModule from '@/server/services/verify';
 
 const modelMocks = vi.hoisted(() => ({
   createEvidence: vi.fn(),
+  createManyEvidence: vi.fn(),
   purgeVerifyRun: vi.fn(),
   createRun: vi.fn(),
   deleteResult: vi.fn(),
@@ -69,6 +70,7 @@ vi.mock('@/database/models/verifyEvidence', () => ({
   VerifyEvidenceModel: vi.fn(function () {
     return {
       create: modelMocks.createEvidence,
+      createMany: modelMocks.createManyEvidence,
     };
   }),
 }));
@@ -555,7 +557,7 @@ describe('verifyRouter', () => {
       ).rejects.toThrow('Verification run not found');
 
       expect(modelMocks.upsertByCheckItem).not.toHaveBeenCalled();
-      expect(modelMocks.createEvidence).not.toHaveBeenCalled();
+      expect(modelMocks.createManyEvidence).not.toHaveBeenCalled();
     });
 
     it('rejects an evidence item with both inline content and fileId', async () => {
@@ -571,7 +573,7 @@ describe('verifyRouter', () => {
     it('lazily upserts the check result and attaches evidence in one call', async () => {
       modelMocks.findRunById.mockResolvedValueOnce({ id: 'run-1' });
       modelMocks.upsertByCheckItem.mockResolvedValueOnce({ id: 'result-1', verdict: 'passed' });
-      modelMocks.createEvidence.mockResolvedValueOnce({ id: 'evidence-1' });
+      modelMocks.createManyEvidence.mockResolvedValueOnce([{ id: 'evidence-1' }]);
 
       const res = await createCaller().submitCheckEvidence({
         checkItemId: 'item-1',
@@ -583,13 +585,13 @@ describe('verifyRouter', () => {
       expect(modelMocks.upsertByCheckItem).toHaveBeenCalledWith(
         expect.objectContaining({ checkItemId: 'item-1', verdict: 'passed', verifyRunId: 'run-1' }),
       );
-      expect(modelMocks.createEvidence).toHaveBeenCalledWith(
+      expect(modelMocks.createManyEvidence).toHaveBeenCalledWith([
         expect.objectContaining({
           checkResultId: 'result-1',
           fileId: 'files-1',
           type: 'screenshot',
         }),
-      );
+      ]);
       expect(res).toEqual({
         checkResult: { id: 'result-1', verdict: 'passed' },
         evidence: [{ id: 'evidence-1' }],
@@ -606,7 +608,7 @@ describe('verifyRouter', () => {
         verifyRunId: 'run-1',
       });
 
-      expect(modelMocks.createEvidence).not.toHaveBeenCalled();
+      expect(modelMocks.createManyEvidence).not.toHaveBeenCalled();
       expect(res.evidence).toEqual([]);
     });
 
@@ -690,7 +692,7 @@ describe('verifyRouter', () => {
         id: 'result-2',
         verifyRunId: 'round-2',
       });
-      modelMocks.createEvidence.mockResolvedValueOnce({ id: 'evidence-1' });
+      modelMocks.createManyEvidence.mockResolvedValueOnce([{ id: 'evidence-1' }]);
 
       await createCaller().submitCheckEvidence({
         checkItemId: 'item-1',
@@ -702,9 +704,9 @@ describe('verifyRouter', () => {
       expect(modelMocks.upsertByCheckItem).toHaveBeenCalledWith(
         expect.objectContaining({ checkItemId: 'item-1', verifyRunId: 'round-2' }),
       );
-      expect(modelMocks.createEvidence).toHaveBeenCalledWith(
+      expect(modelMocks.createManyEvidence).toHaveBeenCalledWith([
         expect.objectContaining({ checkResultId: 'result-2', type: 'gif' }),
-      );
+      ]);
     });
 
     it('stores a GIF uploaded as video as a gif, not a video', async () => {
@@ -717,7 +719,7 @@ describe('verifyRouter', () => {
         name: 'rename.gif',
       });
       modelMocks.upsertByCheckItem.mockResolvedValueOnce({ id: 'result-1' });
-      modelMocks.createEvidence.mockResolvedValueOnce({ id: 'evidence-1' });
+      modelMocks.createManyEvidence.mockResolvedValueOnce([{ id: 'evidence-1' }]);
 
       await createCaller().submitCheckEvidence({
         checkItemId: 'item-1',
@@ -726,9 +728,41 @@ describe('verifyRouter', () => {
       });
 
       expect(modelMocks.findFileById).toHaveBeenCalledWith('files-gif');
-      expect(modelMocks.createEvidence).toHaveBeenCalledWith(
+      expect(modelMocks.createManyEvidence).toHaveBeenCalledWith([
         expect.objectContaining({ fileId: 'files-gif', type: 'gif' }),
+      ]);
+    });
+
+    it('resolves a large submission with bounded concurrency and inserts it once', async () => {
+      modelMocks.findRunById.mockResolvedValueOnce({ id: 'run-1', plan: [] });
+      modelMocks.upsertByCheckItem.mockResolvedValueOnce({ id: 'result-1' });
+      let inFlight = 0;
+      let peak = 0;
+      modelMocks.findFileById.mockImplementation(async (id: string) => {
+        inFlight += 1;
+        peak = Math.max(peak, inFlight);
+        await new Promise((resolve) => setTimeout(resolve, 5));
+        inFlight -= 1;
+        return { fileType: 'image/png', id, name: `${id}.png` };
+      });
+      const evidence = Array.from({ length: 12 }, (_, i) => ({
+        fileId: `files-${i}`,
+        type: 'screenshot' as const,
+      }));
+      modelMocks.createManyEvidence.mockResolvedValueOnce(
+        evidence.map((_, i) => ({ id: `e-${i}` })),
       );
+
+      await createCaller().submitCheckEvidence({
+        checkItemId: 'item-1',
+        evidence,
+        verifyRunId: 'run-1',
+      });
+
+      expect(modelMocks.findFileById).toHaveBeenCalledTimes(12);
+      expect(peak).toBeLessThanOrEqual(5);
+      expect(modelMocks.createManyEvidence).toHaveBeenCalledTimes(1);
+      expect(modelMocks.createManyEvidence.mock.calls[0][0]).toHaveLength(12);
     });
 
     it('rejects a check item that is not in the run plan instead of minting a required row', async () => {
@@ -749,7 +783,7 @@ describe('verifyRouter', () => {
       );
 
       expect(modelMocks.upsertByCheckItem).not.toHaveBeenCalled();
-      expect(modelMocks.createEvidence).not.toHaveBeenCalled();
+      expect(modelMocks.createManyEvidence).not.toHaveBeenCalled();
     });
   });
 

@@ -1,6 +1,5 @@
 import { fetchAcceptanceSkillBundle } from '@lobechat/builtin-skills/acceptance';
 import {
-  normalizeEvidenceMetadata,
   normalizeVerifySurface,
   verifyRunScenarios,
   verifySurfaces,
@@ -10,7 +9,6 @@ import { AgentRuntimeErrorType } from '@lobechat/model-runtime';
 import type {
   VerifyCheckItem,
   VerifyCheckResultMetadata,
-  VerifyEvidenceType,
   VerifyRunContext,
   VerifyRunScenario,
 } from '@lobechat/types';
@@ -49,9 +47,10 @@ import { GoalCriteriaGeneratorService } from '@/server/services/goal/criteriaGen
 import {
   AcceptanceService,
   createEvidenceFileResolver,
-  evidenceTypeForStoredFile,
   finalizeVerifyRun,
+  prepareEvidenceRows,
   purgeVerifyRun,
+  resolveEvidenceFiles,
   resolveLiveRoundForItem,
   VerifyExecutorService,
   VerifyFeedbackService,
@@ -85,6 +84,7 @@ const evidenceTypeSchema = z.enum([
   'markdown',
   'dom_snapshot',
   'transcript',
+  'terminal',
 ]);
 const evidenceCapturedBySchema = z.enum(['agent-browser', 'cdp', 'cli', 'program', 'llm_judge']);
 const toulminSchema = z.object({
@@ -327,14 +327,6 @@ const resolveRunByOperation = async (ctx: { runModel: VerifyRunModel }, operatio
 
   return run;
 };
-
-/** Store a file-backed artifact under the medium of the file itself, not the caller's label. */
-const storedEvidenceType = async (
-  ctx: { fileModel: FileModel },
-  type: VerifyEvidenceType,
-  fileId?: string | null,
-): Promise<VerifyEvidenceType> =>
-  fileId ? evidenceTypeForStoredFile(type, await ctx.fileModel.findById(fileId)) : type;
 
 export const verifyRouter = router({
   // ---- criteria (reusable atomic standards) ----
@@ -973,18 +965,8 @@ export const verifyRouter = router({
       // Attaching evidence mutates another member's result — creator-scoped,
       // mirroring submitCheckEvidence.
       assertWorkspaceRowManageable(ctx, result.userId, 'verify result');
-      const type = await storedEvidenceType(ctx, input.type, input.fileId);
-
-      return ctx.evidenceModel.create({
-        capturedAt: new Date(),
-        capturedBy: input.capturedBy ?? null,
-        checkResultId: result.id,
-        content: input.content ?? null,
-        description: input.description ?? null,
-        fileId: input.fileId ?? null,
-        metadata: normalizeEvidenceMetadata(input.metadata, type) ?? null,
-        type,
-      });
+      const [row] = await prepareEvidenceRows(ctx.fileModel, [input]);
+      return ctx.evidenceModel.create({ ...row, checkResultId: result.id });
     }),
 
   /**
@@ -1010,6 +992,7 @@ export const verifyRouter = router({
                   content: z.string().min(1).optional(),
                   description: z.string().optional(),
                   fileId: z.string().min(1).optional(),
+                  metadata: z.unknown().optional(),
                   type: evidenceTypeSchema,
                 })
                 .refine((e) => Boolean(e.content) !== Boolean(e.fileId), {
@@ -1065,6 +1048,9 @@ export const verifyRouter = router({
             .join('; ')}`,
         });
 
+      // Resolved up front: a rejected record fails the submission before any write.
+      const evidenceRows = await prepareEvidenceRows(ctx.fileModel, input.evidence ?? []);
+
       const checkResult = await ctx.resultModel.upsertByCheckItem({
         checkItemId: input.checkItemId,
         checkItemIndex: input.checkItemIndex ?? planItem?.index,
@@ -1080,21 +1066,13 @@ export const verifyRouter = router({
         verifyRunId: run.id,
       });
 
-      const evidence = input.evidence?.length
-        ? await Promise.all(
-            input.evidence.map(async (e) =>
-              ctx.evidenceModel.create({
-                capturedAt: new Date(),
-                capturedBy: e.capturedBy ?? null,
-                checkResultId: checkResult.id,
-                content: e.content ?? null,
-                description: e.description ?? null,
-                fileId: e.fileId ?? null,
-                type: await storedEvidenceType(ctx, e.type, e.fileId),
-              }),
-            ),
-          )
-        : [];
+      // One multi-row insert, however many artifacts the submission carries.
+      const evidence =
+        evidenceRows.length === 0
+          ? []
+          : await ctx.evidenceModel.createMany(
+              evidenceRows.map((row) => ({ ...row, checkResultId: checkResult.id })),
+            );
 
       return { checkResult, evidence };
     }),
@@ -1283,7 +1261,7 @@ export const verifyRouter = router({
           return {
             ...r,
             evidence: await Promise.all(
-              evidence.map(async (e) => ({ ...e, ...(await resolveFileMeta(e.fileId)) })),
+              evidence.map((e) => resolveEvidenceFiles(resolveFileMeta, e)),
             ),
           };
         }),
