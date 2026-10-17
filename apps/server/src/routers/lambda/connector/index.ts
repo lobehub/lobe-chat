@@ -48,7 +48,7 @@ import {
 import {
   assertWorkspaceRowManageable,
   isWorkspaceNonOwner,
-} from './_helpers/assertWorkspaceRowManageable';
+} from '../_helpers/assertWorkspaceRowManageable';
 
 const connectorProcedure = wsCompatProcedure.use(serverDatabase).use(async (opts) => {
   const { ctx } = opts;
