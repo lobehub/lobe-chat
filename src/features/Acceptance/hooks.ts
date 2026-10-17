@@ -1,5 +1,5 @@
 import type { AcceptanceSubjectType } from '@lobechat/types';
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import useSWRInfinite from 'swr/infinite';
 
 import { useActiveWorkspaceId } from '@/business/client/hooks/useActiveWorkspaceId';
@@ -101,11 +101,30 @@ export const useAcceptanceBySubject = (
     refreshInterval: getAcceptanceBySubjectRefreshInterval(data),
   });
 
+  // A subject without an acceptance polls every 2s. Once a request for this key
+  // has settled, "no acceptance" is a known answer: later polls must not flip the
+  // caller back to its loading placeholder (that swapped the task's Acceptance
+  // trigger for a spinner on every tick and made the section jump).
+  const validatingKeyRef = useRef<string | undefined>(undefined);
+  const [settledKey, setSettledKey] = useState<string>();
+  useEffect(() => {
+    if (!key) return;
+    if (sync.isValidating) {
+      validatingKeyRef.current = key;
+      return;
+    }
+    if (validatingKeyRef.current === key) setSettledKey(key);
+  }, [key, sync.isValidating]);
+
   return {
     data,
     error: sync.error,
     // A read with no subject has nothing to load — never report it as loading.
-    isLoading: !!subjectId && !data && !sync.error && (sync.isValidating || !sync.isHydrated),
+    isLoading:
+      !!subjectId &&
+      !data &&
+      !sync.error &&
+      (!sync.isHydrated || (sync.isValidating && settledKey !== key)),
     isValidating: sync.isValidating,
     mutate: async () => {
       await sync.revalidate();
