@@ -1,19 +1,20 @@
 import { useCallback } from 'react';
 
 import { sandboxStorageService } from '@/services/sandboxStorage';
+import type { SandboxPickerInstanceList } from '@/store/sandbox';
 
 import { usePendingIds } from './usePendingIds';
 import type { SandboxSelection } from './useSandboxMode';
-
-type ListedInstances = Awaited<ReturnType<typeof sandboxStorageService.listInstances>>;
 
 interface UseCreateCopyOptions {
   /** The build could not be started; the copy exists and stays bound. */
   onBuildError: (error: unknown) => void;
   onChange: (selection: SandboxSelection) => Promise<void>;
-  /** The picker's SWR `mutate` for the instance list. */
+  /** The picker's instance-list edit (`sandboxActions.mutatePickerInstances`). */
   refreshInstances: (
-    update?: (previous: ListedInstances | undefined) => ListedInstances | undefined,
+    update?: (
+      previous: SandboxPickerInstanceList | undefined,
+    ) => SandboxPickerInstanceList | undefined,
     options?: { revalidate: boolean },
   ) => Promise<unknown>;
   topicId?: string;
@@ -55,10 +56,7 @@ export const useCreateCopy = ({
               instances: [
                 ...previous.instances,
                 {
-                  buildError: null,
-                  buildId: null,
-                  buildable: true,
-                  createdAt: created.createdAt,
+                  createdAt: new Date(created.createdAt).toISOString(),
                   environmentId: created.environmentId,
                   id: created.id,
                   inUse: false,
@@ -69,7 +67,6 @@ export const useCreateCopy = ({
                     (instance) => instance.environmentId !== environmentId,
                   ),
                   name: created.name,
-                  snapshot: null,
                   status: 'pending' as const,
                   workingDirectory: created.workingDirectory,
                 },

@@ -15,6 +15,7 @@ import { useKnowledgeBaseStore } from '@/store/library';
 import { useMentionStore } from '@/store/mention';
 import { useNotebookStore } from '@/store/notebook';
 import { pageActions } from '@/store/page';
+import { sandboxActions } from '@/store/sandbox';
 import { useSessionStore } from '@/store/session';
 import { useTaskStore } from '@/store/task';
 import { useToolStore } from '@/store/tool';
@@ -48,7 +49,7 @@ const resetableStores: ResetableStoreApi[] = [
   useVideoStore,
 ];
 
-const resetableActions: ResetableStore[] = [agentDocumentActions, pageActions];
+const resetableActions: ResetableStore[] = [agentDocumentActions, pageActions, sandboxActions];
 
 export interface StoreActions extends ResetableStore {}
 

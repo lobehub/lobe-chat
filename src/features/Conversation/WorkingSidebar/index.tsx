@@ -45,7 +45,6 @@ import {
   useState,
 } from 'react';
 import { useTranslation } from 'react-i18next';
-import useSWR from 'swr';
 
 import { useBusinessWorkingSidebarTabs } from '@/business/client/features/WorkingSidebarTabs';
 import { useActiveWorkspaceId } from '@/business/client/hooks/useActiveWorkspaceId';
@@ -70,7 +69,6 @@ import { useEffectiveAgencyConfig } from '@/hooks/useEffectiveAgencyConfig';
 import { useEffectiveWorkingDirectory } from '@/hooks/useEffectiveWorkingDirectory';
 import { useLocalStorageState } from '@/hooks/useLocalStorageState';
 import type { NativeContextMenuItem } from '@/libs/contextMenu/types';
-import { sandboxStorageService } from '@/services/sandboxStorage';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors, chatConfigByIdSelectors } from '@/store/agent/selectors';
 import { useChatStore } from '@/store/chat';
@@ -86,6 +84,7 @@ import {
 import { useElectronStore } from '@/store/electron';
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
+import { sandboxActions, sandboxSelectors, useSandboxStore } from '@/store/sandbox';
 
 import { type ComposerTarget, createComposerTarget, resolveThreadComposerTarget } from '../types';
 import Files from './Files';
@@ -399,15 +398,16 @@ const AgentWorkingSidebar = memo<AgentWorkingSidebarProps>(({ availableWidth }) 
   // Scoped to the bound instance's directory, or the workspace root when the
   // run keeps files without one. The empty string IS the root here, which is
   // why the tab's gate is the topic rather than a truthy path.
-  const { data: sandboxInstances } = useSWR(
-    isSandboxExecution && sandboxInstanceId ? ['sandbox-instance-dir', sandboxInstanceId] : null,
-    () => sandboxStorageService.getInstance({ id: sandboxInstanceId! }),
-  );
-  const sandboxDirectory = sandboxInstances?.workingDirectory ?? '';
+  // A replica, so a reload paints the directory (and the Files tab) from the
+  // last answer; `null` is an instance known to be gone.
+  const sandboxDirectoryId = isSandboxExecution ? sandboxInstanceId : undefined;
+  sandboxActions.useFetchInstanceDirectory(sandboxDirectoryId);
+  const sandboxDir = useSandboxStore(sandboxSelectors.instanceDirectory(sandboxDirectoryId));
+  const sandboxDirectory = sandboxDir ?? '';
   // The empty string IS the workspace root, so an unresolved instance does not
   // read as "no directory yet" — it reads as "the whole workspace", and the
   // tree would list every instance's folder for as long as the lookup took.
-  const sandboxDirectoryKnown = !sandboxInstanceId || sandboxInstances !== undefined;
+  const sandboxDirectoryKnown = !sandboxInstanceId || sandboxDir !== undefined;
 
   const filesystemEnvironmentAvailable = isLocalExecution || isDeviceMode;
   const environmentWorkingDirectory = filesystemEnvironmentAvailable ? workingDirectory : undefined;
