@@ -1453,9 +1453,9 @@ describe('ConversationLifecycle actions', () => {
         );
       });
 
-      // Regression: every non-mention send now runs on the gateway, which only
-      // forwarded `selectedToolIds` — an explicitly selected skill was dropped.
-      it('should carry selected skill context in the gateway run message', async () => {
+      // The server injects a selected skill's body from `selectedSkillIds` (and
+      // recovers it on later turns), so the gateway message must not carry it too.
+      it('should forward a selected skill by id without its body in the gateway message', async () => {
         const { result } = renderHook(() => useChatStore());
         const executeGatewayAgent = mockGatewayAgent();
         vi.spyOn(toolStoreModule, 'getToolStoreState').mockReturnValue({
@@ -1499,10 +1499,11 @@ describe('ConversationLifecycle actions', () => {
         });
 
         expect(executeGatewayAgent).toHaveBeenCalledTimes(1);
-        const { message } = executeGatewayAgent.mock.calls[0][0];
+        const { message, selectedSkillIds } = executeGatewayAgent.mock.calls[0][0];
         expect(message).toContain(TEST_CONTENT.USER_MESSAGE);
-        expect(message).toContain('<selected_skill_context>');
-        expect(message).toContain('identifier="user_memory"');
+        expect(message).not.toContain('<selected_skill_context>');
+        expect(message).not.toContain('Use the user memory skill content.');
+        expect(selectedSkillIds).toEqual(['user_memory']);
       });
 
       it('should work when sending from home page (activeAgentId is empty but context.agentId exists)', async () => {

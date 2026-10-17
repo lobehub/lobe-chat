@@ -1795,8 +1795,10 @@ export class ConversationLifecycleActionImpl {
     }
 
     // Persist selected skill/tool context into user message content so it
-    // survives across turns. Both the gateway run (the server persists the user
-    // row from `message`) and the direct-mention persist path use it.
+    // survives across turns. The direct-mention persist path stores both; the
+    // gateway run (the server persists the user row from `message`) stores only
+    // the tool context, because the server injects selected skill bodies from
+    // `selectedSkillIds` and would otherwise send them twice.
     // Deduplicate: skip skills/tools already @mentioned in earlier messages (via editorData).
     const previouslyMentionedSkills = new Set<string>();
     const previouslyMentionedTools = new Set<string>();
@@ -1810,17 +1812,17 @@ export class ConversationLifecycleActionImpl {
         previouslyMentionedTools.add(t.identifier);
       }
     }
-    const contextSuffix = [
-      formatSelectedSkillsContext(
-        enrichedSelectedSkills.filter((s) => !previouslyMentionedSkills.has(s.identifier)),
-      ),
-      formatSelectedToolsContext(
-        enrichedSelectedTools.filter((t) => !previouslyMentionedTools.has(t.identifier)),
-      ),
-    ]
-      .filter(Boolean)
-      .join('\n');
-    const persistedContent = contextSuffix ? `${message}\n\n${contextSuffix}` : message;
+    const skillsContext = formatSelectedSkillsContext(
+      enrichedSelectedSkills.filter((s) => !previouslyMentionedSkills.has(s.identifier)),
+    );
+    const toolsContext = formatSelectedToolsContext(
+      enrichedSelectedTools.filter((t) => !previouslyMentionedTools.has(t.identifier)),
+    );
+    const withContext = (...parts: (string | null)[]) => {
+      const suffix = parts.filter(Boolean).join('\n');
+      return suffix ? `${message}\n\n${suffix}` : message;
+    };
+    const persistedContent = withContext(skillsContext, toolsContext);
 
     // ── Gateway: skip sendMessageInServer, let execAgentTask handle everything ──
     if (!directMentionRoute) {
@@ -1855,7 +1857,7 @@ export class ConversationLifecycleActionImpl {
             : operationContext,
           messageContext: operationContext,
           fileIds: fileIdList,
-          message: persistedContent,
+          message: withContext(toolsContext),
           // The server persists the user row on this path, so a queued
           // follow-up's steer mark must travel with the request.
           metadata: (metadata as Pick<MessageMetadata, 'steer'> | undefined)?.steer
