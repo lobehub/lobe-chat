@@ -156,11 +156,13 @@ export const useFileItemDropdown = ({
     (sourceType === DERIVED_DOCUMENT_SOURCE_TYPE || fileType === PAGE_FILE_TYPE);
 
   // Pages/documents have no storage URL to attach, so only real files get the
-  // "Send to chat platform" entry. The server resolves the attachment by
+  // "Send to chat platform" entry. It is gated on the file type, not on `url`:
+  // a row restored from the persisted tree has none, and the server needs only
+  // the id. The server resolves the attachment by
   // `files.id`, but a file that backs a derived page is listed under the PAGE
   // id — always prefer the row's underlying `fileId` when it carries one.
   const sendToMessengerItem = useSendToMessengerMenuItem({
-    enabled: !isFolder && !isPage && !!url,
+    enabled: !isFolder && !isPage,
     file: { fileType, id: fileId ?? id, name: filename, size },
   });
 

@@ -426,6 +426,11 @@ describe('useFileItemDropdown — row without a stored URL', () => {
     expect(toast.error).toHaveBeenCalledWith('FileManager.actions.downloadError');
   });
 
+  it('still offers Send to chat platform, which resolves the file by id', () => {
+    renderHook(() => useFileItemDropdown({ ...baseParams, fileId: 'file-id', url: '' } as any));
+    expect(mocks.useSendToMessengerMenuItem.mock.calls.at(-1)![0].enabled).toBe(true);
+  });
+
   it('uses the row URL without a request when it has one', async () => {
     await click('download', { url: 'https://storage.example.com/notes.md' });
     expect(mocks.getFile).not.toHaveBeenCalled();

@@ -307,6 +307,12 @@ export class TreeActionImpl {
     if (knowledgeBaseId) void this.#snapshot.remove(knowledgeBaseId);
   };
 
+  /** A deleted library: drop its persisted tree, and the rendered one if it is open. */
+  forgetLibrary = (knowledgeBaseId: string) => {
+    void this.#snapshot.remove(knowledgeBaseId);
+    if (this.#get().knowledgeBaseId === knowledgeBaseId) this.reset();
+  };
+
   reset = () => {
     this.#queuedRevalidate.clear();
     this.#unconfirmedFolders.clear();

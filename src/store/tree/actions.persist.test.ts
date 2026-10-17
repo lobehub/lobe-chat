@@ -351,6 +351,25 @@ describe('TreeActionImpl — abandoned optimistic folders', () => {
   });
 });
 
+describe('TreeActionImpl.forgetLibrary', () => {
+  beforeEach(() => {
+    mockGetKnowledgeItems.mockReset();
+  });
+
+  it("drops a deleted library's persisted and rendered tree", async () => {
+    const { actions, state } = setup();
+    mockGetKnowledgeItems.mockResolvedValue({ items: [serverRow('doc-1')] });
+    actions.init('kb-1');
+    await vi.waitFor(() => expect(state.snapshotMap['kb-1']).toBeDefined());
+
+    actions.forgetLibrary('kb-1');
+
+    expect(state.snapshotMap['kb-1']).toBeUndefined();
+    expect(state.knowledgeBaseId).toBeNull();
+    expect(state.children).toEqual({});
+  });
+});
+
 describe('TreeActionImpl — cache scope switch', () => {
   beforeEach(() => {
     mockGetKnowledgeItems.mockReset();
