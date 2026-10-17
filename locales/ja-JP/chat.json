@@ -681,7 +681,6 @@
   "goalPage.filteredEmptyDescription": "完了またはキャンセルされた目標を確認するには「すべて」に切り替えてください。",
   "goalPage.filteredEmptyTitle": "進行中の目標がありません",
   "goalPage.listTitle": "目標リスト",
-  "goalPage.loadMore": "さらに読み込む",
   "goalPage.loadingProgress": "受け入れ進捗を読み込み中…",
   "goalPage.metrics.delivered": "配信済み",
   "goalPage.metrics.pursuing": "進行中",

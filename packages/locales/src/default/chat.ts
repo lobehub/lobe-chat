@@ -2817,7 +2817,6 @@ export default {
   'goalPage.filter.running': 'In progress',
   'goalPage.loadingProgress': 'Loading acceptance progress…',
   'goalPage.listTitle': 'Goal list',
-  'goalPage.loadMore': 'Load more',
   'goalPage.metrics.delivered': 'Needs you',
   'goalPage.metrics.pursuing': 'Others',
   'goalPage.metrics.total': 'Total goals',
