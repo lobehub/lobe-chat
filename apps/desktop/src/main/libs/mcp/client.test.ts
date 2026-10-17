@@ -68,6 +68,44 @@ describe('describeStdioSpawnFailure', () => {
     expect(message).toContain('exited immediately with code 127');
   });
 
+  it('reports the crash signal for signal-only exits (exitCode null)', () => {
+    // Node sets exitCode === null and populates `signal` when killed by one
+    const message = describeStdioSpawnFailure({
+      command: 'segfaulting-server',
+      exitCode: null,
+      signal: 'SIGSEGV',
+    });
+
+    expect(message).toContain('segfaulting-server');
+    expect(message).toContain('terminated by signal SIGSEGV');
+    expect(message).not.toContain('not found');
+  });
+
+  it('reports a signal crash with no output distinctly', () => {
+    const message = describeStdioSpawnFailure({
+      command: 'aborting-server',
+      exitCode: null,
+      signal: 'SIGABRT',
+    });
+
+    expect(message).toContain('terminated by signal SIGABRT');
+    expect(message).toContain('no output');
+  });
+
+  it('detects the pt-BR "path not found" loader message printed on stdout', () => {
+    // Some launchers print the loader error on stdout instead of stderr
+    const message = describeStdioSpawnFailure({
+      command: 'mcpkali_note',
+      exitCode: 1,
+      stderr: '',
+      stdout: 'O sistema não pode encontrar o caminho especificado.',
+    });
+
+    expect(message).toContain('mcpkali_note');
+    expect(message).toContain('path not found');
+    expect(message).toContain('Reinstall');
+  });
+
   it('falls back to the no-output diagnosis when nothing is captured', () => {
     const message = describeStdioSpawnFailure({ command: 'silent-server' });
 

@@ -53,9 +53,10 @@ export interface StdioSpawnFailureInput {
   message?: string;
   /** Termination signal when the process was killed by one (e.g. SIGTERM) */
   signal?: NodeJS.Signals | null;
-  /** Node spawn error code, e.g. ENOENT / EACCES / EPERM */
   spawnCode?: string | null;
   stderr?: string;
+  /** Some launchers report the actual failure (e.g. loader errors) on stdout */
+  stdout?: string;
 }
 
 /**
@@ -72,7 +73,10 @@ export interface StdioSpawnFailureInput {
  */
 export function describeStdioSpawnFailure(input: StdioSpawnFailureInput): string {
   const { command } = input;
+  // Launchers may print the real error on stdout instead of stderr — scan both
   const stderr = (input.stderr || '').trim();
+  const stdout = (input.stdout || '').trim();
+  const combinedOutput = `${stdout}\n${stderr}`.trim();
   const spawnCode = input.spawnCode || null;
   const errno = typeof input.errno === 'number' ? input.errno : undefined;
 
@@ -98,7 +102,7 @@ export function describeStdioSpawnFailure(input: StdioSpawnFailureInput): string
   }
 
   const windowsPathNotFound = WINDOWS_PATH_NOT_FOUND_PATTERNS.some((pattern) =>
-    stderr.toLowerCase().includes(pattern.toLowerCase()),
+    combinedOutput.toLowerCase().includes(pattern.toLowerCase()),
   );
 
   if (windowsPathNotFound) {
@@ -107,6 +111,18 @@ export function describeStdioSpawnFailure(input: StdioSpawnFailureInput): string
       'The configured command or one of its script/shim targets does not exist on this machine. ' +
       'Reinstall the MCP server package, or fix the configured command/args to point at an existing executable. ' +
       'On Windows, `npx`/`.cmd` shims require the target script to exist — prefer the real executable path.'
+    );
+  }
+
+  // Signal-only kills have exitCode === null in Node; surface the crash
+  // signal instead of the generic "check PATH / install" advice. Catch it
+  // before the exitCode branch, which the null code would skip.
+  if (input.signal) {
+    return (
+      `MCP server "${command}" crashed: terminated by signal ${input.signal}` +
+      `${combinedOutput ? ' (see the process output below)' : ' with no output'}. ` +
+      'This usually indicates an unhandled native-level failure (e.g. missing shared library or corrupted binary); ' +
+      'reinstall the MCP server package and verify it runs standalone.'
     );
   }
 
@@ -229,7 +245,7 @@ export class MCPClient {
     args?: string[];
     command: string;
     env?: Record<string, string>;
-  }): Promise<{ diagnosis: string; stderr: string; success: boolean }> {
+  }): Promise<{ diagnosis: string; stderr: string; stdout: string; success: boolean }> {
     return new Promise((resolve) => {
       // Do NOT spread the full process.env here: only the SDK's safe defaults
       // plus user-configured vars, matching the main StdioClientTransport.
@@ -255,6 +271,7 @@ export class MCPClient {
             spawnCode: err.code,
           }),
           stderr: '',
+          stdout: '',
           success: false,
         });
         return;
@@ -264,7 +281,7 @@ export class MCPClient {
       let stderr = '';
       let resolved = false;
 
-      const finish = (result: { diagnosis: string; stderr: string; success: boolean }) => {
+      const finish = (result: { diagnosis: string; stderr: string; stdout: string; success: boolean }) => {
         if (!resolved) {
           resolved = true;
           clearTimeout(timeout);
@@ -279,7 +296,7 @@ export class MCPClient {
           child.kill('SIGTERM');
           // Still running after 5s: treat as healthy-enough; the original
           // connection error is the real failure and should surface as-is.
-          finish({ diagnosis: '', stderr, success: true });
+          finish({ diagnosis: '', stderr, stdout, success: true });
         }
       }, 5000);
 
@@ -300,13 +317,14 @@ export class MCPClient {
             spawnCode: error.code,
           }),
           stderr,
+          stdout,
           success: false,
         });
       });
 
       child.on('exit', (code, signal) => {
         if (code === 0) {
-          finish({ diagnosis: '', stderr, success: true });
+          finish({ diagnosis: '', stderr, stdout, success: true });
           return;
         }
 
@@ -316,8 +334,10 @@ export class MCPClient {
             exitCode: code,
             signal,
             stderr,
+            stdout,
           }),
           stderr,
+          stdout,
           success: false,
         });
       });
@@ -341,8 +361,6 @@ export class MCPClient {
       } catch {
         // stdin write failures are handled via 'error'/'exit' events
       }
-
-      void stdout;
     });
   }
 
@@ -377,14 +395,25 @@ export class MCPClient {
 
         if (!preCheck.success) {
           const originalMessage = error instanceof Error ? error.message : String(error);
-          const lines = preCheck.stderr
-            .split('\n')
-            .map((line) => line.trim())
-            .filter(Boolean);
+          // Bounded process output (stdout can carry the real launcher error
+          // when the process writes nothing to stderr). Merge both streams,
+          // newest-stream-first, capped to keep the error payload small.
+          const outputLines = [
+            ...preCheck.stdout
+              .split('\n')
+              .map((line) => line.trim())
+              .filter(Boolean)
+              .slice(0, 10),
+            ...preCheck.stderr
+              .split('\n')
+              .map((line) => line.trim())
+              .filter(Boolean)
+              .slice(0, 10),
+          ].slice(0, 20);
 
           throw new MCPConnectionError(
             `${preCheck.diagnosis} (original error: ${originalMessage})`,
-            lines,
+            outputLines,
           );
         }
       }
