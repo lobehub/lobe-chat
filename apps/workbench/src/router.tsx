@@ -80,6 +80,12 @@ export const workbenchRoutes: RouteObject[] = [
     children: [
       {
         element: lazyElement(() => import('./routes/agent/docs/[docId]')),
+        // Seed the persisted reader body before the reader paints. Resolved on
+        // first use, so the agent document store stays out of the entry chunk.
+        loader: (args) =>
+          import('./routes/agent/docs/[docId]/readerLoader').then((module) =>
+            module.agentDocumentReaderLoader(args),
+          ),
         path: 'agent/:aid/docs/:docId',
       },
       {
