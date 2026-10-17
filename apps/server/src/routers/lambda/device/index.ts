@@ -37,8 +37,8 @@ import {
 import { filterAuthorizedDevicePresence } from '@/server/services/deviceGateway/scopedDevicePresence';
 import { deviceTunnels, TUNNEL_MAX_TTL_SECONDS } from '@/server/services/deviceGateway/tunnels';
 
-import { loadDeviceBoundAgents } from './deviceBoundAgents';
-import { preserveWorkspaceCache } from './deviceWorkingDirs';
+import { loadDeviceBoundAgents } from '../deviceBoundAgents';
+import { preserveWorkspaceCache } from '../deviceWorkingDirs';
 import {
   assertWorkspaceDeviceEditable,
   assertWorkspaceDeviceVisible,
@@ -46,8 +46,8 @@ import {
   canEditWorkspaceDevice,
   canOperateWorkspaceDevice,
   registerDeviceSkillRoots,
-} from './deviceWorkspaceGuard';
-import { workspaceDeviceWorkingDirProcedures } from './deviceWorkspaceWorkingDirs';
+} from '../deviceWorkspaceGuard';
+import { workspaceDeviceWorkingDirProcedures } from '../deviceWorkspaceWorkingDirs';
 
 // Derive the zod enum from the canonical config so new platforms are
 // automatically covered without touching this file.
