@@ -11,6 +11,11 @@ const state = vi.hoisted(() => ({
   topics: {} as Record<string, { projectId?: string; projectWorkingDirectoryId?: string }>,
 }));
 
+const directoryState = vi.hoisted(() => ({
+  all: [] as { deviceId: string; id: string; projectId: string }[],
+  directoriesMap: {} as Record<string, { deviceId: string; id: string; projectId: string }[]>,
+}));
+
 const directories = vi.hoisted(() => [
   { deviceId: 'device-a', id: 'dir-a', projectId: 'project-1' },
   { deviceId: 'device-b', id: 'dir-b', projectId: 'project-1' },
@@ -35,9 +40,14 @@ vi.mock('@/store/chat/selectors', () => ({
 }));
 
 vi.mock('@/store/projectWorkingDirectory', () => ({
-  useProjectDirectories: () => directories,
+  useProjectDirectories: (projectId?: string) =>
+    projectId ? (directoryState.directoriesMap[projectId] ?? []) : directoryState.all,
   useProjectDirectoryStore: (selector: (s: object) => unknown) =>
-    selector({ moveTopic: vi.fn(), useFetchDirectories: () => undefined }),
+    selector({
+      directoriesMap: directoryState.directoriesMap,
+      moveTopic: vi.fn(),
+      useFetchDirectories: () => undefined,
+    }),
 }));
 
 vi.mock('../HeteroDeviceSwitcher', () => ({
@@ -58,11 +68,27 @@ describe('DeviceSwitcher', () => {
     state.setPendingNewTopicDirectory.mockClear();
     state.topics = {};
     pickerProps.current = undefined;
+    directoryState.all = directories;
+    directoryState.directoriesMap = { 'project-1': directories };
   });
 
   // A device subgroup's "+" stages a blank conversation in that device's
   // directory; the composer must show that device, not the agent default.
   it('shows the staged project directory for a blank conversation', () => {
+    state.pendingNewTopicDirectory = { agentId: 'agent-1', projectWorkingDirectoryId: 'dir-b' };
+
+    render(<DeviceSwitcher agentId="agent-1" />);
+
+    expect(screen.getByText('project-picker:dir-b')).toBeInTheDocument();
+    expect(pickerProps.current.directories).toEqual(directories);
+  });
+
+  // The project-keyed entry is still loading (or failed) on a first visit; the
+  // warm scope-wide rows already know the project's devices.
+  it("falls back to the scope-wide rows until the project's own entry loads", () => {
+    const otherProject = { deviceId: 'device-c', id: 'dir-c', projectId: 'project-2' };
+    directoryState.all = [...directories, otherProject];
+    directoryState.directoriesMap = {};
     state.pendingNewTopicDirectory = { agentId: 'agent-1', projectWorkingDirectoryId: 'dir-b' };
 
     render(<DeviceSwitcher agentId="agent-1" />);

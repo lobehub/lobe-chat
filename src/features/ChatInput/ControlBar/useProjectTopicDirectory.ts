@@ -1,3 +1,5 @@
+import { useMemo } from 'react';
+
 import { type ChatStoreState, useChatStore } from '@/store/chat';
 import { topicSelectors } from '@/store/chat/selectors';
 import {
@@ -61,10 +63,19 @@ export const useStagedProjectDirectoryId = (agentId: string): string | undefined
 export const useStagedProjectDirectory = (agentId: string) => {
   const directoryId = useStagedProjectDirectoryId(agentId);
   useProjectDirectoryStore((s) => s.useFetchDirectories)(undefined, !!directoryId);
-  const projectId = useProjectDirectories().find((d) => d.id === directoryId)?.projectId;
+  const scopeRows = useProjectDirectories();
+  const projectId = scopeRows.find((d) => d.id === directoryId)?.projectId;
   useProjectDirectoryStore((s) => s.useFetchDirectories)(projectId, !!projectId);
-  const rows = useProjectDirectories(projectId);
-  const directories = projectId ? rows : EMPTY;
+  const projectRows = useProjectDirectoryStore((s) =>
+    projectId ? s.directoriesMap[projectId] : undefined,
+  );
+  // The project's own entry is the authority once loaded. Until then — or if
+  // its fetch fails — the warm scope-wide rows already list the project's
+  // directories, so the switcher never waits on an empty picker.
+  const directories = useMemo(() => {
+    if (!projectId) return EMPTY;
+    return projectRows ?? scopeRows.filter((d) => d.projectId === projectId);
+  }, [projectId, projectRows, scopeRows]);
 
   return { directories, directoryId };
 };
