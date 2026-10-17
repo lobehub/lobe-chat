@@ -120,6 +120,8 @@ export type GoalPauseReason =
   | 'exploration_revision_limit'
   /** A repeated batch hit a pattern break and is waiting on a person's choice. */
   | 'pattern_break'
+  /** A repeated batch passed its gate and is waiting on a person to approve the release. */
+  | 'release_review'
   | 'user';
 
 export interface GoalExplorationDecision {
@@ -327,6 +329,12 @@ export interface GoalManagerState {
    * over twice.
    */
   problem?: string;
+  /**
+   * What kind of problem was handed over. `rollout_release`: a batch gate passed
+   * and the main Agent decides whether the next wave goes out (`release`) or a
+   * person approves it (`escalate`); no other answer applies to it.
+   */
+  problemKind?: 'rollout_release' | 'rollout_revise';
   /** The blocked task that problem belongs to, so accepting a plan that replaces
    *  it can retire exactly that node without parsing the key. */
   problemTaskId?: string;
@@ -349,7 +357,7 @@ export interface GoalManagerState {
    */
   startedFromDraft?: boolean;
   submitted?: {
-    action: 'tasks' | 'verify' | 'retry' | 'escalate' | 'wait';
+    action: 'tasks' | 'verify' | 'retry' | 'escalate' | 'wait' | 'release' | 'revise_plan';
     /**
      * The question an `escalate` puts to the owner, with the answers it offers.
      * Without it the gate could only ask "retry or retire?" while the real
@@ -526,6 +534,8 @@ export interface GoalRolloutGateCheck {
  * decision's prose being the only trace.
  */
 export interface GoalRolloutGateEvaluation {
+  /** Who approved a release; absent on holds and on releases from before approvals existed. */
+  approvedBy?: 'agent' | 'user';
   /** ISO time of the verdict. */
   at: string;
   /** What the gate judged; empty when a unit's own check held the batch (R6). */
@@ -556,8 +566,36 @@ export interface GoalRolloutGateEvaluation {
   waveIndex: number;
 }
 
-/** Where a batch rollout currently stands. */
-export type GoalRolloutPhase = 'probe' | 'assay' | 'mass' | 'pattern_break' | 'done';
+/**
+ * Where a batch rollout currently stands. `release_review`: the gate passed and
+ * the next wave waits on a person's approval — always before a round's first
+ * mass wave, and later whenever the main Agent escalates a release.
+ */
+export type GoalRolloutPhase =
+  | 'probe'
+  | 'assay'
+  | 'mass'
+  | 'pattern_break'
+  | 'release_review'
+  /** The owner sent the plan back; the main Agent is rewriting it for the owner to review again. */
+  | 'plan_revision'
+  | 'done';
+
+/**
+ * Who approved releasing one wave. A passed gate only proves the checks held;
+ * the release itself is a decision: a person approves a round's first wave, and
+ * the main Agent (or a person it escalated to) every later one.
+ */
+export interface GoalRolloutReleaseApproval {
+  at: string;
+  by: 'agent' | 'user';
+  /** The main Agent's reason, or the person's note. */
+  reason?: string;
+  /** The recipe revision (round) the approval belongs to. */
+  revision: number;
+  /** The round's `waveIndex` the approval releases from. */
+  waveIndex: number;
+}
 
 /**
  * Coordinator-owned rollout progress. Written by decomposition and by the
@@ -592,6 +630,55 @@ export interface GoalRolloutPlanSkill {
   name: string;
 }
 
+/** One unit a release gate reports on: a probe, or a member of the last released wave. */
+export interface GoalReleaseGateUnit {
+  /** The unit's own acceptance, when it was verified. */
+  acceptance?: { checks?: { failed: number; passed: number; total: number }; id: string };
+  /** Deliverables it produced: pull requests, reports, documents. */
+  artifacts: { documentId?: string; title: string; type: string; url?: string }[];
+  /** The unit's own brief: what it was asked to do. */
+  brief?: string;
+  nodeId: string;
+  /** Runs the unit took; more than one means it was reworked. */
+  runs: number;
+  status: GoalNodeStatus;
+  taskId?: string;
+  title: string;
+  tokens: number;
+}
+
+/**
+ * Everything the owner decides a release gate on, frozen when the gate opens.
+ * Rides the gate's acceptance round so the review page reads one snapshot
+ * instead of reassembling the batch from the live graph.
+ */
+export interface GoalReleaseGateDossier {
+  /** The goal's supervising agent — who reports the gate to the owner. */
+  agentId?: string;
+  /** Gate checks the coordinator judged; advice, not the decision. */
+  checks: GoalRolloutGateCheck[];
+  /** The main Agent's reasoning when it brought the release back. */
+  diagnosis?: string;
+  goalId: string;
+  goalTitle: string;
+  /**
+   * `probes`: the first move from probes to batch execution, always a person's.
+   * `escalated`: the main Agent declined to release a later wave.
+   * `unattended`: no main Agent could take a later release.
+   */
+  kind: 'escalated' | 'probes' | 'unattended';
+  /** The units the next wave releases, with their own notes. */
+  nextWave: { brief?: string; title: string }[];
+  /** The recipe every unit follows: the plan skill's current version. */
+  plan: { content: string; revision: number; skillId?: string; skillName?: string };
+  /** Units still owed after the next wave. */
+  remainingAfter: number;
+  /** Units the decision is judged on, in display order. */
+  units: GoalReleaseGateUnit[];
+  /** 1-based roster wave the decision releases. */
+  wave: number;
+}
+
 export interface GoalRolloutState {
   /** The gate (Assay) decision node, once decomposition created it. */
   assayNodeId?: string;
@@ -611,14 +698,36 @@ export interface GoalRolloutState {
    * A restarted canary starts a new round and clears it.
    */
   massNodeIds?: string[];
+  /**
+   * The owner's correction a sent-back release waits on, while the phase is
+   * `plan_revision`. The main Agent rewrites the plan from it (`revisedRecipe`);
+   * once it lands the rewrite returns to the owner's release review.
+   */
+  pendingRevision?: { correction: string; revisedReason?: string; revisedRecipe?: string };
   /** Phase the rollout is in; the coordinator reads this to pick its move. */
   phase: GoalRolloutPhase;
   /** The execution plan as a user skill; each Template revision is one of its versions. */
   planSkill?: GoalRolloutPlanSkill;
+  /**
+   * The plan skill version each round runs on, by round (`templateRevision`).
+   * A round's plan can be rewritten in place — the owner sends it back at its
+   * release gate and the main Agent rewrites it — so a round is not always on
+   * the version numbered after it. Absent entries mean version = round.
+   */
+  planVersions?: Record<string, number>;
   /** Node ids of the probe tasks that must run before the gate passes. */
   probeNodeIds: string[];
+  /**
+   * The approval the next wave is released on. Valid only for the round and
+   * `waveIndex` it names, so a release never rides on an earlier wave's approval.
+   */
+  releaseApproval?: GoalRolloutReleaseApproval;
   /** How many roster entries have been materialized (probes + released waves). */
   releasedCount?: number;
+  /** The acceptance the held release is reviewed on, when one could be opened. */
+  releaseGateAcceptanceId?: string;
+  /** The decision node a held release waits on, while the phase is `release_review`. */
+  releaseReviewNodeId?: string;
   /** Node id of the current Template (finding) node. */
   templateNodeId?: string;
   /** Current Template revision; incremented each time the recipe is revised. */

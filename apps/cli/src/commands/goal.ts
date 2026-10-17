@@ -234,6 +234,12 @@ const admissionHint: Record<string, string> = {
   inactive: 'the Goal is not in an active state (planning or running)',
   operation_mismatch: 'the token does not speak for the operation bound to this Goal',
   pending_decision: 'a decision gate is still waiting on an answer',
+  release_turn_only:
+    'this turn was handed a batch release; answer with release, or escalate without ask for the owner',
+  release_unsolicited: 'release only answers a batch release handed to this turn',
+  revise_turn_only:
+    'this turn was handed a plan the owner sent back; answer with revise_plan (the full revised recipe)',
+  revise_unsolicited: 'revise_plan only answers a plan the owner sent back to this turn',
   review_changed: 'task review feedback changed after this turn started',
   stale_input: 'the graph moved after this turn started, so the plan would apply to stale input',
   started_from_draft:
@@ -514,14 +520,15 @@ export function registerGoalCommand(program: Command) {
         'the same caching, update N callers), declare a batch instead of listing every unit: add "rollout" with',
         '"recipe" (the procedure every unit follows), "units" (every unit beyond the probes, as a title or',
         '{"title","description"}) and optional "variants" ([{"axis","values"}]); "tasks" then hold 2-5',
-        'representative probes. The probes run first and the rest are released wave by wave only after the',
-        'probes ran through without a person; a rejection revises the recipe and re-probes. Units that differ',
+        'representative probes. The probes run first; once they ran through without a person the owner approves',
+        'the first wave, and each later wave is handed to this agent to release or escalate; a rejected',
+        'release comes back to this agent to rewrite the plan for review. Units that differ',
         'only in names, files or details are still one mould; work whose steps differ per task is not.',
       ].join('\n'),
     )
     .requiredOption(
       '--file <path>',
-      'JSON plan: action tasks/wait/verify/retry/escalate, reason and action fields; a tasks plan may add "rollout" to run its units as a batch',
+      'JSON plan: action tasks/wait/verify/retry/escalate/release/revise_plan, reason and action fields; a tasks plan may add "rollout" to run its units as a batch; release answers a batch release handed to this turn; revise_plan answers a plan the owner sent back, with "recipe" the full revised plan',
     )
     .requiredOption('--token <token>', 'Current server-issued planning turn token')
     .option('--operation <id>', 'Defaults to LOBEHUB_OPERATION_ID')
@@ -811,8 +818,8 @@ export function registerGoalCommand(program: Command) {
         'batch, pass --rollout with the recipe and 2-5 probe node ids: the probes move into a batch and run',
         'first; every other seed task (or only --units) leaves the graph as a roster unit, its description',
         "kept as that unit's note, and is released wave by wave once the probes ran through without a person.",
-        'A rejection revises the recipe and re-probes. Tasks that differ only in names, files or details are',
-        'one recipe; tasks whose steps differ are not, so start those without --rollout.',
+        'A rejected release goes back to the main Agent to rewrite the plan for review. Tasks that differ',
+        'only in names, files or details are one recipe; steps that differ are not: start those without --rollout.',
         'Inside a batch a seed may depend only on a probe, and folded seeds need distinct titles.',
         '',
         'Starting a draft that holds tasks settles the planning turn that created it: submit any plan with',

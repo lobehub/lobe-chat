@@ -71,6 +71,8 @@ export default {
   'goalBatch.gatePanel.checksPlanned': 'Not judged yet — these will be checked',
   'goalBatch.gatePanel.question':
     'Revise the plan and re-probe, or fork a fresh one for the units that broke?',
+  'goalBatch.gatePanel.releaseQuestion':
+    'Every check passed. Review the deliveries and the plan — release the next wave, or send the plan back to revise?',
   'goalBatch.gatePanel.history': 'Verdicts',
   'goalBatch.gatePanel.history.blocked': 'Held: {{checks}}',
   'goalBatch.gatePanel.history.empty': 'No verdict yet',
@@ -82,11 +84,14 @@ export default {
     'Every unit finished — judged on the coordinator’s next step',
   'goalBatch.gatePanel.next.human':
     'Waiting on you: revise the plan, or fork a fresh one for the units that broke',
+  'goalBatch.gatePanel.next.release':
+    'Waiting on you: review the deliveries and the plan, then release the next wave or revise the plan',
   'goalBatch.gatePanel.next.locked':
     'Judged automatically once this round’s {{count}} units finish',
   'goalBatch.gatePanel.next.passed':
     'Released wave {{wave}} ({{count}} units) — judged again once it finishes',
   'goalBatch.gatePanel.next.passedDone': 'The whole roster is released',
+  'goalBatch.gatePanel.next.revising': 'The main Agent is rewriting the plan from your correction',
   'goalBatch.gatePanel.next.rejected': 'Reopened as v{{revision}} on your decision',
   'goalBatch.gatePanel.verdict': 'Verdict',
   'goalBatch.gate.checkCount': '{{count}} checks',
@@ -100,7 +105,7 @@ export default {
   'goalBatch.gate.titleRound': 'Release gate · v{{revision}}',
   'goalBatch.overviewCount': 'Total: {{count}} batches · {{nodes}} nodes',
   'goalBatch.probes.hint':
-    '{{count}} representative units run first — the most different ones and the hardest. The rest are released only once every one of them runs through automatically.',
+    '{{count}} representative units run first — the most different ones and the hardest. The rest are released only once every one of them runs through automatically and you approve the release.',
   'goalBatch.probes.status.done': 'Trials done',
   'goalBatch.probes.status.pending': 'Not started',
   'goalBatch.probes.status.running': 'Trials running',
@@ -2405,6 +2410,9 @@ export default {
   'goalProcess.gate.title.goalAcceptance': 'Decide the goal acceptance outcome',
   'goalProcess.gate.title.fixSetup': 'Fix the setup, then retry',
   'goalProcess.gate.title.batchPatternBreak': 'Decide how the failed batch proceeds',
+  'goalProcess.gate.openReview': 'Review',
+  'goalProcess.gate.releaseReports': 'reports the experiment results and needs your decision',
+  'goalProcess.gate.title.batchRelease': 'Experiments finished: start batch execution?',
   'goalProcess.clarify.title': 'Clarify the goal before work starts',
   'goalProcess.clarify.description':
     'Answer these once and the agent plans with them. Skip to let it proceed on its own assumptions.',
@@ -2420,6 +2428,14 @@ export default {
   'goalProcess.gate.reason.attemptBudgetExhausted': 'The attempt budget for this work is used up',
   'goalProcess.gate.reason.costBudgetExhausted': 'The goal cost budget is used up',
   'goalProcess.gate.reason.recoveryFailed': 'Automatic recovery could not start the next attempt',
+  'goalProcess.gate.reason.batchReleaseProbes':
+    'The v{{revision}} experiments finished; start batch execution with wave {{wave}} ({{count}} units)',
+  'goalProcess.gate.reason.batchReleaseRevised':
+    'The main Agent revised the plan to v{{version}} from your correction; start batch execution with wave {{wave}} ({{count}} units)?',
+  'goalProcess.gate.reason.batchReleaseEscalated':
+    'The main Agent asked you to approve releasing wave {{wave}} ({{count}} units)',
+  'goalProcess.gate.reason.batchReleaseNoAgent':
+    'The gate passed but no main Agent could review the release; approve releasing wave {{wave}} ({{count}} units)',
   'goalProcess.gate.reason.deviceStayedOffline':
     'The device this task runs on stayed offline through every automatic retry',
   'goalProcess.gate.reason.setupWorkingDirectory':
@@ -2456,7 +2472,9 @@ export default {
   'goalProcess.gate.option.fail': 'Fail goal',
   'goalProcess.gate.option.assume': 'Go with the assumption',
   'goalProcess.gate.option.reviseBatch': 'Revise the recipe and re-probe',
+  'goalProcess.gate.option.sendBackBatch': 'Send the plan back to the main Agent',
   'goalProcess.gate.option.newClassBatch': 'Fork a fresh recipe',
+  'goalProcess.gate.option.releaseBatch': 'Release the next wave',
   'goalProcess.decision.effect.fixedRetry': 'Run the task again once the setup is fixed.',
   'goalProcess.decision.asks.judgment': 'needs your review on a stuck task',
   'goalProcess.decision.asks.goalAcceptance': 'needs your review on the goal acceptance',
@@ -2486,9 +2504,13 @@ export default {
   'goalProcess.decision.effect.abandonAcceptance':
     'Stop acceptance and end the goal without a verdict.',
   'goalProcess.decision.effect.reviseBatch':
-    'Revise the recipe from this failure, then re-probe this batch.',
+    'Write a correction to the recipe, then re-probe this batch under it.',
+  'goalProcess.decision.effect.sendBackBatch':
+    'Write a correction; the main Agent rewrites the plan from it and brings it back for your review. The probes are not run again.',
   'goalProcess.decision.effect.newClassBatch':
     'Fork a fresh recipe for the units that broke; the rest of the batch continues once the new gate passes.',
+  'goalProcess.decision.effect.releaseBatch':
+    'Release the next wave on the current recipe. Each later wave goes to the main Agent, which releases it or brings it back to you.',
   'goalProcess.signOff.islandSubtitle': 'is done and waiting for your sign-off',
   'goalProcess.signOff.question': 'Do you accept what this goal delivered?',
   'goalProcess.signOff.description': 'Goal-level acceptance passed. Your sign-off closes the goal.',

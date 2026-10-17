@@ -20,6 +20,8 @@ const QUESTION_TAILS = [
   /\.?\s*Retry Goal acceptance, abandon it, or fail this Goal\?$/,
   // The batch pattern-break gate (see `GoalService.openPatternBreakGate`).
   /\.?\s*How should this batch proceed\?$/,
+  // The batch release-approval gate (see `GoalService.openReleaseReview`).
+  /\.?\s*Release the next wave\?$/,
 ];
 
 export const coordinatorGateReason = (question?: string | null): string | undefined => {
@@ -111,6 +113,30 @@ const REASON_PATTERNS: Array<{
     key: 'goalProcess.gate.reason.recoveryFailed',
     pattern:
       /^Automatic recovery could not (start the next attempt|restart an abandoned operation)$/,
+  },
+  // A passed batch gate held for approval (see `GoalService.routeRolloutRelease`).
+  {
+    key: 'goalProcess.gate.reason.batchReleaseProbes',
+    params: ['revision', 'wave', 'count'],
+    pattern:
+      /^Experiments of v(\d+) finished; start batch execution with wave (\d+) \((\d+) units?\)$/,
+  },
+  {
+    key: 'goalProcess.gate.reason.batchReleaseRevised',
+    params: ['version', 'wave', 'count'],
+    pattern:
+      /^The main Agent revised the plan to v(\d+) from your correction; approve releasing wave (\d+) \((\d+) units?\)$/,
+  },
+  {
+    key: 'goalProcess.gate.reason.batchReleaseEscalated',
+    params: ['wave', 'count'],
+    pattern: /^The main Agent asked you to approve releasing wave (\d+) \((\d+) units?\)$/,
+  },
+  {
+    key: 'goalProcess.gate.reason.batchReleaseNoAgent',
+    params: ['wave', 'count'],
+    pattern:
+      /^Batch gate passed and no main Agent could review the release; approve releasing wave (\d+) \((\d+) units?\)$/,
   },
   {
     // A run that failed outright leaves its runtime error type as the reason

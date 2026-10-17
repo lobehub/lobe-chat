@@ -472,7 +472,7 @@ const useBatchCopy = () => {
               subtitle: `user-skills:${model.planSkill.name}`,
             }
           : { subtitle: view.node.description?.split('\n')[0] ?? '' }),
-        title: t(batchPlanTitleKey(model, round), { revision: round.revision }),
+        title: t(batchPlanTitleKey(model, round), { revision: round.planVersion }),
       }),
     }),
     [t, checkCopy],

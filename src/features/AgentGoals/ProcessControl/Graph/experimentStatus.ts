@@ -24,9 +24,11 @@ export const batchContainerStatus = (phase?: GoalRolloutPhase): GoalNodeStatus |
     case 'done': {
       return 'resolved';
     }
-    case 'pattern_break': {
+    case 'pattern_break':
+    case 'release_review': {
       return 'waiting';
     }
+    case 'plan_revision':
     case 'probe':
     case 'mass': {
       return 'active';

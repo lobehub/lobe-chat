@@ -259,11 +259,21 @@ export class VerifyService {
   ): Promise<Array<{ status: string; subjectId: string }>> =>
     lambdaClient.acceptance.listStatusesBySubjects.query({ subjectIds, subjectType });
 
-  acceptDelivery = (id: string, comment?: string) =>
-    lambdaClient.acceptance.accept.mutate({ comment, id });
+  /** `roundId` binds the decision to the round on screen; a gate refuses a stale one. */
+  acceptDelivery = (id: string, comment?: string, options?: { roundId?: string }) =>
+    lambdaClient.acceptance.accept.mutate({ comment, id, roundId: options?.roundId });
 
-  rejectDelivery = (id: string, comment?: string, options?: { dispatch?: boolean }) =>
-    lambdaClient.acceptance.reject.mutate({ comment, dispatch: options?.dispatch, id });
+  rejectDelivery = (
+    id: string,
+    comment?: string,
+    options?: { dispatch?: boolean; roundId?: string },
+  ) =>
+    lambdaClient.acceptance.reject.mutate({
+      comment,
+      dispatch: options?.dispatch,
+      id,
+      roundId: options?.roundId,
+    });
 
   /**
    * The user's verdict on individual union checks — accept settles a check for

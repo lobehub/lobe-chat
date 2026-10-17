@@ -70,9 +70,9 @@ const PlanDetail = memo<PlanDetailProps>(({ graph, model, round }) => {
 
   if (isLoading) return <Loading />;
 
-  const revision = selected ?? round.revision;
+  const revision = selected ?? round.planVersion;
   const current = versions.find((version) => version.revision === revision);
-  const forked = model.rounds.find((item) => item.revision === revision)?.forked;
+  const forked = model.rounds.find((item) => item.planVersion === revision)?.forked;
   const { body, frontmatter } = parseSkillMarkdownFrontmatter(current?.content);
 
   return (

@@ -27,6 +27,9 @@ const DECIDED_ACCEPTANCE_STATUSES = new Set<string>(['accepted', 'closed', 'reje
 const signOffFor = (acceptanceId: string) =>
   sql`${briefs.metadata} -> 'goal' ->> 'signOffAcceptanceId' = ${acceptanceId}`;
 
+const decisionFor = (decisionId: string) =>
+  sql`${briefs.metadata} -> 'goal' ->> 'decisionId' = ${decisionId}`;
+
 const clip = (text: string, limit = SUMMARY_LIMIT) =>
   text.length > limit ? `${text.slice(0, limit - 1).trimEnd()}…` : text;
 
@@ -48,6 +51,8 @@ interface DecisionInput {
   options?: GoalDecisionOption[] | null;
   question: string;
   recommendedOptionId?: string | null;
+  /** A held batch release: answered in this review report, not by a one-click action. */
+  reviewAcceptanceId?: string;
 }
 
 /**
@@ -121,6 +126,7 @@ export class GoalBriefService {
         metadata: {
           decisionId: input.decisionId,
           kind: 'decision',
+          ...(input.reviewAcceptanceId ? { reviewAcceptanceId: input.reviewAcceptanceId } : {}),
           ...(recommended ? { recommendedAction: recommended.id } : {}),
         },
         priority: 'urgent',
@@ -229,6 +235,17 @@ export class GoalBriefService {
         .set({ resolvedAction: action, resolvedAt: new Date(), resolvedComment: comment ?? null })
         .where(
           and(this.briefModel.ownership(), isNull(briefs.resolvedAt), signOffFor(acceptanceId)),
+        );
+    });
+
+  /** A gate was answered somewhere else — its review report, the goal page. */
+  settleDecision = async (decisionId: string, action: string, comment?: string) =>
+    this.safely('settleDecision', async () => {
+      await this.db
+        .update(briefs)
+        .set({ resolvedAction: action, resolvedAt: new Date(), resolvedComment: comment ?? null })
+        .where(
+          and(this.briefModel.ownership(), isNull(briefs.resolvedAt), decisionFor(decisionId)),
         );
     });
 

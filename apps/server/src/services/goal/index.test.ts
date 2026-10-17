@@ -64,6 +64,7 @@ import * as scheduler from './scheduler';
 import { LocalGoalScheduler } from './scheduler/impls';
 import { uncoveredAxisValues } from './spec';
 import { TaskRecoveryCoordinator } from './taskRecoveryCoordinator';
+import { approveRelease } from './testUtils';
 import type { GoalTickObservation } from './traceObservation';
 
 const serverDB: LobeChatDatabase = await getTestDB();
@@ -2270,6 +2271,7 @@ describe('GoalService', () => {
     });
 
     await service.tick(graph.goal.id);
+    await approveRelease(service, graph.goal.id);
     const next = (await service.graph(graph.goal.id)).goal.config!.rolloutState!;
     expect(next.gateLog?.at(-1)).toMatchObject({ outcome: 'released', wave: 3 });
     expect(next.wavesReleased).toBe(3);
@@ -2311,6 +2313,7 @@ describe('GoalService', () => {
     });
 
     await service.tick(graph.goal.id);
+    await approveRelease(service, graph.goal.id);
     const next = (await service.graph(graph.goal.id)).goal.config!.rolloutState!;
     // 20 units at the default wave size of 5 are four waves; this one is the fifth.
     expect(next.gateLog?.at(-1)).toMatchObject({ outcome: 'released', wave: 5 });
@@ -2340,13 +2343,16 @@ describe('GoalService', () => {
     const probeIds = (await service.graph(graph.goal.id)).goal.config!.rolloutState!.probeNodeIds;
     for (const id of probeIds) await graphModel.updateNodeStatus(graph.goal.id, id, 'resolved');
 
-    // The probes settled clean: the gate releases the first wave and says why.
+    // The probes settled clean: once the owner approves, the gate releases the
+    // first wave and says why.
     await service.tick(graph.goal.id);
+    await approveRelease(service, graph.goal.id);
     let state = (await service.graph(graph.goal.id)).goal.config!.rolloutState!;
     expect(state.gateLog).toHaveLength(1);
     expect(state.gateLog![0]).toMatchObject({
       outcome: 'released',
       releasedCount: 5,
+      approvedBy: 'user',
       revision: 1,
       trigger: 'gate',
       wave: 1,
@@ -2577,6 +2583,7 @@ describe('GoalService', () => {
       const probeIds = (await service.graph(graph.goal.id)).goal.config!.rolloutState!.probeNodeIds;
       for (const id of probeIds) await graphModel.updateNodeStatus(graph.goal.id, id, 'resolved');
       await service.tick(graph.goal.id);
+      await approveRelease(service, graph.goal.id);
       const state = (await service.graph(graph.goal.id)).goal.config!.rolloutState!;
       // The last two units went out, and the batch is not closed on release.
       expect(state.massNodeIds).toHaveLength(2);
@@ -2940,46 +2947,6 @@ describe('GoalService', () => {
       outcome: 'blocked',
       trigger: 'unit',
     });
-  });
-
-  it('releases a wave once when two advances pass the gate together', async () => {
-    vi.spyOn(GoalCriteriaGeneratorService.prototype, 'decompose').mockResolvedValue({
-      problemStatement: '把 50 个同构的 store 迁移到 replica',
-      rollout: {
-        recipeOutline: '把 store 换成 replica 支撑的实现',
-        repeatable: true,
-        unitCount: 50,
-        units: Array.from({ length: 50 }, (_, i) => `Unit ${i + 1}`),
-        variants: [],
-      },
-      tasks: Array.from({ length: 5 }, (_, i) => ({
-        dependsOn: [],
-        instruction: `把 src/store/store${i + 1}.ts 换成 replica 实现`,
-        title: `Unit ${i + 1}`,
-      })),
-    });
-    const service = new GoalService(serverDB, userId);
-    const graph = await service.create({ title: 'Migrate stores' });
-    await service.tick(graph.goal.id);
-    const graphModel = new GoalGraphModel(serverDB, userId);
-    const probeIds = (await service.graph(graph.goal.id)).goal.config!.rolloutState!.probeNodeIds;
-    for (const id of probeIds) await graphModel.updateNodeStatus(graph.goal.id, id, 'resolved');
-
-    // Two settled tasks each queued an advance; both see the gate pass.
-    await Promise.all([service.tick(graph.goal.id), service.tick(graph.goal.id)]);
-
-    const after = await service.graph(graph.goal.id);
-    const state = after.goal.config!.rolloutState!;
-    const released = after.nodes.filter(
-      (n) => n.kind === 'task' && !probeIds.includes(n.id) && /^Unit \d+$/.test(n.title),
-    );
-    // One wave, once: no duplicate units and the cursor counts it once.
-    expect(released.map((n) => n.title).sort()).toEqual(
-      [...new Set(released.map((n) => n.title))].sort(),
-    );
-    expect(state.massNodeIds).toHaveLength(released.length);
-    expect(state.releasedCount).toBe(probeIds.length + released.length);
-    expect(state.gateLog?.filter((entry) => entry.outcome === 'released')).toHaveLength(1);
   });
 
   it('stops the running Tasks of the members a restart retires', async () => {

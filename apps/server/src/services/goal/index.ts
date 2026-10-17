@@ -7,6 +7,7 @@ import {
   GOAL_BATCH_ASSAY_TITLE,
   GOAL_BATCH_BREAK_OPTION,
   GOAL_BATCH_BREAK_QUESTION_TAIL,
+  GOAL_BATCH_RELEASE_OPTION,
   GOAL_BATCH_TEMPLATE_TITLE,
   GOAL_CLARIFICATION_OPTION,
   GOAL_CLARIFICATION_TITLE,
@@ -15,7 +16,6 @@ import {
   PATTERN_BREAK_PAUSE_REASON,
   ROLLOUT_CANARY_SIZE_DEFAULT,
   ROLLOUT_MAX_CANARY_SIZE,
-  ROLLOUT_WAVE_SIZE_DEFAULT,
 } from '@lobechat/const/goal';
 import type {
   ChatTopicMetadata,
@@ -35,7 +35,6 @@ import type {
   GoalNodeStatus,
   GoalPauseReason,
   GoalRolloutPolicy,
-  GoalRolloutState,
   GoalStatus,
   GoalTickResult,
   MetricKind,
@@ -104,6 +103,7 @@ import {
   resolveTaskMaxSteps,
   VERIFY_SETTLE_GRACE_MS,
 } from './recoveryPolicy';
+import { GoalReleaseReview } from './releaseReview';
 import { isGoalReportNode, withoutGoalReport } from './report';
 import { GoalReportService } from './reportService';
 import { GoalReportStore } from './reportStore';
@@ -326,6 +326,7 @@ export class GoalService {
   private readonly agentModel: AgentModel;
   /** What the goal tells the person through the inbox: gates, sign-off, findings. */
   private readonly briefs: GoalBriefService;
+  private readonly releaseReview: GoalReleaseReview;
   private readonly goalModel: GoalModel;
   /**
    * Graph writes attributed to the person who asked for them: seeding a goal,
@@ -353,6 +354,14 @@ export class GoalService {
     this.agentModel = new AgentModel(db, userId, workspaceId);
     this.briefs = new GoalBriefService(db, userId, workspaceId);
     this.goalModel = new GoalModel(db, userId, workspaceId);
+    this.releaseReview = new GoalReleaseReview(db, userId, workspaceId, {
+      briefs: this.briefs,
+      decide: (...args) => this.decide(...args),
+      graph: (goalId) => this.graph(goalId),
+      requireGraph: (goalId) => this.requireGraph(goalId),
+      setPauseReason: (goalId, reason) => this.setPauseReason(goalId, reason),
+      transitionStatus: (goal, to, reason) => this.transitionStatus(goal, to, reason),
+    });
     this.graphModel = new GoalGraphModel(db, userId, workspaceId);
     this.coordinatorGraph = new GoalGraphModel(db, userId, workspaceId, {
       id: GOAL_COORDINATOR_ACTOR_ID,
@@ -2099,7 +2108,13 @@ export class GoalService {
     return goal;
   };
 
-  decide = async (goalId: string, decisionId: string, optionId: string, resolution?: string) => {
+  decide = async (
+    goalId: string,
+    decisionId: string,
+    optionId: string,
+    resolution?: string,
+    options?: { fromReleaseGate?: boolean },
+  ) => {
     const graph = await this.requireGraph(goalId);
     // A goal a person ended stays ended: a gate another tab still shows must
     // not reopen it. Checked again under the lock before the status moves.
@@ -2112,6 +2127,19 @@ export class GoalService {
     }
     if (decision.options?.length && !decision.options.some((option) => option.id === optionId)) {
       throw new TRPCError({ code: 'BAD_REQUEST', message: 'Unknown decision option' });
+    }
+    // A held release with a review page is decided there, with its evidence —
+    // not by a one-click answer from a surface that never showed it.
+    const heldRelease = graph.goal.config?.rolloutState;
+    if (
+      !options?.fromReleaseGate &&
+      heldRelease?.releaseGateAcceptanceId &&
+      heldRelease.releaseReviewNodeId === decision.nodeId
+    ) {
+      throw new TRPCError({
+        code: 'BAD_REQUEST',
+        message: 'This release is decided on its review page',
+      });
     }
     // The note *is* the answer for this option; an empty one would re-plan the
     // goal on nothing and the question could never be asked again.
@@ -2135,14 +2163,28 @@ export class GoalService {
     // falling back to the batch node for any gate opened elsewhere. The restart
     // consumes the answer itself, atomically with the round it opens.
     const rolloutState = graph.goal.config?.rolloutState;
-    const patternBreakNodeId = rolloutState?.assayNodeId ?? rolloutState?.batchNodeId;
-    const answersBatchBreak =
-      rolloutState?.phase === 'pattern_break' &&
-      patternBreakNodeId !== undefined &&
-      decision.nodeId === patternBreakNodeId;
-    const resolved = answersBatchBreak
-      ? await this.restartRolloutLoop(goalId, decisionId, optionId, resolution)
-      : await this.graphModel.resolveDecision(goalId, decisionId, optionId, resolution);
+    const batchGateNodeId =
+      rolloutState?.phase === 'release_review'
+        ? rolloutState.releaseReviewNodeId
+        : rolloutState?.phase === 'pattern_break'
+          ? (rolloutState.assayNodeId ?? rolloutState.batchNodeId)
+          : undefined;
+    const answersBatchGate = batchGateNodeId !== undefined && decision.nodeId === batchGateNodeId;
+    // A held release keeps its round either way: approving sends the wave out on
+    // the proven plan, sending it back has the main Agent rewrite that plan.
+    const resolved = !answersBatchGate
+      ? await this.graphModel.resolveDecision(goalId, decisionId, optionId, resolution)
+      : rolloutState?.phase !== 'release_review'
+        ? await this.restartRolloutLoop(goalId, decisionId, optionId, resolution)
+        : optionId === GOAL_BATCH_RELEASE_OPTION.release
+          ? await this.releaseReview.approveRolloutRelease(goalId, decisionId, optionId, resolution)
+          : // A release sent back goes to the main Agent, whoever answered it.
+            await this.releaseReview.sendRevisionToAgent(
+              goalId,
+              decision.nodeId,
+              decisionId,
+              resolution,
+            );
     if (!resolved)
       throw new TRPCError({ code: 'CONFLICT', message: 'Decision was already resolved' });
 
@@ -2400,6 +2442,11 @@ export class GoalService {
       );
       if (result) return result;
     }
+    // A plan the owner sent back waits on the main Agent's rewrite, not on the
+    // frontier: every probe has settled and nothing else is ready to run.
+    if (graph.goal.config?.rolloutState?.phase === 'plan_revision')
+      return this.releaseReview.routeRolloutRevision(graph);
+
     const frontier = selectFrontier(graph);
 
     // Every candidate's task, not just the head's: the scheduler has to know
@@ -2540,7 +2587,7 @@ export class GoalService {
       }
 
       case 'rollout_gate': {
-        return observe(await this.releaseRolloutWave(graph, effects, rolloutGate));
+        return observe(await this.releaseReview.routeRolloutRelease(graph, effects, rolloutGate));
       }
 
       case 'pattern_break': {
@@ -4096,7 +4143,14 @@ export class GoalService {
   private collectRolloutGate = (graph: GoalGraphSnapshot): RolloutGateResult | undefined => {
     const policy = graph.goal.config?.rollout;
     const state = graph.goal.config?.rolloutState;
-    if (!policy || !state || state.phase === 'done' || state.phase === 'pattern_break')
+    if (
+      !policy ||
+      !state ||
+      state.phase === 'done' ||
+      state.phase === 'pattern_break' ||
+      state.phase === 'release_review' ||
+      state.phase === 'plan_revision'
+    )
       return undefined;
     const materializedIds = new Set([...state.probeNodeIds, ...(state.massNodeIds ?? [])]);
     const materialized = graph.nodes.filter((node) => materializedIds.has(node.id));
@@ -4111,110 +4165,9 @@ export class GoalService {
     return state.probeNodeIds.includes(nodeId) || (state.massNodeIds ?? []).includes(nodeId);
   };
 
-  /** Release the next wave of a repeated batch once its gate passed. */
-  private releaseRolloutWave = async (
-    graph: GoalGraphSnapshot,
-    effects: GoalAdvanceEffect[],
-    gate?: RolloutGateResult,
-  ): Promise<GoalTickResult> => {
-    const goalId = graph.goal.id;
-    const policy = graph.goal.config?.rollout;
-    const state = graph.goal.config?.rolloutState;
-    if (!policy || !state)
-      return { goalId, message: 'Batch state missing; nothing to release', outcome: 'no_progress' };
-
-    const roster = state.unitTitles ?? [];
-    const released = state.releasedCount ?? state.probeNodeIds.length;
-    const waveSize = Math.max(1, policy.waveSize ?? ROLLOUT_WAVE_SIZE_DEFAULT);
-    const wave = roster.slice(released, released + waveSize);
-
-    if (!wave.length) {
-      await this.goalModel.updateRolloutState(goalId, { ...state, phase: 'done' });
-      return { goalId, message: 'Batch roster exhausted', outcome: 'advanced' };
-    }
-
-    // Advances overlap — two settling tasks can each queue one — and both
-    // would read the same cursor and release the same wave twice. Claim it:
-    // under the goal row's lock, release only if the cursor is still where this
-    // advance read it.
-    const created: GoalAdvanceEffect[] = [];
-    const message = await this.db.transaction(async (tx) => {
-      const goalModel = new GoalModel(tx, this.userId, this.workspaceId);
-      const current = (await goalModel.lockById(goalId))?.config?.rolloutState;
-      if (
-        !current ||
-        current.phase !== state.phase ||
-        current.waveIndex !== state.waveIndex ||
-        (current.releasedCount ?? current.probeNodeIds.length) !== released
-      )
-        return undefined;
-      const writer = new GoalGraphModel(tx, this.userId, this.workspaceId, {
-        id: GOAL_COORDINATOR_ACTOR_ID,
-        type: 'system',
-      });
-
-      const newIds: string[] = [];
-      for (const title of wave) {
-        const nodeId = await createRecipeUnitTask(
-          writer,
-          goalId,
-          state.batchNodeId,
-          title,
-          { outline: policy.spec?.recipeOutline, skill: state.planSkill },
-          policy.unitBriefs?.[title],
-        );
-        if (nodeId) {
-          newIds.push(nodeId);
-          created.push({ detail: title, nodeId, type: 'created_node' });
-        }
-      }
-
-      const message = `Batch gate passed; released wave ${state.waveIndex + 1} (${newIds.length} unit${newIds.length === 1 ? '' : 's'})`;
-      // A batch that predates the counter has no `gateLog` either, and a restart
-      // resets `waveIndex`; the roster position still says how many waves are out:
-      // everything released beyond the first canary went out a wave at a time.
-      const waveNumber =
-        (state.wavesReleased ??
-          Math.max(
-            state.waveIndex,
-            (state.gateLog ?? []).filter((entry) => entry.outcome === 'released').length,
-            Math.ceil(Math.max(0, released - (policy.canarySize ?? 0)) / waveSize),
-          )) + 1;
-      const next: GoalRolloutState = withGateVerdict(
-        {
-          ...state,
-          massNodeIds: [...(state.massNodeIds ?? []), ...newIds],
-          phase: 'mass',
-          releasedCount: released + newIds.length,
-          waveIndex: state.waveIndex + 1,
-          wavesReleased: waveNumber,
-        },
-        {
-          checks: gate?.checks ?? [],
-          message,
-          outcome: 'released',
-          releasedCount: newIds.length,
-          revision: state.templateRevision,
-          trigger: 'gate',
-          wave: waveNumber,
-          waveIndex: state.waveIndex + 1,
-        },
-      );
-      // Even the final wave stays `mass`: the gate still judges it once it
-      // settles, and only a pass with the roster exhausted closes the batch.
-      await goalModel.updateRolloutState(goalId, next);
-      return message;
-    });
-
-    if (!message)
-      return {
-        goalId,
-        message: 'Another advance already released this wave',
-        outcome: 'no_progress',
-      };
-    effects.push(...created);
-    return { goalId, message, outcome: 'advanced' };
-  };
+  /** Answer a held release from its review report; see {@link GoalReleaseReview.answerReleaseGate}. */
+  answerReleaseGate: GoalReleaseReview['answerReleaseGate'] = (...args) =>
+    this.releaseReview.answerReleaseGate(...args);
 
   /**
    * Hand a blocked batch gate to a person.
@@ -4448,6 +4401,7 @@ export class GoalService {
           return undefined;
         });
       let planSkill = state.planSkill;
+      let planVersion: number | undefined;
       if (planSkill && revisedOutline) {
         const skill = planSkill;
         const version = await inSavepoint('plan skill revision', (db) =>
@@ -4462,6 +4416,7 @@ export class GoalService {
         // failed): units must not load a skill that lacks it. They fall back to
         // copying the revised plan, and the batch drops the stale reference.
         if (version === undefined) planSkill = undefined;
+        else planVersion = version;
       } else if (!planSkill && revisedOutline) {
         // A batch from before plans were skills moves into one now, carrying
         // every earlier version of its plan.
@@ -4639,6 +4594,10 @@ export class GoalService {
       await goalModel.updateRolloutState(goalId, {
         ...state,
         assayNodeId: assay.id,
+        // A round's plan can be rewritten in place, so its skill version is kept, not derived.
+        planVersions: planVersion
+          ? { ...state.planVersions, [String(revision)]: planVersion }
+          : state.planVersions,
         // The new canary is a fresh round: the old waves' members — the broken
         // ones now retired — must not count against its gate.
         massNodeIds: undefined,
