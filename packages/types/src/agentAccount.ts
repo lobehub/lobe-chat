@@ -142,6 +142,22 @@ export interface AgentInboxMessage {
   to: string;
 }
 
+/** One inbox row as a list shows it: who, what and when, without the content. */
+export type AgentInboxMessageSummary = Pick<
+  AgentInboxMessage,
+  | 'accountId'
+  | 'agentId'
+  | 'createdAt'
+  | 'from'
+  | 'id'
+  | 'kind'
+  | 'readAt'
+  | 'receivedAt'
+  | 'subject'
+  | 'threadKey'
+  | 'to'
+>;
+
 /**
  * The inbox as one glance: how much is waiting. Injected into the model's
  * context so it knows it has mail without querying.

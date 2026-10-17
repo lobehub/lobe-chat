@@ -115,6 +115,21 @@ describe('AgentInboxModel workspace isolation by agent visibility', () => {
   });
 });
 
+describe('AgentInboxModel.listSummaries', () => {
+  it('pages like list but leaves out what the sender wrote', async () => {
+    const message = await deliver(publicAgentId, 'summary@lobe.id', 'msg_summary');
+    const model = new AgentInboxModel(serverDB, ownerId, workspaceId);
+
+    const [summary] = await model.listSummaries({ agentId: publicAgentId });
+    const [row] = await model.list({ agentId: publicAgentId });
+
+    expect(summary).toMatchObject({ from: row.from, id: message.id, subject: row.subject });
+    expect(summary).not.toHaveProperty('text');
+    expect(summary).not.toHaveProperty('codes');
+    expect(summary).not.toHaveProperty('metadata');
+  });
+});
+
 describe('AgentInboxModel.claimWake', () => {
   it('lets exactly one of several concurrent workers wake a delivery, and can be given back', async () => {
     const message = await deliver(publicAgentId, 'claim@lobe.id', 'msg_claim');

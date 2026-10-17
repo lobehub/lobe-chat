@@ -108,6 +108,21 @@ const entryColumns = {
   topicId: agentInboxMessages.topicId,
 };
 
+/** Who, what and when — the inbox's own columns, none of the source's content. */
+const summaryColumns = {
+  accountId: agentInboxMessages.accountId,
+  agentId: agentInboxMessages.agentId,
+  createdAt: agentInboxMessages.createdAt,
+  from: agentInboxMessages.sender,
+  id: agentInboxMessages.id,
+  preview: agentInboxMessages.preview,
+  readAt: agentInboxMessages.readAt,
+  receivedAt: agentInboxMessages.receivedAt,
+  sourceType: agentInboxMessages.sourceType,
+  subject: agentInboxMessages.title,
+  threadKey: agentInboxMessages.threadKey,
+};
+
 /**
  * The agent's inbox — one row per item that arrived for its attention.
  *
@@ -393,6 +408,48 @@ export class AgentInboxModel {
     return row;
   };
 
+  /**
+   * The same page as {@link list}, without the content: who, what and when, plus
+   * the short preview the inbox stores itself. A list view renders only these,
+   * and a page of long mails would otherwise be transferred — and held — just
+   * to draw their subject lines. The full item is one {@link list} or detail
+   * read away.
+   */
+  listSummaries = async (params?: Parameters<AgentInboxModel['list']>[0]) => {
+    const conditions = [this.ownership()];
+    if (params?.before) {
+      const { id, receivedAt } = params.before;
+      conditions.push(
+        or(
+          lt(agentInboxMessages.receivedAt, receivedAt),
+          and(eq(agentInboxMessages.receivedAt, receivedAt), lt(agentInboxMessages.id, id)),
+        )!,
+      );
+    }
+    if (params?.agentId) conditions.push(eq(agentInboxMessages.agentId, params.agentId));
+    if (params?.accountId) conditions.push(eq(agentInboxMessages.accountId, params.accountId));
+    if (params?.threadKey) conditions.push(eq(agentInboxMessages.threadKey, params.threadKey));
+    if (params?.receivedAfter)
+      conditions.push(gte(agentInboxMessages.receivedAt, params.receivedAfter));
+    if (params?.unreadOnly) conditions.push(isNull(agentInboxMessages.readAt));
+
+    return this.db
+      .select(summaryColumns)
+      .from(agentInboxMessages)
+      .where(and(...conditions))
+      .orderBy(desc(agentInboxMessages.receivedAt), desc(agentInboxMessages.id))
+      .limit(params?.limit ?? 20);
+  };
+
+  /** One item with its content, scoped to the caller. */
+  findEntryById = async (id: string): Promise<AgentInboxEntry | undefined> => {
+    const [row] = await this.selectEntries()
+      .where(and(eq(agentInboxMessages.id, id), this.ownership()))
+      .limit(1);
+
+    return row;
+  };
+
   unreadCount = async (agentId: string): Promise<number> => {
     const [row] = await this.db
       .select({ value: count() })
@@ -492,3 +549,6 @@ export class AgentInboxModel {
     return row?.value ?? 0;
   };
 }
+
+/** One inbox item as a list shows it. */
+export type AgentInboxSummaryRow = Awaited<ReturnType<AgentInboxModel['listSummaries']>>[number];

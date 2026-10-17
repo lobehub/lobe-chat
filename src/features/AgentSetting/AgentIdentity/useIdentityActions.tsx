@@ -1,7 +1,7 @@
 'use client';
 
-import type { AgentInboxMessage } from '@lobechat/types';
-import { confirmModal, createModal, toast } from '@lobehub/ui/base-ui';
+import type { AgentInboxMessageSummary } from '@lobechat/types';
+import { confirmModal, createModal, toast } from '@lobehub/ui';
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -104,7 +104,7 @@ export const useInboxActions = ({ agentId, onChanged }: UseInboxActionsParams) =
   const { t } = useTranslation('setting');
 
   const openMessage = useCallback(
-    async (message: AgentInboxMessage) => {
+    async (message: Pick<AgentInboxMessageSummary, 'id' | 'readAt'>) => {
       openMessageModal(message.id);
 
       // Already read: opening it again must not re-stamp `readAt`.

@@ -20,7 +20,7 @@ vi.mock('@/store/serverConfig', () => ({
 }));
 
 const ui = vi.hoisted(() => ({ confirmModal: vi.fn(), createModal: vi.fn() }));
-vi.mock('@lobehub/ui/base-ui', async (importOriginal) => ({
+vi.mock('@lobehub/ui', async (importOriginal) => ({
   ...(await importOriginal<Record<string, unknown>>()),
   confirmModal: ui.confirmModal,
   createModal: ui.createModal,
@@ -31,6 +31,7 @@ const { default: AccountCard } = await import('./AccountCard');
 const { default: InboxMessageModal } = await import('./InboxMessageModal');
 const { default: InboxSection } = await import('./InboxSection');
 const { default: IdentityAccounts } = await import('./IdentityAccounts');
+const { INBOX_REFRESH_INTERVAL_MS, useAgentAccounts } = await import('./useAgentIdentity');
 
 const fresh = (node: React.ReactNode) =>
   render(<SWRConfig value={{ dedupingInterval: 0, provider: () => new Map() }}>{node}</SWRConfig>);
@@ -73,6 +74,44 @@ describe('IdentityAccounts', () => {
     expect(screen.getByText('user')).toBeInTheDocument();
     fireEvent.click(screen.getAllByRole('button').at(-1)!);
     expect(ui.confirmModal).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe('IdentityAccounts — revalidation failure', () => {
+  it('keeps the addresses on screen when a later refresh fails', async () => {
+    service.list
+      .mockResolvedValueOnce([
+        {
+          agentId: 'agt_1',
+          capabilities: { receive: true, send: true },
+          displayName: null,
+          id: 'acc_user',
+          identifier: 'me@example.com',
+          kind: 'mail',
+          provider: 'user',
+          status: 'active',
+        },
+      ])
+      .mockRejectedValue(new Error('network down'));
+    let revalidate: () => Promise<unknown> = async () => {};
+    const Probe = () => {
+      const { mutate } = (useAgentAccounts as any)('agt_1');
+      revalidate = mutate;
+      return null;
+    };
+
+    fresh(
+      <>
+        <IdentityAccounts agentId={'agt_1'} />
+        <Probe />
+      </>,
+    );
+    expect(await screen.findByText('me@example.com')).toBeInTheDocument();
+
+    await revalidate().catch(() => {});
+
+    expect(await screen.findByText('identity.loadFailed')).toBeInTheDocument();
+    expect(screen.getByText('me@example.com')).toBeInTheDocument();
   });
 });
 
@@ -135,9 +174,7 @@ describe('InboxSection', () => {
 
     fresh(<InboxSection agentId={'agt_1'} />);
 
-    await waitFor(() =>
-      expect(service.getInboxUnreadCount).toHaveBeenCalledWith('agt_1'),
-    );
+    await waitFor(() => expect(service.getInboxUnreadCount).toHaveBeenCalledWith('agt_1'));
     expect(await screen.findByText('identity.inbox.unread')).toBeInTheDocument();
   });
 
@@ -169,7 +206,7 @@ describe('InboxSection', () => {
     const first = page(0, 50);
     const second = page(50, 50);
     service.listInbox.mockImplementation(async ({ before }: { before?: unknown }) =>
-      before ? (before as any).id === 'msg_49' ? second : page(100, 3) : first,
+      before ? ((before as any).id === 'msg_49' ? second : page(100, 3)) : first,
     );
     service.getInboxUnreadCount.mockResolvedValue(0);
 
@@ -188,5 +225,51 @@ describe('InboxSection', () => {
     );
     // The short third page ends the list.
     expect(screen.queryByRole('button', { name: 'identity.inbox.loadMore' })).toBeNull();
+  });
+
+  it('keeps the loaded messages when an older page fails, with a retry below them', async () => {
+    const first = Array.from({ length: 50 }, (_, i) => ({
+      from: `sender${i}@example.com`,
+      id: `msg_${i}`,
+      readAt: new Date('2026-10-02T00:00:00Z'),
+      receivedAt: new Date(Date.UTC(2026, 9, 2) - i * 1000),
+      subject: `Mail ${i}`,
+    }));
+    service.listInbox.mockImplementation(async ({ before }: { before?: unknown }) => {
+      if (before) throw new Error('older page failed');
+      return first;
+    });
+    service.getInboxUnreadCount.mockResolvedValue(0);
+
+    fresh(<InboxSection agentId={'agt_1'} />);
+
+    fireEvent.click(await screen.findByRole('button', { name: 'identity.inbox.loadMore' }));
+
+    expect(await screen.findByText('identity.inbox.loadFailed')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /sender0@example.com/ })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /sender49@example.com/ })).toBeInTheDocument();
+  });
+
+  it('picks up a delivery that lands while the tab stays open', async () => {
+    vi.useFakeTimers({ shouldAdvanceTime: true });
+    service.listInbox.mockResolvedValueOnce(rows).mockResolvedValue([
+      {
+        from: 'otp@service.com',
+        id: 'msg_2',
+        readAt: null,
+        receivedAt: new Date('2026-10-02T00:01:00Z'),
+        subject: 'Your code',
+      },
+      ...rows,
+    ]);
+    service.getInboxUnreadCount.mockResolvedValue(1);
+
+    fresh(<InboxSection agentId={'agt_1'} />);
+    await screen.findByRole('button', { name: /friend@example.com/ });
+
+    await vi.advanceTimersByTimeAsync(INBOX_REFRESH_INTERVAL_MS + 100);
+
+    expect(await screen.findByRole('button', { name: /otp@service.com/ })).toBeInTheDocument();
+    vi.useRealTimers();
   });
 });

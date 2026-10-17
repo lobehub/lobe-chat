@@ -22,10 +22,13 @@ export const useShowAgentIdentity = (): boolean => {
 
   // Only ask for the agent's accounts when they are what decides it.
   const needsAccounts = enabled && providers.length === 0 && !!agentId;
-  const { data: accounts } = useAgentAccounts(needsAccounts ? agentId! : '');
+  const { data: accounts, error } = useAgentAccounts(needsAccounts ? agentId! : '');
 
   if (!enabled) return false;
   if (providers.length > 0) return true;
+  // The read that decides it failed: the agent may own an address, so keep the
+  // tab — it shows the failure and a retry — rather than hide it on a guess.
+  if (error && !accounts) return true;
 
   return (accounts ?? []).some((account) => account.status !== 'revoked');
 };

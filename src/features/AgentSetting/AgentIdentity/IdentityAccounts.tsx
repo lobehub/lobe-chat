@@ -1,7 +1,6 @@
 'use client';
 
-import { Flexbox } from '@lobehub/ui';
-import { Skeleton } from '@lobehub/ui/base-ui';
+import { Flexbox, Skeleton } from '@lobehub/ui';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -34,7 +33,9 @@ const IdentityAccounts = memo<IdentityAccountsProps>(({ agentId, disabled }) => 
 
   const header = <SectionHeader desc={t('identity.desc')} title={t('identity.title')} />;
 
-  if (error) {
+  // Only a read that never succeeded replaces the list. A later revalidation
+  // that fails keeps the addresses on screen, with the failure beside them.
+  if (error && !data) {
     return (
       <Flexbox gap={10}>
         {header}
@@ -62,6 +63,13 @@ const IdentityAccounts = memo<IdentityAccountsProps>(({ agentId, disabled }) => 
   return (
     <Flexbox gap={10}>
       {header}
+      {error && (
+        <InlineError
+          detail={error instanceof Error ? error.message : String(error)}
+          summary={t('identity.loadFailed')}
+          onRetry={() => void mutate()}
+        />
+      )}
       {IDENTITY_CHANNELS.map((channel) => {
         const owned = accounts.filter((account) => isChannelAccount(account, channel));
 

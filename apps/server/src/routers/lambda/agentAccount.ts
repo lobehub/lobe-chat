@@ -355,7 +355,8 @@ export const agentAccountRouter = router({
           workspaceId: ctx.workspaceId ?? undefined,
         });
 
-        return ctx.agentInboxModel.list(input);
+        // Summaries only: the list renders who/what/when, and `get` reads the body.
+        return ctx.agentInboxModel.listSummaries(input);
       }),
 
     unreadCount: agentAccountProcedure

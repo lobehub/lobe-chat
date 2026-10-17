@@ -66,7 +66,7 @@ vi.mock('@/server/services/agentIdentity', async () => ({
 
 const inbox = vi.hoisted(() => ({
   findById: vi.fn(async (_id: string): Promise<unknown> => undefined),
-  list: vi.fn(async (_params?: unknown): Promise<unknown[]> => []),
+  listSummaries: vi.fn(async (_params?: unknown): Promise<unknown[]> => []),
   markAllRead: vi.fn(async (_agentId: string) => 0),
   markRead: vi.fn(async (_ids: string[]) => 0),
   unreadCount: vi.fn(async (_agentId: string) => 0),
@@ -94,7 +94,7 @@ beforeEach(() => {
   service.setCredential.mockResolvedValue('acc_1');
   service.update.mockResolvedValue('acc_1');
   inbox.findById.mockResolvedValue(undefined);
-  inbox.list.mockResolvedValue([]);
+  inbox.listSummaries.mockResolvedValue([]);
   inbox.markAllRead.mockResolvedValue(0);
   inbox.markRead.mockResolvedValue(0);
   inbox.unreadCount.mockResolvedValue(0);
@@ -359,13 +359,14 @@ describe('agentAccountRouter', () => {
 
   describe('inbox', () => {
     it('reads the inbox only after proving the caller may use the agent', async () => {
-      inbox.list.mockResolvedValueOnce([{ agentId: 'agt_1', id: 'msg_1' }]);
+      inbox.listSummaries.mockResolvedValueOnce([{ agentId: 'agt_1', id: 'msg_1' }]);
       const caller = agentAccountRouter.createCaller(ctx);
 
       const rows = await caller.inbox.list({ agentId: 'agt_1', unreadOnly: true });
 
       expect(assertAgentUsableBy).toHaveBeenCalledWith({}, 'agt_1', expect.anything());
-      expect(inbox.list).toHaveBeenCalledWith({ agentId: 'agt_1', unreadOnly: true });
+      // Summaries, not rows: the list never carries what the sender wrote.
+      expect(inbox.listSummaries).toHaveBeenCalledWith({ agentId: 'agt_1', unreadOnly: true });
       expect(rows).toEqual([{ agentId: 'agt_1', id: 'msg_1' }]);
     });
 

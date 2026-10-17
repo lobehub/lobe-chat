@@ -2,6 +2,7 @@ import type {
   AgentAccountAttachment,
   AgentAccountKind,
   AgentInboxMessage,
+  AgentInboxMessageSummary,
 } from '@lobechat/types';
 import type { inferRouterOutputs } from '@trpc/server';
 
@@ -9,7 +10,7 @@ import { lambdaClient } from '@/libs/trpc/client';
 import type { LambdaRouter } from '@/server/routers/lambda';
 
 type AgentAccountRouterOutputs = inferRouterOutputs<LambdaRouter>['agentAccount'];
-type InboxRow = AgentAccountRouterOutputs['inbox']['list'][number];
+type InboxRow = AgentAccountRouterOutputs['inbox']['get'];
 
 /**
  * One identity account as the control plane returns it. Derived from the router
@@ -97,11 +98,9 @@ class AgentAccountService {
 
   // --------------- Inbox ---------------
 
-  listInbox = async (params: ListAgentInboxParams): Promise<AgentInboxMessage[]> => {
-    const rows = await lambdaClient.agentAccount.inbox.list.query(params);
-
-    return rows.map(toInboxMessage);
-  };
+  /** A page of summaries; the body and attachments come from {@link getInboxMessage}. */
+  listInbox = (params: ListAgentInboxParams): Promise<AgentInboxMessageSummary[]> =>
+    lambdaClient.agentAccount.inbox.list.query(params);
 
   /** Unread across the whole inbox, not just the page a list happened to load. */
   getInboxUnreadCount = async (agentId: string): Promise<number> =>

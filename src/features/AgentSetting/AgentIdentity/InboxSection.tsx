@@ -1,7 +1,6 @@
 'use client';
 
-import { Flexbox } from '@lobehub/ui';
-import { Button, Skeleton, Text } from '@lobehub/ui/base-ui';
+import { Button, Flexbox, Skeleton, Text } from '@lobehub/ui';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { memo, useCallback } from 'react';
@@ -58,7 +57,9 @@ const InboxSection = memo<InboxSectionProps>(({ agentId }) => {
     />
   );
 
-  if (error) {
+  // Only a first page that never loaded replaces the list. A failed refresh or
+  // older page keeps every message already on screen, with a retry below it.
+  if (error && !data) {
     return (
       <Flexbox gap={10}>
         {header}
@@ -137,10 +138,18 @@ const InboxSection = memo<InboxSectionProps>(({ agentId }) => {
           );
         })}
       </Flexbox>
-      {hasMore && (
-        <Button block size={'small'} type={'text'} onClick={loadMore}>
-          {t('identity.inbox.loadMore')}
-        </Button>
+      {error ? (
+        <InlineError
+          detail={error instanceof Error ? error.message : String(error)}
+          summary={t('identity.inbox.loadFailed')}
+          onRetry={() => void mutate()}
+        />
+      ) : (
+        hasMore && (
+          <Button block size={'small'} type={'text'} onClick={loadMore}>
+            {t('identity.inbox.loadMore')}
+          </Button>
+        )
       )}
     </Flexbox>
   );
