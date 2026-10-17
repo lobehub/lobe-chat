@@ -59,11 +59,11 @@ export const A = () => (
     expect(out).toContain('classNames={{ root: stylex.props(styles.root).className }}');
   });
 
-  it('keeps one stylex.props per cx call and counts outside classNames', () => {
+  it('keeps one stylex.props per cx call and counts outside classNames placed before it', () => {
     const source = `import { createStaticStyles, cx } from '@lobehub/ui';
 const styles = createStaticStyles(({ css }) => ({ a: css\`gap: 1px;\`, b: css\`gap: 2px;\` }));
 export const A = ({ className, on }: { className?: string; on: boolean }) => (
-  <section className={cx(styles.a, className, on ? styles.b : undefined)} />
+  <section className={cx(className, styles.a, on ? styles.b : undefined)} />
 );
 `;
     const { code, mergesOutsideClassName } = transformSource(source);
@@ -128,13 +128,24 @@ export const pick = (k: 'a') => styles[k];`,
 export const A = ({ styles }: { styles: { a: string } }) => <div className={styles.a} />;`,
     ],
     [
+      'an outside class after the styles, which StyleX would outrank',
+      `const styles = createStaticStyles(({ css }) => ({ a: css\`gap: 1px;\` }));
+export const A = ({ className }: { className?: string }) => <div className={cx(styles.a, className)} />;`,
+    ],
+    [
+      'style refs kept in a lookup object',
+      `const styles = createStaticStyles(({ css }) => ({ a: css\`gap: 1px;\`, b: css\`gap: 2px;\` }));
+const TONE = { b: styles.b };
+export const A = ({ t }: { t: 'b' }) => <div className={cx(TONE[t])} />;`,
+    ],
+    [
       'an existing stylex binding',
       `const stylex = 1;
 const styles = createStaticStyles(({ css }) => ({ a: css\`gap: 1px;\` }));
 export const A = () => <div className={styles.a} />;`,
     ],
   ])('rejects %s', (_label, body) => {
-    const source = `import { createStaticStyles } from '@lobehub/ui';\n${body}\n`;
+    const source = `import { createStaticStyles, cx } from '@lobehub/ui';\n${body}\n`;
     expect(() => transformSource(source)).toThrow(UnsupportedCssError);
   });
 

@@ -8,7 +8,7 @@ import { compileStylex, format, lintAndFix } from './validate';
 
 export interface CodemodReport {
   converted: string[];
-  /** Converted files whose cx() merges StyleX classes with an outside className. */
+  /** Converted files whose cx() puts an outside className before the StyleX classes. */
   review: string[];
   skipped: { file: string; reason: string }[];
 }
@@ -88,7 +88,8 @@ export const runCodemod = async (
       compileStylex(code, filePath);
       const linted = await lintAndFix(await format(code, filePath), filePath);
       if (linted.errors.length > 0) throw new UnsupportedCssError(`lint: ${linted.errors[0]}`);
-      if (write) writeFileSync(filePath, linted.code);
+      // eslint --fix merges duplicate imports without formatting them.
+      if (write) writeFileSync(filePath, await format(linted.code, filePath));
       report.converted.push(file);
       if (mergesOutsideClassName > 0) report.review.push(file);
     } catch (error) {
@@ -108,6 +109,7 @@ export const summarizeSkips = (skipped: CodemodReport['skipped']) => {
   for (const { reason } of skipped) {
     const key = reason
       .replace(/^(selector|interpolation|style entry|cx argument|factory uses) .*/, '$1 …')
+      .replace(/^(cx: outside class after StyleX): .*/, '$1')
       .replace(/^(lint: [^:]+):.*/, '$1')
       .replace(/^packages\/.+ lacks stylexPlugin$/, 'package vitest config lacks stylexPlugin')
       .replace(/^(compile: ).*/, '$1…');

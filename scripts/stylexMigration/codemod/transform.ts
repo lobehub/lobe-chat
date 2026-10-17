@@ -189,7 +189,14 @@ export const transformSource = (source: string, fileName = 'file.tsx'): Transfor
     for (const arg of call.arguments) {
       if (isStyleArg(arg)) styleArgs.push(text(arg));
       else if (containsStyleRef(arg)) throw new UnsupportedCssError(`cx argument ${text(arg)}`);
-      else rest.push(text(arg));
+      else {
+        // Emotion let a later class win; StyleX rules outrank plain classes, so a
+        // class placed after the styles (a caller's override, a shared emotion
+        // style) would stop winning.
+        if (styleArgs.length > 0)
+          throw new UnsupportedCssError(`cx: outside class after StyleX: ${text(arg)}`);
+        rest.push(text(arg));
+      }
     }
     return { rest, styleArgs };
   };
@@ -230,6 +237,19 @@ export const transformSource = (source: string, fileName = 'file.tsx'): Transfor
     }
 
     if (isStyleArg(node as ts.Expression) && !isStyleArg(node.parent as ts.Expression)) {
+      // A ref kept in a variable or a lookup object is later combined with other
+      // classes; separate stylex.props calls would resolve by CSS order, not by
+      // argument order. Object values inside JSX props (classNames slots) are fine.
+      const inJsxProp = (n: ts.Node): boolean =>
+        !!n.parent &&
+        (ts.isJsxExpression(n.parent) ||
+          ((ts.isObjectLiteralExpression(n.parent) || ts.isPropertyAssignment(n.parent)) &&
+            inJsxProp(n.parent)));
+      if (
+        ts.isVariableDeclaration(node.parent) ||
+        (ts.isPropertyAssignment(node.parent) && !inJsxProp(node.parent))
+      )
+        throw new UnsupportedCssError('style ref stored outside JSX');
       replace(node, `stylex.props(${text(node)}).className`);
       return;
     }
