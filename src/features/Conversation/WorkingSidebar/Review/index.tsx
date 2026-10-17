@@ -241,6 +241,8 @@ const Review = memo<ReviewProps>(
       });
     };
 
+    // Stale-first: after a reload the replica paints the last persisted summary
+    // (paths + counts, no diff text); expanded rows wait for the live diff.
     const { data, isLoading, isValidating } = useReviewPatches(
       workingDirectory,
       mode,
@@ -248,6 +250,7 @@ const Review = memo<ReviewProps>(
       deviceId,
       active,
     );
+    const diffPending = !!data?.summaryOnly;
     const invalidateReviewData = useCallback(
       async () =>
         invalidateGitReviewCaches({
@@ -658,6 +661,7 @@ const Review = memo<ReviewProps>(
                             expanded={expanded}
                             key={key}
                             mode={mode}
+                            pending={diffPending}
                             repoAbsolutePath={group.absolutePath}
                             textDiff={textDiff}
                             viewMode={viewMode}

@@ -21,7 +21,8 @@ import {
 } from 'lucide-react';
 import { memo, type ReactNode, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import type { SWRResponse } from 'swr';
+
+import type { GitReplicaReadResult } from '@/store/device';
 
 import { ChevronRight, OverviewRow, rowStyles } from '../Overview/OverviewRow';
 import { sectionStyles } from '../Overview/sectionStyles';
@@ -99,7 +100,7 @@ Section.displayName = 'PullRequestSection';
 
 interface SectionsProps {
   activity: Pick<
-    SWRResponse<DeviceGitPullRequestActivity>,
+    GitReplicaReadResult<DeviceGitPullRequestActivity>,
     'data' | 'error' | 'isValidating' | 'mutate'
   >;
   busy?: PullRequestBusy;

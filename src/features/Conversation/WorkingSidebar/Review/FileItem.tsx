@@ -10,6 +10,7 @@ import {
   cssVar as themeCssVar,
   Flexbox,
   PatchDiff,
+  Skeleton,
   toast,
 } from '@lobehub/ui';
 import { CopyIcon, LocateFixedIcon, Undo2Icon } from 'lucide-react';
@@ -67,6 +68,10 @@ const styles = createStaticStyles(({ css, cssVar }) => ({
   `,
   deletions: css`
     color: ${cssVar.colorError};
+  `,
+  pending: css`
+    padding-block: 8px;
+    padding-inline: 12px;
   `,
   empty: css`
     padding-block: 12px;
@@ -319,6 +324,8 @@ interface FileItemBodyProps {
   filePath: string;
   isBinary: boolean;
   patch: string;
+  /** Diff text not loaded yet — show a placeholder instead of the error line. */
+  pending?: boolean;
   /** Inline word-level diff highlighting; off → plain line-level. */
   textDiff: boolean;
   truncated: boolean;
@@ -332,6 +339,7 @@ const FileItemBody = memo<FileItemBodyProps>(
     composerTarget,
     filePath,
     patch,
+    pending,
     isBinary,
     truncated,
     expanded,
@@ -394,6 +402,12 @@ const FileItemBody = memo<FileItemBodyProps>(
 
     if (isBinary) return <div className={styles.empty}>{t('workingPanel.review.binary')}</div>;
     if (truncated) return <div className={styles.empty}>{t('workingPanel.review.tooLarge')}</div>;
+    if (!patch && pending)
+      return (
+        <div aria-busy className={styles.pending} data-testid={'review-diff-pending'}>
+          <Skeleton.Text rows={3} width={['80%', '60%', '70%']} />
+        </div>
+      );
     if (!patch) return <div className={styles.empty}>{t('workingPanel.review.error')}</div>;
 
     return (

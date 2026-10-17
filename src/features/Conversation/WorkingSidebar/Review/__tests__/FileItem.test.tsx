@@ -1,7 +1,7 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
-import { FileItemHeader } from '../FileItem';
+import FileItemBody, { FileItemHeader } from '../FileItem';
 
 const mockRevealInFilesTab = vi.fn();
 
@@ -16,7 +16,16 @@ vi.mock('@lobehub/ui', async (importOriginal) => ({
     <button type="button" {...props} onClick={onClick} />
   ),
   confirmModal: vi.fn(),
+  Skeleton: { Text: () => <div data-testid="skeleton-text" /> },
   toast: { error: vi.fn(), success: vi.fn() },
+}));
+
+vi.mock('react-i18next', () => ({
+  useTranslation: () => ({ t: (key: string) => key }),
+}));
+
+vi.mock('@/store/file', () => ({
+  useFileStore: (selector: (s: any) => any) => selector({ addChatContextSelection: vi.fn() }),
 }));
 
 vi.mock('@/services/git', () => ({
@@ -53,5 +62,35 @@ describe('FileItemHeader — reveal in tree', () => {
     fireEvent.click(btn);
 
     expect(parentSpy).not.toHaveBeenCalled();
+  });
+});
+
+describe('FileItemBody — summary rows', () => {
+  const props = {
+    composerTarget: { contextKey: 'ctx', writable: true } as any,
+    expanded: true,
+    filePath: 'src/foo.ts',
+    isBinary: false,
+    patch: '',
+    textDiff: true,
+    truncated: false,
+    viewMode: 'unified' as const,
+    wordWrap: false,
+    workingDirectory: '/repo',
+  };
+
+  // Regression: a row painted from the persisted summary has no diff text yet;
+  // without the pending state it read as a load error until the live diff landed.
+  it('shows a placeholder, not the error line, while the diff text is pending', () => {
+    render(<FileItemBody {...props} pending />);
+
+    expect(screen.getByTestId('review-diff-pending')).toBeInTheDocument();
+    expect(screen.queryByText('workingPanel.review.error')).not.toBeInTheDocument();
+  });
+
+  it('still reports a missing diff once the live read settled', () => {
+    render(<FileItemBody {...props} />);
+
+    expect(screen.getByText('workingPanel.review.error')).toBeInTheDocument();
   });
 });
