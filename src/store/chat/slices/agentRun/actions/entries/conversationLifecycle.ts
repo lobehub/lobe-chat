@@ -512,6 +512,7 @@ export class ConversationLifecycleActionImpl {
         : undefined;
     const projectDirectoryId = boundTopic?.projectWorkingDirectoryId ?? stagedDirectoryId;
     let stagedDirectory: { id: string; projectId: string } | undefined;
+    let projectCwd: string | undefined;
     if (projectDirectoryId) {
       // The sidebar's directory replica already holds the row; read it locally
       // so the optimistic pair is not held behind a network round trip. The
@@ -521,6 +522,7 @@ export class ConversationLifecycleActionImpl {
         findProjectDirectory(projectDirectoryId) ??
         (await projectWorkingDirectoryService.resolve(projectDirectoryId)).data;
       if (stagedDirectoryId) stagedDirectory = directory;
+      projectCwd = directory.path;
       if (!isGatewayMode)
         throw new Error('Enable Gateway Mode to run in a project working directory');
       if (
@@ -1289,12 +1291,10 @@ export class ConversationLifecycleActionImpl {
           workspaceScoped,
         }
       : undefined;
-    const agentWorkingDirectory = runCwdParams
-      ? resolveAgentWorkingDirectory(runCwdParams)
-      : undefined;
-    const agentWorkingDirectoryConfig = runCwdParams
-      ? resolveAgentWorkingDirectoryConfig(runCwdParams)
-      : undefined;
+    const agentCwdParams = projectCwd ? { topicWorkingDirectory: projectCwd } : runCwdParams;
+    const agentWorkingDirectory = agentCwdParams && resolveAgentWorkingDirectory(agentCwdParams);
+    const agentWorkingDirectoryConfig =
+      agentCwdParams && resolveAgentWorkingDirectoryConfig(agentCwdParams);
     // Heterogeneous CLI agents (Claude Code, Codex, …) store sessions per-cwd
     // (`~/.claude/projects/<encoded-cwd>/`). Anchor their session cwd to the
     // SOURCE repo, NOT the selected worktree, so switching worktree keeps cwd +
