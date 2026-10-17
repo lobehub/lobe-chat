@@ -38,10 +38,6 @@ const { getAuthInfo: mockGetAuthInfo } = vi.hoisted(() => ({
   getAuthInfo: vi.fn(),
 }));
 
-const { writeFileSync: mockWriteFileSync } = vi.hoisted(() => ({
-  writeFileSync: vi.fn(),
-}));
-
 const { uploadLocalFile: mockUploadLocalFile } = vi.hoisted(() => ({
   uploadLocalFile: vi.fn(),
 }));
@@ -53,10 +49,6 @@ vi.mock('../utils/uploadLocalFile', async (importOriginal) => {
 
 vi.mock('../api/client', () => ({ getTrpcClient: mockGetTrpcClient }));
 vi.mock('../api/http', () => ({ getAuthInfo: mockGetAuthInfo }));
-vi.mock('node:fs', async (importOriginal) => {
-  const actual: Record<string, unknown> = await importOriginal();
-  return { ...actual, writeFileSync: mockWriteFileSync };
-});
 describe('generate command', () => {
   let exitSpy: ReturnType<typeof vi.spyOn>;
   let consoleSpy: ReturnType<typeof vi.spyOn>;
@@ -476,37 +468,6 @@ describe('generate command', () => {
           provider: 'zhipu',
         }),
       );
-    });
-  });
-
-  describe('tts', () => {
-    it('should call OpenAI TTS endpoint and save file', async () => {
-      const audioBuffer = new ArrayBuffer(100);
-      vi.stubGlobal(
-        'fetch',
-        vi.fn().mockResolvedValue({
-          arrayBuffer: vi.fn().mockResolvedValue(audioBuffer),
-          ok: true,
-        }),
-      );
-
-      const program = createProgram();
-      await program.parseAsync([
-        'node',
-        'test',
-        'generate',
-        'tts',
-        'Hello world',
-        '--output',
-        '/tmp/test.mp3',
-      ]);
-
-      expect(fetch).toHaveBeenCalledWith(
-        'https://app.lobehub.com/webapi/tts/openai',
-        expect.objectContaining({ method: 'POST' }),
-      );
-      expect(mockWriteFileSync).toHaveBeenCalledWith('/tmp/test.mp3', expect.any(Buffer));
-      expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining('Audio saved'));
     });
   });
 

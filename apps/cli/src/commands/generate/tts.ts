@@ -1,10 +1,9 @@
-import { writeFileSync } from 'node:fs';
+import { writeFile } from 'node:fs/promises';
 
 import type { Command } from 'commander';
 import pc from 'picocolors';
 
-import { getAuthInfo } from '../../api/http';
-import { log } from '../../utils/logger';
+import { getTrpcClient } from '../../api/client';
 
 export function registerTtsCommand(parent: Command) {
   parent
@@ -13,45 +12,34 @@ export function registerTtsCommand(parent: Command) {
     .option('-o, --output <file>', 'Output audio file path', 'output.mp3')
     .option('--voice <voice>', 'Voice name', 'alloy')
     .option('--speed <n>', 'Speed multiplier (0.25-4.0)', '1')
-    .option('--model <model>', 'TTS model', 'tts-1')
+    .option('-m, --model <model>', 'Model ID (provider/model format)', 'tts-1')
+    .option('-p, --provider <provider>', 'Provider name (derived from model if omitted)')
     .action(
       async (
         text: string,
         options: {
           model: string;
           output: string;
+          provider?: string;
           speed: string;
           voice: string;
         },
       ) => {
-        const { serverUrl, headers } = await getAuthInfo();
+        const parts = options.model.split('/');
+        const provider = options.provider || (parts.length > 1 ? parts[0] : 'openai');
+        const model = parts.length > 1 ? parts.slice(1).join('/') : options.model;
+        const client = await getTrpcClient();
 
-        const payload: Record<string, any> = {
+        const result = await client.tts.synthesize.mutate({
           input: text,
-          model: options.model,
-          options: {
-            model: options.model,
-            voice: options.voice,
-          },
+          model,
+          provider,
           speed: Number.parseFloat(options.speed),
           voice: options.voice,
-        };
-
-        const res = await fetch(`${serverUrl}/webapi/tts/openai`, {
-          body: JSON.stringify(payload),
-          headers,
-          method: 'POST',
         });
 
-        if (!res.ok) {
-          const errText = await res.text();
-          log.error(`TTS failed: ${res.status} ${errText}`);
-          process.exit(1);
-          return;
-        }
-
-        const buffer = Buffer.from(await res.arrayBuffer());
-        writeFileSync(options.output, buffer);
+        const buffer = Buffer.from(result.audioBase64, 'base64');
+        await writeFile(options.output, buffer);
         console.log(
           `${pc.green('✓')} Audio saved to ${pc.bold(options.output)} (${Math.round(buffer.length / 1024)}KB)`,
         );
