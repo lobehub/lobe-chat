@@ -15,6 +15,15 @@ user-invocable: false
 | Simple one-off                                             | Inline `style` attribute                                                                                                                                                                                                  |
 | Truly dynamic (JS color fns like `readableColor`/`chroma`) | `createStyles` + `token` — **last resort**                                                                                                                                                                                |
 
+### StyleX
+
+- New code may not import `createStaticStyles` / `createStyles` / `css` / `keyframes` / `createGlobalStyle` / `injectGlobal` from `@lobehub/ui` (`stylex-migration/no-emotion-styles`). Files still on them are listed in `scripts/stylexMigration/legacyFiles.json`; after migrating one, run `bun run stylex:migration --prune-legacy`. Never add entries.
+- Migrate a whole file at once. StyleX longhand rules carry raised specificity (`.x:not(#\#)`) and beat emotion classes on the same element, but StyleX shorthand rules do not, so a half-migrated element resolves by property.
+- Element that also forwards a caller's `className` / `style`: `{...sx([styles.root, active && styles.active], className, style)}` from `@/styles/sx`. Spreading `stylex.props` next to `className` fails `@stylexjs/no-conflicting-props`.
+- Component that lets callers restyle it: take `xstyle?: StyleXStyles` and pass it last in the `sx` / `stylex.props` array. A plain `className` from outside cannot override StyleX rules. Passing a class to `@lobehub/ui` components (`className`, `classNames`) works, because lobe-ui CSS sits in `@layer lobe-ui`.
+- Values follow `@stylexjs/valid-styles`: no multi-value shorthands (`margin: '0 8px'` → `marginBlock` / `marginInline`), and string `flex` (`flex: '1'`).
+- `bun run stylex:migration --list <A|B|C|D>` lists files by how hard they are to move: A flat, B self pseudo-classes, C descendant / ancestor coupling (use `stylex.defaultMarker()` + `stylex.when.ancestor()` or `xstyle`), D tag / third-party DOM selectors (scoped plain CSS).
+
 ## Component Priority
 
 1. **`src/components`** — project-specific reusable components
