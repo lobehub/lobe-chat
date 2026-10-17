@@ -224,6 +224,35 @@ describe('Review / PR tab replicas', () => {
       });
     });
 
+    // Regression: an offline remote device resolves the patch read to
+    // `undefined`; it was turned into an empty working tree, so Review claimed
+    // "no changes" and overwrote the persisted summary.
+    it.each([
+      ['unstaged', 'getGitWorkingTreePatches'],
+      ['branch', 'getGitBranchDiff'],
+    ] as const)(
+      'keeps the persisted %s summary when the device read is unknown',
+      async (mode, method) => {
+        const params = { ...REVIEW, mode };
+        const summary = {
+          mode,
+          patches: [patch('src/a.ts', '')],
+          summaryOnly: true,
+        } satisfies ReviewPatchesData;
+        await seed(gitReviewPatchesResource, params, summary);
+        vi.mocked(gitService[method]).mockResolvedValue(undefined);
+
+        const { result } = renderHook(
+          () => useReviewPatches('/repo', mode, undefined, 'device-1'),
+          { wrapper },
+        );
+
+        await waitFor(() => expect(result.current.error).toBeTruthy());
+        expect(result.current.data?.patches.map((p) => p.filePath)).toEqual(['src/a.ts']);
+        expect(await readRow(gitReviewPatchesResource, params)).toEqual(summary);
+      },
+    );
+
     it('treats summary rows as pending only while the live read can still land', () => {
       const summary = { mode: 'unstaged', patches: [], summaryOnly: true } as ReviewPatchesData;
       expect(getReviewSummaryState(summary, undefined)).toEqual({
@@ -459,6 +488,26 @@ describe('Review / PR tab replicas', () => {
       await seed(gitLinkedPRResource, LINKED, {
         value: { pullRequest: { number: 42 }, pullRequestStatus: 'ok' },
       });
+      const none = { pullRequest: null, pullRequestStatus: 'ok' } as const;
+      vi.mocked(gitService.getLinkedPullRequest).mockResolvedValue(none as any);
+
+      const { result } = renderHook(
+        () => useFetchGitLinkedPR('device-1', '/repo', 'feat/x', true),
+        { wrapper },
+      );
+
+      await waitFor(() => expect(result.current.data?.pullRequest).toBeNull());
+      await waitFor(async () =>
+        expect(await readRow(gitLinkedPRResource, LINKED)).toEqual({ value: none }),
+      );
+    });
+
+    // Regression: an offline remote device resolves the lookup to `undefined`;
+    // that was committed as "no PR", so the PR tab vanished and its persisted
+    // copy was overwritten.
+    it('keeps the persisted linked PR when the device read fails', async () => {
+      const cached = { value: { pullRequest: { number: 42 }, pullRequestStatus: 'ok' } };
+      await seed(gitLinkedPRResource, LINKED, cached);
       vi.mocked(gitService.getLinkedPullRequest).mockResolvedValue(undefined);
 
       const { result } = renderHook(
@@ -466,9 +515,27 @@ describe('Review / PR tab replicas', () => {
         { wrapper },
       );
 
-      await waitFor(() => expect(gitService.getLinkedPullRequest).toHaveBeenCalled());
-      await waitFor(() => expect(result.current.data).toBeUndefined());
-      await waitFor(async () => expect(await readRow(gitLinkedPRResource, LINKED)).toEqual({}));
+      await waitFor(() => expect(result.current.error).toBeTruthy());
+      expect(result.current.data?.pullRequest?.number).toBe(42);
+      expect(await readRow(gitLinkedPRResource, LINKED)).toEqual(cached);
+    });
+
+    // Regression: the service maps a failed remote detail read to
+    // `{ detail: null, status: 'error' }`, which replaced the persisted PR.
+    it('keeps the persisted detail when the detail read fails', async () => {
+      await seed(gitPullRequestDetailResource, PR, { value: detailResult });
+      vi.mocked(gitService.getPullRequestDetail).mockResolvedValue({
+        detail: null,
+        status: 'error',
+      });
+
+      const { result } = renderHook(() => useFetchGitPullRequestDetail('device-1', '/repo', 42), {
+        wrapper,
+      });
+
+      await waitFor(() => expect(result.current.error).toBeTruthy());
+      expect(result.current.data?.detail?.title).toBe('Cached PR title');
+      expect(await readRow(gitPullRequestDetailResource, PR)).toEqual({ value: detailResult });
     });
 
     it('does not read a PR for a non-GitHub repo', async () => {

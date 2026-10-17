@@ -69,6 +69,17 @@ export const initialGitReviewState: GitReviewStoreState = {
   gitReviewPatchesReplica: createReplicaState(),
 };
 
+/**
+ * A remote device read resolves to `undefined` when the gateway or the device
+ * RPC fails (the local IPC always answers). That is an unknown result, not an
+ * empty one: reject it so the replica keeps the persisted copy instead of
+ * committing — and persisting — "no changes" / "no PR" over it.
+ */
+const requireAnswer = <T>(value: T | undefined, what: string): T => {
+  if (value === undefined) throw new Error(`Unable to load ${what}`);
+  return value;
+};
+
 const fetchReviewPatches = async ({
   baseRef,
   deviceId,
@@ -76,16 +87,22 @@ const fetchReviewPatches = async ({
   path,
 }: GitReviewPatchesParams): Promise<ReviewPatchesData> => {
   if (mode === 'unstaged') {
-    const result = await gitService.getGitWorkingTreePatches({ deviceId, path });
-    return { mode: 'unstaged', patches: result?.patches ?? [], submodules: result?.submodules };
+    const result = requireAnswer(
+      await gitService.getGitWorkingTreePatches({ deviceId, path }),
+      'working tree changes',
+    );
+    return { mode: 'unstaged', patches: result.patches ?? [], submodules: result.submodules };
   }
-  const result = await gitService.getGitBranchDiff({ baseRef, deviceId, path });
+  const result = requireAnswer(
+    await gitService.getGitBranchDiff({ baseRef, deviceId, path }),
+    'branch diff',
+  );
   return {
-    baseRef: result?.baseRef,
-    headRef: result?.headRef,
+    baseRef: result.baseRef,
+    headRef: result.headRef,
     mode: 'branch',
-    patches: result?.patches ?? [],
-    submodules: result?.submodules,
+    patches: result.patches ?? [],
+    submodules: result.submodules,
   };
 };
 
@@ -95,8 +112,9 @@ const createSlices = (
 ) => ({
   linkedPR: createReplicaSlice(gitLinkedPRResource, {
     actionPrefix: 'gitReview/linkedPR',
+    // "No PR" is an answer (`pullRequest: null`); `undefined` is a failed read.
     fetcher: async (params: GitLinkedPRParams) => ({
-      value: await gitService.getLinkedPullRequest(params),
+      value: requireAnswer(await gitService.getLinkedPullRequest(params), 'linked pull request'),
     }),
     get,
     set,
@@ -117,9 +135,13 @@ const createSlices = (
   }),
   pullRequestDetail: createReplicaSlice(gitPullRequestDetailResource, {
     actionPrefix: 'gitReview/pullRequestDetail',
-    fetcher: async (params: GitPullRequestParams) => ({
-      value: await gitService.getPullRequestDetail({ ...params, coreOnly: true }),
-    }),
+    fetcher: async (params: GitPullRequestParams) => {
+      const value = await gitService.getPullRequestDetail({ ...params, coreOnly: true });
+      // A failed lookup (including a remote read the service maps to
+      // `status: 'error'`) must not replace the persisted PR.
+      if (value.status === 'error') throw new Error('Unable to load pull request');
+      return { value };
+    },
     get,
     set,
     stateKey: 'gitPullRequestDetailReplica',
