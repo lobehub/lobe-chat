@@ -6,6 +6,7 @@ import type {
   ExecAgentClientIds,
   ExecAgentLlmExecutor,
   ExecAgentResult,
+  HeterogeneousFreshSession,
   ResumeClientLlmWaitResult,
   RuntimeMentionedAgent,
   ScheduleAgentRunParams,
@@ -150,6 +151,8 @@ export interface ExecAgentTaskParams {
   existingMessageIds?: string[];
   /** File IDs of already-uploaded attachments to attach to the new user message */
   fileIds?: string[];
+  /** Explicit selected history for a fresh Codex regeneration. */
+  heterogeneousFreshSession?: HeterogeneousFreshSession;
   localDeviceId?: string;
   /**
    * Agents the user @-mentioned in this message (multi-mention). The server

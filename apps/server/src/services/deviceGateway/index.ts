@@ -1999,6 +1999,8 @@ export class DeviceGateway {
     jwt: string;
     operationId: string;
     prompt: string;
+    /** Explicit history boundary; a device must ignore native resume when present. */
+    freshSession?: { historyBoundaryMessageId: string };
     resumeFallbackSystemContext?: string;
     resumeSessionId?: string;
     systemContext?: string;
