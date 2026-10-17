@@ -77,6 +77,15 @@ export const getWellKnownCommandPaths = (agentType: LocalHeterogeneousAgentType)
       ]);
     }
     case 'cursor': {
+      if (platform() === 'win32') {
+        const localAppData = process.env.LOCALAPPDATA;
+        if (!localAppData) return [];
+
+        return [
+          path.win32.join(localAppData, 'cursor-agent', 'agent.cmd'),
+          path.win32.join(localAppData, 'cursor-agent', 'cursor-agent.cmd'),
+        ];
+      }
       if (platform() !== 'darwin' && platform() !== 'linux') return [];
       return [
         path.join(homedir(), '.local', 'bin', 'agent'),
