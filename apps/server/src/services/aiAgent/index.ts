@@ -3,6 +3,7 @@ import { BUILTIN_AGENT_SLUGS } from '@lobechat/builtin-agents';
 import type { SandboxStorageClaim } from '@lobechat/builtin-tool-cloud-sandbox';
 import type { LobeChatDatabase } from '@lobechat/database';
 import type {
+  AgentSenderMetadata,
   ExecAgentResult,
   ExecGroupAgentParams,
   ExecGroupAgentResult,
@@ -25,6 +26,7 @@ import {
 import { AgentModel } from '@/database/models/agent';
 import { AgentOperationModel } from '@/database/models/agentOperation';
 import { AgentShareModel } from '@/database/models/agentShare';
+import { ChatGroupModel } from '@/database/models/chatGroup';
 import { ConnectorModel } from '@/database/models/connector';
 import { ConnectorToolModel } from '@/database/models/connectorTool';
 import { DeviceModel } from '@/database/models/device';
@@ -84,6 +86,7 @@ import { startOperation } from './pipeline/startOperation';
 import { resolveNewTopicSnapshot, setupTurn } from './pipeline/turnSetup';
 import { createRunFacts, type RunFacts } from './runFacts';
 import { applyShareGateToAgentConfig } from './shareGate';
+import { resolveAgentSenderFromOperation } from './sourceAttribution';
 import type { SubAgentLlmRelayRequest } from './subAgentLlmRelay';
 import { closeSubAgentLlmRelay, openSubAgentLlmRelay } from './subAgentLlmRelay';
 import type { SubAgentRunDeps } from './subAgentRuns';
@@ -1215,6 +1218,14 @@ export class AiAgentService {
     );
     if (reusedContinuation) return reusedContinuation;
 
+    // Agent → agent attribution: resolve the launching run's agent into a
+    // display snapshot once, before the turn rows exist, so the persisted user
+    // message carries a self-contained sender block.
+    const agentSender = await this.resolveSourceAgentSnapshot(
+      resolvedAgentId,
+      params.sourceOperationId,
+    );
+
     // Stage 3 + shared turn setup — topic creation/reuse (with the pinned
     // model), device-access policy, hetero detection, attachment ingestion, and
     // the persisted user/assistant rows (see `pipeline/turnSetup`).
@@ -1229,6 +1240,7 @@ export class AiAgentService {
         },
         {
           agentConfig,
+          agentSender,
           agentSlug,
           appContext,
           assistantAgentId,
@@ -1681,6 +1693,28 @@ export class AiAgentService {
       userMessageId: result.userMessageId,
     };
   }
+
+  /**
+   * Snapshot the agent that launched an agent → agent run (`metadata.agentSender`)
+   * from the caller's own operation row; `resolveAgentSenderFromOperation` owns the
+   * trust and shareability rules.
+   */
+  private resolveSourceAgentSnapshot = (
+    destinationAgentId: string,
+    sourceOperationId?: string,
+  ): Promise<AgentSenderMetadata | undefined> =>
+    resolveAgentSenderFromOperation(sourceOperationId, {
+      destinationAgentId,
+      findAgentDisplayFields: (agentId) => this.agentModel.getAgentDisplayFields(agentId),
+      findAgentVisibility: (agentId) => this.agentModel.getAgentVisibility(agentId),
+      findChatGroupVisibility: async (chatGroupId) =>
+        (await new ChatGroupModel(this.db, this.userId, this.workspaceId).findById(chatGroupId))
+          ?.visibility ?? null,
+      findOperation: (operationId) => this.agentOperationModel.findById(operationId),
+      findTopic: (topicId) => this.topicModel.findById(topicId),
+      userId: this.userId,
+      workspaceId: this.workspaceId,
+    });
 
   /**
    * `AgentRuntimeDelegate.verifyShareRunStillAuthorized` implementation — see
