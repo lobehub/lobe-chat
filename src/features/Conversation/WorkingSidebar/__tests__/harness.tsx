@@ -460,7 +460,7 @@ beforeEach(() => {
   filesProps.current = undefined;
   filesPrefetchProps.current = undefined;
   localStorage.clear();
-  useDeviceStore.setState({ isDevicesInit: false });
+  useDeviceStore.setState({ deviceListMap: {} });
   renderedReview.current = undefined;
   reviewState.repoType = undefined;
   reviewState.setRepoType = undefined;

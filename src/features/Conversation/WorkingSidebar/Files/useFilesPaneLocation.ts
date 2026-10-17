@@ -1,4 +1,4 @@
-import { useDeviceStore } from '@/store/device';
+import { deviceSelectors, useDeviceStore } from '@/store/device';
 
 import { filesLocationContextKey, useRememberedFilesLocation } from './useRememberedFilesLocation';
 
@@ -62,7 +62,7 @@ export const useFilesPaneLocation = ({
       ? workingDirectory
       : undefined;
 
-  const devicesSettled = useDeviceStore((s) => s.isDevicesInit);
+  const devicesSettled = useDeviceStore(deviceSelectors.isDeviceListLoaded);
   const filesLocation = useRememberedFilesLocation(
     isSandbox ? undefined : filesLocationContextKey(topicId, activeAgentId),
     liveDirectory === undefined

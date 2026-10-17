@@ -58,7 +58,7 @@ describe('AgentWorkingSidebar — Files cold start', () => {
     expect(filesProps.current).toEqual({ deviceId: undefined, workingDirectory: '/repo' });
 
     act(() => {
-      useDeviceStore.setState({ isDevicesInit: true });
+      useDeviceStore.setState({ deviceListMap: { all: [] } });
     });
     rerender(<AgentWorkingSidebar />);
     expect(filesProps.current).toEqual({ deviceId: undefined, workingDirectory: '/Users/me' });
