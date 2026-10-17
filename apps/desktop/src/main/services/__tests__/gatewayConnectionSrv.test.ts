@@ -518,3 +518,39 @@ describe('GatewayConnectionService auth recovery', () => {
     });
   });
 });
+
+vi.mock('@lobechat/device-identity', () => ({
+  deriveDeviceId: (userId: string) => ({ deviceId: `stable-${userId}`, identitySource: 'machine' }),
+}));
+
+describe('GatewayConnectionService resolveCurrentDeviceId', () => {
+  const jwt = (sub: string) =>
+    ['h', Buffer.from(JSON.stringify({ sub })).toString('base64url'), 's'].join('.');
+
+  const createService = () => {
+    const app = {
+      browserManager: { broadcastToAllWindows: vi.fn() },
+      storeManager: { get: vi.fn(() => 'fallback-uuid'), set: vi.fn() },
+    } as unknown as App;
+    const service = new GatewayConnectionService(app);
+    service.loadOrCreateDeviceId();
+    return service;
+  };
+
+  // Regression: before the gateway connected, topic pins stored the install's
+  // fallback UUID, which stops naming this machine once the identity is derived.
+  it('derives the signed-in user stable id instead of the pre-connect fallback', async () => {
+    const service = createService();
+    service.setTokenProvider(async () => jwt('user-1'));
+
+    expect(service.getDeviceInfo().deviceId).toBe('fallback-uuid');
+    await expect(service.resolveCurrentDeviceId()).resolves.toBe('stable-user-1');
+  });
+
+  it('returns nothing while signed out', async () => {
+    const service = createService();
+    service.setTokenProvider(async () => null);
+
+    await expect(service.resolveCurrentDeviceId()).resolves.toBeUndefined();
+  });
+});

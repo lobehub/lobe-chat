@@ -20,12 +20,11 @@ export interface GatewayDeviceInfo {
 }
 
 export class ElectronGatewayActionImpl {
-  readonly #get: () => ElectronStore;
   readonly #set: Setter;
 
-  constructor(set: Setter, get: () => ElectronStore, _api?: unknown) {
+  constructor(set: Setter, _get: () => ElectronStore, _api?: unknown) {
+    void _get;
     void _api;
-    this.#get = get;
     this.#set = set;
   }
 
@@ -56,21 +55,20 @@ export class ElectronGatewayActionImpl {
   };
 
   /**
-   * This desktop's gateway device id, asked over IPC when the SWR hook has not
-   * filled the store yet. Writes that pin a topic's cwd must name its machine,
-   * and a send or CLI session can land before any picker has mounted.
+   * This desktop's stable device id, for writes that pin a topic's cwd to it.
+   *
+   * Asked over IPC every time rather than read from `gatewayDeviceInfo`: before
+   * the gateway connects, that holds the install's fallback UUID, which stops
+   * naming this machine once the user-scoped identity is derived. The IPC
+   * derives that identity locally — no network on the send path — and returns
+   * nothing while signed out, so no pin is written rather than a stale one.
    */
   resolveGatewayDeviceId = async (): Promise<string | undefined> => {
     if (!isDesktop) return;
-    const cached = this.#get().gatewayDeviceInfo?.deviceId;
-    if (cached) return cached;
     try {
-      const info = (await gatewayConnectionService.getDeviceInfo()) as GatewayDeviceInfo;
-      if (!info?.deviceId) return;
-      this.#set({ gatewayDeviceInfo: info }, false, 'setGatewayDeviceInfo');
-      return info.deviceId;
+      return (await gatewayConnectionService.getStableDeviceId()) ?? undefined;
     } catch (error) {
-      console.error('Gateway device info fetch failed:', error);
+      console.error('Gateway device id lookup failed:', error);
       return;
     }
   };

@@ -293,11 +293,7 @@ export default class GatewayConnectionService extends ServiceModule {
 
   // ─── Device ID ───
 
-  /**
-   * Ensure a stored fallback id exists. Pre-login this doubles as the device id
-   * shown by `getDeviceInfo`; once a userId is available `resolveDeviceIdentity`
-   * replaces it with a stable machine-derived id.
-   */
+  /** Ensure a stored fallback id (pre-login device id until `resolveDeviceIdentity`). */
   loadOrCreateDeviceId() {
     const stored = this.app.storeManager.get('gatewayDeviceId') as string | undefined;
     if (stored) {
@@ -327,6 +323,13 @@ export default class GatewayConnectionService extends ServiceModule {
 
   getDeviceId(): string {
     return this.deviceId || 'unknown';
+  }
+
+  /** Signed-in user's stable device id, derived locally; none while signed out. */
+  async resolveCurrentDeviceId(): Promise<string | undefined> {
+    const token = await this.tokenProvider?.();
+    const userId = token ? this.extractUserIdFromToken(token) : undefined;
+    return userId ? (await this.resolveDeviceIdentity(userId)).deviceId : undefined;
   }
 
   /**
@@ -374,13 +377,7 @@ export default class GatewayConnectionService extends ServiceModule {
    */
   async matchesDeviceId(deviceId: string): Promise<boolean> {
     if (this.getDeviceId() === deviceId) return true;
-
-    const token = await this.tokenProvider?.();
-    const userId = token ? this.extractUserIdFromToken(token) : undefined;
-    if (userId) {
-      const identity = await this.resolveDeviceIdentity(userId);
-      if (identity.deviceId === deviceId) return true;
-    }
+    if ((await this.resolveCurrentDeviceId()) === deviceId) return true;
 
     for (const workspaceId of this.getPersistedWorkspaceEnrollments()) {
       const identity = await this.resolveWorkspaceDeviceIdentity(workspaceId);

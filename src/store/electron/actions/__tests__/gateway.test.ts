@@ -2,45 +2,48 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { useElectronStore } from '@/store/electron';
 
-const getDeviceInfo = vi.hoisted(() => vi.fn());
+const service = vi.hoisted(() => ({ getDeviceInfo: vi.fn(), getStableDeviceId: vi.fn() }));
 
 vi.mock('@lobechat/const', async (importOriginal) => ({
   ...(await importOriginal<object>()),
   isDesktop: true,
 }));
 
-vi.mock('@/services/electron/gatewayConnection', () => ({
-  gatewayConnectionService: { getDeviceInfo },
-}));
+vi.mock('@/services/electron/gatewayConnection', () => ({ gatewayConnectionService: service }));
 
 beforeEach(() => {
-  getDeviceInfo.mockReset();
+  service.getDeviceInfo.mockReset();
+  service.getStableDeviceId.mockReset();
   useElectronStore.setState({ gatewayDeviceInfo: undefined });
 });
 
 describe('resolveGatewayDeviceId', () => {
   // Regression: a cwd write that ran before any picker mounted read an empty
   // store and saved the path with no machine.
-  it('asks the desktop for its id when the store has not loaded it yet', async () => {
-    getDeviceInfo.mockResolvedValue({ deviceId: 'dev-1', hostname: 'mac', platform: 'darwin' });
+  it('asks the desktop for its stable id when the store has not loaded one', async () => {
+    service.getStableDeviceId.mockResolvedValue('stable-1');
 
-    await expect(useElectronStore.getState().resolveGatewayDeviceId()).resolves.toBe('dev-1');
-    expect(useElectronStore.getState().gatewayDeviceInfo?.deviceId).toBe('dev-1');
+    await expect(useElectronStore.getState().resolveGatewayDeviceId()).resolves.toBe('stable-1');
   });
 
-  it('reuses the loaded id without another IPC call', async () => {
+  // Regression: before the gateway connects the store holds the install's
+  // fallback UUID, which no longer names this machine once the identity is derived.
+  it('ignores a cached fallback id and never takes the network-backed device info path', async () => {
     useElectronStore.setState({
-      gatewayDeviceInfo: { deviceId: 'dev-2', hostname: 'mac', platform: 'darwin' },
+      gatewayDeviceInfo: { deviceId: 'fallback-uuid', hostname: 'mac', platform: 'darwin' },
     });
+    service.getStableDeviceId.mockResolvedValue('stable-1');
 
-    await expect(useElectronStore.getState().resolveGatewayDeviceId()).resolves.toBe('dev-2');
-    expect(getDeviceInfo).not.toHaveBeenCalled();
+    await expect(useElectronStore.getState().resolveGatewayDeviceId()).resolves.toBe('stable-1');
+    expect(service.getDeviceInfo).not.toHaveBeenCalled();
   });
 
-  it('returns nothing when the desktop cannot report an id', async () => {
-    getDeviceInfo.mockRejectedValue(new Error('ipc down'));
-    vi.spyOn(console, 'error').mockImplementation(() => {});
+  it('returns nothing while signed out or when the desktop cannot answer', async () => {
+    service.getStableDeviceId.mockResolvedValueOnce(undefined);
+    await expect(useElectronStore.getState().resolveGatewayDeviceId()).resolves.toBeUndefined();
 
+    service.getStableDeviceId.mockRejectedValueOnce(new Error('ipc down'));
+    vi.spyOn(console, 'error').mockImplementation(() => {});
     await expect(useElectronStore.getState().resolveGatewayDeviceId()).resolves.toBeUndefined();
   });
 });
