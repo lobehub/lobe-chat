@@ -23,9 +23,9 @@ import {
   resolveActiveHeteroOperationPrincipal,
 } from '@/server/services/heterogeneousAgent/operationPrincipal';
 
-import { assertWorkspaceRowManageable } from './_helpers/assertWorkspaceRowManageable';
-import { goalGraphEditProcedures } from './goalGraphEdit';
-import { goalProcedure, goalWriteProcedure, idInput, mapGoalError } from './goalProcedures';
+import { assertWorkspaceRowManageable } from '../_helpers/assertWorkspaceRowManageable';
+import { goalGraphEditProcedures } from '../goalGraphEdit';
+import { goalProcedure, goalWriteProcedure, idInput, mapGoalError } from '../goalProcedures';
 
 /**
  * A wrap-up report submitted from a run. The metadata passes through as a
