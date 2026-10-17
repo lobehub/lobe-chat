@@ -120,6 +120,39 @@ describe('Files tab replicas', () => {
     second.unmount();
   });
 
+  it('clears the saved tree and overlay when the host reports nothing', async () => {
+    services.getProjectFileIndex.mockResolvedValue(tree(['a.ts']));
+    services.getGitWorkingTreeFiles.mockResolvedValue({
+      added: [],
+      deleted: [],
+      modified: ['a.ts'],
+    });
+
+    const view = await boot();
+    await waitFor(() => expect(view.result.current.project.data?.entries).toHaveLength(1));
+    await waitFor(() => expect(view.result.current.git.data?.modified).toEqual(['a.ts']));
+
+    // The host has nothing to read there any more: both reads now resolve
+    // without a result, which must clear the visible tree and its saved row.
+    services.getProjectFileIndex.mockResolvedValue(undefined);
+    services.getGitWorkingTreeFiles.mockResolvedValue(undefined);
+    await act(async () => {
+      await view.result.current.project.mutate();
+      await view.result.current.git.mutate();
+    });
+
+    await waitFor(() => expect(view.result.current.project.data).toBeUndefined());
+    await waitFor(() => expect(view.result.current.git.data).toBeUndefined());
+
+    const db = await readRows();
+    const rows = await db.entriesByPrefix<{ data: unknown }>(
+      'query-projections',
+      'replica:projectFileIndex:v1:',
+    );
+    expect(rows.filter(({ key }) => !key.includes('__replica'))).toHaveLength(0);
+    view.unmount();
+  });
+
   it('keeps trees apart per identity, device and directory', async () => {
     services.getProjectFileIndex.mockResolvedValue(tree(['a.ts']));
     services.getGitWorkingTreeFiles.mockResolvedValue({ added: [], deleted: [], modified: [] });

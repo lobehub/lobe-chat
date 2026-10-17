@@ -24,26 +24,28 @@ export class ProjectFilePrivateAction {
   constructor(set: Setter, get: () => ProjectFileState) {
     this.projectIndex = createReplicaSlice(projectIndexResource, {
       actionPrefix: 'projectFile/projectIndex',
-      fetcher: ({ deviceId, dirPath, sandboxInstanceId, sandboxTopicId }) =>
-        projectFileService.getProjectFileIndex({
+      // An absent result is a terminal "nothing to read there", not a dropped
+      // response: the engine skips `isMissing` for `undefined` heads.
+      fetcher: async ({ deviceId, dirPath, sandboxInstanceId, sandboxTopicId }) =>
+        (await projectFileService.getProjectFileIndex({
           deviceId,
           sandboxInstanceId,
           sandboxTopicId,
           scope: dirPath,
-        }),
+        })) ?? null,
       get,
       // No tree from the host (nothing to read there) clears the saved one.
-      isMissing: (incoming) => incoming === undefined,
+      isMissing: (incoming) => incoming === null,
       set,
       stateKey: 'projectIndexReplica',
       view: recordLens<ProjectFileState, ProjectFileIndexResult>('projectIndex'),
     });
     this.gitWorkingTreeFiles = createReplicaSlice(gitWorkingTreeFilesResource, {
       actionPrefix: 'projectFile/gitWorkingTreeFiles',
-      fetcher: ({ deviceId, dirPath }) =>
-        gitService.getGitWorkingTreeFiles({ deviceId, path: dirPath }),
+      fetcher: async ({ deviceId, dirPath }) =>
+        (await gitService.getGitWorkingTreeFiles({ deviceId, path: dirPath })) ?? null,
       get,
-      isMissing: (incoming) => incoming === undefined,
+      isMissing: (incoming) => incoming === null,
       set,
       stateKey: 'gitWorkingTreeFilesReplica',
       // An overlay past the cap is not persisted at all — `null` also drops a
