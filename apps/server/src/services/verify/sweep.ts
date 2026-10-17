@@ -120,6 +120,45 @@ const recoverRun = async (
       : 'skipped';
   }
 
+  // An abandoned repair claim: `triggerAutoRepair` stamps `repairing` durably
+  // before spawning, so a worker killed in that window strands the run — both
+  // repair paths skip `repairing`, and without a sweep predicate nothing ever
+  // reclaims it. The model query only hands over rows stale past the rollup
+  // grace, so reaching this branch means the spawner has been gone for a
+  // while. Skip while a repair child is still in flight (a live child owns
+  // this run's settlement); otherwise retake the claim via CAS and let the
+  // recomputed rollup + finalizer re-drive repair for the same failures.
+  if (run.status === 'repairing') {
+    const workspaceId = run.workspaceId ?? undefined;
+    const operationModel = new AgentOperationModel(db, run.userId, workspaceId);
+    const children = await operationModel.listOperationTree(operationId);
+    // Only a still-live repair child keeps the claim: its spawner died, but the
+    // child it already spawned may be working, and that child owns the parent's
+    // settlement (it recomputes the parent through `recomputeRepairAncestors`).
+    // A terminal child means the whole chain is dead — safe to reclaim.
+    const liveRepairChild = children.find(
+      (child) =>
+        child.id !== operationId &&
+        child.parentOperationId === operationId &&
+        isAgentOperationInFlight(child.status),
+    );
+    if (liveRepairChild) return 'skipped';
+
+    // Stale claim, no live child: retake it via CAS. Losing it means a
+    // concurrent delivery got here first.
+    const runModel = new VerifyRunModel(db, run.userId, workspaceId);
+    if (!(await runModel.reclaimRepairing(run.id))) return 'skipped';
+
+    // Recompute re-derives the verdict from the on-disk results — the failed
+    // checks are all terminal (that is what made this run repair-eligible) —
+    // and the finalizer reaches `maybeAutoRepair` again, spawning a fresh
+    // repair round for the same failures.
+    await new VerifyStatusService(db, run.userId, workspaceId).recompute(operationId);
+    await finalizeVerifyRun(db, run.userId, operationId, {}, workspaceId);
+    log('reclaimed abandoned repair claim on run %s (op %s)', run.id, operationId);
+    return 'settled';
+  }
+
   const workspaceId = run.workspaceId ?? undefined;
   const plan = (run.plan ?? []) as VerifyCheckItem[];
   if (plan.length === 0) return 'skipped';
