@@ -263,7 +263,9 @@ describe('agent-mail provider — inbound', () => {
     );
     expect(accepted).toEqual({
       eventId: 'evt_1',
+      occurredAt: new Date('2026-10-02T00:00:00.000Z'),
       payload: expect.objectContaining({ id: 'evt_1' }),
+      type: 'message.received',
     });
 
     const forged = await provider.verifyInbound(
@@ -422,6 +424,40 @@ describe('agent-mail provider — inbound', () => {
         url: 'https://api.lobe.id/v1/messages/msg_in_1/attachments/1',
       },
     ]);
+  });
+
+  it('hands over the mail detail a mail record needs: addressing, RFC threading, attachments', async () => {
+    const { fetchImpl } = createMailFetch({
+      detail: {
+        attachments: [
+          { contentType: 'application/pdf', filename: 'invoice.pdf', index: 0, size: 1024 },
+        ],
+        cc: [{ address: 'cc@example.com' }],
+        from: { address: 'human@example.com', name: 'Human' },
+        inReplyTo: '<prev@example.com>',
+        references: ['<root@example.com>', '<prev@example.com>'],
+        replyTo: [{ address: 'reply@example.com', name: 'Desk' }],
+      },
+    });
+    const provider = createAgentMailProvider({ ...isolated(), apiKey: 'am_test', fetchImpl });
+
+    const message = await provider.normalizeInbound(
+      { eventId: 'evt_1', payload: JSON.parse(inboundBody()) },
+      ref(),
+    );
+
+    expect(message?.mail).toEqual({
+      attachments: [
+        { contentType: 'application/pdf', filename: 'invoice.pdf', index: 0, size: 1024 },
+      ],
+      cc: [{ address: 'cc@example.com' }],
+      fromName: 'Human',
+      inReplyTo: '<prev@example.com>',
+      messageId: '<m1@example.com>',
+      references: ['<root@example.com>', '<prev@example.com>'],
+      replyTo: [{ address: 'reply@example.com', name: 'Desk' }],
+      to: [{ address: 'agent-7@lobe.id' }],
+    });
   });
 
   it('drops robot mail instead of handing it to the agent', async () => {

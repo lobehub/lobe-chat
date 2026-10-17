@@ -208,9 +208,13 @@ export const createAgentMailProvider = (
       // unauthenticated caller burn ids and suppress real deliveries.
       const fresh = await dedupeStore.claim(event.id, EVENT_ID_TTL_SECONDS);
 
-      return fresh
-        ? { eventId: event.id, payload: event }
-        : { duplicate: true, eventId: event.id, payload: event };
+      const accepted = {
+        eventId: event.id,
+        occurredAt: event.createdAt ? new Date(event.createdAt) : undefined,
+        payload: event,
+        type: event.type,
+      };
+      return fresh ? accepted : { ...accepted, duplicate: true };
     },
 
     normalizeInbound: async (
@@ -258,9 +262,27 @@ export const createAgentMailProvider = (
         url: `${client.baseUrl}/v1/messages/${encodeURIComponent(detail.id)}/attachments/${attachment.index}`,
       }));
 
+      const addresses = (list: Array<{ address: string; name?: string }> | null | undefined) =>
+        (list ?? []).map(({ address, name }) => (name ? { address, name } : { address }));
+
       return {
         attachments: attachments.length > 0 ? attachments : undefined,
         from,
+        mail: {
+          attachments: (detail.attachments ?? []).map((attachment) => ({
+            contentType: attachment.contentType,
+            filename: attachment.filename ?? undefined,
+            index: attachment.index,
+            size: attachment.size,
+          })),
+          cc: addresses(detail.cc),
+          fromName: detail.from?.name || undefined,
+          inReplyTo: detail.inReplyTo ?? undefined,
+          messageId: detail.messageId ?? undefined,
+          references: detail.references ?? [],
+          replyTo: addresses(detail.replyTo),
+          to: addresses(detail.to),
+        },
         providerMessageId: detail.id,
         receivedAt: new Date(detail.receivedAt),
         subject: detail.subject ?? undefined,

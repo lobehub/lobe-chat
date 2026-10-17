@@ -1,3 +1,5 @@
+import type { AgentMailAddress, AgentMailAttachment } from './agentMail';
+
 /**
  * Agent accounts — the identity assets an agent owns.
  *
@@ -70,6 +72,12 @@ export interface AgentAccountInboundMessage {
   attachments?: AgentAccountAttachment[];
   /** Address the message came from. */
   from: string;
+  /**
+   * Mail-only detail a mail provider supplies on top of the transport-neutral
+   * fields, so the full message (addressing, RFC threading headers, attachment
+   * descriptors) can be recorded as an `agent_mails` row.
+   */
+  mail?: AgentAccountInboundMailDetail;
   /** Provider-side message id, used for dedupe and idempotent replies. */
   providerMessageId: string;
   receivedAt: Date;
@@ -82,6 +90,22 @@ export interface AgentAccountInboundMessage {
   threadKey?: string;
   /** Address it was delivered to — the agent's own identifier. */
   to: string;
+}
+
+/** What a mail provider knows about an inbound mail beyond the neutral message. */
+export interface AgentAccountInboundMailDetail {
+  /** Attachment descriptors; the bytes stay with the provider. */
+  attachments: AgentMailAttachment[];
+  cc: AgentMailAddress[];
+  fromName?: string;
+  /** RFC 5322 `In-Reply-To`. */
+  inReplyTo?: string;
+  /** RFC 5322 `Message-ID`. */
+  messageId?: string;
+  /** RFC 5322 `References`, oldest first. */
+  references: string[];
+  replyTo: AgentMailAddress[];
+  to: AgentMailAddress[];
 }
 
 /** A message the agent sends from one of its accounts. */
@@ -172,7 +196,11 @@ export interface AgentAccountInboundEvent {
   duplicate?: boolean;
   /** Provider delivery id; the replay-dedupe key. */
   eventId: string;
+  /** When the provider says the event happened, when it says so. */
+  occurredAt?: Date;
   payload: unknown;
+  /** What happened, in the provider's vocabulary (e.g. `message.received`). */
+  type?: string;
 }
 
 /**

@@ -626,7 +626,12 @@ describe('AgentAccountService — inbound routing', () => {
       },
     });
 
-    expect(outcome).toEqual({ accountId: created.id, outcome: 'ignored' });
+    expect(outcome).toMatchObject({
+      accountId: created.id,
+      event: { eventId: expect.any(String) },
+      outcome: 'ignored',
+      reason: 'receive-disabled',
+    });
     expect(
       calls.some((call) => call.method === 'GET' && call.path.startsWith('/v1/messages')),
     ).toBe(false);

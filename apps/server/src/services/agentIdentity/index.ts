@@ -1,6 +1,7 @@
 import type {
   AgentAccountCapabilities,
   AgentAccountCredentialHint,
+  AgentAccountInboundEvent,
   AgentAccountInboundMessage,
   AgentAccountInboundRequest,
   AgentAccountKind,
@@ -59,10 +60,29 @@ export interface RevokeAgentAccountOptions {
   release?: boolean;
 }
 
-/** What `handleInbound` decided, so the webhook route can pick a status code. */
+/** Why an authentic delivery produced no message. */
+export type AgentAccountInboundIgnoredReason = 'duplicate' | 'filtered' | 'receive-disabled';
+
+/**
+ * What `handleInbound` decided, so the webhook route can pick a status code.
+ *
+ * Every authentic delivery carries its verified `event`, so the caller can
+ * record it as a signal — including the ones that produce no message.
+ */
 export type AgentAccountInboundOutcome =
-  | { accountId: string; message: AgentAccountInboundMessage; outcome: 'delivered' }
-  | { accountId?: string; outcome: 'ignored' | 'rejected' | 'unknown-account' | 'unroutable' };
+  | {
+      accountId: string;
+      event: AgentAccountInboundEvent;
+      message: AgentAccountInboundMessage;
+      outcome: 'delivered';
+    }
+  | {
+      accountId: string;
+      event: AgentAccountInboundEvent;
+      outcome: 'ignored';
+      reason: AgentAccountInboundIgnoredReason;
+    }
+  | { accountId?: string; outcome: 'rejected' | 'unknown-account' | 'unroutable' };
 
 export interface AgentAccountServiceOptions {
   gateKeeper?: AgentAccountGateKeeper;
@@ -357,17 +377,18 @@ export class AgentAccountService {
     if (!event) return { accountId: resolved.view.id, outcome: 'rejected' };
     // Authentic but already handled: acknowledge so the provider stops
     // retrying, and produce nothing a second time.
-    if (event.duplicate) return { accountId: resolved.view.id, outcome: 'ignored' };
+    const accountId = resolved.view.id;
+    if (event.duplicate) return { accountId, event, outcome: 'ignored', reason: 'duplicate' };
     // Same contract on the way in: a send-only account acknowledges the
     // delivery but must not turn it into agent work.
     if (!resolved.view.capabilities.receive) {
-      return { accountId: resolved.view.id, outcome: 'ignored' };
+      return { accountId, event, outcome: 'ignored', reason: 'receive-disabled' };
     }
 
     const message = await provider.normalizeInbound(event, ref);
-    if (!message) return { accountId: resolved.view.id, outcome: 'ignored' };
+    if (!message) return { accountId, event, outcome: 'ignored', reason: 'filtered' };
 
-    return { accountId: resolved.view.id, message, outcome: 'delivered' };
+    return { accountId, event, message, outcome: 'delivered' };
   };
 
   // --------------- Internals ---------------

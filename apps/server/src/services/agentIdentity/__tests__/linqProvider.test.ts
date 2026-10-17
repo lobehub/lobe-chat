@@ -63,7 +63,11 @@ describe('linq provider — declaration', () => {
   });
 
   it('binds the configured number when one is available', async () => {
-    const provider = createLinqProvider({ ...isolated(), apiKey: 'linq_test', fromNumbers: ['+15550002222'] });
+    const provider = createLinqProvider({
+      ...isolated(),
+      apiKey: 'linq_test',
+      fromNumbers: ['+15550002222'],
+    });
 
     await expect(provider.provision({ agentId: 'agent_7', userId: 'user_1' })).resolves.toEqual({
       identifier: '+15550002222',
@@ -91,7 +95,11 @@ describe('linq provider — declaration', () => {
   });
 
   it('refuses with a readable capacity error once every number is held', async () => {
-    const provider = createLinqProvider({ ...isolated(), apiKey: 'linq_test', fromNumbers: ['+15550002222'] });
+    const provider = createLinqProvider({
+      ...isolated(),
+      apiKey: 'linq_test',
+      fromNumbers: ['+15550002222'],
+    });
 
     await expect(
       provider.provision({
@@ -116,7 +124,11 @@ describe('linq provider — inbound', () => {
       }),
     ).toBe('+15550002222');
 
-    const fallback = createLinqProvider({ ...isolated(), apiKey: 'linq_test', fromNumbers: ['+15550003333'] });
+    const fallback = createLinqProvider({
+      ...isolated(),
+      apiKey: 'linq_test',
+      fromNumbers: ['+15550003333'],
+    });
     expect(fallback.resolveInboundIdentifier({ body: inboundBody(), headers: {} })).toBe(
       '+15550003333',
     );
@@ -274,7 +286,11 @@ describe('linq provider — outbound', () => {
       });
     }) as typeof fetch);
 
-    const provider = createLinqProvider({ ...isolated(), apiKey: 'linq_test', fromNumbers: ['+15550002222'] });
+    const provider = createLinqProvider({
+      ...isolated(),
+      apiKey: 'linq_test',
+      fromNumbers: ['+15550002222'],
+    });
     const result = await provider.send(ref(), {
       text: '**bold** and [link](https://x.test)',
       to: '+15550001111',
