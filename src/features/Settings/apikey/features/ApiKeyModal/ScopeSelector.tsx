@@ -190,6 +190,59 @@ export const ScopeOverview: FC<ScopeOverviewProps> = ({ scopes }) => {
   );
 };
 
+/**
+ * Scopes a scope cannot work without. The server enforces these pairs — a
+ * credential write is still an agent write — so a key holding the dependent
+ * scope alone would be refused on every call it advertises.
+ */
+const SCOPE_PREREQUISITES: Partial<Record<ApiKeyScope, readonly ApiKeyScope[]>> = {
+  'agent:credential:write': ['agent:write'],
+};
+
+/** Each scope's prerequisites, with every `:write` needing its `:read` twin when one exists. */
+const prerequisitesOf = (scope: ApiKeyScope): ApiKeyScope[] => {
+  const required = [...(SCOPE_PREREQUISITES[scope] ?? [])];
+  if (scope.endsWith(':write')) {
+    const twin = scope.replace(/:write$/, ':read') as ApiKeyScope;
+    if (isValidApiKeyScope(twin)) required.push(twin);
+  }
+  return required;
+};
+
+/**
+ * The selection after toggling one scope. Checking adds everything it needs;
+ * unchecking drops everything that needed it, so the grid never shows a scope
+ * the key could not actually use.
+ */
+export const toggleScopeSelection = (
+  selected: readonly ApiKeyScope[],
+  scope: ApiKeyScope,
+  checked: boolean,
+): ApiKeyScope[] => {
+  const next = new Set(selected);
+
+  if (checked) {
+    const pending = [scope];
+    while (pending.length > 0) {
+      const current = pending.pop()!;
+      if (next.has(current) && current !== scope) continue;
+      next.add(current);
+      pending.push(...prerequisitesOf(current));
+    }
+  } else {
+    const pending = [scope];
+    while (pending.length > 0) {
+      const current = pending.pop()!;
+      next.delete(current);
+      for (const candidate of next) {
+        if (prerequisitesOf(candidate).includes(current)) pending.push(candidate);
+      }
+    }
+  }
+
+  return [...next];
+};
+
 export interface ScopeSelectorProps {
   fullAccess: boolean;
   onFullAccessChange: (fullAccess: boolean) => void;
@@ -205,27 +258,8 @@ const ScopeSelector: FC<ScopeSelectorProps> = ({
 }) => {
   const { t } = useTranslation('auth');
   const selectedSet = new Set(selected);
-
-  const toggle = (scope: ApiKeyScope, checked: boolean) => {
-    const next = new Set(selectedSet);
-    if (checked) {
-      next.add(scope);
-      // write implies read — keep the UI honest about what the key can do.
-      // Only when that read scope actually exists: a standalone high-risk
-      // write (`agent:credential:write`) has no read twin, and inventing one
-      // would submit a scope the API rejects.
-      if (scope.endsWith(':write')) {
-        const twin = scope.replace(/:write$/, ':read') as ApiKeyScope;
-        if (isValidApiKeyScope(twin)) next.add(twin);
-      }
-    } else {
-      next.delete(scope);
-      // dropping read also drops the write that implied it
-      if (scope.endsWith(':read')) next.delete(scope.replace(/:read$/, ':write') as ApiKeyScope);
-    }
-
-    onSelectedChange([...next]);
-  };
+  const toggle = (scope: ApiKeyScope, checked: boolean) =>
+    onSelectedChange(toggleScopeSelection(selected, scope, checked));
 
   return (
     <Flexbox gap={12}>

@@ -69,19 +69,30 @@ const credentialSchema = z
 
 const ACCOUNT_NOT_FOUND_MESSAGE = 'Agent account not found';
 
-/** Surface a service-layer refusal as a tRPC error the caller can act on. */
+/**
+ * Surface a service-layer refusal as a tRPC error the caller can act on.
+ *
+ * Only the service's recognized refusals are translated: a handle already bound
+ * or a pool with nothing left is a CONFLICT, a request no state would admit (a
+ * mount on a managed provider, a provider-owned field) a BAD_REQUEST. Anything
+ * else — a provider 5xx, a database outage, a KeyVaults misconfiguration — is
+ * the server's failure, so it stays an INTERNAL_SERVER_ERROR with a sanitized
+ * message: the caller can retry it, and its details stay in the server log.
+ */
 const mapAccountError = (error: unknown, operation: string): never => {
   if (error instanceof TRPCError) throw error;
-  // A handle already bound elsewhere, or a provider pool with nothing left:
-  // the request was valid, the deployment's state refuses it.
   if (isAgentAccountError(error)) {
-    throw new TRPCError({ cause: error, code: 'CONFLICT', message: error.message });
+    throw new TRPCError({
+      cause: error,
+      code: error.reason === 'conflict' ? 'CONFLICT' : 'BAD_REQUEST',
+      message: error.message,
+    });
   }
   console.error(`[agentAccount:${operation}]`, error);
   throw new TRPCError({
     cause: error,
-    code: 'BAD_REQUEST',
-    message: error instanceof Error ? error.message : `Failed to ${operation} agent account`,
+    code: 'INTERNAL_SERVER_ERROR',
+    message: `Failed to ${operation} agent account`,
   });
 };
 
@@ -236,7 +247,10 @@ export const agentAccountRouter = router({
       const { id, ...patch } = input;
       await assertAccountEditable(ctx, id);
 
-      const updated = await ctx.agentAccountService.update(id, patch);
+      // A managed provider owns the account's metadata: that refusal is a 400.
+      const updated = await ctx.agentAccountService
+        .update(id, patch)
+        .catch((error: unknown) => mapAccountError(error, 'update'));
       if (!updated) {
         throw new TRPCError({ code: 'NOT_FOUND', message: ACCOUNT_NOT_FOUND_MESSAGE });
       }

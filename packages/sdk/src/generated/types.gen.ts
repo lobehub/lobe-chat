@@ -11,6 +11,7 @@ export type ApiError = {
 };
 
 export type AgentAccount = {
+    accessedAt: string;
     agentId: string;
     capabilities: {
         login?: boolean | null;

@@ -3,6 +3,7 @@ import { API_KEY_PREFIX } from '@lobechat/utils/apiKey';
 import { generateSpecs } from 'hono-openapi';
 
 import { API_KEY_SCOPES } from '@/const/apiKeyScope';
+import type { AgentAccountView } from '@/database/models/agentAccount';
 
 import { evalResponseSchema } from './types/eval-response.type';
 
@@ -24,38 +25,48 @@ const nullableBoolean = { type: ['boolean', 'null'] } as const;
 const nullableNumber = { type: ['number', 'null'] } as const;
 const nullableObject = { additionalProperties: true, type: ['object', 'null'] } as const;
 
+/**
+ * Every field an account view carries. Typed against the view so a column added
+ * to it fails type-checking here rather than being silently dropped from the
+ * SDK — the schema sets `additionalProperties: false`, so a missing field also
+ * makes strict response validators reject real payloads.
+ */
+const agentAccountProperties = {
+  /** Last time the account was read or used — every account view carries it. */
+  accessedAt: dateTime,
+  agentId: { type: 'string' },
+  capabilities: {
+    additionalProperties: false,
+    properties: {
+      login: nullableBoolean,
+      receive: { type: 'boolean' },
+      send: { type: 'boolean' },
+      sign: nullableBoolean,
+    },
+    required: ['receive', 'send'],
+    type: 'object',
+  },
+  createdAt: dateTime,
+  credentialHint: nullableObject,
+  displayName: nullableString,
+  /** Whether a secret is installed. Never the secret itself. */
+  hasCredential: { type: 'boolean' },
+  id: { type: 'string' },
+  identifier: { type: 'string' },
+  kind: { enum: AGENT_ACCOUNT_KINDS, type: 'string' },
+  metadata: nullableObject,
+  provider: { type: 'string' },
+  revokedAt: { ...dateTime, type: ['string', 'null'] },
+  status: { enum: AGENT_ACCOUNT_STATUSES, type: 'string' },
+  updatedAt: dateTime,
+  userId: { type: 'string' },
+  workspaceId: nullableString,
+} satisfies Record<keyof AgentAccountView, SchemaObject>;
+
 const resourceSchemas: Record<string, SchemaObject> = {
   AgentAccount: {
     additionalProperties: false,
-    properties: {
-      agentId: { type: 'string' },
-      capabilities: {
-        additionalProperties: false,
-        properties: {
-          login: nullableBoolean,
-          receive: { type: 'boolean' },
-          send: { type: 'boolean' },
-          sign: nullableBoolean,
-        },
-        required: ['receive', 'send'],
-        type: 'object',
-      },
-      createdAt: dateTime,
-      credentialHint: nullableObject,
-      displayName: nullableString,
-      /** Whether a secret is installed. Never the secret itself. */
-      hasCredential: { type: 'boolean' },
-      id: { type: 'string' },
-      identifier: { type: 'string' },
-      kind: { enum: AGENT_ACCOUNT_KINDS, type: 'string' },
-      metadata: nullableObject,
-      provider: { type: 'string' },
-      revokedAt: { ...dateTime, type: ['string', 'null'] },
-      status: { enum: AGENT_ACCOUNT_STATUSES, type: 'string' },
-      updatedAt: dateTime,
-      userId: { type: 'string' },
-      workspaceId: nullableString,
-    },
+    properties: agentAccountProperties,
     required: [
       'id',
       'agentId',
@@ -65,6 +76,7 @@ const resourceSchemas: Record<string, SchemaObject> = {
       'status',
       'capabilities',
       'hasCredential',
+      'accessedAt',
       'createdAt',
       'updatedAt',
     ],

@@ -164,7 +164,7 @@ export class AgentAccountRestService extends BaseService {
       try {
         return await identity.create({ agentId, ...body });
       } catch (error) {
-        throw this.toConflict(error);
+        throw this.toServiceError(error);
       }
     }
 
@@ -177,17 +177,22 @@ export class AgentAccountRestService extends BaseService {
         provider: body.provider,
       });
     } catch (error) {
-      throw this.toConflict(error);
+      throw this.toServiceError(error);
     }
   }
 
   /**
    * A routing handle is unique deployment-wide and some providers hand out a
    * finite pool, so "already bound" and "no number left" are 409s the caller
-   * can act on — never a 500.
+   * can act on. A request no state would admit — mounting on a managed
+   * provider, patching a provider-owned field — is a 400. Neither is a 500.
    */
-  private toConflict(error: unknown): unknown {
-    return isAgentAccountError(error) ? this.createConflictError(error.message) : error;
+  private toServiceError(error: unknown): unknown {
+    if (!isAgentAccountError(error)) return error;
+
+    return error.reason === 'conflict'
+      ? this.createConflictError(error.message)
+      : this.createValidationError(error.message);
   }
 
   /** Patch the non-secret fields; `status` moves through revoke, not here. */
@@ -204,7 +209,11 @@ export class AgentAccountRestService extends BaseService {
     if (body.displayName !== undefined) patch.displayName = body.displayName;
     if (body.metadata) patch.metadata = body.metadata;
 
-    await (await this.identity()).update(accountId, patch);
+    try {
+      await (await this.identity()).update(accountId, patch);
+    } catch (error) {
+      throw this.toServiceError(error);
+    }
 
     return this.requireAccount(agentId, accountId);
   }

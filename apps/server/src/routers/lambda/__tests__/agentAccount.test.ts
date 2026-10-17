@@ -39,12 +39,10 @@ vi.mock('@/server/services/agentIdentity/providers', () => ({
 
 const service = vi.hoisted(() => ({
   create: vi.fn(async (_params: Record<string, unknown>) => ({ id: 'acc_1' })),
-  get: vi.fn(
-    async (_id: string): Promise<{ agentId: string; id: string } | undefined> => ({
-      agentId: 'agt_1',
-      id: 'acc_1',
-    }),
-  ),
+  get: vi.fn(async (_id: string): Promise<{ agentId: string; id: string } | undefined> => ({
+    agentId: 'agt_1',
+    id: 'acc_1',
+  })),
   list: vi.fn(async () => []),
   provision: vi.fn(async (_params: Record<string, unknown>) => ({ id: 'acc_2' })),
   revoke: vi.fn(async (_id: string, _options?: unknown): Promise<string | undefined> => 'acc_1'),
@@ -275,5 +273,47 @@ describe('agentAccountRouter', () => {
     await expect(caller.provision({ agentId: 'agt_1', provider: 'linq' })).rejects.toMatchObject({
       code: 'CONFLICT',
     });
+  });
+
+  it('answers a request no state would admit as BAD_REQUEST, for create and update alike', async () => {
+    const { AgentAccountError } = await import('@/server/services/agentIdentity/errors');
+    service.create.mockRejectedValueOnce(
+      new AgentAccountError('provider_managed', 'opened through provisioning, not mounted'),
+    );
+    service.update.mockRejectedValueOnce(
+      new AgentAccountError('provider_owned_field', 'metadata is owned by the provider'),
+    );
+    const caller = agentAccountRouter.createCaller(ctx);
+
+    await expect(
+      caller.create({
+        agentId: 'agt_1',
+        identifier: 'someone@lobe.id',
+        kind: 'mail',
+        provider: 'agent-mail',
+      }),
+    ).rejects.toMatchObject({ code: 'BAD_REQUEST' });
+    await expect(
+      caller.update({ id: 'acc_1', metadata: { inboxId: 'inb_other' } }),
+    ).rejects.toMatchObject({ code: 'BAD_REQUEST', message: expect.stringMatching(/owned/) });
+  });
+
+  it('keeps an unexpected failure a sanitized server error the caller can retry', async () => {
+    service.provision.mockRejectedValueOnce(
+      new Error('Agent Mail POST /v1/inboxes failed: 503 — upstream key am_live_secret'),
+    );
+    const caller = agentAccountRouter.createCaller(ctx);
+    const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+    const failure = await caller
+      .provision({ agentId: 'agt_1', provider: 'agent-mail' })
+      .catch((error: unknown) => error);
+
+    expect(failure).toMatchObject({
+      code: 'INTERNAL_SERVER_ERROR',
+      message: 'Failed to provision agent account',
+    });
+    expect(JSON.stringify((failure as Error).message)).not.toContain('am_live_secret');
+    consoleError.mockRestore();
   });
 });

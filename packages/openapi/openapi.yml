@@ -20,6 +20,9 @@ components:
     AgentAccount:
       additionalProperties: false
       properties:
+        accessedAt:
+          format: date-time
+          type: string
         agentId:
           type: string
         capabilities:
@@ -103,6 +106,7 @@ components:
         - status
         - capabilities
         - hasCredential
+        - accessedAt
         - createdAt
         - updatedAt
       type: object

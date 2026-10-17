@@ -33,6 +33,8 @@ Object.assign(process.env, { NODE_ENV: process.env.NODE_ENV ?? 'test' });
 process.env.KEY_VAULTS_SECRET ??= Buffer.alloc(32, 7).toString('base64');
 process.env.CLOUD_DATABASE_URL ??= 'postgresql://mock:mock@localhost:5432/mock';
 process.env.QSTASH_TOKEN ??= 'mock-qstash-token';
+// Register Agent Mail (never called here) so mounting on a managed provider is exercised.
+process.env.AGENT_MAIL_API_KEY ??= 'am_route_test';
 
 const holder = vi.hoisted(() => ({ serverDB: undefined as unknown }));
 
@@ -322,5 +324,23 @@ describe('agent account control plane — end to end', () => {
     });
     expect(res.status).toBe(400);
     expect(await res.text()).toContain('not-a-provider');
+  });
+
+  it('refuses to mount a handle on a managed provider as a 400, writing nothing', async () => {
+    const res = await call(`/agents/${AGENT}/accounts`, {
+      body: JSON.stringify({
+        capabilities: { receive: true, send: true },
+        identifier: 'someone-else@lobe.id',
+        kind: 'mail',
+        metadata: { inboxId: 'inb_someone_else' },
+        provider: 'agent-mail',
+      }),
+      key: CREDENTIAL_KEY,
+      method: 'POST',
+    });
+
+    expect(res.status).toBe(400);
+    expect(await res.text()).toContain('provisioning');
+    expect(await serverDB.select().from(agentAccounts)).toHaveLength(0);
   });
 });
