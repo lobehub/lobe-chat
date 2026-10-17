@@ -288,18 +288,32 @@ class BrowserWebviewRegistry {
       ? MouseEvent
       : PointerEvent) as typeof MouseEvent;
 
-    const replay = (handle: HTMLElement, type: string, source: PointerEvent) =>
-      handle.dispatchEvent(
-        new PointerEventCtor(type, {
-          bubbles: true,
-          button: source.button,
-          buttons: source.buttons,
-          cancelable: true,
-          clientX: source.clientX,
-          clientY: source.clientY,
-          composed: true,
-        }),
-      );
+    // `replay` dispatches a bubbling event on the handle, which reaches this same
+    // capture listener on the way back up to `window`. Re-entrancy is cut here:
+    // without it the first forwarded move re-dispatches itself from inside its
+    // own dispatch until the stack overflows and the panel never resizes.
+    let replaying = false;
+
+    const replay = (handle: HTMLElement, type: string, source: PointerEvent) => {
+      if (replaying) return;
+
+      replaying = true;
+      try {
+        handle.dispatchEvent(
+          new PointerEventCtor(type, {
+            bubbles: true,
+            button: source.button,
+            buttons: source.buttons,
+            cancelable: true,
+            clientX: source.clientX,
+            clientY: source.clientY,
+            composed: true,
+          }),
+        );
+      } finally {
+        replaying = false;
+      }
+    };
 
     let stopForwarding: (() => void) | undefined;
 

@@ -271,7 +271,19 @@ describe('browserWebviewRegistry', () => {
         clientY: 200,
       }),
     );
-    expect(forwardedPointerMove).toHaveBeenCalledOnce();
+    // The replayed event bubbles back into the same capture listener on `window`.
+    // Getting a second call here means the forwarder re-entered itself instead of
+    // moving the panel.
+    expect(forwardedPointerMove).toHaveBeenCalledTimes(1);
+
+    window.dispatchEvent(
+      new PointerEventCtor('pointermove', {
+        bubbles: true,
+        clientX: 240,
+        clientY: 200,
+      }),
+    );
+    expect(forwardedPointerMove).toHaveBeenCalledTimes(2);
 
     window.dispatchEvent(new PointerEventCtor('pointerup', { bubbles: true }));
     expect(webview?.style.pointerEvents).toBe('auto');
