@@ -17,6 +17,8 @@ import {
   goals,
   tasks,
   users,
+  verifyCheckResults,
+  verifyRuns,
 } from '@/database/schemas';
 
 import { buildTaskPrompt } from './buildTaskPrompt';
@@ -89,6 +91,77 @@ describe('buildTaskPrompt Goal loop context', () => {
     expect(result.prompt).toContain('Restore the table and submit fresh evidence.');
     expect(result.prompt).toContain('Goal loop — round 2 of 2');
     expect(result.prompt).not.toContain('round 2 of 20');
+  });
+});
+
+describe('buildTaskPrompt unresolved checks', () => {
+  const planItem = (id: string) => ({
+    id,
+    index: 0,
+    onFail: 'auto_repair' as const,
+    required: true,
+    title: `Check ${id}`,
+    verifierConfig: {},
+    verifierType: 'agent' as const,
+  });
+
+  it('carries the last judged failure when the newest round is still unjudged', async () => {
+    // A repair round re-plans every check and leaves them pending until the
+    // verifier runs. A retry dispatched meanwhile read only that newest round,
+    // found nothing failed, and was told to "close the gaps below" with no gaps.
+    const taskModel = new TaskModel(db, userId);
+    const task = await taskModel.create({ instruction: 'Land the file tree PR.' });
+    await taskModel.update(task.id, { totalTopics: 2 });
+    const goal = await new GoalModel(db, userId).create({
+      subjectType: 'standalone',
+      title: 'Unjudged repair round',
+    });
+    const graphModel = new GoalGraphModel(db, userId);
+    const taskNode = await graphModel.createNode(goal.id, { kind: 'task', title: 'Land it' });
+    await graphModel.bindTask(goal.id, taskNode!.id, task.id);
+    const acceptance = await new AcceptanceModel(db, userId).create({
+      subjectId: task.id,
+      subjectType: 'task',
+    });
+    const [judged, unjudged] = await db
+      .insert(verifyRuns)
+      .values(
+        [1, 2].map((roundIndex) => ({
+          acceptanceId: acceptance.id,
+          plan: [planItem('rebased'), planItem('evidence')],
+          roundIndex,
+          userId,
+        })),
+      )
+      .returning();
+    await db.insert(verifyCheckResults).values(
+      [
+        { checkItemId: 'rebased', status: 'passed', verdict: 'passed', verifyRunId: judged.id },
+        {
+          checkItemId: 'evidence',
+          status: 'failed',
+          suggestion: 'Capture the account switch run and the no-data loading contrast.',
+          verdict: 'failed',
+          verifyRunId: judged.id,
+        },
+        { checkItemId: 'rebased', status: 'pending', verifyRunId: unjudged.id },
+        { checkItemId: 'evidence', status: 'pending', verifyRunId: unjudged.id },
+      ].map((row) => ({ ...row, userId, verifierType: 'agent' as const })),
+    );
+
+    const result = await buildTaskPrompt((await taskModel.findById(task.id))!, {
+      briefModel: new BriefModel(db, userId),
+      db,
+      taskModel,
+      taskTopicModel: new TaskTopicModel(db, userId),
+      userId,
+    });
+
+    expect(result.prompt).toContain('Unresolved checks from the last round:');
+    expect(result.prompt).toContain(
+      '1. Check evidence — Capture the account switch run and the no-data loading contrast.',
+    );
+    expect(result.prompt).not.toContain('Check rebased');
   });
 });
 
