@@ -5,6 +5,7 @@ import { gitService } from '@/services/git';
 import { projectFileService } from '@/services/projectFile';
 import type { StoreSetter } from '@/store/types';
 
+import { isGitWorkingTreeFilesPersistable } from './codec';
 import { type ProjectFileState } from './initialState';
 import {
   type FilesLocation,
@@ -45,6 +46,9 @@ export class ProjectFilePrivateAction {
       isMissing: (incoming) => incoming === undefined,
       set,
       stateKey: 'gitWorkingTreeFilesReplica',
+      // An overlay past the cap is not persisted at all — `null` also drops a
+      // row (and its bounded-index key) left by an earlier, smaller overlay.
+      toPersisted: (data) => (isGitWorkingTreeFilesPersistable(data) ? data : null),
       view: recordLens<ProjectFileState, GitWorkingTreeFiles>('gitWorkingTreeFiles'),
     });
     this.filesLocation = createReplicaSlice(filesLocationResource, {

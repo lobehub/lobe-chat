@@ -170,4 +170,36 @@ describe('Files tab replicas', () => {
     expect((row.value.data as { entries: unknown[] }).entries).toEqual([['a.ts', 0]]);
     view.unmount();
   });
+
+  it('does not keep an overlay past the path cap in the bounded index', async () => {
+    services.getProjectFileIndex.mockResolvedValue(tree(['a.ts']));
+    services.getGitWorkingTreeFiles.mockResolvedValue({
+      added: [],
+      deleted: [],
+      modified: Array.from({ length: 5001 }, (_, index) => `f${index}.ts`),
+    });
+
+    const first = await boot();
+    await waitFor(() => expect(first.result.current.git.data?.modified).toHaveLength(5001));
+
+    // Nothing is stored: not the row, and not a ghost key in the index that
+    // would later evict a real overlay from the bounded LRU.
+    const db = await readRows();
+    const rows = () =>
+      db.entriesByPrefix<{ data: unknown }>('query-projections', 'replica:gitWorkingTreeFiles:v1:');
+    await waitFor(async () => {
+      const all = await rows();
+      expect(all.filter(({ key }) => !key.includes('__replica'))).toHaveLength(0);
+      const index = all.find(({ key }) => key.includes('__replica'));
+      expect((index?.value.data as string[] | undefined) ?? []).toEqual([]);
+    });
+    first.unmount();
+
+    // A reload has nothing to paint for that overlay.
+    services.getGitWorkingTreeFiles.mockReturnValue(never());
+    const second = await boot();
+    await new Promise((resolve) => setTimeout(resolve, 50));
+    expect(second.result.current.git.data).toBeUndefined();
+    second.unmount();
+  });
 });

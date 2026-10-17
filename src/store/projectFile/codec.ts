@@ -170,6 +170,10 @@ const isGitWorkingTreeFiles = (value: unknown): value is GitWorkingTreeFiles =>
   Array.isArray((value as GitWorkingTreeFiles).modified) &&
   Array.isArray((value as GitWorkingTreeFiles).deleted);
 
+export const isGitWorkingTreeFilesPersistable = (data: GitWorkingTreeFiles): boolean =>
+  data.added.length + data.deleted.length + data.modified.length <=
+  GIT_WORKING_TREE_PERSIST_MAX_PATHS;
+
 /**
  * The overlay as stored: only the three buckets, and nothing at all past the
  * cap — a huge dirty set is not worth a stale first paint.
@@ -177,9 +181,8 @@ const isGitWorkingTreeFiles = (value: unknown): value is GitWorkingTreeFiles =>
 export const encodeGitWorkingTreeFiles = (
   data: GitWorkingTreeFiles,
 ): GitWorkingTreeFiles | undefined => {
+  if (!isGitWorkingTreeFilesPersistable(data)) return undefined;
   const { added, deleted, modified } = data;
-  if (added.length + deleted.length + modified.length > GIT_WORKING_TREE_PERSIST_MAX_PATHS)
-    return undefined;
   return { added, deleted, modified };
 };
 
