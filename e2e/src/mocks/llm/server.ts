@@ -8,10 +8,16 @@
  * provider), and each test registers the replies it expects here.
  *
  * Cucumber runs scenarios in several worker processes against one app server,
- * so the endpoint is shared: the first worker to bind the port serves it and
- * every worker registers its replies over HTTP.
+ * so the endpoint is shared. It runs in its own detached process (`./serve.ts`),
+ * started by the first worker that needs it, so no worker's exit can take it
+ * down while the others are still running; every worker registers its replies
+ * over HTTP. The process exits on its own once idle (`E2E_LLM_MOCK_IDLE_MS`).
  */
-import { createServer, type IncomingMessage, type Server, type ServerResponse } from 'node:http';
+import { spawn } from 'node:child_process';
+import { createServer, type IncomingMessage, type ServerResponse } from 'node:http';
+import { createRequire } from 'node:module';
+import path from 'node:path';
+import { pathToFileURL } from 'node:url';
 
 export const LLM_MOCK_PORT = Number(process.env.E2E_LLM_MOCK_PORT || 3990);
 export const LLM_MOCK_URL = `http://127.0.0.1:${LLM_MOCK_PORT}`;
@@ -204,6 +210,11 @@ const handle = async (req: IncomingMessage, res: ServerResponse) => {
       res.end(JSON.stringify({ data: [], object: 'list' }));
       return;
     }
+    if (req.method === 'POST' && path === '/__e2e/shutdown') {
+      res.writeHead(204);
+      res.end(() => process.exit(0));
+      return;
+    }
     if (req.method === 'GET' && path === '/__e2e/health') {
       res.writeHead(200);
       res.end('ok');
@@ -218,25 +229,69 @@ const handle = async (req: IncomingMessage, res: ServerResponse) => {
   }
 };
 
-let server: Server | undefined;
+const IDLE_MS = Number(process.env.E2E_LLM_MOCK_IDLE_MS || 10 * 60_000);
+
+/**
+ * Serve the endpoint in the current process (the body of `./serve.ts`). Exits
+ * the process after `E2E_LLM_MOCK_IDLE_MS` without requests, and quietly when
+ * another process already owns the port.
+ */
+export const serveLLMMock = () => {
+  let idleTimer: NodeJS.Timeout | undefined;
+  const armIdle = () => {
+    clearTimeout(idleTimer);
+    idleTimer = setTimeout(() => process.exit(0), IDLE_MS);
+  };
+  const server = createServer((req, res) => {
+    armIdle();
+    void handle(req, res);
+  });
+  server.once('error', (error: NodeJS.ErrnoException) => {
+    process.exit(error.code === 'EADDRINUSE' ? 0 : 1);
+  });
+  server.listen(LLM_MOCK_PORT, '127.0.0.1', armIdle);
+};
+
+const isServing = async () => {
+  try {
+    return (await fetch(`${LLM_MOCK_URL}/__e2e/health`)).ok;
+  } catch {
+    return false;
+  }
+};
+
+const spawnMockProcess = () => {
+  const require = createRequire(path.join(process.cwd(), 'noop.js'));
+  const child = spawn(
+    process.execPath,
+    ['--import', pathToFileURL(require.resolve('tsx/esm')).href, path.join(__dirname, 'serve.ts')],
+    { detached: true, env: process.env, stdio: 'ignore' },
+  );
+  child.unref();
+};
+
 let starting: Promise<void> | undefined;
 
 /**
- * Bind the shared mock endpoint unless another worker already serves it.
+ * Make sure the shared endpoint is up, starting its process when nobody
+ * serves the port yet. Safe to call from every worker: concurrent starters
+ * race for the port and the losers exit.
  */
 export const ensureLLMMockServer = (): Promise<void> => {
-  starting ??= new Promise<void>((resolve, reject) => {
-    const candidate = createServer((req, res) => void handle(req, res));
-    candidate.once('error', (error: NodeJS.ErrnoException) => {
-      if (error.code === 'EADDRINUSE') resolve();
-      else reject(error);
-    });
-    candidate.listen(LLM_MOCK_PORT, '127.0.0.1', () => {
-      server = candidate;
-      server.unref();
-      console.log(`   ✓ LLM mock endpoint listening on ${LLM_MOCK_URL}`);
-      resolve();
-    });
+  starting ??= (async () => {
+    if (await isServing()) return;
+    spawnMockProcess();
+    for (let attempt = 0; attempt < 100; attempt += 1) {
+      if (await isServing()) {
+        console.log(`   ✓ LLM mock endpoint listening on ${LLM_MOCK_URL}`);
+        return;
+      }
+      await sleep(150);
+    }
+    throw new Error(`LLM mock endpoint did not start on ${LLM_MOCK_URL}`);
+  })().catch((error) => {
+    starting = undefined;
+    throw error;
   });
   return starting;
 };
