@@ -7,6 +7,7 @@ interface ActionLockInput {
   contextConfirmed: boolean;
   contextError: unknown;
   detailConfirmed: boolean;
+  detailError: unknown;
 }
 
 /**
@@ -19,7 +20,11 @@ interface ActionLockInput {
  *   bypass, close / reopen, change base) wait for the live read.
  *
  * A failed context read drops the cached policy rather than locking forever:
- * the pane falls back to the core detail, as it does with no context at all.
+ * the pane falls back to the core detail, as it does with no context at all,
+ * and the merge dock stops reporting it as loading.
+ *
+ * `refreshFailed`: a live read failed while the pane still paints a persisted
+ * row it cannot act on — the pane must say so and offer a retry.
  */
 export const resolvePullRequestActionLock = ({
   confirmed,
@@ -27,11 +32,16 @@ export const resolvePullRequestActionLock = ({
   contextConfirmed,
   contextError,
   detailConfirmed,
+  detailError,
 }: ActionLockInput) => {
   const usableContext = contextConfirmed || !contextError ? context : undefined;
+  const locked = !confirmed || !detailConfirmed;
+  const policyLocked = usableContext !== undefined && !contextConfirmed;
   return {
     context: usableContext,
-    locked: !confirmed || !detailConfirmed,
-    policyLocked: usableContext !== undefined && !contextConfirmed,
+    contextLoading: locked || policyLocked || (usableContext === undefined && !contextError),
+    locked,
+    policyLocked,
+    refreshFailed: (!detailConfirmed && !!detailError) || (!contextConfirmed && !!contextError),
   };
 };

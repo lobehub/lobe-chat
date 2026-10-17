@@ -75,19 +75,23 @@ const PullRequest = memo<PullRequestProps>(
       data: cachedContext,
       error: contextError,
       isConfirmed: contextConfirmed,
+      mutate: mutateContext,
     } = useFetchGitPullRequestMergeContext(deviceId, workingDirectory, data?.detail ?? undefined);
     const { data: aheadBehind } = useFetchGitAheadBehind(deviceId, workingDirectory);
     // Stale content stays paintable; actions wait for the live reads.
     const {
       context,
+      contextLoading,
       locked: actionsLocked,
       policyLocked,
+      refreshFailed,
     } = resolvePullRequestActionLock({
       confirmed,
       context: cachedContext,
       contextConfirmed,
       contextError,
       detailConfirmed,
+      detailError: fetchError,
     });
     const actions = usePullRequestActions({
       deviceId,
@@ -111,6 +115,22 @@ const PullRequest = memo<PullRequestProps>(
       };
     }, [data?.detail, context, activity.data]);
     const externalUrl = detail?.url ?? url;
+    const loadError = (error: unknown, onRetry: () => void) => (
+      <Flexbox className={sectionStyles.section}>
+        <OverviewRow
+          danger
+          icon={TriangleAlertIcon}
+          iconColor={cssVar.colorError}
+          title={error instanceof Error ? error.message : undefined}
+          value={t('workingPanel.pr.error.load')}
+          trailing={
+            <Button icon={<Icon icon={RefreshCwIcon} size={12} />} size={'small'} onClick={onRetry}>
+              {tCommon('retry')}
+            </Button>
+          }
+        />
+      </Flexbox>
+    );
 
     if (isLoading && !data) return <PullRequestSkeleton summary={summary} />;
 
@@ -140,27 +160,7 @@ const PullRequest = memo<PullRequestProps>(
         />
       );
 
-    if (!detail)
-      return (
-        <Flexbox className={sectionStyles.section}>
-          <OverviewRow
-            danger
-            icon={TriangleAlertIcon}
-            iconColor={cssVar.colorError}
-            title={fetchError instanceof Error ? fetchError.message : undefined}
-            value={t('workingPanel.pr.error.load')}
-            trailing={
-              <Button
-                icon={<Icon icon={RefreshCwIcon} size={12} />}
-                size={'small'}
-                onClick={() => void mutate()}
-              >
-                {tCommon('retry')}
-              </Button>
-            }
-          />
-        </Flexbox>
-      );
+    if (!detail) return loadError(fetchError, () => void mutate());
 
     const local = aheadBehind?.hasUpstream ? { ahead: aheadBehind.ahead } : undefined;
 
@@ -173,6 +173,12 @@ const PullRequest = memo<PullRequestProps>(
           contentProps={{ className: styles.scrollContent }}
           viewportProps={{ className: styles.viewport, style: { overflowX: 'hidden' } }}
         >
+          {/* The persisted PR still paints, but stays locked until a live read lands. */}
+          {refreshFailed &&
+            loadError(fetchError ?? contextError, () => {
+              void mutate();
+              void mutateContext();
+            })}
           <Header
             actionsDisabled={actionsLocked || policyLocked}
             activityLoaded={!!activity.data}
@@ -192,7 +198,7 @@ const PullRequest = memo<PullRequestProps>(
         </ScrollArea>
         <MergeDock
           busy={actions.busy}
-          contextLoading={context === undefined || actionsLocked || policyLocked}
+          contextLoading={contextLoading}
           detail={detail}
           error={actions.error}
           local={local}
