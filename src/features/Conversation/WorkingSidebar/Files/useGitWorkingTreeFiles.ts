@@ -29,6 +29,7 @@ export const useGitWorkingTreeFiles = (
   deviceId: string | undefined,
   dirPath: string | undefined,
   enabled: boolean,
+  options?: { revalidateOnFocus?: boolean },
 ) => {
   const active = (!!deviceId || isDesktop) && !!dirPath && enabled;
   const params = useMemo(
@@ -42,7 +43,7 @@ export const useGitWorkingTreeFiles = (
     params,
     {
       focusThrottleInterval: 5 * 1000,
-      revalidateOnFocus: true,
+      revalidateOnFocus: options?.revalidateOnFocus ?? true,
       shouldRetryOnError: false,
     },
   );

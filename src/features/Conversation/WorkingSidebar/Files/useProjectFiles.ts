@@ -59,7 +59,9 @@ export const useProjectFiles = (
     {
       focusThrottleInterval: 30 * 1000,
       refreshInterval: live ? SANDBOX_LIVE_REFRESH_INTERVAL : 0,
-      revalidateOnFocus: true,
+      // A hidden prefetch is one-shot: no polling and no focus re-walk for a
+      // pane nobody is looking at.
+      revalidateOnFocus: sandbox?.live ?? true,
       shouldRetryOnError: false,
     },
   );

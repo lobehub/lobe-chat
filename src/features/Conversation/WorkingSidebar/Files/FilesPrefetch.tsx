@@ -20,7 +20,8 @@ const FilesPrefetch = memo<FilesPrefetchProps>(
     useFilesTreeSources(deviceId, workingDirectory, {
       instanceId: sandboxInstanceId,
       // Warm the tree once. A hidden prefetch must not inherit the visible
-      // pane's sandbox polling and keep walking the workspace.
+      // pane's sandbox polling or focus revalidation and keep walking the
+      // workspace.
       live: false,
       topicId: sandboxTopicId,
     });

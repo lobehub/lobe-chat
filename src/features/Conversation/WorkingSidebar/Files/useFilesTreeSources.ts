@@ -4,8 +4,9 @@ import { useProjectFiles } from './useProjectFiles';
 interface FilesTreeSandbox {
   instanceId?: string;
   /**
-   * Poll a running sandbox tree. Only the visible pane should: a hidden
-   * prefetch warms the tree once and must not keep walking the workspace.
+   * Live reads for a running sandbox and focus revalidation. Only the visible
+   * pane should: a hidden prefetch warms the tree once and must not keep
+   * walking the workspace.
    */
   live?: boolean;
   topicId?: string;
@@ -31,6 +32,7 @@ export const useFilesTreeSources = (
     deviceId,
     workingDirectory,
     !isSandbox && (source === undefined || source === 'git'),
+    { revalidateOnFocus: sandbox?.live ?? true },
   );
 
   return { git, project };
