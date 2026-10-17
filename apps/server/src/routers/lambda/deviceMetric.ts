@@ -24,20 +24,25 @@ const deviceMetricProcedure = wsCompatProcedure.use(serverDatabase).use(async (o
 
   /**
    * Gate a client-supplied `deviceId` with the same visibility rule every
-   * device route uses: in a workspace only rows the caller can see (public,
-   * or its own private enrollment); otherwise only the caller's personal
+   * device route uses: in a workspace the rows the caller can see (public, or
+   * its own private enrollment) plus the caller's own personal devices, which
+   * `listDevices` surfaces there too; otherwise only the caller's personal
    * rows. The gateway itself only knows principals, not visibility.
+   *
+   * Returns the workspace principal the device's metrics live under —
+   * `undefined` for a personal device, which reports under the user principal
+   * even when it is read from a workspace.
    */
-  const assertDeviceVisible = async (deviceId: string) => {
-    const row = workspaceId
-      ? await deviceModel.findWorkspaceDeviceById(deviceId)
-      : await deviceModel.findByDeviceId(deviceId);
-    if (!row || (!workspaceId && row.workspaceId)) {
+  const resolveDevicePrincipal = async (deviceId: string): Promise<string | undefined> => {
+    if (workspaceId && (await deviceModel.findWorkspaceDeviceById(deviceId))) return workspaceId;
+
+    if (!(await deviceModel.findPersonalByDeviceId(deviceId))) {
       throw new TRPCError({ code: 'NOT_FOUND', message: 'Device not found.' });
     }
+    return undefined;
   };
 
-  return opts.next({ ctx: { assertDeviceVisible, userId: ctx.userId, workspaceId } });
+  return opts.next({ ctx: { resolveDevicePrincipal, userId: ctx.userId } });
 });
 
 export const deviceMetricRouter = router({
@@ -59,7 +64,7 @@ export const deviceMetricRouter = router({
       }),
     )
     .query(async ({ ctx, input }): Promise<DeviceMetricSeries> => {
-      await ctx.assertDeviceVisible(input.deviceId);
+      const workspaceId = await ctx.resolveDevicePrincipal(input.deviceId);
       const to = Date.now();
       const from = to - input.windowMs;
       const bucketMs = Math.max(
@@ -72,7 +77,7 @@ export const deviceMetricRouter = router({
         deviceId: input.deviceId,
         since: from,
         userId: ctx.userId,
-        workspaceId: ctx.workspaceId,
+        workspaceId,
       });
       const latest = samples.at(-1);
 
