@@ -34,6 +34,7 @@ const makeClientInstance = (label: string) => ({
   })),
   disconnect: vi.fn().mockResolvedValue(undefined),
   initialize: vi.fn().mockResolvedValue(undefined),
+  listManifests: vi.fn().mockResolvedValue({ tools: [] }),
 });
 
 describe('McpCtr stdio session reuse (T-801 stateful MCP servers)', () => {
@@ -100,7 +101,9 @@ describe('McpCtr stdio session reuse (T-801 stateful MCP servers)', () => {
 
   it('retries on a fresh session after a stale pooled session fails, then keeps pooling', async () => {
     const stale = makeClientInstance('stale');
-    stale.callTool.mockRejectedValue(new Error('no open database instance'));
+    stale.callTool.mockRejectedValue(
+      Object.assign(new Error('Connection closed'), { code: -32000 }),
+    );
     const fresh = makeClientInstance('fresh');
     mcpClientMocks.mockReturnValueOnce(stale).mockReturnValueOnce(fresh).mockReturnValue(fresh);
 
@@ -129,7 +132,9 @@ describe('McpCtr stdio session reuse (T-801 stateful MCP servers)', () => {
   it('propagates the failure when the fresh retry also fails', async () => {
     mcpClientMocks.mockImplementation(() => {
       const failing = makeClientInstance('failing');
-      failing.callTool.mockRejectedValue(new Error('server down'));
+      failing.callTool.mockRejectedValue(
+        Object.assign(new Error('Connection closed'), { code: -32000 }),
+      );
       return failing;
     });
 
@@ -140,6 +145,93 @@ describe('McpCtr stdio session reuse (T-801 stateful MCP servers)', () => {
         params: { args: ['--stdio'], command: 'ida-mcp', name: 'ida-mcp' },
         toolName: 'execute_python',
       } as any),
-    ).rejects.toThrow('server down');
+    ).rejects.toThrow('Connection closed');
+  });
+
+  it('does NOT retry when the tool itself failed at app level (no double-apply of side effects)', async () => {
+    const pooled = makeClientInstance('pooled');
+    pooled.callTool.mockRejectedValue(
+      new Error('no open database instance; call open_database() first'),
+    );
+    mcpClientMocks.mockReturnValue(pooled);
+
+    await expect(
+      ctr.runStdioMcpTool({
+        args: '',
+        env: undefined,
+        params: { args: ['--stdio'], command: 'ida-mcp', name: 'ida-mcp' },
+        toolName: 'execute_python',
+      } as any),
+    ).rejects.toThrow('no open database instance');
+
+    // App-level failure: no eviction, no disconnect, no second invocation.
+    expect(pooled.callTool).toHaveBeenCalledTimes(1);
+    expect(pooled.disconnect).not.toHaveBeenCalled();
+    expect(mcpClientMocks).toHaveBeenCalledTimes(1);
+  });
+
+  it('does NOT retry when post-processing (media upload) fails after a successful tool run', async () => {
+    const pooled = makeClientInstance('pooled');
+    // Return an image block so processContentBlocks runs the media upload.
+    pooled.callTool.mockResolvedValue({
+      content: [{ data: 'aW1hZ2U=', mimeType: 'image/png', type: 'image' }],
+      isError: false,
+    });
+    mcpClientMocks.mockReturnValue(pooled);
+    // Simulate media upload failure inside processContentBlocks.
+    (ctr as any).app.getService = vi.fn(() => ({
+      getFileHTTPURL: vi.fn(),
+      uploadFile: vi.fn().mockRejectedValue(new Error('upload unavailable')),
+    }));
+
+    await expect(
+      ctr.runStdioMcpTool({
+        args: '',
+        env: undefined,
+        params: { args: ['--stdio'], command: 'ida-mcp', name: 'ida-mcp' },
+        toolName: 'render_screenshot',
+      } as any),
+    ).rejects.toThrow('upload unavailable');
+
+    // The tool ran exactly once — its side effect must not be re-applied.
+    expect(pooled.callTool).toHaveBeenCalledTimes(1);
+    expect(pooled.disconnect).not.toHaveBeenCalled();
+  });
+
+  it('preserves CLI argument order in pool keys (reordered argv must not share a session)', async () => {
+    mcpClientMocks.mockImplementation(() => makeClientInstance('x'));
+
+    await ctr.runStdioMcpTool({
+      args: '',
+      env: undefined,
+      params: { args: ['--port', '8080', 'serve'], command: 'svc', name: 'svc' },
+      toolName: 'ping',
+    } as any);
+    await ctr.runStdioMcpTool({
+      args: '',
+      env: undefined,
+      params: { args: ['serve', '--port', '8080'], command: 'svc', name: 'svc' },
+      toolName: 'ping',
+    } as any);
+
+    // Same tokens, different order → distinct sessions, never reused.
+    expect(mcpClientMocks).toHaveBeenCalledTimes(2);
+  });
+
+  it('evicts the pooled client when listManifests fails on a stale session', async () => {
+    const seeded = makeClientInstance('seeded');
+    seeded.listManifests.mockRejectedValue(new Error('Connection closed'));
+    mcpClientMocks.mockReturnValue(seeded);
+
+    await expect(
+      ctr.getStdioMcpServerManifest({
+        args: ['--stdio'],
+        command: 'ida-mcp',
+        name: 'ida-mcp',
+      } as any),
+    ).rejects.toThrow('Connection closed');
+
+    // Broken session evicted + disconnected, so the next refresh starts fresh.
+    expect(seeded.disconnect).toHaveBeenCalledTimes(1);
   });
 });

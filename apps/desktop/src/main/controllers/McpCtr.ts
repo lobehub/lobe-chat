@@ -177,19 +177,47 @@ const getFileExtensionFromMimeType = (mimeType: string, mediaType: MediaContentT
 const todayShard = () => new Date().toISOString().split('T')[0];
 
 /**
- * Serialize MCP client params into a stable cache key (sorted keys so that
- * key order in the manifest does not defeat reuse). `env` participates in the
- * key: a changed secret/config must spawn a fresh session rather than reuse
- * one authenticated with the old values.
+ * Serialize MCP client params into a stable cache key. Object keys are
+ * canonicalized (sorted) so that key order in the manifest does not defeat
+ * reuse, while array order is preserved: CLI argv is positional, and sorting
+ * `args` would let distinct invocations made of the same tokens (reordered
+ * flags / positional arguments) silently share a session launched with the
+ * previous command line. `env` participates in the key: a changed
+ * secret/config must spawn a fresh session rather than reuse one
+ * authenticated with the old values.
  */
-const serializeMcpClientParams = (params: MCPClientParams): string => {
-  const source = params as unknown as Record<string, unknown>;
-  const sorted: Record<string, unknown> = {};
-  for (const key of Object.keys(source).sort()) {
-    const value = source[key];
-    sorted[key] = key === 'args' && Array.isArray(value) ? [...value].sort() : value;
+const canonicalizeForCacheKey = (value: unknown): unknown => {
+  if (Array.isArray(value)) return value.map((item) => canonicalizeForCacheKey(item));
+  if (value !== null && typeof value === 'object') {
+    const source = value as Record<string, unknown>;
+    const sorted: Record<string, unknown> = {};
+    for (const key of Object.keys(source).sort()) {
+      sorted[key] = canonicalizeForCacheKey(source[key]);
+    }
+    return sorted;
   }
-  return JSON.stringify(sorted);
+  return value;
+};
+
+const serializeMcpClientParams = (params: MCPClientParams): string =>
+  JSON.stringify(canonicalizeForCacheKey(params as unknown as Record<string, unknown>));
+
+/**
+ * Whether a failed `callTool` is a confirmed stale-session / transport-level
+ * failure, i.e. safe to retry on a fresh session. App-level tool failures
+ * (the tool ran and rejected the arguments, the server returned an error
+ * result, post-processing failed, …) must NOT be retried: a mutating tool
+ * could apply its side effect (write / delete / send) a second time.
+ */
+const isStaleSessionError = (error: unknown): boolean => {
+  if (!error) return false;
+  if (error instanceof Error && error.name === 'MCPConnectionError') return true;
+  const code = (error as { code?: unknown } | null)?.code;
+  if (code === -32000) return true; // JSON-RPC transport closed (MCP SDK)
+  const message = error instanceof Error ? error.message : String(error);
+  return /connection closed|transport (?:is )?closed|socket closed|channel closed|process exit(?:ed)?|not connected|underlying (?:socket|connection)/i.test(
+    message,
+  );
 };
 
 const toMarkdown = async (
@@ -390,6 +418,11 @@ export default class McpCtr extends ControllerModule {
         type: 'mcp' as any,
       });
     } catch (error) {
+      // The pooled session this manifest refresh ran on is stale/broken —
+      // evict it so the next refresh starts fresh instead of reacquiring
+      // the same dead session forever. Identity-guarded: a concurrent
+      // recreate must not be disconnected.
+      await this.evictClient(params, client);
       // If it's an MCPConnectionError with stderr logs, enhance the error message
       const { MCPConnectionError } = await loadMcpClient();
       if (error instanceof MCPConnectionError && error.stderrLogs.length > 0) {
@@ -516,23 +549,46 @@ export default class McpCtr extends ControllerModule {
       const args = safeParseToRecord(rawArgs);
 
       // Reuse the pooled session (stateful stdio servers keep per-process
-      // state such as a selected database). Retry once on a fresh session if
-      // the pooled one turned stale between calls.
+      // state such as a selected database). Retry once on a fresh session —
+      // but only for confirmed stale-session / transport failures that
+      // happen before a tool result was produced. App-level failures (tool
+      // rejected the args, media post-processing failed, …) are surfaced
+      // as-is: re-running a mutating tool on a generic catch could apply
+      // its side effect a second time. The failing client is tagged onto
+      // the error so eviction carries an identity guard.
       const runOn = async (client: MCPClient) => {
-        const raw = (await client.callTool(toolName, args)) as ToolCallResult;
-        const processed = raw.isError ? raw.content : await this.processContentBlocks(raw.content);
-        const content = await toMarkdown(processed, (key) => this.fileService.getFileHTTPURL(key));
-        return { content, state: { ...raw, content: processed }, success: true };
+        try {
+          const raw = (await client.callTool(toolName, args)) as ToolCallResult;
+          const processed = raw.isError
+            ? raw.content
+            : await this.processContentBlocks(raw.content);
+          const content = await toMarkdown(processed, (key) =>
+            this.fileService.getFileHTTPURL(key),
+          );
+          return { content, state: { ...raw, content: processed }, success: true };
+        } catch (error) {
+          throw Object.assign(error instanceof Error ? error : new Error(String(error)), {
+            ranOnClient: client,
+          });
+        }
       };
 
       try {
         return await runOn(await this.acquireClient(params));
       } catch (firstError) {
+        const failedClient = (firstError as { ranOnClient?: MCPClient })?.ranOnClient;
+        if (!isStaleSessionError(firstError)) {
+          logger.warn('MCP tool call failed (no retry for app-level error):', {
+            message: (firstError as Error).message,
+            toolName,
+          });
+          throw firstError;
+        }
         logger.warn('MCP tool call failed on pooled session, retrying with a fresh one:', {
           message: (firstError as Error).message,
           toolName,
         });
-        await this.evictClient(params);
+        await this.evictClient(params, failedClient);
         const retryClient = await this.createClient(params);
         this.mcpClientPool.set(serializeMcpClientParams(params), retryClient);
         return await runOn(retryClient);
