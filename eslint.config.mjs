@@ -8,6 +8,7 @@ import { flat as mdxFlat } from 'eslint-plugin-mdx';
 import {
   browserBundleRestrictedImportPaths,
   performanceRestrictedImportPaths,
+  performanceRestrictedImportPatterns,
 } from './eslint.bundleBoundaries.mjs';
 
 const tsconfigRootDir = fileURLToPath(new URL('.', import.meta.url));
@@ -223,6 +224,7 @@ const createRestrictedImportRule = ({ paths = [], patterns, serverSide = false }
     patterns: [
       ...(baseRestrictedImportOptions.patterns ?? []),
       ...runtimeRestrictedImportPatterns,
+      ...performanceRestrictedImportPatterns,
       ...(serverSide ? [] : browserRuntimeRestrictedImportPatterns),
       ...(patterns ?? []),
     ],
