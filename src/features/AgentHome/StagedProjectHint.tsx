@@ -16,8 +16,7 @@ const styles = createStaticStyles(({ css }) => ({
   card: css`
     overflow: hidden;
 
-    width: fit-content;
-    max-width: min(100%, 640px);
+    width: 100%;
     padding-block: 12px;
     padding-inline: 12px;
     border: 1px solid ${cssVar.colorBorderSecondary};
@@ -61,7 +60,7 @@ const StagedProjectHint = memo(() => {
         shape={'square'}
         size={32}
       />
-      <Flexbox gap={2} style={{ minWidth: 0 }}>
+      <Flexbox flex={1} gap={2} style={{ minWidth: 0 }}>
         <Text fontSize={14}>
           <Trans
             components={{ project: <span className={styles.project} /> }}
