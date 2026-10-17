@@ -265,6 +265,31 @@ describe('copyInstance', () => {
     }
   });
 
+  it.each([
+    ['empty definition', {}, true],
+    ['blank setup', { bootstrapCommand: '  ' }, true],
+    [
+      'repository',
+      { sources: [{ kind: 'git' as const, url: 'https://github.com/lobehub/lobehub.git' }] },
+      false,
+    ],
+    ['setup command', { bootstrapCommand: 'npm install' }, false],
+  ])('classifies a legacy %s snapshot when copying', async (_, configuration, copiesFiles) => {
+    const created = await createEnvironment({ configuration, name: 'legacy' });
+    const copy = await caller().copyInstance({
+      id: created.defaultInstance.id,
+      name: 'copy',
+      workingDirectory: 'legacy-copy',
+    });
+
+    expect(plane.copyInstance).toHaveBeenLastCalledWith({
+      from: created.defaultInstance.id,
+      instanceDir: 'legacy-copy',
+      ...(copiesFiles && { sourceInstanceDir: created.defaultInstance.workingDirectory }),
+      to: copy.id,
+    });
+  });
+
   it('removes a new Files row and preserves the source when the backend refuses the copy', async () => {
     const created = await createEnvironment({ configuration: { kind: 'files' }, name: 'Files' });
     plane.copyInstance.mockRejectedValue(new Error('copy-files unsupported'));

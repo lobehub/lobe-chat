@@ -1,3 +1,4 @@
+import { environmentKind } from '@lobechat/types';
 import { isDefaultInstance } from '@lobechat/utils/environmentInstance';
 import { TRPCError } from '@trpc/server';
 import pMap from 'p-map';
@@ -80,7 +81,7 @@ export const instancesRouter = router({
         .copyInstance({
           from: source.id,
           instanceDir: created.workingDirectory,
-          ...(source.configurationSnapshot?.kind === 'files' && {
+          ...(environmentKind({ configuration: source.configurationSnapshot }) === 'files' && {
             sourceInstanceDir: source.workingDirectory,
           }),
           to: created.id,
