@@ -69,7 +69,7 @@ import { TaskService } from '../task';
 import { TaskRunnerService } from '../taskRunner';
 import { AcceptanceService } from '../verify/acceptanceService';
 import { VerifyPlanGeneratorService } from '../verify/planGenerator';
-import { isOrphanedRun, stopStaleRun } from './abandonedRun';
+import { isOrphanedRun, readRunTopicMetadata, stopStaleRun } from './abandonedRun';
 import { BatchPlanSkillService, learnedRulesClause, planSkillIdentifier } from './batchPlanSkill';
 import { GoalCriteriaGeneratorService, type GoalDecompositionDraft } from './criteriaGenerator';
 import {
@@ -3308,8 +3308,11 @@ export class GoalService {
       topicId,
     });
     if (stop === 'fresh') return undefined;
-    if (stop === 'unconfirmed' && (await this.readRunDevicePresence(runningTopic)) !== 'offline')
-      return undefined;
+    if (stop === 'unconfirmed') {
+      const metadata = await readRunTopicMetadata(this.db, owner, topicId);
+      if ((await this.readRunDevicePresence({ metadata, operationId })) !== 'offline')
+        return undefined;
+    }
 
     const reclaimed = await this.db.transaction(async (tx) => {
       const operationModel = new AgentOperationModel(tx, this.userId, this.workspaceId);

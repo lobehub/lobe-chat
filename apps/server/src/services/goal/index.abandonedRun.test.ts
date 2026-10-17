@@ -190,7 +190,9 @@ describe('GoalService lease reclaim of a running topic', () => {
       operationId: 'op-next',
       success: true,
     } as never);
-    const stuckTopic = { metadata, operationId: 'op-stuck', topicId: 'tpc_stuck' } as never;
+    // A `task_topics` row carries no topic metadata; the device lives on the topic.
+    await serverDB.insert(topics).values({ id: 'tpc_stuck', metadata, userId });
+    const stuckTopic = { operationId: 'op-stuck', topicId: 'tpc_stuck' } as never;
     vi.spyOn(TaskTopicModel.prototype, 'findRunningByTaskIds').mockResolvedValue([stuckTopic]);
     vi.spyOn(TaskTopicModel.prototype, 'findWithHandoff').mockResolvedValue([
       { ...(stuckTopic as object), status: 'timeout' } as never,
@@ -309,8 +311,13 @@ describe('GoalService lease reclaim of a running topic', () => {
     vi.spyOn(deviceGateway, 'isConfigured', 'get').mockReturnValue(true);
     vi.spyOn(deviceGateway, 'queryDeviceList').mockResolvedValue([]);
     vi.spyOn(AiAgentService.prototype, 'interruptTask').mockResolvedValue({ success: false });
+    // As in production: only the topic's running marker knows the device.
     const { goalId, service } = await seedStaleRun('Device asleep', {
-      boundDeviceId: 'device-laptop',
+      runningOperation: {
+        assistantMessageId: 'msg-stuck',
+        deviceId: 'device-laptop',
+        operationId: 'op-stuck',
+      },
     });
 
     await service.tick(goalId);

@@ -32,6 +32,16 @@ export const isOrphanedRun = async (
   return new Date(endedAt) < staleBefore;
 };
 
+/**
+ * The metadata of a Task run's topic. A `task_topics` row carries no topic
+ * metadata, so the device a run is bound to or hosted on is read from here.
+ */
+export const readRunTopicMetadata = async (
+  db: LobeChatDatabase,
+  owner: { userId: string; workspaceId?: string },
+  topicId: string,
+) => (await new TopicModel(db, owner.userId, owner.workspaceId).findById(topicId))?.metadata;
+
 /** Whether the runtime still holds the run's state, or a device hosts its process. */
 const hasLiveExecutor = async (
   db: LobeChatDatabase,
@@ -39,8 +49,7 @@ const hasLiveExecutor = async (
   run: { operationId: string; topicId: string },
 ): Promise<boolean> => {
   if (await new AgentRuntimeCoordinator().loadAgentState(run.operationId)) return true;
-  const topic = await new TopicModel(db, owner.userId, owner.workspaceId).findById(run.topicId);
-  const marker = topic?.metadata?.runningOperation;
+  const marker = (await readRunTopicMetadata(db, owner, run.topicId))?.runningOperation;
   const target =
     marker?.operationId === run.operationId
       ? marker
