@@ -1,0 +1,113 @@
+/**
+ * StyleX migration status.
+ *
+ *   bun run stylex:migration                 # tier totals and the busiest areas
+ *   bun run stylex:migration --list C        # files in one tier
+ *   bun run stylex:migration --json          # full per-file report
+ *   bun run stylex:migration --prune-legacy  # drop migrated files from legacyFiles.json
+ *
+ * legacyFiles.json is the ESLint allowlist for emotion style imports. It only
+ * shrinks: pruning keeps files that still use them and never adds new ones.
+ */
+import { execFileSync } from 'node:child_process';
+import { readFileSync, writeFileSync } from 'node:fs';
+import path from 'node:path';
+
+import { classifySource, type StyleFileReport } from './classify';
+
+const repoRoot = path.resolve(import.meta.dirname, '../..');
+export const legacyFilesPath = path.join(import.meta.dirname, 'legacyFiles.json');
+
+export type FileReport = StyleFileReport & { area: string; file: string };
+
+const areaOf = (file: string) => {
+  const parts = file.split('/');
+  if (parts[0] === 'packages' && parts[1]?.startsWith('builtin-tool'))
+    return 'packages/builtin-tool-*';
+  return parts.slice(0, parts[0] === 'src' ? 3 : 2).join('/');
+};
+
+export const scanRepo = (root = repoRoot): FileReport[] => {
+  const files = execFileSync('git', ['ls-files', '--', '*.ts', '*.tsx'], {
+    cwd: root,
+    encoding: 'utf8',
+    maxBuffer: 64 * 1024 * 1024,
+  })
+    .split('\n')
+    .filter(Boolean);
+
+  const reports: FileReport[] = [];
+  for (const file of files) {
+    let source: string;
+    try {
+      source = readFileSync(path.join(root, file), 'utf8');
+    } catch {
+      continue; // deleted in the working tree but still in the index
+    }
+    if (!source.includes('@lobehub/ui')) continue;
+    const report = classifySource(source);
+    if (report.legacyImports.length === 0) continue;
+    reports.push({ ...report, area: areaOf(file), file });
+  }
+  return reports;
+};
+
+export const readLegacyFiles = (): string[] =>
+  JSON.parse(readFileSync(legacyFilesPath, 'utf8')) as string[];
+
+/** Listed files that no longer use an emotion style import, or no longer exist. */
+export const findStaleLegacyFiles = (reports: FileReport[], legacy = readLegacyFiles()) => {
+  const current = new Set(reports.map((r) => r.file));
+  return legacy.filter((file) => !current.has(file));
+};
+
+const writeLegacyFiles = (files: string[]) =>
+  writeFileSync(legacyFilesPath, `${JSON.stringify([...files].sort(), null, 2)}\n`);
+
+const printSummary = (reports: FileReport[]) => {
+  const tiers = { A: 0, B: 0, C: 0, D: 0 };
+  const areas = new Map<string, typeof tiers & { total: number }>();
+  for (const r of reports) {
+    tiers[r.tier]++;
+    const area = areas.get(r.area) ?? { A: 0, B: 0, C: 0, D: 0, total: 0 };
+    area[r.tier]++;
+    area.total++;
+    areas.set(r.area, area);
+  }
+  console.log(
+    `${reports.length} files on emotion styles — A ${tiers.A} · B ${tiers.B} · C ${tiers.C} · D ${tiers.D}`,
+  );
+  console.log('\narea | A | B | C | D | total');
+  for (const [area, t] of [...areas].sort((a, b) => b[1].total - a[1].total).slice(0, 30)) {
+    console.log(`${area} | ${t.A} | ${t.B} | ${t.C} | ${t.D} | ${t.total}`);
+  }
+};
+
+const main = () => {
+  const args = process.argv.slice(2);
+  const reports = scanRepo();
+
+  if (args.includes('--json')) {
+    console.log(JSON.stringify(reports, null, 2));
+    return;
+  }
+
+  const listIndex = args.indexOf('--list');
+  if (listIndex !== -1) {
+    const tier = args[listIndex + 1];
+    for (const r of reports.filter((item) => item.tier === tier)) console.log(r.file);
+    return;
+  }
+
+  if (args.includes('--prune-legacy')) {
+    const legacy = readLegacyFiles();
+    const stale = new Set(findStaleLegacyFiles(reports, legacy));
+    writeLegacyFiles(legacy.filter((file) => !stale.has(file)));
+    console.log(`pruned ${stale.size} migrated files from legacyFiles.json`);
+    return;
+  }
+
+  printSummary(reports);
+};
+
+if (process.argv[1] && path.resolve(process.argv[1]) === import.meta.filename) main();
