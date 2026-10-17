@@ -132,12 +132,16 @@ const conversationGoalInput = z.object({
   projectId: z.string().optional(),
   requirement: z.string().optional(),
   title: z.string().min(1),
-  /** Seed task nodes, in dependency-free order. */
+  /** Seed task nodes; `dependsOn` names other seeds by title. */
   tasks: z
     .array(
       z.union([
         z.string().min(1),
-        z.object({ description: z.string().optional(), title: z.string().min(1) }),
+        z.object({
+          dependsOn: z.array(z.string().min(1)).optional(),
+          description: z.string().optional(),
+          title: z.string().min(1),
+        }),
       ]),
     )
     .optional(),

@@ -1,88 +1,57 @@
 import type { GoalGraphSnapshot } from '@lobechat/types';
-
-import type { TrpcClient } from '../../api/client';
-
-type SeedTask = string | { description?: string; title: string };
-
-/** Seed task title → titles of the seed tasks it waits for. */
-export type SeedDependencies = Map<string, string[]>;
+import type { GoalSeedTask } from '@lobechat/utils/goalSeeds';
 
 /**
  * `--task-file`: a JSON array of seed tasks, each a title or
  * {"title","description","dependsOn"}. `dependsOn` names other entries of the
- * same file by title, so a seeded graph arrives with its order in place.
+ * same file by title; the server draws them as `depends_on` edges while it
+ * creates the goal, so the seeded graph arrives with its order in place.
  */
-export const parseTaskFile = (
-  raw: string,
-): { dependencies: SeedDependencies; tasks: SeedTask[] } => {
+export const parseTaskFile = (raw: string): Array<GoalSeedTask | string> => {
   const parsed: unknown = JSON.parse(raw);
   if (!Array.isArray(parsed)) throw new Error('--task-file must hold a JSON array');
-  const dependencies: SeedDependencies = new Map();
-  const tasks = parsed.map((item, index): SeedTask => {
+  const tasks = parsed.map((item, index): GoalSeedTask | string => {
     if (typeof item === 'string' && item.trim()) return item.trim();
     if (!item || typeof item !== 'object' || typeof item.title !== 'string' || !item.title.trim())
       throw new Error(`--task-file entry ${index} needs a title`);
-    const title = item.title.trim();
-    if (item.dependsOn !== undefined) {
-      if (
-        !Array.isArray(item.dependsOn) ||
-        !item.dependsOn.every((dep: unknown) => typeof dep === 'string')
-      )
-        throw new Error(`--task-file entry ${index}: dependsOn must be an array of task titles`);
-      dependencies.set(
-        title,
-        item.dependsOn.map((dep: string) => dep.trim()),
-      );
-    }
+    if (
+      item.dependsOn !== undefined &&
+      (!Array.isArray(item.dependsOn) ||
+        !item.dependsOn.every((dep: unknown) => typeof dep === 'string'))
+    )
+      throw new Error(`--task-file entry ${index}: dependsOn must be an array of task titles`);
     return {
+      dependsOn: item.dependsOn?.map((dep: string) => dep.trim()),
       description: typeof item.description === 'string' ? item.description : undefined,
-      title,
+      title: item.title.trim(),
     };
   });
-
-  const titles = tasks.map((task) => (typeof task === 'string' ? task : task.title));
-  if (dependencies.size > 0) {
-    const duplicate = titles.find((title, index) => titles.indexOf(title) !== index);
-    if (duplicate)
-      throw new Error(`--task-file: "${duplicate}" appears twice, so dependsOn cannot name it`);
-    for (const [title, deps] of dependencies) {
-      for (const dep of deps) {
-        if (!titles.includes(dep))
-          throw new Error(`--task-file: "${title}" depends on "${dep}", which is not in the file`);
-        if (dep === title) throw new Error(`--task-file: "${title}" cannot depend on itself`);
-      }
-    }
-  }
-  return { dependencies, tasks };
+  return tasks;
 };
 
 /**
- * Draw each seed's `dependsOn` as a `depends_on` edge on the created graph and
- * add the edges to it, so the graph printed afterwards shows them.
+ * Seed dependencies the created graph does not carry. A server that predates
+ * `dependsOn` drops the field silently, so the CLI checks what came back
+ * instead of trusting that it was understood.
  */
-export const linkSeedDependencies = async (
-  client: TrpcClient,
-  graph: GoalGraphSnapshot,
-  dependencies: SeedDependencies,
-) => {
-  if (dependencies.size === 0) return;
-  const nodeIdByTitle = new Map(
-    graph.nodes.filter((node) => node.kind === 'task').map((node) => [node.title, node.id]),
+export const missingSeedDependencies = (
+  graph: Pick<GoalGraphSnapshot, 'edges' | 'nodes'>,
+  seeds: Array<GoalSeedTask | string>,
+): string[] => {
+  if (!seeds.some((seed) => typeof seed !== 'string' && seed.dependsOn?.length)) return [];
+  const titleById = new Map(graph.nodes.map((node) => [node.id, node.title]));
+  const drawn = new Set(
+    graph.edges
+      .filter((edge) => edge.kind === 'depends_on')
+      .map(
+        (edge) => `${titleById.get(edge.sourceNodeId)}\u0000${titleById.get(edge.targetNodeId)}`,
+      ),
   );
-  const nodeId = (title: string) => {
-    const id = nodeIdByTitle.get(title);
-    if (!id) throw new Error(`Seed task "${title}" is not on goal ${graph.goal.id}`);
-    return id;
-  };
-  for (const [title, deps] of dependencies) {
-    for (const dep of deps) {
-      const { data } = await client.goal.addEdge.mutate({
-        id: graph.goal.id,
-        kind: 'depends_on',
-        sourceNodeId: nodeId(title),
-        targetNodeId: nodeId(dep),
-      });
-      graph.edges.push(data);
-    }
-  }
+  return seeds.flatMap((seed) =>
+    typeof seed === 'string'
+      ? []
+      : (seed.dependsOn ?? [])
+          .filter((dep) => !drawn.has(`${seed.title}\u0000${dep}`))
+          .map((dep) => `"${seed.title}" depends on "${dep}"`),
+  );
 };

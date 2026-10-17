@@ -44,6 +44,7 @@ import type {
 } from '@lobechat/types';
 import { isAgentOperationInFlight } from '@lobechat/types';
 import { experimentOwner, provenanceParentId } from '@lobechat/utils/goalGraph';
+import { goalSeedDependencyProblem, type GoalSeedTask } from '@lobechat/utils/goalSeeds';
 import { TRPCError } from '@trpc/server';
 import debug from 'debug';
 import { sql } from 'drizzle-orm';
@@ -116,6 +117,7 @@ import {
 } from './rolloutBatch';
 import { evaluateRolloutGate, type RolloutGateResult, withGateVerdict } from './rolloutGate';
 import { scheduleGoalAdvance } from './scheduler';
+import { seedGoalTasks } from './seedTasks';
 import { evaluateHomogeneity } from './spec';
 import { GoalSupervisorService } from './supervisor';
 import { statusAuthoredByActor } from './supervisor/policy';
@@ -205,10 +207,7 @@ const draftNotStarted = (goalId: string) =>
 export const goalTaskAgentId = (goal: Pick<GoalItem, 'agentId' | 'config'>) =>
   goal.config?.taskAgentId ?? goal.agentId ?? undefined;
 
-export interface CreateGoalTaskInput {
-  description?: string;
-  title: string;
-}
+export type CreateGoalTaskInput = GoalSeedTask;
 
 export interface CreateGoalGraphInput {
   /**
@@ -248,7 +247,7 @@ export interface CreateGoalGraphInput {
   projectId?: string;
   requirement?: string;
   /**
-   * Seed task nodes, in dependency-free order. A plain string is title-only.
+   * Seed task nodes; `dependsOn` names other seeds by title. A plain string is title-only.
    * When omitted, the coordinator plans the decomposition on first advance.
    */
   tasks?: Array<CreateGoalTaskInput | string>;
@@ -599,6 +598,8 @@ export class GoalService {
     // unsupervised Goal. A legacy `enabled: false` is rejected rather than
     // silently rewritten: the caller asked for the opposite of what it would
     // get, and hiding that would make the surprise surface later, mid-run.
+    const seedProblem = goalSeedDependencyProblem(input.tasks ?? []);
+    if (seedProblem) throw new TRPCError({ code: 'BAD_REQUEST', message: seedProblem });
     const requestedSupervision = config?.supervision;
     if (requestedSupervision?.enabled === false)
       throw new TRPCError({
@@ -713,17 +714,13 @@ export class GoalService {
         });
         if (!taskNode) throw new Error('Failed to seed goal task');
       }
-      for (const seed of input.tasks ?? []) {
-        const { description, title } = typeof seed === 'string' ? { title: seed } : seed;
-        const taskNode = await authorGraph.createNode(goal.id, {
-          createdByAgentId: input.createdByAgentId,
-          description,
-          kind: 'task',
-          title,
-        });
-        if (!taskNode) throw new Error('Failed to seed goal task');
-        await authorGraph.createEdge(goal.id, problem.id, taskNode.id, 'decomposes');
-      }
+      await seedGoalTasks(
+        authorGraph,
+        goal.id,
+        problem.id,
+        input.tasks ?? [],
+        input.createdByAgentId,
+      );
     } catch (error) {
       await this.goalModel.delete(goal.id).catch(() => {});
       throw error;

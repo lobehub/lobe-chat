@@ -11,6 +11,7 @@ import type {
   GoalPlanContext,
   GoalTickResult,
 } from '@lobechat/types';
+import { goalSeedDependencyProblem } from '@lobechat/utils/goalSeeds';
 import { type Command, Option } from 'commander';
 import pc from 'picocolors';
 
@@ -19,7 +20,7 @@ import { confirm, outputJson, printTable, truncate } from '../../utils/format';
 import { log } from '../../utils/logger';
 import { resolveAppUrlBuilder } from '../task/url';
 import { registerGoalGraphEditCommands } from './graphEdit';
-import { linkSeedDependencies, parseTaskFile } from './seedTasks';
+import { missingSeedDependencies, parseTaskFile } from './seedTasks';
 
 // Typed rather than inferred: an `as const` map is indexable by a widened
 // `any` node kind, which is how a renamed kind silently printed `undefined`
@@ -642,7 +643,7 @@ export function registerGoalCommand(program: Command) {
     .option('-t, --task <title...>', 'Seed task node titles (omit to let the planner decompose)')
     .option(
       '--task-file <path>',
-      'Seed tasks from a JSON array of {"title","description","dependsOn":[titles]}; dependsOn needs --topic',
+      'Seed tasks from a JSON array of {"title","description","dependsOn":[titles]}',
     )
     .option(
       '--agent <id>',
@@ -693,13 +694,12 @@ export function registerGoalCommand(program: Command) {
       if (options.rollout && !['canary', 'full', 'off'].includes(options.rollout)) {
         throw new Error('--rollout must be one of: canary, full, off');
       }
-      const taskFile = options.taskFile
-        ? parseTaskFile(await readFile(options.taskFile, 'utf8'))
-        : undefined;
       const seedTasks = [
         ...((options.task as string[] | undefined) ?? []),
-        ...(taskFile?.tasks ?? []),
+        ...(options.taskFile ? parseTaskFile(await readFile(options.taskFile, 'utf8')) : []),
       ];
+      const seedProblem = goalSeedDependencyProblem(seedTasks);
+      if (seedProblem) throw new Error(`--task-file: ${seedProblem}`);
       const operationId = process.env.LOBEHUB_OPERATION_ID;
       const fromTopic = Boolean(options.topic || options.conversation);
       if (fromTopic && !operationId) {
@@ -707,10 +707,6 @@ export function registerGoalCommand(program: Command) {
           '--topic must run inside an agent topic (LOBEHUB_OPERATION_ID). If this shell lost it, find the running operation with `lh trace op list --topic <topicId>` and export it',
         );
       }
-      // A standalone goal starts dispatching at once, before edges drawn after
-      // creation could hold anything back; a draft waits for `lh goal start`.
-      if (taskFile?.dependencies.size && !fromTopic)
-        throw new Error('--task-file dependsOn needs --topic: only a draft waits for its edges');
       const client = await getTrpcClient();
       const buildUrl = await resolveAppUrlBuilder(client);
       const goalInput = {
@@ -796,7 +792,11 @@ export function registerGoalCommand(program: Command) {
             agentId: options.agent ?? process.env.LOBEHUB_AGENT_ID,
             createdByAgentId: process.env.LOBEHUB_AGENT_ID,
           });
-      if (taskFile) await linkSeedDependencies(client, result.data!, taskFile.dependencies);
+      const undrawn = missingSeedDependencies(result.data!, seedTasks);
+      if (undrawn.length)
+        log.warn(
+          `The server did not draw these dependsOn edges (it may predate dependsOn); add them with \`lh goal add-edge\`: ${undrawn.join('; ')}`,
+        );
       const turnToken = 'turnToken' in result ? result.turnToken : undefined;
       // `goal.create` returns the whole graph snapshot, so the id is on its
       // goal — `result.data.id` is undefined, and the CLI cannot resolve the

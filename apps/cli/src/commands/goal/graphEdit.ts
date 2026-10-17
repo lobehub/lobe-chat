@@ -93,7 +93,7 @@ export function registerGoalGraphEditCommands(goal: Command) {
   goal
     .command('add-edge <id> <source> <target> <kind>')
     .summary('Connect two Goal Graph nodes')
-    .description(`Connect two Goal Graph nodes.\n\n${EDGE_DIRECTION_HELP}`)
+    .description(EDGE_DIRECTION_HELP)
     .action(async (id: string, source: string, target: string, kind: string) => {
       const edge = resolveEdge(source, target, kind);
       const result = await (await getTrpcClient()).goal.addEdge.mutate({ id, ...edge });
