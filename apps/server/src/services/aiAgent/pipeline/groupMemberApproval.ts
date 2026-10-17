@@ -1,5 +1,6 @@
-import type { MessagePluginItem } from '@lobechat/types';
+import type { ExecAgentResult, MessagePluginItem } from '@lobechat/types';
 
+import type { AgentRuntimeService } from '@/server/services/agentRuntime';
 import type { AgentHook } from '@/server/services/agentRuntime/hooks/types';
 import type {
   GroupActionMemberMode,
@@ -113,4 +114,36 @@ export const resolveGroupMemberApprovalContinuation = async (
     slug: undefined,
     topicStartOwnerOperationId: bridge.parentOperationId,
   };
+};
+
+export interface GroupMemberDeadlineDeps {
+  agentRuntimeService: AgentRuntimeService;
+}
+
+/**
+ * An approval continuation retires the parked member op, which silently
+ * disarms the timeout watchdog scheduled for it. Re-arm the same absolute
+ * deadline on the continuation (immediately when it has already passed).
+ */
+export const rearmGroupMemberDeadline = async (
+  deps: GroupMemberDeadlineDeps,
+  continuationParams: InternalExecAgentParams,
+  continuation: ExecAgentResult,
+): Promise<void> => {
+  const bridge = continuationParams.hooks?.find((hook) => hook.id === 'group-member-bridge')
+    ?.webhook?.body as GroupMemberBridgeParams | undefined;
+  if (!bridge?.deadlineAt || !continuation.success || !continuation.operationId) return;
+
+  await deps.agentRuntimeService.scheduleGroupMemberTimeout(
+    {
+      anchorMessageId: bridge.anchorMessageId,
+      expectedMembers: bridge.expectedMembers,
+      groupToolMessageId: bridge.groupToolMessageId,
+      memberOperationId: continuation.operationId,
+      mode: bridge.mode,
+      onComplete: bridge.onComplete,
+      parentOperationId: bridge.parentOperationId,
+    },
+    Math.max(1, bridge.deadlineAt - Date.now()),
+  );
 };

@@ -73,7 +73,7 @@ import {
   supersedeRunningForegroundOperation,
 } from './pipeline/foregroundSupersede';
 import {
-  type GroupMemberBridgeParams,
+  rearmGroupMemberDeadline,
   resolveGroupMemberApprovalContinuation,
 } from './pipeline/groupMemberApproval';
 import { dispatchHeteroAgent } from './pipeline/heteroDispatch';
@@ -82,6 +82,7 @@ import { buildOperationInitRequest, runOperationInit } from './pipeline/operatio
 import { createHistoryMessagesLoader } from './pipeline/operationPrep';
 import { type PrecreatedTopicDeps, resolvePrecreatedTopicConfig } from './pipeline/precreatedTopic';
 import { resolveRunAgentConfig } from './pipeline/resolveRunAgentConfig';
+import { scheduleAgentRun } from './pipeline/scheduleAgentRun';
 import { traceSendStage } from './pipeline/sendTracing';
 import { startOperation } from './pipeline/startOperation';
 import { bindTopicWorkingDirectory } from './pipeline/topicWorkingDirectory';
@@ -92,7 +93,7 @@ import { resolveAgentSenderFromOperation } from './sourceAttribution';
 import type { SubAgentLlmRelayRequest } from './subAgentLlmRelay';
 import { closeSubAgentLlmRelay, openSubAgentLlmRelay } from './subAgentLlmRelay';
 import type { SubAgentRunDeps } from './subAgentRuns';
-import { execAgentMember, execAgentThreadRun } from './subAgentRuns';
+import { execAgentMember, execAgentThreadRun, execIsolatedAgentMember } from './subAgentRuns';
 import { acquireTopicStartReservation, TopicStartReservationError } from './topicStartReservation';
 import type { ExecRunContext, InternalExecAgentParams } from './types';
 
@@ -409,89 +410,16 @@ export class AiAgentService {
     return resolvePrecreatedTopicConfig(this.precreatedTopicDeps(), identifier, overrides);
   }
 
-  /**
-   * Defer an agent run to a future time ("send this in 3 hours").
-   *
-   * Creates the topic now, `scheduled` and empty, carrying the whole request in
-   * `metadata.scheduledRun`; the cron dispatcher replays it through `execAgent`
-   * once `runAt` passes. The prompt is deliberately NOT pre-persisted as a user
-   * message — storing the request whole keeps the dispatch identical to a user
-   * pressing send, and keeps editing / cancelling a pending run a single JSONB
-   * write.
-   *
-   * One-shot only: recurring execution belongs to `tasks.automationMode = 'schedule'`.
-   */
-  async scheduleAgentRun(params: ScheduleAgentRunParams): Promise<ScheduleAgentRunResult> {
-    const { agentId, slug, prompt, runAt, fileIds, groupId, model, provider } = params;
-
-    if (!agentId && !slug) throw new Error('Either agentId or slug must be provided');
-
-    const runAtDate = new Date(runAt);
-    if (Number.isNaN(runAtDate.getTime())) {
-      throw new TRPCError({ code: 'BAD_REQUEST', message: `Invalid runAt: ${runAt}` });
-    }
-    if (runAtDate.getTime() <= Date.now()) {
-      throw new TRPCError({ code: 'BAD_REQUEST', message: 'runAt must be in the future' });
-    }
-
-    const agentConfig = await this.resolvePrecreatedTopicConfig(agentId || slug!, {
-      model,
-      provider,
-    });
-    const resolvedAgentId = agentConfig.id;
-
-    const titleSource = markdownToTxt(prompt);
-    const snapshot = await resolveNewTopicSnapshot(
-      { db: this.db, userId: this.userId, workspaceId: this.workspaceId },
-      agentConfig,
-      { model, provider },
+  /** Defer an agent run to a future time. See `pipeline/scheduleAgentRun`. */
+  scheduleAgentRun(params: ScheduleAgentRunParams): Promise<ScheduleAgentRunResult> {
+    return scheduleAgentRun(
+      {
+        ...this.precreatedTopicDeps(),
+        messageModel: this.messageModel,
+        topicModel: this.topicModel,
+      },
+      params,
     );
-    const topic = await this.topicModel.create({
-      ...snapshot,
-      agentId: resolvedAgentId,
-      groupId,
-      // A scheduled run is still an ordinary user chat, just deferred — so it
-      // keeps the `chat` trigger and stays in the main sidebar (where its
-      // `scheduled` status renders a clock), unlike system-owned cron topics.
-      title: titleSource.slice(0, 50) + (titleSource.length > 50 ? '...' : ''),
-      trigger: 'chat',
-    });
-
-    // Persist the user turn now rather than stashing the prompt in metadata: the
-    // pending run then reads as the user's own words in the topic, and the message
-    // stays the single source of truth for the prompt (the dispatcher reads it
-    // back, so editing a pending run is just editing the message).
-    const userMessage = await this.messageModel.create({
-      agentId: resolvedAgentId,
-      content: prompt,
-      files: fileIds,
-      groupId: groupId ?? undefined,
-      metadata: { trigger: RequestTrigger.Scheduled },
-      role: 'user',
-      topicId: topic.id,
-    });
-
-    const now = new Date().toISOString();
-    await this.topicModel.armScheduledRun(topic.id, {
-      createdAt: now,
-      kind: 'delayed_start',
-      model,
-      provider,
-      // Normalize to UTC ISO: the dispatcher's due query compares this as text.
-      runAt: runAtDate.toISOString(),
-      updatedAt: now,
-      userMessageId: userMessage.id,
-    });
-
-    log(
-      'scheduleAgentRun: topic %s scheduled for %s (agent %s, message %s)',
-      topic.id,
-      runAtDate.toISOString(),
-      resolvedAgentId,
-      userMessage.id,
-    );
-
-    return { agentId: resolvedAgentId, runAt: runAtDate.toISOString(), topicId: topic.id };
   }
 
   /**
@@ -541,7 +469,11 @@ export class AiAgentService {
         memberContinuation.parentOperationId,
       );
       const continuation = await this.execAgent(memberContinuation);
-      await this.rearmGroupMemberDeadline(memberContinuation, continuation);
+      await rearmGroupMemberDeadline(
+        { agentRuntimeService: this.agentRuntimeService },
+        memberContinuation,
+        continuation,
+      );
       return {
         ...continuation,
         groupMemberContinuation: true,
@@ -1570,33 +1502,6 @@ export class AiAgentService {
     });
 
   /**
-   * An approval continuation retires the parked member op, which silently
-   * disarms the timeout watchdog scheduled for it. Re-arm the same absolute
-   * deadline on the continuation (immediately when it has already passed).
-   */
-  private rearmGroupMemberDeadline = async (
-    continuationParams: InternalExecAgentParams,
-    continuation: ExecAgentResult,
-  ): Promise<void> => {
-    const bridge = continuationParams.hooks?.find((hook) => hook.id === 'group-member-bridge')
-      ?.webhook?.body as GroupMemberBridgeParams | undefined;
-    if (!bridge?.deadlineAt || !continuation.success || !continuation.operationId) return;
-
-    await this.agentRuntimeService.scheduleGroupMemberTimeout(
-      {
-        anchorMessageId: bridge.anchorMessageId,
-        expectedMembers: bridge.expectedMembers,
-        groupToolMessageId: bridge.groupToolMessageId,
-        memberOperationId: continuation.operationId,
-        mode: bridge.mode,
-        onComplete: bridge.onComplete,
-        parentOperationId: bridge.parentOperationId,
-      },
-      Math.max(1, bridge.deadlineAt - Date.now()),
-    );
-  };
-
-  /**
    * Fork a single group member ("call agent member") under a `lobe-group-management`
    * tool call. Dispatches to the in-group (non-isolated, shared group session)
    * or isolated (own thread) path, installing the group-action member completion
@@ -1607,68 +1512,7 @@ export class AiAgentService {
    */
   execGroupMember = async (params: ExecGroupMemberParams): Promise<ExecGroupMemberResult> => {
     if (params.mode === 'isolated') {
-      // Isolated members reuse the sub-agent isolation-thread machinery, swapping
-      // in the group-action member bridge (K=N barrier + resume/finish).
-      const deadlineAt =
-        params.timeout && params.timeout > 0 ? Date.now() + params.timeout : undefined;
-      const result = await execAgentThreadRun(
-        this.subAgentRunDeps,
-        {
-          agentId: params.agentId,
-          groupId: params.groupId,
-          instruction: params.instruction ?? 'Please complete the assigned task.',
-          parentMessageId: params.anchorMessageId,
-          parentOperationId: params.parentOperationId,
-          timeout: params.timeout,
-          title: params.instruction?.slice(0, 50),
-          topicId: params.topicId,
-        },
-        {
-          bridgeHookFactory: (threadId) =>
-            createGroupActionMemberBridgeHook(this.agentRuntimeService, {
-              anchorMessageId: params.anchorMessageId,
-              deadlineAt,
-              expectedMembers: params.expectedMembers,
-              groupToolMessageId: params.groupToolMessageId,
-              mode: 'isolated',
-              onComplete: params.onComplete,
-              parentOperationId: params.parentOperationId,
-              threadId,
-            }),
-          isSubAgent: true,
-          logScope: 'execVirtualSubAgent',
-          // Tag the op as a group member so the abandon path routes its parent
-          // resume through the group bridge (its own timeout), not the sub-agent one.
-          orchestrationRole: 'member',
-          resumeParentOnComplete: true,
-          userInterventionConfig: params.userInterventionConfig,
-        },
-      );
-
-      // Enforce the requested timeout: if the member op is still running when the
-      // deadline passes, the watchdog interrupts it and bridges a `timeout`
-      // completion so the supervisor doesn't stay parked indefinitely.
-      if (result.success && result.operationId && params.timeout && params.timeout > 0) {
-        await this.agentRuntimeService.scheduleGroupMemberTimeout(
-          {
-            anchorMessageId: params.anchorMessageId,
-            expectedMembers: params.expectedMembers,
-            groupToolMessageId: params.groupToolMessageId,
-            memberOperationId: result.operationId,
-            mode: 'isolated',
-            onComplete: params.onComplete,
-            parentOperationId: params.parentOperationId,
-          },
-          params.timeout,
-        );
-      }
-
-      return {
-        error: result.error,
-        operationId: result.operationId,
-        started: result.success ?? false,
-        threadId: result.threadId,
-      };
+      return execIsolatedAgentMember(this.subAgentRunDeps, params);
     }
 
     return execAgentMember(this.subAgentRunDeps, params);
