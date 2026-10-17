@@ -582,7 +582,6 @@ export const deviceKeys = {
       baseRef,
     ],
   ),
-  listDevices: def('device:listDevices', () => ['device:listDevices']),
   repoType: def('device:repoType', (path: string) => ['device:repoType', path]),
 };
 

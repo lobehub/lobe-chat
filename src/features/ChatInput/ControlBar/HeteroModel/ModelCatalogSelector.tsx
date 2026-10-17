@@ -47,7 +47,7 @@ import { resolveTargetDeviceId } from '@/helpers/agentWorkingDirectory';
 import { resolveExecutionTarget } from '@/helpers/executionTarget';
 import { useEffectiveAgencyConfig } from '@/hooks/useEffectiveAgencyConfig';
 import { useEffectiveWorkingDirectory } from '@/hooks/useEffectiveWorkingDirectory';
-import { useDeviceStore } from '@/store/device';
+import { deviceSelectors, useDeviceStore } from '@/store/device';
 import { useElectronStore } from '@/store/electron';
 import { useUserStore } from '@/store/user';
 import { authSelectors } from '@/store/user/selectors';
@@ -202,9 +202,8 @@ export const ModelCatalogSelector = memo<ModelCatalogSelectorProps>(
       { topicId },
     );
     const isLogin = useUserStore(authSelectors.isLogin);
-    const { isLoading: isDeviceListLoading } = useDeviceStore((s) => s.useFetchDevices)(
-      isLogin || isDesktop,
-    );
+    useDeviceStore((s) => s.useFetchDevices)(isLogin || isDesktop);
+    const isDeviceListLoading = !useDeviceStore(deviceSelectors.isDeviceListLoaded);
     const cwd = useEffectiveWorkingDirectory(agentId, { topicId });
     const provider = agencyConfig?.heterogeneousProvider;
     useElectronStore((s) => s.useFetchGatewayDeviceInfo)();
