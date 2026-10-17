@@ -221,7 +221,7 @@ describe('browserWebviewRegistry', () => {
     portalRoot.id = 'lobe-ui-theme-app';
     document.body.append(portalRoot);
     const draggablePanel = document.createElement('aside');
-    draggablePanel.className = 'ant-draggable-panel';
+    draggablePanel.className = 'lobe-draggable-panel';
     draggablePanel.getBoundingClientRect = () =>
       ({ height: 600, left: 320, right: 680, top: 40, width: 360 }) as DOMRect;
     document.body.append(draggablePanel);
@@ -231,10 +231,15 @@ describe('browserWebviewRegistry', () => {
     draggablePanel.append(viewport);
 
     const resizeHandle = document.createElement('div');
-    resizeHandle.className = 'ant-draggable-panel-left-handle';
+    resizeHandle.className = 'lobe-draggable-panel__handle';
     draggablePanel.append(resizeHandle);
-    const forwardedMouseDown = vi.fn();
-    resizeHandle.addEventListener('mousedown', forwardedMouseDown);
+    const PointerEventCtor = (typeof PointerEvent === 'undefined'
+      ? MouseEvent
+      : PointerEvent) as typeof MouseEvent;
+    const forwardedPointerDown = vi.fn();
+    const forwardedPointerMove = vi.fn();
+    resizeHandle.addEventListener('pointerdown', forwardedPointerDown);
+    resizeHandle.addEventListener('pointermove', forwardedPointerMove);
 
     const attaching = browserWebviewRegistry.attach('resizable-topic', viewport);
     const webview = document.querySelector<HTMLElement>('webview');
@@ -247,7 +252,7 @@ describe('browserWebviewRegistry', () => {
     expect(webview?.style.width).toBe('360px');
 
     bridge?.dispatchEvent(
-      new MouseEvent('mousedown', {
+      new PointerEventCtor('pointerdown', {
         bubbles: true,
         button: 0,
         buttons: 1,
@@ -256,10 +261,19 @@ describe('browserWebviewRegistry', () => {
       }),
     );
 
-    expect(forwardedMouseDown).toHaveBeenCalledOnce();
+    expect(forwardedPointerDown).toHaveBeenCalledOnce();
     expect(webview?.style.pointerEvents).toBe('none');
 
-    window.dispatchEvent(new MouseEvent('mouseup', { bubbles: true }));
+    window.dispatchEvent(
+      new PointerEventCtor('pointermove', {
+        bubbles: true,
+        clientX: 260,
+        clientY: 200,
+      }),
+    );
+    expect(forwardedPointerMove).toHaveBeenCalledOnce();
+
+    window.dispatchEvent(new PointerEventCtor('pointerup', { bubbles: true }));
     expect(webview?.style.pointerEvents).toBe('auto');
 
     await browserWebviewRegistry.detach('resizable-topic', viewport);
