@@ -3,8 +3,6 @@ import { MAX_GOAL_METRIC_CRITERIA, summarizeGoalSupervision } from '@lobechat/ty
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
-import { withScopedPermission } from '@/business/server/trpc-middlewares/rbacPermission';
-import { wsCompatProcedure } from '@/business/server/trpc-middlewares/workspaceAuth';
 import { GoalModel } from '@/database/models/goal';
 import { heteroAuthedProcedure, router } from '@/libs/trpc/lambda';
 import { serverDatabase } from '@/libs/trpc/lambda/middleware';
@@ -26,25 +24,9 @@ import {
 } from '@/server/services/heterogeneousAgent/operationPrincipal';
 
 import { assertWorkspaceRowManageable } from './_helpers/assertWorkspaceRowManageable';
+import { goalGraphEditProcedures } from './goalGraphEdit';
+import { goalProcedure, goalWriteProcedure, idInput, mapGoalError } from './goalProcedures';
 
-const goalProcedure = wsCompatProcedure.use(serverDatabase).use(async (opts) =>
-  opts.next({
-    ctx: {
-      goalModel: new GoalModel(
-        opts.ctx.serverDB,
-        opts.ctx.userId,
-        opts.ctx.workspaceId ?? undefined,
-      ),
-      goalService: new GoalService(
-        opts.ctx.serverDB,
-        opts.ctx.userId,
-        opts.ctx.workspaceId ?? undefined,
-      ),
-    },
-  }),
-);
-const goalWriteProcedure = goalProcedure.use(withScopedPermission('agent:update'));
-const idInput = z.object({ id: z.string() });
 /**
  * A wrap-up report submitted from a run. The metadata passes through as a
  * record: `GoalReportStore.submit` parses it with the report schema and checks
@@ -150,12 +132,16 @@ const conversationGoalInput = z.object({
   projectId: z.string().optional(),
   requirement: z.string().optional(),
   title: z.string().min(1),
-  /** Seed task nodes, in dependency-free order. */
+  /** Seed task nodes; `dependsOn` names other seeds by title. */
   tasks: z
     .array(
       z.union([
         z.string().min(1),
-        z.object({ description: z.string().optional(), title: z.string().min(1) }),
+        z.object({
+          dependsOn: z.array(z.string().min(1)).optional(),
+          description: z.string().optional(),
+          title: z.string().min(1),
+        }),
       ]),
     )
     .optional(),
@@ -195,16 +181,6 @@ const bindTopicResponse = ({
   success: true,
   turnToken,
 });
-
-function mapGoalError(error: unknown, operation: string): never {
-  if (error instanceof TRPCError) throw error;
-  console.error(`[goal:${operation}]`, error);
-  throw new TRPCError({
-    cause: error,
-    code: 'INTERNAL_SERVER_ERROR',
-    message: `Failed to ${operation} goal`,
-  });
-}
 
 /** `<ISO>|<event id>` — opaque to callers, so the pair can change shape later. */
 const encodeEventCursor = (cursor: { createdAt: Date; id: string }) =>
@@ -557,62 +533,7 @@ export const goalRouter = router({
       });
       return { data, success: true };
     }),
-  addEdge: goalWriteProcedure
-    .input(
-      idInput.extend({
-        kind: z.enum([
-          'contains',
-          'answers',
-          'decomposes',
-          'depends_on',
-          'derived_from',
-          'investigates',
-          'produces',
-          'supports',
-          'contradicts',
-          'leads_to',
-        ]),
-        sourceNodeId: z.string().uuid(),
-        targetNodeId: z.string().uuid(),
-      }),
-    )
-    .mutation(async ({ ctx, input: { id, ...input } }) => {
-      try {
-        return {
-          data: await ctx.goalService.addEdge(
-            id,
-            input.sourceNodeId,
-            input.targetNodeId,
-            input.kind,
-          ),
-          success: true,
-        };
-      } catch (error) {
-        mapGoalError(error, 'addEdge');
-      }
-    }),
-
-  addNode: goalWriteProcedure
-    .input(
-      idInput.extend({
-        description: z.string().optional(),
-        kind: z.enum(['problem', 'experiment', 'task', 'finding', 'decision']),
-        scopeId: z.string().uuid().optional(),
-        questionId: z.string().uuid().optional(),
-        priority: z.number().int().optional(),
-        status: z
-          .enum(['proposed', 'active', 'waiting', 'resolved', 'rejected', 'retired'])
-          .optional(),
-        title: z.string().min(1),
-      }),
-    )
-    .mutation(async ({ ctx, input: { id, ...input } }) => {
-      try {
-        return { data: await ctx.goalService.addNode(id, input), success: true };
-      } catch (error) {
-        mapGoalError(error, 'addNode');
-      }
-    }),
+  ...goalGraphEditProcedures,
 
   /**
    * `/goal` from a conversation run authenticated by its operation token (device

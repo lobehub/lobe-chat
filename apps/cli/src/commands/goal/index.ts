@@ -11,32 +11,20 @@ import type {
   GoalPlanContext,
   GoalTickResult,
 } from '@lobechat/types';
+import { goalSeedDependencyProblem } from '@lobechat/utils/goalSeeds';
 import { type Command, Option } from 'commander';
 import pc from 'picocolors';
 
-import { getTrpcClient } from '../api/client';
-import { confirm, outputJson, printTable, truncate } from '../utils/format';
-import { log } from '../utils/logger';
-import { resolveAppUrlBuilder } from './task/url';
+import { getTrpcClient } from '../../api/client';
+import { confirm, outputJson, printTable, truncate } from '../../utils/format';
+import { log } from '../../utils/logger';
+import { resolveAppUrlBuilder } from '../task/url';
+import { registerGoalGraphEditCommands } from './graphEdit';
+import { missingSeedDependencies, parseTaskFile } from './seedTasks';
 
 // Typed rather than inferred: an `as const` map is indexable by a widened
 // `any` node kind, which is how a renamed kind silently printed `undefined`
 // here after the type checker had signed off everywhere else.
-
-/** `--task-file`: a JSON array of seed tasks, each a title or {"title","description"}. */
-const parseTaskFile = (raw: string): Array<string | { description?: string; title: string }> => {
-  const parsed: unknown = JSON.parse(raw);
-  if (!Array.isArray(parsed)) throw new Error('--task-file must hold a JSON array');
-  return parsed.map((item, index) => {
-    if (typeof item === 'string' && item.trim()) return item.trim();
-    if (item && typeof item === 'object' && typeof item.title === 'string' && item.title.trim())
-      return {
-        description: typeof item.description === 'string' ? item.description : undefined,
-        title: item.title.trim(),
-      };
-    throw new Error(`--task-file entry ${index} needs a title`);
-  });
-};
 
 /** `--variant mechanism=replica,swr` → one axis and its values. */
 const parseVariant = (raw: string) => {
@@ -464,6 +452,19 @@ const goalReads = async () => {
       };
 };
 
+/**
+ * Builds goal page links. Best-effort: a read must not fail over a link, and an
+ * operation-token run may be refused the workspace lookup behind it.
+ */
+const goalUrlBuilder = async () => {
+  try {
+    const buildUrl = await resolveAppUrlBuilder(await getTrpcClient());
+    return (id: string) => buildUrl(`/goal/${encodeURIComponent(id)}`);
+  } catch {
+    return () => undefined;
+  }
+};
+
 export function registerGoalCommand(program: Command) {
   const goal = program.command('goal').description('Run long-horizon Goal Graphs');
   goal
@@ -620,8 +621,8 @@ export function registerGoalCommand(program: Command) {
         '',
         'From a chat, create it with --topic. The goal opens as a draft bound to this topic: nothing is',
         'dispatched until it is started, so arrange it first:',
-        '  1. Place the tasks: -t <titles...>, --task-file <json> for titles with descriptions, or later',
-        '     `lh goal add-node <id> task <title> -d <brief>` and `lh goal add-edge` for prerequisites.',
+        '  1. Place the tasks: -t <titles...>, --task-file <json> for briefs and dependsOn order, or later',
+        '     `lh goal add-node <id> task <title> -d <brief>` and `lh goal add-edge` (`remove-edge` undoes one).',
         '  2. Check the graph the command prints (or `lh goal show <id>`).',
         '  3. Start it: `lh goal start <id>` (see `lh man goal start`). The owner can also start it from the',
         '     goal page.',
@@ -642,7 +643,7 @@ export function registerGoalCommand(program: Command) {
     .option('-t, --task <title...>', 'Seed task node titles (omit to let the planner decompose)')
     .option(
       '--task-file <path>',
-      'Seed tasks from a JSON array of {"title","description"}; use it when each task needs its own brief',
+      'Seed tasks from a JSON array of {"title","description","dependsOn":[titles]}',
     )
     .option(
       '--agent <id>',
@@ -697,10 +698,14 @@ export function registerGoalCommand(program: Command) {
         ...((options.task as string[] | undefined) ?? []),
         ...(options.taskFile ? parseTaskFile(await readFile(options.taskFile, 'utf8')) : []),
       ];
+      const seedProblem = goalSeedDependencyProblem(seedTasks);
+      if (seedProblem) throw new Error(`--task-file: ${seedProblem}`);
       const operationId = process.env.LOBEHUB_OPERATION_ID;
       const fromTopic = Boolean(options.topic || options.conversation);
       if (fromTopic && !operationId) {
-        throw new Error('--topic must run inside an agent topic (LOBEHUB_OPERATION_ID)');
+        throw new Error(
+          '--topic must run inside an agent topic (LOBEHUB_OPERATION_ID). If this shell lost it, find the running operation with `lh trace op list --topic <topicId>` and export it',
+        );
       }
       const client = await getTrpcClient();
       const buildUrl = await resolveAppUrlBuilder(client);
@@ -787,6 +792,11 @@ export function registerGoalCommand(program: Command) {
             agentId: options.agent ?? process.env.LOBEHUB_AGENT_ID,
             createdByAgentId: process.env.LOBEHUB_AGENT_ID,
           });
+      const undrawn = missingSeedDependencies(result.data!, seedTasks);
+      if (undrawn.length)
+        log.warn(
+          `The server did not draw these dependsOn edges (it may predate dependsOn); add them with \`lh goal add-edge\`: ${undrawn.join('; ')}`,
+        );
       const turnToken = 'turnToken' in result ? result.turnToken : undefined;
       // `goal.create` returns the whole graph snapshot, so the id is on its
       // goal — `result.data.id` is undefined, and the CLI cannot resolve the
@@ -905,7 +915,14 @@ export function registerGoalCommand(program: Command) {
         projectId: options.project,
         statuses: options.status,
       });
-      if (options.json !== undefined) return outputJson(result.goals, options.json);
+      if (options.json !== undefined) {
+        const goalUrl = await goalUrlBuilder();
+        const goals = result.goals.map((item: { goal: { id: string } }) => ({
+          ...item,
+          url: goalUrl(item.goal.id),
+        }));
+        return outputJson(goals, options.json);
+      }
       if (result.goals.length === 0) return log.info('No goals yet.');
       printTable(
         result.goals.map((item) => [
@@ -924,8 +941,10 @@ export function registerGoalCommand(program: Command) {
   const show = async (id: string, options: { json?: boolean | string }) => {
     const reads = await goalReads();
     const result = await reads.graph.query({ id });
-    if (options.json !== undefined) return outputJson(result.data, options.json);
+    const url = (await goalUrlBuilder())(result.data.goal.id);
+    if (options.json !== undefined) return outputJson({ ...result.data, url }, options.json);
     printGraph(result.data);
+    if (url) console.log(`${pc.bold('goal')}: ${url}`);
   };
   goal
     .command('show <id>')
@@ -1338,60 +1357,5 @@ export function registerGoalCommand(program: Command) {
       log.info(result.message);
     });
 
-  goal
-    .command('retire <id> <node-ids...>')
-    .description(
-      'Retire task nodes that should not run; unfinished tasks depending on them must be retired together',
-    )
-    .option('--reason <text>', 'Why the nodes are retired')
-    .action(async (id: string, nodeIds: string[], options) => {
-      const result = await (
-        await getTrpcClient()
-      ).goal.retireNodes.mutate({ id, nodeIds, reason: options.reason });
-      log.info(result.message);
-    });
-
-  goal
-    .command('add-node <id> <kind> <title>')
-    .description('Add a question, experiment container, task, finding, or decision node')
-    .option('--scope <experiment-id>', 'Contain this node in an experiment')
-    .option('--question <node-id>', 'Question this experiment answers')
-    .option('-d, --description <text>')
-    .option('-p, --priority <n>')
-    .action(
-      async (
-        id: string,
-        kind: 'decision' | 'experiment' | 'finding' | 'problem' | 'task',
-        title: string,
-        options,
-      ) => {
-        const result = await (
-          await getTrpcClient()
-        ).goal.addNode.mutate({
-          description: options.description,
-          scopeId: options.scope,
-          questionId: options.question,
-          id,
-          kind,
-          priority: options.priority ? Number.parseInt(options.priority, 10) : undefined,
-          title,
-        });
-        log.info(`Created node ${result.data.id}`);
-      },
-    );
-
-  goal
-    .command('add-edge <id> <source> <target> <kind>')
-    .description('Connect two Goal Graph nodes')
-    .action(async (id: string, sourceNodeId: string, targetNodeId: string, kind) => {
-      const result = await (
-        await getTrpcClient()
-      ).goal.addEdge.mutate({
-        id,
-        kind,
-        sourceNodeId,
-        targetNodeId,
-      });
-      log.info(`Created edge ${result.data.id}`);
-    });
+  registerGoalGraphEditCommands(goal);
 }
