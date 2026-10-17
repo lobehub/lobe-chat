@@ -14,8 +14,9 @@ import {
 } from './projection';
 import type { TreeItem, TreeState } from './types';
 
-const { mockGetKnowledgeItems, scope } = vi.hoisted(() => ({
+const { mockGetKnowledgeItems, mockUpdateResource, scope } = vi.hoisted(() => ({
   mockGetKnowledgeItems: vi.fn(),
+  mockUpdateResource: vi.fn(),
   scope: { current: 'user-a:personal' },
 }));
 
@@ -37,7 +38,9 @@ vi.mock('@/services/file', () => ({
   fileService: { getKnowledgeItems: mockGetKnowledgeItems },
 }));
 
-vi.mock('@/services/resource', () => ({ resourceService: {} }));
+vi.mock('@/services/resource', () => ({
+  resourceService: { updateResource: mockUpdateResource },
+}));
 vi.mock('@/store/file', () => ({ useFileStore: { getState: () => ({}) } }));
 
 const folder = (id: string, name = id): TreeItem => ({
@@ -244,11 +247,43 @@ describe('TreeActionImpl.reconcile — optimistic explorer rows', () => {
     actions.reconcile('', [file('doc-1'), file('temp-row')], { confirmed: false });
     expect(state.children[''].map((i) => i.id)).toEqual(['doc-1', 'temp-row']);
     // Nor may an unrelated write persist it meanwhile.
-    actions.toggle('folder-x');
+    actions.reconcile('folder-y', [file('doc-y')]);
     expect(state.snapshotMap['kb-1'].children[''].map((i) => i.id)).toEqual(['doc-1']);
 
     actions.reconcile('', [file('doc-1'), file('doc-2')], { confirmed: true });
     expect(state.snapshotMap['kb-1'].children[''].map((i) => i.id)).toEqual(['doc-1', 'doc-2']);
+  });
+});
+
+describe('TreeActionImpl — sidebar transactions and the snapshot', () => {
+  beforeEach(() => {
+    mockGetKnowledgeItems.mockReset();
+    mockUpdateResource.mockReset();
+  });
+
+  it('never persists a pending rename, and a rejected one leaves the stored name intact', async () => {
+    const { actions, state } = setup();
+    mockGetKnowledgeItems.mockResolvedValue({ items: [serverRow('doc-1')] });
+    actions.init('kb-1');
+    await vi.waitFor(() => expect(state.snapshotMap['kb-1']).toBeDefined());
+
+    let reject!: (error: Error) => void;
+    mockUpdateResource.mockReturnValue(
+      new Promise((_resolve, r) => {
+        reject = r;
+      }),
+    );
+    const renaming = actions.renameItem('doc-1', '', 'renamed');
+    await vi.waitFor(() => expect(state.children[''][0].name).toBe('renamed'));
+
+    // An unrelated write while the rename is in flight must not persist it.
+    actions.reconcile('folder-y', [file('doc-y')]);
+    expect(state.snapshotMap['kb-1'].children[''][0].name).toBe('doc-1');
+
+    reject(new Error('rename failed'));
+    await renaming.catch(() => {});
+    await vi.waitFor(() => expect(state.children[''][0].name).toBe('doc-1'));
+    expect(state.snapshotMap['kb-1'].children[''][0].name).toBe('doc-1');
   });
 });
 

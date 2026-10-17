@@ -14,7 +14,9 @@ const mocks = vi.hoisted(() => ({
   copyToClipboard: vi.fn(async (_text: string) => undefined),
   confirmModal: vi.fn(),
   deleteResource: vi.fn<() => Promise<void>>(async () => {}),
+  downloadFile: vi.fn(async (_url: string, _filename: string) => undefined),
   dropTreeNodes: vi.fn(async () => undefined),
+  getFile: vi.fn(async (_id: string) => ({ url: 'https://storage.example.com/fresh-signed' })),
   publishFileToWorkspace: vi.fn(async (_id: string) => undefined),
   setFileVisibility: vi.fn(async (_id: string, _visibility: string) => undefined),
   refreshFileList: vi.fn(async () => undefined),
@@ -86,6 +88,9 @@ vi.mock('@/store/tree', () => ({
     getState: () => ({ dropNodes: mocks.dropTreeNodes, revalidate: mocks.revalidateTree }),
   }),
 }));
+
+vi.mock('@/services/file', () => ({ fileService: { getFile: mocks.getFile } }));
+vi.mock('@/utils/client/downloadFile', () => ({ downloadFile: mocks.downloadFile }));
 
 const { useFileItemDropdown } = await import('./useFileItemDropdown');
 
@@ -380,6 +385,40 @@ describe('useFileItemDropdown — workspace resource permissions', () => {
 
     await waitFor(() =>
       expect(mocks.dropTreeNodes).toHaveBeenCalledWith(['resource-id'], 'parent-id'),
+    );
+  });
+});
+
+/** @example A sidebar row painted from the persisted tree, before its folder refreshed. */
+describe('useFileItemDropdown — row without a stored URL', () => {
+  const click = async (key: string, params: Record<string, unknown> = {}) => {
+    const { result } = renderHook(() =>
+      useFileItemDropdown({ ...baseParams, fileId: 'file-id', url: '', ...params } as any),
+    );
+    const item = result.current.menuItems().find((entry) => entry?.key === key) as any;
+    await item.onClick({ domEvent: { stopPropagation: vi.fn() } });
+  };
+
+  it('copies a freshly resolved URL instead of an empty string', async () => {
+    await click('copyUrl');
+    expect(mocks.getFile).toHaveBeenCalledWith('file-id');
+    expect(mocks.copyToClipboard).toHaveBeenCalledWith('https://storage.example.com/fresh-signed');
+  });
+
+  it('downloads from a freshly resolved URL', async () => {
+    await click('download');
+    expect(mocks.downloadFile).toHaveBeenCalledWith(
+      'https://storage.example.com/fresh-signed',
+      'notes.md',
+    );
+  });
+
+  it('uses the row URL without a request when it has one', async () => {
+    await click('download', { url: 'https://storage.example.com/notes.md' });
+    expect(mocks.getFile).not.toHaveBeenCalled();
+    expect(mocks.downloadFile).toHaveBeenCalledWith(
+      'https://storage.example.com/notes.md',
+      'notes.md',
     );
   });
 });

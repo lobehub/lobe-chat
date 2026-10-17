@@ -29,6 +29,7 @@ import VisibilityConfirmContent from '@/features/VisibilityConfirmContent';
 import { useAppOrigin } from '@/hooks/useAppOrigin';
 import { usePermission } from '@/hooks/usePermission';
 import { documentService } from '@/services/document';
+import { fileService } from '@/services/file';
 import { useFileStore } from '@/store/file';
 import { useKnowledgeBaseStore } from '@/store/library';
 import { useTreeStore } from '@/store/tree';
@@ -164,6 +165,12 @@ export const useFileItemDropdown = ({
   });
 
   const menuItems = useCallback(() => {
+    // A sidebar row restored from the persisted tree carries no storage URL (a
+    // signed link never reaches storage) until its folder refreshes; fetch it on
+    // demand so Copy URL / Download never act on an empty string.
+    const resolveFileUrl = async (): Promise<string> =>
+      url || (await fileService.getFile(fileId ?? id)).url;
+
     // Filter out current knowledge base and constrain by visibility scope:
     // a private file can only join a private KB, a workspace-public file can
     // only join a public KB. Personal-mode files (visibility null/undefined)
@@ -369,10 +376,9 @@ export const useFileItemDropdown = ({
             // routes are mounted under `/:workspaceSlug`, so the shared link must
             // carry the active slug or recipients land in the personal scope
             // where the page does not resolve.
-            let urlToCopy = url;
-            if (isPage) {
-              urlToCopy = `${appOrigin}${buildPagePath(id, activeWorkspaceSlug, libraryId)}`;
-            }
+            const urlToCopy = isPage
+              ? `${appOrigin}${buildPagePath(id, activeWorkspaceSlug, libraryId)}`
+              : await resolveFileUrl();
 
             await copyToClipboard(urlToCopy);
             toast.success(t('FileManager.actions.copyUrlSuccess'));
@@ -415,7 +421,7 @@ export const useFileItemDropdown = ({
               }
             } else {
               // For regular files, download from URL
-              await downloadFile(url, filename);
+              await downloadFile(await resolveFileUrl(), filename);
             }
 
             downloadingToast.close();

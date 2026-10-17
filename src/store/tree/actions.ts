@@ -199,6 +199,20 @@ export class TreeActionImpl {
    */
   #unconfirmedFolders = new Set<string>();
 
+  /** Sidebar transactions (move, rename, delete) whose optimistic patch is not confirmed. */
+  #pendingTx = 0;
+
+  /** Commit with the snapshot paused, then persist what survived (applied or rolled back). */
+  #commitTracked = async (tx: { commit: () => Promise<unknown> }) => {
+    this.#pendingTx += 1;
+    try {
+      await tx.commit();
+    } finally {
+      this.#pendingTx -= 1;
+      this.#persistSnapshot();
+    }
+  };
+
   #runQueuedRevalidate = (folderId: string) => {
     if (!this.#queuedRevalidate.delete(folderId)) return;
     void this.revalidate(folderId);
@@ -234,7 +248,7 @@ export class TreeActionImpl {
   #persistSnapshot = () => {
     // A folder still showing the explorer's optimistic overlay holds rows the
     // server has not confirmed; persisting it would repaint them after a reload.
-    if (this.#unconfirmedFolders.size > 0) return;
+    if (this.#unconfirmedFolders.size > 0 || this.#pendingTx > 0) return;
     const { children, expanded, knowledgeBaseId } = this.#get();
     if (!knowledgeBaseId) return;
     const snapshot = buildLibraryTreeSnapshot(children, expanded);
@@ -672,7 +686,7 @@ export class TreeActionImpl {
       }
     };
 
-    await tx.commit();
+    await this.#commitTracked(tx);
     await this.#revalidateSettled([fromParent, toParent]);
   };
 
@@ -737,7 +751,7 @@ export class TreeActionImpl {
       }
     };
 
-    await tx.commit();
+    await this.#commitTracked(tx);
     await this.#revalidateSettled([fromParent, toParent]);
   };
 
@@ -761,7 +775,7 @@ export class TreeActionImpl {
       await useFileStore.getState().refreshFileList();
     };
 
-    await tx.commit();
+    await this.#commitTracked(tx);
     await this.#revalidateSettled([parentId]);
   };
 
@@ -780,7 +794,7 @@ export class TreeActionImpl {
       await useFileStore.getState().refreshFileList();
     };
 
-    await tx.commit();
+    await this.#commitTracked(tx);
     await this.dropNodes(itemIds, parentId);
   };
 }
