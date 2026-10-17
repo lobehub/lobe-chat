@@ -16,6 +16,10 @@ export const binDir = app.isPackaged
 
 export const rendererDir = path.join(mainDir, '../renderer');
 
+// Note: userDataDir is resolved AFTER bootstrap() may have called app.setPath('userData', ...)
+// for multi-instance mode. Calling app.getPath('userData') here (module init time) is fine
+// because dir.ts is only imported after Electron app-ready, but AppStorageDir is accessed
+// lazily via StoreManager which initialises after setPath in App.bootstrap.
 export const userDataDir = app.getPath('userData');
 
 export const appStorageDir = path.join(userDataDir, 'lobehub-storage');
