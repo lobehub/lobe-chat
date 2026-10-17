@@ -106,6 +106,19 @@ export const toReviewPatchesSummary = (data: ReviewPatchesData): ReviewPatchesDa
   summaryOnly: true,
 });
 
+/**
+ * How the Review tab treats a painted read. A persisted summary is unconfirmed:
+ * the path may now hold different content, so destructive per-file actions
+ * (revert) wait for the live read (`isSummary`). Its expanded rows show a
+ * placeholder only while that read can still land (`diffPending`): a failed
+ * read leaves the summary in place, and the rows must then report the missing
+ * diff instead of loading forever.
+ */
+export const getReviewSummaryState = (data: ReviewPatchesData | undefined, error: unknown) => {
+  const isSummary = !!data?.summaryOnly;
+  return { diffPending: isSummary && !error, isSummary };
+};
+
 export interface GitReviewPatchesParams {
   baseRef?: string;
   /** Remote device; `undefined` reads this machine over Electron IPC. */

@@ -30,6 +30,7 @@ import {
   useReviewPatches,
 } from '../gitHooks';
 import {
+  getReviewSummaryState,
   GIT_REVIEW_MAX_PERSISTED_BYTES,
   gitLinkedPRResource,
   gitPullRequestActivityResource,
@@ -196,6 +197,47 @@ describe('Review / PR tab replicas', () => {
       // Something to paint: no spinner while the live read is pending.
       expect(result.current.isLoading).toBe(false);
       expect(result.current.isValidating).toBe(true);
+    });
+
+    // Regression: with a persisted summary and a failed live read (offline
+    // device), expanded rows kept their loading placeholder forever.
+    it('stops treating summary rows as pending once the live read fails', async () => {
+      await seed(gitReviewPatchesResource, REVIEW, {
+        mode: 'unstaged',
+        patches: [patch('src/a.ts', '')],
+        summaryOnly: true,
+      } satisfies ReviewPatchesData);
+      vi.mocked(gitService.getGitWorkingTreePatches).mockRejectedValue(new Error('offline'));
+
+      const { result } = renderHook(
+        () => useReviewPatches('/repo', 'unstaged', undefined, 'device-1'),
+        { wrapper },
+      );
+
+      await waitFor(() => expect(result.current.error).toBeTruthy());
+      expect(result.current.isValidating).toBe(false);
+      expect(result.current.data?.summaryOnly).toBe(true);
+      expect(getReviewSummaryState(result.current.data, result.current.error)).toEqual({
+        diffPending: false,
+        // Still unconfirmed: revert stays disabled.
+        isSummary: true,
+      });
+    });
+
+    it('treats summary rows as pending only while the live read can still land', () => {
+      const summary = { mode: 'unstaged', patches: [], summaryOnly: true } as ReviewPatchesData;
+      expect(getReviewSummaryState(summary, undefined)).toEqual({
+        diffPending: true,
+        isSummary: true,
+      });
+      expect(getReviewSummaryState({ mode: 'unstaged', patches: [] }, undefined)).toEqual({
+        diffPending: false,
+        isSummary: false,
+      });
+      expect(getReviewSummaryState(undefined, new Error('offline'))).toEqual({
+        diffPending: false,
+        isSummary: false,
+      });
     });
 
     it('replaces the summary with the live diff, and persists only the diff-free summary', async () => {

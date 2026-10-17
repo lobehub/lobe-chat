@@ -32,6 +32,7 @@ import FileTreeNav from './FileTreeNav';
 import GroupHeader from './GroupHeader';
 import { getDefaultExpandedKeys, itemKey } from './reviewTreeNodes';
 import {
+  getReviewSummaryState,
   invalidateGitReviewCaches,
   type ReviewMode,
   useGitRemoteBranches,
@@ -243,14 +244,14 @@ const Review = memo<ReviewProps>(
 
     // Stale-first: after a reload the replica paints the last persisted summary
     // (paths + counts, no diff text); expanded rows wait for the live diff.
-    const { data, isLoading, isValidating } = useReviewPatches(
+    const { data, error, isLoading, isValidating } = useReviewPatches(
       workingDirectory,
       mode,
       baseOverride,
       deviceId,
       active,
     );
-    const diffPending = !!data?.summaryOnly;
+    const { diffPending, isSummary } = getReviewSummaryState(data, error);
     const invalidateReviewData = useCallback(
       async () =>
         invalidateGitReviewCaches({
@@ -663,6 +664,7 @@ const Review = memo<ReviewProps>(
                             mode={mode}
                             pending={diffPending}
                             repoAbsolutePath={group.absolutePath}
+                            stale={isSummary}
                             textDiff={textDiff}
                             viewMode={viewMode}
                             wordWrap={wordWrap}

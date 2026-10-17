@@ -1,3 +1,4 @@
+import { confirmModal } from '@lobehub/ui';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
@@ -62,6 +63,49 @@ describe('FileItemHeader — reveal in tree', () => {
     fireEvent.click(btn);
 
     expect(parentSpy).not.toHaveBeenCalled();
+  });
+});
+
+describe('FileItemHeader — revert', () => {
+  const revertContext = { deviceId: 'device-1', workingDirectory: '/repo' };
+
+  it('asks for confirmation before reverting a live row', () => {
+    vi.mocked(confirmModal).mockClear();
+    render(
+      <FileItemHeader
+        additions={1}
+        deletions={0}
+        filePath="src/foo.ts"
+        revertContext={revertContext}
+        status="modified"
+      />,
+    );
+
+    fireEvent.click(screen.getByTestId('revert-file'));
+
+    expect(confirmModal).toHaveBeenCalledTimes(1);
+  });
+
+  // Regression: a row painted from the persisted summary kept revert enabled,
+  // so it could discard content at that path the summary never showed.
+  it('keeps revert inert while the row is an unconfirmed summary', () => {
+    vi.mocked(confirmModal).mockClear();
+    render(
+      <FileItemHeader
+        revertDisabled
+        additions={1}
+        deletions={0}
+        filePath="src/foo.ts"
+        revertContext={revertContext}
+        status="modified"
+      />,
+    );
+
+    const button = screen.getByTestId('revert-file');
+    expect(button).toBeDisabled();
+    fireEvent.click(button);
+
+    expect(confirmModal).not.toHaveBeenCalled();
   });
 });
 

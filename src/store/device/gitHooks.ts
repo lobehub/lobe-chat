@@ -17,13 +17,6 @@ import { deviceKeys, localFileKeys } from '@/libs/swr/keys';
 import { type GitBranchSummary, type GitLinkedPRSummary, gitService } from '@/services/git';
 
 import {
-  type GitDiffStats,
-  gitStatusKey,
-  type GitStatusParams,
-  type GitStatusRead,
-} from './gitStatus/projection';
-import { type GitStatusStore, useGitStatusStore } from './gitStatus/store';
-import {
   gitLinkedPRKey,
   gitPullRequestKey,
   gitPullRequestMergeContextKey,
@@ -35,9 +28,16 @@ import {
   type ReviewPatchesData,
 } from './gitReview/projection';
 import { type GitReviewStore, useGitReviewStore, warmPullRequestReplicas } from './gitReview/store';
+import {
+  type GitDiffStats,
+  gitStatusKey,
+  type GitStatusParams,
+  type GitStatusRead,
+} from './gitStatus/projection';
+import { type GitStatusStore, useGitStatusStore } from './gitStatus/store';
 
 export type { ReviewMode, ReviewPatchesData } from './gitReview/projection';
-export { toReviewPatchesSummary } from './gitReview/projection';
+export { getReviewSummaryState, toReviewPatchesSummary } from './gitReview/projection';
 
 const UNSTAGED_REVIEW_REFRESH_INTERVAL = 10 * 1000;
 const BRANCH_REVIEW_REFRESH_INTERVAL = 30 * 1000;

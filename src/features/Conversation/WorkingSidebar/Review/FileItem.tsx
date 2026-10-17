@@ -195,13 +195,16 @@ interface FileItemHeaderProps {
   onReverted?: () => void;
   /** When provided, enables the per-file revert button (unstaged mode only). */
   revertContext?: { deviceId?: string; workingDirectory: string };
+  /** Keep the revert button visible but inert, e.g. while the row is a
+   * persisted summary the live read has not confirmed yet. */
+  revertDisabled?: boolean;
   // Status reserved for future use (e.g. dim deleted entries) — keep on the
   // shape so the parent doesn't need to re-derive it later.
   status: GitFileDiffStatus;
 }
 
 export const FileItemHeader = memo<FileItemHeaderProps>(
-  ({ filePath, additions, deletions, hideDir, revertContext, onReverted }) => {
+  ({ filePath, additions, deletions, hideDir, revertContext, revertDisabled, onReverted }) => {
     const { t } = useTranslation('chat');
     const revealInFilesTab = useGlobalStore((s) => s.revealInFilesTab);
 
@@ -230,7 +233,7 @@ export const FileItemHeader = memo<FileItemHeaderProps>(
     const handleRevert = useCallback(
       (event: MouseEvent<HTMLDivElement>) => {
         event.stopPropagation();
-        if (!revertContext) return;
+        if (!revertContext || revertDisabled) return;
         confirmModal({
           cancelText: t('workingPanel.review.revert.confirm.cancel'),
           content: t('workingPanel.review.revert.confirm.description'),
@@ -264,7 +267,7 @@ export const FileItemHeader = memo<FileItemHeaderProps>(
           title: t('workingPanel.review.revert.confirm.title'),
         });
       },
-      [fileName, filePath, onReverted, revertContext, t],
+      [fileName, filePath, onReverted, revertContext, revertDisabled, t],
     );
 
     return (
@@ -303,6 +306,8 @@ export const FileItemHeader = memo<FileItemHeaderProps>(
           {revertContext && (
             <ActionIcon
               className={`${styles.rowAction} ${styles.revertDanger}`}
+              data-testid="revert-file"
+              disabled={revertDisabled}
               icon={Undo2Icon}
               size={'small'}
               title={t('workingPanel.review.revert')}
