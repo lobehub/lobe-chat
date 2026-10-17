@@ -49,8 +49,8 @@ import {
   VerifyReporterService,
 } from '@/server/services/verify';
 
-import { assertWorkspaceRowManageable } from './_helpers/assertWorkspaceRowManageable';
-import { verifyRunReportProcedures } from './verifyRunReport';
+import { assertWorkspaceRowManageable } from '../_helpers/assertWorkspaceRowManageable';
+import { verifyRunReportProcedures } from '../verifyRunReport';
 
 const verifierTypeSchema = z.enum(['program', 'agent', 'llm']);
 const onFailSchema = z.enum(['manual', 'auto_repair']);
