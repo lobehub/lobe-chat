@@ -36,4 +36,36 @@ describe('parseDotenv', () => {
     ];
     expect(parseDotenv(formatDotenv(entries))).toEqual({ entries });
   });
+
+  it.each([
+    'say "hello" C:\\qa',
+    '"quoted"',
+    'both \'single\' and "double" quotes',
+    'line one\nline two\r\nlast',
+    'tab\there',
+    '  padded  ',
+    '\\n is literal',
+    'control\u0000character',
+  ])('should preserve %j across repeated raw editor saves', (value) => {
+    const entries: [string, string][] = [['QA_VALUE', value]];
+    const first = parseDotenv(formatDotenv(entries));
+    expect(first).toEqual({ entries });
+    if ('entries' in first) {
+      expect(parseDotenv(formatDotenv(first.entries))).toEqual({ entries });
+    }
+  });
+
+  it('should retain literal backslashes in single-quoted and unquoted imports', () => {
+    expect(
+      parseDotenv(String.raw`A='C:\test\new'
+B=C:\test\new
+C="C:\qa"`),
+    ).toEqual({
+      entries: [
+        ['A', String.raw`C:\test\new`],
+        ['B', String.raw`C:\test\new`],
+        ['C', String.raw`C:\qa`],
+      ],
+    });
+  });
 });

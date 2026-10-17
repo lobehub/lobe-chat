@@ -62,7 +62,9 @@ type Entry = [string, string];
 /**
  * Parse `.env`-style text: one `KEY=value` per line, blank lines and `#`
  * comments skipped, an optional `export ` prefix and a matching pair of quotes
- * around the value dropped. Later lines win over earlier ones with the same
+ * around the value dropped. Double-quoted JSON strings decode the escapes the
+ * raw editor writes; other quoted values keep their literal contents.
+ * Later lines win over earlier ones with the same
  * key, as they would when a shell sources the file.
  *
  * @returns the entries, or the 1-based number of the first line that is not a
@@ -78,7 +80,19 @@ export const parseDotenv = (text: string): { entries: Entry[] } | { line: number
     if (!match) return { line: index + 1 };
     let value = match[2].trim();
     if (value.length >= 2 && (value[0] === '"' || value[0] === "'") && value.at(-1) === value[0]) {
-      value = value.slice(1, -1);
+      if (value[0] === '"') {
+        try {
+          // formatDotenv writes JSON strings, so merely stripping the quotes
+          // would add another layer of backslashes on every unchanged save.
+          value = JSON.parse(value) as string;
+        } catch {
+          // Imported .env values need not be JSON (e.g. "C:\\qa"). Keep the
+          // existing literal interpretation instead of losing unknown escapes.
+          value = value.slice(1, -1);
+        }
+      } else {
+        value = value.slice(1, -1);
+      }
     }
     entries.set(match[1], value);
   }
