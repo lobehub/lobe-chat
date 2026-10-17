@@ -94,7 +94,7 @@ const DeviceStatusSection = memo<DeviceStatusSectionProps>(({ active, deviceId }
   const { t: tCommon } = useTranslation('common');
   const bound = useBoundDevice(deviceId, active);
   const device = bound.status === 'ready' ? bound.device : undefined;
-  const { data, error } = useDeviceMetricSeries(deviceId, active && !!device);
+  const { data, error } = useDeviceMetricSeries(deviceId, device?.scope, active && !!device);
 
   if (bound.status === 'loading')
     return (
