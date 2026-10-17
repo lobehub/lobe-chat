@@ -6,6 +6,7 @@
  *   bun run stylex:migration --json          # full per-file report
  *   bun run stylex:migration --prune-legacy  # drop migrated files from legacyFiles.json
  *   bun run stylex:migration --baseline <distDir> [html]  # sizes of a built SPA
+ *   bun run stylex:migration --codemod [--tier A,B] [--path <prefix>]… [--dry]
  *
  * legacyFiles.json is the ESLint allowlist for emotion style imports. It only
  * shrinks: pruning keeps files that still use them and never adds new ones.
@@ -16,6 +17,7 @@ import path from 'node:path';
 
 import { formatBaseline, measureBuild } from './baseline';
 import { classifySource, type StyleFileReport } from './classify';
+import { runCodemod, summarizeSkips } from './codemod';
 
 const repoRoot = path.resolve(import.meta.dirname, '../..');
 export const legacyFilesPath = path.join(import.meta.dirname, 'legacyFiles.json');
@@ -86,7 +88,34 @@ const printSummary = (reports: FileReport[]) => {
   }
 };
 
-const main = () => {
+const optionValues = (args: string[], flag: string) =>
+  args.flatMap((arg, i) => (arg === flag && args[i + 1] ? [args[i + 1]] : []));
+
+const codemod = async (args: string[], reports: FileReport[]) => {
+  const tiers = new Set((optionValues(args, '--tier')[0] ?? 'A,B').split(','));
+  const prefixes = optionValues(args, '--path');
+  const files = reports
+    .filter((r) => tiers.has(r.tier))
+    .filter((r) => prefixes.length === 0 || prefixes.some((p) => r.file.startsWith(p)))
+    .map((r) => r.file);
+
+  const report = await runCodemod(repoRoot, files, { write: !args.includes('--dry') });
+  console.log(
+    `converted ${report.converted.length} / ${files.length}, skipped ${report.skipped.length}`,
+  );
+  for (const [reason, count] of summarizeSkips(report.skipped))
+    console.log(`  ${count}\t${reason}`);
+  if (report.review.length > 0) {
+    console.log(`\nreview — cx() merges StyleX classes with an outside className:`);
+    for (const file of report.review) console.log(`  ${file}`);
+  }
+  if (args.includes('--verbose')) {
+    console.log('\nskipped:');
+    for (const { file, reason } of report.skipped) console.log(`  ${file}: ${reason}`);
+  }
+};
+
+const main = async () => {
   const args = process.argv.slice(2);
   const reports = scanRepo();
 
@@ -111,6 +140,11 @@ const main = () => {
     return;
   }
 
+  if (args.includes('--codemod')) {
+    await codemod(args, reports);
+    return;
+  }
+
   if (args.includes('--prune-legacy')) {
     const legacy = readLegacyFiles();
     const stale = new Set(findStaleLegacyFiles(reports, legacy));
@@ -122,4 +156,9 @@ const main = () => {
   printSummary(reports);
 };
 
-if (process.argv[1] && path.resolve(process.argv[1]) === import.meta.filename) main();
+if (process.argv[1] && path.resolve(process.argv[1]) === import.meta.filename) {
+  main().catch((error) => {
+    console.error(error);
+    process.exit(1);
+  });
+}
