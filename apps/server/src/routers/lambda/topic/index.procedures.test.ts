@@ -1,7 +1,7 @@
 // @vitest-environment node
 import { describe, expect, it } from 'vitest';
 
-import { topicRouter } from './topic';
+import { topicRouter } from '.';
 
 /**
  * Pins the router's public surface: every procedure path, its kind, and its

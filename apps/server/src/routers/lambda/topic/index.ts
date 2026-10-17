@@ -45,23 +45,23 @@ import { type BatchTaskResult } from '@/types/service';
 import {
   assertWorkspaceRowManageable,
   shouldRestrictBulkDeleteToCreator,
-} from './_helpers/assertWorkspaceRowManageable';
+} from '../_helpers/assertWorkspaceRowManageable';
 import {
   assertCanUseConversationTargets,
   assertCanUseSessionTargets,
   assertCanUseTopicTargets,
-} from './_helpers/conversationResourceGuard';
+} from '../_helpers/conversationResourceGuard';
 import {
   batchResolveAgentIdFromSessions,
   resolveAgentIdFromSession,
   resolveContext,
   resolveContextWithAgentId,
-} from './_helpers/resolveContext';
+} from '../_helpers/resolveContext';
 import {
   assertCreatorMessageTargets,
   assertCreatorTopicTargets,
-} from './_helpers/shareVisitorTargetGuard';
-import { basicContextSchema } from './_schema/context';
+} from '../_helpers/shareVisitorTargetGuard';
+import { basicContextSchema } from '../_schema/context';
 
 /** Ctx slice consumed by the conversation General-access guards. */
 const guardCtx = (ctx: {
