@@ -457,4 +457,87 @@ describe('McpCtr stdio session reuse (T-801 stateful MCP servers)', () => {
     expect(a.disconnect).toHaveBeenCalledTimes(1);
     expect(b.disconnect).toHaveBeenCalledTimes(1);
   });
+
+  it('defers eviction disconnect until in-flight calls release the shared client (concurrent manifest + tool call)', async () => {
+    // Manifest discovery holds a long-pending listManifests while a tool
+    // call on the same pooled session fails with a transport error. The
+    // eviction must NOT disconnect the shared client mid-manifest: it leaves
+    // the pool immediately, but the disconnect waits for the release.
+    const shared = makeClientInstance('shared');
+    mcpClientMocks.mockReturnValue(shared);
+
+    let releaseManifest!: () => void;
+    shared.listManifests.mockImplementation(
+      () =>
+        new Promise<void>((resolve) => {
+          releaseManifest = resolve;
+        }),
+    );
+
+    const params = {
+      args: '',
+      env: undefined,
+      params: { args: ['--stdio'], command: 'ida-mcp', name: 'ida-mcp' },
+      toolName: 't',
+    } as any;
+
+    const manifestPromise = ctr.getStdioMcpServerManifest(params);
+    await vi.waitFor(() => {
+      expect(shared.listManifests).toHaveBeenCalled();
+    });
+
+    const toolParams = { ...params, toolName: 'explode' } as any;
+    await ctr.runStdioMcpTool(toolParams);
+
+    // Eviction happened (client left the pool) but the disconnect is
+    // deferred while the manifest call still holds its lease.
+    expect(shared.disconnect).not.toHaveBeenCalled();
+
+    void manifestPromise.catch(() => {});
+    releaseManifest!();
+    await manifestPromise.catch(() => {});
+    await vi.waitFor(() => {
+      expect(shared.disconnect).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  it('idle reaper skips sessions with active leases (long call past TTL)', async () => {
+    vi.useFakeTimers();
+    try {
+      const longCall = makeClientInstance('long');
+      mcpClientMocks.mockReturnValue(longCall);
+      longCall.callTool.mockImplementation(
+        () =>
+          new Promise((resolve) => {
+            setTimeout(
+              () =>
+                resolve({
+                  content: [{ text: 'done', type: 'text' }],
+                  isError: false,
+                }),
+              40 * 60 * 1000,
+            );
+          }),
+      );
+
+      const params = {
+        args: '',
+        env: undefined,
+        params: { args: ['--stdio'], command: 'ida-mcp', name: 'ida-mcp' },
+        toolName: 't',
+      } as any;
+
+      const callPromise = ctr.runStdioMcpTool(params);
+      await vi.advanceTimersByTimeAsync(31 * 60 * 1000);
+
+      // Still inside the 40-minute call: the idle sweep (TTL 30 min) must
+      // not reap the session mid-call even though lastUsedAt is stale.
+      expect(longCall.disconnect).not.toHaveBeenCalled();
+
+      await vi.advanceTimersByTimeAsync(40 * 60 * 1000);
+      await callPromise;
+    } finally {
+      vi.useRealTimers();
+    }
+  });
 });

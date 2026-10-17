@@ -293,6 +293,12 @@ export default class McpCtr extends ControllerModule {
 
   private mcpClientLastUsedAt = new Map<string, number>();
 
+  // In-flight call tracking. A lease is held for the duration of each call
+  // running on a pooled client; eviction and idle reaping are deferred while
+  // any lease is active so a shared session is never disconnected mid-call.
+  private mcpClientLeases = new Map<MCPClient, number>();
+  private mcpClientPendingDisconnect = new Set<MCPClient>();
+
   /**
    * App shutdown hook: disconnect every pooled stdio session so no MCP
    * subprocess outlives the desktop process.
@@ -317,6 +323,10 @@ export default class McpCtr extends ControllerModule {
     for (const [key, client] of this.mcpClientPool) {
       const lastUsed = this.mcpClientLastUsedAt.get(key) ?? 0;
       if (!disposeAll && now - lastUsed < McpCtr.MCP_POOL_IDLE_TTL_MS) continue;
+      // A session with active in-flight calls is still working: disconnecting
+      // it mid-call would kill a valid long-running tool invocation (the
+      // idle clock only refreshes at acquisition, not during the call).
+      if (!disposeAll && this.mcpClientLeases.has(client)) continue;
       this.mcpClientPool.delete(key);
       this.mcpClientLastUsedAt.delete(key);
       try {
@@ -377,11 +387,19 @@ export default class McpCtr extends ControllerModule {
     if (!client) return;
     const key = serializeMcpClientParams(params);
     const pooled = this.mcpClientPool.get(key);
-    // Only evict when the failing call actually ran on the pooled instance —
+    // Only evict when the failing call ran on the pooled instance —
     // a concurrent recreate may have already replaced it.
     if (pooled && pooled === client) {
       this.mcpClientPool.delete(key);
       this.mcpClientLastUsedAt.delete(key);
+    }
+    // Defer the disconnect while the client still has in-flight calls:
+    // manifest discovery and tool execution share one pooled session, so an
+    // eviction triggered by one of them must not abort the other mid-call.
+    // The last lease release performs the deferred disconnect.
+    if (this.mcpClientLeases.has(client)) {
+      this.mcpClientPendingDisconnect.add(client);
+      return;
     }
     try {
       await client.disconnect();
@@ -632,6 +650,11 @@ export default class McpCtr extends ControllerModule {
       // its side effect a second time. The failing client is tagged onto
       // the error so eviction carries an identity guard.
       const runOn = async (client: MCPClient) => {
+        // Lease the client for the duration of the call: eviction and idle
+        // reaping are deferred while a lease is active (see evictClient /
+        // reapIdleClients). Release performs a pending eviction disconnect.
+        const leases = this.mcpClientLeases.get(client) ?? 0;
+        this.mcpClientLeases.set(client, leases + 1);
         try {
           const raw = (await client.callTool(toolName, args)) as ToolCallResult;
           const processed = raw.isError
@@ -645,6 +668,19 @@ export default class McpCtr extends ControllerModule {
           throw Object.assign(error instanceof Error ? error : new Error(String(error)), {
             ranOnClient: client,
           });
+        } finally {
+          const remaining = (this.mcpClientLeases.get(client) ?? 1) - 1;
+          if (remaining > 0) this.mcpClientLeases.set(client, remaining);
+          else {
+            this.mcpClientLeases.delete(client);
+            if (this.mcpClientPendingDisconnect.delete(client)) {
+              try {
+                await client.disconnect();
+              } catch (error) {
+                logger.warn('Failed to disconnect evicted MCP client:', error);
+              }
+            }
+          }
         }
       };
 
