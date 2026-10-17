@@ -1,7 +1,7 @@
 // @vitest-environment node
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { stylexProxiedDevCssModuleId } from '../../../plugins/vite/stylex';
+import { stylexProxiedDevCssModuleId } from '../../../plugins/vite/stylexDevCss';
 import { buildAnalyticsConfig, fetchViteDevTemplate, renderSpaHtml } from '.';
 
 describe('renderSpaHtml', () => {
