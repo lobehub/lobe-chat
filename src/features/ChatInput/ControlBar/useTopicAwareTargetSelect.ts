@@ -9,6 +9,7 @@ import { useEffectiveWorkingDirectory } from '@/hooks/useEffectiveWorkingDirecto
 import { localFileService } from '@/services/electron/localFileService';
 import { useChatStore } from '@/store/chat';
 import { topicSelectors } from '@/store/chat/selectors';
+import { getElectronStoreState } from '@/store/electron';
 
 import { moveTopicToTarget } from './moveTopicToTarget';
 import { useCommitWorkingDirectory } from './useCommitWorkingDirectory';
@@ -100,7 +101,7 @@ export const useTopicAwareTargetSelect = ({
     async (target: DeviceExecutionTarget, deviceId?: string, localSandbox?: boolean) => {
       const apply = async () => {
         if (localSandbox) await ensureSandboxWorkingDirectory();
-        await selectExecutionTarget(target, deviceId, { localSandbox });
+        return selectExecutionTarget(target, deviceId, { localSandbox });
       };
 
       const nextMachineId =
@@ -109,11 +110,18 @@ export const useTopicAwareTargetSelect = ({
       // is — leave the topic pin alone rather than unbinding it.
       const machineKnown = target !== 'local' || !!currentDeviceId;
       if (!topicId || !topicDeviceId || !machineKnown || nextMachineId === topicDeviceId) {
-        await apply();
+        const saved = await apply();
         // A topic whose cwd never recorded its machine: this pick is the user
         // naming it, so pin it — nothing on another machine is left behind.
-        if (topicId && topicDeviceUnknown && machineKnown && nextMachineId) {
-          await updateTopicMetadata(topicId, { boundDeviceId: nextMachineId });
+        // Only once the target saved, or topic and agent would disagree; and
+        // `local` pins the stable id, since `currentDeviceId` may still be the
+        // pre-connect fallback.
+        if (saved && topicId && topicDeviceUnknown && machineKnown) {
+          const pinId =
+            target === 'local'
+              ? await getElectronStoreState().resolveGatewayDeviceId()
+              : nextMachineId;
+          if (pinId) await updateTopicMetadata(topicId, { boundDeviceId: pinId });
         }
         return;
       }
