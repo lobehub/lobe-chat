@@ -73,6 +73,40 @@ describe('Verify data hooks', () => {
     expect(getAcceptanceBySubject).toHaveBeenCalledWith('task', 'T-231');
   });
 
+  it('keeps a subject without an acceptance out of loading while it polls', async () => {
+    const getAcceptanceBySubject = vi
+      .spyOn(verifyService, 'getAcceptanceBySubject')
+      .mockResolvedValue(null as never);
+
+    const { result } = renderHook(() => useAcceptanceBySubject('task', 'T-864'), {
+      wrapper: createSWRWrapper(new Map()),
+    });
+
+    expect(result.current.isLoading).toBe(true);
+    await waitFor(() => expect(result.current.isLoading).toBe(false));
+
+    // A background poll of a subject known to have no acceptance must not flip
+    // the caller back to its loading placeholder on every tick.
+    let resolveNext!: (value: null) => void;
+    getAcceptanceBySubject.mockReturnValueOnce(
+      new Promise((resolve) => {
+        resolveNext = resolve;
+      }) as never,
+    );
+    let revalidation!: Promise<unknown>;
+    act(() => {
+      revalidation = result.current.mutate();
+    });
+    await waitFor(() => expect(result.current.isValidating).toBe(true));
+    expect(result.current.isLoading).toBe(false);
+
+    await act(async () => {
+      resolveNext(null);
+      await revalidation;
+    });
+    expect(result.current.isLoading).toBe(false);
+  });
+
   it('forwards the project scope to the acceptance list service', async () => {
     const listAcceptances = vi.spyOn(verifyService, 'listAcceptances').mockResolvedValue([]);
 
