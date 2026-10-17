@@ -3,7 +3,7 @@ import { afterEach, beforeEach, describe, expect, it, type MockInstance, vi } fr
 import { AgentOperationModel } from '@/database/models/agentOperation';
 import { TaskModel } from '@/database/models/task';
 import { CompletionLifecycle } from '@/server/services/agentRuntime/CompletionLifecycle';
-import { TaskService } from '@/server/services/task';
+import { TaskDetailService } from '@/server/services/task/detail';
 
 import { AiAgentService } from '../index';
 
@@ -272,7 +272,7 @@ describe('AiAgentService.execAgent - hetero runs see the task viewed in Tasks', 
       vi.spyOn(TaskModel.prototype, 'resolve').mockResolvedValue({
         id: 'task-row-858',
       } as NonNullable<Awaited<ReturnType<TaskModel['resolve']>>>),
-      vi.spyOn(TaskService.prototype, 'getTaskDetail').mockResolvedValue({
+      vi.spyOn(TaskDetailService.prototype, 'getTaskDetail').mockResolvedValue({
         identifier: 'T-858',
         instruction: 'Make images in the task content draggable',
         name: 'Task content images cannot be dragged',
@@ -311,7 +311,7 @@ describe('AiAgentService.execAgent - hetero runs see the task viewed in Tasks', 
       prompt: 'Which issue are we working on?',
     });
 
-    expect(TaskService.prototype.getTaskDetail).toHaveBeenCalledWith('task-row-858');
+    expect(TaskDetailService.prototype.getTaskDetail).toHaveBeenCalledWith('task-row-858');
     const { agentSystemContext } = mockBuildRemoteDeviceHeteroContext.mock.calls[0][0];
     expect(agentSystemContext).toMatch(/^Agent rules\n\n<page_context>/);
     expect(agentSystemContext).toContain('viewing the detail page of task T-858');
@@ -350,7 +350,7 @@ describe('AiAgentService.execAgent - hetero runs see the task viewed in Tasks', 
       taskId: 'T-858',
     });
 
-    expect(TaskService.prototype.getTaskDetail).not.toHaveBeenCalled();
+    expect(TaskDetailService.prototype.getTaskDetail).not.toHaveBeenCalled();
     expect(mockBuildRemoteDeviceHeteroContext.mock.calls[0][0].agentSystemContext).toBeUndefined();
   });
 });

@@ -1,7 +1,7 @@
 import type { TaskDetailData } from '@lobechat/types';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { TaskService } from '@/server/services/task';
+import { TaskDetailService } from '@/server/services/task/detail';
 
 import { buildViewedTaskContextPrompt, joinSystemContext } from './viewedTaskContext';
 
@@ -20,7 +20,7 @@ describe('buildViewedTaskContextPrompt', () => {
 
   beforeEach(() => {
     getTaskDetail = vi
-      .spyOn(TaskService.prototype, 'getTaskDetail')
+      .spyOn(TaskDetailService.prototype, 'getTaskDetail')
       .mockResolvedValue(taskDetail as never);
   });
 

@@ -2,6 +2,8 @@ import type { LobeChatDatabase } from '@lobechat/database';
 import { buildTaskDetailPrompt, buildTaskManagerDefaultsPrompt } from '@lobechat/prompts';
 import debug from 'debug';
 
+import { TaskDetailService } from '@/server/services/task/detail';
+
 import type { InternalExecAgentParams } from '../types';
 
 const log = debug('lobe-server:ai-agent-service');
@@ -31,11 +33,11 @@ export const buildViewedTaskContextPrompt = async (
 
   if (taskId) {
     try {
-      // Lazy: TaskService imports AiAgentService, which imports this pipeline.
-      const { TaskService } = await import('@/server/services/task');
-      const task = await new TaskService(deps.db, deps.userId, deps.workspaceId).getTaskDetail(
-        taskId,
-      );
+      const task = await new TaskDetailService(
+        deps.db,
+        deps.userId,
+        deps.workspaceId,
+      ).getTaskDetail(taskId);
       if (task) return buildTaskDetailPrompt({ defaultAssigneeAgentId, task });
     } catch (error) {
       log('failed to load viewed task %s: %O', taskId, error);
