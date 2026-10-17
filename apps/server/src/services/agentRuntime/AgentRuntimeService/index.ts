@@ -102,8 +102,8 @@ import {
   stateHasEntityFileEdits,
 } from '@/server/services/workRegistration';
 
-import { resolveMessageFileUrls } from '../message/resolveMessageFileUrls';
-import { isAbortError, throwIfAborted } from './abort';
+import { resolveMessageFileUrls } from '../../message/resolveMessageFileUrls';
+import { isAbortError, throwIfAborted } from '../abort';
 import {
   CompletionLifecycle,
   CriticalAgentInterventionPersistenceError,
@@ -112,20 +112,20 @@ import {
   isAgentShareRun,
   isSuccessLikeCompletionReason,
   normalizeCompletionMessages,
-} from './CompletionLifecycle';
-import { stepChangedCredentials } from './credentialFacts';
-import { logToolCallPc } from './formalObservation';
-import { type AgentHook, hookDispatcher, parseSerializedHooks } from './hooks';
+} from '../CompletionLifecycle';
+import { stepChangedCredentials } from '../credentialFacts';
+import { logToolCallPc } from '../formalObservation';
+import { type AgentHook, hookDispatcher, parseSerializedHooks } from '../hooks';
 import {
   controlDeferredToolResult,
   type DeferredToolResultControlInput,
   loadDurableToolResultHooks,
-} from './hooks/deferredToolResultControl';
-import { HumanInterventionHandler } from './HumanInterventionHandler';
-import { buildProjectedMessagePatch } from './messagePatch';
-import { OperationTraceRecorder } from './OperationTraceRecorder';
-import { createDefaultSnapshotStore } from './snapshotStore';
-import { buildStepPresentation, formatTokenCount } from './stepPresentation';
+} from '../hooks/deferredToolResultControl';
+import { HumanInterventionHandler } from '../HumanInterventionHandler';
+import { buildProjectedMessagePatch } from '../messagePatch';
+import { OperationTraceRecorder } from '../OperationTraceRecorder';
+import { createDefaultSnapshotStore } from '../snapshotStore';
+import { buildStepPresentation, formatTokenCount } from '../stepPresentation';
 import {
   type AgentExecutionParams,
   type AgentExecutionResult,
@@ -143,7 +143,7 @@ import {
   type StartExecutionResult,
   type StepCompletionReason,
   type SubAgentBridgeParams,
-} from './types';
+} from '../types';
 
 if (process.env.VERCEL) {
   // Route debug output to stdout (`console.info`) instead of stderr, which

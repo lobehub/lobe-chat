@@ -9,13 +9,13 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { AgentOperationModel } from '@/database/models/agentOperation';
 
-import { AgentRuntimeService, createEvalToolForwardingHook } from './AgentRuntimeService';
-import { hookDispatcher } from './hooks';
+import { AgentRuntimeService, createEvalToolForwardingHook } from '.';
+import { hookDispatcher } from '../hooks';
 import {
   type AgentExecutionParams,
   type OperationCreationParams,
   type StartExecutionParams,
-} from './types';
+} from '../types';
 
 vi.mock('@lobechat/model-runtime', () => ({
   // RuntimeExecutors (loaded transitively) resolves extend params via this
