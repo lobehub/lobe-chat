@@ -62,7 +62,10 @@ export const useFilesPaneLocation = ({
       : undefined
     : undefined;
 
-  const devicesSettled = useDeviceStore(deviceSelectors.isDeviceListLoaded);
+  // Not `isDeviceListLoaded`: a hydrated copy already counts as loaded but its
+  // `workingDirs` are stale, so treating it as settled would replace the
+  // conversation's remembered directory before the server confirms the list.
+  const devicesSettled = useDeviceStore(deviceSelectors.isDeviceListConfirmed);
   // A sandbox has its own backend, and without a filesystem environment there
   // is nothing this client can read or mutate: never open a remembered path in
   // either case. A device id is still passed while its directory resolves so a

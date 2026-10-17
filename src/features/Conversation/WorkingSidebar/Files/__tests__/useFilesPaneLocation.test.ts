@@ -2,11 +2,15 @@ import { renderHook } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 const captured = vi.hoisted(() => ({ calls: [] as unknown[][] }));
-const device = vi.hoisted(() => ({ loaded: false }));
+const device = vi.hoisted(() => ({ confirmed: false, loaded: false }));
 
 vi.mock('@/store/device', () => ({
-  deviceSelectors: { isDeviceListLoaded: Symbol('isDeviceListLoaded') },
-  useDeviceStore: () => device.loaded,
+  deviceSelectors: {
+    isDeviceListConfirmed: (s: { confirmed: boolean }) => s.confirmed,
+    isDeviceListLoaded: (s: { loaded: boolean }) => s.loaded,
+  },
+  useDeviceStore: (selector: (s: { confirmed: boolean; loaded: boolean }) => boolean) =>
+    selector(device),
 }));
 
 vi.mock('../useRememberedFilesLocation', () => ({
@@ -29,6 +33,7 @@ const base = {
 
 beforeEach(() => {
   captured.calls.length = 0;
+  device.confirmed = false;
   device.loaded = false;
 });
 
@@ -49,6 +54,36 @@ describe('useFilesPaneLocation', () => {
     expect(captured.calls[0][0]).toBeUndefined();
     expect(captured.calls[0][1]).toBeUndefined();
     expect(result.current).toEqual({ deviceId: undefined, directory: '', isSandbox: true });
+  });
+
+  it('waits for a server-confirmed device list before settling the path', () => {
+    // A persisted device list counts as loaded, but its `workingDirs` are
+    // stale. Settling on it would drop the remembered directory before the
+    // server answers, so the hook must pass `settled: false` until confirmed.
+    device.loaded = true;
+    device.confirmed = false;
+
+    renderHook(() =>
+      useFilesPaneLocation({
+        ...base,
+        filesystemEnvironmentAvailable: true,
+        isSandboxExecution: false,
+        workingDirectory: '/from-stale-device-list',
+      }),
+    );
+
+    expect(captured.calls[0][2]).toBe(false);
+
+    device.confirmed = true;
+    renderHook(() =>
+      useFilesPaneLocation({
+        ...base,
+        filesystemEnvironmentAvailable: true,
+        isSandboxExecution: false,
+        workingDirectory: '/from-stale-device-list',
+      }),
+    );
+    expect(captured.calls[1][2]).toBe(true);
   });
 
   it('keeps the known remote host while its directory is still unresolved', () => {
