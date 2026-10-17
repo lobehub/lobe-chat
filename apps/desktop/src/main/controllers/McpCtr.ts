@@ -208,16 +208,18 @@ const serializeMcpClientParams = (params: MCPClientParams): string =>
  * (the tool ran and rejected the arguments, the server returned an error
  * result, post-processing failed, …) must NOT be retried: a mutating tool
  * could apply its side effect (write / delete / send) a second time.
+ *
+ * The signal set is deliberately narrow and mirrors the server-side
+ * `MCPClient.isNoValidSessionError` (src/libs/mcp/client.ts): only the
+ * `MCPConnectionError` transport wrapper and the SDK's exact
+ * "No valid session ID provided" message qualify. Generic JSON-RPC `-32000`
+ * errors are server-side application errors and do NOT trigger a retry.
  */
 const isStaleSessionError = (error: unknown): boolean => {
   if (!error) return false;
   if (error instanceof Error && error.name === 'MCPConnectionError') return true;
-  const code = (error as { code?: unknown } | null)?.code;
-  if (code === -32000) return true; // JSON-RPC transport closed (MCP SDK)
   const message = error instanceof Error ? error.message : String(error);
-  return /connection closed|transport (?:is )?closed|socket closed|channel closed|process exit(?:ed)?|not connected|underlying (?:socket|connection)/i.test(
-    message,
-  );
+  return message.includes('No valid session ID provided');
 };
 
 const toMarkdown = async (
@@ -273,6 +275,7 @@ export default class McpCtr extends ControllerModule {
    * a call fails.
    */
   private mcpClientPool = new Map<string, MCPClient>();
+  private mcpClientInitialization?: Map<string, Promise<MCPClient>>;
 
   private get fileService() {
     return this.app.getService(FileService);
@@ -288,16 +291,37 @@ export default class McpCtr extends ControllerModule {
     const cached = this.mcpClientPool.get(key);
     if (cached) return cached;
 
-    const client = await this.createClient(params);
-    this.mcpClientPool.set(key, client);
-    return client;
+    // Single-flight per key: concurrent manifest discovery + tool call on the
+    // same uncached params must share one initialization, not spawn two
+    // processes where the later map write silently replaces the first
+    // (stranding whatever state the losing client had established).
+    const inFlight = this.mcpClientInitialization?.get(key);
+    if (inFlight) return inFlight;
+
+    const creating = this.createClient(params)
+      .then((client) => {
+        this.mcpClientPool.set(key, client);
+        return client;
+      })
+      .finally(() => {
+        this.mcpClientInitialization?.delete(key);
+      });
+    (this.mcpClientInitialization ??= new Map()).set(key, creating);
+    return creating;
   }
 
   /**
    * Drop a pooled session after a failed call so the next attempt starts
    * fresh. Never throws — the original call error matters more than cleanup.
+   *
+   * Requires the exact client the failed call ran on: without that identity
+   * we must not disconnect anything, or a concurrent same-key recreate (call
+   * B installing its replacement while call A's initialization fails) would
+   * get its live session killed while the pool keeps pointing at it — a
+   * permanently dead pooled entry until restart.
    */
   private async evictClient(params: MCPClientParams, client?: MCPClient): Promise<void> {
+    if (!client) return;
     const key = serializeMcpClientParams(params);
     const pooled = this.mcpClientPool.get(key);
     // Only evict when the failing call actually ran on the pooled instance —
@@ -305,13 +329,10 @@ export default class McpCtr extends ControllerModule {
     if (pooled && pooled === client) {
       this.mcpClientPool.delete(key);
     }
-    const toDisconnect = client ?? pooled;
-    if (toDisconnect) {
-      try {
-        await toDisconnect.disconnect();
-      } catch (error) {
-        logger.warn('Failed to disconnect evicted MCP client:', error);
-      }
+    try {
+      await client.disconnect();
+    } catch (error) {
+      logger.warn('Failed to disconnect evicted MCP client:', error);
     }
   }
 
@@ -591,7 +612,16 @@ export default class McpCtr extends ControllerModule {
         await this.evictClient(params, failedClient);
         const retryClient = await this.createClient(params);
         this.mcpClientPool.set(serializeMcpClientParams(params), retryClient);
-        return await runOn(retryClient);
+        try {
+          return await runOn(retryClient);
+        } catch (retryError) {
+          // The replacement is proven dead too — evict it so the pool does
+          // not hand the next call a doomed session. Identity-guarded: a
+          // concurrent recreate is never touched. The original retry error
+          // still propagates.
+          await this.evictClient(params, retryClient);
+          throw retryError;
+        }
       }
     } catch (error) {
       // If it's an MCPConnectionError with stderr logs, enhance the error message

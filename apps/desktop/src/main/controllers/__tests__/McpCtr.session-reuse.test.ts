@@ -101,9 +101,7 @@ describe('McpCtr stdio session reuse (T-801 stateful MCP servers)', () => {
 
   it('retries on a fresh session after a stale pooled session fails, then keeps pooling', async () => {
     const stale = makeClientInstance('stale');
-    stale.callTool.mockRejectedValue(
-      Object.assign(new Error('Connection closed'), { code: -32000 }),
-    );
+    stale.callTool.mockRejectedValue(new Error('No valid session ID provided'));
     const fresh = makeClientInstance('fresh');
     mcpClientMocks.mockReturnValueOnce(stale).mockReturnValueOnce(fresh).mockReturnValue(fresh);
 
@@ -132,9 +130,7 @@ describe('McpCtr stdio session reuse (T-801 stateful MCP servers)', () => {
   it('propagates the failure when the fresh retry also fails', async () => {
     mcpClientMocks.mockImplementation(() => {
       const failing = makeClientInstance('failing');
-      failing.callTool.mockRejectedValue(
-        Object.assign(new Error('Connection closed'), { code: -32000 }),
-      );
+      failing.callTool.mockRejectedValue(new Error('No valid session ID provided'));
       return failing;
     });
 
@@ -145,7 +141,7 @@ describe('McpCtr stdio session reuse (T-801 stateful MCP servers)', () => {
         params: { args: ['--stdio'], command: 'ida-mcp', name: 'ida-mcp' },
         toolName: 'execute_python',
       } as any),
-    ).rejects.toThrow('Connection closed');
+    ).rejects.toThrow('No valid session ID provided');
   });
 
   it('does NOT retry when the tool itself failed at app level (no double-apply of side effects)', async () => {
@@ -233,5 +229,90 @@ describe('McpCtr stdio session reuse (T-801 stateful MCP servers)', () => {
 
     // Broken session evicted + disconnected, so the next refresh starts fresh.
     expect(seeded.disconnect).toHaveBeenCalledTimes(1);
+  });
+
+  it('does NOT retry on a generic JSON-RPC -32000 app-level error (no double side effects)', async () => {
+    const pooled = makeClientInstance('pooled');
+    // Generic -32000 is the server-side application error range — a mutating
+    // tool may have already applied its effect, so retrying is forbidden.
+    pooled.callTool.mockRejectedValue(
+      Object.assign(new Error('tool execution failed'), { code: -32000 }),
+    );
+    mcpClientMocks.mockReturnValue(pooled);
+
+    await expect(
+      ctr.runStdioMcpTool({
+        args: '',
+        env: undefined,
+        params: { args: ['--stdio'], command: 'ida-mcp', name: 'ida-mcp' },
+        toolName: 'delete_record',
+      } as any),
+    ).rejects.toThrow('tool execution failed');
+
+    // Exactly one invocation, no eviction, no disconnect.
+    expect(pooled.callTool).toHaveBeenCalledTimes(1);
+    expect(pooled.disconnect).not.toHaveBeenCalled();
+    expect(mcpClientMocks).toHaveBeenCalledTimes(1);
+  });
+
+  it('single-flights concurrent same-key initialization (no duplicate stdio processes)', async () => {
+    let releaseGate: () => void = () => {};
+    const gate = new Promise<void>((resolve) => {
+      releaseGate = resolve;
+    });
+    let created = 0;
+    mcpClientMocks.mockImplementation(() => {
+      created += 1;
+      const instance = makeClientInstance(`c${created}`);
+      // Block inside initialize(): the constructor returns synchronously,
+      // initialization is where the (slow) stdio handshake would happen.
+      instance.initialize.mockImplementation(async () => {
+        await gate;
+      });
+      return instance;
+    });
+
+    const params = {
+      args: '',
+      env: undefined,
+      params: { args: ['--stdio'], command: 'ida-mcp', name: 'ida-mcp' },
+      toolName: 'open_database',
+    } as any;
+
+    const first = ctr.runStdioMcpTool(params);
+    // Let the first call reach its pending initialize() before the second.
+    await vi.waitFor(() => expect(mcpClientMocks).toHaveBeenCalledTimes(1));
+    const second = ctr.runStdioMcpTool(params);
+
+    // Release the gate; both calls must share the one client.
+    releaseGate();
+    await Promise.all([first, second]);
+
+    // Only one MCPClient was ever constructed for both concurrent calls.
+    expect(mcpClientMocks).toHaveBeenCalledTimes(1);
+  });
+
+  it('evicts the replacement session when its retry also fails (pool never serves a dead client)', async () => {
+    const stale = makeClientInstance('stale');
+    stale.callTool.mockRejectedValue(new Error('No valid session ID provided'));
+    const replacement = makeClientInstance('replacement');
+    replacement.callTool.mockRejectedValue(new Error('No valid session ID provided'));
+    mcpClientMocks
+      .mockReturnValueOnce(stale)
+      .mockReturnValueOnce(replacement)
+      .mockReturnValue(replacement);
+
+    await expect(
+      ctr.runStdioMcpTool({
+        args: '',
+        env: undefined,
+        params: { args: ['--stdio'], command: 'ida-mcp', name: 'ida-mcp' },
+        toolName: 'execute_python',
+      } as any),
+    ).rejects.toThrow('No valid session ID provided');
+
+    // Both the stale session and the proven-dead replacement were evicted.
+    expect(stale.disconnect).toHaveBeenCalledTimes(1);
+    expect(replacement.disconnect).toHaveBeenCalledTimes(1);
   });
 });
