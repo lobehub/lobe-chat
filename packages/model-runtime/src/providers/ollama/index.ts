@@ -101,9 +101,19 @@ export class LobeOllamaAI implements LobeRuntimeAI {
     const { messages, model, schema, thinking, tools } = payload;
     if (!tools && !schema) throw new Error('tools or schema is required');
 
+    // `client.abort()` only reaches streamed requests, so a cancelled structured
+    // call gets a one-off client whose fetch carries the caller's signal.
+    const signal = options?.signal;
+    const client = signal
+      ? new Ollama({
+          fetch: (input, init) => fetch(input, { ...init, signal }),
+          ...(this.baseURL && { host: this.baseURL }),
+        })
+      : this.client;
+
     let response: ChatResponse;
     try {
-      response = await this.client.chat({
+      response = await client.chat({
         format: tools ? undefined : schema!.schema,
         messages,
         model,

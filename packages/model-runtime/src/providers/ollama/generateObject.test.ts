@@ -150,6 +150,30 @@ describe('LobeOllamaAI.generateObject', () => {
     ).rejects.toMatchObject({ errorType: AgentRuntimeErrorType.OllamaBizError });
   });
 
+  // Regression: a non-streamed Ollama call is out of `client.abort()`'s reach, so a
+  // cancelled relayed structured call used to keep Ollama generating until it finished.
+  it('sends the request with the caller abort signal', async () => {
+    vi.mocked(Ollama.prototype.chat).mockResolvedValue({
+      message: { content: '{"title":"x"}', role: 'assistant' },
+    } as any);
+    const fetchSpy = vi.spyOn(globalThis, 'fetch').mockResolvedValue(new Response('{}'));
+    const controller = new AbortController();
+
+    await ollamaAI.generateObject(
+      { messages: [{ content: 'hi', role: 'user' }], model: 'qwen3:1.7b', schema },
+      { signal: controller.signal },
+    );
+
+    const config = vi.mocked(Ollama).mock.calls.at(-1)?.[0];
+    expect(config).toMatchObject({ host: 'http://localhost:11434' });
+    await config?.fetch?.('http://localhost:11434/api/chat', { method: 'POST' });
+    expect(fetchSpy).toHaveBeenCalledWith(
+      'http://localhost:11434/api/chat',
+      expect.objectContaining({ method: 'POST', signal: controller.signal }),
+    );
+    fetchSpy.mockRestore();
+  });
+
   it('requires a schema or tools', async () => {
     await expect(
       ollamaAI.generateObject({ messages: [{ content: 'hi', role: 'user' }], model: 'x' }),
