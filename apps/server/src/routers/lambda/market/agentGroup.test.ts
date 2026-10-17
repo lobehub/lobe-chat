@@ -1,4 +1,6 @@
 // @vitest-environment node
+import { MarketAPIError } from '@lobehub/market-sdk';
+import { TRPCError } from '@trpc/server';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { agentGroupRouter } from './agentGroup';
@@ -6,6 +8,7 @@ import { agentGroupRouter } from './agentGroup';
 const { mockMarketSDK } = vi.hoisted(() => ({
   mockMarketSDK: {
     agentGroups: {
+      deprecate: vi.fn(),
       getAgentGroupDetail: vi.fn(),
     },
     headers: {} as Record<string, string>,
@@ -125,4 +128,43 @@ describe('agentGroupRouter.checkOwnership', () => {
       originalGroup: null,
     });
   });
+});
+
+describe('agentGroupRouter.deprecateAgentGroup', () => {
+  let fetchSpy: ReturnType<typeof vi.spyOn>;
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+    fetchSpy = vi.spyOn(globalThis, 'fetch' as never);
+    mockMarketSDK.agentGroups.deprecate.mockResolvedValue({ success: true });
+  });
+
+  it('deprecates through the Market SDK instead of the removed /deprecate route', async () => {
+    const caller = agentGroupRouter.createCaller({ serverDB: {}, userId: 'user-1' } as any);
+
+    const result = await caller.deprecateAgentGroup({ identifier: 'group-1' });
+
+    expect(mockMarketSDK.agentGroups.deprecate).toHaveBeenCalledWith('group-1');
+    expect(fetchSpy).not.toHaveBeenCalled();
+    expect(result).toEqual({ success: true });
+  });
+
+  it('maps a Market 404 to NOT_FOUND', async () => {
+    mockMarketSDK.agentGroups.deprecate.mockRejectedValue(new MarketAPIError(404, 'Not Found'));
+    const caller = agentGroupRouter.createCaller({ serverDB: {}, userId: 'user-1' } as any);
+
+    const error = await caller.deprecateAgentGroup({ identifier: 'missing' }).catch((e) => e);
+
+    expect(error).toBeInstanceOf(TRPCError);
+    expect(error.code).toBe('NOT_FOUND');
+  });
+});
+
+describe('agentGroupRouter removed procedures', () => {
+  it.each(['publishAgentGroup', 'unpublishAgentGroup'])(
+    'does not expose %s, which called a Market route that no longer exists',
+    (name) => {
+      expect(Object.keys(agentGroupRouter._def.procedures)).not.toContain(name);
+    },
+  );
 });
