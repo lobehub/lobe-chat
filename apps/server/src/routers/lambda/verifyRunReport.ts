@@ -1,5 +1,6 @@
 import type { LobeChatDatabase } from '@lobechat/database';
 import { asc, eq } from 'drizzle-orm';
+import pMap from 'p-map';
 import { z } from 'zod';
 
 import { WorkspaceMemberModel } from '@/database/models/workspaceMember';
@@ -15,6 +16,9 @@ import { serverDatabase } from '@/libs/trpc/lambda/middleware';
 import { createEvidenceFileResolver } from '@/server/services/verify';
 
 const publicVerifyReportProcedure = publicProcedure.use(serverDatabase);
+
+// A run's check results and their evidence are runtime-sized; cap the per-row reads.
+const EVIDENCE_LOAD_CONCURRENCY = 5;
 
 const verifyRunIdInputSchema = z.object({ verifyRunId: z.string() });
 
@@ -92,8 +96,9 @@ export const verifyRunReportProcedures = {
         run.workspaceId ?? undefined,
       );
 
-      const resultsWithEvidence = await Promise.all(
-        results.map(async (r) => {
+      const resultsWithEvidence = await pMap(
+        results,
+        async (r) => {
           const evidence = await ctx.serverDB
             .select()
             .from(verifyEvidence)
@@ -101,11 +106,14 @@ export const verifyRunReportProcedures = {
             .orderBy(asc(verifyEvidence.createdAt));
           return {
             ...r,
-            evidence: await Promise.all(
-              evidence.map(async (e) => ({ ...e, ...(await resolveFileMeta(e.fileId)) })),
+            evidence: await pMap(
+              evidence,
+              async (e) => ({ ...e, ...(await resolveFileMeta(e.fileId)) }),
+              { concurrency: EVIDENCE_LOAD_CONCURRENCY },
             ),
           };
-        }),
+        },
+        { concurrency: EVIDENCE_LOAD_CONCURRENCY },
       );
       return { isOwner, report: report ?? null, results: resultsWithEvidence, run };
     }),
