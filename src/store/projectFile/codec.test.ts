@@ -99,6 +99,31 @@ describe('project index codec', () => {
     ]);
   });
 
+  it('caps a large index in source order without reordering the tree', () => {
+    const entries = Array.from({ length: 25_050 }, (_, index) => {
+      const relativePath = `${'deep/'.repeat(index % 5)}f${index}`;
+
+      return {
+        isDirectory: false,
+        name: `f${index}`,
+        path: `/repo/${relativePath}`,
+        relativePath,
+      };
+    });
+
+    const encoded = encodeProjectIndex({ ...index, entries }, 20_000);
+    const keptPaths = encoded.entries.map(([relativePath]) => relativePath as string);
+
+    expect(keptPaths).toHaveLength(20_000);
+    // Every root-level entry survives, and the retained entries keep the
+    // source order the tree renders in.
+    const rootPaths = entries.filter((entry) => !entry.relativePath.includes('/'));
+    for (const entry of rootPaths) expect(keptPaths).toContain(entry.relativePath);
+    const sourceIndex = new Map(entries.map((entry, i) => [entry.relativePath, i]));
+    const keptIndexes = keptPaths.map((path) => sourceIndex.get(path)!);
+    expect(keptIndexes).toEqual([...keptIndexes].sort((a, b) => a - b));
+  });
+
   it('marks a capped tree as partial, and keeps it partial when written back', () => {
     expect(isPersistedPartialIndex(decodeProjectIndex(encodeProjectIndex(index)))).toBe(false);
 

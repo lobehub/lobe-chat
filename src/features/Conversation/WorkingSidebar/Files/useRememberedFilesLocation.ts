@@ -1,6 +1,7 @@
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 
 import { cacheScope } from '@/libs/replica';
+import { useIsScopeTrusted } from '@/libs/swr/useCacheScope';
 import {
   type FilesLocation,
   peekFilesLocation,
@@ -48,18 +49,30 @@ export const useRememberedFilesLocation = (
     [contextKey, scope, stored],
   );
   const remembered = stored ?? peeked;
+  const scopeTrusted = useIsScopeTrusted();
+  const wasTrusted = useRef(scopeTrusted);
 
   const resolvedDirectory = resolved?.directory;
   const resolvedDeviceId = resolved?.deviceId;
   useEffect(() => {
+    const trustJustResolved = scopeTrusted && !wasTrusted.current;
+    wasTrusted.current = scopeTrusted;
+    // Before identity resolves the engine drops the write; the value still
+    // lands in memory, so the equality check below would otherwise keep the
+    // row out of storage for the rest of the session.
+    if (!scopeTrusted) return;
     if (!contextKey || !settled || resolvedDirectory === undefined) return;
-    if (remembered?.directory === resolvedDirectory && remembered?.deviceId === resolvedDeviceId)
+    if (
+      !trustJustResolved &&
+      remembered?.directory === resolvedDirectory &&
+      remembered?.deviceId === resolvedDeviceId
+    )
       return;
     projectFileActions.rememberFilesLocation(contextKey, {
       deviceId: resolvedDeviceId,
       directory: resolvedDirectory,
     });
-  }, [contextKey, remembered, resolvedDeviceId, resolvedDirectory, settled]);
+  }, [contextKey, remembered, resolvedDeviceId, resolvedDirectory, scopeTrusted, settled]);
 
   if (settled) return resolved;
   return remembered ?? resolved;

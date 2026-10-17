@@ -4,11 +4,13 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { FilesLocation } from '../useRememberedFilesLocation';
 
 const scope = vi.hoisted(() => ({ current: 'u1:personal' }));
+const trusted = vi.hoisted(() => ({ current: true }));
 
 vi.mock('@/libs/swr/useCacheScope', () => ({
   getCacheScope: () => scope.current,
-  isScopeTrusted: () => true,
+  isScopeTrusted: () => trusted.current,
   useCacheScope: () => scope.current,
+  useIsScopeTrusted: () => trusted.current,
 }));
 
 interface Props {
@@ -42,6 +44,7 @@ const remember = async (contextKey: string, location: FilesLocation) => {
 
 beforeEach(() => {
   scope.current = 'u1:personal';
+  trusted.current = true;
   localStorage.clear();
 });
 
@@ -152,5 +155,22 @@ describe('useRememberedFilesLocation', () => {
     const { result } = await boot({ resolved: { directory: '' }, settled: false });
 
     expect(result.current).toEqual({ directory: '' });
+  });
+
+  it('writes the location again once identity resolves', async () => {
+    trusted.current = false;
+    const view = await boot({
+      contextKey: 'topic/t1',
+      resolved: { directory: '/repo' },
+      settled: true,
+    });
+    // The engine drops the write while the scope is untrusted, even though the
+    // value is already in memory.
+    await new Promise((resolve) => setTimeout(resolve, 50));
+    expect(storedRows()).toHaveLength(0);
+
+    trusted.current = true;
+    view.rerender({ contextKey: 'topic/t1', resolved: { directory: '/repo' }, settled: true });
+    await waitFor(() => expect(storedRows().length).toBeGreaterThan(0));
   });
 });

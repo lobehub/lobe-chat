@@ -108,16 +108,43 @@ const decodeEntry = (root: string, encoded: EncodedEntry): ProjectFileIndexEntry
  * Keep the shallowest `max` entries, in their original order. A tree cut by
  * depth still renders every visible top-level row correctly; one cut by list
  * position would drop whole sibling folders from the root.
+ *
+ * Linear in the entry count: a repository can hold hundreds of thousands of
+ * paths, and sorting the whole index on the renderer after every revalidation
+ * would cost more than the read it is trying to make cheap. Count by depth,
+ * find the depth that fills the cap, then take the entries in source order.
  */
 const keepShallowest = (entries: ProjectFileIndexEntry[], max: number) => {
   if (entries.length <= max) return entries;
-  const ranked = entries
-    .map((entry, index) => ({ depth: depthOf(entry.relativePath), index }))
-    .sort((a, b) => a.depth - b.depth || a.index - b.index)
-    .slice(0, max)
-    .map(({ index }) => index)
-    .sort((a, b) => a - b);
-  return ranked.map((index) => entries[index]);
+
+  const depths = new Uint32Array(entries.length);
+  let maxDepth = 0;
+  for (let i = 0; i < entries.length; i++) {
+    const depth = depthOf(entries[i].relativePath);
+    depths[i] = depth;
+    if (depth > maxDepth) maxDepth = depth;
+  }
+
+  const counts = new Uint32Array(maxDepth + 1);
+  for (let i = 0; i < depths.length; i++) counts[depths[i]] += 1;
+
+  let remaining = max;
+  let cutoff = 0;
+  while (cutoff <= maxDepth && counts[cutoff] < remaining) {
+    remaining -= counts[cutoff];
+    cutoff += 1;
+  }
+
+  const kept: ProjectFileIndexEntry[] = [];
+  for (let i = 0; i < entries.length && kept.length < max; i++) {
+    const depth = depths[i];
+    if (depth < cutoff) kept.push(entries[i]);
+    else if (depth === cutoff && remaining > 0) {
+      kept.push(entries[i]);
+      remaining -= 1;
+    }
+  }
+  return kept;
 };
 
 /**
