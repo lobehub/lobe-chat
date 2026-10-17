@@ -27,4 +27,13 @@ describe('buildLinearInstallHref', () => {
     expect(href.searchParams.get('workspaceId')).toBe('ws_1');
     expect(href.searchParams.get('returnTo')).toBe('/acme/settings/integrations/linear');
   });
+
+  it('starts a cloud-gateway install on the app login origin', () => {
+    const href = new URL(
+      buildLinearInstallHref(PATH, { appOrigin: 'https://lobehub.com/', workspaceSlug: 'acme' })!,
+    );
+    expect(href.origin).toBe('https://app.lobehub.com');
+    expect(href.pathname).toBe(PATH);
+    expect(href.searchParams.get('returnTo')).toBe('/acme/settings/integrations/linear');
+  });
 });

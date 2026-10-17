@@ -1,5 +1,7 @@
 import urlJoin from 'url-join';
 
+import { integrationInstallOrigin } from '@/utils/integrationInstallOrigin';
+
 /** Where the OAuth callback sends the user back to. */
 export const LINEAR_RETURN_TO = '/settings/integrations/linear';
 
@@ -29,5 +31,5 @@ export const buildLinearInstallHref = (
   });
   if (workspaceId) query.set('workspaceId', workspaceId);
 
-  return `${urlJoin(appOrigin, installPath)}?${query}`;
+  return `${urlJoin(integrationInstallOrigin(appOrigin), installPath)}?${query}`;
 };
