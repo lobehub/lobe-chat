@@ -15,6 +15,7 @@ import { ContainerIcon, PlusIcon, RefreshCwIcon } from 'lucide-react';
 import { memo, type ReactNode, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { useActiveWorkspaceId } from '@/business/client/hooks/useActiveWorkspaceId';
 import AsyncBoundary from '@/components/AsyncBoundary';
 import ListSkeleton from '@/components/ListSkeleton';
 
@@ -99,17 +100,17 @@ interface EnvironmentManagerProps {
 
 const EnvironmentManager = memo<EnvironmentManagerProps>(({ tabs, visibility }) => {
   const { t } = useTranslation('setting');
+  const workspaceId = useActiveWorkspaceId();
   const { data, error, isValidating, mutate } = useEnvironments(visibility);
   const { data: instanceData, mutate: refreshInstances } = useInstances();
   const { refresh: refreshUsage } = useWorkspaceUsage();
   const { buildInstance } = useEnvironmentActions();
 
   const [selectedId, setSelectedId] = useState<string>();
-  const { refresh, refreshing, usageError } = useEnvironmentRefresh({
-    environments: mutate,
-    instances: refreshInstances,
-    usage: refreshUsage,
-  });
+  const { refresh, refreshing, usageError } = useEnvironmentRefresh(
+    { environments: mutate, instances: refreshInstances, usage: refreshUsage },
+    workspaceId,
+  );
   /**
    * Whether the first fetch of THIS mount has come back.
    *

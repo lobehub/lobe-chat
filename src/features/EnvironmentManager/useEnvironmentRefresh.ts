@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useLayoutEffect, useRef, useState } from 'react';
 
 interface RefreshActions {
   environments: () => Promise<unknown>;
@@ -7,11 +7,21 @@ interface RefreshActions {
 }
 
 // Manual refresh owns its spinner and per-resource errors; background SWR reads do not.
-export const useEnvironmentRefresh = (actions: RefreshActions) => {
+export const useEnvironmentRefresh = (
+  actions: RefreshActions,
+  workspaceId: string | null = null,
+) => {
   const [refreshing, setRefreshing] = useState(false);
   const [usageError, setUsageError] = useState(false);
 
   const latestRefresh = useRef(0);
+
+  useLayoutEffect(() => {
+    // Invalidate even A → B → A, and reset before the new workspace is painted.
+    latestRefresh.current += 1;
+    setRefreshing(false);
+    setUsageError(false);
+  }, [workspaceId]);
 
   const refresh = async () => {
     const invocation = ++latestRefresh.current;

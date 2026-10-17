@@ -91,6 +91,50 @@ describe('manual environment refresh', () => {
     expect(result.current.refreshing).toBe(false);
   });
 
+  it('clears a failed workspace refresh when the workspace changes', async () => {
+    vi.spyOn(console, 'error').mockImplementation(() => {});
+    const requests = actions();
+    requests.usage.mockRejectedValueOnce(new Error('workspace A failed'));
+    const { result, rerender } = renderHook(({ scope }) => useEnvironmentRefresh(requests, scope), {
+      initialProps: { scope: 'workspace-A' },
+    });
+    await act(async () => {
+      await result.current.refresh();
+    });
+    expect(result.current.usageError).toBe(true);
+    rerender({ scope: 'workspace-B' });
+    expect(result.current.usageError).toBe(false);
+    expect(result.current.refreshing).toBe(false);
+  });
+
+  it('ignores an in-flight refresh from a previous workspace, including A to B to A', async () => {
+    vi.spyOn(console, 'error').mockImplementation(() => {});
+    const requests = actions();
+    let finish!: () => void;
+    requests.environments.mockReturnValueOnce(
+      new Promise<void>((resolve) => {
+        finish = resolve;
+      }),
+    );
+    requests.usage.mockRejectedValueOnce(new Error('old workspace A failed'));
+    const { result, rerender } = renderHook(({ scope }) => useEnvironmentRefresh(requests, scope), {
+      initialProps: { scope: 'workspace-A' },
+    });
+    let pending!: Promise<void>;
+    await act(async () => {
+      pending = result.current.refresh();
+    });
+    rerender({ scope: 'workspace-B' });
+    expect(result.current.refreshing).toBe(false);
+    rerender({ scope: 'workspace-A' });
+    await act(async () => {
+      finish();
+      await pending;
+    });
+    expect(result.current.usageError).toBe(false);
+    expect(result.current.refreshing).toBe(false);
+  });
+
   it('accepts a successful null result for an account without storage', async () => {
     const requests = actions();
     requests.usage.mockResolvedValueOnce(null);
