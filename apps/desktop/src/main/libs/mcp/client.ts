@@ -1,3 +1,4 @@
+import { spawn } from 'node:child_process';
 import type { Readable } from 'node:stream';
 
 import { Client } from '@modelcontextprotocol/sdk/client/index.js';
@@ -26,12 +27,120 @@ export class MCPConnectionError extends Error {
   }
 }
 
+/**
+ * Known Windows loader error messages surfaced when a shim/script target path
+ * does not exist (reported in the user's locale, e.g. pt-BR
+ * "O sistema não pode encontrar o caminho especificado").
+ */
+const WINDOWS_PATH_NOT_FOUND_PATTERNS = [
+  '找不到指定的路径', // zh-CN
+  '找不到指定的文件', // zh-CN (file variant)
+  'The system cannot find the path specified', // en-US
+  'The system cannot find the file specified', // en-US (file variant)
+  'não pode encontrar o caminho especificado', // pt-BR
+  'no se puede encontrar la ruta especificada', // es-419
+  'Das System kann den angegebenen Pfad nicht finden', // de-DE
+  '指定されたパスが見つかりません', // ja-JP
+  '지정된 경로를 찾을 수 없습니다', // ko-KR
+];
+
+export interface StdioSpawnFailureInput {
+  args?: string[];
+  command: string;
+  /** errno for spawn 'error' events (negative on Windows, e.g. -4058) */
+  errno?: number;
+  exitCode?: number | null;
+  message?: string;
+  /** Termination signal when the process was killed by one (e.g. SIGTERM) */
+  signal?: NodeJS.Signals | null;
+  /** Node spawn error code, e.g. ENOENT / EACCES / EPERM */
+  spawnCode?: string | null;
+  stderr?: string;
+}
+
+/**
+ * Build a user-actionable diagnosis for a failed stdio MCP process spawn.
+ * Pure function (no I/O) so it can be unit-tested in isolation.
+ *
+ * Real-world shape (vent msg_PjF7YECkH0nA67ddyY): five Kali MCP connectors on a
+ * Windows host all fail with "MCP error -32000: Connection closed" plus the
+ * loader message "O sistema não pode encontrar o caminho especificado" — the
+ * SDK spawns with `shell: false`, so the configured command/its shim must
+ * resolve to a real executable; a broken install or a stale PATH surfaces as
+ * an immediate process exit with that stderr, and previously users only saw
+ * the bare -32000 with nothing actionable.
+ */
+export function describeStdioSpawnFailure(input: StdioSpawnFailureInput): string {
+  const { command } = input;
+  const stderr = (input.stderr || '').trim();
+  const spawnCode = input.spawnCode || null;
+  const errno = typeof input.errno === 'number' ? input.errno : undefined;
+
+  // Windows spawns can fail with a numeric errno and no symbolic code
+  const codeIsNotFound = spawnCode === 'ENOENT' || errno === -4058 || errno === 4058;
+  const codeIsPermission = spawnCode === 'EACCES' || spawnCode === 'EPERM';
+
+  if (codeIsNotFound) {
+    return (
+      `MCP server executable not found: "${command}". ` +
+      'Verify the command exists on this machine (check the configured PATH) and install the package it needs ' +
+      '(e.g. `npm install -g <package>` or `pip install <package>`). ' +
+      'On Windows, `npx`/`.cmd` shims cannot be spawned directly — configure the real executable instead ' +
+      '(e.g. `node <path>\\server.js` or `<path>\\python.exe -m <module>`).'
+    );
+  }
+
+  if (codeIsPermission) {
+    return (
+      `MCP server executable is not executable: "${command}". ` +
+      'Check file permissions (on macOS/Linux: `chmod +x <file>`) or antivirus/security-software blocks.'
+    );
+  }
+
+  const windowsPathNotFound = WINDOWS_PATH_NOT_FOUND_PATTERNS.some((pattern) =>
+    stderr.toLowerCase().includes(pattern.toLowerCase()),
+  );
+
+  if (windowsPathNotFound) {
+    return (
+      `MCP server "${command}" failed to start: the loader reported "path not found" (see the process output below). ` +
+      'The configured command or one of its script/shim targets does not exist on this machine. ' +
+      'Reinstall the MCP server package, or fix the configured command/args to point at an existing executable. ' +
+      'On Windows, `npx`/`.cmd` shims require the target script to exist — prefer the real executable path.'
+    );
+  }
+
+  if (input.exitCode !== undefined && input.exitCode !== null && input.exitCode !== 0) {
+    return (
+      `MCP server "${command}" exited immediately with code ${input.exitCode}` +
+      `${input.signal ? ` (signal ${input.signal})` : ''}` +
+      ". Check the process output below and the server's installation requirements."
+    );
+  }
+
+  if (stderr) {
+    return `MCP server "${command}" failed to start. Check the process output below.`;
+  }
+
+  return (
+    `MCP server "${command}" failed to start and produced no output. ` +
+    'Verify the command exists on this machine (check the configured PATH) and install the package it needs ' +
+    '(e.g. `npm install -g <package>` or `pip install <package>`).'
+  );
+}
+
 export class MCPClient {
   private readonly mcp: Client;
 
   private transport: Transport;
   private stderrLogs: string[] = [];
   private isStdio: boolean = false;
+  /**
+   * Kept for post-failure diagnostics: `StdioClientTransport` does not expose
+   * its server params, and re-spawning the command after a bare
+   * "Connection closed" is the only way to surface an actionable error.
+   */
+  private stdioParams?: { args?: string[]; command: string; env?: Record<string, string> };
 
   constructor(params: MCPClientParams) {
     this.mcp = new Client({ name: 'lobehub-desktop-mcp-client', version: '1.0.0' });
@@ -58,6 +167,11 @@ export class MCPClient {
 
       case 'stdio': {
         this.isStdio = true;
+        this.stdioParams = {
+          args: params.args,
+          command: params.command,
+          env: params.env,
+        };
         const stdioTransport = new StdioClientTransport({
           args: params.args,
           command: params.command,
@@ -77,7 +191,7 @@ export class MCPClient {
 
       default: {
         // Exhaustive check
-         
+
         const _never: never = params;
         throw new Error(`Unsupported MCP connection type: ${(params as any).type}`);
       }
@@ -103,10 +217,139 @@ export class MCPClient {
     return this.stderrLogs;
   }
 
+  /**
+   * Re-run the stdio command out-of-band to capture the concrete startup
+   * failure. `StdioClientTransport.start()` rejects with the bare transport
+   * error ("Connection closed", SDK error -32000) and when the process dies
+   * instantly there is often no stderr flowing through the transport's pipe
+   * yet — leaving users with nothing actionable. Mirrors the web app's
+   * `preCheckStdioCommand` (src/libs/mcp/client.ts).
+   */
+  private preCheckStdioCommand(params: {
+    args?: string[];
+    command: string;
+    env?: Record<string, string>;
+  }): Promise<{ diagnosis: string; stderr: string; success: boolean }> {
+    return new Promise((resolve) => {
+      // Do NOT spread the full process.env here: only the SDK's safe defaults
+      // plus user-configured vars, matching the main StdioClientTransport.
+      const env = {
+        ...getDefaultEnvironment(),
+        ...params.env,
+      } as NodeJS.ProcessEnv;
+
+      let child: ReturnType<typeof spawn>;
+      try {
+        child = spawn(params.command, params.args ?? [], {
+          env,
+          stdio: ['pipe', 'pipe', 'pipe'],
+        });
+      } catch (error) {
+        // spawn() can throw synchronously (e.g. invalid args) — normalize it
+        const err = error as NodeJS.ErrnoException;
+        resolve({
+          diagnosis: describeStdioSpawnFailure({
+            command: params.command,
+            errno: err.errno,
+            message: err.message,
+            spawnCode: err.code,
+          }),
+          stderr: '',
+          success: false,
+        });
+        return;
+      }
+
+      let stdout = '';
+      let stderr = '';
+      let resolved = false;
+
+      const finish = (result: { diagnosis: string; stderr: string; success: boolean }) => {
+        if (!resolved) {
+          resolved = true;
+          clearTimeout(timeout);
+          resolve(result);
+        }
+      };
+
+      // Give the process a short window to either complete the MCP handshake
+      // (exit 0 in pre-check terms) or fail with a diagnosable error.
+      const timeout = setTimeout(() => {
+        if (!resolved) {
+          child.kill('SIGTERM');
+          // Still running after 5s: treat as healthy-enough; the original
+          // connection error is the real failure and should surface as-is.
+          finish({ diagnosis: '', stderr, success: true });
+        }
+      }, 5000);
+
+      child.stdout?.on('data', (data) => {
+        stdout += data.toString();
+      });
+
+      child.stderr?.on('data', (data) => {
+        stderr += data.toString();
+      });
+
+      child.on('error', (error: NodeJS.ErrnoException) => {
+        finish({
+          diagnosis: describeStdioSpawnFailure({
+            command: params.command,
+            errno: error.errno,
+            message: error.message,
+            spawnCode: error.code,
+          }),
+          stderr,
+          success: false,
+        });
+      });
+
+      child.on('exit', (code, signal) => {
+        if (code === 0) {
+          finish({ diagnosis: '', stderr, success: true });
+          return;
+        }
+
+        finish({
+          diagnosis: describeStdioSpawnFailure({
+            command: params.command,
+            exitCode: code,
+            signal,
+            stderr,
+          }),
+          stderr,
+          success: false,
+        });
+      });
+
+      // Send a minimal JSON-RPC initialize so servers that start fine but
+      // exit on EOF don't get killed as "failed" before they can boot.
+      try {
+        const initMessage =
+          JSON.stringify({
+            id: 1,
+            jsonrpc: '2.0',
+            method: 'initialize',
+            params: {
+              clientInfo: { name: 'lobe-mcp-precheck', version: '1.0.0' },
+              protocolVersion: '2024-11-05',
+            },
+          }) + '\n';
+
+        child.stdin?.write(initMessage);
+        child.stdin?.end();
+      } catch {
+        // stdin write failures are handled via 'error'/'exit' events
+      }
+
+      void stdout;
+    });
+  }
+
   private isMethodNotFoundError(error: unknown) {
     const err = error as any;
     if (!err) return false;
-     
+
     if (err.code === -32601) return true;
     if (typeof err.message === 'string' && err.message.includes('Method not found')) return true;
     return false;
@@ -121,6 +364,31 @@ export class MCPClient {
         const originalMessage = error instanceof Error ? error.message : String(error);
         throw new MCPConnectionError(originalMessage, this.stderrLogs);
       }
+
+      // When the process dies instantly there may be no stderr at all, leaving
+      // users with a bare "Connection closed" (-32000). Re-spawn once to
+      // capture a concrete, actionable diagnosis instead.
+      if (this.isStdio && this.stdioParams?.command) {
+        const preCheck = await this.preCheckStdioCommand({
+          args: this.stdioParams.args,
+          command: this.stdioParams.command,
+          env: this.stdioParams.env,
+        });
+
+        if (!preCheck.success) {
+          const originalMessage = error instanceof Error ? error.message : String(error);
+          const lines = preCheck.stderr
+            .split('\n')
+            .map((line) => line.trim())
+            .filter(Boolean);
+
+          throw new MCPConnectionError(
+            `${preCheck.diagnosis} (original error: ${originalMessage})`,
+            lines,
+          );
+        }
+      }
+
       throw error;
     }
   }
