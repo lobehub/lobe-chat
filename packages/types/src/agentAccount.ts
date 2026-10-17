@@ -1,4 +1,4 @@
-import type { AgentMailAddress, AgentMailAttachment } from './agentMail';
+import type { AgentInboxSourceType, AgentMailAddress, AgentMailAttachment } from './agentMail';
 
 /**
  * Agent accounts — the identity assets an agent owns.
@@ -119,26 +119,30 @@ export interface AgentAccountInboundMailDetail {
  * the model as context.
  */
 export interface AgentInboxMessage {
-  /** The account that received it — the routing key resolved to an account id. */
-  accountId: string;
+  /** The account it arrived at, when the channel has one. */
+  accountId: string | null;
   agentId: string;
-  /** Media the sender attached, as the provider hosts it (e.g. a photo-only message). */
-  attachments?: AgentAccountAttachment[];
-  /** Verification codes pulled out of the body (3–8 digits), for the `wait` primitive. */
+  /** What the sender attached, as the provider holds it (descriptors only). */
+  attachments: AgentMailAttachment[];
+  /** Verification codes pulled out of the body (4–8 digits), for the `wait` primitive. */
   codes: string[];
   createdAt: Date;
-  /** Address the message came from. */
+  /** Who it is from. */
   from: string;
   id: string;
-  kind: AgentAccountKind;
-  /** When it was first read by the agent; `null` while unread. */
+  /** Short plain-text preview the inbox list shows. */
+  preview: string | null;
+  /** When it was first read; `null` while unread. */
   readAt: Date | null;
   receivedAt: Date;
+  /** What the item is (`mail` today). */
+  sourceType: AgentInboxSourceType;
+  /** Its title (a mail's subject). */
   subject: string | null;
   text: string;
-  /** Provider-normalized thread key, when the provider supplies one. */
+  /** Conversation key within the account, when the source supplies one. */
   threadKey: string | null;
-  /** The agent's own identifier the message was delivered to. */
+  /** Where it was delivered — the agent's own address. */
   to: string;
 }
 
@@ -150,12 +154,12 @@ export type AgentInboxMessageSummary = Pick<
   | 'createdAt'
   | 'from'
   | 'id'
-  | 'kind'
+  | 'preview'
   | 'readAt'
   | 'receivedAt'
+  | 'sourceType'
   | 'subject'
   | 'threadKey'
-  | 'to'
 >;
 
 /**

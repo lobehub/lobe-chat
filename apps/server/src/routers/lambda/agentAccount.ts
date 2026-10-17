@@ -371,7 +371,7 @@ export const agentAccountRouter = router({
       }),
 
     get: agentAccountProcedure.input(idInput).query(async ({ ctx, input }) => {
-      const message = await ctx.agentInboxModel.findById(input.id);
+      const message = await ctx.agentInboxModel.findEntryById(input.id);
       if (!message) {
         throw new TRPCError({ code: 'NOT_FOUND', message: MESSAGE_NOT_FOUND_MESSAGE });
       }

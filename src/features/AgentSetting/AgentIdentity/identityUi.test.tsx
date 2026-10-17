@@ -118,7 +118,10 @@ describe('IdentityAccounts — revalidation failure', () => {
 describe('InboxMessageModal attachments', () => {
   it('lists what an attachment-only message carried instead of a blank body', async () => {
     service.getInboxMessage.mockResolvedValue({
-      attachments: [{ mimeType: 'image/jpeg', url: 'https://cdn.example.test/photo.jpg' }],
+      attachments: [
+        { contentType: 'image/jpeg', filename: 'photo.jpg', index: 0, size: 2_516_582 },
+        { contentType: 'application/pdf', index: 1 },
+      ],
       from: '+15550001111',
       id: 'msg_photo',
       receivedAt: new Date('2026-10-02T00:00:00Z'),
@@ -129,9 +132,11 @@ describe('InboxMessageModal attachments', () => {
 
     fresh(<InboxMessageModal id={'msg_photo'} />);
 
-    const link = await screen.findByRole('link', { name: 'image/jpeg' });
-    expect(link).toHaveAttribute('href', 'https://cdn.example.test/photo.jpg');
-    expect(link).toHaveAttribute('rel', expect.stringContaining('noopener'));
+    // Named by file (or type) and size; nothing is fetched from the provider,
+    // so the list neither links nor previews what an outside sender sent.
+    expect(await screen.findByText('photo.jpg · 2.4 MB')).toBeInTheDocument();
+    expect(screen.getByText('application/pdf')).toBeInTheDocument();
+    expect(screen.queryByRole('link')).toBeNull();
     expect(screen.queryByRole('img')).toBeNull();
   });
 });

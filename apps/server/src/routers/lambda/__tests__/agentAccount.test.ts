@@ -65,7 +65,7 @@ vi.mock('@/server/services/agentIdentity', async () => ({
 }));
 
 const inbox = vi.hoisted(() => ({
-  findById: vi.fn(async (_id: string): Promise<unknown> => undefined),
+  findEntryById: vi.fn(async (_id: string): Promise<unknown> => undefined),
   listSummaries: vi.fn(async (_params?: unknown): Promise<unknown[]> => []),
   markAllRead: vi.fn(async (_agentId: string) => 0),
   markRead: vi.fn(async (_ids: string[]) => 0),
@@ -93,7 +93,7 @@ beforeEach(() => {
   service.revoke.mockResolvedValue('acc_1');
   service.setCredential.mockResolvedValue('acc_1');
   service.update.mockResolvedValue('acc_1');
-  inbox.findById.mockResolvedValue(undefined);
+  inbox.findEntryById.mockResolvedValue(undefined);
   inbox.listSummaries.mockResolvedValue([]);
   inbox.markAllRead.mockResolvedValue(0);
   inbox.markRead.mockResolvedValue(0);

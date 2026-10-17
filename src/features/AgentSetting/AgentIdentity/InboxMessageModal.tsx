@@ -36,6 +36,13 @@ MetaRow.displayName = 'InboxMessageMetaRow';
  * The list is a summary and may be stale; opening a message reads the stored
  * row, so the body shown is the body that was persisted.
  */
+/** `2.4 MB`, `512 KB` — enough to tell a photo from a document at a glance. */
+const formatAttachmentSize = (bytes?: number): string | undefined => {
+  if (!bytes) return undefined;
+  if (bytes >= 1024 * 1024) return `${(bytes / 1024 / 1024).toFixed(1)} MB`;
+  return `${Math.max(1, Math.round(bytes / 1024))} KB`;
+};
+
 const InboxMessageModal = memo<InboxMessageModalProps>(({ id }) => {
   const { t } = useTranslation('setting');
   const { data, error, isLoading, mutate } = useSWR(['agent-inbox-message', id], ([, messageId]) =>
@@ -85,23 +92,27 @@ const InboxMessageModal = memo<InboxMessageModalProps>(({ id }) => {
       >
         {data.text}
       </Text>
-      {data.attachments && data.attachments.length > 0 && (
+      {data.attachments.length > 0 && (
         <Flexbox gap={6}>
           <Text fontSize={12} type={'secondary'}>
             {t('identity.inbox.detail.attachments')}
           </Text>
-          {/* Links, not inline previews: the URLs come from an outside sender,
-              and embedding them would let the sender see when mail is opened. */}
-          {data.attachments.map((attachment, index) => (
-            <a
-              href={attachment.url}
-              key={`${attachment.url}-${index}`}
-              rel={'noopener noreferrer nofollow'}
-              style={{ fontSize: 13, wordBreak: 'break-all' }}
-              target={'_blank'}
+          {/* Descriptors, not links: the bytes stay with the mail provider, so the
+              list says what was sent without fetching any of it. */}
+          {data.attachments.map((attachment) => (
+            <Text
+              fontSize={13}
+              key={attachment.index}
+              style={{ wordBreak: 'break-all' }}
+              type={'secondary'}
             >
-              {attachment.name || attachment.mimeType || attachment.url}
-            </a>
+              {[
+                attachment.filename || attachment.contentType,
+                formatAttachmentSize(attachment.size),
+              ]
+                .filter(Boolean)
+                .join(' · ')}
+            </Text>
           ))}
         </Flexbox>
       )}

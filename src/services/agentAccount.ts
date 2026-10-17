@@ -1,5 +1,4 @@
 import type {
-  AgentAccountAttachment,
   AgentAccountKind,
   AgentInboxMessage,
   AgentInboxMessageSummary,
@@ -42,26 +41,21 @@ export interface ListAgentInboxParams {
   unreadOnly?: boolean;
 }
 
-/**
- * `codes` and `metadata` are nullable in storage (a column default is not a
- * NOT NULL); the read model declares `codes` as a plain array, so the boundary
- * normalizes instead of leaking `null` into every consumer.
- */
+/** The detail read, normalized at the boundary into the client's read model. */
 const toInboxMessage = (row: InboxRow): AgentInboxMessage => ({
   accountId: row.accountId,
-  // Kept in metadata by the inbound edge; an attachment-only message would
-  // otherwise open with a blank body and no way to reach what was sent.
-  attachments: Array.isArray(row.metadata?.attachments)
-    ? (row.metadata.attachments as AgentAccountAttachment[])
-    : undefined,
   agentId: row.agentId,
+  // An attachment-only message would otherwise open with a blank body and no
+  // trace of what was sent.
+  attachments: row.attachments ?? [],
   codes: row.codes ?? [],
   createdAt: row.createdAt,
   from: row.from,
   id: row.id,
-  kind: row.kind,
+  preview: row.preview,
   readAt: row.readAt,
   receivedAt: row.receivedAt,
+  sourceType: row.sourceType,
   subject: row.subject,
   text: row.text,
   threadKey: row.threadKey,
