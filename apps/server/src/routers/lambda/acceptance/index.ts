@@ -56,19 +56,19 @@ import {
 } from '@/server/services/verify/acceptancePullRequests';
 import { after } from '@/server/utils/scheduleAfterResponse';
 
-import { previewUrlSchema, recordPreviewUrl } from './_helpers/acceptancePreviewUrl';
+import { previewUrlSchema, recordPreviewUrl } from '../_helpers/acceptancePreviewUrl';
 import {
   type AcceptanceRepairDispatch,
   dispatchAcceptanceRepair,
-} from './_helpers/acceptanceRepairDispatch';
+} from '../_helpers/acceptanceRepairDispatch';
 import {
   acceptanceStatusOverrideSchema,
   applyAcceptanceStatus,
   settleGoalSignOff,
-} from './_helpers/acceptanceStatus';
-import { canManageAcceptance, filterManageableAcceptances } from './_helpers/acceptanceWriteScope';
-import { assertWorkspaceRowManageable } from './_helpers/assertWorkspaceRowManageable';
-import * as goalGate from './_helpers/goalGateAcceptance';
+} from '../_helpers/acceptanceStatus';
+import { canManageAcceptance, filterManageableAcceptances } from '../_helpers/acceptanceWriteScope';
+import { assertWorkspaceRowManageable } from '../_helpers/assertWorkspaceRowManageable';
+import * as goalGate from '../_helpers/goalGateAcceptance';
 
 /**
  * A reviewer's circled region. On video evidence it also carries the frame
