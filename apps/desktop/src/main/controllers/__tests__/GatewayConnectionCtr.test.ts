@@ -2314,18 +2314,18 @@ describe('GatewayConnectionCtr', () => {
       await expect(ctr.getDeviceInfo()).resolves.toMatchObject({ hostname: 'mock-hostname' });
     });
 
-    it('should return device information', async () => {
-      mockStoreGet.mockImplementation((key: string) => {
-        if (key === 'gatewayEnabled') return true;
-        if (key === 'gatewayDeviceId') return 'my-device';
-        return undefined;
-      });
+    // Regression: pre-connect it reported the fallback UUID while pins stored the stable id.
+    it('reports the stable device id once signed in, even before connecting', async () => {
+      mockStoreGet.mockImplementation((key: string) =>
+        key === 'gatewayDeviceId' ? 'my-device' : undefined,
+      );
+      const sub = Buffer.from(JSON.stringify({ sub: 'user-1' })).toString('base64url');
+      vi.mocked(mockRemoteServerConfigCtr.getAccessToken).mockResolvedValueOnce(`h.${sub}.s`);
       ctr = new GatewayConnectionCtr(mockApp);
       ctr.afterFirstFrame();
-
-      const info = await ctr.getDeviceInfo();
-      expect(info).toEqual({
-        deviceId: 'my-device',
+      const stable = deriveDeviceId('user-1', { fallbackId: 'my-device' }).deviceId;
+      await expect(ctr.getDeviceInfo()).resolves.toEqual({
+        deviceId: stable,
         hostname: 'mock-hostname',
         platform: process.platform,
       });

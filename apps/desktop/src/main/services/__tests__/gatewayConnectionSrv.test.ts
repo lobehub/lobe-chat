@@ -519,9 +519,11 @@ describe('GatewayConnectionService auth recovery', () => {
   });
 });
 
-vi.mock('@lobechat/device-identity', () => ({
-  deriveDeviceId: (userId: string) => ({ deviceId: `stable-${userId}`, identitySource: 'machine' }),
-}));
+const deriveDeviceIdMock = vi.hoisted(() =>
+  vi.fn((userId: string) => ({ deviceId: `stable-${userId}`, identitySource: 'machine' })),
+);
+
+vi.mock('@lobechat/device-identity', () => ({ deriveDeviceId: deriveDeviceIdMock }));
 
 describe('GatewayConnectionService resolveCurrentDeviceId', () => {
   const jwt = (sub: string) =>
@@ -552,5 +554,22 @@ describe('GatewayConnectionService resolveCurrentDeviceId', () => {
     service.setTokenProvider(async () => null);
 
     await expect(service.resolveCurrentDeviceId()).resolves.toBeUndefined();
+  });
+
+  // Regression: every send re-derived the identity, a synchronous machine-id
+  // read in Electron's main process, despite the documented session cache.
+  it('derives the identity once per user and again when the user changes', async () => {
+    const service = createService();
+    let user = 'user-1';
+    service.setTokenProvider(async () => jwt(user));
+    deriveDeviceIdMock.mockClear();
+
+    await service.resolveCurrentDeviceId();
+    await service.resolveCurrentDeviceId();
+    expect(deriveDeviceIdMock).toHaveBeenCalledTimes(1);
+
+    user = 'user-2';
+    await expect(service.resolveCurrentDeviceId()).resolves.toBe('stable-user-2');
+    expect(deriveDeviceIdMock).toHaveBeenCalledTimes(2);
   });
 });

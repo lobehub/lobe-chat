@@ -20,11 +20,12 @@ export interface GatewayDeviceInfo {
 }
 
 export class ElectronGatewayActionImpl {
+  readonly #get: () => ElectronStore;
   readonly #set: Setter;
 
-  constructor(set: Setter, _get: () => ElectronStore, _api?: unknown) {
-    void _get;
+  constructor(set: Setter, get: () => ElectronStore, _api?: unknown) {
     void _api;
+    this.#get = get;
     this.#set = set;
   }
 
@@ -62,11 +63,18 @@ export class ElectronGatewayActionImpl {
    * naming this machine once the user-scoped identity is derived. The IPC
    * derives that identity locally — no network on the send path — and returns
    * nothing while signed out, so no pin is written rather than a stale one.
+   * A differing cached id is corrected too, so "this device" comparisons agree
+   * with the pins written here.
    */
   resolveGatewayDeviceId = async (): Promise<string | undefined> => {
     if (!isDesktop) return;
     try {
-      return (await gatewayConnectionService.getStableDeviceId()) ?? undefined;
+      const deviceId = (await gatewayConnectionService.getStableDeviceId()) ?? undefined;
+      const cached = this.#get().gatewayDeviceInfo;
+      if (deviceId && cached && cached.deviceId !== deviceId) {
+        this.#set({ gatewayDeviceInfo: { ...cached, deviceId } }, false, 'setGatewayDeviceInfo');
+      }
+      return deviceId;
     } catch (error) {
       console.error('Gateway device id lookup failed:', error);
       return;

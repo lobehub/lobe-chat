@@ -19,7 +19,7 @@ import type {
   ToolCallRequestMessage,
   ToolCallResponseMessage,
 } from '@lobechat/device-gateway-client';
-import type { IdentitySource } from '@lobechat/device-identity';
+import type { DeviceIdentity, IdentitySource } from '@lobechat/device-identity';
 import type { GatewayConnectionStatus } from '@lobechat/electron-client-ipc';
 import { createRuntimeProbeCache } from '@lobechat/heterogeneous-agents/runtimeProbeCache';
 import { app, powerSaveBlocker } from 'electron';
@@ -160,6 +160,7 @@ export default class GatewayConnectionService extends ServiceModule {
   private statusBroadcastTimer: ReturnType<typeof setTimeout> | null = null;
 
   private identitySource: IdentitySource | null = null;
+  private identityCache: { identity: DeviceIdentity; userId: string } | null = null;
 
   /**
    * Bundled CLI capability probe. Each probe starts an Electron-as-node CLI plus a Codex
@@ -204,16 +205,12 @@ export default class GatewayConnectionService extends ServiceModule {
 
   // ─── Configuration ───
 
-  /**
-   * Set token provider function (to decouple from RemoteServerConfigCtr)
-   */
+  /** Set token provider function (to decouple from RemoteServerConfigCtr) */
   setTokenProvider(provider: () => Promise<string | null>) {
     this.tokenProvider = provider;
   }
 
-  /**
-   * Set token refresher function (for auth_expired handling)
-   */
+  /** Set token refresher function (for auth_expired handling) */
   setTokenRefresher(refresher: () => Promise<{ error?: string; success: boolean }>) {
     this.tokenRefresher = refresher;
   }
@@ -306,16 +303,17 @@ export default class GatewayConnectionService extends ServiceModule {
   }
 
   /**
-   * Derive the stable, user-scoped device id. Survives LobeHub reinstalls
-   * because it hashes the OS machine id; falls back to the stored random UUID
-   * when the machine id is unavailable. Caches the result for this session.
+   * Stable, user-scoped device id: hashes the OS machine id (stored UUID when
+   * unavailable). Cached per user — machine-id reads are synchronous here.
    */
-  async resolveDeviceIdentity(
-    userId: string,
-  ): Promise<{ deviceId: string; identitySource: IdentitySource }> {
-    const { deriveDeviceId } = await import('@lobechat/device-identity');
-    const fallbackId = this.app.storeManager.get('gatewayDeviceId') as string | undefined;
-    const identity = deriveDeviceId(userId, { fallbackId });
+  async resolveDeviceIdentity(userId: string): Promise<DeviceIdentity> {
+    let identity = this.identityCache?.userId === userId ? this.identityCache.identity : undefined;
+    if (!identity) {
+      const { deriveDeviceId } = await import('@lobechat/device-identity');
+      const fallbackId = this.app.storeManager.get('gatewayDeviceId') as string | undefined;
+      identity = deriveDeviceId(userId, { fallbackId });
+      this.identityCache = { identity, userId };
+    }
     this.deviceId = identity.deviceId;
     this.identitySource = identity.identitySource;
     return identity;

@@ -36,6 +36,9 @@ describe('resolveGatewayDeviceId', () => {
 
     await expect(useElectronStore.getState().resolveGatewayDeviceId()).resolves.toBe('stable-1');
     expect(service.getDeviceInfo).not.toHaveBeenCalled();
+    // The renderer's "this device" must agree with the pin just written, or the
+    // next turn reads this desktop as a remote machine.
+    expect(useElectronStore.getState().gatewayDeviceInfo?.deviceId).toBe('stable-1');
   });
 
   it('returns nothing while signed out or when the desktop cannot answer', async () => {
