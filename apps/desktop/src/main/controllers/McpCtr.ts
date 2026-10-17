@@ -610,16 +610,23 @@ export default class McpCtr extends ControllerModule {
           toolName,
         });
         await this.evictClient(params, failedClient);
-        const retryClient = await this.createClient(params);
-        this.mcpClientPool.set(serializeMcpClientParams(params), retryClient);
+        // Route replacement creation through acquireClient: it single-flights
+        // per key, so two concurrent calls that shared the same stale client
+        // and both failed build ONE replacement process — not two racing
+        // create/set writes that strand the loser (and its established state).
+        const retryClient = await this.acquireClient(params);
         try {
           return await runOn(retryClient);
         } catch (retryError) {
-          // The replacement is proven dead too — evict it so the pool does
-          // not hand the next call a doomed session. Identity-guarded: a
-          // concurrent recreate is never touched. The original retry error
-          // still propagates.
-          await this.evictClient(params, retryClient);
+          // Evict the replacement only when its failure is itself a
+          // stale/transport error — the replacement is then proven dead and
+          // must not be handed to the next call. A post-processing failure
+          // (media upload, URL conversion) after a SUCCESSFUL tool call is
+          // not a session problem: the tool already ran and established
+          // server-side state, so the healthy replacement stays pooled.
+          if (isStaleSessionError(retryError)) {
+            await this.evictClient(params, retryClient);
+          }
           throw retryError;
         }
       }

@@ -315,4 +315,73 @@ describe('McpCtr stdio session reuse (T-801 stateful MCP servers)', () => {
     expect(stale.disconnect).toHaveBeenCalledTimes(1);
     expect(replacement.disconnect).toHaveBeenCalledTimes(1);
   });
+
+  it('single-flights the replacement when two concurrent calls share a stale session', async () => {
+    const shared = makeClientInstance('stale-shared');
+    shared.callTool.mockRejectedValue(new Error('No valid session ID provided'));
+    const replacement = makeClientInstance('replacement');
+    mcpClientMocks
+      .mockReturnValueOnce(shared) // both concurrent calls pool-acquire this
+      .mockReturnValueOnce(replacement) // single-flight creates ONE replacement
+      .mockReturnValue(replacement);
+
+    const params = {
+      args: '',
+      env: undefined,
+      params: { args: ['--stdio'], command: 'ida-mcp', name: 'ida-mcp' },
+      toolName: 'execute_python',
+    } as any;
+
+    // Two concurrent calls share the stale session; both fail stale and both
+    // enter the retry path.
+    const [r1, r2] = await Promise.allSettled([
+      ctr.runStdioMcpTool(params),
+      ctr.runStdioMcpTool(params),
+    ]);
+
+    // Replacement creation went through the single-flight path: exactly one
+    // replacement client was ever constructed (no racing duplicate process).
+    expect(mcpClientMocks).toHaveBeenCalledTimes(2);
+
+    // The winner returns success through the shared replacement.
+    const fulfilled = [r1, r2].filter((r) => r.status === 'fulfilled');
+    expect(fulfilled.length).toBeGreaterThanOrEqual(1);
+    void replacement;
+  });
+
+  it('keeps the healthy replacement pooled when its post-processing fails after a successful tool run', async () => {
+    const stale = makeClientInstance('stale');
+    stale.callTool.mockRejectedValue(new Error('No valid session ID provided'));
+    const fresh = makeClientInstance('fresh');
+    fresh.callTool.mockResolvedValue({
+      content: [
+        { data: 'aGVsbG8=', mimeType: 'image/png', type: 'image' },
+        { text: 'tool ran fine', type: 'text' },
+      ],
+      isError: false,
+    });
+    mcpClientMocks.mockReturnValueOnce(stale).mockReturnValueOnce(fresh).mockReturnValue(fresh);
+
+    // Post-processing (media upload) fails AFTER the tool succeeded.
+    const uploadSpy = vi
+      .spyOn(ctr as any, 'uploadMcpMediaBlock')
+      .mockRejectedValue(new Error('upload failed'));
+
+    await expect(
+      ctr.runStdioMcpTool({
+        args: '',
+        env: undefined,
+        params: { args: ['--stdio'], command: 'ida-mcp', name: 'ida-mcp' },
+        toolName: 'render_chart',
+      } as any),
+    ).rejects.toThrow('upload failed');
+
+    uploadSpy.mockRestore();
+
+    // The tool DID run on the replacement (state established server-side).
+    expect(fresh.callTool).toHaveBeenCalledTimes(1);
+    // A post-processing error is not a session problem — the healthy
+    // replacement stays pooled, never disconnected.
+    expect(fresh.disconnect).not.toHaveBeenCalled();
+  });
 });
