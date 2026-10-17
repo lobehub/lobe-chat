@@ -334,6 +334,65 @@ describe('sandbox replicas', () => {
     expect(sandboxSelectors.pickerInstances(undefined)(state())?.[0].inUseByThisTopic).toBe(false);
   });
 
+  // Regression: a listing already in flight when a copy is created answered
+  // without it, and replacing the whole entry erased the "Building" row (and
+  // the chip bound to it) until the next listing.
+  it('keeps a just-created copy when a listing that started before it lands', async () => {
+    let answerOld!: () => void;
+    const listInstances = vi
+      .spyOn(sandboxStorageService, 'listInstances')
+      .mockResolvedValueOnce(listed(rawInstance()))
+      .mockImplementationOnce(
+        () =>
+          new Promise((resolve) => {
+            answerOld = () => resolve(listed(rawInstance()));
+          }),
+      );
+    renderHook(() => sandboxActions.useFetchPickerInstances(true, 'topic-1'), { wrapper });
+    await waitFor(() =>
+      expect(state().sandboxInstancesMap[SANDBOX_SCOPE_ENTRY]?.instances).toHaveLength(1),
+    );
+
+    // A revalidation starts, then the copy is created while it is in flight.
+    const revalidating = sandboxActions.mutatePickerInstances();
+    await waitFor(() => expect(answerOld).toBeTypeOf('function'));
+    await act(() =>
+      sandboxActions.mutatePickerInstances(
+        (previous) =>
+          previous && {
+            ...previous,
+            instances: [
+              ...previous.instances,
+              pickerInstance({ id: 'inst-2', isDefault: false, status: 'pending' }),
+            ],
+          },
+        { revalidate: false },
+      ),
+    );
+
+    await act(async () => {
+      answerOld();
+      await revalidating;
+    });
+
+    const ids = () =>
+      sandboxSelectors
+        .pickerInstances('topic-1')(state())
+        ?.map((i) => i.id);
+    expect(ids()).toEqual(['inst-1', 'inst-2']);
+    await waitFor(async () =>
+      expect((await stored(sandboxInstancesResource))?.instances.map((i) => i.id)).toEqual([
+        'inst-1',
+      ]),
+    );
+
+    // A listing that started after the creation is authoritative: if it does
+    // not list the copy, the copy is gone.
+    listInstances.mockResolvedValue(listed(rawInstance()));
+    await act(() => sandboxActions.mutatePickerInstances());
+    await waitFor(() => expect(ids()).toEqual(['inst-1']));
+  });
+
   it('keeps a just-created copy in memory until the server lists it', async () => {
     const listInstances = vi
       .spyOn(sandboxStorageService, 'listInstances')

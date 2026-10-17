@@ -3,7 +3,7 @@ import type { StoreSetter } from '@/store/types';
 import { setNamespace } from '@/utils/storeDebug';
 
 import { initialState, type SandboxState } from './initialState';
-import { SandboxPrivateAction } from './privateAction';
+import { type InstanceListEdit, SandboxPrivateAction } from './privateAction';
 import { SANDBOX_SCOPE_ENTRY, type SandboxPickerInstanceList } from './projection';
 import { useSandboxStore } from './store';
 
@@ -13,10 +13,6 @@ type Setter = StoreSetter<SandboxState>;
 
 /** How often a building copy is re-listed while the picker can see it. */
 const BUILD_REFRESH_MS = 4000;
-
-type InstanceListEdit = (
-  previous: SandboxPickerInstanceList | undefined,
-) => SandboxPickerInstanceList | undefined;
 
 interface UseFetchEntitlementOptions {
   /** Revalidate when the window regains focus. Defaults to `true`. */
@@ -73,7 +69,7 @@ export class SandboxActionImpl {
     edit?: InstanceListEdit,
     { revalidate = true }: { revalidate?: boolean } = {},
   ): Promise<void> => {
-    if (edit) this.#private.instances.update(SANDBOX_SCOPE_ENTRY, edit, { persist: false });
+    if (edit) this.#private.editInstances(edit);
     if (!edit || revalidate) await this.#private.instances.revalidate(SANDBOX_SCOPE_ENTRY);
   };
 
