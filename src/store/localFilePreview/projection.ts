@@ -75,14 +75,27 @@ export const toPersistedLocalFilePreview = (preview: LocalFilePreview): LocalFil
     : null;
 
 /**
- * File previews of the local-file portal, one entry per opened file. Persisted
- * to IndexedDB under the user / workspace scope, so a reload paints the last
- * text the portal showed while the device (or sandbox) confirms it.
+ * Whether a preview may touch storage. A cloud-sandbox file is a live read with
+ * no durable copy anywhere — once the sandbox is recycled the file is gone — so
+ * its content must not outlive the session in IndexedDB. Sandbox previews stay
+ * memory-only (no persist, no hydrate).
+ */
+export const isPersistableLocalFilePreviewKey = (key: string): boolean =>
+  !localFilePreviewTargetFromKey(key).sandboxTopicId;
+
+/**
+ * File previews of the local-file portal, one entry per opened file. Previews
+ * of files on this machine or a device are persisted to IndexedDB under the
+ * user / workspace scope, so a reload paints the last text the portal showed
+ * while the device confirms it. At most {@link MAX_PERSISTED_PREVIEWS} rows are
+ * kept per scope (least recently used evicted), and rows hydrate per opened
+ * file, not at startup.
  */
 export const localFilePreviewResource = defineReplica<string, LocalFilePreview>({
   key: (key) => key,
   name: 'localFilePreview',
   persist: { maxEntries: MAX_PERSISTED_PREVIEWS },
+  persistKey: isPersistableLocalFilePreviewKey,
   storage: 'indexedDB',
   version: 1,
 });

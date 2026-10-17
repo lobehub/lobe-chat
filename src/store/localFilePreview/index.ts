@@ -22,10 +22,12 @@ import {
 } from './projection';
 
 export {
+  isPersistableLocalFilePreviewKey,
   localFilePreviewKey,
   localFilePreviewResource,
   type LocalFilePreviewTarget,
   MAX_PERSISTED_PREVIEW_CHARS,
+  MAX_PERSISTED_PREVIEWS,
   toPersistedLocalFilePreview,
 } from './projection';
 

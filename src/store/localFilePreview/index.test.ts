@@ -25,6 +25,7 @@ import {
   localFilePreviewResource,
   type LocalFilePreviewTarget,
   MAX_PERSISTED_PREVIEW_CHARS,
+  MAX_PERSISTED_PREVIEWS,
   useLocalFilePreview,
   useLocalFilePreviewStore,
 } from './index';
@@ -252,6 +253,39 @@ describe('local file preview replica', () => {
       { topicId: 'topic-1' },
     );
     expect(projectFileService.getLocalFilePreview).not.toHaveBeenCalled();
+  });
+
+  it('keeps sandbox previews out of durable storage', async () => {
+    const sandbox = {
+      filePath: '/workspace/a.txt',
+      sandboxTopicId: 'topic-1',
+      workingDirectory: '',
+    };
+    // A row left behind by an older build must not paint a recycled sandbox's file.
+    await seedRow(sandbox, textPreview('stale sandbox copy'));
+    let answer: (value: unknown) => void = () => {};
+    vi.mocked(cloudSandboxService.callTool).mockImplementation(
+      () => new Promise((resolve) => (answer = resolve)) as never,
+    );
+
+    const { result } = renderPreview(sandbox);
+
+    await waitFor(() => expect(result.current.sync.isHydrated).toBe(true));
+    expect(result.current.preview).toBeUndefined();
+
+    await act(async () => {
+      answer({ result: { content: 'from sandbox', mimeType: 'text/plain' }, success: true });
+    });
+    await waitFor(() => expect(result.current.preview).toMatchObject({ content: 'from sandbox' }));
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve, 20));
+    });
+    expect((await storedRow(sandbox))?.data).toEqual(textPreview('stale sandbox copy'));
+  });
+
+  it('bounds the number of persisted previews per scope', () => {
+    expect(localFilePreviewResource.maxPersistedEntries).toBe(MAX_PERSISTED_PREVIEWS);
+    expect(MAX_PERSISTED_PREVIEWS).toBeGreaterThan(0);
   });
 
   it('folds a saved body into the preview and its stored row', async () => {
