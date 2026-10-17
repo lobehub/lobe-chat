@@ -99,6 +99,7 @@ import { threadRouter } from './thread';
 import { topicRouter } from './topic';
 import { topicCommentRouter } from './topicComment';
 import { trashRouter } from './trash';
+import { ttsRouter } from './tts';
 import { uploadRouter } from './upload';
 import { usageRouter } from './usage';
 import { userRouter } from './user';
@@ -138,6 +139,7 @@ export const lambdaRouter = router({
   aiProvider: aiProviderRouter,
   apiKey: apiKeyRouter,
   asr: asrRouter,
+  tts: ttsRouter,
   chunk: chunkRouter,
   comfyui: comfyuiRouter,
   config: configRouter,

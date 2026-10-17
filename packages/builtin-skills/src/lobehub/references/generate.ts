@@ -7,7 +7,7 @@ Generate text, images, videos, and audio. Alias: \`lh generate\`.
 - \`lh gen text <prompt> [-m <model>] [-p <provider>] [--stream] [--temperature <t>]\` - Generate text
 - \`lh gen image <prompt> [-m <model>] [-n <count>] [--width <w>] [--height <h>]\` - Generate image
 - \`lh gen video <prompt> -m <model> -p <provider> [--aspect-ratio <r>] [--duration <d>] [--resolution <res>]\` - Generate video
-- \`lh gen tts <text> [-o <output>] [--voice <v>] [--speed <s>]\` - Text-to-speech
+- \`lh gen tts <text> [-m <model>] [-p <provider>] [-o <output>] [--voice <v>] [--speed <s>]\` - Text-to-speech using the selected provider's saved configuration
 - \`lh gen asr <audioFile> [--model <m>] [--language <l>]\` - Speech-to-text
 - \`lh gen status <generationId> <asyncTaskId>\` - Check generation task status
 - \`lh gen download <generationId> <asyncTaskId> [-o <output>]\` - Wait and download result
