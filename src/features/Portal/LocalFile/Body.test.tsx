@@ -101,7 +101,7 @@ vi.mock('@/store/localFilePreview', () => ({
   useLocalFilePreview: (target: unknown) => (target ? mockPreview.current : undefined),
   useLocalFilePreviewStore: (selector: (state: unknown) => unknown) =>
     selector({
-      applySavedContent: vi.fn(),
+      beginSave: vi.fn(() => vi.fn()),
       refreshPreview: vi.fn(),
       useFetchPreview: mockUseFetchPreview,
     }),
@@ -338,6 +338,16 @@ describe('LocalFile Body', () => {
 
     expect(screen.getByTestId('code-editor')).toBeInTheDocument();
     expect(screen.queryByText('workingPanel.localFile.error')).toBeNull();
+  });
+
+  it('surfaces a refresh failure over a cached non-text preview', () => {
+    mockChatState.current = createChatState('topic-a');
+    mockPreview.current = { blob: new Blob(['png']), contentType: 'image/png', type: 'image' };
+    mockUseFetchPreview.mockReturnValue(syncResult({ error: new Error('File not found') }));
+
+    render(<Body />);
+
+    expect(screen.getByText('workingPanel.localFile.error')).toBeInTheDocument();
   });
 
   it('passes the HTML preview its resource base URL', () => {

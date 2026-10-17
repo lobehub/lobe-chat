@@ -528,7 +528,14 @@ export class DocumentActionImpl {
     this.#detail.optimistic(
       documentId,
       (detail) => (detail.document ? { document: { ...detail.document, ...patch } } : detail),
-      serverCall,
+      async () => {
+        const result = await serverCall();
+        // Confirmed: a read started before this write may return the pre-write
+        // row with the same `updatedAt`, so count it as an adoption (see
+        // `#adoptions`) — that read keeps the committed entry instead.
+        this.#adoptions.set(documentId, (this.#adoptions.get(documentId) ?? 0) + 1);
+        return result;
+      },
     );
 
   /**

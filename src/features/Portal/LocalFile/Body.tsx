@@ -147,7 +147,8 @@ interface TextPreviewPaneProps {
   ext: string;
   filePath: string;
   onReload?: () => Promise<unknown> | void;
-  onSaved?: (savedContent: string) => void;
+  /** Called when a save starts; returns the commit for the saved body. */
+  onSaveStart?: () => (savedContent: string) => void;
   readOnly?: boolean;
   reloading?: boolean;
   resourceBaseUrl?: string;
@@ -164,7 +165,7 @@ const TextPreviewPane = memo<TextPreviewPaneProps>(
     ext,
     filePath,
     onReload,
-    onSaved,
+    onSaveStart,
     readOnly = false,
     reloading = false,
     resourceBaseUrl,
@@ -207,12 +208,13 @@ const TextPreviewPane = memo<TextPreviewPaneProps>(
       if (readOnly) return;
 
       try {
+        const commitSaved = onSaveStart?.();
         const saved = await saveLocalFile({ deviceId, filePath, workingDirectory });
         if (saved === undefined) return;
         // Update SWR cache BEFORE clearing the buffer, otherwise React will
         // briefly render with buffer cleared but content still stale, causing
         // CodeMirror to setValue and reset the cursor.
-        onSaved?.(saved);
+        commitSaved?.(saved);
         setLocalFileBuffer(tabId, undefined);
       } catch {
         /* swallow — surfacing handled elsewhere if needed */
@@ -220,7 +222,7 @@ const TextPreviewPane = memo<TextPreviewPaneProps>(
     }, [
       deviceId,
       filePath,
-      onSaved,
+      onSaveStart,
       readOnly,
       saveLocalFile,
       setLocalFileBuffer,
@@ -423,18 +425,15 @@ const ActiveFileView = memo<ActiveFileViewProps>(
       }),
       [allowExternalFilePreview, deviceId, filePath, sandboxTopicId, workingDirectory],
     );
-    const [useFetchPreview, applySavedContent, refreshPreview] = useLocalFilePreviewStore((s) => [
+    const [useFetchPreview, beginSave, refreshPreview] = useLocalFilePreviewStore((s) => [
       s.useFetchPreview,
-      s.applySavedContent,
+      s.beginSave,
       s.refreshPreview,
     ]);
     const { error, isHydrated, isLoading, isValidating } = useFetchPreview(target, enabled);
     const preview = useLocalFilePreview(enabled ? target : undefined);
 
-    const handleSavedContent = useCallback(
-      (saved: string) => applySavedContent(target, saved),
-      [applySavedContent, target],
-    );
+    const handleSaveStart = useCallback(() => beginSave(target), [beginSave, target]);
 
     const handleReload = useCallback(() => refreshPreview(target), [refreshPreview, target]);
 
@@ -443,9 +442,10 @@ const ActiveFileView = memo<ActiveFileViewProps>(
     if (isLoading) return isHydrated ? <Loading /> : null;
 
     // Text previews are persisted (stale-while-revalidate): a failed background
-    // refresh keeps the cached content. A sandbox error still wins — a recycled
+    // refresh keeps the cached text. Any other preview type surfaces the error
+    // (a deleted file / disconnected device), and so does a sandbox — a recycled
     // sandbox has no file left to show.
-    if (!preview || (error && sandboxTopicId)) {
+    if (!preview || (error && (sandboxTopicId || preview.type !== 'text'))) {
       return (
         <Center height={'100%'} width={'100%'}>
           <Empty
@@ -522,7 +522,7 @@ const ActiveFileView = memo<ActiveFileViewProps>(
         sandboxTopicId={sandboxTopicId}
         workingDirectory={workingDirectory}
         onReload={handleReload}
-        onSaved={handleSavedContent}
+        onSaveStart={handleSaveStart}
       />
     );
   },

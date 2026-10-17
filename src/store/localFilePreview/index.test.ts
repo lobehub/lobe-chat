@@ -319,7 +319,7 @@ describe('local file preview replica', () => {
     const { result } = renderPreview(NOTES);
     await waitFor(() => expect(result.current.preview).toEqual(textPreview('before')));
 
-    act(() => useLocalFilePreviewStore.getState().applySavedContent(NOTES, 'after'));
+    act(() => useLocalFilePreviewStore.getState().beginSave(NOTES)('after'));
 
     expect(result.current.preview).toEqual(textPreview('after'));
     await waitFor(async () => expect((await storedRow(NOTES))?.data).toEqual(textPreview('after')));
@@ -335,7 +335,7 @@ describe('local file preview replica', () => {
     await waitFor(() => expect(result.current.preview).toEqual(textPreview('v1')));
 
     // The mount-time read is still in flight when the user saves.
-    act(() => useLocalFilePreviewStore.getState().applySavedContent(NOTES, 'saved'));
+    act(() => useLocalFilePreviewStore.getState().beginSave(NOTES)('saved'));
     // …and it settles afterwards with the pre-save file.
     await act(async () => {
       answer(textPreview('v1'));
@@ -346,5 +346,25 @@ describe('local file preview replica', () => {
 
     expect(result.current.preview).toEqual(textPreview('saved'));
     await waitFor(async () => expect((await storedRow(NOTES))?.data).toEqual(textPreview('saved')));
+  });
+
+  it('drops a save that settles under another identity', async () => {
+    vi.mocked(projectFileService.getLocalFilePreview).mockResolvedValue(
+      textPreview('before') as never,
+    );
+    const { result } = renderPreview(NOTES);
+    await waitFor(() => expect(result.current.preview).toEqual(textPreview('before')));
+
+    // The save starts under this identity…
+    const commit = useLocalFilePreviewStore.getState().beginSave(NOTES);
+    // …and settles after an account / workspace switch.
+    useScope(`local-file-user-${randomUUID()}:personal`);
+    act(() => commit('saved under the previous identity'));
+
+    expect(result.current.preview).toEqual(textPreview('before'));
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve, 20));
+    });
+    expect(await storedRow(NOTES)).toBeUndefined();
   });
 });

@@ -197,4 +197,38 @@ describe('document detail without an editor (portal / goal / preview views)', ()
       expect((await storedRow('doc-1', scope))?.data.document?.content).toBe('saved'),
     );
   });
+
+  it('keeps a confirmed rename over a read that started before it', async () => {
+    await documentDetailResource.storage!.set(
+      { queryKey: 'doc-1', scope },
+      { data: { document: documentRow({ title: 'Old' }) }, updatedAt: 1 },
+    );
+    let answer: (row: unknown) => void = () => {};
+    vi.mocked(documentService.getDocumentById).mockImplementation(
+      () => new Promise((resolve) => (answer = resolve)) as any,
+    );
+    const { result } = renderDetail('doc-1');
+    await waitFor(() => expect(result.current.data?.title).toBe('Old'));
+
+    // The mount-time read is still in flight when the rename is confirmed.
+    await act(async () => {
+      await useDocumentStore
+        .getState()
+        .optimisticDocumentDetail('doc-1', { title: 'New' }, () => Promise.resolve());
+    });
+    expect(result.current.data?.title).toBe('New');
+
+    // …then it settles with the pre-rename row (same `updatedAt`).
+    await act(async () => {
+      answer(documentRow({ title: 'Old' }));
+    });
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve, 20));
+    });
+
+    expect(result.current.data?.title).toBe('New');
+    await waitFor(async () =>
+      expect((await storedRow('doc-1', scope))?.data.document?.title).toBe('New'),
+    );
+  });
 });

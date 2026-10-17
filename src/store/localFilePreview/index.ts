@@ -4,6 +4,7 @@ import { createWithEqualityFn, type UseBoundStoreWithEqualityFn } from 'zustand/
 
 import { isHtmlFile } from '@/components/HtmlPreview/fileType';
 import {
+  cacheScope,
   createReplicaSlice,
   createReplicaState,
   recordLens,
@@ -87,8 +88,13 @@ export interface LocalFilePreviewStoreState {
 }
 
 interface LocalFilePreviewStore extends LocalFilePreviewStoreState {
-  /** Fold a saved text body into the preview, so the reload paints the saved file. */
-  applySavedContent: (target: LocalFilePreviewTarget, content: string) => void;
+  /**
+   * Start a save of `target`: captures the identity (user / workspace scope) the
+   * save runs under and returns the commit that folds the saved text body into
+   * the preview, so a reload paints the saved file. The commit is a no-op once
+   * another identity is active — the body belongs to the scope that wrote it.
+   */
+  beginSave: (target: LocalFilePreviewTarget) => (content: string) => void;
   /** Re-read the file from its device / sandbox. */
   refreshPreview: (target: LocalFilePreviewTarget) => Promise<unknown>;
   /** Fetch orchestration only; read the preview with `useLocalFilePreview`. */
@@ -137,12 +143,18 @@ export const useLocalFilePreviewStore: UseBoundStoreWithEqualityFn<
   return {
     ...initialLocalFilePreviewState,
 
-    applySavedContent: (target, content) => {
+    beginSave: (target) => {
       const key = localFilePreviewKey(target);
-      saveGenerations.set(key, (saveGenerations.get(key) ?? 0) + 1);
-      previews.update(key, (preview) =>
-        preview?.type === 'text' ? { ...preview, content } : preview,
-      );
+      const scope = cacheScope.get();
+      return (content) => {
+        // The write settled after an account / workspace switch: `update` writes
+        // the active scope, which would plant this file body in another identity.
+        if (cacheScope.get() !== scope) return;
+        saveGenerations.set(key, (saveGenerations.get(key) ?? 0) + 1);
+        previews.update(key, (preview) =>
+          preview?.type === 'text' ? { ...preview, content } : preview,
+        );
+      };
     },
     refreshPreview: (target) => previews.revalidate(localFilePreviewKey(target)),
     useFetchPreview: (target, enabled = true) => {
