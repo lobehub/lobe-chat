@@ -293,9 +293,8 @@ export default class McpCtr extends ControllerModule {
 
   private mcpClientLastUsedAt = new Map<string, number>();
 
-  // In-flight call tracking. A lease is held for the duration of each call
-  // running on a pooled client; eviction and idle reaping are deferred while
-  // any lease is active so a shared session is never disconnected mid-call.
+  // In-flight call tracking: eviction and idle reaping are deferred while a
+  // client holds any lease; release performs a pending eviction disconnect.
   private mcpClientLeases = new Map<MCPClient, number>();
   private mcpClientPendingDisconnect = new Set<MCPClient>();
 
@@ -366,11 +365,41 @@ export default class McpCtr extends ControllerModule {
         this.mcpClientLastUsedAt.set(key, Date.now());
         return client;
       })
+      .catch((error) => {
+        // The acquire-time clock is an orphan when creation fails: failed
+        // configs (serialized keys contain env values) must not accumulate.
+        this.mcpClientLastUsedAt.delete(key);
+        throw error;
+      })
       .finally(() => {
         this.mcpClientInitialization?.delete(key);
       });
     (this.mcpClientInitialization ??= new Map()).set(key, creating);
     return creating;
+  }
+
+  /**
+   * Run `fn` while holding a lease: eviction and idle reaping are deferred
+   * while any lease is active. The last release performs the disconnect.
+   */
+  private async withClientLease<T>(client: MCPClient, fn: () => Promise<T>): Promise<T> {
+    this.mcpClientLeases.set(client, (this.mcpClientLeases.get(client) ?? 0) + 1);
+    try {
+      return await fn();
+    } finally {
+      const remaining = (this.mcpClientLeases.get(client) ?? 1) - 1;
+      if (remaining > 0) this.mcpClientLeases.set(client, remaining);
+      else {
+        this.mcpClientLeases.delete(client);
+        if (this.mcpClientPendingDisconnect.delete(client)) {
+          try {
+            await client.disconnect();
+          } catch (error) {
+            logger.warn('Failed to disconnect evicted MCP client:', error);
+          }
+        }
+      }
+    }
   }
 
   /**
@@ -483,7 +512,9 @@ export default class McpCtr extends ControllerModule {
     let client: MCPClient | undefined;
     try {
       client = await this.acquireClient(params);
-      const manifest = await client.listManifests();
+      // Lease for the manifest refresh too: a concurrent stale-session
+      // eviction must not disconnect underneath this pending request.
+      const manifest = await this.withClientLease(client, () => client!.listManifests());
       const identifier = input.name;
 
       const tools = manifest.tools || [];
@@ -649,40 +680,23 @@ export default class McpCtr extends ControllerModule {
       // as-is: re-running a mutating tool on a generic catch could apply
       // its side effect a second time. The failing client is tagged onto
       // the error so eviction carries an identity guard.
-      const runOn = async (client: MCPClient) => {
-        // Lease the client for the duration of the call: eviction and idle
-        // reaping are deferred while a lease is active (see evictClient /
-        // reapIdleClients). Release performs a pending eviction disconnect.
-        const leases = this.mcpClientLeases.get(client) ?? 0;
-        this.mcpClientLeases.set(client, leases + 1);
-        try {
-          const raw = (await client.callTool(toolName, args)) as ToolCallResult;
-          const processed = raw.isError
-            ? raw.content
-            : await this.processContentBlocks(raw.content);
-          const content = await toMarkdown(processed, (key) =>
-            this.fileService.getFileHTTPURL(key),
-          );
-          return { content, state: { ...raw, content: processed }, success: true };
-        } catch (error) {
-          throw Object.assign(error instanceof Error ? error : new Error(String(error)), {
-            ranOnClient: client,
-          });
-        } finally {
-          const remaining = (this.mcpClientLeases.get(client) ?? 1) - 1;
-          if (remaining > 0) this.mcpClientLeases.set(client, remaining);
-          else {
-            this.mcpClientLeases.delete(client);
-            if (this.mcpClientPendingDisconnect.delete(client)) {
-              try {
-                await client.disconnect();
-              } catch (error) {
-                logger.warn('Failed to disconnect evicted MCP client:', error);
-              }
-            }
+      const runOn = (client: MCPClient) =>
+        this.withClientLease(client, async () => {
+          try {
+            const raw = (await client.callTool(toolName, args)) as ToolCallResult;
+            const processed = raw.isError
+              ? raw.content
+              : await this.processContentBlocks(raw.content);
+            const content = await toMarkdown(processed, (key) =>
+              this.fileService.getFileHTTPURL(key),
+            );
+            return { content, state: { ...raw, content: processed }, success: true };
+          } catch (error) {
+            throw Object.assign(error instanceof Error ? error : new Error(String(error)), {
+              ranOnClient: client,
+            });
           }
-        }
-      };
+        });
 
       try {
         return await runOn(await this.acquireClient(params));
