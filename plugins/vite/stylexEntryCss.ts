@@ -47,6 +47,11 @@ const collectInitialCss = (bundle: Bundle) => {
  * carries the src/styles/stylex.css marker, and fails the build when the rules end
  * up anywhere else or that CSS does not load with an entry.
  */
+// Only the browser loads this CSS. An SSR environment (React Router apps) emits
+// its own server-side CSS asset that no page links.
+const isClientEnvironment = (environment: { config: { consumer: string } }) =>
+  environment.config.consumer === 'client';
+
 export function createStylexEntryCss(classNamePrefix: string) {
   let anchorCss: string | undefined;
   const stylexRule = new RegExp(String.raw`\.${classNamePrefix}[\da-z]{4,}[\s,.:{]`);
@@ -55,6 +60,7 @@ export function createStylexEntryCss(classNamePrefix: string) {
   // enforce: 'pre', so plugin order cannot put this first; hook order 'pre' does.
   const locate: Plugin = {
     apply: 'build',
+    applyToEnvironment: isClientEnvironment,
     generateBundle: {
       handler(_options, bundle) {
         anchorCss = findAnchorCss(bundle as unknown as Bundle);
@@ -66,6 +72,7 @@ export function createStylexEntryCss(classNamePrefix: string) {
 
   const verify: Plugin = {
     apply: 'build',
+    applyToEnvironment: isClientEnvironment,
     generateBundle: {
       handler(_options, output) {
         const bundle = output as unknown as Bundle;
