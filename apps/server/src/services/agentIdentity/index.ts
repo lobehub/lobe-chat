@@ -7,9 +7,7 @@ import type {
   AgentAccountOutboundMessage,
   AgentAccountRef,
 } from '@lobechat/types';
-import { TRPCError } from '@trpc/server';
 
-import { AgentModel } from '@/database/models/agent';
 import type {
   AgentAccountGateKeeper,
   AgentAccountPatch,
@@ -17,7 +15,9 @@ import type {
 } from '@/database/models/agentAccount';
 import { AgentAccountModel, ROUTING_KEY_HELD_STATUSES } from '@/database/models/agentAccount';
 import type { LobeChatDatabase } from '@/database/type';
+import { assertAgentUsableBy } from '@/database/utils/agent-access';
 import { unwrapPgError } from '@/server/modules/AgentRuntime/pgError';
+import { assertCanEditResource } from '@/server/services/resourcePermission';
 
 import { AgentAccountError } from './errors';
 import type { AgentAccountProviderRegistry } from './registry';
@@ -31,9 +31,8 @@ export { AgentAccountError, isAgentAccountError } from './errors';
 export interface CreateAgentAccountParams {
   agentId: string;
   /**
-   * What the account can do. Optional when `provider` is registered — the
-   * provider's declaration is used — but required for an unregistered provider
-   * (e.g. `user`), because nothing else can state it.
+   * What the account can do. Required: a mounted account's provider is never a
+   * registered one (those go through `provision`), so nothing else can state it.
    */
   capabilities?: AgentAccountCapabilities;
   /** Write-only secret. Encrypted before it ever reaches the row. */
@@ -107,15 +106,27 @@ export class AgentAccountService {
 
   /**
    * Mount an account whose handle already exists (a `user`-provided login, or
-   * one issued out of band). Prefer {@link provision} when a provider can mint
-   * the account itself.
+   * one issued out of band) under a provider this deployment does not run.
+   *
+   * A registered provider's accounts are opened through {@link provision} only.
+   * Its send and release act on the stored handle with the deployment-wide key,
+   * so a mounted handle — an inbox id the caller merely knows — would let the
+   * caller send as, or delete, a resource that was never issued to them.
    */
   create = async (params: CreateAgentAccountParams): Promise<AgentAccountView> => {
-    await this.assertAgentOwned(params.agentId);
+    await this.assertCanEditAgent(params.agentId);
 
-    const capabilities = params.capabilities ?? this.declaredCapabilities(params.provider);
+    if (this.options.registry.has(params.provider)) {
+      throw new AgentAccountError(
+        'provider_managed',
+        `Accounts on the "${params.provider}" provider are opened through provisioning, not mounted.`,
+      );
+    }
+
+    const { capabilities } = params;
     if (!capabilities) {
-      throw new Error(
+      throw new AgentAccountError(
+        'capabilities_required',
         `Agent account provider "${params.provider}" is not registered, so its capabilities cannot ` +
           'be inferred. Pass capabilities explicitly when creating an account for an unregistered provider.',
       );
@@ -149,7 +160,7 @@ export class AgentAccountService {
   provision = async (params: ProvisionAgentAccountParams): Promise<AgentAccountView> => {
     // Before the provider is asked to open anything: a refused caller must not
     // be able to make us create a remote inbox or bind a number at all.
-    await this.assertAgentOwned(params.agentId);
+    await this.assertCanEditAgent(params.agentId);
 
     const provider = this.options.registry.get(params.provider);
     const issued = await provider.provision({
@@ -251,7 +262,8 @@ export class AgentAccountService {
     if (!account) return undefined;
 
     if ('metadata' in patch && this.options.registry.has(account.provider)) {
-      throw new Error(
+      throw new AgentAccountError(
+        'provider_owned_field',
         `Agent account metadata is owned by the "${account.provider}" provider and is not patchable.`,
       );
     }
@@ -360,37 +372,39 @@ export class AgentAccountService {
 
   // --------------- Internals ---------------
 
-  private declaredCapabilities = (provider: string): AgentAccountCapabilities | undefined =>
-    this.options.registry.has(provider) ? this.options.registry.capabilities(provider) : undefined;
-
   /**
-   * An account binds an address *and a credential* to an agent, so only the
-   * agent's creator may attach one — the same rule `connector` and `composio`
-   * apply before storing credentials against an agent.
+   * An account binds an address *and a credential* to an agent, so writing one
+   * needs the agent's effective **edit** level — the same rule the transports
+   * apply, so a collaborator they admit is not refused here, and a member who
+   * may merely view or use a shared agent is refused everywhere.
    *
-   * Visibility is deliberately not enough: a member who can merely use a shared
-   * agent must not be able to mount their own mailbox, or a secret, onto it.
-   * `existsOwnedById` is creator-only for exactly that reason.
+   * Visibility first: an agent the caller cannot see answers NOT_FOUND, so the
+   * ACL never becomes an oracle for a colleague's private agent. Outside a
+   * workspace the visibility check alone is ownership.
    */
-  private assertAgentOwned = async (agentId: string): Promise<void> => {
-    const agentModel = new AgentModel(this.db, this.userId, this.options.workspaceId);
-    if (!(await agentModel.existsOwnedById(agentId))) {
-      throw new TRPCError({ code: 'FORBIDDEN', message: 'Agent not found or not editable' });
-    }
+  private assertCanEditAgent = async (agentId: string): Promise<void> => {
+    const ctx = { userId: this.userId, workspaceId: this.options.workspaceId };
+    await assertAgentUsableBy(this.db, agentId, ctx);
+    await assertCanEditResource({
+      db: this.db,
+      resourceId: agentId,
+      resourceType: 'agent',
+      ...ctx,
+    });
   };
 
   /**
-   * Load an account for a mutation, under the same creator-only rule as
-   * {@link create} and {@link provision}. The model's scope alone is not
-   * enough: in a workspace it matches every member's accounts, so without this
-   * any member could rotate the creator's secret, rewrite the account or
-   * release it on the provider.
+   * Load an account for a mutation, under the same edit rule as {@link create}
+   * and {@link provision}. The model's scope alone is not enough: in a
+   * workspace it matches every member's accounts, so without this any member
+   * could rotate the creator's secret, rewrite the account or release it on
+   * the provider.
    */
   private findEditable = async (id: string): Promise<AgentAccountView | undefined> => {
     const account = await this.model.findById(id);
     if (!account) return undefined;
 
-    await this.assertAgentOwned(account.agentId);
+    await this.assertCanEditAgent(account.agentId);
     return account;
   };
 

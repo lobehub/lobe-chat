@@ -2,6 +2,7 @@
 import type { EmailMessageDetail } from '@lobechat/agent-address-mail';
 import { computeAgentMailSignature } from '@lobechat/agent-address-mail';
 import { getTestDB } from '@lobechat/database/test-utils';
+import { TRPCError } from '@trpc/server';
 import { eq } from 'drizzle-orm';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -12,6 +13,13 @@ import { AgentAccountService } from '../index';
 import { createAgentMailProvider } from '../providers/agentMail';
 import { createLinqProvider } from '../providers/linq';
 import { AgentAccountProviderRegistry } from '../registry';
+
+// The agent's edit ACL is its own suite's subject; here it is the seam whose
+// verdict the service must honor, admitting exactly whom the ACL admits.
+const { assertCanEditResource } = vi.hoisted(() => ({
+  assertCanEditResource: vi.fn(async (_params: { userId: string; workspaceId?: string }) => {}),
+}));
+vi.mock('@/server/services/resourcePermission', () => ({ assertCanEditResource }));
 
 const serverDB: LobeChatDatabase = await getTestDB();
 
@@ -121,6 +129,7 @@ afterEach(async () => {
   await serverDB.delete(agentAccounts);
   await serverDB.delete(users);
   vi.clearAllMocks();
+  assertCanEditResource.mockReset();
 });
 
 describe('AgentAccountService — provisioning', () => {
@@ -160,7 +169,7 @@ describe('AgentAccountService — provisioning', () => {
         kind: 'service',
         provider: 'user',
       }),
-    ).rejects.toThrow(/capabilities cannot be inferred/);
+    ).rejects.toMatchObject({ code: 'capabilities_required', reason: 'invalid' });
 
     const created = await service.create({
       agentId,
@@ -174,6 +183,27 @@ describe('AgentAccountService — provisioning', () => {
     expect(created.capabilities).toEqual({ login: true, receive: false, send: false });
   });
 
+  it('refuses to mount a handle on a provider the deployment runs, before writing anything', async () => {
+    const { calls, fetchImpl } = createMailFetch();
+    const service = buildService(fetchImpl);
+
+    // Mounting would persist an inbox the caller merely names; revoke would then
+    // delete it, and send would speak as it, with the deployment-wide key.
+    await expect(
+      service.create({
+        agentId,
+        capabilities: { receive: true, send: true },
+        identifier: 'someone-else@lobe.id',
+        kind: 'mail',
+        metadata: { inboxId: 'inb_someone_else' },
+        provider: 'agent-mail',
+      }),
+    ).rejects.toMatchObject({ code: 'provider_managed', reason: 'invalid' });
+
+    expect(await service.list()).toHaveLength(0);
+    expect(calls).toEqual([]);
+  });
+
   it('refuses to open an account on an agent the caller does not own', async () => {
     const { calls, fetchImpl } = createMailFetch();
     const service = buildService(fetchImpl);
@@ -181,11 +211,11 @@ describe('AgentAccountService — provisioning', () => {
     await serverDB.insert(users).values({ id: foreignUserId });
     await serverDB.insert(agents).values({ id: foreignAgentId, userId: foreignUserId });
 
-    // Being able to see or use a shared agent is not enough: an account binds
-    // an address *and a credential* to it, which only its creator may do.
+    // An agent the caller cannot see answers like a missing one, so the refusal
+    // never confirms that a colleague's private agent exists.
     await expect(
       service.provision({ agentId: foreignAgentId, provider: 'agent-mail' }),
-    ).rejects.toMatchObject({ code: 'FORBIDDEN' });
+    ).rejects.toMatchObject({ code: 'NOT_FOUND' });
 
     // Refused before the provider ran, so no remote inbox was created at all.
     expect(calls).toEqual([]);
@@ -199,7 +229,7 @@ describe('AgentAccountService — provisioning', () => {
         kind: 'service',
         provider: 'user',
       }),
-    ).rejects.toMatchObject({ code: 'FORBIDDEN' });
+    ).rejects.toMatchObject({ code: 'NOT_FOUND' });
 
     expect(await service.list()).toHaveLength(0);
   });
@@ -412,7 +442,7 @@ describe('AgentAccountService — actions', () => {
     // so a patched id would let the account send as, or delete, another inbox.
     await expect(
       service.update(created.id, { metadata: { inboxId: 'inb_someone_else' } }),
-    ).rejects.toThrow(/not patchable/);
+    ).rejects.toMatchObject({ code: 'provider_owned_field', reason: 'invalid' });
     expect(await service.get(created.id)).toMatchObject({
       metadata: { clientId: 'cli_1', inboxId: 'inb_1' },
     });
@@ -433,33 +463,45 @@ describe('AgentAccountService — actions', () => {
     );
   });
 
-  it('refuses mutations from a workspace member who did not create the agent', async () => {
+  it('admits exactly the members the agent edit ACL admits, for every write', async () => {
     const workspaceId = 'agent-identity-service-ws';
-    await serverDB.insert(users).values({ id: foreignUserId });
+    const editorId = 'agent-identity-service-editor';
+    await serverDB.insert(users).values([{ id: foreignUserId }, { id: editorId }]);
     const sharedAgentId = 'agent-identity-service-shared-agent';
     await serverDB
       .insert(workspaces)
       .values({ id: workspaceId, name: workspaceId, primaryOwnerId: userId, slug: workspaceId });
-    // Shared with the workspace, so the member can use the agent — just not edit it.
     await serverDB
       .insert(agents)
       .values({ id: sharedAgentId, userId, visibility: 'public', workspaceId });
+    // The member may use the shared agent but holds no edit level on it; the
+    // editor is a collaborator with an edit grant, though not its creator.
+    assertCanEditResource.mockImplementation(async (params) => {
+      if (params.userId === foreignUserId) {
+        throw new TRPCError({ code: 'FORBIDDEN', message: 'no edit' });
+      }
+    });
 
     const { calls, fetchImpl } = createMailFetch();
     const registry = new AgentAccountProviderRegistry().register(
       createAgentMailProvider({ apiKey: 'am_svc', fetchImpl, webhookUrl: 'https://x/hook' }),
     );
-    const creator = new AgentAccountService(serverDB, userId, {
-      gateKeeper,
-      registry,
-      workspaceId,
-    });
-    const member = new AgentAccountService(serverDB, foreignUserId, {
-      gateKeeper,
-      registry,
-      workspaceId,
-    });
-    const created = await creator.provision({ agentId: sharedAgentId, provider: 'agent-mail' });
+    const serviceFor = (id: string) =>
+      new AgentAccountService(serverDB, id, { gateKeeper, registry, workspaceId });
+    const member = serviceFor(foreignUserId);
+    const editor = serviceFor(editorId);
+
+    await expect(
+      member.provision({ agentId: sharedAgentId, provider: 'agent-mail' }),
+    ).rejects.toMatchObject({ code: 'FORBIDDEN' });
+    expect(calls).toEqual([]);
+
+    // The transports admit an edit-level collaborator, so the service must not
+    // refuse them a second time on a creator-only rule.
+    const created = await editor.provision({ agentId: sharedAgentId, provider: 'agent-mail' });
+    expect(assertCanEditResource).toHaveBeenCalledWith(
+      expect.objectContaining({ resourceId: sharedAgentId, resourceType: 'agent', workspaceId }),
+    );
 
     // The workspace scope lets the member see the account; that is not enough
     // to replace its secret, rewrite it or release its inbox.
@@ -471,9 +513,10 @@ describe('AgentAccountService — actions', () => {
       code: 'FORBIDDEN',
     });
     await expect(member.revoke(created.id)).rejects.toMatchObject({ code: 'FORBIDDEN' });
-
     expect(calls.some((c) => c.method === 'DELETE')).toBe(false);
-    expect(await creator.get(created.id)).toMatchObject({ displayName: null, status: 'active' });
+
+    await expect(editor.update(created.id, { displayName: 'Ops inbox' })).resolves.toBe(created.id);
+    expect(await editor.get(created.id)).toMatchObject({ displayName: 'Ops inbox' });
 
     await serverDB.delete(agentAccounts);
     await serverDB.delete(agents).where(eq(agents.id, sharedAgentId));
