@@ -64,6 +64,33 @@ describe('manual environment refresh', () => {
     expect(result.current.usageError).toBe(true);
   });
 
+  it('keeps the newest recovery when an older failed refresh finishes last', async () => {
+    vi.spyOn(console, 'error').mockImplementation(() => {});
+    const requests = actions();
+    let finishOlder!: () => void;
+    requests.environments.mockReturnValueOnce(
+      new Promise<void>((resolve) => {
+        finishOlder = resolve;
+      }),
+    );
+    requests.usage.mockRejectedValueOnce(new Error('older measurement failed'));
+    const { result } = renderHook(() => useEnvironmentRefresh(requests));
+    let older!: Promise<void>;
+    await act(async () => {
+      older = result.current.refresh();
+    });
+    await act(async () => {
+      await result.current.refresh();
+    });
+    expect(result.current.usageError).toBe(false);
+    await act(async () => {
+      finishOlder();
+      await older;
+    });
+    expect(result.current.usageError).toBe(false);
+    expect(result.current.refreshing).toBe(false);
+  });
+
   it('accepts a successful null result for an account without storage', async () => {
     const requests = actions();
     requests.usage.mockResolvedValueOnce(null);

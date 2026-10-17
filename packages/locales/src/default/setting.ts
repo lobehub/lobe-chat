@@ -4237,6 +4237,8 @@ When I am ___, I need ___
   'environments.removeConfirmContent':
     "Its specification, variables, its copy's folder and the saved snapshot go with it, and cannot be recovered.",
   'environments.storage.refreshFailed': 'Storage usage unavailable. Refresh to try again.',
+  'environments.storage.refreshFailedCached':
+    'Refresh failed. Showing last measured usage. Refresh to try again.',
   'environments.storage.used': '{{used}} of {{total}}',
   'environments.storage.unmeasured': 'Storage not measured yet · {{total}} available',
   'environments.storage.measuredAt': 'Measured {{time}}. Refresh to measure again.',
