@@ -168,7 +168,7 @@ interface GitStatusReadResult<T> {
 
 type GitStatusSlice<T> = Pick<
   ReplicaSlice<GitStatusStore, GitStatusParams, GitStatusRead<T>, any>,
-  'beginOptimistic' | 'revalidate' | 'update' | 'useSync'
+  'beginOptimistic' | 'fetch' | 'revalidate' | 'update' | 'useSync'
 >;
 
 /**
@@ -223,16 +223,26 @@ const useGitStatusRead = <T>(
       }
       if (data === undefined || options?.revalidate !== false) {
         const pending = optimistic.current;
-        await revalidate();
-        // Settle the overlay once the probe has answered, by rolling it back to
-        // the confirmed base: the head response already persisted that value.
-        // Committing would re-apply the optimistic mutation to the base, so a
-        // FAILED checkout (the probe answers with the old branch) would be
-        // re-persisted as if it had landed.
-        if (pending && optimistic.current === pending) {
-          pending.token.rollback();
-          optimistic.current = null;
+        if (pending && params) {
+          // A fresh read, not `revalidate`: a pre-checkout request may still be
+          // in flight, and its response would settle the overlay back to the
+          // branch the user just left.
+          try {
+            await slice.fetch(params, { fresh: true });
+          } catch {
+            // Keep the confirmed base; a later read repairs an unreachable device.
+          } finally {
+            // The head response already persisted the confirmed value. Roll back
+            // to it: committing would re-apply the optimistic mutation to the
+            // base, so a FAILED checkout would be re-persisted as if it landed.
+            if (optimistic.current === pending) {
+              pending.token.rollback();
+              optimistic.current = null;
+            }
+          }
+          return;
         }
+        await revalidate();
       }
     },
     [key, slice, revalidate],
