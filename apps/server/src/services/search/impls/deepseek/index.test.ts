@@ -147,6 +147,18 @@ describe('DeepSeekImpl', () => {
       expect(parsedBody.query.length).toBeLessThanOrEqual(128);
     });
 
+    it('should truncate query even when searchTimeRange is unknown or unsupported', async () => {
+      vi.mocked(fetch).mockResolvedValueOnce(createMockResponse(makeDeepSeekResponse([])));
+
+      const longQuery = 'a'.repeat(200);
+      await impl.query(longQuery, { searchTimeRange: '1d' });
+
+      const fetchCall = vi.mocked(fetch).mock.calls[0];
+      const options = fetchCall[1] as RequestInit;
+      const parsedBody = JSON.parse(options.body as string);
+      expect(parsedBody.query).toHaveLength(128);
+    });
+
     it('should truncate query if exceeding 128 characters', async () => {
       vi.mocked(fetch).mockResolvedValueOnce(createMockResponse(makeDeepSeekResponse([])));
 

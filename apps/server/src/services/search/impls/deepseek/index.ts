@@ -40,7 +40,9 @@ export class DeepSeekImpl implements SearchServiceImpl {
         const maxQueryLen = Math.max(0, 128 - afterSuffix.length);
         formattedQuery = `${formattedQuery.slice(0, maxQueryLen).trim()}${afterSuffix}`;
       }
-    } else if (formattedQuery.length > 128) {
+    }
+
+    if (formattedQuery.length > 128) {
       formattedQuery = formattedQuery.slice(0, 128);
     }
 
