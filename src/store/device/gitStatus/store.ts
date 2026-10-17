@@ -19,6 +19,8 @@ import { expose } from '@/store/middleware/expose';
 import {
   gitAheadBehindResource,
   gitBranchResource,
+  type GitDiffStats,
+  gitDiffStatsResource,
   gitStatusKey,
   type GitStatusParams,
   type GitStatusRead,
@@ -33,6 +35,9 @@ export interface GitStatusStoreState {
   /** `gitStatusKey(params)` → current branch + detached + upstream. */
   gitBranchMap: Record<string, GitStatusRead<GitBranchSummary>>;
   gitBranchReplica: ReplicaState<GitStatusRead<GitBranchSummary>>;
+  /** `gitStatusKey(params)` → uncommitted diff line/file counts (composer chip). */
+  gitDiffStatsMap: Record<string, GitStatusRead<GitDiffStats>>;
+  gitDiffStatsReplica: ReplicaState<GitStatusRead<GitDiffStats>>;
   /** `gitStatusKey(params)` → dirty-file counts. */
   gitWorkingTreeStatusMap: Record<string, GitStatusRead<DeviceGitWorkingTreeStatus>>;
   gitWorkingTreeStatusReplica: ReplicaState<GitStatusRead<DeviceGitWorkingTreeStatus>>;
@@ -46,13 +51,16 @@ export const initialGitStatusState: GitStatusStoreState = {
   gitAheadBehindReplica: createReplicaState(),
   gitBranchMap: {},
   gitBranchReplica: createReplicaState(),
+  gitDiffStatsMap: {},
+  gitDiffStatsReplica: createReplicaState(),
   gitWorkingTreeStatusMap: {},
   gitWorkingTreeStatusReplica: createReplicaState(),
   gitWorktreesMap: {},
   gitWorktreesReplica: createReplicaState(),
 };
 
-export type GitStatusKind = 'aheadBehind' | 'branch' | 'workingTreeStatus' | 'worktrees';
+export type GitStatusKind =
+  'aheadBehind' | 'branch' | 'diffStats' | 'workingTreeStatus' | 'worktrees';
 
 const createSlices = (
   set: (partial: Partial<GitStatusStore>, replace?: false, action?: any) => void,
@@ -75,6 +83,15 @@ const createSlices = (
     set,
     stateKey: 'gitBranchReplica',
     view: recordLens<GitStatusStore, GitStatusRead<GitBranchSummary>>('gitBranchMap'),
+  }),
+  // No fetcher: the counts are written from the review-patch read that already
+  // fetched them (see `useFetchGitDiffStats` + the GitStatus effect).
+  diffStats: createReplicaSlice(gitDiffStatsResource, {
+    actionPrefix: 'gitStatus/diffStats',
+    get,
+    set,
+    stateKey: 'gitDiffStatsReplica',
+    view: recordLens<GitStatusStore, GitStatusRead<GitDiffStats>>('gitDiffStatsMap'),
   }),
   workingTreeStatus: createReplicaSlice(gitWorkingTreeStatusResource, {
     actionPrefix: 'gitStatus/workingTreeStatus',
@@ -116,7 +133,13 @@ export interface GitStatusStore extends GitStatusStoreState {
   slices: GitStatusSlices;
 }
 
-const ALL_KINDS: GitStatusKind[] = ['aheadBehind', 'branch', 'workingTreeStatus', 'worktrees'];
+const ALL_KINDS: GitStatusKind[] = [
+  'aheadBehind',
+  'branch',
+  'diffStats',
+  'workingTreeStatus',
+  'worktrees',
+];
 
 const devtools = createDevtools('gitStatus');
 

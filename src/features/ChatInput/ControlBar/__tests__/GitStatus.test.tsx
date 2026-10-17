@@ -25,8 +25,10 @@ const gitHookMocks = vi.hoisted(() => ({
   mutatePR: vi.fn(),
   mutateReviewPatches: vi.fn(),
   mutateWorktrees: vi.fn(),
+  setDiffStats: vi.fn(),
   useFetchGitAheadBehind: vi.fn(),
   useFetchGitBranch: vi.fn(),
+  useFetchGitDiffStats: vi.fn(),
   useFetchGitLinkedPR: vi.fn(),
   useReviewPatches: vi.fn(),
   useFetchGitWorktrees: vi.fn(),
@@ -37,7 +39,9 @@ vi.mock('../BranchSwitcher', () => ({
 }));
 
 vi.mock('../WorktreeSwitcher', () => ({
-  default: () => <span data-testid="worktree-switcher" />,
+  default: ({ disabled }: { disabled?: boolean }) => (
+    <span data-disabled={Boolean(disabled)} data-testid="worktree-switcher" />
+  ),
 }));
 
 vi.mock('../StaleGitSnapshot', () => ({
@@ -55,6 +59,7 @@ vi.mock('@/store/device', () => ({
     selector(deviceStoreMock),
   useFetchGitAheadBehind: gitHookMocks.useFetchGitAheadBehind,
   useFetchGitBranch: gitHookMocks.useFetchGitBranch,
+  useFetchGitDiffStats: gitHookMocks.useFetchGitDiffStats,
   useFetchGitLinkedPR: gitHookMocks.useFetchGitLinkedPR,
   useReviewPatches: gitHookMocks.useReviewPatches,
   useFetchGitWorktrees: gitHookMocks.useFetchGitWorktrees,
@@ -133,10 +138,14 @@ beforeEach(() => {
     data: [],
     mutate: gitHookMocks.mutateWorktrees,
   });
+  gitHookMocks.useFetchGitDiffStats.mockReturnValue({
+    data: undefined,
+    set: gitHookMocks.setDiffStats,
+  });
 });
 
 describe('GitStatus', () => {
-  it('opens the review panel when clicking remote device diff stats', () => {
+  it('opens the review panel when clicking remote device diff stats', async () => {
     render(<GitStatus agentId="agent-1" deviceId="device-1" isGithub={false} path="/repo" />);
 
     expect(gitHookMocks.useReviewPatches).toHaveBeenCalledWith(
@@ -148,6 +157,14 @@ describe('GitStatus', () => {
     );
     expect(screen.getByText('+3')).toBeInTheDocument();
     expect(screen.getByText('-1')).toBeInTheDocument();
+    // The confirmed counts are handed to the replica so a reload can paint them.
+    await waitFor(() =>
+      expect(gitHookMocks.setDiffStats).toHaveBeenCalledWith({
+        additions: 3,
+        deletions: 1,
+        files: 1,
+      }),
+    );
 
     fireEvent.click(screen.getByRole('button'));
 
@@ -180,6 +197,25 @@ describe('GitStatus', () => {
     });
   });
 
+  // The diff counts come from a separate read. Their persisted copy keeps the
+  // composer cluster stable while that read is still in flight.
+  it('paints the persisted change counts while the review patches load', () => {
+    gitHookMocks.useReviewPatches.mockReturnValue({
+      data: undefined,
+      mutate: gitHookMocks.mutateReviewPatches,
+    });
+    gitHookMocks.useFetchGitDiffStats.mockReturnValue({
+      data: { additions: 4, deletions: 2, files: 2 },
+      set: gitHookMocks.setDiffStats,
+    });
+
+    render(<GitStatus isGithub agentId="agent-1" path="/repo" />);
+
+    expect(screen.getByText('+4')).toBeInTheDocument();
+    expect(screen.getByText('-2')).toBeInTheDocument();
+    expect(gitHookMocks.setDiffStats).not.toHaveBeenCalled();
+  });
+
   // Review P1: the stale-first branch is a paint-only stand-in. Checkout, pull
   // and push must wait until this session's probe confirms it.
   it('keeps checkout, pull and push inert until the current probe confirms the branch', () => {
@@ -204,8 +240,9 @@ describe('GitStatus', () => {
 
     // The branch label still paints…
     expect(screen.getByText('fix/remote-review')).toBeInTheDocument();
-    // …but no checkout entry (worktree menu) and no working sync.
-    expect(screen.queryByTestId('worktree-switcher')).not.toBeInTheDocument();
+    // …and the worktree entry stays mounted (removing it would shift the branch
+    // chip when it returns) but is inert until confirmation.
+    expect(screen.getByTestId('worktree-switcher')).toHaveAttribute('data-disabled', 'true');
     const push = screen.getByText('2').closest('[role="button"]')!;
     const pull = screen.getByText('1').closest('[role="button"]')!;
     expect(push).toHaveAttribute('aria-disabled', 'true');
@@ -533,7 +570,7 @@ describe('GitStatus', () => {
 
     render(<GitStatus isGithub agentId="agent-1" path="/repo" sourcePath="/repo" />);
 
-    expect(screen.getByTestId('worktree-switcher')).toBeInTheDocument();
+    expect(screen.getByTestId('worktree-switcher')).toHaveAttribute('data-disabled', 'false');
     expect(screen.getByText('fix/remote-review')).toBeInTheDocument();
   });
 });

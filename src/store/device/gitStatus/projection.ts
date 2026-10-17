@@ -38,6 +38,17 @@ export interface GitStatusRead<T> {
 }
 
 /**
+ * Line/file counts of the uncommitted diff — the numbers behind the composer's
+ * `+N −M` chip. Derived from the review patches, but only the compact counts are
+ * kept: no patch text, no file contents.
+ */
+export interface GitDiffStats {
+  additions: number;
+  deletions: number;
+  files: number;
+}
+
+/**
  * Directories a user works in; old ones fall out of storage, not out of the
  * app. Capped at the P0 git-overlay budget (20 per resource, LRU-evicted).
  */
@@ -79,6 +90,18 @@ export const gitWorktreesResource = defineReplica<
 >({
   key: gitStatusKey,
   name: 'deviceGitWorktrees',
+  persist,
+  storage: 'indexedDB',
+  version: 1,
+});
+
+/**
+ * Memory + storage only: the counts are written from the review-patch read
+ * (a sibling resource), so there is no fetcher of its own to run.
+ */
+export const gitDiffStatsResource = defineReplica<GitStatusParams, GitStatusRead<GitDiffStats>>({
+  key: gitStatusKey,
+  name: 'deviceGitDiffStats',
   persist,
   storage: 'indexedDB',
   version: 1,

@@ -21,12 +21,14 @@ import { gitService } from '@/services/git';
 import {
   useFetchGitAheadBehind,
   useFetchGitBranch,
+  useFetchGitDiffStats,
   useFetchGitWorkingTreeStatus,
   useFetchGitWorktrees,
 } from '../gitHooks';
 import {
   gitAheadBehindResource,
   gitBranchResource,
+  gitDiffStatsResource,
   gitStatusKey,
   gitWorkingTreeStatusResource,
   gitWorktreesResource,
@@ -75,6 +77,7 @@ const deferred = <T>() => {
 const RESOURCES = [
   gitBranchResource,
   gitAheadBehindResource,
+  gitDiffStatsResource,
   gitWorkingTreeStatusResource,
   gitWorktreesResource,
 ] as const;
@@ -298,6 +301,30 @@ describe('git status replicas', () => {
         })
       )?.data,
     ).toEqual({ value: { branch: 'main', detached: false } });
+  });
+
+  // The composer's `+N −M` chip is derived from review patches; only its compact
+  // counts are persisted, so a reload paints the chip instead of growing the
+  // cluster when the diff arrives.
+  it('paints persisted diff counts and persists a confirmed write', async () => {
+    await seed(gitDiffStatsResource, REMOTE, { additions: 4, deletions: 2, files: 2 });
+    const { result } = renderHook(() => useFetchGitDiffStats('device-1', '/repo'), { wrapper });
+
+    await waitFor(() =>
+      expect(result.current.data).toEqual({ additions: 4, deletions: 2, files: 2 }),
+    );
+    act(() => result.current.set({ additions: 0, deletions: 0, files: 0 }));
+    expect(result.current.data).toEqual({ additions: 0, deletions: 0, files: 0 });
+    await waitFor(async () =>
+      expect(
+        (
+          await gitDiffStatsResource.storage!.get({
+            queryKey: gitDiffStatsResource.storageKey(REMOTE),
+            scope,
+          })
+        )?.data,
+      ).toEqual({ value: { additions: 0, deletions: 0, files: 0 } }),
+    );
   });
 
   it('revalidates the mounted reads of a directory', async () => {

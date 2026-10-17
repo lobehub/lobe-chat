@@ -20,7 +20,12 @@ import { mutate, useClientDataSWR } from '@/libs/swr';
 import { deviceKeys, localFileKeys } from '@/libs/swr/keys';
 import { type GitBranchSummary, type GitLinkedPRSummary, gitService } from '@/services/git';
 
-import { gitStatusKey, type GitStatusParams, type GitStatusRead } from './gitStatus/projection';
+import {
+  type GitDiffStats,
+  gitStatusKey,
+  type GitStatusParams,
+  type GitStatusRead,
+} from './gitStatus/projection';
 import { type GitStatusStore, useGitStatusStore } from './gitStatus/store';
 
 export type ReviewMode = 'unstaged' | 'branch';
@@ -157,11 +162,13 @@ interface GitStatusReadResult<T> {
    * re-runs the read that settles it.
    */
   mutate: (data?: T, options?: { revalidate?: boolean }) => Promise<unknown>;
+  /** Confirmed local write (persisted): for derived data a sibling read owns. */
+  set: (data: T) => void;
 }
 
 type GitStatusSlice<T> = Pick<
   ReplicaSlice<GitStatusStore, GitStatusParams, GitStatusRead<T>, any>,
-  'beginOptimistic' | 'revalidate' | 'useSync'
+  'beginOptimistic' | 'revalidate' | 'update' | 'useSync'
 >;
 
 /**
@@ -230,6 +237,16 @@ const useGitStatusRead = <T>(
     [key, slice, revalidate],
   );
 
+  const set = useCallback(
+    (data: T) => {
+      if (!key) return;
+      // Confirmed by the read that produced it (the review patches), so it is
+      // allowed to replace and persist the row.
+      slice.update(key, () => ({ value: data }));
+    },
+    [key, slice],
+  );
+
   return {
     data: stored?.value,
     error,
@@ -237,6 +254,7 @@ const useGitStatusRead = <T>(
     isLoading: !!params && stored === undefined && !error && (!isHydrated || isValidating),
     isValidating,
     mutate,
+    set,
   };
 };
 
@@ -245,8 +263,11 @@ const selectAheadBehindMap = (s: GitStatusStore) => s.gitAheadBehindMap;
 const selectWorkingTreeStatusMap = (s: GitStatusStore) => s.gitWorkingTreeStatusMap;
 const selectWorktreesMap = (s: GitStatusStore) => s.gitWorktreesMap;
 
+const selectDiffStatsMap = (s: GitStatusStore) => s.gitDiffStatsMap;
+
 const selectBranchEntries = (s: GitStatusStore) => s.gitBranchReplica.entries;
 const selectAheadBehindEntries = (s: GitStatusStore) => s.gitAheadBehindReplica.entries;
+const selectDiffStatsEntries = (s: GitStatusStore) => s.gitDiffStatsReplica.entries;
 const selectWorkingTreeStatusEntries = (s: GitStatusStore) => s.gitWorkingTreeStatusReplica.entries;
 const selectWorktreesEntries = (s: GitStatusStore) => s.gitWorktreesReplica.entries;
 
@@ -288,6 +309,21 @@ export const useFetchGitLinkedPR = (
       : null,
     () => gitService.getLinkedPullRequest({ branch: branch!, deviceId, path: path! }),
     { dedupingInterval: 60 * 1000, focusThrottleInterval: 60 * 1000, shouldRetryOnError: false },
+  );
+
+/**
+ * Compact uncommitted-diff counts for the composer's `+N −M` chip. There is no
+ * read of its own: the review-patch hook writes the counts here once they load,
+ * so a reload paints the previous session's chip before the diff is fetched.
+ */
+export const useFetchGitDiffStats = (deviceId: string | undefined, path?: string) =>
+  useGitStatusRead<GitDiffStats>(
+    useGitStatusStore.getState().slices.diffStats,
+    selectDiffStatsMap,
+    selectDiffStatsEntries,
+    deviceId,
+    path,
+    {},
   );
 
 /**

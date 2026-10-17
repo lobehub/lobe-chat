@@ -329,12 +329,13 @@ const Overview = memo<OverviewProps>(
           />
         )}
 
-        {isLinkedWorktree && branch && workingDirectory && agentId && branchConfirmed && (
+        {isLinkedWorktree && branch && workingDirectory && agentId && (
           <WorktreeSwitcher
             agentId={agentId}
             currentBranch={branch}
             detached={detached}
             deviceId={deviceId}
+            disabled={!branchConfirmed}
             isGithub={isGithub}
             path={workingDirectory}
             placement={'bottomLeft'}
@@ -343,10 +344,10 @@ const Overview = memo<OverviewProps>(
             onWorktreesChange={mutateWorktrees}
           >
             <OverviewRow
-              interactive
               icon={GitForkIcon}
+              interactive={branchConfirmed}
               title={sourcePath ?? workingDirectory}
-              trailing={<PickerGlyph />}
+              trailing={branchConfirmed ? <PickerGlyph /> : undefined}
               value={t('workingPanel.overview.worktree.of', {
                 name: pathBasename(sourcePath ?? workingDirectory),
               })}

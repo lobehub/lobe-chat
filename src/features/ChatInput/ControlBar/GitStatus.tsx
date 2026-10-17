@@ -1,7 +1,7 @@
 import type { WorkingDirGitState } from '@lobechat/types';
 import { createStaticStyles, cssVar, Icon, toast, Tooltip } from '@lobehub/ui';
 import { ArrowDownIcon, ArrowUpIcon, GitPullRequest } from 'lucide-react';
-import { memo, useCallback, useMemo, useState } from 'react';
+import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import RingLoadingIcon from '@/components/RingLoading';
@@ -11,6 +11,7 @@ import {
   useDeviceStore,
   useFetchGitAheadBehind,
   useFetchGitBranch,
+  useFetchGitDiffStats,
   useFetchGitLinkedPR,
   useFetchGitWorktrees,
   useReviewPatches,
@@ -200,6 +201,10 @@ const GitStatus = memo<GitStatusProps>(
       deviceId,
       !isStale,
     );
+    // The `+N −M` chip is derived from the review patches (a separate read), so
+    // persist only its compact counts. That lets a reload paint the previous
+    // session's chip instead of growing the cluster after the diff arrives.
+    const { data: cachedDiffStats, set: setDiffStats } = useFetchGitDiffStats(deviceId, path);
     const livePath = isStale ? undefined : path;
     const { data: aheadBehind, mutate: mutateAheadBehind } = useFetchGitAheadBehind(
       deviceId,
@@ -309,7 +314,7 @@ const GitStatus = memo<GitStatusProps>(
       }
     }, [deviceId, path, pulling, pushing, refreshAfterSync, t]);
 
-    const diffStats = useMemo(() => {
+    const liveDiffStats = useMemo(() => {
       const patches = [
         ...(reviewPatches?.patches ?? []),
         ...(reviewPatches?.submodules ?? []).flatMap((submodule) => submodule.patches),
@@ -324,6 +329,13 @@ const GitStatus = memo<GitStatusProps>(
         { additions: 0, deletions: 0, files: 0 },
       );
     }, [reviewPatches?.patches, reviewPatches?.submodules]);
+    // Persist the confirmed counts; an empty answer (no patches) also replaces
+    // the stale chip.
+    useEffect(() => {
+      if (reviewPatches !== undefined) setDiffStats(liveDiffStats);
+    }, [reviewPatches, liveDiffStats, setDiffStats]);
+    const diffStats =
+      reviewPatches !== undefined ? liveDiffStats : (cachedDiffStats ?? liveDiffStats);
     const hasChanges = diffStats.files > 0;
 
     // Dead directory: the whole live cluster is unreachable, so hand off to the
@@ -404,7 +416,7 @@ const GitStatus = memo<GitStatusProps>(
       </div>
     );
 
-    const hasWorktreeMenu = worktrees.length > 0 && branchConfirmed;
+    const hasWorktreeMenu = worktrees.length > 0;
 
     const worktreeNode = hasWorktreeMenu ? (
       <WorktreeSwitcher
@@ -412,6 +424,7 @@ const GitStatus = memo<GitStatusProps>(
         currentBranch={branch}
         detached={detached}
         deviceId={deviceId}
+        disabled={!branchConfirmed}
         isGithub={isGithub}
         path={path}
         sourcePath={sourcePath ?? path}
