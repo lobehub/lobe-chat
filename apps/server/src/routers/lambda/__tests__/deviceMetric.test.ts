@@ -117,4 +117,25 @@ describe('deviceMetricRouter.getSeries', () => {
     expect(series.cpuCount).toBe(8);
     expect(series.points).toHaveLength(1);
   });
+  it('reads the personal row of a deviceId shared with a workspace row when scoped personal', async () => {
+    deviceModel.findWorkspaceDeviceById.mockResolvedValue({ id: 'row-ws', workspaceId: 'ws-1' });
+    deviceModel.findPersonalByDeviceId.mockResolvedValue({ id: 'row-1', workspaceId: null });
+
+    await workspace.getSeries({ deviceId: 'shared', scope: 'personal' });
+
+    expect(deviceModel.findWorkspaceDeviceById).not.toHaveBeenCalled();
+    expect(queryDeviceMetrics).toHaveBeenCalledWith(
+      expect.objectContaining({ deviceId: 'shared', workspaceId: undefined }),
+    );
+  });
+
+  it('does not fall back to a personal row when scoped workspace', async () => {
+    deviceModel.findWorkspaceDeviceById.mockResolvedValue(undefined);
+    deviceModel.findPersonalByDeviceId.mockResolvedValue({ id: 'row-1', workspaceId: null });
+
+    await expect(
+      workspace.getSeries({ deviceId: 'shared', scope: 'workspace' }),
+    ).rejects.toMatchObject({ code: 'NOT_FOUND' });
+    expect(queryDeviceMetrics).not.toHaveBeenCalled();
+  });
 });

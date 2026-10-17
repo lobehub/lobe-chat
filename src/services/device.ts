@@ -1,4 +1,9 @@
-import type { DeviceBoundAgentItem, DeviceEnroller, DeviceRunningSummary } from '@lobechat/types';
+import type {
+  DeviceBoundAgentItem,
+  DeviceEnroller,
+  DeviceRunningSummary,
+  DeviceScope,
+} from '@lobechat/types';
 
 import { lambdaClient } from '@/libs/trpc/client';
 import { type TopicListItem } from '@/services/topic';
@@ -171,8 +176,8 @@ class DeviceService {
   }
 
   /** The device's recent CPU / memory / load history, bucketed for charting. */
-  getMetricSeries(deviceId: string) {
-    return lambdaClient.deviceMetric.getSeries.query({ deviceId });
+  getMetricSeries(deviceId: string, scope?: DeviceScope) {
+    return lambdaClient.deviceMetric.getSeries.query({ deviceId, scope });
   }
 
   /** Revoke a link. */

@@ -1,4 +1,4 @@
-import type { DeviceMetricSeries } from '@lobechat/types';
+import type { DeviceMetricSeries, DeviceScope } from '@lobechat/types';
 import {
   bucketDeviceMetrics,
   DEVICE_METRIC_RETENTION_MS,
@@ -31,12 +31,22 @@ const deviceMetricProcedure = wsCompatProcedure.use(serverDatabase).use(async (o
    *
    * Returns the workspace principal the device's metrics live under —
    * `undefined` for a personal device, which reports under the user principal
-   * even when it is read from a workspace.
+   * even when it is read from a workspace. A personal and a workspace row can
+   * share a deviceId (an explicit `--device-id` on both connections), so the
+   * list item's `scope` picks the row; without it the workspace row wins.
    */
-  const resolveDevicePrincipal = async (deviceId: string): Promise<string | undefined> => {
-    if (workspaceId && (await deviceModel.findWorkspaceDeviceById(deviceId))) return workspaceId;
+  const resolveDevicePrincipal = async (
+    deviceId: string,
+    scope?: DeviceScope,
+  ): Promise<string | undefined> => {
+    if (
+      workspaceId &&
+      scope !== 'personal' &&
+      (await deviceModel.findWorkspaceDeviceById(deviceId))
+    )
+      return workspaceId;
 
-    if (!(await deviceModel.findPersonalByDeviceId(deviceId))) {
+    if (scope === 'workspace' || !(await deviceModel.findPersonalByDeviceId(deviceId))) {
       throw new TRPCError({ code: 'NOT_FOUND', message: 'Device not found.' });
     }
     return undefined;
@@ -55,6 +65,8 @@ export const deviceMetricRouter = router({
     .input(
       z.object({
         deviceId: z.string().min(1).max(64),
+        /** The list item's scope; disambiguates a deviceId shared by both scopes. */
+        scope: z.enum(['personal', 'workspace']).optional(),
         windowMs: z
           .number()
           .int()
@@ -64,7 +76,7 @@ export const deviceMetricRouter = router({
       }),
     )
     .query(async ({ ctx, input }): Promise<DeviceMetricSeries> => {
-      const workspaceId = await ctx.resolveDevicePrincipal(input.deviceId);
+      const workspaceId = await ctx.resolveDevicePrincipal(input.deviceId, input.scope);
       const to = Date.now();
       const from = to - input.windowMs;
       const bucketMs = Math.max(
