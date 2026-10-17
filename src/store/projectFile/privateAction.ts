@@ -26,13 +26,22 @@ export class ProjectFilePrivateAction {
       actionPrefix: 'projectFile/projectIndex',
       // An absent result is a terminal "nothing to read there", not a dropped
       // response: the engine skips `isMissing` for `undefined` heads.
-      fetcher: async ({ deviceId, dirPath, sandboxInstanceId, sandboxTopicId }) =>
-        (await projectFileService.getProjectFileIndex({
+      fetcher: async ({ deviceId, dirPath, sandboxInstanceId, sandboxTopicId }) => {
+        const result = await projectFileService.getProjectFileIndex({
           deviceId,
           sandboxInstanceId,
           sandboxTopicId,
           scope: dirPath,
-        })) ?? null,
+        });
+        // A remote read that yields nothing is a transport failure, not a
+        // confirmed empty directory: the device router collapses offline /
+        // timeout to `null`. Throw so the replica keeps its cached tree and
+        // exposes the refresh error instead of deleting the saved row.
+        if (deviceId && !sandboxInstanceId && !sandboxTopicId && !result) {
+          throw new Error('The device did not return a project index');
+        }
+        return result ?? null;
+      },
       get,
       // No tree from the host (nothing to read there) clears the saved one.
       isMissing: (incoming) => incoming === null,

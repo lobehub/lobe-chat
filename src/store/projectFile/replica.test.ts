@@ -21,6 +21,10 @@ vi.mock('@/services/projectFile', () => ({
 vi.mock('@/services/git', () => ({
   gitService: { getGitWorkingTreeFiles: services.getGitWorkingTreeFiles },
 }));
+vi.mock('@lobechat/const', async (importOriginal) => ({
+  ...(await importOriginal<object>()),
+  isDesktop: true,
+}));
 vi.mock('@/store/chat', () => ({ useChatStore: () => false }));
 vi.mock('@/store/chat/selectors', () => ({ operationSelectors: {} }));
 vi.mock('@/libs/swr/useCacheScope', () => ({
@@ -44,7 +48,9 @@ const tree = (names: string[]) => ({
 const never = () => new Promise<never>(() => {});
 
 /** A fresh page: new store, replica engine and (empty) SWR cache. */
-const boot = async () => {
+const boot = async (
+  initialProps: { deviceId?: string; dir: string } = { deviceId: 'device-1', dir: '/repo' },
+) => {
   vi.resetModules();
   const { useFilesTreeSources } =
     await import('@/features/Conversation/WorkingSidebar/Files/useFilesTreeSources');
@@ -55,8 +61,8 @@ const boot = async () => {
       children,
     );
   return renderHook(
-    ({ deviceId, dir }: { deviceId: string; dir: string }) => useFilesTreeSources(deviceId, dir),
-    { initialProps: { deviceId: 'device-1', dir: '/repo' }, wrapper },
+    ({ deviceId, dir }: { deviceId?: string; dir: string }) => useFilesTreeSources(deviceId, dir),
+    { initialProps, wrapper },
   );
 };
 
@@ -128,7 +134,8 @@ describe('Files tab replicas', () => {
       modified: ['a.ts'],
     });
 
-    const view = await boot();
+    // This machine: an absent index is a confirmed "nothing to read there".
+    const view = await boot({ deviceId: undefined, dir: '/repo' });
     await waitFor(() => expect(view.result.current.project.data?.entries).toHaveLength(1));
     await waitFor(() => expect(view.result.current.git.data?.modified).toEqual(['a.ts']));
 
@@ -150,6 +157,33 @@ describe('Files tab replicas', () => {
       'replica:projectFileIndex:v1:',
     );
     expect(rows.filter(({ key }) => !key.includes('__replica'))).toHaveLength(0);
+    view.unmount();
+  });
+
+  it('keeps a remote tree when the device read fails', async () => {
+    services.getProjectFileIndex.mockResolvedValue(tree(['a.ts']));
+    services.getGitWorkingTreeFiles.mockResolvedValue({ added: [], deleted: [], modified: [] });
+
+    const view = await boot();
+    await waitFor(() => expect(view.result.current.project.data?.entries).toHaveLength(1));
+
+    // Offline / RPC timeout: the device router normalizes the missing result to
+    // null. That is not a confirmed empty directory, so the cached tree and
+    // its saved row must stay, with the refresh error exposed.
+    services.getProjectFileIndex.mockResolvedValue(undefined);
+    await act(async () => {
+      await view.result.current.project.mutate().catch(() => {});
+    });
+
+    await waitFor(() => expect(view.result.current.project.error).toBeTruthy());
+    expect(view.result.current.project.data?.entries).toHaveLength(1);
+
+    const db = await readRows();
+    const rows = await db.entriesByPrefix<{ data: unknown }>(
+      'query-projections',
+      'replica:projectFileIndex:v1:',
+    );
+    expect(rows.filter(({ key }) => !key.includes('__replica'))).toHaveLength(1);
     view.unmount();
   });
 
