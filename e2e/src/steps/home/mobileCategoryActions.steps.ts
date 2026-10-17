@@ -3,7 +3,8 @@ import { type APIRequestContext, expect, request } from '@playwright/test';
 
 import type { CustomWorld } from '../../support/world';
 
-const categoryName = '移动端分类边界测试与长名称';
+const categoryName =
+  '移动端分类操作触控边界与超长标题省略验证：此分类名称必须在三百九十和三百二十像素视口下均超出可用文本区域';
 
 async function mutate(api: APIRequestContext, procedure: string, input: unknown) {
   const response = await api.post(`/trpc/lambda/${procedure}`, {
@@ -64,6 +65,17 @@ Given(
 
 Then('分类操作默认可见且有足够的触控区域', async function (this: CustomWorld) {
   await expect(action(this)).toHaveCSS('opacity', '1');
+  const title = category(this).getByText(categoryName, { exact: true });
+  await expect(title).toBeVisible();
+  await expect(title).toHaveCSS('text-overflow', 'ellipsis');
+  await expect(title).toHaveCSS('overflow-x', 'hidden');
+  const textBounds = await title.evaluate((element) => ({
+    clientWidth: element.clientWidth,
+    scrollWidth: element.scrollWidth,
+  }));
+  console.log('Category title truncation:', this.page.viewportSize()!.width, textBounds);
+  expect(textBounds.clientWidth).toBeGreaterThan(0);
+  expect(textBounds.scrollWidth).toBeGreaterThan(textBounds.clientWidth);
   const button = action(this).getByRole('button');
   const bounds = await button.boundingBox();
   expect(bounds).not.toBeNull();
