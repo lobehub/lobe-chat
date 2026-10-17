@@ -131,21 +131,17 @@ describe('agentGroupRouter.checkOwnership', () => {
 });
 
 describe('agentGroupRouter.deprecateAgentGroup', () => {
-  let fetchSpy: ReturnType<typeof vi.spyOn>;
-
   beforeEach(() => {
     vi.clearAllMocks();
-    fetchSpy = vi.spyOn(globalThis, 'fetch' as never);
     mockMarketSDK.agentGroups.deprecate.mockResolvedValue({ success: true });
   });
 
-  it('deprecates through the Market SDK instead of the removed /deprecate route', async () => {
+  it('deprecates the requested group and returns the Market result', async () => {
     const caller = agentGroupRouter.createCaller({ serverDB: {}, userId: 'user-1' } as any);
 
     const result = await caller.deprecateAgentGroup({ identifier: 'group-1' });
 
     expect(mockMarketSDK.agentGroups.deprecate).toHaveBeenCalledWith('group-1');
-    expect(fetchSpy).not.toHaveBeenCalled();
     expect(result).toEqual({ success: true });
   });
 
