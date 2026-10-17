@@ -17,9 +17,19 @@ async function rewriteViteAssetUrls(
   const { parseHTML } = await import('linkedom');
   const { document } = parseHTML(html);
 
+  let replacedStylexRuntime = false;
   document.querySelectorAll('script[src]').forEach((el: Element) => {
     const src = el.getAttribute('src');
-    if (src && src.startsWith('/')) {
+    if (!src) return;
+    // The unplugin runtime fetches "/virtual:stylex.css" on the document origin.
+    // Next serves that path, the fetch returns HTML, and the runtime disables the
+    // link that rewrite below points at Vite.
+    if (src.includes('virtual:stylex:runtime')) {
+      el.remove();
+      replacedStylexRuntime = true;
+      return;
+    }
+    if (src.startsWith('/')) {
       el.setAttribute('src', `${origin}${src}`);
     }
   });
@@ -55,6 +65,13 @@ globalThis.Worker.prototype=O.prototype;
   const head = document.querySelector('head');
   if (head?.firstChild) {
     head.insertBefore(workerPatch, head.firstChild);
+  }
+
+  if (replacedStylexRuntime && head) {
+    const stylexDevCss = document.createElement('script');
+    stylexDevCss.setAttribute('type', 'module');
+    stylexDevCss.setAttribute('src', `${origin}/@id/virtual:lobe-stylex-dev-css`);
+    head.appendChild(stylexDevCss);
   }
 
   return document.toString();
