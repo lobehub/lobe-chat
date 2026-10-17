@@ -182,7 +182,13 @@ const useGitStatusRead = <T>(
   const mutate = useCallback(
     async (data?: T, options?: { revalidate?: boolean }) => {
       if (!key) return;
-      if (data !== undefined) slice.update(key, () => ({ value: data }));
+      if (data !== undefined) {
+        // Explicit writes are optimistic (an in-flight checkout). Keep them out
+        // of persistent storage: the checkout can fail, or the app can close
+        // before `onAfterCheckout` revalidates, and the next launch must not
+        // paint a branch that never landed. Only a confirmed read persists.
+        slice.update(key, () => ({ value: data }), { persist: false });
+      }
       if (data === undefined || options?.revalidate !== false) return revalidate();
     },
     [key, slice, revalidate],

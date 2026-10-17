@@ -10,7 +10,7 @@ import isEqual from 'fast-deep-equal';
 import { gitService } from '@/services/git';
 import { topicSelectors } from '@/store/chat/selectors';
 import { getChatStoreState } from '@/store/chat/store';
-import { useGitStatusStore } from '@/store/device/gitStatus/store';
+import { getGitStatusStoreState } from '@/store/device/gitStatus/store';
 import { getElectronStoreState } from '@/store/electron';
 
 /**
@@ -1077,11 +1077,8 @@ export const recordGitCommandEffects = async (params: {
     const currentDeviceId = getElectronStoreState().gatewayDeviceInfo?.deviceId;
     const cacheDeviceId =
       currentDeviceId && boundDeviceId === currentDeviceId ? 'local' : boundDeviceId;
-    await useGitStatusStore
-      .getState()
-      .revalidateGitStatus(cacheDeviceId === 'local' ? undefined : cacheDeviceId, source, [
-        'branch',
-      ]);
+    const revalidateDeviceId = cacheDeviceId === 'local' ? undefined : cacheDeviceId;
+    await getGitStatusStoreState().revalidateGitStatus(revalidateDeviceId, source, ['branch']);
   }
 };
 

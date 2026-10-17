@@ -187,6 +187,17 @@ describe('git status replicas', () => {
     expect(result.current.data).toBeUndefined();
   });
 
+  it('does not paint the same user’s rows from another workspace', async () => {
+    await seed(gitBranchResource, REMOTE, { branch: 'workspace-one' });
+    useScope(scope.replace(':personal', ':workspace-two'));
+    vi.mocked(gitService.getGitBranch).mockImplementation(pending);
+
+    const { result } = renderHook(() => useFetchGitBranch('device-1', '/repo'), { wrapper });
+    await waitFor(() => expect(gitService.getGitBranch).toHaveBeenCalled());
+
+    expect(result.current.data).toBeUndefined();
+  });
+
   it('lets an empty answer replace a stale persisted row', async () => {
     await seed(gitAheadBehindResource, REMOTE, { ahead: 5, behind: 1 });
     vi.mocked(gitService.getGitAheadBehind).mockResolvedValue(undefined);
@@ -202,8 +213,9 @@ describe('git status replicas', () => {
     expect(result.current.isLoading).toBe(false);
   });
 
-  it('writes an optimistic branch through mutate without refetching', async () => {
-    vi.mocked(gitService.getGitBranch).mockResolvedValue({ branch: 'main' });
+  it('writes an optimistic branch through mutate without refetching, and never persists it', async () => {
+    await seed(gitBranchResource, REMOTE, { branch: 'main', detached: false });
+    vi.mocked(gitService.getGitBranch).mockResolvedValue({ branch: 'main', detached: false });
     const { result } = renderHook(() => useFetchGitBranch('device-1', '/repo'), { wrapper });
     await waitFor(() => expect(result.current.data?.branch).toBe('main'));
     vi.mocked(gitService.getGitBranch).mockClear();
@@ -214,6 +226,18 @@ describe('git status replicas', () => {
 
     expect(result.current.data?.branch).toBe('feat/x');
     expect(gitService.getGitBranch).not.toHaveBeenCalled();
+
+    // Review P2: an optimistic checkout value must stay in memory. If the
+    // checkout fails — or the renderer closes before `onAfterCheckout` runs —
+    // the next launch has to paint the confirmed branch, not `feat/x`.
+    expect(
+      (
+        await gitBranchResource.storage!.get({
+          queryKey: gitBranchResource.storageKey(REMOTE),
+          scope,
+        })
+      )?.data,
+    ).toEqual({ value: { branch: 'main', detached: false } });
   });
 
   it('revalidates the mounted reads of a directory', async () => {

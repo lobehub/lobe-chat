@@ -37,8 +37,11 @@ export interface GitStatusRead<T> {
   value?: T;
 }
 
-/** Directories a user works in; old ones fall out of storage, not out of the app. */
-const persist = { maxEntries: 50 };
+/**
+ * Directories a user works in; old ones fall out of storage, not out of the
+ * app. Capped at the P0 git-overlay budget (20 per resource, LRU-evicted).
+ */
+const persist = { maxEntries: 20 };
 
 export const gitBranchResource = defineReplica<GitStatusParams, GitStatusRead<GitBranchSummary>>({
   key: gitStatusKey,

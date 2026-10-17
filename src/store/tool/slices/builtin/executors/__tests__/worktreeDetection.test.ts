@@ -19,13 +19,8 @@ const gitServiceMocks = vi.hoisted(() => ({
   listGitWorktrees: vi.fn(),
 }));
 
-const gitStatusMocks = vi.hoisted(() => ({
-  revalidateGitStatus: vi.fn(),
-}));
-
-vi.mock('@/store/device/gitStatus/store', () => ({
-  useGitStatusStore: { getState: () => gitStatusMocks },
-}));
+const gsMocks = vi.hoisted(() => ({ revalidateGitStatus: vi.fn() }));
+vi.mock('@/store/device/gitStatus/store', () => ({ getGitStatusStoreState: () => gsMocks }));
 
 vi.mock('@/store/chat/store', () => ({
   getChatStoreState: () => chatMocks,
@@ -320,7 +315,7 @@ describe('recordGitCommandEffects', () => {
 
     await recordGitCommandEffects({ command: 'git switch fix/topic', topicId: 't1' });
 
-    expect(gitStatusMocks.revalidateGitStatus).toHaveBeenCalledWith(undefined, '/repo', ['branch']);
+    expect(gsMocks.revalidateGitStatus).toHaveBeenCalledWith(undefined, '/repo', ['branch']);
   });
 
   it('refreshes the remote-device branch cache after a branch switch', async () => {
@@ -339,9 +334,7 @@ describe('recordGitCommandEffects', () => {
 
     await recordGitCommandEffects({ command: 'git switch fix/topic', topicId: 't1' });
 
-    expect(gitStatusMocks.revalidateGitStatus).toHaveBeenCalledWith('remote-device', '/repo', [
-      'branch',
-    ]);
+    expect(gsMocks.revalidateGitStatus).toHaveBeenCalledWith('remote-device', '/repo', ['branch']);
   });
 
   it('updates the topic branch when the agent switches branch with git switch', async () => {
@@ -1134,6 +1127,6 @@ describe('recordGitCommandEffects — git push', () => {
       topicId: 't1',
     });
 
-    expect(gitStatusMocks.revalidateGitStatus).toHaveBeenCalledWith(undefined, '/repo', ['branch']);
+    expect(gsMocks.revalidateGitStatus).toHaveBeenCalledWith(undefined, '/repo', ['branch']);
   });
 });
