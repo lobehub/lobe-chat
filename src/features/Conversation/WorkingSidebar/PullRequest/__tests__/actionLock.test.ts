@@ -98,4 +98,14 @@ describe('resolvePullRequestActionLock', () => {
       resolvePullRequestActionLock({ ...live, contextError: new Error('gh failed') }).context,
     ).toBe(context);
   });
+
+  it('flags a failed confirmation read that keeps the PR locked', () => {
+    const result = resolvePullRequestActionLock({
+      ...live,
+      confirmError: new Error('device offline'),
+      confirmed: false,
+    });
+    expect(result.locked).toBe(true);
+    expect(result.refreshFailed).toBe(true);
+  });
 });

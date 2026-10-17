@@ -46,16 +46,31 @@ interface PullRequestProps {
    * the pane may paint persisted rows, but must not mutate the PR.
    */
   confirmed: boolean;
+  /** The failed branch / linked-PR read keeping `confirmed` false. */
+  confirmError?: unknown;
   deviceId?: string;
   number: number;
   onOpenTab: (tab: string) => void;
+  /** Re-run the branch / linked-PR reads that confirm `number`. */
+  onRetryConfirm?: () => void;
   summary?: DeviceGitLinkedPullRequest;
   url?: string;
   workingDirectory: string;
 }
 
 const PullRequest = memo<PullRequestProps>(
-  ({ active, confirmed, deviceId, number, onOpenTab, summary, url, workingDirectory }) => {
+  ({
+    active,
+    confirmError,
+    confirmed,
+    deviceId,
+    number,
+    onOpenTab,
+    onRetryConfirm,
+    summary,
+    url,
+    workingDirectory,
+  }) => {
     const { t } = useTranslation('chat');
     const { t: tCommon } = useTranslation('common');
     const {
@@ -86,6 +101,7 @@ const PullRequest = memo<PullRequestProps>(
       policyLocked,
       refreshFailed,
     } = resolvePullRequestActionLock({
+      confirmError,
       confirmed,
       context: cachedContext,
       contextConfirmed,
@@ -175,7 +191,8 @@ const PullRequest = memo<PullRequestProps>(
         >
           {/* The persisted PR still paints, but stays locked until a live read lands. */}
           {refreshFailed &&
-            loadError(fetchError ?? contextError, () => {
+            loadError(confirmError ?? fetchError ?? contextError, () => {
+              onRetryConfirm?.();
               void mutate();
               void mutateContext();
             })}

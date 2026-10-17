@@ -14,8 +14,10 @@ interface ResolveLinkedPullRequestInput {
   available: boolean;
   branch?: { branch?: string; detached?: boolean };
   branchConfirmed: boolean;
+  branchError?: unknown;
   linkedPR?: GitLinkedPRSummary;
   linkedPRConfirmed: boolean;
+  linkedPRError?: unknown;
   snapshot?: PullRequestSnapshot;
 }
 
@@ -25,15 +27,21 @@ interface ResolveLinkedPullRequestInput {
  * only a PR that this session's branch read and linked-PR lookup both
  * confirmed may be mutated — a stale row could otherwise close or merge a PR
  * the repository has since moved off.
+ *
+ * `confirmError`: the failed read that keeps an unconfirmed PR locked, so the
+ * pane can say why and retry it.
  */
 export const resolveLinkedPullRequest = ({
   available,
   branch,
   branchConfirmed,
+  branchError,
   linkedPR,
   linkedPRConfirmed,
+  linkedPRError,
   snapshot,
 }: ResolveLinkedPullRequestInput): {
+  confirmError: unknown;
   confirmed: boolean;
   pullRequest: DeviceGitLinkedPullRequest | null | undefined;
 } => {
@@ -52,7 +60,10 @@ export const resolveLinkedPullRequest = ({
     branchConfirmed &&
     linkedPRConfirmed &&
     linkedPR?.pullRequest?.number === pullRequest.number;
-  return { confirmed, pullRequest };
+  const confirmError = confirmed
+    ? undefined
+    : (!branchConfirmed && branchError) || (!linkedPRConfirmed && linkedPRError) || undefined;
+  return { confirmError, confirmed, pullRequest };
 };
 
 /** Branch → linked PR for the Working Sidebar's PR tab. */
@@ -70,9 +81,15 @@ export const useLinkedPullRequest = ({
   isGithub: boolean;
   snapshot?: PullRequestSnapshot;
 }) => {
-  const { data: branch, isConfirmed: branchConfirmed } = useFetchGitBranch(deviceId, gitPath);
+  const {
+    data: branch,
+    error: branchError,
+    isConfirmed: branchConfirmed,
+    mutate: refreshBranch,
+  } = useFetchGitBranch(deviceId, gitPath);
   const {
     data: linkedPR,
+    error: linkedPRError,
     isConfirmed: linkedPRConfirmed,
     mutate: refresh,
   } = useFetchGitLinkedPR(deviceId, gitPath, branch?.branch, isGithub);
@@ -81,10 +98,17 @@ export const useLinkedPullRequest = ({
       available,
       branch,
       branchConfirmed,
+      branchError,
       linkedPR,
       linkedPRConfirmed,
+      linkedPRError,
       snapshot,
     }),
+    /** Re-run the reads that confirm the PR (branch, then its linked PR). */
+    onRetryConfirm: () => {
+      void refreshBranch();
+      void refresh();
+    },
     refresh,
   };
 };

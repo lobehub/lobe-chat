@@ -3,6 +3,8 @@ import type { DeviceGitPullRequestMergeContext } from '@lobechat/types';
 interface ActionLockInput {
   /** The sidebar's branch + linked-PR reads confirmed this PR number. */
   confirmed: boolean;
+  /** The failed branch / linked-PR read that keeps `confirmed` false. */
+  confirmError?: unknown;
   context: DeviceGitPullRequestMergeContext | null | undefined;
   contextConfirmed: boolean;
   contextError: unknown;
@@ -27,6 +29,7 @@ interface ActionLockInput {
  * row it cannot act on — the pane must say so and offer a retry.
  */
 export const resolvePullRequestActionLock = ({
+  confirmError,
   confirmed,
   context,
   contextConfirmed,
@@ -42,6 +45,9 @@ export const resolvePullRequestActionLock = ({
     contextLoading: locked || policyLocked || (usableContext === undefined && !contextError),
     locked,
     policyLocked,
-    refreshFailed: (!detailConfirmed && !!detailError) || (!contextConfirmed && !!contextError),
+    refreshFailed:
+      (!confirmed && !!confirmError) ||
+      (!detailConfirmed && !!detailError) ||
+      (!contextConfirmed && !!contextError),
   };
 };

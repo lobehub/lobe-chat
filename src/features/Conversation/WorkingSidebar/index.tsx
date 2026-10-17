@@ -440,9 +440,9 @@ const AgentWorkingSidebar = memo<AgentWorkingSidebarProps>(({ availableWidth }) 
     repoType === 'github' || (!repoType && !!snapshotConfig?.git?.github?.pullRequest);
   const gitPath = filesystemEnvironmentAvailable && isGithub ? workingDirectory : undefined;
   const {
-    confirmed: pullRequestConfirmed,
     pullRequest,
     refresh: refreshPullRequest,
+    ...pullRequestLink // confirmed, confirmError, onRetryConfirm
   } = useLinkedPullRequest({
     available: filesystemEnvironmentAvailable && !!workingDirectory,
     deviceId: remoteDeviceId,
@@ -1161,7 +1161,7 @@ const AgentWorkingSidebar = memo<AgentWorkingSidebarProps>(({ availableWidth }) 
                     <Flexbox className={styles.pane}>
                       <PullRequest
                         active={!!showRightPanel && activeTab === 'pr'}
-                        confirmed={pullRequestConfirmed}
+                        {...pullRequestLink}
                         deviceId={remoteDeviceId}
                         key={JSON.stringify([remoteDeviceId, workingDirectory, pullRequest.number])}
                         number={pullRequest.number}
