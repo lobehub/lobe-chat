@@ -18,6 +18,7 @@ import type {
 } from '@lobechat/types';
 
 import type { VerifyStatus } from '@/database/models/agentOperation';
+import type { VerifyAutoRepairOutcome } from '@/database/models/verifyRun';
 import type {
   VerifyCheckResultItem,
   VerifyCriterionItem,
@@ -120,6 +121,8 @@ export interface VerifyCriterionDraft {
 }
 
 export interface VerifyStateResponse {
+  /** The server's auto-repair decision for a failed round; absent until it decided. */
+  verifyAutoRepair?: VerifyAutoRepairOutcome | null;
   verifyPlan: VerifyCheckItem[] | null;
   verifyPlanConfirmedAt: Date | null;
   verifyStatus: VerifyStatus | null;
