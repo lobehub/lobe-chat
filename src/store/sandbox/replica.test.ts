@@ -278,6 +278,43 @@ describe('sandbox replicas', () => {
     expect(await readReplicaStoredKeys(sandboxInstancesResource)).toEqual([SANDBOX_SCOPE_ENTRY]);
   });
 
+  // Regression: every topic shares one entry and one storage key, so the
+  // replica's own guard could not tell topic-1's late answer from topic-2's and
+  // let it overwrite topic-2's — the selector then masked topic-2's own copy as
+  // held by another conversation until the next revalidation.
+  it('drops a superseded conversation’s answer that lands after the current one', async () => {
+    let answerTopic1!: () => void;
+    vi.spyOn(sandboxStorageService, 'listInstances').mockImplementation(({ topicId } = {}) => {
+      const answer = listed(rawInstance({ inUse: true, inUseByThisTopic: true }));
+      if (topicId !== 'topic-1') return Promise.resolve(answer);
+      return new Promise((resolve) => {
+        answerTopic1 = () => resolve(answer);
+      });
+    });
+
+    const { rerender } = renderHook(
+      ({ topicId }) => sandboxActions.useFetchPickerInstances(true, topicId),
+      { initialProps: { topicId: 'topic-1' }, wrapper },
+    );
+    await waitFor(() => expect(answerTopic1).toBeTypeOf('function'));
+
+    rerender({ topicId: 'topic-2' });
+    await waitFor(() =>
+      expect(state().sandboxInstancesMap[SANDBOX_SCOPE_ENTRY]?.topicId).toBe('topic-2'),
+    );
+
+    await act(async () => {
+      answerTopic1();
+      await new Promise((resolve) => setTimeout(resolve, 20));
+    });
+
+    expect(state().sandboxInstancesMap[SANDBOX_SCOPE_ENTRY]?.topicId).toBe('topic-2');
+    expect(sandboxSelectors.pickerInstances('topic-2')(state())?.[0].inUseByThisTopic).toBe(true);
+    await waitFor(async () =>
+      expect((await stored(sandboxInstancesResource))?.topicId).toBe('topic-2'),
+    );
+  });
+
   it('never reads another conversation’s answer as this one holding the copy', () => {
     useSandboxStore.setState({
       sandboxInstancesMap: {

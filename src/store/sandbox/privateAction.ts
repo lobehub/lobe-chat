@@ -4,6 +4,7 @@ import type { StoreSetter } from '@/store/types';
 
 import { type SandboxState } from './initialState';
 import {
+  SANDBOX_SCOPE_ENTRY,
   type SandboxEntitlement,
   sandboxEntitlementResource,
   sandboxEnvironmentsResource,
@@ -46,15 +47,26 @@ export class SandboxPrivateAction {
       stateKey: 'sandboxEnvironmentsReplica',
       view: recordLens<SandboxState, SandboxPickerEnvironment[]>('sandboxEnvironmentsMap'),
     });
+    // The conversation the instance list was last asked for. Every topic shares
+    // one entry and one storage key, so the replica's own guard cannot tell a
+    // superseded topic's late answer from the current one; this does.
+    let askedTopicId: string | null | undefined;
     this.instances = createReplicaSlice(sandboxInstancesResource, {
       actionPrefix: 'sandboxInstances',
       // Names, not sizes: sizes need a live sandbox session to answer.
       fetcher: async ({ topicId }) => {
+        const asked = topicId ?? null;
+        askedTopicId = asked;
         const { instances } = await sandboxStorageService.listInstances({
           topicId,
           withSizes: false,
         });
-        return { instances: instances.map(toPickerInstance), topicId: topicId ?? null };
+        const answer = { instances: instances.map(toPickerInstance), topicId: asked };
+        // Another conversation was asked for since: keep what the entry holds
+        // rather than let this answer overwrite that conversation's occupancy.
+        if (askedTopicId !== asked) return get().sandboxInstancesMap[SANDBOX_SCOPE_ENTRY] ?? answer;
+
+        return answer;
       },
       get,
       set,
