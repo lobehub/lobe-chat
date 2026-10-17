@@ -1096,6 +1096,7 @@ describe('Generation Actions', () => {
     it('re-sends the turn tool picks and mentioned agents when regenerating', async () => {
       const { useChatStore } = await import('@/store/chat');
       vi.mocked(useChatStore.getState).mockReturnValue({
+        dbMessagesMap: {},
         messagesMap: {},
         operations: {},
         operationsByMessage: {},
@@ -1154,6 +1155,7 @@ describe('Generation Actions', () => {
     it('fails the retry instead of dispatching when gateway mode is off', async () => {
       const { useChatStore } = await import('@/store/chat');
       vi.mocked(useChatStore.getState).mockReturnValue({
+        dbMessagesMap: {},
         messagesMap: {},
         operations: {},
         operationsByMessage: {},

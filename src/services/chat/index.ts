@@ -11,7 +11,6 @@ import {
   type RequestTrigger,
   type TracePayload,
   TraceTagMap,
-  type UIChatMessage,
 } from '@lobechat/types';
 import { merge } from 'es-toolkit/compat';
 import { ModelProvider } from 'model-bank/modelProvider';
