@@ -159,9 +159,13 @@ const createSlices = (
   }),
   pullRequestMergeContext: createReplicaSlice(gitPullRequestMergeContextResource, {
     actionPrefix: 'gitReview/pullRequestMergeContext',
-    fetcher: async (params: GitPullRequestMergeContextParams) => ({
-      value: await gitService.getPullRequestMergeContext(params),
-    }),
+    // The local read always answers; `null` is the service's mapping of a
+    // failed remote read and must not replace the persisted context.
+    fetcher: async (params: GitPullRequestMergeContextParams) => {
+      const value = await gitService.getPullRequestMergeContext(params);
+      if (value === null) throw new Error('Unable to load pull request merge context');
+      return { value };
+    },
     get,
     set,
     stateKey: 'gitPullRequestMergeContextReplica',

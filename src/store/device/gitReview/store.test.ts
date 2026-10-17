@@ -579,6 +579,31 @@ describe('Review / PR tab replicas', () => {
       expect(await readRow(gitPullRequestDetailResource, PR)).toEqual({ value: detailResult });
     });
 
+    // Regression: an unavailable remote device answers the merge context with
+    // `null`; it was committed and persisted over the cached permission and
+    // required-check context.
+    it('keeps the persisted merge context when the device read fails', async () => {
+      const cached = {
+        value: {
+          baseBehindBy: 0,
+          requiredChecks: ['ci'],
+          viewerCanBypass: false,
+          viewerCanWrite: true,
+        },
+      };
+      await seed(gitPullRequestMergeContextResource, MERGE, cached);
+      vi.mocked(gitService.getPullRequestMergeContext).mockResolvedValue(null);
+
+      const { result } = renderHook(
+        () => useFetchGitPullRequestMergeContext('device-1', '/repo', detailResult.detail!),
+        { wrapper },
+      );
+
+      await waitFor(() => expect(result.current.error).toBeTruthy());
+      expect(result.current.data?.requiredChecks).toEqual(['ci']);
+      expect(await readRow(gitPullRequestMergeContextResource, MERGE)).toEqual(cached);
+    });
+
     it('does not read a PR for a non-GitHub repo', async () => {
       const { result } = renderHook(
         () => useFetchGitLinkedPR('device-1', '/repo', 'feat/x', false),
