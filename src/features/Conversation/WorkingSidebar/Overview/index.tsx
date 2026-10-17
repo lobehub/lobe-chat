@@ -148,6 +148,7 @@ const Overview = memo<OverviewProps>(
     } = useReviewPatches(gitPath, 'unstaged', undefined, deviceId, active);
     const {
       data: worktreesData,
+      isConfirmed: worktreesConfirmed,
       isLoading: worktreesLoading,
       mutate: mutateWorktrees,
     } = useFetchGitWorktrees(deviceId, gitPath);
@@ -251,7 +252,10 @@ const Overview = memo<OverviewProps>(
     const showAhead = !!aheadBehind?.hasUpstream && aheadBehind.ahead > 0;
     const showBehind = !!aheadBehind?.hasUpstream && aheadBehind.behind > 0;
 
-    const canSwitchBranch = !detached && !!agentId && !!workingDirectory && branchConfirmed;
+    // The branch picker routes through the worktree list, so both reads must be
+    // confirmed before either picker may act on them.
+    const pickersReady = branchConfirmed && worktreesConfirmed;
+    const canSwitchBranch = !detached && !!agentId && !!workingDirectory && pickersReady;
     const branchRow = (
       <OverviewRow
         icon={GitBranchIcon}
@@ -335,7 +339,7 @@ const Overview = memo<OverviewProps>(
             currentBranch={branch}
             detached={detached}
             deviceId={deviceId}
-            disabled={!branchConfirmed}
+            disabled={!pickersReady}
             isGithub={isGithub}
             path={workingDirectory}
             placement={'bottomLeft'}
@@ -345,9 +349,9 @@ const Overview = memo<OverviewProps>(
           >
             <OverviewRow
               icon={GitForkIcon}
-              interactive={branchConfirmed}
+              interactive={pickersReady}
               title={sourcePath ?? workingDirectory}
-              trailing={branchConfirmed ? <PickerGlyph /> : undefined}
+              trailing={pickersReady ? <PickerGlyph /> : undefined}
               value={t('workingPanel.overview.worktree.of', {
                 name: pathBasename(sourcePath ?? workingDirectory),
               })}

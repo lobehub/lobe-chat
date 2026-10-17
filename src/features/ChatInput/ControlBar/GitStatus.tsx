@@ -175,11 +175,14 @@ const GitStatus = memo<GitStatusProps>(
       !fallbackGit?.branch && sourcePath && sourcePath !== path
         ? fallbackGit?.activeWorktree
         : undefined;
-    const { data: sourceWorktrees } = useFetchGitWorktrees(
+    const { data: sourceWorktrees, isConfirmed: sourceWorktreesConfirmed } = useFetchGitWorktrees(
       deviceId,
       probeFoundNothing && recordedWorktree ? sourcePath : undefined,
     );
+    // Only this session's answer may condemn the recorded worktree; a hydrated
+    // listing from the previous session is a paint-only stand-in.
     const recordedWorktreeGone =
+      sourceWorktreesConfirmed &&
       !!sourceWorktrees?.length &&
       !sourceWorktrees.some((worktree) => worktree.path === path && !worktree.prunable);
     const isStale =
@@ -210,10 +213,11 @@ const GitStatus = memo<GitStatusProps>(
       deviceId,
       livePath,
     );
-    const { data: worktrees = [], mutate: mutateWorktrees } = useFetchGitWorktrees(
-      deviceId,
-      livePath,
-    );
+    const {
+      data: worktrees = [],
+      isConfirmed: worktreesConfirmed,
+      mutate: mutateWorktrees,
+    } = useFetchGitWorktrees(deviceId, livePath);
     const [switcherOpen, setSwitcherOpen] = useState(false);
     const [pulling, setPulling] = useState(false);
     const [pushing, setPushing] = useState(false);
@@ -273,6 +277,10 @@ const GitStatus = memo<GitStatusProps>(
     // assume that branch is still current. Keep them inert until this session's
     // probe confirms it; the chips stay visible either way.
     const actionsBlocked = syncBusy || !branchConfirmed;
+    // Both pickers consume the worktree list (the branch picker routes to the
+    // worktree that already holds the branch), so it must be this session's
+    // listing too — a stale one can point at a removed worktree.
+    const pickersReady = branchConfirmed && worktreesConfirmed;
 
     const handlePull = useCallback(async () => {
       if (pulling || pushing) return;
@@ -424,7 +432,7 @@ const GitStatus = memo<GitStatusProps>(
         currentBranch={branch}
         detached={detached}
         deviceId={deviceId}
-        disabled={!branchConfirmed}
+        disabled={!pickersReady}
         isGithub={isGithub}
         path={path}
         sourcePath={sourcePath ?? path}
@@ -437,10 +445,10 @@ const GitStatus = memo<GitStatusProps>(
     const branchNode = detached ? (
       // Detached HEAD → plain branch label (nothing to switch to).
       <Tooltip title={branchTooltip}>{branchTrigger}</Tooltip>
-    ) : !branchConfirmed ? (
+    ) : !pickersReady ? (
       // Hydrated from the last session: hold the checkout entry until this
-      // session's probe confirms the branch, so the switcher's "current" branch
-      // is not a stale guess.
+      // session's branch AND worktree probes answer, so the switcher's "current"
+      // branch and its worktree routing are not stale guesses.
       <Tooltip title={t('workingDirectory.branchConfirming')}>{branchTrigger}</Tooltip>
     ) : (
       // Local switches over IPC; a remote device switches over RPC (deviceId set).

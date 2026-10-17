@@ -136,6 +136,7 @@ beforeEach(() => {
   });
   gitHookMocks.useFetchGitWorktrees.mockReturnValue({
     data: [],
+    isConfirmed: true,
     mutate: gitHookMocks.mutateWorktrees,
   });
   gitHookMocks.useFetchGitDiffStats.mockReturnValue({
@@ -254,6 +255,30 @@ describe('GitStatus', () => {
     expect(gitService.pullGitBranch).not.toHaveBeenCalled();
   });
 
+  // Review P1: the branch picker routes through the worktree list. A confirmed
+  // branch alone must not enable a picker that still holds last session's
+  // worktrees — it could point at a worktree removed externally.
+  it('keeps both pickers inert until the worktree list itself is confirmed', () => {
+    gitHookMocks.useFetchGitBranch.mockReturnValue({
+      data: { branch: 'fix/remote-review', detached: false },
+      isConfirmed: true,
+      mutate: gitHookMocks.mutateBranch,
+    });
+    gitHookMocks.useFetchGitWorktrees.mockReturnValue({
+      data: [
+        { branch: 'fix/remote-review', current: true, path: '/repo' },
+        { branch: 'canary', current: false, path: '/repo-canary' },
+      ],
+      isConfirmed: false,
+      mutate: gitHookMocks.mutateWorktrees,
+    });
+
+    render(<GitStatus isGithub agentId="agent-1" path="/repo" sourcePath="/repo" />);
+
+    // The trigger keeps its width (no layout jump) but cannot switch.
+    expect(screen.getByTestId('worktree-switcher')).toHaveAttribute('data-disabled', 'true');
+  });
+
   describe('deleted working directory', () => {
     // The recorded worktree gets removed once its task is done, but the topic
     // keeps pointing at it — the live branch probe then reads nothing and the
@@ -304,6 +329,7 @@ describe('GitStatus', () => {
         gitHookMocks.useFetchGitWorktrees.mockImplementation(
           (_deviceId: string | undefined, path?: string) => ({
             data: path === '/repo' ? listing : [],
+            isConfirmed: true,
             mutate: gitHookMocks.mutateWorktrees,
           }),
         );
@@ -565,6 +591,7 @@ describe('GitStatus', () => {
         { branch: 'fix/remote-review', current: true, path: '/repo' },
         { branch: 'canary', current: false, path: '/repo-canary' },
       ],
+      isConfirmed: true,
       mutate: gitHookMocks.mutateWorktrees,
     });
 
