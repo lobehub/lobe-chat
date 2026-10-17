@@ -69,14 +69,14 @@ describe('DeepSeekImpl', () => {
       expect(result.results).toHaveLength(2);
       expect(result.results[0]).toMatchObject({
         category: 'general',
-        content: 'Full markdown content',
+        content: 'Long summary',
         engines: ['deepseek'],
         parsedUrl: 'example.com',
         score: 2.5,
         title: 'Example Title',
         url: 'https://example.com/page',
       });
-      // Second result falls back to summary because content is empty
+      // Second result uses summary text
       expect(result.results[1]).toMatchObject({
         content: 'Summary text',
         engines: ['deepseek'],
@@ -95,7 +95,7 @@ describe('DeepSeekImpl', () => {
       const parsedBody = JSON.parse(options.body as string);
       expect(parsedBody).toMatchObject({
         count: 10,
-        need_content: true,
+        need_content: false,
         query: 'deepseek test',
       });
     });

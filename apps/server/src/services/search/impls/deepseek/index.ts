@@ -49,7 +49,7 @@ export class DeepSeekImpl implements SearchServiceImpl {
 
     const body: DeepSeekSearchParameters = {
       count: 10,
-      need_content: true,
+      need_content: false,
       query: formattedQuery,
     };
 
@@ -100,7 +100,7 @@ export class DeepSeekImpl implements SearchServiceImpl {
 
       const mappedResults = (deepseekResponse.results || []).map((result): UniformSearchResult => ({
         category: 'general',
-        content: result.content || result.summary || result.snippet || '',
+        content: result.summary || result.snippet || '',
         engines: ['deepseek'],
         parsedUrl: result.url ? new URL(result.url).hostname : '',
         score: result.rerank_score || 0,
