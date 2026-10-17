@@ -6,6 +6,7 @@ import stylex from '@stylexjs/unplugin/vite';
 import type { PluginOption } from 'vite';
 
 import { stylexProxiedDevCssPlugin } from './stylexDevCss';
+import { createStylexEntryCss } from './stylexEntryCss';
 
 const findRepoRoot = (start: string) => {
   let dir = start;
@@ -37,12 +38,16 @@ export const stylexTokenModules = [
   '@lobehub/ui/stylex/media.stylex',
 ] as const;
 
+const classNamePrefix = 'lh';
+
 export function stylexPlugin(): PluginOption {
+  const entryCss = createStylexEntryCss(classNamePrefix);
   const plugin = stylex({
     aliases: {
       '@/*': [path.join(repoRoot, 'src/*')],
     },
-    classNamePrefix: 'lh',
+    classNamePrefix,
+    cssInjectionTarget: entryCss.cssInjectionTarget,
     dev: !isTest && process.env.NODE_ENV !== 'production',
     // Keep :dir() and logical properties. lightningcss would otherwise rewrite them
     // for the default browserslist and break StyleX RTL rules.
@@ -70,7 +75,6 @@ export function stylexPlugin(): PluginOption {
     if (isTest) delete item.configureServer;
   }
 
-  plugins.push(stylexProxiedDevCssPlugin());
-
-  return plugins as PluginOption;
+  const [locateEntryCss, verifyEntryCss] = entryCss.plugins;
+  return [locateEntryCss, ...plugins, verifyEntryCss, stylexProxiedDevCssPlugin()] as PluginOption;
 }
