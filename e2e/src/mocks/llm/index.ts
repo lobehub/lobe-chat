@@ -119,20 +119,24 @@ export class LLMMockManager {
   }
 
   /**
-   * Set a custom response for a specific user message
+   * Set a custom response for a specific user message. Await it before sending
+   * the prompt: server-run agent turns read the reply from the shared endpoint.
    */
-  setResponse(userMessage: string, response: string): void {
+  setResponse(userMessage: string, response: string): Promise<void> {
     this.customResponses.set(userMessage.toLowerCase().trim(), response);
-    this.syncServer({ replies: [this.toReply('exact', userMessage, response)] });
+    return this.syncServer({ replies: [this.toReply('exact', userMessage, response)] });
   }
 
   /**
    * Set a response for requests whose final user message contains a fragment.
    * Useful for system-generated prompts that wrap the original user content.
+   * Await it before sending the prompt, like {@link setResponse}.
    */
-  setResponseContaining(userMessageFragment: string, response: string): void {
+  setResponseContaining(userMessageFragment: string, response: string): Promise<void> {
     this.customResponseFragments.set(userMessageFragment.toLowerCase().trim(), response);
-    this.syncServer({ replies: [this.toReply('contains', userMessageFragment, response)] });
+    return this.syncServer({
+      replies: [this.toReply('contains', userMessageFragment, response)],
+    });
   }
 
   /**
@@ -154,14 +158,14 @@ export class LLMMockManager {
   /**
    * Clear all custom responses
    */
-  clearResponses(): void {
+  clearResponses(): Promise<void> {
     const clear = [
       ...[...this.customResponses.keys()].map((key) => `exact:${key}`),
       ...[...this.customResponseFragments.keys()].map((key) => `contains:${key}`),
     ];
     this.customResponses.clear();
     this.customResponseFragments.clear();
-    if (clear.length > 0) this.syncServer({ clear });
+    return clear.length > 0 ? this.syncServer({ clear }) : this.pendingSync;
   }
 
   private pendingSync: Promise<void> = Promise.resolve();
@@ -180,12 +184,14 @@ export class LLMMockManager {
 
   /**
    * Push replies to the server-side endpoint. Registrations are chained so
-   * they land in call order; `flush` waits for them.
+   * they land in call order; the returned promise (and `flush`) settles once
+   * this one has reached the endpoint.
    */
-  private syncServer(payload: Parameters<typeof registerLLMReplies>[0]): void {
+  private syncServer(payload: Parameters<typeof registerLLMReplies>[0]): Promise<void> {
     this.pendingSync = this.pendingSync
       .then(() => registerLLMReplies(payload))
       .catch((error) => console.error('   ⚠️ LLM mock registration failed:', error));
+    return this.pendingSync;
   }
 
   /** Wait until every reply set so far has reached the server-side endpoint. */

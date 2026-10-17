@@ -100,8 +100,7 @@ async function sendPrompt(world: CustomWorld, basePrompt: string, response: stri
   // calls the model from the server), and scenarios register the same prompt
   // with different stream timings. Scope the prompt to this worker.
   const prompt = `${basePrompt} #${process.env.CUCUMBER_WORKER_ID ?? '0'}`;
-  llmMockManager.setResponse(prompt, response);
-  await llmMockManager.flush();
+  await llmMockManager.setResponse(prompt, response);
 
   const existingMessageIds = new Set(
     await world.page
