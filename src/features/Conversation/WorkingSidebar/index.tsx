@@ -75,12 +75,7 @@ import { useChatStore } from '@/store/chat';
 import { chatPortalSelectors, portalThreadSelectors, topicSelectors } from '@/store/chat/selectors';
 import { PortalViewType } from '@/store/chat/slices/portal/initialState';
 import { messageMapKey } from '@/store/chat/utils/messageMapKey';
-import {
-  deviceSelectors,
-  useDeviceStore,
-  useFetchGitBranch,
-  useFetchGitLinkedPR,
-} from '@/store/device';
+import { deviceSelectors, useDeviceStore } from '@/store/device';
 import { useElectronStore } from '@/store/electron';
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
@@ -94,6 +89,7 @@ import Overview from './Overview';
 import { getStatusDeviceId } from './Overview/overviewData';
 import OverviewSlot from './OverviewSlot';
 import PullRequest from './PullRequest';
+import { useLinkedPullRequest } from './PullRequest/useLinkedPullRequest';
 import ResourcesSection from './ResourcesSection';
 import Review from './Review';
 import WorkspaceTab from './WorkspaceTab';
@@ -443,24 +439,17 @@ const AgentWorkingSidebar = memo<AgentWorkingSidebarProps>(({ availableWidth }) 
   const isGithub =
     repoType === 'github' || (!repoType && !!snapshotConfig?.git?.github?.pullRequest);
   const gitPath = filesystemEnvironmentAvailable && isGithub ? workingDirectory : undefined;
-  const { data: branchData } = useFetchGitBranch(remoteDeviceId, gitPath);
-  const { data: linkedPR, mutate: refreshPullRequest } = useFetchGitLinkedPR(
-    remoteDeviceId,
+  const {
+    pullRequest,
+    refresh: refreshPullRequest,
+    ...pullRequestLink // confirmed, confirmError, onRetryConfirm
+  } = useLinkedPullRequest({
+    available: filesystemEnvironmentAvailable && !!workingDirectory,
+    deviceId: remoteDeviceId,
     gitPath,
-    branchData?.branch,
     isGithub,
-  );
-  const snapshotPR =
-    !branchData || (snapshotConfig?.git?.branch === branchData.branch && !branchData.detached)
-      ? snapshotConfig?.git?.github?.pullRequest
-      : undefined;
-  // A settled empty lookup supersedes the snapshot; failures may keep displaying it.
-  const pullRequest =
-    filesystemEnvironmentAvailable && workingDirectory
-      ? linkedPR?.pullRequestStatus === 'ok'
-        ? linkedPR.pullRequest
-        : (linkedPR?.pullRequest ?? snapshotPR)
-      : undefined;
+    snapshot: snapshotConfig?.git,
+  });
   const paramsAvailable = !isHetero;
   // The in-app browser pages are renderer-retained Electron webviews — desktop only.
   const browserAvailable = isDesktop;
@@ -1172,6 +1161,7 @@ const AgentWorkingSidebar = memo<AgentWorkingSidebarProps>(({ availableWidth }) 
                     <Flexbox className={styles.pane}>
                       <PullRequest
                         active={!!showRightPanel && activeTab === 'pr'}
+                        {...pullRequestLink}
                         deviceId={remoteDeviceId}
                         key={JSON.stringify([remoteDeviceId, workingDirectory, pullRequest.number])}
                         number={pullRequest.number}
