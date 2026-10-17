@@ -4,6 +4,7 @@ import { createModal, useModalContext } from '@lobehub/ui';
 
 import { AcceptanceBundleGate, AcceptanceScope } from '../AcceptanceScope';
 import { useAcceptanceBundle } from '../useAcceptanceBundle';
+import { latestRound } from './dossier';
 import GateReview from './GateReview';
 
 const GateReportContent = ({
@@ -15,7 +16,7 @@ const GateReportContent = ({
 }) => {
   const { data } = useAcceptanceBundle(acceptanceId);
   const { close } = useModalContext();
-  const dossier = data?.rounds.at(-1)?.run.metadata?.releaseGate;
+  const dossier = latestRound(data)?.run.metadata?.releaseGate;
   if (!dossier) return null;
   return (
     <GateReview

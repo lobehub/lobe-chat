@@ -69,17 +69,18 @@ export const AcceptanceOverview = ({
   // A link to one comment has to land on the tab that shows it. The reader can
   // still leave: their own tab choice, once made, outranks the fragment.
   const { hash } = useLocation();
+  const rounds = data?.rounds ?? [];
   const flowCount = getFlowNodeCount(data?.flows);
   const tab = resolveAcceptanceTab(
     requestedTab ?? (!embedded && commentIdFromHash(hash) ? 'discussion' : undefined),
     flowCount,
-    Boolean(flowPlanPhase(data?.rounds.at(-1))),
+    Boolean(flowPlanPhase(rounds.at(-1))),
     md,
   );
   const checks = data ? checksForTurn(data, turn) : [];
   // A Goal decision gate reviews its own frozen dossier, not a checklist.
   const gateDossier =
-    data?.subject.type === 'goal_gate' ? data.rounds.at(-1)?.run.metadata?.releaseGate : undefined;
+    data?.subject.type === 'goal_gate' ? rounds.at(-1)?.run.metadata?.releaseGate : undefined;
   const resourceCount = new Set(
     checks.flatMap((check) =>
       (check.evidence ?? [])
@@ -111,7 +112,7 @@ export const AcceptanceOverview = ({
                 approvals: [],
                 checks: data?.checks,
                 items,
-                rounds: data?.rounds.map(({ run }) => run) ?? [],
+                rounds: rounds.map(({ run }) => run),
                 threads,
               })}
               onChange={setTab}

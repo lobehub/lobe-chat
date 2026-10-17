@@ -34,6 +34,7 @@ import { useAcceptanceScope } from '../AcceptanceScope';
 import { acceptanceOverviewPath } from '../routes';
 import { useAcceptanceBundle } from '../useAcceptanceBundle';
 import { canReviewAcceptance } from '../visibility';
+import { latestRound, unitArtifacts } from './dossier';
 import SkillDirectory from './SkillDirectory';
 
 const styles = createStaticStyles(({ css }) => ({
@@ -307,7 +308,7 @@ const DetailPanel = memo<{ onClose: () => void; selection: Selection }>(
                   : t('acceptance.gate.unitAcceptanceOpen')}
               </a>
             )}
-            {selection.unit.artifacts.map((artifact) =>
+            {unitArtifacts(selection.unit).map((artifact) =>
               artifact.url ? (
                 <a
                   className={styles.link}
@@ -382,7 +383,7 @@ const GateDecision = memo<{
 
   // The dossier on screen is the latest round's; a revised plan arriving in
   // the meantime makes the server refuse this decision rather than approve it.
-  const roundId = data.rounds.at(-1)?.run.id;
+  const roundId = latestRound(data)?.run.id;
 
   const releaseLabel =
     dossier.kind === 'probes'
