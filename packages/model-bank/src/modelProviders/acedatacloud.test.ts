@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
 import { ModelProvider } from '../const/modelProvider';
-
 import { AceDataCloudProvider } from './acedatacloud';
 import { DEFAULT_MODEL_PROVIDER_LIST, getProviderDisplayName } from './index';
 

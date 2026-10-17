@@ -3,7 +3,6 @@ import { ModelProvider } from 'model-bank';
 import { describe, expect, it, vi } from 'vitest';
 
 import { testProvider } from '../../providerTestUtils';
-
 import { LobeAceDataCloudAI } from './index';
 
 vi.mock('@lobechat/business-model-bank/model-config', () => ({
