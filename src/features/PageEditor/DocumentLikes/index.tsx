@@ -23,6 +23,8 @@ import { documentLikeService } from '@/services/documentLike';
 import { useUserStore } from '@/store/user';
 import { userProfileSelectors } from '@/store/user/selectors';
 
+import { isDocumentUnavailableError } from '../isDocumentUnavailableError';
+
 const BUTTON_SIZE = 56;
 const ICON_SIZE = 22;
 
@@ -202,12 +204,15 @@ const DocumentLikes = memo<{ documentId: string }>(({ documentId }) => {
 
   // A failed initial load must not masquerade as a zero-like page: surface a
   // retryable error instead of the idle state with a dead button.
-  if (!data && error)
+  if (!data && error) {
+    if (isDocumentUnavailableError(error)) return null;
+
     return (
       <Flexbox data-document-likes align={'center'} className={styles.section} gap={16}>
         <AsyncError error={error} variant={'inline'} onRetry={() => void mutate()} />
       </Flexbox>
     );
+  }
 
   // Match the surrounding page skeleton while the summary loads instead of
   // flashing the finished idle state ahead of the rest of the content.

@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import AsyncError from '@/components/AsyncError';
 import SurfaceSkeleton from '@/components/Skeleton/Surface';
 
+import { isDocumentUnavailableError } from '../isDocumentUnavailableError';
 import Composer from './Composer';
 import { useDocumentComments } from './context';
 import { styles } from './styles';
@@ -248,6 +249,11 @@ DocumentCommentList.displayName = 'DocumentCommentList';
 const DocumentComments = memo(() => {
   const state = useDocumentComments();
   if (!state) return null;
+  if (
+    state.documentThreads.isInitialError &&
+    isDocumentUnavailableError(state.documentThreads.error)
+  )
+    return null;
   return <DocumentCommentList state={state} />;
 });
 

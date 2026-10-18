@@ -336,6 +336,9 @@ export default {
   'pageEditor.menu.importDocument': 'Import Page',
   'pageEditor.menu.move': 'Move to…',
   'pageEditor.menu.pin': 'Pin Page',
+  'pageEditor.noAccess.description':
+    'This page is private or hasn’t been shared with you. Ask its creator for access.',
+  'pageEditor.noAccess.title': 'You don’t have access to this page',
   'pageEditor.saveFailed': 'Failed to save the page, please try again later',
   'pageEditor.saving': 'Saving...',
   'pageEditor.titlePlaceholder': 'Untitled',

@@ -453,6 +453,42 @@ describe('document detail replica', () => {
     await waitFor(async () => expect(await storedRow('doc-1', scope)).toBeUndefined());
   });
 
+  it('evicts a cached document the viewer lost access to (FORBIDDEN)', async () => {
+    // Cached while the page was readable; its creator has since made it private.
+    const stale = documentRow({ content: '# Now private' });
+    await documentDetailResource.storage!.set(
+      { queryKey: 'doc-1', scope },
+      { data: { document: stale }, updatedAt: 1 },
+    );
+    vi.mocked(documentService.getDocumentById).mockRejectedValue(
+      Object.assign(new Error('forbidden'), { data: { code: 'FORBIDDEN' } }) as any,
+    );
+
+    const { result } = renderDocument('doc-1', createEditor());
+
+    await waitFor(() => expect(result.current.error).toBeDefined());
+    await waitFor(() =>
+      expect(useDocumentStore.getState().documentDetailMap['doc-1']).toBeUndefined(),
+    );
+    expect(useDocumentStore.getState().documents['doc-1']).toBeUndefined();
+    await waitFor(async () => expect(await storedRow('doc-1', scope)).toBeUndefined());
+  });
+
+  it('keeps the cached document when the read fails transiently', async () => {
+    const cached = documentRow({ content: '# Cached' });
+    await documentDetailResource.storage!.set(
+      { queryKey: 'doc-1', scope },
+      { data: { document: cached }, updatedAt: 1 },
+    );
+    vi.mocked(documentService.getDocumentById).mockRejectedValue(new Error('offline') as any);
+
+    const { result } = renderDocument('doc-1', createEditor());
+
+    await waitFor(() => expect(result.current.error).toBeDefined());
+    expect(useDocumentStore.getState().documentDetailMap['doc-1']).toEqual({ document: cached });
+    expect((await storedRow('doc-1', scope))?.data).toEqual({ document: cached });
+  });
+
   it('a reload cannot resurrect a document the server has dropped', async () => {
     const stale = documentRow({ content: '# Revoked' });
     await documentDetailResource.storage!.set(

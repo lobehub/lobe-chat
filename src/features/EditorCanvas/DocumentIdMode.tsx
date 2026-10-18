@@ -12,6 +12,7 @@ import { ArticleSkeleton } from '@/components/Skeleton';
 import { useSaveDocumentHotkey } from '@/hooks/useHotkeys';
 import { useDocumentStore } from '@/store/document';
 import { editorSelectors } from '@/store/document/slices/editor';
+import { isTrpcErrorCode } from '@/utils/trpcError';
 
 import { type EditorCanvasProps } from './EditorCanvas';
 import InternalEditor from './InternalEditor';
@@ -218,11 +219,17 @@ const DocumentIdMode = memo<DocumentIdModeProps>(
     ]);
 
     if (error && isLoading && !isFetchingDocument) {
+      // The page exists but is private to another member (or not shared with
+      // this one): say so instead of a generic load failure or a 404.
+      const isForbidden = isTrpcErrorCode(error, 'FORBIDDEN');
+
       return (
         <>
           {unsavedGuardNode}
           <AsyncError
+            description={isForbidden ? t('pageEditor.noAccess.description') : undefined}
             error={error}
+            title={isForbidden ? t('pageEditor.noAccess.title') : undefined}
             variant={'page'}
             onRetry={() => {
               void mutate();

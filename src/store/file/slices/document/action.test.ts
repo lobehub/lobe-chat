@@ -253,6 +253,25 @@ describe('file document replica', () => {
       });
     });
 
+    it('drops the cached row when access to the document was revoked (FORBIDDEN)', async () => {
+      const cached = lobeDocument({ content: '# Now private', title: 'Cached' });
+      await fileDocumentResource.storage!.set(
+        { queryKey: 'doc-1', scope },
+        { data: { document: cached }, updatedAt: 1 },
+      );
+      vi.mocked(documentService.getDocumentById).mockRejectedValue(
+        Object.assign(new Error('forbidden'), { data: { code: 'FORBIDDEN' } }) as any,
+      );
+
+      const { result } = renderDetail('doc-1');
+
+      await waitFor(() => expect(result.current.error).toBeDefined());
+      await waitFor(() => expect(useFileStore.getState().documentMap['doc-1']).toBeUndefined());
+      await waitFor(async () => {
+        expect(await storedRow('doc-1', scope)).toBeUndefined();
+      });
+    });
+
     it('drops the previous identity’s rows before the next one paints', async () => {
       vi.mocked(documentService.getDocumentById).mockResolvedValue(serverRow() as any);
 
