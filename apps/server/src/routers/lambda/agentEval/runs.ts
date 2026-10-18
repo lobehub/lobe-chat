@@ -1,5 +1,6 @@
 import { TRPCError } from '@trpc/server';
 import debug from 'debug';
+import pMap from 'p-map';
 import { z } from 'zod';
 
 import { router } from '@/libs/trpc/lambda';
@@ -7,9 +8,16 @@ import { AgentEvalRunService } from '@/server/services/agentEvalRun';
 import { AgentEvalRunWorkflow } from '@/server/workflows/agentEvalRun';
 
 import { evalRunInputConfigSchema } from '../evalRunConfig.schema';
-import { agentEvalProcedure, agentEvalProcedureWrite } from './procedures';
+import {
+  agentEvalProcedure,
+  agentEvalProcedureWrite,
+  RUN_ENRICHMENT_CONCURRENCY,
+} from './procedures';
 
 const log = debug('lobe-lambda-router:agent-eval');
+
+/** Max trajectories resumed at once by `batchResumeRunCases`. */
+const BATCH_RESUME_CONCURRENCY = 5;
 
 export const runRouter = router({
   // ============================================
@@ -86,8 +94,12 @@ export const runRouter = router({
       const agentIds = [...new Set(data.map((r) => r.targetAgentId).filter(Boolean))] as string[];
 
       const [datasets, agents] = await Promise.all([
-        Promise.all(datasetIds.map((id) => ctx.datasetModel.findById(id))),
-        Promise.all(agentIds.map((id) => ctx.runService.getAgentDisplayInfo(id))),
+        pMap(datasetIds, (id) => ctx.datasetModel.findById(id), {
+          concurrency: RUN_ENRICHMENT_CONCURRENCY,
+        }),
+        pMap(agentIds, (id) => ctx.runService.getAgentDisplayInfo(id), {
+          concurrency: RUN_ENRICHMENT_CONCURRENCY,
+        }),
       ]);
 
       const datasetMap = Object.fromEntries(datasets.filter(Boolean).map((d) => [d!.id, d!.name]));
@@ -282,17 +294,26 @@ export const runRouter = router({
     )
     .mutation(async ({ input, ctx }) => {
       log('batchResumeRunCases: runId=%s count=%d', input.runId, input.targets.length);
-      const results = await Promise.allSettled(
-        input.targets.map((target) =>
-          ctx.runService.resumeTrajectory({
-            runId: input.runId,
-            testCaseId: target.testCaseId,
-            threadId: target.threadId,
-          }),
-        ),
+      // Each resume settles independently (like `Promise.allSettled`): one
+      // failed target must not abort the others.
+      const results = await pMap(
+        input.targets,
+        async (target) => {
+          try {
+            await ctx.runService.resumeTrajectory({
+              runId: input.runId,
+              testCaseId: target.testCaseId,
+              threadId: target.threadId,
+            });
+            return true;
+          } catch {
+            return false;
+          }
+        },
+        { concurrency: BATCH_RESUME_CONCURRENCY },
       );
-      const succeeded = results.filter((r) => r.status === 'fulfilled').length;
-      const failed = results.filter((r) => r.status === 'rejected').length;
+      const succeeded = results.filter(Boolean).length;
+      const failed = results.length - succeeded;
       log('batchResumeRunCases: succeeded=%d failed=%d', succeeded, failed);
       return { failed, succeeded, total: input.targets.length };
     }),

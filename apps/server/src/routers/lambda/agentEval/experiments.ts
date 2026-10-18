@@ -1,9 +1,14 @@
 import { TRPCError } from '@trpc/server';
+import pMap from 'p-map';
 import { z } from 'zod';
 
 import { router } from '@/libs/trpc/lambda';
 
-import { agentEvalProcedure, agentEvalProcedureWrite } from './procedures';
+import {
+  agentEvalProcedure,
+  agentEvalProcedureWrite,
+  RUN_ENRICHMENT_CONCURRENCY,
+} from './procedures';
 
 export const experimentRouter = router({
   // ============================================
@@ -41,9 +46,9 @@ export const experimentRouter = router({
       const agentIds = [
         ...new Set(experiment.runs.map((run) => run.targetAgentId).filter(Boolean)),
       ] as string[];
-      const agents = await Promise.all(
-        agentIds.map((id) => ctx.runService.getAgentDisplayInfo(id)),
-      );
+      const agents = await pMap(agentIds, (id) => ctx.runService.getAgentDisplayInfo(id), {
+        concurrency: RUN_ENRICHMENT_CONCURRENCY,
+      });
       const agentMap = Object.fromEntries(agents.filter(Boolean).map((a) => [a!.id, a!]));
       const datasetNameMap = new Map(experiment.datasets.map((d) => [d.id, d.name]));
 

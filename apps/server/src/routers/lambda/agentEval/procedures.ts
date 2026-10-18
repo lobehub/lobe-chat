@@ -13,6 +13,9 @@ import { AgentEvalRunService } from '@/server/services/agentEvalRun';
 import { FileService } from '@/server/services/file';
 import { FileUploadService } from '@/server/services/fileUpload';
 
+/** Max in-flight lookups when enriching run lists with dataset and agent info. */
+export const RUN_ENRICHMENT_CONCURRENCY = 5;
+
 export const agentEvalProcedure = wsCompatProcedure.use(serverDatabase).use(async (opts) => {
   const { ctx } = opts;
   const wsId = ctx.workspaceId ?? undefined;
