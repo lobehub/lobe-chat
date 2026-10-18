@@ -43,6 +43,10 @@ vi.mock('@/store/goal', () => ({
     }),
 }));
 
+const removeItem = (config: ReturnType<typeof useGoalNorthStarMoreMenu>) =>
+  config?.extraItems?.find((item) => item && 'key' in item && item.key === 'remove') as
+    { danger?: boolean; label?: unknown; onClick: () => void } | undefined;
+
 describe('useGoalNorthStarMoreMenu', () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -53,8 +57,14 @@ describe('useGoalNorthStarMoreMenu', () => {
     // A clause nobody could fill held a finished goal's acceptance forever:
     // the panel offered record and edit, but no way to drop it.
     const { result } = renderHook(() => useGoalNorthStarMoreMenu());
+    const remove = removeItem(result.current);
 
-    result.current!.delete!();
+    // Labeled as removing the clause, not the generic "Delete": the
+    // observation history is kept.
+    expect(result.current?.delete).toBeUndefined();
+    expect(remove).toMatchObject({ danger: true, label: 'goalProcess.northStar.remove.title' });
+
+    remove!.onClick();
     expect(mocks.confirmModal).toHaveBeenCalledTimes(1);
     expect(mocks.removeGoalMetric).not.toHaveBeenCalled();
 
@@ -67,7 +77,7 @@ describe('useGoalNorthStarMoreMenu', () => {
     vi.spyOn(console, 'error').mockImplementation(() => {});
     const { result } = renderHook(() => useGoalNorthStarMoreMenu());
 
-    result.current!.delete!();
+    removeItem(result.current)!.onClick();
     await mocks.confirmModal.mock.calls[0][0].onOk();
 
     expect(mocks.toastError).toHaveBeenCalledTimes(1);
@@ -77,6 +87,6 @@ describe('useGoalNorthStarMoreMenu', () => {
     mocks.canEdit = false;
     const { result } = renderHook(() => useGoalNorthStarMoreMenu());
 
-    expect(result.current?.delete).toBeUndefined();
+    expect(removeItem(result.current)).toBeUndefined();
   });
 });

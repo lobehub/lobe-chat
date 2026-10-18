@@ -5,6 +5,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { getTestDB } from '@/database/core/getTestDB';
 import { AgentOperationModel } from '@/database/models/agentOperation';
 import { GoalModel } from '@/database/models/goal';
+import { GoalGraphModel } from '@/database/models/goalGraph';
 import { TaskModel } from '@/database/models/task';
 import { TaskTopicModel } from '@/database/models/taskTopic';
 import { agentOperations, goalNodes, tasks } from '@/database/schemas';
@@ -65,7 +66,7 @@ describe('GoalService', () => {
 
     const gated = await service.graph(graph.goal.id);
     const retire = gated.decisions[0].options?.find((option) => option.id === 'retire');
-    expect(retire?.alsoRetires).toEqual(['Write summary']);
+    expect(retire?.alsoRetires).toEqual([{ nodeId: summary.id, title: 'Write summary' }]);
     // Coordinator options carry ids and data only; the client words them.
     expect(retire?.description).toBeUndefined();
 
@@ -81,6 +82,71 @@ describe('GoalService', () => {
     const next = await service.tick(graph.goal.id);
     expect(next.nodeId).toBe(unrelated.id);
     expect((await service.graph(graph.goal.id)).goal.status).not.toBe('paused');
+  });
+
+  /** A goal whose failed "Measure" task gates "Summary", parked on its recovery gate. */
+  const gatedWithDependent = async (title: string) => {
+    const service = new GoalService(serverDB, userId);
+    const graph = await service.create({ tasks: ['Measure', 'Summary', 'Other'], title });
+    const [measure, summary, other] = ['Measure', 'Summary', 'Other'].map((name) =>
+      graph.nodes.find((node) => node.kind === 'task' && node.title === name)!,
+    );
+    await service.addEdge(graph.goal.id, summary.id, measure.id, 'depends_on');
+    await serverDB.update(goalNodes).set({ priority: 10 }).where(eq(goalNodes.id, measure.id));
+    const created = await service.tick(graph.goal.id);
+    await new TaskModel(serverDB, userId).updateStatus(created.taskId!, 'paused', {
+      error: 'Attempt budget exhausted',
+    });
+    await service.tick(graph.goal.id);
+    const decision = (await service.graph(graph.goal.id)).decisions[0];
+    return { decision, goalId: graph.goal.id, measure, other, service, summary };
+  };
+
+  it('asks again instead of retiring a dependent added after the gate was shown', async () => {
+    // The Retire button named one dependent; a second one appearing while the
+    // gate waited must not be canceled on an answer that never mentioned it.
+    const { decision, goalId, measure, other, service, summary } =
+      await gatedWithDependent('Cascade drift');
+    await service.addEdge(goalId, other.id, measure.id, 'depends_on');
+
+    await expect(service.decide(goalId, decision.id, 'retire')).rejects.toThrow(
+      'review the updated choice',
+    );
+    const asked = await service.graph(goalId);
+    expect(asked.decisions[0].status).toBe('pending');
+    expect(asked.nodes.find((node) => node.id === other.id)?.status).not.toBe('retired');
+    const retire = asked.decisions[0].options?.find((option) => option.id === 'retire');
+    expect(retire?.alsoRetires?.map((item) => item.nodeId).sort()).toEqual(
+      [summary.id, other.id].sort(),
+    );
+
+    await service.decide(goalId, decision.id, 'retire');
+    const after = await service.graph(goalId);
+    expect(after.nodes.find((node) => node.id === other.id)?.status).toBe('retired');
+    expect(after.nodes.find((node) => node.id === summary.id)?.status).toBe('retired');
+  });
+
+  it('lists the cascade on a retire option the main Agent wrote before applying it', async () => {
+    const { decision, goalId, service, summary } = await gatedWithDependent('Agent retire');
+    await new GoalGraphModel(serverDB, userId).updatePendingDecisionOptions(goalId, decision.id, [
+      { id: 'measure_again', label: 'Measure again', effect: 'retry' },
+      { description: 'Skip the measurement', effect: 'retire', id: 'skip', label: 'Skip it' },
+    ]);
+
+    await expect(service.decide(goalId, decision.id, 'skip')).rejects.toThrow(
+      'review the updated choice',
+    );
+    const asked = await service.graph(goalId);
+    expect(asked.nodes.find((node) => node.id === summary.id)?.status).not.toBe('retired');
+    expect(asked.decisions[0].options?.find((option) => option.id === 'skip')).toMatchObject({
+      alsoRetires: [{ nodeId: summary.id, title: 'Summary' }],
+      description: 'Skip the measurement',
+    });
+
+    await service.decide(goalId, decision.id, 'skip');
+    expect((await service.graph(goalId)).nodes.find((node) => node.id === summary.id)?.status).toBe(
+      'retired',
+    );
   });
 
   it('reports the effects a tick actually produced, not just its outcome', async () => {

@@ -111,8 +111,25 @@ export const GoalDecisionAsker = ({
 /** The coordinator's own answers, in the reader's words, and what each one does. */
 export const useGateOptionCopy = () => {
   const { i18n, t } = useTranslation('chat');
-  return useMemo(
-    () => ({
+  return useMemo(() => {
+    const alsoRetiresList = (option: GoalDecisionOption) =>
+      option.alsoRetires?.length
+        ? new Intl.ListFormat(i18n.language).format(
+            option.alsoRetires.map(({ title }) =>
+              t('goalProcess.decision.effect.quotedTask', { title }),
+            ),
+          )
+        : undefined;
+    return {
+      /**
+       * What an option the main Agent wrote also does to dependent tasks. Its
+       * own description is the Agent's words; the cascade is the coordinator's,
+       * so it is added here rather than trusted to the Agent to mention.
+       */
+      cascade: (option: GoalDecisionOption) => {
+        const tasks = alsoRetiresList(option);
+        return tasks ? t('goalProcess.decision.effect.alsoRetires', { tasks }) : undefined;
+      },
       describe: (
         option: GoalDecisionOption,
         category: GoalGateCategory,
@@ -129,14 +146,9 @@ export const useGateOptionCopy = () => {
           case 'retire': {
             if (terminalAcceptance) return t('goalProcess.decision.effect.abandonAcceptance');
             // Dependents leave with it, or they would wait forever on it.
-            return option.alsoRetires?.length
-              ? t('goalProcess.decision.effect.retireWithDependents', {
-                  tasks: new Intl.ListFormat(i18n.language).format(
-                    option.alsoRetires.map((title) =>
-                      t('goalProcess.decision.effect.quotedTask', { title }),
-                    ),
-                  ),
-                })
+            const tasks = alsoRetiresList(option);
+            return tasks
+              ? t('goalProcess.decision.effect.retireWithDependents', { tasks })
               : t('goalProcess.decision.effect.retire');
           }
           case 'fail': {
@@ -169,9 +181,8 @@ export const useGateOptionCopy = () => {
         const key = gateOptionLabelKey(option, category === 'machine' ? 'fixSetup' : gateKind);
         return key ? t(key as any) : option.label;
       },
-    }),
-    [i18n.language, t],
-  );
+    };
+  }, [i18n.language, t]);
 };
 
 const contextStyles = createStaticStyles(({ css, cssVar }) => ({
@@ -339,6 +350,7 @@ const GoalDecisionCase = ({
     return [
       toGateQuestion(decision, {
         basis: basisText,
+        cascade: optionCopy.cascade,
         describe: (option) => optionCopy.describe(option, category, gateKind),
         label: (option) => optionCopy.label(option, category, gateKind),
         question: questionText,

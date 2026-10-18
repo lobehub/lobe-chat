@@ -764,6 +764,7 @@
   "goalProcess.decision.context.decision": "Your call",
   "goalProcess.decision.context.task": "Task",
   "goalProcess.decision.effect.abandonAcceptance": "Stop acceptance and end the goal without a verdict.",
+  "goalProcess.decision.effect.alsoRetires": "Also drops the tasks that depend on it: {{tasks}}.",
   "goalProcess.decision.effect.fail": "End the goal and record it as failed.",
   "goalProcess.decision.effect.fixedRetry": "Run the task again once the setup is fixed.",
   "goalProcess.decision.effect.newClassBatch": "Fork a fresh recipe for the units that broke; the rest of the batch continues once the new gate passes.",

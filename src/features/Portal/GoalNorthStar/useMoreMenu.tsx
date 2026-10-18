@@ -1,5 +1,5 @@
 import { confirmModal, Icon, toast } from '@lobehub/ui';
-import { Pencil, Plus } from 'lucide-react';
+import { Pencil, Plus, Trash2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 import { openDeclareMetricModal } from '@/features/AgentGoals/NorthStarMetrics/DeclareMetricModal';
@@ -68,11 +68,16 @@ export const useGoalNorthStarMoreMenu = (): PortalMoreMenuConfig | undefined => 
               label: t('goalProcess.northStar.edit.title'),
               onClick: () => openDeclareMetricModal(goalId, criterion),
             },
+            // Named for what it does, not the generic "Delete": only the clause
+            // goes, its observation history stays.
+            {
+              danger: true,
+              icon: <Icon icon={Trash2} />,
+              key: 'remove',
+              label: t('goalProcess.northStar.remove.title'),
+              onClick: () => removeMetric(criterion.key, criterion.title || criterion.key),
+            },
           ]
-        : undefined,
-    delete:
-      canEdit && criterion
-        ? () => removeMetric(criterion.key, criterion.title || criterion.key)
         : undefined,
     // A clause lives in its goal's config and its numbers in the goal's metric
     // series, so refreshing re-reads both.

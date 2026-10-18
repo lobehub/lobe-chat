@@ -900,10 +900,11 @@ export type GoalDecisionOptionEffect = 'retry' | 'retire';
 
 export interface GoalDecisionOption {
   /**
-   * Titles of the unfinished tasks a coordinator `retire` takes along, because
-   * they depend on the retired one. Data, not copy: the reader's client words it.
+   * The unfinished tasks a `retire` effect takes along, because they depend on
+   * the retired one. It is what the person confirms: answering is refused when
+   * the set changed since. Data, not copy: the reader's client words it.
    */
-  alsoRetires?: string[];
+  alsoRetires?: { nodeId: string; title: string }[];
   /** The consequence of choosing this option, in the words the person reads. */
   description?: string;
   effect?: GoalDecisionOptionEffect;

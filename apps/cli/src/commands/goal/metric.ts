@@ -1,4 +1,5 @@
 import type { GoalGraphSnapshot, GoalMetricComparison } from '@lobechat/types';
+import { TRPCClientError } from '@trpc/client';
 import { type Command, Option } from 'commander';
 import pc from 'picocolors';
 
@@ -35,14 +36,22 @@ export const readMetricState = async (
   graph: GoalGraphSnapshot,
 ): Promise<GoalMetricState | undefined> => {
   if (!graph.goal.config?.acceptance?.metrics?.length) return undefined;
-  // The CLI ships apart from the server: a server without this read must not
-  // take `lh goal show` down with it.
   try {
     return (await reads.metricState.query({ id: graph.goal.id })).data;
-  } catch {
-    return undefined;
+  } catch (error) {
+    // The CLI ships apart from the server: one without this read must not take
+    // `lh goal show` down with it. Any other failure is a real one — a show
+    // that silently omits the values would read as "nothing recorded".
+    if (isMissingProcedure(error)) return undefined;
+    throw error;
   }
 };
+
+/** The server predates this read: tRPC answers an unknown path with NOT_FOUND. */
+const isMissingProcedure = (error: unknown) =>
+  error instanceof TRPCClientError &&
+  error.data?.code === 'NOT_FOUND' &&
+  error.message.includes('No procedure found');
 
 export const describeMetric = (criterion: GoalMetricState['criteria'][number]) => {
   const reading =

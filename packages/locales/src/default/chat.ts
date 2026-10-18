@@ -2520,6 +2520,7 @@ export default {
   'goalProcess.decision.attempts_other': '{{count}} attempts',
   'goalProcess.decision.effect.retry':
     'Send the task back for another attempt. Your note is written into its instructions.',
+  'goalProcess.decision.effect.alsoRetires': 'Also drops the tasks that depend on it: {{tasks}}.',
   'goalProcess.decision.effect.quotedTask': '"{{title}}"',
   'goalProcess.decision.effect.retireWithDependents':
     'Drop this task and the tasks that depend on it ({{tasks}}). The goal moves on without them.',
