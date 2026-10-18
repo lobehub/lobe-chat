@@ -15,7 +15,7 @@ vi.mock('../../utils/agentStream', () => ({
   streamAgentEvents: vi.fn(),
   streamAgentEventsViaWebSocket: vi.fn(),
 }));
-vi.mock('../../utils/device', () => ({ resolveLocalDeviceId: vi.fn() }));
+vi.mock('../../utils/device', () => ({ resolveLocalDeviceId: vi.fn(() => 'device-1') }));
 
 const runAgent = async (...args: string[]) => {
   const program = new Command();
@@ -28,7 +28,12 @@ const runAgent = async (...args: string[]) => {
 describe('lh agent run', () => {
   beforeEach(() => {
     mockExecAgent.mockResolvedValue({ operationId: 'op-1', success: true, topicId: 'tpc-1' });
-    mockGetTrpcClient.mockResolvedValue({ aiAgent: { execAgent: { mutate: mockExecAgent } } });
+    mockGetTrpcClient.mockResolvedValue({
+      aiAgent: { execAgent: { mutate: mockExecAgent } },
+      device: {
+        listDevices: { query: vi.fn().mockResolvedValue([{ deviceId: 'device-1', online: true }]) },
+      },
+    });
     vi.spyOn(console, 'log').mockImplementation(() => {});
   });
 
@@ -67,10 +72,24 @@ describe('lh agent run', () => {
     expect(input.selectedSkillIds).toEqual(['ux-audit', 'agent-skills:review']);
   });
 
-  it('sends neither field when no tool or skill is given', async () => {
-    const input = await runAgent('--agent-id', 'agt-1', '--prompt', 'Hello');
+  it.each([
+    [[], undefined],
+    [
+      ['--device', 'local'],
+      {
+        initialTopicMetadata: {
+          workingDirectory: process.cwd(),
+          workingDirectoryConfig: { path: process.cwd() },
+        },
+      },
+    ],
+    [['--device', 'local', '--topic-id', 'tpc-1'], { topicId: 'tpc-1' }],
+    [['--device', 'device-1'], undefined],
+  ] as const)('sends only the requested optional fields for %j', async (args, appContext) => {
+    const input = await runAgent('--agent-id', 'agt-1', '--prompt', 'Hello', ...args);
 
     expect(input).not.toHaveProperty('selectedToolIds');
     expect(input).not.toHaveProperty('selectedSkillIds');
+    expect(input.appContext).toEqual(appContext);
   });
 });

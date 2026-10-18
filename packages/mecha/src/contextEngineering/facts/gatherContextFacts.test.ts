@@ -260,8 +260,9 @@ describe('gatherContextFacts', () => {
       const facts = await gatherContextFacts(request(), { listRecentAgents: async () => recent });
 
       const ctx = facts.step.agentManagementContext!;
-      expect(ctx.availableAgents?.map((a) => a.id)).not.toContain('agt_1');
-      expect(ctx.availableAgents).toHaveLength(10);
+      expect(ctx.availableAgents?.map((a) => a.id)).toEqual(
+        [0, 10, 2, 3, 4, 5, 6, 7, 8, 9].map((i) => `agt_${i}`),
+      );
       expect(ctx.availableAgentsHasMore).toBe(true);
       expect(ctx.currentAgent).toEqual({ id: 'agt_1', title: 'Helper' });
       expect(ctx.availablePlugins).toBeUndefined();
