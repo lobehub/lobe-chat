@@ -28,11 +28,12 @@ type Setter = StoreSetter<WorkState>;
  * keys (`workService.refresh*`).
  */
 export class WorkActionImpl {
+  readonly #get: () => WorkState;
   readonly #private: WorkPrivateAction;
   readonly #set: Setter;
 
-  constructor(set: Setter, _get: () => WorkState, privateAction: WorkPrivateAction) {
-    void _get;
+  constructor(set: Setter, get: () => WorkState, privateAction: WorkPrivateAction) {
+    this.#get = get;
     this.#set = set;
     this.#private = privateAction;
   }
@@ -40,6 +41,18 @@ export class WorkActionImpl {
   /** Back to a filter's head page, e.g. when the gallery switches to it again. */
   collapseWorkspaceWorks = (params: WorkspaceWorksParams): void => {
     this.#private.workspaceWorks.collapse(workspaceWorksKey(params));
+  };
+
+  /**
+   * Before a Work change refreshes the `work:` sync keys: drop every gallery
+   * filter's loaded tail pages. Only the head page is re-requested, and a tail
+   * kept behind an unchanged head would go on showing a Work as it was (e.g. a
+   * card whose document was just deleted). The tail loads again on scroll.
+   */
+  collapseWorkspaceWorksTails = (): void => {
+    for (const [key, data] of Object.entries(this.#get().workspaceWorksMap)) {
+      if (data.currentPage > 0) this.#private.workspaceWorks.collapse(key);
+    }
   };
 
   loadMoreWorkspaceWorks = async (params: WorkspaceWorksParams): Promise<void> => {

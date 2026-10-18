@@ -210,6 +210,28 @@ describe('work replicas', () => {
     await waitFor(() => expect(galleryIds()).toEqual(['wk_2']));
   });
 
+  it('a Work refresh drops loaded tail pages instead of keeping them stale', async () => {
+    vi.mocked(workService.listByWorkspace)
+      .mockResolvedValueOnce({ items: [summary('wk_1'), summary('wk_2')], nextCursor: 'c1' })
+      .mockResolvedValueOnce({ items: [summary('wk_3', 'Before')], nextCursor: null })
+      // The head is unchanged after the change, so it still holds the join anchor.
+      .mockResolvedValueOnce({ items: [summary('wk_1'), summary('wk_2')], nextCursor: 'c1' })
+      .mockResolvedValueOnce({ items: [summary('wk_3', 'Orphaned')], nextCursor: null });
+    renderHook(() => workActions.useFetchWorkspaceWorks(ALL), { wrapper });
+    await waitFor(() => expect(galleryIds()).toEqual(['wk_1', 'wk_2']));
+    await act(() => workActions.loadMoreWorkspaceWorks(ALL));
+    expect(galleryIds()).toEqual(['wk_1', 'wk_2', 'wk_3']);
+
+    await act(() => workService.refreshWorkspaceLists());
+
+    // The tail card is not left showing its pre-change value…
+    await waitFor(() => expect(galleryIds()).toEqual(['wk_1', 'wk_2']));
+    // …and comes back current when it is paged in again.
+    await act(() => workActions.loadMoreWorkspaceWorks(ALL));
+    const tail = useWorkStore.getState().workspaceWorksMap[workspaceWorksKey(ALL)]?.items[2];
+    expect(tail?.title).toBe('Orphaned');
+  });
+
   it('syncs the project dashboard works of one agent', async () => {
     vi.mocked(workService.listByWorkspace).mockResolvedValue({
       items: [summary('wk_a')],

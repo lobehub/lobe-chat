@@ -8,6 +8,11 @@ import { galleryKeyOfUrl, worksLoader } from './worksLoader';
 const mocks = vi.hoisted(() => ({
   preHydrateWorkspaceWorks: vi.fn(),
   workspaceId: null as string | null,
+  workspaceSlug: null as string | null,
+}));
+
+vi.mock('@/business/client/hooks/useActiveWorkspaceSlug', () => ({
+  getActiveWorkspaceSlug: () => mocks.workspaceSlug,
 }));
 
 vi.mock('@/business/client/hooks/useActiveWorkspaceId', () => ({
@@ -23,12 +28,13 @@ vi.mock('@/store/work', () => ({
   workActions: { preHydrateWorkspaceWorks: mocks.preHydrateWorkspaceWorks },
 }));
 
-const load = (url: string) =>
-  worksLoader({ context: undefined, params: {}, request: new Request(url) } as any);
+const load = (url: string, params: Record<string, string> = {}) =>
+  worksLoader({ context: undefined, params, request: new Request(url) } as any);
 
 beforeEach(() => {
   mocks.preHydrateWorkspaceWorks.mockReset().mockResolvedValue(true);
   mocks.workspaceId = null;
+  mocks.workspaceSlug = null;
   useResourceManagerStore.setState({ listVisibility: initialState.listVisibility });
 });
 
@@ -85,4 +91,38 @@ describe('worksLoader', () => {
     await load('https://app.test/resource/images');
     expect(mocks.preHydrateWorkspaceWorks).not.toHaveBeenCalled();
   });
+
+  it('seeds when the destination route is the active workspace', async () => {
+    mocks.workspaceId = 'ws_other';
+    mocks.workspaceSlug = 'acme';
+
+    await load('https://app.test/acme/resource', { workspaceSlug: 'acme' });
+
+    expect(mocks.preHydrateWorkspaceWorks).toHaveBeenCalledWith(
+      expect.objectContaining({ workspaceId: 'ws_other' }),
+    );
+  });
+
+  it.each([
+    ['another workspace', 'https://app.test/beta/resource', { workspaceSlug: 'beta' }, 'acme'],
+    ['the personal space', 'https://app.test/resource', {}, 'acme'],
+    [
+      'a workspace from the personal space',
+      'https://app.test/acme/resource',
+      { workspaceSlug: 'acme' },
+      null,
+    ],
+  ])(
+    'skips a navigation into %s while the previous scope is still active',
+    async (_label, url, params, activeSlug) => {
+      mocks.workspaceId = activeSlug ? 'ws_private' : null;
+      mocks.workspaceSlug = activeSlug;
+
+      await load(url, params);
+
+      expect(mocks.preHydrateWorkspaceWorks).not.toHaveBeenCalled();
+      // Nor does it restore the left space's mode into the store.
+      expect(useResourceManagerStore.getState().listVisibility).toBe(initialState.listVisibility);
+    },
+  );
 });

@@ -1,6 +1,7 @@
 import type { LoaderFunctionArgs } from 'react-router';
 
 import { getActiveWorkspaceId } from '@/business/client/hooks/useActiveWorkspaceId';
+import { getActiveWorkspaceSlug } from '@/business/client/hooks/useActiveWorkspaceSlug';
 import { useResourceManagerStore } from '@/features/ResourceManager/store';
 import { parseWorkGalleryKey, type WorkGalleryKey } from '@/features/WorkGallery/const';
 import { workspaceWorksParams } from '@/features/WorkGallery/hooks';
@@ -30,9 +31,16 @@ export const galleryKeyOfUrl = (url: URL): WorkGalleryKey | null => {
  * the ResourceManager store first, so the page's first render reads the same
  * mode (and the same replica entry) instead of the store default.
  */
-export const worksLoader = async ({ request }: LoaderFunctionArgs): Promise<null> => {
+export const worksLoader = async ({ params, request }: LoaderFunctionArgs): Promise<null> => {
   const galleryKey = galleryKeyOfUrl(new URL(request.url));
   if (!galleryKey) return null;
+
+  // A navigation into another workspace (or back to the personal space) runs
+  // this loader before the destination commits and switches the scope, so the
+  // active workspace and replica scope still describe the space being left.
+  // Seeding them would read the wrong space; the page hydrates on mount once
+  // the scope has switched.
+  if ((params.workspaceSlug ?? null) !== getActiveWorkspaceSlug()) return null;
 
   const workspaceId = getActiveWorkspaceId();
   useResourceManagerStore.getState().hydrateListVisibility(workspaceId ?? undefined);
