@@ -64,6 +64,18 @@ describe('guardResetRows', () => {
     expect(await storage.get(KEY)).toEqual({ data: 'new context', updatedAt: 201 });
   });
 
+  it('advances the mark past the previous one and past rows written since', async () => {
+    const inner = new PrototypeStorage();
+    const storage = guardResetRows(inner);
+    markReplicaScopeReset('u1:ws1', 200);
+    await storage.set(KEY, { data: 'second context', updatedAt: 200 }); // stamped 201
+
+    // The next switch reads the same (or an earlier) clock value.
+    markReplicaScopeReset('u1:ws1', 200);
+
+    expect(await storage.get(KEY)).toBeUndefined();
+  });
+
   it('keeps the mark across a reload', async () => {
     const inner = new PrototypeStorage();
     inner.rows.set('a', { data: 'previous context', updatedAt: 100 });

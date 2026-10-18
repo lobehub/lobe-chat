@@ -31,11 +31,20 @@ const readMark = (scope: string): number => {
   return mark;
 };
 
-/** Record that `scope`'s persisted rows belong to a data context that is gone. */
+/** Newest `updatedAt` this session wrote per scope (a later mark must cover it). */
+const written = new Map<string, number>();
+
+/**
+ * Record that `scope`'s persisted rows belong to a data context that is gone.
+ * The mark only moves forward — past the previous mark and past every row this
+ * session wrote — so equal timestamps or a clock stepping back between two
+ * resets cannot leave the abandoned context's rows newer than it.
+ */
 export const markReplicaScopeReset = (scope: string, at = Date.now()): void => {
-  marks.set(scope, at);
+  const mark = Math.max(at, readMark(scope) + 1, written.get(scope) ?? 0);
+  marks.set(scope, mark);
   try {
-    if (typeof window !== 'undefined') localStorage.setItem(MARK_PREFIX + scope, String(at));
+    if (typeof window !== 'undefined') localStorage.setItem(MARK_PREFIX + scope, String(mark));
   } catch {
     // The in-memory mark still guards this session.
   }
@@ -44,6 +53,7 @@ export const markReplicaScopeReset = (scope: string, at = Date.now()): void => {
 /** Forget every mark (tests). */
 export const resetReplicaScopeMarks = (): void => {
   marks.clear();
+  written.clear();
 };
 
 const isRetired = (scope: string, row: { updatedAt: number } | undefined) =>
@@ -68,7 +78,9 @@ export const guardResetRows = <TData>(storage: ReplicaStorage<TData>): ReplicaSt
     // back) must still read as post-reset: stamp it past the mark.
     set: (key, row) => {
       const mark = readMark(key.scope);
-      return inner.set(key, row.updatedAt > mark ? row : { ...row, updatedAt: mark + 1 });
+      const stamped = row.updatedAt > mark ? row : { ...row, updatedAt: mark + 1 };
+      written.set(key.scope, Math.max(written.get(key.scope) ?? 0, stamped.updatedAt));
+      return inner.set(key, stamped);
     },
   };
   if (inner.getStrict) {
