@@ -30,9 +30,9 @@ const plane = vi.hoisted(() => ({
   readOccupancy: vi.fn(),
 }));
 
-vi.mock('@/business/server/trpc-middlewares/workspaceAuth', async () => {
+vi.mock('@/business/server/trpc-middlewares/workspaceAuth', async (importOriginal) => {
   const mod = await vi.importActual<{ trpc: any }>('@/libs/trpc/lambda/init');
-  return { wsCompatProcedure: mod.trpc.procedure };
+  return { ...(await importOriginal<object>()), wsCompatProcedure: mod.trpc.procedure };
 });
 
 vi.mock('@/libs/trpc/lambda/middleware', () => ({
