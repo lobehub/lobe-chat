@@ -32,6 +32,7 @@ import { registerCatchAllHandler } from './catchAll';
 import { registerCommands } from './commands';
 import {
   createParticipantTracker,
+  isSoloThreadConversation,
   mentionRequiredAnnouncedKey,
   PARTICIPANTS_TTL_MS,
 } from './participants';
@@ -364,13 +365,10 @@ export function registerHandlers(
     // cache has lapsed — not something a direct message should wait on.
     const isSoloBotConversation =
       !isExplicitlyAddressed &&
-      (client.isSoloBotConversation
-        ? await client.isSoloBotConversation(thread.id).catch((error) => {
-            // Fail closed: an unprovable chat stays mention-only.
-            log('onSubscribedMessage: isSoloBotConversation failed: %O', error);
-            return false;
-          })
-        : humanCount <= 1);
+      (await isSoloThreadConversation(
+        humanCount,
+        client.isSoloBotConversation && (() => client.isSoloBotConversation!(thread.id)),
+      ));
     const isAddressedToBot = isExplicitlyAddressed || isSoloBotConversation;
     const platformReportsShared =
       !isExplicitlyAddressed && !!client.isSoloBotConversation && !isSoloBotConversation;
