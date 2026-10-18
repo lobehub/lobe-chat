@@ -11,6 +11,15 @@ export const skillVersionContent = (
 ): string | undefined => (versions ?? []).find((version) => version.version === revision)?.content;
 
 /**
+ * The files one version shipped beside its `SKILL.md`. Undefined for a version
+ * written before files were kept per version: read the skill's current files.
+ */
+export const skillVersionFiles = <TFile extends { content: string; path: string }>(
+  versions: readonly { files?: TFile[]; version: number }[] | null | undefined,
+  revision: number,
+): TFile[] | undefined => (versions ?? []).find((version) => version.version === revision)?.files;
+
+/**
  * A skill's files as the file tree takes them: `scripts/check.sh` becomes a
  * `scripts` folder holding `check.sh`. Folders first, then files, by name.
  * `SKILL.md` itself is the tree's root entry, not one of these.

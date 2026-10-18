@@ -148,7 +148,13 @@ export class UserSkillService {
   /** Writes the next version of a skill's body. Returns its number. */
   reviseSkill = async (
     id: string,
-    params: { body: string; note?: string; origin?: UserSkillOrigin },
+    params: {
+      body: string;
+      /** Files to write beside `SKILL.md` by path, and paths to drop; the rest stay. */
+      files?: { remove?: string[]; upsert?: UserSkillFile[] };
+      note?: string;
+      origin?: UserSkillOrigin;
+    },
   ): Promise<number | undefined> => {
     const skill = await this.model.findById(id);
     if (!skill) return undefined;
@@ -158,6 +164,7 @@ export class UserSkillService {
         description: skill.description,
         name: skill.name,
       }),
+      files: params.files,
       note: params.note,
       origin: params.origin,
     });

@@ -68,6 +68,40 @@ describe('UserSkillModel', () => {
     );
   });
 
+  // A plan is a package: a revision can add, replace and drop the files beside
+  // SKILL.md, and every version keeps the files it shipped with.
+  it('revises the files beside SKILL.md and freezes them per version', async () => {
+    const skill = await create();
+
+    await model.revise(skill.id, {
+      content: 'v2 body',
+      files: {
+        upsert: [
+          { content: 'echo strict', language: 'bash', path: 'scripts/check.sh' },
+          { content: '# review rules', path: 'references/review.md' },
+        ],
+      },
+    });
+    await model.revise(skill.id, {
+      content: 'v3 body',
+      files: { remove: ['scripts/check.sh'] },
+    });
+    await model.revise(skill.id, { content: 'v4 body' });
+
+    const current = await model.findById(skill.id);
+    expect(current!.files).toEqual([{ content: '# review rules', path: 'references/review.md' }]);
+    const versions = await model.listVersions(skill.id);
+    expect(versions.map((version) => version.files)).toEqual([
+      [{ content: 'echo ok', language: 'bash', path: 'scripts/check.sh' }],
+      [
+        { content: '# review rules', path: 'references/review.md' },
+        { content: 'echo strict', language: 'bash', path: 'scripts/check.sh' },
+      ],
+      [{ content: '# review rules', path: 'references/review.md' }],
+      [{ content: '# review rules', path: 'references/review.md' }],
+    ]);
+  });
+
   it('loads skills by name for a run, and only the owner sees them', async () => {
     const skill = await create();
 

@@ -61,7 +61,11 @@ const PlanDetail = memo<PlanDetailProps>(({ graph, model, round }) => {
   const [selectedFile, setSelectedFile] = useState(SKILL_INDEX);
   const [filesOpen, setFilesOpen] = useState(true);
   const { selected } = usePlanVersionSelection();
-  const { files, isLoading, versions } = usePlanVersions(graph, model);
+  const { files: latestFiles, isLoading, versions } = usePlanVersions(graph, model);
+  const revision = selected ?? round.planVersion;
+  const current = versions.find((version) => version.revision === revision);
+  // The package as this version shipped it, when it kept its own files.
+  const files = current?.files ?? latestFiles;
   const resourceTree = useMemo(() => skillFileTree(files), [files]);
   const contentMap = useMemo(
     () => Object.fromEntries(files.map((file) => [file.path, file.content])),
@@ -70,8 +74,6 @@ const PlanDetail = memo<PlanDetailProps>(({ graph, model, round }) => {
 
   if (isLoading) return <Loading />;
 
-  const revision = selected ?? round.planVersion;
-  const current = versions.find((version) => version.revision === revision);
   const forked = model.rounds.find((item) => item.planVersion === revision)?.forked;
   const { body, frontmatter } = parseSkillMarkdownFrontmatter(current?.content);
 

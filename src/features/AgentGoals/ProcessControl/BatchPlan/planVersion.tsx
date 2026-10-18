@@ -30,6 +30,8 @@ export const usePlanVersionSelection = () => use(PlanVersionContext);
 export interface PlanVersion {
   /** `SKILL.md` as kept, frontmatter included. */
   content: string;
+  /** The files that version shipped beside it; absent when it predates per-version files. */
+  files?: { content: string; path: string }[];
   revision: number;
 }
 
@@ -48,13 +50,17 @@ export const usePlanVersions = (graph: GoalGraphView, model: BatchModel) => {
   );
   const kept = [...(skill?.versions ?? [])].sort((a, b) => a.version - b.version);
   const versions: PlanVersion[] = kept.length
-    ? kept.map((version) => ({ content: version.content, revision: version.version }))
+    ? kept.map((version) => ({
+        content: version.content,
+        ...(version.files && { files: version.files }),
+        revision: version.version,
+      }))
     : model.rounds
         .filter((item) => item.templateId)
         .map((item: BatchRound) => ({
           content: (item.templateId && graph.byId[item.templateId]?.node.description) || '',
           revision: item.planVersion,
         }));
-  // A skill's scripts are its latest set; versions keep `SKILL.md` alone.
+  // The skill's current files, for a version that did not keep its own.
   return { files: skill?.files ?? [], isLoading: !!planSkill && isLoading, versions };
 };

@@ -7,6 +7,7 @@ import Loading from '@/components/Loading/CircleLoading';
 import {
   skillFileTree,
   skillVersionContent,
+  skillVersionFiles,
 } from '@/features/AgentGoals/ProcessControl/BatchPlan/skillVersions';
 import { getLanguage } from '@/features/AgentSkillDetail/ContentViewer';
 import FileTree from '@/features/FileTree';
@@ -60,7 +61,11 @@ const SkillDirectory = memo<SkillDirectoryProps>(
     const { data: skill, isLoading } = useClientDataSWR(['goal-gate-plan-skill', skillId], () =>
       userSkillService.get(skillId),
     );
-    const files = useMemo(() => skill?.files ?? [], [skill]);
+    // The package as the reviewed version shipped it, when that version kept its files.
+    const files = useMemo(
+      () => skillVersionFiles(skill?.versions, revision) ?? skill?.files ?? [],
+      [skill, revision],
+    );
     const resourceTree = useMemo(() => skillFileTree(files), [files]);
     const contentMap = useMemo(
       () => Object.fromEntries(files.map((file) => [file.path, file.content])),

@@ -6,7 +6,9 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { usePlanFiles } from './usePlanFiles';
 
-const skill = vi.hoisted(() => ({ current: undefined as { files: unknown[] } | undefined }));
+const skill = vi.hoisted(() => ({
+  current: undefined as { files: unknown[]; versions?: unknown[] } | undefined,
+}));
 
 vi.mock('@/libs/swr', () => ({
   useClientDataSWR: (key: unknown) => ({ data: key ? skill.current : undefined }),
@@ -25,14 +27,14 @@ describe('usePlanFiles', () => {
   it('opens the directory of a plan that ships more than SKILL.md', () => {
     skill.current = { files: [file('scripts/check.sh'), file('references/review.md')] };
 
-    const { result } = renderHook(() => usePlanFiles('skill-1'));
+    const { result } = renderHook(() => usePlanFiles('skill-1', 1));
 
     expect(result.current).toMatchObject({ extraFiles: 2, filesOpen: true });
   });
 
   it('reads a lone SKILL.md as a document until the owner opens the tree', () => {
     skill.current = { files: [] };
-    const { result } = renderHook(() => usePlanFiles('skill-1'));
+    const { result } = renderHook(() => usePlanFiles('skill-1', 1));
     expect(result.current).toMatchObject({ extraFiles: 0, filesOpen: false });
 
     act(() => result.current.toggleFiles());
@@ -42,10 +44,28 @@ describe('usePlanFiles', () => {
 
   it('lets the owner fold a directory that opened on its own', () => {
     skill.current = { files: [file('scripts/check.sh')] };
-    const { result } = renderHook(() => usePlanFiles('skill-1'));
+    const { result } = renderHook(() => usePlanFiles('skill-1', 1));
 
     act(() => result.current.toggleFiles());
 
     expect(result.current.filesOpen).toBe(false);
+  });
+
+  // The owner reviews one version: its package is what that version shipped,
+  // not whatever the skill carries now.
+  it('counts the files of the version under review', () => {
+    skill.current = {
+      files: [file('scripts/check.sh'), file('references/review.md'), file('templates/pr.md')],
+      versions: [
+        { files: [], version: 1 },
+        { files: [file('scripts/check.sh')], version: 2 },
+      ],
+    };
+
+    expect(renderHook(() => usePlanFiles('skill-1', 1)).result.current).toMatchObject({
+      extraFiles: 0,
+      filesOpen: false,
+    });
+    expect(renderHook(() => usePlanFiles('skill-1', 2)).result.current.extraFiles).toBe(1);
   });
 });

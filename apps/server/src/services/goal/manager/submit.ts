@@ -96,6 +96,7 @@ const declareBatch = async (
     policy,
     problemId: problemId!,
     probes: plan.tasks.map((task) => ({ instruction: task.description, title: task.title })),
+    recipeFiles: plan.rollout.files,
     recipeOutline: plan.rollout.recipe,
     repeatable: true,
     roster,
@@ -299,6 +300,8 @@ export const submitPlan = async (
         pendingRevision: {
           ...rollout.pendingRevision,
           ...(plan.rerun && { rerun: plan.rerun }),
+          ...(plan.files && { revisedFiles: plan.files }),
+          ...(plan.removeFiles && { removedFiles: plan.removeFiles }),
           revisedReason: plan.reason,
           revisedRecipe: plan.recipe,
         },

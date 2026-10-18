@@ -19,7 +19,8 @@ import { buildWorkspacePayload, buildWorkspaceWhere } from '../utils/workspace';
  * any agent or run can load it by name. Under it sit its `SKILL.md`
  * (`skills/index`), its scripts (`skills/script`, the code in `content`, the
  * language in `metadata.language`) and one `skills/version` row per version —
- * the full `SKILL.md` it read at that version. Versions are rows of their own,
+ * the full `SKILL.md` it read at that version, with the files beside it then
+ * (`metadata.files`), so a version reads as the whole package it shipped. Versions are rows of their own,
  * not document history: history is trimmed, a version must stay readable.
  *
  * Rows carry `sourceType: 'agent'` so the Page library never lists them.
@@ -38,6 +39,11 @@ export type UserSkillOrigin = Record<string, unknown>;
 export interface UserSkillVersion {
   content: string;
   createdAt: Date;
+  /**
+   * The files beside `SKILL.md` at this version. Absent on versions written
+   * before files were kept per version: those read the current files.
+   */
+  files?: UserSkillFile[];
   id: string;
   note?: string;
   origin?: UserSkillOrigin;
@@ -168,17 +174,90 @@ export class UserSkillModel {
       },
     );
 
+  /** The files beside `SKILL.md`, as a version freezes them. */
+  private currentFiles = async (tx: Transaction, bundleId: string): Promise<UserSkillFile[]> => {
+    const rows = await tx
+      .select()
+      .from(documents)
+      .where(
+        and(
+          this.scope(),
+          eq(documents.parentId, bundleId),
+          eq(documents.fileType, SKILL_SCRIPT_FILE_TYPE),
+        ),
+      )
+      .orderBy(asc(documents.filename));
+    return rows.map((row) => ({
+      content: row.content ?? '',
+      ...(row.metadata?.language && { language: row.metadata.language as string }),
+      path: row.filename ?? '',
+    }));
+  };
+
+  /** Writes files beside `SKILL.md` by path — replacing one already there — and drops removed ones. */
+  private writeFiles = async (
+    tx: Transaction,
+    bundleId: string,
+    files: { remove?: string[]; upsert?: UserSkillFile[] },
+  ) => {
+    const inBundle = (path: string) =>
+      and(
+        this.scope(),
+        eq(documents.parentId, bundleId),
+        eq(documents.fileType, SKILL_SCRIPT_FILE_TYPE),
+        eq(documents.filename, path),
+      );
+    if (files.remove?.length)
+      for (const path of files.remove) await tx.delete(documents).where(inBundle(path));
+    for (const file of files.upsert ?? []) {
+      const metadata = file.language ? { language: file.language } : undefined;
+      const updated = await tx
+        .update(documents)
+        .set({
+          content: file.content,
+          metadata,
+          totalCharCount: file.content.length,
+          totalLineCount: lineCount(file.content),
+          updatedAt: new Date(),
+        })
+        .where(inBundle(file.path))
+        .returning({ id: documents.id });
+      if (updated.length) continue;
+      await tx.insert(documents).values(
+        this.row({
+          content: file.content,
+          fileType: SKILL_SCRIPT_FILE_TYPE,
+          filename: file.path,
+          metadata,
+          parentId: bundleId,
+          title: file.path,
+        }),
+      );
+    }
+  };
+
   private insertVersion = async (
     tx: Transaction,
     bundleId: string,
-    params: { content: string; note?: string; origin?: UserSkillOrigin; version: number },
+    params: {
+      content: string;
+      files: UserSkillFile[];
+      note?: string;
+      origin?: UserSkillOrigin;
+      version: number;
+    },
   ) => {
     await tx.insert(documents).values(
       this.row({
         content: params.content,
         fileType: SKILL_VERSION_FILE_TYPE,
         filename: `v${params.version}`,
-        metadata: { note: params.note, origin: params.origin, version: params.version },
+        metadata: {
+          files: params.files,
+          note: params.note,
+          origin: params.origin,
+          version: params.version,
+        },
         parentId: bundleId,
         title: `v${params.version}`,
       }),
@@ -248,6 +327,7 @@ export class UserSkillModel {
       }
       await this.insertVersion(tx, bundle.id, {
         content: params.content,
+        files: params.files ?? [],
         note: params.note,
         origin: params.origin,
         version: 1,
@@ -264,7 +344,13 @@ export class UserSkillModel {
    */
   revise = async (
     id: string,
-    params: { content: string; note?: string; origin?: UserSkillOrigin },
+    params: {
+      content: string;
+      /** Files to write beside `SKILL.md` (by path) and paths to drop; the rest stay. */
+      files?: { remove?: string[]; upsert?: UserSkillFile[] };
+      note?: string;
+      origin?: UserSkillOrigin;
+    },
   ): Promise<number | undefined> =>
     this.db.transaction(async (tx) => {
       const [bundle] = await tx
@@ -299,8 +385,10 @@ export class UserSkillModel {
           updatedAt: new Date(),
         })
         .where(and(this.bundleWhere(), eq(documents.id, id)));
+      if (params.files) await this.writeFiles(tx, id, params.files);
       await this.insertVersion(tx, id, {
         content: params.content,
+        files: await this.currentFiles(tx, id),
         note: params.note,
         origin: params.origin,
         version,
@@ -458,6 +546,7 @@ export class UserSkillModel {
       .map((row) => ({
         content: row.content ?? '',
         createdAt: row.createdAt,
+        ...(Array.isArray(row.metadata?.files) && { files: row.metadata.files as UserSkillFile[] }),
         id: row.id,
         note: row.metadata?.note,
         origin: row.metadata?.origin,

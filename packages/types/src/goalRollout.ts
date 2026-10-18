@@ -301,6 +301,10 @@ export interface GoalRolloutState {
      * rewrite. Absent re-runs every one of them; empty re-runs none.
      */
     rerun?: string[];
+    /** Package files the rewrite adds or replaces beside the recipe (by path). */
+    revisedFiles?: { content: string; path: string }[];
+    /** Package paths the rewrite drops. */
+    removedFiles?: string[];
     revisedReason?: string;
     revisedRecipe?: string;
   };
