@@ -274,6 +274,7 @@ describe('buildInitializeProbeMessage', () => {
 });
 
 describe('selectDiagnosticOutputLines', () => {
+  const CAP = 64 * 1024;
   const makeLines = (n: number, prefix: string) =>
     Array.from({ length: n }, (_, i) => `${prefix} line ${i + 1}`).join('\n');
 
@@ -298,6 +299,41 @@ describe('selectDiagnosticOutputLines', () => {
 
   it('returns an empty array when both streams are empty', () => {
     expect(selectDiagnosticOutputLines('', '')).toEqual([]);
+  });
+
+  it('preserves the truncation notice when the payload fills the tail window (P2 4307065883)', () => {
+    // Composed accumulator → selector: a capped stream whose retained payload
+    // has ≥ 10 non-empty lines. A bare slice(-10) silently drops the prepended
+    // notice, making the tail look complete even though the head was dropped.
+    const stream = new PrecheckOutputStream('stderr');
+    stream.append(Buffer.from('x'.repeat(CAP)));
+    stream.append(Buffer.from('\n' + makeLines(12, 'err') + '\n'));
+    stream.append(Buffer.from('final error: path not found\n'));
+
+    const lines = selectDiagnosticOutputLines(stream.toString(), '');
+
+    expect(lines[0]).toBe('[stderr truncated: pre-check output cap reached]');
+    expect(lines).toContain('final error: path not found');
+    expect(lines).toHaveLength(11);
+  });
+
+  it('keeps non-notice lines even when they merely look like a truncation notice', () => {
+    // A payload line that merely echoes notice wording must NOT be hoisted as
+    // the notice itself — only the exact marker line is hoisted. The payload
+    // copy uses near-identical but distinct wording, and since the real
+    // marker's stream is capped the payload copy is dropped with the head.
+    const stream = new PrecheckOutputStream('stdout');
+    stream.append(
+      Buffer.from('[stdout truncated: pre-check app reached]\nreal payload line\n'),
+    );
+    stream.append(Buffer.from('y'.repeat(CAP)));
+    stream.append(Buffer.from('\ndecisive error\n'));
+
+    const lines = selectDiagnosticOutputLines(stream.toString(), '');
+
+    expect(lines[0]).toBe('[stdout truncated: pre-check output cap reached]');
+    expect(lines).toContain('decisive error');
+    expect(lines).not.toContain('[stdout truncated: pre-check app reached]');
   });
 });
 

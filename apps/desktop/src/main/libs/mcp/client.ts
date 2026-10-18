@@ -175,14 +175,29 @@ export class PrecheckOutputStream {
  * error last, so head-slicing keeps the noise and drops the lines that
  * actually explain the failure. Both streams are capped upstream (64 KiB), so
  * the result stays small.
+ *
+ * The truncation notice emitted by PrecheckOutputStream.toString() is
+ * prepended to the stream text BEFORE the payload, so it must be pulled out
+ * before tail-slicing — otherwise a stream with ≥ 10 retained lines silently
+ * drops the notice and the tail looks complete even though earlier output was
+ * discarded (P2 4307065883).
  */
+const truncationNoticePattern = /^\[(?:stdout|stderr) truncated: pre-check output cap reached\]$/;
+
 export function selectDiagnosticOutputLines(stdout: string, stderr: string): string[] {
-  const tailLines = (text: string) =>
-    text
+  const tailLines = (text: string) => {
+    const lines = text
       .split('\n')
       .map((line) => line.trim())
-      .filter(Boolean)
-      .slice(-10);
+      .filter(Boolean);
+    const notices: string[] = [];
+    const payload: string[] = [];
+    for (const line of lines) {
+      if (truncationNoticePattern.test(line)) notices.push(line);
+      else payload.push(line);
+    }
+    return [...notices, ...payload.slice(-10)];
+  };
   return [...tailLines(stdout), ...tailLines(stderr)];
 }
 
