@@ -24,6 +24,33 @@ import { type ElectronStore } from '../store';
 const dataContextOf = ({ active, remoteServerUrl, storageMode }: DataSyncConfig): string =>
   active ? `${storageMode}|${remoteServerUrl ?? ''}` : 'inactive';
 
+type RemoteServerSyncError = NonNullable<ElectronStore['remoteServerSyncError']>;
+
+/**
+ * A connect flow that fails after it already left the previous server still
+ * has to reload, which recreates this store. Its error rides the reload in
+ * sessionStorage (scoped to this window) so the login screen can show it.
+ */
+const SYNC_ERROR_STASH_KEY = 'lobe-remote-server-sync-error';
+
+const stashSyncError = (error: RemoteServerSyncError): void => {
+  try {
+    sessionStorage.setItem(SYNC_ERROR_STASH_KEY, JSON.stringify(error));
+  } catch {
+    // Storage unavailable: the reload still has to happen.
+  }
+};
+
+const takeStashedSyncError = (): RemoteServerSyncError | undefined => {
+  try {
+    const stashed = sessionStorage.getItem(SYNC_ERROR_STASH_KEY);
+    sessionStorage.removeItem(SYNC_ERROR_STASH_KEY);
+    return stashed ? (JSON.parse(stashed) as RemoteServerSyncError) : undefined;
+  } catch {
+    return undefined;
+  }
+};
+
 type Setter = StoreSetter<ElectronStore>;
 export const remoteSyncSlice = (set: Setter, get: () => ElectronStore, _api?: unknown) =>
   new ElectronRemoteServerActionImpl(set, get, _api);
@@ -79,6 +106,8 @@ export class ElectronRemoteServerActionImpl {
       this.#set({ isConnectingServer: false });
       if (this.#pendingDataContextReset) {
         this.#pendingDataContextReset = false;
+        const { remoteServerSyncError } = this.#get();
+        if (remoteServerSyncError) stashSyncError(remoteServerSyncError);
         await resetDataContext();
       }
     }
@@ -122,7 +151,13 @@ export class ElectronRemoteServerActionImpl {
       {
         onSuccess: (data) => {
           const { dataSyncConfig, isConnectingServer, isInitRemoteServerConfig } = this.#get();
-          this.#set({ dataSyncConfig: data, isInitRemoteServerConfig: true });
+          // The first hydration after a reload restores a connect error it carried.
+          const stashedError = isInitRemoteServerConfig ? undefined : takeStashedSyncError();
+          this.#set({
+            dataSyncConfig: data,
+            isInitRemoteServerConfig: true,
+            ...(stashedError && { remoteServerSyncError: stashedError }),
+          });
           // Only after the first hydration: on initial load the renderer already
           // holds this server's data.
           if (!isInitRemoteServerConfig || dataContextOf(data) === dataContextOf(dataSyncConfig))

@@ -41,10 +41,12 @@ const answerConfig = (data: DataSyncConfig) => {
 
 beforeEach(() => {
   vi.clearAllMocks();
+  sessionStorage.clear();
   useElectronStore.setState({
     dataSyncConfig: { storageMode: 'cloud' },
     isConnectingServer: false,
     isInitRemoteServerConfig: false,
+    remoteServerSyncError: undefined,
   });
 });
 
@@ -90,6 +92,37 @@ describe('remote server data context', () => {
     await connecting;
 
     expect(resetDataContext).toHaveBeenCalledTimes(1);
+  });
+
+  it('keeps an authorization error across the reload of a failed switch', async () => {
+    answerConfig(SERVER_A);
+    remoteServerService.getRemoteServerConfig.mockResolvedValue(SERVER_A);
+    let authorize!: (result: { error?: string; success: boolean }) => void;
+    remoteServerService.requestAuthorization.mockReturnValue(
+      new Promise((resolve) => {
+        authorize = resolve;
+      }),
+    );
+    const connecting = useElectronStore.getState().connectRemoteServer(SERVER_B);
+    await vi.waitFor(() => expect(remoteServerService.requestAuthorization).toHaveBeenCalled());
+    answerConfig({ ...SERVER_A, active: false }); // left server A
+
+    authorize({ error: 'denied by user', success: false });
+    await connecting;
+    expect(resetDataContext).toHaveBeenCalledTimes(1);
+
+    // The reload recreates the store; its first config hydration restores the error.
+    useElectronStore.setState({
+      dataSyncConfig: { storageMode: 'cloud' },
+      isInitRemoteServerConfig: false,
+      remoteServerSyncError: undefined,
+    });
+    answerConfig({ ...SERVER_A, active: false });
+
+    expect(useElectronStore.getState().remoteServerSyncError).toEqual({
+      message: 'denied by user',
+      type: 'AUTH_ERROR',
+    });
   });
 
   it('resets after disconnecting from the server', async () => {
