@@ -10,6 +10,7 @@ const palette: VisualPalette = {
   fill: '#fafafa',
   fontFamily: 'system-ui',
   primary: '#1677ff',
+  radius: 12,
   success: '#52c41a',
   text: '#000',
   textSecondary: '#555',
@@ -61,6 +62,13 @@ describe('buildVisualDocument', () => {
     expect(html).toContain('color-scheme: light');
     expect(html).toContain('--primary: #1677ff');
     expect(html).toContain('501B');
+  });
+
+  it('lays out four stats cards as a full grid instead of leaving an orphan card', () => {
+    const items = ['A', 'B', 'C', 'D'].map((label) => ({ label, value: '1' }));
+
+    expect(render({ items, type: 'stats' })).toContain('class="stats count-4"');
+    expect(render({ items: items.slice(0, 3), type: 'stats' })).toContain('class="stats count-3"');
   });
 
   it('escapes model-provided text so no markup or script is injected', () => {

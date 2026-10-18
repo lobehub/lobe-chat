@@ -33,6 +33,7 @@ const Render = ({ children, id }: MarkdownElementProps) => {
       fill: theme.colorFillQuaternary,
       fontFamily: theme.fontFamily,
       primary: theme.colorPrimary,
+      radius: theme.borderRadiusLG,
       success: theme.colorSuccess,
       text: theme.colorText,
       textSecondary: theme.colorTextSecondary,
