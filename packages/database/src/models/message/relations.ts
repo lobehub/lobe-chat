@@ -1,6 +1,7 @@
 import type { TaskDetail, ThreadStatus, WorkAccessScope, WorkSummaryItem } from '@lobechat/types';
 import { logTimingSink as logTiming, runTimedSinkStage as runTimedStage } from '@lobechat/utils';
 import { and, eq, inArray } from 'drizzle-orm';
+import pMap from 'p-map';
 
 import {
   chunks,
@@ -17,6 +18,7 @@ import { buildWorkspaceWhere } from '../../utils/workspace';
 import { WorkModel } from '../work';
 import type { FileDocumentsMap, MessageRelatedFile } from './attachments';
 import {
+  FILE_URL_POST_PROCESS_CONCURRENCY,
   fileDocumentColumns,
   fileDocumentsOrder,
   getMessageWorkRootId,
@@ -103,8 +105,9 @@ export class MessageRelationQueries extends MessageScope {
       timing,
       'db.message.queryWithWhere.relatedFiles.postProcess',
       () =>
-        Promise.all(
-          rawRelatedFileList.map(async (file) => {
+        pMap(
+          rawRelatedFileList,
+          async (file) => {
             // Tombstoned by the visibility guard above — nothing to presign.
             if (file.name === null) return { ...file, url: '' };
             return {
@@ -116,7 +119,8 @@ export class MessageRelationQueries extends MessageScope {
                   )
                 : (file.url as string),
             };
-          }),
+          },
+          { concurrency: FILE_URL_POST_PROCESS_CONCURRENCY },
         ),
       { fileCount: rawRelatedFileList.length },
     );

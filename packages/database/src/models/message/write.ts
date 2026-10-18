@@ -6,7 +6,7 @@ import type {
   UpdateMessageParams,
 } from '@lobechat/types';
 import { runTimedSinkStage as runTimedStage } from '@lobechat/utils';
-import { and, eq } from 'drizzle-orm';
+import { and, eq, inArray } from 'drizzle-orm';
 
 import { clampToolIdentifier } from '@/utils/clampToolIdentifier';
 import { merge } from '@/utils/merge';
@@ -83,6 +83,29 @@ interface SplitCreateMessageParams {
 }
 
 export class MessageWriteMutations extends MessageScope {
+  /**
+   * Row-lock message roots in id order (`SELECT … FOR UPDATE`) and return
+   * their content. Only meaningful on a transaction-bound instance; used by the
+   * human-approval unit of work in `MessageApprovalRepo`.
+   */
+  lockContentForUpdate = async (ids: string[]) =>
+    this.db
+      .select({ content: messages.content, id: messages.id })
+      .from(messages)
+      .where(and(inArray(messages.id, ids), this.ownership()))
+      .orderBy(messages.id)
+      .for('update');
+
+  /** Replace one message's content. Returns `false` when it is outside this scope. */
+  updateContent = async (id: string, content: string): Promise<boolean> => {
+    const [updated] = await this.db
+      .update(messages)
+      .set({ content })
+      .where(and(eq(messages.id, id), this.ownership()))
+      .returning({ id: messages.id });
+    return Boolean(updated);
+  };
+
   private splitCreateMessageParams = ({
     fileChunks,
     files,

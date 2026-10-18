@@ -2,6 +2,7 @@ import type { UpdateMessageRAGParams } from '@lobechat/types';
 import { inArray } from 'drizzle-orm';
 
 import type { FtsSearchCandidateSource } from '../../repositories/ftsSearch';
+import { MessageApprovalRepo } from '../../repositories/messageApproval';
 import { messages } from '../../schemas';
 import type { LobeChatDatabase } from '../../type';
 import { MessageAnalyticsQueries } from './analytics';
@@ -74,8 +75,8 @@ export class MessageModel {
 
   updatePluginState: MessagePluginStore['updatePluginState'];
   updateMessagePlugin: MessagePluginStore['updateMessagePlugin'];
-  resolveHumanApproval: MessagePluginStore['resolveHumanApproval'];
-  restoreHumanApproval: MessagePluginStore['restoreHumanApproval'];
+  resolveHumanApproval: MessageApprovalRepo['resolve'];
+  restoreHumanApproval: MessageApprovalRepo['restore'];
   findMessagePlugin: MessagePluginStore['findMessagePlugin'];
   listMessagePluginsByTopic: MessagePluginStore['listMessagePluginsByTopic'];
   findLatestPluginStateInTopic: MessagePluginStore['findLatestPluginStateInTopic'];
@@ -178,8 +179,11 @@ export class MessageModel {
     this.updateMetadata = writes.updateMetadata;
     this.updatePluginState = plugins.updatePluginState;
     this.updateMessagePlugin = plugins.updateMessagePlugin;
-    this.resolveHumanApproval = plugins.resolveHumanApproval;
-    this.restoreHumanApproval = plugins.restoreHumanApproval;
+    // The approval claim locks and writes message roots and plugin rows in one
+    // transaction; that unit of work is owned by the repository.
+    const approvals = new MessageApprovalRepo(db, userId, workspaceId, options);
+    this.resolveHumanApproval = approvals.resolve;
+    this.restoreHumanApproval = approvals.restore;
     this.findMessagePlugin = plugins.findMessagePlugin;
     this.listMessagePluginsByTopic = plugins.listMessagePluginsByTopic;
     this.findLatestPluginStateInTopic = plugins.findLatestPluginStateInTopic;

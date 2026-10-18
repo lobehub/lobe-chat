@@ -10,6 +10,7 @@ import type {
 import { MessageGroupType } from '@lobechat/types';
 import { logTimingSink as logTiming, runTimedSinkStage as runTimedStage } from '@lobechat/utils';
 import { and, asc, eq, gte, inArray, lte, sql } from 'drizzle-orm';
+import pMap from 'p-map';
 
 import {
   documents,
@@ -30,6 +31,7 @@ import { buildWorkspaceWhere } from '../../utils/workspace';
 import type { FileDocumentsMap } from './attachments';
 import {
   createChatImageItem,
+  FILE_URL_POST_PROCESS_CONCURRENCY,
   fileDocumentColumns,
   fileDocumentsOrder,
   materializeChatAudioItem,
@@ -221,8 +223,9 @@ export class MessageByIdsQueries extends MessageScope {
     ]);
 
     // 3. Process file results
-    const relatedFileList = await Promise.all(
-      rawRelatedFileList.map(async (file) => {
+    const relatedFileList = await pMap(
+      rawRelatedFileList,
+      async (file) => {
         // Tombstoned by the visibility guard above — nothing to presign.
         if (file.name === null) return { ...file, url: '' };
         return {
@@ -234,7 +237,8 @@ export class MessageByIdsQueries extends MessageScope {
               )
             : (file.url as string),
         };
-      }),
+      },
+      { concurrency: FILE_URL_POST_PROCESS_CONCURRENCY },
     );
 
     // Get associated document content. Exclude tombstoned files — their parsed

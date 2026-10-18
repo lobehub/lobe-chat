@@ -3,14 +3,12 @@ import type { SQL } from 'drizzle-orm';
 import { and, asc, desc, eq, gte, inArray, isNotNull, isNull, lte, sql } from 'drizzle-orm';
 
 import { clampToolIdentifier } from '@/utils/clampToolIdentifier';
-import { merge } from '@/utils/merge';
 
 import { messagePlugins, messages } from '../../schemas';
 import { notShareVisitorMessage } from '../../utils/shareVisitor';
 import type { MessageLookupQueries } from './lookup';
 import type { MessageScopeArgs } from './scope';
 import { MessageScope } from './scope';
-import type { HumanApprovalResolution } from './types';
 
 export class HumanApprovalAlreadyResolvedError extends Error {
   constructor(messageId: string) {
@@ -58,160 +56,36 @@ export class MessagePluginStore extends MessageScope {
   };
 
   /**
-   * Resolve an approval batch at one row-locking boundary. Every target is
-   * checked before any write, so Web, Mobile, Stop, and notification actions
-   * cannot each win a subset of the same assistant turn. Source adapters claim
-   * only; content/state remain in their private resolution until the runtime
-   * passes publishResult after afterToolCall. Stop may publish its fixed receipt.
+   * Row-lock the plugin rows of an approval batch (`SELECT … FOR UPDATE`).
+   * Only meaningful on a transaction-bound store: the approval repository
+   * (`MessageApprovalRepo`) calls it after locking the message rows, matching
+   * deferred completion's lock order (message before plugin).
    */
-  resolveHumanApproval = async (
-    resolutions: HumanApprovalResolution[],
-    options: { publishResult?: boolean } = {},
-  ): Promise<'applied' | 'idempotent'> => {
-    if (resolutions.length === 0) return 'idempotent';
+  lockApprovalPluginsForUpdate = async (ids: string[]) =>
+    this.db
+      .select({
+        id: messagePlugins.id,
+        intervention: messagePlugins.intervention,
+        state: messagePlugins.state,
+      })
+      .from(messagePlugins)
+      .where(and(inArray(messagePlugins.id, ids), this.pluginsOwnership()))
+      .for('update');
 
-    const ids = resolutions.map(({ id }) => id);
-    if (new Set(ids).size !== ids.length) {
-      throw new Error('Human approval batch contains duplicate tool messages');
-    }
-
-    return this.db.transaction(async (trx) => {
-      // Match deferred completion's lock order (message before plugin).
-      const lockedMessages = await trx
-        .select({ id: messages.id, content: messages.content })
-        .from(messages)
-        .where(and(inArray(messages.id, ids), this.ownership()))
-        .orderBy(messages.id)
-        .for('update');
-      const messagesById = new Map(lockedMessages.map((row) => [row.id, row]));
-      const lockedRows = await trx
-        .select({
-          id: messagePlugins.id,
-          intervention: messagePlugins.intervention,
-          state: messagePlugins.state,
-        })
-        .from(messagePlugins)
-        .where(and(inArray(messagePlugins.id, ids), this.pluginsOwnership()))
-        .for('update');
-      const lockedById = new Map(lockedRows.map((row) => [row.id, row]));
-
-      const rowStates = resolutions.map((resolution) => {
-        const row = lockedById.get(resolution.id);
-        if (!row) throw new Error(`Plugin not found: ${resolution.id}`);
-        if (row.intervention?.status === 'pending') return 'pending' as const;
-
-        const sameRequest =
-          Boolean(resolution.intervention.resolutionRequestId) &&
-          row.intervention?.resolutionRequestId === resolution.intervention.resolutionRequestId;
-        const sameDecision = Object.entries(resolution.intervention).every(
-          ([key, value]) =>
-            JSON.stringify(row.intervention?.[key as keyof typeof row.intervention]) ===
-            JSON.stringify(value),
-        );
-        if (sameRequest && sameDecision) return 'idempotent' as const;
-        throw new HumanApprovalAlreadyResolvedError(resolution.id);
-      });
-      const pendingCount = rowStates.filter((state) => state === 'pending').length;
-      if (pendingCount === 0 && !options.publishResult) return 'idempotent';
-      if (pendingCount !== 0 && pendingCount !== resolutions.length) {
-        throw new Error('Human approval batch contains a partial idempotent claim');
-      }
-
-      let published = false;
-      for (const resolution of resolutions) {
-        // An already claimed source answer can publish exactly once. A replay
-        // retains the first final content, including a hook denial.
-        if (
-          pendingCount === 0 &&
-          (messagesById.get(resolution.id)?.content ||
-            (resolution.content === undefined &&
-              resolution.pluginState === undefined &&
-              resolution.pluginError === undefined))
-        )
-          continue;
-        published = true;
-        const row = lockedById.get(resolution.id)!;
-        if (options.publishResult && resolution.content !== undefined) {
-          const [updatedMessage] = await trx
-            .update(messages)
-            .set({ content: resolution.content })
-            .where(and(eq(messages.id, resolution.id), this.ownership()))
-            .returning({ id: messages.id });
-          if (!updatedMessage) throw new Error(`Message not found: ${resolution.id}`);
-        }
-
-        const [updatedPlugin] = await trx
-          .update(messagePlugins)
-          .set({
-            // Status/result is a claim patch, not a replacement. Preserve the
-            // authoritative operation/batch/item identity stamped when the
-            // parked tool row was created so subsequent source reads, Stop,
-            // and rollback still address the same sealed batch.
-            intervention: merge(row.intervention || {}, resolution.intervention),
-            ...(options.publishResult &&
-              resolution.pluginError !== undefined && { error: resolution.pluginError }),
-            ...(options.publishResult &&
-              resolution.pluginState !== undefined && {
-                state: resolution.replacePluginState
-                  ? resolution.pluginState
-                  : merge(row.state || {}, resolution.pluginState || {}),
-              }),
-          })
-          .where(and(eq(messagePlugins.id, resolution.id), this.pluginsOwnership()))
-          .returning({ id: messagePlugins.id });
-        if (!updatedPlugin) throw new Error(`Plugin not found: ${resolution.id}`);
-      }
-
-      return published ? 'applied' : 'idempotent';
-    });
-  };
-
-  /** Restore the exact pre-claim snapshot when continuation startup fails. */
-  restoreHumanApproval = async (resolutions: HumanApprovalResolution[]): Promise<void> => {
-    if (resolutions.length === 0) return;
-
-    await this.db.transaction(async (trx) => {
-      const ids = resolutions.map(({ id }) => id);
-      await trx
-        .select({ id: messages.id })
-        .from(messages)
-        .where(and(inArray(messages.id, ids), this.ownership()))
-        .orderBy(messages.id)
-        .for('update');
-      const lockedRows = await trx
-        .select({ id: messagePlugins.id, intervention: messagePlugins.intervention })
-        .from(messagePlugins)
-        .where(and(inArray(messagePlugins.id, ids), this.pluginsOwnership()))
-        .for('update');
-      const lockedById = new Map(lockedRows.map((row) => [row.id, row]));
-
-      for (const resolution of resolutions) {
-        const locked = lockedById.get(resolution.id);
-        if (!locked) throw new Error(`Plugin not found: ${resolution.id}`);
-        if (
-          resolution.claimedResolutionRequestId &&
-          locked.intervention?.resolutionRequestId !== resolution.claimedResolutionRequestId
-        ) {
-          continue;
-        }
-        if (resolution.content !== undefined) {
-          const [updatedMessage] = await trx
-            .update(messages)
-            .set({ content: resolution.content })
-            .where(and(eq(messages.id, resolution.id), this.ownership()))
-            .returning({ id: messages.id });
-          if (!updatedMessage) throw new Error(`Message not found: ${resolution.id}`);
-        }
-        await trx
-          .update(messagePlugins)
-          .set({
-            intervention: resolution.intervention,
-            ...(resolution.pluginError !== undefined && { error: resolution.pluginError }),
-            ...(resolution.pluginState !== undefined && { state: resolution.pluginState }),
-          })
-          .where(and(eq(messagePlugins.id, resolution.id), this.pluginsOwnership()));
-      }
-    });
+  /**
+   * Write the approval columns (intervention / error / state) of one plugin
+   * row. Returns `false` when the row is outside this scope.
+   */
+  patchApprovalPlugin = async (
+    id: string,
+    value: Pick<Partial<typeof messagePlugins.$inferInsert>, 'error' | 'intervention' | 'state'>,
+  ): Promise<boolean> => {
+    const [updated] = await this.db
+      .update(messagePlugins)
+      .set(value)
+      .where(and(eq(messagePlugins.id, id), this.pluginsOwnership()))
+      .returning({ id: messagePlugins.id });
+    return Boolean(updated);
   };
 
   /**

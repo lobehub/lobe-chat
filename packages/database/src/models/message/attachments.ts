@@ -6,6 +6,12 @@ import { asc } from 'drizzle-orm';
 import { documents } from '../../schemas';
 import { documentOriginalCharCount } from '../../utils/originalCharCount';
 
+/**
+ * Max concurrent `postProcessUrl` calls (file URL presign/transform) while
+ * hydrating the attachments of a message page.
+ */
+export const FILE_URL_POST_PROCESS_CONCURRENCY = 10;
+
 export const fileDocumentColumns = {
   content: documents.content,
   fileId: documents.fileId,
