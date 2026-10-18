@@ -342,10 +342,25 @@ export const createSandboxStorageClient = ({ baseURL, headers }: SandboxStorageC
      * packing. `stopped: false` means nothing held it. Control plane only —
      * stopping a sandbox never starts one.
      */
-    stopInstance: async (params: { name: string }): Promise<{ stopped: boolean }> =>
-      request(`${CURRENT_STORAGE}/instances/${encodeURIComponent(params.name)}/stop`, {
-        method: 'POST',
-      }),
+    readStopTarget: async (params: {
+      name: string;
+    }): Promise<{ sessionId: string; topicId: string | null } | null> =>
+      request(`${CURRENT_STORAGE}/instances/${encodeURIComponent(params.name)}/stop-target`),
+
+    stopInstance: async (params: {
+      expectedSessionId?: string;
+      name: string;
+    }): Promise<{ stopped: boolean }> => {
+      const query = new URLSearchParams();
+      if (params.expectedSessionId) query.set('expectedSessionId', params.expectedSessionId);
+      const suffix = query.size ? `?${query.toString()}` : '';
+      return request(
+        `${CURRENT_STORAGE}/instances/${encodeURIComponent(params.name)}/stop${suffix}`,
+        {
+          method: 'POST',
+        },
+      );
+    },
 
     /**
      * Start building an environment from its specification.
