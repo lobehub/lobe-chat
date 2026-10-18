@@ -22,6 +22,7 @@ matching, say what you checked and ask. Do not report "not found" after looking 
 ## Commands
 
 - \`lh workspace current [--json]\` - Show the scope commands run under, and where it came from
+- \`lh workspace use <id|slug>\` / \`lh workspace use --personal\` - Switch the saved scope (restore it afterwards, see below)
 - \`lh workspace list [--json]\` - List workspaces you belong to (id, name, slug, role, plan)
 - \`lh workspace view [workspaceId] [--json]\` - View workspace detail (defaults to the active scope)
 - \`lh workspace members [-w <id>] [--json]\` - List workspace members
@@ -39,16 +40,21 @@ change the scope of other modules.
 
 ## Scope rules for agent runs
 
-- Your run already carries its scope. A run started in a workspace is pinned to that
-  workspace, and a personal run is pinned to personal content. \`lh whoami\` or
+- Your run starts in the scope it was launched from: a workspace run in that workspace,
+  a personal run in personal content. \`lh whoami\` or
   \`lh workspace current\` shows which one you are in. Check it first when something you
   expect to exist reports "not found".
-- **Never run \`lh workspace use\`** from a run. It rewrites the machine's saved scope,
-  which then retargets the user's own later commands, and it does not move this run anyway.
-- To read a single conversation from another workspace, \`lh topic view <id> --workspace <workspaceId>\`
-  and \`lh topic export <id> --workspace <workspaceId>\` take an explicit workspace.
-  For anything else in another workspace, tell the user which workspace holds it and
-  ask them to continue from an agent in that workspace. Do not try other ways to switch scope.
+- To work in another workspace, switch with \`lh workspace use\` and **always switch back**:
+  1. \`lh workspace current\` - note the original scope
+  2. \`lh workspace use <id|slug>\` - switch
+  3. Do the work, then confirm with \`lh workspace current\`
+  4. \`lh workspace use <original>\` (or \`lh workspace use --personal\`) - restore
+
+  The saved scope is shared by every later \`lh\` command on this machine, including the
+  user's own. Restore it even when the work fails partway. If \`lh workspace current\`
+  does not change after \`use\`, this run's scope is fixed: tell the user instead of retrying.
+- \`lh topic view <id> --workspace <workspaceId>\` and \`lh topic export <id> --workspace <workspaceId>\`
+  read one conversation from another workspace without switching.
 - Role-gated commands (admin or higher) fail with a permission error for members. Report
   that error as it is. Do not retry with other flags.
 `;

@@ -46,7 +46,7 @@ run commands.
 | Module | Description | Reference |
 |--------|-------------|-----------|
 | \`lh workspace\` | Team workspaces, members and the scope every command runs under | \`references/workspace\` |
-| \`lh agent\` | Agent management (create, configure, run) and each agent's document space | \`references/agent\` |
+| \`lh agent\` | Agent management (create, configure, run) | \`references/agent\` |
 | \`lh agent-group\` / \`lh session-group\` | Multi-agent group chats / sidebar folders | \`references/agent-group\` |
 | \`lh topic\` / \`lh thread\` | Conversation topics and their threads | \`references/topic\` |
 | \`lh message\` / \`lh notify\` | Message search and stats / post into a conversation | \`references/message\` |
@@ -70,23 +70,21 @@ run commands.
 
 Covered by their own skills, so activate the skill instead of reading a reference here:
 \`lh task\` inside a task run (\`task\` skill), \`lh artifact\` (\`artifacts\` skill) and
-\`lh acceptance\` (\`acceptance\` skill; \`lh verify\` is its deprecated alias).
-
-Infrastructure, never run them from a conversation: \`lh connect\` / \`disconnect\`,
-\`lh device\`, \`lh hetero\`, \`lh agent-signal\`, \`lh tool-worker\`, \`lh login\` / \`logout\`, \`lh update\`.
+\`lh acceptance\` (\`acceptance\` skill).
 
 # Workspace scope
 
 Every command runs against one scope: the user's personal content, or one team
-workspace. Your run is already pinned to the scope it started in.
+workspace. Your run starts in the scope it was launched from.
 
 - "Workspace" is ambiguous. The user may mean a team workspace (\`lh workspace\`), your
   own agent documents, a task's documents, or the local directory. If the request fits
   more than one and the first place you look has nothing, say what you checked and ask
 - When something you expect reports "not found", check the scope with \`lh workspace current\`
   before concluding it does not exist
-- Never run \`lh workspace use\`: it rewrites the machine's saved scope for the user's
-  later commands and does not move this run. See \`references/workspace\`
+- To work in another workspace, \`lh workspace use <id|slug>\` switches the saved scope.
+  Note the original scope from \`lh workspace current\` first, and switch back when you are
+  done (\`lh workspace use <original>\` or \`lh workspace use --personal\`). See \`references/workspace\`
 
 # Usage Pattern
 
