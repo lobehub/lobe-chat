@@ -1257,30 +1257,33 @@ const exec = async (options: ExecOptions): Promise<void> => {
   // response must not overwrite the model selected by `initialModel`.
   const permissionMode = options.type === 'devin' ? 'bypass' : undefined;
 
+  const spawnOptions = {
+    agentType: options.type,
+    askUserBridge: askBridge,
+    command: resolvedCommand.command,
+    cwd: options.cwd || process.cwd(),
+    detached: process.env[HETERO_EXEC_INHERIT_PROCESS_GROUP_ENV] !== '1',
+    env: commandEnv,
+    extraArgs,
+    // Device and sandbox executions are observed through the same gateway
+    // stream as native server agents. Ask Claude Code for content-block
+    // deltas so the current conversation receives text while the process is
+    // running instead of seeing only the terminal assistant snapshot.
+    includePartialMessages: options.type === 'claude-code',
+    initialModel:
+      options.type === 'droid' || options.type === 'devin' || options.type === 'trae'
+        ? options.model
+        : undefined,
+    // Keep Claude Code's stdin open while it can still use input: closing it
+    // early makes print mode kill background tasks after 10 minutes.
+    liveInput: options.type === 'claude-code',
+    operationId,
+    permissionMode,
+    uploadImage,
+  };
+
   const first = await runOneAgent(
-    {
-      agentType: options.type,
-      askUserBridge: askBridge,
-      command: resolvedCommand.command,
-      cwd: options.cwd || process.cwd(),
-      detached: process.env[HETERO_EXEC_INHERIT_PROCESS_GROUP_ENV] !== '1',
-      env: commandEnv,
-      extraArgs,
-      permissionMode,
-      // Device and sandbox executions are observed through the same gateway
-      // stream as native server agents. Ask Claude Code for content-block
-      // deltas so the current conversation receives text while the process is
-      // running instead of seeing only the terminal assistant snapshot.
-      includePartialMessages: options.type === 'claude-code',
-      initialModel:
-        options.type === 'droid' || options.type === 'devin' || options.type === 'trae'
-          ? options.model
-          : undefined,
-      operationId,
-      prompt: resolved.prompt,
-      resumeSessionId: options.resume,
-      uploadImage,
-    },
+    { ...spawnOptions, prompt: resolved.prompt, resumeSessionId: options.resume },
     interceptResume,
     'attempt-1',
   );
@@ -1302,25 +1305,8 @@ const exec = async (options: ExecOptions): Promise<void> => {
   if (!first.cancelled && !first.ingestError && first.resumeNotFound) {
     log.info('Resume failed (session not found or context overflow) — retrying without --resume');
     result = await runOneAgent(
-      {
-        agentType: options.type,
-        askUserBridge: askBridge,
-        command: resolvedCommand.command,
-        cwd: options.cwd || process.cwd(),
-        detached: process.env[HETERO_EXEC_INHERIT_PROCESS_GROUP_ENV] !== '1',
-        env: commandEnv,
-        extraArgs,
-        includePartialMessages: options.type === 'claude-code',
-        initialModel:
-          options.type === 'droid' || options.type === 'devin' || options.type === 'trae'
-            ? options.model
-            : undefined,
-        operationId,
-        permissionMode,
-        prompt: resolved.resumeFallbackPrompt ?? resolved.prompt,
-        uploadImage,
-        // No resumeSessionId — start fresh
-      },
+      // No resumeSessionId — start fresh
+      { ...spawnOptions, prompt: resolved.resumeFallbackPrompt ?? resolved.prompt },
       false, // no need to intercept resume errors on a fresh run
       'attempt-2-noresume',
     );

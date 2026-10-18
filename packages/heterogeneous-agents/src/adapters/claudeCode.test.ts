@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { ClaudeCodeAdapter, ClaudeCodeSdkAdapter } from './claudeCode';
+import { ClaudeCodeAdapter, ClaudeCodeSdkAdapter } from '.';
 
 describe('ClaudeCodeAdapter', () => {
   describe('run cost', () => {
