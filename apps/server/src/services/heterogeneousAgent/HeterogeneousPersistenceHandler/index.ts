@@ -47,7 +47,7 @@ import {
   heteroProvenance,
   persistCodexTurnProvenance,
   restoreHeteroProvenance,
-} from './heteroProvenance';
+} from '../heteroProvenance';
 
 const log = debug('lobe-server:hetero-agent:persistence');
 
