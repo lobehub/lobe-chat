@@ -55,6 +55,14 @@ export interface SharedTopicFirstPage {
 type ForwardReadClient = Parameters<typeof readMessagesForward>[0];
 
 /**
+ * Serialized size above which the first page stays out of the document. The
+ * worker buffers the whole HTML before sending it, so one heavy first round
+ * (a long agent run with tool payloads) would hold back the first paint; the
+ * client reads such a page itself, in parallel with the code.
+ */
+export const SHARED_TOPIC_FIRST_PAGE_MAX_CHARS = 256 * 1024;
+
+/**
  * Read a share's first rounds forward for the document. A server that cannot
  * page forward keeps the page on the newest-first read; any other failure
  * leaves the first page to the client, still forward.
@@ -70,6 +78,8 @@ export const readSharedTopicFirstPage = async (
       null,
       SHARED_TOPIC_FIRST_PAGE,
     );
+    if (JSON.stringify(firstPage.messages).length > SHARED_TOPIC_FIRST_PAGE_MAX_CHARS)
+      return { firstPage: null, messageReadMode: 'forward' };
     return { firstPage, messageReadMode: 'forward' };
   } catch (error) {
     if (error instanceof ForwardPagingUnsupportedError) {

@@ -15,6 +15,7 @@ import {
 import {
   primeSharedTopicMessages,
   readSharedTopicFirstPage,
+  SHARED_TOPIC_FIRST_PAGE_MAX_CHARS,
   sharedTopicMessagesScript,
   sharedTopicMessagesUrl,
   toSharedConversationContext,
@@ -143,6 +144,21 @@ describe('readSharedTopicFirstPage', () => {
       serverQuery,
     };
   };
+
+  it('leaves a first page too large to embed to the client, still forward', async () => {
+    const heavy = 'x'.repeat(SHARED_TOPIC_FIRST_PAGE_MAX_CHARS);
+    const { client } = serverClient(async () => ({
+      direction: 'forward',
+      hasMore: true,
+      messages: [{ content: heavy, id: 'u1' }],
+      nextCursor: null,
+    }));
+
+    await expect(readSharedTopicFirstPage(client, 'share-heavy')).resolves.toEqual({
+      firstPage: null,
+      messageReadMode: 'forward',
+    });
+  });
 
   it('reads the first rounds forward from the share id alone', async () => {
     const page = {
