@@ -545,6 +545,7 @@
   "goalChat.newTopic": "گفتگوی جدید",
   "goalChat.noTopics": "هنوز گفتگویی وجود ندارد",
   "goalChat.title": "پرسش درباره پیشرفت",
+  "goalChat.welcome": "از عامل درباره این هدف بپرسید — چگونه پیش می‌رود، چه موانعی وجود دارد، یا مرحله بعدی چیست.",
   "goalDetail.acceptance": "بررسی‌های پذیرش",
   "goalDetail.acceptanceError": "بارگذاری بررسی‌های پذیرش امکان‌پذیر نیست.",
   "goalDetail.acceptanceProgress": "پیشرفت پذیرش",

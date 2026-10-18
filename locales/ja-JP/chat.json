@@ -545,6 +545,7 @@
   "goalChat.newTopic": "新しい会話",
   "goalChat.noTopics": "まだ会話がありません",
   "goalChat.title": "進捗について質問する",
+  "goalChat.welcome": "この目標についてエージェントに質問してください — 進捗状況、障害、次に何が起こるかなど。",
   "goalDetail.acceptance": "受け入れチェック",
   "goalDetail.acceptanceError": "受け入れチェックを読み込めませんでした。",
   "goalDetail.acceptanceProgress": "受け入れ進捗",

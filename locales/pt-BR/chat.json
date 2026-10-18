@@ -545,6 +545,7 @@
   "goalChat.newTopic": "Nova conversa",
   "goalChat.noTopics": "Nenhuma conversa ainda",
   "goalChat.title": "Perguntar sobre o progresso",
+  "goalChat.welcome": "Pergunte ao agente sobre este objetivo — como está indo, o que está bloqueando ou o que acontece a seguir.",
   "goalDetail.acceptance": "Verificações de aceitação",
   "goalDetail.acceptanceError": "Não foi possível carregar as verificações de aceitação.",
   "goalDetail.acceptanceProgress": "Progresso de aceitação",

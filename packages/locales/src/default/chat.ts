@@ -2276,6 +2276,8 @@ export default {
   'goalChat.noTopics': 'No conversations yet',
   'goalChat.openTopic': 'Go to original topic',
   'goalChat.title': 'Ask about progress',
+  'goalChat.welcome':
+    "Ask the agent about this goal — how it's going, what's blocking, or what happens next.",
   'goalDetail.acceptanceError': 'Could not load acceptance checks.',
   'goalDetail.acceptanceProgress': 'Acceptance progress',
   'goalDetail.agentRun': 'Agent run',

@@ -545,6 +545,7 @@
   "goalChat.newTopic": "새 대화",
   "goalChat.noTopics": "아직 대화가 없습니다",
   "goalChat.title": "진행 상황 문의",
+  "goalChat.welcome": "이 목표에 대해 에이전트에게 물어보세요 — 진행 상황, 장애물, 또는 다음 단계에 대해.",
   "goalDetail.acceptance": "수락 검사",
   "goalDetail.acceptanceError": "수락 검사를 로드할 수 없습니다.",
   "goalDetail.acceptanceProgress": "수락 진행 상황",

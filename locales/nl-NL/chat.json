@@ -545,6 +545,7 @@
   "goalChat.newTopic": "Nieuw gesprek",
   "goalChat.noTopics": "Nog geen gesprekken",
   "goalChat.title": "Vraag naar voortgang",
+  "goalChat.welcome": "Vraag de agent naar dit doel — hoe het gaat, wat blokkeert, of wat de volgende stappen zijn.",
   "goalDetail.acceptance": "Acceptatiecontroles",
   "goalDetail.acceptanceError": "Kon acceptatiecontroles niet laden.",
   "goalDetail.acceptanceProgress": "Acceptatievoortgang",
