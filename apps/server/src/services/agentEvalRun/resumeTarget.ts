@@ -1,5 +1,6 @@
 import { LOADING_FLAT } from '@lobechat/const';
 import type { EvalRunTopicResult, EvalThreadResult } from '@lobechat/types';
+import pMap from 'p-map';
 
 import type { ThreadModel } from '@/database/models/thread';
 import { AgentEvalRunWorkflow } from '@/server/workflows/agentEvalRun';
@@ -9,6 +10,8 @@ import type { EvalRunDeps } from './types';
 import { getCaseId, log } from './utils';
 
 const RESUMABLE_THREAD_STATUSES = new Set(['error', 'timeout']);
+/** Caps concurrent per-case resume checks (each issues several DB reads). */
+const RESUME_CHECK_CONCURRENCY = 5;
 
 interface ResumableCaseTarget {
   caseStatus?: string | null;
@@ -116,8 +119,9 @@ export async function getResumableCases(deps: EvalRunDeps, runId: string) {
     .map((topic) => getResumableCaseTarget(topic, k))
     .filter((topic): topic is ResumableCaseTarget => !!topic);
 
-  const results = await Promise.all(
-    candidates.map(async (candidate) => {
+  const results = await pMap(
+    candidates,
+    async (candidate) => {
       const check = await canResumeTrajectory(deps, {
         runId,
         testCaseId: candidate.testCaseId,
@@ -133,7 +137,8 @@ export async function getResumableCases(deps: EvalRunDeps, runId: string) {
         testCaseId: candidate.testCaseId,
         threadId: candidate.threadId,
       };
-    }),
+    },
+    { concurrency: RESUME_CHECK_CONCURRENCY },
   );
 
   return results;

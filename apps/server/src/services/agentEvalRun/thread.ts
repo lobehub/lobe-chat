@@ -10,6 +10,7 @@ import type {
   RubricType,
 } from '@lobechat/types';
 import { RequestTrigger } from '@lobechat/types';
+import pMap from 'p-map';
 
 import { AiAgentService } from '@/server/services/aiAgent';
 import { AgentEvalRunWorkflow } from '@/server/workflows/agentEvalRun';
@@ -18,6 +19,7 @@ import {
   EVAL_AGENT_RUNTIME_QSTASH_RETRIES,
   EVAL_AGENT_RUNTIME_QSTASH_RETRY_DELAY,
   EVAL_HISTORY_TAIL_METADATA_KEY,
+  THREAD_TRIGGER_CONCURRENCY,
 } from './constants';
 import { createEvalRunDeps } from './deps';
 import type { EvalRunDeps } from './types';
@@ -92,9 +94,10 @@ export async function executeMultiThreadTrajectory(
     } satisfies EvalRunTopicResult,
   });
 
-  // Trigger K run-thread-trajectory workflows in parallel
-  await Promise.all(
-    threadIds.map((threadId) =>
+  // Trigger K run-thread-trajectory workflows with a bounded fan-out
+  await pMap(
+    threadIds,
+    (threadId) =>
       AgentEvalRunWorkflow.triggerRunThreadTrajectory({
         runId,
         testCaseId,
@@ -102,7 +105,7 @@ export async function executeMultiThreadTrajectory(
         topicId,
         userId: deps.userId,
       }),
-    ),
+    { concurrency: THREAD_TRIGGER_CONCURRENCY },
   );
 
   return { threadIds, topicId };
