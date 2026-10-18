@@ -2,6 +2,8 @@ import { type ConversationContext, type UIChatMessage } from '@lobechat/types';
 import debug from 'debug';
 import isEqual from 'fast-deep-equal';
 
+import { mutate } from '@/libs/swr';
+import { isMessageListKey } from '@/libs/swr/keys';
 import {
   invalidateMessageListClientState,
   isMessageListServerVerified,
@@ -81,10 +83,19 @@ export class MessageQueryActionImpl {
    * Drop the transcripts of deleted conversations from memory and storage
    * (every one when `predicate` is omitted). Nothing is refetched: the
    * conversation is gone.
+   *
+   * Installs upgraded from before the replica still hold `message:list` rows
+   * in the SWR IndexedDB tier, which never expires them; those are purged too
+   * until the SWR persistence layer is removed.
    */
-  evictConversationMessages = (
+  evictConversationMessages = async (
     predicate?: (context: ConversationContext) => boolean,
-  ): Promise<void> => getMessageTranscript(this.#set, this.#get).evict(predicate);
+  ): Promise<void> => {
+    await Promise.all([
+      getMessageTranscript(this.#set, this.#get).evict(predicate),
+      mutate((key) => isMessageListKey(key, predicate), undefined, { revalidate: false }),
+    ]);
+  };
 
   prefetchMessages = async (context: ConversationContext): Promise<void> => {
     if (!context.agentId || !context.topicId) return;

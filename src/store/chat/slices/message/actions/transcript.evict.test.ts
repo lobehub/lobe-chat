@@ -3,12 +3,19 @@ import { act, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { cacheScope, readReplicaStoredKeys } from '@/libs/replica';
+import { mutate } from '@/libs/swr';
+import { messageListKey } from '@/services/message/cache';
 import { conversationMessagesKey, conversationMessagesResource } from '@/services/message/replica';
 import { topicService } from '@/services/topic';
 import { useChatStore } from '@/store/chat';
 import { evictMessageCache } from '@/store/chat/utils/evictMessageCache';
 
 import { resetTranscripts, rowsOf } from './testUtils';
+
+vi.mock('@/libs/swr', async (importOriginal) => {
+  const actual: Record<string, any> = await importOriginal();
+  return { ...actual, mutate: vi.fn(actual.mutate) };
+});
 
 vi.mock('@/services/topic', async (importOriginal) => {
   const actual: Record<string, any> = await importOriginal();
@@ -115,5 +122,31 @@ describe('transcript eviction', () => {
     expect(topicService.removeTopic).toHaveBeenCalledWith(topicA.topicId, undefined);
     await waitFor(async () => expect(await storedRow(topicA)).toBeUndefined());
     expect(await storedRow(topicB)).toBeDefined();
+  });
+
+  it('purges the legacy SWR `message:list` rows of deleted conversations too', async () => {
+    vi.mocked(mutate).mockClear();
+
+    await act(() => evictMessageCache((ctx) => ctx.topicId === topicA.topicId));
+
+    const [filter, data, options] = vi.mocked(mutate).mock.calls[0];
+    expect(typeof filter).toBe('function');
+    expect(data).toBeUndefined();
+    expect(options).toEqual({ revalidate: false });
+    const matches = filter as (key: unknown) => boolean;
+    expect(matches(messageListKey(topicA))).toBe(true);
+    expect(matches(messageListKey({ ...topicA, threadId: 'thd-1' }))).toBe(true);
+    expect(matches(messageListKey(topicB))).toBe(false);
+  });
+
+  it('purges every legacy SWR `message:list` row without a predicate', async () => {
+    vi.mocked(mutate).mockClear();
+
+    await act(() => evictMessageCache());
+
+    const matches = vi.mocked(mutate).mock.calls[0][0] as (key: unknown) => boolean;
+    expect(matches(messageListKey(topicA))).toBe(true);
+    expect(matches(messageListKey(otherAgent))).toBe(true);
+    expect(matches(['topic:list', 'x', {}])).toBe(false);
   });
 });

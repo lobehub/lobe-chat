@@ -2,9 +2,11 @@ import type { ConversationContext, UIChatMessage } from '@lobechat/types';
 
 import { IndexedDBQueryProjectionStorage } from '@/libs/queryProjectionStorage';
 import {
+  cacheScope,
   defineReplica,
   isReplicaSyncKey,
   REPLICA_INDEX_KEY,
+  replicaKeys,
   type ReplicaPagedData,
   type ReplicaPageResult,
   type ReplicaPagingConfig,
@@ -114,20 +116,46 @@ const transcriptPaging: ReplicaPagingConfig<UIChatMessage, MessageRoundCursor> =
   persist: { pages: 1 },
 };
 
+const CONVERSATION_MESSAGES_NAME = 'conversationMessages';
+const CONVERSATION_MESSAGES_VERSION = 1;
+
+/**
+ * The conversation a transcript sync reads, without fetch-only options
+ * (`syncInterventions`): persisted entries by their canonical read context,
+ * memory-only ones by their context. Surfaces showing one conversation with
+ * different options then share one sync, as they share one entry.
+ */
+const syncContextOf = (params: ConversationMessageParams, key: string) => {
+  const { syncInterventions: _, ...context } = params;
+  return persistedContextOf(key) ?? context;
+};
+
 export const conversationMessagesResource = defineReplica<
   ConversationMessageParams,
   ConversationMessagePage,
   ConversationMessageFetch
 >({
   key: conversationMessagesKey,
-  name: 'conversationMessages',
+  name: CONVERSATION_MESSAGES_NAME,
   paging: transcriptPaging,
   persistKey: (key) => key.startsWith('p:'),
-  // The sync runs under the default `replica:sync` key: a `message:` key would
-  // match the SWR persistence tier and store every transcript (shared and
-  // scoped ones included) a second time beside the replica's own rows.
   storage: 'indexedDB',
-  version: 1,
+  // A `replica:sync` key, so `slice.revalidate` and the predicate revalidation
+  // below match it; a `message:` key would hit the SWR persistence tier and
+  // store every transcript (shared and scoped ones included) a second time.
+  // Its params are the conversation, not the full sync params: one read per
+  // entry, so two responses never settle out of order into one transcript.
+  syncKey: (params) => {
+    const key = conversationMessagesKey(params);
+    return replicaKeys.sync(
+      CONVERSATION_MESSAGES_NAME,
+      CONVERSATION_MESSAGES_VERSION,
+      cacheScope.get(),
+      key,
+      syncContextOf(params, key),
+    );
+  },
+  version: CONVERSATION_MESSAGES_VERSION,
 });
 
 /**
@@ -146,7 +174,7 @@ export const revalidateConversationMessages = (
       })
     )
       return false;
-    // `replicaKeys.sync` puts the sync's params last.
+    // `replicaKeys.sync` puts the sync's conversation last (see `syncContextOf`).
     return !predicate || predicate((queryKey as unknown[])[5] as ConversationMessageParams);
   });
 
