@@ -1,6 +1,7 @@
 import { acceptanceVisibilities } from '@lobechat/const/verify';
 import { TRPCError } from '@trpc/server';
 import { inArray } from 'drizzle-orm';
+import pMap from 'p-map';
 import { z } from 'zod';
 
 import { ProjectModel } from '@/database/models/project';
@@ -306,7 +307,9 @@ export const listManagementRouter = router({
       const rows = ids.every(isUuid)
         ? await ctx.serverDB.query.acceptances.findMany({ where: inArray(acceptances.id, ids) })
         : [];
-      const readable = await Promise.all(rows.map((row) => canReadAcceptance(ctx, row)));
+      const readable = await pMap(rows, (row) => canReadAcceptance(ctx, row), {
+        concurrency: PURGE_BATCH_CONCURRENCY,
+      });
       if (rows.length !== ids.length || readable.includes(false)) {
         throw new TRPCError({ code: 'NOT_FOUND', message: 'Acceptance not found' });
       }
@@ -319,10 +322,10 @@ export const listManagementRouter = router({
         scope.ids.push(row.id);
         scopes.set(key, scope);
       }
-      const previews = await Promise.all(
-        [...scopes.values()].map((scope) =>
-          previewAcceptancePurge(ctx.serverDB, scope.userId, scope.workspaceId, scope.ids),
-        ),
+      const previews = await pMap(
+        scopes.values(),
+        (scope) => previewAcceptancePurge(ctx.serverDB, scope.userId, scope.workspaceId, scope.ids),
+        { concurrency: PURGE_BATCH_CONCURRENCY },
       );
       return previews.reduce(
         (total, preview) => ({

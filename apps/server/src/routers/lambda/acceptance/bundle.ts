@@ -1,6 +1,7 @@
 import type { AcceptanceAttachment } from '@lobechat/types';
 import { TRPCError } from '@trpc/server';
 import { eq } from 'drizzle-orm';
+import pMap from 'p-map';
 import { z } from 'zod';
 
 import { AcceptanceFlowModel } from '@/database/models/acceptanceFlow';
@@ -24,6 +25,9 @@ import { listAcceptancePullRequests } from '@/server/services/verify/acceptanceP
 
 import { canManageAcceptance } from '../_helpers/acceptanceWriteScope';
 import { canReadAcceptance, publicAcceptanceProcedure } from './procedures';
+
+/** Cap on concurrent evidence/attachment file lookups while building one bundle. */
+const FILE_META_RESOLVE_CONCURRENCY = 5;
 
 export const bundleRouter = router({
   /**
@@ -127,12 +131,12 @@ export const bundleRouter = router({
       const timelineResultIds = new Set(
         checks.flatMap((check) => check.timeline.map((entry) => entry.resultId)),
       );
-      const enriched = await Promise.all(
-        evidence
-          .filter(
-            (e) => timelineResultIds.has(e.checkResultId) || flowResultIds.has(e.checkResultId),
-          )
-          .map(async (e) => ({ ...e, ...(await resolveFileMeta(e.fileId ?? null)) })),
+      const enriched = await pMap(
+        evidence.filter(
+          (e) => timelineResultIds.has(e.checkResultId) || flowResultIds.has(e.checkResultId),
+        ),
+        async (e) => ({ ...e, ...(await resolveFileMeta(e.fileId ?? null)) }),
+        { concurrency: FILE_META_RESOLVE_CONCURRENCY },
       );
       const evidenceByResult = new Map<string, typeof enriched>();
       for (const e of enriched) {
@@ -159,11 +163,13 @@ export const bundleRouter = router({
         for (const entry of run.decisionDetail?.groupFeedback ?? [])
           for (const id of entry.fileIds ?? []) attachmentIds.add(id);
       const attachmentById = new Map<string, AcceptanceAttachment>();
-      await Promise.all(
-        [...attachmentIds].map(async (id) => {
+      await pMap(
+        attachmentIds,
+        async (id) => {
           const meta = await resolveFileMeta(id);
           attachmentById.set(id, { id, name: meta.fileName ?? undefined, url: meta.fileUrl });
-        }),
+        },
+        { concurrency: FILE_META_RESOLVE_CONCURRENCY },
       );
       const toAttachments = (fileIds?: string[]): AcceptanceAttachment[] | undefined => {
         if (!fileIds?.length) return undefined;
