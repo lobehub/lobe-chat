@@ -15,6 +15,7 @@ import {
   mergeQueuedFollowUps,
   type QueuedFollowUp,
   restoreAfterFailure,
+  settleFollowUps,
 } from './index';
 
 const log = debug('lobe-server:steer-queue');
@@ -119,6 +120,7 @@ export const injectQueuedFollowUp = async (
         joining.length,
         operationId,
       );
+      await settleFollowUps(scope, joining.length);
       return;
     }
 
@@ -146,6 +148,7 @@ export const injectQueuedFollowUp = async (
     });
 
     log('[%s] Joined %d queued follow-ups as %s', operationId, joining.length, message.id);
+    await settleFollowUps(scope, joining.length);
     return { messageId: message.id };
   } catch (error) {
     await restoreAfterFailure(scope, joining, operationId, error);

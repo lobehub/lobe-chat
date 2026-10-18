@@ -102,6 +102,14 @@ export const RedisKeys = {
      */
     takenFollowUps: (userId: string, topicId: string, threadId?: string | null): string =>
       `follow_ups_taken:v1:${userId}:${topicId}:${threadId || 'main'}`,
+    /**
+     * How many drained follow-ups of that queue are still in flight — taken by
+     * a run but not yet delivered or put back. Their slots stay reserved, so a
+     * restore never pushes the queue past its bound.
+     * Full key: agentSteer:follow_ups_inflight:v1:{userId}:{topicId}:{threadId|main}
+     */
+    inflightFollowUps: (userId: string, topicId: string, threadId?: string | null): string =>
+      `follow_ups_inflight:v1:${userId}:${topicId}:${threadId || 'main'}`,
   },
   /**
    * AI generation scope - for AI-generated content like welcome messages

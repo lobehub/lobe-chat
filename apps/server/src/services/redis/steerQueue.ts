@@ -8,8 +8,15 @@ const getClient = () => getRedisServiceClient('agentSteer');
 // never ended expires instead of being replayed into a later, unrelated turn.
 const QUEUE_TTL_SECONDS = 24 * 60 * 60;
 
-/** Upper bound on follow-ups waiting behind one turn. */
+/**
+ * Upper bound on follow-ups waiting behind one turn, counting the ones a run
+ * has taken but not yet delivered (their slots stay reserved).
+ */
 export const STEER_QUEUE_MAX_ENTRIES = 20;
+
+// A drained follow-up is delivered or put back within one step; a reservation
+// a crashed run never settled frees its slots after this.
+const INFLIGHT_TTL_SECONDS = 10 * 60;
 
 /**
  * One user's queue on one conversation surface: the topic's main spine, or one
@@ -70,10 +77,10 @@ end
 /**
  * Idempotent by entry id: a retried append of an id still queued answers the
  * current length, and of an id a drain already took answers -2, instead of
- * adding a copy.
+ * adding a copy. The bound counts in-flight (drained, unsettled) entries too.
  *
- * KEYS[1] = queue; KEYS[2] = taken ids; ARGV[1] = entry id; ARGV[2] = item;
- * ARGV[3] = ttl; ARGV[4] = max
+ * KEYS[1] = queue; KEYS[2] = taken ids; KEYS[3] = in-flight count;
+ * ARGV[1] = entry id; ARGV[2] = item; ARGV[3] = ttl; ARGV[4] = max
  */
 const APPEND_SCRIPT = `${LUA_HEADER}
 if redis.call('SISMEMBER', KEYS[2], ARGV[1]) == 1 then return -2 end
@@ -82,7 +89,8 @@ for _, item in ipairs(items) do
   local id = header(item)
   if id == ARGV[1] then return #items end
 end
-if #items >= tonumber(ARGV[4]) then return -1 end
+local inflight = tonumber(redis.call('GET', KEYS[3]) or '0')
+if #items + inflight >= tonumber(ARGV[4]) then return -1 end
 local length = redis.call('RPUSH', KEYS[1], ARGV[2])
 redis.call('EXPIRE', KEYS[1], ARGV[3])
 return length
@@ -116,12 +124,16 @@ return 0
  * that started after the caller looked. Taken ids are recorded so a retried
  * append of one is recognized.
  *
- * KEYS[1] = queue; KEYS[2] = taken ids; ARGV[1] = operation id; ARGV[2] = ttl;
- * ARGV[3..] = runs confirmed ended
+ * Their slots stay reserved in the in-flight count until the caller settles
+ * or restores them.
+ *
+ * KEYS[1] = queue; KEYS[2] = taken ids; KEYS[3] = in-flight count;
+ * ARGV[1] = operation id; ARGV[2] = ttl; ARGV[3] = in-flight ttl;
+ * ARGV[4..] = runs confirmed ended
  */
 const DRAIN_SCRIPT = `${LUA_HEADER}
 local ended = {}
-for i = 3, #ARGV do ended[ARGV[i]] = true end
+for i = 4, #ARGV do ended[ARGV[i]] = true end
 local taken = {}
 local kept = {}
 for _, item in ipairs(redis.call('LRANGE', KEYS[1], 0, -1)) do
@@ -135,6 +147,8 @@ for _, item in ipairs(redis.call('LRANGE', KEYS[1], 0, -1)) do
 end
 if #taken == 0 then return taken end
 redis.call('EXPIRE', KEYS[2], ARGV[2])
+redis.call('INCRBY', KEYS[3], #taken)
+redis.call('EXPIRE', KEYS[3], ARGV[3])
 local ttl = redis.call('TTL', KEYS[1])
 redis.call('DEL', KEYS[1])
 if #kept > 0 then
@@ -144,23 +158,34 @@ end
 return taken
 `;
 
+/** Releases in-flight slots, never below zero. KEYS[1] = in-flight count; ARGV[1] = n */
+const LUA_RELEASE = `
+local function release(key, n)
+  if n <= 0 then return end
+  if redis.call('DECRBY', key, n) <= 0 then redis.call('DEL', key) end
+end
+`;
+
 /**
- * Puts entries back at the head, in order, then holds the queue to its bound:
- * entries queued since the drain may have filled it again, and the overflow
- * (the newest, at the tail) is dropped and counted.
+ * Puts entries back at the head, in order, into the slots their drain
+ * reserved — so the queue stays within its bound and nothing accepted since
+ * is ever dropped — and releases those reservations.
  *
- * KEYS[1] = queue; ARGV[1] = ttl; ARGV[2] = max entries; ARGV[3..] = items
+ * KEYS[1] = queue; KEYS[2] = in-flight count; ARGV[1] = ttl; ARGV[2..] = items
  */
-const RESTORE_SCRIPT = `
-for i = #ARGV, 3, -1 do
+const RESTORE_SCRIPT = `${LUA_RELEASE}
+for i = #ARGV, 2, -1 do
   redis.call('LPUSH', KEYS[1], ARGV[i])
 end
 redis.call('EXPIRE', KEYS[1], ARGV[1])
-local max = tonumber(ARGV[2])
-local length = redis.call('LLEN', KEYS[1])
-if length <= max then return 0 end
-redis.call('LTRIM', KEYS[1], 0, max - 1)
-return length - max
+release(KEYS[2], #ARGV - 1)
+return redis.call('LLEN', KEYS[1])
+`;
+
+/** Drained entries were delivered or dropped: free their slots. KEYS[1] = in-flight; ARGV[1] = n */
+const SETTLE_SCRIPT = `${LUA_RELEASE}
+release(KEYS[1], tonumber(ARGV[1]))
+return 1
 `;
 
 const keyOf = (scope: SteerQueueScope) =>
@@ -168,6 +193,9 @@ const keyOf = (scope: SteerQueueScope) =>
 
 const takenKeyOf = (scope: SteerQueueScope) =>
   RedisKeys.agentSteer.takenFollowUps(scope.userId, scope.topicId, scope.threadId);
+
+const inflightKeyOf = (scope: SteerQueueScope) =>
+  RedisKeys.agentSteer.inflightFollowUps(scope.userId, scope.topicId, scope.threadId);
 
 /** The operation an item waits behind, from its header. */
 const behindOf = (item: string) => {
@@ -223,9 +251,10 @@ export const steerQueue = {
     try {
       const length = await redis.eval<number>(
         APPEND_SCRIPT,
-        2,
+        3,
         key,
         takenKeyOf(scope),
+        inflightKeyOf(scope),
         entry.id,
         encode(entry, operationId),
         QUEUE_TTL_SECONDS,
@@ -269,11 +298,13 @@ export const steerQueue = {
     return parseEntries<T>(
       await redis.eval<unknown>(
         DRAIN_SCRIPT,
-        2,
+        3,
         keyOf(scope),
         takenKeyOf(scope),
+        inflightKeyOf(scope),
         operationId,
         QUEUE_TTL_SECONDS,
+        INFLIGHT_TTL_SECONDS,
         ...endedOperationIds,
       ),
     );
@@ -335,26 +366,37 @@ export const steerQueue = {
   /**
    * Puts drained entries back at the head, ahead of anything queued since,
    * unbound — the run they waited behind has ended, so the next run that
-   * finishes on the surface takes them. Keeps the queue within
-   * {@link STEER_QUEUE_MAX_ENTRIES}. Rejects when Redis is unavailable: the
-   * entries are out of the queue already.
-   *
-   * @returns how many entries the bound dropped (the newest)
+   * finishes on the surface takes them. They return into the slots their
+   * drain reserved, so nothing accepted meanwhile is dropped. Rejects when
+   * Redis is unavailable: the entries are out of the queue already.
    */
-  async restore(scope: SteerQueueScope, entries: SteerQueueEntry[]): Promise<number> {
-    if (entries.length === 0) return 0;
+  async restore(scope: SteerQueueScope, entries: SteerQueueEntry[]): Promise<void> {
+    if (entries.length === 0) return;
 
     const redis = await getClient();
     if (!redis) throw new Error('Redis is unavailable to restore queued follow-ups');
 
-    const dropped = await redis.eval<number>(
+    await redis.eval(
       RESTORE_SCRIPT,
-      1,
+      2,
       keyOf(scope),
+      inflightKeyOf(scope),
       QUEUE_TTL_SECONDS,
-      STEER_QUEUE_MAX_ENTRIES,
       ...entries.map((entry) => encode(entry, UNBOUND)),
     );
-    return Number(dropped) || 0;
+  },
+
+  /**
+   * Drained entries reached their destination (or were dropped): release the
+   * slots their drain reserved. Best effort — an unreleased reservation lapses
+   * on its own.
+   */
+  async settle(scope: SteerQueueScope, count: number): Promise<void> {
+    if (count <= 0) return;
+
+    const redis = await getClient();
+    if (!redis) return;
+
+    await redis.eval(SETTLE_SCRIPT, 1, inflightKeyOf(scope), count);
   },
 };

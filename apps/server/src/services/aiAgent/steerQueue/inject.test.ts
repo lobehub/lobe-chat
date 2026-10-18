@@ -13,6 +13,7 @@ const mocks = vi.hoisted(() => ({
   isRunAlive: vi.fn(),
   resolveParentId: vi.fn(),
   restore: vi.fn(),
+  settle: vi.fn(),
 }));
 
 vi.mock('@/server/services/redis', () => ({
@@ -21,6 +22,7 @@ vi.mock('@/server/services/redis', () => ({
       boundOperations: mocks.boundOperations,
       drain: mocks.drain,
       restore: mocks.restore,
+      settle: mocks.settle,
     },
   },
 }));
@@ -120,7 +122,8 @@ describe('injectQueuedFollowUp', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     mocks.drain.mockResolvedValue([]);
-    mocks.restore.mockResolvedValue(0);
+    mocks.restore.mockResolvedValue(undefined);
+    mocks.settle.mockResolvedValue(undefined);
     mocks.boundOperations.mockResolvedValue({ operationIds: ['op-1'], total: 1 });
     mocks.isRunAlive.mockResolvedValue(true);
     mocks.resolveParentId.mockResolvedValue('msg-assistant');
@@ -146,6 +149,8 @@ describe('injectQueuedFollowUp', () => {
       }),
     );
     expect(mocks.restore).not.toHaveBeenCalled();
+    // Delivered into the run: the reserved slots are free again.
+    expect(mocks.settle).toHaveBeenCalledWith(scope, 2);
   });
 
   it('keeps queue order: joins the leading follow-ups and puts the rest back', async () => {

@@ -27,14 +27,19 @@ const createFakeRedis = () => {
     return taken.get(key)!;
   };
 
+  const inflight = new Map<string, number>();
+  const release = (k: string, n: number) =>
+    inflight.set(k, Math.max((inflight.get(k) ?? 0) - n, 0));
+
   const evalScript = vi.fn(async (script: string, numKeys: number, ...rest: any[]) => {
-    const [key, takenKey] = rest;
+    const [key, takenKey, inflightKey] = rest;
     const args = rest.slice(numKeys);
     const list = listOf(key);
     if (script.includes('local taken')) {
-      const [op, _ttl, ...ended] = args;
+      const [op, _ttl, _inflightTtl, ...ended] = args;
       const owned = (item: string) => takes(item, op) || ended.includes(header(item).behind);
       for (const item of list.filter(owned)) takenOf(takenKey).add(header(item).id);
+      inflight.set(inflightKey, (inflight.get(inflightKey) ?? 0) + list.filter(owned).length);
       lists.set(
         key,
         list.filter((item) => !owned(item)),
@@ -42,12 +47,17 @@ const createFakeRedis = () => {
       return list.filter(owned);
     }
     if (script.includes('local count')) return list.filter((item) => takes(item, args[0])).length;
-    if (script.includes('LTRIM')) {
-      const [ttl, max, ...items] = args;
-      const restored = [...items, ...list];
-      lists.set(key, restored.slice(0, Number(max)));
+    if (script.includes('LPUSH')) {
+      // restore: KEYS = queue, in-flight
+      const [ttl, ...items] = args;
+      lists.set(key, [...items, ...list]);
       ttls.set(key, Number(ttl));
-      return Math.max(restored.length - Number(max), 0);
+      release(takenKey, items.length);
+      return items.length + list.length;
+    }
+    if (script.includes('release(KEYS[1]')) {
+      release(key, Number(args[0]));
+      return 1;
     }
     if (script.includes('LREM')) {
       const index = list.findIndex((item) => header(item).id === args[0]);
@@ -59,7 +69,7 @@ const createFakeRedis = () => {
       const [id, item, ttl, max] = args;
       if (takenOf(takenKey).has(id)) return -2;
       if (list.some((existing) => header(existing).id === id)) return list.length;
-      if (list.length >= Number(max)) return -1;
+      if (list.length + (inflight.get(inflightKey) ?? 0) >= Number(max)) return -1;
       lists.set(key, [...list, item]);
       ttls.set(key, Number(ttl));
       return list.length + 1;
@@ -68,7 +78,7 @@ const createFakeRedis = () => {
     throw new Error(`unexpected script: ${script}`);
   });
 
-  return { client: { eval: evalScript }, lists, ttls };
+  return { client: { eval: evalScript }, inflight, lists, ttls };
 };
 
 const scope = { topicId: 'tpc-1', userId: 'u1' };
@@ -247,20 +257,36 @@ describe('redisService.steerQueue', () => {
     expect(await ids({ ...scope, userId: 'u2' })).toEqual(['theirs']);
   });
 
-  it('holds a restored queue to its bound, dropping and counting the newest overflow', async () => {
+  it('reserves drained slots, so a restore never drops what was accepted meanwhile', async () => {
     await redisService.steerQueue.append(scope, entry('old-1'), 'op-1');
     await redisService.steerQueue.append(scope, entry('old-2'), 'op-1');
     const drained = await redisService.steerQueue.drain(scope, 'op-1', []);
-    for (let i = 0; i < STEER_QUEUE_MAX_ENTRIES; i++) {
-      await redisService.steerQueue.append(scope, entry(`new-${i}`), 'op-2');
+    // Two slots stay reserved for the drained pair: only 18 new ones fit.
+    for (let i = 0; i < STEER_QUEUE_MAX_ENTRIES - 2; i++) {
+      await expect(redisService.steerQueue.append(scope, entry(`new-${i}`), 'op-2')).resolves.toBe(
+        i + 1,
+      );
     }
+    await expect(redisService.steerQueue.append(scope, entry('over'), 'op-2')).resolves.toBe(
+      'full',
+    );
 
-    await expect(redisService.steerQueue.restore(scope, drained)).resolves.toBe(2);
+    await redisService.steerQueue.restore(scope, drained);
 
     const queued = await ids();
     expect(queued).toHaveLength(STEER_QUEUE_MAX_ENTRIES);
     expect(queued.slice(0, 3)).toEqual(['old-1', 'old-2', 'new-0']);
-    expect(queued).not.toContain(`new-${STEER_QUEUE_MAX_ENTRIES - 1}`);
+    expect(queued.at(-1)).toBe(`new-${STEER_QUEUE_MAX_ENTRIES - 3}`);
+  });
+
+  it('frees the reserved slots once the drained entries are delivered', async () => {
+    await redisService.steerQueue.append(scope, entry('a'), 'op-1');
+    await redisService.steerQueue.drain(scope, 'op-1', []);
+    expect(redis.inflight.get('follow_ups_inflight:v1:u1:tpc-1:main')).toBe(1);
+
+    await redisService.steerQueue.settle(scope, 1);
+
+    expect(redis.inflight.get('follow_ups_inflight:v1:u1:tpc-1:main')).toBe(0);
   });
 
   it('recognizes a retry of an entry its run already took, instead of queueing it again', async () => {

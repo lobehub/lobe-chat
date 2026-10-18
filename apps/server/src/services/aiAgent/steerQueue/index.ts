@@ -89,14 +89,7 @@ export const restoreAfterFailure = async (
     error,
   );
   try {
-    const dropped = await redisService.steerQueue.restore(scope, entries);
-    if (dropped > 0) {
-      console.error(
-        '[steerQueue] queue for topic %s was full again: dropped the %d newest follow-ups',
-        scope.topicId,
-        dropped,
-      );
-    }
+    await redisService.steerQueue.restore(scope, entries);
   } catch (restoreError) {
     console.error(
       '[steerQueue] failed to restore %d queued follow-ups for topic %s: %O',
@@ -105,6 +98,16 @@ export const restoreAfterFailure = async (
       restoreError,
     );
   }
+};
+
+/**
+ * Drained follow-ups left the queue for good — delivered, or dropped: free the
+ * slots their drain reserved. Never throws; an unreleased reservation lapses.
+ */
+export const settleFollowUps = async (scope: SteerQueueScope, count: number) => {
+  await redisService.steerQueue.settle(scope, count).catch((error) => {
+    log('Releasing %d in-flight follow-up slots failed (non-fatal): %O', count, error);
+  });
 };
 
 /**
@@ -135,6 +138,7 @@ export const drainOwnFollowUps = async (
   const entries = drained.filter((entry) => entry.userId === ctx.userId);
   if (entries.length < drained.length) {
     log('[%s] Dropped %d foreign queued follow-ups', operationId, drained.length - entries.length);
+    await settleFollowUps(scope, drained.length - entries.length);
   }
   return entries;
 };
@@ -209,6 +213,7 @@ export const startQueuedFollowUp = async (
         entries.length,
         params.operationId,
       );
+      await settleFollowUps(scope, entries.length);
       return;
     }
   } catch (error) {
@@ -253,6 +258,7 @@ export const startQueuedFollowUp = async (
       result.operationId,
       entries.length,
     );
+    await settleFollowUps(scope, entries.length);
     return { operationId: result.operationId };
   } catch (error) {
     await restoreAfterFailure(scope, entries, params.operationId, error);

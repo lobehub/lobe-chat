@@ -17,13 +17,14 @@ const {
   startComposerRun: vi.fn(),
 }));
 
-const { boundOperations, findOwnLiveRuns, isRunAlive } = vi.hoisted(() => ({
+const { boundOperations, findOwnLiveRuns, isRunAlive, settle } = vi.hoisted(() => ({
   boundOperations: vi.fn(),
+  settle: vi.fn(),
   findOwnLiveRuns: vi.fn(),
   isRunAlive: vi.fn(),
 }));
 vi.mock('@/server/services/redis', () => ({
-  redisService: { steerQueue: { boundOperations, drain, restore } },
+  redisService: { steerQueue: { boundOperations, drain, restore, settle } },
 }));
 vi.mock('./liveRuns', () => ({ findOwnLiveRuns, isRunAlive }));
 vi.mock('../composerRun', () => ({ startComposerRun }));
@@ -84,7 +85,8 @@ describe('startQueuedFollowUp', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     drain.mockResolvedValue([]);
-    restore.mockResolvedValue(0);
+    restore.mockResolvedValue(undefined);
+    settle.mockResolvedValue(undefined);
     boundOperations.mockResolvedValue({ operationIds: ['op-1', 'op-ended', 'op-live'], total: 3 });
     findOwnLiveRuns.mockResolvedValue(['op-1']);
     isRunAlive.mockImplementation(
@@ -117,6 +119,8 @@ describe('startQueuedFollowUp', () => {
         steer: true,
       }),
     );
+    // Delivered: the slots the drain reserved are free again.
+    expect(settle).toHaveBeenCalledWith(expect.objectContaining({ topicId: 'tpc-1' }), 2);
   });
 
   it('puts the follow-ups back when the next turn cannot start', async () => {
