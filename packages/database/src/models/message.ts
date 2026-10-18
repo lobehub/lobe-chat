@@ -106,6 +106,11 @@ import { searchableMessage } from '../utils/searchableMessage';
 import { notShareVisitorMessage, notShareVisitorTopicRef } from '../utils/shareVisitor';
 import { isTrashed, restoreStamp, type SoftDeleteOptions, trashStamp } from '../utils/softDelete';
 import { buildWorkspacePayload, buildWorkspaceWhere } from '../utils/workspace';
+import {
+  messageAtOrAfter,
+  messageStrictlyBefore,
+  resolveBackwardRoundWindow,
+} from './messageCursorWindow';
 import { recomputeTopicUsage } from './topicUsage';
 import { WorkModel } from './work';
 
@@ -1976,11 +1981,11 @@ export class MessageModel {
       this.matchThread(undefined),
     );
 
-    const { lowerBound, hasMore } = await this.resolveRoundWindow({
+    const { lowerBound, hasMore } = await resolveBackwardRoundWindow(this.db, {
       countBudget,
       cursor,
-      mainlineWhere,
       roundLimit,
+      where: and(this.ownership(), mainlineWhere),
     });
 
     // MessageGroup nodes (compression / comparison) are partitioned across pages
@@ -2006,8 +2011,8 @@ export class MessageModel {
     const where = lowerBound
       ? and(
           mainlineWhere,
-          this.messageAtOrAfter(lowerBound),
-          cursor ? this.messageStrictlyBefore(cursor) : undefined,
+          messageAtOrAfter(lowerBound),
+          cursor ? messageStrictlyBefore(cursor) : undefined,
         )
       : sql`false`;
 
@@ -2029,89 +2034,6 @@ export class MessageModel {
     // `lowerBound.createdAt` is already the lossless microsecond cursor string.
     return { hasMore, messages, nextCursor: hasMore && lowerBound ? lowerBound : null };
   };
-
-  /**
-   * Resolve the round window for a cursor page: walk mainline rows newest-first
-   * and stop at the `roundLimit`-th round boundary (a `user` message) or the
-   * `countBudget` safety cap, whichever comes first. Returns the lower bound (the
-   * oldest included round's start) and whether older rounds remain.
-   */
-  private resolveRoundWindow = async ({
-    countBudget,
-    cursor,
-    mainlineWhere,
-    roundLimit,
-  }: {
-    countBudget: number;
-    cursor?: MessageRoundCursor | null;
-    mainlineWhere: SQL | undefined;
-    roundLimit: number;
-  }): Promise<{ hasMore: boolean; lowerBound: { createdAt: string; id: string } | null }> => {
-    const olderThanCursor = cursor ? this.messageStrictlyBefore(cursor) : undefined;
-
-    const rows = (await this.db
-      .select({
-        // Microsecond-precision UTC string. `createdAt` is a timestamptz whose
-        // now() default can carry microseconds, but a JS Date keeps only
-        // milliseconds — a Date-derived cursor would round sub-millisecond
-        // boundaries and let rows leak between adjacent pages. Carry the lossless
-        // value in the cursor and compare it back with a ::timestamptz cast.
-        createdAtIso: sql<string>`to_char(${messages.createdAt} AT TIME ZONE 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS.US"Z"')`,
-        id: messages.id,
-        role: messages.role,
-      })
-      .from(messages)
-      .where(and(this.ownership(), isNull(messages.messageGroupId), mainlineWhere, olderThanCursor))
-      .orderBy(desc(messages.createdAt), desc(messages.id))
-      .limit(countBudget + 1)) as { createdAtIso: string; id: string; role: string }[];
-
-    if (rows.length === 0) return { hasMore: false, lowerBound: null };
-
-    let rounds = 0;
-    let boundaryIndex = -1;
-    for (let i = 0; i < rows.length; i += 1) {
-      if (rows[i].role === 'user') {
-        rounds += 1;
-        boundaryIndex = i;
-        if (rounds >= roundLimit) break;
-      }
-      // Safety cap: once a full budget has been walked and at least one whole
-      // round is captured, stop at the last boundary instead of scanning further.
-      if (i + 1 >= countBudget && rounds >= 1) break;
-    }
-
-    // No `user` turn in the visible window — an oversized newest round, or a tail
-    // with no user turn. Fall back to the oldest fetched row; that slice is a
-    // partial round the renderer roots as an orphan chain. Lazy step loading is
-    // the proper fix (a later stage).
-    if (boundaryIndex === -1) boundaryIndex = rows.length - 1;
-
-    const boundaryRow = rows[boundaryIndex];
-    const hasMore = boundaryIndex < rows.length - 1 || rows.length > countBudget;
-
-    return { hasMore, lowerBound: { createdAt: boundaryRow.createdAtIso, id: boundaryRow.id } };
-  };
-
-  /**
-   * `(createdAt, id)` strictly before the cursor — the "older than" half-open
-   * bound. Compares against the cursor's lossless microsecond string cast to
-   * `timestamptz`, so sub-millisecond boundaries stay exact.
-   */
-  private messageStrictlyBefore = (cursor: MessageRoundCursor) =>
-    or(
-      sql`${messages.createdAt} < ${cursor.createdAt}::timestamptz`,
-      and(
-        sql`${messages.createdAt} = ${cursor.createdAt}::timestamptz`,
-        lt(messages.id, cursor.id),
-      ),
-    );
-
-  /** `(createdAt, id)` at or after the lower bound — the inclusive window start. */
-  private messageAtOrAfter = (bound: { createdAt: string; id: string }) =>
-    or(
-      sql`${messages.createdAt} > ${bound.createdAt}::timestamptz`,
-      and(sql`${messages.createdAt} = ${bound.createdAt}::timestamptz`, gte(messages.id, bound.id)),
-    );
 
   private queryMessageGroupNodesForPage = async ({
     allowShareVisitor,
