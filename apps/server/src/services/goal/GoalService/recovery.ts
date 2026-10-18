@@ -439,17 +439,20 @@ export const holdForOfflineDevice = async (
 ): Promise<GoalTickResult | undefined> => {
   const runs = await ctx.taskTopicModel.findByTaskId(task.id);
   const offlineRuns = countConsecutiveDeviceOfflineRuns(runs);
-  // A dispatch failure is an offline run even when it left no run behind, so the
-  // dispatch streak is counted too; a failure that did leave a run is in both.
+  // A dispatch failure is an offline run even when it left no run behind. Those
+  // are kept on the dispatch streak, which holds only failures without a run,
+  // so the two counts add up and the latest of either dates the schedule.
   const dispatch = readDeviceDispatchStreak(task);
   if (!offlineRuns && !dispatch.failures && !isDeviceUnavailableFailure(task.error)) return;
 
-  const failures = Math.max(offlineRuns, dispatch.failures);
-  const lastFailureAt =
-    failures > offlineRuns
-      ? (dispatch.lastFailedAt ?? new Date(task.updatedAt))
-      : new Date(offlineRuns ? runs[0].updatedAt : task.updatedAt);
-  const retryAt = nextDeviceOfflineRetryAt(failures, lastFailureAt);
+  const failureTimes = [
+    ...(offlineRuns ? [new Date(runs[0].updatedAt).getTime()] : []),
+    ...(dispatch.failures && dispatch.lastFailedAt ? [dispatch.lastFailedAt.getTime()] : []),
+  ];
+  const lastFailureAt = new Date(
+    failureTimes.length ? Math.max(...failureTimes) : new Date(task.updatedAt).getTime(),
+  );
+  const retryAt = nextDeviceOfflineRetryAt(offlineRuns + dispatch.failures, lastFailureAt);
   if (!retryAt)
     return ctx.gateOrTakeOver(graph, nodeId, task.id, DEVICE_OFFLINE_GATE_REASON, effects, {
       machine: true,

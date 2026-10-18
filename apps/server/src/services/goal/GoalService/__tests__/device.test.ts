@@ -261,6 +261,76 @@ describe('GoalService', () => {
       });
     });
 
+    it('adds a run lost offline and a retry that left no run as two failures', async () => {
+      // Read as the larger count, the pair was one failure dated by the old run,
+      // so the schedule found it due and dispatched again at once.
+      const runSpy = vi
+        .spyOn(TaskRunnerService.prototype, 'runTask')
+        .mockRejectedValue(new Error('DEVICE_NOT_FOUND'));
+      const service = new GoalService(serverDB, userId);
+      const taskModel = new TaskModel(serverDB, userId);
+      const graph = await service.create({
+        title: 'Run lost, then the retry finds no device',
+        tasks: ['Run on the bound device'],
+      });
+      const created = await service.tick(graph.goal.id);
+      const topicId = 'tpc_lost_offline_run';
+      await serverDB.insert(topics).values({ id: topicId, userId });
+      await serverDB.insert(taskTopics).values({
+        seq: 1,
+        status: DEVICE_OFFLINE_RUN_STATUS,
+        taskId: created.taskId!,
+        topicId,
+        updatedAt: new Date(Date.now() - 31 * 60_000),
+        userId,
+      });
+      await taskModel.update(created.taskId!, { totalTopics: 1 });
+      await taskModel.updateStatus(created.taskId!, 'paused', { error: 'DEVICE_OFFLINE' });
+
+      // The lost run's first retry is due; it fails before recording a run.
+      await service.tick(graph.goal.id);
+      expect(runSpy).toHaveBeenCalledTimes(1);
+      expect((await taskModel.findById(created.taskId!))?.context).toMatchObject({
+        deviceDispatch: { failures: 1 },
+      });
+
+      const waiting = await service.tick(graph.goal.id);
+
+      expect(runSpy).toHaveBeenCalledTimes(1);
+      expect(waiting).toMatchObject({
+        message: expect.stringContaining('next retry at'),
+        outcome: 'waiting_external',
+      });
+      // Two failures: the second retry waits 60 minutes from the newer one.
+      const retryAt = Date.parse(waiting.message.split('next retry at ')[1]);
+      expect(retryAt - Date.now()).toBeGreaterThan(55 * 60_000);
+    });
+
+    it('does not count a failed dispatch that left a run on the streak too', async () => {
+      // `runTask` records the failed run before it throws: that run is the count.
+      const service = new GoalService(serverDB, userId);
+      const taskModel = new TaskModel(serverDB, userId);
+      const graph = await service.create({
+        title: 'Dispatch failure with a recorded run',
+        tasks: ['Run on the bound device'],
+      });
+      const created = await service.tick(graph.goal.id);
+      vi.spyOn(TaskRunnerService.prototype, 'runTask').mockImplementation(async () => {
+        await taskModel.update(created.taskId!, { totalTopics: 1 });
+        throw new Error('DEVICE_NOT_FOUND');
+      });
+
+      await service.tick(graph.goal.id);
+
+      expect(await taskModel.findById(created.taskId!)).toMatchObject({
+        error: 'DEVICE_NOT_FOUND',
+        status: 'paused',
+      });
+      expect(
+        (await taskModel.findById(created.taskId!))?.context as Record<string, unknown> | null,
+      ).not.toHaveProperty('deviceDispatch');
+    });
+
     it('starts a new streak once a dispatch gets through', async () => {
       const runSpy = vi
         .spyOn(TaskRunnerService.prototype, 'runTask')
