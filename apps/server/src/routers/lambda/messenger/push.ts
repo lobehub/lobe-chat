@@ -1,5 +1,6 @@
 import { MESSENGER_PUSH_CONTENT_MAX_LENGTH } from '@lobechat/builtin-tool-message';
 import { TRPCError } from '@trpc/server';
+import pMap from 'p-map';
 import { z } from 'zod';
 
 import { FileModel } from '@/database/models/file';
@@ -13,6 +14,9 @@ import {
 } from '@/server/services/messenger/push';
 
 import { messengerProcedure } from './procedures';
+
+// Each attachment is a file-row read plus a file access URL resolution.
+const ATTACHMENT_RESOLVE_CONCURRENCY = 5;
 
 export const pushRouter = router({
   /**
@@ -91,8 +95,9 @@ export const pushRouter = router({
         const fileModel = new FileModel(ctx.serverDB, ctx.userId, workspaceId);
         const fileService = new FileService(ctx.serverDB, ctx.userId, workspaceId);
 
-        attachments = await Promise.all(
-          input.attachments.map(async (attachment) => {
+        attachments = await pMap(
+          input.attachments,
+          async (attachment) => {
             const file = await fileModel.findById(attachment.fileId);
             if (!file) {
               throw new TRPCError({ code: 'NOT_FOUND', message: 'File not found' });
@@ -112,7 +117,8 @@ export const pushRouter = router({
               size: file.size,
               type: attachment.type,
             };
-          }),
+          },
+          { concurrency: ATTACHMENT_RESOLVE_CONCURRENCY },
         );
       }
 

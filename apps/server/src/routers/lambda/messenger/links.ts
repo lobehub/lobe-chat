@@ -1,4 +1,5 @@
 import { TRPCError } from '@trpc/server';
+import pMap from 'p-map';
 import { z } from 'zod';
 
 import { isMessengerPlatformEnabled, type MessengerPlatform } from '@/config/messenger';
@@ -7,6 +8,9 @@ import { router } from '@/libs/trpc/lambda';
 import { resolveAuthorizedAgentScope } from './agentScope';
 import { messengerProcedure, messengerWriteProcedure } from './procedures';
 import { disconnectWechatAccountLink } from './wechat';
+
+// Each WeChat disconnect tears down a gateway connection and Redis state.
+const WECHAT_DISCONNECT_CONCURRENCY = 5;
 
 const platformEnum = z.enum([
   'telegram',
@@ -86,7 +90,9 @@ export const linksRouter = router({
         );
 
         await ctx.messengerLinkModel.deleteByPlatform('wechat', input.tenantId);
-        await Promise.all(links.map((link) => disconnectWechatAccountLink(link, ctx.userId)));
+        await pMap(links, (link) => disconnectWechatAccountLink(link, ctx.userId), {
+          concurrency: WECHAT_DISCONNECT_CONCURRENCY,
+        });
         return { success: true };
       }
 

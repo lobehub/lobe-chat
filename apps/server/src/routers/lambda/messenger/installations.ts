@@ -1,4 +1,5 @@
 import { TRPCError } from '@trpc/server';
+import pMap from 'p-map';
 import { z } from 'zod';
 
 import type { SafeMessengerAccountLink } from '@/database/models/messengerAccountLink';
@@ -12,6 +13,11 @@ import { getBotRuntimeStatus } from '@/server/services/gateway/runtimeStatus';
 
 import { messengerProcedure, messengerWriteProcedure } from './procedures';
 import { disconnectWechatAccountLink } from './wechat';
+
+// Each Slack reconcile is an `auth.test` call (plus a DB write on revocation).
+const SLACK_RECONCILE_CONCURRENCY = 5;
+// Each WeChat view awaits a gateway runtime-status lookup.
+const WECHAT_RUNTIME_STATUS_CONCURRENCY = 5;
 
 const REVOKED_SLACK_AUTH_ERRORS = new Set([
   'account_inactive',
@@ -61,10 +67,10 @@ export const installationsRouter = router({
       ctx.messengerLinkModel.list(),
     ]);
     const activeRows = (
-      await Promise.all(
-        rows
-          .filter((row) => row.platform !== 'wechat')
-          .map((row) => reconcileSlackInstallation(ctx.serverDB, row)),
+      await pMap(
+        rows.filter((row) => row.platform !== 'wechat'),
+        (row) => reconcileSlackInstallation(ctx.serverDB, row),
+        { concurrency: SLACK_RECONCILE_CONCURRENCY },
       )
     ).filter((row): row is DecryptedMessengerInstallation => row !== null);
 
@@ -81,24 +87,24 @@ export const installationsRouter = router({
       tenantId: row.tenantId,
       tenantName: ((row.metadata as Record<string, unknown> | null)?.tenantName as string) ?? '',
     }));
-    const wechatViews = await Promise.all(
-      links
-        .filter(
-          (link): link is SafeMessengerAccountLink & { applicationId: string } =>
-            link.platform === 'wechat' && typeof link.applicationId === 'string',
-        )
-        .map(async (link) => ({
-          applicationId: link.applicationId,
-          enterpriseId: null,
-          id: link.id,
-          installedAt: link.createdAt,
-          isEnterpriseInstall: false,
-          platform: 'wechat',
-          runtime: await getBotRuntimeStatus('wechat', link.applicationId),
-          scope: '',
-          tenantId: link.tenantId,
-          tenantName: 'WeChat',
-        })),
+    const wechatViews = await pMap(
+      links.filter(
+        (link): link is SafeMessengerAccountLink & { applicationId: string } =>
+          link.platform === 'wechat' && typeof link.applicationId === 'string',
+      ),
+      async (link) => ({
+        applicationId: link.applicationId,
+        enterpriseId: null,
+        id: link.id,
+        installedAt: link.createdAt,
+        isEnterpriseInstall: false,
+        platform: 'wechat',
+        runtime: await getBotRuntimeStatus('wechat', link.applicationId),
+        scope: '',
+        tenantId: link.tenantId,
+        tenantName: 'WeChat',
+      }),
+      { concurrency: WECHAT_RUNTIME_STATUS_CONCURRENCY },
     );
 
     // Telegram is deliberately absent here even though the account link makes it
