@@ -53,57 +53,57 @@ export async function associate(
 ): Promise<{ id: string }> {
   const { agentId, documentId, policyLoad } = params;
 
-  return ctx.db.transaction(async (trx) => {
-    const [doc] = await trx
-      .select()
-      .from(documents)
-      .where(and(eq(documents.id, documentId), documentOwnership(ctx)))
-      .limit(1);
+  // Single-table write: the document row is only read, and the binding insert
+  // resolves conflicts itself, so no transaction is needed here.
+  const [doc] = await ctx.db
+    .select()
+    .from(documents)
+    .where(and(eq(documents.id, documentId), documentOwnership(ctx)))
+    .limit(1);
 
-    if (!doc) return { id: '' };
+  if (!doc) return { id: '' };
 
-    const [result] = await trx
-      .insert(agentDocuments)
-      .values({
-        accessPublic: 0,
-        accessSelf:
-          AgentAccess.EXECUTE |
-          AgentAccess.LIST |
-          AgentAccess.READ |
-          AgentAccess.WRITE |
-          AgentAccess.DELETE,
-        accessShared: 0,
-        agentId,
-        documentId,
-        policyLoad: policyLoad ?? PolicyLoad.PROGRESSIVE,
-        policyLoadFormat: DocumentLoadFormat.RAW,
-        policyLoadPosition: DocumentLoadPosition.BEFORE_FIRST_USER,
-        policyLoadRule: DocumentLoadRule.ALWAYS,
-        userId: ctx.userId,
-        workspaceId: ctx.workspaceId ?? null,
-      })
-      .onConflictDoNothing()
-      .returning({ id: agentDocuments.id });
+  const [result] = await ctx.db
+    .insert(agentDocuments)
+    .values({
+      accessPublic: 0,
+      accessSelf:
+        AgentAccess.EXECUTE |
+        AgentAccess.LIST |
+        AgentAccess.READ |
+        AgentAccess.WRITE |
+        AgentAccess.DELETE,
+      accessShared: 0,
+      agentId,
+      documentId,
+      policyLoad: policyLoad ?? PolicyLoad.PROGRESSIVE,
+      policyLoadFormat: DocumentLoadFormat.RAW,
+      policyLoadPosition: DocumentLoadPosition.BEFORE_FIRST_USER,
+      policyLoadRule: DocumentLoadRule.ALWAYS,
+      userId: ctx.userId,
+      workspaceId: ctx.workspaceId ?? null,
+    })
+    .onConflictDoNothing()
+    .returning({ id: agentDocuments.id });
 
-    if (result) return result;
+  if (result) return result;
 
-    // A concurrent caller (or an earlier run) may already own this unique
-    // agent/document binding. The conflict loser must resolve that row instead
-    // of leaking `undefined` to callers that need the binding id.
-    const [existing] = await trx
-      .select({ id: agentDocuments.id })
-      .from(agentDocuments)
-      .where(
-        and(
-          agentDocOwnership(ctx),
-          eq(agentDocuments.agentId, agentId),
-          eq(agentDocuments.documentId, documentId),
-        ),
-      )
-      .limit(1);
+  // A concurrent caller (or an earlier run) may already own this unique
+  // agent/document binding. The conflict loser must resolve that row instead
+  // of leaking `undefined` to callers that need the binding id.
+  const [existing] = await ctx.db
+    .select({ id: agentDocuments.id })
+    .from(agentDocuments)
+    .where(
+      and(
+        agentDocOwnership(ctx),
+        eq(agentDocuments.agentId, agentId),
+        eq(agentDocuments.documentId, documentId),
+      ),
+    )
+    .limit(1);
 
-    return { id: existing?.id ?? '' };
-  });
+  return { id: existing?.id ?? '' };
 }
 
 /**

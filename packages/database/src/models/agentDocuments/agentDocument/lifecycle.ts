@@ -83,18 +83,16 @@ export async function restore(ctx: AgentDocumentContext, documentId: string): Pr
 
   if (!existing) return;
 
-  await ctx.db.transaction(async (trx) => {
-    await trx
-      .update(agentDocuments)
-      .set({
-        deleteReason: null,
-        deletedAt: null,
-        deletedByAgentId: null,
-        deletedByUserId: null,
-        policyLoad: PolicyLoad.PROGRESSIVE,
-      })
-      .where(and(eq(agentDocuments.id, documentId), agentDocOwnership(ctx)));
-  });
+  await ctx.db
+    .update(agentDocuments)
+    .set({
+      deleteReason: null,
+      deletedAt: null,
+      deletedByAgentId: null,
+      deletedByUserId: null,
+      policyLoad: PolicyLoad.PROGRESSIVE,
+    })
+    .where(and(eq(agentDocuments.id, documentId), agentDocOwnership(ctx)));
 }
 
 export async function restoreSubtreeByDocumentId(
