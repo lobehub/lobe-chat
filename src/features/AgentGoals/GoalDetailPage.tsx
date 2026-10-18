@@ -203,6 +203,18 @@ const GoalDetailPage = memo<GoalDetailPageProps>(({ agentId, goalId }) => {
   // message landing, so the reply is never invisible behind a drill-down. A
   // managed goal whose main Agent has no supervision record yet gets one from
   // this very turn: the panel opens now and moves there once it exists.
+  // A topic picked from either panel's history: the supervision record opens as
+  // the record, any other topic as the side conversation on that topic.
+  const selectTopic = (topicId: string) => {
+    if (!supervisingAgentId || topicId === chat.topicId) return;
+    clearPortalStack();
+    chat.openConversation(
+      managerConversation?.topicId === topicId
+        ? { agentId: managerConversation.agentId, topicId }
+        : { agentId: supervisingAgentId, topicId },
+    );
+  };
+
   const revealConversation = () => {
     setGraphFullscreen(false);
     clearPortalStack();
@@ -373,7 +385,9 @@ const GoalDetailPage = memo<GoalDetailPageProps>(({ agentId, goalId }) => {
             hasWorkspaceSidePanel ? null : (
               <PortalContent />
             )
-          ) : supervisingAgentId && chat.topicId ? (
+          ) : supervisingAgentId &&
+            chat.topicId &&
+            chat.topicId === managerConversation?.topicId ? (
             <GoalSupervision
               agentId={supervisingAgentId}
               goalId={goalId}
@@ -384,6 +398,7 @@ const GoalDetailPage = memo<GoalDetailPageProps>(({ agentId, goalId }) => {
               onInitialMessageConsumed={chat.consumeInitialMessage}
               // A question that should not land in the manager's own record.
               onOpenChat={() => chat.openConversation({ agentId: supervisingAgentId })}
+              onSelectTopic={selectTopic}
             />
           ) : chat.awaitingRecord ? (
             // The supervision record is on its way: show it loading, not the
@@ -400,6 +415,7 @@ const GoalDetailPage = memo<GoalDetailPageProps>(({ agentId, goalId }) => {
               key={`${goalId}:${supervisingAgentId}:${chat.request}`}
               onCollapse={() => chat.setOpen(false)}
               onInitialMessageConsumed={chat.consumeInitialMessage}
+              onSelectTopic={managerConversation ? selectTopic : undefined}
             />
           ) : null}
         </RightPanel>

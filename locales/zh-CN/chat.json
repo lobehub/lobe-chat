@@ -553,6 +553,7 @@
   "goalBatch.waves.title": "分批执行",
   "goalChat.newTopic": "新对话",
   "goalChat.noTopics": "还没有对话",
+  "goalChat.openTopic": "前往原话题",
   "goalChat.title": "问问进展",
   "goalChat.welcome": "向助理询问这个目标：进展如何、卡在哪里、接下来会做什么。",
   "goalDetail.acceptance": "验收检查",
