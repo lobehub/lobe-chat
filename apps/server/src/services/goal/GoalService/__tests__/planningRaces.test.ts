@@ -8,9 +8,9 @@ import { GoalGraphModel } from '@/database/models/goalGraph';
 import { goals } from '@/database/schemas';
 import type { LobeChatDatabase } from '@/database/type';
 
-import { GoalCriteriaGeneratorService } from './criteriaGenerator';
-import { GoalService } from './index';
-import { registerGoalServiceTestCleanup } from './testUtils';
+import { GoalCriteriaGeneratorService } from '../../criteriaGenerator';
+import { registerGoalServiceTestCleanup } from '../../testUtils';
+import { GoalService } from '../index';
 
 const serverDB: LobeChatDatabase = await getTestDB();
 const userId = 'goal-service-test-user';

@@ -9,10 +9,10 @@ import { TaskModel } from '@/database/models/task';
 import { agents } from '@/database/schemas';
 import type { LobeChatDatabase } from '@/database/type';
 
-import { TaskRunnerService } from '../taskRunner';
-import { GoalCriteriaGeneratorService } from './criteriaGenerator';
-import { GoalService } from './index';
-import { registerGoalServiceTestCleanup } from './testUtils';
+import { TaskRunnerService } from '../../../taskRunner';
+import { GoalCriteriaGeneratorService } from '../../criteriaGenerator';
+import { registerGoalServiceTestCleanup } from '../../testUtils';
+import { GoalService } from '../index';
 
 const serverDB: LobeChatDatabase = await getTestDB();
 const userId = 'goal-service-test-user';

@@ -9,9 +9,9 @@ import { TaskTopicModel } from '@/database/models/taskTopic';
 import { agents, goals, taskTopics, topics } from '@/database/schemas';
 import type { LobeChatDatabase } from '@/database/type';
 
-import { TaskService } from '../task';
-import { GoalService } from './index';
-import { registerGoalServiceTestCleanup } from './testUtils';
+import { TaskService } from '../../../task';
+import { registerGoalServiceTestCleanup } from '../../testUtils';
+import { GoalService } from '../index';
 
 const serverDB: LobeChatDatabase = await getTestDB();
 const userId = 'goal-service-test-user';

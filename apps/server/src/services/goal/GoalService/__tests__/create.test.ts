@@ -9,10 +9,10 @@ import { TaskModel } from '@/database/models/task';
 import { goalNodes, goals } from '@/database/schemas';
 import type { LobeChatDatabase } from '@/database/type';
 
-import { VerifyPlanGeneratorService } from '../verify/planGenerator';
-import { GoalExplorationPlanner } from './explorationPlanner';
-import { GoalService } from './index';
-import { registerGoalServiceTestCleanup } from './testUtils';
+import { VerifyPlanGeneratorService } from '../../../verify/planGenerator';
+import { GoalExplorationPlanner } from '../../explorationPlanner';
+import { registerGoalServiceTestCleanup } from '../../testUtils';
+import { GoalService } from '../index';
 
 const serverDB: LobeChatDatabase = await getTestDB();
 const userId = 'goal-service-test-user';

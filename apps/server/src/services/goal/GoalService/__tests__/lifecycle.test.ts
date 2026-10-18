@@ -12,10 +12,10 @@ import { agents, goalEvents, goals, tasks, topics, users, workspaces } from '@/d
 import type { LobeChatDatabase } from '@/database/type';
 import { AiAgentService } from '@/server/services/aiAgent';
 
-import { TaskService } from '../task';
-import { TaskRunnerService } from '../taskRunner';
-import { GoalService } from './index';
-import { registerGoalServiceTestCleanup } from './testUtils';
+import { TaskService } from '../../../task';
+import { TaskRunnerService } from '../../../taskRunner';
+import { registerGoalServiceTestCleanup } from '../../testUtils';
+import { GoalService } from '../index';
 
 const serverDB: LobeChatDatabase = await getTestDB();
 const userId = 'goal-service-test-user';

@@ -23,10 +23,10 @@ import type { LobeChatDatabase } from '@/database/type';
 import { AgentRuntimeCoordinator } from '@/server/modules/AgentRuntime/AgentRuntimeCoordinator';
 import { AiAgentService } from '@/server/services/aiAgent';
 
-import { deviceGateway } from '../deviceGateway';
-import { TaskRunnerService } from '../taskRunner';
-import { GoalService } from './index';
-import { VERIFY_SETTLE_GRACE_MS } from './recoveryPolicy';
+import { deviceGateway } from '../../../deviceGateway';
+import { TaskRunnerService } from '../../../taskRunner';
+import { VERIFY_SETTLE_GRACE_MS } from '../../recoveryPolicy';
+import { GoalService } from '../index';
 
 const serverDB: LobeChatDatabase = await getTestDB();
 const userId = 'goal-verify-repair-test-user';

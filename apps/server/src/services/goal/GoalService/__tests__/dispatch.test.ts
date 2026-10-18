@@ -9,17 +9,17 @@ import { WorkModel } from '@/database/models/work';
 import { documents, goals, tasks, taskTopics } from '@/database/schemas';
 import type { LobeChatDatabase } from '@/database/type';
 
-import { TaskService } from '../task';
-import { TaskRunnerService } from '../taskRunner';
+import { TaskService } from '../../../task';
+import { TaskRunnerService } from '../../../taskRunner';
 import {
   LEASE_EXPIRED_ERROR,
   VERIFICATION_ERRORED_ERROR,
   VERIFICATION_FAILED_ERROR,
-} from './decideNextMove';
-import { GoalService } from './index';
-import { VERIFY_SETTLE_GRACE_MS } from './recoveryPolicy';
-import { TaskRecoveryCoordinator } from './taskRecoveryCoordinator';
-import { registerGoalServiceTestCleanup } from './testUtils';
+} from '../../decideNextMove';
+import { VERIFY_SETTLE_GRACE_MS } from '../../recoveryPolicy';
+import { TaskRecoveryCoordinator } from '../../taskRecoveryCoordinator';
+import { registerGoalServiceTestCleanup } from '../../testUtils';
+import { GoalService } from '../index';
 
 const serverDB: LobeChatDatabase = await getTestDB();
 const userId = 'goal-service-test-user';

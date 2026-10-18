@@ -11,12 +11,12 @@ import { TaskTopicModel } from '@/database/models/taskTopic';
 import { agentOperations, taskTopics, topics } from '@/database/schemas';
 import type { LobeChatDatabase } from '@/database/type';
 
-import { deviceGateway } from '../deviceGateway';
-import { TaskRunnerService } from '../taskRunner';
-import { VERIFICATION_FAILED_ERROR } from './decideNextMove';
-import { GoalService } from './index';
-import { DEVICE_OFFLINE_GATE_REASON } from './recoveryPolicy';
-import { registerGoalServiceTestCleanup } from './testUtils';
+import { deviceGateway } from '../../../deviceGateway';
+import { TaskRunnerService } from '../../../taskRunner';
+import { VERIFICATION_FAILED_ERROR } from '../../decideNextMove';
+import { DEVICE_OFFLINE_GATE_REASON } from '../../recoveryPolicy';
+import { registerGoalServiceTestCleanup } from '../../testUtils';
+import { GoalService } from '../index';
 
 const serverDB: LobeChatDatabase = await getTestDB();
 const userId = 'goal-service-test-user';

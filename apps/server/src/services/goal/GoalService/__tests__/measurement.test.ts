@@ -8,10 +8,10 @@ import { MetricModel } from '@/database/models/metric';
 import { TaskModel } from '@/database/models/task';
 import type { LobeChatDatabase } from '@/database/type';
 
-import { TaskRunnerService } from '../taskRunner';
-import { GoalService } from './index';
-import { registerGoalServiceTestCleanup } from './testUtils';
-import type { GoalTickObservation } from './traceObservation';
+import { TaskRunnerService } from '../../../taskRunner';
+import { registerGoalServiceTestCleanup } from '../../testUtils';
+import type { GoalTickObservation } from '../../traceObservation';
+import { GoalService } from '../index';
 
 const serverDB: LobeChatDatabase = await getTestDB();
 const userId = 'goal-service-test-user';

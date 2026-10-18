@@ -4,7 +4,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { getTestDB } from '@/database/core/getTestDB';
 import type { LobeChatDatabase } from '@/database/type';
 
-import { GoalService } from './index';
+import { GoalService } from '../index';
 
 const serverDB: LobeChatDatabase = await getTestDB();
 

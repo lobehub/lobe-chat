@@ -5,7 +5,7 @@ import { getTestDB } from '@/database/core/getTestDB';
 import { goalEdges, goalEvents, goalNodes, goals, users } from '@/database/schemas';
 import type { LobeChatDatabase } from '@/database/type';
 
-import { GoalService } from './index';
+import { GoalService } from '../index';
 
 const serverDB: LobeChatDatabase = await getTestDB();
 const userId = 'goal-seed-dependencies-user';

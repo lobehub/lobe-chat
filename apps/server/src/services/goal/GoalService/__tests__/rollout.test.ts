@@ -9,10 +9,10 @@ import { GoalGraphModel } from '@/database/models/goalGraph';
 import { goals } from '@/database/schemas';
 import type { LobeChatDatabase } from '@/database/type';
 
-import { UserSkillService } from '../userSkill';
-import { GoalCriteriaGeneratorService } from './criteriaGenerator';
-import { GoalService } from './index';
-import { approveRelease, registerGoalServiceTestCleanup } from './testUtils';
+import { UserSkillService } from '../../../userSkill';
+import { GoalCriteriaGeneratorService } from '../../criteriaGenerator';
+import { approveRelease, registerGoalServiceTestCleanup } from '../../testUtils';
+import { GoalService } from '../index';
 
 const serverDB: LobeChatDatabase = await getTestDB();
 const userId = 'goal-service-test-user';

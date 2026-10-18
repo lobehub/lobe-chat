@@ -15,14 +15,14 @@ import { TaskTopicModel } from '@/database/models/taskTopic';
 import { goals, tasks, taskTopics, topics } from '@/database/schemas';
 import type { LobeChatDatabase } from '@/database/type';
 
-import { deviceGateway } from '../deviceGateway';
-import { TaskRunnerService } from '../taskRunner';
-import { GoalService } from './index';
-import { MAX_QUOTA_RETRIES } from './machineRecovery';
-import { DEVICE_OFFLINE_GATE_REASON } from './recoveryPolicy';
-import * as scheduler from './scheduler';
-import { LocalGoalScheduler } from './scheduler/impls';
-import { registerGoalServiceTestCleanup } from './testUtils';
+import { deviceGateway } from '../../../deviceGateway';
+import { TaskRunnerService } from '../../../taskRunner';
+import { MAX_QUOTA_RETRIES } from '../../machineRecovery';
+import { DEVICE_OFFLINE_GATE_REASON } from '../../recoveryPolicy';
+import * as scheduler from '../../scheduler';
+import { LocalGoalScheduler } from '../../scheduler/impls';
+import { registerGoalServiceTestCleanup } from '../../testUtils';
+import { GoalService } from '../index';
 
 const serverDB: LobeChatDatabase = await getTestDB();
 const userId = 'goal-service-test-user';
