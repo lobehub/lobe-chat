@@ -1,6 +1,8 @@
 import { REPLICA_INDEX_KEY } from '@lobechat/replica';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { localDatabase } from '@/libs/localDatabase';
+
 import { LocalStorageQueryProjectionStorage } from './localStorage';
 import {
   handleProjectionEpochStorageEvent,
@@ -15,6 +17,7 @@ const storage = () => new LocalStorageQueryProjectionStorage<string>({ namespace
 
 describe('projection reset epoch', () => {
   beforeEach(() => {
+    vi.restoreAllMocks();
     localStorage.clear();
     resetProjectionEpochCache();
   });
@@ -28,7 +31,7 @@ describe('projection reset epoch', () => {
   it('reads rows the previous server context wrote as absent', async () => {
     await storage().set(KEY, { data: 'previous context', updatedAt: 1 });
 
-    markProjectionReset();
+    await markProjectionReset();
 
     expect(await storage().get(KEY)).toBeUndefined();
     expect(await storage().getStrict(KEY)).toBeUndefined();
@@ -40,13 +43,13 @@ describe('projection reset epoch', () => {
     const otherWorkspace = { ...KEY, scope: 'u1:ws2' };
     await storage().set(otherWorkspace, { data: 'previous context', updatedAt: 1 });
 
-    markProjectionReset();
+    await markProjectionReset();
 
     expect(await storage().get(otherWorkspace)).toBeUndefined();
   });
 
   it('keeps rows written after the reset, whatever their timestamp', async () => {
-    markProjectionReset();
+    await markProjectionReset();
 
     // Same timestamp as anything before: ordering does not rely on the clock.
     await storage().set(KEY, { data: 'new context', updatedAt: 1 });
@@ -55,20 +58,20 @@ describe('projection reset epoch', () => {
   });
 
   it('retires rows written between two resets, and holds across a reload', async () => {
-    markProjectionReset();
+    await markProjectionReset();
     await storage().set(KEY, { data: 'second context', updatedAt: 5 });
 
     resetProjectionEpochCache(); // reload: the epoch is re-read from localStorage
     expect(await storage().get(KEY)).toEqual({ data: 'second context', updatedAt: 5 });
 
-    markProjectionReset();
+    await markProjectionReset();
     expect(await storage().get(KEY)).toBeUndefined();
   });
 
   it('survives a wrapper that rebuilds the row from data and updatedAt', async () => {
     // e.g. the project-file persist codec: `{ data: encode(row.data), updatedAt }`.
     const inner = storage();
-    markProjectionReset();
+    await markProjectionReset();
 
     await inner.set(KEY, { data: 'new context', updatedAt: 7 });
     const row = await inner.get(KEY);
@@ -95,11 +98,30 @@ describe('projection reset epoch', () => {
     unsubscribe();
   });
 
+  it('deletes every projection when the new epoch cannot be persisted', async () => {
+    await storage().set(KEY, { data: 'previous context', updatedAt: 1 });
+    localStorage.setItem('unrelated', 'kept');
+    vi.spyOn(localDatabase, 'initialize').mockResolvedValue(undefined);
+    const deleteByPrefix = vi.spyOn(localDatabase, 'deleteByPrefix').mockResolvedValue(undefined);
+    // e.g. the localStorage quota is exhausted while IndexedDB still works.
+    vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {
+      throw new Error('QuotaExceededError');
+    });
+
+    await markProjectionReset();
+
+    // A reload would read the old epoch back, so the rows must be gone instead.
+    expect(deleteByPrefix).toHaveBeenCalledWith('query-projections', '');
+    resetProjectionEpochCache();
+    expect(await storage().get(KEY)).toBeUndefined();
+    expect(localStorage.getItem('unrelated')).toBe('kept');
+  });
+
   it('never hides the replica index, so a purge can still enumerate old rows', async () => {
     const indexKey = { queryKey: REPLICA_INDEX_KEY, scope: 'u1:ws1' };
     await storage().set(indexKey, { data: '["a"]', updatedAt: 1 });
 
-    markProjectionReset();
+    await markProjectionReset();
 
     expect(await storage().getStrict(indexKey)).toEqual({ data: '["a"]', updatedAt: 1 });
   });

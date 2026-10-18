@@ -4,6 +4,7 @@ import { RouterProvider } from 'react-router/dom';
 
 import NextThemeProvider from '@/layout/GlobalProvider/NextThemeProvider';
 import { bootTiming } from '@/libs/bootTiming';
+import { followDataContextReset } from '@/libs/dataContextReset';
 import { registerLocalDatabaseAdapter } from '@/libs/localDatabase';
 import { createElectronLocalDatabaseAdapter } from '@/libs/localDatabase/electronAdapter';
 import { rendererOtaService } from '@/services/electron/rendererOta';
@@ -23,6 +24,8 @@ import { createSPARoot } from './runtime';
 rendererOtaService.bootPing('loaded').catch(() => {});
 
 registerLocalDatabaseAdapter(createElectronLocalDatabaseAdapter());
+// Another window's server switch reloads this one too (it reloads itself).
+followDataContextReset();
 // Must stay synchronous and ahead of the first render: `useCacheScope` reads
 // `isIdentityResolved` to pick the cache partition, and on desktop preload is
 // the only source that knows it without waiting for `getUserState()`.

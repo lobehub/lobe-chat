@@ -1,6 +1,6 @@
 import superjson from 'superjson';
 
-import { readProjection, stampProjection } from './resetEpoch';
+import { readProjection, registerLocalProjectionNamespace, stampProjection } from './resetEpoch';
 import type {
   QueryProjection,
   QueryProjectionCodec,
@@ -19,6 +19,7 @@ export class LocalStorageQueryProjectionStorage<T> implements QueryProjectionSto
 
   constructor(options: LocalStorageQueryProjectionStorageOptions<T>) {
     this.#namespace = options.namespace;
+    registerLocalProjectionNamespace(options.namespace);
     this.#codec = options.codec ?? {
       parse: superjson.parse<QueryProjection<T>>,
       stringify: superjson.stringify,

@@ -1,13 +1,13 @@
 import { localDatabase } from '@/libs/localDatabase';
 
-import { readProjection, stampProjection } from './resetEpoch';
+import { PROJECTION_COLLECTION, readProjection, stampProjection } from './resetEpoch';
 import type { QueryProjection, QueryProjectionKey, QueryProjectionStorage } from './types';
 
 interface IndexedDBQueryProjectionStorageOptions {
   namespace: string;
 }
 
-const COLLECTION = 'query-projections';
+const COLLECTION = PROJECTION_COLLECTION;
 
 export class IndexedDBQueryProjectionStorage<T> implements QueryProjectionStorage<T> {
   readonly #namespace: string;

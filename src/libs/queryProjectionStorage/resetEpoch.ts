@@ -1,11 +1,16 @@
 import { REPLICA_INDEX_KEY } from '@lobechat/replica';
 
+import { localDatabase } from '@/libs/localDatabase';
+
 import type { QueryProjection, QueryProjectionKey } from './types';
+
+/** The IndexedDB collection every query projection row lives in. */
+export const PROJECTION_COLLECTION = 'query-projections';
 
 /**
  * The "data context reset" epoch for persisted query projections.
  *
- * `stores.reset()` (a Desktop server switch or disconnect) must retire every
+ * A Desktop server switch or disconnect (`resetDataContext`) must retire every
  * row the previous server context persisted: in every cache scope (each
  * `${userId}:${workspaceId}` the user visited, not only the active one — the
  * next server may reuse those ids), and for features whose replicas were never
@@ -20,8 +25,13 @@ import type { QueryProjection, QueryProjectionKey } from './types';
  * A counter, not a timestamp: wall-clock ordering breaks on equal timestamps
  * and on a clock stepping back. The epoch lives in localStorage, so it holds
  * across reloads and is shared by every renderer window (see
- * `handleProjectionEpochStorageEvent`). Until the first reset it is 0 and rows
- * are written unstamped, exactly as before.
+ * `handleProjectionEpochStorageEvent`). When it cannot be persisted, the reset
+ * deletes the rows instead (see `markProjectionReset`). Until the first reset
+ * it is 0 and rows are written unstamped, exactly as before.
+ *
+ * Memory is not this module's concern: the caller reloads the renderers after
+ * a reset (`@/libs/dataContextReset`), so no in-memory state or in-flight
+ * request of the previous context survives.
  */
 export const PROJECTION_EPOCH_STORAGE_KEY = 'lobe-replica-reset-epoch';
 const EPOCH_FIELD = 'resetEpoch';
@@ -43,16 +53,46 @@ const readEpoch = (): number => {
   return epoch;
 };
 
-/** Record that every persisted row belongs to a server context that is gone. */
-export const markProjectionReset = (): void => {
+/** localStorage namespaces of the projection storages built this session. */
+const localNamespaces = new Set<string>(['replica']);
+
+/** Called by `LocalStorageQueryProjectionStorage` so a fallback purge can find its rows. */
+export const registerLocalProjectionNamespace = (namespace: string): void => {
+  localNamespaces.add(namespace);
+};
+
+const persistEpoch = (epoch: number): boolean => {
+  try {
+    localStorage.setItem(PROJECTION_EPOCH_STORAGE_KEY, String(epoch));
+    return localStorage.getItem(PROJECTION_EPOCH_STORAGE_KEY) === String(epoch);
+  } catch {
+    return false;
+  }
+};
+
+/** Delete every persisted projection row (IndexedDB collection and localStorage tier). */
+const purgeAllProjections = async (): Promise<void> => {
+  await localDatabase.initialize();
+  await localDatabase.deleteByPrefix(PROJECTION_COLLECTION, '');
+  for (let index = localStorage.length - 1; index >= 0; index -= 1) {
+    const key = localStorage.key(index);
+    if (key && [...localNamespaces].some((namespace) => key.startsWith(`${namespace}:`)))
+      localStorage.removeItem(key);
+  }
+};
+
+/**
+ * Record that every persisted row belongs to a server context that is gone.
+ * When the new epoch cannot be persisted (e.g. the localStorage quota is
+ * exhausted while IndexedDB still works), a reload would read the old epoch
+ * back and revive those rows, so they are deleted instead. Resolves once the
+ * rows are unreadable after a reload.
+ */
+export const markProjectionReset = async (): Promise<void> => {
   const epoch = readEpoch() + 1;
   cachedEpoch = epoch;
-  try {
-    if (typeof window !== 'undefined')
-      localStorage.setItem(PROJECTION_EPOCH_STORAGE_KEY, String(epoch));
-  } catch {
-    // The in-memory epoch still guards this session.
-  }
+  if (typeof window === 'undefined' || persistEpoch(epoch)) return;
+  await purgeAllProjections();
 };
 
 /** Forget the cached epoch (tests: a fresh session re-reads localStorage). */
@@ -65,8 +105,8 @@ const remoteResetListeners = new Set<() => void>();
 /**
  * Subscribe to a reset another renderer made (e.g. the Desktop main window
  * switching servers while a topic popup is open). Windows share localStorage
- * and IndexedDB but not memory, so each must drop its cached epoch and its own
- * in-memory replicas; the epoch has already been advanced by the other window.
+ * and IndexedDB but not memory, so each must follow (reload); the epoch has
+ * already been advanced by the other window.
  */
 export const subscribeRemoteProjectionReset = (listener: () => void) => {
   remoteResetListeners.add(listener);

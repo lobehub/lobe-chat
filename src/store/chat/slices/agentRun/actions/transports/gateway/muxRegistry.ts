@@ -89,10 +89,9 @@ export const markGatewayMuxUnavailable = (identity: GatewayMuxIdentity): void =>
 
 /**
  * Tear down every mux (they hold window listeners and the lifecycle → store
- * feed) and forget them. Called when the user-data context resets
- * (`stores.reset()`, e.g. the desktop app switching or disconnecting its
- * remote server) so a socket authenticated for the previous identity never
- * outlives it or keeps writing into the reset chat store; also a test seam.
+ * feed) and forget them. A test seam: when the desktop app switches or
+ * disconnects its remote server the renderer reloads (`resetDataContext`), so
+ * no socket authenticated for the previous identity outlives it.
  */
 export const resetGatewayMuxRegistry = (): void => {
   for (const mux of registry.values()) mux.disconnect();

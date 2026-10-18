@@ -9,7 +9,6 @@ import {
   type ReplicaResource,
   type ReplicaScope,
   type ReplicaStorage,
-  stableQueryKey,
 } from '@lobechat/replica';
 import {
   createReplicaSlice as createCoreReplicaSlice,
@@ -20,8 +19,6 @@ import {
 import {
   IndexedDBQueryProjectionStorage,
   LocalStorageQueryProjectionStorage,
-  markProjectionReset,
-  subscribeRemoteProjectionReset,
 } from '@/libs/queryProjectionStorage';
 import { mutate, useClientDataSWR } from '@/libs/swr';
 import { getCacheScope, isScopeTrusted, useCacheScope } from '@/libs/swr/useCacheScope';
@@ -138,34 +135,10 @@ export const definePagedReplica = <
 // Resolve the SWR bindings per call, not at import: the topic store pulls this
 // module in eagerly, and test suites that mock `@/libs/swr` partially must
 // still be able to import it.
-/**
- * Every SWR key a replica read has used (`stableQueryKey` form), including
- * resources with a custom `syncKey`. A reset revalidates exactly these, never
- * the app's other SWR entries — imperative `useActionSWR` keys must only run
- * on an explicit trigger.
- */
-const replicaReadKeys = new Set<string>();
-
-/**
- * Whether an SWR cache key is one a replica read used. `useClientDataSWR`
- * stores a key under `augmentKey(key, workspaceId)` while a workspace is
- * active — the workspace id appended to an array key, or `[key, id]` — so the
- * recorded key is matched with and without that trailing id.
- */
-const isReplicaReadKey = (queryKey: unknown): boolean =>
-  replicaReadKeys.has(stableQueryKey(queryKey)) ||
-  (Array.isArray(queryKey) &&
-    queryKey.length > 1 &&
-    (replicaReadKeys.has(stableQueryKey(queryKey.slice(0, -1))) ||
-      (queryKey.length === 2 && replicaReadKeys.has(stableQueryKey(queryKey[0])))));
-
 export const replicaSWRDriver = createSWRDriver({
   // Arguments pass through as given: SWR tells a revalidation from a write by their count.
   mutate: (...args) => (mutate as (...args: unknown[]) => Promise<unknown>)(...args),
-  useSWR: (key, fetcher, config) => {
-    if (key) replicaReadKeys.add(stableQueryKey(key));
-    return useClientDataSWR(key, fetcher, config);
-  },
+  useSWR: (key, fetcher, config) => useClientDataSWR(key, fetcher, config),
 });
 
 /**
@@ -204,45 +177,6 @@ export const readReplicaStoredKeys = async (
   return (row?.data as unknown as string[] | undefined) ?? [];
 };
 
-/** Every slice the app created, so a data-context reset can reach them all. */
-const liveSlices = new Set<{ clear: () => Promise<boolean> }>();
-
-/** Clear this renderer's replicas and repaint them from the current context. */
-const retireLiveReplicas = (): void => {
-  for (const slice of liveSlices) void slice.clear();
-  // Every key a replica read used — not just `replica:sync`, since several
-  // replicas declare their own `syncKey` (messages, project files, git review,
-  // memories) — and nothing else.
-  void replicaSWRDriver.revalidate(isReplicaReadKey).catch(() => undefined);
-};
-
-/**
- * Wipe every replica for a new data context (`stores.reset()`: a Desktop
- * server switch or disconnect), then refetch what is mounted.
- *
- * Replacing a store's state is not enough: a read still in flight from the
- * previous context would settle afterwards and repopulate it — and when the
- * next context resolves to the same scope string (a cloned deployment that
- * kept its ids) nothing else tells the old answer apart. `clear()` advances
- * each replica's clear generation, so those reads are discarded, and drops
- * the scope's persisted rows, which the previous context wrote; the reset epoch
- * retires every other persisted row, in every scope and for replicas not built
- * yet. The replica read keys are then
- * revalidated so the screen repaints from the new context instead of staying
- * empty.
- */
-export const clearAllReplicas = (): void => {
-  // Every persisted row of every scope — including those of replicas no slice
-  // exists for yet (a lazy route never opened this session) — is retired by
-  // the reset epoch rather than deleted.
-  markProjectionReset();
-  retireLiveReplicas();
-};
-
-// Another renderer (the Desktop main window) reset: the epoch is already
-// advanced, so only retire what this window holds in memory.
-subscribeRemoteProjectionReset(retireLiveReplicas);
-
 /** `createReplicaSlice` bound to the app's SWR driver. */
 export const createReplicaSlice = <TStore, TParams, TData, TFetched = TData>(
   resource: ReplicaResource<TParams, TData, TFetched>,
@@ -259,7 +193,6 @@ export const createReplicaSlice = <TStore, TParams, TData, TFetched = TData>(
   });
 
   registerReplicaDevtools(resource, { get, slice, stateKey, view });
-  liveSlices.add(slice);
   return slice;
 };
 
