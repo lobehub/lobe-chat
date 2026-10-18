@@ -74,8 +74,8 @@ const SLACK_BOT_EVENTS = [
 ];
 
 /**
- * A Slack app manifest with the scopes, events and Socket Mode the bot
- * channel needs (same as the Slack setup guide), so nothing is set by hand.
+ * A Slack app manifest with the scopes, events and Socket Mode the bot needs
+ * to chat (DMs, group DMs, channels and mentions), so nothing is set by hand.
  */
 export const buildSlackManifest = ({
   description,
@@ -135,3 +135,28 @@ export const toRegistrationName = (name: string): string => {
  */
 export const registrationPollInterval = (intervalSeconds = 5, slowDowns = 0): number =>
   (intervalSeconds + slowDowns * 5) * 1000;
+
+/** Failed polls in a row a registration tolerates before it gives up. */
+export const MAX_TRANSIENT_POLL_FAILURES = 5;
+
+/**
+ * Runs one registration poll, answering `whilePending` for a failed request
+ * (network, 5xx) until `MAX_TRANSIENT_POLL_FAILURES` fail in a row. The device
+ * code stays valid meanwhile, so a scan completed around a hiccup is still
+ * picked up instead of the flow failing and a second app being created.
+ */
+export const tolerateTransientPollFailure = async <T, P>(
+  poll: () => Promise<T>,
+  failures: { current: number },
+  whilePending: P,
+): Promise<T | P> => {
+  try {
+    const result = await poll();
+    failures.current = 0;
+    return result;
+  } catch (error) {
+    failures.current += 1;
+    if (failures.current >= MAX_TRANSIENT_POLL_FAILURES) throw error;
+    return whilePending;
+  }
+};

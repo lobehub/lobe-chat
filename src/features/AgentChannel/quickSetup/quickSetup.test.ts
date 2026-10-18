@@ -6,8 +6,10 @@ import {
   buildSlackCreateAppUrl,
   buildSlackManifest,
   DISCORD_BOT_PERMISSIONS,
+  MAX_TRANSIENT_POLL_FAILURES,
   REGISTRATION_NAME_MAX_LENGTH,
   registrationPollInterval,
+  tolerateTransientPollFailure,
   toRegistrationName,
 } from './links';
 
@@ -72,6 +74,25 @@ describe('registrationPollInterval', () => {
     expect(registrationPollInterval(5, 1)).toBe(10_000);
     expect(registrationPollInterval(5, 2)).toBe(15_000);
     expect(registrationPollInterval(undefined, 0)).toBe(5000);
+  });
+});
+
+describe('tolerateTransientPollFailure', () => {
+  it('keeps polling through failed requests and gives up only after several in a row', async () => {
+    const failures = { current: 0 };
+    const pending = { status: 'pending' };
+    const fail = () => Promise.reject(new Error('502'));
+
+    await expect(tolerateTransientPollFailure(fail, failures, pending)).resolves.toBe(pending);
+    // A good answer resets the count.
+    await expect(
+      tolerateTransientPollFailure(async () => 'success', failures, pending),
+    ).resolves.toBe('success');
+    expect(failures.current).toBe(0);
+
+    for (let i = 1; i < MAX_TRANSIENT_POLL_FAILURES; i++)
+      await expect(tolerateTransientPollFailure(fail, failures, pending)).resolves.toBe(pending);
+    await expect(tolerateTransientPollFailure(fail, failures, pending)).rejects.toThrow('502');
   });
 });
 

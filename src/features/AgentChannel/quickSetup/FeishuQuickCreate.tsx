@@ -18,7 +18,7 @@ import { useTranslation } from 'react-i18next';
 import { useClientDataSWR } from '@/libs/swr';
 import { agentBotProviderService } from '@/services/agentBotProvider';
 
-import { registrationPollInterval } from './links';
+import { registrationPollInterval, tolerateTransientPollFailure } from './links';
 import { type FeishuCreatedApp, useCreatedAppSave } from './useCreatedAppSave';
 
 export type { FeishuCreatedApp } from './useCreatedAppSave';
@@ -66,6 +66,7 @@ const FeishuQuickCreate = memo<FeishuQuickCreateProps>(
     const [brand, setBrand] = useState<Brand>('feishu');
     const [slowDowns, setSlowDowns] = useState(0);
     const reportedRef = useRef<string>(undefined);
+    const pollFailuresRef = useRef(0);
     const {
       clear,
       save: persist,
@@ -95,15 +96,21 @@ const FeishuQuickCreate = memo<FeishuQuickCreateProps>(
     const { data: poll, error: pollError } = useClientDataSWR(
       session ? ['agentChannel/feishuRegisterPoll', session.deviceCode, brand] : null,
       () =>
-        agentBotProviderService.feishuRegisterPoll({
-          brand,
-          deviceCode: session!.deviceCode,
-          platform,
-        }),
+        tolerateTransientPollFailure(
+          () =>
+            agentBotProviderService.feishuRegisterPoll({
+              brand,
+              deviceCode: session!.deviceCode,
+              platform,
+            }),
+          pollFailuresRef,
+          { brand, status: 'pending' as const },
+        ),
       {
         onSuccess: (result) => {
           if (result.status === 'pending' && result.brand !== brand) setBrand(result.brand);
-          if (result.status === 'pending' && result.slowDown) setSlowDowns((count) => count + 1);
+          if (result.status === 'pending' && 'slowDown' in result && result.slowDown)
+            setSlowDowns((count) => count + 1);
           if (result.status === 'success' && reportedRef.current !== session?.deviceCode) {
             reportedRef.current = session?.deviceCode;
             void persist({ appId: result.appId, appSecret: result.appSecret, brand: result.brand });
@@ -122,6 +129,7 @@ const FeishuQuickCreate = memo<FeishuQuickCreateProps>(
       clear();
       setBrand('feishu');
       setSlowDowns(0);
+      pollFailuresRef.current = 0;
       setAttempt((value) => value + 1);
     };
 
