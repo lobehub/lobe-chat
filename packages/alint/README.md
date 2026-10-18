@@ -40,6 +40,14 @@ Package-level rules, kept next to the package they describe:
 | `hetero/agent-layering`            | error    | the browser-reachable layer of `heterogeneous-agents` and its spawn pipeline | `packages/heterogeneous-agents/alint/rules` |
 | `hetero/host-capability-placement` | warn     | files owned by the browser entries of `heterogeneous-agents` (not barrels)   | `packages/heterogeneous-agents/alint/rules` |
 
+Backend-only rules, a rule set of their own for `apps/server`:
+
+| Rule                                  | Severity | Scope                        | Lives in                      |
+| ------------------------------------- | -------- | ---------------------------- | ----------------------------- |
+| `server/resource-guard-in-middleware` | error    | `apps/server/src/routers/**` | `packages/alint/server/rules` |
+
+The rules live in `packages/alint/server/rules` (fixtures in `packages/alint/server/fixtures`) and are scoped by the nested `apps/server/alint.config.toml`, which the root `alint` run discovers on its own; patterns in it resolve against `apps/server`. Its fixture group stays in the root config because a nested config cannot reach outside its directory. `resource-guard-in-middleware` encodes the backend owner's review: "resolveAcceptanceForWrite 这个感觉就应该是放在 Middleware 里直接做掉往下提供 ctx" — two or more handlers opening with the same resolve/authorize helper on the same input field ("2 个其实也没问题，3 个是一定可以的") should share a middleware-backed procedure that hands the resource down through `ctx`. It started at `error` at the owner's request after calibration on 2026-10-18: three cold `deepseek-flash` runs over the 242 router files gave 116 findings, 2 false (a guard under `if (agentId)`, and one helper on `input.groupId` vs `input.id` — both carve-outs the model missed once in three runs) and 5 true findings anchored on a non-qualifying call. That is sample precision, measured on the files the carve-outs came from, not on real PRs.
+
 `hetero/host-capability-placement` encodes two review rejections: code that only one Node host uses (the quota sampler, `lh hetero exec`, the desktop main process) moves behind a Node-only entry even when it is pure, and it is never made browser-portable to stay where it is. It reads one file, so it cannot see who imports a symbol; it reports only a host the file names itself, and misses host-only code whose docs do not say so.
 
 `error` is reserved for rules measured at zero false positives on real PRs; an error turns the ALint check red. A rule starts at `warn` and is promoted only after its findings have been read on real PRs. A rule whose findings are mostly true but not worth acting on per PR does not belong here: `test-the-exit-not-the-entry` was removed after five days because it produced 92% of all findings and drowned out the rest.
