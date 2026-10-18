@@ -7,6 +7,7 @@ import {
   buildInitializeProbeMessage,
   describeStdioSpawnFailure,
   hasInitializeResponse,
+  MCPClient,
   MCPConnectionError,
   selectDiagnosticOutputLines,
   terminatePrecheckProcess,
@@ -352,5 +353,104 @@ describe('terminatePrecheckProcess', () => {
     } finally {
       vi.useRealTimers();
     }
+  });
+});
+
+describe('preCheckStdioCommand', () => {
+  /**
+   * Call the private pre-check directly with a short timeout so long-running
+   * server cases do not stall the suite.
+   */
+  const runPreCheck = (
+    command: string,
+    args?: string[],
+    timeoutMs = 1200,
+  ): Promise<{ diagnosis: string; stderr: string; stdout: string; success: boolean }> =>
+    (
+      MCPClient.prototype as unknown as {
+        preCheckStdioCommand: (p: {
+          args?: string[];
+          command: string;
+          env?: Record<string, string>;
+          timeoutMs?: number;
+        }) => Promise<{ diagnosis: string; stderr: string; stdout: string; success: boolean }>;
+      }
+    ).preCheckStdioCommand.call({} as MCPClient, { args, command, env: {}, timeoutMs });
+
+  it(
+    'classifies on close so buffered stdout is drained before the diagnosis (P2 4305387427)',
+    { timeout: 15_000 },
+    async () => {
+      // The child prints its error line and exits 0 immediately; Node may
+      // emit `exit` before the stdout chunk drains — classification must
+      // wait for `close` (or the bounded fallback) to see it.
+      const result = await runPreCheck('node', [
+        '-e',
+        'process.stdout.write("final loader error\\n"); process.exit(0)',
+      ]);
+
+      expect(result.success).toBe(false);
+      expect(result.diagnosis).toContain('without completing the MCP handshake');
+      expect(result.stdout).toContain('final loader error');
+    },
+  );
+
+  it(
+    'does not credit exit 0 without an initialize response (round-4 regression guard)',
+    { timeout: 15_000 },
+    async () => {
+      const result = await runPreCheck('node', ['-e', 'process.exit(0)']);
+
+      expect(result.success).toBe(false);
+      expect(result.diagnosis).toContain('without completing the MCP handshake');
+    },
+  );
+
+  it(
+    'classifies zero-code exits even when close is delayed by inherited pipes (exit fallback)',
+    { timeout: 15_000 },
+    async () => {
+      // The child spawns a detached grandchild holding stdout open, then
+      // exits 0. `close` stays pending on the inherited pipe; the exit-armed
+      // fallback must classify with the real exit code before the 5s timeout
+      // would have misreported "healthy-enough".
+      const result = await runPreCheck('node', [
+        '-e',
+        [
+          'const { spawn } = require("node:child_process");',
+          'const g = spawn(process.execPath, ["-e", "setTimeout(() => {}, 3000)"], { stdio: ["ignore", "inherit", "inherit"], detached: false });',
+          'g.unref();',
+          'process.exit(0);',
+        ].join(' '),
+      ]);
+
+      expect(result.success).toBe(false);
+      expect(result.diagnosis).toContain('without completing the MCP handshake');
+    },
+  );
+
+  it(
+    'treats a long-running silent server as healthy via the timeout path (success preserved)',
+    { timeout: 15_000 },
+    async () => {
+      const result = await runPreCheck(
+        'node',
+        ['-e', 'setInterval(() => {}, 1000)'],
+        800, // short pre-check window: the server outlives it
+      );
+
+      expect(result.success).toBe(true);
+      expect(result.diagnosis).toBe('');
+    },
+  );
+
+  it('reports a nonzero exit with its code after streams drain', { timeout: 15_000 }, async () => {
+    const result = await runPreCheck('node', [
+      '-e',
+      'process.stderr.write("boom\\n"); process.exit(3)',
+    ]);
+
+    expect(result.success).toBe(false);
+    expect(result.diagnosis).toContain('code 3');
   });
 });

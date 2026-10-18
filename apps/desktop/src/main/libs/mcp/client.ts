@@ -64,6 +64,12 @@ export interface StdioSpawnFailureInput {
  * Electron main process heap while the 5s pre-check window runs. */
 const PRECHECK_OUTPUT_CAP_BYTES = 64 * 1024;
 
+/** Grace window between `exit` and `close` before the pre-check classifies
+ * on the data captured so far — a grandchild holding the stdio pipes can
+ * keep `close` pending indefinitely (see the `close`/`exit` handlers in
+ * `preCheckStdioCommand`). */
+const PRECHECK_CLOSE_GRACE_MS = 750;
+
 /**
  * Append decoded chunk text to an accumulator with a hard per-stream byte cap.
  * Once the cap is reached further data is dropped (not buffered), so a noisy
@@ -378,6 +384,8 @@ export class MCPClient {
     args?: string[];
     command: string;
     env?: Record<string, string>;
+    /** Test hook only — production always uses the default 5s window. */
+    timeoutMs?: number;
   }): Promise<{ diagnosis: string; stderr: string; stdout: string; success: boolean }> {
     return new Promise((resolve) => {
       // Do NOT spread the full process.env here: only the SDK's safe defaults
@@ -444,7 +452,7 @@ export class MCPClient {
           // connection error is the real failure and should surface as-is.
           finish({ diagnosis: '', stderr, stdout, success: true });
         });
-      }, 5000);
+      }, params.timeoutMs ?? 5000);
 
       // P1: the diagnostic child may die instantly (the exact scenario this
       // pre-check targets) and `stdin.write` would emit an async EPIPE that
@@ -487,7 +495,14 @@ export class MCPClient {
         });
       });
 
-      child.on('exit', (code, signal) => {
+      // Classify on `close`, not `exit`: Node emits `exit` when the process
+      // terminates but stdio streams may still hold buffered data, so a final
+      // loader error — or the initialize response checked by
+      // `hasInitializeResponse()` — can arrive after `exit` and be missed,
+      // producing a generic or wrong diagnosis. `close` fires only after ALL
+      // stdio streams have closed and drained. The `error` handler above
+      // still owns spawn failures (error and close are mutually exclusive).
+      const classify = (code: number | null, signal: NodeJS.Signals | null) => {
         if (code === 0) {
           // Exit 0 alone does not prove the MCP handshake completed: one-shot
           // executables and wrappers can start, print an error and exit
@@ -524,6 +539,29 @@ export class MCPClient {
           stdout,
           success: false,
         });
+      };
+
+      // A grandchild spawned by the server can inherit the stdio pipes and
+      // keep `close` pending long after the direct child exited. Arm a
+      // bounded fallback on `exit` (never before — a healthy long-running
+      // server has no exit yet) so a zero-code exit still gets classified
+      // with the direct child's real exit code instead of waiting for the
+      // 5s timeout and being misclassified as "healthy-enough" — which
+      // would regress the round-4 fix that diagnoses one-shot wrappers.
+      // When the pipes close in time the `close` handler wins and this
+      // timer is cleared.
+      let closeFallback: ReturnType<typeof setTimeout> | null = null;
+
+      child.on('close', (code, signal) => {
+        if (closeFallback) clearTimeout(closeFallback);
+        classify(code, signal);
+      });
+
+      child.on('exit', (code, signal) => {
+        if (resolved) return;
+        closeFallback = setTimeout(() => {
+          classify(code, signal);
+        }, PRECHECK_CLOSE_GRACE_MS);
       });
 
       // Send a minimal JSON-RPC initialize so servers that start fine but
@@ -535,7 +573,7 @@ export class MCPClient {
         child.stdin?.write(buildInitializeProbeMessage());
         child.stdin?.end();
       } catch {
-        // stdin write failures are handled via 'error'/'exit' events
+        // stdin write failures are handled via 'error'/'close' events
       }
     });
   }
