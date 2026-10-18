@@ -5,9 +5,9 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { AgentOperationModel } from '@/database/models/agentOperation';
 
-import { hookDispatcher } from '../hooks';
-import { type OperationCreationParams } from '../types';
-import { AgentRuntimeService } from '.';
+import { hookDispatcher } from '../../hooks';
+import { type OperationCreationParams } from '../../types';
+import { AgentRuntimeService } from '..';
 import { setUpService } from './testUtils';
 
 vi.mock('@lobechat/model-runtime', (...args) =>

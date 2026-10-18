@@ -7,7 +7,7 @@ import type { UIChatMessage } from '@lobechat/types';
 import type * as ModelBankModule from 'model-bank';
 import { vi } from 'vitest';
 
-import type { AgentRuntimeService } from '.';
+import type { AgentRuntimeService } from '..';
 
 /** The `importOriginal` a `vi.mock` factory receives. */
 type ImportOriginal = <T = unknown>() => Promise<T>;

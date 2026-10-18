@@ -4,8 +4,8 @@
 import type { MockInstance } from 'vitest';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { hookDispatcher } from '../hooks';
-import { AgentRuntimeService } from '.';
+import { hookDispatcher } from '../../hooks';
+import { AgentRuntimeService } from '..';
 import { buildPersistedToolChain, setUpService } from './testUtils';
 
 vi.mock('@lobechat/model-runtime', (...args) =>

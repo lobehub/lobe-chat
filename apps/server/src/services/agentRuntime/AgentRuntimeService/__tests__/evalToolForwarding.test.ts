@@ -3,8 +3,8 @@
  */
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { hookDispatcher } from '../hooks';
-import { AgentRuntimeService, createEvalToolForwardingHook } from '.';
+import { hookDispatcher } from '../../hooks';
+import { AgentRuntimeService, createEvalToolForwardingHook } from '..';
 import { setUpService } from './testUtils';
 
 vi.mock('@lobechat/model-runtime', (...args) =>

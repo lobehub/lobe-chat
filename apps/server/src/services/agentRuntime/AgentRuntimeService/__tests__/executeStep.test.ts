@@ -5,9 +5,9 @@ import { getModelPropertyWithFallback } from '@lobechat/model-runtime';
 import type { UIChatMessage } from '@lobechat/types';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { hookDispatcher } from '../hooks';
-import { type AgentExecutionParams } from '../types';
-import { AgentRuntimeService } from '.';
+import { hookDispatcher } from '../../hooks';
+import { type AgentExecutionParams } from '../../types';
+import { AgentRuntimeService } from '..';
 import { buildPersistedToolChain, setUpService } from './testUtils';
 
 vi.mock('@lobechat/model-runtime', (...args) =>
