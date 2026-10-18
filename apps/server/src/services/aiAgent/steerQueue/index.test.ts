@@ -17,14 +17,15 @@ const {
   startComposerRun: vi.fn(),
 }));
 
-const { boundOperations, isRunAlive } = vi.hoisted(() => ({
+const { boundOperations, findOwnLiveRuns, isRunAlive } = vi.hoisted(() => ({
   boundOperations: vi.fn(),
+  findOwnLiveRuns: vi.fn(),
   isRunAlive: vi.fn(),
 }));
 vi.mock('@/server/services/redis', () => ({
   redisService: { steerQueue: { boundOperations, drain, restore } },
 }));
-vi.mock('./liveRuns', () => ({ isRunAlive }));
+vi.mock('./liveRuns', () => ({ findOwnLiveRuns, isRunAlive }));
 vi.mock('../composerRun', () => ({ startComposerRun }));
 vi.mock('@/server/routers/lambda/_helpers/workspaceAgentGuard', () => ({
   assertCanUseWorkspaceAgent,
@@ -85,6 +86,7 @@ describe('startQueuedFollowUp', () => {
     drain.mockResolvedValue([]);
     restore.mockResolvedValue(0);
     boundOperations.mockResolvedValue({ operationIds: ['op-1', 'op-ended', 'op-live'], total: 3 });
+    findOwnLiveRuns.mockResolvedValue(['op-1']);
     isRunAlive.mockImplementation(
       async (_ctx: unknown, _user: string, id: string) => id !== 'op-ended',
     );
@@ -108,7 +110,7 @@ describe('startQueuedFollowUp', () => {
     );
     expect(isRunAlive).not.toHaveBeenCalledWith(expect.anything(), 'user-1', 'op-1');
     expect(startComposerRun).toHaveBeenCalledWith(
-      expect.objectContaining({ clientIp: 'ip-b', userId: 'user-1' }),
+      expect.objectContaining({ clientIp: 'ip-b', supersedeLiveRun: false, userId: 'user-1' }),
       expect.objectContaining({
         appContext: { threadId: 'thd-1', topicId: 'tpc-1' },
         prompt: 'a\n\nb',
@@ -179,5 +181,19 @@ describe('startQueuedFollowUp', () => {
 
     expect(isRunAlive).not.toHaveBeenCalled();
     expect(drain).not.toHaveBeenCalled();
+  });
+
+  it('never interrupts a run the user started while the topic was free; leaves the follow-ups to it', async () => {
+    const entries = [followUp('a', 1, {})];
+    drain.mockResolvedValue(entries);
+    findOwnLiveRuns.mockResolvedValue(['op-1', 'op-newer']);
+
+    await expect(startQueuedFollowUp(ctx, finished({ topicId: 'tpc-1' }))).resolves.toBeUndefined();
+
+    expect(startComposerRun).not.toHaveBeenCalled();
+    expect(restore).toHaveBeenCalledWith(
+      { threadId: null, topicId: 'tpc-1', userId: 'user-1' },
+      entries,
+    );
   });
 });

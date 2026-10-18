@@ -51,6 +51,13 @@ export interface ComposerRunContext {
   /** Server-derived request provenance; never client-passable. */
   clientIp?: string;
   db: LobeChatDatabase;
+  /**
+   * Whether the start may take the topic over from a run that still owns it,
+   * as a person at the composer does (default). A server-started follow-up
+   * passes `false`: it waits on the topic instead, and fails when another run
+   * owns it, rather than interrupting that run.
+   */
+  supersedeLiveRun?: boolean;
   userAgent?: string;
   userId: string;
   workspaceId?: string | null;
@@ -99,7 +106,7 @@ export const startComposerRun = async (ctx: ComposerRunContext, input: ComposerR
     // This path serves the composer (`aiAgentService.execAgentTask`).
     // The client already queues follow-ups behind a live run and shows the
     // user a tray; refusing here would only make the message disappear.
-    interactiveStart: true,
+    interactiveStart: ctx.supersedeLiveRun ?? true,
     // Propagate the originating request's client IP / user agent into the run
     // so downstream LLM-call metadata can carry them for auditing and spend
     // attribution. These are server-derived from the tRPC context and are

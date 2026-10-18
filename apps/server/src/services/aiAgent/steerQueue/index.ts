@@ -7,7 +7,7 @@ import { redisService } from '@/server/services/redis';
 import type { SteerQueueEntry, SteerQueueScope } from '@/server/services/redis/steerQueue';
 
 import { type ComposerRunContext, type ComposerRunRequest, startComposerRun } from '../composerRun';
-import { isRunAlive } from './liveRuns';
+import { findOwnLiveRuns, isRunAlive } from './liveRuns';
 
 const log = debug('lobe-server:steer-queue');
 
@@ -216,9 +216,31 @@ export const startQueuedFollowUp = async (
     return;
   }
 
+  // The topic was free for a moment between the finished run and this start;
+  // a send the user made in that gap now owns the surface. Never interrupt it:
+  // the follow-ups go back, unbound, and that run takes them.
+  try {
+    const others = (await findOwnLiveRuns(ctx, scope)).filter((id) => id !== params.operationId);
+    if (others.length > 0) {
+      await redisService.steerQueue.restore(scope, entries);
+      log(
+        '[%s] Left %d queued follow-ups to live run %s',
+        params.operationId,
+        entries.length,
+        others[0],
+      );
+      return;
+    }
+  } catch (error) {
+    await restoreAfterFailure(scope, entries, params.operationId, error);
+    return;
+  }
+
   try {
     const result = await startComposerRun(
-      { ...ctx, clientIp: audit?.clientIp, userAgent: audit?.userAgent },
+      // Not superseding: should a send still win the topic before this start
+      // claims it, the start fails and the follow-ups go back to the queue.
+      { ...ctx, clientIp: audit?.clientIp, supersedeLiveRun: false, userAgent: audit?.userAgent },
       {
         ...request,
         appContext: { ...request.appContext, threadId: scope.threadId, topicId: scope.topicId },
