@@ -2274,6 +2274,7 @@ export default {
   'goalAcceptance.title': 'Acceptance standard',
   'goalChat.newTopic': 'New conversation',
   'goalChat.noTopics': 'No conversations yet',
+  'goalChat.openTopic': 'Go to original topic',
   'goalChat.title': 'Ask about progress',
   'goalChat.welcome':
     "Ask the agent about this goal — how it's going, what's blocking, or what happens next.",

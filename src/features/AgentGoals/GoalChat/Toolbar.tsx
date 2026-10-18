@@ -14,11 +14,13 @@ import { agentSelectors } from '@/store/agent/selectors';
 import { useChatStore } from '@/store/chat';
 import { topicSelectors } from '@/store/chat/slices/topic/selectors';
 
+import TopicActions from './TopicActions';
+
 interface ToolbarProps {
   onCollapse: () => void;
 }
 
-/** Topic title + new-conversation + history — the agent's conversation list. */
+/** Topic title + topic menu + new-conversation + history — the agent's conversation list. */
 const Toolbar = memo<ToolbarProps>(({ onCollapse }) => {
   const { t } = useTranslation('chat');
   const [topicPopoverOpen, setTopicPopoverOpen] = useState(false);
@@ -57,6 +59,15 @@ const Toolbar = memo<ToolbarProps>(({ onCollapse }) => {
       }
       right={
         <>
+          {agentId && currentTopic && (
+            <TopicActions
+              agentId={agentId}
+              fav={currentTopic.favorite}
+              status={currentTopic.status}
+              topicId={currentTopic.id}
+              topicTitle={currentTopic.title}
+            />
+          )}
           <ActionIcon
             icon={PlusIcon}
             size={DESKTOP_HEADER_ICON_SMALL_SIZE}
@@ -81,7 +92,10 @@ const Toolbar = memo<ToolbarProps>(({ onCollapse }) => {
                   {topics!.map((topic) => (
                     <TopicItem
                       active={topic.id === activeTopicId}
+                      agentId={agentId}
+                      fav={topic.favorite}
                       key={topic.id}
+                      status={topic.status}
                       topicId={topic.id}
                       topicTitle={topic.title}
                       onClose={() => setTopicPopoverOpen(false)}
