@@ -106,14 +106,14 @@ describe('TaskSubtreeRepository', () => {
 
     it('should reject updateVisibility for tasks not visible to the caller', async () => {
       const alice = new TaskModel(serverDB, userId, wsId);
-      const bob = new TaskModel(serverDB, userId2, wsId);
+      const bob = subtreeRepo(userId2, wsId);
 
       const aliceTask = await alice.create({
         instruction: 'Alice secret',
         visibility: 'private',
       });
 
-      const result = await subtreeRepo(userId2, wsId).updateVisibility(aliceTask.id, 'public');
+      const result = await bob.updateVisibility(aliceTask.id, 'public');
       expect(result).toBeNull();
       const reload = await alice.findById(aliceTask.id);
       expect(reload?.visibility).toBe('private');
@@ -128,14 +128,14 @@ describe('TaskSubtreeRepository', () => {
       // the TRPC procedure surfaced a spurious NOT_FOUND while the DB row had
       // actually been mutated.
       const alice = new TaskModel(serverDB, userId, wsId);
-      const bob = new TaskModel(serverDB, userId2, wsId);
+      const bob = subtreeRepo(userId2, wsId);
 
       const aliceTask = await alice.create({
         instruction: 'Alice public',
         visibility: 'public',
       });
 
-      const result = await subtreeRepo(userId2, wsId).updateVisibility(aliceTask.id, 'private');
+      const result = await bob.updateVisibility(aliceTask.id, 'private');
       expect(result).not.toBeNull();
       expect(result?.visibility).toBe('private');
       expect(result?.createdByUserId).toBe(userId);
