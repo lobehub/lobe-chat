@@ -64,6 +64,29 @@ describe('Project Router Integration', () => {
     );
     expect(detail.data.knowledgeBases).toHaveLength(1);
     expect(detail.data.tasks?.[0].id).toBe(task.data.id);
+    expect(detail.data.permissions).toEqual({
+      canManage: true,
+      canManageKnowledgeBases: true,
+      canManageMembers: true,
+    });
+
+    const updatedAgent = await caller.updateAgent({
+      agentId: agent.id,
+      id: created.data.id,
+      responsibility: 'Owns the launch plan',
+    });
+    expect(updatedAgent.data).toEqual(
+      expect.objectContaining({ responsibility: 'Owns the launch plan', role: 'lead' }),
+    );
+    const updatedKnowledgeBase = await caller.updateKnowledgeBase({
+      enabled: false,
+      id: created.data.id,
+      knowledgeBaseId: knowledgeBase.id,
+    });
+    expect(updatedKnowledgeBase.data.enabled).toBe(false);
+    await expect(
+      caller.updateAgent({ agentId: 'missing-agent', id: created.data.id, role: 'x' }),
+    ).rejects.toThrow('Binding not found');
 
     await caller.requestCompletion({ id: created.data.id });
     const completed = await caller.acceptCompletion({
