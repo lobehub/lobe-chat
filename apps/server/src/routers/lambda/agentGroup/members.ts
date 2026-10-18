@@ -1,4 +1,5 @@
 import { TRPCError } from '@trpc/server';
+import pMap from 'p-map';
 import { z } from 'zod';
 
 import { AGENT_COPY_IN_PROGRESS } from '@/database/models/agentCopyJob';
@@ -16,6 +17,7 @@ import {
   agentGroupProcedure,
   agentGroupProcedureWrite,
   agentMemberInputSchema,
+  PERMISSION_WRITE_CONCURRENCY,
 } from './procedures';
 
 export const membersRouter = router({
@@ -83,17 +85,16 @@ export const membersRouter = router({
         // Group-owned members inherit the group's current General Access so a
         // group already opened to `edit` doesn't spawn `use`-locked members.
         const groupLevel = await permissionModel.getAccessLevel('agentGroup', input.groupId);
-        await Promise.all(
-          createdAgents
-            .filter((agent) => agent.visibility !== 'private')
-            .map((agent) =>
-              permissionModel.setAccessLevel(
-                'agent',
-                agent.id,
-                groupLevel ?? DEFAULT_RESOURCE_ACCESS_LEVELS.agent,
-                ctx.userId,
-              ),
+        await pMap(
+          createdAgents.filter((agent) => agent.visibility !== 'private'),
+          (agent) =>
+            permissionModel.setAccessLevel(
+              'agent',
+              agent.id,
+              groupLevel ?? DEFAULT_RESOURCE_ACCESS_LEVELS.agent,
+              ctx.userId,
             ),
+          { concurrency: PERMISSION_WRITE_CONCURRENCY },
         );
       }
 

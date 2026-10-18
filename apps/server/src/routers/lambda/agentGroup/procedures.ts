@@ -11,6 +11,12 @@ import { serverDatabase } from '@/libs/trpc/lambda/middleware';
 import { AgentGroupService } from '@/server/services/agentGroup';
 import { EditLockService } from '@/server/services/editLock';
 
+/**
+ * Cap for per-agent permission writes fanned out over a runtime-sized list of
+ * agents (created members, a group's virtual agents).
+ */
+export const PERMISSION_WRITE_CONCURRENCY = 5;
+
 export const agentGroupProcedure = wsCompatProcedure.use(serverDatabase).use(async (opts) => {
   const { ctx } = opts;
   const wsId = ctx.workspaceId ?? undefined;

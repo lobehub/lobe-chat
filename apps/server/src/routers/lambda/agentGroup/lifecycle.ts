@@ -1,5 +1,6 @@
 import { AgentPluginEntrySchema, InsertChatGroupSchema } from '@lobechat/types';
 import { TRPCError } from '@trpc/server';
+import pMap from 'p-map';
 import { z } from 'zod';
 
 import { ResourcePermissionModel } from '@/database/models/resourcePermission';
@@ -14,7 +15,11 @@ import {
 import { TransferErrorCode } from '@/types/transferError';
 
 import { isWorkspaceNonOwner } from '../_helpers/assertWorkspaceRowManageable';
-import { agentGroupProcedureWrite, agentMemberInputSchema } from './procedures';
+import {
+  agentGroupProcedureWrite,
+  agentMemberInputSchema,
+  PERMISSION_WRITE_CONCURRENCY,
+} from './procedures';
 
 export const lifecycleRouter = router({
   /**
@@ -155,16 +160,17 @@ export const lifecycleRouter = router({
             DEFAULT_RESOURCE_ACCESS_LEVELS.agent,
             ctx.userId,
           ),
-          ...createdAgents
-            .filter((agent) => agent.visibility !== 'private')
-            .map((agent) =>
+          pMap(
+            createdAgents.filter((agent) => agent.visibility !== 'private'),
+            (agent) =>
               permissionModel.setAccessLevel(
                 'agent',
                 agent.id,
                 DEFAULT_RESOURCE_ACCESS_LEVELS.agent,
                 ctx.userId,
               ),
-            ),
+            { concurrency: PERMISSION_WRITE_CONCURRENCY },
+          ),
         ]);
       }
 

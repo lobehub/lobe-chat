@@ -1,4 +1,5 @@
 import { TRPCError } from '@trpc/server';
+import pMap from 'p-map';
 import { z } from 'zod';
 
 import { ResourcePermissionModel } from '@/database/models/resourcePermission';
@@ -12,7 +13,7 @@ import {
 } from '@/server/services/resourcePermission';
 
 import { getWorkspaceGroupVirtualAgentIds } from '../_helpers/workspaceAgentGuard';
-import { agentGroupProcedureWrite } from './procedures';
+import { agentGroupProcedureWrite, PERMISSION_WRITE_CONCURRENCY } from './procedures';
 
 /**
  * Write a group's access level onto the group AND the group-owned virtual
@@ -47,8 +48,10 @@ export const applyGroupAccessLevel = async ({
 
   await Promise.all([
     permissionModel.setAccessLevel('agentGroup', groupId, accessLevel, ctx.userId),
-    ...virtualAgentIds.map((agentId) =>
-      permissionModel.setAccessLevel('agent', agentId, accessLevel, ctx.userId),
+    pMap(
+      virtualAgentIds,
+      (agentId) => permissionModel.setAccessLevel('agent', agentId, accessLevel, ctx.userId),
+      { concurrency: PERMISSION_WRITE_CONCURRENCY },
     ),
   ]);
 };

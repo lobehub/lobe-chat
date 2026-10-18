@@ -1,3 +1,4 @@
+import pMap from 'p-map';
 import { z } from 'zod';
 
 import { router } from '@/libs/trpc/lambda';
@@ -10,6 +11,13 @@ import {
   type ResourceConfigAccess,
 } from '../_helpers/resourceConfigGuard';
 import { agentGroupProcedure } from './procedures';
+
+/**
+ * Cap for config-access lookups (DB permission reads) fanned out over a
+ * runtime-sized list of groups or group members. `getGroups` nests the member
+ * fan-out inside the group fan-out, so its worst case is this value squared.
+ */
+const CONFIG_ACCESS_LOOKUP_CONCURRENCY = 5;
 
 const resourceConfigGuardCtx = (ctx: {
   serverDB: Parameters<typeof getResourceConfigAccess>[0]['db'];
@@ -45,8 +53,9 @@ const protectGroupMemberConfigs = async <T extends Record<string, any>>(
   if (!Array.isArray(group.agents) || group.agents.length === 0) return group;
 
   let changed = false;
-  const protectedAgents = await Promise.all(
-    group.agents.map(async (agent: Record<string, any>) => {
+  const protectedAgents = await pMap(
+    group.agents,
+    async (agent: Record<string, any>) => {
       const knownMeta =
         agent.userId && agent.workspaceId !== undefined
           ? {
@@ -71,7 +80,8 @@ const protectGroupMemberConfigs = async <T extends Record<string, any>>(
         return redactAgentConfig(agent);
       }
       return agent;
-    }),
+    },
+    { concurrency: CONFIG_ACCESS_LOOKUP_CONCURRENCY },
   );
 
   return changed ? ({ ...group, agents: protectedAgents.filter(Boolean) } as T) : group;
@@ -130,14 +140,17 @@ export const queryRouter = router({
     }),
   getGroups: agentGroupProcedure.query(async ({ ctx }) => {
     const groups = await ctx.agentGroupService.getGroups();
-    const accessLevels = await Promise.all(groups.map((group) => getGroupConfigAccess(ctx, group)));
+    const accessLevels = await pMap(groups, (group) => getGroupConfigAccess(ctx, group), {
+      concurrency: CONFIG_ACCESS_LOOKUP_CONCURRENCY,
+    });
     const hasFullConfig = accessLevels.includes('full');
     const defaultAgentConfig = hasFullConfig
       ? await ctx.userModel.getUserSettingsDefaultAgentConfig()
       : undefined;
 
-    const protectedGroups = await Promise.all(
-      groups.map(async (group, index) => {
+    const protectedGroups = await pMap(
+      groups,
+      async (group, index) => {
         const access = accessLevels[index];
         if (access === 'none') return null;
         if (access === 'profile') return redactGroupConfig(group);
@@ -147,7 +160,8 @@ export const queryRouter = router({
           ...group,
           agents: ctx.agentGroupService.mergeAgentsDefaultConfig(defaultAgentConfig, group.agents),
         });
-      }),
+      },
+      { concurrency: CONFIG_ACCESS_LOOKUP_CONCURRENCY },
     );
 
     return protectedGroups.filter((group): group is NonNullable<typeof group> => Boolean(group));
