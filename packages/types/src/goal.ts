@@ -700,10 +700,21 @@ export interface GoalRolloutState {
   massNodeIds?: string[];
   /**
    * The owner's correction a sent-back release waits on, while the phase is
-   * `plan_revision`. The main Agent rewrites the plan from it (`revisedRecipe`);
-   * once it lands the rewrite returns to the owner's release review.
+   * `plan_revision`. The main Agent rewrites the plan from it (`revisedRecipe`)
+   * and names the delivered units the correction covers (`rerun`). Those units
+   * run again on the rewrite as a new round of experiments before the owner
+   * reviews it; with none to re-run, the rewrite returns to the review at once.
    */
-  pendingRevision?: { correction: string; revisedReason?: string; revisedRecipe?: string };
+  pendingRevision?: {
+    correction: string;
+    /**
+     * Node ids (or titles) of the reviewed round's units to run again on the
+     * rewrite. Absent re-runs every one of them; empty re-runs none.
+     */
+    rerun?: string[];
+    revisedReason?: string;
+    revisedRecipe?: string;
+  };
   /** Phase the rollout is in; the coordinator reads this to pick its move. */
   phase: GoalRolloutPhase;
   /** The execution plan as a user skill; each Template revision is one of its versions. */

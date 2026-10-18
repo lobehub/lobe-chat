@@ -57,6 +57,8 @@ import { recoveryEligibility } from './supervisor/policy';
 import { goalWaitSchema, GoalWaitService } from './wait';
 
 const reason = z.string().trim().min(1).max(8000);
+/** Node ids or titles of the reviewed units a revised plan runs again; omitted, all of them. */
+const rerun = z.array(z.string().trim().min(1)).max(60).optional();
 /**
  * The question an escalation puts to the owner. A bare reason left the gate
  * asking "retry or retire?" while the decision that actually blocked the goal —
@@ -189,11 +191,8 @@ export const goalPlanSchema = z.discriminatedUnion('action', [
   z.object({ action: z.literal('escalate'), reason, ask: goalAskSchema.optional() }).strict(),
   /** Answers a batch release handed over by the coordinator: the next wave goes out. */
   z.object({ action: z.literal('release'), reason }).strict(),
-  /**
-   * Answers a plan the owner sent back: the whole revised recipe the next probe
-   * round follows, rewritten from the owner's correction.
-   */
-  z.object({ action: z.literal('revise_plan'), reason, recipe: reason }).strict(),
+  /** Answers a plan sent back: the full revised recipe, and the reviewed units to re-run. */
+  z.object({ action: z.literal('revise_plan'), reason, recipe: reason, rerun }).strict(),
 ]);
 type GoalPlan = z.infer<typeof goalPlanSchema>;
 const activeStatuses = new Set(['planning', 'running']);
@@ -1975,8 +1974,7 @@ export class GoalManagerService {
           },
         });
       } else if (plan.action === 'revise_plan') {
-        // The rewrite lands with the plan; the coordinator opens the new probe
-        // round from it on its next advance.
+        // The rewrite lands with the plan; the next advance re-runs the units it names.
         const rollout = goal.config?.rolloutState;
         if (rollout?.phase !== 'plan_revision' || !rollout.pendingRevision)
           throw new TRPCError({
@@ -1987,6 +1985,7 @@ export class GoalManagerService {
           ...rollout,
           pendingRevision: {
             ...rollout.pendingRevision,
+            ...(plan.rerun && { rerun: plan.rerun }),
             revisedReason: plan.reason,
             revisedRecipe: plan.recipe,
           },

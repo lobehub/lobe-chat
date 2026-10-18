@@ -36,6 +36,7 @@ import { useAcceptanceBundle } from '../useAcceptanceBundle';
 import { canReviewAcceptance } from '../visibility';
 import { latestRound, unitArtifacts } from './dossier';
 import SkillDirectory from './SkillDirectory';
+import { usePlanFiles } from './usePlanFiles';
 
 const styles = createStaticStyles(({ css }) => ({
   body: css`
@@ -342,10 +343,13 @@ const DetailPanel = memo<{ onClose: () => void; selection: Selection }>(
   },
 );
 
+/** How the owner settled the gate: let the next wave run, or send the plan back. */
+export type GateDecisionKind = 'release' | 'revise';
+
 const GateDecision = memo<{
   dossier: GoalReleaseGateDossier;
   inModal?: boolean;
-  onDecided?: () => void;
+  onDecided?: (decision: GateDecisionKind) => void;
 }>(({ dossier, inModal, onDecided }) => {
   const { t } = useTranslation('verify');
   const { acceptanceId } = useAcceptanceScope();
@@ -367,13 +371,13 @@ const GateDecision = memo<{
       </Flexbox>
     );
 
-  const run = async (action: () => Promise<unknown>) => {
+  const run = async (decision: GateDecisionKind, action: () => Promise<unknown>) => {
     setPending(true);
     try {
       await action();
       await mutate();
       void globalMutate(isAcceptanceListKey);
-      onDecided?.();
+      onDecided?.(decision);
     } catch (cause) {
       toast.error(cause instanceof Error ? cause.message : t('acceptance.actionError'));
     } finally {
@@ -415,7 +419,7 @@ const GateDecision = memo<{
               disabled={!correction.trim()}
               loading={pending}
               onClick={() =>
-                run(() =>
+                run('revise', () =>
                   verifyService.rejectDelivery(data.acceptance.id, correction.trim(), {
                     dispatch: false,
                     roundId,
@@ -435,7 +439,9 @@ const GateDecision = memo<{
               loading={pending}
               type={'primary'}
               onClick={() =>
-                run(() => verifyService.acceptDelivery(data.acceptance.id, undefined, { roundId }))
+                run('release', () =>
+                  verifyService.acceptDelivery(data.acceptance.id, undefined, { roundId }),
+                )
               }
             >
               {releaseLabel}
@@ -452,7 +458,7 @@ interface GateReviewProps {
   /** Rendered as the review dialog (with its own frame) rather than on the acceptance page. */
   inModal?: boolean;
   onClose?: () => void;
-  onDecided?: () => void;
+  onDecided?: (decision: GateDecisionKind) => void;
 }
 
 /**
@@ -463,8 +469,7 @@ interface GateReviewProps {
 const GateReview = memo<GateReviewProps>(({ dossier, inModal, onClose, onDecided }) => {
   const { t } = useTranslation('verify');
   const [selected, setSelected] = useState<Selection>();
-  // The plan reads as a document first; its other files are a click away.
-  const [filesOpen, setFilesOpen] = useState(false);
+  const { extraFiles, filesOpen, toggleFiles } = usePlanFiles(dossier.plan.skillId);
   const average =
     dossier.units.reduce((sum, unit) => sum + unit.tokens, 0) / Math.max(1, dossier.units.length);
   const probes = dossier.kind === 'probes';
@@ -510,6 +515,7 @@ const GateReview = memo<GateReviewProps>(({ dossier, inModal, onClose, onDecided
           dossier.plan.skillName && (
             <span className={styles.meta}>
               {dossier.plan.skillName} · v{dossier.plan.revision}
+              {extraFiles > 0 && ` · ${t('acceptance.gate.planFiles', { count: extraFiles + 1 })}`}
             </span>
           )
         }
@@ -519,7 +525,7 @@ const GateReview = memo<GateReviewProps>(({ dossier, inModal, onClose, onDecided
               icon={filesOpen ? PanelLeftCloseIcon : PanelLeftOpenIcon}
               size={'small'}
               title={t(filesOpen ? 'acceptance.gate.hideFiles' : 'acceptance.gate.showFiles')}
-              onClick={() => setFilesOpen((open) => !open)}
+              onClick={toggleFiles}
             />
           )
         }
