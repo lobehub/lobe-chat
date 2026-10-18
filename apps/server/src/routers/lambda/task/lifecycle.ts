@@ -213,9 +213,9 @@ export const lifecycleRouter = router({
     .mutation(async ({ input, ctx }) => {
       try {
         const task = await resolveOrThrow(ctx.taskModel, input.id);
-        // Archiving hides a shared task from every member's lists: same
-        // creator-or-owner scope as delete.
-        assertWorkspaceRowManageable(ctx, task.createdByUserId, 'task');
+        // Archiving hides a shared task from every member's lists. It is reversible,
+        // so admins may do it too, beyond delete's creator-or-owner scope.
+        assertWorkspaceRowManageable(ctx, task.createdByUserId, 'task', { allowAdmin: true });
         if (input.archived) {
           await assertNotInOpenGoal(
             ctx.serverDB,
