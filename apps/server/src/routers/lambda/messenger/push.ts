@@ -3,6 +3,7 @@ import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
 import { FileModel } from '@/database/models/file';
+import { router } from '@/libs/trpc/lambda';
 import type { BotMessageAttachment } from '@/server/services/bot/platforms/types';
 import { FileService } from '@/server/services/file';
 import {
@@ -13,7 +14,7 @@ import {
 
 import { messengerProcedure } from './procedures';
 
-export const pushProcedures = {
+export const pushRouter = router({
   /**
    * Proactive-push window status for the caller's link on a platform:
    * deliverability mode, remaining quota, expiry, and queued messages.
@@ -125,4 +126,4 @@ export const pushProcedures = {
         userId: ctx.userId,
       });
     }),
-};
+});

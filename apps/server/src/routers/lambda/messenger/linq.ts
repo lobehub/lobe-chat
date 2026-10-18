@@ -5,13 +5,14 @@ import { z } from 'zod';
 
 import { assertBotFeatureAccess } from '@/business/server/bot/featureAccess';
 import { getMessengerLinqConfig } from '@/config/messenger';
+import { router } from '@/libs/trpc/lambda';
 import { issueLinkCode, peekLinkCodeStatus } from '@/server/services/messenger/linkTokenStore';
 import { pickLinqPoolNumber } from '@/server/services/messenger/platforms/linq/pool';
 
 import { resolveAuthorizedAgentScope } from './agentScope';
 import { messengerProcedure } from './procedures';
 
-export const linqProcedures = {
+export const linqRouter = router({
   /**
    * Start an iMessage / SMS link on the shared Linq pool. The signed-in user
    * gets a one-time code plus `sms:` / `imessage:` deep links prefilled with
@@ -73,4 +74,4 @@ export const linqProcedures = {
       const link = await ctx.messengerLinkModel.findByPlatform('linq', '');
       return { ...result, link: link ?? null };
     }),
-};
+});

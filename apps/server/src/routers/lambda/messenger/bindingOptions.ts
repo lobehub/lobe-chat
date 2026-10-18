@@ -9,6 +9,7 @@ import {
   getMessengerTelegramConfig,
 } from '@/config/messenger';
 import { WorkspaceModel } from '@/database/models/workspace';
+import { router } from '@/libs/trpc/lambda';
 import { messengerPlatformRegistry } from '@/server/services/messenger';
 
 import {
@@ -17,7 +18,7 @@ import {
 } from './agentScope';
 import { messengerProcedure } from './procedures';
 
-export const bindingOptionsProcedures = {
+export const bindingOptionsRouter = router({
   /**
    * Surface available platforms + bot deep-link metadata to the UI.
    *
@@ -122,4 +123,4 @@ export const bindingOptionsProcedures = {
     const workspaces = await new WorkspaceModel(ctx.serverDB, ctx.userId).listUserWorkspaces();
     return workspaces.map((w) => ({ avatar: w.avatar, id: w.id, name: w.name }));
   }),
-};
+});

@@ -2,6 +2,7 @@ import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
 import { isMessengerPlatformEnabled, type MessengerPlatform } from '@/config/messenger';
+import { router } from '@/libs/trpc/lambda';
 
 import { resolveAuthorizedAgentScope } from './agentScope';
 import { messengerProcedure, messengerWriteProcedure } from './procedures';
@@ -15,7 +16,7 @@ const platformEnum = z.enum([
   'linq',
 ]) satisfies z.ZodType<MessengerPlatform>;
 
-export const linksProcedures = {
+export const linksRouter = router({
   /**
    * Get the current user's link for one platform (or null). `tenantId`
    * narrows to a specific Slack workspace; omit for Telegram (global bot).
@@ -92,4 +93,4 @@ export const linksProcedures = {
       await ctx.messengerLinkModel.deleteByPlatform(input.platform, input.tenantId);
       return { success: true };
     }),
-};
+});

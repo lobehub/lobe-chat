@@ -5,6 +5,7 @@ import type { SafeMessengerAccountLink } from '@/database/models/messengerAccoun
 import type { DecryptedMessengerInstallation } from '@/database/models/messengerInstallation';
 import { MessengerInstallationModel } from '@/database/models/messengerInstallation';
 import type { LobeChatDatabase } from '@/database/type';
+import { router } from '@/libs/trpc/lambda';
 import { KeyVaultsGateKeeper } from '@/server/modules/KeyVaultsEncrypt';
 import { SlackApi } from '@/server/services/bot/platforms/slack/api';
 import { getBotRuntimeStatus } from '@/server/services/gateway/runtimeStatus';
@@ -51,7 +52,7 @@ const reconcileSlackInstallation = async (
   }
 };
 
-export const installationsProcedures = {
+export const installationsRouter = router({
   /** List the current user's System Bot connections without credential data. */
   listMyInstallations: messengerProcedure.query(async ({ ctx }) => {
     const gateKeeper = await KeyVaultsGateKeeper.initWithEnvKey().catch(() => undefined);
@@ -164,4 +165,4 @@ export const installationsProcedures = {
       await MessengerInstallationModel.markRevoked(ctx.serverDB, row.id);
       return { success: true };
     }),
-};
+});

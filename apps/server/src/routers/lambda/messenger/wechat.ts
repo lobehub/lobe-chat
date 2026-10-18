@@ -12,6 +12,7 @@ import {
   MessengerAccountLinkRelinkRequiredError,
 } from '@/database/models/messengerAccountLink';
 import type { LobeChatDatabase } from '@/database/type';
+import { router } from '@/libs/trpc/lambda';
 import { getAgentRuntimeRedisClient } from '@/server/modules/AgentRuntime/redis';
 import { KeyVaultsGateKeeper } from '@/server/modules/KeyVaultsEncrypt';
 import {
@@ -60,7 +61,7 @@ export const disconnectWechatAccountLink = async (
   }
 };
 
-export const wechatProcedures = {
+export const wechatRouter = router({
   /** Start a user-bound, one-shot WeChat iLink QR session. */
   createWechatQrSession: messengerProcedure.mutation(async ({ ctx }) => {
     if (!(await isMessengerPlatformEnabled('wechat'))) {
@@ -314,4 +315,4 @@ export const wechatProcedures = {
         throw error;
       }
     }),
-};
+});

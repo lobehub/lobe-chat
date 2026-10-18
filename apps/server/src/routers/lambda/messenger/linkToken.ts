@@ -9,7 +9,7 @@ import {
   MessengerAccountLinkRelinkRequiredError,
 } from '@/database/models/messengerAccountLink';
 import { users } from '@/database/schemas';
-import { publicProcedure } from '@/libs/trpc/lambda';
+import { publicProcedure, router } from '@/libs/trpc/lambda';
 import { serverDatabase } from '@/libs/trpc/lambda/middleware';
 import {
   consumeLinkToken,
@@ -67,7 +67,7 @@ const notifyLinkSuccess = async (
   }
 };
 
-export const linkTokenProcedures = {
+export const linkTokenRouter = router({
   /**
    * Public peek used by the verify-im page to render the IM identity preview
    * before the user confirms. Does NOT consume the token.
@@ -258,4 +258,4 @@ export const linkTokenProcedures = {
 
       return { data: link, success: true };
     }),
-};
+});

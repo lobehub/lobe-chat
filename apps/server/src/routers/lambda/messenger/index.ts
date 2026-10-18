@@ -1,19 +1,19 @@
-import { router } from '@/libs/trpc/lambda';
+import { mergeRouters } from '@/libs/trpc/lambda';
 
-import { bindingOptionsProcedures } from './bindingOptions';
-import { installationsProcedures } from './installations';
-import { linksProcedures } from './links';
-import { linkTokenProcedures } from './linkToken';
-import { linqProcedures } from './linq';
-import { pushProcedures } from './push';
-import { wechatProcedures } from './wechat';
+import { bindingOptionsRouter } from './bindingOptions';
+import { installationsRouter } from './installations';
+import { linksRouter } from './links';
+import { linkTokenRouter } from './linkToken';
+import { linqRouter } from './linq';
+import { pushRouter } from './push';
+import { wechatRouter } from './wechat';
 
-export const messengerRouter = router({
-  ...bindingOptionsProcedures,
-  ...wechatProcedures,
-  ...linqProcedures,
-  ...linkTokenProcedures,
-  ...linksProcedures,
-  ...pushProcedures,
-  ...installationsProcedures,
-});
+export const messengerRouter = mergeRouters(
+  bindingOptionsRouter,
+  wechatRouter,
+  linqRouter,
+  linkTokenRouter,
+  linksRouter,
+  pushRouter,
+  installationsRouter,
+);
