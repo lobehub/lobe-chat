@@ -341,6 +341,7 @@
   "createTask.instructionPlaceholder": "添加描述…",
   "createTask.member": "负责人",
   "createTask.submit": "创建任务",
+  "createTask.submitScheduled": "创建定时任务",
   "createTask.titlePlaceholder": "任务标题",
   "createTask.visibility.changeFailed": "切换任务可见性失败",
   "createTask.visibility.helperPrivate": "仅自己可见此任务。",
