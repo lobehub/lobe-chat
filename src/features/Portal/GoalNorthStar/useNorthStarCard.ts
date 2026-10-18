@@ -5,6 +5,7 @@ import {
   type NorthStarCard,
   type NorthStarTaskRef,
 } from '@/features/AgentGoals/NorthStarMetrics/northStar';
+import { buildGoalGraphView } from '@/features/AgentGoals/ProcessControl/goalGraphViewModel';
 import { goalSelectors, useGoalStore } from '@/store/goal';
 
 /**
@@ -40,10 +41,14 @@ export const useNorthStarCard = (goalId: string, metricKey: string) => {
     [nodes],
   );
 
+  // The graph view routes a task link the way the map does (see `useGoalNodeSelect`).
+  const graph = useMemo(() => (snapshot ? buildGoalGraphView(snapshot) : undefined), [snapshot]);
+
   return {
     card,
     criterion,
     error,
+    graph,
     isLoading: !series && isLoading,
     loaded: !!snapshot,
     points: matched?.points ?? [],

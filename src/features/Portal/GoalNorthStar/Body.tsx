@@ -8,17 +8,16 @@ import {
   Flexbox,
   Icon,
   Skeleton,
-  Tag,
   Text,
   useTheme,
 } from '@lobehub/ui';
 import dayjs from 'dayjs';
-import { Check, ListChecks, Pencil, Plus } from 'lucide-react';
+import { ListChecks } from 'lucide-react';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import AsyncError from '@/components/AsyncError';
-import { openDeclareMetricModal } from '@/features/AgentGoals/NorthStarMetrics/DeclareMetricModal';
+import MetBadge from '@/features/AgentGoals/NorthStarMetrics/MetBadge';
 import {
   buildNorthStarChartRows,
   buildObservationRows,
@@ -27,8 +26,7 @@ import {
   formatMetricValue,
   type NorthStarObservationRow,
 } from '@/features/AgentGoals/NorthStarMetrics/northStar';
-import { openRecordObservationModal } from '@/features/AgentGoals/NorthStarMetrics/RecordObservationModal';
-import { usePermission } from '@/hooks/usePermission';
+import { useGoalNodeSelect } from '@/features/AgentGoals/ProcessControl/useGoalProcessActions';
 import { useChatStore } from '@/store/chat';
 import { chatPortalSelectors } from '@/store/chat/selectors';
 
@@ -116,12 +114,8 @@ const DELTA_COLOR: Record<DeltaTone, string> = {
 const NorthStarDetail = memo<{ goalId: string; metricKey: string }>(({ goalId, metricKey }) => {
   const { t } = useTranslation('chat');
   const theme = useTheme();
-  const { allowed: canEdit } = usePermission('create_content');
-  const openGoalNode = useChatStore((s) => s.openGoalNode);
-  const { card, criterion, error, isLoading, loaded, points, retry, tasks } = useNorthStarCard(
-    goalId,
-    metricKey,
-  );
+  const { card, criterion, error, graph, isLoading, loaded, points, retry, tasks } =
+    useNorthStarCard(goalId, metricKey);
 
   const chartRows = useMemo(
     () =>
@@ -132,6 +126,8 @@ const NorthStarDetail = memo<{ goalId: string; metricKey: string }>(({ goalId, m
         : [],
     [card, points],
   );
+  // A task link shows the Task itself, as a click on the map would.
+  const openNode = useGoalNodeSelect(goalId, graph);
   const history = useMemo(() => buildObservationRows(points, tasks), [points, tasks]);
 
   if (!loaded || isLoading)
@@ -173,12 +169,8 @@ const NorthStarDetail = memo<{ goalId: string; metricKey: string }>(({ goalId, m
               {t(`goalProcess.northStar.op.${card.op}` as const)} {formatMetricValue(card.target)}
               {unit}
             </Text>
+            {card.met && <MetBadge />}
           </Flexbox>
-          {card.met && (
-            <Tag color={'success'}>
-              <Icon icon={Check} size={12} /> {t('goalProcess.northStar.met')}
-            </Tag>
-          )}
         </Flexbox>
         <Text
           fontSize={12}
@@ -190,23 +182,6 @@ const NorthStarDetail = memo<{ goalId: string; metricKey: string }>(({ goalId, m
             : t('goalProcess.northStar.lastObserved', { time: dayjs(card.latestAt).fromNow() })}
           {card.stale ? ` · ${t('goalProcess.northStar.staleWarning')}` : ''}
         </Text>
-        {canEdit && (
-          <Flexbox horizontal gap={8}>
-            <Button
-              icon={<Icon icon={Plus} />}
-              type={'primary'}
-              onClick={() => openRecordObservationModal(goalId, card.key, card.label)}
-            >
-              {t('goalProcess.northStar.record.title')}
-            </Button>
-            <Button
-              icon={<Icon icon={Pencil} />}
-              onClick={() => openDeclareMetricModal(goalId, criterion)}
-            >
-              {t('goalProcess.northStar.edit.title')}
-            </Button>
-          </Flexbox>
-        )}
       </Flexbox>
 
       <Flexbox gap={8}>
@@ -295,7 +270,7 @@ const NorthStarDetail = memo<{ goalId: string; metricKey: string }>(({ goalId, m
                           size={'small'}
                           title={task.title}
                           type={'text'}
-                          onClick={() => openGoalNode(goalId, task.id)}
+                          onClick={() => openNode(task.id)}
                         >
                           <span className={styles.taskTitle}>{task.title}</span>
                         </Button>

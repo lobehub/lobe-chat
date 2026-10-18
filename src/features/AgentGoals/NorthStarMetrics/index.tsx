@@ -8,13 +8,12 @@ import {
   Flexbox,
   Icon,
   Skeleton,
-  Tag,
   Text,
   Tooltip,
   useTheme,
 } from '@lobehub/ui';
 import dayjs from 'dayjs';
-import { Check, Plus, Target } from 'lucide-react';
+import { Plus, Target } from 'lucide-react';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -25,6 +24,7 @@ import { goalSelectors, useGoalStore } from '@/store/goal';
 
 import { handleCardKeyDown } from './cardKeyboard';
 import { openDeclareMetricModal } from './DeclareMetricModal';
+import MetBadge from './MetBadge';
 import { buildNorthStarCards, formatMetricValue, type NorthStarCard } from './northStar';
 import { openRecordObservationModal } from './RecordObservationModal';
 
@@ -108,15 +108,13 @@ const MetricCard = memo<{ canEdit: boolean; card: NorthStarCard; goalId: string 
         onKeyDown={(event) => handleCardKeyDown(event, openDetail)}
       >
         <Flexbox horizontal align={'center'} gap={8} justify={'space-between'}>
-          <Text ellipsis fontSize={12} type={'secondary'}>
-            {card.label}
-          </Text>
+          <Flexbox horizontal align={'center'} gap={8} style={{ minWidth: 0 }}>
+            <Text ellipsis fontSize={12} type={'secondary'}>
+              {card.label}
+            </Text>
+            {card.met && <MetBadge />}
+          </Flexbox>
           <Flexbox horizontal align={'center'} gap={4}>
-            {card.met && (
-              <Tag color={'success'} size={'small'}>
-                <Icon icon={Check} size={11} /> {t('goalProcess.northStar.met')}
-              </Tag>
-            )}
             {/* Recording stays available after the target is met: the world
                 can regress, and a card whose only refresh path disappeared
                 would stay falsely met forever. */}
