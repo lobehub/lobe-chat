@@ -19,7 +19,7 @@ const useHydrated = () =>
  * `fallback` is what the document ships and what hydration matches; pass the
  * static half of the view there so the client takeover is not a visible swap.
  *
- * `preload()` starts the download ahead of the hydration render that would
+ * `preload()` starts the download ahead of the post-hydration render that would
  * otherwise request it; the render then joins that same request.
  */
 export const clientOnly = <P extends object>(
@@ -28,7 +28,7 @@ export const clientOnly = <P extends object>(
   let loading: Promise<{ default: ComponentType<P> }> | undefined;
   const load = () =>
     (loading ??= importFn().catch((error) => {
-      // A failed chunk must stay retryable, as it is through `lazy` alone.
+      // Clear a failed download so a later `preload()` asks again.
       loading = undefined;
       throw error;
     }));

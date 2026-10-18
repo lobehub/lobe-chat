@@ -27,10 +27,9 @@ const SharedTopicBody = clientOnly(() =>
 const SharedTopicAside = clientOnly(() => import('./SharedTopicAside.client'));
 
 /**
- * Everything the conversation needs before it can paint: its chunks and its
- * newest messages, started together. The route calls this as hydration begins,
- * where the body would otherwise only request its chunk once hydrated and its
- * messages once mounted — two downloads in series instead of in parallel.
+ * Everything the conversation needs before it can paint: its chunk and the
+ * newest messages the document already requested. The route calls this as the
+ * hydrated router initializes, ahead of the body's own mount.
  */
 export const preloadSharedTopic = (topic: SharedTopicData) => {
   SharedTopicBody.preload();

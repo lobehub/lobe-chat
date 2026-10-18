@@ -339,7 +339,7 @@ export default eslint(
   // Performance import boundaries. These restrictions preserve real import()
   // seams instead of relying on component-level conditional rendering.
   {
-    files: ['src/**/*.{ts,tsx}'],
+    files: ['src/**/*.{ts,tsx}', 'apps/share/src/**/*.{ts,tsx}'],
     rules: {
       'no-restricted-imports': createRestrictedImportRule(),
     },
