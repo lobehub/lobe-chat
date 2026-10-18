@@ -1,5 +1,6 @@
 import type { LobeToolManifest } from '@lobechat/context-engine';
 import debug from 'debug';
+import pMap from 'p-map';
 
 import { ConnectorModel, type DecryptedConnector } from '@/database/models/connector';
 import { ConnectorToolModel } from '@/database/models/connectorTool';
@@ -17,6 +18,9 @@ import {
 } from '@/server/utils/connectorAttribution';
 
 import type { ToolDiscoveryDeps } from './types';
+
+/** Caps concurrent per-connector permission reads against the database. */
+const CONNECTOR_TOOLS_QUERY_CONCURRENCY = 5;
 
 const log = debug('lobe-server:ai-agent-service');
 
@@ -139,12 +143,14 @@ export const patchConnectorPermissions = async <P extends { identifier: string }
     if (connectorEntries.length > 0) {
       const toolModel = new ConnectorToolModel(deps.db, deps.userId, deps.workspaceId);
       const connectorToolsMap = new Map<string, Map<string, string>>();
-      await Promise.all(
-        connectorEntries.map(async (c) => {
+      await pMap(
+        connectorEntries,
+        async (c) => {
           const tools = await toolModel.queryByConnector(c.id);
           const perms = new Map(tools.map((t) => [t.toolName, t.permission]));
           connectorToolsMap.set(c.identifier, perms);
-        }),
+        },
+        { concurrency: CONNECTOR_TOOLS_QUERY_CONCURRENCY },
       );
 
       lobehubSkillManifests = lobehubSkillManifests.map((m) => {
