@@ -1,4 +1,5 @@
 import { TRPCError } from '@trpc/server';
+import pMap from 'p-map';
 import { z } from 'zod';
 
 import { ConnectorStatus, ConnectorToolPermission } from '@/database/schemas';
@@ -9,6 +10,9 @@ import { syncConnectorToolsById } from '@/server/services/connector/sync';
 
 import { assertWorkspaceRowManageable } from '../_helpers/assertWorkspaceRowManageable';
 import { connectorWriteProcedure } from './procedures';
+
+// A reset rewrites one permission row per synced tool; cap the parallel writes.
+const TOOL_PERMISSION_RESET_CONCURRENCY = 5;
 
 export const toolRouter = router({
   /**
@@ -74,10 +78,10 @@ export const toolRouter = router({
       assertWorkspaceRowManageable(ctx, target.userId, 'connector');
 
       const tools = await ctx.connectorToolModel.queryByConnector(input.id);
-      await Promise.all(
-        tools.map((t) =>
-          ctx.connectorToolModel.updatePermission(t.id, ConnectorToolPermission.auto),
-        ),
+      await pMap(
+        tools,
+        (t) => ctx.connectorToolModel.updatePermission(t.id, ConnectorToolPermission.auto),
+        { concurrency: TOOL_PERMISSION_RESET_CONCURRENCY },
       );
       return { toolCount: tools.length };
     }),

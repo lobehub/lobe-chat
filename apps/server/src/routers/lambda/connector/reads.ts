@@ -1,4 +1,5 @@
 import { TRPCError } from '@trpc/server';
+import pMap from 'p-map';
 import { z } from 'zod';
 
 import { wsCompatProcedure } from '@/business/server/trpc-middlewares/workspaceAuth';
@@ -12,6 +13,9 @@ import {
 
 import { assertWorkspaceRowManageable } from '../_helpers/assertWorkspaceRowManageable';
 import { connectorProcedure, connectorWriteProcedure } from './procedures';
+
+// Each listed connector costs one tool-row query; cap them per request.
+const CONNECTOR_TOOLS_QUERY_CONCURRENCY = 5;
 
 export const connectorReadRouter = router({
   // ── Queries ──────────────────────────────────────────────────────────────
@@ -27,8 +31,9 @@ export const connectorReadRouter = router({
       connectors.map((c) => resolveConnectorAuthorizerId(c)),
     );
 
-    const toolsByConnector = await Promise.all(
-      connectors.map(async (c) => {
+    const toolsByConnector = await pMap(
+      connectors,
+      async (c) => {
         const tools = await ctx.connectorToolModel.queryByConnector(c.id);
         // Never ship decrypted OAuth tokens or the client secret to the browser.
         const { credentials: _credentials, oidcConfig, ...rest } = c;
@@ -41,7 +46,8 @@ export const connectorReadRouter = router({
           oidcConfig: safeOidcConfig,
           tools,
         };
-      }),
+      },
+      { concurrency: CONNECTOR_TOOLS_QUERY_CONCURRENCY },
     );
 
     return toolsByConnector;
@@ -63,8 +69,9 @@ export const connectorReadRouter = router({
         connectors.map((c) => resolveConnectorAuthorizerId(c)),
       );
 
-      return Promise.all(
-        connectors.map(async (c) => {
+      return pMap(
+        connectors,
+        async (c) => {
           const tools = await ctx.connectorToolModel.queryByConnector(c.id);
           const { credentials: _credentials, oidcConfig, ...rest } = c;
           const safeOidcConfig = oidcConfig
@@ -78,7 +85,8 @@ export const connectorReadRouter = router({
             oidcConfig: safeOidcConfig,
             tools,
           };
-        }),
+        },
+        { concurrency: CONNECTOR_TOOLS_QUERY_CONCURRENCY },
       );
     }),
   /**
@@ -109,25 +117,23 @@ export const connectorReadRouter = router({
     const agentMetas = agentIds.length > 0 ? await agentModel.getAgentAvatarsByIds(agentIds) : [];
     const agentMetaById = new Map(agentMetas.map((m) => [m.id, m]));
 
-    return Promise.all(
-      connectors
-        .filter((c) => !!c.agentId && agentMetaById.has(c.agentId))
-        .map(async (c) => {
-          const tools = await ctx.connectorToolModel.queryByConnector(c.id);
-          const { credentials: _credentials, oidcConfig, ...rest } = c;
-          const safeOidcConfig = oidcConfig
-            ? { ...oidcConfig, clientSecret: undefined }
-            : oidcConfig;
-          const meta = agentMetaById.get(c.agentId!);
-          return {
-            ...rest,
-            agentAvatar: meta?.avatar ?? null,
-            agentName: meta?.name ?? null,
-            agentTitle: meta?.title ?? null,
-            oidcConfig: safeOidcConfig,
-            tools,
-          };
-        }),
+    return pMap(
+      connectors.filter((c) => !!c.agentId && agentMetaById.has(c.agentId)),
+      async (c) => {
+        const tools = await ctx.connectorToolModel.queryByConnector(c.id);
+        const { credentials: _credentials, oidcConfig, ...rest } = c;
+        const safeOidcConfig = oidcConfig ? { ...oidcConfig, clientSecret: undefined } : oidcConfig;
+        const meta = agentMetaById.get(c.agentId!);
+        return {
+          ...rest,
+          agentAvatar: meta?.avatar ?? null,
+          agentName: meta?.name ?? null,
+          agentTitle: meta?.title ?? null,
+          oidcConfig: safeOidcConfig,
+          tools,
+        };
+      },
+      { concurrency: CONNECTOR_TOOLS_QUERY_CONCURRENCY },
     );
   }),
   /**
