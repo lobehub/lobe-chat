@@ -1,10 +1,10 @@
 'use client';
 
-import { Flexbox, Text } from '@lobehub/ui';
+import { Flexbox } from '@lobehub/ui';
 import { memo } from 'react';
-import { useTranslation } from 'react-i18next';
 
 import DragUploadZone, { useUploadFiles } from '@/components/DragUploadZone';
+import AgentHome from '@/features/AgentHome';
 import { ChatList, conversationSelectors, useConversationStore } from '@/features/Conversation';
 import { useAgentStore } from '@/store/agent';
 import { agentByIdSelectors } from '@/store/agent/selectors';
@@ -12,19 +12,6 @@ import { agentByIdSelectors } from '@/store/agent/selectors';
 import { GoalChatProvider } from './GoalChatProvider';
 import GoalConversationInput from './GoalConversationInput';
 import Toolbar from './Toolbar';
-
-const Welcome = memo(() => {
-  const { t } = useTranslation('chat');
-  return (
-    <Flexbox align={'center'} flex={1} justify={'center'} padding={24}>
-      <Text style={{ fontSize: 14, textAlign: 'center' }} type={'secondary'}>
-        {t('goalChat.welcome')}
-      </Text>
-    </Flexbox>
-  );
-});
-
-Welcome.displayName = 'GoalChatWelcome';
 
 interface ConversationProps {
   initialMessage?: string;
@@ -50,7 +37,7 @@ const Conversation = memo<ConversationProps>(
         <Flexbox flex={1} height={'100%'} style={{ overflow: 'hidden' }}>
           <Toolbar onCollapse={onCollapse} />
           <Flexbox flex={1} style={{ overflow: 'hidden' }}>
-            <ChatList welcome={<Welcome />} />
+            <ChatList welcome={<AgentHome />} />
           </Flexbox>
           <GoalConversationInput
             initialMessage={initialMessage}

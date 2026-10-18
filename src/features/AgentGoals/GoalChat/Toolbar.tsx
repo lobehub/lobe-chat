@@ -22,7 +22,7 @@ interface ToolbarProps {
  * agent conversation header so the side chat reads as the same conversation.
  */
 const Toolbar = memo<ToolbarProps>(({ onCollapse }) => {
-  const { t } = useTranslation('chat');
+  const { t } = useTranslation(['chat', 'topic']);
   const [topicPopoverOpen, setTopicPopoverOpen] = useState(false);
   const agentId = useConversationStore(conversationSelectors.agentId);
 
@@ -36,7 +36,7 @@ const Toolbar = memo<ToolbarProps>(({ onCollapse }) => {
   const currentTopic = useChatStore(topicSelectors.currentActiveTopic);
 
   const isLoadingTopics = topics === undefined;
-  const topicTitle = currentTopic?.title || t('goalChat.title');
+  const topicTitle = currentTopic?.title || t('newTopic', { ns: 'topic' });
   const hasTopics = !!topics && topics.length > 0;
 
   return (
