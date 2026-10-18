@@ -8,6 +8,7 @@ import { RbacModel } from '@/database/models/rbac';
 import { ResourcePermissionModel } from '@/database/models/resourcePermission';
 import type { WorkModel } from '@/database/models/work';
 import { DEFAULT_RESOURCE_ACCESS_LEVELS } from '@/database/schemas';
+import { router } from '@/libs/trpc/lambda';
 import { resolveDocumentEditorData } from '@/server/services/document/editorData';
 import { canViewDocumentContent } from '@/server/services/documentAccess';
 import { FileService } from '@/server/services/file';
@@ -148,7 +149,7 @@ const registerRunDocumentWork = async (
   }
 };
 
-export const crudProcedures = {
+export const crudRouter = router({
   createDocument: documentProcedure
     .use(withScopedPermission('document:create'))
     .input(
@@ -474,4 +475,4 @@ export const crudProcedures = {
 
       return result;
     }),
-};
+});

@@ -6,6 +6,7 @@ import { withScopedPermission } from '@/business/server/trpc-middlewares/rbacPer
 import { DOCUMENT_TRANSFER_FOREIGN_ROWS } from '@/database/models/document';
 import { ResourcePermissionModel } from '@/database/models/resourcePermission';
 import { DEFAULT_RESOURCE_ACCESS_LEVELS } from '@/database/schemas';
+import { router } from '@/libs/trpc/lambda';
 import {
   assertCanPerformResourceAction,
   buildResourcePermissionState,
@@ -16,7 +17,7 @@ import { TransferErrorCode } from '@/types/transferError';
 import { isWorkspaceNonOwner } from '../_helpers/assertWorkspaceRowManageable';
 import { documentProcedure } from './procedures';
 
-export const workspaceProcedures = {
+export const workspaceRouter = router({
   transferDocument: documentProcedure
     .use(withScopedPermission('document:update'))
     .input(
@@ -312,4 +313,4 @@ export const workspaceProcedures = {
         input.targetVisibility,
       );
     }),
-};
+});

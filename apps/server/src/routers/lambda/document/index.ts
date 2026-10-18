@@ -1,11 +1,7 @@
-import { router } from '@/libs/trpc/lambda';
+import { mergeRouters } from '@/libs/trpc/lambda';
 
-import { crudProcedures } from './crud';
-import { editSessionProcedures } from './editSession';
-import { workspaceProcedures } from './workspace';
+import { crudRouter } from './crud';
+import { editSessionRouter } from './editSession';
+import { workspaceRouter } from './workspace';
 
-export const documentRouter = router({
-  ...crudProcedures,
-  ...editSessionProcedures,
-  ...workspaceProcedures,
-});
+export const documentRouter = mergeRouters(crudRouter, editSessionRouter, workspaceRouter);

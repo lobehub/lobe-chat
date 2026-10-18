@@ -2,6 +2,7 @@ import { z } from 'zod';
 
 import { withScopedPermission } from '@/business/server/trpc-middlewares/rbacPermission';
 import { FREE_DOCUMENT_HISTORY_WINDOW_DAYS } from '@/const/documentHistory';
+import { router } from '@/libs/trpc/lambda';
 
 import { assertContentsNotInRestrictedKnowledgeBase } from '../_helpers/knowledgeBaseAccess';
 import {
@@ -18,7 +19,7 @@ const getFreeDocumentHistorySince = () => {
   return new Date(now - FREE_DOCUMENT_HISTORY_WINDOW_DAYS * 24 * 60 * 60 * 1000);
 };
 
-export const editSessionProcedures = {
+export const editSessionRouter = router({
   listDocumentHistory: documentProcedure
     .input(listDocumentHistoryInputSchema)
     .query(async ({ ctx, input }) => {
@@ -89,4 +90,4 @@ export const editSessionProcedures = {
         await ctx.documentService.releaseDocumentLockWithOwner(input.id, input.ownerId);
       else await ctx.documentService.releaseDocumentLock(input.id);
     }),
-};
+});
