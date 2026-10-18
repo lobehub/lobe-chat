@@ -146,6 +146,77 @@ describe('spawnAgent live input (Claude Code)', () => {
     expect(events.at(-1)?.type).toBe('agent_runtime_end');
   });
 
+  const runToExit = async (results: Record<string, unknown>[], exitCode: number) => {
+    const fake = createLiveProc();
+    nextFakeProc = fake.proc;
+    const handle = await spawnAgent({
+      agentType: 'claude-code',
+      liveInput: true,
+      operationId: 'op-live',
+      prompt: 'task',
+    });
+    const events: any[] = [];
+    const drained = (async () => {
+      for await (const event of handle.events) events.push(event);
+    })();
+    await tick();
+
+    fake.emit(
+      line({
+        isReplay: true,
+        message: { content: [] },
+        type: 'user',
+        uuid: fake.stdinLines[0].uuid,
+      }),
+    );
+    for (const result of results) fake.emit(line({ type: 'result', ...result }));
+    await tick();
+    fake.exit(exitCode);
+    await drained;
+    return events.filter((event) => event.type === 'agent_runtime_end');
+  };
+
+  it('does not report completion when the CLI exits nonzero after a finished turn', async () => {
+    await expect(
+      runToExit([{ is_error: false, result: 'done', subtype: 'success' }], 1),
+    ).resolves.toEqual([]);
+  });
+
+  // Print mode exits 1 after an interrupted last turn (observed with Claude Code 2.1.282).
+  it.each([0, 1])(
+    'ends a run whose last turn was interrupted as interrupted, not complete (exit %i)',
+    async (exitCode) => {
+      const [end] = await runToExit(
+        [
+          {
+            is_error: true,
+            subtype: 'error_during_execution',
+            terminal_reason: 'aborted_streaming',
+          },
+        ],
+        exitCode,
+      );
+
+      expect(end.data).toMatchObject({
+        kind: 'aborted',
+        reason: 'interrupted',
+        terminalReason: 'aborted_streaming',
+      });
+    },
+  );
+
+  it('completes when a turn after an interrupt finishes normally', async () => {
+    const [end] = await runToExit(
+      [
+        { is_error: true, subtype: 'error_during_execution', terminal_reason: 'aborted_streaming' },
+        { is_error: false, result: 'done', subtype: 'success' },
+      ],
+      0,
+    );
+
+    expect(end.data).toMatchObject({ reason: 'complete' });
+  });
+
   it('interrupts only the current turn through a control request', async () => {
     const fake = createLiveProc();
     nextFakeProc = fake.proc;

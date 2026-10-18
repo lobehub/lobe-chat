@@ -53,7 +53,7 @@ describe('ClaudeCodeLiveInput', () => {
     await flush();
 
     expect(live.isOpen).toBe(false);
-    expect(live.resultCount).toBe(1);
+    expect(live.lastTurn).toEqual({ aborted: false, terminalReason: undefined });
     expect(ended).toHaveBeenCalled();
   });
 

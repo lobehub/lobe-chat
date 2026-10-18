@@ -866,15 +866,21 @@ export const spawnAgent = async (options: SpawnAgentOptions): Promise<SpawnAgent
       try {
         const events = await pipeline.flush();
         for (const event of events) queue.push(event);
-        const { code } = await exit;
+        const { code, signal } = await exit;
         if (code === 0 && !killedByUs) {
           for (const event of pipeline.validateCompletion()) queue.push(event);
         }
-        if (live && live.resultCount > 0 && !killedByUs && !sawErrorEvent) {
-          for (const event of pipeline.completeRuntime({
-            reason: 'complete',
-            transport: 'cli-live',
-          }))
+        // Only a clean exit after a finished turn ends the run here: a crash
+        // after a result is a failure, not a completion. Print mode exits 1
+        // when its last turn was an error result, which an interrupt is.
+        const lastTurn = live?.lastTurn;
+        const cleanExit =
+          code === 0 || (lastTurn?.aborted === true && code === 1 && signal === null);
+        if (lastTurn && cleanExit && !killedByUs && !sawErrorEvent) {
+          const end = lastTurn.aborted
+            ? { kind: 'aborted', reason: 'interrupted', terminalReason: lastTurn.terminalReason }
+            : { reason: 'complete' };
+          for (const event of pipeline.completeRuntime({ ...end, transport: 'cli-live' }))
             queue.push(event);
         }
         // Kimi Code reports usage only via its on-disk session wire log, so

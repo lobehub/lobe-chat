@@ -21,6 +21,16 @@ const readIdleCloseMs = (): number => {
 export const withUserMessageUuid = (stdinLine: string, uuid: string): string =>
   `${JSON.stringify({ ...JSON.parse(stdinLine), uuid })}\n`;
 
+/** How the session's most recent turn ended. */
+export interface ClaudeCodeTurnOutcome {
+  /** The turn was stopped by an interrupt (`terminal_reason: aborted_*`), not failed. */
+  aborted: boolean;
+  terminalReason?: string;
+}
+
+const isAbortedResult = (message: any): boolean =>
+  !!message.is_error && String(message.terminal_reason ?? '').startsWith('aborted');
+
 export interface ClaudeCodeLiveInputOptions {
   idleCloseMs?: number;
 }
@@ -45,8 +55,8 @@ export class ClaudeCodeLiveInput {
   private closed = false;
   private idleTimer: NodeJS.Timeout | undefined;
   private readonly idleCloseMs: number;
+  private lastOutcome: ClaudeCodeTurnOutcome | undefined;
   private lineBuffer = '';
-  private results = 0;
   private turnOpen = true;
   private readonly unconsumed = new Set<string>();
 
@@ -63,9 +73,9 @@ export class ClaudeCodeLiveInput {
     return !this.closed;
   }
 
-  /** `result` messages seen so far: zero means the session never finished a turn. */
-  get resultCount(): number {
-    return this.results;
+  /** How the last turn ended; undefined while the session has not finished one. */
+  get lastTurn(): ClaudeCodeTurnOutcome | undefined {
+    return this.lastOutcome;
   }
 
   /**
@@ -105,7 +115,12 @@ export class ClaudeCodeLiveInput {
       if (!line.trim()) continue;
       try {
         const message = JSON.parse(line);
-        if (message?.type === 'result') this.results += 1;
+        if (message?.type === 'result') {
+          this.lastOutcome = {
+            aborted: isAbortedResult(message),
+            terminalReason: message.terminal_reason,
+          };
+        }
         if (!this.closed) this.observeMessage(message);
       } catch {
         // Non-JSON noise on stdout carries no session state.
@@ -144,8 +159,7 @@ export class ClaudeCodeLiveInput {
         this.turnOpen = false;
         // A failed turn ends the run for the host, so nothing would read later
         // input. An interrupt the host sent reports `aborted_*` and is not one.
-        const aborted = String(message.terminal_reason ?? '').startsWith('aborted');
-        if (message.is_error && !aborted) this.close();
+        if (message.is_error && !isAbortedResult(message)) this.close();
         else this.closeIfIdle();
         return;
       }
