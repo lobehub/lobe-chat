@@ -303,6 +303,14 @@ export const tickOnce = async (
         }
 
         case 'failure_decision': {
+          // A device that went to sleep or a usage window that closed says
+          // nothing about the recipe, for a batch member as for any Task: wait it
+          // out first. Checked after the batch gate, one sleeping laptop paused
+          // the whole rollout and asked the owner to revise or fork the recipe.
+          const waiting =
+            (await ctx.waitForDevice(graph, acting!.id, task, effects)) ??
+            (await ctx.waitForQuotaReset(graph, acting!.id, task, effects));
+          if (waiting) return observe(waiting);
           // R6: a batch member that did not pass its own check IS the same
           // intervention as a blocked gate. Route it through the batch gate so
           // the class rolls back to canary, instead of parking on a standalone
@@ -314,10 +322,6 @@ export const tickOnce = async (
               }),
             );
           }
-          const waiting =
-            (await ctx.waitForDevice(graph, acting!.id, task, effects)) ??
-            (await ctx.waitForQuotaReset(graph, acting!.id, task, effects));
-          if (waiting) return observe(waiting);
           const held = await ctx.holdForMachineFailure(graph, acting!.id, task, effects);
           if (held) return observe(held);
           const supervision = await new GoalSupervisorService(

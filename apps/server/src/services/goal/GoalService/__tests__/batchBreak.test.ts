@@ -364,6 +364,49 @@ describe('GoalService', () => {
     });
   });
 
+  it('waits for the device of a batch unit instead of breaking the batch', async () => {
+    // A sleeping laptop is not the recipe's fault. Routed to the batch gate first,
+    // one device the probe could not reach paused the whole rollout and asked the
+    // owner to revise or fork the recipe.
+    vi.spyOn(GoalCriteriaGeneratorService.prototype, 'decompose').mockResolvedValue({
+      problemStatement: '把 50 个同构的 store 迁移到 replica',
+      rollout: {
+        recipeOutline: '把 store 换成 replica 支撑的实现',
+        repeatable: true,
+        unitCount: 50,
+        units: Array.from({ length: 50 }, (_, i) => `Unit ${i + 1}`),
+        variants: [],
+      },
+      tasks: Array.from({ length: 5 }, (_, i) => ({
+        dependsOn: [],
+        instruction: `把 src/store/store${i + 1}.ts 换成 replica 实现`,
+        title: `Unit ${i + 1}`,
+      })),
+    });
+    const runSpy = vi
+      .spyOn(TaskRunnerService.prototype, 'runTask')
+      .mockRejectedValueOnce(new Error('DEVICE_NOT_FOUND'))
+      .mockResolvedValue({} as never);
+    const service = new GoalService(serverDB, userId);
+    const graph = await service.create({ title: 'Migrate stores on a sleeping laptop' });
+    let parked = await service.tick(graph.goal.id);
+    for (let i = 0; i < 10 && runSpy.mock.calls.length === 0; i++)
+      parked = await service.tick(graph.goal.id);
+    expect(parked.message).toContain('waiting for its device to reconnect');
+
+    // The other probes dispatch; the parked unit's turn comes round again.
+    for (let i = 0; i < 8; i++) await service.tick(graph.goal.id);
+
+    const current = await service.graph(graph.goal.id);
+    expect(current.goal.config!.rolloutState!.phase).toBe('probe');
+    expect(current.decisions.filter((item) => item.status === 'pending')).toHaveLength(0);
+    expect(await new TaskModel(serverDB, userId).findById(parked.taskId!)).toMatchObject({
+      error: 'DEVICE_NOT_FOUND',
+      status: 'paused',
+    });
+    expect(runSpy.mock.calls.filter(([params]) => params.taskId === parked.taskId)).toHaveLength(1);
+  });
+
   it('stops the running Tasks of the members a restart retires', async () => {
     vi.spyOn(GoalCriteriaGeneratorService.prototype, 'decompose').mockResolvedValue({
       problemStatement: '把 50 个同构的 store 迁移到 replica',
