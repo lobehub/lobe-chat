@@ -76,8 +76,9 @@ export const reviewFeedback = async (
   // turn's feedback snapshot.
   const titles = new Map(graph.nodes.flatMap((n) => (n.taskId ? [[n.taskId, n.title]] : [])));
   const comments = (
-    await Promise.all(
-      visible.map(async (task) =>
+    await pMap(
+      visible,
+      async (task) =>
         (await tasks.getComments(task.id)).map((comment) => ({
           taskId: task.id,
           id: comment.id,
@@ -86,7 +87,7 @@ export const reviewFeedback = async (
           authorAgentId: comment.authorAgentId,
           updatedAt: comment.updatedAt,
         })),
-      ),
+      { concurrency: 5 },
     )
   )
     .flat()
