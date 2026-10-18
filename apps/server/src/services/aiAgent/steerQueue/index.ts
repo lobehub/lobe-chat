@@ -127,7 +127,9 @@ export const startQueuedFollowUp = async (
 ): Promise<{ operationId: string } | undefined> => {
   const { scope } = params;
 
-  const drained = await redisService.steerQueue.drain<QueuedFollowUp>(scope);
+  // Only what was queued behind this run (or put back unbound after a failed
+  // start): another live run on the surface keeps its own follow-ups.
+  const drained = await redisService.steerQueue.drain<QueuedFollowUp>(scope, params.operationId);
   if (drained.length === 0) return;
 
   // The queue is the run owner's own (the scope carries their user id); never

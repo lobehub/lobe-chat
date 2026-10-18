@@ -40,14 +40,11 @@ const appendTo = (scope: { threadId?: string }) =>
     request: { agentId: 'agt-1', appContext: { topicId, ...scope }, prompt: 'follow-up' },
   });
 
-const startRun = (values: Partial<typeof agentOperations.$inferInsert>) =>
-  db.insert(agentOperations).values({
-    id: `op_${Math.random().toString(36).slice(2)}`,
-    status: 'running',
-    topicId,
-    userId,
-    ...values,
-  });
+const startRun = async (values: Partial<typeof agentOperations.$inferInsert>) => {
+  const id = `op_${Math.random().toString(36).slice(2)}`;
+  await db.insert(agentOperations).values({ id, status: 'running', topicId, userId, ...values });
+  return id;
+};
 
 describe('agentSteerQueueRouter.append — live run on the requested surface', () => {
   beforeEach(async () => {
@@ -62,10 +59,11 @@ describe('agentSteerQueueRouter.append — live run on the requested surface', (
   });
 
   it('queues behind a live thread run, which never claims the topic marker', async () => {
-    await startRun({ threadId });
+    const threadRun = await startRun({ threadId });
 
     await expect(appendTo({ threadId })).resolves.toMatchObject({ queued: true });
     expect(append.mock.calls[0][0]).toEqual({ threadId, topicId, userId });
+    expect(append.mock.calls[0][2]).toBe(threadRun);
   });
 
   it('does not queue on a thread while only the main spine is running', async () => {

@@ -44,11 +44,10 @@ describe('server-side steer queue in the step loop', () => {
           stateOf({ origin: { threadId: 'thd-1', topicId: 'tpc-1' } }),
         ),
       ).resolves.toBe(true);
-      expect(steerQueueLength).toHaveBeenCalledWith({
-        threadId: 'thd-1',
-        topicId: 'tpc-1',
-        userId: 'user-1',
-      });
+      expect(steerQueueLength).toHaveBeenCalledWith(
+        { threadId: 'thd-1', topicId: 'tpc-1', userId: 'user-1' },
+        'op-1',
+      );
     });
 
     it('keeps honouring the client flag without reading the queue', async () => {

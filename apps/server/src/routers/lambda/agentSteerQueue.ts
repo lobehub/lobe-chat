@@ -1,6 +1,7 @@
 import { randomUUID } from 'node:crypto';
 
 import type { AgentOperationStatus } from '@lobechat/types';
+import { TRPCError } from '@trpc/server';
 import debug from 'debug';
 import { and, desc, eq, inArray, isNull } from 'drizzle-orm';
 import { z } from 'zod';
@@ -15,7 +16,10 @@ import { serverDatabase } from '@/libs/trpc/lambda/middleware';
 import { assertCanUseWorkspaceAgent } from '@/server/routers/lambda/_helpers/workspaceAgentGuard';
 import type { QueuedFollowUp } from '@/server/services/aiAgent/steerQueue';
 import { redisService } from '@/server/services/redis';
-import type { SteerQueueScope } from '@/server/services/redis/steerQueue';
+import {
+  type SteerQueueScope,
+  SteerQueueWriteUnknownError,
+} from '@/server/services/redis/steerQueue';
 
 import { ExecAgentFieldsSchema } from './aiAgent/execSchemas';
 import { assertCanUseAgentRunConversation } from './aiAgent/guards';
@@ -74,18 +78,24 @@ const LIVE_STATUSES: AgentOperationStatus[] = [
   'waiting_for_client',
 ];
 
+/** The liveness rule of the topic model; it only reads the operation id off the marker. */
+const isAlive = (
+  ctx: { serverDB: LobeChatDatabase; topicModel: TopicModel },
+  operationId: string,
+) => ctx.topicModel.isRunningOperationAlive(ctx.serverDB, { assistantMessageId: '', operationId });
+
 /**
- * Whether the caller's own top-level run is live on exactly this surface — the
- * topic's main spine or one thread. Follow-ups only queue behind it: the run
- * that finishes on this surface drains this surface's queue, under the run
- * owner's authority, so a run someone else started (or one on another surface)
- * is no place to leave one. Thread runs never claim the topic marker, so the
- * operation rows decide, with the topic model's liveness rule on top.
+ * The caller's own live top-level runs on exactly this surface — the topic's
+ * main spine or one thread. A follow-up queues behind one of them: that run
+ * drains it, under the run owner's authority, so a run someone else started
+ * (or one on another surface) is no place to leave one. Thread runs never claim
+ * the topic marker, so the operation rows decide, with the topic model's
+ * liveness rule on top.
  */
-const hasOwnLiveRun = async (
+const findOwnLiveRuns = async (
   ctx: { serverDB: LobeChatDatabase; topicModel: TopicModel; userId: string },
   scope: SteerQueueScope,
-): Promise<boolean> => {
+): Promise<string[]> => {
   const candidates = await ctx.serverDB
     .select({ id: agentOperations.id })
     .from(agentOperations)
@@ -103,17 +113,9 @@ const hasOwnLiveRun = async (
     .orderBy(desc(agentOperations.createdAt))
     .limit(3);
 
-  for (const { id } of candidates) {
-    // The liveness rule only reads the operation id off the marker.
-    if (
-      await ctx.topicModel.isRunningOperationAlive(ctx.serverDB, {
-        assistantMessageId: '',
-        operationId: id,
-      })
-    )
-      return true;
-  }
-  return false;
+  const live: string[] = [];
+  for (const { id } of candidates) if (await isAlive(ctx, id)) live.push(id);
+  return live;
 };
 
 /** The caller's own queue on the surface: each user only reads and fills theirs. */
@@ -134,7 +136,9 @@ export const agentSteerQueueRouter = router({
    *
    * `queued: false` means nothing was stored and the client should send the
    * message itself: no own run is live (`idle`), the queue is at its bound
-   * (`full`), or the server has no Redis (`unavailable`).
+   * (`full`), more than one own run is live on the surface (`ambiguous`), or
+   * the follow-up could not be stored (`unavailable`). A `SERVICE_UNAVAILABLE`
+   * error means the outcome is unknown: retry with the same `id`.
    */
   append: steerQueueWriteProcedure.input(AppendSchema).mutation(async ({ input, ctx }) => {
     const { streamFeatures, ...request } = input.request;
@@ -157,9 +161,12 @@ export const agentSteerQueueRouter = router({
     });
 
     const scope = toScope({ threadId: request.appContext?.threadId, topicId }, ctx.userId);
-    if (!(await hasOwnLiveRun(ctx, scope))) {
-      return { queued: false as const, reason: 'idle' as const };
-    }
+    const liveRuns = await findOwnLiveRuns(ctx, scope);
+    if (liveRuns.length === 0) return { queued: false as const, reason: 'idle' as const };
+    // Two runs on one surface (thread starts are not serialized): there is no
+    // telling which one the user is typing behind, so do not guess.
+    if (liveRuns.length > 1) return { queued: false as const, reason: 'ambiguous' as const };
+    const [behindOperationId] = liveRuns;
 
     const entry: QueuedFollowUp = {
       audit: { clientIp: ctx.clientIp ?? undefined, userAgent: ctx.userAgent ?? undefined },
@@ -181,14 +188,22 @@ export const agentSteerQueueRouter = router({
       userId: ctx.userId,
     };
 
-    const length = await redisService.steerQueue.append(scope, entry);
+    let length: Awaited<ReturnType<typeof redisService.steerQueue.append>>;
+    try {
+      length = await redisService.steerQueue.append(scope, entry, behindOperationId);
+    } catch (error) {
+      if (!(error instanceof SteerQueueWriteUnknownError)) throw error;
+      // Neither "queued" nor "send directly" is safe to answer; the client
+      // retries with the same entry id, which appends at most once.
+      throw new TRPCError({ cause: error, code: 'SERVICE_UNAVAILABLE', message: error.message });
+    }
     if (length === undefined) return { queued: false as const, reason: 'unavailable' as const };
     if (length === 'full') return { queued: false as const, reason: 'full' as const };
 
     // The run may have ended between the check above and the append, after its
     // drain: then nothing would ever start this entry. Take it back and let the
     // client send it. If the take-back loses, a drain already started it.
-    if (!(await hasOwnLiveRun(ctx, scope))) {
+    if (!(await isAlive(ctx, behindOperationId))) {
       const removed = await redisService.steerQueue.remove(scope, entry.id);
       if (removed) return { queued: false as const, reason: 'idle' as const };
     }

@@ -1,6 +1,8 @@
 // @vitest-environment node
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { SteerQueueWriteUnknownError } from '@/server/services/redis/steerQueue';
+
 import { agentSteerQueueRouter } from '../agentSteerQueue';
 
 const mocks = vi.hoisted(() => ({
@@ -83,7 +85,8 @@ describe('agentSteerQueueRouter.append', () => {
       queued: true,
     });
 
-    const [scope, entry] = mocks.append.mock.calls[0];
+    const [scope, entry, behindOperationId] = mocks.append.mock.calls[0];
+    expect(behindOperationId).toBe('op-1');
     expect(scope).toEqual({ threadId: null, topicId: 'tpc-1', userId: 'user-1' });
     expect(entry).toMatchObject({
       audit: { clientIp: '1.2.3.4', userAgent: 'test' },
@@ -111,6 +114,24 @@ describe('agentSteerQueueRouter.append', () => {
 
     await expect(caller().append(appendInput)).resolves.toEqual({ queued: false, reason: 'idle' });
     expect(mocks.append).not.toHaveBeenCalled();
+  });
+
+  it('refuses to guess between two live runs on the same surface', async () => {
+    mocks.liveCandidates.mockReturnValue([{ id: 'op-1' }, { id: 'op-2' }]);
+
+    await expect(caller().append(appendInput)).resolves.toEqual({
+      queued: false,
+      reason: 'ambiguous',
+    });
+    expect(mocks.append).not.toHaveBeenCalled();
+  });
+
+  it('answers neither queued nor send-directly when the write outcome is unknown', async () => {
+    mocks.append.mockRejectedValue(new SteerQueueWriteUnknownError(new Error('timeout')));
+
+    await expect(caller().append(appendInput)).rejects.toMatchObject({
+      code: 'SERVICE_UNAVAILABLE',
+    });
   });
 
   it('takes the entry back when the run ended after its drain', async () => {

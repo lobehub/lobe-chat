@@ -89,7 +89,10 @@ describe('startQueuedFollowUp', () => {
       startQueuedFollowUp(ctx, finished({ threadId: 'thd-1', topicId: 'tpc-1' })),
     ).resolves.toEqual({ operationId: 'op-2' });
 
-    expect(drain).toHaveBeenCalledWith({ threadId: 'thd-1', topicId: 'tpc-1', userId: 'user-1' });
+    expect(drain).toHaveBeenCalledWith(
+      { threadId: 'thd-1', topicId: 'tpc-1', userId: 'user-1' },
+      'op-1',
+    );
     expect(startComposerRun).toHaveBeenCalledWith(
       expect.objectContaining({ clientIp: 'ip-b', userId: 'user-1' }),
       expect.objectContaining({
