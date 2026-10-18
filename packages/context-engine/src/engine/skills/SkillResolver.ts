@@ -63,7 +63,7 @@ export class SkillResolver {
       // making a pinned-but-unmounted skill invisible to the model entirely.
       // Falling through here keeps it listed as available so the model can
       // still discover and activate it.
-      if ((isOperationActivated || isStepActivated) && resolvedContent) {
+      if ((isOperationActivated || isStepActivated || skill.autoActivate) && resolvedContent) {
         return {
           ...skill,
           activated: true,

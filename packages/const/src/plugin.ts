@@ -25,6 +25,10 @@ export const parseToolNameMaxLength = (raw: string | undefined): number | undefi
 
 export const ARTIFACT_TAG = 'lobeArtifact';
 export const ARTIFACT_THINKING_TAG = 'lobeThinking';
+/** Element produced from a fenced `visual` code block (the inline visual DSL). */
+export const VISUAL_TAG = 'lobeVisual';
+/** Fence language of the inline visual DSL. */
+export const VISUAL_CODE_LANG = 'visual';
 export const MENTION_TAG = 'mention';
 export const THINKING_TAG = 'think';
 export const LOCAL_FILE_TAG = 'localFile';

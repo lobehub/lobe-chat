@@ -70,7 +70,8 @@ export const resolveClientSkills = async (
   const builtinMetas = (await loadBuiltinSkills())
     .filter((s) => !disabledIdSet.has(s.identifier))
     .map((s) => ({
-      activated: pinnedIds.has(s.identifier) && !!s.content,
+      activated: (pinnedIds.has(s.identifier) || !!s.autoActivate) && !!s.content,
+      autoActivate: s.autoActivate,
       content: s.content,
       description: s.description,
       identifier: s.identifier,

@@ -41,6 +41,14 @@ export type SkillAuthor = z.infer<typeof skillAuthorSchema>;
 // ===== Builtin Skill =====
 
 export interface BuiltinSkill {
+  /**
+   * Inject `content` into the system prompt by default instead of only listing
+   * the skill under `<available_skills>`, so the model does not need an
+   * `activateSkill` round trip. Keep such content short: it ships with every
+   * run that has the skill in its pool. Disabled skills and `manual` mode
+   * still exclude it.
+   */
+  autoActivate?: boolean;
   avatar?: string;
   content: string;
   description: string;
@@ -72,7 +80,7 @@ export interface BuiltinSkill {
 
 export type BuiltinSkillManifest = Pick<
   BuiltinSkill,
-  'avatar' | 'description' | 'identifier' | 'name' | 'source' | 'title'
+  'autoActivate' | 'avatar' | 'description' | 'identifier' | 'name' | 'source' | 'title'
 >;
 
 // ===== Skill Source =====
