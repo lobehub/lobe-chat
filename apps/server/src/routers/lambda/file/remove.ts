@@ -3,6 +3,7 @@ import { z } from 'zod';
 
 import { withScopedPermission } from '@/business/server/trpc-middlewares/rbacPermission';
 import { serverDBEnv } from '@/config/db';
+import { router } from '@/libs/trpc/lambda';
 
 import { assertFileNotInRestrictedKnowledgeBase } from '../_helpers/knowledgeBaseAccess';
 import { fileProcedure } from './procedures';
@@ -17,7 +18,7 @@ const assertAllFilesAccessible = (requestedIds: string[], files: Array<{ id: str
   }
 };
 
-export const removeProcedures = {
+export const removeRouter = router({
   removeFile: fileProcedure
     .use(withScopedPermission('file:delete'))
     .input(z.object({ id: z.string() }))
@@ -92,4 +93,4 @@ export const removeProcedures = {
       // remove from S3
       await ctx.fileService.deleteFiles(needToRemoveFileList.map((file) => file.url!));
     }),
-};
+});

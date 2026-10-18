@@ -4,6 +4,7 @@ import { z } from 'zod';
 import { businessFileTransferStorageCheck } from '@/business/server/lambda-routers/file';
 import { withScopedPermission } from '@/business/server/trpc-middlewares/rbacPermission';
 import { DOCUMENT_TRANSFER_FOREIGN_ROWS } from '@/database/models/document';
+import { router } from '@/libs/trpc/lambda';
 import { assertCanPerformResourceAction } from '@/server/services/resourcePermission';
 import { hasWorkspaceScopedPermission } from '@/server/services/workspacePermission';
 import { TransferErrorCode } from '@/types/transferError';
@@ -16,7 +17,7 @@ import { fileProcedure } from './procedures';
 
 const fileTransferEntityTypeSchema = z.enum(['document', 'file', 'folder']);
 
-export const transferProcedures = {
+export const transferRouter = router({
   transferEntity: fileProcedure
     .use(withScopedPermission('file:upload'))
     .input(
@@ -192,4 +193,4 @@ export const transferProcedures = {
         input.targetVisibility,
       );
     }),
-};
+});

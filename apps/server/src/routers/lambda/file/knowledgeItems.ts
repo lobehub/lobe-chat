@@ -9,6 +9,7 @@ import { z } from 'zod';
 
 import { withScopedPermission } from '@/business/server/trpc-middlewares/rbacPermission';
 import { serverDBEnv } from '@/config/db';
+import { router } from '@/libs/trpc/lambda';
 import { createResourceContentPreview } from '@/server/utils/resourceContentPreview';
 import type { FileListItem, KnowledgeItemStatus } from '@/types/files';
 import { QueryFileListSchema } from '@/types/files';
@@ -51,7 +52,7 @@ const filterKnowledgeItems = <
     : items;
 };
 
-export const knowledgeItemsProcedures = {
+export const knowledgeItemsRouter = router({
   getKnowledgeItemStatusesByIds: fileProcedure
     .input(
       z.object({
@@ -303,4 +304,4 @@ export const knowledgeItemsProcedures = {
 
       return { count: fileIds.length + documentIds.length };
     }),
-};
+});

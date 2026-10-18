@@ -8,6 +8,7 @@ import { z } from 'zod';
 import { businessFileUploadCheck } from '@/business/server/lambda-routers/file';
 import { checkFileStorageUsage } from '@/business/server/trpc-middlewares/lambda';
 import { withScopedPermission } from '@/business/server/trpc-middlewares/rbacPermission';
+import { router } from '@/libs/trpc/lambda';
 import type { FileService } from '@/server/services/file';
 import { downloadRemoteImage } from '@/server/services/file/downloadRemoteImage';
 import {
@@ -32,7 +33,7 @@ const isStoredObjectAvailable = async (fileService: FileService, url: string): P
   }
 };
 
-export const uploadProcedures = {
+export const uploadRouter = router({
   checkFileHash: fileProcedure
     .use(withScopedPermission('file:upload'))
     .use(checkFileStorageUsage)
@@ -288,4 +289,4 @@ export const uploadProcedures = {
       );
       return { fileId: result.fileId, url: result.url };
     }),
-};
+});

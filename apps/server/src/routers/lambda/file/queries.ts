@@ -1,6 +1,7 @@
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
+import { router } from '@/libs/trpc/lambda';
 import { AsyncTaskStatus, AsyncTaskType } from '@/types/asyncTask';
 import type { FileListItem } from '@/types/files';
 import { QueryFileListSchema } from '@/types/files';
@@ -12,7 +13,7 @@ import {
 } from '../_helpers/knowledgeBaseAccess';
 import { fileProcedure, getKnowledgeItemStatusMap } from './procedures';
 
-export const queriesProcedures = {
+export const queriesRouter = router({
   findById: fileProcedure
     .input(
       z.object({
@@ -204,4 +205,4 @@ export const queriesProcedures = {
       // eaten by rows that are then filtered out).
       return ctx.knowledgeRepo.queryRecent(limit, 'page', input?.visibility);
     }),
-};
+});

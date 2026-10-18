@@ -1,19 +1,19 @@
-import { router } from '@/libs/trpc/lambda';
+import { mergeRouters } from '@/libs/trpc/lambda';
 
-import { knowledgeItemsProcedures } from './knowledgeItems';
-import { queriesProcedures } from './queries';
-import { removeProcedures } from './remove';
-import { transferProcedures } from './transfer';
-import { updateProcedures } from './update';
-import { uploadProcedures } from './upload';
+import { knowledgeItemsRouter } from './knowledgeItems';
+import { queriesRouter } from './queries';
+import { removeRouter } from './remove';
+import { transferRouter } from './transfer';
+import { updateRouter } from './update';
+import { uploadRouter } from './upload';
 
-export const fileRouter = router({
-  ...uploadProcedures,
-  ...queriesProcedures,
-  ...knowledgeItemsProcedures,
-  ...removeProcedures,
-  ...updateProcedures,
-  ...transferProcedures,
-});
+export const fileRouter = mergeRouters(
+  uploadRouter,
+  queriesRouter,
+  knowledgeItemsRouter,
+  removeRouter,
+  updateRouter,
+  transferRouter,
+);
 
 export type FileRouter = typeof fileRouter;

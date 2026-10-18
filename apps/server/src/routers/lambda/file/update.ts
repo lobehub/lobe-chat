@@ -5,12 +5,13 @@ import { z } from 'zod';
 import { withScopedPermission } from '@/business/server/trpc-middlewares/rbacPermission';
 import { DocumentModel } from '@/database/models/document';
 import { FileModel } from '@/database/models/file';
+import { router } from '@/libs/trpc/lambda';
 import { stripAgentShareFileProvenance } from '@/types/files';
 
 import { assertFileNotInRestrictedKnowledgeBase } from '../_helpers/knowledgeBaseAccess';
 import { fileProcedure, resolveAccessibleParentDocument } from './procedures';
 
-export const updateProcedures = {
+export const updateRouter = router({
   updateFile: fileProcedure
     .use(withScopedPermission('file:update'))
     .input(
@@ -131,4 +132,4 @@ export const updateProcedures = {
       await ctx.fileModel.setVisibility(input.id, input.visibility);
       return { success: true };
     }),
-};
+});
