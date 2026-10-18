@@ -168,6 +168,28 @@ Exit codes:
         // (undefined, true) → headless mode is on and tool calls auto-execute.
         if (options.headless !== false) {
           input.userInterventionConfig = { approvalMode: 'headless' };
+        } else {
+          // --no-headless must actually disable headless mode. Omitting the
+          // config here is not enough: the server falls back to
+          // `{ approvalMode: 'headless' }` for every run that does not carry
+          // one (the default for cron and bot triggers), so an omitted config
+          // re-enables exactly what the flag promised to turn off. Resolve the
+          // user's saved tool approval mode instead, and fall back to `manual`
+          // — the server's documented default — when the state read fails or
+          // the setting is unset. Tools that need approval then park the run
+          // for a human, as this flag's help text promises.
+          const savedConfig = (
+            (await client.user.getUserState.query().catch(() => undefined)) as
+              | { settings?: { tool?: { humanIntervention?: { approvalMode?: string } } } }
+              | undefined
+          )?.settings?.tool?.humanIntervention;
+          const approvalMode =
+            savedConfig?.approvalMode === 'auto-run' ||
+            savedConfig?.approvalMode === 'allow-list' ||
+            savedConfig?.approvalMode === 'headless'
+              ? savedConfig.approvalMode
+              : 'manual';
+          input.userInterventionConfig = { approvalMode };
         }
 
         const result = await client.aiAgent.execAgent.mutate(input as any);

@@ -3,9 +3,10 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { registerAgentRunCommand } from './run';
 
-const { mockExecAgent, mockGetTrpcClient } = vi.hoisted(() => ({
+const { mockExecAgent, mockGetTrpcClient, mockGetUserState } = vi.hoisted(() => ({
   mockExecAgent: vi.fn(),
   mockGetTrpcClient: vi.fn(),
+  mockGetUserState: vi.fn(),
 }));
 
 vi.mock('../../api/client', () => ({ getTrpcClient: mockGetTrpcClient }));
@@ -28,7 +29,11 @@ const runAgent = async (...args: string[]) => {
 describe('lh agent run', () => {
   beforeEach(() => {
     mockExecAgent.mockResolvedValue({ operationId: 'op-1', success: true, topicId: 'tpc-1' });
-    mockGetTrpcClient.mockResolvedValue({ aiAgent: { execAgent: { mutate: mockExecAgent } } });
+    mockGetUserState.mockResolvedValue(undefined);
+    mockGetTrpcClient.mockResolvedValue({
+      aiAgent: { execAgent: { mutate: mockExecAgent } },
+      user: { getUserState: { query: mockGetUserState } },
+    });
     vi.spyOn(console, 'log').mockImplementation(() => {});
   });
 
@@ -72,5 +77,39 @@ describe('lh agent run', () => {
 
     expect(input).not.toHaveProperty('selectedToolIds');
     expect(input).not.toHaveProperty('selectedSkillIds');
+  });
+
+  it('defaults to headless approval when --no-headless is absent', async () => {
+    const input = await runAgent('--agent-id', 'agt-1', '--prompt', 'Hello');
+
+    expect(input.userInterventionConfig).toEqual({ approvalMode: 'headless' });
+    // The saved user state is only consulted for --no-headless runs.
+    expect(mockGetUserState).not.toHaveBeenCalled();
+  });
+
+  it('--no-headless sends the saved tool approval mode instead of headless', async () => {
+    mockGetUserState.mockResolvedValue({
+      settings: { tool: { humanIntervention: { approvalMode: 'manual' } } },
+    });
+
+    const input = await runAgent('--agent-id', 'agt-1', '--prompt', 'Hello', '--no-headless');
+
+    expect(input.userInterventionConfig).toEqual({ approvalMode: 'manual' });
+  });
+
+  it('--no-headless falls back to manual when the state read fails', async () => {
+    mockGetUserState.mockRejectedValue(new Error('network down'));
+
+    const input = await runAgent('--agent-id', 'agt-1', '--prompt', 'Hello', '--no-headless');
+
+    expect(input.userInterventionConfig).toEqual({ approvalMode: 'manual' });
+  });
+
+  it('--no-headless falls back to manual when no approval mode is saved', async () => {
+    mockGetUserState.mockResolvedValue({ settings: { tool: {} } });
+
+    const input = await runAgent('--agent-id', 'agt-1', '--prompt', 'Hello', '--no-headless');
+
+    expect(input.userInterventionConfig).toEqual({ approvalMode: 'manual' });
   });
 });
