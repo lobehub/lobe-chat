@@ -7,7 +7,7 @@ import { AGENT_COPY_IN_PROGRESS, AgentCopyJobModel } from '../../models/agentCop
 import { AGENT_TRANSFER_IN_PROGRESS, AgentTransferJobModel } from '../../models/agentTransferJob';
 import type { AgentItem, ChatGroupItem, NewChatGroup, NewChatGroupAgent } from '../../schemas';
 import { agents, chatGroups, chatGroupsAgents, sessionGroups } from '../../schemas';
-import type { LobeChatDatabase } from '../../type';
+import type { LobeChatDatabase, Transaction } from '../../type';
 import { GROUP_SUPERVISOR_ROLE, resolveGroupMembershipType } from '../../utils/groupMembership';
 import { normalizeInboxAgentMeta } from '../../utils/inboxAgent';
 import { buildWorkspaceWhere } from '../../utils/workspace';
@@ -16,8 +16,10 @@ import {
   copyGroupToWorkspace,
   duplicateGroup,
 } from './copy';
+import { deleteAllGroupsWithOwnedAgents, deleteGroupWithOwnedAgents } from './deletion';
 import { AgentGroupScope } from './scope';
 import { groupTransferHasForeignRows, transferGroupToWorkspace } from './transfer';
+import { transferGroupOwnership } from './transferOwnership';
 
 export { AGENT_GROUP_COPY_SOURCE_MOVED, GROUP_HAS_INACCESSIBLE_MEMBER } from './constants';
 
@@ -470,7 +472,7 @@ export class AgentGroupRepository {
           and(
             this.scope.agentOwnership(),
             inArray(agents.id, virtualAgentIds),
-            // Same backstop as `ChatGroupModel.delete`: builtins (Inbox, the
+            // Same backstop as `deleteGroup`: builtins (Inbox, the
             // agent builders) are `virtual` too, so a malformed roster row
             // would otherwise classify one as this group's own and take it
             // down on removal. `addAgentsToGroup` refuses them at the door;
@@ -618,5 +620,31 @@ export class AgentGroupRepository {
       targetUserId,
       optionsOrNewTitle,
     );
+  }
+
+  /**
+   * Delete a group together with the agents that only existed to serve it,
+   * in one transaction. See {@link deleteGroupWithOwnedAgents}.
+   */
+  async deleteGroup(
+    groupId: string,
+  ): Promise<{ deletedOwnedAgentIds: string[]; group: ChatGroupItem }> {
+    return deleteGroupWithOwnedAgents(this.scope, groupId);
+  }
+
+  /** Delete every group in scope together with the agents they own. */
+  async deleteAllGroups(): Promise<void> {
+    return deleteAllGroupsWithOwnedAgents(this.scope);
+  }
+
+  /**
+   * Same-workspace ownership handover, run inside the caller's transaction.
+   * See {@link transferGroupOwnership}.
+   */
+  async transferOwnership(
+    trx: Transaction,
+    params: Parameters<typeof transferGroupOwnership>[2],
+  ): Promise<void> {
+    return transferGroupOwnership(this.scope, trx, params);
   }
 }
