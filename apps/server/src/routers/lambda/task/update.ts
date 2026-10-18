@@ -4,6 +4,7 @@ import { z } from 'zod';
 
 import type { LobeChatDatabase } from '@/database/type';
 import { assertAgentUsableBy } from '@/database/utils/agent-access';
+import { router } from '@/libs/trpc/lambda';
 import { publishResourceEvent } from '@/server/services/resourceEvents';
 import { TaskService } from '@/server/services/task';
 import { notifyAssignedBestEffort } from '@/server/services/task/assignmentNotification';
@@ -78,7 +79,7 @@ async function resolveActivityActor(
   return { agentId: claimedAgentId ?? null, userId: ctx.userId };
 }
 
-export const updateProcedures = {
+export const updateRouter = router({
   update: taskProcedureWrite
     .input(idInput.merge(updateSchema).extend({ actorAgentId: z.string().optional() }))
     .mutation(async ({ input, ctx }) => {
@@ -373,4 +374,4 @@ export const updateProcedures = {
       { actorId: ctx.userId, data: { holderId: null }, type: 'lock.changed' },
     );
   }),
-};
+});

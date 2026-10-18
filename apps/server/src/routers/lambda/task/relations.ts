@@ -1,9 +1,11 @@
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
+import { router } from '@/libs/trpc/lambda';
+
 import { resolveOrThrow, taskProcedureWrite } from './procedures';
 
-export const relationsProcedures = {
+export const relationsRouter = router({
   reorderSubtasks: taskProcedureWrite
     .input(
       z.object({
@@ -145,4 +147,4 @@ export const relationsProcedures = {
         });
       }
     }),
-};
+});

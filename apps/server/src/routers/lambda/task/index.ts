@@ -1,19 +1,19 @@
-import { router } from '@/libs/trpc/lambda';
+import { mergeRouters } from '@/libs/trpc/lambda';
 
-import { commentsProcedures } from './comments';
-import { executionProcedures } from './execution';
-import { lifecycleProcedures } from './lifecycle';
-import { queriesProcedures } from './queries';
-import { relationsProcedures } from './relations';
-import { reviewProcedures } from './review';
-import { updateProcedures } from './update';
+import { commentsRouter } from './comments';
+import { executionRouter } from './execution';
+import { lifecycleRouter } from './lifecycle';
+import { queriesRouter } from './queries';
+import { relationsRouter } from './relations';
+import { reviewRouter } from './review';
+import { updateRouter } from './update';
 
-export const taskRouter = router({
-  ...lifecycleProcedures,
-  ...relationsProcedures,
-  ...commentsProcedures,
-  ...executionProcedures,
-  ...queriesProcedures,
-  ...reviewProcedures,
-  ...updateProcedures,
-});
+export const taskRouter = mergeRouters(
+  lifecycleRouter,
+  relationsRouter,
+  commentsRouter,
+  executionRouter,
+  queriesRouter,
+  reviewRouter,
+  updateRouter,
+);

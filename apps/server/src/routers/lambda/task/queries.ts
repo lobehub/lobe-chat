@@ -2,11 +2,12 @@ import type { TaskListItem, TaskParticipant } from '@lobechat/types';
 import { TRPCError } from '@trpc/server';
 
 import { UserModel } from '@/database/models/user';
+import { router } from '@/libs/trpc/lambda';
 
 import { groupListSchema, listSchema } from '../_helpers/taskListSchemas';
 import { idInput, resolveOrThrow, taskProcedure } from './procedures';
 
-export const queriesProcedures = {
+export const queriesRouter = router({
   detail: taskProcedure.input(idInput).query(async ({ input, ctx }) => {
     try {
       const detail = await ctx.taskService.getTaskDetail(input.id);
@@ -238,4 +239,4 @@ export const queriesProcedures = {
       });
     }
   }),
-};
+});

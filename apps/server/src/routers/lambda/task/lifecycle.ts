@@ -3,6 +3,7 @@ import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
 import { TaskArchiveModel } from '@/database/models/taskArchive';
+import { router } from '@/libs/trpc/lambda';
 import { markSilentTRPCErrorLog } from '@/libs/trpc/utils/errorLogger';
 import { assertNotInOpenGoal } from '@/server/services/task/archiveGuard';
 import { notifyAssignedBestEffort } from '@/server/services/task/assignmentNotification';
@@ -56,7 +57,7 @@ const createSchema = z.object({
   goal: z.unknown().optional(),
 });
 
-export const lifecycleProcedures = {
+export const lifecycleRouter = router({
   /**
    * Read a composer draft and report what it means — a name, the outcome as
    * understood, the questions that would change the deliverable, and whether
@@ -314,4 +315,4 @@ export const lifecycleProcedures = {
         input.targetVisibility,
       );
     }),
-};
+});

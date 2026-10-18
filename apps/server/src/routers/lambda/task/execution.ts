@@ -1,12 +1,13 @@
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
+import { router } from '@/libs/trpc/lambda';
 import { failStuckTasks } from '@/server/services/taskLifecycle/failStuckTasks';
 import { TaskRunnerService } from '@/server/services/taskRunner';
 
 import { idInput, resolveOrThrow, taskProcedure, taskProcedureWrite } from './procedures';
 
-export const executionProcedures = {
+export const executionRouter = router({
   run: taskProcedureWrite
     .input(
       idInput.merge(
@@ -140,4 +141,4 @@ export const executionProcedures = {
       });
     }
   }),
-};
+});

@@ -5,6 +5,7 @@ import type { TaskCommentActivityRecipient } from '@/business/server/task/notify
 import { notifyTaskCommentActivity } from '@/business/server/task/notifyTaskCommentActivity';
 import type { TaskModel } from '@/database/models/task';
 import type { LobeChatDatabase } from '@/database/type';
+import { router } from '@/libs/trpc/lambda';
 import { assertAssigneeAgentBelongsToUser } from '@/server/services/task/patchValidation';
 import {
   extractMentionedUserIds,
@@ -101,7 +102,7 @@ function notifyCommentActivityBestEffort(
   });
 }
 
-export const commentsProcedures = {
+export const commentsRouter = router({
   addComment: taskProcedureWrite
     .input(
       z.object({
@@ -251,4 +252,4 @@ export const commentsProcedures = {
         });
       }
     }),
-};
+});

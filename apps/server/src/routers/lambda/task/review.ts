@@ -2,6 +2,7 @@ import type { TaskVerifyConfig } from '@lobechat/types';
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
+import { router } from '@/libs/trpc/lambda';
 import { AcceptanceService } from '@/server/services/verify/acceptanceService';
 import { resolveTaskAcceptance } from '@/server/services/verify/taskAcceptance';
 
@@ -13,7 +14,7 @@ import {
   taskVerifyConfigPatchSchema,
 } from './procedures';
 
-export const reviewProcedures = {
+export const reviewRouter = router({
   getCheckpoint: taskProcedure.input(idInput).query(async ({ input, ctx }) => {
     try {
       const model = ctx.taskModel;
@@ -250,4 +251,4 @@ export const reviewProcedures = {
         });
       }
     }),
-};
+});
