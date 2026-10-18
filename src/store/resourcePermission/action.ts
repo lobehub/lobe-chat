@@ -98,6 +98,18 @@ export class ResourcePermissionActionImpl {
 
   useFetchAccess = (ref: ResourceRef | null): ReplicaSyncResult => this.#access.useSync(ref);
 
+  /**
+   * Seed the persisted access record before a route commits (see the route
+   * loaders in `@/features/ResourcePermission/accessLoader`), so a config page
+   * decides from it on the first frame instead of after `useSync` hydrates.
+   */
+  preHydrateAccess = (ref: ResourceRef): Promise<boolean> => {
+    const scope = cacheScope.get();
+    // The slot may still hold the previous identity's rows; drop them before seeding.
+    this.#access.ensureScope(scope);
+    return this.#access.hydrate(ref, scope);
+  };
+
   useFetchCollaborators = (ref: ResourceRef | null): ReplicaSyncResult =>
     this.#collaborators.useSync(ref);
 

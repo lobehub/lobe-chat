@@ -134,4 +134,23 @@ describe('resourcePermissionActions', () => {
 
     expect(state().accessMap[KEY]).toMatchObject({ accessLevel: 'use', generalAccess: 'viewer' });
   });
+
+  it('seeds the persisted record before anything mounts', async () => {
+    const get = vi.spyOn(resourceAccessResource.storage!, 'get').mockResolvedValue({
+      data: record({ accessLevel: 'edit', generalAccess: 'editor' }),
+      updatedAt: 1,
+    });
+
+    // Another resource: the engine keeps a denied key's removal for the session.
+    const ref = { resourceId: 'agent-2', resourceType: 'agent' } as const;
+
+    await expect(resourcePermissionActions.preHydrateAccess(ref)).resolves.toBe(true);
+
+    expect(get).toHaveBeenCalledWith(expect.objectContaining({ queryKey: 'agent:agent-2' }));
+    expect(state().accessMap['agent:agent-2']).toMatchObject({ accessLevel: 'edit' });
+    expect(state().accessReplica.entries['agent:agent-2']?.source).toBe('storage');
+    // A persisted record is not this session's server answer.
+    expect(state().accessSessionMap).toEqual({});
+    get.mockRestore();
+  });
 });

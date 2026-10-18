@@ -18,7 +18,7 @@ import {
   SquarePlay,
   Video,
 } from 'lucide-react';
-import { createElement, isValidElement, type ReactElement, type ReactNode, Suspense } from 'react';
+import { createElement, type ReactElement } from 'react';
 import type { RouteObject } from 'react-router';
 
 import {
@@ -26,7 +26,6 @@ import {
   BusinessDesktopRoutesWithoutMainLayout,
   BusinessResourceRoutes,
 } from '@/business/client/BusinessDesktopRoutes';
-import BrandTextLoading from '@/components/Loading/BrandTextLoading';
 import AppsSkeleton from '@/components/Skeleton/Apps';
 import CommunityHomeSkeleton from '@/components/Skeleton/CommunityHome';
 import CommunityListSkeleton from '@/components/Skeleton/CommunityList';
@@ -37,7 +36,6 @@ import { delayed } from '@/components/Skeleton/Delayed';
 import GenerationSkeleton from '@/components/Skeleton/Generation';
 import MemorySkeleton from '@/components/Skeleton/Memory';
 import ResourceHomeSkeleton from '@/components/Skeleton/ResourceHome';
-import RouteSegmentSkeleton from '@/components/Skeleton/RouteSegment';
 import ProviderSettingsSkeleton, {
   ProviderDetailSkeleton,
 } from '@/components/Skeleton/Settings/Provider';
@@ -88,7 +86,9 @@ import { identitiesListLoader } from '@/spa/router/identitiesListLoader';
 import { libraryTreeLoader } from '@/spa/router/libraryTreeLoader';
 import { pageListLoader } from '@/spa/router/pageListLoader';
 import { preferenceListLoader } from '@/spa/router/preferenceListLoader';
+import { agentAccessLoader, agentGroupAccessLoader } from '@/spa/router/resourceAccessLoader';
 import { NoRouteSkeleton, routeMeta } from '@/spa/router/routeMeta';
+import { withSegmentFallback } from '@/spa/router/withSegmentFallback';
 import { SettingsTabs } from '@/store/global/initialState';
 import { dynamicElement, dynamicLayout, ErrorBoundary, redirectElement } from '@/utils/router';
 
@@ -385,6 +385,8 @@ export const sharedMainAreaChildren: RouteObject[] = [
           { preloadId: 'agent' },
         ),
         errorElement: <ErrorBoundary />,
+        // Seed the persisted access record before the config gates decide.
+        loader: agentAccessLoader,
         path: ':aid',
       },
     ],
@@ -433,6 +435,7 @@ export const sharedMainAreaChildren: RouteObject[] = [
           { preloadId: 'group' },
         ),
         errorElement: <ErrorBoundary />,
+        loader: agentGroupAccessLoader,
         path: ':gid',
       },
     ],
@@ -1808,47 +1811,6 @@ export interface SharedDesktopRouteOptions {
  * Builds the common Web/Electron top-level route tree. Platform entry files
  * supply only the root children, runtime-only routes, and onboarding route.
  */
-/**
- * Swap the default brand-loading fallback for a structural segment skeleton.
- *
- * `dynamicElement` / `dynamicLayout` wrap every route element in their own
- * `Suspense`, and that boundary is always nearer the suspending component than
- * any outlet-level one — so a fallback set on the main layout's outlet never
- * fires for route content, and the 100+ call sites would otherwise each need
- * the option. Explicit route fallbacks are preserved so a route can render the
- * nearest segment skeleton instead. Rewriting only defaults here keeps the main
- * area consistent without touching routes outside it (mobile still wants the
- * full-page brand loading, since its nav bar is inside the same boundary as its
- * outlet).
- */
-export const withSegmentFallback = (routes: RouteObject[]): RouteObject[] =>
-  routes.map((route) => {
-    const suspenseElement =
-      isValidElement(route.element) && route.element.type === Suspense
-        ? (route.element as ReactElement<{ fallback: ReactNode }>)
-        : undefined;
-    const fallback = suspenseElement?.props.fallback;
-    const element =
-      suspenseElement && isValidElement(fallback) && fallback.type === BrandTextLoading
-        ? // This intentionally couples to `dynamicElement` / `dynamicLayout`
-          // returning a bare Suspense with BrandTextLoading as their default.
-          // Explicit segment fallbacks must pass through unchanged.
-          createElement(Suspense, {
-            ...suspenseElement.props,
-            fallback: <RouteSegmentSkeleton />,
-            key: suspenseElement.key,
-          })
-        : route.element;
-
-    // `RouteObject` is a discriminated union of index / non-index routes, and
-    // spreading loses the discriminant — the copy keeps the original's shape.
-    return {
-      ...route,
-      ...(route.children && { children: withSegmentFallback(route.children) }),
-      element,
-    } as RouteObject;
-  });
-
 export const createSharedDesktopRoutes = ({
   mainAreaChildren,
   onboardingRoute,
