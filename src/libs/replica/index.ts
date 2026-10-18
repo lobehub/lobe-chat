@@ -20,8 +20,8 @@ import {
 import {
   IndexedDBQueryProjectionStorage,
   LocalStorageQueryProjectionStorage,
-  markProjectionScopeReset,
-  subscribeRemoteProjectionScopeReset,
+  markProjectionReset,
+  subscribeRemoteProjectionReset,
 } from '@/libs/queryProjectionStorage';
 import { mutate, useClientDataSWR } from '@/libs/swr';
 import { getCacheScope, isScopeTrusted, useCacheScope } from '@/libs/swr/useCacheScope';
@@ -225,23 +225,23 @@ const retireLiveReplicas = (): void => {
  * next context resolves to the same scope string (a cloned deployment that
  * kept its ids) nothing else tells the old answer apart. `clear()` advances
  * each replica's clear generation, so those reads are discarded, and drops
- * the scope's persisted rows, which the previous context wrote; the scope's reset
- * epoch retires the rows of replicas not built yet. The replica read keys are then
+ * the scope's persisted rows, which the previous context wrote; the reset epoch
+ * retires every other persisted row, in every scope and for replicas not built
+ * yet. The replica read keys are then
  * revalidated so the screen repaints from the new context instead of staying
  * empty.
  */
 export const clearAllReplicas = (): void => {
-  // Rows of replicas no slice exists for yet (a lazy route never opened this
-  // session) are retired by the scope's reset epoch rather than deleted.
-  markProjectionScopeReset(cacheScope.get());
+  // Every persisted row of every scope — including those of replicas no slice
+  // exists for yet (a lazy route never opened this session) — is retired by
+  // the reset epoch rather than deleted.
+  markProjectionReset();
   retireLiveReplicas();
 };
 
-// Another renderer (the Desktop main window) reset this scope: its epoch is
-// already advanced, so only retire what this window holds in memory.
-subscribeRemoteProjectionScopeReset((scope) => {
-  if (scope === cacheScope.get()) retireLiveReplicas();
-});
+// Another renderer (the Desktop main window) reset: the epoch is already
+// advanced, so only retire what this window holds in memory.
+subscribeRemoteProjectionReset(retireLiveReplicas);
 
 /** `createReplicaSlice` bound to the app's SWR driver. */
 export const createReplicaSlice = <TStore, TParams, TData, TFetched = TData>(

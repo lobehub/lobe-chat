@@ -53,6 +53,6 @@ export class IndexedDBQueryProjectionStorage<T> implements QueryProjectionStorag
    */
   set = async (key: QueryProjectionKey, projection: QueryProjection<T>): Promise<void> => {
     await localDatabase.initialize();
-    await localDatabase.set(COLLECTION, this.#key(key), stampProjection(key, projection));
+    await localDatabase.set(COLLECTION, this.#key(key), stampProjection(projection));
   };
 }

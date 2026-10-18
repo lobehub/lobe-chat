@@ -2,7 +2,10 @@ import { describe, expect, it, vi } from 'vitest';
 import { createStore } from 'zustand/vanilla';
 
 import { LocalStorageQueryProjectionStorage } from '@/libs/queryProjectionStorage';
-import { handleProjectionEpochStorageEvent } from '@/libs/queryProjectionStorage/resetEpoch';
+import {
+  handleProjectionEpochStorageEvent,
+  PROJECTION_EPOCH_STORAGE_KEY,
+} from '@/libs/queryProjectionStorage/resetEpoch';
 
 import {
   cacheScope,
@@ -72,7 +75,7 @@ describe('clearAllReplicas', () => {
     });
     await slice.fetch('a');
     expect(store.getState().itemMap.a).toBe('answer a');
-    const epochKey = `lobe-replica-reset-epoch:${cacheScope.get()}`;
+    const epochKey = PROJECTION_EPOCH_STORAGE_KEY;
     const before = localStorage.getItem(epochKey);
 
     // The Desktop main window switched servers; this popup only sees the event.
@@ -101,6 +104,18 @@ describe('clearAllReplicas', () => {
     });
 
     expect(await lazy.storage!.get(key)).toBeUndefined();
+  });
+
+  it('retires the rows of every cached workspace, not only the active one', async () => {
+    const storage = new LocalStorageQueryProjectionStorage<string>({
+      namespace: 'replica:clearAllReplicasScopeTest:v1',
+    });
+    const otherWorkspace = { queryKey: 'a', scope: `${cacheScope.get()}-other-workspace` };
+    await storage.set(otherWorkspace, { data: 'previous server', updatedAt: 1 });
+
+    clearAllReplicas();
+
+    expect(await storage.get(otherWorkspace)).toBeUndefined();
   });
 
   it('purges rows an earlier session persisted that this session never loaded', async () => {

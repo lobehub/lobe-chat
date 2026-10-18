@@ -70,6 +70,6 @@ export class LocalStorageQueryProjectionStorage<T> implements QueryProjectionSto
   set = async (key: QueryProjectionKey, projection: QueryProjection<T>): Promise<void> => {
     if (typeof window === 'undefined') return;
 
-    localStorage.setItem(this.#key(key), this.#codec.stringify(stampProjection(key, projection)));
+    localStorage.setItem(this.#key(key), this.#codec.stringify(stampProjection(projection)));
   };
 }
