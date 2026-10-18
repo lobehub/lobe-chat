@@ -13,6 +13,7 @@ const { mockTrpcClient } = vi.hoisted(() => ({
       listAll: { query: vi.fn() },
       removeMessage: { mutate: vi.fn() },
       removeMessages: { mutate: vi.fn() },
+      searchByKeyword: { query: vi.fn() },
       searchMessages: { query: vi.fn() },
       topicStats: { query: vi.fn() },
     },
@@ -165,8 +166,104 @@ describe('message command', () => {
   });
 
   describe('search', () => {
-    it('should search messages', async () => {
-      mockTrpcClient.message.searchMessages.query.mockResolvedValue([]);
+    it('searches through the filtered endpoint with default paging', async () => {
+      mockTrpcClient.message.searchByKeyword.query.mockResolvedValue({ hasMore: false, items: [] });
+
+      const program = createProgram();
+      await program.parseAsync(['node', 'test', 'message', 'search', 'hello']);
+
+      expect(mockTrpcClient.message.searchByKeyword.query).toHaveBeenCalledWith({
+        keywords: 'hello',
+        limit: 20,
+        offset: 0,
+      });
+      expect(mockTrpcClient.message.searchMessages.query).not.toHaveBeenCalled();
+    });
+
+    it('passes the time window, roles, scope and match options', async () => {
+      mockTrpcClient.message.searchByKeyword.query.mockResolvedValue({ hasMore: false, items: [] });
+
+      const program = createProgram();
+      await program.parseAsync([
+        'node',
+        'test',
+        'message',
+        'search',
+        'STAMP',
+        '--since',
+        '2026-10-12',
+        '--until',
+        '2026-10-18',
+        '--role',
+        'user, assistant',
+        '--topic-id',
+        'tpc_1',
+        '--agent-id',
+        'agt_1',
+        '--exact',
+        '--include-system',
+        '-L',
+        '5',
+        '-P',
+        '3',
+      ]);
+
+      expect(mockTrpcClient.message.searchByKeyword.query).toHaveBeenCalledWith({
+        agentId: 'agt_1',
+        endDate: new Date(2026, 9, 18, 23, 59, 59, 999),
+        exact: true,
+        includeAutomatedPrompts: true,
+        keywords: 'STAMP',
+        limit: 5,
+        offset: 10,
+        roles: ['user', 'assistant'],
+        startDate: new Date(2026, 9, 12, 0, 0, 0, 0),
+        topicId: 'tpc_1',
+      });
+    });
+
+    it('prints time, topic and snippet, and hints at the next page', async () => {
+      mockTrpcClient.message.searchByKeyword.query.mockResolvedValue({
+        hasMore: true,
+        items: [
+          {
+            createdAt: new Date(2026, 9, 15, 9, 5),
+            id: 'msg_1',
+            role: 'user',
+            snippet: 'turning on STAMP mode',
+            topicId: 'tpc_1',
+            topicTitle: 'Weekly report',
+          },
+        ],
+      });
+
+      const program = createProgram();
+      await program.parseAsync(['node', 'test', 'message', 'search', 'STAMP']);
+
+      const output = consoleSpy.mock.calls.map((call) => call.join(' ')).join('\n');
+      expect(output).toContain('2026-10-15 09:05');
+      expect(output).toContain('Weekly report');
+      expect(output).toContain('turning on STAMP mode');
+      expect(output).toContain('-P 2');
+    });
+
+    it('rejects an invalid time instead of searching everything', async () => {
+      const program = createProgram();
+      await program.parseAsync(['node', 'test', 'message', 'search', 'x', '--since', 'last week']);
+
+      expect(exitSpy).toHaveBeenCalledWith(1);
+      expect(mockTrpcClient.message.searchByKeyword.query).not.toHaveBeenCalled();
+    });
+
+    it('falls back to the legacy endpoint on an older server when no filters are used', async () => {
+      mockTrpcClient.message.searchByKeyword.query.mockRejectedValue(
+        Object.assign(new Error('No "query"-procedure on path "message.searchByKeyword"'), {
+          data: { code: 'NOT_FOUND' },
+        }),
+      );
+      mockTrpcClient.message.searchMessages.query.mockResolvedValue([
+        { content: 'hello there', id: 'msg_legacy', role: 'user' },
+      ]);
 
       const program = createProgram();
       await program.parseAsync(['node', 'test', 'message', 'search', 'hello']);
@@ -174,6 +271,22 @@ describe('message command', () => {
       expect(mockTrpcClient.message.searchMessages.query).toHaveBeenCalledWith({
         keywords: 'hello',
       });
+      const output = consoleSpy.mock.calls.map((call) => call.join(' ')).join('\n');
+      expect(output).toContain('msg_legacy');
+    });
+
+    it('refuses to drop filters silently on an older server', async () => {
+      mockTrpcClient.message.searchByKeyword.query.mockRejectedValue(
+        Object.assign(new Error('No "query"-procedure on path "message.searchByKeyword"'), {
+          data: { code: 'NOT_FOUND' },
+        }),
+      );
+
+      const program = createProgram();
+      await program.parseAsync(['node', 'test', 'message', 'search', 'hello', '--since', '7d']);
+
+      expect(exitSpy).toHaveBeenCalledWith(1);
+      expect(mockTrpcClient.message.searchMessages.query).not.toHaveBeenCalled();
     });
   });
 

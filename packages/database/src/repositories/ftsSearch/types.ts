@@ -12,7 +12,8 @@ export type FtsSearchResultType =
   | 'plugin'
   | 'communityAgent'
   | 'knowledgeBase'
-  | 'task';
+  | 'task'
+  | 'goal';
 
 export interface FtsSearchBaseResult {
   createdAt: Date;
@@ -128,6 +129,16 @@ export interface FtsSearchTaskResult extends FtsSearchBaseResult {
   type: 'task';
 }
 
+/** Goal lookup result. Goals are not indexed; `GoalSearchRepo` queries them directly. */
+export interface FtsSearchGoalResult extends FtsSearchBaseResult {
+  /** Supervising agent, when one is assigned. */
+  agentId: string | null;
+  completedAt: Date | null;
+  projectId: string | null;
+  status: string;
+  type: 'goal';
+}
+
 /**
  * Hydrated BM25 hit for KB-scoped documents. `fileId` identifies a parsed-file
  * source; inline pages use `documentId` directly.
@@ -168,7 +179,8 @@ export type FtsSearchResult =
   | FtsSearchMCPResult
   | FtsSearchPluginResult
   | FtsSearchAssistantResult
-  | FtsSearchTaskResult;
+  | FtsSearchTaskResult
+  | FtsSearchGoalResult;
 
 export interface FtsSearchOptions {
   agentId?: string;

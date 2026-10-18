@@ -2,11 +2,14 @@ import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
 import { wsCompatProcedure } from '@/business/server/trpc-middlewares/workspaceAuth';
+import { MessageModel } from '@/database/models/message';
+import { GoalSearchRepo } from '@/database/repositories/goalSearch';
 import { TaskSearchRepo } from '@/database/repositories/taskSearch';
 import { router } from '@/libs/trpc/lambda';
 import { resolveMarketUserContext, serverDatabase } from '@/libs/trpc/lambda/middleware';
 import { DiscoverService } from '@/server/services/discover';
 import { createFtsSearchRepo } from '@/server/services/ftsSearch';
+import { RECALL_MAX_LIMIT_PER_TYPE, RECALL_TYPES, RecallService } from '@/server/services/recall';
 
 import { getRestrictedKnowledgeBaseIds } from './_helpers/knowledgeBaseAccess';
 
@@ -67,6 +70,9 @@ const searchProcedure = wsCompatProcedure.use(serverDatabase).use(async (opts) =
   });
 });
 
+/** Recall is DB-only, so it skips the marketplace identity lookup entirely. */
+const recallProcedure = wsCompatProcedure.use(serverDatabase);
+
 /**
  * The unified search router for all entities in the database.
  *
@@ -85,6 +91,12 @@ export const searchRouter = router({
          * always queries the marketplace, other types never do.
          */
         includeMarketplace: z.boolean().optional(),
+        /**
+         * Whether an untyped search also returns goals (default false). The
+         * command menu has no goal rendering yet; the CLI opts in. `type:
+         * 'goal'` always searches goals.
+         */
+        includeGoals: z.boolean().optional(),
         limitPerType: z.number().optional(),
         locale: z.string().optional(),
         offset: z.number().optional(),
@@ -104,6 +116,7 @@ export const searchRouter = router({
             'communityAgent',
             'knowledgeBase',
             'task',
+            'goal',
           ])
           .optional(),
       }),
@@ -156,6 +169,16 @@ export const searchRouter = router({
       if (!type || type === 'task') {
         searchPromises.push(
           new TaskSearchRepo(ctx.serverDB, ctx.userId, ctx.workspaceId ?? undefined).search({
+            limit: limitPerType,
+            query,
+          }),
+        );
+      }
+
+      // Goals are not in the full-text index either; untyped searches opt in.
+      if (type === 'goal' || (!type && input.includeGoals)) {
+        searchPromises.push(
+          new GoalSearchRepo(ctx.serverDB, ctx.userId, ctx.workspaceId ?? undefined).search({
             limit: limitPerType,
             query,
           }),
@@ -287,5 +310,55 @@ export const searchRouter = router({
       // The command palette groups results by type, so we keep each source's order
       // instead of re-sorting the merged list by relevance.
       return results.flat();
+    }),
+
+  /**
+   * History recall for agents and the CLI: messages, topics, goals and pages
+   * matching a query inside an optional time window, grouped by type. Never
+   * reaches the marketplace.
+   */
+  recall: recallProcedure
+    .input(
+      z.object({
+        endDate: z.coerce.date().optional(),
+        exact: z.boolean().optional(),
+        includeAutomatedPrompts: z.boolean().optional(),
+        limitPerType: z.number().int().min(1).max(RECALL_MAX_LIMIT_PER_TYPE).optional(),
+        query: z.string(),
+        startDate: z.coerce.date().optional(),
+        types: z.array(z.enum(RECALL_TYPES)).optional(),
+      }),
+    )
+    .query(async ({ input, ctx }) => {
+      const workspaceId = ctx.workspaceId ?? undefined;
+      const [excludeKnowledgeBaseIds, entitySearchRepo, messageSearchRepo] = await Promise.all([
+        getRestrictedKnowledgeBaseIds(ctx),
+        createFtsSearchRepo({
+          db: ctx.serverDB,
+          userId: ctx.userId,
+          usage: 'unified_search',
+          workspaceId,
+        }),
+        createFtsSearchRepo({
+          db: ctx.serverDB,
+          userId: ctx.userId,
+          usage: 'message_search',
+          workspaceId,
+        }),
+      ]);
+      const messageModel = new MessageModel(
+        ctx.serverDB,
+        ctx.userId,
+        workspaceId,
+        messageSearchRepo,
+      );
+      const goalSearchRepo = new GoalSearchRepo(ctx.serverDB, ctx.userId, workspaceId);
+
+      return new RecallService({
+        searchEntities: (options) =>
+          entitySearchRepo.search({ ...options, excludeKnowledgeBaseIds }),
+        searchGoals: goalSearchRepo.search,
+        searchMessages: messageModel.searchByKeyword,
+      }).recall(input);
     }),
 });
