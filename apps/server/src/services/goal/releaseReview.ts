@@ -139,10 +139,12 @@ export class GoalReleaseReview {
       return this.releaseRolloutWave(graph, effects, gate);
 
     const wave = `wave ${state.waveIndex + 1} (${waveCount} unit${waveCount === 1 ? '' : 's'})`;
-    // A review report still held open means the owner sent this wave's plan
-    // back and its units ran again: their results go back to the owner, not to
-    // the main Agent to release on its own.
-    if (state.waveIndex > 0 && state.releaseGateAcceptanceId)
+    // A release review the owner has not approved means they sent this wave's
+    // plan back and its units ran again: their results go back to the owner,
+    // not to the main Agent to release on its own. The review's decision node
+    // is the marker — it outlives a send-back and only an approval clears it —
+    // so a send-back answered on the goal page, without a report, counts too.
+    if (state.waveIndex > 0 && (state.releaseReviewNodeId || state.releaseGateAcceptanceId))
       return this.openReleaseReview(
         graph,
         `Units re-run on plan v${planVersionOf(state)} passed the gate; approve releasing ${wave}`,

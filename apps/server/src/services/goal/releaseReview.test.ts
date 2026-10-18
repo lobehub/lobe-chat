@@ -378,6 +378,44 @@ describe('approving a batch release', () => {
     expect((await pendingRelease(service, goalId))!.question).toContain('re-run on plan');
   });
 
+  // The review report may fail to open; the owner then sends the wave back on
+  // the goal page. The re-run still returns to the owner, not the main Agent.
+  it('returns a later wave sent back on the goal page to the owner', async () => {
+    const { goalId, graphModel, service } = await firstWaveDelivered();
+    await service.tick(goalId);
+    const held = (await service.graph(goalId)).goal.config!.rolloutState!;
+    const goalModel = new GoalModel(serverDB, userId);
+    await goalModel.updateRolloutState(goalId, { ...held, releaseGateAcceptanceId: undefined });
+    const pending = await pendingRelease(service, goalId);
+    await service.decide(goalId, pending!.id, 'revise', '每个 PR 都要过 codex review 和 CI');
+    const revising = (await service.graph(goalId)).goal.config!.rolloutState!;
+    await goalModel.updateRolloutState(goalId, {
+      ...revising,
+      pendingRevision: {
+        ...revising.pendingRevision!,
+        revisedRecipe: '换 replica，过 review 和 CI',
+      },
+    });
+    await service.tick(goalId);
+
+    const agentId = 'goal-release-fallback-agent';
+    await serverDB.insert(agents).values({ id: agentId, userId });
+    const config = (await service.graph(goalId)).goal.config!;
+    await serverDB
+      .update(goals)
+      .set({ agentId, config: { ...config, manager: { maxTurns: 4 } } })
+      .where(eq(goals.id, goalId));
+    const execAgent = vi.spyOn(AiAgentService.prototype, 'execAgent').mockResolvedValue({
+      operationId: 'op-release-turn',
+    } as Awaited<ReturnType<AiAgentService['execAgent']>>);
+    const rerun = (await service.graph(goalId)).goal.config!.rolloutState!;
+    for (const id of rerun.massNodeIds!) await graphModel.updateNodeStatus(goalId, id, 'resolved');
+    await service.tick(goalId);
+
+    expect(execAgent).not.toHaveBeenCalled();
+    expect((await pendingRelease(service, goalId))!.question).toContain('re-run on plan');
+  });
+
   it('takes a retry of the answer it recorded, and refuses a different one', async () => {
     const { goalId, service } = await passedProbes();
     await service.tick(goalId);
