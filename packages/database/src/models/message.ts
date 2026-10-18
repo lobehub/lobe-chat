@@ -106,11 +106,7 @@ import { searchableMessage } from '../utils/searchableMessage';
 import { notShareVisitorMessage, notShareVisitorTopicRef } from '../utils/shareVisitor';
 import { isTrashed, restoreStamp, type SoftDeleteOptions, trashStamp } from '../utils/softDelete';
 import { buildWorkspacePayload, buildWorkspaceWhere } from '../utils/workspace';
-import {
-  messageAtOrAfter,
-  messageStrictlyBefore,
-  resolveBackwardRoundWindow,
-} from './messageCursorWindow';
+import { resolveCursorPageWindow } from './messageCursorWindow';
 import { recomputeTopicUsage } from './topicUsage';
 import { WorkModel } from './work';
 
@@ -306,9 +302,10 @@ export interface TopicTranscriptResult {
 }
 
 /**
- * Round-boundary cursor for {@link MessageModel.queryTopicMessagesByCursor}. Points
- * at a mainline `user` message (a round start); paging older fetches the rounds
- * strictly before it.
+ * Cursor for {@link MessageModel.queryTopicMessagesByCursor}. Backward, it points
+ * at a mainline `user` message (a round start) and the next page holds the rounds
+ * strictly before it; forward, it points at the last row already loaded (any
+ * role, when a page split a round) and the next page starts strictly after it.
  */
 export interface MessageRoundCursor {
   createdAt: string;
@@ -324,8 +321,13 @@ export interface QueryTopicByCursorParams {
   agentId?: string | null;
   /** Hard cap on rows walked when resolving the round window (safety, ~rows). */
   countBudget?: number;
-  /** Omit for the initial (newest) page; pass a prior `nextCursor` to load older. */
+  /**
+   * Omit for the first page (the newest when backward, the oldest when forward);
+   * pass a prior `nextCursor` to continue in the same direction.
+   */
   cursor?: MessageRoundCursor | null;
+  /** `backward` (default) pages newest-first toward older rounds; `forward` from the first round. */
+  direction?: 'backward' | 'forward';
   /** Group chat topic: rows carry the group id, same filter as `query`. */
   groupId?: string | null;
   /** See {@link QueryMessageParams.includeFileWorks}. */
@@ -341,7 +343,7 @@ export interface QueryTopicByCursorParams {
 export interface TopicMessagesByCursorResult {
   hasMore: boolean;
   messages: UIChatMessage[];
-  /** Cursor to load the previous (older) page, or null when at the topic start. */
+  /** Cursor for the next page in the same direction, or null at the topic's start/end. */
   nextCursor: MessageRoundCursor | null;
 }
 
@@ -1951,6 +1953,7 @@ export class MessageModel {
     {
       countBudget = DEFAULT_ROUND_COUNT_BUDGET,
       cursor,
+      direction = 'backward',
       groupId,
       includeFileWorks,
       roundLimit = DEFAULT_ROUND_LIMIT,
@@ -1981,40 +1984,14 @@ export class MessageModel {
       this.matchThread(undefined),
     );
 
-    const { lowerBound, hasMore } = await resolveBackwardRoundWindow(this.db, {
+    const { groupNodeWindow, hasMore, nextCursor, where } = await resolveCursorPageWindow(this.db, {
       countBudget,
       cursor,
+      direction,
+      mainlineWhere,
       roundLimit,
-      where: and(this.ownership(), mainlineWhere),
+      scopeWhere: this.ownership(),
     });
-
-    // MessageGroup nodes (compression / comparison) are partitioned across pages
-    // by the same `[lowerBound, cursor)` window as mainline rows, so each group is
-    // emitted exactly once over a full backward walk. The oldest page (`!hasMore`)
-    // leaves the lower side open so groups dated before the first remaining
-    // mainline row — including a topic whose whole history was compressed — stay
-    // reachable instead of vanishing.
-    const groupNodeWindow: MessageGroupNodeWindow = {
-      before: cursor?.createdAt ?? null,
-      from: hasMore && lowerBound ? lowerBound.createdAt : null,
-    };
-
-    // No lower bound means no mainline rows remain — either the topic has none
-    // (e.g. compression moved every message into a group) or nothing older than
-    // the cursor is left. The page is then group-only: fetch no mainline rows (an
-    // unbounded `where` would wrongly reload the entire topic) but still assemble
-    // the remaining group nodes.
-    //
-    // Otherwise bound the window on BOTH sides: at/after the resolved round start,
-    // and — when paging older — strictly before the cursor. Without the upper
-    // bound the window would also re-include every newer round already loaded.
-    const where = lowerBound
-      ? and(
-          mainlineWhere,
-          messageAtOrAfter(lowerBound),
-          cursor ? messageStrictlyBefore(cursor) : undefined,
-        )
-      : sql`false`;
 
     const messages = await this.queryWithWhere({
       allowShareVisitor: true,
@@ -2031,8 +2008,7 @@ export class MessageModel {
       groupNodeWindow,
     });
 
-    // `lowerBound.createdAt` is already the lossless microsecond cursor string.
-    return { hasMore, messages, nextCursor: hasMore && lowerBound ? lowerBound : null };
+    return { hasMore, messages, nextCursor };
   };
 
   private queryMessageGroupNodesForPage = async ({
