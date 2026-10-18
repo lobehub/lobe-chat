@@ -33,7 +33,7 @@ import {
 } from '../hooks/useConversationScroll';
 import { useEarlierHistoryTrigger } from '../hooks/useEarlierHistoryTrigger';
 import { useSelectionMessageIds } from '../hooks/useSelectionMessageIds';
-import { useTopicScrollPersist } from '../hooks/useTopicScrollPersist';
+import { type InitialScrollPosition, useTopicScrollPersist } from '../hooks/useTopicScrollPersist';
 import { resolveAutoScrollDetached } from '../utils/autoScrollFollow';
 import type { ResolvedMessageDeepLink } from '../utils/messageDeepLink';
 import AutoScroll from './AutoScroll';
@@ -64,6 +64,7 @@ interface VirtualizedListProps {
   dataSource: string[];
   footerSlot?: ReactNode;
   headerSlot?: ReactNode;
+  initialScrollPosition?: InitialScrollPosition;
   itemContent: (index: number, data: string) => ReactNode;
   messageDeepLink?: ResolvedMessageDeepLink;
 }
@@ -74,7 +75,7 @@ interface VirtualizedListProps {
  * Based on ConversationStore data flow, no dependency on global ChatStore.
  */
 const VirtualizedList = memo<VirtualizedListProps>(
-  ({ dataSource, footerSlot, headerSlot, itemContent, messageDeepLink }) => {
+  ({ dataSource, footerSlot, headerSlot, initialScrollPosition, itemContent, messageDeepLink }) => {
     const virtuaRef = useRef<VListHandle>(null);
     const containerRef = useRef<HTMLDivElement>(null);
     const scrollEndTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -100,6 +101,7 @@ const VirtualizedList = memo<VirtualizedListProps>(
       dataSourceLength: dataSource.length,
       getScroller,
       headerOffset: LEADING_ROWS,
+      initialPosition: initialScrollPosition,
       messageDeepLink,
       virtuaRef,
     });

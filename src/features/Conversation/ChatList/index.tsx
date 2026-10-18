@@ -37,6 +37,7 @@ import VirtualizedList from './components/VirtualizedList';
 import { useAgentSignalReceipts } from './hooks/useAgentSignalReceipts';
 import { useInitialRevalidation } from './hooks/useInitialRevalidation';
 import { useMessageRefreshError } from './hooks/useMessageRefreshError';
+import { type InitialScrollPosition } from './hooks/useTopicScrollPersist';
 import { resolveMessageListFeedback } from './resolveMessageListFeedback';
 import { buildChatRows } from './utils/chatRows';
 import type { MessageDeepLink } from './utils/messageDeepLink';
@@ -93,6 +94,11 @@ export interface ChatListProps {
    */
   hideBackgroundRunHint?: boolean;
   /**
+   * Where the conversation opens: the saved position or the end (`bottom`,
+   * default), or always the first message (`top`, e.g. in share page).
+   */
+  initialScrollPosition?: InitialScrollPosition;
+  /**
    * Custom item renderer. If not provided, uses default ChatItem.
    */
   itemContent?: (index: number, id: string) => ReactNode;
@@ -120,6 +126,7 @@ const ChatList = memo<ChatListProps>(
     footerSlot,
     headerSlot,
     hideBackgroundRunHint,
+    initialScrollPosition,
     welcome,
     itemContent,
     messageDeepLink,
@@ -331,6 +338,7 @@ const ChatList = memo<ChatListProps>(
               dataSource={rowIds}
               footerSlot={footerSlot}
               headerSlot={headerSlot}
+              initialScrollPosition={initialScrollPosition}
               itemContent={itemContent ?? defaultItemContent}
               messageDeepLink={resolvedMessageDeepLink}
             />
