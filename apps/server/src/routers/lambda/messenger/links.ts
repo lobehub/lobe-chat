@@ -90,9 +90,18 @@ export const linksRouter = router({
         );
 
         await ctx.messengerLinkModel.deleteByPlatform('wechat', input.tenantId);
-        await pMap(links, (link) => disconnectWechatAccountLink(link, ctx.userId), {
-          concurrency: WECHAT_DISCONNECT_CONCURRENCY,
-        });
+        // The rows are already gone, so a retry cannot rediscover a skipped
+        // link: attempt every disconnect, then surface the first failure.
+        const errors: unknown[] = [];
+        await pMap(
+          links,
+          (link) =>
+            disconnectWechatAccountLink(link, ctx.userId).catch((error: unknown) => {
+              errors.push(error);
+            }),
+          { concurrency: WECHAT_DISCONNECT_CONCURRENCY },
+        );
+        if (errors.length > 0) throw errors[0];
         return { success: true };
       }
 
