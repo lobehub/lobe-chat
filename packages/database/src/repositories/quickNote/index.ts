@@ -241,12 +241,13 @@ export class QuickNoteRepository {
           visibility: 'private',
         });
 
-        resource = await model.createAnnotationResource({
+        const created = await model.createAnnotationResource({
           documentId,
           quickNoteId: run.quickNoteId,
           sourceHistoryId: run.sourceHistoryId,
         });
-        if (!resource) throw new Error(QUICK_NOTE_SCOPE_LOST);
+        if (!created) throw new Error(QUICK_NOTE_SCOPE_LOST);
+        resource = created;
       }
 
       const annotationDocumentId = resource.documentId;
