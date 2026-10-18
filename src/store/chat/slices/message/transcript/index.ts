@@ -2,7 +2,7 @@ import { type ChatTopic, type ConversationContext, type UIChatMessage } from '@l
 import debug from 'debug';
 
 import { readConversationMessageListPage } from '@/helpers/conversationMessageRead';
-import { createReplicaSlice } from '@/libs/replica';
+import { createReplicaSlice, readReplicaStoredKeys } from '@/libs/replica';
 import { messageService } from '@/services/message';
 import {
   getMessageListCacheIdentity,
@@ -15,6 +15,7 @@ import {
   type ConversationMessageParams,
   conversationMessagesKey,
   conversationMessagesResource,
+  persistedContextOf,
   toPersistedTranscript,
   transcriptOf,
 } from '@/services/message/replica';
@@ -240,8 +241,37 @@ const createMessageTranscript = (set: StoreSetter<ChatStore>, get: () => ChatSto
     if (lens.get(get(), key)) slice.persist(key);
   };
 
+  /**
+   * Drop the transcripts of conversations that no longer exist (a deleted
+   * topic, agent or group) from memory and from storage, so their rows never
+   * hydrate again. Without `predicate` every transcript of the active scope
+   * goes. Persisted rows an earlier session wrote are reached through the
+   * replica's stored-key index. Memory-only (`m:`) entries do not survive a
+   * reload, and their keys do not name the conversation, so they are left to
+   * the session.
+   */
+  const evict = async (predicate?: (context: ConversationContext) => boolean): Promise<void> => {
+    if (!predicate) {
+      await slice.clear();
+      return;
+    }
+    const matches = (key: string) => {
+      const context = persistedContextOf(key);
+      return !!context && predicate(context as ConversationContext);
+    };
+    const scope = conversationMessagesResource.scope.get();
+    const loaded = new Set(lens.keys!(get()));
+    for (const key of loaded) if (matches(key)) slice.remove(key);
+
+    const persisted = await readReplicaStoredKeys(conversationMessagesResource);
+    // `remove` resolves against the active scope; another identity's rows are not ours.
+    if (conversationMessagesResource.scope.get() !== scope) return;
+    for (const key of persisted) if (!loaded.has(key) && matches(key)) slice.remove(key);
+  };
+
   return {
     commit,
+    evict,
     headResolutions,
     keyOf,
     pendingInterventions,
