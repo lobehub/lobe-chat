@@ -146,6 +146,9 @@ export const agentSteerQueueRouter = router({
     }
     if (length === undefined) return { queued: false as const, reason: 'unavailable' as const };
     if (length === 'full') return { queued: false as const, reason: 'full' as const };
+    // A retry of a write that landed and was already taken by its run: it is
+    // on its way, so the client must not send it again.
+    if (length === 'taken') return { id: entry.id, length: 0, queued: true as const };
 
     // The run may have ended between the check above and the append, after its
     // drain: then nothing would ever start this entry. Take it back and let the

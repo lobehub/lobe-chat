@@ -126,6 +126,16 @@ describe('agentSteerQueueRouter.append', () => {
     },
   );
 
+  it('reports queued for a retry its run already took, so the client does not send it again', async () => {
+    mocks.append.mockResolvedValue('taken');
+
+    await expect(caller().append(appendInput)).resolves.toEqual({
+      id: 'q-1',
+      length: 0,
+      queued: true,
+    });
+  });
+
   it('refuses to guess between two live runs on the same surface', async () => {
     mocks.liveCandidates.mockReturnValue([{ id: 'op-1' }, { id: 'op-2' }]);
 

@@ -7,7 +7,7 @@ import { redisService } from '@/server/services/redis';
 import type { SteerQueueEntry, SteerQueueScope } from '@/server/services/redis/steerQueue';
 
 import { type ComposerRunContext, type ComposerRunRequest, startComposerRun } from '../composerRun';
-import { findOwnLiveRuns } from './liveRuns';
+import { isRunAlive } from './liveRuns';
 
 const log = debug('lobe-server:steer-queue');
 
@@ -121,11 +121,17 @@ export const drainOwnFollowUps = async (
   scope: SteerQueueScope,
   operationId: string,
 ): Promise<QueuedFollowUp[]> => {
-  // The live-run lookup is a DB read; skip it on the common empty queue.
-  if ((await redisService.steerQueue.count(scope)) === 0) return [];
+  const { operationIds, total } = await redisService.steerQueue.boundOperations(scope);
+  if (total === 0) return [];
 
-  const liveRuns = await findOwnLiveRuns(ctx, scope);
-  const drained = await redisService.steerQueue.drain<QueuedFollowUp>(scope, operationId, liveRuns);
+  // Entries behind another run are left to it unless that run is confirmed
+  // ended — checked one by one, so a run that starts meanwhile (and the
+  // follow-ups queued behind it) is never mistaken for an orphan.
+  const ended: string[] = [];
+  for (const id of operationIds) {
+    if (id !== operationId && !(await isRunAlive(ctx, ctx.userId, id))) ended.push(id);
+  }
+  const drained = await redisService.steerQueue.drain<QueuedFollowUp>(scope, operationId, ended);
   const entries = drained.filter((entry) => entry.userId === ctx.userId);
   if (entries.length < drained.length) {
     log('[%s] Dropped %d foreign queued follow-ups', operationId, drained.length - entries.length);

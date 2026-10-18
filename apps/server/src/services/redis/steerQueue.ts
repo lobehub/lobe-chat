@@ -68,12 +68,15 @@ end
 `;
 
 /**
- * Idempotent by entry id: a retried append of an id already queued answers the
- * current length instead of adding a copy.
+ * Idempotent by entry id: a retried append of an id still queued answers the
+ * current length, and of an id a drain already took answers -2, instead of
+ * adding a copy.
  *
- * KEYS[1] = queue; ARGV[1] = entry id; ARGV[2] = item; ARGV[3] = ttl; ARGV[4] = max
+ * KEYS[1] = queue; KEYS[2] = taken ids; ARGV[1] = entry id; ARGV[2] = item;
+ * ARGV[3] = ttl; ARGV[4] = max
  */
 const APPEND_SCRIPT = `${LUA_HEADER}
+if redis.call('SISMEMBER', KEYS[2], ARGV[1]) == 1 then return -2 end
 local items = redis.call('LRANGE', KEYS[1], 0, -1)
 for _, item in ipairs(items) do
   local id = header(item)
@@ -87,9 +90,6 @@ return length
 
 /** KEYS[1] = queue */
 const LIST_SCRIPT = `return redis.call('LRANGE', KEYS[1], 0, -1)`;
-
-/** KEYS[1] = queue */
-const COUNT_SCRIPT = `return redis.call('LLEN', KEYS[1])`;
 
 /** Entries a run would take. KEYS[1] = queue; ARGV[1] = operation id */
 const LENGTH_SCRIPT = `${LUA_HEADER}
@@ -111,25 +111,30 @@ return 0
 
 /**
  * Takes the entries a run owns in one step: those queued behind it, unbound
- * ones, and orphans — bound to a run that is no longer live (it ended while
- * its own drain could not reach Redis). Entries behind another live run stay.
+ * ones, and those behind a run confirmed ended (it finished while its own drain
+ * could not reach Redis). Entries behind any other run stay — including one
+ * that started after the caller looked. Taken ids are recorded so a retried
+ * append of one is recognized.
  *
- * KEYS[1] = queue; ARGV[1] = operation id; ARGV[2..] = the surface's live runs
+ * KEYS[1] = queue; KEYS[2] = taken ids; ARGV[1] = operation id; ARGV[2] = ttl;
+ * ARGV[3..] = runs confirmed ended
  */
 const DRAIN_SCRIPT = `${LUA_HEADER}
-local live = {}
-for i = 2, #ARGV do live[ARGV[i]] = true end
+local ended = {}
+for i = 3, #ARGV do ended[ARGV[i]] = true end
 local taken = {}
 local kept = {}
 for _, item in ipairs(redis.call('LRANGE', KEYS[1], 0, -1)) do
-  local _, behind = header(item)
-  if takes(item, ARGV[1]) or (behind and not live[behind]) then
+  local id, behind = header(item)
+  if takes(item, ARGV[1]) or (behind and ended[behind]) then
     table.insert(taken, item)
+    if id then redis.call('SADD', KEYS[2], id) end
   else
     table.insert(kept, item)
   end
 end
 if #taken == 0 then return taken end
+redis.call('EXPIRE', KEYS[2], ARGV[2])
 local ttl = redis.call('TTL', KEYS[1])
 redis.call('DEL', KEYS[1])
 if #kept > 0 then
@@ -160,6 +165,16 @@ return length - max
 
 const keyOf = (scope: SteerQueueScope) =>
   RedisKeys.agentSteer.followUps(scope.userId, scope.topicId, scope.threadId);
+
+const takenKeyOf = (scope: SteerQueueScope) =>
+  RedisKeys.agentSteer.takenFollowUps(scope.userId, scope.topicId, scope.threadId);
+
+/** The operation an item waits behind, from its header. */
+const behindOf = (item: string) => {
+  const head = item.slice(0, Math.max(item.indexOf('\n'), 0));
+  const tab = head.indexOf('\t');
+  return tab < 0 ? undefined : head.slice(tab + 1);
+};
 
 const parseEntries = <T extends SteerQueueEntry>(raw: unknown): T[] => {
   if (!Array.isArray(raw)) return [];
@@ -192,9 +207,10 @@ export const steerQueue = {
    * Adds an entry at the tail, waiting behind `operationId`. Retrying with an
    * entry id that is already queued is a no-op.
    *
-   * @returns the queue length, `'full'` at {@link STEER_QUEUE_MAX_ENTRIES}, or
-   * `undefined` when it was not stored (no Redis, or a failed command that was
-   * taken back)
+   * @returns the queue length, `'full'` at {@link STEER_QUEUE_MAX_ENTRIES},
+   * `'taken'` when a drain already took this entry id (a retry of a write that
+   * landed), or `undefined` when it was not stored (no Redis, or a failed
+   * command that was taken back)
    * @throws {SteerQueueWriteUnknownError} when the command failed and taking
    * the entry back did not prove it absent (the take-back failed, or found
    * nothing because a drain may already have taken it)
@@ -207,13 +223,15 @@ export const steerQueue = {
     try {
       const length = await redis.eval<number>(
         APPEND_SCRIPT,
-        1,
+        2,
         key,
+        takenKeyOf(scope),
         entry.id,
         encode(entry, operationId),
         QUEUE_TTL_SECONDS,
         STEER_QUEUE_MAX_ENTRIES,
       );
+      if (Number(length) === -2) return 'taken' as const;
       return Number(length) < 0 ? ('full' as const) : Number(length);
     } catch (error) {
       // A timed-out command may still have committed. Take the entry back
@@ -234,35 +252,55 @@ export const steerQueue = {
 
   /**
    * Takes the entries `operationId` owns — queued behind it, unbound, or
-   * orphaned (bound to a run not in `liveOperationIds`) — oldest first.
-   * Entries behind another live run stay queued.
+   * behind one of `endedOperationIds` (runs the caller confirmed ended) —
+   * oldest first. Entries behind any other run stay queued.
    *
    * @throws when Redis is unavailable — an outage is not an empty queue; the
-   * entries stay, and the next run that drains the surface takes them
+   * entries stay, and a later run on the surface takes them
    */
   async drain<T extends SteerQueueEntry>(
     scope: SteerQueueScope,
     operationId: string,
-    liveOperationIds: string[],
+    endedOperationIds: string[],
   ): Promise<T[]> {
     const redis = await getClient();
     if (!redis) throw new Error('Redis is unavailable to drain queued follow-ups');
 
     return parseEntries<T>(
-      await redis.eval<unknown>(DRAIN_SCRIPT, 1, keyOf(scope), operationId, ...liveOperationIds),
+      await redis.eval<unknown>(
+        DRAIN_SCRIPT,
+        2,
+        keyOf(scope),
+        takenKeyOf(scope),
+        operationId,
+        QUEUE_TTL_SECONDS,
+        ...endedOperationIds,
+      ),
     );
   },
 
   /**
-   * Every entry waiting on the surface, whoever it waits behind.
+   * The runs the waiting entries are bound to (unbound ones excluded), so a
+   * caller can tell which of them ended. Empty when nothing is queued.
    *
    * @throws when Redis is unavailable, like {@link steerQueue.drain}
    */
-  async count(scope: SteerQueueScope): Promise<number> {
+  async boundOperations(
+    scope: SteerQueueScope,
+  ): Promise<{ operationIds: string[]; total: number }> {
     const redis = await getClient();
-    if (!redis) throw new Error('Redis is unavailable to count queued follow-ups');
+    if (!redis) throw new Error('Redis is unavailable to read queued follow-ups');
 
-    return Number(await redis.eval<number>(COUNT_SCRIPT, 1, keyOf(scope)));
+    const raw = await redis.eval<unknown>(LIST_SCRIPT, 1, keyOf(scope));
+    const items = Array.isArray(raw)
+      ? raw.filter((item): item is string => typeof item === 'string')
+      : [];
+    const operationIds = new Set<string>();
+    for (const item of items) {
+      const behind = behindOf(item);
+      if (behind && behind !== UNBOUND) operationIds.add(behind);
+    }
+    return { operationIds: [...operationIds], total: items.length };
   },
 
   /** Number of entries `operationId` would take; `0` without Redis. */

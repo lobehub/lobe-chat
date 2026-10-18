@@ -17,11 +17,14 @@ const {
   startComposerRun: vi.fn(),
 }));
 
-const { count, findOwnLiveRuns } = vi.hoisted(() => ({ count: vi.fn(), findOwnLiveRuns: vi.fn() }));
-vi.mock('@/server/services/redis', () => ({
-  redisService: { steerQueue: { count, drain, restore } },
+const { boundOperations, isRunAlive } = vi.hoisted(() => ({
+  boundOperations: vi.fn(),
+  isRunAlive: vi.fn(),
 }));
-vi.mock('./liveRuns', () => ({ findOwnLiveRuns }));
+vi.mock('@/server/services/redis', () => ({
+  redisService: { steerQueue: { boundOperations, drain, restore } },
+}));
+vi.mock('./liveRuns', () => ({ isRunAlive }));
 vi.mock('../composerRun', () => ({ startComposerRun }));
 vi.mock('@/server/routers/lambda/_helpers/workspaceAgentGuard', () => ({
   assertCanUseWorkspaceAgent,
@@ -81,8 +84,10 @@ describe('startQueuedFollowUp', () => {
     vi.clearAllMocks();
     drain.mockResolvedValue([]);
     restore.mockResolvedValue(0);
-    count.mockResolvedValue(1);
-    findOwnLiveRuns.mockResolvedValue(['op-live']);
+    boundOperations.mockResolvedValue({ operationIds: ['op-1', 'op-ended', 'op-live'], total: 3 });
+    isRunAlive.mockImplementation(
+      async (_ctx: unknown, _user: string, id: string) => id !== 'op-ended',
+    );
     assertCanUseWorkspaceAgent.mockResolvedValue(undefined);
     assertCanUseAgentRunConversation.mockResolvedValue(undefined);
     startComposerRun.mockResolvedValue({ operationId: 'op-2' });
@@ -98,8 +103,10 @@ describe('startQueuedFollowUp', () => {
     expect(drain).toHaveBeenCalledWith(
       { threadId: 'thd-1', topicId: 'tpc-1', userId: 'user-1' },
       'op-1',
-      ['op-live'],
+      // Only the run confirmed ended; the live one and the finishing run itself are not orphans.
+      ['op-ended'],
     );
+    expect(isRunAlive).not.toHaveBeenCalledWith(expect.anything(), 'user-1', 'op-1');
     expect(startComposerRun).toHaveBeenCalledWith(
       expect.objectContaining({ clientIp: 'ip-b', userId: 'user-1' }),
       expect.objectContaining({
@@ -166,11 +173,11 @@ describe('startQueuedFollowUp', () => {
   });
 
   it('skips the live-run lookup when nothing is queued', async () => {
-    count.mockResolvedValue(0);
+    boundOperations.mockResolvedValue({ operationIds: [], total: 0 });
 
     await expect(startQueuedFollowUp(ctx, finished({ topicId: 'tpc-1' }))).resolves.toBeUndefined();
 
-    expect(findOwnLiveRuns).not.toHaveBeenCalled();
+    expect(isRunAlive).not.toHaveBeenCalled();
     expect(drain).not.toHaveBeenCalled();
   });
 });

@@ -21,45 +21,52 @@ const createFakeRedis = () => {
   };
   const takes = (item: string, op: string) => ['*', op].includes(header(item).behind);
 
-  const evalScript = vi.fn(
-    async (script: string, _numKeys: number, key: string, ...args: any[]) => {
-      const list = listOf(key);
-      if (script.includes('local taken')) {
-        const [op, ...live] = args;
-        const owned = (item: string) => takes(item, op) || !live.includes(header(item).behind);
-        lists.set(
-          key,
-          list.filter((item) => !owned(item)),
-        );
-        return list.filter(owned);
-      }
-      if (script.includes('local count')) return list.filter((item) => takes(item, args[0])).length;
-      if (script.includes('LTRIM')) {
-        const [ttl, max, ...items] = args;
-        const restored = [...items, ...list];
-        lists.set(key, restored.slice(0, Number(max)));
-        ttls.set(key, Number(ttl));
-        return Math.max(restored.length - Number(max), 0);
-      }
-      if (script.includes('LREM')) {
-        const index = list.findIndex((item) => header(item).id === args[0]);
-        if (index < 0) return 0;
-        lists.set(key, list.toSpliced(index, 1));
-        return 1;
-      }
-      if (script.includes('RPUSH')) {
-        const [id, item, ttl, max] = args;
-        if (list.some((existing) => header(existing).id === id)) return list.length;
-        if (list.length >= Number(max)) return -1;
-        lists.set(key, [...list, item]);
-        ttls.set(key, Number(ttl));
-        return list.length + 1;
-      }
-      if (script.includes('LLEN')) return list.length;
-      if (script.includes('LRANGE')) return list;
-      throw new Error(`unexpected script: ${script}`);
-    },
-  );
+  const taken = new Map<string, Set<string>>();
+  const takenOf = (key: string) => {
+    if (!taken.has(key)) taken.set(key, new Set());
+    return taken.get(key)!;
+  };
+
+  const evalScript = vi.fn(async (script: string, numKeys: number, ...rest: any[]) => {
+    const [key, takenKey] = rest;
+    const args = rest.slice(numKeys);
+    const list = listOf(key);
+    if (script.includes('local taken')) {
+      const [op, _ttl, ...ended] = args;
+      const owned = (item: string) => takes(item, op) || ended.includes(header(item).behind);
+      for (const item of list.filter(owned)) takenOf(takenKey).add(header(item).id);
+      lists.set(
+        key,
+        list.filter((item) => !owned(item)),
+      );
+      return list.filter(owned);
+    }
+    if (script.includes('local count')) return list.filter((item) => takes(item, args[0])).length;
+    if (script.includes('LTRIM')) {
+      const [ttl, max, ...items] = args;
+      const restored = [...items, ...list];
+      lists.set(key, restored.slice(0, Number(max)));
+      ttls.set(key, Number(ttl));
+      return Math.max(restored.length - Number(max), 0);
+    }
+    if (script.includes('LREM')) {
+      const index = list.findIndex((item) => header(item).id === args[0]);
+      if (index < 0) return 0;
+      lists.set(key, list.toSpliced(index, 1));
+      return 1;
+    }
+    if (script.includes('RPUSH')) {
+      const [id, item, ttl, max] = args;
+      if (takenOf(takenKey).has(id)) return -2;
+      if (list.some((existing) => header(existing).id === id)) return list.length;
+      if (list.length >= Number(max)) return -1;
+      lists.set(key, [...list, item]);
+      ttls.set(key, Number(ttl));
+      return list.length + 1;
+    }
+    if (script.includes('LRANGE')) return list;
+    throw new Error(`unexpected script: ${script}`);
+  });
 
   return { client: { eval: evalScript }, lists, ttls };
 };
@@ -95,11 +102,11 @@ describe('redisService.steerQueue', () => {
     await redisService.steerQueue.append(scope, entry('a'), 'op-1');
     await redisService.steerQueue.append(scope, entry('b'), 'op-1');
 
-    await expect(redisService.steerQueue.drain(scope, 'op-1', ['op-1'])).resolves.toEqual([
+    await expect(redisService.steerQueue.drain(scope, 'op-1', [])).resolves.toEqual([
       entry('a'),
       entry('b'),
     ]);
-    await expect(redisService.steerQueue.drain(scope, 'op-1', ['op-1'])).resolves.toEqual([]);
+    await expect(redisService.steerQueue.drain(scope, 'op-1', [])).resolves.toEqual([]);
     await expect(redisService.steerQueue.length(scope, 'op-1')).resolves.toBe(0);
   });
 
@@ -108,11 +115,11 @@ describe('redisService.steerQueue', () => {
     await redisService.steerQueue.append(scope, entry('behind-2'), 'op-2');
 
     await expect(redisService.steerQueue.length(scope, 'op-1')).resolves.toBe(1);
-    await expect(redisService.steerQueue.drain(scope, 'op-1', ['op-1', 'op-2'])).resolves.toEqual([
+    await expect(redisService.steerQueue.drain(scope, 'op-1', [])).resolves.toEqual([
       entry('behind-1'),
     ]);
     expect(await ids()).toEqual(['behind-2']);
-    await expect(redisService.steerQueue.drain(scope, 'op-2', ['op-2'])).resolves.toEqual([
+    await expect(redisService.steerQueue.drain(scope, 'op-2', [])).resolves.toEqual([
       entry('behind-2'),
     ]);
   });
@@ -120,14 +127,14 @@ describe('redisService.steerQueue', () => {
   it('hands restored follow-ups to the next run that finishes on the surface', async () => {
     await redisService.steerQueue.append(scope, entry('a'), 'op-1');
     await redisService.steerQueue.append(scope, entry('b'), 'op-1');
-    const drained = await redisService.steerQueue.drain(scope, 'op-1', ['op-1']);
+    const drained = await redisService.steerQueue.drain(scope, 'op-1', []);
     await redisService.steerQueue.append(scope, entry('c'), 'op-2');
 
     await redisService.steerQueue.restore(scope, drained);
 
     expect(await ids()).toEqual(['a', 'b', 'c']);
     await expect(redisService.steerQueue.length(scope, 'op-2')).resolves.toBe(3);
-    await expect(redisService.steerQueue.drain(scope, 'op-2', ['op-2'])).resolves.toHaveLength(3);
+    await expect(redisService.steerQueue.drain(scope, 'op-2', [])).resolves.toHaveLength(3);
   });
 
   it('appends an entry id at most once, so a retry never duplicates the follow-up', async () => {
@@ -167,18 +174,23 @@ describe('redisService.steerQueue', () => {
     ).resolves.toBeUndefined();
     await expect(redisService.steerQueue.length(scope, 'op-1')).resolves.toBe(0);
     // An outage is not an empty queue: the drain says so, and the entries stay.
-    await expect(redisService.steerQueue.drain(scope, 'op-1', ['op-1'])).rejects.toThrow(
+    await expect(redisService.steerQueue.drain(scope, 'op-1', [])).rejects.toThrow(
       'Redis is unavailable',
     );
-    await expect(redisService.steerQueue.count(scope)).rejects.toThrow('Redis is unavailable');
+    await expect(redisService.steerQueue.boundOperations(scope)).rejects.toThrow(
+      'Redis is unavailable',
+    );
   });
 
-  it('lets the next run take follow-ups orphaned by a run that ended while Redis was out', async () => {
+  it('lets the next run take follow-ups behind a run confirmed ended, and only those', async () => {
     await redisService.steerQueue.append(scope, entry('orphan'), 'op-ended');
     await redisService.steerQueue.append(scope, entry('behind-live'), 'op-live');
 
-    await expect(redisService.steerQueue.count(scope)).resolves.toBe(2);
-    await expect(redisService.steerQueue.drain(scope, 'op-next', ['op-live'])).resolves.toEqual([
+    await expect(redisService.steerQueue.boundOperations(scope)).resolves.toEqual({
+      operationIds: ['op-ended', 'op-live'],
+      total: 2,
+    });
+    await expect(redisService.steerQueue.drain(scope, 'op-next', ['op-ended'])).resolves.toEqual([
       entry('orphan'),
     ]);
     expect(await ids()).toEqual(['behind-live']);
@@ -229,7 +241,7 @@ describe('redisService.steerQueue', () => {
     await redisService.steerQueue.append(scope, entry('mine'), 'op-1');
     await redisService.steerQueue.append({ ...scope, userId: 'u2' }, entry('theirs'), 'op-1');
 
-    await expect(redisService.steerQueue.drain(scope, 'op-1', ['op-1'])).resolves.toEqual([
+    await expect(redisService.steerQueue.drain(scope, 'op-1', [])).resolves.toEqual([
       entry('mine'),
     ]);
     expect(await ids({ ...scope, userId: 'u2' })).toEqual(['theirs']);
@@ -238,7 +250,7 @@ describe('redisService.steerQueue', () => {
   it('holds a restored queue to its bound, dropping and counting the newest overflow', async () => {
     await redisService.steerQueue.append(scope, entry('old-1'), 'op-1');
     await redisService.steerQueue.append(scope, entry('old-2'), 'op-1');
-    const drained = await redisService.steerQueue.drain(scope, 'op-1', ['op-1']);
+    const drained = await redisService.steerQueue.drain(scope, 'op-1', []);
     for (let i = 0; i < STEER_QUEUE_MAX_ENTRIES; i++) {
       await redisService.steerQueue.append(scope, entry(`new-${i}`), 'op-2');
     }
@@ -249,5 +261,13 @@ describe('redisService.steerQueue', () => {
     expect(queued).toHaveLength(STEER_QUEUE_MAX_ENTRIES);
     expect(queued.slice(0, 3)).toEqual(['old-1', 'old-2', 'new-0']);
     expect(queued).not.toContain(`new-${STEER_QUEUE_MAX_ENTRIES - 1}`);
+  });
+
+  it('recognizes a retry of an entry its run already took, instead of queueing it again', async () => {
+    await redisService.steerQueue.append(scope, entry('a'), 'op-1');
+    await redisService.steerQueue.drain(scope, 'op-1', []);
+
+    await expect(redisService.steerQueue.append(scope, entry('a'), 'op-2')).resolves.toBe('taken');
+    expect(await ids()).toEqual([]);
   });
 });

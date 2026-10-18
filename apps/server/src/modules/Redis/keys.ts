@@ -95,6 +95,13 @@ export const RedisKeys = {
      */
     followUps: (userId: string, topicId: string, threadId?: string | null): string =>
       `follow_ups:v1:${userId}:${topicId}:${threadId || 'main'}`,
+    /**
+     * Ids of follow-ups a drain already took from that queue, so a retried
+     * append of the same id is recognized instead of queued again.
+     * Full key: agentSteer:follow_ups_taken:v1:{userId}:{topicId}:{threadId|main}
+     */
+    takenFollowUps: (userId: string, topicId: string, threadId?: string | null): string =>
+      `follow_ups_taken:v1:${userId}:${topicId}:${threadId || 'main'}`,
   },
   /**
    * AI generation scope - for AI-generated content like welcome messages
