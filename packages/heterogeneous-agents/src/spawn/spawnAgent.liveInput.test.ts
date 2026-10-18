@@ -217,6 +217,73 @@ describe('spawnAgent live input (Claude Code)', () => {
     expect(end.data).toMatchObject({ reason: 'complete' });
   });
 
+  it('groups the summary after a background Bash completes under the tool that started it', async () => {
+    const fake = createLiveProc();
+    nextFakeProc = fake.proc;
+    const handle = await spawnAgent({
+      agentType: 'claude-code',
+      liveInput: true,
+      operationId: 'op-live',
+      prompt: 'run it in the background',
+    });
+    const events: any[] = [];
+    const drained = (async () => {
+      for await (const event of handle.events) events.push(event);
+    })();
+    await tick();
+
+    fake.emit(
+      line({ model: 'claude-sonnet-4-6', session_id: 'cc-1', subtype: 'init', type: 'system' }),
+    );
+    fake.emit(
+      line({
+        message: {
+          content: [
+            {
+              id: 'toolu_bash',
+              input: { command: 'sleep 1 && echo done', run_in_background: true },
+              name: 'Bash',
+              type: 'tool_use',
+            },
+          ],
+          id: 'msg_01',
+        },
+        type: 'assistant',
+      }),
+    );
+    fake.emit(
+      line({ subtype: 'task_started', task_id: 't-1', tool_use_id: 'toolu_bash', type: 'system' }),
+    );
+    fake.emit(
+      line({
+        message: {
+          content: [{ content: 'started', tool_use_id: 'toolu_bash', type: 'tool_result' }],
+        },
+        type: 'user',
+      }),
+    );
+    fake.emit(line({ is_error: false, result: 'started', subtype: 'success', type: 'result' }));
+    fake.emit(line({ subtype: 'task_notification', task_id: 't-1', type: 'system' }));
+    fake.emit(
+      line({
+        event: { message: { id: 'msg_02', model: 'claude-sonnet-4-6' }, type: 'message_start' },
+        type: 'stream_event',
+      }),
+    );
+    await tick();
+    fake.exit(0);
+    await drained;
+
+    const summary = events.find(
+      (event) => event.type === 'stream_start' && event.data?.messageId === 'msg_02',
+    );
+    expect(summary?.data.externalSignal).toEqual({
+      sourceToolCallId: 'toolu_bash',
+      sourceToolName: 'Bash',
+      type: 'task-completion',
+    });
+  });
+
   it('interrupts only the current turn through a control request', async () => {
     const fake = createLiveProc();
     nextFakeProc = fake.proc;

@@ -774,9 +774,13 @@ export const spawnAgent = async (options: SpawnAgentOptions): Promise<SpawnAgent
 
   const pipeline = new AgentStreamPipeline({
     // A live session can run more turns after its first `result`, so the
-    // runtime ends once, at process exit.
+    // runtime ends once, at process exit, and the turn a background task's
+    // completion opens is grouped under the tool that started it.
     adapter: liveInput
-      ? new ClaudeCodeAdapter({ runtimeEndStrategy: 'on-transport-close' })
+      ? new ClaudeCodeAdapter({
+          runtimeEndStrategy: 'on-transport-close',
+          signalBackgroundTaskCompletion: true,
+        })
       : undefined,
     agentType: options.agentType,
     cwd,

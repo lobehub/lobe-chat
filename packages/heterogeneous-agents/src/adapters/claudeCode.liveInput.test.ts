@@ -17,7 +17,10 @@ const newStepOf = (events: any[]) =>
 
 describe('ClaudeCodeAdapter live input', () => {
   it('opens the turn after a delivered user message as a user turn while a background task runs', () => {
-    const adapter = new ClaudeCodeAdapter({ runtimeEndStrategy: 'on-transport-close' });
+    const adapter = new ClaudeCodeAdapter({
+      runtimeEndStrategy: 'on-transport-close',
+      signalBackgroundTaskCompletion: true,
+    });
     adapter.adapt(init);
     adapter.adapt({
       message: {
@@ -65,7 +68,10 @@ describe('ClaudeCodeAdapter live input', () => {
   });
 
   it('still tags a turn the background task opens without user input', () => {
-    const adapter = new ClaudeCodeAdapter({ runtimeEndStrategy: 'on-transport-close' });
+    const adapter = new ClaudeCodeAdapter({
+      runtimeEndStrategy: 'on-transport-close',
+      signalBackgroundTaskCompletion: true,
+    });
     adapter.adapt(init);
     adapter.adapt({
       message: {
