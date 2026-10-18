@@ -3,8 +3,13 @@ import { type ConversationContext } from '@lobechat/types';
 import superjson, { type SuperJSONResult } from 'superjson';
 
 import {
+  type ForwardMessagePage,
+  ForwardPagingUnsupportedError,
+  primeForwardMessagePage,
   primeMessageListPage,
+  readMessagesForward,
   type RoundCursorQueryResult,
+  SHARED_TOPIC_FIRST_PAGE,
   toMessageListPage,
   toRoundCursorQueryInput,
 } from '@/services/message/roundCursorPage';
@@ -27,12 +32,53 @@ declare global {
  * The conversation a share link shows. The rendered list and the primed read
  * must build it identically, or the list misses the primed page and asks again.
  */
-export const toSharedConversationContext = (topic: SharedTopicTarget): ConversationContext => ({
+export const toSharedConversationContext = (
+  topic: SharedTopicTarget,
+  readMode: SharedTopicReadMode = 'backward',
+): ConversationContext => ({
   agentId: topic.agentId ?? '',
   groupId: topic.groupId ?? undefined,
+  ...(readMode === 'forward' && { messageReadMode: 'forward' as const }),
   topicId: topic.topicId,
   topicShareId: topic.shareId,
 });
+
+export type SharedTopicReadMode = 'backward' | 'forward';
+
+/** How the share document reads its transcript, decided once by the loader. */
+export interface SharedTopicFirstPage {
+  /** The first rounds, embedded in the document; null when the client reads them. */
+  firstPage: ForwardMessagePage | null;
+  messageReadMode: SharedTopicReadMode;
+}
+
+type ForwardReadClient = Parameters<typeof readMessagesForward>[0];
+
+/**
+ * Read a share's first rounds forward for the document. A server that cannot
+ * page forward keeps the page on the newest-first read; any other failure
+ * leaves the first page to the client, still forward.
+ */
+export const readSharedTopicFirstPage = async (
+  client: ForwardReadClient,
+  shareId: string,
+): Promise<SharedTopicFirstPage> => {
+  try {
+    const firstPage = await readMessagesForward(
+      client,
+      { topicShareId: shareId },
+      null,
+      SHARED_TOPIC_FIRST_PAGE,
+    );
+    return { firstPage, messageReadMode: 'forward' };
+  } catch (error) {
+    if (error instanceof ForwardPagingUnsupportedError) {
+      return { firstPage: null, messageReadMode: 'backward' };
+    }
+    console.error('[share] shared topic first page SSR fetch failed:', error);
+    return { firstPage: null, messageReadMode: 'forward' };
+  }
+};
 
 /** The list's first read of the share, as the unbatched tRPC GET the lambda route serves. */
 export const sharedTopicMessagesUrl = (topic: SharedTopicTarget) => {
@@ -86,11 +132,21 @@ const takeDocumentSharedTopicMessages = (shareId: string) => {
 };
 
 /**
- * Hand the messages the document started reading to the list, so they arrive
- * while the conversation chunks are still downloading instead of after they
- * mount. Taken once: a later navigation's list reads for itself.
+ * Hand the messages the document carries to the list, so it paints without
+ * waiting for its own read: the embedded first rounds when reading forward,
+ * else the newest page the document's script started. Taken once: a later
+ * navigation's list reads for itself.
  */
-export const primeSharedTopicMessages = (topic: SharedTopicTarget) => {
+export const primeSharedTopicMessages = (
+  topic: SharedTopicTarget,
+  { firstPage, messageReadMode }: SharedTopicFirstPage,
+) => {
+  if (messageReadMode === 'forward') {
+    if (firstPage)
+      primeForwardMessagePage(toSharedConversationContext(topic, 'forward'), firstPage);
+    return;
+  }
+
   const page = takeDocumentSharedTopicMessages(topic.shareId);
   if (!page) return;
 

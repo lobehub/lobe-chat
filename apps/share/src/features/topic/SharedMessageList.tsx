@@ -7,22 +7,23 @@ import { useTranslation } from 'react-i18next';
 
 import { ChatList, ConversationProvider, MessageItem } from '@/features/Conversation';
 
-import { toSharedConversationContext } from './sharedConversation';
+import { type SharedTopicReadMode, toSharedConversationContext } from './sharedConversation';
 
 interface SharedMessageListProps {
   agentId: string | null;
   groupId: string | null;
   headerSlot?: ReactNode;
+  messageReadMode: SharedTopicReadMode;
   shareId: string;
   topicId: string;
 }
 
 const SharedMessageList = memo<SharedMessageListProps>((props) => {
-  const { agentId, groupId, headerSlot, shareId, topicId } = props;
+  const { agentId, groupId, headerSlot, messageReadMode, shareId, topicId } = props;
   const { t } = useTranslation('chat');
   const context = useMemo(
-    () => toSharedConversationContext({ agentId, groupId, shareId, topicId }),
-    [agentId, groupId, shareId, topicId],
+    () => toSharedConversationContext({ agentId, groupId, shareId, topicId }, messageReadMode),
+    [agentId, groupId, messageReadMode, shareId, topicId],
   );
 
   const itemContent = useCallback(

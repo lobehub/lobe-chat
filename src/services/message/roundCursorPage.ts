@@ -166,3 +166,24 @@ export const takePrimedMessageListPage = (
 
   return page;
 };
+
+/** First forward pages handed over by the document, by conversation. */
+const primedForwardPages = new Map<string, Promise<ForwardMessagePage>>();
+
+/** Hand over a conversation's first forward page; its forward head read takes it once. */
+export const primeForwardMessagePage = (
+  context: MessageListQueryContext,
+  page: ForwardMessagePage,
+): void => {
+  primedForwardPages.set(primeKey(context), Promise.resolve(page));
+};
+
+export const takePrimedForwardMessagePage = (
+  context: MessageListQueryContext,
+): Promise<ForwardMessagePage> | undefined => {
+  const key = primeKey(context);
+  const page = primedForwardPages.get(key);
+  if (page) primedForwardPages.delete(key);
+
+  return page;
+};
