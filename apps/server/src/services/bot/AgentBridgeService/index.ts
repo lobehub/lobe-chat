@@ -19,12 +19,12 @@ import { messengerPlatformRegistry } from '@/server/services/messenger/platforms
 import { isQueueAgentRuntimeEnabled } from '@/server/services/queue/impls';
 import { SystemAgentService } from '@/server/services/systemAgent';
 
-import { createBotCompletionWebhook } from './createBotCompletionHook';
-import { deferBotMessages, isDeferredMessagesAvailable } from './deferredMessages';
-import { runDeferredReplay, scheduleDeferredReplay } from './deferredReplay';
-import { buildBotSender, formatPrompt as formatPromptUtil } from './formatPrompt';
-import { getSourceMessages } from './mergeMessages';
-import type { BotReactionMode, BotReplyLocale, PlatformClient } from './platforms';
+import { createBotCompletionWebhook } from '../createBotCompletionHook';
+import { deferBotMessages, isDeferredMessagesAvailable } from '../deferredMessages';
+import { runDeferredReplay, scheduleDeferredReplay } from '../deferredReplay';
+import { buildBotSender, formatPrompt as formatPromptUtil } from '../formatPrompt';
+import { getSourceMessages } from '../mergeMessages';
+import type { BotReactionMode, BotReplyLocale, PlatformClient } from '../platforms';
 import {
   DEFAULT_BOT_REACTION_MODE,
   getBotReplyLocale,
@@ -34,11 +34,11 @@ import {
   RECEIVED_REACTION_EMOJI,
   shouldApplyReaction,
   THINKING_REACTION_EMOJI,
-} from './platforms';
-import { resolveUnsupportedMessageApis } from './platforms/messageCapabilities';
-import { clearReactionState, saveReactionState } from './reactionState';
-import { buildRecentChannelHistory } from './recentChannelHistory';
-import { renderThrownAgentError } from './renderThrownError';
+} from '../platforms';
+import { resolveUnsupportedMessageApis } from '../platforms/messageCapabilities';
+import { clearReactionState, saveReactionState } from '../reactionState';
+import { buildRecentChannelHistory } from '../recentChannelHistory';
+import { renderThrownAgentError } from '../renderThrownError';
 import {
   renderAgentError,
   renderErrorWithDetails,
@@ -47,7 +47,7 @@ import {
   renderStepProgress,
   renderStopped,
   splitMessage,
-} from './replyTemplate';
+} from '../replyTemplate';
 
 const log = debug('lobe-server:bot:agent-bridge');
 

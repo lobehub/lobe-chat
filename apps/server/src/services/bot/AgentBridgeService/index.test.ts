@@ -87,7 +87,7 @@ vi.mock('@/server/services/bot/platforms', async (importOriginal) => {
   };
 });
 
-const { AgentBridgeService } = await import('../AgentBridgeService');
+const { AgentBridgeService } = await import('./index');
 const { AiAgentService } = await import('@/server/services/aiAgent');
 
 const FAKE_DB = {} as any;

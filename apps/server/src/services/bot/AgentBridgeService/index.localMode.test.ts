@@ -77,7 +77,7 @@ vi.mock('@/server/services/bot/platforms', async (importOriginal) => {
   return { ...actual, platformRegistry: { getPlatform: mockGetPlatform } };
 });
 
-const { AgentBridgeService } = await import('../AgentBridgeService');
+const { AgentBridgeService } = await import('./index');
 
 const FAKE_DB = {} as any;
 const USER_ID = 'user-123';
