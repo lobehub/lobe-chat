@@ -89,4 +89,24 @@ describe('LLM mock endpoint', { timeout: 20_000 }, () => {
     expect(parseContent(text)).toBe('registered reply');
     expect(text.trimEnd().endsWith('data: [DONE]')).toBe(true);
   });
+
+  // Regression: after the first start the worker cached the resolved start and
+  // never checked again, so once the process exited (idle timeout) every later
+  // registration went to a dead port.
+  it('starts the process again after it exits', async () => {
+    await fetch(`${LLM_MOCK_URL}/__e2e/shutdown`, { method: 'POST' });
+    for (let attempt = 0; attempt < 50; attempt += 1) {
+      const up = await fetch(`${LLM_MOCK_URL}/__e2e/health`).then(
+        (res) => res.ok,
+        () => false,
+      );
+      if (!up) break;
+      await new Promise((resolve) => setTimeout(resolve, 100));
+    }
+
+    await registerLLMReplies({ replies: [reply('after restart', 'exact', 'restarted reply')] });
+
+    expect(await complete('after restart')).toBe('restarted reply');
+    await registerLLMReplies({ clear: ['exact:after restart'] });
+  });
 });

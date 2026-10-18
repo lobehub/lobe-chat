@@ -81,7 +81,8 @@ let starting: Promise<void> | undefined;
 /**
  * Make sure the shared endpoint is up, starting its process when nobody
  * serves the port yet. Safe to call from every worker: concurrent starters
- * race for the port and the losers exit.
+ * race for the port and the losers exit. Only an in-flight start is shared;
+ * every later call checks again, because the process exits once idle.
  */
 export const ensureLLMMockServer = (): Promise<void> => {
   starting ??= (async () => {
@@ -97,9 +98,8 @@ export const ensureLLMMockServer = (): Promise<void> => {
     throw new Error(
       `LLM mock endpoint did not start on ${LLM_MOCK_URL}. Log (${LOG_FILE}):\n${readLog()}`,
     );
-  })().catch((error) => {
+  })().finally(() => {
     starting = undefined;
-    throw error;
   });
   return starting;
 };
