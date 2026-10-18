@@ -116,8 +116,20 @@ Follow up with \`lh topic view <id>\`, \`lh goal show <id>\` or \`lh doc view <i
         topics = [],
       } = result ?? {};
 
+      // Hydration-only filters can empty the message page even when the
+      // provider pool was cut, so the caveat must survive an empty section.
+      const printTruncationNote = () => {
+        if (!messages.truncated) return;
+        console.log(
+          pc.yellow(
+            'Only the most relevant message matches were considered; narrow --since/--until to see the rest.',
+          ),
+        );
+      };
+
       if (!goals.length && !messages.items.length && !pages.length && !topics.length) {
         console.log('Nothing found in this window.');
+        printTruncationNote();
         return;
       }
 
@@ -167,13 +179,6 @@ Follow up with \`lh topic view <id>\`, \`lh goal show <id>\` or \`lh doc view <i
             ),
           );
         }
-        if (messages.truncated) {
-          console.log(
-            pc.yellow(
-              'Only the most relevant message matches were considered; narrow --since/--until to see the rest.',
-            ),
-          );
-        }
       }
 
       if (pages.length) {
@@ -187,5 +192,7 @@ Follow up with \`lh topic view <id>\`, \`lh goal show <id>\` or \`lh doc view <i
           ['ID', 'TITLE', 'UPDATED'],
         );
       }
+
+      printTruncationNote();
     });
 }

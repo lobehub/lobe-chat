@@ -129,6 +129,31 @@ describe('recall command', () => {
     expect(text).toContain('More messages');
   });
 
+  it('keeps the truncation caveat when the window is otherwise empty', async () => {
+    mockTrpcClient.search.recall.query.mockResolvedValue({
+      ...emptyResult,
+      messages: { hasMore: false, items: [], truncated: true },
+    });
+
+    await createProgram().parseAsync(['node', 'test', 'recall', 'x', '--exact']);
+
+    expect(output()).toContain('Nothing found in this window.');
+    expect(output()).toContain('Only the most relevant message matches were considered');
+  });
+
+  it('keeps the truncation caveat when only other sections have results', async () => {
+    mockTrpcClient.search.recall.query.mockResolvedValue({
+      ...emptyResult,
+      goals: [{ id: 'goal_1', status: 'paused', title: 'x goal' }],
+      messages: { hasMore: false, items: [], truncated: true },
+    });
+
+    await createProgram().parseAsync(['node', 'test', 'recall', 'x']);
+
+    expect(output()).toContain('goal_1');
+    expect(output()).toContain('Only the most relevant message matches were considered');
+  });
+
   it('rejects unknown types before calling the server', async () => {
     await createProgram().parseAsync(['node', 'test', 'recall', 'x', '-t', 'goal,agent']);
 

@@ -1,4 +1,5 @@
-import { and, asc, desc, gte, lte, or, sql } from 'drizzle-orm';
+import type { GoalStatus } from '@lobechat/const/goal';
+import { and, asc, desc, inArray, lte, or, sql } from 'drizzle-orm';
 
 import { goals } from '../../schemas/goal';
 import type { LobeChatDatabase } from '../../type';
@@ -6,14 +7,29 @@ import { escapeLike, ilikeContains } from '../../utils/like';
 import { buildWorkspaceWhere } from '../../utils/workspace';
 import type { FtsSearchGoalResult } from '../ftsSearch/types';
 
+/** Lifecycle states after which a goal is no longer active. */
+const TERMINAL_STATUSES: GoalStatus[] = ['achieved', 'failed', 'canceled'];
+
 export interface GoalSearchOptions {
   /** Only goals created at or before this instant. */
   endDate?: Date;
   limit?: number;
   query: string;
-  /** Only goals still active (updated) at or after this instant. */
+  /** Only goals still open, or finished at or after this instant. */
   startDate?: Date;
 }
+
+/**
+ * When a goal stopped being active. `GoalModel` stamps `completedAt` on every
+ * terminal transition, while `updatedAt` only records the last edit — an open
+ * goal untouched since before the window was still active throughout it.
+ * Terminal rows that predate `completedAt` fall back to their last update.
+ */
+const lifetimeEnd = sql`COALESCE(${goals.completedAt}, CASE WHEN ${inArray(goals.status, TERMINAL_STATUSES)} THEN ${goals.updatedAt} END)`;
+
+/** Open goals have no end, so they overlap every window that starts after their creation. */
+const activeSince = (startDate: Date) =>
+  sql<boolean>`(${lifetimeEnd} IS NULL OR ${lifetimeEnd} >= ${startDate})`;
 
 /**
  * Lookup for goals by title or requirement.
@@ -67,7 +83,7 @@ export class GoalSearchRepo {
         and(
           buildWorkspaceWhere({ userId: this.userId, workspaceId: this.workspaceId }, goals),
           or(titleContains, ilikeContains(goals.requirement, text)),
-          startDate ? gte(goals.updatedAt, startDate) : undefined,
+          startDate ? activeSince(startDate) : undefined,
           endDate ? lte(goals.createdAt, endDate) : undefined,
         ),
       )

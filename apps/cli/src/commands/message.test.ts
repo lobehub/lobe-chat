@@ -261,6 +261,21 @@ describe('message command', () => {
       expect(output).toContain('Only the most relevant matches were considered');
     });
 
+    it('keeps the truncation caveat when filtering empties the page', async () => {
+      mockTrpcClient.message.searchByKeyword.query.mockResolvedValue({
+        hasMore: false,
+        items: [],
+        truncated: true,
+      });
+
+      const program = createProgram();
+      await program.parseAsync(['node', 'test', 'message', 'search', 'x', '--exact']);
+
+      const output = consoleSpy.mock.calls.map((call) => call.join(' ')).join('\n');
+      expect(output).toContain('No messages found.');
+      expect(output).toContain('Only the most relevant matches were considered');
+    });
+
     it('rejects an impossible calendar date instead of shifting the window', async () => {
       const program = createProgram();
       await program.parseAsync(['node', 'test', 'message', 'search', 'x', '--until', '2026-02-31']);

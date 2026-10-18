@@ -70,6 +70,12 @@ const searchProcedure = wsCompatProcedure.use(serverDatabase).use(async (opts) =
   });
 });
 
+/** Memoizes an async factory so concurrent callers share one initialization. */
+const once = <T>(load: () => Promise<T>) => {
+  let pending: Promise<T> | undefined;
+  return () => (pending ??= load());
+};
+
 /** Recall is DB-only, so it skips the marketplace identity lookup entirely. */
 const recallProcedure = wsCompatProcedure.use(serverDatabase);
 
@@ -331,34 +337,43 @@ export const searchRouter = router({
     )
     .query(async ({ input, ctx }) => {
       const workspaceId = ctx.workspaceId ?? undefined;
-      const [excludeKnowledgeBaseIds, entitySearchRepo, messageSearchRepo] = await Promise.all([
-        getRestrictedKnowledgeBaseIds(ctx),
-        createFtsSearchRepo({
-          db: ctx.serverDB,
-          userId: ctx.userId,
-          usage: 'unified_search',
-          workspaceId,
-        }),
-        createFtsSearchRepo({
-          db: ctx.serverDB,
-          userId: ctx.userId,
-          usage: 'message_search',
-          workspaceId,
-        }),
-      ]);
-      const messageModel = new MessageModel(
-        ctx.serverDB,
-        ctx.userId,
-        workspaceId,
-        messageSearchRepo,
+      // Dependencies resolve on first use, so a goal-only recall never needs
+      // the full-text provider (or the restricted-KB lookup) to be available.
+      const entitySearch = once(async () => {
+        const [excludeKnowledgeBaseIds, repo] = await Promise.all([
+          getRestrictedKnowledgeBaseIds(ctx),
+          createFtsSearchRepo({
+            db: ctx.serverDB,
+            userId: ctx.userId,
+            usage: 'unified_search',
+            workspaceId,
+          }),
+        ]);
+        return { excludeKnowledgeBaseIds, repo };
+      });
+      const messageModel = once(
+        async () =>
+          new MessageModel(
+            ctx.serverDB,
+            ctx.userId,
+            workspaceId,
+            await createFtsSearchRepo({
+              db: ctx.serverDB,
+              userId: ctx.userId,
+              usage: 'message_search',
+              workspaceId,
+            }),
+          ),
       );
       const goalSearchRepo = new GoalSearchRepo(ctx.serverDB, ctx.userId, workspaceId);
 
       return new RecallService({
-        searchEntities: (options) =>
-          entitySearchRepo.search({ ...options, excludeKnowledgeBaseIds }),
+        searchEntities: async (options) => {
+          const { excludeKnowledgeBaseIds, repo } = await entitySearch();
+          return repo.search({ ...options, excludeKnowledgeBaseIds });
+        },
         searchGoals: goalSearchRepo.search,
-        searchMessages: messageModel.searchByKeyword,
+        searchMessages: async (params) => (await messageModel()).searchByKeyword(params),
       }).recall(input);
     }),
 });

@@ -30,6 +30,13 @@ interface MessageSearchOptions {
   user?: boolean;
 }
 
+const printTruncationNote = () =>
+  console.log(
+    pc.yellow(
+      'Only the most relevant matches were considered; narrow with --since/--until or --topic-id to see the rest.',
+    ),
+  );
+
 export function registerMessageCommand(program: Command) {
   const message = program.command('message').description('Manage messages');
 
@@ -196,6 +203,8 @@ export function registerMessageCommand(program: Command) {
 
       if (result.items.length === 0) {
         console.log('No messages found.');
+        // Hydration-only filters can empty a page cut from a truncated pool.
+        if (result.truncated) printTruncationNote();
         return;
       }
 
@@ -212,13 +221,7 @@ export function registerMessageCommand(program: Command) {
       if (result.hasMore) {
         console.log(pc.dim(`\nMore results: add -P ${page + 1}`));
       }
-      if (result.truncated) {
-        console.log(
-          pc.yellow(
-            'Only the most relevant matches were considered; narrow with --since/--until or --topic-id to see the rest.',
-          ),
-        );
-      }
+      if (result.truncated) printTruncationNote();
     });
 
   // ── delete ────────────────────────────────────────────

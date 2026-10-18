@@ -337,5 +337,17 @@ describe('searchRouter', () => {
       expect(DiscoverService).not.toHaveBeenCalled();
       expect(UserModel.findById).not.toHaveBeenCalled();
     });
+
+    it('runs a goal-only recall without initializing full-text search', async () => {
+      vi.mocked(createFtsSearchRepo).mockRejectedValue(new Error('provider unavailable'));
+      searchGoals.mockResolvedValue([{ id: 'goal_1', title: 'Replica', type: 'goal' }]);
+      const caller = searchRouter.createCaller({ userId: 'test-user' } as any);
+
+      const result = await caller.recall({ query: 'replica', types: ['goal'] });
+
+      expect(result.goals.map(({ id }) => id)).toEqual(['goal_1']);
+      expect(createFtsSearchRepo).not.toHaveBeenCalled();
+      expect(MessageModel).not.toHaveBeenCalled();
+    });
   });
 });
