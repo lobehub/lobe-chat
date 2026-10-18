@@ -198,6 +198,27 @@ describe('MessageModel.searchByKeyword', () => {
     expect(exact.items.map(({ id }) => id)).toEqual(['kw-upper']);
   });
 
+  it('matches whole terms in exact mode, the same on every provider', async () => {
+    const messageModel = await seed([
+      { content: '打通KESTREL模式', id: 'kw-cjk', role: 'user', topicId: 'kw-chat', userId },
+      { content: 'KESTREL.', id: 'kw-punct', role: 'user', topicId: 'kw-chat', userId },
+      { content: 'the KESTRELS flew', id: 'kw-plural', role: 'user', topicId: 'kw-chat', userId },
+      { content: 'MKESTREL build', id: 'kw-prefixed', role: 'user', topicId: 'kw-chat', userId },
+      { content: 'ship C++20 now', id: 'kw-cpp', role: 'user', topicId: 'kw-chat', userId },
+    ]);
+
+    const term = await messageModel.searchByKeyword({ exact: true, keyword: 'KESTREL' });
+    // A tokenizing provider never retrieves "KESTRELS"/"MKESTREL" for KESTREL; pg_like
+    // does, so the PostgreSQL check must drop them for the providers to agree.
+    expect(term.items.map(({ id }) => id).sort()).toEqual(['kw-cjk', 'kw-punct']);
+
+    const partial = await messageModel.searchByKeyword({ exact: true, keyword: 'STREL' });
+    expect(partial.items).toEqual([]);
+
+    const symbol = await messageModel.searchByKeyword({ exact: true, keyword: 'C++' });
+    expect(symbol.items.map(({ id }) => id)).toEqual(['kw-cpp']);
+  });
+
   it('pages with limit and offset', async () => {
     const messageModel = await seed(
       [1, 2, 3].map((n) => ({
@@ -295,6 +316,30 @@ describe('MessageModel.searchByKeyword', () => {
     );
     // The provider matched 5000 rows but returned one: lower-ranked matches were dropped.
     expect(result.truncated).toBe(true);
+  });
+
+  it('narrows candidate retrieval to the requested roles, topic and agent', async () => {
+    const ftsSearchCandidates = vi.fn().mockResolvedValue({ candidates: [], total: 0 });
+    const model = new MessageModel(serverDB, userId, undefined, {
+      ftsSearchCandidateEnabled: true,
+      ftsSearchCandidates,
+    });
+
+    await model.searchByKeyword({
+      agentId: 'kw-agent',
+      keyword: 'scoped',
+      roles: ['user'],
+      topicId: 'kw-chat',
+    });
+
+    expect(ftsSearchCandidates).toHaveBeenCalledWith(
+      expect.objectContaining({
+        filters: {
+          messageScope: { roles: ['user'], topicId: 'kw-chat' },
+          topicScope: { agentId: 'kw-agent' },
+        },
+      }),
+    );
   });
 });
 

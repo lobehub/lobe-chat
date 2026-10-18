@@ -284,6 +284,9 @@ export const searchElasticsearchCandidates = async (
   }
   if (entity === 'messages') {
     mustNot.push({ term: { role: 'tool' } });
+    const { roles, topicId } = request.filters.messageScope ?? {};
+    if (roles?.length) filter.push({ terms: { role: roles } });
+    if (topicId) filter.push({ term: { topic_id: topicId } });
   }
   if (request.filters.excludeVirtual && entity === 'agents') {
     mustNot.push({ term: { virtual: true } });

@@ -524,6 +524,47 @@ describe('FtsSearchRepo (pg_like)', () => {
       expect(response.candidates.map((candidate) => candidate.id)).not.toContain(early.id);
     });
 
+    it('applies the message scope before the candidate limit', async () => {
+      await serverDB.insert(topics).values([
+        { id: 'scope-topic-a', title: 'A', userId },
+        { id: 'scope-topic-b', title: 'B', userId },
+      ]);
+      await serverDB.insert(messages).values([
+        // Stronger matches outside the requested topic and role.
+        {
+          content: 'kubernetes',
+          id: 'scope-other-topic',
+          role: 'user',
+          topicId: 'scope-topic-b',
+          userId,
+        },
+        {
+          content: 'kubernetes',
+          id: 'scope-other-role',
+          role: 'assistant',
+          topicId: 'scope-topic-a',
+          userId,
+        },
+        {
+          content: 'notes on kubernetes upgrades',
+          id: 'scope-hit',
+          role: 'user',
+          topicId: 'scope-topic-a',
+          userId,
+        },
+      ]);
+
+      const repo = createRepo(serverDB, userId);
+      const response = await repo.ftsSearchCandidates({
+        entity: 'messages',
+        filters: { messageScope: { roles: ['user'], topicId: 'scope-topic-a' } },
+        pagination: { limit: 1 },
+        query: { text: 'kubernetes' },
+      });
+
+      expect(response.candidates.map((candidate) => candidate.id)).toEqual(['scope-hit']);
+    });
+
     it('applies topic scope to topics and messages before the candidate limit', async () => {
       const [agentA, agentB] = await serverDB
         .insert(agents)

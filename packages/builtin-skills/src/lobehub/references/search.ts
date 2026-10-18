@@ -21,7 +21,7 @@ earlier thread). One call replaces paging through \`lh message list\` and greppi
 - \`--since\` / \`--until\` take an ISO time, a local day (\`2026-10-12\`), or a relative span (\`24h\`, \`7d\`, \`2w\`)
 - Topics merge title matches with conversations whose messages matched, so a topic named differently still shows up
 - Goals are matched by title and requirement; internal code names often live there rather than in messages
-- \`--exact\` makes message matching case-sensitive, so an acronym like \`STAMP\` stops matching the word "stamp"
+- \`--exact\` makes message matching a case-sensitive whole-term match, so an acronym like \`STAMP\` stops matching "stamp" or "STAMPED"
 - System-written prompts of task, cron and eval runs are hidden; add \`--include-system\` to see them
 - Follow up with \`lh topic view <id>\`, \`lh goal show <id>\` or \`lh doc view <id>\`
 

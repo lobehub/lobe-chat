@@ -119,7 +119,10 @@ export function registerMessageCommand(program: Command) {
     .option('--user', 'Shorthand for --role user')
     .option('--topic-id <id>', 'Only messages in this topic')
     .option('--agent-id <id>', 'Only messages of this agent')
-    .option('--exact', 'Case-sensitive substring match (STAMP will not match "stamp")')
+    .option(
+      '--exact',
+      'Case-sensitive whole-term match (STAMP will not match "stamp" or "STAMPED")',
+    )
     .option('--include-system', 'Include system-written prompts of task, cron and eval runs')
     .option('-L, --limit <n>', 'Page size (max 100)', '20')
     .option('-P, --page <n>', 'Page number', '1')

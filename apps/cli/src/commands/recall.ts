@@ -37,7 +37,10 @@ export function registerRecallCommand(program: Command) {
     .option('--since <when>', `Window start (${TIME_POINT_HELP})`)
     .option('--until <when>', `Window end (${TIME_POINT_HELP})`)
     .option('-t, --type <types>', `Only these types, comma-separated: ${RECALL_TYPES.join(', ')}`)
-    .option('--exact', 'Case-sensitive substring match for messages (STAMP will not match "stamp")')
+    .option(
+      '--exact',
+      'Case-sensitive whole-term match for messages (STAMP will not match "stamp" or "STAMPED")',
+    )
     .option('--include-system', 'Include system-written prompts of task, cron and eval runs')
     .option('-L, --limit <n>', 'Results per type (max 50)', '10')
     .option('--json [fields]', 'Output JSON, optionally specify fields (comma-separated)')

@@ -1,6 +1,7 @@
 import type { SQL } from 'drizzle-orm';
 import { and, desc, eq, gte, inArray, isNull, lte, ne, notInArray, or, sql } from 'drizzle-orm';
 
+import type { FtsSearchBackendFilters } from '../../repositories/ftsSearch';
 import { messages, topics } from '../../schemas';
 import { sanitizeBm25Query } from '../../utils/bm25';
 import { inJsonStringArray } from '../../utils/inJsonStringArray';
@@ -41,7 +42,12 @@ const SNIPPET_AFTER = 200;
 export interface MessageKeywordSearchParams {
   agentId?: string;
   endDate?: Date;
-  /** Case-sensitive substring match on top of full-text retrieval. */
+  /**
+   * Case-sensitive whole-term match on top of full-text retrieval: `STAMP`
+   * matches "STAMP mode" but not "stamp" or "STAMPED". Whole terms keep the
+   * result identical across tokenizing (pg_search, Elasticsearch) and
+   * substring (pg_like) providers.
+   */
   exact?: boolean;
   /** Keep system-written `user` prompts of automation topics in the results. */
   includeAutomatedPrompts?: boolean;
@@ -74,6 +80,46 @@ export interface MessageKeywordSearchResult {
    */
   truncated: boolean;
 }
+
+const ASCII_WORD = /\w/;
+
+/**
+ * PostgreSQL regex for a case-sensitive whole-term match. A boundary is only
+ * required on a side where the term starts or ends with an ASCII word
+ * character, so `C++` still matches "C++20" and CJK terms match inside CJK text.
+ */
+export const exactTermPattern = (term: string) => {
+  const escaped = term.replaceAll(/[$()*+.?[\\\]^{|}]/g, '\\$&');
+  const left = ASCII_WORD.test(term[0]) ? '(^|[^A-Za-z0-9_])' : '';
+  const right = ASCII_WORD.test(term.at(-1)!) ? '([^A-Za-z0-9_]|$)' : '';
+  return `${left}${escaped}${right}`;
+};
+
+/**
+ * Candidate-side narrowing. Every filter re-applied after hydration that the
+ * index can express goes here, so a bounded pool is cut inside the caller's
+ * scope rather than across all of their messages. The agent filter rides on
+ * `topicScope`, which keeps legacy rows without `agent_id` for the
+ * authoritative session-aware check in PostgreSQL.
+ */
+const candidateFilters = ({
+  agentId,
+  endDate,
+  roles,
+  startDate,
+  topicId,
+}: Pick<
+  MessageKeywordSearchParams,
+  'agentId' | 'endDate' | 'roles' | 'startDate' | 'topicId'
+>): FtsSearchBackendFilters => ({
+  ...((startDate || endDate) && {
+    timeRange: { end: endDate, field: 'createdAt', start: startDate },
+  }),
+  ...(agentId && { topicScope: { agentId } }),
+  ...((roles?.length || topicId) && {
+    messageScope: { ...(roles?.length && { roles }), ...(topicId && { topicId }) },
+  }),
+});
 
 /**
  * A window of `content` around the first keyword occurrence, whitespace
@@ -132,10 +178,7 @@ export class MessageKeywordSearchQueries extends MessageScope {
     const candidateResult = this.ftsSearchCandidateSource?.ftsSearchCandidateEnabled
       ? await this.ftsSearchCandidateSource.ftsSearchCandidates({
           entity: 'messages',
-          filters:
-            startDate || endDate
-              ? { timeRange: { end: endDate, field: 'createdAt', start: startDate } }
-              : {},
+          filters: candidateFilters({ agentId, endDate, roles, startDate, topicId }),
           pagination: { limit: MESSAGE_KEYWORD_SEARCH_CANDIDATE_POOL },
           query: { fields: ['content'], text },
         })
@@ -155,7 +198,7 @@ export class MessageKeywordSearchQueries extends MessageScope {
       candidateIds
         ? inJsonStringArray(messages.id, candidateIds)
         : sql`${messages.content} @@@ ${sanitizeBm25Query(text)}`,
-      exact ? sql`strpos(${messages.content}, ${text}) > 0` : undefined,
+      exact ? sql`${messages.content} ~ ${exactTermPattern(text)}` : undefined,
       startDate ? gte(messages.createdAt, startDate) : undefined,
       endDate ? lte(messages.createdAt, endDate) : undefined,
       roles?.length ? inArray(messages.role, roles) : undefined,

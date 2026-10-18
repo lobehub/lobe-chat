@@ -31,7 +31,7 @@ const candidates = (
 const sentFilters = (client: ElasticsearchFtsSearchClient) =>
   vi.mocked(client.search).mock.calls[0][0].body.query.bool.filter;
 
-describe('ElasticsearchFtsSearchBackend time range', () => {
+describe('ElasticsearchFtsSearchBackend candidate filters', () => {
   it.each([
     ['messages', 'createdAt', 'created_at'],
     ['topics', 'updatedAt', 'updated_at'],
@@ -69,5 +69,21 @@ describe('ElasticsearchFtsSearchBackend time range', () => {
     await backend.search(candidates('agents', { timeRange: { end, field: 'createdAt', start } }));
 
     expect(sentFilters(client).some((clause: object) => 'range' in clause)).toBe(false);
+  });
+
+  it('narrows message candidates to the requested roles and topic', async () => {
+    const client = createClient();
+    const backend = new ElasticsearchFtsSearchBackend(db, { client, indexNamespace: 'test' });
+
+    await backend.search(
+      candidates('messages', { messageScope: { roles: ['user', 'assistant'], topicId: 'tpc_x' } }),
+    );
+
+    expect(sentFilters(client)).toEqual(
+      expect.arrayContaining([
+        { terms: { role: ['user', 'assistant'] } },
+        { term: { topic_id: 'tpc_x' } },
+      ]),
+    );
   });
 });

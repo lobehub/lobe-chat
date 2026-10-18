@@ -499,6 +499,12 @@ const CANDIDATE_TARGETS: Record<FtsSearchBackendEntity, CandidateTarget | undefi
       searchableMessage(),
       ...topicScopeWhere(messages, filters, true),
       timeRangeWhere(messages, filters.timeRange),
+      filters.messageScope?.roles?.length
+        ? inArray(messages.role, filters.messageScope.roles)
+        : undefined,
+      filters.messageScope?.topicId
+        ? eq(messages.topicId, filters.messageScope.topicId)
+        : undefined,
     ],
   },
   personaDocuments: {

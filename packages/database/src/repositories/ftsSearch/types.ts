@@ -248,6 +248,15 @@ export interface FtsSearchBackendFilters {
   };
   memoryTypes?: string[];
   /**
+   * Message-only candidate narrowing (roles, parent topic). Bounded pools are
+   * cut by score, so filters a caller re-applies after hydration must also
+   * narrow retrieval or stronger out-of-scope rows exhaust the pool.
+   */
+  messageScope?: {
+    roles?: string[];
+    topicId?: string;
+  };
+  /**
    * Window for topics, messages and documents; other entities ignore it. Every
    * provider applies it during retrieval so bounded pools stay in the window.
    */
