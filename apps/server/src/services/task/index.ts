@@ -1,6 +1,7 @@
 import { TASK_ASSIGNEE_PERMISSION_CODES } from '@lobechat/const/rbac';
 import type { TaskContext, TaskDetailData, TaskItem } from '@lobechat/types';
 import { TRPCError } from '@trpc/server';
+import pMap from 'p-map';
 
 import { AgentModel } from '@/database/models/agent';
 import { ProjectModel } from '@/database/models/project';
@@ -28,6 +29,9 @@ import {
 import { interruptTaskOperation, resolveTaskOrThrow } from './utils';
 
 export type { UpdateStatusCascadeResult, UpdateStatusResult } from './statusTransitions';
+
+/** Subtask runs started at once when kicking off a ready layer. */
+const SUBTASK_KICKOFF_CONCURRENCY = 5;
 
 /** How long after a run starts a task may have no recorded operation yet. */
 const TASK_RUN_STARTING_GRACE_MS = 2 * 60 * 1000;
@@ -528,13 +532,19 @@ export class TaskService {
     const kickedOff: string[] = [];
     const failed: { error: string; identifier: string }[] = [];
 
-    const settled = await Promise.allSettled(
-      firstLayer.map(async (identifier) => {
-        const id = identifierToId.get(identifier);
-        if (!id) throw new Error(`Subtask ${identifier} not found`);
-        await runner.runTask({ taskId: id });
-        return identifier;
-      }),
+    const settled = await pMap(
+      firstLayer,
+      async (identifier): Promise<PromiseSettledResult<string>> => {
+        try {
+          const id = identifierToId.get(identifier);
+          if (!id) throw new Error(`Subtask ${identifier} not found`);
+          await runner.runTask({ taskId: id });
+          return { status: 'fulfilled', value: identifier };
+        } catch (reason) {
+          return { reason, status: 'rejected' };
+        }
+      },
+      { concurrency: SUBTASK_KICKOFF_CONCURRENCY },
     );
 
     for (const [index, result] of settled.entries()) {

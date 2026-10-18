@@ -3,6 +3,7 @@ import { randomUUID } from 'node:crypto';
 import { UNFINISHED_TASK_STATUSES } from '@lobechat/builtin-tool-task';
 import type { TaskContext, TaskItem, TaskSchedulerContext, TaskStatus } from '@lobechat/types';
 import { TRPCError } from '@trpc/server';
+import pMap from 'p-map';
 
 import { taskActivityActor, TaskModel } from '@/database/models/task';
 import { TaskTopicModel } from '@/database/models/taskTopic';
@@ -13,6 +14,9 @@ import { createTaskSchedulerModule } from '../taskScheduler';
 import { assertArchivedTaskStaysIdle, writeKeepingArchivedIdle } from './archiveGuard';
 import type { TaskServiceDeps } from './deps';
 import { interruptTaskOperation, resolveTaskOrThrow } from './utils';
+
+/** Concurrent agent-operation interrupts issued by one status cascade. */
+const INTERRUPT_CONCURRENCY = 5;
 
 export interface UpdateStatusResult {
   allSubtasksDone?: boolean;
@@ -257,14 +261,25 @@ export async function updateStatusCascade(
 
   const runningTopics = await deps.taskTopicModel.findRunningByTaskIds(targetIds);
   if (runningTopics.length > 0) {
-    const settled = await Promise.allSettled(
-      runningTopics.map(async (topic) => {
-        if (topic.operationId) {
-          await interruptTaskOperation(aiAgentService, topic.operationId);
+    // Settled-shaped results, in input order, so a failed interrupt never
+    // hides which of the others actually stopped.
+    const settled = await pMap(
+      runningTopics,
+      async (topic): Promise<PromiseSettledResult<void>> => {
+        try {
+          if (topic.operationId) {
+            await interruptTaskOperation(aiAgentService, topic.operationId);
+          }
+          return { status: 'fulfilled', value: undefined };
+        } catch (reason) {
+          return { reason, status: 'rejected' };
         }
-      }),
+      },
+      { concurrency: INTERRUPT_CONCURRENCY },
     );
-    const failure = settled.find((result) => result.status === 'rejected');
+    const failure = settled.find(
+      (result): result is PromiseRejectedResult => result.status === 'rejected',
+    );
     if (failure) {
       // Persist the interrupts that did succeed before surfacing the error,
       // so an actually-stopped operation is not left recorded as running.
@@ -315,10 +330,13 @@ export async function updateStatusCascade(
 
   // Best-effort: stop any operation discovered only inside the transaction.
   const interruptedOperationIds = new Set(runningTopics.map((topic) => topic.operationId));
-  await Promise.allSettled(
-    canceledTopics
-      .filter((topic) => topic.operationId && !interruptedOperationIds.has(topic.operationId))
-      .map((topic) => aiAgentService.interruptTask({ operationId: topic.operationId! })),
+  await pMap(
+    canceledTopics.filter(
+      (topic) => topic.operationId && !interruptedOperationIds.has(topic.operationId),
+    ),
+    (topic) =>
+      aiAgentService.interruptTask({ operationId: topic.operationId! }).catch(() => undefined),
+    { concurrency: INTERRUPT_CONCURRENCY },
   );
 
   const task = updatedTasks.find(({ id }) => id === resolved.id);
