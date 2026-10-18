@@ -446,6 +446,32 @@ describe('BotMessageRouter', () => {
       }
     });
 
+    it('settles every replay with bounded concurrency and rethrows the first failure', async () => {
+      mockFindEnabledByPlatform.mockResolvedValue([makeProvider({ applicationId: 'tg-bot-123' })]);
+      const replays = Array.from({ length: 6 }, (_, index) => ({ id: `m${index}` }));
+      mockDrainDeferredBotMessages.mockResolvedValue(replays);
+      mockBuildReplayMessages.mockReturnValue(replays);
+
+      let inFlight = 0;
+      let maxInFlight = 0;
+      const failure = new Error('replay m1 failed');
+      mockProcessMessage.mockImplementation(async (_adapter, _thread, message: { id: string }) => {
+        inFlight += 1;
+        maxInFlight = Math.max(maxInFlight, inFlight);
+        await new Promise((resolve) => setTimeout(resolve, 5));
+        inFlight -= 1;
+        if (message.id === 'm1') throw failure;
+      });
+
+      const router = new BotMessageRouter();
+      await expect(router.replayDeferredMessages('telegram', 'tg-bot-123', THREAD)).rejects.toBe(
+        failure,
+      );
+
+      expect(mockProcessMessage).toHaveBeenCalledTimes(replays.length);
+      expect(maxInFlight).toBeLessThanOrEqual(3);
+    });
+
     it('does nothing (and does not load the bot) when nothing was deferred', async () => {
       mockBuildReplayMessages.mockReturnValue([]);
 

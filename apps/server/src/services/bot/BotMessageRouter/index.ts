@@ -2,6 +2,7 @@ import { createIoRedisState } from '@chat-adapter/state-ioredis';
 import type { Message, WebhookOptions } from 'chat';
 import { Chat, ConsoleLogger } from 'chat';
 import debug from 'debug';
+import pMap from 'p-map';
 
 import { getServerDB } from '@/database/core/db-adaptor';
 import type { DecryptedBotProvider } from '@/database/models/agentBotProvider';
@@ -36,6 +37,9 @@ import { dispatchTextCommand } from './utils';
 const WEBHOOK_RECONCILE_COOLDOWN_MS = 5 * 60 * 1000;
 /** Redis key prefix for the fleet-wide reconcile cooldown (SET NX EX). */
 const WEBHOOK_RECONCILE_KEY_PREFIX = 'bot:webhook-reconcile';
+
+/** Max deferred messages replayed through the pipeline at the same time. */
+const REPLAY_CONCURRENCY = 3;
 
 const log = debug('lobe-server:bot:message-router');
 
@@ -266,11 +270,12 @@ export class BotMessageRouter {
 
     const { config: providerConfig, settings } = resolveBotProviderConfig(entry, provider);
 
+    // Decrypted provider settings can carry platform credentials: log key names only.
     log(
-      'createAndRegisterBot: %s settings merge: userSettings=%j, merged=%j',
+      'createAndRegisterBot: %s settings merge: userSettingKeys=%j, mergedKeys=%j',
       key,
-      provider.settings,
-      settings,
+      Object.keys(provider.settings ?? {}),
+      Object.keys(settings ?? {}),
     );
 
     const runtimeContext: BotPlatformRuntimeContext = {
@@ -461,10 +466,16 @@ export class BotMessageRouter {
       const bot = await this.getOrCreateBot(platform, applicationId);
       const adapter = bot?.adapters[platform];
       if (!bot || !adapter) throw new Error(`Bot adapter unavailable for ${platform}`);
-      const results = await Promise.allSettled(
-        buildReplayMessages(entries).map((message) =>
-          bot.chatBot.processMessage(adapter, platformThreadId, message),
-        ),
+      // Settle every replay (same as `Promise.allSettled`) but cap how many
+      // messages go through the full pipeline at once.
+      const results = await pMap(
+        buildReplayMessages(entries),
+        (message): Promise<PromiseSettledResult<unknown>> =>
+          bot.chatBot.processMessage(adapter, platformThreadId, message).then(
+            (value) => ({ status: 'fulfilled', value }),
+            (reason: unknown) => ({ reason, status: 'rejected' }),
+          ),
+        { concurrency: REPLAY_CONCURRENCY },
       );
       const failure = results.find((result) => result.status === 'rejected');
       if (failure?.status === 'rejected') throw failure.reason;
