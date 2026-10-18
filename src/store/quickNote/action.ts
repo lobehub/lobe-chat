@@ -1,7 +1,7 @@
 import { debounce } from 'es-toolkit/compat';
 
-import { mutate, useClientDataSWR } from '@/libs/swr';
-import { quickNoteService } from '@/services/quickNote';
+import { mutate, useClientDataSWR, useOnlyFetchOnceSWR } from '@/libs/swr';
+import { type QuickNoteItem, quickNoteService } from '@/services/quickNote';
 import type { StoreSetter } from '@/store/types';
 import { flattenActions } from '@/store/utils/flattenActions';
 
@@ -28,6 +28,8 @@ export const PERSIST_MAX_WAIT = 5000;
 
 type Setter = StoreSetter<QuickNoteStore>;
 
+/** Each store generation (a reset on scope switch) reads its own list entry. */
+let quickNoteListGeneration = 0;
 const agenticDetailKey = (id: string) => ['QUICK_NOTE_AGENTIC_DETAIL', id] as const;
 
 /**
@@ -47,6 +49,8 @@ export class QuickNoteActionImpl {
   readonly #set: (state: Partial<QuickNoteStore>, replace?: false, action?: string) => void;
   readonly #rawSet: Setter;
   #disposed = false;
+  #notesHydrated = false;
+  readonly #listKey = ['QUICK_NOTE_LIST', ++quickNoteListGeneration] as const;
   #pollingActive = true;
   readonly #observedAnalyze = new Set<string>();
   readonly #observedDive = new Set<string>();
@@ -123,49 +127,80 @@ export class QuickNoteActionImpl {
     for (const id of this.#observedDive) this.#scheduleDivePoll(id);
   };
 
+  /**
+   * Loads the note list once for a mounted Quick Note surface.
+   *
+   * Use when:
+   * - A Home feed or Note route mounts and needs the list.
+   *
+   * Expects:
+   * - Local edits made after the first load are authoritative, so later responses do not replace them.
+   *
+   * Returns:
+   * - The SWR response; results are projected into the store.
+   */
+  useFetchNotes = (enabled = true) =>
+    useOnlyFetchOnceSWR(enabled ? this.#listKey : null, () => quickNoteService.getNotes(), {
+      onError: () => this.#markNotesLoadFailed(),
+      onSuccess: (notes: QuickNoteItem[]) => this.#hydrateNotes(notes),
+    });
+
+  /** Loads the note list imperatively (retry, or before creating a note outside a mounted surface). */
   initNotes = async () => {
     if (this.#disposed) return;
     if (this.#get().notesInit && !this.#get().notesLoadError) return;
     this.#set({ notesLoadError: false }, false, 'initNotes/start');
 
     try {
-      const notes = await quickNoteService.getNotes();
-      const divingNoteIds = notes
-        .filter(
-          (note) => note.run?.kind === 'dive' && ['pending', 'running'].includes(note.run.status),
-        )
-        .map((note) => note.id);
-      const analyzingActiveNoteIds = notes
-        .filter(
-          (note) =>
-            note.run?.kind === 'analyze' && ['pending', 'running'].includes(note.run.status),
-        )
-        .map((note) => note.id);
-      this.#set(
-        {
-          divingNoteIds,
-          notes,
-          notesInit: true,
-          notesLoadError: false,
-        },
-        false,
-        'initNotes/success',
-      );
-      for (const id of divingNoteIds) {
-        this.#diveBaselineAnnotationTimes.set(
-          id,
-          notes.find((note) => note.id === id)?.annotation?.divedAt,
-        );
-        this.#scheduleDivePoll(id);
-      }
-      for (const id of analyzingActiveNoteIds) this.#scheduleAnalyzePoll(id);
-      for (const note of notes) {
-        if (note.analyzeDueAt && !analyzingActiveNoteIds.includes(note.id)) {
-          this.#scheduleAnalyze(note.id, note.analyzeDueAt);
-        }
-      }
+      this.#hydrateNotes(await quickNoteService.getNotes());
     } catch {
-      this.#set({ notesInit: true, notesLoadError: true }, false, 'initNotes/failed');
+      this.#markNotesLoadFailed();
+    }
+  };
+
+  #markNotesLoadFailed = () => {
+    if (this.#disposed) return;
+    this.#set({ notesInit: true, notesLoadError: true }, false, 'initNotes/failed');
+  };
+
+  #hydrateNotes = (notes: QuickNoteItem[]) => {
+    if (this.#disposed) return;
+    // A later response must not overwrite edits made after the first successful load.
+    if (this.#notesHydrated) return;
+    this.#notesHydrated = true;
+
+    const divingNoteIds = notes
+      .filter(
+        (note) => note.run?.kind === 'dive' && ['pending', 'running'].includes(note.run.status),
+      )
+      .map((note) => note.id);
+    const analyzingActiveNoteIds = notes
+      .filter(
+        (note) => note.run?.kind === 'analyze' && ['pending', 'running'].includes(note.run.status),
+      )
+      .map((note) => note.id);
+    this.#set(
+      {
+        divingNoteIds,
+        notes,
+        notesInit: true,
+        notesLoadError: false,
+      },
+      false,
+      'initNotes/success',
+    );
+    for (const id of divingNoteIds) {
+      this.#diveBaselineAnnotationTimes.set(
+        id,
+        notes.find((note) => note.id === id)?.annotation?.divedAt,
+      );
+      this.#scheduleDivePoll(id);
+    }
+    for (const id of analyzingActiveNoteIds) this.#scheduleAnalyzePoll(id);
+    for (const note of notes) {
+      if (note.analyzeDueAt && !analyzingActiveNoteIds.includes(note.id)) {
+        this.#scheduleAnalyze(note.id, note.analyzeDueAt);
+      }
     }
   };
 

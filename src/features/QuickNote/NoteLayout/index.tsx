@@ -1,7 +1,7 @@
 'use client';
 
 import { Flexbox } from '@lobehub/ui';
-import { type FC, useEffect } from 'react';
+import { type FC } from 'react';
 import { Navigate, Outlet } from 'react-router';
 
 import { useQuickNoteStore } from '@/store/quickNote';
@@ -12,11 +12,8 @@ import { useQuickNotePersistenceLifecycle } from './useQuickNotePersistenceLifec
 import { useQuickNoteRouteAccess } from './useQuickNoteRouteAccess';
 
 const NoteLayoutContent: FC = () => {
-  const initNotes = useQuickNoteStore((s) => s.initNotes);
-
-  useEffect(() => {
-    initNotes();
-  }, [initNotes]);
+  const useFetchNotes = useQuickNoteStore((s) => s.useFetchNotes);
+  useFetchNotes();
 
   useQuickNotePersistenceLifecycle();
 

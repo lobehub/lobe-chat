@@ -6,6 +6,7 @@ import {
   type QuickNoteResourceReference,
 } from '@lobechat/types';
 import { and, desc, eq, ilike, inArray, isNotNull, isNull, ne, notInArray, or } from 'drizzle-orm';
+import pMap from 'p-map';
 
 import { AgentModel } from '@/database/models/agent';
 import { QuickNoteModel } from '@/database/models/quickNote';
@@ -367,8 +368,12 @@ export class QuickNoteProcessingService {
           )
           .slice(0, 5);
         // Publish terminal state only after its related-resource projection is durable.
-        await Promise.all(
-          relatedResources.map((resource) => this.model.linkResource(params.runId, resource)),
+        await pMap(
+          relatedResources,
+          (resource) => this.model.linkResource(params.runId, resource),
+          {
+            concurrency: 5,
+          },
         );
         const annotation = await this.model.acceptAnnotation(params.runId, {
           content: output.annotation,
@@ -776,14 +781,17 @@ export class QuickNoteProcessingService {
           workspaceId: this.workspaceId,
         })
           .then((repository) =>
-            Promise.all(
-              searchTerms.flatMap((query) => [
-                repository.search({ limitPerType: 6, query, type: 'topic' }),
-                repository.search({ limitPerType: 6, query, type: 'message' }),
-              ]),
+            pMap(
+              searchTerms,
+              (query) =>
+                Promise.all([
+                  repository.search({ limitPerType: 6, query, type: 'topic' }),
+                  repository.search({ limitPerType: 6, query, type: 'message' }),
+                ]),
+              { concurrency: 4 },
             ),
           )
-          .then((results) => results.flat())
+          .then((results) => results.flat(2))
           // Internal retrieval is optional bootstrap context. A deployment with
           // no configured search provider must still complete Analyze.
           .catch(() => []),

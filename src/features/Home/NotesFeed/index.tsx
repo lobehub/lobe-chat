@@ -1,7 +1,7 @@
 'use client';
 
 import { Flexbox, SearchBar, Text } from '@lobehub/ui';
-import { memo, useEffect, useMemo, useState } from 'react';
+import { memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useQuickNotePersistenceLifecycle } from '@/features/QuickNote/NoteLayout/useQuickNotePersistenceLifecycle';
@@ -13,15 +13,13 @@ import FeedItem from './FeedItem';
 const NotesFeed = memo(() => {
   useQuickNotePersistenceLifecycle();
   const { t } = useTranslation('note');
-  const initNotes = useQuickNoteStore((s) => s.initNotes);
+  const useFetchNotes = useQuickNoteStore((s) => s.useFetchNotes);
   const notes = useQuickNoteStore((s) => s.notes);
   const notesInit = useQuickNoteStore((s) => s.notesInit);
   const notesLoadError = useQuickNoteStore((s) => s.notesLoadError);
   const [keywords, setKeywords] = useState('');
 
-  useEffect(() => {
-    initNotes();
-  }, [initNotes]);
+  useFetchNotes();
 
   const list = useMemo(() => {
     const kw = keywords.trim().toLowerCase();

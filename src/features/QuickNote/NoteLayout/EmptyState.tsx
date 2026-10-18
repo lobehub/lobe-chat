@@ -32,9 +32,7 @@ const EmptyState = memo<{ searchActive: boolean }>(({ searchActive }) => {
       <Text align={'center'} color={cssVar.colorTextTertiary} fontSize={12}>
         {t('list.emptyHint')}
       </Text>
-      <Button size={'small'} onClick={handleCreate}>
-        {t('list.newNote')}
-      </Button>
+      <Button onClick={handleCreate}>{t('list.newNote')}</Button>
     </Flexbox>
   );
 });

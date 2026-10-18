@@ -9,15 +9,16 @@ import {
   Markdown,
   Tag,
   Text,
-  TextArea,
   toast,
 } from '@lobehub/ui';
 import { ListTodoIcon } from 'lucide-react';
-import { memo, useState } from 'react';
+import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import type { QuickNoteProposal } from '@/services/quickNote';
 import { quickNoteSelectors, useQuickNoteStore } from '@/store/quickNote';
+
+import { openQuickNoteTextEditModal, quickNoteTextEditTitles } from './TextEditModal';
 
 const styles = createStaticStyles(({ css, cssVar: token }) => ({
   card: css`
@@ -31,8 +32,6 @@ const styles = createStaticStyles(({ css, cssVar: token }) => ({
 const ProposalCard = memo<{ noteId: string; proposal: QuickNoteProposal }>(
   ({ noteId, proposal }) => {
     const { t } = useTranslation('note');
-    const [editing, setEditing] = useState(false);
-    const [draft, setDraft] = useState(proposal.content);
     const [acceptProposal, dismissProposal, updateProposal] = useQuickNoteStore((s) => [
       s.acceptProposal,
       s.dismissProposal,
@@ -60,67 +59,38 @@ const ProposalCard = memo<{ noteId: string; proposal: QuickNoteProposal }>(
           </Flexbox>
           {proposal.validity === 'stale' && <Tag>{t('agentic.proposal.status.stale')}</Tag>}
         </Flexbox>
-        {editing ? (
-          <TextArea
-            autoFocus
-            autoSize={{ maxRows: 8, minRows: 3 }}
-            value={draft}
-            onChange={(event) => setDraft(event.target.value)}
-          />
-        ) : (
-          <Markdown fontSize={13} variant={'chat'}>
-            {proposal.content}
-          </Markdown>
-        )}
+        <Markdown fontSize={13} variant={'chat'}>
+          {proposal.content}
+        </Markdown>
         {actionable && (
           <Flexbox horizontal gap={6} justify={'flex-end'} wrap={'wrap'}>
-            {editing ? (
-              <>
-                <Button
-                  disabled={processing}
-                  type={'text'}
-                  onClick={() => {
-                    setDraft(proposal.content);
-                    setEditing(false);
-                  }}
-                >
-                  {t('agentic.proposal.cancelEdit')}
-                </Button>
-                <Button
-                  disabled={!draft.trim()}
-                  loading={processing}
-                  type={'primary'}
-                  onClick={() =>
-                    runAction(async () => {
-                      await updateProposal(noteId, proposal.id, draft);
-                      setEditing(false);
-                    })
-                  }
-                >
-                  {t('agentic.proposal.save')}
-                </Button>
-              </>
-            ) : (
-              <>
-                <Button type={'text'} onClick={() => setEditing(true)}>
-                  {t('agentic.proposal.edit')}
-                </Button>
-                <Button
-                  disabled={processing}
-                  type={'text'}
-                  onClick={() => runAction(() => dismissProposal(noteId, proposal.id))}
-                >
-                  {t('agentic.proposal.dismiss')}
-                </Button>
-                <Button
-                  loading={processing}
-                  type={'primary'}
-                  onClick={() => runAction(() => acceptProposal(noteId, proposal.id))}
-                >
-                  {t('agentic.proposal.createTask')}
-                </Button>
-              </>
-            )}
+            <Button
+              disabled={processing}
+              type={'text'}
+              onClick={() =>
+                openQuickNoteTextEditModal({
+                  initialValue: proposal.content,
+                  onSave: (content) => updateProposal(noteId, proposal.id, content),
+                  title: quickNoteTextEditTitles.proposal(),
+                })
+              }
+            >
+              {t('agentic.proposal.edit')}
+            </Button>
+            <Button
+              disabled={processing}
+              type={'text'}
+              onClick={() => runAction(() => dismissProposal(noteId, proposal.id))}
+            >
+              {t('agentic.proposal.dismiss')}
+            </Button>
+            <Button
+              loading={processing}
+              type={'primary'}
+              onClick={() => runAction(() => acceptProposal(noteId, proposal.id))}
+            >
+              {t('agentic.proposal.createTask')}
+            </Button>
           </Flexbox>
         )}
       </Flexbox>

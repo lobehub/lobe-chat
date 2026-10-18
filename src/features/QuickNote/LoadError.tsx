@@ -16,7 +16,7 @@ const LoadError = memo(() => {
       <Text align={'center'} type={'danger'}>
         {t('list.loadFailed')}
       </Text>
-      <Button size={'small'} type={'text'} onClick={initNotes}>
+      <Button type={'text'} onClick={initNotes}>
         {t('list.retryLoad')}
       </Button>
     </Flexbox>
