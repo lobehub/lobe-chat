@@ -59,10 +59,10 @@ import type { LobeChatDatabase } from '@/database/type';
 import { AiGenerationService } from '@/server/services/aiGeneration';
 import { ConnectorDataService } from '@/server/services/connectorData';
 
-import { understandingProviderMap } from './providers';
-import type { StoredUnderstandingProviderContext } from './sourceStore';
-import { MAX_SOURCE_BRIEF_LENGTH, UnderstandingSourceStore } from './sourceStore';
-import type { UnderstandingProvider } from './types';
+import { understandingProviderMap } from '../providers';
+import type { StoredUnderstandingProviderContext } from '../sourceStore';
+import { MAX_SOURCE_BRIEF_LENGTH, UnderstandingSourceStore } from '../sourceStore';
+import type { UnderstandingProvider } from '../types';
 
 const BASELINE_MAX_LENGTH = 8_000;
 const MAX_AGENT_INPUT_LENGTH = 128_000;

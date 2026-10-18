@@ -6,9 +6,9 @@ import {
 } from '@lobechat/types';
 import { vi } from 'vitest';
 
-import { UnderstandingService, type UnderstandingServiceDependencies } from './service';
-import type { StoredUnderstandingProviderContext } from './sourceStore';
-import type { UnderstandingProvider } from './types';
+import type { StoredUnderstandingProviderContext } from '../sourceStore';
+import type { UnderstandingProvider } from '../types';
+import { UnderstandingService, type UnderstandingServiceDependencies } from '.';
 
 export const analysis: UnderstandingAnalysis = {
   composition: {
