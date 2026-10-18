@@ -199,6 +199,7 @@
   "acceptance.gate.leadProbes": "{{count}} تجارب مكتملة. بمجرد البدء، تتبع الوحدات المتبقية {{remaining}} هذه الخطة على دفعات.",
   "acceptance.gate.leadRework": "تمت إعادة العمل: {{codes}}.",
   "acceptance.gate.nextWaveTitle": "الموجة {{wave}}",
+  "acceptance.gate.planFiles": "{{count}} ملفات",
   "acceptance.gate.planTitle": "خطة التنفيذ",
   "acceptance.gate.releaseWave": "الموافقة وإطلاق الموجة {{wave}} ({{count}})",
   "acceptance.gate.remaining": "{{count}} أخرى بعد ذلك، كل موجة يتم مراجعتها بواسطة الوكيل الرئيسي. حوالي {{estimate}} رموز إجمالاً، مقدرة من التجارب.",

@@ -199,6 +199,7 @@
   "acceptance.gate.leadProbes": "{{count}} expériences sont terminées. Une fois que vous commencez, les {{remaining}} unités restantes suivent ce plan par lots.",
   "acceptance.gate.leadRework": "Retravaillé : {{codes}}.",
   "acceptance.gate.nextWaveTitle": "Vague {{wave}}",
+  "acceptance.gate.planFiles": "{{count}} fichiers",
   "acceptance.gate.planTitle": "Plan d'exécution",
   "acceptance.gate.releaseWave": "Approuver et publier la vague {{wave}} ({{count}})",
   "acceptance.gate.remaining": "{{count}} de plus après cela, chaque vague examinée par l'agent principal. Environ {{estimate}} jetons au total, estimé à partir des expériences.",

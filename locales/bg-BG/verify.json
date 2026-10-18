@@ -199,6 +199,7 @@
   "acceptance.gate.leadProbes": "{{count}} експеримента са завършени. След като започнете, останалите {{remaining}} единици следват този план на партиди.",
   "acceptance.gate.leadRework": "Преработено: {{codes}}.",
   "acceptance.gate.nextWaveTitle": "Вълна {{wave}}",
+  "acceptance.gate.planFiles": "{{count}} файла",
   "acceptance.gate.planTitle": "План за изпълнение",
   "acceptance.gate.releaseWave": "Одобрете и пуснете вълна {{wave}} ({{count}})",
   "acceptance.gate.remaining": "{{count}} още след това, всяка вълна прегледана от главния агент. Общо около {{estimate}} токена, изчислено от експериментите.",

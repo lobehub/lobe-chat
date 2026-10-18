@@ -199,6 +199,7 @@
   "acceptance.gate.leadProbes": "{{count}} experimenten zijn voltooid. Zodra u start, volgen de resterende {{remaining}} eenheden dit plan in batches.",
   "acceptance.gate.leadRework": "Herschreven: {{codes}}.",
   "acceptance.gate.nextWaveTitle": "Golf {{wave}}",
+  "acceptance.gate.planFiles": "{{count}} bestanden",
   "acceptance.gate.planTitle": "Uitvoeringsplan",
   "acceptance.gate.releaseWave": "Goedkeuren en vrijgeven golf {{wave}} ({{count}})",
   "acceptance.gate.remaining": "{{count}} meer daarna, elke golf beoordeeld door de hoofdagent. Ongeveer {{estimate}} tokens in totaal, geschat op basis van de experimenten.",
