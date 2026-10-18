@@ -1,4 +1,5 @@
 import { TRPCError } from '@trpc/server';
+import pMap from 'p-map';
 import { z } from 'zod';
 
 import { withScopedPermission } from '@/business/server/trpc-middlewares/rbacPermission';
@@ -7,6 +8,18 @@ import { router } from '@/libs/trpc/lambda';
 
 import { assertFileNotInRestrictedKnowledgeBase } from '../_helpers/knowledgeBaseAccess';
 import { fileProcedure } from './procedures';
+
+/** Caps the per-file knowledge-base access checks issued by a bulk delete. */
+export const FILE_ACCESS_CHECK_CONCURRENCY = 5;
+
+export const assertFilesNotInRestrictedKnowledgeBase = async (
+  ctx: Parameters<typeof assertFileNotInRestrictedKnowledgeBase>[0],
+  files: Array<{ id: string }>,
+): Promise<void> => {
+  await pMap(files, (file) => assertFileNotInRestrictedKnowledgeBase(ctx, file.id), {
+    concurrency: FILE_ACCESS_CHECK_CONCURRENCY,
+  });
+};
 
 const assertAllFilesAccessible = (requestedIds: string[], files: Array<{ id: string }>): void => {
   const accessibleIds = new Set(files.map((file) => file.id));
@@ -79,9 +92,7 @@ export const removeRouter = router({
       const ids = [...new Set(input.ids)];
       const targets = await ctx.fileModel.findByIds(ids);
       assertAllFilesAccessible(ids, targets);
-      await Promise.all(
-        targets.map((target) => assertFileNotInRestrictedKnowledgeBase(ctx, target.id)),
-      );
+      await assertFilesNotInRestrictedKnowledgeBase(ctx, targets);
 
       const needToRemoveFileList = await ctx.fileModel.deleteMany(
         ids,
