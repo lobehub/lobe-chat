@@ -58,6 +58,38 @@ export const resetProjectionScopeEpochs = (): void => {
   epochs.clear();
 };
 
+type ScopeResetListener = (scope: string) => void;
+const remoteResetListeners = new Set<ScopeResetListener>();
+
+/**
+ * Subscribe to a reset another renderer made (e.g. the Desktop main window
+ * switching servers while a topic popup is open). Windows share localStorage
+ * and IndexedDB but not memory, so each must drop its cached epoch and its own
+ * in-memory replicas; the epoch has already been advanced by the other window.
+ */
+export const subscribeRemoteProjectionScopeReset = (listener: ScopeResetListener) => {
+  remoteResetListeners.add(listener);
+  return () => {
+    remoteResetListeners.delete(listener);
+  };
+};
+
+/** Apply an epoch another renderer persisted (`storage` events reach only the other windows). */
+export const handleProjectionEpochStorageEvent = ({
+  key,
+  newValue,
+}: Pick<StorageEvent, 'key' | 'newValue'>): void => {
+  if (!key?.startsWith(EPOCH_PREFIX)) return;
+  const scope = key.slice(EPOCH_PREFIX.length);
+  const epoch = Number(newValue) || 0;
+  if (epochs.get(scope) === epoch) return;
+  epochs.set(scope, epoch);
+  for (const listener of remoteResetListeners) listener(scope);
+};
+
+if (typeof window !== 'undefined')
+  window.addEventListener('storage', handleProjectionEpochStorageEvent);
+
 /** The row as it is written: stamped with the scope's epoch once it has one. */
 export const stampProjection = <T>(
   { scope }: QueryProjectionKey,

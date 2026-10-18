@@ -21,6 +21,7 @@ import {
   IndexedDBQueryProjectionStorage,
   LocalStorageQueryProjectionStorage,
   markProjectionScopeReset,
+  subscribeRemoteProjectionScopeReset,
 } from '@/libs/queryProjectionStorage';
 import { mutate, useClientDataSWR } from '@/libs/swr';
 import { getCacheScope, isScopeTrusted, useCacheScope } from '@/libs/swr/useCacheScope';
@@ -206,6 +207,15 @@ export const readReplicaStoredKeys = async (
 /** Every slice the app created, so a data-context reset can reach them all. */
 const liveSlices = new Set<{ clear: () => Promise<boolean> }>();
 
+/** Clear this renderer's replicas and repaint them from the current context. */
+const retireLiveReplicas = (): void => {
+  for (const slice of liveSlices) void slice.clear();
+  // Every key a replica read used — not just `replica:sync`, since several
+  // replicas declare their own `syncKey` (messages, project files, git review,
+  // memories) — and nothing else.
+  void replicaSWRDriver.revalidate(isReplicaReadKey).catch(() => undefined);
+};
+
 /**
  * Wipe every replica for a new data context (`stores.reset()`: a Desktop
  * server switch or disconnect), then refetch what is mounted.
@@ -224,12 +234,14 @@ export const clearAllReplicas = (): void => {
   // Rows of replicas no slice exists for yet (a lazy route never opened this
   // session) are retired by the scope's reset epoch rather than deleted.
   markProjectionScopeReset(cacheScope.get());
-  for (const slice of liveSlices) void slice.clear();
-  // Every key a replica read used — not just `replica:sync`, since several
-  // replicas declare their own `syncKey` (messages, project files, git review,
-  // memories) — and nothing else.
-  void replicaSWRDriver.revalidate(isReplicaReadKey).catch(() => undefined);
+  retireLiveReplicas();
 };
+
+// Another renderer (the Desktop main window) reset this scope: its epoch is
+// already advanced, so only retire what this window holds in memory.
+subscribeRemoteProjectionScopeReset((scope) => {
+  if (scope === cacheScope.get()) retireLiveReplicas();
+});
 
 /** `createReplicaSlice` bound to the app's SWR driver. */
 export const createReplicaSlice = <TStore, TParams, TData, TFetched = TData>(

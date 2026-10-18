@@ -1,8 +1,13 @@
 import { REPLICA_INDEX_KEY } from '@lobechat/replica';
-import { beforeEach, describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { LocalStorageQueryProjectionStorage } from './localStorage';
-import { markProjectionScopeReset, resetProjectionScopeEpochs } from './resetEpoch';
+import {
+  handleProjectionEpochStorageEvent,
+  markProjectionScopeReset,
+  resetProjectionScopeEpochs,
+  subscribeRemoteProjectionScopeReset,
+} from './resetEpoch';
 
 const KEY = { queryKey: 'a', scope: 'u1:ws1' };
 const storage = () => new LocalStorageQueryProjectionStorage<string>({ namespace: 'replica:t:v1' });
@@ -62,6 +67,24 @@ describe('projection reset epochs', () => {
     await inner.set(KEY, { data: row!.data, updatedAt: row!.updatedAt });
 
     expect(await inner.get(KEY)).toEqual({ data: 'new context', updatedAt: 7 });
+  });
+
+  it('follows a reset another renderer made (Desktop popup vs main window)', async () => {
+    const listener = vi.fn();
+    const unsubscribe = subscribeRemoteProjectionScopeReset(listener);
+    await storage().set(KEY, { data: 'previous context', updatedAt: 1 });
+    expect(await storage().get(KEY)).toBeDefined(); // this window caches epoch 0
+
+    // The main window advanced the shared epoch; only a `storage` event says so.
+    localStorage.setItem('lobe-replica-reset-epoch:u1:ws1', '1');
+    handleProjectionEpochStorageEvent({ key: 'lobe-replica-reset-epoch:u1:ws1', newValue: '1' });
+
+    expect(await storage().get(KEY)).toBeUndefined();
+    expect(listener).toHaveBeenCalledWith('u1:ws1');
+    // Rows this window writes now carry the shared epoch.
+    await storage().set(KEY, { data: 'new context', updatedAt: 2 });
+    expect(await storage().get(KEY)).toEqual({ data: 'new context', updatedAt: 2 });
+    unsubscribe();
   });
 
   it('never hides the replica index, so a purge can still enumerate old rows', async () => {

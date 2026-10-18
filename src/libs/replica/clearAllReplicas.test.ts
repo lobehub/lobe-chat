@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { createStore } from 'zustand/vanilla';
 
 import { LocalStorageQueryProjectionStorage } from '@/libs/queryProjectionStorage';
+import { handleProjectionEpochStorageEvent } from '@/libs/queryProjectionStorage/resetEpoch';
 
 import {
   cacheScope,
@@ -54,6 +55,32 @@ describe('clearAllReplicas', () => {
     await pending.catch(() => undefined);
 
     expect(store.getState().itemMap.a).toBeUndefined();
+  });
+
+  it("retires this window's replicas when another renderer resets the scope", async () => {
+    const store = createStore<TestState>(() => ({
+      itemMap: {},
+      itemReplica: createReplicaState(),
+    }));
+    const slice = createReplicaSlice(resource, {
+      actionPrefix: 'clearAllReplicasRemoteTest',
+      fetcher: async (id) => `answer ${id}`,
+      get: store.getState,
+      set: store.setState,
+      stateKey: 'itemReplica',
+      view: recordLens<TestState, string>('itemMap'),
+    });
+    await slice.fetch('a');
+    expect(store.getState().itemMap.a).toBe('answer a');
+    const epochKey = `lobe-replica-reset-epoch:${cacheScope.get()}`;
+    const before = localStorage.getItem(epochKey);
+
+    // The Desktop main window switched servers; this popup only sees the event.
+    handleProjectionEpochStorageEvent({ key: epochKey, newValue: '1000' });
+
+    await vi.waitFor(() => expect(store.getState().itemMap.a).toBeUndefined());
+    // The other window already advanced the epoch; this one must not again.
+    expect(localStorage.getItem(epochKey)).toBe(before);
   });
 
   it('retires the persisted rows of a replica built only after the reset', async () => {
