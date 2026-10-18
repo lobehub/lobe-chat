@@ -28,9 +28,10 @@ const styles = createStaticStyles(({ css, cssVar }) => ({
   `,
 }));
 
+/** Multi-select agent picker shared by chat groups and projects. */
 export interface AddGroupMemberModalProps {
   existingMembers?: string[];
-  groupId: string;
+  groupId?: string;
   onCancel: () => void;
   onConfirm: (selectedAgents: string[]) => void | Promise<void>;
   open: boolean;
