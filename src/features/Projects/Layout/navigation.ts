@@ -1,10 +1,16 @@
 export const getProjectAgentPath = (agentId: string) => `/agent/${agentId}`;
 
+export const getProjectHomePath = (projectId: string) => `/project/${projectId}`;
+
 export const getProjectConversationPath = (projectId: string, topicId?: string) =>
   topicId ? `/project/${projectId}/conversation/${topicId}` : `/project/${projectId}/conversation`;
 
-export const getProjectConversationStartPath = (projectId: string, message: string) =>
-  `${getProjectConversationPath(projectId)}?message=${encodeURIComponent(message)}`;
+/** Open a project conversation and send `message` in it once it has loaded. */
+export const getProjectConversationStartPath = (
+  projectId: string,
+  topicId: string,
+  message: string,
+) => `${getProjectConversationPath(projectId, topicId)}?message=${encodeURIComponent(message)}`;
 
 export const getProjectLibraryPath = (projectId: string, libraryId: string) =>
   `/project/${projectId}/library/${libraryId}`;

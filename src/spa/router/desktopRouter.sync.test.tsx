@@ -213,16 +213,18 @@ describe('desktop router shared definition', () => {
         'dashboard',
         'acceptance',
       ]);
-      for (const section of ['general', 'environments', 'directories']) {
+      for (const section of ['general', 'members', 'knowledge', 'environments', 'directories']) {
         const matches = matchRoutes(
           createMainAreaRoutes(factory),
           `/project/project-1/settings/${section}`,
         );
         expect(matches?.at(-1)?.params.section).toBe(section);
       }
+      // The project root is its home page (composer + overview), not a redirect.
       expect(
-        (projectIndexRoute?.element as ReactElement<{ to: string }> | undefined)?.props.to,
-      ).toBe('conversation');
+        (projectIndexRoute?.element as ReactElement<{ to?: string }> | undefined)?.props.to,
+      ).toBeUndefined();
+      expect(projectIndexRoute?.handle?.meta?.titleKey).toBe('project:sections.home');
     },
   );
 

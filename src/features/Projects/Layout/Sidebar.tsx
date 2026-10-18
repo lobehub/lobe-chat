@@ -3,6 +3,7 @@
 import { Flexbox } from '@lobehub/ui';
 import {
   ClipboardCheckIcon,
+  HouseIcon,
   LayoutDashboardIcon,
   ListTodoIcon,
   SettingsIcon,
@@ -26,6 +27,7 @@ import {
   getProjectAcceptancePath,
   getProjectDashboardPath,
   getProjectGoalsPath,
+  getProjectHomePath,
   getProjectTasksPath,
   isProjectSectionActive,
 } from './navigation';
@@ -39,6 +41,7 @@ const ProjectSidebarContent = memo(() => {
   const detail = useCurrentProjectDetail(projectId);
   const detailSWR = useProjectStore((s) => s.useFetchProjectDetail)(projectId);
   const { enabled: dashboardEnabled } = useDashboardFeature();
+  const projectHomePath = getProjectHomePath(projectId!);
   const projectTasksPath = getProjectTasksPath(projectId!);
   const projectGoalsPath = getProjectGoalsPath(projectId!);
   const projectAcceptancePath = getProjectAcceptancePath(projectId!);
@@ -61,6 +64,12 @@ const ProjectSidebarContent = memo(() => {
       header={header}
       body={
         <Flexbox gap={1} paddingInline={4}>
+          <NavItem
+            active={pathname === projectHomePath}
+            icon={HouseIcon}
+            title={t('sections.home')}
+            onClick={() => navigate(projectHomePath)}
+          />
           <NavItem
             active={pathname === projectTasksPath}
             icon={ListTodoIcon}
