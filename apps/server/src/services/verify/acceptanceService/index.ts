@@ -46,13 +46,13 @@ import { notTrashed } from '@/database/utils/softDelete';
 import { notifyAcceptance } from '@/server/services/acceptanceReview/events';
 import { ExpertiseRejectionWorkflow } from '@/server/workflows/expertiseRejection';
 
-import { requireDecidableAcceptance } from './acceptanceDecision';
+import { requireDecidableAcceptance } from '../acceptanceDecision';
 import {
   type AcceptanceMergeSummary,
   findUnresolvedSupersedes,
   mergeAcceptanceRounds,
-} from './acceptanceMerge';
-import { computeFalseFlags } from './feedbackService';
+} from '../acceptanceMerge';
+import { computeFalseFlags } from '../feedbackService';
 
 const log = debug('lobe-server:verify-acceptance');
 
@@ -1288,7 +1288,7 @@ export class AcceptanceService {
       // the same completion path settle.ts drives on a passed verify. Loaded
       // lazily because `TaskService` reaches this module through its acceptance
       // resolution, so a static import would close a module cycle.
-      const { TaskService } = await import('../task');
+      const { TaskService } = await import('../../task');
       await new TaskService(this.db, this.userId, this.workspaceId).updateStatus({
         id: task.id,
         status: 'completed',
