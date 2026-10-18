@@ -441,8 +441,9 @@ export const holdForOfflineDevice = async (
   const offlineRuns = countConsecutiveDeviceOfflineRuns(runs);
   // A dispatch failure is an offline run even when it left no run behind. Those
   // are kept on the dispatch streak, which holds only failures without a run,
-  // so the two counts add up and the latest of either dates the schedule.
-  const dispatch = readDeviceDispatchStreak(task);
+  // so the two counts add up and the latest of either dates the schedule. The
+  // newest run that was not offline ends the streak for both.
+  const dispatch = readDeviceDispatchStreak(task, runs[offlineRuns]?.createdAt);
   if (!offlineRuns && !dispatch.failures && !isDeviceUnavailableFailure(task.error)) return;
 
   const failureTimes = [

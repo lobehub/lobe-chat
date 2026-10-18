@@ -257,7 +257,7 @@ export const dispatchWork = async (
       taskId: task.id,
       trigger: 'goal',
     });
-    await clearDeviceDispatchStreak(ctx.taskModel, task).catch((clearError) => {
+    await clearDeviceDispatchStreak(ctx.taskModel, task.id).catch((clearError) => {
       console.error('[GoalService.tick] failed to clear the device dispatch streak:', clearError);
     });
     await new GoalSupervisorService(ctx.db, ctx.userId, ctx.workspaceId).recordDispatch(

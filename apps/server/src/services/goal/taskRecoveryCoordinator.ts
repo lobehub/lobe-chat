@@ -152,7 +152,7 @@ export class TaskRecoveryCoordinator {
         trigger: 'goal',
       });
       log('task %s → recovery attempt %d spawned', task.identifier, attempts + 1);
-      await clearDeviceDispatchStreak(taskModel, current).catch((clearError) => {
+      await clearDeviceDispatchStreak(taskModel, current.id).catch((clearError) => {
         log('task %s failed to clear the device dispatch streak: %O', task.identifier, clearError);
       });
       return { operationId: run.operationId, outcome: 'started' };
