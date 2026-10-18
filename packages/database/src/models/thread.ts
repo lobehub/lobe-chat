@@ -1,5 +1,5 @@
 import type { CreateThreadParams, ThreadMetadata } from '@lobechat/types';
-import { RequestTrigger, ThreadStatus } from '@lobechat/types';
+import { RequestTrigger, ThreadStatus, ThreadType } from '@lobechat/types';
 import { and, desc, eq, isNull, notExists, sql } from 'drizzle-orm';
 
 import type { ThreadItem } from '../schemas';
@@ -191,6 +191,59 @@ export class ThreadModel {
           expected.operationId
             ? sql`${threads.metadata} ->> 'operationId' = ${expected.operationId}`
             : sql`COALESCE(${threads.metadata} ->> 'operationId', '') = ''`,
+        ),
+      )
+      .returning({ id: threads.id });
+
+    return rows.length > 0;
+  };
+
+  /**
+   * Move an isolation thread out of `processing` once the run it hosts ended.
+   *
+   * Compare-and-set on the run: only a thread still `processing` that names
+   * this operation (or has not recorded its run id yet) is settled, so a later
+   * follow-up run claimed on the same thread is left alone. Merges
+   * `completedAt` / `duration` / `error` into the existing metadata; usage
+   * totals are derived from the child messages at read time.
+   *
+   * @returns whether this call settled the thread
+   */
+  settleIsolationRun = async (
+    id: string,
+    operationId: string,
+    result: { error?: Record<string, any>; status: ThreadStatus },
+  ): Promise<boolean> => {
+    const thread = await this.findById(id);
+    if (!thread || thread.type !== ThreadType.Isolation) return false;
+    if (thread.status !== ThreadStatus.Processing) return false;
+
+    const metadata = (thread.metadata ?? {}) as ThreadMetadata;
+    if (metadata.operationId && metadata.operationId !== operationId) return false;
+
+    const completedAt = new Date();
+    const startedAt = metadata.startedAt ? new Date(metadata.startedAt).getTime() : Number.NaN;
+    const patch: ThreadMetadata = {
+      completedAt: completedAt.toISOString(),
+      ...(Number.isFinite(startedAt) && { duration: completedAt.getTime() - startedAt }),
+      ...(result.error && { error: result.error }),
+    };
+
+    const rows = await this.db
+      .update(threads)
+      .set({
+        metadata: sql`COALESCE(${threads.metadata}, '{}'::jsonb) || ${JSON.stringify(patch)}::jsonb`,
+        status: result.status,
+        updatedAt: completedAt,
+      })
+      .where(
+        and(
+          eq(threads.id, id),
+          this.ownership(),
+          eq(threads.type, ThreadType.Isolation),
+          eq(threads.status, ThreadStatus.Processing),
+          // COALESCE instead of `IS NULL` on the extracted path, as in `claimForRun`.
+          sql`COALESCE(${threads.metadata} ->> 'operationId', '') IN ('', ${operationId})`,
         ),
       )
       .returning({ id: threads.id });

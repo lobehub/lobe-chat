@@ -478,6 +478,86 @@ describe('ThreadModel', () => {
     });
   });
 
+  describe('settleIsolationRun', () => {
+    const insertThread = (values: Partial<typeof threads.$inferInsert> = {}) =>
+      serverDB.insert(threads).values({
+        id: 'thread-settle',
+        metadata: { operationId: 'op-1', startedAt: '2026-10-18T08:27:25.763Z' },
+        status: ThreadStatus.Processing,
+        topicId,
+        type: ThreadType.Isolation,
+        userId,
+        ...values,
+      });
+    const readThread = () =>
+      serverDB.query.threads.findFirst({ where: eq(threads.id, 'thread-settle') });
+
+    it('settles a processing thread whose run ended and keeps its metadata', async () => {
+      await insertThread();
+
+      const settled = await threadModel.settleIsolationRun('thread-settle', 'op-1', {
+        status: ThreadStatus.Completed,
+      });
+
+      const row = await readThread();
+      expect(settled).toBe(true);
+      expect(row?.status).toBe(ThreadStatus.Completed);
+      expect(row?.metadata).toMatchObject({
+        operationId: 'op-1',
+        startedAt: '2026-10-18T08:27:25.763Z',
+      });
+      expect(row?.metadata?.completedAt).toEqual(expect.any(String));
+      expect(row?.metadata?.duration).toBeGreaterThan(0);
+    });
+
+    it('records the error on a failed run', async () => {
+      await insertThread();
+
+      await threadModel.settleIsolationRun('thread-settle', 'op-1', {
+        error: { message: 'boom' },
+        status: ThreadStatus.Failed,
+      });
+
+      const row = await readThread();
+      expect(row?.status).toBe(ThreadStatus.Failed);
+      expect(row?.metadata?.error).toEqual({ message: 'boom' });
+    });
+
+    it('settles a thread that has not recorded its run id yet', async () => {
+      await insertThread({ metadata: { startedAt: '2026-10-18T08:27:25.763Z' } });
+
+      await expect(
+        threadModel.settleIsolationRun('thread-settle', 'op-1', { status: ThreadStatus.Completed }),
+      ).resolves.toBe(true);
+    });
+
+    it('leaves a thread that a newer run has claimed', async () => {
+      await insertThread({ metadata: { operationId: 'op-2' } });
+
+      await expect(
+        threadModel.settleIsolationRun('thread-settle', 'op-1', { status: ThreadStatus.Completed }),
+      ).resolves.toBe(false);
+      expect((await readThread())?.status).toBe(ThreadStatus.Processing);
+    });
+
+    it('does not touch a thread that is no longer processing', async () => {
+      await insertThread({ status: ThreadStatus.Cancel });
+
+      await expect(
+        threadModel.settleIsolationRun('thread-settle', 'op-1', { status: ThreadStatus.Completed }),
+      ).resolves.toBe(false);
+      expect((await readThread())?.status).toBe(ThreadStatus.Cancel);
+    });
+
+    it('does not touch a non-isolation thread', async () => {
+      await insertThread({ type: ThreadType.Standalone });
+
+      await expect(
+        threadModel.settleIsolationRun('thread-settle', 'op-1', { status: ThreadStatus.Completed }),
+      ).resolves.toBe(false);
+    });
+  });
+
   describe('delete', () => {
     it('should delete a thread', async () => {
       await serverDB.insert(threads).values({
