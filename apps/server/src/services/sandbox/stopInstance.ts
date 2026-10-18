@@ -4,11 +4,12 @@ import { TRPCError } from '@trpc/server';
 import { AgentOperationModel } from '@/database/models/agentOperation';
 import type { EnvironmentInstanceModel } from '@/database/models/environmentInstance';
 import { TopicModel } from '@/database/models/topic';
+import { AgentRuntimeService } from '@/server/services/agentRuntime/AgentRuntimeService';
 
 import type { SandboxStorageClient } from './storageFiles';
 
 interface StopInstanceOptions {
-  client: Pick<SandboxStorageClient, 'readStopTarget' | 'stopInstance'>;
+  client: Pick<SandboxStorageClient, 'prepareStop' | 'readStopTarget' | 'stopInstance'>;
   id: string;
   instanceModel: Pick<EnvironmentInstanceModel, 'findOwnedById'>;
   serverDB: LobeChatDatabase;
@@ -28,6 +29,7 @@ export const stopSandboxInstance = async (options: StopInstanceOptions) => {
   const target = await client.readStopTarget({ name: id });
   if (!target) return { stopped: false };
 
+  let operationIds: string[] = [];
   if (target.topicId) {
     // The execution plane proves which topic holds this copy. Never accept a
     // topic/operation from the UI or infer it from historical session rows.
@@ -38,16 +40,10 @@ export const stopSandboxInstance = async (options: StopInstanceOptions) => {
         message: 'Cannot resolve the holding conversation',
       });
     }
-    const running = topic.metadata?.runningOperation;
-    const operationIds = running
-      ? [running.operationId, ...(running.childOperations?.map((child) => child.operationId) ?? [])]
-      : [];
     const model = new AgentOperationModel(serverDB, userId, workspaceId);
-    const operations = await model.findByIds(operationIds);
-    if (
-      operations.length !== new Set(operationIds).size ||
-      operations.some((op) => op.topicId !== topic.id)
-    ) {
+    const operations = await model.findLiveByTopic(topic.id);
+    operationIds = operations.map((operation) => operation.id);
+    if (operations.some((op) => op.topicId !== topic.id)) {
       throw new TRPCError({ code: 'CONFLICT', message: 'Cannot resolve the holding operation' });
     }
 
@@ -57,12 +53,19 @@ export const stopSandboxInstance = async (options: StopInstanceOptions) => {
     if (current?.sessionId !== target.sessionId || current.topicId !== target.topicId) {
       throw new TRPCError({ code: 'CONFLICT', message: 'Environment instance holder changed' });
     }
+    // Persist cancellation before interruption can make a live row terminal.
+    // The fence survives retries even when the next query no longer returns it.
+    const prepared = await client.prepareStop({
+      expectedSessionId: target.sessionId,
+      name: id,
+      operationIds,
+    });
+    if (!prepared.prepared) {
+      throw new TRPCError({ code: 'CONFLICT', message: 'Environment instance holder changed' });
+    }
     for (const operation of operations) {
-      if (operation.status !== 'running') continue;
       // Shared topics may run as another member. Use the scoped operation row's
       // actor, never the execution plane's organization-level session identity.
-      const { AgentRuntimeService } =
-        await import('@/server/services/agentRuntime/AgentRuntimeService');
       const runtime = new AgentRuntimeService(serverDB, operation.userId, { workspaceId });
       if (!(await runtime.interruptOperation(operation.id))) {
         throw new TRPCError({
@@ -73,7 +76,11 @@ export const stopSandboxInstance = async (options: StopInstanceOptions) => {
     }
   }
 
-  const result = await client.stopInstance({ expectedSessionId: target.sessionId, name: id });
+  const result = await client.stopInstance({
+    expectedSessionId: target.sessionId,
+    name: id,
+    operationIds,
+  });
   if (!result.stopped) {
     throw new TRPCError({ code: 'CONFLICT', message: 'Environment instance holder changed' });
   }

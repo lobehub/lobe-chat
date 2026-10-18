@@ -5,6 +5,7 @@ import { stopSandboxInstance } from './stopInstance';
 
 const mocks = vi.hoisted(() => ({
   findByIds: vi.fn(),
+  findLiveByTopic: vi.fn(),
   findTopic: vi.fn(),
   interrupt: vi.fn(),
   runtimeActors: [] as string[],
@@ -17,6 +18,7 @@ vi.mock('@/database/models/topic', () => ({
 vi.mock('@/database/models/agentOperation', () => ({
   AgentOperationModel: class {
     findByIds = mocks.findByIds;
+    findLiveByTopic = mocks.findLiveByTopic;
   },
 }));
 vi.mock('@/server/services/agentRuntime/AgentRuntimeService', () => ({
@@ -30,6 +32,7 @@ vi.mock('@/server/services/agentRuntime/AgentRuntimeService', () => ({
 
 const fixture = () => ({
   client: {
+    prepareStop: vi.fn().mockResolvedValue({ prepared: true }),
     readStopTarget: vi.fn().mockResolvedValue({ sessionId: 'session-1', topicId: 'topic-1' }),
     stopInstance: vi.fn().mockResolvedValue({ stopped: true }),
   },
@@ -51,8 +54,52 @@ describe('stopSandboxInstance', () => {
     mocks.findByIds.mockResolvedValue([
       { id: 'op-1', status: 'running', topicId: 'topic-1', userId: 'running-member' },
     ]);
+    mocks.findLiveByTopic.mockImplementation(() => mocks.findByIds());
     mocks.interrupt.mockResolvedValue(true);
   });
+
+  it('retains the live operation and lease when fence preparation fails', async () => {
+    const options = fixture();
+    options.client.prepareStop.mockRejectedValue(new Error('fence unavailable'));
+    await expect(stopSandboxInstance(options)).rejects.toThrow('fence unavailable');
+    expect(mocks.interrupt).not.toHaveBeenCalled();
+    expect(options.client.stopInstance).not.toHaveBeenCalled();
+  });
+
+  it('persists the operation fence before a parked run can settle, retaining it across retry', async () => {
+    const options = fixture();
+    const fenced = new Set<string>();
+    options.client.prepareStop.mockImplementation(async (params: any) => {
+      for (const id of params.operationIds) fenced.add(id);
+      return { prepared: true };
+    });
+    mocks.interrupt.mockImplementation(async (id) => {
+      expect(fenced.has(id)).toBe(true);
+      mocks.findByIds.mockResolvedValue([]); // waiting_for_client settled synchronously
+      return true;
+    });
+    options.client.stopInstance.mockRejectedValueOnce(new Error('provider unavailable'));
+    await expect(stopSandboxInstance(options)).rejects.toThrow('provider unavailable');
+    await expect(stopSandboxInstance(options)).resolves.toEqual({ stopped: true });
+    expect(fenced.has('op-1')).toBe(true);
+  });
+
+  it('interrupts a durable live row when the rendering marker is absent', async () => {
+    mocks.findTopic.mockResolvedValue({ id: 'topic-1', metadata: {} });
+    await stopSandboxInstance(fixture());
+    expect(mocks.interrupt).toHaveBeenCalledWith('op-1');
+  });
+
+  it.each(['waiting_for_human', 'waiting_for_async_tool', 'waiting_for_client'])(
+    'interrupts a parked %s operation',
+    async (status) => {
+      mocks.findByIds.mockResolvedValue([
+        { id: 'op-1', status, topicId: 'topic-1', userId: 'running-member' },
+      ]);
+      await stopSandboxInstance(fixture());
+      expect(mocks.interrupt).toHaveBeenCalledWith('op-1');
+    },
+  );
 
   it('interrupts the holding member before releasing the sandbox', async () => {
     const options = fixture();
@@ -71,6 +118,7 @@ describe('stopSandboxInstance', () => {
     expect(options.client.stopInstance).toHaveBeenCalledWith({
       expectedSessionId: 'session-1',
       name: 'instance-1',
+      operationIds: ['op-1'],
     });
   });
 

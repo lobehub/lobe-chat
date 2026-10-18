@@ -347,12 +347,30 @@ export const createSandboxStorageClient = ({ baseURL, headers }: SandboxStorageC
     }): Promise<{ sessionId: string; topicId: string | null } | null> =>
       request(`${CURRENT_STORAGE}/instances/${encodeURIComponent(params.name)}/stop-target`),
 
+    prepareStop: async (params: {
+      expectedSessionId: string;
+      name: string;
+      operationIds: string[];
+    }): Promise<{ prepared: boolean }> => {
+      const query = new URLSearchParams({
+        expectedSessionId: params.expectedSessionId,
+        prepare: 'true',
+      });
+      for (const id of params.operationIds) query.append('operationId', id);
+      return request(
+        `${CURRENT_STORAGE}/instances/${encodeURIComponent(params.name)}/stop?${query}`,
+        { method: 'POST' },
+      );
+    },
+
     stopInstance: async (params: {
       expectedSessionId?: string;
       name: string;
+      operationIds?: string[];
     }): Promise<{ stopped: boolean }> => {
       const query = new URLSearchParams();
       if (params.expectedSessionId) query.set('expectedSessionId', params.expectedSessionId);
+      for (const id of params.operationIds ?? []) query.append('operationId', id);
       const suffix = query.size ? `?${query.toString()}` : '';
       return request(
         `${CURRENT_STORAGE}/instances/${encodeURIComponent(params.name)}/stop${suffix}`,
