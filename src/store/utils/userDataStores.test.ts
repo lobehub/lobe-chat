@@ -5,6 +5,7 @@ const storeResets = vi.hoisted(() => [] as Array<() => void>);
 const pageReset = vi.hoisted(() => vi.fn());
 const resourcePermissionReset = vi.hoisted(() => vi.fn());
 const sandboxReset = vi.hoisted(() => vi.fn());
+const workReset = vi.hoisted(() => vi.fn());
 const fakeStore = vi.hoisted(() => () => ({
   getState: () => {
     const reset = vi.fn();
@@ -40,6 +41,7 @@ vi.mock('@/store/tool', () => ({ useToolStore: fakeStore() }));
 vi.mock('@/store/user', () => ({ useUserStore: fakeStore() }));
 vi.mock('@/store/userMemory', () => ({ useUserMemoryStore: fakeStore() }));
 vi.mock('@/store/video', () => ({ useVideoStore: fakeStore() }));
+vi.mock('@/store/work', () => ({ workActions: { reset: workReset } }));
 
 describe('stores.reset', () => {
   beforeEach(() => {
@@ -48,6 +50,7 @@ describe('stores.reset', () => {
     pageReset.mockClear();
     resourcePermissionReset.mockClear();
     sandboxReset.mockClear();
+    workReset.mockClear();
   });
 
   it('tears down the gateway mux registry before wiping the user-data stores', async () => {
@@ -64,6 +67,7 @@ describe('stores.reset', () => {
     // outlive the data context, even when the next one reuses the scope string.
     expect(resourcePermissionReset).toHaveBeenCalledTimes(1);
     expect(sandboxReset).toHaveBeenCalledTimes(1);
+    expect(workReset).toHaveBeenCalledTimes(1);
     for (const reset of storeResets) expect(reset).toHaveBeenCalledTimes(1);
     expect(order[0]).toBe('mux');
   });

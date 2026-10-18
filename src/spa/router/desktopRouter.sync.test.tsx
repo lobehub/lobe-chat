@@ -704,8 +704,14 @@ describe('desktop router shared definition', () => {
 
   it('keeps business resource and task routes in the shared definition', async () => {
     const [sharedSource] = await readRouterSources();
+    // The resource home children live beside the shared table and are spread into it.
+    const resourceHomeSource = await readFile(
+      path.join(process.cwd(), 'src/spa/router/resourceHomeRoutes.tsx'),
+      'utf8',
+    );
 
-    expect(sharedSource).toContain('...BusinessResourceRoutes');
+    expect(sharedSource).toContain('...resourceHomeRoutes');
+    expect(resourceHomeSource).toContain('...BusinessResourceRoutes');
     expect(sharedSource).toContain("import('@/routes/(main)/(task-workspace)/_layout')");
     expect(sharedSource).toContain("import('@/routes/(main)/agent/task/[taskId]')");
     expect(sharedSource).not.toContain("import('@/routes/(main)/task-workspace/_layout')");
