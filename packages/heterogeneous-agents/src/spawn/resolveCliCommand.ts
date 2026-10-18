@@ -123,6 +123,12 @@ const isPathLikeCommand = (command: string): boolean =>
     ? path.win32.isAbsolute(command) || /[\\/]/.test(command)
     : path.isAbsolute(command) || command.includes(path.sep);
 
+// Windows paths may legally contain `&` or `!`. Passing a path directly to
+// execFile does not invoke a shell; an unresolved shim still reaches
+// buildWindowsShellProbe(), which keeps the metacharacter guard before cmd.exe.
+const isUnsafeWindowsShellExpression = (command: string): boolean =>
+  isWindows() && !isPathLikeCommand(command) && WINDOWS_SHELL_METAS.test(command);
+
 /**
  * A login *interactive* shell has to load the user's full interactive config —
  * oh-my-zsh, plugins, nvm — before it can print PATH. On a developer machine
@@ -477,7 +483,7 @@ const detectValidatedCommandInEnvironment = async (
 ): Promise<CliCommandStatus> => {
   const trimmedCommand = command.trim();
   if (!trimmedCommand) return { available: false };
-  if (isWindows() && WINDOWS_SHELL_METAS.test(trimmedCommand)) return { available: false };
+  if (isUnsafeWindowsShellExpression(trimmedCommand)) return { available: false };
 
   const {
     validateFlag = '--version',
@@ -603,7 +609,7 @@ const detectValidatedCommandInEnvironment = async (
 
 const isProbeableCommand = (command: string): boolean => {
   const trimmedCommand = command.trim();
-  return trimmedCommand.length > 0 && !(isWindows() && WINDOWS_SHELL_METAS.test(trimmedCommand));
+  return trimmedCommand.length > 0 && !isUnsafeWindowsShellExpression(trimmedCommand);
 };
 
 /**
