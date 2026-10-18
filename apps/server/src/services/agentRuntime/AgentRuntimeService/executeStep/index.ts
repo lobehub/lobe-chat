@@ -1,3 +1,4 @@
+import { getLlmCallCount } from '@lobechat/agent-runtime';
 import { context as otelContext, trace as otelTrace } from '@lobechat/observability-otel/api';
 import {
   buildInvokeAgentAttributes,
@@ -157,9 +158,14 @@ export async function executeStep(
       const { uiMessages: stepStartUiMessages, messages: stepEntryMessages } =
         await deps.queryStepEntryMessages(agentState);
       await deps.streamManager.publishStreamEvent(operationId, {
-        data: gatewayMessagePatchEnabled
-          ? { messageRevision: stepIndex }
-          : { ...(stepStartUiMessages !== undefined && { uiMessages: stepStartUiMessages }) },
+        data: {
+          ...(gatewayMessagePatchEnabled
+            ? { messageRevision: stepIndex }
+            : { ...(stepStartUiMessages !== undefined && { uiMessages: stepStartUiMessages }) }),
+          // User-facing metric: completed LLM calls, independent of the
+          // execution `stepIndex` used for scheduling/idempotency.
+          llmCalls: getLlmCallCount(agentState),
+        },
         stepIndex,
         type: 'step_start',
       });

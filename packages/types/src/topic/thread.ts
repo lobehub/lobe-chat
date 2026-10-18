@@ -70,6 +70,8 @@ export interface ThreadMetadata {
   totalCost?: number;
   /** Total messages created during execution */
   totalMessages?: number;
+  /** Total LLM calls made (user-facing step metric) */
+  totalSteps?: number;
   /** Total tokens consumed */
   totalTokens?: number;
   /** Total tool calls made */
@@ -134,6 +136,7 @@ export const threadMetadataSchema = z.object({
   totalCost: z.number().optional(),
   totalMessages: z.number().optional(),
   totalTokens: z.number().optional(),
+  totalSteps: z.number().optional(),
   totalToolCalls: z.number().optional(),
 });
 

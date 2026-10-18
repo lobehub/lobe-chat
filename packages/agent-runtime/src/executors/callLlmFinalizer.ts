@@ -44,6 +44,8 @@ interface CallLlmMessageMetadata extends MessageMetadata {
 
 interface FinalizeCallLlmTurnInput {
   assistantMessageId: string;
+  /** Provider attempts spent on this call, including retries. */
+  attempts?: number;
   events: AgentEvent[];
   host: AgentRuntimeHost;
   model: string;
@@ -219,6 +221,7 @@ const persistFinalMessage = async ({
 
 const buildFinalState = ({
   assistantMessageId,
+  attempts,
   model,
   output,
   provider,
@@ -250,6 +253,7 @@ const buildFinalState = ({
 
   if (output.usage) {
     const { usage, cost } = UsageCounter.accumulateLLM({
+      apiCallsDelta: attempts ?? 1,
       cost: newState.cost,
       model,
       modelUsage: output.usage,
@@ -276,6 +280,7 @@ const buildFinalState = ({
 
 export const finalizeCallLlmTurn = async ({
   assistantMessageId,
+  attempts,
   events,
   host,
   model,
@@ -363,6 +368,7 @@ export const finalizeCallLlmTurn = async ({
   });
   const newState = buildFinalState({
     assistantMessageId,
+    attempts,
     finalReasoning,
     model,
     output: finalizedOutput,

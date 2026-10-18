@@ -1,3 +1,4 @@
+import { getLlmCallCount } from '@lobechat/agent-runtime';
 import { parse } from '@lobechat/conversation-flow';
 import type { TaskCurrentActivity, TaskStatusResult } from '@lobechat/types';
 import { ThreadStatus } from '@lobechat/types';
@@ -287,10 +288,9 @@ export const operationStatusRouter = router({
             updatedMetadata.totalMessages = stats.totalMessages;
           }
 
-          // Store totalSteps from stepCount
-          if (redisState.stepCount) {
-            updatedMetadata.totalSteps = redisState.stepCount;
-          }
+          // User-facing step metric: completed LLM calls.
+          const llmCalls = getLlmCallCount(redisState);
+          if (llmCalls) updatedMetadata.totalSteps = llmCalls;
 
           // Check if operation is completed
           if (realtimeStatus.isCompleted || redisState.status === 'done') {

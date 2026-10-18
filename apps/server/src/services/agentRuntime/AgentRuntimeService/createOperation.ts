@@ -85,6 +85,7 @@ export async function createOperation(
     parentOperationId,
     signal,
     userTimezone,
+    initialLlmCalls = 0,
     initialStepCount = 0,
     workspaceId,
   } = params;
@@ -293,6 +294,7 @@ export async function createOperation(
       operationToolSet,
       status: 'idle',
       stepCount: initialStepCount,
+      llmCalls: initialLlmCalls,
       // How the run executes — frozen from here on.
       plan: {
         eval: evalRuntime,

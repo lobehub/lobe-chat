@@ -18,7 +18,9 @@ import type {
   ToolsCalling,
   Usage,
 } from '../types';
+import { getLlmAttemptCount } from '../utils/llmCalls';
 import { isBlockedStatus } from '../utils/status';
+import { UsageCounter } from './UsageCounter';
 
 /**
  * Simplified Agent Runtime - The "Engine" that executes instructions from an "Agent" (Brain).
@@ -218,6 +220,7 @@ export class AgentRuntime {
       const allEvents: AgentEvent[] = [];
       let finalNextContext: AgentRuntimeContext | undefined = undefined;
       let hasFinishInstruction = false;
+      let executedLlmInstruction = false;
 
       for (const [instructionIndex, instruction] of normalizedInstructions.entries()) {
         if (instruction.type === 'finish') hasFinishInstruction = true;
@@ -254,6 +257,8 @@ export class AgentRuntime {
         // Update state
         currentState = result.newState;
 
+        if (instruction.type === 'call_llm') executedLlmInstruction = true;
+
         // A call_llm consumes any resume-seeded assistant placeholder exactly
         // once — it has now either reused that message id or created its own —
         // so clear the seed before the next step. Otherwise a later assistant
@@ -284,6 +289,10 @@ export class AgentRuntime {
       // Ensure stepCount and lastModified are preserved
       currentState.stepCount = newState.stepCount;
       currentState.lastModified = newState.lastModified;
+      currentState.llmCalls = Math.max(
+        currentState.usage?.llm?.apiCalls ?? 0,
+        (state.llmCalls ?? 0) + (executedLlmInstruction ? 1 : 0),
+      );
 
       // A 'finish' instruction is not a real execution step, undo the +1 from the top of step()
       if (hasFinishInstruction) {
@@ -301,6 +310,18 @@ export class AgentRuntime {
     } catch (error) {
       const errorState = structuredClone(state);
       errorState.stepCount += 1;
+
+      // A terminated LLM call still made provider attempts. Record them even
+      // though no output was finalized, so the user-facing count and the
+      // `maxSteps` budget match what actually happened.
+      const llmAttempts = getLlmAttemptCount(error);
+      if (llmAttempts > 0) {
+        errorState.usage = UsageCounter.accumulateAttempts(errorState.usage, llmAttempts);
+      }
+      errorState.llmCalls = Math.max(
+        errorState.llmCalls ?? 0,
+        errorState.usage?.llm?.apiCalls ?? 0,
+      );
       errorState.lastModified = new Date().toISOString();
       return this.createErrorResult(errorState, error);
     }
@@ -524,6 +545,7 @@ export class AgentRuntime {
       messages: [],
       status: 'idle',
       stepCount: 0,
+      llmCalls: 0,
       usage: AgentRuntime.createDefaultUsage(),
       // User provided values override defaults
       ...(partialState || { operationId: '' }),
