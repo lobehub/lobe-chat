@@ -2,6 +2,7 @@ import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
 import type { EnvironmentInstanceModel } from '@/database/models/environmentInstance';
+import { router } from '@/libs/trpc/lambda';
 import { resolveSandboxSessionConfig } from '@/server/services/sandbox';
 
 import { instanceProcedure, mapStorageError } from './procedures';
@@ -96,7 +97,7 @@ const assertWithinRoot = (path: string, root: string) => {
 /** Names the instance a file route works in; see {@link resolveFileRoot}. */
 const instanceIdSchema = idSchema.optional();
 
-export const filesProcedures = {
+export const filesRouter = router({
   createDirectory: instanceProcedure
     .input(
       z.object({ instanceId: instanceIdSchema, path: relativePathSchema, topicId: topicIdSchema }),
@@ -178,4 +179,4 @@ export const filesProcedures = {
 
       return ctx.client.deleteFile(input).catch(mapStorageError);
     }),
-};
+});

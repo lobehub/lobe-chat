@@ -14,6 +14,7 @@ import { MAX_COLLECTION_COUNT, MAX_UNDERSTANDING_FEEDBACK_LENGTH } from '@lobech
 import { tracked } from '@trpc/server';
 import { z } from 'zod';
 
+import { router } from '@/libs/trpc/lambda';
 import {
   onboardingProgressEventId,
   projectOnboardingGenerationProgress,
@@ -142,7 +143,7 @@ const waitForProgressRecovery = (delay: number, signal: AbortSignal | undefined)
     );
   });
 
-export const onboardingUnderstandingProcedures = {
+export const onboardingUnderstandingRouter = router({
   confirmOnboardingUnderstanding: understandingServiceProcedure
     .input(confirmOnboardingUnderstandingInputSchema)
     .mutation(async ({ ctx, input }) => {
@@ -280,4 +281,4 @@ export const onboardingUnderstandingProcedures = {
         ? ctx.understandingService.start(input.topicId, input.responseLanguage, input.providerIds)
         : ctx.understandingService.start(input.topicId, input.responseLanguage);
     }),
-};
+});

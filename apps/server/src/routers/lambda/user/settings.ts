@@ -5,6 +5,7 @@ import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
 import { RbacModel } from '@/database/models/rbac';
+import { router } from '@/libs/trpc/lambda';
 import { KeyVaultsGateKeeper } from '@/server/modules/KeyVaultsEncrypt';
 
 import { userProcedure } from './procedures';
@@ -23,7 +24,7 @@ const hasOwnerSettingChange = (input: Partial<UserSettings>) =>
 const hasMemberSettingChange = (input: Partial<UserSettings>) =>
   MEMBER_SETTING_KEYS.some((key) => input[key] !== undefined);
 
-export const settingsProcedures = {
+export const settingsRouter = router({
   resetSettings: userProcedure.mutation(async ({ ctx }) => {
     return ctx.userModel.deleteSetting();
   }),
@@ -191,4 +192,4 @@ export const settingsProcedures = {
         workspaceId: input.workspaceId,
       });
     }),
-};
+});

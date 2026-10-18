@@ -1,7 +1,7 @@
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
-import { heteroAuthedProcedure } from '@/libs/trpc/lambda';
+import { heteroAuthedProcedure, router } from '@/libs/trpc/lambda';
 import { serverDatabase } from '@/libs/trpc/lambda/middleware';
 import { advanceGoal } from '@/server/services/goal/advanceGoal';
 import { GoalManagerService } from '@/server/services/goal/manager';
@@ -41,7 +41,7 @@ const startRolloutInput = z
 
 const startInput = idInput.extend({ rollout: startRolloutInput.optional() });
 
-export const lifecycleProcedures = {
+export const lifecycleRouter = router({
   wake: goalWriteProcedure
     .input(goalWakeEventSchema.extend({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
@@ -266,4 +266,4 @@ export const lifecycleProcedures = {
       mapGoalError(error, 'tick');
     }
   }),
-};
+});

@@ -4,7 +4,7 @@ import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
 import { GoalModel } from '@/database/models/goal';
-import { heteroAuthedProcedure } from '@/libs/trpc/lambda';
+import { heteroAuthedProcedure, router } from '@/libs/trpc/lambda';
 import { serverDatabase } from '@/libs/trpc/lambda/middleware';
 import { GoalService } from '@/server/services/goal';
 import { scheduleGoalAdvance } from '@/server/services/goal/scheduler';
@@ -158,7 +158,7 @@ const bindTopicResponse = ({
   turnToken,
 });
 
-export const creationProcedures = {
+export const creationRouter = router({
   /**
    * `/goal` from a conversation run authenticated by its operation token (device
    * and gateway runs). The agent and conversation come from the operation, and
@@ -352,4 +352,4 @@ export const creationProcedures = {
         }
       },
     ),
-};
+});

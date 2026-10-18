@@ -2,12 +2,13 @@ import { MAX_GOAL_METRIC_CRITERIA } from '@lobechat/types';
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
+import { router } from '@/libs/trpc/lambda';
 import { scheduleGoalAdvance } from '@/server/services/goal/scheduler';
 
 import { assertWorkspaceRowManageable } from '../_helpers/assertWorkspaceRowManageable';
 import { goalWriteProcedure, idInput, mapGoalError } from '../goalProcedures';
 
-export const configurationProcedures = {
+export const configurationRouter = router({
   /** Declare or clear the numeric clauses gating this goal's acceptance. */
   setMetricCriteria: goalWriteProcedure
     .input(
@@ -193,4 +194,4 @@ export const configurationProcedures = {
         mapGoalError(error, 'updateRequirement');
       }
     }),
-};
+});

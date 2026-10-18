@@ -12,6 +12,7 @@ import {
   onUserActivityForBusiness,
 } from '@/business/server/user';
 import { UserModel } from '@/database/models/user';
+import { router } from '@/libs/trpc/lambda';
 import { KeyVaultsGateKeeper } from '@/server/modules/KeyVaultsEncrypt';
 import { FileS3 } from '@/server/modules/S3';
 import { after } from '@/server/utils/scheduleAfterResponse';
@@ -49,7 +50,7 @@ const assertSafeAvatarInput = (input: string, userId: string) => {
   throw new TRPCError({ code: 'BAD_REQUEST', message: 'INVALID_AVATAR_URL' });
 };
 
-export const profileProcedures = {
+export const profileRouter = router({
   getUserActivitySummary: userProcedure.query(async ({ ctx }) => {
     return ctx.userModel.getUserActivitySummary();
   }),
@@ -221,4 +222,4 @@ export const profileProcedures = {
 
     return ctx.userModel.updateUser({ username: input });
   }),
-};
+});

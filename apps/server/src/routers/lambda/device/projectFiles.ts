@@ -2,6 +2,7 @@ import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
 import { requireWorkspaceRoleWhenScoped } from '@/business/server/trpc-middlewares/workspaceAuth';
+import { router } from '@/libs/trpc/lambda';
 import { deviceGateway, isValidDirectoryName } from '@/server/services/deviceGateway';
 
 import { assertWorkspaceRootApproved, registerDeviceSkillRoots } from '../deviceWorkspaceGuard';
@@ -50,7 +51,7 @@ const workspacePublishProcedure = workspaceFileProcedure.use(
   requireWorkspaceRoleWhenScoped('member'),
 );
 
-export const projectFilesProcedures = {
+export const projectFilesRouter = router({
   /**
    * Project file index (tree) for a directory on a remote device, via the
    * device's `getProjectFileIndex` RPC. Powers the Files tab's tree. Returns
@@ -409,4 +410,4 @@ export const projectFilesProcedures = {
       });
       return result ?? null;
     }),
-};
+});

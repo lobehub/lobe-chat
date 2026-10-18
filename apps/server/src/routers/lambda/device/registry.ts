@@ -13,6 +13,7 @@ import { z } from 'zod';
 
 import { getTopicDeviceId, TopicModel } from '@/database/models/topic';
 import { UserModel } from '@/database/models/user';
+import { router } from '@/libs/trpc/lambda';
 import { type DeviceAttachment, deviceGateway } from '@/server/services/deviceGateway';
 import { filterAuthorizedDevicePresence } from '@/server/services/deviceGateway/scopedDevicePresence';
 
@@ -58,7 +59,7 @@ const resolveRunUserIds = async (
  */
 const RUNNING_SUMMARY_LIMIT = 500;
 
-export const registryProcedures = {
+export const registryRouter = router({
   /**
    * What the device is doing for the caller: topics running on it right now
    * and the agents routed to it. Both reads go through the regular content
@@ -403,4 +404,4 @@ export const registryProcedures = {
       if (!device) throw new TRPCError({ code: 'NOT_FOUND', message: 'Device not found' });
       return { success: true };
     }),
-};
+});

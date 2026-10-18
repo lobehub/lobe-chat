@@ -1,7 +1,7 @@
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
-import { heteroAuthedProcedure } from '@/libs/trpc/lambda';
+import { heteroAuthedProcedure, router } from '@/libs/trpc/lambda';
 import { serverDatabase } from '@/libs/trpc/lambda/middleware';
 import { GoalManagerService, goalPlanSchema } from '@/server/services/goal/manager';
 import { GoalReportStore, type SubmitGoalReportInput } from '@/server/services/goal/reportStore';
@@ -27,7 +27,7 @@ const reportInput = idInput.extend({
   }),
 });
 
-export const planningProcedures = {
+export const planningRouter = router({
   // A plan is an operation result; the turn token further restricts ingestion to its Goal.
   submitOperationPlan: heteroAuthedProcedure
     .use(serverDatabase)
@@ -230,4 +230,4 @@ export const planningProcedures = {
         mapGoalError(error, 'retireNodes');
       }
     }),
-};
+});

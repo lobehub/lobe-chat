@@ -1,6 +1,8 @@
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
+import { router } from '@/libs/trpc/lambda';
+
 import { rethrowDuplicateEnvironmentName, rethrowEnvironmentInUse } from './constraintErrors';
 import {
   createDerivedInstance,
@@ -87,7 +89,7 @@ const configurationSchema = z.object({
   sources: z.array(environmentSourceSchema).max(1).optional(),
 });
 
-export const environmentsProcedures = {
+export const environmentsRouter = router({
   /**
    * An environment, together with its default instance.
    *
@@ -235,4 +237,4 @@ export const environmentsProcedures = {
         return removed;
       });
     }),
-};
+});

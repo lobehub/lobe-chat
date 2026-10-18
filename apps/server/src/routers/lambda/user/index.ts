@@ -1,15 +1,15 @@
-import { router } from '@/libs/trpc/lambda';
+import { mergeRouters } from '@/libs/trpc/lambda';
 
-import { onboardingProcedures } from './onboarding';
-import { onboardingUnderstandingProcedures } from './onboardingUnderstanding';
-import { profileProcedures } from './profile';
-import { settingsProcedures } from './settings';
+import { onboardingRouter } from './onboarding';
+import { onboardingUnderstandingRouter } from './onboardingUnderstanding';
+import { profileRouter } from './profile';
+import { settingsRouter } from './settings';
 
-export const userRouter = router({
-  ...profileProcedures,
-  ...onboardingUnderstandingProcedures,
-  ...settingsProcedures,
-  ...onboardingProcedures,
-});
+export const userRouter = mergeRouters(
+  profileRouter,
+  onboardingUnderstandingRouter,
+  settingsRouter,
+  onboardingRouter,
+);
 
 export type UserRouter = typeof userRouter;

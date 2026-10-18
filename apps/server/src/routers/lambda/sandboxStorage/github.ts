@@ -2,6 +2,7 @@ import { ConnectorDataError } from '@lobechat/connector-data';
 import { MAX_REPOSITORY_BRANCHES } from '@lobechat/connector-data/github';
 import { z } from 'zod';
 
+import { router } from '@/libs/trpc/lambda';
 import { ConnectorDataService } from '@/server/services/connectorData';
 
 import { entitledProcedure } from './procedures';
@@ -14,7 +15,7 @@ import { entitledProcedure } from './procedures';
 const isGithubUnavailable = (error: unknown): boolean =>
   error instanceof ConnectorDataError && error.provider === 'github' && !error.retryable;
 
-export const githubProcedures = {
+export const githubRouter = router({
   /**
    * Every repository this account can build an environment from, newest
    * activity first, each carrying the owner it belongs to so the caller can
@@ -72,4 +73,4 @@ export const githubProcedures = {
       throw error;
     }
   }),
-};
+});

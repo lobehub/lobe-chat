@@ -1,19 +1,21 @@
-import { router } from '@/libs/trpc/lambda';
+import { mergeRouters, router } from '@/libs/trpc/lambda';
 
 import { workspaceDeviceWorkingDirProcedures } from '../deviceWorkspaceWorkingDirs';
-import { agentsProcedures } from './agents';
-import { gitProcedures } from './git';
-import { operateProcedures } from './operate';
-import { projectFilesProcedures } from './projectFiles';
-import { registryProcedures } from './registry';
-import { workspaceProcedures } from './workspace';
+import { agentsRouter } from './agents';
+import { gitRouter } from './git';
+import { operateRouter } from './operate';
+import { projectFilesRouter } from './projectFiles';
+import { registryRouter } from './registry';
+import { workspaceRouter } from './workspace';
 
-export const deviceRouter = router({
-  ...workspaceDeviceWorkingDirProcedures,
-  ...agentsProcedures,
-  ...registryProcedures,
-  ...gitProcedures,
-  ...projectFilesProcedures,
-  ...operateProcedures,
-  ...workspaceProcedures,
-});
+export const deviceRouter = mergeRouters(
+  agentsRouter,
+  registryRouter,
+  gitRouter,
+  projectFilesRouter,
+  operateRouter,
+  workspaceRouter,
+  router({
+    ...workspaceDeviceWorkingDirProcedures,
+  }),
+);
