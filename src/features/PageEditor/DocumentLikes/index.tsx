@@ -202,17 +202,18 @@ const DocumentLikes = memo<{ documentId: string }>(({ documentId }) => {
 
   if (!workspaceId) return null;
 
+  // The page went private or is gone: SWR keeps the last summary next to the
+  // error, so check the error itself and drop the stale count and likers too.
+  if (isDocumentUnavailableError(error)) return null;
+
   // A failed initial load must not masquerade as a zero-like page: surface a
   // retryable error instead of the idle state with a dead button.
-  if (!data && error) {
-    if (isDocumentUnavailableError(error)) return null;
-
+  if (!data && error)
     return (
       <Flexbox data-document-likes align={'center'} className={styles.section} gap={16}>
         <AsyncError error={error} variant={'inline'} onRetry={() => void mutate()} />
       </Flexbox>
     );
-  }
 
   // Match the surrounding page skeleton while the summary loads instead of
   // flashing the finished idle state ahead of the rest of the content.
