@@ -4169,6 +4169,9 @@ When I am ___, I need ___
   'environments.upgrade.benefits.instances.title': 'One copy per task',
   'environments.upgrade.benefits.instances.desc':
     'Parallel conversations each run in their own copy of the environment, so nothing overwrites anything else.',
+  'environments.github.refreshFailed':
+    'Could not refresh GitHub repositories. Showing the previous list. Try again.',
+  'environments.github.loadFailed': 'Could not load GitHub repositories. Try again.',
   'environments.github.label': 'Repository',
   'environments.github.notConnected':
     'No GitHub connection yet — connect one to build an environment from a repository',
