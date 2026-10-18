@@ -8,6 +8,7 @@ import { GoalGraphModel } from '@/database/models/goalGraph';
 import { TaskModel } from '@/database/models/task';
 
 import { TaskRunnerService } from '../../taskRunner';
+import { GoalAssignmentService } from '../assignment';
 import { learnedRulesClause, planSkillIdentifier } from '../batchPlanSkill';
 import { GOAL_ACCEPTANCE_TASK_TITLE } from '../decideNextMove';
 import { clearDeviceDispatchStreak, parkDeviceUnavailableDispatch } from '../deviceDispatchStreak';
@@ -76,11 +77,17 @@ export const createResponsibleTask = async (
     const batchUnit = frontier.kind === 'task' && ctx.isBatchMember(graph, frontier.id);
     const planSkill = batchUnit ? rollout?.planSkill : undefined;
     const learnedRules = batchUnit ? (rollout?.learnings ?? []) : [];
+    const assignment = await new GoalAssignmentService(
+      ctx.db,
+      ctx.userId,
+      ctx.workspaceId,
+    ).newTaskAssignment(graph.goal);
     task = await ctx.taskService.createTask({
-      assigneeAgentId: await ctx.resolveTaskAssignee(graph.goal),
+      assigneeAgentId: assignment.assigneeAgentId,
       config: {
         checkpoint: { topic: { after: false } },
         ...(planSkill ? { skills: [planSkillIdentifier(planSkill)] } : {}),
+        ...assignment.model,
       },
       description: description?.slice(0, TASK_DESCRIPTION_MAX_LENGTH),
       instruction: ctx.buildTaskInstruction(graph, frontier.title, description),
@@ -123,6 +130,12 @@ export const createResponsibleTask = async (
         outcome: 'waiting_external',
       };
     }
+    // A handoff or Task-model change committed while this Task was being
+    // created scanned the graph before the bind; align it with the goal now.
+    await new GoalAssignmentService(ctx.db, ctx.userId, ctx.workspaceId).syncBoundTask(
+      goalId,
+      task.id,
+    );
   } catch (error) {
     if (acceptanceId) {
       await ctx.acceptanceService.acceptanceModel.delete(acceptanceId).catch(() => {});
