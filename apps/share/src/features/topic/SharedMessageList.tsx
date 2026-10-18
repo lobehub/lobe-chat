@@ -2,7 +2,7 @@
 
 import { BRANDING_NAME } from '@lobechat/business-const';
 import { Flexbox, Text } from '@lobehub/ui';
-import { memo, type ReactNode, useCallback, useMemo } from 'react';
+import { memo, type ReactNode, useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { ChatList, ConversationProvider, MessageItem } from '@/features/Conversation';
@@ -21,10 +21,13 @@ interface SharedMessageListProps {
 const SharedMessageList = memo<SharedMessageListProps>((props) => {
   const { agentId, groupId, headerSlot, messageReadMode, shareId, topicId } = props;
   const { t } = useTranslation('chat');
+  const [newestFirstShareId, setNewestFirstShareId] = useState<string>();
+  const readMode = newestFirstShareId === shareId ? 'backward' : messageReadMode;
   const context = useMemo(
-    () => toSharedConversationContext({ agentId, groupId, shareId, topicId }, messageReadMode),
-    [agentId, groupId, messageReadMode, shareId, topicId],
+    () => toSharedConversationContext({ agentId, groupId, shareId, topicId }, readMode),
+    [agentId, groupId, readMode, shareId, topicId],
   );
+  const readNewestFirst = useCallback(() => setNewestFirstShareId(shareId), [shareId]);
 
   const itemContent = useCallback(
     (index: number, id: string) => <MessageItem disableEditing id={id} index={index} key={id} />,
@@ -45,6 +48,7 @@ const SharedMessageList = memo<SharedMessageListProps>((props) => {
             </Text>
           </Flexbox>
         }
+        onForwardPagingUnsupported={readNewestFirst}
       />
     </ConversationProvider>
   );

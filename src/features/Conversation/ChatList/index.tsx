@@ -35,6 +35,7 @@ import AgentSignalReceiptList from './components/AgentSignalReceiptList';
 import { RefreshError } from './components/RefreshError';
 import VirtualizedList from './components/VirtualizedList';
 import { useAgentSignalReceipts } from './hooks/useAgentSignalReceipts';
+import { useForwardPagingFallback } from './hooks/useForwardPagingFallback';
 import { useInitialRevalidation } from './hooks/useInitialRevalidation';
 import { useMessageRefreshError } from './hooks/useMessageRefreshError';
 import { type InitialScrollPosition } from './hooks/useTopicScrollPersist';
@@ -105,6 +106,12 @@ export interface ChatListProps {
   /** Message hash target to locate after the virtual list has rendered. */
   messageDeepLink?: MessageDeepLink;
   /**
+   * The conversation reads forward (`messageReadMode: 'forward'`) but the
+   * server cannot page forward. The owner of the context should switch it back
+   * to the newest-first read.
+   */
+  onForwardPagingUnsupported?: () => void;
+  /**
    * Force showing welcome component even when messages exist
    */
   showWelcome?: boolean;
@@ -130,10 +137,12 @@ const ChatList = memo<ChatListProps>(
     welcome,
     itemContent,
     messageDeepLink,
+    onForwardPagingUnsupported,
     showWelcome,
   }) => {
     // The chat store owns the transcript; this view keeps its sync mounted.
     const context = useConversationStore((s) => s.context);
+    const paging = context.messageReadMode === 'forward' ? 'forward' : 'backward';
     const enableUserMemories = useUserStore(settingsSelectors.memoryEnabled);
     const skipFetch = useConversationStore(dataSelectors.skipFetch);
     const useFetchMessages = useChatStore((s) => s.useFetchMessages);
@@ -157,9 +166,15 @@ const ChatList = memo<ChatListProps>(
       skipFetch: skipFetch || isCreatingTopic,
       syncInterventions: true,
     });
+    const laterMessagesError = useConversationStore((s) => s.laterMessagesError);
+    const isFallingBack = useForwardPagingFallback({
+      errors: [messagesSWR.error, laterMessagesError],
+      onUnsupported: onForwardPagingUnsupported,
+      paging,
+    });
     const messageListIdentity = getMessageListCacheIdentity(context);
     const refreshError = useMessageRefreshError({
-      error: messagesSWR.error,
+      error: isFallingBack ? undefined : messagesSWR.error,
       identity: messageListIdentity,
       isValidating: messagesSWR.isValidating,
       mutate: messagesSWR.mutate,
@@ -341,6 +356,7 @@ const ChatList = memo<ChatListProps>(
               initialScrollPosition={initialScrollPosition}
               itemContent={itemContent ?? defaultItemContent}
               messageDeepLink={resolvedMessageDeepLink}
+              paging={paging}
             />
           </BackgroundRunHintContext>
         </MessageActionProvider>

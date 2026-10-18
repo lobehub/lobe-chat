@@ -4,6 +4,7 @@ import debug from 'debug';
 import { type StateCreator } from 'zustand/vanilla';
 
 import { useChatStore } from '@/store/chat';
+import { messageStateSelectors } from '@/store/chat/slices/message/selectors/messageState';
 import { type ChatStore } from '@/store/chat/store';
 import { messageMapKey } from '@/store/chat/utils/messageMapKey';
 
@@ -48,7 +49,7 @@ export const chatTranscriptState = (
   context: ConversationContext,
   skipFetch: boolean | undefined,
   previousDisplayMessages: UIChatMessage[],
-): Pick<State, 'dbMessages' | 'displayMessages' | 'messagesInit'> => {
+): Pick<State, 'dbMessages' | 'displayMessages' | 'hasLaterMessages' | 'messagesInit'> => {
   const chat = useChatStore.getState();
   const bucket = messageMapKey(context);
   const rows = chat.dbMessagesMap[bucket];
@@ -59,6 +60,7 @@ export const chatTranscriptState = (
   return {
     dbMessages: rows ?? [],
     displayMessages: stabilizeReferences(previousDisplayMessages, parsed ?? []),
+    hasLaterMessages: messageStateSelectors.hasLaterMessages(context)(chat),
     // An absent bucket is "not loaded yet"; `[]` is a loaded, empty transcript.
     // A conversation that never syncs has nothing to wait for.
     messagesInit: !!rows || !!skipFetch,
@@ -219,6 +221,7 @@ export const dataSlice: StateCreator<
       if (
         next.dbMessages === state.dbMessages &&
         next.displayMessages === state.displayMessages &&
+        next.hasLaterMessages === state.hasLaterMessages &&
         next.messagesInit === state.messagesInit
       )
         return;

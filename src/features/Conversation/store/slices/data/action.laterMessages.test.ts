@@ -8,6 +8,7 @@ import { messageMapKey } from '@/store/chat/utils/messageMapKey';
 
 import { createStore } from '../../index';
 import { createEphemeralResetState } from '../../initialState';
+import { dataSelectors } from './selectors';
 
 vi.mock('@lobechat/conversation-flow', () => ({
   parse: (messages: UIChatMessage[]) => ({
@@ -74,6 +75,7 @@ describe('loadLaterMessages', () => {
     seedFirstPage(context);
     const store = createStore({ context });
     query.mockResolvedValueOnce(laterPage);
+    expect(dataSelectors.hasLaterMessages(store.getState())).toBe(true);
 
     await store.getState().loadLaterMessages();
 
@@ -81,6 +83,7 @@ describe('loadLaterMessages', () => {
     expect(store.getState().dbMessages.map((m) => m.id)).toEqual(['u1', 'a1', 'u2', 'a2']);
     expect(store.getState().isLoadingLaterMessages).toBe(false);
     expect(store.getState().laterMessagesError).toBeUndefined();
+    expect(dataSelectors.hasLaterMessages(store.getState())).toBe(false);
   });
 
   it('keeps a failed page as state and only retries on explicit request', async () => {
