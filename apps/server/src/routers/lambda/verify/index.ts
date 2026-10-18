@@ -1,17 +1,19 @@
-import { router } from '@/libs/trpc/lambda';
+import { mergeRouters, router } from '@/libs/trpc/lambda';
 
 import { verifyRunReportProcedures } from '../verifyRunReport';
-import { criteriaProcedures } from './criteria';
-import { executionProcedures } from './execution';
-import { ingestProcedures } from './ingest';
-import { reportsProcedures } from './reports';
-import { runsProcedures } from './runs';
+import { criteriaRouter } from './criteria';
+import { executionRouter } from './execution';
+import { ingestRouter } from './ingest';
+import { reportsRouter } from './reports';
+import { runsRouter } from './runs';
 
-export const verifyRouter = router({
-  ...criteriaProcedures,
-  ...executionProcedures,
-  ...runsProcedures,
-  ...ingestProcedures,
-  ...reportsProcedures,
-  ...verifyRunReportProcedures,
-});
+export const verifyRouter = mergeRouters(
+  criteriaRouter,
+  executionRouter,
+  runsRouter,
+  ingestRouter,
+  reportsRouter,
+  router({
+    ...verifyRunReportProcedures,
+  }),
+);

@@ -9,6 +9,7 @@ import { z } from 'zod';
 
 import type { FileModel } from '@/database/models/file';
 import type { VerifyRunModel } from '@/database/models/verifyRun';
+import { router } from '@/libs/trpc/lambda';
 import { evidenceTypeForStoredFile, resolveLiveRoundForItem } from '@/server/services/verify';
 
 import { assertWorkspaceRowManageable } from '../_helpers/assertWorkspaceRowManageable';
@@ -89,7 +90,7 @@ const storedEvidenceType = async (
 ): Promise<VerifyEvidenceType> =>
   fileId ? evidenceTypeForStoredFile(type, await ctx.fileModel.findById(fileId)) : type;
 
-export const ingestProcedures = {
+export const ingestRouter = router({
   ingestResult: verifyWriteProcedure
     .input(
       z
@@ -306,4 +307,4 @@ export const ingestProcedures = {
       await ctx.evidenceModel.delete(evidence.id);
       return { id: evidence.id, success: true };
     }),
-};
+});

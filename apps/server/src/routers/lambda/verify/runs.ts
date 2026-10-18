@@ -2,6 +2,7 @@ import { normalizeVerifySurface, verifyRunScenarios, verifySurfaces } from '@lob
 import type { VerifyRunContext, VerifyRunScenario } from '@lobechat/types';
 import { z } from 'zod';
 
+import { router } from '@/libs/trpc/lambda';
 import { FileService } from '@/server/services/file';
 import { purgeVerifyRun } from '@/server/services/verify';
 
@@ -135,7 +136,7 @@ const listReportSummariesInputSchema = z
   })
   .optional();
 
-export const runsProcedures = {
+export const runsRouter = router({
   // ---- ingest (standalone sessions: results / evidence / report, e.g. agent-testing) ----
   // A verification session that isn't a live Agent Run (no executor): an external
   // harness creates the run, ingests each check's verdict + evidence, and writes a
@@ -249,4 +250,4 @@ export const runsProcedures = {
     );
     return { data: updated, success: true };
   }),
-};
+});

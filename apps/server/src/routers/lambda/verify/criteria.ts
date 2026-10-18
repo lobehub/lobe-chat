@@ -2,6 +2,8 @@ import { verifyCheckDefinitionSchema } from '@lobechat/types';
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
+import { router } from '@/libs/trpc/lambda';
+
 import { assertWorkspaceRowManageable } from '../_helpers/assertWorkspaceRowManageable';
 import { verifyProcedure, verifyWriteProcedure } from './procedures';
 import { onFailSchema, verifierTypeSchema } from './schemas';
@@ -11,7 +13,7 @@ const rubricConfigSchema = z.object({
   maxRepairRounds: z.number().int().min(0).max(5).optional(),
 });
 
-export const criteriaProcedures = {
+export const criteriaRouter = router({
   // ---- criteria (reusable atomic standards) ----
   createCriterion: verifyWriteProcedure
     .input(
@@ -173,4 +175,4 @@ export const criteriaProcedures = {
       assertWorkspaceRowManageable(ctx, rubric.userId, 'verify rubric');
       return ctx.rubricModel.update(input.id, input.value);
     }),
-};
+});

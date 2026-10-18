@@ -1,13 +1,14 @@
 import { verifyVisibilities } from '@lobechat/const/verify';
 import { z } from 'zod';
 
+import { router } from '@/libs/trpc/lambda';
 import { AcceptanceService } from '@/server/services/verify';
 
 import { assertWorkspaceRowManageable } from '../_helpers/assertWorkspaceRowManageable';
 import { resolveVerifyRun, verifyProcedure, verifyWriteProcedure } from './procedures';
 import { modelConfigSchema, verdictSchema, verifyRunIdInputSchema } from './schemas';
 
-export const reportsProcedures = {
+export const reportsRouter = router({
   upsertReport: verifyWriteProcedure
     .input(
       z.object({
@@ -100,4 +101,4 @@ export const reportsProcedures = {
       assertWorkspaceRowManageable(ctx, run.userId, 'verify run');
       await ctx.runModel.setVisibility(run.id, input.visibility);
     }),
-};
+});

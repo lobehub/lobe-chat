@@ -3,7 +3,7 @@ import { AgentRuntimeErrorType } from '@lobechat/model-runtime';
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
-import { publicProcedure } from '@/libs/trpc/lambda';
+import { publicProcedure, router } from '@/libs/trpc/lambda';
 import { markSilentTRPCErrorLog } from '@/libs/trpc/utils/errorLogger';
 import { finalizeVerifyRun } from '@/server/services/verify';
 
@@ -13,7 +13,7 @@ import { checkItemSchema, modelConfigSchema, onFailSchema, verifierTypeSchema } 
 
 const decisionSchema = z.enum(['accepted', 'rejected', 'overridden']);
 
-export const executionProcedures = {
+export const executionRouter = router({
   // ---- per-run plan ----
   confirmPlan: verifyWriteProcedure
     .input(z.object({ operationId: z.string() }))
@@ -265,4 +265,4 @@ export const executionProcedures = {
       assertWorkspaceRowManageable(ctx, result.userId, 'verify result');
       return ctx.feedbackService.submitDecision(result.id, input.decision);
     }),
-};
+});
