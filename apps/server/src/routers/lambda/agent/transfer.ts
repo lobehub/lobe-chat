@@ -1,4 +1,5 @@
 import { TRPCError } from '@trpc/server';
+import pMap from 'p-map';
 import { z } from 'zod';
 
 import {
@@ -37,6 +38,9 @@ import { TransferErrorCode } from '@/types/transferError';
 
 import { isWorkspaceNonOwner } from '../_helpers/assertWorkspaceRowManageable';
 import { agentProcedure } from './procedures';
+
+// Caps per-agent DB reads/writes in a batch transfer (up to 100 agents).
+const AGENT_TRANSFER_CONCURRENCY = 5;
 
 export const transferRouter = router({
   /**
@@ -393,9 +397,9 @@ export const transferRouter = router({
       const agentIds = [...new Set(input.agentIds)];
 
       // 1. All agents must exist in the current scope
-      const existences = await Promise.all(
-        agentIds.map((agentId) => ctx.agentModel.existsById(agentId)),
-      );
+      const existences = await pMap(agentIds, (agentId) => ctx.agentModel.existsById(agentId), {
+        concurrency: AGENT_TRANSFER_CONCURRENCY,
+      });
       if (existences.some((exists) => !exists)) {
         throw new TRPCError({
           cause: { data: { code: TransferErrorCode.ResourceNotFound } },
@@ -406,8 +410,9 @@ export const transferRouter = router({
 
       // 2. Transferring ownership/scope is always creator-only.
       if (ctx.workspaceId) {
-        await Promise.all(
-          agentIds.map((agentId) =>
+        await pMap(
+          agentIds,
+          (agentId) =>
             assertCanPerformResourceAction({
               action: 'transfer',
               db: ctx.serverDB,
@@ -416,7 +421,7 @@ export const transferRouter = router({
               userId: ctx.userId,
               workspaceId: ctx.workspaceId!,
             }),
-          ),
+          { concurrency: AGENT_TRANSFER_CONCURRENCY },
         );
       }
 
@@ -526,9 +531,9 @@ export const transferRouter = router({
 
       if (ctx.workspaceId) {
         const sourcePermissionModel = new ResourcePermissionModel(ctx.serverDB, ctx.workspaceId);
-        await Promise.all(
-          agentIds.map((agentId) => sourcePermissionModel.removeAll('agent', agentId)),
-        );
+        await pMap(agentIds, (agentId) => sourcePermissionModel.removeAll('agent', agentId), {
+          concurrency: AGENT_TRANSFER_CONCURRENCY,
+        });
         // The agents left this workspace — void any live member-transfer requests.
         await new ResourceTransferRequestModel(
           ctx.serverDB,
@@ -541,10 +546,11 @@ export const transferRouter = router({
           ctx.serverDB,
           input.targetWorkspaceId,
         );
-        await Promise.all(
-          agentIds.map((agentId) =>
+        await pMap(
+          agentIds,
+          (agentId) =>
             targetPermissionModel.setAccessLevel('agent', agentId, targetAccessLevel, ctx.userId),
-          ),
+          { concurrency: AGENT_TRANSFER_CONCURRENCY },
         );
       }
 
