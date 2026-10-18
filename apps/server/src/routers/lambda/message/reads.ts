@@ -5,7 +5,7 @@ import { z } from 'zod';
 import { cloudWorkspaceAuth } from '@/business/server/trpc-middlewares/workspaceAuth';
 import { MessageModel } from '@/database/models/message';
 import { TopicShareModel } from '@/database/models/topicShare';
-import { publicProcedure } from '@/libs/trpc/lambda';
+import { publicProcedure, router } from '@/libs/trpc/lambda';
 import { serverDatabase } from '@/libs/trpc/lambda/middleware';
 import { FileService } from '@/server/services/file';
 import { createFtsSearchRepo } from '@/server/services/ftsSearch';
@@ -44,7 +44,7 @@ const messageSearchProcedure = messageProcedure.use(async (opts) => {
   });
 });
 
-export const readProcedures = {
+export const readRouter = router({
   /**
    * Raw tool payload for one message, fetched on demand when the projected
    * read path dropped it (`UIChatMessage.payloadOmitted`).
@@ -276,4 +276,4 @@ export const readProcedures = {
     .query(async ({ input, ctx }) => {
       return ctx.messageModel.queryByKeyword(input.keywords);
     }),
-};
+});

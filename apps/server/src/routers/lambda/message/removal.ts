@@ -1,6 +1,7 @@
 import { z } from 'zod';
 
 import { withScopedPermission } from '@/business/server/trpc-middlewares/rbacPermission';
+import { router } from '@/libs/trpc/lambda';
 
 import {
   assertCanUseConversationTargets,
@@ -12,7 +13,7 @@ import { assertCreatorTopicTargets } from '../_helpers/shareVisitorTargetGuard';
 import { basicContextSchema } from '../_schema/context';
 import { guardCtx, messageProcedure } from './procedures';
 
-export const removalProcedures = {
+export const removalRouter = router({
   removeMessage: messageProcedure
     .use(withScopedPermission('message:delete'))
     .input(
@@ -116,4 +117,4 @@ export const removalProcedures = {
 
       return ctx.messageModel.deleteMessagesBySession(null, input.topicId, input.groupId);
     }),
-};
+});

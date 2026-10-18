@@ -1,17 +1,17 @@
-import { router } from '@/libs/trpc/lambda';
+import { mergeRouters } from '@/libs/trpc/lambda';
 
-import { analyticsProcedures } from './analytics';
-import { readProcedures } from './reads';
-import { removalProcedures } from './removal';
-import { toolMessageProcedures } from './toolMessages';
-import { topicTreeProcedures } from './topicTree';
-import { writeProcedures } from './writes';
+import { analyticsRouter } from './analytics';
+import { readRouter } from './reads';
+import { removalRouter } from './removal';
+import { toolMessageRouter } from './toolMessages';
+import { topicTreeRouter } from './topicTree';
+import { writeRouter } from './writes';
 
-export const messageRouter = router({
-  ...writeProcedures,
-  ...topicTreeProcedures,
-  ...analyticsProcedures,
-  ...readProcedures,
-  ...removalProcedures,
-  ...toolMessageProcedures,
-});
+export const messageRouter = mergeRouters(
+  writeRouter,
+  topicTreeRouter,
+  analyticsRouter,
+  readRouter,
+  removalRouter,
+  toolMessageRouter,
+);

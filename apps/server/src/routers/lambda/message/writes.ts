@@ -8,6 +8,7 @@ import { createTimingHelpers, createTimingRequestId } from '@lobechat/utils';
 import { z } from 'zod';
 
 import { withScopedPermission } from '@/business/server/trpc-middlewares/rbacPermission';
+import { router } from '@/libs/trpc/lambda';
 import { type MessageBatchOperation } from '@/server/services/message';
 
 import {
@@ -50,7 +51,7 @@ const messageBatchOperationSchema = z.discriminatedUnion('type', [
   }),
 ]);
 
-export const writeProcedures = {
+export const writeRouter = router({
   addFilesToMessage: messageProcedure
     .use(withScopedPermission('message:update'))
     .input(
@@ -328,4 +329,4 @@ export const writeProcedures = {
 
       return ctx.messageModel.updateTranslate(input.id, input.value);
     }),
-};
+});

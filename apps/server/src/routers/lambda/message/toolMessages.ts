@@ -2,6 +2,7 @@ import { UpdateMessagePluginSchema } from '@lobechat/types';
 import { z } from 'zod';
 
 import { withScopedPermission } from '@/business/server/trpc-middlewares/rbacPermission';
+import { router } from '@/libs/trpc/lambda';
 
 import {
   assertCanUseConversationTargets,
@@ -21,7 +22,7 @@ export const heterogeneousToolStateSnapshotSchema = z.object({
   snapshotSeq: z.number().int().positive(),
 });
 
-export const toolMessageProcedures = {
+export const toolMessageRouter = router({
   updateMessagePlugin: messageProcedure
     .use(withScopedPermission('message:update'))
     .input(
@@ -159,4 +160,4 @@ export const toolMessageProcedures = {
 
       return ctx.messageService.updateToolMessage(id, value, resolved);
     }),
-};
+});

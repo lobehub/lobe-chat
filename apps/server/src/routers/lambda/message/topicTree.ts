@@ -1,6 +1,7 @@
 import { z } from 'zod';
 
 import { withScopedPermission } from '@/business/server/trpc-middlewares/rbacPermission';
+import { router } from '@/libs/trpc/lambda';
 
 import { assertCanUseTopicTargets } from '../_helpers/conversationResourceGuard';
 import {
@@ -9,7 +10,7 @@ import {
 } from '../_helpers/shareVisitorTargetGuard';
 import { guardCtx, messageProcedure } from './procedures';
 
-export const topicTreeProcedures = {
+export const topicTreeRouter = router({
   /**
    * Cancel compression by deleting the compression group and restoring original messages
    */
@@ -142,4 +143,4 @@ export const topicTreeProcedures = {
 
       return ctx.messageService.updateMessageGroupMetadata(messageGroupId, { expanded }, context);
     }),
-};
+});

@@ -1,5 +1,7 @@
 import { z } from 'zod';
 
+import { router } from '@/libs/trpc/lambda';
+
 import { messageProcedure } from './procedures';
 
 /**
@@ -16,7 +18,7 @@ const messageAnalyticsSchema = z.object({
   topicId: z.string().optional(),
 });
 
-export const analyticsProcedures = {
+export const analyticsRouter = router({
   listAll: messageProcedure
     .input(
       messageAnalyticsSchema
@@ -85,4 +87,4 @@ export const analyticsProcedures = {
     .query(async ({ ctx, input }) => {
       return ctx.messageModel.topicMessageStats(input);
     }),
-};
+});
