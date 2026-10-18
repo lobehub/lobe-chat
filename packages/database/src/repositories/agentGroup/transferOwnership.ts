@@ -1,5 +1,12 @@
 import { and, asc, eq, inArray, ne } from 'drizzle-orm';
 
+import { AGENT_SHARED_TRANSFER_BLOCKED } from '../../models/agent';
+import { AGENT_COPY_IN_PROGRESS, AgentCopyJobModel } from '../../models/agentCopyJob';
+import { AGENT_TRANSFER_IN_PROGRESS, AgentTransferJobModel } from '../../models/agentTransferJob';
+import {
+  CHAT_GROUP_OWNERSHIP_STALE,
+  CHAT_GROUP_TRANSFER_HIDDEN_MEMBER,
+} from '../../models/chatGroup/constants';
 import {
   agentBotProviders,
   agentCronJobs,
@@ -23,23 +30,7 @@ import {
 import { rehomeAgentLabelsForRecipient } from '../../utils/agentLabelsOwnership';
 import { rehomeAgentQuotaBindingsForRecipient } from '../../utils/agentQuotaBindings';
 import { resolveGroupMembershipType } from '../../utils/groupMembership';
-import { AGENT_SHARED_TRANSFER_BLOCKED } from '../agent';
-import { AGENT_COPY_IN_PROGRESS, AgentCopyJobModel } from '../agentCopyJob';
-import { AGENT_TRANSFER_IN_PROGRESS, AgentTransferJobModel } from '../agentTransferJob';
-import { type ChatGroupContext } from './scope';
-
-/**
- * The group is no longer where the transfer request said it was: moved scope,
- * changed hands, or was deleted. The request that referenced it can never
- * complete.
- */
-export const CHAT_GROUP_OWNERSHIP_STALE = 'CHAT_GROUP_OWNERSHIP_STALE';
-
-/**
- * Handover refused: the group references a member agent that is private to
- * someone other than the recipient, who would silently lose that participant.
- */
-export const CHAT_GROUP_TRANSFER_HIDDEN_MEMBER = 'CHAT_GROUP_TRANSFER_HIDDEN_MEMBER';
+import type { AgentGroupScope } from './scope';
 
 /**
  * Same-workspace ownership handover: what accepting a member-to-member
@@ -52,10 +43,12 @@ export const CHAT_GROUP_TRANSFER_HIDDEN_MEMBER = 'CHAT_GROUP_TRANSFER_HIDDEN_MEM
  *
  * Runs inside the caller's transaction: the caller flips the transfer
  * request's status in the same `trx`, so a stale/raced accept rolls both
- * back together.
+ * back together. It writes the group, its member agents and their tasks,
+ * project links and runtime rows, so it is a repository unit of work rather
+ * than a `ChatGroupModel` method.
  */
 export const transferGroupOwnership = async (
-  ctx: ChatGroupContext,
+  ctx: Pick<AgentGroupScope, 'workspaceId'>,
   trx: Transaction,
   params: {
     /** The owner recorded on the transfer request; a mismatch means the request is stale. */

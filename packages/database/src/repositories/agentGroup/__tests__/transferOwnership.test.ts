@@ -2,7 +2,17 @@
 import { eq } from 'drizzle-orm';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
-import { getTestDB } from '../../core/getTestDB';
+import { getTestDB } from '../../../core/getTestDB';
+import { AGENT_SHARED_TRANSFER_BLOCKED } from '../../../models/agent';
+import {
+  AGENT_TRANSFER_IN_PROGRESS,
+  AgentTransferJobModel,
+} from '../../../models/agentTransferJob';
+import {
+  CHAT_GROUP_OWNERSHIP_STALE,
+  CHAT_GROUP_TRANSFER_HIDDEN_MEMBER,
+  ChatGroupModel,
+} from '../../../models/chatGroup';
 import {
   agentHistoryJobs,
   agents,
@@ -14,15 +24,9 @@ import {
   topics,
   users,
   workspaces,
-} from '../../schemas';
-import type { LobeChatDatabase } from '../../type';
-import { AGENT_SHARED_TRANSFER_BLOCKED } from '../agent';
-import { AGENT_TRANSFER_IN_PROGRESS, AgentTransferJobModel } from '../agentTransferJob';
-import {
-  CHAT_GROUP_OWNERSHIP_STALE,
-  CHAT_GROUP_TRANSFER_HIDDEN_MEMBER,
-  ChatGroupModel,
-} from '../chatGroup';
+} from '../../../schemas';
+import type { LobeChatDatabase } from '../../../type';
+import { AgentGroupRepository } from '../index';
 
 const serverDB: LobeChatDatabase = await getTestDB();
 
@@ -32,10 +36,10 @@ const teammateId = 'group-handover-teammate';
 const wsId = 'group-handover-ws';
 
 const ownerModel = new ChatGroupModel(serverDB, ownerId, wsId);
-const recipientModel = new ChatGroupModel(serverDB, recipientId, wsId);
+const recipientRepo = new AgentGroupRepository(serverDB, recipientId, wsId);
 
-const handover = (params: Parameters<ChatGroupModel['transferGroupOwnership']>[1]) =>
-  serverDB.transaction(async (trx) => recipientModel.transferGroupOwnership(trx, params));
+const handover = (params: Parameters<AgentGroupRepository['transferOwnership']>[1]) =>
+  serverDB.transaction(async (trx) => recipientRepo.transferOwnership(trx, params));
 
 /** A group with a virtual supervisor (owned) and a standalone teammate agent (referenced). */
 const seedGroupWithRoster = async () => {
@@ -86,7 +90,7 @@ afterEach(async () => {
   await serverDB.delete(users);
 });
 
-describe('ChatGroupModel.transferGroupOwnership', () => {
+describe('AgentGroupRepository.transferOwnership', () => {
   it.each(['link', 'private'] as const)(
     'rejects handover when an owned member has a %s share without changing the group',
     async (visibility) => {

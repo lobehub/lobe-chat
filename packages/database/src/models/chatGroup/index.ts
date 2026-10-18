@@ -7,7 +7,7 @@ import type {
   NewChatGroupAgent,
 } from '../../schemas';
 import { agents, chatGroups, chatGroupsAgents, sessionGroups } from '../../schemas';
-import type { LobeChatDatabase, Transaction } from '../../type';
+import type { LobeChatDatabase } from '../../type';
 import type { GroupMemberRole } from '../../utils/groupMembership';
 import { GROUP_SUPERVISOR_ROLE } from '../../utils/groupMembership';
 import { normalizeInboxAgentAvatar } from '../../utils/inboxAgent';
@@ -15,9 +15,8 @@ import { buildWorkspacePayload, buildWorkspaceWhere } from '../../utils/workspac
 import * as deletion from './deletion';
 import * as membership from './membership';
 import { type ChatGroupContext, groupAgentsOwnership, groupOwnership } from './scope';
-import * as transfer from './transferOwnership';
 
-export { CHAT_GROUP_OWNERSHIP_STALE, CHAT_GROUP_TRANSFER_HIDDEN_MEMBER } from './transferOwnership';
+export { CHAT_GROUP_OWNERSHIP_STALE, CHAT_GROUP_TRANSFER_HIDDEN_MEMBER } from './constants';
 
 export class ChatGroupModel {
   private userId: string;
@@ -479,18 +478,29 @@ export class ChatGroupModel {
 
   // ******* Delete Methods ******* //
 
-  async delete(id: string): Promise<{ deletedOwnedAgentIds: string[]; group: ChatGroupItem }> {
+  /**
+   * Delete one group row (its junction rows cascade). Group aggregate only —
+   * deleting a group together with the agents it owns goes through
+   * `AgentGroupRepository.deleteGroup`.
+   */
+  async delete(id: string): Promise<ChatGroupItem> {
     return deletion.deleteGroup(this.ctx, id);
   }
 
+  /** Delete every group in scope (group aggregate only; see {@link delete}). */
   async deleteAll(): Promise<void> {
     return deletion.deleteAllGroups(this.ctx);
   }
 
-  transferGroupOwnership = (
-    trx: Transaction,
-    params: Parameters<typeof transfer.transferGroupOwnership>[2],
-  ): Promise<void> => transfer.transferGroupOwnership(this.ctx, trx, params);
+  /** See {@link deletion.findOwnedMemberAgentIds}. */
+  async findOwnedMemberAgentIds(groupIds: string[]): Promise<string[]> {
+    return deletion.findOwnedMemberAgentIds(this.ctx, groupIds);
+  }
+
+  /** Ids of every group in the caller's scope. */
+  async findIdsInScope(): Promise<string[]> {
+    return deletion.findGroupIdsInScope(this.ctx);
+  }
 
   // ******* Agent Query Methods ******* //
 
