@@ -16,7 +16,7 @@ import debug from 'debug';
 import type { GoalModel } from '@/database/models/goal';
 import type { GoalGraphModel } from '@/database/models/goalGraph';
 
-import { BatchPlanSkillService, planUnitBrief } from './batchPlanSkill';
+import { BatchPlanSkillService, PLAN_SKILL_BRIEF_LEAD, planUnitBrief } from './batchPlanSkill';
 import { unitsNamedByProbes } from './spec';
 
 const log = debug('lobe-server:goal-rollout');
@@ -87,8 +87,11 @@ export const carriedUnitBrief = (node: { description?: string | null; title: str
   if (carried >= 0) return own || undefined;
   // Briefed from the shared plan alone — the outline, or the plan skill — the
   // unit has nothing of its own, and the plan it ran on is not to be carried.
+  // Only the generated skill brief is skipped: a planner's own instruction may
+  // open with the same `Unit:` line and still carry the unit's constraints.
   const unit = `Unit: ${node.title}`;
-  return !own || own.endsWith(unit) || own.startsWith(unit) ? undefined : own;
+  const skillBrief = own.startsWith(`${unit}\n\n${PLAN_SKILL_BRIEF_LEAD}`);
+  return !own || own.endsWith(unit) || skillBrief ? undefined : own;
 };
 
 /**

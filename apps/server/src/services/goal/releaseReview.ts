@@ -568,6 +568,19 @@ export class GoalReleaseReview {
         if (current.waveIndex === 0 && current.assayNodeId)
           await writer.createEdge(goalId, current.assayNodeId, nodeId, 'depends_on');
       }
+      // A unit that waited on another keeps waiting on it: the order the units
+      // ran in carries over to their re-runs, so a re-run never starts on the
+      // output its prerequisite is still redoing.
+      for (const edge of graph.edges) {
+        const source = edge.kind === 'depends_on' && replaced.get(edge.sourceNodeId);
+        if (!source) continue;
+        await writer.createEdge(
+          goalId,
+          source,
+          replaced.get(edge.targetNodeId) ?? edge.targetNodeId,
+          'depends_on',
+        );
+      }
       const swap = (ids: string[]) => ids.map((id) => replaced.get(id) ?? id);
       await goalModel.updateRolloutState(goalId, {
         ...current,

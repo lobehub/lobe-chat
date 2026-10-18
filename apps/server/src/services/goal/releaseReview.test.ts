@@ -293,6 +293,25 @@ describe('approving a batch release', () => {
     );
   });
 
+  // A probe that built on another runs after it again: the re-runs keep the
+  // order, so the dependent one never starts on its prerequisite's old output.
+  it('keeps the order between probes that depended on each other', async () => {
+    const { goalId, graphModel, probeIds, service } = await passedProbes();
+    await graphModel.createEdge(goalId, probeIds[1], probeIds[0], 'depends_on');
+    await service.tick(goalId);
+
+    await sendBackAndRewrite(service, goalId);
+
+    const graph = await service.graph(goalId);
+    const [first, second] = graph.goal.config!.rolloutState!.probeNodeIds;
+    expect(
+      graph.edges.some(
+        (edge) =>
+          edge.kind === 'depends_on' && edge.sourceNodeId === second && edge.targetNodeId === first,
+      ),
+    ).toBe(true);
+  });
+
   it('re-runs only the units the main Agent names', async () => {
     const { goalId, probeIds, service } = await passedProbes();
     await service.tick(goalId);

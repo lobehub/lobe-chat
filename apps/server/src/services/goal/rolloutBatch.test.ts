@@ -69,6 +69,16 @@ describe('carriedUnitBrief', () => {
     expect(carriedUnitBrief(node)).toBeUndefined();
   });
 
+  // A planner may write its own probe instruction under the same `Unit:` line;
+  // only the generated plan-skill brief is boilerplate.
+  it('keeps a planner instruction that opens with the unit line', () => {
+    const node = brief('Unit: A1\nVariant: desktop\nCover the Electron window only.');
+
+    expect(carriedUnitBrief(node)).toBe(
+      'Unit: A1\nVariant: desktop\nCover the Electron window only.',
+    );
+  });
+
   it('carries nothing for a re-run briefed only from the shared plan', () => {
     const node = brief(
       'Follow the plan skill.\n\nUnit: A1',
