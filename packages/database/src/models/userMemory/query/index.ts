@@ -24,14 +24,14 @@ import type {
   FtsSearchBackendEntity,
   FtsSearchBackendFilters,
   FtsSearchCandidateSource,
-} from '../../repositories/ftsSearch';
+} from '../../../repositories/ftsSearch';
 import type {
   UserMemoryActivitiesWithoutVectors,
   UserMemoryContextsWithoutVectors,
   UserMemoryExperiencesWithoutVectors,
   UserMemoryIdentitiesWithoutVectors,
   UserMemoryPreferencesWithoutVectors,
-} from '../../schemas';
+} from '../../../schemas';
 import {
   userMemories,
   userMemoriesActivities,
@@ -39,11 +39,11 @@ import {
   userMemoriesExperiences,
   userMemoriesIdentities,
   userMemoriesPreferences,
-} from '../../schemas';
-import type { LobeChatDatabase } from '../../type';
-import { normalizeBm25MatchQuery, SAFE_BM25_QUERY_OPTIONS } from '../../utils/bm25';
-import { inJsonStringArray } from '../../utils/inJsonStringArray';
-import { buildUserMemoryWhere } from './where';
+} from '../../../schemas';
+import type { LobeChatDatabase } from '../../../type';
+import { normalizeBm25MatchQuery, SAFE_BM25_QUERY_OPTIONS } from '../../../utils/bm25';
+import { inJsonStringArray } from '../../../utils/inJsonStringArray';
+import { buildUserMemoryWhere } from '../where';
 
 const DEFAULT_HYBRID_SEARCH_LIMIT = 5;
 const HYBRID_SEARCH_OVERFETCH_MULTIPLIER = 3;
