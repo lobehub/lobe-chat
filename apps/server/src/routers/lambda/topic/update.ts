@@ -7,6 +7,7 @@ import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
 import { withScopedPermission } from '@/business/server/trpc-middlewares/rbacPermission';
+import { router } from '@/libs/trpc/lambda';
 
 import { assertWorkspaceRowManageable } from '../_helpers/assertWorkspaceRowManageable';
 import {
@@ -17,7 +18,7 @@ import { resolveContext } from '../_helpers/resolveContext';
 import { assertCreatorTopicTargets } from '../_helpers/shareVisitorTargetGuard';
 import { guardCtx, topicProcedure } from './procedures';
 
-export const updateProcedures = {
+export const updateRouter = router({
   updateTopic: topicProcedure
     .use(withScopedPermission('topic:update'))
     .input(
@@ -163,4 +164,4 @@ export const updateProcedures = {
         rejectInFlightOperation: true,
       });
     }),
-};
+});

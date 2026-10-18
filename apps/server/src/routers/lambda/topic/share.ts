@@ -10,6 +10,7 @@ import { RbacModel } from '@/database/models/rbac';
 import type { TopicModel } from '@/database/models/topic';
 import { WorkspaceAuditLogModel } from '@/database/models/workspaceAuditLog';
 import type { LobeChatDatabase } from '@/database/type';
+import { router } from '@/libs/trpc/lambda';
 
 import { assertCanUseTopicTargets } from '../_helpers/conversationResourceGuard';
 import { resolveAgentIdFromSession } from '../_helpers/resolveContext';
@@ -156,7 +157,7 @@ const recordTopicShareAudit = async (
   });
 };
 
-export const shareProcedures = {
+export const shareRouter = router({
   /**
    * Disable sharing for a topic (deletes share record)
    */
@@ -238,4 +239,4 @@ export const shareProcedures = {
 
       return result;
     }),
-};
+});

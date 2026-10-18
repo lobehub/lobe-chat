@@ -8,6 +8,7 @@ import { z } from 'zod';
 
 import { withScopedPermission } from '@/business/server/trpc-middlewares/rbacPermission';
 import { ProjectWorkingDirectoryModel } from '@/database/models/projectWorkingDirectory';
+import { router } from '@/libs/trpc/lambda';
 import { type BatchTaskResult } from '@/types/service';
 
 import {
@@ -22,7 +23,7 @@ import {
 import { basicContextSchema } from '../_schema/context';
 import { guardCtx, topicProcedure } from './procedures';
 
-export const createProcedures = {
+export const createRouter = router({
   batchCreateTopics: topicProcedure
     .use(withScopedPermission('topic:create'))
     .input(
@@ -257,4 +258,4 @@ export const createProcedures = {
   getHeteroSessionImportStatus: topicProcedure.query(async ({ ctx }) => {
     return ctx.heteroSessionImporterRepo.getImportStatus();
   }),
-};
+});

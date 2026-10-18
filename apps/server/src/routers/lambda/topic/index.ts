@@ -1,17 +1,17 @@
-import { router } from '@/libs/trpc/lambda';
+import { mergeRouters } from '@/libs/trpc/lambda';
 
-import { createProcedures } from './create';
-import { queryProcedures } from './queries';
-import { removeProcedures } from './remove';
-import { shareProcedures } from './share';
-import { updateProcedures } from './update';
+import { createRouter } from './create';
+import { queryRouter } from './queries';
+import { removeRouter } from './remove';
+import { shareRouter } from './share';
+import { updateRouter } from './update';
 
-export const topicRouter = router({
-  ...updateProcedures,
-  ...queryProcedures,
-  ...createProcedures,
-  ...removeProcedures,
-  ...shareProcedures,
-});
+export const topicRouter = mergeRouters(
+  updateRouter,
+  queryRouter,
+  createRouter,
+  removeRouter,
+  shareRouter,
+);
 
 export type TopicRouter = typeof topicRouter;

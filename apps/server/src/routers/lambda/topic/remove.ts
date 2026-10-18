@@ -1,6 +1,7 @@
 import { z } from 'zod';
 
 import { withScopedPermission } from '@/business/server/trpc-middlewares/rbacPermission';
+import { router } from '@/libs/trpc/lambda';
 
 import {
   assertWorkspaceRowManageable,
@@ -15,7 +16,7 @@ import { guardCtx, topicProcedure } from './procedures';
 
 const topicBulkDeleteScopeSchema = z.enum(['own', 'workspace']).default('own');
 
-export const removeProcedures = {
+export const removeRouter = router({
   batchDelete: topicProcedure
     .use(withScopedPermission('topic:delete'))
     .input(z.object({ ids: z.array(z.string()) }))
@@ -98,4 +99,4 @@ export const removeProcedures = {
 
       await ctx.trashService.trashTopics([input.id], { removeFiles: input.removeFiles });
     }),
-};
+});

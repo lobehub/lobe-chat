@@ -12,6 +12,7 @@ import { withScopedPermission } from '@/business/server/trpc-middlewares/rbacPer
 import { MessageModel } from '@/database/models/message';
 import { chatGroups } from '@/database/schemas';
 import { notTrashed } from '@/database/utils/softDelete';
+import { router } from '@/libs/trpc/lambda';
 import { TopicReferenceService } from '@/server/services/topicReference';
 import { after } from '@/server/utils/scheduleAfterResponse';
 
@@ -22,7 +23,7 @@ import {
 } from '../_helpers/resolveContext';
 import { topicProcedure, topicSearchProcedure } from './procedures';
 
-export const queryProcedures = {
+export const queryRouter = router({
   getTopicDetail: topicProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ input, ctx }) => {
@@ -406,4 +407,4 @@ export const queryProcedures = {
         groupId: input.groupId,
       });
     }),
-};
+});
