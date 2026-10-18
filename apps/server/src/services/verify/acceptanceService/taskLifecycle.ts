@@ -2,6 +2,7 @@ import debug from 'debug';
 
 import { GoalModel } from '@/database/models/goal';
 import { TaskModel } from '@/database/models/task';
+import { TaskService } from '@/server/services/task';
 
 import type { AcceptanceServiceDeps } from './deps';
 
@@ -23,10 +24,7 @@ export const completeTaskSubject = async (
     if (!task || ['canceled', 'completed', 'failed'].includes(task.status)) return;
 
     // TaskService cascades checkpoint / sibling rollup / downstream unlock —
-    // the same completion path settle.ts drives on a passed verify. Loaded
-    // lazily because `TaskService` reaches this module through its acceptance
-    // resolution, so a static import would close a module cycle.
-    const { TaskService } = await import('../../task');
+    // the same completion path settle.ts drives on a passed verify.
     await new TaskService(deps.db, deps.userId, deps.workspaceId).updateStatus({
       id: task.id,
       status: 'completed',

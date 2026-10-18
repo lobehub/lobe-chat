@@ -6,6 +6,7 @@ import type {
   VerifyCheckDecisionDetail,
 } from '@lobechat/types';
 import debug from 'debug';
+import pMap from 'p-map';
 
 import { VerifyCheckResultModel } from '@/database/models/verifyCheckResult';
 import { VerifyReviewPredictionModel } from '@/database/models/verifyReviewPrediction';
@@ -16,6 +17,8 @@ import { type AcceptanceCheckRow, buildAcceptanceCheckUnion } from './checkUnion
 import type { AcceptanceServiceDeps } from './deps';
 
 const log = debug('lobe-server:verify-acceptance');
+
+const CHECK_DECISION_WRITE_CONCURRENCY = 10;
 
 /**
  * Record the user's verdict on one or more union checks (a group-level
@@ -107,8 +110,11 @@ export const reviewChecks = async (
   await deps.db.transaction(async (tx) => {
     const resultModel = new VerifyCheckResultModel(tx, deps.userId, deps.workspaceId);
 
-    await Promise.all(
-      [...targets.values()].map((result) => {
+    // `checkItemIds` is request-supplied (a group-level accept can carry many),
+    // so the per-row writes are capped rather than fanned out unbounded.
+    await pMap(
+      [...targets.values()],
+      (result) => {
         const { isFalsePositive, isFalseNegative } = computeFalseFlags(result.verdict, decision);
         return resultModel.update(result.id, {
           isFalseNegative,
@@ -116,7 +122,8 @@ export const reviewChecks = async (
           userDecision: decision,
           userDecisionDetail: detail,
         });
-      }),
+      },
+      { concurrency: CHECK_DECISION_WRITE_CONCURRENCY },
     );
 
     if (input.proposal) {
