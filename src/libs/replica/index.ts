@@ -24,6 +24,7 @@ import { mutate, useClientDataSWR } from '@/libs/swr';
 import { getCacheScope, isScopeTrusted, useCacheScope } from '@/libs/swr/useCacheScope';
 
 import { notifyReplicaDevtools, registerReplicaDevtools } from './devtools';
+import { guardResetRows, markReplicaScopeReset } from './resetMark';
 
 /**
  * LobeHub wiring of `@lobechat/replica`: replicas are partitioned like the SWR
@@ -92,15 +93,25 @@ export type ReplicaStorageKind = 'indexedDB' | 'localStorage' | 'memory';
 type AppStorageOption<TData> =
   ReplicaStorageKind | ReplicaStorage<TData> | ((namespace: string) => ReplicaStorage<TData>);
 
+const createStorage = <TData>(
+  storage: AppStorageOption<TData>,
+  namespace: string,
+): ReplicaStorage<TData> | undefined => {
+  if (typeof storage === 'function') return storage(namespace);
+  if (typeof storage === 'object') return storage;
+  if (storage === 'indexedDB') return new IndexedDBQueryProjectionStorage<TData>({ namespace });
+  if (storage === 'localStorage')
+    return new LocalStorageQueryProjectionStorage<TData>({ namespace });
+  return undefined;
+};
+
+// Every app storage ignores rows written before a data-context reset of their
+// scope (see `./resetMark`), including resources no slice has been built for.
 const resolveStorage =
   <TData>(storage: AppStorageOption<TData> = 'indexedDB') =>
   (namespace: string): ReplicaStorage<TData> | undefined => {
-    if (typeof storage === 'function') return storage(namespace);
-    if (typeof storage === 'object') return storage;
-    if (storage === 'indexedDB') return new IndexedDBQueryProjectionStorage<TData>({ namespace });
-    if (storage === 'localStorage')
-      return new LocalStorageQueryProjectionStorage<TData>({ namespace });
-    return undefined;
+    const resolved = createStorage(storage, namespace);
+    return resolved && guardResetRows(resolved);
   };
 
 export const defineReplica = <TParams, TData, TFetched = TData>({
@@ -189,11 +200,15 @@ const liveSlices = new Set<{ clear: () => Promise<boolean> }>();
  * next context resolves to the same scope string (a cloned deployment that
  * kept its ids) nothing else tells the old answer apart. `clear()` advances
  * each replica's clear generation, so those reads are discarded, and drops
- * the scope's persisted rows, which the previous context wrote. The mounted
+ * the scope's persisted rows, which the previous context wrote; the scope mark
+ * retires the rows of replicas not built yet. The mounted
  * syncs are then revalidated so the screen repaints from the new context
  * instead of staying empty.
  */
 export const clearAllReplicas = (): void => {
+  // Rows of replicas no slice exists for yet (a lazy route never opened this
+  // session) are retired by the scope mark rather than deleted.
+  markReplicaScopeReset(cacheScope.get());
   for (const slice of liveSlices) void slice.clear();
   void replicaSWRDriver
     .revalidate((queryKey) => Array.isArray(queryKey) && queryKey[0] === 'replica:sync')

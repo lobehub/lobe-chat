@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { createStore } from 'zustand/vanilla';
 
 import {
+  cacheScope,
   clearAllReplicas,
   createReplicaSlice,
   createReplicaState,
@@ -50,6 +51,25 @@ describe('clearAllReplicas', () => {
     await pending.catch(() => undefined);
 
     expect(store.getState().itemMap.a).toBeUndefined();
+  });
+
+  it('retires the persisted rows of a replica built only after the reset', async () => {
+    // A lazy route's resource: no slice existed when `stores.reset()` ran.
+    const rows = new Map([['a', { data: 'previous server', updatedAt: Date.now() - 1000 }]]);
+    clearAllReplicas();
+    const lazy = defineReplica<string, string>({
+      key: (id) => id,
+      name: 'clearAllReplicasLazyTest',
+      storage: {
+        get: async ({ queryKey }) => rows.get(queryKey),
+        getStrict: async ({ queryKey }) => rows.get(queryKey),
+        remove: async ({ queryKey }) => void rows.delete(queryKey),
+        set: async ({ queryKey }, row) => void rows.set(queryKey, row),
+      },
+      version: 1,
+    });
+
+    expect(await lazy.storage!.get({ queryKey: 'a', scope: cacheScope.get() })).toBeUndefined();
   });
 
   it('revalidates the mounted replica syncs so the new context repaints', () => {
