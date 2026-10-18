@@ -3,6 +3,7 @@ import { useMemo } from 'react';
 import {
   buildNorthStarCards,
   type NorthStarCard,
+  type NorthStarTaskRef,
 } from '@/features/AgentGoals/NorthStarMetrics/northStar';
 import { goalSelectors, useGoalStore } from '@/store/goal';
 
@@ -27,6 +28,18 @@ export const useNorthStarCard = (goalId: string, metricKey: string) => {
     [criterion, series],
   );
 
+  // Finished task nodes, so each observation can name the work it measures.
+  const nodes = snapshot?.nodes;
+  const tasks = useMemo<NorthStarTaskRef[]>(
+    () =>
+      (nodes ?? []).flatMap((node) =>
+        node.kind === 'task' && node.status === 'resolved' && node.resolvedAt
+          ? [{ id: node.id, resolvedAt: new Date(node.resolvedAt), title: node.title }]
+          : [],
+      ),
+    [nodes],
+  );
+
   return {
     card,
     criterion,
@@ -35,5 +48,6 @@ export const useNorthStarCard = (goalId: string, metricKey: string) => {
     loaded: !!snapshot,
     points: matched?.points ?? [],
     retry: () => void mutate(),
+    tasks,
   };
 };

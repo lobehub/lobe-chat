@@ -1,6 +1,6 @@
 'use client';
 
-import { ProgressBar, SparkAreaChart } from '@lobehub/charts';
+import { SparkAreaChart } from '@lobehub/charts';
 import {
   Button,
   createStaticStyles,
@@ -23,6 +23,7 @@ import { useChatStore } from '@/store/chat';
 import { PortalViewType } from '@/store/chat/slices/portal/initialState';
 import { goalSelectors, useGoalStore } from '@/store/goal';
 
+import { handleCardKeyDown } from './cardKeyboard';
 import { openDeclareMetricModal } from './DeclareMetricModal';
 import { buildNorthStarCards, formatMetricValue, type NorthStarCard } from './northStar';
 import { openRecordObservationModal } from './RecordObservationModal';
@@ -64,6 +65,20 @@ const styles = createStaticStyles(({ css }) => ({
   metValue: css`
     color: ${cssVar.colorSuccess};
   `,
+  /*
+   * The chart has no dashed-series option. It names each series path after its
+   * category, so the target reference line is styled from here: a dashed stroke
+   * with no area under it.
+   */
+  spark: css`
+    & path[name='target'] {
+      stroke-dasharray: 3 3;
+    }
+
+    & path.recharts-area-area[name='target'] {
+      fill: none;
+    }
+  `,
   stale: css`
     color: ${cssVar.colorWarning};
   `,
@@ -76,7 +91,6 @@ const MetricCard = memo<{ canEdit: boolean; card: NorthStarCard; goalId: string 
     const openDetail = () =>
       pushPortalView({ goalId, metricKey: card.key, type: PortalViewType.GoalNorthStar });
     const theme = useTheme();
-    const accent = card.met ? cssVar.colorSuccess : cssVar.colorInfo;
 
     const freshness =
       card.latestAt == null
@@ -91,12 +105,7 @@ const MetricCard = memo<{ canEdit: boolean; card: NorthStarCard; goalId: string 
         style={{ cursor: 'pointer' }}
         tabIndex={0}
         onClick={openDetail}
-        onKeyDown={(event) => {
-          if (event.key === 'Enter' || event.key === ' ') {
-            event.preventDefault();
-            openDetail();
-          }
-        }}
+        onKeyDown={(event) => handleCardKeyDown(event, openDetail)}
       >
         <Flexbox horizontal align={'center'} gap={8} justify={'space-between'}>
           <Text ellipsis fontSize={12} type={'secondary'}>
@@ -141,11 +150,12 @@ const MetricCard = memo<{ canEdit: boolean; card: NorthStarCard; goalId: string 
           {card.trend.length > 1 && (
             <SparkAreaChart
               autoMinValue
-              categories={['value']}
+              categories={['value', 'target']}
+              className={styles.spark}
               // The chart ids its SVG gradient by the color string, so it needs a
               // literal theme color: a `var(--…)` id breaks the `url(#…)` fill.
-              colors={[card.met ? theme.colorSuccess : theme.colorInfo]}
-              data={card.trend.map((value, index) => ({ index, value }))}
+              colors={[card.met ? theme.colorSuccess : theme.colorInfo, theme.colorTextQuaternary]}
+              data={card.trend.map((value, index) => ({ index, target: card.target, value }))}
               height={24}
               index={'index'}
               showGradient={false}
@@ -153,7 +163,6 @@ const MetricCard = memo<{ canEdit: boolean; card: NorthStarCard; goalId: string 
             />
           )}
         </Flexbox>
-        <ProgressBar color={accent} size={4} value={card.percent} />
         <Text className={card.stale ? styles.stale : ''} fontSize={11} type={'secondary'}>
           {freshness}
           {card.stale ? ` · ${t('goalProcess.northStar.staleWarning')}` : ''}

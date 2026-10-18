@@ -1,6 +1,6 @@
 'use client';
 
-import { LineChart, ProgressBar } from '@lobehub/charts';
+import { LineChart } from '@lobehub/charts';
 import {
   Button,
   createStaticStyles,
@@ -13,7 +13,7 @@ import {
   useTheme,
 } from '@lobehub/ui';
 import dayjs from 'dayjs';
-import { Check, Pencil, Plus } from 'lucide-react';
+import { Check, ListChecks, Pencil, Plus } from 'lucide-react';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -22,7 +22,10 @@ import { openDeclareMetricModal } from '@/features/AgentGoals/NorthStarMetrics/D
 import {
   buildNorthStarChartRows,
   buildObservationRows,
+  type DeltaTone,
+  deltaTone,
   formatMetricValue,
+  type NorthStarObservationRow,
 } from '@/features/AgentGoals/NorthStarMetrics/northStar';
 import { openRecordObservationModal } from '@/features/AgentGoals/NorthStarMetrics/RecordObservationModal';
 import { usePermission } from '@/hooks/usePermission';
@@ -42,6 +45,12 @@ const styles = createStaticStyles(({ css }) => ({
     font-family: ${cssVar.fontFamilyCode};
     font-variant-numeric: tabular-nums;
   `,
+  /* The chart names each series path after its category; dash the target line. */
+  chart: css`
+    & path[name='target'] {
+      stroke-dasharray: 4 4;
+    }
+  `,
   row: css`
     padding-block: 8px;
     border-block-end: 1px solid ${cssVar.colorBorderSecondary};
@@ -49,6 +58,28 @@ const styles = createStaticStyles(({ css }) => ({
     &:last-child {
       border-block-end: none;
     }
+  `,
+  task: css`
+    overflow: hidden;
+    min-width: 0;
+    max-width: 100%;
+  `,
+  taskCell: css`
+    overflow: hidden;
+    min-width: 0;
+  `,
+  taskTitle: css`
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  `,
+  time: css`
+    flex: none;
+    width: 72px;
+  `,
+  value: css`
+    flex: none;
+    min-width: 96px;
   `,
   section: css`
     font-size: 12px;
@@ -69,14 +100,25 @@ const timeFormat = (points: { observedAt: Date }[]) => {
 const formatDelta = (delta: number) =>
   `${delta > 0 ? '+' : delta < 0 ? '−' : '±'}${formatMetricValue(Math.abs(delta))}`;
 
-const deltaColor = (delta: number) =>
-  delta > 0 ? cssVar.colorSuccess : delta < 0 ? cssVar.colorError : cssVar.colorTextTertiary;
+/** At most this many task links per observation; the rest are counted. */
+const TASKS_PER_ROW = 1;
+
+/** Who put the number there, for an observation no finished task explains. */
+const observationSource = (row: NorthStarObservationRow): 'agent' | 'api' | 'manual' | 'probe' =>
+  row.actorType === 'agent' ? 'agent' : (row.sourceType ?? 'manual');
+
+const DELTA_COLOR: Record<DeltaTone, string> = {
+  bad: cssVar.colorError,
+  good: cssVar.colorSuccess,
+  neutral: cssVar.colorTextTertiary,
+};
 
 const NorthStarDetail = memo<{ goalId: string; metricKey: string }>(({ goalId, metricKey }) => {
   const { t } = useTranslation('chat');
   const theme = useTheme();
   const { allowed: canEdit } = usePermission('create_content');
-  const { card, criterion, error, isLoading, loaded, points, retry } = useNorthStarCard(
+  const openGoalNode = useChatStore((s) => s.openGoalNode);
+  const { card, criterion, error, isLoading, loaded, points, retry, tasks } = useNorthStarCard(
     goalId,
     metricKey,
   );
@@ -90,7 +132,7 @@ const NorthStarDetail = memo<{ goalId: string; metricKey: string }>(({ goalId, m
         : [],
     [card, points],
   );
-  const history = useMemo(() => buildObservationRows(points), [points]);
+  const history = useMemo(() => buildObservationRows(points, tasks), [points, tasks]);
 
   if (!loaded || isLoading)
     return (
@@ -116,6 +158,8 @@ const NorthStarDetail = memo<{ goalId: string; metricKey: string }>(({ goalId, m
 
   const accent = card.met ? cssVar.colorSuccess : cssVar.colorInfo;
   const unit = card.unit ? ` ${card.unit}` : '';
+  // Literal theme colors: the chart ids its SVG gradients by the color string.
+  const chartColors = [card.met ? theme.colorSuccess : theme.colorInfo, theme.colorTextQuaternary];
 
   return (
     <Flexbox gap={24} padding={16}>
@@ -136,7 +180,6 @@ const NorthStarDetail = memo<{ goalId: string; metricKey: string }>(({ goalId, m
             </Tag>
           )}
         </Flexbox>
-        <ProgressBar color={accent} size={6} value={card.percent} />
         <Text
           fontSize={12}
           style={card.stale ? { color: cssVar.colorWarning } : undefined}
@@ -176,8 +219,8 @@ const NorthStarDetail = memo<{ goalId: string; metricKey: string }>(({ goalId, m
           <LineChart
             autoMinValue
             categories={['value', 'target']}
-            // Literal theme colors: the chart ids its SVG gradients by the color string.
-            colors={[card.met ? theme.colorSuccess : theme.colorInfo, theme.colorTextQuaternary]}
+            className={styles.chart}
+            colors={chartColors}
             data={chartRows}
             height={200}
             index={'time'}
@@ -207,10 +250,18 @@ const NorthStarDetail = memo<{ goalId: string; metricKey: string }>(({ goalId, m
                 horizontal
                 align={'center'}
                 className={styles.row}
-                justify={'space-between'}
+                gap={12}
                 key={row.observedAt.getTime()}
               >
-                <Flexbox horizontal align={'baseline'} gap={8}>
+                <Text
+                  className={styles.time}
+                  fontSize={12}
+                  title={dayjs(row.observedAt).format('YYYY-MM-DD HH:mm:ss')}
+                  type={'secondary'}
+                >
+                  {dayjs(row.observedAt).fromNow()}
+                </Text>
+                <Flexbox horizontal align={'baseline'} className={styles.value} gap={6}>
                   <Text className={styles.mono} weight={500}>
                     {formatMetricValue(row.value)}
                   </Text>
@@ -218,19 +269,49 @@ const NorthStarDetail = memo<{ goalId: string; metricKey: string }>(({ goalId, m
                     <Text
                       className={styles.mono}
                       fontSize={12}
-                      style={{ color: deltaColor(row.delta) }}
+                      style={{
+                        color: DELTA_COLOR[deltaTone(card.op, row.value, row.delta, card.target)],
+                      }}
                     >
                       {formatDelta(row.delta)}
                     </Text>
                   )}
                 </Flexbox>
-                <Text
-                  fontSize={12}
-                  title={dayjs(row.observedAt).format('YYYY-MM-DD HH:mm:ss')}
-                  type={'secondary'}
+                <Flexbox
+                  horizontal
+                  align={'center'}
+                  className={styles.taskCell}
+                  flex={1}
+                  gap={6}
+                  justify={'flex-end'}
                 >
-                  {dayjs(row.observedAt).fromNow()}
-                </Text>
+                  {row.tasks.length > 0 ? (
+                    <>
+                      {row.tasks.slice(0, TASKS_PER_ROW).map((task) => (
+                        <Button
+                          className={styles.task}
+                          icon={<Icon icon={ListChecks} size={12} />}
+                          key={task.id}
+                          size={'small'}
+                          title={task.title}
+                          type={'text'}
+                          onClick={() => openGoalNode(goalId, task.id)}
+                        >
+                          <span className={styles.taskTitle}>{task.title}</span>
+                        </Button>
+                      ))}
+                      {row.tasks.length > TASKS_PER_ROW && (
+                        <Text fontSize={12} type={'secondary'}>
+                          +{row.tasks.length - TASKS_PER_ROW}
+                        </Text>
+                      )}
+                    </>
+                  ) : (
+                    <Text fontSize={12} type={'secondary'}>
+                      {t(`goalProcess.northStar.detail.source.${observationSource(row)}` as const)}
+                    </Text>
+                  )}
+                </Flexbox>
               </Flexbox>
             ))}
           </Flexbox>
