@@ -23,7 +23,7 @@ import { documentLikeService } from '@/services/documentLike';
 import { useUserStore } from '@/store/user';
 import { userProfileSelectors } from '@/store/user/selectors';
 
-import { isDocumentUnavailableError } from '../isDocumentUnavailableError';
+import { resolveDocumentSectionState } from '../isDocumentUnavailableError';
 
 const BUTTON_SIZE = 56;
 const ICON_SIZE = 22;
@@ -202,13 +202,12 @@ const DocumentLikes = memo<{ documentId: string }>(({ documentId }) => {
 
   if (!workspaceId) return null;
 
-  // The page went private or is gone: SWR keeps the last summary next to the
-  // error, so check the error itself and drop the stale count and likers too.
-  if (isDocumentUnavailableError(error)) return null;
-
-  // A failed initial load must not masquerade as a zero-like page: surface a
-  // retryable error instead of the idle state with a dead button.
-  if (!data && error)
+  // A page that went private or is gone drops even the cached count and likers;
+  // a failed initial load must not masquerade as a zero-like page, so it
+  // surfaces a retryable error instead of the idle state with a dead button.
+  const sectionState = resolveDocumentSectionState(data, error);
+  if (sectionState === 'hidden') return null;
+  if (sectionState === 'error')
     return (
       <Flexbox data-document-likes align={'center'} className={styles.section} gap={16}>
         <AsyncError error={error} variant={'inline'} onRetry={() => void mutate()} />

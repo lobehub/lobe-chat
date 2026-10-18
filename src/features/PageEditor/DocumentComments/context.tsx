@@ -5,7 +5,7 @@ import { createContext, type ReactNode, type RefObject, use, useEffect } from 'r
 import { useActiveWorkspaceId } from '@/business/client/hooks/useActiveWorkspaceId';
 import { usePermission } from '@/hooks/usePermission';
 
-import { isDocumentUnavailableError } from '../isDocumentUnavailableError';
+import { isDocumentCommentsUnavailable } from '../isDocumentUnavailableError';
 import { usePageEditorStore } from '../store';
 import { DocumentCommentAnchorsProvider } from './anchor/context';
 import DocumentCommentHighlightStyle from './anchor/HighlightStyle';
@@ -91,12 +91,8 @@ const DocumentCommentsStateProvider = ({
   // comment surface — list, panel, marker, header toggle — reads this context,
   // so publish none rather than cached threads or a stacked load failure. SWR
   // keeps the last pages next to the error, so check the error, not the data.
-  const unavailable =
-    isDocumentUnavailableError(state.documentThreads.error) ||
-    isDocumentUnavailableError(state.anchoredError);
-
   return (
-    <DocumentCommentsContext value={unavailable ? null : state}>
+    <DocumentCommentsContext value={isDocumentCommentsUnavailable(state) ? null : state}>
       <DocumentCommentAnchorsProvider value={state.anchors}>
         <DocumentCommentHighlightStyle />
         {children}
