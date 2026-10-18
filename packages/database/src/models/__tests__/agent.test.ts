@@ -2329,6 +2329,38 @@ describe('AgentModel', () => {
         expect(result?.slug).toBe('task-agent');
         expect(result?.virtual).toBe(true);
       });
+
+      /** @example Quick Note Analyzer capability edits survive later lazy initialization. */
+      it('preserves user configuration for the Quick Note Analyzer', async () => {
+        const created = await agentModel.getBuiltinAgent('quick-note-analyze');
+        await serverDB
+          .update(agents)
+          .set({
+            chatConfig: { enableAgentMode: true, searchMode: 'auto' },
+            model: 'custom-model',
+            plugins: ['lobe-web-browsing'],
+          })
+          .where(eq(agents.id, created!.id));
+
+        const resolved = await agentModel.getBuiltinAgent('quick-note-analyze');
+
+        /** @example Lazy materialization no longer resets the configured capabilities. */
+        expect(resolved).toMatchObject({
+          chatConfig: { enableAgentMode: true, searchMode: 'auto' },
+          model: 'custom-model',
+          plugins: ['lobe-web-browsing'],
+        });
+      });
+
+      /** @example Product-managed builtin Agents cannot be removed as ordinary content. */
+      it('rejects deletion of the Quick Note Analyzer', async () => {
+        const created = await agentModel.getBuiltinAgent('quick-note-analyze');
+
+        /** @example The shared builtin-Agent delete guard also covers the Analyzer. */
+        await expect(agentModel.delete(created!.id)).rejects.toThrow(
+          'A builtin agent cannot be deleted',
+        );
+      });
     });
 
     describe('workspace mode', () => {

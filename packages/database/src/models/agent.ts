@@ -1,4 +1,8 @@
-import { BUILTIN_AGENT_SLUGS, getAgentPersistConfig } from '@lobechat/builtin-agents';
+import {
+  BUILTIN_AGENT_SLUGS,
+  getAgentPersistConfig,
+  isBuiltinAgentUserConfigurable,
+} from '@lobechat/builtin-agents';
 import {
   DEFAULT_INBOX_TITLE,
   INBOX_SESSION_ID,
@@ -2194,7 +2198,7 @@ export class AgentModel {
     });
 
     if (existing) {
-      if (persistConfig?.chatConfig) {
+      if (persistConfig?.chatConfig && !isBuiltinAgentUserConfigurable(slug)) {
         const [updated] = await this.db
           .update(agents)
           .set({ chatConfig: persistConfig.chatConfig })
@@ -2254,10 +2258,14 @@ export class AgentModel {
           { userId: this.userId, workspaceId: this.workspaceId },
           {
             agencyConfig: this.withWorkspaceSelectionPolicyDefaults(undefined),
+            avatar: persistConfig.avatar,
             chatConfig: persistConfig.chatConfig,
+            description: persistConfig.description,
             model: persistConfig.model,
+            plugins: persistConfig.plugins,
             provider: persistConfig.provider,
             slug: persistConfig.slug,
+            title: persistConfig.title,
             virtual: true,
           },
         ),

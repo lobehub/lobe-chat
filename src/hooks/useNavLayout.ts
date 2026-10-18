@@ -40,7 +40,7 @@ export interface NavLayout {
 export const useNavLayout = (): NavLayout => {
   const { t } = useTranslation('common');
   const toggleCommandMenu = useGlobalStore((s) => s.toggleCommandMenu);
-  const { showMarket, hideGitHub } = useServerConfigStore(featureFlagsSelectors);
+  const { showMarket, hideGitHub, enableQuickNote } = useServerConfigStore(featureFlagsSelectors);
   const activeWorkspaceSlug = useActiveWorkspaceSlug();
   const enableDashboard = useServerConfigStore(serverConfigSelectors.enableDashboard);
 
@@ -80,8 +80,15 @@ export const useNavLayout = (): NavLayout => {
           title: t('tab.resource'),
           url: '/resource',
         },
+        {
+          hidden: !enableQuickNote,
+          icon: getRouteById('note')!.icon,
+          key: SidebarTabKey.Note,
+          title: t('tab.note'),
+          url: '/note',
+        },
       ] as NavItem[],
-    [t, toggleCommandMenu, activeWorkspaceSlug, enableDashboard],
+    [t, toggleCommandMenu, activeWorkspaceSlug, enableDashboard, enableQuickNote],
   );
 
   const bottomMenuItems = useMemo(

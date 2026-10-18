@@ -12,6 +12,7 @@ import {
   LayoutPanelTopIcon,
   LibraryBigIcon,
   Mic2,
+  NotebookPenIcon,
   Scale,
   Settings,
   ShapesIcon,
@@ -1256,6 +1257,46 @@ export const sharedMainAreaChildren: RouteObject[] = [
     errorElement: <ErrorBoundary />,
     loader: pageListLoader,
     path: 'page',
+  },
+
+  // Quick Note routes
+  {
+    children: [
+      {
+        element: dynamicElement(() => import('@/routes/(main)/note'), 'Desktop > Note', {
+          preloadId: 'note',
+        }),
+        handle: {
+          meta: routeMeta({
+            Skeleton: createSurfaceSkeleton('list'),
+            icon: NotebookPenIcon,
+            titleKey: 'navigation.note',
+          }),
+        },
+        index: true,
+      },
+      {
+        element: dynamicElement(
+          () => import('@/routes/(main)/note/[id]'),
+          'Desktop > Note > Detail',
+        ),
+        handle: {
+          meta: routeMeta({
+            Skeleton: createSurfaceSkeleton('editor'),
+            icon: NotebookPenIcon,
+            titleKey: 'navigation.note',
+          }),
+        },
+        path: ':id',
+      },
+    ],
+    element: dynamicLayout(
+      () => import('@/routes/(main)/note/_layout'),
+      'Desktop > Note > Layout',
+      { preloadId: 'note' },
+    ),
+    errorElement: <ErrorBoundary />,
+    path: 'note',
   },
 ];
 

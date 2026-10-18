@@ -14,6 +14,7 @@ export enum SidebarTabKey {
   Knowledge = 'knowledge',
   Me = 'me',
   Memory = 'memory',
+  Note = 'note',
   Pages = 'pages',
   Resource = 'resource',
   Setting = 'settings',

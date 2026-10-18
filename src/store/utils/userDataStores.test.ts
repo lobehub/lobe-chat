@@ -30,6 +30,7 @@ vi.mock('@/store/mention', () => ({ useMentionStore: fakeStore() }));
 vi.mock('@/store/notebook', () => ({ useNotebookStore: fakeStore() }));
 vi.mock('@/store/page', () => ({ pageActions: { reset: pageReset } }));
 vi.mock('@/store/sandbox', () => ({ sandboxActions: { reset: sandboxReset } }));
+vi.mock('@/store/quickNote', () => ({ useQuickNoteStore: fakeStore() }));
 vi.mock('@/store/session', () => ({ useSessionStore: fakeStore() }));
 vi.mock('@/store/task', () => ({ useTaskStore: fakeStore() }));
 vi.mock('@/store/tool', () => ({ useToolStore: fakeStore() }));
@@ -53,7 +54,7 @@ describe('stores.reset', () => {
     stores.reset();
 
     expect(resetGatewayMuxRegistry).toHaveBeenCalledTimes(1);
-    expect(storeResets).toHaveLength(18);
+    expect(storeResets).toHaveLength(19);
     expect(pageReset).toHaveBeenCalledTimes(1);
     expect(sandboxReset).toHaveBeenCalledTimes(1);
     for (const reset of storeResets) expect(reset).toHaveBeenCalledTimes(1);
