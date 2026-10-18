@@ -41,6 +41,12 @@ import { UnassignedAssigneeIcon } from '../features/UnassignedAssigneeIcon';
 import { useAgentDisplayMeta } from '../shared/useAgentDisplayMeta';
 import { useAgentVisibility } from '../shared/useAgentVisibility';
 import { useUserDisplayMeta } from '../shared/useUserDisplayMeta';
+import ScheduleChip from './ScheduleChip';
+import {
+  createDefaultScheduleDraft,
+  type ScheduleDraft,
+  toScheduledCreateParams,
+} from './scheduleDraft';
 import { useTitleEnterToInstruction } from './useTitleEnterToInstruction';
 
 export interface CreateTaskContentProps {
@@ -55,6 +61,11 @@ export interface CreateTaskContentProps {
   onCreated?: (task: { agentId?: string; identifier: string; name?: string }) => void;
   projectId?: string;
   /**
+   * Creates a scheduled task: the form gains a schedule chip and the task is
+   * created with that schedule already on. Used by the Scheduled tasks tab.
+   */
+  schedule?: boolean;
+  /**
    * Whether to show the "minimize to inline entry" button. Only the list view has an
    * inline entry target, so contexts like the Kanban board pass `false` to hide it.
    */
@@ -68,6 +79,7 @@ const CreateTaskContent = memo<CreateTaskContentProps>(
     lockAssignee,
     onCreated,
     projectId,
+    schedule: isScheduled = false,
     showInlineToggle = true,
   }) => {
     const { t } = useTranslation('chat');
@@ -92,6 +104,7 @@ const CreateTaskContent = memo<CreateTaskContentProps>(
     // and going private stays one click away. In personal mode the field is
     // irrelevant and the chip is hidden anyway.
     const [visibility, setVisibility] = useState<'private' | 'public'>('public');
+    const [scheduleDraft, setScheduleDraft] = useState<ScheduleDraft>(createDefaultScheduleDraft);
 
     const assigneeVisibility = useAgentVisibility(assigneeAgentId);
     const isPrivateAgent = assigneeVisibility === 'private';
@@ -160,15 +173,17 @@ const CreateTaskContent = memo<CreateTaskContentProps>(
 
       const editorJson = editor?.getDocument?.('json') as unknown;
 
+      // Only present when the user pinned a run location / directory —
+      // otherwise the task inherits the assignee agent entirely.
+      const config = execution ? { execution: toTaskExecutionConfigPatch(execution) } : undefined;
+
       // `createTask` keeps its rejecting contract; surface the failure here so a
       // failed create isn't silent and the modal stays open with its content.
       try {
         const result = await createTask({
           assigneeAgentId,
           assigneeUserId,
-          // Only present when the user pinned a run location / directory —
-          // otherwise the task inherits the assignee agent entirely.
-          ...(execution ? { config: { execution: toTaskExecutionConfigPatch(execution) } } : {}),
+          ...(isScheduled ? toScheduledCreateParams(scheduleDraft, config) : { config }),
           editorData: editorJson,
           instruction: instruction || title.trim(),
           name: title.trim() || undefined,
@@ -198,9 +213,11 @@ const CreateTaskContent = memo<CreateTaskContentProps>(
       execution,
       createTask,
       editor,
+      isScheduled,
       onCreated,
       priority,
       projectId,
+      scheduleDraft,
       t,
       title,
       visibility,
@@ -279,6 +296,14 @@ const CreateTaskContent = memo<CreateTaskContentProps>(
           }}
         >
           <Flexbox horizontal gap={2} wrap={'wrap'}>
+            {isScheduled && (
+              <ScheduleChip
+                disabled={!canCreateTask}
+                value={scheduleDraft}
+                onChange={setScheduleDraft}
+              />
+            )}
+
             <TaskPriorityTag priority={priority} onChange={setPriority}>
               <Block
                 clickable
@@ -425,7 +450,7 @@ const CreateTaskContent = memo<CreateTaskContentProps>(
             type={'primary'}
             onClick={handleSubmit}
           >
-            {t('createTask.submit')}
+            {t(isScheduled ? 'createTask.submitScheduled' : 'createTask.submit')}
           </Button>
         </Flexbox>
       </Flexbox>
