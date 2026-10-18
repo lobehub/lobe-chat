@@ -269,6 +269,9 @@ export const uploadRouter = router({
     .use(checkFileStorageUsage)
     .input(z.object({ url: z.url() }))
     .mutation(async ({ ctx, input }) => {
+      // SSRF-safe: `downloadRemoteImage` accepts only credential-free http(s) URLs and
+      // fetches through `ssrfSafeFetch`, which validates resolved addresses at connect
+      // time and on every redirect hop.
       const { buffer, extension, mimeType } = await downloadRemoteImage(input.url);
       const pathname = `images/${ctx.userId}/${randomUUID()}.${extension}`;
       const result = await ctx.fileService.uploadFromBuffer(
