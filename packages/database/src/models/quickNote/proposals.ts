@@ -1,17 +1,15 @@
 import type { QuickNoteProposalDecisionStatus } from '@lobechat/types';
 import { and, desc, eq, inArray, sql } from 'drizzle-orm';
 
+import type { NewQuickNoteProposal } from '../../schemas';
 import {
-  documentHistories,
   documents,
   quickNoteProposals,
   quickNoteResources,
   quickNoteRunResources,
   quickNotes,
 } from '../../schemas';
-import { TaskModel } from '../task';
 import { type QuickNoteContext, quickNoteOwnershipWhere } from './context';
-import type { UpdateQuickNoteProposalParams } from './types';
 
 export const queryProposals = async (ctx: QuickNoteContext, quickNoteId: string) =>
   ctx.db
@@ -36,138 +34,181 @@ export const queryProposals = async (ctx: QuickNoteContext, quickNoteId: string)
     .where(and(eq(quickNoteProposals.quickNoteId, quickNoteId), quickNoteOwnershipWhere(ctx)))
     .orderBy(desc(quickNoteProposals.createdAt), desc(quickNoteProposals.id));
 
-export const updateProposal = async (
+/** Reads an owned Proposal's edit state, or `undefined` when inaccessible. */
+export const findProposalForEdit = async (ctx: QuickNoteContext, proposalId: string) => {
+  const [proposal] = await ctx.db
+    .select({
+      decisionStatus: quickNoteProposals.decisionStatus,
+      documentId: quickNoteProposals.documentId,
+      id: quickNoteProposals.id,
+    })
+    .from(quickNoteProposals)
+    .innerJoin(quickNotes, eq(quickNotes.id, quickNoteProposals.quickNoteId))
+    .where(and(eq(quickNoteProposals.id, proposalId), quickNoteOwnershipWhere(ctx)));
+
+  return proposal;
+};
+
+/** Advances a Proposal's current revision pointer after its Document body was edited. */
+export const setProposalCurrentHistory = async (
   ctx: QuickNoteContext,
   proposalId: string,
-  params: UpdateQuickNoteProposalParams,
-) =>
-  ctx.db.transaction(async (tx) => {
-    const [proposal] = await tx
-      .select({
-        decisionStatus: quickNoteProposals.decisionStatus,
-        documentId: quickNoteProposals.documentId,
-        id: quickNoteProposals.id,
-      })
-      .from(quickNoteProposals)
-      .innerJoin(quickNotes, eq(quickNotes.id, quickNoteProposals.quickNoteId))
-      .where(and(eq(quickNoteProposals.id, proposalId), quickNoteOwnershipWhere(ctx)));
-    if (!proposal || proposal.decisionStatus !== 'pending') return undefined;
+  currentHistoryId: string,
+  updatedAt: Date,
+) => {
+  const [proposal] = await ctx.db
+    .update(quickNoteProposals)
+    .set({ currentHistoryId, updatedAt })
+    .where(eq(quickNoteProposals.id, proposalId))
+    .returning();
 
-    const savedAt = new Date();
-    await tx
-      .update(documents)
-      .set({
-        content: params.content,
-        editorData: params.editorData,
-        totalCharCount: params.content.length,
-        totalLineCount: params.content.length === 0 ? 0 : params.content.split('\n').length,
-        updatedAt: savedAt,
-      })
-      .where(eq(documents.id, proposal.documentId));
-    const [history] = await tx
-      .insert(documentHistories)
-      .values({
-        documentId: proposal.documentId,
-        editorData: params.editorData,
-        saveSource: 'manual',
-        savedAt,
-        userId: ctx.userId,
-        workspaceId: ctx.workspaceId,
-      })
-      .returning();
-    const [updated] = await tx
-      .update(quickNoteProposals)
-      .set({ currentHistoryId: history.id, updatedAt: savedAt })
-      .where(eq(quickNoteProposals.id, proposal.id))
-      .returning();
+  return proposal;
+};
 
-    return { history, proposal: updated };
-  });
+/** Persists one inert Proposal produced by an accepted Run. */
+export const createProposal = async (
+  ctx: QuickNoteContext,
+  params: {
+    currentHistoryId: string;
+    documentId: string;
+    kind: NewQuickNoteProposal['kind'];
+    quickNoteId: string;
+    runId: string;
+    sourceHistoryId: string;
+  },
+) => {
+  const [proposal] = await ctx.db
+    .insert(quickNoteProposals)
+    .values({ ...params, userId: ctx.userId, workspaceId: ctx.workspaceId })
+    .returning();
 
-export const acceptTaskProposal = async (ctx: QuickNoteContext, proposalId: string) =>
-  ctx.db.transaction(async (tx) => {
-    const [proposal] = await tx
-      .select({
-        content: documents.content,
-        currentHistoryId: quickNoteProposals.currentHistoryId,
-        id: quickNoteProposals.id,
-        kind: quickNoteProposals.kind,
-        quickNoteId: quickNoteProposals.quickNoteId,
-        runId: quickNoteProposals.runId,
-        sourceHistoryId: quickNoteProposals.sourceHistoryId,
-      })
-      .from(quickNoteProposals)
-      .innerJoin(quickNotes, eq(quickNotes.id, quickNoteProposals.quickNoteId))
-      .innerJoin(documents, eq(documents.id, quickNoteProposals.documentId))
-      .where(
-        and(
-          eq(quickNoteProposals.id, proposalId),
-          eq(quickNoteProposals.decisionStatus, 'pending'),
-          eq(quickNoteProposals.validity, 'current'),
-          quickNoteOwnershipWhere(ctx),
-        ),
-      )
-      .for('update');
-    if (!proposal || proposal.kind !== 'task' || !proposal.content?.trim()) return undefined;
+  return proposal;
+};
 
-    // Quick Notes are private captures, so an explicitly converted Task starts private too.
-    const task = await new TaskModel(tx, ctx.userId, ctx.workspaceId).create(
-      { instruction: proposal.content, visibility: 'private' },
-      { maxRetries: 1 },
+/** Marks current pending Proposals stale after their Quick Note source changed. */
+export const markPendingProposalsStale = async (
+  ctx: QuickNoteContext,
+  quickNoteId: string,
+  updatedAt: Date,
+) => {
+  await ctx.db
+    .update(quickNoteProposals)
+    .set({ updatedAt, validity: 'stale' })
+    .where(
+      and(
+        eq(quickNoteProposals.quickNoteId, quickNoteId),
+        eq(quickNoteProposals.decisionStatus, 'pending'),
+        eq(quickNoteProposals.validity, 'current'),
+      ),
     );
-    const [acceptedProposal] = await tx
-      .update(quickNoteProposals)
-      .set({
-        acceptedHistoryId: proposal.currentHistoryId,
-        decisionStatus: 'accepted',
-        updatedAt: new Date(),
-      })
-      .where(eq(quickNoteProposals.id, proposal.id))
-      .returning();
+};
 
-    const [createdResource] = await tx
-      .insert(quickNoteResources)
+/**
+ * Locks an owned, pending, current Proposal with its Document body for Task conversion.
+ *
+ * Returns:
+ * - The locked Proposal, or `undefined` when inaccessible, decided, or stale.
+ */
+export const lockAcceptableProposal = async (ctx: QuickNoteContext, proposalId: string) => {
+  const [proposal] = await ctx.db
+    .select({
+      content: documents.content,
+      currentHistoryId: quickNoteProposals.currentHistoryId,
+      id: quickNoteProposals.id,
+      kind: quickNoteProposals.kind,
+      quickNoteId: quickNoteProposals.quickNoteId,
+      runId: quickNoteProposals.runId,
+      sourceHistoryId: quickNoteProposals.sourceHistoryId,
+    })
+    .from(quickNoteProposals)
+    .innerJoin(quickNotes, eq(quickNotes.id, quickNoteProposals.quickNoteId))
+    .innerJoin(documents, eq(documents.id, quickNoteProposals.documentId))
+    .where(
+      and(
+        eq(quickNoteProposals.id, proposalId),
+        eq(quickNoteProposals.decisionStatus, 'pending'),
+        eq(quickNoteProposals.validity, 'current'),
+        quickNoteOwnershipWhere(ctx),
+      ),
+    )
+    .for('update');
+
+  return proposal;
+};
+
+/**
+ * Accepts a locked Task Proposal and links the created Task as Run-produced Context.
+ *
+ * Expects:
+ * - `proposal` came from {@link lockAcceptableProposal} in the same transaction.
+ *
+ * Returns:
+ * - The terminally accepted Proposal.
+ */
+export const recordTaskProposalAcceptance = async (
+  ctx: QuickNoteContext,
+  proposal: {
+    currentHistoryId: string;
+    id: string;
+    quickNoteId: string;
+    runId: string;
+    sourceHistoryId: string;
+  },
+  taskId: string,
+) => {
+  const [acceptedProposal] = await ctx.db
+    .update(quickNoteProposals)
+    .set({
+      acceptedHistoryId: proposal.currentHistoryId,
+      decisionStatus: 'accepted',
+      updatedAt: new Date(),
+    })
+    .where(eq(quickNoteProposals.id, proposal.id))
+    .returning();
+
+  const [createdResource] = await ctx.db
+    .insert(quickNoteResources)
+    .values({
+      quickNoteId: proposal.quickNoteId,
+      resourceId: taskId,
+      resourceType: 'task',
+      role: 'context',
+      sourceHistoryId: proposal.sourceHistoryId,
+      userId: ctx.userId,
+      workspaceId: ctx.workspaceId,
+    })
+    .onConflictDoNothing()
+    .returning();
+  const resource =
+    createdResource ??
+    (
+      await ctx.db
+        .select()
+        .from(quickNoteResources)
+        .where(
+          and(
+            eq(quickNoteResources.quickNoteId, proposal.quickNoteId),
+            eq(quickNoteResources.sourceHistoryId, proposal.sourceHistoryId),
+            eq(quickNoteResources.resourceId, taskId),
+            eq(quickNoteResources.resourceType, 'task'),
+            eq(quickNoteResources.role, 'context'),
+          ),
+        )
+    )[0];
+  if (resource) {
+    await ctx.db
+      .insert(quickNoteRunResources)
       .values({
-        quickNoteId: proposal.quickNoteId,
-        resourceId: task.id,
-        resourceType: 'task',
-        role: 'context',
-        sourceHistoryId: proposal.sourceHistoryId,
+        resourceId: resource.id,
+        runId: proposal.runId,
         userId: ctx.userId,
         workspaceId: ctx.workspaceId,
       })
-      .onConflictDoNothing()
-      .returning();
-    const resource =
-      createdResource ??
-      (
-        await tx
-          .select()
-          .from(quickNoteResources)
-          .where(
-            and(
-              eq(quickNoteResources.quickNoteId, proposal.quickNoteId),
-              eq(quickNoteResources.sourceHistoryId, proposal.sourceHistoryId),
-              eq(quickNoteResources.resourceId, task.id),
-              eq(quickNoteResources.resourceType, 'task'),
-              eq(quickNoteResources.role, 'context'),
-            ),
-          )
-      )[0];
-    if (resource) {
-      await tx
-        .insert(quickNoteRunResources)
-        .values({
-          resourceId: resource.id,
-          runId: proposal.runId,
-          userId: ctx.userId,
-          workspaceId: ctx.workspaceId,
-        })
-        .onConflictDoNothing();
-    }
+      .onConflictDoNothing();
+  }
 
-    return { proposal: acceptedProposal, task };
-  });
+  return acceptedProposal;
+};
 
 export const decideProposal = async (
   ctx: QuickNoteContext,

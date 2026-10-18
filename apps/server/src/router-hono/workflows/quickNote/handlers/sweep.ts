@@ -2,6 +2,7 @@ import { AGENT_SIGNAL_SOURCE_TYPES } from '@lobechat/agent-signal/source';
 import type { Context } from 'hono';
 
 import { QuickNoteModel } from '@/database/models/quickNote';
+import { QuickNoteRepository } from '@/database/repositories/quickNote';
 import { getServerDB } from '@/database/server';
 import { getServerFeatureFlagsStateFromRuntimeConfig } from '@/server/featureFlags';
 import { enqueueAgentSignalSourceEvent } from '@/server/services/agentSignal';
@@ -14,7 +15,7 @@ import { enqueueAgentSignalSourceEvent } from '@/server/services/agentSignal';
  * QStash one-minute schedule
  *   -> {@link sweepQuickNoteAnalyze}
  *     -> {@link QuickNoteModel.findDueAnalyzeCandidates}
- *       -> {@link QuickNoteModel.claimRun}
+ *       -> {@link QuickNoteRepository.claimRun}
  *         -> Agent Signal Workflow
  *
  * Use when:
@@ -51,8 +52,12 @@ export const sweepQuickNoteAnalyze = async (context: Context) => {
           enabledUsers.set(candidate.userId, flags.enableQuickNote === true);
         }
         if (!enabledUsers.get(candidate.userId)) continue;
-        const model = new QuickNoteModel(db, candidate.userId, candidate.workspaceId ?? undefined);
-        const run = await model.claimRun(candidate.id, { kind: 'analyze', trigger: 'automatic' });
+        const repo = new QuickNoteRepository(
+          db,
+          candidate.userId,
+          candidate.workspaceId ?? undefined,
+        );
+        const run = await repo.claimRun(candidate.id, { kind: 'analyze', trigger: 'automatic' });
         if (!run) continue;
 
         const result = await enqueueAgentSignalSourceEvent(

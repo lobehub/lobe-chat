@@ -1,8 +1,4 @@
-import {
-  DEFAULT_QUICK_NOTE_SETTINGS,
-  DOCUMENT_HISTORY_AUTOSAVE_SOURCE_LIMIT,
-  DOCUMENT_HISTORY_AUTOSAVE_WINDOW_MS,
-} from '@lobechat/const';
+import { DEFAULT_QUICK_NOTE_SETTINGS } from '@lobechat/const';
 import type { UserQuickNoteSettings } from '@lobechat/types';
 import { and, desc, eq, gt, inArray, lte, or, sql } from 'drizzle-orm';
 import isEqual from 'fast-deep-equal';
@@ -15,17 +11,15 @@ import {
   quickNoteRunResources,
   quickNoteRuns,
   quickNotes,
-  topics,
   userSettings,
 } from '../../schemas';
 import type { LobeChatDatabase } from '../../type';
-import { idGenerator } from '../../utils/idGenerator';
 import * as comments from './comments';
 import { type QuickNoteArgs, type QuickNoteContext, quickNoteOwnershipWhere } from './context';
 import * as proposals from './proposals';
 import * as resources from './resources';
 import * as runs from './runs';
-import type { CreateQuickNoteParams, UpdateQuickNoteContentParams } from './types';
+import type { CreateQuickNoteParams } from './types';
 
 export type * from './types';
 
@@ -175,63 +169,38 @@ export class QuickNoteModel {
       .limit(params.limit ?? 100);
 
   /**
-   * Atomically creates a Quick Note, private backing Document, and hidden Topic.
+   * Inserts the Quick Note row for already-created backing containers.
    *
    * Use when:
-   * - The user starts a new capture.
-   *
-   * Expects:
-   * - `content` is the searchable plain-text projection of `editorData`.
+   * - `QuickNoteRepository.create` has inserted the private Document and hidden Topic
+   *   in the same transaction.
    *
    * Returns:
-   * - The newly persisted Quick Note with stable Document and Topic IDs.
+   * - The persisted Quick Note.
    */
-  create = async (params: CreateQuickNoteParams) => {
-    const quickNoteId = params.id ?? idGenerator('quickNotes');
-    const documentId = idGenerator('documents', 16);
-    const topicId = idGenerator('topics');
-    const content = params.content ?? '';
-    const editorData = params.editorData ?? { root: { children: [] } };
-
-    return this.db.transaction(async (tx) => {
-      await tx.insert(documents).values({
-        content,
-        editorData,
-        fileType: 'text/markdown',
-        source: `quick-note:${quickNoteId}`,
-        sourceType: 'quick-note',
-        totalCharCount: content.length,
-        totalLineCount: content.length === 0 ? 0 : content.split('\n').length,
-        userId: this.userId,
-        visibility: 'private',
-        workspaceId: this.workspaceId,
-        id: documentId,
-      });
-
-      await tx.insert(topics).values({
-        id: topicId,
-        trigger: 'quick-note',
+  createRecord = async (
+    params: Omit<CreateQuickNoteParams, 'content' | 'editorData'> & {
+      documentId: string;
+      id: string;
+      topicId: string;
+    },
+  ) => {
+    const [quickNote] = await this.db
+      .insert(quickNotes)
+      .values({
+        analyzeDueAt: params.analyzeDueAt,
+        collection: params.collection,
+        documentId: params.documentId,
+        id: params.id,
+        location: params.location,
+        tags: params.tags ?? [],
+        topicId: params.topicId,
         userId: this.userId,
         workspaceId: this.workspaceId,
-      });
+      })
+      .returning();
 
-      const [quickNote] = await tx
-        .insert(quickNotes)
-        .values({
-          analyzeDueAt: params.analyzeDueAt,
-          collection: params.collection,
-          documentId,
-          id: quickNoteId,
-          location: params.location,
-          tags: params.tags ?? [],
-          topicId,
-          userId: this.userId,
-          workspaceId: this.workspaceId,
-        })
-        .returning();
-
-      return quickNote;
-    });
+    return quickNote;
   };
 
   /**
@@ -494,183 +463,164 @@ export class QuickNoteModel {
   };
 
   /**
-   * Saves the mutable source projection without creating a processing Run.
+   * Stamps a source save on the Quick Note row.
    *
    * Use when:
-   * - Debounced editor persistence reaches the server.
+   * - `QuickNoteRepository.updateContent` has written the backing Document in the same transaction.
    *
    * Expects:
-   * - `editorData` and `content` describe the same editor state.
+   * - `id` was already resolved inside the owner scope.
    *
    * Returns:
-   * - The updated owner-scoped Quick Note, or `undefined` when inaccessible.
+   * - The updated Quick Note.
    */
-  updateContent = async (id: string, params: UpdateQuickNoteContentParams) =>
-    this.db.transaction(async (tx) => {
-      const [quickNote] = await tx
-        .select({
-          content: documents.content,
-          documentId: quickNotes.documentId,
-          editorData: documents.editorData,
-          id: quickNotes.id,
-        })
-        .from(quickNotes)
-        .innerJoin(documents, eq(documents.id, quickNotes.documentId))
-        .where(and(eq(quickNotes.id, id), this.ownershipWhere()));
+  recordContentSave = async (
+    id: string,
+    params: { analyzeDueAt?: Date | null; updatedAt: Date },
+  ) => {
+    const [updated] = await this.db
+      .update(quickNotes)
+      .set({
+        ...(params.analyzeDueAt === undefined ? {} : { analyzeDueAt: params.analyzeDueAt }),
+        updatedAt: params.updatedAt,
+      })
+      .where(eq(quickNotes.id, id))
+      .returning();
 
-      if (!quickNote) return undefined;
-
-      const savedAt = new Date();
-      const currentEditorData = quickNote.editorData ?? { root: { children: [] } };
-      const sourceChanged =
-        quickNote.content !== params.content || !isEqual(currentEditorData, params.editorData);
-      if (!isEqual(currentEditorData, params.editorData)) {
-        const [latestHistory] = await tx
-          .select()
-          .from(documentHistories)
-          .where(eq(documentHistories.documentId, quickNote.documentId))
-          .orderBy(desc(documentHistories.savedAt), desc(documentHistories.id))
-          .limit(1);
-        // Match the canonical Document history policy: fixed clock buckets keep
-        // continuous typing bounded without turning the anchor into a sliding window.
-        const withinAutosaveWindow =
-          latestHistory?.saveSource === 'autosave' &&
-          Math.floor(latestHistory.savedAt.getTime() / DOCUMENT_HISTORY_AUTOSAVE_WINDOW_MS) ===
-            Math.floor(savedAt.getTime() / DOCUMENT_HISTORY_AUTOSAVE_WINDOW_MS);
-
-        if (withinAutosaveWindow) {
-          await tx
-            .update(documentHistories)
-            .set({ editorData: currentEditorData, savedAt })
-            .where(eq(documentHistories.id, latestHistory.id));
-        } else {
-          await tx.insert(documentHistories).values({
-            documentId: quickNote.documentId,
-            editorData: currentEditorData,
-            saveSource: 'autosave',
-            savedAt,
-            userId: this.userId,
-            workspaceId: this.workspaceId,
-          });
-
-          // Retain the same bounded autosave lineage as the Document service.
-          const expiredAutosaves = await tx
-            .select({ id: documentHistories.id })
-            .from(documentHistories)
-            .where(
-              and(
-                eq(documentHistories.documentId, quickNote.documentId),
-                eq(documentHistories.saveSource, 'autosave'),
-              ),
-            )
-            .orderBy(desc(documentHistories.savedAt), desc(documentHistories.id))
-            .offset(DOCUMENT_HISTORY_AUTOSAVE_SOURCE_LIMIT);
-          if (expiredAutosaves.length > 0) {
-            await tx.delete(documentHistories).where(
-              inArray(
-                documentHistories.id,
-                expiredAutosaves.map(({ id: historyId }) => historyId),
-              ),
-            );
-          }
-        }
-      }
-
-      await tx
-        .update(documents)
-        .set({
-          content: params.content,
-          editorData: params.editorData,
-          totalCharCount: params.content.length,
-          totalLineCount: params.content.length === 0 ? 0 : params.content.split('\n').length,
-          updatedAt: savedAt,
-        })
-        .where(eq(documents.id, quickNote.documentId));
-
-      const [updated] = await tx
-        .update(quickNotes)
-        .set({
-          ...(params.analyzeDueAt === undefined ? {} : { analyzeDueAt: params.analyzeDueAt }),
-          updatedAt: savedAt,
-        })
-        .where(eq(quickNotes.id, quickNote.id))
-        .returning();
-
-      if (sourceChanged) {
-        await tx
-          .update(quickNoteProposals)
-          .set({ updatedAt: savedAt, validity: 'stale' })
-          .where(
-            and(
-              eq(quickNoteProposals.quickNoteId, quickNote.id),
-              eq(quickNoteProposals.decisionStatus, 'pending'),
-              eq(quickNoteProposals.validity, 'current'),
-            ),
-          );
-      }
-
-      return updated;
-    });
+    return updated;
+  };
 
   /**
-   * Claims a Run and pins a non-coalescing system Document History snapshot.
+   * Marks current pending Proposals stale after the source changed.
    *
    * Use when:
-   * - Dispatching Automatic Analyze, Signal enrichment, or an explicit Dive.
-   *
-   * Expects:
-   * - Only one pending/running Run of the same kind is needed per capture.
-   *
-   * Returns:
-   * - The existing active Run, a new pending Run, or `undefined` when inaccessible.
+   * - A source save changed content or rich text; decisions stay untouched.
    */
-  claimRun = (...args: QuickNoteArgs<typeof runs.claimRun>) => runs.claimRun(this.ctx, ...args);
+  markPendingProposalsStale = (
+    ...args: QuickNoteArgs<typeof proposals.markPendingProposalsStale>
+  ) => proposals.markPendingProposalsStale(this.ctx, ...args);
 
   /**
-   * Accepts a concise Annotation revision and records its producing Run.
+   * Reads the pending or running Run of one kind for a Quick Note.
    *
    * Use when:
-   * - Analyze, Signal enrichment, or Dive returns a user-visible projection.
+   * - Claiming deduplicates against an active Run before pinning a new snapshot.
    *
    * Expects:
-   * - `runId` belongs to the current owner and is pending or running.
-   * - The payload is a projection, not a copied Domain Agent transcript.
+   * - The Quick Note was already resolved inside the owner scope.
    *
    * Returns:
-   * - The stable Resource binding and accepted Annotation Document History.
+   * - The active Run, or `undefined`.
    */
-  acceptAnnotation = (...args: QuickNoteArgs<typeof resources.acceptAnnotation>) =>
-    resources.acceptAnnotation(this.ctx, ...args);
+  findActiveRun = (...args: QuickNoteArgs<typeof runs.findActiveRun>) =>
+    runs.findActiveRun(this.ctx, ...args);
 
   /**
-   * Edits a pending Proposal and advances its Document-backed current version.
+   * Inserts a pending Run for a pinned source snapshot.
    *
    * Use when:
-   * - A user refines an Agent suggestion before deciding what to do with it.
-   *
-   * Expects:
-   * - Accepted or dismissed Proposals are no longer editable through this path.
+   * - `QuickNoteRepository.claimRun` has written the system Document History snapshot.
    *
    * Returns:
-   * - The updated Proposal with its new current Document History.
+   * - The new Run, or `undefined` when a concurrent claimant won the active-Run index.
    */
-  updateProposal = (...args: QuickNoteArgs<typeof proposals.updateProposal>) =>
-    proposals.updateProposal(this.ctx, ...args);
+  insertPendingRun = (...args: QuickNoteArgs<typeof runs.insertPendingRun>) =>
+    runs.insertPendingRun(this.ctx, ...args);
 
   /**
-   * Converts one current Task Proposal into a private Task and records the accepted revision.
-   *
-   * Use when:
-   * - The user explicitly chooses Create task on a Quick Note Proposal.
+   * Pins the source, latest Comment, and pending Proposal revisions as immutable Run Inputs.
    *
    * Expects:
-   * - The Proposal is still pending, current, and owned by the active workspace scope.
+   * - Runs inside the claiming transaction; pending Proposals are locked in id order.
+   */
+  pinRunInputs = (...args: QuickNoteArgs<typeof runs.pinRunInputs>) =>
+    runs.pinRunInputs(this.ctx, ...args);
+
+  /**
+   * Reads an owned Run with the snapshots Annotation acceptance compares.
    *
    * Returns:
-   * - The created Task and terminal Proposal, or `undefined` for an inaccessible/stale Proposal.
+   * - The Run snapshot, or `undefined` when inaccessible.
    */
-  acceptTaskProposal = (...args: QuickNoteArgs<typeof proposals.acceptTaskProposal>) =>
-    proposals.acceptTaskProposal(this.ctx, ...args);
+  findRunForAnnotation = (...args: QuickNoteArgs<typeof resources.findRunForAnnotation>) =>
+    resources.findRunForAnnotation(this.ctx, ...args);
+
+  /**
+   * Reads the Annotation Resource bound to one source revision.
+   *
+   * Returns:
+   * - The Resource, or `undefined` before the first accepted Annotation.
+   */
+  findAnnotationResource = (...args: QuickNoteArgs<typeof resources.findAnnotationResource>) =>
+    resources.findAnnotationResource(this.ctx, ...args);
+
+  /**
+   * Binds a generated Annotation Document to one source revision.
+   *
+   * Returns:
+   * - The new Annotation Resource.
+   */
+  createAnnotationResource = (...args: QuickNoteArgs<typeof resources.createAnnotationResource>) =>
+    resources.createAnnotationResource(this.ctx, ...args);
+
+  /**
+   * Records which Run produced one accepted Resource revision.
+   */
+  recordRunResource = (...args: QuickNoteArgs<typeof resources.recordRunResource>) =>
+    resources.recordRunResource(this.ctx, ...args);
+
+  /**
+   * Persists one inert Proposal produced by an accepted Run.
+   *
+   * Returns:
+   * - The pending, current Proposal.
+   */
+  createProposal = (...args: QuickNoteArgs<typeof proposals.createProposal>) =>
+    proposals.createProposal(this.ctx, ...args);
+
+  /**
+   * Completes an Annotation Run and refreshes due time and tags when its source is still current.
+   */
+  completeAnnotationRun = (...args: QuickNoteArgs<typeof runs.completeAnnotationRun>) =>
+    runs.completeAnnotationRun(this.ctx, ...args);
+
+  /**
+   * Reads an owned Proposal's edit state.
+   *
+   * Returns:
+   * - Decision status and backing Document, or `undefined` when inaccessible.
+   */
+  findProposalForEdit = (...args: QuickNoteArgs<typeof proposals.findProposalForEdit>) =>
+    proposals.findProposalForEdit(this.ctx, ...args);
+
+  /**
+   * Advances a Proposal's current revision after its Document body was edited.
+   *
+   * Returns:
+   * - The updated Proposal.
+   */
+  setProposalCurrentHistory = (
+    ...args: QuickNoteArgs<typeof proposals.setProposalCurrentHistory>
+  ) => proposals.setProposalCurrentHistory(this.ctx, ...args);
+
+  /**
+   * Locks an owned, pending, current Proposal with its body for Task conversion.
+   *
+   * Returns:
+   * - The locked Proposal, or `undefined` when inaccessible, decided, or stale.
+   */
+  lockAcceptableProposal = (...args: QuickNoteArgs<typeof proposals.lockAcceptableProposal>) =>
+    proposals.lockAcceptableProposal(this.ctx, ...args);
+
+  /**
+   * Accepts a locked Task Proposal and links the created Task as Run-produced Context.
+   *
+   * Returns:
+   * - The terminally accepted Proposal.
+   */
+  recordTaskProposalAcceptance = (
+    ...args: QuickNoteArgs<typeof proposals.recordTaskProposalAcceptance>
+  ) => proposals.recordTaskProposalAcceptance(this.ctx, ...args);
 
   /**
    * Records a user's Proposal decision without treating source validity as feedback.
@@ -779,54 +729,50 @@ export class QuickNoteModel {
     runs.getRunContext(this.ctx, ...args);
 
   /**
-   * Deletes a capture and only the private Documents generated for it.
+   * Deletes the owned Quick Note row and reports the private containers generated for it.
    *
    * Use when:
-   * - The owner removes a Quick Note from the existing list UI.
+   * - `QuickNoteRepository.delete` removes the capture with its backing Document and Topic.
    *
    * Expects:
-   * - Non-Annotation resources may point at user-owned Documents and must survive.
+   * - Non-Annotation resources may point at user-owned Documents and are never reported.
    *
    * Returns:
-   * - `true` when an owned Quick Note was removed, otherwise `false`.
+   * - The source Document, Topic, and generated Document ids, or `undefined` when inaccessible.
    */
-  delete = async (id: string): Promise<boolean> =>
-    this.db.transaction(async (tx) => {
-      const [quickNote] = await tx
-        .select()
-        .from(quickNotes)
-        .where(and(eq(quickNotes.id, id), this.ownershipWhere()));
+  deleteRecord = async (id: string) => {
+    const [quickNote] = await this.db
+      .select()
+      .from(quickNotes)
+      .where(and(eq(quickNotes.id, id), this.ownershipWhere()));
 
-      if (!quickNote) return false;
+    if (!quickNote) return undefined;
 
-      const generatedResources = await tx
-        .select({ documentId: quickNoteResources.documentId })
-        .from(quickNoteResources)
-        .where(
-          and(
-            eq(quickNoteResources.quickNoteId, quickNote.id),
-            eq(quickNoteResources.role, 'annotation'),
-          ),
-        );
-      const proposalDocuments = await tx
-        .select({ documentId: quickNoteProposals.documentId })
-        .from(quickNoteProposals)
-        .where(eq(quickNoteProposals.quickNoteId, quickNote.id));
+    const generatedResources = await this.db
+      .select({ documentId: quickNoteResources.documentId })
+      .from(quickNoteResources)
+      .where(
+        and(
+          eq(quickNoteResources.quickNoteId, quickNote.id),
+          eq(quickNoteResources.role, 'annotation'),
+        ),
+      );
+    const proposalDocuments = await this.db
+      .select({ documentId: quickNoteProposals.documentId })
+      .from(quickNoteProposals)
+      .where(eq(quickNoteProposals.quickNoteId, quickNote.id));
 
-      await tx.delete(quickNotes).where(eq(quickNotes.id, quickNote.id));
-      await tx.delete(documents).where(eq(documents.id, quickNote.documentId));
-      await tx.delete(topics).where(eq(topics.id, quickNote.topicId));
+    await this.db.delete(quickNotes).where(eq(quickNotes.id, quickNote.id));
 
-      const generatedDocumentIds = [
+    return {
+      documentId: quickNote.documentId,
+      generatedDocumentIds: [
         ...generatedResources.map(({ documentId }) => documentId),
         ...proposalDocuments.map(({ documentId }) => documentId),
-      ].filter((documentId): documentId is string => Boolean(documentId));
-      if (generatedDocumentIds.length > 0) {
-        await tx.delete(documents).where(inArray(documents.id, generatedDocumentIds));
-      }
-
-      return true;
-    });
+      ].filter((documentId): documentId is string => Boolean(documentId)),
+      topicId: quickNote.topicId,
+    };
+  };
 
   private ownershipWhere = () => quickNoteOwnershipWhere(this.ctx);
 }

@@ -3,11 +3,9 @@ import { and, desc, eq, isNull, sql } from 'drizzle-orm';
 import { alias } from 'drizzle-orm/pg-core';
 import isEqual from 'fast-deep-equal';
 
-import type { QuickNoteProposalItem } from '../../schemas';
 import {
   documentHistories,
   documents,
-  quickNoteProposals,
   quickNoteResources,
   quickNoteRunResources,
   quickNoteRuns,
@@ -15,9 +13,8 @@ import {
   tasks,
   topics,
 } from '../../schemas';
-import { idGenerator } from '../../utils/idGenerator';
 import { type QuickNoteContext, quickNoteOwnershipWhere } from './context';
-import type { AcceptQuickNoteAnnotationParams, LinkQuickNoteResourceParams } from './types';
+import type { LinkQuickNoteResourceParams } from './types';
 
 /** Resource-side Document alias used beside the Quick Note source Document. */
 const quickNoteResourceDocuments = alias(documents, 'quick_note_resource_documents');
@@ -100,177 +97,88 @@ export const queryResources = async (ctx: QuickNoteContext, quickNoteId: string)
   );
 };
 
-export const acceptAnnotation = async (
+/**
+ * Reads an owned Run with the source snapshots and Quick Note metadata Annotation acceptance needs.
+ *
+ * Returns:
+ * - The Run snapshot, or `undefined` when inaccessible.
+ */
+export const findRunForAnnotation = async (ctx: QuickNoteContext, runId: string) => {
+  const [run] = await ctx.db
+    .select({
+      quickNoteId: quickNoteRuns.quickNoteId,
+      sourceDocumentEditorData: documents.editorData,
+      sourceHistoryId: quickNoteRuns.sourceHistoryId,
+      sourceHistoryEditorData: documentHistories.editorData,
+      status: quickNoteRuns.status,
+      analyzeDueAt: quickNotes.analyzeDueAt,
+      tags: quickNotes.tags,
+    })
+    .from(quickNoteRuns)
+    .innerJoin(quickNotes, eq(quickNotes.id, quickNoteRuns.quickNoteId))
+    .innerJoin(documents, eq(documents.id, quickNotes.documentId))
+    .innerJoin(documentHistories, eq(documentHistories.id, quickNoteRuns.sourceHistoryId))
+    .where(and(eq(quickNoteRuns.id, runId), quickNoteOwnershipWhere(ctx)));
+
+  return run;
+};
+
+/** The Annotation Resource bound to one Quick Note source revision, if any. */
+export const findAnnotationResource = async (
   ctx: QuickNoteContext,
-  runId: string,
-  params: AcceptQuickNoteAnnotationParams,
-) =>
-  ctx.db.transaction(async (tx) => {
-    const [run] = await tx
-      .select({
-        quickNoteId: quickNoteRuns.quickNoteId,
-        sourceDocumentEditorData: documents.editorData,
-        sourceHistoryId: quickNoteRuns.sourceHistoryId,
-        sourceHistoryEditorData: documentHistories.editorData,
-        status: quickNoteRuns.status,
-        analyzeDueAt: quickNotes.analyzeDueAt,
-        tags: quickNotes.tags,
-      })
-      .from(quickNoteRuns)
-      .innerJoin(quickNotes, eq(quickNotes.id, quickNoteRuns.quickNoteId))
-      .innerJoin(documents, eq(documents.id, quickNotes.documentId))
-      .innerJoin(documentHistories, eq(documentHistories.id, quickNoteRuns.sourceHistoryId))
-      .where(and(eq(quickNoteRuns.id, runId), quickNoteOwnershipWhere(ctx)));
+  quickNoteId: string,
+  sourceHistoryId: string,
+) => {
+  const [resource] = await ctx.db
+    .select()
+    .from(quickNoteResources)
+    .where(
+      and(
+        eq(quickNoteResources.quickNoteId, quickNoteId),
+        eq(quickNoteResources.sourceHistoryId, sourceHistoryId),
+        eq(quickNoteResources.role, 'annotation'),
+      ),
+    )
+    .limit(1);
 
-    if (!run || !['pending', 'running'].includes(run.status)) return undefined;
+  return resource;
+};
 
-    const [existingResource] = await tx
-      .select()
-      .from(quickNoteResources)
-      .where(
-        and(
-          eq(quickNoteResources.quickNoteId, run.quickNoteId),
-          eq(quickNoteResources.sourceHistoryId, run.sourceHistoryId),
-          eq(quickNoteResources.role, 'annotation'),
-        ),
-      )
-      .limit(1);
-
-    const editorData = params.editorData ?? { root: { children: [] } };
-    let resource = existingResource;
-
-    if (resource) {
-      const documentId = resource.documentId;
-      if (!documentId) return undefined;
-
-      await tx
-        .update(documents)
-        .set({
-          content: params.content,
-          editorData,
-          totalCharCount: params.content.length,
-          totalLineCount: params.content.length === 0 ? 0 : params.content.split('\n').length,
-          updatedAt: new Date(),
-        })
-        .where(eq(documents.id, documentId));
-    } else {
-      const documentId = idGenerator('documents', 16);
-      await tx.insert(documents).values({
-        content: params.content,
-        editorData,
-        fileType: 'text/markdown',
-        id: documentId,
-        source: `quick-note:annotation:${run.quickNoteId}:${run.sourceHistoryId}`,
-        sourceType: 'quick-note',
-        totalCharCount: params.content.length,
-        totalLineCount: params.content.length === 0 ? 0 : params.content.split('\n').length,
-        userId: ctx.userId,
-        visibility: 'private',
-        workspaceId: ctx.workspaceId,
-      });
-
-      [resource] = await tx
-        .insert(quickNoteResources)
-        .values({
-          documentId,
-          quickNoteId: run.quickNoteId,
-          resourceId: documentId,
-          resourceType: 'document',
-          role: 'annotation',
-          sourceHistoryId: run.sourceHistoryId,
-          userId: ctx.userId,
-          workspaceId: ctx.workspaceId,
-        })
-        .returning();
-    }
-
-    const annotationDocumentId = resource.documentId;
-    if (!annotationDocumentId) return undefined;
-
-    const [documentHistory] = await tx
-      .insert(documentHistories)
-      .values({
-        documentId: annotationDocumentId,
-        editorData,
-        saveSource: 'llm_call',
-        savedAt: new Date(),
-        userId: ctx.userId,
-        workspaceId: ctx.workspaceId,
-      })
-      .returning();
-
-    await tx.insert(quickNoteRunResources).values({
-      documentHistoryId: documentHistory.id,
-      resourceId: resource.id,
-      runId,
+/** Binds a generated Annotation Document to one Quick Note source revision. */
+export const createAnnotationResource = async (
+  ctx: QuickNoteContext,
+  params: { documentId: string; quickNoteId: string; sourceHistoryId: string },
+) => {
+  const [resource] = await ctx.db
+    .insert(quickNoteResources)
+    .values({
+      documentId: params.documentId,
+      quickNoteId: params.quickNoteId,
+      resourceId: params.documentId,
+      resourceType: 'document',
+      role: 'annotation',
+      sourceHistoryId: params.sourceHistoryId,
       userId: ctx.userId,
       workspaceId: ctx.workspaceId,
-    });
+    })
+    .returning();
 
-    const proposals: QuickNoteProposalItem[] = [];
-    for (const proposalDraft of params.proposals ?? []) {
-      const proposalDocumentId = idGenerator('documents', 16);
-      const proposalEditorData = proposalDraft.editorData ?? { markdown: proposalDraft.content };
-      await tx.insert(documents).values({
-        content: proposalDraft.content,
-        editorData: proposalEditorData,
-        fileType: 'text/markdown',
-        id: proposalDocumentId,
-        source: `quick-note:proposal:${run.quickNoteId}:${runId}`,
-        sourceType: 'quick-note',
-        totalCharCount: proposalDraft.content.length,
-        totalLineCount:
-          proposalDraft.content.length === 0 ? 0 : proposalDraft.content.split('\n').length,
-        userId: ctx.userId,
-        visibility: 'private',
-        workspaceId: ctx.workspaceId,
-      });
-      const [proposalHistory] = await tx
-        .insert(documentHistories)
-        .values({
-          documentId: proposalDocumentId,
-          editorData: proposalEditorData,
-          saveSource: 'llm_call',
-          savedAt: new Date(),
-          userId: ctx.userId,
-          workspaceId: ctx.workspaceId,
-        })
-        .returning();
-      const [proposal] = await tx
-        .insert(quickNoteProposals)
-        .values({
-          currentHistoryId: proposalHistory.id,
-          documentId: proposalDocumentId,
-          kind: proposalDraft.kind,
-          quickNoteId: run.quickNoteId,
-          runId,
-          sourceHistoryId: run.sourceHistoryId,
-          userId: ctx.userId,
-          workspaceId: ctx.workspaceId,
-        })
-        .returning();
-      proposals.push(proposal);
-    }
+  return resource;
+};
 
-    await tx
-      .update(quickNoteRuns)
-      .set({ completedAt: new Date(), status: 'completed', updatedAt: new Date() })
-      .where(eq(quickNoteRuns.id, runId));
-
-    const sourceIsCurrent = isEqual(run.sourceDocumentEditorData, run.sourceHistoryEditorData);
-    await tx
-      .update(quickNotes)
-      .set({
-        analyzeDueAt: sourceIsCurrent ? null : run.analyzeDueAt,
-        // A stale Run remains auditable, but its interpretation must not mutate current metadata.
-        tags:
-          sourceIsCurrent && params.tags ? [...new Set([...run.tags, ...params.tags])] : run.tags,
-        updatedAt: new Date(),
-      })
-      .where(eq(quickNotes.id, run.quickNoteId));
-
-    return { documentHistory, proposals, resource };
+/** Records which Run produced one accepted Resource revision. */
+export const recordRunResource = async (
+  ctx: QuickNoteContext,
+  params: { documentHistoryId: string; resourceId: string; runId: string },
+) => {
+  await ctx.db.insert(quickNoteRunResources).values({
+    documentHistoryId: params.documentHistoryId,
+    resourceId: params.resourceId,
+    runId: params.runId,
+    userId: ctx.userId,
+    workspaceId: ctx.workspaceId,
   });
+};
 
 export const linkResource = async (
   ctx: QuickNoteContext,

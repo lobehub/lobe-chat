@@ -1,5 +1,5 @@
 // @vitest-environment node
-import { eq } from 'drizzle-orm';
+import { eq, inArray } from 'drizzle-orm';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { getTestDB } from '../../core/getTestDB';
@@ -54,5 +54,72 @@ describe('DocumentModel.query with Quick Note source documents', () => {
 
     expect(result.items).toHaveLength(1);
     expect(result.items[0].sourceType).toBe('quick-note');
+  });
+});
+
+/** @example Owning aggregates write their private Documents by id, recycle-bin state included. */
+describe('DocumentModel id-targeted writes for owning aggregates', () => {
+  const otherUserId = 'document-quick-note-source-other-user';
+
+  beforeEach(async () => {
+    await serverDB.delete(users).where(eq(users.id, otherUserId));
+    await serverDB.insert(users).values({ id: otherUserId });
+  });
+
+  afterEach(async () => {
+    await serverDB.delete(users).where(eq(users.id, otherUserId));
+  });
+
+  /** @example The body, size counters, and caller save time are written together. */
+  it('replaces content with derived counters at an explicit time', async () => {
+    const { id } = await documentModel.create({
+      content: 'Old',
+      fileType: 'text/markdown',
+      source: 'quick-note:qn_2',
+      sourceType: 'quick-note',
+      totalCharCount: 3,
+      totalLineCount: 1,
+    });
+    const savedAt = new Date('2026-08-24T00:00:00.000Z');
+
+    await documentModel.replaceContent(id, { content: 'a\nb', editorData: { v: 2 } }, savedAt);
+
+    const [row] = await serverDB.select().from(documents).where(eq(documents.id, id));
+    expect(row).toMatchObject({
+      content: 'a\nb',
+      editorData: { v: 2 },
+      totalCharCount: 3,
+      totalLineCount: 2,
+      updatedAt: savedAt,
+    });
+  });
+
+  /** @example A trashed own Document is removed while another user's Document survives. */
+  it('deletes trashed rows in scope and leaves foreign rows', async () => {
+    const own = await documentModel.create({
+      content: 'Trashed',
+      fileType: 'text/markdown',
+      source: 'quick-note:qn_3',
+      sourceType: 'quick-note',
+      totalCharCount: 7,
+      totalLineCount: 1,
+    });
+    const foreign = await new DocumentModel(serverDB, otherUserId).create({
+      content: 'Foreign',
+      fileType: 'text/markdown',
+      source: 'quick-note:qn_4',
+      sourceType: 'quick-note',
+      totalCharCount: 7,
+      totalLineCount: 1,
+    });
+    await serverDB.update(documents).set({ isDeleted: true }).where(eq(documents.id, own.id));
+
+    await documentModel.batchDeleteIncludingTrashed([own.id, foreign.id]);
+
+    const remaining = await serverDB
+      .select({ id: documents.id })
+      .from(documents)
+      .where(inArray(documents.id, [own.id, foreign.id]));
+    expect(remaining).toEqual([{ id: foreign.id }]);
   });
 });

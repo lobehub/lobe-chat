@@ -5,9 +5,9 @@ import { describe, expect, it } from 'vitest';
 
 import { serverDBEnv } from '@/config/db';
 
-import { getTestDB } from '../../core/getTestDB';
-import { documentHistories, quickNoteRunInputs, users } from '../../schemas';
-import { QuickNoteModel } from '../quickNote';
+import { getTestDB } from '../../../core/getTestDB';
+import { documentHistories, quickNoteRunInputs, users } from '../../../schemas';
+import { QuickNoteRepository } from '../index';
 
 /** @example Two PostgreSQL connections serialize proposal editing and immutable input pinning. */
 describe.skipIf(process.env.TEST_SERVER_DB !== '1')(
@@ -17,16 +17,16 @@ describe.skipIf(process.env.TEST_SERVER_DB !== '1')(
     it('keeps the observed proposal revision pinned before its pointer can advance', async () => {
       const db = await getTestDB();
       const userId = 'quick-note-pin-race';
-      const model = new QuickNoteModel(db, userId);
+      const repo = new QuickNoteRepository(db, userId);
       const control = new Client({ connectionString: serverDBEnv.DATABASE_TEST_URL });
       const pending: Promise<unknown>[] = [];
       await control.connect();
 
       try {
         await db.insert(users).values({ id: userId });
-        const note = await model.create({ content: 'Capture' });
-        const analyze = await model.claimRun(note.id, { kind: 'analyze' });
-        const output = await model.acceptAnnotation(analyze!.id, {
+        const note = await repo.create({ content: 'Capture' });
+        const analyze = await repo.claimRun(note.id, { kind: 'analyze' });
+        const output = await repo.acceptAnnotation(analyze!.id, {
           content: 'Annotation',
           proposals: [{ content: 'Original proposal', kind: 'task' }],
         });
@@ -52,7 +52,7 @@ describe.skipIf(process.env.TEST_SERVER_DB !== '1')(
         );
         await control.query('BEGIN');
         await control.query('SELECT pg_advisory_xact_lock(8823181)');
-        const claim = model.claimRun(note.id, { kind: 'dive' });
+        const claim = repo.claimRun(note.id, { kind: 'dive' });
         pending.push(claim);
 
         /** @example The claim pauses after reading the proposal and before committing its input. */
@@ -68,7 +68,7 @@ describe.skipIf(process.env.TEST_SERVER_DB !== '1')(
           )
           .toBe(true);
 
-        const edit = model.updateProposal(proposal.id, {
+        const edit = repo.updateProposal(proposal.id, {
           content: 'Edited proposal',
           editorData: { markdown: 'Edited proposal' },
         });

@@ -11,6 +11,7 @@ import pMap from 'p-map';
 import { AgentModel } from '@/database/models/agent';
 import { QuickNoteModel } from '@/database/models/quickNote';
 import { ThreadModel } from '@/database/models/thread';
+import { QuickNoteRepository } from '@/database/repositories/quickNote';
 import {
   agentOperations,
   documents,
@@ -176,11 +177,11 @@ export const parseQuickNoteAnalyzeOutput = (content: string): QuickNoteAnalyzeOu
  *
  * QuickNote router / Agent Signal handler
  *   -> {@link QuickNoteProcessingService.startAnalyze} / {@link QuickNoteProcessingService.startDive}
- *     -> {@link QuickNoteModel.claimRun}
+ *     -> {@link QuickNoteRepository.claimRun}
  *       -> {@link AiAgentService.execAgent}
  *         -> completion hook
  *           -> {@link QuickNoteProcessingService.onRunComplete}
- *             -> {@link QuickNoteModel.acceptAnnotation}
+ *             -> {@link QuickNoteRepository.acceptAnnotation}
  *
  * Use when:
  * - Dispatching a lightweight background interpretation.
@@ -196,6 +197,7 @@ export const parseQuickNoteAnalyzeOutput = (content: string): QuickNoteAnalyzeOu
 export class QuickNoteProcessingService {
   private readonly db: LobeChatDatabase;
   private readonly model: QuickNoteModel;
+  private readonly repo: QuickNoteRepository;
   private readonly threadModel: ThreadModel;
   private readonly userId: string;
   private readonly workspaceId?: string;
@@ -205,6 +207,7 @@ export class QuickNoteProcessingService {
     this.userId = userId;
     this.workspaceId = workspaceId;
     this.model = new QuickNoteModel(db, userId, workspaceId);
+    this.repo = new QuickNoteRepository(db, userId, workspaceId);
     this.threadModel = new ThreadModel(db, userId, workspaceId);
   }
 
@@ -227,7 +230,7 @@ export class QuickNoteProcessingService {
     ) {
       return undefined;
     }
-    const run = await this.model.claimRun(quickNoteId, { kind: 'analyze', trigger });
+    const run = await this.repo.claimRun(quickNoteId, { kind: 'analyze', trigger });
     if (!run) return undefined;
     if (run.operationId) return run;
 
@@ -284,7 +287,7 @@ export class QuickNoteProcessingService {
    * - The active/new Dive Run plus operation identity, or `undefined`.
    */
   startDive = async (quickNoteId: string) => {
-    const run = await this.model.claimRun(quickNoteId, { kind: 'dive' });
+    const run = await this.repo.claimRun(quickNoteId, { kind: 'dive' });
     if (!run) return undefined;
     if (run.operationId) return run;
 
@@ -375,7 +378,7 @@ export class QuickNoteProcessingService {
             concurrency: 5,
           },
         );
-        const annotation = await this.model.acceptAnnotation(params.runId, {
+        const annotation = await this.repo.acceptAnnotation(params.runId, {
           content: output.annotation,
           editorData: { markdown: output.annotation },
           proposals: output.proposals,
@@ -385,7 +388,7 @@ export class QuickNoteProcessingService {
         return annotation;
       }
 
-      return this.model.acceptAnnotation(params.runId, {
+      return this.repo.acceptAnnotation(params.runId, {
         content: params.lastAssistantContent.trim(),
         editorData: { markdown: params.lastAssistantContent.trim() },
       });

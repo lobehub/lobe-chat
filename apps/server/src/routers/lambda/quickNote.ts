@@ -9,6 +9,7 @@ import { z } from 'zod';
 import { withScopedPermission } from '@/business/server/trpc-middlewares/rbacPermission';
 import { wsCompatProcedure } from '@/business/server/trpc-middlewares/workspaceAuth';
 import { QuickNoteModel } from '@/database/models/quickNote';
+import { QuickNoteRepository } from '@/database/repositories/quickNote';
 import { router } from '@/libs/trpc/lambda';
 import { serverDatabase } from '@/libs/trpc/lambda/middleware';
 import { enqueueAgentSignalSourceEvent } from '@/server/services/agentSignal';
@@ -77,8 +78,8 @@ export const quickNoteRouter = router({
   acceptProposal: quickNoteWriteProcedure
     .input(z.object({ proposalId: z.string().uuid() }))
     .mutation(async ({ ctx, input }) => {
-      const model = new QuickNoteModel(ctx.serverDB, ctx.userId, ctx.workspaceId ?? undefined);
-      const result = await model.acceptTaskProposal(input.proposalId);
+      const repo = new QuickNoteRepository(ctx.serverDB, ctx.userId, ctx.workspaceId ?? undefined);
+      const result = await repo.acceptTaskProposal(input.proposalId);
       if (!result) {
         throw new TRPCError({
           code: 'NOT_FOUND',
@@ -102,7 +103,8 @@ export const quickNoteRouter = router({
     }
 
     const model = new QuickNoteModel(ctx.serverDB, ctx.userId, ctx.workspaceId ?? undefined);
-    const run = await model.claimRun(input.id, { kind: 'analyze', trigger: input.trigger });
+    const repo = new QuickNoteRepository(ctx.serverDB, ctx.userId, ctx.workspaceId ?? undefined);
+    const run = await repo.claimRun(input.id, { kind: 'analyze', trigger: input.trigger });
     if (!run) throw new TRPCError({ code: 'NOT_FOUND', message: 'Quick Note not found' });
 
     try {
@@ -139,9 +141,9 @@ export const quickNoteRouter = router({
   }),
 
   create: quickNoteWriteProcedure.input(createInput).mutation(async ({ ctx, input }) => {
-    const model = new QuickNoteModel(ctx.serverDB, ctx.userId, ctx.workspaceId ?? undefined);
+    const repo = new QuickNoteRepository(ctx.serverDB, ctx.userId, ctx.workspaceId ?? undefined);
     const settings = await QuickNoteModel.getAnalyzeSettings(ctx.serverDB, ctx.userId);
-    return model.create({
+    return repo.create({
       ...input,
       analyzeDueAt:
         settings.autoAnalyze.enabled && input.content?.trim()
@@ -160,8 +162,8 @@ export const quickNoteRouter = router({
     }),
 
   delete: quickNoteWriteProcedure.input(idInput).mutation(async ({ ctx, input }) => {
-    const model = new QuickNoteModel(ctx.serverDB, ctx.userId, ctx.workspaceId ?? undefined);
-    const deleted = await model.delete(input.id);
+    const repo = new QuickNoteRepository(ctx.serverDB, ctx.userId, ctx.workspaceId ?? undefined);
+    const deleted = await repo.delete(input.id);
     if (!deleted) throw new TRPCError({ code: 'NOT_FOUND', message: 'Quick Note not found' });
     return { success: true };
   }),
@@ -211,9 +213,9 @@ export const quickNoteRouter = router({
     }),
 
   updateContent: quickNoteWriteProcedure.input(updateInput).mutation(async ({ ctx, input }) => {
-    const model = new QuickNoteModel(ctx.serverDB, ctx.userId, ctx.workspaceId ?? undefined);
+    const repo = new QuickNoteRepository(ctx.serverDB, ctx.userId, ctx.workspaceId ?? undefined);
     const analyzeSettings = await QuickNoteModel.getAnalyzeSettings(ctx.serverDB, ctx.userId);
-    const updated = await model.updateContent(input.id, {
+    const updated = await repo.updateContent(input.id, {
       content: input.content,
       analyzeDueAt:
         analyzeSettings.autoAnalyze.enabled && input.content.trim()
@@ -228,8 +230,8 @@ export const quickNoteRouter = router({
   updateProposal: quickNoteWriteProcedure
     .input(updateProposalInput)
     .mutation(async ({ ctx, input }) => {
-      const model = new QuickNoteModel(ctx.serverDB, ctx.userId, ctx.workspaceId ?? undefined);
-      const proposal = await model.updateProposal(input.proposalId, input);
+      const repo = new QuickNoteRepository(ctx.serverDB, ctx.userId, ctx.workspaceId ?? undefined);
+      const proposal = await repo.updateProposal(input.proposalId, input);
       if (!proposal) throw new TRPCError({ code: 'NOT_FOUND', message: 'Proposal not found' });
       return proposal;
     }),

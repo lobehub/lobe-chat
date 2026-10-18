@@ -15,6 +15,10 @@ vi.mock('@/database/server', () => ({ getServerDB: vi.fn().mockResolvedValue({})
 vi.mock('@/database/models/quickNote', () => ({
   QuickNoteModel: class {
     static findDueAnalyzeCandidates = mocks.candidates;
+  },
+}));
+vi.mock('@/database/repositories/quickNote', () => ({
+  QuickNoteRepository: class {
     claimRun = mocks.claim;
   },
 }));
