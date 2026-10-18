@@ -96,6 +96,41 @@ export class ResourcePermissionActionImpl {
     );
   };
 
+  /**
+   * A management write the server refused proves this session's `confirmed`
+   * manage grant is stale (the caller was demoted after the access read).
+   * Withdraw the confirmation so manage controls close at once, drop the
+   * manager-only roster, and re-fetch the record — `fresh`, so a read that
+   * started before the demotion cannot land and re-confirm the old grant.
+   */
+  #onManagementRefused = (ref: ResourceRef, scope: string, error: unknown): void => {
+    if (!isAccessDenialError(error) || cacheScope.get() !== scope) return;
+    const key = resourceKey(ref);
+    const sessionKey = accessSessionKey(scope, key);
+    this.#set(
+      (s) => {
+        if (s.accessSessionMap[sessionKey] !== 'confirmed') return s;
+        const { [sessionKey]: _, ...accessSessionMap } = s.accessSessionMap;
+        return { accessSessionMap };
+      },
+      false,
+      n('withdrawAccess', { key }),
+    );
+    void this.#collaborators.remove(key, scope);
+    this.#access.fetch(ref, { fresh: true, scope }).catch(() => {});
+  };
+
+  /** Run a management write, reacting to a refusal before rethrowing it. */
+  #manage = async <T>(ref: ResourceRef, write: () => Promise<T>): Promise<T> => {
+    const scope = cacheScope.get();
+    try {
+      return await write();
+    } catch (error) {
+      this.#onManagementRefused(ref, scope, error);
+      throw error;
+    }
+  };
+
   useFetchAccess = (ref: ResourceRef | null): ReplicaSyncResult => this.#access.useSync(ref);
 
   /**
@@ -116,15 +151,18 @@ export class ResourcePermissionActionImpl {
   setAccessLevel = async (ref: ResourceRef, accessLevel: ResourceAccessLevel): Promise<void> => {
     const scope = cacheScope.get();
     const key = resourceKey(ref);
-    await this.#access.optimistic(
-      key,
-      (data) => ({
-        ...data,
-        accessLevel,
-        generalAccess: accessLevel === 'edit' ? 'editor' : 'viewer',
-      }),
-      () => resourcePermissionService.setAccessLevel(ref.resourceType, ref.resourceId, accessLevel),
-      { confirm: (result) => () => result },
+    await this.#manage(ref, () =>
+      this.#access.optimistic(
+        key,
+        (data) => ({
+          ...data,
+          accessLevel,
+          generalAccess: accessLevel === 'edit' ? 'editor' : 'viewer',
+        }),
+        () =>
+          resourcePermissionService.setAccessLevel(ref.resourceType, ref.resourceId, accessLevel),
+        { confirm: (result) => () => result },
+      ),
     );
     // The write's response is a server answer too.
     if (cacheScope.get() === scope) this.#markAccess(scope, key, 'confirmed');
@@ -135,11 +173,13 @@ export class ResourcePermissionActionImpl {
     userIds: string[],
     accessLevel: ResourceAccessLevel,
   ): Promise<void> => {
-    await resourcePermissionService.addCollaborators(
-      ref.resourceType,
-      ref.resourceId,
-      userIds,
-      accessLevel,
+    await this.#manage(ref, () =>
+      resourcePermissionService.addCollaborators(
+        ref.resourceType,
+        ref.resourceId,
+        userIds,
+        accessLevel,
+      ),
     );
     await this.#collaborators.fetch(ref, { fresh: true });
   };
@@ -149,10 +189,13 @@ export class ResourcePermissionActionImpl {
    * revocation (the caller surfaces the error).
    */
   removeCollaborator = async (ref: ResourceRef, userId: string): Promise<void> => {
-    await this.#collaborators.optimistic(
-      resourceKey(ref),
-      (list) => list.filter((item) => item.userId !== userId),
-      () => resourcePermissionService.removeCollaborator(ref.resourceType, ref.resourceId, userId),
+    await this.#manage(ref, () =>
+      this.#collaborators.optimistic(
+        resourceKey(ref),
+        (list) => list.filter((item) => item.userId !== userId),
+        () =>
+          resourcePermissionService.removeCollaborator(ref.resourceType, ref.resourceId, userId),
+      ),
     );
     await this.#collaborators.fetch(ref, { fresh: true });
   };

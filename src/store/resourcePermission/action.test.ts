@@ -146,6 +146,50 @@ describe('resourcePermissionActions', () => {
     expect(state().accessMap[KEY]).toMatchObject({ accessLevel: 'use', generalAccess: 'viewer' });
   });
 
+  it('withdraws a stale manage grant when the server refuses a management write', async () => {
+    // Confirmed manager this session, demoted before the write.
+    vi.mocked(resourcePermissionService.getGeneralAccess).mockResolvedValueOnce(
+      record({ canManage: true }),
+    );
+    await syncAccess();
+    expect(sessionCheck()).toBe('confirmed');
+
+    let answer!: (value: ResourceGeneralAccess) => void;
+    vi.mocked(resourcePermissionService.getGeneralAccess).mockReturnValueOnce(
+      new Promise((resolve) => {
+        answer = resolve;
+      }),
+    );
+    vi.mocked(resourcePermissionService.setAccessLevel).mockRejectedValue({
+      data: { code: 'FORBIDDEN' },
+    });
+
+    await expect(resourcePermissionActions.setAccessLevel(REF, 'edit')).rejects.toEqual({
+      data: { code: 'FORBIDDEN' },
+    });
+
+    // Manage controls close before the re-fetch answers.
+    expect(sessionCheck()).toBeUndefined();
+    expect(resourcePermissionService.getGeneralAccess).toHaveBeenCalledTimes(2);
+
+    answer(record({ canManage: false }));
+    await vi.waitFor(() => expect(state().accessMap[KEY]?.canManage).toBe(false));
+    expect(sessionCheck()).toBe('confirmed');
+  });
+
+  it('keeps the confirmation through a management write that failed in transport', async () => {
+    vi.mocked(resourcePermissionService.getGeneralAccess).mockResolvedValueOnce(
+      record({ canManage: true }),
+    );
+    await syncAccess();
+    vi.mocked(resourcePermissionService.setAccessLevel).mockRejectedValue(new Error('offline'));
+
+    await expect(resourcePermissionActions.setAccessLevel(REF, 'edit')).rejects.toThrow('offline');
+
+    expect(sessionCheck()).toBe('confirmed');
+    expect(resourcePermissionService.getGeneralAccess).toHaveBeenCalledTimes(1);
+  });
+
   it('seeds the persisted record before anything mounts', async () => {
     const get = vi.spyOn(resourceAccessResource.storage!, 'get').mockResolvedValue({
       data: record({ accessLevel: 'edit', generalAccess: 'editor' }),
