@@ -1,8 +1,17 @@
+import { TRPCError } from '@trpc/server';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { mergeQueuedFollowUps, type QueuedFollowUp, startQueuedFollowUp } from './index';
 
-const { drain, restore, startComposerRun } = vi.hoisted(() => ({
+const {
+  assertCanUseAgentRunConversation,
+  assertCanUseWorkspaceAgent,
+  drain,
+  restore,
+  startComposerRun,
+} = vi.hoisted(() => ({
+  assertCanUseAgentRunConversation: vi.fn(),
+  assertCanUseWorkspaceAgent: vi.fn(),
   drain: vi.fn(),
   restore: vi.fn(),
   startComposerRun: vi.fn(),
@@ -10,6 +19,12 @@ const { drain, restore, startComposerRun } = vi.hoisted(() => ({
 
 vi.mock('@/server/services/redis', () => ({ redisService: { steerQueue: { drain, restore } } }));
 vi.mock('../composerRun', () => ({ startComposerRun }));
+vi.mock('@/server/routers/lambda/_helpers/workspaceAgentGuard', () => ({
+  assertCanUseWorkspaceAgent,
+}));
+vi.mock('@/server/routers/lambda/_helpers/conversationResourceGuard', () => ({
+  assertCanUseAgentRunConversation,
+}));
 
 const followUp = (id: string, createdAt: number, request: Partial<QueuedFollowUp['request']>) =>
   ({
@@ -62,6 +77,8 @@ describe('startQueuedFollowUp', () => {
     vi.clearAllMocks();
     drain.mockResolvedValue([]);
     restore.mockResolvedValue(undefined);
+    assertCanUseWorkspaceAgent.mockResolvedValue(undefined);
+    assertCanUseAgentRunConversation.mockResolvedValue(undefined);
     startComposerRun.mockResolvedValue({ operationId: 'op-2' });
   });
 
@@ -99,5 +116,36 @@ describe('startQueuedFollowUp', () => {
     await startQueuedFollowUp(ctx, finished({ topicId: 'tpc-1' }));
 
     expect(startComposerRun).not.toHaveBeenCalled();
+  });
+
+  it('re-checks access before the queued turn starts, and drops it when access was revoked', async () => {
+    drain.mockResolvedValue([
+      followUp('a', 1, { appContext: { groupId: 'grp-1', topicId: 'tpc-1' } }),
+    ]);
+    assertCanUseWorkspaceAgent.mockRejectedValue(new TRPCError({ code: 'FORBIDDEN' }));
+
+    await expect(startQueuedFollowUp(ctx, finished({ topicId: 'tpc-1' }))).resolves.toBeUndefined();
+
+    expect(assertCanUseWorkspaceAgent).toHaveBeenCalledWith(
+      expect.objectContaining({
+        agentId: 'agt-1',
+        groupId: 'grp-1',
+        userId: 'user-1',
+        workspaceId: 'ws-1',
+      }),
+    );
+    expect(startComposerRun).not.toHaveBeenCalled();
+    expect(restore).not.toHaveBeenCalled();
+  });
+
+  it('keeps the follow-ups when the access check itself fails', async () => {
+    const entries = [followUp('a', 1, {})];
+    drain.mockResolvedValue(entries);
+    assertCanUseAgentRunConversation.mockRejectedValue(new Error('connection reset'));
+
+    await startQueuedFollowUp(ctx, finished({ topicId: 'tpc-1' }));
+
+    expect(startComposerRun).not.toHaveBeenCalled();
+    expect(restore).toHaveBeenCalledWith({ threadId: null, topicId: 'tpc-1' }, entries);
   });
 });

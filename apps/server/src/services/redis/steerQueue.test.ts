@@ -117,4 +117,18 @@ describe('redisService.steerQueue', () => {
     await expect(redisService.steerQueue.drain(scope)).resolves.toEqual([]);
     await expect(redisService.steerQueue.length(scope)).resolves.toBe(0);
   });
+
+  it('falls back like no Redis when the append command itself fails', async () => {
+    redis.client.eval.mockRejectedValueOnce(new Error('command timed out'));
+
+    await expect(redisService.steerQueue.append(scope, entry('a'))).resolves.toBeUndefined();
+  });
+
+  it('rejects a restore it cannot write, so drained entries are never dropped silently', async () => {
+    getRedisServiceClient.mockResolvedValue(null);
+
+    await expect(redisService.steerQueue.restore(scope, [entry('a')])).rejects.toThrow(
+      'Redis is unavailable',
+    );
+  });
 });

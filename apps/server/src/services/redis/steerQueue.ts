@@ -75,8 +75,10 @@ const parseEntries = <T extends SteerQueueEntry>(raw: unknown): { entry: T; raw:
  * Follow-ups a user queued behind a running turn, held server-side so the
  * runtime can start the next turn without a round trip through the client.
  *
- * Every write returns `undefined` when Redis is unavailable: the caller then
+ * `append` returns `undefined` when Redis is unavailable: the caller then
  * tells the client to send the message itself, as it did before this queue.
+ * `restore` rejects instead — the entries it carries are already out of the
+ * queue, so its caller must know they could not go back.
  */
 export const steerQueue = {
   /**
@@ -89,15 +91,21 @@ export const steerQueue = {
     const redis = await getClient();
     if (!redis) return;
 
-    const length = await redis.eval<number>(
-      APPEND_SCRIPT,
-      1,
-      keyOf(scope),
-      JSON.stringify(entry),
-      QUEUE_TTL_SECONDS,
-      STEER_QUEUE_MAX_ENTRIES,
-    );
-    return Number(length) < 0 ? ('full' as const) : Number(length);
+    try {
+      const length = await redis.eval<number>(
+        APPEND_SCRIPT,
+        1,
+        keyOf(scope),
+        JSON.stringify(entry),
+        QUEUE_TTL_SECONDS,
+        STEER_QUEUE_MAX_ENTRIES,
+      );
+      return Number(length) < 0 ? ('full' as const) : Number(length);
+    } catch {
+      // A failed command counts as no Redis: the follow-up was not stored, and
+      // the caller falls back to a direct send instead of failing the request.
+      return;
+    }
   },
 
   /** Takes every entry, oldest first, leaving the queue empty. */
@@ -144,12 +152,15 @@ export const steerQueue = {
     return Number(await redis.eval<number>(REMOVE_SCRIPT, 1, key, target.raw)) > 0;
   },
 
-  /** Puts drained entries back at the head, ahead of anything queued since. */
+  /**
+   * Puts drained entries back at the head, ahead of anything queued since.
+   * Rejects when Redis is unavailable: the entries are out of the queue already.
+   */
   async restore(scope: SteerQueueScope, entries: SteerQueueEntry[]): Promise<void> {
     if (entries.length === 0) return;
 
     const redis = await getClient();
-    if (!redis) return;
+    if (!redis) throw new Error('Redis is unavailable to restore queued follow-ups');
 
     await redis.eval(
       RESTORE_SCRIPT,

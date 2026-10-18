@@ -1,7 +1,8 @@
 import { randomUUID } from 'node:crypto';
 
+import type { AgentOperationStatus } from '@lobechat/types';
 import debug from 'debug';
-import { eq } from 'drizzle-orm';
+import { and, desc, eq, inArray, isNull } from 'drizzle-orm';
 import { z } from 'zod';
 
 import { withScopedPermission } from '@/business/server/trpc-middlewares/rbacPermission';
@@ -14,6 +15,7 @@ import { serverDatabase } from '@/libs/trpc/lambda/middleware';
 import { assertCanUseWorkspaceAgent } from '@/server/routers/lambda/_helpers/workspaceAgentGuard';
 import type { QueuedFollowUp } from '@/server/services/aiAgent/steerQueue';
 import { redisService } from '@/server/services/redis';
+import type { SteerQueueScope } from '@/server/services/redis/steerQueue';
 
 import { ExecAgentFieldsSchema } from './aiAgent/execSchemas';
 import { assertCanUseAgentRunConversation } from './aiAgent/guards';
@@ -63,26 +65,55 @@ const steerQueueProcedure = wsCompatProcedure.use(serverDatabase).use(async (opt
 });
 const steerQueueWriteProcedure = steerQueueProcedure.use(withScopedPermission('message:create'));
 
+/** Statuses of a run that still owns its conversation, parked ones included. */
+const LIVE_STATUSES: AgentOperationStatus[] = [
+  'idle',
+  'running',
+  'waiting_for_human',
+  'waiting_for_async_tool',
+  'waiting_for_client',
+];
+
 /**
- * Whether the caller's own run is live on the topic. Follow-ups only queue
- * behind it: the runtime drains them under the run owner's authority, so a run
- * someone else started is no place to leave one.
+ * Whether the caller's own top-level run is live on exactly this surface — the
+ * topic's main spine or one thread. Follow-ups only queue behind it: the run
+ * that finishes on this surface drains this surface's queue, under the run
+ * owner's authority, so a run someone else started (or one on another surface)
+ * is no place to leave one. Thread runs never claim the topic marker, so the
+ * operation rows decide, with the topic model's liveness rule on top.
  */
 const hasOwnLiveRun = async (
   ctx: { serverDB: LobeChatDatabase; topicModel: TopicModel; userId: string },
-  topicId: string,
+  scope: SteerQueueScope,
 ): Promise<boolean> => {
-  const topic = await ctx.topicModel.findOwnTopicById(topicId);
-  const runningOperation = topic?.metadata?.runningOperation;
-  if (!runningOperation) return false;
-  if (!(await ctx.topicModel.isRunningOperationAlive(ctx.serverDB, runningOperation))) return false;
-
-  const [operation] = await ctx.serverDB
-    .select({ userId: agentOperations.userId })
+  const candidates = await ctx.serverDB
+    .select({ id: agentOperations.id })
     .from(agentOperations)
-    .where(eq(agentOperations.id, runningOperation.operationId))
-    .limit(1);
-  return operation?.userId === ctx.userId;
+    .where(
+      and(
+        eq(agentOperations.topicId, scope.topicId),
+        scope.threadId
+          ? eq(agentOperations.threadId, scope.threadId)
+          : isNull(agentOperations.threadId),
+        isNull(agentOperations.parentOperationId),
+        eq(agentOperations.userId, ctx.userId),
+        inArray(agentOperations.status, LIVE_STATUSES),
+      ),
+    )
+    .orderBy(desc(agentOperations.createdAt))
+    .limit(3);
+
+  for (const { id } of candidates) {
+    // The liveness rule only reads the operation id off the marker.
+    if (
+      await ctx.topicModel.isRunningOperationAlive(ctx.serverDB, {
+        assistantMessageId: '',
+        operationId: id,
+      })
+    )
+      return true;
+  }
+  return false;
 };
 
 const toScope = (scope: z.infer<typeof ScopeSchema>) => ({
@@ -123,11 +154,11 @@ export const agentSteerQueueRouter = router({
       workspaceId: ctx.workspaceId,
     });
 
-    if (!(await hasOwnLiveRun(ctx, topicId))) {
+    const scope = toScope({ threadId: request.appContext?.threadId, topicId });
+    if (!(await hasOwnLiveRun(ctx, scope))) {
       return { queued: false as const, reason: 'idle' as const };
     }
 
-    const scope = toScope({ threadId: request.appContext?.threadId, topicId });
     const entry: QueuedFollowUp = {
       audit: { clientIp: ctx.clientIp ?? undefined, userAgent: ctx.userAgent ?? undefined },
       createdAt: Date.now(),
@@ -155,7 +186,7 @@ export const agentSteerQueueRouter = router({
     // The run may have ended between the check above and the append, after its
     // drain: then nothing would ever start this entry. Take it back and let the
     // client send it. If the take-back loses, a drain already started it.
-    if (!(await hasOwnLiveRun(ctx, topicId))) {
+    if (!(await hasOwnLiveRun(ctx, scope))) {
       const removed = await redisService.steerQueue.remove(scope, entry.id);
       if (removed) return { queued: false as const, reason: 'idle' as const };
     }

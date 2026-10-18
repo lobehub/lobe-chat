@@ -5,19 +5,15 @@ import { agentSteerQueueRouter } from '../agentSteerQueue';
 
 const mocks = vi.hoisted(() => ({
   append: vi.fn(),
-  findOwnTopicById: vi.fn(),
   isRunningOperationAlive: vi.fn(),
   list: vi.fn(),
-  operationOwner: vi.fn(),
+  liveCandidates: vi.fn(),
   remove: vi.fn(),
 }));
 
 vi.mock('@/database/models/topic', () => ({
   TopicModel: vi.fn().mockImplementation(function () {
-    return {
-      findOwnTopicById: mocks.findOwnTopicById,
-      isRunningOperationAlive: mocks.isRunningOperationAlive,
-    };
+    return { isRunningOperationAlive: mocks.isRunningOperationAlive };
   }),
 }));
 vi.mock('@/server/services/redis', () => ({
@@ -43,9 +39,13 @@ vi.mock('@/libs/trpc/lambda/middleware', () => ({
   serverDatabase: async (opts: any) => opts.next({ ctx: opts.ctx }),
 }));
 
+// The scope / owner / status filtering itself runs against a real DB in
+// agentSteerQueue.liveness.test.ts; here the query only yields candidates.
 const serverDB = {
   select: () => ({
-    from: () => ({ where: () => ({ limit: async () => [{ userId: mocks.operationOwner() }] }) }),
+    from: () => ({
+      where: () => ({ orderBy: () => ({ limit: async () => mocks.liveCandidates() }) }),
+    }),
   }),
 };
 
@@ -70,11 +70,8 @@ const appendInput = {
 describe('agentSteerQueueRouter.append', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    mocks.findOwnTopicById.mockResolvedValue({
-      metadata: { runningOperation: { operationId: 'op-1' } },
-    });
+    mocks.liveCandidates.mockReturnValue([{ id: 'op-1' }]);
     mocks.isRunningOperationAlive.mockResolvedValue(true);
-    mocks.operationOwner.mockReturnValue('user-1');
     mocks.append.mockResolvedValue(1);
     mocks.remove.mockResolvedValue(true);
   });
@@ -109,8 +106,8 @@ describe('agentSteerQueueRouter.append', () => {
     expect(mocks.append).not.toHaveBeenCalled();
   });
 
-  it('does not queue behind a run someone else started', async () => {
-    mocks.operationOwner.mockReturnValue('user-2');
+  it('does not queue when no own top-level run is on the surface', async () => {
+    mocks.liveCandidates.mockReturnValue([]);
 
     await expect(caller().append(appendInput)).resolves.toEqual({ queued: false, reason: 'idle' });
     expect(mocks.append).not.toHaveBeenCalled();
