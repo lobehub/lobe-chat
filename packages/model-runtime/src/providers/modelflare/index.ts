@@ -15,9 +15,12 @@ export interface ModelflareModelCard {
 /**
  * Only models reachable through OpenAI Chat Completions are usable with this runtime;
  * image/video-only models are returned by `/v1/models` but use other endpoints.
+ * Models without explicit endpoint metadata are rejected, since there is no evidence
+ * that Chat Completions serves them.
  */
 export const isChatCompletionsModel = (model: ModelflareModelCard) =>
-  !model.supported_endpoint_types || model.supported_endpoint_types.includes('openai');
+  Array.isArray(model.supported_endpoint_types) &&
+  model.supported_endpoint_types.includes('openai');
 
 export const params = {
   baseURL: 'https://modelflare.dev/v1',

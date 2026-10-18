@@ -80,8 +80,11 @@ describe('LobeModelflareAI - params', () => {
       ).toBe(false);
     });
 
-    it('keeps models without endpoint metadata', () => {
-      expect(isChatCompletionsModel({ id: 'unknown-model' })).toBe(true);
+    it('drops models without endpoint metadata', () => {
+      expect(isChatCompletionsModel({ id: 'unknown-model' })).toBe(false);
+      expect(isChatCompletionsModel({ id: 'empty-model', supported_endpoint_types: [] })).toBe(
+        false,
+      );
     });
   });
 });
