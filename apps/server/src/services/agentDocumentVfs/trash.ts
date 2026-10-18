@@ -1,4 +1,5 @@
 import { FileSource } from '@lobechat/types';
+import pMap from 'p-map';
 
 import type { AgentDocumentVfsDeps } from './deps';
 import { AgentDocumentVfsError } from './errors';
@@ -27,15 +28,18 @@ export async function listTrash(
   path?: string,
 ): Promise<AgentDocumentTrashEntry[]> {
   const deletedDocs = await deps.agentDocumentModel.listDeletedByAgent(ctx.agentId);
-  const entries = await Promise.all(
-    deletedDocs.map(async (doc) => {
+  // Each path reconstruction issues DB reads; cap the fan-out per agent trash size.
+  const entries = await pMap(
+    deletedDocs,
+    async (doc) => {
       const path = await buildOrdinaryPathFromNode(deps, doc, ctx.agentId);
       return {
         ...toOrdinaryStats(doc, path),
         deleteReason: doc.deleteReason,
         deletedAt: doc.deletedAt ?? new Date(0),
       } satisfies AgentDocumentTrashEntry;
-    }),
+    },
+    { concurrency: 10 },
   );
 
   if (!path) return entries;
