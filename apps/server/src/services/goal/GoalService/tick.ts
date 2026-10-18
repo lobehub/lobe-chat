@@ -11,6 +11,7 @@ import {
 import { exploreGraph } from '../exploreGraph';
 import { classifyGoalFailure, isMachineFailureClass } from '../failureClass';
 import { GoalManagerService } from '../manager';
+import { GoalProbeDistill, needsProbeDistill } from '../probeDistill';
 import { resolveMaxConcurrentTasks } from '../recoveryPolicy';
 import { withoutGoalReport } from '../report';
 import { GoalReportService } from '../reportService';
@@ -78,7 +79,7 @@ export const tickOnce = async (
   const at = Date.now();
   // The coordinator never sees the wrap-up report node: it runs after the
   // Goal-level acceptance and does not take part in the Goal's status.
-  const graph = withoutGoalReport(await ctx.requireGraph(goalId));
+  let graph = withoutGoalReport(await ctx.requireGraph(goalId));
   // A draft is still being arranged; only `start` hands it to the coordinator.
   if (graph.goal.status === 'draft')
     return {
@@ -103,6 +104,14 @@ export const tickOnce = async (
   // frontier: every probe has settled and nothing else is ready to run.
   if (graph.goal.config?.rolloutState?.phase === 'plan_revision')
     return ctx.releaseReview.routeRolloutRevision(graph);
+  // Settled probes teach the plan before the gate judges them: the main Agent
+  // rewrites the plan skill from what they ran into. Once it has, this same
+  // advance goes on to the gate, on the goal as it now stands.
+  if (needsProbeDistill(graph)) {
+    const waiting = await new GoalProbeDistill(ctx.db, ctx.userId, ctx.workspaceId).route(graph);
+    if (waiting) return waiting;
+    graph = withoutGoalReport(await ctx.requireGraph(goalId));
+  }
 
   const frontier = selectFrontier(graph);
 

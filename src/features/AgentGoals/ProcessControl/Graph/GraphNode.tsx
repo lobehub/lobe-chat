@@ -45,6 +45,8 @@ export interface GraphNodeData extends Record<string, unknown> {
     chip?: StateChip | null;
     /** Detail behind an info icon beside the title, e.g. what a gate checks. */
     hint?: ReactNode;
+    /** Where the hint opens; beside the card when above would cover its neighbours. */
+    hintPlacement?: 'rightTop' | 'top';
     icon?: LucideIcon;
     /** Glyph colours when the card is not its kind — a release gate. */
     palette?: { line: string; soft: string };
@@ -408,7 +410,7 @@ const GraphNodeView = memo<NodeProps>(({ data }) => {
               {presentation?.title ??
                 (coordinatorTitleKey ? t(coordinatorTitleKey as any) : node.title)}
               {presentation?.hint && (
-                <Tooltip title={presentation.hint}>
+                <Tooltip placement={presentation.hintPlacement} title={presentation.hint}>
                   <span data-hint className={cx('nodrag', styles.hint)} role="img">
                     <Icon icon={Info} size={13} />
                   </span>
