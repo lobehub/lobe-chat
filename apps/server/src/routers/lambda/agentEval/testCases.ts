@@ -1,6 +1,8 @@
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
+import { router } from '@/libs/trpc/lambda';
+
 import { agentEvalProcedure, agentEvalProcedureWrite } from './procedures';
 import {
   evalCaseEnvironmentSchema,
@@ -10,7 +12,7 @@ import {
   rubricTypeSchema,
 } from './schemas';
 
-export const testCaseProcedures = {
+export const testCaseRouter = router({
   // ============================================
   // TestCase Operations
   // ============================================
@@ -159,4 +161,4 @@ export const testCaseProcedures = {
       ]);
       return { data, total };
     }),
-};
+});

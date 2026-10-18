@@ -2,10 +2,12 @@ import { parseDataset } from '@lobechat/eval-dataset-parser';
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
+import { router } from '@/libs/trpc/lambda';
+
 import { agentEvalProcedure, agentEvalProcedureWrite } from './procedures';
 import { evalConfigSchema, rubricTypeSchema } from './schemas';
 
-export const datasetProcedures = {
+export const datasetRouter = router({
   // ============================================
   // Dataset Operations
   // ============================================
@@ -270,4 +272,4 @@ export const datasetProcedures = {
         else if (imported) await ctx.fileService.deleteFile(input.pathname);
       }
     }),
-};
+});

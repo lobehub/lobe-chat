@@ -1,9 +1,11 @@
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
+import { router } from '@/libs/trpc/lambda';
+
 import { agentEvalProcedure, agentEvalProcedureWrite } from './procedures';
 
-export const experimentProcedures = {
+export const experimentRouter = router({
   // ============================================
   // Experiment Operations
   // ============================================
@@ -87,4 +89,4 @@ export const experimentProcedures = {
         };
       }
     }),
-};
+});

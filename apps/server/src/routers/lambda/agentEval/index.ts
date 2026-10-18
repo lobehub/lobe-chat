@@ -1,15 +1,15 @@
-import { router } from '@/libs/trpc/lambda';
+import { mergeRouters } from '@/libs/trpc/lambda';
 
-import { benchmarkProcedures } from './benchmarks';
-import { datasetProcedures } from './datasets';
-import { experimentProcedures } from './experiments';
-import { runProcedures } from './runs';
-import { testCaseProcedures } from './testCases';
+import { benchmarkRouter } from './benchmarks';
+import { datasetRouter } from './datasets';
+import { experimentRouter } from './experiments';
+import { runRouter } from './runs';
+import { testCaseRouter } from './testCases';
 
-export const agentEvalRouter = router({
-  ...benchmarkProcedures,
-  ...experimentProcedures,
-  ...datasetProcedures,
-  ...testCaseProcedures,
-  ...runProcedures,
-});
+export const agentEvalRouter = mergeRouters(
+  benchmarkRouter,
+  experimentRouter,
+  datasetRouter,
+  testCaseRouter,
+  runRouter,
+);

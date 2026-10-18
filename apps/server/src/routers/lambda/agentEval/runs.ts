@@ -2,6 +2,7 @@ import { TRPCError } from '@trpc/server';
 import debug from 'debug';
 import { z } from 'zod';
 
+import { router } from '@/libs/trpc/lambda';
 import { AgentEvalRunService } from '@/server/services/agentEvalRun';
 import { AgentEvalRunWorkflow } from '@/server/workflows/agentEvalRun';
 
@@ -10,7 +11,7 @@ import { agentEvalProcedure, agentEvalProcedureWrite } from './procedures';
 
 const log = debug('lobe-lambda-router:agent-eval');
 
-export const runProcedures = {
+export const runRouter = router({
   // ============================================
   // Run Operations
   // ============================================
@@ -464,4 +465,4 @@ export const runProcedures = {
 
       return ctx.runModel.update(id, value);
     }),
-};
+});
