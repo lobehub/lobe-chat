@@ -8,6 +8,7 @@ import type {
 } from '@lobechat/types';
 import { TRPCError } from '@trpc/server';
 
+import { GoalModel } from '@/database/models/goal';
 import { MetricModel } from '@/database/models/metric';
 
 import {
@@ -233,16 +234,23 @@ const updateMetricCriteria = async (
   const before = await ctx.coordinatorGraph.getGraph(goalId);
   if (!before) throw new TRPCError({ code: 'NOT_FOUND', message: 'Goal not found' });
   const parkedOnGate = ctx.isParkedOnMeasuredGate(before);
-  const goal = before.goal;
-  const next = edit(goal.config?.acceptance?.metrics ?? []);
-  await ctx.goalModel.update(goalId, {
-    config: {
-      ...goal.config,
-      acceptance: {
-        ...goal.config?.acceptance,
-        metrics: next.length > 0 ? next : undefined,
+  // Read and write the list under the goal's row lock: two editors deriving
+  // their list from the same snapshot would otherwise race, resurrecting a
+  // removed clause or dropping a newly declared one.
+  await ctx.db.transaction(async (tx) => {
+    const model = new GoalModel(tx, ctx.userId, ctx.workspaceId);
+    const goal = await model.lockById(goalId);
+    if (!goal) throw new TRPCError({ code: 'NOT_FOUND', message: 'Goal not found' });
+    const next = edit(goal.config?.acceptance?.metrics ?? []);
+    await model.update(goalId, {
+      config: {
+        ...goal.config,
+        acceptance: {
+          ...goal.config?.acceptance,
+          metrics: next.length > 0 ? next : undefined,
+        },
       },
-    },
+    });
   });
   // Relaxing or dropping a clause can clear a gate the goal is parked on.
   await ctx.reopenIfMeasurementCleared(goalId, parkedOnGate);

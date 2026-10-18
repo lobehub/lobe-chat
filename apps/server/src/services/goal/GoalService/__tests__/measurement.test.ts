@@ -362,4 +362,24 @@ describe('GoalService', () => {
     expect(cleared?.config?.acceptance?.metrics).toBeUndefined();
     expect(cleared?.status).toBe('running');
   });
+
+  it('applies concurrent clause edits one after the other', async () => {
+    // Both edits read the list before either wrote it: one removing "followers"
+    // and one declaring "churn" must end as just "churn", never resurrecting
+    // the removed clause or losing the new one.
+    const service = new GoalService(serverDB, userId);
+    const graph = await service.create({
+      config: { acceptance: { metrics: [{ key: 'followers', target: 1000 }] } },
+      tasks: ['Grow'],
+      title: 'Concurrent clause edits',
+    });
+
+    await Promise.all([
+      service.removeMetricCriteria(graph.goal.id, ['followers']),
+      service.setMetricCriteria(graph.goal.id, [{ key: 'churn', op: 'lte', target: 5 }], 'merge'),
+    ]);
+
+    const goal = await new GoalModel(serverDB, userId).findById(graph.goal.id);
+    expect(goal?.config?.acceptance?.metrics).toEqual([{ key: 'churn', op: 'lte', target: 5 }]);
+  });
 });
