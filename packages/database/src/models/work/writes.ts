@@ -9,12 +9,13 @@ import type {
   WorkType,
   WorkVisibility,
 } from '@lobechat/types';
-import { and, eq, sql } from 'drizzle-orm';
+import { and, eq, inArray, sql } from 'drizzle-orm';
 
 import { documents } from '../../schemas/file';
 import { tasks } from '../../schemas/task';
 import { works, workVersions } from '../../schemas/work';
 import type { LobeChatDatabase } from '../../type';
+import { buildWorkspaceWhere } from '../../utils/workspace';
 import {
   documentOwnership,
   resolveWorkAccessScope,
@@ -339,6 +340,37 @@ export const deleteTaskWork = async (
     .delete(works)
     .where(
       and(workOwnership(ctx), eq(works.resourceType, 'task'), eq(works.resourceId, params.taskId)),
+    );
+};
+
+/**
+ * Mirror a task subtree's visibility onto its Work rows. Works keep an indexed
+ * copy of the resource visibility so gallery/list queries can filter without a
+ * join; `TaskSubtreeRepository.updateVisibility` calls this in the same
+ * transaction as the task write so lists never observe a stale public row.
+ *
+ * Scoped by user/workspace only (not visibility): a workspace owner demoting
+ * another member's public task must still reach that member's Work row.
+ */
+export const setTaskWorksVisibility = async (
+  ctx: WorkContext,
+  taskIds: string[],
+  visibility: WorkVisibility,
+): Promise<void> => {
+  if (taskIds.length === 0) return;
+
+  await ctx.db
+    .update(works)
+    .set({ visibility })
+    .where(
+      and(
+        eq(works.resourceType, 'task'),
+        inArray(works.resourceId, taskIds),
+        buildWorkspaceWhere(
+          { userId: ctx.userId, workspaceId: ctx.workspaceId },
+          { isDeleted: works.isDeleted, userId: works.userId, workspaceId: works.workspaceId },
+        ),
+      ),
     );
 };
 
