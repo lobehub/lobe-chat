@@ -1,40 +1,18 @@
-import { isDraftVerifyRun, normalizeVerifySurface } from '@lobechat/const/verify';
+import { isDraftVerifyRun } from '@lobechat/const/verify';
 import type {
-  AcceptanceAttachment,
   AcceptanceCheckGroup,
-  AcceptanceCheckReviewAction,
   AcceptanceConfig,
-  AcceptanceRejectIntent,
-  AcceptanceReviewAnnotation,
   AcceptanceStatus,
   AcceptanceSubjectType,
-  ReviewProposalOutcome,
-  VerifyAgentPlanConfig,
-  VerifyCheckDecisionDetail,
-  VerifyCheckItem,
   VerifyCheckTally,
   VerifyRunDecisionDetail,
-  VerifySurface,
 } from '@lobechat/types';
 import debug from 'debug';
 
-import {
-  type AcceptanceListProject,
-  type AcceptanceListScope,
-  type AcceptanceListSource,
-  AcceptanceModel,
-} from '@/database/models/acceptance';
-import { AgentModel } from '@/database/models/agent';
-import { DocumentModel } from '@/database/models/document';
-import { GoalModel } from '@/database/models/goal';
-import { ProjectModel } from '@/database/models/project';
-import { TaskModel } from '@/database/models/task';
-import { TaskTopicModel } from '@/database/models/taskTopic';
-import { TopicModel } from '@/database/models/topic';
+import { AcceptanceModel } from '@/database/models/acceptance';
 import { VerifyCheckResultModel } from '@/database/models/verifyCheckResult';
 import { VerifyEvidenceModel } from '@/database/models/verifyEvidence';
 import { VerifyReportModel } from '@/database/models/verifyReport';
-import { VerifyReviewPredictionModel } from '@/database/models/verifyReviewPrediction';
 import { VerifyRunModel } from '@/database/models/verifyRun';
 import type {
   AcceptanceItem,
@@ -42,459 +20,60 @@ import type {
   VerifyRunItem,
 } from '@/database/schemas/verify';
 import type { LobeChatDatabase } from '@/database/type';
-import { notTrashed } from '@/database/utils/softDelete';
 import { notifyAcceptance } from '@/server/services/acceptanceReview/events';
 import { ExpertiseRejectionWorkflow } from '@/server/workflows/expertiseRejection';
 
 import { requireDecidableAcceptance } from '../acceptanceDecision';
+import { type AcceptanceMergeSummary, mergeAcceptanceRounds } from '../acceptanceMerge';
 import {
-  type AcceptanceMergeSummary,
-  findUnresolvedSupersedes,
-  mergeAcceptanceRounds,
-} from '../acceptanceMerge';
-import { computeFalseFlags } from '../feedbackService';
+  assertPlanLeavesAcceptedChecksAlone,
+  type AttachedRun,
+  withUnresolvedSupersedes,
+} from './attachGuards';
+import { buildAcceptanceCheckUnion, tallyCheckUnion } from './checkUnion';
+import type { AcceptanceServiceDeps, WithoutDeps } from './deps';
+import {
+  type AcceptanceListOptions,
+  isInOwnScope,
+  latestCheckCounts,
+  resolveForeignSubjects,
+  resolveProjects,
+  resolveSubjects,
+  statusesForFilter,
+} from './listing';
+import { findRepairOrigin, resolveOrigin } from './origin';
+import { reviewChecks } from './reviewChecks';
+import { statusFromRound } from './statusRollup';
+import {
+  type AcceptanceSubjectSummary,
+  assertSubjectExists,
+  resolveRunTopicTaskId,
+  resolveSubject,
+  resolveSubjectProjectId,
+} from './subjects';
+import {
+  completeTaskForDelivery,
+  completeTaskSubject,
+  reopenRejectedTaskSubject,
+} from './taskLifecycle';
+
+export type { AttachedRun } from './attachGuards';
+export type {
+  AcceptanceCheckHistoryEntry,
+  AcceptanceCheckRow,
+  AcceptanceTimelineEntry,
+} from './checkUnion';
+export { buildAcceptanceCheckUnion, tallyCheckUnion } from './checkUnion';
+export type { AcceptanceListFilter, AcceptanceListOptions } from './listing';
+export type {
+  AcceptanceCheckReviewEvent,
+  AcceptanceCheckReviewOverlay,
+  AcceptanceCheckUserReview,
+} from './reviewOverlay';
+export { buildCheckReviewOverlay } from './reviewOverlay';
+export type { AcceptanceSubjectSummary } from './subjects';
 
 const log = debug('lobe-server:verify-acceptance');
-
-// ============================================
-// Union view — the cross-round check merge (P-14: the complete inventory of
-// acceptance checks, each with its final verdict + evidence; rounds demoted to
-// provenance). Deterministically computed at read time — never stored, so it
-// can't go stale.
-// ============================================
-
-type CheckState = 'passed' | 'failed' | 'uncertain' | 'not_executed';
-
-const resultState = (result: VerifyCheckResultItem): CheckState => {
-  const v = result.verdict ?? result.status;
-  if (v === 'passed' || v === 'failed' || v === 'uncertain') return v;
-  return 'uncertain';
-};
-
-export interface AcceptanceCheckHistoryEntry {
-  roundIndex: number;
-  state: CheckState;
-  verifyRunId: string;
-}
-
-/**
- * One executed step of a check's iteration timeline. Carries the title THAT
- * round used (a superseded item keeps its own wording) so the evolution reads
- * as written, newest rendered first by the viewer.
- */
-export interface AcceptanceTimelineEntry {
-  /** The result row backing this step — the key its evidence attaches by. */
-  resultId: string;
-  roundIndex: number;
-  state: CheckState;
-  title: string;
-  verifyRunId: string;
-}
-
-/** One row of the acceptance union: a check item merged across every round. */
-export interface AcceptanceCheckRow {
-  /**
-   * Set when the item was planned in rounds AFTER the one that produced its
-   * final result (it was carried forward without a re-run): the round the
-   * evidence actually comes from.
-   */
-  carriedFromRound?: number;
-  /** Grouping key for the union view (harness-authored page section / domain). */
-  category: string | null;
-  /** Passed now, but failed in at least one earlier round — a repaired check. */
-  fixed: boolean;
-  /** Verdict trail across rounds, oldest first — only rounds that produced a result. */
-  history: AcceptanceCheckHistoryEntry[];
-  /** The `checkItemId` every round agrees on (the successor id after folding). */
-  id: string;
-  /** First round whose plan (or results) named this check (or one it supersedes). */
-  introducedAtRound: number;
-  /** The latest plan snapshot of this item (carries method/expected/requiredEvidence). */
-  planItem?: VerifyCheckItem;
-  required: boolean;
-  /** The final (latest-round) result row, or undefined when the item never ran. */
-  result?: VerifyCheckResultItem;
-  /** Round the final result came from. */
-  resultRound?: number;
-  /** How many executed steps the timeline holds (re-runs + folded generations). */
-  revisions: number;
-  /**
-   * Stable 1-based label across the whole union ("C3") — first-appearance
-   * order over the round chain, so earlier rounds' numbering never shifts when
-   * a new round lands. Feedback and annotations reference checks by it.
-   * (Folding a superseded generation removes its row, so numbering after the
-   * folded id shifts by one — the successor keeps its own slot.)
-   */
-  seq: number;
-  /** Final cross-round state — what the decision is made on. */
-  state: CheckState;
-  /** Ids folded into this row via `supersedes` declarations. */
-  supersededIds: string[];
-  /** Per-item product surface (from the plan item's `verifierConfig.surface`). */
-  surface: VerifySurface | null;
-  /** The executed steps, oldest first — drives the iteration-history timeline. */
-  timeline: AcceptanceTimelineEntry[];
-  title: string;
-  /** The wording evolved across the timeline (a real iteration, not a re-run). */
-  titleChanged: boolean;
-}
-
-interface RoundInput {
-  results: VerifyCheckResultItem[];
-  run: VerifyRunItem;
-}
-
-const itemSurface = (item: VerifyCheckItem | undefined): VerifySurface | null => {
-  const raw = (item?.verifierConfig as VerifyAgentPlanConfig | undefined)?.surface;
-  return typeof raw === 'string' ? normalizeVerifySurface(raw) : null;
-};
-
-/** A run chained onto an acceptance, with anything the author should fix. */
-export type AttachedRun = VerifyRunItem & {
-  /** `supersedes` ids naming no check of this acceptance; they fold nothing. */
-  unresolvedSupersedes?: string[];
-};
-
-/**
- * Merge a whole round chain into the union check list.
- *
- * Alignment is two-layered, both harness-authored (no fuzzy matching):
- * - the stable `checkItemId` aligns re-runs of the same check across rounds;
- * - a plan item's `supersedes` folds the ids of checks it REPLACES into this
- *   item's iteration timeline, so a semantically-dead older wording stops
- *   showing up as its own row.
- */
-export const buildAcceptanceCheckUnion = (
-  rounds: RoundInput[],
-  groups: AcceptanceCheckGroup[] = [],
-): AcceptanceCheckRow[] => {
-  const ordered = [...rounds].sort((a, b) => (a.run.roundIndex ?? 0) - (b.run.roundIndex ?? 0));
-
-  const rows = new Map<string, AcceptanceCheckRow>();
-  // Last round whose PLAN named each item — drives the carried-forward flag.
-  const lastPlannedRound = new Map<string, number>();
-  // A `supersedes` entry names the check the author knew: often the plan item id
-  // they wrote, while the row is keyed by the criterion minted for it. Remember
-  // every plan item id's row so the fold below resolves either spelling.
-  const logicalIdByPlanItemId = new Map<string, string>();
-
-  const ensureRow = (id: string, roundIndex: number): AcceptanceCheckRow => {
-    const existing = rows.get(id);
-    if (existing) return existing;
-    const row: AcceptanceCheckRow = {
-      category: null,
-      fixed: false,
-      history: [],
-      id,
-      introducedAtRound: roundIndex,
-      required: true,
-      revisions: 0,
-      seq: 0,
-      state: 'not_executed',
-      supersededIds: [],
-      surface: null,
-      timeline: [],
-      title: id,
-      titleChanged: false,
-    };
-    rows.set(id, row);
-    return row;
-  };
-
-  for (const { results, run } of ordered) {
-    const roundIndex = run.roundIndex ?? 0;
-    const plan = (run.plan ?? []) as VerifyCheckItem[];
-    const planById = new Map(plan.map((item) => [item.id, item]));
-    const logicalIdByCheckItemId = new Map(
-      plan.map((item) => [
-        item.id,
-        item.sourceFlowNode ? item.id : (item.sourceCriterionId ?? item.id),
-      ]),
-    );
-
-    for (const item of plan) {
-      const logicalId = item.sourceFlowNode ? item.id : (item.sourceCriterionId ?? item.id);
-      const row = ensureRow(logicalId, roundIndex);
-      logicalIdByPlanItemId.set(item.id, logicalId);
-      // The latest snapshot wins: repair rounds may refine method/expected.
-      if (item.sourceFlowNode) {
-        // A rerun is a fresh execution; historical evidence stays in the timeline.
-        row.result = undefined;
-        row.resultRound = undefined;
-      }
-      row.planItem = item;
-      row.title = item.title;
-      row.required = item.required;
-      row.category = item.category ?? row.category;
-      row.surface = itemSurface(item) ?? row.surface;
-      lastPlannedRound.set(logicalId, roundIndex);
-    }
-
-    for (const result of results) {
-      const logicalId = logicalIdByCheckItemId.get(result.checkItemId) ?? result.checkItemId;
-      const row = ensureRow(logicalId, roundIndex);
-      const state = resultState(result);
-      // The title THIS round used — the current round's snapshot, not the final one.
-      const roundTitle =
-        planById.get(result.checkItemId)?.title ?? result.checkItemTitle ?? row.title;
-      row.history.push({ roundIndex, state, verifyRunId: run.id });
-      row.timeline.push({
-        resultId: result.id,
-        roundIndex,
-        state,
-        title: roundTitle,
-        verifyRunId: run.id,
-      });
-      row.result = result;
-      row.resultRound = roundIndex;
-      if (!row.planItem && result.checkItemTitle) row.title = result.checkItemTitle;
-      if (!row.planItem) row.required = result.required;
-    }
-  }
-
-  // Fold superseded generations into their successor's timeline, in round
-  // order so a chain (C replaced by B replaced by A) collapses fully into A.
-  const foldOrder = [...rows.values()].sort((a, b) => a.introducedAtRound - b.introducedAtRound);
-  for (const row of foldOrder) {
-    const supersedes = (row.planItem?.supersedes ?? []).map((id) =>
-      rows.has(id) ? id : (logicalIdByPlanItemId.get(id) ?? id),
-    );
-    for (const oldId of supersedes) {
-      const old = rows.get(oldId);
-      if (!old || old === row) continue;
-      row.timeline = [...old.timeline, ...row.timeline].sort((a, b) => a.roundIndex - b.roundIndex);
-      row.history = [...old.history, ...row.history].sort((a, b) => a.roundIndex - b.roundIndex);
-      row.introducedAtRound = Math.min(row.introducedAtRound, old.introducedAtRound);
-      row.supersededIds = [...row.supersededIds, ...old.supersededIds, old.id];
-      // The successor's own state stands; a never-run successor inherits the
-      // superseded item's final result so the row still shows evidence.
-      if (!row.result && old.result) {
-        row.result = old.result;
-        row.resultRound = old.resultRound;
-      }
-      rows.delete(oldId);
-    }
-  }
-
-  // Number the surviving rows by first appearance (Map insertion order) —
-  // stable as rounds accrue, because a new round only appends new ids.
-  let seq = 0;
-  for (const row of rows.values()) row.seq = ++seq;
-
-  for (const row of rows.values()) {
-    row.state = row.result ? resultState(row.result) : 'not_executed';
-    row.fixed = row.state === 'passed' && row.history.some((entry) => entry.state === 'failed');
-    row.revisions = row.timeline.length;
-    row.titleChanged = row.timeline.some((entry) => entry.title !== row.title);
-    // Carried forward: a later round still planned the item but never re-ran it,
-    // so the final evidence predates the current round.
-    const planned = lastPlannedRound.get(row.id);
-    if (row.resultRound !== undefined && planned !== undefined && planned > row.resultRound) {
-      row.carriedFromRound = row.resultRound;
-    }
-  }
-
-  // Organization belongs to the current acceptance, not its immutable execution
-  // snapshots. Preserve IDs, numbering and result references when a check moves.
-  const grouped = new Map<string, AcceptanceCheckRow>();
-  for (const group of groups) {
-    for (const id of group.checkItemIds) {
-      const row = rows.get(id);
-      if (row) grouped.set(id, { ...row, category: group.title });
-    }
-  }
-  return [...grouped.values(), ...[...rows.values()].filter((row) => !grouped.has(row.id))];
-};
-
-/**
- * The union's own three-way split, counted — the number a summary can show
- * without opening the list.
- *
- * It counts UNION ROWS, not one round's result rows. A repair round re-runs the
- * check it was asked to fix and carries the rest forward, so the current round's
- * rows are a subset of the union: counting them would print "1 passed" beside a
- * list that expands to the repaired check plus everything it carried, and the
- * two readings of one acceptance would contradict each other.
- */
-export const tallyCheckUnion = (checks: AcceptanceCheckRow[]): VerifyCheckTally => {
-  let failed = 0;
-  let passed = 0;
-  let unjudged = 0;
-  for (const check of checks) {
-    if (check.state === 'passed') passed++;
-    else if (check.state === 'failed') failed++;
-    // `uncertain` and `not_executed` are both "planned, never judged" — the same
-    // split the acceptance's criteria list draws.
-    else unjudged++;
-  }
-  return { failed, passed, total: checks.length, unjudged };
-};
-
-// ============================================
-// User review overlay — the per-check human verdict layered onto the union.
-// An accept or ignore is sticky across rounds; a reject binds to the round it
-// judged and demotes to iteration history once a newer round lands.
-// ============================================
-
-/** The standing user verdict on one union row, derived from its result rows. */
-export interface AcceptanceCheckUserReview {
-  action: AcceptanceCheckReviewAction;
-  annotations?: AcceptanceReviewAnnotation[];
-  /** Attachments backing a reject, resolved to URLs by the bundle read. */
-  attachments?: AcceptanceAttachment[];
-  comment?: string;
-  createdAt: string;
-  roundIndex: number;
-  /**
-   * A reject made against a round older than the current one — the feedback
-   * was (or is being) consumed by a newer round, so the check is back to
-   * awaiting the user's confirmation instead of standing rejected.
-   */
-  stale: boolean;
-}
-
-/**
- * One user decision on one executed step of a check, projected out of the
- * result rows (`user_decision` + `user_decision_detail`) — no dedicated store:
- * each round's row keeps the decision the user made on THAT round's evidence.
- */
-export interface AcceptanceCheckReviewEvent {
-  action: AcceptanceCheckReviewAction;
-  annotations?: AcceptanceReviewAnnotation[];
-  /** Attachments backing the reject, resolved to URLs by the bundle read. */
-  attachments?: AcceptanceAttachment[];
-  comment?: string;
-  /** When the decision was made (ISO 8601; falls back to the row's timestamps). */
-  createdAt: string;
-  /** Who decided (user id). Absent on legacy rows, which only the owner could write. */
-  decidedBy?: string;
-  /** Uploaded/pasted screenshots backing the reject (FKs to files). */
-  fileIds?: string[];
-  /** The result row the decision is stamped on. */
-  id: string;
-  roundIndex: number;
-}
-
-export interface AcceptanceCheckReviewOverlay {
-  /** The full review trail for this check, oldest first — the iteration history input. */
-  reviews: AcceptanceCheckReviewEvent[];
-  /** The newest review, with its staleness resolved against the current round. */
-  userReview?: AcceptanceCheckUserReview;
-}
-
-/**
- * Project a union row's review trail + standing user verdict from its result
- * rows. Superseded generations' decisions ride along automatically — the union
- * already folded their results into this row's timeline.
- */
-export const buildCheckReviewOverlay = (
-  check: Pick<AcceptanceCheckRow, 'timeline'> & Partial<Pick<AcceptanceCheckRow, 'planItem'>>,
-  resultsById: Map<string, VerifyCheckResultItem>,
-  currentRoundIndex: number,
-): AcceptanceCheckReviewOverlay => {
-  const reviews: AcceptanceCheckReviewEvent[] = [];
-  for (const entry of check.timeline) {
-    const result = resultsById.get(entry.resultId);
-    const decision = result?.userDecision;
-    if (
-      !result ||
-      (decision !== 'accepted' && decision !== 'rejected' && decision !== 'overridden')
-    )
-      continue;
-    const detail = result.userDecisionDetail ?? undefined;
-    reviews.push({
-      action: decision === 'accepted' ? 'accept' : decision === 'overridden' ? 'ignore' : 'reject',
-      annotations: detail?.annotations,
-      comment: detail?.comment,
-      createdAt: detail?.decidedAt ?? (result.completedAt ?? result.createdAt)?.toISOString() ?? '',
-      decidedBy: detail?.decidedBy,
-      fileIds: detail?.fileIds,
-      id: result.id,
-      // A carried-forward check is judged at the CURRENT round even though its
-      // evidence row belongs to an older one — the detail records that round.
-      roundIndex: detail?.roundIndex ?? entry.roundIndex,
-    });
-  }
-  // ISO strings order lexically; ties (legacy rows without decidedAt) keep round order.
-  reviews.sort((a, b) => a.createdAt.localeCompare(b.createdAt) || a.roundIndex - b.roundIndex);
-
-  const latest = reviews.at(-1);
-  if (!latest) return { reviews };
-  return {
-    reviews,
-    userReview: {
-      action: latest.action,
-      annotations: latest.annotations,
-      comment: latest.comment,
-      createdAt: latest.createdAt,
-      roundIndex: latest.roundIndex,
-      stale:
-        (Boolean(check.planItem?.sourceFlowNode) || latest.action === 'reject') &&
-        latest.roundIndex < currentRoundIndex,
-    },
-  };
-};
-
-// ============================================
-// Status rollup — the aggregate's user-facing lifecycle state, derived from the
-// current (highest) round. `accepted` is terminal and user-owned: recompute
-// never overwrites it. `rejected` holds until a newer round re-opens the loop.
-// ============================================
-
-/** Derive the aggregate status from the current round's pipeline state. */
-const statusFromRound = (run: VerifyRunItem, hasReport: boolean): AcceptanceStatus => {
-  switch (run.status) {
-    case 'planned': {
-      return 'planned';
-    }
-    case 'verifying': {
-      return 'verifying';
-    }
-    case 'repairing': {
-      return 'repairing';
-    }
-    case 'errored': {
-      return 'errored';
-    }
-    // Both settled outcomes await the same human decision — the verdict is
-    // advice, acceptance is the user's event (P-12).
-    case 'passed':
-    case 'failed':
-    case 'delivered': {
-      return 'delivered';
-    }
-    default: {
-      // Ingested rounds carry no rollup status: a published report means the
-      // round has settled and awaits the decision; otherwise it is still open.
-      return hasReport ? 'delivered' : 'verifying';
-    }
-  }
-};
-
-export interface AcceptanceSubjectSummary {
-  id: string;
-  title: string | null;
-  type: AcceptanceSubjectType;
-}
-
-/** The list filter as a status set — one definition for the flat and paged reads. */
-export type AcceptanceListFilter = 'active' | 'all' | 'completed';
-
-/** Every narrowing the list panel can apply, shared by the flat and paged reads. */
-export interface AcceptanceListOptions {
-  filter?: AcceptanceListFilter;
-  /** A project id, or `null` for acceptances filed under no project. */
-  projectId?: AcceptanceListProject;
-  scope?: AcceptanceListScope;
-  source?: AcceptanceListSource;
-}
-
-const statusesForFilter = (filter: AcceptanceListFilter): AcceptanceStatus[] | undefined => {
-  if (filter === 'active')
-    return ['pending', 'planned', 'verifying', 'repairing', 'delivered', 'rejected', 'errored'];
-  if (filter === 'completed') return ['accepted', 'closed'];
-  return undefined;
-};
 
 export class AcceptanceService {
   private readonly db: LobeChatDatabase;
@@ -536,58 +115,19 @@ export class AcceptanceService {
     this.reportModel = new VerifyReportModel(db, userId, workspaceId);
   }
 
-  /**
-   * Validate the subject exists in the caller's scope before creating an
-   * aggregate for it — the table deliberately has no FK (polymorphic subject),
-   * so this is where dangling aggregates are prevented.
-   */
-  private assertSubjectExists = async (
-    subjectType: AcceptanceSubjectType,
-    subjectId: string,
-  ): Promise<void> => {
-    // Standalone acceptances are the subject themselves. They deliberately do
-    // not require a Task/Topic/Document row, which keeps external repositories
-    // from having to manufacture a LobeHub task before publishing evidence.
-    if (subjectType === 'standalone') return;
-
-    const found = await this.findSubject(subjectType, subjectId);
-    if (!found) {
-      throw new Error(`${subjectType} "${subjectId}" not found in the current workspace`);
-    }
-  };
-
-  private findSubject = async (
-    subjectType: AcceptanceSubjectType,
-    subjectId: string,
-  ): Promise<{ title: string | null } | null> => {
-    switch (subjectType) {
-      case 'task': {
-        const task = await new TaskModel(this.db, this.userId, this.workspaceId).resolve(subjectId);
-        return task ? { title: task.name ?? task.identifier } : null;
-      }
-      case 'topic': {
-        // Creator-facing lookup: an agent-share visitor topic must not be
-        // treated as a valid acceptance subject for the creator.
-        const topic = await new TopicModel(this.db, this.userId, this.workspaceId).findOwnTopicById(
-          subjectId,
-        );
-        return topic ? { title: topic.title ?? null } : null;
-      }
-      case 'document': {
-        const doc = await new DocumentModel(this.db, this.userId, this.workspaceId).findById(
-          subjectId,
-        );
-        return doc ? { title: doc.title ?? null } : null;
-      }
-      case 'goal_gate': {
-        const goal = await this.goalOfGate(subjectId);
-        return goal ? { title: goal.title } : null;
-      }
-      case 'standalone': {
-        return null;
-      }
-    }
-  };
+  /** Collaborators the extracted sub-domain functions read — resolved on every call. */
+  private get deps(): AcceptanceServiceDeps {
+    return {
+      acceptanceModel: this.acceptanceModel,
+      actorUserId: this.actorUserId,
+      db: this.db,
+      loadRounds: this.loadRounds,
+      resultModel: this.resultModel,
+      runModel: this.runModel,
+      userId: this.userId,
+      workspaceId: this.workspaceId,
+    };
+  }
 
   /** Get (or create) the aggregate for a subject, validating the subject first. */
   ensureForSubject = async (
@@ -595,8 +135,8 @@ export class AcceptanceService {
     subjectId: string,
     defaults?: { config?: AcceptanceConfig; requirement?: string; title?: string },
   ): Promise<AcceptanceItem> => {
-    await this.assertSubjectExists(subjectType, subjectId);
-    const projectId = await this.resolveSubjectProjectId(subjectType, subjectId);
+    await assertSubjectExists(this.deps, subjectType, subjectId);
+    const projectId = await resolveSubjectProjectId(this.deps, subjectType, subjectId);
     return this.acceptanceModel.ensureForSubject(subjectType, subjectId, {
       config: defaults?.config,
       projectId,
@@ -622,54 +162,9 @@ export class AcceptanceService {
     defaults?: { requirement?: string; title?: string },
   ): Promise<AcceptanceItem> => {
     const taskId =
-      subjectType === 'topic' ? await this.resolveRunTopicTaskId(subjectId) : undefined;
+      subjectType === 'topic' ? await resolveRunTopicTaskId(this.deps, subjectId) : undefined;
     if (taskId) return this.ensureForSubject('task', taskId, defaults);
     return this.ensureForSubject(subjectType, subjectId, defaults);
-  };
-
-  private resolveRunTopicTaskId = async (topicId: string): Promise<string | undefined> => {
-    const taskTopic = await new TaskTopicModel(
-      this.db,
-      this.userId,
-      this.workspaceId,
-    ).findByTopicId(topicId);
-    if (!taskTopic) return;
-    if (await this.acceptanceModel.findBySubject('topic', topicId)) return;
-    const task = await new TaskModel(this.db, this.userId, this.workspaceId).findById(
-      taskTopic.taskId,
-    );
-    if (!task || task.automationMode) return;
-    return task.id;
-  };
-
-  /** The Goal a release-gate subject (its review node) belongs to. */
-  private goalOfGate = (nodeId: string) =>
-    new GoalModel(this.db, this.userId, this.workspaceId).findByNode(nodeId);
-
-  private resolveSubjectProjectId = async (
-    subjectType: AcceptanceSubjectType,
-    subjectId: string,
-  ): Promise<string | null> => {
-    if (subjectType === 'task') {
-      return (
-        (await new TaskModel(this.db, this.userId, this.workspaceId).resolve(subjectId))
-          ?.projectId ?? null
-      );
-    }
-    if (subjectType === 'goal_gate') return (await this.goalOfGate(subjectId))?.projectId ?? null;
-    if (subjectType === 'topic') {
-      const taskTopic = await new TaskTopicModel(
-        this.db,
-        this.userId,
-        this.workspaceId,
-      ).findByTopicId(subjectId);
-      if (!taskTopic) return null;
-      return (
-        (await new TaskModel(this.db, this.userId, this.workspaceId).resolve(taskTopic.taskId))
-          ?.projectId ?? null
-      );
-    }
-    return null;
   };
 
   /**
@@ -691,96 +186,6 @@ export class AcceptanceService {
     return this.attachResolvedRun(runId, acceptance);
   };
 
-  /**
-   * An accepted check is settled and its verdict is sticky: a later result on
-   * the same id inherits the tick, so the round publishes green and the
-   * reviewer is never told there is anything new to look at. That is only safe
-   * while nothing writes to a settled check, which is what this enforces —
-   * refusing the whole round rather than letting the write through, because a
-   * partially attached round is harder to reason about than a rejected one.
-   *
-   * The escape hatch is a new check id: a criterion the reviewer has not ruled
-   * on gets its own row and shows up unreviewed, which is what "there is more
-   * to look at here" should look like.
-   */
-  private assertPlanLeavesAcceptedChecksAlone = async (
-    run: VerifyRunItem,
-    acceptanceId: string,
-  ): Promise<void> => {
-    // Every identity by which an incoming item could come to rest on an
-    // existing row. The union keys rows by `sourceCriterionId ?? id`, and a
-    // `supersedes` declaration folds the named row into this one — so comparing
-    // physical ids alone lets both routes write into a settled row unblocked.
-    const candidates = new Map<string, string>();
-    for (const item of run.plan ?? []) {
-      const logicalId = item.sourceFlowNode ? item.id : (item.sourceCriterionId ?? item.id);
-      if (logicalId) candidates.set(logicalId, item.id);
-      if (item.id) candidates.set(item.id, item.id);
-      for (const superseded of item.supersedes ?? []) {
-        if (superseded) candidates.set(superseded, item.id);
-      }
-    }
-    if (candidates.size === 0) return;
-
-    const runs = await this.runModel.listByAcceptance(acceptanceId);
-    if (runs.length === 0) return;
-
-    const results = await this.resultModel.listByRuns(runs.map((item) => item.id));
-    const resultsById = new Map(results.map((result) => [result.id, result]));
-    const resultsByRun = new Map<string, VerifyCheckResultItem[]>();
-    for (const result of results) {
-      if (!result.verifyRunId) continue;
-      const bucket = resultsByRun.get(result.verifyRunId) ?? [];
-      bucket.push(result);
-      resultsByRun.set(result.verifyRunId, bucket);
-    }
-
-    const currentRoundIndex = runs.at(-1)?.roundIndex ?? 0;
-    const checks = buildAcceptanceCheckUnion(
-      runs.map((item) => ({ results: resultsByRun.get(item.id) ?? [], run: item })),
-    );
-
-    // Read the standing verdict exactly the way the page renders it, so the
-    // rule cannot diverge from the tick the reviewer actually sees.
-    const settled = checks.filter((check) => {
-      const { userReview } = buildCheckReviewOverlay(check, resultsById, currentRoundIndex);
-      return userReview?.action === 'accept' && !userReview.stale;
-    });
-
-    // A superseded generation's id is folded into its successor's row, so match
-    // on both — re-running `old-id` after `new-id supersedes: [old-id]` was
-    // accepted is the same write to the same settled row.
-    const blocked = new Set<string>();
-    for (const check of settled) {
-      blocked.add(check.id);
-      for (const superseded of check.supersededIds ?? []) blocked.add(superseded);
-    }
-    // Rows are keyed by criterion, but an author names a check by the plan item
-    // id they wrote — in `supersedes` as much as in a re-run. Block those too.
-    for (const { plan } of runs) {
-      for (const item of (plan ?? []) as VerifyCheckItem[]) {
-        const logicalId = item.sourceFlowNode ? item.id : (item.sourceCriterionId ?? item.id);
-        if (blocked.has(logicalId)) blocked.add(item.id);
-      }
-    }
-
-    // Report the plan item the author has to change, not the internal identity
-    // it collided through — those can differ, and only the former is editable.
-    const offenders = [
-      ...new Set(
-        [...candidates]
-          .filter(([identity]) => blocked.has(identity))
-          .map(([, planItemId]) => planItemId),
-      ),
-    ];
-    if (offenders.length === 0) return;
-
-    throw new Error(
-      `Already accepted, so ${offenders.length === 1 ? 'this check' : 'these checks'} cannot take another result: ` +
-        `${offenders.join(', ')}. An accepted check is settled — publish new work under a new check id instead.`,
-    );
-  };
-
   private attachResolvedRun = async (
     runId: string,
     acceptance: AcceptanceItem,
@@ -794,7 +199,7 @@ export class AcceptanceService {
     // A retried attach (the response of the first one was lost) still reports
     // the warnings the first one did.
     if (existing.acceptanceId === acceptanceId)
-      return this.withUnresolvedSupersedes(existing, acceptanceId);
+      return withUnresolvedSupersedes(this.deps, existing, acceptanceId);
     if (existing.acceptanceId) {
       throw new Error('This verify run already belongs to another acceptance');
     }
@@ -804,7 +209,7 @@ export class AcceptanceService {
       );
     }
 
-    await this.assertPlanLeavesAcceptedChecksAlone(existing, acceptanceId);
+    await assertPlanLeavesAcceptedChecksAlone(this.deps, existing, acceptanceId);
 
     // A round that is still only planned has nothing to preserve: the incoming
     // run folds into it instead of pushing the ledger to yet another number.
@@ -813,7 +218,7 @@ export class AcceptanceService {
     const latest = (await this.runModel.listByAcceptance(acceptanceId)).at(-1);
     // Resolved against the chain as it stood before this run joined it.
     const withWarnings = (attached: VerifyRunItem): Promise<AttachedRun> =>
-      this.withUnresolvedSupersedes(attached, acceptanceId, existing);
+      withUnresolvedSupersedes(this.deps, attached, acceptanceId, existing);
     // A run that already executed cannot fold (`foldIntoRound` refuses any source
     // with results): its verdicts belong to its own round. It is appended after
     // the draft instead — the path a verification driven by the CLI takes, since
@@ -847,36 +252,6 @@ export class AcceptanceService {
     if (latest) this.distilSettledRound(acceptanceId, latest.id);
 
     return await withWarnings(run);
-  };
-
-  /**
-   * Attach `unresolvedSupersedes` — `supersedes` ids of `source`'s plan that
-   * name no check of the acceptance — to the run handed back to the caller.
-   * The source run itself is excluded from the chain it is resolved against.
-   */
-  private withUnresolvedSupersedes = async (
-    attached: VerifyRunItem,
-    acceptanceId: string,
-    source: VerifyRunItem = attached,
-  ): Promise<AttachedRun> => {
-    const plan = (source.plan ?? []) as VerifyCheckItem[];
-    if (!plan.some((item) => item.supersedes?.length)) return attached;
-
-    const priorRuns = (await this.runModel.listByAcceptance(acceptanceId)).filter(
-      (run) => run.id !== source.id,
-    );
-    // Results of the earlier rounds and of the source run itself: an executed
-    // run may supersede one of its own result-only checks.
-    const priorResults = await this.resultModel.listByRuns([
-      ...priorRuns.map((run) => run.id),
-      source.id,
-    ]);
-    const unresolvedSupersedes = findUnresolvedSupersedes(
-      plan,
-      priorRuns,
-      priorResults.map((result) => result.checkItemId),
-    );
-    return unresolvedSupersedes.length ? { ...attached, unresolvedSupersedes } : attached;
   };
 
   /**
@@ -1050,7 +425,8 @@ export class AcceptanceService {
     // the way, and those rejections are exactly the material.
     this.distilSettledRound(acceptanceId, settled);
 
-    if (acceptance.subjectType === 'task') await this.completeTaskSubject(acceptance.subjectId);
+    if (acceptance.subjectType === 'task')
+      await completeTaskSubject(this.deps, acceptance.subjectId);
 
     return (await this.acceptanceModel.findById(acceptanceId))!;
   };
@@ -1089,7 +465,8 @@ export class AcceptanceService {
     await this.acceptanceModel.updateStatus(acceptanceId, 'accepted');
     notifyAcceptance(acceptanceId, 'session', this.actorUserId);
     if (current) this.distilSettledRound(acceptanceId, current.id);
-    if (acceptance.subjectType === 'task') await this.completeTaskSubject(acceptance.subjectId);
+    if (acceptance.subjectType === 'task')
+      await completeTaskSubject(this.deps, acceptance.subjectId);
 
     log(
       'acceptance %s accepted by merge of %s#%d (was %s)',
@@ -1122,135 +499,13 @@ export class AcceptanceService {
     this.distilSettledRound(acceptanceId, settled);
 
     if (acceptance.subjectType === 'task')
-      await this.reopenRejectedTaskSubject(acceptance.subjectId);
+      await reopenRejectedTaskSubject(this.deps, acceptance.subjectId);
 
     return (await this.acceptanceModel.findById(acceptanceId))!;
   };
 
-  /**
-   * Record the user's verdict on one or more union checks (a group-level
-   * "accept all" is just many ids). Stamps `user_decision` +
-   * `user_decision_detail` on each check's FINAL result row — the same data
-   * flywheel every other decision path writes (FP/FN flags included). Unlike
-   * the aggregate-level accept/reject, a per-check review is allowed at any
-   * lifecycle state — confirming a check mid-chain is exactly the point.
-   */
-  reviewChecks = async (
-    acceptanceId: string,
-    input: {
-      action: AcceptanceCheckReviewAction;
-      annotations?: AcceptanceReviewAnnotation[];
-      checkItemIds: string[];
-      comment?: string;
-      fileIds?: string[];
-      /** Recorded when this decision answered a model proposal. */
-      proposal?: Omit<ReviewProposalOutcome, 'respondedAt'>;
-      /** Which of the three jobs a reject is doing; absent means unclassified. */
-      rejectIntent?: AcceptanceRejectIntent;
-    },
-  ): Promise<{ resultIds: string[] }> => {
-    const acceptance = await this.acceptanceModel.findById(acceptanceId);
-    if (!acceptance) throw new Error(`Acceptance "${acceptanceId}" not found`);
-
-    const { results, runs } = await this.loadRounds(acceptanceId);
-
-    // Reviews address union rows — resolve each id (or a superseded alias) to
-    // its row, so a stale client can't stamp junk ids.
-    const resultsByRun = new Map<string, VerifyCheckResultItem[]>();
-    for (const result of results) {
-      const bucket = resultsByRun.get(result.verifyRunId!) ?? [];
-      bucket.push(result);
-      resultsByRun.set(result.verifyRunId!, bucket);
-    }
-    const checks = buildAcceptanceCheckUnion(
-      runs.map((run) => ({ results: resultsByRun.get(run.id) ?? [], run })),
-    );
-    const rowById = new Map<string, AcceptanceCheckRow>();
-    for (const check of checks) {
-      rowById.set(check.id, check);
-      for (const oldId of check.supersededIds) rowById.set(oldId, check);
-    }
-
-    const unknown = input.checkItemIds.filter((id) => !rowById.has(id));
-    if (unknown.length > 0) {
-      throw new Error(`Unknown check item(s): ${unknown.join(', ')}`);
-    }
-
-    // The decision is stamped on evidence — a never-executed check has no
-    // result row to judge, so it cannot be reviewed yet.
-    const targets = new Map<string, VerifyCheckResultItem>();
-    const notExecuted: string[] = [];
-    for (const id of input.checkItemIds) {
-      const row = rowById.get(id)!;
-      if (row.result) targets.set(row.result.id, row.result);
-      else notExecuted.push(id);
-    }
-    if (notExecuted.length > 0) {
-      throw new Error(`Check(s) never executed — nothing to review: ${notExecuted.join(', ')}`);
-    }
-
-    const decision =
-      input.action === 'accept'
-        ? 'accepted'
-        : input.action === 'ignore'
-          ? 'overridden'
-          : 'rejected';
-    const currentRoundIndex = runs.at(-1)?.roundIndex ?? 0;
-    const detail: VerifyCheckDecisionDetail = {
-      decidedAt: new Date().toISOString(),
-      decidedBy: this.actorUserId,
-      roundIndex: currentRoundIndex,
-      ...(input.comment ? { comment: input.comment } : {}),
-      ...(input.annotations?.length ? { annotations: input.annotations } : {}),
-      ...(input.fileIds?.length ? { fileIds: input.fileIds } : {}),
-      // Only meaningful on a reject — an accept has no intent to classify.
-      ...(input.rejectIntent && input.action === 'reject'
-        ? { rejectIntent: input.rejectIntent }
-        : {}),
-      ...(input.proposal
-        ? { proposal: { ...input.proposal, respondedAt: new Date().toISOString() } }
-        : {}),
-    };
-
-    // One transaction for the decision AND the proposal's answer. Written
-    // separately, a failing second write left the check rejected while its
-    // prediction stayed unanswered — and the decision then HIDES the proposal,
-    // so nothing could ever reconcile the pair again. Agreement analysis reads
-    // those two rows as a matched set; a durable split is worse than failing.
-    await this.db.transaction(async (tx) => {
-      const resultModel = new VerifyCheckResultModel(tx, this.userId, this.workspaceId);
-
-      await Promise.all(
-        [...targets.values()].map((result) => {
-          const { isFalsePositive, isFalseNegative } = computeFalseFlags(result.verdict, decision);
-          return resultModel.update(result.id, {
-            isFalseNegative,
-            isFalsePositive,
-            userDecision: decision,
-            userDecisionDetail: detail,
-          });
-        }),
-      );
-
-      if (input.proposal) {
-        const answered = await new VerifyReviewPredictionModel(
-          tx,
-          this.userId,
-          this.workspaceId,
-        ).adjudicate(input.proposal.predictionId, {
-          adjudication: input.proposal.adjudication,
-          edit: input.proposal.edit,
-        });
-        // A zero-row update means the id was wrong or not ours; committing the
-        // decision alone would produce exactly the split this transaction exists
-        // to prevent.
-        if (!answered) throw new Error(`Proposal "${input.proposal.predictionId}" not found`);
-      }
-    });
-
-    log('acceptance %s: %d check result(s) marked %s', acceptanceId, targets.size, decision);
-    return { resultIds: [...targets.keys()] };
-  };
+  /** Records the user's verdict on one or more union checks — see {@link reviewChecks}. */
+  reviewChecks = (...args: WithoutDeps<typeof reviewChecks>) => reviewChecks(this.deps, ...args);
 
   /** Stamps the decision on the current round and returns it — the round that decision settles. */
   private stampDecision = async (
@@ -1272,279 +527,22 @@ export class AcceptanceService {
     return current.id;
   };
 
-  /**
-   * Completes a task subject that verification didn't already settle — on
-   * accept (e.g. the round failed but the user accepted anyway) and when an
-   * ingested round delivers. Best-effort: a task error must not undo the
-   * recorded acceptance.
-   */
-  private completeTaskSubject = async (subjectId: string): Promise<void> => {
-    try {
-      const taskModel = new TaskModel(this.db, this.userId, this.workspaceId);
-      const task = await taskModel.resolve(subjectId);
-      if (!task || ['canceled', 'completed', 'failed'].includes(task.status)) return;
-
-      // TaskService cascades checkpoint / sibling rollup / downstream unlock —
-      // the same completion path settle.ts drives on a passed verify. Loaded
-      // lazily because `TaskService` reaches this module through its acceptance
-      // resolution, so a static import would close a module cycle.
-      const { TaskService } = await import('../../task');
-      await new TaskService(this.db, this.userId, this.workspaceId).updateStatus({
-        id: task.id,
-        status: 'completed',
-      });
-      log('acceptance → task %s completed', task.id);
-    } catch (error) {
-      log('completeTaskSubject failed (non-fatal): %O', error);
-    }
-  };
-
-  /**
-   * The task whose status follows its acceptance's lifecycle: delivered →
-   * completed, rejected → reopened. Goal graph tasks are driven by their
-   * coordinator (a paused task is its retry signal) and recurring tasks stay
-   * on their schedule, so neither follows the acceptance.
-   */
-  private resolveLifecycleTask = async (subjectId: string) => {
-    const task = await new TaskModel(this.db, this.userId, this.workspaceId).resolve(subjectId);
-    if (!task || task.automationMode) return null;
-
-    const goal = await new GoalModel(this.db, this.userId, this.workspaceId).findByGraphTask(
-      task.id,
-    );
-    return goal ? null : task;
-  };
-
-  /**
-   * A delivered acceptance completes its task: the delivery is in, and the
-   * user's accept / reject decides from here. Shared by every settlement path.
-   *
-   * A reject can land at any point around the completion, so the decision is
-   * read on both sides of the write: rejected before → the task is left alone;
-   * rejected in between → the reject saw an unfinished task and did not reopen
-   * it, so it is reopened here. Best-effort — never fails the caller.
-   *
-   * @returns `completed` when the task now reads completed, `rejected` when a
-   * reject won, `skipped` when the task does not follow the acceptance or could
-   * not be completed.
-   */
-  completeTaskForDelivery = async (
-    acceptanceId: string,
-    subjectId: string,
-  ): Promise<'completed' | 'rejected' | 'skipped'> => {
-    try {
-      const task = await this.resolveLifecycleTask(subjectId);
-      if (!task) return 'skipped';
-
-      const before = await this.acceptanceModel.findPolicyById(acceptanceId);
-      if (before?.status === 'rejected') return 'rejected';
-      if (before?.status !== 'delivered') return 'skipped';
-
-      await this.completeTaskSubject(task.id);
-      // `completeTaskSubject` is best-effort and swallows its own failures (e.g. a
-      // running operation that could not be interrupted). Only a task that really
-      // reads completed counts — anything else lets the caller fall back.
-      const written = await new TaskModel(this.db, this.userId, this.workspaceId).findById(task.id);
-      if (written?.status !== 'completed') return 'skipped';
-
-      const after = await this.acceptanceModel.findPolicyById(acceptanceId);
-      if (after?.status === 'rejected') {
-        await this.reopenRejectedTaskSubject(task.id);
-        return 'rejected';
-      }
-      return 'completed';
-    } catch (error) {
-      log('completeTaskForDelivery failed (non-fatal): %O', error);
-      return 'skipped';
-    }
-  };
-
-  /**
-   * Rejecting a delivery reopens the task it completed, so the task is not left
-   * reading "done" while its repair is pending. Only a completed task moves —
-   * one the user already paused, canceled or restarted keeps its own state.
-   */
-  private reopenRejectedTaskSubject = async (subjectId: string): Promise<void> => {
-    try {
-      const task = await this.resolveLifecycleTask(subjectId);
-      if (task?.status !== 'completed') return;
-
-      await new TaskModel(this.db, this.userId, this.workspaceId).updateStatusIfCurrent(
-        task.id,
-        'completed',
-        'paused',
-        { completedAt: null },
-      );
-      log('acceptance rejected → task %s reopened as paused', task.id);
-    } catch (error) {
-      log('reopenRejectedTaskSubject failed (non-fatal): %O', error);
-    }
-  };
+  /** Completes the task a delivered acceptance settles — see {@link completeTaskForDelivery}. */
+  completeTaskForDelivery = (...args: WithoutDeps<typeof completeTaskForDelivery>) =>
+    completeTaskForDelivery(this.deps, ...args);
 
   /** Best-effort subject header info for the bundle (title may be gone). */
-  resolveSubject = async (acceptance: AcceptanceItem): Promise<AcceptanceSubjectSummary> => {
-    // A user rename wins over the subject's own title — the sidebar entry is
-    // renamed without touching the source topic/task/document.
-    const override = acceptance.metadata?.title;
-    let title: string | null =
-      typeof override === 'string' && override.trim() ? override.trim() : null;
-    if (!title) {
-      try {
-        title =
-          (
-            await this.findSubject(
-              acceptance.subjectType as AcceptanceSubjectType,
-              acceptance.subjectId,
-            )
-          )?.title ?? null;
-      } catch (error) {
-        log('resolveSubject failed (non-fatal): %O', error);
-      }
-    }
-    return {
-      id: acceptance.subjectId,
-      title,
-      type: acceptance.subjectType as AcceptanceSubjectType,
-    };
-  };
+  resolveSubject = (...args: WithoutDeps<typeof resolveSubject>) =>
+    resolveSubject(this.deps, ...args);
 
-  /** Resolve list subjects in one query per entity type, regardless of history size. */
-  private resolveSubjects = async (
-    acceptances: AcceptanceItem[],
-  ): Promise<Map<string, AcceptanceSubjectSummary>> => {
-    const result = new Map<string, AcceptanceSubjectSummary>();
-    const idsByType = new Map<AcceptanceSubjectType, string[]>();
-    for (const acceptance of acceptances) {
-      const type = acceptance.subjectType as AcceptanceSubjectType;
-      const ids = idsByType.get(type) ?? [];
-      ids.push(acceptance.subjectId);
-      idsByType.set(type, ids);
-    }
+  private resolveSubjects = (...args: WithoutDeps<typeof resolveSubjects>) =>
+    resolveSubjects(this.deps, ...args);
 
-    try {
-      const [tasks, topics, documents] = await Promise.all([
-        new TaskModel(this.db, this.userId, this.workspaceId).resolveMany(
-          idsByType.get('task') ?? [],
-        ),
-        // Creator-facing lookup: exclude agent-share visitor topics from the
-        // subject summary batch.
-        new TopicModel(this.db, this.userId, this.workspaceId).findOwnTopicsByIds(
-          idsByType.get('topic') ?? [],
-        ),
-        new DocumentModel(this.db, this.userId, this.workspaceId).findByIds(
-          idsByType.get('document') ?? [],
-        ),
-      ]);
-      const taskTitles = new Map<string, string | null>();
-      for (const task of tasks) {
-        const title = task.name ?? task.identifier;
-        taskTitles.set(task.id, title);
-        taskTitles.set(task.identifier, title);
-      }
-      const topicTitles = new Map(topics.map((topic) => [topic.id, topic.title ?? null]));
-      const documentTitles = new Map(
-        documents.map((document) => [document.id, document.title ?? null]),
-      );
+  private resolveProjects = (...args: WithoutDeps<typeof resolveProjects>) =>
+    resolveProjects(this.deps, ...args);
 
-      for (const acceptance of acceptances) {
-        const type = acceptance.subjectType as AcceptanceSubjectType;
-        const override = acceptance.metadata?.title;
-        const overrideTitle =
-          typeof override === 'string' && override.trim() ? override.trim() : null;
-        const title =
-          overrideTitle ??
-          (type === 'task'
-            ? taskTitles.get(acceptance.subjectId)
-            : type === 'topic'
-              ? topicTitles.get(acceptance.subjectId)
-              : type === 'document'
-                ? documentTitles.get(acceptance.subjectId)
-                : null) ??
-          null;
-        result.set(acceptance.id, { id: acceptance.subjectId, title, type });
-      }
-    } catch (error) {
-      log('resolveSubjects failed (non-fatal): %O', error);
-      for (const acceptance of acceptances) {
-        result.set(acceptance.id, {
-          id: acceptance.subjectId,
-          title: typeof acceptance.metadata?.title === 'string' ? acceptance.metadata.title : null,
-          type: acceptance.subjectType as AcceptanceSubjectType,
-        });
-      }
-    }
-    return result;
-  };
-
-  /** Resolve the projects referenced directly by acceptances in one bounded read. */
-  private resolveProjects = async (
-    acceptances: AcceptanceItem[],
-  ): Promise<Map<string, { id: string; name: string }>> => {
-    const result = new Map<string, { id: string; name: string }>();
-    const projectIds = [
-      ...new Set(acceptances.map(({ projectId }) => projectId).filter((id): id is string => !!id)),
-    ];
-    if (projectIds.length === 0) return result;
-
-    try {
-      const projects = await new ProjectModel(this.db, this.userId, this.workspaceId).findByIds(
-        projectIds,
-      );
-      const projectById = new Map(projects.map((project) => [project.id, project]));
-
-      for (const acceptance of acceptances) {
-        if (!acceptance.projectId) continue;
-        const project = projectById.get(acceptance.projectId);
-        if (project) result.set(acceptance.id, { id: project.id, name: project.name });
-      }
-    } catch (error) {
-      log('resolveProjects failed (non-fatal): %O', error);
-    }
-    return result;
-  };
-
-  /**
-   * The latest round's total-check count per acceptance — a cheap glance for the
-   * list panel (two batched reads, never a per-row union recompute). The signed-
-   * off/accepted count would need the cross-round union per row, which is far too
-   * heavy for a list, so the panel shows the total and leans on the row's status
-   * glyph for the decision state.
-   */
-  private latestCheckCounts = async (acceptanceIds: string[]): Promise<Map<string, number>> => {
-    const out = new Map<string, number>();
-    if (acceptanceIds.length === 0) return out;
-
-    const runs = await this.db.query.verifyRuns.findMany({
-      columns: { acceptanceId: true, id: true, roundIndex: true },
-      where: (run, { inArray }) => inArray(run.acceptanceId, acceptanceIds),
-    });
-    const latest = new Map<string, { id: string; round: number }>();
-    for (const run of runs) {
-      if (!run.acceptanceId) continue;
-      const round = run.roundIndex ?? 0;
-      const cur = latest.get(run.acceptanceId);
-      if (!cur || round > cur.round) latest.set(run.acceptanceId, { id: run.id, round });
-    }
-
-    // Unscoped on purpose, like the run read above: the run ids derive from
-    // acceptance ids the caller's list query already authorized, and a
-    // participated row's report belongs to its owner — an owner-scoped read
-    // would need one query per owner.
-    const runIds = [...latest.values()].map((v) => v.id);
-    const reports =
-      runIds.length > 0
-        ? await this.db.query.verifyReports.findMany({
-            columns: { totalChecks: true, verifyRunId: true },
-            where: (report, { inArray }) => inArray(report.verifyRunId, runIds),
-          })
-        : [];
-    const totalByRun = new Map(reports.map((report) => [report.verifyRunId, report.totalChecks]));
-    for (const [acceptanceId, { id: runId }] of latest) {
-      const total = totalByRun.get(runId);
-      if (total != null) out.set(acceptanceId, total);
-    }
-    return out;
-  };
+  private latestCheckCounts = (...args: WithoutDeps<typeof latestCheckCounts>) =>
+    latestCheckCounts(this.deps, ...args);
 
   /**
    * Recent aggregates with their subject headers — the list-panel payload.
@@ -1617,10 +615,8 @@ export class AcceptanceService {
     };
   };
 
-  private isInOwnScope = (row: AcceptanceItem) =>
-    row.workspaceId
-      ? row.workspaceId === this.workspaceId
-      : !this.workspaceId && row.userId === this.userId;
+  private isInOwnScope = (...args: WithoutDeps<typeof isInOwnScope>) =>
+    isInOwnScope(this.deps, ...args);
 
   /**
    * Subject headers for a mixed list. Rows in the caller's own scope go through
@@ -1643,60 +639,8 @@ export class AcceptanceService {
     return new Map([...ownSubjects, ...foreignSubjects]);
   };
 
-  private resolveForeignSubjects = async (
-    rows: AcceptanceItem[],
-  ): Promise<Map<string, AcceptanceSubjectSummary>> => {
-    const result = new Map<string, AcceptanceSubjectSummary>();
-    if (rows.length === 0) return result;
-
-    const idsOf = (type: AcceptanceSubjectType) =>
-      rows.filter((row) => row.subjectType === type).map((row) => row.subjectId);
-    const titles = new Map<string, string | null>();
-    try {
-      const [taskIds, topicIds, documentIds] = [idsOf('task'), idsOf('topic'), idsOf('document')];
-      const [taskRows, topicRows, documentRows] = await Promise.all([
-        taskIds.length > 0
-          ? this.db.query.tasks.findMany({
-              columns: { id: true, identifier: true, name: true },
-              where: (task, { and, inArray }) =>
-                and(inArray(task.id, taskIds), notTrashed(task.isDeleted)),
-            })
-          : [],
-        topicIds.length > 0
-          ? this.db.query.topics.findMany({
-              columns: { id: true, title: true },
-              where: (topic, { and, inArray }) =>
-                and(inArray(topic.id, topicIds), notTrashed(topic.isDeleted)),
-            })
-          : [],
-        documentIds.length > 0
-          ? this.db.query.documents.findMany({
-              columns: { id: true, title: true },
-              where: (document, { and, inArray }) =>
-                and(inArray(document.id, documentIds), notTrashed(document.isDeleted)),
-            })
-          : [],
-      ]);
-      for (const task of taskRows) titles.set(`task:${task.id}`, task.name ?? task.identifier);
-      for (const topic of topicRows) titles.set(`topic:${topic.id}`, topic.title ?? null);
-      for (const document of documentRows)
-        titles.set(`document:${document.id}`, document.title ?? null);
-    } catch (error) {
-      log('resolveForeignSubjects failed (non-fatal): %O', error);
-    }
-
-    for (const row of rows) {
-      const override = row.metadata?.title;
-      const overrideTitle =
-        typeof override === 'string' && override.trim() ? override.trim() : null;
-      result.set(row.id, {
-        id: row.subjectId,
-        title: overrideTitle ?? titles.get(`${row.subjectType}:${row.subjectId}`) ?? null,
-        type: row.subjectType as AcceptanceSubjectType,
-      });
-    }
-    return result;
-  };
+  private resolveForeignSubjects = (...args: WithoutDeps<typeof resolveForeignSubjects>) =>
+    resolveForeignSubjects(this.deps, ...args);
 
   private decorateListRows = async (
     rows: AcceptanceItem[],
@@ -1717,63 +661,12 @@ export class AcceptanceService {
     }));
   };
 
-  /**
-   * The authoring conversation behind the round chain, resolved to displayable
-   * entities (agent avatar/title, topic title). Owner-only header data — the
-   * bundle must not include it for anonymous link holders.
-   */
-  resolveOrigin = async (
-    runs: VerifyRunItem[],
-  ): Promise<{
-    agent: {
-      avatar: string | null;
-      backgroundColor: string | null;
-      id: string;
-      title: string | null;
-    } | null;
-    topic: { id: string; title: string | null } | null;
-  } | null> => {
-    const origin = [...runs].reverse().find((run) => run.metadata?.origin)?.metadata?.origin;
-    if (!origin?.agentId && !origin?.topicId) return null;
+  /** The authoring conversation behind the round chain — see {@link resolveOrigin}. */
+  resolveOrigin = (...args: WithoutDeps<typeof resolveOrigin>) => resolveOrigin(this.deps, ...args);
 
-    const topicRowPromise = origin.topicId
-      ? new TopicModel(this.db, this.userId, this.workspaceId)
-          .findById(origin.topicId)
-          .catch(() => null)
-      : Promise.resolve(null);
-    // Dispatched runs (task / goal / device) record only the topic — the
-    // connector strips the ambient agent id — so the topic's own agent stands in.
-    // A recorded agent does not wait on the topic read.
-    const agentPromise = (
-      origin.agentId ? Promise.resolve(origin.agentId) : topicRowPromise.then((row) => row?.agentId)
-    ).then((agentId) =>
-      agentId
-        ? new AgentModel(this.db, this.userId, this.workspaceId)
-            .getAgentAvatarsByIds([agentId])
-            .then((rows) => rows[0] ?? null)
-            .catch(() => null)
-        : null,
-    );
-    const [topicRow, agent] = await Promise.all([topicRowPromise, agentPromise]);
-    const topic = topicRow ? { id: topicRow.id, title: topicRow.title ?? null } : null;
-    if (!agent && !topic) return null;
-    return { agent, topic };
-  };
-
-  /**
-   * The raw authoring conversation behind the latest round that recorded one —
-   * the ids a rejected delivery is sent back to. Unlike {@link resolveOrigin}
-   * nothing is hydrated: the dispatcher re-reads the topic under the caller's
-   * own scope.
-   */
-  findRepairOrigin = async (
-    acceptanceId: string,
-  ): Promise<{ agentId?: string; topicId?: string } | null> => {
-    const runs = await this.runModel.listByAcceptance(acceptanceId);
-    const origin = [...runs].reverse().find((run) => run.metadata?.origin)?.metadata?.origin;
-    if (!origin?.topicId) return null;
-    return { agentId: origin.agentId || undefined, topicId: origin.topicId };
-  };
+  /** The raw origin a rejected delivery is sent back to — see {@link findRepairOrigin}. */
+  findRepairOrigin = (...args: WithoutDeps<typeof findRepairOrigin>) =>
+    findRepairOrigin(this.deps, ...args);
 
   /** The rounds + their per-round data the bundle and the union both read. */
   loadRounds = async (acceptanceId: string) => {
