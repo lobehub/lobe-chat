@@ -1,5 +1,5 @@
 import { rmSync } from 'node:fs';
-import { mkdtemp, rm, writeFile } from 'node:fs/promises';
+import { mkdtemp, rename, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 
@@ -79,6 +79,30 @@ export interface CodexJwtFile {
   path: string;
 }
 
+/** JWT files of runs still in progress, keyed by path, so a renewed token can reach them. */
+const liveJwtFiles = new Set<string>();
+
+/**
+ * Rewrite every live Codex JWT file with a renewed token. The Codex process and
+ * the `lh` commands it runs cannot see the host's `process.env`, so without this
+ * a run outliving its operation token keeps handing nested commands the expired
+ * one. Each file is replaced atomically, so a concurrent read never sees half a
+ * token. Never throws: a file removed mid-write just drops out.
+ */
+export const refreshCodexJwtFiles = async (jwt: string): Promise<void> => {
+  await Promise.all(
+    [...liveJwtFiles].map(async (filePath) => {
+      const tmpPath = `${filePath}.${process.pid}.tmp`;
+      try {
+        await writeFile(tmpPath, jwt, { encoding: 'utf8', mode: 0o600 });
+        await rename(tmpPath, filePath);
+      } catch {
+        await rm(tmpPath, { force: true }).catch(() => {});
+      }
+    }),
+  );
+};
+
 /**
  * Write the run's JWT to a per-run file only the current user can read: a
  * fresh `mkdtemp` directory (created 0700) holding a 0600 file. The caller
@@ -92,6 +116,7 @@ export const createCodexJwtFile = async (jwt: string): Promise<CodexJwtFile> => 
   const removeSync = () => {
     if (removed) return;
     removed = true;
+    liveJwtFiles.delete(filePath);
     try {
       rmSync(dir, { force: true, recursive: true });
     } catch {
@@ -108,12 +133,14 @@ export const createCodexJwtFile = async (jwt: string): Promise<CodexJwtFile> => 
     throw error;
   }
 
+  liveJwtFiles.add(filePath);
   return {
     args: buildCodexShellEnvSetArgs(LOBEHUB_JWT_FILE_ENV, filePath),
     cleanup: async () => {
       process.off('exit', removeSync);
       if (removed) return;
       removed = true;
+      liveJwtFiles.delete(filePath);
       await rm(dir, { force: true, recursive: true }).catch(() => {});
     },
     path: filePath,

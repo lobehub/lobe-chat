@@ -7,6 +7,7 @@ import {
   buildCodexLobeHubContextArgs,
   createCodexJwtFile,
   LOBEHUB_JWT_FILE_ENV,
+  refreshCodexJwtFiles,
   toTomlBasicString,
 } from './codexShellEnv';
 
@@ -92,5 +93,24 @@ describe('createCodexJwtFile', () => {
     await expect(stat(dir)).rejects.toMatchObject({ code: 'ENOENT' });
     // Idempotent.
     await expect(jwtFile.cleanup()).resolves.toBeUndefined();
+  });
+
+  it('rewrites live files with a renewed token and leaves removed ones gone', async () => {
+    // A run outliving its operation token: nested `lh` reads the file, not the host env.
+    const live = await createCodexJwtFile('old-token');
+    const ended = await createCodexJwtFile('old-token');
+    await ended.cleanup();
+
+    try {
+      await refreshCodexJwtFiles('renewed-token');
+
+      expect(await readFile(live.path, 'utf8')).toBe('renewed-token');
+      if (process.platform !== 'win32') {
+        expect((await stat(live.path)).mode & 0o777).toBe(0o600);
+      }
+      await expect(stat(ended.path)).rejects.toMatchObject({ code: 'ENOENT' });
+    } finally {
+      await live.cleanup();
+    }
   });
 });
