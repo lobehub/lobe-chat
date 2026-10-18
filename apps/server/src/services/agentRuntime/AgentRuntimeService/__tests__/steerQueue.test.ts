@@ -28,7 +28,10 @@ describe('server-side steer queue in the step loop', () => {
 
   describe('readQueuedMessagesFlag', () => {
     const depsWithFlag = (flag: boolean) =>
-      ({ coordinator: { hasQueuedMessages: vi.fn().mockResolvedValue(flag) } }) as any;
+      ({
+        coordinator: { hasQueuedMessages: vi.fn().mockResolvedValue(flag) },
+        userId: 'user-1',
+      }) as any;
 
     it('hands the turn back when follow-ups wait in the server queue', async () => {
       steerQueueLength.mockResolvedValue(2);
@@ -41,7 +44,11 @@ describe('server-side steer queue in the step loop', () => {
           stateOf({ origin: { threadId: 'thd-1', topicId: 'tpc-1' } }),
         ),
       ).resolves.toBe(true);
-      expect(steerQueueLength).toHaveBeenCalledWith({ threadId: 'thd-1', topicId: 'tpc-1' });
+      expect(steerQueueLength).toHaveBeenCalledWith({
+        threadId: 'thd-1',
+        topicId: 'tpc-1',
+        userId: 'user-1',
+      });
     });
 
     it('keeps honouring the client flag without reading the queue', async () => {
@@ -94,6 +101,7 @@ describe('server-side steer queue in the step loop', () => {
         recordInterventionLifecycleCompletion: vi.fn(),
         traceRecorder: { finalize: vi.fn(), flushPartial: vi.fn() },
         tryResumeParentFromAsyncTool: vi.fn(),
+        userId: 'user-1',
       } as any;
       return { deps, order };
     };
@@ -114,7 +122,7 @@ describe('server-side steer queue in the step loop', () => {
 
       expect(deps.delegate.startQueuedFollowUp).toHaveBeenCalledWith({
         operationId: 'op-1',
-        scope: { threadId: null, topicId: 'tpc-1' },
+        scope: { threadId: null, topicId: 'tpc-1', userId: 'user-1' },
       });
       expect(order).toEqual(['hooks', 'followUp']);
     });

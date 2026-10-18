@@ -258,7 +258,7 @@ export async function readQueuedMessagesFlag(
   try {
     if (await deps.coordinator.hasQueuedMessages(operationId)) return true;
 
-    const scope = state && steerQueueScopeOf(state);
+    const scope = state && steerQueueScopeOf(state, deps.userId);
     return scope ? (await redisService.steerQueue.length(scope)) > 0 : false;
   } catch (error) {
     log('[%s][%d] Queued messages flag read failed: %O', operationId, stepIndex, error);

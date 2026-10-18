@@ -87,14 +87,23 @@ const restoreAfterFailure = async (
     operationId,
     error,
   );
-  await redisService.steerQueue.restore(scope, entries).catch((restoreError) => {
+  try {
+    const dropped = await redisService.steerQueue.restore(scope, entries);
+    if (dropped > 0) {
+      console.error(
+        '[startQueuedFollowUp] queue for topic %s was full again: dropped the %d newest follow-ups',
+        scope.topicId,
+        dropped,
+      );
+    }
+  } catch (restoreError) {
     console.error(
       '[startQueuedFollowUp] failed to restore %d queued follow-ups for topic %s: %O',
       entries.length,
       scope.topicId,
       restoreError,
     );
-  });
+  }
 };
 
 /**
@@ -121,8 +130,8 @@ export const startQueuedFollowUp = async (
   const drained = await redisService.steerQueue.drain<QueuedFollowUp>(scope);
   if (drained.length === 0) return;
 
-  // `append` admits only the run owner, so a foreign entry cannot come from it;
-  // never start one under this user's authority if it somehow got here.
+  // The queue is the run owner's own (the scope carries their user id); never
+  // start a foreign entry under this user's authority if one somehow got here.
   const entries = drained.filter((entry) => entry.userId === ctx.userId);
   if (entries.length < drained.length) {
     log(

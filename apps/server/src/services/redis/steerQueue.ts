@@ -11,10 +11,15 @@ const QUEUE_TTL_SECONDS = 24 * 60 * 60;
 /** Upper bound on follow-ups waiting behind one turn. */
 export const STEER_QUEUE_MAX_ENTRIES = 20;
 
-/** One conversation surface: the topic's main spine, or one of its threads. */
+/**
+ * One user's queue on one conversation surface: the topic's main spine, or one
+ * of its threads. Keyed by the user too — workspace members can each have a run
+ * on the same surface, and each run drains only its own owner's follow-ups.
+ */
 export interface SteerQueueScope {
   threadId?: string | null;
   topicId: string;
+  userId: string;
 }
 
 export interface SteerQueueEntry {
@@ -46,17 +51,27 @@ redis.call('DEL', KEYS[1])
 return entries
 `;
 
-/** Puts entries back at the head, in order. KEYS[1] = queue; ARGV[1] = ttl; ARGV[2..] = entries */
+/**
+ * Puts entries back at the head, in order, then holds the queue to its bound:
+ * entries queued since the drain may have filled it again, and the overflow
+ * (the newest, at the tail) is dropped and counted.
+ *
+ * KEYS[1] = queue; ARGV[1] = ttl; ARGV[2] = max entries; ARGV[3..] = entries
+ */
 const RESTORE_SCRIPT = `
-for i = #ARGV, 2, -1 do
+for i = #ARGV, 3, -1 do
   redis.call('LPUSH', KEYS[1], ARGV[i])
 end
 redis.call('EXPIRE', KEYS[1], ARGV[1])
-return redis.call('LLEN', KEYS[1])
+local max = tonumber(ARGV[2])
+local length = redis.call('LLEN', KEYS[1])
+if length <= max then return 0 end
+redis.call('LTRIM', KEYS[1], 0, max - 1)
+return length - max
 `;
 
 const keyOf = (scope: SteerQueueScope) =>
-  RedisKeys.agentSteer.followUps(scope.topicId, scope.threadId);
+  RedisKeys.agentSteer.followUps(scope.userId, scope.topicId, scope.threadId);
 
 const parseEntries = <T extends SteerQueueEntry>(raw: unknown): { entry: T; raw: string }[] => {
   if (!Array.isArray(raw)) return [];
@@ -153,21 +168,26 @@ export const steerQueue = {
   },
 
   /**
-   * Puts drained entries back at the head, ahead of anything queued since.
+   * Puts drained entries back at the head, ahead of anything queued since,
+   * keeping the queue within {@link STEER_QUEUE_MAX_ENTRIES}.
    * Rejects when Redis is unavailable: the entries are out of the queue already.
+   *
+   * @returns how many entries the bound dropped (the newest)
    */
-  async restore(scope: SteerQueueScope, entries: SteerQueueEntry[]): Promise<void> {
-    if (entries.length === 0) return;
+  async restore(scope: SteerQueueScope, entries: SteerQueueEntry[]): Promise<number> {
+    if (entries.length === 0) return 0;
 
     const redis = await getClient();
     if (!redis) throw new Error('Redis is unavailable to restore queued follow-ups');
 
-    await redis.eval(
+    const dropped = await redis.eval<number>(
       RESTORE_SCRIPT,
       1,
       keyOf(scope),
       QUEUE_TTL_SECONDS,
+      STEER_QUEUE_MAX_ENTRIES,
       ...entries.map((entry) => JSON.stringify(entry)),
     );
+    return Number(dropped) || 0;
   },
 };

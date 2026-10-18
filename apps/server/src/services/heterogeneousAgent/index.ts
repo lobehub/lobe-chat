@@ -451,7 +451,7 @@ export class HeterogeneousAgentService {
       isolationThreadId = operation?.threadId ?? undefined;
       // A child run (group member, sub-agent) is not where the user types.
       if (operation && !operation.parentOperationId) {
-        steerScope = { threadId: operation.threadId ?? null, topicId };
+        steerScope = { threadId: operation.threadId ?? null, topicId, userId: this.userId };
       }
     } catch (err) {
       log('heteroFinish: failed to load operation lifecycle metadata (non-fatal): %O', err);

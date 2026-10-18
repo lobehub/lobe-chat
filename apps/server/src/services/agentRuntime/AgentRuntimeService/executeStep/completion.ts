@@ -18,6 +18,7 @@ export type StepCompletionDeps = Pick<
   | 'recordInterventionLifecycleCompletion'
   | 'traceRecorder'
   | 'tryResumeParentFromAsyncTool'
+  | 'userId'
 >;
 /**
  * The run stops here: emit the completion signals, dispatch the completion
@@ -114,7 +115,7 @@ export async function finishOperation(
   // release the topic, which the next turn has to claim. A parked run keeps
   // its queue until it really ends; a failed or stopped one leaves it to the
   // user.
-  const steerScope = steerQueueScopeOf(stepResult.newState);
+  const steerScope = steerQueueScopeOf(stepResult.newState, deps.userId);
   if (stepResult.newState.status === 'done' && steerScope && deps.delegate.startQueuedFollowUp) {
     try {
       await deps.delegate.startQueuedFollowUp({ operationId, scope: steerScope });

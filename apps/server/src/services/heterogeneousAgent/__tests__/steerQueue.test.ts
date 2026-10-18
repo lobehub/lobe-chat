@@ -58,7 +58,7 @@ describe('HeterogeneousAgentService.heteroFinish — queued follow-ups', () => {
 
     expect(startQueuedFollowUp).toHaveBeenCalledWith({
       operationId: 'op-1',
-      scope: { threadId: 'thd-1', topicId: 'tpc-1' },
+      scope: { threadId: 'thd-1', topicId: 'tpc-1', userId: 'user-1' },
     });
     expect(order).toEqual(['complete', 'followUp']);
   });

@@ -89,11 +89,12 @@ export const RedisKeys = {
    */
   agentSteer: {
     /**
-     * Follow-ups queued behind the running turn of one conversation surface.
-     * Full key: agentSteer:follow_ups:v1:{topicId}:{threadId|main}
+     * Follow-ups one user queued behind their running turn on one conversation
+     * surface. Per user: workspace members can each have a run on the same topic.
+     * Full key: agentSteer:follow_ups:v1:{userId}:{topicId}:{threadId|main}
      */
-    followUps: (topicId: string, threadId?: string | null): string =>
-      `follow_ups:v1:${topicId}:${threadId || 'main'}`,
+    followUps: (userId: string, topicId: string, threadId?: string | null): string =>
+      `follow_ups:v1:${userId}:${topicId}:${threadId || 'main'}`,
   },
   /**
    * AI generation scope - for AI-generated content like welcome messages

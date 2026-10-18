@@ -116,9 +116,11 @@ const hasOwnLiveRun = async (
   return false;
 };
 
-const toScope = (scope: z.infer<typeof ScopeSchema>) => ({
+/** The caller's own queue on the surface: each user only reads and fills theirs. */
+const toScope = (scope: z.infer<typeof ScopeSchema>, userId: string): SteerQueueScope => ({
   threadId: scope.threadId ?? null,
   topicId: scope.topicId,
+  userId,
 });
 
 /**
@@ -154,7 +156,7 @@ export const agentSteerQueueRouter = router({
       workspaceId: ctx.workspaceId,
     });
 
-    const scope = toScope({ threadId: request.appContext?.threadId, topicId });
+    const scope = toScope({ threadId: request.appContext?.threadId, topicId }, ctx.userId);
     if (!(await hasOwnLiveRun(ctx, scope))) {
       return { queued: false as const, reason: 'idle' as const };
     }
@@ -204,7 +206,7 @@ export const agentSteerQueueRouter = router({
       workspaceId: ctx.workspaceId,
     });
 
-    const entries = await redisService.steerQueue.list<QueuedFollowUp>(toScope(input));
+    const entries = await redisService.steerQueue.list<QueuedFollowUp>(toScope(input, ctx.userId));
     return entries
       .filter((entry) => entry.userId === ctx.userId)
       .map(({ createdAt, id, request }) => ({
@@ -222,7 +224,7 @@ export const agentSteerQueueRouter = router({
   remove: steerQueueWriteProcedure
     .input(ScopeSchema.extend({ id: z.string() }))
     .mutation(async ({ input, ctx }) => {
-      const scope = toScope(input);
+      const scope = toScope(input, ctx.userId);
       const entries = await redisService.steerQueue.list<QueuedFollowUp>(scope);
       const entry = entries.find((item) => item.id === input.id);
       if (!entry || entry.userId !== ctx.userId) return { removed: false };

@@ -23,10 +23,11 @@ const createFakeRedis = () => {
         return list.length + 1;
       }
       if (script.includes('LPUSH')) {
-        const [ttl, ...entries] = args;
-        lists.set(key, [...entries, ...list]);
+        const [ttl, max, ...entries] = args;
+        const restored = [...entries, ...list];
+        lists.set(key, restored.slice(0, Number(max)));
         ttls.set(key, Number(ttl));
-        return entries.length + list.length;
+        return Math.max(restored.length - Number(max), 0);
       }
       if (script.includes('DEL')) {
         lists.delete(key);
@@ -47,7 +48,7 @@ const createFakeRedis = () => {
   return { client: { eval: evalScript }, lists, ttls };
 };
 
-const scope = { topicId: 'tpc-1' };
+const scope = { topicId: 'tpc-1', userId: 'u1' };
 const entry = (id: string, createdAt = 1) => ({ createdAt, id, prompt: id });
 
 describe('redisService.steerQueue', () => {
@@ -61,14 +62,19 @@ describe('redisService.steerQueue', () => {
 
   it('keeps one queue per conversation surface under the agentSteer scope', async () => {
     await redisService.steerQueue.append(scope, entry('a'));
-    await redisService.steerQueue.append({ threadId: 'thd-1', topicId: 'tpc-1' }, entry('b'));
+    await redisService.steerQueue.append(
+      { threadId: 'thd-1', topicId: 'tpc-1', userId: 'u1' },
+      entry('b'),
+    );
+    await redisService.steerQueue.append({ topicId: 'tpc-1', userId: 'u2' }, entry('c'));
 
     expect(getRedisServiceClient).toHaveBeenCalledWith('agentSteer');
     expect([...redis.lists.keys()]).toEqual([
-      'follow_ups:v1:tpc-1:main',
-      'follow_ups:v1:tpc-1:thd-1',
+      'follow_ups:v1:u1:tpc-1:main',
+      'follow_ups:v1:u1:tpc-1:thd-1',
+      'follow_ups:v1:u2:tpc-1:main',
     ]);
-    expect(redis.ttls.get('follow_ups:v1:tpc-1:main')).toBe(24 * 60 * 60);
+    expect(redis.ttls.get('follow_ups:v1:u1:tpc-1:main')).toBe(24 * 60 * 60);
   });
 
   it('drains every entry in queue order exactly once', async () => {
@@ -130,5 +136,31 @@ describe('redisService.steerQueue', () => {
     await expect(redisService.steerQueue.restore(scope, [entry('a')])).rejects.toThrow(
       'Redis is unavailable',
     );
+  });
+
+  it('keeps each user’s follow-ups out of another user’s drain on the same surface', async () => {
+    await redisService.steerQueue.append(scope, entry('mine'));
+    await redisService.steerQueue.append({ ...scope, userId: 'u2' }, entry('theirs'));
+
+    await expect(redisService.steerQueue.drain(scope)).resolves.toEqual([entry('mine')]);
+    await expect(redisService.steerQueue.list({ ...scope, userId: 'u2' })).resolves.toEqual([
+      entry('theirs'),
+    ]);
+  });
+
+  it('holds a restored queue to its bound, dropping and counting the newest overflow', async () => {
+    await redisService.steerQueue.append(scope, entry('old-1'));
+    await redisService.steerQueue.append(scope, entry('old-2'));
+    const drained = await redisService.steerQueue.drain(scope);
+    for (let i = 0; i < STEER_QUEUE_MAX_ENTRIES; i++) {
+      await redisService.steerQueue.append(scope, entry(`new-${i}`));
+    }
+
+    await expect(redisService.steerQueue.restore(scope, drained)).resolves.toBe(2);
+
+    const ids = (await redisService.steerQueue.list(scope)).map((item) => item.id);
+    expect(ids).toHaveLength(STEER_QUEUE_MAX_ENTRIES);
+    expect(ids.slice(0, 3)).toEqual(['old-1', 'old-2', 'new-0']);
+    expect(ids).not.toContain(`new-${STEER_QUEUE_MAX_ENTRIES - 1}`);
   });
 });

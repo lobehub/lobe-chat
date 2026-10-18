@@ -84,7 +84,7 @@ describe('agentSteerQueueRouter.append', () => {
     });
 
     const [scope, entry] = mocks.append.mock.calls[0];
-    expect(scope).toEqual({ threadId: null, topicId: 'tpc-1' });
+    expect(scope).toEqual({ threadId: null, topicId: 'tpc-1', userId: 'user-1' });
     expect(entry).toMatchObject({
       audit: { clientIp: '1.2.3.4', userAgent: 'test' },
       id: 'q-1',
@@ -117,7 +117,10 @@ describe('agentSteerQueueRouter.append', () => {
     mocks.isRunningOperationAlive.mockResolvedValueOnce(true).mockResolvedValueOnce(false);
 
     await expect(caller().append(appendInput)).resolves.toEqual({ queued: false, reason: 'idle' });
-    expect(mocks.remove).toHaveBeenCalledWith({ threadId: null, topicId: 'tpc-1' }, 'q-1');
+    expect(mocks.remove).toHaveBeenCalledWith(
+      { threadId: null, topicId: 'tpc-1', userId: 'user-1' },
+      'q-1',
+    );
   });
 
   it('reports queued when the drain already took the entry it tried to take back', async () => {

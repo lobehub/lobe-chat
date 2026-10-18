@@ -38,7 +38,7 @@ const followUp = (id: string, createdAt: number, request: Partial<QueuedFollowUp
 const ctx = { aiAgentService: {} as any, db: {} as any, userId: 'user-1', workspaceId: 'ws-1' };
 const finished = (scope: { threadId?: string | null; topicId: string }) => ({
   operationId: 'op-1',
-  scope: { threadId: null, ...scope },
+  scope: { threadId: null, userId: 'user-1', ...scope },
 });
 
 describe('mergeQueuedFollowUps', () => {
@@ -76,7 +76,7 @@ describe('startQueuedFollowUp', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     drain.mockResolvedValue([]);
-    restore.mockResolvedValue(undefined);
+    restore.mockResolvedValue(0);
     assertCanUseWorkspaceAgent.mockResolvedValue(undefined);
     assertCanUseAgentRunConversation.mockResolvedValue(undefined);
     startComposerRun.mockResolvedValue({ operationId: 'op-2' });
@@ -89,7 +89,7 @@ describe('startQueuedFollowUp', () => {
       startQueuedFollowUp(ctx, finished({ threadId: 'thd-1', topicId: 'tpc-1' })),
     ).resolves.toEqual({ operationId: 'op-2' });
 
-    expect(drain).toHaveBeenCalledWith({ threadId: 'thd-1', topicId: 'tpc-1' });
+    expect(drain).toHaveBeenCalledWith({ threadId: 'thd-1', topicId: 'tpc-1', userId: 'user-1' });
     expect(startComposerRun).toHaveBeenCalledWith(
       expect.objectContaining({ clientIp: 'ip-b', userId: 'user-1' }),
       expect.objectContaining({
@@ -107,7 +107,10 @@ describe('startQueuedFollowUp', () => {
 
     await expect(startQueuedFollowUp(ctx, finished({ topicId: 'tpc-1' }))).resolves.toBeUndefined();
 
-    expect(restore).toHaveBeenCalledWith({ threadId: null, topicId: 'tpc-1' }, entries);
+    expect(restore).toHaveBeenCalledWith(
+      { threadId: null, topicId: 'tpc-1', userId: 'user-1' },
+      entries,
+    );
   });
 
   it('never starts a follow-up someone else queued under the run owner', async () => {
@@ -146,6 +149,9 @@ describe('startQueuedFollowUp', () => {
     await startQueuedFollowUp(ctx, finished({ topicId: 'tpc-1' }));
 
     expect(startComposerRun).not.toHaveBeenCalled();
-    expect(restore).toHaveBeenCalledWith({ threadId: null, topicId: 'tpc-1' }, entries);
+    expect(restore).toHaveBeenCalledWith(
+      { threadId: null, topicId: 'tpc-1', userId: 'user-1' },
+      entries,
+    );
   });
 });

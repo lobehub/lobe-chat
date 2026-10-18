@@ -65,7 +65,7 @@ describe('agentSteerQueueRouter.append — live run on the requested surface', (
     await startRun({ threadId });
 
     await expect(appendTo({ threadId })).resolves.toMatchObject({ queued: true });
-    expect(append.mock.calls[0][0]).toEqual({ threadId, topicId });
+    expect(append.mock.calls[0][0]).toEqual({ threadId, topicId, userId });
   });
 
   it('does not queue on a thread while only the main spine is running', async () => {
