@@ -12,6 +12,7 @@ import {
   type WorkAccessScope,
   type WorkItem,
   type WorkSkillProvider,
+  type WorkVisibility,
 } from '@lobechat/types';
 
 import type { LobeChatDatabase } from '../../type';
@@ -139,6 +140,10 @@ export class WorkModel {
     writes.deleteTaskWork(this.ctx, params);
 
   deleteWork = (params: DeleteWorkParams): Promise<void> => writes.deleteWork(this.ctx, params);
+
+  /** See {@link writes.setTaskWorksVisibility}. */
+  setTaskWorksVisibility = (taskIds: string[], visibility: WorkVisibility): Promise<void> =>
+    writes.setTaskWorksVisibility(this.ctx, taskIds, visibility);
 
   listByRootOperation = (params: {
     includeFileWorks?: boolean;

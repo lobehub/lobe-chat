@@ -157,41 +157,17 @@ export class TaskModel {
   }
 
   /**
-   * Move a task and its full subtree to a new visibility (both directions —
-   * added the `public → private` demotion; the router gates who
-   * may call it).
-   *
-   * Cascades inside a single transaction:
-   *   - the root task and every descendant in `tasks`;
-   *   - `task_dependencies` and `task_documents` whose `task_id` is in the set.
-   *
-   * `task_topics` and `task_comments` are direction-sensitive. Their
-   * `visibility` column is a write-time mirror of the parent task used as a
-   * JOIN-free authorization proxy, so:
-   *   - `private → public` deliberately does **not** cascade them: promoting
-   *     the task must not retroactively expose runs and discussions that
-   *     happened while it was private. Rows created after promotion inherit
-   *     the task's then-current visibility through their own create paths.
-   *   - `public → private` **does** cascade them: leaving public-era rows
-   *     public would let workspace members keep reading/operating historical
-   *     topics and comments of a task they can no longer see.
-   *
-   * Returns `null` if the root task is not visible to the current caller
-   * (either missing or owned by another workspace member). Callers should
-   * gate authorization (creator-only / admin) before invoking this.
+   * Write `visibility` onto a task subtree and its task-owned child rows.
+   * Task aggregate only — callers changing a task's visibility go through
+   * `TaskLifecycleRepository.updateVisibility`, which also mirrors it onto
+   * the task's Work row in the same transaction.
    */
-  async updateVisibility(id: string, visibility: 'private' | 'public'): Promise<TaskItem | null> {
-    const root = await this.findById(id);
-    if (!root) return null;
-    if (root.visibility === visibility) return root;
-
-    const descendants = await this.findAllDescendants(root.id);
-    return tree.setSubtreeVisibility(
-      this.ctx,
-      root.id,
-      descendants.map((d) => d.id),
-      visibility,
-    );
+  async setSubtreeVisibility(
+    rootId: string,
+    descendantIds: string[],
+    visibility: 'private' | 'public',
+  ): Promise<TaskItem | null> {
+    return tree.setSubtreeVisibility(this.ctx, rootId, descendantIds, visibility);
   }
 
   async countTasksBlockingAgentDemotion(
@@ -217,12 +193,12 @@ export class TaskModel {
     return rows.deleteAll(this.ctx, options);
   }
 
-  /** Delete a task and every descendant in one transaction. */
-  async deleteSubtree(rootTaskId: string): Promise<number> {
-    const descendants = await this.findAllDescendants(rootTaskId);
-    const taskIds = [rootTaskId, ...descendants.map(({ id }) => id)];
-
-    return tree.deleteTasksWithAcceptances(this.ctx, taskIds);
+  /**
+   * Delete the given tasks (task aggregate only). Use
+   * `TaskLifecycleRepository.deleteSubtree` to also drop their acceptances.
+   */
+  async deleteByIds(taskIds: string[]): Promise<number> {
+    return tree.deleteTasksByIds(this.ctx, taskIds);
   }
 
   // ========== Query ==========

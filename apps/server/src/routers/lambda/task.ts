@@ -15,6 +15,7 @@ import { TaskArchiveModel } from '@/database/models/taskArchive';
 import { TaskTopicModel } from '@/database/models/taskTopic';
 import { TopicModel } from '@/database/models/topic';
 import { UserModel } from '@/database/models/user';
+import { TaskSubtreeRepository } from '@/database/repositories/taskSubtree';
 import type { LobeChatDatabase } from '@/database/type';
 import { assertAgentUsableBy } from '@/database/utils/agent-access';
 import { router } from '@/libs/trpc/lambda';
@@ -64,6 +65,7 @@ const taskProcedure = wsCompatProcedure.use(serverDatabase).use(async (opts) => 
       taskModel: new TaskModel(ctx.serverDB, ctx.userId, wsId),
       taskIntentService: new TaskIntentService(ctx.serverDB, ctx.userId, wsId),
       taskService: new TaskService(ctx.serverDB, ctx.userId, wsId),
+      taskSubtree: new TaskSubtreeRepository(ctx.serverDB, ctx.userId, wsId),
       taskTopicModel: new TaskTopicModel(ctx.serverDB, ctx.userId, wsId),
       topicModel: new TopicModel(ctx.serverDB, ctx.userId, wsId),
     },
@@ -1489,24 +1491,22 @@ export const taskRouter = router({
           );
         }
 
-        // Promoting a task to public while a private agent is its assignee
-        // breaks the visibility invariant. Reject early — the user should
-        // reassign first, then promote.
+        // A private assignee agent on a public task breaks the visibility
+        // invariant. Reject early — reassign first, then promote.
         if (input.visibility === 'public' && resolved.assigneeAgentId) {
           const agentVisibility = await ctx.agentModel.getAgentVisibility(resolved.assigneeAgentId);
           ctx.taskService.assertAgentVisibilityCompat(input.visibility, agentVisibility);
         }
 
-        // Promoting a subtask to public while its parent is still private
-        // would orphan the child in the workspace view — a subtask cannot
-        // be more public than its parent. The user must promote the parent
-        // chain first, or keep the subtask private.
+        // A public subtask under a private parent would be orphaned in the
+        // workspace view — a subtask cannot be more public than its parent.
+        // The user must promote the parent chain first, or keep it private.
         if (input.visibility === 'public' && resolved.parentTaskId) {
           const parent = await ctx.taskModel.findById(resolved.parentTaskId);
           ctx.taskService.assertParentVisibilityCompat(input.visibility, parent?.visibility);
         }
 
-        const updated = await ctx.taskModel.updateVisibility(resolved.id, input.visibility);
+        const updated = await ctx.taskSubtree.updateVisibility(resolved.id, input.visibility);
         if (!updated) throw new TRPCError({ code: 'NOT_FOUND', message: 'Task not found' });
         return { data: updated, message: 'Task visibility updated', success: true };
       } catch (error) {

@@ -9,10 +9,7 @@ import {
   tasks,
   taskTopics,
 } from '../../schemas/task';
-import { acceptances } from '../../schemas/verify';
-import { works } from '../../schemas/work';
 import type { LobeChatDatabase } from '../../type';
-import { buildWorkspaceWhere } from '../../utils/workspace';
 import {
   activitiesOwnership,
   commentsOwnership,
@@ -175,8 +172,12 @@ export const collectTaskSubtree = async (
 };
 
 /**
- * Write one visibility onto a task subtree and the child rows that mirror it,
- * in one transaction. `TaskModel.updateVisibility` documents the cascade rules.
+ * Write one visibility onto a task subtree and the task-owned child rows that
+ * mirror it, in one transaction. Only the task aggregate is written here; the
+ * cross-aggregate flow (Work visibility mirror) lives in
+ * `TaskLifecycleRepository.updateVisibility`, which runs this inside its own
+ * transaction. `TaskLifecycleRepository.updateVisibility` documents the
+ * cascade rules.
  */
 export const setSubtreeVisibility = async (
   ctx: TaskModelContext,
@@ -218,27 +219,10 @@ export const setSubtreeVisibility = async (
       .set({ visibility })
       .where(and(inArray(taskDocuments.taskId, taskIds), docsOwnership(ctx)));
 
-    // Work is a denormalized resource projection. Keep its indexed visibility
-    // mirror in the same transaction as the task subtree so gallery/list
-    // queries cannot observe a stale public row after demotion.
-    await tx
-      .update(works)
-      .set({ visibility })
-      .where(
-        and(
-          eq(works.resourceType, 'task'),
-          inArray(works.resourceId, taskIds),
-          buildWorkspaceWhere(
-            { userId: ctx.userId, workspaceId: ctx.workspaceId },
-            { isDeleted: works.isDeleted, userId: works.userId, workspaceId: works.workspaceId },
-          ),
-        ),
-      );
-
     // Demotion-only cascade for the event-shaped child rows (see the
-    // `TaskModel.updateVisibility` docstring): their visibility mirrors the
-    // task, so pulling the task back to private must also pull public-era
-    // topics/comments out of workspace scope.
+    // `TaskLifecycleRepository.updateVisibility` docstring): their visibility
+    // mirrors the task, so pulling the task back to private must also pull
+    // public-era topics/comments out of workspace scope.
     if (visibility === 'private') {
       await tx
         .update(taskTopics)
@@ -260,29 +244,21 @@ export const setSubtreeVisibility = async (
   });
 };
 
-/** Delete the given tasks and their acceptances in one transaction. */
-export const deleteTasksWithAcceptances = async (
+/**
+ * Delete the given tasks (owned child rows cascade through their FKs).
+ * Acceptances belong to the verify aggregate; `TaskLifecycleRepository`
+ * removes them in the same transaction.
+ */
+export const deleteTasksByIds = async (
   ctx: TaskModelContext,
   taskIds: string[],
 ): Promise<number> => {
-  return ctx.db.transaction(async (tx) => {
-    await tx
-      .delete(acceptances)
-      .where(
-        and(
-          eq(acceptances.subjectType, 'task'),
-          inArray(acceptances.subjectId, taskIds),
-          buildWorkspaceWhere(
-            { userId: ctx.userId, workspaceId: ctx.workspaceId },
-            { userId: acceptances.userId, workspaceId: acceptances.workspaceId },
-          ),
-        ),
-      );
-    const result = await tx
-      .delete(tasks)
-      .where(and(inArray(tasks.id, taskIds), taskOwnership(ctx)))
-      .returning({ id: tasks.id });
+  if (taskIds.length === 0) return 0;
 
-    return result.length;
-  });
+  const result = await ctx.db
+    .delete(tasks)
+    .where(and(inArray(tasks.id, taskIds), taskOwnership(ctx)))
+    .returning({ id: tasks.id });
+
+  return result.length;
 };
