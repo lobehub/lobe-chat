@@ -6,6 +6,7 @@ import { SWRConfig, unstable_serialize } from 'swr';
 import { shareKeys } from '@/libs/swr/keys';
 import { resolveRequestLocale } from '@/locales/requestLocale';
 
+import { sharedTopicMessagesScript } from '../../src/features/topic/sharedConversation';
 import SharedTopicView, { preloadSharedTopic } from '../../src/features/topic/SharedTopicView';
 import { buildTopicByline } from '../../src/features/topic/topicByline';
 import { loadShareResources } from '../../src/shell/createShareI18n';
@@ -35,10 +36,9 @@ export const loader = async ({ context, params, request }: LoaderFunctionArgs) =
   };
 };
 
-// Runs as the router initializes on the client, before the hydration render.
-// On that first call `serverLoader()` hands back the data already in the
-// document, so this costs no request; it only starts the conversation's chunks
-// and messages as early as the client can know which conversation it is.
+// Runs as the hydrated router initializes. On that first call `serverLoader()`
+// hands back the data already in the document, so this costs no request; it
+// hands the conversation the messages the document already requested.
 export const clientLoader = async ({ serverLoader }: ClientLoaderFunctionArgs) => {
   const data = await serverLoader<typeof loader>();
   if (data.topic) preloadSharedTopic(data.topic);
@@ -64,6 +64,7 @@ export const meta: MetaFunction<typeof loader> = ({ loaderData }) => {
 
 export default function ShareTopicRoute() {
   const { shareId, topic } = useLoaderData<typeof loader>();
+  const messagesScript = topic ? sharedTopicMessagesScript(topic) : '';
 
   return (
     <SWRConfig
@@ -71,6 +72,7 @@ export default function ShareTopicRoute() {
         fallback: topic ? { [unstable_serialize(shareKeys.topic(shareId))]: topic } : {},
       }}
     >
+      {messagesScript && <script dangerouslySetInnerHTML={{ __html: messagesScript }} />}
       <SharedTopicView />
     </SWRConfig>
   );

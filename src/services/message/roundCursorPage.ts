@@ -16,37 +16,48 @@ export interface RoundCursorReadParams extends MessageListQueryContext {
   skipWorks?: boolean;
 }
 
+/** The `getMessagesByCursor` input for one round-aligned page of a topic's mainline. */
+export const toRoundCursorQueryInput = (
+  params: RoundCursorReadParams,
+  cursor: MessageRoundCursor | null,
+) => ({
+  agentId: params.agentId,
+  countBudget: MESSAGE_PAGE_ROW_BUDGET,
+  cursor,
+  groupId: params.groupId,
+  includeFileWorks: true,
+  projectToolPayloads: params.projectToolPayloads,
+  // The row budget is the real bound; ask for as many whole rounds as it holds.
+  roundLimit: MESSAGE_PAGE_ROW_BUDGET,
+  skipWorks: params.skipWorks,
+  topicId: params.topicId,
+  topicShareId: params.topicShareId,
+});
+
+export type RoundCursorQueryResult = Awaited<
+  ReturnType<typeof lambdaClient.message.getMessagesByCursor.query>
+>;
+
+export const toMessageListPage = (page: RoundCursorQueryResult): MessageListPage => ({
+  messages: page.messages as unknown as UIChatMessage[],
+  olderCursor: page.nextCursor,
+});
+
 /** One round-aligned page of a topic's mainline: the newest with a `null` cursor, else older. */
 export const readMessagesByRoundCursor = async (
   params: RoundCursorReadParams,
   cursor: MessageRoundCursor | null,
-): Promise<MessageListPage> => {
-  const page = await lambdaClient.message.getMessagesByCursor.query({
-    agentId: params.agentId,
-    countBudget: MESSAGE_PAGE_ROW_BUDGET,
-    cursor,
-    groupId: params.groupId,
-    includeFileWorks: true,
-    projectToolPayloads: params.projectToolPayloads,
-    // The row budget is the real bound; ask for as many whole rounds as it holds.
-    roundLimit: MESSAGE_PAGE_ROW_BUDGET,
-    skipWorks: params.skipWorks,
-    topicId: params.topicId,
-    topicShareId: params.topicShareId,
-  });
-
-  return {
-    messages: page.messages as unknown as UIChatMessage[],
-    olderCursor: page.nextCursor,
-  };
-};
+): Promise<MessageListPage> =>
+  toMessageListPage(
+    await lambdaClient.message.getMessagesByCursor.query(toRoundCursorQueryInput(params, cursor)),
+  );
 
 /**
  * Newest pages requested before the code that renders them has loaded, by
- * conversation. The share page knows its conversation from SSR loader data at
- * hydration, while the conversation stack is still downloading; priming there
- * takes the read off that chain. This module stays dependency-light because the
- * share route imports it ahead of the message service and the chat store.
+ * conversation. The share page starts its read from the document, while the
+ * conversation stack is still downloading, and hands it over here. This module
+ * stays dependency-light because the share route imports it ahead of the
+ * message service and the chat store.
  */
 const primedPages = new Map<string, Promise<MessageListPage>>();
 
@@ -54,15 +65,17 @@ const primeKey = (context: MessageListQueryContext) =>
   JSON.stringify(normalizeMessageListQueryContext(context));
 
 /**
- * Start a conversation's newest page now; its first head read takes it instead
- * of asking again. Primed without tool-payload projection: whole payloads are
- * the answer that cannot lose data for any reader.
+ * Hand over a conversation's newest page already in flight; its first head read
+ * takes it instead of asking again. The page must be read without tool-payload
+ * projection: whole payloads are the answer that cannot lose data for any reader.
  */
-export const primeMessageListPage = (context: MessageListQueryContext): void => {
+export const primeMessageListPage = (
+  context: MessageListQueryContext,
+  page: Promise<MessageListPage>,
+): void => {
   const key = primeKey(context);
   if (primedPages.has(key)) return;
 
-  const page = readMessagesByRoundCursor(context, null);
   // The taker owns failure (it falls back to its own read); an unclaimed page
   // must not surface as an unhandled rejection.
   page.catch(() => {});
