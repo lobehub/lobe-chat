@@ -1,3 +1,4 @@
+import { builtinTools } from '@lobechat/builtin-tools';
 import { getComposioAppByIdentifier } from '@lobechat/const';
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
@@ -150,7 +151,6 @@ export const bootstrapRouter = router({
   syncBuiltinTool: connectorProcedure
     .input(z.object({ identifier: z.string().min(1) }))
     .mutation(async ({ input, ctx }) => {
-      const { builtinTools } = await import('@lobechat/builtin-tools');
       const tool = builtinTools.find((t) => t.identifier === input.identifier);
 
       if (!tool) {
