@@ -73,7 +73,7 @@ import { merge } from '@/utils/merge';
 import { sanitizeNullBytes } from '@/utils/sanitizeNullBytes';
 import { today } from '@/utils/time';
 
-import type { FtsSearchCandidateSource } from '../repositories/ftsSearch';
+import type { FtsSearchCandidateSource } from '../../repositories/ftsSearch';
 import {
   agents,
   agentsToSessions,
@@ -93,21 +93,21 @@ import {
   threads,
   topics,
   users,
-} from '../schemas';
-import type { LobeChatDatabase, Transaction } from '../type';
-import { sanitizeBm25Query } from '../utils/bm25';
-import { notCopiedTranscript } from '../utils/copiedTranscript';
-import { notFileBackedPlaceholder } from '../utils/fileBackedPlaceholder';
-import { genEndDateWhere, genRangeWhere, genStartDateWhere, genWhere } from '../utils/genWhere';
-import { idGenerator } from '../utils/idGenerator';
-import { inJsonStringArray } from '../utils/inJsonStringArray';
-import { documentOriginalCharCount } from '../utils/originalCharCount';
-import { searchableMessage } from '../utils/searchableMessage';
-import { notShareVisitorMessage, notShareVisitorTopicRef } from '../utils/shareVisitor';
-import { isTrashed, restoreStamp, type SoftDeleteOptions, trashStamp } from '../utils/softDelete';
-import { buildWorkspacePayload, buildWorkspaceWhere } from '../utils/workspace';
-import { recomputeTopicUsage } from './topicUsage';
-import { WorkModel } from './work';
+} from '../../schemas';
+import type { LobeChatDatabase, Transaction } from '../../type';
+import { sanitizeBm25Query } from '../../utils/bm25';
+import { notCopiedTranscript } from '../../utils/copiedTranscript';
+import { notFileBackedPlaceholder } from '../../utils/fileBackedPlaceholder';
+import { genEndDateWhere, genRangeWhere, genStartDateWhere, genWhere } from '../../utils/genWhere';
+import { idGenerator } from '../../utils/idGenerator';
+import { inJsonStringArray } from '../../utils/inJsonStringArray';
+import { documentOriginalCharCount } from '../../utils/originalCharCount';
+import { searchableMessage } from '../../utils/searchableMessage';
+import { notShareVisitorMessage, notShareVisitorTopicRef } from '../../utils/shareVisitor';
+import { isTrashed, restoreStamp, type SoftDeleteOptions, trashStamp } from '../../utils/softDelete';
+import { buildWorkspacePayload, buildWorkspaceWhere } from '../../utils/workspace';
+import { recomputeTopicUsage } from '../topicUsage';
+import { WorkModel } from '../work';
 
 /**
  * Parsed-document columns attached to chat file items. `originalCharCount` is only set when the
@@ -610,7 +610,7 @@ export interface ShareVisitorWriteOptions {
 
 /**
  * Constructor options for {@link MessageModel} — mirrors the twin flag on
- * {@link import('./topic').TopicModelOptions}. When `includeShareVisitor` is
+ * {@link import('../topic').TopicModelOptions}. When `includeShareVisitor` is
  * true, the instance's `ownership()` predicate no longer excludes agent-share
  * visitor messages; the escape hatch that per-call {@link ShareVisitorWriteOptions}
  * used to be the only way to grant. Share-only surfaces should set this at
