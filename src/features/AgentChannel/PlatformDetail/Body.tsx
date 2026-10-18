@@ -488,6 +488,8 @@ interface BodyProps {
   platformDef: SerializedPlatformDefinition;
   /** Name a quick-created bot app starts with (the agent's name). */
   quickSetupAppName?: string;
+  /** Who a quick-created bot app is for (the agent id); a new scope starts a new scan. */
+  quickSetupScope?: string;
 }
 
 const Body = memo<BodyProps>(
@@ -500,6 +502,7 @@ const Body = memo<BodyProps>(
     onValuesChange,
     disabled,
     quickSetupAppName,
+    quickSetupScope,
   }) => {
     const { t: _t } = useTranslation('agent');
     const t = _t as (key: string) => string;
@@ -571,6 +574,7 @@ const Body = memo<BodyProps>(
                 form={form}
                 hasConfig={hasConfig}
                 platformId={platformDef.id}
+                scope={quickSetupScope}
                 onAuthenticated={onAuthenticated}
               />
               {/* Render top-level sections in schema order so each platform controls

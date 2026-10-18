@@ -7,6 +7,7 @@ import {
   buildSlackManifest,
   DISCORD_BOT_PERMISSIONS,
   REGISTRATION_NAME_MAX_LENGTH,
+  registrationPollInterval,
   toRegistrationName,
 } from './links';
 
@@ -36,6 +37,9 @@ describe('quick setup links', () => {
     expect(manifest.settings.socket_mode_enabled).toBe(true);
     expect(manifest.settings.event_subscriptions.bot_events).toContain('app_mention');
     expect(manifest.oauth_config.scopes.bot).toContain('chat:write');
+    // Group DMs, as in the Slack setup guide.
+    expect(manifest.settings.event_subscriptions.bot_events).toContain('message.mpim');
+    expect(manifest.oauth_config.scopes.bot).toContain('mpim:read');
     expect(manifest.features.bot_user.display_name).toBe('moss');
     expect(buildSlackManifest({ name: '助手' }).features.bot_user.display_name).toBe(
       'lobehub-assistant',
@@ -59,6 +63,15 @@ describe('toRegistrationName', () => {
     // An emoji is two UTF-16 units; one that would cross the limit is dropped whole.
     const name = toRegistrationName(`${'a'.repeat(REGISTRATION_NAME_MAX_LENGTH - 1)}🤖`);
     expect(name).toBe('a'.repeat(REGISTRATION_NAME_MAX_LENGTH - 1));
+  });
+});
+
+describe('registrationPollInterval', () => {
+  it('keeps every slow_down increase for all later polls', () => {
+    expect(registrationPollInterval(5, 0)).toBe(5000);
+    expect(registrationPollInterval(5, 1)).toBe(10_000);
+    expect(registrationPollInterval(5, 2)).toBe(15_000);
+    expect(registrationPollInterval(undefined, 0)).toBe(5000);
   });
 });
 

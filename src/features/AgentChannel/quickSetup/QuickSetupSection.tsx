@@ -37,6 +37,8 @@ interface QuickSetupSectionProps {
     credentials: Record<string, string>;
   }) => Promise<boolean> | void;
   platformId: string;
+  /** Who the created app is for (the agent id); a new scope starts a new scan. */
+  scope?: string;
 }
 
 /**
@@ -45,7 +47,7 @@ interface QuickSetupSectionProps {
  * gets its setup steps with links straight to the right console page.
  */
 const QuickSetupSection = memo<QuickSetupSectionProps>(
-  ({ appName, disabled, form, hasConfig, onAuthenticated, platformId }) => {
+  ({ appName, disabled, form, hasConfig, onAuthenticated, platformId, scope }) => {
     const { t } = useTranslation('agent');
     const applicationId = useWatch(form, (values) => values?.applicationId as string | undefined);
     const guide = useMemo(
@@ -68,9 +70,12 @@ const QuickSetupSection = memo<QuickSetupSectionProps>(
       <>
         {canScan && (
           <Flexbox gap={12} style={{ padding: '16px 0' }}>
+            {/* Keyed so another agent or platform never inherits this scan. */}
             <FeishuQuickCreate
               appPreset={{ name: toRegistrationName(appName) }}
+              key={`${scope ?? ''}:${platformId}`}
               platform={platformId as 'feishu' | 'lark'}
+              scope={scope}
               onCreated={handleCreated}
             />
             <Text fontSize={12} style={{ color: cssVar.colorTextTertiary }}>

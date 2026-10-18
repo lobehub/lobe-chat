@@ -57,6 +57,7 @@ const SLACK_BOT_SCOPES = [
   'im:read',
   'im:write',
   'mpim:history',
+  'mpim:read',
   'pins:read',
   'pins:write',
   'reactions:read',
@@ -64,7 +65,13 @@ const SLACK_BOT_SCOPES = [
   'users:read',
 ];
 
-const SLACK_BOT_EVENTS = ['app_mention', 'message.channels', 'message.groups', 'message.im'];
+const SLACK_BOT_EVENTS = [
+  'app_mention',
+  'message.channels',
+  'message.groups',
+  'message.im',
+  'message.mpim',
+];
 
 /**
  * A Slack app manifest with the scopes, events and Socket Mode the bot
@@ -121,3 +128,10 @@ export const toRegistrationName = (name: string): string => {
   }
   return result;
 };
+
+/**
+ * Milliseconds until the next registration poll. Every `slow_down` answer adds
+ * five seconds for all later polls (RFC 8628 §3.5), not just the next one.
+ */
+export const registrationPollInterval = (intervalSeconds = 5, slowDowns = 0): number =>
+  (intervalSeconds + slowDowns * 5) * 1000;

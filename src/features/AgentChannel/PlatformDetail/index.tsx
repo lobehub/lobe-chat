@@ -520,6 +520,7 @@ const PlatformDetail = memo<PlatformDetailProps>(
               hasConfig={!!currentConfig}
               platformDef={platformDef}
               quickSetupAppName={agentName}
+              quickSetupScope={agentId}
               onAuthenticated={handleExternalAuth}
               onValuesChange={handleFormValuesChange}
             />
