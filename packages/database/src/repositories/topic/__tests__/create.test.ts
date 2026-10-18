@@ -260,9 +260,9 @@ describe('TopicRepository - create', () => {
     });
 
     it('leaves TopicModel.create single-table: re-parenting messages there is refused', async () => {
-      await expect(topicModel.create({ messages: ['msg-1'], title: 'model only' })).rejects.toThrow(
-        'TopicRepository.create',
-      );
+      await expect(
+        topicModel.create({ messages: ['msg-1'], title: 'model only' } as CreateTopicParams),
+      ).rejects.toThrow('TopicRepository.create');
       expect(await serverDB.select().from(topics)).toHaveLength(0);
     });
   });

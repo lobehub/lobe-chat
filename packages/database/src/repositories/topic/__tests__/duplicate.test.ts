@@ -160,7 +160,7 @@ describe('TopicRepository - duplicate', () => {
         ]);
       });
 
-      const { topic: duplicatedTopic, messages: duplicatedMessages } = await topicRepo.duplicate(
+      const { messages: duplicatedMessages } = await topicRepo.duplicate(
         topicId,
         'Duplicated Topic',
       );
@@ -221,7 +221,7 @@ describe('TopicRepository - duplicate', () => {
         });
       });
 
-      const { topic: duplicatedTopic, messages: duplicatedMessages } = await topicRepo.duplicate(
+      const { messages: duplicatedMessages } = await topicRepo.duplicate(
         topicId,
         'Duplicated Topic',
       );

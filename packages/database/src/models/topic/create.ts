@@ -12,10 +12,14 @@ import type { CreateTopicParams, ModelTimingContext } from './types';
  */
 export const create = async (
   ctx: TopicModelContext,
-  { messages: messageIds, ...params }: CreateTopicParams,
+  topicParams: Omit<CreateTopicParams, 'messages'>,
   id: string = ctx.genId(),
   timing?: ModelTimingContext,
 ): Promise<TopicItem> => {
+  // The type rejects a literal `messages` key; this also catches a widened
+  // `CreateTopicParams` value so a missed caller fails instead of silently
+  // dropping the re-parenting.
+  const { messages: messageIds, ...params } = topicParams as CreateTopicParams;
   if (messageIds && messageIds.length > 0) {
     throw new Error(
       'TopicModel.create does not re-parent messages; use TopicRepository.create instead',

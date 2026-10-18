@@ -2,7 +2,7 @@ import type { LobeChatDatabase } from '@lobechat/database';
 import type { ExecGroupAgentParams } from '@lobechat/types';
 import { TRPCError } from '@trpc/server';
 
-import type { TopicModel } from '@/database/models/topic';
+import type { TopicRepository } from '@/database/repositories/topic';
 import type { AgentConfigWithId } from '@/server/services/agent';
 import { AgentService } from '@/server/services/agent';
 import { markdownToTxt } from '@/utils/markdownToTxt';
@@ -60,7 +60,8 @@ export const resolvePrecreatedTopicSnapshot = async (
 };
 
 export interface GroupAgentTopicDeps extends PrecreatedTopicDeps {
-  topicModel: TopicModel;
+  /** Repository-owned create: `newTopic.topicMessageIds` re-parents messages atomically. */
+  topicRepo: TopicRepository;
 }
 
 /**
@@ -85,7 +86,7 @@ export const createGroupAgentTopic = async (
     { db: deps.db, userId: deps.userId, workspaceId: deps.workspaceId },
     agentConfig,
   );
-  const topicItem = await deps.topicModel.create({
+  const topicItem = await deps.topicRepo.create({
     ...snapshot,
     agentId,
     groupId,
