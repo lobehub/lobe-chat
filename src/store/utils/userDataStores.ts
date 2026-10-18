@@ -16,6 +16,7 @@ import { useMentionStore } from '@/store/mention';
 import { useNotebookStore } from '@/store/notebook';
 import { pageActions } from '@/store/page';
 import { projectFileActions } from '@/store/projectFile';
+import { resourcePermissionActions } from '@/store/resourcePermission';
 import { sandboxActions } from '@/store/sandbox';
 import { useSessionStore } from '@/store/session';
 import { useTaskStore } from '@/store/task';
@@ -54,6 +55,7 @@ const resetableActions: ResetableStore[] = [
   agentDocumentActions,
   pageActions,
   projectFileActions,
+  resourcePermissionActions,
   sandboxActions,
 ];
 
