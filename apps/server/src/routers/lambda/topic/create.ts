@@ -4,6 +4,7 @@ import {
   heteroSessionImportPayloadSchema,
 } from '@lobechat/types';
 import { TRPCError } from '@trpc/server';
+import pMap from 'p-map';
 import { z } from 'zod';
 
 import { withScopedPermission } from '@/business/server/trpc-middlewares/rbacPermission';
@@ -23,6 +24,10 @@ import {
 import { basicContextSchema } from '../_schema/context';
 import { guardCtx, topicProcedure } from './procedures';
 
+// Each batch item resolves its agent/session through the DB; cap the fan-out
+// so a large client-supplied batch does not burst concurrent lookups.
+const BATCH_CREATE_CONTEXT_RESOLUTION_CONCURRENCY = 5;
+
 export const createRouter = router({
   batchCreateTopics: topicProcedure
     .use(withScopedPermission('topic:create'))
@@ -41,8 +46,9 @@ export const createRouter = router({
     .mutation(async ({ input, ctx }): Promise<BatchTaskResult> => {
       // Resolve both directions before authorization: legacy callers may send
       // only sessionId, while the ACL is attached to the owning agent.
-      const resolvedTopics = await Promise.all(
-        input.map(async (item) => {
+      const resolvedTopics = await pMap(
+        input,
+        async (item) => {
           const { agentId, ...rest } = item;
           const resolved = await resolveContextWithAgentId(
             { agentId, groupId: rest.groupId, sessionId: rest.sessionId },
@@ -51,7 +57,8 @@ export const createRouter = router({
             ctx.workspaceId ?? undefined,
           );
           return { ...rest, agentId: resolved.agentId, sessionId: resolved.sessionId };
-        }),
+        },
+        { concurrency: BATCH_CREATE_CONTEXT_RESOLUTION_CONCURRENCY },
       );
 
       await assertCanUseConversationTargets(
