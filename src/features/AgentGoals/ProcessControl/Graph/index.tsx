@@ -131,11 +131,11 @@ const styles = createStaticStyles(({ css }) => ({
       stroke-dasharray: 5 4;
     }
 
-    /* The wrap-up report's mainline: the path reads as one bold line, and
-       everything off it steps back. Selection still lights a muted edge. */
+    /* The wrap-up report's mainline: one line in its cards' ring blue (the
+       near-black primary read as heavy ink), and everything off it steps back. */
     .react-flow__edge.goal-mainline .react-flow__edge-path {
-      stroke: ${cssVar.colorPrimary};
-      stroke-width: 2.5;
+      stroke: ${cssVar.colorInfo};
+      stroke-width: 1.75;
     }
 
     /* A chapter map's detours: the line into a stray card reads in the same
@@ -156,7 +156,8 @@ const styles = createStaticStyles(({ css }) => ({
     }
 
     .react-flow__edge.goal-mainline.goal-hot .react-flow__edge-path {
-      stroke-width: 2.5;
+      stroke: ${cssVar.colorInfo};
+      stroke-width: 2.25;
     }
 
     /* Off-mainline lines keep their step-back on the light canvas. On the dark

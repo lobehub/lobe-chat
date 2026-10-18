@@ -136,7 +136,7 @@ export const edgeTone = (
  * On the light canvas the border token at a third opacity reads as intended —
  * clearly behind the mainline, still present. On the dark canvas that same
  * combination sinks into the background, so the line is lifted just enough to
- * stay legible. The mainline keeps its own bold primary line either way, so the
+ * stay legible. The mainline keeps its own blue line either way, so the
  * hierarchy is never flattened.
  */
 export const MUTED_EDGE_OPACITY = 0.3;
@@ -148,7 +148,7 @@ export const MUTED_EDGE_OPACITY_DARK = 0.5;
  * that token is nearly invisible, so it borrows the lighter text token.
  */
 export const edgeMarkerColor = (tone: EdgeTone, isDarkMode: boolean): string => {
-  if (tone === 'mainline') return cssVar.colorPrimary;
+  if (tone === 'mainline') return cssVar.colorInfo;
   if (tone === 'detour') return cssVar.colorWarning;
   return isDarkMode ? cssVar.colorTextQuaternary : cssVar.colorBorder;
 };
