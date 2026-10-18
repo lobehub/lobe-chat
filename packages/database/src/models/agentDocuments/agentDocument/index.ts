@@ -17,14 +17,14 @@ import {
   sql,
 } from 'drizzle-orm';
 
-import type { DocumentItem, NewAgentDocument, NewDocument } from '../../schemas';
-import { AGENT_SKILL_TEMPLATE_ID, agentDocuments, documents } from '../../schemas';
-import type { LobeChatDatabase, Transaction } from '../../type';
-import { documentMatchesAccessScope } from '../../utils/documentVisibility';
-import { buildWorkspaceWhere } from '../../utils/workspace';
-import { buildCopyParams } from './copyDocument';
-import { deriveAgentDocumentFields } from './deriveFields';
-import { buildDocumentFilename } from './filename';
+import type { DocumentItem, NewAgentDocument, NewDocument } from '../../../schemas';
+import { AGENT_SKILL_TEMPLATE_ID, agentDocuments, documents } from '../../../schemas';
+import type { LobeChatDatabase, Transaction } from '../../../type';
+import { documentMatchesAccessScope } from '../../../utils/documentVisibility';
+import { buildWorkspaceWhere } from '../../../utils/workspace';
+import { buildCopyParams } from '../copyDocument';
+import { deriveAgentDocumentFields } from '../deriveFields';
+import { buildDocumentFilename } from '../filename';
 import {
   composeToolPolicyUpdate,
   isLoadableDocument,
@@ -32,7 +32,7 @@ import {
   parseLoadRules,
   resolveDocumentLoadPosition,
   sortByLoadRulePriority,
-} from './policy';
+} from '../policy';
 import type {
   AgentDocument,
   AgentDocumentContextRow,
@@ -43,16 +43,16 @@ import type {
   AgentDocumentWithRules,
   DocumentLoadRules,
   ToolUpdateLoadRule,
-} from './types';
+} from '../types';
 import {
   AgentAccess,
   DocumentLoadFormat,
   DocumentLoadPosition,
   DocumentLoadRule,
   PolicyLoad,
-} from './types';
+} from '../types';
 
-export * from './types';
+export * from '../types';
 
 interface AgentDocumentQueryOptions {
   cursor?: string;
