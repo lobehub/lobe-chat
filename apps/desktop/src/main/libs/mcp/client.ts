@@ -86,6 +86,23 @@ export function appendCappedOutput(
   return { text: current + chunk.toString('utf8').slice(0, remaining), truncated: true };
 }
 
+/**
+ * Select diagnostic lines for the MCPConnectionError payload. Keeps the TAIL
+ * of each stream: launchers print startup chatter first and emit the decisive
+ * error last, so head-slicing keeps the noise and drops the lines that
+ * actually explain the failure. Both streams are capped upstream (64 KiB), so
+ * the result stays small.
+ */
+export function selectDiagnosticOutputLines(stdout: string, stderr: string): string[] {
+  const tailLines = (text: string) =>
+    text
+      .split('\n')
+      .map((line) => line.trim())
+      .filter(Boolean)
+      .slice(-10);
+  return [...tailLines(stdout), ...tailLines(stderr)];
+}
+
 /** Build the minimal JSON-RPC initialize probe sent to the pre-check child. */
 export function buildInitializeProbeMessage(): string {
   return (
@@ -100,6 +117,28 @@ export function buildInitializeProbeMessage(): string {
       },
     }) + '\n'
   );
+}
+
+/**
+ * Detect the JSON-RPC response to the initialize probe (id: 1) in captured
+ * pre-check stdout. Exit status 0 alone does not prove the MCP handshake
+ * progressed: one-shot executables and wrappers can start, print an error and
+ * exit 0 without ever completing the handshake. Without this check such
+ * servers pass the pre-check and the original bare "Connection closed" error
+ * surfaces unchanged.
+ */
+export function hasInitializeResponse(stdout: string): boolean {
+  return stdout.split('\n').some((line) => {
+    const trimmed = line.trim();
+    if (!trimmed.startsWith('{')) return false;
+    try {
+      const parsed = JSON.parse(trimmed) as { id?: unknown; result?: unknown };
+      return parsed.id === 1 && parsed.result !== undefined;
+      // Non-JSON lines are startup chatter, not handshake responses.
+    } catch {
+      return false;
+    }
+  });
 }
 
 /**
@@ -204,6 +243,19 @@ export function describeStdioSpawnFailure(input: StdioSpawnFailureInput): string
       `${combinedOutput ? ' (see the process output below)' : ' with no output'}. ` +
       'This usually indicates an unhandled native-level failure (e.g. missing shared library or corrupted binary); ' +
       'reinstall the MCP server package and verify it runs standalone.'
+    );
+  }
+
+  // Zero-code exits are only passed by the pre-check when the process
+  // terminated cleanly WITHOUT completing the MCP handshake — a persistent
+  // MCP server must stay alive and answer initialize requests. Catch before
+  // the exitCode branch, which skips code 0.
+  if (input.exitCode === 0) {
+    return (
+      `MCP server "${command}" exited (code 0) without completing the MCP handshake. ` +
+      'A persistent MCP server must stay running and respond to initialize requests; ' +
+      'the configured command may be a one-shot utility, or it may be exiting right ' +
+      'after startup (see the process output below for any error it printed).'
     );
   }
 
@@ -437,7 +489,26 @@ export class MCPClient {
 
       child.on('exit', (code, signal) => {
         if (code === 0) {
-          finish({ diagnosis: '', stderr, stdout, success: true });
+          // Exit 0 alone does not prove the MCP handshake completed: one-shot
+          // executables and wrappers can start, print an error and exit
+          // cleanly before responding to the initialize probe. Only credit
+          // the probe when an initialize response was actually received;
+          // otherwise diagnose the zero-code exit as a startup failure.
+          if (hasInitializeResponse(stdout)) {
+            finish({ diagnosis: '', stderr, stdout, success: true });
+          } else {
+            finish({
+              diagnosis: describeStdioSpawnFailure({
+                command: params.command,
+                exitCode: 0,
+                stderr,
+                stdout,
+              }),
+              stderr,
+              success: false,
+              stdout,
+            });
+          }
           return;
         }
 
@@ -502,19 +573,10 @@ export class MCPClient {
           const originalMessage = error instanceof Error ? error.message : String(error);
           // Bounded process output (stdout can carry the real launcher error
           // when the process writes nothing to stderr). Merge both streams,
-          // newest-stream-first, capped to keep the error payload small.
-          const outputLines = [
-            ...preCheck.stdout
-              .split('\n')
-              .map((line) => line.trim())
-              .filter(Boolean)
-              .slice(0, 10),
-            ...preCheck.stderr
-              .split('\n')
-              .map((line) => line.trim())
-              .filter(Boolean)
-              .slice(0, 10),
-          ].slice(0, 20);
+          // keeping the tail of each — the decisive error is usually the last
+          // line, after startup chatter. selectDiagnosticOutputLines caps the
+          // result (10 lines per stream; both streams are capped at 64 KiB).
+          const outputLines = selectDiagnosticOutputLines(preCheck.stdout, preCheck.stderr);
 
           throw new MCPConnectionError(
             `${preCheck.diagnosis} (original error: ${originalMessage})`,

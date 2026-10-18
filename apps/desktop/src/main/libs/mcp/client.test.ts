@@ -6,7 +6,9 @@ import {
   appendCappedOutput,
   buildInitializeProbeMessage,
   describeStdioSpawnFailure,
+  hasInitializeResponse,
   MCPConnectionError,
+  selectDiagnosticOutputLines,
   terminatePrecheckProcess,
 } from './client';
 
@@ -74,6 +76,28 @@ describe('describeStdioSpawnFailure', () => {
     });
 
     expect(message).toContain('exited immediately with code 127');
+  });
+
+  it('diagnoses a zero-code exit without MCP handshake as a startup failure', () => {
+    const message = describeStdioSpawnFailure({
+      command: 'one-shot-wrapper',
+      exitCode: 0,
+      stdout: 'starting up',
+    });
+
+    expect(message).toContain('exited (code 0)');
+    expect(message).toContain('without completing the MCP handshake');
+  });
+
+  it('diagnoses a zero-code exit with an error line printed on stdout', () => {
+    const message = describeStdioSpawnFailure({
+      command: 'kali-wrapper',
+      exitCode: 0,
+      stdout: 'Error: config file missing',
+    });
+
+    expect(message).toContain('exited (code 0)');
+    expect(message).toContain('kali-wrapper');
   });
 
   it('reports the crash signal for signal-only exits (exitCode null)', () => {
@@ -181,6 +205,58 @@ describe('buildInitializeProbeMessage', () => {
     expect(parsed.params.protocolVersion).toBe('2024-11-05');
     expect(parsed.params.clientInfo.name).toBe('lobe-mcp-precheck');
     expect(message.endsWith('\n')).toBe(true);
+  });
+});
+
+describe('selectDiagnosticOutputLines', () => {
+  const makeLines = (n: number, prefix: string) =>
+    Array.from({ length: n }, (_, i) => `${prefix} line ${i + 1}`).join('\n');
+
+  it('keeps the tail of each stream and caps at 10 lines per stream', () => {
+    const stdout = makeLines(15, 'out');
+    const stderr = makeLines(15, 'err');
+
+    const lines = selectDiagnosticOutputLines(stdout, stderr);
+
+    expect(lines).toHaveLength(20);
+    expect(lines[0]).toBe('out line 6');
+    expect(lines[9]).toBe('out line 15');
+    expect(lines[10]).toBe('err line 6');
+    expect(lines[19]).toBe('err line 15');
+  });
+
+  it('merges stdout then stderr preserving order', () => {
+    const lines = selectDiagnosticOutputLines('out-1\nout-2', 'err-1');
+
+    expect(lines).toEqual(['out-1', 'out-2', 'err-1']);
+  });
+
+  it('returns an empty array when both streams are empty', () => {
+    expect(selectDiagnosticOutputLines('', '')).toEqual([]);
+  });
+});
+
+describe('hasInitializeResponse', () => {
+  it('detects a JSON-RPC response to the initialize probe (id 1)', () => {
+    const stdout = [
+      'server starting…',
+      JSON.stringify({ id: 1, jsonrpc: '2.0', result: { protocolVersion: '2024-11-05' } }),
+    ].join('\n');
+
+    expect(hasInitializeResponse(stdout)).toBe(true);
+  });
+
+  it('returns false when stdout has chatter but no probe response', () => {
+    expect(hasInitializeResponse('booting\nready-ish\n')).toBe(false);
+  });
+
+  it('ignores notifications (no id) and other ids', () => {
+    const stdout = [
+      JSON.stringify({ jsonrpc: '2.0', method: 'notifications/initialized' }),
+      JSON.stringify({ id: 2, jsonrpc: '2.0', result: {} }),
+    ].join('\n');
+
+    expect(hasInitializeResponse(stdout)).toBe(false);
   });
 });
 
