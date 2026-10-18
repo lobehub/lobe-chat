@@ -346,7 +346,7 @@ export const deleteTaskWork = async (
 /**
  * Mirror a task subtree's visibility onto its Work rows. Works keep an indexed
  * copy of the resource visibility so gallery/list queries can filter without a
- * join; `TaskLifecycleRepository.updateVisibility` calls this in the same
+ * join; `TaskSubtreeRepository.updateVisibility` calls this in the same
  * transaction as the task write so lists never observe a stale public row.
  *
  * Scoped by user/workspace only (not visibility): a workspace owner demoting

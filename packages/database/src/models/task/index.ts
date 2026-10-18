@@ -159,7 +159,7 @@ export class TaskModel {
   /**
    * Write `visibility` onto a task subtree and its task-owned child rows.
    * Task aggregate only — callers changing a task's visibility go through
-   * `TaskLifecycleRepository.updateVisibility`, which also mirrors it onto
+   * `TaskSubtreeRepository.updateVisibility`, which also mirrors it onto
    * the task's Work row in the same transaction.
    */
   async setSubtreeVisibility(
@@ -195,7 +195,7 @@ export class TaskModel {
 
   /**
    * Delete the given tasks (task aggregate only). Use
-   * `TaskLifecycleRepository.deleteSubtree` to also drop their acceptances.
+   * `TaskSubtreeRepository.deleteSubtree` to also drop their acceptances.
    */
   async deleteByIds(taskIds: string[]): Promise<number> {
     return tree.deleteTasksByIds(this.ctx, taskIds);

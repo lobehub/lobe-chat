@@ -541,7 +541,7 @@ export class AcceptanceModel {
   /**
    * Delete every acceptance attached to the given subjects in the caller's
    * user/workspace scope. Used when the subjects themselves are deleted (see
-   * `TaskLifecycleRepository.deleteSubtree`).
+   * `TaskSubtreeRepository.deleteSubtree`).
    */
   deleteBySubjects = async (
     subjectType: AcceptanceSubjectType,

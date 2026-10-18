@@ -175,8 +175,8 @@ export const collectTaskSubtree = async (
  * Write one visibility onto a task subtree and the task-owned child rows that
  * mirror it, in one transaction. Only the task aggregate is written here; the
  * cross-aggregate flow (Work visibility mirror) lives in
- * `TaskLifecycleRepository.updateVisibility`, which runs this inside its own
- * transaction. `TaskLifecycleRepository.updateVisibility` documents the
+ * `TaskSubtreeRepository.updateVisibility`, which runs this inside its own
+ * transaction. `TaskSubtreeRepository.updateVisibility` documents the
  * cascade rules.
  */
 export const setSubtreeVisibility = async (
@@ -220,7 +220,7 @@ export const setSubtreeVisibility = async (
       .where(and(inArray(taskDocuments.taskId, taskIds), docsOwnership(ctx)));
 
     // Demotion-only cascade for the event-shaped child rows (see the
-    // `TaskLifecycleRepository.updateVisibility` docstring): their visibility
+    // `TaskSubtreeRepository.updateVisibility` docstring): their visibility
     // mirrors the task, so pulling the task back to private must also pull
     // public-era topics/comments out of workspace scope.
     if (visibility === 'private') {
@@ -246,7 +246,7 @@ export const setSubtreeVisibility = async (
 
 /**
  * Delete the given tasks (owned child rows cascade through their FKs).
- * Acceptances belong to the verify aggregate; `TaskLifecycleRepository`
+ * Acceptances belong to the verify aggregate; `TaskSubtreeRepository`
  * removes them in the same transaction.
  */
 export const deleteTasksByIds = async (
