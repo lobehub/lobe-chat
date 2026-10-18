@@ -1,8 +1,8 @@
 // @vitest-environment node
 import { describe, expect, it } from 'vitest';
 
-import * as agentDocumentModule from '../agentDocument';
-import { AgentDocumentModel } from '../agentDocument';
+import * as agentDocumentModule from '.';
+import { AgentDocumentModel } from '.';
 
 /**
  * Pins the public surface of `AgentDocumentModel` so a split into helper
