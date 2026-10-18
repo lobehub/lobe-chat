@@ -11,6 +11,7 @@ import dayjs from 'dayjs';
 import { cloneDeep, merge, uniq, uniqBy } from 'es-toolkit/compat';
 import matter from 'gray-matter';
 import { isAiModelVisible } from 'model-bank';
+import { DEFAULT_MODEL_PROVIDER_LIST } from 'model-bank/modelProviders';
 import urlJoin from 'url-join';
 
 import { normalizeLocale } from '@/locales/resources';
@@ -22,10 +23,7 @@ import { loadBuiltinModels, log } from './utils';
 
 export const listProviderItems = async (): Promise<DiscoverProviderItem[]> => {
   log('_getProviderList: fetching provider list');
-  const [builtinModels, { DEFAULT_MODEL_PROVIDER_LIST }] = await Promise.all([
-    loadBuiltinModels(),
-    import('model-bank/modelProviders'),
-  ]);
+  const builtinModels = await loadBuiltinModels();
   const result = DEFAULT_MODEL_PROVIDER_LIST.map((item) => {
     const models = uniq(
       builtinModels.filter((m) => m.providerId === item.id && isAiModelVisible(m)).map((m) => m.id),

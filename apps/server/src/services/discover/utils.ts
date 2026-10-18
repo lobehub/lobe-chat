@@ -1,15 +1,14 @@
 import { MarketAPIError } from '@lobehub/market-sdk';
 import debug from 'debug';
 
+import { loadModels } from '@/business/client/model-bank/loadModels';
+
 export const log = debug('lobe-server:discover');
 
 export const isMarketNotFound = (error: unknown) =>
   error instanceof MarketAPIError && (error.status === 404 || error.isErrorCode('NOT_FOUND'));
 
-export const loadBuiltinModels = async () => {
-  const { loadModels } = await import('@/business/client/model-bank/loadModels');
-  return loadModels();
-};
+export const loadBuiltinModels = async () => loadModels();
 
 export const normalizeAuthorField = (
   author: unknown,

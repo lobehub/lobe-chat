@@ -15,6 +15,7 @@ import { type CategoryItem, type CategoryListQuery } from '@lobehub/market-sdk';
 import dayjs from 'dayjs';
 import { countBy, uniq } from 'es-toolkit/compat';
 import { isAiModelVisible } from 'model-bank';
+import { DEFAULT_MODEL_PROVIDER_LIST } from 'model-bank/modelProviders';
 
 import type { DiscoverService } from './index';
 import { loadBuiltinModels, log } from './utils';
@@ -249,10 +250,7 @@ export const getModelDetail = async (
   },
 ): Promise<DiscoverModelDetail | undefined> => {
   log('getModelDetail: params=%O', params);
-  const [builtinModels, { DEFAULT_MODEL_PROVIDER_LIST }] = await Promise.all([
-    loadBuiltinModels(),
-    import('model-bank/modelProviders'),
-  ]);
+  const builtinModels = await loadBuiltinModels();
   const { identifier } = params;
   const all = await listModelItems();
   let model = all.find((item) => item.identifier.toLowerCase() === identifier.toLowerCase());
