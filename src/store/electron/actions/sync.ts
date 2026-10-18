@@ -24,6 +24,34 @@ import { type ElectronStore } from '../store';
 const dataContextOf = ({ active, remoteServerUrl, storageMode }: DataSyncConfig): string =>
   active ? `${storageMode}|${remoteServerUrl ?? ''}` : 'inactive';
 
+/**
+ * Set while a window runs the connect flow, shared by every renderer. That
+ * window owns the data-context reset: every window sees the config toggle
+ * mid-flow, and a follower resetting on its own would reload the initiator
+ * (through the shared reset epoch) before authorization finishes. A stale mark
+ * (a crashed flow) expires.
+ */
+const AUTHORIZING_KEY = 'lobe-remote-server-authorizing';
+const AUTHORIZING_TTL = 15 * 60 * 1000;
+
+const setAuthorizing = (active: boolean): void => {
+  try {
+    if (active) localStorage.setItem(AUTHORIZING_KEY, String(Date.now()));
+    else localStorage.removeItem(AUTHORIZING_KEY);
+  } catch {
+    // Storage unavailable: followers fall back to resetting on their own.
+  }
+};
+
+const isAuthorizingElsewhere = (): boolean => {
+  try {
+    const since = Number(localStorage.getItem(AUTHORIZING_KEY));
+    return since > 0 && Date.now() - since < AUTHORIZING_TTL;
+  } catch {
+    return false;
+  }
+};
+
 type RemoteServerSyncError = NonNullable<ElectronStore['remoteServerSyncError']>;
 
 /**
@@ -58,8 +86,8 @@ export const remoteSyncSlice = (set: Setter, get: () => ElectronStore, _api?: un
 export class ElectronRemoteServerActionImpl {
   readonly #get: () => ElectronStore;
   readonly #set: Setter;
-  /** A data-context change seen mid-connect; applied once the flow finishes. */
-  #pendingDataContextReset = false;
+  /** Which server the data on screen comes from (`dataContextOf`), once hydrated. */
+  #shownContext: string | undefined;
 
   constructor(set: Setter, get: () => ElectronStore, _api?: unknown) {
     void _api;
@@ -74,7 +102,10 @@ export class ElectronRemoteServerActionImpl {
   connectRemoteServer = async (values: DataSyncConfig): Promise<void> => {
     if (values.storageMode === 'selfHost' && !values.remoteServerUrl) return;
 
+    // The context on screen before the flow; this window resets if it changed.
+    const contextBefore = this.#shownContext ?? dataContextOf(this.#get().dataSyncConfig);
     this.#set({ isConnectingServer: true });
+    setAuthorizing(true);
     this.#get().clearRemoteServerSyncError();
     try {
       // Get current configuration
@@ -103,9 +134,16 @@ export class ElectronRemoteServerActionImpl {
         remoteServerSyncError: { message: (error as Error).message, type: 'CONFIG_ERROR' },
       });
     } finally {
+      let changed = true;
+      try {
+        changed =
+          dataContextOf(await remoteServerService.getRemoteServerConfig()) !== contextBefore;
+      } catch {
+        // Unknown outcome: reset rather than keep possibly foreign data on screen.
+      }
       this.#set({ isConnectingServer: false });
-      if (this.#pendingDataContextReset) {
-        this.#pendingDataContextReset = false;
+      setAuthorizing(false);
+      if (changed) {
         const { remoteServerSyncError } = this.#get();
         if (remoteServerSyncError) stashSyncError(remoteServerSyncError);
         await resetDataContext();
@@ -150,7 +188,7 @@ export class ElectronRemoteServerActionImpl {
       },
       {
         onSuccess: (data) => {
-          const { dataSyncConfig, isConnectingServer, isInitRemoteServerConfig } = this.#get();
+          const { isConnectingServer, isInitRemoteServerConfig } = this.#get();
           // The first hydration after a reload restores a connect error it carried.
           const stashedError = isInitRemoteServerConfig ? undefined : takeStashedSyncError();
           this.#set({
@@ -158,16 +196,17 @@ export class ElectronRemoteServerActionImpl {
             isInitRemoteServerConfig: true,
             ...(stashedError && { remoteServerSyncError: stashedError }),
           });
-          // Only after the first hydration: on initial load the renderer already
-          // holds this server's data.
-          if (!isInitRemoteServerConfig || dataContextOf(data) === dataContextOf(dataSyncConfig))
-            return;
-          // The connect flow toggles the config while it authorizes; reloading
-          // mid-flow would drop its progress and error state. It resets when done.
-          if (isConnectingServer) {
-            this.#pendingDataContextReset = true;
-            return;
-          }
+          const context = dataContextOf(data);
+          // On the first hydration the renderer already holds this server's data.
+          if (!isInitRemoteServerConfig || this.#shownContext === undefined)
+            this.#shownContext = context;
+          if (context === this.#shownContext) return;
+          // A connect flow (in this window or another) toggles the config while it
+          // authorizes and owns the reset; reloading mid-flow would abort it. Its
+          // reset reloads this window through the shared epoch. The baseline stays,
+          // so a flow that ends on the same server reloads nothing.
+          if (isConnectingServer || isAuthorizingElsewhere()) return;
+          this.#shownContext = context;
           void resetDataContext().catch((error) => {
             console.error('Failed to reset the data context:', error);
           });

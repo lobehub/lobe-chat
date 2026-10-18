@@ -27,6 +27,8 @@ const SERVER_A: DataSyncConfig = {
   storageMode: 'selfHost',
 };
 const SERVER_B: DataSyncConfig = { ...SERVER_A, remoteServerUrl: 'https://b.example' };
+const LEFT_A: DataSyncConfig = { ...SERVER_A, active: false };
+const AUTHORIZING_KEY = 'lobe-remote-server-authorizing';
 
 /** Play the remote-server-config SWR answering `data`. */
 const answerConfig = (data: DataSyncConfig) => {
@@ -39,8 +41,22 @@ const answerConfig = (data: DataSyncConfig) => {
   options.onSuccess(data);
 };
 
+/** Start a connect flow to `target` and hold it at authorization. */
+const startConnect = async (target: DataSyncConfig) => {
+  let authorize!: (result: { error?: string; success: boolean }) => void;
+  remoteServerService.requestAuthorization.mockReturnValue(
+    new Promise((resolve) => {
+      authorize = resolve;
+    }),
+  );
+  const connecting = useElectronStore.getState().connectRemoteServer(target);
+  await vi.waitFor(() => expect(remoteServerService.requestAuthorization).toHaveBeenCalled());
+  return { authorize, connecting };
+};
+
 beforeEach(() => {
   vi.clearAllMocks();
+  localStorage.clear();
   sessionStorage.clear();
   useElectronStore.setState({
     dataSyncConfig: { storageMode: 'cloud' },
@@ -57,7 +73,7 @@ describe('remote server data context', () => {
     expect(resetDataContext).not.toHaveBeenCalled();
   });
 
-  it('resets (reloads every renderer) when the server changes', () => {
+  it('resets when the server changes outside a connect flow', () => {
     answerConfig(SERVER_A);
 
     answerConfig(SERVER_B);
@@ -66,47 +82,58 @@ describe('remote server data context', () => {
   });
 
   it('ignores config changes that keep the same server', () => {
-    answerConfig({ ...SERVER_A, active: false });
-    answerConfig({ ...SERVER_A, active: false, remoteServerUrl: 'https://draft.example' });
+    answerConfig(LEFT_A);
+    answerConfig({ ...LEFT_A, remoteServerUrl: 'https://draft.example' });
 
     expect(resetDataContext).not.toHaveBeenCalled();
   });
 
-  it('defers the reset of a switch seen mid-connect until the flow finishes', async () => {
+  it('lets the connecting window own the reset and resets once the flow ends', async () => {
     answerConfig(SERVER_A);
     remoteServerService.getRemoteServerConfig.mockResolvedValue(SERVER_A);
-    let authorize!: (result: { success: boolean }) => void;
-    remoteServerService.requestAuthorization.mockReturnValue(
-      new Promise((resolve) => {
-        authorize = resolve;
-      }),
-    );
-
-    const connecting = useElectronStore.getState().connectRemoteServer(SERVER_B);
-    await vi.waitFor(() => expect(remoteServerService.requestAuthorization).toHaveBeenCalled());
-    // The flow deactivates the old server while it authorizes the new one.
-    answerConfig({ ...SERVER_A, active: false });
+    const { authorize, connecting } = await startConnect(SERVER_B);
+    answerConfig(LEFT_A); // the flow leaves server A while it authorizes
     expect(resetDataContext).not.toHaveBeenCalled();
 
+    remoteServerService.getRemoteServerConfig.mockResolvedValue(SERVER_B);
     authorize({ success: true });
     await connecting;
 
     expect(resetDataContext).toHaveBeenCalledTimes(1);
+    expect(localStorage.getItem(AUTHORIZING_KEY)).toBeNull();
+  });
+
+  it('does not reset a follower window while another window authorizes', () => {
+    answerConfig(SERVER_A);
+    // Another window (e.g. a chat window) is running the connect flow.
+    localStorage.setItem(AUTHORIZING_KEY, String(Date.now()));
+
+    answerConfig(LEFT_A);
+    expect(resetDataContext).not.toHaveBeenCalled();
+
+    // The flow ends back on server A: this window holds the right data already.
+    localStorage.removeItem(AUTHORIZING_KEY);
+    answerConfig(SERVER_A);
+    expect(resetDataContext).not.toHaveBeenCalled();
+  });
+
+  it('does not reload when a reconnect ends on the same server', async () => {
+    answerConfig(SERVER_A);
+    remoteServerService.getRemoteServerConfig.mockResolvedValue(SERVER_A);
+    const { authorize, connecting } = await startConnect(SERVER_A);
+
+    authorize({ success: true });
+    await connecting;
+
+    expect(resetDataContext).not.toHaveBeenCalled();
   });
 
   it('keeps an authorization error across the reload of a failed switch', async () => {
     answerConfig(SERVER_A);
     remoteServerService.getRemoteServerConfig.mockResolvedValue(SERVER_A);
-    let authorize!: (result: { error?: string; success: boolean }) => void;
-    remoteServerService.requestAuthorization.mockReturnValue(
-      new Promise((resolve) => {
-        authorize = resolve;
-      }),
-    );
-    const connecting = useElectronStore.getState().connectRemoteServer(SERVER_B);
-    await vi.waitFor(() => expect(remoteServerService.requestAuthorization).toHaveBeenCalled());
-    answerConfig({ ...SERVER_A, active: false }); // left server A
+    const { authorize, connecting } = await startConnect(SERVER_B);
 
+    remoteServerService.getRemoteServerConfig.mockResolvedValue(LEFT_A); // left A, B failed
     authorize({ error: 'denied by user', success: false });
     await connecting;
     expect(resetDataContext).toHaveBeenCalledTimes(1);
@@ -117,7 +144,7 @@ describe('remote server data context', () => {
       isInitRemoteServerConfig: false,
       remoteServerSyncError: undefined,
     });
-    answerConfig({ ...SERVER_A, active: false });
+    answerConfig(LEFT_A);
 
     expect(useElectronStore.getState().remoteServerSyncError).toEqual({
       message: 'denied by user',
