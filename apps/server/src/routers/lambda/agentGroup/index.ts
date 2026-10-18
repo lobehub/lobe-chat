@@ -1,19 +1,19 @@
-import { router } from '@/libs/trpc/lambda';
+import { mergeRouters } from '@/libs/trpc/lambda';
 
-import { lifecycleProcedures } from './lifecycle';
-import { lockProcedures } from './lock';
-import { membersProcedures } from './members';
-import { queryProcedures } from './query';
-import { transferProcedures } from './transfer';
-import { visibilityProcedures } from './visibility';
+import { lifecycleRouter } from './lifecycle';
+import { lockRouter } from './lock';
+import { membersRouter } from './members';
+import { queryRouter } from './query';
+import { transferRouter } from './transfer';
+import { visibilityRouter } from './visibility';
 
-export const agentGroupRouter = router({
-  ...membersProcedures,
-  ...transferProcedures,
-  ...lifecycleProcedures,
-  ...queryProcedures,
-  ...visibilityProcedures,
-  ...lockProcedures,
-});
+export const agentGroupRouter = mergeRouters(
+  membersRouter,
+  transferRouter,
+  lifecycleRouter,
+  queryRouter,
+  visibilityRouter,
+  lockRouter,
+);
 
 export type AgentGroupRouter = typeof agentGroupRouter;

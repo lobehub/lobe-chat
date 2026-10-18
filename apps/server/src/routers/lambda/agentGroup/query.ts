@@ -1,5 +1,6 @@
 import { z } from 'zod';
 
+import { router } from '@/libs/trpc/lambda';
 import { assertCanEditResource } from '@/server/services/resourcePermission';
 
 import {
@@ -76,7 +77,7 @@ const protectGroupMemberConfigs = async <T extends Record<string, any>>(
   return changed ? ({ ...group, agents: protectedAgents.filter(Boolean) } as T) : group;
 };
 
-export const queryProcedures = {
+export const queryRouter = router({
   getGroup: agentGroupProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ input, ctx }) => {
@@ -163,4 +164,4 @@ export const queryProcedures = {
     .query(async ({ input, ctx }) => {
       return ctx.agentGroupRepo.listReferencedMembers([...new Set(input.groupIds)]);
     }),
-};
+});

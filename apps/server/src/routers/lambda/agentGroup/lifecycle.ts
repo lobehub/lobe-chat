@@ -6,6 +6,7 @@ import { ResourcePermissionModel } from '@/database/models/resourcePermission';
 import { ResourceTransferRequestModel } from '@/database/models/resourceTransferRequest';
 import { DEFAULT_RESOURCE_ACCESS_LEVELS } from '@/database/schemas';
 import { type ChatGroupConfig } from '@/database/types/chatGroup';
+import { router } from '@/libs/trpc/lambda';
 import {
   assertCanEditResource,
   assertCanPerformResourceAction,
@@ -15,7 +16,7 @@ import { TransferErrorCode } from '@/types/transferError';
 import { isWorkspaceNonOwner } from '../_helpers/assertWorkspaceRowManageable';
 import { agentGroupProcedureWrite, agentMemberInputSchema } from './procedures';
 
-export const lifecycleProcedures = {
+export const lifecycleRouter = router({
   /**
    * Create a group with a supervisor agent.
    * The supervisor agent is automatically created as a virtual agent.
@@ -290,4 +291,4 @@ export const lifecycleProcedures = {
       }
       return result;
     }),
-};
+});

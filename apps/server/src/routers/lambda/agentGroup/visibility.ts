@@ -5,6 +5,7 @@ import { ResourcePermissionModel } from '@/database/models/resourcePermission';
 import type { ResourceAccessLevel } from '@/database/schemas';
 import { DEFAULT_RESOURCE_ACCESS_LEVELS, RESOURCE_ACCESS_LEVELS_BY_TYPE } from '@/database/schemas';
 import type { LobeChatDatabase } from '@/database/type';
+import { router } from '@/libs/trpc/lambda';
 import {
   assertCanPerformResourceAction,
   buildResourcePermissionState,
@@ -52,7 +53,7 @@ export const applyGroupAccessLevel = async ({
   ]);
 };
 
-export const visibilityProcedures = {
+export const visibilityRouter = router({
   /**
    * Publish a private chat group into the workspace. One-way: once shared,
    * other workspace members may already be using it, so we never let it slip
@@ -216,4 +217,4 @@ export const visibilityProcedures = {
         visibility: input.visibility,
       });
     }),
-};
+});

@@ -6,6 +6,7 @@ import { AGENT_TRANSFER_IN_PROGRESS } from '@/database/models/agentTransferJob';
 import { ResourcePermissionModel } from '@/database/models/resourcePermission';
 import { DEFAULT_RESOURCE_ACCESS_LEVELS } from '@/database/schemas';
 import { GROUP_MEMBER_ROLES } from '@/database/utils/groupMembership';
+import { router } from '@/libs/trpc/lambda';
 import {
   assertCanEditResource,
   assertCanPerformResourceAction,
@@ -17,7 +18,7 @@ import {
   agentMemberInputSchema,
 } from './procedures';
 
-export const membersProcedures = {
+export const membersRouter = router({
   addAgentsToGroup: agentGroupProcedureWrite
     .input(
       z.object({
@@ -198,4 +199,4 @@ export const membersProcedures = {
       }
       return ctx.chatGroupModel.updateAgentInGroup(input.groupId, input.agentId, input.updates);
     }),
-};
+});

@@ -1,10 +1,11 @@
 import { z } from 'zod';
 
+import { router } from '@/libs/trpc/lambda';
 import { publishResourceEvent } from '@/server/services/resourceEvents';
 
 import { agentGroupProcedureWrite } from './procedures';
 
-export const lockProcedures = {
+export const lockRouter = router({
   acquireGroupLock: agentGroupProcedureWrite
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
@@ -43,4 +44,4 @@ export const lockProcedures = {
         { actorId: ctx.userId, data: { holderId: null }, type: 'lock.changed' },
       );
     }),
-};
+});

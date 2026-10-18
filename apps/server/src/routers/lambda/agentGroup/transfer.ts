@@ -21,6 +21,7 @@ import {
   LEGACY_VIEWER_ACCESS_LEVELS,
   RESOURCE_ACCESS_LEVELS_BY_TYPE,
 } from '@/database/schemas';
+import { router } from '@/libs/trpc/lambda';
 import { assertCanPerformResourceAction } from '@/server/services/resourcePermission';
 import { assertTransferRecipientValid } from '@/server/services/resourceTransferRequest';
 import {
@@ -34,7 +35,7 @@ import { isWorkspaceNonOwner } from '../_helpers/assertWorkspaceRowManageable';
 import { agentGroupProcedure, agentGroupProcedureWrite } from './procedures';
 import { applyGroupAccessLevel } from './visibility';
 
-export const transferProcedures = {
+export const transferRouter = router({
   transferGroup: agentGroupProcedureWrite
     .input(
       z.object({
@@ -329,4 +330,4 @@ export const transferProcedures = {
         type: job.type,
       };
     }),
-};
+});
