@@ -12,6 +12,13 @@ import { getRecentDirs, setRecentDirRepoType } from './recentDirs';
 
 export type RepoType = 'git' | 'github' | undefined;
 
+/**
+ * How long a probe answer is reused, and how often a dir whose probe could not
+ * answer (device unreachable, path gone) is re-probed. One value: SWR dedupes
+ * interval refreshes, so a shorter re-probe interval would not take effect.
+ */
+const PROBE_INTERVAL_MS = 60 * 1000;
+
 export interface RepoTypeState {
   repoType: RepoType;
   /**
@@ -72,15 +79,22 @@ export const useRepoTypeState = (path?: string, deviceId?: string): RepoTypeStat
 
   const cached = fromDevice ?? cachedLocal;
 
-  // The local filesystem is only reachable from the desktop app.
+  // The local filesystem is only reachable from the desktop app. A device the
+  // list reports offline cannot answer, so its probe starts when it reconnects.
   const probeDeviceId = isLocalTarget ? undefined : deviceId;
-  const canProbe = !!path && (!isLocalTarget || isDesktop);
+  const isProbeDeviceOffline = useDeviceStore(
+    (s) => !!probeDeviceId && deviceSelectors.getDeviceById(probeDeviceId)(s)?.online === false,
+  );
+  const canProbe = !!path && (isLocalTarget ? isDesktop : !isProbeDeviceOffline);
 
   const { data: probe } = useClientDataSWR(
     canProbe ? deviceKeys.repoType(probeDeviceId ?? 'local', path) : null,
     () => gitService.detectRepoType({ deviceId: probeDeviceId, path: path! }),
     {
-      dedupingInterval: 60 * 1000,
+      dedupingInterval: PROBE_INTERVAL_MS,
+      // An unverifiable answer is re-probed until the dir can be checked (the
+      // device may reconnect while still listed online); a settled one is not.
+      refreshInterval: (latest) => (latest === null ? PROBE_INTERVAL_MS : 0),
       revalidateOnFocus: false,
       shouldRetryOnError: false,
     },

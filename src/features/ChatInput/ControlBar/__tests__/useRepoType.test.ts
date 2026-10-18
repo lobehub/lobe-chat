@@ -283,6 +283,53 @@ describe('useRepoType', () => {
     }
   });
 
+  // The device was unreachable when the dir was first probed, yet still listed
+  // online: the unverifiable answer is re-probed instead of kept for good.
+  it('re-probes a dir the device could not answer for', async () => {
+    vi.useFakeTimers({ shouldAdvanceTime: true });
+    try {
+      seedDevices([device('flaky', [{ path: '/srv/flaky' }])]);
+      rpc.statPath
+        .mockResolvedValueOnce(null)
+        .mockResolvedValue({ exists: true, isDirectory: true, repoType: 'github' });
+
+      const { result } = renderRepoType('/srv/flaky', 'flaky');
+
+      await waitFor(() => expect(rpc.statPath).toHaveBeenCalledTimes(1));
+      expect(result.current).toBeUndefined();
+
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(61 * 1000);
+      });
+
+      await waitFor(() => expect(result.current).toBe('github'));
+      expect(rpc.statPath).toHaveBeenCalledTimes(2);
+      await waitFor(() =>
+        expect(workingDirsOf('flaky')).toEqual([{ path: '/srv/flaky', repoType: 'github' }]),
+      );
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it('probes an offline device once it comes back online', async () => {
+    const entry = { path: '/srv/reconnect' };
+    seedDevices([{ ...device('reconnect', [entry]), online: false }]);
+    rpc.statPath.mockResolvedValue({ exists: true, isDirectory: true, repoType: 'git' });
+
+    const { result } = renderRepoType('/srv/reconnect', 'reconnect');
+
+    await new Promise((resolve) => setTimeout(resolve, 50));
+    expect(rpc.statPath).not.toHaveBeenCalled();
+
+    act(() => {
+      seedDevices([device('reconnect', [entry])]);
+    });
+
+    await waitFor(() => expect(result.current).toBe('git'));
+    expect(rpc.statPath).toHaveBeenCalledWith({ deviceId: 'reconnect', path: '/srv/reconnect' });
+  });
+
   // The persisted copy may hold stale `workingDirs`: show the probe right away,
   // but write it back only once the server has confirmed the list.
   it('writes back only after the device list is confirmed', async () => {
