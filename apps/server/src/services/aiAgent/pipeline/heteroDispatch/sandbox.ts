@@ -3,6 +3,7 @@ import debug from 'debug';
 
 import { AgentOperationModel } from '@/database/models/agentOperation';
 import { signUserJWT } from '@/libs/trpc/utils/internalJwt';
+import { spawnHeteroSandbox } from '@/server/services/heterogeneousAgent/sandboxRunner';
 
 import {
   getHeterogeneousAgentTitle,
@@ -111,11 +112,6 @@ export const spawnInCloudSandbox = async (
 
   // Cloud sandbox path — only for sandbox-provisioned local CLI agents.
   // Remote agents (openclaw / hermes) always require a bound device.
-  // Lazy-loaded on purpose: `sandboxRunner` pulls the sandbox-service graph
-  // (which eagerly touches server-only ModelRuntime env at module init), so
-  // importing it statically would couple that whole subsystem into every
-  // `aiAgent` import. Only this cloud-CLI branch needs it.
-  const { spawnHeteroSandbox } = await import('@/server/services/heterogeneousAgent/sandboxRunner');
   // The entitlement rides on the trust token; without it the execution
   // plane routes to the ephemeral sandbox whatever the request says.
   const marketService = await deps.getMarketService(
