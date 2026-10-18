@@ -285,6 +285,10 @@ const AgentTasksPage = memo<AgentTasksPageProps>(({ agentId, projectId }) => {
   const collectionTasks = collectionSWR.data?.data ?? [];
   const collectionTasksTotal = collectionSWR.data?.total ?? 0;
   const isCollectionListInit = collectionSWR.data !== undefined;
+  // An empty Scheduled tab offers creation from its empty state; the header
+  // button would only duplicate it.
+  const showScheduledEmptyCreate =
+    isScheduledCollection && canCreateTask && isCollectionListInit && collectionTasksTotal === 0;
   const scheduledViewOptions = useMemo(
     () => getScheduledTaskViewOptions(viewOptions),
     [viewOptions],
@@ -440,7 +444,7 @@ const AgentTasksPage = memo<AgentTasksPageProps>(({ agentId, projectId }) => {
                 onClick={handleCreateTask}
               />
             )}
-            {isScheduledCollection && (
+            {isScheduledCollection && !showScheduledEmptyCreate && (
               <ActionIcon
                 disabled={!canCreateTask}
                 icon={Plus}
@@ -501,7 +505,7 @@ const AgentTasksPage = memo<AgentTasksPageProps>(({ agentId, projectId }) => {
             options={isMineCollection ? myTaskViewOptions : scheduledViewOptions}
             routeScope={routeScope}
             emptyAction={
-              isScheduledCollection && canCreateTask ? (
+              showScheduledEmptyCreate ? (
                 <Button icon={Plus} onClick={handleCreateScheduledTask}>
                   {t('createTask.submitScheduled')}
                 </Button>
