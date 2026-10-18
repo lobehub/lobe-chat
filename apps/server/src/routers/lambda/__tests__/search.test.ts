@@ -310,12 +310,6 @@ describe('searchRouter', () => {
                 type: 'page',
                 updatedAt: new Date('2026-10-16T00:00:00.000Z'),
               },
-              {
-                id: 'docs_old',
-                title: 'Old STAMP notes',
-                type: 'page',
-                updatedAt: new Date('2026-09-01T00:00:00.000Z'),
-              },
             ]
           : [],
       );
@@ -332,6 +326,14 @@ describe('searchRouter', () => {
       expect(result.topics).toMatchObject([{ hitCount: 1, id: 'tpc_1', title: 'Weekly' }]);
       expect(result.goals.map(({ id }) => id)).toEqual(['goal_1']);
       expect(result.pages.map(({ id }) => id)).toEqual(['docs_in']);
+      // The window reaches the repository, which applies it during retrieval.
+      expect(search).toHaveBeenCalledWith(
+        expect.objectContaining({
+          excludeKnowledgeBaseIds: expect.any(Array),
+          timeRange: { end: endDate, field: 'updatedAt', start: startDate },
+          type: 'page',
+        }),
+      );
       expect(DiscoverService).not.toHaveBeenCalled();
       expect(UserModel.findById).not.toHaveBeenCalled();
     });

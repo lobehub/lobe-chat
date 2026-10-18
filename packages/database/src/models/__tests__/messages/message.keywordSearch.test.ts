@@ -5,7 +5,7 @@ import { getTestDB } from '../../../core/getTestDB';
 import { agents, messages, topics, users } from '../../../schemas';
 import type { LobeChatDatabase } from '../../../type';
 import { MessageModel } from '../../message';
-import { buildMessageSnippet } from '../../message/search';
+import { buildMessageSnippet, MESSAGE_KEYWORD_SEARCH_CANDIDATE_POOL } from '../../message/search';
 
 const serverDB: LobeChatDatabase = await getTestDB();
 
@@ -253,15 +253,48 @@ describe('MessageModel.searchByKeyword', () => {
 
     const result = await model.searchByKeyword({ keyword: 'candidate' });
     expect(result.items.map(({ id }) => id)).toEqual(['kw-cand-chat']);
-    expect(ftsSearchCandidates).toHaveBeenCalledWith(
-      expect.objectContaining({
-        entity: 'messages',
-        query: { fields: ['content'], text: 'candidate' },
-      }),
-    );
+    expect(result.truncated).toBe(false);
+    expect(ftsSearchCandidates).toHaveBeenCalledWith({
+      entity: 'messages',
+      filters: {},
+      pagination: { limit: MESSAGE_KEYWORD_SEARCH_CANDIDATE_POOL },
+      query: { fields: ['content'], text: 'candidate' },
+    });
 
     const empty = await model.searchByKeyword({ keyword: 'nothing' });
-    expect(empty).toEqual({ hasMore: false, items: [] });
+    expect(empty).toEqual({ hasMore: false, items: [], truncated: false });
+  });
+
+  it('bounds the candidate pool, pushes the window into it and reports truncation', async () => {
+    await serverDB.insert(messages).values([
+      {
+        content: 'bounded pool hit',
+        id: 'kw-pool-hit',
+        role: 'user',
+        topicId: 'kw-chat',
+        userId,
+      },
+    ]);
+    const ftsSearchCandidates = vi.fn().mockResolvedValue({
+      candidates: [{ id: 'kw-pool-hit', score: 1 }],
+      total: 5000,
+    });
+    const model = new MessageModel(serverDB, userId, undefined, {
+      ftsSearchCandidateEnabled: true,
+      ftsSearchCandidates,
+    });
+    const startDate = new Date('2026-10-12T00:00:00.000Z');
+
+    const result = await model.searchByKeyword({ keyword: 'bounded', startDate });
+
+    expect(ftsSearchCandidates).toHaveBeenCalledWith(
+      expect.objectContaining({
+        filters: { timeRange: { end: undefined, field: 'createdAt', start: startDate } },
+        pagination: { limit: MESSAGE_KEYWORD_SEARCH_CANDIDATE_POOL },
+      }),
+    );
+    // The provider matched 5000 rows but returned one: lower-ranked matches were dropped.
+    expect(result.truncated).toBe(true);
   });
 });
 

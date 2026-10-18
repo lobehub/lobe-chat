@@ -3,7 +3,11 @@ import type {
   MessageKeywordSearchParams,
   MessageKeywordSearchResult,
 } from '@/database/models/message';
-import type { FtsSearchGoalResult, FtsSearchResult } from '@/database/repositories/ftsSearch';
+import type {
+  FtsSearchGoalResult,
+  FtsSearchResult,
+  FtsSearchTimeRange,
+} from '@/database/repositories/ftsSearch';
 import type { GoalSearchOptions } from '@/database/repositories/goalSearch';
 
 export const RECALL_TYPES = ['message', 'topic', 'goal', 'page'] as const;
@@ -16,11 +20,6 @@ export const RECALL_MAX_LIMIT_PER_TYPE = 50;
  * history than the message list shows; it stays within the model's page cap.
  */
 const MESSAGE_POOL_SIZE = 100;
-/**
- * Topic and page search have no time filter in the index, so a deeper pool is
- * fetched and trimmed to the window afterwards.
- */
-const WINDOWED_POOL_MULTIPLIER = 3;
 
 export interface RecallInput {
   endDate?: Date;
@@ -51,23 +50,22 @@ export interface RecallPage {
 
 export interface RecallResult {
   goals: FtsSearchGoalResult[];
-  messages: { hasMore: boolean; items: MessageKeywordSearchItem[] };
+  messages: { hasMore: boolean; items: MessageKeywordSearchItem[]; truncated: boolean };
   pages: RecallPage[];
   topics: RecallTopic[];
 }
 
 export interface RecallDependencies {
+  /** Must apply `timeRange` during retrieval, not after a ranked cut. */
   searchEntities: (options: {
     limitPerType: number;
     query: string;
+    timeRange?: FtsSearchTimeRange;
     type: 'page' | 'topic';
   }) => Promise<FtsSearchResult[]>;
   searchGoals: (options: GoalSearchOptions) => Promise<FtsSearchGoalResult[]>;
   searchMessages: (params: MessageKeywordSearchParams) => Promise<MessageKeywordSearchResult>;
 }
-
-const inWindow = (date: Date, startDate?: Date, endDate?: Date) =>
-  (!startDate || date >= startDate) && (!endDate || date <= endDate);
 
 /**
  * "What did I do about X in this period": one query across messages, topics,
@@ -89,7 +87,7 @@ export class RecallService {
   }: RecallInput): Promise<RecallResult> => {
     const empty: RecallResult = {
       goals: [],
-      messages: { hasMore: false, items: [] },
+      messages: { hasMore: false, items: [], truncated: false },
       pages: [],
       topics: [],
     };
@@ -99,6 +97,9 @@ export class RecallService {
     const limit = Math.min(Math.max(limitPerType, 1), RECALL_MAX_LIMIT_PER_TYPE);
     const wanted = new Set<RecallType>(types?.length ? types : RECALL_TYPES);
     const wantsMessagePool = wanted.has('message') || wanted.has('topic');
+    // Topic titles and pages count as active in the window when last updated in it.
+    const timeRange: FtsSearchTimeRange | undefined =
+      startDate || endDate ? { end: endDate, field: 'updatedAt', start: startDate } : undefined;
 
     const [messagePool, topicHits, goals, pageHits] = await Promise.all([
       wantsMessagePool
@@ -112,19 +113,11 @@ export class RecallService {
           })
         : undefined,
       wanted.has('topic')
-        ? this.deps.searchEntities({
-            limitPerType: limit * WINDOWED_POOL_MULTIPLIER,
-            query: text,
-            type: 'topic',
-          })
+        ? this.deps.searchEntities({ limitPerType: limit, query: text, timeRange, type: 'topic' })
         : [],
       wanted.has('goal') ? this.deps.searchGoals({ endDate, limit, query: text, startDate }) : [],
       wanted.has('page')
-        ? this.deps.searchEntities({
-            limitPerType: limit * WINDOWED_POOL_MULTIPLIER,
-            query: text,
-            type: 'page',
-          })
+        ? this.deps.searchEntities({ limitPerType: limit, query: text, timeRange, type: 'page' })
         : [],
     ]);
 
@@ -136,10 +129,11 @@ export class RecallService {
         ? {
             hasMore: poolItems.length > limit || Boolean(messagePool?.hasMore),
             items: poolItems.slice(0, limit),
+            truncated: Boolean(messagePool?.truncated),
           }
         : empty.messages,
       pages: pageHits
-        .filter((hit) => hit.type === 'page' && inWindow(hit.updatedAt, startDate, endDate))
+        .filter((hit) => hit.type === 'page')
         .slice(0, limit)
         .map(({ description, id, title, updatedAt }) => ({
           description: description ?? null,
@@ -147,9 +141,7 @@ export class RecallService {
           title,
           updatedAt,
         })),
-      topics: wanted.has('topic')
-        ? mergeTopics(poolItems, topicHits, limit, startDate, endDate)
-        : [],
+      topics: wanted.has('topic') ? mergeTopics(poolItems, topicHits, limit) : [],
     };
   };
 }
@@ -158,8 +150,6 @@ const mergeTopics = (
   messages: MessageKeywordSearchItem[],
   topicHits: FtsSearchResult[],
   limit: number,
-  startDate?: Date,
-  endDate?: Date,
 ): RecallTopic[] => {
   const topics = new Map<string, RecallTopic>();
 
@@ -182,7 +172,7 @@ const mergeTopics = (
   }
 
   for (const hit of topicHits) {
-    if (hit.type !== 'topic' || !inWindow(hit.updatedAt, startDate, endDate)) continue;
+    if (hit.type !== 'topic') continue;
     const topic = topics.get(hit.id);
     if (topic) {
       topic.matchedBy.unshift('title');

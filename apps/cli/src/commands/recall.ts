@@ -108,7 +108,7 @@ Follow up with \`lh topic view <id>\`, \`lh goal show <id>\` or \`lh doc view <i
 
       const {
         goals = [],
-        messages = { hasMore: false, items: [] },
+        messages = { hasMore: false, items: [], truncated: false },
         pages = [],
         topics = [],
       } = result ?? {};
@@ -161,6 +161,13 @@ Follow up with \`lh topic view <id>\`, \`lh goal show <id>\` or \`lh doc view <i
           console.log(
             pc.dim(
               'More messages: `lh message search` with the same query, --since and --until pages through all of them',
+            ),
+          );
+        }
+        if (messages.truncated) {
+          console.log(
+            pc.yellow(
+              'Only the most relevant message matches were considered; narrow --since/--until to see the rest.',
             ),
           );
         }

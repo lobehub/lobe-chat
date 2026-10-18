@@ -25,6 +25,14 @@ export const AUTOMATED_PROMPT_TOPIC_TRIGGERS = [
 
 export const MESSAGE_KEYWORD_SEARCH_MAX_LIMIT = 100;
 
+/**
+ * Requested size of the external candidate pool (Elasticsearch, `pg_like`).
+ * Retrieval is ranked by relevance and filtered here, so an unbounded pool
+ * would walk every match on each page; the time window is pushed into the
+ * provider so the bound applies to an already narrowed set.
+ */
+export const MESSAGE_KEYWORD_SEARCH_CANDIDATE_POOL = 1000;
+
 const DEFAULT_LIMIT = 20;
 /** Short lead-in so the match stays visible in a truncated terminal column. */
 const SNIPPET_BEFORE = 24;
@@ -60,6 +68,11 @@ export interface MessageKeywordSearchItem {
 export interface MessageKeywordSearchResult {
   hasMore: boolean;
   items: MessageKeywordSearchItem[];
+  /**
+   * The provider had more matches than the candidate pool holds, so lower-ranked
+   * matches were not considered. Narrow the window or scope to see them.
+   */
+  truncated: boolean;
 }
 
 /**
@@ -112,20 +125,29 @@ export class MessageKeywordSearchQueries extends MessageScope {
     topicId,
   }: MessageKeywordSearchParams): Promise<MessageKeywordSearchResult> => {
     const text = keyword.trim();
-    if (!text) return { hasMore: false, items: [] };
+    if (!text) return { hasMore: false, items: [], truncated: false };
 
     const pageSize = Math.min(Math.max(limit, 1), MESSAGE_KEYWORD_SEARCH_MAX_LIMIT);
 
     const candidateResult = this.ftsSearchCandidateSource?.ftsSearchCandidateEnabled
       ? await this.ftsSearchCandidateSource.ftsSearchCandidates({
           entity: 'messages',
-          filters: {},
-          pagination: {},
+          filters:
+            startDate || endDate
+              ? { timeRange: { end: endDate, field: 'createdAt', start: startDate } }
+              : {},
+          pagination: { limit: MESSAGE_KEYWORD_SEARCH_CANDIDATE_POOL },
           query: { fields: ['content'], text },
         })
       : undefined;
     const candidateIds = candidateResult?.candidates.map(({ id }) => id);
-    if (candidateIds?.length === 0) return { hasMore: false, items: [] };
+    if (candidateIds?.length === 0) return { hasMore: false, items: [], truncated: false };
+    // Providers over-fetch past the requested pool; reaching it, or a provider
+    // total above what came back, means lower-ranked matches may be missing.
+    const truncated = candidateResult
+      ? candidateResult.total > candidateResult.candidates.length ||
+        candidateResult.candidates.length >= MESSAGE_KEYWORD_SEARCH_CANDIDATE_POOL
+      : false;
 
     const conditions: (SQL | undefined)[] = [
       this.ownership(),
@@ -168,6 +190,7 @@ export class MessageKeywordSearchQueries extends MessageScope {
       .offset(Math.max(offset, 0));
 
     return {
+      truncated,
       hasMore: rows.length > pageSize,
       items: rows.slice(0, pageSize).map(({ content, summary, ...row }) => {
         const body = content || summary || '';

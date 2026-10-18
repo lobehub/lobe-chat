@@ -321,6 +321,20 @@ export const searchElasticsearchCandidates = async (
     }
   }
 
+  if (
+    request.filters.timeRange &&
+    (entity === 'topics' || entity === 'messages' || entity === 'documents')
+  ) {
+    const { end, field, start } = request.filters.timeRange;
+    const dateRange = {
+      ...(start ? { gte: start.toISOString() } : {}),
+      ...(end ? { lte: end.toISOString() } : {}),
+    };
+    if (Object.keys(dateRange).length > 0) {
+      filter.push({ range: { [field === 'createdAt' ? 'created_at' : 'updated_at']: dateRange } });
+    }
+  }
+
   appendMemoryFilters(entity, request.filters, filter);
   appendTopicScopeFilters(entity, request.filters, filter);
 

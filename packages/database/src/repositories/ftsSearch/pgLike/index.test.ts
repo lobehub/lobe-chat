@@ -21,6 +21,7 @@ import {
   otherUserId,
   userId,
 } from '../__tests__/productSearchBehavior';
+import { describeFtsSearchTimeRangeBehavior } from '../__tests__/timeRangeBehavior';
 import { FtsSearchRepo } from '../index';
 import { PgLikeFtsSearchBackend } from './index';
 
@@ -47,6 +48,7 @@ const createRepo = (
  */
 describe('FtsSearchRepo (pg_like)', () => {
   describeFtsSearchProductBehavior({ createRepo, db: serverDB });
+  describeFtsSearchTimeRangeBehavior({ createRepo, db: serverDB, supportsCandidates: true });
 
   describe('LIKE wildcard escaping', () => {
     beforeEach(async () => {

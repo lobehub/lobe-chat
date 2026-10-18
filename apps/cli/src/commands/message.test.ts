@@ -247,6 +247,28 @@ describe('message command', () => {
       expect(output).toContain('-P 2');
     });
 
+    it('warns when the provider pool cut off lower-ranked matches', async () => {
+      mockTrpcClient.message.searchByKeyword.query.mockResolvedValue({
+        hasMore: false,
+        items: [{ createdAt: new Date(2026, 9, 15), id: 'msg_1', role: 'user', snippet: 'x' }],
+        truncated: true,
+      });
+
+      const program = createProgram();
+      await program.parseAsync(['node', 'test', 'message', 'search', 'x']);
+
+      const output = consoleSpy.mock.calls.map((call) => call.join(' ')).join('\n');
+      expect(output).toContain('Only the most relevant matches were considered');
+    });
+
+    it('rejects an impossible calendar date instead of shifting the window', async () => {
+      const program = createProgram();
+      await program.parseAsync(['node', 'test', 'message', 'search', 'x', '--until', '2026-02-31']);
+
+      expect(exitSpy).toHaveBeenCalledWith(1);
+      expect(mockTrpcClient.message.searchByKeyword.query).not.toHaveBeenCalled();
+    });
+
     it('rejects an invalid time instead of searching everything', async () => {
       const program = createProgram();
       await program.parseAsync(['node', 'test', 'message', 'search', 'x', '--since', 'last week']);

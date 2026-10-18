@@ -33,7 +33,7 @@ describe('RecallService', () => {
 
     expect(result).toEqual({
       goals: [],
-      messages: { hasMore: false, items: [] },
+      messages: { hasMore: false, items: [], truncated: false },
       pages: [],
       topics: [],
     });
@@ -57,7 +57,6 @@ describe('RecallService', () => {
                 type: 'topic',
                 updatedAt: at('2026-10-17T00:00:00Z'),
               },
-              { id: 'tpc_old', title: 'Old', type: 'topic', updatedAt: at('2026-09-01T00:00:00Z') },
             ]
           : [],
       ),
@@ -134,7 +133,7 @@ describe('RecallService', () => {
     expect(deps.searchEntities).not.toHaveBeenCalled();
   });
 
-  it('keeps only pages updated inside the window', async () => {
+  it('pushes the window into topic and page retrieval instead of trimming afterwards', async () => {
     const deps = createDeps({
       searchEntities: vi.fn().mockImplementation(async ({ type }) =>
         type === 'page'
@@ -146,26 +145,42 @@ describe('RecallService', () => {
                 type: 'page',
                 updatedAt: at('2026-10-14T00:00:00Z'),
               },
-              {
-                description: null,
-                id: 'p_out',
-                title: 'Out',
-                type: 'page',
-                updatedAt: at('2026-10-01T00:00:00Z'),
-              },
             ]
           : [],
       ),
     });
+    const startDate = at('2026-10-12T00:00:00Z');
 
     const result = await new RecallService(deps).recall({
+      limitPerType: 4,
       query: 'x',
-      startDate: at('2026-10-12T00:00:00Z'),
-      types: ['page'],
+      startDate,
+      types: ['page', 'topic'],
     });
 
+    for (const type of ['page', 'topic']) {
+      expect(deps.searchEntities).toHaveBeenCalledWith({
+        limitPerType: 4,
+        query: 'x',
+        timeRange: { end: undefined, field: 'updatedAt', start: startDate },
+        type,
+      });
+    }
     expect(result.pages).toEqual([
       { description: null, id: 'p_in', title: 'In', updatedAt: at('2026-10-14T00:00:00Z') },
     ]);
+  });
+
+  it('passes no window when none is given and surfaces message truncation', async () => {
+    const deps = createDeps({
+      searchMessages: vi.fn().mockResolvedValue({ hasMore: false, items: [], truncated: true }),
+    });
+
+    const result = await new RecallService(deps).recall({ query: 'x', types: ['message', 'page'] });
+
+    expect(deps.searchEntities).toHaveBeenCalledWith(
+      expect.objectContaining({ timeRange: undefined, type: 'page' }),
+    );
+    expect(result.messages.truncated).toBe(true);
   });
 });

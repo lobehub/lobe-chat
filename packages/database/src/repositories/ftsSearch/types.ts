@@ -190,6 +190,8 @@ export interface FtsSearchOptions {
   limitPerType?: number;
   offset?: number;
   query: string;
+  /** Narrows topic, message and page results; other types ignore it. */
+  timeRange?: FtsSearchTimeRange;
   type?: FtsSearchResultType;
 }
 
@@ -220,6 +222,13 @@ export interface FtsSearchBackendScope {
   workspaceId?: string;
 }
 
+/** Time window on a row's creation or last update. */
+export interface FtsSearchTimeRange {
+  end?: Date;
+  field: 'createdAt' | 'updatedAt';
+  start?: Date;
+}
+
 export interface FtsSearchBackendFilters {
   agentId?: string;
   documentKind?: 'folder' | 'knowledgeBaseDocument' | 'page';
@@ -238,6 +247,11 @@ export interface FtsSearchBackendFilters {
     start?: Date;
   };
   memoryTypes?: string[];
+  /**
+   * Window for topics, messages and documents; other entities ignore it. Every
+   * provider applies it during retrieval so bounded pools stay in the window.
+   */
+  timeRange?: FtsSearchTimeRange;
   topicScope?: {
     agentId?: string | null;
     containerId?: string | null;

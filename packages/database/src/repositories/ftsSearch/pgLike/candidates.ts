@@ -38,6 +38,7 @@ import { searchableMessage } from '../../../utils/searchableMessage';
 import { buildWorkspaceWhere } from '../../../utils/workspace';
 import type { PostgresFtsSearchContext } from '../postgres/context';
 import type { PostgresFtsSearchField } from '../postgres/dialect';
+import { timeRangeWhere } from '../postgres/timeRange';
 import type {
   FtsSearchBackendCandidate,
   FtsSearchBackendEntity,
@@ -323,6 +324,7 @@ const CANDIDATE_TARGETS: Record<FtsSearchBackendEntity, CandidateTarget | undefi
     where: (scope, filters, db) => [
       buildWorkspaceWhere(scope, documents),
       ...documentKindWhere(db, filters),
+      timeRangeWhere(documents, filters.timeRange),
     ],
   },
   files: {
@@ -496,6 +498,7 @@ const CANDIDATE_TARGETS: Record<FtsSearchBackendEntity, CandidateTarget | undefi
       // rows crowd out eligible hits that hydration would have kept.
       searchableMessage(),
       ...topicScopeWhere(messages, filters, true),
+      timeRangeWhere(messages, filters.timeRange),
     ],
   },
   personaDocuments: {
@@ -523,6 +526,7 @@ const CANDIDATE_TARGETS: Record<FtsSearchBackendEntity, CandidateTarget | undefi
     where: (scope, filters) => [
       buildWorkspaceWhere(scope, topics),
       ...topicScopeWhere(topics, filters, false),
+      timeRangeWhere(topics, filters.timeRange),
     ],
   },
   userMemories: {

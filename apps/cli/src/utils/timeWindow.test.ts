@@ -22,6 +22,17 @@ describe('parseTimePoint', () => {
     );
   });
 
+  it.each(['2026-02-31', '2026-00-12', '2026-13-01', '2026-02-31T00:00:00Z', '2025-02-29'])(
+    'rejects the impossible calendar date %s instead of rolling it over',
+    (value) => {
+      expect(() => parseTimePoint(value, 'end')).toThrow(`Invalid time "${value}"`);
+    },
+  );
+
+  it('accepts a real leap day', () => {
+    expect(parseTimePoint('2028-02-29', 'start')).toEqual(new Date(2028, 1, 29, 0, 0, 0, 0));
+  });
+
   it('rejects unparseable input', () => {
     expect(() => parseTimePoint('last week', 'start')).toThrow('Invalid time "last week"');
   });

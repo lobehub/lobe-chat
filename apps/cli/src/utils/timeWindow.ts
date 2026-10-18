@@ -1,5 +1,6 @@
 const RELATIVE_PATTERN = /^(\d+)\s*([hdwm])$/i;
 const DATE_ONLY_PATTERN = /^(\d{4})-(\d{2})-(\d{2})$/;
+const LEADING_DATE_PATTERN = /^(\d{4})-(\d{2})-(\d{2})/;
 
 const UNIT_MS: Record<string, number> = {
   d: 24 * 60 * 60 * 1000,
@@ -23,6 +24,16 @@ export function parseTimePoint(value: string, edge: 'end' | 'start', now: Date =
     return new Date(now.getTime() - Number(relative[1]) * UNIT_MS[relative[2].toLowerCase()]);
   }
 
+  // `Date` rolls impossible days over (2026-02-31 becomes March 3) for both
+  // bare dates and ISO strings, which would silently shift the window.
+  const leadingDate = text.match(LEADING_DATE_PATTERN);
+  if (
+    leadingDate &&
+    !isCalendarDate(...(leadingDate.slice(1).map(Number) as [number, number, number]))
+  ) {
+    throw new Error(`Invalid time "${value}": no such calendar date.`);
+  }
+
   const dateOnly = text.match(DATE_ONLY_PATTERN);
   if (dateOnly) {
     const [year, month, day] = dateOnly.slice(1).map(Number);
@@ -36,6 +47,13 @@ export function parseTimePoint(value: string, edge: 'end' | 'start', now: Date =
     throw new Error(`Invalid time "${value}". Use ${TIME_POINT_HELP}.`);
   }
   return parsed;
+}
+
+function isCalendarDate(year: number, month: number, day: number): boolean {
+  const date = new Date(Date.UTC(year, month - 1, day));
+  return (
+    date.getUTCFullYear() === year && date.getUTCMonth() === month - 1 && date.getUTCDate() === day
+  );
 }
 
 export interface TimeWindow {
