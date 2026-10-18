@@ -12,6 +12,7 @@ import {
 } from './appServerParams';
 import { CodexAppServerClient } from './CodexAppServerClient';
 import { CodexThreadSession } from './CodexThreadSession';
+import { pickCodexRunProvenance } from './environment';
 
 /** Native Codex execution inputs for a single connected-device operation. */
 export interface CodexAgentHandleOptions {
@@ -87,11 +88,10 @@ export const createCodexAgentHandle = async (
   // The session ends a turn lost to a transport crash with an interrupted runtime end and
   // resolves; without a Stop from this operation that is a truncated run, not a success.
   let nativeTurnInterrupted = false;
-  const provenance = {
-    LOBEHUB_AGENT_ID: options.env.LOBEHUB_AGENT_ID ?? '',
+  const provenance = pickCodexRunProvenance({
+    ...options.env,
     LOBEHUB_OPERATION_ID: options.operationId,
-    LOBEHUB_TOPIC_ID: options.env.LOBEHUB_TOPIC_ID ?? '',
-  };
+  });
   // Codex shells get their env from `[shell_environment_policy]`, so a user's
   // `inherit = "core"` would drop the run context `lh` needs. Forward it as
   // `set` overrides; the JWT travels as a 0600 file path, never in the config.
@@ -106,9 +106,12 @@ export const createCodexAgentHandle = async (
   // The same per-turn context is consumed by the shared app-server isolation contract.
   threadParams.config = {
     ...threadParams.config,
-    'shell_environment_policy.set.LOBEHUB_AGENT_ID': provenance.LOBEHUB_AGENT_ID,
-    'shell_environment_policy.set.LOBEHUB_OPERATION_ID': provenance.LOBEHUB_OPERATION_ID,
-    'shell_environment_policy.set.LOBEHUB_TOPIC_ID': provenance.LOBEHUB_TOPIC_ID,
+    ...Object.fromEntries(
+      Object.entries(provenance).map(([key, value]) => [
+        `shell_environment_policy.set.${key}`,
+        value ?? '',
+      ]),
+    ),
   };
   const session = new CodexThreadSession({
     client,
