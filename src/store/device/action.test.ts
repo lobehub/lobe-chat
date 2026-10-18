@@ -19,6 +19,22 @@ vi.mock('@/libs/swr', () => ({
 const seedDevices = (devices: DeviceListItem[]) =>
   useDeviceStore.setState({ deviceListMap: { [DEVICE_LIST_KEY]: devices } });
 
+/** Seed a list the server has confirmed this session (not just the persisted copy). */
+const seedConfirmedDevices = (devices: DeviceListItem[]) =>
+  useDeviceStore.setState((state) => ({
+    deviceListMap: { [DEVICE_LIST_KEY]: devices },
+    deviceListReplica: {
+      ...state.deviceListReplica,
+      entries: {
+        ...state.deviceListReplica.entries,
+        [DEVICE_LIST_KEY]: { pending: [], source: 'server', updatedAt: Date.now() },
+      },
+    },
+  }));
+
+const workingDirsOf = (deviceId: string) =>
+  deviceSelectors.getDeviceWorkingDirs(deviceId)(useDeviceStore.getState());
+
 /** The SWR matchers the action revalidated with. */
 const revalidatedMatchers = () =>
   vi
@@ -57,6 +73,9 @@ describe('DeviceAction', () => {
     vi.spyOn(deviceService, 'updateWorkspaceDevice').mockResolvedValue({ success: true });
     vi.spyOn(deviceService, 'addWorkspaceDeviceWorkingDir').mockResolvedValue({ success: true });
     vi.spyOn(deviceService, 'removeWorkspaceDeviceWorkingDir').mockResolvedValue({
+      success: true,
+    });
+    vi.spyOn(deviceService, 'setWorkspaceDeviceWorkingDirRepoType').mockResolvedValue({
       success: true,
     });
     useDeviceStore.setState(initialState);
@@ -197,6 +216,138 @@ describe('DeviceAction', () => {
         workingDirs: [],
       });
       expect(deviceService.updateWorkspaceDevice).not.toHaveBeenCalled();
+    });
+  });
+
+  // The device store is a singleton and remembers which corrections it held
+  // back, so each case below uses its own path.
+  describe('syncWorkingDirRepoType', () => {
+    it('corrects a workspace device entry in place through the entry mutation', async () => {
+      seedConfirmedDevices([
+        buildDevice({
+          deviceId: 'ws-dev',
+          scope: 'workspace',
+          workingDirs: [{ path: '/other' }, { path: '/cloned-later' }],
+        }),
+      ]);
+
+      await useDeviceStore.getState().syncWorkingDirRepoType('ws-dev', '/cloned-later', 'github');
+
+      expect(deviceService.setWorkspaceDeviceWorkingDirRepoType).toHaveBeenCalledWith({
+        deviceId: 'ws-dev',
+        path: '/cloned-later',
+        repoType: 'github',
+      });
+      expect(deviceService.updateDevice).not.toHaveBeenCalled();
+      expect(workingDirsOf('ws-dev')).toEqual([
+        { path: '/other' },
+        { path: '/cloned-later', repoType: 'github' },
+      ]);
+      expect(revalidatedDeviceListReplica()).toBe(true);
+    });
+
+    it('writes the patched list for a personal device', async () => {
+      seedConfirmedDevices([buildDevice({ workingDirs: [{ path: '/personal' }, { path: '/b' }] })]);
+
+      await useDeviceStore.getState().syncWorkingDirRepoType('dev-1', '/personal', 'git');
+
+      expect(deviceService.updateDevice).toHaveBeenCalledWith({
+        deviceId: 'dev-1',
+        workingDirs: [{ path: '/personal', repoType: 'git' }, { path: '/b' }],
+      });
+    });
+
+    it('does nothing when the entry already matches or is not in the list', async () => {
+      seedConfirmedDevices([buildDevice({ workingDirs: [{ path: '/same', repoType: 'git' }] })]);
+
+      await useDeviceStore.getState().syncWorkingDirRepoType('dev-1', '/same', 'git');
+      await useDeviceStore.getState().syncWorkingDirRepoType('dev-1', '/not-listed', 'git');
+
+      expect(deviceService.updateDevice).not.toHaveBeenCalled();
+      expect(mutate).not.toHaveBeenCalled();
+    });
+
+    // A persisted copy holds stale `workingDirs`; a personal write sends the
+    // whole list and would overwrite newer entries with it.
+    it('waits for the server-confirmed list before writing', async () => {
+      seedDevices([buildDevice({ workingDirs: [{ path: '/persisted-copy' }] })]);
+
+      await useDeviceStore.getState().syncWorkingDirRepoType('dev-1', '/persisted-copy', 'git');
+
+      expect(deviceService.updateDevice).not.toHaveBeenCalled();
+      expect(workingDirsOf('dev-1')).toEqual([{ path: '/persisted-copy' }]);
+    });
+
+    // A viewer cannot edit a shared device: the rollback restores the stale
+    // value, which must not trigger the same refused write again.
+    it('never re-sends a correction the server refused', async () => {
+      seedConfirmedDevices([
+        buildDevice({
+          deviceId: 'ws-dev',
+          scope: 'workspace',
+          workingDirs: [{ path: '/forbidden' }],
+        }),
+      ]);
+      vi.mocked(deviceService.setWorkspaceDeviceWorkingDirRepoType).mockRejectedValueOnce(
+        Object.assign(new Error('forbidden'), { data: { code: 'FORBIDDEN' } }),
+      );
+      const now = vi.spyOn(Date, 'now').mockReturnValue(1_000_000);
+
+      await expect(
+        useDeviceStore.getState().syncWorkingDirRepoType('ws-dev', '/forbidden', 'github'),
+      ).rejects.toThrow('forbidden');
+      expect(workingDirsOf('ws-dev')).toEqual([{ path: '/forbidden' }]);
+      now.mockReturnValue(1_000_000 + 24 * 60 * 60 * 1000);
+      await expect(
+        useDeviceStore.getState().syncWorkingDirRepoType('ws-dev', '/forbidden', 'github'),
+      ).resolves.toBe(Number.POSITIVE_INFINITY);
+
+      expect(deviceService.setWorkspaceDeviceWorkingDirRepoType).toHaveBeenCalledTimes(1);
+    });
+
+    // A network blip must not block the correction for the rest of the session.
+    it('re-sends a correction after a transient failure once the retry delay passes', async () => {
+      seedConfirmedDevices([
+        buildDevice({
+          deviceId: 'ws-dev',
+          scope: 'workspace',
+          workingDirs: [{ path: '/transient' }],
+        }),
+      ]);
+      vi.mocked(deviceService.setWorkspaceDeviceWorkingDirRepoType).mockRejectedValueOnce(
+        new Error('fetch failed'),
+      );
+      const now = vi.spyOn(Date, 'now').mockReturnValue(2_000_000);
+
+      await expect(
+        useDeviceStore.getState().syncWorkingDirRepoType('ws-dev', '/transient', 'github'),
+      ).rejects.toThrow('fetch failed');
+      // Rolled back to the stale entry, and held back until the retry time.
+      expect(workingDirsOf('ws-dev')).toEqual([{ path: '/transient' }]);
+      await expect(
+        useDeviceStore.getState().syncWorkingDirRepoType('ws-dev', '/transient', 'github'),
+      ).resolves.toBe(2_000_000 + 60 * 1000);
+      expect(deviceService.setWorkspaceDeviceWorkingDirRepoType).toHaveBeenCalledTimes(1);
+
+      now.mockReturnValue(2_000_000 + 61 * 1000);
+      await useDeviceStore.getState().syncWorkingDirRepoType('ws-dev', '/transient', 'github');
+      expect(deviceService.setWorkspaceDeviceWorkingDirRepoType).toHaveBeenCalledTimes(2);
+    });
+
+    // The dir lost its repo and was cloned into again: the second `git` is a
+    // new change, not a repeat of the first.
+    it('re-sends a value it already wrote once the entry changed back', async () => {
+      seedConfirmedDevices([buildDevice({ workingDirs: [{ path: '/recloned' }] })]);
+
+      await useDeviceStore.getState().syncWorkingDirRepoType('dev-1', '/recloned', 'git');
+      await useDeviceStore.getState().syncWorkingDirRepoType('dev-1', '/recloned', undefined);
+      await useDeviceStore.getState().syncWorkingDirRepoType('dev-1', '/recloned', 'git');
+
+      expect(deviceService.updateDevice).toHaveBeenCalledTimes(3);
+      expect(deviceService.updateDevice).toHaveBeenLastCalledWith({
+        deviceId: 'dev-1',
+        workingDirs: [{ path: '/recloned', repoType: 'git' }],
+      });
     });
   });
 });
