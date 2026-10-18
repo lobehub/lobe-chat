@@ -24,18 +24,16 @@ vi.mock('@/database/core/db-adaptor', () => ({
 }));
 
 vi.mock('@/database/models/agentBotProvider', () => {
-  // Constructor returns the same set of instance-method mocks so tests
-  // can assert / configure without grabbing a per-instance reference.
   const ctor = vi.fn().mockImplementation(function () {
     return {
       findById: mockProviderFindById,
       update: mockProviderUpdate,
     };
   });
-  // Preserve the static method other tests rely on (load path).
-  (
-    ctor as unknown as { findEnabledByPlatform: typeof mockFindEnabledByPlatform }
-  ).findEnabledByPlatform = mockFindEnabledByPlatform;
+  (ctor as any).findEnabledByPlatformAndAppId = async (...args: any[]) =>
+    (await mockFindEnabledByPlatform(args[0], args[1], args[3])).find(
+      (p: any) => p.applicationId === args[2],
+    );
   return { AgentBotProviderModel: ctor };
 });
 
@@ -633,8 +631,8 @@ describe('BotMessageRouter', () => {
       const req2 = new Request('https://example.com/webhook', { body: '{}', method: 'POST' });
       await handler(req2);
 
-      // DB should only be queried once — second call uses cache
-      expect(mockFindEnabledByPlatform).toHaveBeenCalledTimes(1);
+      // Revalidate configuration but reuse an unchanged runtime
+      expect(mockFindEnabledByPlatform).toHaveBeenCalledTimes(2);
       expect(mockInitialize).toHaveBeenCalledTimes(1);
     });
 

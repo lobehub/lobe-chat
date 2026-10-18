@@ -17,6 +17,7 @@ import { emitAgentSignalSourceEvent } from '@/server/services/agentSignal';
 import { AiAgentService } from '@/server/services/aiAgent';
 
 import { AgentBridgeService } from './AgentBridgeService';
+import { botConfigSnapshot } from './botConfigSnapshot';
 import { buildBotContext } from './buildBotContext';
 import { replayDeferredBotMessages } from './deferredMessages';
 import {
@@ -130,6 +131,7 @@ interface RegisteredBot {
   agentInfo: ResolvedAgentInfo;
   chatBot: Chat<any>;
   client: PlatformClient;
+  configSnapshot: string;
 }
 
 /** Context passed to every command handler — a minimal surface shared by both
@@ -364,17 +366,12 @@ export class BotMessageRouter {
   // ------------------------------------------------------------------
 
   /**
-   * Get an existing bot or create one on-demand from DB.
+   * Revalidate persisted configuration before reusing a cached runtime.
    * Concurrent calls for the same key are deduplicated.
    */
   private async getOrCreateBot(platform: string, appId: string): Promise<RegisteredBot | null> {
     const key = buildRuntimeKey(platform, appId);
 
-    // Return cached bot
-    const existing = this.bots.get(key);
-    if (existing) return existing;
-
-    // Deduplicate concurrent loads for the same key
     const inflight = this.loadingPromises.get(key);
     if (inflight) return inflight;
 
@@ -401,19 +398,21 @@ export class BotMessageRouter {
       const serverDB = await getServerDB();
       const gateKeeper = await KeyVaultsGateKeeper.initWithEnvKey();
 
-      // Find the specific provider — search across all users
-      const providers = await AgentBotProviderModel.findEnabledByPlatform(
+      const provider = await AgentBotProviderModel.findEnabledByPlatformAndAppId(
         serverDB,
         platform,
+        appId,
         gateKeeper,
       );
-      const provider = providers.find((p) => p.applicationId === appId);
 
       if (!provider) {
+        this.bots.delete(key);
         log('No enabled provider found for %s', key);
         return null;
       }
 
+      const existing = this.bots.get(key);
+      if (existing?.configSnapshot === botConfigSnapshot(provider)) return existing;
       const registered = await this.createAndRegisterBot(entry, provider, serverDB);
       log('Created %s bot on-demand for agent=%s, appId=%s', platform, provider.agentId, appId);
       return registered;
@@ -519,6 +518,7 @@ export class BotMessageRouter {
       agentInfo: { agentId, userId, workspaceId: workspaceId ?? undefined },
       chatBot,
       client,
+      configSnapshot: botConfigSnapshot(provider),
     };
 
     this.bots.set(key, registered);
