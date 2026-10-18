@@ -94,19 +94,29 @@ export async function executeMultiThreadTrajectory(
     } satisfies EvalRunTopicResult,
   });
 
-  // Trigger K run-thread-trajectory workflows with a bounded fan-out
+  // Trigger K run-thread-trajectory workflows with a bounded fan-out. Every
+  // thread above is already persisted as running, so one failed dispatch must
+  // not stop the rest from being attempted; the first failure is rethrown once
+  // all triggers have settled, matching the previous Promise.all rejection.
+  let firstTriggerError: { error: unknown } | undefined;
   await pMap(
     threadIds,
-    (threadId) =>
-      AgentEvalRunWorkflow.triggerRunThreadTrajectory({
-        runId,
-        testCaseId,
-        threadId,
-        topicId,
-        userId: deps.userId,
-      }),
+    async (threadId) => {
+      try {
+        await AgentEvalRunWorkflow.triggerRunThreadTrajectory({
+          runId,
+          testCaseId,
+          threadId,
+          topicId,
+          userId: deps.userId,
+        });
+      } catch (error) {
+        firstTriggerError ??= { error };
+      }
+    },
     { concurrency: THREAD_TRIGGER_CONCURRENCY },
   );
+  if (firstTriggerError) throw firstTriggerError.error;
 
   return { threadIds, topicId };
 }
