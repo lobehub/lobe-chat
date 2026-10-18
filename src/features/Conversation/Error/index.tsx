@@ -6,8 +6,7 @@ import { AgentRuntimeErrorType, getErrorCodeSpec } from '@lobechat/model-runtime
 import { type ChatMessageError, type ErrorType, type IToolErrorType } from '@lobechat/types';
 import { ChatErrorType } from '@lobechat/types';
 import { isRecord } from '@lobechat/utils/object';
-import { Block, Highlighter } from '@lobehub/ui';
-import { type AlertProps, Skeleton, toast } from '@lobehub/ui/base-ui';
+import { type AlertProps, Block, Highlighter, Skeleton, toast } from '@lobehub/ui';
 import { memo, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -533,7 +532,9 @@ const ErrorMessageExtra = memo<ErrorExtraProps>(
         }
 
         case AgentRuntimeErrorType.OllamaBizError: {
-          return <OllamaBizError {...data} />;
+          return (
+            <OllamaBizError {...data} alertError={{ ...alertError, message: displayMessage }} />
+          );
         }
 
         case AgentRuntimeErrorType.ExceededContextWindow: {
@@ -572,6 +573,7 @@ const ErrorMessageExtra = memo<ErrorExtraProps>(
 
       return (
         <TraceIdError
+          error={error}
           id={data.id}
           showRetry={!isSharedTopic}
           traceId={traceId}

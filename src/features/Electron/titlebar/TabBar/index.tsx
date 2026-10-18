@@ -1,9 +1,7 @@
 'use client';
 
 import { useWatchBroadcast } from '@lobechat/electron-client-ipc';
-import { Flexbox } from '@lobehub/ui';
-import { ActionIcon, type DropdownItem, DropdownMenu } from '@lobehub/ui/base-ui';
-import { cx } from 'antd-style';
+import { ActionIcon, cx, type DropdownItem, DropdownMenu, Flexbox } from '@lobehub/ui';
 import { ChevronDown, Plus } from 'lucide-react';
 import { useMotionValue, useSpring } from 'motion/react';
 import * as m from 'motion/react-m';
@@ -25,6 +23,7 @@ import { useResolvedTabs } from './hooks/useResolvedTabs';
 import { useStripWidth } from './hooks/useStripWidth';
 import { useTabDrag } from './hooks/useTabDrag';
 import { TAB_SPRING } from './motion';
+import { resolveCloseShortcut } from './resolveCloseShortcut';
 import { resolveTabScope } from './scope';
 import { useStyles } from './styles';
 import TabItem from './TabItem';
@@ -207,11 +206,11 @@ const TabBar = () => {
   );
 
   useWatchBroadcast('closeCurrentTabOrWindow', () => {
-    if (tabs.length > 1 && activeTabId) {
-      handleClose(activeTabId);
-    } else {
-      void electronSystemService.closeWindow();
-    }
+    const state = useElectronStore.getState();
+    const action = resolveCloseShortcut(state.tabs, state.activeTabId, state.activeTabScope);
+
+    if (action.type === 'closeTab') handleClose(action.id);
+    else void electronSystemService.closeWindow();
   });
 
   const handleNewTab = useCallback(

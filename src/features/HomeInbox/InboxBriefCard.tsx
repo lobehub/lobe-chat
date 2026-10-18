@@ -1,17 +1,27 @@
 import { DEFAULT_AVATAR, INBOX_SESSION_ID } from '@lobechat/const';
 import { agentDisplayName } from '@lobechat/types';
-import { Block, Flexbox, Icon } from '@lobehub/ui';
-import { Avatar, Text } from '@lobehub/ui/base-ui';
-import { createStaticStyles, cssVar, cx } from 'antd-style';
+import {
+  Avatar,
+  Block,
+  Button,
+  createStaticStyles,
+  cssVar,
+  cx,
+  Flexbox,
+  Icon,
+  Text,
+} from '@lobehub/ui';
 import { Target } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { DEFAULT_INBOX_AVATAR } from '@/const/meta';
+import { openGateReportModal } from '@/features/Acceptance/Viewer/Gate';
 import { taskDetailPath } from '@/features/AgentTasks/shared/taskDetailPath';
 import BriefCardActions from '@/features/DailyBrief/BriefCardActions';
 import BriefCardArtifacts from '@/features/DailyBrief/BriefCardArtifacts';
 import BriefCardSummary from '@/features/DailyBrief/BriefCardSummary';
+import BriefPriorityIcon from '@/features/DailyBrief/BriefPriorityIcon';
 import SelfReviewBriefDetails from '@/features/DailyBrief/SelfReviewBriefDetails';
 import { styles as briefStyles } from '@/features/DailyBrief/style';
 import { type BriefItem } from '@/features/DailyBrief/types';
@@ -139,13 +149,20 @@ const InboxBriefCard = memo<InboxBriefCardProps>(({ bare, brief }) => {
         )}
         <Flexbox flex={1} gap={6} style={{ minWidth: 0 }}>
           <Flexbox horizontal align={'center'} gap={8}>
+            {/* Priority sits in one place on every card — right before the title — so
+                a scan down the queue reads levels in a single column. */}
+            <BriefPriorityIcon priority={brief.priority} />
             <Text ellipsis className={homeType.itemTitle} style={{ flex: 1, minWidth: 0 }}>
               {selfReview?.title ?? brief.title}
             </Text>
             {!hasTaskMeta && !goal && <Time date={brief.createdAt} />}
           </Flexbox>
           {selfReview ? (
-            <SelfReviewBriefDetails agentName={agentName} details={selfReview.details} />
+            <SelfReviewBriefDetails
+              agentName={agentName}
+              content={selfReview.content}
+              details={selfReview.details}
+            />
           ) : (
             <BriefCardSummary summary={brief.summary} />
           )}
@@ -153,6 +170,18 @@ const InboxBriefCard = memo<InboxBriefCardProps>(({ bare, brief }) => {
         </Flexbox>
       </Flexbox>
 
+      {/* A held batch release is decided in its report, opened right here. */}
+      {goal?.reviewAcceptanceId && !brief.resolvedAction && (
+        <Flexbox horizontal justify={'flex-end'}>
+          <Button
+            size={'small'}
+            type={'primary'}
+            onClick={() => openGateReportModal({ acceptanceId: goal.reviewAcceptanceId! })}
+          >
+            {t('goalProcess.gate.openReview', { ns: 'chat' })}
+          </Button>
+        </Flexbox>
+      )}
       <BriefCardActions
         actions={brief.actions}
         agentId={brief.agentId ?? brief.agent?.id}

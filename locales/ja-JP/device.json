@@ -88,6 +88,7 @@
   "workingDirectory.pushNoop": "すべて最新の状態です",
   "workingDirectory.pushSuccess": "正常にプッシュしました",
   "workingDirectory.recent": "最近使用したもの",
+  "workingDirectory.refreshFolders": "フォルダーを更新",
   "workingDirectory.refreshGitStatus": "ブランチとPRのステータスを更新",
   "workingDirectory.removeRecent": "最近使用したものから削除",
   "workingDirectory.removeWorktreeAction": "ワークツリーを削除",

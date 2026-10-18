@@ -514,9 +514,19 @@ export function registerAcceptanceCommands(parent: Command, options?: { deprecat
               console.log(`      ${pc.dim(`└ ${location}`)}`);
           }
           for (const annotation of entry.annotations ?? []) {
-            if (annotation.comment && annotation.comment !== entry.comment)
-              console.log(`    ${pc.dim('region:')} ${annotation.comment}`);
-            if (annotation.region) console.log(`      ${pc.dim(`└ ${annotation.region}`)}`);
+            // The region is the anchor, and the anchor is metadata: lead with it,
+            // dim the whole line, and hang the reviewer's own words under it, so
+            // the readable half stays the comment.
+            const note =
+              annotation.comment && annotation.comment !== entry.comment
+                ? annotation.comment
+                : undefined;
+            if (annotation.region) {
+              console.log(`    ${pc.dim(`region: ${annotation.region}`)}`);
+              if (note) console.log(`      ${pc.dim('└')} ${note}`);
+            } else if (note) {
+              console.log(`    ${pc.dim('region:')} ${note}`);
+            }
             const disputed = formatDisputedChapter(annotation.disputes);
             if (disputed) console.log(`      ${pc.dim(`└ disputes ${disputed}`)}`);
           }

@@ -228,6 +228,8 @@
   "acceptance.predict.nonePending": "Nada mais para revisar — todas as verificações já têm um veredicto.",
   "acceptance.predict.proposals": "Revisão da IA concluída: {{count}} verificação(ões) sinalizada(s) para você.",
   "acceptance.predict.stillRunning": "A revisão da IA ainda está em andamento — atualize em um momento para ver os resultados.",
+  "acceptance.preview.review": "Revisar na pré-visualização",
+  "acceptance.preview.reviewHint": "Abra a pré-visualização implantada com a barra de ferramentas de revisão para comentar na página ao vivo",
   "acceptance.proposal.confirm": "Confirmar e enviar de volta",
   "acceptance.proposal.misidentified": "Problema real, lugar errado",
   "acceptance.proposal.notAnIssue": "Não é um problema",

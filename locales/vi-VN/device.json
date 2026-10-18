@@ -88,6 +88,7 @@
   "workingDirectory.pushNoop": "Mọi thứ đã được cập nhật",
   "workingDirectory.pushSuccess": "Đẩy thành công",
   "workingDirectory.recent": "Gần đây",
+  "workingDirectory.refreshFolders": "Làm mới thư mục",
   "workingDirectory.refreshGitStatus": "Làm mới trạng thái nhánh & yêu cầu kéo",
   "workingDirectory.removeRecent": "Xóa khỏi gần đây",
   "workingDirectory.removeWorktreeAction": "Xóa worktree",

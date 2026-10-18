@@ -1,9 +1,8 @@
 'use client';
 
 import type { GoalNodeStatus } from '@lobechat/types';
-import { Flexbox, Icon, Tooltip } from '@lobehub/ui';
+import { createStaticStyles, cssVar, cx, Flexbox, Icon, Tooltip } from '@lobehub/ui';
 import { Handle, type NodeProps, Position } from '@xyflow/react';
-import { createStaticStyles, cssVar, cx } from 'antd-style';
 import { FileBox, Info, type LucideIcon, Repeat2, ShieldCheck } from 'lucide-react';
 import { memo, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -195,7 +194,8 @@ const styles = createStaticStyles(({ css }) => ({
   `,
   /* A ring, not a fill: the kind tint and the state chip must stay readable.
      Blue, not `colorPrimary` — the primary is near-black here, so the ring read
-     as a heavier version of the plain card border and told nothing apart. */
+     as a heavier version of the plain card border and told nothing apart. The
+     cards carry the mainline; the lines between them stay ordinary. */
   mainline: css`
     border-color: ${cssVar.colorInfo};
     box-shadow: 0 0 0 1px ${cssVar.colorInfo};

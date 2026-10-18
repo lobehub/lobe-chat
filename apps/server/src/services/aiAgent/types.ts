@@ -259,6 +259,13 @@ export interface InternalExecAgentParams extends ExecAgentParams {
     toolCallId: string;
   };
   /**
+   * Skill identifiers the user selected for this message. Persisted on the
+   * user message (`metadata.selectedSkillIds`) and, together with the ones
+   * earlier turns of the topic selected, injected with their bodies like a
+   * pinned skill. Never widens what the skill pool already allows.
+   */
+  selectedSkillIds?: string[];
+  /**
    * Tool identifiers the user @-mentioned in this message. Merged into the
    * agent's plugin set for this run (alongside `additionalPluginIds`) so a
    * mentioned tool that isn't pinned to the agent — e.g. a custom MCP connector

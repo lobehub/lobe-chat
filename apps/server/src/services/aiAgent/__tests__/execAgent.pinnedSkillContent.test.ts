@@ -21,6 +21,7 @@ const {
   mockListUserSkillCatalog,
   mockLoadUserSkills,
   mockMessageCreate,
+  mockMessageQuery,
   mockPluginQuery,
   mockSkillFindAll,
   mockSkillFindByIds,
@@ -40,6 +41,7 @@ const {
   mockListUserSkillCatalog: vi.fn().mockResolvedValue([]),
   mockLoadUserSkills: vi.fn().mockResolvedValue([]),
   mockMessageCreate: vi.fn(),
+  mockMessageQuery: vi.fn().mockResolvedValue([]),
   mockPluginQuery: vi.fn().mockResolvedValue([]),
   mockSkillFindAll: vi.fn().mockResolvedValue({ data: [], total: 0 }),
   mockSkillFindByIds: vi.fn().mockResolvedValue([]),
@@ -63,7 +65,7 @@ vi.mock('@/database/models/message', () => ({
       create: mockMessageCreate,
       getLatestNonToolMessageId: vi.fn().mockResolvedValue(undefined),
       getLatestSpineMessageId: vi.fn().mockResolvedValue(undefined),
-      query: vi.fn().mockResolvedValue([]),
+      query: mockMessageQuery,
       update: vi.fn().mockResolvedValue({}),
     };
   }),
@@ -139,6 +141,8 @@ vi.mock('@/database/models/topic', () => ({
       releaseTaskCallbackReservation: vi.fn().mockResolvedValue(undefined),
       tryReserveTaskCallback: vi.fn().mockResolvedValue(true),
       create: vi.fn().mockResolvedValue({ id: 'topic-1' }),
+      // A follow-up turn reuses its topic; only the selected-skill history case sends one.
+      findById: vi.fn().mockResolvedValue({ id: 'topic-1', metadata: {} }),
     };
   }),
 }));
@@ -500,5 +504,111 @@ describe('AiAgentService.execAgent - pinned skill content injection', () => {
     expect(injected).toContain('ZIP SKILL BODY');
     expect(injected).toContain('Available Resources');
     expect(injected).toContain('guide.md');
+  });
+});
+
+describe('AiAgentService.execAgent - selected skill content injection', () => {
+  let service: AiAgentService;
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+    mockMessageCreate.mockResolvedValue({ id: 'msg-1' });
+    mockMessageQuery.mockResolvedValue([]);
+    mockCreateOperation.mockResolvedValue({
+      autoStarted: true,
+      messageId: 'queue-msg-1',
+      operationId: 'op-123',
+      success: true,
+    });
+    mockSkillFindAll.mockResolvedValue({
+      data: DB_SKILL_ROWS.map(({ id, identifier }) => ({
+        description: 'd',
+        id,
+        identifier,
+        name: identifier,
+      })),
+      total: DB_SKILL_ROWS.length,
+    });
+    mockSkillFindByIds.mockImplementation(async (ids: string[]) =>
+      DB_SKILL_ROWS.filter((r) => ids.includes(r.id)),
+    );
+    mockGetAgentSkills.mockResolvedValue([]);
+    mockListUserSkillCatalog.mockResolvedValue([]);
+    mockLoadUserSkills.mockResolvedValue([]);
+    mockGetAgentConfig.mockResolvedValue({
+      chatConfig: {},
+      id: 'agent-1',
+      model: 'gpt-4',
+      // Nothing pinned — db-skill-auto is an auto-mode skill.
+      plugins: [],
+      provider: 'openai',
+      systemRole: 'You are a helper',
+    });
+    service = new AiAgentService({} as any, 'test-user-id');
+  });
+
+  // ROOT CAUSE:
+  //
+  // A skill picked in the chat composer reached a gateway-mode run only as the
+  // `<skill name="…" />` text in the prompt, because `execAgent` had no field
+  // for it. The client runtime injects the body; the server run left it to the
+  // model to call `activateSkill`.
+  //
+  // The fix injects the body of every selected skill like a pinned skill.
+  it('injects the body of a skill this turn selected and persists the selection', async () => {
+    await service.execAgent({
+      agentId: 'agent-1',
+      prompt: 'Audit this page',
+      selectedSkillIds: ['db-skill-auto'],
+    } as any);
+
+    expect(operationSkillSetArg()?.enabledPluginIds).toContain('db-skill-auto');
+    expect(skillById('db-skill-auto')?.content).toBe('AUTO SKILL BODY');
+    expect(mockSkillFindByIds).toHaveBeenCalledWith(['sk-2']);
+    const userRow = mockMessageCreate.mock.calls.find(([row]) => row.role === 'user')?.[0];
+    expect(userRow?.metadata).toEqual(
+      expect.objectContaining({ selectedSkillIds: ['db-skill-auto'] }),
+    );
+  });
+
+  it('keeps injecting a skill an earlier turn of the topic selected', async () => {
+    mockMessageQuery.mockResolvedValue([
+      {
+        content: 'Audit this page',
+        id: 'msg-earlier',
+        metadata: { selectedSkillIds: ['db-skill-auto'] },
+        role: 'user',
+      },
+    ]);
+
+    await service.execAgent({
+      agentId: 'agent-1',
+      appContext: { topicId: 'topic-1' },
+      prompt: 'Now the settings page',
+    } as any);
+
+    expect(operationSkillSetArg()?.enabledPluginIds).toContain('db-skill-auto');
+    expect(skillById('db-skill-auto')?.content).toBe('AUTO SKILL BODY');
+  });
+
+  it('keeps a selected skill available when the agent only allows picked skills', async () => {
+    mockGetAgentConfig.mockResolvedValue({
+      chatConfig: { skillActivateMode: 'manual' },
+      id: 'agent-1',
+      model: 'gpt-4',
+      plugins: [],
+      provider: 'openai',
+      systemRole: 'You are a helper',
+    });
+
+    await service.execAgent({
+      agentId: 'agent-1',
+      prompt: 'Audit this page',
+      selectedSkillIds: ['db-skill-auto'],
+    } as any);
+
+    expect(skillById('db-skill-auto')?.content).toBe('AUTO SKILL BODY');
+    // Manual mode still hides the skills nobody picked.
+    expect(skillById('db-skill-pinned')).toBeUndefined();
   });
 });

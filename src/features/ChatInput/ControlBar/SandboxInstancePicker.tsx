@@ -1,10 +1,19 @@
 'use client';
 
-import { environmentKind } from '@lobechat/types';
 import { Github } from '@lobehub/icons';
-import { Flexbox, Icon, Tooltip } from '@lobehub/ui';
-import { confirmModal, Popover, Skeleton, Text, toast } from '@lobehub/ui/base-ui';
-import { createStaticStyles, cssVar, cx } from 'antd-style';
+import {
+  confirmModal,
+  createStaticStyles,
+  cssVar,
+  cx,
+  Flexbox,
+  Icon,
+  Popover,
+  Skeleton,
+  Text,
+  toast,
+  Tooltip,
+} from '@lobehub/ui';
 import {
   ChevronDownIcon,
   FolderClockIcon,
@@ -17,7 +26,6 @@ import {
 } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import useSWR from 'swr';
 
 import { openSandboxStorageUpsell } from '@/business/client/features/SandboxStorageUpsell';
 import { describeError } from '@/features/EnvironmentManager/errorMessage';
@@ -25,6 +33,7 @@ import { settleThenRefresh } from '@/features/EnvironmentManager/settleThenRefre
 import { useCanEditEnvironment } from '@/features/EnvironmentManager/useCanEditEnvironment';
 import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwareNavigate';
 import { sandboxStorageService } from '@/services/sandboxStorage';
+import { sandboxActions, sandboxSelectors, useSandboxStore } from '@/store/sandbox';
 
 import OptionRow from './OptionRow';
 import SandboxEnvironmentRow from './SandboxEnvironmentRow';
@@ -184,9 +193,6 @@ interface SandboxInstancePickerProps {
   value: SandboxSelection;
 }
 
-/** How often a building copy is re-listed while the picker can see it. */
-const BUILD_REFRESH_MS = 4000;
-
 /**
  * Where a cloud-sandbox run keeps its files, offered the way the local picker
  * offers folders: the chip names the slot, the menu lists the places.
@@ -220,42 +226,25 @@ const SandboxInstancePicker = memo<SandboxInstancePickerProps>(
     // Fetched while CLOSED whenever a copy is bound, because the chip names
     // it by looking it up in this list: gating the list on `open` alone leaves
     // the closed chip with nothing to look up.
-    const {
-      data,
-      isLoading: instancesLoading,
-      mutate: refreshInstances,
-    } = useSWR(
-      entitled && (open || boundInstanceId) ? ['sandbox-instances', topicId] : null,
-      () => sandboxStorageService.listInstances({ topicId, withSizes: false }),
-      // The topic is in the key because occupancy is answered per conversation
-      // — "in use by another one" is a different answer here than there. The
-      // instances themselves are the same list either way, so the first send,
-      // which takes the topic from none to one, must not blank the chip: it
-      // would flash a skeleton for a name that never changed. Kept until the
-      // refetch lands; a moment of last-known occupancy is not worth that.
-      {
-        keepPreviousData: true,
-        // A building copy settles on a listing, so keep listing while one is
-        // building: "Building" has to turn into a usable row on its own.
-        refreshInterval: (latest) =>
-          (latest?.instances ?? []).some((instance) => instance.status === 'pending')
-            ? BUILD_REFRESH_MS
-            : 0,
-        revalidateOnFocus: false,
-      },
-    );
-    const {
-      data: environmentData,
-      error: environmentError,
-      isLoading: environmentsLoading,
-      // Also while closed when a copy is bound: whether that copy is still
-      // usable depends on its environment's visibility.
-    } = useSWR(entitled && (open || boundInstanceId) ? 'sandbox-environments' : null, () =>
-      sandboxStorageService.listEnvironments(),
-    );
+    //
+    // Both lists are replicas: a reload names the chip and fills the menu from
+    // the last answer while the network confirms it. One instance list serves
+    // every conversation (see `sandboxSelectors.pickerInstances`), so the first
+    // send, which takes the topic from none to one, never blanks the chip.
+    const listsEnabled = entitled && Boolean(open || boundInstanceId);
+    const { error: instancesError } = sandboxActions.useFetchPickerInstances(listsEnabled, topicId);
+    // Also while closed when a copy is bound: whether that copy is still
+    // usable depends on its environment's visibility.
+    const { error: environmentError } = sandboxActions.useFetchPickerEnvironments(listsEnabled);
+    const data = useSandboxStore(sandboxSelectors.pickerInstances(topicId));
+    const environmentData = useSandboxStore(sandboxSelectors.pickerEnvironments);
+    const refreshInstances = sandboxActions.mutatePickerInstances;
+    // "Not known yet": nothing painted (persisted or fetched) and no failure.
+    const instancesLoading = listsEnabled && !data && !instancesError;
+    const environmentsLoading = listsEnabled && !environmentData && !environmentError;
 
-    const instances = data?.instances ?? [];
-    const environments = environmentData?.environments ?? [];
+    const instances = data ?? [];
+    const environments = environmentData ?? [];
     const current = instances.find((instance) => instance.id === boundInstanceId);
     // The server's rule, mirrored: only inside a workspace, where private and
     // published are two different things. A personal environment is always
@@ -368,7 +357,7 @@ const SandboxInstancePicker = memo<SandboxInstancePickerProps>(
 
     const renderEnvironment = (environment: (typeof environments)[number]) => {
       const isCreator = canEdit(environment);
-      const kind = environmentKind(environment);
+      const kind = environment.kind;
       const row = describeEnvironmentRow({
         boundInstanceId,
         copies: copiesOf(environment.id),
@@ -413,7 +402,7 @@ const SandboxInstancePicker = memo<SandboxInstancePickerProps>(
         );
       }
       if (currentBlocked) return <Icon icon={LockIcon} size={14} />;
-      return environmentKind(currentEnvironment) === 'files' ? (
+      return (currentEnvironment?.kind ?? 'files') === 'files' ? (
         <Icon icon={FolderIcon} size={14} />
       ) : (
         <Github size={14} />
@@ -511,7 +500,7 @@ const SandboxInstancePicker = memo<SandboxInstancePickerProps>(
 
         {entitled && (environmentsLoading || instancesLoading) && <EnvironmentSectionSkeleton />}
 
-        {entitled && environmentError && (
+        {entitled && Boolean(environmentError) && (
           <Text className={styles.notice}>{t('sandboxStorage.environmentsUnavailable')}</Text>
         )}
 

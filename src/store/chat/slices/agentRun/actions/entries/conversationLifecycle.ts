@@ -27,7 +27,7 @@ import {
   resolveAgentAgencyConfig,
 } from '@lobechat/types';
 import { generateEntityId, nanoid } from '@lobechat/utils';
-import { toast } from '@lobehub/ui/base-ui';
+import { toast } from '@lobehub/ui';
 import { t } from 'i18next';
 
 import { type ChatInputEditor } from '@/features/ChatInput';
@@ -66,7 +66,7 @@ import {
 } from '@/store/agent/selectors';
 import { agentGroupByIdSelectors, getChatGroupStoreState } from '@/store/agentGroup';
 import { getPendingSandboxSelection } from '@/store/chat/pendingSandboxSelection';
-import { getPendingTopicRepos } from '@/store/chat/pendingTopicRepos';
+import { consumePendingTopicRepos, getPendingTopicRepos } from '@/store/chat/pendingTopicRepos';
 import {
   dbMessageSelectors,
   displayMessageSelectors,
@@ -511,7 +511,7 @@ export class ConversationLifecycleActionImpl {
         ? pendingDirectory.projectWorkingDirectoryId
         : undefined;
     const projectDirectoryId = boundTopic?.projectWorkingDirectoryId ?? stagedDirectoryId;
-    let stagedDirectory: { id: string; projectId: string } | undefined;
+    let stagedDirectory: { id: string; path: string; projectId: string } | undefined;
     if (projectDirectoryId) {
       // The sidebar's directory replica already holds the row; read it locally
       // so the optimistic pair is not held behind a network round trip. The
@@ -521,6 +521,7 @@ export class ConversationLifecycleActionImpl {
         findProjectDirectory(projectDirectoryId) ??
         (await projectWorkingDirectoryService.resolve(projectDirectoryId)).data;
       if (stagedDirectoryId) stagedDirectory = directory;
+      if (stagedDirectory) consumePendingTopicRepos(ownerAgentId); // a cloud repo pick conflicts
       if (!isGatewayMode)
         throw new Error('Enable Gateway Mode to run in a project working directory');
       if (
@@ -1234,7 +1235,7 @@ export class ConversationLifecycleActionImpl {
           : undefined,
       topicId: willCreateNewTopic ? undefined : operationContext.topicId,
     });
-    const currentDeviceId = getElectronStoreState().gatewayDeviceInfo?.deviceId;
+    const currentDeviceId = await getElectronStoreState().resolveGatewayDeviceId();
     // Resolve the cwd for every run that lands on a MACHINE — a hetero CLI
     // (in-process `hetero` runtime) and a NATIVE agent alike, as long as the
     // effective target routes to a device. The server can only honour a cwd the
@@ -1286,15 +1287,14 @@ export class ConversationLifecycleActionImpl {
             deviceSelectors.getDeviceDefaultCwd(runCwdDeviceId)(getDeviceStoreState()),
           fallback: heteroCwdContext?.desktopPath ?? heteroCwdContext?.homePath,
           legacyAgentWorkingDirectory: agentState.localAgentWorkingDirectoryMap[agentId],
+          // A project's staged directory, not the agent default, is the new topic's cwd.
+          topicWorkingDirectory: stagedDirectory?.path,
           workspaceScoped,
         }
       : undefined;
-    const agentWorkingDirectory = runCwdParams
-      ? resolveAgentWorkingDirectory(runCwdParams)
-      : undefined;
-    const agentWorkingDirectoryConfig = runCwdParams
-      ? resolveAgentWorkingDirectoryConfig(runCwdParams)
-      : undefined;
+    const agentWorkingDirectory = runCwdParams && resolveAgentWorkingDirectory(runCwdParams);
+    const agentWorkingDirectoryConfig =
+      runCwdParams && resolveAgentWorkingDirectoryConfig(runCwdParams);
     // Heterogeneous CLI agents (Claude Code, Codex, …) store sessions per-cwd
     // (`~/.claude/projects/<encoded-cwd>/`). Anchor their session cwd to the
     // SOURCE repo, NOT the selected worktree, so switching worktree keeps cwd +
@@ -1885,13 +1885,13 @@ export class ConversationLifecycleActionImpl {
         // input loading state would drop during the execAgentTask round-trip
         // and the send button would flicker back to "send".
         const result = await this.#get().executeGatewayAgent({
-          // The ids this send's optimistic rows already render under. The
-          // server honours them, so the gateway path converges on the same ids
-          // instead of minting its own — same contract as sendMessageInServer.
+          // Ids and branch tail the optimistic rows render under; the server honours
+          // them like sendMessageInServer, so the turn stays on the visible branch.
           clientIds: {
             assistantMessageId: tempAssistantId,
             topicId: optimisticTopic?.id,
             userMessageId: tempId,
+            userMessageParentId: willCreateNewTopic ? undefined : parentId,
           },
           // Execution context: what the SERVER should act on. While creating,
           // the topic exists only client-side, so the server must see no
@@ -1921,6 +1921,10 @@ export class ConversationLifecycleActionImpl {
           // selection (only the client runtime did). Omit when empty.
           selectedToolIds:
             selectedTools.length > 0 ? selectedTools.map((tool) => tool.identifier) : undefined,
+          // Forward selected skills so the server injects their bodies, as the
+          // client runtime does by persisting them into the message content.
+          selectedSkillIds:
+            selectedSkills.length > 0 ? selectedSkills.map((skill) => skill.identifier) : undefined,
           // Forward @-mentioned agents so the server supervisor can delegate to
           // them (multi-mention). Mirrors the client runtime's `initialContext`
           // injection: the server enables the callAgent tool and injects the

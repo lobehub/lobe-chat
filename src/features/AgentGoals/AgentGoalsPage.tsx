@@ -1,8 +1,16 @@
 'use client';
 
-import { Block, Empty, Flexbox } from '@lobehub/ui';
-import { ActionIcon, Button, Segmented, Text } from '@lobehub/ui/base-ui';
-import { createStaticStyles, cssVar } from 'antd-style';
+import {
+  ActionIcon,
+  Block,
+  Button,
+  createStaticStyles,
+  cssVar,
+  Empty,
+  Flexbox,
+  Segmented,
+  Text,
+} from '@lobehub/ui';
 import { LayoutGridIcon, ListIcon, PlusIcon, RefreshCwIcon } from 'lucide-react';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -21,6 +29,7 @@ import { GoalCardItem } from './GoalCardItem';
 import GoalEmptyState from './GoalEmptyState';
 import type { GoalExampleSeed } from './goalExamples';
 import { GoalListItem } from './GoalListItem';
+import { useGoalListAutoLoad } from './useGoalListAutoLoad';
 
 const styles = createStaticStyles(({ css }) => ({
   countBadge: css`
@@ -61,6 +70,9 @@ const styles = createStaticStyles(({ css }) => ({
       padding-inline-start: 0;
       border-inline-start: 0;
     }
+  `,
+  sentinel: css`
+    height: 1px;
   `,
 }));
 
@@ -159,6 +171,8 @@ const AgentGoalsPage = memo<AgentGoalsPageProps>(({ agentId, projectId }) => {
   // when it failed — the list's page cannot stand in for it either.
   const visibleGoalCount = isTabUnresolved ? '—' : filteredGoals.length;
   const GoalItem = viewMode === 'list' ? GoalListItem : GoalCardItem;
+  const hasMoreGoals = !isTabUnresolved && visibleLimit < filteredGoals.length;
+  const sentinelRef = useGoalListAutoLoad(hasMoreGoals, loadMoreGoals, visibleLimit);
   const openCreateGoal = (seed?: GoalExampleSeed) => {
     createGoalModal({
       agentId,
@@ -319,13 +333,7 @@ const AgentGoalsPage = memo<AgentGoalsPageProps>(({ agentId, projectId }) => {
                     ))
                 )}
               </div>
-              {visibleLimit < filteredGoals.length && (
-                <Flexbox align={'center'} paddingBlock={8}>
-                  <Button size={'small'} onClick={loadMoreGoals}>
-                    {t('goalPage.loadMore')}
-                  </Button>
-                </Flexbox>
-              )}
+              {hasMoreGoals && <div aria-hidden className={styles.sentinel} ref={sentinelRef} />}
             </Flexbox>
           </>
         )}

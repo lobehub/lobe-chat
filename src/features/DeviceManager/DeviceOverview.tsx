@@ -1,9 +1,18 @@
 'use client';
 
 import type { DeviceListItem, DeviceWorkspaceShare } from '@lobechat/types';
-import { Flexbox, Icon } from '@lobehub/ui';
-import { ActionIcon, Avatar, confirmModal, Tag, Text, toast } from '@lobehub/ui/base-ui';
-import { createStaticStyles, cssVar } from 'antd-style';
+import {
+  ActionIcon,
+  Avatar,
+  confirmModal,
+  createStaticStyles,
+  cssVar,
+  Flexbox,
+  Icon,
+  Tag,
+  Text,
+  toast,
+} from '@lobehub/ui';
 import dayjs from 'dayjs';
 import {
   ActivityIcon,
@@ -229,7 +238,7 @@ interface DeviceOverviewProps {
  */
 const DeviceOverview = ({ canOperate, device }: DeviceOverviewProps) => {
   const { t } = useTranslation('setting');
-  const { data, error } = useDeviceMetricSeries(device.deviceId);
+  const { data, error } = useDeviceMetricSeries(device.deviceId, device.scope);
   const usage = latestUsageView({ data, error });
   const latest = usage.loading ? null : usage.latest;
 
@@ -401,7 +410,7 @@ const DeviceOverview = ({ canOperate, device }: DeviceOverviewProps) => {
       </div>
 
       <DetailCard extra={<HealthLegend />} icon={HeartPulseIcon} title={t('devices.health.title')}>
-        <DeviceHealth deviceId={device.deviceId} />
+        <DeviceHealth deviceId={device.deviceId} scope={device.scope} />
       </DetailCard>
 
       <DetailCard icon={CableIcon} title={t('devices.detail.connections')}>

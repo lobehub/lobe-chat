@@ -70,7 +70,14 @@ const bundle = () => ({
       title: 'Token table',
       evidence: [],
       timeline: [{ evidence: [{ id: 'image', description: 'table.png' }] }],
-      reviews: [],
+      reviews: [] as {
+        action: string;
+        annotations?: { comment?: string; evidenceId?: string; rect?: typeof rect }[];
+        comment?: string;
+        createdAt?: string;
+        id?: string;
+        roundIndex?: number;
+      }[],
       userReview: null,
     },
   ],
@@ -242,6 +249,30 @@ it('prints readable region, attachment and overall rejection context in plain te
   expect(text).toContain('attachment');
   expect(text).toContain('https://example.com/expected.png');
   expect(text).not.toContain('No actionable feedback');
+});
+
+it('leads with the region a note was drawn on, and hangs the note under it', async () => {
+  const stdout = vi.spyOn(console, 'log').mockImplementation(() => {});
+  const data = bundle();
+  data.checks[0].reviews.push({
+    action: 'reject',
+    // A region note: the reviewer circled an area and wrote the words for it.
+    annotations: [{ comment: 'Expand this by default', evidenceId: 'image', rect }],
+    comment: '',
+    createdAt: '2026-09-22T14:20:00.000Z',
+    id: 'review-1',
+    roundIndex: 1,
+  });
+  getBundle.mockResolvedValue(data);
+
+  await feedback();
+
+  const text = stdout.mock.calls.flat().join('\n');
+  expect(text).toContain('table.png @ 10%,20% · 30%×40%');
+  expect(text).toContain('Expand this by default');
+  // The anchor names the artifact; the reviewer's own words come after it.
+  expect(text.indexOf('table.png')).toBeLessThan(text.indexOf('Expand this by default'));
+  expect(text).not.toContain('region: Expand this by default');
 });
 
 it('reports a comment read failure instead of claiming there is no feedback', async () => {

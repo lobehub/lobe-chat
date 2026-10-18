@@ -228,6 +228,8 @@
   "acceptance.predict.nonePending": "沒有剩餘的審核項目——每個項目都已經有了判定結果。",
   "acceptance.predict.proposals": "AI 審核完成：{{count}} 個項目已標記供您查看。",
   "acceptance.predict.stillRunning": "AI 審核仍在進行中——稍後刷新以查看結果。",
+  "acceptance.preview.review": "預覽審查",
+  "acceptance.preview.reviewHint": "使用審查工具欄打開已部署的預覽，對實時頁面進行評論",
   "acceptance.proposal.confirm": "確認並送回",
   "acceptance.proposal.misidentified": "真實問題，位置錯誤",
   "acceptance.proposal.notAnIssue": "不是問題",

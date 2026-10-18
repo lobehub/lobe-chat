@@ -1,5 +1,7 @@
 import { z } from 'zod';
 
+import type { DeviceLocalFilePreviewFailure } from './deviceFilePreviewFailure';
+
 /** Structured context for an unavailable logical device. */
 export interface DeviceUnavailableErrorData {
   /** Stable machine-readable availability code. */
@@ -388,6 +390,13 @@ export interface DeviceListItem {
    */
   metadata?: Record<string, string> | null;
   online: boolean;
+  /**
+   * Client-only: the row was hydrated from the persisted device-list snapshot
+   * and has not been confirmed by a fresh `listDevices` yet. `online` is
+   * `false` and `channels` empty on such rows — presence is unknown, not
+   * offline. Never sent by the server.
+   */
+  onlineUnknown?: boolean;
   platform: string | null;
   registered: boolean;
   /** Personal (own) vs. workspace-enrolled device — drives picker grouping. */
@@ -842,8 +851,7 @@ export type DeviceLocalFilePreview =
  * file preview result but carries binary image content as base64 so it can cross
  * the Gateway/RPC boundary.
  */
-export interface DeviceLocalFilePreviewResult {
-  error?: string;
+export interface DeviceLocalFilePreviewResult extends DeviceLocalFilePreviewFailure {
   preview?: DeviceLocalFilePreview;
   success: boolean;
 }

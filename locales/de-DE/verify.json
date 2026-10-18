@@ -228,6 +228,8 @@
   "acceptance.predict.nonePending": "Nichts mehr zu überprüfen — jede Prüfung hat bereits ein Urteil.",
   "acceptance.predict.proposals": "KI-Überprüfung abgeschlossen: {{count}} Prüfung(en) wurden für Sie markiert.",
   "acceptance.predict.stillRunning": "Die KI-Überprüfung läuft noch — aktualisieren Sie in einem Moment, um die Ergebnisse zu sehen.",
+  "acceptance.preview.review": "Überprüfung der Vorschau",
+  "acceptance.preview.reviewHint": "Öffnen Sie die bereitgestellte Vorschau mit der Überprüfungsleiste, um Kommentare auf der Live-Seite zu hinterlassen",
   "acceptance.proposal.confirm": "Bestätigen und zurücksenden",
   "acceptance.proposal.misidentified": "Echtes Problem, falscher Ort",
   "acceptance.proposal.notAnIssue": "Kein Problem",

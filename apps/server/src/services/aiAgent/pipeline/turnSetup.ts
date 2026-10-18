@@ -2,20 +2,24 @@ import { isHeterogeneousAgentModelId, LOADING_FLAT } from '@lobechat/const';
 import type { LobeChatDatabase } from '@lobechat/database';
 import type { HeterogeneousAgentType } from '@lobechat/heterogeneous-agents';
 import type {
+  AgentSenderMetadata,
   ChatAudioItem,
   ChatFileItem,
   ChatTopicMetadata,
   ChatVideoItem,
   FileAccessScope,
   HeterogeneousProviderConfig,
+  HeterogeneousRuntimePinSources,
   HeterogeneousTopicPin,
+  RequestTrigger,
 } from '@lobechat/types';
 import {
   agentShareFileAccessScope,
   ChatErrorType,
   ordinaryFileAccessScope,
-  RequestTrigger,
+  resolveHeterogeneousModelOverride,
   resolveHeterogeneousProviderTopicModel,
+  resolveHeterogeneousTopicRuntimeSnapshot,
 } from '@lobechat/types';
 import { TRPCError } from '@trpc/server';
 import debug from 'debug';
@@ -40,7 +44,9 @@ import { ingestAttachment } from '../ingestAttachment';
 import type { AgentShareGate } from '../shareGate';
 import { reserveShareVisitorTopic, reserveShareVisitorTurn } from '../shareVisitorAbuseGuards';
 import type { InternalExecAgentParams } from '../types';
+import { createUserTurnAnchor } from './resolveUserMessageParentId';
 import { createStageTracer, openStageMark } from './sendTracing';
+import { buildUserTurnMetadata } from './userTurnMetadata';
 
 const log = debug('lobe-server:ai-agent-service');
 
@@ -66,8 +72,9 @@ export interface RunAttachments {
 
 /**
  * Build the reasoning snapshot for a topic being created — see
- * `ChatTopicMetadata.reasoningConfig` / `heteroEffort`. Returns undefined when
- * there is nothing to pin (non-reasoning model, hetero agent without an effort)
+ * `ChatTopicMetadata.reasoningConfig` / `heteroEffort` / `heteroSpeed`. Returns
+ * undefined when there is nothing to pin (non-reasoning model, hetero agent
+ * without effort or speed)
  * so the caller leaves metadata untouched. Never throws: a failed lookup just
  * means the topic follows the user-level config until the user pins one.
  */
@@ -83,10 +90,12 @@ const resolveTopicReasoningSnapshot = async ({
   isHeteroTopic: boolean;
   model: string;
   provider: string;
-}): Promise<Pick<ChatTopicMetadata, 'heteroEffort' | 'reasoningConfig'> | undefined> => {
+}): Promise<
+  Pick<ChatTopicMetadata, 'heteroEffort' | 'heteroSpeed' | 'reasoningConfig'> | undefined
+> => {
   if (isHeteroTopic) {
-    const effort = heterogeneousProvider?.effort;
-    return effort === undefined ? undefined : { heteroEffort: effort };
+    const snapshot = resolveHeterogeneousTopicRuntimeSnapshot(heterogeneousProvider);
+    return Object.keys(snapshot).length === 0 ? undefined : snapshot;
   }
 
   try {
@@ -323,6 +332,12 @@ const resolveRunAttachments = async (
 
 export interface TurnSetupInput {
   agentConfig: AgentConfigWithId;
+  /**
+   * Sending agent of an agent → agent turn, resolved to a snapshot before this
+   * stage runs. Stamped onto the user message as `metadata.agentSender` so the
+   * receiving topic attributes the turn to that agent, not the human owner.
+   */
+  agentSender?: AgentSenderMetadata;
   agentSlug?: string | null;
   appContext?: InternalExecAgentParams['appContext'];
   assistantAgentId: string;
@@ -349,6 +364,8 @@ export interface TurnSetupInput {
   /** Raw resume flag — a resume run must land on an existing topic. */
   resume?: boolean;
   runFromHistory: boolean;
+  /** Skills the user selected for this turn; see `ExecAgentParams.selectedSkillIds`. */
+  selectedSkillIds?: string[];
   /** Shared-agent visitor gate — set only by the shareChat router. */
   shareGate?: AgentShareGate;
   /** The prompt was queued behind a running turn; see `ExecAgentParams.steer`. */
@@ -371,8 +388,13 @@ export interface TurnSetupResult {
   isHeteroAgent: boolean;
   /** Effective model/provider after the topic-pinned model is applied. */
   model: string;
-  /** Topic-pinned model + reasoning effort for a heterogeneous run (reused topics only). */
+  /**
+   * Model, effort and speed pins for a heterogeneous run: a reused topic's pins,
+   * with a native Task model override taking the model's place.
+   */
   pinnedHeterogeneousTopicModel?: HeterogeneousTopicPin;
+  /** Which layer supplied each pin, for the dispatched configuration receipt. */
+  pinnedHeterogeneousTopicSources?: HeterogeneousRuntimePinSources;
   provider: string;
   /**
    * The request's device, or — when it named none — the device a reused topic
@@ -381,6 +403,7 @@ export interface TurnSetupResult {
   requestedDeviceId?: string;
   requestTriggerMetadata: {
     agentDispatch?: { kind: 'callAgent'; visibility: 'internal' };
+    agentSender?: AgentSenderMetadata;
     steer?: true;
     trigger?: RequestTrigger;
   };
@@ -415,6 +438,7 @@ export const setupTurn = async (
   const {
     agentConfig,
     agentSlug,
+    agentSender,
     appContext,
     assistantAgentId,
     attachedFileIds,
@@ -437,6 +461,7 @@ export const setupTurn = async (
     resolvedAgentId,
     resume,
     runFromHistory,
+    selectedSkillIds,
     shareGate,
     steer,
     throwIfExecutionAborted,
@@ -471,6 +496,24 @@ export const setupTurn = async (
   let provider = agentConfig.provider!;
   const heterogeneousProvider = agentConfig.agencyConfig?.heterogeneousProvider;
   let pinnedHeterogeneousTopicModel: HeterogeneousTopicPin | undefined;
+  let pinnedHeterogeneousTopicSources: HeterogeneousRuntimePinSources | undefined;
+  // TaskRunner forwards the Task's model snapshot on every run. For a
+  // heterogeneous agent that snapshot is often the Agent row's wrapper pair (a
+  // runtime ID such as codex/openai, or an ordinary chat model), not a CLI
+  // model, so only a runtime-compatible override may replace a topic pin.
+  const heterogeneousModelOverride =
+    heterogeneousProvider && modelOverride
+      ? resolveHeterogeneousModelOverride(heterogeneousProvider, {
+          model: modelOverride,
+          provider: providerOverride,
+        })
+      : undefined;
+  const nativeModelOverride = heterogeneousProvider
+    ? heterogeneousModelOverride?.model
+    : modelOverride;
+  const nativeProviderOverride = heterogeneousProvider
+    ? heterogeneousModelOverride?.provider
+    : providerOverride;
   let topicEditingGroupId: string | undefined;
 
   // Share-visitor fail-closed gate — reject a heterogeneous (Claude Code /
@@ -699,8 +742,8 @@ export const setupTurn = async (
         canUseTopicPin && (!existingTopic?.agentId || existingTopic.agentId === resolvedAgentId);
       const pinnedModel = canUseTopicModelPin ? existingTopic?.model : undefined;
       if (pinnedModel) {
-        model = modelOverride || pinnedModel;
-        provider = providerOverride || existingTopic?.provider || provider;
+        model = nativeModelOverride || pinnedModel;
+        provider = nativeProviderOverride || existingTopic?.provider || provider;
         pinnedHeterogeneousTopicModel = { model, provider };
         log(
           'execAgent: using topic-pinned model=%s provider=%s for topic %s',
@@ -709,15 +752,20 @@ export const setupTurn = async (
           topicId,
         );
       }
-      // The heterogeneous effort pin lives in metadata and is independent of the
-      // model pin (a runtime without a model selector can still pin an effort).
+      // Effort and speed pins live in metadata and are independent of the model
+      // pin (a runtime without a model selector can still pin them). They belong
+      // to the topic's own agent for the same reason as the model pin.
       const pinnedHeteroEffort = canUseTopicModelPin
         ? existingTopic?.metadata?.heteroEffort
         : undefined;
-      if (pinnedHeteroEffort !== undefined) {
+      const pinnedHeteroSpeed = canUseTopicModelPin
+        ? existingTopic?.metadata?.heteroSpeed
+        : undefined;
+      if (pinnedHeteroEffort !== undefined || pinnedHeteroSpeed !== undefined) {
         pinnedHeterogeneousTopicModel = {
           ...pinnedHeterogeneousTopicModel,
-          effort: pinnedHeteroEffort,
+          ...(pinnedHeteroEffort === undefined ? {} : { effort: pinnedHeteroEffort }),
+          ...(pinnedHeteroSpeed === undefined ? {} : { speed: pinnedHeteroSpeed }),
         };
       }
 
@@ -770,6 +818,26 @@ export const setupTurn = async (
     topicStage.end();
   }
 
+  if (heterogeneousProvider) {
+    // A new topic has no pins, yet a native Task model still replaces the
+    // agent's model. Carry it in the pin so dispatch and its receipt both read
+    // this one resolved result.
+    if (nativeModelOverride && !pinnedHeterogeneousTopicModel?.model) {
+      pinnedHeterogeneousTopicModel = {
+        ...pinnedHeterogeneousTopicModel,
+        model: nativeModelOverride,
+        provider: nativeProviderOverride ?? heterogeneousProvider.type,
+      };
+    }
+    if (pinnedHeterogeneousTopicModel) {
+      pinnedHeterogeneousTopicSources = {
+        effort: 'topic',
+        model: nativeModelOverride ? (operationTaskId ? 'task' : undefined) : 'topic',
+        speed: 'topic',
+      };
+    }
+  }
+
   await throwIfExecutionAborted('topic setup');
 
   // Resolve device-tool access ONCE per turn, BEFORE the hetero early exit —
@@ -798,22 +866,15 @@ export const setupTurn = async (
   const heteroType = (heteroProviderType ?? model) as HeterogeneousAgentType;
 
   // ── Shared turn setup (runs for BOTH hetero and normal agents) ──────────
-  const requestTriggerMetadata = {
-    ...(trigger && Object.values(RequestTrigger).includes(trigger as RequestTrigger)
-      ? { trigger: trigger as RequestTrigger }
-      : undefined),
-    ...(appContext?.conversationAgentId && appContext.scope === 'sub_agent'
-      ? { agentDispatch: { kind: 'callAgent' as const, visibility: 'internal' as const } }
-      : undefined),
-    // Bot-channel turns are inserted under the OWNER's userId; keep the real
-    // platform author alongside so the UI can attribute the bubble correctly.
-    ...(botSender ? { botSender } : undefined),
-    // A provider event that injected this turn keeps its source on the row.
-    ...(externalOrigin ? { externalOrigin } : undefined),
-    // A follow-up queued behind a running turn renders as that turn's
-    // continuation; the client's optimistic row is replaced by this one.
-    ...(steer ? { steer: true as const } : undefined),
-  };
+  const requestTriggerMetadata = buildUserTurnMetadata({
+    agentSender,
+    appContext,
+    botSender,
+    externalOrigin,
+    selectedSkillIds,
+    steer,
+    trigger,
+  });
 
   // Attachment ingestion: raw bot/IM `files` → S3, pre-uploaded
   // `attachedFileIds` → signed URLs + classification.
@@ -840,16 +901,17 @@ export const setupTurn = async (
     'messages',
     async () => {
       const selfMessageIds = new Set<string>();
-      // Anchor the new user turn on the conversation tail. Never leave it
-      // undefined for a topic that already has messages: `parentId: undefined`
-      // persists a second ROOT, and the renderer walks the parentId forest
-      // depth-first — an earlier root's still-growing subtree is emitted before a
-      // later root, so the newest reply lands ABOVE older messages.
-      //
-      // `getLatestSpineMessageId` skips tool rows and toolless signal turns, so it
-      // can come back empty on a topic built entirely from signal callbacks; fall
-      // back to the latest non-tool row rather than orphaning the turn.
-      const resolveUserMessageParentId = async () => {
+      // Anchor the new user turn on the selected branch's tail (see
+      // `createUserTurnAnchor` for why it is never left undefined).
+      const anchor = createUserTurnAnchor(deps.messageModel, {
+        allowShareVisitor: !!shareGate,
+        clientParentId: clientIds?.userMessageParentId,
+        groupId: appContext?.groupId ?? undefined,
+        sessionId: appContext?.sessionId,
+        threadId: appContext?.threadId ?? null,
+        topicId,
+      });
+      const resolveParentId = async () => {
         if (runFromHistory) return undefined;
         if (parentMessageId) return parentMessageId;
         // A thread created for THIS turn is empty, so there is no spine head to
@@ -859,21 +921,9 @@ export const setupTurn = async (
         // of order.
         if (createdThreadId) return appContext?.newThread?.sourceMessageId;
 
-        const threadId = appContext?.threadId ?? null;
-        const spineId = await deps.messageModel.getLatestSpineMessageId({ threadId, topicId });
-        if (spineId) return spineId;
-
-        const fallbackId = await deps.messageModel.getLatestNonToolMessageId({ threadId, topicId });
-        if (fallbackId) {
-          log(
-            'execAgent: no spine head for topic %s, anchoring user turn on latest non-tool message %s',
-            topicId,
-            fallbackId,
-          );
-        }
-        return fallbackId;
+        return anchor.resolveParentId();
       };
-      const userMessageParentId = await resolveUserMessageParentId();
+      const userMessageParentId = await resolveParentId();
       const userMessageParams = {
         agentId: conversationAgentId,
         content: prompt,
@@ -918,6 +968,7 @@ export const setupTurn = async (
       if (userMessageRecord) {
         selfMessageIds.add(userMessageRecord.id);
         log('execAgent: created user message %s', userMessageRecord.id);
+        await anchor.selectBranchOf(userMessageRecord);
       }
 
       // Snapshot the author's group orchestration role onto the assistant message
@@ -1053,6 +1104,7 @@ export const setupTurn = async (
     isHeteroAgent,
     model,
     pinnedHeterogeneousTopicModel,
+    pinnedHeterogeneousTopicSources,
     provider,
     requestedDeviceId: resolvedRequestedDeviceId,
     requestTriggerMetadata,

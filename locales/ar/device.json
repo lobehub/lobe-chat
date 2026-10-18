@@ -88,6 +88,7 @@
   "workingDirectory.pushNoop": "كل شيء محدث",
   "workingDirectory.pushSuccess": "تم الدفع بنجاح",
   "workingDirectory.recent": "حديث",
+  "workingDirectory.refreshFolders": "تحديث المجلدات",
   "workingDirectory.refreshGitStatus": "تحديث حالة الفرع وطلبات السحب",
   "workingDirectory.removeRecent": "إزالة من الحديث",
   "workingDirectory.removeWorktreeAction": "حذف مساحة العمل",

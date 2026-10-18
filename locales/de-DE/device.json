@@ -88,6 +88,7 @@
   "workingDirectory.pushNoop": "Alles auf dem neuesten Stand",
   "workingDirectory.pushSuccess": "Erfolgreich gepusht",
   "workingDirectory.recent": "Kürzlich",
+  "workingDirectory.refreshFolders": "Ordner aktualisieren",
   "workingDirectory.refreshGitStatus": "Zweig- und PR-Status aktualisieren",
   "workingDirectory.removeRecent": "Aus Kürzlich entfernen",
   "workingDirectory.removeWorktreeAction": "Worktree löschen",

@@ -88,6 +88,7 @@
   "workingDirectory.pushNoop": "Her şey güncel",
   "workingDirectory.pushSuccess": "Başarıyla gönderildi",
   "workingDirectory.recent": "Son",
+  "workingDirectory.refreshFolders": "Klasörleri yenile",
   "workingDirectory.refreshGitStatus": "Dal ve PR durumunu yenile",
   "workingDirectory.removeRecent": "Son öğelerden kaldır",
   "workingDirectory.removeWorktreeAction": "Çalışma ağacını sil",

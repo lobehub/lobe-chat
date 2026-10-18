@@ -4,6 +4,10 @@ import os from 'node:os';
 import path from 'node:path';
 
 import type { DeviceControlDeps } from '@lobechat/device-control';
+import {
+  COMPUTER_USE_IDENTIFIER as AuvIdentifier,
+  toAuvToolOutput,
+} from '@lobechat/device-control/computer-use';
 import type { AgentRunRequestMessage, GatewayMcpParams } from '@lobechat/device-gateway-client';
 import type { GatewayConnectionStatus } from '@lobechat/electron-client-ipc';
 import type { HeterogeneousAgentCancellationSignal } from '@lobechat/heterogeneous-agents/protocol';
@@ -50,7 +54,6 @@ type AvailableRemotePlatformRuntime = Extract<RemotePlatformCommandRuntime, { av
 // Hardcoded (not imported) so the desktop main process keeps zero builtin-tool
 // package deps — importing one risks the @lobechat/types stub runtime leak.
 const BrowserIdentifier = 'lobe-browser';
-const AuvIdentifier = 'lobe-computer-use';
 
 function parseHermesSessionId(stderr: string): string | undefined {
   for (const line of stderr.split(/\r?\n/).reverse()) {
@@ -101,9 +104,8 @@ interface PlatformTaskEntry {
   pid: number;
   topicId: string;
   /**
-   * Workspace that owns the dispatched topic — used at exit time so the
-   * cleanup notify still scopes to the workspace agentNotify resolves the
-   * topic in (the server seeds this via the `runHeteroTask` args).
+   * Workspace owning the dispatched topic (seeded by `runHeteroTask`), so the
+   * exit-time cleanup notify scopes to the workspace agentNotify resolves it in.
    */
   workspaceId?: string;
 }
@@ -266,13 +268,22 @@ export default class GatewayConnectionCtr extends ControllerModule {
     return { enabled: this.service.getKeepAwake() };
   }
 
+  /** Stable device id for persisted topic pins — local only, no backfill request. */
+  @IpcMethod()
+  async getStableDeviceId(): Promise<string | undefined> {
+    return this.service.resolveCurrentDeviceId();
+  }
+
   @IpcMethod()
   async getDeviceInfo(): Promise<{
     deviceId: string;
     hostname: string;
     platform: string;
   }> {
-    const info = this.service.getDeviceInfo();
+    // Signed in, report the stable id the gateway registers — not the pre-connect
+    // fallback — so the renderer's "this device" matches the pins it writes.
+    const stableId = await this.service.resolveCurrentDeviceId().catch(() => undefined);
+    const info = { ...this.service.getDeviceInfo(), ...(stableId && { deviceId: stableId }) };
     try {
       const [serverUrl, token] = await Promise.all([
         this.remoteServerConfigCtr.getRemoteServerUrl(),
@@ -295,10 +306,8 @@ export default class GatewayConnectionCtr extends ControllerModule {
   }
 
   /**
-   * Let the web app wake this desktop and restore its gateway connection from
-   * an offline device row. The device id guard matters when the user has more
-   * than one registered computer: opening the deep link on a different machine
-   * must not silently connect that machine instead.
+   * Wake this desktop from an offline device row. The device id guard keeps a
+   * deep link opened on another registered computer from connecting it instead.
    */
   @deviceProtocolHandler('reconnect')
   async reconnectFromProtocol({ deviceId }: { deviceId?: string }): Promise<boolean> {
@@ -439,10 +448,8 @@ export default class GatewayConnectionCtr extends ControllerModule {
   }
 
   /**
-   * Platform-specific handlers the shared `@lobechat/device-control` dispatcher
-   * delegates to. Git + workspace-scan methods run inside device-control over
-   * `@lobechat/local-file-shell`; only file preview / index (and preview
-   * approval) are desktop-specific and routed back to the controllers here.
+   * Desktop handlers for the shared `@lobechat/device-control` dispatcher: only
+   * file preview / index (and preview approval) route back to controllers here.
    */
   private get deviceControlDeps(): DeviceControlDeps {
     return {
@@ -481,9 +488,8 @@ export default class GatewayConnectionCtr extends ControllerModule {
   }
 
   /**
-   * Dispatch a generic server-internal device RPC (not an agent tool call) by
-   * method name. The dispatch logic lives in `@lobechat/device-control` so the
-   * desktop main process and the CLI daemon share one device RPC surface.
+   * Dispatch a server-internal device RPC by method name, via the dispatcher
+   * the desktop and the CLI daemon share (`@lobechat/device-control`).
    */
   private async executeDeviceRpc(method: string, params: unknown): Promise<unknown> {
     const { executeDeviceRpc: runDeviceRpc } = await import('@lobechat/device-control');
@@ -621,23 +627,12 @@ export default class GatewayConnectionCtr extends ControllerModule {
       throw new Error(`AUV tool "${apiName}" is not available on this device`);
     }
 
-    const result = await this.auvService.runCommand(args as AuvRunCommandParams);
-    return {
-      content: JSON.stringify(result),
-      ...(result.exitCode !== 0 && {
-        error: result.stderr || `Computer Use exited with code ${result.exitCode}`,
-      }),
-      state: result,
-      success: result.exitCode === 0,
-    };
+    return toAuvToolOutput(await this.auvService.runCommand(args as AuvRunCommandParams));
   }
 
   /**
-   * Execute an MCP tool call tunneled from the cloud server, for MCP servers
-   * only this machine can reach: stdio (the server can't spawn the user's
-   * local binary) and localhost / LAN HTTP endpoints (the server's fetch
-   * can't reach them). The connection params ride along; we run the call
-   * through the local MCP client.
+   * Run a tunneled MCP call through the local MCP client, for servers only this
+   * machine can reach: stdio binaries and localhost / LAN HTTP endpoints.
    */
   private async executeMcpCall(mcpCall: {
     apiName: string;

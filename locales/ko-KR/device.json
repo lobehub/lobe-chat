@@ -88,6 +88,7 @@
   "workingDirectory.pushNoop": "모든 것이 최신 상태입니다",
   "workingDirectory.pushSuccess": "성공적으로 푸시되었습니다",
   "workingDirectory.recent": "최근",
+  "workingDirectory.refreshFolders": "폴더 새로 고침",
   "workingDirectory.refreshGitStatus": "브랜치 및 PR 상태 새로고침",
   "workingDirectory.removeRecent": "최근 항목에서 제거",
   "workingDirectory.removeWorktreeAction": "작업 트리 삭제",

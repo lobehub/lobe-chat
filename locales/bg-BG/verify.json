@@ -228,6 +228,8 @@
   "acceptance.predict.nonePending": "Няма нищо за преглед — всяка проверка вече има решение.",
   "acceptance.predict.proposals": "AI прегледът завърши: {{count}} проверки са отбелязани за вас.",
   "acceptance.predict.stillRunning": "AI прегледът все още се изпълнява — обновете след малко, за да видите резултатите.",
+  "acceptance.preview.review": "Преглед на предварителен изглед",
+  "acceptance.preview.reviewHint": "Отворете разположения предварителен изглед с лентата за преглед, за да коментирате на живата страница",
   "acceptance.proposal.confirm": "Потвърдете и изпратете обратно",
   "acceptance.proposal.misidentified": "Истински проблем, грешно място",
   "acceptance.proposal.notAnIssue": "Не е проблем",

@@ -183,7 +183,7 @@ export class TopicService {
   updateTopicModel = (
     id: string,
     value: {
-      metadata?: Pick<ChatTopicMetadata, 'heteroEffort' | 'reasoningConfig'>;
+      metadata?: Pick<ChatTopicMetadata, 'heteroEffort' | 'heteroSpeed' | 'reasoningConfig'>;
       model: string;
       provider: string;
     },

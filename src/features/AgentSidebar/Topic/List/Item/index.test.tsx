@@ -81,7 +81,7 @@ vi.mock('@/features/ChatInput/ControlBar/DirIcon', () => ({
 vi.mock('@/business/client/hooks/useActiveWorkspaceSlug', () => ({
   useActiveWorkspaceSlug: () => 'team',
 }));
-vi.mock('@/routes/(main)/agent/channel/const', () => ({
+vi.mock('@/features/AgentChannel/const', () => ({
   getPlatformIcon: () => null,
 }));
 vi.mock('@/store/agent', () => ({

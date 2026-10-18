@@ -15,6 +15,8 @@ export default {
   'agentLabel.create': 'New label',
   'agentLabel.manage': 'Manage labels',
   'agentLabel.menuTitle': 'Labels',
+  'agentSkills.ensureFailed':
+    'Some skills this agent relies on could not be installed automatically: {{skills}}. You can add them manually in the Skill Store.',
   'agentViewAll.groupBy.author': 'Author',
   'agentViewAll.groupBy.label': 'Label',
   'agentViewAll.groupBy.noLabel': 'No label',
@@ -53,6 +55,7 @@ export default {
     'Current topic is not saved, please save it first to use subtopic feature',
   'forkRequiresSavedTopic': 'Current topic is not saved. Save it first to fork a new topic',
   'forkTopic': 'Continue in new topic',
+  'supportAgent.troubleshoot.question': 'This message failed. Please help me troubleshoot it.',
   'viewExecutionDetails': 'View execution details',
   'cancel': 'Cancel',
   'changelog': 'Changelog',
@@ -158,6 +161,7 @@ export default {
   'cmdk.newLibrary': 'Create New Library',
 
   'cmdk.newPage': 'Create New Page',
+  'cmdk.newTask': 'Create New Task',
 
   'cmdk.newTopic': 'New Topic in Current Agent',
 
@@ -214,6 +218,8 @@ export default {
   'cmdk.search.plugins': 'Skills',
   'cmdk.search.searchMore': 'Search more {{type}}',
   'cmdk.search.searching': 'Search Results',
+  'cmdk.search.task': 'Task',
+  'cmdk.search.tasks': 'Tasks',
   'cmdk.search.topic': 'Topic',
   'cmdk.search.topics': 'Topics',
   'cmdk.searchPlaceholder': 'Enter a command or search...',

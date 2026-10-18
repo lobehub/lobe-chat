@@ -88,6 +88,7 @@
   "workingDirectory.pushNoop": "همه چیز به‌روز است",
   "workingDirectory.pushSuccess": "با موفقیت ارسال شد",
   "workingDirectory.recent": "اخیر",
+  "workingDirectory.refreshFolders": "تازه‌سازی پوشه‌ها",
   "workingDirectory.refreshGitStatus": "وضعیت شاخه و درخواست‌ها را تازه‌سازی کنید",
   "workingDirectory.removeRecent": "حذف از موارد اخیر",
   "workingDirectory.removeWorktreeAction": "حذف ورک‌تری",

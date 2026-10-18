@@ -25,7 +25,15 @@ export type GoalGateCategory =
   'agentQuestion' | 'clarify' | 'goalAcceptance' | 'judgment' | 'machine';
 
 /** The ids the coordinator writes on its own gates; anything else is an Agent's answer. */
-const COORDINATOR_OPTION_IDS = new Set(['fail', 'retire', 'retry']);
+const COORDINATOR_OPTION_IDS = new Set([
+  'fail',
+  'retire',
+  'retry',
+  // A batch's own gates: revise or fork the recipe, release the next wave.
+  'new_class',
+  'release',
+  'revise',
+]);
 
 export const goalGateCategory = (gate: {
   nodeTitle?: string | null;

@@ -1,9 +1,17 @@
 'use client';
 
 import { exportJSONFile } from '@lobechat/utils/client';
-import { Flexbox, Icon } from '@lobehub/ui';
-import type { DropdownItem } from '@lobehub/ui/base-ui';
-import { ActionIcon, confirmModal, DropdownMenu, Switch, Tag, toast } from '@lobehub/ui/base-ui';
+import type { DropdownItem } from '@lobehub/ui';
+import {
+  ActionIcon,
+  confirmModal,
+  DropdownMenu,
+  Flexbox,
+  Icon,
+  Switch,
+  Tag,
+  toast,
+} from '@lobehub/ui';
 import {
   BookOpen,
   Download,
@@ -24,8 +32,8 @@ import NavHeader from '@/features/NavHeader';
 import type { SerializedPlatformDefinition } from '@/server/services/bot/platforms/types';
 import { useAgentStore } from '@/store/agent';
 import type { BotProviderItem } from '@/store/agent/slices/bot/action';
+import { BOT_RUNTIME_STATUSES, type BotRuntimeStatus } from '@/types/botRuntimeStatus';
 
-import { BOT_RUNTIME_STATUSES, type BotRuntimeStatus } from '../../../../types/botRuntimeStatus';
 import { resolveChannelHeaderView } from './headerView';
 import { isImportableChannel, planChannelImport } from './importPlan';
 

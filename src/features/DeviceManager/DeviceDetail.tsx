@@ -2,9 +2,21 @@
 
 import { isDesktop } from '@lobechat/const';
 import type { DeviceListItem } from '@lobechat/types';
-import { CopyButton, Flexbox, Icon, SortableList } from '@lobehub/ui';
-import { ActionIcon, Button, Input, Tabs, Tag, Text, toast } from '@lobehub/ui/base-ui';
-import { createStaticStyles, cssVar } from 'antd-style';
+import {
+  ActionIcon,
+  Button,
+  CopyButton,
+  createStaticStyles,
+  cssVar,
+  Flexbox,
+  Icon,
+  Input,
+  SortableList,
+  Tabs,
+  Tag,
+  Text,
+  toast,
+} from '@lobehub/ui';
 import {
   ArrowLeftIcon,
   BotIcon,

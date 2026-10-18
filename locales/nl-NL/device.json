@@ -88,6 +88,7 @@
   "workingDirectory.pushNoop": "Alles is up-to-date",
   "workingDirectory.pushSuccess": "Succesvol gepusht",
   "workingDirectory.recent": "Recent",
+  "workingDirectory.refreshFolders": "Mappen vernieuwen",
   "workingDirectory.refreshGitStatus": "Branch- en PR-status vernieuwen",
   "workingDirectory.removeRecent": "Verwijderen uit recent",
   "workingDirectory.removeWorktreeAction": "Verwijder werkboom",

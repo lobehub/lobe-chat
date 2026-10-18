@@ -11,9 +11,8 @@ import {
   HETERO_EXEC_INHERIT_PROCESS_GROUP_ENV,
   lobeHubCliGuide,
 } from '@lobechat/heterogeneous-agents/protocol';
-import type { CodexAppServerClient as NativeCodexAppServerClient } from '@lobechat/heterogeneous-agents/spawn';
+import type * as spawnModule from '@lobechat/heterogeneous-agents/spawn';
 import { AcpRpcResponseError } from '@lobechat/heterogeneous-agents/spawn';
-import * as managedProcess from '@lobechat/utils/managedProcess';
 // `electron` is mocked below; this binding is the mock object so tests can
 // flip `isPackaged` to exercise the packaged-build tracing gate.
 import { app as electronAppMock } from 'electron';
@@ -265,7 +264,8 @@ const { ensureResumeTranscriptMock, readClaudeCodeSessionCostMock } = vi.hoisted
 }));
 
 vi.mock('@lobechat/heterogeneous-agents/spawn', async (importOriginal) => {
-  const actual = await importOriginal<Record<string, unknown>>();
+  const { createCodexAppServerMocks } = await import('./testUtils');
+  const actual = await importOriginal<typeof spawnModule>();
 
   class MockClaudeAgentSdkSession {
     constructor(private readonly options: any) {
@@ -315,95 +315,6 @@ vi.mock('@lobechat/heterogeneous-agents/spawn', async (importOriginal) => {
         sessionId: this.options.sessionId,
         state: 'closed',
         transport: 'claude-sdk',
-      });
-    }
-  }
-
-  class MockCodexAppServerClient extends (actual.CodexAppServerClient as typeof NativeCodexAppServerClient) {
-    constructor(options: any) {
-      super(options);
-      codexAppServerClientConstructMock(options);
-    }
-
-    canReuseFor(options: Parameters<NativeCodexAppServerClient['canReuseFor']>[0]) {
-      return codexAppServerCanReuse.value && super.canReuseFor(options);
-    }
-
-    get hasConsumers() {
-      return codexAppServerConsumerCount.value > 0;
-    }
-
-    close() {
-      codexAppServerClientCloseMock();
-    }
-  }
-
-  class MockCodexThreadSession {
-    canFallbackToExec = true;
-    private closed = false;
-
-    constructor(private readonly options: any) {
-      codexAppServerConsumerCount.value += 1;
-      codexAppServerConstructMock(options);
-    }
-
-    close() {
-      if (!this.closed) {
-        this.closed = true;
-        codexAppServerConsumerCount.value -= 1;
-      }
-      codexAppServerCloseMock();
-    }
-
-    async interrupt() {
-      return codexAppServerInterruptMock();
-    }
-
-    async run(runOptions: any) {
-      codexAppServerRunMock(runOptions);
-      if (codexAppServerShouldFailResume.value && this.options.initialThreadId) {
-        this.canFallbackToExec = false;
-        const error = new Error('Thread not found');
-        error.name = 'CodexAppServerConnectionError';
-        throw error;
-      }
-      if (codexAppServerShouldFallback.value) {
-        const error = new Error('Method not found: initialize');
-        error.name = 'CodexAppServerConnectionError';
-        throw error;
-      }
-
-      const now = Date.now();
-      this.canFallbackToExec = false;
-      if (codexAppServerShouldFailAfterThread.value) {
-        const error = new Error('Codex app-server disconnected');
-        error.name = 'CodexAppServerConnectionError';
-        throw error;
-      }
-      this.options.onRuntimeStatus({
-        activeTasks: [],
-        lastEventAt: now,
-        operationId: runOptions.operationId,
-        sessionId: this.options.sessionId,
-        state: 'running',
-        transport: 'codex-app-server',
-      });
-      this.options.onSessionId('thread_app_server');
-      await this.options.onEvents([
-        {
-          data: { reason: 'complete', transport: 'codex-app-server' },
-          operationId: runOptions.operationId,
-          stepIndex: 0,
-          timestamp: now,
-          type: 'agent_runtime_end',
-        },
-      ]);
-      this.options.onRuntimeStatus({
-        activeTasks: [],
-        lastEventAt: now,
-        sessionId: this.options.sessionId,
-        state: 'closed',
-        transport: 'codex-app-server',
       });
     }
   }
@@ -612,8 +523,19 @@ vi.mock('@lobechat/heterogeneous-agents/spawn', async (importOriginal) => {
     ensureClaudeCodeResumeTranscript: ensureResumeTranscriptMock,
     readClaudeCodeSessionCost: readClaudeCodeSessionCostMock,
     ClaudeAgentSdkSession: MockClaudeAgentSdkSession,
-    CodexAppServerClient: MockCodexAppServerClient,
-    CodexThreadSession: MockCodexThreadSession,
+    ...createCodexAppServerMocks(actual, {
+      codexAppServerCanReuse,
+      codexAppServerClientCloseMock,
+      codexAppServerClientConstructMock,
+      codexAppServerCloseMock,
+      codexAppServerConsumerCount,
+      codexAppServerConstructMock,
+      codexAppServerInterruptMock,
+      codexAppServerRunMock,
+      codexAppServerShouldFailAfterThread,
+      codexAppServerShouldFailResume,
+      codexAppServerShouldFallback,
+    }),
     CursorAcpSession: MockCursorAcpSession,
     DroidAcpSession: MockDroidAcpSession,
     DevinAcpSession: MockDevinAcpSession,
@@ -2905,12 +2827,12 @@ describe('HeterogeneousAgentCtr', () => {
       return { cliArgs, command, ctr, options, sessionId, writes };
     };
 
-    it('identifies Codex when beginning a server-default operation', async () => {
+    it.each(['codex', 'opencode'] as const)('runs %s via relay', async (agentType) => {
       const { proc } = createFakeProc();
       nextFakeProc = proc;
       const relayInvocation = {
         acceptedAt: '2026-09-01T00:00:00.000Z',
-        agentType: 'codex',
+        agentType,
         ingress: 'openai-responses',
         model: 'gpt-5.4',
         operationId: 'op-server-default',
@@ -2925,8 +2847,8 @@ describe('HeterogeneousAgentCtr', () => {
         storeManager: { get: vi.fn() },
       } as any);
       const { sessionId } = await ctr.startSession({
-        agentType: 'codex',
-        command: 'codex',
+        agentType,
+        command: agentType,
         providerBinding: {
           apiConfig: { model: 'gpt-5.4', source: 'server-default' },
           kind: 'server-default',
@@ -2940,16 +2862,16 @@ describe('HeterogeneousAgentCtr', () => {
         sessionId,
         topicId: 'topic-1',
       });
-
       expect(beginServerDefaultOperationMock).toHaveBeenCalledWith(expect.any(Object), {
         agentId: 'agent-1',
-        agentType: 'codex',
+        agentType,
         model: 'gpt-5.4',
         operationId: 'op-server-default',
         topicId: 'topic-1',
       });
-      expect(spawnCalls[0].args).toEqual(expect.arrayContaining(['--model', 'lobehub/gpt-5.4']));
-      expect(spawnCalls[0].options.env.LOBEHUB_HETERO_TOKEN).toBe('operation-token');
+      expect(spawnCalls[0].args.join(' ')).toContain('lobehub/gpt-5.4');
+      const key = agentType === 'codex' ? 'LOBEHUB_HETERO_TOKEN' : 'LOBEHUB_OPENCODE_API_KEY';
+      expect(spawnCalls[0].options.env[key]).toBe('operation-token');
       expect(settleServerDefaultOperationMock).toHaveBeenCalledWith(expect.any(Object), {
         cancelled: false,
         operationId: 'op-server-default',
@@ -3637,52 +3559,6 @@ describe('HeterogeneousAgentCtr', () => {
         agentSessionId: 'thread_app_server',
       });
       expect(send).toHaveBeenCalledWith('heteroAgentSessionComplete', { sessionId });
-    });
-
-    it('reuses one native app-server client for sessions owned by different topics and agents', async () => {
-      const registry = new managedProcess.ManagedProcessRegistry();
-      const environment = vi
-        .spyOn(managedProcess, 'managedProcessEnvironment')
-        .mockImplementation(registry.environment.bind(registry));
-      try {
-        const ctr = new HeterogeneousAgentCtr({
-          appStoragePath,
-          storeManager: { get: vi.fn() },
-        } as any);
-        const first = await ctr.startSession({
-          agentType: 'codex',
-          command: 'codex',
-          useCodexAppServer: true,
-        });
-        const second = await ctr.startSession({
-          agentType: 'codex',
-          command: 'codex',
-          useCodexAppServer: true,
-        });
-
-        await ctr.sendPrompt({
-          agentId: 'agent-1',
-          topicId: 'topic-1',
-          operationId: 'op-1',
-          prompt: 'first',
-          sessionId: first.sessionId,
-        });
-        await ctr.sendPrompt({
-          agentId: 'agent-2',
-          topicId: 'topic-2',
-          operationId: 'op-2',
-          prompt: 'second',
-          sessionId: second.sessionId,
-        });
-
-        expect(codexAppServerClientConstructMock).toHaveBeenCalledTimes(1);
-        expect(codexAppServerConstructMock).toHaveBeenCalledTimes(2);
-        const { env } = codexAppServerClientConstructMock.mock.calls[0][0];
-        expect(env.LOBEHUB_PROCESS_TOPIC).toBeUndefined();
-        expect(env.AGENT_BROWSER_NAMESPACE).toBeUndefined();
-      } finally {
-        environment.mockRestore();
-      }
     });
 
     it('reuses one native thread session across multiple turns', async () => {

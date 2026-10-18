@@ -228,6 +228,8 @@
   "acceptance.predict.nonePending": "Nic nie pozostało do sprawdzenia — każde sprawdzenie ma już werdykt.",
   "acceptance.predict.proposals": "Przegląd AI zakończony: {{count}} sprawdzeń oznaczonych dla Ciebie.",
   "acceptance.predict.stillRunning": "Przegląd AI nadal trwa — odśwież za chwilę, aby zobaczyć wyniki.",
+  "acceptance.preview.review": "Przegląd podglądu",
+  "acceptance.preview.reviewHint": "Otwórz wdrożony podgląd z paskiem narzędzi przeglądu, aby komentować na żywej stronie",
   "acceptance.proposal.confirm": "Potwierdź i odeślij",
   "acceptance.proposal.misidentified": "Prawdziwy problem, złe miejsce",
   "acceptance.proposal.notAnIssue": "Nie jest problemem",

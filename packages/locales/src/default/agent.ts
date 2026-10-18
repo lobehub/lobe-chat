@@ -232,6 +232,12 @@ export default {
   'channel.save': 'Save Configuration',
   'channel.setupGuide': 'Setup Guide',
   'channel.saveFailed': 'Failed to save configuration',
+  'channel.saveFailedHint': 'Check the fields above and try again.',
+  'channel.connectFailedHint':
+    'Check the credentials and platform settings, then save again to reconnect.',
+  'channel.testFailedHint': 'Check the credentials and try again.',
+  'channel.resultDetail.show': 'Show details',
+  'channel.resultDetail.hide': 'Hide details',
   'channel.saveFirstWarning': 'Please save configuration first',
   'channel.saved': 'Configuration saved successfully',
   'channel.secretToken': 'Webhook Secret Token',

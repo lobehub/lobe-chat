@@ -1,6 +1,5 @@
-import { Block, Flexbox, Icon } from '@lobehub/ui';
-import { Button, Select, Text } from '@lobehub/ui/base-ui';
-import { cssVar } from 'antd-style';
+import type { DeviceListItem } from '@lobechat/types';
+import { Block, Button, cssVar, Flexbox, Icon, Select, Text } from '@lobehub/ui';
 import { FolderIcon, MessageSquarePlusIcon, PlusIcon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useSearchParams } from 'react-router';
@@ -8,7 +7,7 @@ import { useSearchParams } from 'react-router';
 import AsyncError from '@/components/AsyncError';
 import { getDeviceIcon } from '@/features/DeviceManager/getDeviceIcon';
 import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwareNavigate';
-import { useDeviceStore } from '@/store/device';
+import { deviceSelectors, useDeviceStore } from '@/store/device';
 import { useCurrentProjectDetail, useProjectStore } from '@/store/project';
 import {
   useProjectDirectories,
@@ -19,6 +18,20 @@ import {
 import { openAddDirectoryModal } from './AddDirectoryModal';
 import { openBindDirectoryModal } from './BindDirectoryModal';
 import { openProjectTopicModal } from './StartDirectoryModal';
+
+/**
+ * A device row restored from the persisted list (`onlineUnknown`) has not been
+ * confirmed yet, so its presence is left unsaid until `listDevices` answers.
+ */
+const DevicePresence = ({ device }: { device?: DeviceListItem }) => {
+  const { t } = useTranslation('project');
+  if (device?.onlineUnknown) return null;
+  return (
+    <Text fontSize={12} type="secondary">
+      {t(device?.online ? 'settings.deviceOnline' : 'settings.deviceOffline')}
+    </Text>
+  );
+};
 
 export function WorkingDirectorySettings({ projectId }: { projectId: string }) {
   const { t } = useTranslation('project');
@@ -32,7 +45,8 @@ export function WorkingDirectorySettings({ projectId }: { projectId: string }) {
   const environments = useProjectEnvironments(projectId);
   const directories = useProjectDirectories(projectId);
   const deviceRequest = useDeviceStore((s) => s.useFetchDevices)(true);
-  const devices = useDeviceStore((s) => s.devices);
+  const devices = useDeviceStore(deviceSelectors.deviceList);
+  const isDeviceListLoaded = useDeviceStore(deviceSelectors.isDeviceListLoaded);
   const items = directories.filter((d) => !environmentId || d.environmentId === environmentId);
   const error = environmentsRequest.error || directoriesRequest.error || deviceRequest.error;
   return (
@@ -72,14 +86,14 @@ export function WorkingDirectorySettings({ projectId }: { projectId: string }) {
             Promise.all([
               environmentsRequest.revalidate(),
               directoriesRequest.revalidate(),
-              deviceRequest.mutate(),
+              deviceRequest.revalidate(),
             ])
           }
         />
       ) : null}
       {error ? null : !directoriesRequest.hasData ||
         !environmentsRequest.hasData ||
-        deviceRequest.isLoading ? (
+        !isDeviceListLoaded ? (
         <Text>{t('loading', { ns: 'common' })}</Text>
       ) : !items.length ? (
         <Flexbox gap={12} paddingBlock={24}>
@@ -115,13 +129,9 @@ export function WorkingDirectorySettings({ projectId }: { projectId: string }) {
                       14,
                     )}
                     <Text fontSize={12}>{directory.deviceName || directory.deviceId}</Text>
-                    <Text fontSize={12} type="secondary">
-                      {t(
-                        devices.find((d) => d.deviceId === directory.deviceId)?.online
-                          ? 'settings.deviceOnline'
-                          : 'settings.deviceOffline',
-                      )}
-                    </Text>
+                    <DevicePresence
+                      device={devices.find((d) => d.deviceId === directory.deviceId)}
+                    />
                     <Text fontSize={12} type="secondary">
                       · {directory.environmentName || t('directories.noEnvironment')}
                     </Text>

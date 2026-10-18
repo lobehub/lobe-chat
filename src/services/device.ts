@@ -1,4 +1,9 @@
-import type { DeviceBoundAgentItem, DeviceEnroller, DeviceRunningSummary } from '@lobechat/types';
+import type {
+  DeviceBoundAgentItem,
+  DeviceEnroller,
+  DeviceRunningSummary,
+  DeviceScope,
+} from '@lobechat/types';
 
 import { lambdaClient } from '@/libs/trpc/client';
 import { type TopicListItem } from '@/services/topic';
@@ -23,6 +28,25 @@ class DeviceService {
   /** Update user-editable device fields (defaultCwd / friendlyName / workingDirs). */
   updateDevice(input: Parameters<DeviceClient['updateDevice']['mutate']>[0]) {
     return lambdaClient.device.updateDevice.mutate(input);
+  }
+
+  /** Update user-editable fields of a workspace-enrolled device (workspace-scoped write). */
+  updateWorkspaceDevice(input: Parameters<DeviceClient['updateWorkspaceDevice']['mutate']>[0]) {
+    return lambdaClient.device.updateWorkspaceDevice.mutate(input);
+  }
+
+  /** Add (or move to the front) one recent working dir on a workspace device. */
+  addWorkspaceDeviceWorkingDir(
+    input: Parameters<DeviceClient['addWorkspaceDeviceWorkingDir']['mutate']>[0],
+  ) {
+    return lambdaClient.device.addWorkspaceDeviceWorkingDir.mutate(input);
+  }
+
+  /** Remove one recent working dir from a workspace device. */
+  removeWorkspaceDeviceWorkingDir(
+    input: Parameters<DeviceClient['removeWorkspaceDeviceWorkingDir']['mutate']>[0],
+  ) {
+    return lambdaClient.device.removeWorkspaceDeviceWorkingDir.mutate(input);
   }
 
   /**
@@ -152,8 +176,8 @@ class DeviceService {
   }
 
   /** The device's recent CPU / memory / load history, bucketed for charting. */
-  getMetricSeries(deviceId: string) {
-    return lambdaClient.deviceMetric.getSeries.query({ deviceId });
+  getMetricSeries(deviceId: string, scope?: DeviceScope) {
+    return lambdaClient.deviceMetric.getSeries.query({ deviceId, scope });
   }
 
   /** Revoke a link. */

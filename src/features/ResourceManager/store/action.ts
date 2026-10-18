@@ -397,6 +397,9 @@ export class ResourceManagerStoreActionImpl {
           await fileStore.evictResourceLists();
           // The deleted set is only known to the server here, and every row in
           // it was a child of the listed folder, so refetch that one folder.
+          // The persisted tree is dropped first: if that refetch never lands,
+          // a reload must not repaint the deleted rows.
+          useTreeStore.getState().forgetSnapshot();
           void useTreeStore.getState().revalidate(currentFolderKey);
 
           this.clearSelectAllState();

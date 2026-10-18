@@ -228,6 +228,8 @@
   "acceptance.predict.nonePending": "Không còn gì để xem xét — mọi mục kiểm tra đều đã có phán quyết.",
   "acceptance.predict.proposals": "AI đã hoàn thành việc xem xét: {{count}} mục kiểm tra được đánh dấu để bạn xem xét.",
   "acceptance.predict.stillRunning": "AI vẫn đang xem xét — làm mới sau một lúc để xem kết quả.",
+  "acceptance.preview.review": "Xem xét trên bản xem trước",
+  "acceptance.preview.reviewHint": "Mở bản xem trước đã triển khai với thanh công cụ đánh giá để bình luận trên trang trực tiếp",
   "acceptance.proposal.confirm": "Xác nhận và gửi lại",
   "acceptance.proposal.misidentified": "Vấn đề thực sự, sai vị trí",
   "acceptance.proposal.notAnIssue": "Không phải là vấn đề",

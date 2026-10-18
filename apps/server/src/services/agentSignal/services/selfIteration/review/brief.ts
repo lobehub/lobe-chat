@@ -8,7 +8,7 @@ import type { BriefItem, NewBrief } from '@/database/schemas';
 import type { LobeChatDatabase } from '@/database/type';
 
 import type { EvidenceRef, RunResult } from '../types';
-import { ActionStatus, ReviewRunStatus } from '../types';
+import { ActionStatus } from '../types';
 import {
   createSelfReviewBriefText,
   type SelfReviewBriefTextActionSummaries,
@@ -53,7 +53,7 @@ export interface SelfReviewBriefMetadata {
   /** User-local review date in YYYY-MM-DD form. */
   localDate: string;
   /** Coarse user-visible outcome selected by the projection service. */
-  outcome: 'applied' | 'error' | 'ideas' | 'proposal';
+  outcome: 'applied' | 'ideas' | 'proposal';
   /** Durable receipt ids linked to this brief. */
   receiptIds: string[];
   /** Frozen self-review proposal state for approve/dismiss flows. */
@@ -378,13 +378,14 @@ const getReceiptIds = (result: RunResult) => [
 ];
 
 const getOutcome = (
-  result: RunResult,
   counts: SelfReviewBriefActionCounts,
   ideas: SelfReviewIdea[] = [],
 ): SelfReviewBriefMetadata['outcome'] | undefined => {
   if (counts.proposed > 0) return 'proposal';
   if (counts.applied > 0) return 'applied';
-  if (counts.failed > 0 || result.status === ReviewRunStatus.Failed) return 'error';
+  // A failed nightly run is housekeeping the user cannot act on, so it no
+  // longer mints an `error` brief in "Needs you"; failures stay in receipts
+  // and traces. Ideas recorded before the failure still surface.
   if (ideas.length > 0) return 'ideas';
 
   return;
@@ -529,7 +530,7 @@ export const createBriefSelfReviewService = () => ({
    *
    * Use when:
    * - Nightly review handlers have already executed self-review actions
-   * - Noop reviews should remain silent while applied/proposal/error outcomes surface
+   * - Noop and failed reviews stay silent while applied/proposal/ideas outcomes surface
    *
    * Expects:
    * - `result.actions` contains executor-order action results
@@ -542,7 +543,7 @@ export const createBriefSelfReviewService = () => ({
     input: ProjectNightlyReviewBriefInput,
   ): SelfReviewBriefProjection | undefined => {
     const actionCounts = countActions(input.result, input.plan);
-    const outcome = getOutcome(input.result, actionCounts, input.ideas);
+    const outcome = getOutcome(actionCounts, input.ideas);
 
     if (!outcome) return;
 

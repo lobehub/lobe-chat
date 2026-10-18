@@ -228,6 +228,8 @@
   "acceptance.predict.nonePending": "لا يوجد شيء للمراجعة — كل فحص لديه حكم بالفعل.",
   "acceptance.predict.proposals": "انتهت مراجعة الذكاء الاصطناعي: تم الإبلاغ عن {{count}} من الفحوصات لك.",
   "acceptance.predict.stillRunning": "مراجعة الذكاء الاصطناعي لا تزال قيد التشغيل — قم بالتحديث بعد لحظة لرؤية النتائج.",
+  "acceptance.preview.review": "مراجعة على المعاينة",
+  "acceptance.preview.reviewHint": "افتح المعاينة المنشورة باستخدام شريط أدوات المراجعة للتعليق على الصفحة الحية",
   "acceptance.proposal.confirm": "تأكيد وإرسال مرة أخرى",
   "acceptance.proposal.misidentified": "مشكلة حقيقية، في المكان الخطأ",
   "acceptance.proposal.notAnIssue": "ليست مشكلة",
