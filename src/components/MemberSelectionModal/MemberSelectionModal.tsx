@@ -7,9 +7,11 @@ import {
   Button,
   Checkbox,
   createStaticStyles,
+  cssVar,
   cx,
   Flexbox,
   List,
+  ModalFooter,
   SearchBar,
   Switch,
   Text,
@@ -296,7 +298,7 @@ const MemberSelectionModal = memo<MemberSelectionModalProps>(
               <ActionIcon
                 icon={X}
                 size="small"
-                style={{ color: '#999' }}
+                style={{ color: cssVar.colorTextTertiary }}
                 onClick={() => handleRemoveAgent(agentId)}
               />
             ),
@@ -374,7 +376,7 @@ const MemberSelectionModal = memo<MemberSelectionModalProps>(
         title={modalTitle}
         width={800}
         footer={
-          <Flexbox horizontal gap={8} justify="end">
+          <ModalFooter>
             <Button onClick={handleCancel}>{t('cancel', { ns: 'common' })}</Button>
             <Button
               disabled={isConfirmDisabled}
@@ -384,7 +386,7 @@ const MemberSelectionModal = memo<MemberSelectionModalProps>(
             >
               {confirmButtonText} ({totalMemberCount})
             </Button>
-          </Flexbox>
+          </ModalFooter>
         }
         onCancel={handleCancel}
       >
@@ -440,7 +442,7 @@ const MemberSelectionModal = memo<MemberSelectionModalProps>(
                       {t('groupWizard.host.title')}
                     </Text>
                     <Text
-                      style={{ color: '#999', fontSize: 12 }}
+                      style={{ color: cssVar.colorTextTertiary, fontSize: 12 }}
                       type={isHostRemoved ? 'secondary' : undefined}
                     >
                       {t('groupWizard.host.description')}
