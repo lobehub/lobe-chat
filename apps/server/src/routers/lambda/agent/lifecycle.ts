@@ -8,6 +8,7 @@ import { AGENT_TRANSFER_IN_PROGRESS } from '@/database/models/agentTransferJob';
 import { ResourcePermissionModel } from '@/database/models/resourcePermission';
 import { ResourceTransferRequestModel } from '@/database/models/resourceTransferRequest';
 import { DEFAULT_RESOURCE_ACCESS_LEVELS } from '@/database/schemas';
+import { router } from '@/libs/trpc/lambda';
 import { assertCanPerformResourceAction } from '@/server/services/resourcePermission';
 import { TrashService } from '@/server/services/trash';
 import { TransferErrorCode } from '@/types/transferError';
@@ -15,7 +16,7 @@ import { TransferErrorCode } from '@/types/transferError';
 import { isWorkspaceNonOwner } from '../_helpers/assertWorkspaceRowManageable';
 import { agentProcedure } from './procedures';
 
-export const lifecycleProcedures = {
+export const lifecycleRouter = router({
   /**
    * Check if an agent with the given marketIdentifier already exists
    */
@@ -315,4 +316,4 @@ export const lifecycleProcedures = {
     .mutation(async ({ input, ctx }) => {
       return ctx.agentModel.update(input.id, { pinned: input.pinned });
     }),
-};
+});

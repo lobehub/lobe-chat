@@ -3,6 +3,7 @@ import { KnowledgeType } from '@lobechat/types';
 import { z } from 'zod';
 
 import { withScopedPermission } from '@/business/server/trpc-middlewares/rbacPermission';
+import { router } from '@/libs/trpc/lambda';
 import {
   assertCanEditResource,
   assertCanPerformResourceAction,
@@ -14,7 +15,7 @@ import {
 } from '../_helpers/knowledgeBaseAccess';
 import { agentProcedure } from './procedures';
 
-export const knowledgeProcedures = {
+export const knowledgeRouter = router({
   createAgentFiles: agentProcedure
     .use(withScopedPermission('agent:update'))
     .input(
@@ -242,4 +243,4 @@ export const knowledgeProcedures = {
         input.enabled,
       );
     }),
-};
+});

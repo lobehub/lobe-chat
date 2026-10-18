@@ -1,6 +1,7 @@
 import { z } from 'zod';
 
 import { withScopedPermission } from '@/business/server/trpc-middlewares/rbacPermission';
+import { router } from '@/libs/trpc/lambda';
 import { assertCanEditResource } from '@/server/services/resourcePermission';
 
 import { agentProcedure } from './procedures';
@@ -17,7 +18,7 @@ export interface AgentRouteResolution {
   kind: 'own' | 'notFound';
 }
 
-export const routingProcedures = {
+export const routingRouter = router({
   /**
    * Resolve a slug to its agent id so `/agent/:slug` can open the agent.
    *
@@ -78,4 +79,4 @@ export const routingProcedures = {
 
       return ctx.agentModel.updateSlug(input.agentId, input.slug);
     }),
-};
+});

@@ -25,6 +25,7 @@ import {
   LEGACY_VIEWER_ACCESS_LEVELS,
   RESOURCE_ACCESS_LEVELS_BY_TYPE,
 } from '@/database/schemas';
+import { router } from '@/libs/trpc/lambda';
 import { assertCanPerformResourceAction } from '@/server/services/resourcePermission';
 import { assertTransferRecipientValid } from '@/server/services/resourceTransferRequest';
 import {
@@ -37,7 +38,7 @@ import { TransferErrorCode } from '@/types/transferError';
 import { isWorkspaceNonOwner } from '../_helpers/assertWorkspaceRowManageable';
 import { agentProcedure } from './procedures';
 
-export const transferProcedures = {
+export const transferRouter = router({
   /**
    * Progress of the async history backfill after a heavy transfer, plus the
    * topic ids still awaiting their scope rewrite (the UI's gray-out set).
@@ -549,4 +550,4 @@ export const transferProcedures = {
 
       return results;
     }),
-};
+});

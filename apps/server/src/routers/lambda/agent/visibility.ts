@@ -8,6 +8,7 @@ import { ResourcePermissionModel } from '@/database/models/resourcePermission';
 import { TaskModel } from '@/database/models/task';
 import type { ResourceAccessLevel } from '@/database/schemas';
 import { DEFAULT_RESOURCE_ACCESS_LEVELS, RESOURCE_ACCESS_LEVELS_BY_TYPE } from '@/database/schemas';
+import { router } from '@/libs/trpc/lambda';
 import {
   assertCanPerformResourceAction,
   buildResourcePermissionState,
@@ -15,7 +16,7 @@ import {
 
 import { agentProcedure } from './procedures';
 
-export const visibilityProcedures = {
+export const visibilityRouter = router({
   /**
    * Publish a private agent into the workspace. Only the creator of a
    * still-private agent can run this; the underlying SQL enforces both rules.
@@ -180,4 +181,4 @@ export const visibilityProcedures = {
         visibility: input.visibility,
       });
     }),
-};
+});

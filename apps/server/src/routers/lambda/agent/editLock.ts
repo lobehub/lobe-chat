@@ -1,11 +1,12 @@
 import { z } from 'zod';
 
 import { withScopedPermission } from '@/business/server/trpc-middlewares/rbacPermission';
+import { router } from '@/libs/trpc/lambda';
 import { publishResourceEvent } from '@/server/services/resourceEvents';
 
 import { agentProcedure } from './procedures';
 
-export const editLockProcedures = {
+export const editLockRouter = router({
   acquireAgentLock: agentProcedure
     .use(withScopedPermission('agent:update'))
     .input(z.object({ agentId: z.string() }))
@@ -47,4 +48,4 @@ export const editLockProcedures = {
         { actorId: ctx.userId, data: { holderId: null }, type: 'lock.changed' },
       );
     }),
-};
+});

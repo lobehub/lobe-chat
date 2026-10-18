@@ -6,6 +6,7 @@ import { z } from 'zod';
 
 import { withScopedPermission } from '@/business/server/trpc-middlewares/rbacPermission';
 import { UserModel } from '@/database/models/user';
+import { router } from '@/libs/trpc/lambda';
 import { assertCanEditResource } from '@/server/services/resourcePermission';
 import { isWorkspacePrimaryOwner } from '@/server/services/workspacePermission';
 
@@ -61,7 +62,7 @@ const protectAgentConfig = async <T extends Record<string, any>>(
   return access === 'profile' ? redactAgentConfig(config) : config;
 };
 
-export const configProcedures = {
+export const configRouter = router({
   getAgentConfig: agentProcedure
     .input(
       z.object({
@@ -177,4 +178,4 @@ export const configProcedures = {
         input.replaceWorkingDirDeviceIds,
       );
     }),
-};
+});
