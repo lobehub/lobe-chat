@@ -166,6 +166,43 @@ describe('GoalService', () => {
       expect(runSpy).not.toHaveBeenCalled();
       expect(waiting).toMatchObject({ outcome: 'waiting_external', taskId: created.taskId });
     });
+
+    it('parks a first dispatch that cannot reach its device instead of re-dispatching it', async () => {
+      // A first dispatch handed its claim back to `backlog` with no error and threw.
+      // Every sweep then dispatched again, the queue redelivered each throw twice,
+      // and a sleeping laptop became 27 uncharged runs in 40 minutes.
+      const runSpy = vi
+        .spyOn(TaskRunnerService.prototype, 'runTask')
+        .mockRejectedValue(new Error('DEVICE_NOT_FOUND'));
+      const service = new GoalService(serverDB, userId);
+      const taskModel = new TaskModel(serverDB, userId);
+      const graph = await service.create({
+        title: 'First dispatch to a sleeping device',
+        tasks: ['Run on the bound device'],
+      });
+      const created = await service.tick(graph.goal.id);
+
+      const parked = await service.tick(graph.goal.id);
+
+      expect(parked).toMatchObject({
+        message: expect.stringContaining('waiting for its device to reconnect'),
+        outcome: 'waiting_external',
+        taskId: created.taskId,
+      });
+      expect(await taskModel.findById(created.taskId!)).toMatchObject({
+        error: 'DEVICE_NOT_FOUND',
+        status: 'paused',
+      });
+
+      const waiting = await service.tick(graph.goal.id);
+
+      expect(waiting).toMatchObject({
+        message: expect.stringContaining('next retry at'),
+        outcome: 'waiting_external',
+      });
+      expect(runSpy).toHaveBeenCalledTimes(1);
+      expect((await service.graph(graph.goal.id)).decisions).toHaveLength(0);
+    });
   });
 
   describe('a Task its usage window refused', () => {
