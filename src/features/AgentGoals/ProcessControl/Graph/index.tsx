@@ -53,7 +53,7 @@ import {
   isRunningNode,
   scopeGraphView,
 } from '../goalGraphViewModel';
-import { GATE_COLOR, KindDot, SKILL_COLOR, SKILL_ICON } from '../shared';
+import { GATE_COLOR, SKILL_COLOR, SKILL_ICON } from '../shared';
 import {
   BatchExperimentProbeGroup,
   BatchRoundFrame,
@@ -77,6 +77,7 @@ import ExperimentGroup, { type ExperimentGroupData } from './ExperimentGroup';
 import { batchContainerStatus } from './experimentStatus';
 import ExplorationEdge from './ExplorationEdge';
 import { explorationMap } from './explorationMap';
+import GraphLegend from './GraphLegend';
 import GraphNodeView, { GhostNodeView, type GraphNodeData, type StateChip } from './GraphNode';
 import { type GraphBridge, hideKinds, type LayoutBox, layoutGraph, NODE_WIDTH } from './layout';
 import {
@@ -88,6 +89,7 @@ import {
   MUTED_EDGE_OPACITY_DARK,
   nodeEmphasis,
   resolveMainline,
+  shownMainline,
 } from './mainline';
 import { flowNodeSize, type MeasuredSizes, mergeMeasuredSizes } from './measuredSizes';
 import { revealCenter } from './revealNode';
@@ -193,38 +195,6 @@ const styles = createStaticStyles(({ css }) => ({
   full: css`
     height: 100%;
   `,
-  legend: css`
-    font-size: 12px;
-    color: ${cssVar.colorTextTertiary};
-  `,
-  legendItem: css`
-    cursor: pointer;
-    user-select: none;
-
-    &:hover {
-      color: ${cssVar.colorText};
-    }
-  `,
-  /* A hidden kind stays in the legend as a dimmed toggle — the way back must
-     be exactly where the way in was. */
-  /** Not a kind filter: it names the bold line and ring the mainline is drawn with. */
-  legendMainline: css`
-    cursor: default;
-    color: ${cssVar.colorText};
-  `,
-  legendMainlineSwatch: css`
-    width: 14px;
-    height: 3px;
-    border-radius: 2px;
-    background: ${cssVar.colorInfo};
-  `,
-  legendOff: css`
-    opacity: 0.35;
-
-    &:hover {
-      opacity: 0.65;
-    }
-  `,
   /* Fullscreen chrome floats over the canvas in two corner cards instead of a
      full-width bar, so a node panned to the top edge is never hidden behind an
      opaque header strip. */
@@ -296,6 +266,12 @@ interface GraphProps {
   graph: GoalGraphView;
   /** Nodes to call out on the map — a chapter's detours in the report's local map. */
   highlightedIds?: ReadonlySet<string>;
+  /**
+   * Whether the report's mainline starts highlighted. Off by default, so a
+   * finished Goal reads as the plain map until 主线 is clicked in the legend;
+   * a report chapter, which is about the mainline, turns it on.
+   */
+  initialShowMainline?: boolean;
   onFullscreenChange?: (fullscreen: boolean) => void;
   onSelect: (nodeId: string) => void;
   /** The coordinator is still decomposing: show ghost task cards under the problem. */
@@ -504,6 +480,7 @@ const Canvas = memo<
     navigation?: ReactNode;
     /** The batch entered on its own: its units as a grid, round by round. */
     scopeBatch?: BatchModel;
+    showMainline: boolean;
   }
 >(
   ({
@@ -522,6 +499,7 @@ const Canvas = memo<
     onEnter,
     navigation,
     scopeBatch,
+    showMainline,
     view,
   }) => {
     const { fitView, getInternalNode, getViewport, setCenter } = useReactFlow();
@@ -676,7 +654,7 @@ const Canvas = memo<
       [ghosts],
     );
 
-    const mainline = useMemo(() => resolveMainline(graph), [graph]);
+    const mainline = useMemo(() => shownMainline(graph, showMainline), [graph, showMainline]);
     const emphasisById = useMemo(() => {
       const result = new Map<string, ReturnType<typeof nodeEmphasis>>();
       if (!mainline) return result;
@@ -1211,6 +1189,7 @@ const Graph = memo<GraphProps>(({ extra, fullscreen = false, onFullscreenChange,
   // A batch never folds, so expand/collapse all only means something with experiments.
   const hasFoldable = !onlyBatches;
   const [hiddenKinds, setHiddenKinds] = useState<ReadonlySet<GoalGraphNodeKind>>(() => new Set());
+  const [showMainline, setShowMainline] = useState(props.initialShowMainline ?? false);
   const showPortal = useChatStore(chatPortalSelectors.showPortal);
   const currentViewType = useChatStore(chatPortalSelectors.currentViewType);
   const clearPortalStack = useChatStore((s) => s.clearPortalStack);
@@ -1226,6 +1205,8 @@ const Graph = memo<GraphProps>(({ extra, fullscreen = false, onFullscreenChange,
       return next;
     });
   }, []);
+
+  const toggleMainline = useCallback(() => setShowMainline((prev) => !prev), []);
 
   const selectNode = (nodeId: string) => {
     if (isContainerKind(props.graph.byId[nodeId]?.node.kind ?? ('task' as const))) {
@@ -1316,57 +1297,23 @@ const Graph = memo<GraphProps>(({ extra, fullscreen = false, onFullscreenChange,
   // cards, so the legend never promises a mainline the view decided to drop.
   const hasMainline = !!resolveMainline(scopedGraph);
   const legend = (
-    <Flexbox horizontal align={'center'} className={styles.legend} gap={10}>
-      {hasMainline && (
-        <Flexbox
-          horizontal
-          align={'center'}
-          className={styles.legendMainline}
-          gap={4}
-          title={t('goalProcess.graph.legend.mainlineHint')}
-        >
-          <span className={styles.legendMainlineSwatch} />
-          <span>{t('goalProcess.graph.legend.mainline')}</span>
-        </Flexbox>
-      )}
-      {(
-        [
-          'problem',
-          'task',
-          ...(containers.some((view) => view.node.kind === 'experiment')
-            ? ['experiment' as const]
-            : []),
-          ...(containers.some((view) => view.node.kind === 'batch') ? ['batch' as const] : []),
-          'finding',
-          'decision',
-        ] as const
-      ).map((kind) => {
-        const off = hiddenKinds.has(kind);
-        return (
-          <Flexbox
-            horizontal
-            align={'center'}
-            aria-pressed={!off}
-            className={cx(styles.legendItem, off && styles.legendOff)}
-            gap={4}
-            key={kind}
-            role={'button'}
-            tabIndex={0}
-            title={t(off ? 'goalProcess.graph.legend.show' : 'goalProcess.graph.legend.hide')}
-            onClick={() => toggleKind(kind)}
-            onKeyDown={(event) => {
-              if (event.key === 'Enter' || event.key === ' ') {
-                event.preventDefault();
-                toggleKind(kind);
-              }
-            }}
-          >
-            <KindDot kind={kind} />
-            <span>{t(`goalProcess.kind.${kind}` as const)}</span>
-          </Flexbox>
-        );
-      })}
-    </Flexbox>
+    <GraphLegend
+      hasMainline={hasMainline}
+      hiddenKinds={hiddenKinds}
+      showMainline={showMainline}
+      kinds={[
+        'problem',
+        'task',
+        ...(containers.some((view) => view.node.kind === 'experiment')
+          ? ['experiment' as const]
+          : []),
+        ...(containers.some((view) => view.node.kind === 'batch') ? ['batch' as const] : []),
+        'finding',
+        'decision',
+      ]}
+      onToggleKind={toggleKind}
+      onToggleMainline={toggleMainline}
+    />
   );
   if (fullscreen)
     return (
@@ -1384,6 +1331,7 @@ const Graph = memo<GraphProps>(({ extra, fullscreen = false, onFullscreenChange,
               planning={scopeId ? false : props.planning}
               refitKey={showPortal}
               scopeBatch={scopeBatch}
+              showMainline={showMainline}
               view={scopeId ? 'all' : view}
               navigation={
                 <Flexbox gap={8}>
@@ -1449,6 +1397,7 @@ const Graph = memo<GraphProps>(({ extra, fullscreen = false, onFullscreenChange,
           navigation={breadcrumbs}
           planning={scopeId ? false : props.planning}
           scopeBatch={scopeBatch}
+          showMainline={showMainline}
           view={scopeId ? 'all' : view}
           onEnter={navigation.enter}
           onInspect={(id) => openNode(props.graph.goal.id, id)}

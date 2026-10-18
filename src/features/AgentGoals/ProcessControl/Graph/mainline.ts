@@ -33,6 +33,15 @@ export const resolveMainline = (
 };
 
 /**
+ * The mainline the map paints. A finished Goal's map reads as the plain map
+ * first: the bold path is drawn only once the user turns 主线 on in the legend.
+ */
+export const shownMainline = (
+  graph: Parameters<typeof resolveMainline>[0],
+  shown: boolean,
+): Mainline | undefined => (shown ? resolveMainline(graph) : undefined);
+
+/**
  * A card is on the mainline when it was marked, or when it is an experiment
  * whose members were — collapsed, the experiment stands in for them. The root
  * question is the anchor every path starts from, so it is never muted.

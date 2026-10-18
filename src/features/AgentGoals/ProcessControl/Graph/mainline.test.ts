@@ -11,6 +11,7 @@ import {
   MUTED_EDGE_OPACITY_DARK,
   nodeEmphasis,
   resolveMainline,
+  shownMainline,
 } from './mainline';
 
 const graphWith = (
@@ -194,5 +195,17 @@ describe('off-mainline legibility', () => {
   it('is more legible on the dark canvas while still stepping back', () => {
     expect(MUTED_EDGE_OPACITY_DARK).toBeGreaterThan(MUTED_EDGE_OPACITY);
     expect(MUTED_EDGE_OPACITY_DARK).toBeLessThan(1);
+  });
+});
+
+describe('shownMainline', () => {
+  const graph = graphWith({ edgeIds: ['e1'], nodeIds: ['t1', 't2'] });
+
+  it('leaves a finished map plain until the mainline is turned on', () => {
+    expect(shownMainline(graph, false)).toBeUndefined();
+  });
+
+  it('draws the marked mainline once it is turned on', () => {
+    expect([...shownMainline(graph, true)!.nodeIds]).toEqual(['t1', 't2']);
   });
 });
