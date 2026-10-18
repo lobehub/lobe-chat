@@ -547,6 +547,29 @@ describe('AiAgentService.execAgent - device auto-activation', () => {
   });
 
   describe('topic and explicit device binding', () => {
+    it.each(['device', 'sandbox'] as const)('rejects a conflicting cwd (%s)', async (target) => {
+      mockDeviceProxy.isConfigured = true;
+      mockDeviceProxy.queryDeviceList.mockResolvedValue([onlineDevice, onlineDevice2]);
+      await useAgencyConfig({
+        boundDeviceId: target === 'device' ? 'device-001' : undefined,
+        executionTarget: target,
+        executionTargetSelectionPolicy: 'fixed',
+      });
+      service = new AiAgentService(mockDb, userId, { workspaceId: 'workspace-1' });
+
+      await expect(
+        service.execAgent({
+          agentId: 'agent-1',
+          appContext: { initialTopicMetadata: { workingDirectory: '/caller-project' } },
+          deviceId: 'device-002',
+          prompt: 'Run a command',
+        }),
+      ).rejects.toThrow('Agent is fixed to another execution target');
+      expect(topicMock.create).not.toHaveBeenCalled();
+      expect(mockMessageCreate).not.toHaveBeenCalled();
+      expect(mockCreateOperation).not.toHaveBeenCalled();
+    });
+
     it('uses the shared fixed device even when the request asks for another device', async () => {
       mockDeviceProxy.isConfigured = true;
       mockDeviceProxy.queryDeviceList.mockResolvedValue([onlineDevice, onlineDevice2]);
