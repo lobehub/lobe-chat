@@ -2,18 +2,25 @@ import type { ConversationContext, UIChatMessage } from '@lobechat/types';
 
 import { IndexedDBQueryProjectionStorage } from '@/libs/queryProjectionStorage';
 import {
+  cacheScope,
   defineReplica,
+  isReplicaSyncKey,
   REPLICA_INDEX_KEY,
+  replicaKeys,
   type ReplicaPagedData,
   type ReplicaPageResult,
   type ReplicaPagingConfig,
   type ReplicaRow,
   type ReplicaRowKey,
   type ReplicaStorage,
+  replicaSWRDriver,
 } from '@/libs/replica';
-import { normalizeMessageListQueryContext } from '@/libs/swr/keys';
+import {
+  type CanonicalMessageListContext,
+  normalizeMessageListQueryContext,
+} from '@/libs/swr/keys';
 import type { MessageService } from '@/services/message';
-import { messageListKey, type MessageRoundCursor } from '@/services/message/cache';
+import type { MessageRoundCursor } from '@/services/message/cache';
 import { isLocalOnlyMessage } from '@/store/chat/utils/localMessages';
 import { messageMapKey } from '@/store/chat/utils/messageMapKey';
 
@@ -21,9 +28,9 @@ import { messageMapKey } from '@/store/chat/utils/messageMapKey';
 export type ConversationMessagePage = ReplicaPagedData<UIChatMessage, MessageRoundCursor>;
 
 /**
- * A transcript fetch: the head window is the plain row list (the same shape
- * every `message:list` consumer and cache write uses, so a fetch shared with
- * the chat store stays one shape); older pages carry their cursor.
+ * A transcript fetch: the head window is the plain row list (the shape the
+ * message list query and the chat store's head merge work with); older pages
+ * carry their cursor.
  */
 export type ConversationMessageFetch =
   UIChatMessage[] | ReplicaPageResult<UIChatMessage, MessageRoundCursor>;
@@ -77,6 +84,13 @@ export const conversationMessagesKey = (context: ConversationContext) =>
     : `m:${JSON.stringify({ bucket: messageMapKey(context), threadId: context.threadId ?? null })}`;
 
 /**
+ * The canonical read context a persisted (`p:`) entry key was built from;
+ * `undefined` for memory-only (`m:`) keys, whose bucket does not name it.
+ */
+export const persistedContextOf = (key: string): CanonicalMessageListContext | undefined =>
+  key.startsWith('p:') ? JSON.parse(key.slice(2)) : undefined;
+
+/**
  * The chat store bucket (`messageMapKey`) an entry key renders into, and the
  * thread its rows are parsed for. Every key is built by
  * {@link conversationMessagesKey}, so both are recoverable from it.
@@ -102,21 +116,67 @@ const transcriptPaging: ReplicaPagingConfig<UIChatMessage, MessageRoundCursor> =
   persist: { pages: 1 },
 };
 
+const CONVERSATION_MESSAGES_NAME = 'conversationMessages';
+const CONVERSATION_MESSAGES_VERSION = 1;
+
+/**
+ * The conversation a transcript sync reads, without fetch-only options
+ * (`syncInterventions`): persisted entries by their canonical read context,
+ * memory-only ones by their context. Surfaces showing one conversation with
+ * different options then share one sync, as they share one entry.
+ */
+const syncContextOf = (params: ConversationMessageParams, key: string) => {
+  const { syncInterventions: _, ...context } = params;
+  return persistedContextOf(key) ?? context;
+};
+
 export const conversationMessagesResource = defineReplica<
   ConversationMessageParams,
   ConversationMessagePage,
   ConversationMessageFetch
 >({
   key: conversationMessagesKey,
-  name: 'conversationMessages',
+  name: CONVERSATION_MESSAGES_NAME,
   paging: transcriptPaging,
   persistKey: (key) => key.startsWith('p:'),
   storage: 'indexedDB',
-  // Mutations, refreshes and evictions across the app revalidate the
-  // conversation by its `message:list` key.
-  syncKey: (params) => messageListKey(params),
-  version: 1,
+  // A `replica:sync` key, so `slice.revalidate` and the predicate revalidation
+  // below match it; a `message:` key would hit the SWR persistence tier and
+  // store every transcript (shared and scoped ones included) a second time.
+  // Its params are the conversation, not the full sync params: one read per
+  // entry, so two responses never settle out of order into one transcript.
+  syncKey: (params) => {
+    const key = conversationMessagesKey(params);
+    return replicaKeys.sync(
+      CONVERSATION_MESSAGES_NAME,
+      CONVERSATION_MESSAGES_VERSION,
+      cacheScope.get(),
+      key,
+      syncContextOf(params, key),
+    );
+  },
+  version: CONVERSATION_MESSAGES_VERSION,
 });
+
+/**
+ * Revalidate the transcript syncs of the active scope whose conversation
+ * matches `predicate` (every one when omitted) — the conversation-shaped
+ * matcher for code that cannot name one entry key (a whole topic across its
+ * threads, every transcript after a bulk change).
+ */
+export const revalidateConversationMessages = (
+  predicate?: (context: ConversationMessageParams) => boolean,
+) =>
+  replicaSWRDriver.revalidate((queryKey) => {
+    if (
+      !isReplicaSyncKey(queryKey, conversationMessagesResource.name, {
+        scope: conversationMessagesResource.scope.get(),
+      })
+    )
+      return false;
+    // `replicaKeys.sync` puts the sync's conversation last (see `syncContextOf`).
+    return !predicate || predicate((queryKey as unknown[])[5] as ConversationMessageParams);
+  });
 
 /** Strip rows that must never be persisted (local-only placeholders with blob URLs). */
 export const toPersistedTranscript = (data: ConversationMessagePage): ConversationMessagePage => {
