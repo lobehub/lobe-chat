@@ -243,8 +243,8 @@ const EnvironmentManager = memo<EnvironmentManagerProps>(({ tabs, visibility }) 
       }
       onRetry={refresh}
     >
-      <Flexbox horizontal align={'flex-start'} gap={16}>
-        <Flexbox className={styles.listCol} flex={1}>
+      <Flexbox horizontal align={'flex-start'} gap={16} wrap={'wrap'}>
+        <Flexbox className={styles.listCol} flex={'1 1 320px'}>
           <Flexbox className={styles.listScroll} gap={2} padding={4}>
             {environments.map((environment) => (
               <EnvironmentItem
@@ -271,11 +271,10 @@ const EnvironmentManager = memo<EnvironmentManagerProps>(({ tabs, visibility }) 
             ))}
           </Flexbox>
         </Flexbox>
-        {/* Twice the list's share. A row carries a name and two facts; the panel
-            carries a form, so an even split starved the half doing the work and
-            left the other half mostly empty. */}
+        {/* Keep enough space to identify environments and read their details.
+            When both columns no longer fit, wrap the detail below the list. */}
         {selected && (
-          <Flexbox className={styles.detailCol} flex={2}>
+          <Flexbox className={styles.detailCol} flex={'2 1 480px'}>
             {/* Keyed on the environment so the form's draft state resets when
                   the selection changes — a description typed for one
                   environment must not survive into another. */}
@@ -297,7 +296,7 @@ const EnvironmentManager = memo<EnvironmentManagerProps>(({ tabs, visibility }) 
    */
   return (
     <Flexbox gap={16}>
-      <Flexbox horizontal align={'center'} gap={16} justify={'space-between'}>
+      <Flexbox horizontal align={'center'} gap={16} justify={'space-between'} wrap={'wrap'}>
         {tabs ?? (
           <Text fontSize={16} weight={600}>
             {t('environments.mine')}
