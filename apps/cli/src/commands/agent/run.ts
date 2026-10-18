@@ -1,5 +1,6 @@
 import { readFileSync } from 'node:fs';
 
+import type { UserInterventionConfig } from '@lobechat/types';
 import { type Command, InvalidArgumentError } from 'commander';
 import pc from 'picocolors';
 
@@ -180,16 +181,29 @@ Exit codes:
           // for a human, as this flag's help text promises.
           const savedConfig = (
             (await client.user.getUserState.query().catch(() => undefined)) as
-              | { settings?: { tool?: { humanIntervention?: { approvalMode?: string } } } }
+              | { settings?: { tool?: { humanIntervention?: UserInterventionConfig } } }
               | undefined
           )?.settings?.tool?.humanIntervention;
+          // The Web tool-intervention selector treats a persisted 'headless' as
+          // a backend-only value and shows 'auto-run' instead (settings
+          // selectors/toolIntervention.ts). Mirror that here so a legacy or raw
+          // persisted 'headless' can never leak back into a run the user
+          // explicitly asked to supervise with --no-headless — in headless mode
+          // the agent converts intervention-required calls into blocked results
+          // instead of parking them for a human.
           const approvalMode =
-            savedConfig?.approvalMode === 'auto-run' ||
-            savedConfig?.approvalMode === 'allow-list' ||
-            savedConfig?.approvalMode === 'headless'
+            savedConfig?.approvalMode === 'auto-run' || savedConfig?.approvalMode === 'allow-list'
               ? savedConfig.approvalMode
-              : 'manual';
-          input.userInterventionConfig = { approvalMode };
+              : savedConfig?.approvalMode === 'headless'
+                ? 'auto-run'
+                : 'manual';
+          // In allow-list mode the saved list must travel with the mode:
+          // GeneralChatAgent defaults an omitted allowList to [], which would
+          // park again every tool the user previously approved.
+          input.userInterventionConfig = {
+            approvalMode,
+            ...(approvalMode === 'allow-list' ? { allowList: savedConfig?.allowList ?? [] } : {}),
+          };
         }
 
         const result = await client.aiAgent.execAgent.mutate(input as any);

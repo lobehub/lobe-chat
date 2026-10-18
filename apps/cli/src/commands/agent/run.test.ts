@@ -112,4 +112,49 @@ describe('lh agent run', () => {
 
     expect(input.userInterventionConfig).toEqual({ approvalMode: 'manual' });
   });
+
+  it('--no-headless keeps the saved allow list in allow-list mode', async () => {
+    mockGetUserState.mockResolvedValue({
+      settings: {
+        tool: {
+          humanIntervention: {
+            allowList: ['lobe-computer-use', 'my-mcp'],
+            approvalMode: 'allow-list',
+          },
+        },
+      },
+    });
+
+    const input = await runAgent('--agent-id', 'agt-1', '--prompt', 'Hello', '--no-headless');
+
+    // GeneralChatAgent defaults an omitted allowList to [], which would park
+    // again every tool the user previously approved.
+    expect(input.userInterventionConfig).toEqual({
+      allowList: ['lobe-computer-use', 'my-mcp'],
+      approvalMode: 'allow-list',
+    });
+  });
+
+  it('--no-headless sends an empty allow list when none is saved in allow-list mode', async () => {
+    mockGetUserState.mockResolvedValue({
+      settings: { tool: { humanIntervention: { approvalMode: 'allow-list' } } },
+    });
+
+    const input = await runAgent('--agent-id', 'agt-1', '--prompt', 'Hello', '--no-headless');
+
+    expect(input.userInterventionConfig).toEqual({ allowList: [], approvalMode: 'allow-list' });
+  });
+
+  it('--no-headless normalizes a persisted headless mode to auto-run', async () => {
+    // 'headless' is a backend-only value in the Web tool-intervention selector;
+    // sending it back would convert intervention-required calls into blocked
+    // results instead of parking them, defeating the explicit flag.
+    mockGetUserState.mockResolvedValue({
+      settings: { tool: { humanIntervention: { approvalMode: 'headless' } } },
+    });
+
+    const input = await runAgent('--agent-id', 'agt-1', '--prompt', 'Hello', '--no-headless');
+
+    expect(input.userInterventionConfig).toEqual({ approvalMode: 'auto-run' });
+  });
 });
