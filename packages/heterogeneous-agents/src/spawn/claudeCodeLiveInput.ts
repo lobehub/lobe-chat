@@ -134,6 +134,15 @@ export class ClaudeCodeLiveInput {
     else this.armIdleTimer();
   }
 
+  /**
+   * stdout ended: take a final record left without a trailing newline, then
+   * close input, since nothing can read it any more.
+   */
+  finish(): void {
+    if (this.lineBuffer.trim()) this.observe('\n');
+    this.close();
+  }
+
   close(): void {
     if (this.closed) return;
 

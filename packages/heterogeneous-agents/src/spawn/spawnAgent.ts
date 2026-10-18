@@ -869,11 +869,11 @@ export const spawnAgent = async (options: SpawnAgentOptions): Promise<SpawnAgent
     pipelineQueue = pipelineQueue.then(async () => {
       try {
         const events = await pipeline.flush();
-        for (const event of events) queue.push(event);
+        live?.finish();
         const { code, signal } = await exit;
-        if (code === 0 && !killedByUs) {
-          for (const event of pipeline.validateCompletion()) queue.push(event);
-        }
+        if (code === 0 && !killedByUs) events.push(...pipeline.validateCompletion());
+        sawErrorEvent ||= events.some((event) => event.type === 'error');
+        for (const event of events) queue.push(event);
         // Only a clean exit after a finished turn ends the run here: a crash
         // after a result is a failure, not a completion. Print mode exits 1
         // when its last turn was an error result, which an interrupt is.

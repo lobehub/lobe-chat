@@ -176,6 +176,56 @@ describe('spawnAgent live input (Claude Code)', () => {
     return events.filter((event) => event.type === 'agent_runtime_end');
   };
 
+  /** Ends stdout on a final record with no trailing newline. */
+  const runToExitUnterminated = async (records: Record<string, unknown>[], exitCode: number) => {
+    const fake = createLiveProc();
+    nextFakeProc = fake.proc;
+    const handle = await spawnAgent({
+      agentType: 'claude-code',
+      liveInput: true,
+      operationId: 'op-live',
+      prompt: 'task',
+    });
+    const events: any[] = [];
+    const drained = (async () => {
+      for await (const event of handle.events) events.push(event);
+    })();
+    await tick();
+
+    const uuid = fake.stdinLines[0].uuid;
+    fake.emit(line({ isReplay: true, message: { content: [] }, type: 'user', uuid }));
+    const body = records.map((record) => JSON.stringify(record)).join('\n');
+    fake.emit(body);
+    await tick();
+    fake.exit(exitCode);
+    await drained;
+    return events;
+  };
+
+  it('completes a run whose final result has no trailing newline', async () => {
+    const events = await runToExitUnterminated(
+      [{ is_error: false, result: 'done', subtype: 'success', type: 'result' }],
+      0,
+    );
+
+    expect(events.filter((event) => event.type === 'agent_runtime_end')).toEqual([
+      expect.objectContaining({ data: expect.objectContaining({ reason: 'complete' }) }),
+    ]);
+  });
+
+  it('does not report completion when an unterminated final result is an error', async () => {
+    const events = await runToExitUnterminated(
+      [
+        { is_error: false, result: 'first', subtype: 'success', type: 'result' },
+        { is_error: true, result: 'API Error: 500 boom', subtype: 'success', type: 'result' },
+      ],
+      0,
+    );
+
+    expect(events.some((event) => event.type === 'error')).toBe(true);
+    expect(events.some((event) => event.type === 'agent_runtime_end')).toBe(false);
+  });
+
   it('does not report completion when the CLI exits nonzero after a finished turn', async () => {
     await expect(
       runToExit([{ is_error: false, result: 'done', subtype: 'success' }], 1),
