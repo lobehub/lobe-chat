@@ -119,19 +119,38 @@ export const useLocalFilePreviewStore: UseBoundStoreWithEqualityFn<
   StoreApi<LocalFilePreviewStore>
 > = createWithEqualityFn<LocalFilePreviewStore>()((set, get) => {
   /**
-   * Saves folded into each preview (by key). A read started before a save may
-   * still hold the pre-save file; once the save lands it must not replace the
-   * confirmed content — the same guard as the document detail's adoptions.
+   * Saves folded into each preview, by identity (cache scope) and key. A read
+   * started before a save may still hold the pre-save file; once the save lands
+   * it must not replace the confirmed content — the same guard as the document
+   * detail's adoptions. A save under another identity never vouches for a read
+   * of this one.
    */
   const saveGenerations = new Map<string, number>();
+  const generationKey = (scope: string, key: string) => JSON.stringify([scope, key]);
 
   const previews = createReplicaSlice(localFilePreviewResource, {
     actionPrefix: 'localFilePreview/previews',
     fetcher: async (key) => {
-      const savedBefore = saveGenerations.get(key) ?? 0;
-      const preview = await fetchLocalFilePreview(key);
+      const scope = cacheScope.get();
+      const generation = generationKey(scope, key);
+      const savedBefore = saveGenerations.get(generation) ?? 0;
+      // `previewMap` shows the active identity, so the saved body is only
+      // readable while the read's identity is still the active one.
+      const savedSince = () =>
+        cacheScope.get() === scope && (saveGenerations.get(generation) ?? 0) !== savedBefore;
+      let preview: LocalFilePreview;
+      try {
+        preview = await fetchLocalFilePreview(key);
+      } catch (error) {
+        // A save landed while this read was in flight: its failure (e.g. the
+        // 404 of a file the save then recreated) describes the pre-save file,
+        // so it must neither surface nor evict the confirmed saved body.
+        const saved = get().previewMap[key];
+        if (savedSince() && saved) return saved;
+        throw error;
+      }
       const current = get().previewMap[key];
-      if ((saveGenerations.get(key) ?? 0) === savedBefore || !current) return preview;
+      if (!savedSince() || !current) return preview;
       // A save landed while this read was in flight: keep the saved body, but
       // take the rest of the fresh read — notably the `resourceBaseUrl` an HTML
       // preview needs for its relative assets (never persisted, so the cached
@@ -166,7 +185,8 @@ export const useLocalFilePreviewStore: UseBoundStoreWithEqualityFn<
         // The write settled after an account / workspace switch: `update` writes
         // the active scope, which would plant this file body in another identity.
         if (cacheScope.get() !== scope) return;
-        saveGenerations.set(key, (saveGenerations.get(key) ?? 0) + 1);
+        const generation = generationKey(scope, key);
+        saveGenerations.set(generation, (saveGenerations.get(generation) ?? 0) + 1);
         previews.update(key, (preview) =>
           preview?.type === 'text' ? { ...preview, content } : preview,
         );

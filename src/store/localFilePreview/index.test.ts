@@ -402,6 +402,64 @@ describe('local file preview replica', () => {
     await waitFor(async () => expect(await storedRow(NOTES)).toBeUndefined());
   });
 
+  it.each([404, 403])(
+    'keeps the saved content when a read started before the save answers %i',
+    async (status) => {
+      // The persisted preview belongs to a file that was deleted meanwhile.
+      await seedRow(NOTES, textPreview('# cached'));
+      let fail: (error: unknown) => void = () => {};
+      vi.mocked(projectFileService.getLocalFilePreview).mockImplementation(
+        () => new Promise((_, reject) => (fail = reject)) as never,
+      );
+      const { result } = renderPreview(NOTES);
+      await waitFor(() => expect(result.current.preview).toEqual(textPreview('# cached')));
+
+      // The user saves (recreating the file) while the mount-time read is pending…
+      act(() => useLocalFilePreviewStore.getState().beginSave(NOTES)('saved'));
+      // …and the older read then settles with the pre-save 404 / 403.
+      await act(async () => {
+        fail(new LocalFileResponseError(status));
+      });
+      await act(async () => {
+        await new Promise((resolve) => setTimeout(resolve, 20));
+      });
+
+      expect(result.current.preview).toEqual(textPreview('saved'));
+      expect(result.current.sync.error).toBeUndefined();
+      expect((await storedRow(NOTES))?.data).toEqual(textPreview('saved'));
+    },
+  );
+
+  it('still evicts the row when a save under another identity races a terminal read', async () => {
+    const first = scope;
+    await seedRow(NOTES, textPreview('# forbidden'));
+    const fails: ((error: unknown) => void)[] = [];
+    vi.mocked(projectFileService.getLocalFilePreview).mockImplementation(
+      () => new Promise((_, reject) => fails.push(reject)) as never,
+    );
+    const { result } = renderPreview(NOTES);
+    await waitFor(() => expect(result.current.preview).toEqual(textPreview('# forbidden')));
+
+    // The read started under the first identity; the same file is saved under another…
+    useScope(`local-file-user-${randomUUID()}:personal`);
+    // (where the same file is open with a cached preview too)
+    await seedRow(NOTES, textPreview('# other identity'));
+    const { result: other } = renderPreview(NOTES);
+    await waitFor(() => expect(other.current.preview).toEqual(textPreview('# other identity')));
+    act(() => useLocalFilePreviewStore.getState().beginSave(NOTES)('saved elsewhere'));
+    expect(other.current.preview).toEqual(textPreview('saved elsewhere'));
+    // …so the first identity's 403 must still purge its own stored row.
+    await act(async () => {
+      fails[0](new LocalFileResponseError(403));
+    });
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve, 20));
+    });
+
+    useScope(first);
+    await waitFor(async () => expect(await storedRow(NOTES)).toBeUndefined());
+  });
+
   it('keeps the cached text when the file read fails transiently', async () => {
     await seedRow(NOTES, textPreview('# cached'));
     let fail: (error: unknown) => void = () => {};
