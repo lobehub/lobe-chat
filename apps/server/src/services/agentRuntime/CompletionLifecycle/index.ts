@@ -42,9 +42,9 @@ import {
 } from '@/server/services/workRegistration';
 import { after } from '@/server/utils/scheduleAfterResponse';
 
-import { buildRuntimeInterventionNotification } from './agentInterventionNotification';
-import { extractFinalReplyImageUrls } from './finalReplyImages';
-import { CriticalHookDeliveryError, hookDispatcher, type SerializedHook } from './hooks';
+import { buildRuntimeInterventionNotification } from '../agentInterventionNotification';
+import { extractFinalReplyImageUrls } from '../finalReplyImages';
+import { CriticalHookDeliveryError, hookDispatcher, type SerializedHook } from '../hooks';
 
 const log = debug('lobe-server:completion-lifecycle');
 

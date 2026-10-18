@@ -12,12 +12,12 @@ import * as verifyServices from '@/server/services/verify';
 import type * as WorkRegistrationModule from '@/server/services/workRegistration';
 import { registerWorksForOperation } from '@/server/services/workRegistration';
 
+import { CriticalHookDeliveryError, hookDispatcher } from '../hooks';
 import {
   CompletionLifecycle,
   CriticalAgentInterventionPersistenceError,
   isSuccessLikeCompletionReason,
-} from '../CompletionLifecycle';
-import { CriticalHookDeliveryError, hookDispatcher } from '../hooks';
+} from '.';
 
 // Default async no-op implementation: the production code chains `.catch` on
 // the returned promise, so a bare vi.fn() (returning undefined) would throw
