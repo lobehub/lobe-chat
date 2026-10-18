@@ -240,39 +240,33 @@ const CreateTaskContent = memo<CreateTaskContentProps>(
 
     return (
       <Flexbox flex={1} style={{ minHeight: 0 }} onKeyDown={handleKeyDown}>
-        <Flexbox horizontal style={{ minHeight: 0, padding: '16px 24px 0' }}>
-          {/* A block (not flex) scroller: the editor's overflow-hidden wrapper
-              would otherwise shrink to fit and clip instead of scrolling. */}
-          <div style={{ flex: 1, minHeight: 180, minWidth: 0, overflowY: 'auto' }}>
-            <input
-              autoFocus={canCreateTask}
-              disabled={!canCreateTask}
-              placeholder={t('createTask.titlePlaceholder')}
-              value={title}
-              style={{
-                background: 'transparent',
-                border: 'none',
-                color: 'inherit',
-                fontFamily: 'inherit',
-                fontSize: 20,
-                fontWeight: 600,
-                lineHeight: 1.4,
-                outline: 'none',
-                padding: '4px 0',
-                width: '100%',
-              }}
-              onChange={(e) => setTitle(e.target.value)}
-              onKeyDown={handleTitleKeyDown}
-            />
-            <EditorCanvas
-              disabled={!canCreateTask}
-              editor={editor}
-              floatingToolbar={false}
-              placeholder={t('createTask.instructionPlaceholder')}
-              style={{ fontSize: 14, paddingBottom: 16 }}
-              onContentChange={handleContentChange}
-            />
-          </div>
+        <Flexbox
+          horizontal
+          align={'center'}
+          gap={8}
+          style={{ flexShrink: 0, padding: '16px 24px 0' }}
+        >
+          <input
+            autoFocus={canCreateTask}
+            disabled={!canCreateTask}
+            placeholder={t('createTask.titlePlaceholder')}
+            value={title}
+            style={{
+              background: 'transparent',
+              border: 'none',
+              color: 'inherit',
+              flex: 1,
+              fontFamily: 'inherit',
+              fontSize: 20,
+              fontWeight: 600,
+              lineHeight: 1.4,
+              minWidth: 0,
+              outline: 'none',
+              padding: '4px 0',
+            }}
+            onChange={(e) => setTitle(e.target.value)}
+            onKeyDown={handleTitleKeyDown}
+          />
           <Flexbox horizontal gap={4} style={{ flexShrink: 0 }}>
             {showInlineToggle && (
               <ActionIcon
@@ -284,6 +278,23 @@ const CreateTaskContent = memo<CreateTaskContentProps>(
             <ActionIcon icon={X} onClick={close} />
           </Flexbox>
         </Flexbox>
+
+        {/* Only the instruction scrolls; the title row above stays pinned. A
+            full-width block (not flex) scroller keeps the scrollbar on the
+            modal's right edge; as a flex item the editor's overflow-hidden
+            wrapper would shrink to fit and clip instead of scrolling. */}
+        <div style={{ minHeight: 0, overflowY: 'auto' }}>
+          <div style={{ minHeight: 144, padding: '0 24px' }}>
+            <EditorCanvas
+              disabled={!canCreateTask}
+              editor={editor}
+              floatingToolbar={false}
+              placeholder={t('createTask.instructionPlaceholder')}
+              style={{ fontSize: 14, paddingBottom: 16 }}
+              onContentChange={handleContentChange}
+            />
+          </div>
+        </div>
 
         <Flexbox
           horizontal
