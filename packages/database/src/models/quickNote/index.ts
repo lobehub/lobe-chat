@@ -18,7 +18,7 @@ import { and, asc, desc, eq, gt, inArray, isNull, lte, or, sql } from 'drizzle-o
 import { alias } from 'drizzle-orm/pg-core';
 import isEqual from 'fast-deep-equal';
 
-import type { QuickNoteProposalItem } from '../schemas';
+import type { QuickNoteProposalItem } from '../../schemas';
 import {
   documentHistories,
   documents,
@@ -33,10 +33,10 @@ import {
   tasks,
   topics,
   userSettings,
-} from '../schemas';
-import type { LobeChatDatabase } from '../type';
-import { idGenerator } from '../utils/idGenerator';
-import { TaskModel } from './task';
+} from '../../schemas';
+import type { LobeChatDatabase } from '../../type';
+import { idGenerator } from '../../utils/idGenerator';
+import { TaskModel } from '../task';
 
 /** Resource-side Document alias used beside the Quick Note source Document. */
 const quickNoteResourceDocuments = alias(documents, 'quick_note_resource_documents');
