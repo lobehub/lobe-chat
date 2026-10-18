@@ -1,4 +1,3 @@
-import { agentDisplayName } from '@lobechat/types';
 import { ActionIcon, Flexbox, Popover, Text } from '@lobehub/ui';
 import { Clock3Icon, PanelRightCloseIcon, PlusIcon } from 'lucide-react';
 import { memo, useState } from 'react';
@@ -9,8 +8,6 @@ import { conversationSelectors, useConversationStore } from '@/features/Conversa
 import NavHeader from '@/features/NavHeader';
 import TopicItem from '@/features/PageEditor/Copilot/TopicSelector/TopicItem';
 import { useFetchAgentChatTopics } from '@/hooks/useFetchChatTopics';
-import { useAgentStore } from '@/store/agent';
-import { agentSelectors } from '@/store/agent/selectors';
 import { useChatStore } from '@/store/chat';
 import { topicSelectors } from '@/store/chat/slices/topic/selectors';
 
@@ -20,15 +17,14 @@ interface ToolbarProps {
   onCollapse: () => void;
 }
 
-/** Topic title + topic menu + new-conversation + history — the agent's conversation list. */
+/**
+ * Topic title + topic menu, then new-conversation + history — laid out like the
+ * agent conversation header so the side chat reads as the same conversation.
+ */
 const Toolbar = memo<ToolbarProps>(({ onCollapse }) => {
   const { t } = useTranslation('chat');
   const [topicPopoverOpen, setTopicPopoverOpen] = useState(false);
   const agentId = useConversationStore(conversationSelectors.agentId);
-
-  const agentTitle = useAgentStore((s) =>
-    agentDisplayName(agentSelectors.getAgentMetaById(agentId)(s)),
-  );
 
   useFetchAgentChatTopics(agentId);
 
@@ -47,18 +43,13 @@ const Toolbar = memo<ToolbarProps>(({ onCollapse }) => {
     <NavHeader
       showTogglePanelButton={false}
       left={
-        <Text
-          style={{ fontSize: 13, fontWeight: 500, marginLeft: 8 }}
-          type={'secondary'}
-          ellipsis={{
-            tooltipWhenOverflow: true,
-          }}
-        >
-          {agentTitle ? `${agentTitle} · ${topicTitle}` : topicTitle}
-        </Text>
-      }
-      right={
-        <>
+        <Flexbox allowShrink horizontal align={'center'} gap={4} style={{ minWidth: 0 }}>
+          <Text
+            ellipsis={{ tooltipWhenOverflow: true }}
+            style={{ fontSize: 14, fontWeight: 600, marginLeft: 8, minWidth: 0 }}
+          >
+            {topicTitle}
+          </Text>
           {agentId && currentTopic && (
             <TopicActions
               agentId={agentId}
@@ -68,6 +59,10 @@ const Toolbar = memo<ToolbarProps>(({ onCollapse }) => {
               topicTitle={currentTopic.title}
             />
           )}
+        </Flexbox>
+      }
+      right={
+        <>
           <ActionIcon
             icon={PlusIcon}
             size={DESKTOP_HEADER_ICON_SMALL_SIZE}
