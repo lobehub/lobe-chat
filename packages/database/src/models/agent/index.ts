@@ -37,7 +37,7 @@ import type { PartialDeep } from 'type-fest';
 
 import { merge } from '@/utils/merge';
 
-import type { AgentItem } from '../schemas';
+import type { AgentItem } from '../../schemas';
 import {
   agentBotProviders,
   agentCronJobs,
@@ -71,55 +71,55 @@ import {
   threads,
   topicDocuments,
   topics,
-} from '../schemas';
-import type { LobeChatDatabase, Transaction } from '../type';
+} from '../../schemas';
+import type { LobeChatDatabase, Transaction } from '../../type';
 import {
   collectBoundDeviceIds,
   sanitizeAgencyConfigsForWorkspace,
-} from '../utils/agencyConfigDevices';
+} from '../../utils/agencyConfigDevices';
 import {
   rehomeAgentConnectorsForRecipient,
   rehomeAgentConnectorsForScopeTransfer,
-} from '../utils/agentConnectors';
+} from '../../utils/agentConnectors';
 import {
   moveAgentDocumentsForScopeTransfer,
   rehomeAgentDocumentsForRecipient,
-} from '../utils/agentDocumentsOwnership';
-import { rehomeAgentExpertiseForRecipient } from '../utils/agentExpertise';
+} from '../../utils/agentDocumentsOwnership';
+import { rehomeAgentExpertiseForRecipient } from '../../utils/agentExpertise';
 import {
   detachAgentKnowledgeMountsForRecipient,
   rehomeRetainedAgentKnowledgeMounts,
-} from '../utils/agentKnowledgeMounts';
-import { rehomeAgentLabelsForRecipient } from '../utils/agentLabelsOwnership';
-import { rehomeAgentQuotaBindingsForRecipient } from '../utils/agentQuotaBindings';
-import { notFileBackedPlaceholder } from '../utils/fileBackedPlaceholder';
-import { genEndDateWhere, genRangeWhere, genStartDateWhere, genWhere } from '../utils/genWhere';
-import { resolveGroupMembershipType } from '../utils/groupMembership';
-import { normalizeInboxAgentMeta } from '../utils/inboxAgent';
-import { readOriginalCharCount } from '../utils/parsedDocument';
-import { sanitizeAgentApiConfig } from '../utils/sanitizeAgentApiConfig';
-import { notShareVisitorTopic } from '../utils/shareVisitor';
+} from '../../utils/agentKnowledgeMounts';
+import { rehomeAgentLabelsForRecipient } from '../../utils/agentLabelsOwnership';
+import { rehomeAgentQuotaBindingsForRecipient } from '../../utils/agentQuotaBindings';
+import { notFileBackedPlaceholder } from '../../utils/fileBackedPlaceholder';
+import { genEndDateWhere, genRangeWhere, genStartDateWhere, genWhere } from '../../utils/genWhere';
+import { resolveGroupMembershipType } from '../../utils/groupMembership';
+import { normalizeInboxAgentMeta } from '../../utils/inboxAgent';
+import { readOriginalCharCount } from '../../utils/parsedDocument';
+import { sanitizeAgentApiConfig } from '../../utils/sanitizeAgentApiConfig';
+import { notShareVisitorTopic } from '../../utils/shareVisitor';
 import {
   isTrashed,
   notTrashed,
   restoreStamp,
   type SoftDeleteOptions,
   trashStamp,
-} from '../utils/softDelete';
-import { buildWorkspacePayload, buildWorkspaceWhere } from '../utils/workspace';
-import { AGENT_COPY_IN_PROGRESS, AgentCopyJobModel } from './agentCopyJob';
+} from '../../utils/softDelete';
+import { buildWorkspacePayload, buildWorkspaceWhere } from '../../utils/workspace';
+import { AGENT_COPY_IN_PROGRESS, AgentCopyJobModel } from '../agentCopyJob';
 import {
   AGENT_TRANSFER_IN_PROGRESS,
   AgentTransferJobModel,
   getAgentTransferSyncMessageThreshold,
   rewriteMessageScopeForTopics,
   rewriteResidualMessageScope,
-} from './agentTransferJob';
+} from '../agentTransferJob';
 import {
   hasForeignTopicComments,
   syncTopicCommentsOnTopicTransfer,
   TOPIC_COMMENT_TRANSFER_HAS_FOREIGN_AUTHORS,
-} from './topicComment';
+} from '../topicComment';
 
 /**
  * Fields the Agent Builder's own row (`slug = BUILTIN_AGENT_SLUGS.agentBuilder`) must never
