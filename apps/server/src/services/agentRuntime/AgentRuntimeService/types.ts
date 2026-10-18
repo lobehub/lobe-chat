@@ -16,6 +16,7 @@ import type {
 import type { IStreamEventManager } from '@/server/modules/AgentRuntime/types';
 import type { MessageService } from '@/server/services/message';
 import type { QueueService } from '@/server/services/queue';
+import type { SteerQueueScope } from '@/server/services/redis/steerQueue';
 import type { ToolExecutionService } from '@/server/services/toolExecution';
 
 import type { CompletionLifecycle } from '../CompletionLifecycle';
@@ -143,6 +144,16 @@ export interface AgentRuntimeDelegate {
    * placeholder before resuming the parked parent operation.
    */
   execVirtualSubAgent?: (params: ExecVirtualSubAgentParams) => Promise<ExecSubAgentResult>;
+  /**
+   * A top-level run just finished: start the follow-ups the user queued behind
+   * it as the next turn (the composer pipeline, with `steer`). Resolves to
+   * `undefined` when nothing was queued or the start failed — the follow-ups
+   * then stay queued; it never throws into the finishing step.
+   */
+  startQueuedFollowUp?: (params: {
+    operationId: string;
+    scope: SteerQueueScope;
+  }) => Promise<{ operationId: string } | undefined>;
   /**
    * Re-check that an Agent Share visitor run is STILL authorized to continue,
    * called on EVERY step. Without it, a revocation that lands mid-run (link →

@@ -222,14 +222,19 @@ export async function prepareStepInput(
     }
   }
 
-  // Queued follow-ups live in the client's composer, not in this state.
-  // The client mirrors them into a flag; the agent reads it from the step
-  // context and hands the turn back at its next decision point, so the
-  // follow-up starts as the next turn instead of after the whole run.
+  // Queued follow-ups live outside this state: in the client's composer,
+  // which mirrors them into a flag, or in the server-side steer queue. The
+  // agent reads either from the step context and hands the turn back at its
+  // next decision point, so the follow-up starts as the next turn instead of
+  // after the whole run.
   // This read is authoritative for the step: a value carried in on the
   // incoming context must not keep a hand-back the user has withdrawn.
   if (currentContext && !forcedFinishState) {
-    const hasQueuedMessages = await deps.readQueuedMessagesFlag(operationId, stepIndex);
+    const hasQueuedMessages = await deps.readQueuedMessagesFlag(
+      operationId,
+      stepIndex,
+      currentState,
+    );
     if (hasQueuedMessages !== Boolean(currentContext.stepContext?.hasQueuedMessages)) {
       const stepContext = { ...currentContext.stepContext };
       if (hasQueuedMessages) stepContext.hasQueuedMessages = true;

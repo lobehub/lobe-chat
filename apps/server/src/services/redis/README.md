@@ -7,6 +7,9 @@ callers do not choose a provider, prefix, key, SET options or claim lifetime.
   callers may request a freshness bound through the existing gateway API.
 - `skillTools.remember`: connection scoped tool lists, ten minutes; empty/failed results are not cached.
 - `workspaceRescan.claim`: one background scan per principal/device/directory for 45 seconds.
+- `steerQueue`: follow-ups a user queued behind a running agent turn, per topic/thread, held for
+  a day. Atomic append (bounded), drain and restore; the runtime drains it into the next turn.
+  Writes return `undefined` without Redis, and the caller tells the client to send directly.
 - `agentSignal`: spend bounds for background self-iteration — classifier calls per user per UTC
   day, self-feedback declaration slots per topic, manual triggers per user per hour, and the
   distinct topics one nightly review may cover. Its keys live in the `agent-signal` namespace

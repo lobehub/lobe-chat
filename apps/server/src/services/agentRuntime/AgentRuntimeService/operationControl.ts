@@ -2,12 +2,15 @@ import type { AgentState } from '@lobechat/agent-runtime';
 import { isParkedStatus } from '@lobechat/agent-runtime';
 import debug from 'debug';
 
+import { redisService } from '@/server/services/redis';
+
 import { hookDispatcher } from '../hooks';
 import {
   controlDeferredToolResult,
   type DeferredToolResultControlInput,
   loadDurableToolResultHooks,
 } from '../hooks/deferredToolResultControl';
+import { steerQueueScopeOf } from '../steerQueueScope';
 import {
   type AgentStepContinuation,
   type OperationStatusResult,
@@ -240,17 +243,23 @@ export async function setQueuedMessages(
 }
 
 /**
- * Read the queued-messages flag for a step. A failed read keeps the run
- * going: the follow-up still starts once the run ends, exactly as it did
- * before the flag existed, instead of failing the step.
+ * Whether follow-ups wait behind this run: the client's flag, or the
+ * follow-ups queued server-side on the run's conversation (a top-level run
+ * only — see `steerQueueScopeOf`). A failed read keeps the run going: the
+ * follow-up still starts once the run ends, exactly as it did before the flag
+ * existed, instead of failing the step.
  */
 export async function readQueuedMessagesFlag(
   deps: OperationControlDeps,
   operationId: string,
   stepIndex: number,
+  state?: AgentState,
 ): Promise<boolean> {
   try {
-    return await deps.coordinator.hasQueuedMessages(operationId);
+    if (await deps.coordinator.hasQueuedMessages(operationId)) return true;
+
+    const scope = state && steerQueueScopeOf(state);
+    return scope ? (await redisService.steerQueue.length(scope)) > 0 : false;
   } catch (error) {
     log('[%s][%d] Queued messages flag read failed: %O', operationId, stepIndex, error);
     return false;

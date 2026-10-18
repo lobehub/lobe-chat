@@ -21,6 +21,11 @@ export const RedisKeyNamespace = {
    */
   AGENT_SIGNAL: 'agent-signal',
   /**
+   * Follow-ups a user queued behind a running agent turn ("steer"). The server
+   * drains them into the next turn itself when the running one hands back.
+   */
+  AGENT_STEER: 'agentSteer',
+  /**
    * AI generation related keys (agent welcome, placeholders, etc.)
    */
   AI_GENERATION: 'aiGeneration',
@@ -80,6 +85,17 @@ export const RedisKeys = {
       `nightly_topics:v1:${userId}:${localDate}`,
   },
   /**
+   * Steer queue scope — see {@link RedisKeyNamespace.AGENT_STEER}.
+   */
+  agentSteer: {
+    /**
+     * Follow-ups queued behind the running turn of one conversation surface.
+     * Full key: agentSteer:follow_ups:v1:{topicId}:{threadId|main}
+     */
+    followUps: (topicId: string, threadId?: string | null): string =>
+      `follow_ups:v1:${topicId}:${threadId || 'main'}`,
+  },
+  /**
    * AI generation scope - for AI-generated content like welcome messages
    */
   aiGeneration: {
@@ -134,6 +150,7 @@ export const RedisKeys = {
  */
 export const RedisKeyScopeNamespace = {
   agentSignal: RedisKeyNamespace.AGENT_SIGNAL,
+  agentSteer: RedisKeyNamespace.AGENT_STEER,
   aiGeneration: RedisKeyNamespace.AI_GENERATION,
   lobechat: RedisKeyNamespace.LOBEHUB,
   sendPathCache: RedisKeyNamespace.SEND_PATH_CACHE,

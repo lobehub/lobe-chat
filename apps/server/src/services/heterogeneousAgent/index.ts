@@ -26,6 +26,7 @@ import { type IStreamEventManager } from '@/server/modules/AgentRuntime/types';
 import { CompletionLifecycle } from '@/server/services/agentRuntime/CompletionLifecycle';
 import type { SerializedHook } from '@/server/services/agentRuntime/hooks/types';
 import { createDefaultSnapshotStore } from '@/server/services/agentRuntime/snapshotStore';
+import type { SteerQueueScope } from '@/server/services/redis/steerQueue';
 import { instantiateVerifyPlanOnStart } from '@/server/services/verify';
 
 import {
@@ -432,6 +433,9 @@ export class HeterogeneousAgentService {
     let isolationThreadId: string | undefined;
     let orchestrationRole: 'member' | 'supervisor' | undefined;
     let staleActiveOperationId: string | undefined;
+    // Where the user's follow-ups queue: unknown (and never drained) until the
+    // operation row says this is a top-level run.
+    let steerScope: SteerQueueScope | undefined;
 
     // The operation row is the durable lifecycle owner. The frontend may have
     // already consumed the in-stream terminal event and cleared the topic's
@@ -445,6 +449,10 @@ export class HeterogeneousAgentService {
         assistantMessageId = metadata.assistantMessageId;
       }
       isolationThreadId = operation?.threadId ?? undefined;
+      // A child run (group member, sub-agent) is not where the user types.
+      if (operation && !operation.parentOperationId) {
+        steerScope = { threadId: operation.threadId ?? null, topicId };
+      }
     } catch (err) {
       log('heteroFinish: failed to load operation lifecycle metadata (non-fatal): %O', err);
     }
@@ -705,6 +713,30 @@ export class HeterogeneousAgentService {
       completionReason,
     );
     log('heteroFinish: dispatched completion lifecycle for op=%s result=%s', operationId, result);
+
+    // Follow-ups the user queued behind this run start as the next turn here,
+    // as they do when a native run ends. The completion above released the
+    // topic, which the next turn has to claim. A failed run leaves its queue
+    // to the user.
+    if (result === 'success' && steerScope) await this.startQueuedFollowUp(operationId, steerScope);
+  }
+
+  /**
+   * Start the follow-ups queued behind a finished top-level run. Never throws:
+   * the run's own completion is already settled, and the follow-ups stay
+   * queued when they cannot start.
+   */
+  private async startQueuedFollowUp(operationId: string, scope: SteerQueueScope): Promise<void> {
+    try {
+      // AiAgentService dispatches heterogeneous runs through this service, so
+      // it is loaded here rather than imported at the top.
+      const { AiAgentService } = await import('@/server/services/aiAgent');
+      await new AiAgentService(this.db, this.userId, {
+        workspaceId: this.workspaceId,
+      }).startQueuedFollowUp({ operationId, scope });
+    } catch (err) {
+      log('heteroFinish: starting queued follow-ups failed (non-fatal): %O', err);
+    }
   }
 
   /**

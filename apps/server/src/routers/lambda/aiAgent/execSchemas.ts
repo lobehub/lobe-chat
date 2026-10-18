@@ -123,8 +123,11 @@ export const validateResumePayload = (
   }
 };
 
-export const ExecAgentSchema = z
-  .object({
+/**
+ * Fields of an execAgent request. Exported without the refinements so a queued
+ * follow-up (`agentSteerQueue.append`) can carry the fresh-send subset of it.
+ */
+export const ExecAgentFieldsSchema = z.object({
     includeFinalState: z.boolean().optional(),
     /**
      * Gateway stream features the calling client handles. `member_runtime_end`:
@@ -307,8 +310,9 @@ export const ExecAgentSchema = z
      * so tool calls auto-execute without waiting for human approval.
      */
     userInterventionConfig: UserInterventionConfigSchema.optional(),
-  })
-  .refine((data) => data.agentId || data.slug, {
+});
+
+export const ExecAgentSchema = ExecAgentFieldsSchema.refine((data) => data.agentId || data.slug, {
     message: 'Either agentId or slug must be provided',
   })
   .superRefine(validateResumePayload);
