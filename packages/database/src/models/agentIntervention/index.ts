@@ -20,7 +20,7 @@ import type {
 } from '@lobechat/types';
 import { and, asc, eq, getTableColumns, gt, inArray, isNull, lte, ne, or, sql } from 'drizzle-orm';
 
-import type { AgentInterventionItem, AgentInterventionResolutionItem } from '../schemas';
+import type { AgentInterventionItem, AgentInterventionResolutionItem } from '../../schemas';
 import {
   agentInterventionResolutions,
   agentInterventions,
@@ -28,9 +28,9 @@ import {
   messagePlugins,
   messages,
   userSettings,
-} from '../schemas';
-import type { LobeChatDatabase, Transaction } from '../type';
-import { notTrashed } from '../utils/softDelete';
+} from '../../schemas';
+import type { LobeChatDatabase, Transaction } from '../../type';
+import { notTrashed } from '../../utils/softDelete';
 
 export const AGENT_INTERVENTION_INVALID_REVIEW_TOKEN_HASH =
   'AGENT_INTERVENTION_INVALID_REVIEW_TOKEN_HASH';
