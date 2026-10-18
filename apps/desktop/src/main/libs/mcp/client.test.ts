@@ -1,13 +1,13 @@
 import { describe, expect, it } from 'vitest';
 
 import {
-  appendCappedOutput,
   buildInitializeProbeMessage,
   describeStdioSpawnFailure,
   hasInitializeResponse,
   isBareConnectionClosedError,
   MCPClient,
   MCPConnectionError,
+  PrecheckOutputStream,
   selectDiagnosticOutputLines,
 } from './client';
 
@@ -188,43 +188,76 @@ describe('MCPConnectionError', () => {
   });
 });
 
-describe('appendCappedOutput', () => {
-  it('accumulates chunks below the cap without truncation', () => {
-    const first = appendCappedOutput('', Buffer.from('hello '));
-    const second = appendCappedOutput(first.text, Buffer.from('world'));
+describe('PrecheckOutputStream', () => {
+  const CAP = 64 * 1024;
 
-    expect(second.text).toBe('hello world');
-    expect(second.truncated).toBe(false);
+  it('accumulates small chunks without truncation', () => {
+    const stream = new PrecheckOutputStream('stdout');
+    stream.append(Buffer.from('hello '));
+    stream.append(Buffer.from('world'));
+
+    expect(stream.truncated).toBe(false);
+    expect(stream.toString()).toBe('hello world');
   });
 
-  it('drops data beyond the per-stream cap instead of buffering it', () => {
-    // 64 KiB cap: fill the accumulator, then push more data
-    const filler = 'x'.repeat(64 * 1024);
-    const full = appendCappedOutput('', Buffer.from(filler));
-    expect(full.truncated).toBe(false);
+  it('retains the actual tail when the cap is exceeded (P2 4306325895)', () => {
+    // A noisy launcher fills the cap with chatter, THEN prints the decisive
+    // error. The tail buffer must keep the later error, not the first 64 KiB.
+    const stream = new PrecheckOutputStream('stderr');
+    stream.append(Buffer.from('x'.repeat(CAP)));
+    stream.append(Buffer.from('\nnoise padding line\n'));
+    stream.append(Buffer.from('final error: path not found\n'));
 
-    const over = appendCappedOutput(full.text, Buffer.from('overflow-data'));
-    expect(over.truncated).toBe(true);
-    expect(Buffer.byteLength(over.text)).toBe(64 * 1024);
-    expect(over.text).not.toContain('overflow-data');
+    const text = stream.toString();
+    expect(stream.truncated).toBe(true);
+    expect(text).toContain('final error: path not found');
   });
 
-  it('truncates a single oversized chunk at the byte boundary', () => {
-    const chunk = Buffer.from('y'.repeat(200 * 1024));
-    const result = appendCappedOutput('', chunk);
+  it('decodes a multibyte character split across two chunks (P2 4306581051)', () => {
+    // pt-BR "não pode encontrar o caminho especificado" — the byte sequence
+    // of ã (0xC3 0xA3) must survive the chunk boundary. The pt-BR
+    // path-not-found matcher lowercases the combined output.
+    const stream = new PrecheckOutputStream('stderr');
+    stream.append(Buffer.from('O sistema n', 'utf8'));
+    stream.append(Buffer.from([0xc3, 0xa3])); // ã, split across the boundary
+    stream.append(Buffer.from('o pode encontrar o caminho especificado', 'utf8'));
 
-    expect(result.truncated).toBe(true);
-    expect(Buffer.byteLength(result.text)).toBe(64 * 1024);
+    const text = stream.toString();
+    expect(text).toContain('não pode encontrar o caminho especificado');
+    expect(text).not.toContain('\uFFFD');
+    expect(text.toLowerCase()).toContain('não pode encontrar o caminho especificado');
   });
 
-  it('keeps dropping once the cap is already reached', () => {
-    const filler = 'x'.repeat(64 * 1024);
-    let state = appendCappedOutput('', Buffer.from(filler));
-    state = appendCappedOutput(state.text, Buffer.from('more'));
-    state = appendCappedOutput(state.text, Buffer.from('even more'));
+  it('drops only the head beyond the cap, aligned to a UTF-8 sequence boundary', () => {
+    // 4-byte emoji per repetition guarantees a multibyte cut candidate.
+    const stream = new PrecheckOutputStream('stdout');
+    stream.append(Buffer.from('🎉'.repeat(30_000))); // ~120 KB, ~2x cap
 
-    expect(state.truncated).toBe(true);
-    expect(Buffer.byteLength(state.text)).toBe(64 * 1024);
+    const text = stream.toString();
+    expect(stream.truncated).toBe(true);
+    expect(Buffer.byteLength(text)).toBeLessThanOrEqual(CAP + 128);
+    expect(text).toContain('🎉');
+    expect(text).not.toContain('\uFFFD');
+  });
+
+  it('handles a single oversized chunk by keeping its last cap bytes', () => {
+    const stream = new PrecheckOutputStream('stdout');
+    stream.append(Buffer.from('a'.repeat(CAP + 500)));
+
+    const text = stream.toString();
+    expect(stream.truncated).toBe(true);
+    expect(text).toContain('a');
+    expect(text.length).toBeLessThanOrEqual(CAP + 128);
+  });
+
+  it('marks truncation once and keeps the marker stable across flushes', () => {
+    const stream = new PrecheckOutputStream('stderr');
+    stream.append(Buffer.from('x'.repeat(CAP)));
+    const first = stream.toString();
+    const second = stream.toString();
+
+    expect(first).toContain('truncated: pre-check output cap reached');
+    expect(second).toBe(first);
   });
 });
 

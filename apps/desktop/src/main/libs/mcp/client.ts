@@ -93,25 +93,80 @@ const PRECHECK_OUTPUT_CAP_BYTES = 64 * 1024;
 const PRECHECK_CLOSE_GRACE_MS = 750;
 
 /**
- * Append decoded chunk text to an accumulator with a hard per-stream byte cap.
- * Once the cap is reached further data is dropped (not buffered), so a noisy
- * or broken command cannot consume unbounded memory before the timeout fires.
- * Returns true when the cap was hit (diagnostics may note truncation).
+ * Find the first index at or after `start` that begins a complete UTF-8
+ * sequence, skipping the continuation bytes of a character split by the cut.
+ * Advances at most 3 bytes; returns `start` when it already lands on a
+ * sequence boundary.
  */
-export function appendCappedOutput(
-  current: string,
-  chunk: Buffer,
-): { text: string; truncated: boolean } {
-  const remaining = PRECHECK_OUTPUT_CAP_BYTES - Buffer.byteLength(current);
-  if (remaining <= 0) return { text: current, truncated: true };
+const utf8SequenceStart = (buf: Buffer, start: number): number => {
+  let index = start;
+  while (index < buf.byteLength && (buf[index] & 0b1100_0000) === 0b1000_0000) index += 1;
+  return index;
+};
 
-  if (chunk.byteLength <= remaining) {
-    return { text: current + chunk.toString('utf8'), truncated: false };
+/**
+ * Per-stream pre-check output accumulator (bounded tail buffer).
+ *
+ * Keeps the most recent bytes under a hard per-stream cap so a noisy launcher
+ * cannot balloon the Electron main-process heap, while the stream's actual
+ * tail — where launchers print the decisive startup error — stays available
+ * for diagnosis. The previous prefix-accumulate-then-drop design kept only
+ * the first 64 KiB, so the tail-10 line selection saw the tail of that prefix
+ * and lost errors printed after the cap (P2 4306325895).
+ *
+ * Raw bytes are buffered and decoded as a whole on flush: stream chunks do
+ * not preserve character boundaries, and decoding each chunk independently
+ * turns a multibyte character split across two chunks into U+FFFD — which
+ * broke localized (e.g. pt-BR) path-not-found matchers (P2 4306581051).
+ */
+export class PrecheckOutputStream {
+  private readonly label: 'stdout' | 'stderr';
+  private tail: Buffer = Buffer.alloc(0);
+  private overflown = false;
+
+  constructor(label: 'stdout' | 'stderr') {
+    this.label = label;
   }
 
-  // Keep whole chunks on the boundary; a single oversized chunk still counts
-  // once toward the cap (the tail is dropped, not split mid-codepoint).
-  return { text: current + chunk.toString('utf8').slice(0, remaining), truncated: true };
+  /** Buffer a raw stdout/stderr chunk; retains only the most recent cap bytes. */
+  append(chunk: Buffer): void {
+    if (chunk.byteLength === 0) return;
+
+    if (chunk.byteLength >= PRECHECK_OUTPUT_CAP_BYTES) {
+      // Single oversized chunk: keep its last cap bytes on a sequence boundary.
+      this.tail = chunk.subarray(
+        utf8SequenceStart(chunk, chunk.byteLength - PRECHECK_OUTPUT_CAP_BYTES),
+      );
+      this.overflown = true;
+      return;
+    }
+
+    const merged = this.tail.byteLength === 0 ? chunk : Buffer.concat([this.tail, chunk]);
+    if (merged.byteLength > PRECHECK_OUTPUT_CAP_BYTES) {
+      this.tail = merged.subarray(
+        utf8SequenceStart(merged, merged.byteLength - PRECHECK_OUTPUT_CAP_BYTES),
+      );
+      this.overflown = true;
+    } else {
+      this.tail = merged;
+    }
+  }
+
+  /** Whether the stream ever exceeded the per-stream cap. */
+  get truncated(): boolean {
+    return this.overflown;
+  }
+
+  /**
+   * Decode the retained tail (pure — safe to call repeatedly). When the cap
+   * was hit, the truncation marker is prepended so downstream line selection
+   * keeps the decisive error while still disclosing the truncation.
+   */
+  toString(): string {
+    const text = new TextDecoder('utf-8', { fatal: false }).decode(this.tail);
+    if (!this.overflown) return text;
+    return `[${this.label} truncated: pre-check output cap reached]\n${text}`;
+  }
 }
 
 /**
@@ -409,10 +464,8 @@ export class MCPClient {
         return;
       }
 
-      let stdout = '';
-      let stdoutTruncated = false;
-      let stderr = '';
-      let stderrTruncated = false;
+      const stdout = new PrecheckOutputStream('stdout');
+      const stderr = new PrecheckOutputStream('stderr');
       let resolved = false;
 
       const finish = (result: {
@@ -441,7 +494,12 @@ export class MCPClient {
         terminatePrecheckProcess(child, () => {
           // Still running after 5s: treat as healthy-enough; the original
           // connection error is the real failure and should surface as-is.
-          finish({ diagnosis: '', stderr, stdout, success: true });
+          finish({
+            diagnosis: '',
+            stderr: stderr.toString(),
+            stdout: stdout.toString(),
+            success: true,
+          });
         });
       }, params.timeoutMs ?? 5000);
 
@@ -453,23 +511,11 @@ export class MCPClient {
       child.stdin?.on('error', () => {});
 
       child.stdout?.on('data', (data: Buffer) => {
-        const next = appendCappedOutput(stdout, data);
-        if (next.truncated && !stdoutTruncated) {
-          stdoutTruncated = true;
-          stdout = `${next.text}\n[stdout truncated: pre-check output cap reached]`;
-        } else {
-          stdout = next.text;
-        }
+        stdout.append(data);
       });
 
       child.stderr?.on('data', (data: Buffer) => {
-        const next = appendCappedOutput(stderr, data);
-        if (next.truncated && !stderrTruncated) {
-          stderrTruncated = true;
-          stderr = `${next.text}\n[stderr truncated: pre-check output cap reached]`;
-        } else {
-          stderr = next.text;
-        }
+        stderr.append(data);
       });
 
       child.on('error', (error: NodeJS.ErrnoException) => {
@@ -480,8 +526,8 @@ export class MCPClient {
             message: error.message,
             spawnCode: error.code,
           }),
-          stderr,
-          stdout,
+          stderr: stderr.toString(),
+          stdout: stdout.toString(),
           success: false,
         });
       });
@@ -511,19 +557,24 @@ export class MCPClient {
           // cleanly before responding to the initialize probe. Only credit
           // the probe when an initialize response was actually received;
           // otherwise diagnose the zero-code exit as a startup failure.
-          if (hasInitializeResponse(stdout)) {
-            finish({ diagnosis: '', stderr, stdout, success: true });
+          if (hasInitializeResponse(stdout.toString())) {
+            finish({
+              diagnosis: '',
+              stderr: stderr.toString(),
+              stdout: stdout.toString(),
+              success: true,
+            });
           } else {
             finish({
               diagnosis: describeStdioSpawnFailure({
                 command: params.command,
                 exitCode: 0,
-                stderr,
-                stdout,
+                stderr: stderr.toString(),
+                stdout: stdout.toString(),
               }),
-              stderr,
+              stderr: stderr.toString(),
               success: false,
-              stdout,
+              stdout: stdout.toString(),
             });
           }
           return;
@@ -534,11 +585,11 @@ export class MCPClient {
             command: params.command,
             exitCode: code,
             signal,
-            stderr,
-            stdout,
+            stderr: stderr.toString(),
+            stdout: stdout.toString(),
           }),
-          stderr,
-          stdout,
+          stderr: stderr.toString(),
+          stdout: stdout.toString(),
           success: false,
         });
       };
