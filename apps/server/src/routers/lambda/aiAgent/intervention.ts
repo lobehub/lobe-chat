@@ -2,6 +2,7 @@ import { randomUUID } from 'node:crypto';
 
 import { TRPCError } from '@trpc/server';
 import debug from 'debug';
+import pMap from 'p-map';
 import { z } from 'zod';
 
 import {
@@ -27,6 +28,9 @@ import { aiAgentBaseProcedure, aiAgentWriteProcedure } from './procedures';
 import { acceptsFileWorksOf, acceptsMemberRuntimeEndOf } from './utils';
 
 const log = debug('lobe-server:ai-agent-router');
+
+/** Each tool message id is a separate plugin read; a large batch must not open them all at once. */
+const TOOL_PLUGIN_LOOKUP_CONCURRENCY = 5;
 
 const ProcessHumanInterventionSchema = z.object({
   action: z.enum(['approve', 'reject', 'reject_continue', 'input', 'select']),
@@ -87,8 +91,10 @@ export const interventionRouter = router({
         workspaceId: ctx.workspaceId,
       });
 
-      const stopPlugins = await Promise.all(
-        input.toolMessageIds.map((id) => ctx.messageModel.findMessagePlugin(id)),
+      const stopPlugins = await pMap(
+        input.toolMessageIds,
+        (id) => ctx.messageModel.findMessagePlugin(id),
+        { concurrency: TOOL_PLUGIN_LOOKUP_CONCURRENCY },
       );
       const hasGenericSource = stopPlugins.every(
         (plugin) =>

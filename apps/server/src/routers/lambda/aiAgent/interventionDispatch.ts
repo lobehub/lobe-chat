@@ -2,6 +2,7 @@ import { selectUserInterventionConfig } from '@lobechat/agent-runtime';
 import type { ExecAgentResult, UserInterventionConfig, UserToolConfig } from '@lobechat/types';
 import { RequestTrigger } from '@lobechat/types';
 import debug from 'debug';
+import pMap from 'p-map';
 
 import {
   deriveAgentInterventionContinuationMessageId,
@@ -25,6 +26,9 @@ import type { AiAgentService } from '@/server/services/aiAgent';
 import type { AgentShareGate } from '@/server/services/aiAgent/shareGate';
 
 const log = debug('lobe-server:ai-agent-router');
+
+/** Each expected claim is a separate plugin read; a large batch must not open them all at once. */
+const TOOL_PLUGIN_LOOKUP_CONCURRENCY = 5;
 
 type ClaimedAgentInterventionResolution = Extract<
   ResolveAgentInterventionResult,
@@ -177,8 +181,10 @@ const probeRuntimeActionDispatch = async (
     resolution.ownerUserId,
     resolution.workspaceId ?? ctx.workspaceId ?? undefined,
   );
-  const plugins = await Promise.all(
-    expected.map(({ messageId }) => messageModel.findMessagePlugin(messageId)),
+  const plugins = await pMap(
+    expected,
+    ({ messageId }) => messageModel.findMessagePlugin(messageId),
+    { concurrency: TOOL_PLUGIN_LOOKUP_CONCURRENCY },
   );
 
   if (plugins.every((plugin) => plugin?.intervention?.status === 'pending')) {

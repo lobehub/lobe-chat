@@ -100,6 +100,8 @@ export const assertCanUseAgentRunConversation = async (params: {
   if (!workspaceId) return;
 
   const uniqueMessageIds = [...new Set(messageIds.filter(Boolean) as string[])];
+  // Fixed two-call tuple, not a per-id fan-out: `assertCanUseMessageTargets`
+  // resolves every message id in one batched `inArray` query.
   await Promise.all([
     assertCanUseTopicTargets({ db, userId, workspaceId }, topicId ? [topicId] : []),
     assertCanUseMessageTargets({ db, userId, workspaceId }, uniqueMessageIds),
