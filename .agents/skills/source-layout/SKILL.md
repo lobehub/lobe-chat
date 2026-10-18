@@ -1,6 +1,6 @@
 ---
 name: source-layout
-description: 'Use for where a file lives, how it is named, where its tests go, and how to split a source or test file over 800 lines (拆分大文件, 目录结构, 文件命名).'
+description: 'Use for where a file lives, how it is named, where its tests go, and how to split a source or test file over 1200 lines (拆分大文件, 目录结构, 文件命名).'
 user-invocable: false
 ---
 
@@ -36,10 +36,10 @@ One rule for every app and package:
 
 ## 3. File size
 
-Source and test files stay at or below 800 lines. Generated code (`*.gen.ts`, `generated/` directories) and the `locales/default/` tables are exempt:
+Source and test files stay at or below 1200 lines. Generated code (`*.gen.ts`, `generated/` directories) and the `locales/default/` tables are exempt:
 
-- A new file over 800 lines, or an existing file that crosses 800 lines in this change, is split in the same change. `bun run check`, the pre-commit hook, and the PR's File Size Gate job fail on both.
-- A file already over 800 lines must not grow, including for a bug fix: the change may only keep or reduce its line count. Before adding code, extract the cohesive part the change touches. Put a new test in a scenario test file under the limit (§2), splitting the old test file first when the test belongs to one of its scenarios. Because hundreds of legacy files are over the limit, these checks report their growth as an advisory (a warning annotation in CI) instead of failing; it is still a required fix.
+- A new file over 1200 lines, or an existing file that crosses 1200 lines in this change, is split in the same change. `bun run check`, the pre-commit hook, and the PR's File Size Gate job fail on both.
+- A file already over 1200 lines must not grow, including for a bug fix: the change may only keep or reduce its line count. Before adding code, extract the cohesive part the change touches. Put a new test in a scenario test file under the limit (§2), splitting the old test file first when the test belongs to one of its scenarios. Because hundreds of legacy files are over the limit, these checks report their growth as an advisory (a warning annotation in CI) instead of failing; it is still a required fix.
 
 The limit says when to split, not where. Split on a real boundary (state, reuse, render update, sub-domain, pipeline stage), as `react` requires; never cut a file at an arbitrary line count. When a heavy feature is mounted by several hosts, use `compose-atoms` instead.
 

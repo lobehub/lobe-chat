@@ -105,7 +105,7 @@ When acceptance is required, put its published `https://app.lobehub.com/acceptan
 
 ### Code Style
 
-- Source and test files stay at or below 800 lines; a file already over the limit must not grow. Before adding, moving, or splitting files, read the `source-layout` skill for placement, naming, test location, and how a large file becomes a directory.
+- Source and test files stay at or below 1200 lines; a file already over the limit must not grow. Before adding, moving, or splitting files, read the `source-layout` skill for placement, naming, test location, and how a large file becomes a directory.
 
 ### Code Review
 
