@@ -1,17 +1,17 @@
-import { router } from '@/libs/trpc/lambda';
+import { mergeRouters } from '@/libs/trpc/lambda';
 
-import { agentBindingProcedures } from './agentBinding';
-import { bootstrapProcedures } from './bootstrap';
-import { connectorManagementProcedures } from './management';
-import { oauthProcedures } from './oauth';
-import { connectorReadProcedures } from './reads';
-import { toolProcedures } from './tools';
+import { agentBindingRouter } from './agentBinding';
+import { bootstrapRouter } from './bootstrap';
+import { connectorManagementRouter } from './management';
+import { oauthRouter } from './oauth';
+import { connectorReadRouter } from './reads';
+import { toolRouter } from './tools';
 
-export const connectorRouter = router({
-  ...connectorReadProcedures,
-  ...connectorManagementProcedures,
-  ...agentBindingProcedures,
-  ...oauthProcedures,
-  ...toolProcedures,
-  ...bootstrapProcedures,
-});
+export const connectorRouter = mergeRouters(
+  connectorReadRouter,
+  connectorManagementRouter,
+  agentBindingRouter,
+  oauthRouter,
+  toolRouter,
+  bootstrapRouter,
+);

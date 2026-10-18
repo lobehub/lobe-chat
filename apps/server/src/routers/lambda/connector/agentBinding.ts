@@ -2,11 +2,12 @@ import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
 import { AgentModel } from '@/database/models/agent';
+import { router } from '@/libs/trpc/lambda';
 
 import { assertWorkspaceRowManageable } from '../_helpers/assertWorkspaceRowManageable';
 import { connectorWriteProcedure } from './procedures';
 
-export const agentBindingProcedures = {
+export const agentBindingRouter = router({
   /**
    * Bind an existing connector to an agent (transfer it into the agent scope).
    * The connector then resolves only for that agent's runs and shadows the
@@ -163,4 +164,4 @@ export const agentBindingProcedures = {
       await ctx.connectorModel.update(input.connectorId, { metadata: restMeta });
       return { id: input.connectorId };
     }),
-};
+});

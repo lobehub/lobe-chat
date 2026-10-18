@@ -3,13 +3,14 @@ import { z } from 'zod';
 
 import { ConnectorStatus, ConnectorToolPermission } from '@/database/schemas';
 import { inferCrudType } from '@/libs/mcp/utils';
+import { router } from '@/libs/trpc/lambda';
 import { callConnectorToolById, ConnectorToolCallError } from '@/server/services/connector/exec';
 import { syncConnectorToolsById } from '@/server/services/connector/sync';
 
 import { assertWorkspaceRowManageable } from '../_helpers/assertWorkspaceRowManageable';
 import { connectorWriteProcedure } from './procedures';
 
-export const toolProcedures = {
+export const toolRouter = router({
   /**
    * Fetch the tool list from the remote MCP server and sync it into
    * `user_connector_tools`. Manifest-derived fields are overwritten;
@@ -140,4 +141,4 @@ export const toolProcedures = {
       await ctx.connectorModel.updateStatus(input.id, ConnectorStatus.connected);
       return { toolCount: syncInputs.length };
     }),
-};
+});

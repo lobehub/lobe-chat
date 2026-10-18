@@ -3,6 +3,7 @@ import { z } from 'zod';
 
 import { wsCompatProcedure } from '@/business/server/trpc-middlewares/workspaceAuth';
 import { AgentModel } from '@/database/models/agent';
+import { router } from '@/libs/trpc/lambda';
 import { getConnectorRedirectUri } from '@/server/services/connector/oauth';
 import {
   resolveConnectorAuthorizerId,
@@ -12,7 +13,7 @@ import {
 import { assertWorkspaceRowManageable } from '../_helpers/assertWorkspaceRowManageable';
 import { connectorProcedure, connectorWriteProcedure } from './procedures';
 
-export const connectorReadProcedures = {
+export const connectorReadRouter = router({
   // ── Queries ──────────────────────────────────────────────────────────────
 
   list: connectorProcedure.query(async ({ ctx }) => {
@@ -165,4 +166,4 @@ export const connectorReadProcedures = {
    * URI the user registers matches the one used at authorize time.
    */
   getRedirectUri: wsCompatProcedure.query(() => ({ redirectUri: getConnectorRedirectUri() })),
-};
+});

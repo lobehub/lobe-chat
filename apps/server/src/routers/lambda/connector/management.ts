@@ -9,6 +9,7 @@ import {
   ConnectorStatus,
 } from '@/database/schemas';
 import { getComposioClient } from '@/libs/composio';
+import { router } from '@/libs/trpc/lambda';
 import { withTrustedLinkedByUserId } from '@/server/utils/connectorAttribution';
 
 import { assertWorkspaceRowManageable } from '../_helpers/assertWorkspaceRowManageable';
@@ -74,7 +75,7 @@ const createConnectorSchema = z.object({
   ]),
 });
 
-export const connectorManagementProcedures = {
+export const connectorManagementRouter = router({
   // ── Mutations ─────────────────────────────────────────────────────────────
 
   create: connectorWriteProcedure.input(createConnectorSchema).mutation(async ({ input, ctx }) => {
@@ -239,4 +240,4 @@ export const connectorManagementProcedures = {
         }
       }
     }),
-};
+});

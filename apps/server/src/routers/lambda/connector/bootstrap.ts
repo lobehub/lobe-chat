@@ -7,6 +7,7 @@ import type { ConnectorMetadata } from '@/database/schemas';
 import { ConnectorSourceType, ConnectorStatus, ConnectorToolPermission } from '@/database/schemas';
 import type { LobeChatDatabase } from '@/database/type';
 import { inferCrudType } from '@/libs/mcp/utils';
+import { router } from '@/libs/trpc/lambda';
 import { hasWorkspaceScopedPermission } from '@/server/services/workspacePermission';
 
 import { isWorkspaceNonOwner } from '../_helpers/assertWorkspaceRowManageable';
@@ -95,7 +96,7 @@ function resolveDefaultPermission(humanIntervention: unknown): ConnectorToolPerm
   return ConnectorToolPermission.auto;
 }
 
-export const bootstrapProcedures = {
+export const bootstrapRouter = router({
   /**
    * Sync tools from a client-provided list (for Lobehub OAuth skills, Composio, etc.
    * that already have their tool list available on the client side).
@@ -253,4 +254,4 @@ export const bootstrapProcedures = {
       await ctx.connectorToolModel.upsertMany(connectorId, syncInputs);
       return { connectorId, toolCount: syncInputs.length };
     }),
-};
+});

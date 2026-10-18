@@ -2,6 +2,7 @@ import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
 import type { OIDCConfig } from '@/database/schemas';
+import { router } from '@/libs/trpc/lambda';
 import {
   buildAuthorizationUrl,
   discoverConnectorOAuth,
@@ -18,7 +19,7 @@ import {
 import { assertWorkspaceRowManageable } from '../_helpers/assertWorkspaceRowManageable';
 import { connectorWriteProcedure } from './procedures';
 
-export const oauthProcedures = {
+export const oauthRouter = router({
   /**
    * Begin the OAuth authorization-code flow for a custom MCP connector.
    *
@@ -132,4 +133,4 @@ export const oauthProcedures = {
 
       return { authorizationUrl };
     }),
-};
+});
