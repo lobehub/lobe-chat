@@ -1,11 +1,105 @@
 import { type ChildProcess, execFile } from 'node:child_process';
 import { promisify } from 'node:util';
 
-/** execFile with a narrowed promise shape (the (file, args) overload only). */
+/** execFile with a narrowed promise shape (the (file, args[, options]) overload only). */
 const execFileAsync = promisify(execFile) as (
   file: string,
   args: readonly string[],
+  options?: { timeout?: number },
 ) => Promise<{ stdout: string; stderr: string }>;
+
+/** Max descendant pids listed per direct taskkill invocation. */
+const TASKKILL_BATCH_SIZE = 20;
+
+/** One CIM snapshot query returns every process id with its parent id. */
+const WINDOWS_PROCESS_SNAPSHOT_ARGS = [
+  '-NoProfile',
+  '-NonInteractive',
+  '-Command',
+  'Get-CimInstance Win32_Process | Select-Object ProcessId,ParentProcessId | ConvertTo-Json -Compress',
+];
+
+type WindowsProcessRow = { ProcessId: number; ParentProcessId: number };
+
+const isPidAlive = (pid: number): boolean => {
+  try {
+    process.kill(pid, 0);
+    return true;
+  } catch (error) {
+    // EPERM: the process exists but we cannot probe it — treat as alive.
+    return (error as NodeJS.ErrnoException).code === 'EPERM';
+  }
+};
+
+/**
+ * Enumerate the descendant pids of `rootPid` from a single CIM snapshot
+ * (one PowerShell round trip) and a BFS over the parent→children map. The
+ * visited set keeps self-referencing rows from looping the walk. Returns []
+ * when the snapshot is unavailable (CIM service down, malformed output), so
+ * callers degrade to the pre-existing behavior instead of throwing.
+ */
+const collectWindowsDescendantPids = async (rootPid: number): Promise<number[]> => {
+  let rows: WindowsProcessRow[];
+  try {
+    const { stdout } = await execFileAsync('powershell', [...WINDOWS_PROCESS_SNAPSHOT_ARGS], {
+      timeout: 5_000,
+    });
+    const parsed = JSON.parse(stdout) as WindowsProcessRow | WindowsProcessRow[];
+    rows = Array.isArray(parsed) ? parsed : [parsed];
+  } catch {
+    return [];
+  }
+
+  const childrenOf = new Map<number, number[]>();
+  for (const row of rows) {
+    if (typeof row?.ProcessId !== 'number' || typeof row?.ParentProcessId !== 'number') continue;
+    const siblings = childrenOf.get(row.ParentProcessId);
+    if (siblings) siblings.push(row.ProcessId);
+    else childrenOf.set(row.ParentProcessId, [row.ProcessId]);
+  }
+
+  const descendants: number[] = [];
+  const visited = new Set<number>([rootPid]);
+  const queue = [rootPid];
+  while (queue.length > 0) {
+    const parent = queue.shift();
+    if (parent === undefined) break;
+    for (const child of childrenOf.get(parent) ?? []) {
+      if (visited.has(child)) continue;
+      visited.add(child);
+      descendants.push(child);
+      queue.push(child);
+    }
+  }
+  return descendants;
+};
+
+const killWindowsDescendants = async (descendantPids: number[]): Promise<void> => {
+  for (let i = 0; i < descendantPids.length; i += TASKKILL_BATCH_SIZE) {
+    const batch = descendantPids.slice(i, i + TASKKILL_BATCH_SIZE);
+    const args = batch.flatMap((pid) => ['/pid', String(pid)]);
+    args.push('/F');
+    try {
+      await execFileAsync('taskkill', args);
+    } catch {
+      // already exited between the snapshot and the kill
+    }
+  }
+};
+
+/**
+ * Windows fallback for the launcher pre-exit gap (P2 4307489808): `taskkill
+ * /T` walks the tree from the given pid, so it cannot recover descendants
+ * whose root (the launcher) has already exited — the swallowed failure
+ * would leak the worker across reconnects. Probe whether any descendant
+ * survived the failed root kill and force-terminate them directly.
+ */
+const killSurvivingWindowsDescendants = async (rootPid: number): Promise<void> => {
+  const descendants = await collectWindowsDescendantPids(rootPid);
+  const survivors = descendants.filter(isPidAlive);
+  if (survivors.length === 0) return;
+  await killWindowsDescendants(survivors);
+};
 
 /**
  * Signal a pre-check child and its whole process tree.
@@ -46,9 +140,14 @@ export async function signalProcessTree(
     // exit nonzero when the tree already exited — not an error for us.
     try {
       await execFileAsync('taskkill', ['/pid', String(pid), '/T', '/F']);
+      return;
     } catch {
-      // tree already gone
+      // The tree may already be gone — but a launcher that exited BEFORE
+      // this call leaves /T nothing to walk (its descendants are no longer
+      // its children), so probe for surviving descendants directly
+      // (P2 4307489808) instead of swallowing the failure.
     }
+    await killSurvivingWindowsDescendants(pid);
     return;
   }
 
@@ -90,12 +189,20 @@ export function reapOrphanedProcessGroup(
   const { recheckDelayMs = 500 } = options;
 
   if (process.platform === 'win32') {
-    // No POSIX process groups on Windows; taskkill /T in signalProcessTree
-    // already walks the tree for the terminate path, and the zero-code
-    // classification path here is best-effort cleanup.
-    void execFileAsync('taskkill', ['/pid', String(pid), '/T', '/F']).catch(() => {
-      // already gone
-    });
+    // No POSIX process groups on Windows; the zero-code classification path
+    // here is best-effort cleanup. A launcher that exited before this call
+    // leaves /T nothing to walk (its descendants are no longer its children),
+    // so after the root kill, probe for surviving descendants directly
+    // (P2 4307489808). Detached best-effort sweep — this function is
+    // intentionally not awaited.
+    void (async () => {
+      try {
+        await execFileAsync('taskkill', ['/pid', String(pid), '/T', '/F']);
+      } catch {
+        // root already gone or tree already exited
+      }
+      await killSurvivingWindowsDescendants(pid);
+    })();
     return;
   }
 

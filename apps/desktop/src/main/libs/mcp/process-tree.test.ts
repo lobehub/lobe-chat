@@ -255,3 +255,183 @@ describe('reapOrphanedProcessGroup', () => {
     }
   });
 });
+
+describe('windows launcher pre-exit recovery (P2 4307489808)', () => {
+  // The Windows branches key off process.platform at call time; pin it to
+  // win32 (and restore) so the paths are covered on a POSIX dev machine.
+  const pinWindowsPlatform = () => {
+    const descriptor = Object.getOwnPropertyDescriptor(process, 'platform')!;
+    Object.defineProperty(process, 'platform', { value: 'win32', configurable: true });
+    return () => Object.defineProperty(process, 'platform', descriptor);
+  };
+
+  // ./process-tree is statically imported at the top of this file; clear the
+  // module registry so vi.doMock applies to the dynamic re-import below.
+  const setupWindowsMocks = (plan: { taskkill: 'ok' | 'fail'; cim?: string }) => {
+    vi.resetModules();
+    const taskkillInvocations: string[][] = [];
+    let cimSnapshotCount = 0;
+    vi.doMock('node:child_process', async (importOriginal) => {
+      const actual = importOriginal<any>();
+      return {
+        ...actual,
+        execFile: (
+          file: string,
+          args: readonly string[],
+          optionsOrCallback:
+            | { timeout?: number }
+            | ((error: Error | null, stdout: string) => void),
+          maybeCallback?: (error: Error | null, stdout: string) => void,
+        ) => {
+          // Node arity: (file, args, callback) or (file, args, options, callback)
+          const callback =
+            typeof optionsOrCallback === 'function' ? optionsOrCallback : maybeCallback;
+          if (typeof callback !== 'function') {
+            throw new TypeError('mock execFile: no callback provided');
+          }
+          if (file === 'taskkill') {
+            if (plan.taskkill === 'ok') callback(null, '');
+            else callback(new Error('The process not found.'), '');
+            return;
+          }
+          if (file === 'powershell' && typeof plan.cim === 'string') {
+            cimSnapshotCount += 1;
+            callback(null, plan.cim);
+            return;
+          }
+          callback(new Error(`unexpected invocation: ${file}`), '');
+        },
+      } as any;
+    });
+    vi.doMock('node:util', async (importOriginal) => {
+      const actual = importOriginal<any>();
+      return {
+        ...actual,
+        promisify:
+          (fn: (...args: any[]) => void) =>
+          (...args: any[]) =>
+            new Promise((resolve, reject) => {
+              (fn as any)(...args, (error: Error | null, stdout: string) => {
+                if (error) reject(error);
+                else resolve({ stdout });
+              });
+              if (args[0] === 'taskkill') {
+                taskkillInvocations.push([...(args[1] as readonly string[])]);
+              }
+            }),
+      } as any;
+    });
+    return {
+      taskkillInvocations,
+      cimSnapshotCount: () => cimSnapshotCount,
+    };
+  };
+
+  const restoreMocks = () => {
+    vi.doUnmock('node:child_process');
+    vi.doUnmock('node:util');
+    vi.resetModules();
+  };
+
+  it('directly force-kills surviving descendants when the root taskkill fails (terminate path)', async () => {
+    const restorePlatform = pinWindowsPlatform();
+    const { taskkillInvocations } = setupWindowsMocks({
+      taskkill: 'fail',
+      cim: JSON.stringify([
+        { ProcessId: 111, ParentProcessId: 4242 },
+        { ProcessId: 222, ParentProcessId: 111 },
+        { ProcessId: 333, ParentProcessId: 999 },
+      ]),
+    });
+
+    try {
+      const { signalProcessTree } = await import('./process-tree');
+      const child = new EventEmitter() as EventEmitter & { kill: any; pid?: number };
+      child.kill = vi.fn();
+      child.pid = 4242;
+
+      // EPERM → treat as alive; ESRCH → already gone
+      const aliveProbe = vi.spyOn(process, 'kill').mockImplementation(((pid: number) => {
+        if (pid === 111 || pid === 222) {
+          const e = new Error('operation not permitted') as NodeJS.ErrnoException;
+          e.code = 'EPERM';
+          throw e;
+        }
+        const e = new Error('no such process') as NodeJS.ErrnoException;
+        e.code = 'ESRCH';
+        throw e;
+      }) as any);
+
+      await signalProcessTree(child as any, 'SIGTERM');
+
+      // Root /T /F failed → one batched direct kill for the survivors
+      // (111 + 222; 333 is not a descendant of 4242)
+      expect(taskkillInvocations.length).toBe(2);
+      expect(taskkillInvocations[0]).toEqual(['/pid', '4242', '/T', '/F']);
+      expect(taskkillInvocations[1]).toEqual(['/pid', '111', '/pid', '222', '/F']);
+      aliveProbe.mockRestore();
+    } finally {
+      restorePlatform();
+      restoreMocks();
+    }
+  });
+
+  it('sweeps surviving descendants detached after the root kill in the reaper (zero-code path)', async () => {
+    const restorePlatform = pinWindowsPlatform();
+    const { taskkillInvocations } = setupWindowsMocks({
+      taskkill: 'fail',
+      cim: JSON.stringify([
+        { ProcessId: 777, ParentProcessId: 5555 },
+        { ProcessId: 888, ParentProcessId: 777 },
+      ]),
+    });
+
+    try {
+      const { reapOrphanedProcessGroup } = await import('./process-tree');
+      const aliveProbe = vi.spyOn(process, 'kill').mockImplementation(((pid: number) => {
+        if (pid === 777) return true; // survivor
+        const e = new Error('no such process') as NodeJS.ErrnoException;
+        e.code = 'ESRCH';
+        throw e;
+      }) as any);
+
+      reapOrphanedProcessGroup(5555);
+
+      // The sweep is detached (not awaited) — poll until the survivor batch lands.
+      await vi.waitFor(() => {
+        expect(taskkillInvocations.length).toBe(2);
+      });
+      expect(taskkillInvocations[0]).toEqual(['/pid', '5555', '/T', '/F']);
+      // 888 is a descendant but probes dead (ESRCH) → only 777 is swept.
+      expect(taskkillInvocations[1]).toEqual(['/pid', '777', '/F']);
+      aliveProbe.mockRestore();
+    } finally {
+      restorePlatform();
+      restoreMocks();
+    }
+  });
+
+  it('skips the survivor sweep when the root taskkill succeeds (terminate path)', async () => {
+    const restorePlatform = pinWindowsPlatform();
+    const { taskkillInvocations, cimSnapshotCount } = setupWindowsMocks({
+      taskkill: 'ok',
+      cim: '[]',
+    });
+
+    try {
+      const { signalProcessTree } = await import('./process-tree');
+      const child = new EventEmitter() as EventEmitter & { kill: any; pid?: number };
+      child.kill = vi.fn();
+      child.pid = 4242;
+
+      await signalProcessTree(child as any, 'SIGTERM');
+
+      // Root kill landed; no CIM snapshot round and no extra taskkill call.
+      expect(taskkillInvocations).toEqual([['/pid', '4242', '/T', '/F']]);
+      expect(cimSnapshotCount()).toBe(0);
+    } finally {
+      restorePlatform();
+      restoreMocks();
+    }
+  });
+});
