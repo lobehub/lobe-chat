@@ -929,6 +929,12 @@ export class GeneralChatAgent implements Agent {
         // Single sub-agent completed, continue to call LLM with result
         const { parentMessageId } = context.payload as SubAgentResultPayload;
 
+        // Same decision point as the batch variant: hand the turn back for
+        // queued user messages instead of another model call first.
+        if (context.stepContext?.hasQueuedMessages) {
+          return { reason: 'queued_message_interrupt', type: 'finish' };
+        }
+
         // Continue to call LLM with the latest state after the sub-agent run.
         return this.toLLMCall(
           {

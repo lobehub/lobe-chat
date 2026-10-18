@@ -21,7 +21,12 @@ const log = debug('lobe-server:agent-runtime-service');
  * sub-agent) results of the turn are all in, so a user message can join here
  * without splitting an assistant's tool calls from their results.
  */
-const LLM_NEXT_PHASES = new Set(['tool_result', 'tools_batch_result', 'sub_agents_batch_result']);
+const LLM_NEXT_PHASES = new Set([
+  'tool_result',
+  'tools_batch_result',
+  'sub_agent_result',
+  'sub_agents_batch_result',
+]);
 
 /** What this module reads off the service. */
 export type StepPrepareDeps = Pick<

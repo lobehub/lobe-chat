@@ -182,7 +182,7 @@ describe('server-side steer queue in the step loop', () => {
         stepEntryMessages: undefined as any,
       });
 
-    it.each(['tool_result', 'tools_batch_result', 'sub_agents_batch_result'])(
+    it.each(['tool_result', 'tools_batch_result', 'sub_agent_result', 'sub_agents_batch_result'])(
       're-enters the LLM on the joined steer message after %s',
       async (phase) => {
         const deps = createDeps({ messageId: 'msg-steer' });
