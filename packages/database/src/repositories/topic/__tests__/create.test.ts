@@ -2,9 +2,11 @@ import { asc, eq, inArray } from 'drizzle-orm';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { getTestDB } from '../../../core/getTestDB';
+import type { CreateTopicParams } from '../../../models/topic';
+import { TopicModel } from '../../../models/topic';
 import {
   agents,
-  messagePlugins,
+  chatGroups,
   messages,
   sessions,
   topics,
@@ -12,16 +14,16 @@ import {
   workspaces,
 } from '../../../schemas';
 import type { LobeChatDatabase } from '../../../type';
-import type { CreateTopicParams } from '../../topic';
-import { TopicModel } from '../../topic';
+import { TopicRepository } from '../index';
 
 const userId = 'topic-create-user';
 const userId2 = 'topic-create-user-2';
 const sessionId = 'topic-create-session';
 const serverDB: LobeChatDatabase = await getTestDB();
 const topicModel = new TopicModel(serverDB, userId);
+const topicRepo = new TopicRepository(serverDB, userId);
 
-describe('TopicModel - Create', () => {
+describe('TopicRepository - create', () => {
   beforeEach(async () => {
     await serverDB.delete(users);
     await serverDB.transaction(async (tx) => {
@@ -51,7 +53,7 @@ describe('TopicModel - Create', () => {
         { id: 'message3', role: 'user', userId, sessionId },
       ]);
 
-      const createdTopic = await topicModel.create(topicData, topicId);
+      const createdTopic = await topicRepo.create(topicData, topicId);
 
       expect(createdTopic).toMatchObject({
         id: topicId,
@@ -106,7 +108,7 @@ describe('TopicModel - Create', () => {
     it('should associate workspace messages created by another member', async () => {
       const workspaceId = 'topic-create-workspace';
       const workspaceSessionId = 'topic-create-workspace-session';
-      const workspaceTopicModel = new TopicModel(serverDB, userId, workspaceId);
+      const workspaceTopicRepo = new TopicRepository(serverDB, userId, workspaceId);
 
       await serverDB.transaction(async (tx) => {
         await tx.insert(workspaces).values({
@@ -129,7 +131,7 @@ describe('TopicModel - Create', () => {
         });
       });
 
-      const createdTopic = await workspaceTopicModel.create(
+      const createdTopic = await workspaceTopicRepo.create(
         {
           messages: ['workspace-message-other-member'],
           sessionId: workspaceSessionId,
@@ -157,7 +159,7 @@ describe('TopicModel - Create', () => {
       const topicId = 'new-topic';
 
       const timingEvents: string[] = [];
-      const createdTopic = await topicModel.create(topicData, topicId, {
+      const createdTopic = await topicRepo.create(topicData, topicId, {
         log: (event) => timingEvents.push(event),
       });
 
@@ -212,7 +214,7 @@ describe('TopicModel - Create', () => {
 
       const topicId = 'topic-with-agent';
 
-      const createdTopic = await topicModel.create(topicData, topicId);
+      const createdTopic = await topicRepo.create(topicData, topicId);
 
       expect(createdTopic.id).toBe(topicId);
       expect(createdTopic.title).toBe('Topic with Agent');
@@ -235,10 +237,33 @@ describe('TopicModel - Create', () => {
 
       const topicId = 'agent-only-topic';
 
-      const createdTopic = await topicModel.create(topicData, topicId);
+      const createdTopic = await topicRepo.create(topicData, topicId);
 
       expect(createdTopic.agentId).toBe('agent-only');
       expect(createdTopic.sessionId).toBeNull();
+    });
+
+    it('attaches given messages to the new topic in one transaction', async () => {
+      await serverDB.insert(messages).values([
+        { content: 'm1', id: 'msg-1', role: 'user', userId },
+        { content: 'm2', id: 'msg-2', role: 'assistant', userId },
+      ]);
+
+      const topic = await topicRepo.create({ messages: ['msg-1', 'msg-2'], title: 'with msgs' });
+
+      const linked = await serverDB
+        .select({ id: messages.id, topicId: messages.topicId })
+        .from(messages)
+        .where(eq(messages.topicId, topic.id));
+
+      expect(linked.map((m) => m.id).sort()).toEqual(['msg-1', 'msg-2']);
+    });
+
+    it('leaves TopicModel.create single-table: re-parenting messages there is refused', async () => {
+      await expect(topicModel.create({ messages: ['msg-1'], title: 'model only' })).rejects.toThrow(
+        'TopicRepository.create',
+      );
+      expect(await serverDB.select().from(topics)).toHaveLength(0);
     });
   });
 
@@ -254,7 +279,7 @@ describe('TopicModel - Create', () => {
         { id: 'message3', role: 'user', userId },
       ]);
 
-      const createdTopics = await topicModel.batchCreate(topicParams);
+      const createdTopics = await topicRepo.batchCreate(topicParams);
 
       expect(createdTopics).toHaveLength(2);
       expect(createdTopics[0]).toMatchObject({
@@ -285,7 +310,7 @@ describe('TopicModel - Create', () => {
     it('should batch associate workspace messages created by other members', async () => {
       const workspaceId = 'topic-batch-workspace';
       const workspaceSessionId = 'topic-batch-workspace-session';
-      const workspaceTopicModel = new TopicModel(serverDB, userId, workspaceId);
+      const workspaceTopicRepo = new TopicRepository(serverDB, userId, workspaceId);
 
       await serverDB.transaction(async (tx) => {
         await tx.insert(workspaces).values({
@@ -317,7 +342,7 @@ describe('TopicModel - Create', () => {
         ]);
       });
 
-      const createdTopics = await workspaceTopicModel.batchCreate([
+      const createdTopics = await workspaceTopicRepo.batchCreate([
         {
           messages: ['workspace-batch-message-1', 'workspace-batch-message-2'],
           sessionId: workspaceSessionId,
@@ -344,7 +369,7 @@ describe('TopicModel - Create', () => {
         { title: 'Topic 2', favorite: false, sessionId },
       ];
 
-      const createdTopics = await topicModel.batchCreate(topicParams);
+      const createdTopics = await topicRepo.batchCreate(topicParams);
 
       expect(createdTopics[0].id).toBeDefined();
       expect(createdTopics[1].id).toBeDefined();
@@ -362,7 +387,7 @@ describe('TopicModel - Create', () => {
         { title: 'Topic with Agent 2', favorite: false, agentId: 'batch-agent-2' },
       ];
 
-      const createdTopics = await topicModel.batchCreate(topicParams);
+      const createdTopics = await topicRepo.batchCreate(topicParams);
 
       expect(createdTopics).toHaveLength(2);
       expect(createdTopics[0].agentId).toBe('batch-agent-1');
@@ -383,253 +408,41 @@ describe('TopicModel - Create', () => {
       expect(dbTopics.find((t) => t.id === createdTopics[0].id)?.agentId).toBe('batch-agent-1');
       expect(dbTopics.find((t) => t.id === createdTopics[1].id)?.agentId).toBe('batch-agent-2');
     });
-  });
 
-  describe('duplicate', () => {
-    it('should duplicate a topic and its associated messages', async () => {
-      const topicId = 'topic-duplicate';
-      const newTitle = 'Duplicated Topic';
+    it('keeps a session topic session-scoped and a group topic group-scoped', async () => {
+      await serverDB.insert(agents).values({ id: 'agent-b', userId });
+      await serverDB.insert(sessions).values({ id: 'session-x', userId });
+      await serverDB.insert(chatGroups).values({ id: 'group-b', userId });
 
-      await serverDB.transaction(async (tx) => {
-        await tx.insert(topics).values({ id: topicId, sessionId, userId, title: 'Original Topic' });
-        // Distinct createdAt so `duplicate`'s `orderBy(createdAt)` is
-        // deterministic — inserting both in one tx would otherwise give them the
-        // same `now()` default, leaving the tied rows in arbitrary order.
-        await tx.insert(messages).values([
-          {
-            id: 'message1',
-            role: 'user',
-            topicId,
-            userId,
-            content: 'User message',
-            createdAt: new Date('2024-01-01T00:00:00Z'),
-          },
-          {
-            id: 'message2',
-            role: 'assistant',
-            topicId,
-            userId,
-            content: 'Assistant message',
-            createdAt: new Date('2024-01-01T00:00:01Z'),
-          },
-        ]);
-      });
-
-      const { topic: duplicatedTopic, messages: duplicatedMessages } = await topicModel.duplicate(
-        topicId,
-        newTitle,
-      );
-
-      expect(duplicatedTopic.id).not.toBe(topicId);
-      expect(duplicatedTopic.title).toBe(newTitle);
-      expect(duplicatedTopic.sessionId).toBe(sessionId);
-      expect(duplicatedTopic.userId).toBe(userId);
-
-      expect(duplicatedMessages).toHaveLength(2);
-      expect(duplicatedMessages[0].id).not.toBe('message1');
-      expect(duplicatedMessages[0].topicId).toBe(duplicatedTopic.id);
-      expect(duplicatedMessages[0].content).toBe('User message');
-      expect(duplicatedMessages[1].id).not.toBe('message2');
-      expect(duplicatedMessages[1].topicId).toBe(duplicatedTopic.id);
-      expect(duplicatedMessages[1].content).toBe('Assistant message');
-    });
-
-    it('should duplicate workspace messages created by other members', async () => {
-      const workspaceId = 'topic-duplicate-workspace';
-      const topicId = 'workspace-topic-duplicate';
-      const workspaceTopicModel = new TopicModel(serverDB, userId, workspaceId);
-
-      await serverDB.transaction(async (tx) => {
-        await tx.insert(workspaces).values({
-          id: workspaceId,
-          name: 'Topic Duplicate Workspace',
-          primaryOwnerId: userId,
-          slug: workspaceId,
-        });
-        await tx.insert(topics).values({
-          id: topicId,
-          title: 'Workspace Original Topic',
-          userId: userId2,
-          workspaceId,
-        });
-        await tx.insert(messages).values([
-          {
-            content: 'Other member user message',
-            id: 'workspace-duplicate-message-1',
-            role: 'user',
-            topicId,
-            userId: userId2,
-            workspaceId,
-          },
-          {
-            content: 'Current member assistant message',
-            id: 'workspace-duplicate-message-2',
-            role: 'assistant',
-            topicId,
-            userId,
-            workspaceId,
-          },
-        ]);
-      });
-
-      const { topic: duplicatedTopic, messages: duplicatedMessages } =
-        await workspaceTopicModel.duplicate(topicId, 'Workspace Duplicated Topic');
-
-      expect(duplicatedTopic.workspaceId).toBe(workspaceId);
-      expect(duplicatedMessages).toHaveLength(2);
-      expect(duplicatedMessages.map((message) => message.content).sort()).toEqual([
-        'Current member assistant message',
-        'Other member user message',
+      const created = await topicRepo.batchCreate([
+        { agentId: 'agent-b', sessionId: 'session-x', title: 'session topic' },
+        { groupId: 'group-b', title: 'group topic' },
       ]);
-      expect(duplicatedMessages.every((message) => message.workspaceId === workspaceId)).toBe(true);
+
+      const bySession = created.find((t) => t.title === 'session topic')!;
+      const byGroup = created.find((t) => t.title === 'group topic')!;
+
+      // sessionId given (no groupId) → sessionId kept, groupId stays null
+      expect(bySession.sessionId).toBe('session-x');
+      expect(bySession.groupId).toBeNull();
+
+      // groupId given (no sessionId) → groupId kept, sessionId stays null
+      expect(byGroup.groupId).toBe('group-b');
+      expect(byGroup.sessionId).toBeNull();
     });
 
-    it('should correctly map parentId references when duplicating messages', async () => {
-      const topicId = 'topic-with-parent-refs';
+    it('drops both owner ids when sessionId and groupId are passed together', async () => {
+      await serverDB.insert(sessions).values({ id: 'session-both', userId });
+      await serverDB.insert(chatGroups).values({ id: 'group-both', userId });
 
-      await serverDB.transaction(async (tx) => {
-        await tx.insert(topics).values({ id: topicId, sessionId, userId, title: 'Original Topic' });
-        await tx.insert(messages).values([
-          { id: 'msg1', role: 'user', topicId, userId, content: 'First message', parentId: null },
-          {
-            id: 'msg2',
-            role: 'assistant',
-            topicId,
-            userId,
-            content: 'Reply to first',
-            parentId: 'msg1',
-          },
-          {
-            id: 'msg3',
-            role: 'tool',
-            topicId,
-            userId,
-            content: 'Tool response',
-            parentId: 'msg2',
-          },
-          {
-            id: 'msg4',
-            role: 'assistant',
-            topicId,
-            userId,
-            content: 'Final message',
-            parentId: 'msg3',
-          },
-        ]);
-      });
+      // Each field is nulled based on the *other* being present, so passing both
+      // detaches the topic from both — callers must pick exactly one.
+      const [created] = await topicRepo.batchCreate([
+        { groupId: 'group-both', sessionId: 'session-both', title: 'ambiguous' },
+      ]);
 
-      const { topic: duplicatedTopic, messages: duplicatedMessages } = await topicModel.duplicate(
-        topicId,
-        'Duplicated Topic',
-      );
-
-      expect(duplicatedMessages).toHaveLength(4);
-
-      const msgMap = new Map(duplicatedMessages.map((m) => [m.content, m]));
-      const newMsg1 = msgMap.get('First message')!;
-      const newMsg2 = msgMap.get('Reply to first')!;
-      const newMsg3 = msgMap.get('Tool response')!;
-      const newMsg4 = msgMap.get('Final message')!;
-
-      expect(newMsg1.parentId).toBeNull();
-      expect(newMsg2.parentId).toBe(newMsg1.id);
-      expect(newMsg3.parentId).toBe(newMsg2.id);
-      expect(newMsg4.parentId).toBe(newMsg3.id);
-
-      expect(newMsg1.id).not.toBe('msg1');
-      expect(newMsg2.id).not.toBe('msg2');
-      expect(newMsg3.id).not.toBe('msg3');
-      expect(newMsg4.id).not.toBe('msg4');
-    });
-
-    it('should correctly map tool_call_id when duplicating messages with tools', async () => {
-      const topicId = 'topic-with-tools';
-      const originalToolId = 'toolu_original_123';
-
-      await serverDB.transaction(async (tx) => {
-        await tx.insert(topics).values({ id: topicId, sessionId, userId, title: 'Original Topic' });
-
-        // Insert assistant message with tools
-        await tx.insert(messages).values({
-          id: 'msg1',
-          role: 'assistant',
-          topicId,
-          userId,
-          content: 'Using tool',
-          parentId: null,
-          tools: [{ id: originalToolId, type: 'builtin', apiName: 'broadcast' }],
-        });
-
-        // Insert tool message
-        await tx.insert(messages).values({
-          id: 'msg2',
-          role: 'tool',
-          topicId,
-          userId,
-          content: 'Tool response',
-          parentId: 'msg1',
-        });
-
-        // Insert messagePlugins entry
-        await tx.insert(messagePlugins).values({
-          id: 'msg2',
-          userId,
-          toolCallId: originalToolId,
-          apiName: 'broadcast',
-        });
-      });
-
-      const { topic: duplicatedTopic, messages: duplicatedMessages } = await topicModel.duplicate(
-        topicId,
-        'Duplicated Topic',
-      );
-
-      expect(duplicatedMessages).toHaveLength(2);
-
-      const msgMap = new Map(duplicatedMessages.map((m) => [m.role, m]));
-      const newAssistant = msgMap.get('assistant')!;
-      const newTool = msgMap.get('tool')!;
-
-      // Check that tools array has new IDs
-      expect(newAssistant.tools).toBeDefined();
-      const newTools = newAssistant.tools as any[];
-      expect(newTools).toHaveLength(1);
-      expect(newTools[0].id).not.toBe(originalToolId);
-      expect(newTools[0].id).toMatch(/^toolu_/);
-
-      // Check that messagePlugins was copied with new toolCallId
-      const newPlugin = await serverDB.query.messagePlugins.findFirst({
-        where: eq(messagePlugins.id, newTool.id),
-      });
-
-      expect(newPlugin).toBeDefined();
-      expect(newPlugin!.toolCallId).toBe(newTools[0].id);
-      expect(newPlugin!.toolCallId).not.toBe(originalToolId);
-    });
-
-    it('should throw an error if the topic to duplicate does not exist', async () => {
-      const topicId = 'nonexistent-topic';
-
-      await expect(topicModel.duplicate(topicId)).rejects.toThrow(
-        `Topic with id ${topicId} not found`,
-      );
-    });
-
-    it('should duplicate a topic with no messages (empty messageIds)', async () => {
-      const topicId = 'topic-no-messages';
-
-      await serverDB
-        .insert(topics)
-        .values({ id: topicId, sessionId, userId, title: 'Empty Topic' });
-
-      const { topic: duplicated, messages: duplicatedMessages } = await topicModel.duplicate(
-        topicId,
-        'Duplicated Empty',
-      );
-
-      expect(duplicated.id).not.toBe(topicId);
-      expect(duplicated.title).toBe('Duplicated Empty');
-      expect(duplicatedMessages).toHaveLength(0);
+      expect(created.sessionId).toBeNull();
+      expect(created.groupId).toBeNull();
     });
   });
 });

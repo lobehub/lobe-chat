@@ -145,8 +145,7 @@ export class TopicModel {
   // **************** Create *************** //
 
   create = this.withContext(create.create);
-  batchCreate = this.withContext(create.batchCreate);
-  duplicate = this.withContext(create.duplicate);
+  batchInsert = this.withContext(create.batchInsert);
 
   // **************** Delete *************** //
 
@@ -174,7 +173,6 @@ export class TopicModel {
 
   update = this.withContext(update.update);
   settleRunningStatus = this.withContext(update.settleRunningStatus);
-  batchMoveToAgent = this.withContext(update.batchMoveToAgent);
   recomputeUsage = this.withContext(update.recomputeUsage);
   updateMetadata = this.withContext(update.updateMetadata);
   updateModelPin = this.withContext(update.updateModelPin);
