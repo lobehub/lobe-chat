@@ -52,7 +52,7 @@ describe('useResourceCollaborators', () => {
     expect(await syncKeys()).toHaveLength(0);
   });
 
-  it('paints the list on screen (a persisted copy) without a loading state', () => {
+  it('paints a list fetched earlier this session without a loading state', () => {
     seed([{ userId: 'member-1' }]);
 
     const { result } = renderHook(() => useResourceCollaborators('knowledgeBase', 'kb-1'));

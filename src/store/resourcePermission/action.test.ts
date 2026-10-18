@@ -5,7 +5,7 @@ import { cacheScope } from '@/libs/replica';
 import type { ResourceGeneralAccess } from '@/services/resourcePermission';
 
 import { resourcePermissionActions } from './action';
-import { resourceAccessResource } from './projection';
+import { resourceAccessResource, resourceCollaboratorsResource } from './projection';
 import { useResourcePermissionStore } from './store';
 
 vi.mock('@/libs/swr', () => ({
@@ -70,6 +70,17 @@ describe('resourcePermissionActions', () => {
   it('keys the access replica per resource type and id, with a bounded persisted set', () => {
     expect(resourceAccessResource.key(REF)).toBe(KEY);
     expect(resourceAccessResource.persisted).toBe(true);
+  });
+
+  it('never persists the manager-only collaborator roster', async () => {
+    // A stored roster would paint for a former manager before the server's 403.
+    expect(resourceCollaboratorsResource.persisted).toBe(false);
+    expect(resourceCollaboratorsResource.storage).toBeUndefined();
+
+    renderHook(() => resourcePermissionActions.useFetchCollaborators(REF));
+
+    expect(state().collaboratorsMap[KEY]).toBeUndefined();
+    expect(state().collaboratorsReplica.entries[KEY]?.source).not.toBe('storage');
   });
 
   it('applies a server answer and confirms it for this session', async () => {

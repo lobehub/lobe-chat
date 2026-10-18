@@ -12,8 +12,8 @@ import {
 /**
  * The collaborator grants of one resource, with add/remove handlers for the
  * Permission page. Only fetch when the caller manages the resource — the
- * server rejects everyone else. The list is a replica, so a revisit paints the
- * last confirmed grants while it revalidates.
+ * server rejects everyone else. The list is memory-only: it holds what this
+ * session fetched, never a persisted roster from before a lost grant.
  */
 export const useResourceCollaborators = (
   resourceType: PermissionResourceType,
@@ -86,7 +86,7 @@ export const useResourceCollaborators = (
     addCollaborators,
     collaborators: data,
     error,
-    /** First load only: a persisted list is not "loading". */
+    /** First load only: a list already fetched this session is not "loading". */
     isLoading: !!ref && !data && !error,
     mutate: revalidate,
     mutating,

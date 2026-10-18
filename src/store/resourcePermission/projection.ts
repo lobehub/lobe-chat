@@ -34,13 +34,14 @@ export const resourceAccessResource = defineReplica<ResourceRef, ResourceGeneral
 
 /**
  * The collaborator grants of one resource, read by its managers on the
- * Permission page. Only managers can fetch it, so it is persisted for far
- * fewer resources than the access record.
+ * Permission page. Memory-only (`storage: 'memory'`): the roster carries other
+ * members' names, avatars and emails, and only a current manager may see it. A
+ * persisted copy would paint for a former manager on revisit before the server
+ * answered 403, so the list only ever holds what this session fetched.
  */
 export const resourceCollaboratorsResource = defineReplica<ResourceRef, ResourceCollaborator[]>({
   key: resourceKey,
   name: 'resourceCollaborators',
-  persist: { maxEntries: 50 },
-  storage: 'indexedDB',
+  storage: 'memory',
   version: 1,
 });
