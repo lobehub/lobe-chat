@@ -16,7 +16,7 @@ export const mentionRequiredAnnouncedKey = (threadId: string): string =>
   `messenger:thread-mention-required-announced:${threadId}`;
 
 /**
- * Track the distinct humans who have spoken in a subscribed thread, stored in
+ * Track the distinct participants (humans and other bots) who have spoken in a subscribed thread, stored in
  * the bot's chat-sdk state. Returns `trackThreadParticipants`, which folds a
  * debounced batch into one count.
  */
@@ -27,11 +27,11 @@ export const createParticipantTracker = (bot: Chat<any>) => {
   ): Promise<{ count: number; isNewParticipant: boolean }> => {
     if (thread.isDM) return { count: 0, isNewParticipant: false };
     const senderId = message.author?.userId;
-    const isHuman =
-      !!senderId &&
-      message.author?.isBot !== true &&
-      (message.author as { isMe?: boolean })?.isMe !== true;
-    if (!isHuman) return { count: 0, isNewParticipant: false };
+    // Other bots (another Agent) are participants too: once one joins, the
+    // thread is no longer a private 1:1. Only this bot's own messages are
+    // excluded.
+    const isParticipant = !!senderId && (message.author as { isMe?: boolean })?.isMe !== true;
+    if (!isParticipant) return { count: 0, isNewParticipant: false };
 
     const stateAdapter = bot.getState();
     const key = participantsKey(thread.id);
@@ -70,4 +70,28 @@ export const createParticipantTracker = (bot: Chat<any>) => {
   };
 
   return trackThreadParticipants;
+};
+
+/**
+ * Whether an unaddressed message in a subscribed thread may be answered
+ * without an @mention.
+ *
+ * Recorded speakers are checked first: they are stored before this decision,
+ * so a second participant switches the thread to mention-only immediately,
+ * even while a cached platform "solo" verdict has not expired yet. The
+ * platform membership lookup can only narrow a single-speaker thread further
+ * (e.g. silent members); an unprovable chat fails closed.
+ */
+export const isSoloThreadConversation = async (
+  participantCount: number,
+  lookupMembership?: () => Promise<boolean>,
+): Promise<boolean> => {
+  if (participantCount > 1) return false;
+  if (!lookupMembership) return true;
+  try {
+    return await lookupMembership();
+  } catch (error) {
+    log('isSoloThreadConversation: membership lookup failed: %O', error);
+    return false;
+  }
 };
