@@ -42,6 +42,32 @@ import { agentProcedure } from './procedures';
 // Caps per-agent DB reads/writes in a batch transfer (up to 100 agents).
 const AGENT_TRANSFER_CONCURRENCY = 5;
 
+/**
+ * Runs post-commit per-agent writes with bounded concurrency. Once the transfer
+ * has committed, every write must still be attempted even if one fails (pMap's
+ * default stop-on-error would skip the unscheduled rest), so each item settles
+ * first and the first failure is rethrown afterwards, as `Promise.all` did.
+ */
+const runAllPostCommit = async (
+  agentIds: string[],
+  write: (agentId: string) => Promise<unknown>,
+): Promise<void> => {
+  const failures = await pMap(
+    agentIds,
+    async (agentId) => {
+      try {
+        await write(agentId);
+        return undefined;
+      } catch (error) {
+        return { error };
+      }
+    },
+    { concurrency: AGENT_TRANSFER_CONCURRENCY },
+  );
+  const failure = failures.find((outcome) => outcome !== undefined);
+  if (failure) throw failure.error;
+};
+
 export const transferRouter = router({
   /**
    * Progress of the async history backfill after a heavy transfer, plus the
@@ -531,9 +557,9 @@ export const transferRouter = router({
 
       if (ctx.workspaceId) {
         const sourcePermissionModel = new ResourcePermissionModel(ctx.serverDB, ctx.workspaceId);
-        await pMap(agentIds, (agentId) => sourcePermissionModel.removeAll('agent', agentId), {
-          concurrency: AGENT_TRANSFER_CONCURRENCY,
-        });
+        await runAllPostCommit(agentIds, (agentId) =>
+          sourcePermissionModel.removeAll('agent', agentId),
+        );
         // The agents left this workspace — void any live member-transfer requests.
         await new ResourceTransferRequestModel(
           ctx.serverDB,
@@ -546,11 +572,8 @@ export const transferRouter = router({
           ctx.serverDB,
           input.targetWorkspaceId,
         );
-        await pMap(
-          agentIds,
-          (agentId) =>
-            targetPermissionModel.setAccessLevel('agent', agentId, targetAccessLevel, ctx.userId),
-          { concurrency: AGENT_TRANSFER_CONCURRENCY },
+        await runAllPostCommit(agentIds, (agentId) =>
+          targetPermissionModel.setAccessLevel('agent', agentId, targetAccessLevel, ctx.userId),
         );
       }
 

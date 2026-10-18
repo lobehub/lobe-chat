@@ -118,6 +118,26 @@ describe('transferRouter.transferAgents', () => {
     expect(setAccessLevel.fn).toHaveBeenCalledWith('agent', 'agent-0', 'edit', userId);
   });
 
+  it('still attempts every target ACL write after the commit when one fails', async () => {
+    const failure = new Error('acl write failed');
+    setAccessLevel.fn.mockImplementation(async (_type: string, agentId: string) => {
+      if (agentId === 'agent-0') throw failure;
+    });
+
+    await expect(callTransfer()).rejects.toThrow('acl write failed');
+    expect(transferAgents).toHaveBeenCalledTimes(1);
+    expect(setAccessLevel.fn).toHaveBeenCalledTimes(agentIds.length);
+  });
+
+  it('still attempts every source ACL cleanup after the commit when one fails', async () => {
+    removeAll.fn.mockImplementation(async (_type: string, agentId: string) => {
+      if (agentId === 'agent-0') throw new Error('cleanup failed');
+    });
+
+    await expect(callTransfer()).rejects.toThrow('cleanup failed');
+    expect(removeAll.fn).toHaveBeenCalledTimes(agentIds.length);
+  });
+
   it('rejects with NOT_FOUND when any agent is missing, before transferring', async () => {
     existsById.fn.mockImplementation(async (id: string) => id !== 'agent-7');
 
