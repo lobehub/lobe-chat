@@ -8,11 +8,8 @@ import { AgentEvalRunService } from '@/server/services/agentEvalRun';
 import { AgentEvalRunWorkflow } from '@/server/workflows/agentEvalRun';
 
 import { evalRunInputConfigSchema } from '../evalRunConfig.schema';
-import {
-  agentEvalProcedure,
-  agentEvalProcedureWrite,
-  RUN_ENRICHMENT_CONCURRENCY,
-} from './procedures';
+import { RUN_ENRICHMENT_CONCURRENCY } from './constants';
+import { agentEvalProcedure, agentEvalProcedureWrite } from './procedures';
 
 const log = debug('lobe-lambda-router:agent-eval');
 

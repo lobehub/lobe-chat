@@ -3,9 +3,9 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { createCallerFactory } from '@/libs/trpc/lambda';
 
+import { RUN_ENRICHMENT_CONCURRENCY } from './constants';
 import { experimentRouter } from './experiments';
 import type * as Procedures from './procedures';
-import { RUN_ENRICHMENT_CONCURRENCY } from './procedures';
 import { runRouter } from './runs';
 
 const mocks = vi.hoisted(() => ({

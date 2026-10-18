@@ -4,11 +4,8 @@ import { z } from 'zod';
 
 import { router } from '@/libs/trpc/lambda';
 
-import {
-  agentEvalProcedure,
-  agentEvalProcedureWrite,
-  RUN_ENRICHMENT_CONCURRENCY,
-} from './procedures';
+import { RUN_ENRICHMENT_CONCURRENCY } from './constants';
+import { agentEvalProcedure, agentEvalProcedureWrite } from './procedures';
 
 export const experimentRouter = router({
   // ============================================
