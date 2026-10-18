@@ -184,6 +184,45 @@ describe('TopicRepository - duplicate', () => {
       expect(newMsg4.id).not.toBe('msg4');
     });
 
+    /**
+     * Regression: messages were copied in `createdAt` order alone, so a reply
+     * timestamped no later than its parent — rows written by one insert share a
+     * timestamp, and imported or clock-skewed rows can run backwards — could be
+     * inserted before its parent and break the parent foreign key.
+     */
+    it('copies a parent before its reply even when the reply is timestamped earlier', async () => {
+      const topicId = 'topic-with-skewed-times';
+      const later = new Date('2026-01-01T00:00:10.000Z');
+      const earlier = new Date('2026-01-01T00:00:00.000Z');
+
+      await serverDB.transaction(async (tx) => {
+        await tx.insert(topics).values({ id: topicId, sessionId, userId, title: 'Original Topic' });
+        await tx.insert(messages).values({
+          content: 'Parent',
+          createdAt: later,
+          id: 'skew-parent',
+          role: 'user',
+          topicId,
+          userId,
+        });
+        await tx.insert(messages).values({
+          content: 'Reply',
+          createdAt: earlier,
+          id: 'skew-reply',
+          parentId: 'skew-parent',
+          role: 'assistant',
+          topicId,
+          userId,
+        });
+      });
+
+      const { messages: duplicated } = await topicRepo.duplicate(topicId, 'Duplicated Topic');
+
+      const byContent = new Map(duplicated.map((message) => [message.content, message]));
+      expect(byContent.get('Parent')!.parentId).toBeNull();
+      expect(byContent.get('Reply')!.parentId).toBe(byContent.get('Parent')!.id);
+    });
+
     it('should correctly map tool_call_id when duplicating messages with tools', async () => {
       const topicId = 'topic-with-tools';
       const originalToolId = 'toolu_original_123';

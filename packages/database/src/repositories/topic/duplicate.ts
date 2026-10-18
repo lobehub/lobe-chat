@@ -17,6 +17,40 @@ import { messageOwnership, topicOwnership, type TopicRepositoryScope } from './s
  * that message (first message → that message) — the "fork from here" path.
  * Without it the whole topic is copied, matching the duplicate action.
  */
+
+/**
+ * Order messages so every parent precedes its replies, keeping `createdAt`
+ * order otherwise. Copies are inserted one by one against the parent foreign
+ * key, and time alone does not guarantee it: rows written by one insert share a
+ * timestamp, and imported or clock-skewed rows can run backwards.
+ */
+type Linked = { id: string; parentId?: string | null };
+
+const parentsFirst = <T>(rows: T[]): T[] => {
+  const link = (row: T) => row as Linked;
+  const byId = new Map(rows.map((row) => [link(row).id, row]));
+  const placed = new Set<string>();
+  const ordered: T[] = [];
+  for (const row of rows) {
+    // Walk up to the first ancestor already placed (or the root), then place
+    // the chain from the top down. A cycle stops the walk where it repeats.
+    const chain: T[] = [];
+    const seen = new Set<string>();
+    let cursor: T | undefined = row;
+    while (cursor && !placed.has(link(cursor).id) && !seen.has(link(cursor).id)) {
+      const { id, parentId } = link(cursor);
+      seen.add(id);
+      chain.push(cursor);
+      cursor = parentId ? byId.get(parentId) : undefined;
+    }
+    for (const item of chain.reverse()) {
+      placed.add(link(item).id);
+      ordered.push(item);
+    }
+  }
+  return ordered;
+};
+
 export const duplicateTopic = async (
   scope: TopicRepositoryScope,
   topicId: string,
@@ -69,7 +103,7 @@ export const duplicateTopic = async (
     // A fork copies only the selected prefix of the conversation (first
     // message → `upToMessageId`), so sibling branches left behind by
     // regenerate stay in the source topic; a duplicate copies the whole topic.
-    let originalMessages = topicMessages;
+    let originalMessages = parentsFirst(topicMessages);
     if (options?.upToMessageId) {
       const byId = new Map(topicMessages.map((message) => [message.id, message]));
       const selected = byId.get(options.upToMessageId);
