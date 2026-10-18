@@ -55,18 +55,18 @@ import {
   humanizeHeteroDispatchError,
   resolveHeteroDispatchErrorType,
   supportsCloudHeterogeneousSandbox,
-} from '../helpers/heteroErrors';
-import { resolveDeviceWorkingDirectoryConfig } from '../resolveDeviceWorkingDirectory';
+} from '../../helpers/heteroErrors';
+import { resolveDeviceWorkingDirectoryConfig } from '../../resolveDeviceWorkingDirectory';
 import type {
   BindTopicWorkingDirectoryParams,
   ExecRunContext,
   InternalExecAgentParams,
-} from '../types';
-import { selectCodexDeviceDispatch } from './codexDeviceRuntime';
-import { finalizeHeteroDispatchError } from './finalizeHeteroDispatchError';
-import { heteroOperationCapabilities } from './heteroOperationCapabilities';
-import type { RunAttachments } from './turnSetup';
-import { buildViewedTaskContextPrompt, joinSystemContext } from './viewedTaskContext';
+} from '../../types';
+import { selectCodexDeviceDispatch } from '../codexDeviceRuntime';
+import { finalizeHeteroDispatchError } from '../finalizeHeteroDispatchError';
+import { heteroOperationCapabilities } from '../heteroOperationCapabilities';
+import type { RunAttachments } from '../turnSetup';
+import { buildViewedTaskContextPrompt, joinSystemContext } from '../viewedTaskContext';
 
 const log = debug('lobe-server:ai-agent-service');
 

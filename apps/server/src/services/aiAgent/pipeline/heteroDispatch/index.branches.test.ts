@@ -4,10 +4,10 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import {
   humanizeHeteroDispatchError,
   resolveHeteroDispatchErrorType,
-} from '../helpers/heteroErrors';
-import type { ExecRunContext } from '../types';
-import type { HeteroDispatchDeps, HeteroDispatchInput } from './heteroDispatch';
-import { dispatchHeteroAgent } from './heteroDispatch';
+} from '../../helpers/heteroErrors';
+import type { ExecRunContext } from '../../types';
+import type { HeteroDispatchDeps, HeteroDispatchInput } from '.';
+import { dispatchHeteroAgent } from '.';
 
 const mocks = vi.hoisted(() => ({
   completeOperation: vi.fn(),
@@ -85,11 +85,11 @@ vi.mock('@/server/services/heterogeneousAgent/sandboxRunner', () => ({
   spawnHeteroSandbox: mocks.spawnHeteroSandbox,
 }));
 
-vi.mock('./finalizeHeteroDispatchError', () => ({
+vi.mock('../finalizeHeteroDispatchError', () => ({
   finalizeHeteroDispatchError: mocks.finalizeHeteroDispatchError,
 }));
 
-vi.mock('./codexDeviceRuntime', () => ({
+vi.mock('../codexDeviceRuntime', () => ({
   selectCodexDeviceDispatch: mocks.selectCodexDeviceDispatch,
 }));
 
