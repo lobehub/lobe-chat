@@ -1,7 +1,6 @@
 'use client';
 
-import { Button, Flexbox, Icon, QRCode, Spin, Text } from '@lobehub/ui';
-import { createStaticStyles, cssVar } from 'antd-style';
+import { Button, createStaticStyles, cssVar, Flexbox, Icon, QRCode, Spin, Text } from '@lobehub/ui';
 import { CheckIcon, ExternalLinkIcon, RefreshCwIcon } from 'lucide-react';
 import { memo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -153,7 +152,6 @@ const FeishuQuickCreate = memo<FeishuQuickCreateProps>(({ appPreset, onCreated, 
             </Text>
             <Button
               icon={<Icon icon={RefreshCwIcon} />}
-              size={'small'}
               style={{ alignSelf: 'flex-start' }}
               onClick={regenerate}
             >

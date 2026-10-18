@@ -1,7 +1,6 @@
 'use client';
 
-import { Button, Flexbox, Icon, Text } from '@lobehub/ui';
-import { createStaticStyles, cssVar } from 'antd-style';
+import { Button, createStaticStyles, cssVar, Flexbox, Icon, Text } from '@lobehub/ui';
 import { ExternalLinkIcon } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';

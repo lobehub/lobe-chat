@@ -1,8 +1,7 @@
 'use client';
 
-import { Flexbox, Text, toast } from '@lobehub/ui';
+import { createStaticStyles, cssVar, Flexbox, Text, toast } from '@lobehub/ui';
 import { Form, type FormInstance, useWatch } from '@lobehub/ui/form';
-import { createStaticStyles, cssVar } from 'antd-style';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
