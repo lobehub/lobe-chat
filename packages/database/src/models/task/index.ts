@@ -40,15 +40,15 @@ import type { AnyPgColumn } from 'drizzle-orm/pg-core';
 
 import { merge } from '@/utils/merge';
 
-import type { AgentOperationError } from '../schemas/agentOperations';
-import { agentOperations } from '../schemas/agentOperations';
-import { documents } from '../schemas/file';
+import type { AgentOperationError } from '../../schemas/agentOperations';
+import { agentOperations } from '../../schemas/agentOperations';
+import { documents } from '../../schemas/file';
 import type {
   NewTaskActivity,
   NewTaskComment,
   TaskActivityItem,
   TaskCommentItem,
-} from '../schemas/task';
+} from '../../schemas/task';
 import {
   taskActivities,
   taskComments,
@@ -56,18 +56,18 @@ import {
   taskDocuments,
   tasks,
   taskTopics,
-} from '../schemas/task';
-import { topics } from '../schemas/topic';
-import { acceptances } from '../schemas/verify';
-import { works } from '../schemas/work';
-import type { LobeChatDatabase } from '../type';
-import { buildWorkspaceWhere } from '../utils/workspace';
-import { ProjectModel } from './project';
+} from '../../schemas/task';
+import { topics } from '../../schemas/topic';
+import { acceptances } from '../../schemas/verify';
+import { works } from '../../schemas/work';
+import type { LobeChatDatabase } from '../../type';
+import { buildWorkspaceWhere } from '../../utils/workspace';
+import { ProjectModel } from '../project';
 import {
   buildTaskListFilters,
   type TaskListFilterOptions,
   type TaskListOptions,
-} from './taskListFilters';
+} from '../taskListFilters';
 
 const DEFAULT_TASK_IDENTIFIER_PREFIX = 'T';
 
