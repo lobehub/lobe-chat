@@ -1,6 +1,4 @@
-import { BUILTIN_AGENT_SLUGS } from '@lobechat/builtin-agents';
-import { TRPCError } from '@trpc/server';
-import { and, asc, desc, eq, inArray, isNull, ne, notInArray, or, sql } from 'drizzle-orm';
+import { and, desc, eq, inArray, isNull, ne, or, sql } from 'drizzle-orm';
 
 import type {
   ChatGroupAgentItem,
@@ -8,78 +6,36 @@ import type {
   NewChatGroup,
   NewChatGroupAgent,
 } from '../../schemas';
-import {
-  agentBotProviders,
-  agentCronJobs,
-  agents,
-  agentShares,
-  chatGroups,
-  chatGroupsAgents,
-  projectAgents,
-  projects,
-  sessionGroups,
-  tasks,
-} from '../../schemas';
+import { agents, chatGroups, chatGroupsAgents, sessionGroups } from '../../schemas';
 import type { LobeChatDatabase, Transaction } from '../../type';
-import { sanitizeAgencyConfigsForWorkspace } from '../../utils/agencyConfigDevices';
-import { rehomeAgentConnectorsForRecipient } from '../../utils/agentConnectors';
-import { rehomeAgentDocumentsForRecipient } from '../../utils/agentDocumentsOwnership';
-import { rehomeAgentExpertiseForRecipient } from '../../utils/agentExpertise';
-import {
-  detachAgentKnowledgeMountsForRecipient,
-  rehomeRetainedAgentKnowledgeMounts,
-} from '../../utils/agentKnowledgeMounts';
-import { rehomeAgentLabelsForRecipient } from '../../utils/agentLabelsOwnership';
-import { rehomeAgentQuotaBindingsForRecipient } from '../../utils/agentQuotaBindings';
 import type { GroupMemberRole } from '../../utils/groupMembership';
-import {
-  GROUP_SUPERVISOR_ROLE,
-  isOwnedMembership,
-  resolveGroupMembershipType,
-} from '../../utils/groupMembership';
+import { GROUP_SUPERVISOR_ROLE } from '../../utils/groupMembership';
 import { normalizeInboxAgentAvatar } from '../../utils/inboxAgent';
 import { buildWorkspacePayload, buildWorkspaceWhere } from '../../utils/workspace';
-import { AGENT_SHARED_TRANSFER_BLOCKED } from '../agent';
-import { AGENT_COPY_IN_PROGRESS, AgentCopyJobModel } from '../agentCopyJob';
-import { AGENT_TRANSFER_IN_PROGRESS, AgentTransferJobModel } from '../agentTransferJob';
+import * as deletion from './deletion';
+import * as membership from './membership';
+import { type ChatGroupContext, groupAgentsOwnership, groupOwnership } from './scope';
+import * as transfer from './transferOwnership';
 
-/** Slugs owned by builtin provisioning; a group delete must never reach one. */
-const RESERVED_BUILTIN_AGENT_SLUGS: string[] = Object.values(BUILTIN_AGENT_SLUGS);
-
-/**
- * The group is no longer where the transfer request said it was: moved scope,
- * changed hands, or was deleted. The request that referenced it can never
- * complete.
- */
-export const CHAT_GROUP_OWNERSHIP_STALE = 'CHAT_GROUP_OWNERSHIP_STALE';
-
-/**
- * Handover refused: the group references a member agent that is private to
- * someone other than the recipient, who would silently lose that participant.
- */
-export const CHAT_GROUP_TRANSFER_HIDDEN_MEMBER = 'CHAT_GROUP_TRANSFER_HIDDEN_MEMBER';
+export { CHAT_GROUP_OWNERSHIP_STALE, CHAT_GROUP_TRANSFER_HIDDEN_MEMBER } from './transferOwnership';
 
 export class ChatGroupModel {
   private userId: string;
   private db: LobeChatDatabase;
   private workspaceId?: string;
 
+  private ctx: ChatGroupContext;
+
   constructor(db: LobeChatDatabase, userId: string, workspaceId?: string) {
     this.userId = userId;
     this.db = db;
     this.workspaceId = workspaceId;
+    this.ctx = { db, model: this, userId, workspaceId };
   }
 
-  private ownership = () =>
-    buildWorkspaceWhere(
-      { userId: this.userId, workspaceId: this.workspaceId },
-      {
-        isDeleted: chatGroups.isDeleted,
-        userId: chatGroups.userId,
-        workspaceId: chatGroups.workspaceId,
-        visibility: chatGroups.visibility,
-      },
-    );
+  private ownership = () => groupOwnership(this.ctx);
+
+  private agentsOwnership = () => groupAgentsOwnership(this.ctx);
 
   /**
    * Visibility predicate on the member's `agents` row itself. Group membership
@@ -495,199 +451,22 @@ export class ChatGroupModel {
     agentId: string,
     options?: { order?: number; role?: GroupMemberRole },
   ): Promise<NewChatGroupAgent> {
-    const params: NewChatGroupAgent = {
-      agentId,
-      chatGroupId: groupId,
-      order: options?.order || 0,
-      role: options?.role || 'assistant',
-      userId: this.userId,
-      workspaceId: this.workspaceId ?? null,
-    };
-
-    const [result] = await this.db.insert(chatGroupsAgents).values(params).returning();
-    return result;
+    return membership.addAgentToGroup(this.ctx, groupId, agentId, options);
   }
 
-  /**
-   * Add multiple agents to a group.
-   * Automatically skips agents that are already in the group.
-   *
-   * @returns Object containing:
-   * - `added`: Agents that were newly added to the group
-   * - `existing`: Agent IDs that were already in the group (skipped)
-   */
   async addAgentsToGroup(
     groupId: string,
     agentIds: string[],
   ): Promise<{ added: NewChatGroupAgent[]; existing: string[] }> {
-    const group = await this.findById(groupId);
-    if (!group) throw new TRPCError({ code: 'NOT_FOUND', message: 'Group not found' });
-
-    // Composite visibility rule for group membership:
-    // - A caller-owned private group may admit the caller's own private agents
-    //   alongside public ones.
-    // - Any public group, or any group the caller doesn't own, must contain
-    //   only public agents — even the caller's own private agent can't be
-    //   added, because that would expose it to the other members.
-    // `findById` already scopes by visibility, so reaching here with
-    // `group.visibility === 'private'` implies `group.userId === this.userId`.
-    const allowPrivateMembers = group.visibility === 'private' && group.userId === this.userId;
-
-    if (agentIds.length > 0) {
-      // Resolve each requested agent through the workspace + visibility
-      // predicate so another user's private agent never enters this set; it
-      // simply doesn't match the row filter, and we surface NOT_FOUND below.
-      const visibleAgents = await this.db
-        .select({
-          id: agents.id,
-          slug: agents.slug,
-          userId: agents.userId,
-          virtual: agents.virtual,
-          visibility: agents.visibility,
-        })
-        .from(agents)
-        .where(
-          and(
-            inArray(agents.id, agentIds),
-            buildWorkspaceWhere(
-              { userId: this.userId, workspaceId: this.workspaceId },
-              {
-                isDeleted: agents.isDeleted,
-                userId: agents.userId,
-                workspaceId: agents.workspaceId,
-                visibility: agents.visibility,
-              },
-            ),
-          ),
-        );
-
-      const visibleById = new Map(visibleAgents.map((row) => [row.id, row]));
-      for (const agentId of agentIds) {
-        const row = visibleById.get(agentId);
-        if (!row) {
-          throw new TRPCError({ code: 'NOT_FOUND', message: 'Agent not found' });
-        }
-        if (row.visibility === 'private' && !allowPrivateMembers) {
-          // Caller owns this private agent (visibility predicate would have
-          // hidden it otherwise) but the group can't hold private members.
-          throw new TRPCError({ code: 'NOT_FOUND', message: 'Agent not found' });
-        }
-      }
-
-      // `resolveGroupMembershipType` treats a virtual member as OWNED by its
-      // group: the delete path takes it down with the group, the transfer path
-      // rehomes it. Both are sound only while such an agent belongs to exactly
-      // ONE group — otherwise deleting either group destroys an agent the
-      // other still lists.
-      //
-      // The invariant is "exactly one", not "never joins one": the group agent
-      // builder legitimately creates a `virtual: true` agent and adds it here,
-      // and that is its first and only membership. So reject only a virtual
-      // agent that is ALREADY on another group's roster — which nothing in the
-      // product does, since the member picker filters virtual agents
-      // (`buildQueryAgentsWhere`), leaving this enforced by a query rather
-      // than by the write until now.
-      // Builtins (Inbox, the agent builders) are provisioned per user and are
-      // `virtual` like a group's own members, so the membership rules would
-      // classify one as group-OWNED the moment it joined a roster — and
-      // `removeAgentsFromGroup` deletes owned members. Letting someone add
-      // their Inbox to a group and then leave the group would delete the
-      // Inbox. They are nobody's group member; refuse at the door.
-      const builtinAgentId = agentIds.find((id) => {
-        const slug = visibleById.get(id)?.slug;
-        return !!slug && RESERVED_BUILTIN_AGENT_SLUGS.includes(slug);
-      });
-      if (builtinAgentId) {
-        throw new TRPCError({
-          code: 'BAD_REQUEST',
-          message: 'A builtin agent cannot join a chat group',
-        });
-      }
-
-      const virtualAgentIds = agentIds.filter((id) => visibleById.get(id)?.virtual);
-      if (virtualAgentIds.length > 0) {
-        const [poached] = await this.db
-          .select({ agentId: chatGroupsAgents.agentId })
-          .from(chatGroupsAgents)
-          .where(
-            and(
-              inArray(chatGroupsAgents.agentId, virtualAgentIds),
-              ne(chatGroupsAgents.chatGroupId, groupId),
-            ),
-          )
-          .limit(1);
-
-        if (poached) {
-          throw new TRPCError({
-            code: 'BAD_REQUEST',
-            message: 'A group-owned agent cannot join another group',
-          });
-        }
-      }
-    }
-
-    const existingAgents = await this.getGroupAgents(groupId);
-    const existingAgentIds = new Set(existingAgents.map((a) => a.agentId));
-
-    const newAgentIds = agentIds.filter((id) => !existingAgentIds.has(id));
-    const existingIds = agentIds.filter((id) => existingAgentIds.has(id));
-
-    if (newAgentIds.length === 0) {
-      return { added: [], existing: existingIds };
-    }
-
-    // Append new members after the current highest order so an incremental add
-    // never collapses everyone to the default `order = 0` (which would make the
-    // roster re-shuffle on every refetch). Supervisor rows sit at `order = -1`,
-    // so a group holding only a supervisor yields maxOrder = -1 → the first
-    // member gets order 0.
-    const maxOrder = existingAgents.reduce((max, agent) => Math.max(max, agent.order ?? 0), -1);
-
-    const newAgents: NewChatGroupAgent[] = newAgentIds.map((agentId, index) => ({
-      agentId,
-      chatGroupId: groupId,
-      enabled: true,
-      order: maxOrder + 1 + index,
-      userId: this.userId,
-      workspaceId: this.workspaceId ?? null,
-    }));
-
-    const added = await this.db.insert(chatGroupsAgents).values(newAgents).returning();
-
-    return { added, existing: existingIds };
+    return membership.addAgentsToGroup(this.ctx, groupId, agentIds);
   }
-
-  private agentsOwnership = () =>
-    buildWorkspaceWhere({ userId: this.userId, workspaceId: this.workspaceId }, chatGroupsAgents);
 
   async removeAgentFromGroup(groupId: string, agentId: string): Promise<void> {
-    await this.db
-      .delete(chatGroupsAgents)
-      .where(
-        and(
-          eq(chatGroupsAgents.chatGroupId, groupId),
-          eq(chatGroupsAgents.agentId, agentId),
-          this.agentsOwnership(),
-        ),
-      );
+    return membership.removeAgentFromGroup(this.ctx, groupId, agentId);
   }
 
-  /**
-   * Batch remove multiple agents from a group.
-   * More efficient than calling removeAgentFromGroup multiple times.
-   */
   async removeAgentsFromGroup(groupId: string, agentIds: string[]): Promise<void> {
-    if (agentIds.length === 0) return;
-
-    await this.db
-      .delete(chatGroupsAgents)
-      .where(
-        and(
-          eq(chatGroupsAgents.chatGroupId, groupId),
-          inArray(chatGroupsAgents.agentId, agentIds),
-          this.agentsOwnership(),
-        ),
-      );
+    return membership.removeAgentsFromGroup(this.ctx, groupId, agentIds);
   }
 
   async updateAgentInGroup(
@@ -695,427 +474,23 @@ export class ChatGroupModel {
     agentId: string,
     updates: Partial<Pick<NewChatGroupAgent, 'enabled' | 'order'>> & { role?: GroupMemberRole },
   ): Promise<NewChatGroupAgent> {
-    // A supervisor is the group's own synthetic orchestrator: every path that
-    // creates one creates a fresh virtual agent for it, and the delete/transfer
-    // paths rely on `supervisor ⟹ owned`. Promoting a `referenced` member would
-    // break that invariant and put a member's personal agent on the group's
-    // lifecycle, so it is refused rather than silently reclassified.
-    if (updates.role === GROUP_SUPERVISOR_ROLE) {
-      const [row] = await this.db
-        .select({ role: chatGroupsAgents.role, slug: agents.slug, virtual: agents.virtual })
-        .from(chatGroupsAgents)
-        .innerJoin(agents, eq(chatGroupsAgents.agentId, agents.id))
-        .where(
-          and(
-            eq(chatGroupsAgents.chatGroupId, groupId),
-            eq(chatGroupsAgents.agentId, agentId),
-            this.agentsOwnership(),
-          ),
-        );
-
-      if (row && resolveGroupMembershipType(row) !== 'owned') {
-        throw new TRPCError({
-          code: 'BAD_REQUEST',
-          message: 'Only a group-owned member can act as the group supervisor',
-        });
-      }
-    }
-
-    const [result] = await this.db
-      .update(chatGroupsAgents)
-      .set({ ...updates, updatedAt: new Date() })
-      .where(
-        and(
-          eq(chatGroupsAgents.chatGroupId, groupId),
-          eq(chatGroupsAgents.agentId, agentId),
-          this.agentsOwnership(),
-        ),
-      )
-      .returning();
-
-    return result;
+    return membership.updateAgentInGroup(this.ctx, groupId, agentId, updates);
   }
 
   // ******* Delete Methods ******* //
 
-  /**
-   * Agent ids that die with the given groups.
-   *
-   * `agents` has NO foreign key to `chat_groups` — the cascade only reaches the
-   * junction — so deleting a group leaves its synthetic supervisor and its
-   * group-built members behind forever: `virtual: true` hides them from every
-   * list, so nothing will ever surface or reclaim them.
-   *
-   * Read from the RAW junction rows, with no visibility or ownership predicate
-   * on the member agent. Those predicates belong to reads: a member another
-   * workspace user flipped back to `private` is still owned by this group, and
-   * filtering it out here is precisely how the previous service-level cleanup
-   * leaked. The caller has already proven it may delete the group itself.
-   */
-  private findOwnedMemberAgentIds = async (
-    executor: LobeChatDatabase,
-    groupIds: string[],
-  ): Promise<string[]> => {
-    if (groupIds.length === 0) return [];
-
-    const rows = await executor
-      .select({ agentId: chatGroupsAgents.agentId })
-      .from(chatGroupsAgents)
-      .innerJoin(agents, eq(chatGroupsAgents.agentId, agents.id))
-      .where(and(inArray(chatGroupsAgents.chatGroupId, groupIds), isOwnedMembership()));
-
-    return [...new Set(rows.map((row) => row.agentId))];
-  };
-
-  /**
-   * Builtin agents (Inbox, the agent builders, …) are provisioned per user and
-   * are `virtual` like a group's own members, so `owned` on a malformed
-   * junction row would be enough to take one down with a group. Their reserved
-   * slugs are the one thing that always tells them apart — a cheap belt to the
-   * `owned` braces, on a delete whose blast radius is somebody's Inbox.
-   */
-  private deleteOwnedMemberAgents = async (
-    executor: LobeChatDatabase,
-    agentIds: string[],
-  ): Promise<string[]> => {
-    if (agentIds.length === 0) return [];
-
-    const deleted = await executor
-      .delete(agents)
-      .where(
-        and(
-          inArray(agents.id, agentIds),
-          eq(agents.virtual, true),
-          // A NULL slug predates slug generation and is not a builtin;
-          // `NOT IN` alone would evaluate to NULL and skip those rows.
-          or(isNull(agents.slug), notInArray(agents.slug, RESERVED_BUILTIN_AGENT_SLUGS)),
-        ),
-      )
-      .returning({ id: agents.id });
-
-    return deleted.map((row) => row.id);
-  };
-
-  /**
-   * Delete a group together with the agents that only existed to serve it.
-   *
-   * Returns the deleted owned-agent ids so callers can report them; the delete
-   * itself needs no follow-up.
-   */
   async delete(id: string): Promise<{ deletedOwnedAgentIds: string[]; group: ChatGroupItem }> {
-    return this.db.transaction(async (trx) => {
-      // Collect BEFORE the delete: the junction rows cascade away with the
-      // group, taking the only record of which agents were group-owned.
-      const ownedAgentIds = await this.findOwnedMemberAgentIds(trx, [id]);
-
-      const [result] = await trx
-        .delete(chatGroups)
-        .where(and(eq(chatGroups.id, id), this.ownership()))
-        .returning();
-
-      if (!result) {
-        throw new Error('Chat group not found or access denied');
-      }
-
-      // Same transaction as the group delete: a cleanup that can be interrupted
-      // between the two statements is a leak with extra steps.
-      const deletedOwnedAgentIds = await this.deleteOwnedMemberAgents(trx, ownedAgentIds);
-
-      return { deletedOwnedAgentIds, group: result };
-    });
+    return deletion.deleteGroup(this.ctx, id);
   }
 
   async deleteAll(): Promise<void> {
-    await this.db.transaction(async (trx) => {
-      const groupIds = await trx
-        .select({ id: chatGroups.id })
-        .from(chatGroups)
-        .where(this.ownership());
-
-      const ownedAgentIds = await this.findOwnedMemberAgentIds(
-        trx,
-        groupIds.map((group) => group.id),
-      );
-
-      await trx.delete(chatGroups).where(this.ownership());
-
-      await this.deleteOwnedMemberAgents(trx, ownedAgentIds);
-    });
+    return deletion.deleteAllGroups(this.ctx);
   }
 
-  /**
-   * Same-workspace ownership handover: what accepting a member-to-member
-   * transfer request executes. Deliberately narrower than the cross-scope
-   * `AgentGroupRepository.transferToWorkspace` — the group stays where it is,
-   * so nothing is cloned and no conversation moves. Only ownership flips: the
-   * group row, its junction rows, and the member agents that exist to serve it
-   * (supervisor + generated members). Referenced standalone members keep their
-   * own owners — membership never owned them.
-   *
-   * Runs inside the caller's transaction: the caller flips the transfer
-   * request's status in the same `trx`, so a stale/raced accept rolls both
-   * back together.
-   */
-  transferGroupOwnership = async (
+  transferGroupOwnership = (
     trx: Transaction,
-    params: {
-      /** The owner recorded on the transfer request; a mismatch means the request is stale. */
-      fromUserId: string;
-      groupId: string;
-      toUserId: string;
-    },
-  ): Promise<void> => {
-    const { fromUserId, groupId, toUserId } = params;
-    if (!this.workspaceId) throw new Error(CHAT_GROUP_OWNERSHIP_STALE);
-
-    // FOR UPDATE: serialize against a concurrent cross-scope transfer, delete,
-    // or second accept; the loser re-reads and fails the staleness check.
-    const [group] = await trx
-      .select()
-      .from(chatGroups)
-      .where(and(eq(chatGroups.id, groupId), eq(chatGroups.workspaceId, this.workspaceId)))
-      .for('update');
-    if (!group || group.userId !== fromUserId) throw new Error(CHAT_GROUP_OWNERSHIP_STALE);
-
-    // Raw roster read (no visibility predicate): the owned/referenced split
-    // must see every member, exactly as delete and the cross-scope transfer do.
-    const memberRows = await trx
-      .select({
-        agentId: chatGroupsAgents.agentId,
-        role: chatGroupsAgents.role,
-        slug: agents.slug,
-        virtual: agents.virtual,
-      })
-      .from(chatGroupsAgents)
-      .innerJoin(agents, eq(chatGroupsAgents.agentId, agents.id))
-      .where(eq(chatGroupsAgents.chatGroupId, groupId));
-
-    const agentIds = memberRows.map((row) => row.agentId);
-    const ownedAgentIds = memberRows
-      .filter((row) => resolveGroupMembershipType(row) === 'owned')
-      .map((row) => row.agentId);
-
-    // Same lock-then-guard as `transferToWorkspace`: serialize with a
-    // concurrent transfer of any member agent BEFORE consulting the pending
-    // job tables, so two racing operations cannot both pass the guards.
-    if (agentIds.length > 0) {
-      await trx
-        .select({ id: agents.id })
-        .from(agents)
-        .where(inArray(agents.id, agentIds))
-        .orderBy(asc(agents.id))
-        .for('update');
-    }
-
-    // A share row keeps the agent bound to its current owner and workspace,
-    // including when the share is paused. Check only owned members: referenced
-    // standalone agents remain with their owner and do not move with the group.
-    if (ownedAgentIds.length > 0) {
-      const [existingShare] = await trx
-        .select({ id: agentShares.id })
-        .from(agentShares)
-        .where(inArray(agentShares.agentId, ownedAgentIds))
-        .limit(1);
-      if (existingShare) throw new Error(AGENT_SHARED_TRANSFER_BLOCKED);
-    }
-
-    // A REFERENCED member that is private to someone other than the recipient
-    // would silently vanish from the roster for the group's new owner (every
-    // roster read applies member-agent visibility). Refuse instead — same
-    // policy as the cross-scope transfer; the member's owner can share it and
-    // the recipient can retry. Evaluated from a re-read AFTER the agent locks
-    // above, so a visibility flip racing this handover cannot slip past the
-    // guard on a stale snapshot.
-    const referencedIds = memberRows
-      .filter((row) => resolveGroupMembershipType(row) === 'referenced')
-      .map((row) => row.agentId);
-    if (referencedIds.length > 0) {
-      const lockedReferenced = await trx
-        .select({ userId: agents.userId, visibility: agents.visibility })
-        .from(agents)
-        .where(inArray(agents.id, referencedIds));
-      const hasHiddenReferencedMember = lockedReferenced.some(
-        (row) => row.visibility === 'private' && row.userId !== toUserId,
-      );
-      if (hasHiddenReferencedMember) throw new Error(CHAT_GROUP_TRANSFER_HIDDEN_MEMBER);
-    }
-
-    // An unfinished backfill still rewrites rows toward the OLD owner's
-    // request; hand the group over only once it has drained.
-    if (
-      (await AgentTransferJobModel.hasPendingJobForAgents(trx, agentIds)) ||
-      (await AgentTransferJobModel.hasPendingJobForGroups(trx, [groupId]))
-    ) {
-      throw new Error(AGENT_TRANSFER_IN_PROGRESS);
-    }
-    if (
-      (await AgentCopyJobModel.hasPendingCopyJobForSourceAgents(trx, agentIds)) ||
-      (await AgentCopyJobModel.hasPendingCopyJobForSourceGroups(trx, [groupId]))
-    ) {
-      throw new Error(AGENT_COPY_IN_PROGRESS);
-    }
-
-    // An ownership flip does not make the group's content newer, and the
-    // scope/visibility/folder/pin all stay: the group is not moving anywhere.
-    // `clientId` is cleared — unique per (clientId, userId), it belongs to the
-    // previous owner's client-side sync and would abort the accept if the
-    // recipient already owns a group with the same value.
-    await trx
-      .update(chatGroups)
-      .set({ clientId: null, updatedAt: chatGroups.updatedAt, userId: toUserId })
-      .where(eq(chatGroups.id, groupId));
-
-    // The junction rows belong to the GROUP, so all of them follow its owner —
-    // including the rows pointing at referenced members that stay put.
-    await trx
-      .update(chatGroupsAgents)
-      .set({ userId: toUserId })
-      .where(eq(chatGroupsAgents.chatGroupId, groupId));
-
-    if (ownedAgentIds.length > 0) {
-      // Re-home device bindings on the owned agents (supervisor + generated
-      // members): a boundDeviceId / fixed device policy pointing at the
-      // previous owner's personal or private device would leave the
-      // recipient's group runs unroutable. Same sanitation as the member
-      // agent handover.
-      const ownedRows = await trx
-        .select({ agencyConfig: agents.agencyConfig, id: agents.id, visibility: agents.visibility })
-        .from(agents)
-        .where(inArray(agents.id, ownedAgentIds));
-      const cleanedConfigs = await sanitizeAgencyConfigsForWorkspace(
-        trx,
-        this.workspaceId,
-        ownedRows.map((row) => row.agencyConfig),
-        { viewerUserId: toUserId },
-      );
-      for (const [index, row] of ownedRows.entries()) {
-        // `clientId` cleared for the same reason as the single-agent handover:
-        // it is unique per (clientId, userId) and belongs to the previous
-        // owner's client-side sync.
-        await trx
-          .update(agents)
-          .set({
-            agencyConfig: cleanedConfigs[index],
-            clientId: null,
-            updatedAt: agents.updatedAt,
-            userId: toUserId,
-          })
-          .where(eq(agents.id, row.id));
-      }
-
-      // Owner-attributed runtime rows (cron jobs, bot providers) execute AS
-      // their `userId`; the previous owner's rows on the owned agents re-home
-      // with them — DISABLED, so nothing runs silently under the recipient's
-      // identity and budget. Same policy as the single-agent handover.
-      await trx
-        .update(agentCronJobs)
-        .set({ enabled: false, updatedAt: agentCronJobs.updatedAt, userId: toUserId })
-        .where(
-          and(inArray(agentCronJobs.agentId, ownedAgentIds), eq(agentCronJobs.userId, fromUserId)),
-        );
-      await trx
-        .update(agentBotProviders)
-        .set({ enabled: false, updatedAt: agentBotProviders.updatedAt, userId: toUserId })
-        .where(
-          and(
-            inArray(agentBotProviders.agentId, ownedAgentIds),
-            eq(agentBotProviders.userId, fromUserId),
-          ),
-        );
-      // Quota account bindings (and exclusively-consumed provider accounts)
-      // re-home: both cascade on user deletion. See the util.
-      await rehomeAgentQuotaBindingsForRecipient(trx, {
-        agentIds: ownedAgentIds,
-        fromUserId,
-        recipientId: toUserId,
-      });
-
-      // Label assignments (and exclusively-assigned backing labels) re-home:
-      // both cascade on user deletion. See the util.
-      await rehomeAgentLabelsForRecipient(trx, {
-        agentIds: ownedAgentIds,
-        fromUserId,
-        recipientId: toUserId,
-      });
-
-      // Tasks stay with their creators (moving ownership breaks in-flight run
-      // identity and splits subtrees). But owned agents that are PRIVATE stop
-      // resolving for everyone but the recipient, so detach other users' task
-      // assignments to them — the schedule goes quiet rather than erroring.
-      const privateOwnedIds = ownedRows
-        .filter((row) => row.visibility === 'private')
-        .map((row) => row.id);
-      if (privateOwnedIds.length > 0) {
-        await trx
-          .update(tasks)
-          .set({ assigneeAgentId: null, updatedAt: tasks.updatedAt })
-          .where(
-            and(
-              inArray(tasks.assigneeAgentId, privateOwnedIds),
-              ne(tasks.createdByUserId, toUserId),
-            ),
-          );
-
-        // Private owned agents also leave other members' PROJECTS explicitly —
-        // project agent listings apply member-agent visibility, so those
-        // projects would otherwise keep a silent hole. Same policy as the
-        // single-agent handover.
-        const projectLinks = await trx
-          .select({ linkId: projectAgents.id, projectOwnerId: projects.userId })
-          .from(projectAgents)
-          .innerJoin(projects, eq(projectAgents.projectId, projects.id))
-          .where(inArray(projectAgents.agentId, privateOwnedIds));
-        const leavingProjectLinkIds = projectLinks
-          .filter((link) => link.projectOwnerId !== toUserId)
-          .map((link) => link.linkId);
-        if (leavingProjectLinkIds.length > 0) {
-          await trx.delete(projectAgents).where(inArray(projectAgents.id, leavingProjectLinkIds));
-        }
-      }
-
-      // Knowledge mounts on the owned agents whose KB / file the recipient
-      // cannot access would survive as dead links the runtime silently skips.
-      // Detach them — same policy as the single-agent handover; the manifest
-      // surfaces the count to both parties before acceptance.
-      await detachAgentKnowledgeMountsForRecipient(trx, {
-        agentIds: ownedAgentIds,
-        recipientId: toUserId,
-        workspaceId: this.workspaceId,
-      });
-      // The retained mounts the previous owner created re-home with the owned
-      // agents — the junction `user_id` cascades on user deletion, and the
-      // group's knowledge must not die with the previous owner's account.
-      await rehomeRetainedAgentKnowledgeMounts(trx, {
-        agentIds: ownedAgentIds,
-        fromUserId,
-        recipientId: toUserId,
-        workspaceId: this.workspaceId,
-      });
-
-      // Connectors: OAuth credentials are personal identity and never travel.
-      // Agent-owned rows on the owned members re-home as disconnected shells
-      // the recipient must reauthorize; other members' mounted rows unmount.
-      await rehomeAgentConnectorsForRecipient(trx, {
-        agentIds: ownedAgentIds,
-        recipientId: toUserId,
-      });
-
-      // Expertise + VFS documents: same policies as the single-agent handover
-      // (agent-exclusive domains re-home / shared ones unbind; the previous
-      // owner's document rows re-home so account deletion cannot strip them).
-      await rehomeAgentExpertiseForRecipient(trx, {
-        agentIds: ownedAgentIds,
-        recipientId: toUserId,
-        workspaceId: this.workspaceId,
-      });
-      await rehomeAgentDocumentsForRecipient(trx, {
-        agentIds: ownedAgentIds,
-        fromUserId,
-        recipientId: toUserId,
-        workspaceId: this.workspaceId,
-      });
-    }
-  };
+    params: Parameters<typeof transfer.transferGroupOwnership>[2],
+  ): Promise<void> => transfer.transferGroupOwnership(this.ctx, trx, params);
 
   // ******* Agent Query Methods ******* //
 
