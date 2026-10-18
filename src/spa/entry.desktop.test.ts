@@ -28,4 +28,16 @@ describe('desktop entry boot order', () => {
     expect(source).not.toContain('useEffect');
     expect(source).toMatch(/^applyDesktopBootstrapIdentity\(\);$/m);
   });
+
+  // Every Desktop renderer shares storage but not memory: a server switch in
+  // one window must reload the others, or a popup keeps the previous server's
+  // state and keeps writing it.
+  it.each(['entry.desktop.tsx', 'entry.popup.tsx'])(
+    '%s follows a data-context reset from another window',
+    async (entry) => {
+      const source = await readFile(path.join(process.cwd(), 'src/spa', entry), 'utf8');
+
+      expect(source).toMatch(/^followDataContextReset\(\);$/m);
+    },
+  );
 });

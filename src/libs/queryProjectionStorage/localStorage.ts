@@ -1,5 +1,6 @@
 import superjson from 'superjson';
 
+import { readProjection, registerLocalProjectionNamespace, stampProjection } from './resetEpoch';
 import type {
   QueryProjection,
   QueryProjectionCodec,
@@ -18,6 +19,7 @@ export class LocalStorageQueryProjectionStorage<T> implements QueryProjectionSto
 
   constructor(options: LocalStorageQueryProjectionStorageOptions<T>) {
     this.#namespace = options.namespace;
+    registerLocalProjectionNamespace(options.namespace);
     this.#codec = options.codec ?? {
       parse: superjson.parse<QueryProjection<T>>,
       stringify: superjson.stringify,
@@ -36,7 +38,7 @@ export class LocalStorageQueryProjectionStorage<T> implements QueryProjectionSto
 
     try {
       const value = localStorage.getItem(this.#key(key));
-      return value ? this.#codec.parse(value) : undefined;
+      return value ? readProjection(key, this.#codec.parse(value)) : undefined;
     } catch {
       return undefined;
     }
@@ -47,7 +49,7 @@ export class LocalStorageQueryProjectionStorage<T> implements QueryProjectionSto
     if (typeof window === 'undefined') return undefined;
 
     const value = localStorage.getItem(this.#key(key));
-    return value ? this.#codec.parse(value) : undefined;
+    return value ? readProjection(key, this.#codec.parse(value)) : undefined;
   };
 
   /**
@@ -69,6 +71,6 @@ export class LocalStorageQueryProjectionStorage<T> implements QueryProjectionSto
   set = async (key: QueryProjectionKey, projection: QueryProjection<T>): Promise<void> => {
     if (typeof window === 'undefined') return;
 
-    localStorage.setItem(this.#key(key), this.#codec.stringify(projection));
+    localStorage.setItem(this.#key(key), this.#codec.stringify(stampProjection(projection)));
   };
 }

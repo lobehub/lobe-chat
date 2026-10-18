@@ -4,17 +4,80 @@ import isEqual from 'fast-deep-equal';
 import { type SWRResponse } from 'swr';
 import useSWR from 'swr';
 
+import { resetDataContext } from '@/libs/dataContextReset';
 import { mutate } from '@/libs/swr';
 import { electronKeys } from '@/libs/swr/keys';
 import { remoteServerService } from '@/services/electron/remoteServer';
 import { type StoreSetter } from '@/store/types';
-import { useUserStore } from '@/store/user';
 
 import { type ElectronStore } from '../store';
 
 /**
  * Remote server actions
  */
+
+/**
+ * Which server the renderer's user data comes from. Other config changes (an
+ * inactive config being edited, the auth flow toggling `active` off and on for
+ * the same server) do not change what is on screen.
+ */
+const dataContextOf = ({ active, remoteServerUrl, storageMode }: DataSyncConfig): string =>
+  active ? `${storageMode}|${remoteServerUrl ?? ''}` : 'inactive';
+
+/**
+ * Set while a window runs the connect flow, shared by every renderer. That
+ * window owns the data-context reset: every window sees the config toggle
+ * mid-flow, and a follower resetting on its own would reload the initiator
+ * (through the shared reset epoch) before authorization finishes. A stale mark
+ * (a crashed flow) expires.
+ */
+const AUTHORIZING_KEY = 'lobe-remote-server-authorizing';
+const AUTHORIZING_TTL = 15 * 60 * 1000;
+
+const setAuthorizing = (active: boolean): void => {
+  try {
+    if (active) localStorage.setItem(AUTHORIZING_KEY, String(Date.now()));
+    else localStorage.removeItem(AUTHORIZING_KEY);
+  } catch {
+    // Storage unavailable: followers fall back to resetting on their own.
+  }
+};
+
+const isAuthorizingElsewhere = (): boolean => {
+  try {
+    const since = Number(localStorage.getItem(AUTHORIZING_KEY));
+    return since > 0 && Date.now() - since < AUTHORIZING_TTL;
+  } catch {
+    return false;
+  }
+};
+
+type RemoteServerSyncError = NonNullable<ElectronStore['remoteServerSyncError']>;
+
+/**
+ * A connect flow that fails after it already left the previous server still
+ * has to reload, which recreates this store. Its error rides the reload in
+ * sessionStorage (scoped to this window) so the login screen can show it.
+ */
+const SYNC_ERROR_STASH_KEY = 'lobe-remote-server-sync-error';
+
+const stashSyncError = (error: RemoteServerSyncError): void => {
+  try {
+    sessionStorage.setItem(SYNC_ERROR_STASH_KEY, JSON.stringify(error));
+  } catch {
+    // Storage unavailable: the reload still has to happen.
+  }
+};
+
+const takeStashedSyncError = (): RemoteServerSyncError | undefined => {
+  try {
+    const stashed = sessionStorage.getItem(SYNC_ERROR_STASH_KEY);
+    sessionStorage.removeItem(SYNC_ERROR_STASH_KEY);
+    return stashed ? (JSON.parse(stashed) as RemoteServerSyncError) : undefined;
+  } catch {
+    return undefined;
+  }
+};
 
 type Setter = StoreSetter<ElectronStore>;
 export const remoteSyncSlice = (set: Setter, get: () => ElectronStore, _api?: unknown) =>
@@ -23,6 +86,8 @@ export const remoteSyncSlice = (set: Setter, get: () => ElectronStore, _api?: un
 export class ElectronRemoteServerActionImpl {
   readonly #get: () => ElectronStore;
   readonly #set: Setter;
+  /** Which server the data on screen comes from (`dataContextOf`), once hydrated. */
+  #shownContext: string | undefined;
 
   constructor(set: Setter, get: () => ElectronStore, _api?: unknown) {
     void _api;
@@ -37,7 +102,10 @@ export class ElectronRemoteServerActionImpl {
   connectRemoteServer = async (values: DataSyncConfig): Promise<void> => {
     if (values.storageMode === 'selfHost' && !values.remoteServerUrl) return;
 
+    // The context on screen before the flow; this window resets if it changed.
+    const contextBefore = this.#shownContext ?? dataContextOf(this.#get().dataSyncConfig);
     this.#set({ isConnectingServer: true });
+    setAuthorizing(true);
     this.#get().clearRemoteServerSyncError();
     try {
       // Get current configuration
@@ -66,7 +134,20 @@ export class ElectronRemoteServerActionImpl {
         remoteServerSyncError: { message: (error as Error).message, type: 'CONFIG_ERROR' },
       });
     } finally {
+      let changed = true;
+      try {
+        changed =
+          dataContextOf(await remoteServerService.getRemoteServerConfig()) !== contextBefore;
+      } catch {
+        // Unknown outcome: reset rather than keep possibly foreign data on screen.
+      }
       this.#set({ isConnectingServer: false });
+      setAuthorizing(false);
+      if (changed) {
+        const { remoteServerSyncError } = this.#get();
+        if (remoteServerSyncError) stashSyncError(remoteServerSyncError);
+        await resetDataContext();
+      }
     }
   };
 
@@ -77,9 +158,8 @@ export class ElectronRemoteServerActionImpl {
       // Must use clearRemoteServerConfig (not only set active: false): main process
       // clears encrypted OIDC access/refresh tokens; otherwise sign-out still leaves auth state.
       await remoteServerService.clearRemoteServerConfig();
-      const { stores } = await import('@/store/utils/userDataStores');
-      stores.reset();
-      await this.#get().refreshServerConfig();
+      // Nothing of the previous server's data may stay: reload every renderer.
+      await resetDataContext();
     } catch (error) {
       console.error('Disconnect failed:', error);
       this.#set({
@@ -92,21 +172,6 @@ export class ElectronRemoteServerActionImpl {
 
   refreshServerConfig = async (): Promise<void> => {
     await mutate(electronKeys.remoteServerConfig());
-  };
-
-  refreshUserData = async (): Promise<void> => {
-    const { stores } = await import('@/store/utils/userDataStores');
-    stores.reset();
-
-    const [{ useSessionStore }, { useChatStore }] = await Promise.all([
-      import('@/store/session'),
-      import('@/store/chat'),
-    ]);
-
-    await useSessionStore.getState().refreshSessions();
-    await useChatStore.getState().refreshMessages();
-    await useChatStore.getState().refreshTopic();
-    await useUserStore.getState().refreshUserState();
   };
 
   useDataSyncConfig = (): SWRResponse => {
@@ -123,21 +188,28 @@ export class ElectronRemoteServerActionImpl {
       },
       {
         onSuccess: (data) => {
-          const { dataSyncConfig, isInitRemoteServerConfig } = this.#get();
-          // Only refresh on genuine config changes AFTER the first hydration.
-          // On initial load the stores are already fresh, and `refreshUserData`
-          // runs `stores.reset()` which wipes chat state (notably `activeAgentId`)
-          // that `AgentIdSync` just set from the URL — leaving the topic list
-          // unable to resolve its agent scope on reload.
-          if (isInitRemoteServerConfig && !isEqual(data, dataSyncConfig)) {
-            void this.#get()
-              .refreshUserData()
-              .catch((error) => {
-                console.error('Failed to refresh user data:', error);
-              });
-          }
-
-          this.#set({ dataSyncConfig: data, isInitRemoteServerConfig: true });
+          const { isConnectingServer, isInitRemoteServerConfig } = this.#get();
+          // The first hydration after a reload restores a connect error it carried.
+          const stashedError = isInitRemoteServerConfig ? undefined : takeStashedSyncError();
+          this.#set({
+            dataSyncConfig: data,
+            isInitRemoteServerConfig: true,
+            ...(stashedError && { remoteServerSyncError: stashedError }),
+          });
+          const context = dataContextOf(data);
+          // On the first hydration the renderer already holds this server's data.
+          if (!isInitRemoteServerConfig || this.#shownContext === undefined)
+            this.#shownContext = context;
+          if (context === this.#shownContext) return;
+          // A connect flow (in this window or another) toggles the config while it
+          // authorizes and owns the reset; reloading mid-flow would abort it. Its
+          // reset reloads this window through the shared epoch. The baseline stays,
+          // so a flow that ends on the same server reloads nothing.
+          if (isConnectingServer || isAuthorizingElsewhere()) return;
+          this.#shownContext = context;
+          void resetDataContext().catch((error) => {
+            console.error('Failed to reset the data context:', error);
+          });
         },
       },
     );
