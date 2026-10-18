@@ -14,7 +14,7 @@ describe('Quick Note migration', () => {
   it('can be reapplied and creates the complete note schema', async () => {
     // Read the generated artifact so SQL and snapshot drift cannot hide behind the ORM schema.
     const migration = await readFile(
-      new URL('../../../migrations/0179_quick_note_persistence.sql', import.meta.url),
+      new URL('../../../migrations/0182_quick_note_persistence.sql', import.meta.url),
       'utf8',
     );
     for (const statement of migration.split('--> statement-breakpoint')) {
