@@ -2,7 +2,7 @@ import { RequestTrigger } from '@lobechat/types';
 import type * as ModelBankModule from 'model-bank';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { AiAgentService } from './index';
+import { AiAgentService } from '../index';
 
 const {
   mockAppendRunningOperationChild,
