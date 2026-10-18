@@ -5,6 +5,7 @@
   "agentLabel.create": "새 라벨",
   "agentLabel.manage": "라벨 관리",
   "agentLabel.menuTitle": "라벨",
+  "agentSkills.ensureFailed": "이 에이전트가 의존하는 일부 스킬을 자동으로 설치할 수 없습니다: {{skills}}. 스킬 스토어에서 수동으로 추가할 수 있습니다.",
   "agentViewAll.addToSidebar": "사이드바에 표시",
   "agentViewAll.empty": "아직 에이전트가 없습니다",
   "agentViewAll.form.grouping": "그룹화",

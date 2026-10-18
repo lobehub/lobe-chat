@@ -73,6 +73,7 @@
   "directories.repository": "آدرس مخزن GitHub (اختیاری)",
   "directories.repositoryHint": "این منبع مخزن را ثبت می‌کند. فایل‌ها را کلون یا همگام‌سازی نمی‌کند. اطلاعات ورود را وارد نکنید.",
   "directories.sourceSummary": "دایرکتوری موجود",
+  "directories.stagedNewTopic": "یک موضوع جدید در <project>{{name}}</project> شروع خواهد شد",
   "directories.start": "شروع کار در اینجا",
   "directories.startInProject": "شروع کار در {{name}}",
   "directories.title": "دایرکتوری‌های کاری",

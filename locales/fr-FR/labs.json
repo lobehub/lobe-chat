@@ -44,6 +44,8 @@
   "features.selfLearning.title": "Auto-évolution",
   "features.taskVerify.desc": "Ajoutez une section d'acceptation de livraison dans les détails de la tâche : décrivez l'acceptation en une phrase et laissez l'IA générer des critères de vérification modifiables.",
   "features.taskVerify.title": "Acceptation de Livraison de Tâche",
+  "features.topicBugReport.desc": "Ajoute Signaler un Problème au menu du sujet. Il envoie les identifiants du sujet et l'environnement de votre application à l'équipe de support de LobeHub, qui examine ensuite ce qui s'est passé.",
+  "features.topicBugReport.title": "Signaler un Problème avec un Sujet",
   "group.desktop": "Bureau",
   "group.general": "Général",
   "stage.alpha.desc": "Test interne uniquement. Non recommandé pour une utilisation quotidienne pour le moment — cela peut changer ou rencontrer des problèmes à tout moment.",

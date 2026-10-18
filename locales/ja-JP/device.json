@@ -6,6 +6,7 @@
   "workingDirectory.agentDescription": "このエージェントとのすべての会話におけるデフォルトの作業ディレクトリ",
   "workingDirectory.agentLevel": "エージェント作業ディレクトリ",
   "workingDirectory.bareWorktree": "ベア",
+  "workingDirectory.branchConfirming": "現在のブランチを確認中…",
   "workingDirectory.branchInWorktree": "作業ツリー {{name}} 内のブランチ",
   "workingDirectory.branchSearchPlaceholder": "ブランチを検索",
   "workingDirectory.branchesEmpty": "ローカルブランチがありません",

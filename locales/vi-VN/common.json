@@ -5,6 +5,7 @@
   "agentLabel.create": "Nhãn mới",
   "agentLabel.manage": "Quản lý nhãn",
   "agentLabel.menuTitle": "Nhãn",
+  "agentSkills.ensureFailed": "Một số kỹ năng mà agent này dựa vào không thể được cài đặt tự động: {{skills}}. Bạn có thể thêm chúng thủ công trong Cửa hàng Kỹ năng.",
   "agentViewAll.addToSidebar": "Hiển thị trong thanh bên",
   "agentViewAll.empty": "Chưa có tác nhân nào",
   "agentViewAll.form.grouping": "Nhóm",

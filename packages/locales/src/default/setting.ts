@@ -975,6 +975,10 @@ export default {
   'notification.channel.status.enabledCount': 'Enabled for {{num}} notification types',
   'notification.channel.status.notLinked': 'Not linked',
   'notification.channel.types.title': 'Notification types',
+  'notification.content.scheduledTaskSummary.desc':
+    'When a scheduled task succeeds, include a short summary of what the run did in the notification.',
+  'notification.content.scheduledTaskSummary.title': 'Include run summary for scheduled tasks',
+  'notification.content.title': 'Notification content',
   'notification.email.desc': 'Receive email notifications when important events occur',
   'notification.im.banner.platformUnlinked': '{{platform}} is not linked yet',
   'notification.im.desc':
