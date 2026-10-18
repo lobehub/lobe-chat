@@ -1,6 +1,5 @@
 import { type UIChatMessage } from '@lobechat/types';
-import { createModal, Flexbox, Tabs } from '@lobehub/ui';
-import { t } from 'i18next';
+import { Flexbox, Tabs } from '@lobehub/ui';
 import { memo, useId, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -75,18 +74,14 @@ const ShareMessageModalContent = memo<ShareMessageModalContentProps>(({ message 
 
 ShareMessageModalContent.displayName = 'ShareMessageModalContent';
 
-export const openShareMessageModal = (
-  message: UIChatMessage,
-  createConversationStore: () => ReturnType<typeof createStore>,
-) =>
-  createModal({
-    content: (
-      <Provider createStore={createConversationStore}>
-        <ShareMessageModalContent message={message} />
-      </Provider>
-    ),
-    footer: null,
-    maskClosable: true,
-    title: t('share', { ns: 'common' }),
-    width: 'min(95vw, 1440px)',
-  });
+interface ShareMessageModalProps extends ShareMessageModalContentProps {
+  createConversationStore: () => ReturnType<typeof createStore>;
+}
+
+const ShareMessageModal = ({ createConversationStore, message }: ShareMessageModalProps) => (
+  <Provider createStore={createConversationStore}>
+    <ShareMessageModalContent message={message} />
+  </Provider>
+);
+
+export default ShareMessageModal;
