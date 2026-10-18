@@ -60,7 +60,7 @@ execAgent({ hooks })
 | `apps/server/src/modules/AgentRuntime/adapters/ServerToolTransport.ts`                           | Tool notifications and execution results                  |
 | `apps/server/src/modules/AgentRuntime/RuntimeExecutors.ts`                                       | Tool, compression and human-intervention execution        |
 | `apps/server/src/services/agentRuntime/AgentRuntimeService/` (`executeStep/`, `intervention.ts`) | Step events and human-intervention continuation           |
-| `apps/server/src/services/agentRuntime/CompletionLifecycle.ts`                                   | Terminal events                                           |
+| `apps/server/src/services/agentRuntime/CompletionLifecycle/index.ts`                             | Terminal events                                           |
 | `apps/server/src/services/aiAgent/subAgentRuns.ts`                                               | Sub-agent events                                          |
 
 ## Registration

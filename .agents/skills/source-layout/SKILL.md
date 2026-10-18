@@ -10,15 +10,15 @@ Top-level ownership (`src/features`, `src/routes`, `apps/server/src`, `packages`
 
 ## 1. Names
 
-| What                                                 | Form                  | Example                                        |
-| ---------------------------------------------------- | --------------------- | ---------------------------------------------- |
-| React component file / component directory           | PascalCase            | `PlanCard.tsx`, `ChatInput/ControlBar/`        |
-| Hook                                                 | `useXxx.ts(x)`        | `ChatInputNotice/useChatInputNotice.ts`        |
-| Other module                                         | camelCase or one word | `originLink.ts`, `recentDirs.ts`               |
-| Server class module                                  | the class name        | `services/agentRuntime/CompletionLifecycle.ts` |
-| Service, router, store, and other non-component dirs | camelCase             | `services/aiAgent/`, `store/chat/slices/`      |
-| Package directory                                    | kebab-case            | `packages/agent-runtime/`                      |
-| Files inside a package                               | camelCase             | `packages/database/src/models/`                |
+| What                                                 | Form                  | Example                                         |
+| ---------------------------------------------------- | --------------------- | ----------------------------------------------- |
+| React component file / component directory           | PascalCase            | `PlanCard.tsx`, `ChatInput/ControlBar/`         |
+| Hook                                                 | `useXxx.ts(x)`        | `ChatInputNotice/useChatInputNotice.ts`         |
+| Other module                                         | camelCase or one word | `originLink.ts`, `recentDirs.ts`                |
+| Server class module                                  | the class name        | `services/agentRuntime/StaleOperationReaper.ts` |
+| Service, router, store, and other non-component dirs | camelCase             | `services/aiAgent/`, `store/chat/slices/`       |
+| Package directory                                    | kebab-case            | `packages/agent-runtime/`                       |
+| Files inside a package                               | camelCase             | `packages/database/src/models/`                 |
 
 A package whose files are already kebab-case (`alint`, `openapi`, `builtin-skills`) keeps kebab-case internally. Shared per-directory modules are `constants.ts`, `types.ts`, `style.ts`, and `utils.ts`, not `const.ts`, `type.ts`, `styles.ts`, or `helpers.ts`. Create one only when two or more modules in that directory use it; a constant or type used by one module stays in that module.
 
