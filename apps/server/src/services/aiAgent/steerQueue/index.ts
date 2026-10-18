@@ -75,15 +75,15 @@ export const mergeQueuedFollowUps = (entries: QueuedFollowUp[]): QueuedFollowUpR
 /** Guard outcomes that mean the user may no longer start this turn. */
 const DENIED_CODES = new Set<TRPCError['code']>(['FORBIDDEN', 'NOT_FOUND']);
 
-/** The next turn did not start: put the follow-ups back at the head of the queue. */
-const restoreAfterFailure = async (
+/** Follow-ups that did not go anywhere: put them back at the head of the queue. */
+export const restoreAfterFailure = async (
   scope: SteerQueueScope,
   entries: QueuedFollowUp[],
   operationId: string,
   error: unknown,
 ) => {
   console.error(
-    '[startQueuedFollowUp] failed to start the queued follow-up after %s: %O',
+    '[steerQueue] queued follow-ups after %s did not go through: %O',
     operationId,
     error,
   );
@@ -91,14 +91,14 @@ const restoreAfterFailure = async (
     const dropped = await redisService.steerQueue.restore(scope, entries);
     if (dropped > 0) {
       console.error(
-        '[startQueuedFollowUp] queue for topic %s was full again: dropped the %d newest follow-ups',
+        '[steerQueue] queue for topic %s was full again: dropped the %d newest follow-ups',
         scope.topicId,
         dropped,
       );
     }
   } catch (restoreError) {
     console.error(
-      '[startQueuedFollowUp] failed to restore %d queued follow-ups for topic %s: %O',
+      '[steerQueue] failed to restore %d queued follow-ups for topic %s: %O',
       entries.length,
       scope.topicId,
       restoreError,
@@ -107,10 +107,65 @@ const restoreAfterFailure = async (
 };
 
 /**
- * A top-level run just finished on `scope`: start the follow-ups queued behind
- * it as the next turn, here on the server, instead of waiting for a client to
- * drain them. Called by both runtimes — the native step loop and a
- * heterogeneous agent's (Claude Code, Codex) finish callback.
+ * Take the follow-ups `operationId` owns — queued behind it, or put back
+ * unbound after a failed start. Another live run on the surface keeps its own.
+ * The queue is the run owner's (the scope carries their user id); a foreign
+ * entry is never acted on under this user's authority if one somehow got here.
+ */
+export const drainOwnFollowUps = async (
+  userId: string,
+  scope: SteerQueueScope,
+  operationId: string,
+): Promise<QueuedFollowUp[]> => {
+  const drained = await redisService.steerQueue.drain<QueuedFollowUp>(scope, operationId);
+  const entries = drained.filter((entry) => entry.userId === userId);
+  if (entries.length < drained.length) {
+    log('[%s] Dropped %d foreign queued follow-ups', operationId, drained.length - entries.length);
+  }
+  return entries;
+};
+
+/**
+ * `append` authorized a follow-up when it was queued; access can be revoked
+ * while the run is still going. Re-check it the way `aiAgent.execAgent` checks
+ * every run. `denied` means the follow-ups are no longer this user's to send —
+ * putting them back would only retry a refused send; any other failure of the
+ * check says nothing about access and is thrown.
+ */
+export const checkFollowUpAccess = async (
+  ctx: Pick<ComposerRunContext, 'db' | 'userId' | 'workspaceId'>,
+  request: QueuedFollowUpRequest,
+  scope: SteerQueueScope,
+): Promise<'allowed' | 'denied'> => {
+  try {
+    await assertCanUseWorkspaceAgent({
+      agentId: request.agentId,
+      db: ctx.db,
+      groupId: request.appContext?.groupId,
+      slug: request.slug,
+      userId: ctx.userId,
+      workspaceId: ctx.workspaceId,
+    });
+    await assertCanUseAgentRunConversation({
+      db: ctx.db,
+      topicId: scope.topicId,
+      userId: ctx.userId,
+      workspaceId: ctx.workspaceId,
+    });
+    return 'allowed';
+  } catch (error) {
+    if (error instanceof TRPCError && DENIED_CODES.has(error.code)) return 'denied';
+    throw error;
+  }
+};
+
+/**
+ * A top-level run just finished on `scope`: start the follow-ups still queued
+ * behind it as the next turn, here on the server, instead of waiting for a
+ * client to drain them. A native run takes most follow-ups into itself before
+ * its next LLM call (`injectQueuedFollowUp`); this picks up the rest — those
+ * that arrived after its last decision point or could not join a running turn —
+ * and serves heterogeneous agents (Claude Code, Codex) when they finish.
  *
  * Drain is atomic, so exactly one finishing run takes a given follow-up. When
  * the next turn cannot start, the follow-ups go back to the head of the queue —
@@ -127,56 +182,22 @@ export const startQueuedFollowUp = async (
 ): Promise<{ operationId: string } | undefined> => {
   const { scope } = params;
 
-  // Only what was queued behind this run (or put back unbound after a failed
-  // start): another live run on the surface keeps its own follow-ups.
-  const drained = await redisService.steerQueue.drain<QueuedFollowUp>(scope, params.operationId);
-  if (drained.length === 0) return;
-
-  // The queue is the run owner's own (the scope carries their user id); never
-  // start a foreign entry under this user's authority if one somehow got here.
-  const entries = drained.filter((entry) => entry.userId === ctx.userId);
-  if (entries.length < drained.length) {
-    log(
-      '[%s] Dropped %d foreign queued follow-ups',
-      params.operationId,
-      drained.length - entries.length,
-    );
-  }
+  const entries = await drainOwnFollowUps(ctx.userId, scope, params.operationId);
   if (entries.length === 0) return;
 
   const request = mergeQueuedFollowUps(entries);
   const audit = entries.at(-1)!.audit;
 
-  // `append` authorized the follow-up when it was queued; access can be revoked
-  // while the run is still going. Re-check it the way `aiAgent.execAgent` checks
-  // every run. A denial drops the follow-ups — they are no longer this user's to
-  // start, and putting them back would only retry a refused start.
   try {
-    await assertCanUseWorkspaceAgent({
-      agentId: request.agentId,
-      db: ctx.db,
-      groupId: request.appContext?.groupId,
-      slug: request.slug,
-      userId: ctx.userId,
-      workspaceId: ctx.workspaceId,
-    });
-    await assertCanUseAgentRunConversation({
-      db: ctx.db,
-      topicId: scope.topicId,
-      userId: ctx.userId,
-      workspaceId: ctx.workspaceId,
-    });
-  } catch (error) {
-    if (error instanceof TRPCError && DENIED_CODES.has(error.code)) {
+    if ((await checkFollowUpAccess(ctx, request, scope)) === 'denied') {
       console.error(
-        '[startQueuedFollowUp] dropped %d queued follow-ups after %s: access revoked (%s)',
+        '[startQueuedFollowUp] dropped %d queued follow-ups after %s: access revoked',
         entries.length,
         params.operationId,
-        error.code,
       );
       return;
     }
-    // Anything else (a failed lookup) says nothing about access: keep them.
+  } catch (error) {
     await restoreAfterFailure(scope, entries, params.operationId, error);
     return;
   }

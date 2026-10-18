@@ -66,6 +66,7 @@ import { runWithTopicStart, type TopicStartDeps } from './pipeline/topicStart';
 import type { RunFacts } from './runFacts';
 import { resolveAgentSenderFromOperation } from './sourceAttribution';
 import { startQueuedFollowUp } from './steerQueue';
+import { injectQueuedFollowUp } from './steerQueue/inject';
 import type { SubAgentLlmRelayRequest } from './subAgentLlmRelay';
 import { closeSubAgentLlmRelay, openSubAgentLlmRelay } from './subAgentLlmRelay';
 import type { SubAgentRunDeps } from './subAgentRuns';
@@ -163,6 +164,7 @@ export class AiAgentService {
         execSubAgent: this.execSubAgent,
         execVirtualSubAgent: this.execVirtualSubAgent,
         execGroupMember: this.execGroupMember,
+        injectQueuedFollowUp: this.injectQueuedFollowUp,
         startQueuedFollowUp: this.startQueuedFollowUp,
         verifyShareRunStillAuthorized: this.verifyShareRunStillAuthorized,
       },
@@ -629,6 +631,23 @@ export class AiAgentService {
    * Arrow field (not a method) so it stays bound when handed to
    * AgentRuntimeService.
    */
+  /**
+   * `AgentRuntimeDelegate.injectQueuedFollowUp` implementation — see
+   * `injectQueuedFollowUp` in `./steerQueue/inject`.
+   *
+   * Arrow field (not a method) so it stays bound when handed to
+   * AgentRuntimeService.
+   */
+  injectQueuedFollowUp = async (params: {
+    operationId: string;
+    scope: SteerQueueScope;
+    state: AgentState;
+  }) =>
+    injectQueuedFollowUp(
+      { db: this.db, userId: this.userId, workspaceId: this.workspaceId },
+      params,
+    );
+
   startQueuedFollowUp = async (params: { operationId: string; scope: SteerQueueScope }) =>
     startQueuedFollowUp(
       { aiAgentService: this, db: this.db, userId: this.userId, workspaceId: this.workspaceId },

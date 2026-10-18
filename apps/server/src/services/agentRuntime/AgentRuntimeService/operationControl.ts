@@ -34,6 +34,7 @@ export type OperationControlDeps = Pick<
   | 'baseURL'
   | 'completionLifecycle'
   | 'coordinator'
+  | 'delegate'
   | 'endExpiredClientLlmWait'
   | 'messageModel'
   | 'queueService'
@@ -263,6 +264,46 @@ export async function readQueuedMessagesFlag(
   } catch (error) {
     log('[%s][%d] Queued messages flag read failed: %O', operationId, stepIndex, error);
     return false;
+  }
+}
+
+/**
+ * Join the follow-ups queued behind this run into it, right before its next
+ * LLM call, instead of ending the run and starting another for them. Hands off
+ * to the owning layer (merge, access check, persisting the user message); the
+ * caller re-enters the LLM on top of that message.
+ *
+ * Best-effort: any failure leaves the follow-ups queued, and the run hands its
+ * turn back for them at this decision point as it did before.
+ *
+ * @returns the user message the follow-ups became, or `undefined` when none
+ * were taken in
+ */
+export async function injectQueuedFollowUp(
+  deps: OperationControlDeps,
+  operationId: string,
+  stepIndex: number,
+  state: AgentState,
+): Promise<{ messageId: string } | undefined> {
+  const scope = steerQueueScopeOf(state, deps.userId);
+  if (!scope || !deps.delegate.injectQueuedFollowUp) return;
+
+  try {
+    if ((await redisService.steerQueue.length(scope, operationId)) === 0) return;
+
+    const injected = await deps.delegate.injectQueuedFollowUp({ operationId, scope, state });
+    if (injected) {
+      log(
+        '[%s][%d] Joined queued follow-ups into the run as %s',
+        operationId,
+        stepIndex,
+        injected.messageId,
+      );
+    }
+    return injected;
+  } catch (error) {
+    log('[%s][%d] Joining queued follow-ups failed: %O', operationId, stepIndex, error);
+    return;
   }
 }
 

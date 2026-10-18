@@ -5,6 +5,7 @@ import type { AgentState } from '@lobechat/agent-runtime';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { finishOperation } from '../executeStep/completion';
+import { prepareStepInput } from '../executeStep/prepare';
 import { readQueuedMessagesFlag } from '../operationControl';
 
 const { steerQueueLength } = vi.hoisted(() => ({ steerQueueLength: vi.fn() }));
@@ -150,6 +151,81 @@ describe('server-side steer queue in the step loop', () => {
       const { deps } = createDeps(vi.fn().mockRejectedValue(new Error('boom')));
 
       await expect(finish(deps, stateOf())).resolves.toBeUndefined();
+    });
+  });
+
+  describe('prepareStepInput — joining follow-ups before the next LLM call', () => {
+    const toolMessages = [
+      { content: '', id: 'msg-assistant', role: 'assistant', tools: [{ id: 'call-1' }] },
+      { content: '391', id: 'msg-tool', parentId: 'msg-assistant', role: 'tool' },
+    ];
+    const refreshed = [...toolMessages, { content: 'follow-up', id: 'msg-steer', role: 'user' }];
+
+    const createDeps = (injected?: { messageId: string }) =>
+      ({
+        computeDeviceContext: vi.fn().mockResolvedValue(undefined),
+        humanIntervention: { process: vi.fn() },
+        injectQueuedFollowUp: vi.fn().mockResolvedValue(injected),
+        readQueuedMessagesFlag: vi.fn().mockResolvedValue(false),
+        refreshMessagesFromDB: vi.fn().mockResolvedValue(refreshed),
+        resolveAsyncToolResumeParentMessageId: vi.fn(),
+      }) as any;
+
+    const prepare = (deps: any, phase: string, messages: any[] = toolMessages) =>
+      prepareStepInput(deps, {
+        agentState: stateOf({ messages, status: 'running' } as any),
+        params: {
+          context: { payload: { parentMessageId: 'msg-tool' }, phase },
+          operationId: 'op-1',
+          stepIndex: 2,
+        } as any,
+        stepEntryMessages: undefined as any,
+      });
+
+    it.each(['tool_result', 'tools_batch_result', 'sub_agents_batch_result'])(
+      're-enters the LLM on the joined steer message after %s',
+      async (phase) => {
+        const deps = createDeps({ messageId: 'msg-steer' });
+
+        const { currentContext, currentState } = await prepare(deps, phase);
+
+        expect(deps.injectQueuedFollowUp).toHaveBeenCalledWith('op-1', 2, expect.anything());
+        expect(currentContext).toMatchObject({
+          payload: { parentMessageId: 'msg-steer' },
+          phase: 'user_input',
+        });
+        expect(currentState.messages).toEqual(refreshed);
+      },
+    );
+
+    it('keeps the decision point when nothing joined', async () => {
+      const deps = createDeps(undefined);
+
+      const { currentContext } = await prepare(deps, 'tool_result');
+
+      expect(currentContext).toMatchObject({ phase: 'tool_result' });
+      expect(deps.refreshMessagesFromDB).not.toHaveBeenCalled();
+    });
+
+    it('never splits an assistant’s tool calls from their results', async () => {
+      const deps = createDeps({ messageId: 'msg-steer' });
+
+      await prepare(deps, 'llm_result');
+      await prepare(deps, 'user_input');
+
+      expect(deps.injectQueuedFollowUp).not.toHaveBeenCalled();
+    });
+
+    it('lets the agent park for a tool still waiting for approval first', async () => {
+      const deps = createDeps({ messageId: 'msg-steer' });
+      const pending = [
+        toolMessages[0],
+        { ...toolMessages[1], pluginIntervention: { status: 'pending' } },
+      ];
+
+      await prepare(deps, 'tool_result', pending);
+
+      expect(deps.injectQueuedFollowUp).not.toHaveBeenCalled();
     });
   });
 });

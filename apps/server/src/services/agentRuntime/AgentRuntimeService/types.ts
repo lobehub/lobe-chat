@@ -1,4 +1,4 @@
-import type { Agent, GeneralAgentConfig } from '@lobechat/agent-runtime';
+import type { Agent, AgentState, GeneralAgentConfig } from '@lobechat/agent-runtime';
 import type { ISnapshotStore } from '@lobechat/agent-tracing';
 import {
   type ExecSubAgentParams,
@@ -75,6 +75,7 @@ import type {
   acceptsMemberRuntimeEnd,
   controlCompletedToolResult,
   getOperationStatus,
+  injectQueuedFollowUp,
   interruptOperation,
   isOperationInterrupted,
   readQueuedMessagesFlag,
@@ -144,6 +145,19 @@ export interface AgentRuntimeDelegate {
    * placeholder before resuming the parked parent operation.
    */
   execVirtualSubAgent?: (params: ExecVirtualSubAgentParams) => Promise<ExecSubAgentResult>;
+  /**
+   * The run reached a decision point right before its next LLM call: take the
+   * follow-ups the user queued behind it into the run as a steer user message
+   * (merged, access re-checked, persisted where a composer send would anchor
+   * it). Follow-ups that cannot join a running turn (attachments, a different
+   * agent, tool / skill selections) stay queued for the hand-back. Resolves to
+   * `undefined` when nothing was taken in.
+   */
+  injectQueuedFollowUp?: (params: {
+    operationId: string;
+    scope: SteerQueueScope;
+    state: AgentState;
+  }) => Promise<{ messageId: string } | undefined>;
   /**
    * A top-level run just finished: start the follow-ups the user queued behind
    * it as the next turn (the composer pipeline, with `steer`). Resolves to
@@ -287,6 +301,7 @@ export interface AgentRuntimeServiceContext {
   getPendingInterventions: Bound<typeof getPendingInterventions>;
   handleGroupMemberTimeout: Bound<typeof handleGroupMemberTimeout>;
   readonly humanIntervention: HumanInterventionHandler;
+  injectQueuedFollowUp: Bound<typeof injectQueuedFollowUp>;
   interruptOperation: Bound<typeof interruptOperation>;
   isCallSubAgentToolMessage: Bound<typeof isCallSubAgentToolMessage>;
   isOperationInterrupted: Bound<typeof isOperationInterrupted>;
