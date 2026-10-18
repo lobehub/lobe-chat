@@ -54,9 +54,40 @@ describe('terminatePrecheckProcess', () => {
 
       (child as any).__emit('exit');
       expect(onSettled).toHaveBeenCalledTimes(1);
-      // timers cleared: no SIGKILL, no fallback
-      vi.advanceTimersByTime(2000);
-      expect(child.kill).toHaveBeenCalledTimes(1);
+      // The SIGKILL escalation survives the launcher's exit (P2 4306440127);
+      // only the hard fallback is cleared by settle. advanceTimersByTimeAsync
+      // flushes the promise chain inside signalProcessTree so the direct-kill
+      // belt (100ms after the group signal) lands before the assertion.
+      await vi.advanceTimersByTimeAsync(2000);
+      expect(onSettled).toHaveBeenCalledTimes(1);
+      expect(groupKill).toHaveBeenCalledWith(-4242, 'SIGKILL');
+      expect(child.kill).toHaveBeenLastCalledWith('SIGKILL');
+      groupKill.mockRestore();
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it('keeps the group SIGKILL escalation when the launcher exits early and a worker ignores SIGTERM (P2 4306440127)', async () => {
+    vi.useFakeTimers();
+    try {
+      const child = makeFakeChild(4242);
+      const onSettled = vi.fn();
+      const groupKill = vi.spyOn(process, 'kill').mockImplementation((() => true) as any);
+
+      terminatePrecheckProcess(child as any, onSettled);
+      await vi.advanceTimersByTimeAsync(150);
+      // The launcher dies on the group SIGTERM before the grace period ends;
+      // a worker descendant ignored the signal and is still alive.
+      (child as any).__emit('exit');
+      expect(onSettled).toHaveBeenCalledTimes(1);
+
+      // The escalation must still fire after the grace period — settle no
+      // longer cancels it, otherwise the ignoring worker leaks.
+      await vi.advanceTimersByTimeAsync(600); // grace 500 + retry 100
+      expect(groupKill).toHaveBeenCalledWith(-4242, 'SIGKILL');
+      expect(child.kill).toHaveBeenLastCalledWith('SIGKILL');
+      expect(onSettled).toHaveBeenCalledTimes(1); // settled exactly once
       groupKill.mockRestore();
     } finally {
       vi.useRealTimers();

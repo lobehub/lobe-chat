@@ -133,9 +133,14 @@ export function reapOrphanedProcessGroup(
  * signal or Windows `taskkill /T`), escalating from SIGTERM to SIGKILL
  * after a short grace period, and settling once the exit event confirms
  * the process is gone (with a hard fallback so the pre-check promise can
- * never hang). Without the exit confirmation a server that ignores SIGTERM
- * would survive with its pipe listeners attached, leaking processes across
- * repeated failed connections.
+ * never hang). The SIGKILL escalation is NOT cancelled by the launcher's
+ * exit (P2 4306440127): a launcher that dies on the group SIGTERM while a
+ * worker descendant ignores the signal would otherwise settle the teardown
+ * and leak that worker across repeated failed connections. When the group
+ * is already gone the escalation is a harmless ESRCH no-op. Without the
+ * exit confirmation a server that ignores SIGTERM would survive with its
+ * pipe listeners attached, leaking processes across repeated failed
+ * connections.
  */
 export function terminatePrecheckProcess(
   child: ChildProcess,
@@ -148,12 +153,15 @@ export function terminatePrecheckProcess(
   const settle = () => {
     if (settled) return;
     settled = true;
-    clearTimeout(graceTimer);
     clearTimeout(fallbackTimer);
     onSettled();
   };
 
-  const graceTimer = setTimeout(() => {
+  // The SIGKILL escalation is intentionally NOT tracked/cancelled: settle()
+  // fires when the launcher exits, but a worker descendant may ignore the
+  // group SIGTERM — the escalation must still land to kill the group
+  // (P2 4306440127). When everything already exited it is an ESRCH no-op.
+  setTimeout(() => {
     void signalProcessTree(child, 'SIGKILL');
   }, graceMs);
 
