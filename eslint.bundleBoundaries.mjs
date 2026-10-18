@@ -52,7 +52,7 @@ export const performanceRestrictedImportPatterns = [
   {
     message:
       'Import the facade from "ShareMessageModal" (openShareMessageModal), which loads the modal with its screenshot and PDF libraries on click.',
-    regex: String.raw`(^|/)ShareMessageModal/Modal$`,
+    regex: String.raw`(^|/)ShareMessageModal/Content$`,
   },
 ];
 
