@@ -16,6 +16,12 @@ import type { QuickNoteProposalItem } from '../../schemas';
 import type { LobeChatDatabase } from '../../type';
 import { idGenerator } from '../../utils/idGenerator';
 
+/**
+ * Thrown inside a transaction when an owned row checked earlier in the same flow is no longer
+ * writable, so the whole unit of work rolls back instead of committing half of it.
+ */
+export const QUICK_NOTE_SCOPE_LOST = 'QUICK_NOTE_SCOPE_LOST';
+
 /** Line count stored beside a Document body, matching the Document service projection. */
 const countLines = (content: string) => (content.length === 0 ? 0 : content.split('\n').length);
 
@@ -240,6 +246,7 @@ export class QuickNoteRepository {
           quickNoteId: run.quickNoteId,
           sourceHistoryId: run.sourceHistoryId,
         });
+        if (!resource) throw new Error(QUICK_NOTE_SCOPE_LOST);
       }
 
       const annotationDocumentId = resource.documentId;
@@ -252,11 +259,12 @@ export class QuickNoteRepository {
         savedAt: new Date(),
       });
 
-      await model.recordRunResource({
+      const recorded = await model.recordRunResource({
         documentHistoryId: documentHistory.id,
         resourceId: resource.id,
         runId,
       });
+      if (!recorded) throw new Error(QUICK_NOTE_SCOPE_LOST);
 
       const proposals: QuickNoteProposalItem[] = [];
       for (const proposalDraft of params.proposals ?? []) {
@@ -353,6 +361,8 @@ export class QuickNoteRepository {
         { maxRetries: 1 },
       );
       const acceptedProposal = await quickNote.recordTaskProposalAcceptance(proposal, task.id);
+      // Roll back the new Task rather than leave it unlinked.
+      if (!acceptedProposal) throw new Error(QUICK_NOTE_SCOPE_LOST);
 
       return { proposal: acceptedProposal, task };
     });

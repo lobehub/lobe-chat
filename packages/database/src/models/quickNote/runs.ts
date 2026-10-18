@@ -11,7 +11,7 @@ import {
   quickNoteRuns,
   quickNotes,
 } from '../../schemas';
-import { type QuickNoteContext, quickNoteOwnershipWhere } from './context';
+import { ownedQuickNoteIds, type QuickNoteContext, quickNoteOwnershipWhere } from './context';
 import type { ClaimQuickNoteRunParams } from './types';
 
 /** The pending or running Run of one kind for a Quick Note, if any. */
@@ -157,7 +157,9 @@ export const completeAnnotationRun = async (
   await ctx.db
     .update(quickNoteRuns)
     .set({ completedAt: new Date(), status: 'completed', updatedAt: new Date() })
-    .where(eq(quickNoteRuns.id, runId));
+    .where(
+      and(eq(quickNoteRuns.id, runId), inArray(quickNoteRuns.quickNoteId, ownedQuickNoteIds(ctx))),
+    );
 
   const sourceIsCurrent = isEqual(run.sourceDocumentEditorData, run.sourceHistoryEditorData);
   await ctx.db
@@ -168,7 +170,7 @@ export const completeAnnotationRun = async (
       tags: sourceIsCurrent && tags ? [...new Set([...run.tags, ...tags])] : run.tags,
       updatedAt: new Date(),
     })
-    .where(eq(quickNotes.id, run.quickNoteId));
+    .where(and(eq(quickNotes.id, run.quickNoteId), quickNoteOwnershipWhere(ctx)));
 };
 
 export const attachThread = async (ctx: QuickNoteContext, runId: string, threadId: string) => {

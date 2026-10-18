@@ -1,5 +1,5 @@
 import type { QuickNoteResourceRole } from '@lobechat/types';
-import { and, desc, eq, isNull, sql } from 'drizzle-orm';
+import { and, desc, eq, inArray, isNull, sql } from 'drizzle-orm';
 import { alias } from 'drizzle-orm/pg-core';
 import isEqual from 'fast-deep-equal';
 
@@ -13,7 +13,7 @@ import {
   tasks,
   topics,
 } from '../../schemas';
-import { type QuickNoteContext, quickNoteOwnershipWhere } from './context';
+import { ownedQuickNoteIds, type QuickNoteContext, quickNoteOwnershipWhere } from './context';
 import type { LinkQuickNoteResourceParams } from './types';
 
 /** Resource-side Document alias used beside the Quick Note source Document. */
@@ -149,6 +149,12 @@ export const createAnnotationResource = async (
   ctx: QuickNoteContext,
   params: { documentId: string; quickNoteId: string; sourceHistoryId: string },
 ) => {
+  const [owned] = await ctx.db
+    .select({ id: quickNotes.id })
+    .from(quickNotes)
+    .where(and(eq(quickNotes.id, params.quickNoteId), quickNoteOwnershipWhere(ctx)));
+  if (!owned) return undefined;
+
   const [resource] = await ctx.db
     .insert(quickNoteResources)
     .values({
@@ -170,7 +176,21 @@ export const createAnnotationResource = async (
 export const recordRunResource = async (
   ctx: QuickNoteContext,
   params: { documentHistoryId: string; resourceId: string; runId: string },
-) => {
+): Promise<boolean> => {
+  const [run] = await ctx.db
+    .select({ id: quickNoteRuns.id })
+    .from(quickNoteRuns)
+    .innerJoin(quickNoteResources, eq(quickNoteResources.id, params.resourceId))
+    .where(
+      and(
+        eq(quickNoteRuns.id, params.runId),
+        // The resource must belong to the Run's own Quick Note, which the caller owns.
+        eq(quickNoteResources.quickNoteId, quickNoteRuns.quickNoteId),
+        inArray(quickNoteRuns.quickNoteId, ownedQuickNoteIds(ctx)),
+      ),
+    );
+  if (!run) return false;
+
   await ctx.db.insert(quickNoteRunResources).values({
     documentHistoryId: params.documentHistoryId,
     resourceId: params.resourceId,
@@ -178,6 +198,8 @@ export const recordRunResource = async (
     userId: ctx.userId,
     workspaceId: ctx.workspaceId,
   });
+
+  return true;
 };
 
 export const linkResource = async (

@@ -131,9 +131,12 @@ export class DocumentHistoryModel {
       .offset(DOCUMENT_HISTORY_AUTOSAVE_SOURCE_LIMIT);
     if (expiredAutosaves.length > 0) {
       await this.db.delete(documentHistories).where(
-        inArray(
-          documentHistories.id,
-          expiredAutosaves.map(({ id }) => id),
+        and(
+          inArray(
+            documentHistories.id,
+            expiredAutosaves.map(({ id }) => id),
+          ),
+          this.ownership(),
         ),
       );
     }

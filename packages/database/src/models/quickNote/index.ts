@@ -484,7 +484,7 @@ export class QuickNoteModel {
         ...(params.analyzeDueAt === undefined ? {} : { analyzeDueAt: params.analyzeDueAt }),
         updatedAt: params.updatedAt,
       })
-      .where(eq(quickNotes.id, id))
+      .where(and(eq(quickNotes.id, id), this.ownershipWhere()))
       .returning();
 
     return updated;
@@ -762,7 +762,9 @@ export class QuickNoteModel {
       .from(quickNoteProposals)
       .where(eq(quickNoteProposals.quickNoteId, quickNote.id));
 
-    await this.db.delete(quickNotes).where(eq(quickNotes.id, quickNote.id));
+    await this.db
+      .delete(quickNotes)
+      .where(and(eq(quickNotes.id, quickNote.id), this.ownershipWhere()));
 
     return {
       documentId: quickNote.documentId,

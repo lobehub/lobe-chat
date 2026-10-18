@@ -15,6 +15,10 @@ export type QuickNoteArgs<F> = F extends (ctx: QuickNoteContext, ...args: infer 
   ? A
   : never;
 
+/** Subquery of the caller's Quick Note ids, for scoping writes to child rows. */
+export const ownedQuickNoteIds = (ctx: QuickNoteContext) =>
+  ctx.db.select({ id: quickNotes.id }).from(quickNotes).where(quickNoteOwnershipWhere(ctx));
+
 /** Confines a query to the caller's own Quick Notes in the active scope (personal or workspace). */
 export const quickNoteOwnershipWhere = (ctx: QuickNoteContext) =>
   and(

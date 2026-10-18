@@ -9,7 +9,7 @@ import {
   quickNoteRunResources,
   quickNotes,
 } from '../../schemas';
-import { type QuickNoteContext, quickNoteOwnershipWhere } from './context';
+import { ownedQuickNoteIds, type QuickNoteContext, quickNoteOwnershipWhere } from './context';
 
 export const queryProposals = async (ctx: QuickNoteContext, quickNoteId: string) =>
   ctx.db
@@ -59,7 +59,12 @@ export const setProposalCurrentHistory = async (
   const [proposal] = await ctx.db
     .update(quickNoteProposals)
     .set({ currentHistoryId, updatedAt })
-    .where(eq(quickNoteProposals.id, proposalId))
+    .where(
+      and(
+        eq(quickNoteProposals.id, proposalId),
+        inArray(quickNoteProposals.quickNoteId, ownedQuickNoteIds(ctx)),
+      ),
+    )
     .returning();
 
   return proposal;
@@ -97,6 +102,7 @@ export const markPendingProposalsStale = async (
     .where(
       and(
         eq(quickNoteProposals.quickNoteId, quickNoteId),
+        inArray(quickNoteProposals.quickNoteId, ownedQuickNoteIds(ctx)),
         eq(quickNoteProposals.decisionStatus, 'pending'),
         eq(quickNoteProposals.validity, 'current'),
       ),
@@ -163,8 +169,15 @@ export const recordTaskProposalAcceptance = async (
       decisionStatus: 'accepted',
       updatedAt: new Date(),
     })
-    .where(eq(quickNoteProposals.id, proposal.id))
+    .where(
+      and(
+        eq(quickNoteProposals.id, proposal.id),
+        inArray(quickNoteProposals.quickNoteId, ownedQuickNoteIds(ctx)),
+      ),
+    )
     .returning();
+  // The links below attach to the Proposal's Quick Note, so stop unless the owned update matched.
+  if (!acceptedProposal) return undefined;
 
   const [createdResource] = await ctx.db
     .insert(quickNoteResources)
