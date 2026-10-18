@@ -8,6 +8,7 @@ import type { LobeChatDatabase } from '@/database/type';
 
 import { BatchPlanSkillService } from './batchPlanSkill';
 import { GoalManagerService } from './manager';
+import { activeStatuses } from './manager/turnState';
 
 const log = debug('lobe-server:goal-rollout');
 
@@ -117,6 +118,17 @@ export class GoalProbeDistill {
         .map((node) => `${node.title} [${node.id}]: ${node.status}`)
         .join('; ')}). Rewrite the plan from what they ran into before the gate judges them.`,
     };
+    // Paused, or waiting on a person: the main Agent is unavailable for now,
+    // not out of turns, so the distillation stays pending for when it runs again.
+    if (
+      !activeStatuses.has(graph.goal.status) ||
+      graph.decisions.some((decision) => decision.status === 'pending')
+    )
+      return {
+        goalId,
+        message: 'The plan waits to be distilled from the probes until the goal runs again',
+        outcome: 'waiting_human',
+      };
     const takeover = await new GoalManagerService(this.db, this.userId, this.workspaceId).takeOver(
       graph,
       problem,
@@ -143,38 +155,46 @@ export class GoalProbeDistill {
    * Land the plan the main Agent distilled: the plan skill's next version, the
    * policy's outline every later wave is briefed from, and the Template. The
    * round stays in `plan_distill`, marked distilled, for the gate to judge.
+   *
+   * The rewrite is claimed under the goal row's lock before the skill is
+   * revised, so overlapping advances that read the same pending rewrite write
+   * one version, not one each.
    */
   private apply = async (graph: GoalGraphSnapshot) => {
     const goalId = graph.goal.id;
     const policy = graph.goal.config?.rollout;
-    const state = graph.goal.config!.rolloutState!;
-    const { reason, recipe: raw } = state.pendingDistill!;
-    const recipe = raw.trim();
-    const round = String(state.templateRevision);
-    const version =
-      state.planSkill && recipe
-        ? await new BatchPlanSkillService(this.db, this.userId, this.workspaceId)
-            .revise(state.planSkill, {
-              goalId,
-              guidance: reason,
-              plan: recipe,
-              revision: state.templateRevision,
-            })
-            .catch((error) => {
-              log('probe distill: plan skill revision failed: %O', error);
-              return undefined;
-            })
-        : undefined;
-    // A revision that did not land leaves the skill on the plan before the
-    // probes: later units drop it and copy the distilled plan instead.
-    const planSkill =
-      state.planSkill && recipe && version === undefined ? undefined : state.planSkill;
-
     await this.db.transaction(async (tx) => {
       const goalModel = new GoalModel(tx, this.userId, this.workspaceId);
       const current = (await goalModel.lockById(goalId))?.config?.rolloutState;
       // Another advance landed it first; the gate is next either way.
       if (current?.phase !== 'plan_distill' || !current.pendingDistill) return;
+      const { reason, recipe: raw } = current.pendingDistill;
+      const recipe = raw.trim();
+      const round = String(current.templateRevision);
+      const skill = recipe ? current.planSkill : undefined;
+      // A savepoint: a failed revision costs the skill version, not the claim.
+      const version = skill
+        ? await tx
+            .transaction((savepoint) =>
+              new BatchPlanSkillService(
+                savepoint as unknown as LobeChatDatabase,
+                this.userId,
+                this.workspaceId,
+              ).revise(skill, {
+                goalId,
+                guidance: reason,
+                plan: recipe,
+                revision: current.templateRevision,
+              }),
+            )
+            .catch((error) => {
+              log('probe distill: plan skill revision failed: %O', error);
+              return undefined;
+            })
+        : undefined;
+      // A revision that did not land leaves the skill on the plan before the
+      // probes: later units drop it and copy the distilled plan instead.
+      const planSkill = skill && version === undefined ? undefined : current.planSkill;
       if (recipe) {
         if (policy)
           await goalModel.updateRolloutPolicy(goalId, {

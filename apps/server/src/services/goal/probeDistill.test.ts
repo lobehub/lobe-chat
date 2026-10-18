@@ -14,6 +14,7 @@ import { UserSkillService } from '@/server/services/userSkill';
 
 import { GoalService } from './index';
 import { GoalManagerService } from './manager';
+import { GoalProbeDistill } from './probeDistill';
 import * as scheduler from './scheduler';
 import {
   answerDistill,
@@ -191,5 +192,56 @@ describe('distilling the plan from settled probes', () => {
     expect(config.rolloutState!.phase).toBe('release_review');
     expect(config.rollout!.spec!.recipeOutline).toBe(recipe);
     expect(config.managerState!.problemKind).toBeUndefined();
+  });
+
+  it('keeps the distillation pending while the goal is paused', async () => {
+    const { id } = await probesSettled();
+    await service().tick(id);
+    const first = await distillTurn(db, userId, id);
+    await ops().recordCompletion(first.op.id, { status: 'done' });
+    await model().updateStatus(id, 'paused');
+
+    // A queued advance runs while paused: the Agent is unavailable, not out of turns.
+    await service().tick(id);
+
+    let state = (await model().findById(id))!.config!.rolloutState!;
+    expect(state.phase).toBe('plan_distill');
+    expect(state.distilledProbes).toBeUndefined();
+    expect(await pendingRelease(service(), id)).toBeUndefined();
+
+    // Resumed, the probes go to the main Agent again rather than to the gate.
+    await model().updateStatus(id, 'running');
+    await service().tick(id);
+    await service().tick(id);
+    const second = await distillTurn(db, userId, id);
+    expect(second.state.token).not.toBe(first.state.token);
+    state = (await model().findById(id))!.config!.rolloutState!;
+    expect(state.phase).toBe('plan_distill');
+  });
+
+  it('writes one plan skill version when two advances land the same rewrite', async () => {
+    const { id } = await probesSettled();
+    await service().tick(id);
+    const { op, state } = await distillTurn(db, userId, id);
+    await manager().submit(id, state.token, op.id, {
+      action: 'revise_plan',
+      reason: 'Folded the workspace scoping pitfall into step 1',
+      recipe: distilled,
+    });
+    await ops().recordCompletion(op.id, { status: 'done' });
+    // Settle the turn, so the next advance is the one that lands the rewrite.
+    await service().tick(id);
+    const before = await service().graph(id);
+    expect(before.goal.config!.rolloutState!.pendingDistill).toBeDefined();
+
+    // Two advances read the same pending rewrite; the second lands after the first.
+    const distill = new GoalProbeDistill(db, userId, undefined);
+    await distill.route(before);
+    await distill.route(before);
+
+    const after = (await model().findById(id))!.config!.rolloutState!;
+    const skill = await new UserSkillService(db, userId).getSkill(after.planSkill!.id);
+    expect(skill?.versions.map((version) => version.version)).toEqual([1, 2]);
+    expect(after.planVersions).toEqual({ '1': 2 });
   });
 });
