@@ -1,6 +1,7 @@
 import type { DocumentAccessScope } from '@lobechat/types';
 import { ordinaryDocumentAccessScope } from '@lobechat/types';
 
+import { AgentDocumentRepository } from '../../../repositories/agentDocument';
 import type { LobeChatDatabase, Transaction } from '../../../type';
 import type {
   AgentDocument,
@@ -24,6 +25,7 @@ import * as tree from './tree';
 import type {
   AgentDocumentCreateParams,
   AgentDocumentQueryOptions,
+  AgentDocumentUpdateParams,
   ConvertAgentDocumentToSkillIndexParams,
 } from './types';
 
@@ -32,6 +34,11 @@ export * from '../types';
 export class AgentDocumentModel {
   /** The scope handed to the helper modules in this directory. */
   private readonly ctx: AgentDocumentContext;
+  /**
+   * Owns the flows that write both the `documents` row and its `agent_documents`
+   * binding; this model forwards to it instead of opening those transactions.
+   */
+  private readonly repository: AgentDocumentRepository;
 
   constructor(
     db: LobeChatDatabase,
@@ -40,6 +47,7 @@ export class AgentDocumentModel {
     documentAccessScope: DocumentAccessScope = ordinaryDocumentAccessScope,
   ) {
     this.ctx = { db, documentAccessScope, userId, workspaceId };
+    this.repository = new AgentDocumentRepository(db, userId, workspaceId, documentAccessScope);
   }
 
   /**
@@ -80,7 +88,8 @@ export class AgentDocumentModel {
   }
 
   /**
-   * Creates a document row and links it to an agent in one transaction.
+   * Creates a document row and links it to an agent in one transaction
+   * (owned by {@link AgentDocumentRepository.create}).
    *
    * Use when:
    * - Creating ordinary agent-visible VFS files or folders.
@@ -100,7 +109,7 @@ export class AgentDocumentModel {
     content: string,
     params?: AgentDocumentCreateParams,
   ): Promise<AgentDocument> {
-    return creation.create(this.ctx, agentId, filename, content, params);
+    return this.repository.create(agentId, filename, content, params);
   }
 
   /**
@@ -124,7 +133,7 @@ export class AgentDocumentModel {
     content: string,
     params?: AgentDocumentCreateParams,
   ): Promise<AgentDocument> {
-    return creation.createWithTx(this.ctx, trx, agentId, filename, content, params);
+    return this.repository.createWithTx(trx, agentId, filename, content, params);
   }
 
   /**
@@ -145,7 +154,7 @@ export class AgentDocumentModel {
   async convertAgentDocumentToSkillIndex(
     params: ConvertAgentDocumentToSkillIndexParams,
   ): Promise<AgentDocument | undefined> {
-    return creation.convertAgentDocumentToSkillIndex(this.ctx, params);
+    return this.repository.convertToSkillIndex(params);
   }
 
   /**
@@ -166,7 +175,7 @@ export class AgentDocumentModel {
     trx: Transaction,
     params: ConvertAgentDocumentToSkillIndexParams,
   ): Promise<AgentDocument | undefined> {
-    return creation.convertAgentDocumentToSkillIndexWithTx(this.ctx, trx, params);
+    return this.repository.convertToSkillIndexWithTx(trx, params);
   }
 
   /**
@@ -192,20 +201,8 @@ export class AgentDocumentModel {
     return edits.updateEditorSnapshotIfUnchanged(this.ctx, documentId, expected, next);
   }
 
-  async update(
-    documentId: string,
-    params?: {
-      content?: string;
-      editorData?: Record<string, any> | null;
-      fileType?: string;
-      loadPosition?: DocumentLoadPosition;
-      loadRules?: Partial<DocumentLoadRules>;
-      metadata?: Record<string, any>;
-      policy?: AgentDocumentPolicy;
-      policyLoad?: PolicyLoad;
-    },
-  ): Promise<void> {
-    return edits.update(this.ctx, documentId, params);
+  async update(documentId: string, params?: AgentDocumentUpdateParams): Promise<void> {
+    return this.repository.update(documentId, params);
   }
 
   /**
@@ -284,7 +281,7 @@ export class AgentDocumentModel {
   }
 
   async copy(documentId: string, newTitle?: string): Promise<AgentDocument | undefined> {
-    return creation.copy(this.ctx, documentId, newTitle);
+    return this.repository.copy(documentId, newTitle);
   }
 
   async updateToolLoadRule(
@@ -339,7 +336,7 @@ export class AgentDocumentModel {
       updatedAt?: Date;
     },
   ): Promise<AgentDocument> {
-    return edits.upsert(this.ctx, agentId, filename, content, params);
+    return this.repository.upsert(agentId, filename, content, params);
   }
 
   async findByAgent(agentId: string): Promise<AgentDocumentWithRules[]> {
@@ -497,7 +494,7 @@ export class AgentDocumentModel {
    * - Backing file IDs for reference-safe cleanup by the storage service after commit.
    */
   async permanentlyDelete(documentId: string): Promise<string[]> {
-    return lifecycle.permanentlyDelete(this.ctx, documentId);
+    return this.repository.permanentlyDelete(documentId);
   }
 
   /**
@@ -514,7 +511,7 @@ export class AgentDocumentModel {
     agentId: string,
     rootDocumentId: string,
   ): Promise<string[]> {
-    return lifecycle.permanentlyDeleteSubtreeByDocumentId(this.ctx, agentId, rootDocumentId);
+    return this.repository.permanentlyDeleteSubtree(agentId, rootDocumentId);
   }
 
   async deleteByAgent(agentId: string, deleteReason?: string): Promise<void> {

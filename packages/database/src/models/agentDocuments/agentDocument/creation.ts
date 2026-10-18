@@ -3,13 +3,12 @@ import { and, eq, isNull } from 'drizzle-orm';
 
 import {
   agentDocuments,
+  type DocumentItem,
   documents,
   type NewAgentDocument,
   type NewDocument,
 } from '../../../schemas';
 import type { Transaction } from '../../../type';
-import { buildCopyParams } from '../copyDocument';
-import { buildDocumentFilename } from '../filename';
 import { normalizePolicy } from '../policy';
 import {
   AgentAccess,
@@ -25,7 +24,6 @@ import {
   documentOwnership,
   scopeMetadata,
 } from './context';
-import { findById } from './queries';
 import type { AgentDocumentCreateParams, ConvertAgentDocumentToSkillIndexParams } from './types';
 import { getDocumentStats, getMetadataDescription, toAgentDocument } from './utils';
 
@@ -109,73 +107,42 @@ export async function associate(
 }
 
 /**
- * Creates a document row and links it to an agent in one transaction.
+ * Inserts the backing `documents` row for a new agent document.
  *
  * Use when:
- * - Creating ordinary agent-visible VFS files or folders.
- * - Creating model-owned documents that still need agent document policy metadata.
+ * - `AgentDocumentRepository` creates an agent document and needs the document
+ *   row before it can insert the binding in the same transaction.
  *
  * Expects:
- * - `filename` is a single VFS segment supplied by the caller.
- * - Duplicate filenames are allowed; path-style callers resolve visible duplicates separately.
- *
- * Returns:
- * - The created agent document with joined document content and metadata.
- *
- */
-export async function create(
-  ctx: AgentDocumentContext,
-  agentId: string,
-  filename: string,
-  content: string,
-  params?: AgentDocumentCreateParams,
-): Promise<AgentDocument> {
-  return ctx.db.transaction((trx) => createWithTx(ctx, trx, agentId, filename, content, params));
-}
-
-/**
- * Creates a document row and links it to an agent inside a caller-owned transaction.
- *
- * Use when:
- * - A higher-level aggregate must create multiple agent documents atomically.
- * - Callers already run `db.transaction` and need to avoid nested transactions.
- *
- * Expects:
- * - `trx` is the active transaction for every write in the aggregate.
+ * - `trx` is the caller-owned transaction; this helper writes only `documents`.
  * - `filename` is a single VFS segment supplied by the caller.
  *
  * Returns:
- * - The created agent document with joined document content and metadata.
+ * - The inserted document row.
  */
-export async function createWithTx(
+export async function insertBackingDocument(
   ctx: AgentDocumentContext,
   trx: Transaction,
   agentId: string,
   filename: string,
   content: string,
   params?: AgentDocumentCreateParams,
-): Promise<AgentDocument> {
+): Promise<DocumentItem> {
   const {
     createdAt,
     editorData,
     fileId,
     fileType = AGENT_DOCUMENT_FILE_TYPE,
-    loadPosition,
-    loadRules,
     metadata,
     parentId,
-    policy,
-    policyLoad,
     source,
     sourceType = AGENT_DOCUMENT_SOURCE_TYPE,
-    templateId,
     title: providedTitle,
     updatedAt,
   } = params ?? {};
 
   const title = providedTitle?.trim() || filename.replace(/\.[^.]+$/, '');
   const stats = getDocumentStats(content);
-  const normalizedPolicy = normalizePolicy(loadPosition, loadRules, policy);
   const scopedMetadata = scopeMetadata(ctx, metadata);
 
   const documentPayload: NewDocument = {
@@ -209,6 +176,34 @@ export async function createWithTx(
 
   const [insertedDocument] = await trx.insert(documents).values(documentPayload).returning();
 
+  return insertedDocument!;
+}
+
+/**
+ * Inserts the `agent_documents` binding for a freshly inserted backing document.
+ *
+ * Use when:
+ * - `AgentDocumentRepository` links the document row from
+ *   {@link insertBackingDocument} to an agent in the same transaction.
+ *
+ * Expects:
+ * - `trx` is the caller-owned transaction; this helper writes only `agent_documents`.
+ * - `document` is the backing row returned by {@link insertBackingDocument}.
+ *
+ * Returns:
+ * - The created agent document with joined document content and metadata.
+ */
+export async function insertBinding(
+  ctx: AgentDocumentContext,
+  trx: Transaction,
+  agentId: string,
+  document: DocumentItem,
+  params?: AgentDocumentCreateParams,
+): Promise<AgentDocument> {
+  const { createdAt, loadPosition, loadRules, policy, policyLoad, templateId, updatedAt } =
+    params ?? {};
+  const normalizedPolicy = normalizePolicy(loadPosition, loadRules, policy);
+
   const newDoc: NewAgentDocument = {
     accessPublic: 0,
     accessSelf:
@@ -225,7 +220,7 @@ export async function createWithTx(
     deletedAt: null,
     deletedByAgentId: null,
     deletedByUserId: null,
-    documentId: insertedDocument!.id,
+    documentId: document.id,
     policy: normalizedPolicy,
     policyLoadFormat: normalizedPolicy.context?.policyLoadFormat || DocumentLoadFormat.RAW,
     policyLoadPosition:
@@ -239,70 +234,50 @@ export async function createWithTx(
 
   const [settings] = await trx.insert(agentDocuments).values(newDoc).returning();
 
-  return toAgentDocument(settings!, insertedDocument!);
+  return toAgentDocument(settings!, document);
 }
 
 /**
- * Converts an existing ordinary agent document binding into a managed skill index.
- *
- * Use when:
- * - Agent Signal promoted an already-created agent document into skill management.
- * - The caller must preserve both the agent document id and backing document id.
- *
- * Expects:
- * - `agentDocumentId` is a live binding owned by the current user.
- * - `parentId` points to the managed skill bundle document row.
+ * Reads one live binding joined to its document through a caller-owned transaction.
  *
  * Returns:
- * - The same agent document binding after document identity and load metadata are updated.
- *
+ * - The live agent document, or `undefined` when it is missing, deleted, or out of scope.
  */
-export async function convertAgentDocumentToSkillIndex(
-  ctx: AgentDocumentContext,
-  params: ConvertAgentDocumentToSkillIndexParams,
-): Promise<AgentDocument | undefined> {
-  return ctx.db.transaction((trx) => convertAgentDocumentToSkillIndexWithTx(ctx, trx, params));
-}
-
-/**
- * Converts a live agent document binding into a managed skill index inside a transaction.
- *
- * Use when:
- * - A higher-level skill aggregate also creates the owning bundle in the same transaction.
- * - The caller must preserve both `agent_documents.id` and `documents.id`.
- *
- * Expects:
- * - `trx` is the active transaction for the whole skill creation operation.
- * - `parentId` points to the managed skill bundle document row inside the same transaction.
- *
- * Returns:
- * - The same agent document binding after document identity and load metadata are updated.
- */
-export async function convertAgentDocumentToSkillIndexWithTx(
+export async function findLiveWithTx(
   ctx: AgentDocumentContext,
   trx: Transaction,
-  params: ConvertAgentDocumentToSkillIndexParams,
+  agentDocumentId: string,
 ): Promise<AgentDocument | undefined> {
-  const [existingResult] = await trx
+  const [result] = await trx
     .select({ doc: documents, settings: agentDocuments })
     .from(agentDocuments)
     .innerJoin(documents, eq(agentDocuments.documentId, documents.id))
     .where(
       and(
-        eq(agentDocuments.id, params.agentDocumentId),
+        eq(agentDocuments.id, agentDocumentId),
         agentDocOwnership(ctx),
         isNull(agentDocuments.deletedAt),
       ),
     )
     .limit(1);
 
-  if (!existingResult) return undefined;
+  return result ? toAgentDocument(result.settings, result.doc) : undefined;
+}
 
-  const existing = toAgentDocument(existingResult.settings, existingResult.doc);
-  if (!existing) return undefined;
-
+/**
+ * Rewrites a backing document row into a managed skill index document.
+ *
+ * Expects:
+ * - `trx` is the caller-owned transaction; this helper writes only `documents`.
+ * - `documentId` is the backing row of a live binding resolved in the same transaction.
+ */
+export async function updateBackingDocumentAsSkillIndex(
+  ctx: AgentDocumentContext,
+  trx: Transaction,
+  documentId: string,
+  params: ConvertAgentDocumentToSkillIndexParams,
+): Promise<void> {
   const stats = getDocumentStats(params.content);
-  const updatedAt = new Date();
   const scopedMetadata = scopeMetadata(ctx, params.metadata);
 
   await trx
@@ -321,58 +296,32 @@ export async function convertAgentDocumentToSkillIndexWithTx(
       totalCharCount: stats.totalCharCount,
       totalLineCount: stats.totalLineCount,
     })
-    .where(and(eq(documents.id, existing.documentId), documentOwnership(ctx)));
+    .where(and(eq(documents.id, documentId), documentOwnership(ctx)));
+}
 
+/**
+ * Marks a live binding as a managed skill index: stop autoload and tag the template.
+ *
+ * Expects:
+ * - `trx` is the caller-owned transaction; this helper writes only `agent_documents`.
+ */
+export async function markBindingAsSkillIndex(
+  ctx: AgentDocumentContext,
+  trx: Transaction,
+  agentDocumentId: string,
+): Promise<void> {
   await trx
     .update(agentDocuments)
     .set({
       policyLoad: PolicyLoad.DISABLED,
       templateId: 'agent-skill',
-      updatedAt,
+      updatedAt: new Date(),
     })
     .where(
       and(
-        eq(agentDocuments.id, params.agentDocumentId),
+        eq(agentDocuments.id, agentDocumentId),
         agentDocOwnership(ctx),
         isNull(agentDocuments.deletedAt),
       ),
     );
-
-  const [updatedResult] = await trx
-    .select({ doc: documents, settings: agentDocuments })
-    .from(agentDocuments)
-    .innerJoin(documents, eq(agentDocuments.documentId, documents.id))
-    .where(
-      and(
-        eq(agentDocuments.id, params.agentDocumentId),
-        agentDocOwnership(ctx),
-        isNull(agentDocuments.deletedAt),
-      ),
-    )
-    .limit(1);
-
-  return updatedResult ? toAgentDocument(updatedResult.settings, updatedResult.doc) : undefined;
-}
-
-export async function copy(
-  ctx: AgentDocumentContext,
-  documentId: string,
-  newTitle?: string,
-): Promise<AgentDocument | undefined> {
-  const existing = await findById(ctx, documentId);
-  if (!existing) return undefined;
-
-  const title = newTitle?.trim();
-  const filename = title ? buildDocumentFilename(title) : `copy-${Date.now()}-${existing.filename}`;
-
-  // Empty-parse shells must not be duplicated as another shell (the clone
-  // reads as Lexical error #38 and blocks cleanup); see `copyDocument.ts`
-  // for the shell detection and raw-text downgrade.
-  return create(
-    ctx,
-    existing.agentId,
-    filename,
-    existing.content,
-    buildCopyParams(existing, title),
-  );
 }

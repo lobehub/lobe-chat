@@ -129,66 +129,31 @@ export async function restoreSubtreeByDocumentId(
 }
 
 /**
- * Removes a binding and its document when no other agent still owns that document.
+ * Hard-deletes agent document bindings by binding id.
  *
  * Use when:
- * - Permanently deleting an agent trash entry.
+ * - `AgentDocumentRepository` permanently deletes trash entries and then removes
+ *   the backing documents no other binding still references.
+ *
  * Expects:
- * - The binding belongs to the current scope.
- * Returns:
- * - Backing file IDs for reference-safe cleanup by the storage service after commit.
+ * - `trx` is the caller-owned transaction; this helper writes only `agent_documents`.
  */
-export async function permanentlyDelete(
+export async function deleteBindings(
   ctx: AgentDocumentContext,
-  documentId: string,
-): Promise<string[]> {
-  const existing = await findByIdWithOptions(ctx, documentId, { includeDeleted: true });
-
-  if (!existing) return [];
-
-  return ctx.db.transaction(async (trx) => {
-    await trx
-      .delete(agentDocuments)
-      .where(and(eq(agentDocuments.id, documentId), agentDocOwnership(ctx)));
-
-    return deleteUnboundDocuments(ctx, trx, [existing.documentId]);
-  });
+  trx: Transaction,
+  agentDocumentIds: string[],
+): Promise<void> {
+  await trx
+    .delete(agentDocuments)
+    .where(and(agentDocOwnership(ctx), inArray(agentDocuments.id, agentDocumentIds)));
 }
 
 /**
- * Permanently removes a subtree's bindings and documents without deleting shared documents.
+ * Removes only documents with no surviving agent binding and returns their backing files.
  *
- * Use when:
- * - Erasing a complete document subtree in one transaction.
  * Expects:
- * - The root belongs to the requested agent and current scope.
- * Returns:
- * - Backing file IDs requiring reference-safe storage cleanup after commit.
+ * - `trx` is the caller-owned transaction; this helper writes only `documents`.
  */
-export async function permanentlyDeleteSubtreeByDocumentId(
-  ctx: AgentDocumentContext,
-  agentId: string,
-  rootDocumentId: string,
-): Promise<string[]> {
-  const subtree = await listSubtreeByDocumentId(ctx, agentId, rootDocumentId, {
-    includeDeleted: true,
-  });
-
-  if (subtree.length === 0) return [];
-
-  const agentDocumentIds = subtree.map((item) => item.id);
-  const documentIds = subtree.map((item) => item.documentId);
-
-  return ctx.db.transaction(async (trx) => {
-    await trx
-      .delete(agentDocuments)
-      .where(and(agentDocOwnership(ctx), inArray(agentDocuments.id, agentDocumentIds)));
-
-    return deleteUnboundDocuments(ctx, trx, documentIds);
-  });
-}
-
-/** Removes only documents with no surviving agent binding and returns their backing files. */
 export async function deleteUnboundDocuments(
   ctx: AgentDocumentContext,
   trx: Transaction,

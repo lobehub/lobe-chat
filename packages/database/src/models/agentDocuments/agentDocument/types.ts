@@ -31,6 +31,17 @@ export interface AgentDocumentCreateParams {
   updatedAt?: Date;
 }
 
+export interface AgentDocumentUpdateParams {
+  content?: string;
+  editorData?: Record<string, any> | null;
+  fileType?: string;
+  loadPosition?: DocumentLoadPosition;
+  loadRules?: Partial<DocumentLoadRules>;
+  metadata?: Record<string, any>;
+  policy?: AgentDocumentPolicy;
+  policyLoad?: PolicyLoad;
+}
+
 export interface ConvertAgentDocumentToSkillIndexParams {
   agentDocumentId: string;
   content: string;

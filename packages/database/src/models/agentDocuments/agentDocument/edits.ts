@@ -6,16 +6,14 @@ import {
   type NewAgentDocument,
   type NewDocument,
 } from '../../../schemas';
+import type { Transaction } from '../../../type';
 import { buildDocumentFilename } from '../filename';
-import { composeToolPolicyUpdate, normalizePolicy, parseLoadRules } from '../policy';
+import { composeToolPolicyUpdate, normalizePolicy } from '../policy';
 import {
   type AgentDocument,
-  type AgentDocumentPolicy,
   DocumentLoadFormat,
   DocumentLoadPosition,
   DocumentLoadRule,
-  type DocumentLoadRules,
-  type PolicyLoad,
   type ToolUpdateLoadRule,
 } from '../types';
 import {
@@ -24,8 +22,8 @@ import {
   documentOwnership,
   scopeMetadata,
 } from './context';
-import { create } from './creation';
-import { findByFilename, findById } from './queries';
+import { findById } from './queries';
+import type { AgentDocumentUpdateParams } from './types';
 import { getDocumentStats, getMetadataDescription } from './utils';
 
 /**
@@ -79,26 +77,18 @@ export async function updateEditorSnapshotIfUnchanged(
   return updated.length > 0;
 }
 
-export async function update(
-  ctx: AgentDocumentContext,
-  documentId: string,
-  params?: {
-    content?: string;
-    editorData?: Record<string, any> | null;
-    fileType?: string;
-    loadPosition?: DocumentLoadPosition;
-    loadRules?: Partial<DocumentLoadRules>;
-    metadata?: Record<string, any>;
-    policy?: AgentDocumentPolicy;
-    policyLoad?: PolicyLoad;
-  },
-): Promise<void> {
-  const { content, editorData, fileType, loadPosition, loadRules, metadata, policy, policyLoad } =
-    params ?? {};
-
-  const existing = await findById(ctx, documentId);
-
-  if (!existing) return;
+/**
+ * Builds the `agent_documents` settings patch for an update, merging the
+ * requested load policy into the binding's current policy.
+ *
+ * Use when:
+ * - `AgentDocumentRepository.update` prepares the binding write for its transaction.
+ */
+export function buildBindingSettingsUpdate(
+  existing: AgentDocument,
+  params?: AgentDocumentUpdateParams,
+): Partial<NewAgentDocument> {
+  const { loadPosition, loadRules, policy, policyLoad } = params ?? {};
 
   const existingPolicy = existing.policy || {};
   const existingContext = existingPolicy.context || {};
@@ -121,63 +111,104 @@ export async function update(
     policy ? { ...existingPolicy, ...policy } : existingPolicy,
   );
 
-  const settingsUpdate: Partial<NewAgentDocument> = {
+  return {
     policy: mergedPolicy,
     policyLoadFormat: mergedPolicy.context?.policyLoadFormat || DocumentLoadFormat.RAW,
     policyLoadPosition: mergedPolicy.context?.position || DocumentLoadPosition.BEFORE_FIRST_USER,
     policyLoadRule: mergedPolicy.context?.rule || DocumentLoadRule.ALWAYS,
     ...(policyLoad !== undefined && { policyLoad }),
   };
+}
 
-  await ctx.db.transaction(async (trx) => {
-    if (
-      content !== undefined ||
-      editorData !== undefined ||
-      fileType !== undefined ||
-      metadata !== undefined
-    ) {
-      const documentUpdate: Partial<NewDocument> = {};
+/**
+ * Builds the backing `documents` patch for an update.
+ *
+ * Returns:
+ * - `undefined` when the update touches no document field, so the caller skips the write.
+ */
+export function buildBackingDocumentUpdate(
+  ctx: AgentDocumentContext,
+  params?: AgentDocumentUpdateParams,
+): Partial<NewDocument> | undefined {
+  const { content, editorData, fileType, metadata } = params ?? {};
 
-      if (content !== undefined) {
-        // NOTICE:
-        // Updating Markdown content alone is valid for raw consumers, but it does not refresh
-        // the editor snapshot used by document history. Callers that replace full Markdown
-        // should also provide `editorData` from the same content when they expect history or
-        // editor restore support to keep working.
-        // Root cause: `DocumentService.trySaveCurrentDocumentHistory` validates editor data
-        // before creating history rows.
-        // Removal condition: only if document history supports Markdown-content snapshots.
-        const stats = getDocumentStats(content);
-        documentUpdate.content = content;
-        documentUpdate.totalCharCount = stats.totalCharCount;
-        documentUpdate.totalLineCount = stats.totalLineCount;
-      }
+  if (
+    content === undefined &&
+    editorData === undefined &&
+    fileType === undefined &&
+    metadata === undefined
+  ) {
+    return undefined;
+  }
 
-      if (editorData !== undefined) {
-        documentUpdate.editorData = editorData;
-      }
+  const documentUpdate: Partial<NewDocument> = {};
 
-      if (fileType !== undefined) {
-        documentUpdate.fileType = fileType;
-      }
+  if (content !== undefined) {
+    // NOTICE:
+    // Updating Markdown content alone is valid for raw consumers, but it does not refresh
+    // the editor snapshot used by document history. Callers that replace full Markdown
+    // should also provide `editorData` from the same content when they expect history or
+    // editor restore support to keep working.
+    // Root cause: `DocumentService.trySaveCurrentDocumentHistory` validates editor data
+    // before creating history rows.
+    // Removal condition: only if document history supports Markdown-content snapshots.
+    const stats = getDocumentStats(content);
+    documentUpdate.content = content;
+    documentUpdate.totalCharCount = stats.totalCharCount;
+    documentUpdate.totalLineCount = stats.totalLineCount;
+  }
 
-      if (metadata !== undefined) {
-        const scopedMetadata = scopeMetadata(ctx, metadata);
-        documentUpdate.metadata = scopedMetadata;
-        documentUpdate.description = getMetadataDescription(scopedMetadata);
-      }
+  if (editorData !== undefined) {
+    documentUpdate.editorData = editorData;
+  }
 
-      await trx
-        .update(documents)
-        .set(documentUpdate)
-        .where(and(eq(documents.id, existing.documentId), documentOwnership(ctx)));
-    }
+  if (fileType !== undefined) {
+    documentUpdate.fileType = fileType;
+  }
 
-    await trx
-      .update(agentDocuments)
-      .set(settingsUpdate)
-      .where(and(eq(agentDocuments.id, documentId), agentDocOwnership(ctx)));
-  });
+  if (metadata !== undefined) {
+    const scopedMetadata = scopeMetadata(ctx, metadata);
+    documentUpdate.metadata = scopedMetadata;
+    documentUpdate.description = getMetadataDescription(scopedMetadata);
+  }
+
+  return documentUpdate;
+}
+
+/**
+ * Writes a prepared patch to a backing `documents` row.
+ *
+ * Expects:
+ * - `trx` is the caller-owned transaction; this helper writes only `documents`.
+ */
+export async function updateBackingDocument(
+  ctx: AgentDocumentContext,
+  trx: Transaction,
+  documentId: string,
+  documentUpdate: Partial<NewDocument>,
+): Promise<void> {
+  await trx
+    .update(documents)
+    .set(documentUpdate)
+    .where(and(eq(documents.id, documentId), documentOwnership(ctx)));
+}
+
+/**
+ * Writes a prepared settings patch to one `agent_documents` binding.
+ *
+ * Expects:
+ * - `trx` is the caller-owned transaction; this helper writes only `agent_documents`.
+ */
+export async function updateBindingSettings(
+  ctx: AgentDocumentContext,
+  trx: Transaction,
+  agentDocumentId: string,
+  settingsUpdate: Partial<NewAgentDocument>,
+): Promise<void> {
+  await trx
+    .update(agentDocuments)
+    .set(settingsUpdate)
+    .where(and(eq(agentDocuments.id, agentDocumentId), agentDocOwnership(ctx)));
 }
 
 /**
@@ -349,83 +380,4 @@ export async function updateToolLoadRule(
     );
 
   return findById(ctx, documentId);
-}
-
-/**
- * Updates an existing document by filename or creates a new one when missing.
- *
- * Use when:
- * - Callers want idempotent writes keyed by agent and filename.
- * - Existing document policy and metadata should be merged on update.
- *
- * Expects:
- * - `filename` addresses the current agent's ordinary filename lookup.
- * - Duplicate filenames are allowed; the first matching filename is the oldest live binding.
- *
- * Returns:
- * - The updated or created agent document.
- *
- */
-export async function upsert(
-  ctx: AgentDocumentContext,
-  agentId: string,
-  filename: string,
-  content: string,
-  params?: {
-    createdAt?: Date;
-    editorData?: Record<string, any>;
-    loadPosition?: DocumentLoadPosition;
-    loadRules?: DocumentLoadRules;
-    metadata?: Record<string, any>;
-    policy?: AgentDocumentPolicy;
-    policyLoad?: PolicyLoad;
-    templateId?: string;
-    updatedAt?: Date;
-  },
-): Promise<AgentDocument> {
-  const {
-    createdAt,
-    editorData,
-    loadPosition,
-    loadRules,
-    metadata,
-    policy,
-    policyLoad,
-    templateId,
-    updatedAt,
-  } = params ?? {};
-
-  const existing = await findByFilename(ctx, agentId, filename);
-
-  if (existing) {
-    const currentRules = parseLoadRules(existing);
-    const mergedRules = loadRules ? { ...currentRules, ...loadRules } : currentRules;
-    const mergedMetadata = metadata
-      ? { ...existing.metadata, ...metadata }
-      : (existing.metadata ?? undefined);
-
-    await update(ctx, existing.id, {
-      content,
-      editorData,
-      loadPosition,
-      loadRules: mergedRules,
-      metadata: mergedMetadata,
-      policy,
-      policyLoad,
-    });
-
-    return (await findByFilename(ctx, agentId, filename))!;
-  }
-
-  return create(ctx, agentId, filename, content, {
-    createdAt,
-    editorData,
-    loadPosition,
-    loadRules,
-    metadata,
-    policy,
-    policyLoad,
-    templateId,
-    updatedAt,
-  });
 }
