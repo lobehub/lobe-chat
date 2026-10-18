@@ -65,7 +65,9 @@ describe('GoalService', () => {
 
     const gated = await service.graph(graph.goal.id);
     const retire = gated.decisions[0].options?.find((option) => option.id === 'retire');
-    expect(retire?.description).toContain('Write summary');
+    expect(retire?.alsoRetires).toEqual(['Write summary']);
+    // Coordinator options carry ids and data only; the client words them.
+    expect(retire?.description).toBeUndefined();
 
     await service.decide(graph.goal.id, gated.decisions[0].id, 'retire');
 

@@ -899,6 +899,11 @@ export type GoalDecisionStatus = 'pending' | 'resolved' | 'canceled';
 export type GoalDecisionOptionEffect = 'retry' | 'retire';
 
 export interface GoalDecisionOption {
+  /**
+   * Titles of the unfinished tasks a coordinator `retire` takes along, because
+   * they depend on the retired one. Data, not copy: the reader's client words it.
+   */
+  alsoRetires?: string[];
   /** The consequence of choosing this option, in the words the person reads. */
   description?: string;
   effect?: GoalDecisionOptionEffect;

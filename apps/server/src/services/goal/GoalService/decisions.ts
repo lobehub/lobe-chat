@@ -429,16 +429,13 @@ export const openFailureDecisionLocked = async (
     // Goal is a verdict even when a machine problem is what stopped it.
     const machine = !!gate.machine && !terminalAcceptance;
     const { ask } = gate;
-    // Retiring this node retires what waits on it too; say so on the button.
+    // Retiring this node retires what waits on it too. The titles travel as
+    // data so the page can say so in the reader's language.
     const stranded = terminalAcceptance ? [] : collectStrandedDependents(graph, [nodeId]);
     const retireTask: GoalDecisionOption = {
       id: 'retire',
       label: 'Retire task',
-      ...(stranded.length > 0 && {
-        description: `Also retires the tasks that depend on it: ${stranded
-          .map((node) => `"${node.title}"`)
-          .join(', ')}`,
-      }),
+      ...(stranded.length > 0 && { alsoRetires: stranded.map((node) => node.title) }),
     };
     const node = await ctx.coordinatorGraph.createNode(graph.goal.id, {
       // What the gate stands on: the main Agent's diagnosis when it asked,

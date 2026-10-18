@@ -110,7 +110,7 @@ export const GoalDecisionAsker = ({
 
 /** The coordinator's own answers, in the reader's words, and what each one does. */
 export const useGateOptionCopy = () => {
-  const { t } = useTranslation('chat');
+  const { i18n, t } = useTranslation('chat');
   return useMemo(
     () => ({
       describe: (
@@ -127,8 +127,16 @@ export const useGateOptionCopy = () => {
               : t('goalProcess.decision.effect.retry');
           }
           case 'retire': {
-            return terminalAcceptance
-              ? t('goalProcess.decision.effect.abandonAcceptance')
+            if (terminalAcceptance) return t('goalProcess.decision.effect.abandonAcceptance');
+            // Dependents leave with it, or they would wait forever on it.
+            return option.alsoRetires?.length
+              ? t('goalProcess.decision.effect.retireWithDependents', {
+                  tasks: new Intl.ListFormat(i18n.language).format(
+                    option.alsoRetires.map((title) =>
+                      t('goalProcess.decision.effect.quotedTask', { title }),
+                    ),
+                  ),
+                })
               : t('goalProcess.decision.effect.retire');
           }
           case 'fail': {
@@ -162,7 +170,7 @@ export const useGateOptionCopy = () => {
         return key ? t(key as any) : option.label;
       },
     }),
-    [t],
+    [i18n.language, t],
   );
 };
 
