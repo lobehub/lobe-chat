@@ -136,7 +136,7 @@ const DocumentIdMode = memo<DocumentIdModeProps>(
         initializedDocIdRef.current = documentId;
         hydratedVersionRef.current = remoteDocumentVersion;
 
-        void onEditorInit(editorInstance).finally(() => {
+        void onEditorInit(editorInstance, documentId).finally(() => {
           onInit?.(editorInstance);
         });
       },
@@ -160,7 +160,7 @@ const DocumentIdMode = memo<DocumentIdModeProps>(
         // Lock content-change callback while hydrating document content into editor.
         contentChangeLockRef.current = true;
 
-        void onEditorInit(editor).finally(() => {
+        void onEditorInit(editor, documentId).finally(() => {
           onInit?.(editor);
           queueMicrotask(() => {
             if (initRunIdRef.current === runId) {
@@ -198,7 +198,7 @@ const DocumentIdMode = memo<DocumentIdModeProps>(
       const runId = ++initRunIdRef.current;
       contentChangeLockRef.current = true;
 
-      void onEditorInit(editor).finally(() => {
+      void onEditorInit(editor, documentId).finally(() => {
         onInit?.(editor);
         queueMicrotask(() => {
           if (initRunIdRef.current === runId) {

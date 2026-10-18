@@ -121,7 +121,7 @@ describe('DocumentIdMode', () => {
     render(<DocumentIdMode documentId="doc-1" editor={editor} onInit={onInit} />);
 
     await waitFor(() => {
-      expect(onEditorInit).toHaveBeenCalledWith(editor);
+      expect(onEditorInit).toHaveBeenCalledWith(editor, 'doc-1');
       expect(onInit).toHaveBeenCalledWith(editor);
     });
   });
