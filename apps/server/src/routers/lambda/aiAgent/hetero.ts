@@ -15,6 +15,7 @@ import {
 } from '@/business/server/agent-run/heteroInterventionReview';
 import { agentOperations } from '@/database/schemas';
 import type { LobeChatDatabase } from '@/database/type';
+import { router } from '@/libs/trpc/lambda';
 import { signHeteroOperationJWT } from '@/libs/trpc/utils/internalJwt';
 import { createStreamEventManager } from '@/server/modules/AgentRuntime/factory';
 import { mapAgentInterventionTRPCError } from '@/server/routers/lambda/_helpers/agentInterventionError';
@@ -260,7 +261,7 @@ const authorizeOperationCallback = async (
   }
 };
 
-export const heteroProcedures = {
+export const heteroRouter = router({
   /**
    * Ingest a batch of `AgentStreamEvent`s from a `lh hetero exec` producer
    * (CLI standalone, sandboxed CC, etc.) and republish them through the
@@ -594,4 +595,4 @@ export const heteroProcedures = {
 
       return { status: 'resolving' as const, success: true as const };
     }),
-};
+});

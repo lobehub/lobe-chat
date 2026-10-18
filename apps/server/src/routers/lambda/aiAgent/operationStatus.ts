@@ -9,6 +9,7 @@ import { z } from 'zod';
 import { agentOperations } from '@/database/schemas';
 import type { LobeChatDatabase } from '@/database/type';
 import { notShareVisitorTopicRef } from '@/database/utils/shareVisitor';
+import { router } from '@/libs/trpc/lambda';
 import { assertCanUseWorkspaceAgent } from '@/server/routers/lambda/_helpers/workspaceAgentGuard';
 
 import { aiAgentProcedure } from './procedures';
@@ -136,7 +137,7 @@ const GetPendingInterventionsSchema = z
     message: 'Either operationId or userId must be provided',
   });
 
-export const operationStatusProcedures = {
+export const operationStatusRouter = router({
   getOperationStatus: aiAgentProcedure
     .input(GetOperationStatusSchema)
     .query(async ({ input, ctx }) => {
@@ -450,4 +451,4 @@ export const operationStatusProcedures = {
 
       return result;
     }),
-};
+});

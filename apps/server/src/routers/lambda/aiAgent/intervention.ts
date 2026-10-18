@@ -10,6 +10,7 @@ import {
   resolveAgentIntervention,
   resolveAgentInterventionBySource,
 } from '@/business/server/agent-run/agentInterventionReview';
+import { router } from '@/libs/trpc/lambda';
 import { mapAgentInterventionTRPCError } from '@/server/routers/lambda/_helpers/agentInterventionError';
 import { assertCanViewMessageTargets } from '@/server/routers/lambda/_helpers/conversationResourceGuard';
 import { toClientExecAgentResult } from '@/server/routers/lambda/_helpers/groupMemberContinuationResult';
@@ -48,7 +49,7 @@ const ProcessHumanInterventionSchema = z.object({
   toolMessageId: z.string().optional(),
 });
 
-export const interventionProcedures = {
+export const interventionRouter = router({
   /**
    * Interrupt a running task
    *
@@ -354,4 +355,4 @@ export const interventionProcedures = {
         timestamp: new Date().toISOString(),
       };
     }),
-};
+});

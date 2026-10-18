@@ -1,12 +1,13 @@
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
+import { router } from '@/libs/trpc/lambda';
 import { signUserJWT } from '@/libs/trpc/utils/internalJwt';
 
 import { LlmExecutorSchema } from './execSchemas';
 import { aiAgentProcedure, aiAgentWriteProcedure } from './procedures';
 
-export const gatewayRelayProcedures = {
+export const gatewayRelayRouter = router({
   /**
    * Runs of the caller parked in `waiting_for_client`: their next LLM call needs
    * the user's device and no client took it. A client that can run the provider
@@ -84,4 +85,4 @@ export const gatewayRelayProcedures = {
 
       return { token };
     }),
-};
+});

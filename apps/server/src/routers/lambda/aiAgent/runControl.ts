@@ -2,6 +2,8 @@ import { TRPCError } from '@trpc/server';
 import debug from 'debug';
 import { z } from 'zod';
 
+import { router } from '@/libs/trpc/lambda';
+
 import { assertCanUseOperationAgent } from './guards';
 import { aiAgentWriteProcedure } from './procedures';
 
@@ -43,7 +45,7 @@ const StartExecutionSchema = z.object({
   priority: z.enum(['high', 'normal', 'low']).optional().default('normal'),
 });
 
-export const runControlProcedures = {
+export const runControlRouter = router({
   interruptTask: aiAgentWriteProcedure
     .input(InterruptTaskSchema)
     .mutation(async ({ input, ctx }) => {
@@ -104,4 +106,4 @@ export const runControlProcedures = {
         timestamp: new Date().toISOString(),
       };
     }),
-};
+});

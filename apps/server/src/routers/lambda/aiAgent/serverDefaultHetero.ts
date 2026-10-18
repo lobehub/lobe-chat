@@ -8,6 +8,7 @@ import { z } from 'zod';
 import { AgentOperationModel } from '@/database/models/agentOperation';
 import { agentOperations, workspaceMembers } from '@/database/schemas';
 import type { LobeChatDatabase } from '@/database/type';
+import { router } from '@/libs/trpc/lambda';
 import { signHeteroOperationJWT } from '@/libs/trpc/utils/internalJwt';
 import {
   describeServerDefaultHeterogeneousModel,
@@ -133,7 +134,7 @@ const settleServerDefaultControlOperation = async (params: {
   }
 };
 
-export const serverDefaultHeteroProcedures = {
+export const serverDefaultHeteroRouter = router({
   getServerDefaultHeterogeneousCapability: aiAgentBaseProcedure.query(() =>
     resolveServerDefaultHeterogeneousCapability(),
   ),
@@ -305,4 +306,4 @@ export const serverDefaultHeteroProcedures = {
       });
       return { success: true as const };
     }),
-};
+});

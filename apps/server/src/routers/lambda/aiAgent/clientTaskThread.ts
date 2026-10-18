@@ -4,6 +4,7 @@ import { TRPCError } from '@trpc/server';
 import debug from 'debug';
 import { z } from 'zod';
 
+import { router } from '@/libs/trpc/lambda';
 import { assertCanUseWorkspaceAgent } from '@/server/routers/lambda/_helpers/workspaceAgentGuard';
 
 import { assertCanUseAgentRunConversation } from './guards';
@@ -76,7 +77,7 @@ const UpdateClientTaskThreadStatusSchema = z.object({
   threadId: z.string(),
 });
 
-export const clientTaskThreadProcedures = {
+export const clientTaskThreadRouter = router({
   /**
    * Create Thread for client-side task execution in Group mode
    *
@@ -403,4 +404,4 @@ export const clientTaskThreadProcedures = {
         });
       }
     }),
-};
+});

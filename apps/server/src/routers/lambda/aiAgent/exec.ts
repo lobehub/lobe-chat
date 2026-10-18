@@ -13,6 +13,7 @@ import {
 } from '@/business/server/agent-run/agentInterventionReview';
 import type { MessageModel } from '@/database/models/message';
 import { HumanApprovalAlreadyResolvedError } from '@/database/models/message';
+import { router } from '@/libs/trpc/lambda';
 import { unwrapPgError } from '@/server/modules/AgentRuntime/pgError';
 import { toClientExecAgentResult } from '@/server/routers/lambda/_helpers/groupMemberContinuationResult';
 import { assertCanUseWorkspaceAgent } from '@/server/routers/lambda/_helpers/workspaceAgentGuard';
@@ -201,7 +202,7 @@ export const bridgeLegacyResumeToSourceIntervention = async (
   return undefined;
 };
 
-export const execProcedures = {
+export const execRouter = router({
   execAgent: aiAgentWriteProcedure.input(ExecAgentSchema).mutation(async ({ input, ctx }) => {
     const {
       agentId,
@@ -716,4 +717,4 @@ export const execProcedures = {
         });
       }
     }),
-};
+});
