@@ -27,8 +27,8 @@ import { BatchPlanSkillService } from './batchPlanSkill';
 import type { GoalBriefService } from './goalBriefs';
 import type { GoalService } from './index';
 import { answeredProblem, GoalManagerService, problemKey } from './manager';
-import { buildReleaseGateDossier, openReleaseGateAcceptance } from './releaseGate';
-import { createRecipeUnitTask } from './rolloutBatch';
+import { buildReleaseGateDossier, openReleaseGateAcceptance, reviewedUnitIds } from './releaseGate';
+import { carriedUnitBrief, createRecipeUnitTask, rerunUnitNote } from './rolloutBatch';
 import { describeGateChecks, type RolloutGateResult, withGateVerdict } from './rolloutGate';
 
 const log = debug('lobe-server:goal-rollout');
@@ -49,13 +49,52 @@ export interface ReleaseReviewHost {
 }
 
 /**
+ * The plan version a round runs on. A plan sent back is rewritten inside its
+ * round, so the round number alone would name the version the owner rejected.
+ */
+const planVersionOf = (state: GoalRolloutState) =>
+  state.planVersions?.[String(state.templateRevision)] ?? state.templateRevision;
+
+/**
+ * The reviewed units a sent-back plan runs again, with the brief each keeps and
+ * what it delivered. `names` are the node ids or titles the main Agent chose;
+ * absent — or naming none of them, which is a slip rather than a choice —
+ * every reviewed unit runs again, and an empty list runs none.
+ */
+const rerunUnits = (
+  graph: GoalGraphSnapshot,
+  state: GoalRolloutState,
+  waveSize: number,
+  names: string[] | undefined,
+) => {
+  const units = reviewedUnitIds(state, waveSize).flatMap((id) => {
+    const node = graph.nodes.find((candidate) => candidate.id === id);
+    if (!node || node.kind !== 'task') return [];
+    const delivered = graph.workVersions
+      .filter((link) => link.nodeId === id && link.work && link.work.type !== 'task')
+      .map((link) => {
+        const title = link.work!.title ?? link.work!.identifier ?? '';
+        return link.work!.url ? `${title} ${link.work!.url}`.trim() : title;
+      })
+      .filter(Boolean);
+    return [
+      { brief: carriedUnitBrief(node), delivered: [...new Set(delivered)], id, title: node.title },
+    ];
+  });
+  if (!names) return units;
+  const chosen = units.filter((unit) => names.includes(unit.id) || names.includes(unit.title));
+  return names.length && !chosen.length ? units : chosen;
+};
+
+/**
  * The batch's release gate as a decision a person (or the main Agent) makes.
  *
  * A passed gate only proves the units ran; releasing the next wave is held
  * here: on the owner for a round's first wave, on the main Agent for the rest.
  * The owner decides on a review report; sending the plan back hands the
  * correction to the main Agent, whose rewrite becomes the plan skill's next
- * version in the same round and comes back to the same review.
+ * version in the same round. The units the correction covers run again on
+ * it in place, and their results come back to the same review.
  */
 export class GoalReleaseReview {
   constructor(
@@ -100,10 +139,22 @@ export class GoalReleaseReview {
       return this.releaseRolloutWave(graph, effects, gate);
 
     const wave = `wave ${state.waveIndex + 1} (${waveCount} unit${waveCount === 1 ? '' : 's'})`;
+    // A release review the owner has not approved means they sent this wave's
+    // plan back and its units ran again: their results go back to the owner,
+    // not to the main Agent to release on its own. The review's decision node
+    // is the marker — it outlives a send-back and only an approval clears it —
+    // so a send-back answered on the goal page, without a report, counts too.
+    if (state.waveIndex > 0 && (state.releaseReviewNodeId || state.releaseGateAcceptanceId))
+      return this.openReleaseReview(
+        graph,
+        `Units re-run on plan v${planVersionOf(state)} passed the gate; approve releasing ${wave}`,
+        effects,
+        { gate, kind: 'escalated' },
+      );
     if (state.waveIndex === 0)
       return this.openReleaseReview(
         graph,
-        `Experiments of v${state.templateRevision} finished; start batch execution with ${wave}`,
+        `Experiments of v${planVersionOf(state)} finished; start batch execution with ${wave}`,
         effects,
         { gate, kind: 'probes' },
       );
@@ -112,7 +163,7 @@ export class GoalReleaseReview {
     // read as the answer for the next.
     const problem = {
       kind: 'rollout_release' as const,
-      reason: `Batch gate passed for v${state.templateRevision} after wave ${state.waveIndex}: ${describeGateChecks(gate)}. Decide whether ${wave} goes out — release it, or escalate it for the owner to approve.`,
+      reason: `Batch gate passed for v${planVersionOf(state)} after wave ${state.waveIndex}: ${describeGateChecks(gate)}. Decide whether ${wave} goes out — release it, or escalate it for the owner to approve.`,
     };
     const answered = answeredProblem(graph.goal.config?.managerState);
     // A `release` answer recorded its approval when it was submitted, so reaching
@@ -143,8 +194,8 @@ export class GoalReleaseReview {
    * Parks the goal like a pattern break, but on a decision node of its own: a
    * node carries one decision, and the Assay keeps its for a break later in the
    * round. `release` sends the wave out on the proven recipe; `revise` takes a
-   * correction for the main Agent, whose rewritten plan comes back to this
-   * review — the probes already ran and are not run again.
+   * correction for the main Agent, whose rewritten plan re-runs the units the
+   * correction covers and comes back to this review with their new results.
    */
   private openReleaseReview = async (
     graph: GoalGraphSnapshot,
@@ -430,7 +481,7 @@ export class GoalReleaseReview {
 
     const problem = {
       kind: 'rollout_revise' as const,
-      reason: `The owner reviewed the experiments of plan v${state.templateRevision} and sent the plan back with this correction:\n${pending.correction}\nRewrite the plan so every remaining unit follows it, and answer revise_plan with the full revised plan.`,
+      reason: `The owner reviewed the experiments of plan v${planVersionOf(state)} and sent the plan back with this correction:\n${pending.correction}\nRewrite the plan so every remaining unit follows it, and answer revise_plan with the full revised plan.`,
     };
     const takeover = await new GoalManagerService(this.db, this.userId, this.workspaceId).takeOver(
       graph,
@@ -444,11 +495,13 @@ export class GoalReleaseReview {
   };
 
   /**
-   * Land the main Agent's rewrite in the round it was asked for. Sending a plan
-   * back revises the plan skill — a new version of the same round — not the
-   * experiments: they already ran, and the owner judged them. The rewritten
-   * plan then returns to the owner on the same release review, as its next
-   * round, so the decision is made on the plan the batch will actually copy.
+   * Land the main Agent's rewrite in the round it was asked for: the plan
+   * skill's next version, not a new round. The owner sent the plan back after
+   * judging this round's experiments, so the units the rewrite names — every
+   * one unless it said otherwise — run again on it in place, under the same
+   * gate: each re-run is `derived_from` its earlier run, continues that
+   * delivery, and takes its place in the round. Their results come back to the
+   * same review. A rewrite that re-runs nothing returns to the review at once.
    */
   private applyPlanRevision = async (graph: GoalGraphSnapshot): Promise<GoalTickResult> => {
     const goalId = graph.goal.id;
@@ -457,6 +510,8 @@ export class GoalReleaseReview {
     const pending = state.pendingRevision!;
     const recipe = pending.revisedRecipe!.trim();
     const round = String(state.templateRevision);
+    const waveSize = Math.max(1, policy?.waveSize ?? ROLLOUT_WAVE_SIZE_DEFAULT);
+    const rerun = rerunUnits(graph, state, waveSize, pending.rerun);
     const version = state.planSkill
       ? await new BatchPlanSkillService(this.db, this.userId, this.workspaceId)
           .revise(state.planSkill, {
@@ -470,6 +525,10 @@ export class GoalReleaseReview {
             return undefined;
           })
       : undefined;
+    // A revision that did not land leaves the skill on the plan the owner sent
+    // back: units drop it and copy the revised plan instead.
+    const planSkill = version === undefined ? undefined : state.planSkill;
+    const reopened: string[] = [];
     const applied = await this.db.transaction(async (tx) => {
       const goalModel = new GoalModel(tx, this.userId, this.workspaceId);
       const current = (await goalModel.lockById(goalId))?.config?.rolloutState;
@@ -484,31 +543,73 @@ export class GoalReleaseReview {
             repeatable: policy.spec?.repeatable ?? true,
           },
         });
+      const writer = new GoalGraphModel(tx, this.userId, this.workspaceId, {
+        id: GOAL_COORDINATOR_ACTOR_ID,
+        type: 'system',
+      });
       if (current.templateNodeId)
-        await new GoalGraphModel(tx, this.userId, this.workspaceId, {
-          id: GOAL_COORDINATOR_ACTOR_ID,
-          type: 'system',
-        }).updateNodeDescription(goalId, current.templateNodeId, recipe);
+        await writer.updateNodeDescription(goalId, current.templateNodeId, recipe);
+
+      // Each re-run replaces its earlier run in the round, so the gate judges
+      // the re-runs and the review reports them.
+      const replaced = new Map<string, string>();
+      for (const unit of rerun) {
+        const nodeId = await createRecipeUnitTask(
+          writer,
+          goalId,
+          current.batchNodeId,
+          unit.title,
+          { outline: recipe, skill: planSkill },
+          unit.brief,
+          rerunUnitNote(pending.correction, unit.delivered),
+        );
+        if (!nodeId) continue;
+        replaced.set(unit.id, nodeId);
+        reopened.push(unit.title);
+        await writer.createEdge(goalId, nodeId, unit.id, 'derived_from');
+        if (current.waveIndex === 0 && current.assayNodeId)
+          await writer.createEdge(goalId, current.assayNodeId, nodeId, 'depends_on');
+      }
+      // A unit that waited on another keeps waiting on it: the order the units
+      // ran in carries over to their re-runs, so a re-run never starts on the
+      // output its prerequisite is still redoing.
+      for (const edge of graph.edges) {
+        const source = edge.kind === 'depends_on' && replaced.get(edge.sourceNodeId);
+        if (!source) continue;
+        await writer.createEdge(
+          goalId,
+          source,
+          replaced.get(edge.targetNodeId) ?? edge.targetNodeId,
+          'depends_on',
+        );
+      }
+      const swap = (ids: string[]) => ids.map((id) => replaced.get(id) ?? id);
       await goalModel.updateRolloutState(goalId, {
         ...current,
+        ...(current.massNodeIds && { massNodeIds: swap(current.massNodeIds) }),
         pendingRevision: undefined,
         phase: current.waveIndex === 0 ? 'probe' : 'mass',
-        // A revision that did not land leaves the skill on the plan the owner
-        // sent back: units drop it and copy the revised plan instead.
-        planSkill: version === undefined ? undefined : current.planSkill,
+        planSkill,
         planVersions: version
           ? { ...current.planVersions, [round]: version }
           : current.planVersions,
+        probeNodeIds: swap(current.probeNodeIds),
       });
       return true;
     });
     if (!applied)
       return { goalId, message: 'The plan revision was already applied', outcome: 'no_progress' };
 
+    if (reopened.length)
+      return {
+        goalId,
+        message: `The main Agent revised the plan to v${version ?? state.templateRevision} from your correction; re-running ${reopened.length} unit${reopened.length === 1 ? '' : 's'} on it before you review again`,
+        outcome: 'advanced',
+      };
+
     const fresh = await this.host.requireGraph(goalId);
     const freshState = fresh.goal.config!.rolloutState!;
     const released = freshState.releasedCount ?? freshState.probeNodeIds.length;
-    const waveSize = Math.max(1, policy?.waveSize ?? ROLLOUT_WAVE_SIZE_DEFAULT);
     const count = (freshState.unitTitles ?? []).slice(released, released + waveSize).length;
     const wave = `wave ${freshState.waveIndex + 1} (${count} unit${count === 1 ? '' : 's'})`;
     return this.openReleaseReview(

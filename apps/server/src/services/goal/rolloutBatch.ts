@@ -16,7 +16,7 @@ import debug from 'debug';
 import type { GoalModel } from '@/database/models/goal';
 import type { GoalGraphModel } from '@/database/models/goalGraph';
 
-import { BatchPlanSkillService, planUnitBrief } from './batchPlanSkill';
+import { BatchPlanSkillService, PLAN_SKILL_BRIEF_LEAD, planUnitBrief } from './batchPlanSkill';
 import { unitsNamedByProbes } from './spec';
 
 const log = debug('lobe-server:goal-rollout');
@@ -67,6 +67,8 @@ export const normalizeRolloutRoster = (
 
 /** Heads the brief a unit carries over from its first run when it is re-opened. */
 const UNIT_BRIEF_HEADING = 'Unit brief (from its first run):';
+/** Heads why a delivered unit runs again, and what it delivered before. */
+const RERUN_HEADING = 'Re-run on the revised plan:';
 
 /**
  * The per-unit brief a re-opened unit must keep: the first-hand probe brief
@@ -78,8 +80,18 @@ export const carriedUnitBrief = (node: { description?: string | null; title: str
   const description = node.description?.trim();
   if (!description) return undefined;
   const carried = description.indexOf(UNIT_BRIEF_HEADING);
-  if (carried >= 0) return description.slice(carried + UNIT_BRIEF_HEADING.length).trim();
-  return description.endsWith(`Unit: ${node.title}`) ? undefined : description;
+  // A re-run's note belongs to that run; the next re-open writes its own.
+  const brief = carried >= 0 ? description.slice(carried + UNIT_BRIEF_HEADING.length) : description;
+  const note = brief.indexOf(RERUN_HEADING);
+  const own = (note >= 0 ? brief.slice(0, note) : brief).trim();
+  if (carried >= 0) return own || undefined;
+  // Briefed from the shared plan alone — the outline, or the plan skill — the
+  // unit has nothing of its own, and the plan it ran on is not to be carried.
+  // Only the generated skill brief is skipped: a planner's own instruction may
+  // open with the same `Unit:` line and still carry the unit's constraints.
+  const unit = `Unit: ${node.title}`;
+  const skillBrief = own.startsWith(`${unit}\n\n${PLAN_SKILL_BRIEF_LEAD}`);
+  return !own || own.endsWith(unit) || skillBrief ? undefined : own;
 };
 
 /**
@@ -97,9 +109,15 @@ export const createRecipeUnitTask = async (
   title: string,
   plan: { outline?: string; skill?: GoalRolloutPlanSkill },
   unitBrief?: string,
+  /** Why a delivered unit runs again; see {@link rerunUnitNote}. */
+  rerunNote?: string,
 ): Promise<string | undefined> => {
   const node = await writer.createNode(goalId, {
-    description: [planUnitBrief(title, plan), unitBrief && `${UNIT_BRIEF_HEADING}\n${unitBrief}`]
+    description: [
+      planUnitBrief(title, plan),
+      unitBrief && `${UNIT_BRIEF_HEADING}\n${unitBrief}`,
+      rerunNote && `${RERUN_HEADING}\n${rerunNote}`,
+    ]
       .filter(Boolean)
       .join('\n\n'),
     kind: 'task',
@@ -108,6 +126,19 @@ export const createRecipeUnitTask = async (
   });
   return node?.id;
 };
+
+/**
+ * Why a unit the owner already saw delivered runs again: the correction its
+ * plan was rewritten from, and what it delivered, so the run brings that
+ * delivery up to the revised plan instead of starting a second one beside it.
+ */
+export const rerunUnitNote = (correction: string, delivered: string[]) =>
+  [
+    `The owner reviewed this unit's earlier delivery and sent the plan back with this correction:\n${correction}`,
+    delivered.length
+      ? `Earlier delivery:\n${delivered.map((item) => `- ${item}`).join('\n')}\nContinue on it (same branch / PR) until it meets the revised plan; do not open a second one.`
+      : 'Redo the unit so it meets the revised plan.',
+  ].join('\n\n');
 
 export interface RolloutBatchProbe {
   /** 0-based indices of earlier probes this one builds on. */

@@ -493,12 +493,12 @@ export default {
   'acceptance.status.closed': 'Acceptance closed',
   'acceptance.status.delivered': 'Ready for your decision',
   'acceptance.gate.decidedRevise':
-    'Sent back. The main Agent is rewriting the plan from your correction; the new version comes back here for your review.',
+    'Sent back. The main Agent is rewriting the plan from your correction and re-running the affected units on it; their new results come back here for your review.',
   'acceptance.gate.decidedRelease': 'Started. Wave {{wave}} is running.',
   'acceptance.gate.cancel': 'Cancel',
   'acceptance.gate.reviseSubmit': 'Send back to revise',
   'acceptance.gate.reviseHint':
-    'Your correction goes to the main Agent, which writes a new version of the plan skill. The results above stand; you review the new version before anything is released.',
+    'Your correction goes to the main Agent, which writes a new version of the plan skill and re-runs the units it covers on that version. You review their new results before anything is released.',
   'acceptance.gate.revisePlaceholder':
     'Write the correction. The main Agent writes it into a new version of the plan.',
   'acceptance.gate.revise': 'Revise plan',
@@ -522,6 +522,7 @@ export default {
   'acceptance.gate.resultsProbes': 'Experiment results',
   'acceptance.gate.hideFiles': 'Hide files',
   'acceptance.gate.showFiles': 'Show the skill files',
+  'acceptance.gate.planFiles': '{{count}} files',
   'acceptance.gate.planTitle': 'Execution plan',
   'acceptance.gate.agentSays': 'Main Agent: {{reason}}',
   'acceptance.gate.unitBrief': 'What this unit does',

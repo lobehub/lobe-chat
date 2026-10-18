@@ -52,8 +52,12 @@ export type BatchUnitOrigin =
   | { index: number; kind: 'wave'; wave: number };
 
 export interface BatchProbe {
+  /** Which run of the unit this is, when it was sent back and run again in the round (2, 3…). */
+  attempt?: number;
   from?: BatchUnitOrigin;
   nodeId: string;
+  /** Every run of a unit sent back inside its round, first to latest — this one last. */
+  runs?: { nodeId: string; state: BatchCellState }[];
   state: BatchCellState;
   title: string;
 }
@@ -310,16 +314,62 @@ export const buildBatchModel = (graph: GoalGraphView, batchId: string): BatchMod
   });
 
   const rounds: BatchRound[] = probeIdsByRound.map((ids, r) => {
+    // A unit sent back and run again inside its round keeps one place there:
+    // its latest run, numbered, instead of a superseded square beside it.
+    const inRound = new Set(ids);
+    const rerunOf = new Map(
+      graph.edges
+        .filter(
+          (edge) =>
+            edge.kind === 'derived_from' &&
+            inRound.has(edge.sourceNodeId) &&
+            inRound.has(edge.targetNodeId),
+        )
+        .map((edge) => [edge.sourceNodeId, edge.targetNodeId]),
+    );
+    const rerun = new Set(rerunOf.values());
+    const attemptOf = (id: string): number => {
+      const earlier = rerunOf.get(id);
+      return earlier ? attemptOf(earlier) + 1 : 1;
+    };
+    // Where the unit first ran, so a re-run keeps its place among the trials.
+    const firstRunOf = (id: string): string => {
+      const earlier = rerunOf.get(id);
+      return earlier ? firstRunOf(earlier) : id;
+    };
+    // The unit's runs in this round, first to latest.
+    const runsOf = (id: string): string[] => {
+      const earlier = rerunOf.get(id);
+      return earlier ? [...runsOf(earlier), id] : [id];
+    };
     const probes = ids
+      .filter((id) => !rerun.has(id))
       .map((id) => graph.byId[id])
       .filter((view): view is GoalNodeView => !!view)
-      .sort(byCreatedAt)
-      .map((view) => ({
-        from: r > 0 ? originOf(view) : undefined,
-        nodeId: view.node.id,
-        state: cellOf(view.node.id),
-        title: view.node.title,
-      }));
+      .sort(
+        (a, b) =>
+          byCreatedAt(
+            graph.byId[firstRunOf(a.node.id)] ?? a,
+            graph.byId[firstRunOf(b.node.id)] ?? b,
+          ) || byCreatedAt(a, b),
+      )
+      .map((view) => {
+        const attempt = attemptOf(view.node.id);
+        return {
+          ...(attempt > 1 && {
+            attempt,
+            // A superseded run is history here, read as it ended, not as superseded.
+            runs: runsOf(view.node.id).map((id) => ({
+              nodeId: id,
+              state: batchCellState(graph.byId[id], waitingOn),
+            })),
+          }),
+          from: r > 0 ? originOf(view) : undefined,
+          nodeId: view.node.id,
+          state: cellOf(view.node.id),
+          title: view.node.title,
+        };
+      });
     const template = templates[r];
     const assay = assays[r];
     const previousTemplate = templates[r - 1];
