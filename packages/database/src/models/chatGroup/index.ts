@@ -7,7 +7,7 @@ import type {
   ChatGroupItem,
   NewChatGroup,
   NewChatGroupAgent,
-} from '../schemas';
+} from '../../schemas';
 import {
   agentBotProviders,
   agentCronJobs,
@@ -19,29 +19,29 @@ import {
   projects,
   sessionGroups,
   tasks,
-} from '../schemas';
-import type { LobeChatDatabase, Transaction } from '../type';
-import { sanitizeAgencyConfigsForWorkspace } from '../utils/agencyConfigDevices';
-import { rehomeAgentConnectorsForRecipient } from '../utils/agentConnectors';
-import { rehomeAgentDocumentsForRecipient } from '../utils/agentDocumentsOwnership';
-import { rehomeAgentExpertiseForRecipient } from '../utils/agentExpertise';
+} from '../../schemas';
+import type { LobeChatDatabase, Transaction } from '../../type';
+import { sanitizeAgencyConfigsForWorkspace } from '../../utils/agencyConfigDevices';
+import { rehomeAgentConnectorsForRecipient } from '../../utils/agentConnectors';
+import { rehomeAgentDocumentsForRecipient } from '../../utils/agentDocumentsOwnership';
+import { rehomeAgentExpertiseForRecipient } from '../../utils/agentExpertise';
 import {
   detachAgentKnowledgeMountsForRecipient,
   rehomeRetainedAgentKnowledgeMounts,
-} from '../utils/agentKnowledgeMounts';
-import { rehomeAgentLabelsForRecipient } from '../utils/agentLabelsOwnership';
-import { rehomeAgentQuotaBindingsForRecipient } from '../utils/agentQuotaBindings';
-import type { GroupMemberRole } from '../utils/groupMembership';
+} from '../../utils/agentKnowledgeMounts';
+import { rehomeAgentLabelsForRecipient } from '../../utils/agentLabelsOwnership';
+import { rehomeAgentQuotaBindingsForRecipient } from '../../utils/agentQuotaBindings';
+import type { GroupMemberRole } from '../../utils/groupMembership';
 import {
   GROUP_SUPERVISOR_ROLE,
   isOwnedMembership,
   resolveGroupMembershipType,
-} from '../utils/groupMembership';
-import { normalizeInboxAgentAvatar } from '../utils/inboxAgent';
-import { buildWorkspacePayload, buildWorkspaceWhere } from '../utils/workspace';
-import { AGENT_SHARED_TRANSFER_BLOCKED } from './agent';
-import { AGENT_COPY_IN_PROGRESS, AgentCopyJobModel } from './agentCopyJob';
-import { AGENT_TRANSFER_IN_PROGRESS, AgentTransferJobModel } from './agentTransferJob';
+} from '../../utils/groupMembership';
+import { normalizeInboxAgentAvatar } from '../../utils/inboxAgent';
+import { buildWorkspacePayload, buildWorkspaceWhere } from '../../utils/workspace';
+import { AGENT_SHARED_TRANSFER_BLOCKED } from '../agent';
+import { AGENT_COPY_IN_PROGRESS, AgentCopyJobModel } from '../agentCopyJob';
+import { AGENT_TRANSFER_IN_PROGRESS, AgentTransferJobModel } from '../agentTransferJob';
 
 /** Slugs owned by builtin provisioning; a group delete must never reach one. */
 const RESERVED_BUILTIN_AGENT_SLUGS: string[] = Object.values(BUILTIN_AGENT_SLUGS);
