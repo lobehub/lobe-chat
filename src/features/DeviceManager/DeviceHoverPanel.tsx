@@ -114,7 +114,7 @@ const DeviceHoverPanel = ({ device }: DeviceHoverPanelProps) => {
 
   // The series also carries the specs (cores, memory), so fetch it for offline
   // devices too; only an online device's last reading is shown as its load.
-  const { data, error } = useDeviceMetricSeries(device.deviceId);
+  const { data, error } = useDeviceMetricSeries(device.deviceId, device.scope);
   const usage = latestUsageView({ data, error });
   const summary = buildDeviceHoverSummary(device, data);
   const { online } = summary;

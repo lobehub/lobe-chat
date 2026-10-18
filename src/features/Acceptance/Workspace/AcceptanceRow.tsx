@@ -254,30 +254,32 @@ const AcceptanceRow = memo<{
     });
   };
 
-  const statusItems: DropdownItem[] = getAcceptanceStatusActions(item.status).map((action) => {
-    if (action === 'accept') {
+  const statusItems: DropdownItem[] = getAcceptanceStatusActions(item.status, item.subjectType).map(
+    (action) => {
+      if (action === 'accept') {
+        return {
+          icon: <Icon icon={CircleCheck} />,
+          key: action,
+          label: t('acceptance.workspace.actions.markAccepted'),
+          onClick: () => void changeStatus('accepted'),
+        };
+      }
+      if (action === 'reopen') {
+        return {
+          icon: <Icon icon={RotateCcw} />,
+          key: action,
+          label: t('acceptance.workspace.actions.reopen'),
+          onClick: () => void changeStatus('delivered'),
+        };
+      }
       return {
-        icon: <Icon icon={CircleCheck} />,
+        icon: <Icon icon={X} />,
         key: action,
-        label: t('acceptance.workspace.actions.markAccepted'),
-        onClick: () => void changeStatus('accepted'),
+        label: t('acceptance.workspace.actions.markClosed'),
+        onClick: () => void changeStatus('closed'),
       };
-    }
-    if (action === 'reopen') {
-      return {
-        icon: <Icon icon={RotateCcw} />,
-        key: action,
-        label: t('acceptance.workspace.actions.reopen'),
-        onClick: () => void changeStatus('delivered'),
-      };
-    }
-    return {
-      icon: <Icon icon={X} />,
-      key: action,
-      label: t('acceptance.workspace.actions.markClosed'),
-      onClick: () => void changeStatus('closed'),
-    };
-  });
+    },
+  );
 
   // Deciding the delivery is what this menu is FOR — status leads, then the
   // filing actions, then the destructive one behind its own divider. Buried

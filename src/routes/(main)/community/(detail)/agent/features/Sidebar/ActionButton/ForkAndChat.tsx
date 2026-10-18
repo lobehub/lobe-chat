@@ -13,6 +13,7 @@ import { useMarketAuth } from '@/layout/AuthProvider/MarketAuth';
 import { lambdaClient } from '@/libs/trpc/client';
 import { agentService } from '@/services/agent';
 import { discoverService } from '@/services/discover';
+import { ensureAgentMarketSkillsAndWarn } from '@/services/ensureAgentMarketSkills';
 import { marketApiService } from '@/services/marketApi';
 import { useAgentStore } from '@/store/agent';
 import { useHomeStore } from '@/store/home';
@@ -200,7 +201,11 @@ const ForkAndChat = memo<{ mobile?: boolean }>(({ mobile }) => {
 
       toast.success(t('fork.success'));
 
-      // Step 6: Navigate to chat
+      // Step 6: Install the Market skills the agent references. The agent already
+      // exists, so this never throws and only ever adds a non-blocking warning.
+      await ensureAgentMarketSkillsAndWarn(config.plugins);
+
+      // Step 7: Navigate to chat
       navigate(AGENT_CHAT_URL(result!.agentId, mobile));
     } catch (error: any) {
       console.error('Fork failed:', error);

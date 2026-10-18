@@ -39,6 +39,7 @@ import { useInitialRevalidation } from './hooks/useInitialRevalidation';
 import { useMessageRefreshError } from './hooks/useMessageRefreshError';
 import { resolveMessageListFeedback } from './resolveMessageListFeedback';
 import { buildChatRows } from './utils/chatRows';
+import { hoistCompressedGroups } from './utils/compressedGroupOrder';
 import type { MessageDeepLink } from './utils/messageDeepLink';
 import { resolveMessageDeepLink } from './utils/messageDeepLink';
 import { resolveRefreshingRowId } from './utils/refreshingRow';
@@ -164,9 +165,16 @@ const ChatList = memo<ChatListProps>(
       isValidating: messagesSWR.isValidating,
     });
     const allDisplayMessages = useConversationStore(dataSelectors.displayMessages);
+    // A compression group summarises the history before the turn that triggered
+    // it, so it belongs above that turn's question rather than between the
+    // question and its answer.
+    const orderedMessages = useMemo(
+      () => hoistCompressedGroups(allDisplayMessages),
+      [allDisplayMessages],
+    );
     const displayMessages = useMemo(
-      () => (filterItem ? allDisplayMessages.filter(filterItem) : allDisplayMessages),
-      [allDisplayMessages, filterItem],
+      () => (filterItem ? orderedMessages.filter(filterItem) : orderedMessages),
+      [orderedMessages, filterItem],
     );
     const displayMessageIds = useMemo(() => displayMessages.map((m) => m.id), [displayMessages]);
     // Steered follow-up turns fold into the turn they interrupted. Custom item

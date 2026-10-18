@@ -50,6 +50,9 @@ export default {
   'goalBatch.planPanel.latest': 'v{{revision}} · latest',
   'goalBatch.planPanel.same': 'Same as v{{base}}',
   'goalBatch.planPanel.unfoldFiles': 'Show files',
+  'goalBatch.probes.attemptNext': 'Next run',
+  'goalBatch.probes.attemptOf': 'Run {{current}} / {{total}}',
+  'goalBatch.probes.attemptPrevious': 'Previous run',
   'goalBatch.probes.cell.backlog': 'Not started',
   'goalBatch.probes.cell.done': 'Done',
   'goalBatch.probes.cell.human': 'Needs you',
@@ -71,6 +74,8 @@ export default {
   'goalBatch.gatePanel.checksPlanned': 'Not judged yet — these will be checked',
   'goalBatch.gatePanel.question':
     'Revise the plan and re-probe, or fork a fresh one for the units that broke?',
+  'goalBatch.gatePanel.releaseQuestion':
+    'Every check passed. Review the deliveries and the plan — release the next wave, or send the plan back to revise?',
   'goalBatch.gatePanel.history': 'Verdicts',
   'goalBatch.gatePanel.history.blocked': 'Held: {{checks}}',
   'goalBatch.gatePanel.history.empty': 'No verdict yet',
@@ -82,11 +87,14 @@ export default {
     'Every unit finished — judged on the coordinator’s next step',
   'goalBatch.gatePanel.next.human':
     'Waiting on you: revise the plan, or fork a fresh one for the units that broke',
+  'goalBatch.gatePanel.next.release':
+    'Waiting on you: review the deliveries and the plan, then release the next wave or revise the plan',
   'goalBatch.gatePanel.next.locked':
     'Judged automatically once this round’s {{count}} units finish',
   'goalBatch.gatePanel.next.passed':
     'Released wave {{wave}} ({{count}} units) — judged again once it finishes',
   'goalBatch.gatePanel.next.passedDone': 'The whole roster is released',
+  'goalBatch.gatePanel.next.revising': 'The main Agent is rewriting the plan from your correction',
   'goalBatch.gatePanel.next.rejected': 'Reopened as v{{revision}} on your decision',
   'goalBatch.gatePanel.verdict': 'Verdict',
   'goalBatch.gate.checkCount': '{{count}} checks',
@@ -100,7 +108,7 @@ export default {
   'goalBatch.gate.titleRound': 'Release gate · v{{revision}}',
   'goalBatch.overviewCount': 'Total: {{count}} batches · {{nodes}} nodes',
   'goalBatch.probes.hint':
-    '{{count}} representative units run first — the most different ones and the hardest. The rest are released only once every one of them runs through automatically.',
+    '{{count}} representative units run first — the most different ones and the hardest. The rest are released only once every one of them runs through automatically and you approve the release.',
   'goalBatch.probes.status.done': 'Trials done',
   'goalBatch.probes.status.pending': 'Not started',
   'goalBatch.probes.status.running': 'Trials running',
@@ -240,6 +248,7 @@ export default {
   'agentProfile.runtime': 'Runs on {{name}}',
   'agentProfile.skills_one': '{{count}} skill',
   'agentProfile.skills_other': '{{count}} skills',
+  'agentSender.sourceTopic': 'Source topic',
   'agentSignal.receipts.agentSignalLabel': 'Agent Signal',
   'agentSignal.receipts.memory.detail': 'Saved this for future replies',
   'agentSignal.receipts.memory.openInMemory': 'Open in Memory',
@@ -281,6 +290,8 @@ export default {
   'compression.cancel': 'Uncompress',
   'compression.cancelConfirm':
     'Are you sure you want to uncompress? This will restore the original messages.',
+  'compression.collapsed': 'Compressed {{turns}} earlier turns · View summary',
+  'compression.collapsedUnknown': 'Compressed earlier history · View summary',
   'compression.history': 'Original conversation',
   'compression.summary': 'History summary',
   'confirmClearCurrentMessages':
@@ -2140,6 +2151,7 @@ export default {
   'createTask.expandToInline': 'Dock to page',
   'createTask.instructionPlaceholder': 'Add task instruction...',
   'createTask.submit': 'Create task',
+  'createTask.submitScheduled': 'Create scheduled task',
   'createTask.titlePlaceholder': 'Task title',
   'createTask.visibility.changeFailed': 'Failed to change task visibility',
   'createTask.visibility.helperPrivate': 'Only you can see this task.',
@@ -2263,6 +2275,7 @@ export default {
   'goalAcceptance.title': 'Acceptance standard',
   'goalChat.newTopic': 'New conversation',
   'goalChat.noTopics': 'No conversations yet',
+  'goalChat.openTopic': 'Go to original topic',
   'goalChat.title': 'Ask about progress',
   'goalChat.welcome':
     "Ask the agent about this goal — how it's going, what's blocking, or what happens next.",
@@ -2365,6 +2378,22 @@ export default {
   'goalProcess.northStar.record.valueLabel': 'Current value of {{key}}',
   'goalProcess.northStar.record.submit': 'Record',
   'goalProcess.northStar.record.failed': 'Failed to record the observation',
+  'goalProcess.northStar.detail.history': 'Observations ({{count}})',
+  'goalProcess.northStar.detail.removed': 'This metric is no longer declared on the goal',
+  'goalProcess.northStar.detail.source.agent': 'Recorded by agent',
+  'goalProcess.northStar.detail.source.api': 'Written via API',
+  'goalProcess.northStar.detail.source.manual': 'Recorded manually',
+  'goalProcess.northStar.detail.source.probe': 'Collected',
+  'goalProcess.northStar.detail.target': 'Target',
+  'goalProcess.northStar.detail.title': 'Metric',
+  'goalProcess.northStar.detail.trend': 'Trend',
+  'goalProcess.northStar.detail.trendEmpty': 'The trend appears after a second observation',
+  'goalProcess.northStar.edit.submit': 'Save',
+  'goalProcess.northStar.edit.title': 'Adjust target',
+  'goalProcess.northStar.remove.confirm':
+    'Remove "{{name}}"? It will no longer gate this goal\'s acceptance. Recorded observations are kept.',
+  'goalProcess.northStar.remove.failed': 'Failed to remove the metric',
+  'goalProcess.northStar.remove.title': 'Remove metric',
   'goalProcess.frontier.add': 'Add task',
   'goalProcess.frontier.needsYou': '{{count}} need you',
   'goalProcess.frontier.advanceable': '{{count}} can advance',
@@ -2405,6 +2434,9 @@ export default {
   'goalProcess.gate.title.goalAcceptance': 'Decide the goal acceptance outcome',
   'goalProcess.gate.title.fixSetup': 'Fix the setup, then retry',
   'goalProcess.gate.title.batchPatternBreak': 'Decide how the failed batch proceeds',
+  'goalProcess.gate.openReview': 'Review',
+  'goalProcess.gate.releaseReports': 'reports the experiment results and needs your decision',
+  'goalProcess.gate.title.batchRelease': 'Experiments finished: start batch execution?',
   'goalProcess.clarify.title': 'Clarify the goal before work starts',
   'goalProcess.clarify.description':
     'Answer these once and the agent plans with them. Skip to let it proceed on its own assumptions.',
@@ -2420,6 +2452,14 @@ export default {
   'goalProcess.gate.reason.attemptBudgetExhausted': 'The attempt budget for this work is used up',
   'goalProcess.gate.reason.costBudgetExhausted': 'The goal cost budget is used up',
   'goalProcess.gate.reason.recoveryFailed': 'Automatic recovery could not start the next attempt',
+  'goalProcess.gate.reason.batchReleaseProbes':
+    'The v{{revision}} experiments finished; start batch execution with wave {{wave}} ({{count}} units)',
+  'goalProcess.gate.reason.batchReleaseRevised':
+    'The main Agent revised the plan to v{{version}} from your correction; start batch execution with wave {{wave}} ({{count}} units)?',
+  'goalProcess.gate.reason.batchReleaseEscalated':
+    'The main Agent asked you to approve releasing wave {{wave}} ({{count}} units)',
+  'goalProcess.gate.reason.batchReleaseNoAgent':
+    'The gate passed but no main Agent could review the release; approve releasing wave {{wave}} ({{count}} units)',
   'goalProcess.gate.reason.deviceStayedOffline':
     'The device this task runs on stayed offline through every automatic retry',
   'goalProcess.gate.reason.setupWorkingDirectory':
@@ -2456,7 +2496,9 @@ export default {
   'goalProcess.gate.option.fail': 'Fail goal',
   'goalProcess.gate.option.assume': 'Go with the assumption',
   'goalProcess.gate.option.reviseBatch': 'Revise the recipe and re-probe',
+  'goalProcess.gate.option.sendBackBatch': 'Send the plan back to the main Agent',
   'goalProcess.gate.option.newClassBatch': 'Fork a fresh recipe',
+  'goalProcess.gate.option.releaseBatch': 'Release the next wave',
   'goalProcess.decision.effect.fixedRetry': 'Run the task again once the setup is fixed.',
   'goalProcess.decision.asks.judgment': 'needs your review on a stuck task',
   'goalProcess.decision.asks.goalAcceptance': 'needs your review on the goal acceptance',
@@ -2480,15 +2522,23 @@ export default {
   'goalProcess.decision.attempts_other': '{{count}} attempts',
   'goalProcess.decision.effect.retry':
     'Send the task back for another attempt. Your note is written into its instructions.',
+  'goalProcess.decision.effect.alsoRetires': 'Also drops the tasks that depend on it: {{tasks}}.',
+  'goalProcess.decision.effect.quotedTask': '"{{title}}"',
+  'goalProcess.decision.effect.retireWithDependents':
+    'Drop this task and the tasks that depend on it ({{tasks}}). The goal moves on without them.',
   'goalProcess.decision.effect.retire': 'Drop this task. The goal moves on without it.',
   'goalProcess.decision.effect.fail': 'End the goal and record it as failed.',
   'goalProcess.decision.effect.retryAcceptance': 'Run the goal-level acceptance again.',
   'goalProcess.decision.effect.abandonAcceptance':
     'Stop acceptance and end the goal without a verdict.',
   'goalProcess.decision.effect.reviseBatch':
-    'Revise the recipe from this failure, then re-probe this batch.',
+    'Write a correction to the recipe, then re-probe this batch under it.',
+  'goalProcess.decision.effect.sendBackBatch':
+    'Write a correction; the main Agent rewrites the plan from it and brings it back for your review. The probes are not run again.',
   'goalProcess.decision.effect.newClassBatch':
     'Fork a fresh recipe for the units that broke; the rest of the batch continues once the new gate passes.',
+  'goalProcess.decision.effect.releaseBatch':
+    'Release the next wave on the current recipe. Each later wave goes to the main Agent, which releases it or brings it back to you.',
   'goalProcess.signOff.islandSubtitle': 'is done and waiting for your sign-off',
   'goalProcess.signOff.question': 'Do you accept what this goal delivered?',
   'goalProcess.signOff.description': 'Goal-level acceptance passed. Your sign-off closes the goal.',
@@ -2795,7 +2845,6 @@ export default {
   'goalPage.filter.running': 'In progress',
   'goalPage.loadingProgress': 'Loading acceptance progress…',
   'goalPage.listTitle': 'Goal list',
-  'goalPage.loadMore': 'Load more',
   'goalPage.metrics.delivered': 'Needs you',
   'goalPage.metrics.pursuing': 'Others',
   'goalPage.metrics.total': 'Total goals',
@@ -3649,6 +3698,9 @@ export default {
   'workingPanel.files.filters.title': 'Filter Files',
   'workingPanel.files.noSearchResults': 'No matching files',
   'workingPanel.files.open': 'Open File',
+  'workingPanel.files.partialIndexNotice':
+    'Only part of this large project is shown — refresh to load every file',
+  'workingPanel.files.refreshFailed': "Couldn't refresh this view — showing the last saved files",
   'workingPanel.files.search': 'Search Files',
   'workingPanel.files.searchPlaceholder': 'Filter files...',
   'workingPanel.files.showInReview': 'Show in Review',

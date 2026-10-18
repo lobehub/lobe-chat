@@ -1,8 +1,19 @@
 'use client';
 
-import { Button, createStaticStyles, cssVar, cx, Flexbox, Icon, Tooltip } from '@lobehub/ui';
+import {
+  ActionIcon,
+  Button,
+  createStaticStyles,
+  cssVar,
+  cx,
+  Flexbox,
+  Icon,
+  Tooltip,
+} from '@lobehub/ui';
 import { Handle, type NodeProps, Position } from '@xyflow/react';
 import {
+  ChevronLeft,
+  ChevronRight,
   CircleCheck,
   CircleDashed,
   CircleDot,
@@ -13,7 +24,7 @@ import {
   TestTubeDiagonal,
   Waves,
 } from 'lucide-react';
-import { memo, type ReactNode } from 'react';
+import { memo, type ReactNode, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { TASK_STATUS_VISUALS } from '@/components/ExecutionStatus';
@@ -343,7 +354,9 @@ const GroupShell = memo<{
   onEnter?: () => void;
   status: GroupStatus;
   title: string;
-}>(({ children, foot, hint, icon, iconColor, onEnter, status, title }) => {
+  /** A control that belongs in the head, before the enter button. */
+  toolbar?: ReactNode;
+}>(({ children, foot, hint, icon, iconColor, onEnter, status, title, toolbar }) => {
   const { t } = useTranslation('chat');
   return (
     <div className={styles.group}>
@@ -360,18 +373,21 @@ const GroupShell = memo<{
             </Tooltip>
           )}
         </Flexbox>
-        {onEnter && (
-          <Button
-            className={'nodrag'}
-            size={'small'}
-            onClick={(event) => {
-              event.stopPropagation();
-              onEnter();
-            }}
-          >
-            {t('goalBatch.enter')}
-          </Button>
-        )}
+        <Flexbox horizontal align={'center'} gap={8} style={{ flex: 'none' }}>
+          {toolbar}
+          {onEnter && (
+            <Button
+              className={'nodrag'}
+              size={'small'}
+              onClick={(event) => {
+                event.stopPropagation();
+                onEnter();
+              }}
+            >
+              {t('goalBatch.enter')}
+            </Button>
+          )}
+        </Flexbox>
       </div>
       {children}
       <div className={styles.foot}>
@@ -472,11 +488,26 @@ export interface BatchExperimentProbeData extends Record<string, unknown> {
   views: Record<string, GoalNodeView>;
 }
 
+/** Heads the unit's own brief in a re-run's description, after the shared plan. */
+const CARRIED_BRIEF_HEADING = 'Unit brief (from its first run):';
+
+/**
+ * A probe's one-line subtitle: its own brief. A re-run's description opens with
+ * the shared plan, so its subtitle is the brief it carried over from its first run.
+ */
+const probeSubtitle = (description?: string | null) => {
+  if (!description) return '';
+  const carried = description.indexOf(CARRIED_BRIEF_HEADING);
+  const own =
+    carried >= 0 ? description.slice(carried + CARRIED_BRIEF_HEADING.length) : description;
+  return own.trim().split('\n')[0] ?? '';
+};
+
 const ProbeCell = memo<{ onSelect: (id: string) => void; probe: BatchProbe; view?: GoalNodeView }>(
   ({ onSelect, probe, view }) => {
     const { t } = useTranslation('chat');
     const visual = CELL_VISUAL[probe.state];
-    const subtitle = view?.node.description?.split('\n')[0] ?? '';
+    const subtitle = probeSubtitle(view?.node.description);
     return (
       <div className={styles.probeCell} data-probe={probe.nodeId} data-state={probe.state}>
         <StatusText
@@ -528,8 +559,20 @@ const ProbeCell = memo<{ onSelect: (id: string) => void; probe: BatchProbe; view
 ProbeCell.displayName = 'GoalBatchProbeCell';
 
 export const BatchExperimentProbeGroup = memo<NodeProps>(({ data }) => {
-  const { onEnter, onSelect, probes, started, views } = data as BatchExperimentProbeData;
+  const { onEnter, onSelect, probes: latest, started, views } = data as BatchExperimentProbeData;
   const { t } = useTranslation('chat');
+  // Trials sent back and run again in the round: one switch in the head picks
+  // which run the cards show, the latest unless the reader goes back.
+  const attempts = Math.max(1, ...latest.map((probe) => probe.attempt ?? 1));
+  const [picked, setPicked] = useState<number>();
+  const attempt = picked && picked <= attempts ? picked : attempts;
+  const probes =
+    attempt === attempts
+      ? latest
+      : latest.map((probe) => {
+          const run = probe.runs?.[attempt - 1];
+          return run ? { ...probe, ...run } : probe;
+        });
   const status = useUnitsStatus()(
     probes,
     {
@@ -546,6 +589,39 @@ export const BatchExperimentProbeGroup = memo<NodeProps>(({ data }) => {
       iconColor={KIND_COLOR.batch.line}
       status={status}
       title={t('goalBatch.probes.title')}
+      toolbar={
+        attempts > 1 && (
+          // A plan can be sent back many times before it passes: step through
+          // the runs one at a time rather than listing every one of them.
+          <Flexbox horizontal align={'center'} className={'nodrag'} gap={2}>
+            <ActionIcon
+              aria-label={t('goalBatch.probes.attemptPrevious')}
+              disabled={attempt <= 1}
+              icon={ChevronLeft}
+              size={'small'}
+              title={t('goalBatch.probes.attemptPrevious')}
+              onClick={(event) => {
+                event.stopPropagation();
+                setPicked(attempt - 1);
+              }}
+            />
+            <span className={styles.muted} style={{ fontVariantNumeric: 'tabular-nums' }}>
+              {t('goalBatch.probes.attemptOf', { current: attempt, total: attempts })}
+            </span>
+            <ActionIcon
+              aria-label={t('goalBatch.probes.attemptNext')}
+              disabled={attempt >= attempts}
+              icon={ChevronRight}
+              size={'small'}
+              title={t('goalBatch.probes.attemptNext')}
+              onClick={(event) => {
+                event.stopPropagation();
+                setPicked(attempt + 1);
+              }}
+            />
+          </Flexbox>
+        )
+      }
       onEnter={onEnter}
     >
       <div className={styles.probeGrid}>

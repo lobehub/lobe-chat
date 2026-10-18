@@ -24,6 +24,12 @@ const styles = createStaticStyles(({ css }) => ({
 /** Long enough that sweeping the pointer down the list doesn't flash a panel per row. */
 const DETAIL_OPEN_DELAY_MS = 300;
 
+/**
+ * Rows sit ~5px inside the menu edge, so the default 6px offset leaves the
+ * panels touching. 12px matches the model provider submenu (~7px visible gap).
+ */
+const DETAIL_SIDE_OFFSET = 12;
+
 interface DeviceOptionRowProps {
   active: boolean;
   device: DeviceListItem;
@@ -57,6 +63,7 @@ const DeviceOptionRow = ({
       content={<DeviceHoverPanel device={device} />}
       openDelay={DETAIL_OPEN_DELAY_MS}
       placement={'rightTop'}
+      positionerProps={{ sideOffset: DETAIL_SIDE_OFFSET }}
       styles={{ content: { padding: 4 } }}
       trigger={'hover'}
     >

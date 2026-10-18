@@ -18,6 +18,7 @@ import type {
 } from '@lobechat/types';
 
 import type { VerifyStatus } from '@/database/models/agentOperation';
+import type { VerifyAutoRepairOutcome } from '@/database/models/verifyRun';
 import type {
   VerifyCheckResultItem,
   VerifyCriterionItem,
@@ -120,6 +121,8 @@ export interface VerifyCriterionDraft {
 }
 
 export interface VerifyStateResponse {
+  /** The server's auto-repair decision for a failed round; absent until it decided. */
+  verifyAutoRepair?: VerifyAutoRepairOutcome | null;
   verifyPlan: VerifyCheckItem[] | null;
   verifyPlanConfirmedAt: Date | null;
   verifyStatus: VerifyStatus | null;
@@ -149,30 +152,10 @@ export interface VerifyReportBundle {
   run: VerifyRunItem;
 }
 
-export interface VerifyReportSummary {
-  report: Pick<
-    VerifyReport,
-    | 'createdAt'
-    | 'failedChecks'
-    | 'generatedAt'
-    | 'id'
-    | 'overallConfidence'
-    | 'passedChecks'
-    | 'reviewedByUser'
-    | 'summary'
-    | 'totalChecks'
-    | 'uncertainChecks'
-    | 'verdict'
-    | 'verifyRunId'
-  > | null;
-  run: VerifyRunItem;
-}
-
-/** One cursor-paginated page of report summaries. */
-export interface VerifyReportSummaryPage {
-  items: VerifyReportSummary[];
-  /** Opaque token for the next page, or `null` when this is the last page. */
-  nextCursor: string | null;
+/** The acceptance round a verify run belongs to — where its old `/verify/:runId` link lands. */
+export interface VerifyRunAcceptanceRound {
+  acceptanceId: string;
+  roundIndex: number | null;
 }
 
 export interface GenerateDraftPlanInput {
@@ -259,11 +242,21 @@ export class VerifyService {
   ): Promise<Array<{ status: string; subjectId: string }>> =>
     lambdaClient.acceptance.listStatusesBySubjects.query({ subjectIds, subjectType });
 
-  acceptDelivery = (id: string, comment?: string) =>
-    lambdaClient.acceptance.accept.mutate({ comment, id });
+  /** `roundId` binds the decision to the round on screen; a gate refuses a stale one. */
+  acceptDelivery = (id: string, comment?: string, options?: { roundId?: string }) =>
+    lambdaClient.acceptance.accept.mutate({ comment, id, roundId: options?.roundId });
 
-  rejectDelivery = (id: string, comment?: string, options?: { dispatch?: boolean }) =>
-    lambdaClient.acceptance.reject.mutate({ comment, dispatch: options?.dispatch, id });
+  rejectDelivery = (
+    id: string,
+    comment?: string,
+    options?: { dispatch?: boolean; roundId?: string },
+  ) =>
+    lambdaClient.acceptance.reject.mutate({
+      comment,
+      dispatch: options?.dispatch,
+      id,
+      roundId: options?.roundId,
+    });
 
   /**
    * The user's verdict on individual union checks — accept settles a check for
@@ -436,16 +429,11 @@ export class VerifyService {
     }) as Promise<VerifyReportBundle | null>;
 
   /**
-   * One cursor-paginated page of the current user's verification sessions with
-   * report rollup fields. `cursor` comes from the previous page's `nextCursor`;
-   * `q` filters by title on the server so search spans the whole history.
+   * The acceptance round a run belongs to, under the same access rule as
+   * `getReportBundle`. `null` for a missing, denied or standalone run.
    */
-  listReportSummaries = (params?: {
-    cursor?: string;
-    limit?: number;
-    q?: string;
-  }): Promise<VerifyReportSummaryPage> =>
-    lambdaClient.verify.listReportSummaries.query(params) as Promise<VerifyReportSummaryPage>;
+  getRunAcceptanceRound = (verifyRunId: string): Promise<VerifyRunAcceptanceRound | null> =>
+    lambdaClient.verify.getRunAcceptanceRound.query({ verifyRunId });
 
   deleteRun = (verifyRunId: string): Promise<unknown> =>
     lambdaClient.verify.deleteRun.mutate({ verifyRunId });

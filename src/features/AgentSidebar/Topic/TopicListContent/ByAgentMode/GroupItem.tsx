@@ -4,22 +4,29 @@ import {
   AccordionHeader,
   AccordionItem,
   AccordionPanel,
+  accordionStyles,
   AccordionTrigger,
+  ActionIcon,
   Center,
   createStaticStyles,
   cssVar,
+  cx,
   Flexbox,
   Text,
 } from '@lobehub/ui';
 import isEqual from 'fast-deep-equal';
+import { PlusIcon } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import Avatar from '@/components/Avatar';
+import { openProjectTopicModal } from '@/features/Projects/WorkingDirectories/StartDirectoryModal';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
+import { useProjectDirectories } from '@/store/projectWorkingDirectory';
 
 import TopicItem from '../../List/Item';
+import { useTopicListScope } from '../../TopicListScope';
 import { type GroupItemComponentProps } from '../GroupedAccordion';
 
 const AGENT_GROUP_PREFIX = 'agent:';
@@ -46,11 +53,14 @@ interface AgentAttributedRow {
 
 const GroupItem = memo<GroupItemComponentProps>(({ group }) => {
   const { t } = useTranslation('topic');
+  const { t: tProject } = useTranslation('project');
   const { id, title, children } = group;
   const agentId = id.startsWith(AGENT_GROUP_PREFIX)
     ? id.slice(AGENT_GROUP_PREFIX.length)
     : undefined;
 
+  const scope = useTopicListScope();
+  const directories = useProjectDirectories(scope?.projectId);
   const activeAgentId = useAgentStore((s) => s.activeAgentId);
   const activeMeta = useAgentStore(agentSelectors.currentAgentMeta);
   const registeredMeta = useAgentStore((s) =>
@@ -72,6 +82,20 @@ const GroupItem = memo<GroupItemComponentProps>(({ group }) => {
     (isOwnBucket ? (activeMeta.title ?? activeMeta.name) : undefined) ??
     t('groupTitle.byAgent.unknown');
 
+  // Only an attributed bucket in a project-scoped list can start a topic with
+  // its agent preselected; the `no-agent` bucket has no agent to preselect.
+  const canAddTopic = !!scope && !!agentId;
+  const handleAddTopic = () => {
+    if (!scope || !agentId) return;
+    openProjectTopicModal({
+      coordinatorAgentId: scope.coordinatorAgentId ?? agentId,
+      directories,
+      initialAgentId: agentId,
+      projectId: scope.projectId,
+      title: tProject('sidebar.newConversation'),
+    });
+  };
+
   return (
     <AccordionItem value={id}>
       <AccordionHeader>
@@ -85,6 +109,25 @@ const GroupItem = memo<GroupItemComponentProps>(({ group }) => {
             </Text>
           </Flexbox>
         </AccordionTrigger>
+        {canAddTopic && (
+          <div
+            className={cx(
+              'accordion-action',
+              accordionStyles.action,
+              accordionStyles.actionBorderless,
+            )}
+          >
+            <ActionIcon
+              icon={PlusIcon}
+              size={'small'}
+              title={tProject('sidebar.newConversation')}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleAddTopic();
+              }}
+            />
+          </div>
+        )}
       </AccordionHeader>
       <AccordionPanel contentStyle={{ padding: 0 }}>
         <Flexbox gap={1} paddingBlock={1}>

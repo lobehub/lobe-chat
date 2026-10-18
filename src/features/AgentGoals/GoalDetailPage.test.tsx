@@ -23,7 +23,7 @@ vi.mock('@/store/goal', () => ({
           : {},
         id: 'goal_1',
         projectId: null,
-        requirement: null,
+        requirement: 'Reach 1,100 followers',
         status: 'review',
         title: 'Ship it',
       },
@@ -100,14 +100,35 @@ vi.mock('@/features/WideScreenContainer', () => ({
   default: ({ children }: { children: ReactNode }) => <div>{children}</div>,
 }));
 vi.mock('./GoalChat', () => ({
-  default: ({ agentId, initialMessage }: { agentId: string; initialMessage?: string }) => (
-    <div data-agent-id={agentId} data-initial-message={initialMessage} data-testid="goal-chat" />
+  default: ({
+    agentId,
+    initialMessage,
+    initialTopicId,
+    onSelectTopic,
+  }: {
+    agentId: string;
+    initialMessage?: string;
+    initialTopicId?: string;
+    onSelectTopic?: (topicId: string) => void;
+  }) => (
+    <div
+      data-agent-id={agentId}
+      data-initial-message={initialMessage}
+      data-initial-topic-id={initialTopicId}
+      data-testid="goal-chat"
+    >
+      {onSelectTopic && (
+        <button data-testid="goal-chat-pick-record" onClick={() => onSelectTopic('tpc_manager')}>
+          pick record
+        </button>
+      )}
+    </div>
   ),
 }));
 vi.mock('./GoalDetailActions', () => ({ default: () => null }));
 vi.mock('./GoalHeaderMetrics', () => ({ default: () => null }));
-vi.mock('./GoalRequirement', () => ({ default: () => null }));
-vi.mock('./NorthStarMetrics', () => ({ default: () => null }));
+vi.mock('./GoalRequirement', () => ({ default: () => <div data-testid="goal-requirement" /> }));
+vi.mock('./NorthStarMetrics', () => ({ default: () => <div data-testid="goal-north-star" /> }));
 // The result page's composer lives inside ProcessControl; the page owns where
 // its message goes, so the stub only exposes the hand-off.
 vi.mock('./ProcessControl', () => ({
@@ -122,10 +143,12 @@ vi.mock('./GoalSupervision', () => ({
   GoalSupervision: ({
     initialMessage,
     onOpenChat,
+    onSelectTopic,
     topicId,
   }: {
     initialMessage?: string;
     onOpenChat?: () => void;
+    onSelectTopic?: (topicId: string) => void;
     topicId: string;
   }) => (
     <div data-initial-message={initialMessage} data-testid="goal-supervision">
@@ -133,6 +156,14 @@ vi.mock('./GoalSupervision', () => ({
       {onOpenChat && (
         <button data-testid="goal-supervision-open-chat" onClick={onOpenChat}>
           open chat
+        </button>
+      )}
+      {onSelectTopic && (
+        <button
+          data-testid="goal-supervision-pick-topic"
+          onClick={() => onSelectTopic('tpc_other')}
+        >
+          pick topic
         </button>
       )}
     </div>
@@ -144,6 +175,19 @@ describe('GoalDetailPage', () => {
     mocks.canEdit = true;
     mocks.hasSupervision = true;
     mocks.showPortal = false;
+  });
+
+  // The measured numbers are what executing the requirement has observed, so
+  // they read below it as its outcome.
+  it('renders the north-star metrics below the requirement', () => {
+    render(<GoalDetailPage goalId={'goal_1'} />);
+
+    expect(
+      screen
+        .getByTestId('goal-requirement')
+        .compareDocumentPosition(screen.getByTestId('goal-north-star')) &
+        Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy();
   });
 
   // On the agent-less route the task workspace owns the portal host, but the
@@ -224,6 +268,23 @@ describe('GoalDetailPage', () => {
     expect(screen.queryByTestId('goal-supervision')).not.toBeInTheDocument();
     expect(screen.getByTestId('goal-chat')).toHaveAttribute('data-agent-id', 'agt_manager');
     expect(screen.getByTestId('goal-right-panel')).toHaveAttribute('data-expand', 'true');
+  });
+
+  // Both panels share one header with a history list: another topic picked from
+  // the record opens as the editable side conversation on that topic, and the
+  // record picked from the side conversation opens as the record again.
+  it('routes a topic picked from history to the panel that owns it', () => {
+    render(<GoalDetailPage agentId={'agt_manager'} goalId={'goal_1'} />);
+
+    fireEvent.click(screen.getByTestId('goal-supervisor-toggle'));
+    fireEvent.click(screen.getByTestId('goal-supervision-pick-topic'));
+
+    expect(screen.queryByTestId('goal-supervision')).not.toBeInTheDocument();
+    expect(screen.getByTestId('goal-chat')).toHaveAttribute('data-initial-topic-id', 'tpc_other');
+
+    fireEvent.click(screen.getByTestId('goal-chat-pick-record'));
+
+    expect(screen.getByTestId('goal-supervision')).toHaveTextContent('tpc_manager');
   });
 
   it('leaves drill-downs to the workspace portal host on the agent-less route', () => {

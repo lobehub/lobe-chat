@@ -194,7 +194,8 @@ const styles = createStaticStyles(({ css }) => ({
   `,
   /* A ring, not a fill: the kind tint and the state chip must stay readable.
      Blue, not `colorPrimary` — the primary is near-black here, so the ring read
-     as a heavier version of the plain card border and told nothing apart. */
+     as a heavier version of the plain card border and told nothing apart. The
+     cards carry the mainline; the lines between them stay ordinary. */
   mainline: css`
     border-color: ${cssVar.colorInfo};
     box-shadow: 0 0 0 1px ${cssVar.colorInfo};

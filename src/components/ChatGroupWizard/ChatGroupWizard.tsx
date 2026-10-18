@@ -11,6 +11,7 @@ import {
   Empty,
   Flexbox,
   List,
+  ModalFooter,
   SearchBar,
   stopPropagation,
   Switch,
@@ -67,7 +68,7 @@ const TemplateItem = memo<{
             {template.description}
           </Text>
           <Flexbox horizontal align="center" gap={4}>
-            <Users size={11} style={{ color: '#999' }} />
+            <Users size={11} style={{ color: cssVar.colorTextTertiary }} />
             <Text style={{ fontSize: 11 }} type="secondary">
               {t('groupWizard.memberCount', {
                 count: template.members.filter((member) => member !== null && member !== undefined)
@@ -544,7 +545,7 @@ const ChatGroupWizard = memo<ChatGroupWizardProps>(
         title={t('groupWizard.title')}
         width={900}
         footer={
-          <Flexbox horizontal gap={8} justify="end">
+          <ModalFooter>
             <Button onClick={handleCancel}>{t('cancel', { ns: 'common' })}</Button>
             <Button
               disabled={confirmDisabled}
@@ -554,7 +555,7 @@ const ChatGroupWizard = memo<ChatGroupWizardProps>(
             >
               {t('groupWizard.createGroup')}
             </Button>
-          </Flexbox>
+          </ModalFooter>
         }
         onCancel={handleCancel}
       >
@@ -656,7 +657,7 @@ const ChatGroupWizard = memo<ChatGroupWizardProps>(
                     {t('groupWizard.host.title')}
                   </Text>
                   <Text
-                    style={{ color: '#999', fontSize: 12 }}
+                    style={{ color: cssVar.colorTextTertiary, fontSize: 12 }}
                     type={isHostRemoved ? 'secondary' : undefined}
                   >
                     {t('groupWizard.host.description')}

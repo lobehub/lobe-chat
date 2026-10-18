@@ -533,6 +533,12 @@ export default {
   'heterogeneousStatus.cloud.tokenChange': 'Change',
   'heterogeneousStatus.cloud.tokenSave': 'Save',
   'heterogeneousStatus.cloud.tokenCancel': 'Cancel',
+  'heterogeneousStatus.cloud.tokenRemove': 'Remove',
+  'heterogeneousStatus.cloud.tokenRemoveTitle': 'Remove Claude Code token?',
+  'heterogeneousStatus.cloud.tokenRemoveConfirm':
+    'This deletes your Claude Code OAuth token from Credentials. Cloud runs of Claude Code agents will not be able to use it until you save a new token.',
+  'heterogeneousStatus.cloud.tokenRemoveError':
+    'Failed to remove the Claude Code token. Please try again.',
   'heterogeneousStatus.cloud.githubLabel': 'GitHub Connection',
   'heterogeneousStatus.cloud.githubDesc':
     'Select a GitHub OAuth credential to allow the sandbox to clone your private repositories.',
@@ -975,6 +981,10 @@ export default {
   'notification.channel.status.enabledCount': 'Enabled for {{num}} notification types',
   'notification.channel.status.notLinked': 'Not linked',
   'notification.channel.types.title': 'Notification types',
+  'notification.content.scheduledTaskSummary.desc':
+    'When a scheduled task succeeds, include a short summary of what the run did in the notification.',
+  'notification.content.scheduledTaskSummary.title': 'Include run summary for scheduled tasks',
+  'notification.content.title': 'Notification content',
   'notification.email.desc': 'Receive email notifications when important events occur',
   'notification.im.banner.platformUnlinked': '{{platform}} is not linked yet',
   'notification.im.desc':

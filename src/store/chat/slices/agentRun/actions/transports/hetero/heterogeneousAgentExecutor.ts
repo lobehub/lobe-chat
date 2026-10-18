@@ -3,7 +3,7 @@ import type {
   AgentInterventionResponseData,
   AgentStreamEvent,
 } from '@lobechat/agent-gateway-client';
-import { stripGoalCommand, withConversationGoalPrompt } from '@lobechat/builtin-tool-goal';
+import { stripGoalCommand } from '@lobechat/builtin-tool-goal';
 import type { HeterogeneousAgentSessionError } from '@lobechat/electron-client-ipc';
 import { HeterogeneousAgentSessionErrorCode } from '@lobechat/electron-client-ipc';
 import {
@@ -91,6 +91,7 @@ import { labPreferSelectors, userProfileSelectors } from '@/store/user/selectors
 import { buildRunLifecycle } from '../../lifecycle/buildRunLifecycle';
 import type { RunScope } from '../../lifecycle/types';
 import { createGatewayEventHandler, isCompletedRuntimeEnd } from '../gateway/gatewayEventHandler';
+import { withHeteroContext } from '../viewedTaskPrompt';
 import { getNativeHeteroSessionBindingKey } from './heteroResume';
 import { createMessageWriteBatcher, type ToolMessageUpdateOperation } from './messageWriteBatcher';
 import { createPendingCreateLedger } from './pendingCreateLedger';
@@ -880,11 +881,9 @@ export const executeHeterogeneousAgent = async (
   const getPersistedWorkingDirectoryConfig = (
     topicMetadata: ChatTopicMetadata | undefined,
   ): WorkingDirConfig | undefined =>
-    // Prefer the topic's CURRENT config: while the CLI runs, GitStatus may have
-    // persisted richer branch/PR/CI (`git.github`) onto it. Falling back to the
-    // run-start captured config would drop that enrichment on the completion
-    // write until a status component re-probes. Captured config is only the
-    // fallback for a topic that carries none yet.
+    // Prefer the topic's CURRENT config: GitStatus may have persisted richer
+    // branch/PR/CI (`git.github`) onto it while the CLI ran, which the run-start
+    // captured config would drop. That one is only for a topic with none yet.
     topicMetadata?.workingDirectoryConfig ??
     workingDirectoryConfig ??
     (workingDirectory === undefined ? undefined : { path: workingDirectory });
@@ -895,11 +894,16 @@ export const executeHeterogeneousAgent = async (
     mainState.toolState.payloads.length > 0 ||
     toolMsgIdByCallId.size > 0 ||
     mainState.subagents.runs.size > 0;
+  // The CLI session and its cwd live on THIS machine: every cwd write pins it.
+  const getRunMachinePin = async () => {
+    const deviceId = await getElectronStoreState().resolveGatewayDeviceId();
+    return deviceId ? { boundDeviceId: deviceId } : {};
+  };
   const clearStaleResumeMetadata = async () => {
     if (!context.topicId || !updateTopicMetadata) return;
-
     const topicMetadata = getTopicMetadataById(get(), context.topicId);
     await updateTopicMetadata(context.topicId, {
+      ...(await getRunMachinePin()),
       heteroSessionBindingKey: undefined,
       heteroSessionBindingKeyByWorkingDirectory: removeHeteroSessionBindingKeyForWorkingDirectory(
         topicMetadata,
@@ -930,11 +934,8 @@ export const executeHeterogeneousAgent = async (
       .catch(() => {})
       .then(async () => {
         const topicMetadata = getTopicMetadataById(get(), topicId);
-        // The session and its cwd now live on THIS machine, so the topic is
-        // pinned here — its next turn and the device picker follow it.
-        const runDeviceId = getElectronStoreState().gatewayDeviceInfo?.deviceId;
         await updateTopicMetadata(topicId, {
-          ...(runDeviceId ? { boundDeviceId: runDeviceId } : {}),
+          ...(await getRunMachinePin()),
           heteroSessionBindingKey: activeSessionBindingKey,
           heteroSessionBindingKeyByWorkingDirectory: setHeteroSessionBindingKeyForWorkingDirectory(
             topicMetadata,
@@ -2618,9 +2619,8 @@ export const executeHeterogeneousAgent = async (
       get().messagesMap?.[messageMapKey(context)]) as UIChatMessage[] | undefined;
 
     const systemContext = buildLocalHeterogeneousSystemContext({
-      // `/goal` reaches a hetero agent as instructions, not a tool: it creates
-      // and plans the goal through `lh` in this same run.
-      agentSystemContext: withConversationGoalPrompt(heterogeneousProvider.systemContext, message),
+      // `/goal` and the viewed Tasks page reach a hetero agent as instructions.
+      agentSystemContext: withHeteroContext(heterogeneousProvider.systemContext, message, context),
       contextSelections,
       pageSelections,
       // Only a topic created by Codex edit-and-resend starts with copied

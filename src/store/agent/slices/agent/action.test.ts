@@ -10,7 +10,6 @@ import { setScopedMutate } from '@/libs/swr';
 import * as cacheScopeModule from '@/libs/swr/useCacheScope';
 import { getCacheScope } from '@/libs/swr/useCacheScope';
 import { agentService } from '@/services/agent';
-import { agentDocumentService } from '@/services/agentDocument';
 import { useGlobalStore } from '@/store/global';
 import { useUserStore } from '@/store/user';
 import { type LobeAgentConfig } from '@/types/agent';
@@ -34,13 +33,6 @@ vi.mock('@/services/agent', () => ({
 }));
 
 vi.mock('@/services/agentDocument', () => ({
-  agentDocumentService: {
-    listDocuments: vi.fn(),
-  },
-  agentDocumentSWRKeys: {
-    documents: (agentId: string) => ['agent:documents', agentId] as const,
-    documentsList: (agentId: string) => ['agent:documentsList', agentId] as const,
-  },
   resolveAgentDocumentsContext: vi.fn(),
 }));
 
@@ -332,31 +324,6 @@ describe('AgentSlice Actions', () => {
       });
 
       expect(vi.mocked(agentService.createAgent).mock.calls[0][0].config?.name).toBe('Ada');
-    });
-  });
-
-  describe('useFetchAgentDocuments', () => {
-    it('should fetch agent documents via listDocuments', async () => {
-      const docs = [
-        {
-          documentId: 'doc-1',
-          filename: 'setup.md',
-          id: 'doc-1',
-          title: 'Setup',
-        },
-      ];
-      vi.mocked(agentDocumentService.listDocuments).mockResolvedValue(docs as any);
-
-      const store = renderHook(() => useAgentStore(), { wrapper: withSWR });
-
-      const { result } = renderHook(() => store.result.current.useFetchAgentDocuments('agent-1'), {
-        wrapper: withSWR,
-      });
-
-      await waitFor(() => {
-        expect(result.current.data).toEqual(docs);
-      });
-      expect(agentDocumentService.listDocuments).toHaveBeenCalledWith({ agentId: 'agent-1' });
     });
   });
 

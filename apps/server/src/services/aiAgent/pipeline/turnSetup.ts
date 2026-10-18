@@ -2,6 +2,7 @@ import { isHeterogeneousAgentModelId, LOADING_FLAT } from '@lobechat/const';
 import type { LobeChatDatabase } from '@lobechat/database';
 import type { HeterogeneousAgentType } from '@lobechat/heterogeneous-agents';
 import type {
+  AgentSenderMetadata,
   ChatAudioItem,
   ChatFileItem,
   ChatTopicMetadata,
@@ -331,6 +332,12 @@ const resolveRunAttachments = async (
 
 export interface TurnSetupInput {
   agentConfig: AgentConfigWithId;
+  /**
+   * Sending agent of an agent → agent turn, resolved to a snapshot before this
+   * stage runs. Stamped onto the user message as `metadata.agentSender` so the
+   * receiving topic attributes the turn to that agent, not the human owner.
+   */
+  agentSender?: AgentSenderMetadata;
   agentSlug?: string | null;
   appContext?: InternalExecAgentParams['appContext'];
   assistantAgentId: string;
@@ -396,6 +403,7 @@ export interface TurnSetupResult {
   requestedDeviceId?: string;
   requestTriggerMetadata: {
     agentDispatch?: { kind: 'callAgent'; visibility: 'internal' };
+    agentSender?: AgentSenderMetadata;
     steer?: true;
     trigger?: RequestTrigger;
   };
@@ -430,6 +438,7 @@ export const setupTurn = async (
   const {
     agentConfig,
     agentSlug,
+    agentSender,
     appContext,
     assistantAgentId,
     attachedFileIds,
@@ -858,6 +867,7 @@ export const setupTurn = async (
 
   // ── Shared turn setup (runs for BOTH hetero and normal agents) ──────────
   const requestTriggerMetadata = buildUserTurnMetadata({
+    agentSender,
     appContext,
     botSender,
     externalOrigin,

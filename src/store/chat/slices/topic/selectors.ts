@@ -15,10 +15,12 @@ import {
 import {
   getTopicSortTime,
   groupTopicsByAgent,
+  groupTopicsByDevice,
   groupTopicsByProject,
   groupTopicsByStatus,
   groupTopicsByTime,
   groupTopicsByUpdatedTime,
+  type TopicDeviceDirectory,
 } from '@/utils/client/topic';
 
 import { type ChatStoreState } from '../../initialState';
@@ -376,6 +378,7 @@ const getGroupFn = (
   groupMode: TopicGroupMode,
   sortBy: TopicSortBy,
   loadingTopicIds?: ReadonlySet<string>,
+  directories?: ReadonlyArray<TopicDeviceDirectory>,
 ) => {
   const field: 'createdAt' | 'updatedAt' = sortBy === 'createdAt' ? 'createdAt' : 'updatedAt';
   if (groupMode === 'byProject') {
@@ -398,6 +401,11 @@ const getGroupFn = (
     // buckets without attribution stay title-less and the group item names
     // them from its agent context.
     return (topics: ChatTopic[]) => groupTopicsByAgent(topics, field);
+  }
+  if (groupMode === 'byDevice') {
+    // Device names resolve at render time from the directory and device
+    // registries, so groups stay title-less here.
+    return (topics: ChatTopic[]) => groupTopicsByDevice(topics, field, directories);
   }
   return sortBy === 'updatedAt' ? groupTopicsByUpdatedTime : groupTopicsByTime;
 };
@@ -432,7 +440,8 @@ export const groupSidebarTopics = (
   groupMode: TopicGroupMode,
   sortBy: TopicSortBy,
   loadingTopicIds?: ReadonlySet<string>,
-) => buildGroupedTopics(topics, getGroupFn(groupMode, sortBy, loadingTopicIds));
+  directories?: ReadonlyArray<TopicDeviceDirectory>,
+) => buildGroupedTopics(topics, getGroupFn(groupMode, sortBy, loadingTopicIds, directories));
 
 const groupedTopicsSelector =
   (groupFn: typeof groupTopicsByTime = groupTopicsByTime) =>

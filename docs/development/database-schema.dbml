@@ -2192,6 +2192,31 @@ table goal_traces {
   }
 }
 
+table linear_connections {
+  id uuid [pk, not null, default: `gen_random_uuid()`]
+  user_id text [not null]
+  workspace_id text
+  organization_id varchar(255) [not null]
+  organization_name varchar(255) [not null]
+  organization_url_key varchar(255) [not null]
+  actor_external_id varchar(255) [not null]
+  actor_name varchar(255) [not null]
+  credentials text
+  token_expires_at "timestamp with time zone"
+  revoked_at "timestamp with time zone"
+  metadata jsonb [not null, default: `{}`]
+  accessed_at "timestamp with time zone" [not null, default: `now()`]
+  created_at "timestamp with time zone" [not null, default: `now()`]
+  updated_at "timestamp with time zone" [not null, default: `now()`]
+
+  indexes {
+    (organization_id, user_id) [name: 'linear_connections_org_personal_unique', unique]
+    (organization_id, user_id, workspace_id) [name: 'linear_connections_org_workspace_unique', unique]
+    user_id [name: 'linear_connections_user_id_idx']
+    workspace_id [name: 'linear_connections_workspace_id_idx']
+  }
+}
+
 table llm_generation_tracing {
   id uuid [pk, not null, default: `gen_random_uuid()`]
   scenario text [not null]

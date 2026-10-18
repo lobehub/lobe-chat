@@ -5,6 +5,7 @@
   "agentLabel.create": "Nuova etichetta",
   "agentLabel.manage": "Gestisci etichette",
   "agentLabel.menuTitle": "Etichette",
+  "agentSkills.ensureFailed": "Alcune competenze su cui si basa questo agente non sono state installate automaticamente: {{skills}}. Puoi aggiungerle manualmente nel Negozio di Competenze.",
   "agentViewAll.addToSidebar": "Mostra nella barra laterale",
   "agentViewAll.empty": "Nessun agente disponibile",
   "agentViewAll.form.grouping": "Raggruppamento",

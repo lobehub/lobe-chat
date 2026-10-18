@@ -30,11 +30,13 @@ export function StartDirectoryContent({
   directories,
   coordinatorAgentId,
   projectId,
+  initialAgentId,
   initialDirectoryId,
 }: {
   directories: ProjectDirectory[];
   coordinatorAgentId: string;
   projectId: string;
+  initialAgentId?: string;
   initialDirectoryId?: string;
 }) {
   const [directoryId, setDirectoryId] = useState(
@@ -48,7 +50,7 @@ export function StartDirectoryContent({
   const { t } = useTranslation('project');
   const { close } = useModalContext();
   const navigate = useWorkspaceAwareNavigate();
-  const { agentId, agentName, setAgentId } = useDirectoryAgent(coordinatorAgentId);
+  const { agentId, agentName, setAgentId } = useDirectoryAgent(coordinatorAgentId, initialAgentId);
   const startTopic = useProjectDirectoryStore((s) => s.startTopic);
   const createTopic = useProjectDirectoryStore((s) => s.createProjectTopic);
   const [pending, setPending] = useState(false);
@@ -133,6 +135,7 @@ export function openProjectTopicModal(options: {
   projectId: string;
   coordinatorAgentId: string;
   directories: ProjectDirectory[];
+  initialAgentId?: string;
   initialDirectoryId?: string;
   title: string;
 }) {

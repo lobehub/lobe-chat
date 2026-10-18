@@ -5,6 +5,7 @@
   "agentLabel.create": "新建标签",
   "agentLabel.manage": "管理标签",
   "agentLabel.menuTitle": "标签",
+  "agentSkills.ensureFailed": "该助理依赖的部分技能未能自动安装：{{skills}}。可在技能商店中手动添加。",
   "agentViewAll.addToSidebar": "在我的侧边栏显示",
   "agentViewAll.empty": "暂无助理",
   "agentViewAll.form.grouping": "分组",

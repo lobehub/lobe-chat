@@ -226,7 +226,7 @@ executionTarget: 'local'` in `agencyConfig`) + one message per case asking CC to
   hand-written id like `tsk_foo`, then calling a task procedure — it 404s
   ("Task not found") even though the row exists and the caller is a member.
 - **Doesn't work**: any id not starting with `task_`. `TaskModel.resolve()`
-  (`packages/database/src/models/task.ts:220-223`) only treats the input as a row
+  (`packages/database/src/models/task/index.ts:116-119`) only treats the input as a row
   id when it starts with `task_`; everything else is upper-cased and looked up as
   a workspace `identifier` (e.g. `T-1`), so `tsk_foo` becomes the identifier
   lookup `TSK_FOO` → null.

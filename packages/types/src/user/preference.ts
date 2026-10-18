@@ -219,6 +219,11 @@ export const UserLabSchema = z.object({
   /** Capture a conversation turn as an eval test case (developer-facing). */
   enableEvalCapture: z.boolean().optional(),
   /**
+   * show "Report a problem" in the topic menu, which sends where the topic is
+   * (its ids and the client environment) to the support team
+   */
+  enableTopicBugReport: z.boolean().optional(),
+  /**
    * enable Goals: hand the agent a goal it plans into tasks, tracks and delivers
    */
   enableGoals: z.boolean().optional(),
@@ -395,7 +400,9 @@ export const UserPreferenceSchema = z
     sidebarHiddenGroupIds: z.array(z.string()).optional(),
     terminalFontFamily: z.string().optional(),
     telemetry: z.boolean().nullable(),
-    topicGroupMode: z.enum(['byTime', 'byProject', 'flat', 'byStatus', 'byAgent']).optional(),
+    topicGroupMode: z
+      .enum(['byTime', 'byProject', 'flat', 'byStatus', 'byAgent', 'byDevice'])
+      .optional(),
     topicIncludeCompleted: z.boolean().optional(),
     topicSortBy: z.enum(['createdAt', 'updatedAt']).optional(),
     useCmdEnterToSend: z.boolean().optional(),

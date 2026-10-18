@@ -4,12 +4,10 @@ import { Button, Center, Empty, Flexbox } from '@lobehub/ui';
 import { AlertTriangleIcon } from 'lucide-react';
 import { memo, type PropsWithChildren } from 'react';
 import { useTranslation } from 'react-i18next';
-import useSWR from 'swr';
 
 import { SandboxStorageUpgradeGuide } from '@/business/client/features/SandboxStorageUpsell';
-import { useActiveWorkspaceId } from '@/business/client/hooks/useActiveWorkspaceId';
 import { RouteLoading } from '@/components/Skeleton/RouteSegment';
-import { sandboxStorageService } from '@/services/sandboxStorage';
+import { sandboxActions, sandboxSelectors, useSandboxStore } from '@/store/sandbox';
 
 /**
  * Environments are specifications for a persistent workspace, so the page
@@ -18,17 +16,15 @@ import { sandboxStorageService } from '@/services/sandboxStorage';
  * nothing could ever run in.
  *
  * The entitlement is resolved and signed server-side; asking the server is the
- * only way to see the same answer the sandbox will act on. Same key as the
- * composer's working-directory chip — workspace included, since the server
- * resolves the answer from the active one — so the two never disagree.
+ * only way to see the same answer the sandbox will act on. The same replica
+ * entry as the composer's working-directory chip — partitioned by workspace,
+ * since the server resolves the answer from the active one — so the two never
+ * disagree.
  */
 const EnvironmentsGate = memo<PropsWithChildren>(({ children }) => {
   const { t } = useTranslation('setting');
-  const workspaceId = useActiveWorkspaceId();
-  const { data, error, isLoading, mutate } = useSWR(
-    ['sandbox-storage-entitlement', workspaceId ?? ''],
-    () => sandboxStorageService.getEntitlement(),
-  );
+  const { error, revalidate } = sandboxActions.useFetchEntitlement(true);
+  const data = useSandboxStore(sandboxSelectors.entitlement);
 
   // A failed lookup is not an unentitled account, and it is not a slow one
   // either: left as a spinner this page is indistinguishable from loading
@@ -44,14 +40,14 @@ const EnvironmentsGate = memo<PropsWithChildren>(({ children }) => {
             style={{ maxWidth: 400 }}
             title={t('environments.loadFailed.title')}
           />
-          <Button onClick={() => void mutate()}>{t('environments.loadFailed.retry')}</Button>
+          <Button onClick={() => void revalidate()}>{t('environments.loadFailed.retry')}</Button>
         </Flexbox>
       </Center>
     );
 
   // Nothing rather than a flash of the upgrade page at a user who turns out to
   // be entitled.
-  if (isLoading || !data) return <RouteLoading />;
+  if (!data) return <RouteLoading />;
   if (!data.entitled) return <SandboxStorageUpgradeGuide />;
 
   return children;

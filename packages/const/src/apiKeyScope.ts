@@ -296,6 +296,7 @@ export const TRPC_NAMESPACE_API_KEY_RULES: Record<string, TrpcNamespaceScopeRule
   // restore / purge is a destructive cross-cutting surface, so restricted keys
   // never reach it; only full-access keys can.
   trash: 'blocked',
+  tts: { any: 'model:invoke' },
   upload: rw('file:read', 'file:write'),
   usage: rw('usage:read', null),
   user: rw('user:read', 'user:write'),

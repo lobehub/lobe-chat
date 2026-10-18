@@ -68,6 +68,8 @@ interface InboxSection {
   key: string;
   /** Omitted when the section labels itself (the running card names its own count). */
   label?: string;
+  /** A refresh is in flight over rows already on screen (see GroupBlock `loading`). */
+  loading?: boolean;
   node: ReactNode;
   onCollapsedChange?: (collapsed: boolean) => void;
   /** Section carries its own card shell — the rail renders it verbatim. */
@@ -229,6 +231,10 @@ const HomeInbox = memo<HomeInboxProps>((props) => {
 
   if (!isLogin) return null;
 
+  // The cached feed is on screen while the server confirms it: say so on the
+  // section heading instead of hiding the rows behind a skeleton.
+  const briefsRefreshing = isBriefsInit && briefsSWR.isValidating;
+
   const blockState = resolveInboxBlockState({
     hasError: Boolean(briefsSWR.error),
     hiddenWidgets,
@@ -337,6 +343,7 @@ const HomeInbox = memo<HomeInboxProps>((props) => {
             count: needsYou.length,
             key: 'needsYou',
             label: t('inbox.needsYou.title'),
+            loading: briefsRefreshing,
             node: (
               <Flexbox gap={12}>
                 {needsYou.map((brief) => (
@@ -362,6 +369,7 @@ const HomeInbox = memo<HomeInboxProps>((props) => {
       count: unreadTopics.length,
       key: 'unread',
       label: t('inbox.unread.title'),
+      loading: topics.isRefreshing,
       node: (
         <UnreadTopicList
           bare={isRail}
@@ -393,6 +401,7 @@ const HomeInbox = memo<HomeInboxProps>((props) => {
         count: needsYou.length,
         key: 'needsYou',
         label: t('inbox.needsYou.title'),
+        loading: briefsRefreshing,
         node: (
           <Flexbox gap={12}>
             {needsYou.map((brief) => (
@@ -548,6 +557,7 @@ const HomeInbox = memo<HomeInboxProps>((props) => {
           count,
           key,
           label,
+          loading,
           node,
           onCollapsedChange,
           selfShelled,
@@ -562,6 +572,7 @@ const HomeInbox = memo<HomeInboxProps>((props) => {
                 collapsed={collapsed}
                 count={count}
                 key={key}
+                loading={loading}
                 title={
                   label && (
                     <>
@@ -585,6 +596,7 @@ const HomeInbox = memo<HomeInboxProps>((props) => {
               collapsed={collapsed}
               count={count}
               key={key}
+              loading={loading}
               title={
                 <>
                   {label}

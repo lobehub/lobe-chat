@@ -131,7 +131,7 @@ const DeviceCard = memo<DeviceCardProps>(({ device, isCurrent, onOpen }) => {
   // Cards are not virtualized; only cards on screen keep their usage meters polling.
   const cardRef = useRef<HTMLDivElement>(null);
   const [inViewport] = useInViewport(cardRef);
-  const { data, error } = useDeviceMetricSeries(device.deviceId, !!inViewport);
+  const { data, error } = useDeviceMetricSeries(device.deviceId, device.scope, !!inViewport);
   const { t } = useTranslation('setting');
   const { t: tCommon } = useTranslation('common');
   const canEdit = useCanEditDevice()(device);

@@ -1,8 +1,10 @@
+import type { AgentSenderMetadata } from '@lobechat/types';
 import { RequestTrigger } from '@lobechat/types';
 
 import type { InternalExecAgentParams } from '../types';
 
 export interface UserTurnMetadataInput {
+  agentSender?: AgentSenderMetadata;
   appContext?: InternalExecAgentParams['appContext'];
   botSender?: InternalExecAgentParams['botSender'];
   externalOrigin?: InternalExecAgentParams['externalOrigin'];
@@ -17,6 +19,7 @@ export interface UserTurnMetadataInput {
  * ordinary chat turn stores no more than `trigger`.
  */
 export const buildUserTurnMetadata = ({
+  agentSender,
   appContext,
   botSender,
   externalOrigin,
@@ -30,6 +33,10 @@ export const buildUserTurnMetadata = ({
   ...(appContext?.conversationAgentId && appContext.scope === 'sub_agent'
     ? { agentDispatch: { kind: 'callAgent' as const, visibility: 'internal' as const } }
     : undefined),
+  // An agent → agent turn (a sibling agent calling `lh agent run`). The row is
+  // persisted in THIS topic under the human owner, so keep the sending agent
+  // alongside — the UI shows it as the author and links back to its topic.
+  ...(agentSender ? { agentSender } : undefined),
   // Bot-channel turns are inserted under the OWNER's userId; keep the real
   // platform author alongside so the UI can attribute the bubble correctly.
   ...(botSender ? { botSender } : undefined),

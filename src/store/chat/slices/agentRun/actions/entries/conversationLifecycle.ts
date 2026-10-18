@@ -66,7 +66,7 @@ import {
 } from '@/store/agent/selectors';
 import { agentGroupByIdSelectors, getChatGroupStoreState } from '@/store/agentGroup';
 import { getPendingSandboxSelection } from '@/store/chat/pendingSandboxSelection';
-import { getPendingTopicRepos } from '@/store/chat/pendingTopicRepos';
+import { consumePendingTopicRepos, getPendingTopicRepos } from '@/store/chat/pendingTopicRepos';
 import {
   dbMessageSelectors,
   displayMessageSelectors,
@@ -511,7 +511,7 @@ export class ConversationLifecycleActionImpl {
         ? pendingDirectory.projectWorkingDirectoryId
         : undefined;
     const projectDirectoryId = boundTopic?.projectWorkingDirectoryId ?? stagedDirectoryId;
-    let stagedDirectory: { id: string; projectId: string } | undefined;
+    let stagedDirectory: { id: string; path: string; projectId: string } | undefined;
     if (projectDirectoryId) {
       // The sidebar's directory replica already holds the row; read it locally
       // so the optimistic pair is not held behind a network round trip. The
@@ -521,6 +521,7 @@ export class ConversationLifecycleActionImpl {
         findProjectDirectory(projectDirectoryId) ??
         (await projectWorkingDirectoryService.resolve(projectDirectoryId)).data;
       if (stagedDirectoryId) stagedDirectory = directory;
+      if (stagedDirectory) consumePendingTopicRepos(ownerAgentId); // a cloud repo pick conflicts
       if (!isGatewayMode)
         throw new Error('Enable Gateway Mode to run in a project working directory');
       if (
@@ -1234,7 +1235,7 @@ export class ConversationLifecycleActionImpl {
           : undefined,
       topicId: willCreateNewTopic ? undefined : operationContext.topicId,
     });
-    const currentDeviceId = getElectronStoreState().gatewayDeviceInfo?.deviceId;
+    const currentDeviceId = await getElectronStoreState().resolveGatewayDeviceId();
     // Resolve the cwd for every run that lands on a MACHINE — a hetero CLI
     // (in-process `hetero` runtime) and a NATIVE agent alike, as long as the
     // effective target routes to a device. The server can only honour a cwd the
@@ -1286,15 +1287,14 @@ export class ConversationLifecycleActionImpl {
             deviceSelectors.getDeviceDefaultCwd(runCwdDeviceId)(getDeviceStoreState()),
           fallback: heteroCwdContext?.desktopPath ?? heteroCwdContext?.homePath,
           legacyAgentWorkingDirectory: agentState.localAgentWorkingDirectoryMap[agentId],
+          // A project's staged directory, not the agent default, is the new topic's cwd.
+          topicWorkingDirectory: stagedDirectory?.path,
           workspaceScoped,
         }
       : undefined;
-    const agentWorkingDirectory = runCwdParams
-      ? resolveAgentWorkingDirectory(runCwdParams)
-      : undefined;
-    const agentWorkingDirectoryConfig = runCwdParams
-      ? resolveAgentWorkingDirectoryConfig(runCwdParams)
-      : undefined;
+    const agentWorkingDirectory = runCwdParams && resolveAgentWorkingDirectory(runCwdParams);
+    const agentWorkingDirectoryConfig =
+      runCwdParams && resolveAgentWorkingDirectoryConfig(runCwdParams);
     // Heterogeneous CLI agents (Claude Code, Codex, …) store sessions per-cwd
     // (`~/.claude/projects/<encoded-cwd>/`). Anchor their session cwd to the
     // SOURCE repo, NOT the selected worktree, so switching worktree keeps cwd +

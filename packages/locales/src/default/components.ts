@@ -45,11 +45,13 @@ export default {
   'FileManager.actions.confirmRemoveFromLibrary':
     "You're about to remove {{count}} selected file(s) from the Library. They'll still be available in All Files. Confirm to continue.",
   'FileManager.actions.copyUrl': 'Copy Link',
+  'FileManager.actions.copyUrlError': 'Failed to copy the file link',
   'FileManager.actions.copyUrlSuccess': 'File url copied successfully.',
   'FileManager.actions.createChunkingTask': 'Preparing...',
   'FileManager.actions.deleteSuccess': 'File deleted successfully.',
   'FileManager.actions.deleteAll': 'Delete All Items',
   'FileManager.actions.deleteAllOwn': 'Delete All Items I Created',
+  'FileManager.actions.downloadError': 'Failed to download the file',
   'FileManager.actions.downloadPageEmpty': 'Failed to download page: no content available',
   'FileManager.actions.downloadPageError': 'Failed to download page',
   'FileManager.actions.downloading': 'Downloading file...',

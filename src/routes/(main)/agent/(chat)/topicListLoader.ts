@@ -6,6 +6,9 @@ import { PRE_PAINT_HYDRATE_TIMEOUT, settleWithin } from '@/libs/replica/prePaint
 import { useAgentStore } from '@/store/agent';
 import { builtinAgentSelectors } from '@/store/agent/selectors';
 import { useChatStore } from '@/store/chat';
+import { messageMapKey } from '@/store/chat/utils/messageMapKey';
+import { useDeviceStore } from '@/store/device';
+import { useVerifyStore } from '@/store/verify';
 
 const builtinAgentSlugs = new Set<string>(Object.values(BUILTIN_AGENT_SLUGS));
 
@@ -57,11 +60,31 @@ export const preHydrateMessagesForRoute = async (
   const agentId = resolveRouteAgentId(routeAgentId);
   if (!agentId || !topicId) return;
 
-  await settleWithin(
-    useChatStore.getState().preHydrateMessages({ agentId, scope: 'main', topicId }),
-    PRE_PAINT_HYDRATE_TIMEOUT,
-  );
+  const context = { agentId, scope: 'main' as const, topicId };
+  const seed = async () => {
+    await useChatStore.getState().preHydrateMessages(context);
+
+    // Verify cards render from their own replica: seed the cards of the seeded
+    // transcript before the route commits, so a settled card paints in the same
+    // frame as its message instead of after its own mount-time storage read.
+    const messages = useChatStore.getState().dbMessagesMap[messageMapKey(context)] ?? [];
+    const verifyOperationIds = messages.flatMap((message) =>
+      message.role === 'verify' && message.metadata?.verifyOperationId
+        ? [message.metadata.verifyOperationId]
+        : [],
+    );
+    await useVerifyStore.getState().preHydrateVerifyRuns(verifyOperationIds);
+  };
+
+  await settleWithin(seed(), PRE_PAINT_HYDRATE_TIMEOUT);
 };
+
+/**
+ * Seed the persisted device list, so the input bar names the bound device and
+ * resolves its cwd on the first frame instead of after the mount-time hydrate.
+ */
+export const preHydrateDeviceListForRoute = (): Promise<void> =>
+  settleWithin(useDeviceStore.getState().preHydrateDeviceList(), PRE_PAINT_HYDRATE_TIMEOUT);
 
 /** Loader for the agent chat routes (`/agent/:aid`, `/agent/:aid/:topicId`). */
 export const agentChatTopicListLoader = async ({ params }: LoaderFunctionArgs): Promise<null> => {
@@ -81,6 +104,7 @@ export const agentChatTopicListLoader = async ({ params }: LoaderFunctionArgs): 
   await Promise.all([
     preHydrateTopicListForRoute(params.aid),
     preHydrateMessagesForRoute(params.aid, params.topicId),
+    preHydrateDeviceListForRoute(),
   ]);
 
   return null;
