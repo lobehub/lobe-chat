@@ -105,3 +105,19 @@ export const buildSlackCreateAppUrl = (options: { description?: string; name: st
 
 export const buildSlackAppPageUrl = (applicationId: string, page: 'general' | 'oauth') =>
   `${SLACK_APPS_URL}/${encodeURIComponent(applicationId)}/${page}`;
+
+/** Longest app name Feishu / Lark registration accepts (`feishuRegisterBegin`). */
+export const REGISTRATION_NAME_MAX_LENGTH = 64;
+
+/**
+ * The agent name as a registration preset: agent titles can be longer than the
+ * registration API allows, so cut at the limit without splitting a character.
+ */
+export const toRegistrationName = (name: string): string => {
+  let result = '';
+  for (const char of name) {
+    if (result.length + char.length > REGISTRATION_NAME_MAX_LENGTH) break;
+    result += char;
+  }
+  return result;
+};

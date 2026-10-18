@@ -28,8 +28,10 @@ export interface LinearTeam {
   description?: string;
   /** Short team key used in issue identifiers, such as `ENG`. */
   key: string;
-  /** Number of members returned for the team (bounded). */
+  /** Number of members returned for the team (bounded to the first 100). */
   memberCount?: number;
+  /** True when the team has more members than `memberCount` counted. */
+  memberCountIsLowerBound?: boolean;
   /** Team display name. */
   name: string;
   /** `public`, `private`, or `restricted` (a team inside a private-team boundary). */

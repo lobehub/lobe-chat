@@ -350,8 +350,14 @@ const PlatformDetail = memo<PlatformDetailProps>(
     ]);
 
     const handleExternalAuth = useCallback(
-      async (params: { applicationId: string; credentials: Record<string, string> }) => {
-        if (writeDisabled) return;
+      // Resolves whether the credentials were saved, so a caller holding them
+      // (Feishu scan-to-create) can keep them for a retry when saving fails.
+      async (params: {
+        applicationId: string;
+        credentials: Record<string, string>;
+      }): Promise<boolean> => {
+        if (writeDisabled) return false;
+        let saved = false;
 
         setSaving(true);
         setSaveResult(undefined);
@@ -383,6 +389,7 @@ const PlatformDetail = memo<PlatformDetailProps>(
             });
           }
 
+          saved = true;
           setSaveResult({ type: 'success' });
           setIsDirty(false);
           toast.success(t('channel.saved'));
@@ -394,6 +401,7 @@ const PlatformDetail = memo<PlatformDetailProps>(
         } finally {
           setSaving(false);
         }
+        return saved;
       },
       [
         agentId,

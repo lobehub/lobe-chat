@@ -50,7 +50,7 @@ export const LINEAR_QUERIES = {
     nodes {
       key name description visibility
       activeCycle { number name startsAt endsAt progress }
-      members(first: 100) { nodes { id } }
+      members(first: 100) { nodes { id } pageInfo { hasNextPage } }
     }
   }
 }`,
@@ -247,6 +247,8 @@ export const createLinearMarketConnectorClient = ({
             description: str(team.description),
             key,
             memberCount: toRecord(team.members) ? nodes(team.members).length : undefined,
+            memberCountIsLowerBound:
+              toRecord(toRecord(team.members)?.pageInfo)?.hasNextPage === true || undefined,
             name,
             visibility: str(team.visibility),
           },

@@ -69,6 +69,7 @@ export const collectLinearUnderstanding = async ({
       'Linear evidence policy:',
       '- Teams, cycles and projects show how the workspace plans work; issue states and priorities are a snapshot, not commitments.',
       `- Issues are the most recently updated ones${includePrivateTeams ? '' : ' in public teams'}, not the full backlog; do not treat missing topics as absent.`,
+      '- A team `memberCount` with `memberCountIsLowerBound: true` is a minimum; the team has more members.',
       '- Assignee and lead names identify who owns a piece of work; do not infer performance, seniority or anything personal from them.',
       JSON.stringify({ issues, organization, projects, provider: 'linear', teams }, null, 2),
     ].join('\n\n'),

@@ -41,6 +41,33 @@ describe('createLinearMarketConnectorClient', () => {
     expect(variables()).toEqual({ team: publicTeam });
   });
 
+  it('marks a member count cut at the page size as a lower bound', async () => {
+    const proxyOAuthRequest = vi.fn().mockResolvedValueOnce(
+      ok({
+        teams: {
+          nodes: [
+            {
+              key: 'ENG',
+              members: { nodes: [{ id: 'u1' }], pageInfo: { hasNextPage: true } },
+              name: 'Engineering',
+            },
+            {
+              key: 'OPS',
+              members: { nodes: [{ id: 'u2' }], pageInfo: { hasNextPage: false } },
+              name: 'Operations',
+            },
+          ],
+        },
+      }),
+    );
+
+    const [eng, ops] = await createClient(proxyOAuthRequest).listTeams();
+    expect(eng).toMatchObject({ memberCount: 1, memberCountIsLowerBound: true });
+    expect(ops.memberCount).toBe(1);
+    expect(ops.memberCountIsLowerBound).toBeUndefined();
+    expect(LINEAR_QUERIES.teams).toContain('pageInfo { hasNextPage }');
+  });
+
   it('normalizes teams, projects and issues and drops incomplete nodes', async () => {
     const proxyOAuthRequest = vi
       .fn()

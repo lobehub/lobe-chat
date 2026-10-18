@@ -1,12 +1,26 @@
 'use client';
 
-import { Button, createStaticStyles, cssVar, Flexbox, Icon, QRCode, Spin, Text } from '@lobehub/ui';
+import {
+  Button,
+  CopyButton,
+  createStaticStyles,
+  cssVar,
+  Flexbox,
+  Icon,
+  QRCode,
+  Spin,
+  Text,
+} from '@lobehub/ui';
 import { CheckIcon, ExternalLinkIcon, RefreshCwIcon } from 'lucide-react';
 import { memo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useClientDataSWR } from '@/libs/swr';
 import { agentBotProviderService } from '@/services/agentBotProvider';
+
+import { type FeishuCreatedApp, useCreatedAppSave } from './useCreatedAppSave';
+
+export type { FeishuCreatedApp } from './useCreatedAppSave';
 
 const QR_SIZE = 148;
 
@@ -26,16 +40,10 @@ const styles = createStaticStyles(({ css }) => ({
   `,
 }));
 
-export interface FeishuCreatedApp {
-  appId: string;
-  appSecret: string;
-  /** The tenant that scanned: a Lark account creates a Lark app. */
-  brand: 'feishu' | 'lark';
-}
-
 interface FeishuQuickCreateProps {
   appPreset?: { avatar?: string; desc?: string; name?: string };
-  onCreated: (app: FeishuCreatedApp) => void;
+  /** Saves the created app; rejects (with a message) when it can't be saved. */
+  onCreated: (app: FeishuCreatedApp) => Promise<void>;
   platform: 'feishu' | 'lark';
 }
 
@@ -45,12 +53,24 @@ type Brand = FeishuCreatedApp['brand'];
  * Feishu / Lark scan-to-create: one scan creates the bot app with messaging
  * scopes and the receive-message event already set, and hands back its
  * credentials. Polls while waiting; an expired or declined code regenerates.
+ * When saving the created app fails, its credentials stay on screen with a
+ * retry, since the app already exists and its secret is shown only once.
  */
 const FeishuQuickCreate = memo<FeishuQuickCreateProps>(({ appPreset, onCreated, platform }) => {
   const { t } = useTranslation('agent');
   const [attempt, setAttempt] = useState(0);
   const [brand, setBrand] = useState<Brand>('feishu');
   const reportedRef = useRef<string>(undefined);
+  const {
+    clear,
+    save: persist,
+    saving,
+    unsaved,
+  } = useCreatedAppSave({
+    fallbackMessage: t('channel.quickSetup.feishu.scan.saveFailed'),
+    onCreated,
+    platform,
+  });
 
   const {
     data: session,
@@ -80,7 +100,7 @@ const FeishuQuickCreate = memo<FeishuQuickCreateProps>(({ appPreset, onCreated, 
         if (result.status === 'pending' && result.brand !== brand) setBrand(result.brand);
         if (result.status === 'success' && reportedRef.current !== session?.deviceCode) {
           reportedRef.current = session?.deviceCode;
-          onCreated({ appId: result.appId, appSecret: result.appSecret, brand: result.brand });
+          void persist({ appId: result.appId, appSecret: result.appSecret, brand: result.brand });
         }
       },
       refreshInterval: (result) =>
@@ -94,6 +114,7 @@ const FeishuQuickCreate = memo<FeishuQuickCreateProps>(({ appPreset, onCreated, 
   );
 
   const regenerate = () => {
+    clear();
     setBrand('feishu');
     setAttempt((value) => value + 1);
   };
@@ -157,6 +178,37 @@ const FeishuQuickCreate = memo<FeishuQuickCreateProps>(({ appPreset, onCreated, 
             >
               {t('channel.quickSetup.feishu.scan.regenerate')}
             </Button>
+          </Flexbox>
+        ) : unsaved ? (
+          <Flexbox data-testid={'feishu-quick-create-unsaved'} gap={8}>
+            <Text fontSize={13} type={'danger'}>
+              {unsaved.message}
+            </Text>
+            {(
+              [
+                ['App ID', unsaved.app.appId],
+                ['App Secret', unsaved.app.appSecret],
+              ] as const
+            ).map(([label, value]) => (
+              <Flexbox horizontal align={'center'} gap={6} key={label}>
+                <Text fontSize={12} type={'secondary'}>
+                  {label}
+                </Text>
+                <Text code fontSize={12}>
+                  {value}
+                </Text>
+                <CopyButton content={value} size={'small'} />
+              </Flexbox>
+            ))}
+            {unsaved.canRetry && (
+              <Button
+                loading={saving}
+                style={{ alignSelf: 'flex-start' }}
+                onClick={() => void persist(unsaved.app)}
+              >
+                {t('channel.quickSetup.feishu.scan.saveAgain')}
+              </Button>
+            )}
           </Flexbox>
         ) : created ? (
           <Text fontSize={13} type={'success'}>

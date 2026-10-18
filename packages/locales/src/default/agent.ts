@@ -26,6 +26,9 @@ export default {
   'channel.quickSetup.feishu.scan.expired': 'The QR code expired.',
   'channel.quickSetup.feishu.scan.denied': 'Creation was declined in Feishu.',
   'channel.quickSetup.feishu.scan.error': "Couldn't create the app. Try a new code.",
+  'channel.quickSetup.feishu.scan.saveFailed':
+    "The app was created but couldn't be saved. Keep these credentials and save again.",
+  'channel.quickSetup.feishu.scan.saveAgain': 'Save again',
   'channel.quickSetup.feishu.create.title': 'Create a custom app',
   'channel.quickSetup.feishu.create.desc':
     'Copy the App ID and App Secret from Credentials & Basic Info.',

@@ -1,12 +1,13 @@
 'use client';
 
-import { createStaticStyles, cssVar, Flexbox, Text, toast } from '@lobehub/ui';
+import { createStaticStyles, cssVar, Flexbox, Text } from '@lobehub/ui';
 import { Form, type FormInstance, useWatch } from '@lobehub/ui/form';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import FeishuQuickCreate, { type FeishuCreatedApp } from './FeishuQuickCreate';
 import { getSetupGuide } from './guides';
+import { toRegistrationName } from './links';
 import SetupGuide from './SetupGuide';
 
 // Same quiet group heading as the form's Advanced Settings.
@@ -30,10 +31,11 @@ interface QuickSetupSectionProps {
   // Only reads `applicationId`; any channel form shape works.
   form: FormInstance<any>;
   hasConfig?: boolean;
+  /** Saves and connects the credentials; resolves `false` when saving failed. */
   onAuthenticated?: (params: {
     applicationId: string;
     credentials: Record<string, string>;
-  }) => void;
+  }) => Promise<boolean> | void;
   platformId: string;
 }
 
@@ -54,12 +56,12 @@ const QuickSetupSection = memo<QuickSetupSectionProps>(
 
     const canScan = guide.scanToCreate && !hasConfig && !disabled && !!onAuthenticated;
 
-    const handleCreated = ({ appId, appSecret, brand }: FeishuCreatedApp) => {
-      if (brand !== platformId) {
-        toast.warning(t(`channel.quickSetup.feishu.scan.brandMismatch.${brand}`));
-        return;
-      }
-      onAuthenticated?.({ applicationId: appId, credentials: { appSecret } });
+    // Throws when the app can't be saved here, so the scan keeps its credentials.
+    const handleCreated = async ({ appId, appSecret, brand }: FeishuCreatedApp) => {
+      if (brand !== platformId)
+        throw new Error(t(`channel.quickSetup.feishu.scan.brandMismatch.${brand}`));
+      const saved = await onAuthenticated?.({ applicationId: appId, credentials: { appSecret } });
+      if (saved === false) throw new Error(t('channel.quickSetup.feishu.scan.saveFailed'));
     };
 
     return (
@@ -67,7 +69,7 @@ const QuickSetupSection = memo<QuickSetupSectionProps>(
         {canScan && (
           <Flexbox gap={12} style={{ padding: '16px 0' }}>
             <FeishuQuickCreate
-              appPreset={{ name: appName }}
+              appPreset={{ name: toRegistrationName(appName) }}
               platform={platformId as 'feishu' | 'lark'}
               onCreated={handleCreated}
             />

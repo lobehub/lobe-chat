@@ -253,6 +253,8 @@
   "channel.quickSetup.feishu.scan.expired": "二维码已过期。",
   "channel.quickSetup.feishu.scan.openInBrowser": "在浏览器中打开",
   "channel.quickSetup.feishu.scan.regenerate": "重新生成二维码",
+  "channel.quickSetup.feishu.scan.saveAgain": "重新保存",
+  "channel.quickSetup.feishu.scan.saveFailed": "应用已创建，但保存失败。请保留以下凭据并重新保存。",
   "channel.quickSetup.feishu.scan.title": "用飞书扫码，一键创建机器人",
   "channel.quickSetup.feishu.scan.waiting": "等待你在飞书中确认…",
   "channel.quickSetup.guideTitle": "设置步骤",

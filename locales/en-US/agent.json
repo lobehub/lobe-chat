@@ -253,6 +253,8 @@
   "channel.quickSetup.feishu.scan.expired": "The QR code expired.",
   "channel.quickSetup.feishu.scan.openInBrowser": "Open in browser instead",
   "channel.quickSetup.feishu.scan.regenerate": "Generate a new code",
+  "channel.quickSetup.feishu.scan.saveAgain": "Save again",
+  "channel.quickSetup.feishu.scan.saveFailed": "The app was created but couldn't be saved. Keep these credentials and save again.",
   "channel.quickSetup.feishu.scan.title": "Scan with Feishu to create the bot",
   "channel.quickSetup.feishu.scan.waiting": "Waiting for you to confirm in Feishu…",
   "channel.quickSetup.guideTitle": "Setup steps",

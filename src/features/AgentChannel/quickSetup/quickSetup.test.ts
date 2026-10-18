@@ -6,6 +6,8 @@ import {
   buildSlackCreateAppUrl,
   buildSlackManifest,
   DISCORD_BOT_PERMISSIONS,
+  REGISTRATION_NAME_MAX_LENGTH,
+  toRegistrationName,
 } from './links';
 
 describe('quick setup links', () => {
@@ -44,6 +46,19 @@ describe('quick setup links', () => {
     expect(JSON.parse(url.searchParams.get('manifest_json')!).display_information.name).toBe(
       'Moss',
     );
+  });
+});
+
+describe('toRegistrationName', () => {
+  it('cuts a long agent name to the registration limit without splitting a character', () => {
+    expect(toRegistrationName('Moss')).toBe('Moss');
+
+    const long = 'a'.repeat(REGISTRATION_NAME_MAX_LENGTH + 10);
+    expect(toRegistrationName(long)).toHaveLength(REGISTRATION_NAME_MAX_LENGTH);
+
+    // An emoji is two UTF-16 units; one that would cross the limit is dropped whole.
+    const name = toRegistrationName(`${'a'.repeat(REGISTRATION_NAME_MAX_LENGTH - 1)}🤖`);
+    expect(name).toBe('a'.repeat(REGISTRATION_NAME_MAX_LENGTH - 1));
   });
 });
 

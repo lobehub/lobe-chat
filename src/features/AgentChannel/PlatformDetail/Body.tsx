@@ -479,10 +479,11 @@ interface BodyProps {
   disabled?: boolean;
   form: FormInstance<ChannelFormValues>;
   hasConfig?: boolean;
+  /** Saves and connects the credentials; resolves `false` when saving failed. */
   onAuthenticated?: (params: {
     applicationId: string;
     credentials: Record<string, string>;
-  }) => void;
+  }) => Promise<boolean> | void;
   onValuesChange?: (values: ChannelFormValues) => void;
   platformDef: SerializedPlatformDefinition;
   /** Name a quick-created bot app starts with (the agent's name). */
