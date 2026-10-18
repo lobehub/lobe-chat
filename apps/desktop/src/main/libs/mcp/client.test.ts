@@ -1,6 +1,4 @@
-import { EventEmitter } from 'node:events';
-
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
 import {
   appendCappedOutput,
@@ -10,7 +8,6 @@ import {
   MCPClient,
   MCPConnectionError,
   selectDiagnosticOutputLines,
-  terminatePrecheckProcess,
 } from './client';
 
 describe('describeStdioSpawnFailure', () => {
@@ -261,101 +258,6 @@ describe('hasInitializeResponse', () => {
   });
 });
 
-describe('terminatePrecheckProcess', () => {
-  const makeFakeChild = () => {
-    const listeners: Record<string, (() => void)[]> = {};
-    const child = new EventEmitter() as EventEmitter & {
-      kill: ReturnType<typeof vi.fn>;
-      once: (event: string, fn: () => void) => void;
-    };
-    child.kill = vi.fn();
-    (child as any).once = (event: string, fn: () => void) => {
-      listeners[event] = listeners[event] || [];
-      listeners[event].push(fn);
-      return child;
-    };
-    (child as any).__emit = (event: string) => {
-      for (const fn of listeners[event] || []) fn();
-    };
-    (child as any).__listeners = listeners;
-    return child;
-  };
-
-  it('sends SIGTERM first and settles on the exit event', () => {
-    vi.useFakeTimers();
-    try {
-      const child = makeFakeChild();
-      const onSettled = vi.fn();
-
-      terminatePrecheckProcess(child as any, onSettled);
-
-      expect(child.kill).toHaveBeenCalledWith('SIGTERM');
-      expect(onSettled).not.toHaveBeenCalled();
-
-      (child as any).__emit('exit');
-      expect(onSettled).toHaveBeenCalledTimes(1);
-      // timers cleared: no SIGKILL, no fallback
-      vi.advanceTimersByTime(2000);
-      expect(child.kill).toHaveBeenCalledTimes(1);
-    } finally {
-      vi.useRealTimers();
-    }
-  });
-
-  it('escalates to SIGKILL after the grace period when the process ignores SIGTERM', () => {
-    vi.useFakeTimers();
-    try {
-      const child = makeFakeChild();
-      const onSettled = vi.fn();
-
-      terminatePrecheckProcess(child as any, onSettled);
-      vi.advanceTimersByTime(500);
-
-      expect(child.kill).toHaveBeenNthCalledWith(2, 'SIGKILL');
-
-      // exit after escalation settles and clears the fallback timer
-      (child as any).__emit('exit');
-      expect(onSettled).toHaveBeenCalledTimes(1);
-      vi.advanceTimersByTime(2000);
-      expect(onSettled).toHaveBeenCalledTimes(1);
-    } finally {
-      vi.useRealTimers();
-    }
-  });
-
-  it('settles via the hard fallback even when no exit event ever fires', () => {
-    vi.useFakeTimers();
-    try {
-      const child = makeFakeChild();
-      const onSettled = vi.fn();
-
-      terminatePrecheckProcess(child as any, onSettled);
-      vi.advanceTimersByTime(1500);
-
-      expect(onSettled).toHaveBeenCalledTimes(1);
-      expect(child.kill).toHaveBeenCalledTimes(2); // SIGTERM + SIGKILL
-    } finally {
-      vi.useRealTimers();
-    }
-  });
-
-  it('settles only once across exit and fallback races', () => {
-    vi.useFakeTimers();
-    try {
-      const child = makeFakeChild();
-      const onSettled = vi.fn();
-
-      terminatePrecheckProcess(child as any, onSettled);
-      (child as any).__emit('exit');
-      vi.advanceTimersByTime(2000);
-
-      expect(onSettled).toHaveBeenCalledTimes(1);
-    } finally {
-      vi.useRealTimers();
-    }
-  });
-});
-
 describe('preCheckStdioCommand', () => {
   /**
    * Call the private pre-check directly with a short timeout so long-running
@@ -441,6 +343,96 @@ describe('preCheckStdioCommand', () => {
 
       expect(result.success).toBe(true);
       expect(result.diagnosis).toBe('');
+    },
+  );
+
+  it(
+    'terminates the whole process tree: the launcher-spawned descendant does not survive cleanup (P2 4305748076)',
+    { timeout: 20_000 },
+    async () => {
+      // The configured command is a launcher that starts a persistent worker
+      // (writes a heartbeat to a side file every 200ms) and stays alive via
+      // pipes. The pre-check must tear down BOTH processes: the worker file
+      // must stop growing after the pre-check window, proving no orphan.
+      const heartbeat = '/tmp/lobehub-precheck-p2-heartbeat';
+
+      const result = await runPreCheck('node', [
+        '-e',
+        [
+          `require("node:fs").rmSync("${heartbeat}", { force: true });`,
+          'const { spawn } = require("node:child_process");',
+          `const w = spawn(process.execPath, ["-e", "const fs=require(\\"fs\\");const t=setInterval(()=>fs.appendFileSync(\\"${heartbeat}\\", String(Date.now())+\\"\\\\n\\"),200);process.on(\\"SIGTERM\\",()=>{clearInterval(t);process.exit(0);});"], { stdio: "ignore" });`,
+          'w.unref();',
+          'setInterval(() => {}, 1000);', // launcher itself stays alive → timeout path
+        ].join(' '),
+      ]);
+
+      expect(result.success).toBe(true); // still-running launcher → healthy-enough path
+      const settleWait = Date.now() + 5000;
+      let lines = 0;
+      // Give the teardown (SIGTERM → SIGKILL escalation) time to land.
+      while (Date.now() < settleWait) {
+        await new Promise((r) => setTimeout(r, 400));
+        lines = require('node:fs').existsSync(heartbeat)
+          ? require('node:fs').readFileSync(heartbeat, 'utf8').trim().split('\n').length
+          : 0;
+        if (lines >= 3) break; // worker was alive and writing
+      }
+      const stableAt = lines;
+
+      // After teardown the heartbeat must freeze: no orphaned worker.
+      await new Promise((r) => setTimeout(r, 1600));
+      const finalLines = require('node:fs').existsSync(heartbeat)
+        ? require('node:fs').readFileSync(heartbeat, 'utf8').trim().split('\n').length
+        : 0;
+
+      expect(stableAt).toBeGreaterThanOrEqual(3); // worker genuinely ran
+      expect(finalLines).toBe(stableAt); // …and was killed with the tree
+    },
+  );
+
+  it(
+    'reaps worker descendants when the launcher exits on its own (zero-code path)',
+    { timeout: 20_000 },
+    async () => {
+      // Launcher starts a worker, lets it write a few heartbeat lines, then
+      // exits 0 without a handshake → zero-code classification. The worker
+      // must not survive the classification: reapOrphanedProcessGroup kills
+      // the group.
+      const heartbeat = '/tmp/lobehub-precheck-reap-heartbeat';
+
+      const result = await runPreCheck('node', [
+        '-e',
+        [
+          `require("node:fs").rmSync("${heartbeat}", { force: true });`,
+          'const { spawn } = require("node:child_process");',
+          `const w = spawn(process.execPath, ["-e", "const fs=require(\\"fs\\");const t=setInterval(()=>fs.appendFileSync(\\"${heartbeat}\\", String(Date.now())+\\"\\\\n\\"),200);"], { stdio: "ignore" });`,
+          'w.unref();',
+          'setTimeout(() => process.exit(0), 700);', // worker writes ~3 lines first
+        ].join(' '),
+      ]);
+
+      expect(result.success).toBe(false);
+      expect(result.diagnosis).toContain('without completing the MCP handshake');
+
+      const settleWait = Date.now() + 5000;
+      let lines = 0;
+      while (Date.now() < settleWait) {
+        await new Promise((r) => setTimeout(r, 400));
+        lines = require('node:fs').existsSync(heartbeat)
+          ? require('node:fs').readFileSync(heartbeat, 'utf8').trim().split('\n').length
+          : 0;
+        if (lines >= 3) break;
+      }
+      const stableAt = lines;
+
+      await new Promise((r) => setTimeout(r, 1600));
+      const finalLines = require('node:fs').existsSync(heartbeat)
+        ? require('node:fs').readFileSync(heartbeat, 'utf8').trim().split('\n').length
+        : 0;
+
+      expect(stableAt).toBeGreaterThanOrEqual(3);
+      expect(finalLines).toBe(stableAt);
     },
   );
 

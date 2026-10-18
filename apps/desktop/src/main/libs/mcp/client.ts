@@ -1,4 +1,3 @@
-import type { ChildProcess } from 'node:child_process';
 import { spawn } from 'node:child_process';
 import type { Readable } from 'node:stream';
 
@@ -13,7 +12,16 @@ import type { Progress } from '@modelcontextprotocol/sdk/types.js';
 
 import { getDesktopEnv } from '@/env';
 
+import { reapOrphanedProcessGroup, terminatePrecheckProcess } from './process-tree';
 import type { MCPClientParams, McpPrompt, McpResource, McpTool, ToolCallResult } from './types';
+
+// Process-tree teardown lives in ./process-tree; re-export so existing
+// importers of this module (and the focused test file) keep one import path.
+export {
+  reapOrphanedProcessGroup,
+  signalProcessTree,
+  terminatePrecheckProcess,
+} from './process-tree';
 
 /**
  * Custom error class for MCP connection errors that includes STDIO logs
@@ -145,44 +153,6 @@ export function hasInitializeResponse(stdout: string): boolean {
       return false;
     }
   });
-}
-
-/**
- * Tear down a pre-check child that outlived its 5s window. SIGTERM first,
- * escalate to SIGKILL after a short grace period, and settle once the exit
- * event confirms the process is gone (with a hard fallback so the pre-check
- * promise can never hang). Without the exit confirmation a server that
- * ignores SIGTERM would survive with its pipe listeners attached, leaking
- * processes across repeated failed connections.
- */
-export function terminatePrecheckProcess(
-  child: ChildProcess,
-  onSettled: () => void,
-  options: { fallbackMs?: number; graceMs?: number } = {},
-): void {
-  const { fallbackMs = 1500, graceMs = 500 } = options;
-
-  let settled = false;
-  const settle = () => {
-    if (settled) return;
-    settled = true;
-    clearTimeout(graceTimer);
-    clearTimeout(fallbackTimer);
-    onSettled();
-  };
-
-  const graceTimer = setTimeout(() => {
-    try {
-      child.kill('SIGKILL');
-    } catch {
-      // already dead — exit handler settles
-    }
-  }, graceMs);
-
-  const fallbackTimer = setTimeout(settle, fallbackMs);
-
-  child.once('exit', settle);
-  child.kill('SIGTERM');
 }
 
 /**
@@ -398,6 +368,13 @@ export class MCPClient {
       let child: ReturnType<typeof spawn>;
       try {
         child = spawn(params.command, params.args ?? [], {
+          // POSIX only: make the child a process-group leader so teardown
+          // can signal the whole tree (launchers that spawn persistent
+          // workers leave no orphans). On Windows `detached` means a new
+          // console window / DETACHED_PROCESS — not wanted here; tree
+          // teardown there is handled via `taskkill /T` (see
+          // `signalProcessTree`).
+          detached: process.platform !== 'win32',
           env,
           stdio: ['pipe', 'pipe', 'pipe'],
         });
@@ -503,6 +480,17 @@ export class MCPClient {
       // stdio streams have closed and drained. The `error` handler above
       // still owns spawn failures (error and close are mutually exclusive).
       const classify = (code: number | null, signal: NodeJS.Signals | null) => {
+        // The direct child exited on its own. If it was a launcher, its
+        // worker descendants may still be alive in the process group —
+        // every failed reconnect would otherwise accumulate another
+        // orphaned MCP server. Background-reap the group (no-op when the
+        // tree already exited; setsid daemons that left the group are
+        // untouched). The timeout path instead goes through
+        // `terminatePrecheckProcess`, which signals the whole tree itself.
+        if (child.pid !== undefined) {
+          reapOrphanedProcessGroup(child.pid);
+        }
+
         if (code === 0) {
           // Exit 0 alone does not prove the MCP handshake completed: one-shot
           // executables and wrappers can start, print an error and exit
