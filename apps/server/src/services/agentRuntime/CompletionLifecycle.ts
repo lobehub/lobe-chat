@@ -1,10 +1,6 @@
 import { isParkedStatus } from '@lobechat/agent-runtime';
 import { readHeterogeneousErrorContext } from '@lobechat/heterogeneous-agents/errors';
-import {
-  type AgentOperationStatus,
-  isAgentOperationInFlight,
-  RequestTrigger,
-} from '@lobechat/types';
+import { type AgentOperationStatus, RequestTrigger } from '@lobechat/types';
 import { deserializeParts } from '@lobechat/utils';
 import { isRecord } from '@lobechat/utils/object';
 import debug from 'debug';
@@ -17,7 +13,6 @@ import {
   type RecordOperationStartParams,
 } from '@/database/models/agentOperation';
 import { MessageModel } from '@/database/models/message';
-import { TopicModel } from '@/database/models/topic';
 import { recomputeTopicUsage } from '@/database/models/topicUsage';
 import { VerifyRunModel } from '@/database/models/verifyRun';
 import { WorkModel } from '@/database/models/work';
@@ -45,6 +40,7 @@ import { after } from '@/server/utils/scheduleAfterResponse';
 import { buildRuntimeInterventionNotification } from './agentInterventionNotification';
 import { extractFinalReplyImageUrls } from './finalReplyImages';
 import { CriticalHookDeliveryError, hookDispatcher, type SerializedHook } from './hooks';
+import { settleIsolationThread, settleTopicRunningMark } from './settleRunMarks';
 
 const log = debug('lobe-server:completion-lifecycle');
 
@@ -61,21 +57,6 @@ export const isSuccessLikeCompletionReason = (reason: string): boolean =>
   reason === 'max_steps' ||
   reason === 'cost_limit' ||
   reason === 'tool_call_repeat_limit';
-
-/**
- * The topic status a finished run leaves behind, mirroring what the client
- * writes for the same outcome (`executeGatewayAgent`'s `onSessionComplete`) and
- * what `agentNotify` does for the remote path: only a clean finish is something
- * the user may not have watched (`unread`); every other ending is an
- * interruption they already saw (`active`).
- *
- * Agrees with the one existing server-side settle, too:
- * `ServerOperationStore.clearRunningMark` hardcodes `unread`, and it only ever
- * runs from the `finish` executor — the success path, where this helper returns
- * `unread` as well.
- */
-const topicStatusForTerminalRun = (status: string): 'active' | 'unread' =>
-  status === 'done' ? 'unread' : 'active';
 
 /**
  * Triggers whose completion recalls the user with a push notification. Beyond
@@ -505,13 +486,26 @@ export class CompletionLifecycle {
       log('[%s] Failed to persist operation completion (non-fatal): %O', operationId, error);
     }
 
-    // The run is over durably — converge the topic's running mark, or it outlives
-    // the run (see `settleTopicRunningMark`). Deliberately not attempted when the
-    // completion above did not land: a DB error or a missing start row leaves the
-    // operation's own end unproven, and a mark cleared on an unproven ending
-    // reads as settled while `agent_operations` still says `running`.
+    // The run is over durably — converge the topic's running mark and the
+    // isolation thread's status, or they outlive the run (see `settleRunMarks`).
+    // Deliberately not attempted when the completion above did not land: a DB
+    // error or a missing start row leaves the operation's own end unproven, and a
+    // mark cleared on an unproven ending reads as settled while
+    // `agent_operations` still says `running`.
     if (completionDurable) {
-      await this.settleTopicRunningMark({ operationId, status: durableStatus, topicId });
+      const deps = {
+        includeShareVisitor: this.includeShareVisitor,
+        serverDB: this.serverDB,
+        userId: this.userId,
+        workspaceId: this.workspaceId,
+      };
+      await settleTopicRunningMark(deps, { operationId, status: durableStatus, topicId });
+      await settleIsolationThread(deps, {
+        error: state?.error,
+        operationId,
+        status: durableStatus,
+        threadId: runOrigin.threadId,
+      });
     }
 
     if (conflictingTerminalOwner) return false;
@@ -533,80 +527,6 @@ export class CompletionLifecycle {
     }
 
     return true;
-  }
-
-  /**
-   * Drop the topic's `runningOperation` mark when a run reaches its terminal row.
-   *
-   * The ONLY server-side settle used to be `ServerOperationStore.clearRunningMark`,
-   * and it runs from a single place: the `finish` executor. Every ending that
-   * never emits a `finish` instruction therefore wrote a terminal
-   * `agent_operations` row and left the topic exactly as the run's start had left
-   * it — `status = 'running'` with `metadata.runningOperation` naming an operation
-   * that had already finished:
-   *
-   * - a Stop is persisted at the step boundary (`AgentRuntimeService.executeStep`
-   *   sets the state to `interrupted` once the in-flight step returns), and the
-   *   following delivery usually finds the operation already terminal;
-   * - `interruptOperation` settles a client-parked run itself, and
-   *   `buildShareAbortResult` settles a revoked share visitor run;
-   * - a loop stopped by `max_steps` / `cost_limit` ends without the agent asking
-   *   to finish.
-   *
-   * Nothing then revisited the row: the client's own settle is a single attempt
-   * that a transient server refusal discards, and the client watchdog only runs
-   * with that user's sidebar open. Observed 2026-10-13 on a self-hosted
-   * deployment as a topic shown "running" for 45 minutes whose operation row had
-   * been `interrupted` since 03:33:58Z with `topics.updated_at` frozen at the
-   * run's start — `settleRunningOperation` always bumps `updated_at`, so that
-   * timestamp is proof no settle ever reached the row. 16 rows of the same shape,
-   * the oldest two months old.
-   *
-   * Persisting the terminal row is the moment the run is over, so converging
-   * here covers every ending above (and any future one) instead of adding a call
-   * to each caller. Compare-and-clear, exactly as the executor's adapter does:
-   * only the operation the mark names — or one of its children — may drop it, so
-   * a newer run that claimed the topic meanwhile is left alone and answers
-   * `conflict`. Best-effort: a topic that cannot be reached must not fail the
-   * completion it already persisted.
-   */
-  private async settleTopicRunningMark(params: {
-    operationId: string;
-    status: AgentOperationStatus;
-    topicId?: string;
-  }): Promise<void> {
-    const { operationId, status, topicId } = params;
-
-    // No topic to settle (a sub-agent run, a bot thread, a verify pass).
-    if (!topicId) return;
-    // Only an ending may drop the mark. Not merely the parked three: the fallback
-    // above settles for the status read back from the row rather than one this
-    // callback authored, and `idle` / `running` are no more of an ending than a
-    // pause is. `isAgentOperationInFlight` is the shared authority for both.
-    if (isAgentOperationInFlight(status)) return;
-    // A lease-expired abandon settles the topic on its own path with its own
-    // status (`AbandonOperationService`); leave that one to it.
-    if (status === 'abandoned') return;
-
-    try {
-      const topicModel = new TopicModel(this.serverDB, this.userId, this.workspaceId, undefined, {
-        includeShareVisitor: this.includeShareVisitor,
-      });
-
-      const settled = await topicModel.settleRunningOperation(
-        topicId,
-        operationId,
-        topicStatusForTerminalRun(status),
-      );
-
-      // `missing` (another writer already cleared it) and `conflict` (a newer run
-      // owns the mark) are both correct no-ops, not failures.
-      if (settled.status !== 'settled') {
-        log('[%s] Topic running mark left alone: %s', operationId, settled.status);
-      }
-    } catch (error) {
-      log('[%s] Failed to settle the topic running mark (non-fatal): %O', operationId, error);
-    }
   }
 
   /** Best-effort child-usage rollup — a DB hiccup must not fail the completion write. */
