@@ -62,7 +62,9 @@ import {
   evaluateBudget,
   evaluateMetricCriteria,
   isParkedOnMeasuredGate,
+  metricState,
   recordObservation,
+  removeMetricCriteria,
   reopenIfMeasurementCleared,
   resolveSpend,
   setAcceptanceCriteria,
@@ -322,6 +324,11 @@ export class GoalService {
 
   setMetricCriteria = (...args: MethodArgs<typeof setMetricCriteria>) =>
     setMetricCriteria(this.context, ...args);
+
+  removeMetricCriteria = (...args: MethodArgs<typeof removeMetricCriteria>) =>
+    removeMetricCriteria(this.context, ...args);
+
+  metricState = (...args: MethodArgs<typeof metricState>) => metricState(this.context, ...args);
 
   setAcceptanceCriteria = (...args: MethodArgs<typeof setAcceptanceCriteria>) =>
     setAcceptanceCriteria(this.context, ...args);

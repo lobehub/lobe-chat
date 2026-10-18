@@ -8,6 +8,7 @@ import type {
 } from '@lobechat/types';
 import { TRPCError } from '@trpc/server';
 
+import { GoalModel } from '@/database/models/goal';
 import { MetricModel } from '@/database/models/metric';
 
 import {
@@ -204,28 +205,77 @@ export const setMetricCriteria = async (
    * concurrent editor or agent declared since that snapshot was read.
    */
   mode: 'merge' | 'replace' = 'replace',
+) =>
+  updateMetricCriteria(ctx, goalId, (current) =>
+    mode === 'merge'
+      ? [...current.filter((item) => !metrics.some((m) => m.key === item.key)), ...metrics]
+      : metrics,
+  );
+
+/**
+ * Drop clauses by key, against the list as it stands on the server — for the
+ * same reason `merge` exists: a client filtering its own snapshot would put
+ * back whatever was removed or declared since it read.
+ */
+export const removeMetricCriteria = async (
+  ctx: GoalServiceContext,
+  goalId: string,
+  keys: string[],
+) =>
+  updateMetricCriteria(ctx, goalId, (current) =>
+    current.filter((item) => !keys.includes(item.key)),
+  );
+
+const updateMetricCriteria = async (
+  ctx: GoalServiceContext,
+  goalId: string,
+  edit: (current: GoalMetricCriterion[]) => GoalMetricCriterion[],
 ) => {
   const before = await ctx.coordinatorGraph.getGraph(goalId);
   if (!before) throw new TRPCError({ code: 'NOT_FOUND', message: 'Goal not found' });
   const parkedOnGate = ctx.isParkedOnMeasuredGate(before);
-  const goal = before.goal;
-  const current = goal.config?.acceptance?.metrics ?? [];
-  const next =
-    mode === 'merge'
-      ? [...current.filter((item) => !metrics.some((m) => m.key === item.key)), ...metrics]
-      : metrics;
-  await ctx.goalModel.update(goalId, {
-    config: {
-      ...goal.config,
-      acceptance: {
-        ...goal.config?.acceptance,
-        metrics: next.length > 0 ? next : undefined,
+  // Read and write the list under the goal's row lock: two editors deriving
+  // their list from the same snapshot would otherwise race, resurrecting a
+  // removed clause or dropping a newly declared one.
+  await ctx.db.transaction(async (tx) => {
+    const model = new GoalModel(tx, ctx.userId, ctx.workspaceId);
+    const goal = await model.lockById(goalId);
+    if (!goal) throw new TRPCError({ code: 'NOT_FOUND', message: 'Goal not found' });
+    const next = edit(goal.config?.acceptance?.metrics ?? []);
+    await model.update(goalId, {
+      config: {
+        ...goal.config,
+        acceptance: {
+          ...goal.config?.acceptance,
+          metrics: next.length > 0 ? next : undefined,
+        },
       },
-    },
+    });
   });
   // Relaxing or dropping a clause can clear a gate the goal is parked on.
   await ctx.reopenIfMeasurementCleared(goalId, parkedOnGate);
   return ctx.graph(goalId);
+};
+
+/**
+ * Every declared clause beside the value the gate would read for it right now.
+ *
+ * The graph carries only the declarations, so a reader of it — a planning
+ * Agent above all — could not tell a clause nobody measured from one already
+ * met, and kept resubmitting verification against a gate that had cleared.
+ */
+export const metricState = async (ctx: GoalServiceContext, goalId: string) => {
+  const graph = await ctx.requireGraph(goalId);
+  const declared = graph.goal.config?.acceptance?.metrics ?? [];
+  if (declared.length === 0) return { allMet: true, criteria: [] };
+  const state = await ctx.evaluateMetricCriteria(graph);
+  return {
+    allMet: state.allMet,
+    criteria: state.criteria.map((criterion) => ({
+      ...criterion,
+      title: declared.find((item) => item.key === criterion.key)?.title,
+    })),
+  };
 };
 
 export const setAcceptanceCriteria = async (

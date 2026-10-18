@@ -2388,6 +2388,10 @@ export default {
   'goalProcess.northStar.detail.trendEmpty': 'The trend appears after a second observation',
   'goalProcess.northStar.edit.submit': 'Save',
   'goalProcess.northStar.edit.title': 'Adjust target',
+  'goalProcess.northStar.remove.confirm':
+    'Remove "{{name}}"? It will no longer gate this goal\'s acceptance. Recorded observations are kept.',
+  'goalProcess.northStar.remove.failed': 'Failed to remove the metric',
+  'goalProcess.northStar.remove.title': 'Remove metric',
   'goalProcess.frontier.add': 'Add task',
   'goalProcess.frontier.needsYou': '{{count}} need you',
   'goalProcess.frontier.advanceable': '{{count}} can advance',
@@ -2516,6 +2520,10 @@ export default {
   'goalProcess.decision.attempts_other': '{{count}} attempts',
   'goalProcess.decision.effect.retry':
     'Send the task back for another attempt. Your note is written into its instructions.',
+  'goalProcess.decision.effect.alsoRetires': 'Also drops the tasks that depend on it: {{tasks}}.',
+  'goalProcess.decision.effect.quotedTask': '"{{title}}"',
+  'goalProcess.decision.effect.retireWithDependents':
+    'Drop this task and the tasks that depend on it ({{tasks}}). The goal moves on without them.',
   'goalProcess.decision.effect.retire': 'Drop this task. The goal moves on without it.',
   'goalProcess.decision.effect.fail': 'End the goal and record it as failed.',
   'goalProcess.decision.effect.retryAcceptance': 'Run the goal-level acceptance again.',

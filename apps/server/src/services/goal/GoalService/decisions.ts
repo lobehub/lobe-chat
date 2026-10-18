@@ -8,6 +8,7 @@ import {
 } from '@lobechat/const/goal';
 import type {
   GoalDecisionOption,
+  GoalGraphNode,
   GoalGraphSnapshot,
   GoalManagerAsk,
   GoalTickResult,
@@ -19,7 +20,7 @@ import { GoalModel } from '@/database/models/goal';
 import { GoalGraphModel } from '@/database/models/goalGraph';
 import { TaskModel } from '@/database/models/task';
 
-import { GOAL_ACCEPTANCE_TASK_TITLE } from '../decideNextMove';
+import { collectStrandedDependents, GOAL_ACCEPTANCE_TASK_TITLE } from '../decideNextMove';
 import { answeredProblem, GoalManagerService, problemKey } from '../manager';
 import { GoalSupervisorService } from '../supervisor';
 import type { GoalServiceContext } from './types';
@@ -43,6 +44,30 @@ const decisionOptionEffect = (
   if (option.id === 'retry' || option.id === 'retire') return option.id;
   if (option.id === 'fail' && sourceTitle === GOAL_ACCEPTANCE_TASK_TITLE) return 'fail';
   return undefined;
+};
+
+/**
+ * Put on every option that retires the task what it would take along: the
+ * unfinished tasks that wait on it. The Retire button says so, and an option
+ * the main Agent wrote for its own question carries it the same way.
+ */
+const withRetireCascade = (
+  options: GoalDecisionOption[],
+  sourceTitle: string | undefined,
+  stranded: GoalGraphNode[],
+): GoalDecisionOption[] =>
+  options.map((option) => {
+    if (decisionOptionEffect(option, sourceTitle) !== 'retire') return option;
+    const { alsoRetires: _previous, ...rest } = option;
+    return stranded.length > 0
+      ? { ...rest, alsoRetires: stranded.map((node) => ({ nodeId: node.id, title: node.title })) }
+      : rest;
+  });
+
+/** Whether the person was shown exactly the tasks this retire would take along. */
+const confirmedCascade = (option: GoalDecisionOption | undefined, stranded: GoalGraphNode[]) => {
+  const confirmed = new Set(option?.alsoRetires?.map((item) => item.nodeId) ?? []);
+  return confirmed.size === stranded.length && stranded.every((node) => confirmed.has(node.id));
 };
 
 /**
@@ -128,6 +153,31 @@ export const decide = async (
     });
   }
   const chosen = decision.options?.find((option) => option.id === optionId);
+  const incoming = graph.edges.find(
+    (edge) => edge.targetNodeId === decision.nodeId && edge.kind === 'leads_to',
+  );
+  const source = incoming && graph.nodes.find((node) => node.id === incoming.sourceNodeId);
+  // Retiring takes the unfinished dependents along, so the answer only stands
+  // for the set the person was shown. A dependent added while the gate waited,
+  // or an option that never listed them, gets the gate rewritten and asked
+  // again instead of quietly canceling work nobody confirmed.
+  const stranded =
+    source?.kind === 'task' &&
+    source.title !== GOAL_ACCEPTANCE_TASK_TITLE &&
+    decisionOptionEffect(chosen, source.title) === 'retire'
+      ? collectStrandedDependents(graph, [source.id])
+      : [];
+  if (stranded.length > 0 && !confirmedCascade(chosen, stranded)) {
+    await ctx.graphModel.updatePendingDecisionOptions(
+      goalId,
+      decisionId,
+      withRetireCascade(decision.options ?? [], source?.title, stranded),
+    );
+    throw new TRPCError({
+      code: 'CONFLICT',
+      message: 'The tasks this retire would take along changed; review the updated choice',
+    });
+  }
   // R5: a person answering a batch gate IS the intervention, and an
   // intervention rolls the class back to canary. Open the next recipe round
   // automatically — revise the same mould, or fork it as a new class — rather
@@ -161,10 +211,6 @@ export const decide = async (
   if (!resolved)
     throw new TRPCError({ code: 'CONFLICT', message: 'Decision was already resolved' });
 
-  const incoming = graph.edges.find(
-    (edge) => edge.targetNodeId === decision.nodeId && edge.kind === 'leads_to',
-  );
-  const source = incoming && graph.nodes.find((node) => node.id === incoming.sourceNodeId);
   if (source?.kind === 'task') {
     if (source.taskId)
       await new GoalSupervisorService(ctx.db, ctx.userId, ctx.workspaceId).recordProgress(
@@ -189,6 +235,19 @@ export const decide = async (
         });
     } else if (effect === 'retire') {
       await ctx.graphModel.updateNodeStatus(goalId, source.id, 'retired', resolution);
+      // Same rule `retireNodes` enforces: whatever still waits on the retired
+      // node leaves with it, or it would block the goal on a prerequisite
+      // that can no longer resolve. This is the set confirmed above.
+      for (const node of stranded) {
+        await ctx.graphModel.updateNodeStatus(
+          goalId,
+          node.id,
+          'retired',
+          `Retired with its prerequisite "${source.title}"`,
+        );
+      }
+      if (stranded.length > 0)
+        await ctx.stopFencedTasks(goalId, new Set(stranded.map((node) => node.id)));
     }
   }
   // Ending the terminal acceptance ends the Goal: `fail` is a verdict that
@@ -415,6 +474,15 @@ export const openFailureDecisionLocked = async (
     // Goal is a verdict even when a machine problem is what stopped it.
     const machine = !!gate.machine && !terminalAcceptance;
     const { ask } = gate;
+    // Retiring this node retires what waits on it too. The tasks travel as
+    // data so the page can say so in the reader's language.
+    const source = graph.nodes.find((candidate) => candidate.id === nodeId);
+    const stranded = terminalAcceptance ? [] : collectStrandedDependents(graph, [nodeId]);
+    const retireTask = withRetireCascade(
+      [{ id: 'retire', label: 'Retire task' }],
+      source?.title,
+      stranded,
+    )[0];
     const node = await ctx.coordinatorGraph.createNode(graph.goal.id, {
       // What the gate stands on: the main Agent's diagnosis when it asked,
       // else the coordinator's own reason for stopping.
@@ -433,7 +501,7 @@ export const openFailureDecisionLocked = async (
         ask
           ? {
               authority: 'user',
-              options: ask.options,
+              options: withRetireCascade(ask.options, source?.title, stranded),
               question: ask.question,
               recommendedOptionId: ask.recommendedOptionId,
               requestedUserId: ctx.userId,
@@ -441,10 +509,7 @@ export const openFailureDecisionLocked = async (
           : {
               authority: 'user',
               options: machine
-                ? [
-                    { id: 'retry', label: 'I fixed it — retry' },
-                    { id: 'retire', label: 'Retire task' },
-                  ]
+                ? [{ id: 'retry', label: 'I fixed it — retry' }, retireTask]
                 : terminalAcceptance
                   ? [
                       { id: 'retry', label: 'Retry goal acceptance' },
@@ -453,10 +518,7 @@ export const openFailureDecisionLocked = async (
                       { id: 'retire', label: 'Abandon goal acceptance' },
                       { id: 'fail', label: 'Fail goal' },
                     ]
-                  : [
-                      { id: 'retry', label: 'Retry task' },
-                      { id: 'retire', label: 'Retire task' },
-                    ],
+                  : [{ id: 'retry', label: 'Retry task' }, retireTask],
               question: machine
                 ? `${reason}. Fix it, then retry or retire this task node?`
                 : terminalAcceptance

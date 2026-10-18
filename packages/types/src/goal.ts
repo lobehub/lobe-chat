@@ -899,6 +899,12 @@ export type GoalDecisionStatus = 'pending' | 'resolved' | 'canceled';
 export type GoalDecisionOptionEffect = 'retry' | 'retire';
 
 export interface GoalDecisionOption {
+  /**
+   * The unfinished tasks a `retire` effect takes along, because they depend on
+   * the retired one. It is what the person confirms: answering is refused when
+   * the set changed since. Data, not copy: the reader's client words it.
+   */
+  alsoRetires?: { nodeId: string; title: string }[];
   /** The consequence of choosing this option, in the words the person reads. */
   description?: string;
   effect?: GoalDecisionOptionEffect;

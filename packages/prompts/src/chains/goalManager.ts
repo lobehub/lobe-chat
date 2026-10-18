@@ -19,8 +19,10 @@ import { GOAL_TURN_TAG } from '@lobechat/const';
  * or an `escalate` that asks the owner to approve it.
  * v11 hands a plan the owner sent back to the agent as a `rollout_revise`
  * takeover, answered only with `revise_plan` (the rewritten recipe).
+ * v12 reads measured acceptance from the clause values `lh goal show` reports
+ * and asks the owner to record an unrecorded one instead of re-verifying.
  */
-export const GOAL_MANAGER_PROMPT_VERSION = 'v11';
+export const GOAL_MANAGER_PROMPT_VERSION = 'v12';
 
 export interface GoalManagerFeedbackNote {
   /** `user`, or `agent <id>` for an agent-written comment. */
@@ -195,6 +197,7 @@ const contract = (input: GoalManagerPromptInput) =>
     'Give every planned task a dependsOn list naming the work it builds on: task node IDs from lh goal show for earlier rounds, or 0-based indexes of earlier tasks in the same plan. Omit it only for work that is genuinely independent — the Goal graph is laid out from these links, so a later round without them looks unrelated to the evidence it uses. Never depend on a retired or rejected node.',
     GOAL_BATCH_PLANNING_RULE,
     'When useful work must wait for time or external evidence, submit wait and exit; never sleep or poll. until is a future UTC ISO instant and a fallback check even if the optional event is lost. Events match type, key and current turn token; producers deliver using lh goal wake. A wake asks you to reconsider evidence, never proves success. Measured shortfalls are feedback: plan useful work or a bounded wait; do not lower the original target.',
+    'Measured acceptance clauses gate on recorded observations only; the "metrics" field of lh goal show lists each clause with the latest value the gate reads. Task conclusions and decision answers are not observations. When the evidence already meets a clause nobody recorded, escalate asking the owner to record the value on the Goal page (or with lh goal metric record) instead of submitting verify again; once metrics shows every clause met, submit verify.',
     'Choose exactly one schema:',
     '{"action":"tasks","reason":"evidence-based rationale","tasks":[{"title":"specific task","description":"self-contained contract, inputs, output and acceptance","dependsOn":["task node ID from an earlier round", 0]}]}',
     '{"action":"tasks","reason":"why these units are one mould","tasks":[{"title":"probe unit","description":"full brief for this unit"}],"rollout":{"recipe":"the procedure every unit follows","units":["unit title",{"title":"unit title","description":"this unit\'s own pointers"}],"variants":[{"axis":"what the units differ in","values":["value a","value b"]}]}}',
