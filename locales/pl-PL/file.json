@@ -302,7 +302,7 @@
   "pageEditor.menu.importDocument": "Importuj stronę",
   "pageEditor.menu.move": "Przenieś",
   "pageEditor.menu.pin": "Przypnij stronę",
-  "pageEditor.noAccess.description": "Ta strona jest prywatna lub nie została z Tobą udostępniona. Poproś jej twórcę o dostęp.",
+  "pageEditor.noAccess.description": "Ta strona jest prywatna lub znajduje się w bibliotece, do której nie masz dostępu. Poproś jej twórcę lub menedżera biblioteki o dostęp.",
   "pageEditor.noAccess.title": "Nie masz dostępu do tej strony",
   "pageEditor.saveFailed": "Nie udało się zapisać strony, spróbuj ponownie później",
   "pageEditor.saving": "Zapisywanie...",

@@ -302,7 +302,7 @@
   "pageEditor.menu.importDocument": "Importa pagina",
   "pageEditor.menu.move": "Sposta",
   "pageEditor.menu.pin": "Fissa pagina",
-  "pageEditor.noAccess.description": "Questa pagina è privata o non è stata condivisa con te. Chiedi al suo creatore l'accesso.",
+  "pageEditor.noAccess.description": "Questa pagina è privata o si trova in una libreria a cui non puoi accedere. Chiedi al suo creatore o a un gestore della libreria l'accesso.",
   "pageEditor.noAccess.title": "Non hai accesso a questa pagina",
   "pageEditor.saveFailed": "Impossibile salvare la pagina, riprova più tardi",
   "pageEditor.saving": "Salvataggio in corso...",
