@@ -22,7 +22,7 @@ import type { LobeChatDatabase } from '@/database/type';
 
 import { extractFileIdsFromEditorData } from '../file/extractFileIdsFromEditorData';
 import { resolveAttachmentMetadata } from '../file/resolveAttachments';
-import { resolveTaskAcceptance } from '../verify/taskAcceptance';
+import { resolveTaskAcceptance } from '../verify/taskAcceptanceResolution';
 import { collapseActivityLog } from './collapseActivityLog';
 import { projectTaskDetailState } from './detailProjection';
 
