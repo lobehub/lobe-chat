@@ -5,6 +5,7 @@ import {
   buildInitializeProbeMessage,
   describeStdioSpawnFailure,
   hasInitializeResponse,
+  isBareConnectionClosedError,
   MCPClient,
   MCPConnectionError,
   selectDiagnosticOutputLines,
@@ -141,6 +142,39 @@ describe('describeStdioSpawnFailure', () => {
 
     expect(message).toContain('produced no output');
     expect(message).toContain('silent-server');
+  });
+});
+
+describe('isBareConnectionClosedError', () => {
+  it('matches the bare -32000 Connection closed transport failure', () => {
+    const error = Object.assign(new Error('MCP error -32000: Connection closed'), {
+      code: -32_000,
+    });
+
+    expect(isBareConnectionClosedError(error)).toBe(true);
+  });
+
+  it('rejects -32000 errors without the connection-closed message', () => {
+    const error = Object.assign(new Error('MCP error -32000: other transport failure'), {
+      code: -32_000,
+    });
+
+    expect(isBareConnectionClosedError(error)).toBe(false);
+  });
+
+  it('rejects protocol/configuration failures that are not -32000', () => {
+    const error = Object.assign(
+      new Error('MCP error -32602: Invalid params — incompatible protocol version'),
+      { code: -32_602 },
+    );
+
+    expect(isBareConnectionClosedError(error)).toBe(false);
+  });
+
+  it('rejects non-error values', () => {
+    expect(isBareConnectionClosedError(null)).toBe(false);
+    expect(isBareConnectionClosedError(undefined)).toBe(false);
+    expect(isBareConnectionClosedError('Connection closed')).toBe(false);
   });
 });
 
@@ -444,5 +478,62 @@ describe('preCheckStdioCommand', () => {
 
     expect(result.success).toBe(false);
     expect(result.diagnosis).toContain('code 3');
+  });
+});
+
+describe('MCPClient.initialize respawn gating (P2 4306033474)', () => {
+  /**
+   * Drive `initialize()` against a stubbed SDK client to prove the
+   * diagnostic re-spawn only fires for the bare -32000 connection-closed
+   * failure it was built to diagnose.
+   */
+  const runInitialize = async (connectError: unknown): Promise<{ respawned: boolean }> => {
+    let respawned = false;
+    const probe = MCPClient.prototype as unknown as {
+      initialize: MCPClient['initialize'];
+    };
+
+    const instance = Object.create(MCPClient.prototype) as MCPClient;
+    // Stub the private fields initialize() reads.
+    Object.assign(instance, {
+      isStdio: true,
+      stderrLogs: [],
+      stdioParams: { args: [], command: 'irrelevant' },
+      mcp: {
+        connect: () => {
+          throw connectError;
+        },
+      },
+      // Instrument the private pre-check instead of spawning real processes.
+      preCheckStdioCommand: async () => {
+        respawned = true;
+        return { diagnosis: 'stubbed', stderr: '', stdout: '', success: false };
+      },
+    });
+
+    try {
+      await probe.initialize.call(instance, {});
+    } catch {
+      // initialize() is expected to throw — the call shape is not under test.
+    }
+    return { respawned };
+  };
+
+  it('re-spawns for the bare -32000 Connection closed failure', async () => {
+    const { respawned } = await runInitialize(
+      Object.assign(new Error('MCP error -32000: Connection closed'), { code: -32_000 }),
+    );
+
+    expect(respawned).toBe(true);
+  });
+
+  it('does not re-spawn for other handshake failures (protocol/config errors)', async () => {
+    const { respawned } = await runInitialize(
+      Object.assign(new Error('MCP error -32602: Invalid params — incompatible protocol version'), {
+        code: -32_602,
+      }),
+    );
+
+    expect(respawned).toBe(false);
   });
 });

@@ -24,6 +24,20 @@ export {
 } from './process-tree';
 
 /**
+ * The SDK surfaces a stdio process that died without completing the MCP
+ * handshake as a bare "Connection closed" (JSON-RPC error -32000). This is
+ * the only failure class the diagnostic re-spawn can improve: when the
+ * server rejected the handshake for a protocol/configuration reason instead,
+ * re-running the same command adds a five-second probe window and a
+ * temporary duplicate server process without producing new information.
+ */
+export function isBareConnectionClosedError(error: unknown): boolean {
+  if ((error as { code?: unknown })?.code !== -32_000) return false;
+  const message = error instanceof Error ? error.message : String(error);
+  return message.includes('Connection closed');
+}
+
+/**
  * Custom error class for MCP connection errors that includes STDIO logs
  */
 export class MCPConnectionError extends Error {
@@ -587,8 +601,12 @@ export class MCPClient {
 
       // When the process dies instantly there may be no stderr at all, leaving
       // users with a bare "Connection closed" (-32000). Re-spawn once to
-      // capture a concrete, actionable diagnosis instead.
-      if (this.isStdio && this.stdioParams?.command) {
+      // capture a concrete, actionable diagnosis instead. Other failure
+      // classes (protocol/configuration errors with stderr already flowing
+      // through the transport) gain nothing from a re-spawn: the probe can
+      // only diagnose startup liveness, so gate it to the bare
+      // connection-closed failure (P2 4306033474).
+      if (this.isStdio && this.stdioParams?.command && isBareConnectionClosedError(error)) {
         const preCheck = await this.preCheckStdioCommand({
           args: this.stdioParams.args,
           command: this.stdioParams.command,
