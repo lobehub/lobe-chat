@@ -5,6 +5,7 @@ import {
   UpdateMessageRAGParamsSchema,
 } from '@lobechat/types';
 import { createTimingHelpers, createTimingRequestId } from '@lobechat/utils';
+import pMap from 'p-map';
 import { z } from 'zod';
 
 import { withScopedPermission } from '@/business/server/trpc-middlewares/rbacPermission';
@@ -27,6 +28,9 @@ import { guardCtx, messageProcedure } from './procedures';
 import { heterogeneousToolStateSnapshotSchema } from './toolMessages';
 
 const { logTiming, runTimedStage } = createTimingHelpers('lobe-server:chat:lobehub:timing');
+
+/** Caps concurrent session -> agent lookups while normalizing a `batchMutate` batch. */
+const BATCH_AGENT_RESOLUTION_CONCURRENCY = 5;
 
 const messageBatchOperationSchema = z.discriminatedUnion('type', [
   z.object({
@@ -89,8 +93,9 @@ export const writeRouter = router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      const operations: MessageBatchOperation[] = await Promise.all(
-        input.operations.map(async (rawOperation): Promise<MessageBatchOperation> => {
+      const operations: MessageBatchOperation[] = await pMap(
+        input.operations,
+        async (rawOperation): Promise<MessageBatchOperation> => {
           // Creates are passthrough, so a client could carry server-owned metadata.
           const operation =
             rawOperation.type === 'createMessage'
@@ -124,7 +129,8 @@ export const writeRouter = router({
               agentId: agentId!,
             },
           } as MessageBatchOperation;
-        }),
+        },
+        { concurrency: BATCH_AGENT_RESOLUTION_CONCURRENCY },
       );
 
       const targetedIds = operations.flatMap((op) => (op.type === 'createMessage' ? [] : [op.id]));
