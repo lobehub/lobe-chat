@@ -230,7 +230,7 @@ const legacyRawRedisClientConsumers = [
   'apps/server/src/services/gateway/GatewayManager.ts',
   'apps/server/src/services/gateway/botConnectQueue.ts',
   'apps/server/src/services/gateway/runtimeStatus.ts',
-  'apps/server/src/services/messenger/MessengerRouter.ts',
+  'apps/server/src/services/messenger/MessengerRouter/index.ts',
   'apps/server/src/services/messenger/installations/wechat.ts',
   'apps/server/src/services/messenger/linkTokenStore.ts',
   'apps/server/src/services/messenger/oauth/stateStore.ts',

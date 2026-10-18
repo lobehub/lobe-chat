@@ -41,16 +41,16 @@ import {
 } from '@/server/services/bot/replyTemplate';
 import { isResourceAuthorOrAdmin } from '@/server/services/resourcePermission';
 
-import { getInstallationStore } from './installations';
-import type { InstallationCredentials } from './installations/types';
-import { type MessengerPlatformDefinition, messengerPlatformRegistry } from './platforms';
-import { getMessengerSystemStrings } from './systemReply';
+import { getInstallationStore } from '../installations';
+import type { InstallationCredentials } from '../installations/types';
+import { type MessengerPlatformDefinition, messengerPlatformRegistry } from '../platforms';
+import { getMessengerSystemStrings } from '../systemReply';
 import type {
   AgentPickerEntry,
   CallbackAcknowledgement,
   InboundCallbackAction,
   MessengerPlatformBinder,
-} from './types';
+} from '../types';
 
 const log = debug('lobe-server:messenger:router');
 

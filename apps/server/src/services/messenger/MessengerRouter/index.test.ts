@@ -2,7 +2,7 @@
 import { Chat } from 'chat';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { MessengerRouter } from './MessengerRouter';
+import { MessengerRouter } from './index';
 
 const mockGetBotFeatureAccessState = vi.hoisted(() => vi.fn());
 
@@ -26,7 +26,7 @@ const mockResolveByPayload = vi.fn();
 const mockResolveByKey = vi.fn();
 const mockMarkRevoked = vi.fn();
 
-vi.mock('./installations', () => ({
+vi.mock('../installations', () => ({
   getInstallationStore: vi.fn(() => ({
     markRevoked: mockMarkRevoked,
     resolveByKey: mockResolveByKey,
@@ -35,7 +35,7 @@ vi.mock('./installations', () => ({
 }));
 
 const mockVerifySignature = vi.fn();
-vi.mock('./oauth/slackOAuth', () => ({
+vi.mock('../oauth/slackOAuth', () => ({
   verifySignature: (...args: any[]) => mockVerifySignature(...args),
 }));
 
@@ -218,7 +218,7 @@ const mockSlackBinder = {
   sendAgentPicker: vi.fn(),
   sendDmText: vi.fn(),
 };
-vi.mock('./platforms/slack/binder', () => ({
+vi.mock('../platforms/slack/binder', () => ({
   MessengerSlackBinder: vi.fn(function () {
     return mockSlackBinder;
   }),
@@ -239,7 +239,7 @@ const mockTelegramBinder = {
   sendAgentPicker: vi.fn(),
   sendDmText: vi.fn(),
 };
-vi.mock('./platforms/telegram/binder', () => ({
+vi.mock('../platforms/telegram/binder', () => ({
   MessengerTelegramBinder: vi.fn(function () {
     return mockTelegramBinder;
   }),
@@ -254,13 +254,13 @@ const mockWechatBinder = {
   notifyLinkSuccess: vi.fn(),
   sendDmText: vi.fn(),
 };
-vi.mock('./platforms/wechat/binder', () => ({
+vi.mock('../platforms/wechat/binder', () => ({
   MessengerWechatBinder: vi.fn(function () {
     return mockWechatBinder;
   }),
 }));
 
-vi.mock('./platforms/linq/binder', () => ({
+vi.mock('../platforms/linq/binder', () => ({
   MessengerLinqBinder: vi.fn(function () {
     return { createClient: vi.fn(), handleUnlinkedMessage: vi.fn(), sendDmText: vi.fn() };
   }),
@@ -270,7 +270,7 @@ const mockLinqGate = vi.hoisted(() => ({
   preprocess: vi.fn(async (): Promise<Response | null> => null),
   settle: vi.fn(async () => {}),
 }));
-vi.mock('./platforms/linq/webhook', () => ({ linqWebhookGate: mockLinqGate }));
+vi.mock('../platforms/linq/webhook', () => ({ linqWebhookGate: mockLinqGate }));
 
 const buildSlackRequest = (body: string, headers: Record<string, string> = {}): Request =>
   new Request('https://app.example.com/api/agent/messenger/webhooks/slack', {
