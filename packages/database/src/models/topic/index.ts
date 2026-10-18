@@ -38,8 +38,8 @@ import {
 
 import { clampToolIdentifier } from '@/utils/clampToolIdentifier';
 
-import type { FtsSearchCandidateSource } from '../repositories/ftsSearch';
-import type { TopicItem } from '../schemas';
+import type { FtsSearchCandidateSource } from '../../repositories/ftsSearch';
+import type { TopicItem } from '../../schemas';
 import {
   agentOperations,
   agents,
@@ -49,26 +49,26 @@ import {
   threads,
   topicDocuments,
   topics,
-} from '../schemas';
-import type { LobeChatDatabase } from '../type';
-import { sanitizeBm25Query } from '../utils/bm25';
-import { COPIED_TOPIC_USAGE_RESET } from '../utils/copiedTranscript';
-import { markCopiedMessageMetadata } from '../utils/copyMessagesInDatabase';
-import { genEndDateWhere, genRangeWhere, genStartDateWhere, genWhere } from '../utils/genWhere';
-import { idGenerator } from '../utils/idGenerator';
-import { inJsonStringArray } from '../utils/inJsonStringArray';
-import { searchableMessage } from '../utils/searchableMessage';
-import { notShareVisitorTopic } from '../utils/shareVisitor';
+} from '../../schemas';
+import type { LobeChatDatabase } from '../../type';
+import { sanitizeBm25Query } from '../../utils/bm25';
+import { COPIED_TOPIC_USAGE_RESET } from '../../utils/copiedTranscript';
+import { markCopiedMessageMetadata } from '../../utils/copyMessagesInDatabase';
+import { genEndDateWhere, genRangeWhere, genStartDateWhere, genWhere } from '../../utils/genWhere';
+import { idGenerator } from '../../utils/idGenerator';
+import { inJsonStringArray } from '../../utils/inJsonStringArray';
+import { searchableMessage } from '../../utils/searchableMessage';
+import { notShareVisitorTopic } from '../../utils/shareVisitor';
 import {
   isTrashed,
   notTrashed,
   restoreStamp,
   type SoftDeleteOptions,
   trashStamp,
-} from '../utils/softDelete';
-import { buildWorkspacePayload, buildWorkspaceWhere } from '../utils/workspace';
-import { topicMetadataWithCreator } from './topicCreator';
-import { recomputeTopicUsage } from './topicUsage';
+} from '../../utils/softDelete';
+import { buildWorkspacePayload, buildWorkspaceWhere } from '../../utils/workspace';
+import { topicMetadataWithCreator } from '../topicCreator';
+import { recomputeTopicUsage } from '../topicUsage';
 
 type OnboardingSessionMetadataPatch = Partial<NonNullable<ChatTopicMetadata['onboardingSession']>>;
 type RunningOperation = NonNullable<ChatTopicMetadata['runningOperation']>;
