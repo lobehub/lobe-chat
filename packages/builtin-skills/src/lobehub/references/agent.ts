@@ -13,6 +13,19 @@ Manage agents (AI assistants with custom configurations).
 - \`lh agent run -a <agentId> -p <prompt> [-t <topicId>] [--json]\` - Run agent with a prompt
 - \`lh agent status <operationId> [--history]\` - Check agent operation status
 
+## Agent document space
+
+Each agent has its own document tree (reports, notes, verifiers it keeps). It is
+separate from \`lh doc\`. Browse it with \`lh agent space fs\` and pass \`-A <agentId>\`
+(or \`-s <slug>\`) on every call:
+
+- \`lh agent space fs ls [path] -A <agentId> [-l] [-L <n>] [--json]\` - List entries (default \`agent:/\`)
+- \`lh agent space fs tree [path] -A <agentId>\` - Print the tree
+- \`lh agent space fs cat <path> -A <agentId>\` - Read a file
+- \`lh agent space fs stat <path> -A <agentId> [--json]\` - Show node metadata
+- \`lh agent space fs write <path> -A <agentId> (-c <content> | -F <file>)\` - Write a file
+- \`lh agent space fs mkdir <path> -A <agentId> [-p]\` / \`mv\` / \`cp\` / \`rm [-r] [--yes]\` - Manage nodes (\`rm\` moves into trash)
+
 ## Editing your own configuration
 
 You can edit yourself: pass your own agent id (already given to you in the
