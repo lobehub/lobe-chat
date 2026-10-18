@@ -24,10 +24,10 @@ import {
   topics,
   verifyCheckResults,
   verifyRuns,
-} from '../schemas';
-import type { LobeChatDatabase } from '../type';
-import { idGenerator } from '../utils/idGenerator';
-import { buildWorkspaceWhere } from '../utils/workspace';
+} from '../../schemas';
+import type { LobeChatDatabase } from '../../type';
+import { idGenerator } from '../../utils/idGenerator';
+import { buildWorkspaceWhere } from '../../utils/workspace';
 
 /** The core tier starts at 40% of the domain's maximum hit count, with a floor of two. */
 const CORE_CUT_RATIO = 0.4;
