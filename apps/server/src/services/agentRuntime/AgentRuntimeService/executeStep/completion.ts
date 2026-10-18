@@ -3,17 +3,27 @@ import { buildInvokeAgentResultAttributes } from '@lobechat/observability-otel/m
 import debug from 'debug';
 
 import { logToolCallPc } from '../../formalObservation';
-import type { AgentRuntimeService } from '..';
+import type { AgentRuntimeServiceContext } from '../types';
 import type { StepRunResult } from './runStep';
 
 const log = debug('lobe-server:agent-runtime-service');
+
+/** What this module reads off the service. */
+export type StepCompletionDeps = Pick<
+  AgentRuntimeServiceContext,
+  | 'completionLifecycle'
+  | 'determineCompletionReason'
+  | 'recordInterventionLifecycleCompletion'
+  | 'traceRecorder'
+  | 'tryResumeParentFromAsyncTool'
+>;
 /**
  * The run stops here: emit the completion signals, dispatch the completion
  * hooks, record a parked intervention, re-check a just-parked async-tool
  * barrier and finalize the trace.
  */
 export async function finishOperation(
-  svc: AgentRuntimeService,
+  deps: StepCompletionDeps,
   {
     invokeAgentSpan,
     operationId,
@@ -26,22 +36,22 @@ export async function finishOperation(
     stepResult: StepRunResult;
   },
 ): Promise<void> {
-  const reason = svc.determineCompletionReason(stepResult.newState);
+  const reason = deps.determineCompletionReason(stepResult.newState);
   invokeAgentSpan.setAttributes(buildInvokeAgentResultAttributes({ completionReason: reason }));
 
   // A client park is no completion: the run continues under this id.
   const completionSignalEvents =
     reason === 'waiting_for_client'
       ? []
-      : await svc.completionLifecycle.emitSignalEvents(operationId, stepResult.newState, reason);
+      : await deps.completionLifecycle.emitSignalEvents(operationId, stepResult.newState, reason);
   logToolCallPc(operationId, stepIndex, 'post.completion_signals', () => ({ reason }));
 
   // Dispatch completion hooks
-  await svc.completionLifecycle.dispatchHooks(operationId, stepResult.newState, reason);
+  await deps.completionLifecycle.dispatchHooks(operationId, stepResult.newState, reason);
   logToolCallPc(operationId, stepIndex, 'post.completion_hooks', () => ({ reason }));
 
   if (reason === 'waiting_for_human') {
-    await svc.recordInterventionLifecycleCompletion(operationId, stepResult.newState, stepIndex);
+    await deps.recordInterventionLifecycleCompletion(operationId, stepResult.newState, stepIndex);
   }
 
   // Park-time self-check: sub-agents are dispatched mid-step, so a
@@ -53,7 +63,7 @@ export async function finishOperation(
   // any resume that raced the park.
   if (stepResult.newState.status === 'waiting_for_async_tool') {
     try {
-      await svc.tryResumeParentFromAsyncTool({ parentOperationId: operationId });
+      await deps.tryResumeParentFromAsyncTool({ parentOperationId: operationId });
     } catch (selfCheckError) {
       log(
         '[%s][%d] Park-time async-tool self-check failed (non-fatal): %O',
@@ -71,9 +81,9 @@ export async function finishOperation(
   // steps extend the same trajectory and the real end finalizes it whole.
   const newStateError = stepResult.newState.error;
   if (reason === 'waiting_for_client') {
-    await svc.traceRecorder.flushPartial();
+    await deps.traceRecorder.flushPartial();
   } else
-    await svc.traceRecorder.finalize(operationId, {
+    await deps.traceRecorder.finalize(operationId, {
       appendEventsToLastStep: completionSignalEvents,
       completionReason: reason,
       error: newStateError
@@ -84,7 +94,7 @@ export async function finishOperation(
             countAsFailure: newStateError.countAsFailure,
             httpStatus: newStateError.httpStatus,
             message:
-              svc.completionLifecycle.extractErrorMessage(newStateError) ??
+              deps.completionLifecycle.extractErrorMessage(newStateError) ??
               JSON.stringify(newStateError),
             numericId: newStateError.numericId,
             retryable: newStateError.retryable,

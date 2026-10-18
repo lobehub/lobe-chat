@@ -12,8 +12,8 @@ import {
   type AgentExecutionResult,
   type AgentStepContinuation,
 } from '../../types';
-import type { AgentRuntimeService } from '..';
 import { STEP_LOCK_TTL_SECONDS } from '../constants';
+import type { AgentRuntimeServiceContext } from '../types';
 import { createStepLockOwner } from '../utils';
 import { startStepAbortPoll, type StepAbortPoll } from './abortPoll';
 import { finishOperation } from './completion';
@@ -31,11 +31,49 @@ import { runAndReconcileStep, saveAndPublishStep } from './runStep';
 
 const log = debug('lobe-server:agent-runtime-service');
 
+/** What this module reads off the service. */
+export type ExecuteStepDeps = Pick<
+  AgentRuntimeServiceContext,
+  | 'agentOperationModel'
+  | 'baseURL'
+  | 'buildShareAbortResult'
+  | 'calculatePriority'
+  | 'calculateStepDelay'
+  | 'completionLifecycle'
+  | 'computeDeviceContext'
+  | 'coordinator'
+  | 'createAgentRuntime'
+  | 'delegate'
+  | 'determineCompletionReason'
+  | 'expireClientLlmWait'
+  | 'handleGroupMemberTimeout'
+  | 'humanIntervention'
+  | 'parkForClientLlm'
+  | 'publishSubAgentProgress'
+  | 'queryStepEntryMessages'
+  | 'queryUiMessages'
+  | 'queueService'
+  | 'readQueuedMessagesFlag'
+  | 'recordInterventionLifecycleCompletion'
+  | 'refreshMessagesFromDB'
+  | 'resolveAsyncToolResumeParentMessageId'
+  | 'serverDB'
+  | 'shouldContinueExecution'
+  | 'shouldReplayPendingInterventionLifecycle'
+  | 'startStepLockHeartbeat'
+  | 'streamManager'
+  | 'traceRecorder'
+  | 'tryResumeParentFromAsyncTool'
+  | 'userId'
+  | 'usesGatewayMessagePatch'
+  | 'workspaceId'
+>;
+
 /**
  * Execute Agent step
  */
 export async function executeStep(
-  svc: AgentRuntimeService,
+  deps: ExecuteStepDeps,
   params: AgentExecutionParams,
 ): Promise<AgentExecutionResult> {
   const {
@@ -48,23 +86,23 @@ export async function executeStep(
     stepLockOwner: providedStepLockOwner,
   } = params;
 
-  const lockFree = await runLockFreeDelivery(svc, params);
+  const lockFree = await runLockFreeDelivery(deps, params);
   if (lockFree) return lockFree;
 
   // ===== Distributed lock: prevent duplicate execution from QStash retries =====
   const stepLockOwner = providedStepLockOwner ?? createStepLockOwner(operationId, stepIndex);
-  const claimed = await svc.coordinator.tryClaimStep(
+  const claimed = await deps.coordinator.tryClaimStep(
     operationId,
     stepIndex,
     STEP_LOCK_TTL_SECONDS,
     stepLockOwner,
   );
-  if (!claimed) return handleStepLockConflict(svc, params);
+  if (!claimed) return handleStepLockConflict(deps, params);
 
-  await svc.agentOperationModel.touchRunning(operationId).catch((error) => {
+  await deps.agentOperationModel.touchRunning(operationId).catch((error) => {
     log('[%s][%d] Operation lease refresh failed: %O', operationId, stepIndex, error);
   });
-  const stopStepLockHeartbeat = svc.startStepLockHeartbeat(operationId, stepIndex, stepLockOwner);
+  const stopStepLockHeartbeat = deps.startStepLockHeartbeat(operationId, stepIndex, stepLockOwner);
 
   // Hoisted so the shared `finally` can stop it on every exit path — an
   // orphaned poll would keep reading Redis for a step that is long gone.
@@ -100,13 +138,13 @@ export async function executeStep(
       // the snapshot query here reflects strongly-consistent state — that's
       // the contract that lets the client treat the pushed uiMessages as
       // the source of truth instead of doing its own refetch.
-      const agentState = await svc.coordinator.loadAgentState(operationId);
+      const agentState = await deps.coordinator.loadAgentState(operationId);
 
       if (!agentState) {
         throw new Error(`Agent state not found for operation ${operationId}`);
       }
 
-      const replayed = await replayPendingInterventionLifecycle(svc, {
+      const replayed = await replayPendingInterventionLifecycle(deps, {
         agentState,
         externalRetryCount,
         operationId,
@@ -114,10 +152,10 @@ export async function executeStep(
       });
       if (replayed) return replayed;
 
-      const gatewayMessagePatchEnabled = svc.usesGatewayMessagePatch(agentState);
+      const gatewayMessagePatchEnabled = deps.usesGatewayMessagePatch(agentState);
       const { uiMessages: stepStartUiMessages, messages: stepEntryMessages } =
-        await svc.queryStepEntryMessages(agentState);
-      await svc.streamManager.publishStreamEvent(operationId, {
+        await deps.queryStepEntryMessages(agentState);
+      await deps.streamManager.publishStreamEvent(operationId, {
         data: gatewayMessagePatchEnabled
           ? { messageRevision: stepIndex }
           : { ...(stepStartUiMessages !== undefined && { uiMessages: stepStartUiMessages }) },
@@ -149,7 +187,7 @@ export async function executeStep(
         }),
       );
 
-      const skipped = await skipUnrunnableStep(svc, {
+      const skipped = await skipUnrunnableStep(deps, {
         agentState,
         operationId,
         resumeClientLlm,
@@ -157,7 +195,7 @@ export async function executeStep(
       });
       if (skipped) return skipped;
 
-      const beforeStepSignalEvents = await dispatchBeforeStepHooks(svc, {
+      const beforeStepSignalEvents = await dispatchBeforeStepHooks(deps, {
         agentState,
         operationId,
         stepIndex,
@@ -177,9 +215,9 @@ export async function executeStep(
       // Create Agent and Runtime instances
       // Use agentState.metadata which contains the full app context (topicId, agentId, etc.)
       // operationMetadata only contains basic fields (agentConfig, modelRuntimeConfig, userId)
-      abortPoll = startStepAbortPoll(svc, operationId, stepIndex);
+      abortPoll = startStepAbortPoll(deps, operationId, stepIndex);
 
-      const { runtime } = await svc.createAgentRuntime({
+      const { runtime } = await deps.createAgentRuntime({
         abortSignal: abortPoll.signal,
         agentState,
         operationId,
@@ -189,10 +227,10 @@ export async function executeStep(
         },
       });
 
-      const input = await prepareStepInput(svc, { agentState, params, stepEntryMessages });
+      const input = await prepareStepInput(deps, { agentState, params, stepEntryMessages });
       const { currentContext } = input;
 
-      const { startAt, stepResult } = await runAndReconcileStep(svc, {
+      const { startAt, stepResult } = await runAndReconcileStep(deps, {
         ...input,
         operationId,
         runtime,
@@ -200,7 +238,7 @@ export async function executeStep(
       });
 
       const { content, shouldContinue, stepPresentationData, toolsCalling } =
-        await saveAndPublishStep(svc, {
+        await saveAndPublishStep(deps, {
           gatewayMessagePatchEnabled,
           operationId,
           startAt,
@@ -209,7 +247,7 @@ export async function executeStep(
           stepStartUiMessages,
         });
 
-      const afterStepSignalEvents = await dispatchAfterStepHooks(svc, {
+      const afterStepSignalEvents = await dispatchAfterStepHooks(deps, {
         content,
         operationId,
         shouldContinue,
@@ -219,7 +257,7 @@ export async function executeStep(
         toolsCalling,
       });
 
-      await svc.traceRecorder.appendStep(operationId, {
+      await deps.traceRecorder.appendStep(operationId, {
         afterStepSignalEvents,
         agentState,
         beforeStepSignalEvents,
@@ -232,7 +270,7 @@ export async function executeStep(
         stepResult,
       });
 
-      await persistStepTracking(svc, {
+      await persistStepTracking(deps, {
         content,
         operationId,
         shouldContinue,
@@ -243,8 +281,8 @@ export async function executeStep(
 
       let nextStepScheduled = false;
       let continuation: AgentStepContinuation | undefined;
-      if (shouldContinue && stepResult.nextContext && svc.queueService) {
-        const scheduled = await scheduleNextStep(svc, {
+      if (shouldContinue && stepResult.nextContext && deps.queueService) {
+        const scheduled = await scheduleNextStep(deps, {
           inlineContinuation,
           operationId,
           stepIndex,
@@ -267,7 +305,7 @@ export async function executeStep(
       );
 
       if (!shouldContinue) {
-        await finishOperation(svc, { invokeAgentSpan, operationId, stepIndex, stepResult });
+        await finishOperation(deps, { invokeAgentSpan, operationId, stepIndex, stepResult });
       }
 
       return {
@@ -279,7 +317,7 @@ export async function executeStep(
       };
     });
   } catch (error) {
-    return await failStep(svc, {
+    return await failStep(deps, {
       error,
       externalRetryCount,
       invokeAgentSpan,
@@ -295,16 +333,16 @@ export async function executeStep(
     // by a different invocation, so the partial cannot stay in memory only.
     // An inline hand-off keeps it: the next step runs on this recorder.
     if (!handedOffInline) {
-      await svc.traceRecorder.flushPartial();
+      await deps.traceRecorder.flushPartial();
       // Same boundary for the stream: an issued push is only guaranteed to
       // reach the gateway while this invocation is still running.
-      await svc.streamManager.drainPushes?.(operationId);
+      await deps.streamManager.drainPushes?.(operationId);
     }
     // The inline step loop keeps the lock across step boundaries — releasing
     // here would open a window for a stale redelivery to claim it mid-run.
     // Its caller releases once, in a `finally`, for the whole invocation.
     if (!retainStepLock) {
-      await svc.coordinator.releaseStepLock(operationId, stepIndex, stepLockOwner);
+      await deps.coordinator.releaseStepLock(operationId, stepIndex, stepLockOwner);
     }
   }
 }

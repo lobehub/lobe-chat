@@ -2,11 +2,30 @@ import type { AgentState } from '@lobechat/agent-runtime';
 import debug from 'debug';
 
 import { type AgentExecutionParams, type AgentExecutionResult } from '../../types';
-import type { AgentRuntimeService } from '..';
 import { STEP_LOCK_RETRY_MAX_ATTEMPTS } from '../constants';
+import type { AgentRuntimeServiceContext } from '../types';
 import { stepLockRetryDelayMs } from '../utils';
 
 const log = debug('lobe-server:agent-runtime-service');
+
+/** What this module reads off the service. */
+export type StepGuardsDeps = Pick<
+  AgentRuntimeServiceContext,
+  | 'agentOperationModel'
+  | 'baseURL'
+  | 'buildShareAbortResult'
+  | 'completionLifecycle'
+  | 'coordinator'
+  | 'delegate'
+  | 'determineCompletionReason'
+  | 'expireClientLlmWait'
+  | 'handleGroupMemberTimeout'
+  | 'queueService'
+  | 'recordInterventionLifecycleCompletion'
+  | 'shouldReplayPendingInterventionLifecycle'
+  | 'traceRecorder'
+  | 'tryResumeParentFromAsyncTool'
+>;
 
 /**
  * Deliveries that execute nothing and never claim the step lock: a group
@@ -15,7 +34,7 @@ const log = debug('lobe-server:agent-runtime-service');
  * `undefined` when the step has to run.
  */
 export async function runLockFreeDelivery(
-  svc: AgentRuntimeService,
+  deps: StepGuardsDeps,
   params: AgentExecutionParams,
 ): Promise<AgentExecutionResult | undefined> {
   const {
@@ -31,7 +50,7 @@ export async function runLockFreeDelivery(
   // the step lock. No-op if the member already finished; otherwise interrupt it
   // and bridge a `timeout` completion so the parked supervisor resumes/finishes.
   if (groupMemberTimeout) {
-    return svc.handleGroupMemberTimeout(groupMemberTimeout);
+    return deps.handleGroupMemberTimeout(groupMemberTimeout);
   }
 
   // Expiry check of a `waiting_for_client` park. It executes nothing: the CAS
@@ -40,7 +59,7 @@ export async function runLockFreeDelivery(
   // below, because a retried expiry whose first attempt settled the row but
   // failed to finish must still get to finish it.
   if (clientLlmWaitExpired) {
-    const expired = await svc.expireClientLlmWait(operationId, clientLlmWaitExpired);
+    const expired = await deps.expireClientLlmWait(operationId, clientLlmWaitExpired);
     return {
       nextStepScheduled: false,
       state: expired ? { status: 'error' } : {},
@@ -56,7 +75,7 @@ export async function runLockFreeDelivery(
   // topic; otherwise the abandoned attempt can finish concurrently with its
   // replacement and submit a second Acceptance run.
   try {
-    const durableOperation = await svc.agentOperationModel.findById(operationId);
+    const durableOperation = await deps.agentOperationModel.findById(operationId);
     if (
       durableOperation &&
       ['done', 'error', 'interrupted', 'abandoned'].includes(durableOperation.status)
@@ -91,7 +110,7 @@ export async function runLockFreeDelivery(
   if (verifyAsyncToolBarrier) {
     const attempt = asyncToolVerifyAttempt ?? 1;
     log('[%s][%d] Running async-tool barrier verify (attempt %d)', operationId, stepIndex, attempt);
-    const resumed = await svc.tryResumeParentFromAsyncTool(
+    const resumed = await deps.tryResumeParentFromAsyncTool(
       { parentOperationId: operationId },
       { scheduleVerifyOnHold: true, verifyAttempt: attempt + 1 },
     );
@@ -112,7 +131,7 @@ export async function runLockFreeDelivery(
  * the bounded lock backoff.
  */
 export async function handleStepLockConflict(
-  svc: AgentRuntimeService,
+  deps: StepGuardsDeps,
   params: AgentExecutionParams,
 ): Promise<AgentExecutionResult> {
   const {
@@ -134,11 +153,11 @@ export async function handleStepLockConflict(
   // Someone else owns this operation now. Whatever this invocation buffered
   // for the trace belongs to their partial from here — every return below
   // leaves without it, so drop it once, up front, rather than per exit.
-  svc.traceRecorder.discardPartial();
+  deps.traceRecorder.discardPartial();
 
   let currentState: AgentState | null | undefined = null;
   try {
-    currentState = await svc.coordinator.loadAgentState(operationId);
+    currentState = await deps.coordinator.loadAgentState(operationId);
   } catch (error) {
     log(
       '[%s][%d] Failed to load state while handling step lock conflict: %O',
@@ -150,7 +169,9 @@ export async function handleStepLockConflict(
 
   const currentStepCount = currentState?.stepCount;
   if (currentState && typeof currentStepCount === 'number' && currentStepCount > stepIndex) {
-    if (svc.shouldReplayPendingInterventionLifecycle(currentState, stepIndex, externalRetryCount)) {
+    if (
+      deps.shouldReplayPendingInterventionLifecycle(currentState, stepIndex, externalRetryCount)
+    ) {
       // This is a retry of a completed human-approval step whose Review
       // lifecycle did not finish. Do not ACK it while another delivery still
       // owns the step lock: once that owner releases the lock, QStash must
@@ -200,7 +221,7 @@ export async function handleStepLockConflict(
   // leaving a parked operation parked forever. Undefined fields drop out of
   // the JSON body, so unrelated deliveries still send just the counter.
   const nextLockRetryAttempt = lockRetryAttempt + 1;
-  if (svc.queueService && nextLockRetryAttempt <= STEP_LOCK_RETRY_MAX_ATTEMPTS) {
+  if (deps.queueService && nextLockRetryAttempt <= STEP_LOCK_RETRY_MAX_ATTEMPTS) {
     const delay = stepLockRetryDelayMs(nextLockRetryAttempt);
     log(
       '[%s][%d] Step lock conflict — re-queueing attempt %d/%d in %dms',
@@ -212,10 +233,10 @@ export async function handleStepLockConflict(
     );
 
     try {
-      await svc.queueService.scheduleMessage({
+      await deps.queueService.scheduleMessage({
         context,
         delay,
-        endpoint: `${svc.baseURL}/run`,
+        endpoint: `${deps.baseURL}/run`,
         operationId,
         payload: {
           approvedToolCall,
@@ -276,7 +297,7 @@ export async function handleStepLockConflict(
  * publication failed. Returns the step's result when it replayed.
  */
 export async function replayPendingInterventionLifecycle(
-  svc: AgentRuntimeService,
+  deps: StepGuardsDeps,
   {
     agentState,
     externalRetryCount,
@@ -298,7 +319,7 @@ export async function replayPendingInterventionLifecycle(
   // runtime.step (LLM/tools), afterStep, or saveStepResult again.
   if (
     agentState.stepCount > stepIndex &&
-    svc.shouldReplayPendingInterventionLifecycle(agentState, stepIndex, externalRetryCount)
+    deps.shouldReplayPendingInterventionLifecycle(agentState, stepIndex, externalRetryCount)
   ) {
     agentState.metadata = {
       ...agentState.metadata,
@@ -306,14 +327,14 @@ export async function replayPendingInterventionLifecycle(
     };
 
     const reason = 'waiting_for_human' as const;
-    const completionSignalEvents = await svc.completionLifecycle.emitSignalEvents(
+    const completionSignalEvents = await deps.completionLifecycle.emitSignalEvents(
       operationId,
       agentState,
       reason,
     );
-    await svc.completionLifecycle.dispatchHooks(operationId, agentState, reason);
-    await svc.recordInterventionLifecycleCompletion(operationId, agentState, stepIndex);
-    await svc.traceRecorder.finalize(operationId, {
+    await deps.completionLifecycle.dispatchHooks(operationId, agentState, reason);
+    await deps.recordInterventionLifecycleCompletion(operationId, agentState, stepIndex);
+    await deps.traceRecorder.finalize(operationId, {
       appendEventsToLastStep: completionSignalEvents,
       completionReason: reason,
       state: agentState,
@@ -337,7 +358,7 @@ export async function replayPendingInterventionLifecycle(
  * Returns the step's result, or `undefined` when the step runs.
  */
 export async function skipUnrunnableStep(
-  svc: AgentRuntimeService,
+  deps: StepGuardsDeps,
   {
     agentState,
     operationId,
@@ -380,12 +401,12 @@ export async function skipUnrunnableStep(
       agentState.status,
     );
 
-    const reason = svc.determineCompletionReason(agentState);
+    const reason = deps.determineCompletionReason(agentState);
 
-    await svc.completionLifecycle.emitSignalEvents(operationId, agentState, reason);
+    await deps.completionLifecycle.emitSignalEvents(operationId, agentState, reason);
 
     // Dispatch completion hooks so consumers (e.g., bot local-mode promise) can finalize
-    await svc.completionLifecycle.dispatchHooks(operationId, agentState, reason);
+    await deps.completionLifecycle.dispatchHooks(operationId, agentState, reason);
 
     return {
       nextStepScheduled: false,
@@ -418,13 +439,13 @@ export async function skipUnrunnableStep(
   // step boundary. See `AgentShareModel.isRunStillAuthorized`'s JSDoc for
   // why one query covers every revocation path (visibility flip — which
   // is what turning sharing off does — share delete, agent delete).
-  if (svc.delegate.verifyShareRunStillAuthorized) {
+  if (deps.delegate.verifyShareRunStillAuthorized) {
     const shareMarker = agentState.principal?.actor?.shareVisitor as
       { agentId?: string; shareId?: string } | undefined;
     if (shareMarker?.agentId && shareMarker.shareId) {
       let stillAuthorized = false;
       try {
-        stillAuthorized = await svc.delegate.verifyShareRunStillAuthorized({
+        stillAuthorized = await deps.delegate.verifyShareRunStillAuthorized({
           agentId: shareMarker.agentId,
           shareId: shareMarker.shareId,
         });
@@ -435,7 +456,7 @@ export async function skipUnrunnableStep(
         log('[%s][%d] Share run authorization re-check failed: %O', operationId, stepIndex, error);
       }
       if (!stillAuthorized) {
-        return svc.buildShareAbortResult(operationId, agentState);
+        return deps.buildShareAbortResult(operationId, agentState);
       }
     }
   }

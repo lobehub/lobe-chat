@@ -12,7 +12,13 @@ import {
   findLastAssistantMessage,
   normalizeCompletionMessages,
 } from '../CompletionLifecycle';
-import type { AgentRuntimeService } from '.';
+import type { AgentRuntimeServiceContext } from './types';
+
+/** What this module reads off the service. */
+export type MessagesDeps = Pick<
+  AgentRuntimeServiceContext,
+  'messageModel' | 'messageService' | 'queryMessagesFromDB' | 'serverDB' | 'userId'
+>;
 
 /**
  * Query the canonical UIChatMessage[] snapshot for the active topic — the
@@ -25,7 +31,7 @@ import type { AgentRuntimeService } from '.';
  * the `uiMessages` field entirely instead of pushing an empty array.
  */
 export async function queryUiMessages(
-  svc: AgentRuntimeService,
+  deps: MessagesDeps,
   agentState: AgentState,
   options?: {
     /**
@@ -67,7 +73,7 @@ export async function queryUiMessages(
   const includeFileWorks = isShareVisitorRun || agentState?.host?.acceptsFileWorks === true;
 
   try {
-    return await svc.messageService.queryMessages(
+    return await deps.messageService.queryMessages(
       {
         agentId,
         groupId,
@@ -111,10 +117,10 @@ export function usesGatewayMessagePatch(agentState: AgentState): boolean {
   return agentState.host?.clientProtocol === 2;
 }
 
-export async function queryMessagesFromDB(svc: AgentRuntimeService, state: AgentState) {
+export async function queryMessagesFromDB(deps: MessagesDeps, state: AgentState) {
   let postProcessUrl: ((path: string | null) => Promise<string>) | undefined;
   try {
-    const fileService = new FileService(svc.serverDB, svc.userId);
+    const fileService = new FileService(deps.serverDB, deps.userId);
     postProcessUrl = (path: string | null) => fileService.getFullFileUrl(path);
   } catch {
     postProcessUrl = undefined;
@@ -125,7 +131,7 @@ export async function queryMessagesFromDB(svc: AgentRuntimeService, state: Agent
   // reduce tool payloads to render-facing view models (see
   // `@lobechat/tool-view-model`), which would silently strip the results the
   // model is supposed to remember.
-  return svc.messageModel.query(
+  return deps.messageModel.query(
     {
       agentId: state.origin?.agentId,
       // Group runs must pass groupId, else the query filters `groupId IS NULL`
@@ -148,10 +154,10 @@ export async function queryMessagesFromDB(svc: AgentRuntimeService, state: Agent
  * results written out-of-band (e.g. by a sub-agent completion bridge).
  */
 export async function refreshMessagesFromDB(
-  svc: AgentRuntimeService,
+  deps: MessagesDeps,
   state: AgentState,
 ): Promise<AgentState['messages']> {
-  const dbMessages = await svc.queryMessagesFromDB(state);
+  const dbMessages = await deps.queryMessagesFromDB(state);
 
   const { flatList } = parse(dbMessages, undefined, { threadId: state.origin?.threadId });
   return flatList as AgentState['messages'];
@@ -164,10 +170,10 @@ export async function refreshMessagesFromDB(
  * alone cannot reliably identify serialized multimodal content.
  */
 export async function resolveLastAssistantMessageFromDB(
-  svc: AgentRuntimeService,
+  deps: MessagesDeps,
   state: AgentState,
 ): Promise<unknown> {
-  const dbMessages = await svc.queryMessagesFromDB(state);
+  const dbMessages = await deps.queryMessagesFromDB(state);
   const { flatList } = parse(dbMessages, undefined, { threadId: state.origin?.threadId });
   const lastAssistant = findLastAssistantMessage(normalizeCompletionMessages(flatList));
   const lastAssistantId = typeof lastAssistant?.id === 'string' ? lastAssistant.id : undefined;
@@ -196,10 +202,10 @@ export async function resolveLastAssistantMessageFromDB(
  * disambiguate.
  */
 export async function resolveLastAssistantContentFromThread(
-  svc: AgentRuntimeService,
+  deps: MessagesDeps,
   threadId: string,
 ): Promise<string | undefined> {
-  const messages = await svc.messageModel.query({ threadId }, { allowShareVisitor: true });
+  const messages = await deps.messageModel.query({ threadId }, { allowShareVisitor: true });
   const lastAssistant = findLastAssistantMessage(normalizeCompletionMessages(messages));
   return extractTextFromMessage(lastAssistant) || undefined;
 }
@@ -223,7 +229,7 @@ export async function resolveLastAssistantContentFromThread(
  * Undefined rows mean the read was skipped or failed; [] is a successful read.
  */
 export async function queryStepEntryMessages(
-  svc: AgentRuntimeService,
+  deps: MessagesDeps,
   state: AgentState,
 ): Promise<{
   messages?: UIChatMessage[];
@@ -236,7 +242,7 @@ export async function queryStepEntryMessages(
   try {
     // Keep full tool payloads and raw attachment paths. Each consumer derives
     // its own view; mid-stream Work summaries are not used by the runtime.
-    messages = await svc.messageModel.query(
+    messages = await deps.messageModel.query(
       {
         agentId: state.origin.agentId,
         groupId: state.origin.groupId,
@@ -254,7 +260,7 @@ export async function queryStepEntryMessages(
   const [uiResult] = await Promise.all([
     (async () => {
       try {
-        return await svc.messageService.prepareUiMessages(messages);
+        return await deps.messageService.prepareUiMessages(messages);
       } catch (error) {
         console.error('[queryStepEntryMessages] Failed to prepare UI messages: %O', error);
         return undefined;
@@ -266,7 +272,7 @@ export async function queryStepEntryMessages(
       try {
         let fileService: FileService | undefined;
         try {
-          fileService = new FileService(svc.serverDB, svc.userId);
+          fileService = new FileService(deps.serverDB, deps.userId);
         } catch (error) {
           // Match the model read's fallback when file storage is unavailable.
           console.error('[queryStepEntryMessages] File service unavailable: %O', error);

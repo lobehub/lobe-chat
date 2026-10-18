@@ -1,13 +1,16 @@
 import debug from 'debug';
 
-import type { AgentRuntimeService } from '..';
 import {
   LEGACY_INTERRUPT_STATE_POLL_INTERVAL_MS,
   STEP_ABORT_POLL_INTERVAL_MS,
   STEP_ABORT_POLL_MAX_BACKOFF,
 } from '../constants';
+import type { AgentRuntimeServiceContext } from '../types';
 
 const log = debug('lobe-server:agent-runtime-service');
+
+/** What this module reads off the service. */
+export type StepAbortPollDeps = Pick<AgentRuntimeServiceContext, 'coordinator'>;
 
 export interface StepAbortPoll {
   signal: AbortSignal;
@@ -16,7 +19,7 @@ export interface StepAbortPoll {
 }
 
 export function startStepAbortPoll(
-  svc: AgentRuntimeService,
+  deps: StepAbortPollDeps,
   operationId: string,
   stepIndex: number,
 ): StepAbortPoll {
@@ -47,14 +50,15 @@ export function startStepAbortPoll(
       // worker can still write only the authoritative state, so sample
       // that large blob at a much lower cadence until all writers have
       // sentinel support.
-      let interrupted = await svc.coordinator.isInterrupted(operationId);
+      let interrupted = await deps.coordinator.isInterrupted(operationId);
       const now = Date.now();
       if (
         !interrupted &&
         now - lastLegacyInterruptStatePollAt >= LEGACY_INTERRUPT_STATE_POLL_INTERVAL_MS
       ) {
         lastLegacyInterruptStatePollAt = now;
-        interrupted = (await svc.coordinator.loadAgentState(operationId))?.status === 'interrupted';
+        interrupted =
+          (await deps.coordinator.loadAgentState(operationId))?.status === 'interrupted';
       }
       abortPollFailures = 0;
       if (interrupted) {

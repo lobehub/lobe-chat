@@ -6,11 +6,25 @@ import debug from 'debug';
 import { AgentOperationModel } from '@/database/models/agentOperation';
 
 import { type GroupActionOnComplete } from '../types';
-import type { AgentRuntimeService } from '.';
 import { ASYNC_TOOL_VERIFY_MAX_ATTEMPTS } from './constants';
+import type { AgentRuntimeServiceContext } from './types';
 import { asyncToolVerifyDelayMs } from './utils';
 
 const log = debug('lobe-server:agent-runtime-service');
+
+/** What this module reads off the service. */
+export type AsyncToolDeps = Pick<
+  AgentRuntimeServiceContext,
+  | 'allPendingToolsFulfilled'
+  | 'baseURL'
+  | 'coordinator'
+  | 'maybeScheduleAsyncToolVerify'
+  | 'messageModel'
+  | 'queueService'
+  | 'resolveAsyncToolOnComplete'
+  | 'serverDB'
+  | 'userId'
+>;
 
 /**
  * Completion-bridge entry point for async sub-agent tools.
@@ -39,7 +53,7 @@ const log = debug('lobe-server:agent-runtime-service');
  * never re-arms, so retries stay bounded.
  */
 export async function tryResumeParentFromAsyncTool(
-  svc: AgentRuntimeService,
+  deps: AsyncToolDeps,
   params: { parentOperationId: string },
   options?: {
     /**
@@ -61,7 +75,7 @@ export async function tryResumeParentFromAsyncTool(
 ): Promise<boolean> {
   const { parentOperationId } = params;
 
-  const state = await svc.coordinator.loadAgentState(parentOperationId);
+  const state = await deps.coordinator.loadAgentState(parentOperationId);
   if (!state) {
     // State expired (Redis TTL) or never persisted. A missing state at
     // completion time is a classic way a parent silently strands — but it is
@@ -72,7 +86,7 @@ export async function tryResumeParentFromAsyncTool(
     // exhausts the attempt cap (verify_exhausted) rather than stranding here.
     log('[%s] async-tool resume: parent state missing/expired, arming verify', parentOperationId);
     asyncToolResumeCounter.add(1, { outcome: 'no_state' });
-    await svc.maybeScheduleAsyncToolVerify(parentOperationId, null, options);
+    await deps.maybeScheduleAsyncToolVerify(parentOperationId, null, options);
     return false;
   }
 
@@ -80,7 +94,7 @@ export async function tryResumeParentFromAsyncTool(
     // Not parked (yet). Either the op already resumed/finished — nothing to
     // do — or the child outran the parent's parking step; the delayed verify
     // re-checks once the park has had time to land.
-    await svc.maybeScheduleAsyncToolVerify(parentOperationId, state, options);
+    await deps.maybeScheduleAsyncToolVerify(parentOperationId, state, options);
     return false;
   }
 
@@ -94,19 +108,19 @@ export async function tryResumeParentFromAsyncTool(
       parentOperationId,
     );
     asyncToolResumeCounter.add(1, { outcome: 'no_pending' });
-    await svc.maybeScheduleAsyncToolVerify(parentOperationId, state, options);
+    await deps.maybeScheduleAsyncToolVerify(parentOperationId, state, options);
     return false;
   }
 
   // Barrier: every pending tool must have a fulfilled tool_result message.
-  const allFulfilled = await svc.allPendingToolsFulfilled(
+  const allFulfilled = await deps.allPendingToolsFulfilled(
     pending,
     options?.knownFulfilledMessageId,
   );
   if (!allFulfilled) {
     log('[%s] async-tool barrier not yet satisfied, holding', parentOperationId);
     asyncToolResumeCounter.add(1, { outcome: 'barrier_held' });
-    await svc.maybeScheduleAsyncToolVerify(parentOperationId, state, options);
+    await deps.maybeScheduleAsyncToolVerify(parentOperationId, state, options);
     return false;
   }
 
@@ -117,10 +131,10 @@ export async function tryResumeParentFromAsyncTool(
   // verify watchdog resolves it correctly: the option (if any) wins, else the
   // hint persisted on the parked tool message's pluginState, else resume.
   const onComplete: GroupActionOnComplete =
-    options?.onComplete ?? (await svc.resolveAsyncToolOnComplete(pending));
+    options?.onComplete ?? (await deps.resolveAsyncToolOnComplete(pending));
 
   // Single-fire guard: only one concurrent completion flips the op.
-  const won = await new AgentOperationModel(svc.serverDB, svc.userId).tryResumeFromAsyncTool(
+  const won = await new AgentOperationModel(deps.serverDB, deps.userId).tryResumeFromAsyncTool(
     parentOperationId,
   );
   if (!won) {
@@ -138,11 +152,11 @@ export async function tryResumeParentFromAsyncTool(
     onComplete,
   );
 
-  if (svc.queueService) {
-    await svc.queueService.scheduleMessage({
+  if (deps.queueService) {
+    await deps.queueService.scheduleMessage({
       context: undefined,
       delay: 100,
-      endpoint: `${svc.baseURL}/run`,
+      endpoint: `${deps.baseURL}/run`,
       operationId: parentOperationId,
       payload: onComplete === 'finish' ? { finishAfterAsyncTool: true } : { resumeAsyncTool: true },
       priority: 'high',
@@ -169,12 +183,12 @@ export async function tryResumeParentFromAsyncTool(
  * orphan is observable. For details see: async sub-agent suspend/resume stability hardening — bounded watchdog retry with exponential backoff.
  */
 export async function maybeScheduleAsyncToolVerify(
-  svc: AgentRuntimeService,
+  deps: AsyncToolDeps,
   parentOperationId: string,
   state: AgentState | null,
   options?: { scheduleVerifyOnHold?: boolean; verifyAttempt?: number },
 ): Promise<void> {
-  if (!options?.scheduleVerifyOnHold || !svc.queueService) return;
+  if (!options?.scheduleVerifyOnHold || !deps.queueService) return;
 
   // `state` is null when the parked snapshot is missing/expired at completion
   // time (no_state). We can't read a status to skip a terminal op, but the
@@ -209,10 +223,10 @@ export async function maybeScheduleAsyncToolVerify(
   );
 
   try {
-    await svc.queueService.scheduleMessage({
+    await deps.queueService.scheduleMessage({
       context: undefined,
       delay,
-      endpoint: `${svc.baseURL}/run`,
+      endpoint: `${deps.baseURL}/run`,
       operationId: parentOperationId,
       payload: { asyncToolVerifyAttempt: attempt, verifyAsyncToolBarrier: true },
       priority: 'high',
@@ -240,12 +254,12 @@ export async function maybeScheduleAsyncToolVerify(
  * lookup still resolves; only the freshly written content/state is trusted.
  */
 export async function allPendingToolsFulfilled(
-  svc: AgentRuntimeService,
+  deps: AsyncToolDeps,
   pending: ChatToolPayload[],
   knownFulfilledMessageId?: string,
 ): Promise<boolean> {
   for (const tc of pending) {
-    const plugin = await svc.serverDB.query.messagePlugins.findFirst({
+    const plugin = await deps.serverDB.query.messagePlugins.findFirst({
       where: (mp, { eq }) => eq(mp.toolCallId, tc.id),
     });
     if (!plugin) return false;
@@ -253,7 +267,7 @@ export async function allPendingToolsFulfilled(
     // Trust the caller's own just-committed backfill (read-your-writes).
     if (knownFulfilledMessageId && plugin.id === knownFulfilledMessageId) continue;
 
-    const message = await svc.messageModel.findById(plugin.id);
+    const message = await deps.messageModel.findById(plugin.id);
     const pluginState = plugin.state as { status?: string } | null;
     const fulfilled =
       (!!message?.content && message.content.length > 0) ||
@@ -272,7 +286,7 @@ export async function allPendingToolsFulfilled(
  * Self-describing so the generic verify watchdog finishes the right ops.
  */
 export async function resolveAsyncToolOnComplete(
-  svc: AgentRuntimeService,
+  deps: AsyncToolDeps,
   pending: ChatToolPayload[],
 ): Promise<GroupActionOnComplete> {
   // A batched turn can park multiple deferred/client tools. If ANY of them is
@@ -280,7 +294,7 @@ export async function resolveAsyncToolOnComplete(
   // orchestration must finish — reading only pending[0] would miss a group
   // finish call that isn't the first pending tool and wrongly resume.
   for (const tool of pending) {
-    const plugin = await svc.serverDB.query.messagePlugins.findFirst({
+    const plugin = await deps.serverDB.query.messagePlugins.findFirst({
       where: (mp, { eq }) => eq(mp.toolCallId, tool.id),
     });
     const pluginState = plugin?.state as { onComplete?: string } | null;

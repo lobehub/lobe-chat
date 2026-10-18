@@ -7,18 +7,27 @@ import {
 } from '@/business/server/agent-run/agentInterventionIdentity';
 
 import { type PendingInterventionsResult } from '../types';
-import type { AgentRuntimeService } from '.';
 import { INTERVENTION_LIFECYCLE_CHECKPOINT_KEY } from './constants';
-import type { InterventionLifecycleCheckpoint } from './types';
+import type { AgentRuntimeServiceContext, InterventionLifecycleCheckpoint } from './types';
 
 const log = debug('lobe-server:agent-runtime-service');
 
+/** What this module reads off the service. */
+export type InterventionDeps = Pick<
+  AgentRuntimeServiceContext,
+  | 'agentOperationModel'
+  | 'baseURL'
+  | 'coordinator'
+  | 'persistInterventionDispatchAck'
+  | 'queueService'
+>;
+
 /** Load the authoritative runtime state for a deterministic intervention continuation. */
 export async function loadInterventionContinuationState(
-  svc: AgentRuntimeService,
+  deps: InterventionDeps,
   operationId: string,
 ): Promise<AgentState | null> {
-  return svc.coordinator.loadAgentState(operationId);
+  return deps.coordinator.loadAgentState(operationId);
 }
 
 /**
@@ -28,10 +37,10 @@ export async function loadInterventionContinuationState(
  * lock de-duplicates concurrent/repeated schedules.
  */
 export async function ensureInterventionContinuationStarted(
-  svc: AgentRuntimeService,
+  deps: InterventionDeps,
   operationId: string,
 ): Promise<'already_started' | 'missing' | 'scheduled'> {
-  const state = await svc.coordinator.loadAgentState(operationId);
+  const state = await deps.coordinator.loadAgentState(operationId);
   if (!state) return 'missing';
 
   const provenance = state.origin?.continuation as
@@ -71,7 +80,7 @@ export async function ensureInterventionContinuationStarted(
   if (preparation.deduplicationId !== deduplicationId) {
     throw new Error(`Intervention continuation dedupe provenance conflict: ${operationId}`);
   }
-  const operation = await svc.agentOperationModel.findById(operationId);
+  const operation = await deps.agentOperationModel.findById(operationId);
   if (
     !operation ||
     !matchesAgentInterventionContinuationProvenance(
@@ -103,7 +112,7 @@ export async function ensureInterventionContinuationStarted(
     throw new Error(`Intervention continuation durable preparation conflict: ${operationId}`);
   }
   if (!durablePreparation) {
-    const persisted = await svc.agentOperationModel.recordAgentInterventionPreparation(
+    const persisted = await deps.agentOperationModel.recordAgentInterventionPreparation(
       operationId,
       {
         deduplicationId,
@@ -134,7 +143,7 @@ export async function ensureInterventionContinuationStarted(
     }
     return 'already_started';
   }
-  if (!svc.queueService) {
+  if (!deps.queueService) {
     throw new Error(`Cannot schedule intervention continuation ${operationId}`);
   }
 
@@ -142,11 +151,11 @@ export async function ensureInterventionContinuationStarted(
   // have raced the HTTP response and advanced this state to running/terminal.
   // Re-publish with the same provider dedupe key to recover the ACK without a
   // second actual delivery, then persist the authoritative dispatch marker.
-  const messageId = await svc.queueService.scheduleMessage({
+  const messageId = await deps.queueService.scheduleMessage({
     context: (state as AgentState & { initialContext: AgentRuntimeContext }).initialContext,
     deduplicationId,
     delay: 0,
-    endpoint: `${svc.baseURL}/run`,
+    endpoint: `${deps.baseURL}/run`,
     operationId,
     priority: 'high',
     retryDelay:
@@ -155,7 +164,7 @@ export async function ensureInterventionContinuationStarted(
       typeof state.host?.queue?.retries === 'number' ? state.host?.queue?.retries : undefined,
     stepIndex,
   });
-  await svc.persistInterventionDispatchAck({
+  await deps.persistInterventionDispatchAck({
     deduplicationId,
     messageId,
     operationId,
@@ -166,7 +175,7 @@ export async function ensureInterventionContinuationStarted(
 }
 
 export async function persistInterventionDispatchAck(
-  svc: AgentRuntimeService,
+  deps: InterventionDeps,
   params: {
     deduplicationId: string;
     messageId: string;
@@ -181,7 +190,7 @@ export async function persistInterventionDispatchAck(
     scheduledAt: new Date().toISOString(),
     state: 'scheduled' as const,
   };
-  const persisted = await svc.agentOperationModel.recordAgentInterventionDispatch(
+  const persisted = await deps.agentOperationModel.recordAgentInterventionDispatch(
     params.operationId,
     marker,
   );
@@ -194,7 +203,7 @@ export async function persistInterventionDispatchAck(
  * Get list of pending human interventions
  */
 export async function getPendingInterventions(
-  svc: AgentRuntimeService,
+  deps: InterventionDeps,
   params: {
     operationId?: string;
     userId?: string;
@@ -212,13 +221,13 @@ export async function getPendingInterventions(
     } else if (userId) {
       // Get all active operations for the user
       try {
-        const activeOperations = await svc.coordinator.getActiveOperations();
+        const activeOperations = await deps.coordinator.getActiveOperations();
 
         // Filter operations belonging to this user
         const userOperations = [];
         for (const operation of activeOperations) {
           try {
-            const metadata = await svc.coordinator.getOperationMetadata(operation);
+            const metadata = await deps.coordinator.getOperationMetadata(operation);
             if (metadata?.userId === userId) {
               userOperations.push(operation);
             }
@@ -239,8 +248,8 @@ export async function getPendingInterventions(
     for (const operation of operations) {
       try {
         const [state, metadata] = await Promise.all([
-          svc.coordinator.loadAgentState(operation),
-          svc.coordinator.getOperationMetadata(operation),
+          deps.coordinator.loadAgentState(operation),
+          deps.coordinator.getOperationMetadata(operation),
         ]);
 
         if (state?.status === 'waiting_for_human') {
@@ -287,7 +296,7 @@ export async function getPendingInterventions(
  * Process human intervention
  */
 export async function processHumanIntervention(
-  svc: AgentRuntimeService,
+  deps: InterventionDeps,
   params: {
     action: 'approve' | 'reject' | 'reject_continue' | 'input' | 'select';
     approvedToolCall?: any;
@@ -320,11 +329,11 @@ export async function processHumanIntervention(
 
     // Schedule execution with high priority (if queue service is available)
     let messageId: string | undefined;
-    if (svc.queueService) {
-      messageId = await svc.queueService.scheduleMessage({
+    if (deps.queueService) {
+      messageId = await deps.queueService.scheduleMessage({
         context: undefined, // Will be retrieved from state manager
         delay: 100,
-        endpoint: `${svc.baseURL}/run`,
+        endpoint: `${deps.baseURL}/run`,
         operationId,
         payload: {
           approvedToolCall,
@@ -383,7 +392,7 @@ export function shouldReplayPendingInterventionLifecycle(
  * for the smaller crash window before this checkpoint is saved.
  */
 export async function recordInterventionLifecycleCompletion(
-  svc: AgentRuntimeService,
+  deps: InterventionDeps,
   operationId: string,
   state: AgentState,
   stepIndex: number,
@@ -397,7 +406,7 @@ export async function recordInterventionLifecycleCompletion(
   };
 
   try {
-    await svc.coordinator.saveAgentState(operationId, state);
+    await deps.coordinator.saveAgentState(operationId, state);
   } catch (error) {
     // The Review and hook are already delivered. Do not turn a best-effort
     // dedup checkpoint failure into an agent error; a rare later redelivery

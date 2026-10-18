@@ -15,16 +15,30 @@ import {
   type OperationCreationParams,
   type OperationCreationResult,
 } from '../types';
-import type { AgentRuntimeService } from '.';
+import type { AgentRuntimeServiceContext } from './types';
 import { withoutFrozenModelFacts } from './utils';
 
 const log = debug('lobe-server:agent-runtime-service');
+
+/** What this module reads off the service. */
+export type CreateOperationDeps = Pick<
+  AgentRuntimeServiceContext,
+  | 'acceptsFileWorks'
+  | 'agentOperationModel'
+  | 'baseURL'
+  | 'completionLifecycle'
+  | 'coordinator'
+  | 'persistInterventionDispatchAck'
+  | 'queueService'
+  | 'resolveLlmExecutor'
+  | 'workspaceId'
+>;
 
 /**
  * Create a new Agent operation
  */
 export async function createOperation(
-  svc: AgentRuntimeService,
+  deps: CreateOperationDeps,
   params: OperationCreationParams,
 ): Promise<OperationCreationResult> {
   const {
@@ -97,7 +111,7 @@ export async function createOperation(
     (hook) => hook.type === 'afterToolCall' && hook.webhook?.responseHandling === 'toolCall',
   );
   const operationStartPersisted = await traceStartStage('record_start', () =>
-    svc.completionLifecycle.recordStart({
+    deps.completionLifecycle.recordStart({
       agentId: appContext?.agentId ?? null,
       appContext: {
         defaultTaskAssigneeAgentId: appContext?.defaultTaskAssigneeAgentId,
@@ -146,7 +160,7 @@ export async function createOperation(
   }
 
   if (interventionResolution) {
-    const durableOperation = await svc.agentOperationModel.findById(operationId);
+    const durableOperation = await deps.agentOperationModel.findById(operationId);
     const persistedProvenance = durableOperation?.metadata?.agentInterventionContinuation;
     if (
       !durableOperation ||
@@ -192,13 +206,13 @@ export async function createOperation(
         }))
       : undefined;
 
-    const llmExecutor = await svc.resolveLlmExecutor(params.llmExecutor, parentOperationId);
+    const llmExecutor = await deps.resolveLlmExecutor(params.llmExecutor, parentOperationId);
     // A member's pushes reach the supervisor's client, so it renders what
     // that client declared.
     const fileWorksAccepted =
       acceptsFileWorks ??
       (parentOperationId && appContext?.orchestrationRole === 'member'
-        ? await svc.acceptsFileWorks(parentOperationId)
+        ? await deps.acceptsFileWorks(parentOperationId)
         : undefined);
 
     const initialState = {
@@ -331,7 +345,7 @@ export async function createOperation(
     const mirrorToOperationId =
       appContext?.orchestrationRole === 'member' ? (parentOperationId ?? undefined) : undefined;
     await traceStartStage('runtime_meta', () =>
-      svc.coordinator.createAgentOperation(operationId, {
+      deps.coordinator.createAgentOperation(operationId, {
         acceptsMemberRuntimeEnd,
         agentConfig,
         // Persisted so a queue worker that never ran this op's init still
@@ -349,14 +363,14 @@ export async function createOperation(
         // to the visitor — the gateway registers the WS channel under this id.
         streamOwnerUserId: agentShareVisitor?.visitorUserId,
         userId,
-        workspaceId: svc.workspaceId,
+        workspaceId: deps.workspaceId,
       }),
     );
     operationCreated = true;
 
     // Save initial state
     await traceStartStage('save_state', () =>
-      svc.coordinator.saveAgentState(operationId, initialState as any),
+      deps.coordinator.saveAgentState(operationId, initialState as any),
     );
 
     // Register external hooks
@@ -366,9 +380,9 @@ export async function createOperation(
       // Persist webhook configs to state metadata for production mode
       const serializedHooks = hookDispatcher.getSerializedHooks(operationId);
       if (serializedHooks && serializedHooks.length > 0) {
-        const currentState = await svc.coordinator.loadAgentState(operationId);
+        const currentState = await deps.coordinator.loadAgentState(operationId);
         if (currentState) {
-          await svc.coordinator.saveAgentState(operationId, {
+          await deps.coordinator.saveAgentState(operationId, {
             ...currentState,
             host: { ...currentState.host, hooks: serializedHooks },
           });
@@ -377,7 +391,7 @@ export async function createOperation(
     }
 
     if (interventionResolution) {
-      const preparedState = await svc.coordinator.loadAgentState(operationId);
+      const preparedState = await deps.coordinator.loadAgentState(operationId);
       if (!preparedState) {
         throw new Error(`Intervention continuation state disappeared: ${operationId}`);
       }
@@ -387,17 +401,15 @@ export async function createOperation(
         state: 'ready' as const,
         stepIndex: initialStepCount,
       };
-      await svc.coordinator.saveAgentState(operationId, {
+      await deps.coordinator.saveAgentState(operationId, {
         ...preparedState,
         metadata: {
           ...preparedState.metadata,
           agentInterventionPreparation: preparation,
         },
       });
-      const preparationPersisted = await svc.agentOperationModel.recordAgentInterventionPreparation(
-        operationId,
-        preparation,
-      );
+      const preparationPersisted =
+        await deps.agentOperationModel.recordAgentInterventionPreparation(operationId, preparation);
       if (!preparationPersisted) {
         throw new Error(`Failed to persist intervention continuation preparation: ${operationId}`);
       }
@@ -411,20 +423,20 @@ export async function createOperation(
     let messageId: string | undefined;
     let autoStarted = false;
 
-    if (autoStart && svc.queueService) {
+    if (autoStart && deps.queueService) {
       const deduplicationId = interventionResolution
         ? deriveAgentInterventionQueueDeduplicationId(operationId, initialStepCount)
         : undefined;
       // Both local and queue modes use scheduleMessage
       // LocalQueueServiceImpl uses setTimeout + callback mechanism
       // QStashQueueServiceImpl schedules HTTP requests
-      const queueService = svc.queueService;
+      const queueService = deps.queueService;
       messageId = await traceStartStage('schedule_step', () =>
         queueService.scheduleMessage({
           context: initialContext,
           deduplicationId,
           delay: 50, // Short delay for startup
-          endpoint: `${svc.baseURL}/run`,
+          endpoint: `${deps.baseURL}/run`,
           operationId,
           priority: 'high',
           retryDelay: queueRetryDelay,
@@ -433,7 +445,7 @@ export async function createOperation(
         }),
       );
       if (interventionResolution && deduplicationId) {
-        await svc.persistInterventionDispatchAck({
+        await deps.persistInterventionDispatchAck({
           deduplicationId,
           messageId,
           operationId,
@@ -457,7 +469,7 @@ export async function createOperation(
 
       if (operationCreated) {
         try {
-          await svc.coordinator.deleteAgentOperation(operationId);
+          await deps.coordinator.deleteAgentOperation(operationId);
         } catch (cleanupError) {
           console.error('Failed to cleanup aborted operation %s: %O', operationId, cleanupError);
         }

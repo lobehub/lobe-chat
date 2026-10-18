@@ -10,10 +10,30 @@ import {
   type GroupActionMemberBridgeParams,
   type GroupMemberTimeoutParams,
 } from '../types';
-import type { AgentRuntimeService } from '.';
+import type { AgentRuntimeServiceContext } from './types';
 import { formatErrorForMetadata, formatSubAgentErrorReason } from './utils';
 
 const log = debug('lobe-server:agent-runtime-service');
+
+/** What this module reads off the service. */
+export type GroupMemberDeps = Pick<
+  AgentRuntimeServiceContext,
+  | 'agentOperationModel'
+  | 'baseURL'
+  | 'completeGroupActionMember'
+  | 'completeGroupMemberBarrier'
+  | 'controlCompletedToolResult'
+  | 'coordinator'
+  | 'countFulfilledMemberAnchors'
+  | 'interruptOperation'
+  | 'maybeScheduleAsyncToolVerify'
+  | 'messageModel'
+  | 'queueService'
+  | 'resolveLastAssistantContentFromThread'
+  | 'resolveLastAssistantMessageFromDB'
+  | 'serverDB'
+  | 'tryResumeParentFromAsyncTool'
+>;
 
 /**
  * The completion bridge of a group member run: from its runtime snapshot
@@ -21,7 +41,7 @@ const log = debug('lobe-server:agent-runtime-service');
  * at start. Undefined for any run that is not a group member.
  */
 export async function loadGroupMemberBridge(
-  svc: AgentRuntimeService,
+  deps: GroupMemberDeps,
   operationId: string,
 ): Promise<
   | {
@@ -33,7 +53,7 @@ export async function loadGroupMemberBridge(
     }
   | undefined
 > {
-  const state = await svc.coordinator.loadAgentState(operationId);
+  const state = await deps.coordinator.loadAgentState(operationId);
   if (state) {
     const origin = state.origin;
     const bridge = state.host?.hooks?.find((hook) => hook.id === 'group-member-bridge')?.webhook
@@ -50,7 +70,7 @@ export async function loadGroupMemberBridge(
     };
   }
 
-  const row = await svc.agentOperationModel.findById(operationId);
+  const row = await deps.agentOperationModel.findById(operationId);
   const bridge = (row?.metadata as Record<string, unknown> | null | undefined)
     ?.groupMemberBridge as
     Omit<GroupActionMemberBridgeParams, 'operationId' | 'reason'> | undefined;
@@ -72,10 +92,10 @@ export async function loadGroupMemberBridge(
  * single-tool barrier) once this reaches the expected member count.
  */
 export async function countFulfilledMemberAnchors(
-  svc: AgentRuntimeService,
+  deps: GroupMemberDeps,
   groupToolMessageId: string,
 ): Promise<number> {
-  const children = await svc.serverDB.query.messages.findMany({
+  const children = await deps.serverDB.query.messages.findMany({
     where: (m, { and, eq }) => and(eq(m.parentId, groupToolMessageId), eq(m.role, 'tool')),
   });
   let fulfilled = 0;
@@ -84,7 +104,7 @@ export async function countFulfilledMemberAnchors(
       fulfilled += 1;
       continue;
     }
-    const plugin = await svc.serverDB.query.messagePlugins.findFirst({
+    const plugin = await deps.serverDB.query.messagePlugins.findFirst({
       where: (mp, { eq }) => eq(mp.id, child.id),
     });
     const pluginState = plugin?.state as { status?: string } | null;
@@ -114,7 +134,7 @@ export async function countFulfilledMemberAnchors(
  * CAS-guarded, so redelivery is safe.
  */
 export async function completeGroupActionMember(
-  svc: AgentRuntimeService,
+  deps: GroupMemberDeps,
   params: GroupActionMemberBridgeParams,
 ): Promise<boolean> {
   const {
@@ -144,7 +164,7 @@ export async function completeGroupActionMember(
   }
 
   const finalState =
-    params.finalState ?? (await svc.coordinator.loadAgentState(operationId)) ?? undefined;
+    params.finalState ?? (await deps.coordinator.loadAgentState(operationId)) ?? undefined;
 
   log(
     '[%s] group-member bridge → parent %s (mode: %s, reason: %s, %d members)',
@@ -165,7 +185,7 @@ export async function completeGroupActionMember(
   let lastAssistant: unknown;
   if (!failed && mode !== 'in_group' && finalState && !Array.isArray(finalState.messages)) {
     try {
-      lastAssistant = await svc.resolveLastAssistantMessageFromDB(finalState);
+      lastAssistant = await deps.resolveLastAssistantMessageFromDB(finalState);
     } catch (error) {
       console.error(
         '[%s] group-member bridge: failed to resolve final assistant from DB: %O',
@@ -187,7 +207,7 @@ export async function completeGroupActionMember(
   // for: it never populates `finalState` at all.
   if (!failed && mode !== 'in_group' && !finalState && threadId) {
     try {
-      lastAssistantContent = await svc.resolveLastAssistantContentFromThread(threadId);
+      lastAssistantContent = await deps.resolveLastAssistantContentFromThread(threadId);
     } catch (error) {
       console.error(
         '[%s] group-member bridge: failed to resolve content from thread %s: %O',
@@ -207,7 +227,7 @@ export async function completeGroupActionMember(
       ? `Agent ${agentLabel} responded in the group.`
       : lastAssistantContent || 'Agent member completed without a textual answer.';
 
-  const { result: completed, blocked } = await svc.controlCompletedToolResult({
+  const { result: completed, blocked } = await deps.controlCompletedToolResult({
     preserveUsage: true,
     contextToolMessageId: groupToolMessageId,
     operationId: parentOperationId,
@@ -233,7 +253,7 @@ export async function completeGroupActionMember(
       },
     },
   });
-  const anchorBackfill = await svc.messageModel.updateToolMessage(anchorMessageId, {
+  const anchorBackfill = await deps.messageModel.updateToolMessage(anchorMessageId, {
     content: completed.content,
     pluginError: completed.error ?? null,
     pluginState: completed.state,
@@ -246,7 +266,7 @@ export async function completeGroupActionMember(
     );
   }
 
-  return svc.completeGroupMemberBarrier({
+  return deps.completeGroupMemberBarrier({
     anchorMessageId,
     expectedMembers,
     groupToolMessageId,
@@ -256,7 +276,7 @@ export async function completeGroupActionMember(
 
 /** Shared by a child's completion and a member that failed before an operation existed. */
 export async function completeGroupMemberBarrier(
-  svc: AgentRuntimeService,
+  deps: GroupMemberDeps,
   {
     anchorMessageId,
     expectedMembers,
@@ -270,7 +290,7 @@ export async function completeGroupMemberBarrier(
   // 2. K=N member barrier (multi-member actions only — single-member actions
   //    use the group tool call itself as the anchor, already backfilled above).
   if (expectedMembers > 1 && anchorMessageId !== groupToolMessageId) {
-    const fulfilled = await svc.countFulfilledMemberAnchors(groupToolMessageId);
+    const fulfilled = await deps.countFulfilledMemberAnchors(groupToolMessageId);
     if (fulfilled < expectedMembers) {
       log(
         '[%s] group-member barrier %d/%d, holding parent %s',
@@ -279,9 +299,9 @@ export async function completeGroupMemberBarrier(
         expectedMembers,
         parentOperationId,
       );
-      const parentState = await svc.coordinator.loadAgentState(parentOperationId);
+      const parentState = await deps.coordinator.loadAgentState(parentOperationId);
       if (parentState) {
-        await svc.maybeScheduleAsyncToolVerify(parentOperationId, parentState, {
+        await deps.maybeScheduleAsyncToolVerify(parentOperationId, parentState, {
           scheduleVerifyOnHold: true,
         });
       }
@@ -291,7 +311,7 @@ export async function completeGroupMemberBarrier(
     // All members done — backfill the group tool call so the parked op's
     // single-tool barrier ([groupTool]) passes. Idempotent across racing
     // last-committers; the resume/finish CAS guarantees one transition.
-    const { result: groupResult, blocked: groupBlocked } = await svc.controlCompletedToolResult({
+    const { result: groupResult, blocked: groupBlocked } = await deps.controlCompletedToolResult({
       operationId: parentOperationId,
       toolMessageId: groupToolMessageId,
       result: {
@@ -300,7 +320,7 @@ export async function completeGroupMemberBarrier(
         success: true,
       },
     });
-    const groupBackfill = await svc.messageModel.updateToolMessage(groupToolMessageId, {
+    const groupBackfill = await deps.messageModel.updateToolMessage(groupToolMessageId, {
       content: groupResult.content,
       pluginError: groupResult.error ?? null,
       pluginState: groupResult.state,
@@ -317,7 +337,7 @@ export async function completeGroupMemberBarrier(
   }
 
   // 3. Barrier + CAS + resume/finish the parked supervisor op.
-  return svc.tryResumeParentFromAsyncTool({ parentOperationId }, { scheduleVerifyOnHold: true });
+  return deps.tryResumeParentFromAsyncTool({ parentOperationId }, { scheduleVerifyOnHold: true });
 }
 
 /**
@@ -327,16 +347,16 @@ export async function completeGroupMemberBarrier(
  * forever. No-op when the queue is disabled or the timeout is non-positive.
  */
 export async function scheduleGroupMemberTimeout(
-  svc: AgentRuntimeService,
+  deps: GroupMemberDeps,
   params: GroupMemberTimeoutParams,
   delayMs: number,
 ): Promise<void> {
-  if (!svc.queueService || !(delayMs > 0)) return;
+  if (!deps.queueService || !(delayMs > 0)) return;
   try {
-    await svc.queueService.scheduleMessage({
+    await deps.queueService.scheduleMessage({
       context: undefined,
       delay: delayMs,
-      endpoint: `${svc.baseURL}/run`,
+      endpoint: `${deps.baseURL}/run`,
       // Keyed on the member op so the /run worker can resolve userId from its
       // metadata, same trust chain as every other scheduled step.
       operationId: params.memberOperationId,
@@ -368,10 +388,10 @@ export async function scheduleGroupMemberTimeout(
  * CAS-guarded resume).
  */
 export async function handleGroupMemberTimeout(
-  svc: AgentRuntimeService,
+  deps: GroupMemberDeps,
   params: GroupMemberTimeoutParams,
 ): Promise<AgentExecutionResult> {
-  const state = await svc.coordinator.loadAgentState(params.memberOperationId);
+  const state = await deps.coordinator.loadAgentState(params.memberOperationId);
   const status = state?.status as string | undefined;
   if (!state || status === 'done' || status === 'error' || status === 'interrupted') {
     log(
@@ -387,9 +407,9 @@ export async function handleGroupMemberTimeout(
     params.memberOperationId,
     params.parentOperationId,
   );
-  await svc.interruptOperation(params.memberOperationId);
+  await deps.interruptOperation(params.memberOperationId);
 
-  const resumed = await svc.completeGroupActionMember({
+  const resumed = await deps.completeGroupActionMember({
     anchorMessageId: params.anchorMessageId,
     expectedMembers: params.expectedMembers,
     finalState: state,

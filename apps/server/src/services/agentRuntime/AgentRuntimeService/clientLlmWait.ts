@@ -23,10 +23,29 @@ import {
 } from '@/server/modules/AgentRuntime/llmRelay/errors';
 import { CLIENT_LLM_WAIT_CAPABILITY } from '@/server/modules/AgentRuntime/llmRelay/protocol';
 
-import type { AgentRuntimeService } from '.';
 import { CLIENT_WAIT_ROW_WRITE_ATTEMPTS } from './constants';
+import type { AgentRuntimeServiceContext } from './types';
 
 const log = debug('lobe-server:agent-runtime-service');
+
+/** What this module reads off the service. */
+export type ClientLlmWaitDeps = Pick<
+  AgentRuntimeServiceContext,
+  | 'agentOperationModel'
+  | 'baseURL'
+  | 'completionLifecycle'
+  | 'coordinator'
+  | 'endExpiredClientLlmWait'
+  | 'expireClientLlmWait'
+  | 'finishClientLlmWaitExpiry'
+  | 'messageModel'
+  | 'queueService'
+  | 'restoreClientLlmWait'
+  | 'revertClientWaitResumeWithRetry'
+  | 'traceRecorder'
+  | 'updateAssistantRowWithRetry'
+  | 'userId'
+>;
 
 /**
  * Park a step that failed because no client could run its LLM call — the
@@ -38,7 +57,7 @@ const log = debug('lobe-server:agent-runtime-service');
  * park (no queue) — the step then fails as before.
  */
 export async function parkForClientLlm(
-  svc: AgentRuntimeService,
+  deps: ClientLlmWaitDeps,
   operationId: string,
   errorState: AgentState,
   context: AgentRuntimeContext | undefined,
@@ -46,7 +65,7 @@ export async function parkForClientLlm(
   stepStartState?: AgentState,
 ): Promise<AgentState | undefined> {
   const reason = getClientLlmWaitableReason(errorState.error);
-  if (!reason || !svc.queueService) return;
+  if (!reason || !deps.queueService) return;
 
   // A client that started the run but predates the wait takes the parked
   // call's error as the run's end and settles it locally, while the row
@@ -67,7 +86,7 @@ export async function parkForClientLlm(
   let assistantMessage: { id: string; parentId?: string | null } | undefined;
   if (topicId) {
     try {
-      const row = await svc.messageModel.findLatestAssistantByOperationId({
+      const row = await deps.messageModel.findLatestAssistantByOperationId({
         operationId,
         topicId,
       });
@@ -113,7 +132,7 @@ export async function parkForClientLlm(
   // `waiting_for_client` before anything advertises the wait. If it cannot,
   // fail the step as before rather than park a run nothing could settle.
   try {
-    const recorded = await svc.agentOperationModel.recordCompletion(operationId, {
+    const recorded = await deps.agentOperationModel.recordCompletion(operationId, {
       completionReason: 'waiting_for_client',
       status: 'waiting_for_client',
     });
@@ -131,7 +150,7 @@ export async function parkForClientLlm(
   // already be in place, or it no-ops — or its terminal error is overwritten
   // by the notice — and the run waits with nothing left to end it.
   try {
-    await svc.coordinator.saveAgentState(operationId, parkedState);
+    await deps.coordinator.saveAgentState(operationId, parkedState);
   } catch (error) {
     log('[%s] Could not save the parked state, failing instead: %O', operationId, error);
     return;
@@ -140,15 +159,15 @@ export async function parkForClientLlm(
   // The notice is the only thing a client that cannot run the provider sees
   // (its relay error handler re-reads the server-owned row), so a transient
   // failure is retried rather than left as a silent park.
-  await svc.updateAssistantRowWithRetry(operationId, assistantMessage.id, {
+  await deps.updateAssistantRowWithRetry(operationId, assistantMessage.id, {
     error: buildClientLlmWaitMessageError(wait),
   });
 
   try {
-    await svc.queueService.scheduleMessage({
+    await deps.queueService.scheduleMessage({
       context: undefined,
       delay: Math.max(Date.parse(wait.expiresAt) - Date.now(), 0),
-      endpoint: `${svc.baseURL}/run`,
+      endpoint: `${deps.baseURL}/run`,
       operationId,
       payload: { clientLlmWaitExpired: wait.parkedAt },
       priority: 'normal',
@@ -178,16 +197,16 @@ export async function parkForClientLlm(
  * a click) race on the durable row and one wins.
  */
 export async function resumeFromClientLlmWait(
-  svc: AgentRuntimeService,
+  deps: ClientLlmWaitDeps,
   params: {
     llmExecutor?: AgentRunLlmExecutor;
     operationId: string;
   },
 ): Promise<ResumeClientLlmWaitResult> {
   const { llmExecutor, operationId } = params;
-  const state = await svc.coordinator.loadAgentState(operationId);
+  const state = await deps.coordinator.loadAgentState(operationId);
   if (!state || state.status !== 'waiting_for_client') return { resumed: false };
-  if (state.origin?.userId && state.origin.userId !== svc.userId) return { resumed: false };
+  if (state.origin?.userId && state.origin.userId !== deps.userId) return { resumed: false };
 
   // Past its deadline the wait is over even if the expiry is still in flight
   // (QStash can deliver late): leave the run to it rather than run the call
@@ -195,7 +214,7 @@ export async function resumeFromClientLlmWait(
   const expiresAt = Date.parse(state.clientLlmWait?.expiresAt ?? '');
   if (Number.isFinite(expiresAt) && Date.now() >= expiresAt) return { resumed: false };
 
-  const won = await svc.agentOperationModel.tryResumeFromClientWait(operationId);
+  const won = await deps.agentOperationModel.tryResumeFromClientWait(operationId);
   if (!won) return { resumed: false };
 
   const wait = state.clientLlmWait;
@@ -203,7 +222,7 @@ export async function resumeFromClientLlmWait(
   // goes back to its wait: a `running` row with nothing queued is one that no
   // resume, expiry or Stop can reach.
   try {
-    await svc.coordinator.saveAgentState(operationId, {
+    await deps.coordinator.saveAgentState(operationId, {
       ...state,
       host: { ...state.host, ...(llmExecutor && { llmExecutor }) },
       lastModified: new Date().toISOString(),
@@ -213,7 +232,7 @@ export async function resumeFromClientLlmWait(
     // and the save above may have overwritten its `interrupted` state. It
     // marks the interrupt before saving, so any such Stop shows here; a later
     // one saves after this and the queued step stops on it.
-    if (await svc.coordinator.isInterrupted(operationId)) {
+    if (await deps.coordinator.isInterrupted(operationId)) {
       log('[%s] Stopped while being resumed; settling as interrupted', operationId);
       const interruptedState: AgentState = {
         ...state,
@@ -221,25 +240,25 @@ export async function resumeFromClientLlmWait(
         lastModified: new Date().toISOString(),
         status: 'interrupted',
       };
-      await svc.coordinator.saveAgentState(operationId, interruptedState);
-      if (await svc.agentOperationModel.settleRunning(operationId, 'interrupted')) {
-        await svc.completionLifecycle.dispatchHooks(operationId, interruptedState, 'interrupted');
+      await deps.coordinator.saveAgentState(operationId, interruptedState);
+      if (await deps.agentOperationModel.settleRunning(operationId, 'interrupted')) {
+        await deps.completionLifecycle.dispatchHooks(operationId, interruptedState, 'interrupted');
       }
       return { resumed: false };
     }
 
     if (wait?.assistantMessageId) {
       try {
-        await svc.messageModel.update(wait.assistantMessageId, { error: null });
+        await deps.messageModel.update(wait.assistantMessageId, { error: null });
       } catch (error) {
         log('[%s] Failed to clear the waiting notice: %O', operationId, error);
       }
     }
 
-    await svc.queueService?.scheduleMessage({
+    await deps.queueService?.scheduleMessage({
       context: undefined,
       delay: 100,
-      endpoint: `${svc.baseURL}/run`,
+      endpoint: `${deps.baseURL}/run`,
       operationId,
       payload: { resumeClientLlm: true },
       priority: 'high',
@@ -247,7 +266,7 @@ export async function resumeFromClientLlmWait(
     });
   } catch (error) {
     log('[%s] Could not hand the run to a client, staying parked: %O', operationId, error);
-    await svc.restoreClientLlmWait(operationId, state);
+    await deps.restoreClientLlmWait(operationId, state);
     throw error;
   }
 
@@ -270,22 +289,22 @@ export async function resumeFromClientLlmWait(
  * one failure does not skip the rest.
  */
 export async function restoreClientLlmWait(
-  svc: AgentRuntimeService,
+  deps: ClientLlmWaitDeps,
   operationId: string,
   parkedState: AgentState,
 ) {
   const wait = parkedState.clientLlmWait;
-  const current = await svc.coordinator.loadAgentState(operationId).catch(() => null);
+  const current = await deps.coordinator.loadAgentState(operationId).catch(() => null);
   const stillParked =
     current?.status === 'waiting_for_client' && current.clientLlmWait?.parkedAt === wait?.parkedAt;
 
   if (!stillParked) {
     if (current?.status === 'interrupted') {
-      const settled = await svc.agentOperationModel
+      const settled = await deps.agentOperationModel
         .settleRunning(operationId, 'interrupted')
         .catch(() => false);
       if (settled) {
-        await svc.completionLifecycle
+        await deps.completionLifecycle
           .dispatchHooks(operationId, current, 'interrupted')
           .catch((error) => log('[%s] Failed to finish the stop: %O', operationId, error));
       }
@@ -296,15 +315,15 @@ export async function restoreClientLlmWait(
   // The visible wait is only worth restoring once the row is parked again:
   // with the row stuck `running`, no resume, expiry or Stop can reach it, and
   // the abandoned-run watchdog is what settles it.
-  if (!(await svc.revertClientWaitResumeWithRetry(operationId))) {
+  if (!(await deps.revertClientWaitResumeWithRetry(operationId))) {
     log('[%s] Could not re-park the durable row; leaving it to the watchdog', operationId);
     return;
   }
-  await svc.coordinator
+  await deps.coordinator
     .saveAgentState(operationId, parkedState)
     .catch((error) => log('[%s] Failed to restore the parked state: %O', operationId, error));
   if (wait?.assistantMessageId) {
-    await svc.messageModel
+    await deps.messageModel
       .update(wait.assistantMessageId, { error: buildClientLlmWaitMessageError(wait) })
       .catch((error) => log('[%s] Failed to restore the waiting notice: %O', operationId, error));
   }
@@ -312,16 +331,16 @@ export async function restoreClientLlmWait(
 
   // Duplicate expiries are no-ops (they match on `parkedAt` and the row CAS).
   if (Date.now() >= Date.parse(wait.expiresAt)) {
-    await svc
+    await deps
       .expireClientLlmWait(operationId, wait.parkedAt)
       .catch((error) => log('[%s] Failed to expire the overdue wait: %O', operationId, error));
     return;
   }
-  await svc.queueService
+  await deps.queueService
     ?.scheduleMessage({
       context: undefined,
       delay: Math.max(Date.parse(wait.expiresAt) - Date.now(), 0),
-      endpoint: `${svc.baseURL}/run`,
+      endpoint: `${deps.baseURL}/run`,
       operationId,
       payload: { clientLlmWaitExpired: wait.parkedAt },
       priority: 'normal',
@@ -332,7 +351,7 @@ export async function restoreClientLlmWait(
 
 /** Put the claimed row back to `waiting_for_client`, riding out a transient DB error. */
 export async function revertClientWaitResumeWithRetry(
-  svc: AgentRuntimeService,
+  deps: ClientLlmWaitDeps,
   operationId: string,
 ): Promise<boolean> {
   for (const delayMs of CLIENT_WAIT_REVERT_RETRY_DELAYS_MS) {
@@ -340,7 +359,7 @@ export async function revertClientWaitResumeWithRetry(
     try {
       // `false` means the row is no longer the claimed `running` one, so it
       // is not ours to put back.
-      return await svc.agentOperationModel.revertClientWaitResume(operationId);
+      return await deps.agentOperationModel.revertClientWaitResume(operationId);
     } catch (error) {
       log('[%s] Failed to re-park the durable row: %O', operationId, error);
     }
@@ -354,14 +373,14 @@ export async function revertClientWaitResumeWithRetry(
  * conversation lives so it can subscribe to the stream before resuming.
  */
 export async function listClientLlmWaits(
-  svc: AgentRuntimeService,
+  deps: ClientLlmWaitDeps,
   providers?: string[],
 ): Promise<ClientLlmWaitItem[]> {
-  const rows = await svc.agentOperationModel.listWaitingForClient({ providers });
+  const rows = await deps.agentOperationModel.listWaitingForClient({ providers });
   const items = await pMap(
     rows,
     async (row): Promise<ClientLlmWaitItem | undefined> => {
-      const state = await svc.coordinator.loadAgentState(row.id).catch(() => null);
+      const state = await deps.coordinator.loadAgentState(row.id).catch(() => null);
       const wait = state?.clientLlmWait;
       if (state?.status !== 'waiting_for_client' || !wait) return;
       return {
@@ -385,18 +404,18 @@ export async function listClientLlmWaits(
  * row CAS keeps a racing resume from being killed.
  */
 export async function expireClientLlmWait(
-  svc: AgentRuntimeService,
+  deps: ClientLlmWaitDeps,
   operationId: string,
   parkedAt: string,
 ): Promise<boolean> {
-  const state = await svc.coordinator.loadAgentState(operationId);
+  const state = await deps.coordinator.loadAgentState(operationId);
 
   // A redelivery after this expiry already ended the run but its lifecycle
   // delivery threw (a critical hook asks QStash to retry): deliver it again,
   // like a retried terminal step does.
   if (state?.status === 'error' && isClientLlmWaitExpiryOf(state, parkedAt)) {
     log('[%s] Redelivering the lifecycle of an expired client wait', operationId);
-    await svc.finishClientLlmWaitExpiry(operationId, state);
+    await deps.finishClientLlmWaitExpiry(operationId, state);
     return true;
   }
 
@@ -409,14 +428,14 @@ export async function expireClientLlmWait(
   // delivery of this expiry settled it and failed before finishing (resumes,
   // Stop and failing steps all move the Redis state off this park first), so
   // finish it now — QStash retries the delivery that threw.
-  const settled = await svc.agentOperationModel.settleClientWait(operationId);
+  const settled = await deps.agentOperationModel.settleClientWait(operationId);
   if (!settled) {
-    const row = await svc.agentOperationModel.findById(operationId);
+    const row = await deps.agentOperationModel.findById(operationId);
     if (row?.status !== 'error') return false;
     log('[%s] Finishing a client wait expiry that settled but did not finish', operationId);
   }
 
-  await svc.endExpiredClientLlmWait(operationId, state, state.clientLlmWait);
+  await deps.endExpiredClientLlmWait(operationId, state, state.clientLlmWait);
 
   log('[%s] waiting_for_client expired (parked at %s)', operationId, parkedAt);
   return true;
@@ -428,7 +447,7 @@ export async function expireClientLlmWait(
  * lifecycle. `state` is the run as it was parked on `wait`.
  */
 export async function endExpiredClientLlmWait(
-  svc: AgentRuntimeService,
+  deps: ClientLlmWaitDeps,
   operationId: string,
   state: AgentState,
   wait: AgentRunClientLlmWait,
@@ -455,15 +474,15 @@ export async function endExpiredClientLlmWait(
   // dead waiting notice until reload.
   const assistantMessageId = wait.assistantMessageId;
   if (assistantMessageId && finalState.error) {
-    const message = svc.completionLifecycle.extractErrorMessage(finalState.error);
+    const message = deps.completionLifecycle.extractErrorMessage(finalState.error);
     const error = { ...finalState.error, body: finalState.error.body ?? { message }, message };
-    await svc.updateAssistantRowWithRetry(operationId, assistantMessageId, { error });
+    await deps.updateAssistantRowWithRetry(operationId, assistantMessageId, { error });
   }
 
   // Ends the stream (`agent_runtime_end`) and finalizes the run like any failure.
-  await svc.coordinator.saveAgentState(operationId, finalState);
-  await svc.completionLifecycle.emitSignalEvents(operationId, finalState, 'error');
-  await svc.finishClientLlmWaitExpiry(operationId, finalState);
+  await deps.coordinator.saveAgentState(operationId, finalState);
+  await deps.completionLifecycle.emitSignalEvents(operationId, finalState, 'error');
+  await deps.finishClientLlmWaitExpiry(operationId, finalState);
 }
 
 /**
@@ -471,14 +490,14 @@ export async function endExpiredClientLlmWait(
  * transient failure: what a connected tab shows next is read from this row.
  */
 export async function updateAssistantRowWithRetry(
-  svc: AgentRuntimeService,
+  deps: ClientLlmWaitDeps,
   operationId: string,
   messageId: string,
   value: Parameters<MessageModel['update']>[1],
 ) {
   for (let attempt = 1; attempt <= CLIENT_WAIT_ROW_WRITE_ATTEMPTS; attempt += 1) {
     try {
-      await svc.messageModel.update(messageId, value);
+      await deps.messageModel.update(messageId, value);
       return;
     } catch (error) {
       log('[%s] Failed to write the assistant row (%d): %O', operationId, attempt, error);
@@ -491,14 +510,14 @@ export async function updateAssistantRowWithRetry(
 
 /** Lifecycle delivery of an expired client wait; safe to repeat on redelivery. */
 export async function finishClientLlmWaitExpiry(
-  svc: AgentRuntimeService,
+  deps: ClientLlmWaitDeps,
   operationId: string,
   finalState: AgentState,
 ) {
   const provider = (finalState.error as { body?: { provider?: string } } | undefined)?.body
     ?.provider;
-  await svc.completionLifecycle.dispatchHooks(operationId, finalState, 'error');
-  await svc.traceRecorder.finalize(operationId, {
+  await deps.completionLifecycle.dispatchHooks(operationId, finalState, 'error');
+  await deps.traceRecorder.finalize(operationId, {
     completionReason: 'error',
     error: {
       message: `No LobeHub client picked up the ${provider ?? 'local model'} call in time`,

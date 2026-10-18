@@ -8,12 +8,24 @@ import { stepChangedCredentials } from '../../credentialFacts';
 import { logToolCallPc } from '../../formalObservation';
 import { buildProjectedMessagePatch } from '../../messagePatch';
 import { buildStepPresentation, formatTokenCount } from '../../stepPresentation';
-import type { AgentRuntimeService } from '..';
 import { INTERVENTION_LIFECYCLE_CHECKPOINT_KEY } from '../constants';
-import type { InterventionLifecycleCheckpoint } from '../types';
+import type { AgentRuntimeServiceContext, InterventionLifecycleCheckpoint } from '../types';
 import type { PreparedStepInput } from './prepare';
 
 const log = debug('lobe-server:agent-runtime-service');
+
+/** What this module reads off the service. */
+export type StepRunStepDeps = Pick<
+  AgentRuntimeServiceContext,
+  | 'completionLifecycle'
+  | 'coordinator'
+  | 'determineCompletionReason'
+  | 'parkForClientLlm'
+  | 'publishSubAgentProgress'
+  | 'queryUiMessages'
+  | 'shouldContinueExecution'
+  | 'streamManager'
+>;
 
 export type StepRunResult = Awaited<ReturnType<AgentRuntime['step']>>;
 export type StepPresentation = ReturnType<typeof buildStepPresentation>['presentation'];
@@ -24,7 +36,7 @@ export type StepPresentation = ReturnType<typeof buildStepPresentation>['present
  * its LLM call.
  */
 export async function runAndReconcileStep(
-  svc: AgentRuntimeService,
+  deps: StepRunStepDeps,
   {
     currentContext,
     currentState,
@@ -65,10 +77,10 @@ export async function runAndReconcileStep(
   // sentinel, but fall back to the state once at the step boundary while
   // old workers that only write `status: 'interrupted'` may still be
   // running during a rolling deployment.
-  const sentinelInterrupted = await svc.coordinator.isInterrupted(operationId);
+  const sentinelInterrupted = await deps.coordinator.isInterrupted(operationId);
   const wasInterrupted = sentinelInterrupted
     ? true
-    : (await svc.coordinator.loadAgentState(operationId))?.status === 'interrupted';
+    : (await deps.coordinator.loadAgentState(operationId))?.status === 'interrupted';
   logToolCallPc(operationId, stepIndex, 'post.latest_state_loaded', () => ({
     interrupted: wasInterrupted,
   }));
@@ -108,7 +120,7 @@ export async function runAndReconcileStep(
     // No client could run the step's LLM call: park for one instead of
     // failing (U4c). The parked state is what the step started from, so
     // a resume replays the same call.
-    const parkedState = await svc.parkForClientLlm(
+    const parkedState = await deps.parkForClientLlm(
       operationId,
       stepResult.newState,
       currentContext,
@@ -130,7 +142,7 @@ export async function runAndReconcileStep(
  * presentation.
  */
 export async function saveAndPublishStep(
-  svc: AgentRuntimeService,
+  deps: StepRunStepDeps,
   {
     gatewayMessagePatchEnabled,
     operationId,
@@ -145,7 +157,7 @@ export async function saveAndPublishStep(
     stepIndex: number;
     stepResult: StepRunResult;
     stepStartUiMessages: Awaited<
-      ReturnType<AgentRuntimeService['queryStepEntryMessages']>
+      ReturnType<AgentRuntimeServiceContext['queryStepEntryMessages']>
     >['uiMessages'];
   },
 ): Promise<{
@@ -156,7 +168,7 @@ export async function saveAndPublishStep(
 }> {
   // Decide whether to schedule next step (hoisted above the save: it also
   // gates the pre-snapshot file-Work registration below)
-  const shouldContinue = svc.shouldContinueExecution(stepResult.newState, stepResult.nextContext);
+  const shouldContinue = deps.shouldContinueExecution(stepResult.newState, stepResult.nextContext);
 
   // Register entity-file Works BEFORE the terminal save: `saveStepResult`
   // publishes `agent_runtime_end`, whose `uiMessages` snapshot the client
@@ -167,7 +179,7 @@ export async function saveAndPublishStep(
   // loading covers this export window by design. Idempotent — the
   // dispatchHooks backstop below no-ops via the state marker.
   if (!shouldContinue) {
-    const preSaveReason = svc.determineCompletionReason(stepResult.newState);
+    const preSaveReason = deps.determineCompletionReason(stepResult.newState);
     if (preSaveReason === 'waiting_for_human') {
       stepResult.newState.metadata = {
         ...stepResult.newState.metadata,
@@ -184,7 +196,7 @@ export async function saveAndPublishStep(
     // history and performs the terminal scan after the decision runs;
     // registering here would freeze pre-approval content too early.
     if (isSuccessLikeCompletionReason(preSaveReason)) {
-      await svc.completionLifecycle.registerFileWorks(operationId, stepResult.newState);
+      await deps.completionLifecycle.registerFileWorks(operationId, stepResult.newState);
       logToolCallPc(operationId, stepIndex, 'post.file_works_registered', () => ({}));
     }
   }
@@ -195,7 +207,7 @@ export async function saveAndPublishStep(
   // agent_runtime_end immediately, and the client must apply the patch
   // before completing the run.
   if (gatewayMessagePatchEnabled && stepStartUiMessages) {
-    const settledUiMessages = await svc.queryUiMessages(stepResult.newState, {
+    const settledUiMessages = await deps.queryUiMessages(stepResult.newState, {
       skipWorks: shouldContinue,
     });
     if (settledUiMessages) {
@@ -203,7 +215,7 @@ export async function saveAndPublishStep(
       // protocol 2, which renders tool view models and can fetch a stored
       // payload back. The model-facing lists are read elsewhere, straight
       // off `MessageModel`, and stay whole.
-      await svc.streamManager.publishStreamEvent(operationId, {
+      await deps.streamManager.publishStreamEvent(operationId, {
         data: buildProjectedMessagePatch(stepStartUiMessages, settledUiMessages, stepIndex + 1),
         stepIndex,
         type: 'message_patch',
@@ -221,7 +233,7 @@ export async function saveAndPublishStep(
   }
 
   // Save state, coordinator will handle event sending automatically
-  await svc.coordinator.saveStepResult(operationId, {
+  await deps.coordinator.saveStepResult(operationId, {
     ...stepResult,
     executionTime: Date.now() - startAt,
     stepIndex, // placeholder
@@ -235,7 +247,7 @@ export async function saveAndPublishStep(
   const nextStepScheduled = false;
 
   // Publish step complete event
-  await svc.streamManager.publishStreamEvent(operationId, {
+  await deps.streamManager.publishStreamEvent(operationId, {
     data: {
       ...(stepResult.newState.host?.includeFinalState === true && {
         finalState: stepResult.newState,
@@ -248,7 +260,7 @@ export async function saveAndPublishStep(
   });
   logToolCallPc(operationId, stepIndex, 'post.step_complete_published', () => ({}));
 
-  await svc.publishSubAgentProgress(stepResult.newState, stepIndex);
+  await deps.publishSubAgentProgress(stepResult.newState, stepIndex);
 
   // Build enhanced step completion log & presentation data
   const { presentation: stepPresentationData, summary: stepSummary } = buildStepPresentation(

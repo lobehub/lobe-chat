@@ -14,18 +14,34 @@ import {
   type StartExecutionParams,
   type StartExecutionResult,
 } from '../types';
-import type { AgentRuntimeService } from '.';
 import {
   DEAD_OPERATION_LEASE_MS,
   DURABLE_LEASE_HEARTBEAT_EVERY_TICKS,
   STEP_LOCK_HEARTBEAT_MS,
   STEP_LOCK_TTL_SECONDS,
 } from './constants';
+import type { AgentRuntimeServiceContext } from './types';
 
 const log = debug('lobe-server:agent-runtime-service');
 
+/** What this module reads off the service. */
+export type OperationControlDeps = Pick<
+  AgentRuntimeServiceContext,
+  | 'agentOperationModel'
+  | 'baseURL'
+  | 'completionLifecycle'
+  | 'coordinator'
+  | 'endExpiredClientLlmWait'
+  | 'messageModel'
+  | 'queueService'
+  | 'streamManager'
+  | 'traceRecorder'
+  | 'userId'
+  | 'workspaceId'
+>;
+
 export function startStepLockHeartbeat(
-  svc: AgentRuntimeService,
+  deps: OperationControlDeps,
   operationId: string,
   stepIndex: number,
   ownerId: string,
@@ -36,9 +52,9 @@ export function startStepLockHeartbeat(
     const refreshDurableLease = heartbeatTick % DURABLE_LEASE_HEARTBEAT_EVERY_TICKS === 0;
 
     Promise.all([
-      svc.coordinator.refreshStepLock(operationId, stepIndex, STEP_LOCK_TTL_SECONDS, ownerId),
+      deps.coordinator.refreshStepLock(operationId, stepIndex, STEP_LOCK_TTL_SECONDS, ownerId),
       refreshDurableLease
-        ? svc.agentOperationModel.touchRunning(operationId)
+        ? deps.agentOperationModel.touchRunning(operationId)
         : Promise.resolve(true),
     ])
       .then(([refreshed, leaseRefreshed]) => {
@@ -73,10 +89,10 @@ export function startStepLockHeartbeat(
  * set), even though it may still be finishing its current step.
  */
 export async function isOperationInterrupted(
-  svc: AgentRuntimeService,
+  deps: OperationControlDeps,
   operationId: string,
 ): Promise<boolean> {
-  return svc.coordinator.isInterrupted(operationId);
+  return deps.coordinator.isInterrupted(operationId);
 }
 
 /**
@@ -88,15 +104,15 @@ export async function isOperationInterrupted(
  * false if missing runtime state prevents confirming that the operation has stopped.
  */
 export async function interruptOperation(
-  svc: AgentRuntimeService,
+  deps: OperationControlDeps,
   operationId: string,
 ): Promise<boolean> {
-  const state = await svc.coordinator.loadAgentState(operationId);
+  const state = await deps.coordinator.loadAgentState(operationId);
   if (!state) {
     // Runtime state can expire before the task-topic completion callback lands.
     // Absence alone is not proof of exit (e.g. another in-memory worker owns
     // the run). Only an owned, durably terminal operation can acknowledge it.
-    const operation = await svc.agentOperationModel.findById(operationId);
+    const operation = await deps.agentOperationModel.findById(operationId);
     if (!operation) return false;
     if (['done', 'error', 'interrupted', 'abandoned'].includes(operation.status)) return true;
 
@@ -111,7 +127,7 @@ export async function interruptOperation(
       operation.updatedAt &&
       new Date(operation.updatedAt).getTime() < Date.now() - DEAD_OPERATION_LEASE_MS
     ) {
-      return svc.agentOperationModel.settleStaleRunning(
+      return deps.agentOperationModel.settleStaleRunning(
         operationId,
         new Date(Date.now() - DEAD_OPERATION_LEASE_MS),
       );
@@ -134,7 +150,7 @@ export async function interruptOperation(
   // two never diverge. A sentinel that lands without the state save
   // (crash between the writes) only stops the op earlier than the record
   // shows — the step-boundary check then persists the interrupted state.
-  await svc.coordinator.markInterrupted(operationId);
+  await deps.coordinator.markInterrupted(operationId);
 
   const parkedWait = state.status === 'waiting_for_client' ? state.clientLlmWait : undefined;
   const interruptedState: AgentState = {
@@ -143,27 +159,27 @@ export async function interruptOperation(
     lastModified: new Date().toISOString(),
     status: 'interrupted',
   };
-  await svc.coordinator.saveAgentState(operationId, interruptedState);
+  await deps.coordinator.saveAgentState(operationId, interruptedState);
 
   // A run parked for a client has no step that would reach a boundary and
   // settle it, so settle it here — otherwise the row and the topic stay live
   // until the wait expires. Its waiting card goes too: nothing can continue it.
   if (state.status === 'waiting_for_client') {
     if (parkedWait?.assistantMessageId) {
-      await svc.messageModel
+      await deps.messageModel
         .update(parkedWait.assistantMessageId, { error: null })
         .catch((error) => log('[%s] Failed to clear the waiting notice: %O', operationId, error));
     }
-    if (await svc.agentOperationModel.settleClientWait(operationId, 'interrupted')) {
-      await svc.completionLifecycle.dispatchHooks(operationId, interruptedState, 'interrupted');
+    if (await deps.agentOperationModel.settleClientWait(operationId, 'interrupted')) {
+      await deps.completionLifecycle.dispatchHooks(operationId, interruptedState, 'interrupted');
     } else if (parkedWait) {
       // The wait's expiry claimed the row first and has not finished (its
       // Redis state still read this park). Its retry would find the state
       // this Stop just wrote and give up, so finish it here as the row says.
-      const row = await svc.agentOperationModel.findById(operationId).catch(() => undefined);
+      const row = await deps.agentOperationModel.findById(operationId).catch(() => undefined);
       if (row?.status === 'error') {
         log('[%s] Stop lost to the wait expiry; finishing the expiry', operationId);
-        await svc.endExpiredClientLlmWait(operationId, state, parkedWait);
+        await deps.endExpiredClientLlmWait(operationId, state, parkedWait);
       }
     }
   }
@@ -178,11 +194,11 @@ export async function interruptOperation(
  * then keeps the pushed snapshot every client can render.
  */
 export async function acceptsFileWorks(
-  svc: AgentRuntimeService,
+  deps: OperationControlDeps,
   operationId: string,
 ): Promise<boolean> {
   try {
-    const state = await svc.coordinator.loadAgentState(operationId);
+    const state = await deps.coordinator.loadAgentState(operationId);
     return state?.host?.acceptsFileWorks === true;
   } catch (error) {
     log('[%s] Failed to read the file Works declaration: %O', operationId, error);
@@ -196,10 +212,10 @@ export async function acceptsFileWorks(
  * a continuation then keeps the verbatim terminal every client understands.
  */
 export async function acceptsMemberRuntimeEnd(
-  svc: AgentRuntimeService,
+  deps: OperationControlDeps,
   operationId: string,
 ): Promise<boolean> {
-  const metadata = await svc.coordinator.getOperationMetadata(operationId).catch(() => null);
+  const metadata = await deps.coordinator.getOperationMetadata(operationId).catch(() => null);
   return metadata?.acceptsMemberRuntimeEnd === true;
 }
 
@@ -211,14 +227,14 @@ export async function acceptsMemberRuntimeEnd(
  * @returns true when the flag was written
  */
 export async function setQueuedMessages(
-  svc: AgentRuntimeService,
+  deps: OperationControlDeps,
   operationId: string,
   pending: boolean,
 ): Promise<boolean> {
-  const metadata = await svc.coordinator.getOperationMetadata(operationId);
-  if (!metadata || metadata.userId !== svc.userId) return false;
+  const metadata = await deps.coordinator.getOperationMetadata(operationId);
+  if (!metadata || metadata.userId !== deps.userId) return false;
 
-  await svc.coordinator.setQueuedMessages(operationId, pending);
+  await deps.coordinator.setQueuedMessages(operationId, pending);
   log('[%s] Queued messages flag set to %s', operationId, pending);
   return true;
 }
@@ -229,12 +245,12 @@ export async function setQueuedMessages(
  * before the flag existed, instead of failing the step.
  */
 export async function readQueuedMessagesFlag(
-  svc: AgentRuntimeService,
+  deps: OperationControlDeps,
   operationId: string,
   stepIndex: number,
 ): Promise<boolean> {
   try {
-    return await svc.coordinator.hasQueuedMessages(operationId);
+    return await deps.coordinator.hasQueuedMessages(operationId);
   } catch (error) {
     log('[%s][%d] Queued messages flag read failed: %O', operationId, stepIndex, error);
     return false;
@@ -243,18 +259,18 @@ export async function readQueuedMessagesFlag(
 
 /** Review out-of-band results before any subsequent history read can expose them. */
 export async function controlCompletedToolResult(
-  svc: AgentRuntimeService,
+  deps: OperationControlDeps,
   input: DeferredToolResultControlInput,
 ) {
   const controlled = await controlDeferredToolResult(
     {
       dispatcher: hookDispatcher,
-      loadState: (operationId) => svc.coordinator.loadAgentState(operationId),
+      loadState: (operationId) => deps.coordinator.loadAgentState(operationId),
       loadDurableHooks: (operationId) =>
-        loadDurableToolResultHooks(svc.agentOperationModel, operationId),
-      messageModel: svc.messageModel,
-      userId: svc.userId,
-      workspaceId: svc.workspaceId,
+        loadDurableToolResultHooks(deps.agentOperationModel, operationId),
+      messageModel: deps.messageModel,
+      userId: deps.userId,
+      workspaceId: deps.workspaceId,
     },
     input,
   );
@@ -267,10 +283,10 @@ export async function controlCompletedToolResult(
  * the remaining steps resume in a fresh invocation.
  */
 export async function scheduleContinuation(
-  svc: AgentRuntimeService,
+  deps: OperationControlDeps,
   continuation: AgentStepContinuation,
 ): Promise<void> {
-  if (!svc.queueService) {
+  if (!deps.queueService) {
     throw new Error(
       `Cannot schedule continuation for ${continuation.operationId}: no queue service`,
     );
@@ -279,12 +295,12 @@ export async function scheduleContinuation(
   // The steps this invocation inlined are still only in memory — the
   // invocation that picks the run up reads the partial from the store, and
   // the gateway pushes it issued have nothing else to carry them.
-  await svc.traceRecorder.flushPartial();
-  await svc.streamManager.drainPushes?.(continuation.operationId);
+  await deps.traceRecorder.flushPartial();
+  await deps.streamManager.drainPushes?.(continuation.operationId);
 
-  await svc.queueService.scheduleMessage({
+  await deps.queueService.scheduleMessage({
     ...continuation,
-    endpoint: `${svc.baseURL}/run`,
+    endpoint: `${deps.baseURL}/run`,
   });
 
   log('[%s] Handed step %d back to the queue', continuation.operationId, continuation.stepIndex);
@@ -295,18 +311,18 @@ export async function scheduleContinuation(
  * so it is a no-op when this invocation never held the lock.
  */
 export async function releaseOperationLock(
-  svc: AgentRuntimeService,
+  deps: OperationControlDeps,
   operationId: string,
   stepLockOwner: string,
 ): Promise<void> {
-  await svc.coordinator.releaseStepLock(operationId, 0, stepLockOwner);
+  await deps.coordinator.releaseStepLock(operationId, 0, stepLockOwner);
 }
 
 /**
  * Get operation status
  */
 export async function getOperationStatus(
-  svc: AgentRuntimeService,
+  deps: OperationControlDeps,
   params: {
     historyLimit?: number;
     includeHistory?: boolean;
@@ -320,8 +336,8 @@ export async function getOperationStatus(
 
     // Get current state and metadata
     const [currentState, operationMetadata] = await Promise.all([
-      svc.coordinator.loadAgentState(operationId),
-      svc.coordinator.getOperationMetadata(operationId),
+      deps.coordinator.loadAgentState(operationId),
+      deps.coordinator.getOperationMetadata(operationId),
     ]);
 
     // Operation may have expired or does not exist, return null
@@ -334,7 +350,7 @@ export async function getOperationStatus(
     let executionHistory;
     if (includeHistory) {
       try {
-        executionHistory = await svc.coordinator.getExecutionHistory(operationId, historyLimit);
+        executionHistory = await deps.coordinator.getExecutionHistory(operationId, historyLimit);
       } catch (error) {
         log('Failed to load execution history: %O', error);
         executionHistory = [];
@@ -345,7 +361,7 @@ export async function getOperationStatus(
     let recentEvents;
     if (includeHistory) {
       try {
-        recentEvents = await svc.streamManager.getStreamHistory(operationId, 20);
+        recentEvents = await deps.streamManager.getStreamHistory(operationId, 20);
       } catch (error) {
         log('Failed to load recent events: %O', error);
         recentEvents = [];
@@ -400,7 +416,7 @@ export async function getOperationStatus(
  * Explicitly start operation execution
  */
 export async function startExecution(
-  svc: AgentRuntimeService,
+  deps: OperationControlDeps,
   params: StartExecutionParams,
 ): Promise<StartExecutionResult> {
   const { operationId, context, priority = 'normal', delay = 50 } = params;
@@ -409,13 +425,13 @@ export async function startExecution(
     log('Starting execution for operation %s', operationId);
 
     // Check if operation exists
-    const operationMetadata = await svc.coordinator.getOperationMetadata(operationId);
+    const operationMetadata = await deps.coordinator.getOperationMetadata(operationId);
     if (!operationMetadata) {
       throw new Error(`Operation ${operationId} not found`);
     }
 
     // Get current state
-    const currentState = await svc.coordinator.loadAgentState(operationId);
+    const currentState = await deps.coordinator.loadAgentState(operationId);
     if (!currentState) {
       throw new Error(`Agent state not found for operation ${operationId}`);
     }
@@ -458,7 +474,7 @@ export async function startExecution(
     }
 
     // Update operation status to running
-    await svc.coordinator.saveAgentState(operationId, {
+    await deps.coordinator.saveAgentState(operationId, {
       ...currentState,
       lastModified: new Date().toISOString(),
       status: 'running',
@@ -466,11 +482,11 @@ export async function startExecution(
 
     // Schedule execution (if queue service is available)
     let messageId: string | undefined;
-    if (svc.queueService) {
-      messageId = await svc.queueService.scheduleMessage({
+    if (deps.queueService) {
+      messageId = await deps.queueService.scheduleMessage({
         context: executionContext,
         delay,
-        endpoint: `${svc.baseURL}/run`,
+        endpoint: `${deps.baseURL}/run`,
         operationId,
         priority,
         stepIndex: currentState.stepCount || 0,

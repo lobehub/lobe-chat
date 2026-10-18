@@ -16,20 +16,37 @@ import { createWidgetDryRunAudit } from '@/server/services/widget/dryRunAudit';
 import { stateHasEntityFileEdits } from '@/server/services/workRegistration';
 
 import { hookDispatcher } from '../hooks';
-import type { AgentRuntimeService } from '.';
 import { EVAL_TOOL_FORWARDING_HOOK_ID } from './constants';
 import { createEvalToolForwardingHook } from './evalToolForwardingHook';
+import type { AgentRuntimeServiceContext } from './types';
 
 const log = debug('lobe-server:agent-runtime-service');
+
+/** What this module reads off the service. */
+export type RuntimeFactoryDeps = Pick<
+  AgentRuntimeServiceContext,
+  | 'agentFactory'
+  | 'completeGroupMemberBarrier'
+  | 'coordinator'
+  | 'delegate'
+  | 'executeStep'
+  | 'messageModel'
+  | 'queueService'
+  | 'serverDB'
+  | 'streamManager'
+  | 'toolExecutionService'
+  | 'userId'
+  | 'workspaceId'
+>;
 
 /**
  * Setup execution callback for LocalQueueServiceImpl
  * This breaks the circular dependency by using callback injection
  */
-export function setupLocalExecutionCallback(svc: AgentRuntimeService): void {
-  if (!svc.queueService) return;
+export function setupLocalExecutionCallback(deps: RuntimeFactoryDeps): void {
+  if (!deps.queueService) return;
 
-  const impl = svc.queueService.getImpl();
+  const impl = deps.queueService.getImpl();
   if (impl instanceof LocalQueueServiceImpl) {
     log('Setting up local execution callback');
     impl.setExecutionCallback(async (operationId, stepIndex, context, payload) => {
@@ -37,7 +54,7 @@ export function setupLocalExecutionCallback(svc: AgentRuntimeService): void {
       // toolMessageId, resumeAsyncTool, …) ride the request body into
       // executeStep. Without this spread, local/in-memory resumes silently
       // lose their intervention/resume signal.
-      await svc.executeStep({ context, operationId, stepIndex, ...payload });
+      await deps.executeStep({ context, operationId, stepIndex, ...payload });
     });
   }
 }
@@ -58,7 +75,7 @@ export function setupLocalExecutionCallback(svc: AgentRuntimeService): void {
  * Best-effort: an expired parent leaves the child without one.
  */
 export async function resolveLlmExecutor(
-  svc: AgentRuntimeService,
+  deps: RuntimeFactoryDeps,
   declared: AgentRunLlmExecutor | undefined,
   parentOperationId: string | undefined,
 ): Promise<AgentRunLlmExecutor | undefined> {
@@ -67,14 +84,14 @@ export async function resolveLlmExecutor(
 
   let parent: AgentState | null | undefined;
   try {
-    parent = await svc.coordinator.loadAgentState(parentOperationId);
+    parent = await deps.coordinator.loadAgentState(parentOperationId);
   } catch (error) {
     log('[%s] Failed to read the parent relay executor: %O', parentOperationId, error);
     return;
   }
   if (
-    parent?.origin?.userId !== svc.userId ||
-    (parent.origin.workspaceId ?? undefined) !== (svc.workspaceId ?? undefined)
+    parent?.origin?.userId !== deps.userId ||
+    (parent.origin.workspaceId ?? undefined) !== (deps.workspaceId ?? undefined)
   )
     return;
 
@@ -93,11 +110,11 @@ export async function resolveLlmExecutor(
  * expired operation reads as none.
  */
 export async function getLlmExecutor(
-  svc: AgentRuntimeService,
+  deps: RuntimeFactoryDeps,
   operationId: string,
 ): Promise<AgentRunLlmExecutor | undefined> {
   try {
-    const state = await svc.coordinator.loadAgentState(operationId);
+    const state = await deps.coordinator.loadAgentState(operationId);
     return state?.host?.llmExecutor;
   } catch (error) {
     log('[%s] Failed to read the relay executor: %O', operationId, error);
@@ -109,7 +126,7 @@ export async function getLlmExecutor(
  * Create Agent Runtime instance
  */
 export async function createAgentRuntime(
-  svc: AgentRuntimeService,
+  deps: RuntimeFactoryDeps,
   {
     abortSignal,
     agentState,
@@ -157,9 +174,9 @@ export async function createAgentRuntime(
     dynamicInterventionAudits: {
       ...dynamicInterventionAudits,
       [DASHBOARD_DRY_RUN_AUDIT]: createWidgetDryRunAudit(
-        svc.serverDB,
-        origin?.userId ?? svc.userId,
-        svc.workspaceId,
+        deps.serverDB,
+        origin?.userId ?? deps.userId,
+        deps.workspaceId,
       ),
     },
     modelRuntimeConfig,
@@ -177,8 +194,8 @@ export async function createAgentRuntime(
     ]);
   }
 
-  const agent = svc.agentFactory
-    ? svc.agentFactory(generalConfig)
+  const agent = deps.agentFactory
+    ? deps.agentFactory(generalConfig)
     : new GeneralChatAgent(generalConfig);
 
   // Create streaming executor context
@@ -198,24 +215,24 @@ export async function createAgentRuntime(
     allowEarlyFinalAnswerVisibleOutputEnd:
       agent instanceof GeneralChatAgent && !stateHasEntityFileEdits(agentState),
     botContext: principal?.actor?.bot,
-    execSubAgent: svc.delegate.execSubAgent,
-    execVirtualSubAgent: svc.delegate.execVirtualSubAgent,
-    execGroupMember: svc.delegate.execGroupMember,
-    onGroupMemberResult: (params) => svc.completeGroupMemberBarrier(params),
+    execSubAgent: deps.delegate.execSubAgent,
+    execVirtualSubAgent: deps.delegate.execVirtualSubAgent,
+    execGroupMember: deps.delegate.execGroupMember,
+    onGroupMemberResult: (params) => deps.completeGroupMemberBarrier(params),
     hookDispatcher,
-    loadAgentState: svc.coordinator.loadAgentState.bind(svc.coordinator),
-    messageModel: svc.messageModel,
+    loadAgentState: deps.coordinator.loadAgentState.bind(deps.coordinator),
+    messageModel: deps.messageModel,
     modelRuntimeConfig,
     operationId,
-    serverDB: svc.serverDB,
+    serverDB: deps.serverDB,
     stepIndex,
     stream: plan?.stream,
-    streamManager: svc.streamManager,
-    toolExecutionService: svc.toolExecutionService,
+    streamManager: deps.streamManager,
+    toolExecutionService: deps.toolExecutionService,
     topicId: origin?.topicId,
     tracingContextEngine,
     userId: origin?.userId,
-    workspaceId: svc.workspaceId,
+    workspaceId: deps.workspaceId,
   };
 
   // Create Agent Runtime instance
@@ -231,14 +248,14 @@ export async function createAgentRuntime(
  * Uses findInMessages visitor to scan tool messages for device activation.
  */
 export async function computeDeviceContext(
-  svc: AgentRuntimeService,
+  deps: RuntimeFactoryDeps,
   state: any,
   entryMessages?: UIChatMessage[],
 ) {
   try {
     const dbMessages =
       entryMessages ??
-      (await svc.messageModel.query(
+      (await deps.messageModel.query(
         {
           agentId: state.origin?.agentId,
           // Group runs need groupId or the query returns no group messages

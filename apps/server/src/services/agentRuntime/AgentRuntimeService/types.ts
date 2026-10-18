@@ -6,11 +6,102 @@ import {
   type ExecVirtualSubAgentParams,
 } from '@lobechat/types';
 
-import { type AgentRuntimeCoordinatorOptions } from '@/server/modules/AgentRuntime';
-import { type IStreamEventManager } from '@/server/modules/AgentRuntime/types';
+import type { AgentOperationModel } from '@/database/models/agentOperation';
+import type { MessageModel } from '@/database/models/message';
+import type { LobeChatDatabase } from '@/database/type';
+import type {
+  AgentRuntimeCoordinator,
+  AgentRuntimeCoordinatorOptions,
+} from '@/server/modules/AgentRuntime';
+import type { IStreamEventManager } from '@/server/modules/AgentRuntime/types';
+import type { MessageService } from '@/server/services/message';
 import type { QueueService } from '@/server/services/queue';
+import type { ToolExecutionService } from '@/server/services/toolExecution';
 
+import type { CompletionLifecycle } from '../CompletionLifecycle';
+import type { HumanInterventionHandler } from '../HumanInterventionHandler';
+import type { OperationTraceRecorder } from '../OperationTraceRecorder';
 import { type ExecGroupMemberParams, type ExecGroupMemberResult } from '../types';
+import type {
+  allPendingToolsFulfilled,
+  maybeScheduleAsyncToolVerify,
+  resolveAsyncToolOnComplete,
+  tryResumeParentFromAsyncTool,
+} from './asyncTool';
+import type {
+  endExpiredClientLlmWait,
+  expireClientLlmWait,
+  finishClientLlmWaitExpiry,
+  listClientLlmWaits,
+  parkForClientLlm,
+  restoreClientLlmWait,
+  resumeFromClientLlmWait,
+  revertClientWaitResumeWithRetry,
+  updateAssistantRowWithRetry,
+} from './clientLlmWait';
+import type { createOperation } from './createOperation';
+import type { executeStep } from './executeStep/index';
+import type { executeSync } from './executeSync';
+import type {
+  completeGroupActionMember,
+  completeGroupMemberBarrier,
+  countFulfilledMemberAnchors,
+  handleGroupMemberTimeout,
+  loadGroupMemberBridge,
+  scheduleGroupMemberTimeout,
+} from './groupMember';
+import type {
+  ensureInterventionContinuationStarted,
+  getPendingInterventions,
+  loadInterventionContinuationState,
+  persistInterventionDispatchAck,
+  processHumanIntervention,
+  recordInterventionLifecycleCompletion,
+  shouldReplayPendingInterventionLifecycle,
+} from './intervention';
+import type {
+  queryMessagesFromDB,
+  queryStepEntryMessages,
+  queryUiMessages,
+  refreshMessagesFromDB,
+  resolveAsyncToolResumeParentMessageId,
+  resolveLastAssistantContentFromThread,
+  resolveLastAssistantMessageFromDB,
+  usesGatewayMessagePatch,
+} from './messages';
+import type {
+  acceptsFileWorks,
+  acceptsMemberRuntimeEnd,
+  controlCompletedToolResult,
+  getOperationStatus,
+  interruptOperation,
+  isOperationInterrupted,
+  readQueuedMessagesFlag,
+  releaseOperationLock,
+  scheduleContinuation,
+  setQueuedMessages,
+  startExecution,
+  startStepLockHeartbeat,
+} from './operationControl';
+import type {
+  computeDeviceContext,
+  createAgentRuntime,
+  getLlmExecutor,
+  resolveLlmExecutor,
+  setupLocalExecutionCallback,
+} from './runtimeFactory';
+import type { buildShareAbortResult } from './shareRunGate';
+import type {
+  calculatePriority,
+  calculateStepDelay,
+  determineCompletionReason,
+  shouldContinueExecution,
+} from './stepPolicy';
+import type {
+  completeSubAgentBridge,
+  isCallSubAgentToolMessage,
+  publishSubAgentProgress,
+} from './subAgentBridge';
 
 export interface InterventionLifecycleCheckpoint {
   state: 'completed' | 'pending';
@@ -143,3 +234,92 @@ export interface AgentRuntimeServiceOptions {
 
 /** A sibling-module function's arguments after the service it runs against. */
 export type MethodArgs<F> = F extends (svc: any, ...args: infer A) => any ? A : never;
+
+/** A sibling-module function bound to the service it runs against. */
+type Bound<F> = F extends (svc: any, ...args: infer A) => infer R ? (...args: A) => R : never;
+
+/**
+ * What the sibling modules read off the service: its collaborators and the
+ * methods they call back into. The service hands each module this view (each
+ * module picks the members it uses), so the members stay private on the class.
+ */
+export interface AgentRuntimeServiceContext {
+  acceptsFileWorks: Bound<typeof acceptsFileWorks>;
+  acceptsMemberRuntimeEnd: Bound<typeof acceptsMemberRuntimeEnd>;
+  readonly agentFactory: ((config: GeneralAgentConfig) => Agent) | undefined;
+  readonly agentOperationModel: AgentOperationModel;
+  allPendingToolsFulfilled: Bound<typeof allPendingToolsFulfilled>;
+  readonly baseURL: string;
+  buildShareAbortResult: Bound<typeof buildShareAbortResult>;
+  calculatePriority: typeof calculatePriority;
+  calculateStepDelay: typeof calculateStepDelay;
+  completeGroupActionMember: Bound<typeof completeGroupActionMember>;
+  completeGroupMemberBarrier: Bound<typeof completeGroupMemberBarrier>;
+  completeSubAgentBridge: Bound<typeof completeSubAgentBridge>;
+  readonly completionLifecycle: CompletionLifecycle;
+  computeDeviceContext: Bound<typeof computeDeviceContext>;
+  controlCompletedToolResult: Bound<typeof controlCompletedToolResult>;
+  readonly coordinator: AgentRuntimeCoordinator;
+  countFulfilledMemberAnchors: Bound<typeof countFulfilledMemberAnchors>;
+  createAgentRuntime: Bound<typeof createAgentRuntime>;
+  createOperation: Bound<typeof createOperation>;
+  readonly delegate: AgentRuntimeDelegate;
+  determineCompletionReason: typeof determineCompletionReason;
+  endExpiredClientLlmWait: Bound<typeof endExpiredClientLlmWait>;
+  ensureInterventionContinuationStarted: Bound<typeof ensureInterventionContinuationStarted>;
+  executeStep: Bound<typeof executeStep>;
+  executeSync: Bound<typeof executeSync>;
+  expireClientLlmWait: Bound<typeof expireClientLlmWait>;
+  finishClientLlmWaitExpiry: Bound<typeof finishClientLlmWaitExpiry>;
+  getLlmExecutor: Bound<typeof getLlmExecutor>;
+  getOperationStatus: Bound<typeof getOperationStatus>;
+  getPendingInterventions: Bound<typeof getPendingInterventions>;
+  handleGroupMemberTimeout: Bound<typeof handleGroupMemberTimeout>;
+  readonly humanIntervention: HumanInterventionHandler;
+  interruptOperation: Bound<typeof interruptOperation>;
+  isCallSubAgentToolMessage: Bound<typeof isCallSubAgentToolMessage>;
+  isOperationInterrupted: Bound<typeof isOperationInterrupted>;
+  listClientLlmWaits: Bound<typeof listClientLlmWaits>;
+  loadGroupMemberBridge: Bound<typeof loadGroupMemberBridge>;
+  loadInterventionContinuationState: Bound<typeof loadInterventionContinuationState>;
+  maybeScheduleAsyncToolVerify: Bound<typeof maybeScheduleAsyncToolVerify>;
+  readonly messageModel: MessageModel;
+  readonly messageService: MessageService;
+  parkForClientLlm: Bound<typeof parkForClientLlm>;
+  persistInterventionDispatchAck: Bound<typeof persistInterventionDispatchAck>;
+  processHumanIntervention: Bound<typeof processHumanIntervention>;
+  publishSubAgentProgress: Bound<typeof publishSubAgentProgress>;
+  queryMessagesFromDB: Bound<typeof queryMessagesFromDB>;
+  queryStepEntryMessages: Bound<typeof queryStepEntryMessages>;
+  queryUiMessages: Bound<typeof queryUiMessages>;
+  readonly queueService: QueueService | null;
+  readQueuedMessagesFlag: Bound<typeof readQueuedMessagesFlag>;
+  recordInterventionLifecycleCompletion: Bound<typeof recordInterventionLifecycleCompletion>;
+  refreshMessagesFromDB: Bound<typeof refreshMessagesFromDB>;
+  releaseOperationLock: Bound<typeof releaseOperationLock>;
+  resolveAsyncToolOnComplete: Bound<typeof resolveAsyncToolOnComplete>;
+  resolveAsyncToolResumeParentMessageId: typeof resolveAsyncToolResumeParentMessageId;
+  resolveLastAssistantContentFromThread: Bound<typeof resolveLastAssistantContentFromThread>;
+  resolveLastAssistantMessageFromDB: Bound<typeof resolveLastAssistantMessageFromDB>;
+  resolveLlmExecutor: Bound<typeof resolveLlmExecutor>;
+  restoreClientLlmWait: Bound<typeof restoreClientLlmWait>;
+  resumeFromClientLlmWait: Bound<typeof resumeFromClientLlmWait>;
+  revertClientWaitResumeWithRetry: Bound<typeof revertClientWaitResumeWithRetry>;
+  scheduleContinuation: Bound<typeof scheduleContinuation>;
+  scheduleGroupMemberTimeout: Bound<typeof scheduleGroupMemberTimeout>;
+  readonly serverDB: LobeChatDatabase;
+  setQueuedMessages: Bound<typeof setQueuedMessages>;
+  setupLocalExecutionCallback: Bound<typeof setupLocalExecutionCallback>;
+  shouldContinueExecution: typeof shouldContinueExecution;
+  shouldReplayPendingInterventionLifecycle: typeof shouldReplayPendingInterventionLifecycle;
+  startExecution: Bound<typeof startExecution>;
+  startStepLockHeartbeat: Bound<typeof startStepLockHeartbeat>;
+  readonly streamManager: IStreamEventManager;
+  readonly toolExecutionService: ToolExecutionService;
+  readonly traceRecorder: OperationTraceRecorder;
+  tryResumeParentFromAsyncTool: Bound<typeof tryResumeParentFromAsyncTool>;
+  updateAssistantRowWithRetry: Bound<typeof updateAssistantRowWithRetry>;
+  readonly userId: string;
+  usesGatewayMessagePatch: typeof usesGatewayMessagePatch;
+  readonly workspaceId: string | undefined;
+}

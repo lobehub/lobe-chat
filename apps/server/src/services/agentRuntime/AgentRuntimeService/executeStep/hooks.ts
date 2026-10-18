@@ -6,16 +6,22 @@ import { emitAgentSignalSourceEvent } from '@/server/services/agentSignal';
 import { isAgentShareRun } from '../../CompletionLifecycle';
 import { logToolCallPc } from '../../formalObservation';
 import { hookDispatcher } from '../../hooks';
-import type { AgentRuntimeService } from '..';
+import type { AgentRuntimeServiceContext } from '../types';
 import { toAgentSignalSnapshotEvents } from '../utils';
 import type { StepPresentation, StepRunResult } from './runStep';
 
 const log = debug('lobe-server:agent-runtime-service');
+
+/** What this module reads off the service. */
+export type StepHooksDeps = Pick<
+  AgentRuntimeServiceContext,
+  'coordinator' | 'queueService' | 'serverDB' | 'userId' | 'workspaceId'
+>;
 type SignalSnapshotEvents = Array<{ [key: string]: unknown; type: string }>;
 
 /** Emit the `runtime.before_step` signal and dispatch the `beforeStep` hooks. */
 export async function dispatchBeforeStepHooks(
-  svc: AgentRuntimeService,
+  deps: StepHooksDeps,
   {
     agentState,
     operationId,
@@ -49,9 +55,9 @@ export async function dispatchBeforeStepHooks(
           },
           {
             agentId: beforeStepOrigin.agentId,
-            db: svc.serverDB,
-            userId: beforeStepOrigin.userId || svc.userId,
-            workspaceId: svc.workspaceId,
+            db: deps.serverDB,
+            userId: beforeStepOrigin.userId || deps.userId,
+            workspaceId: deps.workspaceId,
           },
           { ignoreError: true },
         );
@@ -65,7 +71,7 @@ export async function dispatchBeforeStepHooks(
         operationId,
         stepIndex,
         steps: agentState?.stepCount || 0,
-        userId: beforeStepOrigin.userId || svc.userId,
+        userId: beforeStepOrigin.userId || deps.userId,
       },
       agentState?.host?.hooks,
     );
@@ -81,7 +87,7 @@ export async function dispatchBeforeStepHooks(
  * enriched with the step's presentation and the cross-step tracking data.
  */
 export async function dispatchAfterStepHooks(
-  svc: AgentRuntimeService,
+  deps: StepHooksDeps,
   {
     content,
     operationId,
@@ -132,8 +138,8 @@ export async function dispatchAfterStepHooks(
             },
             {
               agentId: origin.agentId,
-              db: svc.serverDB,
-              userId: origin.userId || svc.userId,
+              db: deps.serverDB,
+              userId: origin.userId || deps.userId,
             },
             { ignoreError: true },
           ),
@@ -170,7 +176,7 @@ export async function dispatchAfterStepHooks(
         totalSteps: stepPresentationData.totalSteps,
         totalTokens: stepPresentationData.totalTokens,
         totalToolCalls: (tracking.totalToolCalls ?? 0) + (toolsCalling?.length ?? 0),
-        userId: origin.userId || svc.userId,
+        userId: origin.userId || deps.userId,
       },
       stepResult.newState?.host?.hooks,
     );
@@ -183,7 +189,7 @@ export async function dispatchAfterStepHooks(
 
 /** Accumulate the step tracking the next step's `afterStep` hooks read. */
 export async function persistStepTracking(
-  svc: AgentRuntimeService,
+  deps: StepHooksDeps,
   {
     content,
     operationId,
@@ -208,7 +214,7 @@ export async function persistStepTracking(
   logToolCallPc(operationId, stepIndex, 'post.route_selected', () => ({
     hasAfterStepHooks,
     nextContextPresent: stepResult.nextContext !== undefined,
-    queueAvailable: Boolean(svc.queueService),
+    queueAvailable: Boolean(deps.queueService),
     shouldContinue,
   }));
   if (hasAfterStepHooks && stepResult.newState.metadata) {
@@ -230,7 +236,7 @@ export async function persistStepTracking(
 
     // Persist tracking state for next step
     stepResult.newState.metadata._stepTracking = updatedTracking;
-    await svc.coordinator.saveAgentState(operationId, stepResult.newState);
+    await deps.coordinator.saveAgentState(operationId, stepResult.newState);
     logToolCallPc(operationId, stepIndex, 'post.step_tracking_saved', () => ({}));
   }
 }

@@ -2,17 +2,29 @@ import debug from 'debug';
 
 import { logToolCallPc } from '../../formalObservation';
 import { type AgentStepContinuation } from '../../types';
-import type { AgentRuntimeService } from '..';
+import type { AgentRuntimeServiceContext } from '../types';
 import type { StepRunResult } from './runStep';
 
 const log = debug('lobe-server:agent-runtime-service');
+
+/** What this module reads off the service. */
+export type StepContinuationDeps = Pick<
+  AgentRuntimeServiceContext,
+  | 'baseURL'
+  | 'calculatePriority'
+  | 'calculateStepDelay'
+  | 'coordinator'
+  | 'queueService'
+  | 'streamManager'
+  | 'traceRecorder'
+>;
 /**
  * Hand the next step back to the caller (inline) or queue it. Inlining needs
  * the envelope parked first, so a redelivery can recover the run when this
  * invocation dies mid-step.
  */
 export async function scheduleNextStep(
-  svc: AgentRuntimeService,
+  deps: StepContinuationDeps,
   {
     inlineContinuation,
     operationId,
@@ -34,16 +46,16 @@ export async function scheduleNextStep(
   let nextStepScheduled = false;
 
   // The caller checks both; repeated here for the type narrowing.
-  if (!svc.queueService || !stepResult.nextContext) {
+  if (!deps.queueService || !stepResult.nextContext) {
     return { continuation, handedOffInline, nextStepScheduled };
   }
 
   const nextStepIndex = stepIndex + 1;
   const next: AgentStepContinuation = {
     context: stepResult.nextContext,
-    delay: svc.calculateStepDelay(stepResult),
+    delay: deps.calculateStepDelay(stepResult),
     operationId,
-    priority: svc.calculatePriority(stepResult),
+    priority: deps.calculatePriority(stepResult),
     retries:
       typeof stepResult.newState.host?.queue?.retries === 'number'
         ? stepResult.newState.host?.queue?.retries
@@ -65,7 +77,7 @@ export async function scheduleNextStep(
   // doesn't, fall back to the ordinary queue round-trip: slower by a
   // step boundary, but it keeps the recovery path the queue provides.
   const parked = inlineContinuation
-    ? await svc.coordinator.saveInlineResume(operationId, next)
+    ? await deps.coordinator.saveInlineResume(operationId, next)
     : false;
 
   if (!parked && inlineContinuation) {
@@ -92,9 +104,9 @@ export async function scheduleNextStep(
     // partial from the store — it has to see this step. The gateway
     // pushes this invocation issued have to land for the same reason:
     // nothing carries them once it stops running.
-    await svc.traceRecorder.flushPartial();
-    await svc.streamManager.drainPushes?.(operationId);
-    await svc.queueService.scheduleMessage({ ...next, endpoint: `${svc.baseURL}/run` });
+    await deps.traceRecorder.flushPartial();
+    await deps.streamManager.drainPushes?.(operationId);
+    await deps.queueService.scheduleMessage({ ...next, endpoint: `${deps.baseURL}/run` });
     nextStepScheduled = true;
     logToolCallPc(operationId, stepIndex, 'post.next_step_scheduled', () => ({
       nextStepIndex,

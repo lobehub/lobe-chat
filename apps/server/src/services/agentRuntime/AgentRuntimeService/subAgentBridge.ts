@@ -8,10 +8,23 @@ import {
   normalizeCompletionMessages,
 } from '../CompletionLifecycle';
 import { type SubAgentBridgeParams } from '../types';
-import type { AgentRuntimeService } from '.';
+import type { AgentRuntimeServiceContext } from './types';
 import { formatErrorForMetadata, formatSubAgentErrorReason } from './utils';
 
 const log = debug('lobe-server:agent-runtime-service');
+
+/** What this module reads off the service. */
+export type SubAgentBridgeDeps = Pick<
+  AgentRuntimeServiceContext,
+  | 'controlCompletedToolResult'
+  | 'coordinator'
+  | 'isCallSubAgentToolMessage'
+  | 'messageModel'
+  | 'resolveLastAssistantContentFromThread'
+  | 'resolveLastAssistantMessageFromDB'
+  | 'streamManager'
+  | 'tryResumeParentFromAsyncTool'
+>;
 
 /**
  * Stream a `callSubAgent` child's running totals to the client, once per step.
@@ -33,7 +46,7 @@ const log = debug('lobe-server:agent-runtime-service');
  * Best-effort: a publish failure must not fail the sub-agent's step.
  */
 export async function publishSubAgentProgress(
-  svc: AgentRuntimeService,
+  deps: SubAgentBridgeDeps,
   state: AgentState,
   stepIndex: number,
 ): Promise<void> {
@@ -42,7 +55,7 @@ export async function publishSubAgentProgress(
   if (!anchor?.parentOperationId || !anchor.toolMessageId) return;
 
   try {
-    await svc.streamManager.publishStreamEvent(anchor.parentOperationId, {
+    await deps.streamManager.publishStreamEvent(anchor.parentOperationId, {
       data: {
         model: state?.modelRuntimeConfig?.model,
         phase: 'subagent_progress',
@@ -84,7 +97,7 @@ export async function publishSubAgentProgress(
  * Returns true when this call won the resume CAS.
  */
 export async function completeSubAgentBridge(
-  svc: AgentRuntimeService,
+  deps: SubAgentBridgeDeps,
   params: SubAgentBridgeParams,
 ): Promise<boolean> {
   const { operationId, parentOperationId, reason, threadId, toolMessageId } = params;
@@ -92,7 +105,7 @@ export async function completeSubAgentBridge(
 
   // Infra errors propagate; a null state (expired) degrades to a stub note.
   const finalState =
-    params.finalState ?? (await svc.coordinator.loadAgentState(operationId)) ?? undefined;
+    params.finalState ?? (await deps.coordinator.loadAgentState(operationId)) ?? undefined;
 
   log(
     '[%s] sub-agent bridge → parent %s (reason: %s, state: %s)',
@@ -116,7 +129,7 @@ export async function completeSubAgentBridge(
   let lastAssistant: unknown;
   if (!failed && finalState && !Array.isArray(finalState.messages)) {
     try {
-      lastAssistant = await svc.resolveLastAssistantMessageFromDB(finalState);
+      lastAssistant = await deps.resolveLastAssistantMessageFromDB(finalState);
     } catch (error) {
       console.error(
         '[%s] sub-agent bridge: failed to resolve final assistant from DB: %O',
@@ -142,7 +155,7 @@ export async function completeSubAgentBridge(
   // authoritative signal here to override.
   if (!failed && !finalState && threadId) {
     try {
-      lastAssistantContent = await svc.resolveLastAssistantContentFromThread(threadId);
+      lastAssistantContent = await deps.resolveLastAssistantContentFromThread(threadId);
     } catch (error) {
       console.error(
         '[%s] sub-agent bridge: failed to resolve content from thread %s: %O',
@@ -163,11 +176,11 @@ export async function completeSubAgentBridge(
   // callSubAgent results carry the sub-agent id so the parent can later send
   // this same sub-agent a follow-up (`callSubAgent({ subAgentId })`) — e.g.
   // to hand over what it gathered before failing — instead of redoing it.
-  const content = (await svc.isCallSubAgentToolMessage(toolMessageId, threadId))
+  const content = (await deps.isCallSubAgentToolMessage(toolMessageId, threadId))
     ? appendSubAgentReference(resultContent, threadId)
     : resultContent;
 
-  const { result: completed, blocked } = await svc.controlCompletedToolResult({
+  const { result: completed, blocked } = await deps.controlCompletedToolResult({
     preserveUsage: true,
     operationId: parentOperationId,
     toolMessageId,
@@ -192,7 +205,7 @@ export async function completeSubAgentBridge(
       },
     },
   });
-  const backfill = await svc.messageModel.updateToolMessage(toolMessageId, {
+  const backfill = await deps.messageModel.updateToolMessage(toolMessageId, {
     content: completed.content,
     pluginError: completed.error ?? null,
     pluginState: completed.state,
@@ -208,7 +221,7 @@ export async function completeSubAgentBridge(
   // 2. Barrier + CAS + resume the parent op (infra errors propagate too).
   // Pass the just-backfilled message id so the barrier trusts this write
   // instead of re-reading a possibly-stale replica.
-  return svc.tryResumeParentFromAsyncTool(
+  return deps.tryResumeParentFromAsyncTool(
     { parentOperationId },
     { knownFulfilledMessageId: toolMessageId, scheduleVerifyOnHold: true },
   );
@@ -220,13 +233,13 @@ export async function completeSubAgentBridge(
  * Best-effort: a failed lookup only drops the id trailer, never the bridge.
  */
 export async function isCallSubAgentToolMessage(
-  svc: AgentRuntimeService,
+  deps: SubAgentBridgeDeps,
   toolMessageId: string,
   threadId: string | undefined,
 ): Promise<boolean> {
   if (!threadId) return false;
   try {
-    return isCallSubAgentCall(await svc.messageModel.findMessagePlugin(toolMessageId));
+    return isCallSubAgentCall(await deps.messageModel.findMessagePlugin(toolMessageId));
   } catch (error) {
     log('[%s] sub-agent bridge: failed to read tool plugin: %O', toolMessageId, error);
     return false;

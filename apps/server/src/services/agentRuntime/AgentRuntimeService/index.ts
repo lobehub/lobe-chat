@@ -98,7 +98,12 @@ import {
   isCallSubAgentToolMessage,
   publishSubAgentProgress,
 } from './subAgentBridge';
-import type { AgentRuntimeDelegate, AgentRuntimeServiceOptions, MethodArgs } from './types';
+import type {
+  AgentRuntimeDelegate,
+  AgentRuntimeServiceContext,
+  AgentRuntimeServiceOptions,
+  MethodArgs,
+} from './types';
 import { createStepLockOwner } from './utils';
 
 if (process.env.VERCEL) {
@@ -112,37 +117,36 @@ export type { AgentRuntimeDelegate, AgentRuntimeServiceOptions } from './types';
 
 /**
  * The step executor and its operation lifecycle. The class holds the
- * collaborators and delegates every method to a sibling module (each takes the
- * service as its first argument), so the methods stay overridable and
- * spy-able on the instance. The fields are read by those modules: internal,
- * not API.
+ * collaborators and delegates every method to a sibling module, handing it the
+ * narrow `AgentRuntimeServiceContext` view it declares; calls still dispatch
+ * through the instance, so the methods stay overridable and spy-able.
  */
 export class AgentRuntimeService {
-  agentOperationModel: AgentOperationModel;
-  agentFactory?: (config: GeneralAgentConfig) => Agent;
-  completionLifecycle: CompletionLifecycle;
-  coordinator: AgentRuntimeCoordinator;
-  delegate: AgentRuntimeDelegate;
-  humanIntervention: HumanInterventionHandler;
-  streamManager: IStreamEventManager;
-  queueService: QueueService | null;
-  traceRecorder: OperationTraceRecorder;
-  toolExecutionService: ToolExecutionService;
-  get baseURL() {
+  private readonly agentOperationModel: AgentOperationModel;
+  private readonly agentFactory?: (config: GeneralAgentConfig) => Agent;
+  private readonly completionLifecycle: CompletionLifecycle;
+  private readonly coordinator: AgentRuntimeCoordinator;
+  private readonly delegate: AgentRuntimeDelegate;
+  private readonly humanIntervention: HumanInterventionHandler;
+  private readonly streamManager: IStreamEventManager;
+  private readonly queueService: QueueService | null;
+  private readonly traceRecorder: OperationTraceRecorder;
+  private readonly toolExecutionService: ToolExecutionService;
+  private get baseURL() {
     const baseUrl = process.env.AGENT_RUNTIME_BASE_URL || appEnv.APP_URL || 'http://localhost:3010';
 
     return urlJoin(baseUrl, '/api/agent');
   }
-  serverDB: LobeChatDatabase;
-  userId: string;
-  workspaceId?: string;
-  messageModel: MessageModel;
+  private readonly serverDB: LobeChatDatabase;
+  private readonly userId: string;
+  private readonly workspaceId?: string;
+  private readonly messageModel: MessageModel;
   // Lazily constructed because MessageService instantiates a FileService
   // which eagerly creates the S3 client and throws when S3 env vars are
   // missing — eager construction would break every test that builds an
   // AgentRuntimeService without mocking the file backend.
-  messageServiceInstance?: MessageService;
-  get messageService(): MessageService {
+  private messageServiceInstance?: MessageService;
+  private get messageService(): MessageService {
     if (!this.messageServiceInstance) {
       this.messageServiceInstance = new MessageService(
         this.serverDB,
@@ -224,262 +228,398 @@ export class AgentRuntimeService {
   getCoordinator(): AgentRuntimeCoordinator {
     return this.coordinator;
   }
+
+  /**
+   * The view the sibling modules get: the collaborators through getters, so a
+   * module reads a field when it uses it (as a method body did), and the
+   * methods through arrows, so a call still dispatches on the instance.
+   */
+  private get context(): AgentRuntimeServiceContext {
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
+    const self = this;
+    return {
+      get agentOperationModel() {
+        return self.agentOperationModel;
+      },
+      get agentFactory() {
+        return self.agentFactory;
+      },
+      get completionLifecycle() {
+        return self.completionLifecycle;
+      },
+      get coordinator() {
+        return self.coordinator;
+      },
+      get delegate() {
+        return self.delegate;
+      },
+      get humanIntervention() {
+        return self.humanIntervention;
+      },
+      get streamManager() {
+        return self.streamManager;
+      },
+      get queueService() {
+        return self.queueService;
+      },
+      get traceRecorder() {
+        return self.traceRecorder;
+      },
+      get toolExecutionService() {
+        return self.toolExecutionService;
+      },
+      get baseURL() {
+        return self.baseURL;
+      },
+      get serverDB() {
+        return self.serverDB;
+      },
+      get userId() {
+        return self.userId;
+      },
+      get workspaceId() {
+        return self.workspaceId;
+      },
+      get messageModel() {
+        return self.messageModel;
+      },
+      get messageService() {
+        return self.messageService;
+      },
+      acceptsFileWorks: (...args) => self.acceptsFileWorks(...args),
+      acceptsMemberRuntimeEnd: (...args) => self.acceptsMemberRuntimeEnd(...args),
+      allPendingToolsFulfilled: (...args) => self.allPendingToolsFulfilled(...args),
+      buildShareAbortResult: (...args) => self.buildShareAbortResult(...args),
+      calculatePriority: (...args) => self.calculatePriority(...args),
+      calculateStepDelay: (...args) => self.calculateStepDelay(...args),
+      completeGroupActionMember: (...args) => self.completeGroupActionMember(...args),
+      completeGroupMemberBarrier: (...args) => self.completeGroupMemberBarrier(...args),
+      completeSubAgentBridge: (...args) => self.completeSubAgentBridge(...args),
+      computeDeviceContext: (...args) => self.computeDeviceContext(...args),
+      controlCompletedToolResult: (...args) => self.controlCompletedToolResult(...args),
+      countFulfilledMemberAnchors: (...args) => self.countFulfilledMemberAnchors(...args),
+      createAgentRuntime: (...args) => self.createAgentRuntime(...args),
+      createOperation: (...args) => self.createOperation(...args),
+      determineCompletionReason: (...args) => self.determineCompletionReason(...args),
+      endExpiredClientLlmWait: (...args) => self.endExpiredClientLlmWait(...args),
+      ensureInterventionContinuationStarted: (...args) =>
+        self.ensureInterventionContinuationStarted(...args),
+      executeStep: (...args) => self.executeStep(...args),
+      executeSync: (...args) => self.executeSync(...args),
+      expireClientLlmWait: (...args) => self.expireClientLlmWait(...args),
+      finishClientLlmWaitExpiry: (...args) => self.finishClientLlmWaitExpiry(...args),
+      getLlmExecutor: (...args) => self.getLlmExecutor(...args),
+      getOperationStatus: (...args) => self.getOperationStatus(...args),
+      getPendingInterventions: (...args) => self.getPendingInterventions(...args),
+      handleGroupMemberTimeout: (...args) => self.handleGroupMemberTimeout(...args),
+      interruptOperation: (...args) => self.interruptOperation(...args),
+      isCallSubAgentToolMessage: (...args) => self.isCallSubAgentToolMessage(...args),
+      isOperationInterrupted: (...args) => self.isOperationInterrupted(...args),
+      listClientLlmWaits: (...args) => self.listClientLlmWaits(...args),
+      loadGroupMemberBridge: (...args) => self.loadGroupMemberBridge(...args),
+      loadInterventionContinuationState: (...args) =>
+        self.loadInterventionContinuationState(...args),
+      maybeScheduleAsyncToolVerify: (...args) => self.maybeScheduleAsyncToolVerify(...args),
+      parkForClientLlm: (...args) => self.parkForClientLlm(...args),
+      persistInterventionDispatchAck: (...args) => self.persistInterventionDispatchAck(...args),
+      processHumanIntervention: (...args) => self.processHumanIntervention(...args),
+      publishSubAgentProgress: (...args) => self.publishSubAgentProgress(...args),
+      queryMessagesFromDB: (...args) => self.queryMessagesFromDB(...args),
+      queryStepEntryMessages: (...args) => self.queryStepEntryMessages(...args),
+      queryUiMessages: (...args) => self.queryUiMessages(...args),
+      readQueuedMessagesFlag: (...args) => self.readQueuedMessagesFlag(...args),
+      recordInterventionLifecycleCompletion: (...args) =>
+        self.recordInterventionLifecycleCompletion(...args),
+      refreshMessagesFromDB: (...args) => self.refreshMessagesFromDB(...args),
+      releaseOperationLock: (...args) => self.releaseOperationLock(...args),
+      resolveAsyncToolOnComplete: (...args) => self.resolveAsyncToolOnComplete(...args),
+      resolveAsyncToolResumeParentMessageId: (...args) =>
+        self.resolveAsyncToolResumeParentMessageId(...args),
+      resolveLastAssistantContentFromThread: (...args) =>
+        self.resolveLastAssistantContentFromThread(...args),
+      resolveLastAssistantMessageFromDB: (...args) =>
+        self.resolveLastAssistantMessageFromDB(...args),
+      resolveLlmExecutor: (...args) => self.resolveLlmExecutor(...args),
+      restoreClientLlmWait: (...args) => self.restoreClientLlmWait(...args),
+      resumeFromClientLlmWait: (...args) => self.resumeFromClientLlmWait(...args),
+      revertClientWaitResumeWithRetry: (...args) => self.revertClientWaitResumeWithRetry(...args),
+      scheduleContinuation: (...args) => self.scheduleContinuation(...args),
+      scheduleGroupMemberTimeout: (...args) => self.scheduleGroupMemberTimeout(...args),
+      setQueuedMessages: (...args) => self.setQueuedMessages(...args),
+      setupLocalExecutionCallback: (...args) => self.setupLocalExecutionCallback(...args),
+      shouldContinueExecution: (...args) => self.shouldContinueExecution(...args),
+      shouldReplayPendingInterventionLifecycle: (...args) =>
+        self.shouldReplayPendingInterventionLifecycle(...args),
+      startExecution: (...args) => self.startExecution(...args),
+      startStepLockHeartbeat: (...args) => self.startStepLockHeartbeat(...args),
+      tryResumeParentFromAsyncTool: (...args) => self.tryResumeParentFromAsyncTool(...args),
+      updateAssistantRowWithRetry: (...args) => self.updateAssistantRowWithRetry(...args),
+      usesGatewayMessagePatch: (...args) => self.usesGatewayMessagePatch(...args),
+    };
+  }
+
   // ==================== Delegates to the sibling modules ====================
-  startStepLockHeartbeat(...args: MethodArgs<typeof startStepLockHeartbeat>) {
-    return startStepLockHeartbeat(this, ...args);
+  private startStepLockHeartbeat(...args: MethodArgs<typeof startStepLockHeartbeat>) {
+    return startStepLockHeartbeat(this.context, ...args);
   }
 
   isOperationInterrupted(...args: MethodArgs<typeof isOperationInterrupted>) {
-    return isOperationInterrupted(this, ...args);
+    return isOperationInterrupted(this.context, ...args);
   }
 
   interruptOperation(...args: MethodArgs<typeof interruptOperation>) {
-    return interruptOperation(this, ...args);
+    return interruptOperation(this.context, ...args);
   }
 
   acceptsFileWorks(...args: MethodArgs<typeof acceptsFileWorks>) {
-    return acceptsFileWorks(this, ...args);
+    return acceptsFileWorks(this.context, ...args);
   }
 
   acceptsMemberRuntimeEnd(...args: MethodArgs<typeof acceptsMemberRuntimeEnd>) {
-    return acceptsMemberRuntimeEnd(this, ...args);
+    return acceptsMemberRuntimeEnd(this.context, ...args);
   }
 
   setQueuedMessages(...args: MethodArgs<typeof setQueuedMessages>) {
-    return setQueuedMessages(this, ...args);
+    return setQueuedMessages(this.context, ...args);
   }
 
-  readQueuedMessagesFlag(...args: MethodArgs<typeof readQueuedMessagesFlag>) {
-    return readQueuedMessagesFlag(this, ...args);
+  private readQueuedMessagesFlag(...args: MethodArgs<typeof readQueuedMessagesFlag>) {
+    return readQueuedMessagesFlag(this.context, ...args);
   }
 
   controlCompletedToolResult(...args: MethodArgs<typeof controlCompletedToolResult>) {
-    return controlCompletedToolResult(this, ...args);
+    return controlCompletedToolResult(this.context, ...args);
   }
 
   scheduleContinuation(...args: MethodArgs<typeof scheduleContinuation>) {
-    return scheduleContinuation(this, ...args);
+    return scheduleContinuation(this.context, ...args);
   }
 
   releaseOperationLock(...args: MethodArgs<typeof releaseOperationLock>) {
-    return releaseOperationLock(this, ...args);
+    return releaseOperationLock(this.context, ...args);
   }
 
   getOperationStatus(...args: MethodArgs<typeof getOperationStatus>) {
-    return getOperationStatus(this, ...args);
+    return getOperationStatus(this.context, ...args);
   }
 
   startExecution(...args: MethodArgs<typeof startExecution>) {
-    return startExecution(this, ...args);
+    return startExecution(this.context, ...args);
   }
 
   loadInterventionContinuationState(...args: MethodArgs<typeof loadInterventionContinuationState>) {
-    return loadInterventionContinuationState(this, ...args);
+    return loadInterventionContinuationState(this.context, ...args);
   }
 
   ensureInterventionContinuationStarted(
     ...args: MethodArgs<typeof ensureInterventionContinuationStarted>
   ) {
-    return ensureInterventionContinuationStarted(this, ...args);
+    return ensureInterventionContinuationStarted(this.context, ...args);
   }
 
-  persistInterventionDispatchAck(...args: MethodArgs<typeof persistInterventionDispatchAck>) {
-    return persistInterventionDispatchAck(this, ...args);
+  private persistInterventionDispatchAck(
+    ...args: MethodArgs<typeof persistInterventionDispatchAck>
+  ) {
+    return persistInterventionDispatchAck(this.context, ...args);
   }
 
   getPendingInterventions(...args: MethodArgs<typeof getPendingInterventions>) {
-    return getPendingInterventions(this, ...args);
+    return getPendingInterventions(this.context, ...args);
   }
 
   processHumanIntervention(...args: MethodArgs<typeof processHumanIntervention>) {
-    return processHumanIntervention(this, ...args);
+    return processHumanIntervention(this.context, ...args);
   }
 
-  shouldReplayPendingInterventionLifecycle(
+  private shouldReplayPendingInterventionLifecycle(
     ...args: Parameters<typeof shouldReplayPendingInterventionLifecycle>
   ) {
     return shouldReplayPendingInterventionLifecycle(...args);
   }
 
-  recordInterventionLifecycleCompletion(
+  private recordInterventionLifecycleCompletion(
     ...args: MethodArgs<typeof recordInterventionLifecycleCompletion>
   ) {
-    return recordInterventionLifecycleCompletion(this, ...args);
+    return recordInterventionLifecycleCompletion(this.context, ...args);
   }
 
-  buildShareAbortResult(...args: MethodArgs<typeof buildShareAbortResult>) {
-    return buildShareAbortResult(this, ...args);
+  private buildShareAbortResult(...args: MethodArgs<typeof buildShareAbortResult>) {
+    return buildShareAbortResult(this.context, ...args);
   }
 
   createOperation(...args: MethodArgs<typeof createOperation>) {
-    return createOperation(this, ...args);
+    return createOperation(this.context, ...args);
   }
 
   queryUiMessages(...args: MethodArgs<typeof queryUiMessages>) {
-    return queryUiMessages(this, ...args);
+    return queryUiMessages(this.context, ...args);
   }
 
-  usesGatewayMessagePatch(...args: Parameters<typeof usesGatewayMessagePatch>) {
+  private usesGatewayMessagePatch(...args: Parameters<typeof usesGatewayMessagePatch>) {
     return usesGatewayMessagePatch(...args);
   }
 
-  queryMessagesFromDB(...args: MethodArgs<typeof queryMessagesFromDB>) {
-    return queryMessagesFromDB(this, ...args);
+  private queryMessagesFromDB(...args: MethodArgs<typeof queryMessagesFromDB>) {
+    return queryMessagesFromDB(this.context, ...args);
   }
 
-  refreshMessagesFromDB(...args: MethodArgs<typeof refreshMessagesFromDB>) {
-    return refreshMessagesFromDB(this, ...args);
+  private refreshMessagesFromDB(...args: MethodArgs<typeof refreshMessagesFromDB>) {
+    return refreshMessagesFromDB(this.context, ...args);
   }
 
-  resolveLastAssistantMessageFromDB(...args: MethodArgs<typeof resolveLastAssistantMessageFromDB>) {
-    return resolveLastAssistantMessageFromDB(this, ...args);
+  private resolveLastAssistantMessageFromDB(
+    ...args: MethodArgs<typeof resolveLastAssistantMessageFromDB>
+  ) {
+    return resolveLastAssistantMessageFromDB(this.context, ...args);
   }
 
-  resolveLastAssistantContentFromThread(
+  private resolveLastAssistantContentFromThread(
     ...args: MethodArgs<typeof resolveLastAssistantContentFromThread>
   ) {
-    return resolveLastAssistantContentFromThread(this, ...args);
+    return resolveLastAssistantContentFromThread(this.context, ...args);
   }
 
-  queryStepEntryMessages(...args: MethodArgs<typeof queryStepEntryMessages>) {
-    return queryStepEntryMessages(this, ...args);
+  private queryStepEntryMessages(...args: MethodArgs<typeof queryStepEntryMessages>) {
+    return queryStepEntryMessages(this.context, ...args);
   }
 
-  resolveAsyncToolResumeParentMessageId(
+  private resolveAsyncToolResumeParentMessageId(
     ...args: Parameters<typeof resolveAsyncToolResumeParentMessageId>
   ) {
     return resolveAsyncToolResumeParentMessageId(...args);
   }
 
   executeStep(...args: MethodArgs<typeof executeStep>) {
-    return executeStep(this, ...args);
+    return executeStep(this.context, ...args);
   }
 
   tryResumeParentFromAsyncTool(...args: MethodArgs<typeof tryResumeParentFromAsyncTool>) {
-    return tryResumeParentFromAsyncTool(this, ...args);
+    return tryResumeParentFromAsyncTool(this.context, ...args);
   }
 
-  maybeScheduleAsyncToolVerify(...args: MethodArgs<typeof maybeScheduleAsyncToolVerify>) {
-    return maybeScheduleAsyncToolVerify(this, ...args);
+  private maybeScheduleAsyncToolVerify(...args: MethodArgs<typeof maybeScheduleAsyncToolVerify>) {
+    return maybeScheduleAsyncToolVerify(this.context, ...args);
   }
 
-  allPendingToolsFulfilled(...args: MethodArgs<typeof allPendingToolsFulfilled>) {
-    return allPendingToolsFulfilled(this, ...args);
+  private allPendingToolsFulfilled(...args: MethodArgs<typeof allPendingToolsFulfilled>) {
+    return allPendingToolsFulfilled(this.context, ...args);
   }
 
-  resolveAsyncToolOnComplete(...args: MethodArgs<typeof resolveAsyncToolOnComplete>) {
-    return resolveAsyncToolOnComplete(this, ...args);
+  private resolveAsyncToolOnComplete(...args: MethodArgs<typeof resolveAsyncToolOnComplete>) {
+    return resolveAsyncToolOnComplete(this.context, ...args);
   }
 
-  parkForClientLlm(...args: MethodArgs<typeof parkForClientLlm>) {
-    return parkForClientLlm(this, ...args);
+  private parkForClientLlm(...args: MethodArgs<typeof parkForClientLlm>) {
+    return parkForClientLlm(this.context, ...args);
   }
 
   resumeFromClientLlmWait(...args: MethodArgs<typeof resumeFromClientLlmWait>) {
-    return resumeFromClientLlmWait(this, ...args);
+    return resumeFromClientLlmWait(this.context, ...args);
   }
 
-  restoreClientLlmWait(...args: MethodArgs<typeof restoreClientLlmWait>) {
-    return restoreClientLlmWait(this, ...args);
+  private restoreClientLlmWait(...args: MethodArgs<typeof restoreClientLlmWait>) {
+    return restoreClientLlmWait(this.context, ...args);
   }
 
-  revertClientWaitResumeWithRetry(...args: MethodArgs<typeof revertClientWaitResumeWithRetry>) {
-    return revertClientWaitResumeWithRetry(this, ...args);
+  private revertClientWaitResumeWithRetry(
+    ...args: MethodArgs<typeof revertClientWaitResumeWithRetry>
+  ) {
+    return revertClientWaitResumeWithRetry(this.context, ...args);
   }
 
   listClientLlmWaits(...args: MethodArgs<typeof listClientLlmWaits>) {
-    return listClientLlmWaits(this, ...args);
+    return listClientLlmWaits(this.context, ...args);
   }
 
-  expireClientLlmWait(...args: MethodArgs<typeof expireClientLlmWait>) {
-    return expireClientLlmWait(this, ...args);
+  private expireClientLlmWait(...args: MethodArgs<typeof expireClientLlmWait>) {
+    return expireClientLlmWait(this.context, ...args);
   }
 
-  endExpiredClientLlmWait(...args: MethodArgs<typeof endExpiredClientLlmWait>) {
-    return endExpiredClientLlmWait(this, ...args);
+  private endExpiredClientLlmWait(...args: MethodArgs<typeof endExpiredClientLlmWait>) {
+    return endExpiredClientLlmWait(this.context, ...args);
   }
 
-  updateAssistantRowWithRetry(...args: MethodArgs<typeof updateAssistantRowWithRetry>) {
-    return updateAssistantRowWithRetry(this, ...args);
+  private updateAssistantRowWithRetry(...args: MethodArgs<typeof updateAssistantRowWithRetry>) {
+    return updateAssistantRowWithRetry(this.context, ...args);
   }
 
-  finishClientLlmWaitExpiry(...args: MethodArgs<typeof finishClientLlmWaitExpiry>) {
-    return finishClientLlmWaitExpiry(this, ...args);
+  private finishClientLlmWaitExpiry(...args: MethodArgs<typeof finishClientLlmWaitExpiry>) {
+    return finishClientLlmWaitExpiry(this.context, ...args);
   }
 
-  publishSubAgentProgress(...args: MethodArgs<typeof publishSubAgentProgress>) {
-    return publishSubAgentProgress(this, ...args);
+  private publishSubAgentProgress(...args: MethodArgs<typeof publishSubAgentProgress>) {
+    return publishSubAgentProgress(this.context, ...args);
   }
 
   completeSubAgentBridge(...args: MethodArgs<typeof completeSubAgentBridge>) {
-    return completeSubAgentBridge(this, ...args);
+    return completeSubAgentBridge(this.context, ...args);
   }
 
-  isCallSubAgentToolMessage(...args: MethodArgs<typeof isCallSubAgentToolMessage>) {
-    return isCallSubAgentToolMessage(this, ...args);
+  private isCallSubAgentToolMessage(...args: MethodArgs<typeof isCallSubAgentToolMessage>) {
+    return isCallSubAgentToolMessage(this.context, ...args);
   }
 
   loadGroupMemberBridge(...args: MethodArgs<typeof loadGroupMemberBridge>) {
-    return loadGroupMemberBridge(this, ...args);
+    return loadGroupMemberBridge(this.context, ...args);
   }
 
-  countFulfilledMemberAnchors(...args: MethodArgs<typeof countFulfilledMemberAnchors>) {
-    return countFulfilledMemberAnchors(this, ...args);
+  private countFulfilledMemberAnchors(...args: MethodArgs<typeof countFulfilledMemberAnchors>) {
+    return countFulfilledMemberAnchors(this.context, ...args);
   }
 
   completeGroupActionMember(...args: MethodArgs<typeof completeGroupActionMember>) {
-    return completeGroupActionMember(this, ...args);
+    return completeGroupActionMember(this.context, ...args);
   }
 
   completeGroupMemberBarrier(...args: MethodArgs<typeof completeGroupMemberBarrier>) {
-    return completeGroupMemberBarrier(this, ...args);
+    return completeGroupMemberBarrier(this.context, ...args);
   }
 
   scheduleGroupMemberTimeout(...args: MethodArgs<typeof scheduleGroupMemberTimeout>) {
-    return scheduleGroupMemberTimeout(this, ...args);
+    return scheduleGroupMemberTimeout(this.context, ...args);
   }
 
-  handleGroupMemberTimeout(...args: MethodArgs<typeof handleGroupMemberTimeout>) {
-    return handleGroupMemberTimeout(this, ...args);
+  private handleGroupMemberTimeout(...args: MethodArgs<typeof handleGroupMemberTimeout>) {
+    return handleGroupMemberTimeout(this.context, ...args);
   }
 
-  setupLocalExecutionCallback(...args: MethodArgs<typeof setupLocalExecutionCallback>) {
-    return setupLocalExecutionCallback(this, ...args);
+  private setupLocalExecutionCallback(...args: MethodArgs<typeof setupLocalExecutionCallback>) {
+    return setupLocalExecutionCallback(this.context, ...args);
   }
 
-  resolveLlmExecutor(...args: MethodArgs<typeof resolveLlmExecutor>) {
-    return resolveLlmExecutor(this, ...args);
+  private resolveLlmExecutor(...args: MethodArgs<typeof resolveLlmExecutor>) {
+    return resolveLlmExecutor(this.context, ...args);
   }
 
   getLlmExecutor(...args: MethodArgs<typeof getLlmExecutor>) {
-    return getLlmExecutor(this, ...args);
+    return getLlmExecutor(this.context, ...args);
   }
 
-  createAgentRuntime(...args: MethodArgs<typeof createAgentRuntime>) {
-    return createAgentRuntime(this, ...args);
+  private createAgentRuntime(...args: MethodArgs<typeof createAgentRuntime>) {
+    return createAgentRuntime(this.context, ...args);
   }
 
-  computeDeviceContext(...args: MethodArgs<typeof computeDeviceContext>) {
-    return computeDeviceContext(this, ...args);
+  private computeDeviceContext(...args: MethodArgs<typeof computeDeviceContext>) {
+    return computeDeviceContext(this.context, ...args);
   }
 
-  shouldContinueExecution(...args: Parameters<typeof shouldContinueExecution>) {
+  private shouldContinueExecution(...args: Parameters<typeof shouldContinueExecution>) {
     return shouldContinueExecution(...args);
   }
 
-  calculateStepDelay(...args: Parameters<typeof calculateStepDelay>) {
+  private calculateStepDelay(...args: Parameters<typeof calculateStepDelay>) {
     return calculateStepDelay(...args);
   }
 
-  calculatePriority(...args: Parameters<typeof calculatePriority>) {
+  private calculatePriority(...args: Parameters<typeof calculatePriority>) {
     return calculatePriority(...args);
   }
 
-  determineCompletionReason(...args: Parameters<typeof determineCompletionReason>) {
+  private determineCompletionReason(...args: Parameters<typeof determineCompletionReason>) {
     return determineCompletionReason(...args);
   }
 
   executeSync(...args: MethodArgs<typeof executeSync>) {
-    return executeSync(this, ...args);
+    return executeSync(this.context, ...args);
   }
 }

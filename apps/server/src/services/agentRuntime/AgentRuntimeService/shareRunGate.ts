@@ -2,9 +2,15 @@ import type { AgentState } from '@lobechat/agent-runtime';
 import debug from 'debug';
 
 import { type AgentExecutionResult } from '../types';
-import type { AgentRuntimeService } from '.';
+import type { AgentRuntimeServiceContext } from './types';
 
 const log = debug('lobe-server:agent-runtime-service');
+
+/** What this module reads off the service. */
+export type ShareRunGateDeps = Pick<
+  AgentRuntimeServiceContext,
+  'completionLifecycle' | 'coordinator' | 'interruptOperation'
+>;
 
 /**
  * Terminate an Agent Share visitor run whose authorization was revoked
@@ -25,7 +31,7 @@ const log = debug('lobe-server:agent-runtime-service');
  * blocks the visitor's next send on that topic for the abandoned-run TTL.
  */
 export async function buildShareAbortResult(
-  svc: AgentRuntimeService,
+  deps: ShareRunGateDeps,
   operationId: string,
   state: AgentState | null | undefined,
 ): Promise<AgentExecutionResult> {
@@ -38,12 +44,12 @@ export async function buildShareAbortResult(
         lastModified: new Date().toISOString(),
         status: 'interrupted',
       };
-      await svc.coordinator.saveAgentState(operationId, interruptedState);
+      await deps.coordinator.saveAgentState(operationId, interruptedState);
 
-      await svc.completionLifecycle.emitSignalEvents(operationId, interruptedState, 'interrupted');
-      await svc.completionLifecycle.dispatchHooks(operationId, interruptedState, 'interrupted');
+      await deps.completionLifecycle.emitSignalEvents(operationId, interruptedState, 'interrupted');
+      await deps.completionLifecycle.dispatchHooks(operationId, interruptedState, 'interrupted');
     } else {
-      await svc.interruptOperation(operationId);
+      await deps.interruptOperation(operationId);
     }
   } catch (error) {
     log(

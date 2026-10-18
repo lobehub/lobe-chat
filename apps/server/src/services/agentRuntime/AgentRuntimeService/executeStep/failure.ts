@@ -7,16 +7,22 @@ import { formatErrorForState } from '@/server/modules/AgentRuntime/formatErrorFo
 
 import { CriticalAgentInterventionPersistenceError } from '../../CompletionLifecycle';
 import { logToolCallPc } from '../../formalObservation';
-import type { AgentRuntimeService } from '..';
+import type { AgentRuntimeServiceContext } from '../types';
 
 const log = debug('lobe-server:agent-runtime-service');
+
+/** What this module reads off the service. */
+export type StepFailureDeps = Pick<
+  AgentRuntimeServiceContext,
+  'completionLifecycle' | 'coordinator' | 'streamManager' | 'traceRecorder'
+>;
 /**
  * A step threw. Record it on the span, persist the error state, settle the
  * completion lifecycle and finalize the trace, then rethrow — except a failed
  * intervention Review publication, which keeps the run parked for the retry.
  */
 export async function failStep(
-  svc: AgentRuntimeService,
+  deps: StepFailureDeps,
   {
     error,
     externalRetryCount,
@@ -71,7 +77,7 @@ export async function failStep(
   // that completion callbacks and webhooks can still fire.
   let finalStateWithError: any;
   try {
-    await svc.streamManager.publishStreamEvent(operationId, {
+    await deps.streamManager.publishStreamEvent(operationId, {
       data: {
         error: formattedError.message,
         errorType: String(formattedError.type),
@@ -86,7 +92,7 @@ export async function failStep(
   }
 
   try {
-    const errorState = await svc.coordinator.loadAgentState(operationId);
+    const errorState = await deps.coordinator.loadAgentState(operationId);
     finalStateWithError = {
       ...errorState!,
       error: formattedError,
@@ -109,16 +115,16 @@ export async function failStep(
   }
 
   try {
-    await svc.coordinator.saveAgentState(operationId, finalStateWithError);
+    await deps.coordinator.saveAgentState(operationId, finalStateWithError);
   } catch (saveError) {
     log('[%s] Failed to save error state (infra may be down): %O', operationId, saveError);
   }
 
-  await svc.completionLifecycle.emitSignalEvents(operationId, finalStateWithError, 'error');
+  await deps.completionLifecycle.emitSignalEvents(operationId, finalStateWithError, 'error');
   logToolCallPc(operationId, stepIndex, 'post.completion_signals', () => ({ reason: 'error' }));
 
   // Dispatch onComplete + onError hooks
-  await svc.completionLifecycle.dispatchHooks(operationId, finalStateWithError, 'error');
+  await deps.completionLifecycle.dispatchHooks(operationId, finalStateWithError, 'error');
   logToolCallPc(operationId, stepIndex, 'post.completion_hooks', () => ({ reason: 'error' }));
 
   // Finalize the partial snapshot into the canonical S3 path so the
@@ -134,7 +140,7 @@ export async function failStep(
   // success path could push it. Without this synthetic step, the
   // snapshot's step count would lag the assistant message that
   // triggered the failing call.
-  await svc.traceRecorder.finalize(operationId, {
+  await deps.traceRecorder.finalize(operationId, {
     completionReason: 'error',
     error: {
       attribution: formattedError.attribution,

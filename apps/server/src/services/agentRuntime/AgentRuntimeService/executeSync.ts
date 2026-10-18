@@ -2,9 +2,15 @@ import type { AgentRuntimeContext, AgentState } from '@lobechat/agent-runtime';
 import { isParkedStatus } from '@lobechat/agent-runtime';
 import debug from 'debug';
 
-import type { AgentRuntimeService } from '.';
+import type { AgentRuntimeServiceContext } from './types';
 
 const log = debug('lobe-server:agent-runtime-service');
+
+/** What this module reads off the service. */
+export type ExecuteSyncDeps = Pick<
+  AgentRuntimeServiceContext,
+  'completionLifecycle' | 'coordinator' | 'executeStep' | 'shouldContinueExecution'
+>;
 
 /**
  * Synchronously execute Agent operation until completion
@@ -26,7 +32,7 @@ const log = debug('lobe-server:agent-runtime-service');
  * ```
  */
 export async function executeSync(
-  svc: AgentRuntimeService,
+  deps: ExecuteSyncDeps,
   operationId: string,
   options?: {
     /** Initial context (if not provided, inferred from state) */
@@ -42,7 +48,7 @@ export async function executeSync(
   log('[%s] Starting sync execution (maxSteps: %d)', operationId, maxSteps);
 
   // Load initial state
-  const initialState = await svc.coordinator.loadAgentState(operationId);
+  const initialState = await deps.coordinator.loadAgentState(operationId);
   if (!initialState) {
     throw new Error(`Agent state not found for operation ${operationId}`);
   }
@@ -85,7 +91,7 @@ export async function executeSync(
 
     // Execute one step
     log('[%s][%d] Start executing...', operationId, stepIndex);
-    const result = await svc.executeStep({
+    const result = await deps.executeStep({
       context,
       operationId,
       stepIndex,
@@ -101,7 +107,7 @@ export async function executeSync(
     }
 
     // Check if should continue
-    if (!svc.shouldContinueExecution(state, context)) {
+    if (!deps.shouldContinueExecution(state, context)) {
       log('[%s] Sync execution stopped: shouldContinue=false', operationId);
       break;
     }
@@ -112,8 +118,8 @@ export async function executeSync(
     // If stopped due to executeSync's maxSteps limit, need to manually dispatch onComplete hooks
     // Note: If stopped due to state.maxSteps being reached, onComplete has already been called in executeStep
     if (state.status !== 'done' && state.status !== 'error') {
-      await svc.completionLifecycle.emitSignalEvents(operationId, state, 'max_steps');
-      await svc.completionLifecycle.dispatchHooks(operationId, state, 'max_steps');
+      await deps.completionLifecycle.emitSignalEvents(operationId, state, 'max_steps');
+      await deps.completionLifecycle.dispatchHooks(operationId, state, 'max_steps');
     }
   }
 

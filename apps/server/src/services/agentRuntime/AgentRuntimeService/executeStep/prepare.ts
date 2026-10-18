@@ -11,9 +11,19 @@ import { runMayUseDevice } from '@/server/modules/AgentRuntime/executors/resolve
 import { buildClientLlmWaitResumeContext } from '@/server/modules/AgentRuntime/llmRelay/clientWait';
 
 import { type AgentExecutionParams } from '../../types';
-import type { AgentRuntimeService } from '..';
+import type { AgentRuntimeServiceContext } from '../types';
 
 const log = debug('lobe-server:agent-runtime-service');
+
+/** What this module reads off the service. */
+export type StepPrepareDeps = Pick<
+  AgentRuntimeServiceContext,
+  | 'computeDeviceContext'
+  | 'humanIntervention'
+  | 'readQueuedMessagesFlag'
+  | 'refreshMessagesFromDB'
+  | 'resolveAsyncToolResumeParentMessageId'
+>;
 
 export interface PreparedStepInput {
   currentContext: AgentExecutionParams['context'];
@@ -29,7 +39,7 @@ export interface PreparedStepInput {
  * queued-follow-up flag.
  */
 export async function prepareStepInput(
-  svc: AgentRuntimeService,
+  deps: StepPrepareDeps,
   {
     agentState,
     params,
@@ -38,7 +48,7 @@ export async function prepareStepInput(
     agentState: AgentState;
     params: AgentExecutionParams;
     stepEntryMessages: Awaited<
-      ReturnType<AgentRuntimeService['queryStepEntryMessages']>
+      ReturnType<AgentRuntimeServiceContext['queryStepEntryMessages']>
     >['messages'];
   },
 ): Promise<PreparedStepInput> {
@@ -64,7 +74,7 @@ export async function prepareStepInput(
   let currentState = agentState;
 
   if (humanInput || approvedToolCall || rejectionReason) {
-    const interventionResult = await svc.humanIntervention.process(currentState, {
+    const interventionResult = await deps.humanIntervention.process(currentState, {
       approvedToolCall,
       humanInput,
       rejectAndContinue,
@@ -80,9 +90,9 @@ export async function prepareStepInput(
   // the pending set, refresh messages from the DB (to pick up the tool
   // results written out-of-band), and re-enter the LLM with them.
   if (resumeAsyncTool && currentState.status === 'waiting_for_async_tool') {
-    const refreshed = await svc.refreshMessagesFromDB(currentState);
+    const refreshed = await deps.refreshMessagesFromDB(currentState);
     const pendingTools = (currentState.pendingToolsCalling ?? []) as ChatToolPayload[];
-    const resumeParentMessageId = svc.resolveAsyncToolResumeParentMessageId(
+    const resumeParentMessageId = deps.resolveAsyncToolResumeParentMessageId(
       refreshed,
       pendingTools,
     );
@@ -147,7 +157,7 @@ export async function prepareStepInput(
   // completion + dispatch hooks. Skips runtime.step entirely.
   let forcedFinishState: AgentState | undefined;
   if (finishAfterAsyncTool && currentState.status === 'waiting_for_async_tool') {
-    const refreshed = await svc.refreshMessagesFromDB(currentState);
+    const refreshed = await deps.refreshMessagesFromDB(currentState);
     currentState = structuredClone(currentState);
     currentState.messages = refreshed;
     currentState.pendingToolsCalling = [];
@@ -190,7 +200,7 @@ export async function prepareStepInput(
       !rejectionReason &&
       !resumeAsyncTool &&
       !finishAfterAsyncTool;
-    const deviceContext = await svc.computeDeviceContext(
+    const deviceContext = await deps.computeDeviceContext(
       currentState,
       canReuseEntryMessages ? stepEntryMessages : undefined,
     );
@@ -219,7 +229,7 @@ export async function prepareStepInput(
   // This read is authoritative for the step: a value carried in on the
   // incoming context must not keep a hand-back the user has withdrawn.
   if (currentContext && !forcedFinishState) {
-    const hasQueuedMessages = await svc.readQueuedMessagesFlag(operationId, stepIndex);
+    const hasQueuedMessages = await deps.readQueuedMessagesFlag(operationId, stepIndex);
     if (hasQueuedMessages !== Boolean(currentContext.stepContext?.hasQueuedMessages)) {
       const stepContext = { ...currentContext.stepContext };
       if (hasQueuedMessages) stepContext.hasQueuedMessages = true;
