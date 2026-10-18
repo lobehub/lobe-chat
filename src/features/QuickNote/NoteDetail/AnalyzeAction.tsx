@@ -2,12 +2,12 @@
 
 import { ActionIcon, cssVar, toast } from '@lobehub/ui';
 import { Sparkles } from 'lucide-react';
-import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { ANALYZE_SETTLE_DELAY, quickNoteSelectors, useQuickNoteStore } from '@/store/quickNote';
 
 import { styles } from './style';
+import { useAnalyzeCountdown } from './useAnalyzeCountdown';
 
 const AnalyzeAction = ({ noteId }: { noteId: string }) => {
   const { t } = useTranslation('note');
@@ -23,27 +23,14 @@ const AnalyzeAction = ({ noteId }: { noteId: string }) => {
   });
   const requesting = useQuickNoteStore(quickNoteSelectors.isAnalyzing(noteId));
   const analyzeNote = useQuickNoteStore((s) => s.analyzeNote);
-  const [now, setNow] = useState(Date.now());
 
   const runActive = runStatus === 'pending' || runStatus === 'running';
   const dueAt = runActive ? undefined : analyzeDueAt;
 
-  useEffect(() => {
-    if (!dueAt || dueAt <= Date.now()) return;
-
-    setNow(Date.now());
-    const interval = window.setInterval(() => {
-      const currentTime = Date.now();
-      setNow(currentTime);
-      // Stop the visual countdown even if the next server update is delayed.
-      if (currentTime >= dueAt) window.clearInterval(interval);
-    }, 100);
-    return () => window.clearInterval(interval);
-  }, [dueAt]);
+  const remaining = useAnalyzeCountdown(dueAt);
 
   if (!exists) return null;
 
-  const remaining = dueAt ? Math.max(0, dueAt - now) : 0;
   const scheduled = remaining > 0;
   const circumference = 2 * Math.PI * 12;
   const progress = Math.min(1, remaining / ANALYZE_SETTLE_DELAY);

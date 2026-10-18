@@ -63,20 +63,11 @@ StatusText.displayName = 'QuickNoteAiStatusText';
 
 const AiPanel = memo<{ noteId: string }>(({ noteId }) => {
   const { t } = useTranslation('note');
-  const [exists, annotationContent, dived, hasContent] = useQuickNoteStore((s) => {
-    const note = quickNoteSelectors.noteById(noteId)(s);
-    return [
-      Boolean(note),
-      note?.annotation?.content,
-      Boolean(note?.annotation?.divedAt),
-      Boolean(note?.content.trim()),
-    ] as const;
-  });
-  const tags = useQuickNoteStore(
-    (s) => quickNoteSelectors.noteById(noteId)(s)?.tags ?? [],
+  const { annotationContent, dived, exists, hasContent, tags } = useQuickNoteStore(
+    quickNoteSelectors.aiPanelViewById(noteId),
     isEqual,
   );
-  const run = useQuickNoteStore((s) => quickNoteSelectors.noteById(noteId)(s)?.run, isEqual);
+  const run = useQuickNoteStore(quickNoteSelectors.runById(noteId), isEqual);
   const diving = useQuickNoteStore(quickNoteSelectors.isDiving(noteId));
   const [diveInto, toggleAnnotationPanel] = useQuickNoteStore((s) => [
     s.diveInto,

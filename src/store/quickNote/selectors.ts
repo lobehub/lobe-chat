@@ -49,6 +49,43 @@ const noteById =
   (s: QuickNoteState): QuickNoteItem | undefined =>
     id ? s.notes.find((note) => note.id === id) : undefined;
 
+export interface QuickNoteAiPanelView {
+  annotationContent?: string;
+  dived: boolean;
+  exists: boolean;
+  hasContent: boolean;
+  tags: string[];
+}
+
+/**
+ * Selects only the note fields the AI panel displays.
+ *
+ * Use when:
+ * - A subscriber must ignore note content edits beyond the empty/non-empty boundary.
+ *
+ * Expects:
+ * - Callers compare the result with `fast-deep-equal`, since each call builds a new object.
+ * - The run is read separately through `runById`, so its reference stays stable for memoized
+ *   run views when only annotation or tags change.
+ */
+const aiPanelViewById =
+  (id: string) =>
+  (s: QuickNoteState): QuickNoteAiPanelView => {
+    const note = noteById(id)(s);
+    return {
+      annotationContent: note?.annotation?.content,
+      dived: Boolean(note?.annotation?.divedAt),
+      exists: Boolean(note),
+      hasContent: Boolean(note?.content.trim()),
+      tags: note?.tags ?? [],
+    };
+  };
+
+const runById =
+  (id: string) =>
+  (s: QuickNoteState): QuickNoteItem['run'] =>
+    noteById(id)(s)?.run;
+
 const activeNote = (s: QuickNoteState): QuickNoteItem | undefined => noteById(s.activeNoteId)(s);
 
 const isDiving =
@@ -76,6 +113,7 @@ const pendingProposalsById = (id: string) => (s: QuickNoteState) =>
 export const quickNoteSelectors = {
   activeNote,
   agenticDetailsById,
+  aiPanelViewById,
   collections,
   filteredNotes,
   isAnalyzing,
@@ -85,6 +123,7 @@ export const quickNoteSelectors = {
   isProcessingProposal,
   noteById,
   pendingProposalsById,
+  runById,
   tags,
   totalCount,
   uncategorizedCount,
