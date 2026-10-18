@@ -3,12 +3,13 @@ import { RequestTrigger } from '@lobechat/types';
 
 import { AiAgentService } from '@/server/services/aiAgent';
 
+import { recordTrajectoryCompletion } from './completion';
 import {
   EVAL_AGENT_RUNTIME_QSTASH_RETRIES,
   EVAL_AGENT_RUNTIME_QSTASH_RETRY_DELAY,
 } from './constants';
 import { createRunTopics } from './createRun';
-import { AgentEvalRunService } from './index';
+import { createEvalRunDeps } from './deps';
 import type { EvalRunDeps } from './types';
 import { getCaseId, getEvalContextParams } from './utils';
 
@@ -110,8 +111,7 @@ async function executeTrajectoryCore(
         {
           handler: async (event) => {
             // Local mode: directly record completion
-            const service = new AgentEvalRunService(db, userId, deps.workspaceId);
-            await service.recordTrajectoryCompletion({
+            await recordTrajectoryCompletion(createEvalRunDeps(db, userId, deps.workspaceId), {
               runId,
               status: event.status || event.reason || 'done',
               telemetry: {

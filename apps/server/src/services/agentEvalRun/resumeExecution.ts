@@ -9,7 +9,7 @@ import {
 } from '@/server/workflows/agentEvalRun';
 
 import { recordTrajectoryCompletion } from './completion';
-import { AgentEvalRunService } from './index';
+import { createEvalRunDeps } from './deps';
 import { canResumeTrajectory } from './resumeTarget';
 import { recordThreadCompletion } from './thread';
 import type { EvalRunDeps } from './types';
@@ -95,8 +95,7 @@ export async function executeResumedTrajectory(
         {
           handler: async (event) => {
             // Local mode: directly record completion
-            const service = new AgentEvalRunService(db, userId, deps.workspaceId);
-            await service.recordTrajectoryCompletion({
+            await recordTrajectoryCompletion(createEvalRunDeps(db, userId, deps.workspaceId), {
               runId,
               status: event.status || event.reason || 'done',
               telemetry: {
@@ -243,8 +242,7 @@ export async function executeResumedThreadTrajectory(
         {
           handler: async (event) => {
             // Local mode: directly record thread completion
-            const service = new AgentEvalRunService(db, userId, deps.workspaceId);
-            await service.recordThreadCompletion({
+            await recordThreadCompletion(createEvalRunDeps(db, userId, deps.workspaceId), {
               runId,
               status: event.status || event.reason || 'done',
               telemetry: {

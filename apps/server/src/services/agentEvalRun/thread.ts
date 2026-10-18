@@ -19,7 +19,7 @@ import {
   EVAL_AGENT_RUNTIME_QSTASH_RETRY_DELAY,
   EVAL_HISTORY_TAIL_METADATA_KEY,
 } from './constants';
-import { AgentEvalRunService } from './index';
+import { createEvalRunDeps } from './deps';
 import type { EvalRunDeps } from './types';
 import { getCaseId, getEvalContextParams, roundCost } from './utils';
 
@@ -152,8 +152,7 @@ export async function executeThreadTrajectory(
         {
           handler: async (event) => {
             // Local mode: directly record thread completion
-            const service = new AgentEvalRunService(db, userId, deps.workspaceId);
-            await service.recordThreadCompletion({
+            await recordThreadCompletion(createEvalRunDeps(db, userId, deps.workspaceId), {
               runId,
               status: event.status || event.reason || 'done',
               telemetry: {
