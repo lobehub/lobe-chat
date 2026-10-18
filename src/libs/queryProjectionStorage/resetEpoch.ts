@@ -74,10 +74,14 @@ const persistEpoch = (epoch: number): boolean => {
 const purgeAllProjections = async (): Promise<void> => {
   await localDatabase.initialize();
   await localDatabase.deleteByPrefix(PROJECTION_COLLECTION, '');
-  for (let index = localStorage.length - 1; index >= 0; index -= 1) {
-    const key = localStorage.key(index);
-    if (key && [...localNamespaces].some((namespace) => key.startsWith(`${namespace}:`)))
-      localStorage.removeItem(key);
+  try {
+    for (let index = localStorage.length - 1; index >= 0; index -= 1) {
+      const key = localStorage.key(index);
+      if (key && [...localNamespaces].some((namespace) => key.startsWith(`${namespace}:`)))
+        localStorage.removeItem(key);
+    }
+  } catch {
+    // Storage access denied: its tier cannot be read back after a reload either.
   }
 };
 

@@ -16,8 +16,13 @@ export const dataContextReset = {
 
 /** Retire the previous context's persisted data, then reload this renderer. */
 export const resetDataContext = async (): Promise<void> => {
-  await markProjectionReset();
-  dataContextReset.reload();
+  try {
+    await markProjectionReset();
+  } finally {
+    // Reload even if retiring the rows failed: the previous server's in-memory
+    // state must never stay on screen once the configuration has changed.
+    dataContextReset.reload();
+  }
 };
 
 /** Reload this renderer when another window resets the data context. Call once per entry. */

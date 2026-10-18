@@ -8,6 +8,7 @@ import {
 } from './queryProjectionStorage/resetEpoch';
 
 beforeEach(() => {
+  vi.restoreAllMocks();
   localStorage.clear();
   resetProjectionEpochCache();
   vi.spyOn(dataContextReset, 'reload').mockImplementation(() => {});
@@ -18,6 +19,14 @@ describe('resetDataContext', () => {
     await resetDataContext();
 
     expect(localStorage.getItem(PROJECTION_EPOCH_STORAGE_KEY)).toBe('1');
+    expect(dataContextReset.reload).toHaveBeenCalledTimes(1);
+  });
+
+  it('reloads even when retiring the persisted rows fails', async () => {
+    const storage = await import('@/libs/queryProjectionStorage');
+    vi.spyOn(storage, 'markProjectionReset').mockRejectedValue(new Error('IndexedDB closed'));
+
+    await expect(resetDataContext()).rejects.toThrow('IndexedDB closed');
     expect(dataContextReset.reload).toHaveBeenCalledTimes(1);
   });
 

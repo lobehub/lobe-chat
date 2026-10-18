@@ -117,6 +117,22 @@ describe('projection reset epoch', () => {
     expect(localStorage.getItem('unrelated')).toBe('kept');
   });
 
+  it('still resolves when localStorage access is denied altogether', async () => {
+    vi.spyOn(localDatabase, 'initialize').mockResolvedValue(undefined);
+    const deleteByPrefix = vi.spyOn(localDatabase, 'deleteByPrefix').mockResolvedValue(undefined);
+    const denied = () => {
+      throw new Error('SecurityError');
+    };
+    vi.spyOn(Storage.prototype, 'setItem').mockImplementation(denied);
+    vi.spyOn(Storage.prototype, 'getItem').mockImplementation(denied);
+    vi.spyOn(Storage.prototype, 'key').mockImplementation(denied);
+    vi.spyOn(Storage.prototype, 'removeItem').mockImplementation(denied);
+    vi.spyOn(Storage.prototype, 'length', 'get').mockImplementation(denied);
+
+    await expect(markProjectionReset()).resolves.toBeUndefined();
+    expect(deleteByPrefix).toHaveBeenCalledWith('query-projections', '');
+  });
+
   it('never hides the replica index, so a purge can still enumerate old rows', async () => {
     const indexKey = { queryKey: REPLICA_INDEX_KEY, scope: 'u1:ws1' };
     await storage().set(indexKey, { data: '["a"]', updatedAt: 1 });
