@@ -167,6 +167,23 @@ describe('projection reset epoch', () => {
     unsubscribe();
   });
 
+  it('ignores a late notification of an older reset', async () => {
+    const listener = vi.fn();
+    const unsubscribe = subscribeRemoteProjectionReset(listener);
+    handleProjectionEpochStorageEvent({ key: PROJECTION_EPOCH_STORAGE_KEY, newValue: '2' });
+
+    // Epoch 1's channel message, delayed behind epoch 2's storage event.
+    handleProjectionEpochStorageEvent({ key: PROJECTION_EPOCH_STORAGE_KEY, newValue: '1' });
+
+    expect(listener).toHaveBeenCalledTimes(1);
+    // Rows written now still carry epoch 2, so they survive the reload.
+    localStorage.setItem(PROJECTION_EPOCH_STORAGE_KEY, '2');
+    await storage().set(KEY, { data: 'new context', updatedAt: 1 });
+    resetProjectionEpochCache();
+    expect(await storage().get(KEY)).toEqual({ data: 'new context', updatedAt: 1 });
+    unsubscribe();
+  });
+
   it('never hides the replica index, so a purge can still enumerate old rows', async () => {
     const indexKey = { queryKey: REPLICA_INDEX_KEY, scope: 'u1:ws1' };
     await storage().set(indexKey, { data: '["a"]', updatedAt: 1 });

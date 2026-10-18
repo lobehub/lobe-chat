@@ -133,9 +133,13 @@ export const subscribeRemoteProjectionReset = (listener: () => void) => {
   };
 };
 
-/** Apply an epoch another renderer reset to; both signals may deliver it. */
+/**
+ * Apply an epoch another renderer reset to. Both signals deliver each epoch and
+ * their queues are not ordered against each other, so a late notification of
+ * an older reset is ignored rather than moving the epoch backward.
+ */
 const applyRemoteEpoch = (epoch: number): void => {
-  if (cachedEpoch === epoch) return;
+  if (cachedEpoch !== undefined && epoch <= cachedEpoch) return;
   cachedEpoch = epoch;
   for (const listener of remoteResetListeners) listener();
 };
