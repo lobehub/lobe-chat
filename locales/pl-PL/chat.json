@@ -340,6 +340,7 @@
   "createTask.instructionPlaceholder": "Dodaj opis...",
   "createTask.member": "Przypisany",
   "createTask.submit": "Utwórz zadanie",
+  "createTask.submitScheduled": "Utwórz zaplanowane zadanie",
   "createTask.titlePlaceholder": "Tytuł zadania",
   "createTask.visibility.changeFailed": "Nie udało się zmienić widoczności zadania",
   "createTask.visibility.helperPrivate": "Tylko Ty możesz zobaczyć to zadanie.",

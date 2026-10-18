@@ -340,6 +340,7 @@
   "createTask.instructionPlaceholder": "설명 추가...",
   "createTask.member": "담당자",
   "createTask.submit": "작업 생성",
+  "createTask.submitScheduled": "예약된 작업 생성",
   "createTask.titlePlaceholder": "작업 제목",
   "createTask.visibility.changeFailed": "작업 가시성 변경 실패",
   "createTask.visibility.helperPrivate": "이 작업은 오직 당신만 볼 수 있습니다.",

@@ -340,6 +340,7 @@
   "createTask.instructionPlaceholder": "Aggiungi una descrizione...",
   "createTask.member": "Assegnatario",
   "createTask.submit": "Crea attività",
+  "createTask.submitScheduled": "Crea attività programmata",
   "createTask.titlePlaceholder": "Titolo dell’attività",
   "createTask.visibility.changeFailed": "Impossibile modificare la visibilità del compito",
   "createTask.visibility.helperPrivate": "Solo tu puoi vedere questo compito.",

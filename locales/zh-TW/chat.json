@@ -340,6 +340,7 @@
   "createTask.instructionPlaceholder": "新增描述...",
   "createTask.member": "指派人",
   "createTask.submit": "建立任務",
+  "createTask.submitScheduled": "建立排程任務",
   "createTask.titlePlaceholder": "任務標題",
   "createTask.visibility.changeFailed": "無法更改任務可見性",
   "createTask.visibility.helperPrivate": "只有您可以看到此任務。",

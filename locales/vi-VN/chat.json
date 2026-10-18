@@ -340,6 +340,7 @@
   "createTask.instructionPlaceholder": "Thêm mô tả...",
   "createTask.member": "Người được giao",
   "createTask.submit": "Tạo nhiệm vụ",
+  "createTask.submitScheduled": "Tạo tác vụ đã lên lịch",
   "createTask.titlePlaceholder": "Tiêu đề nhiệm vụ",
   "createTask.visibility.changeFailed": "Không thể thay đổi quyền hiển thị của nhiệm vụ",
   "createTask.visibility.helperPrivate": "Chỉ bạn có thể xem nhiệm vụ này.",

@@ -340,6 +340,7 @@
   "createTask.instructionPlaceholder": "افزودن توضیحات...",
   "createTask.member": "مسئول",
   "createTask.submit": "ایجاد وظیفه",
+  "createTask.submitScheduled": "ایجاد وظیفه زمان‌بندی‌شده",
   "createTask.titlePlaceholder": "عنوان وظیفه",
   "createTask.visibility.changeFailed": "تغییر قابلیت مشاهده وظیفه ناموفق بود",
   "createTask.visibility.helperPrivate": "فقط شما می‌توانید این وظیفه را ببینید.",

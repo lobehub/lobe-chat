@@ -340,6 +340,7 @@
   "createTask.instructionPlaceholder": "Adicionar descrição...",
   "createTask.member": "Responsável",
   "createTask.submit": "Criar tarefa",
+  "createTask.submitScheduled": "Criar tarefa agendada",
   "createTask.titlePlaceholder": "Título da tarefa",
   "createTask.visibility.changeFailed": "Falha ao alterar a visibilidade da tarefa",
   "createTask.visibility.helperPrivate": "Somente você pode ver esta tarefa.",

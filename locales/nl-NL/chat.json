@@ -340,6 +340,7 @@
   "createTask.instructionPlaceholder": "Beschrijving toevoegen...",
   "createTask.member": "Toewijzing",
   "createTask.submit": "Taak aanmaken",
+  "createTask.submitScheduled": "Geplande taak maken",
   "createTask.titlePlaceholder": "Taaktitel",
   "createTask.visibility.changeFailed": "Het wijzigen van de zichtbaarheid van de taak is mislukt",
   "createTask.visibility.helperPrivate": "Alleen jij kunt deze taak zien.",

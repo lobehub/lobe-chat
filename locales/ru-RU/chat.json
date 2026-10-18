@@ -340,6 +340,7 @@
   "createTask.instructionPlaceholder": "Добавить описание...",
   "createTask.member": "Исполнитель",
   "createTask.submit": "Создать задачу",
+  "createTask.submitScheduled": "Создать запланированную задачу",
   "createTask.titlePlaceholder": "Название задачи",
   "createTask.visibility.changeFailed": "Не удалось изменить видимость задачи",
   "createTask.visibility.helperPrivate": "Только вы можете видеть эту задачу.",

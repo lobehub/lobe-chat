@@ -340,6 +340,7 @@
   "createTask.instructionPlaceholder": "Añadir descripción...",
   "createTask.member": "Asignado",
   "createTask.submit": "Crear tarea",
+  "createTask.submitScheduled": "Crear tarea programada",
   "createTask.titlePlaceholder": "Título de la tarea",
   "createTask.visibility.changeFailed": "Error al cambiar la visibilidad de la tarea",
   "createTask.visibility.helperPrivate": "Solo tú puedes ver esta tarea.",

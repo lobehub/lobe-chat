@@ -340,6 +340,7 @@
   "createTask.instructionPlaceholder": "説明を追加...",
   "createTask.member": "担当者",
   "createTask.submit": "タスクを作成",
+  "createTask.submitScheduled": "スケジュールされたタスクを作成",
   "createTask.titlePlaceholder": "タスク名",
   "createTask.visibility.changeFailed": "タスクの可視性の変更に失敗しました",
   "createTask.visibility.helperPrivate": "このタスクはあなただけが見ることができます。",

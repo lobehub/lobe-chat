@@ -340,6 +340,7 @@
   "createTask.instructionPlaceholder": "Açıklama ekle...",
   "createTask.member": "Atanan",
   "createTask.submit": "Görevi oluştur",
+  "createTask.submitScheduled": "Zamanlanmış görevi oluştur",
   "createTask.titlePlaceholder": "Görev başlığı",
   "createTask.visibility.changeFailed": "Görev görünürlüğü değiştirilemedi",
   "createTask.visibility.helperPrivate": "Bu görevi yalnızca siz görebilirsiniz.",

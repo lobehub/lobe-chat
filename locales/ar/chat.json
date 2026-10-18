@@ -340,6 +340,7 @@
   "createTask.instructionPlaceholder": "أضف وصفًا...",
   "createTask.member": "المُكلف",
   "createTask.submit": "إنشاء مهمة",
+  "createTask.submitScheduled": "إنشاء مهمة مجدولة",
   "createTask.titlePlaceholder": "عنوان المهمة",
   "createTask.visibility.changeFailed": "فشل في تغيير رؤية المهمة",
   "createTask.visibility.helperPrivate": "فقط يمكنك رؤية هذه المهمة.",
