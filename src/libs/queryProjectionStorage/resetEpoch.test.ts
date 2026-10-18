@@ -8,6 +8,7 @@ import {
   handleProjectionEpochStorageEvent,
   markProjectionReset,
   PROJECTION_EPOCH_STORAGE_KEY,
+  PROJECTION_RESET_CHANNEL,
   resetProjectionEpochCache,
   subscribeRemoteProjectionReset,
 } from './resetEpoch';
@@ -131,6 +132,39 @@ describe('projection reset epoch', () => {
 
     await expect(markProjectionReset()).resolves.toBeUndefined();
     expect(deleteByPrefix).toHaveBeenCalledWith('query-projections', '');
+  });
+
+  it('signals other renderers even when the epoch cannot be persisted', async () => {
+    vi.spyOn(localDatabase, 'initialize').mockResolvedValue(undefined);
+    vi.spyOn(localDatabase, 'deleteByPrefix').mockResolvedValue(undefined);
+    vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {
+      throw new Error('QuotaExceededError');
+    });
+    // Another window's end of the channel (no `storage` event will fire).
+    const otherWindow = new BroadcastChannel(PROJECTION_RESET_CHANNEL);
+    const received = new Promise<unknown>((resolve) => {
+      otherWindow.addEventListener('message', ({ data }) => resolve(data), { once: true });
+    });
+
+    await markProjectionReset();
+
+    expect(await received).toBe(1);
+    otherWindow.close();
+  });
+
+  it('follows a reset another renderer announced on the channel', async () => {
+    const listener = vi.fn();
+    const unsubscribe = subscribeRemoteProjectionReset(listener);
+    const otherWindow = new BroadcastChannel(PROJECTION_RESET_CHANNEL);
+
+    otherWindow.postMessage(7);
+
+    await vi.waitFor(() => expect(listener).toHaveBeenCalledTimes(1));
+    // The same epoch arriving again (through the `storage` event) is not a new reset.
+    handleProjectionEpochStorageEvent({ key: PROJECTION_EPOCH_STORAGE_KEY, newValue: '7' });
+    expect(listener).toHaveBeenCalledTimes(1);
+    otherWindow.close();
+    unsubscribe();
   });
 
   it('never hides the replica index, so a purge can still enumerate old rows', async () => {

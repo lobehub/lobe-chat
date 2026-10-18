@@ -40,6 +40,16 @@ type StampedRow<T> = QueryProjection<T> & { [EPOCH_FIELD]?: number };
 
 let cachedEpoch: number | undefined;
 
+/**
+ * The second signal, independent of localStorage: a reset whose epoch could not
+ * be persisted fires no `storage` event. Neither reaches the sending window.
+ */
+export const PROJECTION_RESET_CHANNEL = 'lobe-replica-reset-epoch';
+const resetChannel =
+  typeof BroadcastChannel === 'undefined'
+    ? undefined
+    : new BroadcastChannel(PROJECTION_RESET_CHANNEL);
+
 const readEpoch = (): number => {
   if (cachedEpoch !== undefined) return cachedEpoch;
   let epoch = 0;
@@ -95,8 +105,12 @@ const purgeAllProjections = async (): Promise<void> => {
 export const markProjectionReset = async (): Promise<void> => {
   const epoch = readEpoch() + 1;
   cachedEpoch = epoch;
-  if (typeof window === 'undefined' || persistEpoch(epoch)) return;
-  await purgeAllProjections();
+  if (typeof window === 'undefined') return;
+  const persisted = persistEpoch(epoch);
+  // Tell the other renderers even when the localStorage write failed: then no
+  // `storage` event fires, and they would keep the previous server's state.
+  resetChannel?.postMessage(epoch);
+  if (!persisted) await purgeAllProjections();
 };
 
 /** Forget the cached epoch (tests: a fresh session re-reads localStorage). */
@@ -119,17 +133,26 @@ export const subscribeRemoteProjectionReset = (listener: () => void) => {
   };
 };
 
-/** Apply an epoch another renderer persisted (`storage` events reach only the other windows). */
+/** Apply an epoch another renderer reset to; both signals may deliver it. */
+const applyRemoteEpoch = (epoch: number): void => {
+  if (cachedEpoch === epoch) return;
+  cachedEpoch = epoch;
+  for (const listener of remoteResetListeners) listener();
+};
+
+/** A `storage` event: another renderer persisted a new epoch. */
 export const handleProjectionEpochStorageEvent = ({
   key,
   newValue,
 }: Pick<StorageEvent, 'key' | 'newValue'>): void => {
   if (key !== PROJECTION_EPOCH_STORAGE_KEY) return;
-  const epoch = Number(newValue) || 0;
-  if (cachedEpoch === epoch) return;
-  cachedEpoch = epoch;
-  for (const listener of remoteResetListeners) listener();
+  applyRemoteEpoch(Number(newValue) || 0);
 };
+
+// Another renderer's reset, through the channel declared above.
+resetChannel?.addEventListener('message', ({ data }: MessageEvent) => {
+  applyRemoteEpoch(Number(data) || 0);
+});
 
 if (typeof window !== 'undefined')
   window.addEventListener('storage', handleProjectionEpochStorageEvent);
