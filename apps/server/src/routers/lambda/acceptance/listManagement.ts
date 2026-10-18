@@ -9,6 +9,7 @@ import type { AcceptanceItem } from '@/database/schemas/verify';
 import { acceptances } from '@/database/schemas/verify';
 import type { LobeChatDatabase } from '@/database/type';
 import { isUuid } from '@/database/utils/uuid';
+import { router } from '@/libs/trpc/lambda';
 import { FileService } from '@/server/services/file';
 import {
   mapWithConcurrency,
@@ -60,7 +61,7 @@ const PURGE_BATCH_CONCURRENCY = 4;
 
 const PURGE_PREVIEW_LIMIT = 20;
 
-export const listManagementProcedures = {
+export const listManagementRouter = router({
   /**
    * Recent acceptances (with subject headers), newest first — list panel + CLI.
    *
@@ -403,4 +404,4 @@ export const listManagementProcedures = {
 
       return { deleted, failedIds };
     }),
-};
+});

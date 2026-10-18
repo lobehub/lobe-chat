@@ -1,19 +1,19 @@
-import { router } from '@/libs/trpc/lambda';
+import { mergeRouters } from '@/libs/trpc/lambda';
 
-import { bundleProcedures } from './bundle';
-import { deliveryLinksProcedures } from './deliveryLinks';
-import { flowProcedures } from './flow';
-import { listManagementProcedures } from './listManagement';
-import { reviewProcedures } from './review';
-import { subjectProcedures } from './subject';
+import { bundleRouter } from './bundle';
+import { deliveryLinksRouter } from './deliveryLinks';
+import { flowRouter } from './flow';
+import { listManagementRouter } from './listManagement';
+import { reviewRouter } from './review';
+import { subjectRouter } from './subject';
 
 export { resolveAcceptanceForWrite } from './procedures';
 
-export const acceptanceRouter = router({
-  ...reviewProcedures,
-  ...flowProcedures,
-  ...deliveryLinksProcedures,
-  ...subjectProcedures,
-  ...bundleProcedures,
-  ...listManagementProcedures,
-});
+export const acceptanceRouter = mergeRouters(
+  reviewRouter,
+  flowRouter,
+  deliveryLinksRouter,
+  subjectRouter,
+  bundleRouter,
+  listManagementRouter,
+);

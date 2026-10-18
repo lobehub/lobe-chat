@@ -2,6 +2,7 @@ import { verifyCheckDefinitionSchema } from '@lobechat/types';
 import { z } from 'zod';
 
 import { AcceptanceFlowModel } from '@/database/models/acceptanceFlow';
+import { router } from '@/libs/trpc/lambda';
 
 import { acceptanceWriteProcedure, resolveAcceptanceForWrite } from './procedures';
 import { reviewAnnotationsSchema } from './schemas';
@@ -48,7 +49,7 @@ const flowDefinitionSchema = z.object({
     .max(300),
 });
 
-export const flowProcedures = {
+export const flowRouter = router({
   publishFlow: acceptanceWriteProcedure
     .input(
       z.object({
@@ -145,4 +146,4 @@ export const flowProcedures = {
         { annotations: input.annotations, fileIds: input.fileIds },
       );
     }),
-};
+});

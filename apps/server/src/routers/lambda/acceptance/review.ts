@@ -10,6 +10,7 @@ import { z } from 'zod';
 import { VerifyReviewPredictionModel } from '@/database/models/verifyReviewPrediction';
 import { VerifyRunModel } from '@/database/models/verifyRun';
 import type { AcceptanceItem } from '@/database/schemas/verify';
+import { router } from '@/libs/trpc/lambda';
 import { notifyAcceptance } from '@/server/services/acceptanceReview/events';
 import {
   buildAcceptanceCheckUnion,
@@ -29,7 +30,7 @@ import * as goalGate from '../_helpers/goalGateAcceptance';
 import { acceptanceWriteProcedure, resolveAcceptanceForWrite } from './procedures';
 import { reviewAnnotationsSchema } from './schemas';
 
-export const reviewProcedures = {
+export const reviewRouter = router({
   regroupChecks: acceptanceWriteProcedure
     .input(
       z.object({
@@ -379,4 +380,4 @@ export const reviewProcedures = {
         return { ...(current ?? rejected), repairDispatch };
       },
     ),
-};
+});

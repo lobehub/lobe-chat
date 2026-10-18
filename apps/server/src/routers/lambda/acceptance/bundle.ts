@@ -10,6 +10,7 @@ import { VerifyReviewPredictionModel } from '@/database/models/verifyReviewPredi
 import { users } from '@/database/schemas';
 import { acceptances } from '@/database/schemas/verify';
 import { isUuid } from '@/database/utils/uuid';
+import { router } from '@/libs/trpc/lambda';
 import {
   AcceptanceService,
   buildAcceptanceCheckUnion,
@@ -24,7 +25,7 @@ import { listAcceptancePullRequests } from '@/server/services/verify/acceptanceP
 import { canManageAcceptance } from '../_helpers/acceptanceWriteScope';
 import { canReadAcceptance, publicAcceptanceProcedure } from './procedures';
 
-export const bundleProcedures = {
+export const bundleRouter = router({
   /**
    * One-shot payload for the acceptance decision workspace: the aggregate, its
    * subject header, the round ledger (each round's run + report), and the
@@ -335,4 +336,4 @@ export const bundleProcedures = {
         subject,
       };
     }),
-};
+});

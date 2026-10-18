@@ -2,6 +2,7 @@ import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
 import { VerifyRunModel } from '@/database/models/verifyRun';
+import { router } from '@/libs/trpc/lambda';
 import { notifyAcceptance } from '@/server/services/acceptanceReview/events';
 import { parseChangeRequestUrl } from '@/server/services/scm/changeRequestUrl';
 import {
@@ -14,7 +15,7 @@ import { previewUrlSchema, recordPreviewUrl } from '../_helpers/acceptancePrevie
 import { assertWorkspaceRowManageable } from '../_helpers/assertWorkspaceRowManageable';
 import { acceptanceWriteProcedure, resolveAcceptanceForWrite } from './procedures';
 
-export const deliveryLinksProcedures = {
+export const deliveryLinksRouter = router({
   /**
    * Chain an existing verify run onto an acceptance as its next round.
    * Idempotent when the run is already chained to the same acceptance (the
@@ -120,4 +121,4 @@ export const deliveryLinksProcedures = {
         });
       return { previewUrl: input.url, roundIndex: run.roundIndex };
     }),
-};
+});
