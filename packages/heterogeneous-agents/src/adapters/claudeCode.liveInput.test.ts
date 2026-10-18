@@ -67,6 +67,60 @@ describe('ClaudeCodeAdapter live input', () => {
     expect(reply.data.externalSignal).toBeUndefined();
   });
 
+  it('keeps the reply to a delivered message out of a task completion that lands after the replay', () => {
+    const adapter = new ClaudeCodeAdapter({
+      runtimeEndStrategy: 'on-transport-close',
+      signalBackgroundTaskCompletion: true,
+    });
+    adapter.adapt(init);
+    adapter.adapt({
+      message: {
+        content: [
+          {
+            id: 'toolu_bash',
+            input: { command: 'sleep 1', run_in_background: true },
+            name: 'Bash',
+            type: 'tool_use',
+          },
+        ],
+        id: 'msg_01',
+      },
+      type: 'assistant',
+    });
+    adapter.adapt({
+      session_id: 'sess_1',
+      subtype: 'task_started',
+      task_id: 'task_1',
+      tool_use_id: 'toolu_bash',
+      type: 'system',
+    });
+    adapter.adapt({
+      message: {
+        content: [{ content: 'started', tool_use_id: 'toolu_bash', type: 'tool_result' }],
+      },
+      type: 'user',
+    });
+    adapter.adapt(messageStart('msg_02'));
+    adapter.adapt({ is_error: false, result: 'started', subtype: 'success', type: 'result' });
+
+    // Replay → task notification → the user's turn (anthropics/claude-code#39632).
+    adapter.adapt({
+      isReplay: true,
+      message: { content: [{ text: 'what next?', type: 'text' }], role: 'user' },
+      type: 'user',
+      uuid: 'u-2',
+    });
+    adapter.adapt({
+      session_id: 'sess_1',
+      subtype: 'task_notification',
+      task_id: 'task_1',
+      type: 'system',
+    });
+    const reply = newStepOf(adapter.adapt(messageStart('msg_03')));
+
+    expect(reply.data.externalSignal).toBeUndefined();
+  });
+
   it('still tags a turn the background task opens without user input', () => {
     const adapter = new ClaudeCodeAdapter({
       runtimeEndStrategy: 'on-transport-close',

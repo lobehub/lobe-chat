@@ -121,7 +121,8 @@ export class ClaudeCodeLiveInput {
             terminalReason: message.terminal_reason,
           };
         }
-        if (!this.closed) this.observeMessage(message);
+        // Turns still run after input closes, so keep tracking them.
+        this.observeMessage(message);
       } catch {
         // Non-JSON noise on stdout carries no session state.
       }
@@ -160,13 +161,13 @@ export class ClaudeCodeLiveInput {
       case 'user': {
         if (message.isReplay && typeof message.uuid === 'string') {
           this.unconsumed.delete(message.uuid);
-          this.turnOpen = true;
+          this.openTurn();
         }
         return;
       }
       case 'assistant':
       case 'stream_event': {
-        this.turnOpen = true;
+        this.openTurn();
         return;
       }
       case 'system': {
@@ -186,7 +187,7 @@ export class ClaudeCodeLiveInput {
 
   private observeSystem(message: any): void {
     if (message.subtype === 'init') {
-      this.turnOpen = true;
+      this.openTurn();
       return;
     }
     if (message.subtype === 'task_started' && message.task_id) {
@@ -202,6 +203,12 @@ export class ClaudeCodeLiveInput {
       this.activeTasks.delete(message.task_id);
       this.closeIfIdle();
     }
+  }
+
+  /** A newer turn supersedes how the last one ended until it reports its own. */
+  private openTurn(): void {
+    this.turnOpen = true;
+    this.lastOutcome = undefined;
   }
 
   private closeIfIdle(): void {

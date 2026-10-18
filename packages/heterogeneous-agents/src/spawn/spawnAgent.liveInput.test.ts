@@ -255,6 +255,23 @@ describe('spawnAgent live input (Claude Code)', () => {
     },
   );
 
+  it('does not report a stale interrupt when a later turn crashes before its result', async () => {
+    await expect(
+      runToExit(
+        [
+          {
+            is_error: true,
+            subtype: 'error_during_execution',
+            terminal_reason: 'aborted_streaming',
+          },
+          // A background task's callback opens a new turn, then the CLI dies.
+          { model: 'claude-sonnet-4-6', session_id: 'cc-1', subtype: 'init', type: 'system' },
+        ],
+        1,
+      ),
+    ).resolves.toEqual([]);
+  });
+
   it('completes when a turn after an interrupt finishes normally', async () => {
     const [end] = await runToExit(
       [
