@@ -103,13 +103,20 @@ export const RedisKeys = {
     takenFollowUps: (userId: string, topicId: string, threadId?: string | null): string =>
       `follow_ups_taken:v1:${userId}:${topicId}:${threadId || 'main'}`,
     /**
-     * How many drained follow-ups of that queue are still in flight — taken by
-     * a run but not yet delivered or put back. Their slots stay reserved, so a
-     * restore never pushes the queue past its bound.
-     * Full key: agentSteer:follow_ups_inflight:v1:{userId}:{topicId}:{threadId|main}
+     * Follow-ups a run drained from that queue but has not settled yet, one
+     * batch per drain (field = drain id). A batch whose lease lapses goes back
+     * to the queue, so an interrupted delivery never loses an entry.
+     * Full key: agentSteer:follow_ups_drained:v1:{userId}:{topicId}:{threadId|main}
      */
-    inflightFollowUps: (userId: string, topicId: string, threadId?: string | null): string =>
-      `follow_ups_inflight:v1:${userId}:${topicId}:${threadId || 'main'}`,
+    drainedFollowUps: (userId: string, topicId: string, threadId?: string | null): string =>
+      `follow_ups_drained:v1:${userId}:${topicId}:${threadId || 'main'}`,
+    /**
+     * Short fence around starting a run on an existing thread. Thread starts
+     * skip the topic-start reservation, so this is what lets a queued
+     * follow-up check "no run is live here" and start as one step.
+     * Full key: agentSteer:thread_start:v1:{threadId}
+     */
+    threadStartFence: (threadId: string): string => `thread_start:v1:${threadId}`,
   },
   /**
    * AI generation scope - for AI-generated content like welcome messages

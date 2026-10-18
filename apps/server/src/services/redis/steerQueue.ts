@@ -9,14 +9,18 @@ const getClient = () => getRedisServiceClient('agentSteer');
 const QUEUE_TTL_SECONDS = 24 * 60 * 60;
 
 /**
+ * How long a drained batch belongs to the run that took it. Delivery (joining
+ * the run, or starting the next turn) finishes well within it; a batch its run
+ * never settled — a crash, a timed-out drain, Redis gone between drain and
+ * settle — goes back to the queue once it lapses, so nothing is lost.
+ */
+const PROCESSING_LEASE_MS = 5 * 60 * 1000;
+
+/**
  * Upper bound on follow-ups waiting behind one turn, counting the ones a run
- * has taken but not yet delivered (their slots stay reserved).
+ * has taken but not yet delivered (they may still come back).
  */
 export const STEER_QUEUE_MAX_ENTRIES = 20;
-
-// A drained follow-up is delivered or put back within one step; a reservation
-// a crashed run never settled frees its slots after this.
-const INFLIGHT_TTL_SECONDS = 10 * 60;
 
 /**
  * One user's queue on one conversation surface: the topic's main spine, or one
@@ -47,19 +51,22 @@ export class SteerQueueWriteUnknownError extends Error {
 }
 
 /**
- * Entries waiting on the surface but bound to no run — put back after a failed
- * start, when the run they were queued behind has already ended. The next run
- * that finishes on the surface takes them.
+ * Entries waiting on the surface but bound to no run — returned after a failed
+ * delivery or reclaimed from a lapsed batch. The next run that drains the
+ * surface takes them.
  */
 const UNBOUND = '*';
 
-// Each list item is `<entry id>\t<operation it waits behind>\n<entry JSON>`, so
-// the scripts can match ids and operations without parsing JSON.
+// Each item is `<entry id>\t<operation it waits behind>\n<entry JSON>`, so the
+// scripts can match ids and operations without parsing JSON. A drained batch is
+// `<lease expiry ms>` followed by its items, each after a 0x1E separator —
+// a character neither an entry id nor `JSON.stringify` output ever contains.
 const encode = (entry: SteerQueueEntry, behind: string) =>
   `${entry.id}\t${behind}\n${JSON.stringify(entry)}`;
 
 /** Lua helpers shared by the scripts below. */
-const LUA_HEADER = `
+const LUA_HELPERS = `
+local SEP = string.char(30)
 local function header(item)
   local nl = string.find(item, '\\n', 1, true)
   if not nl then return nil, nil end
@@ -72,25 +79,68 @@ local function takes(item, op)
   local _, behind = header(item)
   return behind == op or behind == '${UNBOUND}'
 end
+local function unbind(item)
+  local id = header(item)
+  local nl = string.find(item, '\\n', 1, true)
+  return id .. '\\t${UNBOUND}' .. string.sub(item, nl)
+end
+local function splitBatch(batch)
+  local parts = {}
+  local from = 1
+  while true do
+    local at = string.find(batch, SEP, from, true)
+    if not at then
+      table.insert(parts, string.sub(batch, from))
+      break
+    end
+    table.insert(parts, string.sub(batch, from, at - 1))
+    from = at + 1
+  end
+  local expiry = tonumber(table.remove(parts, 1))
+  return expiry, parts
+end
+local function joinBatch(expiry, items)
+  return tostring(expiry) .. SEP .. table.concat(items, SEP)
+end
+local function pushFront(qkey, items)
+  for i = #items, 1, -1 do redis.call('LPUSH', qkey, unbind(items[i])) end
+end
+local function reclaimLapsed(qkey, pkey, now)
+  local all = redis.call('HGETALL', pkey)
+  for i = 1, #all, 2 do
+    local expiry, items = splitBatch(all[i + 1])
+    if expiry <= now then
+      pushFront(qkey, items)
+      redis.call('HDEL', pkey, all[i])
+    end
+  end
+end
+local function inFlight(pkey)
+  local n = 0
+  for _, batch in ipairs(redis.call('HVALS', pkey)) do
+    local _, items = splitBatch(batch)
+    n = n + #items
+  end
+  return n
+end
 `;
 
 /**
  * Idempotent by entry id: a retried append of an id still queued answers the
  * current length, and of an id a drain already took answers -2, instead of
- * adding a copy. The bound counts in-flight (drained, unsettled) entries too.
+ * adding a copy. The bound counts entries in drained batches too.
  *
- * KEYS[1] = queue; KEYS[2] = taken ids; KEYS[3] = in-flight count;
+ * KEYS[1] = queue; KEYS[2] = taken ids; KEYS[3] = drained batches;
  * ARGV[1] = entry id; ARGV[2] = item; ARGV[3] = ttl; ARGV[4] = max
  */
-const APPEND_SCRIPT = `${LUA_HEADER}
+const APPEND_SCRIPT = `${LUA_HELPERS}
 if redis.call('SISMEMBER', KEYS[2], ARGV[1]) == 1 then return -2 end
 local items = redis.call('LRANGE', KEYS[1], 0, -1)
 for _, item in ipairs(items) do
   local id = header(item)
   if id == ARGV[1] then return #items end
 end
-local inflight = tonumber(redis.call('GET', KEYS[3]) or '0')
-if #items + inflight >= tonumber(ARGV[4]) then return -1 end
+if #items + inFlight(KEYS[3]) >= tonumber(ARGV[4]) then return -1 end
 local length = redis.call('RPUSH', KEYS[1], ARGV[2])
 redis.call('EXPIRE', KEYS[1], ARGV[3])
 return length
@@ -99,17 +149,26 @@ return length
 /** KEYS[1] = queue */
 const LIST_SCRIPT = `return redis.call('LRANGE', KEYS[1], 0, -1)`;
 
-/** Entries a run would take. KEYS[1] = queue; ARGV[1] = operation id */
-const LENGTH_SCRIPT = `${LUA_HEADER}
+/**
+ * Entries a run would take: queued ones it owns, plus any in a lapsed batch
+ * (they go back unbound on the next drain).
+ *
+ * KEYS[1] = queue; KEYS[2] = drained batches; ARGV[1] = operation id; ARGV[2] = now ms
+ */
+const LENGTH_SCRIPT = `${LUA_HELPERS}
 local count = 0
 for _, item in ipairs(redis.call('LRANGE', KEYS[1], 0, -1)) do
   if takes(item, ARGV[1]) then count = count + 1 end
+end
+for _, batch in ipairs(redis.call('HVALS', KEYS[2])) do
+  local expiry, items = splitBatch(batch)
+  if expiry <= tonumber(ARGV[2]) then count = count + #items end
 end
 return count
 `;
 
 /** KEYS[1] = queue; ARGV[1] = entry id. Returns 1 when this call removed it. */
-const REMOVE_SCRIPT = `${LUA_HEADER}
+const REMOVE_SCRIPT = `${LUA_HELPERS}
 for _, item in ipairs(redis.call('LRANGE', KEYS[1], 0, -1)) do
   local id = header(item)
   if id == ARGV[1] then return redis.call('LREM', KEYS[1], 1, item) end
@@ -118,22 +177,27 @@ return 0
 `;
 
 /**
- * Takes the entries a run owns in one step: those queued behind it, unbound
- * ones, and those behind a run confirmed ended (it finished while its own drain
- * could not reach Redis). Entries behind any other run stay — including one
- * that started after the caller looked. Taken ids are recorded so a retried
+ * Moves the entries a run owns into a drained batch under `drainId`, in one
+ * step: those queued behind it, unbound ones, and those behind a run confirmed
+ * ended. Entries behind any other run stay. Lapsed batches go back to the queue
+ * first. Retrying with the same `drainId` returns the same batch, so a drain
+ * whose response was lost can be read back. Taken ids are recorded so a retried
  * append of one is recognized.
  *
- * Their slots stay reserved in the in-flight count until the caller settles
- * or restores them.
- *
- * KEYS[1] = queue; KEYS[2] = taken ids; KEYS[3] = in-flight count;
- * ARGV[1] = operation id; ARGV[2] = ttl; ARGV[3] = in-flight ttl;
- * ARGV[4..] = runs confirmed ended
+ * KEYS[1] = queue; KEYS[2] = taken ids; KEYS[3] = drained batches;
+ * ARGV[1] = operation id; ARGV[2] = drain id; ARGV[3] = now ms; ARGV[4] = lease ms;
+ * ARGV[5] = ttl; ARGV[6..] = runs confirmed ended
  */
-const DRAIN_SCRIPT = `${LUA_HEADER}
+const DRAIN_SCRIPT = `${LUA_HELPERS}
+local now = tonumber(ARGV[3])
+reclaimLapsed(KEYS[1], KEYS[3], now)
+local existing = redis.call('HGET', KEYS[3], ARGV[2])
+if existing then
+  local _, items = splitBatch(existing)
+  return items
+end
 local ended = {}
-for i = 4, #ARGV do ended[ARGV[i]] = true end
+for i = 6, #ARGV do ended[ARGV[i]] = true end
 local taken = {}
 local kept = {}
 for _, item in ipairs(redis.call('LRANGE', KEYS[1], 0, -1)) do
@@ -146,46 +210,48 @@ for _, item in ipairs(redis.call('LRANGE', KEYS[1], 0, -1)) do
   end
 end
 if #taken == 0 then return taken end
-redis.call('EXPIRE', KEYS[2], ARGV[2])
-redis.call('INCRBY', KEYS[3], #taken)
-redis.call('EXPIRE', KEYS[3], ARGV[3])
+redis.call('HSET', KEYS[3], ARGV[2], joinBatch(now + tonumber(ARGV[4]), taken))
+redis.call('EXPIRE', KEYS[3], ARGV[5])
+redis.call('EXPIRE', KEYS[2], ARGV[5])
 local ttl = redis.call('TTL', KEYS[1])
 redis.call('DEL', KEYS[1])
 if #kept > 0 then
   redis.call('RPUSH', KEYS[1], unpack(kept))
-  if ttl > 0 then redis.call('EXPIRE', KEYS[1], ttl) end
+  redis.call('EXPIRE', KEYS[1], ttl > 0 and ttl or ARGV[5])
 end
 return taken
 `;
 
-/** Releases in-flight slots, never below zero. KEYS[1] = in-flight count; ARGV[1] = n */
-const LUA_RELEASE = `
-local function release(key, n)
-  if n <= 0 then return end
-  if redis.call('DECRBY', key, n) <= 0 then redis.call('DEL', key) end
-end
-`;
-
 /**
- * Puts entries back at the head, in order, into the slots their drain
- * reserved — so the queue stays within its bound and nothing accepted since
- * is ever dropped — and releases those reservations.
+ * Settles part or all of a drained batch: the listed entries go back to the
+ * head of the queue, unbound, in order; the batch keeps the rest, or is gone
+ * once nothing is left. An empty list acknowledges the whole batch (delivered).
  *
- * KEYS[1] = queue; KEYS[2] = in-flight count; ARGV[1] = ttl; ARGV[2..] = items
+ * KEYS[1] = queue; KEYS[2] = drained batches; ARGV[1] = drain id; ARGV[2] = ttl;
+ * ARGV[3..] = entry ids to return
  */
-const RESTORE_SCRIPT = `${LUA_RELEASE}
-for i = #ARGV, 2, -1 do
-  redis.call('LPUSH', KEYS[1], ARGV[i])
+const SETTLE_SCRIPT = `${LUA_HELPERS}
+local batch = redis.call('HGET', KEYS[2], ARGV[1])
+if not batch then return 0 end
+local back = {}
+for i = 3, #ARGV do back[ARGV[i]] = true end
+local expiry, items = splitBatch(batch)
+local returned = {}
+local kept = {}
+for _, item in ipairs(items) do
+  local id = header(item)
+  if #ARGV >= 3 and back[id] then table.insert(returned, item) else table.insert(kept, item) end
 end
-redis.call('EXPIRE', KEYS[1], ARGV[1])
-release(KEYS[2], #ARGV - 1)
-return redis.call('LLEN', KEYS[1])
-`;
-
-/** Drained entries were delivered or dropped: free their slots. KEYS[1] = in-flight; ARGV[1] = n */
-const SETTLE_SCRIPT = `${LUA_RELEASE}
-release(KEYS[1], tonumber(ARGV[1]))
-return 1
+if #returned > 0 then
+  pushFront(KEYS[1], returned)
+  redis.call('EXPIRE', KEYS[1], ARGV[2])
+end
+if #ARGV < 3 or #kept == 0 then
+  redis.call('HDEL', KEYS[2], ARGV[1])
+else
+  redis.call('HSET', KEYS[2], ARGV[1], joinBatch(expiry, kept))
+end
+return #returned
 `;
 
 const keyOf = (scope: SteerQueueScope) =>
@@ -194,8 +260,8 @@ const keyOf = (scope: SteerQueueScope) =>
 const takenKeyOf = (scope: SteerQueueScope) =>
   RedisKeys.agentSteer.takenFollowUps(scope.userId, scope.topicId, scope.threadId);
 
-const inflightKeyOf = (scope: SteerQueueScope) =>
-  RedisKeys.agentSteer.inflightFollowUps(scope.userId, scope.topicId, scope.threadId);
+const drainedKeyOf = (scope: SteerQueueScope) =>
+  RedisKeys.agentSteer.drainedFollowUps(scope.userId, scope.topicId, scope.threadId);
 
 /** The operation an item waits behind, from its header. */
 const behindOf = (item: string) => {
@@ -223,12 +289,16 @@ const parseEntries = <T extends SteerQueueEntry>(raw: unknown): T[] => {
  * Follow-ups a user queued behind a running turn, held server-side so the
  * runtime can start the next turn without a round trip through the client.
  * Each entry is bound to the run it was queued behind, and only that run (or,
- * once put back after a failed start, the next run on the surface) takes it.
+ * once returned unbound, the next run on the surface) takes it.
+ *
+ * Draining is two-phase: `drain` moves entries into a batch that stays in Redis
+ * until `settle` acknowledges it or returns entries from it. A batch nobody
+ * settles goes back to the queue when its lease lapses, so a crash, a lost
+ * response or an outage between the two never loses an accepted follow-up.
  *
  * `append` returns `undefined` when the follow-up was definitely not stored: the
  * caller then tells the client to send the message itself, as it did before
- * this queue. `restore` rejects instead — the entries it carries are already
- * out of the queue, so its caller must know they could not go back.
+ * this queue.
  */
 export const steerQueue = {
   /**
@@ -254,7 +324,7 @@ export const steerQueue = {
         3,
         key,
         takenKeyOf(scope),
-        inflightKeyOf(scope),
+        drainedKeyOf(scope),
         entry.id,
         encode(entry, operationId),
         QUEUE_TTL_SECONDS,
@@ -280,9 +350,11 @@ export const steerQueue = {
   },
 
   /**
-   * Takes the entries `operationId` owns — queued behind it, unbound, or
-   * behind one of `endedOperationIds` (runs the caller confirmed ended) —
-   * oldest first. Entries behind any other run stay queued.
+   * Moves the entries `operationId` owns — queued behind it, unbound, or
+   * behind one of `endedOperationIds` (runs the caller confirmed ended) — into
+   * a drained batch under `drainId`, and returns them oldest first. Entries
+   * behind any other run stay queued. The caller must `settle` the batch; a
+   * retry with the same `drainId` reads the same batch back.
    *
    * @throws when Redis is unavailable — an outage is not an empty queue; the
    * entries stay, and a later run on the surface takes them
@@ -291,6 +363,7 @@ export const steerQueue = {
     scope: SteerQueueScope,
     operationId: string,
     endedOperationIds: string[],
+    drainId: string,
   ): Promise<T[]> {
     const redis = await getClient();
     if (!redis) throw new Error('Redis is unavailable to drain queued follow-ups');
@@ -301,18 +374,43 @@ export const steerQueue = {
         3,
         keyOf(scope),
         takenKeyOf(scope),
-        inflightKeyOf(scope),
+        drainedKeyOf(scope),
         operationId,
+        drainId,
+        Date.now(),
+        PROCESSING_LEASE_MS,
         QUEUE_TTL_SECONDS,
-        INFLIGHT_TTL_SECONDS,
         ...endedOperationIds,
       ),
     );
   },
 
   /**
+   * Settles a drained batch: `returnIds` go back to the head of the queue,
+   * unbound; with none, the whole batch is acknowledged as delivered.
+   *
+   * @throws when Redis is unavailable — the batch then stays and goes back to
+   * the queue on its own once its lease lapses
+   */
+  async settle(scope: SteerQueueScope, drainId: string, returnIds: string[] = []): Promise<void> {
+    const redis = await getClient();
+    if (!redis) throw new Error('Redis is unavailable to settle queued follow-ups');
+
+    await redis.eval(
+      SETTLE_SCRIPT,
+      2,
+      keyOf(scope),
+      drainedKeyOf(scope),
+      drainId,
+      QUEUE_TTL_SECONDS,
+      ...returnIds,
+    );
+  },
+
+  /**
    * The runs the waiting entries are bound to (unbound ones excluded), so a
-   * caller can tell which of them ended. Empty when nothing is queued.
+   * caller can tell which of them ended. `total` also counts entries in drained
+   * batches, so a lapsed one is still drained back. Zero when nothing waits.
    *
    * @throws when Redis is unavailable, like {@link steerQueue.drain}
    */
@@ -331,7 +429,10 @@ export const steerQueue = {
       const behind = behindOf(item);
       if (behind && behind !== UNBOUND) operationIds.add(behind);
     }
-    return { operationIds: [...operationIds], total: items.length };
+    const drained = Number(
+      await redis.eval<number>(`${LUA_HELPERS}\nreturn inFlight(KEYS[1])`, 1, drainedKeyOf(scope)),
+    );
+    return { operationIds: [...operationIds], total: items.length + drained };
   },
 
   /** Number of entries `operationId` would take; `0` without Redis. */
@@ -339,7 +440,16 @@ export const steerQueue = {
     const redis = await getClient();
     if (!redis) return 0;
 
-    return Number(await redis.eval<number>(LENGTH_SCRIPT, 1, keyOf(scope), operationId));
+    return Number(
+      await redis.eval<number>(
+        LENGTH_SCRIPT,
+        2,
+        keyOf(scope),
+        drainedKeyOf(scope),
+        operationId,
+        Date.now(),
+      ),
+    );
   },
 
   /** Every waiting entry on the surface, oldest first. */
@@ -361,42 +471,5 @@ export const steerQueue = {
     if (!redis) return false;
 
     return Number(await redis.eval<number>(REMOVE_SCRIPT, 1, keyOf(scope), id)) > 0;
-  },
-
-  /**
-   * Puts drained entries back at the head, ahead of anything queued since,
-   * unbound — the run they waited behind has ended, so the next run that
-   * finishes on the surface takes them. They return into the slots their
-   * drain reserved, so nothing accepted meanwhile is dropped. Rejects when
-   * Redis is unavailable: the entries are out of the queue already.
-   */
-  async restore(scope: SteerQueueScope, entries: SteerQueueEntry[]): Promise<void> {
-    if (entries.length === 0) return;
-
-    const redis = await getClient();
-    if (!redis) throw new Error('Redis is unavailable to restore queued follow-ups');
-
-    await redis.eval(
-      RESTORE_SCRIPT,
-      2,
-      keyOf(scope),
-      inflightKeyOf(scope),
-      QUEUE_TTL_SECONDS,
-      ...entries.map((entry) => encode(entry, UNBOUND)),
-    );
-  },
-
-  /**
-   * Drained entries reached their destination (or were dropped): release the
-   * slots their drain reserved. Best effort — an unreleased reservation lapses
-   * on its own.
-   */
-  async settle(scope: SteerQueueScope, count: number): Promise<void> {
-    if (count <= 0) return;
-
-    const redis = await getClient();
-    if (!redis) return;
-
-    await redis.eval(SETTLE_SCRIPT, 1, inflightKeyOf(scope), count);
   },
 };

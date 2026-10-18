@@ -3,19 +3,18 @@ import { RequestTrigger } from '@lobechat/types';
 import debug from 'debug';
 
 import { MessageModel } from '@/database/models/message';
-import { redisService } from '@/server/services/redis';
 import type { SteerQueueScope } from '@/server/services/redis/steerQueue';
 
 import type { ComposerRunContext } from '../composerRun';
 import { createUserTurnAnchor } from '../pipeline/resolveUserMessageParentId';
 import { buildUserTurnMetadata } from '../pipeline/userTurnMetadata';
 import {
+  ackFollowUps,
   checkFollowUpAccess,
   drainOwnFollowUps,
   mergeQueuedFollowUps,
   type QueuedFollowUp,
-  restoreAfterFailure,
-  settleFollowUps,
+  returnFollowUps,
 } from './index';
 
 const log = debug('lobe-server:steer-queue');
@@ -99,16 +98,16 @@ export const injectQueuedFollowUp = async (
 ): Promise<{ messageId: string } | undefined> => {
   const { operationId, scope, state } = params;
 
-  const entries = await drainOwnFollowUps(ctx, scope, operationId);
+  const drained = await drainOwnFollowUps(ctx, scope, operationId);
+  const { entries } = drained;
   if (entries.length === 0) return;
 
   const firstHeld = entries.findIndex((entry) => !canJoinRunningTurn(entry, state));
   const joining = firstHeld === -1 ? entries : entries.slice(0, firstHeld);
   const held = entries.slice(joining.length);
-  if (held.length > 0) {
-    // Back at the head, for the hand-back at the next decision point.
-    await redisService.steerQueue.restore(scope, held);
-  }
+  // Back at the head, for the hand-back at the next decision point. Should
+  // that fail, they stay in the batch and return when it lapses.
+  await returnFollowUps(scope, drained, held, 'needs a turn of its own');
   if (joining.length === 0) return;
 
   const request = mergeQueuedFollowUps(joining);
@@ -120,7 +119,7 @@ export const injectQueuedFollowUp = async (
         joining.length,
         operationId,
       );
-      await settleFollowUps(scope, joining.length);
+      await ackFollowUps(scope, drained);
       return;
     }
 
@@ -148,10 +147,10 @@ export const injectQueuedFollowUp = async (
     });
 
     log('[%s] Joined %d queued follow-ups as %s', operationId, joining.length, message.id);
-    await settleFollowUps(scope, joining.length);
+    await ackFollowUps(scope, drained);
     return { messageId: message.id };
   } catch (error) {
-    await restoreAfterFailure(scope, joining, operationId, error);
+    await returnFollowUps(scope, drained, joining, error);
     return;
   }
 };

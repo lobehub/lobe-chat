@@ -1,3 +1,5 @@
+import { randomUUID } from 'node:crypto';
+
 import { TRPCError } from '@trpc/server';
 import debug from 'debug';
 
@@ -76,46 +78,72 @@ export const mergeQueuedFollowUps = (entries: QueuedFollowUp[]): QueuedFollowUpR
 /** Guard outcomes that mean the user may no longer start this turn. */
 const DENIED_CODES = new Set<TRPCError['code']>(['FORBIDDEN', 'NOT_FOUND']);
 
-/** Follow-ups that did not go anywhere: put them back at the head of the queue. */
-export const restoreAfterFailure = async (
+/**
+ * A drained batch: the follow-ups a run took, held in Redis under `drainId`
+ * until the run acknowledges or returns them (see `steerQueue.settle`).
+ */
+export interface DrainedFollowUps {
+  drainId: string;
+  entries: QueuedFollowUp[];
+}
+
+/**
+ * Some or all drained follow-ups did not go anywhere: put them back at the
+ * head of the queue, unbound. Never throws — if Redis cannot be reached the
+ * batch goes back on its own once its lease lapses.
+ */
+export const returnFollowUps = async (
   scope: SteerQueueScope,
+  drained: Pick<DrainedFollowUps, 'drainId'>,
   entries: QueuedFollowUp[],
-  operationId: string,
-  error: unknown,
+  reason: unknown,
 ) => {
+  if (entries.length === 0) return;
   console.error(
-    '[steerQueue] queued follow-ups after %s did not go through: %O',
-    operationId,
-    error,
+    '[steerQueue] %d queued follow-ups go back to the queue: %O',
+    entries.length,
+    reason,
   );
-  try {
-    await redisService.steerQueue.restore(scope, entries);
-  } catch (restoreError) {
-    console.error(
-      '[steerQueue] failed to restore %d queued follow-ups for topic %s: %O',
-      entries.length,
-      scope.topicId,
-      restoreError,
-    );
-  }
+  await redisService.steerQueue
+    .settle(
+      scope,
+      drained.drainId,
+      entries.map((entry) => entry.id),
+    )
+    .catch((error) => {
+      console.error(
+        '[steerQueue] returning %d follow-ups for topic %s failed; they return when batch %s lapses: %O',
+        entries.length,
+        scope.topicId,
+        drained.drainId,
+        error,
+      );
+    });
 };
 
 /**
- * Drained follow-ups left the queue for good — delivered, or dropped: free the
- * slots their drain reserved. Never throws; an unreleased reservation lapses.
+ * The drained batch reached its destination (or was dropped): acknowledge it.
+ * Never throws — an unacknowledged batch lapses back into the queue, which
+ * would only redeliver it.
  */
-export const settleFollowUps = async (scope: SteerQueueScope, count: number) => {
-  await redisService.steerQueue.settle(scope, count).catch((error) => {
-    log('Releasing %d in-flight follow-up slots failed (non-fatal): %O', count, error);
+export const ackFollowUps = async (
+  scope: SteerQueueScope,
+  drained: Pick<DrainedFollowUps, 'drainId'>,
+) => {
+  await redisService.steerQueue.settle(scope, drained.drainId).catch((error) => {
+    console.error('[steerQueue] acknowledging batch %s failed: %O', drained.drainId, error);
   });
 };
 
 /**
- * Take the follow-ups `operationId` owns — queued behind it, put back unbound
- * after a failed start, or orphaned by a run that ended while Redis was out of
- * reach. Another live run on the surface keeps its own.
- * The queue is the run owner's (the scope carries their user id); a foreign
- * entry is never acted on under this user's authority if one somehow got here.
+ * Take the follow-ups `operationId` owns — queued behind it, returned unbound
+ * after a failed delivery, or orphaned by a run that ended while Redis was out
+ * of reach — into a drained batch. Another live run on the surface keeps its
+ * own. The queue is the run owner's (the scope carries their user id); a
+ * foreign entry is never acted on under this user's authority if one got here.
+ *
+ * A drain whose response was lost is read back once with the same id; if that
+ * fails too, the batch (if it was taken) goes back when its lease lapses.
  *
  * @throws when Redis is unavailable: the entries stay queued
  */
@@ -123,9 +151,10 @@ export const drainOwnFollowUps = async (
   ctx: Pick<ComposerRunContext, 'db' | 'userId' | 'workspaceId'>,
   scope: SteerQueueScope,
   operationId: string,
-): Promise<QueuedFollowUp[]> => {
+): Promise<DrainedFollowUps> => {
+  const drainId = randomUUID();
   const { operationIds, total } = await redisService.steerQueue.boundOperations(scope);
-  if (total === 0) return [];
+  if (total === 0) return { drainId, entries: [] };
 
   // Entries behind another run are left to it unless that run is confirmed
   // ended — checked one by one, so a run that starts meanwhile (and the
@@ -134,13 +163,20 @@ export const drainOwnFollowUps = async (
   for (const id of operationIds) {
     if (id !== operationId && !(await isRunAlive(ctx, ctx.userId, id))) ended.push(id);
   }
-  const drained = await redisService.steerQueue.drain<QueuedFollowUp>(scope, operationId, ended);
+  const drain = () =>
+    redisService.steerQueue.drain<QueuedFollowUp>(scope, operationId, ended, drainId);
+  const drained = await drain().catch((error) => {
+    log('[%s] Drain %s failed, reading it back once: %O', operationId, drainId, error);
+    return drain();
+  });
+
   const entries = drained.filter((entry) => entry.userId === ctx.userId);
   if (entries.length < drained.length) {
+    // Acknowledged along with the rest of the batch; never sent.
     log('[%s] Dropped %d foreign queued follow-ups', operationId, drained.length - entries.length);
-    await settleFollowUps(scope, drained.length - entries.length);
   }
-  return entries;
+  if (entries.length === 0 && drained.length > 0) await ackFollowUps(scope, { drainId });
+  return { drainId, entries };
 };
 
 /**
@@ -200,7 +236,8 @@ export const startQueuedFollowUp = async (
 ): Promise<{ operationId: string } | undefined> => {
   const { scope } = params;
 
-  const entries = await drainOwnFollowUps(ctx, scope, params.operationId);
+  const drained = await drainOwnFollowUps(ctx, scope, params.operationId);
+  const { entries } = drained;
   if (entries.length === 0) return;
 
   const request = mergeQueuedFollowUps(entries);
@@ -213,37 +250,26 @@ export const startQueuedFollowUp = async (
         entries.length,
         params.operationId,
       );
-      await settleFollowUps(scope, entries.length);
+      await ackFollowUps(scope, drained);
       return;
     }
-  } catch (error) {
-    await restoreAfterFailure(scope, entries, params.operationId, error);
-    return;
-  }
 
-  // The topic was free for a moment between the finished run and this start;
-  // a send the user made in that gap now owns the surface. Never interrupt it:
-  // the follow-ups go back, unbound, and that run takes them.
-  try {
+    // The topic was free for a moment between the finished run and this
+    // start; a send the user made in that gap now owns the surface. Never
+    // interrupt it: the follow-ups go back, unbound, and that run takes them.
     const others = (await findOwnLiveRuns(ctx, scope)).filter((id) => id !== params.operationId);
     if (others.length > 0) {
-      await redisService.steerQueue.restore(scope, entries);
-      log(
-        '[%s] Left %d queued follow-ups to live run %s',
-        params.operationId,
-        entries.length,
-        others[0],
-      );
+      await returnFollowUps(scope, drained, entries, `left to live run ${others[0]}`);
       return;
     }
   } catch (error) {
-    await restoreAfterFailure(scope, entries, params.operationId, error);
+    await returnFollowUps(scope, drained, entries, error);
     return;
   }
 
   try {
     const result = await startComposerRun(
-      // Not superseding: should a send still win the topic before this start
+      // Not superseding: should a send still win the surface before this start
       // claims it, the start fails and the follow-ups go back to the queue.
       { ...ctx, clientIp: audit?.clientIp, supersedeLiveRun: false, userAgent: audit?.userAgent },
       {
@@ -258,10 +284,10 @@ export const startQueuedFollowUp = async (
       result.operationId,
       entries.length,
     );
-    await settleFollowUps(scope, entries.length);
+    await ackFollowUps(scope, drained);
     return { operationId: result.operationId };
   } catch (error) {
-    await restoreAfterFailure(scope, entries, params.operationId, error);
+    await returnFollowUps(scope, drained, entries, error);
     return;
   }
 };

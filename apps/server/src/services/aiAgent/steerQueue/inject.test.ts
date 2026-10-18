@@ -137,7 +137,7 @@ describe('injectQueuedFollowUp', () => {
 
     await expect(inject()).resolves.toEqual({ messageId: 'msg-steer' });
 
-    expect(mocks.drain).toHaveBeenCalledWith(scope, 'op-1', []);
+    expect(mocks.drain).toHaveBeenCalledWith(scope, 'op-1', [], expect.any(String));
     expect(mocks.create).toHaveBeenCalledWith(
       expect.objectContaining({
         agentId: 'agt-1',
@@ -148,9 +148,13 @@ describe('injectQueuedFollowUp', () => {
         topicId: 'tpc-1',
       }),
     );
-    expect(mocks.restore).not.toHaveBeenCalled();
+    expect(mocks.settle).not.toHaveBeenCalledWith(
+      expect.anything(),
+      expect.anything(),
+      expect.anything(),
+    );
     // Delivered into the run: the reserved slots are free again.
-    expect(mocks.settle).toHaveBeenCalledWith(scope, 2);
+    expect(mocks.settle).toHaveBeenCalledWith(scope, expect.any(String));
   });
 
   it('keeps queue order: joins the leading follow-ups and puts the rest back', async () => {
@@ -160,7 +164,11 @@ describe('injectQueuedFollowUp', () => {
     await expect(inject()).resolves.toEqual({ messageId: 'msg-steer' });
 
     expect(mocks.create).toHaveBeenCalledWith(expect.objectContaining({ content: 'plain' }));
-    expect(mocks.restore).toHaveBeenCalledWith(scope, held);
+    expect(mocks.settle).toHaveBeenCalledWith(
+      scope,
+      expect.any(String),
+      held.map((e) => e.id),
+    );
   });
 
   it('joins nothing when the first follow-up needs a turn of its own', async () => {
@@ -170,7 +178,11 @@ describe('injectQueuedFollowUp', () => {
     await expect(inject()).resolves.toBeUndefined();
 
     expect(mocks.create).not.toHaveBeenCalled();
-    expect(mocks.restore).toHaveBeenCalledWith(scope, entries);
+    expect(mocks.settle).toHaveBeenCalledWith(
+      scope,
+      expect.any(String),
+      entries.map((e) => e.id),
+    );
   });
 
   it('puts the follow-ups back when the message cannot be persisted', async () => {
@@ -180,7 +192,11 @@ describe('injectQueuedFollowUp', () => {
 
     await expect(inject()).resolves.toBeUndefined();
 
-    expect(mocks.restore).toHaveBeenCalledWith(scope, entries);
+    expect(mocks.settle).toHaveBeenCalledWith(
+      scope,
+      expect.any(String),
+      entries.map((e) => e.id),
+    );
   });
 
   it('drops follow-ups whose sender lost access while the run went on', async () => {
@@ -191,6 +207,10 @@ describe('injectQueuedFollowUp', () => {
     await expect(inject()).resolves.toBeUndefined();
 
     expect(mocks.create).not.toHaveBeenCalled();
-    expect(mocks.restore).not.toHaveBeenCalled();
+    expect(mocks.settle).not.toHaveBeenCalledWith(
+      expect.anything(),
+      expect.anything(),
+      expect.anything(),
+    );
   });
 });

@@ -67,6 +67,7 @@ import type { RunFacts } from './runFacts';
 import { resolveAgentSenderFromOperation } from './sourceAttribution';
 import { startQueuedFollowUp } from './steerQueue';
 import { injectQueuedFollowUp } from './steerQueue/inject';
+import { findOwnLiveRuns } from './steerQueue/liveRuns';
 import type { SubAgentLlmRelayRequest } from './subAgentLlmRelay';
 import { closeSubAgentLlmRelay, openSubAgentLlmRelay } from './subAgentLlmRelay';
 import type { SubAgentRunDeps } from './subAgentRuns';
@@ -236,6 +237,8 @@ export class AiAgentService {
     return {
       agentOperationModel: this.agentOperationModel,
       agentRuntimeService: this.agentRuntimeService,
+      findOwnLiveRuns: (scope) =>
+        findOwnLiveRuns({ db: this.db, workspaceId: this.workspaceId }, scope),
       interruptTask: (p) => this.interruptTask(p),
       topicModel: this.topicModel,
       userId: this.userId,

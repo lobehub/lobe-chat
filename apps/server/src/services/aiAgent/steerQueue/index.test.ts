@@ -109,6 +109,7 @@ describe('startQueuedFollowUp', () => {
       'op-1',
       // Only the run confirmed ended; the live one and the finishing run itself are not orphans.
       ['op-ended'],
+      expect.any(String),
     );
     expect(isRunAlive).not.toHaveBeenCalledWith(expect.anything(), 'user-1', 'op-1');
     expect(startComposerRun).toHaveBeenCalledWith(
@@ -120,7 +121,10 @@ describe('startQueuedFollowUp', () => {
       }),
     );
     // Delivered: the slots the drain reserved are free again.
-    expect(settle).toHaveBeenCalledWith(expect.objectContaining({ topicId: 'tpc-1' }), 2);
+    expect(settle).toHaveBeenCalledWith(
+      expect.objectContaining({ topicId: 'tpc-1' }),
+      expect.any(String),
+    );
   });
 
   it('puts the follow-ups back when the next turn cannot start', async () => {
@@ -130,9 +134,10 @@ describe('startQueuedFollowUp', () => {
 
     await expect(startQueuedFollowUp(ctx, finished({ topicId: 'tpc-1' }))).resolves.toBeUndefined();
 
-    expect(restore).toHaveBeenCalledWith(
+    expect(settle).toHaveBeenCalledWith(
       { threadId: null, topicId: 'tpc-1', userId: 'user-1' },
-      entries,
+      expect.any(String),
+      entries.map((e) => e.id),
     );
   });
 
@@ -161,7 +166,11 @@ describe('startQueuedFollowUp', () => {
       }),
     );
     expect(startComposerRun).not.toHaveBeenCalled();
-    expect(restore).not.toHaveBeenCalled();
+    expect(settle).not.toHaveBeenCalledWith(
+      expect.anything(),
+      expect.anything(),
+      expect.anything(),
+    );
   });
 
   it('keeps the follow-ups when the access check itself fails', async () => {
@@ -172,9 +181,10 @@ describe('startQueuedFollowUp', () => {
     await startQueuedFollowUp(ctx, finished({ topicId: 'tpc-1' }));
 
     expect(startComposerRun).not.toHaveBeenCalled();
-    expect(restore).toHaveBeenCalledWith(
+    expect(settle).toHaveBeenCalledWith(
       { threadId: null, topicId: 'tpc-1', userId: 'user-1' },
-      entries,
+      expect.any(String),
+      entries.map((e) => e.id),
     );
   });
 
@@ -195,9 +205,31 @@ describe('startQueuedFollowUp', () => {
     await expect(startQueuedFollowUp(ctx, finished({ topicId: 'tpc-1' }))).resolves.toBeUndefined();
 
     expect(startComposerRun).not.toHaveBeenCalled();
-    expect(restore).toHaveBeenCalledWith(
+    expect(settle).toHaveBeenCalledWith(
       { threadId: null, topicId: 'tpc-1', userId: 'user-1' },
-      entries,
+      expect.any(String),
+      entries.map((e) => e.id),
     );
+  });
+
+  it('reads a drain back once with the same id when its response was lost', async () => {
+    drain
+      .mockRejectedValueOnce(new Error('command timed out'))
+      .mockResolvedValueOnce([followUp('a', 1, {})]);
+
+    await expect(startQueuedFollowUp(ctx, finished({ topicId: 'tpc-1' }))).resolves.toEqual({
+      operationId: 'op-2',
+    });
+
+    const [first, second] = drain.mock.calls;
+    expect(second[3]).toBe(first[3]);
+  });
+
+  it('does not fail when returning follow-ups fails — their batch lapses back on its own', async () => {
+    drain.mockResolvedValue([followUp('a', 1, {})]);
+    startComposerRun.mockRejectedValue(new Error('topic busy'));
+    settle.mockRejectedValue(new Error('redis down'));
+
+    await expect(startQueuedFollowUp(ctx, finished({ topicId: 'tpc-1' }))).resolves.toBeUndefined();
   });
 });
