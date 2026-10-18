@@ -88,6 +88,9 @@ return length
 /** KEYS[1] = queue */
 const LIST_SCRIPT = `return redis.call('LRANGE', KEYS[1], 0, -1)`;
 
+/** KEYS[1] = queue */
+const COUNT_SCRIPT = `return redis.call('LLEN', KEYS[1])`;
+
 /** Entries a run would take. KEYS[1] = queue; ARGV[1] = operation id */
 const LENGTH_SCRIPT = `${LUA_HEADER}
 local count = 0
@@ -107,16 +110,24 @@ return 0
 `;
 
 /**
- * Takes the entries a finishing run owns — those queued behind it, and unbound
- * ones — in one step, leaving entries queued behind another live run in place.
+ * Takes the entries a run owns in one step: those queued behind it, unbound
+ * ones, and orphans — bound to a run that is no longer live (it ended while
+ * its own drain could not reach Redis). Entries behind another live run stay.
  *
- * KEYS[1] = queue; ARGV[1] = operation id
+ * KEYS[1] = queue; ARGV[1] = operation id; ARGV[2..] = the surface's live runs
  */
 const DRAIN_SCRIPT = `${LUA_HEADER}
+local live = {}
+for i = 2, #ARGV do live[ARGV[i]] = true end
 local taken = {}
 local kept = {}
 for _, item in ipairs(redis.call('LRANGE', KEYS[1], 0, -1)) do
-  if takes(item, ARGV[1]) then table.insert(taken, item) else table.insert(kept, item) end
+  local _, behind = header(item)
+  if takes(item, ARGV[1]) or (behind and not live[behind]) then
+    table.insert(taken, item)
+  else
+    table.insert(kept, item)
+  end
 end
 if #taken == 0 then return taken end
 local ttl = redis.call('TTL', KEYS[1])
@@ -185,7 +196,8 @@ export const steerQueue = {
    * `undefined` when it was not stored (no Redis, or a failed command that was
    * taken back)
    * @throws {SteerQueueWriteUnknownError} when the command failed and taking
-   * the entry back failed too
+   * the entry back did not prove it absent (the take-back failed, or found
+   * nothing because a drain may already have taken it)
    */
   async append(scope: SteerQueueScope, entry: SteerQueueEntry, operationId: string) {
     const redis = await getClient();
@@ -207,27 +219,50 @@ export const steerQueue = {
       // A timed-out command may still have committed. Take the entry back
       // through the same client (a fresh one is behind the open circuit) so
       // "not stored" holds before the client is told to send directly.
+      let removed: number;
       try {
-        await redis.eval(REMOVE_SCRIPT, 1, key, entry.id);
+        removed = Number(await redis.eval<number>(REMOVE_SCRIPT, 1, key, entry.id));
       } catch {
         throw new SteerQueueWriteUnknownError(error);
       }
+      // Nothing to take back: the write never landed, or a drain already took
+      // it and may be starting it. Only a removal proves "not stored".
+      if (removed === 0) throw new SteerQueueWriteUnknownError(error);
       return;
     }
   },
 
   /**
-   * Takes the entries `operationId` owns — queued behind it, or unbound —
-   * oldest first. Entries behind another run stay queued.
+   * Takes the entries `operationId` owns — queued behind it, unbound, or
+   * orphaned (bound to a run not in `liveOperationIds`) — oldest first.
+   * Entries behind another live run stay queued.
+   *
+   * @throws when Redis is unavailable — an outage is not an empty queue; the
+   * entries stay, and the next run that drains the surface takes them
    */
   async drain<T extends SteerQueueEntry>(
     scope: SteerQueueScope,
     operationId: string,
+    liveOperationIds: string[],
   ): Promise<T[]> {
     const redis = await getClient();
-    if (!redis) return [];
+    if (!redis) throw new Error('Redis is unavailable to drain queued follow-ups');
 
-    return parseEntries<T>(await redis.eval<unknown>(DRAIN_SCRIPT, 1, keyOf(scope), operationId));
+    return parseEntries<T>(
+      await redis.eval<unknown>(DRAIN_SCRIPT, 1, keyOf(scope), operationId, ...liveOperationIds),
+    );
+  },
+
+  /**
+   * Every entry waiting on the surface, whoever it waits behind.
+   *
+   * @throws when Redis is unavailable, like {@link steerQueue.drain}
+   */
+  async count(scope: SteerQueueScope): Promise<number> {
+    const redis = await getClient();
+    if (!redis) throw new Error('Redis is unavailable to count queued follow-ups');
+
+    return Number(await redis.eval<number>(COUNT_SCRIPT, 1, keyOf(scope)));
   },
 
   /** Number of entries `operationId` would take; `0` without Redis. */

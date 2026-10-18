@@ -17,7 +17,11 @@ const {
   startComposerRun: vi.fn(),
 }));
 
-vi.mock('@/server/services/redis', () => ({ redisService: { steerQueue: { drain, restore } } }));
+const { count, findOwnLiveRuns } = vi.hoisted(() => ({ count: vi.fn(), findOwnLiveRuns: vi.fn() }));
+vi.mock('@/server/services/redis', () => ({
+  redisService: { steerQueue: { count, drain, restore } },
+}));
+vi.mock('./liveRuns', () => ({ findOwnLiveRuns }));
 vi.mock('../composerRun', () => ({ startComposerRun }));
 vi.mock('@/server/routers/lambda/_helpers/workspaceAgentGuard', () => ({
   assertCanUseWorkspaceAgent,
@@ -77,6 +81,8 @@ describe('startQueuedFollowUp', () => {
     vi.clearAllMocks();
     drain.mockResolvedValue([]);
     restore.mockResolvedValue(0);
+    count.mockResolvedValue(1);
+    findOwnLiveRuns.mockResolvedValue(['op-live']);
     assertCanUseWorkspaceAgent.mockResolvedValue(undefined);
     assertCanUseAgentRunConversation.mockResolvedValue(undefined);
     startComposerRun.mockResolvedValue({ operationId: 'op-2' });
@@ -92,6 +98,7 @@ describe('startQueuedFollowUp', () => {
     expect(drain).toHaveBeenCalledWith(
       { threadId: 'thd-1', topicId: 'tpc-1', userId: 'user-1' },
       'op-1',
+      ['op-live'],
     );
     expect(startComposerRun).toHaveBeenCalledWith(
       expect.objectContaining({ clientIp: 'ip-b', userId: 'user-1' }),
@@ -156,5 +163,14 @@ describe('startQueuedFollowUp', () => {
       { threadId: null, topicId: 'tpc-1', userId: 'user-1' },
       entries,
     );
+  });
+
+  it('skips the live-run lookup when nothing is queued', async () => {
+    count.mockResolvedValue(0);
+
+    await expect(startQueuedFollowUp(ctx, finished({ topicId: 'tpc-1' }))).resolves.toBeUndefined();
+
+    expect(findOwnLiveRuns).not.toHaveBeenCalled();
+    expect(drain).not.toHaveBeenCalled();
   });
 });

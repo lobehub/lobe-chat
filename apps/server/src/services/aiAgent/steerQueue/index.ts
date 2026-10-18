@@ -7,6 +7,7 @@ import { redisService } from '@/server/services/redis';
 import type { SteerQueueEntry, SteerQueueScope } from '@/server/services/redis/steerQueue';
 
 import { type ComposerRunContext, type ComposerRunRequest, startComposerRun } from '../composerRun';
+import { findOwnLiveRuns } from './liveRuns';
 
 const log = debug('lobe-server:steer-queue');
 
@@ -107,18 +108,25 @@ export const restoreAfterFailure = async (
 };
 
 /**
- * Take the follow-ups `operationId` owns — queued behind it, or put back
- * unbound after a failed start. Another live run on the surface keeps its own.
+ * Take the follow-ups `operationId` owns — queued behind it, put back unbound
+ * after a failed start, or orphaned by a run that ended while Redis was out of
+ * reach. Another live run on the surface keeps its own.
  * The queue is the run owner's (the scope carries their user id); a foreign
  * entry is never acted on under this user's authority if one somehow got here.
+ *
+ * @throws when Redis is unavailable: the entries stay queued
  */
 export const drainOwnFollowUps = async (
-  userId: string,
+  ctx: Pick<ComposerRunContext, 'db' | 'userId' | 'workspaceId'>,
   scope: SteerQueueScope,
   operationId: string,
 ): Promise<QueuedFollowUp[]> => {
-  const drained = await redisService.steerQueue.drain<QueuedFollowUp>(scope, operationId);
-  const entries = drained.filter((entry) => entry.userId === userId);
+  // The live-run lookup is a DB read; skip it on the common empty queue.
+  if ((await redisService.steerQueue.count(scope)) === 0) return [];
+
+  const liveRuns = await findOwnLiveRuns(ctx, scope);
+  const drained = await redisService.steerQueue.drain<QueuedFollowUp>(scope, operationId, liveRuns);
+  const entries = drained.filter((entry) => entry.userId === ctx.userId);
   if (entries.length < drained.length) {
     log('[%s] Dropped %d foreign queued follow-ups', operationId, drained.length - entries.length);
   }
@@ -182,7 +190,7 @@ export const startQueuedFollowUp = async (
 ): Promise<{ operationId: string } | undefined> => {
   const { scope } = params;
 
-  const entries = await drainOwnFollowUps(ctx.userId, scope, params.operationId);
+  const entries = await drainOwnFollowUps(ctx, scope, params.operationId);
   if (entries.length === 0) return;
 
   const request = mergeQueuedFollowUps(entries);

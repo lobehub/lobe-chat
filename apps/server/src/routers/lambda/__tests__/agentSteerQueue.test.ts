@@ -116,6 +116,16 @@ describe('agentSteerQueueRouter.append', () => {
     expect(mocks.append).not.toHaveBeenCalled();
   });
 
+  it.each(['a\tb', 'a\nb', ''])(
+    'rejects an entry id the queue header cannot carry: %j',
+    async (id) => {
+      await expect(caller().append({ ...appendInput, id })).rejects.toMatchObject({
+        code: 'BAD_REQUEST',
+      });
+      expect(mocks.append).not.toHaveBeenCalled();
+    },
+  );
+
   it('refuses to guess between two live runs on the same surface', async () => {
     mocks.liveCandidates.mockReturnValue([{ id: 'op-1' }, { id: 'op-2' }]);
 

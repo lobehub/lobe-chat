@@ -164,6 +164,16 @@ export interface HeterogeneousAgentServiceOptions {
   persistenceHandler?: HeterogeneousPersistenceHandler;
   /** Inject a snapshot store (used by tests); defaults to the env-resolved store. */
   snapshotStore?: ISnapshotStore | null;
+  /**
+   * Start the follow-ups queued behind a finished top-level run as its next
+   * turn. Supplied by the caller: that start is the composer pipeline of
+   * AiAgentService, which itself dispatches heterogeneous runs through this
+   * service. Without it a finished run leaves its queue alone.
+   */
+  startQueuedFollowUp?: (params: {
+    operationId: string;
+    scope: SteerQueueScope;
+  }) => Promise<unknown>;
   /** Inject a pre-built manager (used by tests). */
   streamEventManager?: IStreamEventManager;
   /** Inject a pre-built TopicModel (used by tests for the resume helper). */
@@ -192,6 +202,7 @@ export class HeterogeneousAgentService {
   private readonly db: LobeChatDatabase;
   private readonly messageModel: MessageModel;
   private readonly persistenceHandler: HeterogeneousPersistenceHandler;
+  private readonly queuedFollowUpStarter?: HeterogeneousAgentServiceOptions['startQueuedFollowUp'];
   private readonly streamEventManager: IStreamEventManager;
   private readonly topicModel: TopicModel;
   private readonly traceRecorder: HeteroTraceRecorder;
@@ -207,6 +218,7 @@ export class HeterogeneousAgentService {
     this.userId = userId;
     const workspaceId = options.workspaceId;
     this.workspaceId = workspaceId;
+    this.queuedFollowUpStarter = options.startQueuedFollowUp;
     this.agentOperationModel =
       options.agentOperationModel ?? new AgentOperationModel(db, userId, workspaceId);
     this.messageModel = new MessageModel(db, userId, workspaceId);
@@ -727,13 +739,9 @@ export class HeterogeneousAgentService {
    * queued when they cannot start.
    */
   private async startQueuedFollowUp(operationId: string, scope: SteerQueueScope): Promise<void> {
+    if (!this.queuedFollowUpStarter) return;
     try {
-      // AiAgentService dispatches heterogeneous runs through this service, so
-      // it is loaded here rather than imported at the top.
-      const { AiAgentService } = await import('@/server/services/aiAgent');
-      await new AiAgentService(this.db, this.userId, {
-        workspaceId: this.workspaceId,
-      }).startQueuedFollowUp({ operationId, scope });
+      await this.queuedFollowUpStarter({ operationId, scope });
     } catch (err) {
       log('heteroFinish: starting queued follow-ups failed (non-fatal): %O', err);
     }

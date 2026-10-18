@@ -25,12 +25,13 @@ const createFakeRedis = () => {
     async (script: string, _numKeys: number, key: string, ...args: any[]) => {
       const list = listOf(key);
       if (script.includes('local taken')) {
-        const taken = list.filter((item) => takes(item, args[0]));
+        const [op, ...live] = args;
+        const owned = (item: string) => takes(item, op) || !live.includes(header(item).behind);
         lists.set(
           key,
-          list.filter((item) => !takes(item, args[0])),
+          list.filter((item) => !owned(item)),
         );
-        return taken;
+        return list.filter(owned);
       }
       if (script.includes('local count')) return list.filter((item) => takes(item, args[0])).length;
       if (script.includes('LTRIM')) {
@@ -54,6 +55,7 @@ const createFakeRedis = () => {
         ttls.set(key, Number(ttl));
         return list.length + 1;
       }
+      if (script.includes('LLEN')) return list.length;
       if (script.includes('LRANGE')) return list;
       throw new Error(`unexpected script: ${script}`);
     },
@@ -93,11 +95,11 @@ describe('redisService.steerQueue', () => {
     await redisService.steerQueue.append(scope, entry('a'), 'op-1');
     await redisService.steerQueue.append(scope, entry('b'), 'op-1');
 
-    await expect(redisService.steerQueue.drain(scope, 'op-1')).resolves.toEqual([
+    await expect(redisService.steerQueue.drain(scope, 'op-1', ['op-1'])).resolves.toEqual([
       entry('a'),
       entry('b'),
     ]);
-    await expect(redisService.steerQueue.drain(scope, 'op-1')).resolves.toEqual([]);
+    await expect(redisService.steerQueue.drain(scope, 'op-1', ['op-1'])).resolves.toEqual([]);
     await expect(redisService.steerQueue.length(scope, 'op-1')).resolves.toBe(0);
   });
 
@@ -106,11 +108,11 @@ describe('redisService.steerQueue', () => {
     await redisService.steerQueue.append(scope, entry('behind-2'), 'op-2');
 
     await expect(redisService.steerQueue.length(scope, 'op-1')).resolves.toBe(1);
-    await expect(redisService.steerQueue.drain(scope, 'op-1')).resolves.toEqual([
+    await expect(redisService.steerQueue.drain(scope, 'op-1', ['op-1', 'op-2'])).resolves.toEqual([
       entry('behind-1'),
     ]);
     expect(await ids()).toEqual(['behind-2']);
-    await expect(redisService.steerQueue.drain(scope, 'op-2')).resolves.toEqual([
+    await expect(redisService.steerQueue.drain(scope, 'op-2', ['op-2'])).resolves.toEqual([
       entry('behind-2'),
     ]);
   });
@@ -118,14 +120,14 @@ describe('redisService.steerQueue', () => {
   it('hands restored follow-ups to the next run that finishes on the surface', async () => {
     await redisService.steerQueue.append(scope, entry('a'), 'op-1');
     await redisService.steerQueue.append(scope, entry('b'), 'op-1');
-    const drained = await redisService.steerQueue.drain(scope, 'op-1');
+    const drained = await redisService.steerQueue.drain(scope, 'op-1', ['op-1']);
     await redisService.steerQueue.append(scope, entry('c'), 'op-2');
 
     await redisService.steerQueue.restore(scope, drained);
 
     expect(await ids()).toEqual(['a', 'b', 'c']);
     await expect(redisService.steerQueue.length(scope, 'op-2')).resolves.toBe(3);
-    await expect(redisService.steerQueue.drain(scope, 'op-2')).resolves.toHaveLength(3);
+    await expect(redisService.steerQueue.drain(scope, 'op-2', ['op-2'])).resolves.toHaveLength(3);
   });
 
   it('appends an entry id at most once, so a retry never duplicates the follow-up', async () => {
@@ -163,8 +165,32 @@ describe('redisService.steerQueue', () => {
     await expect(
       redisService.steerQueue.append(scope, entry('a'), 'op-1'),
     ).resolves.toBeUndefined();
-    await expect(redisService.steerQueue.drain(scope, 'op-1')).resolves.toEqual([]);
     await expect(redisService.steerQueue.length(scope, 'op-1')).resolves.toBe(0);
+    // An outage is not an empty queue: the drain says so, and the entries stay.
+    await expect(redisService.steerQueue.drain(scope, 'op-1', ['op-1'])).rejects.toThrow(
+      'Redis is unavailable',
+    );
+    await expect(redisService.steerQueue.count(scope)).rejects.toThrow('Redis is unavailable');
+  });
+
+  it('lets the next run take follow-ups orphaned by a run that ended while Redis was out', async () => {
+    await redisService.steerQueue.append(scope, entry('orphan'), 'op-ended');
+    await redisService.steerQueue.append(scope, entry('behind-live'), 'op-live');
+
+    await expect(redisService.steerQueue.count(scope)).resolves.toBe(2);
+    await expect(redisService.steerQueue.drain(scope, 'op-next', ['op-live'])).resolves.toEqual([
+      entry('orphan'),
+    ]);
+    expect(await ids()).toEqual(['behind-live']);
+  });
+
+  it('reports an unknown outcome when the take-back finds nothing to remove', async () => {
+    // The write never landed — or a drain took it first and may be starting it.
+    redis.client.eval.mockRejectedValueOnce(new Error('command timed out'));
+
+    await expect(redisService.steerQueue.append(scope, entry('a'), 'op-1')).rejects.toBeInstanceOf(
+      SteerQueueWriteUnknownError,
+    );
   });
 
   it('takes back an append that committed before its command failed, then falls back', async () => {
@@ -203,14 +229,16 @@ describe('redisService.steerQueue', () => {
     await redisService.steerQueue.append(scope, entry('mine'), 'op-1');
     await redisService.steerQueue.append({ ...scope, userId: 'u2' }, entry('theirs'), 'op-1');
 
-    await expect(redisService.steerQueue.drain(scope, 'op-1')).resolves.toEqual([entry('mine')]);
+    await expect(redisService.steerQueue.drain(scope, 'op-1', ['op-1'])).resolves.toEqual([
+      entry('mine'),
+    ]);
     expect(await ids({ ...scope, userId: 'u2' })).toEqual(['theirs']);
   });
 
   it('holds a restored queue to its bound, dropping and counting the newest overflow', async () => {
     await redisService.steerQueue.append(scope, entry('old-1'), 'op-1');
     await redisService.steerQueue.append(scope, entry('old-2'), 'op-1');
-    const drained = await redisService.steerQueue.drain(scope, 'op-1');
+    const drained = await redisService.steerQueue.drain(scope, 'op-1', ['op-1']);
     for (let i = 0; i < STEER_QUEUE_MAX_ENTRIES; i++) {
       await redisService.steerQueue.append(scope, entry(`new-${i}`), 'op-2');
     }

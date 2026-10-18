@@ -19,6 +19,7 @@ import { router } from '@/libs/trpc/lambda';
 import { signHeteroOperationJWT } from '@/libs/trpc/utils/internalJwt';
 import { createStreamEventManager } from '@/server/modules/AgentRuntime/factory';
 import { mapAgentInterventionTRPCError } from '@/server/routers/lambda/_helpers/agentInterventionError';
+import { AiAgentService } from '@/server/services/aiAgent';
 import { HeterogeneousAgentService } from '@/server/services/heterogeneousAgent';
 import {
   HeteroOperationPrincipalError,
@@ -390,6 +391,12 @@ export const heteroRouter = router({
         userId: ctx.userId,
       });
       const heteroService = new HeterogeneousAgentService(ctx.serverDB, ctx.userId, {
+        // Follow-ups queued behind the run start as its next turn through the
+        // composer pipeline, under the run owner and its workspace.
+        startQueuedFollowUp: (params) =>
+          new AiAgentService(ctx.serverDB, ctx.userId, { workspaceId: wsId }).startQueuedFollowUp(
+            params,
+          ),
         workspaceId: wsId,
       });
 

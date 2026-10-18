@@ -7,15 +7,18 @@ import { canJoinRunningTurn, injectQueuedFollowUp } from './inject';
 const mocks = vi.hoisted(() => ({
   assertCanUseAgentRunConversation: vi.fn(),
   assertCanUseWorkspaceAgent: vi.fn(),
+  count: vi.fn(),
   create: vi.fn(),
   drain: vi.fn(),
+  findOwnLiveRuns: vi.fn(),
   resolveParentId: vi.fn(),
   restore: vi.fn(),
 }));
 
 vi.mock('@/server/services/redis', () => ({
-  redisService: { steerQueue: { drain: mocks.drain, restore: mocks.restore } },
+  redisService: { steerQueue: { count: mocks.count, drain: mocks.drain, restore: mocks.restore } },
 }));
+vi.mock('./liveRuns', () => ({ findOwnLiveRuns: mocks.findOwnLiveRuns }));
 vi.mock('@/database/models/message', () => ({
   MessageModel: vi.fn().mockImplementation(function () {
     return { create: mocks.create };
@@ -70,6 +73,8 @@ describe('injectQueuedFollowUp', () => {
     vi.clearAllMocks();
     mocks.drain.mockResolvedValue([]);
     mocks.restore.mockResolvedValue(0);
+    mocks.count.mockResolvedValue(1);
+    mocks.findOwnLiveRuns.mockResolvedValue(['op-1']);
     mocks.resolveParentId.mockResolvedValue('msg-assistant');
     mocks.create.mockResolvedValue({ id: 'msg-steer' });
     mocks.assertCanUseWorkspaceAgent.mockResolvedValue(undefined);
@@ -81,7 +86,7 @@ describe('injectQueuedFollowUp', () => {
 
     await expect(inject()).resolves.toEqual({ messageId: 'msg-steer' });
 
-    expect(mocks.drain).toHaveBeenCalledWith(scope, 'op-1');
+    expect(mocks.drain).toHaveBeenCalledWith(scope, 'op-1', ['op-1']);
     expect(mocks.create).toHaveBeenCalledWith(
       expect.objectContaining({
         agentId: 'agt-1',

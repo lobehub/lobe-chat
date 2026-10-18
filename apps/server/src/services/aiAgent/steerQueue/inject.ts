@@ -51,7 +51,7 @@ export const injectQueuedFollowUp = async (
 ): Promise<{ messageId: string } | undefined> => {
   const { operationId, scope, state } = params;
 
-  const entries = await drainOwnFollowUps(ctx.userId, scope, operationId);
+  const entries = await drainOwnFollowUps(ctx, scope, operationId);
   if (entries.length === 0) return;
 
   const firstHeld = entries.findIndex((entry) => !canJoinRunningTurn(entry, state));

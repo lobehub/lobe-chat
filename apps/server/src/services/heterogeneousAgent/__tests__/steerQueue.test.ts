@@ -5,14 +5,12 @@ import { CompletionLifecycle } from '@/server/services/agentRuntime/CompletionLi
 
 import { HeterogeneousAgentService } from '..';
 
-const { startQueuedFollowUp } = vi.hoisted(() => ({ startQueuedFollowUp: vi.fn() }));
-vi.mock('@/server/services/aiAgent', () => ({
-  AiAgentService: vi.fn().mockImplementation(function () {
-    return { startQueuedFollowUp };
-  }),
-}));
+const startQueuedFollowUp = vi.fn();
 
-const createService = (operation: Record<string, unknown> | null) => {
+const createService = (
+  operation: Record<string, unknown> | null,
+  { withStarter = true }: { withStarter?: boolean } = {},
+) => {
   const order: string[] = [];
   vi.spyOn(CompletionLifecycle.prototype, 'completeOperation').mockImplementation(async () => {
     order.push('complete');
@@ -25,6 +23,7 @@ const createService = (operation: Record<string, unknown> | null) => {
     agentOperationModel: { findById: vi.fn(async () => operation) } as any,
     persistenceHandler: { finish: vi.fn(async () => undefined) } as any,
     snapshotStore: null,
+    ...(withStarter && { startQueuedFollowUp }),
     streamEventManager: { publishStreamEvent: vi.fn(async () => 'ok') } as any,
     topicModel: {
       settleRunningOperation: vi.fn(async () => ({ status: 'settled' })),
@@ -84,5 +83,12 @@ describe('HeterogeneousAgentService.heteroFinish — queued follow-ups', () => {
     startQueuedFollowUp.mockRejectedValue(new Error('boom'));
 
     await expect(finish(service, 'success')).resolves.toBeUndefined();
+  });
+
+  it('leaves the queue alone when its caller supplied no way to start a turn', async () => {
+    const { service } = createService({ metadata: {} }, { withStarter: false });
+
+    await expect(finish(service, 'success')).resolves.toBeUndefined();
+    expect(startQueuedFollowUp).not.toHaveBeenCalled();
   });
 });
