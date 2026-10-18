@@ -12,6 +12,7 @@ import {
   userMemoriesPreferences,
 } from '@/database/schemas';
 import { notTrashed } from '@/database/utils/softDelete';
+import { router } from '@/libs/trpc/lambda';
 import { embedUserMemoryTexts } from '@/server/services/memory/userMemory/embedding';
 
 import { memoryWriteProcedure } from './procedures';
@@ -58,7 +59,7 @@ const normalizeEmbeddable = (value?: string | null): string | undefined => {
   return trimmed.length > 0 ? trimmed : undefined;
 };
 
-export const reEmbedProcedures = {
+export const reEmbedRouter = router({
   reEmbedMemories: memoryWriteProcedure
     .input(reEmbedInputSchema.optional())
     .mutation(async ({ ctx, input }) => {
@@ -522,4 +523,4 @@ export const reEmbedProcedures = {
         };
       }
     }),
-};
+});

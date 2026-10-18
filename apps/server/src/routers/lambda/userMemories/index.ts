@@ -1,13 +1,13 @@
-import { router } from '@/libs/trpc/lambda';
+import { mergeRouters } from '@/libs/trpc/lambda';
 
-import { queryProcedures } from './query';
-import { reEmbedProcedures } from './reEmbed';
-import { searchProcedures } from './search';
-import { toolWriteProcedures } from './toolWrite';
+import { queryRouter } from './query';
+import { reEmbedRouter } from './reEmbed';
+import { searchRouter } from './search';
+import { toolWriteRouter } from './toolWrite';
 
-export const userMemoriesRouter = router({
-  ...queryProcedures,
-  ...reEmbedProcedures,
-  ...searchProcedures,
-  ...toolWriteProcedures,
-});
+export const userMemoriesRouter = mergeRouters(
+  queryRouter,
+  reEmbedRouter,
+  searchRouter,
+  toolWriteRouter,
+);

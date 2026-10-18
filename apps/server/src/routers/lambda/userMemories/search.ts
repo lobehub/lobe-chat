@@ -13,6 +13,7 @@ import {
   shouldRunUserMemoryLexicalSearch,
 } from '@/database/models/userMemory';
 import { UserMemoryTopicRepository } from '@/database/repositories/userMemory';
+import { router } from '@/libs/trpc/lambda';
 import { getServerDefaultFilesConfig } from '@/server/globalConfig';
 import { initModelRuntimeFromDB } from '@/server/modules/ModelRuntime';
 import {
@@ -93,7 +94,7 @@ const searchUserMemories = async (
   ) as Promise<SearchMemoryResult>;
 };
 
-export const searchProcedures = {
+export const searchRouter = router({
   searchMemory: memorySearchProcedure.input(searchMemorySchema).query(async ({ input, ctx }) => {
     try {
       return await searchUserMemories(ctx, input, 'api');
@@ -152,4 +153,4 @@ export const searchProcedures = {
       const result = await searchUserMemories(ctx, input, 'tool');
       return result;
     }),
-};
+});

@@ -14,6 +14,7 @@ import {
   type IdentityEntryPayload,
 } from '@/database/models/userMemory';
 import { UserMemoryModel } from '@/database/models/userMemory';
+import { router } from '@/libs/trpc/lambda';
 import type { UserMemoryEmbeddingRuntime } from '@/server/services/memory/userMemory/embedding';
 import { embedUserMemoryTexts } from '@/server/services/memory/userMemory/embedding';
 
@@ -40,7 +41,7 @@ const createEmbedder = (
   };
 };
 
-export const toolWriteProcedures = {
+export const toolWriteRouter = router({
   toolAddActivityMemory: memoryWriteProcedure
     .input(ActivityMemoryItemSchema)
     .mutation(async ({ input, ctx }) => {
@@ -477,4 +478,4 @@ export const toolWriteProcedures = {
         };
       }
     }),
-};
+});

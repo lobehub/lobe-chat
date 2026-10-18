@@ -2,6 +2,8 @@ import type { QueryTaxonomyOptionsResult } from '@lobechat/types';
 import { LayersEnum, queryTaxonomyOptionsSchema } from '@lobechat/types';
 import { z } from 'zod';
 
+import { router } from '@/libs/trpc/lambda';
+
 import { memoryProcedure, memorySearchProcedure } from './procedures';
 import { rethrowCandidateSearchError } from './utils';
 
@@ -16,7 +18,7 @@ const EMPTY_TAXONOMY_RESULT: QueryTaxonomyOptionsResult = {
   types: [],
 };
 
-export const queryProcedures = {
+export const queryRouter = router({
   getMemoryDetail: memoryProcedure
     .input(z.object({ id: z.string(), layer: z.nativeEnum(LayersEnum) }))
     .query(async ({ ctx, input }) => {
@@ -208,4 +210,4 @@ export const queryProcedures = {
         return EMPTY_TAXONOMY_RESULT;
       }
     }),
-};
+});
