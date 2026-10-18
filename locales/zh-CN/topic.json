@@ -271,6 +271,7 @@
   "reportProblem.failed": "提交失败，请重试。",
   "reportProblem.placeholder": "遇到了什么问题？（选填）",
   "reportProblem.rateLimited": "最近提交的报告较多，请稍后再试。",
+  "reportProblem.recentDesc": "会把你最近一个话题的 ID 和应用环境提交给 LobeHub 支持团队，团队会据此查看这个话题的运行记录、报错和对话内容。",
   "reportProblem.submit": "Report Bug",
   "reportProblem.success": "已提交",
   "reportProblem.successDesc": "报告 ID：{{id}}",
