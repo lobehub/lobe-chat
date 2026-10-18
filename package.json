@@ -325,7 +325,7 @@
     "@lobehub/editor": "^5.0.0",
     "@lobehub/icons": "^6.0.0",
     "@lobehub/market-sdk": "0.42.0",
-    "@lobehub/ui": "^6.0.4",
+    "@lobehub/ui": "^6.3.0",
     "@modelcontextprotocol/sdk": "^1.30.0",
     "@neondatabase/serverless": "^1.1.0",
     "@next/third-parties": "^16.3.0",
