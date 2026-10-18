@@ -4,6 +4,7 @@ const resetGatewayMuxRegistry = vi.hoisted(() => vi.fn());
 const storeResets = vi.hoisted(() => [] as Array<() => void>);
 const pageReset = vi.hoisted(() => vi.fn());
 const sandboxReset = vi.hoisted(() => vi.fn());
+const clearAllReplicas = vi.hoisted(() => vi.fn());
 const fakeStore = vi.hoisted(() => () => ({
   getState: () => {
     const reset = vi.fn();
@@ -12,6 +13,10 @@ const fakeStore = vi.hoisted(() => () => ({
   },
 }));
 
+vi.mock('@/libs/replica', async (importOriginal) => ({
+  ...(await importOriginal<Record<string, unknown>>()),
+  clearAllReplicas,
+}));
 vi.mock('react-dom', () => ({ unstable_batchedUpdates: (fn: () => void) => fn() }));
 vi.mock('@/store/chat/slices/agentRun/actions/transports/gateway/muxRegistry', () => ({
   resetGatewayMuxRegistry,
@@ -43,6 +48,21 @@ describe('stores.reset', () => {
     storeResets.length = 0;
     pageReset.mockClear();
     sandboxReset.mockClear();
+    clearAllReplicas.mockClear();
+  });
+
+  it('retires every replica before the stores are wiped', async () => {
+    const { stores } = await import('./userDataStores');
+    const order: string[] = [];
+    clearAllReplicas.mockImplementation(() => order.push('replicas'));
+    pageReset.mockImplementation(() => order.push('page'));
+
+    stores.reset();
+
+    // Otherwise a read in flight from the previous data context settles after
+    // the wipe and repopulates the store it was just cleared from.
+    expect(clearAllReplicas).toHaveBeenCalledTimes(1);
+    expect(order.indexOf('replicas')).toBeLessThan(order.indexOf('page'));
   });
 
   it('tears down the gateway mux registry before wiping the user-data stores', async () => {

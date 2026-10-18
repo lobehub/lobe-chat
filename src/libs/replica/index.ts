@@ -177,6 +177,29 @@ export const readReplicaStoredKeys = async (
   return (row?.data as unknown as string[] | undefined) ?? [];
 };
 
+/** Every slice the app created, so a data-context reset can reach them all. */
+const liveSlices = new Set<{ clear: () => Promise<boolean> }>();
+
+/**
+ * Wipe every replica for a new data context (`stores.reset()`: a Desktop
+ * server switch or disconnect), then refetch what is mounted.
+ *
+ * Replacing a store's state is not enough: a read still in flight from the
+ * previous context would settle afterwards and repopulate it — and when the
+ * next context resolves to the same scope string (a cloned deployment that
+ * kept its ids) nothing else tells the old answer apart. `clear()` advances
+ * each replica's clear generation, so those reads are discarded, and drops
+ * the scope's persisted rows, which the previous context wrote. The mounted
+ * syncs are then revalidated so the screen repaints from the new context
+ * instead of staying empty.
+ */
+export const clearAllReplicas = (): void => {
+  for (const slice of liveSlices) void slice.clear();
+  void replicaSWRDriver
+    .revalidate((queryKey) => Array.isArray(queryKey) && queryKey[0] === 'replica:sync')
+    .catch(() => undefined);
+};
+
 /** `createReplicaSlice` bound to the app's SWR driver. */
 export const createReplicaSlice = <TStore, TParams, TData, TFetched = TData>(
   resource: ReplicaResource<TParams, TData, TFetched>,
@@ -193,6 +216,7 @@ export const createReplicaSlice = <TStore, TParams, TData, TFetched = TData>(
   });
 
   registerReplicaDevtools(resource, { get, slice, stateKey, view });
+  liveSlices.add(slice);
   return slice;
 };
 

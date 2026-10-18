@@ -1,5 +1,6 @@
 import { unstable_batchedUpdates } from 'react-dom';
 
+import { clearAllReplicas } from '@/libs/replica';
 import { useAgentStore } from '@/store/agent';
 import { agentDocumentActions } from '@/store/agentDocument';
 import { useAgentGroupStore } from '@/store/agentGroup';
@@ -68,6 +69,9 @@ const createStoreActions = (
     // wiped — a new data context must not inherit the old identity's socket.
     resetGatewayMuxRegistry();
     unstable_batchedUpdates(() => {
+      // Retire the previous context's in-flight replica reads before the
+      // stores are wiped, or they settle afterwards and repopulate them.
+      clearAllReplicas();
       for (const store of stores) {
         store.getState().reset();
       }
