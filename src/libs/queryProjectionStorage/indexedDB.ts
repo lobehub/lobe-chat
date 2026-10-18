@@ -1,5 +1,6 @@
 import { localDatabase } from '@/libs/localDatabase';
 
+import { readProjection, stampProjection } from './resetEpoch';
 import type { QueryProjection, QueryProjectionKey, QueryProjectionStorage } from './types';
 
 interface IndexedDBQueryProjectionStorageOptions {
@@ -29,7 +30,10 @@ export class IndexedDBQueryProjectionStorage<T> implements QueryProjectionStorag
   /** Like `get`, but rejects when the row could not be read (see `ReplicaStorage.getStrict`). */
   getStrict = async (key: QueryProjectionKey): Promise<QueryProjection<T> | undefined> => {
     await localDatabase.initialize();
-    return localDatabase.get<QueryProjection<T>>(COLLECTION, this.#key(key));
+    return readProjection(
+      key,
+      await localDatabase.get<QueryProjection<T>>(COLLECTION, this.#key(key)),
+    );
   };
 
   /**
@@ -49,6 +53,6 @@ export class IndexedDBQueryProjectionStorage<T> implements QueryProjectionStorag
    */
   set = async (key: QueryProjectionKey, projection: QueryProjection<T>): Promise<void> => {
     await localDatabase.initialize();
-    await localDatabase.set(COLLECTION, this.#key(key), projection);
+    await localDatabase.set(COLLECTION, this.#key(key), stampProjection(key, projection));
   };
 }

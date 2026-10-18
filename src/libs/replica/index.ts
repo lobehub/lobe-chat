@@ -20,12 +20,12 @@ import {
 import {
   IndexedDBQueryProjectionStorage,
   LocalStorageQueryProjectionStorage,
+  markProjectionScopeReset,
 } from '@/libs/queryProjectionStorage';
 import { mutate, useClientDataSWR } from '@/libs/swr';
 import { getCacheScope, isScopeTrusted, useCacheScope } from '@/libs/swr/useCacheScope';
 
 import { notifyReplicaDevtools, registerReplicaDevtools } from './devtools';
-import { guardResetRows, markReplicaScopeReset } from './resetMark';
 
 /**
  * LobeHub wiring of `@lobechat/replica`: replicas are partitioned like the SWR
@@ -94,25 +94,15 @@ export type ReplicaStorageKind = 'indexedDB' | 'localStorage' | 'memory';
 type AppStorageOption<TData> =
   ReplicaStorageKind | ReplicaStorage<TData> | ((namespace: string) => ReplicaStorage<TData>);
 
-const createStorage = <TData>(
-  storage: AppStorageOption<TData>,
-  namespace: string,
-): ReplicaStorage<TData> | undefined => {
-  if (typeof storage === 'function') return storage(namespace);
-  if (typeof storage === 'object') return storage;
-  if (storage === 'indexedDB') return new IndexedDBQueryProjectionStorage<TData>({ namespace });
-  if (storage === 'localStorage')
-    return new LocalStorageQueryProjectionStorage<TData>({ namespace });
-  return undefined;
-};
-
-// Every app storage ignores rows written before a data-context reset of their
-// scope (see `./resetMark`), including resources no slice has been built for.
 const resolveStorage =
   <TData>(storage: AppStorageOption<TData> = 'indexedDB') =>
   (namespace: string): ReplicaStorage<TData> | undefined => {
-    const resolved = createStorage(storage, namespace);
-    return resolved && guardResetRows(resolved);
+    if (typeof storage === 'function') return storage(namespace);
+    if (typeof storage === 'object') return storage;
+    if (storage === 'indexedDB') return new IndexedDBQueryProjectionStorage<TData>({ namespace });
+    if (storage === 'localStorage')
+      return new LocalStorageQueryProjectionStorage<TData>({ namespace });
+    return undefined;
   };
 
 export const defineReplica = <TParams, TData, TFetched = TData>({
@@ -154,6 +144,19 @@ export const definePagedReplica = <
  * on an explicit trigger.
  */
 const replicaReadKeys = new Set<string>();
+
+/**
+ * Whether an SWR cache key is one a replica read used. `useClientDataSWR`
+ * stores a key under `augmentKey(key, workspaceId)` while a workspace is
+ * active — the workspace id appended to an array key, or `[key, id]` — so the
+ * recorded key is matched with and without that trailing id.
+ */
+const isReplicaReadKey = (queryKey: unknown): boolean =>
+  replicaReadKeys.has(stableQueryKey(queryKey)) ||
+  (Array.isArray(queryKey) &&
+    queryKey.length > 1 &&
+    (replicaReadKeys.has(stableQueryKey(queryKey.slice(0, -1))) ||
+      (queryKey.length === 2 && replicaReadKeys.has(stableQueryKey(queryKey[0])))));
 
 export const replicaSWRDriver = createSWRDriver({
   // Arguments pass through as given: SWR tells a revalidation from a write by their count.
@@ -212,22 +215,20 @@ const liveSlices = new Set<{ clear: () => Promise<boolean> }>();
  * next context resolves to the same scope string (a cloned deployment that
  * kept its ids) nothing else tells the old answer apart. `clear()` advances
  * each replica's clear generation, so those reads are discarded, and drops
- * the scope's persisted rows, which the previous context wrote; the scope mark
- * retires the rows of replicas not built yet. The replica read keys are then
+ * the scope's persisted rows, which the previous context wrote; the scope's reset
+ * epoch retires the rows of replicas not built yet. The replica read keys are then
  * revalidated so the screen repaints from the new context instead of staying
  * empty.
  */
 export const clearAllReplicas = (): void => {
   // Rows of replicas no slice exists for yet (a lazy route never opened this
-  // session) are retired by the scope mark rather than deleted.
-  markReplicaScopeReset(cacheScope.get());
+  // session) are retired by the scope's reset epoch rather than deleted.
+  markProjectionScopeReset(cacheScope.get());
   for (const slice of liveSlices) void slice.clear();
   // Every key a replica read used — not just `replica:sync`, since several
   // replicas declare their own `syncKey` (messages, project files, git review,
   // memories) — and nothing else.
-  void replicaSWRDriver
-    .revalidate((queryKey) => replicaReadKeys.has(stableQueryKey(queryKey)))
-    .catch(() => undefined);
+  void replicaSWRDriver.revalidate(isReplicaReadKey).catch(() => undefined);
 };
 
 /** `createReplicaSlice` bound to the app's SWR driver. */

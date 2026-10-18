@@ -1,5 +1,6 @@
 import superjson from 'superjson';
 
+import { readProjection, stampProjection } from './resetEpoch';
 import type {
   QueryProjection,
   QueryProjectionCodec,
@@ -36,7 +37,7 @@ export class LocalStorageQueryProjectionStorage<T> implements QueryProjectionSto
 
     try {
       const value = localStorage.getItem(this.#key(key));
-      return value ? this.#codec.parse(value) : undefined;
+      return value ? readProjection(key, this.#codec.parse(value)) : undefined;
     } catch {
       return undefined;
     }
@@ -47,7 +48,7 @@ export class LocalStorageQueryProjectionStorage<T> implements QueryProjectionSto
     if (typeof window === 'undefined') return undefined;
 
     const value = localStorage.getItem(this.#key(key));
-    return value ? this.#codec.parse(value) : undefined;
+    return value ? readProjection(key, this.#codec.parse(value)) : undefined;
   };
 
   /**
@@ -69,6 +70,6 @@ export class LocalStorageQueryProjectionStorage<T> implements QueryProjectionSto
   set = async (key: QueryProjectionKey, projection: QueryProjection<T>): Promise<void> => {
     if (typeof window === 'undefined') return;
 
-    localStorage.setItem(this.#key(key), this.#codec.stringify(projection));
+    localStorage.setItem(this.#key(key), this.#codec.stringify(stampProjection(key, projection)));
   };
 }
