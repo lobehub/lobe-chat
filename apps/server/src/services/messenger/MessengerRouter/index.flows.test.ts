@@ -91,6 +91,7 @@ vi.mock('@/server/services/bot/feedbackSubmit', () => ({
   submitBotFeedback: mockSubmitBotFeedback,
 }));
 vi.mock('@/server/services/bot/deferredMessages', () => ({
+  MAX_DEFERRED_PER_THREAD: 20,
   replayDeferredBotMessages: async (
     applicationId: string,
     threadId: string,
@@ -451,6 +452,44 @@ describe('MessengerRouter bot lifecycle', () => {
     expect(mockDrainDeferred).toHaveBeenCalledWith('messenger-slack-T_ACME', 'slack:D_DM');
     expect(mockResolveByKey).toHaveBeenCalledWith('slack:T_ACME');
     expect(processMessage).toHaveBeenCalledWith(adapter, 'slack:D_DM', { id: 'm1:replay' });
+  });
+
+  it('dispatches every deferred message together and rethrows the first failure', async () => {
+    const adapter = { name: 'slack-adapter' };
+    patchSlackBinder({
+      createClient: () => ({
+        createAdapter: () => ({ slack: adapter }),
+        extractChatId: (id: string) => id.split(':')[1] ?? id,
+      }),
+    });
+    let releaseFirst!: (error: Error) => void;
+    const started: string[] = [];
+    const processMessage = vi.fn((_adapter: unknown, _thread: string, message: { id: string }) => {
+      started.push(message.id);
+      if (message.id === 'm1:replay') {
+        return new Promise<void>((_resolve, reject) => {
+          releaseFirst = reject;
+        });
+      }
+      return Promise.resolve();
+    });
+    (mockChatBot as Record<string, unknown>).processMessage = processMessage;
+    mockResolveByKey.mockResolvedValue(slackCreds('T_ACME'));
+    mockDrainDeferred.mockResolvedValue([{ id: 'm1' }, { id: 'm2' }]);
+    mockBuildReplayMessages.mockReturnValue([{ id: 'm1:replay' }, { id: 'm2:replay' }]);
+
+    try {
+      const replay = new MessengerRouter().replayDeferredMessages(
+        'slack:T_ACME',
+        'messenger-slack-T_ACME',
+        'slack:D_DM',
+      );
+      await vi.waitFor(() => expect(started).toEqual(['m1:replay', 'm2:replay']));
+      releaseFirst(new Error('dispatch failed'));
+      await expect(replay).rejects.toThrow('dispatch failed');
+    } finally {
+      delete (mockChatBot as Record<string, unknown>).processMessage;
+    }
   });
 
   it('fails the replay when the install has no adapter for the platform', async () => {

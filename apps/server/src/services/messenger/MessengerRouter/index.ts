@@ -2,12 +2,16 @@ import { createIoRedisState } from '@chat-adapter/state-ioredis';
 import type { WebhookOptions } from 'chat';
 import { Chat, ConsoleLogger } from 'chat';
 import debug from 'debug';
+import pMap from 'p-map';
 
 import type { MessengerPlatform } from '@/config/messenger';
 import { getServerDB } from '@/database/core/db-adaptor';
 import type { LobeChatDatabase } from '@/database/type';
 import { getAgentRuntimeRedisClient } from '@/server/modules/AgentRuntime/redis';
-import { replayDeferredBotMessages } from '@/server/services/bot/deferredMessages';
+import {
+  MAX_DEFERRED_PER_THREAD,
+  replayDeferredBotMessages,
+} from '@/server/services/bot/deferredMessages';
 import { buildReplayMessages } from '@/server/services/bot/mergeMessages';
 import { patchSenderBatches } from '@/server/services/bot/patchSenderBatches';
 // Leaf module, not the `./platforms` barrel: the barrel instantiates every
@@ -301,10 +305,18 @@ export class MessengerRouter {
       const bot = creds ? await this.getOrCreateBot(creds) : null;
       const adapter = bot?.adapters[platform];
       if (!bot || !adapter) throw new Error(`Messenger adapter unavailable for ${platform}`);
-      const results = await Promise.allSettled(
-        buildReplayMessages(entries).map((message) =>
-          bot.chatBot.processMessage(adapter, platformThreadId, message),
-        ),
+      // The cap equals the store's own per-thread cap, so every parked message
+      // is still dispatched at once: burst/debounce strategies rely on that to
+      // merge the replay into one turn. Settle all before rethrowing the first
+      // failure so a single bad entry cannot cut the rest of the replay short.
+      const results = await pMap(
+        buildReplayMessages(entries),
+        (message): Promise<PromiseSettledResult<unknown>> =>
+          bot.chatBot.processMessage(adapter, platformThreadId, message).then(
+            (value) => ({ status: 'fulfilled', value }),
+            (reason: unknown) => ({ reason, status: 'rejected' }),
+          ),
+        { concurrency: MAX_DEFERRED_PER_THREAD },
       );
       const failure = results.find((result) => result.status === 'rejected');
       if (failure?.status === 'rejected') throw failure.reason;
