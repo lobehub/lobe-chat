@@ -129,9 +129,20 @@ export const useLocalFilePreviewStore: UseBoundStoreWithEqualityFn<
     actionPrefix: 'localFilePreview/previews',
     fetcher: async (key) => {
       const savedBefore = saveGenerations.get(key) ?? 0;
-      const preview = await fetchLocalFilePreview(key);
+      const savedSince = () => (saveGenerations.get(key) ?? 0) !== savedBefore;
+      let preview: LocalFilePreview;
+      try {
+        preview = await fetchLocalFilePreview(key);
+      } catch (error) {
+        // A save landed while this read was in flight: its failure (e.g. the
+        // 404 of a file the save then recreated) describes the pre-save file,
+        // so it must neither surface nor evict the confirmed saved body.
+        const saved = get().previewMap[key];
+        if (savedSince() && saved) return saved;
+        throw error;
+      }
       const current = get().previewMap[key];
-      if ((saveGenerations.get(key) ?? 0) === savedBefore || !current) return preview;
+      if (!savedSince() || !current) return preview;
       // A save landed while this read was in flight: keep the saved body, but
       // take the rest of the fresh read — notably the `resourceBaseUrl` an HTML
       // preview needs for its relative assets (never persisted, so the cached
