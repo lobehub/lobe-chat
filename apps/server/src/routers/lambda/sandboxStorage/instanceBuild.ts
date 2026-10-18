@@ -2,13 +2,14 @@ import { toExecutionConfiguration } from '@lobechat/types';
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
+import { router } from '@/libs/trpc/lambda';
 import { resolveScmCloneCredential } from '@/server/services/scm/cloneCredential';
 
 import { isBuildable } from './instanceOperations';
 import { instanceProcedure, mapStorageError } from './procedures';
 import { idSchema, topicIdSchema } from './schemas';
 
-export const instanceBuildProcedures = {
+export const instanceBuildRouter = router({
   /**
    * Materialize an instance: clone the environment's sources and run its
    * bootstrap, into the instance's own stored generation.
@@ -160,4 +161,4 @@ export const instanceBuildProcedures = {
 
       return { chunk: status.chunk, logOffset: status.logOffset, state: status.state };
     }),
-};
+});

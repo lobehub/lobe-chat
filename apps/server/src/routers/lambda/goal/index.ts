@@ -1,17 +1,19 @@
-import { router } from '@/libs/trpc/lambda';
+import { mergeRouters, router } from '@/libs/trpc/lambda';
 
 import { goalGraphEditProcedures } from '../goalGraphEdit';
-import { configurationProcedures } from './configuration';
-import { creationProcedures } from './creation';
-import { lifecycleProcedures } from './lifecycle';
-import { planningProcedures } from './planning';
-import { readProcedures } from './reads';
+import { configurationRouter } from './configuration';
+import { creationRouter } from './creation';
+import { lifecycleRouter } from './lifecycle';
+import { planningRouter } from './planning';
+import { readRouter } from './reads';
 
-export const goalRouter = router({
-  ...lifecycleProcedures,
-  ...planningProcedures,
-  ...goalGraphEditProcedures,
-  ...creationProcedures,
-  ...configurationProcedures,
-  ...readProcedures,
-});
+export const goalRouter = mergeRouters(
+  lifecycleRouter,
+  planningRouter,
+  creationRouter,
+  configurationRouter,
+  readRouter,
+  router({
+    ...goalGraphEditProcedures,
+  }),
+);

@@ -4,6 +4,7 @@ import pMap from 'p-map';
 import { z } from 'zod';
 
 import { TopicModel } from '@/database/models/topic';
+import { router } from '@/libs/trpc/lambda';
 
 import { rethrowDuplicateInstanceDirectory } from './constraintErrors';
 import {
@@ -22,7 +23,7 @@ import { idSchema, nameSchema, relativePathSchema, topicIdSchema } from './schem
  */
 const MANAGEMENT_TOPIC_ID = 'sandbox-workspace-console';
 
-export const instancesProcedures = {
+export const instancesRouter = router({
   /**
    * Fork an instance: a second directory that starts with everything the
    * first one had installed. The point of copying rather than creating is to
@@ -405,4 +406,4 @@ export const instancesProcedures = {
 
       return updated;
     }),
-};
+});

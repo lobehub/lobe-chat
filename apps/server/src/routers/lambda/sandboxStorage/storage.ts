@@ -1,10 +1,11 @@
 import { z } from 'zod';
 
+import { router } from '@/libs/trpc/lambda';
 import { resolveSandboxSessionConfig } from '@/server/services/sandbox';
 
 import { entitledProcedure, mapStorageError, storageClaimProcedure } from './procedures';
 
-export const storageProcedures = {
+export const storageRouter = router({
   /**
    * Whether this caller has a persistent workspace at all. The client pairs it
    * with the lab flag it already holds: flag off renders nothing, flag on
@@ -57,4 +58,4 @@ export const storageProcedures = {
   refreshStorageUsage: entitledProcedure.mutation(async ({ ctx }) =>
     ctx.client.refreshUsage().catch(mapStorageError),
   ),
-};
+});

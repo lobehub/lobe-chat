@@ -4,6 +4,7 @@ import {
 } from '@lobechat/heterogeneous-agents';
 import { z } from 'zod';
 
+import { router } from '@/libs/trpc/lambda';
 import { deviceGateway } from '@/server/services/deviceGateway';
 
 import { deviceProcedure } from './procedures';
@@ -25,7 +26,7 @@ const PROFILE_TIMEOUT_MS = 5_000;
 // login-shell PATH fallback), so it gets a longer budget than a single probe.
 const SCAN_TIMEOUT_MS = 10_000;
 
-export const agentsProcedures = {
+export const agentsRouter = router({
   /**
    * Probe whether a specific agent platform (openclaw / hermes) is available
    * on the given device. Dispatches a `checkPlatformCapability` tool call to
@@ -196,4 +197,4 @@ export const agentsProcedures = {
         return {};
       }
     }),
-};
+});

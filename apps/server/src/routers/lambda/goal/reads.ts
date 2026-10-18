@@ -3,7 +3,7 @@ import { summarizeGoalSupervision } from '@lobechat/types';
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
-import { heteroAuthedProcedure } from '@/libs/trpc/lambda';
+import { heteroAuthedProcedure, router } from '@/libs/trpc/lambda';
 import { serverDatabase } from '@/libs/trpc/lambda/middleware';
 import { GoalService } from '@/server/services/goal';
 import { graphForClient } from '@/server/services/goal/graphCompat';
@@ -152,7 +152,7 @@ const goalOperationReadProcedure = heteroAuthedProcedure.use(serverDatabase).use
   });
 });
 
-export const readProcedures = {
+export const readRouter = router({
   /** Clarifications still waiting on the user, grouped by goal. */
   pendingForIsland: goalProcedure.query(async ({ ctx }) => {
     try {
@@ -273,4 +273,4 @@ export const readProcedures = {
       success: true,
     };
   }),
-};
+});

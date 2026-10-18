@@ -8,6 +8,7 @@ import {
   wsProcedure,
 } from '@/business/server/trpc-middlewares/workspaceAuth';
 import { DeviceModel, WorkspaceDevicePrivateConflictError } from '@/database/models/device';
+import { router } from '@/libs/trpc/lambda';
 import { serverDatabase } from '@/libs/trpc/lambda/middleware';
 import { signWorkspaceDeviceToken } from '@/libs/trpc/utils/internalJwt';
 import { deviceGateway } from '@/server/services/deviceGateway';
@@ -41,7 +42,7 @@ const assertDeviceNotBoundToFixedAgent = async (
  */
 const wsWritableProcedure = wsProcedure.use(requireWorkspaceRole('member'));
 
-export const workspaceProcedures = {
+export const workspaceRouter = router({
   /**
    * Mint a short-lived connect token for enrolling a WORKSPACE-owned device.
    * Workspace members (and owners) can call — enrolling a machine into the
@@ -380,4 +381,4 @@ export const workspaceProcedures = {
       await model.deleteWorkspaceDevice(input.deviceId);
       return { success: true };
     }),
-};
+});

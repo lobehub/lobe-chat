@@ -2,6 +2,7 @@ import { TUNNEL_TOKEN_PARAM } from '@lobechat/device-gateway-client';
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
+import { router } from '@/libs/trpc/lambda';
 import { signTunnelAccessToken } from '@/libs/trpc/utils/internalJwt';
 import { deviceGateway } from '@/server/services/deviceGateway';
 import { deviceTunnels, TUNNEL_MAX_TTL_SECONDS } from '@/server/services/deviceGateway/tunnels';
@@ -52,7 +53,7 @@ const buildTunnelOpenUrl = async (
   return `${url}?${TUNNEL_TOKEN_PARAM}=${encodeURIComponent(token)}`;
 };
 
-export const operateProcedures = {
+export const operateRouter = router({
   /** Open a link to `port` on a device. */
   createTunnel: deviceProcedure
     .input(
@@ -309,4 +310,4 @@ export const operateProcedures = {
       }
       return { success: true };
     }),
-};
+});

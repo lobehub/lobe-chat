@@ -1,11 +1,11 @@
-import { router } from '@/libs/trpc/lambda';
+import { mergeRouters } from '@/libs/trpc/lambda';
 
-import { environmentsProcedures } from './environments';
-import { filesProcedures } from './files';
-import { githubProcedures } from './github';
-import { instanceBuildProcedures } from './instanceBuild';
-import { instancesProcedures } from './instances';
-import { storageProcedures } from './storage';
+import { environmentsRouter } from './environments';
+import { filesRouter } from './files';
+import { githubRouter } from './github';
+import { instanceBuildRouter } from './instanceBuild';
+import { instancesRouter } from './instances';
+import { storageRouter } from './storage';
 
 /**
  * Browsing and managing the persistent sandbox workspace.
@@ -16,13 +16,13 @@ import { storageProcedures } from './storage';
  * a client, which leaves nothing for one to smuggle back.
  */
 
-export const sandboxStorageRouter = router({
-  ...filesProcedures,
-  ...storageProcedures,
-  ...instancesProcedures,
-  ...instanceBuildProcedures,
-  ...environmentsProcedures,
-  ...githubProcedures,
-});
+export const sandboxStorageRouter = mergeRouters(
+  filesRouter,
+  storageRouter,
+  instancesRouter,
+  instanceBuildRouter,
+  environmentsRouter,
+  githubRouter,
+);
 
 export type SandboxStorageRouter = typeof sandboxStorageRouter;

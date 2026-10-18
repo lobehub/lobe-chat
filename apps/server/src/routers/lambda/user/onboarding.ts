@@ -12,12 +12,13 @@ import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
 import { UserPersonaModel } from '@/database/models/userMemory/persona';
+import { router } from '@/libs/trpc/lambda';
 import { AgentDocumentsService } from '@/server/services/agentDocuments';
 import { OnboardingService } from '@/server/services/onboarding';
 
 import { userProcedure } from './procedures';
 
-export const onboardingProcedures = {
+export const onboardingRouter = router({
   getOrCreateOnboardingState: userProcedure.query(async ({ ctx }) => {
     const onboardingService = new OnboardingService(ctx.serverDB, ctx.userId);
 
@@ -239,4 +240,4 @@ export const onboardingProcedures = {
   updateOnboarding: userProcedure.input(UserOnboardingSchema).mutation(async ({ ctx, input }) => {
     return ctx.createOnboardingService().updateOnboarding(input);
   }),
-};
+});

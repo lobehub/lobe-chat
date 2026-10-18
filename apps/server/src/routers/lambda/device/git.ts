@@ -2,12 +2,13 @@ import { deriveWorktreePath } from '@lobechat/types';
 import { z } from 'zod';
 
 import { requireWorkspaceRoleWhenScoped } from '@/business/server/trpc-middlewares/workspaceAuth';
+import { router } from '@/libs/trpc/lambda';
 import { deviceGateway } from '@/server/services/deviceGateway';
 
 import { assertWorkspaceRootApproved } from '../deviceWorkspaceGuard';
 import { deviceProcedure } from './procedures';
 
-export const gitProcedures = {
+export const gitRouter = router({
   /**
    * Granular git reads for a directory on a remote device, each via its own
    * device RPC so the web/remote git status bar mirrors the local desktop's
@@ -429,4 +430,4 @@ export const gitProcedures = {
         workspaceId: ctx.workspaceId,
       }),
     ),
-};
+});
