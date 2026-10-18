@@ -9,6 +9,7 @@ import {
   defineReplica,
   recordLens,
   type ReplicaState,
+  replicaSWRDriver,
 } from './index';
 
 const swrMutate = vi.hoisted(() => vi.fn(async () => undefined));
@@ -107,14 +108,23 @@ describe('clearAllReplicas', () => {
     canPersist.mockRestore();
   });
 
-  it('revalidates every SWR key, including replicas with a custom sync key', () => {
+  it('revalidates replica read keys, custom sync keys included, and nothing else', () => {
+    // Keys a replica read went through the driver with.
+    const fetcher = async () => undefined;
+    replicaSWRDriver.useQuery(
+      ['replica:sync', 'clearAllReplicasTest', 'q', 'scope', 'a'],
+      fetcher,
+      {},
+    );
+    replicaSWRDriver.useQuery(['userMemory', 'contexts', { page: 1 }], fetcher, {});
     swrMutate.mockClear();
 
     clearAllReplicas();
 
     const [match] = swrMutate.mock.calls.at(-1) as unknown as [(key: unknown) => boolean];
     expect(match(['replica:sync', 'clearAllReplicasTest', 'q', 'scope', 'a'])).toBe(true);
-    // e.g. the user-memory replicas sync under their own keys.
     expect(match(['userMemory', 'contexts', { page: 1 }])).toBe(true);
+    // An imperative action SWR (e.g. "create topic") must never fire on its own.
+    expect(match('openNewTopicOrSaveTopic')).toBe(false);
   });
 });

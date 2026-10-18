@@ -9,6 +9,7 @@ import {
   type ReplicaResource,
   type ReplicaScope,
   type ReplicaStorage,
+  stableQueryKey,
 } from '@lobechat/replica';
 import {
   createReplicaSlice as createCoreReplicaSlice,
@@ -146,10 +147,21 @@ export const definePagedReplica = <
 // Resolve the SWR bindings per call, not at import: the topic store pulls this
 // module in eagerly, and test suites that mock `@/libs/swr` partially must
 // still be able to import it.
+/**
+ * Every SWR key a replica read has used (`stableQueryKey` form), including
+ * resources with a custom `syncKey`. A reset revalidates exactly these, never
+ * the app's other SWR entries — imperative `useActionSWR` keys must only run
+ * on an explicit trigger.
+ */
+const replicaReadKeys = new Set<string>();
+
 export const replicaSWRDriver = createSWRDriver({
   // Arguments pass through as given: SWR tells a revalidation from a write by their count.
   mutate: (...args) => (mutate as (...args: unknown[]) => Promise<unknown>)(...args),
-  useSWR: (key, fetcher, config) => useClientDataSWR(key, fetcher, config),
+  useSWR: (key, fetcher, config) => {
+    if (key) replicaReadKeys.add(stableQueryKey(key));
+    return useClientDataSWR(key, fetcher, config);
+  },
 });
 
 /**
@@ -201,7 +213,7 @@ const liveSlices = new Set<{ clear: () => Promise<boolean> }>();
  * kept its ids) nothing else tells the old answer apart. `clear()` advances
  * each replica's clear generation, so those reads are discarded, and drops
  * the scope's persisted rows, which the previous context wrote; the scope mark
- * retires the rows of replicas not built yet. Every SWR key is then
+ * retires the rows of replicas not built yet. The replica read keys are then
  * revalidated so the screen repaints from the new context instead of staying
  * empty.
  */
@@ -210,10 +222,12 @@ export const clearAllReplicas = (): void => {
   // session) are retired by the scope mark rather than deleted.
   markReplicaScopeReset(cacheScope.get());
   for (const slice of liveSlices) void slice.clear();
-  // Every SWR key, not just `replica:sync`: several replicas declare their own
-  // `syncKey` (messages, project files, git review, memories), and everything
-  // on screen belongs to the context that is gone.
-  void replicaSWRDriver.revalidate(() => true).catch(() => undefined);
+  // Every key a replica read used — not just `replica:sync`, since several
+  // replicas declare their own `syncKey` (messages, project files, git review,
+  // memories) — and nothing else.
+  void replicaSWRDriver
+    .revalidate((queryKey) => replicaReadKeys.has(stableQueryKey(queryKey)))
+    .catch(() => undefined);
 };
 
 /** `createReplicaSlice` bound to the app's SWR driver. */
