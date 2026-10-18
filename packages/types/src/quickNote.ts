@@ -52,6 +52,20 @@ export const QUICK_NOTE_RUN_STATUSES = [
 export type QuickNoteRunStatus = (typeof QUICK_NOTE_RUN_STATUSES)[number];
 
 /**
+ * Structured failure recorded on a terminal Quick Note Run.
+ *
+ * Stored as jsonb so callers can add diagnostic fields without a migration.
+ * Must not contain secrets or full trace payloads.
+ */
+export interface QuickNoteRunError {
+  [key: string]: unknown;
+  /** Stable machine-readable failure code, when one is known. */
+  code?: string;
+  /** Human-readable failure summary. */
+  message: string;
+}
+
+/**
  * Well-known roles for Documents linked to a Quick Note.
  *
  * This is intentionally not a closed union at the database boundary: future
