@@ -11,6 +11,18 @@ import type { MessageListPage, MessageRoundCursor } from './cache';
  */
 export const MESSAGE_PAGE_ROW_BUDGET = 1000;
 
+/** Page sizes for reading a topic forward from its first round. */
+export interface ForwardPageSize {
+  countBudget: number;
+  roundLimit: number;
+}
+
+/** The first page of a shared topic, embedded in the share document. */
+export const SHARED_TOPIC_FIRST_PAGE: ForwardPageSize = { countBudget: 200, roundLimit: 3 };
+
+/** Each page a reader appends while scrolling a shared topic. */
+export const FORWARD_PAGE: ForwardPageSize = { countBudget: 1000, roundLimit: 5 };
+
 export interface RoundCursorReadParams extends MessageListQueryContext {
   projectToolPayloads?: boolean;
   skipWorks?: boolean;
@@ -51,6 +63,68 @@ export const readMessagesByRoundCursor = async (
   toMessageListPage(
     await lambdaClient.message.getMessagesByCursor.query(toRoundCursorQueryInput(params, cursor)),
   );
+
+/** The `getMessagesByCursor` input for one forward page, starting after `cursor`. */
+export const toForwardRoundCursorQueryInput = (
+  params: MessageListQueryContext,
+  cursor: MessageRoundCursor | null,
+  size: ForwardPageSize = FORWARD_PAGE,
+) => ({
+  agentId: params.agentId,
+  countBudget: size.countBudget,
+  cursor,
+  direction: 'forward' as const,
+  groupId: params.groupId,
+  includeFileWorks: true,
+  roundLimit: size.roundLimit,
+  topicId: params.topicId,
+  topicShareId: params.topicShareId,
+});
+
+/** The server answered with a page it did not read forward. */
+export class ForwardPagingUnsupportedError extends Error {
+  constructor() {
+    super('getMessagesByCursor did not page forward');
+    this.name = 'ForwardPagingUnsupportedError';
+  }
+}
+
+export interface ForwardMessagePage {
+  messages: UIChatMessage[];
+  /** Cursor for the rounds after this page, or null at the topic's end. */
+  newerCursor: MessageRoundCursor | null;
+}
+
+interface ForwardCursorClient {
+  message: {
+    getMessagesByCursor: {
+      query: (input: ReturnType<typeof toForwardRoundCursorQueryInput>) => Promise<{
+        direction?: 'backward' | 'forward';
+        messages: unknown[];
+        nextCursor: MessageRoundCursor | null;
+      }>;
+    };
+  };
+}
+
+/**
+ * One forward page through `client`: the browser's lambda client, or the share
+ * worker's server client. A server that predates `direction` strips it and
+ * answers with the newest page, so anything not echoed as forward is refused.
+ */
+export const readMessagesForward = async (
+  client: ForwardCursorClient,
+  params: MessageListQueryContext,
+  cursor: MessageRoundCursor | null,
+  size: ForwardPageSize = FORWARD_PAGE,
+): Promise<ForwardMessagePage> => {
+  const page = await client.message.getMessagesByCursor.query(
+    toForwardRoundCursorQueryInput(params, cursor, size),
+  );
+  if (page.direction !== 'forward') throw new ForwardPagingUnsupportedError();
+
+  return { messages: page.messages as UIChatMessage[], newerCursor: page.nextCursor };
+};
 
 /**
  * Newest pages requested before the code that renders them has loaded, by
