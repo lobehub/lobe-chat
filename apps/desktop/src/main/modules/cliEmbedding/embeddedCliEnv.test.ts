@@ -29,4 +29,35 @@ describe('withEmbeddedCliEnv', () => {
   it('works when the env carries no PATH', () => {
     expect(withEmbeddedCliEnv({}).PATH).toBe(wrapperDir);
   });
+
+  it('prefixes the Windows `Path` key instead of adding a wrapper-only PATH', () => {
+    // process.env spells it `Path` on Windows; a second `PATH` holding only the
+    // wrapper dir made the child drop System32 and every inherited directory.
+    const env = withEmbeddedCliEnv(
+      { Path: 'C:\\Windows\\System32;C:\\Git\\cmd' },
+      'C:\\lh\\bin',
+      'win32',
+    );
+
+    expect(env.Path).toBe('C:\\lh\\bin;C:\\Windows\\System32;C:\\Git\\cmd');
+    expect(env).not.toHaveProperty('PATH');
+  });
+
+  it('on Windows, prefers an explicit PATH and drops other spellings', () => {
+    const env = withEmbeddedCliEnv(
+      { PATH: 'C:\\login\\bin', Path: 'C:\\Windows' },
+      'C:\\lh\\bin',
+      'win32',
+    );
+
+    expect(env.PATH).toBe('C:\\lh\\bin;C:\\login\\bin');
+    expect(env).not.toHaveProperty('Path');
+  });
+
+  it('keeps differently-cased names apart on case-sensitive platforms', () => {
+    const env = withEmbeddedCliEnv({ PATH: '/usr/bin', Path: 'other' }, '/lh/bin', 'darwin');
+
+    expect(env.PATH).toBe('/lh/bin:/usr/bin');
+    expect(env.Path).toBe('other');
+  });
 });
