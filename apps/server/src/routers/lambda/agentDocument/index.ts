@@ -1,13 +1,13 @@
-import { router } from '@/libs/trpc/lambda';
+import { mergeRouters } from '@/libs/trpc/lambda';
 
-import { documentsProcedures } from './documents';
-import { skillsProcedures } from './skills';
-import { toolDocumentsProcedures } from './toolDocuments';
-import { vfsProcedures } from './vfs';
+import { documentsRouter } from './documents';
+import { skillsRouter } from './skills';
+import { toolDocumentsRouter } from './toolDocuments';
+import { vfsRouter } from './vfs';
 
-export const agentDocumentRouter = router({
-  ...documentsProcedures,
-  ...vfsProcedures,
-  ...skillsProcedures,
-  ...toolDocumentsProcedures,
-});
+export const agentDocumentRouter = mergeRouters(
+  documentsRouter,
+  vfsRouter,
+  skillsRouter,
+  toolDocumentsRouter,
+);

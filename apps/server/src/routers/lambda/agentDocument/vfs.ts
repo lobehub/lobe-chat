@@ -1,5 +1,7 @@
 import { z } from 'zod';
 
+import { router } from '@/libs/trpc/lambda';
+
 import {
   agentDocumentProcedure,
   agentDocumentProcedureWrite,
@@ -17,7 +19,7 @@ const writeCreateModeSchema = z.enum(['always-new', 'if-missing', 'must-exist'])
 
 const recursiveSchema = z.boolean().optional();
 
-export const vfsProcedures = {
+export const vfsRouter = router({
   /**
    * Tool-oriented: list documents for an agent
    */
@@ -366,4 +368,4 @@ export const vfsProcedures = {
         handleAgentDocumentVfsError(error);
       }
     }),
-};
+});

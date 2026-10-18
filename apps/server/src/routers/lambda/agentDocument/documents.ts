@@ -3,6 +3,7 @@ import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
 import { TopicTrigger } from '@/const/topic';
+import { router } from '@/libs/trpc/lambda';
 
 import { agentDocumentProcedure, agentDocumentProcedureWrite } from './procedures';
 
@@ -14,7 +15,7 @@ const metadataSchema = z
     message: `metadata must be ${MAX_METADATA_BYTES} bytes or smaller`,
   });
 
-export const documentsProcedures = {
+export const documentsRouter = router({
   /**
    * Get all available template sets
    */
@@ -207,4 +208,4 @@ export const documentsProcedures = {
     .query(async ({ ctx, input }) => {
       return ctx.agentDocumentService.hasDocuments(input.agentId);
     }),
-};
+});

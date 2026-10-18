@@ -3,6 +3,7 @@ import { MOVE_DOCUMENTS_MAX_IDS } from '@lobechat/builtin-tool-agent-documents';
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
+import { router } from '@/libs/trpc/lambda';
 import { emitAgentDocumentToolOutcomeSafely } from '@/server/services/agentDocuments/toolOutcome';
 import { assertCanPerformResourceAction } from '@/server/services/resourcePermission';
 
@@ -113,7 +114,7 @@ const emitCreateDocumentToolOutcome = async (input: {
   });
 };
 
-export const toolDocumentsProcedures = {
+export const toolDocumentsRouter = router({
   /**
    * Tool-oriented: associate an existing document with an agent
    */
@@ -513,4 +514,4 @@ export const toolDocumentsProcedures = {
     .mutation(async ({ ctx, input }) => {
       return ctx.agentDocumentService.updateLoadRuleById(input.id, input.rule, input.agentId);
     }),
-};
+});

@@ -4,6 +4,7 @@ import matter from 'gray-matter';
 import { z } from 'zod';
 
 import { deriveAgentDocumentFields } from '@/database/models/agentDocuments';
+import { router } from '@/libs/trpc/lambda';
 import type { AgentDocumentsService } from '@/server/services/agentDocuments';
 import { getUnifiedSkillNamespaceRootPath } from '@/server/services/agentDocumentVfs/mounts/skills/path';
 
@@ -99,7 +100,7 @@ const resolveConvertibleDocumentBody = async (
   return bodyMarkdown;
 };
 
-export const skillsProcedures = {
+export const skillsRouter = router({
   createSkillByPath: agentDocumentProcedureWrite
     .input(createMountedSkillSchema)
     .mutation(async ({ ctx, input }) => {
@@ -208,4 +209,4 @@ export const skillsProcedures = {
         handleAgentDocumentVfsError(error);
       }
     }),
-};
+});
