@@ -1871,6 +1871,15 @@ export class ClaudeCompatibleStreamAdapter implements AgentEventAdapter {
    * not main-agent-scoped).
    */
   private handleUser(raw: any): HeterogeneousAgentEvent[] {
+    // A replayed user message (`--replay-user-messages`) is input the host
+    // delivered into a live session: the turn it opens answers the user, not a
+    // background task, even while one is still running.
+    if (raw.isReplay && !raw.parent_tool_use_id) {
+      this.hasUnhandledUserInput = true;
+      this.pendingTaskCompletion = undefined;
+      return [];
+    }
+
     const content = raw.message?.content;
     if (!Array.isArray(content)) return [];
 
@@ -2463,12 +2472,3 @@ export class ClaudeCompatibleStreamAdapter implements AgentEventAdapter {
 }
 
 export class ClaudeCodeAdapter extends ClaudeCompatibleStreamAdapter {}
-
-export class ClaudeCodeSdkAdapter extends ClaudeCodeAdapter {
-  constructor() {
-    super({
-      runtimeEndStrategy: 'on-transport-close',
-      signalBackgroundTaskCompletion: true,
-    });
-  }
-}
