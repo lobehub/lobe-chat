@@ -14,14 +14,21 @@ import { topicSelectors } from '@/store/chat/slices/topic/selectors';
 import TopicActions from './TopicActions';
 
 interface ToolbarProps {
+  /** Shown while the open conversation has no titled topic. @default the side chat's title */
+  fallbackTitle?: string;
   onCollapse: () => void;
+  /** Hand a new conversation to another panel, after the topic is cleared. */
+  onNewTopic?: () => void;
+  /** Open a topic picked from history. @default switch this panel to it */
+  onSelectTopic?: (topicId: string) => void;
 }
 
 /**
  * Topic title + topic menu, then new-conversation + history — laid out like the
- * agent conversation header so the side chat reads as the same conversation.
+ * agent conversation header. Shared by the side chat and the supervision record
+ * so both goal-page conversations carry the same header.
  */
-const Toolbar = memo<ToolbarProps>(({ onCollapse }) => {
+const Toolbar = memo<ToolbarProps>(({ fallbackTitle, onCollapse, onNewTopic, onSelectTopic }) => {
   const { t } = useTranslation('chat');
   const [topicPopoverOpen, setTopicPopoverOpen] = useState(false);
   const agentId = useConversationStore(conversationSelectors.agentId);
@@ -36,7 +43,7 @@ const Toolbar = memo<ToolbarProps>(({ onCollapse }) => {
   const currentTopic = useChatStore(topicSelectors.currentActiveTopic);
 
   const isLoadingTopics = topics === undefined;
-  const topicTitle = currentTopic?.title || t('goalChat.title');
+  const topicTitle = currentTopic?.title || fallbackTitle || t('goalChat.title');
   const hasTopics = !!topics && topics.length > 0;
 
   return (
@@ -67,7 +74,12 @@ const Toolbar = memo<ToolbarProps>(({ onCollapse }) => {
             icon={PlusIcon}
             size={DESKTOP_HEADER_ICON_SMALL_SIZE}
             title={t('goalChat.newTopic')}
-            onClick={() => switchTopic(null)}
+            onClick={() => {
+              // Clear first: the side chat keeps the agent's open topic when it
+              // mounts, so a hand-off would otherwise land back on this one.
+              void switchTopic(null);
+              onNewTopic?.();
+            }}
           />
           <Popover
             open={isLoadingTopics ? false : topicPopoverOpen}
@@ -94,7 +106,7 @@ const Toolbar = memo<ToolbarProps>(({ onCollapse }) => {
                       topicId={topic.id}
                       topicTitle={topic.title}
                       onClose={() => setTopicPopoverOpen(false)}
-                      onTopicChange={(id) => switchTopic(id)}
+                      onTopicChange={(id) => (onSelectTopic ? onSelectTopic(id) : switchTopic(id))}
                     />
                   ))}
                 </Flexbox>
