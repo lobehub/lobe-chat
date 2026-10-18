@@ -1,6 +1,8 @@
 /**
  * Durable Review publication for a run parked on human approval.
  */
+import pMap from 'p-map';
+
 import { notifyAgentInterventionRequired } from '@/business/server/agent-run/agentInterventionReview';
 
 import { buildRuntimeInterventionNotification } from '../agentInterventionNotification';
@@ -38,8 +40,9 @@ export async function notifyPendingAgentIntervention(
     });
     if (!notification) return;
 
-    const persistedRows = await Promise.all(
-      notification.items.map(async (item, itemIndex) => {
+    const persistedRows = await pMap(
+      notification.items,
+      async (item, itemIndex) => {
         if (item.sourceRef.type !== 'runtime') return;
         const [message, plugin] = await Promise.all([
           deps.messageModel.findById(item.sourceRef.toolMessageId),
@@ -61,7 +64,8 @@ export async function notifyPendingAgentIntervention(
           return;
         }
         return true;
-      }),
+      },
+      { concurrency: 5 },
     );
 
     if (persistedRows.some((persisted) => persisted !== true)) {
