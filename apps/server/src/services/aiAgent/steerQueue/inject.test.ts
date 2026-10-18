@@ -74,6 +74,48 @@ describe('canJoinRunningTurn', () => {
   });
 });
 
+describe('canJoinRunningTurn — per-turn settings', () => {
+  const configured = {
+    binding: { device: { id: 'dev-1' } },
+    host: {
+      acceptsFileWorks: true,
+      clientProtocol: 2,
+      llmExecutor: {
+        capabilities: ['llm_relay@1'],
+        channelOperationId: 'op-0',
+        clientId: 'tab-1',
+        providers: ['ollama'],
+      },
+    },
+    origin: { agentId: 'agt-1', topicId: 'tpc-1' },
+    principal: { policy: { userIntervention: { allowList: ['a'], approvalMode: 'manual' } } },
+    status: 'running',
+  } as unknown as AgentState;
+  const same = {
+    acceptsFileWorks: true,
+    clientProtocol: 2 as const,
+    deviceId: 'dev-1',
+    llmExecutor: { clientId: 'tab-1', providers: ['ollama'], capabilities: ['llm_relay@1'] },
+    userInterventionConfig: { approvalMode: 'manual' as const, allowList: ['a'] },
+  };
+
+  it('joins when every stated setting is the running turn’s, in any key order', () => {
+    expect(canJoinRunningTurn(followUp('a', 1, same), configured)).toBe(true);
+    expect(canJoinRunningTurn(followUp('a', 1, { acceptsFileWorks: true }), configured)).toBe(true);
+  });
+
+  it.each([
+    ['another device', { deviceId: 'dev-2' }],
+    ['another local device hint', { localDeviceId: 'dev-2' }],
+    ['another LLM executor', { llmExecutor: { ...same.llmExecutor, clientId: 'tab-2' } }],
+    ['another wire protocol', { clientProtocol: 1 as const }],
+    ['another approval mode', { userInterventionConfig: { approvalMode: 'auto-run' as const } }],
+    ['other stream features', { acceptsFileWorks: false }],
+  ])('holds a follow-up sent with %s for the next turn', (_label, change) => {
+    expect(canJoinRunningTurn(followUp('a', 1, { ...same, ...change }), configured)).toBe(false);
+  });
+});
+
 describe('injectQueuedFollowUp', () => {
   beforeEach(() => {
     vi.clearAllMocks();

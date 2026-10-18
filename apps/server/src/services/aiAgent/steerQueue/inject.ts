@@ -19,11 +19,56 @@ import {
 
 const log = debug('lobe-server:steer-queue');
 
+/** Key-order-independent form of a settings value, for comparing two of them. */
+const canonical = (value: unknown): string =>
+  JSON.stringify(value, (_key, v) =>
+    v && typeof v === 'object' && !Array.isArray(v)
+      ? Object.fromEntries(Object.entries(v).sort(([a], [b]) => a.localeCompare(b)))
+      : v,
+  );
+
+/**
+ * Whether the per-turn settings a follow-up was sent with are the ones the
+ * running turn already uses. A joined follow-up only adds a message — it runs
+ * on the run's device, executor, protocol and approval settings — so any
+ * setting it states must match them; one it leaves out is inherited either
+ * way.
+ */
+const matchesRunningTurnSettings = (
+  request: QueuedFollowUp['request'],
+  state: AgentState,
+): boolean => {
+  const runDeviceId = state.binding?.device?.id;
+  if (request.deviceId && request.deviceId !== runDeviceId) return false;
+  if (request.localDeviceId && request.localDeviceId !== runDeviceId) return false;
+
+  if (request.clientProtocol && request.clientProtocol !== (state.host?.clientProtocol ?? 1)) {
+    return false;
+  }
+  if (!!request.acceptsFileWorks !== !!state.host?.acceptsFileWorks) return false;
+
+  if (request.llmExecutor) {
+    // `channelOperationId` is server-set on the run's executor, never sent by a client.
+    const { channelOperationId: _channel, ...runExecutor } = (state.host?.llmExecutor ??
+      {}) as Record<string, unknown>;
+    if (canonical(request.llmExecutor) !== canonical(runExecutor)) return false;
+  }
+
+  if (request.userInterventionConfig) {
+    const runIntervention =
+      state.principal?.policy?.userIntervention ?? state.userInterventionConfig;
+    if (canonical(request.userInterventionConfig) !== canonical(runIntervention)) return false;
+  }
+
+  return true;
+};
+
 /**
  * Whether a follow-up can join the run that is already going: plain text for
- * the same agent. Anything that needs a turn configured for it — attachments,
- * tool or skill selections, @-mentions, another agent — waits for the
- * hand-back and starts as the next turn instead.
+ * the same agent, sent with the turn settings the run already has. Anything
+ * that needs a turn configured for it — attachments, tool or skill selections,
+ * @-mentions, another agent, a different device, executor, protocol or approval
+ * setting — waits for the hand-back and starts as the next turn instead.
  */
 export const canJoinRunningTurn = (entry: QueuedFollowUp, state: AgentState): boolean => {
   const { request } = entry;
@@ -33,7 +78,9 @@ export const canJoinRunningTurn = (entry: QueuedFollowUp, state: AgentState): bo
   if (request.mentionedAgents?.length) return false;
 
   const runAgentId = state.origin?.agentId;
-  return !!request.agentId && !!runAgentId && request.agentId === runAgentId;
+  if (!request.agentId || !runAgentId || request.agentId !== runAgentId) return false;
+
+  return matchesRunningTurnSettings(request, state);
 };
 
 /**
