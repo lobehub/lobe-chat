@@ -22,7 +22,7 @@ vi.mock('../composerRun', () => ({ startComposerRun }));
 vi.mock('@/server/routers/lambda/_helpers/workspaceAgentGuard', () => ({
   assertCanUseWorkspaceAgent,
 }));
-vi.mock('@/server/routers/lambda/_helpers/conversationResourceGuard', () => ({
+vi.mock('@/server/routers/lambda/aiAgent/guards', () => ({
   assertCanUseAgentRunConversation,
 }));
 

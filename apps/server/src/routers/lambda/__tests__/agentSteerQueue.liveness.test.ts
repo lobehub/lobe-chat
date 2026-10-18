@@ -15,7 +15,7 @@ vi.mock('@/server/services/redis', () => ({
 vi.mock('@/server/routers/lambda/_helpers/workspaceAgentGuard', () => ({
   assertCanUseWorkspaceAgent: vi.fn(),
 }));
-vi.mock('@/server/routers/lambda/_helpers/conversationResourceGuard', () => ({
+vi.mock('@/server/routers/lambda/aiAgent/guards', () => ({
   assertCanUseAgentRunConversation: vi.fn(),
 }));
 vi.mock('@/business/server/trpc-middlewares/rbacPermission', async () => {

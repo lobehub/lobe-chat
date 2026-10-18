@@ -1,8 +1,8 @@
 import { TRPCError } from '@trpc/server';
 import debug from 'debug';
 
-import { assertCanUseAgentRunConversation } from '@/server/routers/lambda/_helpers/conversationResourceGuard';
 import { assertCanUseWorkspaceAgent } from '@/server/routers/lambda/_helpers/workspaceAgentGuard';
+import { assertCanUseAgentRunConversation } from '@/server/routers/lambda/aiAgent/guards';
 import { redisService } from '@/server/services/redis';
 import type { SteerQueueEntry, SteerQueueScope } from '@/server/services/redis/steerQueue';
 

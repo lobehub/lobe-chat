@@ -27,7 +27,7 @@ vi.mock('../pipeline/resolveUserMessageParentId', () => ({
 vi.mock('@/server/routers/lambda/_helpers/workspaceAgentGuard', () => ({
   assertCanUseWorkspaceAgent: mocks.assertCanUseWorkspaceAgent,
 }));
-vi.mock('@/server/routers/lambda/_helpers/conversationResourceGuard', () => ({
+vi.mock('@/server/routers/lambda/aiAgent/guards', () => ({
   assertCanUseAgentRunConversation: mocks.assertCanUseAgentRunConversation,
 }));
 
