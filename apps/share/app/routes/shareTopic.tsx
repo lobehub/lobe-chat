@@ -6,7 +6,10 @@ import { SWRConfig, unstable_serialize } from 'swr';
 import { shareKeys } from '@/libs/swr/keys';
 import { resolveRequestLocale } from '@/locales/requestLocale';
 
-import { sharedTopicMessagesScript } from '../../src/features/topic/sharedConversation';
+import {
+  readSharedTopicFirstPage,
+  sharedTopicMessagesScript,
+} from '../../src/features/topic/sharedConversation';
 import SharedTopicView, { preloadSharedTopic } from '../../src/features/topic/SharedTopicView';
 import { buildTopicByline } from '../../src/features/topic/topicByline';
 import { loadShareResources } from '../../src/shell/createShareI18n';
@@ -21,13 +24,19 @@ export const loader = async ({ context, params, request }: LoaderFunctionArgs) =
   const client = createServerLambdaClient(request, apiBase);
 
   // SSR data is best-effort: on any backend failure fall back to CSR, where SWR
-  // refetches and surfaces the error state exactly as before.
-  const topic = await client.share.getSharedTopic.query({ shareId }).catch((error) => {
-    console.error('[share] shared topic SSR fetch failed:', error);
-    return null;
-  });
+  // refetches and surfaces the error state exactly as before. The first rounds
+  // are read with the share id alone, so both reads run side by side.
+  const [topic, { firstPage, messageReadMode }] = await Promise.all([
+    client.share.getSharedTopic.query({ shareId }).catch((error) => {
+      console.error('[share] shared topic SSR fetch failed:', error);
+      return null;
+    }),
+    readSharedTopicFirstPage(client, shareId),
+  ]);
 
   return {
+    firstPage,
+    messageReadMode,
     byline: topic ? buildTopicByline(topic) : undefined,
     description: shareMetaDescription(await loadShareResources(locale), 'topicDescription'),
     locale,
@@ -38,10 +47,10 @@ export const loader = async ({ context, params, request }: LoaderFunctionArgs) =
 
 // Runs as the hydrated router initializes. On that first call `serverLoader()`
 // hands back the data already in the document, so this costs no request; it
-// hands the conversation the messages the document already requested.
+// hands the conversation the messages the document carries.
 export const clientLoader = async ({ serverLoader }: ClientLoaderFunctionArgs) => {
   const data = await serverLoader<typeof loader>();
-  if (data.topic) preloadSharedTopic(data.topic);
+  if (data.topic) preloadSharedTopic(data.topic, data);
 
   return data;
 };
@@ -63,8 +72,11 @@ export const meta: MetaFunction<typeof loader> = ({ loaderData }) => {
 };
 
 export default function ShareTopicRoute() {
-  const { shareId, topic } = useLoaderData<typeof loader>();
-  const messagesScript = topic ? sharedTopicMessagesScript(topic) : '';
+  const { messageReadMode, shareId, topic } = useLoaderData<typeof loader>();
+  // The document starts the newest-first read only when the server cannot page
+  // forward; reading forward, the first rounds are already in the loader data.
+  const messagesScript =
+    topic && messageReadMode === 'backward' ? sharedTopicMessagesScript(topic) : '';
 
   return (
     <SWRConfig
@@ -73,7 +85,7 @@ export default function ShareTopicRoute() {
       }}
     >
       {messagesScript && <script dangerouslySetInnerHTML={{ __html: messagesScript }} />}
-      <SharedTopicView />
+      <SharedTopicView messageReadMode={messageReadMode} />
     </SWRConfig>
   );
 }

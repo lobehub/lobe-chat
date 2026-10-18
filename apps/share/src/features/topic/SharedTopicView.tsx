@@ -17,7 +17,11 @@ import { type SharedTopicData } from '@/types/topic';
 import { clientOnly } from '../../shell/clientOnly';
 import ShareLayout from '../../shell/ShareLayout';
 import ExplainTopic from './ExplainTopic';
-import { primeSharedTopicMessages } from './sharedConversation';
+import {
+  primeSharedTopicMessages,
+  type SharedTopicFirstPage,
+  type SharedTopicReadMode,
+} from './sharedConversation';
 import TopicAvatar from './TopicAvatar';
 import { buildTopicByline } from './topicByline';
 
@@ -28,15 +32,19 @@ const SharedTopicAside = clientOnly(() => import('./SharedTopicAside.client'));
 
 /**
  * Everything the conversation needs before it can paint: its chunk and the
- * newest messages the document already requested. The route calls this as the
- * hydrated router initializes, ahead of the body's own mount.
+ * messages the document carries. The route calls this as the hydrated router
+ * initializes, ahead of the body's own mount.
  */
-export const preloadSharedTopic = (topic: SharedTopicData) => {
+export const preloadSharedTopic = (topic: SharedTopicData, firstPage: SharedTopicFirstPage) => {
   SharedTopicBody.preload();
-  primeSharedTopicMessages(topic);
+  primeSharedTopicMessages(topic, firstPage);
 };
 
-const SharedTopicView = memo(() => {
+interface SharedTopicViewProps {
+  messageReadMode: SharedTopicReadMode;
+}
+
+const SharedTopicView = memo<SharedTopicViewProps>(({ messageReadMode }) => {
   const wideScreen = useGlobalStore(systemStatusSelectors.wideScreen);
   const { id } = useParams<{ id: string }>();
 
@@ -75,7 +83,9 @@ const SharedTopicView = memo(() => {
       loading={isLoading && !data}
       title={data?.title}
     >
-      {id && data ? <SharedTopicBody fallback={hero} shareId={id} /> : null}
+      {id && data ? (
+        <SharedTopicBody fallback={hero} messageReadMode={messageReadMode} shareId={id} />
+      ) : null}
     </ShareLayout>
   );
 });
