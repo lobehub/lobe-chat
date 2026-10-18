@@ -2,6 +2,7 @@ import { TRPCError } from '@trpc/server';
 import debug from 'debug';
 import { z } from 'zod';
 
+import { router } from '@/libs/trpc/lambda';
 import {
   AssistantSorts,
   McpConnectionType,
@@ -18,7 +19,7 @@ const log = debug('lambda-router:market');
 
 const marketSourceSchema = z.enum(['legacy', 'new']);
 
-export const discoveryProcedures = {
+export const discoveryRouter = router({
   getAgentsByPlugin: marketProcedure
     .input(
       z.object({
@@ -563,4 +564,4 @@ export const discoveryProcedures = {
         throw mapMarketError(error, 'Failed to fetch user info');
       }
     }),
-};
+});

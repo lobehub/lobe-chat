@@ -1,15 +1,9 @@
-import { router } from '@/libs/trpc/lambda';
+import { mergeRouters } from '@/libs/trpc/lambda';
 
-import { forkProcedures } from './fork';
-import { publishProcedures } from './publish';
-import { readProcedures } from './read';
+import { forkRouter } from './fork';
+import { publishRouter } from './publish';
+import { readRouter } from './read';
 
-export const agentRouter = router({
-  ...publishProcedures,
-
-  ...forkProcedures,
-
-  ...readProcedures,
-});
+export const agentRouter = mergeRouters(publishRouter, forkRouter, readRouter);
 
 export type AgentRouter = typeof agentRouter;

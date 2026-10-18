@@ -2,6 +2,7 @@ import { TRPCError } from '@trpc/server';
 import debug from 'debug';
 import { z } from 'zod';
 
+import { router } from '@/libs/trpc/lambda';
 import { type TrustedClientUserInfo } from '@/libs/trusted-client';
 import { generateTrustedClientToken } from '@/libs/trusted-client';
 import { normalizeLocale } from '@/locales/resources';
@@ -15,7 +16,7 @@ const paginationSchema = z.object({
   pageSize: z.number().optional(),
 });
 
-export const readProcedures = {
+export const readRouter = router({
   /**
    * Get agent detail by identifier
    * GET /market/agent/:identifier
@@ -113,4 +114,4 @@ export const readProcedures = {
       });
     }
   }),
-};
+});

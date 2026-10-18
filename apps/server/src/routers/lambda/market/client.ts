@@ -4,11 +4,13 @@ import { serialize } from 'cookie';
 import debug from 'debug';
 import { z } from 'zod';
 
+import { router } from '@/libs/trpc/lambda';
+
 import { marketProcedure } from './procedures';
 
 const log = debug('lambda-router:market');
 
-export const clientProcedures = {
+export const clientRouter = router({
   registerClientInMarketplace: marketProcedure.input(z.object({})).mutation(async ({ ctx }) => {
     return ctx.discoverService.registerClient({
       userAgent: ctx.userAgent,
@@ -264,4 +266,4 @@ export const clientProcedures = {
         });
       }
     }),
-};
+});

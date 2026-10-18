@@ -2,6 +2,7 @@ import { TRPCError } from '@trpc/server';
 import debug from 'debug';
 import { z } from 'zod';
 
+import { router } from '@/libs/trpc/lambda';
 import { type TrustedClientUserInfo } from '@/libs/trusted-client';
 import { generateTrustedClientToken } from '@/libs/trusted-client';
 import type { AgentForkBatchResult, AgentForkResponse } from '@/types/discover';
@@ -125,7 +126,7 @@ const forkAgentItemSchema = z.object({
   visibility: z.enum(['public', 'private', 'internal']).optional(),
 });
 
-export const forkProcedures = {
+export const forkRouter = router({
   /**
    * Fork one or more agents in a single batch.
    * POST /market/agent/fork (batch)
@@ -256,4 +257,4 @@ export const forkProcedures = {
         });
       }
     }),
-};
+});

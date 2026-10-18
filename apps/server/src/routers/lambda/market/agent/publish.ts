@@ -3,6 +3,7 @@ import debug from 'debug';
 import { customAlphabet } from 'nanoid/non-secure';
 import { z } from 'zod';
 
+import { router } from '@/libs/trpc/lambda';
 import { type TrustedClientUserInfo } from '@/libs/trusted-client';
 import { generateTrustedClientToken } from '@/libs/trusted-client';
 
@@ -174,7 +175,7 @@ const publishOrCreateSchema = z.object({
   tokenUsage: z.number().optional(),
 });
 
-export const publishProcedures = {
+export const publishRouter = router({
   /**
    * Check if current user owns the specified agent
    * Returns ownership status and original agent info for fork scenario
@@ -444,4 +445,4 @@ export const publishProcedures = {
         });
       }
     }),
-};
+});
