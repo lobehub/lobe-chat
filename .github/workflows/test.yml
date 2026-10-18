@@ -260,15 +260,15 @@ jobs:
       pull-requests: write
     env:
       ALINT_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
-      # Release PRs (`release/*`, the release-branch rule auto-tag-release.yml and
-      # claude-pr-assign.yml use) carry a whole cycle of canary changes that already
-      # ran alint on their own PRs, and so does a push to main. Re-linting them
-      # takes over an hour and spends provider tokens for nothing. `hotfix/*` PRs
-      # still run: the fix is written on the hotfix branch itself, so that PR is
-      # the only place it gets linted.
+      # Weekly release PRs (`release/weekly-*`, cut from canary) carry a whole cycle
+      # of canary changes that already ran alint on their own PRs, and so does a
+      # push to main. Re-linting them takes over an hour and spends provider tokens
+      # for nothing. Other release branches and `hotfix/*` start from main and get
+      # new or cherry-picked changes (and conflict resolutions) on the branch
+      # itself, so their PRs are the only place those changes get linted.
       ALINT_SKIP_REASON: >-
         ${{
-        github.event_name == 'pull_request' && startsWith(github.head_ref, 'release/') && 'release PR, whose changes were linted on their own PRs' ||
+        github.event_name == 'pull_request' && startsWith(github.head_ref, 'release/weekly-') && 'weekly release PR, whose changes were linted on their own PRs' ||
         github.event_name == 'push' && github.ref == 'refs/heads/main' && 'push to main, whose changes were linted on their own PRs' ||
         ''
         }}
@@ -320,8 +320,8 @@ jobs:
       # Findings are published as a separate "ALint" check (red when a rule at
       # `error` level fires) plus one summary comment on the PR, rewritten on
       # every push. This job itself never fails because of alint. Skipped when
-      # the provider secret is unavailable (forks) and for release PRs and pushes
-      # to main (see ALINT_SKIP_REASON). Runs here to reuse the root
+      # the provider secret is unavailable (forks) and for weekly release PRs and
+      # pushes to main (see ALINT_SKIP_REASON). Runs here to reuse the root
       # install instead of paying for another job.
       - name: alint · report a skipped run
         if: ${{ !cancelled() && env.ALINT_API_KEY != '' && env.ALINT_SKIP_REASON != '' }}

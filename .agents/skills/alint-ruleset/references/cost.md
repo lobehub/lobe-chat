@@ -42,8 +42,8 @@ the ALint check run summary and the PR comment, in the form
 ## Two keys, never one number
 
 - **CI key** — the `DEEPSEEK_API_KEY` repository secret, spent by the
-  `ALint & Test Desktop App` job on every push and PR, except `release/*` PRs and pushes
-  to `main`. This is the recurring cost.
+  `ALint & Test Desktop App` job on every push and PR, except `release/weekly-*` PRs and
+  pushes to `main`. This is the recurring cost.
 - **Local / calibration key** — whatever the operator uses for scans. A whole-repo cold
   calibration pass is a one-off cost that dwarfs a normal CI day; never fold it into the CI
   figure, and never quote a total without naming which key it came from.
