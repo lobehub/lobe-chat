@@ -217,7 +217,7 @@ const legacyRawRedisClientConsumers = [
   'apps/server/src/services/agentRuntime/opportunisticSweep.ts',
   'apps/server/src/services/agentSignal/store/adapters/redis/shared.ts',
   'apps/server/src/services/bot/BotCallbackService.ts',
-  'apps/server/src/services/bot/BotMessageRouter.ts',
+  'apps/server/src/services/bot/BotMessageRouter/index.ts',
   'apps/server/src/services/bot/deferredMessages.ts',
   'apps/server/src/services/bot/platforms/discord/chatComposition.ts',
   'apps/server/src/services/bot/platforms/feishu/chatComposition.ts',

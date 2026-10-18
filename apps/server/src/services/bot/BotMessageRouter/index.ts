@@ -16,19 +16,19 @@ import { KeyVaultsGateKeeper } from '@/server/modules/KeyVaultsEncrypt';
 import { emitAgentSignalSourceEvent } from '@/server/services/agentSignal';
 import { AiAgentService } from '@/server/services/aiAgent';
 
-import { AgentBridgeService } from './AgentBridgeService';
-import { buildBotContext } from './buildBotContext';
-import { replayDeferredBotMessages } from './deferredMessages';
+import { AgentBridgeService } from '../AgentBridgeService';
+import { buildBotContext } from '../buildBotContext';
+import { replayDeferredBotMessages } from '../deferredMessages';
 import {
   createOrGetPairingRequest,
   deletePairingRequest,
   peekPairingRequest,
   releasePairingClaim,
-} from './dmPairingStore';
-import { submitBotFeedback } from './feedbackSubmit';
-import { isWholeGroupChatThreadId } from './isWholeGroupChatThreadId';
-import { buildReplayMessages, getSameSenderMessages, mergeBotMessages } from './mergeMessages';
-import { patchSenderBatches } from './patchSenderBatches';
+} from '../dmPairingStore';
+import { submitBotFeedback } from '../feedbackSubmit';
+import { isWholeGroupChatThreadId } from '../isWholeGroupChatThreadId';
+import { buildReplayMessages, getSameSenderMessages, mergeBotMessages } from '../mergeMessages';
+import { patchSenderBatches } from '../patchSenderBatches';
 import {
   type BotPlatformRuntimeContext,
   type BotReplyLocale,
@@ -60,9 +60,9 @@ import {
   shouldHandleGuest,
   type UserAllowlist,
   type WatchKeywordEntry,
-} from './platforms';
-import { isGuestTelegramThreadId } from './platforms/telegram/threadId';
-import { renderThrownAgentError } from './renderThrownError';
+} from '../platforms';
+import { isGuestTelegramThreadId } from '../platforms/telegram/threadId';
+import { renderThrownAgentError } from '../renderThrownError';
 import {
   renderApproveSuccess,
   renderCommandReply,
@@ -76,7 +76,7 @@ import {
   renderModeStatus,
   renderSenderRejected,
   renderWhoami,
-} from './replyTemplate';
+} from '../replyTemplate';
 
 /** Minimum gap between two webhook re-registrations for the same bot. */
 const WEBHOOK_RECONCILE_COOLDOWN_MS = 5 * 60 * 1000;

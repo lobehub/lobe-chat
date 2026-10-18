@@ -2,8 +2,8 @@ import { DEFAULT_BOT_DEBOUNCE_MS } from '@lobechat/const';
 import { Chat } from 'chat';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { BotMessageRouter } from '../BotMessageRouter';
 import type * as PlatformUtils from '../platforms/utils';
+import { BotMessageRouter } from './index';
 
 // ==================== Hoisted mocks ====================
 
