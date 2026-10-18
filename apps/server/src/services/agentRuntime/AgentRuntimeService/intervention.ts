@@ -1,5 +1,4 @@
 import type { AgentRuntimeContext, AgentState } from '@lobechat/agent-runtime';
-import { getLlmCallCount } from '@lobechat/agent-runtime';
 import debug from 'debug';
 
 import {
@@ -256,7 +255,6 @@ export async function getPendingInterventions(
         if (state?.status === 'waiting_for_human') {
           const intervention: any = {
             lastModified: state.lastModified,
-            llmCalls: getLlmCallCount(state),
             modelRuntimeConfig: metadata?.modelRuntimeConfig,
             operationId: operation,
             status: state.status,
