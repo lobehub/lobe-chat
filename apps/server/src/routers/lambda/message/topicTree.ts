@@ -29,7 +29,7 @@ export const topicTreeRouter = router({
     .mutation(async ({ input, ctx }) => {
       const { messageGroupId, agentId, groupId, threadId, topicId } = input;
       await assertCanUseTopicTargets(guardCtx(ctx), [topicId]);
-      // Same visitor guard as `addFilesToMessage` above.
+      // Same visitor guard as `addFilesToMessage` in `writes.ts`.
       await assertCreatorTopicTargets(guardCtx(ctx), [topicId]);
 
       return ctx.messageService.cancelCompression(messageGroupId, {
@@ -59,7 +59,7 @@ export const topicTreeRouter = router({
     .mutation(async ({ input, ctx }) => {
       const { topicId, messageIds, agentId, groupId, threadId } = input;
       await assertCanUseTopicTargets(guardCtx(ctx), [topicId]);
-      // Same visitor guard as `addFilesToMessage` above, plus the message ids
+      // Same visitor guard as `addFilesToMessage` in `writes.ts`, plus the message ids
       // themselves — compression reads and rewrites their content.
       await assertCreatorTopicTargets(guardCtx(ctx), [topicId]);
       await assertCreatorMessageTargets(guardCtx(ctx), messageIds);
@@ -90,7 +90,7 @@ export const topicTreeRouter = router({
     .mutation(async ({ input, ctx }) => {
       const { messageGroupId, content, ...params } = input;
       await assertCanUseTopicTargets(guardCtx(ctx), [params.topicId]);
-      // Same visitor guard as `addFilesToMessage` above.
+      // Same visitor guard as `addFilesToMessage` in `writes.ts`.
       await assertCreatorTopicTargets(guardCtx(ctx), [params.topicId]);
 
       return ctx.messageService.finalizeCompression(messageGroupId, content, params);
@@ -138,7 +138,7 @@ export const topicTreeRouter = router({
     .mutation(async ({ input, ctx }) => {
       const { messageGroupId, expanded, context } = input;
       await assertCanUseTopicTargets(guardCtx(ctx), [context.topicId]);
-      // Same visitor guard as `addFilesToMessage` above.
+      // Same visitor guard as `addFilesToMessage` in `writes.ts`.
       await assertCreatorTopicTargets(guardCtx(ctx), [context.topicId]);
 
       return ctx.messageService.updateMessageGroupMetadata(messageGroupId, { expanded }, context);

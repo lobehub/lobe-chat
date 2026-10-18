@@ -85,7 +85,7 @@ export const removalRouter = router({
       if (options.topicId) await assertCanUseTopicTargets(guardCtx(ctx), [options.topicId]);
       else
         await assertCanUseConversationTargets(guardCtx(ctx), [{ agentId, groupId: input.groupId }]);
-      // Same visitor guard as `addFilesToMessage` above.
+      // Same visitor guard as `addFilesToMessage` in `writes.ts`.
       if (options.topicId) await assertCreatorTopicTargets(guardCtx(ctx), [options.topicId]);
       const resolved = await resolveContext(
         { agentId, ...options },
@@ -112,7 +112,7 @@ export const removalRouter = router({
     .mutation(async ({ input, ctx }) => {
       if (input.topicId) await assertCanUseTopicTargets(guardCtx(ctx), [input.topicId]);
       else await assertCanUseConversationTargets(guardCtx(ctx), [{ groupId: input.groupId }]);
-      // Same visitor guard as `addFilesToMessage` above.
+      // Same visitor guard as `addFilesToMessage` in `writes.ts`.
       if (input.topicId) await assertCreatorTopicTargets(guardCtx(ctx), [input.topicId]);
 
       return ctx.messageModel.deleteMessagesBySession(null, input.topicId, input.groupId);

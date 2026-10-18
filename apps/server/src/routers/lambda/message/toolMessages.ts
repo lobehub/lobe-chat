@@ -114,7 +114,7 @@ export const toolMessageRouter = router({
         await assertCanUseConversationTargets(guardCtx(ctx), [
           { agentId, groupId: options.groupId },
         ]);
-      // Same visitor guard as `addFilesToMessage` above — no message id here,
+      // Same visitor guard as `addFilesToMessage` in `writes.ts` — no message id here,
       // so it's applied to the resolved topic instead.
       if (options.topicId) await assertCreatorTopicTargets(guardCtx(ctx), [options.topicId]);
       const resolved = await resolveContext(
