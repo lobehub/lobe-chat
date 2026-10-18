@@ -1,3 +1,4 @@
+import type { ChildProcess } from 'node:child_process';
 import { spawn } from 'node:child_process';
 import type { Readable } from 'node:stream';
 
@@ -57,6 +58,86 @@ export interface StdioSpawnFailureInput {
   stderr?: string;
   /** Some launchers report the actual failure (e.g. loader errors) on stdout */
   stdout?: string;
+}
+
+/** Per-stream cap for pre-check output so a noisy command cannot balloon the
+ * Electron main process heap while the 5s pre-check window runs. */
+const PRECHECK_OUTPUT_CAP_BYTES = 64 * 1024;
+
+/**
+ * Append decoded chunk text to an accumulator with a hard per-stream byte cap.
+ * Once the cap is reached further data is dropped (not buffered), so a noisy
+ * or broken command cannot consume unbounded memory before the timeout fires.
+ * Returns true when the cap was hit (diagnostics may note truncation).
+ */
+export function appendCappedOutput(
+  current: string,
+  chunk: Buffer,
+): { text: string; truncated: boolean } {
+  const remaining = PRECHECK_OUTPUT_CAP_BYTES - Buffer.byteLength(current);
+  if (remaining <= 0) return { text: current, truncated: true };
+
+  if (chunk.byteLength <= remaining) {
+    return { text: current + chunk.toString('utf8'), truncated: false };
+  }
+
+  // Keep whole chunks on the boundary; a single oversized chunk still counts
+  // once toward the cap (the tail is dropped, not split mid-codepoint).
+  return { text: current + chunk.toString('utf8').slice(0, remaining), truncated: true };
+}
+
+/** Build the minimal JSON-RPC initialize probe sent to the pre-check child. */
+export function buildInitializeProbeMessage(): string {
+  return (
+    JSON.stringify({
+      id: 1,
+      jsonrpc: '2.0',
+      method: 'initialize',
+      params: {
+        capabilities: {},
+        clientInfo: { name: 'lobe-mcp-precheck', version: '1.0.0' },
+        protocolVersion: '2024-11-05',
+      },
+    }) + '\n'
+  );
+}
+
+/**
+ * Tear down a pre-check child that outlived its 5s window. SIGTERM first,
+ * escalate to SIGKILL after a short grace period, and settle once the exit
+ * event confirms the process is gone (with a hard fallback so the pre-check
+ * promise can never hang). Without the exit confirmation a server that
+ * ignores SIGTERM would survive with its pipe listeners attached, leaking
+ * processes across repeated failed connections.
+ */
+export function terminatePrecheckProcess(
+  child: ChildProcess,
+  onSettled: () => void,
+  options: { fallbackMs?: number; graceMs?: number } = {},
+): void {
+  const { fallbackMs = 1500, graceMs = 500 } = options;
+
+  let settled = false;
+  const settle = () => {
+    if (settled) return;
+    settled = true;
+    clearTimeout(graceTimer);
+    clearTimeout(fallbackTimer);
+    onSettled();
+  };
+
+  const graceTimer = setTimeout(() => {
+    try {
+      child.kill('SIGKILL');
+    } catch {
+      // already dead — exit handler settles
+    }
+  }, graceMs);
+
+  const fallbackTimer = setTimeout(settle, fallbackMs);
+
+  child.once('exit', settle);
+  child.kill('SIGTERM');
 }
 
 /**
@@ -278,10 +359,17 @@ export class MCPClient {
       }
 
       let stdout = '';
+      let stdoutTruncated = false;
       let stderr = '';
+      let stderrTruncated = false;
       let resolved = false;
 
-      const finish = (result: { diagnosis: string; stderr: string; stdout: string; success: boolean }) => {
+      const finish = (result: {
+        diagnosis: string;
+        stderr: string;
+        stdout: string;
+        success: boolean;
+      }) => {
         if (!resolved) {
           resolved = true;
           clearTimeout(timeout);
@@ -292,20 +380,45 @@ export class MCPClient {
       // Give the process a short window to either complete the MCP handshake
       // (exit 0 in pre-check terms) or fail with a diagnosable error.
       const timeout = setTimeout(() => {
-        if (!resolved) {
-          child.kill('SIGTERM');
+        if (resolved) return;
+        child.stdout?.pause();
+        child.stderr?.pause();
+        child.stdin?.end();
+        // Wait for the confirmed teardown (SIGTERM → SIGKILL escalation →
+        // exit event) before resolving; a server that ignores SIGTERM must
+        // not survive the pre-check with its pipe listeners attached.
+        terminatePrecheckProcess(child, () => {
           // Still running after 5s: treat as healthy-enough; the original
           // connection error is the real failure and should surface as-is.
           finish({ diagnosis: '', stderr, stdout, success: true });
-        }
+        });
       }, 5000);
 
-      child.stdout?.on('data', (data) => {
-        stdout += data.toString();
+      // P1: the diagnostic child may die instantly (the exact scenario this
+      // pre-check targets) and `stdin.write` would emit an async EPIPE that
+      // the surrounding try/catch cannot catch — an uncaught exception in the
+      // Electron main process. Swallow it; 'error'/'exit' handlers own the
+      // failure diagnosis.
+      child.stdin?.on('error', () => {});
+
+      child.stdout?.on('data', (data: Buffer) => {
+        const next = appendCappedOutput(stdout, data);
+        if (next.truncated && !stdoutTruncated) {
+          stdoutTruncated = true;
+          stdout = `${next.text}\n[stdout truncated: pre-check output cap reached]`;
+        } else {
+          stdout = next.text;
+        }
       });
 
-      child.stderr?.on('data', (data) => {
-        stderr += data.toString();
+      child.stderr?.on('data', (data: Buffer) => {
+        const next = appendCappedOutput(stderr, data);
+        if (next.truncated && !stderrTruncated) {
+          stderrTruncated = true;
+          stderr = `${next.text}\n[stderr truncated: pre-check output cap reached]`;
+        } else {
+          stderr = next.text;
+        }
       });
 
       child.on('error', (error: NodeJS.ErrnoException) => {
@@ -344,19 +457,11 @@ export class MCPClient {
 
       // Send a minimal JSON-RPC initialize so servers that start fine but
       // exit on EOF don't get killed as "failed" before they can boot.
+      // `capabilities: {}` is included per the MCP initialize spec so servers
+      // that validate params don't reject the probe for a probe-specific
+      // reason and mask the real startup failure.
       try {
-        const initMessage =
-          JSON.stringify({
-            id: 1,
-            jsonrpc: '2.0',
-            method: 'initialize',
-            params: {
-              clientInfo: { name: 'lobe-mcp-precheck', version: '1.0.0' },
-              protocolVersion: '2024-11-05',
-            },
-          }) + '\n';
-
-        child.stdin?.write(initMessage);
+        child.stdin?.write(buildInitializeProbeMessage());
         child.stdin?.end();
       } catch {
         // stdin write failures are handled via 'error'/'exit' events

@@ -1,6 +1,14 @@
-import { describe, expect, it } from 'vitest';
+import { EventEmitter } from 'node:events';
 
-import { describeStdioSpawnFailure, MCPConnectionError } from './client';
+import { describe, expect, it, vi } from 'vitest';
+
+import {
+  appendCappedOutput,
+  buildInitializeProbeMessage,
+  describeStdioSpawnFailure,
+  MCPConnectionError,
+  terminatePrecheckProcess,
+} from './client';
 
 describe('describeStdioSpawnFailure', () => {
   it('diagnoses ENOENT spawn errors with the command and install guidance', () => {
@@ -121,5 +129,152 @@ describe('MCPConnectionError', () => {
     expect(error.name).toBe('MCPConnectionError');
     expect(error.message).toBe('diagnosis text');
     expect(error.stderrLogs).toEqual(['line one', 'line two']);
+  });
+});
+
+describe('appendCappedOutput', () => {
+  it('accumulates chunks below the cap without truncation', () => {
+    const first = appendCappedOutput('', Buffer.from('hello '));
+    const second = appendCappedOutput(first.text, Buffer.from('world'));
+
+    expect(second.text).toBe('hello world');
+    expect(second.truncated).toBe(false);
+  });
+
+  it('drops data beyond the per-stream cap instead of buffering it', () => {
+    // 64 KiB cap: fill the accumulator, then push more data
+    const filler = 'x'.repeat(64 * 1024);
+    const full = appendCappedOutput('', Buffer.from(filler));
+    expect(full.truncated).toBe(false);
+
+    const over = appendCappedOutput(full.text, Buffer.from('overflow-data'));
+    expect(over.truncated).toBe(true);
+    expect(Buffer.byteLength(over.text)).toBe(64 * 1024);
+    expect(over.text).not.toContain('overflow-data');
+  });
+
+  it('truncates a single oversized chunk at the byte boundary', () => {
+    const chunk = Buffer.from('y'.repeat(200 * 1024));
+    const result = appendCappedOutput('', chunk);
+
+    expect(result.truncated).toBe(true);
+    expect(Buffer.byteLength(result.text)).toBe(64 * 1024);
+  });
+
+  it('keeps dropping once the cap is already reached', () => {
+    const filler = 'x'.repeat(64 * 1024);
+    let state = appendCappedOutput('', Buffer.from(filler));
+    state = appendCappedOutput(state.text, Buffer.from('more'));
+    state = appendCappedOutput(state.text, Buffer.from('even more'));
+
+    expect(state.truncated).toBe(true);
+    expect(Buffer.byteLength(state.text)).toBe(64 * 1024);
+  });
+});
+
+describe('buildInitializeProbeMessage', () => {
+  it('includes capabilities so spec-validating servers accept the probe', () => {
+    const message = buildInitializeProbeMessage();
+    const parsed = JSON.parse(message);
+
+    expect(parsed.params.capabilities).toEqual({});
+    expect(parsed.params.protocolVersion).toBe('2024-11-05');
+    expect(parsed.params.clientInfo.name).toBe('lobe-mcp-precheck');
+    expect(message.endsWith('\n')).toBe(true);
+  });
+});
+
+describe('terminatePrecheckProcess', () => {
+  const makeFakeChild = () => {
+    const listeners: Record<string, (() => void)[]> = {};
+    const child = new EventEmitter() as EventEmitter & {
+      kill: ReturnType<typeof vi.fn>;
+      once: (event: string, fn: () => void) => void;
+    };
+    child.kill = vi.fn();
+    (child as any).once = (event: string, fn: () => void) => {
+      listeners[event] = listeners[event] || [];
+      listeners[event].push(fn);
+      return child;
+    };
+    (child as any).__emit = (event: string) => {
+      for (const fn of listeners[event] || []) fn();
+    };
+    (child as any).__listeners = listeners;
+    return child;
+  };
+
+  it('sends SIGTERM first and settles on the exit event', () => {
+    vi.useFakeTimers();
+    try {
+      const child = makeFakeChild();
+      const onSettled = vi.fn();
+
+      terminatePrecheckProcess(child as any, onSettled);
+
+      expect(child.kill).toHaveBeenCalledWith('SIGTERM');
+      expect(onSettled).not.toHaveBeenCalled();
+
+      (child as any).__emit('exit');
+      expect(onSettled).toHaveBeenCalledTimes(1);
+      // timers cleared: no SIGKILL, no fallback
+      vi.advanceTimersByTime(2000);
+      expect(child.kill).toHaveBeenCalledTimes(1);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it('escalates to SIGKILL after the grace period when the process ignores SIGTERM', () => {
+    vi.useFakeTimers();
+    try {
+      const child = makeFakeChild();
+      const onSettled = vi.fn();
+
+      terminatePrecheckProcess(child as any, onSettled);
+      vi.advanceTimersByTime(500);
+
+      expect(child.kill).toHaveBeenNthCalledWith(2, 'SIGKILL');
+
+      // exit after escalation settles and clears the fallback timer
+      (child as any).__emit('exit');
+      expect(onSettled).toHaveBeenCalledTimes(1);
+      vi.advanceTimersByTime(2000);
+      expect(onSettled).toHaveBeenCalledTimes(1);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it('settles via the hard fallback even when no exit event ever fires', () => {
+    vi.useFakeTimers();
+    try {
+      const child = makeFakeChild();
+      const onSettled = vi.fn();
+
+      terminatePrecheckProcess(child as any, onSettled);
+      vi.advanceTimersByTime(1500);
+
+      expect(onSettled).toHaveBeenCalledTimes(1);
+      expect(child.kill).toHaveBeenCalledTimes(2); // SIGTERM + SIGKILL
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it('settles only once across exit and fallback races', () => {
+    vi.useFakeTimers();
+    try {
+      const child = makeFakeChild();
+      const onSettled = vi.fn();
+
+      terminatePrecheckProcess(child as any, onSettled);
+      (child as any).__emit('exit');
+      vi.advanceTimersByTime(2000);
+
+      expect(onSettled).toHaveBeenCalledTimes(1);
+    } finally {
+      vi.useRealTimers();
+    }
   });
 });
