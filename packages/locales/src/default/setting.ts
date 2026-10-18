@@ -533,6 +533,12 @@ export default {
   'heterogeneousStatus.cloud.tokenChange': 'Change',
   'heterogeneousStatus.cloud.tokenSave': 'Save',
   'heterogeneousStatus.cloud.tokenCancel': 'Cancel',
+  'heterogeneousStatus.cloud.tokenRemove': 'Remove',
+  'heterogeneousStatus.cloud.tokenRemoveTitle': 'Remove Claude Code token?',
+  'heterogeneousStatus.cloud.tokenRemoveConfirm':
+    'This deletes your Claude Code OAuth token from Credentials. Cloud runs of Claude Code agents will not be able to use it until you save a new token.',
+  'heterogeneousStatus.cloud.tokenRemoveError':
+    'Failed to remove the Claude Code token. Please try again.',
   'heterogeneousStatus.cloud.githubLabel': 'GitHub Connection',
   'heterogeneousStatus.cloud.githubDesc':
     'Select a GitHub OAuth credential to allow the sandbox to clone your private repositories.',
