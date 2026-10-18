@@ -141,3 +141,33 @@ export const formatMetricValue = (value: number | null): string => {
   if (Number.isInteger(value)) return value.toLocaleString('en-US');
   return String(value);
 };
+
+/** One observation in the detail panel's history, newest first. */
+export interface NorthStarObservationRow {
+  /** Change from the observation before it; null for the first one in the window. */
+  delta: number | null;
+  observedAt: Date;
+  value: number;
+}
+
+export const buildObservationRows = (
+  points: { observedAt: Date; value: number }[],
+): NorthStarObservationRow[] =>
+  points
+    .map((point, index) => ({
+      delta: index === 0 ? null : point.value - points[index - 1].value,
+      observedAt: point.observedAt,
+      value: point.value,
+    }))
+    .reverse();
+
+/**
+ * Rows for the detail chart: the observed series plus the target as a flat
+ * reference line, so the gap reads off the chart instead of the legend.
+ */
+export const buildNorthStarChartRows = (
+  points: { observedAt: Date; value: number }[],
+  target: number,
+  formatTime: (date: Date) => string,
+): { target: number; time: string; value: number }[] =>
+  points.map((point) => ({ target, time: formatTime(point.observedAt), value: point.value }));

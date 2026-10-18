@@ -23,7 +23,7 @@ vi.mock('@/store/goal', () => ({
           : {},
         id: 'goal_1',
         projectId: null,
-        requirement: null,
+        requirement: 'Reach 1,100 followers',
         status: 'review',
         title: 'Ship it',
       },
@@ -106,8 +106,8 @@ vi.mock('./GoalChat', () => ({
 }));
 vi.mock('./GoalDetailActions', () => ({ default: () => null }));
 vi.mock('./GoalHeaderMetrics', () => ({ default: () => null }));
-vi.mock('./GoalRequirement', () => ({ default: () => null }));
-vi.mock('./NorthStarMetrics', () => ({ default: () => null }));
+vi.mock('./GoalRequirement', () => ({ default: () => <div data-testid="goal-requirement" /> }));
+vi.mock('./NorthStarMetrics', () => ({ default: () => <div data-testid="goal-north-star" /> }));
 // The result page's composer lives inside ProcessControl; the page owns where
 // its message goes, so the stub only exposes the hand-off.
 vi.mock('./ProcessControl', () => ({
@@ -144,6 +144,19 @@ describe('GoalDetailPage', () => {
     mocks.canEdit = true;
     mocks.hasSupervision = true;
     mocks.showPortal = false;
+  });
+
+  // The measured numbers are what executing the requirement has observed, so
+  // they read below it as its outcome.
+  it('renders the north-star metrics below the requirement', () => {
+    render(<GoalDetailPage goalId={'goal_1'} />);
+
+    expect(
+      screen
+        .getByTestId('goal-requirement')
+        .compareDocumentPosition(screen.getByTestId('goal-north-star')) &
+        Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy();
   });
 
   // On the agent-less route the task workspace owns the portal host, but the

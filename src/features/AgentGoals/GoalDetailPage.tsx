@@ -284,15 +284,13 @@ const GoalDetailPage = memo<GoalDetailPageProps>(({ agentId, goalId }) => {
                   )}
                 </Flexbox>
               )}
-              {/* North-star strip reads with the requirement document — the
-                  measured clauses ARE half of the acceptance contract — and
-                  leads it rather than trailing it (review feedback, r3). It
-                  stays below the execution metrics, so it is never squeezed
-                  between the title and those numbers. */}
-              <NorthStarMetrics canEdit={canEdit} goalId={goalId} />
               {goal.requirement && (
                 <GoalRequirement goalId={goal.id} requirement={goal.requirement} />
               )}
+              {/* North-star strip follows the requirement it measures: the
+                  numbers are what executing that requirement has observed so
+                  far, so they read as its outcome, below it. */}
+              <NorthStarMetrics canEdit={canEdit} goalId={goalId} />
             </Flexbox>
 
             <ProcessControl

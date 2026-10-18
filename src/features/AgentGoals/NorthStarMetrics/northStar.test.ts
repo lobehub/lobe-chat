@@ -2,7 +2,13 @@ import { describe, expect, it } from 'vitest';
 
 import type { MetricSeriesWithPoints } from '@/services/metric';
 
-import { buildNorthStarCards, formatMetricValue, NORTH_STAR_STALE_AFTER_MS } from './northStar';
+import {
+  buildNorthStarCards,
+  buildNorthStarChartRows,
+  buildObservationRows,
+  formatMetricValue,
+  NORTH_STAR_STALE_AFTER_MS,
+} from './northStar';
 
 const NOW = Date.parse('2026-09-06T12:00:00Z');
 
@@ -142,5 +148,33 @@ describe('formatMetricValue', () => {
     expect(formatMetricValue(72_180)).toBe('72,180');
     expect(formatMetricValue(0.07)).toBe('0.07');
     expect(formatMetricValue(null)).toBe('—');
+  });
+});
+
+describe('buildObservationRows', () => {
+  it('lists observations newest first with the change from the one before', () => {
+    const { points } = series('followers', [1000, 1040, 1080, 1120]);
+
+    expect(buildObservationRows(points).map(({ delta, value }) => ({ delta, value }))).toEqual([
+      { delta: 40, value: 1120 },
+      { delta: 40, value: 1080 },
+      { delta: 40, value: 1040 },
+      { delta: null, value: 1000 },
+    ]);
+  });
+
+  it('returns nothing for a series never measured', () => {
+    expect(buildObservationRows([])).toEqual([]);
+  });
+});
+
+describe('buildNorthStarChartRows', () => {
+  it('pairs every observation with the flat target line', () => {
+    const { points } = series('followers', [1000, 1080]);
+
+    expect(buildNorthStarChartRows(points, 1100, (date) => date.toISOString())).toEqual([
+      { target: 1100, time: points[0].observedAt.toISOString(), value: 1000 },
+      { target: 1100, time: points[1].observedAt.toISOString(), value: 1080 },
+    ]);
   });
 });
