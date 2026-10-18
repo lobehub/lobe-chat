@@ -73,7 +73,7 @@ export const findVisitorTopicOrThrow = async (
  *
  * Also the sink for a RESOLVED (not thrown) `{ success: false, error }` from
  * `AiAgentService.execAgent` — a `createOperation` startup failure resolves
- * rather than rejects there, so the visitor-facing `execAgent` handler below
+ * rather than rejects there, so the visitor-facing `execAgent` handler (`exec.ts`)
  * re-throws that case through this same function instead of letting the raw
  * message escape via a normal `return`.
  */

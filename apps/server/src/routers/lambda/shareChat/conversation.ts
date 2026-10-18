@@ -20,7 +20,7 @@ export const conversationRouter = router({
 
       // The list is intentionally NOT bounded by the share's live
       // `maxTopicsPerVisitor`: that cap gates ADMISSION of new topics (the
-      // COUNT check in `execAgent` above), and a creator may lower it below
+      // COUNT check in `execAgent`, `exec.ts`), and a creator may lower it below
       // what a visitor already created. Tying the page size to it would hide
       // those older conversations with no pagination or deep link to reach
       // them, so the model applies its own fixed, generous list bound instead.
@@ -71,7 +71,7 @@ export const conversationRouter = router({
       // queryForVisitor strips the creator's `sender` identity, and — unless the
       // share opts in via `showModelInfo` / `showErrorDetails` — the spend/model
       // snapshot and raw error payload too. Share messages persist under the
-      // CREATOR's account (see the module doc above), so the raw `query()` result
+      // CREATOR's account (see the `shareChatProcedure` doc in `procedures.ts`), so the raw `query()` result
       // would otherwise leak the creator's account identity to the visitor.
       return messageModel.queryForVisitor(
         { includeFileWorks: input.includeFileWorks, topicId: input.topicId },

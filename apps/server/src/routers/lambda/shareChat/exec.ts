@@ -259,7 +259,7 @@ export const execRouter = router({
           appContext: { topicId: input.topicId },
           clientIds: input.clientIds,
           clientIp: ctx.clientIp ?? undefined,
-          // Share uploads are creator-owned rows (see `createFile` below), so
+          // Share uploads are creator-owned rows (see `createFile` in `upload.ts`), so
           // the creator-scoped runtime resolves them like any owner attachment.
           fileIds: input.fileIds,
           // `interactiveStart: true` (the `aiAgent.execAgent` owner path's
