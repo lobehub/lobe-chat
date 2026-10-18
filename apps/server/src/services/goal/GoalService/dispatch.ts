@@ -10,8 +10,13 @@ import { TaskModel } from '@/database/models/task';
 import { TaskRunnerService } from '../../taskRunner';
 import { learnedRulesClause, planSkillIdentifier } from '../batchPlanSkill';
 import { GOAL_ACCEPTANCE_TASK_TITLE } from '../decideNextMove';
+import { clearDeviceDispatchStreak, parkDeviceUnavailableDispatch } from '../deviceDispatchStreak';
 import { experimentResults } from '../exploreGraph';
-import { resolveMaxConcurrentTasks, resolveTaskMaxSteps } from '../recoveryPolicy';
+import {
+  isDeviceUnavailableFailure,
+  resolveMaxConcurrentTasks,
+  resolveTaskMaxSteps,
+} from '../recoveryPolicy';
 import { GoalSupervisorService } from '../supervisor';
 import { claimGoalTask } from '../taskClaim';
 import type { GoalServiceContext } from './types';
@@ -252,6 +257,9 @@ export const dispatchWork = async (
       taskId: task.id,
       trigger: 'goal',
     });
+    await clearDeviceDispatchStreak(ctx.taskModel, task.id).catch((clearError) => {
+      console.error('[GoalService.tick] failed to clear the device dispatch streak:', clearError);
+    });
     await new GoalSupervisorService(ctx.db, ctx.userId, ctx.workspaceId).recordDispatch(
       graph,
       task.id,
@@ -271,6 +279,24 @@ export const dispatchWork = async (
       taskId: run.taskId,
     };
   } catch (error) {
+    // A run that could not reach its device parks on that reason, the same as a
+    // retry that could not (`TaskRecoveryCoordinator`), so the next advance takes
+    // the offline schedule. Handed back to `backlog` with no error, every advance
+    // dispatched again and threw, the queue redelivered each throw, and one
+    // sleeping laptop became three uncharged runs per sweep with no bound.
+    const message = error instanceof Error ? error.message : String(error);
+    if (isDeviceUnavailableFailure(message)) {
+      await parkDeviceUnavailableDispatch(ctx.taskModel, task, message).catch((releaseError) => {
+        console.error('[GoalService.tick] failed to park claimed task:', releaseError);
+      });
+      return {
+        goalId,
+        message: `Task ${task.identifier} is waiting for its device to reconnect`,
+        nodeId,
+        outcome: 'waiting_external',
+        taskId: task.id,
+      };
+    }
     // We claimed the task, so nothing else will put it back. Release it or the
     // Task stays 'running' with no run behind it and only the lease reclaims it.
     await ctx.taskModel
