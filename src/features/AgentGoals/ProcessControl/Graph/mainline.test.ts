@@ -183,7 +183,7 @@ describe('off-mainline legibility', () => {
    * blue line, so the hierarchy is not flattened.
    */
   it('lifts only the off-mainline arrow on the dark canvas', () => {
-    expect(edgeMarkerColor('mainline', true)).toBe(cssVar.colorInfo);
+    expect(edgeMarkerColor('mainline', true)).toBe(cssVar.blue7);
     expect(edgeMarkerColor('detour', true)).toBe(cssVar.colorWarning);
     // Light mode is unchanged — the same border token as before.
     expect(edgeMarkerColor(undefined, false)).toBe(cssVar.colorBorder);
@@ -194,11 +194,11 @@ describe('off-mainline legibility', () => {
 
   /**
    * Regression: the mainline arrow was the near-black primary, so the path read
-   * as heavy ink that matched neither its cards' blue ring nor the legend swatch.
+   * as heavy ink; the full info blue that replaced it was still too strong.
    */
-  it('ends the mainline in the same blue as its cards and legend', () => {
-    expect(edgeMarkerColor('mainline', false)).toBe(cssVar.colorInfo);
-    expect(edgeMarkerColor('mainline', true)).toBe(cssVar.colorInfo);
+  it('ends the mainline in the light blue of its line and legend', () => {
+    expect(edgeMarkerColor('mainline', false)).toBe(cssVar.blue7);
+    expect(edgeMarkerColor('mainline', true)).toBe(cssVar.blue7);
   });
 
   it('is more legible on the dark canvas while still stepping back', () => {

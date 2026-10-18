@@ -148,7 +148,7 @@ export const MUTED_EDGE_OPACITY_DARK = 0.5;
  * that token is nearly invisible, so it borrows the lighter text token.
  */
 export const edgeMarkerColor = (tone: EdgeTone, isDarkMode: boolean): string => {
-  if (tone === 'mainline') return cssVar.colorInfo;
+  if (tone === 'mainline') return cssVar.blue7;
   if (tone === 'detour') return cssVar.colorWarning;
   return isDarkMode ? cssVar.colorTextQuaternary : cssVar.colorBorder;
 };

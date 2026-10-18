@@ -22,7 +22,7 @@ const styles = createStaticStyles(({ css }) => ({
     width: 14px;
     height: 3px;
     border-radius: 2px;
-    background: ${cssVar.colorInfo};
+    background: ${cssVar.blue7};
   `,
   /* A hidden kind stays in the legend as a dimmed toggle — the way back must
      be exactly where the way in was. */
