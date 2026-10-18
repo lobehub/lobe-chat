@@ -18,11 +18,12 @@ const styles = createStaticStyles(({ css }) => ({
       color: ${cssVar.colorText};
     }
   `,
+  /* The mainline is drawn as a ring on its cards, so the swatch is a ring too. */
   legendMainlineSwatch: css`
-    width: 14px;
-    height: 3px;
-    border-radius: 2px;
-    background: ${cssVar.blue7};
+    width: 10px;
+    height: 10px;
+    border: 1.5px solid ${cssVar.colorInfo};
+    border-radius: 3px;
   `,
   /* A hidden kind stays in the legend as a dimmed toggle — the way back must
      be exactly where the way in was. */

@@ -131,13 +131,6 @@ const styles = createStaticStyles(({ css }) => ({
       stroke-dasharray: 5 4;
     }
 
-    /* The wrap-up report's mainline: one light blue line (darker blues read as
-       heavy ink), and everything off it steps back. */
-    .react-flow__edge.goal-mainline .react-flow__edge-path {
-      stroke: ${cssVar.blue7};
-      stroke-width: 1.5;
-    }
-
     /* A chapter map's detours: the line into a stray card reads in the same
        orange dash as the card's own frame. */
     .react-flow__edge.goal-detour .react-flow__edge-path {
@@ -155,15 +148,10 @@ const styles = createStaticStyles(({ css }) => ({
       stroke-width: 1.75;
     }
 
-    .react-flow__edge.goal-mainline.goal-hot .react-flow__edge-path {
-      stroke: ${cssVar.blue7};
-      stroke-width: 2;
-    }
-
     /* Off-mainline lines keep their step-back on the light canvas. On the dark
        one that same border token at a third opacity turns into background, so
-       the line is lifted just enough to read; the mainline stays the boldest
-       line on the map either way, so the hierarchy is not flattened. These
+       the line is lifted just enough to read; the mainline's lines stay at full
+       strength either way, so the hierarchy is not flattened. These
        dark-theme overrides carry higher specificity, so they sit last to keep
        the cascade ascending. */
     html[data-theme='dark'] & .react-flow__edge.goal-muted:not(.goal-hot) {
@@ -171,6 +159,16 @@ const styles = createStaticStyles(({ css }) => ({
     }
 
     html[data-theme='dark'] & .react-flow__edge.goal-muted:not(.goal-hot) .react-flow__edge-path {
+      stroke: ${cssVar.colorTextQuaternary};
+    }
+
+    /* The mainline is carried by its cards' ring; its lines stay ordinary, at
+       full strength while the rest steps back. On the dark canvas they take the
+       same lifted token as the muted lines so they never read fainter. */
+    html[data-theme='dark']
+      &
+      .react-flow__edge.goal-mainline:not(.goal-hot)
+      .react-flow__edge-path {
       stroke: ${cssVar.colorTextQuaternary};
     }
 

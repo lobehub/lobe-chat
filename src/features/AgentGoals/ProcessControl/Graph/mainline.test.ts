@@ -179,11 +179,10 @@ describe('off-mainline legibility', () => {
   /**
    * Regression: the dark canvas turned the border token at a third opacity into
    * background, so an off-mainline line and the arrow ending it were barely
-   * there. Only the off-mainline tone is lifted; the mainline keeps its own
-   * blue line, so the hierarchy is not flattened.
+   * there. Off-mainline lines step back through opacity, so the lifted token
+   * only restores legibility.
    */
-  it('lifts only the off-mainline arrow on the dark canvas', () => {
-    expect(edgeMarkerColor('mainline', true)).toBe(cssVar.blue7);
+  it('lifts the plain arrow on the dark canvas', () => {
     expect(edgeMarkerColor('detour', true)).toBe(cssVar.colorWarning);
     // Light mode is unchanged — the same border token as before.
     expect(edgeMarkerColor(undefined, false)).toBe(cssVar.colorBorder);
@@ -193,12 +192,13 @@ describe('off-mainline legibility', () => {
   });
 
   /**
-   * Regression: the mainline arrow was the near-black primary, so the path read
-   * as heavy ink; the full info blue that replaced it was still too strong.
+   * Regression: a colored mainline line — near-black primary, then info blue,
+   * then light blue — read as heavier than the map. The cards carry the
+   * mainline; its lines end in the same ordinary arrow as any other line.
    */
-  it('ends the mainline in the light blue of its line and legend', () => {
-    expect(edgeMarkerColor('mainline', false)).toBe(cssVar.blue7);
-    expect(edgeMarkerColor('mainline', true)).toBe(cssVar.blue7);
+  it('ends the mainline in an ordinary arrow', () => {
+    expect(edgeMarkerColor('mainline', false)).toBe(edgeMarkerColor(undefined, false));
+    expect(edgeMarkerColor('mainline', true)).toBe(edgeMarkerColor(undefined, true));
   });
 
   it('is more legible on the dark canvas while still stepping back', () => {
