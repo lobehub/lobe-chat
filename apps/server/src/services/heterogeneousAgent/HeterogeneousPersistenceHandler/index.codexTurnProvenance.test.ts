@@ -1,10 +1,7 @@
 // @vitest-environment node
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import {
-  __resetOperationStatesForTesting,
-  HeterogeneousPersistenceHandler,
-} from '../HeterogeneousPersistenceHandler';
+import { __resetOperationStatesForTesting, HeterogeneousPersistenceHandler } from '.';
 
 interface FakeMessage {
   agentId: string | null;

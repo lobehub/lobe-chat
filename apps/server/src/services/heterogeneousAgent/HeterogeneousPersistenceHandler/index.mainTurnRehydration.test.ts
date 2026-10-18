@@ -2,10 +2,7 @@
 import type { AgentStreamEvent } from '@lobechat/agent-gateway-client';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import {
-  __resetOperationStatesForTesting,
-  HeterogeneousPersistenceHandler,
-} from '../HeterogeneousPersistenceHandler';
+import { __resetOperationStatesForTesting, HeterogeneousPersistenceHandler } from '.';
 
 /**
  * Regression for the MAIN-chain analog of #15808 (which only fixed the SUBAGENT
