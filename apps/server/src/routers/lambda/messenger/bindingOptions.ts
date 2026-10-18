@@ -1,4 +1,5 @@
 import { TRPCError } from '@trpc/server';
+import pMap from 'p-map';
 import { z } from 'zod';
 
 import { withBotPlatformAccessMeta } from '@/business/server/bot/featureAccess';
@@ -17,6 +18,9 @@ import {
   isWorkspaceFeatureEnabledForUser,
 } from './agentScope';
 import { messengerProcedure } from './procedures';
+
+/** `withBotPlatformAccessMeta` may read access state per platform; keep the fan-out bounded. */
+const PLATFORM_ACCESS_META_CONCURRENCY = 5;
 
 export const bindingOptionsRouter = router({
   /**
@@ -46,8 +50,9 @@ export const bindingOptionsRouter = router({
       enabledSet.has('telegram') ? getMessengerTelegramConfig() : Promise.resolve(null),
     ]);
 
-    return Promise.all(
-      definitions.map(async (def) => {
+    return pMap(
+      definitions,
+      async (def) => {
         const serialized = {
           ...def,
           appId:
@@ -67,7 +72,8 @@ export const bindingOptionsRouter = router({
         };
 
         return withBotPlatformAccessMeta(serialized, { userId: ctx.userId });
-      }),
+      },
+      { concurrency: PLATFORM_ACCESS_META_CONCURRENCY },
     );
   }),
   /**
