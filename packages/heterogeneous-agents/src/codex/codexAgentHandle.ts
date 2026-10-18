@@ -2,6 +2,7 @@ import { PassThrough } from 'node:stream';
 
 import type { AgentPromptInput } from '../protocol';
 import { createEventQueue } from '../spawn/agentEventQueue';
+import { buildCodexLobeHubContextArgs, createCodexJwtFile } from '../spawn/codexShellEnv';
 import { buildAgentInput } from '../spawn/input';
 import type { SpawnAgentHandle } from '../spawn/spawnAgent';
 import {
@@ -91,7 +92,16 @@ export const createCodexAgentHandle = async (
     LOBEHUB_OPERATION_ID: options.operationId,
     LOBEHUB_TOPIC_ID: options.env.LOBEHUB_TOPIC_ID ?? '',
   };
-  const threadParams = buildCodexAppServerThreadParams(options.args, options.cwd);
+  // Codex shells get their env from `[shell_environment_policy]`, so a user's
+  // `inherit = "core"` would drop the run context `lh` needs. Forward it as
+  // `set` overrides; the JWT travels as a 0600 file path, never in the config.
+  const jwtFile = options.env.LOBEHUB_JWT
+    ? await createCodexJwtFile(options.env.LOBEHUB_JWT)
+    : undefined;
+  const threadParams = buildCodexAppServerThreadParams(
+    [...buildCodexLobeHubContextArgs(options.env), ...(jwtFile?.args ?? []), ...options.args],
+    options.cwd,
+  );
   // Pin shell identity on native start/resume as well as the operation-owned process.
   // The same per-turn context is consumed by the shared app-server isolation contract.
   threadParams.config = {
@@ -161,6 +171,7 @@ export const createCodexAgentHandle = async (
       stopStderr();
       events.close();
       stderr.end();
+      void jwtFile?.cleanup();
     });
   return {
     events,

@@ -18,6 +18,8 @@ import path from 'node:path';
 export const CODEX_LOBEHUB_CONTEXT_ENV_KEYS = [
   'LOBEHUB_AGENT_ID',
   'LOBEHUB_ASSISTANT_MESSAGE_ID',
+  // The desktop's bundled `lh`, for shells that resolve an older global one first.
+  'LOBEHUB_CLI',
   'LOBEHUB_OPERATION_ID',
   'LOBEHUB_SERVER',
   'LOBEHUB_TASK_ID',

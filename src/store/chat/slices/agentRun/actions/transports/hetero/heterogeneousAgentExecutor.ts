@@ -2009,15 +2009,15 @@ export const executeHeterogeneousAgent = async (
       : await resolveQuotaAccountSpawnPlan(context.agentId, adapterType);
 
     const sessionEnv = {
-      // Tell the CLI which LobeHub conversation it is running inside. The child
-      // (and every subprocess it spawns, e.g. `lh`) inherits these, so a tool
-      // running under the agent can attribute its output back to this topic
-      // without the agent having to pass ids it can't see. User-configured env
-      // wins — this is provenance, never an override the user can't escape.
+      // Tell the CLI which LobeHub conversation and workspace it runs inside.
+      // Every subprocess it spawns (e.g. `lh`) inherits these, so its output
+      // lands in this topic and workspace without ids the agent can't see.
+      // User-configured env wins — provenance, never an inescapable override.
       ...buildLobeHubSessionEnv({
         agentId: context.agentId,
         operationId,
         topicId: context.topicId,
+        workspaceId: getActiveWorkspaceId(),
       }),
       ...quotaAccountPlan.env,
       // The agent's own env is the most specific choice and keeps winning —

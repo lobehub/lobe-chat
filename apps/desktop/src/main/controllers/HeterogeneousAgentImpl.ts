@@ -130,7 +130,7 @@ import semver from 'semver';
 import { HETERO_AGENT_FILES_DIR, HETERO_AGENT_TRACING_DIR } from '@/const/heteroAgent';
 import type { App } from '@/core/App';
 import { detectHeterogeneousCliCommand } from '@/modules/binaries';
-import { resolveCliScript } from '@/modules/cliEmbedding';
+import { resolveCliScript, withEmbeddedCliEnv } from '@/modules/cliEmbedding';
 import { getHeterogeneousAgentDriver, withCodexContextArgs } from '@/modules/heterogeneousAgent';
 import {
   consumeCodexRateLimitResetCredit as consumeCodexRateLimitResetCreditRequest,
@@ -1074,7 +1074,7 @@ export default class HeterogeneousAgentCtr {
     // shim finds its interpreter. `session.env` still wins if it sets PATH.
     if (session.resolvedCommandSearchPath) inheritedEnv.PATH = session.resolvedCommandSearchPath;
     const env: NodeJS.ProcessEnv = {
-      ...inheritedEnv,
+      ...withEmbeddedCliEnv(inheritedEnv),
       ...proxyEnv,
       ...(session.agentType === 'codebuddy'
         ? { CODEBUDDY_CODE_DISABLE_BACKGROUND_TASKS: '1' }
@@ -4184,7 +4184,7 @@ export default class HeterogeneousAgentCtr {
     }
 
     const env = {
-      ...childEnv,
+      ...withEmbeddedCliEnv(childEnv),
       ...buildProxyEnv(this.app.storeManager.get('networkProxy')),
       ELECTRON_RUN_AS_NODE: '1',
       [HETERO_EXEC_INHERIT_PROCESS_GROUP_ENV]: '1',

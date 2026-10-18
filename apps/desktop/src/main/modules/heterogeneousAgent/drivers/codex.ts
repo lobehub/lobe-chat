@@ -17,6 +17,8 @@ import {
   isCodexServerDefaultCustomModel,
 } from '@lobechat/types';
 
+import { getEmbeddedCliPath, LOBEHUB_CLI_ENV } from '@/modules/cliEmbedding';
+
 import type { HeterogeneousAgentBuildPlanParams, HeterogeneousAgentDriver } from '../types';
 
 const hasAnyFlag = (args: string[], flags: readonly string[]) =>
@@ -234,18 +236,24 @@ const buildServerDefaultModelCatalog = (
 
 /**
  * Prefix a Codex session's args with `shell_environment_policy.set.*`
- * overrides for the LobeHub run context in its env (agent/operation/topic
- * ids), so `lh` inside Codex's shell sees them even when the user's config
- * sets `inherit = "core"`. Both the `codex exec` plan and the app-server
- * thread config (`buildCodexAppServerThreadParams`) read these args. Other
- * agent types are returned unchanged.
+ * overrides for the LobeHub run context in its env (agent/operation/topic/
+ * workspace ids) plus the bundled `lh` path, so `lh` inside Codex's shell sees
+ * them even when the user's config sets `inherit = "core"`. Both the
+ * `codex exec` plan and the app-server thread config
+ * (`buildCodexAppServerThreadParams`) read these args. Other agent types are
+ * returned unchanged.
  */
 export const withCodexContextArgs = (
   agentType: string,
   env: Record<string, string> | undefined,
   args: string[] = [],
 ): string[] =>
-  agentType === 'codex' && env ? [...buildCodexLobeHubContextArgs(env), ...args] : args;
+  agentType === 'codex' && env
+    ? [
+        ...buildCodexLobeHubContextArgs({ [LOBEHUB_CLI_ENV]: getEmbeddedCliPath(), ...env }),
+        ...args,
+      ]
+    : args;
 
 const buildCodexOptionArgs = async ({
   args,
