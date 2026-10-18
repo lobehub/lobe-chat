@@ -266,10 +266,30 @@ describe('file document replica', () => {
       const { result } = renderDetail('doc-1');
 
       await waitFor(() => expect(result.current.error).toBeDefined());
-      await waitFor(() => expect(useFileStore.getState().documentMap['doc-1']).toBeUndefined());
+      await waitFor(() =>
+        expect(useFileStore.getState().documentMap['doc-1']).toEqual({ document: null }),
+      );
       await waitFor(async () => {
         expect(await storedRow('doc-1', scope)).toBeUndefined();
       });
+    });
+
+    it('loads the document on retry once access is granted again', async () => {
+      vi.mocked(documentService.getDocumentById).mockRejectedValue(
+        Object.assign(new Error('forbidden'), { data: { code: 'FORBIDDEN' } }) as any,
+      );
+      const { result } = renderDetail('doc-1');
+      await waitFor(() => expect(result.current.error).toBeDefined());
+
+      vi.mocked(documentService.getDocumentById).mockResolvedValue(
+        serverRow({ content: '# Shared', title: 'Shared' }) as any,
+      );
+      await act(async () => {
+        await result.current.mutate();
+      });
+
+      await waitFor(() => expect(result.current.data?.content).toBe('# Shared'));
+      expect(result.current.error).toBeUndefined();
     });
 
     it('drops the previous identity’s rows before the next one paints', async () => {

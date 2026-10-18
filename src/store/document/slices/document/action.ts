@@ -445,15 +445,6 @@ export class DocumentActionImpl {
       // minutes after returning to the tab — ~20s is the window this was tuned
       // to before the migration.
       focusThrottleInterval: 20_000,
-      // A page made private to another member (FORBIDDEN) or deleted (NOT_FOUND)
-      // must not keep painting from the projection: drop the entry — memory,
-      // persisted row and derived editor state — so the page shows its terminal
-      // state. Bind the removal to the scope the failing request was captured
-      // under; transient failures keep the cached body.
-      onError: (error, { key, scope }) => {
-        if (key && (isTrpcErrorCode(error, 'FORBIDDEN') || isTrpcErrorCode(error, 'NOT_FOUND')))
-          this.#detail.remove(key, scope);
-      },
       revalidateOnFocus: true,
     });
 
