@@ -35,6 +35,7 @@ const SharedMessageList = memo<SharedMessageListProps>((props) => {
       <ChatList
         disableActionsBar
         headerSlot={headerSlot}
+        initialScrollPosition={'top'}
         itemContent={itemContent}
         footerSlot={
           <Flexbox align={'center'} paddingBlock={24} paddingInline={24}>
