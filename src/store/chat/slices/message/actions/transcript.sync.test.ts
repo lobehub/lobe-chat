@@ -1,8 +1,9 @@
-import type { UIChatMessage } from '@lobechat/types';
+import { type UIChatMessage } from '@lobechat/types';
 import { act, waitFor } from '@testing-library/react';
 import { unstable_serialize } from 'swr';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { REPLICA_INDEX_KEY } from '@/libs/replica';
 import { useClientDataSWR } from '@/libs/swr';
 import { CACHE_TIERS } from '@/libs/swr/localStorageProvider';
 import { messageService } from '@/services/message';
@@ -11,7 +12,11 @@ import {
   MESSAGE_LIST_VERIFICATION_INTERVAL,
   runMessageListQuery,
 } from '@/services/message/cache';
-import { conversationMessagesKey } from '@/services/message/replica';
+import {
+  conversationMessagesKey,
+  conversationMessagesResource,
+  transcriptOf,
+} from '@/services/message/replica';
 import { useChatStore } from '@/store/chat';
 import { operationSelectors } from '@/store/chat/selectors';
 import { LOCAL_MESSAGE_SCOPE } from '@/store/chat/utils/localMessages';
@@ -602,6 +607,56 @@ describe('useFetchMessages', () => {
         sentUser.id,
         sentAssistant.id,
       ]);
+    });
+
+    it('drops a row that only the hydrated page still has when a stale read resolves', async () => {
+      const persisted: UIChatMessage[] = [
+        {
+          id: 'remote-deleted',
+          content: 'Deleted on another device',
+          role: 'user',
+          createdAt: 1000,
+          updatedAt: 1000,
+        },
+        { id: 'kept', content: 'Kept', role: 'user', createdAt: 1001, updatedAt: 1001 },
+      ];
+
+      // The read is issued while the bucket is empty: neither row exists yet.
+      let resolveFetch!: (messages: UIChatMessage[]) => void;
+      vi.mocked(messageService.getMessages).mockReturnValue(
+        new Promise((resolve) => {
+          resolveFetch = resolve;
+        }) as Promise<UIChatMessage[]>,
+      );
+
+      // IndexedDB hydration is slower than issuing the read, then lands first.
+      // Its page still holds `remote-deleted`, which the server has since removed.
+      let resolveHydrate!: () => void;
+      const hydrated = new Promise((resolve) => {
+        resolveHydrate = () => resolve({ data: transcriptOf(persisted), updatedAt: 1 });
+      });
+      vi.spyOn(conversationMessagesResource.storage!, 'get').mockImplementation(async (key) =>
+        key.queryKey === REPLICA_INDEX_KEY ? undefined : hydrated,
+      );
+
+      syncMessages(context);
+      await waitFor(() => expect(messageService.getMessages).toHaveBeenCalled());
+
+      await act(async () => {
+        resolveHydrate();
+        await hydrated;
+      });
+      await waitFor(() =>
+        expect(rowsOf(context)?.map((message) => message.id)).toEqual(['remote-deleted', 'kept']),
+      );
+
+      await act(async () => {
+        resolveFetch([persisted[1]]);
+      });
+
+      // Hydration is not an in-memory write made after the read started, so the
+      // server snapshot wins. Before the fix every hydrated row was kept.
+      await waitFor(() => expect(rowsOf(context)?.map((message) => message.id)).toEqual(['kept']));
     });
   });
 });

@@ -37,7 +37,7 @@ import {
 import { type StoreSetter } from '@/store/types';
 
 import { bucketOfKey, createTranscriptLens } from './lens';
-import { mergeFetchedMessagesWithLocalState } from './mergeFetched';
+import { type HeadRequestBoundary, mergeFetchedMessagesWithLocalState } from './mergeFetched';
 
 const log = debug('lobe-store:message-transcript');
 
@@ -73,15 +73,26 @@ const createMessageTranscript = (set: StoreSetter<ChatStore>, get: () => ChatSto
   /** Head responses resolved by `prepareHead`, read back by the sync's `onSuccess`. */
   const headResolutions = new WeakMap<UIChatMessage[], HeadResolution>();
   /**
-   * Row ids that existed when each head read was issued. A read that is still
-   * in flight when a send lands resolves with the pre-send snapshot; any row
-   * absent from this set was added after the read started and must survive it
-   * even once the send operation has handed off to the runtime.
+   * The rows a head read could be missing, captured when it was issued. A read
+   * that is still in flight when a send lands resolves with the pre-send
+   * snapshot; rows written in memory after this point must survive it even once
+   * the send operation has handed off to the runtime.
    *
    * The first read of a shared request wins: it started earliest, so it is the
    * most conservative boundary for what the response can be missing.
    */
-  const headRequestIds = new WeakMap<UIChatMessage[], Set<string>>();
+  const headRequestBoundaries = new WeakMap<
+    UIChatMessage[],
+    { idsAtRequestStart: Set<string>; localWriteSeqAtRequestStart: number }
+  >();
+  /**
+   * The order in which rows entered a bucket through `commit` — an in-memory
+   * write from a send, a stream, or a server response applied by an action.
+   * Storage hydration writes through the replica slice instead, so a hydrated
+   * row has no sequence and can never be mistaken for a post-request addition.
+   */
+  const localWrittenAt = new Map<string, number>();
+  let localWriteSeq = 0;
   /** The entry key each bucket was last written under. */
   const bucketKeys = new Map<string, string>();
 
@@ -99,6 +110,21 @@ const createMessageTranscript = (set: StoreSetter<ChatStore>, get: () => ChatSto
 
   const bucketRows = (key: string) => get().dbMessagesMap[bucketOfKey(key).bucket];
 
+  /**
+   * Concurrent reads can join one query result. Register the earliest start
+   * seen for it, so every settle of that result uses the most conservative
+   * boundary instead of whichever fetcher resumed first.
+   */
+  const registerHeadBoundary = (
+    messages: UIChatMessage[],
+    boundary: { idsAtRequestStart: Set<string>; localWriteSeqAtRequestStart: number },
+  ) => {
+    const existing = headRequestBoundaries.get(messages);
+    if (!existing || boundary.localWriteSeqAtRequestStart < existing.localWriteSeqAtRequestStart) {
+      headRequestBoundaries.set(messages, boundary);
+    }
+  };
+
   // ---- reads ---------------------------------------------------------------
   const fetchForward = async (
     context: ConversationMessageParams,
@@ -114,15 +140,18 @@ const createMessageTranscript = (set: StoreSetter<ChatStore>, get: () => ChatSto
   const fetchHead = async (context: ConversationMessageParams): Promise<UIChatMessage[]> => {
     const syncKey = getMessageListCacheIdentity(context);
     const dbMessages = bucketRows(conversationMessagesKey(context)) ?? [];
-    // Captured before the request: rows added after this point are newer than
-    // whatever the server read can know about.
-    const idsAtRequestStart = new Set(dbMessages.map((message) => message.id));
+    // Captured before the request: rows written in memory after this point are
+    // newer than whatever the server read can know about.
+    const requestStart = {
+      idsAtRequestStart: new Set(dbMessages.map((message) => message.id)),
+      localWriteSeqAtRequestStart: localWriteSeq,
+    };
     const topicAtRequest = context.topicId
       ? topicSelectors.getTopicById(context.topicId)(get())
       : undefined;
     const wasPending = hasPendingInterventions(dbMessages);
     let messages = await runMessageListQuery(context, readConversationMessageListPage);
-    if (!headRequestIds.has(messages)) headRequestIds.set(messages, idsAtRequestStart);
+    registerHeadBoundary(messages, requestStart);
     if (!context.syncInterventions || !context.topicId) return messages;
     if (wasPending || hasPendingInterventions(messages)) pendingInterventions.add(syncKey);
     if (!pendingInterventions.has(syncKey) || hasPendingInterventions(messages)) return messages;
@@ -135,11 +164,11 @@ const createMessageTranscript = (set: StoreSetter<ChatStore>, get: () => ChatSto
       messages = await runMessageListQuery(context, readConversationMessageListPage, {
         force: true,
       });
-      if (!headRequestIds.has(messages)) headRequestIds.set(messages, idsAtRequestStart);
+      registerHeadBoundary(messages, requestStart);
     }
     const result = [...messages];
     // The copy is what `prepareHead` receives; the earliest start still applies.
-    if (!headRequestIds.has(result)) headRequestIds.set(result, idsAtRequestStart);
+    registerHeadBoundary(result, requestStart);
     snapshots.set(result, { dbMessages, topic, topicAtRequest });
     return result;
   };
@@ -176,9 +205,24 @@ const createMessageTranscript = (set: StoreSetter<ChatStore>, get: () => ChatSto
     context: ConversationMessageParams,
   ): ConversationMessageFetch | undefined => {
     if (!Array.isArray(incoming)) return incoming;
-    const idsAtRequestStart = headRequestIds.get(incoming);
-    headRequestIds.delete(incoming);
+    // Several fetchers can join one result. The earliest request is the most
+    // conservative boundary for what any of their responses can be missing.
+    const requestStart = headRequestBoundaries.get(incoming);
     if (!context.topicId) return undefined;
+
+    // Only rows written in memory after this read was issued may be missing
+    // from its snapshot. Hydrated rows carry no sequence and stay out of it.
+    let boundary: HeadRequestBoundary | undefined;
+    if (requestStart) {
+      const locallyWrittenAfterRequestStart = new Set<string>();
+      for (const [id, seq] of localWrittenAt) {
+        if (seq > requestStart.localWriteSeqAtRequestStart) locallyWrittenAfterRequestStart.add(id);
+      }
+      boundary = {
+        idsAtRequestStart: requestStart.idsAtRequestStart,
+        locallyWrittenAfterRequestStart,
+      };
+    }
 
     // DB chunk writes can lag behind pushed content, even at an equal
     // updatedAt. Keep streamed rows, but allow answers and unseen rows in.
@@ -207,7 +251,7 @@ const createMessageTranscript = (set: StoreSetter<ChatStore>, get: () => ChatSto
           prevDbMessages,
           activeVoiceMessageIds,
           creatingMessageIds,
-          idsAtRequestStart,
+          boundary,
         );
     const dropped = isStreaming && mergedMessages === prevDbMessages;
 
@@ -259,9 +303,22 @@ const createMessageTranscript = (set: StoreSetter<ChatStore>, get: () => ChatSto
    * the entry's paging; so does `preservePaging` (a reducer edit of the same
    * window). Anything else is a fresh, unpaged transcript.
    */
-  const commit = (context: TranscriptContext, messages: UIChatMessage[], preservePaging = false) =>
-    slice.update(
-      keyOf(context),
+  const commit = (
+    context: TranscriptContext,
+    messages: UIChatMessage[],
+    preservePaging = false,
+  ) => {
+    const key = keyOf(context);
+    // Record the order rows enter the bucket through an in-memory write. Hydration
+    // writes through the replica slice, so its persisted rows never get a sequence
+    // and cannot be mistaken for a row a stale read must keep.
+    const previousIds = new Set(lens.get(get(), key)?.items.map((message) => message.id));
+    for (const message of messages) {
+      if (previousIds.has(message.id) || localWrittenAt.has(message.id)) continue;
+      localWrittenAt.set(message.id, ++localWriteSeq);
+    }
+    return slice.update(
+      key,
       (current) =>
         current &&
         (preservePaging ||
@@ -271,6 +328,7 @@ const createMessageTranscript = (set: StoreSetter<ChatStore>, get: () => ChatSto
           : transcriptOf(messages),
       { persist: false },
     );
+  };
 
   /**
    * Persist a conversation once it is settled — never per streamed chunk; the

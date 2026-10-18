@@ -6,6 +6,19 @@ import {
   mergeLocalMessagesByCreatedAt,
 } from '@/store/chat/utils/localMessages';
 
+/** What a head read can legitimately be missing, captured when it was issued. */
+export interface HeadRequestBoundary {
+  /** Row ids that already existed when the read was issued. */
+  idsAtRequestStart: ReadonlySet<string>;
+  /**
+   * Row ids that entered a bucket through an in-memory write after the read was
+   * issued. Rows painted from storage hydration are deliberately absent: they
+   * are persisted server rows, so a server snapshot that omits one is
+   * authoritative (e.g. it was deleted on another device).
+   */
+  locallyWrittenAfterRequestStart: ReadonlySet<string>;
+}
+
 /**
  * Merge an idle head fetch into the shown transcript.
  *
@@ -17,17 +30,16 @@ import {
  *
  * The send operation ends as soon as the runtime takes over, while a read that
  * was already in flight can still resolve afterwards with the pre-send
- * snapshot. `idsAtRequestStart` covers that window: a local row that did not
- * exist when the read was issued cannot be absent from it on the server's
- * behalf, so keep it until a read that started after it was added says
- * otherwise.
+ * snapshot. `boundary` covers that window: a row written in memory after the
+ * read was issued cannot be absent from it on the server's behalf, so keep it
+ * until a read that started after it was added says otherwise.
  */
 export const mergeFetchedMessagesWithLocalState = (
   fetchedMessages: UIChatMessage[],
   localMessages: UIChatMessage[],
   activeVoiceMessageIds: ReadonlySet<string>,
   creatingMessageIds: ReadonlySet<string>,
-  idsAtRequestStart?: ReadonlySet<string>,
+  boundary?: HeadRequestBoundary,
 ): UIChatMessage[] => {
   if (localMessages.length === 0) return fetchedMessages;
 
@@ -54,8 +66,12 @@ export const mergeFetchedMessagesWithLocalState = (
       !fetchedIds.has(message.id) &&
       ((isLocalOnlyMessage(message) && activeVoiceMessageIds.has(message.id)) ||
         creatingMessageIds.has(message.id) ||
-        // Added while this read was in flight: the snapshot predates it.
-        (!!idsAtRequestStart && !idsAtRequestStart.has(message.id))),
+        // Written in memory while this read was in flight: the snapshot
+        // predates it. Hydrated rows are never in this set, so an old local
+        // page cannot shield a row the server has already deleted.
+        (!!boundary &&
+          !boundary.idsAtRequestStart.has(message.id) &&
+          boundary.locallyWrittenAfterRequestStart.has(message.id))),
   );
 
   if (missingLocalMessages.length === 0) return changed ? mergedMessages : fetchedMessages;
