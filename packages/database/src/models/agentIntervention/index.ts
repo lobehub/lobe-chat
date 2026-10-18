@@ -1,6 +1,6 @@
+import { AgentInterventionRepository } from '../../repositories/agentIntervention';
 import type { AgentInterventionItem, AgentInterventionResolutionItem } from '../../schemas';
 import type { LobeChatDatabase } from '../../type';
-import * as claim from './claim';
 import type { AgentInterventionContext } from './context';
 import * as creation from './creation';
 import * as customExecution from './customExecution';
@@ -56,8 +56,17 @@ export class AgentInterventionModel {
   /** The scope handed to the helper modules in this directory. */
   private readonly ctx: AgentInterventionContext;
 
+  /**
+   * Owns the flows that also write other aggregates (agent operations, tool
+   * messages, user settings). The methods below that delegate to it are kept so
+   * existing callers of this model keep working; new code should use
+   * `AgentInterventionRepository` directly.
+   */
+  private readonly repository: AgentInterventionRepository;
+
   constructor(db: LobeChatDatabase, userId: string, workspaceId?: string) {
     this.ctx = { db, userId, workspaceId };
+    this.repository = new AgentInterventionRepository(db, userId, workspaceId);
   }
 
   /**
@@ -132,7 +141,7 @@ export class AgentInterventionModel {
   createBatchWithSupersession = (
     params: CreateAgentInterventionBatchWithSupersessionParams,
   ): Promise<AgentInterventionBatchSupersessionResult> =>
-    creation.createBatchWithSupersession(this.ctx, params);
+    this.repository.createBatchWithSupersession(params);
 
   findById = (id: string): Promise<AgentInterventionItem | undefined> =>
     lookup.findById(this.ctx, id);
@@ -155,7 +164,7 @@ export class AgentInterventionModel {
    */
   claimBatch = (
     params: ClaimAgentInterventionBatchParams,
-  ): Promise<AgentInterventionBatchMutationResult> => claim.claimBatch(this.ctx, params);
+  ): Promise<AgentInterventionBatchMutationResult> => this.repository.claimBatch(params);
 
   markResolutionPublished = (
     resolutionRequestId: string,
@@ -167,21 +176,21 @@ export class AgentInterventionModel {
   rollbackResolution = (
     resolutionRequestId: string,
   ): Promise<AgentInterventionBatchMutationResult> =>
-    resolution.rollbackResolution(this.ctx, resolutionRequestId);
+    this.repository.rollbackResolution(resolutionRequestId);
 
   /** Runtime rows become terminal once the continuation has durably started. */
   completeRuntimeResolution = (
     resolutionRequestId: string,
     continuationStartedAt = new Date(),
   ): Promise<AgentInterventionBatchMutationResult> =>
-    resolution.completeRuntimeResolution(this.ctx, resolutionRequestId, continuationStartedAt);
+    this.repository.completeRuntimeResolution(resolutionRequestId, continuationStartedAt);
 
   /** Heterogeneous rows become terminal only after the matching producer ACK. */
   acknowledgeProducerResolution = (
     resolutionRequestId: string,
     producerAckAt = new Date(),
   ): Promise<AgentInterventionBatchMutationResult> =>
-    resolution.acknowledgeProducerResolution(this.ctx, resolutionRequestId, producerAckAt);
+    this.repository.acknowledgeProducerResolution(resolutionRequestId, producerAckAt);
 
   /** Timeout/session teardown of every still-open item in one sealed batch. */
   markBatchTerminal = (

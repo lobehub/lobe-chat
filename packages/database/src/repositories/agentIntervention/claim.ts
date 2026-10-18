@@ -1,32 +1,40 @@
 import { and, asc, eq, gt, inArray, isNull, sql } from 'drizzle-orm';
 
 import {
-  type AgentInterventionResolutionItem,
-  agentInterventionResolutions,
-  agentInterventions,
-} from '../../schemas';
-import {
   AGENT_INTERVENTION_INVALID_ACTION,
   AGENT_INTERVENTION_INVALID_BATCH,
   AGENT_INTERVENTION_RESOLUTION_REQUEST_REUSED,
   UUID_PATTERN,
-} from './constants';
-import { type AgentInterventionContext, ownership, resolutionOwnership } from './context';
-import { applyArgumentEffect, applyRememberEffect } from './effects';
-import { markRowsTerminalInTransaction } from './lookup';
-import { findResolutionByRequestId } from './resolution';
+} from '../../models/agentIntervention/constants';
+import {
+  type AgentInterventionContext,
+  ownership,
+  resolutionOwnership,
+} from '../../models/agentIntervention/context';
+import { markRowsTerminalInTransaction } from '../../models/agentIntervention/lookup';
+import { findResolutionByRequestId } from '../../models/agentIntervention/resolution';
 import type {
   AgentInterventionBatchMutationResult,
   ClaimAgentInterventionBatchParams,
-} from './types';
+} from '../../models/agentIntervention/types';
 import {
   hasExactKeys,
   isCanonicalJsonSafe,
   isUniqueViolation,
   sameJson,
   uniqueSorted,
-} from './utils';
-import { hasValidSealedSnapshot, hasValidSelection, validateAction } from './validation';
+} from '../../models/agentIntervention/utils';
+import {
+  hasValidSealedSnapshot,
+  hasValidSelection,
+  validateAction,
+} from '../../models/agentIntervention/validation';
+import {
+  type AgentInterventionResolutionItem,
+  agentInterventionResolutions,
+  agentInterventions,
+} from '../../schemas';
+import { applyArgumentEffect, applyRememberEffect } from './effects';
 
 /**
  * Atomically validates a complete sealed Review snapshot and claims one,

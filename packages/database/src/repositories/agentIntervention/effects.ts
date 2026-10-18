@@ -2,6 +2,17 @@ import type { AgentInterventionResolutionAction, ChatToolPayload } from '@lobech
 import { and, asc, eq, inArray, isNull, ne } from 'drizzle-orm';
 
 import {
+  AGENT_INTERVENTION_IDENTITY_CONFLICT,
+  AGENT_INTERVENTION_INVALID_ACTION,
+  AGENT_INTERVENTION_INVALID_REQUEST_REVISION_HASH,
+} from '../../models/agentIntervention/constants';
+import type { AgentInterventionContext } from '../../models/agentIntervention/context';
+import {
+  asRecord,
+  canonicalJson,
+  hashAgentInterventionRequestRevision,
+} from '../../models/agentIntervention/utils';
+import {
   type AgentInterventionItem,
   type AgentInterventionResolutionItem,
   agentInterventionResolutions,
@@ -11,13 +22,6 @@ import {
 } from '../../schemas';
 import type { Transaction } from '../../type';
 import { notTrashed } from '../../utils/softDelete';
-import {
-  AGENT_INTERVENTION_IDENTITY_CONFLICT,
-  AGENT_INTERVENTION_INVALID_ACTION,
-  AGENT_INTERVENTION_INVALID_REQUEST_REVISION_HASH,
-} from './constants';
-import type { AgentInterventionContext } from './context';
-import { asRecord, canonicalJson, hashAgentInterventionRequestRevision } from './utils';
 
 export const applyArgumentEffect = async (
   ctx: AgentInterventionContext,
