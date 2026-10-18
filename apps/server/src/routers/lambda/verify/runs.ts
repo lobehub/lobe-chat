@@ -1,5 +1,6 @@
 import { normalizeVerifySurface, verifyRunScenarios, verifySurfaces } from '@lobechat/const/verify';
 import type { VerifyRunContext, VerifyRunScenario } from '@lobechat/types';
+import pMap from 'p-map';
 import { z } from 'zod';
 
 import { router } from '@/libs/trpc/lambda';
@@ -136,6 +137,9 @@ const listReportSummariesInputSchema = z
   })
   .optional();
 
+// A report-summary page holds up to `limit` runs; cap the per-run report reads.
+const REPORT_LOAD_CONCURRENCY = 5;
+
 export const runsRouter = router({
   // ---- ingest (standalone sessions: results / evidence / report, e.g. agent-testing) ----
   // A verification session that isn't a live Agent Run (no executor): an external
@@ -201,7 +205,9 @@ export const runsRouter = router({
         limit: input?.limit,
         q: input?.q,
       });
-      const reports = await Promise.all(runs.map((run) => ctx.reportModel.findByRun(run.id)));
+      const reports = await pMap(runs, (run) => ctx.reportModel.findByRun(run.id), {
+        concurrency: REPORT_LOAD_CONCURRENCY,
+      });
 
       const items = runs.map((run, index) => {
         const report = reports[index];

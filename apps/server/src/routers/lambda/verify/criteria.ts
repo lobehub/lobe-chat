@@ -1,5 +1,6 @@
 import { verifyCheckDefinitionSchema } from '@lobechat/types';
 import { TRPCError } from '@trpc/server';
+import pMap from 'p-map';
 import { z } from 'zod';
 
 import { router } from '@/libs/trpc/lambda';
@@ -12,6 +13,9 @@ import { onFailSchema, verifierTypeSchema } from './schemas';
 const rubricConfigSchema = z.object({
   maxRepairRounds: z.number().int().min(0).max(5).optional(),
 });
+
+// A criteria list links a runtime-sized set of documents; cap the per-document reads.
+const CRITERION_DOCUMENT_LOAD_CONCURRENCY = 5;
 
 export const criteriaRouter = router({
   // ---- criteria (reusable atomic standards) ----
@@ -56,7 +60,9 @@ export const criteriaRouter = router({
       const documentIds = [
         ...new Set(rows.flatMap((row) => (row.documentId ? [row.documentId] : []))),
       ];
-      const documents = await Promise.all(documentIds.map((id) => ctx.documentModel.findById(id)));
+      const documents = await pMap(documentIds, (id) => ctx.documentModel.findById(id), {
+        concurrency: CRITERION_DOCUMENT_LOAD_CONCURRENCY,
+      });
       const contentByDocId = new Map(
         documents.flatMap((doc) => (doc ? [[doc.id, doc.content ?? undefined] as const] : [])),
       );

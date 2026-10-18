@@ -5,6 +5,7 @@ import type {
   VerifyEvidenceType,
 } from '@lobechat/types';
 import { TRPCError } from '@trpc/server';
+import pMap from 'p-map';
 import { z } from 'zod';
 
 import type { FileModel } from '@/database/models/file';
@@ -89,6 +90,10 @@ const storedEvidenceType = async (
   fileId?: string | null,
 ): Promise<VerifyEvidenceType> =>
   fileId ? evidenceTypeForStoredFile(type, await ctx.fileModel.findById(fileId)) : type;
+
+// A submitted result carries a runtime-sized evidence list; cap the per-entry
+// file lookup + insert.
+const EVIDENCE_WRITE_CONCURRENCY = 5;
 
 export const ingestRouter = router({
   ingestResult: verifyWriteProcedure
@@ -271,8 +276,9 @@ export const ingestRouter = router({
       });
 
       const evidence = input.evidence?.length
-        ? await Promise.all(
-            input.evidence.map(async (e) =>
+        ? await pMap(
+            input.evidence,
+            async (e) =>
               ctx.evidenceModel.create({
                 capturedAt: new Date(),
                 capturedBy: e.capturedBy ?? null,
@@ -282,7 +288,7 @@ export const ingestRouter = router({
                 fileId: e.fileId ?? null,
                 type: await storedEvidenceType(ctx, e.type, e.fileId),
               }),
-            ),
+            { concurrency: EVIDENCE_WRITE_CONCURRENCY },
           )
         : [];
 
