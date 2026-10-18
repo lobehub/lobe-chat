@@ -18,6 +18,7 @@ import { checkAgentShareSpendAllowance } from '@/business/server/agent-share/spe
 import { FileModel } from '@/database/models/file';
 import { HumanApprovalAlreadyResolvedError } from '@/database/models/message';
 import type { LobeChatDatabase } from '@/database/type';
+import { router } from '@/libs/trpc/lambda';
 
 import { execAgentClientIdsSchema } from '../_helpers/execAgentClientIds';
 import {
@@ -64,7 +65,7 @@ const assertShareVisitorFiles = async (
   }
 };
 
-export const execProcedures = {
+export const execRouter = router({
   /**
    * Execute a shared agent as a visitor — the gateway-transport mirror of
    * `aiAgent.execAgent`, restricted to the share surface: fixed agent, no
@@ -342,4 +343,4 @@ export const execProcedures = {
         });
       }
     }),
-};
+});

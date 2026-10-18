@@ -2,12 +2,13 @@ import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
 import { TopicModel } from '@/database/models/topic';
+import { router } from '@/libs/trpc/lambda';
 import { signUserJWT } from '@/libs/trpc/utils/internalJwt';
 
 import { findVisitorTopicOrThrow, resolveLinkShareOrThrow } from './guards';
 import { shareChatProcedure, ShareTopicScopeSchema } from './procedures';
 
-export const gatewayProcedures = {
+export const gatewayRouter = router({
   /**
    * Mint the per-VISITOR Gateway JWT for the multiplexed v2 WebSocket — the
    * visitor counterpart of `aiAgent.issueGatewayUserToken`. Same subject rule
@@ -73,4 +74,4 @@ export const gatewayProcedures = {
 
       return { token };
     }),
-};
+});

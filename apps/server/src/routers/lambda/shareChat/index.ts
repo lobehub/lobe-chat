@@ -1,17 +1,17 @@
-import { router } from '@/libs/trpc/lambda';
+import { mergeRouters } from '@/libs/trpc/lambda';
 
-import { conversationProcedures } from './conversation';
-import { execProcedures } from './exec';
-import { gatewayProcedures } from './gateway';
-import { runControlProcedures } from './runControl';
-import { uploadProcedures } from './upload';
+import { conversationRouter } from './conversation';
+import { execRouter } from './exec';
+import { gatewayRouter } from './gateway';
+import { runControlRouter } from './runControl';
+import { uploadRouter } from './upload';
 
-export const shareChatRouter = router({
-  ...uploadProcedures,
-  ...execProcedures,
-  ...conversationProcedures,
-  ...runControlProcedures,
-  ...gatewayProcedures,
-});
+export const shareChatRouter = mergeRouters(
+  uploadRouter,
+  execRouter,
+  conversationRouter,
+  runControlRouter,
+  gatewayRouter,
+);
 
 export type ShareChatRouter = typeof shareChatRouter;

@@ -8,6 +8,7 @@ import { z } from 'zod';
 import { resolveAgentInterventionBySource } from '@/business/server/agent-run/agentInterventionReview';
 import { TopicModel } from '@/database/models/topic';
 import type { LobeChatDatabase } from '@/database/type';
+import { router } from '@/libs/trpc/lambda';
 import { AiAgentService } from '@/server/services/aiAgent';
 
 import { mapAgentInterventionTRPCError } from '../_helpers/agentInterventionError';
@@ -66,7 +67,7 @@ const authorizeVisitorRunningOperation = async (
   return { aiAgentService, share };
 };
 
-export const runControlProcedures = {
+export const runControlRouter = router({
   /**
    * Resolve an intervention (approve / reject / answer / skip / stop) parked on
    * the VISITOR's own share run — the visitor counterpart of
@@ -334,4 +335,4 @@ export const runControlProcedures = {
         });
       }
     }),
-};
+});

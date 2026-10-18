@@ -14,6 +14,7 @@ import { AgentShareModel } from '@/database/models/agentShare';
 import { FileModel } from '@/database/models/file';
 import { FileUploadModel } from '@/database/models/fileUpload';
 import type { LobeChatDatabase } from '@/database/type';
+import { router } from '@/libs/trpc/lambda';
 import { FileS3 } from '@/server/modules/S3';
 import { FileService } from '@/server/services/file';
 import { FileUploadService } from '@/server/services/fileUpload';
@@ -88,7 +89,7 @@ const ShareUploadMetadataSchema = z
   })
   .partial();
 
-export const uploadProcedures = {
+export const uploadRouter = router({
   /**
    * Release a share upload reservation the visitor abandoned (PUT failed or
    * was cancelled). Scoped to the share's own key prefix so a visitor cannot
@@ -365,4 +366,4 @@ export const uploadProcedures = {
         file.url!,
       );
     }),
-};
+});

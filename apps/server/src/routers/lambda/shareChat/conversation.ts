@@ -5,12 +5,13 @@ import { z } from 'zod';
 import { DocumentModel } from '@/database/models/document';
 import { MessageModel } from '@/database/models/message';
 import { TopicModel } from '@/database/models/topic';
+import { router } from '@/libs/trpc/lambda';
 import { FileService } from '@/server/services/file';
 
 import { findVisitorTopicOrThrow, resolveLinkShareOrThrow } from './guards';
 import { shareChatProcedure, ShareTopicScopeSchema } from './procedures';
 
-export const conversationProcedures = {
+export const conversationRouter = router({
   /** The visitor's own topics on this shared agent. */
   getTopics: shareChatProcedure
     .input(z.object({ shareId: z.string() }))
@@ -146,4 +147,4 @@ export const conversationProcedures = {
         updatedAt: document.updatedAt,
       };
     }),
-};
+});
