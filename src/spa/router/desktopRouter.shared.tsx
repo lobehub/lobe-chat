@@ -89,6 +89,7 @@ import { preferenceListLoader } from '@/spa/router/preferenceListLoader';
 import { agentAccessLoader, agentGroupAccessLoader } from '@/spa/router/resourceAccessLoader';
 import { NoRouteSkeleton, routeMeta } from '@/spa/router/routeMeta';
 import { withSegmentFallback } from '@/spa/router/withSegmentFallback';
+import { worksLoader } from '@/spa/router/worksLoader';
 import { SettingsTabs } from '@/store/global/initialState';
 import { dynamicElement, dynamicLayout, ErrorBoundary, redirectElement } from '@/utils/router';
 
@@ -672,6 +673,7 @@ export const sharedMainAreaChildren: RouteObject[] = [
               }),
             },
             index: true,
+            loader: worksLoader,
           },
           ...BusinessResourceRoutes,
           ...resourceCategoryRoutes,
@@ -699,6 +701,7 @@ export const sharedMainAreaChildren: RouteObject[] = [
             handle: {
               meta: routeMeta({ icon: LibraryBigIcon, titleKey: 'navigation.resources' }),
             },
+            loader: worksLoader,
             path: ':category',
           },
         ],
