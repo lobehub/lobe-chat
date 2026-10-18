@@ -1,24 +1,12 @@
-import { randomUUID } from 'node:crypto';
-
-import { UNFINISHED_TASK_STATUSES } from '@lobechat/builtin-tool-task';
 import { TASK_ASSIGNEE_PERMISSION_CODES } from '@lobechat/const/rbac';
-import type {
-  TaskContext,
-  TaskDetailData,
-  TaskItem,
-  TaskSchedulerContext,
-  TaskStatus,
-} from '@lobechat/types';
+import type { TaskContext, TaskDetailData, TaskItem } from '@lobechat/types';
 import { TRPCError } from '@trpc/server';
+import pMap from 'p-map';
 
 import { AgentModel } from '@/database/models/agent';
 import { ProjectModel } from '@/database/models/project';
 import { RbacModel } from '@/database/models/rbac';
-import {
-  isTaskIdentifierUniqueViolation,
-  taskActivityActor,
-  TaskModel,
-} from '@/database/models/task';
+import { isTaskIdentifierUniqueViolation, TaskModel } from '@/database/models/task';
 import { TaskTopicModel } from '@/database/models/taskTopic';
 import { TopicModel } from '@/database/models/topic';
 import { WorkspaceMemberModel } from '@/database/models/workspaceMember';
@@ -28,10 +16,22 @@ import { AiAgentService } from '../aiAgent';
 import { type SubtaskGraphPlan, TaskGraphService } from '../taskGraph';
 import { type ReviewResult, TaskReviewService } from '../taskReview';
 import { TaskRunnerService } from '../taskRunner';
-import { createTaskSchedulerModule } from '../taskScheduler';
-import { assertArchivedTaskStaysIdle, writeKeepingArchivedIdle } from './archiveGuard';
+import { writeKeepingArchivedIdle } from './archiveGuard';
+import type { TaskServiceDeps } from './deps';
 import { TaskDetailService } from './detail';
 import { resolveMissingTaskModelConfig } from './modelSnapshot';
+import {
+  updateStatus,
+  updateStatusCascade,
+  type UpdateStatusCascadeResult,
+  type UpdateStatusResult,
+} from './statusTransitions';
+import { interruptTaskOperation, resolveTaskOrThrow } from './utils';
+
+export type { UpdateStatusCascadeResult, UpdateStatusResult } from './statusTransitions';
+
+/** Subtask runs started at once when kicking off a ready layer. */
+const SUBTASK_KICKOFF_CONCURRENCY = 5;
 
 /** How long after a run starts a task may have no recorded operation yet. */
 const TASK_RUN_STARTING_GRACE_MS = 2 * 60 * 1000;
@@ -62,24 +62,6 @@ export interface CreateTaskInput {
   visibility?: 'private' | 'public';
 }
 
-export interface UpdateStatusResult {
-  allSubtasksDone?: boolean;
-  checkpointTriggered?: boolean;
-  /** Completion was requested by the task's own run and lands when it ends. */
-  completionDeferred?: boolean;
-  parentTaskId?: string | null;
-  paused: string[];
-  task: TaskItem;
-  unlocked: string[];
-}
-
-export interface UpdateStatusCascadeResult {
-  paused: string[];
-  task: TaskItem;
-  unlocked: string[];
-  updatedSubtasks: string[];
-}
-
 export interface RunReadySubtasksResult {
   failed: { error: string; identifier: string }[];
   kickedOff: string[];
@@ -107,6 +89,18 @@ export class TaskService {
     this.taskModel = new TaskModel(db, userId, workspaceId);
     this.taskTopicModel = new TaskTopicModel(db, userId, workspaceId);
     this.topicModel = new TopicModel(db, userId, workspaceId);
+  }
+
+  /** Collaborators the extracted sub-domain functions read — resolved on every call. */
+  private get deps(): TaskServiceDeps {
+    return {
+      agentModel: this.agentModel,
+      db: this.db,
+      taskModel: this.taskModel,
+      taskTopicModel: this.taskTopicModel,
+      userId: this.userId,
+      workspaceId: this.workspaceId,
+    };
   }
 
   /**
@@ -267,16 +261,7 @@ export class TaskService {
     });
   }
 
-  private interruptTaskOperation = async (service: AiAgentService, operationId: string) => {
-    const result = await service.interruptTask({ operationId });
-    if (!result.success || result.deviceCancellationConfirmed === false) {
-      throw new TRPCError({
-        code: 'CONFLICT',
-        message:
-          'Task interruption was not confirmed. The execution remains active; retry stopping it before starting another attempt.',
-      });
-    }
-  };
+  private interruptTaskOperation = interruptTaskOperation;
 
   /**
    * Cancel a running topic: interrupt the remote operation (if any), then
@@ -493,194 +478,9 @@ export class TaskService {
    *     completions, kick off any newly-unlocked downstream tasks.
    */
   async updateStatus(
-    input: {
-      error?: string;
-      id: string;
-      /**
-       * The caller's own run, when an agent changes the task it is executing.
-       * Completing that task is a delivery request: it is recorded and
-       * finalized by onTopicComplete once the run ends, instead of
-       * interrupting the run mid-tool-call.
-       */
-      operationId?: string;
-      status: TaskStatus;
-    },
-    /**
-     * Present only for a change a person or their agent made; its absence is
-     * how system transitions (runner / lifecycle / watchdog) opt out of the
-     * activity feed.
-     */
-    actor?: { agentId?: string | null; userId?: string | null },
+    ...args: Parameters<typeof updateStatus> extends [unknown, ...infer A] ? A : never
   ): Promise<UpdateStatusResult> {
-    const { id, operationId, status, error: errorMsg } = input;
-
-    if (errorMsg && status !== 'failed') {
-      throw new TRPCError({
-        code: 'BAD_REQUEST',
-        message: 'Task error can only be provided when status is failed.',
-      });
-    }
-
-    const resolved = await this.resolveOrThrow(id);
-    assertArchivedTaskStaysIdle(resolved, { status });
-
-    if (resolved.status === 'running' && status !== 'running') {
-      const topics = await this.taskTopicModel.findByTaskId(resolved.id);
-
-      if (
-        status === 'completed' &&
-        operationId &&
-        topics.some((t) => t.status === 'running' && t.operationId === operationId)
-      ) {
-        await this.taskModel.updateContext(resolved.id, {
-          completion: { requestedByOperationId: operationId },
-        });
-        return { completionDeferred: true, paused: [], task: resolved, unlocked: [] };
-      }
-
-      const aiAgentService = new AiAgentService(this.db, this.userId, {
-        workspaceId: this.workspaceId,
-      });
-
-      for (const t of topics) {
-        if (t.status !== 'running' || !t.topicId) continue;
-
-        // Interrupt the remote operation first; if it fails, skip cancellation
-        // to avoid desynchronizing DB state from a still-running operation.
-        if (t.operationId) {
-          try {
-            await this.interruptTaskOperation(aiAgentService, t.operationId);
-          } catch (err) {
-            console.error(
-              '[TaskService.updateStatus] failed to interrupt topic %s:',
-              t.topicId,
-              err,
-            );
-            throw err;
-          }
-        }
-
-        await this.taskTopicModel.cancelIfRunning(resolved.id, t.topicId);
-      }
-    }
-
-    const extra: Record<string, unknown> = {};
-    if (status === 'running') extra.startedAt = new Date();
-    if (status === 'completed' || status === 'failed' || status === 'canceled')
-      extra.completedAt = new Date();
-    if (errorMsg) extra.error = errorMsg;
-
-    const task = await writeKeepingArchivedIdle(this.db, (tx) => {
-      const model = new TaskModel(tx, this.userId, this.workspaceId);
-      return actor
-        ? model.updateWithLog(resolved.id, { status, ...extra }, actor)
-        : model.updateStatus(resolved.id, status, extra);
-    });
-    if (!task) throw new TRPCError({ code: 'NOT_FOUND', message: 'Task not found' });
-
-    // Stamp the schedule run-count window each time the user (re)starts a
-    // scheduled task. The cron dispatcher itself flips a task running →
-    // scheduled on every tick, so we exclude that natural cycle by only
-    // resetting when the previous status was NOT 'running'. This lets
-    // `runScheduleTick` enforce `config.schedule.maxExecutions` by counting
-    // task_topics created since this timestamp.
-    if (
-      status === 'scheduled' &&
-      task.automationMode === 'schedule' &&
-      resolved.status !== 'running'
-    ) {
-      await this.taskModel.updateContext(task.id, {
-        scheduler: { scheduleStartedAt: new Date().toISOString() },
-      });
-    }
-
-    // Heartbeat ticks are one-shot delayed messages that re-arm themselves
-    // after each run. Seed the very first message when a user starts/restarts
-    // the schedule; otherwise a fresh heartbeat task has no event capable of
-    // reaching the lifecycle re-arm path.
-    if (
-      status === 'scheduled' &&
-      task.automationMode === 'heartbeat' &&
-      task.heartbeatInterval &&
-      task.heartbeatInterval > 0 &&
-      resolved.status !== 'running' &&
-      resolved.status !== 'scheduled'
-    ) {
-      const scheduler = createTaskSchedulerModule();
-      const schedulerContext = (resolved.context as TaskContext | null)?.scheduler as
-        TaskSchedulerContext | undefined;
-      const previousTickMessageId = schedulerContext?.tickMessageId;
-      const tickToken = randomUUID();
-      let tickMessageId: string | undefined;
-
-      try {
-        // Invalidate the previous generation before publishing. This closes
-        // the race where an old QStash delivery arrives while the replacement
-        // message is being created.
-        await this.taskModel.updateContext(task.id, { scheduler: { tickToken } });
-        tickMessageId = await scheduler.scheduleNextTopic({
-          delay: task.heartbeatInterval,
-          taskId: task.id,
-          tickToken,
-          userId: this.userId,
-        });
-
-        await this.taskModel.updateContext(task.id, {
-          scheduler: {
-            consecutiveFailures: schedulerContext?.consecutiveFailures ?? 0,
-            scheduledAt: new Date().toISOString(),
-            tickMessageId,
-            tickToken,
-          },
-        });
-      } catch (error) {
-        // Never expose a scheduled status without a persisted tick. Restore
-        // the user-visible state and cancel a newly published message when
-        // persistence was the failing step.
-        if (tickMessageId) await scheduler.cancelScheduled(tickMessageId).catch(() => undefined);
-        await this.taskModel.update(task.id, { context: resolved.context });
-        // The logged transition really happened and is now being undone, so
-        // the undo is logged too (same actor, back to the same value): the
-        // audit trail stays truthful and the feed folds the pair away.
-        if (actor) await this.taskModel.updateWithLog(task.id, { status: resolved.status }, actor);
-        else await this.taskModel.updateStatus(task.id, resolved.status);
-        throw error;
-      }
-
-      if (previousTickMessageId) {
-        await scheduler.cancelScheduled(previousTickMessageId).catch(() => undefined);
-      }
-    }
-
-    const unlocked: string[] = [];
-    const paused: string[] = [];
-    let allSubtasksDone = false;
-    let checkpointTriggered = false;
-
-    if (status === 'completed') {
-      if (task.parentTaskId) {
-        const parentTask = await this.taskModel.findById(task.parentTaskId);
-        if (parentTask && this.taskModel.shouldPauseAfterComplete(parentTask, task.identifier)) {
-          await this.taskModel.updateStatus(parentTask.id, 'paused');
-          checkpointTriggered = true;
-        }
-        allSubtasksDone = await this.taskModel.areAllSubtasksCompleted(task.parentTaskId);
-      }
-
-      // Unlock blocked tasks and actually kick them off via the runner.
-      const runner = new TaskRunnerService(this.db, this.userId, this.workspaceId);
-      const cascade = await runner.cascadeOnCompletion(task.id);
-      unlocked.push(...cascade.started);
-      paused.push(...cascade.paused);
-    }
-
-    return {
-      paused,
-      task,
-      unlocked,
-      ...(checkpointTriggered && { checkpointTriggered: true }),
-      ...(allSubtasksDone && { allSubtasksDone: true, parentTaskId: task.parentTaskId }),
-    };
+    return updateStatus(this.deps, ...args);
   }
 
   /**
@@ -690,113 +490,9 @@ export class TaskService {
    * sibling in the middle of the cascade.
    */
   async updateStatusCascade(
-    input: {
-      id: string;
-      status: 'canceled' | 'completed';
-    },
-    /** The person confirming "include subtasks"; absent for system callers. */
-    actor?: { agentId?: string | null; userId?: string | null },
+    ...args: Parameters<typeof updateStatusCascade> extends [unknown, ...infer A] ? A : never
   ): Promise<UpdateStatusCascadeResult> {
-    const resolved = await this.resolveOrThrow(input.id);
-    const subtasks = await this.taskModel.findSubtasks(resolved.id);
-    const unfinishedStatuses = new Set<string>(UNFINISHED_TASK_STATUSES);
-    const openSubtasks = subtasks.filter((task) => unfinishedStatuses.has(task.status));
-    // Freeze the cascade to this snapshot: both the interrupt pass and the
-    // status update operate on the same id set, so a subtask created or
-    // transitioned after the confirmation dialog is never rewritten.
-    const targetTasks = [resolved, ...openSubtasks];
-    const targetIds = targetTasks.map((task) => task.id);
-
-    const aiAgentService = new AiAgentService(this.db, this.userId, {
-      workspaceId: this.workspaceId,
-    });
-
-    const runningTopics = await this.taskTopicModel.findRunningByTaskIds(targetIds);
-    if (runningTopics.length > 0) {
-      const settled = await Promise.allSettled(
-        runningTopics.map(async (topic) => {
-          if (topic.operationId) {
-            await this.interruptTaskOperation(aiAgentService, topic.operationId);
-          }
-        }),
-      );
-      const failure = settled.find((result) => result.status === 'rejected');
-      if (failure) {
-        // Persist the interrupts that did succeed before surfacing the error,
-        // so an actually-stopped operation is not left recorded as running.
-        for (const [index, topic] of runningTopics.entries()) {
-          if (settled[index].status !== 'fulfilled' || !topic.topicId) continue;
-          await this.taskTopicModel
-            .cancelIfRunning(topic.taskId, topic.topicId)
-            .catch(() => undefined);
-        }
-        throw failure.reason;
-      }
-    }
-
-    const completedAt = new Date();
-    let updatedTasks: TaskItem[] = [];
-    let canceledTopics: Awaited<ReturnType<TaskTopicModel['cancelRunningByTaskIds']>> = [];
-    await this.db.transaction(async (tx) => {
-      const taskModel = new TaskModel(tx, this.userId, this.workspaceId);
-      const taskTopicModel = new TaskTopicModel(tx, this.userId, this.workspaceId);
-
-      // Cancel by the frozen id set rather than the pre-read topic list, so a
-      // topic that started between the snapshot and this transaction is still
-      // closed together with the status update.
-      canceledTopics = await taskTopicModel.cancelRunningByTaskIds(targetIds);
-      // The pre-transaction snapshot only chose *which* tasks; what each one
-      // is leaving is read under the lock, so a collaborator's edit between
-      // the dialog and this write is logged as it really was.
-      const locked = actor ? await taskModel.lockForStatusChange(targetIds) : [];
-      updatedTasks = await taskModel.updateStatusForIds(targetIds, input.status, { completedAt });
-
-      // A person confirmed this for the whole family, so every member that
-      // moved gets its own row — one INSERT, not one per task.
-      if (actor) {
-        const { actorKind, ...actorColumns } = taskActivityActor(actor);
-        await taskModel.addActivities(
-          locked
-            .filter((before) => before.status !== input.status)
-            .map((before) => ({
-              ...actorColumns,
-              payload: { actorKind, from: before.status, to: input.status },
-              taskId: before.id,
-              type: 'status' as const,
-              visibility: before.visibility,
-            })),
-        );
-      }
-    });
-
-    // Best-effort: stop any operation discovered only inside the transaction.
-    const interruptedOperationIds = new Set(runningTopics.map((topic) => topic.operationId));
-    await Promise.allSettled(
-      canceledTopics
-        .filter((topic) => topic.operationId && !interruptedOperationIds.has(topic.operationId))
-        .map((topic) => aiAgentService.interruptTask({ operationId: topic.operationId! })),
-    );
-
-    const task = updatedTasks.find(({ id }) => id === resolved.id);
-    if (!task) throw new TRPCError({ code: 'NOT_FOUND', message: 'Task not found' });
-
-    const unlocked: string[] = [];
-    const paused: string[] = [];
-    if (input.status === 'completed') {
-      const runner = new TaskRunnerService(this.db, this.userId, this.workspaceId);
-      const cascade = await runner.cascadeOnCompletionMany(updatedTasks.map(({ id }) => id));
-      unlocked.push(...cascade.started);
-      paused.push(...cascade.paused);
-    }
-
-    return {
-      paused,
-      task,
-      unlocked,
-      updatedSubtasks: updatedTasks
-        .filter(({ parentTaskId }) => parentTaskId === resolved.id)
-        .map(({ identifier }) => identifier),
-    };
+    return updateStatusCascade(this.deps, ...args);
   }
 
   /**
@@ -836,13 +532,19 @@ export class TaskService {
     const kickedOff: string[] = [];
     const failed: { error: string; identifier: string }[] = [];
 
-    const settled = await Promise.allSettled(
-      firstLayer.map(async (identifier) => {
-        const id = identifierToId.get(identifier);
-        if (!id) throw new Error(`Subtask ${identifier} not found`);
-        await runner.runTask({ taskId: id });
-        return identifier;
-      }),
+    const settled = await pMap(
+      firstLayer,
+      async (identifier): Promise<PromiseSettledResult<string>> => {
+        try {
+          const id = identifierToId.get(identifier);
+          if (!id) throw new Error(`Subtask ${identifier} not found`);
+          await runner.runTask({ taskId: id });
+          return { status: 'fulfilled', value: identifier };
+        } catch (reason) {
+          return { reason, status: 'rejected' };
+        }
+      },
+      { concurrency: SUBTASK_KICKOFF_CONCURRENCY },
     );
 
     for (const [index, result] of settled.entries()) {
@@ -980,9 +682,7 @@ export class TaskService {
   }
 
   private async resolveOrThrow(idOrIdentifier: string): Promise<TaskItem> {
-    const task = await this.taskModel.resolve(idOrIdentifier);
-    if (!task) throw new TRPCError({ code: 'NOT_FOUND', message: 'Task not found' });
-    return task;
+    return resolveTaskOrThrow(this.deps, idOrIdentifier);
   }
 
   async getTaskDetail(taskIdOrIdentifier: string): Promise<TaskDetailData | null> {
