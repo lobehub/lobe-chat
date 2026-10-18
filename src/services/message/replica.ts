@@ -48,6 +48,7 @@ const isSyntheticGroupNode = (message: UIChatMessage) =>
 const isPersistableContext = (context: ConversationContext) => {
   if (!context.agentId || !context.topicId) return false;
   if (context.agentShareId || context.topicShareId) return false;
+  if (context.messageReadMode === 'forward') return false;
   return messageMapKey(context) === canonicalBucketOf(context);
 };
 
@@ -69,12 +70,17 @@ const canonicalBucketOf = (context: {
  * Entry identity of a conversation. Persistable conversations key by the
  * canonical read context (`p:`), so the route loader and every surface showing
  * the same conversation address one row; the rest key by their bucket (`m:`)
- * and stay in memory.
+ * and stay in memory. A forward transcript is its own entry: its pages run the
+ * other way, so it never shares paging with the newest-first one.
  */
 export const conversationMessagesKey = (context: ConversationContext) =>
   isPersistableContext(context)
     ? `p:${JSON.stringify(normalizeMessageListQueryContext(context))}`
-    : `m:${JSON.stringify({ bucket: messageMapKey(context), threadId: context.threadId ?? null })}`;
+    : `m:${JSON.stringify({
+        bucket: messageMapKey(context),
+        threadId: context.threadId ?? null,
+        ...(context.messageReadMode === 'forward' && { paging: 'forward' }),
+      })}`;
 
 /**
  * The chat store bucket (`messageMapKey`) an entry key renders into, and the
@@ -84,8 +90,11 @@ export const conversationMessagesKey = (context: ConversationContext) =>
 export const transcriptBucketOf = (key: string): { bucket: string; threadId: string | null } => {
   const value = JSON.parse(key.slice(2));
   if (key.startsWith('p:')) return { bucket: canonicalBucketOf(value), threadId: value.threadId };
-  return value;
+  return { bucket: value.bucket, threadId: value.threadId };
 };
+
+const isForwardTranscriptKey = (key: string) =>
+  key.startsWith('m:') && JSON.parse(key.slice(2)).paging === 'forward';
 
 const transcriptPaging: ReplicaPagingConfig<UIChatMessage, MessageRoundCursor> = {
   // Only reached for read paths without round cursors (threads, shared
@@ -95,6 +104,7 @@ const transcriptPaging: ReplicaPagingConfig<UIChatMessage, MessageRoundCursor> =
     id: message.id,
   }),
   direction: 'backward',
+  directionOf: (key) => (isForwardTranscriptKey(key) ? 'forward' : 'backward'),
   getId: (message) => message.id,
   isCursorable: (message) => !isSyntheticGroupNode(message) && !isLocalOnlyMessage(message),
   mode: 'cursor',
@@ -114,7 +124,10 @@ export const conversationMessagesResource = defineReplica<
   storage: 'indexedDB',
   // Mutations, refreshes and evictions across the app revalidate the
   // conversation by its `message:list` key.
-  syncKey: (params) => messageListKey(params),
+  syncKey: (params) =>
+    params.messageReadMode === 'forward'
+      ? [...messageListKey(params), 'forward']
+      : messageListKey(params),
   version: 1,
 });
 

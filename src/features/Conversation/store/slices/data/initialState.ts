@@ -26,6 +26,16 @@ export interface DataState {
    */
   isLoadingEarlierMessages: boolean;
 
+  /** A forward transcript's next page is in flight. Drives the end-of-list loading row. */
+  isLoadingLaterMessages: boolean;
+
+  /**
+   * The last forward page fetch failed. Drives the inline error row with Retry
+   * after the last message; cleared when a retry starts and on conversation
+   * switch.
+   */
+  laterMessagesError?: unknown;
+
   /**
    * Whether messages have been initialized
    */
@@ -55,6 +65,7 @@ export const dataInitialState: DataState = {
   dbMessages: [],
   displayMessages: [],
   isLoadingEarlierMessages: false,
+  isLoadingLaterMessages: false,
   messagesInit: false,
   transcriptSource: 'chat',
 };

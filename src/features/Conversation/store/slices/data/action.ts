@@ -4,6 +4,7 @@ import debug from 'debug';
 import { type StateCreator } from 'zustand/vanilla';
 
 import { useChatStore } from '@/store/chat';
+import { type ChatStore } from '@/store/chat/store';
 import { messageMapKey } from '@/store/chat/utils/messageMapKey';
 
 import { type Store as ConversationStore } from '../../action';
@@ -15,6 +16,28 @@ import { dataSelectors } from './selectors';
 import { stabilizeReferences } from './stabilizeReferences';
 
 const log = debug('lobe-render:features:Conversation');
+
+type PageSide = 'earlier' | 'later';
+
+const PAGE_SIDES = {
+  earlier: {
+    error: 'earlierMessagesError',
+    load: (...args) => useChatStore.getState().loadEarlierMessages(...args),
+    loading: 'isLoadingEarlierMessages',
+  },
+  later: {
+    error: 'laterMessagesError',
+    load: (...args) => useChatStore.getState().loadLaterMessages(...args),
+    loading: 'isLoadingLaterMessages',
+  },
+} satisfies Record<
+  PageSide,
+  {
+    error: keyof State;
+    load: ChatStore['loadEarlierMessages'];
+    loading: keyof State;
+  }
+>;
 
 /**
  * The conversation's rows as the chat store holds them: `dbMessages` is the
@@ -75,6 +98,13 @@ export interface DataAction {
   loadEarlierMessages: (options?: { retry?: boolean }) => Promise<void>;
 
   /**
+   * Load the rounds after a forward transcript's loaded pages and append them.
+   * Same contract as `loadEarlierMessages`, with its failure kept in
+   * `laterMessagesError`.
+   */
+  loadLaterMessages: (options?: { retry?: boolean }) => Promise<void>;
+
+  /**
    * Replace all messages with new data
    * Used for syncing after database operations (optimistic update pattern)
    *
@@ -116,6 +146,26 @@ export const dataSlice: StateCreator<
       false,
       action,
     );
+
+  const loadPage = async (side: PageSide, options?: { retry?: boolean }) => {
+    const { context, transcriptSource } = get();
+    if (transcriptSource !== 'chat') return;
+    const { error: errorKey, load, loading } = PAGE_SIDES[side];
+    if (get()[errorKey] !== undefined && !options?.retry) return;
+
+    const { error, started } = await load(context, {
+      onStart: () =>
+        set({ [errorKey]: undefined, [loading]: true }, false, `${side}Messages/start`),
+    });
+    if (!started) return;
+    get().internal_syncChatTranscript();
+
+    // The flag is conversation-wide state: after a context switch it belongs
+    // to the new conversation (reset by createEphemeralResetState), so a
+    // late settle from the previous one must not clear it.
+    if (!isSameConversationContext(context, get().context)) return;
+    set({ [errorKey]: error ?? undefined, [loading]: false }, false, `${side}Messages/end`);
+  };
 
   return {
     internal_dispatchMessage: (payload) => {
@@ -175,32 +225,9 @@ export const dataSlice: StateCreator<
       set(next, false, 'syncChatTranscript');
     },
 
-    loadEarlierMessages: async (options) => {
-      const { context, transcriptSource } = get();
-      if (transcriptSource !== 'chat') return;
-      if (get().earlierMessagesError !== undefined && !options?.retry) return;
+    loadEarlierMessages: (options) => loadPage('earlier', options),
 
-      const { error, started } = await useChatStore.getState().loadEarlierMessages(context, {
-        onStart: () =>
-          set(
-            { earlierMessagesError: undefined, isLoadingEarlierMessages: true },
-            false,
-            'loadEarlierMessages/start',
-          ),
-      });
-      if (!started) return;
-      get().internal_syncChatTranscript();
-
-      // The flag is conversation-wide state: after a context switch it belongs
-      // to the new conversation (reset by createEphemeralResetState), so a
-      // late settle from the previous one must not clear it.
-      if (!isSameConversationContext(context, get().context)) return;
-      set(
-        { earlierMessagesError: error ?? undefined, isLoadingEarlierMessages: false },
-        false,
-        'loadEarlierMessages/end',
-      );
-    },
+    loadLaterMessages: (options) => loadPage('later', options),
 
     replaceMessages: (messages, options) => {
       const { context, transcriptSource } = get();
