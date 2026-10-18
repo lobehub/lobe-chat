@@ -44,6 +44,8 @@
   "features.selfLearning.title": "자기 진화",
   "features.taskVerify.desc": "작업 세부 정보에 배송 수락 섹션을 추가하세요: 수락을 한 문장으로 설명하고 AI가 편집 가능한 검증 기준을 생성하도록 합니다.",
   "features.taskVerify.title": "작업 배송 수락",
+  "features.topicBugReport.desc": "토픽 메뉴에 '문제 보고'를 추가합니다. 이 기능은 토픽의 ID와 앱 환경을 LobeHub 지원팀에 전송하며, 지원팀은 이를 바탕으로 문제를 조사합니다.",
+  "features.topicBugReport.title": "토픽 문제 보고",
   "group.desktop": "데스크탑",
   "group.general": "일반",
   "stage.alpha.desc": "내부 테스트용입니다. 아직 일상적으로 사용하기에는 권장되지 않습니다 — 언제든지 변경되거나 문제가 발생할 수 있습니다.",

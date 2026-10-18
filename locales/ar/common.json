@@ -5,6 +5,7 @@
   "agentLabel.create": "تسمية جديدة",
   "agentLabel.manage": "إدارة التسميات",
   "agentLabel.menuTitle": "التسميات",
+  "agentSkills.ensureFailed": "بعض المهارات التي يعتمد عليها هذا الوكيل لم يتم تثبيتها تلقائيًا: {{skills}}. يمكنك إضافتها يدويًا في متجر المهارات.",
   "agentViewAll.addToSidebar": "عرض في الشريط الجانبي",
   "agentViewAll.empty": "لا توجد وكلاء حتى الآن",
   "agentViewAll.form.grouping": "التجميع",

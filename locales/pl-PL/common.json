@@ -5,6 +5,7 @@
   "agentLabel.create": "Nowa etykieta",
   "agentLabel.manage": "Zarządzaj etykietami",
   "agentLabel.menuTitle": "Etykiety",
+  "agentSkills.ensureFailed": "Niektóre umiejętności, na których polega ten agent, nie mogły zostać zainstalowane automatycznie: {{skills}}. Możesz je dodać ręcznie w Sklepie Umiejętności.",
   "agentViewAll.addToSidebar": "Pokaż w pasku bocznym",
   "agentViewAll.empty": "Brak agentów",
   "agentViewAll.form.grouping": "Grupowanie",

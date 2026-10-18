@@ -73,6 +73,7 @@
   "directories.repository": "URL do repositório GitHub (opcional)",
   "directories.repositoryHint": "Isso registra o repositório de origem. Não clona ou sincroniza arquivos. Não inclua credenciais.",
   "directories.sourceSummary": "Diretório existente",
+  "directories.stagedNewTopic": "Um novo tópico começará em <project>{{name}}</project>",
   "directories.start": "Começar a trabalhar aqui",
   "directories.startInProject": "Começar a trabalhar em {{name}}",
   "directories.title": "Diretórios de trabalho",

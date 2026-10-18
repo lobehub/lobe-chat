@@ -6,6 +6,7 @@
   "workingDirectory.agentDescription": "Répertoire de travail par défaut pour toutes les conversations avec cet Agent",
   "workingDirectory.agentLevel": "Répertoire de travail de l'Agent",
   "workingDirectory.bareWorktree": "nu",
+  "workingDirectory.branchConfirming": "Confirmation de la branche actuelle…",
   "workingDirectory.branchInWorktree": "Dans l'arborescence de travail {{name}}",
   "workingDirectory.branchSearchPlaceholder": "Rechercher des branches",
   "workingDirectory.branchesEmpty": "Aucune branche locale",

@@ -44,6 +44,8 @@
   "features.selfLearning.title": "自我進化",
   "features.taskVerify.desc": "在任務詳情中新增交付驗收部分：用一句話描述驗收內容，並讓 AI 生成可編輯的驗收標準。",
   "features.taskVerify.title": "任務交付驗收",
+  "features.topicBugReport.desc": "將「回報問題」新增到主題選單中。它會將主題的 ID 和您的應用程式環境發送給 LobeHub 支援團隊，支援團隊將進一步調查問題。",
+  "features.topicBugReport.title": "回報主題問題",
   "group.desktop": "桌面",
   "group.general": "一般",
   "stage.alpha.desc": "僅供內部測試使用。目前不建議日常使用——可能隨時更改或出現問題。",

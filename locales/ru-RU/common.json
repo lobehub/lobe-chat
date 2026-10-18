@@ -5,6 +5,7 @@
   "agentLabel.create": "Новая метка",
   "agentLabel.manage": "Управление метками",
   "agentLabel.menuTitle": "Метки",
+  "agentSkills.ensureFailed": "Некоторые навыки, на которые полагается этот агент, не удалось установить автоматически: {{skills}}. Вы можете добавить их вручную в Магазине Навыков.",
   "agentViewAll.addToSidebar": "Показать в боковой панели",
   "agentViewAll.empty": "Агенты отсутствуют",
   "agentViewAll.form.grouping": "Группировка",

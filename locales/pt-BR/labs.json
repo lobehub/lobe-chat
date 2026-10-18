@@ -44,6 +44,8 @@
   "features.selfLearning.title": "Autoevolução",
   "features.taskVerify.desc": "Adicione uma seção de aceitação de entrega aos detalhes da tarefa: descreva a aceitação em uma frase e deixe a IA gerar critérios de verificação editáveis.",
   "features.taskVerify.title": "Aceitação de Entrega da Tarefa",
+  "features.topicBugReport.desc": "Adiciona Relatar um Problema ao menu de tópicos. Ele envia os IDs do tópico e o ambiente do seu aplicativo para a equipe de suporte do LobeHub, que investigará o ocorrido a partir daí.",
+  "features.topicBugReport.title": "Relatar um Problema com um Tópico",
   "group.desktop": "Desktop",
   "group.general": "Geral",
   "stage.alpha.desc": "Apenas para testes internos. Ainda não recomendado para uso diário — pode mudar ou apresentar falhas a qualquer momento.",

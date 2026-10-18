@@ -73,6 +73,7 @@
   "directories.repository": "عنوان URL لمستودع GitHub (اختياري)",
   "directories.repositoryHint": "هذا يسجل مصدر المستودع. لا يقوم بالاستنساخ أو مزامنة الملفات. لا تقم بتضمين بيانات الاعتماد.",
   "directories.sourceSummary": "الدليل الحالي",
+  "directories.stagedNewTopic": "موضوع جديد سيبدأ في <project>{{name}}</project>",
   "directories.start": "ابدأ العمل هنا",
   "directories.startInProject": "ابدأ العمل في {{name}}",
   "directories.title": "أدلة العمل",

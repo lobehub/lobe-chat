@@ -73,6 +73,7 @@
   "directories.repository": "URL на GitHub хранилище (по избор)",
   "directories.repositoryHint": "Това записва изходното хранилище. Не клонира или синхронизира файлове. Не включвайте идентификационни данни.",
   "directories.sourceSummary": "Съществуваща директория",
+  "directories.stagedNewTopic": "Нова тема ще започне в <project>{{name}}</project>",
   "directories.start": "Започнете работа тук",
   "directories.startInProject": "Започнете работа в {{name}}",
   "directories.title": "Работни директории",

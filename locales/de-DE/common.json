@@ -5,6 +5,7 @@
   "agentLabel.create": "Neue Bezeichnung",
   "agentLabel.manage": "Bezeichnungen verwalten",
   "agentLabel.menuTitle": "Bezeichnungen",
+  "agentSkills.ensureFailed": "Einige Fähigkeiten, auf die dieser Agent angewiesen ist, konnten nicht automatisch installiert werden: {{skills}}. Sie können sie manuell im Skill Store hinzufügen.",
   "agentViewAll.addToSidebar": "Im Seitenbereich anzeigen",
   "agentViewAll.empty": "Noch keine Agenten",
   "agentViewAll.form.grouping": "Gruppierung",

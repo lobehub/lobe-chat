@@ -5,6 +5,7 @@
   "agentLabel.create": "Novo rótulo",
   "agentLabel.manage": "Gerenciar rótulos",
   "agentLabel.menuTitle": "Rótulos",
+  "agentSkills.ensureFailed": "Algumas habilidades que este agente utiliza não puderam ser instaladas automaticamente: {{skills}}. Você pode adicioná-las manualmente na Loja de Habilidades.",
   "agentViewAll.addToSidebar": "Mostrar na barra lateral",
   "agentViewAll.empty": "Nenhum agente ainda",
   "agentViewAll.form.grouping": "Agrupamento",

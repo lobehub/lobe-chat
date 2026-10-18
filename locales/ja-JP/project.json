@@ -73,6 +73,7 @@
   "directories.repository": "GitHubリポジトリURL（オプション）",
   "directories.repositoryHint": "これはソースリポジトリを記録します。ファイルをクローンまたは同期するものではありません。認証情報を含めないでください。",
   "directories.sourceSummary": "既存のディレクトリ",
+  "directories.stagedNewTopic": "<project>{{name}}</project>で新しいトピックが始まります",
   "directories.start": "ここで作業を開始",
   "directories.startInProject": "{{name}}で作業を開始",
   "directories.title": "作業ディレクトリ",

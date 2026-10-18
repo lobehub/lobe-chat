@@ -73,6 +73,7 @@
   "directories.repository": "GitHub 儲存庫 URL（可選）",
   "directories.repositoryHint": "這會記錄來源儲存庫。它不會複製或同步檔案。請勿包含憑據。",
   "directories.sourceSummary": "現有目錄",
+  "directories.stagedNewTopic": "一個新主題將在<project>{{name}}</project>開始",
   "directories.start": "從這裡開始工作",
   "directories.startInProject": "在 {{name}} 中開始工作",
   "directories.title": "工作目錄",

@@ -5,6 +5,7 @@
   "agentLabel.create": "Нов етикет",
   "agentLabel.manage": "Управление на етикети",
   "agentLabel.menuTitle": "Етикети",
+  "agentSkills.ensureFailed": "Някои умения, на които този агент разчита, не можаха да бъдат инсталирани автоматично: {{skills}}. Можете да ги добавите ръчно в Магазина за умения.",
   "agentViewAll.addToSidebar": "Показване в страничната лента",
   "agentViewAll.empty": "Все още няма агенти",
   "agentViewAll.form.grouping": "Групиране",

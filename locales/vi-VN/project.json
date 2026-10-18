@@ -73,6 +73,7 @@
   "directories.repository": "URL kho GitHub (tùy chọn)",
   "directories.repositoryHint": "Điều này ghi lại nguồn kho. Nó không sao chép hoặc đồng bộ hóa các tệp. Không bao gồm thông tin đăng nhập.",
   "directories.sourceSummary": "Thư mục hiện có",
+  "directories.stagedNewTopic": "Một chủ đề mới sẽ bắt đầu trong <project>{{name}}</project>",
   "directories.start": "Bắt đầu làm việc tại đây",
   "directories.startInProject": "Bắt đầu làm việc trong {{name}}",
   "directories.title": "Thư mục làm việc",

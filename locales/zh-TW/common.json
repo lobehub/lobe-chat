@@ -5,6 +5,7 @@
   "agentLabel.create": "新增標籤",
   "agentLabel.manage": "管理標籤",
   "agentLabel.menuTitle": "標籤",
+  "agentSkills.ensureFailed": "某些此代理依賴的技能無法自動安裝：{{skills}}。您可以在技能商店中手動添加它們。",
   "agentViewAll.addToSidebar": "顯示於側邊欄",
   "agentViewAll.empty": "尚無代理",
   "agentViewAll.form.grouping": "分組",

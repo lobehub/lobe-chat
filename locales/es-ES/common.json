@@ -5,6 +5,7 @@
   "agentLabel.create": "Nueva etiqueta",
   "agentLabel.manage": "Gestionar etiquetas",
   "agentLabel.menuTitle": "Etiquetas",
+  "agentSkills.ensureFailed": "Algunas habilidades de las que depende este agente no se pudieron instalar automáticamente: {{skills}}. Puedes agregarlas manualmente en la Tienda de Habilidades.",
   "agentViewAll.addToSidebar": "Mostrar en la barra lateral",
   "agentViewAll.empty": "No hay agentes aún",
   "agentViewAll.form.grouping": "Agrupación",

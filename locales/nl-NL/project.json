@@ -73,6 +73,7 @@
   "directories.repository": "GitHub-repository-URL (optioneel)",
   "directories.repositoryHint": "Dit registreert de bronrepository. Het kloont of synchroniseert geen bestanden. Voeg geen inloggegevens toe.",
   "directories.sourceSummary": "Bestaande map",
+  "directories.stagedNewTopic": "Een nieuw onderwerp zal starten in <project>{{name}}</project>",
   "directories.start": "Begin hier met werken",
   "directories.startInProject": "Begin met werken in {{name}}",
   "directories.title": "Werkmappen",

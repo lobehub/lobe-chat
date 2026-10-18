@@ -5,6 +5,7 @@
   "agentLabel.create": "Yeni etiket",
   "agentLabel.manage": "Etiketleri yönet",
   "agentLabel.menuTitle": "Etiketler",
+  "agentSkills.ensureFailed": "Bu ajanın güvendiği bazı beceriler otomatik olarak yüklenemedi: {{skills}}. Bunları Beceri Mağazası'ndan manuel olarak ekleyebilirsiniz.",
   "agentViewAll.addToSidebar": "Kenar çubuğunda göster",
   "agentViewAll.empty": "Henüz ajan yok",
   "agentViewAll.form.grouping": "Gruplama",

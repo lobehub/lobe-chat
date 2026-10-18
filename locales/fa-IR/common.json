@@ -5,6 +5,7 @@
   "agentLabel.create": "برچسب جدید",
   "agentLabel.manage": "مدیریت برچسب‌ها",
   "agentLabel.menuTitle": "برچسب‌ها",
+  "agentSkills.ensureFailed": "برخی از مهارت‌هایی که این عامل به آن‌ها وابسته است، به‌طور خودکار نصب نشدند: {{skills}}. می‌توانید آن‌ها را به صورت دستی در فروشگاه مهارت اضافه کنید.",
   "agentViewAll.addToSidebar": "نمایش در نوار کناری",
   "agentViewAll.empty": "هنوز هیچ عاملی وجود ندارد",
   "agentViewAll.form.grouping": "گروه‌بندی",
