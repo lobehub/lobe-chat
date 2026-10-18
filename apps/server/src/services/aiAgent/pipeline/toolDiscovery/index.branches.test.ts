@@ -20,7 +20,7 @@ import {
   collectBorrowedConnectors,
 } from '@/server/utils/connectorAttribution';
 
-import { discoverTools } from './toolDiscovery';
+import { discoverTools } from '.';
 
 vi.mock('@/business/client/model-bank/loadModels', () => ({
   loadModels: vi.fn().mockResolvedValue([]),

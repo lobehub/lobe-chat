@@ -87,21 +87,24 @@ import {
   resolveUserDisplayMap,
 } from '@/server/utils/connectorAttribution';
 
-import { buildAllowedBuiltinTools } from '../deviceToolRegistry';
-import { buildBotConversationGroupContext, buildGroupAgentContext } from '../helpers/groupContext';
+import { buildAllowedBuiltinTools } from '../../deviceToolRegistry';
+import {
+  buildBotConversationGroupContext,
+  buildGroupAgentContext,
+} from '../../helpers/groupContext';
 import {
   getMediaAvailabilityFromFileTypes,
   getMediaAvailabilityFromMessages,
   isMultimodalUnderstandingConfigured,
-} from '../helpers/mediaAvailability';
-import { resolveServerSearchDecision } from '../searchDecision';
+} from '../../helpers/mediaAvailability';
+import { resolveServerSearchDecision } from '../../searchDecision';
 import {
   filterPluginsByShareGate,
   getShareGrantActivatedPluginIds,
   shareGateGrantsCloudSandbox,
-} from '../shareGate';
-import type { ExecRunContext, InternalExecAgentParams } from '../types';
-import { markDegradedStage, traceDiscoveryStage } from './discoveryTracing';
+} from '../../shareGate';
+import type { ExecRunContext, InternalExecAgentParams } from '../../types';
+import { markDegradedStage, traceDiscoveryStage } from '../discoveryTracing';
 
 const log = debug('lobe-server:ai-agent-service');
 
