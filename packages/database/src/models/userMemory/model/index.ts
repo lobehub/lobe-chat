@@ -28,7 +28,7 @@ import { and, asc, cosineDistance, desc, eq, inArray, isNotNull, ne, or, sql } f
 
 import { merge } from '@/utils/merge';
 
-import type { FtsSearchCandidateSource } from '../../repositories/ftsSearch';
+import type { FtsSearchCandidateSource } from '../../../repositories/ftsSearch';
 import type {
   UserMemoryActivitiesWithoutVectors,
   UserMemoryActivity,
@@ -37,7 +37,7 @@ import type {
   UserMemoryIdentity,
   UserMemoryItem,
   UserMemoryPreference,
-} from '../../schemas';
+} from '../../../schemas';
 import {
   userMemories,
   userMemoriesActivities,
@@ -45,15 +45,15 @@ import {
   userMemoriesExperiences,
   userMemoriesIdentities,
   userMemoriesPreferences,
-} from '../../schemas';
-import type { LobeChatDatabase } from '../../type';
-import { normalizeBm25MatchQuery, SAFE_BM25_QUERY_OPTIONS } from '../../utils/bm25';
-import { selectNonVectorColumns } from '../../utils/columns';
-import { inJsonStringArray } from '../../utils/inJsonStringArray';
-import { TopicModel } from '../topic';
-import type { UserMemoryHybridSearchAggregatedResult } from './query';
-import { UserMemoryQueryModel } from './query';
-import { buildUserMemoryWhere } from './where';
+} from '../../../schemas';
+import type { LobeChatDatabase } from '../../../type';
+import { normalizeBm25MatchQuery, SAFE_BM25_QUERY_OPTIONS } from '../../../utils/bm25';
+import { selectNonVectorColumns } from '../../../utils/columns';
+import { inJsonStringArray } from '../../../utils/inJsonStringArray';
+import { TopicModel } from '../../topic';
+import type { UserMemoryHybridSearchAggregatedResult } from '../query';
+import { UserMemoryQueryModel } from '../query';
+import { buildUserMemoryWhere } from '../where';
 
 const normalizeRelationshipValue = (input: unknown): RelationshipEnum | null => {
   if (input === null) return null;
