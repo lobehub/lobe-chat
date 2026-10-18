@@ -7,7 +7,7 @@ import { AgentOperationModel } from '@/database/models/agentOperation';
 import { GoalModel } from '@/database/models/goal';
 import { TaskModel } from '@/database/models/task';
 import { TaskTopicModel } from '@/database/models/taskTopic';
-import { agentOperations, tasks } from '@/database/schemas';
+import { agentOperations, goalNodes, tasks } from '@/database/schemas';
 import type { LobeChatDatabase } from '@/database/type';
 import { AgentRuntimeCoordinator } from '@/server/modules/AgentRuntime/AgentRuntimeCoordinator';
 
@@ -40,6 +40,45 @@ describe('GoalService', () => {
     await service.decide(graph.goal.id, decision.id, 'retire', 'This branch is not useful');
     const achieved = await service.tick(graph.goal.id);
     expect(achieved.outcome).toBe('achieved');
+  });
+
+  it('retiring a failed task from its gate retires the tasks that depend on it', async () => {
+    // A prerequisite only counts as met once `resolved`, so a gate that
+    // retired just the failed node left its dependent blocked forever and
+    // the goal paused on `no eligible task to advance`.
+    const service = new GoalService(serverDB, userId);
+    const taskModel = new TaskModel(serverDB, userId);
+    const graph = await service.create({
+      tasks: ['Measure latency', 'Write summary', 'Unrelated'],
+      title: 'Gate retire cascade',
+    });
+    const [measure, summary, unrelated] = ['Measure latency', 'Write summary', 'Unrelated'].map(
+      (title) => graph.nodes.find((node) => node.kind === 'task' && node.title === title)!,
+    );
+    await service.addEdge(graph.goal.id, summary.id, measure.id, 'depends_on');
+    await serverDB.update(goalNodes).set({ priority: 10 }).where(eq(goalNodes.id, measure.id));
+
+    const created = await service.tick(graph.goal.id);
+    expect(created.nodeId).toBe(measure.id);
+    await taskModel.updateStatus(created.taskId!, 'paused', { error: 'Attempt budget exhausted' });
+    await service.tick(graph.goal.id);
+
+    const gated = await service.graph(graph.goal.id);
+    const retire = gated.decisions[0].options?.find((option) => option.id === 'retire');
+    expect(retire?.description).toContain('Write summary');
+
+    await service.decide(graph.goal.id, gated.decisions[0].id, 'retire');
+
+    const after = await service.graph(graph.goal.id);
+    const status = (id: string) => after.nodes.find((node) => node.id === id)?.status;
+    expect(status(measure.id)).toBe('retired');
+    expect(status(summary.id)).toBe('retired');
+    expect(status(unrelated.id)).not.toBe('retired');
+
+    vi.spyOn(TaskRunnerService.prototype, 'runTask').mockResolvedValue({} as never);
+    const next = await service.tick(graph.goal.id);
+    expect(next.nodeId).toBe(unrelated.id);
+    expect((await service.graph(graph.goal.id)).goal.status).not.toBe('paused');
   });
 
   it('reports the effects a tick actually produced, not just its outcome', async () => {

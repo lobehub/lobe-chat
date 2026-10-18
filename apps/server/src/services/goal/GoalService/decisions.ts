@@ -19,7 +19,7 @@ import { GoalModel } from '@/database/models/goal';
 import { GoalGraphModel } from '@/database/models/goalGraph';
 import { TaskModel } from '@/database/models/task';
 
-import { GOAL_ACCEPTANCE_TASK_TITLE } from '../decideNextMove';
+import { collectStrandedDependents, GOAL_ACCEPTANCE_TASK_TITLE } from '../decideNextMove';
 import { answeredProblem, GoalManagerService, problemKey } from '../manager';
 import { GoalSupervisorService } from '../supervisor';
 import type { GoalServiceContext } from './types';
@@ -189,6 +189,20 @@ export const decide = async (
         });
     } else if (effect === 'retire') {
       await ctx.graphModel.updateNodeStatus(goalId, source.id, 'retired', resolution);
+      // Same rule `retireNodes` enforces: whatever still waits on the retired
+      // node leaves with it, or it would block the goal on a prerequisite
+      // that can no longer resolve. The gate's Retire option names them.
+      const stranded = collectStrandedDependents(graph, [source.id]);
+      for (const node of stranded) {
+        await ctx.graphModel.updateNodeStatus(
+          goalId,
+          node.id,
+          'retired',
+          `Retired with its prerequisite "${source.title}"`,
+        );
+      }
+      if (stranded.length > 0)
+        await ctx.stopFencedTasks(goalId, new Set(stranded.map((node) => node.id)));
     }
   }
   // Ending the terminal acceptance ends the Goal: `fail` is a verdict that
@@ -415,6 +429,17 @@ export const openFailureDecisionLocked = async (
     // Goal is a verdict even when a machine problem is what stopped it.
     const machine = !!gate.machine && !terminalAcceptance;
     const { ask } = gate;
+    // Retiring this node retires what waits on it too; say so on the button.
+    const stranded = terminalAcceptance ? [] : collectStrandedDependents(graph, [nodeId]);
+    const retireTask: GoalDecisionOption = {
+      id: 'retire',
+      label: 'Retire task',
+      ...(stranded.length > 0 && {
+        description: `Also retires the tasks that depend on it: ${stranded
+          .map((node) => `"${node.title}"`)
+          .join(', ')}`,
+      }),
+    };
     const node = await ctx.coordinatorGraph.createNode(graph.goal.id, {
       // What the gate stands on: the main Agent's diagnosis when it asked,
       // else the coordinator's own reason for stopping.
@@ -441,10 +466,7 @@ export const openFailureDecisionLocked = async (
           : {
               authority: 'user',
               options: machine
-                ? [
-                    { id: 'retry', label: 'I fixed it — retry' },
-                    { id: 'retire', label: 'Retire task' },
-                  ]
+                ? [{ id: 'retry', label: 'I fixed it — retry' }, retireTask]
                 : terminalAcceptance
                   ? [
                       { id: 'retry', label: 'Retry goal acceptance' },
@@ -453,10 +475,7 @@ export const openFailureDecisionLocked = async (
                       { id: 'retire', label: 'Abandon goal acceptance' },
                       { id: 'fail', label: 'Fail goal' },
                     ]
-                  : [
-                      { id: 'retry', label: 'Retry task' },
-                      { id: 'retire', label: 'Retire task' },
-                    ],
+                  : [{ id: 'retry', label: 'Retry task' }, retireTask],
               question: machine
                 ? `${reason}. Fix it, then retry or retire this task node?`
                 : terminalAcceptance

@@ -2388,6 +2388,10 @@ export default {
   'goalProcess.northStar.detail.trendEmpty': 'The trend appears after a second observation',
   'goalProcess.northStar.edit.submit': 'Save',
   'goalProcess.northStar.edit.title': 'Adjust target',
+  'goalProcess.northStar.remove.confirm':
+    'Remove "{{name}}"? It will no longer gate this goal\'s acceptance. Recorded observations are kept.',
+  'goalProcess.northStar.remove.failed': 'Failed to remove the metric',
+  'goalProcess.northStar.remove.title': 'Remove metric',
   'goalProcess.frontier.add': 'Add task',
   'goalProcess.frontier.needsYou': '{{count}} need you',
   'goalProcess.frontier.advanceable': '{{count}} can advance',

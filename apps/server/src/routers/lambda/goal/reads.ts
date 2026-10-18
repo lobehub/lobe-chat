@@ -186,6 +186,17 @@ export const readRouter = router({
       }
     }),
   /**
+   * Each declared measured clause with the value the acceptance gate reads for
+   * it now. `lh goal show` / `lh goal metric list` render it.
+   */
+  metricState: goalProcedure.input(idInput).query(async ({ ctx, input }) => {
+    try {
+      return { data: await ctx.goalService.metricState(input.id), success: true };
+    } catch (error) {
+      mapGoalError(error, 'read the metrics of');
+    }
+  }),
+  /**
    * Why `submitPlan` would accept or refuse a plan right now, without writing.
    *
    * `lh goal state` renders it and a refused `lh goal plan` re-reads it, so the
@@ -216,7 +227,7 @@ export const readRouter = router({
     }
   }),
 
-  // The same three reads for a planning run that holds an operation token, which
+  // The same reads for a planning run that holds an operation token, which
   // the ordinary `goalProcedure` above refuses — see `goalOperationReadProcedure`.
   graphOperation: goalOperationReadProcedure.input(idInput).query(async ({ ctx, input }) => {
     try {
@@ -224,6 +235,14 @@ export const readRouter = router({
       return { data: await ctx.goalService.graph(input.id), success: true };
     } catch (error) {
       mapGoalError(error, 'graph');
+    }
+  }),
+  metricStateOperation: goalOperationReadProcedure.input(idInput).query(async ({ ctx, input }) => {
+    try {
+      await ctx.goalManager.assertOperationOwnsTurn(input.id, ctx.heteroOperationId);
+      return { data: await ctx.goalService.metricState(input.id), success: true };
+    } catch (error) {
+      mapGoalError(error, 'read the metrics of');
     }
   }),
   planContextOperation: goalOperationReadProcedure

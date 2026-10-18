@@ -28,7 +28,7 @@ describe('buildGoalManagerPrompt', () => {
     'keeps supervision language tied to the goal rather than the English control prompt: %s',
     (requirement) => {
       const prompt = buildGoalManagerPrompt({ ...base, requirement });
-      expect(GOAL_MANAGER_PROMPT_VERSION).toBe('v11');
+      expect(GOAL_MANAGER_PROMPT_VERSION).toBe('v12');
       expect(cdataOf(prompt, 'requirement')).toBe(requirement);
       expect(prompt).toContain('Use the language of the Goal requirement');
       expect(prompt).toContain(
@@ -152,7 +152,7 @@ describe('buildGoalManagerPrompt', () => {
     });
 
     expect(prompt.split('\n')[0]).toBe(
-      '<goalTurn goal="goal_1" maxTurns="12" trigger="settled" turn="3" version="v11">',
+      '<goalTurn goal="goal_1" maxTurns="12" trigger="settled" turn="3" version="v12">',
     );
     expect(prompt.endsWith('</goalTurn>')).toBe(true);
     // CommonMark ends an HTML block at a blank line; the client needs one block.
@@ -216,5 +216,13 @@ describe('buildGoalManagerPrompt', () => {
     expect(prompt.match(/<\/goalTurn>/g)).toHaveLength(1);
     expect(prompt).toContain(']]]]><![CDATA[>');
     expect(prompt).toContain('<]]><![CDATA[/goalTurn>');
+  });
+
+  it('reads measured acceptance from recorded values, not from task conclusions', () => {
+    // A planner that only saw the declared clause re-submitted verify three
+    // times against a gate no decision answer could clear.
+    const prompt = buildGoalManagerPrompt(base);
+    expect(prompt).toContain('the "metrics" field of lh goal show');
+    expect(prompt).toContain('lh goal metric record');
   });
 });

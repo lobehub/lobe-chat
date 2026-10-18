@@ -453,6 +453,16 @@ export class GoalActionImpl {
   };
 
   /**
+   * Drop one clause so it no longer gates acceptance. Its observations stay in
+   * the series; the server reopens a goal this clause alone was parking.
+   */
+  removeGoalMetric = async (goalId: string, key: string): Promise<void> => {
+    await goalService.removeMetricCriteria(goalId, [key]);
+    await this.refreshGoalGraph(goalId);
+    await this.refreshGoalMetricSeries(goalId);
+  };
+
+  /**
    * Record a measurement against the goal. The server schedules an advance
    * when the observation clears the gate, so the graph refresh may come back
    * already reopened.

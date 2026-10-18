@@ -317,4 +317,49 @@ describe('GoalService', () => {
       criteria: [{ key: 'churn', met: false, op: 'lte', target: 5, value: 9 }],
     });
   });
+
+  it('reports each clause with the value the gate reads, before the terminal phase', async () => {
+    // The graph carries only declarations: without this read a planning Agent
+    // could not tell an unmeasured clause from one a person already recorded.
+    const service = new GoalService(serverDB, userId);
+    const graph = await service.create({
+      config: {
+        acceptance: {
+          metrics: [
+            { key: 'latency_ms', op: 'lte', target: 16.7, title: 'Input latency' },
+            { key: 'accuracy', target: 99 },
+          ],
+        },
+      },
+      tasks: ['Measure'],
+      title: 'Metric state',
+    });
+    await service.recordObservation(graph.goal.id, { key: 'latency_ms', value: 5 });
+
+    expect(await service.metricState(graph.goal.id)).toMatchObject({
+      allMet: false,
+      criteria: [
+        { key: 'latency_ms', met: true, title: 'Input latency', value: 5 },
+        { key: 'accuracy', met: false, value: null },
+      ],
+    });
+  });
+
+  it('removes a clause by key and reopens a goal it alone was parking', async () => {
+    vi.spyOn(TaskRunnerService.prototype, 'runTask').mockResolvedValue({} as never);
+    const service = new GoalService(serverDB, userId);
+    const goalModel = new GoalModel(serverDB, userId);
+    const goalId = await parkedOnGate(service);
+    await service.setMetricCriteria(goalId, [{ key: 'churn', op: 'lte', target: 5 }], 'merge');
+
+    await service.removeMetricCriteria(goalId, ['followers']);
+    const kept = await goalModel.findById(goalId);
+    expect(kept?.config?.acceptance?.metrics).toEqual([{ key: 'churn', op: 'lte', target: 5 }]);
+    expect(kept?.status).toBe('paused');
+
+    await service.removeMetricCriteria(goalId, ['churn']);
+    const cleared = await goalModel.findById(goalId);
+    expect(cleared?.config?.acceptance?.metrics).toBeUndefined();
+    expect(cleared?.status).toBe('running');
+  });
 });

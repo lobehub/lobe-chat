@@ -64,6 +64,10 @@ class GoalService {
     mode?: 'merge' | 'replace',
   ) => lambdaClient.goal.setMetricCriteria.mutate({ id, metrics, mode });
 
+  /** Drop declared clauses by key, against the server's current list. */
+  removeMetricCriteria = async (id: string, keys: string[]) =>
+    lambdaClient.goal.removeMetricCriteria.mutate({ id, keys });
+
   recordObservation = async (
     id: string,
     observation: { key: string; observedAt?: Date; title?: string; unit?: string; value: number },
