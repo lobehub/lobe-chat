@@ -1,7 +1,7 @@
 import type { AgentStreamEvent } from '@lobechat/agent-gateway-client';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { streamAgentEventsViaWebSocket } from './agentStream';
+import { streamAgentEvents } from './agentStream';
 import type { AgentHistoryPage } from './agentStreamTransport';
 import { consumeAgentStream } from './agentStreamTransport';
 
@@ -99,7 +99,7 @@ describe('recoverable WebSocket transport', () => {
       ...Array.from({ length: 1100 }, (_, i) => event(i + 2, 'stream_chunk', String(i))),
       event(1102, 'agent_runtime_end'),
     );
-    const done = streamAgentEventsViaWebSocket({ ...options(), json: true });
+    const done = streamAgentEvents({ ...options(), json: true });
     await flush();
     await expect(done).resolves.toMatchObject({ kind: 'completed' });
     expect(JSON.parse(String(consoleLog.mock.calls[0][0]))).toHaveLength(1102);
@@ -110,7 +110,7 @@ describe('recoverable WebSocket transport', () => {
 
   it('reconnects with backoff and recovers missed output exactly once', async () => {
     journal.push(event(2, 'stream_chunk', 'before'));
-    const done = streamAgentEventsViaWebSocket(options());
+    const done = streamAgentEvents(options());
     await flush();
     sockets[0].disconnect();
     journal.push(event(3, 'stream_chunk', 'after'));
@@ -131,7 +131,7 @@ describe('recoverable WebSocket transport', () => {
   });
 
   it('recovers a lost terminal notification from the journal without treating session_complete as success', async () => {
-    const done = streamAgentEventsViaWebSocket({ ...options(), json: true });
+    const done = streamAgentEvents({ ...options(), json: true });
     const settled = vi.fn();
     done.then(settled, settled);
     await flush();
@@ -145,7 +145,7 @@ describe('recoverable WebSocket transport', () => {
   });
 
   it('retries a transient history read without losing cursor or printing partial JSON', async () => {
-    const done = streamAgentEventsViaWebSocket({ ...options(), json: true });
+    const done = streamAgentEvents({ ...options(), json: true });
     await flush();
     readHistory.mockRejectedValueOnce(new Error('temporary outage'));
     sockets[0].message({ type: 'agent_event' });
@@ -165,7 +165,7 @@ describe('recoverable WebSocket transport', () => {
       hasMore: false,
       nextCursor: '0',
     });
-    const done = streamAgentEventsViaWebSocket({ ...options(), json: true });
+    const done = streamAgentEvents({ ...options(), json: true });
     const failure = expect(done).rejects.toMatchObject({ name: 'AgentStreamHistoryError' });
     await flush();
     await failure;
@@ -201,7 +201,7 @@ describe('recoverable WebSocket transport', () => {
         token: 'refreshed',
         tokenType: 'jwt',
       });
-    const done = streamAgentEventsViaWebSocket({ ...options(), getAuth });
+    const done = streamAgentEvents({ ...options(), getAuth });
     await flush();
     sockets[0].disconnect();
     await vi.advanceTimersByTimeAsync(1000);
@@ -219,7 +219,7 @@ describe('recoverable WebSocket transport', () => {
       abortedSignal = signal;
       return new Promise(() => {});
     });
-    const done = streamAgentEventsViaWebSocket({ ...options(), json: true });
+    const done = streamAgentEvents({ ...options(), json: true });
     await flush();
     await vi.advanceTimersByTimeAsync(10_000);
     expect(abortedSignal?.aborted).toBe(true);

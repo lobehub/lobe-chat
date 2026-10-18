@@ -3,21 +3,21 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { AgentStreamHistoryError } from '../../utils/agentStreamTransport';
 import { followAgentRun } from './followRun';
 
-const { getTrpcClient, historyQuery, streamAgentEventsViaWebSocket } = vi.hoisted(() => {
+const { getTrpcClient, historyQuery, streamAgentEvents } = vi.hoisted(() => {
   const historyQuery = vi.fn();
   return {
     getTrpcClient: vi.fn(async () => ({
       aiAgent: { getOperationStreamHistory: { query: historyQuery } },
     })),
     historyQuery,
-    streamAgentEventsViaWebSocket: vi.fn(),
+    streamAgentEvents: vi.fn(),
   };
 });
 
 vi.mock('../../api/client', () => ({ getTrpcClient }));
 vi.mock('../../api/http', () => ({ getAgentStreamAuthInfo: vi.fn() }));
 vi.mock('../../settings', () => ({ resolveAgentGatewayUrl: () => 'https://gateway.test' }));
-vi.mock('../../utils/agentStream', () => ({ streamAgentEventsViaWebSocket }));
+vi.mock('../../utils/agentStream', () => ({ streamAgentEvents }));
 vi.mock('../../utils/logger', () => ({ log: { error: vi.fn() } }));
 
 describe('followAgentRun', () => {
@@ -32,7 +32,7 @@ describe('followAgentRun', () => {
   });
 
   it('reads history pages through the credential-refreshing tRPC client', async () => {
-    streamAgentEventsViaWebSocket.mockImplementation(async ({ readHistory }) => {
+    streamAgentEvents.mockImplementation(async ({ readHistory }) => {
       await readHistory('1-0', new AbortController().signal);
       return { kind: 'completed', status: 'done' };
     });
@@ -47,13 +47,13 @@ describe('followAgentRun', () => {
   });
 
   it('resolves an incomplete history as an unknown outcome, never a success', async () => {
-    streamAgentEventsViaWebSocket.mockRejectedValue(new AgentStreamHistoryError('History expired'));
+    streamAgentEvents.mockRejectedValue(new AgentStreamHistoryError('History expired'));
 
     await expect(followAgentRun('op-1')).resolves.toEqual({ kind: 'unknown' });
   });
 
   it('rethrows other failures so the caller can choose a fallback', async () => {
-    streamAgentEventsViaWebSocket.mockRejectedValue(new Error('boom'));
+    streamAgentEvents.mockRejectedValue(new Error('boom'));
 
     await expect(followAgentRun('op-1')).rejects.toThrow('boom');
   });

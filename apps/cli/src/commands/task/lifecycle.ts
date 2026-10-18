@@ -202,7 +202,7 @@ export function registerLifecycleCommands(task: Command) {
           }
 
           // Connect to the gateway WebSocket and wait for completion
-          const outcome = await followAgentRun(result.operationId, {
+          const outcome = await followAgentRun(operationId, {
             json: options.json,
             verbose: options.verbose,
           });

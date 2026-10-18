@@ -331,11 +331,12 @@ class GatewayWakeChannel {
  *
  * `done` resolves after the terminal event and rejects only with
  * `AgentStreamHistoryError`: any failure means the output may be incomplete.
+ * `abort` lets the consumer end the stream as incomplete (e.g. a stall check).
  */
 export const consumeAgentStream = (
   options: AgentStreamTransportOptions,
   onEvent: (event: AgentStreamEvent) => boolean,
-): { close: () => void; done: Promise<void> } => {
+): { abort: (error: Error) => void; close: () => void; done: Promise<void> } => {
   const resolved = { ...options, maxRetries: options.maxRetries ?? DEFAULT_MAX_RETRIES };
   let stopped = false;
   let resolveDone: () => void;
@@ -375,5 +376,5 @@ export const consumeAgentStream = (
   };
 
   gateway.connect();
-  return { close, done };
+  return { abort: fail, close, done };
 };

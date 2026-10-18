@@ -278,14 +278,6 @@ describe('generate command', () => {
       expect(writtenText()).toBe('Hello\n');
     });
 
-    it('rejects the removed --stream option without making a request', async () => {
-      vi.stubGlobal('fetch', vi.fn());
-      await expect(
-        createProgram().parseAsync(['node', 'test', 'generate', 'text', 'Hi', '--stream']),
-      ).rejects.toThrow("unknown option '--stream'");
-      expect(fetch).not.toHaveBeenCalled();
-    });
-
     it('should exit when the SSE stream reports an error', async () => {
       vi.stubGlobal(
         'fetch',

@@ -14,7 +14,7 @@ interface StreamOptions {
   verbose?: boolean;
 }
 
-interface WebSocketStreamOptions extends StreamOptions, AgentStreamTransportOptions {
+interface FollowStreamOptions extends StreamOptions, AgentStreamTransportOptions {
   /**
    * Called when the stream has carried no progress for `stallTimeoutMs`. A
    * gateway can keep a connection alive with heartbeats while never
@@ -95,45 +95,53 @@ export function replayAgentEvents(
 }
 
 /**
- * Follow an operation's events (Gateway WebSocket wake-ups + server journal)
- * and render them to the terminal. Resolves with the outcome of the terminal
- * event; rejects with `AgentStreamHistoryError` when the complete event
- * history cannot be confirmed.
+ * Consult `onStall` whenever `timeoutMs` passes without progress. Re-arms while
+ * the run is still active; a terminal status (or a failed check) means the
+ * journal will never deliver the terminal event, so the stream is incomplete.
  */
-export async function streamAgentEventsViaWebSocket(
-  options: WebSocketStreamOptions,
+const watchForStall = (
+  timeoutMs: number,
+  onStall: () => Promise<AgentRunOutcome | undefined>,
+  onIncomplete: (error: AgentStreamHistoryError) => void,
+) => {
+  let stopped = false;
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  const arm = () => {
+    if (stopped) return;
+    clearTimeout(timer);
+    timer = setTimeout(async () => {
+      let message = 'Run status is terminal but the complete event history has no terminal event';
+      try {
+        if (!(await onStall())) return arm();
+      } catch (error) {
+        message = error instanceof Error ? error.message : String(error);
+      }
+      if (!stopped) onIncomplete(new AgentStreamHistoryError(message));
+    }, timeoutMs);
+  };
+  const stop = () => {
+    stopped = true;
+    clearTimeout(timer);
+  };
+  arm();
+  return { arm, stop };
+};
+
+/**
+ * Follow an operation's events (server journal, woken by the Gateway
+ * WebSocket) and render them to the terminal. Resolves with the outcome of the
+ * terminal event; rejects with `AgentStreamHistoryError` when the complete
+ * event history cannot be confirmed.
+ */
+export async function streamAgentEvents(
+  options: FollowStreamOptions,
 ): Promise<AgentRunOutcome | undefined> {
-  const { onStall } = options;
   const jsonEvents: AgentStreamEvent[] = [];
   const ctx = createRenderContext();
   let outcome: AgentRunOutcome | undefined;
-  let stallTimer: ReturnType<typeof setTimeout> | undefined;
-  let finished = false;
-  let rejectStall: (error: Error) => void;
-  const stalled = new Promise<never>((_, reject) => {
-    rejectStall = reject;
-  });
-  const armStallTimer = () => {
-    if (!onStall) return;
-    clearTimeout(stallTimer);
-    stallTimer = setTimeout(async () => {
-      let message = 'Run status is terminal but the complete event history has no terminal event';
-      try {
-        const result = await onStall();
-        if (finished) return;
-        if (!result) {
-          armStallTimer();
-          return;
-        }
-      } catch (error) {
-        if (finished) return;
-        message = error instanceof Error ? error.message : String(error);
-      }
-      rejectStall(new AgentStreamHistoryError(message));
-    }, options.stallTimeoutMs ?? STALL_TIMEOUT);
-  };
+
   const transport = consumeAgentStream(options, (event) => {
-    armStallTimer();
+    stall?.arm();
     if (options.json) jsonEvents.push(event);
     else renderEvent(event, ctx, options);
     if (event.type === 'agent_runtime_end') {
@@ -148,13 +156,15 @@ export async function streamAgentEventsViaWebSocket(
     }
     return false;
   });
-  armStallTimer();
+  const stall =
+    options.onStall &&
+    watchForStall(options.stallTimeoutMs ?? STALL_TIMEOUT, options.onStall, transport.abort);
+
   try {
-    await Promise.race([transport.done, stalled]);
+    await transport.done;
     return outcome;
   } finally {
-    finished = true;
-    clearTimeout(stallTimer);
+    stall?.stop();
     transport.close();
     if (options.json) console.log(JSON.stringify(jsonEvents, null, 2));
   }

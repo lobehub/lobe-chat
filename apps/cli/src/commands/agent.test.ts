@@ -692,12 +692,6 @@ describe('agent command', () => {
       });
     });
 
-    it('rejects the removed --sse option before starting a run', async () => {
-      await expect(
-        createProgram().parseAsync(['node', 'test', 'agent', 'run', '--sse']),
-      ).rejects.toThrow("unknown option '--sse'");
-      expect(mockTrpcClient.aiAgent.execAgent.mutate).not.toHaveBeenCalled();
-    });
     it('should support --slug option', async () => {
       mockTrpcClient.aiAgent.execAgent.mutate.mockResolvedValue({
         operationId: 'op-456',

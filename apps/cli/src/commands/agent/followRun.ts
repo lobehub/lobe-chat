@@ -2,13 +2,13 @@ import { getTrpcClient } from '../../api/client';
 import { getAgentStreamAuthInfo } from '../../api/http';
 import { resolveAgentGatewayUrl } from '../../settings';
 import type { AgentRunOutcome } from '../../utils/agentRunOutcome';
-import { streamAgentEventsViaWebSocket } from '../../utils/agentStream';
+import { streamAgentEvents } from '../../utils/agentStream';
 import { AgentStreamHistoryError } from '../../utils/agentStreamTransport';
 import { log } from '../../utils/logger';
 
 interface FollowAgentRunOptions {
   json?: boolean;
-  /** See `streamAgentEventsViaWebSocket`; omit for runs where long silence is healthy. */
+  /** See `streamAgentEvents`; omit for runs where long silence is healthy. */
   onStall?: () => Promise<AgentRunOutcome | undefined>;
   verbose?: boolean;
 }
@@ -28,7 +28,7 @@ export const followAgentRun = async (
   if (!gatewayUrl) throw new Error('Agent gateway URL is not configured');
 
   try {
-    const outcome = await streamAgentEventsViaWebSocket({
+    const outcome = await streamAgentEvents({
       ...options,
       gatewayUrl,
       getAuth: () => getAgentStreamAuthInfo(),

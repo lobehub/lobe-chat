@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import type { AgentStreamEvent } from './agentStream';
-import { replayAgentEvents, streamAgentEventsViaWebSocket as streamImpl } from './agentStream';
+import { replayAgentEvents, streamAgentEvents as streamImpl } from './agentStream';
 import type { AgentHistoryPage, AgentStreamAuth } from './agentStreamTransport';
 
 type StreamOptions = Parameters<typeof streamImpl>[0];
@@ -21,7 +21,7 @@ const testAuth: AgentStreamAuth = {
   tokenType: 'jwt',
 };
 
-const streamAgentEventsViaWebSocket = (
+const streamAgentEvents = (
   options: Partial<StreamOptions> & Pick<StreamOptions, 'gatewayUrl' | 'operationId'>,
 ) =>
   streamImpl({
@@ -102,7 +102,7 @@ class MockWebSocket {
   }
 }
 
-describe('streamAgentEventsViaWebSocket', () => {
+describe('streamAgentEvents', () => {
   let stdoutSpy: ReturnType<typeof vi.spyOn>;
   let consoleSpy: ReturnType<typeof vi.spyOn>;
   const originalWebSocket = globalThis.WebSocket;
@@ -128,7 +128,7 @@ describe('streamAgentEventsViaWebSocket', () => {
     emit({ data: { reason: 'done', ...data }, type: 'agent_runtime_end' });
 
   it('should connect, authenticate with fresh credentials, and send resume', async () => {
-    const promise = streamAgentEventsViaWebSocket({
+    const promise = streamAgentEvents({
       gatewayUrl: 'https://gw.test.com',
       operationId: 'op-1',
     });
@@ -146,7 +146,7 @@ describe('streamAgentEventsViaWebSocket', () => {
   });
 
   it('should send tokenType=apiKey and serverUrl when the caller uses an API key', async () => {
-    const promise = streamAgentEventsViaWebSocket({
+    const promise = streamAgentEvents({
       gatewayUrl: 'https://gw.test.com',
       // `getAgentStreamAuthInfo` also returns HTTP headers; they must not reach the gateway.
       getAuth: async () =>
@@ -176,7 +176,7 @@ describe('streamAgentEventsViaWebSocket', () => {
   });
 
   it('should render journal events woken by agent_event notifications', async () => {
-    const promise = streamAgentEventsViaWebSocket({
+    const promise = streamAgentEvents({
       gatewayUrl: 'https://gw.test.com',
       operationId: 'op-1',
     });
@@ -192,7 +192,7 @@ describe('streamAgentEventsViaWebSocket', () => {
   });
 
   it('should output JSON when json option is set', async () => {
-    const promise = streamAgentEventsViaWebSocket({
+    const promise = streamAgentEvents({
       gatewayUrl: 'https://gw.test.com',
       json: true,
       operationId: 'op-1',
@@ -231,7 +231,7 @@ describe('streamAgentEventsViaWebSocket', () => {
     };
 
     await expect(
-      streamAgentEventsViaWebSocket({
+      streamAgentEvents({
         gatewayUrl: 'https://gw.test.com',
         operationId: 'op-1',
       }),
@@ -239,7 +239,7 @@ describe('streamAgentEventsViaWebSocket', () => {
   });
 
   it('should reject once reconnects are exhausted after onerror', async () => {
-    const promise = streamAgentEventsViaWebSocket({
+    const promise = streamAgentEvents({
       gatewayUrl: 'https://gw.test.com',
       operationId: 'op-1',
     });
@@ -251,7 +251,7 @@ describe('streamAgentEventsViaWebSocket', () => {
   });
 
   it('should reject once reconnects are exhausted after the socket closes', async () => {
-    const promise = streamAgentEventsViaWebSocket({
+    const promise = streamAgentEvents({
       gatewayUrl: 'https://gw.test.com',
       operationId: 'op-1',
     });
@@ -266,7 +266,7 @@ describe('streamAgentEventsViaWebSocket', () => {
   });
 
   it('should resolve from the journal terminal on session_complete', async () => {
-    const promise = streamAgentEventsViaWebSocket({
+    const promise = streamAgentEvents({
       gatewayUrl: 'https://gw.test.com',
       operationId: 'op-1',
     });
@@ -286,7 +286,7 @@ describe('streamAgentEventsViaWebSocket', () => {
   });
 
   it('should ignore heartbeat_ack messages', async () => {
-    const promise = streamAgentEventsViaWebSocket({
+    const promise = streamAgentEvents({
       gatewayUrl: 'https://gw.test.com',
       operationId: 'op-1',
     });
@@ -301,7 +301,7 @@ describe('streamAgentEventsViaWebSocket', () => {
   });
 
   it('should construct correct WebSocket URL from HTTPS gateway URL', async () => {
-    const promise = streamAgentEventsViaWebSocket({
+    const promise = streamAgentEvents({
       gatewayUrl: 'https://agent-gateway.lobehub.com',
       operationId: 'op-123',
     });
@@ -322,7 +322,7 @@ describe('streamAgentEventsViaWebSocket', () => {
   });
 
   it('should render a multi-step agent run with tool calls', async () => {
-    const promise = streamAgentEventsViaWebSocket({
+    const promise = streamAgentEvents({
       gatewayUrl: 'https://gw.test.com',
       operationId: 'op-1',
       verbose: true,
@@ -452,7 +452,7 @@ describe('run outcome of the live stream (#19543 #19613 #19615)', () => {
     ['interrupted', 'interrupted', 'Agent interrupted'],
   ])('agent_runtime_end reason=%s', (reason, kind, label) => {
     it(`WebSocket resolves ${kind} and prints "${label}"`, async () => {
-      const promise = streamAgentEventsViaWebSocket({
+      const promise = streamAgentEvents({
         gatewayUrl: 'https://gw.test.com',
         operationId: 'op-1',
       });
@@ -466,7 +466,7 @@ describe('run outcome of the live stream (#19543 #19613 #19615)', () => {
   });
 
   it('resolves an error event as a failed outcome instead of exiting the process', async () => {
-    const promise = streamAgentEventsViaWebSocket({
+    const promise = streamAgentEvents({
       gatewayUrl: 'https://gw.test.com',
       operationId: 'op-1',
     });
@@ -512,7 +512,7 @@ describe('run outcome of the live stream (#19543 #19613 #19615)', () => {
       .mockResolvedValueOnce(undefined) // still running → keep streaming
       .mockResolvedValueOnce({ kind: 'completed', status: 'done' });
 
-    const promise = streamAgentEventsViaWebSocket({
+    const promise = streamAgentEvents({
       gatewayUrl: 'https://gw.test.com',
       onStall,
       operationId: 'op-1',
@@ -535,7 +535,7 @@ describe('run outcome of the live stream (#19543 #19613 #19615)', () => {
   it('real stream progress restarts the quiet window, so a slow healthy run is not probed', async () => {
     vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout', 'setInterval', 'clearInterval'] });
     const onStall = vi.fn();
-    const promise = streamAgentEventsViaWebSocket({
+    const promise = streamAgentEvents({
       gatewayUrl: 'https://gw.test.com',
       onStall,
       operationId: 'op-1',
@@ -569,7 +569,7 @@ describe('run outcome of the live stream (#19543 #19613 #19615)', () => {
       return handle;
     }) as any);
 
-    const promise = streamAgentEventsViaWebSocket({
+    const promise = streamAgentEvents({
       gatewayUrl: 'https://gw.test.com',
       operationId: 'op-1',
     });
@@ -621,7 +621,7 @@ describe('--json prints exactly one array, even when no event arrived', () => {
     };
 
     await expect(
-      streamAgentEventsViaWebSocket({
+      streamAgentEvents({
         gatewayUrl: 'https://gw.test.com',
         json: true,
         operationId: 'op-1',
@@ -633,7 +633,7 @@ describe('--json prints exactly one array, even when no event arrived', () => {
 
   it('an expired journal before any event prints [] once', async () => {
     await expect(
-      streamAgentEventsViaWebSocket({
+      streamAgentEvents({
         gatewayUrl: 'https://gw.test.com',
         json: true,
         operationId: 'op-1',
