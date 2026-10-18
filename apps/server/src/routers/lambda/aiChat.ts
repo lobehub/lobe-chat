@@ -17,7 +17,7 @@ import { LOADING_FLAT } from '@/const/message';
 import { AgentModel } from '@/database/models/agent';
 import { MessageModel } from '@/database/models/message';
 import { ThreadModel } from '@/database/models/thread';
-import { TopicModel } from '@/database/models/topic';
+import { TopicRepository } from '@/database/repositories/topic';
 import { router } from '@/libs/trpc/lambda';
 import { serverDatabase } from '@/libs/trpc/lambda/middleware';
 import { markSilentTRPCErrorLog } from '@/libs/trpc/utils/errorLogger';
@@ -137,7 +137,7 @@ const aiChatProcedure = wsCompatProcedure.use(serverDatabase).use(async (opts) =
       fileService: new FileService(ctx.serverDB, ctx.userId, wsId),
       messageModel: new MessageModel(ctx.serverDB, ctx.userId, wsId),
       threadModel: new ThreadModel(ctx.serverDB, ctx.userId, wsId),
-      topicModel: new TopicModel(ctx.serverDB, ctx.userId, wsId),
+      topicRepo: new TopicRepository(ctx.serverDB, ctx.userId, wsId),
     },
   });
 });
@@ -267,8 +267,8 @@ export const aiChatRouter = router({
             // conversation under; honour it so the topic never changes id
             // mid-flight. Absent (older client) → the model mints one.
             return modelTiming
-              ? ctx.topicModel.create(payload, input.newTopic!.id, modelTiming)
-              : ctx.topicModel.create(payload, input.newTopic!.id);
+              ? ctx.topicRepo.create(payload, input.newTopic!.id, modelTiming)
+              : ctx.topicRepo.create(payload, input.newTopic!.id);
           },
           {
             messageCount: input.newTopic.topicMessageIds?.length ?? 0,

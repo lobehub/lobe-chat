@@ -30,6 +30,7 @@ import { TaskModel } from '@/database/models/task';
 import { ThreadModel } from '@/database/models/thread';
 import { TopicModel } from '@/database/models/topic';
 import { UserModel } from '@/database/models/user';
+import { TopicRepository } from '@/database/repositories/topic';
 import { createStreamEventManager } from '@/server/modules/AgentRuntime/factory';
 import { AgentService } from '@/server/services/agent';
 import { AgentDocumentsService } from '@/server/services/agentDocuments';
@@ -540,7 +541,10 @@ export class AiAgentService {
     // - no topicId is provided (default behavior for group chat)
     if (newTopic || !inputTopicId) {
       topicId = await createGroupAgentTopic(
-        { ...this.precreatedTopicDeps(), topicModel: this.topicModel },
+        {
+          ...this.precreatedTopicDeps(),
+          topicRepo: new TopicRepository(this.db, this.userId, this.workspaceId),
+        },
         { agentId, groupId, message, newTopic },
       );
       isCreateNewTopic = true;

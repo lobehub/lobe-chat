@@ -4,14 +4,14 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { getTestDB } from '../../../core/getTestDB';
 import { agents, messages, sessions, threads, topics, users } from '../../../schemas';
 import type { LobeChatDatabase } from '../../../type';
-import { TopicModel } from '../../topic';
+import { TopicRepository } from '../index';
 
 const userId = 'topic-move-user';
 const otherUserId = 'topic-move-user-2';
 const serverDB: LobeChatDatabase = await getTestDB();
-const topicModel = new TopicModel(serverDB, userId);
+const topicRepo = new TopicRepository(serverDB, userId);
 
-describe('TopicModel - batchMoveToAgent', () => {
+describe('TopicRepository - batchMoveToAgent', () => {
   beforeEach(async () => {
     await serverDB.delete(users);
     await serverDB.transaction(async (tx) => {
@@ -42,7 +42,7 @@ describe('TopicModel - batchMoveToAgent', () => {
       ]);
     });
 
-    await topicModel.batchMoveToAgent(['topic-1', 'topic-2'], 'target-agent');
+    await topicRepo.batchMoveToAgent(['topic-1', 'topic-2'], 'target-agent');
 
     const movedTopics = await serverDB
       .select()
@@ -89,7 +89,7 @@ describe('TopicModel - batchMoveToAgent', () => {
       ]);
     });
 
-    await topicModel.batchMoveToAgent(['topic-t'], 'target-agent');
+    await topicRepo.batchMoveToAgent(['topic-t'], 'target-agent');
 
     // Thread under the moved topic follows the topic to the target agent —
     // critical because threads.agentId is a cascade-on-delete FK.
@@ -119,7 +119,7 @@ describe('TopicModel - batchMoveToAgent', () => {
       ]);
     });
 
-    await topicModel.batchMoveToAgent(['topic-s'], 'target-agent');
+    await topicRepo.batchMoveToAgent(['topic-s'], 'target-agent');
 
     const [topic] = await serverDB.select().from(topics).where(eq(topics.id, 'topic-s'));
     expect(topic.agentId).toBe('target-agent');
@@ -149,7 +149,7 @@ describe('TopicModel - batchMoveToAgent', () => {
       ]);
     });
 
-    await topicModel.batchMoveToAgent(['mine', 'theirs'], 'target-agent');
+    await topicRepo.batchMoveToAgent(['mine', 'theirs'], 'target-agent');
 
     const [theirTopic] = await serverDB.select().from(topics).where(eq(topics.id, 'theirs'));
     expect(theirTopic.agentId).toBe('source-agent');
@@ -174,7 +174,7 @@ describe('TopicModel - batchMoveToAgent', () => {
         ]);
     });
 
-    await expect(topicModel.batchMoveToAgent(['topic-x'], 'foreign-agent')).rejects.toThrow();
+    await expect(topicRepo.batchMoveToAgent(['topic-x'], 'foreign-agent')).rejects.toThrow();
 
     // Transaction rolled back — topic and message still point at the source agent.
     const [topic] = await serverDB.select().from(topics).where(eq(topics.id, 'topic-x'));
@@ -187,9 +187,53 @@ describe('TopicModel - batchMoveToAgent', () => {
   it('is a no-op when given an empty topic list', async () => {
     await serverDB.insert(topics).values([{ id: 'topic-noop', userId, agentId: 'source-agent' }]);
 
-    await topicModel.batchMoveToAgent([], 'target-agent');
+    await topicRepo.batchMoveToAgent([], 'target-agent');
 
     const [topic] = await serverDB.select().from(topics).where(eq(topics.id, 'topic-noop'));
     expect(topic.agentId).toBe('source-agent');
+  });
+
+  it('reassigns agentId, clears sessionId, and moves child messages', async () => {
+    await serverDB.insert(agents).values([
+      { id: 'agent-src', userId },
+      { id: 'agent-dst', userId },
+    ]);
+    await serverDB.insert(topics).values({
+      agentId: 'agent-src',
+      id: 'move-1',
+      sessionId: null,
+      title: 'movable',
+      userId,
+    });
+    await serverDB.insert(messages).values({
+      agentId: 'agent-src',
+      content: 'm',
+      id: 'move-msg',
+      role: 'user',
+      topicId: 'move-1',
+      userId,
+    });
+
+    await topicRepo.batchMoveToAgent(['move-1'], 'agent-dst');
+
+    const [topic] = await serverDB.select().from(topics).where(eq(topics.id, 'move-1'));
+    expect(topic.agentId).toBe('agent-dst');
+    expect(topic.sessionId).toBeNull();
+
+    const [msg] = await serverDB.select().from(messages).where(eq(messages.id, 'move-msg'));
+    expect(msg.agentId).toBe('agent-dst');
+  });
+
+  it('throws when the target agent is not accessible', async () => {
+    await serverDB.insert(agents).values({ id: 'agent-foreign', userId: otherUserId });
+    await serverDB.insert(topics).values({ id: 'move-x', title: 'x', userId });
+
+    await expect(topicRepo.batchMoveToAgent(['move-x'], 'agent-foreign')).rejects.toThrow(
+      'not found or not accessible',
+    );
+  });
+
+  it('is a no-op for an empty id list', async () => {
+    await expect(topicRepo.batchMoveToAgent([], 'whatever')).resolves.toBeUndefined();
   });
 });
