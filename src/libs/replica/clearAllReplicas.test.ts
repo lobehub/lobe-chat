@@ -72,6 +72,41 @@ describe('clearAllReplicas', () => {
     expect(await lazy.storage!.get({ queryKey: 'a', scope: cacheScope.get() })).toBeUndefined();
   });
 
+  it('purges rows an earlier session persisted that this session never loaded', async () => {
+    const rows = new Map<string, { data: unknown; updatedAt: number }>([
+      ['__replica:index', { data: ['old'], updatedAt: 1 }],
+      ['old', { data: 'previous server', updatedAt: 1 }],
+    ]);
+    const persisted = defineReplica<string, string>({
+      key: (id) => id,
+      name: 'clearAllReplicasPurgeTest',
+      storage: {
+        get: async ({ queryKey }) => rows.get(queryKey) as never,
+        getStrict: async ({ queryKey }) => rows.get(queryKey) as never,
+        remove: async ({ queryKey }) => void rows.delete(queryKey),
+        set: async ({ queryKey }, row) => void rows.set(queryKey, row),
+      },
+      version: 1,
+    });
+    const store = createStore<TestState>(() => ({
+      itemMap: {},
+      itemReplica: createReplicaState(),
+    }));
+    createReplicaSlice(persisted, {
+      actionPrefix: 'clearAllReplicasPurgeTest',
+      get: store.getState,
+      set: store.setState,
+      stateKey: 'itemReplica',
+      view: recordLens<TestState, string>('itemMap'),
+    });
+    const canPersist = vi.spyOn(cacheScope, 'canPersist').mockReturnValue(true);
+
+    clearAllReplicas();
+    await vi.waitFor(() => expect(rows.has('old')).toBe(false));
+
+    canPersist.mockRestore();
+  });
+
   it('revalidates every SWR key, including replicas with a custom sync key', () => {
     swrMutate.mockClear();
 

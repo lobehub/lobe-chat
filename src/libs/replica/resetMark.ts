@@ -1,4 +1,4 @@
-import type { ReplicaStorage } from '@lobechat/replica';
+import { REPLICA_INDEX_KEY, type ReplicaStorage } from '@lobechat/replica';
 
 /**
  * Per-scope "data context reset" marks for the persisted replica rows.
@@ -56,8 +56,15 @@ export const resetReplicaScopeMarks = (): void => {
   written.clear();
 };
 
-const isRetired = (scope: string, row: { updatedAt: number } | undefined) =>
-  row !== undefined && row.updatedAt <= readMark(scope);
+/**
+ * The per-scope index row is never hidden: it lists keys, not data, and the
+ * engine enumerates it to purge and evict rows — hiding it would orphan the
+ * previous context's rows outside every future clear.
+ */
+const isRetired = (
+  { queryKey, scope }: { queryKey: string; scope: string },
+  row: { updatedAt: number } | undefined,
+) => row !== undefined && queryKey !== REPLICA_INDEX_KEY && row.updatedAt <= readMark(scope);
 
 type SyncReadable<TData> = ReplicaStorage<TData> & {
   /** Pre-paint read of the localStorage tier (`LocalStorageQueryProjectionStorage`). */
@@ -71,7 +78,7 @@ export const guardResetRows = <TData>(storage: ReplicaStorage<TData>): ReplicaSt
   const guarded: SyncReadable<TData> = {
     get: async (key) => {
       const row = await inner.get(key);
-      return isRetired(key.scope, row) ? undefined : row;
+      return isRetired(key, row) ? undefined : row;
     },
     remove: (key) => inner.remove(key),
     // A row written in the reset's millisecond (or after the clock stepped
@@ -86,13 +93,13 @@ export const guardResetRows = <TData>(storage: ReplicaStorage<TData>): ReplicaSt
   if (inner.getStrict) {
     guarded.getStrict = async (key) => {
       const row = await inner.getStrict!(key);
-      return isRetired(key.scope, row) ? undefined : row;
+      return isRetired(key, row) ? undefined : row;
     };
   }
   if (inner.getSync) {
     guarded.getSync = (key) => {
       const row = inner.getSync!(key) as { updatedAt: number } | undefined;
-      return isRetired(key.scope, row) ? undefined : row;
+      return isRetired(key, row) ? undefined : row;
     };
   }
   return guarded;

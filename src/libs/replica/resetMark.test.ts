@@ -1,4 +1,4 @@
-import type { ReplicaStorage } from '@lobechat/replica';
+import { REPLICA_INDEX_KEY, type ReplicaStorage } from '@lobechat/replica';
 import { beforeEach, describe, expect, it } from 'vitest';
 
 import { guardResetRows, markReplicaScopeReset, resetReplicaScopeMarks } from './resetMark';
@@ -74,6 +74,18 @@ describe('guardResetRows', () => {
     markReplicaScopeReset('u1:ws1', 200);
 
     expect(await storage.get(KEY)).toBeUndefined();
+  });
+
+  it('keeps the index row readable so a purge can still enumerate old rows', async () => {
+    const inner = new PrototypeStorage();
+    const indexKey = { queryKey: REPLICA_INDEX_KEY, scope: 'u1:ws1' };
+    inner.rows.set(REPLICA_INDEX_KEY, { data: '["a"]', updatedAt: 100 });
+    const storage = guardResetRows(inner);
+
+    markReplicaScopeReset('u1:ws1', 200);
+
+    expect(await storage.getStrict!(indexKey)).toEqual({ data: '["a"]', updatedAt: 100 });
+    expect(await storage.get(indexKey)).toEqual({ data: '["a"]', updatedAt: 100 });
   });
 
   it('keeps the mark across a reload', async () => {
