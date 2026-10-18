@@ -2,11 +2,11 @@
 import { eq } from 'drizzle-orm';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
-import { getTestDB } from '../../core/getTestDB';
-import { PolicyLoad } from '../../models/agentDocuments/types';
-import { agentDocuments, agents, documents, users } from '../../schemas';
-import type { LobeChatDatabase } from '../../type';
-import { AgentDocumentRepository } from './index';
+import { getTestDB } from '../../../core/getTestDB';
+import { PolicyLoad } from '../../../models/agentDocuments/types';
+import { agentDocuments, agents, documents, users } from '../../../schemas';
+import type { LobeChatDatabase } from '../../../type';
+import { AgentDocumentRepository } from '../index';
 
 const serverDB: LobeChatDatabase = await getTestDB();
 
