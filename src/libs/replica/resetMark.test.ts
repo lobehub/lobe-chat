@@ -54,6 +54,16 @@ describe('guardResetRows', () => {
     expect(await storage.get(KEY)).toEqual({ data: 'new context', updatedAt: 300 });
   });
 
+  it('stamps a write landing in the reset millisecond past the mark', async () => {
+    const storage = guardResetRows(new PrototypeStorage());
+    markReplicaScopeReset('u1:ws1', 200);
+
+    // Same millisecond as the reset, or a clock that stepped back.
+    await storage.set(KEY, { data: 'new context', updatedAt: 200 });
+
+    expect(await storage.get(KEY)).toEqual({ data: 'new context', updatedAt: 201 });
+  });
+
   it('keeps the mark across a reload', async () => {
     const inner = new PrototypeStorage();
     inner.rows.set('a', { data: 'previous context', updatedAt: 100 });

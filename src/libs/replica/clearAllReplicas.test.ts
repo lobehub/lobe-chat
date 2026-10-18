@@ -72,13 +72,14 @@ describe('clearAllReplicas', () => {
     expect(await lazy.storage!.get({ queryKey: 'a', scope: cacheScope.get() })).toBeUndefined();
   });
 
-  it('revalidates the mounted replica syncs so the new context repaints', () => {
+  it('revalidates every SWR key, including replicas with a custom sync key', () => {
     swrMutate.mockClear();
 
     clearAllReplicas();
 
     const [match] = swrMutate.mock.calls.at(-1) as unknown as [(key: unknown) => boolean];
     expect(match(['replica:sync', 'clearAllReplicasTest', 'q', 'scope', 'a'])).toBe(true);
-    expect(match(['agent', 'list'])).toBe(false);
+    // e.g. the user-memory replicas sync under their own keys.
+    expect(match(['userMemory', 'contexts', { page: 1 }])).toBe(true);
   });
 });

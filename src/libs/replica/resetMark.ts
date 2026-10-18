@@ -64,7 +64,12 @@ export const guardResetRows = <TData>(storage: ReplicaStorage<TData>): ReplicaSt
       return isRetired(key.scope, row) ? undefined : row;
     },
     remove: (key) => inner.remove(key),
-    set: (key, row) => inner.set(key, row),
+    // A row written in the reset's millisecond (or after the clock stepped
+    // back) must still read as post-reset: stamp it past the mark.
+    set: (key, row) => {
+      const mark = readMark(key.scope);
+      return inner.set(key, row.updatedAt > mark ? row : { ...row, updatedAt: mark + 1 });
+    },
   };
   if (inner.getStrict) {
     guarded.getStrict = async (key) => {

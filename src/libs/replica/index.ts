@@ -201,18 +201,19 @@ const liveSlices = new Set<{ clear: () => Promise<boolean> }>();
  * kept its ids) nothing else tells the old answer apart. `clear()` advances
  * each replica's clear generation, so those reads are discarded, and drops
  * the scope's persisted rows, which the previous context wrote; the scope mark
- * retires the rows of replicas not built yet. The mounted
- * syncs are then revalidated so the screen repaints from the new context
- * instead of staying empty.
+ * retires the rows of replicas not built yet. Every SWR key is then
+ * revalidated so the screen repaints from the new context instead of staying
+ * empty.
  */
 export const clearAllReplicas = (): void => {
   // Rows of replicas no slice exists for yet (a lazy route never opened this
   // session) are retired by the scope mark rather than deleted.
   markReplicaScopeReset(cacheScope.get());
   for (const slice of liveSlices) void slice.clear();
-  void replicaSWRDriver
-    .revalidate((queryKey) => Array.isArray(queryKey) && queryKey[0] === 'replica:sync')
-    .catch(() => undefined);
+  // Every SWR key, not just `replica:sync`: several replicas declare their own
+  // `syncKey` (messages, project files, git review, memories), and everything
+  // on screen belongs to the context that is gone.
+  void replicaSWRDriver.revalidate(() => true).catch(() => undefined);
 };
 
 /** `createReplicaSlice` bound to the app's SWR driver. */
