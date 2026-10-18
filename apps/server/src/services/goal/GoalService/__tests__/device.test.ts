@@ -18,7 +18,7 @@ import type { LobeChatDatabase } from '@/database/type';
 import { deviceGateway } from '../../../deviceGateway';
 import { TaskRunnerService } from '../../../taskRunner';
 import { MAX_QUOTA_RETRIES } from '../../machineRecovery';
-import { DEVICE_OFFLINE_GATE_REASON } from '../../recoveryPolicy';
+import { DEVICE_OFFLINE_GATE_REASON, MAX_DEVICE_OFFLINE_RETRIES } from '../../recoveryPolicy';
 import * as scheduler from '../../scheduler';
 import { LocalGoalScheduler } from '../../scheduler/impls';
 import { registerGoalServiceTestCleanup } from '../../testUtils';
@@ -202,6 +202,105 @@ describe('GoalService', () => {
       });
       expect(runSpy).toHaveBeenCalledTimes(1);
       expect((await service.graph(graph.goal.id)).decisions).toHaveLength(0);
+    });
+
+    it('gates a device that stays gone even when no dispatch leaves a run behind', async () => {
+      // Counted from runs alone, a dispatch that failed before `runTask` recorded
+      // a run never advanced the schedule: each failure refreshed `updatedAt`,
+      // so the Task waited 30 minutes and retried, forever, without a gate.
+      const runSpy = vi
+        .spyOn(TaskRunnerService.prototype, 'runTask')
+        .mockRejectedValue(new Error('DEVICE_NOT_FOUND'));
+      const service = new GoalService(serverDB, userId);
+      const taskModel = new TaskModel(serverDB, userId);
+      const graph = await service.create({
+        title: 'Device never registers again',
+        tasks: ['Run on the bound device'],
+      });
+      const created = await service.tick(graph.goal.id);
+      const backdateLastFailure = async () => {
+        const task = await taskModel.findById(created.taskId!);
+        const context = task?.context as { deviceDispatch: { failures: number } };
+        await serverDB
+          .update(tasks)
+          .set({
+            context: {
+              ...context,
+              deviceDispatch: {
+                ...context.deviceDispatch,
+                lastFailedAt: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
+              },
+            },
+          })
+          .where(eq(tasks.id, created.taskId!));
+      };
+
+      // The first dispatch, then each retry the schedule allows once it is due.
+      await service.tick(graph.goal.id);
+      for (let retry = 1; retry <= MAX_DEVICE_OFFLINE_RETRIES; retry++) {
+        await backdateLastFailure();
+        await service.tick(graph.goal.id);
+      }
+
+      expect(runSpy).toHaveBeenCalledTimes(MAX_DEVICE_OFFLINE_RETRIES + 1);
+      expect(await serverDB.select().from(taskTopics)).toHaveLength(0);
+      expect((await taskModel.findById(created.taskId!))?.context).toMatchObject({
+        deviceDispatch: { failures: MAX_DEVICE_OFFLINE_RETRIES + 1 },
+      });
+
+      await backdateLastFailure();
+      await service.tick(graph.goal.id);
+
+      expect(runSpy).toHaveBeenCalledTimes(MAX_DEVICE_OFFLINE_RETRIES + 1);
+      const gate = (await service.graph(graph.goal.id)).nodes.find(
+        (node) => node.kind === 'decision',
+      );
+      expect(gate).toMatchObject({
+        description: DEVICE_OFFLINE_GATE_REASON,
+        title: GOAL_MACHINE_GATE_TITLE,
+      });
+    });
+
+    it('starts a new streak once a dispatch gets through', async () => {
+      const runSpy = vi
+        .spyOn(TaskRunnerService.prototype, 'runTask')
+        .mockRejectedValueOnce(new Error('DEVICE_NOT_FOUND'))
+        .mockResolvedValue({ operationId: 'op-reached-device', success: true } as never);
+      const service = new GoalService(serverDB, userId);
+      const taskModel = new TaskModel(serverDB, userId);
+      const graph = await service.create({
+        title: 'Device comes back',
+        tasks: ['Run on the bound device'],
+      });
+      const created = await service.tick(graph.goal.id);
+      await service.tick(graph.goal.id);
+      expect((await taskModel.findById(created.taskId!))?.context).toMatchObject({
+        deviceDispatch: { failures: 1 },
+      });
+      await serverDB
+        .update(tasks)
+        .set({ updatedAt: new Date(Date.now() - 31 * 60 * 1000) })
+        .where(eq(tasks.id, created.taskId!));
+      const task = await taskModel.findById(created.taskId!);
+      await serverDB
+        .update(tasks)
+        .set({
+          context: {
+            ...(task?.context as object),
+            deviceDispatch: {
+              failures: 1,
+              lastFailedAt: new Date(Date.now() - 31 * 60 * 1000).toISOString(),
+            },
+          },
+        })
+        .where(eq(tasks.id, created.taskId!));
+
+      await service.tick(graph.goal.id);
+
+      expect(runSpy).toHaveBeenCalledTimes(2);
+      expect((await taskModel.findById(created.taskId!))?.context).toMatchObject({
+        deviceDispatch: { failures: 0 },
+      });
     });
   });
 

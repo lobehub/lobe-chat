@@ -10,6 +10,7 @@ import { TaskModel } from '@/database/models/task';
 import { TaskRunnerService } from '../../taskRunner';
 import { learnedRulesClause, planSkillIdentifier } from '../batchPlanSkill';
 import { GOAL_ACCEPTANCE_TASK_TITLE } from '../decideNextMove';
+import { clearDeviceDispatchStreak, parkDeviceUnavailableDispatch } from '../deviceDispatchStreak';
 import { experimentResults } from '../exploreGraph';
 import {
   isDeviceUnavailableFailure,
@@ -256,6 +257,9 @@ export const dispatchWork = async (
       taskId: task.id,
       trigger: 'goal',
     });
+    await clearDeviceDispatchStreak(ctx.taskModel, task).catch((clearError) => {
+      console.error('[GoalService.tick] failed to clear the device dispatch streak:', clearError);
+    });
     await new GoalSupervisorService(ctx.db, ctx.userId, ctx.workspaceId).recordDispatch(
       graph,
       task.id,
@@ -282,11 +286,9 @@ export const dispatchWork = async (
     // sleeping laptop became three uncharged runs per sweep with no bound.
     const message = error instanceof Error ? error.message : String(error);
     if (isDeviceUnavailableFailure(message)) {
-      await ctx.taskModel
-        .updateStatusIfCurrent(task.id, 'running', 'paused', { error: message })
-        .catch((releaseError) => {
-          console.error('[GoalService.tick] failed to park claimed task:', releaseError);
-        });
+      await parkDeviceUnavailableDispatch(ctx.taskModel, task, message).catch((releaseError) => {
+        console.error('[GoalService.tick] failed to park claimed task:', releaseError);
+      });
       return {
         goalId,
         message: `Task ${task.identifier} is waiting for its device to reconnect`,
