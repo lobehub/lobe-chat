@@ -17,7 +17,7 @@ import { assertCanPerformResourceAction } from '@/server/services/resourcePermis
  * Reads `workspaceRole` as an optional context field: the cloud workspace-auth
  * override injects it, while the OSS stub leaves it absent.
  */
-const isWorkspaceAdmin = (ctx: { workspaceRole?: WorkspaceRole }) =>
+const isWorkspaceAdmin = (ctx: { userId: string; workspaceRole?: WorkspaceRole }) =>
   ctx.workspaceRole === 'owner' || ctx.workspaceRole === 'admin';
 
 const projectProcedure = wsCompatProcedure.use(serverDatabase).use(async (opts) => {
