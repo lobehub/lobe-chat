@@ -127,7 +127,11 @@ export class ClaudeCodeLiveInput {
       }
     }
 
-    if (!this.closed && !this.turnOpen) this.armIdleTimer();
+    // The idle clock only runs between turns; any output then, a sub-agent's
+    // included, restarts it.
+    if (this.closed) return;
+    if (this.turnOpen) this.clearIdleTimer();
+    else this.armIdleTimer();
   }
 
   close(): void {
@@ -138,6 +142,11 @@ export class ClaudeCodeLiveInput {
   }
 
   private observeMessage(message: any): void {
+    // A background sub-agent's turn records are activity of its task, not a
+    // main turn: they must not hold the session open once the task ends. Its
+    // task lifecycle (`system`) still counts.
+    if (message?.parent_tool_use_id && message.type !== 'system') return;
+
     switch (message?.type) {
       case 'user': {
         if (message.isReplay && typeof message.uuid === 'string') {

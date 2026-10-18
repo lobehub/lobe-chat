@@ -178,6 +178,51 @@ describe('ClaudeCodeLiveInput', () => {
     expect(live.isOpen).toBe(false);
   });
 
+  it('treats sub-agent output as background activity that keeps the idle timer fresh', () => {
+    vi.useFakeTimers();
+    const { live } = setup({ idleCloseMs: 1000 });
+    live.send(userLine('first'), 'u-1');
+    live.observe(line({ isReplay: true, type: 'user', uuid: 'u-1' }));
+    live.observe(line({ subtype: 'task_started', task_id: 't-1', type: 'system' }));
+    live.observe(line({ subtype: 'success', type: 'result' }));
+
+    vi.advanceTimersByTime(800);
+    live.observe(line({ parent_tool_use_id: 'tu-agent', type: 'assistant' }));
+    vi.advanceTimersByTime(800);
+    expect(live.isOpen).toBe(true);
+
+    // A task the sub-agent starts still holds the session open.
+    live.observe(
+      line({
+        parent_tool_use_id: 'tu-agent',
+        subtype: 'task_started',
+        task_id: 't-2',
+        type: 'system',
+      }),
+    );
+    live.observe(line({ subtype: 'task_notification', task_id: 't-2', type: 'system' }));
+    expect(live.isOpen).toBe(true);
+
+    // The sub-agent opened no main turn, so its end leaves the session idle.
+    live.observe(line({ subtype: 'task_notification', task_id: 't-1', type: 'system' }));
+    expect(live.isOpen).toBe(false);
+  });
+
+  it('does not let the idle timer fire during a main turn', () => {
+    vi.useFakeTimers();
+    const { live } = setup({ idleCloseMs: 1000 });
+    live.send(userLine('first'), 'u-1');
+    live.observe(line({ isReplay: true, type: 'user', uuid: 'u-1' }));
+    live.observe(line({ subtype: 'task_started', task_id: 't-1', type: 'system' }));
+    live.observe(line({ subtype: 'success', type: 'result' }));
+
+    vi.advanceTimersByTime(500);
+    live.observe(line({ subtype: 'init', type: 'system' }));
+    vi.advanceTimersByTime(5000);
+
+    expect(live.isOpen).toBe(true);
+  });
+
   it('parses messages split across stdout chunks', () => {
     const { live } = setup();
     live.send(userLine('first'), 'u-1');
