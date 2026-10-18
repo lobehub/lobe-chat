@@ -5,6 +5,7 @@ import { cacheScope } from '@/libs/replica';
 import type { ResourceGeneralAccess } from '@/services/resourcePermission';
 
 import { resourcePermissionActions } from './action';
+import { initialState } from './initialState';
 import { resourceAccessResource, resourceCollaboratorsResource } from './projection';
 import { useResourcePermissionStore } from './store';
 
@@ -40,7 +41,7 @@ const state = () => useResourcePermissionStore.getState();
  * Mount the access sync and play the request SWR would run: the fetcher, then
  * the success / error callback the slice installed.
  */
-const syncAccess = async () => {
+const mountAccessSync = async () => {
   renderHook(() => resourcePermissionActions.useFetchAccess(REF));
   const { useClientDataSWR } = await import('@/libs/swr');
   const call = vi
@@ -53,6 +54,10 @@ const syncAccess = async () => {
     () => Promise<unknown>,
     { onError: (error: unknown) => void; onSuccess: (data: unknown) => void },
   ];
+  return { config, fetcher };
+};
+const syncAccess = async () => {
+  const { config, fetcher } = await mountAccessSync();
   try {
     config.onSuccess(await fetcher());
   } catch (error) {
@@ -64,7 +69,9 @@ const sessionCheck = () => state().accessSessionMap[`${cacheScope.get()}|${KEY}`
 describe('resourcePermissionActions', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    resourcePermissionActions.reset();
+    // State only: `reset()` also clears the replicas, which (scope not yet
+    // persistable here) would block later hydrates in this scope.
+    useResourcePermissionStore.setState(initialState);
   });
 
   it('keys the access replica per resource type and id, with a bounded persisted set', () => {
@@ -81,6 +88,29 @@ describe('resourcePermissionActions', () => {
 
     expect(state().collaboratorsMap[KEY]).toBeUndefined();
     expect(state().collaboratorsReplica.entries[KEY]?.source).not.toBe('storage');
+  });
+
+  it('discards an access read still in flight when the user-data stores reset', async () => {
+    // A Desktop server switch that resolves to the same scope string: the old
+    // server's answer must not repopulate the store or confirm a manage grant.
+    let answer!: (value: ResourceGeneralAccess) => void;
+    vi.mocked(resourcePermissionService.getGeneralAccess).mockReturnValue(
+      new Promise((resolve) => {
+        answer = resolve;
+      }),
+    );
+    const { config, fetcher } = await mountAccessSync();
+    const pending = fetcher();
+
+    // Let the reset's row purge land, so later hydrates in this scope still run.
+    const canPersist = vi.spyOn(cacheScope, 'canPersist').mockReturnValue(true);
+    resourcePermissionActions.reset();
+    canPersist.mockRestore();
+    answer(record({ canManage: true }));
+    config.onSuccess(await pending);
+
+    expect(state().accessMap[KEY]).toBeUndefined();
+    expect(sessionCheck()).toBeUndefined();
   });
 
   it('applies a server answer and confirms it for this session', async () => {

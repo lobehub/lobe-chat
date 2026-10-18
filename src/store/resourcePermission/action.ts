@@ -201,6 +201,13 @@ export class ResourcePermissionActionImpl {
   };
 
   reset = (): void => {
+    // `clear()` advances each replica's clear generation, so a read still in
+    // flight from the previous data context (e.g. a Desktop server switch that
+    // resolves to the same scope string) is discarded instead of repopulating
+    // the maps and re-confirming a manage grant. It also drops this scope's
+    // persisted access rows, which that context wrote.
+    void this.#access.clear();
+    void this.#collaborators.clear();
     this.#set(initialState, false, n('reset'));
   };
 }
