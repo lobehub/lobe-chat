@@ -109,7 +109,7 @@ const MetricCard = memo<{ canEdit: boolean; card: NorthStarCard; goalId: string 
       >
         <Flexbox horizontal align={'center'} gap={8} justify={'space-between'}>
           <Flexbox horizontal align={'center'} gap={8} style={{ minWidth: 0 }}>
-            <Text ellipsis fontSize={12} type={'secondary'}>
+            <Text ellipsis fontSize={13} weight={600}>
               {card.label}
             </Text>
             {card.met && <MetBadge />}

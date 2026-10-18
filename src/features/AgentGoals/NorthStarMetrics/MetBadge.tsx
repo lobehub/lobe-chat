@@ -1,7 +1,7 @@
 'use client';
 
 import { cssVar, Flexbox, Icon, Text } from '@lobehub/ui';
-import { CircleCheck } from 'lucide-react';
+import { Check } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -19,7 +19,7 @@ const MetBadge = memo(() => {
       gap={3}
       style={{ color: cssVar.colorSuccess, flex: 'none' }}
     >
-      <Icon icon={CircleCheck} size={12} />
+      <Icon icon={Check} size={12} />
       <Text fontSize={12} style={{ color: 'inherit' }}>
         {t('goalProcess.northStar.met')}
       </Text>
