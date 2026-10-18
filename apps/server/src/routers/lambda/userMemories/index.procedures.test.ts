@@ -2,6 +2,10 @@
 import { describe, expect, it } from 'vitest';
 
 import { userMemoriesRouter } from '.';
+import { queryRouter } from './query';
+import { reEmbedRouter } from './reEmbed';
+import { searchRouter } from './search';
+import { toolWriteRouter } from './toolWrite';
 
 /**
  * Pins the router's public surface: every procedure path, its kind, and its
@@ -13,6 +17,16 @@ describe('userMemoriesRouter procedures', () => {
 
   it('exposes exactly the expected procedure paths', () => {
     expect(Object.keys(procedures).sort()).toEqual(expected().map(([name]) => name));
+  });
+
+  it.each([
+    ['queryRouter', queryRouter],
+    ['reEmbedRouter', reEmbedRouter],
+    ['searchRouter', searchRouter],
+    ['toolWriteRouter', toolWriteRouter],
+  ])('%s declares its procedures in alphabetical order', (_name, subRouter) => {
+    const names = Object.keys((subRouter as any)._def.procedures);
+    expect(names).toEqual([...names].sort());
   });
 
   it.each(expected())('%s is a %s with %i middlewares', (name, type, middlewares) => {

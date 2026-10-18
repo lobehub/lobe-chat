@@ -95,15 +95,6 @@ const searchUserMemories = async (
 };
 
 export const searchRouter = router({
-  searchMemory: memorySearchProcedure.input(searchMemorySchema).query(async ({ input, ctx }) => {
-    try {
-      return await searchUserMemories(ctx, input, 'api');
-    } catch (error) {
-      rethrowCandidateSearchError(error);
-      console.error('Failed to retrieve memories:', error);
-      return EMPTY_SEARCH_RESULT;
-    }
-  }),
   /**
    * Retrieve memories for a specific topic
    * Uses concatenated user messages (first 7000 chars) as the search query
@@ -147,6 +138,15 @@ export const searchRouter = router({
         return EMPTY_SEARCH_RESULT;
       }
     }),
+  searchMemory: memorySearchProcedure.input(searchMemorySchema).query(async ({ input, ctx }) => {
+    try {
+      return await searchUserMemories(ctx, input, 'api');
+    } catch (error) {
+      rethrowCandidateSearchError(error);
+      console.error('Failed to retrieve memories:', error);
+      return EMPTY_SEARCH_RESULT;
+    }
+  }),
   toolSearchMemory: memorySearchProcedure
     .input(searchMemorySchema)
     .query(async ({ input, ctx }) => {
