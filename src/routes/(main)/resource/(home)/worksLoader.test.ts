@@ -1,5 +1,8 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { useResourceManagerStore } from '@/features/ResourceManager/store';
+import { initialState } from '@/features/ResourceManager/store/initialState';
+
 import { galleryKeyOfUrl, worksLoader } from './worksLoader';
 
 const mocks = vi.hoisted(() => ({
@@ -26,6 +29,7 @@ const load = (url: string) =>
 beforeEach(() => {
   mocks.preHydrateWorkspaceWorks.mockReset().mockResolvedValue(true);
   mocks.workspaceId = null;
+  useResourceManagerStore.setState({ listVisibility: initialState.listVisibility });
 });
 
 describe('galleryKeyOfUrl', () => {
@@ -66,6 +70,15 @@ describe('worksLoader', () => {
     expect(mocks.preHydrateWorkspaceWorks).toHaveBeenLastCalledWith(
       expect.objectContaining({ visibility: 'public', workspaceId: 'ws_other' }),
     );
+  });
+
+  it('restores the persisted mode into the ResourceManager store before the page renders', async () => {
+    mocks.workspaceId = 'ws_private';
+    await load('https://app.test/resource/works');
+
+    // The gallery hook reads `listVisibility` from this store on its first
+    // render; it must select the same (prehydrated) private entry.
+    expect(useResourceManagerStore.getState().listVisibility).toBe('private');
   });
 
   it('skips resource categories that show no Works', async () => {

@@ -1,8 +1,7 @@
 import type { LoaderFunctionArgs } from 'react-router';
 
 import { getActiveWorkspaceId } from '@/business/client/hooks/useActiveWorkspaceId';
-import { DEFAULT_WORKSPACE_LIST_VISIBILITY } from '@/features/ResourceManager/store/initialState';
-import { readPersistedResourceMode } from '@/features/ResourceManager/store/modePersistence';
+import { useResourceManagerStore } from '@/features/ResourceManager/store';
 import { parseWorkGalleryKey, type WorkGalleryKey } from '@/features/WorkGallery/const';
 import { workspaceWorksParams } from '@/features/WorkGallery/hooks';
 import { PRE_PAINT_HYDRATE_TIMEOUT, settleWithin } from '@/libs/replica/prePaint';
@@ -27,15 +26,17 @@ export const galleryKeyOfUrl = (url: URL): WorkGalleryKey | null => {
  * Route loaders run before React commits the route: the only point where the
  * persisted list (an async read) can land before the page paints its loading
  * skeleton. The visibility is the persisted Private / Workspace mode the
- * resource sidebar restores for this workspace.
+ * resource sidebar restores for this workspace; the loader restores it into
+ * the ResourceManager store first, so the page's first render reads the same
+ * mode (and the same replica entry) instead of the store default.
  */
 export const worksLoader = async ({ request }: LoaderFunctionArgs): Promise<null> => {
   const galleryKey = galleryKeyOfUrl(new URL(request.url));
   if (!galleryKey) return null;
 
   const workspaceId = getActiveWorkspaceId();
-  const listVisibility =
-    readPersistedResourceMode(workspaceId ?? undefined) ?? DEFAULT_WORKSPACE_LIST_VISIBILITY;
+  useResourceManagerStore.getState().hydrateListVisibility(workspaceId ?? undefined);
+  const { listVisibility } = useResourceManagerStore.getState();
 
   await settleWithin(
     workActions.preHydrateWorkspaceWorks(
