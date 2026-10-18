@@ -1,5 +1,7 @@
 import { and, asc, eq, inArray } from 'drizzle-orm';
 
+import { AgentDeletionRepository } from '../../repositories/agentDeletion';
+import { AgentTransferRepository } from '../../repositories/agentTransfer';
 import type { AgentItem } from '../../schemas';
 import { agents, agentsToSessions, documents } from '../../schemas';
 import type { LobeChatDatabase } from '../../type';
@@ -97,7 +99,15 @@ export class AgentModel {
 
   // **************** Delete *************** //
 
-  delete = this.withContext(remove.deleteAgent);
+  /**
+   * Delete an agent with its session links and legacy session shells. The
+   * unit of work spans the sessions aggregate, so it lives in
+   * {@link AgentDeletionRepository}; this forwards to it.
+   */
+  delete = (agentId: string) =>
+    new AgentDeletionRepository(this.ctx.db, this.ctx.userId, this.ctx.workspaceId).deleteAgent(
+      agentId,
+    );
   assertDeletable = this.withContext(remove.assertDeletable);
   findSessionIdsByAgentIds = this.withContext(remove.findSessionIdsByAgentIds);
   findAgentIdsBySessionIds = this.withContext(remove.findAgentIdsBySessionIds);
@@ -118,7 +128,15 @@ export class AgentModel {
   // **************** Transfer *************** //
 
   transferHasForeignRows = this.withContext(transfer.transferHasForeignRows);
-  transferAgents = this.withContext(transfer.transferAgents);
+  /**
+   * Cross-scope transfer of agents and everything they own. The unit of work
+   * spans many aggregates, so it lives in {@link AgentTransferRepository};
+   * this forwards to it.
+   */
+  transferAgents: AgentTransferRepository['transferAgents'] = (...args) =>
+    new AgentTransferRepository(this.ctx.db, this.ctx.userId, this.ctx.workspaceId).transferAgents(
+      ...args,
+    );
 
   // **************** Ownership transfer *************** //
 

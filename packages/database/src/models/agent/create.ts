@@ -1,6 +1,7 @@
 import { getAgentPersistConfig } from '@lobechat/builtin-agents';
 import { INBOX_SESSION_ID } from '@lobechat/const';
 import { and, eq } from 'drizzle-orm';
+import pMap from 'p-map';
 
 import type { AgentItem } from '../../schemas';
 import { agents, agentsToSessions, sessions } from '../../schemas';
@@ -65,11 +66,16 @@ export const batchCreate = async (
     ),
   }));
 
-  await Promise.all(
-    normalizedConfigs.flatMap((config) => [
-      ctx.assertWorkspaceDeviceBinding(ctx.workspaceId ?? null, config.agencyConfig),
-      ctx.assertFixedExecutionTarget(ctx.workspaceId ?? null, config.agencyConfig),
-    ]),
+  // Each config's assertions read device bindings / execution targets; cap
+  // the fan-out so a large batch cannot open 2×N concurrent queries.
+  await pMap(
+    normalizedConfigs,
+    (config) =>
+      Promise.all([
+        ctx.assertWorkspaceDeviceBinding(ctx.workspaceId ?? null, config.agencyConfig),
+        ctx.assertFixedExecutionTarget(ctx.workspaceId ?? null, config.agencyConfig),
+      ]),
+    { concurrency: 5 },
   );
 
   return ctx.db
