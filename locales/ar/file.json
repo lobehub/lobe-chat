@@ -302,6 +302,8 @@
   "pageEditor.menu.importDocument": "استيراد صفحة",
   "pageEditor.menu.move": "نقل",
   "pageEditor.menu.pin": "تثبيت الصفحة",
+  "pageEditor.noAccess.description": "هذه الصفحة خاصة أو لم يتم مشاركتها معك. اطلب من منشئها الوصول.",
+  "pageEditor.noAccess.title": "ليس لديك حق الوصول إلى هذه الصفحة",
   "pageEditor.saveFailed": "فشل حفظ الصفحة، يرجى المحاولة مرة أخرى لاحقًا",
   "pageEditor.saving": "جارٍ الحفظ...",
   "pageEditor.titlePlaceholder": "بدون عنوان",
