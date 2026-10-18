@@ -26,10 +26,10 @@ export const createDefaultScheduleDraft = (): ScheduleDraft => ({
 });
 
 /**
- * The `task.create` fields that make the new task a live schedule. A task in
- * `backlog` with a schedule pattern is already dispatchable, so no status
- * change is needed. `maxExecutions` lives in the `config.schedule` pocket and is
- * merged over any other config the form sends.
+ * The `task.create` fields that make the new task a live schedule; the server
+ * creates a schedule-mode task already `scheduled`. `maxExecutions` lives in
+ * the `config.schedule` pocket and is merged over any other config the form
+ * sends.
  */
 export const toScheduledCreateParams = (
   draft: ScheduleDraft,
