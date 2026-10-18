@@ -96,3 +96,6 @@ export const storedProposal = (metadata: unknown) => {
   );
   return parsed.success ? parsed.data : undefined;
 };
+
+/** Concurrency cap for per-provider source-store reads and session writes. */
+export const PROVIDER_IO_CONCURRENCY = 5;

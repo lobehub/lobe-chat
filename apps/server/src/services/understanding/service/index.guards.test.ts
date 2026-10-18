@@ -140,6 +140,33 @@ describe('UnderstandingService guards and compensation', () => {
     );
   });
 
+  it('fails every recollection attempt and rethrows the trigger error when revise cannot dispatch', async () => {
+    const harness = createHarness(
+      createSession({
+        github: providerState('completed', 1),
+        gmail: providerState('completed', 1),
+      }),
+    );
+    mockTriggerProviders.mockRejectedValueOnce(new Error('workflow down'));
+    harness.repository.failProvider.mockRejectedValueOnce(new Error('db down'));
+
+    await expect(
+      harness.service.revise({
+        expectedFeedbackRevision: 0,
+        providerIds: [],
+        responseLanguage: 'en-US',
+        ...sessionRef,
+      }),
+    ).rejects.toThrow('workflow down');
+    expect(harness.repository.failProvider).toHaveBeenCalledTimes(2);
+    expect(harness.repository.failProvider).toHaveBeenCalledWith(
+      expect.objectContaining({ providerId: 'github', revision: 2 }),
+    );
+    expect(harness.repository.failProvider).toHaveBeenCalledWith(
+      expect.objectContaining({ providerId: 'gmail', revision: 2 }),
+    );
+  });
+
   it('returns the published result when the writing already completed', async () => {
     const harness = createHarness(completedWriting());
 

@@ -12,12 +12,18 @@ import {
 } from '@lobechat/prompts';
 import type { UnderstandingPersonaProposal } from '@lobechat/types';
 import { RequestTrigger, UnderstandingPersonaProposalSchema } from '@lobechat/types';
+import pMap from 'p-map';
 
 import type { StoredUnderstandingProviderContext } from '../sourceStore';
 import { UnderstandingProviderContextUnavailableError } from './errors';
 import { readActiveSession } from './session';
 import type { ProcessCollectedInput, UnderstandingServiceDependencies } from './types';
-import { buildEphemeralDocument, createCollectionError, storedProposal } from './utils';
+import {
+  buildEphemeralDocument,
+  createCollectionError,
+  PROVIDER_IO_CONCURRENCY,
+  storedProposal,
+} from './utils';
 
 export const processDetailedPersona = async (
   dependencies: UnderstandingServiceDependencies,
@@ -67,15 +73,16 @@ export const processDetailedPersona = async (
       const contexts = await observeOnboardingUnderstandingOperation(
         { ...operationAttributes, operation: 'writer.read-contexts' },
         () =>
-          Promise.all(
-            completed.map(([providerId, state]) =>
+          pMap(
+            completed,
+            ([providerId, state]) =>
               sourceStore.get({
                 providerId,
                 revision: state.revision,
                 sessionId,
                 userId: dependencies.userId,
               }),
-            ),
+            { concurrency: PROVIDER_IO_CONCURRENCY },
           ),
       );
       if (contexts.some((context) => !context)) {

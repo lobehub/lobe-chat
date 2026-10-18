@@ -18,6 +18,7 @@ import type {
   ReviseOnboardingUnderstandingInput,
 } from '@lobechat/types';
 import { projectOnboardingUnderstandingSessionStatus } from '@lobechat/types';
+import pMap from 'p-map';
 
 import { AgentModel } from '@/database/models/agent';
 import { MessageModel } from '@/database/models/message';
@@ -26,6 +27,7 @@ import { UserPersonaModel } from '@/database/models/userMemory/persona';
 import type { LobeChatDatabase } from '@/database/type';
 import { AiGenerationService } from '@/server/services/aiGeneration';
 import { ConnectorDataService } from '@/server/services/connectorData';
+import { OnboardingUnderstandingWorkflow } from '@/server/workflows/onboardingUnderstanding';
 
 import { understandingProviderMap } from '../providers';
 import { UnderstandingSourceStore } from '../sourceStore';
@@ -38,7 +40,7 @@ import type {
   ProviderOperationInput,
   UnderstandingServiceDependencies,
 } from './types';
-import { storedProposal } from './utils';
+import { PROVIDER_IO_CONCURRENCY, storedProposal } from './utils';
 import * as writing from './writing';
 
 export { UnderstandingProviderContextUnavailableError } from './errors';
@@ -123,8 +125,6 @@ export class UnderstandingService {
     return observeOnboardingUnderstandingOperation(
       { operation: 'session.start', topicId },
       async () => {
-        const { OnboardingUnderstandingWorkflow } =
-          await import('@/server/workflows/onboardingUnderstanding');
         OnboardingUnderstandingWorkflow.assertAvailable();
 
         const session = await this.initialize(topicId, selectedProviderIds);
@@ -158,8 +158,6 @@ export class UnderstandingService {
   revise = async (
     input: ReviseOnboardingUnderstandingInput,
   ): Promise<OnboardingUnderstandingPollingResult> => {
-    const { OnboardingUnderstandingWorkflow } =
-      await import('@/server/workflows/onboardingUnderstanding');
     OnboardingUnderstandingWorkflow.assertAvailable();
     await this.activeSession(input.topicId, input.sessionId);
     const requestedProviderIds = [...new Set(input.providerIds)].sort();
@@ -185,15 +183,16 @@ export class UnderstandingService {
     );
     const sourceStore = completedProviders.length > 0 ? this.dependencies.sourceStore() : undefined;
     const storedContexts = sourceStore
-      ? await Promise.all(
-          completedProviders.map(([providerId, state]) =>
+      ? await pMap(
+          completedProviders,
+          ([providerId, state]) =>
             sourceStore.get({
               providerId,
               revision: state.revision,
               sessionId: input.sessionId,
               userId: this.dependencies.userId,
             }),
-          ),
+          { concurrency: PROVIDER_IO_CONCURRENCY },
         )
       : [];
     const expiredProviders = completedProviders.flatMap(([providerId, state], index) =>
@@ -209,15 +208,17 @@ export class UnderstandingService {
             topicId: input.topicId,
           })
         : next;
-    const recollectedProviders = await Promise.all(
-      expiredProviders.map(async ({ providerId }) => ({
+    const recollectedProviders = await pMap(
+      expiredProviders,
+      async ({ providerId }) => ({
         id: providerId,
         ...(await this.dependencies.repository.markProviderRunning(
           input.topicId,
           input.sessionId,
           providerId,
         )),
-      })),
+      }),
+      { concurrency: PROVIDER_IO_CONCURRENCY },
     );
     const attempts = [...providerAttempts, ...recollectedProviders].sort((left, right) =>
       left.id.localeCompare(right.id),
@@ -238,15 +239,18 @@ export class UnderstandingService {
           },
         );
       } catch (triggerError) {
-        await Promise.allSettled(
-          attempts.map(({ id, revision }) =>
+        // Best effort: every attempt is marked failed even if some writes
+        // reject, and the trigger error is what the caller sees.
+        await pMap(
+          attempts,
+          ({ id, revision }) =>
             this.failProvider({
               providerId: id,
               revision,
               sessionId: input.sessionId,
               topicId: input.topicId,
-            }),
-          ),
+            }).catch(() => undefined),
+          { concurrency: PROVIDER_IO_CONCURRENCY },
         );
         throw triggerError;
       }
@@ -303,8 +307,6 @@ export class UnderstandingService {
   retry = async (
     input: RetryOnboardingUnderstandingProviderInput,
   ): Promise<OnboardingUnderstandingPollingResult> => {
-    const { OnboardingUnderstandingWorkflow } =
-      await import('@/server/workflows/onboardingUnderstanding');
     OnboardingUnderstandingWorkflow.assertAvailable();
     const session = await this.activeSession(input.topicId, input.sessionId);
     const state = session.sources[input.providerId];

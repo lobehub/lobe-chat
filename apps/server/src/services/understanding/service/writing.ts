@@ -23,11 +23,17 @@ import {
   RequestTrigger,
   UnderstandingAnalysisSchema,
 } from '@lobechat/types';
+import pMap from 'p-map';
 
 import type { StoredUnderstandingProviderContext } from '../sourceStore';
 import { readActiveSession } from './session';
 import type { ProcessCollectedInput, UnderstandingServiceDependencies } from './types';
-import { boundProviderDiagnostics, buildEphemeralDocument, createCollectionError } from './utils';
+import {
+  boundProviderDiagnostics,
+  buildEphemeralDocument,
+  createCollectionError,
+  PROVIDER_IO_CONCURRENCY,
+} from './utils';
 
 const parseStoredAnalysis = (content: unknown) => {
   if (typeof content !== 'string') return;
@@ -104,15 +110,16 @@ export const processCollected = async (
       const contexts = await observeOnboardingUnderstandingOperation(
         { ...operationAttributes, operation: 'writer.read-contexts' },
         () =>
-          Promise.all(
-            completed.map(([providerId, state]) =>
+          pMap(
+            completed,
+            ([providerId, state]) =>
               sourceStore.get({
                 providerId,
                 revision: state.revision,
                 sessionId,
                 userId: dependencies.userId,
               }),
-            ),
+            { concurrency: PROVIDER_IO_CONCURRENCY },
           ),
       );
       const missing = completed.flatMap(([providerId, state], index) =>
