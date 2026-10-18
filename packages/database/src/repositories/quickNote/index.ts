@@ -178,7 +178,8 @@ export class QuickNoteRepository {
       const run = await model.insertPendingRun(quickNote.id, history.id, params);
 
       if (run) {
-        await model.pinRunInputs(run.id, quickNote.id, history.id);
+        const pinned = await model.pinRunInputs(run.id, quickNote.id, history.id);
+        if (!pinned) throw new Error(QUICK_NOTE_SCOPE_LOST);
 
         return run;
       }

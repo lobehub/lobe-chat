@@ -1,5 +1,5 @@
 // @vitest-environment node
-import { eq } from 'drizzle-orm';
+import { and, eq } from 'drizzle-orm';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { getTestDB } from '../../core/getTestDB';
@@ -7,6 +7,7 @@ import { QuickNoteRepository } from '../../repositories/quickNote';
 import {
   quickNoteProposals,
   quickNoteResources,
+  quickNoteRunInputs,
   quickNoteRunResources,
   quickNoteRuns,
   quickNotes,
@@ -69,6 +70,11 @@ describe('QuickNoteModel write scope', () => {
       resourceId: output.resource.id,
       runId: dive.id,
     });
+    // The Analyze Run is already completed, so only the ownership guard can refuse this insert.
+    const inserted = await otherModel.insertPendingRun(note.id, dive.sourceHistoryId, {
+      kind: 'analyze',
+    });
+    const pinned = await otherModel.pinRunInputs(dive.id, note.id, dive.sourceHistoryId);
     await otherModel.completeAnnotationRun(dive.id, {
       analyzeDueAt: null,
       quickNoteId: note.id,
@@ -90,19 +96,32 @@ describe('QuickNoteModel write scope', () => {
       .select()
       .from(quickNoteResources)
       .where(eq(quickNoteResources.quickNoteId, note.id));
+    const analyzeRuns = await serverDB
+      .select()
+      .from(quickNoteRuns)
+      .where(and(eq(quickNoteRuns.quickNoteId, note.id), eq(quickNoteRuns.kind, 'analyze')));
+    const diveInputs = await serverDB
+      .select()
+      .from(quickNoteRunInputs)
+      .where(eq(quickNoteRunInputs.runId, dive.id));
     const diveEvidence = await serverDB
       .select()
       .from(quickNoteRunResources)
       .where(eq(quickNoteRunResources.runId, dive.id));
 
     /** @example No helper reports a write for a foreign id. */
-    expect({ annotation, deleted, pointed, recorded, saved }).toEqual({
+    expect({ annotation, deleted, inserted, pinned, pointed, recorded, saved }).toEqual({
       annotation: undefined,
       deleted: undefined,
+      inserted: undefined,
+      pinned: false,
       pointed: undefined,
       recorded: false,
       saved: undefined,
     });
+    /** @example No foreign Run was started and no extra inputs were pinned. */
+    expect(analyzeRuns).toHaveLength(1);
+    expect(diveInputs.filter(({ role }) => role === 'source')).toHaveLength(1);
     /** @example The note row keeps its timestamps and tags. */
     expect(noteAfter).toEqual(noteBefore);
     /** @example The Proposal keeps its revision pointer and stays current. */

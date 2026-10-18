@@ -38,8 +38,9 @@ export const findActiveRun = async (
 /**
  * Inserts a pending Run against a pinned source revision.
  *
- * Returns `undefined` when a concurrent claimant already holds the active Run of this kind
- * (partial unique index on pending/running Runs).
+ * Returns `undefined` when the Quick Note is not the caller's, when `sourceHistoryId` is not a
+ * revision of its Document, or when a concurrent claimant already holds the active Run of this
+ * kind (partial unique index on pending/running Runs).
  */
 export const insertPendingRun = async (
   ctx: QuickNoteContext,
@@ -47,6 +48,19 @@ export const insertPendingRun = async (
   sourceHistoryId: string,
   params: ClaimQuickNoteRunParams,
 ) => {
+  const [source] = await ctx.db
+    .select({ id: documentHistories.id })
+    .from(quickNotes)
+    .innerJoin(documentHistories, eq(documentHistories.documentId, quickNotes.documentId))
+    .where(
+      and(
+        eq(quickNotes.id, quickNoteId),
+        eq(documentHistories.id, sourceHistoryId),
+        quickNoteOwnershipWhere(ctx),
+      ),
+    );
+  if (!source) return undefined;
+
   const [run] = await ctx.db
     .insert(quickNoteRuns)
     .values({
@@ -71,13 +85,30 @@ export const insertPendingRun = async (
  * - Runs inside the claiming transaction: pending Proposal rows are locked in id order so a
  *   concurrent Proposal edit cannot advance (and retention cannot drop) an observed revision
  *   before its input pin commits.
+ *
+ * Returns:
+ * - `false` without pinning when the Run is not the caller's pending Run of that Quick Note and
+ *   source revision.
  */
 export const pinRunInputs = async (
   ctx: QuickNoteContext,
   runId: string,
   quickNoteId: string,
   sourceHistoryId: string,
-) => {
+): Promise<boolean> => {
+  const [run] = await ctx.db
+    .select({ id: quickNoteRuns.id })
+    .from(quickNoteRuns)
+    .where(
+      and(
+        eq(quickNoteRuns.id, runId),
+        eq(quickNoteRuns.quickNoteId, quickNoteId),
+        eq(quickNoteRuns.sourceHistoryId, sourceHistoryId),
+        inArray(quickNoteRuns.quickNoteId, ownedQuickNoteIds(ctx)),
+      ),
+    );
+  if (!run) return false;
+
   const commentRevisions = await ctx.db
     .select({
       commentId: quickNoteComments.id,
@@ -133,6 +164,8 @@ export const pinRunInputs = async (
       workspaceId: ctx.workspaceId,
     })),
   ]);
+
+  return true;
 };
 
 /**
