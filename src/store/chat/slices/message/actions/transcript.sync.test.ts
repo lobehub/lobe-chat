@@ -680,6 +680,55 @@ describe('useFetchMessages', () => {
       expect(transcript.debugUnconfirmedClientIds()).not.toContain('tmp_client');
     });
 
+    it('keeps a remapped row when a read issued before its temporary id resolves', async () => {
+      const previousReply: UIChatMessage = {
+        id: 'previous-reply',
+        content: 'Previous reply',
+        role: 'assistant',
+        createdAt: 1000,
+        updatedAt: 1000,
+      };
+      const temp: UIChatMessage = {
+        id: 'tmp_client',
+        content: 'Sent',
+        role: 'user',
+        createdAt: 2000,
+        updatedAt: 2000,
+      };
+      const persisted: UIChatMessage = { ...temp, id: 'msg_server' };
+
+      // The read starts before the optimistic create.
+      let resolveFetch!: (messages: UIChatMessage[]) => void;
+      vi.mocked(messageService.getMessages).mockReturnValue(
+        new Promise((resolve) => {
+          resolveFetch = resolve;
+        }) as Promise<UIChatMessage[]>,
+      );
+      seedRows(context, [previousReply]);
+      syncMessages(context);
+
+      useChatStore
+        .getState()
+        .internal_dispatchMessage(
+          { id: temp.id, type: 'createMessage', value: temp as any },
+          { conversationContext: context },
+          { creationOrigin: 'client' },
+        );
+      // The create succeeds and the server id replaces the temporary one.
+      useChatStore.getState().replaceMessages([previousReply, persisted], { context });
+
+      // The pre-create snapshot resolves without the persisted row.
+      await act(async () => {
+        resolveFetch([{ ...previousReply, content: 'Previous reply (fetched)', updatedAt: 1500 }]);
+      });
+
+      await waitFor(() => expect(rowsOf(context)?.[0].content).toBe('Previous reply (fetched)'));
+      expect(rowsOf(context)?.map((message) => message.id)).toEqual([
+        previousReply.id,
+        persisted.id,
+      ]);
+    });
+
     it('keeps a send whose stale fetch resolves after the send operation handed off', async () => {
       const previousReply: UIChatMessage = {
         id: 'previous-reply',

@@ -129,9 +129,19 @@ const createMessageTranscript = (set: StoreSetter<ChatStore>, get: () => ChatSto
     for (const message of messages) unconfirmedClientIds.delete(message.id);
   };
 
-  /** Client rows a server replacement removed or remapped (e.g. `tmp_*`). */
-  const forgetClientRows = (ids: Iterable<string>) => {
-    for (const id of ids) unconfirmedClientIds.delete(id);
+  /**
+   * A server replacement removed or remapped client rows (an optimistic
+   * `tmp_*` id swapped for the server id). They can never be preserved again,
+   * but a read that was already protecting one predates the rows that replaced
+   * it, so those take over its protection in that read only.
+   */
+  const remapClientRows = (removedIds: string[], addedIds: string[]) => {
+    for (const id of removedIds) unconfirmedClientIds.delete(id);
+    if (addedIds.length === 0) return;
+    for (const record of activeHeadReads) {
+      if (!removedIds.some((id) => record.clientIds.has(id))) continue;
+      for (const id of addedIds) record.clientIds.add(id);
+    }
   };
 
   const lens = createTranscriptLens();
@@ -427,7 +437,7 @@ const createMessageTranscript = (set: StoreSetter<ChatStore>, get: () => ChatSto
     /** @internal Test/debug view of the ids a stale read may still preserve. */
     debugUnconfirmedClientIds: () => [...unconfirmedClientIds],
     evict,
-    forgetClientRows,
+    remapClientRows,
     headResolutions,
     keyOf,
     pendingInterventions,
