@@ -5,6 +5,7 @@ import { observable } from '@trpc/server/observable';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { getValidToken } from '../auth/refresh';
+import { log } from '../utils/logger';
 import {
   isOperationToken,
   OPERATION_TOKEN_REFUSAL,
@@ -13,6 +14,7 @@ import {
 } from './operationTokenFallback';
 
 vi.mock('../auth/refresh', () => ({ getValidToken: vi.fn() }));
+vi.mock('../utils/logger', () => ({ log: { debug: vi.fn(), warn: vi.fn() } }));
 
 const jwt = (payload: Record<string, unknown>) =>
   `e30.${Buffer.from(JSON.stringify(payload)).toString('base64url')}.sig`;
@@ -38,20 +40,18 @@ const serverLink =
   () =>
   ({ op }) =>
     observable((observer) => {
-      const headers = operationTokenHeaders(() => operationToken);
-      void Promise.resolve(headers({ op: op as Operation })).then((value) => {
-        const outcome = respond(value['Oidc-Auth']);
-        if (outcome instanceof Error) observer.error(outcome as TRPCClientError<AnyRouter>);
-        else {
-          observer.next({ result: { data: outcome, type: 'data' } } as any);
-          observer.complete();
-        }
-      });
+      const headers = operationTokenHeaders(() => operationToken)({ op: op as Operation });
+      const outcome = respond(headers['Oidc-Auth']);
+      if (outcome instanceof Error) observer.error(outcome as TRPCClientError<AnyRouter>);
+      else {
+        observer.next({ result: { data: outcome, type: 'data' } } as any);
+        observer.complete();
+      }
     });
 
 const query = (respond: (authorization: string) => unknown) => {
   const client = createTRPCClient<AnyRouter>({
-    links: [operationTokenFallbackLink(), serverLink(respond)],
+    links: [operationTokenFallbackLink(() => operationToken), serverLink(respond)],
   }) as any;
   return client.doc.list.query();
 };
@@ -66,6 +66,7 @@ const userScopedRoute = vi.fn((authorization: string) =>
 describe('operation token fallback', () => {
   beforeEach(() => {
     vi.mocked(getValidToken).mockReset();
+    vi.mocked(log.warn).mockClear();
     userScopedRoute.mockClear();
   });
 
@@ -93,17 +94,21 @@ describe('operation token fallback', () => {
    * A workspace device is reachable by every member, so the login saved on it
    * can be another member's. Borrowing it would act on that person's data.
    */
-  it("never borrows another account's login", async () => {
+  it("never borrows another account's login, and says why", async () => {
     storedLogin('device-owner');
 
     await expect(query(userScopedRoute)).rejects.toThrow(OPERATION_TOKEN_REFUSAL);
-    expect(userScopedRoute).toHaveBeenCalledTimes(2);
+    expect(userScopedRoute).toHaveBeenCalledTimes(1);
+    expect(log.warn).toHaveBeenCalledWith(
+      expect.stringContaining('no stored login of the same account'),
+    );
   });
 
   it('fails as before when the machine has no login', async () => {
     vi.mocked(getValidToken).mockResolvedValue({ status: 'no-login' });
 
     await expect(query(userScopedRoute)).rejects.toThrow(OPERATION_TOKEN_REFUSAL);
+    expect(userScopedRoute).toHaveBeenCalledTimes(1);
   });
 
   it('does not retry other authentication errors', async () => {

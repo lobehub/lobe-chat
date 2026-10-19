@@ -31,8 +31,8 @@ import { log } from '../utils/logger';
 /** `oidcAuth`'s message when an operation token reaches a user-scoped route. */
 export const OPERATION_TOKEN_REFUSAL = 'hetero-operation tokens are not accepted on this endpoint';
 
-/** Operation-context flag on the request the fallback link re-sends. */
-const USE_STORED_LOGIN = 'useStoredLogin';
+/** Operation-context key carrying the stored login on the request the link re-sends. */
+const STORED_LOGIN = 'storedLogin';
 
 export const isOperationToken = (token: string | undefined): boolean =>
   !!token && parseJwtPayload(token)?.purpose === 'hetero-operation';
@@ -48,34 +48,6 @@ export const isOperationTokenRefusal = (error: unknown): boolean =>
   error.message === OPERATION_TOKEN_REFUSAL;
 
 /**
- * Retry a request whose operation token was refused, once, flagged so the
- * headers callback answers with the stored login instead.
- */
-export const operationTokenFallbackLink =
-  <TRouter extends AnyRouter>(): TRPCLink<TRouter> =>
-  () =>
-  ({ next, op }) =>
-    observable((observer) => {
-      let subscription = next(op).subscribe({
-        complete: () => observer.complete(),
-        error: (error) => {
-          if (op.context[USE_STORED_LOGIN] || !isOperationTokenRefusal(error)) {
-            observer.error(error);
-            return;
-          }
-          log.debug(`${op.path}: operation token refused, retrying with the stored login`);
-          subscription = next({
-            ...op,
-            context: { ...op.context, [USE_STORED_LOGIN]: true },
-          }).subscribe(observer);
-        },
-        next: (value) => observer.next(value),
-      });
-
-      return () => subscription.unsubscribe();
-    });
-
-/**
  * The stored login, when it is usable and belongs to the operation token's own
  * account.
  */
@@ -89,16 +61,55 @@ const storedLoginFor = async (operationToken: string): Promise<string | undefine
 };
 
 /**
+ * Re-send a request whose operation token was refused, once, with the stored
+ * login of the same account. Without one, say why instead of re-sending a
+ * request that can only be refused again.
+ */
+export const operationTokenFallbackLink =
+  <TRouter extends AnyRouter>(operationToken: () => string): TRPCLink<TRouter> =>
+  () =>
+  ({ next, op }) =>
+    observable((observer) => {
+      let closed = false;
+      let subscription = next(op).subscribe({
+        complete: () => observer.complete(),
+        error: (error) => {
+          if (op.context[STORED_LOGIN] || !isOperationTokenRefusal(error)) {
+            observer.error(error);
+            return;
+          }
+          void storedLoginFor(operationToken()).then((stored) => {
+            if (closed) return;
+            if (!stored) {
+              log.warn(
+                "LOBEHUB_JWT is this run's operation token, which this endpoint refuses, and this machine has no stored login of the same account to use instead.",
+              );
+              observer.error(error);
+              return;
+            }
+            log.debug(`${op.path}: operation token refused, retrying with the stored login`);
+            subscription = next({
+              ...op,
+              context: { ...op.context, [STORED_LOGIN]: stored },
+            }).subscribe(observer);
+          });
+        },
+        next: (value) => observer.next(value),
+      });
+
+      return () => {
+        closed = true;
+        subscription.unsubscribe();
+      };
+    });
+
+/**
  * Auth headers for a client holding an operation token: the token itself, or
- * the stored login on a request `operationTokenFallbackLink` re-sent. Without a
- * stored login of the same account the retry carries the token again and fails
- * as before.
+ * the stored login `operationTokenFallbackLink` attached to a re-sent request.
  */
 export const operationTokenHeaders =
   (operationToken: () => string) =>
-  (opts?: { op?: Operation }): Record<string, string> | Promise<Record<string, string>> => {
-    const token = operationToken();
-    if (!opts?.op?.context[USE_STORED_LOGIN]) return { 'Oidc-Auth': token };
-
-    return storedLoginFor(token).then((stored) => ({ 'Oidc-Auth': stored ?? token }));
+  (opts?: { op?: Operation }): Record<string, string> => {
+    const stored = opts?.op?.context[STORED_LOGIN];
+    return { 'Oidc-Auth': typeof stored === 'string' ? stored : operationToken() };
   };
