@@ -15,6 +15,15 @@
  * material as a loadable skill (`@lobechat/builtin-skills`'s `lobehub` skill)
  * — hetero agents have no skill loader, hence the inlined summary.
  *
+ * The installed `lh` can be older than the server it talks to (a container or
+ * remote device that never ran `lh update`), so `lh man` may lack a command the
+ * user needs. What must stay untouched is the install itself — a global
+ * reinstall can replace the binary that is running `lh connect` — and the
+ * login. A one-off `dlx` of the latest CLI touches neither: it reads the same
+ * `LOBEHUB_*` environment and stored login. So the guide forbids the install
+ * and offers the `dlx` run, instead of forbidding every install outright,
+ * which left agents refusing even an explicit user request for `dlx`.
+ *
  * Two things it deliberately does NOT promise, because they are not true on
  * every transport:
  *
@@ -45,14 +54,14 @@
 export const lobeHubCliGuide = [
   '## LobeHub CLI (`lh`)',
   '',
-  "You are running inside a LobeHub conversation, on a machine where the `lh` CLI is already installed and the run normally carries the user's credentials in its environment — never install it, and never run `lh login`.",
+  "You are running inside a LobeHub conversation, on a machine where the `lh` CLI is already installed and the run normally carries the user's credentials in its environment. Do not install, upgrade or replace `lh` globally — that can swap out the binary running `lh connect` — and never run `lh login`.",
   '',
   '- **You already know where you are.** `LOBEHUB_TOPIC_ID` (this conversation) and `LOBEHUB_OPERATION_ID` (this run) are in your environment, and `LOBEHUB_AGENT_ID` (you) and `LOBEHUB_WORKSPACE_ID` (the workspace this conversation belongs to, which scopes every `lh` call) are too whenever the run carries them. They are ordinary environment variables, so every sub-shell, script or tool you spawn inherits them. Pass them straight to commands rather than listing agents or topics to find yourself; if the one you need is empty, say so instead of guessing an id.',
-  '- **If `lh` is older than this app**, the shell may have found a stale global install first: `lh man` lacks a command you expect, or `lh` reports an unknown command. When `LOBEHUB_CLI` is set it is the path of the CLI this app ships — run that path instead of `lh` for the rest of the session.',
+  '- **If `lh` is too old**, `lh man` lacks a command you expect, or `lh` reports an unknown command or option — the shell may have found a stale global install first. When `LOBEHUB_CLI` is set it is the path of the CLI this app ships — run that path instead of `lh` for the rest of the session. Otherwise, or if that one is too old as well, run the latest CLI once without installing it: `pnpm --package @lobehub/cli@latest dlx lh …` (or `npx -y -p @lobehub/cli@latest lh …`). It reads the same environment and login as `lh`. When the user asks you to run `lh` this way, do so.',
   '- **Look commands up, do not guess them.** `lh man <command>` (e.g. `lh man doc create`) prints the manual for the CLI actually installed here, including exactly which flags that command takes. Many commands offer `--json` for structured output, but not all of them — the manual is what says so, and an invented flag just fails the call.',
   '- **What it reaches:** `lh kb` knowledge bases · `lh doc` documents · `lh file` files · `lh artifact` artifacts · `lh topic` / `lh message` past conversations · `lh agent` agents · `lh task` / `lh project` work · `lh widget` / `lh dashboard` monitoring widgets and dashboards · `lh search` local resources and the web · `lh gen` text/image/video/TTS/ASR generation · `lh memory` user memory · `lh notify` notifications to the user · `lh model` / `lh provider` / `lh plugin` / `lh skill` platform configuration · `lh bot` chat-platform bots.',
   "- **Widgets run code with the user's credentials.** Before `lh widget dry-run` of a draft that declares connector credentials (`manifest.env`) or network hosts (`manifest.network.allow`), show the user that version id, what the script does and which credentials and hosts it uses, and wait for their explicit approval of that exact version before passing `--version <id> --yes`. Never publish (`lh widget publish`) without the user's confirmation.",
   '- **When to use it:** whenever the user asks for something that lives in LobeHub rather than in this working directory — saving a document, recalling an earlier conversation, generating an image, or changing your own agent configuration. Say what you did and where it landed.',
-  "- **If a command comes back with an authentication or permission error**, clear `LOBEHUB_JWT` and `LOBEHUB_JWT_FILE` and retry it once — some runs carry a narrow token scoped to this conversation, which shadows the machine's own login. An empty value is enough, so use whichever form your shell takes: `LOBEHUB_JWT= LOBEHUB_JWT_FILE= lh …` (sh/bash/zsh), `$env:LOBEHUB_JWT=''; $env:LOBEHUB_JWT_FILE=''; lh …` (PowerShell), `set LOBEHUB_JWT=` and `set LOBEHUB_JWT_FILE=` then `lh …` (cmd). If it still fails, tell the user what you were trying to do — do not work around it.",
+  "- **If a command comes back with an authentication or permission error**, clear `LOBEHUB_JWT` and `LOBEHUB_JWT_FILE` and retry it once — some runs carry a narrow token scoped to this conversation, which shadows the machine's own login. An empty value is enough, so use whichever form your shell takes: `LOBEHUB_JWT= LOBEHUB_JWT_FILE= lh …` (sh/bash/zsh), `$env:LOBEHUB_JWT=''; $env:LOBEHUB_JWT_FILE=''; lh …` (PowerShell), `set LOBEHUB_JWT=` and `set LOBEHUB_JWT_FILE=` then `lh …` (cmd). If it still fails, tell the user what you were trying to do — do not look for other credentials or log in again.",
   '- **Leave these alone:** `lh hetero` and `lh connect` run the infrastructure that is executing you. And never change the persistent workspace scope with `lh workspace use` — it silently rewrites the target of every later command in this session.',
 ].join('\n');
