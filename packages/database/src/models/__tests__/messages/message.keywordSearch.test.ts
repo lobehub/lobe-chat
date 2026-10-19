@@ -318,6 +318,20 @@ describe('MessageModel.searchByKeyword', () => {
     expect(result.truncated).toBe(true);
   });
 
+  it('does not report truncation for a complete pool larger than the nominal size', async () => {
+    // Providers over-fetch past the requested pool, so 1,500 of 1,500 is complete.
+    const candidates = Array.from({ length: 1500 }, (_, i) => ({ id: `kw-full-${i}`, score: 1 }));
+    const model = new MessageModel(serverDB, userId, undefined, {
+      ftsSearchCandidateEnabled: true,
+      ftsSearchCandidates: vi.fn().mockResolvedValue({ candidates, total: candidates.length }),
+    });
+
+    const result = await model.searchByKeyword({ keyword: 'complete' });
+
+    expect(candidates.length).toBeGreaterThan(MESSAGE_KEYWORD_SEARCH_CANDIDATE_POOL);
+    expect(result.truncated).toBe(false);
+  });
+
   it('narrows candidate retrieval to the requested roles, topic and agent', async () => {
     const ftsSearchCandidates = vi.fn().mockResolvedValue({ candidates: [], total: 0 });
     const model = new MessageModel(serverDB, userId, undefined, {

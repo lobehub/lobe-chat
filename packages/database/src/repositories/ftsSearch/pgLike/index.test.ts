@@ -524,6 +524,36 @@ describe('FtsSearchRepo (pg_like)', () => {
       expect(response.candidates.map((candidate) => candidate.id)).not.toContain(early.id);
     });
 
+    it('reports a bounded pool as cut only when matches lie past its cutoff', async () => {
+      const insertHits = (count: number, offset = 0) =>
+        serverDB.insert(messages).values(
+          Array.from({ length: count }, (_, i) => ({
+            content: `cutoff kubernetes ${offset + i}`,
+            id: `cutoff-${offset + i}`,
+            role: 'user',
+            userId,
+          })),
+        );
+      const repo = createRepo(serverDB, userId);
+      // A limit of 1 over-fetches to a cutoff of 4.
+      const request = {
+        entity: 'messages' as const,
+        filters: {},
+        pagination: { limit: 1 },
+        query: { text: 'cutoff' },
+      };
+
+      await insertHits(4);
+      const exact = await repo.ftsSearchCandidates(request);
+      expect(exact.candidates).toHaveLength(4);
+      expect(exact.total).toBe(4);
+
+      await insertHits(1, 4);
+      const cut = await repo.ftsSearchCandidates(request);
+      expect(cut.candidates).toHaveLength(4);
+      expect(cut.total).toBeGreaterThan(cut.candidates.length);
+    });
+
     it('applies the message scope before the candidate limit', async () => {
       await serverDB.insert(topics).values([
         { id: 'scope-topic-a', title: 'A', userId },

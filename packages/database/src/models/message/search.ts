@@ -185,11 +185,11 @@ export class MessageKeywordSearchQueries extends MessageScope {
       : undefined;
     const candidateIds = candidateResult?.candidates.map(({ id }) => id);
     if (candidateIds?.length === 0) return { hasMore: false, items: [], truncated: false };
-    // Providers over-fetch past the requested pool; reaching it, or a provider
-    // total above what came back, means lower-ranked matches may be missing.
+    // Providers over-fetch past the requested pool size, so its nominal size
+    // says nothing; only a provider total above what came back means the
+    // cutoff actually dropped lower-ranked matches.
     const truncated = candidateResult
-      ? candidateResult.total > candidateResult.candidates.length ||
-        candidateResult.candidates.length >= MESSAGE_KEYWORD_SEARCH_CANDIDATE_POOL
+      ? candidateResult.total > candidateResult.candidates.length
       : false;
 
     const conditions: (SQL | undefined)[] = [

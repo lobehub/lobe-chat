@@ -355,6 +355,10 @@ export type FtsSearchCandidateRequest = Omit<FtsSearchBackendRequest, 'mode' | '
 
 export interface FtsSearchCandidateResult {
   candidates: FtsSearchBackendCandidate[];
+  /**
+   * Provider match count. It may be a lower bound once a bounded pool hits its
+   * cutoff, but `total > candidates.length` always means matches were dropped.
+   */
   total: number;
 }
 
