@@ -231,9 +231,11 @@ export class DocumentService {
     // Resolve visibility upfront so the KB mirror file uses the same policy
     // as the document. A library-root document inherits the KB visibility;
     // parent documents remain navigation-only and do not pass visibility or
-    // ACL to children. Personal mode leaves it undefined — the ownership
-    // filter ignores the column there — but still checks the library exists,
-    // so a wrong id fails as NOT_FOUND instead of a foreign-key violation.
+    // ACL to children. Without a library or an explicit value it stays
+    // undefined, so the row takes the schema default (`'public'` — workspace
+    // documents are shared unless asked otherwise). Personal mode ignores the
+    // column but still checks the library exists, so a wrong id fails as
+    // NOT_FOUND instead of a foreign-key violation.
     let resolvedVisibility: 'private' | 'public' | undefined = visibility;
     if (knowledgeBaseId) {
       const knowledgeBase = await this.knowledgeBaseModel.findById(
@@ -248,7 +250,6 @@ export class DocumentService {
       }
       if (this.workspaceId) resolvedVisibility = knowledgeBase.visibility;
     }
-    if (!resolvedVisibility && this.workspaceId) resolvedVisibility = 'private';
 
     let fileId: string | null = null;
 
