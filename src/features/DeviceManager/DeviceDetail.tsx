@@ -101,6 +101,12 @@ const isDetailTab = (value: string | null): value is DetailTab =>
 
 interface DeviceDetailProps {
   device: DeviceListItem;
+  /**
+   * The row was confirmed by the server this session. A row restored from
+   * storage may be stale, and edits merge into it (the full `workingDirs` list,
+   * the drafts below), so it stays read-only until confirmed.
+   */
+  isConfirmed: boolean;
   isCurrent?: boolean;
   onBack: () => void;
 }
@@ -110,10 +116,12 @@ interface DeviceDetailProps {
  * (`/settings/devices/:sub`, `/:slug/settings/devices/:sub`). The list stays a
  * plain card grid and every card opens here.
  */
-const DeviceDetail = memo<DeviceDetailProps>(({ device, isCurrent, onBack }) => {
+const DeviceDetail = memo<DeviceDetailProps>(({ device, isConfirmed, isCurrent, onBack }) => {
   const { t } = useTranslation(['setting', 'device']);
-  const canEdit = useCanEditDevice()(device);
-  const canOperate = useCanOperateDevice()(device);
+  // Permission alone drives the read-only hint; confirmation only defers edits.
+  const isEditableRow = useCanEditDevice()(device);
+  const canEdit = isEditableRow && isConfirmed;
+  const canOperate = useCanOperateDevice()(device) && isConfirmed;
   // Health monitoring and the directory settings are separate jobs; a tab each
   // keeps the charts from pushing the directories below the fold. The active
   // tab lives in `?tab=` so a view can be linked, reloaded and reached with
@@ -366,7 +374,7 @@ const DeviceDetail = memo<DeviceDetailProps>(({ device, isCurrent, onBack }) => 
             fields below are read-only without the user needing to try and hit a
             403. Only renders for workspace devices that aren't the caller's own
             enrollment (personal scope is always editable). */}
-        {!canEdit && (
+        {!isEditableRow && (
           <Flexbox horizontal align={'center'} gap={8}>
             <Icon icon={LockIcon} size={14} style={{ color: cssVar.colorTextTertiary }} />
             <Text fontSize={12} type={'secondary'}>

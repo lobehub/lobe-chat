@@ -1,7 +1,7 @@
 import type { DeviceListItem } from '@lobechat/types';
 import { describe, expect, it } from 'vitest';
 
-import { getDeviceListBoundary } from './deviceListBoundary';
+import { deviceDetailKey, getDeviceListBoundary } from './deviceListBoundary';
 
 const rows = [{ deviceId: 'dev-2', scope: 'personal' }] as DeviceListItem[];
 
@@ -51,5 +51,19 @@ describe('getDeviceListBoundary', () => {
         false,
       ),
     ).toEqual({ data: rows, isLoading: false });
+  });
+});
+
+describe('deviceDetailKey', () => {
+  it('remounts the detail once the server confirms a stored row', () => {
+    expect(deviceDetailKey('dev-1', false)).not.toBe(deviceDetailKey('dev-1', true));
+  });
+
+  it('keeps one mount across refreshes of a confirmed row', () => {
+    expect(deviceDetailKey('dev-1', true)).toBe(deviceDetailKey('dev-1', true));
+  });
+
+  it('remounts when the route moves to another device', () => {
+    expect(deviceDetailKey('dev-1', true)).not.toBe(deviceDetailKey('dev-2', true));
   });
 });

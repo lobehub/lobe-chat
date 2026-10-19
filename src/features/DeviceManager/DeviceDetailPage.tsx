@@ -12,7 +12,7 @@ import { useDeviceList } from '@/store/device';
 import { useElectronStore } from '@/store/electron';
 
 import DeviceDetail from './DeviceDetail';
-import { getDeviceListBoundary } from './deviceListBoundary';
+import { deviceDetailKey, getDeviceListBoundary } from './deviceListBoundary';
 
 const DetailSkeleton = memo(() => (
   <Flexbox gap={24}>
@@ -43,7 +43,7 @@ interface DeviceDetailPageProps {
 const DeviceDetailPage = memo<DeviceDetailPageProps>(({ deviceId, onBack, scope }) => {
   const { t } = useTranslation('setting');
   const deviceList = useDeviceList();
-  const { data, error, mutate } = deviceList;
+  const { data, error, isConfirmed, mutate } = deviceList;
   const device = data?.find((d) => d.deviceId === deviceId && d.scope === scope);
   // A persisted copy missing this device may just be stale: only the server
   // can say it is gone.
@@ -85,11 +85,11 @@ const DeviceDetailPage = memo<DeviceDetailPageProps>(({ deviceId, onBack, scope 
       onRetry={() => mutate()}
     >
       {device && (
-        // keyed on deviceId so the form drafts reset when the route moves to another device
         <DeviceDetail
           device={device}
+          isConfirmed={isConfirmed}
           isCurrent={isCurrent}
-          key={device.deviceId}
+          key={deviceDetailKey(device.deviceId, isConfirmed)}
           onBack={() => onBack(device)}
         />
       )}

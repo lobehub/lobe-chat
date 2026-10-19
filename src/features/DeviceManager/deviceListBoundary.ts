@@ -28,3 +28,12 @@ export const getDeviceListBoundary = (
     isLoading: list.isLoading || (isPending && (!list.error || list.isValidating)),
   };
 };
+
+/**
+ * React key for the device detail. It seeds its rename / cwd drafts from the
+ * row on mount, so it remounts when the route moves to another device and once
+ * the server confirms a row that was painted from storage — drafts seeded from
+ * a stale stored row would otherwise write the old name or `workingDirs` back.
+ */
+export const deviceDetailKey = (deviceId: string, isConfirmed: boolean): string =>
+  `${deviceId}:${isConfirmed ? 'server' : 'stored'}`;
