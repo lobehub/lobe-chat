@@ -2,7 +2,6 @@ import { isDesktop } from '@lobechat/const';
 import { isFullAccessApiKey } from '@lobechat/const/apiKeyScope';
 import type { UserInitializationState, UserPreference } from '@lobechat/types';
 import { Plans, UserGuideSchema } from '@lobechat/types';
-import { inferImageMimeTypeFromBytes } from '@lobechat/utils/imageMimeType';
 import { TRPCError } from '@trpc/server';
 import { v4 as uuidv4 } from 'uuid';
 import { z } from 'zod';
@@ -154,15 +153,6 @@ export const profileRouter = router({
         }
         const [, mimeType, fileType] = prefix;
         const buffer = Buffer.from(input.slice(prefix[0].length), 'base64');
-        let detectedMimeType: string | undefined;
-        try {
-          detectedMimeType = await inferImageMimeTypeFromBytes(buffer);
-        } catch (cause) {
-          throw new TRPCError({ cause, code: 'BAD_REQUEST', message: 'INVALID_AVATAR_IMAGE' });
-        }
-        if (detectedMimeType !== mimeType) {
-          throw new TRPCError({ code: 'BAD_REQUEST', message: 'INVALID_AVATAR_IMAGE' });
-        }
 
         // Create S3 client
         const s3 = new FileS3();
