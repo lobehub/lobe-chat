@@ -42,6 +42,14 @@ describe('quick setup links', () => {
     // Group DMs, as in the Slack setup guide.
     expect(manifest.settings.event_subscriptions.bot_events).toContain('message.mpim');
     expect(manifest.oauth_config.scopes.bot).toContain('mpim:read');
+    // Attachment uploads and the /new and /stop commands.
+    expect(manifest.oauth_config.scopes.bot).toEqual(
+      expect.arrayContaining(['files:write', 'commands']),
+    );
+    expect(manifest.features.slash_commands.map(({ command }) => command)).toEqual([
+      '/new',
+      '/stop',
+    ]);
     expect(manifest.features.bot_user.display_name).toBe('moss');
     expect(buildSlackManifest({ name: '助手' }).features.bot_user.display_name).toBe(
       'lobehub-assistant',

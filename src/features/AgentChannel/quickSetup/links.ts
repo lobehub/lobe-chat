@@ -50,7 +50,9 @@ const SLACK_BOT_SCOPES = [
   'channels:history',
   'channels:read',
   'chat:write',
+  'commands',
   'files:read',
+  'files:write',
   'groups:history',
   'groups:read',
   'im:history',
@@ -75,7 +77,8 @@ const SLACK_BOT_EVENTS = [
 
 /**
  * A Slack app manifest with the scopes, events and Socket Mode the bot needs
- * to chat (DMs, group DMs, channels and mentions), so nothing is set by hand.
+ * to chat (DMs, group DMs, channels and mentions), send files and answer the
+ * `/new` and `/stop` commands, so nothing is set by hand.
  */
 export const buildSlackManifest = ({
   description,
@@ -91,6 +94,11 @@ export const buildSlackManifest = ({
   features: {
     app_home: { messages_tab_enabled: true, messages_tab_read_only_enabled: false },
     bot_user: { always_online: true, display_name: toSlackBotName(name) },
+    // The gateway handles these over Socket Mode, so no request URL is needed.
+    slash_commands: [
+      { command: '/new', description: 'Start a new conversation', should_escape: false },
+      { command: '/stop', description: 'Stop the current execution', should_escape: false },
+    ],
   },
   oauth_config: { scopes: { bot: SLACK_BOT_SCOPES } },
   settings: {
