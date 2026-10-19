@@ -18,12 +18,17 @@ import { AgentRuntimeError } from '../../utils/createError';
 import type { ModelIdMappingOptions } from '../../utils/modelIdMapping';
 import { resolveMappedModelId } from '../../utils/modelIdMapping';
 import { getFalInputSchema, listFalGenerationModels } from './catalog';
-import { createFalVideo, pollFalVideoStatus } from './createVideo';
+import {
+  createFalVideo,
+  getFalTaskRoutedVideoEndpoints,
+  pollFalVideoStatus,
+} from './createVideo';
 import {
   isFalResolutionTierEndpoint,
   resolveFalEndpointId,
   resolveFalImageEndpoint,
 } from './endpoint';
+import { coerceFalInput } from './schema';
 
 // Create debug logger
 const log = debug('lobe-image:fal');
@@ -71,6 +76,24 @@ export const resolveFalImageSize = (
   const roundDown = (value: number) => Math.floor(value / 16) * 16;
 
   return { height: roundDown(ratioHeight * scale), width: roundDown(ratioWidth * scale) };
+};
+
+/**
+ * fal endpoints served by the built-in cards: each card's id plus the task endpoints its one-card
+ * family routes to (e.g. `fal-ai/bytedance/seedream/v4/edit`). The catalog copies of these are
+ * duplicates without the curated parameters and pricing.
+ */
+const loadBuiltinFalEndpoints = async () => {
+  const { default: builtinModels } = await import('model-bank/fal');
+
+  return new Set(
+    builtinModels.flatMap(({ id }) => [
+      id,
+      resolveFalImageEndpoint(id, false),
+      resolveFalImageEndpoint(id, true),
+      ...getFalTaskRoutedVideoEndpoints(id),
+    ]),
+  );
 };
 
 // https://docs.fal.ai/model-apis/errors/
@@ -208,10 +231,13 @@ export class LobeFalAI implements LobeRuntimeAI {
       defaultInput['acceleration'] = 'high';
     }
 
-    const finalInput = {
-      ...defaultInput,
-      ...userInput,
-    };
+    const builtinEndpoints = await loadBuiltinFalEndpoints();
+    const input = { ...defaultInput, ...userInput };
+    // Fetched endpoints only accept the fields their schema declares; built-in cards send the
+    // curated input as is
+    const finalInput = builtinEndpoints.has(endpoint)
+      ? input
+      : coerceFalInput(input, await getFalInputSchema(this.apiKey, endpoint));
 
     log('Calling fal.subscribe with endpoint: %s and input: %O', endpoint, finalInput);
     try {
@@ -233,18 +259,17 @@ export class LobeFalAI implements LobeRuntimeAI {
 
   /**
    * List fal's image and video endpoints with parameters derived from their input schemas, so any
-   * endpoint (any owner, not only `fal-ai/`) can be enabled on the generation pages. Built-in
-   * cards are skipped: they are already listed with curated parameters and pricing.
+   * endpoint (any owner, not only `fal-ai/`) can be enabled on the generation pages. Endpoints of
+   * built-in cards are skipped: they are already listed with curated parameters and pricing.
    */
   async models(): Promise<ChatModelCard[]> {
-    const { default: builtinModels } = await import('model-bank/fal');
-    const builtinIds = new Set(builtinModels.map((model) => model.id));
+    const builtinEndpoints = await loadBuiltinFalEndpoints();
 
     try {
       const models = await listFalGenerationModels(this.apiKey);
 
       return models
-        .filter((model) => !builtinIds.has(model.id))
+        .filter((model) => !builtinEndpoints.has(model.id))
         .map(({ parameters, ...model }) => ({
           ...model,
           enabled: false,

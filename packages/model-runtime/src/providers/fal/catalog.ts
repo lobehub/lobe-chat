@@ -196,17 +196,24 @@ export const listFalGenerationModels = async (apiKey: string, signal?: AbortSign
   return [...models.values()];
 };
 
-const inputSchemaCache = new Map<string, Promise<FalJsonSchema | undefined>>();
+/** fal redeploys endpoints in place, so a cached input schema is refetched after this long */
+export const FAL_INPUT_SCHEMA_TTL_MS = 60 * 60 * 1000;
+
+const inputSchemaCache = new Map<
+  string,
+  { expiresAt: number; schema: Promise<FalJsonSchema | undefined> }
+>();
 
 /**
- * Input schema of one fal endpoint, cached per process. Resolves undefined when the catalog
- * cannot be reached, so callers fall back to sending the request as built.
+ * Input schema of one fal endpoint, cached per process for `FAL_INPUT_SCHEMA_TTL_MS`. Resolves
+ * undefined when the catalog cannot be reached, so callers fall back to sending the request as
+ * built.
  */
 export const getFalInputSchema = (apiKey: string, endpointId: string) => {
   const cached = inputSchemaCache.get(endpointId);
-  if (cached) return cached;
+  if (cached && cached.expiresAt > Date.now()) return cached.schema;
 
-  const pending = requestCatalog(apiKey, { endpoint_id: endpointId, expand: 'openapi-3.0' })
+  const schema = requestCatalog(apiKey, { endpoint_id: endpointId, expand: 'openapi-3.0' })
     .then((page) => {
       const model = page.models?.find((item) => item.endpoint_id === endpointId);
       return extractFalInputSchema(model?.openapi, endpointId);
@@ -217,8 +224,8 @@ export const getFalInputSchema = (apiKey: string, endpointId: string) => {
       return undefined;
     });
 
-  inputSchemaCache.set(endpointId, pending);
-  return pending;
+  inputSchemaCache.set(endpointId, { expiresAt: Date.now() + FAL_INPUT_SCHEMA_TTL_MS, schema });
+  return schema;
 };
 
 /** @internal Test helper */

@@ -49,6 +49,12 @@ const REQUEST_PATH_SEPARATOR = '/requests/';
 /** Video model cards whose task endpoint the runtime picks from the request params */
 export const isFalTaskRoutedVideoModel = (model: string) => Object.hasOwn(FAL_VIDEO_MODELS, model);
 
+const FAL_VIDEO_TASKS = ['text-to-video', 'image-to-video', 'reference-to-video'] as const;
+
+/** fal endpoints a task-routed video card sends requests to; empty for any other model */
+export const getFalTaskRoutedVideoEndpoints = (model: string) =>
+  isFalTaskRoutedVideoModel(model) ? FAL_VIDEO_TASKS.map((task) => `${model}/${task}`) : [];
+
 export const toFalVideoInferenceId = (appId: string, requestId: string) =>
   `${appId}${REQUEST_PATH_SEPARATOR}${requestId}`;
 
@@ -81,7 +87,7 @@ export const buildFalVideoRequest = (model: string, params: RuntimeVideoGenParam
   if (resolution) input.resolution = resolution;
   if (typeof seed === 'number' && seed >= 0) input.seed = seed;
 
-  let task: 'image-to-video' | 'reference-to-video' | 'text-to-video';
+  let task: (typeof FAL_VIDEO_TASKS)[number];
   if (imageUrls?.length) {
     task = 'reference-to-video';
     // Shared with pricing so the billed reference tokens cover every image sent

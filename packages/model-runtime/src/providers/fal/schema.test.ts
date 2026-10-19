@@ -98,6 +98,24 @@ describe('falInputSchemaToImageParameters', () => {
       falInputSchemaToImageParameters({ properties: { image_url: { type: 'string' } } }),
     ).toBeUndefined();
   });
+
+  it('skips endpoints that require an input the runtime does not send', () => {
+    expect(
+      falInputSchemaToImageParameters({
+        properties: { control_image_url: { type: 'string' }, prompt: { type: 'string' } },
+        required: ['prompt', 'control_image_url'],
+      }),
+    ).toBeUndefined();
+  });
+
+  it('keeps endpoints whose required inputs are all exposed', () => {
+    expect(
+      falInputSchemaToImageParameters({
+        properties: { image_urls: { type: 'array' }, prompt: { type: 'string' } },
+        required: ['prompt', 'image_urls'],
+      }),
+    ).toEqual({ imageUrls: { default: [] }, prompt: { default: '' } });
+  });
 });
 
 describe('falInputSchemaToVideoParameters', () => {
@@ -136,6 +154,15 @@ describe('falInputSchemaToVideoParameters', () => {
         },
       })?.duration,
     ).toEqual({ default: 5, max: 15, min: 3, step: 1 });
+  });
+
+  it('skips endpoints that require an input the runtime does not send', () => {
+    expect(
+      falInputSchemaToVideoParameters({
+        properties: { audio_url: { type: 'string' }, prompt: { type: 'string' } },
+        required: ['prompt', 'audio_url'],
+      }),
+    ).toBeUndefined();
   });
 });
 

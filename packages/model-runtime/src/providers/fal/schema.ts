@@ -140,10 +140,51 @@ const parseDuration = (value: unknown) => {
   return Number.isFinite(parsed) ? parsed : undefined;
 };
 
+/** fal input field each image parameter is sent as by `createImage` */
+const IMAGE_PARAMETER_FIELDS: Record<string, string> = {
+  aspectRatio: 'aspect_ratio',
+  cfg: 'guidance_scale',
+  imageUrl: 'image_url',
+  imageUrls: 'image_urls',
+  prompt: 'prompt',
+  resolution: 'resolution',
+  seed: 'seed',
+  size: 'image_size',
+  steps: 'num_inference_steps',
+  strength: 'strength',
+};
+
+/** fal input field each video parameter is sent as by `buildGenericFalVideoInput` */
+const VIDEO_PARAMETER_FIELDS: Record<string, string> = {
+  aspectRatio: 'aspect_ratio',
+  duration: 'duration',
+  endImageUrl: 'end_image_url',
+  generateAudio: 'generate_audio',
+  imageUrl: 'image_url',
+  imageUrls: 'image_urls',
+  prompt: 'prompt',
+  resolution: 'resolution',
+  seed: 'seed',
+};
+
+/**
+ * Whether every input the endpoint requires is one the exposed parameters send. An endpoint that
+ * requires anything else (e.g. `control_image_url`) would fail fal's validation on every request.
+ */
+const sendsRequiredInputs = (
+  required: string[] | undefined,
+  parameters: Record<string, unknown>,
+  fields: Record<string, string>,
+) => {
+  const sent = new Set(Object.keys(parameters).map((key) => fields[key]));
+  return (required ?? []).every((field) => sent.has(field));
+};
+
 /**
  * Map a fal image endpoint's input schema to the image generation parameters lobehub renders.
  * Only fields the runtime knows how to send are exposed (see `createImage`'s parameter map);
- * returns undefined for endpoints without a text prompt, which the generation page cannot drive.
+ * returns undefined for endpoints without a text prompt or with a required input the runtime does
+ * not send, which the generation page cannot drive.
  */
 export const falInputSchemaToImageParameters = (
   input: FalJsonSchema | undefined,
@@ -223,12 +264,15 @@ export const falInputSchemaToImageParameters = (
 
   if (properties.seed) parameters.seed = { default: null };
 
+  if (!sendsRequiredInputs(input?.required, parameters, IMAGE_PARAMETER_FIELDS)) return;
+
   return parameters;
 };
 
 /**
  * Map a fal video endpoint's input schema to the video generation parameters lobehub renders.
- * Field names follow `buildGenericFalVideoInput`, so every exposed parameter reaches fal.
+ * Field names follow `buildGenericFalVideoInput`, so every exposed parameter reaches fal. Returns
+ * undefined for endpoints without a prompt or with a required input the runtime does not send.
  */
 export const falInputSchemaToVideoParameters = (
   input: FalJsonSchema | undefined,
@@ -294,6 +338,8 @@ export const falInputSchemaToVideoParameters = (
   }
 
   if (properties.seed) parameters.seed = { default: null };
+
+  if (!sendsRequiredInputs(input?.required, parameters, VIDEO_PARAMETER_FIELDS)) return;
 
   return parameters;
 };

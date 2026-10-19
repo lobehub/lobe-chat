@@ -2,8 +2,9 @@
 import { fal } from '@fal-ai/client';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { clearFalInputSchemaCache, FAL_INPUT_SCHEMA_TTL_MS, getFalInputSchema } from './catalog';
 import { LobeFalAI } from './index';
-import { buildFalOpenAPI } from './testUtils';
+import { buildFalCatalogResponse, buildFalOpenAPI } from './testUtils';
 
 vi.mock('@fal-ai/client', () => ({
   createFalClient: vi.fn(() => ({})),
@@ -16,6 +17,7 @@ let instance: LobeFalAI;
 
 beforeEach(() => {
   vi.clearAllMocks();
+  clearFalInputSchemaCache();
   instance = new LobeFalAI({ apiKey: 'test-api-key' });
   mockFal.subscribe.mockResolvedValue({
     data: { images: [{ url: 'https://example.com/out.png' }] },
@@ -25,10 +27,24 @@ beforeEach(() => {
 
 afterEach(() => {
   vi.unstubAllGlobals();
+  vi.restoreAllMocks();
 });
+
+/** Serve one endpoint's input schema from the catalog, or fail when no properties are given */
+const stubInputSchema = (endpointId: string, properties?: Record<string, any>) => {
+  const fetchMock = vi.fn(async () =>
+    properties
+      ? new Response(JSON.stringify(buildFalCatalogResponse(endpointId, properties)))
+      : new Response('{}', { status: 500 }),
+  );
+  vi.stubGlobal('fetch', fetchMock);
+  return fetchMock;
+};
 
 describe('LobeFalAI createImage with any fal endpoint', () => {
   it('sends endpoints from other owners verbatim', async () => {
+    stubInputSchema('black-forest-labs/flux-2-pro');
+
     await instance.createImage({
       model: 'black-forest-labs/flux-2-pro',
       params: { prompt: 'a fox' },
@@ -69,7 +85,33 @@ describe('LobeFalAI createImage with any fal endpoint', () => {
     });
   });
 
+  it('sends a fetched endpoint only the fields its schema declares', async () => {
+    const fetchMock = stubInputSchema('someone/prompt-only', { prompt: { type: 'string' } });
+
+    await instance.createImage({ model: 'someone/prompt-only', params: { prompt: 'a fox' } });
+
+    expect(mockFal.subscribe).toHaveBeenCalledWith('someone/prompt-only', {
+      input: { prompt: 'a fox' },
+    });
+    expect((fetchMock.mock.calls[0] as unknown as [URL])[0].searchParams.get('endpoint_id')).toBe(
+      'someone/prompt-only',
+    );
+  });
+
+  it('sends built-in cards their curated input without loading a schema', async () => {
+    const fetchMock = stubInputSchema('fal-ai/flux/schnell', { prompt: { type: 'string' } });
+
+    await instance.createImage({ model: 'fal-ai/flux/schnell', params: { prompt: 'a fox' } });
+
+    expect(mockFal.subscribe).toHaveBeenCalledWith('fal-ai/flux/schnell', {
+      input: { enable_safety_checker: false, num_images: 1, prompt: 'a fox' },
+    });
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
   it('reads a single `image` output', async () => {
+    stubInputSchema('fal-ai/some-upscaler');
+
     mockFal.subscribe.mockResolvedValue({
       data: { image: { height: 512, url: 'https://example.com/one.png', width: 512 } },
       requestId: 'r',
@@ -115,6 +157,10 @@ describe('LobeFalAI models', () => {
   it('lists image and video endpoints of any owner with derived parameters', async () => {
     const fetchMock = stubCatalog({
       'image-to-video': [
+        catalogModel('bytedance/seedance-2.5/image-to-video', 'image-to-video', {
+          image_url: { type: 'string' },
+          prompt: { type: 'string' },
+        }),
         catalogModel('fal-ai/kling-video/v2.1/standard/image-to-video', 'image-to-video', {
           duration: { default: '5', enum: ['5', '10'], type: 'string' },
           image_url: { type: 'string' },
@@ -133,6 +179,10 @@ describe('LobeFalAI models', () => {
         ),
         // Built-in cards keep their curated parameters, so the catalog copy is skipped
         catalogModel('fal-ai/flux/schnell', 'text-to-image', { prompt: { type: 'string' } }),
+        // Task endpoints a built-in one-card family routes to are duplicates of that card
+        catalogModel('fal-ai/bytedance/seedream/v4/edit', 'text-to-image', {
+          prompt: { type: 'string' },
+        }),
         // Upscalers and other prompt-less endpoints cannot be driven by the generation page
         catalogModel('fal-ai/upscaler', 'text-to-image', { image_url: { type: 'string' } }),
         catalogModel(
@@ -261,5 +311,20 @@ describe('LobeFalAI models', () => {
     await expect(instance.models()).rejects.toMatchObject({
       errorType: 'InvalidProviderAPIKey',
     });
+  });
+});
+
+describe('getFalInputSchema', () => {
+  it('refetches a cached schema once it expires', async () => {
+    const now = vi.spyOn(Date, 'now').mockReturnValue(1_000);
+    const fetchMock = stubInputSchema('a/app', { prompt: { type: 'string' } });
+
+    await getFalInputSchema('key', 'a/app');
+    await getFalInputSchema('key', 'a/app');
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+
+    now.mockReturnValue(1_000 + FAL_INPUT_SCHEMA_TTL_MS + 1);
+    await getFalInputSchema('key', 'a/app');
+    expect(fetchMock).toHaveBeenCalledTimes(2);
   });
 });
