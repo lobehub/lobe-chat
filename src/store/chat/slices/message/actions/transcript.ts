@@ -197,9 +197,6 @@ export class MessageTranscriptActionImpl {
           dedupingInterval: 1000,
         }),
         onSuccess: (fetched) => {
-          // A response the replica does not fold (off-scope or superseded)
-          // never reaches `prepareHead`; release its read record here.
-          if (Array.isArray(fetched)) this.#transcript.releaseHeadRead(fetched);
           const resolution = Array.isArray(fetched) ? headResolutions.get(fetched) : undefined;
           if (!resolution || !context.topicId) return;
           headResolutions.delete(fetched as never);

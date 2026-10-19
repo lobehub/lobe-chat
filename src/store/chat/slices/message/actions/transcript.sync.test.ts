@@ -555,6 +555,55 @@ describe('useFetchMessages', () => {
       }
     });
 
+    it('keeps optimistic rows that were already present when the read started', async () => {
+      const previousReply: UIChatMessage = {
+        id: 'previous-reply',
+        content: 'Previous reply',
+        role: 'assistant',
+        createdAt: 1000,
+        updatedAt: 1000,
+      };
+      const sentUser: UIChatMessage = {
+        id: 'msg_user',
+        content: 'Follow-up question',
+        role: 'user',
+        createdAt: 2000,
+        updatedAt: 2000,
+      };
+      const sentAssistant: UIChatMessage = {
+        id: 'msg_assistant',
+        content: '...',
+        role: 'assistant',
+        createdAt: 2001,
+        updatedAt: 2001,
+      };
+
+      // The server has not persisted the optimistic pair when a poll or focus
+      // read starts, so its snapshot omits them even though they exist locally.
+      vi.mocked(messageService.getMessages).mockResolvedValue([
+        { ...previousReply, content: 'Previous reply (fetched)', updatedAt: 1500 },
+      ]);
+      seedRows(context, [previousReply]);
+      for (const message of [sentUser, sentAssistant]) {
+        useChatStore
+          .getState()
+          .internal_dispatchMessage(
+            { id: message.id, type: 'createMessage', value: message as any },
+            { conversationContext: context },
+          );
+      }
+
+      syncMessages(context);
+
+      // Wait for the fetched row to land, so the merge has run.
+      await waitFor(() => expect(rowsOf(context)?.[0].content).toBe('Previous reply (fetched)'));
+      expect(rowsOf(context)?.map((message) => message.id)).toEqual([
+        previousReply.id,
+        sentUser.id,
+        sentAssistant.id,
+      ]);
+    });
+
     it('keeps a send whose stale fetch resolves after the send operation handed off', async () => {
       const previousReply: UIChatMessage = {
         id: 'previous-reply',

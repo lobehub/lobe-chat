@@ -84,19 +84,23 @@ const createMessageTranscript = (set: StoreSetter<ChatStore>, get: () => ChatSto
    * what an earlier unfinished one still needs.
    */
   type HeadReadRecord = {
-    idsAtRequestStart: Set<string>;
-    written: Set<string>;
+    /** Client-created ids this read cannot treat as server-authoritative. */
+    clientIds: Set<string>;
     /** Creation order, used to keep the earliest record for a shared result. */
     order: number;
   };
   const activeHeadReads = new Set<HeadReadRecord>();
   const headReads = new WeakMap<UIChatMessage[], HeadReadRecord>();
+  /** Client-created rows a server snapshot has not returned yet. */
+  const unconfirmedClientIds = new Set<string>();
   let headReadOrder = 0;
   /** The entry key each bucket was last written under. */
   const bucketKeys = new Map<string, string>();
 
-  const createHeadRead = (idsAtRequestStart: Set<string>): HeadReadRecord => {
-    const record = { idsAtRequestStart, order: ++headReadOrder, written: new Set<string>() };
+  const createHeadRead = (): HeadReadRecord => {
+    // A row created before this read but not yet persisted is still missing
+    // from an authoritative snapshot, so it starts in the record too.
+    const record = { clientIds: new Set(unconfirmedClientIds), order: ++headReadOrder };
     activeHeadReads.add(record);
     return record;
   };
@@ -112,7 +116,8 @@ const createMessageTranscript = (set: StoreSetter<ChatStore>, get: () => ChatSto
    * the server, so a snapshot that omits one stays authoritative.
    */
   const noteClientWrite = (id: string) => {
-    for (const record of activeHeadReads) record.written.add(id);
+    unconfirmedClientIds.add(id);
+    for (const record of activeHeadReads) record.clientIds.add(id);
   };
 
   const lens = createTranscriptLens();
@@ -135,7 +140,16 @@ const createMessageTranscript = (set: StoreSetter<ChatStore>, get: () => ChatSto
    */
   const registerHeadRead = (messages: UIChatMessage[], record: HeadReadRecord) => {
     const existing = headReads.get(messages);
-    if (!existing || record.order < existing.order) headReads.set(messages, record);
+    if (existing) {
+      if (existing === record) return;
+      if (existing.order <= record.order) {
+        // An earlier read already covers this shared result.
+        releaseHeadRead(record);
+        return;
+      }
+      releaseHeadRead(existing);
+    }
+    headReads.set(messages, record);
   };
 
   // ---- reads ---------------------------------------------------------------
@@ -158,7 +172,7 @@ const createMessageTranscript = (set: StoreSetter<ChatStore>, get: () => ChatSto
      * the forced re-read after an intervention. It stays live until the fetch
      * settles, so no other read can discard a row this one still needs.
      */
-    const read = createHeadRead(new Set((bucketRows(bucket) ?? []).map((message) => message.id)));
+    const read = createHeadRead();
     try {
       const dbMessages = bucketRows(bucket) ?? [];
       const topicAtRequest = context.topicId
@@ -230,13 +244,15 @@ const createMessageTranscript = (set: StoreSetter<ChatStore>, get: () => ChatSto
     // The fetch has fully settled (topic detail and any forced re-read
     // included); later writes need not be recorded for it.
     if (read) releaseHeadRead(read);
+
+    // A returned row is server-confirmed: a later snapshot may remove it.
+    for (const message of incoming) unconfirmedClientIds.delete(message.id);
     if (!context.topicId) return undefined;
 
-    // Only rows a client mutation created after this read was issued may be
-    // missing from its snapshot. Hydrated and server-applied rows stay out.
+    // Client rows this read cannot treat as authoritative: unconfirmed when it
+    // was issued, or created while it was in flight.
     const boundary: HeadRequestBoundary | undefined = read && {
-      idsAtRequestStart: read.idsAtRequestStart,
-      locallyWrittenAfterRequestStart: read.written,
+      unconfirmedClientIds: read.clientIds,
     };
 
     // DB chunk writes can lag behind pushed content, even at an equal
@@ -291,6 +307,16 @@ const createMessageTranscript = (set: StoreSetter<ChatStore>, get: () => ChatSto
 
   const slice = createReplicaSlice(conversationMessagesResource, {
     actionPrefix: 'messageTranscript',
+    effects: {
+      // Every settled success releases its read record, including responses
+      // the replica discards before `prepareHead` (off-scope, superseded,
+      // cleared, removed, or dropped by the merge).
+      onSettled: (data) => {
+        if (!Array.isArray(data)) return;
+        const record = headReads.get(data);
+        if (record) releaseHeadRead(record);
+      },
+    },
     fetcher: (context, cursor) =>
       context.messageReadMode === 'forward'
         ? fetchForward(context, cursor)
@@ -389,14 +415,6 @@ const createMessageTranscript = (set: StoreSetter<ChatStore>, get: () => ChatSto
     pendingInterventions,
     /** The entry's current value, as the replica sees it. */
     read: (key: string) => lens.get(get(), key),
-    /**
-     * Release a head result the replica never folded (off-scope or superseded).
-     * Applied results are released by `prepareHead`.
-     */
-    releaseHeadRead: (messages: UIChatMessage[]) => {
-      const record = headReads.get(messages);
-      if (record) releaseHeadRead(record);
-    },
     settle,
     slice,
   };
