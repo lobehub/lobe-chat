@@ -4,6 +4,7 @@ import type {
   TaskTemplateConnectorSource,
 } from '@lobechat/const';
 
+import type { LocalStorageQueryProjectionStorage } from '@/libs/queryProjectionStorage';
 import { cacheScope, defineReplica, replicaKeys } from '@/libs/replica';
 
 import { TASK_TEMPLATE_DAILY_RECOMMEND_REPLICA } from './const';
@@ -101,3 +102,22 @@ export const dailyRecommendResource = defineReplica<DailyRecommendParams, TaskTe
     ),
   version: DAILY_RECOMMEND_VERSION,
 });
+
+/**
+ * The persisted recommendations of an entry, read synchronously from the
+ * replica's own localStorage row. The replica hydrates asynchronously, after
+ * the first paint; this lets that first frame show the cards, not a skeleton.
+ */
+export const peekDailyRecommendations = (
+  params: DailyRecommendParams,
+  scope: string,
+): unknown[] | undefined => {
+  if (!cacheScope.canHydrate?.()) return undefined;
+  const storage = dailyRecommendResource.storage as
+    LocalStorageQueryProjectionStorage<TaskTemplate[]> | undefined;
+  const data = storage?.getSync?.({
+    queryKey: dailyRecommendResource.storageKey(params),
+    scope,
+  })?.data;
+  return Array.isArray(data) ? data : undefined;
+};

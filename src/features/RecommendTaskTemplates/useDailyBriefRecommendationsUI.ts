@@ -18,6 +18,7 @@ import {
   dailyRecommendKey,
   type DailyRecommendParams,
   normalizeTaskTemplateRecommendations,
+  peekDailyRecommendations,
 } from './projection';
 import {
   dailyRecommendErrorId,
@@ -207,9 +208,15 @@ export function useDailyBriefRecommendationsUI(
   const retained = useTaskTemplateRecommendationStore((s) =>
     key && retainedKey ? s.dailyRecommendMap[retainedKey] : undefined,
   );
-  const shown = entry ?? retained;
+  // Until the async hydrate settles, read the persisted row synchronously, so
+  // a reload paints the cards on its first frame instead of the skeleton.
+  const peeked = useMemo(
+    () => (!isHydrated && params ? peekDailyRecommendations(params, scope) : undefined),
+    [isHydrated, params, scope],
+  );
+  const shown = entry ?? (peeked as TaskTemplate[] | undefined) ?? retained;
   // Card actions target the entry whose batch is on screen.
-  const shownKey = entry ? key : retained ? retainedKey : undefined;
+  const shownKey = entry || peeked ? key : retained ? retainedKey : undefined;
 
   const handleRefresh = useCallback(() => {
     setRefreshSeed(nextRefreshSeed());

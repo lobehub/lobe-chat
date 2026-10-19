@@ -714,4 +714,27 @@ describe('useDailyBriefRecommendationsUI', () => {
     expect(taskTemplateService.listDailyRecommend).toHaveBeenCalledTimes(1);
     expect(consoleErrorSpy).toHaveBeenCalledWith('[taskTemplate:listDailyRecommend]', error);
   });
+
+  // Regression: the persisted row hydrated through an async SWR fetcher, so a
+  // reload rendered the skeleton for at least its first frame.
+  it('paints persisted cards on the very first render', async () => {
+    await seed([template]);
+    vi.mocked(taskTemplateService.listDailyRecommend).mockImplementation(pending);
+    const modes: string[] = [];
+
+    renderHook(
+      () => {
+        const state = useDailyBriefRecommendationsUI();
+        modes.push(state.mode);
+        return state;
+      },
+      { wrapper },
+    );
+
+    expect(modes[0]).toBe('cards');
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve, 20));
+    });
+    expect(modes.every((mode) => mode === 'cards')).toBe(true);
+  });
 });
