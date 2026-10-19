@@ -14,7 +14,7 @@ import { parseSkillMarkdownFrontmatter } from '@/utils/skillMarkdown';
 import type { GoalGraphView } from '../goalGraphViewModel';
 import type { BatchModel, BatchRound } from '../Graph/batchModel';
 import { usePlanVersions, usePlanVersionSelection } from './planVersion';
-import { skillFileTree } from './skillVersions';
+import { skillFileTree, useSkillVersion } from './skillVersions';
 
 /**
  * A batch's plan, opened from its node, read the way the product reads a
@@ -61,21 +61,25 @@ const PlanDetail = memo<PlanDetailProps>(({ graph, model, round }) => {
   const [selectedFile, setSelectedFile] = useState(SKILL_INDEX);
   const [filesOpen, setFilesOpen] = useState(true);
   const { selected } = usePlanVersionSelection();
-  const { files: latestFiles, isLoading, versions } = usePlanVersions(graph, model);
+  const { files: latestFiles, isLoading, skillId, versions } = usePlanVersions(graph, model);
   const revision = selected ?? round.planVersion;
   const current = versions.find((version) => version.revision === revision);
+  const { data: shipped, isLoading: isVersionLoading } = useSkillVersion(
+    current && skillId,
+    revision,
+  );
   // The package as this version shipped it, when it kept its own files.
-  const files = current?.files ?? latestFiles;
+  const files = shipped?.files ?? latestFiles;
   const resourceTree = useMemo(() => skillFileTree(files), [files]);
   const contentMap = useMemo(
     () => Object.fromEntries(files.map((file) => [file.path, file.content])),
     [files],
   );
 
-  if (isLoading) return <Loading />;
+  if (isLoading || isVersionLoading) return <Loading />;
 
   const forked = model.rounds.find((item) => item.planVersion === revision)?.forked;
-  const { body, frontmatter } = parseSkillMarkdownFrontmatter(current?.content);
+  const { body, frontmatter } = parseSkillMarkdownFrontmatter(shipped?.content ?? current?.content);
 
   return (
     <Flexbox data-plan-detail flex={1} style={{ minHeight: 0 }}>

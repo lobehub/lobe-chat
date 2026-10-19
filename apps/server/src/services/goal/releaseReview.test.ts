@@ -24,6 +24,8 @@ import {
 } from '@/database/schemas';
 import type { LobeChatDatabase } from '@/database/type';
 import { AiAgentService } from '@/server/services/aiAgent';
+import { UserSkillService } from '@/server/services/userSkill';
+import { mockSkillStorage } from '@/server/services/userSkill/testUtils';
 
 import { GoalCriteriaGeneratorService } from './criteriaGenerator';
 import { GoalService } from './index';
@@ -34,6 +36,7 @@ const userId = 'goal-release-review-test-user';
 
 beforeEach(async () => {
   await serverDB.insert(users).values({ id: userId }).onConflictDoNothing();
+  mockSkillStorage();
 });
 
 afterEach(async () => {
@@ -340,11 +343,13 @@ describe('approving a batch release', () => {
       'references/replica-read.md',
       'scripts/check-pr.sh',
     ]);
-    const versions = await skills.listVersions(before.planSkill!.id);
-    expect(versions.at(0)!.files).toEqual([]);
-    expect(versions.at(-1)!.files!.map((file) => file.path)).toEqual([
-      'references/replica-read.md',
-      'scripts/check-pr.sh',
+    // Each version reads back from its own archive: v1 shipped SKILL.md alone.
+    const versions = new UserSkillService(serverDB, userId);
+    expect((await versions.getVersion(skill!.id, 1))!.files).toEqual([]);
+    const latest = await versions.getVersion(skill!.id, skill!.version);
+    expect(latest!.files!.map((file) => [file.path, file.content])).toEqual([
+      ['references/replica-read.md', '# 读取约定'],
+      ['scripts/check-pr.sh', 'gh pr checks "$1" --required'],
     ]);
   });
 

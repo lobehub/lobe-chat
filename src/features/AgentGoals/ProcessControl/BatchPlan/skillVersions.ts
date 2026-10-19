@@ -1,23 +1,19 @@
 import type { SkillResourceTreeNode } from '@lobechat/types';
 
-/**
- * One version's `SKILL.md` as a plan skill kept it — frontmatter included, as
- * the document view shows it. A payload without `versions` (an older server)
- * has none to offer, rather than throwing.
- */
-export const skillVersionContent = (
-  versions: readonly { content: string; version: number }[] | null | undefined,
-  revision: number,
-): string | undefined => (versions ?? []).find((version) => version.version === revision)?.content;
+import { useClientDataSWR } from '@/libs/swr';
+import { userSkillService } from '@/services/userSkill';
 
 /**
- * The files one version shipped beside its `SKILL.md`. Undefined for a version
- * written before files were kept per version: read the skill's current files.
+ * One version of a skill as it shipped — its `SKILL.md` and the files beside
+ * it — read from its archive on demand. A version never changes, so it is
+ * fetched once and shared by every view that reads it.
  */
-export const skillVersionFiles = <TFile extends { content: string; path: string }>(
-  versions: readonly { files?: TFile[]; version: number }[] | null | undefined,
-  revision: number,
-): TFile[] | undefined => (versions ?? []).find((version) => version.version === revision)?.files;
+export const useSkillVersion = (skillId: string | undefined, version: number | undefined) =>
+  useClientDataSWR(
+    skillId && version ? ['user-skill-version', skillId, version] : null,
+    () => userSkillService.getVersion(skillId!, version!),
+    { revalidateOnFocus: false, revalidateOnReconnect: false },
+  );
 
 /**
  * A skill's files as the file tree takes them: `scripts/check.sh` becomes a

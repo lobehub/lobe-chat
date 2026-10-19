@@ -22,6 +22,7 @@ import {
 } from '@/database/schemas';
 import type { LobeChatDatabase } from '@/database/type';
 
+import { mockSkillStorage } from '../userSkill/testUtils';
 import type { GoalService } from './index';
 import { GoalManagerService } from './manager';
 
@@ -29,6 +30,8 @@ import { GoalManagerService } from './manager';
 export const registerGoalServiceTestCleanup = (serverDB: LobeChatDatabase, userId: string) => {
   beforeEach(async () => {
     await serverDB.insert(users).values({ id: userId }).onConflictDoNothing();
+    // A batch's plan skill publishes every version to storage.
+    mockSkillStorage();
   });
 
   afterEach(async () => {

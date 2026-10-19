@@ -25,6 +25,11 @@ export enum FileSource {
   AgentDocument = 'agent-document',
   ImageGeneration = 'image_generation',
   PageEditor = 'page-editor',
+  /**
+   * A file a skill package holds: a binary file beside its `SKILL.md`, or a
+   * published version's archive. Owned by the skill, not by the library.
+   */
+  Skill = 'skill',
   VideoGeneration = 'video_generation',
 }
 
@@ -43,6 +48,7 @@ export enum FileSource {
 export const LIBRARY_HIDDEN_FILE_SOURCES: FileSource[] = [
   FileSource.Acceptance,
   FileSource.AgentDocument,
+  FileSource.Skill,
 ];
 
 /** Sources a generation model wrote, as opposed to anything a human put there. */
