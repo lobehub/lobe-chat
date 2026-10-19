@@ -16,6 +16,17 @@ export const useSkillVersion = (skillId: string | undefined, version: number | u
   );
 
 /**
+ * The file a reader sees: the one they picked, while the version on screen
+ * ships it. A version without it — the reader picked a script in v2, then
+ * switched to v1 — shows its `SKILL.md` rather than an empty viewer.
+ */
+export const shownSkillFile = (
+  selected: string,
+  files: readonly { path: string }[],
+  index = 'SKILL.md',
+): string => (files.some((file) => file.path === selected) ? selected : index);
+
+/**
  * A skill's files as the file tree takes them: `scripts/check.sh` becomes a
  * `scripts` folder holding `check.sh`. Folders first, then files, by name.
  * `SKILL.md` itself is the tree's root entry, not one of these.

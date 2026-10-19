@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 
-import { skillFileTree } from './skillVersions';
+import { shownSkillFile, skillFileTree } from './skillVersions';
 
 vi.mock('@/services/userSkill', () => ({ userSkillService: {} }));
 
@@ -28,5 +28,19 @@ describe('skillFileTree', () => {
 
   it('is empty for a skill with no files', () => {
     expect(skillFileTree(undefined)).toEqual([]);
+  });
+});
+
+describe('shownSkillFile', () => {
+  const v2 = [{ path: 'scripts/check-pr.sh' }, { path: 'references/replica-read.md' }];
+
+  it('keeps the file the reader picked while the version ships it', () => {
+    expect(shownSkillFile('scripts/check-pr.sh', v2)).toBe('scripts/check-pr.sh');
+  });
+
+  // Picked in v2, then v1 opened: v1 has no such file, so its SKILL.md shows.
+  it('falls back to SKILL.md in a version without the picked file', () => {
+    expect(shownSkillFile('scripts/check-pr.sh', [])).toBe('SKILL.md');
+    expect(shownSkillFile('SKILL.md', [])).toBe('SKILL.md');
   });
 });
