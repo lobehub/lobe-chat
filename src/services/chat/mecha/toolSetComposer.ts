@@ -1,4 +1,4 @@
-import { HTML_PAGE_API_NAMES, PageAgentIdentifier } from '@lobechat/builtin-tool-page-agent';
+import { PageAgentIdentifier } from '@lobechat/builtin-tool-page-agent';
 import type { LobeToolManifest, ToolsGenerationResult } from '@lobechat/context-engine';
 import { generateToolsFromManifest } from '@lobechat/context-engine';
 import debug from 'debug';
@@ -51,45 +51,23 @@ const mergeInjectedManifests = (
   };
 };
 
-const toolNamePrefix = `${PageAgentIdentifier}____`;
-
-/** Narrow the page-agent manifest to the APIs that apply to the open page. */
-const keepPageAgentApis = (
-  set: ComposedToolSet,
-  keep: (apiName: string) => boolean,
-): ComposedToolSet => {
-  const manifest = set.enabledManifests.find((m) => m.identifier === PageAgentIdentifier);
-  if (!manifest) return set;
-
-  const narrowed = { ...manifest, api: manifest.api.filter((api) => keep(api.name)) };
-  const otherTools = set.tools?.filter((t) => !t.function?.name?.startsWith(toolNamePrefix)) ?? [];
-  const tools = [...otherTools, ...generateToolsFromManifest(narrowed)];
-
-  return {
-    enabledManifests: set.enabledManifests.map((m) => (m === manifest ? narrowed : m)),
-    enabledToolIds: set.enabledToolIds,
-    tools: tools.length > 0 ? tools : undefined,
-  };
-};
-
 // `scope` is bound to the topic, not the route: navigating away from the page
 // editor keeps `scope === 'page'` on the same topic. Without this drop the LLM
 // still sees page-agent tools and can call them against a stale editor ref.
-// An HTML page mounts no editor; it keeps the tool with only its HTML APIs.
-const selectPageAgentApis = (
+// An HTML page mounts no editor; it keeps the tool (its HTML APIs need none).
+const dropPageAgentIfEditorNotMounted = (
   set: ComposedToolSet,
   context: ToolSetComposerContext,
 ): ComposedToolSet => {
   if (context.scope !== 'page') return set;
   if (!set.enabledToolIds.includes(PageAgentIdentifier)) return set;
 
-  if (context.isHtmlPage) return keepPageAgentApis(set, (api) => HTML_PAGE_API_NAMES.includes(api));
-  if (context.isPageEditorReady) {
-    return keepPageAgentApis(set, (api) => !HTML_PAGE_API_NAMES.includes(api));
-  }
+  // The manifest is already narrowed to the page's kind (`resolvePageAgentManifest`).
+  if (context.isHtmlPage || context.isPageEditorReady) return set;
 
   log('dropping %s: editor not mounted', PageAgentIdentifier);
 
+  const toolNamePrefix = `${PageAgentIdentifier}____`;
   const nextTools = set.tools?.filter((t) => !t.function?.name?.startsWith(toolNamePrefix));
 
   return {
@@ -110,5 +88,8 @@ export const composeEnabledTools = ({
     tools: toolsDetailed.tools,
   };
 
-  return selectPageAgentApis(mergeInjectedManifests(initial, injectedManifests), context);
+  return dropPageAgentIfEditorNotMounted(
+    mergeInjectedManifests(initial, injectedManifests),
+    context,
+  );
 };

@@ -46,6 +46,7 @@ import {
 } from './connectors';
 import { resolveDevicePlan } from './devicePlan';
 import { resolveModelContext, startModelMetadataRead } from './modelFacts';
+import { resolvePageDocumentType } from './pageDocument';
 import { readCredentialFacts, startToolReads } from './reads';
 import { resolveOperationGroup, resolveTurnScopedPluginIds } from './turnContext';
 import type { ToolDiscoveryDeps, ToolDiscoveryInput, ToolDiscoveryResult } from './types';
@@ -419,6 +420,8 @@ export const discoverTools = async (
       executionEnvUnroutedReason:
         executionPlan.kind === 'device-unrouted' ? executionPlan.reason : undefined,
       isSubAgent: appContext?.isSubAgent,
+      // An HTML page gets only the page tool's HTML APIs; any other page its node APIs.
+      pageDocumentType: await resolvePageDocumentType(deps, appContext),
       scope: appContext?.scope ?? undefined,
     };
 

@@ -3,7 +3,7 @@ import { groupSupervisorToolIds } from '@lobechat/builtin-tools';
 import { describe, expect, it } from 'vitest';
 
 import { filterAllowedBuiltinTools } from './deviceTools';
-import { resolveToolRules } from './resolveToolRules';
+import { resolveToolRules, scopeRequiredToolIds } from './resolveToolRules';
 import type { ToolRuleRequest } from './types';
 
 const request = (overrides: Partial<ToolRuleRequest> = {}): ToolRuleRequest => ({
@@ -56,6 +56,25 @@ describe('resolveToolRules', () => {
     expect(resolved.rules['lobe-knowledge-base']).toBe(true);
     expect(resolved.rules['lobe-web-browsing']).toBe(true);
     expect(resolved.defaultToolIds).not.toContain('lobe-agent');
+  });
+
+  it('enables a scope-required tool in every mode, inside the walls', () => {
+    const required = scopeRequiredToolIds('page');
+    expect(required).toEqual(['lobe-page-agent']);
+    expect(scopeRequiredToolIds('main')).toEqual([]);
+
+    // A page copilot running Lobe AI in chat mode still gets the page tool.
+    for (const chatConfig of [{ enableAgentMode: false }, { toolMode: 'custom' as const }, {}]) {
+      const { rules } = resolveToolRules(
+        request({ agent: { chatConfig, plugins: [] }, requiredToolIds: required }),
+      );
+      expect(rules['lobe-page-agent']).toBe(true);
+    }
+
+    const walled = resolveToolRules(
+      request({ disabledPluginIds: ['lobe-page-agent'], requiredToolIds: required }),
+    );
+    expect(walled.excludedIdentifiers.has('lobe-page-agent')).toBe(true);
   });
 
   it('custom mode is exactly the pinned plugins', () => {

@@ -156,40 +156,15 @@ describe('composeEnabledTools', () => {
   });
 
   describe('page agent on an HTML page', () => {
-    const FULL_PAGE_AGENT: LobeToolManifest = {
-      ...PAGE_AGENT_MANIFEST,
-      api: ['initPage', 'modifyNodes', 'readHtml', 'editHtml', 'writeHtml'].map((name) => ({
-        description: name,
-        name,
-        parameters: { properties: {}, type: 'object' as const },
-      })),
-    };
-    const pageAgentApis = (result: ReturnType<typeof composeEnabledTools>) =>
-      result.enabledManifests
-        .find((m) => m.identifier === PageAgentIdentifier)
-        ?.api.map((api) => api.name);
-    const toolNames = (result: ReturnType<typeof composeEnabledTools>) =>
-      result.tools?.map((t) => t.function?.name).filter((name) => name?.includes('page-agent'));
-
-    it('keeps only the HTML APIs, though no editor is mounted', () => {
+    it('keeps the page tool though no editor is mounted', () => {
+      // The manifest arrives already narrowed to the HTML APIs (`resolvePageAgentManifest`).
       const result = composeEnabledTools({
         context: { isHtmlPage: true, isPageEditorReady: false, scope: 'page' },
-        toolsDetailed: makeToolsDetailed([FULL_PAGE_AGENT, OTHER_MANIFEST]),
+        toolsDetailed: makeToolsDetailed([PAGE_AGENT_MANIFEST, OTHER_MANIFEST]),
       });
 
-      expect(pageAgentApis(result)).toEqual(['readHtml', 'editHtml', 'writeHtml']);
-      expect(toolNames(result)).toHaveLength(3);
-      expect(result.enabledToolIds).toContain('lobe-agent-documents');
-    });
-
-    it('hides the HTML APIs on a rich-text page', () => {
-      const result = composeEnabledTools({
-        context: { isPageEditorReady: true, scope: 'page' },
-        toolsDetailed: makeToolsDetailed([FULL_PAGE_AGENT]),
-      });
-
-      expect(pageAgentApis(result)).toEqual(['initPage', 'modifyNodes']);
-      expect(toolNames(result)).toHaveLength(2);
+      expect(result.enabledToolIds).toEqual([PageAgentIdentifier, 'lobe-agent-documents']);
+      expect(result.tools).toHaveLength(2);
     });
   });
 });

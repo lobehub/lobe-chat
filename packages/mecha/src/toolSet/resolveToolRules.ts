@@ -7,6 +7,7 @@ import { KnowledgeBaseManifest } from '@lobechat/builtin-tool-knowledge-base';
 import { LocalSystemManifest } from '@lobechat/builtin-tool-local-system';
 import { MemoryManifest } from '@lobechat/builtin-tool-memory';
 import { MessageManifest } from '@lobechat/builtin-tool-message';
+import { PageAgentIdentifier } from '@lobechat/builtin-tool-page-agent';
 import { RemoteDeviceManifest } from '@lobechat/builtin-tool-remote-device';
 import { VideoGenerationManifest } from '@lobechat/builtin-tool-video-generation';
 import { WebBrowsingManifest } from '@lobechat/builtin-tool-web-browsing';
@@ -38,6 +39,14 @@ export const deviceToolWallParams = (request: ToolRuleRequest): DeviceToolWallPa
         supportedDeviceTools: request.device ? (request.device.supportedTools ?? []) : undefined,
       }
     : undefined;
+
+/**
+ * Tools a conversation scope cannot work without, whatever tool mode the agent
+ * is in: a page copilot must be able to edit its page even when the agent
+ * (e.g. Lobe AI in chat mode) would otherwise ignore runtime plugins.
+ */
+export const scopeRequiredToolIds = (scope?: string | null): string[] =>
+  scope === 'page' ? [PageAgentIdentifier] : [];
 
 /**
  * Decide which tools a run may enable, which it gets by default, and which
@@ -125,6 +134,9 @@ export const resolveToolRules = (request: ToolRuleRequest): ResolvedToolRules =>
     }
   }
 
+  const modeRules =
+    toolMode === 'custom' ? customModeRules : toolMode === 'chat' ? chatModeRules : agentModeRules;
+
   return {
     allowExplicitActivation: toolMode === 'agent',
     defaultToolIds:
@@ -136,12 +148,7 @@ export const resolveToolRules = (request: ToolRuleRequest): ResolvedToolRules =>
     deviceCapable,
     deviceLocked,
     excludedIdentifiers,
-    rules:
-      toolMode === 'custom'
-        ? customModeRules
-        : toolMode === 'chat'
-          ? chatModeRules
-          : agentModeRules,
+    rules: { ...modeRules, ...enableAll(request.requiredToolIds ?? []) },
     runtimeMode,
     toolMode,
   };

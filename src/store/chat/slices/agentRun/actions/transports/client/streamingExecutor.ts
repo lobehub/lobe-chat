@@ -18,7 +18,6 @@ import { PageAgentIdentifier } from '@lobechat/builtin-tool-page-agent';
 import { manualModeExcludeToolIds } from '@lobechat/builtin-tools';
 import {
   getSubAgentChatConfigOverride,
-  HTML_DOCUMENT_FILE_TYPE,
   isDesktop,
   resolveSubAgentChatConfig,
   resolveSubAgentModel,
@@ -61,7 +60,6 @@ import {
 import { type ChatStore } from '@/store/chat/store';
 import { notifyDesktopHumanApprovalRequired } from '@/store/chat/utils/desktopNotification';
 import { messageMapKey } from '@/store/chat/utils/messageMapKey';
-import { getDocumentStoreState } from '@/store/document';
 import { getElectronStoreState } from '@/store/electron';
 import { getGoalStoreState } from '@/store/goal';
 import { getServerConfigStoreState, serverConfigSelectors } from '@/store/serverConfig';
@@ -73,6 +71,7 @@ import { getUserStoreState } from '@/store/user/store';
 import { buildRunLifecycle } from '../../lifecycle/buildRunLifecycle';
 import type { RunParkedReason, RunScope } from '../../lifecycle/types';
 import { buildViewedTaskPrompt } from '../viewedTaskPrompt';
+import { resolveClientPageDocumentType } from './pageDocumentType';
 
 const log = debug('lobe-store:streaming-executor');
 
@@ -186,16 +185,8 @@ export class StreamingExecutorActionImpl {
     const operation = operationId ? this.#get().operations[operationId] : undefined;
     const scope = operation?.context.scope;
     const groupId = operation?.context.groupId;
-    // An HTML page renders in a sandboxed frame with no editor mounted: its
-    // page-agent tool keeps only the HTML APIs and no editor content is injected.
-    const pageDocumentId =
-      scope === 'page'
-        ? (operation?.context.documentId ?? pageAgentRuntime.getCurrentDocId())
-        : undefined;
-    const isHtmlPage =
-      !!pageDocumentId &&
-      getDocumentStoreState().documentDetailMap[pageDocumentId]?.document?.fileType ===
-        HTML_DOCUMENT_FILE_TYPE;
+    const pageDocumentType = resolveClientPageDocumentType(scope, operation?.context.documentId);
+    const isHtmlPage = pageDocumentType === 'html';
 
     // Resolve agent config with builtin agent runtime config merged
     // This ensures runtime plugins (e.g., 'lobe-agent-builder' for Agent Builder) are included
@@ -298,7 +289,7 @@ export class StreamingExecutorActionImpl {
       // Context-aware builtin manifests: lobe-agent hides callSubAgent in group /
       // sub-agent runs. Desktop client runs also need the local environment so
       // local-system can advertise IPC-only capabilities such as direct image reads.
-      { executionEnv: isDesktop ? 'local' : undefined, isSubAgent, scope },
+      { executionEnv: isDesktop ? 'local' : undefined, isSubAgent, pageDocumentType, scope },
       { hasOversizedFiles: hasPreviewableFiles(messages) },
     );
     // When skillActivateMode is 'manual':

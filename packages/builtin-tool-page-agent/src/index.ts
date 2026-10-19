@@ -11,6 +11,7 @@ export {
   type WriteHtmlState,
 } from './html';
 export { PageAgentManifest } from './manifest';
+export { htmlPageSystemPrompt, resolvePageAgentManifest } from './resolveManifest';
 export { systemPrompt } from './systemRole';
 export {
   DocumentApiName,
