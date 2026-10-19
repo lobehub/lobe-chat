@@ -36,6 +36,7 @@ import { memo, type ReactNode, useCallback, useEffect, useMemo, useState } from 
 import { useTranslation } from 'react-i18next';
 
 import { useActiveWorkspaceId } from '@/business/client/hooks/useActiveWorkspaceId';
+import AsyncError from '@/components/AsyncError';
 import CommandLine from '@/components/CommandLine';
 import { DOWNLOAD_URL } from '@/const/url';
 import { getDeviceIcon } from '@/features/DeviceManager/getDeviceIcon';
@@ -418,6 +419,7 @@ const ConnectAgentContent = memo<ConnectAgentContentProps>(
 
     const {
       data: devices,
+      error: deviceListError,
       isConfirmed: isDeviceListConfirmed,
       isLoading: loadingDevices,
       isValidating: fetchingDevices,
@@ -639,6 +641,7 @@ const ConnectAgentContent = memo<ConnectAgentContentProps>(
     if (step === 0) {
       const isRefreshing = loadingDevices || fetchingDevices;
       const deviceListState = getDeviceListState({
+        error: deviceListError,
         hasDevices: listedDevices.length > 0,
         isConfirmed: isDeviceListConfirmed,
         isFetching: isRefreshing,
@@ -743,27 +746,35 @@ const ConnectAgentContent = memo<ConnectAgentContentProps>(
                     </Button>
                   </Flexbox>
                   <div className={styles.groupList}>
-                    {deviceListState === 'loading'
-                      ? [96, 140, 112].map((width) => (
-                          <SkeletonRow squareIcon key={width} width={width} />
-                        ))
-                      : listedDevices.map((device) => (
-                          <DeviceRow
-                            icon={getDeviceIcon(device.platform, 18)}
-                            key={device.deviceId}
-                            offline={!device.online}
-                            subtitle={device.hostname || device.deviceId}
-                            title={deviceLabel(device)}
-                            statusText={
-                              isDevicePresenceUnknown(device)
-                                ? t('heteroAgent.executionTarget.presenceChecking')
-                                : device.online
-                                  ? t('connectAgent.create.online')
-                                  : t('connectAgent.create.offline')
-                            }
-                            onClick={() => pickTarget({ device, kind: 'device' })}
-                          />
-                        ))}
+                    {deviceListState === 'error' ? (
+                      <AsyncError
+                        error={deviceListError}
+                        variant={'inline'}
+                        onRetry={() => void refetchDevices()}
+                      />
+                    ) : deviceListState === 'loading' ? (
+                      [96, 140, 112].map((width) => (
+                        <SkeletonRow squareIcon key={width} width={width} />
+                      ))
+                    ) : (
+                      listedDevices.map((device) => (
+                        <DeviceRow
+                          icon={getDeviceIcon(device.platform, 18)}
+                          key={device.deviceId}
+                          offline={!device.online}
+                          subtitle={device.hostname || device.deviceId}
+                          title={deviceLabel(device)}
+                          statusText={
+                            isDevicePresenceUnknown(device)
+                              ? t('heteroAgent.executionTarget.presenceChecking')
+                              : device.online
+                                ? t('connectAgent.create.online')
+                                : t('connectAgent.create.offline')
+                          }
+                          onClick={() => pickTarget({ device, kind: 'device' })}
+                        />
+                      ))
+                    )}
                   </div>
                 </Flexbox>
               )}

@@ -88,7 +88,7 @@ export const useAgentSelectionPolicies = (agentId: string): AgentSelectionPolici
   // server's list rather than pin an unresolvable machine for every member.
   const canFixSelection =
     !!executionSelection &&
-    isDeviceListConfirmed &&
+    (executionSelection.target !== 'device' || isDeviceListConfirmed) &&
     (executionSelection.target !== 'sandbox' ||
       isHeterogeneousSandboxExecutionAvailable(heterogeneousType));
 

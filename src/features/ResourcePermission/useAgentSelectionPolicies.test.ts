@@ -75,3 +75,25 @@ describe('useAgentSelectionPolicies', () => {
     });
   });
 });
+
+describe('useAgentSelectionPolicies with a non-device target', () => {
+  it('fixes a cloud / no-environment target without waiting for the device list', () => {
+    state.agent = {
+      ...state.agent,
+      agencyConfig: { executionTarget: 'none', executionTargetSelectionPolicy: 'member' },
+    };
+    state.deviceList = { data: [], isConfirmed: false };
+    state.updateAgentConfigById.mockReset();
+
+    const { result } = renderHook(() => useAgentSelectionPolicies('agent-1'));
+
+    expect(result.current.canFixExecutionTarget).toBe(true);
+    result.current.setExecutionTargetPolicy('fixed');
+    expect(state.updateAgentConfigById).toHaveBeenCalledWith('agent-1', {
+      agencyConfig: expect.objectContaining({
+        executionTarget: 'none',
+        executionTargetSelectionPolicy: 'fixed',
+      }),
+    });
+  });
+});

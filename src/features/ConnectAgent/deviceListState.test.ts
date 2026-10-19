@@ -15,7 +15,7 @@ describe('getDeviceListState', () => {
     );
   });
 
-  it('keeps an unconfirmed stored copy without rows loading, even after a failed refresh', () => {
+  it('keeps an unconfirmed stored copy without rows loading while no request has failed', () => {
     expect(getDeviceListState({ hasDevices: false, isConfirmed: false, isFetching: false })).toBe(
       'loading',
     );
@@ -25,5 +25,29 @@ describe('getDeviceListState', () => {
     expect(getDeviceListState({ hasDevices: true, isConfirmed: false, isFetching: true })).toBe(
       'ready',
     );
+  });
+});
+
+describe('getDeviceListState when the request fails', () => {
+  it('reports an error, not an endless skeleton, for an unconfirmed pool without rows', () => {
+    expect(
+      getDeviceListState({
+        error: new Error('network down'),
+        hasDevices: false,
+        isConfirmed: false,
+        isFetching: false,
+      }),
+    ).toBe('error');
+  });
+
+  it('shows a retry in flight as loading', () => {
+    expect(
+      getDeviceListState({
+        error: new Error('network down'),
+        hasDevices: false,
+        isConfirmed: false,
+        isFetching: true,
+      }),
+    ).toBe('loading');
   });
 });

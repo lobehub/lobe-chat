@@ -1,6 +1,8 @@
-export type DeviceListState = 'empty' | 'loading' | 'ready';
+export type DeviceListState = 'empty' | 'error' | 'loading' | 'ready';
 
 interface GetDeviceListStateOptions {
+  /** The last device-list request failed. */
+  error?: unknown;
   hasDevices: boolean;
   /**
    * The server answered this session. A stored copy without rows for this
@@ -11,10 +13,14 @@ interface GetDeviceListStateOptions {
 }
 
 export const getDeviceListState = ({
+  error,
   hasDevices,
   isConfirmed,
   isFetching,
 }: GetDeviceListStateOptions): DeviceListState => {
   if (hasDevices) return 'ready';
-  return isFetching || !isConfirmed ? 'loading' : 'empty';
+  if (isFetching) return 'loading';
+  // Unconfirmed and the request failed: say so instead of an endless skeleton.
+  if (!isConfirmed) return error ? 'error' : 'loading';
+  return 'empty';
 };
