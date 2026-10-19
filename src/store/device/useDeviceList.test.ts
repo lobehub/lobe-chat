@@ -150,6 +150,51 @@ describe('useDeviceList', () => {
     expect(isDevicePresenceUnknown(row)).toBe(true);
   });
 
+  it('keeps a restored empty list pending until the server confirms it', async () => {
+    await deviceListResource.storage!.set({ queryKey: ROW_KEY, scope }, { data: [], updatedAt: 1 });
+    let answer!: (rows: DeviceListItem[]) => void;
+    vi.mocked(deviceService.listDevices).mockImplementation(
+      () => new Promise((resolve) => (answer = resolve)),
+    );
+
+    const { result } = renderHook(() => useDeviceList(), { wrapper });
+
+    await waitFor(() => expect(useDeviceStore.getState().deviceListMap.all).toEqual([]));
+    // The empty copy is no proof the user has no device.
+    expect(result.current).toMatchObject({ data: undefined, isConfirmed: false, isLoading: true });
+
+    await waitFor(() => expect(deviceService.listDevices).toHaveBeenCalled());
+    await act(async () => answer([]));
+
+    await waitFor(() =>
+      expect(result.current).toMatchObject({ data: [], isConfirmed: true, isLoading: false }),
+    );
+  });
+
+  it('surfaces a failed refresh over a restored empty list', async () => {
+    await deviceListResource.storage!.set({ queryKey: ROW_KEY, scope }, { data: [], updatedAt: 1 });
+    vi.mocked(deviceService.listDevices).mockRejectedValue(new Error('boom'));
+
+    const { result } = renderHook(() => useDeviceList(), { wrapper });
+
+    await waitFor(() => expect(result.current.error).toBeTruthy());
+    expect(result.current).toMatchObject({ data: undefined, isConfirmed: false, isLoading: false });
+  });
+
+  it('keeps the restored rows when the refresh fails', async () => {
+    await deviceListResource.storage!.set(
+      { queryKey: ROW_KEY, scope },
+      { data: [device('dev-1')], updatedAt: 1 },
+    );
+    vi.mocked(deviceService.listDevices).mockRejectedValue(new Error('boom'));
+
+    const { result } = renderHook(() => useDeviceList(), { wrapper });
+
+    await waitFor(() => expect(result.current.error).toBeTruthy());
+    expect(result.current.data).toHaveLength(1);
+    expect(result.current.isConfirmed).toBe(false);
+  });
+
   it('shows a cwd written through the store without waiting for a refetch', async () => {
     vi.mocked(deviceService.listDevices).mockResolvedValue([device('dev-1')]);
     // Hold the write open: the optimistic row is what the list must show.

@@ -23,6 +23,7 @@ import { useElectronStore } from '@/store/electron';
 
 import DeviceCard from './DeviceCard';
 import DeviceGrid from './DeviceGrid';
+import { getDeviceListBoundary } from './deviceListBoundary';
 import { DeviceGridSkeleton } from './Skeleton';
 
 const styles = createStaticStyles(({ css }) => ({
@@ -243,7 +244,8 @@ const DeviceManager = memo<DeviceManagerProps>((props) => {
 
   // The device replica every device-listing surface reads (see `useDeviceList`):
   // a reload paints the persisted cards first, presence pending.
-  const { data, isLoading, isValidating, error, mutate } = useDeviceList();
+  const deviceList = useDeviceList();
+  const { data, isValidating, error, mutate } = deviceList;
   // `listDevices` is workspace-aware and returns both pools — keep each surface
   // to its own scope (and visibility tab). Ghost rows (`visibility: null`,
   // online but unregistered) belong to the shared pool: the server already
@@ -252,6 +254,9 @@ const DeviceManager = memo<DeviceManagerProps>((props) => {
   const devices = (data ?? []).filter(
     (d) => d.scope === scope && (!visibility || (d.visibility ?? 'public') === visibility),
   );
+  // A persisted copy with no row for this pool / tab is not proof the pool is
+  // empty: wait for the server (or its error) before showing onboarding.
+  const boundary = getDeviceListBoundary(deviceList, devices.length === 0);
 
   // The machine the user is on right now (desktop only) — personal pool only;
   // a workspace device is never "this machine" in the personal sense.
@@ -350,12 +355,12 @@ const DeviceManager = memo<DeviceManagerProps>((props) => {
 
   const list = (
     <AsyncBoundary
-      data={data}
+      data={boundary.data}
       empty={emptyState}
       error={error}
       errorVariant={'block'}
       isEmpty={devices.length === 0}
-      isLoading={isLoading}
+      isLoading={boundary.isLoading}
       loading={<DeviceGridSkeleton />}
       onRetry={() => mutate()}
     >

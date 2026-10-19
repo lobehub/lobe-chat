@@ -12,7 +12,13 @@ export interface DeviceListResult {
   /** Every device of the active scope, or `undefined` until storage or the server answers. */
   data: DeviceListItem[] | undefined;
   error: unknown;
-  /** Nothing to show yet: no persisted copy and the first request is in flight. */
+  /**
+   * The server answered this session. Until then `data` is a persisted copy
+   * that may be stale or miss rows, so "no device" / "not found" is pending,
+   * not a fact.
+   */
+  isConfirmed: boolean;
+  /** Nothing to show yet: no usable copy and the request is in flight. */
   isLoading: boolean;
   /** A request is in flight. Never a reason to hide `data`. */
   isValidating: boolean;
@@ -41,6 +47,7 @@ export const useDeviceList = (config?: { refreshInterval?: number }): DeviceList
   const enabled = isLogin || isDesktop;
   const { error, isValidating } = useDeviceStore((s) => s.useFetchDevices)(enabled, config);
   const isLoaded = useDeviceStore(deviceSelectors.isDeviceListLoaded);
+  const isConfirmed = useDeviceStore(deviceSelectors.isDeviceListConfirmed);
   const devices = useDeviceStore(deviceSelectors.deviceList);
   const refreshDevices = useDeviceStore((s) => s.refreshDevices);
 
@@ -52,10 +59,16 @@ export const useDeviceList = (config?: { refreshInterval?: number }): DeviceList
       : undefined;
   }, [refreshDevices]);
 
+  // A restored empty list says nothing about the server: keep it pending so no
+  // surface renders onboarding off it, and a failed refresh still surfaces its
+  // error instead of settling on the empty snapshot.
+  const hasData = isLoaded && (isConfirmed || devices.length > 0);
+
   return {
-    data: isLoaded ? devices : undefined,
+    data: hasData ? devices : undefined,
     error,
-    isLoading: enabled && !isLoaded && !error,
+    isConfirmed,
+    isLoading: enabled && !hasData && (!error || isValidating),
     isValidating,
     mutate,
   };

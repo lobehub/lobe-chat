@@ -12,6 +12,7 @@ import { useDeviceList } from '@/store/device';
 import { useElectronStore } from '@/store/electron';
 
 import DeviceDetail from './DeviceDetail';
+import { getDeviceListBoundary } from './deviceListBoundary';
 
 const DetailSkeleton = memo(() => (
   <Flexbox gap={24}>
@@ -41,8 +42,12 @@ interface DeviceDetailPageProps {
  */
 const DeviceDetailPage = memo<DeviceDetailPageProps>(({ deviceId, onBack, scope }) => {
   const { t } = useTranslation('setting');
-  const { data, isLoading, error, mutate } = useDeviceList();
+  const deviceList = useDeviceList();
+  const { data, error, mutate } = deviceList;
   const device = data?.find((d) => d.deviceId === deviceId && d.scope === scope);
+  // A persisted copy missing this device may just be stale: only the server
+  // can say it is gone.
+  const boundary = getDeviceListBoundary(deviceList, !device);
 
   // The machine the user is on right now (desktop only) — personal pool only.
   const useFetchDeviceInfo = useElectronStore((s) => s.useFetchGatewayDeviceInfo);
@@ -70,12 +75,12 @@ const DeviceDetailPage = memo<DeviceDetailPageProps>(({ deviceId, onBack, scope 
 
   return (
     <AsyncBoundary
-      data={data}
+      data={boundary.data}
       empty={notFound}
       error={error}
       errorVariant={'block'}
       isEmpty={!device}
-      isLoading={isLoading}
+      isLoading={boundary.isLoading}
       loading={<DetailSkeleton />}
       onRetry={() => mutate()}
     >
