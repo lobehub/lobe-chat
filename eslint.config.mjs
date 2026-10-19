@@ -157,6 +157,29 @@ const redisAccessRestrictedSyntax = [
     selector: 'ImportExpression > Literal[value=/^@\\/server\\/modules\\/Redis(?:\\/|$)/]',
   },
 ];
+// Server output is source English. Translation catalogs and runtimes stay with the clients.
+const serverI18nMessage =
+  'Server code renders source English and must not load translation catalogs or i18n runtimes.';
+const serverI18nRestrictedImportPaths = [
+  { message: serverI18nMessage, name: 'i18next' },
+  { message: serverI18nMessage, name: 'react-i18next' },
+];
+const serverI18nRestrictedImportPatterns = [
+  {
+    group: [
+      '@/locales/*',
+      '!@/locales/resources',
+      '@lobechat/locales',
+      '@lobechat/locales/*',
+      '!@lobechat/locales/resources',
+      '@/libs/i18n',
+      '@/libs/i18n/*',
+      '**/locales/*/*.json',
+    ],
+    message: serverI18nMessage,
+  },
+];
+
 const legacyRawRedisClientConsumers = [
   'apps/server/src/services/home/index.ts',
   'apps/server/src/services/agent/index.ts',
@@ -668,6 +691,22 @@ export default eslint(
     },
   },
   {
+    files: ['apps/server/src/**/*.{ts,tsx}'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          ...baseRestrictedImportOptions,
+          paths: [...(baseRestrictedImportOptions.paths ?? []), ...serverI18nRestrictedImportPaths],
+          patterns: [
+            ...(baseRestrictedImportOptions.patterns ?? []),
+            ...serverI18nRestrictedImportPatterns,
+          ],
+        },
+      ],
+    },
+  },
+  {
     // Redis access boundary for server code (see `redisAccessRestrictedImportPaths`).
     files: ['apps/server/src/**/*.{ts,tsx}'],
     // Tests of the legacy consumers import the raw module to mock or seed it;
@@ -686,10 +725,12 @@ export default eslint(
           ...baseRestrictedImportOptions,
           paths: [
             ...(baseRestrictedImportOptions.paths ?? []),
+            ...serverI18nRestrictedImportPaths,
             ...redisAccessRestrictedImportPaths,
           ],
           patterns: [
             ...(baseRestrictedImportOptions.patterns ?? []),
+            ...serverI18nRestrictedImportPatterns,
             {
               group: ['@/server/modules/Redis/*'],
               message: 'Use domain methods in services/redis.',
