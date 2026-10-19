@@ -264,9 +264,8 @@ export const runHeterogeneousFromExistingMessage = async (
     parentOperationId: string;
     prompt: string;
     /**
-     * Replay the topic's on-disk CLI transcript into this row instead of
-     * spawning the CLI (desktop restart recovery). The saved session id must
-     * resolve, or there is nothing to read.
+     * Replay the topic's on-disk CLI transcript into this row instead of spawning the CLI
+     * (desktop restart recovery). The saved session id must resolve, or there is nothing to read.
      */
     replayTranscript?: boolean;
     /** Claude profile root the interrupted run's transcript was written under. */
@@ -275,6 +274,7 @@ export const runHeterogeneousFromExistingMessage = async (
     replayTranscriptStartedAt?: string;
     /** Topic row when the caller already holds it (not necessarily in the paginated store). */
     topic?: ChatTopic;
+    workspaceId?: string | null; // where the caller's flow started; omitted = read now
   },
 ): Promise<{
   assistantMessageId: string;
@@ -297,7 +297,7 @@ export const runHeterogeneousFromExistingMessage = async (
   } = params;
   const agentId = context.agentId;
   if (!agentId) throw new Error('agentId is required for heterogeneous agent');
-  const workspaceId = getActiveWorkspaceId(); // before any await moves navigation away
+  const workspaceId = 'workspaceId' in params ? params.workspaceId : getActiveWorkspaceId();
   await ensureEffectiveAgencyAccess(agentId);
   const { cwdChanged, reason, resumeBindingKey, resumeSessionId, workingDirectory } =
     resolveHeteroRunContext(chatStore, context, agentId, topicOverride);
