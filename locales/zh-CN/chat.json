@@ -1117,6 +1117,8 @@
   "goalProcess.result.nav.document": "交付文档",
   "goalProcess.result.nav.label": "页面导航",
   "goalProcess.result.nav.overview": "概览",
+  "goalProcess.result.nav.report": "报告",
+  "goalProcess.result.report.expand": "全屏查看",
   "goalProcess.result.requirement": "原始要求",
   "goalProcess.result.scale.cost": "花费 {{cost}}",
   "goalProcess.result.scale.criteria": "标准达成 {{met}}/{{total}}",
