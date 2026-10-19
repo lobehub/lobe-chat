@@ -25,6 +25,9 @@ import {
 import { memo, useEffect, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { resolveExecutionTarget } from '@/helpers/executionTarget';
+import { useIsGatewayModeEnabled } from '@/helpers/gatewayMode';
+import { useEffectiveAgencyConfig } from '@/hooks/useEffectiveAgencyConfig';
 import { useAgentStore } from '@/store/agent';
 import { agentByIdSelectors } from '@/store/agent/selectors';
 import { useChatStore } from '@/store/chat';
@@ -36,7 +39,7 @@ import { useGlobalStore } from '@/store/global';
 import SplitView from './SplitView';
 import type { TerminalTab } from './store';
 import { useChatTerminalStore } from './store';
-import { buildTargetOptions, LOCAL_TARGET } from './targetOptions';
+import { buildTargetOptions, LOCAL_TARGET, resolveTerminalDevice } from './targetOptions';
 
 const EMPTY_TABS: TerminalTab[] = [];
 
@@ -99,16 +102,24 @@ const Content = memo(() => {
   const agentId = useChatStore((s) => s.activeAgentId);
   const topicWorkingDirectory = useChatStore(topicSelectors.currentTopicWorkingDirectory);
   const currentDeviceId = useElectronStore((s) => s.gatewayDeviceInfo?.deviceId);
-  const agentWorkingDirectory = useAgentStore((s) =>
-    agentId
-      ? agentByIdSelectors.getAgentWorkingDirectoryById(agentId, currentDeviceId)(s)
-      : undefined,
-  );
   const toggleTerminalPanel = useGlobalStore((s) => s.toggleTerminalPanel);
+
+  // The device the conversation runs on — the same resolution the chat input's
+  // device picker shows, so the terminal opens next to the agent's files.
+  const { agencyConfig, workspaceScoped } = useEffectiveAgencyConfig(agentId || undefined);
+  const deviceRoutingAvailable = useIsGatewayModeEnabled(agentId || undefined);
+  const executionTarget = resolveExecutionTarget(agencyConfig, {
+    clientExecutionAvailable: isDesktop,
+    deviceRoutingAvailable,
+    isHetero: !!agencyConfig?.heterogeneousProvider?.type,
+    workspaceScoped,
+  });
+  const boundDeviceId = executionTarget === 'device' ? agencyConfig?.boundDeviceId : undefined;
+  // Bound to this very desktop: its own PTY is the same machine, minus a gateway hop.
+  const topicDeviceId = isDesktop && boundDeviceId === currentDeviceId ? undefined : boundDeviceId;
 
   // Tabs are bound to the topic: sessions created here only show for this topic.
   const topicKey = topicId || (agentId ? `agent:${agentId}` : 'global');
-  const cwd = topicWorkingDirectory || agentWorkingDirectory || undefined;
 
   const tabs = useChatTerminalStore((s) => s.tabsByTopic[topicKey]) ?? EMPTY_TABS;
   const activeTabId = useChatTerminalStore((s) => s.activeTabIds[topicKey]);
@@ -122,35 +133,46 @@ const Content = memo(() => {
   const closePane = useChatTerminalStore((s) => s.closePane);
   const setActivePane = useChatTerminalStore((s) => s.setActivePane);
   const setPaneFlex = useChatTerminalStore((s) => s.setPaneFlex);
-  const targetDeviceId = useChatTerminalStore((s) => s.deviceByTopic[topicKey]);
+  const devicePick = useChatTerminalStore((s) => s.devicePickByTopic[topicKey]);
   const setTerminalDevice = useChatTerminalStore((s) => s.setTerminalDevice);
 
+  // The panel shell only fetches the list on the web; desktop needs it here to
+  // follow a topic bound to a remote device.
+  useDeviceStore((s) => s.useFetchDevices)(true);
   const devices = useDeviceStore(deviceSelectors.deviceList);
+  const deviceListLoaded = useDeviceStore(deviceSelectors.isDeviceListLoaded);
   // Only devices that can actually open a shell. An offline row, or one whose
   // live connections are all desktop ones, answers a terminal RPC with a
   // refusal — offering it would fail the session the moment it is claimed.
   const targets = useMemo(() => devices.filter(canHostTerminal), [devices]);
-  // Desktop can always run a shell here; the web build needs a device.
-  const canSpawn = isDesktop || !!targetDeviceId;
+  const { deviceId: targetDeviceId, ready: canSpawn } = resolveTerminalDevice({
+    listLoaded: deviceListLoaded,
+    localAvailable: isDesktop,
+    pick: devicePick,
+    targets,
+    topicDeviceId,
+  });
+
+  const agentWorkingDirectory = useAgentStore((s) =>
+    agentId
+      ? agentByIdSelectors.getAgentWorkingDirectoryById(
+          agentId,
+          targetDeviceId ?? currentDeviceId,
+        )(s)
+      : undefined,
+  );
+  const cwd = topicWorkingDirectory || agentWorkingDirectory || undefined;
 
   const activeTab = tabs.find((tab) => tab.id === activeTabId) ?? tabs.at(-1);
 
   const prevTabCountRef = useRef(0);
-
-  // The web build has no local shell, so a topic must name a device before the
-  // first terminal can open. Claim the first usable one until the user picks
-  // another.
-  useEffect(() => {
-    if (isDesktop || targetDeviceId || targets.length === 0) return;
-    setTerminalDevice(topicKey, targets[0].deviceId);
-  }, [targets, setTerminalDevice, targetDeviceId, topicKey]);
 
   // Open a first shell automatically when this topic has none yet and we know
   // where it would run. Runs on open / topic switch / target arrival only — NOT
   // on tab-count changes, so closing the last tab doesn't respawn a shell.
   useEffect(() => {
     prevTabCountRef.current = tabs.length;
-    if (tabs.length === 0 && canSpawn) void createTab(topicKey, cwd);
+    if (tabs.length === 0 && canSpawn) void createTab(topicKey, cwd, targetDeviceId);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [topicKey, canSpawn]);
 
@@ -182,8 +204,9 @@ const Content = memo(() => {
    * started, so open one — otherwise picking a device looks like it did nothing.
    */
   const selectTarget = (next: string) => {
-    setTerminalDevice(topicKey, next === LOCAL_TARGET ? undefined : next);
-    void createTab(topicKey, cwd);
+    const deviceId = next === LOCAL_TARGET ? undefined : next;
+    setTerminalDevice(topicKey, deviceId);
+    void createTab(topicKey, cwd, deviceId);
   };
 
   const targetOptions = buildTargetOptions(
@@ -228,7 +251,7 @@ const Content = memo(() => {
           loading={creating}
           size={'small'}
           title={t('terminalPanel.newTab')}
-          onClick={() => createTab(topicKey, cwd)}
+          onClick={() => createTab(topicKey, cwd, targetDeviceId)}
         />
         <Flexbox flex={1} />
         <Select
@@ -244,7 +267,7 @@ const Content = memo(() => {
           icon={SquareSplitHorizontalIcon}
           size={'small'}
           title={t('terminalPanel.split')}
-          onClick={() => activeTab && splitPane(topicKey, activeTab.id, cwd)}
+          onClick={() => activeTab && splitPane(topicKey, activeTab.id, cwd, targetDeviceId)}
         />
         <ActionIcon
           icon={XIcon}
@@ -265,7 +288,7 @@ const Content = memo(() => {
         ) : createError ? (
           <Flexbox align={'center'} flex={1} gap={8} height={'100%'} justify={'center'}>
             <Text type={'secondary'}>{t('terminalPanel.createFailed')}</Text>
-            <Button size={'small'} onClick={() => createTab(topicKey, cwd)}>
+            <Button size={'small'} onClick={() => createTab(topicKey, cwd, targetDeviceId)}>
               {t('retry', { ns: 'common' })}
             </Button>
           </Flexbox>
