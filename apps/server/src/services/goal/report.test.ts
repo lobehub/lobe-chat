@@ -445,6 +445,19 @@ describe('buildGoalReportSkeleton', () => {
     expect(text).not.toContain('submitGoalReport');
   });
 
+  it('asks for the report as one self-contained HTML page and submits it with the markdown', () => {
+    const tool = buildGoalReportInstruction(snapshot, 'accepted', {
+      kind: 'tool',
+      toolName: 'lobe-goal-report.submitGoalReport',
+    });
+    expect(tool).toContain('ONE self-contained HTML page');
+    expect(tool).toContain('html: that HTML page');
+
+    const cli = buildGoalReportInstruction(snapshot, 'accepted', { kind: 'cli' });
+    expect(cli).toContain('ONE self-contained HTML page');
+    expect(cli).toContain('--html-file <html>');
+  });
+
   describe('validateGoalReport', () => {
     const valid: GoalReportMetadata = {
       chapters: [

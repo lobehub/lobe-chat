@@ -9,6 +9,7 @@ import { useEntityMarkdown } from '@/features/EntityLink';
 import { useChatStore } from '@/store/chat';
 import { chatPortalSelectors } from '@/store/chat/selectors';
 
+import ReportPage from './ReportPage';
 import { useReportChapter, useReportGraph } from './useReportGraph';
 
 /**
@@ -68,18 +69,24 @@ export const ReportBody = memo(() => {
   if (!story) return <Unavailable>{t('goalProcess.result.story.unavailable')}</Unavailable>;
 
   const content = story.report.content?.trim();
+  const markdown = content ? (
+    <Markdown variant={'chat'} {...markdownProps}>
+      {content}
+    </Markdown>
+  ) : (
+    <Text type={'secondary'}>{t('goalProcess.result.story.reportEmpty')}</Text>
+  );
 
   return (
     <Frame>
       <Text fontSize={16} weight={600}>
         {story.metadata.headline}
       </Text>
-      {content ? (
-        <Markdown variant={'chat'} {...markdownProps}>
-          {content}
-        </Markdown>
+      {/* The report's HTML page when the wrap-up wrote one; its markdown otherwise. */}
+      {story.report.pageDocumentId ? (
+        <ReportPage documentId={story.report.pageDocumentId} fallback={markdown} />
       ) : (
-        <Text type={'secondary'}>{t('goalProcess.result.story.reportEmpty')}</Text>
+        markdown
       )}
     </Frame>
   );
