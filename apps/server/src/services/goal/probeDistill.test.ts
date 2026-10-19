@@ -149,6 +149,58 @@ describe('distilling the plan from settled probes', () => {
     expect(round.metadata!.releaseGate!.plan.content).toContain('Pitfalls the probes hit');
   });
 
+  it('re-runs the probes the main Agent sends back, then distills the round again', async () => {
+    const { id, probeIds } = await probesSettled();
+    const [shortProbe, metProbe] = probeIds;
+    await service().tick(id);
+    const first = await distillTurn(db, userId, id);
+    await manager().submit(id, first.state.token, first.op.id, {
+      action: 'revise_plan',
+      reason: 'Device list stopped at an open PR: CI fails and a P1 review finding is unresolved',
+      recipe: distilled,
+      rerun: [shortProbe],
+    });
+    await ops().recordCompletion(first.op.id, { status: 'done' });
+    await service().tick(id);
+    await service().tick(id);
+
+    // The plan lands, but the gate does not judge the probe sent back.
+    const config = (await model().findById(id))!.config!;
+    let state = config.rolloutState!;
+    expect(state.phase).toBe('probe');
+    expect(state.pendingDistill).toBeUndefined();
+    expect(state.planVersions).toEqual({ '1': 2 });
+    expect(config.rollout!.spec!.recipeOutline).toBe(distilled);
+    expect(await pendingRelease(service(), id)).toBeUndefined();
+
+    // The re-run takes the sent-back probe's place, continuing it; the other stays.
+    const rerunId = state.probeNodeIds[0];
+    expect(rerunId).not.toBe(shortProbe);
+    expect(state.probeNodeIds[1]).toBe(metProbe);
+    const graph = await service().graph(id);
+    const rerun = graph.nodes.find((node) => node.id === rerunId)!;
+    expect(rerun.title).toBe('Device list');
+    expect(rerun.description).toContain('Persist device:listDevices');
+    expect(rerun.description).toContain('a P1 review finding is unresolved');
+    expect(
+      graph.edges.some(
+        (edge) =>
+          edge.kind === 'derived_from' &&
+          edge.sourceNodeId === rerunId &&
+          edge.targetNodeId === shortProbe,
+      ),
+    ).toBe(true);
+
+    // Once the re-run settles, the round goes back to the main Agent before the gate.
+    await db.update(goalNodes).set({ status: 'resolved' }).where(eq(goalNodes.id, rerunId));
+    await answerDistill(service(), db, userId, id, distilled);
+
+    state = (await model().findById(id))!.config!.rolloutState!;
+    expect(state.phase).toBe('release_review');
+    expect(state.probeNodeIds).toEqual([rerunId, metProbe]);
+    expect(await pendingRelease(service(), id)).toBeDefined();
+  });
+
   it('distills a round with a broken probe too, before the gate breaks on it', async () => {
     const { id } = await probesSettled('rejected');
 

@@ -24,8 +24,11 @@ import { GOAL_TURN_TAG } from '@lobechat/const';
  * v13 hands a round's settled probes to the agent as a `rollout_distill`
  * takeover before the gate judges them: it rewrites the plan from what the
  * probes ran into, answered only with `revise_plan`.
+ * v14 lets that distill turn send probes back: a probe whose delivery falls
+ * short of the distilled plan is named in `rerun` and runs again on it before
+ * the gate judges the round.
  */
-export const GOAL_MANAGER_PROMPT_VERSION = 'v13';
+export const GOAL_MANAGER_PROMPT_VERSION = 'v14';
 
 export interface GoalManagerFeedbackNote {
   /** `user`, or `agent <id>` for an agent-written comment. */
@@ -174,7 +177,7 @@ export const GOAL_BATCH_REVISE_RULE =
 
 /** A takeover whose problem is a round's settled probes: rewrite the plan from them. */
 export const GOAL_BATCH_DISTILL_RULE =
-  'Plan distillation: every probe of the batch has settled, and before the gate judges them the plan skill must learn from them. Read the current plan skill and each probe\'s task, topic, deliverables, review comments and acceptance evidence with lh goal show and lh task view. Then rewrite the whole plan so every remaining unit benefits from what the probes ran into: steps they had to add or reorder, pitfalls and how they were resolved, conventions reviewers enforced, commands and checks that proved the work, and anything a probe got wrong that later units must avoid. Fold each lesson into the step it changes instead of appending a log of what happened; keep what is specific to one probe out unless it generalizes. When the probes taught nothing new, return the current plan unchanged and say so in reason. Answer {"action":"revise_plan","reason":"what the probes taught and where it landed in the plan","recipe":"the full plan, in the language of the Goal requirement"}. The probes are not run again and the owner reviews them with the plan you wrote. No other action is accepted on this turn.';
+  'Plan distillation: every probe of the batch has settled, and before the gate judges them the plan skill must learn from them. Read the current plan skill and each probe\'s task, topic, deliverables, review comments and acceptance evidence with lh goal show and lh task view. Then rewrite the whole plan so every remaining unit benefits from what the probes ran into: steps they had to add or reorder, pitfalls and how they were resolved, conventions reviewers enforced, commands and checks that proved the work, and anything a probe got wrong that later units must avoid. Fold each lesson into the step it changes instead of appending a log of what happened; keep what is specific to one probe out unless it generalizes. When the probes taught nothing new, return the current plan unchanged and say so in reason. Then check every probe\'s delivery against the plan you wrote, its definition of done above all — the state of its PR, CI and review, not only the probe\'s own report or a passed acceptance. A probe that falls short of it (a required step skipped, failing checks, unresolved review findings, a delivery that stopped at "next: review and merge") goes back: name it in "rerun", and say per probe in reason what is missing. It runs again on the plan, continuing its delivery (same branch / PR), and the round comes back to you once it settles, before the gate judges it. Answer {"action":"revise_plan","reason":"what the probes taught, where it landed in the plan, and what each probe sent back is missing","recipe":"the full plan, in the language of the Goal requirement","rerun":["node ids of the probes to run again"]} — omit "rerun" or pass [] when every probe meets the plan; the owner then reviews them with the plan you wrote. No other action is accepted on this turn.';
 
 /**
  * When to declare a batch, and how. The judgement is the planning agent's; the
