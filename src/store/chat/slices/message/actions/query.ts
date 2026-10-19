@@ -217,6 +217,12 @@ export class MessageQueryActionImpl {
     // The server returned these rows, so their optimistic mark is settled even
     // when the bucket already holds the same list (the commit below is skipped).
     transcript.confirmServerRows(persistedIncoming);
+    // Rows this replacement removed or remapped (an optimistic `tmp_*` id
+    // replaced by the server id) can never be preserved again.
+    const nextIds = new Set(reconciled.map((message) => message.id));
+    transcript.forgetClientRows(
+      currentMessages.filter((message) => !nextIds.has(message.id)).map((message) => message.id),
+    );
     // An unchanged bucket still settles: an optimistic dispatch may already
     // have applied this exact state in memory while the stored copy is older.
     if (!isEqual(reconciled, currentMessages) || !this.#get().dbMessagesMap[messagesKey]) {

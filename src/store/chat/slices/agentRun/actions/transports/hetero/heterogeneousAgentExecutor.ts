@@ -1214,6 +1214,7 @@ export const executeHeterogeneousAgent = async (
           get().internal_dispatchMessage(
             { id: msg.id, type: 'createMessage', value: msg as any },
             dispatchCtx,
+            { creationOrigin: 'client' },
           );
         },
         replacePluginState(id, pluginState, metadata) {
@@ -1643,6 +1644,7 @@ export const executeHeterogeneousAgent = async (
         get().internal_dispatchMessage(
           { id: intent.messageId, type: 'createMessage', value: messageToCreate },
           { operationId },
+          { creationOrigin: 'client' },
         );
         // Associate so cancellation / cleanup tracks the new step's message.
         get().associateMessageWithOperation(intent.messageId, operationId);
@@ -1762,6 +1764,7 @@ export const executeHeterogeneousAgent = async (
           get().internal_dispatchMessage(
             { id: x.toolMessageId, type: 'createMessage', value: toolMsg },
             { operationId },
+            { creationOrigin: 'client' },
           );
         }
 

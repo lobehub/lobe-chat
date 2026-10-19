@@ -2416,6 +2416,7 @@ export class ConversationLifecycleActionImpl {
         }) as any,
       },
       { operationId },
+      { creationOrigin: 'client' },
     );
 
     try {

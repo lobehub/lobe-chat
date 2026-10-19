@@ -39,7 +39,17 @@ export class MessageInternalsActionImpl {
     this.#get = get;
   }
 
-  internal_dispatchMessage = (payload: MessageDispatch, context?: MessageDispatchContext): void => {
+  internal_dispatchMessage = (
+    payload: MessageDispatch,
+    context?: MessageDispatchContext,
+    /**
+     * Where a `createMessage` row came from. Only a client-created row can be
+     * missing from a read that predates its server persistence; a server row
+     * (e.g. a gateway `stream_start` shell) is authoritative from the start.
+     * Defaults to `server` so an unlabelled insert is never preserved.
+     */
+    options?: { creationOrigin?: 'client' | 'server' },
+  ): void => {
     // Get full conversation context (including scope) from operation or global state
     const ctx =
       context?.conversationContext ?? this.#get().internal_getConversationContext(context);
@@ -72,7 +82,9 @@ export class MessageInternalsActionImpl {
       ctx,
       reconciled,
       true,
-      payload.type === 'createMessage' ? payload.id : undefined,
+      payload.type === 'createMessage' && options?.creationOrigin === 'client'
+        ? payload.id
+        : undefined,
     );
     transcript.settle(ctx);
   };

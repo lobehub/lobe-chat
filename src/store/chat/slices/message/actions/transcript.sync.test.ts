@@ -21,6 +21,7 @@ import {
 import { topicService } from '@/services/topic';
 import { useChatStore } from '@/store/chat';
 import { operationSelectors } from '@/store/chat/selectors';
+import { getMessageTranscript } from '@/store/chat/slices/message/transcript';
 import { LOCAL_MESSAGE_SCOPE } from '@/store/chat/utils/localMessages';
 
 import { resetTranscripts, rowsOf, seedRows, syncMessages } from './testUtils';
@@ -590,6 +591,7 @@ describe('useFetchMessages', () => {
           .internal_dispatchMessage(
             { id: message.id, type: 'createMessage', value: message as any },
             { conversationContext: context },
+            { creationOrigin: 'client' },
           );
       }
 
@@ -618,6 +620,7 @@ describe('useFetchMessages', () => {
         .internal_dispatchMessage(
           { id: sent.id, type: 'createMessage', value: sent as any },
           { conversationContext: context },
+          { creationOrigin: 'client' },
         );
       // The server returns the exact list already in memory: the replacement
       // is unchanged, but it still confirms the optimistic row.
@@ -629,6 +632,52 @@ describe('useFetchMessages', () => {
       syncMessages(context);
 
       await waitFor(() => expect(rowsOf(context)).toEqual([]));
+    });
+
+    it('does not preserve a server-created row omitted by a later read', async () => {
+      const serverShell: UIChatMessage = {
+        id: 'msg_server_shell',
+        content: '',
+        role: 'assistant',
+        createdAt: 2000,
+        updatedAt: 2000,
+      };
+      // The gateway inserts a shell the server already created.
+      useChatStore
+        .getState()
+        .internal_dispatchMessage(
+          { id: serverShell.id, type: 'createMessage', value: serverShell as any },
+          { conversationContext: context },
+          { creationOrigin: 'server' },
+        );
+
+      vi.mocked(messageService.getMessages).mockResolvedValue([]);
+      syncMessages(context);
+
+      await waitFor(() => expect(rowsOf(context)).toEqual([]));
+    });
+
+    it('forgets a temporary id once a server replacement remaps it', () => {
+      const temp: UIChatMessage = {
+        id: 'tmp_client',
+        content: 'Sent',
+        role: 'user',
+        createdAt: 2000,
+        updatedAt: 2000,
+      };
+      useChatStore
+        .getState()
+        .internal_dispatchMessage(
+          { id: temp.id, type: 'createMessage', value: temp as any },
+          { conversationContext: context },
+          { creationOrigin: 'client' },
+        );
+      const transcript = getMessageTranscript(useChatStore.setState, useChatStore.getState);
+      expect(transcript.debugUnconfirmedClientIds()).toContain('tmp_client');
+
+      useChatStore.getState().replaceMessages([{ ...temp, id: 'msg_server' }], { context });
+
+      expect(transcript.debugUnconfirmedClientIds()).not.toContain('tmp_client');
     });
 
     it('keeps a send whose stale fetch resolves after the send operation handed off', async () => {
@@ -681,6 +730,7 @@ describe('useFetchMessages', () => {
           .internal_dispatchMessage(
             { id: message.id, type: 'createMessage', value: message as any },
             { conversationContext: context },
+            { creationOrigin: 'client' },
           );
       }
       useChatStore.getState().completeOperation(operationId);
@@ -842,6 +892,7 @@ describe('useFetchMessages', () => {
         .internal_dispatchMessage(
           { id: sent.id, type: 'createMessage', value: sent as any },
           { conversationContext: context },
+          { creationOrigin: 'client' },
         );
 
       await act(async () => {

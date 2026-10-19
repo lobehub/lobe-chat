@@ -129,6 +129,11 @@ const createMessageTranscript = (set: StoreSetter<ChatStore>, get: () => ChatSto
     for (const message of messages) unconfirmedClientIds.delete(message.id);
   };
 
+  /** Client rows a server replacement removed or remapped (e.g. `tmp_*`). */
+  const forgetClientRows = (ids: Iterable<string>) => {
+    for (const id of ids) unconfirmedClientIds.delete(id);
+  };
+
   const lens = createTranscriptLens();
 
   /**
@@ -419,7 +424,10 @@ const createMessageTranscript = (set: StoreSetter<ChatStore>, get: () => ChatSto
   return {
     commit,
     confirmServerRows,
+    /** @internal Test/debug view of the ids a stale read may still preserve. */
+    debugUnconfirmedClientIds: () => [...unconfirmedClientIds],
     evict,
+    forgetClientRows,
     headResolutions,
     keyOf,
     pendingInterventions,

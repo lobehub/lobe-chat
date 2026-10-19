@@ -132,6 +132,7 @@ describe('ClientMessageTransport', () => {
     expect(store.internal_dispatchMessage).toHaveBeenCalledWith(
       { id: message.id, type: 'createMessage', value: { ...params, id: message.id } },
       { operationId: 'operation-1' },
+      { creationOrigin: 'client' },
     );
     expect(messageService.batchMutate).toHaveBeenCalledWith([
       { message: { ...params, id: message.id }, type: 'createMessage' },
