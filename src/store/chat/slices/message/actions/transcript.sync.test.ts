@@ -794,6 +794,7 @@ describe('useFetchMessages', () => {
       );
       seedRows(context, [previousReply]);
       syncMessages(context);
+      await waitFor(() => expect(messageService.getMessages).toHaveBeenCalledTimes(1));
 
       useChatStore
         .getState()
@@ -815,6 +816,62 @@ describe('useFetchMessages', () => {
         previousReply.id,
         persisted.id,
       ]);
+    });
+
+    it('drops a remapped row omitted by a generation restarted after the remap', async () => {
+      const previousReply: UIChatMessage = {
+        id: 'previous-reply',
+        content: 'Previous reply',
+        role: 'assistant',
+        createdAt: 1000,
+        updatedAt: 1000,
+      };
+      const temp: UIChatMessage = {
+        id: 'tmp_client',
+        content: 'Sent',
+        role: 'user',
+        createdAt: 2000,
+        updatedAt: 2000,
+      };
+      const persisted: UIChatMessage = { ...temp, id: 'msg_server' };
+
+      let resolveFirst!: (messages: UIChatMessage[]) => void;
+      let resolveRestarted!: (messages: UIChatMessage[]) => void;
+      vi.mocked(messageService.getMessages)
+        .mockReturnValueOnce(
+          new Promise((resolve) => {
+            resolveFirst = resolve;
+          }) as Promise<UIChatMessage[]>,
+        )
+        .mockReturnValueOnce(
+          new Promise((resolve) => {
+            resolveRestarted = resolve;
+          }) as Promise<UIChatMessage[]>,
+        );
+      seedRows(context, [previousReply]);
+      syncMessages(context);
+      await waitFor(() => expect(messageService.getMessages).toHaveBeenCalledTimes(1));
+
+      useChatStore
+        .getState()
+        .internal_dispatchMessage(
+          { id: temp.id, type: 'createMessage', value: temp as any },
+          { conversationContext: context },
+          { creationOrigin: 'client' },
+        );
+      useChatStore.getState().replaceMessages([previousReply, persisted], { context });
+      // The cache re-issues the query after the remap.
+      invalidateMessageListClientState(() => true);
+
+      resolveFirst([previousReply]);
+      await waitFor(() => expect(messageService.getMessages).toHaveBeenCalledTimes(2));
+
+      // The restarted request knew the server id, so omitting it is a remote delete.
+      resolveRestarted([previousReply]);
+
+      await waitFor(() =>
+        expect(rowsOf(context)?.map((message) => message.id)).toEqual([previousReply.id]),
+      );
     });
 
     it('keeps a send whose stale fetch resolves after the send operation handed off', async () => {

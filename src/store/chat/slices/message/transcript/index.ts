@@ -88,19 +88,37 @@ const createMessageTranscript = (set: StoreSetter<ChatStore>, get: () => ChatSto
     clientIds: Set<string>;
     /** Creation order, used to keep the earliest record for a shared result. */
     order: number;
+    /**
+     * When the server came to know a protected id (confirmed it, or assigned
+     * it to a remapped row). A physical request issued after that point
+     * returns the row if it still exists, so omitting it is authoritative.
+     */
+    serverKnownAt: Map<string, number>;
   };
   const activeHeadReads = new Set<HeadReadRecord>();
   const headReads = new WeakMap<UIChatMessage[], HeadReadRecord>();
   /** Client-created rows a server snapshot has not returned yet. */
   const unconfirmedClientIds = new Set<string>();
   let headReadOrder = 0;
+  /** Orders physical requests against the moments ids became server-known. */
+  let clock = 0;
+  /**
+   * When the physical request behind each head result was issued. A logical
+   * read can issue several (a cache generation restart, a forced re-read), and
+   * only the one whose response is applied decides what it may omit.
+   */
+  const physicalStarts = new WeakMap<UIChatMessage[], number>();
   /** The entry key each bucket was last written under. */
   const bucketKeys = new Map<string, string>();
 
   const createHeadRead = (): HeadReadRecord => {
     // A row created before this read but not yet persisted is still missing
     // from an authoritative snapshot, so it starts in the record too.
-    const record = { clientIds: new Set(unconfirmedClientIds), order: ++headReadOrder };
+    const record: HeadReadRecord = {
+      clientIds: new Set(unconfirmedClientIds),
+      order: ++headReadOrder,
+      serverKnownAt: new Map(),
+    };
     activeHeadReads.add(record);
     return record;
   };
@@ -121,11 +139,26 @@ const createMessageTranscript = (set: StoreSetter<ChatStore>, get: () => ChatSto
   };
 
   /**
+   * The server knows these ids from now on. Active reads keep protecting them
+   * only against a response whose physical request was issued earlier.
+   */
+  const markServerKnown = (ids: Iterable<string>, at = ++clock) => {
+    for (const id of ids) {
+      for (const record of activeHeadReads) {
+        if (record.clientIds.has(id) && !record.serverKnownAt.has(id)) {
+          record.serverKnownAt.set(id, at);
+        }
+      }
+    }
+  };
+
+  /**
    * A server snapshot returned these rows. Their client-side mark is settled,
    * so a later snapshot that omits one is authoritative (a remote delete).
    * Runs even when the replacement leaves the bucket unchanged.
    */
   const confirmServerRows = (messages: UIChatMessage[]) => {
+    markServerKnown(messages.map((message) => message.id));
     for (const message of messages) unconfirmedClientIds.delete(message.id);
   };
 
@@ -143,10 +176,38 @@ const createMessageTranscript = (set: StoreSetter<ChatStore>, get: () => ChatSto
   const remapClientRows = (removedIds: string[], addedIds: string[]) => {
     forgetClientRows(removedIds);
     if (addedIds.length === 0) return;
+    const at = ++clock;
     for (const record of activeHeadReads) {
       if (!removedIds.some((id) => record.clientIds.has(id))) continue;
-      for (const id of addedIds) record.clientIds.add(id);
+      for (const id of addedIds) {
+        record.clientIds.add(id);
+        // The server assigned it just now: only a request issued earlier can
+        // be missing it.
+        if (!record.serverKnownAt.has(id)) record.serverKnownAt.set(id, at);
+      }
     }
+  };
+
+  /**
+   * Issue one physical head request, stamping its result with the moment it
+   * was issued. The cache can call this again for a restarted generation.
+   */
+  const readHeadPage: typeof readConversationMessageListPage = async (context) => {
+    const startedAt = ++clock;
+    const result = await readConversationMessageListPage(context);
+    physicalStarts.set(Array.isArray(result) ? result : result.messages, startedAt);
+    return result;
+  };
+
+  /** Ids `record` still protects in a response issued at `startedAt`. */
+  const protectedIds = (record: HeadReadRecord, startedAt: number | undefined) => {
+    if (startedAt === undefined || record.serverKnownAt.size === 0) return record.clientIds;
+    const ids = new Set<string>();
+    for (const id of record.clientIds) {
+      const knownAt = record.serverKnownAt.get(id);
+      if (knownAt === undefined || knownAt > startedAt) ids.add(id);
+    }
+    return ids;
   };
 
   const lens = createTranscriptLens();
@@ -208,7 +269,7 @@ const createMessageTranscript = (set: StoreSetter<ChatStore>, get: () => ChatSto
         ? topicSelectors.getTopicById(context.topicId)(get())
         : undefined;
       const wasPending = hasPendingInterventions(dbMessages);
-      let messages = await runMessageListQuery(context, readConversationMessageListPage);
+      let messages = await runMessageListQuery(context, readHeadPage);
       registerHeadRead(messages, read);
       if (!context.syncInterventions || !context.topicId) return messages;
       if (wasPending || hasPendingInterventions(messages)) pendingInterventions.add(syncKey);
@@ -224,11 +285,13 @@ const createMessageTranscript = (set: StoreSetter<ChatStore>, get: () => ChatSto
         releaseHeadRead(read);
         read = createHeadRead();
         // Read after completion without dropping loaded history or its cursor.
-        messages = await runMessageListQuery(context, readConversationMessageListPage, {
+        messages = await runMessageListQuery(context, readHeadPage, {
           force: true,
         });
       }
       const result = [...messages];
+      const startedAt = physicalStarts.get(messages);
+      if (startedAt !== undefined) physicalStarts.set(result, startedAt);
       // The copy is what `prepareHead` receives.
       registerHeadRead(result, read);
       snapshots.set(result, { dbMessages, topic, topicAtRequest });
@@ -280,13 +343,13 @@ const createMessageTranscript = (set: StoreSetter<ChatStore>, get: () => ChatSto
     if (read) releaseHeadRead(read);
 
     // A returned row is server-confirmed: a later snapshot may remove it.
-    for (const message of incoming) unconfirmedClientIds.delete(message.id);
+    confirmServerRows(incoming);
     if (!context.topicId) return undefined;
 
     // Client rows this read cannot treat as authoritative: unconfirmed when it
     // was issued, or created while it was in flight.
     const boundary: HeadRequestBoundary | undefined = read && {
-      unconfirmedClientIds: read.clientIds,
+      unconfirmedClientIds: protectedIds(read, physicalStarts.get(incoming)),
     };
 
     // DB chunk writes can lag behind pushed content, even at an equal
@@ -424,6 +487,7 @@ const createMessageTranscript = (set: StoreSetter<ChatStore>, get: () => ChatSto
    */
   const evict = async (predicate?: (context: ConversationContext) => boolean): Promise<void> => {
     if (!predicate) {
+      unconfirmedClientIds.clear();
       await slice.clear();
       return;
     }
@@ -433,7 +497,13 @@ const createMessageTranscript = (set: StoreSetter<ChatStore>, get: () => ChatSto
     };
     const scope = conversationMessagesResource.scope.get();
     const loaded = new Set(lens.keys!(get()));
-    for (const key of loaded) if (matches(key)) slice.remove(key);
+    for (const key of loaded) {
+      if (!matches(key)) continue;
+      // No later replacement or delete reaches an evicted conversation, so its
+      // client rows' marks go with it.
+      forgetClientRows((bucketRows(key) ?? []).map((message) => message.id));
+      slice.remove(key);
+    }
 
     const persisted = await readReplicaStoredKeys(conversationMessagesResource);
     // `remove` resolves against the active scope; another identity's rows are not ours.
