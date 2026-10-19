@@ -5,6 +5,8 @@ import {
   buildSlackCreateAppUrl,
   DISCORD_DEVELOPER_PORTAL_URL,
   FEISHU_CONSOLE_URL,
+  LINE_ACCOUNT_ENTRY_URL,
+  LINE_ACCOUNT_MANAGER_URL,
   LINE_CONSOLE_URL,
   QQ_BOT_CONSOLE_URL,
   SLACK_APPS_URL,
@@ -12,10 +14,12 @@ import {
 } from './links';
 
 export type SetupLinkLabel =
+  | 'createLineAccount'
   | 'createSlackApp'
   | 'inviteBot'
   | 'openBotFather'
   | 'openBotSettings'
+  | 'openLineAccountManager'
   | 'openConsole'
   | 'openSlackApp';
 
@@ -128,9 +132,16 @@ export const getSetupGuide = (
     case 'line': {
       return {
         guide: 'line',
+        // LINE no longer creates Messaging API channels in the Developers Console;
+        // they come from an Official Account, and the webhook is set by hand.
         steps: [
-          { key: 'create', link: { href: LINE_CONSOLE_URL, label: 'openConsole' } },
-          { key: 'credentials' },
+          { key: 'account', link: { href: LINE_ACCOUNT_ENTRY_URL, label: 'createLineAccount' } },
+          {
+            key: 'messagingApi',
+            link: { href: LINE_ACCOUNT_MANAGER_URL, label: 'openLineAccountManager' },
+          },
+          { key: 'credentials', link: { href: LINE_CONSOLE_URL, label: 'openConsole' } },
+          { key: 'webhook' },
         ],
       };
     }

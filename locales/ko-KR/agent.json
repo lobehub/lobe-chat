@@ -256,8 +256,6 @@
   "channel.quickSetup.feishu.scan.title": "Feishu로 스캔하여 봇 생성",
   "channel.quickSetup.feishu.scan.waiting": "Feishu에서 확인을 기다리는 중…",
   "channel.quickSetup.guideTitle": "설정 단계",
-  "channel.quickSetup.line.create.desc": "LINE 개발자 콘솔에서 제공자와 메시징 API 채널을 생성하세요.",
-  "channel.quickSetup.line.create.title": "메시징 API 채널 생성",
   "channel.quickSetup.line.credentials.desc": "비밀은 기본 설정에 있으며, 메시징 API에서 장기 액세스 토큰을 발급하세요.",
   "channel.quickSetup.line.credentials.title": "채널 비밀과 액세스 토큰 복사",
   "channel.quickSetup.link.createSlackApp": "Slack 앱 생성",

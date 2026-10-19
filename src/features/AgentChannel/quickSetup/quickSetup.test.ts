@@ -113,6 +113,18 @@ describe('scanCopyKey', () => {
 });
 
 describe('getSetupGuide', () => {
+  it('starts LINE from an Official Account and ends with the manual webhook', () => {
+    const guide = getSetupGuide('line', { appName: 'Moss' })!;
+    expect(guide.steps.map(({ key }) => key)).toEqual([
+      'account',
+      'messagingApi',
+      'credentials',
+      'webhook',
+    ]);
+    // LINE no longer creates Messaging API channels in the Developers Console.
+    expect(guide.steps[0].link?.href).toContain('entry.line.biz');
+  });
+
   it('offers scan-to-create for Feishu and Lark with their own consoles', () => {
     const feishu = getSetupGuide('feishu', { appName: 'Moss' })!;
     const lark = getSetupGuide('lark', { appName: 'Moss' })!;

@@ -256,8 +256,6 @@
   "channel.quickSetup.feishu.scan.title": "Сканирайте с Feishu, за да създадете бота",
   "channel.quickSetup.feishu.scan.waiting": "Чакаме да потвърдите в Feishu…",
   "channel.quickSetup.guideTitle": "Стъпки за настройка",
-  "channel.quickSetup.line.create.desc": "В конзолата LINE Developers, създайте доставчик и канал за Messaging API.",
-  "channel.quickSetup.line.create.title": "Създайте канал за Messaging API",
   "channel.quickSetup.line.credentials.desc": "Тайната е в Basic settings; издайте дълготраен токен за достъп в Messaging API.",
   "channel.quickSetup.line.credentials.title": "Копирайте тайната на канала и токена за достъп",
   "channel.quickSetup.link.createSlackApp": "Създайте Slack приложение",

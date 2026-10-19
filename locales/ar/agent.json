@@ -256,8 +256,6 @@
   "channel.quickSetup.feishu.scan.title": "امسح باستخدام Feishu لإنشاء الروبوت",
   "channel.quickSetup.feishu.scan.waiting": "في انتظار تأكيدك في Feishu...",
   "channel.quickSetup.guideTitle": "خطوات الإعداد",
-  "channel.quickSetup.line.create.desc": "في وحدة مطوري LINE، قم بإنشاء مزود وقناة API للرسائل.",
-  "channel.quickSetup.line.create.title": "إنشاء قناة API للرسائل",
   "channel.quickSetup.line.credentials.desc": "السر موجود في الإعدادات الأساسية؛ قم بإصدار رمز وصول طويل الأمد على API للرسائل.",
   "channel.quickSetup.line.credentials.title": "انسخ سر القناة ورمز الوصول",
   "channel.quickSetup.link.createSlackApp": "إنشاء تطبيق Slack",

@@ -256,8 +256,6 @@
   "channel.quickSetup.feishu.scan.title": "با Feishu اسکن کنید تا ربات ایجاد شود",
   "channel.quickSetup.feishu.scan.waiting": "منتظر تأیید شما در Feishu...",
   "channel.quickSetup.guideTitle": "مراحل راه‌اندازی",
-  "channel.quickSetup.line.create.desc": "در کنسول LINE Developers، یک ارائه‌دهنده و یک کانال Messaging API ایجاد کنید.",
-  "channel.quickSetup.line.create.title": "یک کانال Messaging API ایجاد کنید",
   "channel.quickSetup.line.credentials.desc": "رمز در Basic settings است؛ یک توکن دسترسی بلندمدت در Messaging API صادر کنید.",
   "channel.quickSetup.line.credentials.title": "رمز کانال و توکن دسترسی را کپی کنید",
   "channel.quickSetup.link.createSlackApp": "ایجاد برنامه Slack",

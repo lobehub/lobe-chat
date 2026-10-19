@@ -256,8 +256,6 @@
   "channel.quickSetup.feishu.scan.title": "Scan met Feishu om de bot te maken",
   "channel.quickSetup.feishu.scan.waiting": "Wachten op bevestiging in Feishu…",
   "channel.quickSetup.guideTitle": "Installatiestappen",
-  "channel.quickSetup.line.create.desc": "Maak in de LINE Developers-console een provider en een Messaging API-kanaal.",
-  "channel.quickSetup.line.create.title": "Maak een Messaging API-kanaal",
   "channel.quickSetup.line.credentials.desc": "Het geheim staat onder Basisinstellingen; maak een langlevende toegangstoken aan op Messaging API.",
   "channel.quickSetup.line.credentials.title": "Kopieer het kanaalgeheim en de toegangstoken",
   "channel.quickSetup.link.createSlackApp": "Maak Slack-app",

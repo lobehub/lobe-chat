@@ -256,8 +256,6 @@
   "channel.quickSetup.feishu.scan.title": "Feishuでスキャンしてボットを作成する",
   "channel.quickSetup.feishu.scan.waiting": "Feishuでの確認を待っています…",
   "channel.quickSetup.guideTitle": "セットアップ手順",
-  "channel.quickSetup.line.create.desc": "LINE DevelopersコンソールでプロバイダーとMessaging APIチャンネルを作成します。",
-  "channel.quickSetup.line.create.title": "Messaging APIチャンネルを作成する",
   "channel.quickSetup.line.credentials.desc": "シークレットは「基本設定」にあります。Messaging APIで長期間有効なアクセストークンを発行します。",
   "channel.quickSetup.line.credentials.title": "チャンネルシークレットとアクセストークンをコピーする",
   "channel.quickSetup.link.createSlackApp": "Slackアプリを作成する",

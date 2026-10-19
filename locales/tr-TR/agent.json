@@ -256,8 +256,6 @@
   "channel.quickSetup.feishu.scan.title": "Botu oluşturmak için Feishu ile tarayın",
   "channel.quickSetup.feishu.scan.waiting": "Feishu'da onaylamanızı bekliyor…",
   "channel.quickSetup.guideTitle": "Kurulum adımları",
-  "channel.quickSetup.line.create.desc": "LINE Geliştirici konsolunda bir sağlayıcı ve bir Mesajlaşma API kanalı oluşturun.",
-  "channel.quickSetup.line.create.title": "Bir Mesajlaşma API kanalı oluşturun",
   "channel.quickSetup.line.credentials.desc": "Gizli anahtar Temel ayarlarda bulunur; Mesajlaşma API'sinde uzun ömürlü bir erişim jetonu oluşturun.",
   "channel.quickSetup.line.credentials.title": "Kanal gizli anahtarını ve erişim jetonunu kopyalayın",
   "channel.quickSetup.link.createSlackApp": "Slack uygulaması oluşturun",

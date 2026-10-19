@@ -12,6 +12,9 @@ export const FEISHU_CONSOLE_URL = {
 } as const;
 export const QQ_BOT_CONSOLE_URL = 'https://q.qq.com/qqbot/';
 export const LINE_CONSOLE_URL = 'https://developers.line.biz/console/';
+// Since 2024-09-04 a Messaging API channel starts from an Official Account.
+export const LINE_ACCOUNT_ENTRY_URL = 'https://entry.line.biz/form/entry/unverified';
+export const LINE_ACCOUNT_MANAGER_URL = 'https://manager.line.biz/';
 
 /**
  * What the bot needs in a server: view channels, send messages (also in

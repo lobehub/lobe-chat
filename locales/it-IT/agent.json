@@ -256,8 +256,6 @@
   "channel.quickSetup.feishu.scan.title": "Scansiona con Feishu per creare il bot",
   "channel.quickSetup.feishu.scan.waiting": "In attesa della tua conferma in Feishu…",
   "channel.quickSetup.guideTitle": "Passaggi di configurazione",
-  "channel.quickSetup.line.create.desc": "Nella console degli sviluppatori LINE, crea un provider e un canale API di messaggistica.",
-  "channel.quickSetup.line.create.title": "Crea un canale API di messaggistica",
   "channel.quickSetup.line.credentials.desc": "Il segreto si trova in Impostazioni di base; emetti un token di accesso a lunga durata su API di messaggistica.",
   "channel.quickSetup.line.credentials.title": "Copia il segreto del canale e il token di accesso",
   "channel.quickSetup.link.createSlackApp": "Crea app Slack",

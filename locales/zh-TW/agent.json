@@ -256,8 +256,6 @@
   "channel.quickSetup.feishu.scan.title": "使用飛書掃描以創建機器人",
   "channel.quickSetup.feishu.scan.waiting": "等待您在飛書中確認…",
   "channel.quickSetup.guideTitle": "設置步驟",
-  "channel.quickSetup.line.create.desc": "在 LINE 開發者控制台中，創建提供者和訊息 API 頻道。",
-  "channel.quickSetup.line.create.title": "創建訊息 API 頻道",
   "channel.quickSetup.line.credentials.desc": "密鑰位於基本設置中；在訊息 API 中發行長期存取令牌。",
   "channel.quickSetup.line.credentials.title": "複製頻道密鑰和存取令牌",
   "channel.quickSetup.link.createSlackApp": "創建 Slack 應用",

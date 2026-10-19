@@ -256,8 +256,6 @@
   "channel.quickSetup.feishu.scan.title": "Quét với Feishu để tạo bot",
   "channel.quickSetup.feishu.scan.waiting": "Đang chờ bạn xác nhận trong Feishu…",
   "channel.quickSetup.guideTitle": "Các bước thiết lập",
-  "channel.quickSetup.line.create.desc": "Trong bảng điều khiển LINE Developers, tạo một nhà cung cấp và một kênh Messaging API.",
-  "channel.quickSetup.line.create.title": "Tạo một kênh Messaging API",
   "channel.quickSetup.line.credentials.desc": "Secret nằm trong Basic settings; tạo một access token có thời hạn dài trong Messaging API.",
   "channel.quickSetup.line.credentials.title": "Sao chép channel secret và access token",
   "channel.quickSetup.link.createSlackApp": "Tạo ứng dụng Slack",

@@ -5,6 +5,8 @@ export default {
   'channel.quickSetup.link.openBotFather': 'Open BotFather',
   'channel.quickSetup.link.openBotSettings': 'Open bot settings',
   'channel.quickSetup.link.openConsole': 'Open developer console',
+  'channel.quickSetup.link.createLineAccount': 'Create Official Account',
+  'channel.quickSetup.link.openLineAccountManager': 'Open Official Account Manager',
   'channel.quickSetup.link.openSlackApp': 'Open app settings',
   'channel.quickSetup.manualToggle': 'Already have an app? Enter credentials manually',
   'channel.quickSetup.scanToggle': 'Scan to create instead',
@@ -75,12 +77,18 @@ export default {
     'On the QQ Open Platform, create a bot and finish its basic setup.',
   'channel.quickSetup.qq.credentials.title': 'Copy the App ID and App Secret',
   'channel.quickSetup.qq.credentials.desc': "Find them in the bot's Development settings.",
-  'channel.quickSetup.line.create.title': 'Create a Messaging API channel',
-  'channel.quickSetup.line.create.desc':
-    'In the LINE Developers console, create a provider and a Messaging API channel.',
+  'channel.quickSetup.line.account.title': 'Create a LINE Official Account',
+  'channel.quickSetup.line.account.desc':
+    'Sign in with your LINE Business ID and create the account the bot speaks as.',
+  'channel.quickSetup.line.messagingApi.title': 'Turn on the Messaging API',
+  'channel.quickSetup.line.messagingApi.desc':
+    'In Official Account Manager, open Settings → Messaging API and enable it. The channel then appears in the Developers Console.',
   'channel.quickSetup.line.credentials.title': 'Copy the channel secret and access token',
   'channel.quickSetup.line.credentials.desc':
     'The secret is on Basic settings; issue a long-lived access token on Messaging API.',
+  'channel.quickSetup.line.webhook.title': 'Turn on the webhook',
+  'channel.quickSetup.line.webhook.desc':
+    'After saving, paste the webhook URL shown below into Messaging API settings, turn on Use webhook, and click Verify.',
   'channel.applicationId': 'Application ID / Bot Username',
   'channel.applicationIdHint': 'Unique identifier for your bot application.',
   'channel.applicationIdInvalid.discord':
