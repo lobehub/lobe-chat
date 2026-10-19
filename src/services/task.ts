@@ -7,7 +7,7 @@ import type {
 } from '@lobechat/types';
 
 import { lambdaClient, withLlmRelay } from '@/libs/trpc/client';
-import { oneShotRelay } from '@/services/llmRelay';
+import { buildLlmExecutorDeclaration, oneShotRelay } from '@/services/llmRelay';
 import { useUserStore } from '@/store/user';
 import { systemAgentSelectors } from '@/store/user/selectors';
 
@@ -26,6 +26,8 @@ class TaskService {
     after?: { at: Date | string; seq: number };
     assigneeAgentId?: string;
     automated?: boolean;
+    /** Archived tasks are left out unless this is set. */
+    includeArchived?: boolean;
     orderBy?: 'createdAt' | 'updatedAt';
     limit?: number;
     offset?: number;
@@ -50,6 +52,7 @@ class TaskService {
       offset?: number;
       statuses: string[];
     }>;
+    includeArchived?: boolean;
     parentTaskId?: string | null;
     projectId?: string;
     /** "My tasks" narrowing: assigned to the caller, or created by them. */
@@ -166,6 +169,9 @@ class TaskService {
 
   delete = async (id: string) => lambdaClient.task.delete.mutate({ id });
 
+  archive = async (id: string, archived: boolean) =>
+    lambdaClient.task.archive.mutate({ archived, id });
+
   clearAll = async () => lambdaClient.task.clearAll.mutate();
 
   updateStatus = async (
@@ -238,8 +244,16 @@ class TaskService {
     ...args: Parameters<typeof lambdaClient.task.updateVerifyConfig.mutate>
   ) => lambdaClient.task.updateVerifyConfig.mutate(...args);
 
+  /**
+   * Judge the task's output against its rubrics. The server picks the judge
+   * model (the task's own judge, else the topic model), so any device provider
+   * this tab runs is reason to stand by as its executor.
+   */
   runReview = async (id: string, params?: { content?: string; topicId?: string }) =>
-    lambdaClient.task.runReview.mutate({ id, ...params });
+    oneShotRelay.run(
+      () => buildLlmExecutorDeclaration()?.providers ?? [],
+      (relay) => lambdaClient.task.runReview.mutate({ id, ...params }, withLlmRelay(relay)),
+    );
 
   pinDocument = async (taskId: string, documentId: string, pinnedBy?: string) =>
     lambdaClient.task.pinDocument.mutate({ documentId, pinnedBy, taskId });

@@ -1,11 +1,21 @@
 'use client';
 
 import { isMaskedBotCredential } from '@lobechat/const';
-import { Block, Flexbox, Icon } from '@lobehub/ui';
-import type { SelectOption } from '@lobehub/ui/base-ui';
-import { Button, confirmModal, InputNumber, Select, Switch, Tag, Text } from '@lobehub/ui/base-ui';
-import { Form, type FormInstance, useFormInstance, useWatch } from '@lobehub/ui/base-ui/form';
-import { createStaticStyles } from 'antd-style';
+import type { SelectOption } from '@lobehub/ui';
+import {
+  Block,
+  Button,
+  confirmModal,
+  createStaticStyles,
+  Flexbox,
+  Icon,
+  InputNumber,
+  Select,
+  Switch,
+  Tag,
+  Text,
+} from '@lobehub/ui';
+import { Form, type FormInstance, useFormInstance, useWatch } from '@lobehub/ui/form';
 import {
   Fingerprint,
   Hash,
@@ -34,6 +44,7 @@ import {
   platformCredentialExtrasMap,
   platformSettingsFieldExtrasMap,
 } from '../platform/registry';
+import QuickSetupSection from '../quickSetup/QuickSetupSection';
 import { extractSettingsDefaults } from './formState';
 import type { ChannelFormValues } from './index';
 
@@ -468,16 +479,31 @@ interface BodyProps {
   disabled?: boolean;
   form: FormInstance<ChannelFormValues>;
   hasConfig?: boolean;
+  /** Saves and connects the credentials; resolves `false` when saving failed. */
   onAuthenticated?: (params: {
     applicationId: string;
     credentials: Record<string, string>;
-  }) => void;
+  }) => Promise<boolean> | void;
   onValuesChange?: (values: ChannelFormValues) => void;
   platformDef: SerializedPlatformDefinition;
+  /** Name a quick-created bot app starts with (the agent's name). */
+  quickSetupAppName?: string;
+  /** Who a quick-created bot app is for (the agent id); a new scope starts a new scan. */
+  quickSetupScope?: string;
 }
 
 const Body = memo<BodyProps>(
-  ({ platformDef, form, hasConfig, currentConfig, onAuthenticated, onValuesChange, disabled }) => {
+  ({
+    platformDef,
+    form,
+    hasConfig,
+    currentConfig,
+    onAuthenticated,
+    onValuesChange,
+    disabled,
+    quickSetupAppName,
+    quickSetupScope,
+  }) => {
     const { t: _t } = useTranslation('agent');
     const t = _t as (key: string) => string;
 
@@ -542,6 +568,15 @@ const Body = memo<BodyProps>(
             />
           ) : (
             <>
+              <QuickSetupSection
+                appName={quickSetupAppName || 'LobeHub'}
+                disabled={disabled}
+                form={form}
+                hasConfig={hasConfig}
+                platformId={platformDef.id}
+                scope={quickSetupScope}
+                onAuthenticated={onAuthenticated}
+              />
               {/* Render top-level sections in schema order so each platform controls
               its own field ordering. LINE places `credentials` before `applicationId`
               because the operator must enter the channel access token before the

@@ -61,6 +61,22 @@ lobehub = "./packages/alint/rules"
 "lobehub/no-mode-flags" = "warn"
 "lobehub/no-unguarded-response-field" = "error"
 
+# Fixed product images and App-owned resource requests have different namespaces.
+[[config.group]]
+files = [ "src/**/*.{ts,tsx,css}", "packages/const/src/**/*.ts", "apps/*/app/**/*.{ts,tsx,css}", "apps/{share,workbench}/src/**/*.{ts,tsx,css}", "apps/desktop/vite.*.config.{ts,mts}", "scripts/**/*.{ts,mts}" ]
+ignores = [ "**/*.{test,spec}.{ts,tsx}", "**/__tests__/**", "**/fixtures/**", "**/generated/**" ]
+[config.group.plugins]
+lobehub = "./packages/alint/rules"
+[config.group.rules]
+"lobehub/static-app-image-namespace" = "warn"
+
+[[config.group]]
+files = [ "packages/alint/fixtures/static-app-image-namespace/**" ]
+[config.group.plugins]
+lobehub = "./packages/alint/rules"
+[config.group.rules]
+"lobehub/static-app-image-namespace" = "warn"
+
 
 # Browser code, everywhere: no third-party package that needs Node may be
 # imported where the SPA (or the Electron renderer) runs it. Node built-ins and

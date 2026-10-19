@@ -1,18 +1,21 @@
 import { deriveWorktreePath, type DeviceGitWorktreeListItem } from '@lobechat/types';
-import { Icon, Tooltip } from '@lobehub/ui';
 import {
   confirmModal,
+  createStaticStyles,
+  cssVar,
+  cx,
   DropdownMenuItem,
   DropdownMenuPopup,
   DropdownMenuPortal,
   DropdownMenuPositioner,
   DropdownMenuRoot,
   DropdownMenuTrigger,
+  Icon,
   Input,
   Spin,
   toast,
-} from '@lobehub/ui/base-ui';
-import { createStaticStyles, cssVar, cx } from 'antd-style';
+  Tooltip,
+} from '@lobehub/ui';
 import {
   CheckIcon,
   FolderPlusIcon,
@@ -415,6 +418,8 @@ interface WorktreeSwitcherProps {
   currentBranch: string;
   detached?: boolean;
   deviceId?: string;
+  /** Mounted but inert while a stale-first branch awaits confirmation. */
+  disabled?: boolean;
   isGithub: boolean;
   onWorktreesChange?: () => Promise<unknown> | unknown;
   path: string;
@@ -433,6 +438,7 @@ const WorktreeSwitcher = memo<WorktreeSwitcherProps>(
     currentBranch,
     detached,
     deviceId,
+    disabled = false,
     isGithub,
     onWorktreesChange,
     path,
@@ -635,9 +641,18 @@ const WorktreeSwitcher = memo<WorktreeSwitcherProps>(
     );
 
     return (
-      <DropdownMenuRoot open={open} onOpenChange={setOpen}>
+      <DropdownMenuRoot
+        open={!disabled && open}
+        onOpenChange={(next) => {
+          if (!disabled) setOpen(next);
+        }}
+      >
         <DropdownMenuTrigger>
-          <div className={gitMenuTriggerStyles.trigger}>
+          <div
+            aria-disabled={disabled}
+            className={gitMenuTriggerStyles.trigger}
+            data-disabled={disabled || undefined}
+          >
             {open ? trigger : <Tooltip title={triggerTitle}>{trigger}</Tooltip>}
           </div>
         </DropdownMenuTrigger>

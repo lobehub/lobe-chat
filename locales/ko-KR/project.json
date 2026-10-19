@@ -73,6 +73,7 @@
   "directories.repository": "GitHub 저장소 URL (선택 사항)",
   "directories.repositoryHint": "소스 저장소를 기록합니다. 파일을 복제하거나 동기화하지 않습니다. 자격 증명을 포함하지 마세요.",
   "directories.sourceSummary": "기존 디렉토리",
+  "directories.stagedNewTopic": "<project>{{name}}</project>에서 새 주제가 시작됩니다",
   "directories.start": "여기에서 작업 시작",
   "directories.startInProject": "{{name}}에서 작업 시작",
   "directories.title": "작업 디렉토리",

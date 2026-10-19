@@ -1860,8 +1860,8 @@ describe('HeterogeneousAgentCtr', () => {
         expect(options.env).not.toHaveProperty('ANTHROPIC_API_KEY');
         expect(options.env).not.toHaveProperty('ANTHROPIC_AUTH_TOKEN');
         expect(options.env).not.toHaveProperty('ANTHROPIC_BASE_URL');
-        // Unrelated inherited vars must still pass through.
-        expect(options.env.PATH).toBe(process.env.PATH);
+        // Unrelated inherited vars pass through, behind the bundled CLI's dir.
+        expect(options.env.PATH).toBe(`/fake/userData/bin${path.delimiter}${process.env.PATH}`);
       } finally {
         for (const [key, value] of Object.entries(original)) {
           if (value === undefined) delete process.env[key];
@@ -2827,12 +2827,12 @@ describe('HeterogeneousAgentCtr', () => {
       return { cliArgs, command, ctr, options, sessionId, writes };
     };
 
-    it('identifies Codex when beginning a server-default operation', async () => {
+    it.each(['codex', 'opencode'] as const)('runs %s via relay', async (agentType) => {
       const { proc } = createFakeProc();
       nextFakeProc = proc;
       const relayInvocation = {
         acceptedAt: '2026-09-01T00:00:00.000Z',
-        agentType: 'codex',
+        agentType,
         ingress: 'openai-responses',
         model: 'gpt-5.4',
         operationId: 'op-server-default',
@@ -2847,8 +2847,8 @@ describe('HeterogeneousAgentCtr', () => {
         storeManager: { get: vi.fn() },
       } as any);
       const { sessionId } = await ctr.startSession({
-        agentType: 'codex',
-        command: 'codex',
+        agentType,
+        command: agentType,
         providerBinding: {
           apiConfig: { model: 'gpt-5.4', source: 'server-default' },
           kind: 'server-default',
@@ -2862,16 +2862,16 @@ describe('HeterogeneousAgentCtr', () => {
         sessionId,
         topicId: 'topic-1',
       });
-
       expect(beginServerDefaultOperationMock).toHaveBeenCalledWith(expect.any(Object), {
         agentId: 'agent-1',
-        agentType: 'codex',
+        agentType,
         model: 'gpt-5.4',
         operationId: 'op-server-default',
         topicId: 'topic-1',
       });
-      expect(spawnCalls[0].args).toEqual(expect.arrayContaining(['--model', 'lobehub/gpt-5.4']));
-      expect(spawnCalls[0].options.env.LOBEHUB_HETERO_TOKEN).toBe('operation-token');
+      expect(spawnCalls[0].args.join(' ')).toContain('lobehub/gpt-5.4');
+      const key = agentType === 'codex' ? 'LOBEHUB_HETERO_TOKEN' : 'LOBEHUB_OPENCODE_API_KEY';
+      expect(spawnCalls[0].options.env[key]).toBe('operation-token');
       expect(settleServerDefaultOperationMock).toHaveBeenCalledWith(expect.any(Object), {
         cancelled: false,
         operationId: 'op-server-default',
@@ -3434,9 +3434,7 @@ describe('HeterogeneousAgentCtr', () => {
     });
 
     it('carries the detector login-shell PATH into the spawn env for `env node` shims', async () => {
-      // `codex` resolved via the login-shell PATH (mise/nvm). Spawning the
-      // absolute shim under the leaner inherited PATH would fail at its
-      // `#!/usr/bin/env node` shebang — the resolved PATH must reach the child.
+      // A login-shell-resolved shim needs that PATH for its `#!/usr/bin/env node` shebang.
       const resolvedPath = '/Users/h/.local/share/mise/shims/codex';
       const searchPath = '/Users/h/.local/share/mise/shims:/usr/bin:/bin';
       const detect = vi
@@ -3454,7 +3452,9 @@ describe('HeterogeneousAgentCtr', () => {
       await ctr.sendPrompt({ operationId: 'op-test', prompt: 'hello', sessionId });
 
       expect(spawnCalls[0].command).toBe(resolvedPath);
-      expect(spawnCalls[0].options.env.PATH).toBe(searchPath);
+      expect(spawnCalls[0].options.env.PATH).toBe(
+        `/fake/userData/bin${path.delimiter}${searchPath}`,
+      );
     });
 
     it('keeps an explicit path-like command for spawn instead of the detector result', async () => {

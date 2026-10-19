@@ -1,6 +1,6 @@
 'use client';
 
-import { ActionIcon } from '@lobehub/ui/base-ui';
+import { ActionIcon } from '@lobehub/ui';
 import { SettingsIcon } from 'lucide-react';
 import { memo, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -14,7 +14,9 @@ import type { SwitcherItem } from '@/features/NavPanel/switcher/switcherItems';
 import SwitcherMenu from '@/features/NavPanel/switcher/SwitcherMenu';
 import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwareNavigate';
 import type { ProjectDetail } from '@/store/project';
-import { useCurrentProjectList, useProjectStore } from '@/store/project';
+import { useLoadedProjectList, useProjectStore } from '@/store/project';
+
+import { resolveProjectListState } from '../projectListState';
 
 interface ProjectHeaderProps {
   project?: ProjectDetail['project'];
@@ -23,16 +25,15 @@ interface ProjectHeaderProps {
 const ProjectHeader = memo<ProjectHeaderProps>(({ project }) => {
   const { t } = useTranslation(['project', 'common']);
   const navigate = useWorkspaceAwareNavigate();
-  const projects = useCurrentProjectList();
+  const projects = useLoadedProjectList();
   const { error, isHydrated, isValidating, revalidate } = useProjectStore(
     (s) => s.useFetchProjectList,
   )(true);
-  // Rows come from the store; the hook only reports fetch progress.
-  const isLoading = !isHydrated || isValidating;
+  const listState = resolveProjectListState({ error, isHydrated, isValidating, projects });
 
   const items = useMemo<SwitcherItem[]>(
     () =>
-      projects.map((item) => ({
+      (projects ?? []).map((item) => ({
         avatar: item.avatar || undefined,
         id: item.slug ?? item.id,
         private: item.visibility === 'private',
@@ -54,8 +55,8 @@ const ProjectHeader = memo<ProjectHeaderProps>(({ project }) => {
           content={
             <SwitcherMenu
               activeId={project?.slug ?? project?.id}
-              error={items.length === 0 ? error : undefined}
-              isLoading={isLoading && items.length === 0}
+              error={listState === 'error' ? error : undefined}
+              isLoading={listState === 'loading'}
               items={items}
               kind={'project'}
               searchPlaceholder={t('navPanel.searchProject', { ns: 'common' })}

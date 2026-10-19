@@ -1,17 +1,19 @@
 import { isDesktop, OFFICIAL_URL } from '@lobechat/const';
-import { Block, CopyButton, Flexbox } from '@lobehub/ui';
 import {
   ActionIcon,
+  Block,
   Button,
   confirmModal,
+  CopyButton,
+  createStaticStyles,
   type DropdownItem,
   DropdownMenu,
+  Flexbox,
   Tag,
   Text,
   toast,
   Tooltip,
-} from '@lobehub/ui/base-ui';
-import { createStaticStyles } from 'antd-style';
+} from '@lobehub/ui';
 import { ExternalLinkIcon, MoreHorizontalIcon, PencilIcon, TrashIcon } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';

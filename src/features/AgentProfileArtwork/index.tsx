@@ -5,7 +5,7 @@ import {
   type AgentArtworkStyle,
   DEFAULT_AGENT_ARTWORK_STYLE,
 } from '@lobechat/prompts';
-import { Center, Flexbox, Icon, Tooltip } from '@lobehub/ui';
+import { Center, createStaticStyles, cssVar, Flexbox, Icon, Tooltip } from '@lobehub/ui';
 import {
   ActionIcon,
   Avatar,
@@ -15,8 +15,7 @@ import {
   Spin,
   Text,
   toast,
-} from '@lobehub/ui/base-ui';
-import { createStaticStyles, cssVar } from 'antd-style';
+} from '@lobehub/ui';
 import { Check, ImageIcon, MoreHorizontal, Trash2, UploadIcon, WandSparkles } from 'lucide-react';
 import { memo, useCallback, useId, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -49,10 +48,6 @@ const styles = createStaticStyles(({ css }) => ({
     border-radius: calc(${cssVar.borderRadiusLG} + 4px);
 
     background: ${cssVar.colorBgContainer};
-
-    .ant-avatar:focus {
-      outline: none;
-    }
   `,
   avatarGenerating: css`
     pointer-events: none;
@@ -96,11 +91,6 @@ const styles = createStaticStyles(({ css }) => ({
     .agent-background:hover &,
     .agent-background:focus-within & {
       opacity: 1;
-    }
-  `,
-  avatarPicker: css`
-    .ant-tabs-tab:has([id$='-tab-generate']) {
-      order: -1;
     }
   `,
   compactBackground: css`
@@ -496,7 +486,7 @@ export const AgentProfileArtwork = memo<AgentProfileArtworkProps>(
             key={avatarRemountKey(avatar)}
             locale={locale}
             open={canEdit ? undefined : false}
-            popupClassName={`${styles.avatarPicker} agent-avatar-artwork-picker`}
+            popupClassName="agent-avatar-artwork-picker"
             popupProps={{ placement: 'bottomLeft' }}
             shape={'square'}
             size={72}

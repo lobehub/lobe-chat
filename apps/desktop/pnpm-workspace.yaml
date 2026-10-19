@@ -75,3 +75,4 @@ minimumReleaseAgeExclude:
   - '@auv-js/cli@0.0.33'
   - '@auv-js/sdk@0.0.33'
   - electron-sparkle-updater@0.5.3
+  - '@lobehub/*'

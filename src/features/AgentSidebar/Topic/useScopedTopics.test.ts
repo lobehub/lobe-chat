@@ -17,6 +17,7 @@ const rows = [
     updatedAt: 40,
     status: 'active',
     favorite: false,
+    metadata: { boundDeviceId: 'device-a' },
   },
   {
     id: 'new',
@@ -47,6 +48,7 @@ const rows = [
   },
 ];
 vi.mock('@/store/projectWorkingDirectory', () => ({
+  useProjectDirectories: () => [],
   useProjectDirectoryStore: (selector: (s: unknown) => unknown) =>
     selector({ useFetchProjectTopics: () => ({ hasData: true, revalidate: async () => {} }) }),
   useProjectTopics: () => rows,
@@ -114,6 +116,17 @@ describe('Project topics use the canonical Agent sidebar rules', () => {
     fixture.topicId = 'done';
     rerender({ include: false });
     expect(result.current.topics.map((topic) => topic.id)).toEqual(['star', 'old', 'new', 'done']);
+  });
+  it('groups topics by their bound device in byDevice mode', () => {
+    const { result } = renderHook(
+      () => useScopedSidebarTopics(20, 'updatedAt', 'byDevice', false),
+      { wrapper },
+    );
+    expect(result.current.groups.map((group) => group.id)).toEqual([
+      'favorite',
+      'device:device-a',
+      'no-device',
+    ]);
   });
   it('does not silently lose topics beyond the page limit', () => {
     const { result } = renderHook(() => useScopedSidebarTopics(1, 'updatedAt', 'flat', false), {

@@ -23,6 +23,8 @@ import {
 import { mutate, useClientDataSWR } from '@/libs/swr';
 import { getCacheScope, isScopeTrusted, useCacheScope } from '@/libs/swr/useCacheScope';
 
+import { notifyReplicaDevtools, registerReplicaDevtools } from './devtools';
+
 /**
  * LobeHub wiring of `@lobechat/replica`: replicas are partitioned like the SWR
  * cache (`${userId}:${workspaceId}`), persist to IndexedDB by default and
@@ -30,25 +32,29 @@ import { getCacheScope, isScopeTrusted, useCacheScope } from '@/libs/swr/useCach
  */
 
 /**
- * Whether this runtime may hydrate replicas from their persisted projection.
+ * Where a runtime's replicas take their partition and their persistence gates.
  *
- * The Workbench runtime renders the public acceptance / verify surfaces and
- * never mounts the user store, so its cache scope stays the last-known user's
- * partition. Hydrating there would paint a previous — possibly expired or
- * server-invalidated — session's private rows before any authorization is
- * checked, so the Workbench entry turns hydration off at boot. The main SPA
- * keeps it on for the instant-from-cache first paint (it hydrates the persisted
- * partition in parallel with the session check, then resets on a scope change).
+ * The main SPA (the default) resolves the scope from the user store: it
+ * hydrates the last-known user's partition in parallel with the session check
+ * and resets on a scope change, and it persists only once identity resolves.
+ *
+ * The Workbench runtime never mounts the user store, so it installs its own
+ * source at boot (`apps/workbench/src/shell/workbenchReplicaScope.ts`): network
+ * only on its public surfaces, and the same hydrate-then-verify contract as the
+ * main SPA on the private routes that run its session check.
  */
-let replicaHydrationEnabled = true;
-
-/** Enable/disable reads from the persisted projection for this runtime. */
-export const setReplicaPersistedHydration = (enabled: boolean): void => {
-  replicaHydrationEnabled = enabled;
-};
+export interface ReplicaScopeSource {
+  /** Whether a persisted projection may be painted before the network answers. */
+  canHydrate: () => boolean;
+  /** Whether a server answer may be written to the persisted projection. */
+  canPersist: () => boolean;
+  get: () => string;
+  /** React hook form of `get`; must be stable for the runtime's lifetime. */
+  use: () => string;
+}
 
 /**
- * The scope hook, wrapped so `cacheScope` does not *read* it while this module
+ * The scope hook and getters are referenced at call time, not while this module
  * body runs. `@/libs/swr/useCacheScope` imports `@/store/user`, and a user-store
  * slice imports this module — so when `useCacheScope` is the entry of that
  * cycle this module's body executes before `useCacheScope`'s exports are
@@ -56,22 +62,40 @@ export const setReplicaPersistedHydration = (enabled: boolean): void => {
  * scope (a resource would then have no `scope.get`); resolving at call time is
  * equivalent because they are stateless delegating functions.
  */
-const useCacheScopeLazy = (): string => useCacheScope();
+const useAppCacheScope = (): string => useCacheScope();
 
-export const cacheScope: ReplicaScope = {
-  canHydrate: () => replicaHydrationEnabled,
+const appScopeSource: ReplicaScopeSource = {
+  canHydrate: () => true,
   canPersist: () => isScopeTrusted(),
   get: () => getCacheScope(),
-  use: useCacheScopeLazy,
+  use: useAppCacheScope,
+};
+
+let scopeSource: ReplicaScopeSource = appScopeSource;
+
+/** Install this runtime's scope source. Call once at boot, before any render. */
+export const setReplicaScopeSource = (source: ReplicaScopeSource): void => {
+  scopeSource = source;
+};
+
+const useSourceScope = (): string => scopeSource.use();
+
+export const cacheScope: ReplicaScope = {
+  canHydrate: () => scopeSource.canHydrate(),
+  canPersist: () => scopeSource.canPersist(),
+  get: () => scopeSource.get(),
+  use: useSourceScope,
 };
 
 export type ReplicaStorageKind = 'indexedDB' | 'localStorage' | 'memory';
 
-type AppStorageOption<TData> = ReplicaStorageKind | ReplicaStorage<TData>;
+type AppStorageOption<TData> =
+  ReplicaStorageKind | ReplicaStorage<TData> | ((namespace: string) => ReplicaStorage<TData>);
 
 const resolveStorage =
   <TData>(storage: AppStorageOption<TData> = 'indexedDB') =>
   (namespace: string): ReplicaStorage<TData> | undefined => {
+    if (typeof storage === 'function') return storage(namespace);
     if (typeof storage === 'object') return storage;
     if (storage === 'indexedDB') return new IndexedDBQueryProjectionStorage<TData>({ namespace });
     if (storage === 'localStorage')
@@ -157,7 +181,20 @@ export const readReplicaStoredKeys = async (
 export const createReplicaSlice = <TStore, TParams, TData, TFetched = TData>(
   resource: ReplicaResource<TParams, TData, TFetched>,
   options: Omit<CreateReplicaSliceOptions<TStore, TParams, TData, TFetched>, 'driver'>,
-) => createCoreReplicaSlice(resource, { driver: replicaSWRDriver, ...options });
+) => {
+  const { get, set, stateKey, view } = options;
+  const slice = createCoreReplicaSlice(resource, {
+    driver: replicaSWRDriver,
+    ...options,
+    set: (partial, replace, action) => {
+      set(partial, replace, action);
+      notifyReplicaDevtools();
+    },
+  });
+
+  registerReplicaDevtools(resource, { get, slice, stateKey, view });
+  return slice;
+};
 
 export * from '@lobechat/replica';
 export {

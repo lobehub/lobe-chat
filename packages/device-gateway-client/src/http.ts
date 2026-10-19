@@ -317,6 +317,8 @@ export class GatewayHttpClient {
     assistantMessageId: string;
     /** Resolved `lh hetero exec` wrapper args. */
     args?: string[];
+    /** Restricts the run to connections of these clients; omitted means any client. */
+    clientKinds?: DeviceClient[];
     cwd?: string;
     deviceId?: string;
     /** Image attachments forwarded into the `agent_run_request` message. */

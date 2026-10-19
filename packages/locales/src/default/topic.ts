@@ -1,4 +1,13 @@
 export default {
+  'reportProblem.attachments.uploadFailed':
+    "Couldn't upload the attachments. Your report is still here. Try again.",
+  'reportProblem.attachments.invalid': 'Choose a non-empty file with a name under 256 characters.',
+  'reportProblem.attachments.tooLarge': 'Attachments must be 4 MB or less in total.',
+  'reportProblem.attachments.tooMany': 'You can attach up to 5 files.',
+  'reportProblem.attachments.remove': 'Remove {{name}}',
+  'reportProblem.attachments.hint':
+    'Optional · Up to 5 files, 4 MB total. Attachments are sent to the support team.',
+  'reportProblem.attachments.add': 'Add attachments',
   'actions.addNewTopic': 'Start New Topic',
   'actions.addNewTopicInProject': 'Start new topic in {{directory}}',
   'actions.autoRename': 'Smart Rename',
@@ -35,6 +44,7 @@ export default {
   'actions.copyLinkSuccess': 'Link copied',
   'actions.copySessionId': 'Copy Topic ID',
   'actions.copySessionIdSuccess': 'Topic ID copied',
+  'actions.reportProblem': 'Report Bug',
   'actions.copyTopicPrompt': 'Copy Topic Prompt',
   'actions.copyTopicPromptSuccess': 'Topic prompt copied',
   'actions.copyWorkingDirectory': 'Copy Working Directory',
@@ -98,6 +108,7 @@ export default {
   'metaCard.pr.open': 'Open',
   'filter.filter': 'Filter',
   'filter.groupMode.byAgent': 'By agent',
+  'filter.groupMode.byDevice': 'By device',
   'filter.groupMode.byProject': 'By project',
   'filter.groupMode.byStatus': 'By status',
   'filter.groupMode.byTime': 'By time',
@@ -284,6 +295,17 @@ export default {
   'management.view.card': 'Card',
   'management.view.list': 'List',
   'newTopic': 'New Topic',
+  'reportProblem.desc':
+    "This topic's IDs and your app environment are sent to the LobeHub support team, who can then look into this topic's runs, errors and conversation.",
+  'reportProblem.recentDesc':
+    "Your most recent topic's IDs and your app environment are sent to the LobeHub support team, who can then look into that topic's runs, errors and conversation.",
+  'reportProblem.failed': "Couldn't submit the report. Try again.",
+  'reportProblem.rateLimited': "You've sent a lot of reports recently. Try again later.",
+  'reportProblem.placeholder': 'What went wrong? (optional)',
+  'reportProblem.submit': 'Report Bug',
+  'reportProblem.success': 'Report submitted',
+  'reportProblem.successDesc': 'Report ID: {{id}}',
+  'reportProblem.title': 'Report Bug',
   'renameModal.description': 'Keep it short and easy to recognize.',
   'renameModal.title': 'Rename Topic',
   'scheduledStatusTip': 'Scheduled to run at {{time}}.',

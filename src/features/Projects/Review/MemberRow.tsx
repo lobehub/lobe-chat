@@ -1,6 +1,5 @@
 import { PROJECT_MEMBER_ROLES, type ProjectMemberRole } from '@lobechat/types';
-import { Flexbox } from '@lobehub/ui';
-import { Avatar, Select, Text } from '@lobehub/ui/base-ui';
+import { Avatar, Flexbox, Select, Text } from '@lobehub/ui';
 import { useTranslation } from 'react-i18next';
 
 import type { ProjectMemberItem } from '@/services/projectReview';

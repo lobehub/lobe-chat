@@ -1,13 +1,22 @@
 import { DEFAULT_AVATAR, INBOX_SESSION_ID } from '@lobechat/const';
 import { agentDisplayName } from '@lobechat/types';
-import { Block, Flexbox, Icon } from '@lobehub/ui';
-import { Avatar, Text } from '@lobehub/ui/base-ui';
-import { createStaticStyles, cssVar, cx } from 'antd-style';
+import {
+  Avatar,
+  Block,
+  Button,
+  createStaticStyles,
+  cssVar,
+  cx,
+  Flexbox,
+  Icon,
+  Text,
+} from '@lobehub/ui';
 import { Target } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { DEFAULT_INBOX_AVATAR } from '@/const/meta';
+import { openGateReportModal } from '@/features/Acceptance/Viewer/Gate';
 import { taskDetailPath } from '@/features/AgentTasks/shared/taskDetailPath';
 import BriefCardActions from '@/features/DailyBrief/BriefCardActions';
 import BriefCardArtifacts from '@/features/DailyBrief/BriefCardArtifacts';
@@ -161,6 +170,18 @@ const InboxBriefCard = memo<InboxBriefCardProps>(({ bare, brief }) => {
         </Flexbox>
       </Flexbox>
 
+      {/* A held batch release is decided in its report, opened right here. */}
+      {goal?.reviewAcceptanceId && !brief.resolvedAction && (
+        <Flexbox horizontal justify={'flex-end'}>
+          <Button
+            size={'small'}
+            type={'primary'}
+            onClick={() => openGateReportModal({ acceptanceId: goal.reviewAcceptanceId! })}
+          >
+            {t('goalProcess.gate.openReview', { ns: 'chat' })}
+          </Button>
+        </Flexbox>
+      )}
       <BriefCardActions
         actions={brief.actions}
         agentId={brief.agentId ?? brief.agent?.id}

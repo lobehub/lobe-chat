@@ -27,9 +27,10 @@ import {
   resolveAgentAgencyConfig,
 } from '@lobechat/types';
 import { generateEntityId, nanoid } from '@lobechat/utils';
-import { toast } from '@lobehub/ui/base-ui';
+import { toast } from '@lobehub/ui';
 import { t } from 'i18next';
 
+import { getActiveWorkspaceId } from '@/business/client/hooks/useActiveWorkspaceId';
 import { type ChatInputEditor } from '@/features/ChatInput';
 import { saveDraft } from '@/features/ChatInput/draftStorage';
 import {
@@ -66,7 +67,7 @@ import {
 } from '@/store/agent/selectors';
 import { agentGroupByIdSelectors, getChatGroupStoreState } from '@/store/agentGroup';
 import { getPendingSandboxSelection } from '@/store/chat/pendingSandboxSelection';
-import { getPendingTopicRepos } from '@/store/chat/pendingTopicRepos';
+import { consumePendingTopicRepos, getPendingTopicRepos } from '@/store/chat/pendingTopicRepos';
 import {
   dbMessageSelectors,
   displayMessageSelectors,
@@ -348,15 +349,13 @@ export class ConversationLifecycleActionImpl {
     let detachCallerAbort = () => {};
     let hasNotifiedMessageAccepted = false;
     let sendOperationId: string | undefined = undefined;
-    // Where the user was when they hit send. This send's continuations adopt the
-    // topic it creates only while the conversation is still here — the awaited
-    // preflight (access check, snapshots, topic resolution) is long enough for
-    // the user to open another topic, and following them with a switchTopic
-    // would yank both the message list and the URL back (see the
-    // `onlyIfActiveTopicIn` guards below). The agent and group are pinned too:
-    // two blank views share `activeTopicId === null`, so the topic guard alone
-    // cannot tell "still on the origin blank view" from "moved to another
-    // agent's/group's blank view".
+    // Where the user was when they hit send. Continuations adopt the topic this send
+    // creates only while the conversation is still here — the awaited preflight (access
+    // check, snapshots, topic resolution) is long enough to open another topic, and a
+    // switchTopic would yank the message list and URL back (`onlyIfActiveTopicIn`
+    // below). Agent and group are pinned too: two blank views share
+    // `activeTopicId === null`. The workspace scopes the agent CLI run it may start.
+    const sendOriginWorkspaceId = getActiveWorkspaceId();
     const sendOriginActiveTopicId = this.#get().activeTopicId || null;
     const sendOriginActiveAgentId = this.#get().activeAgentId ?? null;
     const sendOriginActiveGroupId = this.#get().activeGroupId ?? null;
@@ -511,7 +510,7 @@ export class ConversationLifecycleActionImpl {
         ? pendingDirectory.projectWorkingDirectoryId
         : undefined;
     const projectDirectoryId = boundTopic?.projectWorkingDirectoryId ?? stagedDirectoryId;
-    let stagedDirectory: { id: string; projectId: string } | undefined;
+    let stagedDirectory: { id: string; path: string; projectId: string } | undefined;
     if (projectDirectoryId) {
       // The sidebar's directory replica already holds the row; read it locally
       // so the optimistic pair is not held behind a network round trip. The
@@ -521,6 +520,7 @@ export class ConversationLifecycleActionImpl {
         findProjectDirectory(projectDirectoryId) ??
         (await projectWorkingDirectoryService.resolve(projectDirectoryId)).data;
       if (stagedDirectoryId) stagedDirectory = directory;
+      if (stagedDirectory) consumePendingTopicRepos(ownerAgentId); // a cloud repo pick conflicts
       if (!isGatewayMode)
         throw new Error('Enable Gateway Mode to run in a project working directory');
       if (
@@ -1234,7 +1234,7 @@ export class ConversationLifecycleActionImpl {
           : undefined,
       topicId: willCreateNewTopic ? undefined : operationContext.topicId,
     });
-    const currentDeviceId = getElectronStoreState().gatewayDeviceInfo?.deviceId;
+    const currentDeviceId = await getElectronStoreState().resolveGatewayDeviceId();
     // Resolve the cwd for every run that lands on a MACHINE — a hetero CLI
     // (in-process `hetero` runtime) and a NATIVE agent alike, as long as the
     // effective target routes to a device. The server can only honour a cwd the
@@ -1286,15 +1286,14 @@ export class ConversationLifecycleActionImpl {
             deviceSelectors.getDeviceDefaultCwd(runCwdDeviceId)(getDeviceStoreState()),
           fallback: heteroCwdContext?.desktopPath ?? heteroCwdContext?.homePath,
           legacyAgentWorkingDirectory: agentState.localAgentWorkingDirectoryMap[agentId],
+          // A project's staged directory, not the agent default, is the new topic's cwd.
+          topicWorkingDirectory: stagedDirectory?.path,
           workspaceScoped,
         }
       : undefined;
-    const agentWorkingDirectory = runCwdParams
-      ? resolveAgentWorkingDirectory(runCwdParams)
-      : undefined;
-    const agentWorkingDirectoryConfig = runCwdParams
-      ? resolveAgentWorkingDirectoryConfig(runCwdParams)
-      : undefined;
+    const agentWorkingDirectory = runCwdParams && resolveAgentWorkingDirectory(runCwdParams);
+    const agentWorkingDirectoryConfig =
+      runCwdParams && resolveAgentWorkingDirectoryConfig(runCwdParams);
     // Heterogeneous CLI agents (Claude Code, Codex, …) store sessions per-cwd
     // (`~/.claude/projects/<encoded-cwd>/`). Anchor their session cwd to the
     // SOURCE repo, NOT the selected worktree, so switching worktree keeps cwd +
@@ -1829,6 +1828,7 @@ export class ConversationLifecycleActionImpl {
           resumeSessionId,
           workingDirectory,
           workingDirectoryConfig,
+          workspaceId: sendOriginWorkspaceId,
         });
 
         if (directMentionThreadId) {

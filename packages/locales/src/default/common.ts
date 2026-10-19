@@ -15,6 +15,8 @@ export default {
   'agentLabel.create': 'New label',
   'agentLabel.manage': 'Manage labels',
   'agentLabel.menuTitle': 'Labels',
+  'agentSkills.ensureFailed':
+    'Some skills this agent relies on could not be installed automatically: {{skills}}. You can add them manually in the Skill Store.',
   'agentViewAll.groupBy.author': 'Author',
   'agentViewAll.groupBy.label': 'Label',
   'agentViewAll.groupBy.noLabel': 'No label',
@@ -159,6 +161,7 @@ export default {
   'cmdk.newLibrary': 'Create New Library',
 
   'cmdk.newPage': 'Create New Page',
+  'cmdk.newTask': 'Create New Task',
 
   'cmdk.newTopic': 'New Topic in Current Agent',
 
@@ -215,6 +218,8 @@ export default {
   'cmdk.search.plugins': 'Skills',
   'cmdk.search.searchMore': 'Search more {{type}}',
   'cmdk.search.searching': 'Search Results',
+  'cmdk.search.task': 'Task',
+  'cmdk.search.tasks': 'Tasks',
   'cmdk.search.topic': 'Topic',
   'cmdk.search.topics': 'Topics',
   'cmdk.searchPlaceholder': 'Enter a command or search...',
@@ -497,6 +502,12 @@ export default {
   'supportAgent.context.attached': 'Diagnostic info attached',
   'supportAgent.context.remove': 'Remove',
   'supportAgent.error.failed': 'Something went wrong while answering. Try again.',
+  'supportAgent.error.inspection_expired':
+    'This permission request expired. Start a new conversation to continue.',
+  'supportAgent.error.inspection_submitted':
+    'A permission response may already have been submitted. Its outcome is unknown. Start a new conversation to continue.',
+  'supportAgent.error.resume_failed':
+    'Unable to confirm that this conversation resumed. Start a new conversation to continue.',
   'supportAgent.error.invalid_conversation':
     'This conversation can no longer be continued. Send again to start a new one.',
   'supportAgent.error.rate_limited': "You've reached the hourly question limit. Try again later.",
@@ -506,6 +517,7 @@ export default {
   'supportAgent.inspect.accessHint':
     'For the next 10 minutes it can act as you in your account to investigate. It has been told to only read, and to change nothing unless you ask.',
   'supportAgent.inspect.allow': 'Allow',
+  'supportAgent.inspect.approvedDecision': 'You approved access to {{target}}.',
   'supportAgent.inspect.declined': 'You declined the request',
   'supportAgent.inspect.deny': 'Decline',
   'supportAgent.inspect.granted': 'Granted {{target}}',
@@ -524,6 +536,7 @@ export default {
   'supportAgent.inspect.target.agent': 'the configuration of the agent "{{title}}"',
   'supportAgent.inspect.target.conversation':
     'the full conversation "{{title}}" ({{total}} messages)',
+  'supportAgent.inspect.target.unavailable': 'an unavailable page',
   'supportAgent.inspect.untitled': 'Untitled',
   'supportAgent.newConversation': 'New conversation',
   'supportAgent.placeholder': 'Describe your question…',

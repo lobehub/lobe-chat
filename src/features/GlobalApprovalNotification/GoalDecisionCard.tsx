@@ -1,16 +1,21 @@
 'use client';
 
-import { ActionIcon, Button, toast } from '@lobehub/ui/base-ui';
+import { ActionIcon, Button, toast } from '@lobehub/ui';
 import { ArrowUpRight, ChevronUp } from 'lucide-react';
 import { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { openGateReportModal } from '@/features/Acceptance/Viewer/Gate';
 import GoalDecisionCase, {
   GoalDecisionAsker,
   type GoalGateCategory,
   goalGateCategory,
   useGateSummary,
 } from '@/features/AgentGoals/GoalDecision';
+import {
+  coordinatorGateReason,
+  localizedCoordinatorReason,
+} from '@/features/AgentGoals/ProcessControl/coordinatorCopy';
 import ClarificationQuestions, {
   type ClarificationAnswer,
 } from '@/features/ClarificationQuestions';
@@ -56,6 +61,20 @@ const GoalDecisionCard = ({ item, onCollapse, onDismiss }: GoalDecisionCardProps
           options: item.decision.options,
         }) as Exclude<GoalGateCategory, 'clarify'>)
       : undefined;
+
+  // A held batch release is a decision gate: reviewed in its report, never
+  // answered with one click from wherever the user happens to be.
+  const reviewAcceptanceId =
+    item.type === 'decision' ? (item.decision.releaseGateAcceptanceId ?? undefined) : undefined;
+  const openReview = () =>
+    reviewAcceptanceId &&
+    openGateReportModal({
+      acceptanceId: reviewAcceptanceId,
+      onDecided: () => {
+        void mutate(goalKeys.pendingForIsland());
+        void mutate((key) => Array.isArray(key) && key[0] === 'brief:list');
+      },
+    });
 
   const openGoal = () =>
     navigate(goal.agentId ? `/agent/${goal.agentId}/goal/${goal.id}` : `/goal/${goal.id}`);
@@ -120,7 +139,13 @@ const GoalDecisionCard = ({ item, onCollapse, onDismiss }: GoalDecisionCardProps
           <GoalDecisionAsker
             agentId={goal.agentId}
             category={category ?? 'judgment'}
-            subtitle={item.type === 'signOff' ? t('goalProcess.signOff.islandSubtitle') : undefined}
+            subtitle={
+              item.type === 'signOff'
+                ? t('goalProcess.signOff.islandSubtitle')
+                : reviewAcceptanceId
+                  ? t('goalProcess.gate.releaseReports')
+                  : undefined
+            }
           />
         </div>
         <ActionIcon
@@ -144,7 +169,11 @@ const GoalDecisionCard = ({ item, onCollapse, onDismiss }: GoalDecisionCardProps
       </div>
 
       <div className={styles.content}>
-        {item.type === 'decision' ? (
+        {item.type === 'decision' && reviewAcceptanceId ? (
+          <div className={styles.reviewSummary}>
+            {localizedCoordinatorReason(coordinatorGateReason(item.decision.question), t as any)}
+          </div>
+        ) : item.type === 'decision' ? (
           <GoalDecisionCase
             hideAsker
             actionsPortalTarget={actionsPortalTarget}
@@ -191,6 +220,11 @@ const GoalDecisionCard = ({ item, onCollapse, onDismiss }: GoalDecisionCardProps
           </Button>
         )}
         <div className={styles.goalActionsSlot} ref={setActionsPortalTarget} />
+        {reviewAcceptanceId && (
+          <Button size="small" type="primary" onClick={openReview}>
+            {t('goalProcess.gate.openReview')}
+          </Button>
+        )}
       </div>
     </div>
   );

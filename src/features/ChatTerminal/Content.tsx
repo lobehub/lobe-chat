@@ -1,20 +1,20 @@
 'use client';
 
 import { isDesktop } from '@lobechat/const';
-import { Flexbox } from '@lobehub/ui';
 import {
   ActionIcon,
   Button,
   type ContextMenuItem,
   ContextMenuTrigger,
+  createStaticStyles,
+  Flexbox,
   Select,
   TabsIndicator,
   TabsList,
   TabsRoot,
   TabsTab,
   Text,
-} from '@lobehub/ui/base-ui';
-import { createStaticStyles } from 'antd-style';
+} from '@lobehub/ui';
 import {
   CopyXIcon,
   PlusIcon,

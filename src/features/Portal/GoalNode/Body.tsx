@@ -1,6 +1,13 @@
-import { Flexbox, Icon, Markdown } from '@lobehub/ui';
-import { Button, Tag, Text } from '@lobehub/ui/base-ui';
-import { createStaticStyles, cssVar } from 'antd-style';
+import {
+  Button,
+  createStaticStyles,
+  cssVar,
+  Flexbox,
+  Icon,
+  Markdown,
+  Tag,
+  Text,
+} from '@lobehub/ui';
 import dayjs from 'dayjs';
 import { SquareArrowOutUpRight } from 'lucide-react';
 import { memo, type ReactNode, useMemo } from 'react';
@@ -24,7 +31,10 @@ import {
   findBatchPlan,
 } from '@/features/AgentGoals/ProcessControl/Graph/batchModel';
 import { KindDot } from '@/features/AgentGoals/ProcessControl/shared';
-import { useFrontierActions } from '@/features/AgentGoals/ProcessControl/useGoalProcessActions';
+import {
+  useFrontierActions,
+  useGoalNodeSelect,
+} from '@/features/AgentGoals/ProcessControl/useGoalProcessActions';
 import { useChatStore } from '@/store/chat';
 import { chatPortalSelectors } from '@/store/chat/selectors';
 import { goalSelectors, useGoalStore } from '@/store/goal';
@@ -144,7 +154,6 @@ const Body = memo(() => {
   const { t } = useTranslation('chat');
   const view = useChatStore(chatPortalSelectors.goalNodeView);
   const openTaskDetail = useChatStore((s) => s.openTaskDetail);
-  const openGoalNode = useChatStore((s) => s.openGoalNode);
   const { decide } = useFrontierActions(view?.goalId ?? '');
   // Fetched here, not assumed from the goal page: the drill-down also opens
   // from the conversation portal, where nothing else holds the snapshot.
@@ -153,6 +162,9 @@ const Body = memo(() => {
   const snapshot = useGoalStore(goalSelectors.goalGraph(view?.goalId ?? ''));
 
   const graph = useMemo(() => (snapshot ? buildGoalGraphView(snapshot) : undefined), [snapshot]);
+  // Linked nodes land where a click on the map would: a Task shows the Task
+  // itself, anything else its drill-down.
+  const openNode = useGoalNodeSelect(view?.goalId ?? '', graph);
   if (!view || !graph || !snapshot) return null;
 
   const nodeView = graph.byId[view.nodeId];
@@ -201,7 +213,7 @@ const Body = memo(() => {
           graph={graph}
           model={batchGate.model}
           round={batchGate.round}
-          onOpenNode={(nodeId) => openGoalNode(view.goalId, nodeId)}
+          onOpenNode={(nodeId) => openNode(nodeId)}
         />
       )}
 
@@ -250,7 +262,7 @@ const Body = memo(() => {
                   key={finding.id}
                   text={finding.title}
                   view={findingView}
-                  onClick={() => openGoalNode(view.goalId, finding.id)}
+                  onClick={() => openNode(finding.id)}
                 />
               );
             })}
@@ -263,7 +275,7 @@ const Body = memo(() => {
           <NodeLinkRow
             text={nodeView.producedBy.title}
             view={graph.byId[nodeView.producedBy.id]}
-            onClick={() => openGoalNode(view.goalId, nodeView.producedBy!.id)}
+            onClick={() => openNode(nodeView.producedBy!.id)}
           />
         </Section>
       )}
@@ -279,7 +291,7 @@ const Body = memo(() => {
                   key={blocker.id}
                   text={blocker.title}
                   view={blockerView}
-                  onClick={() => openGoalNode(view.goalId, blocker.id)}
+                  onClick={() => openNode(blocker.id)}
                 />
               );
             })}

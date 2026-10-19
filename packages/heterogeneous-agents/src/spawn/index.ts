@@ -16,12 +16,14 @@ export {
   buildCodexAppServerArgs,
   buildCodexAppServerInput,
   buildCodexAppServerThreadParams,
+  type CodexAgentHandleOptions,
   CodexAppServerClient,
   type CodexAppServerClientOptions,
   CodexAppServerConnectionError,
   CodexAppServerRpcError,
   CodexThreadSession,
   type CodexThreadSessionOptions,
+  createCodexAgentHandle,
   getCodexAppServerUnsupportedArgs,
   isCodexAppServerCompatibilityError,
   pickCodexRunProvenance,
@@ -75,6 +77,16 @@ export {
   readCodexSessionModel,
   resolveCodexInitialModel,
 } from './codexModel';
+export {
+  buildCodexLobeHubContextArgs,
+  buildCodexShellEnvSetArgs,
+  CODEX_LOBEHUB_CONTEXT_ENV_KEYS,
+  type CodexJwtFile,
+  createCodexJwtFile,
+  LOBEHUB_JWT_FILE_ENV,
+  refreshCodexJwtFiles,
+  toTomlBasicString,
+} from './codexShellEnv';
 export {
   buildCursorAcpArgs,
   buildCursorAcpPrompt,

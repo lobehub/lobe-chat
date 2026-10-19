@@ -18,7 +18,7 @@ import {
   SquarePlay,
   Video,
 } from 'lucide-react';
-import { createElement, isValidElement, type ReactElement, type ReactNode, Suspense } from 'react';
+import { createElement, type ReactElement } from 'react';
 import type { RouteObject } from 'react-router';
 
 import {
@@ -26,7 +26,6 @@ import {
   BusinessDesktopRoutesWithoutMainLayout,
   BusinessResourceRoutes,
 } from '@/business/client/BusinessDesktopRoutes';
-import BrandTextLoading from '@/components/Loading/BrandTextLoading';
 import AppsSkeleton from '@/components/Skeleton/Apps';
 import CommunityHomeSkeleton from '@/components/Skeleton/CommunityHome';
 import CommunityListSkeleton from '@/components/Skeleton/CommunityList';
@@ -37,14 +36,12 @@ import { delayed } from '@/components/Skeleton/Delayed';
 import GenerationSkeleton from '@/components/Skeleton/Generation';
 import MemorySkeleton from '@/components/Skeleton/Memory';
 import ResourceHomeSkeleton from '@/components/Skeleton/ResourceHome';
-import RouteSegmentSkeleton from '@/components/Skeleton/RouteSegment';
 import ProviderSettingsSkeleton, {
   ProviderDetailSkeleton,
 } from '@/components/Skeleton/Settings/Provider';
 import { createSettingsSectionsSkeleton } from '@/components/Skeleton/Settings/Sections';
 import { WORKSPACE_SETTINGS_SECTION_SHAPES } from '@/components/Skeleton/Settings/sectionShapes';
 import { createSurfaceSkeleton } from '@/components/Skeleton/Surface';
-import { acceptanceRouteMeta } from '@/features/Acceptance/routeMeta';
 import { agentDocumentRouteMeta } from '@/features/AgentDocumentPage/routeMeta';
 import { goalDetailRouteMeta, goalsRouteMeta } from '@/features/AgentGoals/routeMeta';
 import { taskRouteMeta, tasksRouteMeta } from '@/features/AgentTasks/routeMeta';
@@ -53,6 +50,7 @@ import { dashboardRouteMeta, dashboardsRouteMeta } from '@/features/Dashboard/ro
 import DevicesPageSkeleton from '@/features/DeviceManager/Skeleton';
 import { pageRouteMeta } from '@/features/Pages/routeMeta';
 import {
+  projectAcceptanceRouteMeta,
   projectConversationRouteMeta,
   projectDirectoriesRouteMeta,
   projectsRouteMeta,
@@ -81,12 +79,18 @@ import AppShellSkeleton, { APP_SHELL_FALLBACK_ID } from '@/spa/BootShell/AppShel
 import { loadRouteWithBuiltinToolSurfaces } from '@/spa/initialize/toolSurfaces';
 import { activityListLoader } from '@/spa/router/activityListLoader';
 import { agentChatTopicListLoader } from '@/spa/router/agentChatTopicListLoader';
+import { agentDocumentListLoader } from '@/spa/router/agentDocumentListLoader';
 import { channelDataLoader } from '@/spa/router/channelDataLoader';
 import { contextListLoader } from '@/spa/router/contextListLoader';
 import { identitiesListLoader } from '@/spa/router/identitiesListLoader';
+import { libraryTreeLoader } from '@/spa/router/libraryTreeLoader';
 import { pageListLoader } from '@/spa/router/pageListLoader';
 import { preferenceListLoader } from '@/spa/router/preferenceListLoader';
+import { agentAccessLoader, agentGroupAccessLoader } from '@/spa/router/resourceAccessLoader';
 import { NoRouteSkeleton, routeMeta } from '@/spa/router/routeMeta';
+import { scheduledTaskListLoader } from '@/spa/router/scheduledTaskListLoader';
+import { withSegmentFallback } from '@/spa/router/withSegmentFallback';
+import { worksLoader } from '@/spa/router/worksLoader';
 import { SettingsTabs } from '@/store/global/initialState';
 import { dynamicElement, dynamicLayout, ErrorBoundary, redirectElement } from '@/utils/router';
 
@@ -204,6 +208,8 @@ export const sharedMainAreaChildren: RouteObject[] = [
               () => import('@/routes/(main)/agent/docs/_layout'),
               'Desktop > Chat > DocumentLayout',
             ),
+            // Seed the persisted document list before the docs sidebar paints.
+            loader: agentDocumentListLoader,
             path: 'docs',
           },
           {
@@ -361,6 +367,7 @@ export const sharedMainAreaChildren: RouteObject[] = [
               'Desktop > Chat > Tasks',
             ),
             handle: { meta: tasksRouteMeta },
+            loader: scheduledTaskListLoader,
             path: 'tasks',
           },
           {
@@ -381,6 +388,8 @@ export const sharedMainAreaChildren: RouteObject[] = [
           { preloadId: 'agent' },
         ),
         errorElement: <ErrorBoundary />,
+        // Seed the persisted access record before the config gates decide.
+        loader: agentAccessLoader,
         path: ':aid',
       },
     ],
@@ -429,6 +438,7 @@ export const sharedMainAreaChildren: RouteObject[] = [
           { preloadId: 'group' },
         ),
         errorElement: <ErrorBoundary />,
+        loader: agentGroupAccessLoader,
         path: ':gid',
       },
     ],
@@ -665,6 +675,7 @@ export const sharedMainAreaChildren: RouteObject[] = [
               }),
             },
             index: true,
+            loader: worksLoader,
           },
           ...BusinessResourceRoutes,
           ...resourceCategoryRoutes,
@@ -692,6 +703,7 @@ export const sharedMainAreaChildren: RouteObject[] = [
             handle: {
               meta: routeMeta({ icon: LibraryBigIcon, titleKey: 'navigation.resources' }),
             },
+            loader: worksLoader,
             path: ':category',
           },
         ],
@@ -744,6 +756,7 @@ export const sharedMainAreaChildren: RouteObject[] = [
           () => import('@/routes/(main)/resource/library/_layout'),
           'Desktop > Resource > Library > Layout',
         ),
+        loader: libraryTreeLoader,
         path: 'library/:id',
       },
     ],
@@ -1083,6 +1096,7 @@ export const sharedMainAreaChildren: RouteObject[] = [
           'Desktop > Project Tasks',
         ),
         handle: { meta: tasksRouteMeta },
+        loader: scheduledTaskListLoader,
         path: 'tasks',
       },
       {
@@ -1145,7 +1159,7 @@ export const sharedMainAreaChildren: RouteObject[] = [
           () => import('@/routes/(main)/project/[projectId]/acceptance'),
           'Desktop > Project Acceptance',
         ),
-        handle: { meta: acceptanceRouteMeta },
+        handle: { meta: projectAcceptanceRouteMeta },
         path: 'acceptance',
       },
     ],
@@ -1168,6 +1182,7 @@ export const sharedMainAreaChildren: RouteObject[] = [
             }),
             handle: { meta: tasksRouteMeta },
             index: true,
+            loader: scheduledTaskListLoader,
           },
         ],
         errorElement: <ErrorBoundary resetPath=".." />,
@@ -1803,47 +1818,6 @@ export interface SharedDesktopRouteOptions {
  * Builds the common Web/Electron top-level route tree. Platform entry files
  * supply only the root children, runtime-only routes, and onboarding route.
  */
-/**
- * Swap the default brand-loading fallback for a structural segment skeleton.
- *
- * `dynamicElement` / `dynamicLayout` wrap every route element in their own
- * `Suspense`, and that boundary is always nearer the suspending component than
- * any outlet-level one — so a fallback set on the main layout's outlet never
- * fires for route content, and the 100+ call sites would otherwise each need
- * the option. Explicit route fallbacks are preserved so a route can render the
- * nearest segment skeleton instead. Rewriting only defaults here keeps the main
- * area consistent without touching routes outside it (mobile still wants the
- * full-page brand loading, since its nav bar is inside the same boundary as its
- * outlet).
- */
-export const withSegmentFallback = (routes: RouteObject[]): RouteObject[] =>
-  routes.map((route) => {
-    const suspenseElement =
-      isValidElement(route.element) && route.element.type === Suspense
-        ? (route.element as ReactElement<{ fallback: ReactNode }>)
-        : undefined;
-    const fallback = suspenseElement?.props.fallback;
-    const element =
-      suspenseElement && isValidElement(fallback) && fallback.type === BrandTextLoading
-        ? // This intentionally couples to `dynamicElement` / `dynamicLayout`
-          // returning a bare Suspense with BrandTextLoading as their default.
-          // Explicit segment fallbacks must pass through unchanged.
-          createElement(Suspense, {
-            ...suspenseElement.props,
-            fallback: <RouteSegmentSkeleton />,
-            key: suspenseElement.key,
-          })
-        : route.element;
-
-    // `RouteObject` is a discriminated union of index / non-index routes, and
-    // spreading loses the discriminant — the copy keeps the original's shape.
-    return {
-      ...route,
-      ...(route.children && { children: withSegmentFallback(route.children) }),
-      element,
-    } as RouteObject;
-  });
-
 export const createSharedDesktopRoutes = ({
   mainAreaChildren,
   onboardingRoute,

@@ -2,9 +2,7 @@
 
 import { DEFAULT_USER_AVATAR_URL } from '@lobechat/const';
 import type { DeviceEnroller } from '@lobechat/types';
-import { Flexbox, Icon, Tooltip } from '@lobehub/ui';
-import { Avatar, Text } from '@lobehub/ui/base-ui';
-import { createStaticStyles, cssVar } from 'antd-style';
+import { Avatar, createStaticStyles, cssVar, Flexbox, Icon, Text, Tooltip } from '@lobehub/ui';
 import { TriangleAlertIcon } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';

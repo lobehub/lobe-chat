@@ -1,5 +1,7 @@
+import type { ReplicaStorage } from '@lobechat/replica';
 import type { LobeDefaultAiModelListItem } from 'model-bank';
 
+import { IndexedDBQueryProjectionStorage } from '@/libs/queryProjectionStorage';
 import { defineReplica, stableQueryKey } from '@/libs/replica';
 import { aiProviderService } from '@/services/aiProvider';
 import type {
@@ -22,11 +24,12 @@ import type {
  * server rows plus the bundled model bank, and dozens of selectors read it
  * directly.
  *
- * Persistence policy: only the provider list — which the server projects
- * without any credentials — is stored. The detail and the runtime state carry
- * the providers' decrypted `keyVaults`, so they pass `storage: 'memory'`
- * explicitly. Omitting `storage` is NOT memory-only: `@/libs/replica`'s
- * `defineReplica` defaults it to `'indexedDB'`.
+ * Persistence policy: the provider list — which the server projects without
+ * any credentials — is stored as is. The detail carries the provider's
+ * decrypted `keyVaults`, so it passes `storage: 'memory'` explicitly. The
+ * runtime state stores only an allowlisted, secret-free display projection
+ * (see `aiProviderRuntimeStateResource`). Omitting `storage` is NOT
+ * memory-only: `@/libs/replica`'s `defineReplica` defaults it to `'indexedDB'`.
  */
 
 /** The provider list is one per scope (`aiProviderList`). */
@@ -80,9 +83,6 @@ export const aiProviderRuntimeStateQueryKey = (params: AiProviderRuntimeStatePar
  * where the normalizers that do the combination already are; the extra
  * `builtinAiModelList` and per-type model lists are projected onto the store's
  * flat fields by the slice lens.
- *
- * Memory-only (`storage: 'memory'`): `runtimeConfig` embeds the providers'
- * decrypted `keyVaults`, so this value must never be persisted.
  */
 export type AiProviderRuntimeStateView = AiProviderRuntimeState & {
   builtinAiModelList: LobeDefaultAiModelListItem[];
@@ -91,6 +91,69 @@ export type AiProviderRuntimeStateView = AiProviderRuntimeState & {
   enabledEmbeddingModelList?: EnabledProviderWithModels[];
   enabledImageModelList?: EnabledProviderWithModels[];
   enabledVideoModelList?: EnabledProviderWithModels[];
+  isDisplaySnapshot?: true;
+};
+
+const RUNTIME_STATE_DISPLAY_FIELDS = [
+  'enabledAiModels',
+  'enabledAiProviders',
+  'enabledAsrModelList',
+  'enabledChatAiProviders',
+  'enabledChatModelList',
+  'enabledEmbeddingModelList',
+  'enabledImageAiProviders',
+  'enabledImageModelList',
+  'enabledVideoAiProviders',
+  'enabledVideoModelList',
+  'modelRedirects',
+  'providerBindingAgentTypes',
+] as const satisfies readonly (keyof AiProviderRuntimeStateView)[];
+
+/**
+ * `runtimeConfig` embeds the providers' decrypted `keyVaults`, so a persisted
+ * runtime state keeps only the allowlisted display fields. The result is
+ * flagged `isDisplaySnapshot`: the lens paints the model lists from it but does
+ * not mark the runtime state ready, so nothing sends a request with the empty
+ * `runtimeConfig` before the server answers.
+ */
+export const toRuntimeStateDisplaySnapshot = (
+  data: AiProviderRuntimeStateView,
+): AiProviderRuntimeStateView => {
+  const snapshot: Record<string, unknown> = {};
+  for (const field of RUNTIME_STATE_DISPLAY_FIELDS) {
+    if (data[field] !== undefined) snapshot[field] = data[field];
+  }
+
+  return {
+    enabledAiModels: [],
+    enabledAiProviders: [],
+    enabledChatAiProviders: [],
+    enabledImageAiProviders: [],
+    enabledVideoAiProviders: [],
+    ...snapshot,
+    builtinAiModelList: [],
+    isDisplaySnapshot: true,
+    runtimeConfig: {},
+  };
+};
+
+const createRuntimeStateStorage = (): ReplicaStorage<AiProviderRuntimeStateView> => {
+  const storage = new IndexedDBQueryProjectionStorage<AiProviderRuntimeStateView>({
+    namespace: 'replica:aiProviderRuntimeState:v2',
+  });
+  const read = async (
+    row: Promise<{ data: AiProviderRuntimeStateView; updatedAt: number } | undefined>,
+  ) => {
+    const value = await row;
+    return value && { ...value, data: toRuntimeStateDisplaySnapshot(value.data) };
+  };
+
+  return {
+    get: (key) => read(storage.get(key)),
+    getStrict: (key) => read(storage.getStrict(key)),
+    remove: (key) => storage.remove(key),
+    set: (key, row) => storage.set(key, { ...row, data: toRuntimeStateDisplaySnapshot(row.data) }),
+  };
 };
 
 /** The derived runtime state per entry key (`aiProviderRuntimeStateMap[key]`). */
@@ -100,6 +163,6 @@ export const aiProviderRuntimeStateResource = defineReplica<
 >({
   key: aiProviderRuntimeStateQueryKey,
   name: 'aiProviderRuntimeState',
-  storage: 'memory',
-  version: 1,
+  storage: createRuntimeStateStorage(),
+  version: 2,
 });

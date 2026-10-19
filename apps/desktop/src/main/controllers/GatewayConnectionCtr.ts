@@ -11,6 +11,7 @@ import {
 import type { AgentRunRequestMessage, GatewayMcpParams } from '@lobechat/device-gateway-client';
 import type { GatewayConnectionStatus } from '@lobechat/electron-client-ipc';
 import type { HeterogeneousAgentCancellationSignal } from '@lobechat/heterogeneous-agents/protocol';
+import { stripInheritedRunIdentity } from '@lobechat/heterogeneous-agents/protocol';
 import type { RemotePlatformCommandRuntime } from '@lobechat/heterogeneous-agents/scanHost';
 import {
   resolveRemotePlatformCommand,
@@ -20,6 +21,7 @@ import { type ILocalSystemService, LocalSystemExecutionRuntime } from '@lobechat
 import { managedProcessEnvironment, spawnManaged } from '@lobechat/utils/managedProcess';
 import { app as electronApp } from 'electron';
 
+import { withEmbeddedCliEnv } from '@/modules/cliEmbedding';
 import { updaterConfig } from '@/modules/updater/configs';
 import { createRemoteAppUpdateDeps } from '@/modules/updater/remoteUpdate';
 import AuvService, { type AuvRunCommandParams } from '@/services/auvSrv';
@@ -104,9 +106,8 @@ interface PlatformTaskEntry {
   pid: number;
   topicId: string;
   /**
-   * Workspace that owns the dispatched topic — used at exit time so the
-   * cleanup notify still scopes to the workspace agentNotify resolves the
-   * topic in (the server seeds this via the `runHeteroTask` args).
+   * Workspace owning the dispatched topic (seeded by `runHeteroTask`), so the
+   * exit-time cleanup notify scopes to the workspace agentNotify resolves it in.
    */
   workspaceId?: string;
 }
@@ -269,13 +270,22 @@ export default class GatewayConnectionCtr extends ControllerModule {
     return { enabled: this.service.getKeepAwake() };
   }
 
+  /** Stable device id for persisted topic pins — local only, no backfill request. */
+  @IpcMethod()
+  async getStableDeviceId(): Promise<string | undefined> {
+    return this.service.resolveCurrentDeviceId();
+  }
+
   @IpcMethod()
   async getDeviceInfo(): Promise<{
     deviceId: string;
     hostname: string;
     platform: string;
   }> {
-    const info = this.service.getDeviceInfo();
+    // Signed in, report the stable id the gateway registers — not the pre-connect
+    // fallback — so the renderer's "this device" matches the pins it writes.
+    const stableId = await this.service.resolveCurrentDeviceId().catch(() => undefined);
+    const info = { ...this.service.getDeviceInfo(), ...(stableId && { deviceId: stableId }) };
     try {
       const [serverUrl, token] = await Promise.all([
         this.remoteServerConfigCtr.getRemoteServerUrl(),
@@ -298,10 +308,8 @@ export default class GatewayConnectionCtr extends ControllerModule {
   }
 
   /**
-   * Let the web app wake this desktop and restore its gateway connection from
-   * an offline device row. The device id guard matters when the user has more
-   * than one registered computer: opening the deep link on a different machine
-   * must not silently connect that machine instead.
+   * Wake this desktop from an offline device row. The device id guard keeps a
+   * deep link opened on another registered computer from connecting it instead.
    */
   @deviceProtocolHandler('reconnect')
   async reconnectFromProtocol({ deviceId }: { deviceId?: string }): Promise<boolean> {
@@ -442,10 +450,8 @@ export default class GatewayConnectionCtr extends ControllerModule {
   }
 
   /**
-   * Platform-specific handlers the shared `@lobechat/device-control` dispatcher
-   * delegates to. Git + workspace-scan methods run inside device-control over
-   * `@lobechat/local-file-shell`; only file preview / index (and preview
-   * approval) are desktop-specific and routed back to the controllers here.
+   * Desktop handlers for the shared `@lobechat/device-control` dispatcher: only
+   * file preview / index (and preview approval) route back to controllers here.
    */
   private get deviceControlDeps(): DeviceControlDeps {
     return {
@@ -484,9 +490,8 @@ export default class GatewayConnectionCtr extends ControllerModule {
   }
 
   /**
-   * Dispatch a generic server-internal device RPC (not an agent tool call) by
-   * method name. The dispatch logic lives in `@lobechat/device-control` so the
-   * desktop main process and the CLI daemon share one device RPC surface.
+   * Dispatch a server-internal device RPC by method name, via the dispatcher
+   * the desktop and the CLI daemon share (`@lobechat/device-control`).
    */
   private async executeDeviceRpc(method: string, params: unknown): Promise<unknown> {
     const { executeDeviceRpc: runDeviceRpc } = await import('@lobechat/device-control');
@@ -628,11 +633,8 @@ export default class GatewayConnectionCtr extends ControllerModule {
   }
 
   /**
-   * Execute an MCP tool call tunneled from the cloud server, for MCP servers
-   * only this machine can reach: stdio (the server can't spawn the user's
-   * local binary) and localhost / LAN HTTP endpoints (the server's fetch
-   * can't reach them). The connection params ride along; we run the call
-   * through the local MCP client.
+   * Run a tunneled MCP call through the local MCP client, for servers only this
+   * machine can reach: stdio binaries and localhost / LAN HTTP endpoints.
    */
   private async executeMcpCall(mcpCall: {
     apiName: string;
@@ -862,23 +864,14 @@ export default class GatewayConnectionCtr extends ControllerModule {
       this.remoteServerConfigCtr.getAccessToken(),
     ]);
 
-    // Never inherit the launcher's conversation identity for a dispatched run.
-    const inheritedEnv = { ...process.env };
-    for (const key of [
-      'LOBEHUB_AGENT_ID',
-      'LOBEHUB_ASSISTANT_MESSAGE_ID',
-      'LOBEHUB_TASK_ID',
-      'LOBEHUB_WORKSPACE_ID',
-    ]) {
-      delete inheritedEnv[key];
-    }
+    // Never inherit the launcher's run identity (or JWT file) for a dispatched run.
+    const inheritedEnv = stripInheritedRunIdentity(process.env);
 
-    // Inject auth + workspace scope into child env so `lh notify` can
-    // authenticate AND target the same workspace as the dispatched topic
-    // (without LOBEHUB_WORKSPACE_ID, the CLI's notify falls back to personal
-    // mode and the workspace topic 404s).
+    // Inject auth + workspace scope so `lh notify` authenticates AND targets the
+    // dispatched topic's workspace (without it, the CLI falls back to personal
+    // mode and the workspace topic 404s), plus the bundled `lh` ahead of PATH.
     const childEnv: NodeJS.ProcessEnv = {
-      ...inheritedEnv,
+      ...withEmbeddedCliEnv(inheritedEnv),
       ...(agentId && { LOBEHUB_AGENT_ID: agentId }),
       ...(accessToken && { LOBEHUB_JWT: accessToken }),
       LOBEHUB_OPERATION_ID: operationId,

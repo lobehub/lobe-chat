@@ -257,10 +257,21 @@ export class CommonActionImpl {
         options?.onSuccess?.(data);
 
         if (data) {
-          writeUserDisplaySnapshot(data.userId, {
-            avatar: data.avatar ?? '',
-            preference: this.#get().preference,
-          });
+          writeUserDisplaySnapshot(
+            data.userId,
+            {
+              avatar: data.avatar ?? '',
+              email: data.email,
+              firstName: data.firstName,
+              fullName: data.fullName,
+              interests: data.interests,
+              lastName: data.lastName,
+              preference: this.#get().preference,
+              settings: data.settings,
+              username: data.username,
+            },
+            { replace: true },
+          );
 
           const autoDetectedGeneralConfig: Partial<UserGeneralConfig> = {};
           const currentGeneralSettings = data.settings?.general;

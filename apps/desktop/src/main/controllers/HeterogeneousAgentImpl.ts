@@ -48,6 +48,7 @@ import {
   buildHeteroExecStdinPayload,
   buildHeterogeneousPrompt,
   HETERO_EXEC_INHERIT_PROCESS_GROUP_ENV,
+  stripInheritedRunIdentity,
 } from '@lobechat/heterogeneous-agents/protocol';
 import {
   CLAUDE_CODE_QUOTA_FRESH_MS,
@@ -130,8 +131,8 @@ import semver from 'semver';
 import { HETERO_AGENT_FILES_DIR, HETERO_AGENT_TRACING_DIR } from '@/const/heteroAgent';
 import type { App } from '@/core/App';
 import { detectHeterogeneousCliCommand } from '@/modules/binaries';
-import { resolveCliScript } from '@/modules/cliEmbedding';
-import { getHeterogeneousAgentDriver } from '@/modules/heterogeneousAgent';
+import { resolveCliScript, withEmbeddedCliEnv } from '@/modules/cliEmbedding';
+import { getHeterogeneousAgentDriver, withCodexContextArgs } from '@/modules/heterogeneousAgent';
 import {
   consumeCodexRateLimitResetCredit as consumeCodexRateLimitResetCreditRequest,
   fetchCodexQuota,
@@ -151,6 +152,7 @@ import {
   gcHostedProviderBindingProfiles,
   prepareHostedProviderBinding,
   prepareHostedServerDefaultBinding,
+  resolveHostedBindingSession,
 } from '@/modules/heterogeneousAgent/providerBindingHost';
 import {
   beginServerDefaultOperation,
@@ -198,14 +200,14 @@ const STRIPPED_INHERITED_ENV_KEYS = [
 ] as const;
 
 /**
- * Inherited `process.env` with the Anthropic auth vars removed. Keep this pure
- * and exported so the "never leak host Anthropic creds into the CLI" invariant
- * can be unit-tested directly.
+ * Inherited `process.env` without the Anthropic auth vars or an ancestor agent run's
+ * identity (a Desktop launched from an agent shell carries its JWT file, which the CLI
+ * prefers over any token). Pure and exported so the invariant is unit-tested directly.
  */
 export const buildInheritedSpawnEnv = (
   sourceEnv: NodeJS.ProcessEnv = process.env,
 ): NodeJS.ProcessEnv => {
-  const env = { ...sourceEnv };
+  const env = stripInheritedRunIdentity(sourceEnv);
   for (const key of STRIPPED_INHERITED_ENV_KEYS) delete env[key];
   return env;
 };
@@ -1073,7 +1075,7 @@ export default class HeterogeneousAgentCtr {
     // shim finds its interpreter. `session.env` still wins if it sets PATH.
     if (session.resolvedCommandSearchPath) inheritedEnv.PATH = session.resolvedCommandSearchPath;
     const env: NodeJS.ProcessEnv = {
-      ...inheritedEnv,
+      ...withEmbeddedCliEnv(inheritedEnv),
       ...proxyEnv,
       ...(session.agentType === 'codebuddy'
         ? { CODEBUDDY_CODE_DISABLE_BACKGROUND_TASKS: '1' }
@@ -1573,9 +1575,7 @@ export default class HeterogeneousAgentCtr {
         sessionId,
       });
 
-      // Opportunistic sweep of long-unused binding profiles (provider deleted,
-      // endpoint changed, identity version bumped). The profile in use was just
-      // touched by prepare, so it is never a candidate. Never blocks the run.
+      // Sweep idle profiles without blocking; prepare just marked the current profile as active.
       gcHostedProviderBindingProfiles(this.app.appStoragePath)
         .then((removedProfiles) => {
           if (removedProfiles.length > 0)
@@ -1584,11 +1584,12 @@ export default class HeterogeneousAgentCtr {
         .catch((error) => logger.warn('Provider-binding profile GC failed:', error));
     } else if (driver && params.providerBinding?.kind === 'server-default') {
       const model = params.providerBinding.apiConfig.model;
-      // Codex and Pi describe the model to the CLI from its card. Best-effort:
-      // a model described without its card still runs (on default window and
-      // modalities), and the operation begin re-validates the model.
+      // Model-card lookup is best-effort; operation begin validates the selection.
       const modelDescriptor =
-        agentType === 'codex' || agentType === 'pi'
+        agentType === 'codex' ||
+        agentType === 'pi' ||
+        agentType === 'opencode' ||
+        agentType === 'droid'
           ? await describeServerDefaultModel(this.remoteServerAuth, { agentType, model }).catch(
               (error) => {
                 logger.warn('Server-default model description unavailable:', error);
@@ -1609,17 +1610,17 @@ export default class HeterogeneousAgentCtr {
       });
     }
 
-    const resumeSessionId =
-      !hostedProviderBinding ||
-      params.providerBinding?.resumeBindingKey === hostedProviderBinding.bindingKey
-        ? params.resumeSessionId
-        : undefined;
+    const { model, resumeSessionId } = resolveHostedBindingSession({
+      ...params,
+      agentType,
+      binding: hostedProviderBinding,
+      resumeBindingKey: params.providerBinding?.resumeBindingKey,
+    });
 
     this.sessions.set(sessionId, {
-      // If resuming, pre-set the agent session ID so sendPrompt adds --resume
       agentSessionId: resumeSessionId,
       agentType,
-      args: hostedProviderBinding?.args ?? params.args ?? [],
+      args: withCodexContextArgs(agentType, params.env, hostedProviderBinding?.args ?? params.args),
       command: params.command,
       cwd: params.cwd,
       env: hostedProviderBinding?.env ?? params.env,
@@ -1628,7 +1629,7 @@ export default class HeterogeneousAgentCtr {
         params.providerBinding?.kind === 'server-default'
           ? params.providerBinding.apiConfig
           : undefined,
-      model: agentType === 'trae' && hostedProviderBinding ? undefined : params.initialModel,
+      model,
       sessionId,
       resumeSessionId,
       useClaudeCodeSdk: params.useClaudeCodeSdk,
@@ -4172,19 +4173,11 @@ export default class HeterogeneousAgentCtr {
       });
     }
 
-    // Never inherit the launcher's conversation identity for a dispatched run.
-    const childEnv = { ...process.env };
-    for (const key of [
-      'LOBEHUB_AGENT_ID',
-      'LOBEHUB_ASSISTANT_MESSAGE_ID',
-      'LOBEHUB_TASK_ID',
-      'LOBEHUB_WORKSPACE_ID',
-    ]) {
-      delete childEnv[key];
-    }
+    // Never inherit the launcher's run identity (or JWT file) for a dispatched run.
+    const childEnv = stripInheritedRunIdentity(process.env);
 
     const env = {
-      ...childEnv,
+      ...withEmbeddedCliEnv(childEnv),
       ...buildProxyEnv(this.app.storeManager.get('networkProxy')),
       ELECTRON_RUN_AS_NODE: '1',
       [HETERO_EXEC_INHERIT_PROCESS_GROUP_ENV]: '1',

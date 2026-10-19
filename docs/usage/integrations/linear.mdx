@@ -1,0 +1,59 @@
+---
+title: Linear Integration
+description: >-
+  Connect a Linear workspace to LobeHub with OAuth, review who connected it,
+  and disconnect it when you no longer need access.
+tags:
+  - LobeHub
+  - Integration
+  - Linear
+  - OAuth
+---
+
+# Linear Integration
+
+**The Linear Integration connects a Linear workspace to LobeHub.** You authorize LobeHub once with Linear OAuth, and the connection is kept with your account or Workspace.
+
+LobeHub requests **read-only** access. The connection identifies your Linear workspace and the user who authorized it; it cannot create or change issues.
+
+> \[!NOTE]
+>
+> Integrations is an Alpha feature. Turn it on in **Settings → Labs → Integrations** first; **Integrations** then appears in Settings.
+>
+> To let an Agent search and update Linear issues inside a conversation, use the Linear connector instead. See [Connectors](/docs/usage/agent/connectors).
+
+## Connect Linear
+
+1. Open **Settings → Integrations → Linear**.
+2. Click **Connect workspace**. Linear opens its authorization page.
+3. Choose the Linear workspace to connect, then approve the request.
+4. Linear returns you to LobeHub, which shows **Linear connected: \<workspace>**.
+
+The workspace then appears under **Connections**, with who connected it and when. To go to that workspace, choose **Open in Linear** from the menu next to it.
+
+In a Workspace, the connection belongs to that Workspace. Only Workspace members who can edit can connect or disconnect Linear.
+
+## Disconnect Linear
+
+1. In **Connections**, open the menu next to the workspace and choose **Disconnect**.
+2. Confirm. LobeHub asks Linear to revoke its access token and removes the workspace from **Connections**.
+
+Revocation is best-effort: if Linear cannot be reached, the workspace is still removed but the token may stay valid. To make sure access ends, also revoke LobeHub in your Linear settings under authorized applications.
+
+## Troubleshooting
+
+| Message                                                              | What to do                                                                               |
+| -------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| **Authorization was cancelled on Linear.**                           | Click **Connect workspace** again and approve the request.                               |
+| **The connection request expired.**                                  | Start again from **Connect workspace**; each request can be used only once.              |
+| **Linear authorized the connection, but LobeHub could not save it.** | Click **Connect workspace** again.                                                       |
+| **Only workspace members can connect Linear here.**                  | Ask a Workspace owner or admin for a member role, or connect from your personal account. |
+| **This deployment has no Linear application configured**             | See [Self-hosted deployments](#self-hosted-deployments).                                 |
+
+## Self-hosted deployments
+
+A self-hosted deployment needs Redis (`REDIS_URL`), which holds the short-lived connection request; without it, **Connect workspace** fails. It also needs its own Linear OAuth application:
+
+1. In Linear, go to **Settings → API → OAuth applications** and create an application.
+2. Set the callback URL to `<APP_URL>/api/webhooks/linear/oauth/callback`, where `<APP_URL>` is your LobeHub address. It must match `APP_URL` exactly.
+3. Set `LINEAR_CLIENT_ID` and `LINEAR_CLIENT_SECRET` on the server to the application's client ID and secret, then restart LobeHub.

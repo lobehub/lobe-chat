@@ -11,11 +11,18 @@ import type * as RefreshModule from '../auth/refresh';
 import { resolveToken } from '../auth/resolveToken';
 import { removeStatus, spawnDaemon, stopDaemon, writeStatus } from '../daemon/manager';
 import type * as DeviceRegister from '../device/register';
+import type * as SystemInfoModule from '../device/systemInfo';
 import { loadSettings, saveSettings } from '../settings';
 import { executeToolCall } from '../tools';
 import { cleanupAllProcesses } from '../tools/shell';
 import { log, setVerbose } from '../utils/logger';
 import { registerConnectCommand } from './connect';
+
+// Native runtime probing spawns Codex; connect.nativeRuntimes.test.ts covers it.
+vi.mock('../device/systemInfo', async (importOriginal) => ({
+  ...(await importOriginal<typeof SystemInfoModule>()),
+  probeNativeRuntimes: vi.fn().mockResolvedValue([]),
+}));
 
 const registerDeviceMock = vi.hoisted(() => vi.fn().mockResolvedValue(undefined));
 const mintWorkspaceConnectTokenMock = vi.hoisted(() => vi.fn());

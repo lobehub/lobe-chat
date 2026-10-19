@@ -1,8 +1,7 @@
 'use client';
 
-import { Flexbox, Icon } from '@lobehub/ui';
-import { Form } from '@lobehub/ui/base-ui/form';
-import { createStaticStyles } from 'antd-style';
+import { createStaticStyles, Flexbox, Icon } from '@lobehub/ui';
+import { Form } from '@lobehub/ui/form';
 import type { LucideIcon } from 'lucide-react';
 import { Fingerprint, KeyRound, UserRound } from 'lucide-react';
 import { memo } from 'react';
@@ -69,7 +68,7 @@ const WechatConnectedInfo = memo<WechatConnectedInfoProps>(
         <div className={styles.header}>
           <Flexbox gap={4}>
             <div style={{ fontSize: 16, fontWeight: 600 }}>{t('channel.wechatConnectedInfo')}</div>
-            <div style={{ color: 'var(--ant-color-text-secondary)', fontSize: 13 }}>
+            <div style={{ color: 'var(--lobe-color-text-secondary)', fontSize: 13 }}>
               {t('channel.wechatManagedCredentials')}
             </div>
           </Flexbox>

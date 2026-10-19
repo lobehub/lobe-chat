@@ -20,6 +20,7 @@ export enum PortalViewType {
   Goal = 'goal',
   GoalMetric = 'goalMetric',
   GoalNode = 'goalNode',
+  GoalNorthStar = 'goalNorthStar',
   GoalReport = 'goalReport',
   GoalReportChapter = 'goalReportChapter',
   GroupThread = 'groupThread',
@@ -93,6 +94,8 @@ export type PortalViewData =
   | { goalId: string; type: PortalViewType.Goal }
   | { goalId: string; metric: GoalMetricKind; type: PortalViewType.GoalMetric }
   | { goalId: string; nodeId: string; type: PortalViewType.GoalNode }
+  /** One declared north-star clause of a goal, keyed by its metric series key. */
+  | { goalId: string; metricKey: string; type: PortalViewType.GoalNorthStar }
   | { goalId: string; type: PortalViewType.GoalReport }
   | { chapterIndex: number; goalId: string; type: PortalViewType.GoalReportChapter }
   | { acceptanceId: string; type: PortalViewType.Acceptance }

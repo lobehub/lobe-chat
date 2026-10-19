@@ -39,7 +39,7 @@ const mockUpdateToolMessage = vi.fn();
 const mockGetMessages = vi.fn();
 
 const mockToastInfo = vi.fn();
-vi.mock('@lobehub/ui/base-ui', async (importOriginal) => ({
+vi.mock('@lobehub/ui', async (importOriginal) => ({
   ...(await importOriginal<object>()),
   toast: { info: (...args: unknown[]) => mockToastInfo(...args) },
 }));
@@ -701,7 +701,7 @@ describe('heterogeneousAgentExecutor DB persistence', () => {
               }),
           ],
           {
-            params: { heterogeneousProvider: provider, operationId },
+            params: { heterogeneousProvider: provider, operationId, workspaceId: 'ws-1' },
             store: createMockStore({ topicDataMap: {} }),
           },
         );
@@ -713,12 +713,11 @@ describe('heterogeneousAgentExecutor DB persistence', () => {
           LOBEHUB_AGENT_ID: 'agent-1',
           ...(operationId ? { LOBEHUB_OPERATION_ID: operationId } : {}),
           LOBEHUB_TOPIC_ID: 'topic-1',
+          LOBEHUB_WORKSPACE_ID: 'ws-1', // the caller's captured workspace, not live navigation
         })),
       );
-      expect(mockSendPrompt.mock.calls.map(([params]) => params.operationId)).toEqual([
-        'op-1',
-        'op-2',
-      ]);
+      const sent = mockSendPrompt.mock.calls.map(([p]) => [p.operationId, p.workspaceId]);
+      expect(sent.flat()).toEqual(['op-1', 'ws-1', 'op-2', 'ws-1']);
     },
   );
 
@@ -2786,11 +2785,11 @@ describe('heterogeneousAgentExecutor DB persistence', () => {
       });
     });
 
-    // The session now lives on this machine, so the topic is pinned here —
-    // otherwise a legacy unbound topic follows whatever the agent default
-    // becomes and its next turn cannot resume.
+    // The session lives here, so the topic is pinned even before the store has this desktop's id.
     it('pins the topic to this machine when it persists the session id', async () => {
-      useElectronStore.setState({ gatewayDeviceInfo: { deviceId: 'this-desktop' } as any });
+      const resolveDeviceId = vi
+        .spyOn(useElectronStore.getState(), 'resolveGatewayDeviceId')
+        .mockResolvedValue('this-desktop');
       const store = createMockStore({
         topicDataMap: { 'agent-1__main': { items: [{ id: 'topic-1', metadata: {} }] } },
       });
@@ -2810,7 +2809,7 @@ describe('heterogeneousAgentExecutor DB persistence', () => {
           heteroSessionId: 'cc-session-here',
         }),
       );
-      useElectronStore.setState({ gatewayDeviceInfo: undefined });
+      resolveDeviceId.mockRestore();
     });
 
     it.each(['claude-code', 'codex'] as const)(

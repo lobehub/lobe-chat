@@ -302,6 +302,8 @@
   "pageEditor.menu.importDocument": "Nhập Trang",
   "pageEditor.menu.move": "Di chuyển",
   "pageEditor.menu.pin": "Ghim Trang",
+  "pageEditor.noAccess.description": "Trang này là riêng tư hoặc nằm trong một thư viện mà bạn không thể truy cập. Hãy yêu cầu người tạo hoặc quản lý thư viện cấp quyền truy cập.",
+  "pageEditor.noAccess.title": "Bạn không có quyền truy cập vào trang này",
   "pageEditor.saveFailed": "Không thể lưu trang, vui lòng thử lại sau",
   "pageEditor.saving": "Đang lưu...",
   "pageEditor.titlePlaceholder": "Chưa có tiêu đề",

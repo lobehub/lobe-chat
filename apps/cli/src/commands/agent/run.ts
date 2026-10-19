@@ -1,5 +1,6 @@
 import { readFileSync } from 'node:fs';
 
+import type { UserInterventionConfig } from '@lobechat/types';
 import { type Command, InvalidArgumentError } from 'commander';
 import pc from 'picocolors';
 
@@ -155,10 +156,54 @@ Exit codes:
         if (options.autoStart === false) input.autoStart = false;
         if (options.tool?.length) input.selectedToolIds = options.tool;
         if (options.skill?.length) input.selectedSkillIds = options.skill;
+        // When another agent launched this command, its environment carries the
+        // operation the launcher's run belongs to (LOBEHUB_OPERATION_ID) — but
+        // deliberately not its agent id or its topic, which device-dispatched
+        // runs strip. Forward the operation so the target's conversation
+        // attributes the turn to the launching agent; the server reads the topic
+        // and agent from that operation row. A person running `lh` from a
+        // terminal has no ambient operation, and nothing is stamped.
+        const sourceOperationId = process.env.LOBEHUB_OPERATION_ID;
+        if (sourceOperationId) input.sourceOperationId = sourceOperationId;
         // commander's --no-headless sets `headless` to false. Anything else
         // (undefined, true) → headless mode is on and tool calls auto-execute.
         if (options.headless !== false) {
           input.userInterventionConfig = { approvalMode: 'headless' };
+        } else {
+          // --no-headless must actually disable headless mode. Omitting the
+          // config here is not enough: the server falls back to
+          // `{ approvalMode: 'headless' }` for every run that does not carry
+          // one (the default for cron and bot triggers), so an omitted config
+          // re-enables exactly what the flag promised to turn off. Resolve the
+          // user's saved tool approval mode instead, and fall back to `manual`
+          // — the server's documented default — when the state read fails or
+          // the setting is unset. Tools that need approval then park the run
+          // for a human, as this flag's help text promises.
+          const savedConfig = (
+            (await client.user.getUserState.query().catch(() => undefined)) as
+              | { settings?: { tool?: { humanIntervention?: UserInterventionConfig } } }
+              | undefined
+          )?.settings?.tool?.humanIntervention;
+          // The Web tool-intervention selector treats a persisted 'headless' as
+          // a backend-only value and shows 'auto-run' instead (settings
+          // selectors/toolIntervention.ts). Mirror that here so a legacy or raw
+          // persisted 'headless' can never leak back into a run the user
+          // explicitly asked to supervise with --no-headless — in headless mode
+          // the agent converts intervention-required calls into blocked results
+          // instead of parking them for a human.
+          const approvalMode =
+            savedConfig?.approvalMode === 'auto-run' || savedConfig?.approvalMode === 'allow-list'
+              ? savedConfig.approvalMode
+              : savedConfig?.approvalMode === 'headless'
+                ? 'auto-run'
+                : 'manual';
+          // In allow-list mode the saved list must travel with the mode:
+          // GeneralChatAgent defaults an omitted allowList to [], which would
+          // park again every tool the user previously approved.
+          input.userInterventionConfig = {
+            approvalMode,
+            ...(approvalMode === 'allow-list' ? { allowList: savedConfig?.allowList ?? [] } : {}),
+          };
         }
 
         const result = await client.aiAgent.execAgent.mutate(input as any);

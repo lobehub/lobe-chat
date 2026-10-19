@@ -302,6 +302,8 @@
   "pageEditor.menu.importDocument": "ドキュメントをインポート",
   "pageEditor.menu.move": "移動",
   "pageEditor.menu.pin": "ドキュメントをピン留め",
+  "pageEditor.noAccess.description": "このページは非公開であるか、アクセスできないライブラリにあります。作成者またはライブラリ管理者にアクセスを依頼してください。",
+  "pageEditor.noAccess.title": "このページへのアクセス権がありません",
   "pageEditor.saveFailed": "ページの保存に失敗しました。後でもう一度お試しください。",
   "pageEditor.saving": "保存中...",
   "pageEditor.titlePlaceholder": "無題",

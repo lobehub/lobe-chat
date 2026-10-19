@@ -1,6 +1,5 @@
 import { PROJECT_MEMBER_ROLES, type ProjectMemberRole } from '@lobechat/types';
-import { Block, Empty, Flexbox } from '@lobehub/ui';
-import { Button, Select, Text, toast } from '@lobehub/ui/base-ui';
+import { Block, Button, Empty, Flexbox, Select, Text, toast } from '@lobehub/ui';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 

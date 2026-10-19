@@ -6,6 +6,7 @@ import {
   getTopicWorkingDirectoryEffectivePath,
   getTopicWorkingDirectorySourcePath,
   groupTopicsByAgent,
+  groupTopicsByDevice,
   groupTopicsByProject,
   groupTopicsByStatus,
   groupTopicsByTime,
@@ -830,6 +831,85 @@ describe('groupTopicsByAgent', () => {
     const result = groupTopicsByAgent(topics, 'createdAt');
 
     expect(result.map((group) => group.id)).toEqual(['agent:agent-x', 'agent:agent-y']);
+    expect(result[0].children.map((topic) => topic.id)).toEqual(['new', 'old']);
+  });
+});
+
+describe('groupTopicsByDevice', () => {
+  const createRow = (id: string, updatedAt: number, extra?: Partial<ChatTopic>): ChatTopic => ({
+    createdAt: updatedAt,
+    id,
+    title: id,
+    updatedAt,
+    ...extra,
+  });
+
+  it('should return empty array for empty input', () => {
+    expect(groupTopicsByDevice([], 'updatedAt')).toEqual([]);
+  });
+
+  it('groups topics by metadata.boundDeviceId', () => {
+    const topics = [
+      createRow('a1', 2, { metadata: { boundDeviceId: 'device-x' } }),
+      createRow('a2', 1, { metadata: { boundDeviceId: 'device-x' } }),
+      createRow('b1', 3, { metadata: { boundDeviceId: 'device-y' } }),
+    ];
+
+    const result = groupTopicsByDevice(topics, 'updatedAt');
+
+    expect(result.map((group) => group.id)).toEqual(['device:device-y', 'device:device-x']);
+    expect(result[1].children.map((topic) => topic.id)).toEqual(['a1', 'a2']);
+  });
+
+  it('resolves the device from the topic directory when boundDeviceId is absent', () => {
+    const topics = [
+      createRow('a', 2, { projectWorkingDirectoryId: 'dir-1' }),
+      createRow('b', 1, { projectWorkingDirectoryId: 'dir-2' }),
+    ];
+    const directories = [
+      { deviceId: 'device-x', id: 'dir-1' },
+      { deviceId: 'device-y', id: 'dir-2' },
+    ];
+
+    expect(groupTopicsByDevice(topics, 'updatedAt', directories).map((group) => group.id)).toEqual([
+      'device:device-x',
+      'device:device-y',
+    ]);
+  });
+
+  it('prefers metadata.boundDeviceId over the directory device', () => {
+    const topics = [
+      createRow('a', 1, {
+        metadata: { boundDeviceId: 'device-bound' },
+        projectWorkingDirectoryId: 'dir-1',
+      }),
+    ];
+    const directories = [{ deviceId: 'device-x', id: 'dir-1' }];
+
+    expect(groupTopicsByDevice(topics, 'updatedAt', directories)[0].id).toBe('device:device-bound');
+  });
+
+  it('buckets rows without device attribution as a title-less no-device group', () => {
+    const topics = [
+      createRow('a', 2),
+      createRow('b', 1, { projectWorkingDirectoryId: 'dir-missing' }),
+    ];
+
+    expect(groupTopicsByDevice(topics, 'updatedAt', [])).toEqual([
+      { children: topics, id: 'no-device' },
+    ]);
+  });
+
+  it('sorts children and groups by the chosen field descending', () => {
+    const topics = [
+      createRow('old', 1, { metadata: { boundDeviceId: 'device-x' } }),
+      createRow('new', 5, { metadata: { boundDeviceId: 'device-x' } }),
+      createRow('other-recent', 4, { metadata: { boundDeviceId: 'device-y' } }),
+    ];
+
+    const result = groupTopicsByDevice(topics, 'createdAt');
+
+    expect(result.map((group) => group.id)).toEqual(['device:device-x', 'device:device-y']);
     expect(result[0].children.map((topic) => topic.id)).toEqual(['new', 'old']);
   });
 });

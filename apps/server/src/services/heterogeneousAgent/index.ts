@@ -26,6 +26,7 @@ import { type IStreamEventManager } from '@/server/modules/AgentRuntime/types';
 import { CompletionLifecycle } from '@/server/services/agentRuntime/CompletionLifecycle';
 import type { SerializedHook } from '@/server/services/agentRuntime/hooks/types';
 import { createDefaultSnapshotStore } from '@/server/services/agentRuntime/snapshotStore';
+import type { SteerQueueScope } from '@/server/services/redis/steerQueue';
 import { instantiateVerifyPlanOnStart } from '@/server/services/verify';
 
 import {
@@ -163,6 +164,16 @@ export interface HeterogeneousAgentServiceOptions {
   persistenceHandler?: HeterogeneousPersistenceHandler;
   /** Inject a snapshot store (used by tests); defaults to the env-resolved store. */
   snapshotStore?: ISnapshotStore | null;
+  /**
+   * Start the follow-ups queued behind a finished top-level run as its next
+   * turn. Supplied by the caller: that start is the composer pipeline of
+   * AiAgentService, which itself dispatches heterogeneous runs through this
+   * service. Without it a finished run leaves its queue alone.
+   */
+  startQueuedFollowUp?: (params: {
+    operationId: string;
+    scope: SteerQueueScope;
+  }) => Promise<unknown>;
   /** Inject a pre-built manager (used by tests). */
   streamEventManager?: IStreamEventManager;
   /** Inject a pre-built TopicModel (used by tests for the resume helper). */
@@ -191,6 +202,7 @@ export class HeterogeneousAgentService {
   private readonly db: LobeChatDatabase;
   private readonly messageModel: MessageModel;
   private readonly persistenceHandler: HeterogeneousPersistenceHandler;
+  private readonly queuedFollowUpStarter?: HeterogeneousAgentServiceOptions['startQueuedFollowUp'];
   private readonly streamEventManager: IStreamEventManager;
   private readonly topicModel: TopicModel;
   private readonly traceRecorder: HeteroTraceRecorder;
@@ -206,6 +218,7 @@ export class HeterogeneousAgentService {
     this.userId = userId;
     const workspaceId = options.workspaceId;
     this.workspaceId = workspaceId;
+    this.queuedFollowUpStarter = options.startQueuedFollowUp;
     this.agentOperationModel =
       options.agentOperationModel ?? new AgentOperationModel(db, userId, workspaceId);
     this.messageModel = new MessageModel(db, userId, workspaceId);
@@ -432,6 +445,9 @@ export class HeterogeneousAgentService {
     let isolationThreadId: string | undefined;
     let orchestrationRole: 'member' | 'supervisor' | undefined;
     let staleActiveOperationId: string | undefined;
+    // Where the user's follow-ups queue: unknown (and never drained) until the
+    // operation row says this is a top-level run.
+    let steerScope: SteerQueueScope | undefined;
 
     // The operation row is the durable lifecycle owner. The frontend may have
     // already consumed the in-stream terminal event and cleared the topic's
@@ -445,6 +461,10 @@ export class HeterogeneousAgentService {
         assistantMessageId = metadata.assistantMessageId;
       }
       isolationThreadId = operation?.threadId ?? undefined;
+      // A child run (group member, sub-agent) is not where the user types.
+      if (operation && !operation.parentOperationId) {
+        steerScope = { threadId: operation.threadId ?? null, topicId, userId: this.userId };
+      }
     } catch (err) {
       log('heteroFinish: failed to load operation lifecycle metadata (non-fatal): %O', err);
     }
@@ -705,6 +725,26 @@ export class HeterogeneousAgentService {
       completionReason,
     );
     log('heteroFinish: dispatched completion lifecycle for op=%s result=%s', operationId, result);
+
+    // Follow-ups the user queued behind this run start as the next turn here,
+    // as they do when a native run ends. The completion above released the
+    // topic, which the next turn has to claim. A failed run leaves its queue
+    // to the user.
+    if (result === 'success' && steerScope) await this.startQueuedFollowUp(operationId, steerScope);
+  }
+
+  /**
+   * Start the follow-ups queued behind a finished top-level run. Never throws:
+   * the run's own completion is already settled, and the follow-ups stay
+   * queued when they cannot start.
+   */
+  private async startQueuedFollowUp(operationId: string, scope: SteerQueueScope): Promise<void> {
+    if (!this.queuedFollowUpStarter) return;
+    try {
+      await this.queuedFollowUpStarter({ operationId, scope });
+    } catch (err) {
+      log('heteroFinish: starting queued follow-ups failed (non-fatal): %O', err);
+    }
   }
 
   /**

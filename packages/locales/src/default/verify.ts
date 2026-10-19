@@ -492,6 +492,53 @@ export default {
   'acceptance.status.accepted': 'Delivery accepted',
   'acceptance.status.closed': 'Acceptance closed',
   'acceptance.status.delivered': 'Ready for your decision',
+  'acceptance.gate.decidedRevise':
+    'Sent back. The main Agent is rewriting the plan from your correction and re-running the affected units on it; their new results come back here for your review.',
+  'acceptance.gate.decidedRelease': 'Started. Wave {{wave}} is running.',
+  'acceptance.gate.cancel': 'Cancel',
+  'acceptance.gate.reviseSubmit': 'Send back to revise',
+  'acceptance.gate.reviseHint':
+    'Your correction goes to the main Agent, which writes a new version of the plan skill and re-runs the units it covers on that version. You review their new results before anything is released.',
+  'acceptance.gate.revisePlaceholder':
+    'Write the correction. The main Agent writes it into a new version of the plan.',
+  'acceptance.gate.revise': 'Revise plan',
+  'acceptance.gate.releaseWave': 'Approve and release wave {{wave}} ({{count}})',
+  'acceptance.gate.startBatch': 'Approve and start ({{count}})',
+  'acceptance.gate.decisionHint':
+    'Start runs the plan on the next wave. Revise has the main Agent rewrite the plan, then it comes back to you.',
+  'acceptance.gate.checks':
+    'Gate checks {{passed}}/{{total}} passed. They show the experiments finished, not that the plan carries over.',
+  'acceptance.gate.remaining':
+    '{{count}} more after that, each wave reviewed by the main Agent. About {{estimate}} tokens in total, estimated from the experiments.',
+  'acceptance.gate.unitMeta': '{{runs}} run(s) · {{tokens}} tokens',
+  'acceptance.gate.unitReworkedCostly':
+    'Passed after {{rework}} rework round(s), using {{ratio}}× the average.',
+  'acceptance.gate.unitReworked': 'Passed after {{rework}} rework round(s).',
+  'acceptance.gate.unitUnsettled': 'Did not settle cleanly. Check its acceptance before going on.',
+  'acceptance.gate.unitAcceptanceOpen': 'Open acceptance',
+  'acceptance.gate.unitAcceptance': 'Acceptance {{passed}}/{{total}}',
+  'acceptance.gate.unitCount': '{{count}} units',
+  'acceptance.gate.resultsWave': 'Last wave',
+  'acceptance.gate.resultsProbes': 'Experiment results',
+  'acceptance.gate.hideFiles': 'Hide files',
+  'acceptance.gate.showFiles': 'Show the skill files',
+  'acceptance.gate.planFiles': '{{count}} files',
+  'acceptance.gate.planTitle': 'Execution plan',
+  'acceptance.gate.agentSays': 'Main Agent: {{reason}}',
+  'acceptance.gate.unitBrief': 'What this unit does',
+  'acceptance.gate.unitWaitingHint': 'Not started yet. It runs the plan above once you approve.',
+  'acceptance.gate.unitWaiting': 'Starts on approval',
+  'acceptance.gate.nextWaveTitle': 'Wave {{wave}}',
+  'acceptance.gate.asker': 'reports the experiments of “{{goal}}” and needs your decision',
+  'acceptance.gate.leadRework': 'Reworked: {{codes}}.',
+  'acceptance.gate.lead.unattended':
+    'Wave {{wave}} passed its checks, but no main Agent could review the release.',
+  'acceptance.gate.lead.escalated':
+    'The main Agent reviewed wave {{wave}} and brought this release back to you instead of releasing it.',
+  'acceptance.gate.leadProbes':
+    '{{count}} experiments are done. Once you start, the remaining {{remaining}} units follow this plan in batches.',
+  'acceptance.gate.titleWave': 'Release wave {{wave}}?',
+  'acceptance.gate.titleProbes': 'Experiments finished. Start batch execution?',
   'acceptance.status.errored': 'Verification could not run',
   'acceptance.status.failed': 'Verification failed',
   'acceptance.status.pending': 'Waiting for verification',
@@ -858,6 +905,9 @@ export default {
   'report.surface.mobile': 'Mobile',
   'report.surface.web': 'Web',
   'report.titleFallback': 'Verification report',
+  'report.unavailable.description':
+    'Reports now live on their acceptance. This one is not part of an acceptance, or it was never shared with you.',
+  'report.unavailable.title': 'This report is no longer available',
   'report.verdict.failed': 'Failed',
   'report.verdict.notExecuted': 'Not run',
   'report.verdict.passed': 'Passed',

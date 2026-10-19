@@ -269,13 +269,6 @@ export const recentKeys = {
   ]),
 };
 
-// ---- task ---------------------------------------------------------------
-export const isScheduledTaskListKey = (key: unknown): boolean =>
-  Array.isArray(key) && key[0] === 'task:scheduledList';
-
-export const isMyTaskListKey = (key: unknown): boolean =>
-  Array.isArray(key) && key[0] === 'task:myList';
-
 /**
  * Goal reads that have no local-first projection: the pending queues are live
  * "what needs you" feeds, and the topic link is a discovery poll.
@@ -291,51 +284,6 @@ export const goalKeys = {
   pendingForIsland: def('goal:pendingForIsland', () => ['goal:pendingForIsland']),
   /** Goals whose planning conversation is this topic (`subject_type = 'topic'`). */
   topicGoals: def('goal:topicGoals', (topicId: string) => ['goal:topicGoals', topicId]),
-};
-
-export const taskKeys = {
-  /**
-   * Home's automated-task roll-up: the tasks that fire on a schedule or a
-   * heartbeat. Kept off `list` because it is a different result set entirely —
-   * sharing the key would let one section's fetch overwrite the other's.
-   */
-  /**
-   * The Tasks page's "My tasks" tab: work assigned to, or created by, the
-   * caller. Its own root for the same reason as `scheduledList` — a different
-   * result set from `list`, so a shared entry would let one tab's fetch
-   * overwrite the other's.
-   */
-  myList: def(
-    'task:myList',
-    (scope: 'assigned' | 'created', statuses?: string[], limit?: number, offset?: number) => [
-      'task:myList',
-      scope,
-      // Status narrowing is part of the identity: "hide completed" and "show
-      // all" are different server pages, not a client-side view of one page.
-      statuses ? [...statuses].sort().join(',') : 'all',
-      ...(limit === undefined && offset === undefined ? [] : [{ limit, offset }]),
-    ],
-  ),
-  scheduledList: def(
-    'task:scheduledList',
-    (
-      agentKey: string | undefined,
-      visibility: 'all' | 'private' | 'workspace' = 'all',
-      limit?: number,
-      offset?: number,
-    ) => [
-      'task:scheduledList',
-      agentKey,
-      visibility,
-      ...(limit === undefined && offset === undefined ? [] : [{ limit, offset }]),
-    ],
-  ),
-  /**
-   * AgentSidebar task panel. Lives in the `task:` domain (not a `sidebar:`
-   * one) so the tiered cache provider persists it to IndexedDB and the second
-   * open renders from cache instead of a skeleton.
-   */
-  sidebarGroups: def('task:sidebarGroups', (agentId: string) => ['task:sidebarGroups', agentId]),
 };
 
 // ---- work ---------------------------------------------------------------
@@ -378,12 +326,6 @@ export const briefKeys = {
     scope,
     day,
   ]),
-};
-
-// ---- home inbox ---------------------------------------------------------
-export const homeInboxKeys = {
-  /** Account-wide topics powering the home inbox (running + unread + needs-input). */
-  topics: def('home:inboxTopics', (isLogin: boolean) => ['home:inboxTopics', isLogin]),
 };
 
 // ---- agent config / available / search ----------------------------------
@@ -529,16 +471,6 @@ export const deviceKeys = {
     workspaceId,
     deviceId,
   ]),
-  gitAheadBehind: def('device:gitAheadBehind', (deviceId: string, path: string) => [
-    'device:gitAheadBehind',
-    deviceId,
-    path,
-  ]),
-  gitBranch: def('device:gitBranch', (deviceId: string, path: string) => [
-    'device:gitBranch',
-    deviceId,
-    path,
-  ]),
   gitBranches: def('device:gitBranches', (deviceId: string, path: string) => [
     'device:gitBranches',
     deviceId,
@@ -598,17 +530,6 @@ export const deviceKeys = {
       baseRef,
     ],
   ),
-  gitWorkingTreeStatus: def('device:gitWorkingTreeStatus', (deviceId: string, path: string) => [
-    'device:gitWorkingTreeStatus',
-    deviceId,
-    path,
-  ]),
-  gitWorktrees: def('device:gitWorktrees', (deviceId: string, path: string) => [
-    'device:gitWorktrees',
-    deviceId,
-    path,
-  ]),
-  listDevices: def('device:listDevices', () => ['device:listDevices']),
   repoType: def('device:repoType', (path: string) => ['device:repoType', path]),
 };
 
@@ -793,7 +714,7 @@ export const verifyKeys = {
   ),
   /**
    * One scroll page of the list panel. Keyed by workspace + the status split +
-   * the cursor, mirroring `reportSummaries` — the sibling paged feed.
+   * the cursor.
    */
   acceptancePurgePreview: def('verify:acceptancePurgePreview', (acceptanceId: string) => [
     'verify:acceptancePurgePreview',
@@ -827,23 +748,17 @@ export const verifyKeys = {
     'verify:reportBundle',
     verifyRunId,
   ]),
-  reportSummaries: def(
-    'verify:reportSummaries',
-    (workspaceId?: string | null, q?: string, cursor?: string) => [
-      'verify:reportSummaries',
-      workspaceId ?? '',
-      q ?? '',
-      cursor ?? '',
-    ],
-  ),
-  results: def('verify:results', (operationId: string) => ['verify:results', operationId]),
   rubric: def('verify:rubric', (rubricId: string) => ['verify:rubric', rubricId]),
+  /** The acceptance round an old `/verify/:runId` link redirects to. */
+  runAcceptanceRound: def('verify:runAcceptanceRound', (verifyRunId: string) => [
+    'verify:runAcceptanceRound',
+    verifyRunId,
+  ]),
   rubricCriteria: def('verify:rubricCriteria', (rubricId: string) => [
     'verify:rubricCriteria',
     rubricId,
   ]),
   rubrics: def('verify:rubrics', () => ['verify:rubrics']),
-  state: def('verify:state', (operationId: string) => ['verify:state', operationId]),
   tracing: def('verify:tracing', (tracingId: string) => ['verify:tracing', tracingId]),
 };
 
@@ -925,14 +840,6 @@ export const shareKeys = {
 export const forkKeys = {
   groupSource: def('fork:groupSource', (identifier: string) => ['fork:groupSource', identifier]),
   source: def('fork:source', (identifier: string) => ['fork:source', identifier]),
-};
-
-// ---- portal -------------------------------------------------------------
-export const portalKeys = {
-  documentHeader: def('portal:documentHeader', (documentId: string) => [
-    'portal:documentHeader',
-    documentId,
-  ]),
 };
 
 // ---- local file ---------------------------------------------------------
@@ -1048,10 +955,6 @@ export const topicActionKeys = {
 };
 
 // ---- misc remaining domains ---------------------------------------------
-export const homeKeys = {
-  dailyBrief: def('home:dailyBrief', (userId: string) => ['home:dailyBrief', userId]),
-};
-
 /**
  * Daily task-template recommendation cache schema version. Bump this when the
  * persisted recommendation row shape changes incompatibly so desktop clients
@@ -1077,25 +980,6 @@ export const resourceKeys = {
     params,
     workspaceId,
   ]),
-  // Every Resources cache entry is workspace-scoped: the same visibility means
-  // different rows in each workspace, so leaving `workspaceId` out of the key
-  // makes a workspace switch serve the previous workspace's rows from cache.
-  recentFiles: def(
-    'resource:recentFiles',
-    (workspaceId: string | null, visibility?: 'private' | 'public') => [
-      'resource:recentFiles',
-      workspaceId,
-      visibility ?? null,
-    ],
-  ),
-  recentPages: def(
-    'resource:recentPages',
-    (workspaceId: string | null, visibility?: 'private' | 'public') => [
-      'resource:recentPages',
-      workspaceId,
-      visibility ?? null,
-    ],
-  ),
 };
 export const recommendationsKeys = {
   heteroDetections: def('recommendations:heteroDetections', () => [
@@ -1163,7 +1047,6 @@ export const swrKeys = {
   goal: goalKeys,
   global: globalKeys,
   group: groupKeys,
-  home: homeKeys,
   image: imageKeys,
   imessage: imessageKeys,
   inbox: inboxKeys,
@@ -1174,7 +1057,6 @@ export const swrKeys = {
   ollama: ollamaKeys,
   onboarding: onboardingKeys,
   openInApp: openInAppKeys,
-  portal: portalKeys,
   ragEval: ragEvalKeys,
   recent: recentKeys,
   recommendations: recommendationsKeys,
@@ -1183,7 +1065,6 @@ export const swrKeys = {
   session: sessionKeys,
   share: shareKeys,
   stats: statsKeys,
-  task: taskKeys,
   taskTemplate: taskTemplateKeys,
   thread: threadKeys,
   tool: toolKeys,

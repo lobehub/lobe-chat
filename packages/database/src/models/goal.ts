@@ -3,6 +3,7 @@ import { randomUUID } from 'node:crypto';
 import { GOAL_CLARIFICATION_TITLE, type GoalStatus } from '@lobechat/const/goal';
 import type {
   GoalDecisionOption,
+  GoalManagerPolicy,
   GoalNodeStatus,
   GoalRolloutPolicy,
   GoalRolloutState,
@@ -105,6 +106,17 @@ export class GoalModel {
     return row?.goal;
   };
 
+  /** The Goal that owns a graph node, or undefined when the node is not in the caller's scope. */
+  findByNode = async (nodeId: string): Promise<GoalItem | undefined> => {
+    const [row] = await this.db
+      .select({ goal: goals })
+      .from(goalNodes)
+      .innerJoin(goals, eq(goalNodes.goalId, goals.id))
+      .where(and(eq(goalNodes.id, nodeId), this.ownership()))
+      .limit(1);
+    return row?.goal;
+  };
+
   /**
    * Patch only `config.pausedBy`, leaving every other key in the column alone.
    *
@@ -138,6 +150,35 @@ export class GoalModel {
         config: taskAgentId
           ? sql`jsonb_set(COALESCE(${goals.config}, '{}'::jsonb), '{taskAgentId}', ${JSON.stringify(taskAgentId)}::jsonb)`
           : sql`COALESCE(${goals.config}, '{}'::jsonb) - 'taskAgentId'`,
+        updatedAt: new Date(),
+      })
+      .where(and(eq(goals.id, id), this.ownership()))
+      .returning();
+    return row as GoalItem | undefined;
+  };
+
+  /**
+   * Patch only one model slot of `config` — `model`/`provider` for planning
+   * turns, `taskModel`/`taskProvider` for Tasks — or drop it with `null`, for
+   * the same reason as `updateTaskAgentId`.
+   */
+  updateModelConfig = async (
+    id: string,
+    modelConfig: { model: string; provider: string } | null,
+    slot: 'planning' | 'task' = 'planning',
+  ) => {
+    const [modelKey, providerKey] =
+      slot === 'task' ? ['taskModel', 'taskProvider'] : ['model', 'provider'];
+    const patch = modelConfig && {
+      [modelKey]: modelConfig.model,
+      [providerKey]: modelConfig.provider,
+    };
+    const [row] = await this.db
+      .update(goals)
+      .set({
+        config: patch
+          ? sql`COALESCE(${goals.config}, '{}'::jsonb) || ${JSON.stringify(patch)}::jsonb`
+          : sql`COALESCE(${goals.config}, '{}'::jsonb) - ${modelKey}::text - ${providerKey}::text`,
         updatedAt: new Date(),
       })
       .where(and(eq(goals.id, id), this.ownership()))
@@ -206,6 +247,38 @@ export class GoalModel {
         updatedAt: new Date(),
       })
       .where(and(eq(goals.id, id), this.ownership()));
+  };
+
+  /**
+   * Patch only `config.manager`: open the main Agent policy unless one is
+   * already there, which is kept as it is. The coordinator opens one when its
+   * own planner hands a goal over.
+   */
+  openManagerPolicy = async (id: string, policy: GoalManagerPolicy): Promise<void> => {
+    await this.db
+      .update(goals)
+      .set({
+        config: sql`jsonb_set(COALESCE(${goals.config}, '{}'::jsonb), '{manager}', COALESCE(${goals.config}->'manager', ${JSON.stringify(policy)}::jsonb))`,
+        updatedAt: new Date(),
+      })
+      .where(and(eq(goals.id, id), this.ownership()));
+  };
+
+  /**
+   * Remove the policy a hand-over opened, only while it is still that one: a
+   * policy a person set or changed in the meantime has another token, or none.
+   */
+  closeHandoffManagerPolicy = async (id: string, token: string): Promise<void> => {
+    await this.db
+      .update(goals)
+      .set({ config: sql`${goals.config} - 'manager'`, updatedAt: new Date() })
+      .where(
+        and(
+          eq(goals.id, id),
+          this.ownership(),
+          sql`${goals.config}->'manager'->>'openedForHandoff' = ${token}`,
+        ),
+      );
   };
 
   /** Patch only `config.rollout`, so auto-detection can persist the policy. */
@@ -424,6 +497,11 @@ export class GoalModel {
         options: goalNodeDecisions.options,
         question: goalNodeDecisions.question,
         recommendedOptionId: goalNodeDecisions.recommendedOptionId,
+        // A held batch release is reviewed in its own report; the gate row
+        // carries where that report lives.
+        releaseGateAcceptanceId: sql<
+          string | null
+        >`case when ${goals.config} -> 'rolloutState' ->> 'releaseReviewNodeId' = ${goalNodes.id}::text then ${goals.config} -> 'rolloutState' ->> 'releaseGateAcceptanceId' end`,
         sourceTaskId: source.taskId,
         sourceTitle: source.title,
       })
@@ -438,7 +516,15 @@ export class GoalModel {
       .where(
         and(
           this.ownership(),
-          notInArray(goals.status, ['paused', 'achieved', 'failed', 'canceled']),
+          // A goal parked on its own batch gate is paused exactly because it
+          // waits on this answer, so its gate is still asked.
+          or(
+            notInArray(goals.status, ['paused', 'achieved', 'failed', 'canceled']),
+            and(
+              eq(goals.status, 'paused'),
+              sql`${goals.config} ->> 'pausedBy' in ('release_review', 'pattern_break')`,
+            ),
+          ),
           eq(goalNodeDecisions.status, 'pending'),
           eq(goalNodeDecisions.authority, 'user'),
           // In a workspace every member can see the goal, but a gate is asked
@@ -693,6 +779,8 @@ export interface PendingGoalDecisionRow {
   options: GoalDecisionOption[] | null;
   question: string;
   recommendedOptionId: string | null;
+  /** The review report of a held batch release; null for every other gate. */
+  releaseGateAcceptanceId: string | null;
   /** The Task the gate was opened for; null for a goal-level question. */
   sourceTaskId: string | null;
   sourceTitle: string | null;

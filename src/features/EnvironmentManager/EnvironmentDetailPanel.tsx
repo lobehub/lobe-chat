@@ -2,9 +2,18 @@
 
 import { environmentKind } from '@lobechat/types';
 import { Github } from '@lobehub/icons';
-import { Flexbox, Icon, Tooltip } from '@lobehub/ui';
-import { ActionIcon, Avatar, Tabs, Tag, Text } from '@lobehub/ui/base-ui';
-import { createStaticStyles, cssVar } from 'antd-style';
+import {
+  ActionIcon,
+  Avatar,
+  createStaticStyles,
+  cssVar,
+  Flexbox,
+  Icon,
+  Tabs,
+  Tag,
+  Text,
+  Tooltip,
+} from '@lobehub/ui';
 import dayjs from 'dayjs';
 import {
   FolderIcon,
@@ -177,6 +186,7 @@ const EnvironmentDetailPanel = memo<EnvironmentDetailPanelProps>(({ environment,
             drops the rest. */}
       <Tabs
         activeKey={tab}
+        styles={{ list: { maxWidth: '100%', overflowX: 'auto' } }}
         items={[
           ...(copies.includes('overview')
             ? [

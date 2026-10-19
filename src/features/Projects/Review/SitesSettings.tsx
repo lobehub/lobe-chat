@@ -1,5 +1,4 @@
-import { Empty, Flexbox } from '@lobehub/ui';
-import { Button, Text } from '@lobehub/ui/base-ui';
+import { Button, Empty, Flexbox, Text } from '@lobehub/ui';
 import { PlusIcon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 

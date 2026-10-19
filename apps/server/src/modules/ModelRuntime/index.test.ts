@@ -363,14 +363,10 @@ describe('getServerDefaultHeterogeneousModels', () => {
       },
     });
 
-    await expect(getServerDefaultHeterogeneousModels()).resolves.toEqual({
-      'claude-code': [{ model: 'kimi-k3' }],
-      'codex': [{ model: 'kimi-k3' }],
-      'grok-build': [{ model: 'kimi-k3' }],
-      'kimi-code': [{ model: 'kimi-k3' }],
-      'pi': [{ model: 'kimi-k3' }],
-      'trae': [{ model: 'kimi-k3' }],
-    });
+    const models = await getServerDefaultHeterogeneousModels();
+    for (const agentType of SERVER_DEFAULT_HETEROGENEOUS_AGENT_TYPES) {
+      expect(models[agentType]).toEqual([{ model: 'kimi-k3' }]);
+    }
   });
 
   it('accepts arbitrary chat model ids when the relay catalog declares no abilities', async () => {

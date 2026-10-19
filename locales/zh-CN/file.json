@@ -302,6 +302,8 @@
   "pageEditor.menu.importDocument": "导入文稿",
   "pageEditor.menu.move": "移动到…",
   "pageEditor.menu.pin": "置顶文稿",
+  "pageEditor.noAccess.description": "该页面是私有的，或位于你无权访问的资源库中。如需查看，请联系创建者或资源库管理员。",
+  "pageEditor.noAccess.title": "你没有查看此页面的权限",
   "pageEditor.saveFailed": "页面保存失败，请稍后重试",
   "pageEditor.saving": "正在保存…",
   "pageEditor.titlePlaceholder": "无标题",

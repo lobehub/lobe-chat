@@ -1,14 +1,14 @@
-import { Flexbox } from '@lobehub/ui';
 import {
   ActionIcon,
   Alert,
   Button,
   createModal,
+  createStaticStyles,
+  Flexbox,
   Input,
   Text,
   useModalContext,
-} from '@lobehub/ui/base-ui';
-import { createStaticStyles } from 'antd-style';
+} from '@lobehub/ui';
 import { t } from 'i18next';
 import { PlusIcon, XIcon } from 'lucide-react';
 import { useState } from 'react';

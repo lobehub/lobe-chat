@@ -3,10 +3,12 @@
 import { getHeterogeneousTypeLabel } from '@lobechat/heterogeneous-agents';
 import type { ListHeterogeneousAgentModelsParams } from '@lobechat/types';
 import { HETEROGENEOUS_AGENT_DEFAULT_SELECTION } from '@lobechat/types';
-import { Icon, Tooltip } from '@lobehub/ui';
 import {
   ActionIcon,
   Button,
+  createStaticStyles,
+  cssVar,
+  cx,
   DropdownMenuGroup,
   DropdownMenuGroupLabel,
   DropdownMenuHeader,
@@ -25,9 +27,10 @@ import {
   DropdownMenuSubmenuRoot,
   DropdownMenuSubmenuTrigger,
   DropdownMenuTrigger,
+  Icon,
   Input,
-} from '@lobehub/ui/base-ui';
-import { createStaticStyles, cssVar, cx } from 'antd-style';
+  Tooltip,
+} from '@lobehub/ui';
 import {
   CheckIcon,
   ChevronDownIcon,
@@ -44,7 +47,7 @@ import { resolveTargetDeviceId } from '@/helpers/agentWorkingDirectory';
 import { resolveExecutionTarget } from '@/helpers/executionTarget';
 import { useEffectiveAgencyConfig } from '@/hooks/useEffectiveAgencyConfig';
 import { useEffectiveWorkingDirectory } from '@/hooks/useEffectiveWorkingDirectory';
-import { useDeviceStore } from '@/store/device';
+import { deviceSelectors, useDeviceStore } from '@/store/device';
 import { useElectronStore } from '@/store/electron';
 import { useUserStore } from '@/store/user';
 import { authSelectors } from '@/store/user/selectors';
@@ -163,6 +166,8 @@ const getCatalogErrorKey = (name: string) => {
 
 interface ModelCatalogSelectorProps {
   agentId?: string;
+  /** Secondary line under the submenu label, e.g. where the current model comes from. */
+  desc?: string;
   disabled: boolean;
   model: string;
   onSelect: (model: string) => void;
@@ -172,7 +177,16 @@ interface ModelCatalogSelectorProps {
 }
 
 export const ModelCatalogSelector = memo<ModelCatalogSelectorProps>(
-  ({ agentId, disabled, model, onSelect, permissionReason, type, variant = 'standalone' }) => {
+  ({
+    agentId,
+    desc,
+    disabled,
+    model,
+    onSelect,
+    permissionReason,
+    type,
+    variant = 'standalone',
+  }) => {
     const { t } = useTranslation('chat');
     const agentName = getHeterogeneousTypeLabel(type) ?? type;
     const [search, setSearch] = useState('');
@@ -188,9 +202,8 @@ export const ModelCatalogSelector = memo<ModelCatalogSelectorProps>(
       { topicId },
     );
     const isLogin = useUserStore(authSelectors.isLogin);
-    const { isLoading: isDeviceListLoading } = useDeviceStore((s) => s.useFetchDevices)(
-      isLogin || isDesktop,
-    );
+    useDeviceStore((s) => s.useFetchDevices)(isLogin || isDesktop);
+    const isDeviceListLoading = !useDeviceStore(deviceSelectors.isDeviceListLoaded);
     const cwd = useEffectiveWorkingDirectory(agentId, { topicId });
     const provider = agencyConfig?.heterogeneousProvider;
     useElectronStore((s) => s.useFetchGatewayDeviceInfo)();
@@ -386,7 +399,18 @@ export const ModelCatalogSelector = memo<ModelCatalogSelectorProps>(
             openOnHover={false}
           >
             <DropdownMenuItemContent>
-              <DropdownMenuItemLabel>{t('heteroAgent.modelSelector.model')}</DropdownMenuItemLabel>
+              {desc ? (
+                <DropdownMenuItemLabelGroup>
+                  <DropdownMenuItemLabel>
+                    {t('heteroAgent.modelSelector.model')}
+                  </DropdownMenuItemLabel>
+                  <DropdownMenuItemDesc>{desc}</DropdownMenuItemDesc>
+                </DropdownMenuItemLabelGroup>
+              ) : (
+                <DropdownMenuItemLabel>
+                  {t('heteroAgent.modelSelector.model')}
+                </DropdownMenuItemLabel>
+              )}
               <DropdownMenuItemExtra className={styles.submenuMeta}>
                 {currentModel === HETEROGENEOUS_AGENT_DEFAULT_SELECTION
                   ? t('heteroAgent.modelSelector.default')

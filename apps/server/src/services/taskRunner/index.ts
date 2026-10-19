@@ -3,7 +3,7 @@ import { AcceptanceEvidenceIdentifier } from '@lobechat/builtin-tool-acceptance-
 import { BriefIdentifier } from '@lobechat/builtin-tool-brief';
 import { INBOX_SESSION_ID } from '@lobechat/const';
 import type { ExecAgentResult, TaskItem, TaskRunTrigger } from '@lobechat/types';
-import { readTaskExecutionConfig } from '@lobechat/types';
+import { getHeterogeneousTaskModelProvider, readTaskExecutionConfig } from '@lobechat/types';
 import { TRPCError } from '@trpc/server';
 import debug from 'debug';
 
@@ -16,6 +16,7 @@ import { TopicModel } from '@/database/models/topic';
 import type { LobeChatDatabase } from '@/database/type';
 import { AiAgentService } from '@/server/services/aiAgent';
 import { resolveFailedRunStatus } from '@/server/services/goal/recoveryPolicy';
+import { resolveMissingTaskModelConfig } from '@/server/services/task/modelSnapshot';
 import { createTaskRunHooks } from '@/server/services/task/runHooks';
 import { readTaskSkillIds } from '@/server/services/userSkill';
 
@@ -118,6 +119,14 @@ export class TaskRunnerService {
     if (!task) {
       throw new TRPCError({ code: 'NOT_FOUND', message: 'Task not found' });
     }
+    // Archived tasks are hidden from every list, so a run would go unseen.
+    // Every execution path (manual, tick, dependency unlock, goal) lands here.
+    if (task.archivedAt) {
+      throw new TRPCError({
+        code: 'PRECONDITION_FAILED',
+        message: 'Restore this archived task before running it',
+      });
+    }
 
     // Track whether *this* invocation transitioned the task to 'running'. The
     // catch-block rollback must only fire when we own the running state —
@@ -207,6 +216,17 @@ export class TaskRunnerService {
             message: 'The task changed or was deleted before its run could start.',
           });
         }
+        // An archive that committed between the read above and this write is
+        // visible on the returned row: hand the status back and refuse the run.
+        if (started.archivedAt) {
+          await this.taskModel.updateStatusIfCurrent(task.id, 'running', task.status, {
+            error: task.error ?? null,
+          });
+          throw new TRPCError({
+            code: 'PRECONDITION_FAILED',
+            message: 'Restore this archived task before running it',
+          });
+        }
         weSetRunning = true;
       } else if (task.error) {
         await this.taskModel.update(task.id, { error: null });
@@ -252,12 +272,18 @@ export class TaskRunnerService {
       // Backfill model snapshot for tasks created before the snapshot logic
       // landed, or whose assignee was set after creation. Once written, the
       // task is pinned to this model regardless of later agent default changes.
+      // Only missing fields are filled: a legacy model-only override keeps its model.
       if (typeof taskConfig.model !== 'string' || typeof taskConfig.provider !== 'string') {
         const snapshot = await this.agentModel.getAgentModelConfig(agentRef);
         if (snapshot) {
-          await this.taskModel.updateTaskConfig(task.id, snapshot);
-          taskConfig.model = snapshot.model;
-          taskConfig.provider = snapshot.provider;
+          const agencyConfig = await this.agentModel.getAgentAgencyConfig(agentRef);
+          const missing = resolveMissingTaskModelConfig(
+            taskConfig,
+            snapshot,
+            getHeterogeneousTaskModelProvider(agencyConfig?.heterogeneousProvider),
+          );
+          await this.taskModel.updateTaskConfig(task.id, missing);
+          Object.assign(taskConfig, missing);
         }
       }
 
@@ -482,6 +508,8 @@ export class TaskRunnerService {
     const result: CascadeResult = { failed: [], paused: [], started: [] };
 
     for (const task of unlocked) {
+      // An archived dependent stays idle; restoring it leaves it ready to run.
+      if (task.archivedAt) continue;
       if (await this.shouldHoldForCheckpoint(task)) {
         await this.taskModel.updateStatus(task.id, 'paused');
         result.paused.push(task.identifier);
@@ -492,6 +520,8 @@ export class TaskRunnerService {
         await this.runTask({ taskId: task.id });
         result.started.push(task.identifier);
       } catch (error) {
+        // Archived after discovery: the runner refused it, nothing failed.
+        if (error instanceof TRPCError && error.code === 'PRECONDITION_FAILED') continue;
         const message = error instanceof Error ? error.message : 'Failed to start task';
         log('cascadeOnCompletion: runTask failed for %s: %s', task.identifier, message);
         // Best-effort: mark as paused so the user can see why it didn't run.
