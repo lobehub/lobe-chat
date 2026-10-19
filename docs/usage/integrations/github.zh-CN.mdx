@@ -45,7 +45,7 @@ tags:
 - 描述中包含 LobeHub 验收链接（`…/acceptance/<id>`）。
 - 某轮验收记录了这个 Pull Request 的地址。
 
-没有关联的 Pull Request 仍会被记录，但不会触发任何自动化。发起 Pull Request 的 GitHub 账号需要关联到一个有写权限的 LobeHub 用户；否则 LobeHub 会按安装应用的账号来处理。
+没有关联的 Pull Request 仍会被记录，但不会触发任何自动化。如果发起 Pull Request 的 GitHub 账号已关联 LobeHub 用户，LobeHub 会以该用户身份处理，此用户需要有工作区的写权限，否则自动化会被跳过。如果账号未关联，或 Pull Request 由机器人发起，LobeHub 会改用安装应用的账号。
 
 ## 自动化
 

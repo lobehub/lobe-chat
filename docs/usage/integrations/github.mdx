@@ -46,7 +46,7 @@ LobeHub links a pull request to your records when any of these is true:
 - Its description contains a LobeHub acceptance link (`…/acceptance/<id>`).
 - An acceptance round recorded the pull request URL.
 
-Pull requests without a link are still recorded but do not trigger any automation. The GitHub account that opened the pull request must be linked to a LobeHub user with write access; otherwise LobeHub falls back to the account that installed the app.
+Pull requests without a link are still recorded but do not trigger any automation. If the GitHub account that opened the pull request is linked to a LobeHub user, LobeHub acts for that user, who needs write access to the Workspace; otherwise automation is skipped. If the account is not linked, or a bot opened the pull request, LobeHub uses the account that installed the app instead.
 
 ## Automation
 
