@@ -8,6 +8,7 @@ import { fileCheckDispute } from '../dispute';
 
 const mocks = vi.hoisted(() => ({
   acceptance: vi.fn(),
+  document: vi.fn(),
   evidence: vi.fn(),
   generate: vi.fn(),
   listByAcceptance: vi.fn(),
@@ -45,7 +46,7 @@ vi.mock('@/database/models/acceptance', () => ({
 }));
 vi.mock('@/database/models/document', () => ({
   DocumentModel: vi.fn(function () {
-    return { findById: vi.fn() };
+    return { findById: mocks.document };
   }),
 }));
 vi.mock('@/server/services/aiGeneration', () => ({
@@ -324,6 +325,88 @@ describe('fileCheckDispute — guards', () => {
 
     expect(await file()).toMatchObject({ error: 'ALREADY_RULED' });
     expect(mocks.generate).not.toHaveBeenCalled();
+  });
+});
+
+describe('fileCheckDispute — the contract the panel rules on', () => {
+  const panelPrompt = () => mocks.generate.mock.calls[0][0].messages[1].content as string;
+
+  /**
+   * Regression: arbitration read only the live document, so a structured
+   * criterion without one reached the panel with no rules at all.
+   */
+  it("hands the panel a documentless structured check's frozen definition", async () => {
+    mocks.run.mockResolvedValue({
+      acceptanceId: 'a1',
+      id: 'r2',
+      plan: [{ ...item, definition: { expected: 'A PDF opens in the viewer' } }],
+    });
+    rule({ a: false, b: false, c: false });
+
+    await file();
+
+    expect(panelPrompt()).toContain('A PDF opens in the viewer');
+  });
+
+  /**
+   * Regression: an edited document made the panel arbitrate different text
+   * from the frozen payload the verifier enforced.
+   */
+  it('rules on the frozen definition, not a document edited after freezing', async () => {
+    mocks.run.mockResolvedValue({
+      acceptanceId: 'a1',
+      id: 'r2',
+      plan: [{ ...item, definition: { expected: 'frozen rule' }, documentId: 'doc-1' }],
+    });
+    mocks.document.mockResolvedValue({ content: 'edited rule' });
+    rule({ a: false, b: false, c: false });
+
+    await file();
+
+    expect(panelPrompt()).toContain('frozen rule');
+    expect(panelPrompt()).not.toContain('edited rule');
+    expect(mocks.document).not.toHaveBeenCalled();
+  });
+
+  it('still reads the linked document for a check without a frozen definition', async () => {
+    mocks.run.mockResolvedValue({
+      acceptanceId: 'a1',
+      id: 'r2',
+      plan: [{ ...item, documentId: 'doc-1' }],
+    });
+    mocks.document.mockResolvedValue({ content: 'document rule' });
+    rule({ a: false, b: false, c: false });
+
+    await file();
+
+    expect(panelPrompt()).toContain('document rule');
+  });
+
+  /**
+   * Regression: two checks without provenance that shared a title shared a
+   * ruling, so one sibling's ruling waived or blocked the other.
+   */
+  it('keeps same-titled checks without provenance apart', async () => {
+    const bare = { ...item, sourceCriterionId: undefined };
+    mocks.run.mockResolvedValue({
+      acceptanceId: 'a1',
+      id: 'r2',
+      plan: [{ ...bare, id: 'c1' }, bare],
+    });
+    mocks.listByAcceptance.mockResolvedValue([{ id: 'r2', plan: [{ ...bare, id: 'c1' }, bare] }]);
+    mocks.listByRuns.mockResolvedValue([
+      {
+        checkItemId: 'c1',
+        checkItemTitle: 'Exports a PDF',
+        id: 'res1',
+        metadata: { dispute: { arbitration: { outcome: 'overruled' }, kind: 'invalid_criterion' } },
+        verifyRunId: 'r2',
+      },
+    ]);
+    rule({ a: true, b: true, c: true });
+
+    expect(await file()).toMatchObject({ success: true });
+    expect(savedDispute().arbitration.outcome).toBe('upheld');
   });
 });
 

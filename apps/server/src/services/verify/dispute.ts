@@ -27,6 +27,7 @@ import type { VerifyCheckResultItem } from '@/database/schemas/verify';
 import type { LobeChatDatabase } from '@/database/type';
 import { AiGenerationService } from '@/server/services/aiGeneration';
 
+import { resolveCheckInstruction } from './checkInstruction';
 import { DISPUTE_PANEL_SIZE, resolveDisputePanelModelConfigs } from './goalReviewModelConfig';
 import type { VerifyModelConfig } from './modelConfig';
 
@@ -66,21 +67,19 @@ export interface FileCheckDisputeParams {
 /**
  * The same check across the rounds of one Acceptance, keyed exactly as the
  * acceptance check union keys it: a flow node's check is its own occurrence
- * even when several nodes reuse one criterion asset, so it keeps its item id;
- * otherwise a criterion keeps its `sourceCriterionId` from round to round while
- * its item id is minted fresh. An ad-hoc check without either is matched by title.
+ * even when several nodes reuse one criterion asset, so it keeps its item id; a
+ * criterion keeps its `sourceCriterionId` from round to round while its item id
+ * is minted fresh. A check with neither keeps its own item id — two such checks
+ * can share a title and must never share a ruling.
  */
 const logicalCheckKey = (item: {
   id: string;
   sourceCriterionId?: string | null;
   sourceFlowNode?: unknown;
-  title?: string | null;
 }) =>
-  item.sourceFlowNode
-    ? `item:${item.id}`
-    : item.sourceCriterionId
-      ? `criterion:${item.sourceCriterionId}`
-      : `title:${item.title ?? ''}`;
+  !item.sourceFlowNode && item.sourceCriterionId
+    ? `criterion:${item.sourceCriterionId}`
+    : `item:${item.id}`;
 
 /** A round past these statuses has been judged and its Task driven; a waiver there would never settle. */
 const SETTLED_RUN_STATUSES = new Set(['delivered', 'errored', 'failed', 'passed', 'repairing']);
@@ -330,11 +329,7 @@ export const fileCheckDispute = async (
         const planned = planItems.get(`${row.verifyRunId}:${row.checkItemId}`);
         return (
           logicalCheckKey(
-            planned ?? {
-              id: row.checkItemId,
-              sourceCriterionId: row.sourceCriterionId,
-              title: row.checkItemTitle,
-            },
+            planned ?? { id: row.checkItemId, sourceCriterionId: row.sourceCriterionId },
           ) === key
         );
       })
@@ -380,10 +375,11 @@ export const fileCheckDispute = async (
     };
   }
 
-  const instruction = item.documentId
-    ? ((await new DocumentModel(db, userId, workspaceId).findById(item.documentId))?.content ??
-      undefined)
-    : undefined;
+  // The frozen contract the verifier enforced, never the live document alone.
+  const instruction = await resolveCheckInstruction(
+    new DocumentModel(db, userId, workspaceId),
+    item,
+  );
   const arbitration = await runArbitrationPanel(
     db,
     userId,
