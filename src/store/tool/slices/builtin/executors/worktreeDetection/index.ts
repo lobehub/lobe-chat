@@ -1,9 +1,5 @@
 import { isDesktop } from '@lobechat/const';
-import type {
-  DeviceGitLinkedPullRequest,
-  DeviceGitUpstreamRef,
-  WorkingDirConfig,
-} from '@lobechat/types';
+import type { DeviceGitUpstreamRef } from '@lobechat/types';
 import { getWorkingDirSourcePath } from '@lobechat/types';
 import isEqual from 'fast-deep-equal';
 
@@ -12,6 +8,24 @@ import { topicSelectors } from '@/store/chat/selectors';
 import { getChatStoreState } from '@/store/chat/store';
 import { getGitStatusStoreState } from '@/store/device/gitStatus/store';
 import { getElectronStoreState } from '@/store/electron';
+
+import {
+  applyBranchToConfig,
+  applyDetachedToConfig,
+  applyPullRequestToConfig,
+  applyPushToConfig,
+  applyWorktreeAddToConfig,
+  type PullRequestCreateInfo,
+  type WorktreeAddInfo,
+} from './configTransitions';
+import { normalizeBranch } from './utils';
+
+export {
+  isWorktreeExitContent,
+  parseWorktreeEnterInfo,
+  recordWorktreeEnter,
+  recordWorktreeExit,
+} from './claudeCodeWorktree';
 
 /**
  * Detect git / gh side effects in a heterogeneous CLI agent's successful shell
@@ -76,28 +90,6 @@ const BRANCH_OUTPUT_PATTERNS = [
   /branch ['"]([^'"\n]+)['"] set up to track/i,
 ] as const;
 
-/**
- * Claude Code's `EnterWorktree` / `ExitWorktree` move the session without ever
- * shelling out, so the `git worktree add` sniffing above cannot see them. Their
- * tool_result ships only CC's `message` string (the structured `worktreePath`
- * never leaves the tool), which makes these sentences the wire contract.
- */
-const CC_ENTER_PATTERN = /^(?:Created|Entered) worktree at (.+?)(?: on branch (\S+))?\. /;
-const CC_EXIT_PATTERN = /^Exited\b/;
-/**
- * Said only on the branch that `chdir`s the SESSION into the worktree. A subagent
- * pinned to its own cwd gets "This agent's working directory …" instead, because it
- * moved only itself — recording that would claim the whole run had relocated.
- * Requiring this sentence fails CLOSED: if CC rewords it we stop recording, rather
- * than record a worktree the session is not in.
- */
-const CC_SESSION_ENTER_MARKER = 'The session is now working in the worktree';
-
-interface WorktreeAddInfo {
-  branch?: string;
-  path: string;
-}
-
 interface WorktreeAddParseResult {
   branch?: string;
   /** Resolved absolute path, present only when the command yielded a trustworthy literal. */
@@ -107,11 +99,6 @@ interface WorktreeAddParseResult {
 }
 
 type BranchSwitchInfo = { branch: string } | { detached: true };
-
-interface PullRequestCreateInfo {
-  branch?: string;
-  pullRequest: DeviceGitLinkedPullRequest;
-}
 
 const stripQuotes = (token: string): string => {
   if (token.length >= 2) {
@@ -173,13 +160,6 @@ const isGitExecutable = (token: string): boolean => {
 const isGhExecutable = (token: string): boolean => {
   const executable = getExecutableName(token);
   return executable === 'gh' || executable === 'gh.exe';
-};
-
-const normalizeBranch = (branch?: string): string | undefined => {
-  const value = branch?.trim();
-  // A `$`/backtick here is an unexpanded shell construct, not a branch name.
-  if (!value || value === '-' || /[$`]/.test(value)) return undefined;
-  return value.includes(':') ? value.split(':').at(-1) : value;
 };
 
 const getInlineFlagValue = (token: string, flags: readonly string[]): string | undefined => {
@@ -533,166 +513,6 @@ const parseGitPush = (
   if (!remoteBranch) return undefined;
 
   return { branch: remoteBranch, remote: push.remote ?? 'origin' };
-};
-
-const applyBranchToConfig = (
-  currentConfig: WorkingDirConfig | undefined,
-  source: string,
-  branch: string,
-): WorkingDirConfig => {
-  const branchChanged = currentConfig?.git?.branch !== branch;
-  const git: NonNullable<WorkingDirConfig['git']> = {
-    ...currentConfig?.git,
-    branch,
-  };
-
-  delete git.detached;
-  // The old branch's remote ref and PR describe a branch the topic has left. Held
-  // onto, `upstream` would aim the PR lookup at the wrong head — worse than none.
-  if (branchChanged) {
-    delete git.github;
-    delete git.upstream;
-  }
-
-  return {
-    ...currentConfig,
-    git,
-    path: source,
-    ...(currentConfig?.repoType ? { repoType: currentConfig.repoType } : {}),
-  };
-};
-
-const applyDetachedToConfig = (
-  currentConfig: WorkingDirConfig | undefined,
-  source: string,
-): WorkingDirConfig => {
-  const git: NonNullable<WorkingDirConfig['git']> = {
-    ...currentConfig?.git,
-    detached: true,
-  };
-
-  delete git.branch;
-  delete git.github;
-  delete git.upstream;
-
-  return {
-    ...currentConfig,
-    git,
-    path: source,
-    ...(currentConfig?.repoType ? { repoType: currentConfig.repoType } : {}),
-  };
-};
-
-const applyPullRequestToConfig = (
-  currentConfig: WorkingDirConfig | undefined,
-  source: string,
-  info: PullRequestCreateInfo,
-): WorkingDirConfig => {
-  const branch = info.branch ?? currentConfig?.git?.branch;
-  const git: NonNullable<WorkingDirConfig['git']> = {
-    ...currentConfig?.git,
-    ...(branch ? { branch } : {}),
-    github: {
-      pullRequest: info.pullRequest,
-      pullRequestStatus: 'ok',
-    },
-  };
-
-  delete git.detached;
-
-  return {
-    ...currentConfig,
-    git,
-    path: source,
-    repoType: 'github',
-  };
-};
-
-/**
- * Record where the branch now publishes to. This is what makes the PR lookup work at
- * all for a worktree: its local branch name (`worktree-feat+x`) never exists on the
- * remote, so only the ref the push actually created (`feat/y`) can find the PR.
- */
-const applyPushToConfig = (
-  currentConfig: WorkingDirConfig | undefined,
-  source: string,
-  upstream: DeviceGitUpstreamRef,
-): WorkingDirConfig => {
-  const previous = currentConfig?.git?.upstream?.branch;
-  const git: NonNullable<WorkingDirConfig['git']> = {
-    ...currentConfig?.git,
-    upstream,
-  };
-
-  // Re-pointing the branch at a DIFFERENT remote ref orphans the PR bound to the old
-  // one. Only a change invalidates it — a first push must not drop a PR that a
-  // preceding `gh pr create` in the same run just recorded.
-  if (previous && previous !== upstream.branch) delete git.github;
-
-  return {
-    ...currentConfig,
-    git,
-    path: source,
-    ...(currentConfig?.repoType ? { repoType: currentConfig.repoType } : {}),
-  };
-};
-
-const applyWorktreeAddToConfig = (
-  currentConfig: WorkingDirConfig | undefined,
-  source: string,
-  info: WorktreeAddInfo,
-): WorkingDirConfig => {
-  const branchChanged = !!info.branch && currentConfig?.git?.branch !== info.branch;
-  const git: NonNullable<WorkingDirConfig['git']> = {
-    ...currentConfig?.git,
-    activeWorktree: info.path,
-    ...(info.branch ? { branch: info.branch } : {}),
-    isWorktree: true,
-  };
-
-  if (info.branch) delete git.detached;
-  if (branchChanged) {
-    delete git.github;
-    delete git.upstream;
-  }
-
-  return {
-    ...currentConfig,
-    git,
-    path: source,
-    ...(currentConfig?.repoType ? { repoType: currentConfig.repoType } : {}),
-  };
-};
-
-/**
- * The session left the worktree and is back in the source repo. `branch`, its
- * `upstream` ref and the linked `github` PR described the worktree's branch, not the
- * source repo's, so they are dropped rather than left pointing at a branch the topic
- * is no longer on — the source branch is unknown until the next `git switch` /
- * `checkout` refreshes it.
- */
-const applyWorktreeExitToConfig = (
-  currentConfig: WorkingDirConfig | undefined,
-  source: string,
-): WorkingDirConfig => {
-  const git: NonNullable<WorkingDirConfig['git']> = {
-    ...currentConfig?.git,
-    isWorktree: false,
-  };
-
-  delete git.activeWorktree;
-  if (currentConfig?.git?.isWorktree) {
-    delete git.branch;
-    delete git.github;
-    delete git.upstream;
-  }
-
-  return {
-    ...currentConfig,
-    git,
-    path: source,
-    ...(currentConfig?.repoType ? { repoType: currentConfig.repoType } : {}),
-  };
 };
 
 /** Collapse `.`/`..` segments in a POSIX path without touching the filesystem. */
@@ -1080,88 +900,4 @@ export const recordGitCommandEffects = async (params: {
     const revalidateDeviceId = cacheDeviceId === 'local' ? undefined : cacheDeviceId;
     await getGitStatusStoreState().revalidateGitStatus(revalidateDeviceId, source, ['branch']);
   }
-};
-
-/**
- * Read the worktree CC entered out of `EnterWorktree`'s result message:
- *
- *   `${'Created' | 'Entered'} worktree at ${path}[ on branch ${branch}]. The session…`
- *
- * The path is delimited by ` on branch <ref>` or the `. ` before the next sentence,
- * so a path containing spaces survives; one containing `". "` would not. Returns
- * undefined unless the SESSION moved (see {@link CC_SESSION_ENTER_MARKER}).
- */
-export const parseWorktreeEnterInfo = (content?: string): WorktreeAddInfo | undefined => {
-  if (!content?.includes(CC_SESSION_ENTER_MARKER)) return undefined;
-
-  const match = CC_ENTER_PATTERN.exec(content);
-  const path = match?.[1]?.trim();
-  if (!path) return undefined;
-
-  const branch = normalizeBranch(match?.[2]);
-  return { ...(branch ? { branch } : {}), path };
-};
-
-/**
- * Every successful `ExitWorktree` outcome — kept, removed, or "could not remove it"
- * — opens with `Exited …`, and all three leave the session back in its original
- * directory. The no-op ("no active EnterWorktree session") and the refusals are
- * validation failures, so they arrive with `success: false` and never get here.
- */
-export const isWorktreeExitContent = (content?: string): boolean =>
-  !!content && CC_EXIT_PATTERN.test(content);
-
-/**
- * Record a successful `EnterWorktree` as the run topic's active worktree. Unlike
- * `git worktree add`, the path is never in the arguments — a bare call generates a
- * random name — so it is read back out of the result message.
- */
-export const recordWorktreeEnter = async (params: {
-  content?: string;
-  topicId: string;
-}): Promise<void> => {
-  const { content, topicId } = params;
-  const state = getChatStoreState();
-
-  const topic = topicSelectors.getTopicById(topicId)(state);
-  const currentConfig = topic?.metadata?.workingDirectoryConfig;
-  const source = getWorkingDirSourcePath(currentConfig) ?? topic?.metadata?.workingDirectory;
-
-  const worktreeInfo = parseWorktreeEnterInfo(content);
-  if (!worktreeInfo || !source || worktreeInfo.path === source) return;
-
-  const nextConfig = applyWorktreeAddToConfig(currentConfig, source, worktreeInfo);
-
-  if (isEqual(currentConfig, nextConfig)) return;
-  await state.updateTopicMetadata(topicId, { workingDirectoryConfig: nextConfig });
-};
-
-/**
- * Record a successful `ExitWorktree` — the session is back in its original directory,
- * so the topic drops its worktree whether it was kept on disk or removed. Keeping it
- * would leave the topic pointing at a directory the run has left (and, on `remove`,
- * one that no longer exists).
- */
-export const recordWorktreeExit = async (params: {
-  content?: string;
-  topicId: string;
-}): Promise<void> => {
-  const { content, topicId } = params;
-  if (!isWorktreeExitContent(content)) return;
-
-  const state = getChatStoreState();
-
-  const topic = topicSelectors.getTopicById(topicId)(state);
-  const currentConfig = topic?.metadata?.workingDirectoryConfig;
-  const source = getWorkingDirSourcePath(currentConfig) ?? topic?.metadata?.workingDirectory;
-  if (!source) return;
-
-  // Never in a worktree → nothing to clear, and don't materialize an empty `git`.
-  const currentGit = currentConfig?.git;
-  if (!currentGit?.activeWorktree && !currentGit?.isWorktree) return;
-
-  const nextConfig = applyWorktreeExitToConfig(currentConfig, source);
-
-  if (isEqual(currentConfig, nextConfig)) return;
-  await state.updateTopicMetadata(topicId, { workingDirectoryConfig: nextConfig });
 };
