@@ -111,4 +111,19 @@ describe('api/client workspace scoping', () => {
     expect(scoped).toBe(scopedAgain);
     expect(scoped).not.toBe(personal);
   });
+
+  // Only a device run's operation token is refused on user-scoped routes, so
+  // only its clients get the stored-login fallback (see operationTokenFallback).
+  it.each([
+    ['an operation token', { purpose: 'hetero-operation', sub: 'user-1' }, 2],
+    ['a user-scoped token', { purpose: 'cli-sandbox', sub: 'user-1' }, 1],
+  ])('builds the fallback link only for %s', async (_label, payload, linkCount) => {
+    process.env.LOBEHUB_JWT = `e30.${Buffer.from(JSON.stringify(payload)).toString('base64url')}.s`;
+    const { getTrpcClient } = await import('./client');
+    await getTrpcClient();
+
+    const { links } = (mockCreateTRPCClient.mock.calls.at(-1) as any[])[0];
+    expect(links).toHaveLength(linkCount);
+    expect(headersOfLastLink()).toMatchObject({ 'Oidc-Auth': process.env.LOBEHUB_JWT });
+  });
 });

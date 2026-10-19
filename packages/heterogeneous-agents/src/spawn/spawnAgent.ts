@@ -26,6 +26,7 @@ import {
 } from './codexShellEnv';
 import type { AgentPromptInput, BuildAgentInputOptions } from './input';
 import { buildAgentInput } from './input';
+import { prepareClaudeCodeLobeHubCli } from './lobeHubCliPlugin';
 import { assertSpawnableWorkingDirectory } from './workingDirectory';
 
 export interface SpawnAgentOptions {
@@ -478,7 +479,20 @@ export const spawnAgent = async (options: SpawnAgentOptions): Promise<SpawnAgent
     return spawnDroidAcpAgent(options, command, cwd);
   }
 
-  const inputPlan = await buildAgentInput(options.agentType, options.prompt, options.inputOptions);
+  // A run answering a LobeHub conversation (`lh hetero exec --topic`) gets the
+  // `lh` guide as a Claude Code skill rather than in the user's turn. The
+  // caller's env, not the inherited one: a standalone run nested inside some
+  // other conversation is not answering it.
+  const lobeHubCli =
+    options.agentType === 'claude-code' && options.env?.LOBEHUB_TOPIC_ID
+      ? await prepareClaudeCodeLobeHubCli(options.prompt, options.extraArgs)
+      : { args: [], prompt: options.prompt };
+  const promptPlan = await buildAgentInput(
+    options.agentType,
+    lobeHubCli.prompt,
+    options.inputOptions,
+  );
+  const inputPlan = { ...promptPlan, args: [...lobeHubCli.args, ...promptPlan.args] };
   const childEnv: NodeJS.ProcessEnv = {
     ...process.env,
     ...(options.agentType === 'codebuddy' ? { CODEBUDDY_CODE_DISABLE_BACKGROUND_TASKS: '1' } : {}),

@@ -161,6 +161,15 @@ export {
   type NormalizeImageOptions,
 } from './input';
 export { JsonlStreamProcessor } from './jsonlProcessor';
+export {
+  buildLobeHubCliPluginFiles,
+  type ClaudeCodeLobeHubCliDelivery,
+  LOBEHUB_CLI_PLUGIN_NAME,
+  LOBEHUB_CLI_SKILL_NAME,
+  omitLobeHubCliGuide,
+  prepareClaudeCodeLobeHubCli,
+  resolveLobeHubCliPluginDir,
+} from './lobeHubCliPlugin';
 // NOTE: `resolveCliCommand` is intentionally NOT re-exported here. It runs
 // `promisify(execFile)` at module load, which throws under a partial
 // `node:child_process` mock — and this barrel is widely imported (e.g. for

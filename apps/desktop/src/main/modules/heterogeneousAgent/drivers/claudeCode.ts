@@ -1,6 +1,7 @@
 import {
   buildClaudeCodeDirectEnv,
   CLAUDE_CODE_BASE_ARGS,
+  prepareClaudeCodeLobeHubCli,
   sanitizeClaudeCodeDirectArgs,
   sanitizeClaudeCodeDirectEnv,
 } from '@lobechat/heterogeneous-agents/spawn';
@@ -27,7 +28,9 @@ export const claudeCodeDriver: HeterogeneousAgentDriver = {
     promptInput,
     resumeSessionId,
   }: HeterogeneousAgentBuildPlanParams) {
-    const { stdin: stdinPayload } = await helpers.buildAgentInput('claude-code', promptInput);
+    // The `lh` guide rides along as a skill, not as text in the user's turn.
+    const lobeHubCli = await prepareClaudeCodeLobeHubCli(promptInput, args);
+    const { stdin: stdinPayload } = await helpers.buildAgentInput('claude-code', lobeHubCli.prompt);
 
     return {
       args: [
@@ -37,6 +40,7 @@ export const claudeCodeDriver: HeterogeneousAgentDriver = {
         // does not accept inline JSON for `--mcp-config`.
         ...(mcpConfigPath ? ['--mcp-config', mcpConfigPath] : []),
         ...(resumeSessionId ? ['--resume', resumeSessionId] : []),
+        ...lobeHubCli.args,
         ...args,
       ],
       stdinPayload,

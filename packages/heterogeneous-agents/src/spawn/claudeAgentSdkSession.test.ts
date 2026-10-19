@@ -213,3 +213,42 @@ describe('ClaudeAgentSdkSession resume cost', () => {
     expect(resultUsage?.data.costUsd).toBeCloseTo(6.76);
   });
 });
+
+describe('ClaudeAgentSdkSession plugins', () => {
+  afterEach(() => {
+    sdkQueryMock.mockReset();
+  });
+
+  const runWith = async (pluginDirs?: string[]) => {
+    sdkQueryMock.mockImplementation(() => ({
+      async *[Symbol.asyncIterator]() {},
+      close: vi.fn(),
+    }));
+    await new ClaudeAgentSdkSession({
+      args: [],
+      commandPath: 'claude',
+      cwd: os.tmpdir(),
+      env: {} as NodeJS.ProcessEnv,
+      onEvents: () => {},
+      onRawMessage: () => {},
+      onRuntimeStatus: () => {},
+      onSessionId: () => {},
+      onStderr: () => {},
+      operationId: 'op-sdk-plugins',
+      pluginDirs,
+      sessionId: 'session-1',
+      stdinPayload: `${JSON.stringify({ message: { content: 'hi', role: 'user' }, type: 'user' })}\n`,
+    }).run();
+    return sdkQueryMock.mock.calls[0][0].options;
+  };
+
+  it('loads the session plugins, e.g. the one carrying the `lh` guide', async () => {
+    await expect(runWith(['/tmp/lobehub-plugin'])).resolves.toMatchObject({
+      plugins: [{ path: '/tmp/lobehub-plugin', type: 'local' }],
+    });
+  });
+
+  it('passes no plugins option when there are none', async () => {
+    await expect(runWith()).resolves.not.toHaveProperty('plugins');
+  });
+});

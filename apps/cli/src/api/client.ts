@@ -1,3 +1,4 @@
+import type { Operation } from '@trpc/client';
 import { createTRPCClient, httpLink } from '@trpc/client';
 import superjson from 'superjson';
 
@@ -11,6 +12,11 @@ import { CLI_PRIMARY_BIN } from '../constants/identity';
 import { cliPackageName } from '../pkg';
 import { resolveServerUrl } from '../settings';
 import { log } from '../utils/logger';
+import {
+  isOperationToken,
+  operationTokenFallbackLink,
+  operationTokenHeaders,
+} from './operationTokenFallback';
 import { resolveWorkspaceId, withWorkspaceHeader } from './workspace';
 
 export type TrpcClient = ReturnType<typeof createTRPCClient<LambdaRouter>>;
@@ -20,8 +26,22 @@ const PERSONAL_KEY = '__personal__';
 const _clients = new Map<string, TrpcClient>();
 const _toolsClients = new Map<string, ToolsTrpcClient>();
 
+type AuthHeaders = (opts?: {
+  op?: Operation;
+}) => Record<string, string> | Promise<Record<string, string>>;
+
+const scopedHeaders =
+  (headers: AuthHeaders, workspaceId?: string) => (opts?: { op?: Operation }) => {
+    const resolved = headers(opts);
+    return resolved instanceof Promise
+      ? resolved.then((value) => withWorkspaceHeader(value, workspaceId))
+      : withWorkspaceHeader(resolved, workspaceId);
+  };
+
 async function getAuthAndServer(): Promise<{
-  headers: () => Record<string, string>;
+  /** The credential is a run's operation token; see `operationTokenFallback`. */
+  fallback: boolean;
+  headers: AuthHeaders;
   serverUrl: string;
 }> {
   // Precedence lives in `pickAuthSource`, shared with `resolveToken` and
@@ -32,18 +52,21 @@ async function getAuthAndServer(): Promise<{
   if (source.kind === 'env-jwt') {
     const serverUrl = resolveServerUrl();
 
-    return {
-      // Read per request: `hetero exec` renews its operation token in place, and
-      // its clients live for the whole run.
-      headers: () => ({ 'Oidc-Auth': process.env.LOBEHUB_JWT || source.token! }),
-      serverUrl,
-    };
+    // Read per request: `hetero exec` renews its operation token in place, and
+    // its clients live for the whole run.
+    const envToken = () => process.env.LOBEHUB_JWT || source.token!;
+    if (isOperationToken(source.token)) {
+      return { fallback: true, headers: operationTokenHeaders(envToken), serverUrl };
+    }
+
+    return { fallback: false, headers: () => ({ 'Oidc-Auth': envToken() }), serverUrl };
   }
 
   if (source.kind === 'env-api-key') {
     const serverUrl = resolveServerUrl();
 
     return {
+      fallback: false,
       headers: () => ({ 'X-API-Key': source.token! }),
       serverUrl,
     };
@@ -64,6 +87,7 @@ async function getAuthAndServer(): Promise<{
   const { accessToken } = result.credentials;
 
   return {
+    fallback: false,
     headers: () => ({ 'Oidc-Auth': accessToken }),
     serverUrl,
   };
@@ -75,11 +99,12 @@ export async function getTrpcClient(workspaceId?: string): Promise<TrpcClient> {
   const cached = _clients.get(cacheKey);
   if (cached) return cached;
 
-  const { headers, serverUrl } = await getAuthAndServer();
+  const { fallback, headers, serverUrl } = await getAuthAndServer();
   const client = createTRPCClient<LambdaRouter>({
     links: [
+      ...(fallback ? [operationTokenFallbackLink<LambdaRouter>()] : []),
       httpLink({
-        headers: () => withWorkspaceHeader(headers(), wsId),
+        headers: scopedHeaders(headers, wsId),
         transformer: superjson,
         url: `${serverUrl}/trpc/lambda`,
       }),
@@ -145,11 +170,12 @@ export async function getToolsTrpcClient(workspaceId?: string): Promise<ToolsTrp
   const cached = _toolsClients.get(cacheKey);
   if (cached) return cached;
 
-  const { headers, serverUrl } = await getAuthAndServer();
+  const { fallback, headers, serverUrl } = await getAuthAndServer();
   const client = createTRPCClient<ToolsRouter>({
     links: [
+      ...(fallback ? [operationTokenFallbackLink<ToolsRouter>()] : []),
       httpLink({
-        headers: () => withWorkspaceHeader(headers(), wsId),
+        headers: scopedHeaders(headers, wsId),
         transformer: superjson,
         url: `${serverUrl}/trpc/tools`,
       }),

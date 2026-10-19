@@ -173,6 +173,8 @@ export interface ClaudeAgentSdkSessionOptions {
   onSessionId: (sessionId: string) => void;
   onStderr: (data: string) => Promise<void> | void;
   operationId: string;
+  /** Local plugin roots loaded for this session only (e.g. the `lh` guide skill). */
+  pluginDirs?: string[];
   resumeSessionId?: string;
   sessionId: string;
   stdinPayload: string;
@@ -327,6 +329,9 @@ export class ClaudeAgentSdkSession {
       includePartialMessages: true,
       pathToClaudeCodeExecutable: executablePath,
       permissionMode: 'bypassPermissions',
+      ...(this.options.pluginDirs?.length
+        ? { plugins: this.options.pluginDirs.map((path) => ({ path, type: 'local' as const })) }
+        : {}),
       spawnClaudeCodeProcess: (spawnOptions) =>
         spawnClaudeCodeCliProcess(spawnOptions, {
           onProcessSpawn: this.options.onProcessSpawn,

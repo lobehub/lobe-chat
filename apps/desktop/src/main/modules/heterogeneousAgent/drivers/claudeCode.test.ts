@@ -1,4 +1,5 @@
-import { describe, expect, it } from 'vitest';
+import { buildHeterogeneousPrompt } from '@lobechat/heterogeneous-agents/protocol';
+import { describe, expect, it, vi } from 'vitest';
 
 import type {
   HeterogeneousAgentBuildPlanHelpers,
@@ -39,6 +40,21 @@ describe('claudeCodeDriver', () => {
     expect(plan.operationTokenEnvKey).toBe('ANTHROPIC_AUTH_TOKEN');
     expect(plan.env.ANTHROPIC_AUTH_TOKEN).toBeUndefined();
   });
+  it("loads the `lh` guide as a skill instead of sending it in the user's turn", async () => {
+    const buildAgentInput = vi.fn(stubHelpers.buildAgentInput);
+    const { args } = await claudeCodeDriver.buildSpawnPlan(
+      buildParams({
+        helpers: { buildAgentInput },
+        promptInput: buildHeterogeneousPrompt({ isNewSession: true, prompt: 'fix the test' }),
+      }),
+    );
+
+    expect(args).toContain('--plugin-dir');
+    expect(buildAgentInput).toHaveBeenCalledWith('claude-code', [
+      { text: 'fix the test', type: 'text' },
+    ]);
+  });
+
   it('omits --mcp-config when mcpConfigPath is undefined', async () => {
     const { args } = await claudeCodeDriver.buildSpawnPlan(buildParams());
     expect(args).not.toContain('--mcp-config');

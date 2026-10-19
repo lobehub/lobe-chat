@@ -97,6 +97,7 @@ import {
   isDevinAcpSessionNotFoundError,
   isDroidAcpSessionNotFoundError,
   normalizeImage,
+  prepareClaudeCodeLobeHubCli,
   readClaudeCodeSessionCost,
   readCodexSessionModel,
   resolveClaudeCodeTranscriptPath,
@@ -1508,26 +1509,23 @@ export default class HeterogeneousAgentCtr {
   }
 
   /**
-   * Build a Claude Code stream-json user message with text + base64 images.
-   * Semantic context is assembled by the shared prompt engine before the
-   * provider-specific serializer runs.
+   * Build the Claude SDK's stream-json user message (text + base64 images) and
+   * the plugin carrying the `lh` guide, which then stays out of that message.
    */
-  private async buildStreamJsonInput(
-    prompt: string,
-    imageList: HeterogeneousAgentImageAttachment[] = [],
-    systemContext?: string,
-    isNewSession?: boolean,
-  ): Promise<string> {
-    const promptInput = buildHeterogeneousPrompt({
-      imageList,
-      isNewSession,
-      prompt,
-      systemContext,
-    });
-    const plan = await buildAgentInput('claude-code', promptInput, {
+  private async buildStreamJsonInput(params: SendPromptParams, session: AgentSession) {
+    const lobeHubCli = await prepareClaudeCodeLobeHubCli(
+      buildHeterogeneousPrompt({
+        imageList: params.imageList ?? [],
+        isNewSession: this.needsSessionIntroduction(session),
+        prompt: params.prompt,
+        systemContext: params.systemContext,
+      }),
+      session.args,
+    );
+    const plan = await buildAgentInput('claude-code', lobeHubCli.prompt, {
       cacheDir: this.fileCacheDir,
     });
-    return plan.stdin;
+    return { pluginDir: lobeHubCli.pluginDir, stdin: plan.stdin };
   }
 
   // ─── IPC methods ───
@@ -2051,12 +2049,7 @@ export default class HeterogeneousAgentCtr {
     const cwd = session.cwd || electronApp.getPath('desktop');
     const spawnEnv = this.buildSessionSpawnEnv(session);
     const commandPath = session.resolvedCommandPath ?? this.resolveSessionCommand(session);
-    const stdinPayload = await this.buildStreamJsonInput(
-      params.prompt,
-      params.imageList ?? [],
-      params.systemContext,
-      this.needsSessionIntroduction(session),
-    );
+    const { pluginDir, stdin: stdinPayload } = await this.buildStreamJsonInput(params, session);
     const traceSession = await this.createCliTraceSession({
       cliArgs: ['sdk-stream', ...session.args],
       cwd,
@@ -2110,6 +2103,7 @@ export default class HeterogeneousAgentCtr {
       },
       onStderr: (data) => this.appendCliTraceFile(traceSession, 'stderr.log', data),
       operationId: params.operationId,
+      pluginDirs: pluginDir ? [pluginDir] : undefined,
       resumeSessionId: session.agentSessionId,
       sessionId: session.sessionId,
       stdinPayload,
