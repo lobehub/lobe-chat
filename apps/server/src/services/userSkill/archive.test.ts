@@ -31,4 +31,13 @@ describe('skill archive', () => {
       ],
     });
   });
+
+  // Package paths come from the caller; one named after an object built-in
+  // would set an object's prototype while zipping, so it is refused outright.
+  it('refuses a file whose path is an object built-in', () => {
+    for (const path of ['__proto__', 'scripts/constructor', 'prototype/x.sh'])
+      expect(() => packSkillArchive('# plan', [{ data: 'odd', path }])).toThrow(
+        'names an object built-in',
+      );
+  });
 });

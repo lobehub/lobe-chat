@@ -3,6 +3,7 @@ import type { LobeChatDatabase } from '@lobechat/database';
 import { resourcesTreePrompt } from '@lobechat/prompts';
 import type { SkillResourceMeta } from '@lobechat/types';
 import { sha256 } from 'js-sha256';
+import pMap from 'p-map';
 
 import { FileModel } from '@/database/models/file';
 import {
@@ -18,6 +19,9 @@ import {
 import { renderSkillIndexContent, validateSkillName } from '../skillManagement/frontmatter';
 import { packSkillArchive, type SkillArchiveFile, unpackSkillArchive } from './archive';
 import { skillStorage } from './storage';
+
+/** Storage reads one publish runs at once. */
+const STORAGE_READ_CONCURRENCY = 5;
 
 /**
  * The user's own skill library: skills that belong to the user rather than to
@@ -170,13 +174,16 @@ export class UserSkillService {
     const stored = binaryIds.length
       ? await new FileModel(this.db, this.userId, this.workspaceId).findByIds(binaryIds)
       : [];
-    const entries = await Promise.all(
-      files.map(async (file) => {
+    // A package's size is the caller's, so its storage reads go a few at a time.
+    const entries = await pMap(
+      files,
+      async (file) => {
         if (!file.fileId) return { data: file.content, path: file.path };
         const row = stored.find((item) => item.id === file.fileId);
         if (!row) throw new Error(`Skill file ${file.path} names a file that is not there`);
         return { data: await skillStorage.read(this.owner(), row.url), path: file.path };
-      }),
+      },
+      { concurrency: STORAGE_READ_CONCURRENCY },
     );
     const { bytes, hash } = packSkillArchive(skillMd, entries);
     const url = `skills/user/${hash}.zip`;

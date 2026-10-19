@@ -25,8 +25,19 @@ export interface SkillArchiveFile {
   size: number;
 }
 
+/**
+ * Path segments that name object built-ins. The zip is built from a keyed
+ * object — ours and the zip library's own — so such a path would set an
+ * object's prototype instead of adding an entry.
+ */
+const OBJECT_BUILT_INS = new Set(['__proto__', 'constructor', 'prototype']);
+
 /** Zips `SKILL.md` and the files beside it; the hash names the bytes in storage. */
 export const packSkillArchive = (skillMd: string, entries: SkillArchiveEntry[]) => {
+  const unsafe = entries.find((entry) =>
+    entry.path.split('/').some((segment) => OBJECT_BUILT_INS.has(segment)),
+  );
+  if (unsafe) throw new Error(`Skill file path ${unsafe.path} names an object built-in`);
   const encoder = new TextEncoder();
   const tree: Record<string, [Uint8Array, { mtime: Date }]> = {
     [SKILL_INDEX_FILENAME]: [encoder.encode(skillMd), { mtime: FIXED_MTIME }],

@@ -13,6 +13,9 @@ export const MAX_PACKAGE_FILES = 20;
 export const MAX_PACKAGE_FILE_CHARS = 64_000;
 export const MAX_PACKAGE_CHARS = 256_000;
 
+/** Names that read as object built-ins wherever a path becomes a key. */
+const OBJECT_BUILT_INS = new Set(['__proto__', 'constructor', 'prototype']);
+
 /**
  * A path inside the package, e.g. `scripts/check.sh` or `references/rules.md`.
  * Relative, no `..`, and never `SKILL.md`, which is the recipe itself.
@@ -24,6 +27,10 @@ const packagePath = z
   .max(200)
   .regex(/^[\w.-]+(\/[\w.-]+)*$/, 'A package path is relative, like scripts/check.sh')
   .refine((path) => !path.split('/').includes('..'), 'A package path cannot leave the package')
+  .refine(
+    (path) => !path.split('/').some((segment) => OBJECT_BUILT_INS.has(segment)),
+    'A package path cannot use __proto__, constructor or prototype as a name',
+  )
   .refine(
     (path) => path.toLowerCase() !== 'skill.md',
     'SKILL.md is the recipe itself; submit it as the recipe',

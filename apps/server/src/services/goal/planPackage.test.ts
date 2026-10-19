@@ -13,7 +13,15 @@ describe('planFilesSchema', () => {
   });
 
   it('keeps every path inside the package and SKILL.md as the recipe', () => {
-    for (const path of ['../secrets.txt', '/etc/passwd', 'scripts/../../x', 'SKILL.md', 'a b.md'])
+    for (const path of [
+      '../secrets.txt',
+      '/etc/passwd',
+      'scripts/../../x',
+      'SKILL.md',
+      'a b.md',
+      '__proto__',
+      'scripts/constructor',
+    ])
       expect(planFilesSchema.safeParse([file(path)]).success).toBe(false);
   });
 
