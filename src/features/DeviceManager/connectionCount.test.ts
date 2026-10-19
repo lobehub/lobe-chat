@@ -1,7 +1,11 @@
 import type { DeviceListItem } from '@lobechat/types';
 import { describe, expect, it } from 'vitest';
 
-import { getScopedConnectionCount, getWorkspaceConnectionState } from './connectionCount';
+import {
+  getIdleConnectionStatus,
+  getScopedConnectionCount,
+  getWorkspaceConnectionState,
+} from './connectionCount';
 
 const device = (
   deviceId: string,
@@ -97,5 +101,10 @@ describe('persisted rows before the server confirms presence', () => {
 
     expect(getWorkspaceConnectionState(devices, false, undefined)).toBe('connecting');
     expect(getWorkspaceConnectionState(devices, false, new Error('offline'))).toBe('unavailable');
+  });
+
+  it('says checking, not offline, for a persisted row with no connection', () => {
+    expect(getIdleConnectionStatus(persisted('dev-a', 'personal'))).toBe('checking');
+    expect(getIdleConnectionStatus(device('dev-a', 'personal', 0))).toBe('offline');
   });
 });

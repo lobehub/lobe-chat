@@ -57,3 +57,15 @@ export const getWorkspaceConnectionState = (
 
   return count ? 'connected' : 'disconnected';
 };
+
+/**
+ * What a device with no live connection says about it.
+ *
+ * Returns:
+ * - `checking` for a persisted row the server has not confirmed yet
+ *   (`onlineUnknown`): its empty channels are a placeholder, not "offline"
+ * - `offline` once the server reported the device without a connection
+ */
+export const getIdleConnectionStatus = (
+  device: Pick<DeviceListItem, 'onlineUnknown'>,
+): 'checking' | 'offline' => (device.onlineUnknown ? 'checking' : 'offline');
