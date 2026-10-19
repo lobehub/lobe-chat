@@ -12,6 +12,7 @@ import { FileService } from '@/server/services/file';
 
 import { resolveSystemAgentModelConfig } from '../systemAgent/modelConfig';
 import { MeetingTranscriptionError, toMeetingErrorCode, toMeetingErrorMessage } from './errors';
+import { MeetingMinutesService } from './minutes';
 import { transcribeRecording } from './transcribeRecording';
 
 const log = debug('lobe-server:meeting-transcription');
@@ -33,7 +34,8 @@ const toLanguage = (language: string) => (language === 'auto' ? undefined : lang
  * Server side of meeting transcription.
  *
  * - `refine` transcribes the stored recording end to end (speakers +
- *   timestamps) and replaces the meeting's refined transcript.
+ *   timestamps), replaces the meeting's refined transcript, then generates
+ *   the minutes from it (`MeetingMinutesService`).
  * - `transcribeLiveChunk` drafts one slice of a recording in progress where
  *   no realtime gateway is deployed, and stores it as a realtime segment.
  *
@@ -51,8 +53,9 @@ export class MeetingTranscriptionService {
   }
 
   /**
-   * Run the refine pass. Returns the meeting afterwards — `ready`, or `failed`
-   * with `error` naming what to fix — or `undefined` when it is not the
+   * Run the refine pass, then the minutes. Returns the meeting afterwards —
+   * `ready` (with `error.stage = 'minutes'` if only the minutes failed), or
+   * `failed` with `error` naming what to fix — or `undefined` when it is not the
    * caller's. Throws `MeetingStateError` while the meeting is still recording.
    */
   async refine(meetingId: string) {
@@ -81,9 +84,8 @@ export class MeetingTranscriptionService {
       });
 
       const seqSegments = segments.map((segment, seq) => ({ ...segment, seq }));
-      const updated = await this.meetingModel.completeRefine(meetingId, seqSegments);
+      await this.meetingModel.completeRefine(meetingId, seqSegments, { next: 'summarizing' });
       log('refine %s: %d segments in %dms', meetingId, seqSegments.length, Date.now() - startedAt);
-      return updated;
     } catch (error) {
       const meetingError: MeetingError = {
         code: toMeetingErrorCode(error),
@@ -93,6 +95,9 @@ export class MeetingTranscriptionService {
       console.error('[meeting:refine] failed', meetingId, meetingError);
       return this.meetingModel.failRefine(meetingId, meetingError);
     }
+
+    // The final transcript is in: write the minutes from it straight away.
+    return new MeetingMinutesService(this.db, this.userId, this.workspaceId).generate(meetingId);
   }
 
   /**
@@ -184,3 +189,4 @@ export class MeetingTranscriptionService {
 }
 
 export { MeetingTranscriptionError } from './errors';
+export { MeetingMinutesService } from './minutes';

@@ -1,6 +1,7 @@
 import {
   FileSource,
   MEETING_ACTION_ITEM_STATUSES,
+  MEETING_ASSIGNEE_TYPES,
   MEETING_LANGUAGES,
   MEETING_PLATFORMS,
   MEETING_REALTIME_PROVIDERS,
@@ -24,6 +25,7 @@ import { serverDatabase } from '@/libs/trpc/lambda/middleware';
 import { FileService } from '@/server/services/file';
 import {
   MAX_LIVE_CHUNK_BASE64_CHARS,
+  MeetingMinutesService,
   MeetingTranscriptionError,
   MeetingTranscriptionService,
 } from '@/server/services/meeting';
@@ -38,6 +40,7 @@ const meetingProcedure = wsCompatProcedure.use(serverDatabase).use(async (opts) 
       fileModel: new FileModel(ctx.serverDB, ctx.userId, workspaceId),
       fileService: new FileService(ctx.serverDB, ctx.userId, workspaceId),
       meetingModel: new MeetingModel(ctx.serverDB, ctx.userId, workspaceId),
+      minutesService: new MeetingMinutesService(ctx.serverDB, ctx.userId, workspaceId),
       transcriptionService: new MeetingTranscriptionService(ctx.serverDB, ctx.userId, workspaceId),
     },
   });
@@ -73,17 +76,24 @@ const segmentInput = z
 
 const segmentIds = z.array(z.string()).max(200);
 
+const assigneeRef = z.object({ id: z.string().min(1), type: z.enum(MEETING_ASSIGNEE_TYPES) });
+/** `YYYY-MM-DD`, the only deadline format minutes store. */
+const dueDate = z.string().regex(/^\d{4}-\d{2}-\d{2}$/);
+
 const minutesInput = z.object({
   actionItems: z
     .array(
       z.object({
+        assignee: assigneeRef.extend({ name: z.string().max(255) }).optional(),
         assigneeHint: z.string().max(255).optional(),
         dueDate: z.string().max(64).optional(),
         id: z.string().min(1).max(64),
         segmentIds,
         speakerLabel: z.string().max(64).optional(),
+        startMs: offsetMs.optional(),
         status: z.enum(MEETING_ACTION_ITEM_STATUSES),
         taskId: z.string().max(64).optional(),
+        taskIdentifier: z.string().max(64).optional(),
         text: z.string().min(1).max(2000),
       }),
     )
@@ -117,6 +127,8 @@ const TRANSCRIPTION_ERROR_STATUS = {
   provider_not_configured: 'PRECONDITION_FAILED',
   provider_unavailable: 'SERVICE_UNAVAILABLE',
   quota_exceeded: 'TOO_MANY_REQUESTS',
+  summarization_failed: 'INTERNAL_SERVER_ERROR',
+  transcript_empty: 'BAD_REQUEST',
   transcription_failed: 'INTERNAL_SERVER_ERROR',
 } as const;
 
@@ -278,6 +290,65 @@ export const meetingRouter = router({
         fail(error, 'transcribe');
       }
     }),
+
+  /** Members and agents an action item can be assigned to, for the confirmation list. */
+  assigneeCandidates: meetingProcedure.query(async ({ ctx }) => {
+    try {
+      const candidates = await ctx.minutesService.listAssigneeCandidates();
+      return {
+        data: candidates.map(({ avatar, id, name, type }) => ({ avatar, id, name, type })),
+        success: true,
+      };
+    } catch (error) {
+      fail(error, 'list assignees of');
+    }
+  }),
+
+  /**
+   * Turn confirmed action items into LobeHub tasks with the text, assignee
+   * and deadline the user confirmed. Created tasks are linked back into the
+   * minutes; items that failed are reported and stay suggested for a retry.
+   */
+  createTasks: meetingWriteProcedure
+    .input(
+      z.object({
+        items: z
+          .array(
+            z.object({
+              assignee: assigneeRef.nullish(),
+              dueDate: dueDate.nullish(),
+              id: z.string().min(1).max(64),
+              text: z.string().trim().min(1).max(2000),
+            }),
+          )
+          .min(1)
+          .max(100),
+        meetingId: z.string().min(1),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      try {
+        const data = await ctx.minutesService.createTasks(input.meetingId, input.items);
+        if (!data) throw notFound();
+        return { data, message: 'Tasks created', success: true };
+      } catch (error) {
+        fail(error, 'create tasks from');
+      }
+    }),
+
+  /**
+   * (Re)generate the minutes from the final transcript. Resolves with the
+   * meeting: `ready`, with `error.stage = 'minutes'` when generation failed.
+   */
+  generateMinutes: meetingWriteProcedure.input(idInput).mutation(async ({ ctx, input }) => {
+    try {
+      const data = await ctx.minutesService.generate(input.id);
+      if (!data) throw notFound();
+      return { data, message: 'Minutes generated', success: true };
+    } catch (error) {
+      fail(error, 'generate minutes of');
+    }
+  }),
 
   /** Delete the meeting, its transcript and minutes, and reclaim its uploaded audio. */
   delete: meetingWriteProcedure.input(idInput).mutation(async ({ ctx, input }) => {

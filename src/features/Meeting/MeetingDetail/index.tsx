@@ -173,7 +173,7 @@ const MeetingBody = ({ meeting }: { meeting: MeetingDetail }) => {
         />
       </div>
       <div className={styles.side}>
-        <Minutes minutes={meeting.minutes} segmentStarts={segmentStarts} onSeek={onSeek} />
+        <Minutes meeting={meeting} segmentStarts={segmentStarts} onSeek={onSeek} />
       </div>
     </div>
   );

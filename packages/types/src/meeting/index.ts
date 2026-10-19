@@ -50,15 +50,16 @@ export type MeetingSegmentSource = (typeof MEETING_SEGMENT_SOURCES)[number];
 export const MEETING_VISIBILITIES = ['private', 'public'] as const;
 export type MeetingVisibility = (typeof MEETING_VISIBILITIES)[number];
 
-/** Pipeline stage a meeting failed in; later stages (e.g. minutes) extend this list. */
-export const MEETING_ERROR_STAGES = ['refine'] as const;
+/** Pipeline stage a meeting failed in: the refine transcript, or the minutes generated from it. */
+export const MEETING_ERROR_STAGES = ['refine', 'minutes'] as const;
 export type MeetingErrorStage = (typeof MEETING_ERROR_STAGES)[number];
 
 /**
  * Why a post-recording stage failed, chosen so the UI can say what to fix:
  * `provider_not_configured` → set up the transcription model / key,
  * `quota_exceeded` → top up or wait, `provider_unavailable` → retry later,
- * `audio_missing` / `audio_unsupported` → the recording itself is unusable.
+ * `audio_missing` / `audio_unsupported` → the recording itself is unusable,
+ * `transcript_empty` → nothing was said that minutes could cover.
  */
 export const MEETING_ERROR_CODES = [
   'audio_missing',
@@ -66,6 +67,8 @@ export const MEETING_ERROR_CODES = [
   'provider_not_configured',
   'provider_unavailable',
   'quota_exceeded',
+  'summarization_failed',
+  'transcript_empty',
   'transcription_failed',
 ] as const;
 export type MeetingErrorCode = (typeof MEETING_ERROR_CODES)[number];
@@ -96,8 +99,20 @@ export interface MeetingDecision {
 export const MEETING_ACTION_ITEM_STATUSES = ['suggested', 'created', 'dismissed'] as const;
 export type MeetingActionItemStatus = (typeof MEETING_ACTION_ITEM_STATUSES)[number];
 
+export const MEETING_ASSIGNEE_TYPES = ['user', 'agent'] as const;
+export type MeetingAssigneeType = (typeof MEETING_ASSIGNEE_TYPES)[number];
+
+/** Who an action item goes to: a workspace member or an agent, with the name shown at the time. */
+export interface MeetingAssignee {
+  id: string;
+  name: string;
+  type: MeetingAssigneeType;
+}
+
 /** A to-do extracted from the meeting; becomes a LobeHub task once confirmed. */
 export interface MeetingActionItem {
+  /** Member or agent the item is assigned to: matched from `assigneeHint`, or picked by the user. */
+  assignee?: MeetingAssignee;
   /** Free-text owner the transcript names ("Alice", "我"), before it is mapped to a member. */
   assigneeHint?: string;
   /** ISO date the transcript gives as the deadline, when it gives one. */
@@ -107,8 +122,24 @@ export interface MeetingActionItem {
   segmentIds: string[];
   /** Speaker label that took the item, when the transcript attributes one. */
   speakerLabel?: string;
+  /**
+   * Offset of the passage the item was taken from. Kept beside `segmentIds` so
+   * the citation survives a later refine pass that replaces the segments.
+   */
+  startMs?: number;
   status: MeetingActionItemStatus;
   /** The task created from this item, once `status` is `created`. */
   taskId?: string;
+  /** Identifier of that task (`T-12`), for the link shown in the minutes. */
+  taskIdentifier?: string;
   text: string;
+}
+
+/** Meeting preferences of a user (`users.preference.meeting`). */
+export interface UserMeetingPreference {
+  /**
+   * Create tasks from every action item as soon as the minutes are generated,
+   * instead of waiting for the user to confirm the list. Off by default.
+   */
+  autoCreateTasks?: boolean;
 }

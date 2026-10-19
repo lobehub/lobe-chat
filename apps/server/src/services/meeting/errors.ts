@@ -43,11 +43,14 @@ const readErrorType = (error: unknown): string | undefined => {
 };
 
 /**
- * Turn a transcription failure into the code the meeting UI acts on. Provider
+ * Turn a transcription or minutes failure into the code the meeting UI acts on. Provider
  * errors arrive as runtime payloads (`{ errorType, error }`); billing gates of
  * hosted deployments name budgets or quotas in their type.
  */
-export const toMeetingErrorCode = (error: unknown): MeetingErrorCode => {
+export const toMeetingErrorCode = (
+  error: unknown,
+  fallback: MeetingErrorCode = 'transcription_failed',
+): MeetingErrorCode => {
   if (error instanceof MeetingTranscriptionError) return error.code;
 
   const errorType = readErrorType(error);
@@ -57,7 +60,7 @@ export const toMeetingErrorCode = (error: unknown): MeetingErrorCode => {
     if (UNAVAILABLE.has(errorType)) return 'provider_unavailable';
   }
 
-  return 'transcription_failed';
+  return fallback;
 };
 
 /** Short detail kept next to the code for support; never contains credentials. */

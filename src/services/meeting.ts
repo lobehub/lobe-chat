@@ -1,4 +1,6 @@
 import type {
+  MeetingActionItem,
+  MeetingAssigneeType,
   MeetingLanguage,
   MeetingPlatform,
   MeetingRealtimeProvider,
@@ -21,6 +23,13 @@ export interface MeetingSegmentParams {
   endMs: number;
   seq: number;
   startMs: number;
+  text: string;
+}
+
+export interface CreateMeetingTaskItem {
+  assignee?: { id: string; type: MeetingAssigneeType } | null;
+  dueDate?: string | null;
+  id: string;
   text: string;
 }
 
@@ -72,9 +81,27 @@ class MeetingService {
   }) => (await lambdaClient.meeting.transcribeLive.mutate(params)).data;
 
   refine = async (id: string) => (await lambdaClient.meeting.refine.mutate({ id })).data;
+
+  /** (Re)generate the minutes from the final transcript. */
+  generateMinutes = async (id: string) =>
+    (await lambdaClient.meeting.generateMinutes.mutate({ id })).data;
+
+  /** Members and agents an action item can be assigned to. */
+  assigneeCandidates = async () => (await lambdaClient.meeting.assigneeCandidates.query()).data;
+
+  /** Turn confirmed action items into tasks; created tasks are linked back into the minutes. */
+  createTasks = async (meetingId: string, items: CreateMeetingTaskItem[]) =>
+    (await lambdaClient.meeting.createTasks.mutate({ items, meetingId })).data;
+
+  /** Replace the action items, e.g. after dismissing or restoring one. */
+  saveActionItems = (meetingId: string, actionItems: MeetingActionItem[]) =>
+    lambdaClient.meeting.saveMinutes.mutate({ actionItems, meetingId });
 }
 
 export const meetingService = new MeetingService();
 
 export type MeetingListItem = Awaited<ReturnType<MeetingService['list']>>[number];
 export type MeetingDetail = NonNullable<Awaited<ReturnType<MeetingService['detail']>>>;
+export type MeetingAssigneeCandidate = Awaited<
+  ReturnType<MeetingService['assigneeCandidates']>
+>[number];

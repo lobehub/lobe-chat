@@ -17,11 +17,15 @@ const RefineErrorAlert = ({ code, loading, onRetry }: RefineErrorAlertProps) => 
   const { t } = useTranslation('meeting');
   const navigate = useWorkspaceAwareNavigate();
   const retryable = code !== 'audio_missing' && code !== 'audio_unsupported';
+  // Minutes-stage codes never reach a refine failure; they read as the generic one.
+  const description = t(`refine.error.${code}`, {
+    defaultValue: t('refine.error.transcription_failed'),
+  });
 
   return (
     <Alert
       data-testid="meeting-refine-error"
-      description={t(`refine.error.${code}`)}
+      description={description}
       title={t('refine.error.title')}
       type={'error'}
       action={

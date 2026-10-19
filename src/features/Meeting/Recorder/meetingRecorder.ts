@@ -105,6 +105,7 @@ export const meetingRecorder = new MeetingRecorderController({
     create: meetingService.create,
     finish: meetingService.finish,
     pause: meetingService.pause,
+    refine: meetingService.refine,
     resume: meetingService.resume,
   },
   createAudioRecorder,

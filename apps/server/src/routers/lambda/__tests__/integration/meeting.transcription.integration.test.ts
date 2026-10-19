@@ -41,6 +41,21 @@ vi.mock('@/server/modules/ModelRuntime', () => ({
   initModelRuntimeFromDB: (...args: unknown[]) => initModelRuntimeFromDB(...(args as [])),
 }));
 
+// Refine chains into minutes generation; covered in meeting.minutes.integration.test.ts.
+vi.mock('@/server/services/aiGeneration', () => ({
+  AiGenerationService: vi.fn(function () {
+    return {
+      generateObject: async () => ({
+        actionItems: [],
+        chapters: [],
+        decisions: [],
+        keywords: [],
+        summary: 'Weekly sync.',
+      }),
+    };
+  }),
+}));
+
 const context = (userId: string) => ({ jwtPayload: { userId }, userId });
 
 const diarized = {
