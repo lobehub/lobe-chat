@@ -392,7 +392,14 @@ export class DocumentActionImpl {
     if (currentActiveId && currentActiveId !== documentId) return;
 
     if (this.#get().documents[documentId]) {
-      this.#get().reconcileRemote(documentId, document);
+      // A read that lands while our own save is in flight (e.g. a focus
+      // revalidation after a tab switch) carries the row that save is writing,
+      // not the edits typed since. Adopting it would wipe those edits from the
+      // editor; the save's response settles the version instead, and a real
+      // concurrent writer still surfaces through the save's CONFLICT retry.
+      if (!this.#get().getPendingSave(documentId)) {
+        this.#get().reconcileRemote(documentId, document);
+      }
       if (sourceType === 'notebook' && topicId) {
         this.#rememberTopicDocument(topicId, documentId);
       }

@@ -200,6 +200,46 @@ describe('document detail replica', () => {
     });
   });
 
+  it('keeps edits typed during an in-flight save when a focus revalidation lands', async () => {
+    vi.mocked(documentService.getDocumentById).mockResolvedValue(documentRow() as any);
+    let settleSave!: () => void;
+    vi.mocked(documentService.updateDocument).mockReturnValue(
+      new Promise((resolve) => {
+        settleSave = () =>
+          resolve({ historyAppended: false, id: 'doc-1', updatedAt: '2026-01-03T00:00:00.000Z' });
+      }) as any,
+    );
+    const editor = createEditor();
+    const { result } = renderDocument('doc-1', editor);
+
+    await waitFor(() => expect(useDocumentStore.getState().documents['doc-1']).toBeDefined());
+    act(() => useDocumentStore.getState().handleContentChange());
+    const save = useDocumentStore.getState().performSave('doc-1');
+    await waitFor(() => expect(documentService.updateDocument).toHaveBeenCalled());
+
+    // The server already committed the save, but its response has not arrived:
+    // the read returns that row, which lacks what was typed since.
+    vi.mocked(documentService.getDocumentById).mockResolvedValue(
+      documentRow({
+        content: '# Draft without the latest edits',
+        updatedAt: new Date('2026-01-03T00:00:00.000Z'),
+      }) as any,
+    );
+    await act(async () => {
+      await result.current.mutate();
+    });
+
+    expect(useDocumentStore.getState().documents['doc-1']).toMatchObject({
+      content: '# Draft',
+      isDirty: true,
+    });
+
+    await act(async () => {
+      settleSave();
+      await save;
+    });
+  });
+
   it('ignores a replayed row older than the version saved since', async () => {
     vi.mocked(documentService.getDocumentById).mockResolvedValue(documentRow() as any);
     vi.mocked(documentService.updateDocument).mockResolvedValue({
