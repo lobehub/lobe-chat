@@ -2,6 +2,7 @@ import { createStaticStyles, Flexbox } from '@lobehub/ui';
 import { memo } from 'react';
 
 import { useHomeUsageWidgetActive } from '@/business/client/features/HomeUsageWidget';
+import MeetingHomeEntry from '@/features/Meeting/HomeEntry';
 import NavHeader from '@/features/NavHeader';
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
@@ -39,6 +40,7 @@ const HomeNavHeader = memo(() => {
       right={
         isLogin && isStatusInit ? (
           <Flexbox horizontal align={'center'} gap={4}>
+            <MeetingHomeEntry />
             <CustomizeButton />
             {canHostRail(hiddenWidgets, usageActive) && (
               <RailToggle railVisible={showHomeRail} onToggle={toggleHomeRail} />
