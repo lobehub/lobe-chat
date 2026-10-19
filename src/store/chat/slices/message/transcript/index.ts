@@ -173,6 +173,16 @@ const createMessageTranscript = (set: StoreSetter<ChatStore>, get: () => ChatSto
     for (const message of messages) unconfirmedClientIds.delete(message.id);
   };
 
+  /**
+   * The server acknowledged persisting these client rows without returning a
+   * snapshot. Reads issued before the acknowledgement may still miss them; a
+   * later one that omits them is authoritative.
+   */
+  const confirmPersistedRows = (ids: string[]) => {
+    markServerKnown(ids);
+    forgetClientRows(ids);
+  };
+
   /** Client rows that no longer exist locally (deleted, removed or remapped). */
   const forgetClientRows = (ids: Iterable<string>) => {
     for (const id of ids) unconfirmedClientIds.delete(id);
@@ -533,6 +543,7 @@ const createMessageTranscript = (set: StoreSetter<ChatStore>, get: () => ChatSto
 
   return {
     commit,
+    confirmPersistedRows,
     confirmServerRows,
     /** @internal Test/debug view of the ids a stale read may still preserve. */
     debugUnconfirmedClientIds: () => [...unconfirmedClientIds],

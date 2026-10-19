@@ -9,6 +9,7 @@ import { ClientMessageTransport } from './ClientMessageTransport';
 const createStore = () =>
   ({
     dbMessagesMap: { 'message-key': [] },
+    internal_confirmClientMessages: vi.fn(),
     internal_dispatchMessage: vi.fn(),
     operations: {
       'operation-1': {
@@ -137,6 +138,8 @@ describe('ClientMessageTransport', () => {
     expect(messageService.batchMutate).toHaveBeenCalledWith([
       { message: { ...params, id: message.id }, type: 'createMessage' },
     ]);
+    // The quiet write returns no snapshot, so the acknowledgement confirms the row.
+    expect(store.internal_confirmClientMessages).toHaveBeenCalledWith([message.id]);
     expect(store.optimisticCreateMessage).not.toHaveBeenCalled();
     expect(store.replaceMessages).not.toHaveBeenCalled();
   });
@@ -201,6 +204,7 @@ describe('ClientMessageTransport', () => {
         role: 'assistant',
       }),
     ).rejects.toThrow('Failed to create assistant message');
+    expect(store.internal_confirmClientMessages).not.toHaveBeenCalled();
 
     expect(store.internal_dispatchMessage).toHaveBeenLastCalledWith(
       expect.objectContaining({

@@ -189,6 +189,7 @@ export class ClientMessageTransport implements MessageTransport {
       );
       throw createError;
     }
+    store.internal_confirmClientMessages([id]);
 
     return message;
   }

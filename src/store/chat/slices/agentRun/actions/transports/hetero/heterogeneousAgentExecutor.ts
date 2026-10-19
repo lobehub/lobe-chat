@@ -995,6 +995,7 @@ export const executeHeterogeneousAgent = async (
       messageService as { batchMutate?: (operations: MessageBatchOperation[]) => Promise<any> }
     ).batchMutate,
     createMessage: messageService.createMessage,
+    onCreated: get().internal_confirmClientMessages,
     updateMessage: messageService.updateMessage,
     updateToolMessage: messageService.updateToolMessage,
   });

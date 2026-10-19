@@ -105,6 +105,12 @@ export class MessageInternalsActionImpl {
     });
   };
 
+  /** The server persisted these client-created rows (a quiet write, no snapshot back). */
+  internal_confirmClientMessages = (ids: string[]): void => {
+    if (ids.length === 0) return;
+    getMessageTranscript(this.#set, this.#get).confirmPersistedRows(ids);
+  };
+
   internal_traceMessage = async (id: string, payload: TraceEventPayloads): Promise<void> => {
     // tracing the diff of update
     const message = displayMessageSelectors.getDisplayMessageById(id)(this.#get());
