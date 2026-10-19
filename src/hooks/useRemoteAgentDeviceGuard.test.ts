@@ -129,6 +129,33 @@ describe('useRemoteAgentDeviceGuard', () => {
     await waitFor(() => expect(result.current.status).toBe('ok'));
   });
 
+  it('allows sending when a refresh fails over a confirmed offline row', async () => {
+    mockedUseEffectiveAgencyConfig.mockReturnValue({
+      agencyConfig: {
+        boundDeviceId: 'my-device',
+        executionTarget: 'device',
+        heterogeneousProvider: { type: 'claude-code' },
+      },
+      canDisplayExecutionTarget: true,
+      canSelectExecutionTarget: true,
+      isPreferenceLoading: false,
+      workspaceScoped: false,
+    });
+    mockedListDevices.mockResolvedValue([{ deviceId: 'my-device', online: false }] as never);
+
+    const { result } = renderHook(() => useRemoteAgentDeviceGuard({ agentId: 'agent-1' }), {
+      wrapper,
+    });
+    await waitFor(() => expect(result.current.status).toBe('device-offline'));
+
+    // A focus / manual re-check that cannot reach the server must not keep the
+    // composer blocked on the earlier answer.
+    mockedListDevices.mockRejectedValue(new Error('network down'));
+    act(() => result.current.refresh());
+
+    await waitFor(() => expect(result.current.status).toBe('ok'));
+  });
+
   it('checks the EFFECTIVE bound device (with the caller override merged)', async () => {
     // The workspace-shared row points at the creator's (offline) machine; the
     // caller's override picks their own online device — the guard must probe

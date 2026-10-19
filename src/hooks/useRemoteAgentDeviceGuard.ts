@@ -66,10 +66,11 @@ export const useRemoteAgentDeviceGuard = ({
     // flash an offline banner for a device this member never picked.
     if (!enabled || isPreferenceLoading) return 'checking';
     if (!boundDeviceId) return 'no-device';
-    if (!isListConfirmed || (device && isDevicePresenceUnknown(device))) {
-      // On error, allow sending — don't block the user on network issues.
-      return deviceListError ? 'ok' : 'checking';
-    }
+    // The last list request failed: whatever presence the store still holds
+    // (stored copy or an earlier answer) may be stale. Allow sending rather
+    // than block the user on a network issue.
+    if (deviceListError) return 'ok';
+    if (!isListConfirmed || (device && isDevicePresenceUnknown(device))) return 'checking';
     // A shared/legacy binding may point at the author's personal principal,
     // which is intentionally absent from the caller-scoped device list. The
     // server owns that routing decision; absence here is not proof of offline.
