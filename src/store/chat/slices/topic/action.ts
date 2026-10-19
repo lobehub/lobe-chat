@@ -29,7 +29,6 @@ import {
   recordLens,
   type ReplicaPageResult,
   type ReplicaSyncResult,
-  singleEntity,
 } from '@/libs/replica';
 import { mutate, useClientDataSWRWithSync } from '@/libs/swr';
 import { cronKeys, deviceKeys, topicKeys } from '@/libs/swr/keys';
@@ -75,12 +74,12 @@ import {
   normalizeTopicListParams,
   type TopicAgentViewParams,
   topicAgentViewResource,
-  topicDetailResource,
   type TopicListParams,
   topicListResource,
 } from './projection';
 import { type ChatTopicDispatch } from './reducer';
 import { topicSelectors } from './selectors';
+import { createTopicDetailSlice, RUN_WATCH_INTERVAL } from './topicDetail';
 
 const n = setNamespace('t');
 
@@ -267,16 +266,14 @@ export class ChatTopicActionImpl {
       view: recordLens<ChatStore, TopicData>('agentTopicsViewMap'),
       viewFields: ({ withDetails }) => ({ withDetails }),
     });
-    this.#topicDetail = createReplicaSlice(topicDetailResource, {
-      actionPrefix: n('topicDetail'),
-      entity: singleEntity<ChatTopic>((topic) => topic.id),
-      fetcher: (topicId) => topicService.getTopicDetail(topicId),
+    this.#topicDetail = createTopicDetailSlice({
       get,
-      // A missing topic keeps whatever is cached (the list may still hold it).
-      merge: (topic, confirmed) => (!topic || isEqual(topic, confirmed) ? undefined : topic),
+      onRunningOperation: (fresh) =>
+        this.#topicEntity.update(fresh.id, (topic) => ({
+          ...topic,
+          metadata: { ...topic.metadata, runningOperation: fresh.metadata!.runningOperation },
+        })),
       set,
-      stateKey: 'topicDetailReplica',
-      view: recordLens<ChatStore, ChatTopic>('topicDetailMap'),
     });
     this.#topicEntity = linkReplicaEntity<ChatTopic>([
       this.#topicList,
@@ -1455,16 +1452,15 @@ export class ChatTopicActionImpl {
     return this.#topicList.hydrate(normalized, scope);
   };
 
-  /**
-   * By-id topic detail fetch, used as a fallback when a topic the UI is
-   * anchored on is missing from the loaded list bucket — e.g. an archived
-   * (`completed`) topic that the sidebar fetch excludes via `excludeStatuses`,
-   * or a topic deep-linked from the Topics management page. The result lands
-   * in `topicDetailMap`, which `currentActiveTopic` / `getTopicById` read as
-   * a fallback. Pass `undefined` to disable the fetch.
-   */
-  useFetchTopicDetail = (topicId?: string | null): ReplicaSyncResult =>
-    this.#topicDetail.useSync(topicId || null);
+  /** By-id details and background run discovery. An absent id disables the read. */
+  useFetchTopicDetail = (topicId?: string | null, watchRuns = false): ReplicaSyncResult =>
+    this.#topicDetail.useSync(topicId || null, {
+      dedupingInterval: 1000,
+      focusThrottleInterval: 5000,
+      refreshInterval: watchRuns ? RUN_WATCH_INTERVAL : 0,
+      refreshWhenHidden: false,
+      refreshWhenOffline: false,
+    });
 
   /**
    * Topic fetch dedicated to the Agent Topics management page. Its own
