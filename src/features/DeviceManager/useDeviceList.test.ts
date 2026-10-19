@@ -1,0 +1,160 @@
+/**
+ * @vitest-environment happy-dom
+ *
+ * `useDeviceList` reads the device store's replica: every device surface shares
+ * one request per scope, and a reload paints the persisted list (presence
+ * unknown) before the server answers.
+ */
+import { randomUUID } from 'node:crypto';
+
+import type { DeviceListItem } from '@lobechat/types';
+import { act, renderHook, waitFor } from '@testing-library/react';
+import type { PropsWithChildren } from 'react';
+import { createElement, useEffect } from 'react';
+import { SWRConfig, useSWRConfig } from 'swr';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+
+import { cacheScope } from '@/libs/replica';
+import { setScopedMutate } from '@/libs/swr/mutate';
+import { deviceService } from '@/services/device';
+import { useDeviceStore } from '@/store/device';
+import { initialState } from '@/store/device/initialState';
+import { deviceListResource } from '@/store/device/projection';
+import { useUserStore } from '@/store/user';
+
+import { isDevicePresenceUnknown, useDeviceList } from './useDeviceList';
+
+vi.mock('@/services/device', () => ({
+  deviceService: { listDevices: vi.fn(), updateDevice: vi.fn() },
+}));
+
+const MutateBridge = () => {
+  const { mutate } = useSWRConfig();
+  useEffect(() => setScopedMutate(mutate), [mutate]);
+  return null;
+};
+
+const wrapper = ({ children }: PropsWithChildren) =>
+  createElement(
+    SWRConfig,
+    { value: { dedupingInterval: 0, provider: () => new Map() } },
+    createElement(MutateBridge),
+    children,
+  );
+
+const device = (deviceId: string, overrides: Partial<DeviceListItem> = {}): DeviceListItem => ({
+  channels: [{ channel: 'cli', connectedAt: new Date(0).toISOString() } as never],
+  defaultCwd: `/repo/${deviceId}`,
+  deviceId,
+  enroller: null,
+  friendlyName: `Mac ${deviceId}`,
+  hostname: null,
+  identitySource: 'machine-id',
+  lastSeen: new Date(0).toISOString(),
+  online: true,
+  platform: 'darwin',
+  registered: true,
+  scope: 'personal',
+  visibility: null,
+  workingDirs: [{ path: `/repo/${deviceId}` }],
+  ...overrides,
+});
+
+/** Never-resolving fetch: the first frame can only come from storage. */
+const pending = () => new Promise<never>(() => {});
+
+const ROW_KEY = deviceListResource.storageKey({});
+
+describe('useDeviceList', () => {
+  let scope = '';
+
+  beforeEach(() => {
+    scope = `device-list-user-${randomUUID()}:personal`;
+    vi.spyOn(cacheScope, 'get').mockImplementation(() => scope);
+    vi.spyOn(cacheScope, 'use').mockImplementation(() => scope);
+    vi.spyOn(cacheScope, 'canPersist').mockReturnValue(true);
+    act(() => {
+      useDeviceStore.setState(initialState);
+      useUserStore.setState({ isSignedIn: true });
+    });
+  });
+
+  afterEach(async () => {
+    await deviceListResource.storage!.remove({ queryKey: ROW_KEY, scope });
+    vi.restoreAllMocks();
+    vi.clearAllMocks();
+  });
+
+  it('shares one request with the device store instead of fetching the list twice', async () => {
+    vi.mocked(deviceService.listDevices).mockResolvedValue([device('dev-1')]);
+
+    const { result } = renderHook(
+      () => {
+        // A picker and a working-directory chip mounted side by side.
+        const list = useDeviceList();
+        useDeviceStore((s) => s.useFetchDevices)(true);
+        return list;
+      },
+      { wrapper },
+    );
+
+    await waitFor(() => expect(result.current.data).toEqual([device('dev-1')]));
+    expect(deviceService.listDevices).toHaveBeenCalledTimes(1);
+  });
+
+  it('paints the persisted list without a loading state, presence unknown', async () => {
+    await deviceListResource.storage!.set(
+      { queryKey: ROW_KEY, scope },
+      { data: [device('dev-1')], updatedAt: 1 },
+    );
+    vi.mocked(deviceService.listDevices).mockImplementation(pending);
+
+    const { result } = renderHook(() => useDeviceList(), { wrapper });
+
+    await waitFor(() => expect(result.current.data).toHaveLength(1));
+    expect(result.current.isLoading).toBe(false);
+    const [row] = result.current.data!;
+    expect(row).toMatchObject({ friendlyName: 'Mac dev-1', online: false });
+    // The stored `online: false` is a placeholder, not an offline device.
+    expect(isDevicePresenceUnknown(row)).toBe(true);
+  });
+
+  it('shows a cwd written through the store without waiting for a refetch', async () => {
+    vi.mocked(deviceService.listDevices).mockResolvedValue([device('dev-1')]);
+    // Hold the write open: the optimistic row is what the list must show.
+    vi.mocked(deviceService.updateDevice).mockImplementation(pending);
+
+    const { result } = renderHook(() => useDeviceList(), { wrapper });
+    await waitFor(() => expect(result.current.data).toHaveLength(1));
+
+    act(() => {
+      void useDeviceStore.getState().updateDeviceCwd('dev-1', { path: '/elsewhere' });
+    });
+
+    await waitFor(() => expect(result.current.data?.[0]?.defaultCwd).toBe('/elsewhere'));
+  });
+
+  it('resolves mutate with the refreshed rows', async () => {
+    vi.mocked(deviceService.listDevices).mockResolvedValue([device('dev-1', { online: false })]);
+
+    const { result } = renderHook(() => useDeviceList(), { wrapper });
+    await waitFor(() => expect(result.current.data).toHaveLength(1));
+
+    vi.mocked(deviceService.listDevices).mockResolvedValue([device('dev-1')]);
+    let next: DeviceListItem[] | undefined;
+    await act(async () => {
+      next = await result.current.mutate();
+    });
+
+    expect(next?.[0]?.online).toBe(true);
+  });
+
+  it('stays idle while signed out', () => {
+    act(() => useUserStore.setState({ isSignedIn: false }));
+
+    const { result } = renderHook(() => useDeviceList(), { wrapper });
+
+    expect(result.current).toMatchObject({ data: undefined, isLoading: false });
+    expect(deviceService.listDevices).not.toHaveBeenCalled();
+  });
+});

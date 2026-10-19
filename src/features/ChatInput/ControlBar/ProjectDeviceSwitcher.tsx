@@ -117,6 +117,8 @@ const ProjectDeviceSwitcher = ({
                       offlineLabel={t('heteroAgent.executionTarget.offline')}
                       online={target.online}
                       onlineLabel={t('heteroAgent.executionTarget.online')}
+                      unknown={target.onlineUnknown}
+                      unknownLabel={t('heteroAgent.executionTarget.presenceChecking')}
                     />
                   </span>
                 </>

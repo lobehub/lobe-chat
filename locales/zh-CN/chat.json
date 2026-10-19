@@ -1462,6 +1462,7 @@
   "heteroAgent.executionTarget.onlineConnections_one": "在线 · {{count}} 个连接",
   "heteroAgent.executionTarget.onlineConnections_other": "在线 · {{count}} 个连接",
   "heteroAgent.executionTarget.personalGroup": "私人设备",
+  "heteroAgent.executionTarget.presenceChecking": "正在确认状态…",
   "heteroAgent.executionTarget.projectDevicesHint": "仅列出已绑定此项目工作目录的设备。其他设备可在项目设置中添加目录。",
   "heteroAgent.executionTarget.reconnect": "重新连接",
   "heteroAgent.executionTarget.reconnectFailed": "无法重新连接此设备。请确认桌面端正在运行，然后重试。",

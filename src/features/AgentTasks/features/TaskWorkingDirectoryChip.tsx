@@ -49,9 +49,9 @@ const TaskWorkingDirectoryChip = memo<TaskWorkingDirectoryChipProps>(
     const { t: tDevice } = useTranslation('device');
     const [open, setOpen] = useState(false);
 
-    // Read the canonical device list (the same SWR entry `useTaskRunTarget`
-    // fetches), not the device store: a task page may render nothing that
-    // populates the store, which left the recents empty on a cold load.
+    // `useDeviceList` mounts the device replica's sync itself: a task page may
+    // render nothing else that fetches the list, which left the recents empty
+    // on a cold load.
     const { data: devices } = useDeviceList();
     const device = devices?.find((item) => item.deviceId === deviceId);
     const deviceDefaultCwd = getWorkingDirectoryPathString(device?.defaultCwd ?? undefined);

@@ -1,38 +1,68 @@
 import { isDesktop } from '@lobechat/const';
 import type { DeviceListItem } from '@lobechat/types';
-import type { SWRConfiguration, SWRResponse } from 'swr';
+import { useCallback } from 'react';
 
-import { useClientDataSWR } from '@/libs/swr';
-import { deviceService } from '@/services/device';
+import { useDeviceStore } from '@/store/device';
+import { deviceSelectors } from '@/store/device/selectors';
 import { useUserStore } from '@/store/user';
 import { authSelectors } from '@/store/user/selectors';
 
-import { DEVICE_LIST_SWR_KEY } from './const';
+export interface DeviceListResult {
+  /** Every device of the active scope, or `undefined` until storage or the server answers. */
+  data: DeviceListItem[] | undefined;
+  error: unknown;
+  /** Nothing to show yet: no persisted copy and the first request is in flight. */
+  isLoading: boolean;
+  /** A request is in flight. Never a reason to hide `data`. */
+  isValidating: boolean;
+  /** Re-fetch, then resolve with the rows now in the store. */
+  mutate: () => Promise<DeviceListItem[] | undefined>;
+}
 
 /**
- * Workspace-aware device list. ALWAYS use this (not
- * `lambdaQuery.device.listDevices.useQuery`) for any surface that lists or
- * resolves devices: `useClientDataSWR` augments the cache key with the active
- * workspace id, so switching workspaces re-fetches into a fresh cache entry.
- * The raw TRPC React Query key has no workspace dimension — a list primed in
- * one workspace kept serving a stale pool after switching, and a
- * fetch primed while the workspace was still resolving stuck for the whole
- * session (the DeviceManager fix this generalizes).
+ * The device list, read from the device store's replica. ALWAYS use this (or
+ * `useFetchDevices` + `deviceSelectors`) for any surface that lists or
+ * resolves devices — never `lambdaQuery.device.listDevices` or a second fetch.
+ * One request per scope feeds every reader, and the replica is partitioned by
+ * user + workspace, so switching workspaces never serves the previous pool.
+ *
+ * A reload paints the persisted copy first. Its rows carry `onlineUnknown`
+ * (stored as offline, no channels) until the server confirms them, so a
+ * surface that shows or acts on presence must treat those rows as unknown
+ * rather than offline (`isDevicePresenceUnknown`).
  *
  * Devices come from an authed lambda procedure, so only query once signed in
  * (desktop always queries — it lists the local device's registered cwd).
- *
- * Refresh: `refreshDeviceList()` (`./const`) revalidates every workspace
- * context's entry; the returned `mutate` revalidates just the active one.
  * A live surface that must track presence passes its own `refreshInterval`.
  */
-export const useDeviceList = (
-  config?: Pick<SWRConfiguration, 'refreshInterval'>,
-): SWRResponse<DeviceListItem[]> => {
+export const useDeviceList = (config?: { refreshInterval?: number }): DeviceListResult => {
   const isLogin = useUserStore(authSelectors.isLogin);
-  return useClientDataSWR<DeviceListItem[]>(
-    isLogin || isDesktop ? [DEVICE_LIST_SWR_KEY] : null,
-    () => deviceService.listDevices(),
-    config,
-  );
+  const enabled = isLogin || isDesktop;
+  const { error, isValidating } = useDeviceStore((s) => s.useFetchDevices)(enabled, config);
+  const isLoaded = useDeviceStore(deviceSelectors.isDeviceListLoaded);
+  const devices = useDeviceStore(deviceSelectors.deviceList);
+  const refreshDevices = useDeviceStore((s) => s.refreshDevices);
+
+  const mutate = useCallback(async () => {
+    await refreshDevices();
+    const state = useDeviceStore.getState();
+    return deviceSelectors.isDeviceListLoaded(state)
+      ? deviceSelectors.deviceList(state)
+      : undefined;
+  }, [refreshDevices]);
+
+  return {
+    data: isLoaded ? devices : undefined,
+    error,
+    isLoading: enabled && !isLoaded && !error,
+    isValidating,
+    mutate,
+  };
 };
+
+/**
+ * The row came from the persisted copy and the server has not confirmed it
+ * yet: its `online: false` is a placeholder, not a fact.
+ */
+export const isDevicePresenceUnknown = (device: Pick<DeviceListItem, 'onlineUnknown'>): boolean =>
+  !!device.onlineUnknown;

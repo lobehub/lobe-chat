@@ -878,6 +878,7 @@ export default {
   'heteroAgent.executionTarget.online': 'Online',
   'heteroAgent.executionTarget.onlineConnections_one': 'Online · {{count}} connection',
   'heteroAgent.executionTarget.onlineConnections_other': 'Online · {{count}} connections',
+  'heteroAgent.executionTarget.presenceChecking': 'Checking status…',
   'heteroAgent.executionTarget.projectDevicesHint':
     "Only devices with this project's working directory are listed. Add a directory for another device in the project settings.",
   'heteroAgent.executionTarget.switchProjectTopic.content':

@@ -551,6 +551,7 @@
   "devices.share.viewerHint": "查看者无法共享设备",
   "devices.share.visibilityTag.private": "私人",
   "devices.share.visibilityTag.public": "工作区",
+  "devices.status.checking": "正在确认状态…",
   "devices.status.offline": "离线",
   "devices.status.online": "在线",
   "devices.status.onlineConnections_one": "在线 · {{count}} 个连接",

@@ -39,7 +39,7 @@ import { useActiveWorkspaceId } from '@/business/client/hooks/useActiveWorkspace
 import CommandLine from '@/components/CommandLine';
 import { DOWNLOAD_URL } from '@/const/url';
 import { getDeviceIcon } from '@/features/DeviceManager/getDeviceIcon';
-import { useDeviceList } from '@/features/DeviceManager/useDeviceList';
+import { isDevicePresenceUnknown, useDeviceList } from '@/features/DeviceManager/useDeviceList';
 import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwareNavigate';
 import { deviceService } from '@/services/device';
 import { useAgentStore } from '@/store/agent';
@@ -428,6 +428,9 @@ const ConnectAgentContent = memo<ConnectAgentContentProps>(
       [devices, restrictToWorkspaceDevices],
     );
     const onlineDevices = listedDevices.filter((d) => d.online);
+    // Rows painted from the persisted list until the server confirms presence:
+    // none of them is offline yet, so "no devices" would be a guess.
+    const presencePending = listedDevices.some(isDevicePresenceUnknown);
 
     const deviceLabel = useCallback(
       (device: DeviceListItem) => device.friendlyName || device.hostname || device.deviceId,
@@ -638,7 +641,8 @@ const ConnectAgentContent = memo<ConnectAgentContentProps>(
         hasDevices: listedDevices.length > 0,
         isFetching: isRefreshing,
       });
-      const showEmpty = !isDesktop && !isRefreshing && onlineDevices.length === 0;
+      const showEmpty =
+        !isDesktop && !isRefreshing && !presencePending && onlineDevices.length === 0;
 
       return (
         <Flexbox gap={16} paddingBlock={'16px 8px'}>
@@ -749,9 +753,11 @@ const ConnectAgentContent = memo<ConnectAgentContentProps>(
                             subtitle={device.hostname || device.deviceId}
                             title={deviceLabel(device)}
                             statusText={
-                              device.online
-                                ? t('connectAgent.create.online')
-                                : t('connectAgent.create.offline')
+                              isDevicePresenceUnknown(device)
+                                ? t('heteroAgent.executionTarget.presenceChecking')
+                                : device.online
+                                  ? t('connectAgent.create.online')
+                                  : t('connectAgent.create.offline')
                             }
                             onClick={() => pickTarget({ device, kind: 'device' })}
                           />

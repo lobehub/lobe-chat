@@ -108,6 +108,8 @@ const TaskDeviceChip = memo<TaskDeviceChipProps>(
                 offlineLabel={t('heteroAgent.executionTarget.offline')}
                 online={device.online}
                 onlineLabel={t('heteroAgent.executionTarget.online')}
+                unknown={device.onlineUnknown}
+                unknownLabel={t('heteroAgent.executionTarget.presenceChecking')}
               />
             </div>
           </Flexbox>

@@ -7,6 +7,7 @@ import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import DeviceHoverPanel from '@/features/DeviceManager/DeviceHoverPanel';
+import { isDevicePresenceUnknown } from '@/features/DeviceManager/useDeviceList';
 import { ExecutionTargetDeviceStatus, ExecutionTargetIcon } from '@/features/ExecutionTargetPicker';
 
 import { handleDeviceRowKeyDown } from './deviceRowKeyDown';
@@ -56,6 +57,8 @@ const DeviceOptionRow = ({
   tags,
 }: DeviceOptionRowProps) => {
   const { t } = useTranslation('chat');
+  // A row restored from the persisted list is neither online nor offline yet.
+  const presenceUnknown = isDevicePresenceUnknown(device);
 
   return (
     <Popover
@@ -85,12 +88,14 @@ const DeviceOptionRow = ({
                 <ExecutionTargetDeviceStatus
                   offlineLabel={t('heteroAgent.executionTarget.offline')}
                   online={device.online}
+                  unknown={presenceUnknown}
+                  unknownLabel={t('heteroAgent.executionTarget.presenceChecking')}
                   onlineLabel={t('heteroAgent.executionTarget.onlineConnections', {
                     count: device.channels.length,
                   })}
                 />
               )}
-              {device.online ? null : (
+              {device.online || presenceUnknown ? null : (
                 <Button
                   className={styles.reconnectButton}
                   icon={<Icon icon={RefreshCwIcon} size={10} />}

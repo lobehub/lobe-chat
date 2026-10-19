@@ -158,9 +158,11 @@ const DeviceDetail = memo<DeviceDetailProps>(({ device, isCurrent, onBack }) => 
   // Only the machine you're on can browse its own filesystem natively.
   const canBrowse = !!isCurrent && isDesktop;
 
-  // An empty `device.channels` means offline.
+  // An empty `device.channels` means offline — unless the row is the
+  // persisted copy, whose presence the server has not confirmed yet.
   const channels = device.channels ?? [];
   const online = channels.length > 0;
+  const presenceUnknown = !!device.onlineUnknown;
 
   // Every edit persists immediately — there is no Save button. Name and the
   // default cwd commit on blur; recent-dir add / remove / reorder commit on the
@@ -282,9 +284,11 @@ const DeviceDetail = memo<DeviceDetailProps>(({ device, isCurrent, onBack }) => 
             className={styles.presence}
             style={{ background: online ? cssVar.colorSuccess : cssVar.colorTextQuaternary }}
             title={
-              online
-                ? t('devices.status.onlineConnections', { count: channels.length })
-                : t('devices.status.offline')
+              presenceUnknown
+                ? t('devices.status.checking')
+                : online
+                  ? t('devices.status.onlineConnections', { count: channels.length })
+                  : t('devices.status.offline')
             }
           />
         </span>

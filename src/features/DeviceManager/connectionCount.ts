@@ -11,7 +11,9 @@ import type { DeviceListItem, DeviceScope } from '@lobechat/types';
  * - Device channels were already filtered by the server for the active principal
  *
  * Returns:
- * - The number of live connections in the requested scope and optional device
+ * - The number of live connections in the requested scope and optional device,
+ *   or `undefined` while a matching row is still the persisted copy
+ *   (`onlineUnknown`), whose empty channels are a placeholder, not a count
  */
 export const getScopedConnectionCount = (
   devices: DeviceListItem[] | undefined,
@@ -20,9 +22,12 @@ export const getScopedConnectionCount = (
 ): number | undefined => {
   if (!devices) return undefined;
 
-  return devices
-    .filter((device) => device.scope === scope && (!deviceId || device.deviceId === deviceId))
-    .reduce((count, device) => count + device.channels.length, 0);
+  const matched = devices.filter(
+    (device) => device.scope === scope && (!deviceId || device.deviceId === deviceId),
+  );
+  if (matched.some((device) => device.onlineUnknown)) return undefined;
+
+  return matched.reduce((count, device) => count + device.channels.length, 0);
 };
 
 /**
@@ -46,5 +51,9 @@ export const getWorkspaceConnectionState = (
   if (!devices && error) return 'unavailable';
   if (!devices && isLoading) return 'connecting';
 
-  return getScopedConnectionCount(devices, 'workspace') ? 'connected' : 'disconnected';
+  const count = getScopedConnectionCount(devices, 'workspace');
+  // Persisted rows not yet confirmed by the server: presence is unknown.
+  if (devices && count === undefined) return error ? 'unavailable' : 'connecting';
+
+  return count ? 'connected' : 'disconnected';
 };

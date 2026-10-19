@@ -241,8 +241,8 @@ const DeviceManager = memo<DeviceManagerProps>((props) => {
   const { t } = useTranslation('setting');
   const isWorkspace = scope === 'workspace';
 
-  // Workspace-keyed SWR fetch — the shared hook every device-listing surface
-  // uses (see `useDeviceList` for why the raw TRPC React Query path is wrong).
+  // The device replica every device-listing surface reads (see `useDeviceList`):
+  // a reload paints the persisted cards first, presence pending.
   const { data, isLoading, isValidating, error, mutate } = useDeviceList();
   // `listDevices` is workspace-aware and returns both pools — keep each surface
   // to its own scope (and visibility tab). Ghost rows (`visibility: null`,

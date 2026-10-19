@@ -70,3 +70,32 @@ describe('getWorkspaceConnectionState', () => {
     ).toBe('connected');
   });
 });
+
+describe('persisted rows before the server confirms presence', () => {
+  const persisted = (deviceId: string, scope: DeviceListItem['scope']): DeviceListItem => ({
+    ...device(deviceId, scope, 0),
+    online: false,
+    onlineUnknown: true,
+  });
+
+  /** @example A reload paints the stored list with no channels; that is not "0 connections". */
+  it('reports no count while a matching row is still the persisted copy', () => {
+    expect(getScopedConnectionCount([persisted('workspace-a', 'workspace')], 'workspace')).toBe(
+      undefined,
+    );
+    // An unrelated scope's placeholder does not hide a confirmed count.
+    expect(
+      getScopedConnectionCount(
+        [persisted('workspace-a', 'workspace'), device('personal-a', 'personal', 1)],
+        'personal',
+      ),
+    ).toBe(1);
+  });
+
+  it('reads the workspace as connecting, not disconnected, until presence is confirmed', () => {
+    const devices = [persisted('workspace-a', 'workspace')];
+
+    expect(getWorkspaceConnectionState(devices, false, undefined)).toBe('connecting');
+    expect(getWorkspaceConnectionState(devices, false, new Error('offline'))).toBe('unavailable');
+  });
+});

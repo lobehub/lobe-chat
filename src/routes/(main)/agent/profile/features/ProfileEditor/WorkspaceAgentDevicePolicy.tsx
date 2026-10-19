@@ -112,16 +112,19 @@ interface ExecutionTargetLabelProps {
   offlineLabel: string;
   onlineLabel: string;
   target: DeviceExecutionTarget;
+  unknownLabel: string;
 }
 
 const ExecutionTargetLabel = memo<ExecutionTargetLabelProps>(
-  ({ compact, description, device, label, offlineLabel, onlineLabel, target }) => {
+  ({ compact, description, device, label, offlineLabel, onlineLabel, target, unknownLabel }) => {
     const icon = <ExecutionTargetIcon devicePlatform={device?.platform} target={target} />;
     const secondary = device ? (
       <ExecutionTargetDeviceStatus
         offlineLabel={offlineLabel}
         online={device.online}
         onlineLabel={onlineLabel}
+        unknown={device.onlineUnknown}
+        unknownLabel={unknownLabel}
       />
     ) : (
       description
@@ -210,6 +213,7 @@ const WorkspaceAgentDevicePolicy = memo<WorkspaceAgentDevicePolicyProps>(
           offlineLabel={t('chat:heteroAgent.executionTarget.offline')}
           onlineLabel={t('chat:heteroAgent.executionTarget.online')}
           target={target}
+          unknownLabel={t('chat:heteroAgent.executionTarget.presenceChecking')}
         />
       ),
       [t, targetLabels],
@@ -225,6 +229,7 @@ const WorkspaceAgentDevicePolicy = memo<WorkspaceAgentDevicePolicyProps>(
           offlineLabel={t('chat:heteroAgent.executionTarget.offline')}
           onlineLabel={t('chat:heteroAgent.executionTarget.online')}
           target={'device'}
+          unknownLabel={t('chat:heteroAgent.executionTarget.presenceChecking')}
         />
       ),
       [t],

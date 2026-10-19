@@ -551,6 +551,7 @@
   "devices.share.viewerHint": "Viewers cannot share devices",
   "devices.share.visibilityTag.private": "Private",
   "devices.share.visibilityTag.public": "Workspace",
+  "devices.status.checking": "Checking status…",
   "devices.status.offline": "Offline",
   "devices.status.online": "Online",
   "devices.status.onlineConnections_one": "Online · {{count}} connection",

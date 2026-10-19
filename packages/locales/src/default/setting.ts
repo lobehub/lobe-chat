@@ -828,6 +828,7 @@ export default {
   'devices.share.visibilityTag.private': 'Private',
   'devices.share.visibilityTag.public': 'Workspace',
   'devices.status.offline': 'Offline',
+  'devices.status.checking': 'Checking status…',
   'devices.status.online': 'Online',
   'devices.status.onlineConnections_one': 'Online · {{count}} connection',
   'devices.status.onlineConnections_other': 'Online · {{count}} connections',
