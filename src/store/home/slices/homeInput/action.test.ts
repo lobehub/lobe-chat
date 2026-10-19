@@ -36,13 +36,15 @@ const agentState = vi.hoisted(() => ({
   agentMap: {
     // Personal-mode rows by default; a test flips `workspaceId` on to assert the
     // workspace-shared behaviour.
-    agentBuilder: {} as { workspaceId?: string },
-    groupAgentBuilder: {} as { workspaceId?: string },
-    pageAgent: {} as { workspaceId?: string },
+    'agentBuilder': {} as { workspaceId?: string },
+    'groupAgentBuilder': {} as { workspaceId?: string },
+    'inbox-agent': {} as { workspaceId?: string },
+    'pageAgent': {} as { workspaceId?: string },
   },
   builtinAgentIdMap: {
     'agent-builder': 'agentBuilder',
     'group-agent-builder': 'groupAgentBuilder',
+    'inbox': 'inbox-agent',
     'page-agent': 'pageAgent',
   },
   createAgent: createAgentMock,
@@ -55,6 +57,7 @@ vi.mock('@lobechat/builtin-agents', () => ({
   BUILTIN_AGENT_SLUGS: {
     agentBuilder: 'agent-builder',
     groupAgentBuilder: 'group-agent-builder',
+    inbox: 'inbox',
     pageAgent: 'page-agent',
   },
 }));
@@ -372,7 +375,7 @@ describe('HomeInputActionImpl', () => {
   });
 
   describe('sendAsWrite', () => {
-    it('passes the freshly created document id through the page context', async () => {
+    it('starts the page as Lobe AI with the freshly created document in context', async () => {
       const action = createAction();
 
       await action.sendAsWrite({ message: 'write me a doc' });
@@ -383,25 +386,13 @@ describe('HomeInputActionImpl', () => {
       // explicitly rather than relying on the page editor runtime singleton.
       expect(sendMessageMock).toHaveBeenCalledWith(
         expect.objectContaining({
-          context: { agentId: 'pageAgent', documentId: 'doc-new', scope: 'page' },
+          context: { agentId: 'inbox-agent', documentId: 'doc-new', scope: 'page' },
           message: 'write me a doc',
         }),
       );
     });
 
-    it('keeps syncing model/provider onto a personal page agent', async () => {
-      const action = createAction();
-
-      await action.sendAsWrite({ message: 'write me a doc' });
-
-      expect(updateAgentConfigByIdMock).toHaveBeenCalledWith('pageAgent', {
-        model: 'gpt-4o-mini',
-        provider: 'openai',
-      });
-    });
-
-    it('never writes model/provider onto a workspace-shared page agent', async () => {
-      agentState.agentMap.pageAgent.workspaceId = 'ws-1';
+    it('runs on Lobe AI itself, so no model is copied onto another agent', async () => {
       const action = createAction();
 
       await action.sendAsWrite({ message: 'write me a doc' });
@@ -409,7 +400,7 @@ describe('HomeInputActionImpl', () => {
       expect(updateAgentConfigByIdMock).not.toHaveBeenCalled();
     });
 
-    it('passes the workspace slug to the page agent message context', async () => {
+    it('passes the workspace slug to the page message context', async () => {
       const action = createAction();
 
       await action.sendAsWrite({ message: 'write me a doc', workspaceSlug: 'team' });
@@ -417,7 +408,7 @@ describe('HomeInputActionImpl', () => {
       expect(sendMessageMock).toHaveBeenCalledWith(
         expect.objectContaining({
           context: {
-            agentId: 'pageAgent',
+            agentId: 'inbox-agent',
             documentId: 'doc-new',
             scope: 'page',
             workspaceSlug: 'team',

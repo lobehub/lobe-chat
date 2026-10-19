@@ -175,6 +175,47 @@ export const PageAgentManifest: BuiltinToolManifest = {
         type: 'object',
       },
     },
+
+    // ============ HTML pages ============
+    {
+      description:
+        'Read the current HTML of an HTML page (a page whose body is one self-contained HTML document rendered as a web page). Call this before editing so oldString matches exactly. Only for HTML pages.',
+      name: DocumentApiName.readHtml,
+      parameters: { properties: {}, type: 'object' },
+    },
+    {
+      description:
+        'Edit an HTML page by exact string replacement in its HTML source. oldString must match the current HTML exactly (including whitespace) and occur once, unless replaceAll is true. Prefer this for targeted changes. Only for HTML pages.',
+      name: DocumentApiName.editHtml,
+      parameters: {
+        properties: {
+          newString: { description: 'The replacement text.', type: 'string' },
+          oldString: {
+            description: 'The exact text to replace, copied from readHtml output.',
+            type: 'string',
+          },
+          replaceAll: {
+            default: false,
+            description: 'Replace every occurrence of oldString instead of exactly one.',
+            type: 'boolean',
+          },
+        },
+        required: ['oldString', 'newString'],
+        type: 'object',
+      },
+    },
+    {
+      description:
+        'Replace the whole HTML of an HTML page with a new self-contained HTML document (inline CSS/JS; images as data URIs or public URLs). Use for rewrites; use editHtml for targeted changes. Only for HTML pages.',
+      name: DocumentApiName.writeHtml,
+      parameters: {
+        properties: {
+          html: { description: 'The complete new HTML document.', type: 'string' },
+        },
+        required: ['html'],
+        type: 'object',
+      },
+    },
   ],
   identifier: PageAgentIdentifier,
   meta: {

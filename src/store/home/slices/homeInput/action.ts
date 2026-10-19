@@ -322,33 +322,22 @@ export class HomeInputActionImpl {
     this.#set({ homeInputLoading: true }, false, n('sendAsWrite/start'));
 
     try {
-      const agentState = getAgentStoreState();
-
-      // 1. Get model/provider config from inbox agent
-      const inboxAgentId = builtinAgentSelectors.inboxAgentId(agentState);
-      const inboxConfig = inboxAgentId
-        ? agentSelectors.getAgentConfigById(inboxAgentId)(agentState)
-        : null;
-      const model = inboxConfig?.model;
-      const provider = inboxConfig?.provider;
-
-      // 2. Create new Document
+      // 1. Create new Document
       const newDoc = await documentService.createDocument({
         editorData: '{}',
         fileType: CUSTOM_DOCUMENT_FILE_TYPE,
         title: markdownToTxt(message ?? '').slice(0, 50) || 'Untitled',
       });
 
-      // 3. Navigate to Page
+      // 2. Navigate to Page
       stableWorkspaceAwareNavigate(`/page/${newDoc.id}`);
 
-      // 4. Send the initial page-agent message. Hydrate first to avoid the same
-      // race the agent/group flows hit.
-      const pageAgentId = await ensureBuiltinAgentHydrated(BUILTIN_AGENT_SLUGS.pageAgent);
+      // 3. Send the initial message as Lobe AI, the page copilot; page scope
+      // force-enables the page tool. Hydrate first to avoid the same race the
+      // agent/group flows hit.
+      const copilotAgentId = await ensureBuiltinAgentHydrated(BUILTIN_AGENT_SLUGS.inbox);
 
-      if (pageAgentId) {
-        await syncBuiltinAgentModel(pageAgentId, model, provider);
-
+      if (copilotAgentId) {
         const { sendMessage } = useChatStore.getState();
         await sendMessage({
           // Pass the freshly created document id explicitly. The new PageEditor
@@ -356,7 +345,7 @@ export class HomeInputActionImpl {
           // be bound to the previously open document — relying on its fallback
           // here would scope server-side PageAgent tools to the wrong document.
           context: {
-            agentId: pageAgentId,
+            agentId: copilotAgentId,
             documentId: newDoc.id,
             scope: 'page',
             ...(workspaceSlug ? { workspaceSlug } : {}),
@@ -368,7 +357,7 @@ export class HomeInputActionImpl {
         });
       }
 
-      // 5. Clear mode
+      // 4. Clear mode
       this.#set({ inputActiveMode: null }, false, n('sendAsWrite/clearMode'));
 
       return newDoc.id;

@@ -18,7 +18,19 @@ export const DocumentApiName = {
 
   // Text Operations
   replaceText: 'replaceText',
+
+  // HTML pages (`custom/html`)
+  editHtml: 'editHtml',
+  readHtml: 'readHtml',
+  writeHtml: 'writeHtml',
 };
+
+/** The APIs that apply to an HTML page; every other API applies to a rich-text page. */
+export const HTML_PAGE_API_NAMES: string[] = [
+  DocumentApiName.readHtml,
+  DocumentApiName.editHtml,
+  DocumentApiName.writeHtml,
+];
 
 // ============ State Types for Renders ============
 

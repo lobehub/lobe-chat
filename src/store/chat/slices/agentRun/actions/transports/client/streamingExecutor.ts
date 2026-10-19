@@ -18,6 +18,7 @@ import { PageAgentIdentifier } from '@lobechat/builtin-tool-page-agent';
 import { manualModeExcludeToolIds } from '@lobechat/builtin-tools';
 import {
   getSubAgentChatConfigOverride,
+  HTML_DOCUMENT_FILE_TYPE,
   isDesktop,
   resolveSubAgentChatConfig,
   resolveSubAgentModel,
@@ -60,6 +61,7 @@ import {
 import { type ChatStore } from '@/store/chat/store';
 import { notifyDesktopHumanApprovalRequired } from '@/store/chat/utils/desktopNotification';
 import { messageMapKey } from '@/store/chat/utils/messageMapKey';
+import { getDocumentStoreState } from '@/store/document';
 import { getElectronStoreState } from '@/store/electron';
 import { getGoalStoreState } from '@/store/goal';
 import { getServerConfigStoreState, serverConfigSelectors } from '@/store/serverConfig';
@@ -184,6 +186,16 @@ export class StreamingExecutorActionImpl {
     const operation = operationId ? this.#get().operations[operationId] : undefined;
     const scope = operation?.context.scope;
     const groupId = operation?.context.groupId;
+    // An HTML page renders in a sandboxed frame with no editor mounted: its
+    // page-agent tool keeps only the HTML APIs and no editor content is injected.
+    const pageDocumentId =
+      scope === 'page'
+        ? (operation?.context.documentId ?? pageAgentRuntime.getCurrentDocId())
+        : undefined;
+    const isHtmlPage =
+      !!pageDocumentId &&
+      getDocumentStoreState().documentDetailMap[pageDocumentId]?.document?.fileType ===
+        HTML_DOCUMENT_FILE_TYPE;
 
     // Resolve agent config with builtin agent runtime config merged
     // This ensures runtime plugins (e.g., 'lobe-agent-builder' for Agent Builder) are included
@@ -304,6 +316,7 @@ export class StreamingExecutorActionImpl {
 
     const { enabledToolIds, enabledManifests, tools } = composeEnabledTools({
       context: {
+        isHtmlPage,
         isPageEditorReady: pageAgentRuntime.isReady(),
         scope,
       },
@@ -398,7 +411,7 @@ export class StreamingExecutorActionImpl {
     // Build initialContext for page editor if lobe-page-agent is enabled
     let runtimeInitialContext: RuntimeInitialContext | undefined;
 
-    if (scope === 'page' && enabledToolIds.includes(PageAgentIdentifier)) {
+    if (scope === 'page' && !isHtmlPage && enabledToolIds.includes(PageAgentIdentifier)) {
       try {
         // Get page content context from page agent runtime
         const pageContentContext = pageAgentRuntime.getPageContentContext('both');

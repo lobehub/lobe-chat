@@ -1,3 +1,4 @@
+import { HTML_DOCUMENT_FILE_TYPE } from '@lobechat/const';
 import type {
   EditorRuntime,
   EditTitleArgs,
@@ -7,10 +8,12 @@ import type {
   ReplaceTextArgs,
 } from '@lobechat/editor-runtime';
 import { formatModifyNodesResult } from '@lobechat/editor-runtime';
-import type { BuiltinToolResult, ToolAfterCallContext } from '@lobechat/types';
+import type { BuiltinToolContext, BuiltinToolResult, ToolAfterCallContext } from '@lobechat/types';
 import { BaseExecutor } from '@lobechat/types';
 import debug from 'debug';
 
+import type { EditHtmlArgs, ReadHtmlArgs, WriteHtmlArgs } from '../../html';
+import { applyHtmlEdit, RICH_TEXT_PAGE_TOOL_HINT } from '../../html';
 import type {
   EditTitleState,
   GetPageContentState,
@@ -41,6 +44,11 @@ const PageAgentApiName = {
 
   // Text Operations
   replaceText: 'replaceText',
+
+  // HTML pages
+  editHtml: 'editHtml',
+  readHtml: 'readHtml',
+  writeHtml: 'writeHtml',
 } as const;
 
 const DOCUMENT_WRITING_APIS = new Set<string>([
@@ -48,6 +56,15 @@ const DOCUMENT_WRITING_APIS = new Set<string>([
   PageAgentApiName.editTitle,
   PageAgentApiName.modifyNodes,
   PageAgentApiName.replaceText,
+  PageAgentApiName.editHtml,
+  PageAgentApiName.writeHtml,
+]);
+
+/** HTML pages mount no Lexical editor; these APIs read and write the stored HTML. */
+const HTML_APIS = new Set<string>([
+  PageAgentApiName.readHtml,
+  PageAgentApiName.editHtml,
+  PageAgentApiName.writeHtml,
 ]);
 
 const summarizeError = (error: unknown) => {
@@ -121,7 +138,7 @@ class PageAgentExecutor extends BaseExecutor<typeof PageAgentApiName> {
     // the LLM can still call page-agent APIs against a stale editor ref.
     const baseInvoke = this.invoke;
     this.invoke = async (apiName, params, ctx) => {
-      if (this.hasApi(apiName) && !this.runtime.isReady()) {
+      if (this.hasApi(apiName) && !HTML_APIS.has(apiName) && !this.runtime.isReady()) {
         console.warn('[PageAgentToolCall] blocked: editor not mounted', {
           apiName,
           runtime: getRuntimeDebugSnapshot(this.runtime),
@@ -152,6 +169,72 @@ class PageAgentExecutor extends BaseExecutor<typeof PageAgentApiName> {
       log('[PageAgentExecutor] document revalidation failed', error);
     }
   };
+
+  // ==================== HTML pages ====================
+
+  /**
+   * Read-modify-write of an HTML page's stored HTML. The page renders it in a
+   * sandboxed frame, so there is no editor state to go through: the write lands
+   * on the server and `onAfterCall` revalidates the frame's document.
+   */
+  private runHtml = async (
+    apiName: string,
+    ctx: BuiltinToolContext | undefined,
+    handler: (html: string) => { content: string; html?: string; state: Record<string, unknown> },
+  ): Promise<BuiltinToolResult> => {
+    const documentId = ctx?.documentId ?? this.runtime.getCurrentDocId();
+    if (!documentId) {
+      return {
+        content: 'No page is open for this conversation.',
+        error: { message: 'No page is open for this conversation.', type: 'PageAgentNoDocument' },
+        success: false,
+      };
+    }
+
+    try {
+      const { documentService } = await import('@/services/document');
+      const document = await documentService.getDocumentById(documentId);
+      if (!document) throw new Error(`Page document not found: ${documentId}`);
+      if (document.fileType !== HTML_DOCUMENT_FILE_TYPE) throw new Error(RICH_TEXT_PAGE_TOOL_HINT);
+
+      const { content, html, state } = handler(document.content ?? '');
+      if (html !== undefined)
+        await documentService.updateDocument({ content: html, id: documentId });
+
+      return { content, state: { ...state, documentId }, success: true };
+    } catch (error) {
+      const err = error as Error;
+      console.error(`[PageAgentToolCall] ${apiName}:error`, { error: summarizeError(error) });
+      return {
+        content: err.message,
+        error: { body: error, message: err.message, type: 'PluginServerError' },
+        success: false,
+      };
+    }
+  };
+
+  readHtml = (_params: ReadHtmlArgs, ctx?: BuiltinToolContext) =>
+    this.runHtml(PageAgentApiName.readHtml, ctx, (html) => ({
+      content: html,
+      state: { charCount: html.length, html },
+    }));
+
+  editHtml = (params: EditHtmlArgs, ctx?: BuiltinToolContext) =>
+    this.runHtml(PageAgentApiName.editHtml, ctx, (current) => {
+      const { html, replacementCount } = applyHtmlEdit(current, params);
+      return {
+        content: `Replaced ${replacementCount} occurrence(s) in the page HTML.`,
+        html,
+        state: { charCount: html.length, replacementCount },
+      };
+    });
+
+  writeHtml = (params: WriteHtmlArgs, ctx?: BuiltinToolContext) =>
+    this.runHtml(PageAgentApiName.writeHtml, ctx, () => ({
+      content: `Page HTML replaced (${params.html.length} characters).`,
+      html: params.html,
+      state: { charCount: params.html.length },
+    }));
 
   // ==================== Initialize ====================
 
