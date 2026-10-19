@@ -302,6 +302,8 @@
   "pageEditor.menu.importDocument": "Seite importieren",
   "pageEditor.menu.move": "Verschieben",
   "pageEditor.menu.pin": "Seite anheften",
+  "pageEditor.noAccess.description": "Diese Seite ist privat oder befindet sich in einer Bibliothek, auf die Sie keinen Zugriff haben. Bitten Sie den Ersteller oder einen Bibliotheksmanager um Zugriff.",
+  "pageEditor.noAccess.title": "Sie haben keinen Zugriff auf diese Seite",
   "pageEditor.saveFailed": "Das Speichern der Seite ist fehlgeschlagen. Bitte versuchen Sie es später erneut.",
   "pageEditor.saving": "Speichern...",
   "pageEditor.titlePlaceholder": "Unbenannt",

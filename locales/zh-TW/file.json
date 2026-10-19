@@ -302,6 +302,8 @@
   "pageEditor.menu.importDocument": "匯入文稿",
   "pageEditor.menu.move": "移動",
   "pageEditor.menu.pin": "置頂文稿",
+  "pageEditor.noAccess.description": "此頁面為私人頁面，或位於您無法存取的資料庫中。請向其創建者或資料庫管理員請求存取權限。",
+  "pageEditor.noAccess.title": "您無權訪問此頁面",
   "pageEditor.saveFailed": "無法儲存頁面，請稍後再試",
   "pageEditor.saving": "儲存中...",
   "pageEditor.titlePlaceholder": "無標題",
