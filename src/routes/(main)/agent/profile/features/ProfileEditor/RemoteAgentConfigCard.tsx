@@ -29,6 +29,8 @@ import { deviceService } from '@/services/device';
 import { useAgentStore } from '@/store/agent';
 import { isDevicePresenceUnknown, useDeviceList } from '@/store/device';
 
+import { getBoundDevicePresence } from './boundDevicePresence';
+
 const styles = createStaticStyles(({ css }) => ({
   card: css`
     padding-block: 16px 4px;
@@ -111,10 +113,11 @@ const ChangeDeviceContent = memo<ChangeDeviceContentProps>(
     }, [saving, setCanDismissByClickOutside]);
 
     // The shared device replica (see useDeviceList), partitioned by workspace.
-    const { data: devices, isLoading: loadingDevices } = useDeviceList();
-    // Only online devices are offered, and a persisted row's presence is not
-    // known until the server confirms it — keep the picker loading until then.
-    const presencePending = (devices ?? []).some(isDevicePresenceUnknown);
+    const { data: devices, isConfirmed, isLoading: loadingDevices } = useDeviceList();
+    // Only online devices are offered, and neither a stored row's presence nor
+    // a stored copy's missing rows are known until the server confirms the list
+    // — keep the picker loading until then.
+    const presencePending = !isConfirmed || (devices ?? []).some(isDevicePresenceUnknown);
 
     const onlineDevices = (devices ?? []).filter(
       (d) =>
@@ -278,10 +281,11 @@ const RemoteAgentConfigCard = memo<RemoteAgentConfigCardProps>(
     const platformName = HETEROGENEOUS_TYPE_LABELS[provider.type] ?? provider.type;
 
     // The shared device replica — see the comment on the sibling call above.
-    const { data: devices } = useDeviceList();
+    const { data: devices, isConfirmed } = useDeviceList();
 
     const boundDevice = devices?.find((d) => d.deviceId === boundDeviceId);
-    const boundPresenceUnknown = !!boundDevice && isDevicePresenceUnknown(boundDevice);
+    const boundPresence = getBoundDevicePresence(boundDeviceId, boundDevice, isConfirmed);
+    const boundPresenceUnknown = boundPresence === 'checking';
 
     const checkCapability = useCallback(
       async (deviceId: string) => {
@@ -410,7 +414,11 @@ const RemoteAgentConfigCard = memo<RemoteAgentConfigCardProps>(
                   </Tag>
                 </Flexbox>
               ) : (
-                <Tag style={{ marginInlineEnd: 0 }}>{t('platformAgentConfig.device.none')}</Tag>
+                <Tag style={{ marginInlineEnd: 0 }}>
+                  {boundPresenceUnknown
+                    ? t('devices.status.checking')
+                    : t('platformAgentConfig.device.none')}
+                </Tag>
               )}
             </div>
           </div>

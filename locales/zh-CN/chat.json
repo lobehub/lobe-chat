@@ -1443,6 +1443,7 @@
   "heteroAgent.executionTarget.gateway": "网关",
   "heteroAgent.executionTarget.gatewayDesc": "经由设备网关运行，其他客户端可跟踪进度",
   "heteroAgent.executionTarget.infoTooltip": "选择此代理运行的位置。设备可以读取和写入文件或操作计算机；云沙盒在隔离的临时环境中运行。",
+  "heteroAgent.executionTarget.loadFailed": "设备加载失败。",
   "heteroAgent.executionTarget.loading": "正在加载设备…",
   "heteroAgent.executionTarget.local": "本地设备",
   "heteroAgent.executionTarget.localDesc": "在当前桌面端以本地进程运行",

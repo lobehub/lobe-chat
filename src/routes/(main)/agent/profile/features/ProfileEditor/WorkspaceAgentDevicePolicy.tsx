@@ -169,7 +169,7 @@ const WorkspaceAgentDevicePolicy = memo<WorkspaceAgentDevicePolicyProps>(
     const config = useAgentStore((s) => s.agentMap[agentId]);
     const updateAgentConfigById = useAgentStore((s) => s.updateAgentConfigById);
 
-    const { data: devices, error, isLoading, mutate } = useDeviceList();
+    const { data: devices, error, isConfirmed, isLoading, mutate } = useDeviceList();
     const { publicWorkspace: publicWorkspaceDevices } = useMemo(
       () => groupExecutionTargetDevices(devices),
       [devices],
@@ -259,27 +259,33 @@ const WorkspaceAgentDevicePolicy = memo<WorkspaceAgentDevicePolicyProps>(
         },
       ];
 
-      const workspaceOptions = isLoading
-        ? [
-            {
-              disabled: true,
-              label: t('chat:heteroAgent.executionTarget.loading'),
-              value: 'status:loading',
-            },
-          ]
-        : publicWorkspaceDevices.length > 0
-          ? publicWorkspaceDevices.map((device) => ({
-              label: renderDeviceLabel(device),
-              title: device.friendlyName || device.hostname || device.deviceId,
-              value: executionTargetValue('device', device.deviceId),
-            }))
-          : [
+      // Until the server confirms the list, the stored copy may hold devices that
+      // were since deleted or unshared (binding one would point the agent at an
+      // unresolvable machine) or lack ones that exist: show its rows, but only
+      // the confirmed list can be picked from or reported empty.
+      const workspaceOptions =
+        isLoading || (!isConfirmed && publicWorkspaceDevices.length === 0)
+          ? [
               {
                 disabled: true,
-                label: t('settingAgent.devicePolicy.noPublicDevice'),
-                value: 'status:empty',
+                label: t('chat:heteroAgent.executionTarget.loading'),
+                value: 'status:loading',
               },
-            ];
+            ]
+          : publicWorkspaceDevices.length > 0
+            ? publicWorkspaceDevices.map((device) => ({
+                disabled: !isConfirmed,
+                label: renderDeviceLabel(device),
+                title: device.friendlyName || device.hostname || device.deviceId,
+                value: executionTargetValue('device', device.deviceId),
+              }))
+            : [
+                {
+                  disabled: true,
+                  label: t('settingAgent.devicePolicy.noPublicDevice'),
+                  value: 'status:empty',
+                },
+              ];
 
       return [
         ...sharedTargets,
@@ -294,6 +300,7 @@ const WorkspaceAgentDevicePolicy = memo<WorkspaceAgentDevicePolicyProps>(
       ];
     }, [
       error,
+      isConfirmed,
       isLoading,
       isHeterogeneous,
       publicWorkspaceDevices,

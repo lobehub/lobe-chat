@@ -418,6 +418,7 @@ const ConnectAgentContent = memo<ConnectAgentContentProps>(
 
     const {
       data: devices,
+      isConfirmed: isDeviceListConfirmed,
       isLoading: loadingDevices,
       isValidating: fetchingDevices,
       mutate: refetchDevices,
@@ -430,7 +431,7 @@ const ConnectAgentContent = memo<ConnectAgentContentProps>(
     const onlineDevices = listedDevices.filter((d) => d.online);
     // Rows painted from the persisted list until the server confirms presence:
     // none of them is offline yet, so "no devices" would be a guess.
-    const presencePending = listedDevices.some(isDevicePresenceUnknown);
+    const presencePending = !isDeviceListConfirmed || listedDevices.some(isDevicePresenceUnknown);
 
     const deviceLabel = useCallback(
       (device: DeviceListItem) => device.friendlyName || device.hostname || device.deviceId,
@@ -639,6 +640,7 @@ const ConnectAgentContent = memo<ConnectAgentContentProps>(
       const isRefreshing = loadingDevices || fetchingDevices;
       const deviceListState = getDeviceListState({
         hasDevices: listedDevices.length > 0,
+        isConfirmed: isDeviceListConfirmed,
         isFetching: isRefreshing,
       });
       const showEmpty =
