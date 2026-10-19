@@ -43,6 +43,7 @@ const GoalAgentModelConfig = ({
             ? {
                 lockedReason: planner.modelLocked ? t('goalDetail.modelFixed') : undefined,
                 onChange: planner.changeModel,
+                providerIds: planner.providerIds,
                 ready: planner.modelReady,
                 title: t('goalDetail.planningModel'),
                 value: planner.model,

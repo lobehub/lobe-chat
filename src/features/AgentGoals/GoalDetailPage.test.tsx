@@ -38,6 +38,10 @@ vi.mock('@/store/goal', () => ({
     }),
 }));
 
+vi.mock('@/store/serverConfig', () => ({
+  useServerConfigStore: (selector: (s: any) => unknown) => selector({ featureFlags: {} }),
+}));
+
 vi.mock('@/store/chat', () => ({
   useChatStore: (selector: (s: any) => unknown) => selector({ clearPortalStack: vi.fn() }),
 }));

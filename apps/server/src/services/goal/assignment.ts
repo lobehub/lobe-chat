@@ -15,7 +15,7 @@ import { isResourceAuthorOrAdmin } from '../resourcePermission';
 import { resolveMissingTaskModelConfig } from '../task/modelSnapshot';
 import { goalTaskAgentId } from './GoalService/utils';
 import { GoalManagerService } from './manager';
-import { goalTaskModelOverride } from './modelConfig';
+import { assertGoalModelRunnable, goalTaskModelOverride } from './modelConfig';
 
 const goalNotFound = () => new TRPCError({ code: 'NOT_FOUND', message: 'Goal not found' });
 
@@ -186,8 +186,14 @@ export class GoalAssignmentService {
     slot: 'planning' | 'task',
     /** Runs in the same transaction after the write, still under the lock. */
     after?: (scoped: GoalAssignmentService, goal: GoalItem) => Promise<void>,
-  ): Promise<GoalItem> =>
-    this.db.transaction(async (tx) => {
+  ): Promise<GoalItem> => {
+    if (modelConfig) {
+      // The owner never changes, so the availability check needs no lock.
+      const owner = await new GoalModel(this.db, this.userId, this.workspaceId).findById(goalId);
+      if (!owner) throw goalNotFound();
+      await assertGoalModelRunnable(this.db, owner, slot, modelConfig);
+    }
+    return this.db.transaction(async (tx) => {
       const model = new GoalModel(tx, this.userId, this.workspaceId);
       const current = await model.lockById(goalId);
       if (!current) throw goalNotFound();
@@ -203,6 +209,7 @@ export class GoalAssignmentService {
       await after?.(scoped, goal);
       return goal;
     });
+  };
 
   /**
    * Pin every unfinished Task of the goal to `model`, or drop their pinned model

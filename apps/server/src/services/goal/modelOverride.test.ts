@@ -20,6 +20,7 @@ import {
 import { AiAgentService } from '@/server/services/aiAgent';
 
 import { GoalService } from './index';
+import * as modelConfig from './modelConfig';
 import * as scheduler from './scheduler';
 
 const db = await getTestDB();
@@ -31,6 +32,8 @@ const service = () => new GoalService(db, userId);
 const execAgent = () => vi.mocked(AiAgentService.prototype.execAgent);
 
 beforeEach(async () => {
+  // What this suite pins is how picks are stored, not which models the owner has.
+  vi.spyOn(modelConfig, 'assertGoalModelRunnable').mockResolvedValue();
   await db.insert(users).values({ id: userId }).onConflictDoNothing();
   await db.insert(agents).values([
     { id: agentId, slug: 'model-override-agent', userId },

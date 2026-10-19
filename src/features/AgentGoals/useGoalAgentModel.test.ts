@@ -21,6 +21,7 @@ const mocks = vi.hoisted(() => ({
   memberPicks: {} as Record<string, string>,
   ownerId: undefined as string | undefined,
   preferenceLoading: false,
+  relayEnabled: false,
   settingsReady: true,
   setGoalAgent: vi.fn(),
   setGoalModel: vi.fn(),
@@ -71,6 +72,16 @@ vi.mock('@/features/ChatInput/hooks/useAgentModelSelection', () => ({
   }),
 }));
 
+// `ollama` is reached from this device; the others from the server.
+vi.mock('@/store/aiInfra', () => ({
+  aiProviderSelectors: { isProviderFetchOnClient: (id: string) => () => id === 'ollama' },
+  useAiInfraStore: (selector: (s: any) => unknown) =>
+    selector({ enabledChatModelList: [{ id: 'openai' }, { id: 'ollama' }, { id: 'google' }] }),
+}));
+vi.mock('@/store/serverConfig', () => ({
+  useServerConfigStore: (selector: (s: any) => unknown) =>
+    selector({ featureFlags: { enableLlmRelay: mocks.relayEnabled } }),
+}));
 vi.mock('@/store/home', () => ({ useHomeStore: (selector: (s: any) => unknown) => selector({}) }));
 vi.mock('@/store/home/selectors', () => ({
   homeAgentListSelectors: { getAgentById: () => () => undefined },
@@ -98,6 +109,7 @@ beforeEach(() => {
   mocks.loadedAgents = new Set(['agt_old', 'agt_exec']);
   mocks.lockedAgents = new Set();
   mocks.preferenceLoading = false;
+  mocks.relayEnabled = false;
 });
 
 describe('useGoalAgentModel', () => {
@@ -280,5 +292,17 @@ describe('useGoalAgentModel', () => {
       model: 'gpt-4o-mini',
       provider: 'openai',
     });
+  });
+
+  it('offers the planner no device-only provider while calls are relayed', () => {
+    const { result, rerender } = renderHook(() => useGoalAgentModel({ goalId: 'goal_1' }));
+    // Without the relay, every provider runs on the server.
+    expect(result.current.planner.providerIds).toBeUndefined();
+
+    mocks.relayEnabled = true;
+    rerender();
+    expect(result.current.planner.providerIds).toEqual(['openai', 'google']);
+    // Only planning is restricted.
+    expect(result.current.executor).not.toHaveProperty('providerIds');
   });
 });

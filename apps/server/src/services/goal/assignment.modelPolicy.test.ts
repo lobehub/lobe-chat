@@ -4,9 +4,20 @@ import { randomUUID } from 'node:crypto';
 import { eq } from 'drizzle-orm';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
+import * as businessAiProvider from '@/business/server/aiProvider';
 import { getTestDB } from '@/database/core/getTestDB';
 import { TaskModel } from '@/database/models/task';
-import { agents, goals, tasks, users, workspaceMembers, workspaces } from '@/database/schemas';
+import {
+  agents,
+  aiModels,
+  aiProviders,
+  goals,
+  tasks,
+  users,
+  workspaceMembers,
+  workspaces,
+} from '@/database/schemas';
+import * as featureFlags from '@/server/featureFlags';
 
 import { GoalAssignmentService } from './assignment';
 import { GoalService } from './index';
@@ -164,6 +175,60 @@ describe('goal model overrides on a fixed-model Agent', () => {
       model: 'deepseek-chat',
       provider: 'deepseek',
     });
+  });
+
+  it("refuses an admin's pick of a model the goal's owner cannot use", async () => {
+    // The member's plan hides the model the admin's picker still offers.
+    vi.spyOn(businessAiProvider, 'getHiddenBuiltinModelsForUser').mockImplementation(
+      async (userId) => (userId === memberId ? [{ id: gemini.model, providerId: 'google' }] : []),
+    );
+    const goalId = await goalFor(memberId, openAgentId);
+    const admin = new GoalAssignmentService(db, authorId, workspaceId);
+
+    // The goal runs as the member, who could not run that model.
+    await expect(admin.setModel(goalId, gemini)).rejects.toMatchObject({ code: 'BAD_REQUEST' });
+    await expect(admin.setTaskModel(goalId, gemini)).rejects.toMatchObject({
+      code: 'BAD_REQUEST',
+    });
+    // A model the member can run is still fine.
+    await db.insert(aiModels).values({
+      enabled: true,
+      id: 'gemini-team',
+      providerId: 'google',
+      userId: authorId,
+      workspaceId,
+    });
+    await expect(
+      admin.setModel(goalId, { model: 'gemini-team', provider: 'google' }),
+    ).resolves.toBeTruthy();
+  });
+
+  it('refuses a device-only provider for planning, but not for Tasks', async () => {
+    vi.spyOn(featureFlags, 'getServerFeatureFlagsStateFromRuntimeConfig').mockResolvedValue({
+      enableLlmRelay: true,
+    } as Awaited<ReturnType<typeof featureFlags.getServerFeatureFlagsStateFromRuntimeConfig>>);
+    await db.insert(aiProviders).values({
+      enabled: true,
+      fetchOnClient: true,
+      id: 'ollama',
+      source: 'builtin',
+      userId: memberId,
+      workspaceId,
+    });
+    await db.insert(aiModels).values({
+      enabled: true,
+      id: 'llama3.1',
+      providerId: 'ollama',
+      userId: memberId,
+      workspaceId,
+    });
+    const goalId = await goalFor(memberId, openAgentId);
+    const local = { model: 'llama3.1', provider: 'ollama' };
+    const member = new GoalAssignmentService(db, memberId, workspaceId);
+
+    // Planning advances in the background, with no device to reach it.
+    await expect(member.setModel(goalId, local)).rejects.toMatchObject({ code: 'BAD_REQUEST' });
+    await expect(member.setTaskModel(goalId, local)).resolves.toBeTruthy();
   });
 
   it("refuses to hand a member's goal to an admin's private Agent", async () => {

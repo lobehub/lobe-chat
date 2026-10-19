@@ -1,12 +1,15 @@
 import { toast } from '@lobehub/ui';
+import { useShallow } from 'zustand/react/shallow';
 
 import { useAgentModelSelection } from '@/features/ChatInput/hooks/useAgentModelSelection';
 import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwareNavigate';
 import { useAgentStore } from '@/store/agent';
 import { agentByIdSelectors } from '@/store/agent/selectors';
+import { aiProviderSelectors, useAiInfraStore } from '@/store/aiInfra';
 import { goalSelectors, useGoalStore } from '@/store/goal';
 import { useHomeStore } from '@/store/home';
 import { homeAgentListSelectors } from '@/store/home/selectors';
+import { useServerConfigStore } from '@/store/serverConfig';
 import { useUserStore } from '@/store/user';
 import { authSelectors, systemAgentSelectors, userProfileSelectors } from '@/store/user/selectors';
 
@@ -95,6 +98,18 @@ export const useGoalAgentModel = ({ goalId, routeAgentId }: UseGoalAgentModelPar
   const plannerFallback = managed ? planner.effective : systemGoalModel;
   const executorFallback = executor.shared;
   const plannerReady = planner.ready && (managed || settingsReady);
+  // Planning advances in the background with no device attached, so a provider
+  // relayed to this device could not serve it; the server refuses it as well.
+  const relayEnabled = useServerConfigStore((s) => !!s.featureFlags.enableLlmRelay);
+  const plannerProviderIds = useAiInfraStore(
+    useShallow((s) =>
+      relayEnabled
+        ? (s.enabledChatModelList ?? [])
+            .filter((provider) => !aiProviderSelectors.isProviderFetchOnClient(provider.id)(s))
+            .map((provider) => provider.id)
+        : undefined,
+    ),
+  );
 
   const run = async (write: () => Promise<void>) => {
     try {
@@ -154,6 +169,7 @@ export const useGoalAgentModel = ({ goalId, routeAgentId }: UseGoalAgentModelPar
       heterogeneousType: planner.heterogeneousType,
       modelLocked: planner.locked,
       modelReady: plannerReady,
+      providerIds: plannerProviderIds,
       model: {
         model: planningModel || plannerFallback.model || '',
         provider: planningProvider || plannerFallback.provider || '',

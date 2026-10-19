@@ -37,6 +37,8 @@ export interface GoalAgentPillProps {
     /** Why the model cannot be changed here, when it cannot. */
     lockedReason?: string;
     onChange: (next: ModelConfig) => void;
+    /** Restrict the choice to these providers. */
+    providerIds?: string[];
     /** False while the agent's own model is still loading. */
     ready: boolean;
     title: string;
@@ -137,6 +139,7 @@ const GoalAgentPill = ({
                   initialWidth
                   disabled={disabled}
                   popupWidth={400}
+                  providerIds={model.providerIds}
                   value={model.value}
                   onChange={model.onChange}
                 />
