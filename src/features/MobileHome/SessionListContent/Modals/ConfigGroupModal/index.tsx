@@ -6,9 +6,9 @@ import { useTranslation } from 'react-i18next';
 
 import ImperativeModal from '@/components/ImperativeModal';
 import { usePermission } from '@/hooks/usePermission';
-import { useSessionStore } from '@/store/session';
-import { sessionGroupSelectors } from '@/store/session/selectors';
-import { type SessionGroupItem } from '@/types/session';
+import { useHomeStore } from '@/store/home';
+import { homeAgentListSelectors } from '@/store/home/selectors';
+import { type SessionGroupItemBase } from '@/types/session';
 
 import GroupItem from './GroupItem';
 
@@ -29,10 +29,17 @@ const ConfigGroupModal = memo<{ onCancel?: () => void; open?: boolean }>(({ open
   const { t } = useTranslation('chat');
   const { allowed: canCreate, reason: createReason } = usePermission('create_content');
   const { allowed: canEdit } = usePermission('edit_own_content');
-  const sessionGroupItems = useSessionStore(sessionGroupSelectors.sessionGroupItems, isEqual);
-  const [addSessionGroup, updateSessionGroupSort] = useSessionStore((s) => [
-    s.addSessionGroup,
-    s.updateSessionGroupSort,
+  const sessionGroupItems = useHomeStore(
+    (s) =>
+      [
+        ...homeAgentListSelectors.agentGroups(s),
+        ...homeAgentListSelectors.privateAgentGroups(s),
+      ].map(({ id, name, sort }) => ({ id, name, sort })),
+    isEqual,
+  );
+  const [addSessionGroup, updateSessionGroupSort] = useHomeStore((s) => [
+    s.addGroup,
+    s.updateGroupSort,
   ]);
   const [loading, setLoading] = useState(false);
 
@@ -48,7 +55,7 @@ const ConfigGroupModal = memo<{ onCancel?: () => void; open?: boolean }>(({ open
       <Flexbox>
         <SortableList
           items={sessionGroupItems}
-          renderItem={(item: SessionGroupItem) => (
+          renderItem={(item: SessionGroupItemBase) => (
             <SortableList.Item
               horizontal
               align={'center'}
@@ -60,7 +67,7 @@ const ConfigGroupModal = memo<{ onCancel?: () => void; open?: boolean }>(({ open
               <GroupItem {...item} disabled={!canEdit} />
             </SortableList.Item>
           )}
-          onChange={(items: SessionGroupItem[]) => {
+          onChange={(items: SessionGroupItemBase[]) => {
             if (!canEdit) return;
             updateSessionGroupSort(items);
           }}

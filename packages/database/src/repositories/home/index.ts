@@ -94,6 +94,7 @@ export class HomeRepository {
         description: agents.description,
         id: agents.id,
         name: agents.name,
+        model: agents.model,
         pinned: agents.pinned,
         slug: agents.slug,
         title: agents.title,
@@ -290,6 +291,7 @@ export class HomeRepository {
       description: string | null;
       id: string;
       name: string | null;
+      model: string | null;
       pinned: boolean | null;
       sessionGroupId: string | null;
       slug: string | null;
@@ -350,6 +352,7 @@ export class HomeRepository {
           isPrivate: visibility === 'private',
           labels: agentLabelsMap.get(a.id),
           name: a.name,
+          model: a.model,
           pinned: a.pinned ?? false,
           slug: a.slug,
           title: meta.title,
