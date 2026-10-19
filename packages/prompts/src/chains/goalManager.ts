@@ -21,8 +21,11 @@ import { GOAL_TURN_TAG } from '@lobechat/const';
  * takeover, answered only with `revise_plan` (the rewritten recipe).
  * v12 reads measured acceptance from the clause values `lh goal show` reports
  * and asks the owner to record an unrecorded one instead of re-verifying.
+ * v13 hands a round's settled probes to the agent as a `rollout_distill`
+ * takeover before the gate judges them: it rewrites the plan from what the
+ * probes ran into, answered only with `revise_plan`.
  */
-export const GOAL_MANAGER_PROMPT_VERSION = 'v12';
+export const GOAL_MANAGER_PROMPT_VERSION = 'v13';
 
 export interface GoalManagerFeedbackNote {
   /** `user`, or `agent <id>` for an agent-written comment. */
@@ -59,8 +62,9 @@ interface GoalManagerPromptInput {
   /**
    * `rollout_release`: a passed batch gate whose next wave this turn releases or escalates.
    * `rollout_revise`: the owner sent the batch plan back; this turn rewrites it.
+   * `rollout_distill`: the round's probes settled; this turn rewrites the plan from them.
    */
-  problemKind?: 'rollout_release' | 'rollout_revise';
+  problemKind?: 'rollout_distill' | 'rollout_release' | 'rollout_revise';
   requirement: string;
   token: string;
   turn: number;
@@ -168,12 +172,16 @@ export const GOAL_BATCH_RELEASE_RULE =
 export const GOAL_BATCH_REVISE_RULE =
   'Plan revision: the owner reviewed the batch\'s experiments and sent the plan back with the correction in <problem>. Read the current plan skill and the experiment results with lh goal show, then rewrite the whole plan so every remaining unit follows the correction — fold it into the steps it changes instead of appending a note. Then decide which delivered experiment units the correction covers: those run again on the revised plan, continuing their earlier delivery (same branch / PR), and the owner reviews the new round\'s results — not the old ones. A correction about how the units were delivered (review, CI, quality, a missed step) covers all of them; one that only changes units still owed covers none. Answer {"action":"revise_plan","reason":"what changed and why it answers the correction","recipe":"the full revised plan, in the language of the Goal requirement","rerun":["node ids of the experiment units to run again"]} — omit "rerun" to run every experiment unit again, or pass [] when none needs it. Where the correction conflicts with the plan, resolve it in the rewrite and say how in reason. No other action is accepted on this turn.';
 
+/** A takeover whose problem is a round's settled probes: rewrite the plan from them. */
+export const GOAL_BATCH_DISTILL_RULE =
+  'Plan distillation: every probe of the batch has settled, and before the gate judges them the plan skill must learn from them. Read the current plan skill and each probe\'s task, topic, deliverables, review comments and acceptance evidence with lh goal show and lh task view. Then rewrite the whole plan so every remaining unit benefits from what the probes ran into: steps they had to add or reorder, pitfalls and how they were resolved, conventions reviewers enforced, commands and checks that proved the work, and anything a probe got wrong that later units must avoid. Fold each lesson into the step it changes instead of appending a log of what happened; keep what is specific to one probe out unless it generalizes. When the probes taught nothing new, return the current plan unchanged and say so in reason. Answer {"action":"revise_plan","reason":"what the probes taught and where it landed in the plan","recipe":"the full plan, in the language of the Goal requirement"}. The probes are not run again and the owner reviews them with the plan you wrote. No other action is accepted on this turn.';
+
 /**
  * When to declare a batch, and how. The judgement is the planning agent's; the
  * server only checks the declaration is well formed.
  */
 export const GOAL_BATCH_PLANNING_RULE =
-  'Batch (one repeated mould): when the remaining work applies one recipe to many units — migrate N stores to one mechanism, give N resources the same caching, update N callers — and the first units will likely need a person (unsettled conventions, review, acceptance), do not plan every unit as a task. Add "rollout" to the tasks plan instead: "tasks" become 2-5 probes, the most representative units covering every variant, each with a full brief; "rollout.recipe" is the one procedure every unit follows; "rollout.units" lists every other unit in delivery order, as a title or as {"title","description"} when the unit has its own pointers; "rollout.variants" names the axes the units differ along, and the gate holds until the probes cover each value. The probes run first; once every probe ran through without a person, the owner approves the first wave, each later wave is handed to you to release or escalate, and a rejected release comes back to you to rewrite the plan for the owner to review again. Units that differ only in names, files or details are still one mould; work whose steps differ from task to task is not, so plan it as ordinary tasks. Never declare a batch on a Goal whose rollout is off. While a batch is in flight no planning turn starts; the next one comes after its roster is delivered.';
+  'Batch (one repeated mould): when the remaining work applies one recipe to many units — migrate N stores to one mechanism, give N resources the same caching, update N callers — and the first units will likely need a person (unsettled conventions, review, acceptance), do not plan every unit as a task. Add "rollout" to the tasks plan instead: "tasks" become 2-5 probes, the most representative units covering every variant, each with a full brief; "rollout.recipe" is the one procedure every unit follows; "rollout.units" lists every other unit in delivery order, as a title or as {"title","description"} when the unit has its own pointers; "rollout.variants" names the axes the units differ along, and the gate holds until the probes cover each value. The probes run first; once they settle you rewrite the plan from what they ran into, and once every probe ran through without a person, the owner approves the first wave, each later wave is handed to you to release or escalate, and a rejected release comes back to you to rewrite the plan for the owner to review again. Units that differ only in names, files or details are still one mould; work whose steps differ from task to task is not, so plan it as ordinary tasks. Never declare a batch on a Goal whose rollout is off. While a batch is in flight no planning turn starts; the next one comes after its roster is delivered.';
 
 const contract = (input: GoalManagerPromptInput) =>
   [
@@ -184,7 +192,9 @@ const contract = (input: GoalManagerPromptInput) =>
             ? GOAL_BATCH_RELEASE_RULE
             : input.problemKind === 'rollout_revise'
               ? GOAL_BATCH_REVISE_RULE
-              : takeoverRules,
+              : input.problemKind === 'rollout_distill'
+                ? GOAL_BATCH_DISTILL_RULE
+                : takeoverRules,
         ]
       : []),
     'Reading this block: <requirement> is the Goal; <ownerInstruction> is the owner’s standing note; <problem> (takeover) and <continuation> say why this turn started; <previousTurn> is how the last turn ended; <feedback new="true"> was written since the last turn and <feedback> without it is an excerpt the last turn already had; truncated="true" or <omittedFeedback> means the list is incomplete, so read the full comments with lh task view.',

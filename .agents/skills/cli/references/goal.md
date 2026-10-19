@@ -115,7 +115,10 @@ probes run first, the rest are released wave by wave once the probes ran through
 without a person, and a rejection revises the recipe and re-probes. Whether the
 units are one mould is the planning agent's call; the server refuses only a
 malformed declaration, a Goal with `--rollout off`, or a batch already in flight.
-No planning turn starts while a batch is in flight.
+No planning turn starts while a batch is in flight, except one: when the probes
+settle, the main Agent gets a `rollout_distill` turn to rewrite the plan from
+what they ran into — answer it with `revise_plan` and the full plan — and the
+gate judges the probes after that.
 
 `wait` is how a turn waits for time or external evidence — never sleep or poll.
 Producers deliver the event with `lh goal wake`.

@@ -17,6 +17,7 @@ import { GoalGraphModel } from '@/database/models/goalGraph';
 
 import { BatchPlanSkillService } from '../batchPlanSkill';
 import { TERMINAL_NODE_STATUSES } from '../decideNextMove';
+import { probesDistilled } from '../probeDistill';
 import { carriedUnitBrief, createRecipeUnitTask } from '../rolloutBatch';
 import { evaluateRolloutGate, type RolloutGateResult, withGateVerdict } from '../rolloutGate';
 import type { GoalServiceContext } from './types';
@@ -42,7 +43,9 @@ export const collectRolloutGate = (
     state.phase === 'done' ||
     state.phase === 'pattern_break' ||
     state.phase === 'release_review' ||
-    state.phase === 'plan_revision'
+    state.phase === 'plan_revision' ||
+    // The probes are judged once they have taught the plan, straight from the distill step.
+    (state.phase === 'plan_distill' && !probesDistilled(state))
   )
     return undefined;
   const materializedIds = new Set([...state.probeNodeIds, ...(state.massNodeIds ?? [])]);
