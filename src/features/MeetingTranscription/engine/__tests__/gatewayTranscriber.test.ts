@@ -197,6 +197,23 @@ describe('GatewayTranscriber', () => {
     expect(t.transcriber.resumePoint).toEqual({ startFrame: 0, startSeq: 0 });
   });
 
+  it.each(['SESSION_CREATE_FAILED', 'PROTOCOL_ERROR'] as const)(
+    'treats an admission answered without the realtime route (%s) as no gateway',
+    async (code) => {
+      const t = setup({
+        createSession: async () => {
+          throw new RealtimeDictationError(code, false);
+        },
+      });
+      await t.record(2);
+
+      expect(t.statuses.at(-1)).toMatchObject({
+        errorCode: 'provider_not_configured',
+        state: 'blocked',
+      });
+    },
+  );
+
   it('backs off after a network failure and retries at once when the browser is back online', async () => {
     let offline = true;
     const t = setup({

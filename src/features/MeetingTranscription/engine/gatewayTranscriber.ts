@@ -304,8 +304,13 @@ export class GatewayTranscriber implements LiveTranscriber {
       admission = await this.#deps.createSession(session.abort.signal);
     } catch (error) {
       if (session.abort.signal.aborted) return;
-      const code =
-        error instanceof RealtimeDictationError ? error.code : ('NETWORK_DISCONNECTED' as const);
+      let code: RealtimeDictationErrorCode =
+        error instanceof RealtimeDictationError ? error.code : 'NETWORK_DISCONNECTED';
+      // A deployment without the realtime route answers admission with a
+      // redirect or an unexpected body; that is "no gateway here", not an outage.
+      if (code === 'SESSION_CREATE_FAILED' || code === 'PROTOCOL_ERROR') {
+        code = 'PROVIDER_NOT_CONFIGURED';
+      }
       this.#failSession(session, code);
       return;
     }
