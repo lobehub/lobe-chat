@@ -5,6 +5,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { DocumentModel } from '@/database/models/document';
 import { FileModel } from '@/database/models/file';
 
+import { EditLockService } from '../../editLock';
 import { DocumentHistoryService } from '../history';
 import { DocumentService } from '../index';
 
@@ -105,5 +106,54 @@ describe('DocumentService.updateDocument on an HTML document', () => {
       fileType: HTML_DOCUMENT_FILE_TYPE,
     });
     expect(createHistory).not.toHaveBeenCalled();
+  });
+
+  describe('on a shared workspace page another member is editing', () => {
+    const sharedPage = (fileType: string, pageEditorData: unknown) => ({
+      editorData: pageEditorData,
+      fileId: null,
+      fileType,
+      id: 'doc-1',
+      updatedAt: new Date('2026-10-19T00:00:00.000Z'),
+      visibility: 'public',
+      workspaceId: 'ws-1',
+    });
+
+    beforeEach(() => {
+      vi.spyOn(EditLockService.prototype, 'canWrite').mockResolvedValue(false);
+      service = new DocumentService(
+        { transaction: async (callback: any) => callback({}) } as any,
+        'user-1',
+        'ws-1',
+      );
+    });
+
+    it.each([
+      [
+        'turning their rich-text page into HTML',
+        sharedPage('custom/document', editorData),
+        HTML_DOCUMENT_FILE_TYPE,
+      ],
+      [
+        'turning their HTML page into a rich-text page',
+        sharedPage(HTML_DOCUMENT_FILE_TYPE, null),
+        'custom/document',
+      ],
+    ])('refuses %s, which replaces the body they are editing', async (_label, page, fileType) => {
+      documentModel.findById.mockResolvedValue(page);
+
+      await expect(service.updateDocument('doc-1', { fileType })).rejects.toMatchObject({
+        code: 'CONFLICT',
+      });
+      expect(documentModel.update).not.toHaveBeenCalled();
+    });
+
+    it('still lets a metadata-only edit of their HTML page through', async () => {
+      documentModel.findById.mockResolvedValue(sharedPage(HTML_DOCUMENT_FILE_TYPE, null));
+
+      await service.updateDocument('doc-1', { title: 'Renamed' });
+
+      expect(documentModel.update).toHaveBeenCalled();
+    });
   });
 });

@@ -781,8 +781,13 @@ export class DocumentService {
       // (title/emoji) pass through, since the autosave always re-sends the
       // unchanged body. The lease auto-expires in Redis; when Redis is down this
       // returns null (fail-open) so the lock can't block saving.
+      // Switching a page into or out of HTML replaces the body other members see
+      // (and clears its editorData), so it is a body change even with no content.
+      const htmlTypeChanged =
+        isHtmlDocument !== (currentDocument.fileType === HTML_DOCUMENT_FILE_TYPE);
       const contentChanged =
         historyAppended ||
+        htmlTypeChanged ||
         (params.content !== undefined && params.content !== currentDocument.content);
       if (contentChanged && this.isCollaborativeDocument(currentDocument)) {
         const canWrite = await this.editLockService.canWrite('document', id, params.lockOwnerId);

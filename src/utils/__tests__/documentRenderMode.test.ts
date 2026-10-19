@@ -105,9 +105,18 @@ describe('getDocumentRenderMode', () => {
     expect(getDocumentRenderMode({ fileType: 'custom/html', filename: 'report.html' })).toEqual({
       mode: 'html',
     });
-    /** @example An uploaded HTML file is still a file. */
+    /** @example A knowledge-base page carries a placeholder mirror file but keeps its body inline. */
     expect(
-      getDocumentRenderMode({ fileId: 'file-1', fileType: 'custom/html', filename: 'a.html' }),
+      getDocumentRenderMode({
+        fileId: 'kb-mirror',
+        fileType: 'custom/html',
+        filename: 'Goal report',
+        sourceType: 'api',
+      }),
+    ).toEqual({ mode: 'html' });
+    /** @example An uploaded HTML file has a MIME type and is still a file. */
+    expect(
+      getDocumentRenderMode({ fileId: 'file-1', fileType: 'text/html', filename: 'a.html' }),
     ).toEqual({ mode: 'file' });
   });
 });

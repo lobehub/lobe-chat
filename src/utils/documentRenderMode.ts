@@ -54,10 +54,13 @@ const isEditorDocument = (document: DocumentRenderModeFields): boolean => {
  * - File preview, rich-text editor, sandboxed HTML page, or source editor mode.
  */
 export const getDocumentRenderMode = (document: DocumentRenderModeFields): DocumentRenderMode => {
+  // Only pages are created with this type (uploads carry a MIME type). A page in
+  // a knowledge base also has a placeholder mirror fileId, but its body stays in
+  // `content`, so the type wins over the upload check below.
+  if (document.fileType === HTML_DOCUMENT_FILE_TYPE) return { mode: 'html' };
+
   // Keep deleted uploads in the file view even after their fileId FK is cleared.
   if (document.fileId || document.sourceType === 'file') return { mode: 'file' };
-
-  if (document.fileType === HTML_DOCUMENT_FILE_TYPE) return { mode: 'html' };
 
   if (isSkillMarkdownDocument(document)) return { mode: 'editor' };
 
