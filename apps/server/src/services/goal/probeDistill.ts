@@ -9,6 +9,7 @@ import type { LobeChatDatabase } from '@/database/type';
 import { BatchPlanSkillService } from './batchPlanSkill';
 import { GoalManagerService } from './manager';
 import { activeStatuses } from './manager/turnState';
+import { deliveredUnits, pickRerunUnits, reopenRoundUnits, rerunUnitNote } from './rolloutBatch';
 
 const log = debug('lobe-server:goal-rollout');
 
@@ -57,7 +58,10 @@ const planVersionOf = (state: GoalRolloutState) =>
  * The step between a round's settled probes and its gate: the main Agent reads
  * what the probes ran into and rewrites the plan skill from it, so the owner
  * reviews the probes against the plan they taught and every later wave runs on
- * it. The probes are not run again. A goal whose main Agent cannot take the
+ * it. A probe whose delivery falls short of that plan — it skipped a step the
+ * plan calls done, its review or CI is still open — the main Agent sends back:
+ * it runs again on the plan, continuing its delivery, and the round is
+ * distilled again once it settles, before the gate judges it. A goal whose main Agent cannot take the
  * turn (no turns or budget left) keeps its plan as written and goes on to the
  * gate rather than stopping on it.
  */
@@ -70,18 +74,16 @@ export class GoalProbeDistill {
 
   /**
    * Drive the distill step. Returns the tick result while it waits on the main
-   * Agent; `undefined` once the plan is ready, and the caller judges the gate in
-   * the same advance — straight from `plan_distill`, never back through `probe`.
+   * Agent, or once it sent probes back to run again; `undefined` once the plan
+   * is ready, and the caller judges the gate in the same advance — straight
+   * from `plan_distill`, never back through `probe`.
    */
   route = async (snapshot: GoalGraphSnapshot): Promise<GoalTickResult | undefined> => {
     let graph = snapshot;
     const goalId = graph.goal.id;
     const state = graph.goal.config!.rolloutState!;
     if (probesDistilled(state)) return undefined;
-    if (state.phase === 'plan_distill' && state.pendingDistill) {
-      await this.apply(graph);
-      return undefined;
-    }
+    if (state.phase === 'plan_distill' && state.pendingDistill) return this.apply(graph);
 
     if (state.phase !== 'plan_distill') {
       const entered = await this.db.transaction(async (tx) => {
@@ -154,21 +156,24 @@ export class GoalProbeDistill {
   /**
    * Land the plan the main Agent distilled: the plan skill's next version, the
    * policy's outline every later wave is briefed from, and the Template. The
-   * round stays in `plan_distill`, marked distilled, for the gate to judge.
+   * round stays in `plan_distill`, marked distilled, for the gate to judge —
+   * unless the rewrite sends probes back. Those re-open in place on the new
+   * plan and the round returns to `probe`; the re-runs form a new probe set, so
+   * the round is distilled again when they settle.
    *
    * The rewrite is claimed under the goal row's lock before the skill is
    * revised, so overlapping advances that read the same pending rewrite write
    * one version, not one each.
    */
-  private apply = async (graph: GoalGraphSnapshot) => {
+  private apply = async (graph: GoalGraphSnapshot): Promise<GoalTickResult | undefined> => {
     const goalId = graph.goal.id;
     const policy = graph.goal.config?.rollout;
-    await this.db.transaction(async (tx) => {
+    const reopened = await this.db.transaction(async (tx) => {
       const goalModel = new GoalModel(tx, this.userId, this.workspaceId);
       const current = (await goalModel.lockById(goalId))?.config?.rolloutState;
-      // Another advance landed it first; the gate is next either way.
-      if (current?.phase !== 'plan_distill' || !current.pendingDistill) return;
-      const { reason, recipe: raw } = current.pendingDistill;
+      // Another advance landed it first; what it decided is next either way.
+      if (current?.phase !== 'plan_distill' || !current.pendingDistill) return [];
+      const { reason, recipe: raw, rerun: names } = current.pendingDistill;
       const recipe = raw.trim();
       const round = String(current.templateRevision);
       const skill = recipe ? current.planSkill : undefined;
@@ -211,15 +216,51 @@ export class GoalProbeDistill {
             type: 'system',
           }).updateNodeDescription(goalId, current.templateNodeId, recipe);
       }
+      const planVersions = version
+        ? { ...current.planVersions, [round]: version }
+        : current.planVersions;
+
+      const rerun = pickRerunUnits(deliveredUnits(graph, current.probeNodeIds), names, 'none');
+      if (!rerun.length) {
+        await goalModel.updateRolloutState(goalId, {
+          ...current,
+          distilledProbes: probeSetKey(current),
+          pendingDistill: undefined,
+          planSkill,
+          planVersions,
+        });
+        return [];
+      }
+
+      // The re-runs replace the probes they continue, so the round's next
+      // distillation and its gate read them, not the deliveries sent back.
+      const replaced = await reopenRoundUnits(
+        new GoalGraphModel(tx, this.userId, this.workspaceId, {
+          id: GOAL_COORDINATOR_ACTOR_ID,
+          type: 'system',
+        }),
+        graph,
+        current,
+        rerun,
+        { outline: recipe || policy?.spec?.recipeOutline, skill: planSkill },
+        (unit) => rerunUnitNote(reason, unit.delivered, 'agent'),
+      );
       await goalModel.updateRolloutState(goalId, {
         ...current,
-        distilledProbes: probeSetKey(current),
         pendingDistill: undefined,
+        phase: 'probe',
         planSkill,
-        planVersions: version
-          ? { ...current.planVersions, [round]: version }
-          : current.planVersions,
+        planVersions,
+        probeNodeIds: current.probeNodeIds.map((id) => replaced.get(id) ?? id),
       });
+      return rerun.filter((unit) => replaced.has(unit.id)).map((unit) => unit.title);
     });
+    if (!reopened.length) return undefined;
+    log('probe distill: re-running %d probe(s) on the distilled plan', reopened.length);
+    return {
+      goalId,
+      message: `The main Agent distilled the plan from the probes and sent ${reopened.length} back to run again on it before the gate judges them: ${reopened.join(', ')}`,
+      outcome: 'advanced',
+    };
   };
 }
