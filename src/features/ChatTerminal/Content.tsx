@@ -25,13 +25,12 @@ import {
 import { memo, useEffect, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { resolveTargetDeviceId } from '@/helpers/agentWorkingDirectory';
 import { resolveExecutionTarget } from '@/helpers/executionTarget';
 import { useIsGatewayModeEnabled } from '@/helpers/gatewayMode';
 import { useEffectiveAgencyConfig } from '@/hooks/useEffectiveAgencyConfig';
-import { useAgentStore } from '@/store/agent';
-import { agentByIdSelectors } from '@/store/agent/selectors';
+import { useEffectiveWorkingDirectory } from '@/hooks/useEffectiveWorkingDirectory';
 import { useChatStore } from '@/store/chat';
-import { topicSelectors } from '@/store/chat/selectors';
 import { canHostTerminal, deviceSelectors, useDeviceStore } from '@/store/device';
 import { useElectronStore } from '@/store/electron';
 import { useGlobalStore } from '@/store/global';
@@ -39,7 +38,12 @@ import { useGlobalStore } from '@/store/global';
 import SplitView from './SplitView';
 import type { TerminalTab } from './store';
 import { useChatTerminalStore } from './store';
-import { buildTargetOptions, LOCAL_TARGET, resolveTerminalDevice } from './targetOptions';
+import {
+  buildTargetOptions,
+  LOCAL_TARGET,
+  resolveTerminalCwd,
+  resolveTerminalDevice,
+} from './targetOptions';
 
 const EMPTY_TABS: TerminalTab[] = [];
 
@@ -100,13 +104,14 @@ const Content = memo(() => {
 
   const topicId = useChatStore((s) => s.activeTopicId);
   const agentId = useChatStore((s) => s.activeAgentId);
-  const topicWorkingDirectory = useChatStore(topicSelectors.currentTopicWorkingDirectory);
   const currentDeviceId = useElectronStore((s) => s.gatewayDeviceInfo?.deviceId);
   const toggleTerminalPanel = useGlobalStore((s) => s.toggleTerminalPanel);
 
   // The device the conversation runs on — the same resolution the chat input's
   // device picker shows, so the terminal opens next to the agent's files.
-  const { agencyConfig, workspaceScoped } = useEffectiveAgencyConfig(agentId || undefined);
+  const { agencyConfig, isPreferenceLoading, workspaceScoped } = useEffectiveAgencyConfig(
+    agentId || undefined,
+  );
   const deviceRoutingAvailable = useIsGatewayModeEnabled(agentId || undefined);
   const executionTarget = resolveExecutionTarget(agencyConfig, {
     clientExecutionAvailable: isDesktop,
@@ -138,30 +143,32 @@ const Content = memo(() => {
 
   // The panel shell only fetches the list on the web; desktop needs it here to
   // follow a topic bound to a remote device.
-  useDeviceStore((s) => s.useFetchDevices)(true);
+  const { error: deviceListError } = useDeviceStore((s) => s.useFetchDevices)(true);
   const devices = useDeviceStore(deviceSelectors.deviceList);
-  const deviceListLoaded = useDeviceStore(deviceSelectors.isDeviceListLoaded);
+  const deviceListConfirmed = useDeviceStore(deviceSelectors.isDeviceListConfirmed);
   // Only devices that can actually open a shell. An offline row, or one whose
   // live connections are all desktop ones, answers a terminal RPC with a
   // refusal — offering it would fail the session the moment it is claimed.
   const targets = useMemo(() => devices.filter(canHostTerminal), [devices]);
   const { deviceId: targetDeviceId, ready: canSpawn } = resolveTerminalDevice({
-    listLoaded: deviceListLoaded,
+    configLoading: isPreferenceLoading,
+    listSettled: deviceListConfirmed || !!deviceListError,
     localAvailable: isDesktop,
     pick: devicePick,
     targets,
     topicDeviceId,
   });
 
-  const agentWorkingDirectory = useAgentStore((s) =>
-    agentId
-      ? agentByIdSelectors.getAgentWorkingDirectoryById(
-          agentId,
-          targetDeviceId ?? currentDeviceId,
-        )(s)
-      : undefined,
-  );
-  const cwd = topicWorkingDirectory || agentWorkingDirectory || undefined;
+  const effectiveWorkingDirectory = useEffectiveWorkingDirectory(agentId || undefined);
+  const targetDefaultCwd = useDeviceStore(deviceSelectors.getDeviceDefaultCwd(targetDeviceId));
+  const cwd = resolveTerminalCwd({
+    deviceDefaultCwd: targetDefaultCwd,
+    terminalDeviceId: targetDeviceId ?? currentDeviceId,
+    workingDirectory: effectiveWorkingDirectory,
+    workingDirectoryDeviceId: resolveTargetDeviceId(agencyConfig, currentDeviceId, {
+      workspaceScoped,
+    }),
+  });
 
   const activeTab = tabs.find((tab) => tab.id === activeTabId) ?? tabs.at(-1);
 
