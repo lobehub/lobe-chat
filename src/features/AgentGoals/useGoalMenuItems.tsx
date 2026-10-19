@@ -134,7 +134,7 @@ export const useGoalMenuItems = ({
 
 interface UseGoalItemMenuOptions {
   /** The goal's agent, resolved by the host: the route's agent first, then the goal's own. */
-  agentId?: string;
+  agentId?: string | null;
   goal: { agentId?: string | null; id: string; status: string; userId?: string | null };
   /** The project whose goal page renders the row; absent on an agent's page. */
   projectId?: string;
@@ -158,7 +158,7 @@ export const useGoalItemMenu = ({
   }, [refreshGoals, scopeId]);
 
   return useGoalMenuItems({
-    agentId,
+    agentId: agentId ?? undefined,
     creatorUserId: goal.userId,
     goalId: goal.id,
     // Deleting from the list keeps the reader on the list it just pruned.
