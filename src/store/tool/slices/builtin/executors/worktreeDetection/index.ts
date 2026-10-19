@@ -15,6 +15,7 @@ import {
   applyPullRequestToConfig,
   applyPushToConfig,
   applyWorktreeAddToConfig,
+  applyWorktreeExitToConfig,
   type PullRequestCreateInfo,
   type WorktreeAddInfo,
 } from './configTransitions';
@@ -267,6 +268,28 @@ const parseGitSubcommand = (
   if (!subcommand) return undefined;
 
   return { args: tokens.slice(i + 1), baseCwd, subcommand };
+};
+
+/**
+ * The resolved path of ONE `git … worktree remove [-f] <path>` command. Its flags
+ * take no value. A path that stays shell syntax after expansion yields nothing
+ * rather than a guess.
+ */
+const parseGitWorktreeRemoveTokens = (
+  tokens: string[],
+  cwd?: string,
+  env?: ShellEnv,
+): string | undefined => {
+  const git = parseGitSubcommand(tokens, cwd);
+  if (git?.subcommand !== 'worktree' || stripQuotes(git.args[0] ?? '') !== 'remove') return;
+
+  for (const token of git.args.slice(1)) {
+    if (/^\d*[<>]/.test(token)) return; // redirection — git's args end here
+    if (token.startsWith('-')) continue;
+    const value = resolveToken(token, env);
+    if (!value) continue;
+    return isLiteralPath(value) ? resolveWorktreePath(value, git.baseCwd) : undefined;
+  }
 };
 
 const parseGitBranchSwitchTokens = (
@@ -835,6 +858,7 @@ export const recordWorktreeAdd = async (params: {
 /**
  * Record successful heterogeneous CLI shell side effects onto the run topic:
  * - `git worktree add` selects the created worktree and explicit branch.
+ * - `git worktree remove` of the selected worktree returns the topic to the source.
  * - `git switch` / confirmed `git checkout` updates the branch snapshot.
  * - `git push` records the remote ref the branch publishes to.
  * - `gh pr create` binds the created PR URL to the topic.
@@ -861,6 +885,19 @@ export const recordGitCommandEffects = async (params: {
   );
   if (worktreeInfo && worktreeInfo.path !== source) {
     nextConfig = applyWorktreeAddToConfig(nextConfig, source, worktreeInfo);
+  }
+
+  // After the add, so a command that creates and removes a scratch worktree nets
+  // out. Left recorded, a removed worktree is a directory that no longer exists.
+  // Parsed rather than confirmed against the device: if a `;`-chained remove
+  // actually failed, dropping the selection is the cheap mistake to make.
+  const activeWorktree = nextConfig?.git?.activeWorktree;
+  if (activeWorktree) {
+    const removedPath = resolveWorktreePath(activeWorktree, source);
+    const removed = findInCommand(command, (tokens, env) =>
+      parseGitWorktreeRemoveTokens(tokens, source, env) === removedPath ? true : undefined,
+    );
+    if (removed) nextConfig = applyWorktreeExitToConfig(nextConfig, source);
   }
 
   const branchSwitch = parseGitBranchSwitch(command, resultContent);
