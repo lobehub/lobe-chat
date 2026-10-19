@@ -26,10 +26,23 @@ describe('hydrateJwtFromFile', () => {
     expect(env.LOBEHUB_JWT).toBe('header.payload.sig');
   });
 
-  it('lets a non-empty LOBEHUB_JWT win over the file', () => {
-    const env: NodeJS.ProcessEnv = { LOBEHUB_JWT: 'from-env', [JWT_FILE_ENV]: jwtPath };
+  it('prefers the file over an inherited token, which goes stale after renewal', () => {
+    // Codex's default policy passes the original LOBEHUB_JWT alongside the file;
+    // only the file is rewritten when the operation token renews.
+    const env: NodeJS.ProcessEnv = { LOBEHUB_JWT: 'expired', [JWT_FILE_ENV]: jwtPath };
     hydrateJwtFromFile(env);
-    expect(env.LOBEHUB_JWT).toBe('from-env');
+    expect(env.LOBEHUB_JWT).toBe('header.payload.sig');
+  });
+
+  it('keeps an inherited token when the file is missing or empty', async () => {
+    const missing: NodeJS.ProcessEnv = { LOBEHUB_JWT: 'from-env', [JWT_FILE_ENV]: `${jwtPath}x` };
+    hydrateJwtFromFile(missing);
+    expect(missing.LOBEHUB_JWT).toBe('from-env');
+
+    await writeFile(jwtPath, '\n');
+    const empty: NodeJS.ProcessEnv = { LOBEHUB_JWT: 'from-env', [JWT_FILE_ENV]: jwtPath };
+    hydrateJwtFromFile(empty);
+    expect(empty.LOBEHUB_JWT).toBe('from-env');
   });
 
   it('treats an explicitly empty LOBEHUB_JWT as an opt-out of the file', () => {

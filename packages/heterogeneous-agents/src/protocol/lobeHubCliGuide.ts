@@ -29,9 +29,9 @@
  *   as "clear the variable", not `env -u`: devices run Windows too, and
  *   `pickAuthSource` only tests `LOBEHUB_JWT` for truthiness, so an empty value
  *   falls through to the stored login in every shell. Codex runs may carry the
- *   token as `LOBEHUB_JWT_FILE` instead (see `codexShellEnv`); the CLI reads it
- *   only while `LOBEHUB_JWT` is unset, and PowerShell/cmd unset a variable
- *   assigned an empty value, so the guide clears both.
+ *   token as `LOBEHUB_JWT_FILE` instead (see `codexShellEnv`); the CLI prefers
+ *   it over an inherited token unless `LOBEHUB_JWT` is set empty, and
+ *   PowerShell/cmd unset a variable assigned an empty value, so the guide clears both.
  * - **`LOBEHUB_AGENT_ID`.** Desktop client mode sets it through
  *   `buildLobeHubSessionEnv`. CLI/Desktop dispatch launchers, including
  *   OpenClaw/Hermes, clear inherited identity and inject the current dispatch's

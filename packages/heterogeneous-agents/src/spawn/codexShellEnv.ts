@@ -30,7 +30,8 @@ export const CODEX_LOBEHUB_CONTEXT_ENV_KEYS = [
 /**
  * Points the CLI at a 0600 file holding the run's JWT. The token itself never
  * goes into Codex argv (readable by any local user through `ps`); only this
- * path does. Read by the `lh` CLI when `LOBEHUB_JWT` is absent.
+ * path does. The `lh` CLI prefers it over an inherited `LOBEHUB_JWT` (only the
+ * file follows token renewals) unless `LOBEHUB_JWT` is set empty.
  */
 export const LOBEHUB_JWT_FILE_ENV = 'LOBEHUB_JWT_FILE';
 

@@ -14,14 +14,17 @@ export const JWT_FILE_ENV = 'LOBEHUB_JWT_FILE';
  * `LOBEHUB_JWT` (auth source, tRPC/HTTP clients, workspace scope, doctor) sees
  * the same credential.
  *
- * - A non-empty `LOBEHUB_JWT` always wins; the file is not read.
+ * - A readable, non-empty file wins over an inherited non-empty `LOBEHUB_JWT`.
+ *   Under Codex's default `inherit = "all"` the shell gets both, and only the
+ *   file is rewritten when the operation token renews, so the env copy goes
+ *   stale.
  * - A `LOBEHUB_JWT` that is defined but empty (`LOBEHUB_JWT= lh …`) is an
  *   explicit opt-out: the file is ignored, so the agent's "clear LOBEHUB_JWT
  *   and retry with the machine's login" fallback keeps working.
  * - A missing, unreadable or empty file behaves as if no file were configured.
  */
 export const hydrateJwtFromFile = (env: NodeJS.ProcessEnv = process.env): void => {
-  if (env.LOBEHUB_JWT !== undefined) return;
+  if (env.LOBEHUB_JWT === '') return;
 
   const filePath = env[JWT_FILE_ENV]?.trim();
   if (!filePath) return;
