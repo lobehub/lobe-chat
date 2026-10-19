@@ -30,8 +30,8 @@ const MutateBridge = () => {
   return null;
 };
 
-const createWrapper = () => {
-  const value = { provider: () => new Map() };
+const createWrapper = (cache = new Map()) => {
+  const value = { provider: () => cache };
 
   return function SWRTestWrapper({ children }: PropsWithChildren) {
     return createElement(SWRConfig, { value }, createElement(MutateBridge), children);
@@ -189,6 +189,98 @@ describe('useModelCatalog', () => {
         )?.data,
       ).toEqual(catalog),
     );
+  });
+
+  // Regression (Codex P2): the default sync key serialized the whole params,
+  // so picking a model (`provider.model`) started another CLI discovery, and
+  // raw `provider.env` values became part of an SWR cache key.
+  it('keeps one discovery when only the selected model changes', async () => {
+    const listModels = vi.spyOn(heterogeneousAgentCatalogService, 'listModels').mockResolvedValue({
+      models: [{ id: 'gpt-live', modelId: 'gpt-live', providerId: 'codex' }],
+      status: 'success',
+      updatedAt: 1,
+    });
+
+    const { result, rerender } = renderHook(
+      ({ model }: { model: string }) =>
+        useModelCatalog({
+          deviceId: 'device-1',
+          isDeviceListLoading: false,
+          isPreferenceLoading: false,
+          open: false,
+          provider: { env: { OPENAI_API_KEY: 'sk-secret' }, model, type: 'codex' },
+          targetReady: true,
+          type: 'codex',
+        }),
+      { initialProps: { model: 'gpt-a' }, wrapper: createWrapper() },
+    );
+
+    await waitFor(() => expect(result.current.data?.models[0]?.id).toBe('gpt-live'));
+    rerender({ model: 'gpt-b' });
+    await new Promise((resolve) => setTimeout(resolve, 20));
+
+    expect(listModels).toHaveBeenCalledTimes(1);
+    expect(result.current.data?.models[0]?.id).toBe('gpt-live');
+  });
+
+  it('rediscovers when the launch config changes', async () => {
+    const listModels = vi.spyOn(heterogeneousAgentCatalogService, 'listModels').mockResolvedValue({
+      models: [],
+      status: 'success',
+      updatedAt: 1,
+    });
+
+    const { rerender } = renderHook(
+      ({ token }: { token: string }) =>
+        useModelCatalog({
+          isDeviceListLoading: false,
+          isPreferenceLoading: false,
+          open: false,
+          provider: { env: { OPENAI_API_KEY: token }, type: 'codex' },
+          targetReady: true,
+          type: 'codex',
+        }),
+      { initialProps: { token: 'sk-a' }, wrapper: createWrapper() },
+    );
+
+    await waitFor(() => expect(listModels).toHaveBeenCalledTimes(1));
+    rerender({ token: 'sk-b' });
+    await waitFor(() => expect(listModels).toHaveBeenCalledTimes(2));
+    expect(listModels).toHaveBeenLastCalledWith(
+      expect.objectContaining({ env: { OPENAI_API_KEY: 'sk-b' } }),
+    );
+  });
+
+  it('keeps provider env values and unrelated config out of the SWR cache keys', async () => {
+    const cache = new Map();
+    vi.spyOn(heterogeneousAgentCatalogService, 'listModels').mockResolvedValue({
+      models: [],
+      status: 'success',
+      updatedAt: 1,
+    });
+
+    const { result } = renderHook(
+      () =>
+        useModelCatalog({
+          isDeviceListLoading: false,
+          isPreferenceLoading: false,
+          open: false,
+          provider: {
+            env: { OPENAI_API_KEY: 'sk-secret' },
+            platformAgentId: 'agent: secret-context',
+            type: 'codex',
+          },
+          targetReady: true,
+          type: 'codex',
+        }),
+      { wrapper: createWrapper(cache) },
+    );
+
+    await waitFor(() => expect(result.current.data).toBeDefined());
+    const keys = [...cache.keys()].map(String).join('\n');
+    expect(keys).toContain('heteroAgentModelCatalog');
+    expect(keys).not.toContain('sk-secret');
+    expect(keys).not.toContain('secret-context');
   });
 
   it.each([

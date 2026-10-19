@@ -1,10 +1,11 @@
+import { replicaKeys } from '@lobechat/replica';
 import type {
   HeterogeneousAgentModelCatalogSuccess,
   HeterogeneousProviderConfig,
   ListHeterogeneousAgentModelsParams,
 } from '@lobechat/types';
 
-import { defineReplica } from '@/libs/replica';
+import { cacheScope, defineReplica } from '@/libs/replica';
 
 /**
  * The model list an external agent CLI reports on one device — the options of
@@ -50,14 +51,22 @@ export const heteroModelCatalogKey = ({
     '\u0000',
   );
 
+const NAME = 'heteroAgentModelCatalog';
+const VERSION = 1;
+
 export const heteroModelCatalogResource = defineReplica<
   HeteroModelCatalogParams,
   HeterogeneousAgentModelCatalogSuccess
 >({
   key: heteroModelCatalogKey,
-  name: 'heteroAgentModelCatalog',
+  name: NAME,
   // A few agents × devices × directories; old ones fall out of storage, LRU.
   persist: { maxEntries: 20 },
   storage: 'indexedDB',
-  version: 1,
+  // The default sync key embeds the raw params: picking a model would start
+  // another discovery, and `env` values would land in an SWR cache key. Keep
+  // the default shape (so `revalidate` still matches) with the hashed key only.
+  syncKey: (params): readonly unknown[] =>
+    replicaKeys.sync(NAME, VERSION, cacheScope.get(), heteroModelCatalogKey(params), null),
+  version: VERSION,
 });

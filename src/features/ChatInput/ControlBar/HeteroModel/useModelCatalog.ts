@@ -6,6 +6,7 @@ import type {
 import { useEffect, useMemo, useRef } from 'react';
 
 import {
+  fingerprintConfig,
   heteroModelCatalogKey,
   type HeteroModelCatalogParams,
 } from '@/store/device/heteroModelCatalog/projection';
@@ -64,9 +65,25 @@ export const useModelCatalog = ({
 }: UseHeterogeneousAgentModelCatalogParams): ModelCatalogResult => {
   const wasOpenRef = useRef(open);
   const enabled = targetReady && !isDeviceListLoading && !isPreferenceLoading;
+  // Only the discovery inputs: a model / effort pick must not start another
+  // discovery. `fingerprint` stands in for args + env in the memo deps.
+  const fingerprint = fingerprintConfig(provider);
   const params = useMemo<HeteroModelCatalogParams | null>(
-    () => (enabled ? { cwd, deviceId, provider, type } : null),
-    [enabled, cwd, deviceId, provider, type],
+    () =>
+      enabled
+        ? {
+            cwd,
+            deviceId,
+            provider: provider && {
+              args: provider.args,
+              command: provider.command,
+              env: provider.env,
+              type: provider.type,
+            },
+            type,
+          }
+        : null,
+    [enabled, cwd, deviceId, provider?.command, provider?.type, fingerprint, type],
   );
   const key = params ? heteroModelCatalogKey(params) : undefined;
   const data = useHeteroModelCatalogStore((s) => (key ? s.heteroModelCatalogMap[key] : undefined));
