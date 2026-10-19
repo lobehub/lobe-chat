@@ -2,6 +2,7 @@ import { isDesktop } from '@lobechat/const';
 import { isFullAccessApiKey } from '@lobechat/const/apiKeyScope';
 import type { UserInitializationState, UserPreference } from '@lobechat/types';
 import { Plans, UserGuideSchema } from '@lobechat/types';
+import { inferImageMimeTypeFromBytes } from '@lobechat/utils/imageMimeType';
 import { TRPCError } from '@trpc/server';
 import { v4 as uuidv4 } from 'uuid';
 import { z } from 'zod';
@@ -147,19 +148,21 @@ export const profileRouter = router({
     // If it's Base64 data, need to upload to S3
     if (input.startsWith('data:image')) {
       try {
-        // Extract mimeType, e.g., "image/png"
-        const prefix = 'data:';
-        const semicolonIndex = input.indexOf(';');
-        const mimeType =
-          semicolonIndex !== -1 ? input.slice(prefix.length, semicolonIndex) : 'image/png';
-        const fileType = mimeType.split('/')[1];
-
-        // Split string to get the Base64 part
-        const commaIndex = input.indexOf(',');
-        if (commaIndex === -1) {
-          throw new Error('Invalid Base64 data');
+        const prefix = /^data:(image\/(webp|png));base64,/.exec(input);
+        if (!prefix) {
+          throw new TRPCError({ code: 'BAD_REQUEST', message: 'INVALID_AVATAR_IMAGE' });
         }
-        const base64Data = input.slice(commaIndex + 1);
+        const [, mimeType, fileType] = prefix;
+        const buffer = Buffer.from(input.slice(prefix[0].length), 'base64');
+        let detectedMimeType: string | undefined;
+        try {
+          detectedMimeType = await inferImageMimeTypeFromBytes(buffer);
+        } catch (cause) {
+          throw new TRPCError({ cause, code: 'BAD_REQUEST', message: 'INVALID_AVATAR_IMAGE' });
+        }
+        if (detectedMimeType !== mimeType) {
+          throw new TRPCError({ code: 'BAD_REQUEST', message: 'INVALID_AVATAR_IMAGE' });
+        }
 
         // Create S3 client
         const s3 = new FileS3();
@@ -171,9 +174,6 @@ export const profileRouter = router({
 
         const fileName = `${uuidv4()}.${fileType}`;
         const filePath = `user/avatar/${ctx.userId}/${fileName}`;
-
-        // Convert Base64 data to Buffer and upload to S3
-        const buffer = Buffer.from(base64Data, 'base64');
 
         await s3.uploadBuffer(filePath, buffer, mimeType);
 
@@ -193,6 +193,7 @@ export const profileRouter = router({
 
         return ctx.userModel.updateUser({ avatar: avatarUrl });
       } catch (error) {
+        if (error instanceof TRPCError) throw error;
         throw new Error(
           'Error uploading avatar: ' + (error instanceof Error ? error.message : String(error)),
           { cause: error },
