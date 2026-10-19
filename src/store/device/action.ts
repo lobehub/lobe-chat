@@ -13,6 +13,14 @@ type Setter = StoreSetter<DeviceStore>;
 
 const LIST_PARAMS = {} as DeviceListParams;
 
+/**
+ * Pickers, chips and guards across a page mount the list at different times.
+ * The app's SWR default (no dedupe) would let each late mount re-request it;
+ * inside this window they join the last request instead. Explicit refreshes,
+ * post-write revalidation and polling still go out.
+ */
+const DEVICE_LIST_DEDUPING_INTERVAL = 10_000;
+
 type UpdateDeviceInput = Parameters<typeof deviceService.updateDevice>[0];
 
 /**
@@ -208,7 +216,11 @@ export class DeviceActionImpl {
    * its own `refreshInterval`.
    */
   useFetchDevices = (enabled = false, schedule?: { refreshInterval?: number }): ReplicaSyncResult =>
-    this.#list.useSync(LIST_PARAMS, { enabled, ...schedule });
+    this.#list.useSync(LIST_PARAMS, {
+      dedupingInterval: DEVICE_LIST_DEDUPING_INTERVAL,
+      enabled,
+      ...schedule,
+    });
 }
 
 export type DeviceAction = Pick<DeviceActionImpl, keyof DeviceActionImpl>;

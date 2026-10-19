@@ -8,7 +8,7 @@
 import { randomUUID } from 'node:crypto';
 
 import type { DeviceListItem } from '@lobechat/types';
-import { act, renderHook, waitFor } from '@testing-library/react';
+import { act, render, renderHook, waitFor } from '@testing-library/react';
 import type { PropsWithChildren } from 'react';
 import { createElement, useEffect } from 'react';
 import { SWRConfig, useSWRConfig } from 'swr';
@@ -99,6 +99,37 @@ describe('useDeviceList', () => {
     );
 
     await waitFor(() => expect(result.current.data).toEqual([device('dev-1')]));
+    expect(deviceService.listDevices).toHaveBeenCalledTimes(1);
+  });
+
+  it('lets a reader that mounts after the first answer reuse it', async () => {
+    vi.mocked(deviceService.listDevices).mockResolvedValue([device('dev-1')]);
+    let lateData: DeviceListItem[] | undefined;
+    const Reader = () => {
+      useDeviceList();
+      return null;
+    };
+    const LateReader = () => {
+      lateData = useDeviceList().data;
+      return null;
+    };
+    const page = (late: boolean) =>
+      wrapper({
+        children: [
+          createElement(Reader, { key: 'a' }),
+          late && createElement(LateReader, { key: 'b' }),
+        ],
+      });
+
+    const view = render(page(false));
+    await waitFor(() => expect(deviceService.listDevices).toHaveBeenCalledTimes(1));
+    await waitFor(() => expect(useDeviceStore.getState().deviceListMap.all).toHaveLength(1));
+
+    // A popover / chip opening a moment later on the same page.
+    view.rerender(page(true));
+
+    expect(lateData).toEqual([device('dev-1')]);
+    await new Promise((resolve) => setTimeout(resolve, 50));
     expect(deviceService.listDevices).toHaveBeenCalledTimes(1);
   });
 
