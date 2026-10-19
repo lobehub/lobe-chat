@@ -722,6 +722,8 @@
   "goalList.taskProgress": "{{done}}/{{total}} 项任务完成",
   "goalList.title": "目标",
   "goalPage.activeGoals": "待处理目标",
+  "goalPage.agentFilter.all": "全部 Agent",
+  "goalPage.agentFilter.title": "按 Agent 筛选",
   "goalPage.allGoals": "全部目标",
   "goalPage.create": "创建目标",
   "goalPage.description": "掌握 Agent 正在追逐什么，以及每个目标距离验收还有多远。",

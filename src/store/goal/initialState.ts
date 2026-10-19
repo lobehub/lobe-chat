@@ -31,6 +31,11 @@ export interface GoalState {
    * (what the project dashboard and the route meta read) and one sibling entry
    * per narrow tab (`goalListKey`).
    */
+  /**
+   * The agent the cross-agent goals page is narrowed to; unset lists every
+   * agent's goals. Kept in the store so returning from a goal keeps the filter.
+   */
+  goalListAgentFilter?: string;
   goalListByAgentId: Record<string, GoalListValue>;
   goalListFilter: GoalListFilter;
   /** Local-first bookkeeping for `goalListByAgentId`. */

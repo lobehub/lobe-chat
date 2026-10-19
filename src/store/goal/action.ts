@@ -537,6 +537,14 @@ export class GoalActionImpl {
     await this.#homeGoalList.revalidate(scope);
   };
 
+  setGoalListAgentFilter = (agentId?: string): void => {
+    this.#set(
+      { goalListAgentFilter: agentId, goalListVisibleLimit: 10 },
+      false,
+      'setGoalListAgentFilter',
+    );
+  };
+
   setGoalListFilter = (filter: GoalListFilter): void => {
     this.#set({ goalListFilter: filter, goalListVisibleLimit: 10 }, false, 'setGoalListFilter');
   };

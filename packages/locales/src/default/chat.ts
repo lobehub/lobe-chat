@@ -2880,6 +2880,8 @@ export default {
   'goalProcess.start': 'Start',
   'goalPage.allGoals': 'All goals',
   'goalPage.activeGoals': 'Open goals',
+  'goalPage.agentFilter.all': 'All agents',
+  'goalPage.agentFilter.title': 'Filter by agent',
   'goalPage.description':
     'Track what this agent is pursuing and how close each goal is to acceptance.',
   'goalPage.create': 'Create goal',

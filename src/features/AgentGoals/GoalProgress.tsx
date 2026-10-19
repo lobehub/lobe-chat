@@ -54,7 +54,6 @@ const styles = createStaticStyles(({ css }) => ({
 }));
 
 export interface GoalProgressProps {
-  findingCount: number;
   pendingDecisions: number;
   taskDone: number;
   taskTotal: number;
@@ -63,12 +62,11 @@ export interface GoalProgressProps {
 }
 
 /**
- * The list row's roll-up: how far the graph got, what it produced, what it
- * cost — and, taking priority over the findings count, whether anything is
- * blocked on the user right now.
+ * The list row's roll-up: how far the graph got, whether anything is blocked
+ * on the user right now, and how long it ran and what it cost.
  */
 export const GoalProgress = memo<GoalProgressProps>(
-  ({ findingCount, pendingDecisions, totalRunCost, totalRunDuration, taskDone, taskTotal }) => {
+  ({ pendingDecisions, totalRunCost, totalRunDuration, taskDone, taskTotal }) => {
     const { t } = useTranslation('chat');
     const progress = taskTotal > 0 ? Math.round((taskDone / taskTotal) * 100) : 0;
 
@@ -88,14 +86,14 @@ export const GoalProgress = memo<GoalProgressProps>(
             {t('goalList.noTasks')}
           </Text>
         )}
+        {/* Only what is blocked on the user; the column stays so the
+          duration and cost line up from row to row. */}
         {pendingDecisions > 0 ? (
           <Text className={styles.needsYou} fontSize={12}>
             {t('goalList.needsYou', { count: pendingDecisions })}
           </Text>
         ) : (
-          <Text className={styles.metric} color={cssVar.colorTextTertiary} fontSize={12}>
-            {t('goalList.findings', { count: findingCount })}
-          </Text>
+          <span />
         )}
         <Text className={styles.metric} color={cssVar.colorTextTertiary} fontSize={12}>
           {formatGoalDuration(totalRunDuration)}

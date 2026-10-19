@@ -89,7 +89,6 @@ export const GoalCardItem = memo<GoalItemProps>(({ globalScopeId, goal: item, pr
           progress grid without pushing the grid past the card's edge. */}
         {globalScopeId && <GoalAgentLabel agentId={goal.agentId} />}
         <GoalProgress
-          findingCount={item.findingCount}
           pendingDecisions={item.pendingDecisions}
           taskDone={item.taskDone}
           taskTotal={item.taskTotal}

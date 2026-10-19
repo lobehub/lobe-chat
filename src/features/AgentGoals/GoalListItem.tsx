@@ -87,7 +87,6 @@ export const GoalListItem = memo<GoalItemProps>(({ globalScopeId, goal: item, pr
         </Flexbox>
         {globalScopeId && <GoalAgentLabel agentId={goal.agentId} />}
         <GoalProgress
-          findingCount={item.findingCount}
           pendingDecisions={item.pendingDecisions}
           taskDone={item.taskDone}
           taskTotal={item.taskTotal}
