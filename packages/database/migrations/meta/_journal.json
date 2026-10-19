@@ -1281,6 +1281,13 @@
       "when": 1792447024792,
       "tag": "0182_add_meetings",
       "breakpoints": true
+    },
+    {
+      "idx": 183,
+      "version": "7",
+      "when": 1792449612524,
+      "tag": "0183_add_meeting_error",
+      "breakpoints": true
     }
   ],
   "version": "6"
