@@ -288,7 +288,7 @@ const Content = memo(() => {
         ) : createError ? (
           <Flexbox align={'center'} flex={1} gap={8} height={'100%'} justify={'center'}>
             <Text type={'secondary'}>{t('terminalPanel.createFailed')}</Text>
-            <Button size={'small'} onClick={() => createTab(topicKey, cwd, targetDeviceId)}>
+            <Button onClick={() => createTab(topicKey, cwd, targetDeviceId)}>
               {t('retry', { ns: 'common' })}
             </Button>
           </Flexbox>
