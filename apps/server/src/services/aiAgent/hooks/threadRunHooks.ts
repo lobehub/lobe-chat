@@ -31,13 +31,13 @@ export function calculateTotalTokens(usage?: AgentState['usage']): number | unde
  */
 export type ThreadUsageBaseline = Pick<
   ThreadMetadata,
-  'totalCost' | 'totalMessages' | 'totalSteps' | 'totalTokens' | 'totalToolCalls'
+  'totalCost' | 'totalLlmCalls' | 'totalMessages' | 'totalTokens' | 'totalToolCalls'
 >;
 
 export const pickThreadUsageBaseline = (metadata?: ThreadMetadata | null): ThreadUsageBaseline => ({
   totalCost: metadata?.totalCost,
   totalMessages: metadata?.totalMessages,
-  totalSteps: metadata?.totalSteps,
+  totalLlmCalls: metadata?.totalLlmCalls,
   totalTokens: metadata?.totalTokens,
   totalToolCalls: metadata?.totalToolCalls,
 });
@@ -82,6 +82,7 @@ export function createThreadMetadataCallbacks(
             startedAt,
             totalMessages: state.messages?.length ?? 0,
             totalSteps: getLlmCallCount(state),
+            totalLlmCalls: getLlmCallCount(state),
             totalTokens: calculateTotalTokens(state.usage),
             totalToolCalls: accumulatedToolCalls,
           },
@@ -159,6 +160,7 @@ export function createThreadMetadataCallbacks(
             totalCost: finalState.cost?.total,
             totalMessages: finalState.messages?.length ?? 0,
             totalSteps: getLlmCallCount(finalState),
+            totalLlmCalls: getLlmCallCount(finalState),
             totalTokens: calculateTotalTokens(finalState.usage),
             totalToolCalls: accumulatedToolCalls,
           },
@@ -203,7 +205,8 @@ export function createThreadHooks(
               startedAt,
               totalCost: usageBaseline.totalCost,
               totalMessages: state.messages?.length ?? 0,
-              totalSteps: addUsage(usageBaseline.totalSteps, getLlmCallCount(state)),
+              totalSteps: addUsage(usageBaseline.totalLlmCalls, getLlmCallCount(state)),
+              totalLlmCalls: addUsage(usageBaseline.totalLlmCalls, getLlmCallCount(state)),
               totalTokens: addUsage(usageBaseline.totalTokens, calculateTotalTokens(state.usage)),
               totalToolCalls: addUsage(
                 usageBaseline.totalToolCalls,
@@ -284,7 +287,8 @@ export function createThreadHooks(
               startedAt,
               totalCost: addUsage(usageBaseline.totalCost, finalState.cost?.total),
               totalMessages: finalState.messages?.length ?? 0,
-              totalSteps: addUsage(usageBaseline.totalSteps, getLlmCallCount(finalState)),
+              totalSteps: addUsage(usageBaseline.totalLlmCalls, getLlmCallCount(finalState)),
+              totalLlmCalls: addUsage(usageBaseline.totalLlmCalls, getLlmCallCount(finalState)),
               totalTokens: addUsage(
                 usageBaseline.totalTokens,
                 calculateTotalTokens(finalState.usage),

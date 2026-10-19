@@ -1157,6 +1157,8 @@ export class StreamingExecutorActionImpl {
           totalCost,
           totalMessages: subTaskMessages.length,
           // User-facing step metric: actual LLM calls, not execution rounds.
+          // `totalLlmCalls` is the versioned continuation baseline.
+          totalLlmCalls: usage?.llm?.apiCalls,
           totalSteps: usage?.llm?.apiCalls,
           totalTokens,
           totalToolCalls,

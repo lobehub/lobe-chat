@@ -121,6 +121,8 @@ export const executeDirectMention = async (
           totalCost: runtimeResult?.cost?.total,
           totalMessages: threadMessages.length,
           // `totalSteps` is the user-facing step metric: actual LLM calls.
+          // `totalLlmCalls` is the versioned continuation baseline.
+          totalLlmCalls: runtimeResult?.usage?.llm?.apiCalls,
           totalSteps: runtimeResult?.usage?.llm?.apiCalls,
           totalTokens: metrics.totalTokens,
           totalToolCalls: metrics.toolCalls,

@@ -68,6 +68,14 @@ export interface ThreadMetadata {
   subagentType?: string;
   /** Total cost in dollars */
   totalCost?: number;
+  /**
+   * Total LLM calls made (user-facing step metric).
+   *
+   * Versioned baseline for continuation runs: legacy threads only have
+   * `totalSteps` in execution-step units, so that value must not be reused to
+   * accumulate LLM calls.
+   */
+  totalLlmCalls?: number;
   /** Total messages created during execution */
   totalMessages?: number;
   /** Total LLM calls made (user-facing step metric) */
@@ -134,6 +142,7 @@ export const threadMetadataSchema = z.object({
   startedAt: z.string().optional(),
   subagentType: z.string().optional(),
   totalCost: z.number().optional(),
+  totalLlmCalls: z.number().optional(),
   totalMessages: z.number().optional(),
   totalTokens: z.number().optional(),
   totalSteps: z.number().optional(),

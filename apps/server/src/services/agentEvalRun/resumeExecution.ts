@@ -104,7 +104,9 @@ export async function executeResumedTrajectory(
                 duration: event.duration,
                 errorDetail: event.errorDetail,
                 errorMessage: event.errorMessage,
-                llmCalls: (event.llmCalls ?? 0) + prevLlmCalls,
+                // `event.llmCalls` is already cumulative: the operation is seeded with
+                // `initialLlmCalls: prevLlmCalls`.
+                llmCalls: event.llmCalls ?? 0,
                 steps: (event.steps ?? 0) + prevSteps,
                 toolCalls: (event.toolCalls ?? 0) + prevToolCalls,
                 totalTokens: (event.totalTokens ?? 0) + prevTokens,
@@ -251,7 +253,9 @@ export async function executeResumedThreadTrajectory(
                 cost: (event.cost ?? 0) + prevCost,
                 duration: event.duration,
                 errorMessage: event.errorMessage,
-                llmCalls: (event.llmCalls ?? 0) + prevLlmCalls,
+                // `event.llmCalls` is already cumulative: the operation is seeded with
+                // `initialLlmCalls: prevLlmCalls`.
+                llmCalls: event.llmCalls ?? 0,
                 steps: (event.steps ?? 0) + prevSteps,
                 toolCalls: (event.toolCalls ?? 0) + prevToolCalls,
                 totalTokens: (event.totalTokens ?? 0) + prevTokens,
