@@ -968,6 +968,33 @@ export interface DeviceListProjectSkillsResult {
   source: ProjectSkillSource | null;
 }
 
+/** One Claude Code auto-memory file, from the `listClaudeCodeMemory` device RPC. */
+export interface DeviceClaudeCodeMemoryFile {
+  description?: string;
+  /** The `MEMORY.md` index Claude Code loads into every session. */
+  isIndex: boolean;
+  name: string;
+  /** Absolute path on the device. */
+  path: string;
+  /** Path within the memory directory, `/`-separated. */
+  relativePath: string;
+  size: number;
+  /** Frontmatter memory type: user / feedback / project / reference. */
+  type?: string;
+  updatedAt: number;
+}
+
+/**
+ * Claude Code's auto memory for a project on the device, returned by the
+ * `listClaudeCodeMemory` device RPC. Mirrors device-control's
+ * `ListClaudeCodeMemoryResult`.
+ */
+export interface DeviceListClaudeCodeMemoryResult {
+  files: DeviceClaudeCodeMemoryFile[];
+  /** `~/.claude/projects/<project key>/memory` on the device, present or not. */
+  memoryDir: string;
+}
+
 const gitLinkedPullRequestSchema = z.object({
   ciStatus: z.enum(['failure', 'pending', 'success', 'unknown']).optional(),
   isDraft: z.boolean().optional(),

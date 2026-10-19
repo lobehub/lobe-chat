@@ -721,6 +721,45 @@ describe('AgentWorkingSidebar — tab strip', () => {
     expect(tabs[0]).toHaveAttribute('aria-pressed', 'true');
   });
 
+  it('opens Claude Code memory by default once a project folder is selected', () => {
+    agentStore.activeAgentId = 'agent';
+    agentStore.heterogeneousType = 'claude-code';
+    agentStore.isHeterogeneous = true;
+    effectiveConfig.agencyConfig = { executionTarget: 'local' };
+    reviewState.workingDirectory = '/repo';
+    localStorageState.openTabsByContext = {};
+    globalStore.status.workingSidebarTab = 'memory';
+
+    render(<AgentWorkingSidebar />);
+
+    const tabs = Array.from(document.querySelectorAll<HTMLButtonElement>('button[data-tab-key]'));
+    expect(tabs.map((tab) => tab.dataset.tabKey)).toEqual(['files', 'skills', 'memory']);
+    expect(screen.getByTestId('memory-pane')).toHaveTextContent('/repo');
+  });
+
+  it.each([
+    ['another heterogeneous agent', 'codex', '/repo', false],
+    ['a Claude Code agent without a project folder', 'claude-code', undefined, false],
+    ['a Claude Code agent on the home fallback only', 'claude-code', '/home/me', true],
+  ])(
+    'offers no memory tab for %s',
+    (_case, heterogeneousType, workingDirectory, isHomeFallback) => {
+      agentStore.activeAgentId = 'agent';
+      agentStore.heterogeneousType = heterogeneousType;
+      agentStore.isHeterogeneous = true;
+      effectiveConfig.agencyConfig = { executionTarget: 'local' };
+      reviewState.workingDirectory = workingDirectory;
+      reviewState.isHomeFallback = isHomeFallback;
+      localStorageState.openTabsByContext = {};
+
+      render(<AgentWorkingSidebar />);
+
+      const tabs = Array.from(document.querySelectorAll<HTMLButtonElement>('button[data-tab-key]'));
+      expect(tabs.map((tab) => tab.dataset.tabKey)).not.toContain('memory');
+      expect(screen.queryByTestId('memory-pane')).toBeNull();
+    },
+  );
+
   it('creates an independent browser tab every time Browser is chosen', async () => {
     localStorageState.openTabsByContext = { 'draft:default:none': ['params'] };
     globalStore.status.workingSidebarTab = 'params';

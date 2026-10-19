@@ -48,11 +48,28 @@ export const registerDeviceSkillRoots = (deviceId: string, roots: string[]) => {
   deviceSkillRoots.set(deviceId, new Set(roots));
 };
 
-const isWithinSkillRoots = (deviceId: string, workingDirectory: string): boolean => {
-  const roots = deviceSkillRoots.get(deviceId);
-  if (!roots) return false;
-  return [...roots].some((root) => isPathWithinRoot(root, workingDirectory));
+/**
+ * Claude Code auto-memory directories (`~/.claude/projects/<key>/memory`),
+ * registered by `listClaudeCodeMemory` once the caller proved the project
+ * itself is an approved root, so the Memory tab can preview and save them.
+ * Accumulates per device (one per project), oldest evicted past the cap.
+ */
+const MAX_MEMORY_ROOTS_PER_DEVICE = 50;
+const deviceMemoryRoots = new Map<string, Set<string>>();
+
+export const registerDeviceMemoryRoot = (deviceId: string, root: string) => {
+  if (!root) return;
+  const roots = deviceMemoryRoots.get(deviceId) ?? new Set<string>();
+  roots.delete(root);
+  roots.add(root);
+  if (roots.size > MAX_MEMORY_ROOTS_PER_DEVICE) roots.delete(roots.values().next().value!);
+  deviceMemoryRoots.set(deviceId, roots);
 };
+
+const isWithinRegisteredRoots = (deviceId: string, workingDirectory: string): boolean =>
+  [deviceSkillRoots.get(deviceId), deviceMemoryRoots.get(deviceId)].some(
+    (roots) => !!roots && [...roots].some((root) => isPathWithinRoot(root, workingDirectory)),
+  );
 
 /**
  * Validate that a client-supplied workspace root is actually one the user has
@@ -101,7 +118,7 @@ export const assertWorkspaceRootApproved = async (
 
   const approved =
     approvedRoots.some((root) => isPathWithinRoot(root, workingDirectory)) ||
-    isWithinSkillRoots(deviceId, workingDirectory);
+    isWithinRegisteredRoots(deviceId, workingDirectory);
 
   if (!approved) {
     throw new TRPCError({
