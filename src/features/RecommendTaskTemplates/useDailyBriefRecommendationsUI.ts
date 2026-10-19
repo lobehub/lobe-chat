@@ -23,6 +23,7 @@ import { useResolvedInterestKeys } from './useResolvedInterestKeys';
 
 const REFRESH_SEED_STORAGE_KEY = 'lobehub:taskTemplate:refreshSeed';
 const nextRefreshSeed = createNanoId(8);
+const RECOMMENDATION_DEDUPE_INTERVAL = 10_000;
 
 export type DailyBriefRecommendationsUIState =
   | { mode: 'hidden' }
@@ -135,8 +136,18 @@ export function useDailyBriefRecommendationsUI(
   );
 
   // The persisted row hydrates as soon as the user is known; the network read
-  // waits for resolved interests (they are sent with the request).
-  const { error, isHydrated, isValidating, revalidate } = dailyRecommendReplica.useSync(params, {
+  // waits for resolved interests (they are sent with the request). Several views
+  // (home rail, its visibility probe, the task empty state) mount this hook:
+  // the dedupe window lets one mounting shortly after another share its read.
+  // `isPaused` holds the network read until the interests resolve, also when
+  // the entry key changes (scope, locale, seed) before they do: the persisted
+  // row still hydrates, and the read starts once they resolve (below).
+  const interestsPendingRef = useRef(interestKeys === null);
+  interestsPendingRef.current = interestKeys === null;
+  const isPaused = useCallback(() => interestsPendingRef.current, []);
+  const { error, isHydrated, isValidating } = dailyRecommendReplica.useSync(params, {
+    dedupingInterval: RECOMMENDATION_DEDUPE_INTERVAL,
+    isPaused,
     revalidateIfStale: canFetchRecommendations,
     revalidateOnFocus: false,
     revalidateOnMount: canFetchRecommendations,
@@ -155,10 +166,15 @@ export function useDailyBriefRecommendationsUI(
       return;
     }
 
-    if (!waitedForInterestsRef.current) return;
+    if (!waitedForInterestsRef.current || !params) return;
     waitedForInterestsRef.current = false;
-    void revalidate();
-  }, [interestKeys, key, revalidate]);
+    // `fetch` joins a request already in flight for the entry, so every mounted
+    // view resolving its interests in the same frame sends one request (a
+    // `revalidate` per view would force one each).
+    dailyRecommendReplica.fetch(params).catch((fetchError: unknown) => {
+      console.error('[taskTemplate:listDailyRecommend]', fetchError);
+    });
+  }, [interestKeys, key, params]);
 
   useEffect(() => {
     if (error) console.error('[taskTemplate:listDailyRecommend]', error);
@@ -188,7 +204,9 @@ export function useDailyBriefRecommendationsUI(
     (templateId: number) => {
       if (!shownKey) return;
       dailyRecommendReplica.update(shownKey, (current) =>
-        current?.filter((tmpl) => tmpl.id !== templateId),
+        current
+          ? normalizeTaskTemplateRecommendations(current).filter((tmpl) => tmpl.id !== templateId)
+          : current,
       );
     },
     [shownKey],
@@ -202,7 +220,9 @@ export function useDailyBriefRecommendationsUI(
         // Rolls the card back if the server refuses.
         await dailyRecommendReplica.optimistic(
           shownKey,
-          (current) => current.filter((tmpl) => tmpl.id !== templateId),
+          // A hydrated row may still hold rows the cards dropped as malformed.
+          (current) =>
+            normalizeTaskTemplateRecommendations(current).filter((tmpl) => tmpl.id !== templateId),
           () => taskTemplateService.dismiss(templateId),
         );
       } catch (error) {

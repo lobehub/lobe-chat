@@ -337,4 +337,25 @@ describe('useBuilderSuggestions', () => {
     await waitFor(() => expect(reloaded.result.current.suggestions[0]?.title).toBe('second title'));
     expect(aiChatService.generateJSON).toHaveBeenCalledTimes(3);
   });
+
+  // Regression: hydration started in a passive effect, so a reload with a
+  // persisted batch rendered the skeleton for at least its first frame.
+  it('paints a persisted batch on the very first render', async () => {
+    await seedPersisted(scope, baseParams, 'persisted');
+    const renders: Array<{ isLoading: boolean; title?: string }> = [];
+
+    renderHook(
+      (props) => {
+        const result = useBuilderSuggestions(props);
+        renders.push({ isLoading: result.isLoading, title: result.suggestions[0]?.title });
+        return result;
+      },
+      { initialProps: baseParams },
+    );
+
+    expect(renders[0]).toEqual({ isLoading: false, title: 'persisted' });
+    await waitForNextTick();
+    expect(renders.every((r) => !r.isLoading)).toBe(true);
+    expect(aiChatService.generateJSON).not.toHaveBeenCalled();
+  });
 });

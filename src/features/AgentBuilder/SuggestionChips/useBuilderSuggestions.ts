@@ -5,7 +5,11 @@ import { useSingleton } from '@/hooks/useSingleton';
 import { cacheScope } from '@/libs/replica';
 
 import { useBuilderSuggestionFeedbackStore } from './feedbackStore';
-import { builderSuggestionKey, type BuilderSuggestionParams } from './projection';
+import {
+  builderSuggestionKey,
+  type BuilderSuggestionParams,
+  peekBuilderSuggestions,
+} from './projection';
 import { builderSuggestionReplica, useBuilderSuggestionStore } from './suggestionStore';
 
 interface UseBuilderSuggestionsParams {
@@ -62,7 +66,17 @@ export const useBuilderSuggestions = ({
   const paramsRef = useRef(params);
   paramsRef.current = params;
 
-  const batch = useBuilderSuggestionStore((s) => (key ? s.suggestionMap[key] : undefined));
+  const stored = useBuilderSuggestionStore((s) => (key ? s.suggestionMap[key] : undefined));
+  // Entries (scope + key) whose async hydration has settled. Until then the
+  // persisted row is read synchronously, so a reload paints the chips on its
+  // first frame instead of a skeleton.
+  const settled = useSingleton(() => new Set<string>());
+  const entryId = key ? `${scope}\u0000${key}` : undefined;
+  const batch =
+    stored ??
+    (params && entryId && !settled.has(entryId)
+      ? peekBuilderSuggestions(params, scope)
+      : undefined);
   const error = useBuilderSuggestionStore((s) => (key ? s.suggestionErrorMap[key] : undefined));
 
   // Before paint, so a scope switch never shows the previous identity's chips.
@@ -81,6 +95,7 @@ export const useBuilderSuggestions = ({
     if (!key || !current) return;
     let cancelled = false;
     void builderSuggestionReplica.hydrate(current, scope).then(() => {
+      settled.add(`${scope}\u0000${key}`);
       if (cancelled || useBuilderSuggestionStore.getState().suggestionMap[key]) return;
       const entry = `${scope}\u0000${key}`;
       if (requested.has(entry)) return;
@@ -99,6 +114,7 @@ export const useBuilderSuggestions = ({
     // Drop the rejected batch from memory and its persisted row (skeleton shows),
     // so a failed regeneration never restores it on the next visit; then
     // generate a fresh one from the latest context.
+    settled.add(`${scope}\u0000${key}`);
     builderSuggestionReplica.remove(key, scope);
     builderSuggestionReplica.fetch(current, { fresh: true, scope }).catch(ignore);
   }, [batch?.tracingId, key, markRegenerated, scope]);

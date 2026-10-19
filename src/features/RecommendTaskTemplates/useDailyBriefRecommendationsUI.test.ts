@@ -577,4 +577,121 @@ describe('useDailyBriefRecommendationsUI', () => {
     );
     expect(result.current).toMatchObject({ mode: 'cards', templates: [template] });
   });
+
+  // The home rail, its visibility probe and the task empty state each mount
+  // this hook: they share one read.
+  it('sends one read for several mounted views', async () => {
+    const { result } = renderHook(
+      () => [
+        useDailyBriefRecommendationsUI(),
+        useDailyBriefRecommendationsUI(),
+        useDailyBriefRecommendationsUI(),
+      ],
+      { wrapper },
+    );
+
+    await waitFor(() => expect(result.current[0]).toMatchObject({ mode: 'cards' }));
+    await new Promise((resolve) => setTimeout(resolve, 20));
+    expect(taskTemplateService.listDailyRecommend).toHaveBeenCalledTimes(1);
+  });
+
+  // Regression: every mounted view forced its own `revalidate` once the
+  // interests resolved, so N views sent N reads.
+  it('sends one read for several views once interests resolve', async () => {
+    await seed([template]);
+    mockUseResolvedInterestKeys.mockReturnValue(null);
+    const fresh = { ...template, id: 202, title: 'Fresh' };
+    vi.mocked(taskTemplateService.listDailyRecommend).mockResolvedValue({
+      data: [fresh],
+      success: true,
+    });
+
+    const { rerender, result } = renderHook(
+      () => [
+        useDailyBriefRecommendationsUI(),
+        useDailyBriefRecommendationsUI(),
+        useDailyBriefRecommendationsUI(),
+      ],
+      { wrapper },
+    );
+    await waitFor(() => expect(result.current[0]).toMatchObject({ templates: [template] }));
+    expect(taskTemplateService.listDailyRecommend).not.toHaveBeenCalled();
+
+    mockUseResolvedInterestKeys.mockReturnValue(['coding']);
+    rerender();
+
+    await waitFor(() => expect(result.current[2]).toMatchObject({ templates: [fresh] }));
+    await new Promise((resolve) => setTimeout(resolve, 20));
+    expect(taskTemplateService.listDailyRecommend).toHaveBeenCalledTimes(1);
+  });
+
+  // Regression: the card actions filtered the raw hydrated row, so a malformed
+  // row next to a valid card threw on `tmpl.id` and the dismiss never reached
+  // the server.
+  it('dismisses a card from a persisted row that also holds malformed entries', async () => {
+    await seed([template, null]);
+    vi.mocked(taskTemplateService.listDailyRecommend).mockImplementation(pending);
+    vi.mocked(taskTemplateService.dismiss).mockResolvedValue(undefined as any);
+    const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+    const { result } = renderHook(() => useDailyBriefRecommendationsUI(), { wrapper });
+    await waitFor(() => expect(result.current).toMatchObject({ mode: 'cards' }));
+    if (result.current.mode !== 'cards') throw new Error('expected cards');
+
+    const { onDismiss } = result.current;
+    await act(async () => {
+      await onDismiss(template.id);
+    });
+
+    expect(taskTemplateService.dismiss).toHaveBeenCalledWith(template.id);
+    expect(consoleErrorSpy).not.toHaveBeenCalledWith('[taskTemplate:dismiss]', expect.anything());
+    expect(result.current).not.toMatchObject({ mode: 'cards' });
+  });
+
+  it('removes a created card from a persisted row that also holds malformed entries', async () => {
+    await seed([template, null]);
+    vi.mocked(taskTemplateService.listDailyRecommend).mockImplementation(pending);
+
+    const { result } = renderHook(() => useDailyBriefRecommendationsUI(), { wrapper });
+    await waitFor(() => expect(result.current).toMatchObject({ mode: 'cards' }));
+    if (result.current.mode !== 'cards') throw new Error('expected cards');
+
+    const { onCreated } = result.current;
+    expect(() => act(() => onCreated(template.id))).not.toThrow();
+    expect(result.current).not.toMatchObject({ mode: 'cards' });
+  });
+
+  // Regression: `revalidateOnMount: false` only holds the first mount, so an
+  // entry key change (here the refresh seed) before the interests resolved ran
+  // the fetcher, which failed with "interests not resolved".
+  it('holds the read until interests resolve when the entry key changes first', async () => {
+    mockUseResolvedInterestKeys.mockReturnValue(null);
+    const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+    const { rerender, result } = renderHook(() => useDailyBriefRecommendationsUI(), { wrapper });
+    await waitFor(() => expect(result.current).toEqual({ mode: 'skeleton', skeletonCount: 3 }));
+
+    mockRefreshSeed.value = 'next-seed';
+    rerender();
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve, 20));
+    });
+
+    expect(taskTemplateService.listDailyRecommend).not.toHaveBeenCalled();
+    expect(consoleErrorSpy).not.toHaveBeenCalledWith(
+      '[taskTemplate:listDailyRecommend]',
+      expect.anything(),
+    );
+    expect(result.current).toEqual({ mode: 'skeleton', skeletonCount: 3 });
+
+    mockUseResolvedInterestKeys.mockReturnValue(['coding']);
+    rerender();
+    await waitFor(() => expect(result.current).toMatchObject({ mode: 'cards' }));
+    expect(taskTemplateService.listDailyRecommend).toHaveBeenCalledTimes(1);
+    expect(taskTemplateService.listDailyRecommend).toHaveBeenCalledWith(['coding'], {
+      count: 3,
+      locale: 'en-US',
+      refreshSeed: 'next-seed',
+    });
+  });
 });

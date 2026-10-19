@@ -1,6 +1,7 @@
 import type { BuilderSuggestionItem, BuilderSuggestionMode } from '@lobechat/prompts';
 
-import { defineReplica } from '@/libs/replica';
+import type { LocalStorageQueryProjectionStorage } from '@/libs/queryProjectionStorage';
+import { cacheScope, defineReplica } from '@/libs/replica';
 
 export interface BuilderSuggestionParams {
   /** Builtin builder agent id — drives the model and is recorded as `agentId`. */
@@ -53,3 +54,22 @@ export const builderSuggestionResource = defineReplica<
   storage: 'localStorage',
   version: 1,
 });
+
+/**
+ * The persisted batch of an entry, read synchronously from the replica's own
+ * localStorage row. The replica hydrates asynchronously, after the first paint;
+ * this lets that first frame show the chips instead of a skeleton.
+ */
+export const peekBuilderSuggestions = (
+  params: BuilderSuggestionParams,
+  scope: string,
+): BuilderSuggestionBatch | undefined => {
+  if (!cacheScope.canHydrate?.()) return undefined;
+  const storage = builderSuggestionResource.storage as
+    LocalStorageQueryProjectionStorage<BuilderSuggestionBatch> | undefined;
+  const data = storage?.getSync?.({
+    queryKey: builderSuggestionResource.storageKey(params),
+    scope,
+  })?.data;
+  return Array.isArray(data?.suggestions) ? data : undefined;
+};

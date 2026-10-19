@@ -7,6 +7,13 @@ export interface ReplicaSyncSchedule {
   dedupingInterval?: number;
   /** Skip focus revalidation while the last one is younger than this (ms). */
   focusThrottleInterval?: number;
+  /**
+   * Hold every network request (mount, stale, focus, revalidate) while it
+   * returns `true`, for a read whose input outside the sync key is not ready
+   * yet. Unlike `revalidateOnMount: false` it also covers a later key change.
+   * Read on each request, so it may close over a ref.
+   */
+  isPaused?: () => boolean;
   /** Poll every N ms while mounted (0 = off); a function decides per tick from the latest data. */
   refreshInterval?: number | ((latest: any) => number);
   /** Keep polling while the page is hidden. */
