@@ -5,7 +5,7 @@ import { and, asc, count, desc, eq, getTableColumns, gt, isNotNull, sql } from '
 
 import { today } from '@/utils/time';
 
-import { agents, messages } from '../../schemas';
+import { agents, messagePlugins, messages } from '../../schemas';
 import { notCopiedTranscript } from '../../utils/copiedTranscript';
 import { genEndDateWhere, genRangeWhere, genStartDateWhere, genWhere } from '../../utils/genWhere';
 import { notShareVisitorMessage } from '../../utils/shareVisitor';
@@ -88,9 +88,24 @@ export class MessageAnalyticsQueries extends MessageScope {
         ...getTableColumns(messages),
         agentName: agents.name,
         agentTitle: agents.title,
+        // Tool-call metadata lives on the 1:1 `message_plugins` row, not on
+        // `messages`. Consumers (lh CLI `message list --json`, wiki-ingest
+        // image-evidence verification) rely on these fields to attribute a
+        // tool result to its originating call — same shape as queryByIds.
+        tool_call_id: messagePlugins.toolCallId,
+        plugin: {
+          apiName: messagePlugins.apiName,
+          arguments: messagePlugins.arguments,
+          identifier: messagePlugins.identifier,
+          type: messagePlugins.type,
+        },
+        pluginError: messagePlugins.error,
+        pluginIntervention: messagePlugins.intervention,
+        pluginState: messagePlugins.state,
       })
       .from(messages)
       .leftJoin(agents, eq(messages.agentId, agents.id))
+      .leftJoin(messagePlugins, and(eq(messagePlugins.id, messages.id), this.pluginsOwnership()))
       .where(genWhere(this.analyticsConditions(filters)))
       .orderBy(desc(messages.createdAt))
       .limit(pageSize)
