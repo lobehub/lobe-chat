@@ -5,10 +5,10 @@ const Fikra: ModelProviderCard = {
   chatModels: [],
   checkModel: 'deepseek-v4.1-flash',
   description:
-    'Fikra API is an OpenAI-compatible inference service serving open models (DeepSeek, GLM, Kimi, Qwen) with per-token billing and M-Pesa or card payments.',
+    'Fikra API is an OpenAI-compatible inference service serving open-weight models (DeepSeek, GLM, Kimi, Qwen) with per-token billing in USD and M-Pesa, mobile money or card payments.',
   id: 'fikra',
   modelList: { showModelFetcher: true },
-  modelsUrl: 'https://fikraapi.co.ke/models',
+  modelsUrl: 'https://api.fikraapi.co.ke/v1/models',
   name: 'Fikra',
   settings: {
     proxyUrl: {
