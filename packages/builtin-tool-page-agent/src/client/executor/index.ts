@@ -175,7 +175,7 @@ class PageAgentExecutor extends BaseExecutor<typeof PageAgentApiName> {
   /**
    * Read-modify-write of an HTML page's stored HTML. The page renders it in a
    * sandboxed frame, so there is no editor state to go through: the write lands
-   * on the server and `onAfterCall` revalidates the frame's document.
+   * on the server and the frame's document is revalidated.
    */
   private runHtml = async (
     apiName: string,
@@ -198,8 +198,13 @@ class PageAgentExecutor extends BaseExecutor<typeof PageAgentApiName> {
       if (document.fileType !== HTML_DOCUMENT_FILE_TYPE) throw new Error(RICH_TEXT_PAGE_TOOL_HINT);
 
       const { content, html, state } = handler(document.content ?? '');
-      if (html !== undefined)
+      if (html !== undefined) {
         await documentService.updateDocument({ content: html, id: documentId });
+        // A client-run tool gets no `onAfterCall` (only gateway `tool_end` events
+        // dispatch it), so refresh the frame's document here.
+        const { invalidateDocumentMutation } = await import('@/services/document/invalidation');
+        await invalidateDocumentMutation({ documentId });
+      }
 
       return { content, state: { ...state, documentId }, success: true };
     } catch (error) {

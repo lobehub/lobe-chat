@@ -47,7 +47,8 @@ describe('PageAgentExecutor on an HTML page', () => {
       id: 'page-1',
     });
 
-    await executor.onAfterCall({ apiName: 'editHtml', result } as any);
+    // A client-run tool gets no `onAfterCall` (only gateway tool_end events do):
+    // the write itself refreshes the page's frame.
     expect(mocks.invalidateDocumentMutation).toHaveBeenCalledWith({ documentId: 'page-1' });
   });
 
@@ -56,6 +57,7 @@ describe('PageAgentExecutor on an HTML page', () => {
 
     expect(result).toMatchObject({ content: HTML, success: true });
     expect(mocks.updateDocument).not.toHaveBeenCalled();
+    expect(mocks.invalidateDocumentMutation).not.toHaveBeenCalled();
   });
 
   it('refuses a rich-text page', async () => {
