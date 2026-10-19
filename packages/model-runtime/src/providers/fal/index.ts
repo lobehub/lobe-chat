@@ -1,4 +1,5 @@
 import { createFalClient, fal, type FalClient } from '@fal-ai/client';
+import type { ChatModelCard } from '@lobechat/types';
 import debug from 'debug';
 import { pick } from 'es-toolkit/compat';
 import type { RuntimeImageGenParamsValue } from 'model-bank';
@@ -16,28 +17,24 @@ import type {
 import { AgentRuntimeError } from '../../utils/createError';
 import type { ModelIdMappingOptions } from '../../utils/modelIdMapping';
 import { resolveMappedModelId } from '../../utils/modelIdMapping';
-import { createFalVideo, isFalVideoModel, pollFalVideoStatus } from './createVideo';
+import { getFalInputSchema, listFalGenerationModels } from './catalog';
+import { createFalVideo, pollFalVideoStatus } from './createVideo';
+import {
+  isFalResolutionTierEndpoint,
+  resolveFalEndpointId,
+  resolveFalImageEndpoint,
+} from './endpoint';
 
 // Create debug logger
 const log = debug('lobe-image:fal');
 
-type FluxDevOutput = Awaited<ReturnType<typeof fal.subscribe<'fal-ai/flux/dev'>>>['data'];
+interface FalImageOutput {
+  image?: { height?: number; url: string; width?: number };
+  images?: { height?: number; url: string; width?: number }[];
+}
 
-/**
- * fal hosts models under several namespaces (e.g. `alibaba/qwen-image-3`); only bare
- * model ids without a known namespace get the default `fal-ai/` prefix.
- */
-const FAL_NAMESPACES = ['fal-ai/', 'alibaba/', 'minimax/'];
-
-/**
- * Model families exposed as one card but served by separate fal endpoints: requests
- * with reference images go to `/edit`, others to `/text-to-image`.
- */
-const EDIT_OR_TEXT_TO_IMAGE_ENDPOINT_PREFIXES = [
-  'fal-ai/bytedance/seedream/v',
-  'fal-ai/hunyuan-image/v',
-  'alibaba/qwen-image-3',
-];
+/** fal endpoints that run faster with `acceleration: 'high'` at no quality cost */
+const ACCELERATED_BY_DEFAULT_ENDPOINTS = new Set(['fal-ai/flux/krea']);
 
 /**
  * Long edge of a square image for each `resolution` preset. fal bills some models
@@ -109,6 +106,7 @@ export class LobeFalAI implements LobeRuntimeAI {
    * submitting a request and polling it.
    */
   private readonly client: FalClient;
+  private readonly apiKey: string;
 
   // OpenAI SDK v6 widened `apiKey` to `string | ApiKeySetter`; lobehub only uses the string form.
   constructor({
@@ -120,6 +118,7 @@ export class LobeFalAI implements LobeRuntimeAI {
     fal.config({
       credentials: apiKey,
     });
+    this.apiKey = apiKey;
     this.client = createFalClient({ credentials: apiKey });
     this.modelIdMappingOptions = { modelIdMapping };
     log('FalAI initialized with apiKey: %s', apiKey ? '*****' : 'Not set');
@@ -130,15 +129,14 @@ export class LobeFalAI implements LobeRuntimeAI {
   }
 
   async createVideo(payload: CreateVideoPayload): Promise<CreateVideoResult> {
-    const requestModel = resolveMappedModelId(payload.model, this.modelIdMappingOptions);
-    if (!isFalVideoModel(requestModel)) {
-      throw AgentRuntimeError.createError(AgentRuntimeErrorType.ProviderBizError, {
-        message: `Video generation is not supported for fal model: ${requestModel}`,
-      });
-    }
+    const requestModel = resolveFalEndpointId(
+      resolveMappedModelId(payload.model, this.modelIdMappingOptions),
+    );
 
     try {
-      return await createFalVideo(this.client, requestModel, payload.params);
+      return await createFalVideo(this.client, requestModel, payload.params, (endpoint) =>
+        getFalInputSchema(this.apiKey, endpoint),
+      );
     } catch (error) {
       throw toFalRuntimeError(error);
     }
@@ -159,6 +157,7 @@ export class LobeFalAI implements LobeRuntimeAI {
       ['imageUrl', 'image_url'],
       ['imageUrls', 'image_urls'],
       ['size', 'image_size'],
+      ['aspectRatio', 'aspect_ratio'],
     ]);
 
     const defaultInput: Record<string, unknown> = {
@@ -175,13 +174,20 @@ export class LobeFalAI implements LobeRuntimeAI {
         .map(([key, value]) => [paramsMap.get(key) ?? key, value]),
     );
 
-    if (typeof userInput.resolution === 'string' && RESOLUTION_BASE_EDGE[userInput.resolution]) {
+    const hasImageUrls = (params.imageUrls?.length ?? 0) > 0;
+    const endpoint = resolveFalImageEndpoint(requestModel, hasImageUrls);
+
+    if (
+      isFalResolutionTierEndpoint(endpoint) &&
+      typeof userInput.resolution === 'string' &&
+      RESOLUTION_BASE_EDGE[userInput.resolution]
+    ) {
       const imageSize = resolveFalImageSize(
-        userInput.aspectRatio as string | undefined,
+        userInput.aspect_ratio as string | undefined,
         userInput.resolution,
       );
       if (imageSize) userInput.image_size = imageSize;
-      delete userInput.aspectRatio;
+      delete userInput.aspect_ratio;
       delete userInput.resolution;
     }
 
@@ -198,19 +204,8 @@ export class LobeFalAI implements LobeRuntimeAI {
       }
     }
 
-    const modelsAcceleratedByDefault = new Set<string>(['flux/krea']);
-    if (modelsAcceleratedByDefault.has(requestModel)) {
+    if (ACCELERATED_BY_DEFAULT_ENDPOINTS.has(endpoint)) {
       defaultInput['acceleration'] = 'high';
-    }
-
-    let endpoint = FAL_NAMESPACES.some((namespace) => requestModel.startsWith(namespace))
-      ? requestModel
-      : `fal-ai/${requestModel}`;
-    const hasImageUrls = (params.imageUrls?.length ?? 0) > 0;
-    if (EDIT_OR_TEXT_TO_IMAGE_ENDPOINT_PREFIXES.some((m) => endpoint.startsWith(m))) {
-      endpoint += hasImageUrls ? '/edit' : '/text-to-image';
-    } else if (endpoint === 'fal-ai/nano-banana' && hasImageUrls) {
-      endpoint += '/edit';
     }
 
     const finalInput = {
@@ -223,12 +218,38 @@ export class LobeFalAI implements LobeRuntimeAI {
       const { data } = await fal.subscribe(endpoint, {
         input: finalInput,
       });
-      const image = (data as FluxDevOutput).images[0];
+      const output = data as FalImageOutput;
+      const image = output.images?.[0] ?? output.image;
+      if (!image?.url) throw new Error(`fal returned no image for ${endpoint}`);
 
       return {
         imageUrl: image.url,
         ...pick(image, ['width', 'height']),
       };
+    } catch (error) {
+      throw toFalRuntimeError(error);
+    }
+  }
+
+  /**
+   * List fal's image and video endpoints with parameters derived from their input schemas, so any
+   * endpoint (any owner, not only `fal-ai/`) can be enabled on the generation pages. Built-in
+   * cards are skipped: they are already listed with curated parameters and pricing.
+   */
+  async models(): Promise<ChatModelCard[]> {
+    const { default: builtinModels } = await import('model-bank/fal');
+    const builtinIds = new Set(builtinModels.map((model) => model.id));
+
+    try {
+      const models = await listFalGenerationModels(this.apiKey);
+
+      return models
+        .filter((model) => !builtinIds.has(model.id))
+        .map(({ parameters, ...model }) => ({
+          ...model,
+          enabled: false,
+          parameters: parameters as ChatModelCard['parameters'],
+        }));
     } catch (error) {
       throw toFalRuntimeError(error);
     }
