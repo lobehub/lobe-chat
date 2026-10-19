@@ -85,17 +85,17 @@ export const GoalCardItem = memo<GoalItemProps>(({ globalScopeId, goal: item, pr
           </Flexbox>
           <GoalItemMoreButton items={menuItems} />
         </Flexbox>
-        <Flexbox horizontal align={'center'} gap={12} justify={'space-between'}>
-          {globalScopeId && <GoalAgentLabel agentId={goal.agentId} />}
-          <GoalProgress
-            findingCount={item.findingCount}
-            pendingDecisions={item.pendingDecisions}
-            taskDone={item.taskDone}
-            taskTotal={item.taskTotal}
-            totalRunCost={item.totalRunCost}
-            totalRunDuration={item.totalRunDuration}
-          />
-        </Flexbox>
+        {/* Its own line: a card is too narrow to hold the label beside the
+          progress grid without pushing the grid past the card's edge. */}
+        {globalScopeId && <GoalAgentLabel agentId={goal.agentId} />}
+        <GoalProgress
+          findingCount={item.findingCount}
+          pendingDecisions={item.pendingDecisions}
+          taskDone={item.taskDone}
+          taskTotal={item.taskTotal}
+          totalRunCost={item.totalRunCost}
+          totalRunDuration={item.totalRunDuration}
+        />
       </Block>
     </ContextMenuTrigger>
   );
