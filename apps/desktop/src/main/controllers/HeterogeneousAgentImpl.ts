@@ -48,6 +48,7 @@ import {
   buildHeteroExecStdinPayload,
   buildHeterogeneousPrompt,
   HETERO_EXEC_INHERIT_PROCESS_GROUP_ENV,
+  stripInheritedRunIdentity,
 } from '@lobechat/heterogeneous-agents/protocol';
 import {
   CLAUDE_CODE_QUOTA_FRESH_MS,
@@ -4172,16 +4173,8 @@ export default class HeterogeneousAgentCtr {
       });
     }
 
-    // Never inherit the launcher's conversation identity for a dispatched run.
-    const childEnv = { ...process.env };
-    for (const key of [
-      'LOBEHUB_AGENT_ID',
-      'LOBEHUB_ASSISTANT_MESSAGE_ID',
-      'LOBEHUB_TASK_ID',
-      'LOBEHUB_WORKSPACE_ID',
-    ]) {
-      delete childEnv[key];
-    }
+    // Never inherit the launcher's run identity (or JWT file) for a dispatched run.
+    const childEnv = stripInheritedRunIdentity(process.env);
 
     const env = {
       ...withEmbeddedCliEnv(childEnv),

@@ -11,6 +11,7 @@ import {
 import type { AgentRunRequestMessage, GatewayMcpParams } from '@lobechat/device-gateway-client';
 import type { GatewayConnectionStatus } from '@lobechat/electron-client-ipc';
 import type { HeterogeneousAgentCancellationSignal } from '@lobechat/heterogeneous-agents/protocol';
+import { stripInheritedRunIdentity } from '@lobechat/heterogeneous-agents/protocol';
 import type { RemotePlatformCommandRuntime } from '@lobechat/heterogeneous-agents/scanHost';
 import {
   resolveRemotePlatformCommand,
@@ -863,16 +864,8 @@ export default class GatewayConnectionCtr extends ControllerModule {
       this.remoteServerConfigCtr.getAccessToken(),
     ]);
 
-    // Never inherit the launcher's conversation identity for a dispatched run.
-    const inheritedEnv = { ...process.env };
-    for (const key of [
-      'LOBEHUB_AGENT_ID',
-      'LOBEHUB_ASSISTANT_MESSAGE_ID',
-      'LOBEHUB_TASK_ID',
-      'LOBEHUB_WORKSPACE_ID',
-    ]) {
-      delete inheritedEnv[key];
-    }
+    // Never inherit the launcher's run identity (or JWT file) for a dispatched run.
+    const inheritedEnv = stripInheritedRunIdentity(process.env);
 
     // Inject auth + workspace scope so `lh notify` authenticates AND targets the
     // dispatched topic's workspace (without it, the CLI falls back to personal

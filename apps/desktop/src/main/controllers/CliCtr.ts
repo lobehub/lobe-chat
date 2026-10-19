@@ -49,6 +49,8 @@ export default class CliCtr extends ControllerModule {
 
       if (token && serverUrl) {
         env.LOBEHUB_JWT = token;
+        // An inherited agent-run JWT file would win over this fresh token.
+        delete env.LOBEHUB_JWT_FILE;
         env.LOBEHUB_SERVER = normalizeServerUrl(serverUrl);
         logger.debug('Injected LOBEHUB_JWT / LOBEHUB_SERVER for CLI command');
       }
