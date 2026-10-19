@@ -199,6 +199,7 @@
   "acceptance.gate.leadProbes": "{{count}} eksperymentów zakończonych. Po rozpoczęciu pozostałe {{remaining}} jednostki podążają za tym planem w partiach.",
   "acceptance.gate.leadRework": "Przerobione: {{codes}}.",
   "acceptance.gate.nextWaveTitle": "Fala {{wave}}",
+  "acceptance.gate.planFiles": "{{count}} plików",
   "acceptance.gate.planTitle": "Plan wykonania",
   "acceptance.gate.releaseWave": "Zatwierdź i wypuść falę {{wave}} ({{count}})",
   "acceptance.gate.remaining": "{{count}} więcej po tym, każda fala przeglądana przez głównego Agenta. Około {{estimate}} tokenów w sumie, oszacowane na podstawie eksperymentów.",

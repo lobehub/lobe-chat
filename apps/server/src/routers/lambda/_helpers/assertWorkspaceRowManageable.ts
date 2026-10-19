@@ -19,19 +19,25 @@ export type WorkspaceBulkDeleteScope = 'own' | 'workspace';
  * - Personal mode (no `workspaceId`): pass through — the model's ownership
  *   filter already scopes rows to the caller.
  * - Workspace owner: pass through — owners manage all workspace resources.
+ * - Workspace admin: pass through only when `allowAdmin` is set, for actions
+ *   admins may take on any member's row (e.g. archiving a task).
  * - Otherwise the row's creator must be the caller.
  */
 export function assertWorkspaceRowManageable(
   ctx: WorkspaceRowCtx,
   rowUserId: string | null | undefined,
   resource: string,
+  options: { allowAdmin?: boolean } = {},
 ): void {
   if (!ctx.workspaceId) return;
   if (ctx.workspaceRole === 'owner') return;
+  if (options.allowAdmin && ctx.workspaceRole === 'admin') return;
   if (rowUserId !== ctx.userId) {
     throw new TRPCError({
       code: 'FORBIDDEN',
-      message: `Only the creator or a workspace owner can modify this ${resource}`,
+      message: options.allowAdmin
+        ? `Only the creator or a workspace owner or admin can modify this ${resource}`
+        : `Only the creator or a workspace owner can modify this ${resource}`,
     });
   }
 }

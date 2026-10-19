@@ -199,6 +199,7 @@
   "acceptance.gate.leadProbes": "{{count}} experimentos están terminados. Una vez que inicies, las {{remaining}} unidades restantes seguirán este plan en lotes.",
   "acceptance.gate.leadRework": "Revisado: {{codes}}.",
   "acceptance.gate.nextWaveTitle": "Ola {{wave}}",
+  "acceptance.gate.planFiles": "{{count}} archivos",
   "acceptance.gate.planTitle": "Plan de ejecución",
   "acceptance.gate.releaseWave": "Aprobar y liberar ola {{wave}} ({{count}})",
   "acceptance.gate.remaining": "{{count}} más después de eso, cada ola revisada por el Agente Principal. Aproximadamente {{estimate}} tokens en total, estimado a partir de los experimentos.",
