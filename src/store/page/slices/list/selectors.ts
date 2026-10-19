@@ -60,35 +60,6 @@ const getFilteredDocuments = (s: PageState): LobeDocument[] => {
 const getFilteredDocumentsLimited = (s: PageState): LobeDocument[] =>
   getFilteredDocuments(s).slice(0, sidebarPageSize());
 
-// Workspace-mode sidebar buckets: split filtered docs into "private" (creator
-// only) and "workspace-shared". Personal-mode `visibility` is meaningless — the
-// caller decides whether to render the flat list or the dual accordion.
-const getPrivateFilteredDocuments = (s: PageState): LobeDocument[] =>
-  getFilteredDocuments(s).filter((doc) => doc.visibility === 'private');
-
-const getWorkspaceFilteredDocuments = (s: PageState): LobeDocument[] =>
-  getFilteredDocuments(s).filter((doc) => doc.visibility !== 'private');
-
-// Bucket-scoped, sidebar-sized page slices — mirror the Limited helper for the
-// dual-accordion Pages sidebar so each bucket paginates independently.
-const getPrivateFilteredDocumentsLimited = (s: PageState): LobeDocument[] =>
-  getPrivateFilteredDocuments(s).slice(0, sidebarPageSize());
-
-const getWorkspaceFilteredDocumentsLimited = (s: PageState): LobeDocument[] =>
-  getWorkspaceFilteredDocuments(s).slice(0, sidebarPageSize());
-
-const privateFilteredDocumentsCount = (s: PageState): number =>
-  getPrivateFilteredDocuments(s).length;
-
-const workspaceFilteredDocumentsCount = (s: PageState): number =>
-  getWorkspaceFilteredDocuments(s).length;
-
-const hasMorePrivateFilteredDocuments = (s: PageState): boolean =>
-  getPrivateFilteredDocuments(s).length > sidebarPageSize();
-
-const hasMoreWorkspaceFilteredDocuments = (s: PageState): boolean =>
-  getWorkspaceFilteredDocuments(s).length > sidebarPageSize();
-
 /**
  * One page as the loaded list holds it, falling back to the by-id projection
  * for pages outside it (mobile mounts no sidebar; a deep link may land before
@@ -119,17 +90,9 @@ export const listSelectors = {
   getDocumentById,
   getFilteredDocuments,
   getFilteredDocumentsLimited,
-  getPrivateFilteredDocuments,
-  getPrivateFilteredDocumentsLimited,
-  getWorkspaceFilteredDocuments,
-  getWorkspaceFilteredDocumentsLimited,
   hasMoreDocuments,
   hasMoreFilteredDocuments,
-  hasMorePrivateFilteredDocuments,
-  hasMoreWorkspaceFilteredDocuments,
   isDocumentsLoading,
   isLoadingMoreDocuments,
   isPageListInit,
-  privateFilteredDocumentsCount,
-  workspaceFilteredDocumentsCount,
 };

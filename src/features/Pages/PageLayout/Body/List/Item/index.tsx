@@ -1,10 +1,11 @@
 import { HTML_DOCUMENT_FILE_TYPE } from '@lobechat/const';
-import { Avatar, Icon } from '@lobehub/ui';
-import { FileTextIcon, GlobeIcon } from 'lucide-react';
+import { Avatar, cssVar, Icon, Tooltip } from '@lobehub/ui';
+import { FileTextIcon, GlobeIcon, LockIcon } from 'lucide-react';
 import { type MouseEvent } from 'react';
 import { memo, useCallback, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { useActiveWorkspaceId } from '@/business/client/hooks/useActiveWorkspaceId';
 import { useActiveWorkspaceSlug } from '@/business/client/hooks/useActiveWorkspaceSlug';
 import { isDesktop } from '@/const/version';
 import NavItem from '@/features/NavPanel/components/NavItem';
@@ -30,6 +31,9 @@ const PageListItem = memo<DocumentItemProps>(({ pageId, className }) => {
 
   const addTab = useElectronStore((s) => s.addTab);
   const activeWorkspaceSlug = useActiveWorkspaceSlug();
+  // Visibility only means something inside a workspace; personal pages are
+  // always the owner's alone, so they never carry the lock.
+  const isPrivate = Boolean(useActiveWorkspaceId()) && document?.visibility === 'private';
 
   const active = selectedPageId === pageId;
   const title = document?.title || t('pageList.untitled');
@@ -98,6 +102,18 @@ const PageListItem = memo<DocumentItemProps>(({ pageId, className }) => {
         icon={icon}
         key={pageId}
         title={title}
+        extra={
+          isPrivate && (
+            <Tooltip title={t('pageList.privateTooltip')}>
+              <Icon
+                aria-label={t('pageList.privateTooltip')}
+                color={cssVar.colorTextDescription}
+                icon={LockIcon}
+                size={14}
+              />
+            </Tooltip>
+          )
+        }
         onClick={handleClick}
         onDoubleClick={handleDoubleClick}
       />
