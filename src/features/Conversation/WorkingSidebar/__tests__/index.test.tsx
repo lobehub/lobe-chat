@@ -982,6 +982,19 @@ describe('AgentWorkingSidebar — tab strip', () => {
     expect(chatStore.openTopicComments).toHaveBeenCalledWith('topic-1');
   });
 
+  it('hides Comments for a workspace-private agent', () => {
+    workspace.id = 'workspace-1';
+    chatStore.activeTopicId = 'topic-1';
+    agentStore.visibility = 'private';
+    localStorageState.openTabsByContext = { 'topic:topic-1': ['params'] };
+    globalStore.status.workingSidebarTab = 'params';
+
+    render(<AgentWorkingSidebar />);
+    fireEvent.click(screen.getByRole('button', { name: 'workingPanel.openMenu.title' }));
+
+    expect(screen.queryByRole('button', { name: 'topicComment.title' })).not.toBeInTheDocument();
+  });
+
   it('hides Comments when there is no workspace topic', () => {
     localStorageState.openTabsByContext = { 'draft:default:none': ['params'] };
     globalStore.status.workingSidebarTab = 'params';

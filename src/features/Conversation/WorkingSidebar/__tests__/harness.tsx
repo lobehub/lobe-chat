@@ -31,6 +31,7 @@ const agentStore = vi.hoisted(() => ({
   isHeterogeneous: false,
   rawAgencyConfig: undefined as
     { boundDeviceId?: string; executionTarget?: 'device' | 'local' } | undefined,
+  visibility: undefined as 'private' | 'public' | undefined,
 }));
 
 const effectiveConfig = vi.hoisted(() => ({
@@ -249,6 +250,7 @@ vi.mock('@/store/agent', () => ({
 vi.mock('@/store/agent/selectors', () => ({
   agentByIdSelectors: {
     getAgencyConfigById: () => () => agentStore.rawAgencyConfig,
+    getAgentById: () => () => ({ visibility: agentStore.visibility }),
     isWorkspaceAgentById: () => () => false,
   },
   agentSelectors: {
@@ -451,6 +453,7 @@ beforeEach(() => {
   agentStore.activeAgentId = undefined;
   agentStore.isHeterogeneous = false;
   agentStore.rawAgencyConfig = undefined;
+  agentStore.visibility = undefined;
   effectiveConfig.agencyConfig = undefined;
   effectiveConfig.workspaceScoped = false;
   platform.isDesktop = true;

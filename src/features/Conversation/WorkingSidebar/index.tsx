@@ -47,7 +47,6 @@ import {
 import { useTranslation } from 'react-i18next';
 
 import { useBusinessWorkingSidebarTabs } from '@/business/client/features/WorkingSidebarTabs';
-import { useActiveWorkspaceId } from '@/business/client/hooks/useActiveWorkspaceId';
 import { DESKTOP_HEADER_ICON_SMALL_SIZE } from '@/const/layoutTokens';
 import { isDesktop } from '@/const/version';
 import {
@@ -59,6 +58,7 @@ import { useSandboxMode } from '@/features/ChatInput/ControlBar/useSandboxMode';
 import { getPortalViewWidth } from '@/features/Portal/portalWidth';
 import TopicCommentsSidebar from '@/features/Portal/TopicComments/Sidebar';
 import RightPanel from '@/features/RightPanel';
+import { useCommentableTopicId } from '@/features/TopicComment/useCommentableTopicId';
 import { resolveTargetDeviceId } from '@/helpers/agentWorkingDirectory';
 import { resolveExecutionTarget } from '@/helpers/executionTarget';
 import { useIsGatewayModeEnabled } from '@/helpers/gatewayMode';
@@ -260,7 +260,7 @@ const AgentWorkingSidebar = memo<AgentWorkingSidebarProps>(({ availableWidth }) 
     ? { ...OVERVIEW_TRANSITION, duration: 0.1 }
     : OVERVIEW_TRANSITION;
   const activeAgentId = useAgentStore((s) => s.activeAgentId);
-  const workspaceId = useActiveWorkspaceId();
+  const commentableTopicId = useCommentableTopicId();
   const [
     topicId,
     currentPortalView,
@@ -460,7 +460,7 @@ const AgentWorkingSidebar = memo<AgentWorkingSidebarProps>(({ availableWidth }) 
   );
 
   const businessTabs = useBusinessWorkingSidebarTabs({ activeAgentId, topicId });
-  const commentsAvailable = !!workspaceId && !!topicId;
+  const commentsAvailable = !!commentableTopicId;
   const currentCommentTopicId =
     currentPortalView?.type === PortalViewType.TopicComments ||
     currentPortalView?.type === PortalViewType.TopicCommentThread

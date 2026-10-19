@@ -7,7 +7,6 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { useActiveWorkspaceId } from '@/business/client/hooks/useActiveWorkspaceId';
 import { topicCommentService } from '@/services/topicComment';
-import { useChatStore } from '@/store/chat';
 import {
   createTopicCommentDraftKey,
   TOPIC_COMMENT_PAGE_SIZE,
@@ -22,6 +21,8 @@ import type {
 import { useUserStore } from '@/store/user';
 import { userProfileSelectors } from '@/store/user/slices/auth/selectors';
 import { isTrpcErrorCode } from '@/utils/trpcError';
+
+import { useCommentableTopicId } from './useCommentableTopicId';
 
 /**
  * Topic comments are replicas: the feed of a topic, the replies of a root
@@ -127,13 +128,12 @@ export const useTopicCommentSummary = (topicId?: string | null) => {
 };
 
 export const useMessageCommentCount = (messageId: string) => {
-  const workspaceId = useActiveWorkspaceId();
-  const topicId = useChatStore((s) => s.activeTopicId);
-  const { data } = useTopicCommentSummary(workspaceId ? topicId : undefined);
+  const topicId = useCommentableTopicId();
+  const { data } = useTopicCommentSummary(topicId);
 
   return {
     count: data?.countByMessage[messageId] ?? 0,
-    topicId: workspaceId ? topicId : null,
+    topicId: topicId ?? null,
   };
 };
 
