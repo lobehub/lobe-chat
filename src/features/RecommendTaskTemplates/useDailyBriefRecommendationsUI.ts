@@ -165,10 +165,20 @@ export function useDailyBriefRecommendationsUI(
   }, [error]);
 
   // A refresh mints a new seed (a new entry): keep the previous batch on screen
-  // until the new one lands instead of dropping back to the skeleton.
-  const previousRef = useRef<TaskTemplate[] | undefined>(undefined);
-  if (entry) previousRef.current = entry;
-  const shown = entry ?? (key && !error ? previousRef.current : undefined);
+  // until the new one lands — or after it fails — instead of dropping back to
+  // the skeleton. Only the previous entry's key is remembered and its batch is
+  // read from the store, which a scope switch clears, so another identity's
+  // batch is never shown.
+  const retainedKeyRef = useRef<string | undefined>(undefined);
+  if (!key) retainedKeyRef.current = undefined;
+  else if (entry) retainedKeyRef.current = key;
+  const retainedKey = retainedKeyRef.current;
+  const retained = useTaskTemplateRecommendationStore((s) =>
+    key && retainedKey ? s.dailyRecommendMap[retainedKey] : undefined,
+  );
+  const shown = entry ?? retained;
+  // Card actions target the entry whose batch is on screen.
+  const shownKey = entry ? key : retained ? retainedKey : undefined;
 
   const handleRefresh = useCallback(() => {
     setRefreshSeed(nextRefreshSeed());
@@ -176,21 +186,22 @@ export function useDailyBriefRecommendationsUI(
 
   const handleCreated = useCallback(
     (templateId: number) => {
-      if (!key) return;
-      dailyRecommendReplica.update(key, (current) =>
+      if (!shownKey) return;
+      dailyRecommendReplica.update(shownKey, (current) =>
         current?.filter((tmpl) => tmpl.id !== templateId),
       );
     },
-    [key],
+    [shownKey],
   );
 
   const handleDismiss = useCallback(
     async (templateId: number) => {
-      if (!key || !useTaskTemplateRecommendationStore.getState().dailyRecommendMap[key]) return;
+      if (!shownKey || !useTaskTemplateRecommendationStore.getState().dailyRecommendMap[shownKey])
+        return;
       try {
         // Rolls the card back if the server refuses.
         await dailyRecommendReplica.optimistic(
-          key,
+          shownKey,
           (current) => current.filter((tmpl) => tmpl.id !== templateId),
           () => taskTemplateService.dismiss(templateId),
         );
@@ -199,7 +210,7 @@ export function useDailyBriefRecommendationsUI(
         toast.error(t('taskTemplate.action.dismiss.error'));
       }
     },
-    [key, t],
+    [shownKey, t],
   );
 
   const templates = useMemo(() => normalizeTaskTemplateRecommendations(shown), [shown]);

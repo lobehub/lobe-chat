@@ -515,4 +515,66 @@ describe('useDailyBriefRecommendationsUI', () => {
     );
     expect(result.current).toMatchObject({ mode: 'cards', templates: [template] });
   });
+
+  // Regression: the retained batch was copied into an identity-agnostic ref, so
+  // after a scope switch with the same entry key the previous identity's cards
+  // painted while the new identity's read was pending.
+  it('drops the retained cards when the identity switches', async () => {
+    const { rerender, result } = renderHook(() => useDailyBriefRecommendationsUI(), { wrapper });
+    await waitFor(() => expect(result.current).toMatchObject({ mode: 'cards' }));
+
+    vi.mocked(taskTemplateService.listDailyRecommend).mockImplementation(pending);
+    scope = `task-template-user-${randomUUID()}:personal`;
+    rerender();
+
+    await waitFor(() => expect(taskTemplateService.listDailyRecommend).toHaveBeenCalledTimes(2));
+    expect(result.current).toEqual({ mode: 'skeleton', skeletonCount: 3 });
+  });
+
+  // Regression: dismiss targeted only the new seed's (still empty) entry, so a
+  // dismiss on the retained cards during a refresh was silently dropped.
+  it('dismisses a retained card while the refresh seed loads', async () => {
+    vi.mocked(taskTemplateService.dismiss).mockResolvedValue(undefined as any);
+    const { rerender, result } = renderHook(() => useDailyBriefRecommendationsUI(), { wrapper });
+    await waitFor(() => expect(result.current).toMatchObject({ mode: 'cards' }));
+
+    vi.mocked(taskTemplateService.listDailyRecommend).mockImplementation(pending);
+    mockRefreshSeed.value = 'next-seed';
+    rerender();
+    await waitFor(() => expect(taskTemplateService.listDailyRecommend).toHaveBeenCalledTimes(2));
+    if (result.current.mode !== 'cards') throw new Error('expected retained cards');
+
+    const { onDismiss } = result.current;
+    await act(async () => {
+      await onDismiss(template.id);
+    });
+
+    expect(taskTemplateService.dismiss).toHaveBeenCalledWith(template.id);
+    expect(result.current).toEqual({ mode: 'skeleton', skeletonCount: 3 });
+    await waitFor(async () => {
+      const row = await dailyRecommendResource.storage!.get({
+        queryKey: dailyRecommendResource.storageKey(params()),
+        scope,
+      });
+      expect(row?.data).toEqual([]);
+    });
+  });
+
+  // Regression: the retained batch was eligible only while `!error`, so a
+  // failed manual refresh dropped the cards and hid the section.
+  it('keeps the retained cards when a refresh seed fails', async () => {
+    const error = new Error('market down');
+    const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    const { rerender, result } = renderHook(() => useDailyBriefRecommendationsUI(), { wrapper });
+    await waitFor(() => expect(result.current).toMatchObject({ mode: 'cards' }));
+
+    vi.mocked(taskTemplateService.listDailyRecommend).mockRejectedValue(error);
+    mockRefreshSeed.value = 'next-seed';
+    rerender();
+
+    await waitFor(() =>
+      expect(consoleErrorSpy).toHaveBeenCalledWith('[taskTemplate:listDailyRecommend]', error),
+    );
+    expect(result.current).toMatchObject({ mode: 'cards', templates: [template] });
+  });
 });

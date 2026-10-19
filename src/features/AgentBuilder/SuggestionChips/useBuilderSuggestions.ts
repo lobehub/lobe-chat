@@ -96,9 +96,10 @@ export const useBuilderSuggestions = ({
     const current = paramsRef.current;
     if (!key || !current) return;
     markRegenerated(batch?.tracingId);
-    // Clear the current batch (skeleton shows) and generate a fresh one from the
-    // latest context; it replaces the persisted row once it lands.
-    builderSuggestionReplica.update(key, () => undefined, { persist: false });
+    // Drop the rejected batch from memory and its persisted row (skeleton shows),
+    // so a failed regeneration never restores it on the next visit; then
+    // generate a fresh one from the latest context.
+    builderSuggestionReplica.remove(key, scope);
     builderSuggestionReplica.fetch(current, { fresh: true, scope }).catch(ignore);
   }, [batch?.tracingId, key, markRegenerated, scope]);
 

@@ -298,4 +298,43 @@ describe('useBuilderSuggestions', () => {
     await waitForNextTick();
     expect(aiChatService.generateJSON).toHaveBeenCalledTimes(1);
   });
+
+  // Regression: refresh hid the rejected batch in memory only (`persist: false`),
+  // so a failed regeneration followed by a reload restored the rejected batch
+  // and skipped generation because the entry looked filled.
+  it('drops a rejected batch from persistence even when its regeneration fails', async () => {
+    const { result, unmount } = renderHook((props) => useBuilderSuggestions(props), {
+      initialProps: baseParams,
+    });
+    await waitFor(() => expect(result.current.suggestions[0]?.title).toBe('first title'));
+    await waitFor(async () => {
+      const row = await builderSuggestionResource.storage!.get({
+        queryKey: builderSuggestionResource.storageKey(baseParams),
+        scope,
+      });
+      expect(row?.data).toBeTruthy();
+    });
+
+    vi.mocked(aiChatService.generateJSON).mockRejectedValue(new Error('llm down'));
+    act(() => result.current.refresh());
+    await waitFor(() => expect(result.current.error).toBeTruthy());
+    unmount();
+
+    await waitFor(async () => {
+      const row = await builderSuggestionResource.storage!.get({
+        queryKey: builderSuggestionResource.storageKey(baseParams),
+        scope,
+      });
+      expect(row).toBeUndefined();
+    });
+
+    // Reload: the rejected batch is not restored; the entry generates again.
+    act(() => useBuilderSuggestionStore.setState(initialBuilderSuggestionState));
+    vi.mocked(aiChatService.generateJSON).mockResolvedValue(makeEnvelope('second'));
+    const reloaded = renderHook((props) => useBuilderSuggestions(props), {
+      initialProps: baseParams,
+    });
+    await waitFor(() => expect(reloaded.result.current.suggestions[0]?.title).toBe('second title'));
+    expect(aiChatService.generateJSON).toHaveBeenCalledTimes(3);
+  });
 });
