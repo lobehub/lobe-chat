@@ -266,6 +266,7 @@
   "reportProblem.attachments.remove": "حذف {{name}}",
   "reportProblem.attachments.tooLarge": "پیوست‌ها باید در مجموع ۴ مگابایت یا کمتر باشند.",
   "reportProblem.attachments.tooMany": "می‌توانید حداکثر ۵ فایل پیوست کنید.",
+  "reportProblem.attachments.trigger": "فایل‌ها را بچسبانید، بکشید و رها کنید، یا کلیک کنید تا اضافه شوند",
   "reportProblem.attachments.uploadFailed": "بارگذاری پیوست‌ها انجام نشد. گزارش شما همچنان اینجاست. دوباره تلاش کنید.",
   "reportProblem.desc": "شناسه‌های این موضوع و محیط برنامه شما به تیم پشتیبانی LobeHub ارسال می‌شود تا بتوانند اجرای این موضوع، خطاها و مکالمات را بررسی کنند.",
   "reportProblem.failed": "گزارش ارسال نشد. دوباره تلاش کنید.",

@@ -266,6 +266,7 @@
   "reportProblem.attachments.remove": "{{name}} entfernen",
   "reportProblem.attachments.tooLarge": "Anhänge dürfen insgesamt nicht größer als 4 MB sein.",
   "reportProblem.attachments.tooMany": "Sie können bis zu 5 Dateien anhängen.",
+  "reportProblem.attachments.trigger": "Einfügen, ziehen oder klicken, um Dateien hinzuzufügen",
   "reportProblem.attachments.uploadFailed": "Die Anhänge konnten nicht hochgeladen werden. Ihr Bericht ist weiterhin hier. Versuchen Sie es erneut.",
   "reportProblem.desc": "Die IDs dieses Themas und Ihre App-Umgebung werden an das LobeHub-Support-Team gesendet, das dann die Ausführungen, Fehler und Gespräche zu diesem Thema untersuchen kann.",
   "reportProblem.failed": "Der Bericht konnte nicht gesendet werden. Versuchen Sie es erneut.",

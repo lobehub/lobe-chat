@@ -266,6 +266,7 @@
   "reportProblem.attachments.remove": "Премахване на {{name}}",
   "reportProblem.attachments.tooLarge": "Прикачените файлове трябва да са с общ размер 4 MB или по-малко.",
   "reportProblem.attachments.tooMany": "Можете да прикачите до 5 файла.",
+  "reportProblem.attachments.trigger": "Поставете, пуснете или кликнете, за да добавите файлове",
   "reportProblem.attachments.uploadFailed": "Неуспешно качване на прикачените файлове. Вашият доклад все още е тук. Опитайте отново.",
   "reportProblem.desc": "Идентификаторите на тази тема и вашата среда на приложението се изпращат на екипа за поддръжка на LobeHub, който може да разгледа изпълненията, грешките и разговора на тази тема.",
   "reportProblem.failed": "Не успяхме да изпратим доклада. Опитайте отново.",

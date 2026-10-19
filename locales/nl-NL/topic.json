@@ -266,6 +266,7 @@
   "reportProblem.attachments.remove": "Verwijder {{name}}",
   "reportProblem.attachments.tooLarge": "Bijlagen moeten in totaal 4 MB of minder zijn.",
   "reportProblem.attachments.tooMany": "Je kunt maximaal 5 bestanden toevoegen.",
+  "reportProblem.attachments.trigger": "Plak, sleep of klik om bestanden toe te voegen",
   "reportProblem.attachments.uploadFailed": "De bijlagen konden niet worden geüpload. Je rapport is nog steeds hier. Probeer het opnieuw.",
   "reportProblem.desc": "De ID's van dit onderwerp en uw app-omgeving worden naar het LobeHub-ondersteuningsteam gestuurd, zodat zij de runs, fouten en gesprekken van dit onderwerp kunnen onderzoeken.",
   "reportProblem.failed": "Het rapport kon niet worden ingediend. Probeer het opnieuw.",

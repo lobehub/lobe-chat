@@ -266,6 +266,7 @@
   "reportProblem.attachments.remove": "{{name}} öğesini kaldır",
   "reportProblem.attachments.tooLarge": "Ekler toplamda 4 MB veya daha az olmalıdır.",
   "reportProblem.attachments.tooMany": "En fazla 5 dosya ekleyebilirsiniz.",
+  "reportProblem.attachments.trigger": "Dosyaları eklemek için yapıştırın, sürükleyip bırakın veya tıklayın",
   "reportProblem.attachments.uploadFailed": "Ek dosyalar yüklenemedi. Raporunuz hâlâ burada. Tekrar deneyin.",
   "reportProblem.desc": "Bu konunun kimlikleri ve uygulama ortamınız LobeHub destek ekibine gönderilir, böylece bu konunun çalışmaları, hataları ve konuşmaları incelenebilir.",
   "reportProblem.failed": "Rapor gönderilemedi. Tekrar deneyin.",

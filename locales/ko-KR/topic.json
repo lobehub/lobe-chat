@@ -266,6 +266,7 @@
   "reportProblem.attachments.remove": "{{name}} 제거",
   "reportProblem.attachments.tooLarge": "첨부 파일은 총 4MB 이하여야 합니다.",
   "reportProblem.attachments.tooMany": "최대 5개의 파일을 첨부할 수 있습니다.",
+  "reportProblem.attachments.trigger": "파일을 붙여넣거나 드롭하거나 클릭하여 추가하세요",
   "reportProblem.attachments.uploadFailed": "첨부 파일을 업로드할 수 없습니다. 보고서는 여전히 여기에 있습니다. 다시 시도하세요.",
   "reportProblem.desc": "이 주제의 ID와 앱 환경이 LobeHub 지원팀에 전송되어, 이 주제의 실행, 오류 및 대화를 조사할 수 있습니다.",
   "reportProblem.failed": "보고서를 제출할 수 없습니다. 다시 시도하세요.",
