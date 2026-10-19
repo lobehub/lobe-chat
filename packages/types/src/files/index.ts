@@ -24,6 +24,8 @@ export enum FileSource {
   /** Original upload owned by an agent's document tree rather than the resource library. */
   AgentDocument = 'agent-document',
   ImageGeneration = 'image_generation',
+  /** Audio recording owned by a meeting (`meetings.audio_file_id`), not the resource library. */
+  Meeting = 'meeting',
   PageEditor = 'page-editor',
   VideoGeneration = 'video_generation',
 }
@@ -38,11 +40,12 @@ export enum FileSource {
  *
  * The one way back in is an explicit `ResourceSourceFilter.Acceptance` request:
  * the user asked for evidence, so burying it no longer applies.
- * That exception only reveals acceptance evidence; agent uploads stay hidden.
+ * That exception only reveals acceptance evidence; agent uploads and meeting audio stay hidden.
  */
 export const LIBRARY_HIDDEN_FILE_SOURCES: FileSource[] = [
   FileSource.Acceptance,
   FileSource.AgentDocument,
+  FileSource.Meeting,
 ];
 
 /** Sources a generation model wrote, as opposed to anything a human put there. */
