@@ -2417,7 +2417,6 @@
   "taskList.contextMenu.archive": "Archivieren",
   "taskList.contextMenu.archiveBlocked": "Stoppen Sie die laufende Aufgabe oder deren Zeitplan/Herzschlag, bevor Sie sie archivieren",
   "taskList.contextMenu.archiveDenied.noEditPermission": "Sie haben keine Berechtigung, Aufgaben in diesem Arbeitsbereich zu bearbeiten. Bitten Sie einen Arbeitsbereichs-Admin um Zugriff.",
-  "taskList.contextMenu.archiveDenied.notCreatorOrAdmin": "Nur der Ersteller der Aufgabe, ein Arbeitsbereichsbesitzer oder ein Admin kann diese Aufgabe archivieren oder wiederherstellen. Bitten Sie einen von ihnen, dies zu tun.",
   "taskList.contextMenu.archiveFailed": "Der Archivstatus konnte nicht aktualisiert werden. Aktualisieren Sie die Aufgabe und versuchen Sie es erneut.",
   "taskList.contextMenu.archiveGoalBlocked": "Diese Aufgabe ist Teil eines aktiven Ziels. Beenden oder schließen Sie das Ziel, bevor Sie es archivieren.",
   "taskList.contextMenu.archiveSuccess": "Aufgabe archiviert",

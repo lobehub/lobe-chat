@@ -2417,7 +2417,6 @@
   "taskList.contextMenu.archive": "Архивирай",
   "taskList.contextMenu.archiveBlocked": "Спрете изпълняващата се задача или нейния график/сърцебиене преди да я архивирате",
   "taskList.contextMenu.archiveDenied.noEditPermission": "Нямате разрешение за редактиране на задачи в този работен простор. Помолете администратор на работния простор за достъп.",
-  "taskList.contextMenu.archiveDenied.notCreatorOrAdmin": "Само създателят на задачата, собственикът на работния простор или администратор може да архивира или възстанови тази задача. Помолете някой от тях да го направи.",
   "taskList.contextMenu.archiveFailed": "Неуспешно актуализиране на състоянието на архива. Обновете задачата и опитайте отново.",
   "taskList.contextMenu.archiveGoalBlocked": "Тази задача е част от активна цел. Завършете или затворете целта преди да я архивирате.",
   "taskList.contextMenu.archiveSuccess": "Задачата е архивирана",

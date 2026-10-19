@@ -2417,7 +2417,6 @@
   "taskList.contextMenu.archive": "بایگانی کردن",
   "taskList.contextMenu.archiveBlocked": "وظیفه در حال اجرا یا برنامه‌ریزی/ضربان قلب آن را قبل از بایگانی متوقف کنید",
   "taskList.contextMenu.archiveDenied.noEditPermission": "شما اجازه ویرایش وظایف در این فضای کاری را ندارید. از مدیر فضای کاری درخواست دسترسی کنید.",
-  "taskList.contextMenu.archiveDenied.notCreatorOrAdmin": "فقط سازنده وظیفه، مالک فضای کاری یا یک مدیر می‌تواند این وظیفه را بایگانی یا بازیابی کند. از یکی از آنها بخواهید این کار را انجام دهد.",
   "taskList.contextMenu.archiveFailed": "بروزرسانی وضعیت بایگانی انجام نشد. وظیفه را تازه‌سازی کرده و دوباره تلاش کنید.",
   "taskList.contextMenu.archiveGoalBlocked": "این وظیفه بخشی از یک هدف فعال است. هدف را به پایان برسانید یا ببندید قبل از بایگانی کردن آن.",
   "taskList.contextMenu.archiveSuccess": "وظیفه بایگانی شد",

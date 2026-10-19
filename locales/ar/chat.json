@@ -2417,7 +2417,6 @@
   "taskList.contextMenu.archive": "أرشفة",
   "taskList.contextMenu.archiveBlocked": "أوقف المهمة الجارية أو جدولها/نبضها قبل أرشفتها",
   "taskList.contextMenu.archiveDenied.noEditPermission": "ليس لديك إذن لتحرير المهام في مساحة العمل هذه. اطلب من مسؤول مساحة العمل الوصول.",
-  "taskList.contextMenu.archiveDenied.notCreatorOrAdmin": "فقط منشئ المهمة، مالك مساحة العمل، أو المسؤول يمكنه أرشفة أو استعادة هذه المهمة. اطلب من أحدهم القيام بذلك.",
   "taskList.contextMenu.archiveFailed": "تعذر تحديث حالة الأرشيف. قم بتحديث المهمة وحاول مرة أخرى.",
   "taskList.contextMenu.archiveGoalBlocked": "هذه المهمة جزء من هدف نشط. أكمل أو أغلق الهدف قبل أرشفتها.",
   "taskList.contextMenu.archiveSuccess": "تم أرشفة المهمة",

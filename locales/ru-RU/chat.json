@@ -2417,7 +2417,6 @@
   "taskList.contextMenu.archive": "Архивировать",
   "taskList.contextMenu.archiveBlocked": "Остановите выполняющуюся задачу или её расписание/сигнал перед архивированием",
   "taskList.contextMenu.archiveDenied.noEditPermission": "У вас нет прав на редактирование задач в этом рабочем пространстве. Попросите администратора рабочего пространства предоставить доступ.",
-  "taskList.contextMenu.archiveDenied.notCreatorOrAdmin": "Только создатель задачи, владелец рабочего пространства или администратор могут архивировать или восстанавливать эту задачу. Попросите одного из них сделать это.",
   "taskList.contextMenu.archiveFailed": "Не удалось обновить состояние архива. Обновите задачу и попробуйте снова.",
   "taskList.contextMenu.archiveGoalBlocked": "Эта задача является частью активной цели. Завершите или закройте цель перед архивированием.",
   "taskList.contextMenu.archiveSuccess": "Задача архивирована",

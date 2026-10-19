@@ -2417,7 +2417,6 @@
   "taskList.contextMenu.archive": "Archiwizuj",
   "taskList.contextMenu.archiveBlocked": "Zatrzymaj działające zadanie lub jego harmonogram/heartbeat przed zarchiwizowaniem",
   "taskList.contextMenu.archiveDenied.noEditPermission": "Nie masz uprawnień do edytowania zadań w tym obszarze roboczym. Poproś administratora obszaru roboczego o dostęp.",
-  "taskList.contextMenu.archiveDenied.notCreatorOrAdmin": "Tylko twórca zadania, właściciel obszaru roboczego lub administrator może zarchiwizować lub przywrócić to zadanie. Poproś jedną z tych osób o wykonanie tej czynności.",
   "taskList.contextMenu.archiveFailed": "Nie udało się zaktualizować stanu archiwum. Odśwież zadanie i spróbuj ponownie.",
   "taskList.contextMenu.archiveGoalBlocked": "To zadanie jest częścią aktywnego celu. Zakończ lub zamknij cel przed zarchiwizowaniem.",
   "taskList.contextMenu.archiveSuccess": "Zadanie zarchiwizowane",

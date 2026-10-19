@@ -2417,7 +2417,6 @@
   "taskList.contextMenu.archive": "Archivar",
   "taskList.contextMenu.archiveBlocked": "Detén la tarea en ejecución o su programación/latido antes de archivarla",
   "taskList.contextMenu.archiveDenied.noEditPermission": "No tienes permiso para editar tareas en este espacio de trabajo. Solicita acceso a un administrador del espacio de trabajo.",
-  "taskList.contextMenu.archiveDenied.notCreatorOrAdmin": "Solo el creador de la tarea, un propietario del espacio de trabajo o un administrador pueden archivar o restaurar esta tarea. Pide a uno de ellos que lo haga.",
   "taskList.contextMenu.archiveFailed": "No se pudo actualizar el estado del archivo. Actualiza la tarea e inténtalo de nuevo.",
   "taskList.contextMenu.archiveGoalBlocked": "Esta tarea es parte de un objetivo activo. Termina o cierra el objetivo antes de archivarla.",
   "taskList.contextMenu.archiveSuccess": "Tarea archivada",

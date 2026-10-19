@@ -2417,7 +2417,6 @@
   "taskList.contextMenu.archive": "Arquivar",
   "taskList.contextMenu.archiveBlocked": "Pare a tarefa em execução ou sua programação/intervalo antes de arquivá-la",
   "taskList.contextMenu.archiveDenied.noEditPermission": "Você não tem permissão para editar tarefas neste espaço de trabalho. Solicite acesso a um administrador do espaço de trabalho.",
-  "taskList.contextMenu.archiveDenied.notCreatorOrAdmin": "Somente o criador da tarefa, um proprietário do espaço de trabalho ou um administrador pode arquivar ou restaurar esta tarefa. Solicite que um deles faça isso.",
   "taskList.contextMenu.archiveFailed": "Não foi possível atualizar o estado do arquivo. Atualize a tarefa e tente novamente.",
   "taskList.contextMenu.archiveGoalBlocked": "Esta tarefa faz parte de um objetivo ativo. Conclua ou feche o objetivo antes de arquivá-la.",
   "taskList.contextMenu.archiveSuccess": "Tarefa arquivada",

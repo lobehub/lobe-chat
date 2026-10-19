@@ -2417,7 +2417,6 @@
   "taskList.contextMenu.archive": "アーカイブ",
   "taskList.contextMenu.archiveBlocked": "実行中のタスクまたはそのスケジュール/ハートビートを停止してからアーカイブしてください",
   "taskList.contextMenu.archiveDenied.noEditPermission": "このワークスペースのタスクを編集する権限がありません。ワークスペース管理者にアクセスを依頼してください。",
-  "taskList.contextMenu.archiveDenied.notCreatorOrAdmin": "タスクの作成者、ワークスペースの所有者、または管理者のみがこのタスクをアーカイブまたは復元できます。いずれかの人に依頼してください。",
   "taskList.contextMenu.archiveFailed": "アーカイブ状態を更新できませんでした。タスクを更新して再試行してください。",
   "taskList.contextMenu.archiveGoalBlocked": "このタスクはアクティブな目標の一部です。目標を完了または終了してからアーカイブしてください。",
   "taskList.contextMenu.archiveSuccess": "タスクがアーカイブされました",

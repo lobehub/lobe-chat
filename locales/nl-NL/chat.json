@@ -2417,7 +2417,6 @@
   "taskList.contextMenu.archive": "Archiveren",
   "taskList.contextMenu.archiveBlocked": "Stop de lopende taak of het schema/heartbeat voordat je deze archiveert",
   "taskList.contextMenu.archiveDenied.noEditPermission": "Je hebt geen toestemming om taken in deze werkruimte te bewerken. Vraag een werkruimtebeheerder om toegang.",
-  "taskList.contextMenu.archiveDenied.notCreatorOrAdmin": "Alleen de taakmaker, een werkruimte-eigenaar of een beheerder kan deze taak archiveren of herstellen. Vraag een van hen om dit te doen.",
   "taskList.contextMenu.archiveFailed": "Kon de archiefstatus niet bijwerken. Vernieuw de taak en probeer het opnieuw.",
   "taskList.contextMenu.archiveGoalBlocked": "Deze taak maakt deel uit van een actief doel. Voltooi of sluit het doel voordat je deze archiveert.",
   "taskList.contextMenu.archiveSuccess": "Taak gearchiveerd",

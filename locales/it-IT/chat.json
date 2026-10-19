@@ -2417,7 +2417,6 @@
   "taskList.contextMenu.archive": "Archivia",
   "taskList.contextMenu.archiveBlocked": "Interrompi il task in esecuzione o la sua pianificazione/heartbeat prima di archiviarlo",
   "taskList.contextMenu.archiveDenied.noEditPermission": "Non hai il permesso di modificare le attività in questo spazio di lavoro. Chiedi l'accesso a un amministratore dello spazio di lavoro.",
-  "taskList.contextMenu.archiveDenied.notCreatorOrAdmin": "Solo il creatore dell'attività, un proprietario dello spazio di lavoro o un amministratore possono archiviare o ripristinare questa attività. Chiedi a uno di loro di farlo.",
   "taskList.contextMenu.archiveFailed": "Impossibile aggiornare lo stato dell'archivio. Aggiorna il task e riprova.",
   "taskList.contextMenu.archiveGoalBlocked": "Questo task fa parte di un obiettivo attivo. Completa o chiudi l'obiettivo prima di archiviarlo.",
   "taskList.contextMenu.archiveSuccess": "Attività archiviata",

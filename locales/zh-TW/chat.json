@@ -2417,7 +2417,6 @@
   "taskList.contextMenu.archive": "封存",
   "taskList.contextMenu.archiveBlocked": "在存檔之前停止正在執行的任務或其排程/心跳",
   "taskList.contextMenu.archiveDenied.noEditPermission": "您沒有權限編輯此工作區中的任務。請向工作區管理員申請訪問權限。",
-  "taskList.contextMenu.archiveDenied.notCreatorOrAdmin": "只有任務創建者、工作區擁有者或管理員可以歸檔或恢復此任務。請他們其中之一來執行此操作。",
   "taskList.contextMenu.archiveFailed": "無法更新存檔狀態。請重新整理任務並重試。",
   "taskList.contextMenu.archiveGoalBlocked": "此任務是活動目標的一部分。在存檔之前完成或關閉目標。",
   "taskList.contextMenu.archiveSuccess": "任務已封存",

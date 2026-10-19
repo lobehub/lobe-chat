@@ -2417,7 +2417,6 @@
   "taskList.contextMenu.archive": "Archiver",
   "taskList.contextMenu.archiveBlocked": "Arrêtez la tâche en cours ou son programme/battement de cœur avant de l'archiver",
   "taskList.contextMenu.archiveDenied.noEditPermission": "Vous n'avez pas la permission de modifier les tâches dans cet espace de travail. Demandez l'accès à un administrateur de l'espace de travail.",
-  "taskList.contextMenu.archiveDenied.notCreatorOrAdmin": "Seul le créateur de la tâche, un propriétaire de l'espace de travail ou un administrateur peut archiver ou restaurer cette tâche. Demandez à l'un d'eux de le faire.",
   "taskList.contextMenu.archiveFailed": "Impossible de mettre à jour l'état de l'archive. Actualisez la tâche et réessayez.",
   "taskList.contextMenu.archiveGoalBlocked": "Cette tâche fait partie d'un objectif actif. Terminez ou fermez l'objectif avant de l'archiver.",
   "taskList.contextMenu.archiveSuccess": "Tâche archivée",

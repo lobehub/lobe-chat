@@ -2417,7 +2417,6 @@
   "taskList.contextMenu.archive": "Lưu trữ",
   "taskList.contextMenu.archiveBlocked": "Dừng nhiệm vụ đang chạy hoặc lịch trình/nhịp tim của nó trước khi lưu trữ",
   "taskList.contextMenu.archiveDenied.noEditPermission": "Bạn không có quyền chỉnh sửa các nhiệm vụ trong không gian làm việc này. Hãy yêu cầu quyền truy cập từ quản trị viên không gian làm việc.",
-  "taskList.contextMenu.archiveDenied.notCreatorOrAdmin": "Chỉ người tạo nhiệm vụ, chủ sở hữu không gian làm việc hoặc quản trị viên mới có thể lưu trữ hoặc khôi phục nhiệm vụ này. Hãy yêu cầu một trong số họ thực hiện.",
   "taskList.contextMenu.archiveFailed": "Không thể cập nhật trạng thái lưu trữ. Làm mới nhiệm vụ và thử lại.",
   "taskList.contextMenu.archiveGoalBlocked": "Nhiệm vụ này là một phần của mục tiêu đang hoạt động. Hoàn thành hoặc đóng mục tiêu trước khi lưu trữ nó.",
   "taskList.contextMenu.archiveSuccess": "Nhiệm vụ đã được lưu trữ",

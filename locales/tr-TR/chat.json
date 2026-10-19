@@ -2417,7 +2417,6 @@
   "taskList.contextMenu.archive": "Arşivle",
   "taskList.contextMenu.archiveBlocked": "Arşivlemeden önce çalışan görevi veya programını/kalp atışını durdurun",
   "taskList.contextMenu.archiveDenied.noEditPermission": "Bu çalışma alanındaki görevleri düzenleme izniniz yok. Erişim için bir çalışma alanı yöneticisine başvurun.",
-  "taskList.contextMenu.archiveDenied.notCreatorOrAdmin": "Yalnızca görev yaratıcısı, bir çalışma alanı sahibi veya bir yönetici bu görevi arşivleyebilir veya geri yükleyebilir. Bunu yapmaları için onlardan birine başvurun.",
   "taskList.contextMenu.archiveFailed": "Arşiv durumu güncellenemedi. Görevi yenileyin ve tekrar deneyin.",
   "taskList.contextMenu.archiveGoalBlocked": "Bu görev aktif bir hedefin parçası. Arşivlemeden önce hedefi tamamlayın veya kapatın.",
   "taskList.contextMenu.archiveSuccess": "Görev arşivlendi",

@@ -2417,7 +2417,6 @@
   "taskList.contextMenu.archive": "보관",
   "taskList.contextMenu.archiveBlocked": "실행 중인 작업 또는 해당 일정/하트비트를 중지한 후 보관하십시오",
   "taskList.contextMenu.archiveDenied.noEditPermission": "이 작업 공간에서 작업을 편집할 권한이 없습니다. 작업 공간 관리자에게 접근 권한을 요청하세요.",
-  "taskList.contextMenu.archiveDenied.notCreatorOrAdmin": "작업 생성자, 작업 공간 소유자 또는 관리자인 경우에만 이 작업을 보관하거나 복원할 수 있습니다. 해당 권한이 있는 사람에게 요청하세요.",
   "taskList.contextMenu.archiveFailed": "보관 상태를 업데이트할 수 없습니다. 작업을 새로 고치고 다시 시도하십시오.",
   "taskList.contextMenu.archiveGoalBlocked": "이 작업은 활성 목표의 일부입니다. 목표를 완료하거나 닫은 후 보관하십시오.",
   "taskList.contextMenu.archiveSuccess": "작업이 보관되었습니다",
