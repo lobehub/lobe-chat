@@ -17,11 +17,11 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { cacheScope } from '@/libs/replica';
 import { setScopedMutate } from '@/libs/swr/mutate';
 import { deviceService } from '@/services/device';
-import { useDeviceStore } from '@/store/device';
-import { initialState } from '@/store/device/initialState';
-import { deviceListResource } from '@/store/device/projection';
 import { useUserStore } from '@/store/user';
 
+import { initialState } from './initialState';
+import { deviceListResource } from './projection';
+import { useDeviceStore } from './store';
 import { isDevicePresenceUnknown, useDeviceList } from './useDeviceList';
 
 vi.mock('@/services/device', () => ({

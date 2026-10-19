@@ -9,8 +9,8 @@ import {
   getScopedConnectionCount,
   getWorkspaceConnectionState,
 } from '@/features/DeviceManager/connectionCount';
-import { useDeviceList } from '@/features/DeviceManager/useDeviceList';
 import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwareNavigate';
+import { useDeviceList } from '@/store/device';
 import { useElectronStore } from '@/store/electron';
 import { electronSyncSelectors } from '@/store/electron/selectors';
 

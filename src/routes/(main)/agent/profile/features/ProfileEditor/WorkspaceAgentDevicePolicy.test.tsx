@@ -36,7 +36,7 @@ vi.mock('@lobehub/ui', async (importOriginal) => {
   };
 });
 
-vi.mock('@/features/DeviceManager/useDeviceList', () => ({
+vi.mock('@/store/device/useDeviceList', () => ({
   useDeviceList: () => ({
     data: undefined,
     error: undefined,

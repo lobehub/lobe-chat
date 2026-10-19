@@ -30,7 +30,6 @@ import { DOWNLOAD_URL } from '@/const/url';
 import { useChatInputResourceAccess } from '@/features/ChatInput/hooks/useChatInputResourceAccess';
 import { useLocalSandboxCapability } from '@/features/ChatInput/hooks/useLocalSandboxCapability';
 import { useSelectExecutionTarget } from '@/features/ChatInput/hooks/useSelectExecutionTarget';
-import { useDeviceList } from '@/features/DeviceManager/useDeviceList';
 import {
   devicePoolForAgent,
   ExecutionTargetIcon,
@@ -46,6 +45,7 @@ import { useIsGatewayModeEnabled } from '@/helpers/gatewayMode';
 import { useEffectiveAgencyConfig } from '@/hooks/useEffectiveAgencyConfig';
 import { localFileService } from '@/services/electron/localFileService';
 import { useAgentStore } from '@/store/agent';
+import { useDeviceList } from '@/store/device';
 import { useElectronStore } from '@/store/electron';
 
 import { useTopicId } from '../hooks/useTopicId';

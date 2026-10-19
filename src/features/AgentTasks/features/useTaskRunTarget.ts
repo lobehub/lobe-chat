@@ -6,7 +6,6 @@ import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { resolveWorkspaceSurface } from '@/features/ChatInput/ControlBar/useWorkspaceSurface';
-import { useDeviceList } from '@/features/DeviceManager/useDeviceList';
 import { devicePoolForAgent, devicePoolForTask } from '@/features/ExecutionTargetPicker';
 import { resolveAgentWorkingDirectoryConfig } from '@/helpers/agentWorkingDirectory';
 import { resolveExecutionTarget } from '@/helpers/executionTarget';
@@ -15,6 +14,7 @@ import { getWorkingDirectoryPathString } from '@/helpers/workingDirectoryPath';
 import { useEffectiveAgencyConfig } from '@/hooks/useEffectiveAgencyConfig';
 import { useAgentStore } from '@/store/agent';
 import { agentByIdSelectors } from '@/store/agent/selectors';
+import { useDeviceList } from '@/store/device';
 import { useElectronStore } from '@/store/electron';
 
 export type DeviceLabelSource = Pick<DeviceListItem, 'deviceId' | 'friendlyName' | 'hostname'>;

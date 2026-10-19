@@ -9,13 +9,13 @@ import { useTranslation } from 'react-i18next';
 
 import DirIcon from '@/features/ChatInput/ControlBar/DirIcon';
 import { formatLockedControlTooltip } from '@/features/ChatInput/utils/lockedControlTooltip';
-import { useDeviceList } from '@/features/DeviceManager/useDeviceList';
 import { openAddWorkingDirModal } from '@/features/WorkingDirectory';
 import {
   getWorkingDirectoryName,
   getWorkingDirectoryPathString,
 } from '@/helpers/workingDirectoryPath';
 import { deviceService } from '@/services/device';
+import { useDeviceList } from '@/store/device';
 
 import { taskExecutionStyles as styles } from './taskExecutionStyles';
 import TaskPickerOption from './TaskPickerOption';

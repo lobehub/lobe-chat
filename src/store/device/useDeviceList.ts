@@ -2,10 +2,11 @@ import { isDesktop } from '@lobechat/const';
 import type { DeviceListItem } from '@lobechat/types';
 import { useCallback } from 'react';
 
-import { useDeviceStore } from '@/store/device';
-import { deviceSelectors } from '@/store/device/selectors';
 import { useUserStore } from '@/store/user';
 import { authSelectors } from '@/store/user/selectors';
+
+import { deviceSelectors } from './selectors';
+import { useDeviceStore } from './store';
 
 export interface DeviceListResult {
   /** Every device of the active scope, or `undefined` until storage or the server answers. */

@@ -18,12 +18,12 @@ import { memo, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import AsyncBoundary from '@/components/AsyncBoundary';
+import { useDeviceList } from '@/store/device';
 import { useElectronStore } from '@/store/electron';
 
 import DeviceCard from './DeviceCard';
 import DeviceGrid from './DeviceGrid';
 import { DeviceGridSkeleton } from './Skeleton';
-import { useDeviceList } from './useDeviceList';
 
 const styles = createStaticStyles(({ css }) => ({
   // ─── Onboarding empty state ───

@@ -25,9 +25,9 @@ import { BotIcon, CheckCircle2, MonitorSmartphone, RefreshCw, XCircle } from 'lu
 import { memo, useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { isDevicePresenceUnknown, useDeviceList } from '@/features/DeviceManager/useDeviceList';
 import { deviceService } from '@/services/device';
 import { useAgentStore } from '@/store/agent';
+import { isDevicePresenceUnknown, useDeviceList } from '@/store/device';
 
 const styles = createStaticStyles(({ css }) => ({
   card: css`

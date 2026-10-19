@@ -7,7 +7,6 @@ import type {
 } from '@lobechat/types';
 import { useCallback, useMemo } from 'react';
 
-import { useDeviceList } from '@/features/DeviceManager/useDeviceList';
 import {
   groupExecutionTargetDevices,
   resolveExecutionTargetSelection,
@@ -16,6 +15,7 @@ import { isHeterogeneousSandboxExecutionAvailable } from '@/helpers/executionTar
 import { usePermission } from '@/hooks/usePermission';
 import { useAgentStore } from '@/store/agent';
 import { agentByIdSelectors } from '@/store/agent/selectors';
+import { useDeviceList } from '@/store/device';
 import { useUserStore } from '@/store/user';
 import { userProfileSelectors } from '@/store/user/selectors';
 

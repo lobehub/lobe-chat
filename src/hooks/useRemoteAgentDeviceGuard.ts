@@ -1,10 +1,14 @@
 import { isRemoteHeterogeneousType } from '@lobechat/heterogeneous-agents';
 import { useCallback, useEffect, useState } from 'react';
 
-import { isDevicePresenceUnknown, useDeviceList } from '@/features/DeviceManager/useDeviceList';
 import { useEffectiveAgencyConfig } from '@/hooks/useEffectiveAgencyConfig';
 import { deviceService } from '@/services/device';
-import { deviceSelectors, useDeviceStore } from '@/store/device';
+import {
+  deviceSelectors,
+  isDevicePresenceUnknown,
+  useDeviceList,
+  useDeviceStore,
+} from '@/store/device';
 
 export type RemoteAgentDeviceStatus =
   'checking' | 'device-offline' | 'no-device' | 'ok' | 'platform-unavailable';

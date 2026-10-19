@@ -1,6 +1,6 @@
 import type { DeviceListItem } from '@lobechat/types';
 
-import { useDeviceList } from '@/features/DeviceManager/useDeviceList';
+import { useDeviceList } from '@/store/device';
 
 /** Re-reads presence so a device that drops or reconnects shows it without a refocus. */
 export const PRESENCE_REFRESH_INTERVAL_MS = 30_000;

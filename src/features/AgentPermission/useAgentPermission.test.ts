@@ -27,7 +27,7 @@ vi.mock('@/store/user', () => ({
     selector({ user: { id: mocks.viewerId } }),
 }));
 
-vi.mock('@/features/DeviceManager/useDeviceList', () => ({
+vi.mock('@/store/device/useDeviceList', () => ({
   useDeviceList: () => ({ data: mocks.devices }),
 }));
 

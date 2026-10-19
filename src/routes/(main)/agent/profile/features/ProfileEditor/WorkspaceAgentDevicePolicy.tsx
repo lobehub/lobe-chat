@@ -9,7 +9,6 @@ import { memo, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import AsyncError from '@/components/AsyncError';
-import { useDeviceList } from '@/features/DeviceManager/useDeviceList';
 import {
   ExecutionTargetDeviceStatus,
   ExecutionTargetIcon,
@@ -20,6 +19,7 @@ import {
 } from '@/features/ExecutionTargetPicker';
 import { isHeterogeneousSandboxExecutionAvailable } from '@/helpers/executionTarget';
 import { useAgentStore } from '@/store/agent';
+import { useDeviceList } from '@/store/device';
 
 import { WorkspaceAgentPolicyCard } from './WorkspaceAgentPolicyCard';
 

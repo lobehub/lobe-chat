@@ -39,11 +39,11 @@ import { useActiveWorkspaceId } from '@/business/client/hooks/useActiveWorkspace
 import CommandLine from '@/components/CommandLine';
 import { DOWNLOAD_URL } from '@/const/url';
 import { getDeviceIcon } from '@/features/DeviceManager/getDeviceIcon';
-import { isDevicePresenceUnknown, useDeviceList } from '@/features/DeviceManager/useDeviceList';
 import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwareNavigate';
 import { deviceService } from '@/services/device';
 import { useAgentStore } from '@/store/agent';
 import { heteroAgentDefaultName } from '@/store/agent/utils/heteroAgentDefaultName';
+import { isDevicePresenceUnknown, useDeviceList } from '@/store/device';
 import { useElectronStore } from '@/store/electron';
 import { useHomeStore } from '@/store/home';
 

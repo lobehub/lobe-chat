@@ -7,8 +7,8 @@ import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import DeviceHoverPanel from '@/features/DeviceManager/DeviceHoverPanel';
-import { isDevicePresenceUnknown } from '@/features/DeviceManager/useDeviceList';
 import { ExecutionTargetDeviceStatus, ExecutionTargetIcon } from '@/features/ExecutionTargetPicker';
+import { isDevicePresenceUnknown } from '@/store/device';
 
 import { handleDeviceRowKeyDown } from './deviceRowKeyDown';
 import OptionRow from './OptionRow';

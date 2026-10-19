@@ -8,10 +8,10 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import AsyncBoundary from '@/components/AsyncBoundary';
+import { useDeviceList } from '@/store/device';
 import { useElectronStore } from '@/store/electron';
 
 import DeviceDetail from './DeviceDetail';
-import { useDeviceList } from './useDeviceList';
 
 const DetailSkeleton = memo(() => (
   <Flexbox gap={24}>

@@ -50,7 +50,7 @@ vi.mock('react-i18next', () => ({
   useTranslation: () => ({ t: (key: string) => key }),
 }));
 
-vi.mock('@/features/DeviceManager/useDeviceList', () => ({
+vi.mock('@/store/device/useDeviceList', () => ({
   useDeviceList: () => ({ data: mocks.devices, isLoading: false }),
 }));
 

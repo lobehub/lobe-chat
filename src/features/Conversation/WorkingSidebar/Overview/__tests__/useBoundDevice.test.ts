@@ -6,7 +6,7 @@ import { PRESENCE_REFRESH_INTERVAL_MS, useBoundDevice } from '../useBoundDevice'
 const useDeviceList = vi.fn();
 const mutate = vi.fn();
 
-vi.mock('@/features/DeviceManager/useDeviceList', () => ({
+vi.mock('@/store/device/useDeviceList', () => ({
   useDeviceList: (...args: unknown[]) => useDeviceList(...args),
 }));
 
