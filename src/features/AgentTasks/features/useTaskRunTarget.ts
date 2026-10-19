@@ -23,6 +23,25 @@ export const deviceLabel = (device: DeviceLabelSource, unknownLabel: string) =>
   device.friendlyName || device.hostname || unknownLabel;
 
 /**
+ * Why the run-location control is locked, for its tooltip. An author-fixed
+ * policy (or a disabled form) says so; a target still waiting on the device
+ * list is only being checked, not fixed.
+ */
+export const getTaskDeviceLockReason = ({
+  canSelect,
+  disabled,
+  isPending,
+}: {
+  canSelect: boolean;
+  disabled?: boolean;
+  isPending: boolean;
+}): 'fixed' | 'pending' | undefined => {
+  if (disabled || !canSelect) return 'fixed';
+  if (isPending) return 'pending';
+  return undefined;
+};
+
+/**
  * What the directory axis can offer, which is a property of the TARGET and not
  * of the task: a cloud repo identifier and a path on a machine are the same
  * axis in different units, so the control has to follow where the run goes.

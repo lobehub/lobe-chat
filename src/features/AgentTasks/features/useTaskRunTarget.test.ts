@@ -1,7 +1,7 @@
 import { renderHook } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { useTaskRunTarget } from './useTaskRunTarget';
+import { getTaskDeviceLockReason, useTaskRunTarget } from './useTaskRunTarget';
 
 const DEVICE_AGENT_BOUND = 'device-agent-bound';
 const DEVICE_TASK_PIN = 'device-task-pin';
@@ -270,5 +270,22 @@ describe('useTaskRunTarget', () => {
     expect(result.current.devices?.map((device) => device.deviceId)).toEqual([
       PERSONAL_DEVICE.deviceId,
     ]);
+  });
+});
+
+describe('getTaskDeviceLockReason', () => {
+  it('explains a lock caused by the unconfirmed device list as pending, not fixed', () => {
+    expect(getTaskDeviceLockReason({ canSelect: true, isPending: true })).toBe('pending');
+  });
+
+  it('keeps the fixed reason for an author-fixed policy or a disabled form', () => {
+    expect(getTaskDeviceLockReason({ canSelect: false, isPending: true })).toBe('fixed');
+    expect(getTaskDeviceLockReason({ canSelect: true, disabled: true, isPending: false })).toBe(
+      'fixed',
+    );
+  });
+
+  it('does not lock a selectable, confirmed target', () => {
+    expect(getTaskDeviceLockReason({ canSelect: true, isPending: false })).toBeUndefined();
   });
 });

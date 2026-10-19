@@ -11,7 +11,7 @@ import { ExecutionTargetDeviceStatus, ExecutionTargetIcon } from '@/features/Exe
 
 import { taskExecutionStyles as styles } from './taskExecutionStyles';
 import TaskPickerOption from './TaskPickerOption';
-import { deviceLabel, useTaskRunTarget } from './useTaskRunTarget';
+import { deviceLabel, getTaskDeviceLockReason, useTaskRunTarget } from './useTaskRunTarget';
 
 interface TaskDeviceChipProps {
   /** The assignee whose execution environment is inherited when nothing is pinned. */
@@ -60,7 +60,8 @@ const TaskDeviceChip = memo<TaskDeviceChipProps>(
 
     // The agent's policy is author-controlled: the server's resolver would drop
     // this pin, so the control must not pretend it can set one.
-    const isLocked = disabled || isPending || !canSelect;
+    const lockReason = getTaskDeviceLockReason({ canSelect, disabled, isPending });
+    const isLocked = !!lockReason;
 
     // Read the EFFECTIVE pin, never the raw prop: an author-fixed policy makes
     // the run side drop a requested device, and showing the stored one would
@@ -193,7 +194,9 @@ const TaskDeviceChip = memo<TaskDeviceChipProps>(
         <Tooltip
           title={formatLockedControlTooltip(
             t('taskExecution.runLocation'),
-            t('taskExecution.fixedTip'),
+            lockReason === 'pending'
+              ? t('heteroAgent.executionTarget.presenceChecking')
+              : t('taskExecution.fixedTip'),
           )}
         >
           {chip}
