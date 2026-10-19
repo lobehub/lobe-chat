@@ -48,22 +48,20 @@ export const updateRouter = router({
       // view-only members are read-only.
       await assertCanUseTopicTargets(guardCtx(ctx), [input.id]);
       await assertCreatorTopicTargets(guardCtx(ctx), [input.id]);
-      const { agentId, ...restValue } = input.value;
-      if (agentId) await assertCanUseConversationTargets(guardCtx(ctx), [{ agentId }]);
-
-      // If agentId is provided, resolve to sessionId
-      let resolvedSessionId = restValue.sessionId;
-      if (agentId && !resolvedSessionId) {
-        const resolved = await resolveContext(
-          { agentId },
-          ctx.serverDB,
-          ctx.userId,
-          ctx.workspaceId ?? undefined,
-        );
-        resolvedSessionId = resolved.sessionId ?? undefined;
-      }
-
-      return ctx.topicModel.update(input.id, { ...restValue, sessionId: resolvedSessionId });
+      const { agentId, sessionId, ...restValue } = input.value;
+      if (!agentId && !sessionId) return ctx.topicModel.update(input.id, restValue);
+      const resolved = await resolveContext(
+        { agentId, sessionId },
+        ctx.serverDB,
+        ctx.userId,
+        ctx.workspaceId ?? undefined,
+      );
+      await assertCanUseConversationTargets(guardCtx(ctx), [resolved]);
+      return ctx.topicModel.update(input.id, {
+        ...restValue,
+        agentId: resolved.agentId,
+        sessionId: resolved.sessionId,
+      });
     }),
   /**
    * Switch the topic's pinned model and its effort pin atomically — see

@@ -275,7 +275,10 @@ export const query = async (
           eq(topics.agentId, agentId),
           and(isNull(topics.sessionId), isNull(topics.groupId), isNull(topics.agentId)),
         )
-      : eq(topics.agentId, agentId);
+      : or(
+          eq(topics.agentId, agentId),
+          containerId ? and(isNull(topics.agentId), eq(topics.sessionId, containerId)) : undefined,
+        );
 
     const agentWhere = and(
       ctx.ownership(),

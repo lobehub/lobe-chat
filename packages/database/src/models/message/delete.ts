@@ -1,5 +1,5 @@
 import type { ChatToolPayload } from '@lobechat/types';
-import { and, eq, inArray, not, or } from 'drizzle-orm';
+import { and, eq, inArray, isNull, not, or } from 'drizzle-orm';
 
 import { agentsToSessions, messagePlugins, messages } from '../../schemas';
 import { notShareVisitorMessage } from '../../utils/shareVisitor';
@@ -195,7 +195,7 @@ export class MessageDeleteMutations extends MessageScope {
     sessionId?: string | null,
     topicId?: string | null,
     groupId?: string | null,
-    options?: ShareVisitorWriteOptions,
+    options?: ShareVisitorWriteOptions & { agentId?: string },
   ) => {
     const includeVisitor = options?.includeShareVisitor || this.includeShareVisitor;
     const scope = includeVisitor ? this.workspaceScope() : this.ownership();
@@ -205,7 +205,14 @@ export class MessageDeleteMutations extends MessageScope {
       .where(
         and(
           scope,
-          this.matchSession(sessionId),
+          options?.agentId
+            ? or(
+                eq(messages.agentId, options.agentId),
+                sessionId
+                  ? and(isNull(messages.agentId), eq(messages.sessionId, sessionId))
+                  : undefined,
+              )
+            : this.matchSession(sessionId),
           this.matchTopic(topicId),
           this.matchGroup(groupId),
         ),

@@ -16,12 +16,9 @@ import { router } from '@/libs/trpc/lambda';
 import { TopicReferenceService } from '@/server/services/topicReference';
 import { after } from '@/server/utils/scheduleAfterResponse';
 
-import {
-  batchResolveAgentIdFromSessions,
-  resolveAgentIdFromSession,
-  resolveContext,
-} from '../_helpers/resolveContext';
-import { topicProcedure, topicSearchProcedure } from './procedures';
+import { assertCanUseConversationTargets } from '../_helpers/conversationResourceGuard';
+import { batchResolveAgentIdFromSessions, resolveContext } from '../_helpers/resolveContext';
+import { guardCtx, topicProcedure, topicSearchProcedure } from './procedures';
 
 export const queryRouter = router({
   getTopicDetail: topicProcedure
@@ -175,20 +172,19 @@ export const queryRouter = router({
         return { items: result.items, total: result.total };
       }
 
-      // If sessionId is provided but no agentId, need to reverse lookup agentId
-      let effectiveAgentId = rest.agentId;
-      if (!effectiveAgentId && sessionId) {
-        effectiveAgentId = await resolveAgentIdFromSession(
-          sessionId,
-          ctx.serverDB,
-          ctx.userId,
-          ctx.workspaceId ?? undefined,
-        );
-      }
+      const resolvedContext = await resolveContext(
+        { agentId: rest.agentId ?? undefined, sessionId },
+        ctx.serverDB,
+        ctx.userId,
+        ctx.workspaceId ?? undefined,
+      );
+      const effectiveAgentId = resolvedContext.agentId ?? undefined;
+      await assertCanUseConversationTargets(guardCtx(ctx), [resolvedContext]);
 
       const result = await ctx.topicModel.query({
         ...rest,
         agentId: effectiveAgentId,
+        containerId: resolvedContext.sessionId,
         excludeStatuses,
         excludeTriggers,
         includeTriggers,
@@ -395,16 +391,29 @@ export const queryRouter = router({
         ctx.workspaceId ?? undefined,
       );
 
-      // Scope the search exactly like the topics list (`query`): by agentId
-      // directly (the new agent system stamps every topic with an agentId).
-      // Passing only the resolved sessionId used to miss every agentId-scoped
-      // topic — the cause of "no topics match" in the per-agent Topics search.
-      // `containerId` is only the fallback for legacy callers that pass no
-      // agentId/groupId.
-      return ctx.topicModel.queryByKeyword(input.keywords, {
-        agentId: input.agentId,
+      await assertCanUseConversationTargets(guardCtx(ctx), [resolved]);
+
+      const byAgent = ctx.topicModel.queryByKeyword(input.keywords, {
+        agentId: resolved.agentId ?? undefined,
         containerId: resolved.sessionId,
         groupId: input.groupId,
       });
+      if (!resolved.agentId || !resolved.sessionId || input.groupId) return byAgent;
+
+      // Legacy topics can still lack agentId before the existing on-read
+      // migration finishes. Search both scopes through the same search backend;
+      // only unassigned legacy rows may supplement the canonical Agent result.
+      const [current, legacy] = await Promise.all([
+        byAgent,
+        ctx.topicModel.queryByKeyword(input.keywords, { containerId: resolved.sessionId }),
+      ]);
+      return [
+        ...new Map(
+          [...current, ...legacy.filter((topic) => !topic.agentId)].map((topic) => [
+            topic.id,
+            topic,
+          ]),
+        ).values(),
+      ];
     }),
 });
