@@ -1,6 +1,6 @@
 'use client';
 
-import { EDITOR_DEBOUNCE_TIME, EDITOR_MAX_WAIT } from '@lobechat/const';
+import { EDITOR_DEBOUNCE_TIME, EDITOR_MAX_WAIT, HTML_DOCUMENT_FILE_TYPE } from '@lobechat/const';
 import type { DocumentItem } from '@lobechat/database/schemas';
 import type { IEditor } from '@lobehub/editor';
 import { debounce } from 'es-toolkit/compat';
@@ -21,6 +21,11 @@ import type { DocumentDetail } from './projection';
 import { documentDetailResource } from './projection';
 
 const n = setNamespace('document/document');
+
+const resolveContentFormat = (document: DocumentItem): DocumentContentFormat => {
+  if (document.fileType === HTML_DOCUMENT_FILE_TYPE) return 'html';
+  return isSkillMarkdownDocument(document) ? 'skillMarkdown' : 'markdown';
+};
 
 /**
  * Parameters for initializing a document with editor
@@ -404,7 +409,7 @@ export class DocumentActionImpl {
     this.#get().initDocumentWithEditor({
       autoSave,
       content: document.content,
-      contentFormat: isSkillMarkdownDocument(document) ? 'skillMarkdown' : 'markdown',
+      contentFormat: resolveContentFormat(document),
       documentId,
       editor,
       editorData: document.editorData,

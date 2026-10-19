@@ -91,7 +91,7 @@ export class EditorActionImpl {
     if (!editor || !id || id !== activeDocumentId) return false;
 
     const doc = documents[id];
-    if (!doc) return false;
+    if (!doc || doc.contentFormat === 'html') return false;
 
     try {
       const editorMarkdown = (editor.getDocument('markdown') as unknown as string) || '';
@@ -255,7 +255,7 @@ export class EditorActionImpl {
 
     const doc = documents[documentId];
 
-    if (!doc) return;
+    if (!doc || doc.contentFormat === 'html') return;
 
     // Check if editorData is valid and non-empty
     const editorDataRoot = (doc.editorData as { root?: { children?: unknown[] } } | null)?.root;
@@ -367,7 +367,8 @@ export class EditorActionImpl {
           }).filter(([, value]) => value !== undefined),
         )
       : undefined;
-    const metadataOnly = options?.metadataOnly === true;
+    // An HTML page's body is never edited here: only its title / emoji save.
+    const metadataOnly = options?.metadataOnly === true || doc.contentFormat === 'html';
     if (metadataOnly && !hasMetadataChanges) return;
 
     // Skip save if neither document content nor metadata changed

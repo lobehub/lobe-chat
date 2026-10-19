@@ -13,6 +13,11 @@ export const AGENT_PLAN_FILE_TYPE = 'agent/plan';
 export const VERIFY_INSTRUCTION_FILE_TYPE = 'verify/instruction';
 export const CUSTOM_DOCUMENT_FILE_TYPE = 'custom/document';
 export const CUSTOM_FOLDER_FILE_TYPE = 'custom/folder';
+/**
+ * A page whose `content` is a self-contained HTML document, rendered in a
+ * sandboxed frame instead of the rich-text editor. It never carries editorData.
+ */
+export const HTML_DOCUMENT_FILE_TYPE = 'custom/html';
 
 export const MARKDOWN_MIME_TYPES = ['text/markdown', 'text/x-markdown'];
 

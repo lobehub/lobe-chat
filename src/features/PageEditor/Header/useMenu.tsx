@@ -31,6 +31,7 @@ import { useUserStore } from '@/store/user';
 import { userProfileSelectors } from '@/store/user/selectors';
 
 import { formatPageEditorInfoTime } from '../formatPageEditorInfoTime';
+import { useIsHtmlPage } from '../HtmlPageBody';
 import { usePageEditorStore, useStoreApi } from '../store';
 
 /**
@@ -51,6 +52,8 @@ export const useMenu = (options: UseMenuOptions = {}): { menuItems: any[] } => {
   const dateLocale = i18n.resolvedLanguage || i18n.language;
 
   const documentId = usePageEditorStore((s) => s.documentId);
+  // An HTML page has no rich-text body: no Markdown to export, no editor history.
+  const isHtmlPage = useIsHtmlPage(documentId);
   const { allowed: canCreatePage } = usePermission('create_content');
   const { allowed: canEditPage } = usePermission('edit_own_content');
 
@@ -259,19 +262,23 @@ export const useMenu = (options: UseMenuOptions = {}): { menuItems: any[] } => {
           state.handleCopyLink(t as any);
         },
       },
-      {
-        icon: <Icon icon={Clock3Icon} />,
-        key: 'version-history',
-        label: t('pageEditor.history.title'),
-        onClick: () => {
-          setRightPanelMode('history');
-          if (onOpenHistory) {
-            onOpenHistory();
-          } else {
-            togglePageAgentPanel(true);
-          }
-        },
-      },
+      ...(isHtmlPage
+        ? []
+        : [
+            {
+              icon: <Icon icon={Clock3Icon} />,
+              key: 'version-history',
+              label: t('pageEditor.history.title'),
+              onClick: () => {
+                setRightPanelMode('history');
+                if (onOpenHistory) {
+                  onOpenHistory();
+                } else {
+                  togglePageAgentPanel(true);
+                }
+              },
+            } as DropdownItem,
+          ]),
       {
         danger: true,
         disabled: !canEditPage,
@@ -298,18 +305,22 @@ export const useMenu = (options: UseMenuOptions = {}): { menuItems: any[] } => {
             } as DropdownItem,
           ]
         : []),
-      {
-        children: [
-          {
-            key: 'export-markdown',
-            label: t('pageEditor.menu.export.markdown'),
-            onClick: handleExportMarkdown,
-          },
-        ],
-        icon: <Icon icon={Download} />,
-        key: 'export',
-        label: t('pageEditor.menu.export'),
-      },
+      ...(isHtmlPage
+        ? []
+        : [
+            {
+              children: [
+                {
+                  key: 'export-markdown',
+                  label: t('pageEditor.menu.export.markdown'),
+                  onClick: handleExportMarkdown,
+                },
+              ],
+              icon: <Icon icon={Download} />,
+              key: 'export',
+              label: t('pageEditor.menu.export'),
+            } as DropdownItem,
+          ]),
     ];
 
     if (lastUpdatedTime || authorName) {
@@ -339,6 +350,7 @@ export const useMenu = (options: UseMenuOptions = {}): { menuItems: any[] } => {
     }
     return items;
   }, [
+    isHtmlPage,
     lastUpdatedTime,
     authorName,
     canCreatePage,
