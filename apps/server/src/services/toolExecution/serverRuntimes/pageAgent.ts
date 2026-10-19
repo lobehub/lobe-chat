@@ -31,6 +31,7 @@ interface DocumentSnapshot {
   editorData: Record<string, unknown> | null;
   fileType: string;
   title: string;
+  updatedAt?: Date;
 }
 
 interface InvocationEnv {
@@ -132,6 +133,7 @@ const loadSnapshot = async (
     editorData: (doc.editorData ?? null) as Record<string, unknown> | null,
     fileType: doc.fileType,
     title: doc.title ?? 'Untitled',
+    updatedAt: doc.updatedAt ?? undefined,
   };
 };
 
@@ -299,6 +301,12 @@ interface HtmlHandlerOutput extends HandlerOutput {
  * Raw-text read-modify-write of an HTML page under the same document lock as
  * the node APIs. Refuses rich-text pages, whose body is not an HTML document.
  */
+const HTML_WRITE_ATTEMPTS = 3;
+
+const isVersionMismatch = (error: unknown) =>
+  (error as { cause?: { data?: { code?: string } } })?.cause?.data?.code ===
+  'DocumentVersionMismatch';
+
 const withHtmlPage = async (
   { documentModel, documentService }: PageAgentServiceContext,
   ctx: PageAgentInvocationContext,
@@ -308,23 +316,38 @@ const withHtmlPage = async (
   const documentId = ctx.documentId;
   if (!documentId) throw new Error('documentId is required');
 
+  // The document lock is workspace-only, and one step's tool calls run at once:
+  // write against the version that was read, and re-apply the edit to the newer
+  // HTML when another write landed in between, so no edit is silently dropped.
   const run = async (lockOwnerId?: string): Promise<HandlerOutput> => {
-    const snapshot = await loadSnapshot(documentModel, documentId);
-    if (snapshot.fileType !== HTML_DOCUMENT_FILE_TYPE) throw new Error(RICH_TEXT_PAGE_TOOL_HINT);
+    for (let attempt = 1; ; attempt++) {
+      const snapshot = await loadSnapshot(documentModel, documentId);
+      if (snapshot.fileType !== HTML_DOCUMENT_FILE_TYPE) throw new Error(RICH_TEXT_PAGE_TOOL_HINT);
 
-    const { content, html, state } = handler(snapshot.content);
-    if (persist && html !== undefined) {
-      await documentService.updateDocument(documentId, {
-        content: html,
-        ...(lockOwnerId ? { lockOwnerId } : {}),
-        saveSource: 'llm_call',
-      });
+      const { content, html, state } = handler(snapshot.content);
+      if (persist && html !== undefined) {
+        try {
+          await documentService.updateDocument(documentId, {
+            content: html,
+            ...(snapshot.updatedAt ? { expectedUpdatedAt: snapshot.updatedAt } : {}),
+            ...(lockOwnerId ? { lockOwnerId } : {}),
+            saveSource: 'llm_call',
+          });
+        } catch (error) {
+          if (isVersionMismatch(error) && attempt < HTML_WRITE_ATTEMPTS) continue;
+          throw error;
+        }
+      }
+
+      return {
+        content,
+        state: {
+          ...state,
+          documentContent: html ?? snapshot.content,
+          documentTitle: snapshot.title,
+        },
+      };
     }
-
-    return {
-      content,
-      state: { ...state, documentContent: html ?? snapshot.content, documentTitle: snapshot.title },
-    };
   };
 
   return persist ? documentService.runWithDocumentLock(documentId, run) : run();

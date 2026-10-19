@@ -7,7 +7,7 @@ import { pageAgentRuntime } from '@/store/tool/slices/builtin/executors/pageAgen
 /**
  * The kind of page a page-scoped run edits. An HTML page renders in a sandboxed
  * frame with no editor mounted: its page tool exposes only the HTML APIs and no
- * editor content is injected. `undefined` outside page scope.
+ * editor content is injected. `undefined` outside page scope or before the page loads.
  */
 export const resolveClientPageDocumentType = (
   scope: string | undefined,
@@ -16,6 +16,9 @@ export const resolveClientPageDocumentType = (
   if (scope !== 'page') return undefined;
   const id = documentId ?? pageAgentRuntime.getCurrentDocId();
   if (!id) return undefined;
-  const fileType = getDocumentStoreState().documentDetailMap[id]?.document?.fileType;
-  return fileType === HTML_DOCUMENT_FILE_TYPE ? 'html' : 'rich-text';
+  const document = getDocumentStoreState().documentDetailMap[id]?.document;
+  // Not loaded yet: unknown, never a guess (the copilot holds sending until the
+  // page is known, see `isPageDocumentLoaded`).
+  if (!document) return undefined;
+  return document.fileType === HTML_DOCUMENT_FILE_TYPE ? 'html' : 'rich-text';
 };

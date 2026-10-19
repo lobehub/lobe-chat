@@ -34,4 +34,8 @@ describe('resolveClientPageDocumentType', () => {
     expect(resolveClientPageDocumentType('main', 'html-page')).toBeUndefined();
     expect(resolveClientPageDocumentType('page', undefined)).toBeUndefined();
   });
+
+  it('stays unknown while the page has not loaded, instead of guessing rich text', () => {
+    expect(resolveClientPageDocumentType('page', 'still-loading')).toBeUndefined();
+  });
 });

@@ -76,4 +76,29 @@ describe('PageAgentExecutor on an HTML page', () => {
     expect(result.success).toBe(false);
     expect(result.error?.type).toBe('PageEditorNotMounted');
   });
+
+  it('applies concurrent edits of one page in turn, so none is lost', async () => {
+    // A stored page the mocked service reads and writes, with network latency.
+    let stored = '<p>a</p><p>b</p>';
+    const tick = () => new Promise((resolve) => setTimeout(resolve, 5));
+    mocks.getDocumentById.mockImplementation(async () => {
+      const snapshot = stored;
+      await tick();
+      return { content: snapshot, fileType: 'custom/html' };
+    });
+    mocks.updateDocument.mockImplementation(async ({ content }: { content: string }) => {
+      await tick();
+      stored = content;
+      return {};
+    });
+
+    // The gateway starts every tool call of one step at once.
+    const results = await Promise.all([
+      executor.invoke('editHtml', { newString: '<p>A</p>', oldString: '<p>a</p>' }, ctx),
+      executor.invoke('editHtml', { newString: '<p>B</p>', oldString: '<p>b</p>' }, ctx),
+    ]);
+
+    expect(results.every((result) => result.success)).toBe(true);
+    expect(stored).toBe('<p>A</p><p>B</p>');
+  });
 });

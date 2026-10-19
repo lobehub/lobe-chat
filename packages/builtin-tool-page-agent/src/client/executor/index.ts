@@ -60,6 +60,25 @@ const DOCUMENT_WRITING_APIS = new Set<string>([
   PageAgentApiName.writeHtml,
 ]);
 
+/**
+ * One queue per HTML page: the gateway starts every tool call of a step at once,
+ * and two read-modify-writes of the same page must not read the same HTML (the
+ * later write would silently drop the earlier edit).
+ */
+const htmlPageQueues = new Map<string, Promise<unknown>>();
+
+const runInPageQueue = <T>(documentId: string, task: () => Promise<T>): Promise<T> => {
+  const previous = htmlPageQueues.get(documentId) ?? Promise.resolve();
+  const run = previous.catch(() => undefined).then(task);
+  htmlPageQueues.set(documentId, run);
+  void run
+    .catch(() => undefined)
+    .finally(() => {
+      if (htmlPageQueues.get(documentId) === run) htmlPageQueues.delete(documentId);
+    });
+  return run;
+};
+
 /** HTML pages mount no Lexical editor; these APIs read and write the stored HTML. */
 const HTML_APIS = new Set<string>([
   PageAgentApiName.readHtml,
@@ -191,6 +210,14 @@ class PageAgentExecutor extends BaseExecutor<typeof PageAgentApiName> {
       };
     }
 
+    return runInPageQueue(documentId, () => this.runHtmlNow(apiName, documentId, handler));
+  };
+
+  private runHtmlNow = async (
+    apiName: string,
+    documentId: string,
+    handler: (html: string) => { content: string; html?: string; state: Record<string, unknown> },
+  ): Promise<BuiltinToolResult> => {
     try {
       const { documentService } = await import('@/services/document');
       const document = await documentService.getDocumentById(documentId);

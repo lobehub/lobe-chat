@@ -33,12 +33,13 @@ const runtime = () =>
   >;
 const ctx = { documentId: 'doc-1' };
 
-const page = (fileType: string, content: string) => ({
+const page = (fileType: string, content: string, updatedAt = new Date('2026-10-19T00:00:00Z')) => ({
   content,
   editorData: null,
   fileType,
   id: 'doc-1',
   title: 'Goal report',
+  updatedAt,
 });
 
 beforeEach(() => {
@@ -70,9 +71,40 @@ describe('page agent on an HTML page', () => {
     expect(mocks.runWithDocumentLock).toHaveBeenCalledWith('doc-1', expect.any(Function));
     expect(mocks.updateDocument).toHaveBeenCalledWith('doc-1', {
       content: HTML.replace('<p>12</p>', '<p>13</p>'),
+      expectedUpdatedAt: new Date('2026-10-19T00:00:00Z'),
       lockOwnerId: 'lock-owner',
       saveSource: 'llm_call',
     });
+  });
+
+  it('re-applies an edit on the latest HTML when another write landed first', async () => {
+    // Another call of the same step saved its edit between this read and write.
+    const concurrent = HTML.replace('<h1>Report</h1>', '<h1>Report v2</h1>');
+    mocks.findById
+      .mockResolvedValueOnce(page('custom/html', HTML))
+      .mockResolvedValueOnce(page('custom/html', concurrent, new Date('2026-10-19T00:00:01Z')));
+    mocks.updateDocument
+      .mockRejectedValueOnce(
+        Object.assign(new Error('Document has been updated by another session'), {
+          cause: { data: { code: 'DocumentVersionMismatch' } },
+          code: 'CONFLICT',
+        }),
+      )
+      .mockResolvedValueOnce({});
+
+    const result = await runtime().editHtml(
+      { newString: '<p>13</p>', oldString: '<p>12</p>' },
+      ctx,
+    );
+
+    expect(result.success).toBe(true);
+    expect(mocks.updateDocument).toHaveBeenLastCalledWith(
+      'doc-1',
+      expect.objectContaining({
+        content: concurrent.replace('<p>12</p>', '<p>13</p>'),
+        expectedUpdatedAt: new Date('2026-10-19T00:00:01Z'),
+      }),
+    );
   });
 
   it('rewrites the whole page', async () => {
