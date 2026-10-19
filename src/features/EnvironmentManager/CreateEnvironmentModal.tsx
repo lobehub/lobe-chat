@@ -23,7 +23,13 @@ import { useTranslation } from 'react-i18next';
 import VisibilityConfirmContent from '@/features/VisibilityConfirmContent';
 import { useIMECompositionEvent } from '@/hooks/useIMECompositionEvent';
 
-import { ENVIRONMENT_NAME_MAX_LENGTH, validateEnvironmentName } from './environmentName';
+import {
+  type CreateEnvironmentFailure,
+  ENVIRONMENT_NAME_MAX_LENGTH,
+  getCreateEnvironmentFeedback,
+  toCreateEnvironmentFailure,
+  validateEnvironmentName,
+} from './environmentName';
 import GithubRepositoryPicker, { type GithubRepositorySelection } from './GithubRepositoryPicker';
 import { type CreatedEnvironment, useEnvironmentActions } from './useEnvironmentData';
 
@@ -106,15 +112,22 @@ const CreateEnvironmentContent = memo<CreateEnvironmentContentProps>(
     // The Enter that confirms an IME candidate reaches `keydown` as an Enter,
     // so a Chinese name would submit the dialog on the keystroke that picked it.
     const { compositionProps, isComposingRef } = useIMECompositionEvent();
-    const [error, setError] = useState<string | undefined>();
+    const [error, setError] = useState<CreateEnvironmentFailure | undefined>();
 
     const trimmed = name.trim();
     const nameValidation = validateEnvironmentName(name);
     const errorId = useId();
-    const displayedError =
-      nameValidation === 'tooLong'
+    // Only a problem with the name marks the field invalid. A network or server
+    // failure says nothing about what was typed, so pointing a screen reader at
+    // the field would send the person to edit a name that was fine.
+    const feedback = getCreateEnvironmentFeedback(name, error);
+    const fieldError =
+      feedback.field === 'tooLong'
         ? t('environments.nameTooLong', { max: ENVIRONMENT_NAME_MAX_LENGTH })
-        : error;
+        : feedback.field === 'duplicateName'
+          ? t('environments.duplicateName')
+          : undefined;
+    const formError = feedback.form ? t('environments.createFailed') : undefined;
 
     const pickRepository = (selection: GithubRepositorySelection | undefined) => {
       setRepository(selection);
@@ -161,11 +174,7 @@ const CreateEnvironmentContent = memo<CreateEnvironmentContentProps>(
         // The one failure the user can act on is a name already taken, and it is
         // fixed by typing a different one — so it belongs next to the field
         // rather than in a toast that outlives the dialog.
-        setError(
-          (cause as { message?: string })?.message === 'DUPLICATE_ENVIRONMENT_NAME'
-            ? t('environments.duplicateName')
-            : t('environments.createFailed'),
-        );
+        setError(toCreateEnvironmentFailure(cause));
       } finally {
         setCreating(false);
       }
@@ -247,8 +256,8 @@ const CreateEnvironmentContent = memo<CreateEnvironmentContentProps>(
               </Text>
               <Input
                 autoFocus
-                aria-describedby={displayedError ? errorId : undefined}
-                aria-invalid={!!displayedError}
+                aria-describedby={fieldError ? errorId : undefined}
+                aria-invalid={!!fieldError}
                 aria-label={t('environments.nameLabel')}
                 placeholder={t('environments.namePlaceholder')}
                 value={name}
@@ -262,12 +271,18 @@ const CreateEnvironmentContent = memo<CreateEnvironmentContentProps>(
                 }}
                 {...compositionProps}
               />
-              {displayedError && (
+              {fieldError && (
                 <Text fontSize={12} id={errorId} role={'alert'} type={'danger'}>
-                  {displayedError}
+                  {fieldError}
                 </Text>
               )}
             </Flexbox>
+          )}
+
+          {formError && (
+            <Text fontSize={12} role={'alert'} type={'danger'}>
+              {formError}
+            </Text>
           )}
         </Flexbox>
         <ModalFooter>
