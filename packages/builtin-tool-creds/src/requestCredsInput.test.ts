@@ -75,6 +75,18 @@ describe('requestCredsInput — T-675 form-bypass guidance', () => {
     expect(result.content).not.toContain('Call requestCredsInput again');
   });
 
+  it('does NOT advertise a reopenable pending card (Codex P2 on PR #20701)', () => {
+    const result = buildRequestCredsInputResult(args, false);
+
+    // The pending card is gone once the approval resolves (Tool Detail only
+    // routes *pending* interventions to the InterventionBar and renders
+    // completed calls as results), so the copy must not send the agent
+    // hunting for a card that no longer exists.
+    expect(result.content).not.toContain('Open this conversation');
+    expect(result.content).not.toMatch(/fill the secure form there/i);
+    expect(result.content).toContain('no reopenable card');
+  });
+
   it('names the key and offers the manual settings path', () => {
     const result = buildRequestCredsInputResult(args, false);
 
