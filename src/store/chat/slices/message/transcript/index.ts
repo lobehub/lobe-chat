@@ -86,8 +86,8 @@ const createMessageTranscript = (set: StoreSetter<ChatStore>, get: () => ChatSto
   type HeadReadRecord = {
     /** Client-created ids this read cannot treat as server-authoritative. */
     clientIds: Set<string>;
-    /** Creation order, used to keep the earliest record for a shared result. */
-    order: number;
+    /** Number of fetch responses that have not settled with this record yet. */
+    refs: number;
     /**
      * When the server came to know a protected id (confirmed it, or assigned
      * it to a remapped row). A physical request issued after that point
@@ -99,7 +99,6 @@ const createMessageTranscript = (set: StoreSetter<ChatStore>, get: () => ChatSto
   const headReads = new WeakMap<UIChatMessage[], HeadReadRecord>();
   /** Client-created rows a server snapshot has not returned yet. */
   const unconfirmedClientIds = new Set<string>();
-  let headReadOrder = 0;
   /** Orders physical requests against the moments ids became server-known. */
   let clock = 0;
   /**
@@ -116,15 +115,27 @@ const createMessageTranscript = (set: StoreSetter<ChatStore>, get: () => ChatSto
     // from an authoritative snapshot, so it starts in the record too.
     const record: HeadReadRecord = {
       clientIds: new Set(unconfirmedClientIds),
-      order: ++headReadOrder,
+      refs: 1,
       serverKnownAt: new Map(),
     };
     activeHeadReads.add(record);
     return record;
   };
 
+  const retainHeadRead = (record: HeadReadRecord) => {
+    record.refs += 1;
+    activeHeadReads.add(record);
+  };
+
+  /**
+   * Drop one fetch's reference. A shared record stays active until every
+   * response that uses it has settled, so no fetch can lose protection that
+   * another unfinished one still needs.
+   */
   const releaseHeadRead = (record: HeadReadRecord) => {
-    activeHeadReads.delete(record);
+    if (record.refs <= 0) return;
+    record.refs -= 1;
+    if (record.refs === 0) activeHeadReads.delete(record);
   };
 
   /**
@@ -225,21 +236,29 @@ const createMessageTranscript = (set: StoreSetter<ChatStore>, get: () => ChatSto
   const bucketRows = (key: string) => get().dbMessagesMap[bucketOfKey(key).bucket];
 
   /**
-   * Concurrent reads can join one query result. Register the earliest record
-   * for it, the most conservative view of what the response can be missing.
+   * Associate a fetch with the record that tracks a shared result, and return
+   * that record. Concurrent reads can join one query result; the first record
+   * registered for an array survives, the other one is folded into it and its
+   * reference transferred. Every copy of the result then keeps using a record
+   * that stays live until all of them settle.
    */
-  const registerHeadRead = (messages: UIChatMessage[], record: HeadReadRecord) => {
+  const registerHeadRead = (messages: UIChatMessage[], record: HeadReadRecord): HeadReadRecord => {
     const existing = headReads.get(messages);
-    if (existing) {
-      if (existing === record) return;
-      if (existing.order <= record.order) {
-        // An earlier read already covers this shared result.
-        releaseHeadRead(record);
-        return;
-      }
-      releaseHeadRead(existing);
+    if (!existing) {
+      headReads.set(messages, record);
+      return record;
     }
-    headReads.set(messages, record);
+    if (existing === record) return record;
+
+    for (const id of record.clientIds) existing.clientIds.add(id);
+    for (const [id, at] of record.serverKnownAt) {
+      const existingAt = existing.serverKnownAt.get(id);
+      // The earliest observation is the authoritative one.
+      if (existingAt === undefined || at < existingAt) existing.serverKnownAt.set(id, at);
+    }
+    retainHeadRead(existing);
+    releaseHeadRead(record);
+    return existing;
   };
 
   // ---- reads ---------------------------------------------------------------
@@ -270,7 +289,7 @@ const createMessageTranscript = (set: StoreSetter<ChatStore>, get: () => ChatSto
         : undefined;
       const wasPending = hasPendingInterventions(dbMessages);
       let messages = await runMessageListQuery(context, readHeadPage);
-      registerHeadRead(messages, read);
+      read = registerHeadRead(messages, read);
       if (!context.syncInterventions || !context.topicId) return messages;
       if (wasPending || hasPendingInterventions(messages)) pendingInterventions.add(syncKey);
       if (!pendingInterventions.has(syncKey) || hasPendingInterventions(messages)) return messages;
@@ -288,12 +307,14 @@ const createMessageTranscript = (set: StoreSetter<ChatStore>, get: () => ChatSto
         messages = await runMessageListQuery(context, readHeadPage, {
           force: true,
         });
+        read = registerHeadRead(messages, read);
       }
       const result = [...messages];
       const startedAt = physicalStarts.get(messages);
       if (startedAt !== undefined) physicalStarts.set(result, startedAt);
-      // The copy is what `prepareHead` receives.
-      registerHeadRead(result, read);
+      // The copy is what `prepareHead` receives. It must use the record that
+      // survived for the shared result, not one this fetch already released.
+      read = registerHeadRead(result, read);
       snapshots.set(result, { dbMessages, topic, topicAtRequest });
       return result;
     } catch (error) {
@@ -338,9 +359,8 @@ const createMessageTranscript = (set: StoreSetter<ChatStore>, get: () => ChatSto
     // Several fetchers can join one result. The earliest request is the most
     // conservative boundary for what any of their responses can be missing.
     const read = headReads.get(incoming);
-    // The fetch has fully settled (topic detail and any forced re-read
-    // included); later writes need not be recorded for it.
-    if (read) releaseHeadRead(read);
+    // The read record is released by `onSettled`, which runs for every success
+    // including the responses the replica discards before this point.
 
     // A returned row is server-confirmed: a later snapshot may remove it.
     confirmServerRows(incoming);

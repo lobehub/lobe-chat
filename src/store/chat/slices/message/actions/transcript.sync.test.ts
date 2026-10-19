@@ -740,6 +740,69 @@ describe('useFetchMessages', () => {
       await waitFor(() => expect(rowsOf(context)).toEqual([]));
     });
 
+    it('keeps a client row when two fetches share a result across the topic wait', async () => {
+      const question: UIChatMessage = {
+        id: 'question',
+        content: '',
+        role: 'tool',
+        tool_call_id: 'call-1',
+        createdAt: 1,
+        updatedAt: 1,
+        pluginIntervention: { status: 'pending' },
+      };
+      const answered: UIChatMessage = { ...question, pluginIntervention: { status: 'approved' } };
+      const sent: UIChatMessage = {
+        id: 'msg_user',
+        content: 'Created during the wait',
+        role: 'user',
+        createdAt: 2000,
+        updatedAt: 2000,
+      };
+
+      let resolveFetch!: (messages: UIChatMessage[]) => void;
+      vi.mocked(messageService.getMessages).mockReturnValue(
+        new Promise((resolve) => {
+          resolveFetch = resolve;
+        }) as Promise<UIChatMessage[]>,
+      );
+
+      let resolveTopic!: () => void;
+      vi.mocked(topicService.getTopicDetail).mockReturnValue(
+        new Promise((resolve) => {
+          resolveTopic = () => resolve({ id: context.topicId, status: 'running' });
+        }) as ReturnType<typeof topicService.getTopicDetail>,
+      );
+
+      seedRows(context, [question]);
+      // Two mounted syncs join the same restarted query result. One record is
+      // subsumed; its fetch must still use the surviving record after copying
+      // the shared array.
+      syncMessages(context, { syncInterventions: true });
+      syncMessages(context, { syncInterventions: true });
+
+      await waitFor(() => expect(messageService.getMessages).toHaveBeenCalled());
+      await act(async () => {
+        resolveFetch([answered]);
+        await Promise.resolve();
+      });
+      await waitFor(() => expect(topicService.getTopicDetail).toHaveBeenCalled());
+
+      // The row lands after registration, so only the surviving record sees it.
+      useChatStore
+        .getState()
+        .internal_dispatchMessage(
+          { id: sent.id, type: 'createMessage', value: sent as any },
+          { conversationContext: context },
+          { creationOrigin: 'client' },
+        );
+
+      await act(async () => {
+        resolveTopic();
+      });
+
+      await waitFor(() => expect(rowsOf(context)?.map((message) => message.id)).toContain(sent.id));
+    });
+
     it('forgets an unconfirmed id when the local row is deleted', () => {
       const temp: UIChatMessage = {
         id: 'tmp_deleted',
