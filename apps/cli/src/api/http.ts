@@ -1,4 +1,6 @@
 import { describeTokenLookup, getValidToken } from '../auth/refresh';
+import { assertRunIdentity } from '../auth/runIdentity';
+import { pickAuthSource } from '../auth/source';
 import { CLI_API_KEY_ENV, readCliApiKeyEnv } from '../constants/auth';
 import { CLI_PRIMARY_BIN } from '../constants/identity';
 import { resolveServerUrl } from '../settings';
@@ -14,6 +16,7 @@ export interface AuthInfo {
 
 export async function getAuthInfo(workspaceId?: string): Promise<AuthInfo> {
   const serverUrl = resolveServerUrl();
+  assertRunIdentity(pickAuthSource());
   const envJwt = process.env.LOBEHUB_JWT;
   if (envJwt) {
     return {
@@ -82,6 +85,7 @@ export interface AgentStreamAuthInfo {
 
 export async function getAgentStreamAuthInfo(workspaceId?: string): Promise<AgentStreamAuthInfo> {
   const serverUrl = resolveServerUrl();
+  assertRunIdentity(pickAuthSource());
 
   const envJwt = process.env.LOBEHUB_JWT;
   if (envJwt) {

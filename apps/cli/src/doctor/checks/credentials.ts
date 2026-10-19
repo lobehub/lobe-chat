@@ -1,3 +1,4 @@
+import { checkRunIdentity } from '../../auth/runIdentity';
 import { maskSecret, pickAuthSource } from '../../auth/source';
 import { CLI_API_KEY_ENV } from '../../constants/auth';
 import { CLI_PRIMARY_BIN } from '../../constants/identity';
@@ -39,6 +40,9 @@ const credentialSource: DoctorCheck = {
         fix: 'Expected? This is how server-dispatched runs authenticate. If not, unset LOBEHUB_JWT and LOBEHUB_JWT_FILE.',
         status: 'warn',
       };
+
+    const runIdentityRefusal = checkRunIdentity(source);
+    if (runIdentityRefusal) return { detail: runIdentityRefusal, evidence, status: 'fail' };
 
     return {
       detail: `Using ${source.origin} (${maskSecret(source.token)}).`,

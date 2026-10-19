@@ -13,7 +13,11 @@ export type {
 } from './cancellation';
 export { buildHeteroExecStdinPayload, type HeteroExecImageRef } from './execStdinPayload';
 export { lobeHubCliGuide } from './lobeHubCliGuide';
-export { INHERITED_RUN_IDENTITY_ENV_KEYS, stripInheritedRunIdentity } from './runIdentityEnv';
+export {
+  INHERITED_RUN_IDENTITY_ENV_KEYS,
+  RUN_USER_ID_ENV,
+  stripInheritedRunIdentity,
+} from './runIdentityEnv';
 export const HETERO_EXEC_INHERIT_PROCESS_GROUP_ENV = 'LOBEHUB_HETERO_EXEC_INHERIT_PROCESS_GROUP';
 export {
   buildHeterogeneousPrompt,

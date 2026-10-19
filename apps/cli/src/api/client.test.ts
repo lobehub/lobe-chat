@@ -15,6 +15,10 @@ vi.mock('../auth/refresh', async (importOriginal) => ({
   getValidToken: vi.fn(),
 }));
 
+const mockLoadCredentials = vi.hoisted(() => vi.fn<() => { accessToken: string } | null>());
+
+vi.mock('../auth/credentials', () => ({ loadCredentials: mockLoadCredentials }));
+
 vi.mock('../settings', () => ({
   loadActiveWorkspace: () => undefined,
   resolveServerUrl: () => 'https://app.lobehub.com',
@@ -110,5 +114,50 @@ describe('api/client workspace scoping', () => {
     expect(mockCreateTRPCClient).toHaveBeenCalledTimes(2);
     expect(scoped).toBe(scopedAgain);
     expect(scoped).not.toBe(personal);
+  });
+});
+
+/**
+ * Regression: in a dispatched run the agent cleared `LOBEHUB_JWT` and retried,
+ * so the CLI fell back to the device owner's stored login and wrote an
+ * acceptance under that account instead of the run's user.
+ */
+describe('api/client run identity', () => {
+  const jwtWithSub = (sub: string) =>
+    `header.${Buffer.from(JSON.stringify({ sub })).toString('base64url')}.signature`;
+
+  beforeEach(async () => {
+    vi.clearAllMocks();
+    vi.resetModules();
+    vi.stubEnv('LOBEHUB_JWT', '');
+    vi.stubEnv('LOBEHUB_RUN_USER_ID', 'user_initiator');
+    const { getValidToken } = await import('../auth/refresh');
+    vi.mocked(getValidToken).mockImplementation(async () => ({
+      credentials: mockLoadCredentials()!,
+      status: 'ok',
+    }));
+  });
+
+  afterEach(() => {
+    vi.unstubAllEnvs();
+  });
+
+  it("refuses to fall back to another account's stored login", async () => {
+    mockLoadCredentials.mockReturnValue({ accessToken: jwtWithSub('user_device_owner') });
+    const { getTrpcClient } = await import('./client');
+
+    await expect(getTrpcClient()).rejects.toThrow(
+      /started by user user_initiator.*belongs to user user_device_owner/,
+    );
+    expect(mockCreateTRPCClient).not.toHaveBeenCalled();
+  });
+
+  it("falls back to the stored login when it is the run's user", async () => {
+    mockLoadCredentials.mockReturnValue({ accessToken: jwtWithSub('user_initiator') });
+    const { getTrpcClient } = await import('./client');
+
+    await getTrpcClient();
+
+    expect(headersOfLastLink()).toMatchObject({ 'Oidc-Auth': jwtWithSub('user_initiator') });
   });
 });
