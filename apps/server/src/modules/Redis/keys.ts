@@ -21,6 +21,11 @@ export const RedisKeyNamespace = {
    */
   AGENT_SIGNAL: 'agent-signal',
   /**
+   * Follow-ups a user queued behind a running agent turn ("steer"). The server
+   * drains them into the next turn itself when the running one hands back.
+   */
+  AGENT_STEER: 'agentSteer',
+  /**
    * AI generation related keys (agent welcome, placeholders, etc.)
    */
   AI_GENERATION: 'aiGeneration',
@@ -80,6 +85,40 @@ export const RedisKeys = {
       `nightly_topics:v1:${userId}:${localDate}`,
   },
   /**
+   * Steer queue scope — see {@link RedisKeyNamespace.AGENT_STEER}.
+   */
+  agentSteer: {
+    /**
+     * Follow-ups one user queued behind their running turn on one conversation
+     * surface. Per user: workspace members can each have a run on the same topic.
+     * Full key: agentSteer:follow_ups:v1:{userId}:{topicId}:{threadId|main}
+     */
+    followUps: (userId: string, topicId: string, threadId?: string | null): string =>
+      `follow_ups:v1:${userId}:${topicId}:${threadId || 'main'}`,
+    /**
+     * Ids of follow-ups a drain already took from that queue, so a retried
+     * append of the same id is recognized instead of queued again.
+     * Full key: agentSteer:follow_ups_taken:v1:{userId}:{topicId}:{threadId|main}
+     */
+    takenFollowUps: (userId: string, topicId: string, threadId?: string | null): string =>
+      `follow_ups_taken:v1:${userId}:${topicId}:${threadId || 'main'}`,
+    /**
+     * Follow-ups a run drained from that queue but has not settled yet, one
+     * batch per drain (field = drain id). A batch whose lease lapses goes back
+     * to the queue, so an interrupted delivery never loses an entry.
+     * Full key: agentSteer:follow_ups_drained:v1:{userId}:{topicId}:{threadId|main}
+     */
+    drainedFollowUps: (userId: string, topicId: string, threadId?: string | null): string =>
+      `follow_ups_drained:v1:${userId}:${topicId}:${threadId || 'main'}`,
+    /**
+     * Short fence around starting a run on an existing thread. Thread starts
+     * skip the topic-start reservation, so this is what lets a queued
+     * follow-up check "no run is live here" and start as one step.
+     * Full key: agentSteer:thread_start:v1:{threadId}
+     */
+    threadStartFence: (threadId: string): string => `thread_start:v1:${threadId}`,
+  },
+  /**
    * AI generation scope - for AI-generated content like welcome messages
    */
   aiGeneration: {
@@ -134,6 +173,7 @@ export const RedisKeys = {
  */
 export const RedisKeyScopeNamespace = {
   agentSignal: RedisKeyNamespace.AGENT_SIGNAL,
+  agentSteer: RedisKeyNamespace.AGENT_STEER,
   aiGeneration: RedisKeyNamespace.AI_GENERATION,
   lobechat: RedisKeyNamespace.LOBEHUB,
   sendPathCache: RedisKeyNamespace.SEND_PATH_CACHE,

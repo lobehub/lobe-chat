@@ -189,6 +189,7 @@ export const TRPC_NAMESPACE_API_KEY_RULES: Record<string, TrpcNamespaceScopeRule
   agentShare: 'blocked',
   agentSignal: rw('agent:read', 'agent:write'),
   agentSkills: rw('agent:read', 'agent:write'),
+  agentSteerQueue: rw('agent:read', 'agent:write'),
   // a trace snapshot is the whole inside of a run — system role, injected user
   // memory, tool results — and `getSnapshotUrl` hands back a presigned URL that
   // needs no further auth, so a restricted key holding one would read past its
@@ -349,6 +350,12 @@ export const TRPC_PROCEDURE_EXTRA_SCOPES: Record<string, ApiKeyScope[]> = {
   'aiAgent.execSubAgentTask': AGENT_RUN_SCOPES,
   'aiAgent.scheduleAgentRun': AGENT_RUN_SCOPES,
   'aiAgent.startExecution': AGENT_RUN_SCOPES,
+  // a queued follow-up is a deferred composer send: the run that drains it
+  // starts a model turn and writes the user message
+  'agentSteerQueue.append': AGENT_RUN_SCOPES,
+  'agentSteerQueue.remove': ['chat:write'],
+  // returns the queued prompts and attachments, i.e. conversation content
+  'agentSteerQueue.list': ['chat:read'],
   // thread/message state writes without starting a run
   'aiAgent.createClientGroupAgentTaskThread': ['chat:write'],
   'aiAgent.createClientTaskThread': ['chat:write'],

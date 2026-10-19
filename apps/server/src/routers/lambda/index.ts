@@ -35,6 +35,7 @@ import { agentQuotaRouter } from './agentQuota';
 import { agentShareRouter } from './agentShare';
 import { agentSignalRouter } from './agentSignal';
 import { agentSkillsRouter } from './agentSkills';
+import { agentSteerQueueRouter } from './agentSteerQueue';
 import { agentTraceRouter } from './agentTrace';
 import { aiAgentRouter } from './aiAgent';
 import { aiChatRouter } from './aiChat';
@@ -129,6 +130,7 @@ export const lambdaRouter = router({
   agentTrace: agentTraceRouter,
   expertise: expertiseRouter,
   agentSignal: agentSignalRouter,
+  agentSteerQueue: agentSteerQueueRouter,
   changelog: changelogRouter,
   brief: briefRouter,
   aiAgent: aiAgentRouter,
