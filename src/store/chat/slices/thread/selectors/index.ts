@@ -16,6 +16,13 @@ const currentTopicThreads = (s: ChatStoreState) => {
   return s.threadMaps[s.activeTopicId] || [];
 };
 
+/**
+ * Whether the active topic's thread list has a value to render — hydrated from
+ * the local copy or fetched. With no active topic there is nothing to wait for.
+ */
+const isCurrentTopicThreadsLoaded = (s: ChatStoreState): boolean =>
+  !s.activeTopicId || s.threadMaps[s.activeTopicId] !== undefined;
+
 const currentPortalThread = (s: ChatStoreState): ThreadItem | undefined => {
   if (!s.portalThreadId) return undefined;
 
@@ -199,6 +206,7 @@ export const threadSelectors = {
   getThreadsByTopic,
   hasThreadBySourceMsgId,
   isActiveThreadSubagent,
+  isCurrentTopicThreadsLoaded,
   portalAIChats,
   portalAIChatsWithHistoryConfig,
   portalDisplayChatsString,
