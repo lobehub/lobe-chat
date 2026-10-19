@@ -181,9 +181,14 @@ describe('PageEditor header menu', () => {
     vi.clearAllMocks();
   });
 
-  it('offers no Markdown export or editor history for an HTML page', () => {
+  it('exports an HTML page as HTML and offers no editor history', () => {
+    const exportChildren = (items: ReturnType<typeof useMenu>['menuItems']) =>
+      (getMenuItem(items, 'export') as { children: { key: string }[] }).children.map(
+        (child) => child.key,
+      );
+
     const { result: page } = renderHook(() => useMenu());
-    expect(getMenuItem(page.current.menuItems, 'export')).toBeDefined();
+    expect(exportChildren(page.current.menuItems)).toEqual(['export-markdown']);
     expect(getMenuItem(page.current.menuItems, 'version-history')).toBeDefined();
 
     documentStoreMock.state = {
@@ -191,7 +196,7 @@ describe('PageEditor header menu', () => {
     };
     const { result: htmlPage } = renderHook(() => useMenu());
 
-    expect(getMenuItem(htmlPage.current.menuItems, 'export')).toBeUndefined();
+    expect(exportChildren(htmlPage.current.menuItems)).toEqual(['export-html']);
     expect(getMenuItem(htmlPage.current.menuItems, 'version-history')).toBeUndefined();
     expect(getMenuItem(htmlPage.current.menuItems, 'duplicate')).toBeDefined();
   });

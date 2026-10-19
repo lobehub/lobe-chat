@@ -29,6 +29,7 @@ import { systemStatusSelectors } from '@/store/global/selectors';
 import { pageActions, pageSelectors, usePageStore } from '@/store/page';
 import { useUserStore } from '@/store/user';
 import { userProfileSelectors } from '@/store/user/selectors';
+import { exportHtmlDocument } from '@/utils/exportTextFile';
 
 import { formatPageEditorInfoTime } from '../formatPageEditorInfoTime';
 import { useIsHtmlPage } from '../HtmlPageBody';
@@ -52,7 +53,7 @@ export const useMenu = (options: UseMenuOptions = {}): { menuItems: any[] } => {
   const dateLocale = i18n.resolvedLanguage || i18n.language;
 
   const documentId = usePageEditorStore((s) => s.documentId);
-  // An HTML page has no rich-text body: no Markdown to export, no editor history.
+  // An HTML page has no rich-text body: it exports as HTML and has no editor history.
   const isHtmlPage = useIsHtmlPage(documentId);
   const { allowed: canCreatePage } = usePermission('create_content');
   const { allowed: canEditPage } = usePermission('edit_own_content');
@@ -209,6 +210,19 @@ export const useMenu = (options: UseMenuOptions = {}): { menuItems: any[] } => {
     }
   }, [storeApi, t]);
 
+  const htmlContent = useDocumentStore((s) =>
+    isHtmlPage && documentId ? s.documentDetailMap[documentId]?.document?.content : undefined,
+  );
+  const handleExportHtml = useCallback(async () => {
+    try {
+      const result = await exportHtmlDocument(htmlContent ?? '', storeApi.getState().title);
+      if (result === 'downloaded') toast.success(t('pageEditor.exportSuccess'));
+    } catch (error) {
+      console.error('Failed to export HTML:', error);
+      toast.error(t('pageEditor.exportError'));
+    }
+  }, [htmlContent, storeApi, t]);
+
   const menuItems = useMemo<DropdownItem[]>(() => {
     const items: DropdownItem[] = [
       ...(showViewModeSwitch
@@ -305,22 +319,27 @@ export const useMenu = (options: UseMenuOptions = {}): { menuItems: any[] } => {
             } as DropdownItem,
           ]
         : []),
-      ...(isHtmlPage
-        ? []
-        : [
-            {
-              children: [
-                {
-                  key: 'export-markdown',
-                  label: t('pageEditor.menu.export.markdown'),
-                  onClick: handleExportMarkdown,
-                },
-              ],
-              icon: <Icon icon={Download} />,
-              key: 'export',
-              label: t('pageEditor.menu.export'),
-            } as DropdownItem,
-          ]),
+      {
+        // An HTML page has no Markdown to export: it downloads as the page itself.
+        children: isHtmlPage
+          ? [
+              {
+                key: 'export-html',
+                label: t('pageEditor.menu.export.html'),
+                onClick: handleExportHtml,
+              },
+            ]
+          : [
+              {
+                key: 'export-markdown',
+                label: t('pageEditor.menu.export.markdown'),
+                onClick: handleExportMarkdown,
+              },
+            ],
+        icon: <Icon icon={Download} />,
+        key: 'export',
+        label: t('pageEditor.menu.export'),
+      },
     ];
 
     if (lastUpdatedTime || authorName) {
@@ -368,6 +387,7 @@ export const useMenu = (options: UseMenuOptions = {}): { menuItems: any[] } => {
     handleDuplicate,
     handleMakePrivate,
     handlePublish,
+    handleExportHtml,
     handleExportMarkdown,
     memberPermissionMenuItem,
     transferMenuItems,

@@ -331,6 +331,7 @@ export default {
     'Someone else is editing this page. Your changes can’t be saved right now.',
   'pageEditor.menu.copyLink': 'Copy Link',
   'pageEditor.menu.export': 'Export',
+  'pageEditor.menu.export.html': 'HTML',
   'pageEditor.menu.export.markdown': 'Markdown',
   'pageEditor.menu.exportDocument': 'Export Page',
   'pageEditor.menu.importDocument': 'Import Page',
