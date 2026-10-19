@@ -35,6 +35,7 @@ import { goalManagerConversation } from './goalPresentation';
 import GoalRequirement from './GoalRequirement';
 import { GoalSupervision } from './GoalSupervision';
 import GoalSupervisorToggle from './GoalSupervisorToggle';
+import GoalWorkspaceBreadcrumb from './GoalWorkspaceBreadcrumb';
 import NorthStarMetrics from './NorthStarMetrics';
 import ProcessControl from './ProcessControl';
 import { useGoalChatPanel } from './useGoalChatPanel';
@@ -249,9 +250,7 @@ const GoalDetailPage = memo<GoalDetailPageProps>(({ agentId, goalId }) => {
                     title={<Link to={buildAgentPath('goals')}>{t('goalList.title')}</Link>}
                   />
                 ) : (
-                  <Text fontSize={14} weight={500}>
-                    {goal.title}
-                  </Text>
+                  <GoalWorkspaceBreadcrumb title={goal.title} />
                 )}
                 {/* Not nested under the breadcrumb: an agent-less goal still has to
                   be deletable, and this menu is the only place that can do it. */}

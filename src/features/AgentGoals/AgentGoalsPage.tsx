@@ -20,9 +20,10 @@ import AgentBreadcrumb from '@/features/AgentBreadcrumb';
 import NavHeader from '@/features/NavHeader';
 import WideScreenContainer from '@/features/WideScreenContainer';
 import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwareNavigate';
+import { useCacheScope } from '@/libs/swr/useCacheScope';
 import type { GoalListFilter } from '@/store/goal';
 import { goalSelectors, useGoalStore } from '@/store/goal';
-import { goalListKey } from '@/store/goal/projection';
+import { goalListKey, goalListScopeId } from '@/store/goal/projection';
 
 import { createGoalModal } from './CreateGoalModal';
 import { GoalCardItem } from './GoalCardItem';
@@ -99,6 +100,7 @@ const GoalLoadError = ({ onRetry }: { onRetry: () => void }) => {
 };
 
 interface AgentGoalsPageProps {
+  /** Neither id: the cross-agent page, listing every agent's goals. */
   agentId?: string;
   projectId?: string;
 }
@@ -106,7 +108,10 @@ interface AgentGoalsPageProps {
 const AgentGoalsPage = memo<AgentGoalsPageProps>(({ agentId, projectId }) => {
   const { t } = useTranslation('chat');
   const navigate = useWorkspaceAwareNavigate();
-  const scopeId = projectId ? `project:${projectId}` : agentId!;
+  const cacheScope = useCacheScope();
+  const isGlobal = !agentId && !projectId;
+  const globalScope = isGlobal ? cacheScope : undefined;
+  const scopeId = goalListScopeId({ agentId, globalScope, projectId });
   const useFetchGoals = useGoalStore((s) => s.useFetchGoals);
   const refreshGoals = useGoalStore((s) => s.refreshGoals);
   const filter = useGoalStore((s) => s.goalListFilter);
@@ -118,25 +123,25 @@ const AgentGoalsPage = memo<AgentGoalsPageProps>(({ agentId, projectId }) => {
   // The rows live in the replica view; the hook only orchestrates the fetch, so
   // a revisit paints the persisted projection on the first frame instead of an
   // empty-state frame while the sync lands.
-  const { error, isLoading } = useFetchGoals(agentId, projectId);
+  const { error, isLoading } = useFetchGoals(agentId, projectId, 'all', globalScope);
   // The active tab reads its own statuses from the server. `all` shares the
   // window read's entry, so the page only pays for an extra request once the
   // user opens a narrow tab.
-  const tabSync = useFetchGoals(agentId, projectId, filter);
+  const tabSync = useFetchGoals(agentId, projectId, filter, globalScope);
   // `delivered` is a whole-set count, not a count of the page the list happens
   // to hold: read the review set's own total so the header can never disagree
   // with what the Needs-review tab shows once a goal sits past the list's page.
   // The read has to run whichever tab is active, since the header shows it
   // regardless — the rows themselves come from the view below.
-  useFetchGoals(agentId, projectId, 'review');
+  useFetchGoals(agentId, projectId, 'review', globalScope);
   const listView = useGoalStore(goalSelectors.goalListView(scopeId));
   const tabView = useGoalStore(
     goalSelectors.goalListView(
-      filter === 'all' ? scopeId : goalListKey({ agentId, filter, projectId }),
+      filter === 'all' ? scopeId : goalListKey({ agentId, filter, globalScope, projectId }),
     ),
   );
   const reviewView = useGoalStore(
-    goalSelectors.goalListView(goalListKey({ agentId, filter: 'review', projectId })),
+    goalSelectors.goalListView(goalListKey({ agentId, filter: 'review', globalScope, projectId })),
   );
   const goals = useMemo(() => listView?.goals ?? [], [listView]);
   const summary = useMemo(() => {
@@ -185,7 +190,9 @@ const AgentGoalsPage = memo<AgentGoalsPageProps>(({ agentId, projectId }) => {
       // instead of the modal blocking on it.
       onCreated: (goal) => {
         void refreshGoals(scopeId);
-        const ownerId = goal.agentId ?? agentId;
+        // The cross-agent page keeps the user in the workspace, like a task
+        // opened from the global task list.
+        const ownerId = isGlobal ? undefined : (goal.agentId ?? agentId);
         navigate(ownerId ? `/agent/${ownerId}/goal/${goal.goalId}` : `/goal/${goal.goalId}`);
       },
     });
@@ -329,7 +336,12 @@ const AgentGoalsPage = memo<AgentGoalsPageProps>(({ agentId, projectId }) => {
                   filteredGoals
                     .slice(0, visibleLimit)
                     .map((item) => (
-                      <GoalItem goal={item} key={item.goal.id} projectId={projectId} />
+                      <GoalItem
+                        globalScopeId={isGlobal ? scopeId : undefined}
+                        goal={item}
+                        key={item.goal.id}
+                        projectId={projectId}
+                      />
                     ))
                 )}
               </div>

@@ -558,9 +558,15 @@ export class GoalActionImpl {
    * network answers, so the page never flashes its empty state over hydrated
    * data.
    */
-  useFetchGoals = (agentId?: string, projectId?: string, filter: GoalListFilter = 'all') => {
+  useFetchGoals = (
+    agentId?: string,
+    projectId?: string,
+    filter: GoalListFilter = 'all',
+    /** Cache scope of the cross-agent page, read when neither id is given. */
+    globalScope?: string,
+  ) => {
     const params: GoalListParams | undefined =
-      agentId || projectId ? { agentId, filter, projectId } : undefined;
+      agentId || projectId || globalScope ? { agentId, filter, globalScope, projectId } : undefined;
     const key = params ? goalListKey(params) : undefined;
     const sync = this.#goalList.useSync(params ?? null, { revalidateOnFocus: true });
 
