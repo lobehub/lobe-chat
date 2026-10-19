@@ -214,6 +214,9 @@ export class MessageQueryActionImpl {
     );
 
     const transcript = getMessageTranscript(this.#set, this.#get);
+    // The server returned these rows, so their optimistic mark is settled even
+    // when the bucket already holds the same list (the commit below is skipped).
+    transcript.confirmServerRows(persistedIncoming);
     // An unchanged bucket still settles: an optimistic dispatch may already
     // have applied this exact state in memory while the stored copy is older.
     if (!isEqual(reconciled, currentMessages) || !this.#get().dbMessagesMap[messagesKey]) {

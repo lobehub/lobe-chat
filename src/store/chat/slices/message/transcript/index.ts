@@ -120,6 +120,15 @@ const createMessageTranscript = (set: StoreSetter<ChatStore>, get: () => ChatSto
     for (const record of activeHeadReads) record.clientIds.add(id);
   };
 
+  /**
+   * A server snapshot returned these rows. Their client-side mark is settled,
+   * so a later snapshot that omits one is authoritative (a remote delete).
+   * Runs even when the replacement leaves the bucket unchanged.
+   */
+  const confirmServerRows = (messages: UIChatMessage[]) => {
+    for (const message of messages) unconfirmedClientIds.delete(message.id);
+  };
+
   const lens = createTranscriptLens();
 
   /**
@@ -409,6 +418,7 @@ const createMessageTranscript = (set: StoreSetter<ChatStore>, get: () => ChatSto
 
   return {
     commit,
+    confirmServerRows,
     evict,
     headResolutions,
     keyOf,

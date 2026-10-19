@@ -604,6 +604,33 @@ describe('useFetchMessages', () => {
       ]);
     });
 
+    it('drops a client row after a server replacement confirms it', async () => {
+      const sent: UIChatMessage = {
+        id: 'msg_user',
+        content: 'Sent',
+        role: 'user',
+        createdAt: 2000,
+        updatedAt: 2000,
+      };
+
+      useChatStore
+        .getState()
+        .internal_dispatchMessage(
+          { id: sent.id, type: 'createMessage', value: sent as any },
+          { conversationContext: context },
+        );
+      // The server returns the exact list already in memory: the replacement
+      // is unchanged, but it still confirms the optimistic row.
+      const stored = rowsOf(context)!;
+      useChatStore.getState().replaceMessages(stored, { context });
+
+      // A later snapshot omits it (deleted on another device).
+      vi.mocked(messageService.getMessages).mockResolvedValue([]);
+      syncMessages(context);
+
+      await waitFor(() => expect(rowsOf(context)).toEqual([]));
+    });
+
     it('keeps a send whose stale fetch resolves after the send operation handed off', async () => {
       const previousReply: UIChatMessage = {
         id: 'previous-reply',
