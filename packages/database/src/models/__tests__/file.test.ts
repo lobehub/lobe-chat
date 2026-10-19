@@ -5,6 +5,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { getTestDB } from '../../core/getTestDB';
 import {
+  acceptances,
   agents,
   agentsFiles,
   asyncTasks,
@@ -22,9 +23,13 @@ import {
   knowledgeBases,
   messages,
   messagesFiles,
+  messageTTS,
   sessions,
   topics,
   users,
+  verifyCheckResults,
+  verifyEvidence,
+  verifyRuns,
   workspaces,
 } from '../../schemas';
 import type { LobeChatDatabase } from '../../type';
@@ -2214,6 +2219,103 @@ describe('FileModel', () => {
       const result = await fileModel.findDeletableFilesByTopicId(topicId);
 
       expect(result).toEqual(['tf-msg']);
+    });
+
+    it('preserves a file a non-mirror document is built on, but not its own parse mirror', async () => {
+      await serverDB.insert(files).values(
+        ['tf-doc', 'tf-mirror'].map((id) => ({
+          fileType: 'application/pdf',
+          id,
+          name: `${id}.pdf`,
+          size: 1,
+          url: `k-${id}`,
+          userId,
+        })),
+      );
+      await serverDB
+        .insert(messagesFiles)
+        .values(
+          ['tf-doc', 'tf-mirror'].map((fileId) => ({ fileId, messageId: 'tf-msg-1', userId })),
+        );
+      await serverDB.insert(documents).values([
+        {
+          content: 'note',
+          fileId: 'tf-doc',
+          fileType: 'custom/document',
+          source: 'note',
+          sourceType: 'topic',
+          totalCharCount: 4,
+          totalLineCount: 1,
+          userId,
+        },
+        {
+          content: 'parsed',
+          fileId: 'tf-mirror',
+          fileType: 'custom/document',
+          source: 'k-tf-mirror',
+          sourceType: 'file',
+          totalCharCount: 6,
+          totalLineCount: 1,
+          userId,
+        },
+      ]);
+
+      const result = await fileModel.findDeletableFilesByTopicId(topicId);
+
+      expect(result).toEqual(['tf-mirror']);
+    });
+
+    it("preserves TTS audio of a message outside the topic, not of the topic's own", async () => {
+      await serverDB.insert(files).values(
+        ['tf-tts-out', 'tf-tts-in'].map((id) => ({
+          fileType: 'audio/mpeg',
+          id,
+          name: `${id}.mp3`,
+          size: 1,
+          url: `k-${id}`,
+          userId,
+        })),
+      );
+      await serverDB
+        .insert(messagesFiles)
+        .values(
+          ['tf-tts-out', 'tf-tts-in'].map((fileId) => ({ fileId, messageId: 'tf-msg-1', userId })),
+        );
+      await serverDB.insert(messageTTS).values([
+        // audio of a message in another topic → survives, so the file must too
+        { fileId: 'tf-tts-out', id: 'tf-msg-2', userId },
+        // audio of a message in the deleted topic → goes with it
+        { fileId: 'tf-tts-in', id: 'tf-msg-1b', userId },
+      ]);
+
+      const result = await fileModel.findDeletableFilesByTopicId(topicId);
+
+      expect(result).toEqual(['tf-tts-in']);
+    });
+
+    it('preserves a file used as acceptance evidence', async () => {
+      await serverDB
+        .insert(messagesFiles)
+        .values({ fileId: 'tf-shared', messageId: 'tf-msg-1', userId });
+      const [acceptance] = await serverDB
+        .insert(acceptances)
+        .values({ subjectId: 'tf-subject', subjectType: 'standalone', userId })
+        .returning();
+      const [run] = await serverDB
+        .insert(verifyRuns)
+        .values({ acceptanceId: acceptance.id, roundIndex: 1, userId })
+        .returning();
+      const [checkResult] = await serverDB
+        .insert(verifyCheckResults)
+        .values({ checkItemId: 'c1', userId, verifierType: 'agent', verifyRunId: run.id })
+        .returning();
+      await serverDB
+        .insert(verifyEvidence)
+        .values({ checkResultId: checkResult.id, fileId: 'tf-shared', type: 'screenshot', userId });
+
+      const result = await fileModel.findDeletableFilesByTopicId(topicId);
+
+      expect(result).toEqual([]);
     });
 
     it('returns an empty array when the topic has no message files', async () => {

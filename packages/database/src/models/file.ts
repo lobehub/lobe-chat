@@ -696,8 +696,12 @@ export class FileModel {
    * A candidate is therefore preserved (excluded) when it is still attached:
    * - to a message in another topic (or a message with no topic),
    * - at the session level (`files_to_sessions`), which outlives a single topic,
-   * - to a knowledge base (`knowledge_base_files`) or an agent (`agents_files`), or
-   * - to an image generation (`generations`), whose record the delete would drop.
+   * - to a knowledge base (`knowledge_base_files`) or an agent (`agents_files`),
+   * - to an image generation (`generations`), whose record the delete would drop,
+   * - to a document that is not the file's own parse mirror (`sourceType='file'`
+   *   mirrors are bookkeeping that `deleteMany` removes with the file),
+   * - as the TTS audio of a message outside the topic (`message_tts`), or
+   * - as acceptance evidence (`verify_evidence`), whose attachment would be lost.
    *
    * Session-level files are likewise never returned, matching the behaviour
    * documented on {@link findFilesToInitInSandbox}.
@@ -712,45 +716,80 @@ export class FileModel {
     const candidateIds = candidates.map((row) => row.id);
     if (candidateIds.length === 0) return [];
 
-    const [messageRefsOutsideTopic, sessionRefs, knowledgeBaseRefs, agentRefs, generationRefs] =
-      await Promise.all([
-        // same file attached to a message in a different topic (or no topic)
-        this.db
-          .selectDistinct({ id: messagesFiles.fileId })
-          .from(messagesFiles)
-          .innerJoin(messages, eq(messagesFiles.messageId, messages.id))
-          .where(
-            and(
-              inArray(messagesFiles.fileId, candidateIds),
-              eq(messagesFiles.userId, this.userId),
-              or(ne(messages.topicId, topicId), isNull(messages.topicId)),
-            ),
+    const [
+      messageRefsOutsideTopic,
+      sessionRefs,
+      knowledgeBaseRefs,
+      agentRefs,
+      generationRefs,
+      documentRefs,
+      ttsRefsOutsideTopic,
+      evidenceRefs,
+    ] = await Promise.all([
+      // same file attached to a message in a different topic (or no topic)
+      this.db
+        .selectDistinct({ id: messagesFiles.fileId })
+        .from(messagesFiles)
+        .innerJoin(messages, eq(messagesFiles.messageId, messages.id))
+        .where(
+          and(
+            inArray(messagesFiles.fileId, candidateIds),
+            eq(messagesFiles.userId, this.userId),
+            or(ne(messages.topicId, topicId), isNull(messages.topicId)),
           ),
-        // same file attached at the session level — survives topic deletion
-        this.db
-          .selectDistinct({ id: filesToSessions.fileId })
-          .from(filesToSessions)
-          .where(
-            and(
-              inArray(filesToSessions.fileId, candidateIds),
-              eq(filesToSessions.userId, this.userId),
-            ),
+        ),
+      // same file attached at the session level — survives topic deletion
+      this.db
+        .selectDistinct({ id: filesToSessions.fileId })
+        .from(filesToSessions)
+        .where(
+          and(
+            inArray(filesToSessions.fileId, candidateIds),
+            eq(filesToSessions.userId, this.userId),
           ),
-        // knowledge base / agent knowledge / image generation: none of these
-        // belong to the topic, so the file must outlive it
-        this.db
-          .selectDistinct({ id: knowledgeBaseFiles.fileId })
-          .from(knowledgeBaseFiles)
-          .where(inArray(knowledgeBaseFiles.fileId, candidateIds)),
-        this.db
-          .selectDistinct({ id: agentsFiles.fileId })
-          .from(agentsFiles)
-          .where(inArray(agentsFiles.fileId, candidateIds)),
-        this.db
-          .selectDistinct({ id: generations.fileId })
-          .from(generations)
-          .where(inArray(generations.fileId, candidateIds)),
-      ]);
+        ),
+      // knowledge base / agent knowledge / image generation: none of these
+      // belong to the topic, so the file must outlive it
+      this.db
+        .selectDistinct({ id: knowledgeBaseFiles.fileId })
+        .from(knowledgeBaseFiles)
+        .where(inArray(knowledgeBaseFiles.fileId, candidateIds)),
+      this.db
+        .selectDistinct({ id: agentsFiles.fileId })
+        .from(agentsFiles)
+        .where(inArray(agentsFiles.fileId, candidateIds)),
+      this.db
+        .selectDistinct({ id: generations.fileId })
+        .from(generations)
+        .where(inArray(generations.fileId, candidateIds)),
+      // a document built on the file, other than its own parse mirror
+      this.db
+        .selectDistinct({ id: documents.fileId })
+        .from(documents)
+        .where(
+          and(
+            inArray(documents.fileId, candidateIds),
+            or(ne(documents.sourceType, 'file'), isNull(documents.sourceType)),
+          ),
+        ),
+      // TTS audio of a message that survives the topic: the delete would
+      // cascade its TTS row away. Audio of the topic's own messages goes with them.
+      this.db
+        .selectDistinct({ id: messageTTS.fileId })
+        .from(messageTTS)
+        .innerJoin(messages, eq(messageTTS.id, messages.id))
+        .where(
+          and(
+            inArray(messageTTS.fileId, candidateIds),
+            or(ne(messages.topicId, topicId), isNull(messages.topicId)),
+          ),
+        ),
+      // acceptance evidence keeps the file as its attachment
+      this.db
+        .selectDistinct({ id: verifyEvidence.fileId })
+        .from(verifyEvidence)
+        .where(inArray(verifyEvidence.fileId, candidateIds)),
+    ]);
 
     const referencedElsewhere = new Set<string | null>([
       ...messageRefsOutsideTopic.map((row) => row.id),
@@ -758,6 +797,9 @@ export class FileModel {
       ...knowledgeBaseRefs.map((row) => row.id),
       ...agentRefs.map((row) => row.id),
       ...generationRefs.map((row) => row.id),
+      ...documentRefs.map((row) => row.id),
+      ...ttsRefsOutsideTopic.map((row) => row.id),
+      ...evidenceRefs.map((row) => row.id),
     ]);
 
     return candidateIds.filter((id) => !referencedElsewhere.has(id));
