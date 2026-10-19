@@ -24,7 +24,7 @@ const styles = createStaticStyles(({ css }) => ({
   `,
   metrics: css`
     display: grid;
-    grid-template-columns: minmax(178px, 1fr) 72px 48px 64px;
+    grid-template-columns: minmax(0, 1fr) 48px 64px;
     column-gap: 12px;
     align-items: center;
 
@@ -32,12 +32,13 @@ const styles = createStaticStyles(({ css }) => ({
     min-width: 390px;
   `,
   needsYou: css`
-    justify-self: end;
+    flex: none;
     color: ${cssVar.colorWarning};
     white-space: nowrap;
   `,
   progress: css`
     overflow: hidden;
+    flex: none;
 
     width: 64px;
     height: 4px;
@@ -72,34 +73,37 @@ export const GoalProgress = memo<GoalProgressProps>(
 
     return (
       <div className={styles.metrics}>
-        {taskTotal > 0 ? (
-          <Flexbox horizontal align={'center'} className={styles.acceptance} gap={6}>
-            <div aria-hidden className={styles.progress}>
-              <div className={styles.progressValue} style={{ width: `${progress}%` }} />
-            </div>
+        {/* Progress and anything blocked on the user read as one cell, so
+          duration and cost sit in fixed columns at the row's end and line up
+          whether or not a goal needs you. */}
+        <Flexbox horizontal align={'center'} className={styles.acceptance} gap={8}>
+          {taskTotal > 0 ? (
+            <Flexbox horizontal align={'center'} gap={6} style={{ minWidth: 0 }}>
+              <div aria-hidden className={styles.progress}>
+                <div className={styles.progressValue} style={{ width: `${progress}%` }} />
+              </div>
+              <Text ellipsis color={cssVar.colorTextTertiary} fontSize={12}>
+                {t('goalList.taskProgress', { done: taskDone, total: taskTotal })}
+              </Text>
+            </Flexbox>
+          ) : (
             <Text ellipsis color={cssVar.colorTextTertiary} fontSize={12}>
-              {t('goalList.taskProgress', { done: taskDone, total: taskTotal })}
+              {t('goalList.noTasks')}
             </Text>
-          </Flexbox>
-        ) : (
-          <Text ellipsis color={cssVar.colorTextTertiary} fontSize={12}>
-            {t('goalList.noTasks')}
-          </Text>
-        )}
-        {/* Only what is blocked on the user; the column stays so the
-          duration and cost line up from row to row. */}
-        {pendingDecisions > 0 ? (
-          <Text className={styles.needsYou} fontSize={12}>
-            {t('goalList.needsYou', { count: pendingDecisions })}
-          </Text>
-        ) : (
-          <span />
-        )}
+          )}
+          {pendingDecisions > 0 && (
+            <Text className={styles.needsYou} fontSize={12}>
+              {t('goalList.needsYou', { count: pendingDecisions })}
+            </Text>
+          )}
+        </Flexbox>
+        {/* A goal that has not run yet leaves these cells empty: a column of
+          lone dashes reads as stray marks rather than as "nothing yet". */}
         <Text className={styles.metric} color={cssVar.colorTextTertiary} fontSize={12}>
-          {formatGoalDuration(totalRunDuration)}
+          {totalRunDuration > 0 ? formatGoalDuration(totalRunDuration) : null}
         </Text>
         <Text className={styles.metric} color={cssVar.colorTextTertiary} fontSize={12}>
-          {formatGoalCost(totalRunCost)}
+          {totalRunCost > 0 ? formatGoalCost(totalRunCost) : null}
         </Text>
       </div>
     );

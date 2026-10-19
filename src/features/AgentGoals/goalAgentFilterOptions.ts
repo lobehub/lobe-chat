@@ -21,3 +21,17 @@ export const goalAgentFilterOptions = (goals: GoalWithAgent[]): GoalAgentFilterO
   }
   return [...counts].map(([agentId, count]) => ({ agentId, count }));
 };
+
+/**
+ * The options whose agent name contains the search text, case-insensitively.
+ * An empty search keeps every option.
+ */
+export const matchGoalAgentFilterOptions = (
+  options: GoalAgentFilterOption[],
+  titles: Record<string, string>,
+  search: string,
+): GoalAgentFilterOption[] => {
+  const query = search.trim().toLowerCase();
+  if (!query) return options;
+  return options.filter(({ agentId }) => (titles[agentId] ?? '').toLowerCase().includes(query));
+};
