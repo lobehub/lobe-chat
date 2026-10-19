@@ -10,8 +10,9 @@ const Header = () => {
   const isInNew = useChatStore((s) => s.startToForkThread);
 
   const isInit = useChatStore(threadSelectors.isCurrentTopicThreadsLoaded);
+  const isThreadPending = useChatStore(threadSelectors.isPortalThreadPending);
 
-  if (!isInit) return <Skeleton height={22} width={200} />;
+  if (!isInit || (!isInNew && isThreadPending)) return <Skeleton height={22} width={200} />;
 
   return isInNew ? <NewThread /> : <ActiveThread />;
 };

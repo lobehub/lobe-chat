@@ -90,6 +90,38 @@ vi.mock(import('@/store/user/selectors'), async (importOriginal) => ({
 
 const SCOPE = 'thread-test-user:personal';
 
+const makeThread = (id: string, title: string, topicId = 'test-topic-id'): ThreadItem => ({
+  createdAt: new Date('2026-10-01T00:00:00Z'),
+  id,
+  lastActiveAt: new Date('2026-10-01T00:00:00Z'),
+  sourceMessageId: 'msg-1',
+  status: ThreadStatus.Active,
+  title,
+  topicId,
+  type: ThreadType.Continuation,
+  updatedAt: new Date('2026-10-01T00:00:00Z'),
+  userId: 'user-1',
+});
+
+/** Fetch a topic's threads through the replica and wait until they are persisted. */
+const seedPersistedThreads = async (topicId: string, threads: ThreadItem[]) => {
+  (threadService.getThreads as Mock).mockResolvedValueOnce(threads);
+  await act(async () => {
+    await useChatStore.getState().refreshThreads(topicId);
+  });
+  await waitFor(async () => {
+    const row = await threadListResource.storage!.get({ queryKey: topicId, scope: SCOPE });
+    expect(row?.data).toEqual(threads);
+  });
+};
+
+/** Drop everything in memory, as a reload does; only storage survives. */
+const simulateReload = () => {
+  act(() => {
+    useChatStore.setState({ threadListReplica: createReplicaState(), threadMaps: {} });
+  });
+};
+
 beforeEach(() => {
   vi.clearAllMocks();
   vi.spyOn(cacheScope, 'get').mockReturnValue(SCOPE);
@@ -262,19 +294,6 @@ describe('thread action', () => {
   });
 
   describe('useFetchThreads', () => {
-    const makeThread = (id: string, title: string): ThreadItem => ({
-      createdAt: new Date('2026-10-01T00:00:00Z'),
-      id,
-      lastActiveAt: new Date('2026-10-01T00:00:00Z'),
-      sourceMessageId: 'msg-1',
-      status: ThreadStatus.Active,
-      title,
-      topicId: 'test-topic-id',
-      type: ThreadType.Continuation,
-      updatedAt: new Date('2026-10-01T00:00:00Z'),
-      userId: 'user-1',
-    });
-
     it('should fetch threads for a given topic id into threadMaps', async () => {
       const topicId = 'test-topic-id';
       const threads = [makeThread('thread-1', 'Thread 1')];
@@ -339,6 +358,92 @@ describe('thread action', () => {
         }),
       ).toBe(true);
     });
+
+    it('sends one request when several mounts sync the same topic', async () => {
+      const topicId = `topic-dedupe-${Date.now()}`;
+      (threadService.getThreads as Mock).mockResolvedValue([makeThread('t1', 'T1', topicId)]);
+
+      // ThreadHydration + the sidebar ThreadList both sync the active topic.
+      renderHook(() => {
+        useChatStore().useFetchThreads(true, topicId);
+        useChatStore().useFetchThreads(true, topicId);
+      });
+      const other = renderHook(() => useChatStore().useFetchThreads(true, topicId));
+
+      await waitFor(() => {
+        expect(useChatStore.getState().threadMaps[topicId]).toHaveLength(1);
+      });
+      other.rerender();
+      expect(threadService.getThreads).toHaveBeenCalledTimes(1);
+    });
+
+    it('does not show the previous identity threads after a scope switch', async () => {
+      const topicId = `topic-scope-${Date.now()}`;
+      await seedPersistedThreads(topicId, [makeThread('t1', 'Owned by A', topicId)]);
+      simulateReload();
+
+      // Another user / workspace opens the same topic id.
+      vi.spyOn(cacheScope, 'get').mockReturnValue('other-user:personal');
+      vi.spyOn(cacheScope, 'use').mockReturnValue('other-user:personal');
+      (threadService.getThreads as Mock).mockImplementation(() => new Promise(() => {}));
+
+      const { result } = renderHook(() => useChatStore().useFetchThreads(true, topicId));
+      await waitFor(() => expect(result.current.isHydrated).toBe(true));
+
+      expect(useChatStore.getState().threadMaps[topicId]).toBeUndefined();
+    });
+
+    it('keeps the last good threads when a background refresh fails', async () => {
+      const topicId = `topic-offline-${Date.now()}`;
+      const threads = [makeThread('t1', 'Last good', topicId)];
+      await seedPersistedThreads(topicId, threads);
+      vi.spyOn(console, 'error').mockImplementation(() => {});
+      (threadService.getThreads as Mock).mockRejectedValue(new Error('offline'));
+
+      await act(async () => {
+        await useChatStore.getState().refreshThreads(topicId);
+      });
+
+      expect(useChatStore.getState().threadMaps[topicId]).toEqual(threads);
+    });
+  });
+
+  describe('isPortalThreadPending', () => {
+    it('treats a thread missing from a restored snapshot as loading until the server answers', async () => {
+      const topicId = `topic-portal-${Date.now()}`;
+      await seedPersistedThreads(topicId, [makeThread('old', 'Old', topicId)]);
+      simulateReload();
+      act(() => {
+        useChatStore.setState({ activeTopicId: topicId, portalThreadId: 'created-later' });
+      });
+
+      let resolve!: (threads: ThreadItem[]) => void;
+      (threadService.getThreads as Mock).mockImplementation(
+        () => new Promise<ThreadItem[]>((r) => (resolve = r)),
+      );
+      renderHook(() => useChatStore().useFetchThreads(true, topicId));
+      await waitFor(() => expect(useChatStore.getState().threadMaps[topicId]).toHaveLength(1));
+
+      // Restored, but the snapshot predates the thread: still loading.
+      expect(threadSelectors.isPortalThreadPending(useChatStore.getState())).toBe(true);
+
+      await act(async () => {
+        resolve([makeThread('old', 'Old', topicId), makeThread('created-later', 'New', topicId)]);
+      });
+      await waitFor(() =>
+        expect(threadSelectors.isPortalThreadPending(useChatStore.getState())).toBe(false),
+      );
+    });
+
+    it('is settled once the server confirms the thread is gone', async () => {
+      const topicId = `topic-gone-${Date.now()}`;
+      await seedPersistedThreads(topicId, []);
+      act(() => {
+        useChatStore.setState({ activeTopicId: topicId, portalThreadId: 'deleted' });
+      });
+
+      expect(threadSelectors.isPortalThreadPending(useChatStore.getState())).toBe(false);
+    });
   });
 
   describe('refreshThreads', () => {
@@ -375,6 +480,39 @@ describe('thread action', () => {
   });
 
   describe('removeThread', () => {
+    it('drops the thread from the view and storage even when the refetch fails', async () => {
+      const topicId = 'test-topic-id';
+      await seedPersistedThreads(topicId, [makeThread('keep', 'Keep'), makeThread('gone', 'Gone')]);
+      vi.spyOn(console, 'error').mockImplementation(() => {});
+      (threadService.removeThread as Mock).mockResolvedValue(undefined);
+      (threadService.getThreads as Mock).mockRejectedValue(new Error('offline'));
+
+      await act(async () => {
+        await useChatStore.getState().removeThread('gone');
+      });
+
+      expect(useChatStore.getState().threadMaps[topicId]?.map((t) => t.id)).toEqual(['keep']);
+
+      // A reload must not bring the deleted thread back from the local copy.
+      simulateReload();
+      await act(async () => {
+        await useChatStore.getState().preHydrateThreads(topicId);
+      });
+      expect(useChatStore.getState().threadMaps[topicId]?.map((t) => t.id)).toEqual(['keep']);
+    });
+
+    it('restores the thread when the server rejects the delete', async () => {
+      const topicId = 'test-topic-id';
+      await seedPersistedThreads(topicId, [makeThread('keep', 'Keep'), makeThread('t2', 'T2')]);
+      (threadService.removeThread as Mock).mockRejectedValue(new Error('forbidden'));
+
+      await act(async () => {
+        await expect(useChatStore.getState().removeThread('t2')).rejects.toThrow('forbidden');
+      });
+
+      expect(useChatStore.getState().threadMaps[topicId]?.map((t) => t.id)).toEqual(['keep', 't2']);
+    });
+
     it('should remove thread and refresh threads', async () => {
       const { result } = renderHook(() => useChatStore());
 

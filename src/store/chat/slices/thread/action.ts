@@ -34,6 +34,9 @@ import { genParentMessages } from './selectors';
 const n = setNamespace('thd');
 
 type Setter = StoreSetter<ChatStore>;
+/** Window in which mounts syncing the same topic share one request. */
+export const THREAD_LIST_DEDUPING_INTERVAL = 10_000;
+
 export const chatThreadMessage = (set: Setter, get: () => ChatStore, _api?: unknown) =>
   new ChatThreadActionImpl(set, get, _api);
 
@@ -170,7 +173,12 @@ export class ChatThreadActionImpl {
    * `threadSelectors`, never from this hook.
    */
   useFetchThreads = (enable: boolean, topicId?: string): ReplicaSyncResult =>
-    this.#threadList.useSync(topicId || null, { enabled: enable });
+    // The conversation's ThreadHydration and the sidebar list both sync the
+    // active topic; collapse their mounts into one request.
+    this.#threadList.useSync(topicId || null, {
+      dedupingInterval: THREAD_LIST_DEDUPING_INTERVAL,
+      enabled: enable,
+    });
 
   /**
    * Seed a topic's persisted thread list before its first paint (route loader).
@@ -189,8 +197,7 @@ export class ChatThreadActionImpl {
    * Refetch the active topic's threads after a write, whether or not a list is
    * mounted. Fire-and-forget callers rely on it never rejecting.
    */
-  refreshThreads = async (): Promise<void> => {
-    const topicId = this.#get().activeTopicId;
+  refreshThreads = async (topicId = this.#get().activeTopicId): Promise<void> => {
     if (!topicId) return;
 
     try {
@@ -201,8 +208,21 @@ export class ChatThreadActionImpl {
   };
 
   removeThread = async (id: string): Promise<void> => {
-    await threadService.removeThread(id);
-    await this.#get().refreshThreads();
+    const topicId = this.#topicIdOfThread(id);
+
+    if (topicId) {
+      // Drops the row from the view and the persisted copy at once, so a failed
+      // refetch (or a reload) cannot bring it back; rolls back if the server
+      // rejects the delete.
+      await this.#threadList.optimistic(
+        topicId,
+        (threads) => threads.filter((thread) => thread.id !== id),
+        () => threadService.removeThread(id),
+      );
+    } else {
+      await threadService.removeThread(id);
+    }
+    await this.#get().refreshThreads(topicId);
 
     if (this.#get().activeThreadId === id) {
       this.#set({ activeThreadId: undefined });
@@ -284,7 +304,7 @@ export class ChatThreadActionImpl {
   };
 
   internal_updateThread = async (id: string, data: Partial<ThreadItem>): Promise<void> => {
-    const topicId = this.#get().activeTopicId;
+    const topicId = this.#topicIdOfThread(id);
     if (!topicId) return;
 
     this.#get().internal_updateThreadLoading(id, true);
@@ -295,10 +315,26 @@ export class ChatThreadActionImpl {
         (threads) => threadReducer(threads, { type: 'updateThread', id, value: data }),
         () => threadService.updateThread(id, data),
       );
-      await this.#get().refreshThreads();
+      await this.#get().refreshThreads(topicId);
     } finally {
       this.#get().internal_updateThreadLoading(id, false);
     }
+  };
+
+  /**
+   * The topic whose list holds the thread — the one the user is looking at,
+   * falling back to the active topic before any list has loaded.
+   */
+  #topicIdOfThread = (id: string): string | undefined => {
+    const { activeTopicId, threadMaps } = this.#get();
+    if (activeTopicId && threadMaps[activeTopicId]?.some((thread) => thread.id === id))
+      return activeTopicId;
+
+    const owner = Object.entries(threadMaps).find(([, threads]) =>
+      threads?.some((thread) => thread.id === id),
+    );
+
+    return owner?.[0] ?? activeTopicId;
   };
 
   /**
