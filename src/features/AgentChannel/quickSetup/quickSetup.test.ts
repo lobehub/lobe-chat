@@ -9,6 +9,7 @@ import {
   MAX_TRANSIENT_POLL_FAILURES,
   REGISTRATION_NAME_MAX_LENGTH,
   registrationPollInterval,
+  scanCopyKey,
   tolerateTransientPollFailure,
   toRegistrationName,
 } from './links';
@@ -101,6 +102,13 @@ describe('tolerateTransientPollFailure', () => {
     for (let i = 1; i < MAX_TRANSIENT_POLL_FAILURES; i++)
       await expect(tolerateTransientPollFailure(fail, failures, pending)).resolves.toBe(pending);
     await expect(tolerateTransientPollFailure(fail, failures, pending)).rejects.toThrow('502');
+  });
+});
+
+describe('scanCopyKey', () => {
+  it('names Lark in the copy of a Lark scan', () => {
+    expect(scanCopyKey('lark', 'waiting')).toBe('channel.quickSetup.feishu.scan.lark.waiting');
+    expect(scanCopyKey('feishu', 'waiting')).toBe('channel.quickSetup.feishu.scan.waiting');
   });
 });
 

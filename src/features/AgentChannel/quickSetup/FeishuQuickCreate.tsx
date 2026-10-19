@@ -18,7 +18,7 @@ import { useTranslation } from 'react-i18next';
 import { useClientDataSWR } from '@/libs/swr';
 import { agentBotProviderService } from '@/services/agentBotProvider';
 
-import { registrationPollInterval, tolerateTransientPollFailure } from './links';
+import { registrationPollInterval, scanCopyKey, tolerateTransientPollFailure } from './links';
 import { type FeishuCreatedApp, useCreatedAppSave } from './useCreatedAppSave';
 
 export type { FeishuCreatedApp } from './useCreatedAppSave';
@@ -139,7 +139,7 @@ const FeishuQuickCreate = memo<FeishuQuickCreateProps>(
         : poll?.status === 'expired'
           ? t('channel.quickSetup.feishu.scan.expired')
           : poll?.status === 'denied'
-            ? t('channel.quickSetup.feishu.scan.denied')
+            ? t(scanCopyKey(platform, 'denied'))
             : poll?.status === 'error'
               ? t('channel.quickSetup.feishu.scan.error')
               : undefined;
@@ -172,7 +172,7 @@ const FeishuQuickCreate = memo<FeishuQuickCreateProps>(
         </div>
 
         <Flexbox flex={1} gap={10} style={{ minWidth: 200 }}>
-          <Text weight={600}>{t('channel.quickSetup.feishu.scan.title')}</Text>
+          <Text weight={600}>{t(scanCopyKey(platform, 'title'))}</Text>
           <Flexbox gap={6}>
             {(['app', 'permissions', 'credentials'] as const).map((item) => (
               <Flexbox horizontal align={'flex-start'} gap={6} key={item}>
@@ -240,7 +240,7 @@ const FeishuQuickCreate = memo<FeishuQuickCreateProps>(
                 <Flexbox horizontal align={'center'} gap={8}>
                   <Spin size={'small'} />
                   <Text fontSize={13} type={'secondary'}>
-                    {t('channel.quickSetup.feishu.scan.waiting')}
+                    {t(scanCopyKey(platform, 'waiting'))}
                   </Text>
                 </Flexbox>
                 <a href={session.url} rel={'noreferrer'} target={'_blank'}>

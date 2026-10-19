@@ -168,3 +168,12 @@ export const tolerateTransientPollFailure = async <T, P>(
     return whilePending;
   }
 };
+
+/**
+ * Locale key for scan copy that names the app to open, so a Lark scan tells
+ * the user to confirm in Lark rather than Feishu.
+ */
+export const scanCopyKey = (platform: 'feishu' | 'lark', key: 'denied' | 'title' | 'waiting') =>
+  platform === 'lark'
+    ? (`channel.quickSetup.feishu.scan.lark.${key}` as const)
+    : (`channel.quickSetup.feishu.scan.${key}` as const);

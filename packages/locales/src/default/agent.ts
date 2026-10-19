@@ -29,6 +29,9 @@ export default {
   'channel.quickSetup.feishu.scan.saveFailed':
     "The app was created but couldn't be saved. Keep these credentials and save again.",
   'channel.quickSetup.feishu.scan.saveAgain': 'Save again',
+  'channel.quickSetup.feishu.scan.lark.title': 'Scan with Lark to create the bot',
+  'channel.quickSetup.feishu.scan.lark.waiting': 'Waiting for you to confirm in Lark…',
+  'channel.quickSetup.feishu.scan.lark.denied': 'Creation was declined in Lark.',
   'channel.quickSetup.feishu.create.title': 'Create a custom app',
   'channel.quickSetup.feishu.create.desc':
     'Copy the App ID and App Secret from Credentials & Basic Info.',
