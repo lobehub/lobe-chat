@@ -71,19 +71,18 @@ const BulkActionBar = memo(() => {
   }, [selectedIds, updateTopicStatus, exitSelectMode]);
 
   const handleBatchDelete = useCallback(() => {
-    void confirmRemoveTopic({
+    confirmRemoveTopic({
       content: t('management.bulk.deleteConfirm', { count: selectedIds.length }),
       okText: t('management.bulk.delete'),
-      onConfirm: async (removeFiles) => {
+      onConfirm: async () => {
         // Serial removal so each call's optimistic update + refetch resolves
         // cleanly; parallel removeTopic causes cascading refetches.
         for (const id of selectedIds) {
-          await removeTopic(id, removeFiles);
+          await removeTopic(id, true);
         }
         exitSelectMode();
       },
       title: t('management.bulk.deleteTitle'),
-      topicIds: selectedIds,
     });
   }, [selectedIds, t, removeTopic, exitSelectMode]);
 

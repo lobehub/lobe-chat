@@ -8,7 +8,6 @@ import { TRPCError } from '@trpc/server';
 import { and, inArray } from 'drizzle-orm';
 import { z } from 'zod';
 
-import { withScopedPermission } from '@/business/server/trpc-middlewares/rbacPermission';
 import { MessageModel } from '@/database/models/message';
 import { chatGroups } from '@/database/schemas';
 import { notTrashed } from '@/database/utils/softDelete';
@@ -226,22 +225,6 @@ export const queryRouter = router({
       after(runMigration);
 
       return { items: result.items, total: result.total };
-    }),
-  hasTopicFiles: topicProcedure
-    .use(withScopedPermission('topic:delete'))
-    .input(z.object({ ids: z.array(z.string()).min(1) }))
-    .query(async ({ input, ctx }) => {
-      try {
-        const hasFiles = await ctx.fileModel.hasFilesByTopicIds(input.ids);
-        return { data: { hasFiles }, success: true };
-      } catch (error) {
-        console.error('[topic:hasTopicFiles]', error);
-        throw new TRPCError({
-          cause: error,
-          code: 'INTERNAL_SERVER_ERROR',
-          message: 'Failed to check topic files',
-        });
-      }
     }),
   hasTopics: topicProcedure.query(async ({ ctx }) => {
     return (await ctx.topicModel.count()) === 0;

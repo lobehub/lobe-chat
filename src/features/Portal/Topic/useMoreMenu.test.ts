@@ -89,9 +89,8 @@ describe('useTopicMoreMenu', () => {
     const { result } = renderHook(() => useTopicMoreMenu());
     result.current!.delete!();
 
-    const { onConfirm, topicIds } = mocks.confirmRemoveTopic.mock.calls[0][0];
-    expect(topicIds).toEqual(['tpc_2']);
-    await onConfirm(true);
+    const { onConfirm } = mocks.confirmRemoveTopic.mock.calls[0][0];
+    await onConfirm();
 
     expect(mocks.removeTopic).toHaveBeenCalledWith('tpc_2', true);
     expect(mocks.closeTopicPortal).toHaveBeenCalledOnce();

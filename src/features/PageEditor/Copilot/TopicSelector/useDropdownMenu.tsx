@@ -237,13 +237,12 @@ export const useDropdownMenu = ({
           key: 'delete',
           label: t('delete'),
           onClick: () => {
-            void confirmRemoveTopic({
-              onConfirm: async (removeFiles) => {
-                await removeTopic(topicId, removeFiles);
+            confirmRemoveTopic({
+              onConfirm: async () => {
+                await removeTopic(topicId, true);
                 onDelete?.(topicId);
                 onClose();
               },
-              topicIds: [topicId],
             });
           },
           sfSymbol: 'trash',

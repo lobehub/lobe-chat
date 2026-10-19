@@ -196,8 +196,8 @@ describe('useTopicItemDropdownMenu', () => {
       const item = getMenuItem(result.current.dropdownMenu(), 'delete');
       if (!item || !('onClick' in item)) throw new Error('Missing delete');
       item.onClick?.({} as never);
-      await confirmDeleteMock.mock.calls[0][0].onConfirm(false);
-      expect(removeMock).toHaveBeenCalledWith('topic-1', false);
+      await confirmDeleteMock.mock.calls[0][0].onConfirm();
+      expect(removeMock).toHaveBeenCalledWith('topic-1', true);
       expect(refreshProjectMock).toHaveBeenCalledOnce();
       if (shouldNavigate) expect(navigateMock).toHaveBeenCalledWith('/project/project-1');
       else expect(navigateMock).not.toHaveBeenCalled();

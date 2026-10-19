@@ -14,7 +14,6 @@
   "actions.confirmRemoveAllWorkspace": "현재 워크스페이스 목록에서 다른 멤버가 생성한 주제를 포함하여 모든 주제를 삭제하려고 합니다. 이 작업은 되돌릴 수 없습니다.",
   "actions.confirmRemoveAllWorkspaceAcknowledge": "다른 멤버의 주제가 영구적으로 삭제된다는 것을 이해합니다.",
   "actions.confirmRemoveTopic": "이 주제를 삭제하려고 합니다. 이 작업은 되돌릴 수 없습니다.",
-  "actions.confirmRemoveTopicFiles": "이 주제에 업로드된 이미지와 파일도 삭제하시겠습니까?",
   "actions.confirmRemoveTopicTitle": "이 주제를 삭제하시겠습니까?",
   "actions.confirmRemoveUnstarred": "즐겨찾기되지 않은 주제를 삭제하려고 합니다. 이 작업은 되돌릴 수 없습니다.",
   "actions.confirmRemoveUnstarredOwn": "내가 생성한 별표가 없는 주제를 삭제하려고 합니다. 다른 워크스페이스 멤버가 생성한 주제는 유지됩니다. 이 작업은 되돌릴 수 없습니다.",

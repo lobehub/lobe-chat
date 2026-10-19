@@ -14,7 +14,6 @@
   "actions.confirmRemoveAllWorkspace": "Sie sind dabei, alle Themen in der aktuellen Arbeitsbereichsliste zu löschen, einschließlich der von anderen Mitgliedern erstellten Themen. Diese Aktion kann nicht rückgängig gemacht werden.",
   "actions.confirmRemoveAllWorkspaceAcknowledge": "Ich verstehe, dass dies die Themen anderer Mitglieder dauerhaft löscht.",
   "actions.confirmRemoveTopic": "Sie sind dabei, dieses Thema zu löschen. Diese Aktion kann nicht rückgängig gemacht werden.",
-  "actions.confirmRemoveTopicFiles": "Auch Bilder und Dateien löschen, die in diesem Thema hochgeladen wurden",
   "actions.confirmRemoveTopicTitle": "Dieses Thema löschen?",
   "actions.confirmRemoveUnstarred": "Sie sind dabei, nicht markierte Themen zu löschen. Diese Aktion kann nicht rückgängig gemacht werden.",
   "actions.confirmRemoveUnstarredOwn": "Sie sind dabei, nicht markierte Themen zu löschen, die Sie erstellt haben. Themen, die von anderen Mitgliedern des Arbeitsbereichs erstellt wurden, bleiben erhalten. Diese Aktion kann nicht rückgängig gemacht werden.",

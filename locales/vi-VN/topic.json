@@ -14,7 +14,6 @@
   "actions.confirmRemoveAllWorkspace": "Bạn sắp xóa tất cả các chủ đề trong danh sách Không gian làm việc hiện tại, bao gồm cả các chủ đề được tạo bởi các thành viên khác. Hành động này không thể hoàn tác.",
   "actions.confirmRemoveAllWorkspaceAcknowledge": "Tôi hiểu rằng điều này sẽ xóa vĩnh viễn các chủ đề của các thành viên khác.",
   "actions.confirmRemoveTopic": "Bạn sắp xóa chủ đề này. Hành động này không thể hoàn tác.",
-  "actions.confirmRemoveTopicFiles": "Cũng xóa hình ảnh và tệp đã tải lên trong chủ đề này",
   "actions.confirmRemoveTopicTitle": "Xóa chủ đề này?",
   "actions.confirmRemoveUnstarred": "Bạn sắp xóa các chủ đề chưa đánh dấu sao. Hành động này không thể hoàn tác.",
   "actions.confirmRemoveUnstarredOwn": "Bạn sắp xóa các chủ đề không được đánh dấu sao mà bạn đã tạo. Các chủ đề được tạo bởi các thành viên khác trong Không gian làm việc sẽ được giữ lại. Hành động này không thể hoàn tác.",

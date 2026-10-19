@@ -46,7 +46,6 @@ function expected(): Array<
     ['getTopicDetail', 'query', 12],
     ['getTopicTranscript', 'query', 12],
     ['getTopics', 'query', 12],
-    ['hasTopicFiles', 'query', 13],
     ['hasTopics', 'query', 11],
     ['importHeteroSessions', 'mutation', 13],
     ['importTopic', 'mutation', 13],

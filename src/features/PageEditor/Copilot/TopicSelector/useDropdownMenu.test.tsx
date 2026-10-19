@@ -171,16 +171,14 @@ describe('PageEditor Copilot TopicSelector useDropdownMenu', () => {
       }),
     );
 
-    confirmRemoveTopicMock.mockImplementation(async ({ onConfirm }) => onConfirm(true));
+    confirmRemoveTopicMock.mockImplementation(async ({ onConfirm }) => onConfirm());
 
     getMenuItem(result.current(), 'delete')?.onClick?.();
     await vi.waitFor(() => {
       expect(removeTopicMock).toHaveBeenCalledWith('topic-1', true);
     });
 
-    expect(confirmRemoveTopicMock).toHaveBeenCalledWith(
-      expect.objectContaining({ topicIds: ['topic-1'] }),
-    );
+    expect(confirmRemoveTopicMock).toHaveBeenCalledOnce();
     expect(onDelete).toHaveBeenCalledWith('topic-1');
     expect(onClose).toHaveBeenCalled();
   });

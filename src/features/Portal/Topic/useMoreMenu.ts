@@ -63,17 +63,16 @@ export const useTopicMoreMenu = (): PortalMoreMenuConfig | undefined => {
     copyLink: shareUrl,
     delete: canEdit
       ? () =>
-          void confirmRemoveTopic({
-            onConfirm: async (removeFiles) => {
+          confirmRemoveTopic({
+            onConfirm: async () => {
               try {
-                await removeTopic(topicId, removeFiles);
+                await removeTopic(topicId, true);
                 // The store never closes the pane showing the removed topic.
                 closeTopicPortal();
               } catch (error) {
                 toastWriteError(error);
               }
             },
-            topicIds: [topicId],
           })
       : undefined,
     refresh: () => refreshMessages({ agentId, topicId }),

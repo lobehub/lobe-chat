@@ -5,6 +5,8 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { getTestDB } from '../../core/getTestDB';
 import {
+  agents,
+  agentsFiles,
   asyncTasks,
   chunks,
   documents,
@@ -12,6 +14,9 @@ import {
   fileChunks,
   files,
   filesToSessions,
+  generationBatches,
+  generations,
+  generationTopics,
   globalFiles,
   knowledgeBaseFiles,
   knowledgeBases,
@@ -2086,81 +2091,6 @@ describe('FileModel', () => {
     });
   });
 
-  describe('hasFilesByTopicIds', () => {
-    const sessionId = 'has-topic-files-session';
-    const topicId = 'has-topic-files-topic';
-
-    beforeEach(async () => {
-      await serverDB.insert(sessions).values({ id: sessionId, userId });
-      await serverDB.insert(topics).values({ id: topicId, sessionId, userId });
-      await serverDB
-        .insert(messages)
-        .values({ id: 'has-topic-files-message', role: 'user', topicId, userId });
-    });
-
-    it('returns false when no topic ids are provided', async () => {
-      await expect(fileModel.hasFilesByTopicIds([])).resolves.toBe(false);
-    });
-
-    it('returns false when the topics have no message files', async () => {
-      await expect(fileModel.hasFilesByTopicIds([topicId])).resolves.toBe(false);
-    });
-
-    it('returns true when any selected topic has a message file', async () => {
-      await serverDB.insert(files).values({
-        fileType: 'image/png',
-        id: 'has-topic-files-image',
-        name: 'image.png',
-        size: 1,
-        url: 'has-topic-files-image-key',
-        userId,
-      });
-      await serverDB.insert(messagesFiles).values({
-        fileId: 'has-topic-files-image',
-        messageId: 'has-topic-files-message',
-        userId,
-      });
-
-      await expect(fileModel.hasFilesByTopicIds(['topic-without-files', topicId])).resolves.toBe(
-        true,
-      );
-    });
-
-    it("does not expose another user's topic files", async () => {
-      await serverDB
-        .insert(sessions)
-        .values({ id: 'has-topic-files-other-session', userId: 'user2' });
-      await serverDB.insert(topics).values({
-        id: 'has-topic-files-other-topic',
-        sessionId: 'has-topic-files-other-session',
-        userId: 'user2',
-      });
-      await serverDB.insert(messages).values({
-        id: 'has-topic-files-other-message',
-        role: 'user',
-        topicId: 'has-topic-files-other-topic',
-        userId: 'user2',
-      });
-      await serverDB.insert(files).values({
-        fileType: 'image/png',
-        id: 'has-topic-files-other-image',
-        name: 'other.png',
-        size: 1,
-        url: 'has-topic-files-other-image-key',
-        userId: 'user2',
-      });
-      await serverDB.insert(messagesFiles).values({
-        fileId: 'has-topic-files-other-image',
-        messageId: 'has-topic-files-other-message',
-        userId: 'user2',
-      });
-
-      await expect(fileModel.hasFilesByTopicIds(['has-topic-files-other-topic'])).resolves.toBe(
-        false,
-      );
-    });
-  });
-
   describe('findDeletableFilesByTopicId', () => {
     const sessionId = 'topic-files-session-1';
     const topicId = 'topic-files-topic-1';
@@ -2241,6 +2171,49 @@ describe('FileModel', () => {
       const result = await fileModel.findDeletableFilesByTopicId(topicId);
 
       expect(result).toEqual([]);
+    });
+
+    it('preserves files still used by a knowledge base, an agent or an image generation', async () => {
+      await serverDB.insert(files).values(
+        ['tf-kb', 'tf-agent', 'tf-gen'].map((id) => ({
+          fileType: 'image/png',
+          id,
+          name: `${id}.png`,
+          size: 1,
+          url: `k-${id}`,
+          userId,
+        })),
+      );
+      await serverDB.insert(messagesFiles).values(
+        ['tf-msg', 'tf-kb', 'tf-agent', 'tf-gen'].map((fileId) => ({
+          fileId,
+          messageId: 'tf-msg-1',
+          userId,
+        })),
+      );
+      await serverDB
+        .insert(knowledgeBaseFiles)
+        .values({ fileId: 'tf-kb', knowledgeBaseId: knowledgeBase.id, userId });
+      await serverDB.insert(agents).values({ id: 'tf-agent-1', userId });
+      await serverDB
+        .insert(agentsFiles)
+        .values({ agentId: 'tf-agent-1', fileId: 'tf-agent', userId });
+      await serverDB.insert(generationTopics).values({ id: 'tf-gen-topic', userId });
+      await serverDB.insert(generationBatches).values({
+        generationTopicId: 'tf-gen-topic',
+        id: 'tf-gen-batch',
+        model: 'model',
+        prompt: 'prompt',
+        provider: 'provider',
+        userId,
+      });
+      await serverDB
+        .insert(generations)
+        .values({ fileId: 'tf-gen', generationBatchId: 'tf-gen-batch', userId });
+
+      const result = await fileModel.findDeletableFilesByTopicId(topicId);
+
+      expect(result).toEqual(['tf-msg']);
     });
 
     it('returns an empty array when the topic has no message files', async () => {

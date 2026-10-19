@@ -14,7 +14,6 @@
   "actions.confirmRemoveAllWorkspace": "Mevcut Çalışma Alanı listesindeki tüm konuları, diğer üyeler tarafından oluşturulanlar da dahil olmak üzere silmek üzeresiniz. Bu işlem geri alınamaz.",
   "actions.confirmRemoveAllWorkspaceAcknowledge": "Diğer üyelerin konularını kalıcı olarak sileceğimi anlıyorum.",
   "actions.confirmRemoveTopic": "Bu konuyu silmek üzeresiniz. Bu işlem geri alınamaz.",
-  "actions.confirmRemoveTopicFiles": "Bu konudaki yüklenmiş resim ve dosyaları da sil",
   "actions.confirmRemoveTopicTitle": "Bu konuyu silmek istiyor musunuz?",
   "actions.confirmRemoveUnstarred": "Yıldızlanmamış konuları silmek üzeresiniz. Bu işlem geri alınamaz.",
   "actions.confirmRemoveUnstarredOwn": "Yıldızsız olarak oluşturduğunuz konuları silmek üzeresiniz. Diğer Çalışma Alanı üyeleri tarafından oluşturulan konular kalacaktır. Bu işlem geri alınamaz.",

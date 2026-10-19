@@ -14,7 +14,6 @@
   "actions.confirmRemoveAllWorkspace": "您即將刪除當前工作區列表中的所有主題，包括其他成員創建的主題。此操作無法撤銷。",
   "actions.confirmRemoveAllWorkspaceAcknowledge": "我了解這將永久刪除其他成員的主題。",
   "actions.confirmRemoveTopic": "您即將刪除此主題。此操作無法復原。",
-  "actions.confirmRemoveTopicFiles": "同時刪除此主題中上傳的圖片和文件",
   "actions.confirmRemoveTopicTitle": "刪除此主題？",
   "actions.confirmRemoveUnstarred": "您即將刪除未加星號的主題。此操作無法復原。",
   "actions.confirmRemoveUnstarredOwn": "您即將刪除未加星標的您創建的主題。其他工作區成員創建的主題將保留。此操作無法撤銷。",

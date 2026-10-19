@@ -14,7 +14,6 @@
   "actions.confirmRemoveAllWorkspace": "أنت على وشك حذف جميع المواضيع في قائمة مساحة العمل الحالية، بما في ذلك المواضيع التي أنشأها أعضاء آخرون. لا يمكن التراجع عن هذا الإجراء.",
   "actions.confirmRemoveAllWorkspaceAcknowledge": "أفهم أن هذا يحذف مواضيع الأعضاء الآخرين بشكل دائم.",
   "actions.confirmRemoveTopic": "أنت على وشك حذف هذا الموضوع. لا يمكن التراجع عن هذا الإجراء.",
-  "actions.confirmRemoveTopicFiles": "حذف الصور والملفات المرفوعة في هذا الموضوع أيضًا",
   "actions.confirmRemoveTopicTitle": "حذف هذا الموضوع؟",
   "actions.confirmRemoveUnstarred": "أنت على وشك حذف المواضيع غير المميزة. لا يمكن التراجع عن هذا الإجراء.",
   "actions.confirmRemoveUnstarredOwn": "أنت على وشك حذف المواضيع غير المميزة بنجمة التي أنشأتها. ستبقى المواضيع التي أنشأها أعضاء آخرون في مساحة العمل. لا يمكن التراجع عن هذا الإجراء.",

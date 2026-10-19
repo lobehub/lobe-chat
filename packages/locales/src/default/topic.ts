@@ -29,8 +29,7 @@ export default {
   'actions.confirmRemoveAllWorkspaceAcknowledge':
     "I understand that this moves other members' topics to the trash.",
   'actions.confirmRemoveTopic':
-    'You are about to delete this topic. It will be moved to the trash and can be restored within 30 days.',
-  'actions.confirmRemoveTopicFiles': 'Also delete images and files uploaded in this topic',
+    'You are about to delete this topic. It will be moved to the trash and can be restored within 30 days. Once it is permanently deleted, files used only in this topic are deleted too.',
   'actions.confirmRemoveTopicTitle': 'Delete this topic?',
   'actions.confirmRemoveUnstarred':
     'You are about to delete unstarred topics. They will be moved to the trash and can be restored within 30 days.',
@@ -218,7 +217,7 @@ export default {
   'management.bulk.cancel': 'Cancel',
   'management.bulk.delete': 'Delete',
   'management.bulk.deleteConfirm':
-    'You are about to delete {{count}} topics. They will be moved to the trash and can be restored within 30 days.',
+    'You are about to delete {{count}} topics. They will be moved to the trash and can be restored within 30 days. Once they are permanently deleted, files used only in these topics are deleted too.',
   'management.bulk.deleteTitle': 'Delete topics?',
   'management.bulk.favorite': 'Favorite',
   'management.bulk.move': 'Move to agent',

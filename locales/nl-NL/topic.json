@@ -14,7 +14,6 @@
   "actions.confirmRemoveAllWorkspace": "Je staat op het punt om alle onderwerpen in de huidige Workspace-lijst te verwijderen, inclusief onderwerpen die door andere leden zijn gemaakt. Deze actie kan niet ongedaan worden gemaakt.",
   "actions.confirmRemoveAllWorkspaceAcknowledge": "Ik begrijp dat dit permanent de onderwerpen van andere leden verwijdert.",
   "actions.confirmRemoveTopic": "Je staat op het punt om dit onderwerp te verwijderen. Deze actie kan niet ongedaan worden gemaakt.",
-  "actions.confirmRemoveTopicFiles": "Verwijder ook afbeeldingen en bestanden die in dit onderwerp zijn geüpload",
   "actions.confirmRemoveTopicTitle": "Dit onderwerp verwijderen?",
   "actions.confirmRemoveUnstarred": "Je staat op het punt om niet-gemarkeerde onderwerpen te verwijderen. Deze actie kan niet ongedaan worden gemaakt.",
   "actions.confirmRemoveUnstarredOwn": "Je staat op het punt om niet-gemarkeerde onderwerpen die je hebt gemaakt te verwijderen. Onderwerpen die door andere Workspace-leden zijn gemaakt, blijven behouden. Deze actie kan niet ongedaan worden gemaakt.",
