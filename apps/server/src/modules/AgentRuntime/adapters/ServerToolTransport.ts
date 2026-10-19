@@ -166,7 +166,12 @@ export class ServerToolTransport implements ToolTransport {
 
     try {
       const hookResult = await this.dispatchBeforeToolCall(chatToolPayload, context);
-      if (context.abortSignal?.aborted) return this.abortedBeforeLaunch();
+      if (
+        context.abortSignal?.aborted ||
+        (await isOperationInterrupted(this.ctx)) ||
+        context.abortSignal?.aborted
+      )
+        return this.abortedBeforeLaunch();
       let toolCallMocked = false;
 
       if (isDeviceToolIdentifier(chatToolPayload.identifier) && !hookResult?.isMocked) {
@@ -208,7 +213,12 @@ export class ServerToolTransport implements ToolTransport {
         // so Stop can land between entering `run` and reaching this line. The
         // executor's race has already settled the call by then — launching now
         // would start side-effecting work for a cancelled operation.
-        if (context.abortSignal?.aborted) return this.abortedBeforeLaunch();
+        if (
+          context.abortSignal?.aborted ||
+          (await isOperationInterrupted(this.ctx)) ||
+          context.abortSignal?.aborted
+        )
+          return this.abortedBeforeLaunch();
 
         const dispatchResult = await dispatchClientTool(chatToolPayload, {
           agentId: context.state.origin?.agentId,
@@ -240,7 +250,12 @@ export class ServerToolTransport implements ToolTransport {
 
         // Re-checked after the visibility await for the same reason as above:
         // every await between entry and launch reopens the cancellation window.
-        if (context.abortSignal?.aborted) return this.abortedBeforeLaunch();
+        if (
+          context.abortSignal?.aborted ||
+          (await isOperationInterrupted(this.ctx)) ||
+          context.abortSignal?.aborted
+        )
+          return this.abortedBeforeLaunch();
 
         log(`[${operationLogId}] Executing tool ${context.toolName} ...`);
         execution = await executeToolWithRetry(
