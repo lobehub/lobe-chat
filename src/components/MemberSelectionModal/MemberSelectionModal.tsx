@@ -82,7 +82,7 @@ const AvailableAgentItem = memo<{
   );
 });
 
-const styles = createStaticStyles(({ css, cssVar }) => ({
+const styles = createStaticStyles(({ css, cssVar, responsive }) => ({
   container: css`
     display: flex;
     flex-direction: row;
@@ -90,6 +90,11 @@ const styles = createStaticStyles(({ css, cssVar }) => ({
     height: 500px;
     border: 1px solid ${cssVar.colorBorderSecondary};
     border-radius: ${cssVar.borderRadius};
+
+    ${responsive.sm} {
+      flex-direction: column;
+      height: min(500px, calc(100dvh - 160px));
+    }
   `,
   description: css`
     font-size: 11px;
@@ -103,6 +108,17 @@ const styles = createStaticStyles(({ css, cssVar }) => ({
     border-radius: ${cssVar.borderRadiusLG};
 
     background: ${cssVar.colorFillTertiary};
+
+    ${responsive.sm} {
+      flex-direction: column;
+      align-items: stretch;
+    }
+  `,
+  hostModelSelect: css`
+    ${responsive.sm} {
+      flex: 1;
+      min-width: 0;
+    }
   `,
   leftColumn: css`
     user-select: none;
@@ -113,6 +129,12 @@ const styles = createStaticStyles(({ css, cssVar }) => ({
     padding-block: ${cssVar.paddingSM} 0;
     padding-inline: ${cssVar.paddingSM};
     border-inline-end: 1px solid ${cssVar.colorBorderSecondary};
+
+    ${responsive.sm} {
+      min-height: 0;
+      border-block-end: 1px solid ${cssVar.colorBorderSecondary};
+      border-inline-end: 0;
+    }
   `,
   listItem: css`
     cursor: pointer;
@@ -136,6 +158,10 @@ const styles = createStaticStyles(({ css, cssVar }) => ({
     overflow-y: auto;
     flex: 1;
     padding: ${cssVar.paddingSM};
+
+    ${responsive.sm} {
+      min-height: 0;
+    }
   `,
   selectedItem: css`
     opacity: 0.6;
@@ -445,11 +471,15 @@ const MemberSelectionModal = memo<MemberSelectionModalProps>(
                   </Flexbox>
                   <Flexbox horizontal align="center" gap={12}>
                     <div
-                      className={cx(isHostRemoved && styles.modelSelectDisabled)}
                       style={{ opacity: isHostRemoved ? 0.6 : 1 }}
+                      className={cx(
+                        styles.hostModelSelect,
+                        isHostRemoved && styles.modelSelectDisabled,
+                      )}
                     >
                       <ModelSelect
                         requiredAbilities={['functionCall']}
+                        style={{ maxWidth: '100%', minWidth: 'min(200px, 100%)' }}
                         value={normalizedHostModelConfig}
                         onChange={handleHostModelChange}
                       />
