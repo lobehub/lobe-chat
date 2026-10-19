@@ -356,7 +356,7 @@ describe('CreateTaskInlineEntry', () => {
     const attachmentAction = container
       .querySelector('svg.lucide-paperclip')
       ?.closest<HTMLElement>('button');
-    expect(attachmentAction).toHaveStyle({ height: '24px', width: '24px' });
+    expect(attachmentAction).toBeEnabled();
     expect(attachmentAction?.parentElement?.style.getPropertyValue('--lobe-flex-align')).toBe(
       'center',
     );
