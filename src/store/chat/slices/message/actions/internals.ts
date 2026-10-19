@@ -86,6 +86,11 @@ export class MessageInternalsActionImpl {
         ? payload.id
         : undefined,
     );
+
+    // A locally deleted client row can no longer be preserved. Its dispatch
+    // removes it before any server replacement can observe the removal.
+    if (payload.type === 'deleteMessage') transcript.forgetClientRows([payload.id]);
+    else if (payload.type === 'deleteMessages') transcript.forgetClientRows(payload.ids);
     transcript.settle(ctx);
   };
 

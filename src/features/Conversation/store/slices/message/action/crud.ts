@@ -247,11 +247,14 @@ export const messageCRUDSlice: StateCreator<
     const { internal_dispatchMessage } = get();
 
     const tempId = 'tmp_' + nanoid();
-    internal_dispatchMessage({
-      id: tempId,
-      type: 'createMessage',
-      value: params,
-    });
+    internal_dispatchMessage(
+      {
+        id: tempId,
+        type: 'createMessage',
+        value: params,
+      },
+      { creationOrigin: 'client' },
+    );
 
     return tempId;
   },

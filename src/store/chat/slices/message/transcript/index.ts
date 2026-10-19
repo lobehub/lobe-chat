@@ -129,6 +129,11 @@ const createMessageTranscript = (set: StoreSetter<ChatStore>, get: () => ChatSto
     for (const message of messages) unconfirmedClientIds.delete(message.id);
   };
 
+  /** Client rows that no longer exist locally (deleted, removed or remapped). */
+  const forgetClientRows = (ids: Iterable<string>) => {
+    for (const id of ids) unconfirmedClientIds.delete(id);
+  };
+
   /**
    * A server replacement removed or remapped client rows (an optimistic
    * `tmp_*` id swapped for the server id). They can never be preserved again,
@@ -136,7 +141,7 @@ const createMessageTranscript = (set: StoreSetter<ChatStore>, get: () => ChatSto
    * it, so those take over its protection in that read only.
    */
   const remapClientRows = (removedIds: string[], addedIds: string[]) => {
-    for (const id of removedIds) unconfirmedClientIds.delete(id);
+    forgetClientRows(removedIds);
     if (addedIds.length === 0) return;
     for (const record of activeHeadReads) {
       if (!removedIds.some((id) => record.clientIds.has(id))) continue;
@@ -192,11 +197,11 @@ const createMessageTranscript = (set: StoreSetter<ChatStore>, get: () => ChatSto
     const syncKey = getMessageListCacheIdentity(context);
     const bucket = conversationMessagesKey(context);
     /**
-     * One record for the whole logical read, including a generation restart and
-     * the forced re-read after an intervention. It stays live until the fetch
-     * settles, so no other read can discard a row this one still needs.
+     * The record for the read whose response will be applied. The forced
+     * re-read after an intervention replaces it, because rows confirmed or
+     * remapped while awaiting the topic decision become authoritative then.
      */
-    const read = createHeadRead();
+    let read = createHeadRead();
     try {
       const dbMessages = bucketRows(bucket) ?? [];
       const topicAtRequest = context.topicId
@@ -213,6 +218,11 @@ const createMessageTranscript = (set: StoreSetter<ChatStore>, get: () => ChatSto
       // still live even before runningOperation is published.
       const topic = await topicService.getTopicDetail(context.topicId);
       if (!isInterventionRunActive(topic)) {
+        // This read starts after any confirmation or remap that happened while
+        // awaiting the topic decision, so its omission is authoritative. The
+        // first read's response is discarded, so its record can go with it.
+        releaseHeadRead(read);
+        read = createHeadRead();
         // Read after completion without dropping loaded history or its cursor.
         messages = await runMessageListQuery(context, readConversationMessageListPage, {
           force: true,
@@ -437,6 +447,7 @@ const createMessageTranscript = (set: StoreSetter<ChatStore>, get: () => ChatSto
     /** @internal Test/debug view of the ids a stale read may still preserve. */
     debugUnconfirmedClientIds: () => [...unconfirmedClientIds],
     evict,
+    forgetClientRows,
     remapClientRows,
     headResolutions,
     keyOf,

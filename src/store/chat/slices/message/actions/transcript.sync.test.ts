@@ -680,6 +680,94 @@ describe('useFetchMessages', () => {
       expect(transcript.debugUnconfirmedClientIds()).not.toContain('tmp_client');
     });
 
+    it('lets the forced reread drop a row confirmed while awaiting the topic decision', async () => {
+      const question: UIChatMessage = {
+        id: 'question',
+        content: '',
+        role: 'tool',
+        tool_call_id: 'call-1',
+        createdAt: 1,
+        updatedAt: 1,
+        pluginIntervention: { status: 'pending' },
+      };
+      const answered: UIChatMessage = { ...question, pluginIntervention: { status: 'approved' } };
+      const temp: UIChatMessage = {
+        id: 'tmp_client',
+        content: 'Sent',
+        role: 'user',
+        createdAt: 2000,
+        updatedAt: 2000,
+      };
+      const serverRow: UIChatMessage = { ...temp, id: 'msg_server' };
+
+      let calls = 0;
+      vi.mocked(messageService.getMessages).mockImplementation(() => {
+        calls += 1;
+        // The forced read is the second call; later reads stay in flight so
+        // they cannot repair the row for the assertion.
+        if (calls === 1) return Promise.resolve([answered]);
+        if (calls === 2) return Promise.resolve([]);
+        return new Promise(() => {});
+      });
+
+      let resolveTopic!: () => void;
+      vi.mocked(topicService.getTopicDetail).mockReturnValue(
+        new Promise((resolve) => {
+          resolveTopic = () => resolve(null);
+        }) as ReturnType<typeof topicService.getTopicDetail>,
+      );
+
+      seedRows(context, [question]);
+      syncMessages(context, { syncInterventions: true });
+      await waitFor(() => expect(topicService.getTopicDetail).toHaveBeenCalled());
+
+      // The optimistic row is confirmed and remapped while the fetch is
+      // waiting, so the forced read that starts afterwards can know it.
+      useChatStore
+        .getState()
+        .internal_dispatchMessage(
+          { id: temp.id, type: 'createMessage', value: temp as any },
+          { conversationContext: context },
+          { creationOrigin: 'client' },
+        );
+      useChatStore.getState().replaceMessages([serverRow], { context });
+
+      await act(async () => {
+        resolveTopic();
+      });
+
+      // The forced read omits the row (deleted remotely); it is authoritative.
+      await waitFor(() => expect(rowsOf(context)).toEqual([]));
+    });
+
+    it('forgets an unconfirmed id when the local row is deleted', () => {
+      const temp: UIChatMessage = {
+        id: 'tmp_deleted',
+        content: 'Failed send',
+        role: 'user',
+        createdAt: 2000,
+        updatedAt: 2000,
+      };
+      useChatStore
+        .getState()
+        .internal_dispatchMessage(
+          { id: temp.id, type: 'createMessage', value: temp as any },
+          { conversationContext: context },
+          { creationOrigin: 'client' },
+        );
+      const transcript = getMessageTranscript(useChatStore.setState, useChatStore.getState);
+      expect(transcript.debugUnconfirmedClientIds()).toContain('tmp_deleted');
+
+      useChatStore
+        .getState()
+        .internal_dispatchMessage(
+          { id: temp.id, type: 'deleteMessage' },
+          { conversationContext: context },
+        );
+
+      expect(transcript.debugUnconfirmedClientIds()).not.toContain('tmp_deleted');
+    });
+
     it('keeps a remapped row when a read issued before its temporary id resolves', async () => {
       const previousReply: UIChatMessage = {
         id: 'previous-reply',

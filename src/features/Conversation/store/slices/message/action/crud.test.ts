@@ -3,6 +3,7 @@ import { act } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import * as messageServiceModule from '@/services/message';
+import { useChatStore } from '@/store/chat';
 
 import { type ConversationContext } from '../../../../types';
 import { createStore } from '../../../index';
@@ -178,6 +179,25 @@ describe('Message CRUD Actions', () => {
       const state = store.getState();
       expect(state.displayMessages.length).toBe(1);
       expect(state.displayMessages[0].content).toBe('Temp message');
+    });
+
+    it('marks the temp row as client-created when forwarding to the chat store', () => {
+      const store = createTestStore();
+      const dispatch = vi.spyOn(useChatStore.getState(), 'internal_dispatchMessage');
+
+      act(() => {
+        store.getState().createTempMessage({
+          content: 'Temp message',
+          role: 'user',
+          sessionId: 'test-session',
+        });
+      });
+
+      expect(dispatch).toHaveBeenCalledWith(
+        expect.objectContaining({ type: 'createMessage' }),
+        expect.any(Object),
+        { creationOrigin: 'client' },
+      );
     });
   });
 
