@@ -8,7 +8,6 @@ import { useTaskItemContextMenu } from './useTaskItemContextMenu';
 
 const mocks = vi.hoisted(() => ({
   archiveTask: vi.fn(),
-  isAdmin: false,
   manageable: true,
   closeContextMenu: vi.fn(),
   copyToClipboard: vi.fn(),
@@ -34,10 +33,6 @@ vi.mock('@lobehub/ui', async (importOriginal) => {
     toast: { ...actual.toast, error: mocks.toastError, success: vi.fn() },
   };
 });
-
-vi.mock('@/business/client/hooks/useIsWorkspaceAdmin', () => ({
-  useIsWorkspaceAdmin: () => mocks.isAdmin,
-}));
 
 vi.mock('@/hooks/useResourceManageable', () => ({
   useResourceManageableChecker: () => () => mocks.manageable,
@@ -107,7 +102,6 @@ vi.mock('react-i18next', () => ({
 describe('useTaskItemContextMenu', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    mocks.isAdmin = false;
     mocks.manageable = true;
   });
 
@@ -208,23 +202,8 @@ describe('useTaskItemContextMenu', () => {
       expect(mocks.toastError).toHaveBeenCalledWith('taskList.contextMenu.archiveFailed');
     });
 
-    it("disables archiving someone else's shared task and says why", async () => {
+    it("lets a member who can't manage the task still archive it", async () => {
       mocks.manageable = false;
-      const item = findArchiveItem(null) as unknown as {
-        desc?: string;
-        disabled: boolean;
-        onClick: (info: unknown) => Promise<void>;
-      };
-
-      expect(item.disabled).toBe(true);
-      expect(item.desc).toBe('taskList.contextMenu.archiveDenied.notCreatorOrAdmin');
-      await click(item);
-      expect(mocks.archiveTask).not.toHaveBeenCalled();
-    });
-
-    it("lets a workspace admin archive someone else's shared task", async () => {
-      mocks.manageable = false;
-      mocks.isAdmin = true;
       const item = findArchiveItem(null) as unknown as {
         desc?: string;
         disabled: boolean;

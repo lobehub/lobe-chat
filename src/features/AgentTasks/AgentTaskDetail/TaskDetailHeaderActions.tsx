@@ -48,7 +48,7 @@ const TaskDetailHeaderActions = memo(() => {
   const isArchived = !!useTaskStore(taskDetailSelectors.activeTaskArchivedAt);
   const isArchiveBlocked = useTaskStore(taskDetailSelectors.isActiveTaskArchiveBlocked);
   const checkArchive = useTaskArchiveGate();
-  const { allowed: canArchive, reasonKey: archiveDeniedKey } = checkArchive(createdByUserId, {
+  const { allowed: canArchive, reasonKey: archiveDeniedKey } = checkArchive({
     archiveBlocked: !isArchived && isArchiveBlocked,
   });
   const updateTaskVisibility = useTaskStore((s) => s.updateTaskVisibility);

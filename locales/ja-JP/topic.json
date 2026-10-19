@@ -271,6 +271,7 @@
   "reportProblem.failed": "レポートを送信できませんでした。もう一度お試しください。",
   "reportProblem.placeholder": "何が問題でしたか？（任意）",
   "reportProblem.rateLimited": "最近、多くのレポートを送信しました。後でもう一度お試しください。",
+  "reportProblem.recentDesc": "最新のトピックのIDとアプリ環境がLobeHubサポートチームに送信されます。これにより、そのトピックの実行状況、エラー、会話を調査することができます。",
   "reportProblem.submit": "送信",
   "reportProblem.success": "レポートが送信されました",
   "reportProblem.successDesc": "レポートID: {{id}}",

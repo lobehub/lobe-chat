@@ -271,6 +271,7 @@
   "reportProblem.failed": "تعذر إرسال التقرير. حاول مرة أخرى.",
   "reportProblem.placeholder": "ما الذي حدث؟ (اختياري)",
   "reportProblem.rateLimited": "لقد أرسلت العديد من التقارير مؤخرًا. حاول مرة أخرى لاحقًا.",
+  "reportProblem.recentDesc": "يتم إرسال معرفات الموضوع الأخير وبيئة التطبيق الخاصة بك إلى فريق دعم LobeHub، الذي يمكنه بعد ذلك التحقق من تشغيلات هذا الموضوع، الأخطاء والمحادثة.",
   "reportProblem.submit": "إرسال",
   "reportProblem.success": "تم إرسال التقرير",
   "reportProblem.successDesc": "معرف التقرير: {{id}}",

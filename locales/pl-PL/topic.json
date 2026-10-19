@@ -271,6 +271,7 @@
   "reportProblem.failed": "Nie udało się przesłać zgłoszenia. Spróbuj ponownie.",
   "reportProblem.placeholder": "Co poszło nie tak? (opcjonalne)",
   "reportProblem.rateLimited": "Wysłałeś ostatnio wiele zgłoszeń. Spróbuj ponownie później.",
+  "reportProblem.recentDesc": "Identyfikatory Twojego ostatniego tematu i środowisko aplikacji są wysyłane do zespołu wsparcia LobeHub, który może następnie przeanalizować przebiegi, błędy i rozmowy związane z tym tematem.",
   "reportProblem.submit": "Prześlij",
   "reportProblem.success": "Zgłoszenie przesłane",
   "reportProblem.successDesc": "Identyfikator zgłoszenia: {{id}}",

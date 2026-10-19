@@ -62,6 +62,7 @@
   "linear.installResult.error.exchange_failed": "Linear مجوز را نپذیرفت. لطفاً دوباره تلاش کنید.",
   "linear.installResult.error.invalid_state": "درخواست اتصال منقضی شد. لطفاً دوباره از اتصال فضای کاری شروع کنید.",
   "linear.installResult.error.missing_code": "Linear کد مجوزی بازنگرداند.",
+  "linear.installResult.error.save_failed": "لینیر اتصال را تأیید کرد، اما LobeHub نتوانست آن را ذخیره کند. لطفاً دوباره تلاش کنید.",
   "linear.installResult.error.unknown": "اتصال به Linear ناموفق بود ({{code}}).",
   "linear.installResult.error.workspace_forbidden": "فقط اعضای فضای کاری می‌توانند Linear را اینجا متصل کنند.",
   "linear.installResult.success": "Linear متصل شد: {{account}}",

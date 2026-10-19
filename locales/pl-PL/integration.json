@@ -62,6 +62,7 @@
   "linear.installResult.error.exchange_failed": "Linear nie zaakceptował autoryzacji. Spróbuj połączyć się ponownie.",
   "linear.installResult.error.invalid_state": "Żądanie połączenia wygasło. Rozpocznij ponownie od Połącz przestrzeń roboczą.",
   "linear.installResult.error.missing_code": "Linear nie zwrócił kodu autoryzacyjnego.",
+  "linear.installResult.error.save_failed": "Linear autoryzował połączenie, ale LobeHub nie mógł go zapisać. Spróbuj ponownie nawiązać połączenie.",
   "linear.installResult.error.unknown": "Połączenie z Linear nie powiodło się ({{code}}).",
   "linear.installResult.error.workspace_forbidden": "Tylko członkowie przestrzeni roboczej mogą połączyć Linear tutaj.",
   "linear.installResult.success": "Linear połączono: {{account}}",

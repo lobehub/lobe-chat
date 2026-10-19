@@ -62,6 +62,7 @@
   "linear.installResult.error.exchange_failed": "لم تقبل Linear التفويض. يرجى المحاولة مرة أخرى للاتصال.",
   "linear.installResult.error.invalid_state": "انتهت صلاحية طلب الاتصال. يرجى البدء من جديد من اتصال مساحة العمل.",
   "linear.installResult.error.missing_code": "لم تُرجع Linear رمز التفويض.",
+  "linear.installResult.error.save_failed": "تم تفويض الاتصال بواسطة Linear، ولكن لم يتمكن LobeHub من حفظه. يرجى محاولة الاتصال مرة أخرى.",
   "linear.installResult.error.unknown": "فشل الاتصال بـ Linear ({{code}}).",
   "linear.installResult.error.workspace_forbidden": "يمكن فقط لأعضاء مساحة العمل الاتصال بـ Linear هنا.",
   "linear.installResult.success": "تم الاتصال بـ Linear: {{account}}",

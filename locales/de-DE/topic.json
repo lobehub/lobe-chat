@@ -271,6 +271,7 @@
   "reportProblem.failed": "Der Bericht konnte nicht gesendet werden. Versuchen Sie es erneut.",
   "reportProblem.placeholder": "Was ist schiefgelaufen? (optional)",
   "reportProblem.rateLimited": "Sie haben in letzter Zeit viele Berichte gesendet. Versuchen Sie es später erneut.",
+  "reportProblem.recentDesc": "Die IDs Ihres zuletzt behandelten Themas und Ihre App-Umgebung werden an das LobeHub-Support-Team gesendet, das dann die Ausführungen, Fehler und Unterhaltungen zu diesem Thema untersuchen kann.",
   "reportProblem.submit": "Senden",
   "reportProblem.success": "Bericht gesendet",
   "reportProblem.successDesc": "Berichts-ID: {{id}}",

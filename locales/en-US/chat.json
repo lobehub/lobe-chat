@@ -2466,7 +2466,6 @@
   "taskList.contextMenu.archive": "Archive",
   "taskList.contextMenu.archiveBlocked": "Stop the running task or its schedule/heartbeat before archiving it",
   "taskList.contextMenu.archiveDenied.noEditPermission": "You don't have permission to edit tasks in this workspace. Ask a workspace admin for access.",
-  "taskList.contextMenu.archiveDenied.notCreatorOrAdmin": "Only the task creator, a workspace owner, or an admin can archive or restore this task. Ask one of them to do it.",
   "taskList.contextMenu.archiveFailed": "Couldn't update the archive state. Refresh the task and try again.",
   "taskList.contextMenu.archiveGoalBlocked": "This task is part of an active goal. Finish or close the goal before archiving it.",
   "taskList.contextMenu.archiveSuccess": "Task archived",

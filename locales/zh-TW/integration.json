@@ -62,6 +62,7 @@
   "linear.installResult.error.exchange_failed": "Linear 未接受授權。請重試連接。",
   "linear.installResult.error.invalid_state": "連接請求已過期。請從“連接工作區”重新開始。",
   "linear.installResult.error.missing_code": "Linear 未返回授權碼。",
+  "linear.installResult.error.save_failed": "Linear 已授權連接，但 LobeHub 無法儲存。請嘗試重新連接。",
   "linear.installResult.error.unknown": "連接 Linear 失敗（{{code}}）。",
   "linear.installResult.error.workspace_forbidden": "只有工作區成員可以在此處連接 Linear。",
   "linear.installResult.success": "Linear 已連接：{{account}}",

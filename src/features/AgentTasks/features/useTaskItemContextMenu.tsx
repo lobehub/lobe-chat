@@ -50,8 +50,6 @@ export interface TaskContextMenuTarget {
   assigneeAgentId?: string | null;
   assigneeUserId?: string | null;
   automationMode?: string | null;
-  /** Archive follows the creator-or-owner/admin rule the server enforces. */
-  createdByUserId?: string | null;
   heartbeatInterval?: number | null;
   identifier: string;
   /** Only feeds the copied link's readable slug tail. */
@@ -162,10 +160,9 @@ export const useTaskContextMenuActions = (
       const canRunNow = RUN_NOW_STATUSES.has(currentStatus) && !task.archivedAt;
       const isArchived = !!task.archivedAt;
       // Archived rows leave every list, so live work must stop first.
-      const { allowed: canArchive, reasonKey: archiveDeniedKey } = checkArchive(
-        task.createdByUserId,
-        { archiveBlocked: !isArchived && isTaskArchiveBlocked(task) },
-      );
+      const { allowed: canArchive, reasonKey: archiveDeniedKey } = checkArchive({
+        archiveBlocked: !isArchived && isTaskArchiveBlocked(task),
+      });
       const archiveItems: NativeContextMenuItem[] =
         task.archivedAt === undefined
           ? []

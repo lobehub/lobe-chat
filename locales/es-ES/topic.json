@@ -271,6 +271,7 @@
   "reportProblem.failed": "No se pudo enviar el informe. Inténtalo de nuevo.",
   "reportProblem.placeholder": "¿Qué salió mal? (opcional)",
   "reportProblem.rateLimited": "Has enviado muchos informes recientemente. Inténtalo de nuevo más tarde.",
+  "reportProblem.recentDesc": "Los ID de tu tema más reciente y tu entorno de aplicación se envían al equipo de soporte de LobeHub, que luego puede investigar las ejecuciones, errores y conversaciones de ese tema.",
   "reportProblem.submit": "Enviar",
   "reportProblem.success": "Informe enviado",
   "reportProblem.successDesc": "ID del informe: {{id}}",

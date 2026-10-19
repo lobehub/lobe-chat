@@ -62,6 +62,7 @@
   "linear.installResult.error.exchange_failed": "Linear에서 인증을 승인하지 않았습니다. 다시 연결을 시도하세요.",
   "linear.installResult.error.invalid_state": "연결 요청이 만료되었습니다. 작업 공간 연결을 다시 시작하세요.",
   "linear.installResult.error.missing_code": "Linear에서 인증 코드를 반환하지 않았습니다.",
+  "linear.installResult.error.save_failed": "Linear에서 연결을 승인했지만 LobeHub에서 저장할 수 없었습니다. 다시 연결을 시도해 주세요.",
   "linear.installResult.error.unknown": "Linear 연결 실패 ({{code}}).",
   "linear.installResult.error.workspace_forbidden": "작업 공간 멤버만 여기에서 Linear를 연결할 수 있습니다.",
   "linear.installResult.success": "Linear 연결됨: {{account}}",
