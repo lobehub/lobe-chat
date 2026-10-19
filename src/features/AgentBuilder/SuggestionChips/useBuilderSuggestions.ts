@@ -10,7 +10,11 @@ import {
   type BuilderSuggestionParams,
   peekBuilderSuggestions,
 } from './projection';
-import { builderSuggestionReplica, useBuilderSuggestionStore } from './suggestionStore';
+import {
+  builderSuggestionErrorId,
+  builderSuggestionReplica,
+  useBuilderSuggestionStore,
+} from './suggestionStore';
 
 interface UseBuilderSuggestionsParams {
   /** Builtin builder agent id — drives the model and is recorded as `agentId`. */
@@ -77,7 +81,9 @@ export const useBuilderSuggestions = ({
     (params && entryId && !settled.has(entryId)
       ? peekBuilderSuggestions(params, scope)
       : undefined);
-  const error = useBuilderSuggestionStore((s) => (key ? s.suggestionErrorMap[key] : undefined));
+  const error = useBuilderSuggestionStore((s) =>
+    key ? s.suggestionErrorMap[builderSuggestionErrorId(scope, key)] : undefined,
+  );
 
   // Before paint, so a scope switch never shows the previous identity's chips.
   useLayoutEffect(() => {

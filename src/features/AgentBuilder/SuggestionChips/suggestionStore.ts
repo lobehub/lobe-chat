@@ -64,7 +64,11 @@ const generateBuilderSuggestions = async ({
 };
 
 export interface BuilderSuggestionStoreState {
-  /** `builderSuggestionKey(params)` → the last generation failure, cleared by a success. */
+  /**
+   * `builderSuggestionErrorId(scope, key)` → the last generation failure,
+   * cleared by a success. Scoped, so one identity's failure never shows as
+   * another's (the view of a scope switch is cleared, this map is not).
+   */
   suggestionErrorMap: Record<string, unknown>;
   /** `builderSuggestionKey(params)` → the last generated batch. */
   suggestionMap: Record<string, BuilderSuggestionBatch>;
@@ -79,12 +83,14 @@ export const initialBuilderSuggestionState: BuilderSuggestionStoreState = {
 
 const devtools = createDevtools('builderSuggestion');
 
-const setError = (key: string, error: unknown) => {
+export const builderSuggestionErrorId = (scope: string, key: string) => `${scope}\u0000${key}`;
+
+const setError = (id: string, error: unknown) => {
   const { suggestionErrorMap } = useBuilderSuggestionStore.getState();
-  if (suggestionErrorMap[key] === error) return;
+  if (suggestionErrorMap[id] === error) return;
   const next = { ...suggestionErrorMap };
-  if (error === undefined) delete next[key];
-  else next[key] = error;
+  if (error === undefined) delete next[id];
+  else next[id] = error;
   useBuilderSuggestionStore.setState({ suggestionErrorMap: next });
 };
 
@@ -101,9 +107,10 @@ export const useBuilderSuggestionStore = createWithEqualityFn<BuilderSuggestionS
 export const builderSuggestionReplica = createReplicaSlice(builderSuggestionResource, {
   actionPrefix: 'builderSuggestion',
   effects: {
-    onApplied: (_data, _params, { key }) => setError(key, undefined),
-    onError: (error, _params, { isActive, key }) => {
-      if (isActive && key) setError(key, error);
+    onApplied: (_data, _params, { key, scope }) =>
+      setError(builderSuggestionErrorId(scope, key), undefined),
+    onError: (error, _params, { isActive, key, scope }) => {
+      if (isActive && key) setError(builderSuggestionErrorId(scope, key), error);
     },
   },
   fetcher: generateBuilderSuggestions,

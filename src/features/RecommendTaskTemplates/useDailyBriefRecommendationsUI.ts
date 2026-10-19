@@ -3,7 +3,7 @@ import { TASK_TEMPLATE_RECOMMEND_COUNT } from '@lobechat/const';
 import { createNanoId } from '@lobechat/utils';
 import { toast } from '@lobehub/ui';
 import { useSessionStorageState } from 'ahooks';
-import { useCallback, useEffect, useLayoutEffect, useMemo, useRef } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useMemo, useReducer, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useSingleton } from '@/hooks/useSingleton';
@@ -233,35 +233,47 @@ export function useDailyBriefRecommendationsUI(
   }, []);
 
   // Cards created / dismissed from the retained batch while a refresh is in
-  // flight: the refreshing entry may return them again, so the removal is
-  // carried to it (scope + key → template ids) and applied as it lands.
-  const carried = useSingleton(() => new Map<string, Set<number>>());
-  const carry = useCallback(
-    (target: string, templateId: number, add = true) => {
-      if (!key || target === key) return;
-      const id = `${scope}\u0000${key}`;
-      const ids = carried.get(id) ?? new Set<number>();
-      if (add) ids.add(templateId);
-      else ids.delete(templateId);
-      if (ids.size > 0) carried.set(id, ids);
-      else carried.delete(id);
+  // flight: the refreshing entry may return them again. Keyed by the
+  // refreshing entry (scope + key → template ids):
+  // - `pendingRemovals`: dismissals the server has not confirmed yet, only
+  //   hidden on screen, so a refused dismiss leaves nothing to undo;
+  // - `confirmedRemovals`: created cards and confirmed dismissals, removed from
+  //   the refreshing entry (and its persisted row) as soon as it holds them.
+  const pendingRemovals = useSingleton(() => new Map<string, Set<number>>());
+  const confirmedRemovals = useSingleton(() => new Map<string, Set<number>>());
+  const [, bumpPendingRemovals] = useReducer((count: number) => count + 1, 0);
+  const refreshingId = key ? `${scope}\u0000${key}` : undefined;
+  const toggleRemoval = (
+    map: Map<string, Set<number>>,
+    id: string,
+    templateId: number,
+    add: boolean,
+  ) => {
+    const ids = map.get(id) ?? new Set<number>();
+    if (add) ids.add(templateId);
+    else ids.delete(templateId);
+    if (ids.size > 0) map.set(id, ids);
+    else map.delete(id);
+  };
+  const applyConfirmedRemovals = useCallback(
+    (target: string, id: string) => {
+      const ids = confirmedRemovals.get(id);
+      const current = useTaskTemplateRecommendationStore.getState().dailyRecommendMap[target];
+      if (!ids || !current) return;
+      confirmedRemovals.delete(id);
+      if (!current.some((tmpl) => ids.has(tmpl?.id))) return;
+      dailyRecommendReplica.update(target, (batch) =>
+        batch
+          ? normalizeTaskTemplateRecommendations(batch).filter((tmpl) => !ids.has(tmpl.id))
+          : batch,
+      );
     },
-    [key, scope],
+    [confirmedRemovals],
   );
-  // Before paint, so a carried card never flashes back in.
+  // Before paint, so a removed card never flashes back in.
   useLayoutEffect(() => {
-    if (!key || !entry) return;
-    const id = `${scope}\u0000${key}`;
-    const ids = carried.get(id);
-    if (!ids) return;
-    carried.delete(id);
-    if (!entry.some((tmpl) => ids.has(tmpl?.id))) return;
-    dailyRecommendReplica.update(key, (current) =>
-      current
-        ? normalizeTaskTemplateRecommendations(current).filter((tmpl) => !ids.has(tmpl.id))
-        : current,
-    );
-  }, [entry, key, scope]);
+    if (key && refreshingId && entry) applyConfirmedRemovals(key, refreshingId);
+  }, [applyConfirmedRemovals, entry, key, refreshingId]);
 
   const handleRefresh = useCallback(() => {
     setRefreshSeed(nextRefreshSeed());
@@ -271,14 +283,16 @@ export function useDailyBriefRecommendationsUI(
     (templateId: number) => {
       if (!shownKey) return;
       seedPeeked(shownKey);
-      carry(shownKey, templateId);
       dailyRecommendReplica.update(shownKey, (current) =>
         current
           ? normalizeTaskTemplateRecommendations(current).filter((tmpl) => tmpl.id !== templateId)
           : current,
       );
+      if (!key || !refreshingId || shownKey === key) return;
+      toggleRemoval(confirmedRemovals, refreshingId, templateId, true);
+      applyConfirmedRemovals(key, refreshingId);
     },
-    [carry, seedPeeked, shownKey],
+    [applyConfirmedRemovals, confirmedRemovals, key, refreshingId, seedPeeked, shownKey],
   );
 
   const handleDismiss = useCallback(
@@ -286,7 +300,12 @@ export function useDailyBriefRecommendationsUI(
       if (!shownKey) return;
       seedPeeked(shownKey);
       if (!useTaskTemplateRecommendationStore.getState().dailyRecommendMap[shownKey]) return;
-      carry(shownKey, templateId);
+      // A dismiss on the retained batch while a refresh is in flight.
+      const carriedTo = key && refreshingId && shownKey !== key ? refreshingId : undefined;
+      if (carriedTo) {
+        toggleRemoval(pendingRemovals, carriedTo, templateId, true);
+        bumpPendingRemovals();
+      }
       try {
         // Rolls the card back if the server refuses.
         await dailyRecommendReplica.optimistic(
@@ -296,16 +315,38 @@ export function useDailyBriefRecommendationsUI(
             normalizeTaskTemplateRecommendations(current).filter((tmpl) => tmpl.id !== templateId),
           () => taskTemplateService.dismiss(templateId),
         );
+        if (carriedTo && key) {
+          toggleRemoval(confirmedRemovals, carriedTo, templateId, true);
+          applyConfirmedRemovals(key, carriedTo);
+        }
       } catch (error) {
-        carry(shownKey, templateId, false);
         console.error('[taskTemplate:dismiss]', error);
         toast.error(t('taskTemplate.action.dismiss.error'));
+      } finally {
+        if (carriedTo) {
+          toggleRemoval(pendingRemovals, carriedTo, templateId, false);
+          bumpPendingRemovals();
+        }
       }
     },
-    [carry, seedPeeked, shownKey, t],
+    [
+      applyConfirmedRemovals,
+      confirmedRemovals,
+      key,
+      pendingRemovals,
+      refreshingId,
+      seedPeeked,
+      shownKey,
+      t,
+    ],
   );
 
-  const templates = useMemo(() => normalizeTaskTemplateRecommendations(shown), [shown]);
+  const hiddenIds = refreshingId ? pendingRemovals.get(refreshingId) : undefined;
+  const templates = useMemo(() => {
+    const normalized = normalizeTaskTemplateRecommendations(shown);
+    return hiddenIds?.size ? normalized.filter((tmpl) => !hiddenIds.has(tmpl.id)) : normalized;
+    // `hiddenIds` is mutated in place; its size (bumped on every change) is the dependency.
+  }, [shown, hiddenIds, hiddenIds?.size]);
   const requiredSources = useMemo(() => {
     const sources = new Set<TaskTemplateConnectorSource>();
     for (const tmpl of templates) {

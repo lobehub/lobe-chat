@@ -827,4 +827,52 @@ describe('useDailyBriefRecommendationsUI', () => {
       });
     },
   );
+
+  // Regression: a carried dismissal was applied (and persisted) to the
+  // refreshing entry before the server answered, so a refused dismiss that
+  // settled after the refresh left the card removed for good.
+  it('restores a carried dismissal the server refuses after the refresh lands', async () => {
+    const other = { ...template, id: 102, title: 'Other' };
+    const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    let rejectDismiss!: (error: unknown) => void;
+    vi.mocked(taskTemplateService.dismiss).mockImplementation(
+      () => new Promise((_, reject) => (rejectDismiss = reject)) as any,
+    );
+    const { rerender, result } = renderHook(() => useDailyBriefRecommendationsUI(), { wrapper });
+    await waitFor(() => expect(result.current).toMatchObject({ mode: 'cards' }));
+
+    let resolveRefresh!: (value: unknown) => void;
+    vi.mocked(taskTemplateService.listDailyRecommend).mockImplementation(
+      () => new Promise((resolve) => (resolveRefresh = resolve)) as any,
+    );
+    mockRefreshSeed.value = 'next-seed';
+    rerender();
+    await waitFor(() => expect(taskTemplateService.listDailyRecommend).toHaveBeenCalledTimes(2));
+    if (result.current.mode !== 'cards') throw new Error('expected retained cards');
+
+    let dismissing: Promise<void> | undefined;
+    const { onDismiss } = result.current;
+    act(() => {
+      dismissing = onDismiss(template.id) as unknown as Promise<void>;
+    });
+
+    await act(async () => {
+      resolveRefresh({ data: [template, other], success: true });
+    });
+    // Hidden while the dismiss is pending.
+    await waitFor(() => expect(result.current).toMatchObject({ templates: [other] }));
+
+    await act(async () => {
+      rejectDismiss(new Error('dismiss failed'));
+      await dismissing;
+    });
+
+    expect(result.current).toMatchObject({ templates: [template, other] });
+    const row = await dailyRecommendResource.storage!.get({
+      queryKey: dailyRecommendResource.storageKey(params({ refreshSeed: 'next-seed' })),
+      scope,
+    });
+    expect(row?.data).toEqual([template, other]);
+    expect(consoleErrorSpy).toHaveBeenCalledWith('[taskTemplate:dismiss]', expect.any(Error));
+  });
 });

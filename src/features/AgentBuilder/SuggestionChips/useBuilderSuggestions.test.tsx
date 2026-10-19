@@ -358,4 +358,22 @@ describe('useBuilderSuggestions', () => {
     expect(renders.every((r) => !r.isLoading)).toBe(true);
     expect(aiChatService.generateJSON).not.toHaveBeenCalled();
   });
+
+  // Regression: generation errors were keyed by entry only, so identity A's
+  // failure showed as identity B's (not loading) for the same entry key.
+  it('does not carry a generation error over to another identity', async () => {
+    vi.mocked(aiChatService.generateJSON).mockRejectedValue(new Error('llm down'));
+    const { rerender, result } = renderHook((props) => useBuilderSuggestions(props), {
+      initialProps: baseParams,
+    });
+    await waitFor(() => expect(result.current.error).toBeTruthy());
+
+    vi.mocked(aiChatService.generateJSON).mockImplementation(() => new Promise(() => {}));
+    scope = `builder-user-${randomUUID()}:personal`;
+    rerender({ ...baseParams });
+    await waitForNextTick();
+
+    expect(result.current.error).toBeUndefined();
+    expect(result.current.isLoading).toBe(true);
+  });
 });
