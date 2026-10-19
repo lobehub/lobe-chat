@@ -1,9 +1,81 @@
+import type * as LobeConst from '@lobechat/const';
 import { ErrorCode, McpError } from '@modelcontextprotocol/sdk/types.js';
 import { TRPCError } from '@trpc/server';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+
+import { MCPClient } from '@/libs/mcp';
+
+import { MCPService } from './index';
+
+const environment = vi.hoisted(() => ({ isDesktop: false }));
+
+vi.mock('@lobechat/const', async (importOriginal) => ({
+  ...(await importOriginal<typeof LobeConst>()),
+  get isDesktop() {
+    return environment.isDesktop;
+  },
+}));
 
 // Mock 依赖
 vi.mock('@/libs/mcp');
+
+describe('MCPService stdio authorization', () => {
+  const stdioParams = {
+    args: ['serve'],
+    command: 'local-mcp',
+    name: 'local-connector',
+    type: 'stdio' as const,
+  };
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+    environment.isDesktop = false;
+    vi.mocked(MCPClient.prototype.listTools).mockResolvedValue([]);
+    vi.mocked(MCPClient.prototype.callTool).mockResolvedValue({ content: [] });
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+    environment.isDesktop = false;
+  });
+
+  it('rejects connector tool sync on the web before initializing a stdio client', async () => {
+    await expect(new MCPService().listRawTools(stdioParams)).rejects.toMatchObject({
+      code: 'BAD_REQUEST',
+      message: 'Stdio MCP type is not supported in web environment.',
+    });
+    expect(MCPClient).not.toHaveBeenCalled();
+  });
+
+  it('rejects server-side stdio tool execution without initializing a client', async () => {
+    await expect(
+      new MCPService().callTool({
+        argsStr: '{}',
+        clientParams: stdioParams,
+        toolName: 'read_file',
+      }),
+    ).rejects.toMatchObject({ code: 'BAD_REQUEST' });
+    expect(MCPClient).not.toHaveBeenCalled();
+  });
+
+  it('keeps stdio available on Desktop', async () => {
+    environment.isDesktop = true;
+
+    await expect(new MCPService().listRawTools(stdioParams)).resolves.toEqual([]);
+    expect(MCPClient.prototype.initialize).toHaveBeenCalledOnce();
+  });
+
+  it('keeps HTTP MCP available on the web', async () => {
+    await expect(
+      new MCPService().listRawTools({
+        name: 'remote-connector',
+        type: 'http',
+        url: 'https://mcp.example.com',
+      }),
+    ).resolves.toEqual([]);
+    expect(MCPClient.prototype.initialize).toHaveBeenCalledOnce();
+  });
+});
 
 describe('MCPService', () => {
   let mcpService: any;
