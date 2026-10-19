@@ -288,9 +288,16 @@ export const operationStatusRouter = router({
             updatedMetadata.totalMessages = stats.totalMessages;
           }
 
-          // User-facing step metric: completed LLM calls.
-          const llmCalls = getLlmCallCount(redisState);
-          if (llmCalls) updatedMetadata.totalSteps = llmCalls;
+          // User-facing step metric: completed LLM calls. In QStash mode this
+          // poller is the only writer of thread metadata, so accumulate against
+          // the persisted versioned baseline and keep both fields in LLM-call
+          // units (`totalSteps` is what the UI reads).
+          const operationLlmCalls = getLlmCallCount(redisState);
+          if (operationLlmCalls) {
+            const totalLlmCalls = (metadata?.totalLlmCalls ?? 0) + operationLlmCalls;
+            updatedMetadata.totalLlmCalls = totalLlmCalls;
+            updatedMetadata.totalSteps = totalLlmCalls;
+          }
 
           // Check if operation is completed
           if (realtimeStatus.isCompleted || redisState.status === 'done') {

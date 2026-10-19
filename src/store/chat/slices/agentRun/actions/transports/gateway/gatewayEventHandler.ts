@@ -43,7 +43,7 @@ import {
   isCompletedRuntimeEnd,
   resolveRuntimeEndStatus,
 } from './runtimeEndReason';
-import { resolveStepMetricPatch } from './stepMetrics';
+import { applyStepMetrics } from './stepMetrics';
 
 // Lazy-loaded to break the import cycle:
 //   gateway.ts → gatewayEventHandler.ts → executors/index.ts (which pulls in
@@ -1040,7 +1040,6 @@ export const createGatewayEventHandler = (
 
       case 'step_start': {
         const data = event.data as {
-          llmCalls?: number;
           messageRevision?: number;
           pendingToolsCalling?: unknown[];
           phase?: string;
@@ -1061,10 +1060,9 @@ export const createGatewayEventHandler = (
           });
         }
 
-        // The server's stepIndex is the authoritative execution counter; `llmCalls`
-        // is the separate user-facing metric (actual model calls).
-        const metricPatch = resolveStepMetricPatch(event.stepIndex, data?.llmCalls);
-        if (metricPatch) get().updateOperationMetadata(operationId, metricPatch);
+        // `stepIndex` is the execution counter; `llmCalls` is the user-facing metric.
+        const update = get().updateOperationMetadata;
+        applyStepMetrics(update, operationId, event.stepIndex, (event.data as any)?.llmCalls);
 
         // Server attaches the canonical UIChatMessage[] snapshot at every
         // step boundary (agent-runtime #15152). Use it as Source of Truth
@@ -1235,6 +1233,8 @@ export const createGatewayEventHandler = (
           }
           break;
         }
+
+        applyStepMetrics(get().updateOperationMetadata, operationId, undefined, data?.llmCalls);
 
         // Refresh on execution_complete to ensure final step state is consistent
         if (data?.phase === 'execution_complete') {

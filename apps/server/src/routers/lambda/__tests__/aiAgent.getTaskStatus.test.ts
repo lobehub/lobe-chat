@@ -242,6 +242,39 @@ describe('aiAgentRouter.getSubAgentTaskStatus', () => {
       });
     });
 
+    it('accumulates LLM calls against the persisted versioned baseline', async () => {
+      await serverDB
+        .update(threads)
+        .set({
+          metadata: { operationId: 'op-test-123', totalLlmCalls: 4, totalSteps: 4 },
+        })
+        .where(eq(threads.id, testThreadId));
+
+      mockGetOperationStatus.mockResolvedValue({
+        currentState: {
+          llmCalls: 3,
+          status: 'done',
+          stepCount: 9,
+          usage: { llm: { apiCalls: 3, tokens: { total: 100 } } },
+        },
+        isCompleted: true,
+        hasError: false,
+        metadata: {},
+        stats: { totalMessages: 2 },
+      });
+
+      const caller = aiAgentRouter.createCaller(createTestContext());
+      const result = await caller.getSubAgentTaskStatus({ threadId: testThreadId });
+
+      expect(result.status).toBe('completed');
+      // 4 previous + 3 in this operation — not the operation's own 3.
+      expect(result.taskDetail?.totalSteps).toBe(7);
+
+      const [row] = await serverDB.select().from(threads).where(eq(threads.id, testThreadId));
+      expect((row.metadata as any)?.totalLlmCalls).toBe(7);
+      expect((row.metadata as any)?.totalSteps).toBe(7);
+    });
+
     it('should extract totalToolCalls from usage.tools.totalCalls', async () => {
       mockGetOperationStatus.mockResolvedValue({
         currentState: {
