@@ -5,6 +5,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { PageAgentExecutor } from './index';
 
 const mocks = vi.hoisted(() => ({
+  documents: {} as Record<string, { lockOwnerId?: string }>,
   getDocumentById: vi.fn(),
   invalidateDocumentMutation: vi.fn().mockResolvedValue(undefined),
   updateDocument: vi.fn().mockResolvedValue({}),
@@ -12,6 +13,9 @@ const mocks = vi.hoisted(() => ({
 
 vi.mock('@/services/document', () => ({
   documentService: { getDocumentById: mocks.getDocumentById, updateDocument: mocks.updateDocument },
+}));
+vi.mock('@/store/document', () => ({
+  getDocumentStoreState: () => ({ documents: mocks.documents }),
 }));
 vi.mock('@/services/document/invalidation', () => ({
   invalidateDocumentMutation: mocks.invalidateDocumentMutation,
@@ -31,7 +35,12 @@ describe('PageAgentExecutor on an HTML page', () => {
       getDebugSnapshot: vi.fn(() => ({})),
       isReady: vi.fn(() => false),
     } as unknown as EditorRuntime);
-    mocks.getDocumentById.mockResolvedValue({ content: HTML, fileType: 'custom/html' });
+    mocks.documents = {};
+    mocks.getDocumentById.mockResolvedValue({
+      content: HTML,
+      fileType: 'custom/html',
+      updatedAt: new Date('2026-10-19T00:00:00Z'),
+    });
   });
 
   it('edits the stored HTML without a mounted editor and refreshes the page', async () => {
@@ -44,6 +53,7 @@ describe('PageAgentExecutor on an HTML page', () => {
     expect(result.success).toBe(true);
     expect(mocks.updateDocument).toHaveBeenCalledWith({
       content: HTML.replace('<p>12</p>', '<p>13</p>'),
+      expectedUpdatedAt: new Date('2026-10-19T00:00:00Z'),
       id: 'page-1',
     });
 
@@ -100,5 +110,59 @@ describe('PageAgentExecutor on an HTML page', () => {
 
     expect(results.every((result) => result.success)).toBe(true);
     expect(stored).toBe('<p>A</p><p>B</p>');
+  });
+
+  it('saves under the edit lock this page holds', async () => {
+    // A shared workspace page: the open editor holds an owner-scoped lease.
+    mocks.documents = { 'page-1': { lockOwnerId: 'session-1' } };
+
+    await executor.invoke('editHtml', { newString: '<p>13</p>', oldString: '<p>12</p>' }, ctx);
+
+    expect(mocks.updateDocument).toHaveBeenCalledWith(
+      expect.objectContaining({ lockOwnerId: 'session-1' }),
+    );
+  });
+
+  it('re-applies an edit when another tab saved the page in between', async () => {
+    const otherTab = HTML.replace('<body>', '<body><h1>Report</h1>');
+    mocks.getDocumentById
+      .mockResolvedValueOnce({ content: HTML, fileType: 'custom/html', updatedAt: new Date(1) })
+      // Re-read after the conflict, then the retry's read.
+      .mockResolvedValue({ content: otherTab, fileType: 'custom/html', updatedAt: new Date(2) });
+    mocks.updateDocument
+      .mockRejectedValueOnce(Object.assign(new Error('conflict'), { data: { code: 'CONFLICT' } }))
+      .mockResolvedValueOnce({});
+
+    const result = await executor.invoke(
+      'editHtml',
+      { newString: '<p>13</p>', oldString: '<p>12</p>' },
+      ctx,
+    );
+
+    expect(result.success).toBe(true);
+    expect(mocks.updateDocument).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        content: otherTab.replace('<p>12</p>', '<p>13</p>'),
+        expectedUpdatedAt: new Date(2),
+      }),
+    );
+  });
+
+  it('reports a page locked by someone else instead of retrying', async () => {
+    mocks.updateDocument.mockRejectedValue(
+      Object.assign(new Error('Document is being edited by another user'), {
+        data: { code: 'CONFLICT' },
+      }),
+    );
+
+    const result = await executor.invoke(
+      'editHtml',
+      { newString: '<p>13</p>', oldString: '<p>12</p>' },
+      ctx,
+    );
+
+    // Same version on re-read: the conflict is the lock, not a newer write.
+    expect(result.success).toBe(false);
+    expect(mocks.updateDocument).toHaveBeenCalledTimes(1);
   });
 });

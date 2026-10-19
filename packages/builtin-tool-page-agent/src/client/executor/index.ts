@@ -67,6 +67,11 @@ const DOCUMENT_WRITING_APIS = new Set<string>([
  */
 const htmlPageQueues = new Map<string, Promise<unknown>>();
 
+const HTML_WRITE_ATTEMPTS = 3;
+
+const isConflict = (error: unknown) =>
+  (error as { data?: { code?: string } } | undefined)?.data?.code === 'CONFLICT';
+
 const runInPageQueue = <T>(documentId: string, task: () => Promise<T>): Promise<T> => {
   const previous = htmlPageQueues.get(documentId) ?? Promise.resolve();
   const run = previous.catch(() => undefined).then(task);
@@ -220,20 +225,49 @@ class PageAgentExecutor extends BaseExecutor<typeof PageAgentApiName> {
   ): Promise<BuiltinToolResult> => {
     try {
       const { documentService } = await import('@/services/document');
-      const document = await documentService.getDocumentById(documentId);
-      if (!document) throw new Error(`Page document not found: ${documentId}`);
-      if (document.fileType !== HTML_DOCUMENT_FILE_TYPE) throw new Error(RICH_TEXT_PAGE_TOOL_HINT);
+      const { getDocumentStoreState } = await import('@/store/document');
 
-      const { content, html, state } = handler(document.content ?? '');
-      if (html !== undefined) {
-        await documentService.updateDocument({ content: html, id: documentId });
-        // A client-run tool gets no `onAfterCall` (only gateway `tool_end` events
-        // dispatch it), so refresh the frame's document here.
-        const { invalidateDocumentMutation } = await import('@/services/document/invalidation');
-        await invalidateDocumentMutation({ documentId });
+      for (let attempt = 1; ; attempt++) {
+        const document = await documentService.getDocumentById(documentId);
+        if (!document) throw new Error(`Page document not found: ${documentId}`);
+        if (document.fileType !== HTML_DOCUMENT_FILE_TYPE)
+          throw new Error(RICH_TEXT_PAGE_TOOL_HINT);
+
+        const { content, html, state } = handler(document.content ?? '');
+        if (html !== undefined) {
+          const readVersion = document.updatedAt ? new Date(document.updatedAt) : undefined;
+          const lockOwnerId = getDocumentStoreState().documents[documentId]?.lockOwnerId;
+          try {
+            await documentService.updateDocument({
+              content: html,
+              // Another tab or device may save this page too: write against the
+              // version that was read.
+              ...(readVersion ? { expectedUpdatedAt: readVersion } : {}),
+              id: documentId,
+              // A shared page's open editor holds the edit lock; save under it.
+              ...(lockOwnerId ? { lockOwnerId } : {}),
+            });
+          } catch (error) {
+            // CONFLICT is either a newer save (re-apply on it) or someone else's
+            // lock (the version is unchanged: report it).
+            if (isConflict(error) && attempt < HTML_WRITE_ATTEMPTS) {
+              const latest = await documentService.getDocumentById(documentId);
+              if (
+                latest?.updatedAt &&
+                readVersion?.getTime() !== new Date(latest.updatedAt).getTime()
+              )
+                continue;
+            }
+            throw error;
+          }
+          // A client-run tool gets no `onAfterCall` (only gateway `tool_end` events
+          // dispatch it), so refresh the frame's document here.
+          const { invalidateDocumentMutation } = await import('@/services/document/invalidation');
+          await invalidateDocumentMutation({ documentId });
+        }
+
+        return { content, state: { ...state, documentId }, success: true };
       }
-
-      return { content, state: { ...state, documentId }, success: true };
     } catch (error) {
       const err = error as Error;
       console.error(`[PageAgentToolCall] ${apiName}:error`, { error: summarizeError(error) });
