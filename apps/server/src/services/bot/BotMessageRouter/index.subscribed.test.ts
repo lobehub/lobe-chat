@@ -401,7 +401,7 @@ describe('BotMessageRouter', () => {
           totalSinceLastHandler: 4,
         });
         const queuedHumans = lists.get(`messenger:thread-humans:${queuedThread.id}`);
-        expect(queuedHumans).toEqual(['bob-id', 'carol-id']);
+        expect(queuedHumans).toEqual(['bob-id', 'other-bot', 'carol-id']);
         expect(mockHandleSubscribedMessage).not.toHaveBeenCalled();
         observations.queued = {
           agentDispatches: mockHandleSubscribedMessage.mock.calls.length,
@@ -418,7 +418,7 @@ describe('BotMessageRouter', () => {
       });
     });
 
-    it('tracks every human sender preserved in context.skipped', async () => {
+    it('tracks every sender, including other bots, preserved in context.skipped', async () => {
       mockGetList.mockResolvedValue(['alice-id']);
       const handler = await loadSubscribedHandler();
       const thread = makeThread();
@@ -448,7 +448,7 @@ describe('BotMessageRouter', () => {
         'carol-id',
         expect.any(Object),
       );
-      expect(mockAppendToList).not.toHaveBeenCalledWith(
+      expect(mockAppendToList).toHaveBeenCalledWith(
         'messenger:thread-humans:telegram:chat-1',
         'skipped-bot-id',
         expect.any(Object),
@@ -473,7 +473,7 @@ describe('BotMessageRouter', () => {
         'alice-id',
         expect.any(Object),
       );
-      expect(mockAppendToList).not.toHaveBeenCalledWith(
+      expect(mockAppendToList).toHaveBeenCalledWith(
         'messenger:thread-humans:telegram:chat-1',
         'another-bot',
         expect.any(Object),

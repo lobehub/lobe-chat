@@ -20,7 +20,13 @@ vi.mock('@/libs/swr/useCacheScope', () => ({
 }));
 
 vi.mock('@/services/goal', () => ({
-  goalService: { delete: vi.fn(), getGraph: vi.fn(), list: vi.fn() },
+  goalService: {
+    advance: vi.fn(),
+    delete: vi.fn(),
+    getGraph: vi.fn(),
+    list: vi.fn(),
+    tick: vi.fn(),
+  },
 }));
 
 const SCOPE = 'user-1:personal';
@@ -355,5 +361,28 @@ describe('GoalAction', () => {
     const list = useGoalStore.getState().goalListByAgentId['agent-1'];
     expect(list?.goals.map((item) => item.goal.id)).toEqual(['goal-2']);
     expect(list?.total).toBe(1);
+  });
+
+  it('relays the provider the goal actually plans on when advancing it', async () => {
+    vi.mocked(goalService.advance).mockResolvedValue({ ticks: 1 } as never);
+    vi.mocked(goalService.tick).mockResolvedValue({} as never);
+    useGoalStore.setState({
+      goalGraphById: {
+        'goal-1': graphWith('running', {
+          goal: {
+            config: { model: 'local-llm', provider: 'ollama' },
+            id: 'goal-1',
+            status: 'running',
+            title: 'Goal',
+          },
+        }),
+      },
+    });
+
+    await useGoalStore.getState().advanceGoal('goal-1');
+    await useGoalStore.getState().tickGoal('goal-1');
+
+    expect(goalService.advance).toHaveBeenCalledWith('goal-1', 'ollama');
+    expect(goalService.tick).toHaveBeenCalledWith('goal-1', 'ollama');
   });
 });

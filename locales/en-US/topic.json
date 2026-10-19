@@ -271,6 +271,7 @@
   "reportProblem.failed": "Couldn't submit the report. Try again.",
   "reportProblem.placeholder": "What went wrong? (optional)",
   "reportProblem.rateLimited": "You've sent a lot of reports recently. Try again later.",
+  "reportProblem.recentDesc": "Your most recent topic's IDs and your app environment are sent to the LobeHub support team, who can then look into that topic's runs, errors and conversation.",
   "reportProblem.submit": "Report Bug",
   "reportProblem.success": "Report submitted",
   "reportProblem.successDesc": "Report ID: {{id}}",

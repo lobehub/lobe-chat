@@ -1,5 +1,6 @@
 import {
   ActionIcon,
+  Button,
   Flexbox,
   Pagination,
   TabsIndicator,
@@ -25,6 +26,7 @@ import type { TaskViewMode } from '@/store/global/initialState';
 import { systemStatusSelectors } from '@/store/global/selectors';
 import { useTaskStore } from '@/store/task';
 import { taskListSelectors } from '@/store/task/selectors';
+import { TASK_COLLECTION_PAGE_SIZE } from '@/store/task/slices/list/action';
 
 import { createTaskModal } from '../CreateTaskModal';
 import Breadcrumb from '../shared/Breadcrumb';
@@ -111,7 +113,7 @@ interface AgentTasksPageProps {
 export type TaskCollection = 'mine' | 'scheduled' | 'tasks';
 /** "My tasks" sub-view: assigned to me as a member, or created by me. */
 export type MyTaskScope = 'assigned' | 'created';
-const COLLECTION_PAGE_SIZE = 50;
+const COLLECTION_PAGE_SIZE = TASK_COLLECTION_PAGE_SIZE;
 
 export const resolveTaskCollection = (
   searchParams: URLSearchParams,
@@ -284,6 +286,10 @@ const AgentTasksPage = memo<AgentTasksPageProps>(({ agentId, projectId }) => {
   const collectionTasks = collectionSWR.data?.data ?? [];
   const collectionTasksTotal = collectionSWR.data?.total ?? 0;
   const isCollectionListInit = collectionSWR.data !== undefined;
+  // An empty Scheduled tab offers creation from its empty state; the header
+  // button would only duplicate it.
+  const showScheduledEmptyCreate =
+    isScheduledCollection && canCreateTask && isCollectionListInit && collectionTasksTotal === 0;
   const scheduledViewOptions = useMemo(
     () => getScheduledTaskViewOptions(viewOptions),
     [viewOptions],
@@ -339,6 +345,21 @@ const AgentTasksPage = memo<AgentTasksPageProps>(({ agentId, projectId }) => {
       },
     });
   }, [agentId, canCreateTask, createActionBehavior.mode, navigate, projectId, updateSystemStatus]);
+
+  const handleCreateScheduledTask = useCallback(() => {
+    if (!canCreateTask) return;
+    createTaskModal({
+      agentId,
+      lockAssignee: !!agentId,
+      projectId,
+      schedule: true,
+      // The scheduled tab has no inline entry to dock into.
+      showInlineToggle: false,
+      onCreated: (task) => {
+        navigate(taskDetailPath(task.identifier, agentId ? task.agentId : undefined, task.name));
+      },
+    });
+  }, [agentId, canCreateTask, navigate, projectId]);
 
   const handleShowHiddenCompleted = useCallback(() => {
     setViewOptions((prev) => ({ ...prev, hideCompleted: false }));
@@ -424,6 +445,15 @@ const AgentTasksPage = memo<AgentTasksPageProps>(({ agentId, projectId }) => {
                 onClick={handleCreateTask}
               />
             )}
+            {isScheduledCollection && !showScheduledEmptyCreate && (
+              <ActionIcon
+                disabled={!canCreateTask}
+                icon={Plus}
+                size={DESKTOP_HEADER_ICON_SMALL_SIZE}
+                title={canCreateTask ? t('createTask.submitScheduled') : reason}
+                onClick={handleCreateScheduledTask}
+              />
+            )}
             {!isScheduledCollection && headerVisibility.showViewOptions && (
               <TasksGroupConfig
                 options={viewOptions}
@@ -475,6 +505,13 @@ const AgentTasksPage = memo<AgentTasksPageProps>(({ agentId, projectId }) => {
             items={collectionTasks}
             options={isMineCollection ? myTaskViewOptions : scheduledViewOptions}
             routeScope={routeScope}
+            emptyAction={
+              showScheduledEmptyCreate ? (
+                <Button icon={Plus} onClick={handleCreateScheduledTask}>
+                  {t('createTask.submitScheduled')}
+                </Button>
+              ) : undefined
+            }
             emptyDescription={
               isMineCollection
                 ? t(

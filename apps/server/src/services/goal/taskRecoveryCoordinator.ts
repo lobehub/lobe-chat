@@ -8,6 +8,7 @@ import { TaskTopicModel } from '@/database/models/taskTopic';
 import type { LobeChatDatabase } from '@/database/type';
 import { TaskRunnerService } from '@/server/services/taskRunner';
 
+import { clearDeviceDispatchStreak, parkDeviceUnavailableDispatch } from './deviceDispatchStreak';
 import {
   countChargedTaskAttempts,
   countUnchargedRuns,
@@ -151,6 +152,9 @@ export class TaskRecoveryCoordinator {
         trigger: 'goal',
       });
       log('task %s → recovery attempt %d spawned', task.identifier, attempts + 1);
+      await clearDeviceDispatchStreak(taskModel, current.id).catch((clearError) => {
+        log('task %s failed to clear the device dispatch streak: %O', task.identifier, clearError);
+      });
       return { operationId: run.operationId, outcome: 'started' };
     } catch (error) {
       log('task %s recovery spawn failed (non-fatal): %O', task.identifier, error);
@@ -159,13 +163,13 @@ export class TaskRecoveryCoordinator {
       const message = error instanceof Error ? error.message : String(error);
       const deviceUnavailable = isDeviceUnavailableFailure(message);
       // We own the claim, so nothing else will put the task back.
-      await taskModel
-        .updateStatusIfCurrent(task.id, 'running', 'paused', {
-          error: deviceUnavailable ? message : current.error,
-        })
-        .catch((releaseError) => {
-          log('task %s failed to release the recovery claim: %O', task.identifier, releaseError);
-        });
+      await (
+        deviceUnavailable
+          ? parkDeviceUnavailableDispatch(taskModel, current, message)
+          : taskModel.updateStatusIfCurrent(task.id, 'running', 'paused', { error: current.error })
+      ).catch((releaseError) => {
+        log('task %s failed to release the recovery claim: %O', task.identifier, releaseError);
+      });
       return { deviceUnavailable, outcome: 'spawn-failed' };
     }
   };

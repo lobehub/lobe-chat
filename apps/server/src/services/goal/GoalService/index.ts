@@ -45,7 +45,9 @@ import {
   retireNodes,
   setAgent,
   setBudget,
+  setModel,
   setTaskAgent,
+  setTaskModel,
   stopFencedTasks,
   updateRequirement,
 } from './editing';
@@ -62,7 +64,9 @@ import {
   evaluateBudget,
   evaluateMetricCriteria,
   isParkedOnMeasuredGate,
+  metricState,
   recordObservation,
+  removeMetricCriteria,
   reopenIfMeasurementCleared,
   resolveSpend,
   setAcceptanceCriteria,
@@ -264,8 +268,10 @@ export class GoalService {
       setAgent: (...args) => self.setAgent(...args),
       setBudget: (...args) => self.setBudget(...args),
       setMetricCriteria: (...args) => self.setMetricCriteria(...args),
+      setModel: (...args) => self.setModel(...args),
       setPauseReason: (...args) => self.setPauseReason(...args),
       setTaskAgent: (...args) => self.setTaskAgent(...args),
+      setTaskModel: (...args) => self.setTaskModel(...args),
       settleTerminalAcceptance: (...args) => self.settleTerminalAcceptance(...args),
       status: (...args) => self.status(...args),
       stopFencedTasks: (...args) => self.stopFencedTasks(...args),
@@ -323,6 +329,11 @@ export class GoalService {
   setMetricCriteria = (...args: MethodArgs<typeof setMetricCriteria>) =>
     setMetricCriteria(this.context, ...args);
 
+  removeMetricCriteria = (...args: MethodArgs<typeof removeMetricCriteria>) =>
+    removeMetricCriteria(this.context, ...args);
+
+  metricState = (...args: MethodArgs<typeof metricState>) => metricState(this.context, ...args);
+
   setAcceptanceCriteria = (...args: MethodArgs<typeof setAcceptanceCriteria>) =>
     setAcceptanceCriteria(this.context, ...args);
 
@@ -376,6 +387,10 @@ export class GoalService {
     followGoalAgent(this.context, ...args);
 
   setTaskAgent = (...args: MethodArgs<typeof setTaskAgent>) => setTaskAgent(this.context, ...args);
+
+  setModel = (...args: MethodArgs<typeof setModel>) => setModel(this.context, ...args);
+
+  setTaskModel = (...args: MethodArgs<typeof setTaskModel>) => setTaskModel(this.context, ...args);
 
   private resolveTaskAssignee = (...args: MethodArgs<typeof resolveTaskAssignee>) =>
     resolveTaskAssignee(this.context, ...args);

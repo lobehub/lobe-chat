@@ -6,6 +6,7 @@
   "workingDirectory.agentDescription": "Рабочая директория по умолчанию для всех разговоров с этим агентом",
   "workingDirectory.agentLevel": "Рабочая директория агента",
   "workingDirectory.bareWorktree": "голый",
+  "workingDirectory.branchConfirming": "Подтверждение текущей ветки…",
   "workingDirectory.branchInWorktree": "В рабочем дереве {{name}}",
   "workingDirectory.branchSearchPlaceholder": "Поиск веток",
   "workingDirectory.branchesEmpty": "Нет локальных веток",

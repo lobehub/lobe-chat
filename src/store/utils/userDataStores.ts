@@ -25,6 +25,7 @@ import { useUserStore } from '@/store/user';
 import { useUserMemoryStore } from '@/store/userMemory';
 import type { ResetableStore } from '@/store/utils/resetableStore';
 import { useVideoStore } from '@/store/video';
+import { workActions } from '@/store/work';
 
 interface ResetableStoreApi {
   getState: () => ResetableStore;
@@ -57,6 +58,7 @@ const resetableActions: ResetableStore[] = [
   projectFileActions,
   resourcePermissionActions,
   sandboxActions,
+  workActions,
 ];
 
 export interface StoreActions extends ResetableStore {}

@@ -1,16 +1,17 @@
 'use client';
 
-import { Block, createStaticStyles, cssVar, Flexbox, Icon, Text } from '@lobehub/ui';
-import { ArrowRightIcon } from 'lucide-react';
+import { Block, ContextMenuTrigger, createStaticStyles, cssVar, Flexbox, Text } from '@lobehub/ui';
 import type { KeyboardEvent } from 'react';
 import { memo } from 'react';
 
 import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwareNavigate';
 import { useActiveRouteParams } from '@/hooks/useActiveRouteParams';
 
+import GoalItemMoreButton from './GoalItemMoreButton';
 import { GoalProgress } from './GoalProgress';
 import GoalStatusGlyph from './GoalStatusGlyph';
 import type { GoalItemProps } from './types';
+import { useGoalItemMenu } from './useGoalMenuItems';
 
 const styles = createStaticStyles(({ css }) => ({
   row: css`
@@ -21,13 +22,14 @@ const styles = createStaticStyles(({ css }) => ({
       border-block-start: 1px solid ${cssVar.colorBorderSecondary};
     }
 
-    &:hover {
+    &:hover,
+    &[data-popup-open] {
       background: ${cssVar.colorFillQuaternary};
     }
   `,
 }));
 
-export const GoalListItem = memo<GoalItemProps>(({ goal: item }) => {
+export const GoalListItem = memo<GoalItemProps>(({ goal: item, projectId }) => {
   const navigate = useWorkspaceAwareNavigate();
   const { aid } = useActiveRouteParams<{ aid?: string }>();
   const { goal } = item;
@@ -38,6 +40,7 @@ export const GoalListItem = memo<GoalItemProps>(({ goal: item }) => {
   const handleClick = () => {
     navigate(agentId ? `/agent/${agentId}/goal/${goal.id}` : `/goal/${goal.id}`);
   };
+  const menuItems = useGoalItemMenu({ agentId, goal, projectId, routeAgentId: aid });
   const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
     if (event.key !== 'Enter' && event.key !== ' ') return;
     event.preventDefault();
@@ -45,44 +48,46 @@ export const GoalListItem = memo<GoalItemProps>(({ goal: item }) => {
   };
 
   return (
-    <Block
-      clickable
-      horizontal
-      align={'center'}
-      className={styles.row}
-      gap={12}
-      justify={'space-between'}
-      paddingBlock={10}
-      paddingInline={0}
-      role={'link'}
-      tabIndex={0}
-      variant={'borderless'}
-      onClick={handleClick}
-      onKeyDown={handleKeyDown}
-    >
-      <Flexbox gap={4} style={{ flex: 1, minWidth: 0 }}>
-        <Flexbox horizontal align={'center'} gap={7}>
-          <GoalStatusGlyph size={13} status={goal.status} />
-          <Text ellipsis fontSize={15} weight={600}>
-            {goal.title}
-          </Text>
+    <ContextMenuTrigger items={menuItems}>
+      <Block
+        clickable
+        horizontal
+        align={'center'}
+        className={styles.row}
+        gap={12}
+        justify={'space-between'}
+        paddingBlock={10}
+        paddingInline={12}
+        role={'link'}
+        tabIndex={0}
+        variant={'borderless'}
+        onClick={handleClick}
+        onKeyDown={handleKeyDown}
+      >
+        <Flexbox gap={4} style={{ flex: 1, minWidth: 0 }}>
+          <Flexbox horizontal align={'center'} gap={7}>
+            <GoalStatusGlyph size={13} status={goal.status} />
+            <Text ellipsis fontSize={15} weight={600}>
+              {goal.title}
+            </Text>
+          </Flexbox>
+          {goal.requirement && goal.requirement !== goal.title && (
+            <Text ellipsis fontSize={12} type={'secondary'}>
+              {goal.requirement}
+            </Text>
+          )}
         </Flexbox>
-        {goal.requirement && goal.requirement !== goal.title && (
-          <Text ellipsis fontSize={12} type={'secondary'}>
-            {goal.requirement}
-          </Text>
-        )}
-      </Flexbox>
-      <GoalProgress
-        findingCount={item.findingCount}
-        pendingDecisions={item.pendingDecisions}
-        taskDone={item.taskDone}
-        taskTotal={item.taskTotal}
-        totalRunCost={item.totalRunCost}
-        totalRunDuration={item.totalRunDuration}
-      />
-      <Icon color={cssVar.colorTextQuaternary} icon={ArrowRightIcon} size={16} />
-    </Block>
+        <GoalProgress
+          findingCount={item.findingCount}
+          pendingDecisions={item.pendingDecisions}
+          taskDone={item.taskDone}
+          taskTotal={item.taskTotal}
+          totalRunCost={item.totalRunCost}
+          totalRunDuration={item.totalRunDuration}
+        />
+        <GoalItemMoreButton items={menuItems} />
+      </Block>
+    </ContextMenuTrigger>
   );
 });
 

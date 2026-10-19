@@ -297,6 +297,8 @@ export default {
   'newTopic': 'New Topic',
   'reportProblem.desc':
     "This topic's IDs and your app environment are sent to the LobeHub support team, who can then look into this topic's runs, errors and conversation.",
+  'reportProblem.recentDesc':
+    "Your most recent topic's IDs and your app environment are sent to the LobeHub support team, who can then look into that topic's runs, errors and conversation.",
   'reportProblem.failed': "Couldn't submit the report. Try again.",
   'reportProblem.rateLimited': "You've sent a lot of reports recently. Try again later.",
   'reportProblem.placeholder': 'What went wrong? (optional)',

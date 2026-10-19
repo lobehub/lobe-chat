@@ -46,7 +46,9 @@ import type {
   retireNodes,
   setAgent,
   setBudget,
+  setModel,
   setTaskAgent,
+  setTaskModel,
   stopFencedTasks,
   updateRequirement,
 } from './editing';
@@ -253,8 +255,10 @@ export interface GoalServiceContext {
   setAgent: Bound<typeof setAgent>;
   setBudget: Bound<typeof setBudget>;
   setMetricCriteria: Bound<typeof setMetricCriteria>;
+  setModel: Bound<typeof setModel>;
   setPauseReason: Bound<typeof setPauseReason>;
   setTaskAgent: Bound<typeof setTaskAgent>;
+  setTaskModel: Bound<typeof setTaskModel>;
   settleTerminalAcceptance: Bound<typeof settleTerminalAcceptance>;
   status: Bound<typeof status>;
   stopFencedTasks: Bound<typeof stopFencedTasks>;

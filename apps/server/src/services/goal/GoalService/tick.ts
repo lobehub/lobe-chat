@@ -11,6 +11,7 @@ import {
 import { exploreGraph } from '../exploreGraph';
 import { classifyGoalFailure, isMachineFailureClass } from '../failureClass';
 import { GoalManagerService } from '../manager';
+import { GoalProbeDistill, needsProbeDistill } from '../probeDistill';
 import { resolveMaxConcurrentTasks } from '../recoveryPolicy';
 import { withoutGoalReport } from '../report';
 import { GoalReportService } from '../reportService';
@@ -78,7 +79,7 @@ export const tickOnce = async (
   const at = Date.now();
   // The coordinator never sees the wrap-up report node: it runs after the
   // Goal-level acceptance and does not take part in the Goal's status.
-  const graph = withoutGoalReport(await ctx.requireGraph(goalId));
+  let graph = withoutGoalReport(await ctx.requireGraph(goalId));
   // A draft is still being arranged; only `start` hands it to the coordinator.
   if (graph.goal.status === 'draft')
     return {
@@ -103,6 +104,14 @@ export const tickOnce = async (
   // frontier: every probe has settled and nothing else is ready to run.
   if (graph.goal.config?.rolloutState?.phase === 'plan_revision')
     return ctx.releaseReview.routeRolloutRevision(graph);
+  // Settled probes teach the plan before the gate judges them: the main Agent
+  // rewrites the plan skill from what they ran into. Once it has, this same
+  // advance goes on to the gate, on the goal as it now stands.
+  if (needsProbeDistill(graph)) {
+    const waiting = await new GoalProbeDistill(ctx.db, ctx.userId, ctx.workspaceId).route(graph);
+    if (waiting) return waiting;
+    graph = withoutGoalReport(await ctx.requireGraph(goalId));
+  }
 
   const frontier = selectFrontier(graph);
 
@@ -303,6 +312,14 @@ export const tickOnce = async (
         }
 
         case 'failure_decision': {
+          // A device that went to sleep or a usage window that closed says
+          // nothing about the recipe, for a batch member as for any Task: wait it
+          // out first. Checked after the batch gate, one sleeping laptop paused
+          // the whole rollout and asked the owner to revise or fork the recipe.
+          const waiting =
+            (await ctx.waitForDevice(graph, acting!.id, task, effects)) ??
+            (await ctx.waitForQuotaReset(graph, acting!.id, task, effects));
+          if (waiting) return observe(waiting);
           // R6: a batch member that did not pass its own check IS the same
           // intervention as a blocked gate. Route it through the batch gate so
           // the class rolls back to canary, instead of parking on a standalone
@@ -314,10 +331,6 @@ export const tickOnce = async (
               }),
             );
           }
-          const waiting =
-            (await ctx.waitForDevice(graph, acting!.id, task, effects)) ??
-            (await ctx.waitForQuotaReset(graph, acting!.id, task, effects));
-          if (waiting) return observe(waiting);
           const held = await ctx.holdForMachineFailure(graph, acting!.id, task, effects);
           if (held) return observe(held);
           const supervision = await new GoalSupervisorService(

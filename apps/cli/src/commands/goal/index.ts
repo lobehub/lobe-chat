@@ -20,6 +20,13 @@ import { confirm, outputJson, printTable, truncate } from '../../utils/format';
 import { log } from '../../utils/logger';
 import { resolveAppUrlBuilder } from '../task/url';
 import { registerGoalGraphEditCommands } from './graphEdit';
+import {
+  type GoalMetricState,
+  printMetricState,
+  readMetricState,
+  registerGoalMetricCommands,
+} from './metric';
+import { goalReads, hasOperationToken } from './reads';
 import { missingSeedDependencies, parseTaskFile } from './seedTasks';
 
 // Typed rather than inferred: an `as const` map is indexable by a widened
@@ -144,7 +151,7 @@ const isSameWaitingState = (previous: GoalRunTickResult | undefined, current: Go
   previous.nodeId === current.nodeId &&
   previous.taskId === current.taskId;
 
-function printGraph(graph: GoalGraphSnapshot) {
+function printGraph(graph: GoalGraphSnapshot, metrics?: GoalMetricState) {
   const { goal } = graph;
   console.log(
     `\n${pc.bold(goal.title)} ${pc.dim(goal.id)} [${goal.status}${
@@ -163,6 +170,7 @@ function printGraph(graph: GoalGraphSnapshot) {
         : 'no planning turn'
     }${pending > 0 ? pc.yellow(` · ${pending} decision(s) need you`) : ''}`,
   );
+  if (metrics) printMetricState(metrics);
   const incoming = new Map<string, typeof graph.edges>();
   for (const edge of graph.edges) {
     const list = incoming.get(edge.targetNodeId) ?? [];
@@ -226,8 +234,8 @@ const admissionHint: Record<string, string> = {
     'this turn was handed a batch release; answer with release, or escalate without ask for the owner',
   release_unsolicited: 'release only answers a batch release handed to this turn',
   revise_turn_only:
-    'this turn was handed a plan the owner sent back; answer with revise_plan (the full revised recipe)',
-  revise_unsolicited: 'revise_plan only answers a plan the owner sent back to this turn',
+    'this turn was handed the batch plan to rewrite; answer with revise_plan (the full revised recipe)',
+  revise_unsolicited: 'revise_plan only answers a batch plan handed to this turn to rewrite',
   review_changed: 'task review feedback changed after this turn started',
   stale_input: 'the graph moved after this turn started, so the plan would apply to stale input',
   started_from_draft:
@@ -410,49 +418,6 @@ async function explainPlanRefusal(
 }
 
 /**
- * Whether this process runs with a server-minted operation token (device and
- * gateway runs) rather than the user's own login. Operation tokens are refused
- * on ordinary routes, so commands that act for the running conversation pick
- * the operation-authenticated endpoint instead.
- */
-const hasOperationToken = () => {
-  const injectedJwt = process.env.LOBEHUB_JWT;
-  if (!injectedJwt) return false;
-  try {
-    return (
-      JSON.parse(Buffer.from(injectedJwt.split('.')[1], 'base64url').toString()).purpose ===
-      'hetero-operation'
-    );
-  } catch {
-    return false;
-  }
-};
-
-/**
- * The Goal reads `lh goal show` / `state` / `events` use, picked by credential.
- *
- * A device or gateway planning run holds a `hetero-operation` JWT, and the
- * server's ordinary authed routes refuse that by design — so the same reads have
- * an operation-authenticated twin. Runs holding one are exactly the runs whose
- * refusal these commands exist to explain, so they must not be the ones that
- * cannot read.
- */
-const goalReads = async () => {
-  const client = await getTrpcClient();
-  return hasOperationToken()
-    ? {
-        events: client.goal.eventsOperation,
-        graph: client.goal.graphOperation,
-        planContext: client.goal.planContextOperation,
-      }
-    : {
-        events: client.goal.events,
-        graph: client.goal.graph,
-        planContext: client.goal.planContext,
-      };
-};
-
-/**
  * Builds goal page links. Best-effort: a read must not fail over a link, and an
  * operation-token run may be refused the workspace lookup behind it.
  */
@@ -529,7 +494,7 @@ export function registerGoalCommand(program: Command) {
     )
     .requiredOption(
       '--file <path>',
-      'JSON plan: action tasks/wait/verify/retry/escalate/release/revise_plan, reason and action fields; a tasks plan may add "rollout" to run its units as a batch; release answers a batch release handed to this turn; revise_plan answers a plan the owner sent back, with "recipe" the full revised plan and optional "rerun" the experiment unit ids to run again on it (omitted: all)',
+      'JSON plan: action tasks/wait/verify/retry/escalate/release/revise_plan, reason and action fields; a tasks plan may add "rollout" to run its units as a batch; release answers a batch release handed to this turn; revise_plan answers a plan the owner sent back, with "recipe" the full revised plan and optional "rerun" the experiment unit ids to run again on it (omitted: all), and answers settled probes to distill with "recipe" and optional "rerun" the probe ids that fall short of it (omitted: none)',
     )
     .requiredOption('--token <token>', 'Current server-issued planning turn token')
     .option('--operation <id>', 'Defaults to LOBEHUB_OPERATION_ID')
@@ -942,8 +907,10 @@ export function registerGoalCommand(program: Command) {
     const reads = await goalReads();
     const result = await reads.graph.query({ id });
     const url = (await goalUrlBuilder())(result.data.goal.id);
-    if (options.json !== undefined) return outputJson({ ...result.data, url }, options.json);
-    printGraph(result.data);
+    const metrics = await readMetricState(reads, result.data);
+    if (options.json !== undefined)
+      return outputJson({ ...result.data, metrics, url }, options.json);
+    printGraph(result.data, metrics);
     if (url) console.log(`${pc.bold('goal')}: ${url}`);
   };
   goal
@@ -1358,4 +1325,5 @@ export function registerGoalCommand(program: Command) {
     });
 
   registerGoalGraphEditCommands(goal);
+  registerGoalMetricCommands(goal);
 }

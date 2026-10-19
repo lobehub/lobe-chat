@@ -22,32 +22,48 @@ export interface AcceptanceSubjectSummary {
  * Validate the subject exists in the caller's scope before creating an
  * aggregate for it — the table deliberately has no FK (polymorphic subject),
  * so this is where dangling aggregates are prevented.
+ *
+ * Resolves to the subject's canonical id. A task is addressable by its
+ * identifier (`T-898`) as well as its id, but every reader keys the aggregate
+ * by the id — storing the identifier left the Task page without its acceptance.
  */
 export const assertSubjectExists = async (
   deps: AcceptanceServiceDeps,
   subjectType: AcceptanceSubjectType,
   subjectId: string,
-): Promise<void> => {
+): Promise<string> => {
   // Standalone acceptances are the subject themselves. They deliberately do
   // not require a Task/Topic/Document row, which keeps external repositories
   // from having to manufacture a LobeHub task before publishing evidence.
-  if (subjectType === 'standalone') return;
+  if (subjectType === 'standalone') return subjectId;
 
   const found = await findSubject(deps, subjectType, subjectId);
   if (!found) {
     throw new Error(`${subjectType} "${subjectId}" not found in the current workspace`);
   }
+  return found.id;
+};
+
+/** The id an aggregate is keyed by; an unknown subject passes through unchanged. */
+export const resolveCanonicalSubjectId = async (
+  deps: AcceptanceServiceDeps,
+  subjectType: AcceptanceSubjectType,
+  subjectId: string,
+): Promise<string> => {
+  if (subjectType !== 'task') return subjectId;
+  const task = await new TaskModel(deps.db, deps.userId, deps.workspaceId).resolve(subjectId);
+  return task?.id ?? subjectId;
 };
 
 export const findSubject = async (
   deps: AcceptanceServiceDeps,
   subjectType: AcceptanceSubjectType,
   subjectId: string,
-): Promise<{ title: string | null } | null> => {
+): Promise<{ id: string; title: string | null } | null> => {
   switch (subjectType) {
     case 'task': {
       const task = await new TaskModel(deps.db, deps.userId, deps.workspaceId).resolve(subjectId);
-      return task ? { title: task.name ?? task.identifier } : null;
+      return task ? { id: task.id, title: task.name ?? task.identifier } : null;
     }
     case 'topic': {
       // Creator-facing lookup: an agent-share visitor topic must not be
@@ -55,17 +71,17 @@ export const findSubject = async (
       const topic = await new TopicModel(deps.db, deps.userId, deps.workspaceId).findOwnTopicById(
         subjectId,
       );
-      return topic ? { title: topic.title ?? null } : null;
+      return topic ? { id: subjectId, title: topic.title ?? null } : null;
     }
     case 'document': {
       const doc = await new DocumentModel(deps.db, deps.userId, deps.workspaceId).findById(
         subjectId,
       );
-      return doc ? { title: doc.title ?? null } : null;
+      return doc ? { id: subjectId, title: doc.title ?? null } : null;
     }
     case 'goal_gate': {
       const goal = await goalOfGate(deps, subjectId);
-      return goal ? { title: goal.title } : null;
+      return goal ? { id: subjectId, title: goal.title } : null;
     }
     case 'standalone': {
       return null;

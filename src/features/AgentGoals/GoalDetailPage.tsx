@@ -26,6 +26,7 @@ import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
 import { goalSelectors, useGoalStore } from '@/store/goal';
 
+import GoalAgentModelConfig from './GoalAgentModelConfig';
 import GoalChat from './GoalChat';
 import { GoalConversationContext } from './goalConversation';
 import GoalDetailActions from './GoalDetailActions';
@@ -65,7 +66,7 @@ const AWAIT_RECORD_TIMEOUT = 10_000;
 
 const GoalDetailPage = memo<GoalDetailPageProps>(({ agentId, goalId }) => {
   const { t } = useTranslation('chat');
-  const { allowed: canEdit } = usePermission('create_content');
+  const { allowed: canEdit, reason: editBlockedReason } = usePermission('create_content');
   const useFetchGoalGraph = useGoalStore((s) => s.useFetchGoalGraph);
   const { error, isLoading, mutate } = useFetchGoalGraph(goalId);
   const snapshot = useGoalStore(goalSelectors.goalGraph(goalId));
@@ -203,6 +204,18 @@ const GoalDetailPage = memo<GoalDetailPageProps>(({ agentId, goalId }) => {
   // message landing, so the reply is never invisible behind a drill-down. A
   // managed goal whose main Agent has no supervision record yet gets one from
   // this very turn: the panel opens now and moves there once it exists.
+  // A topic picked from either panel's history: the supervision record opens as
+  // the record, any other topic as the side conversation on that topic.
+  const selectTopic = (topicId: string) => {
+    if (!supervisingAgentId || topicId === chat.topicId) return;
+    clearPortalStack();
+    chat.openConversation(
+      managerConversation?.topicId === topicId
+        ? { agentId: managerConversation.agentId, topicId }
+        : { agentId: supervisingAgentId, topicId },
+    );
+  };
+
   const revealConversation = () => {
     setGraphFullscreen(false);
     clearPortalStack();
@@ -275,9 +288,12 @@ const GoalDetailPage = memo<GoalDetailPageProps>(({ agentId, goalId }) => {
                   button is only the control. */}
                 {/* A draft is still being arranged: nothing has been dispatched,
                   and starting it is the one explicit move into running. */}
-                {goal.status === 'draft' && (
-                  <Flexbox horizontal align={'center'} gap={10} paddingBlock={'8px 0'}>
-                    {canEdit && canStart && (
+                <Flexbox horizontal align={'center'} gap={10} paddingBlock={'8px 0'} wrap={'wrap'}>
+                  {/* One control at a time: a draft is started, a moving goal is
+                      paused or resumed — the two states never overlap. */}
+                  {goal.status === 'draft' ? (
+                    canEdit &&
+                    canStart && (
                       <Button
                         icon={PlayIcon}
                         loading={starting}
@@ -295,14 +311,8 @@ const GoalDetailPage = memo<GoalDetailPageProps>(({ agentId, goalId }) => {
                       >
                         {t('goalProcess.start')}
                       </Button>
-                    )}
-                    <Text fontSize={12} type={'secondary'}>
-                      {t('goalProcess.draft')}
-                    </Text>
-                  </Flexbox>
-                )}
-                {canPause && (
-                  <Flexbox horizontal align={'center'} gap={10} paddingBlock={'8px 0'}>
+                    )
+                  ) : canPause ? (
                     <Button
                       icon={paused ? PlayIcon : PauseIcon}
                       type={paused ? 'primary' : 'default'}
@@ -310,13 +320,24 @@ const GoalDetailPage = memo<GoalDetailPageProps>(({ agentId, goalId }) => {
                     >
                       {paused ? t('goalProcess.resume') : t('goalProcess.pause')}
                     </Button>
-                    {paused && (
-                      <Text fontSize={12} type={'secondary'}>
-                        {t('goalProcess.paused')}
-                      </Text>
-                    )}
-                  </Flexbox>
-                )}
+                  ) : null}
+                  {/* Who plans the goal and who does its Tasks, next to the control
+                      that starts or pauses that work. Also the way to give an
+                      agent-less goal its main agent. */}
+                  <GoalAgentModelConfig
+                    disabled={!canEdit || !canStart}
+                    goalId={goal.id}
+                    routeAgentId={agentId}
+                    disabledReason={
+                      canEdit ? t('goalDetail.agentManagedByOwner') : editBlockedReason
+                    }
+                  />
+                  {goal.status === 'draft' && (
+                    <Text fontSize={12} type={'secondary'}>
+                      {t('goalProcess.draft')}
+                    </Text>
+                  )}
+                </Flexbox>
                 {goal.requirement && (
                   <GoalRequirement goalId={goal.id} requirement={goal.requirement} />
                 )}
@@ -373,7 +394,9 @@ const GoalDetailPage = memo<GoalDetailPageProps>(({ agentId, goalId }) => {
             hasWorkspaceSidePanel ? null : (
               <PortalContent />
             )
-          ) : supervisingAgentId && chat.topicId ? (
+          ) : supervisingAgentId &&
+            chat.topicId &&
+            chat.topicId === managerConversation?.topicId ? (
             <GoalSupervision
               agentId={supervisingAgentId}
               goalId={goalId}
@@ -384,6 +407,7 @@ const GoalDetailPage = memo<GoalDetailPageProps>(({ agentId, goalId }) => {
               onInitialMessageConsumed={chat.consumeInitialMessage}
               // A question that should not land in the manager's own record.
               onOpenChat={() => chat.openConversation({ agentId: supervisingAgentId })}
+              onSelectTopic={selectTopic}
             />
           ) : chat.awaitingRecord ? (
             // The supervision record is on its way: show it loading, not the
@@ -400,6 +424,7 @@ const GoalDetailPage = memo<GoalDetailPageProps>(({ agentId, goalId }) => {
               key={`${goalId}:${supervisingAgentId}:${chat.request}`}
               onCollapse={() => chat.setOpen(false)}
               onInitialMessageConsumed={chat.consumeInitialMessage}
+              onSelectTopic={managerConversation ? selectTopic : undefined}
             />
           ) : null}
         </RightPanel>

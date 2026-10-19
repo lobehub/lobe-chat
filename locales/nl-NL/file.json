@@ -302,6 +302,8 @@
   "pageEditor.menu.importDocument": "Pagina importeren",
   "pageEditor.menu.move": "Verplaatsen",
   "pageEditor.menu.pin": "Pagina vastzetten",
+  "pageEditor.noAccess.description": "Deze pagina is privé, of bevindt zich in een bibliotheek waar je geen toegang toe hebt. Vraag de maker of een bibliotheekbeheerder om toegang.",
+  "pageEditor.noAccess.title": "Je hebt geen toegang tot deze pagina",
   "pageEditor.saveFailed": "Het opslaan van de pagina is mislukt, probeer het later opnieuw",
   "pageEditor.saving": "Bezig met opslaan...",
   "pageEditor.titlePlaceholder": "Naamloos",

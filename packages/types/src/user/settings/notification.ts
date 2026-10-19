@@ -27,7 +27,18 @@ export interface IMNotificationChannelSettings extends NotificationChannelSettin
   platforms?: Record<string, IMPlatformNotificationSettings>;
 }
 
+/**
+ * How much detail notification bodies carry, independent of which channels
+ * deliver them. Every switch defaults to on — a missing key keeps the detail.
+ */
+export interface NotificationContentSettings {
+  /** Append the run summary to successful scheduled-task notifications. */
+  scheduledTaskSummary?: boolean;
+}
+
 export interface NotificationSettings {
+  /** Body detail switches; not a delivery channel. */
+  content?: NotificationContentSettings;
   email?: NotificationChannelSettings;
   /**
    * IM notifications delivered to the user's DM with the platform System Bot

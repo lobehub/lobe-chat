@@ -18,6 +18,7 @@ import { deviceGateway } from '../../deviceGateway';
 import { isOrphanedRun, readRunTopicMetadata, stopStaleRun } from '../abandonedRun';
 import { LEASE_EXPIRED_ERROR } from '../decideNextMove';
 import { isDeliverySettling } from '../deliverySettle';
+import { readDeviceDispatchStreak } from '../deviceDispatchStreak';
 import { classifyGoalFailure } from '../failureClass';
 import { lastAnsweredGateAt, planMachineRecovery } from '../machineRecovery';
 import {
@@ -438,11 +439,21 @@ export const holdForOfflineDevice = async (
 ): Promise<GoalTickResult | undefined> => {
   const runs = await ctx.taskTopicModel.findByTaskId(task.id);
   const offlineRuns = countConsecutiveDeviceOfflineRuns(runs);
-  // A dispatch failure is an offline run even when it left no run behind.
-  if (!offlineRuns && !isDeviceUnavailableFailure(task.error)) return;
+  // A dispatch failure is an offline run even when it left no run behind. Those
+  // are kept on the dispatch streak, which holds only failures without a run,
+  // so the two counts add up and the latest of either dates the schedule. The
+  // newest run that was not offline ends the streak for both.
+  const dispatch = readDeviceDispatchStreak(task, runs[offlineRuns]?.createdAt);
+  if (!offlineRuns && !dispatch.failures && !isDeviceUnavailableFailure(task.error)) return;
 
-  const lastFailureAt = new Date(offlineRuns ? runs[0].updatedAt : task.updatedAt);
-  const retryAt = nextDeviceOfflineRetryAt(offlineRuns, lastFailureAt);
+  const failureTimes = [
+    ...(offlineRuns ? [new Date(runs[0].updatedAt).getTime()] : []),
+    ...(dispatch.failures && dispatch.lastFailedAt ? [dispatch.lastFailedAt.getTime()] : []),
+  ];
+  const lastFailureAt = new Date(
+    failureTimes.length ? Math.max(...failureTimes) : new Date(task.updatedAt).getTime(),
+  );
+  const retryAt = nextDeviceOfflineRetryAt(offlineRuns + dispatch.failures, lastFailureAt);
   if (!retryAt)
     return ctx.gateOrTakeOver(graph, nodeId, task.id, DEVICE_OFFLINE_GATE_REASON, effects, {
       machine: true,

@@ -63,6 +63,32 @@ export default {
   'goalBatch.gateCheck.no_open_decision': 'No decision in the batch is waiting on a person',
   'goalBatch.gateCheck.plan_written': 'The batch plan is written',
   'goalBatch.gateCheck.uncovered': 'Not covered: {{values}}',
+  'goalBatch.gateCheck.interventions_accounted': 'Every person’s intervention was accounted for',
+  'goalBatch.gateCheck.reverified': 'The delivered units passed the retro’s criteria',
+  'goalBatch.retro.added': '{{count}} new',
+  'goalBatch.retro.changes': '{{count}} steps changed',
+  'goalBatch.retro.criteria': '{{block}} blocking · {{warn}} advisory',
+  'goalBatch.retro.hint':
+    'What the execution ran into, kept in two layers: experience goes into the plan skill every unit loads, criteria go into the verifier every unit is judged on. The gate opens only after the retro.',
+  'goalBatch.retro.interventionsShort': '{{accounted}}/{{total}} accounted',
+  'goalBatch.retro.loosened': '{{count}} loosened, needs you',
+  'goalBatch.retro.mark.blocked': 'Unaccounted',
+  'goalBatch.retro.mark.done': 'Exp v{{skill}} · Crit v{{verifier}}',
+  'goalBatch.retro.mark.pending': 'Retro owed',
+  'goalBatch.retro.mark.pendingHint': 'This wave finished; its retro has not run yet',
+  'goalBatch.retro.mark.running': 'In retro',
+  'goalBatch.retro.skill': 'Experience · plan skill v{{version}}',
+  'goalBatch.retro.status.blocked': 'Interventions not accounted for',
+  'goalBatch.retro.status.done': 'Retro done',
+  'goalBatch.retro.status.running': 'In retro',
+  'goalBatch.retro.summary.interventions': '{{accounted}}/{{total}} interventions accounted for',
+  'goalBatch.retro.summary.reverify': 'Re-verified {{passed}}/{{total}}',
+  'goalBatch.retro.summary.skill': 'Plan skill v{{version}}: {{count}} steps changed',
+  'goalBatch.retro.summary.verifier':
+    'Verifier v{{version}}: {{added}} added, {{loosened}} loosened',
+  'goalBatch.retro.title': 'Retro · cold start',
+  'goalBatch.retro.titleWave': 'Retro · wave {{wave}} sent back',
+  'goalBatch.retro.verifier': 'Criteria · verifier v{{version}}',
   'goalBatch.gateCheck.units_settled': 'Every unit this round finished',
   'goalBatch.gateCheck.units_succeeded':
     'Every unit this round ran through on its own — none failed or was sent back',
@@ -94,10 +120,14 @@ export default {
   'goalBatch.gatePanel.next.passed':
     'Released wave {{wave}} ({{count}} units) — judged again once it finishes',
   'goalBatch.gatePanel.next.passedDone': 'The whole roster is released',
+  'goalBatch.gatePanel.next.distilling':
+    'The main Agent is updating the plan from what the probes ran into — judged once it is done',
   'goalBatch.gatePanel.next.revising': 'The main Agent is rewriting the plan from your correction',
   'goalBatch.gatePanel.next.rejected': 'Reopened as v{{revision}} on your decision',
   'goalBatch.gatePanel.verdict': 'Verdict',
   'goalBatch.gate.checkCount': '{{count}} checks',
+  'goalBatch.gate.hintSection.execution': 'Execution',
+  'goalBatch.gate.hintSection.retro': 'Retro & criteria',
   'goalBatch.gate.hintTitle': 'Checked before the rest are released:',
   'goalBatch.gate.status.checking': 'Judging',
   'goalBatch.gate.status.human': 'Needs your decision',
@@ -282,6 +312,7 @@ export default {
   'builtinCopilot': 'Built-in Copilot',
   'chatList.earlierHistoryError': "Couldn't load earlier messages",
   'chatList.expandMessage': 'Expand Message',
+  'chatList.laterHistoryError': "Couldn't load later messages",
   'chatList.longMessageDetail': 'View Details',
   'chatList.refreshError': "Couldn't refresh messages",
   'chatList.refreshing': 'Fetching latest messages…',
@@ -2107,6 +2138,9 @@ export default {
   'createGoal.costBudgetPlaceholder': 'No cap',
   'createGoal.createFailed': 'Failed to create goal',
   'createGoal.back': 'Back',
+  'createGoal.agentsHint':
+    'The main agent plans and supervises the goal; tasks go to the executor, or to the main agent when none is chosen.',
+  'createGoal.agentsTitle': 'Agents',
   'createGoal.budgetTitle': 'Budget',
   'createGoal.contextLabel': 'Context for the Agent',
   'createGoal.contextHint': 'Add constraints, source material, or anything the Agent should know',
@@ -2151,6 +2185,7 @@ export default {
   'createTask.expandToInline': 'Dock to page',
   'createTask.instructionPlaceholder': 'Add task instruction...',
   'createTask.submit': 'Create task',
+  'createTask.submitScheduled': 'Create scheduled task',
   'createTask.titlePlaceholder': 'Task title',
   'createTask.visibility.changeFailed': 'Failed to change task visibility',
   'createTask.visibility.helperPrivate': 'Only you can see this task.',
@@ -2258,6 +2293,8 @@ export default {
   'goalTask.step.queued': 'Not started',
   'goalList.title': 'Goals',
   'goalDetail.acceptance': 'Acceptance checks',
+  'goalDetail.agentManagedByOwner':
+    "Only the goal's creator or a Workspace admin can change its agents",
   'goalAcceptance.add': 'Add criterion',
   'goalAcceptance.edit': 'Edit',
   'goalAcceptance.empty': 'No criteria yet — add the outcomes the final acceptance should check.',
@@ -2274,6 +2311,7 @@ export default {
   'goalAcceptance.title': 'Acceptance standard',
   'goalChat.newTopic': 'New conversation',
   'goalChat.noTopics': 'No conversations yet',
+  'goalChat.openTopic': 'Go to original topic',
   'goalChat.title': 'Ask about progress',
   'goalChat.welcome':
     "Ask the agent about this goal — how it's going, what's blocking, or what happens next.",
@@ -2287,6 +2325,9 @@ export default {
     'The complete task tree and latest runs for this goal.',
   'goalDetail.instruction': 'Goal instruction',
   'goalDetail.latestRuns': 'Recent executions',
+  'goalDetail.mainAgent': 'Main agent · plans and supervises this goal',
+  'goalDetail.mainAgentLabel': 'Plan',
+  'goalDetail.mainAgentUnassigned': 'Choose main agent',
   'goalDetail.closeConfirm.achieved.content':
     'Runs still in progress will be stopped and no new tasks will start. You can reopen the goal from this menu.',
   'goalDetail.closeConfirm.achieved.ok': 'Mark achieved',
@@ -2300,6 +2341,13 @@ export default {
   'goalDetail.deleteConfirm.ok': 'Delete goal',
   'goalDetail.deleteConfirm.title': 'Delete this goal?',
   'goalDetail.moreActions': 'More goal actions',
+  'goalDetail.modelFixed':
+    "This Agent's author fixed its model; only they or an admin can pick another for this goal",
+  'goalDetail.planningModel': 'Planning model · used by the main agent for planning turns',
+  'goalDetail.taskAgent': 'Executor · does the tasks under this goal',
+  'goalDetail.taskAgentFollowsMain': 'Same as main agent',
+  'goalDetail.taskAgentLabel': 'Execute',
+  'goalDetail.taskModel': "Task model · used by the goal's tasks, including unfinished ones",
   'goalDetail.metrics.planItems': 'Plan items',
   'goalDetail.metrics.progress': 'Progress',
   'goalDetail.metrics.agentRuns': 'Agent runs',
@@ -2388,6 +2436,10 @@ export default {
   'goalProcess.northStar.detail.trendEmpty': 'The trend appears after a second observation',
   'goalProcess.northStar.edit.submit': 'Save',
   'goalProcess.northStar.edit.title': 'Adjust target',
+  'goalProcess.northStar.remove.confirm':
+    'Remove "{{name}}"? It will no longer gate this goal\'s acceptance. Recorded observations are kept.',
+  'goalProcess.northStar.remove.failed': 'Failed to remove the metric',
+  'goalProcess.northStar.remove.title': 'Remove metric',
   'goalProcess.frontier.add': 'Add task',
   'goalProcess.frontier.needsYou': '{{count}} need you',
   'goalProcess.frontier.advanceable': '{{count}} can advance',
@@ -2516,6 +2568,10 @@ export default {
   'goalProcess.decision.attempts_other': '{{count}} attempts',
   'goalProcess.decision.effect.retry':
     'Send the task back for another attempt. Your note is written into its instructions.',
+  'goalProcess.decision.effect.alsoRetires': 'Also drops the tasks that depend on it: {{tasks}}.',
+  'goalProcess.decision.effect.quotedTask': '"{{title}}"',
+  'goalProcess.decision.effect.retireWithDependents':
+    'Drop this task and the tasks that depend on it ({{tasks}}). The goal moves on without them.',
   'goalProcess.decision.effect.retire': 'Drop this task. The goal moves on without it.',
   'goalProcess.decision.effect.fail': 'End the goal and record it as failed.',
   'goalProcess.decision.effect.retryAcceptance': 'Run the goal-level acceptance again.',
@@ -2919,6 +2975,10 @@ export default {
     'This task is part of an active goal. Finish or close the goal before archiving it.',
   'taskList.contextMenu.archiveFailed':
     "Couldn't update the archive state. Refresh the task and try again.",
+  'taskList.contextMenu.archiveDenied.noEditPermission':
+    "You don't have permission to edit tasks in this workspace. Ask a workspace admin for access.",
+  'taskList.contextMenu.archiveDenied.notCreatorOrAdmin':
+    'Only the task creator, a workspace owner, or an admin can archive or restore this task. Ask one of them to do it.',
   'taskList.contextMenu.archiveBlocked':
     'Stop the running task or its schedule/heartbeat before archiving it',
   'taskList.contextMenu.archiveSuccess': 'Task archived',

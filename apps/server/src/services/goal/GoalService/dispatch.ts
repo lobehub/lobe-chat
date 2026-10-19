@@ -8,10 +8,16 @@ import { GoalGraphModel } from '@/database/models/goalGraph';
 import { TaskModel } from '@/database/models/task';
 
 import { TaskRunnerService } from '../../taskRunner';
+import { GoalAssignmentService } from '../assignment';
 import { learnedRulesClause, planSkillIdentifier } from '../batchPlanSkill';
 import { GOAL_ACCEPTANCE_TASK_TITLE } from '../decideNextMove';
+import { clearDeviceDispatchStreak, parkDeviceUnavailableDispatch } from '../deviceDispatchStreak';
 import { experimentResults } from '../exploreGraph';
-import { resolveMaxConcurrentTasks, resolveTaskMaxSteps } from '../recoveryPolicy';
+import {
+  isDeviceUnavailableFailure,
+  resolveMaxConcurrentTasks,
+  resolveTaskMaxSteps,
+} from '../recoveryPolicy';
 import { GoalSupervisorService } from '../supervisor';
 import { claimGoalTask } from '../taskClaim';
 import type { GoalServiceContext } from './types';
@@ -71,11 +77,17 @@ export const createResponsibleTask = async (
     const batchUnit = frontier.kind === 'task' && ctx.isBatchMember(graph, frontier.id);
     const planSkill = batchUnit ? rollout?.planSkill : undefined;
     const learnedRules = batchUnit ? (rollout?.learnings ?? []) : [];
+    const assignment = await new GoalAssignmentService(
+      ctx.db,
+      ctx.userId,
+      ctx.workspaceId,
+    ).newTaskAssignment(graph.goal);
     task = await ctx.taskService.createTask({
-      assigneeAgentId: await ctx.resolveTaskAssignee(graph.goal),
+      assigneeAgentId: assignment.assigneeAgentId,
       config: {
         checkpoint: { topic: { after: false } },
         ...(planSkill ? { skills: [planSkillIdentifier(planSkill)] } : {}),
+        ...assignment.model,
       },
       description: description?.slice(0, TASK_DESCRIPTION_MAX_LENGTH),
       instruction: ctx.buildTaskInstruction(graph, frontier.title, description),
@@ -118,6 +130,12 @@ export const createResponsibleTask = async (
         outcome: 'waiting_external',
       };
     }
+    // A handoff or Task-model change committed while this Task was being
+    // created scanned the graph before the bind; align it with the goal now.
+    await new GoalAssignmentService(ctx.db, ctx.userId, ctx.workspaceId).syncBoundTask(
+      goalId,
+      task.id,
+    );
   } catch (error) {
     if (acceptanceId) {
       await ctx.acceptanceService.acceptanceModel.delete(acceptanceId).catch(() => {});
@@ -252,6 +270,9 @@ export const dispatchWork = async (
       taskId: task.id,
       trigger: 'goal',
     });
+    await clearDeviceDispatchStreak(ctx.taskModel, task.id).catch((clearError) => {
+      console.error('[GoalService.tick] failed to clear the device dispatch streak:', clearError);
+    });
     await new GoalSupervisorService(ctx.db, ctx.userId, ctx.workspaceId).recordDispatch(
       graph,
       task.id,
@@ -271,6 +292,24 @@ export const dispatchWork = async (
       taskId: run.taskId,
     };
   } catch (error) {
+    // A run that could not reach its device parks on that reason, the same as a
+    // retry that could not (`TaskRecoveryCoordinator`), so the next advance takes
+    // the offline schedule. Handed back to `backlog` with no error, every advance
+    // dispatched again and threw, the queue redelivered each throw, and one
+    // sleeping laptop became three uncharged runs per sweep with no bound.
+    const message = error instanceof Error ? error.message : String(error);
+    if (isDeviceUnavailableFailure(message)) {
+      await parkDeviceUnavailableDispatch(ctx.taskModel, task, message).catch((releaseError) => {
+        console.error('[GoalService.tick] failed to park claimed task:', releaseError);
+      });
+      return {
+        goalId,
+        message: `Task ${task.identifier} is waiting for its device to reconnect`,
+        nodeId,
+        outcome: 'waiting_external',
+        taskId: task.id,
+      };
+    }
     // We claimed the task, so nothing else will put it back. Release it or the
     // Task stays 'running' with no run behind it and only the lease reclaims it.
     await ctx.taskModel

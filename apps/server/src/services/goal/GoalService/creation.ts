@@ -9,6 +9,7 @@ import { TopicModel } from '@/database/models/topic';
 import { assertAgentUsableBy } from '@/database/utils/agent-access';
 
 import { VerifyPlanGeneratorService } from '../../verify/planGenerator';
+import { GoalAssignmentService, staleModelSlots } from '../assignment';
 import { GoalManagerService } from '../manager';
 import { DEFAULT_MANAGER_MAX_TURNS } from '../recoveryPolicy';
 import { seedGoalTasks } from '../seedTasks';
@@ -147,10 +148,17 @@ export const bindTopic = async (
       { agentId, operationId, topicId },
       { force: options?.force },
     );
-    const reassignedTaskIds =
-      bound.previousAgentId === agentId
-        ? []
-        : await ctx.inTransaction(tx).followGoalAgent(bound.goal, agentId, options?.goalOnly);
+    if (bound.previousAgentId === agentId) return { bound, reassignedTaskIds: [] };
+    // The previous agent's model overrides do not carry to the new one.
+    const assignment = new GoalAssignmentService(tx, ctx.userId, ctx.workspaceId);
+    const goal = await assignment.dropModelOverride(
+      bound.goal,
+      staleModelSlots(
+        { agentId: bound.previousAgentId ?? null, config: bound.goal.config },
+        bound.goal,
+      ),
+    );
+    const reassignedTaskIds = await assignment.followGoalAgent(goal, agentId, options?.goalOnly);
     return { bound, reassignedTaskIds };
   });
   return {

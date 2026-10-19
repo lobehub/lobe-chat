@@ -5,6 +5,7 @@
   "agentLabel.create": "Nieuw label",
   "agentLabel.manage": "Labels beheren",
   "agentLabel.menuTitle": "Labels",
+  "agentSkills.ensureFailed": "Sommige vaardigheden waar deze agent op vertrouwt, konden niet automatisch worden geïnstalleerd: {{skills}}. Je kunt ze handmatig toevoegen in de Skill Store.",
   "agentViewAll.addToSidebar": "Weergeven in zijbalk",
   "agentViewAll.empty": "Nog geen agents",
   "agentViewAll.form.grouping": "Groeperen",

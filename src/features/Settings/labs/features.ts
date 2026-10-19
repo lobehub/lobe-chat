@@ -31,7 +31,8 @@ type LabFeatureI18nKey =
   | 'persistentSandbox'
   | 'projects'
   | 'selfLearning'
-  | 'topicBugReport';
+  | 'topicBugReport'
+  | 'workspaceOnboarding';
 
 export interface LabFeatureItem {
   /**
@@ -48,6 +49,8 @@ export interface LabFeatureItem {
   /** Extra untranslated English synonyms for the settings search index */
   searchKeywords: string[];
   stage: LabStage;
+  /** Only rendered (and searchable) for users with workspace access */
+  workspaceOnly?: boolean;
 }
 
 const ALL_LAB_FEATURES: LabFeatureItem[] = [
@@ -139,6 +142,13 @@ const ALL_LAB_FEATURES: LabFeatureItem[] = [
     stage: 'beta',
   },
   {
+    flag: 'enableWorkspaceOnboardingV2',
+    i18nKey: 'workspaceOnboarding',
+    searchKeywords: ['workspace', 'onboarding', 'team setup'],
+    stage: 'alpha',
+    workspaceOnly: true,
+  },
+  {
     desktopOnly: true,
     flag: 'enableDesktopSplitView',
     i18nKey: 'desktopSplitView',
@@ -185,7 +195,7 @@ export const filterAvailableLabFeatures = (
 
 /**
  * Single source of truth for the lab experiments: the Labs settings page
- * renders this list (general first, then desktop-only), and the settings
+ * renders this list (general first, then workspace-only, then desktop-only), and the settings
  * search index derives its entries from it — adding a flag here makes it both
  * visible and searchable without a second registration.
  */

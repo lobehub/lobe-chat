@@ -73,6 +73,7 @@
   "directories.repository": "GitHub deposu URL'si (isteğe bağlı)",
   "directories.repositoryHint": "Bu, kaynak deposunu kaydeder. Dosyaları klonlamaz veya senkronize etmez. Kimlik bilgilerini eklemeyin.",
   "directories.sourceSummary": "Mevcut dizin",
+  "directories.stagedNewTopic": "Yeni bir konu <project>{{name}}</project> içinde başlayacak",
   "directories.start": "Burada çalışmaya başla",
   "directories.startInProject": "{{name}} projesinde çalışmaya başla",
   "directories.title": "Çalışma dizinleri",
