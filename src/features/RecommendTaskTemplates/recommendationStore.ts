@@ -34,12 +34,20 @@ export const fetchDailyRecommendations = async ({
 };
 
 export interface TaskTemplateRecommendationStoreState {
+  /**
+   * `dailyRecommendErrorId(scope, key)` → the last read failure, cleared by a
+   * success. Scoped, so one identity's failure never hides another's cards.
+   * Covers reads started outside `useSync` (`slice.fetch`), whose failure the
+   * sync's own `error` never sees.
+   */
+  dailyRecommendErrorMap: Record<string, unknown>;
   /** `dailyRecommendKey(params)` → the recommended templates. */
   dailyRecommendMap: Record<string, TaskTemplate[]>;
   dailyRecommendReplica: ReplicaState<TaskTemplate[]>;
 }
 
 export const initialTaskTemplateRecommendationState: TaskTemplateRecommendationStoreState = {
+  dailyRecommendErrorMap: {},
   dailyRecommendMap: {},
   dailyRecommendReplica: createReplicaState(),
 };
@@ -52,8 +60,26 @@ export const useTaskTemplateRecommendationStore =
     shallow,
   );
 
+export const dailyRecommendErrorId = (scope: string, key: string) => `${scope}\u0000${key}`;
+
+const setError = (id: string, error: unknown) => {
+  const { dailyRecommendErrorMap } = useTaskTemplateRecommendationStore.getState();
+  if (dailyRecommendErrorMap[id] === error) return;
+  const next = { ...dailyRecommendErrorMap };
+  if (error === undefined) delete next[id];
+  else next[id] = error;
+  useTaskTemplateRecommendationStore.setState({ dailyRecommendErrorMap: next });
+};
+
 export const dailyRecommendReplica = createReplicaSlice(dailyRecommendResource, {
   actionPrefix: 'taskTemplate/dailyRecommend',
+  effects: {
+    onApplied: (_data, _params, { key, scope }) =>
+      setError(dailyRecommendErrorId(scope, key), undefined),
+    onError: (error, _params, { isActive, key, scope }) => {
+      if (isActive && key) setError(dailyRecommendErrorId(scope, key), error);
+    },
+  },
   fetcher: fetchDailyRecommendations,
   get: useTaskTemplateRecommendationStore.getState,
   // A row persisted by an older or corrupted write is not a list: fetch instead.

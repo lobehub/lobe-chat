@@ -6,6 +6,7 @@ import { useSessionStorageState } from 'ahooks';
 import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { cacheScope } from '@/libs/replica';
 import { taskTemplateService } from '@/services/taskTemplate';
 import { useBriefStore } from '@/store/brief';
 import { briefListSelectors } from '@/store/brief/selectors';
@@ -18,7 +19,11 @@ import {
   type DailyRecommendParams,
   normalizeTaskTemplateRecommendations,
 } from './projection';
-import { dailyRecommendReplica, useTaskTemplateRecommendationStore } from './recommendationStore';
+import {
+  dailyRecommendErrorId,
+  dailyRecommendReplica,
+  useTaskTemplateRecommendationStore,
+} from './recommendationStore';
 import { useResolvedInterestKeys } from './useResolvedInterestKeys';
 
 const REFRESH_SEED_STORAGE_KEY = 'lobehub:taskTemplate:refreshSeed';
@@ -145,7 +150,11 @@ export function useDailyBriefRecommendationsUI(
   const interestsPendingRef = useRef(interestKeys === null);
   interestsPendingRef.current = interestKeys === null;
   const isPaused = useCallback(() => interestsPendingRef.current, []);
-  const { error, isHydrated, isValidating } = dailyRecommendReplica.useSync(params, {
+  const {
+    error: syncError,
+    isHydrated,
+    isValidating,
+  } = dailyRecommendReplica.useSync(params, {
     dedupingInterval: RECOMMENDATION_DEDUPE_INTERVAL,
     isPaused,
     revalidateIfStale: canFetchRecommendations,
@@ -153,6 +162,12 @@ export function useDailyBriefRecommendationsUI(
     revalidateOnMount: canFetchRecommendations,
     revalidateOnReconnect: false,
   });
+  // A failure of either the sync or the `fetch` below lands here.
+  const scope = cacheScope.use();
+  const storedError = useTaskTemplateRecommendationStore((s) =>
+    key ? s.dailyRecommendErrorMap[dailyRecommendErrorId(scope, key)] : undefined,
+  );
+  const error = syncError ?? storedError;
   const waitedForInterestsRef = useRef(false);
 
   useEffect(() => {
@@ -171,9 +186,9 @@ export function useDailyBriefRecommendationsUI(
     // `fetch` joins a request already in flight for the entry, so every mounted
     // view resolving its interests in the same frame sends one request (a
     // `revalidate` per view would force one each).
-    dailyRecommendReplica.fetch(params).catch((fetchError: unknown) => {
-      console.error('[taskTemplate:listDailyRecommend]', fetchError);
-    });
+    // A failure is stored by the slice effects (`dailyRecommendErrorMap`) and
+    // logged through `error` below.
+    dailyRecommendReplica.fetch(params).catch(() => {});
   }, [interestKeys, key, params]);
 
   useEffect(() => {

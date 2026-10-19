@@ -694,4 +694,24 @@ describe('useDailyBriefRecommendationsUI', () => {
       refreshSeed: 'next-seed',
     });
   });
+
+  // Regression: the read started once interests resolve went through
+  // `slice.fetch`, whose failure was only logged, so a failed first load left
+  // the view on its skeleton instead of settling.
+  it('settles a failed first load that started once interests resolved', async () => {
+    mockUseResolvedInterestKeys.mockReturnValue(null);
+    const error = new Error('market down');
+    const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    vi.mocked(taskTemplateService.listDailyRecommend).mockRejectedValue(error);
+
+    const { rerender, result } = renderHook(() => useDailyBriefRecommendationsUI(), { wrapper });
+    await waitFor(() => expect(result.current).toEqual({ mode: 'skeleton', skeletonCount: 3 }));
+
+    mockUseResolvedInterestKeys.mockReturnValue(['coding']);
+    rerender();
+
+    await waitFor(() => expect(result.current).toEqual({ mode: 'hidden' }));
+    expect(taskTemplateService.listDailyRecommend).toHaveBeenCalledTimes(1);
+    expect(consoleErrorSpy).toHaveBeenCalledWith('[taskTemplate:listDailyRecommend]', error);
+  });
 });
