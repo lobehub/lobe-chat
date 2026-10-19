@@ -17,14 +17,20 @@ export interface DynamicKeyEntry {
 }
 
 export interface ExtractTranslationUsesOptions {
+  contextOption?: string;
+  contextSeparator?: string;
+  countOption?: string;
   marker?: string;
   namespaceOption?: string;
   namespaceSeparator?: string;
+  pluralSeparator?: string;
   skip?: (file: string) => boolean;
   translatorFields?: string[];
 }
 
 export const i18nextPreset = {
+  contextOption: 'context',
+  countOption: 'count',
   marker: '$TFunctionBrand',
   namespaceOption: 'ns',
   namespaceSeparator: ':',
@@ -51,6 +57,7 @@ export const assertBoundedTranslationUses = (
 const escape = (value: string) => value.replaceAll(/[.*+?^${}()|[\]\\]/g, '\\$&');
 const product = (left: string[], right: string[]) => left.flatMap((a) => right.map((b) => a + b));
 const INDIRECT_CALLS = new Set(['apply', 'bind', 'call']);
+const PLURAL_CATEGORIES = 'zero|one|two|few|many|other';
 const unwrapAssertions = (node: ts.Expression): ts.Expression =>
   ts.isAsExpression(node) ||
   ts.isTypeAssertionExpression(node) ||
@@ -92,9 +99,13 @@ export const extractTranslationUses = (
   program: ts.Program,
   files: string[],
   {
+    contextOption,
+    contextSeparator = '_',
+    countOption,
     marker: markerName = DEFAULT_NAMESPACE_MARKER,
     namespaceOption,
     namespaceSeparator,
+    pluralSeparator = '_',
     skip,
     translatorFields = ['t', 'find'],
   }: ExtractTranslationUsesOptions = {},
@@ -203,30 +214,49 @@ export const extractTranslationUses = (
         omittable: parts.length < (type.isUnion() ? type.types.length : 1),
       };
     };
+    const optionType = (node: ts.CallExpression, name: string | undefined) => {
+      const options = node.arguments[1];
+      if (!name || !options) return;
+      const option = checker.getTypeAtLocation(options).getProperty(name);
+      if (!option) return;
+      // Object literal properties widen without a contextual type; the initializer keeps its literal.
+      const declaration = ts.isObjectLiteralExpression(options)
+        ? options.properties.find((property) => property.name?.getText(source) === name)
+        : undefined;
+      return {
+        optional: !declaration && Boolean(option.flags & ts.SymbolFlags.Optional),
+        type:
+          declaration && ts.isPropertyAssignment(declaration)
+            ? checker.getTypeAtLocation(declaration.initializer)
+            : declaration && ts.isShorthandPropertyAssignment(declaration)
+              ? checker.getTypeAtLocation(declaration.name)
+              : checker.getTypeOfSymbolAtLocation(option, options),
+      };
+    };
     const callNamespaces = (node: ts.CallExpression) => {
       const marker = markerOf(checker.getTypeAtLocation(node.expression));
       if (!marker) return;
       const branded = namespaceTypes(
         checker.getNonNullableType(checker.getTypeOfSymbolAtLocation(marker, node.expression)),
       ).literals;
-      const options = node.arguments[1];
-      if (!namespaceOption || !options) return branded;
-      const option = checker.getTypeAtLocation(options).getProperty(namespaceOption);
+      const option = optionType(node, namespaceOption);
       if (!option) return branded;
-      // Object literal properties widen without a contextual type; the initializer keeps its literal.
-      const declaration = ts.isObjectLiteralExpression(options)
-        ? options.properties.find((property) => property.name?.getText(source) === namespaceOption)
-        : undefined;
-      const optionType =
-        declaration && ts.isPropertyAssignment(declaration)
-          ? checker.getTypeAtLocation(declaration.initializer)
-          : declaration && ts.isShorthandPropertyAssignment(declaration)
-            ? checker.getTypeAtLocation(declaration.name)
-            : checker.getTypeOfSymbolAtLocation(option, options);
-      const { literals, omittable } = namespaceTypes(optionType);
-      return omittable || (!declaration && option.flags & ts.SymbolFlags.Optional)
-        ? [...new Set([...literals, ...branded])]
-        : literals;
+      const { literals, omittable } = namespaceTypes(option.type);
+      return omittable || option.optional ? [...new Set([...literals, ...branded])] : literals;
+    };
+    // i18next also tries `key_<context>` and `key[_<context>]_[ordinal_]<plural category>`, falling back to `key`.
+    const lookupSuffix = (node: ts.CallExpression) => {
+      let suffix = '';
+      const context = optionType(node, contextOption);
+      const contextType = context && checker.getNonNullableType(context.type);
+      if (contextType && !(contextType.flags & ts.TypeFlags.Never))
+        suffix += `(?:${escape(contextSeparator)}(?:${typePatterns(contextType).join('|')}))?`;
+      const count = optionType(node, countOption);
+      const countType = count && checker.getNonNullableType(count.type);
+      const countParts = countType?.isUnion() ? countType.types : countType ? [countType] : [];
+      if (countParts.some((part) => !(part.flags & (ts.TypeFlags.StringLike | ts.TypeFlags.Never))))
+        suffix += `(?:${escape(pluralSeparator)}(?:ordinal${escape(pluralSeparator)})?(?:${PLURAL_CATEGORIES}))?`;
+      return suffix;
     };
     const prefixPattern = namespaceSeparator
       ? new RegExp(`^([A-Za-z_][\\w-]*)${escape(escape(namespaceSeparator))}([^]*)$`)
@@ -243,13 +273,16 @@ export const extractTranslationUses = (
         optional =
           resultType.isUnion() &&
           resultType.types.some((type) => type.flags & ts.TypeFlags.Undefined);
-        patterns = patternsFor(node.arguments[0]);
+        const suffix = lookupSuffix(node);
+        patterns = patternsFor(node.arguments[0]).map((pattern) => pattern + suffix);
       } catch (error) {
         throw new Error(`${file}:${line}: ${String(error)}`, { cause: error });
       }
       for (const namespace of namespaces) {
         if (namespace === undefined)
-          throw new Error(`${file}:${line}: unknown translation namespace`);
+          throw new Error(
+            `${file}:${line}: unknown translation namespace; make sure the declaration that types the translator (such as i18next CustomTypeOptions) is part of the program`,
+          );
         const grouped = new Map<string, string[]>();
         for (const pattern of patterns) {
           const prefixed = prefixPattern?.exec(pattern);

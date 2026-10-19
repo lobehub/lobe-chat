@@ -261,6 +261,74 @@ describe('extractTranslationUses', () => {
     );
   });
 
+  it('retains plural suffixes when a count option is passed', async () => {
+    const uses = await extract(
+      "declare const count: number; declare const options: { count?: number }; t('views', { count }); t('items', options); t('plain', {});",
+      { countOption: 'count' },
+    );
+    const keys = [
+      'items_one',
+      'plain',
+      'plain_one',
+      'views',
+      'views_few',
+      'views_one',
+      'views_ordinal_two',
+      'views_other',
+      'views_total',
+    ];
+    expect(uses.map((use) => selectKeys(keys, use.patterns))).toEqual([
+      ['views', 'views_few', 'views_one', 'views_ordinal_two', 'views_other'],
+      ['items_one'],
+      ['plain'],
+    ]);
+  });
+
+  it('does not treat a string count as plural', async () => {
+    const uses = await extract("t('views', { count: '3' });", { countOption: 'count' });
+    expect(selectKeys(['views', 'views_other'], uses[0].patterns)).toEqual(['views']);
+  });
+
+  it('retains context suffixes, alone and combined with plurals', async () => {
+    const uses = await extract(
+      "declare const gender: 'male' | 'female' | undefined; declare const count: number; t('friend', { context: gender, count }); t('label', { context: 'short' });",
+      { contextOption: 'context', countOption: 'count' },
+    );
+    const keys = [
+      'friend',
+      'friend_female_one',
+      'friend_male',
+      'friend_other',
+      'friend_robot',
+      'label',
+      'label_long',
+      'label_short',
+    ];
+    expect(uses.map((use) => selectKeys(keys, use.patterns))).toEqual([
+      ['friend', 'friend_female_one', 'friend_male', 'friend_other'],
+      ['label', 'label_short'],
+    ]);
+  });
+
+  it('bounds an open context by the key prefix', async () => {
+    const uses = await extract("declare const kind: string; t('label', { context: kind });", {
+      contextOption: 'context',
+    });
+    expect(selectKeys(['label', 'label_any', 'other'], uses[0].patterns)).toEqual([
+      'label',
+      'label_any',
+    ]);
+  });
+
+  it('keeps plural suffixes on namespace-prefixed keys', async () => {
+    const uses = await extract("t('error:retry', { count: 2 });", {
+      countOption: 'count',
+      namespaceSeparator: ':',
+    });
+    expect(uses[0].namespace).toBe('error');
+    expect(selectKeys(['retry_one'], uses[0].patterns)).toEqual(['retry_one']);
+  });
+
   it('extracts i18next-branded translators with the preset', async () => {
     const root = await createFixture({
       'entry.ts':
