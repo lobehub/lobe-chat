@@ -65,6 +65,12 @@ export interface TaskRunTarget {
   inheritedTarget: DeviceExecutionTarget;
   /** Whether a task-level pin is what puts the run on {@link deviceId}. */
   isDeviceTarget: boolean;
+  /**
+   * The target controls must wait: the preference is loading, or the device
+   * list is still the stored copy. Its rows may since have been deleted or
+   * unshared, and a pin stored from one would point the task's runs at a
+   * machine they cannot resolve.
+   */
   isPending: boolean;
   /**
    * The task's own pin, and only when the assignee's policy lets it take
@@ -89,7 +95,11 @@ export interface TaskRunTarget {
  */
 export const useTaskRunTarget = (agentId: string, pinnedDeviceId?: string): TaskRunTarget => {
   const { t } = useTranslation('chat');
-  const { data: devices, isLoading: isDevicesLoading } = useDeviceList();
+  const {
+    data: devices,
+    isConfirmed: isDevicesConfirmed,
+    isLoading: isDevicesLoading,
+  } = useDeviceList();
   const isHetero = useAgentStore(agentByIdSelectors.isAgentHeterogeneousById(agentId));
   // Agent-level, not the active chat topic's: a task run carries no topic
   // binding, so the conversation that happens to be open must not move it.
@@ -223,7 +233,7 @@ export const useTaskRunTarget = (agentId: string, pinnedDeviceId?: string): Task
     inheritedLabel,
     inheritedTarget,
     isDeviceTarget,
-    isPending: isPreferenceLoading || isDevicesLoading,
+    isPending: isPreferenceLoading || isDevicesLoading || !isDevicesConfirmed,
     pinnedDeviceId: pinApplies ? pinnedDeviceId : undefined,
   };
 };

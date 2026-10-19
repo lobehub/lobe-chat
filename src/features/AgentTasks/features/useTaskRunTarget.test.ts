@@ -28,6 +28,7 @@ const mocks = vi.hoisted(() => ({
   activeTopicAgency: undefined as undefined | { agencyConfig: Record<string, unknown> },
   agentState: { agentMap: {} as Record<string, { workspaceId?: string }> },
   devices: [] as { deviceId: string; scope?: string; visibility?: string }[],
+  devicesConfirmed: true,
   electron: { currentDeviceId: undefined as string | undefined, isDesktop: false },
 }));
 
@@ -51,7 +52,11 @@ vi.mock('react-i18next', () => ({
 }));
 
 vi.mock('@/store/device/useDeviceList', () => ({
-  useDeviceList: () => ({ data: mocks.devices, isLoading: false }),
+  useDeviceList: () => ({
+    data: mocks.devices,
+    isConfirmed: mocks.devicesConfirmed,
+    isLoading: false,
+  }),
 }));
 
 vi.mock('@/hooks/useEffectiveAgencyConfig', () => ({
@@ -82,6 +87,7 @@ const deviceBoundAgent = {
 
 beforeEach(() => {
   mocks.activeTopicAgency = undefined;
+  mocks.devicesConfirmed = true;
   mocks.agency.agencyConfig = {};
   mocks.agency.canSelectExecutionTarget = true;
   mocks.agency.isPreferenceLoading = false;
@@ -93,6 +99,21 @@ beforeEach(() => {
 describe('useTaskRunTarget', () => {
   // A task's runs never carry the open chat topic's binding, so the machine
   // shown for a task must not follow whatever conversation happens to be active.
+  it('keeps the target controls pending while the device list is the stored copy', () => {
+    mocks.devices = [PERSONAL_DEVICE];
+    mocks.devicesConfirmed = false;
+
+    const { result, rerender } = renderHook(() => useTaskRunTarget('agent-1'));
+
+    // A stored row may since have been deleted or unshared: no pin from it yet.
+    expect(result.current.isPending).toBe(true);
+
+    mocks.devicesConfirmed = true;
+    rerender();
+
+    expect(result.current.isPending).toBe(false);
+  });
+
   it('ignores the active chat topic device binding', () => {
     mocks.agency.agencyConfig = deviceBoundAgent;
     mocks.activeTopicAgency = {
