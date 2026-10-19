@@ -68,7 +68,12 @@ export class MessageInternalsActionImpl {
 
     log('[internal_dispatchMessage] %s | key=%s', payload.type, messagesKey);
     const transcript = getMessageTranscript(this.#set, this.#get);
-    transcript.commit(ctx, reconciled, true);
+    transcript.commit(
+      ctx,
+      reconciled,
+      true,
+      payload.type === 'createMessage' ? payload.id : undefined,
+    );
     transcript.settle(ctx);
   };
 

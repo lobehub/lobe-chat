@@ -9,6 +9,7 @@ import { CACHE_TIERS } from '@/libs/swr/localStorageProvider';
 import { messageService } from '@/services/message';
 import {
   clearMessageListClientCacheState,
+  invalidateMessageListClientState,
   MESSAGE_LIST_VERIFICATION_INTERVAL,
   runMessageListQuery,
 } from '@/services/message/cache';
@@ -594,9 +595,15 @@ describe('useFetchMessages', () => {
       });
       useChatStore.getState().associateMessageWithOperation(sentUser.id, operationId);
       useChatStore.getState().associateMessageWithOperation(sentAssistant.id, operationId);
-      useChatStore
-        .getState()
-        .replaceMessages([previousReply, sentUser, sentAssistant], { context });
+      // The send path creates its optimistic rows through the message dispatch.
+      for (const message of [sentUser, sentAssistant]) {
+        useChatStore
+          .getState()
+          .internal_dispatchMessage(
+            { id: message.id, type: 'createMessage', value: message as any },
+            { conversationContext: context },
+          );
+      }
       useChatStore.getState().completeOperation(operationId);
 
       resolveFetch([{ ...previousReply, content: 'Previous reply (fetched)', updatedAt: 1500 }]);
@@ -656,6 +663,55 @@ describe('useFetchMessages', () => {
 
       // Hydration is not an in-memory write made after the read started, so the
       // server snapshot wins. Before the fix every hydrated row was kept.
+      await waitFor(() => expect(rowsOf(context)?.map((message) => message.id)).toEqual(['kept']));
+    });
+
+    it('drops a server-applied row that a restarted read omits', async () => {
+      const kept: UIChatMessage = {
+        id: 'kept',
+        content: 'Kept',
+        role: 'user',
+        createdAt: 1000,
+        updatedAt: 1000,
+      };
+      const alreadyKnown: UIChatMessage = {
+        id: 'already-known',
+        content: 'Committed before the restarted read',
+        role: 'user',
+        createdAt: 1001,
+        updatedAt: 1001,
+      };
+
+      let resolveFirst!: (messages: UIChatMessage[]) => void;
+      let resolveRestarted!: (messages: UIChatMessage[]) => void;
+      vi.mocked(messageService.getMessages)
+        .mockReturnValueOnce(
+          new Promise((resolve) => {
+            resolveFirst = resolve;
+          }) as Promise<UIChatMessage[]>,
+        )
+        .mockReturnValueOnce(
+          new Promise((resolve) => {
+            resolveRestarted = resolve;
+          }) as Promise<UIChatMessage[]>,
+        );
+
+      seedRows(context, [kept]);
+      syncMessages(context);
+      await waitFor(() => expect(messageService.getMessages).toHaveBeenCalledTimes(1));
+
+      // The row lands in memory after the first read started, but before the
+      // generation is invalidated and the query is physically re-issued.
+      useChatStore.getState().replaceMessages([kept, alreadyKnown], { context });
+      invalidateMessageListClientState(() => true);
+
+      resolveFirst([kept]);
+      await waitFor(() => expect(messageService.getMessages).toHaveBeenCalledTimes(2));
+
+      // The restarted read started after the write, so its omission of the row
+      // is authoritative (it was deleted remotely).
+      resolveRestarted([kept]);
+
       await waitFor(() => expect(rowsOf(context)?.map((message) => message.id)).toEqual(['kept']));
     });
   });
