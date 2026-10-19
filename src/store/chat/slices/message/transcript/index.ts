@@ -72,74 +72,47 @@ const createMessageTranscript = (set: StoreSetter<ChatStore>, get: () => ChatSto
   const snapshots = new WeakMap<UIChatMessage[], InterventionSnapshot>();
   /** Head responses resolved by `prepareHead`, read back by the sync's `onSuccess`. */
   const headResolutions = new WeakMap<UIChatMessage[], HeadResolution>();
-  /** What a head read can be missing, captured when the read is issued. */
-  type HeadRequestStart = {
-    idsAtRequestStart: Set<string>;
-    localWriteSeqAtRequestStart: number;
-  };
   /**
-   * The rows a head read could be missing, captured when it was issued. A read
+   * A read's own view of the writes that happened after it was issued. A read
    * that is still in flight when a send lands resolves with the pre-send
-   * snapshot; rows written in memory after this point must survive it even once
-   * the send operation has handed off to the runtime.
+   * snapshot; the rows that send created must survive it even once the send
+   * operation has handed off to the runtime.
    *
-   * The first read of a shared request wins: it started earliest, so it is the
-   * most conservative boundary for what the response can be missing.
+   * Records are created when a read starts and released when the whole fetch
+   * settles — including the topic-detail wait and a forced re-read. Nothing is
+   * shared, pruned or capped across reads, so a later read can never discard
+   * what an earlier unfinished one still needs.
    */
-  const headRequestBoundaries = new WeakMap<UIChatMessage[], HeadRequestStart>();
-  /**
-   * Rows a client mutation created, in write order. These may not have reached
-   * the server when a read is issued, so a snapshot that omits one can be stale.
-   *
-   * Rows applied from a server response (`replaceMessages`) and rows painted
-   * from storage hydration are deliberately absent: the server already knows
-   * them, so a snapshot that omits one is authoritative (e.g. a remote delete).
-   */
-  const localWrittenAt = new Map<string, number>();
-  let localWriteSeq = 0;
-  /**
-   * Reads whose physical query has not resolved yet, by the sequence at which
-   * they started. Pruning never drops a mark an unfinished read can still need.
-   */
-  const inFlightReadStarts = new Map<number, number>();
-  /**
-   * Backstop for sessions that keep writing without another head read. Only
-   * rows written since the oldest live boundary can affect a merge; older ones
-   * are history no request can still ask about.
-   */
-  const MAX_TRACKED_LOCAL_WRITES = 2000;
+  type HeadReadRecord = {
+    idsAtRequestStart: Set<string>;
+    written: Set<string>;
+    /** Creation order, used to keep the earliest record for a shared result. */
+    order: number;
+  };
+  const activeHeadReads = new Set<HeadReadRecord>();
+  const headReads = new WeakMap<UIChatMessage[], HeadReadRecord>();
+  let headReadOrder = 0;
   /** The entry key each bucket was last written under. */
   const bucketKeys = new Map<string, string>();
 
-  /** Remember a row's first in-memory write. Repeated writes keep its sequence. */
-  const noteLocalWrite = (id: string) => {
-    if (localWrittenAt.has(id)) return;
-    localWrittenAt.set(id, ++localWriteSeq);
-    while (localWrittenAt.size > MAX_TRACKED_LOCAL_WRITES) {
-      const oldest = localWrittenAt.keys().next().value;
-      if (oldest === undefined) break;
-      localWrittenAt.delete(oldest);
-    }
+  const createHeadRead = (idsAtRequestStart: Set<string>): HeadReadRecord => {
+    const record = { idsAtRequestStart, order: ++headReadOrder, written: new Set<string>() };
+    activeHeadReads.add(record);
+    return record;
   };
 
-  const beginRead = (seq: number) => {
-    inFlightReadStarts.set(seq, (inFlightReadStarts.get(seq) ?? 0) + 1);
+  const releaseHeadRead = (record: HeadReadRecord) => {
+    activeHeadReads.delete(record);
   };
 
-  const endRead = (seq: number) => {
-    const count = inFlightReadStarts.get(seq);
-    if (!count) return;
-    if (count === 1) inFlightReadStarts.delete(seq);
-    else inFlightReadStarts.set(seq, count - 1);
-  };
-
-  /** Drop marks no live boundary can still classify as a post-request write. */
-  const pruneLocalWrites = (floor: number) => {
-    // The map is insertion-ordered by sequence, so pruning is a prefix walk.
-    for (const [id, seq] of localWrittenAt) {
-      if (seq > floor) break;
-      localWrittenAt.delete(id);
-    }
+  /**
+   * A client mutation created this row. Only these rows may be missing from a
+   * read that predates their server persistence. Rows applied from a server
+   * response (`replaceMessages`) and rows painted from hydration are known to
+   * the server, so a snapshot that omits one stays authoritative.
+   */
+  const noteClientWrite = (id: string) => {
+    for (const record of activeHeadReads) record.written.add(id);
   };
 
   const lens = createTranscriptLens();
@@ -157,15 +130,12 @@ const createMessageTranscript = (set: StoreSetter<ChatStore>, get: () => ChatSto
   const bucketRows = (key: string) => get().dbMessagesMap[bucketOfKey(key).bucket];
 
   /**
-   * Concurrent reads can join one query result. Register the earliest start
-   * seen for it, so every settle of that result uses the most conservative
-   * boundary instead of whichever fetcher resumed first.
+   * Concurrent reads can join one query result. Register the earliest record
+   * for it, the most conservative view of what the response can be missing.
    */
-  const registerHeadBoundary = (messages: UIChatMessage[], boundary: HeadRequestStart) => {
-    const existing = headRequestBoundaries.get(messages);
-    if (!existing || boundary.localWriteSeqAtRequestStart < existing.localWriteSeqAtRequestStart) {
-      headRequestBoundaries.set(messages, boundary);
-    }
+  const registerHeadRead = (messages: UIChatMessage[], record: HeadReadRecord) => {
+    const existing = headReads.get(messages);
+    if (!existing || record.order < existing.order) headReads.set(messages, record);
   };
 
   // ---- reads ---------------------------------------------------------------
@@ -184,54 +154,42 @@ const createMessageTranscript = (set: StoreSetter<ChatStore>, get: () => ChatSto
     const syncKey = getMessageListCacheIdentity(context);
     const bucket = conversationMessagesKey(context);
     /**
-     * The earliest start this fetch depends on. Later physical reads (a new
-     * generation, the forced read after an intervention) keep it: a client
-     * mutation may have been committed locally while its server write is still
-     * in flight, so an earlier boundary is the conservative one. Rows the
-     * server already knows are not in `localWrittenAt` at all, so a later read
-     * still removes what it authoritatively omits.
+     * One record for the whole logical read, including a generation restart and
+     * the forced re-read after an intervention. It stays live until the fetch
+     * settles, so no other read can discard a row this one still needs.
      */
-    const requestStart: HeadRequestStart = {
-      idsAtRequestStart: new Set((bucketRows(bucket) ?? []).map((message) => message.id)),
-      localWriteSeqAtRequestStart: localWriteSeq,
-    };
-    const dbMessages = bucketRows(bucket) ?? [];
-    const topicAtRequest = context.topicId
-      ? topicSelectors.getTopicById(context.topicId)(get())
-      : undefined;
-    const wasPending = hasPendingInterventions(dbMessages);
-    beginRead(requestStart.localWriteSeqAtRequestStart);
-    let messages: UIChatMessage[];
+    const read = createHeadRead(new Set((bucketRows(bucket) ?? []).map((message) => message.id)));
     try {
-      messages = await runMessageListQuery(context, readConversationMessageListPage);
-    } finally {
-      endRead(requestStart.localWriteSeqAtRequestStart);
-    }
-    registerHeadBoundary(messages, requestStart);
-    if (!context.syncInterventions || !context.topicId) return messages;
-    if (wasPending || hasPendingInterventions(messages)) pendingInterventions.add(syncKey);
-    if (!pendingInterventions.has(syncKey) || hasPendingInterventions(messages)) return messages;
+      const dbMessages = bucketRows(bucket) ?? [];
+      const topicAtRequest = context.topicId
+        ? topicSelectors.getTopicById(context.topicId)(get())
+        : undefined;
+      const wasPending = hasPendingInterventions(dbMessages);
+      let messages = await runMessageListQuery(context, readConversationMessageListPage);
+      registerHeadRead(messages, read);
+      if (!context.syncInterventions || !context.topicId) return messages;
+      if (wasPending || hasPendingInterventions(messages)) pendingInterventions.add(syncKey);
+      if (!pendingInterventions.has(syncKey) || hasPendingInterventions(messages)) return messages;
 
-    // The decision must precede the liveness read. A startup reservation is
-    // still live even before runningOperation is published.
-    const topic = await topicService.getTopicDetail(context.topicId);
-    if (!isInterventionRunActive(topic)) {
-      // Read after completion without dropping loaded history or its cursor.
-      beginRead(requestStart.localWriteSeqAtRequestStart);
-      try {
+      // The decision must precede the liveness read. A startup reservation is
+      // still live even before runningOperation is published.
+      const topic = await topicService.getTopicDetail(context.topicId);
+      if (!isInterventionRunActive(topic)) {
+        // Read after completion without dropping loaded history or its cursor.
         messages = await runMessageListQuery(context, readConversationMessageListPage, {
           force: true,
         });
-      } finally {
-        endRead(requestStart.localWriteSeqAtRequestStart);
       }
-      registerHeadBoundary(messages, requestStart);
+      const result = [...messages];
+      // The copy is what `prepareHead` receives.
+      registerHeadRead(result, read);
+      snapshots.set(result, { dbMessages, topic, topicAtRequest });
+      return result;
+    } catch (error) {
+      // A rejected fetch never reaches `prepareHead`; drop its record here.
+      releaseHeadRead(read);
+      throw error;
     }
-    const result = [...messages];
-    // The copy is what `prepareHead` receives.
-    registerHeadBoundary(result, requestStart);
-    snapshots.set(result, { dbMessages, topic, topicAtRequest });
-    return result;
   };
 
   const fetchOlder = async (
@@ -268,27 +226,18 @@ const createMessageTranscript = (set: StoreSetter<ChatStore>, get: () => ChatSto
     if (!Array.isArray(incoming)) return incoming;
     // Several fetchers can join one result. The earliest request is the most
     // conservative boundary for what any of their responses can be missing.
-    const requestStart = headRequestBoundaries.get(incoming);
+    const read = headReads.get(incoming);
+    // The fetch has fully settled (topic detail and any forced re-read
+    // included); later writes need not be recorded for it.
+    if (read) releaseHeadRead(read);
     if (!context.topicId) return undefined;
 
-    // Only rows written in memory after this read was issued may be missing
-    // from its snapshot. Hydrated rows carry no sequence and stay out of it.
-    let boundary: HeadRequestBoundary | undefined;
-    if (requestStart) {
-      const locallyWrittenAfterRequestStart = new Set<string>();
-      for (const [id, seq] of localWrittenAt) {
-        if (seq > requestStart.localWriteSeqAtRequestStart) locallyWrittenAfterRequestStart.add(id);
-      }
-      boundary = {
-        idsAtRequestStart: requestStart.idsAtRequestStart,
-        locallyWrittenAfterRequestStart,
-      };
-      // Nothing at or below every live/captured start can still count as a
-      // post-request write for an outstanding read.
-      pruneLocalWrites(
-        Math.min(requestStart.localWriteSeqAtRequestStart, ...inFlightReadStarts.keys()),
-      );
-    }
+    // Only rows a client mutation created after this read was issued may be
+    // missing from its snapshot. Hydrated and server-applied rows stay out.
+    const boundary: HeadRequestBoundary | undefined = read && {
+      idsAtRequestStart: read.idsAtRequestStart,
+      locallyWrittenAfterRequestStart: read.written,
+    };
 
     // DB chunk writes can lag behind pushed content, even at an equal
     // updatedAt. Keep streamed rows, but allow answers and unseen rows in.
@@ -379,7 +328,7 @@ const createMessageTranscript = (set: StoreSetter<ChatStore>, get: () => ChatSto
     // Only a row a client mutation created can be missing from a read that
     // predates its server persistence. Hydration writes through the replica
     // slice and `replaceMessages` applies server data, so neither is tracked.
-    if (clientCreatedId) noteLocalWrite(clientCreatedId);
+    if (clientCreatedId) noteClientWrite(clientCreatedId);
     return slice.update(
       key,
       (current) =>
@@ -440,6 +389,14 @@ const createMessageTranscript = (set: StoreSetter<ChatStore>, get: () => ChatSto
     pendingInterventions,
     /** The entry's current value, as the replica sees it. */
     read: (key: string) => lens.get(get(), key),
+    /**
+     * Release a head result the replica never folded (off-scope or superseded).
+     * Applied results are released by `prepareHead`.
+     */
+    releaseHeadRead: (messages: UIChatMessage[]) => {
+      const record = headReads.get(messages);
+      if (record) releaseHeadRead(record);
+    },
     settle,
     slice,
   };

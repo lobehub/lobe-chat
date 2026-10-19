@@ -18,6 +18,7 @@ import {
   conversationMessagesResource,
   transcriptOf,
 } from '@/services/message/replica';
+import { topicService } from '@/services/topic';
 import { useChatStore } from '@/store/chat';
 import { operationSelectors } from '@/store/chat/selectors';
 import { LOCAL_MESSAGE_SCOPE } from '@/store/chat/utils/localMessages';
@@ -42,6 +43,8 @@ vi.mock('@/services/message', () => {
     },
   };
 });
+
+vi.mock('@/services/topic', () => ({ topicService: { getTopicDetail: vi.fn() } }));
 
 vi.mock('@/business/client/hooks/useActiveWorkspaceId', () => ({
   getActiveWorkspaceId: () => undefined,
@@ -713,6 +716,65 @@ describe('useFetchMessages', () => {
       resolveRestarted([kept]);
 
       await waitFor(() => expect(rowsOf(context)?.map((message) => message.id)).toEqual(['kept']));
+    });
+
+    it('keeps a client row created while the fetch waits for the topic decision', async () => {
+      const question: UIChatMessage = {
+        id: 'question',
+        content: '',
+        role: 'tool',
+        tool_call_id: 'call-1',
+        createdAt: 1,
+        updatedAt: 1,
+        pluginIntervention: { status: 'pending' },
+      };
+      const answered: UIChatMessage = {
+        ...question,
+        pluginIntervention: { status: 'approved' },
+      };
+      const sent: UIChatMessage = {
+        id: 'msg_user',
+        content: 'Follow-up',
+        role: 'user',
+        createdAt: 2000,
+        updatedAt: 2000,
+      };
+
+      let calls = 0;
+      vi.mocked(messageService.getMessages).mockImplementation(() => {
+        calls += 1;
+        // The forced read is the second call; later reads stay in flight so
+        // they cannot repair the row for the assertion.
+        return calls <= 2 ? Promise.resolve([answered]) : new Promise(() => {});
+      });
+
+      let resolveTopic!: () => void;
+      vi.mocked(topicService.getTopicDetail).mockReturnValue(
+        new Promise((resolve) => {
+          resolveTopic = () => resolve(null);
+        }) as ReturnType<typeof topicService.getTopicDetail>,
+      );
+
+      seedRows(context, [question]);
+      syncMessages(context, { syncInterventions: true });
+      await waitFor(() => expect(topicService.getTopicDetail).toHaveBeenCalled());
+
+      // The send lands after the first read resolved but before the topic
+      // decision returns — the gap where a later read used to prune its mark.
+      useChatStore
+        .getState()
+        .internal_dispatchMessage(
+          { id: sent.id, type: 'createMessage', value: sent as any },
+          { conversationContext: context },
+        );
+
+      await act(async () => {
+        resolveTopic();
+      });
+
+      await waitFor(() =>
+        expect(rowsOf(context)?.map((message) => message.id)).toEqual(['question', 'msg_user']),
+      );
     });
   });
 });
