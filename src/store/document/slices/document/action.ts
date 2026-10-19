@@ -1,6 +1,6 @@
 'use client';
 
-import { EDITOR_DEBOUNCE_TIME, EDITOR_MAX_WAIT, HTML_DOCUMENT_FILE_TYPE } from '@lobechat/const';
+import { EDITOR_DEBOUNCE_TIME, EDITOR_MAX_WAIT } from '@lobechat/const';
 import type { DocumentItem } from '@lobechat/database/schemas';
 import type { IEditor } from '@lobehub/editor';
 import { debounce } from 'es-toolkit/compat';
@@ -10,22 +10,18 @@ import { createReplicaSlice, recordLens } from '@/libs/replica';
 import { documentService } from '@/services/document';
 import { pageActions } from '@/store/page';
 import type { StoreSetter } from '@/store/types';
-import { isSkillMarkdownDocument, parseSkillMarkdownFrontmatter } from '@/utils/skillMarkdown';
+import { parseSkillMarkdownFrontmatter } from '@/utils/skillMarkdown';
 import { setNamespace } from '@/utils/storeDebug';
 import { isTrpcErrorCode } from '@/utils/trpcError';
 
 import type { DocumentStore } from '../../store';
 import { useDocumentStore } from '../../store';
+import { resolveDocumentContentFormat } from '../editor/contentFormat';
 import type { DocumentContentFormat, DocumentSourceType } from '../editor/initialState';
 import type { DocumentDetail } from './projection';
 import { documentDetailResource } from './projection';
 
 const n = setNamespace('document/document');
-
-const resolveContentFormat = (document: DocumentItem): DocumentContentFormat => {
-  if (document.fileType === HTML_DOCUMENT_FILE_TYPE) return 'html';
-  return isSkillMarkdownDocument(document) ? 'skillMarkdown' : 'markdown';
-};
 
 /**
  * Parameters for initializing a document with editor
@@ -409,7 +405,7 @@ export class DocumentActionImpl {
     this.#get().initDocumentWithEditor({
       autoSave,
       content: document.content,
-      contentFormat: resolveContentFormat(document),
+      contentFormat: resolveDocumentContentFormat(document),
       documentId,
       editor,
       editorData: document.editorData,

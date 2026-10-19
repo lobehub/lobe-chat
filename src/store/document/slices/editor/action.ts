@@ -15,6 +15,8 @@ import { setNamespace } from '@/utils/storeDebug';
 
 import type { DocumentStore } from '../../store';
 import { documentDetailResource } from '../document/projection';
+import type { DocumentFormatFields } from './contentFormat';
+import { hasDocumentFormatFields, resolveDocumentContentFormat } from './contentFormat';
 import type { DocumentDispatch } from './reducer';
 import { documentReducer } from './reducer';
 
@@ -35,7 +37,7 @@ export interface SaveExecutionOptions {
   saveSource?: 'autosave' | 'manual' | 'restore' | 'system' | 'llm_call';
 }
 
-export interface RemoteDocumentRow {
+export interface RemoteDocumentRow extends DocumentFormatFields {
   content?: string | null;
   editorData?: unknown;
   updatedAt: Date | string;
@@ -211,10 +213,27 @@ export class EditorActionImpl {
     const sameBody =
       content === (doc.lastSavedContent ?? '') &&
       isEqual(editorData, doc.lastSavedEditorData ?? null);
+    // A remote write can change the type alone (`lh doc edit --file-type`): the
+    // HTML guards and the SKILL.md frontmatter split must follow the new type.
+    const contentFormat = hasDocumentFormatFields(row)
+      ? resolveDocumentContentFormat(row)
+      : doc.contentFormat;
+    const formatChanged = contentFormat !== doc.contentFormat;
+    const skillFrontmatter =
+      contentFormat === 'skillMarkdown'
+        ? parseSkillMarkdownFrontmatter(content).frontmatter
+        : undefined;
 
     if (sameBody) {
       internal_dispatchDocument(
-        { id: documentId, type: 'updateDocument', value: { lastUpdatedTime: updatedAt } },
+        {
+          id: documentId,
+          type: 'updateDocument',
+          value: {
+            lastUpdatedTime: updatedAt,
+            ...(formatChanged ? { contentFormat, skillFrontmatter } : {}),
+          },
+        },
         n('reconcileRemote/rebased'),
       );
       return 'rebased';
@@ -227,10 +246,9 @@ export class EditorActionImpl {
         type: 'updateDocument',
         value: {
           content,
+          contentFormat,
           editorData,
-          ...(doc.contentFormat === 'skillMarkdown'
-            ? { skillFrontmatter: parseSkillMarkdownFrontmatter(content).frontmatter }
-            : {}),
+          ...(contentFormat === 'skillMarkdown' || formatChanged ? { skillFrontmatter } : {}),
           isDirty: false,
           lastSavedContent: content,
           lastSavedEditorData: editorData,

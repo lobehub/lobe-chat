@@ -90,4 +90,60 @@ describe('HTML page persistence', () => {
     expect(request).not.toHaveProperty('content');
     expect(request).not.toHaveProperty('editorData');
   });
+
+  it('re-derives the format when a remote write turns an open Markdown page into HTML', async () => {
+    const { editor } = makeUnmountedEditor();
+    useDocumentStore.getState().initDocumentWithEditor({
+      autoSave: true,
+      content: HTML,
+      contentFormat: 'markdown',
+      documentId: 'page-1',
+      editor,
+      editorData: null,
+      sourceType: 'page',
+      updatedAt: new Date('2026-10-19T00:00:00Z'),
+    });
+
+    // Same body, only the type changed (`lh doc edit --file-type custom/html`).
+    useDocumentStore.getState().reconcileRemote('page-1', {
+      content: HTML,
+      editorData: null,
+      fileType: 'custom/html',
+      updatedAt: new Date('2026-10-19T00:00:05Z'),
+    });
+    expect(useDocumentStore.getState().documents['page-1'].contentFormat).toBe('html');
+
+    await useDocumentStore.getState().commitEditorMutation('page-1', { saveSource: 'llm_call' });
+    expect(documentService.updateDocument).not.toHaveBeenCalled();
+  });
+
+  it('re-derives the format when a remote write turns an HTML page back into Markdown', () => {
+    const { editor } = makeUnmountedEditor();
+    seedHtmlPage(editor);
+
+    useDocumentStore.getState().reconcileRemote('page-1', {
+      content: '# Notes',
+      editorData: null,
+      fileType: 'custom/document',
+      updatedAt: new Date('2026-10-19T00:00:05Z'),
+    });
+
+    expect(useDocumentStore.getState().documents['page-1']).toMatchObject({
+      content: '# Notes',
+      contentFormat: 'markdown',
+    });
+  });
+
+  it('keeps the format when the remote row carries no type fields', () => {
+    const { editor } = makeUnmountedEditor();
+    seedHtmlPage(editor);
+
+    useDocumentStore.getState().reconcileRemote('page-1', {
+      content: HTML,
+      editorData: null,
+      updatedAt: new Date('2026-10-19T00:00:05Z'),
+    });
+
+    expect(useDocumentStore.getState().documents['page-1'].contentFormat).toBe('html');
+  });
 });
