@@ -312,6 +312,7 @@ export default {
   'builtinCopilot': 'Built-in Copilot',
   'chatList.earlierHistoryError': "Couldn't load earlier messages",
   'chatList.expandMessage': 'Expand Message',
+  'chatList.laterHistoryError': "Couldn't load later messages",
   'chatList.longMessageDetail': 'View Details',
   'chatList.refreshError': "Couldn't refresh messages",
   'chatList.refreshing': 'Fetching latest messages…',
