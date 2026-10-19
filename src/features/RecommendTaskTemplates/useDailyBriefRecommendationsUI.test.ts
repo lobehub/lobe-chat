@@ -784,4 +784,47 @@ describe('useDailyBriefRecommendationsUI', () => {
 
     expect(result.current).toMatchObject({ mode: 'cards', templates: [other] });
   });
+
+  // Regression: a dismiss / create on the retained batch during a refresh only
+  // touched the old entry, so the refreshing entry brought the card back when
+  // its response included the same template.
+  it.each(['dismiss', 'create'] as const)(
+    'carries a %s on the retained batch into the refreshing entry',
+    async (action) => {
+      const other = { ...template, id: 102, title: 'Other' };
+      vi.mocked(taskTemplateService.dismiss).mockResolvedValue(undefined as any);
+      const { rerender, result } = renderHook(() => useDailyBriefRecommendationsUI(), {
+        wrapper,
+      });
+      await waitFor(() => expect(result.current).toMatchObject({ mode: 'cards' }));
+
+      let resolveRefresh!: (value: unknown) => void;
+      vi.mocked(taskTemplateService.listDailyRecommend).mockImplementation(
+        () => new Promise((resolve) => (resolveRefresh = resolve)) as any,
+      );
+      mockRefreshSeed.value = 'next-seed';
+      rerender();
+      await waitFor(() => expect(taskTemplateService.listDailyRecommend).toHaveBeenCalledTimes(2));
+      if (result.current.mode !== 'cards') throw new Error('expected retained cards');
+
+      const { onCreated, onDismiss } = result.current;
+      await act(async () => {
+        if (action === 'dismiss') await onDismiss(template.id);
+        else onCreated(template.id);
+      });
+
+      await act(async () => {
+        resolveRefresh({ data: [template, other], success: true });
+      });
+
+      await waitFor(() => expect(result.current).toMatchObject({ templates: [other] }));
+      await waitFor(async () => {
+        const row = await dailyRecommendResource.storage!.get({
+          queryKey: dailyRecommendResource.storageKey(params({ refreshSeed: 'next-seed' })),
+          scope,
+        });
+        expect(row?.data).toEqual([other]);
+      });
+    },
+  );
 });

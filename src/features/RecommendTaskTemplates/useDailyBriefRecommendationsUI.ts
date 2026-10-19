@@ -3,9 +3,10 @@ import { TASK_TEMPLATE_RECOMMEND_COUNT } from '@lobechat/const';
 import { createNanoId } from '@lobechat/utils';
 import { toast } from '@lobehub/ui';
 import { useSessionStorageState } from 'ahooks';
-import { useCallback, useEffect, useMemo, useRef } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { useSingleton } from '@/hooks/useSingleton';
 import { cacheScope } from '@/libs/replica';
 import { taskTemplateService } from '@/services/taskTemplate';
 import { useBriefStore } from '@/store/brief';
@@ -231,6 +232,37 @@ export function useDailyBriefRecommendationsUI(
     });
   }, []);
 
+  // Cards created / dismissed from the retained batch while a refresh is in
+  // flight: the refreshing entry may return them again, so the removal is
+  // carried to it (scope + key → template ids) and applied as it lands.
+  const carried = useSingleton(() => new Map<string, Set<number>>());
+  const carry = useCallback(
+    (target: string, templateId: number, add = true) => {
+      if (!key || target === key) return;
+      const id = `${scope}\u0000${key}`;
+      const ids = carried.get(id) ?? new Set<number>();
+      if (add) ids.add(templateId);
+      else ids.delete(templateId);
+      if (ids.size > 0) carried.set(id, ids);
+      else carried.delete(id);
+    },
+    [key, scope],
+  );
+  // Before paint, so a carried card never flashes back in.
+  useLayoutEffect(() => {
+    if (!key || !entry) return;
+    const id = `${scope}\u0000${key}`;
+    const ids = carried.get(id);
+    if (!ids) return;
+    carried.delete(id);
+    if (!entry.some((tmpl) => ids.has(tmpl?.id))) return;
+    dailyRecommendReplica.update(key, (current) =>
+      current
+        ? normalizeTaskTemplateRecommendations(current).filter((tmpl) => !ids.has(tmpl.id))
+        : current,
+    );
+  }, [entry, key, scope]);
+
   const handleRefresh = useCallback(() => {
     setRefreshSeed(nextRefreshSeed());
   }, [setRefreshSeed]);
@@ -239,13 +271,14 @@ export function useDailyBriefRecommendationsUI(
     (templateId: number) => {
       if (!shownKey) return;
       seedPeeked(shownKey);
+      carry(shownKey, templateId);
       dailyRecommendReplica.update(shownKey, (current) =>
         current
           ? normalizeTaskTemplateRecommendations(current).filter((tmpl) => tmpl.id !== templateId)
           : current,
       );
     },
-    [seedPeeked, shownKey],
+    [carry, seedPeeked, shownKey],
   );
 
   const handleDismiss = useCallback(
@@ -253,6 +286,7 @@ export function useDailyBriefRecommendationsUI(
       if (!shownKey) return;
       seedPeeked(shownKey);
       if (!useTaskTemplateRecommendationStore.getState().dailyRecommendMap[shownKey]) return;
+      carry(shownKey, templateId);
       try {
         // Rolls the card back if the server refuses.
         await dailyRecommendReplica.optimistic(
@@ -263,11 +297,12 @@ export function useDailyBriefRecommendationsUI(
           () => taskTemplateService.dismiss(templateId),
         );
       } catch (error) {
+        carry(shownKey, templateId, false);
         console.error('[taskTemplate:dismiss]', error);
         toast.error(t('taskTemplate.action.dismiss.error'));
       }
     },
-    [seedPeeked, shownKey, t],
+    [carry, seedPeeked, shownKey, t],
   );
 
   const templates = useMemo(() => normalizeTaskTemplateRecommendations(shown), [shown]);
