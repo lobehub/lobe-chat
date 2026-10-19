@@ -179,25 +179,30 @@ export class MeetingMinutesService {
           matchAssignee(hint, candidates, { recorder, speakerNames: labelNames }),
       });
 
-      // Items already turned into tasks survive a regeneration, so their links never break.
+      // Items already turned into tasks survive a regeneration, so their links never break,
+      // and a new suggestion citing the same passage as one of them is the same to-do again.
       const kept = (detail.minutes?.actionItems ?? []).filter((item) => item.status === 'created');
+      const takenSegments = new Set(kept.flatMap((item) => item.segmentIds));
+      const fresh = minutes.actionItems.filter(
+        (item) => !item.segmentIds.some((id) => takenSegments.has(id)),
+      );
       const result = await this.meetingModel.completeMinutes(meetingId, {
         ...minutes,
-        actionItems: [...kept, ...minutes.actionItems],
+        actionItems: [...kept, ...fresh],
         model: `${provider}/${model}`,
       });
       log(
         'minutes %s: %d action items in %dms',
         meetingId,
-        minutes.actionItems.length,
+        fresh.length,
         Date.now() - startedAt,
       );
 
       const preference = await new UserModel(this.db, this.userId).getUserPreference();
-      if (preference?.meeting?.autoCreateTasks && minutes.actionItems.length > 0) {
+      if (preference?.meeting?.autoCreateTasks && fresh.length > 0) {
         await this.createTasks(
           meetingId,
-          minutes.actionItems.map((item) => ({
+          fresh.map((item) => ({
             assignee: item.assignee,
             dueDate: item.dueDate,
             id: item.id,

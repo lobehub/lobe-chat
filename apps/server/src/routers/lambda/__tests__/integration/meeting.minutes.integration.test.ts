@@ -306,7 +306,11 @@ describe('meeting minutes integration', () => {
     expect(items.filter((item) => item.status === 'created').map((item) => item.id)).toEqual([
       release.id,
     ]);
-    expect(items.filter((item) => item.status === 'suggested')).toHaveLength(3);
+    // The regenerated release to-do cites the same passage as the created one: not suggested twice.
+    expect(items.filter((item) => item.status === 'suggested').map((item) => item.text)).toEqual([
+      '完成竞品调研并给出结论',
+      '整理会议录音',
+    ]);
   });
 
   it('keeps the transcript ready and records the failure when minutes generation fails', async () => {
