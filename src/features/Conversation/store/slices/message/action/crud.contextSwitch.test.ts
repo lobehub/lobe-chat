@@ -5,6 +5,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import * as messageServiceModule from '@/services/message';
 import { useChatStore } from '@/store/chat';
 import { getMessageTranscript } from '@/store/chat/slices/message/transcript';
+import { evictMessageCache } from '@/store/chat/utils/evictMessageCache';
 import { messageMapKey } from '@/store/chat/utils/messageMapKey';
 
 import { type ConversationContext } from '../../../../types';
@@ -156,5 +157,63 @@ describe('createMessage across a conversation switch', () => {
     const settled = useChatStore.getState().dbMessagesMap[oldBucketKey];
     expect(settled?.[0].id).toBe(tempId);
     expect(settled?.[0].error).toBeDefined();
+  });
+
+  it('does not restore a conversation evicted while a create was pending', async () => {
+    let resolveCreate!: (result: any) => void;
+    vi.spyOn(messageServiceModule.messageService, 'createMessage').mockReturnValue(
+      new Promise((resolve) => {
+        resolveCreate = resolve;
+      }),
+    );
+
+    const oldContext = {
+      agentId: 'test-session',
+      threadId: null,
+      topicId: 'topic-old',
+    };
+    const currentContext = {
+      agentId: 'test-session',
+      threadId: null,
+      topicId: 'topic-current',
+    };
+    const store = createTestStore(oldContext);
+
+    const createPromise = store.getState().createMessage({
+      content: 'old topic message',
+      role: 'user',
+    });
+    const oldBucketKey = messageMapKey(oldContext);
+    expect(useChatStore.getState().dbMessagesMap[oldBucketKey]).toBeDefined();
+
+    store.setState({
+      context: currentContext,
+      dbMessages: [],
+      displayMessages: [],
+      messageLoadingIds: [],
+      messagesInit: true,
+    });
+
+    await act(() => evictMessageCache((ctx) => ctx.topicId === 'topic-old'));
+    expect(useChatStore.getState().dbMessagesMap[oldBucketKey]).toBeUndefined();
+
+    await act(async () => {
+      resolveCreate({
+        id: 'msg-old',
+        messages: [
+          {
+            content: 'late old topic result',
+            createdAt: 1000,
+            id: 'msg-old',
+            role: 'user',
+            updatedAt: 1000,
+          },
+        ],
+      });
+      await createPromise;
+    });
+
+    // The late response must not recreate the deleted transcript.
+    expect(useChatStore.getState().dbMessagesMap[oldBucketKey]).toBeUndefined();
   });
 });

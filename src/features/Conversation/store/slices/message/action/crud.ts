@@ -18,6 +18,7 @@ import { type StateCreator } from 'zustand';
 
 import { messageService } from '@/services/message';
 import { useChatStore } from '@/store/chat';
+import { messageMapKey } from '@/store/chat/utils/messageMapKey';
 
 import { type Store as ConversationStore } from '../../../action';
 import { isSameConversationContext } from '../../../utils/contextGuard';
@@ -224,12 +225,20 @@ export const messageCRUDSlice: StateCreator<
       // switched conversations while the request was in flight: the chat
       // bucket for that context still holds the optimistic row.
       const stillCurrent = isSameConversationContext(context, get().context);
-      if (stillCurrent) {
-        replaceMessages(result.messages, { expectedContext: context });
-      } else if (transcriptSource === 'chat') {
-        // Don't route through the Conversation store here: it would sync the
-        // conversation now on screen from that other bucket.
-        useChatStore.getState().replaceMessages(result.messages, { context });
+      // The conversation may have been deleted while the create was pending.
+      // A late response must not recreate its transcript.
+      const targetExists =
+        transcriptSource !== 'chat' ||
+        !!useChatStore.getState().dbMessagesMap[messageMapKey(context)];
+
+      if (targetExists) {
+        if (stillCurrent) {
+          replaceMessages(result.messages, { expectedContext: context });
+        } else if (transcriptSource === 'chat') {
+          // Don't route through the Conversation store here: it would sync the
+          // conversation now on screen from that other bucket.
+          useChatStore.getState().replaceMessages(result.messages, { context });
+        }
       }
       internal_toggleMessageLoading(false, tempId);
 
