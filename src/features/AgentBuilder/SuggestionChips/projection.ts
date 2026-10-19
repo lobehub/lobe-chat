@@ -39,6 +39,9 @@ export const builderSuggestionKey = ({
  * batch on the first frame instead of paying a skeleton and an LLM generation
  * on every page load. Only titles, prompts and the tracing id are kept; one row
  * per edited target and locale, the least recently used evicted past the cap.
+ *
+ * The name deliberately matches no `CACHE_TIERS` pattern
+ * (`agentBuilder:suggestions`), so the batch is persisted by the replica only.
  */
 export const builderSuggestionResource = defineReplica<
   BuilderSuggestionParams,

@@ -69,13 +69,21 @@ const isTaskTemplateRecommendation = (value: unknown): value is TaskTemplate => 
 export const normalizeTaskTemplateRecommendations = (templates: unknown): TaskTemplate[] =>
   Array.isArray(templates) ? templates.filter(isTaskTemplateRecommendation) : [];
 
-const DAILY_RECOMMEND_VERSION = 1;
+/**
+ * Continues the persisted row shape the SWR key carried as
+ * `taskTemplate:listDailyRecommend:v2` (connectors + text fields). Bump it when
+ * the row shape changes incompatibly; older rows then never hydrate.
+ */
+const DAILY_RECOMMEND_VERSION = 2;
 
 /**
  * Home / empty-state task-template recommendations, one entry per refresh
  * seed + count + locale. localStorage so the home cards paint on the first
  * frame of a reload; every refresh mints a seed, so old rows are evicted past
- * the cap. Bump `version` when the persisted row shape changes incompatibly.
+ * the cap.
+ *
+ * The name deliberately matches no `CACHE_TIERS` pattern (`taskTemplate:`), so
+ * the replica's SWR sync key is never persisted a second time by the SWR tier.
  */
 export const dailyRecommendResource = defineReplica<DailyRecommendParams, TaskTemplate[]>({
   key: dailyRecommendKey,
