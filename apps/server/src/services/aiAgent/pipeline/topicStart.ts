@@ -12,6 +12,8 @@ import {
   type SupersedeKind,
   type SupersedeRecord,
 } from '@/server/services/agentRuntime/foregroundOperation';
+import { redisService } from '@/server/services/redis';
+import type { SteerQueueScope } from '@/server/services/redis/steerQueue';
 
 import { acquireTopicStartReservation, TopicStartReservationError } from '../topicStartReservation';
 import type { InternalExecAgentParams } from '../types';
@@ -21,6 +23,8 @@ const log = debug('lobe-server:ai-agent-service');
 export interface TopicStartDeps {
   agentOperationModel: AgentOperationModel;
   agentRuntimeService: AgentRuntimeService;
+  /** The caller's live top-level runs on one surface (see `steerQueue/liveRuns`). */
+  findOwnLiveRuns?: (scope: SteerQueueScope) => Promise<string[]>;
   interruptTask: (params: {
     operationId?: string;
     topicId?: string;
@@ -157,6 +161,52 @@ export const recordSupersede = async (
   }
 };
 
+/** How long a start waits for another start on the same thread to finish. */
+const THREAD_START_WAIT_MS = 3000;
+
+/**
+ * Start a run on an existing thread inside the thread's start fence.
+ *
+ * A server-started queued follow-up (`steer`, not interactive) must hold the
+ * fence and finds no other live run of the user's on the thread, as one step —
+ * otherwise it fails and its follow-ups go back to the queue, instead of
+ * starting next to a run the user just sent. A person at the composer only
+ * waits briefly for the fence and is never refused.
+ */
+const startOnThread = async (
+  deps: TopicStartDeps,
+  params: InternalExecAgentParams,
+  surface: { threadId: string; topicId: string },
+  run: (params: InternalExecAgentParams) => Promise<ExecAgentResult>,
+): Promise<ExecAgentResult> => {
+  const queuedSuccessor = !!params.steer && !params.interactiveStart;
+  const owner = `thread-start-${nanoid()}`;
+  const fence = await redisService.threadStartFence.acquire(
+    surface.threadId,
+    owner,
+    THREAD_START_WAIT_MS,
+  );
+
+  try {
+    if (queuedSuccessor) {
+      if (fence !== 'held') {
+        throw new TopicStartReservationError(
+          `Thread ${surface.threadId} is busy starting another run`,
+        );
+      }
+      const live = (await deps.findOwnLiveRuns?.({ ...surface, userId: deps.userId })) ?? [];
+      if (live.length > 0) {
+        throw new TopicStartReservationError(
+          `Thread ${surface.threadId} already has a live run (${live[0]})`,
+        );
+      }
+    }
+    return await run(params);
+  } finally {
+    if (fence === 'held') await redisService.threadStartFence.release(surface.threadId, owner);
+  }
+};
+
 /**
  * Claim the topic for a new run, then start it through `run`.
  *
@@ -197,8 +247,9 @@ export const runWithTopicStart = async (
   // advance the topic's main spine. They may start while their parent
   // operation owns `runningOperation` (for example callAgent/callSubAgent),
   // so making them wait for the topic-start claim deadlocks the child start.
-  if (!topicId || (params.appContext?.threadId && !isInterventionThreadStart)) {
-    return run(params);
+  if (!topicId) return run(params);
+  if (params.appContext?.threadId && !isInterventionThreadStart) {
+    return startOnThread(deps, params, { threadId: params.appContext.threadId, topicId }, run);
   }
 
   const replacesOperationId = isInterventionThreadStart

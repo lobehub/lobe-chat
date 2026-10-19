@@ -3,7 +3,9 @@ import { act, renderHook, waitFor } from '@testing-library/react';
 import useSWR from 'swr';
 import { describe, expect, it, vi } from 'vitest';
 
+import { documentService } from '@/services/document';
 import { documentDetailResource } from '@/store/document/slices/document/projection';
+import { fileDocumentResource } from '@/store/file/slices/document/projection';
 
 import { invalidateDocumentMutation } from './invalidation';
 
@@ -39,5 +41,42 @@ describe('invalidateDocumentMutation', () => {
 
     expect(result.current.document.data).toEqual(row);
     expect(otherFetcher).toHaveBeenCalledTimes(otherCalls);
+  });
+  it('refreshes saved resource metadata without rewriting it or rehydrating a dirty editor', async () => {
+    const id = 'metadata-only-document';
+    const mutation = vi.spyOn(documentService, 'updateDocument');
+    let row = { title: 'Before' };
+    const fileFetcher = vi.fn(async () => row);
+    const editorFetcher = vi.fn(async () => ({ content: 'Saved body' }));
+    const { result } = renderHook(() => ({
+      document: useSWR(
+        replicaKeys.sync(
+          fileDocumentResource.name,
+          fileDocumentResource.version,
+          fileDocumentResource.scope.get(),
+          id,
+          id,
+        ),
+        fileFetcher,
+      ),
+      editor: useSWR(documentDetailSyncKey(id), editorFetcher),
+    }));
+    await waitFor(() => expect(result.current.document.data?.title).toBe('Before'));
+    await waitFor(() => expect(result.current.editor.data?.content).toBe('Saved body'));
+    const editorCalls = editorFetcher.mock.calls.length;
+    row = { title: 'Already saved' };
+
+    await act(async () => {
+      await invalidateDocumentMutation({
+        documentId: id,
+        refreshDocumentEditor: false,
+        refreshResources: true,
+      });
+    });
+
+    expect(result.current.document.data?.title).toBe('Already saved');
+    expect(editorFetcher).toHaveBeenCalledTimes(editorCalls);
+    expect(mutation).not.toHaveBeenCalled();
+    mutation.mockRestore();
   });
 });

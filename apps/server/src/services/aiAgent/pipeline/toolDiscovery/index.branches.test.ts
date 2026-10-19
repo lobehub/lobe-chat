@@ -25,6 +25,9 @@ import { discoverTools } from '.';
 vi.mock('@/business/client/model-bank/loadModels', () => ({
   loadModels: vi.fn().mockResolvedValue([]),
 }));
+vi.mock('@/server/services/agentSignal/featureGate', () => ({
+  isAgentSignalEnabledForUser: vi.fn().mockResolvedValue(true),
+}));
 vi.mock('@/database/models/aiModel', () => ({
   AiModelModel: class {
     findByIdAndProvider = vi.fn().mockResolvedValue(undefined);
@@ -194,7 +197,8 @@ describe('discoverTools — disabled tools and client function tools', () => {
     const result = await run({ input: { disableTools: true, functionTools } }).promise;
 
     expect(result.toolsEngine).toBeUndefined();
-    expect(result.tools).toBeUndefined();
+    expect(result.tools).toHaveLength(1);
+    expect(result.tools?.[0].function.name).toBe('lobe-client-fn____getWeather');
     expect(createServerAgentToolsEngine).not.toHaveBeenCalled();
     expect(result.toolsResult.enabledToolIds).toEqual(['lobe-client-fn']);
     expect(result.toolSourceMap['lobe-client-fn']).toBe('client');
@@ -221,6 +225,20 @@ describe('discoverTools — disabled tools and client function tools', () => {
       type: 'function',
     });
     expect(result.toolsResult.enabledToolIds.at(-1)).toBe('lobe-client-fn');
+  });
+
+  it('keeps an exclusive function-only surface despite media and self-feedback injection', async () => {
+    const result = await run({
+      agentConfig: { plugins: ['lobe-agent'] },
+      input: { exclusivePluginIds: [], externalFileTypes: ['image/png'], functionTools },
+    }).promise;
+
+    expect(result.agentPlugins).toEqual([]);
+    expect(result.toolsResult.enabledToolIds).toEqual(['lobe-client-fn']);
+    expect(Object.keys(result.toolManifestMap)).toEqual(['lobe-client-fn']);
+    expect(result.tools?.map((tool) => tool.function.name)).toEqual([
+      'lobe-client-fn____getWeather',
+    ]);
   });
 });
 

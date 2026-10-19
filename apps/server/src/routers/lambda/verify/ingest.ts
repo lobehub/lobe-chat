@@ -2,6 +2,7 @@ import { normalizeEvidenceMetadata } from '@lobechat/const/verify';
 import type {
   VerifyCheckItem,
   VerifyCheckResultMetadata,
+  VerifyEvidenceCapturedBy,
   VerifyEvidenceType,
 } from '@lobechat/types';
 import { TRPCError } from '@trpc/server';
@@ -9,6 +10,7 @@ import pMap from 'p-map';
 import { z } from 'zod';
 
 import type { FileModel } from '@/database/models/file';
+import type { VerifyEvidenceModel } from '@/database/models/verifyEvidence';
 import type { VerifyRunModel } from '@/database/models/verifyRun';
 import { router } from '@/libs/trpc/lambda';
 import { evidenceTypeForStoredFile, resolveLiveRoundForItem } from '@/server/services/verify';
@@ -83,13 +85,41 @@ const resolveRunByOperation = async (ctx: { runModel: VerifyRunModel }, operatio
   return run;
 };
 
-/** Store a file-backed artifact under the medium of the file itself, not the caller's label. */
-const storedEvidenceType = async (
-  ctx: { fileModel: FileModel },
-  type: VerifyEvidenceType,
-  fileId?: string | null,
-): Promise<VerifyEvidenceType> =>
-  fileId ? evidenceTypeForStoredFile(type, await ctx.fileModel.findById(fileId)) : type;
+interface VerifyEvidenceRowInput {
+  capturedBy?: VerifyEvidenceCapturedBy | null;
+  content?: string | null;
+  description?: string | null;
+  fileId?: string | null;
+  metadata?: unknown;
+  type: VerifyEvidenceType;
+}
+
+/**
+ * Store one evidence artifact on a check result — the single write path behind
+ * `uploadEvidence` and `submitCheckEvidence`. A file-backed artifact is stored
+ * under the medium of the file itself, not the caller's label, and its metadata
+ * (a video's chapters, a comparison pair) is normalized for that medium.
+ */
+const createVerifyEvidenceRow = async (
+  ctx: { evidenceModel: VerifyEvidenceModel; fileModel: FileModel },
+  checkResultId: string,
+  input: VerifyEvidenceRowInput,
+) => {
+  const type = input.fileId
+    ? evidenceTypeForStoredFile(input.type, await ctx.fileModel.findById(input.fileId))
+    : input.type;
+
+  return ctx.evidenceModel.create({
+    capturedAt: new Date(),
+    capturedBy: input.capturedBy ?? null,
+    checkResultId,
+    content: input.content ?? null,
+    description: input.description ?? null,
+    fileId: input.fileId ?? null,
+    metadata: normalizeEvidenceMetadata(input.metadata, type) ?? null,
+    type,
+  });
+};
 
 // A submitted result carries a runtime-sized evidence list; cap the per-entry
 // file lookup + insert.
@@ -169,18 +199,8 @@ export const ingestRouter = router({
       // Attaching evidence mutates another member's result — creator-scoped,
       // mirroring submitCheckEvidence.
       assertWorkspaceRowManageable(ctx, result.userId, 'verify result');
-      const type = await storedEvidenceType(ctx, input.type, input.fileId);
 
-      return ctx.evidenceModel.create({
-        capturedAt: new Date(),
-        capturedBy: input.capturedBy ?? null,
-        checkResultId: result.id,
-        content: input.content ?? null,
-        description: input.description ?? null,
-        fileId: input.fileId ?? null,
-        metadata: normalizeEvidenceMetadata(input.metadata, type) ?? null,
-        type,
-      });
+      return createVerifyEvidenceRow(ctx, result.id, input);
     }),
   /**
    * Builder self-evidence contract: submit a check item's verdict AND its
@@ -205,6 +225,7 @@ export const ingestRouter = router({
                   content: z.string().min(1).optional(),
                   description: z.string().optional(),
                   fileId: z.string().min(1).optional(),
+                  metadata: z.unknown().optional(), // as on uploadEvidence: a video's chapters
                   type: evidenceTypeSchema,
                 })
                 .refine((e) => Boolean(e.content) !== Boolean(e.fileId), {
@@ -278,16 +299,7 @@ export const ingestRouter = router({
       const evidence = input.evidence?.length
         ? await pMap(
             input.evidence,
-            async (e) =>
-              ctx.evidenceModel.create({
-                capturedAt: new Date(),
-                capturedBy: e.capturedBy ?? null,
-                checkResultId: checkResult.id,
-                content: e.content ?? null,
-                description: e.description ?? null,
-                fileId: e.fileId ?? null,
-                type: await storedEvidenceType(ctx, e.type, e.fileId),
-              }),
+            (e) => createVerifyEvidenceRow(ctx, checkResult.id, e),
             { concurrency: EVIDENCE_WRITE_CONCURRENCY },
           )
         : [];

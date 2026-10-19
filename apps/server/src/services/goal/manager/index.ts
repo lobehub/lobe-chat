@@ -24,6 +24,7 @@ import { readDeviceDispatchRoute } from '@/server/services/aiAgent/helpers/heter
 import { TopicStartReservationError } from '@/server/services/aiAgent/topicStartReservation';
 import { deviceGateway } from '@/server/services/deviceGateway';
 
+import { goalModelOverride } from '../modelConfig';
 import { countUnchargedRuns, DEFAULT_MANAGER_MAX_TURNS } from '../recoveryPolicy';
 import { scheduleGoalAdvance } from '../scheduler';
 import { recoveryEligibility } from '../supervisor/policy';
@@ -592,6 +593,8 @@ export class GoalManagerService {
       });
       return {
         ...next,
+        // Read under the lock, so a model picked just before this turn applies to it.
+        modelOverride: goalModelOverride(fresh.config),
         earlierFeedback: listed.filter((n) => !isNew(n)).map(note),
         newFeedback: listed.filter(isNew).map(note),
         omittedFeedback: {
@@ -614,6 +617,7 @@ export class GoalManagerService {
         clientIds: { userMessageId: `msg_goal_manager_${claimed.token}` },
         autoStart: true,
         maxSteps: 80,
+        ...claimed.modelOverride,
         userInterventionConfig: { approvalMode: 'headless' },
         prompt: buildGoalManagerPrompt({
           goalId: goal.id,

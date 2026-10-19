@@ -199,6 +199,7 @@
   "acceptance.gate.leadProbes": "{{count}} آزمایش انجام شده است. پس از شروع، {{remaining}} واحد باقی‌مانده این برنامه را به صورت دسته‌ای دنبال می‌کنند.",
   "acceptance.gate.leadRework": "بازنگری شده: {{codes}}.",
   "acceptance.gate.nextWaveTitle": "موج {{wave}}",
+  "acceptance.gate.planFiles": "{{count}} فایل",
   "acceptance.gate.planTitle": "برنامه اجرا",
   "acceptance.gate.releaseWave": "تأیید و انتشار موج {{wave}} ({{count}})",
   "acceptance.gate.remaining": "{{count}} مورد دیگر پس از آن، هر موج توسط عامل اصلی بررسی می‌شود. حدود {{estimate}} توکن در کل، بر اساس آزمایش‌ها تخمین زده شده است.",

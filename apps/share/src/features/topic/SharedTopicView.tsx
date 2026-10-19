@@ -12,10 +12,16 @@ import { lambdaClient } from '@/libs/trpc/client';
 import { loadRouteWithBuiltinToolSurfaces } from '@/spa/initialize/toolSurfaces';
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
+import { type SharedTopicData } from '@/types/topic';
 
 import { clientOnly } from '../../shell/clientOnly';
 import ShareLayout from '../../shell/ShareLayout';
 import ExplainTopic from './ExplainTopic';
+import {
+  primeSharedTopicMessages,
+  type SharedTopicFirstPage,
+  type SharedTopicReadMode,
+} from './sharedConversation';
 import TopicAvatar from './TopicAvatar';
 import { buildTopicByline } from './topicByline';
 
@@ -24,7 +30,21 @@ const SharedTopicBody = clientOnly(() =>
 );
 const SharedTopicAside = clientOnly(() => import('./SharedTopicAside.client'));
 
-const SharedTopicView = memo(() => {
+/**
+ * Everything the conversation needs before it can paint: its chunk and the
+ * messages the document carries. The route calls this as the hydrated router
+ * initializes, ahead of the body's own mount.
+ */
+export const preloadSharedTopic = (topic: SharedTopicData, firstPage: SharedTopicFirstPage) => {
+  SharedTopicBody.preload();
+  primeSharedTopicMessages(topic, firstPage);
+};
+
+interface SharedTopicViewProps {
+  messageReadMode: SharedTopicReadMode;
+}
+
+const SharedTopicView = memo<SharedTopicViewProps>(({ messageReadMode }) => {
   const wideScreen = useGlobalStore(systemStatusSelectors.wideScreen);
   const { id } = useParams<{ id: string }>();
 
@@ -63,7 +83,9 @@ const SharedTopicView = memo(() => {
       loading={isLoading && !data}
       title={data?.title}
     >
-      {id && data ? <SharedTopicBody fallback={hero} shareId={id} /> : null}
+      {id && data ? (
+        <SharedTopicBody fallback={hero} messageReadMode={messageReadMode} shareId={id} />
+      ) : null}
     </ShareLayout>
   );
 });

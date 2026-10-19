@@ -199,6 +199,7 @@
   "acceptance.gate.leadProbes": "{{count}} deney tamamlandı. Başlattığınızda, kalan {{remaining}} birimler bu planı gruplar halinde takip eder.",
   "acceptance.gate.leadRework": "Yeniden işlendi: {{codes}}.",
   "acceptance.gate.nextWaveTitle": "Dalga {{wave}}",
+  "acceptance.gate.planFiles": "{{count}} dosya",
   "acceptance.gate.planTitle": "Uygulama planı",
   "acceptance.gate.releaseWave": "Dalga {{wave}} ({{count}}) onayla ve serbest bırak",
   "acceptance.gate.remaining": "Bundan sonra {{count}} daha, her dalga ana Ajan tarafından incelenecek. Deneylerden tahmini olarak toplamda yaklaşık {{estimate}} token.",

@@ -28,7 +28,7 @@ describe('buildGoalManagerPrompt', () => {
     'keeps supervision language tied to the goal rather than the English control prompt: %s',
     (requirement) => {
       const prompt = buildGoalManagerPrompt({ ...base, requirement });
-      expect(GOAL_MANAGER_PROMPT_VERSION).toBe('v12');
+      expect(GOAL_MANAGER_PROMPT_VERSION).toBe('v14');
       expect(cdataOf(prompt, 'requirement')).toBe(requirement);
       expect(prompt).toContain('Use the language of the Goal requirement');
       expect(prompt).toContain(
@@ -53,6 +53,20 @@ describe('buildGoalManagerPrompt', () => {
     expect(prompt).toContain('Batch release:');
     expect(prompt).toContain('{"action":"release"');
     // The failure takeover's corrective-task guidance does not apply to a release.
+    expect(prompt).not.toContain('Takeover: without you this Goal stops on a person');
+  });
+
+  it('asks a distill turn to rewrite the plan from the settled probes', () => {
+    const prompt = buildGoalManagerPrompt({
+      ...base,
+      problem: 'The 2 probes of plan v1 settled. Rewrite the plan before the gate judges them.',
+      problemKind: 'rollout_distill',
+    });
+    expect(prompt).toContain('Plan distillation:');
+    expect(prompt).toContain('{"action":"revise_plan"');
+    // A probe that falls short of the distilled plan goes back instead of to the gate.
+    expect(prompt).toContain('"rerun":["node ids of the probes to run again"]');
+    expect(prompt).toContain('definition of done');
     expect(prompt).not.toContain('Takeover: without you this Goal stops on a person');
   });
 
@@ -152,7 +166,7 @@ describe('buildGoalManagerPrompt', () => {
     });
 
     expect(prompt.split('\n')[0]).toBe(
-      '<goalTurn goal="goal_1" maxTurns="12" trigger="settled" turn="3" version="v12">',
+      '<goalTurn goal="goal_1" maxTurns="12" trigger="settled" turn="3" version="v14">',
     );
     expect(prompt.endsWith('</goalTurn>')).toBe(true);
     // CommonMark ends an HTML block at a blank line; the client needs one block.

@@ -11,6 +11,8 @@ import type {
   GoalRolloutLearning,
   GoalRolloutPhase,
   GoalRolloutPlanSkill,
+  GoalRolloutRetro,
+  GoalRolloutVerifier,
 } from '@lobechat/types';
 import { experimentMembers } from '@lobechat/utils/goalGraph';
 
@@ -117,7 +119,11 @@ export interface BatchModel {
   phase?: GoalRolloutPhase;
   /** The execution plan as a skill in the user's library; round N is its version N. */
   planSkill?: GoalRolloutPlanSkill;
+  /** The retro after each execution: index 0 reads the probes, N reads roster wave N. */
+  retros: GoalRolloutRetro[];
   rounds: BatchRound[];
+  /** What every unit is judged on, once a retro produced it. */
+  verifier?: GoalRolloutVerifier;
   /**
    * The round (1-based revision) each wave belongs to. A released wave belongs
    * to the plan it went out under; the waves not yet released belong to the
@@ -414,6 +420,10 @@ export const buildBatchModel = (graph: GoalGraphView, batchId: string): BatchMod
     { key: 'no_open_decision' },
     { key: 'plan_written' },
     ...(policy?.spec?.variantAxes?.length ? [{ key: 'axes_covered' as const }] : []),
+    // A batch that runs retros opens its gate on them: re-verified, every intervention accounted.
+    ...(state?.retros?.length
+      ? [{ key: 'reverified' as const }, { key: 'interventions_accounted' as const }]
+      : []),
   ];
 
   return {
@@ -423,7 +433,9 @@ export const buildBatchModel = (graph: GoalGraphView, batchId: string): BatchMod
     learnings: state?.learnings ?? [],
     phase: state?.phase,
     planSkill: state?.planSkill,
+    retros: state?.retros ?? [],
     rounds,
+    verifier: state?.verifier,
     waveRounds,
     waves,
     waveSize,
@@ -557,3 +569,11 @@ export const findBatchPlan = (
   const round = model.rounds.find((item) => item.templateId === nodeId);
   return round ? { model, round } : undefined;
 };
+
+/**
+ * The retro a round starts from, drawn at the top of its frame: the cold
+ * start's for the first round, and for a later one the retro of the wave whose
+ * break opened it.
+ */
+export const roundRetro = (model: Pick<BatchModel, 'retros'>, revision: number) =>
+  model.retros.find((retro) => (revision === 1 ? retro.wave === 0 : retro.opens === revision));

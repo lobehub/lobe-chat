@@ -29,7 +29,7 @@ describe('createTRPCErrorLogger', () => {
     const onError = createTRPCErrorLogger('lambda');
     const error = new TRPCError({ code: 'UNAUTHORIZED' });
 
-    onError({ error, path: 'session.getSessions', type: 'query' });
+    onError({ error, path: 'session.getGroupedSessions', type: 'query' });
 
     expect(console.info).not.toHaveBeenCalled();
     expect(console.error).not.toHaveBeenCalled();

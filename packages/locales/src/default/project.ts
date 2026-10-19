@@ -2,7 +2,7 @@ export default {
   'directories.currentFolder': 'Current folder',
   'settings.reuseEnvironmentDescription':
     'Already created an environment? Select it to link its repository configuration to this project, then add a working directory for this project.',
-  'settings.startDirectoryConversation': 'New conversation here',
+  'settings.startDirectoryConversation': 'New topic here',
   'settings.configureDirectory': 'Add a working directory',
   'settings.reuseEnvironment': 'Add an existing environment to this project',
   'settings.addDirectoryFailed': 'Could not add working directory',
@@ -15,7 +15,7 @@ export default {
   'settings.generalDescription': 'Manage the project name, address, and description.',
   'settings.workLocations': 'Working directories',
   'settings.directoryDescription':
-    'Choose a folder and start a conversation. The Agent will work with files in that folder on the connected device.',
+    'Choose a folder and start a topic. The Agent will work with files in that folder on the connected device.',
   'settings.environmentDescription':
     'Keep repository sources together in an environment, then add a folder on your device to start working.',
   'settings.allEnvironments': 'All environments',
@@ -23,9 +23,9 @@ export default {
   'directories.noEnvironment': 'No environment linked',
   'directories.sourceSummary': 'Existing directory',
   'directories.keepFiles':
-    'Files stay on {{device}}. Linking only organizes the conversations in this directory.',
+    'Files stay on {{device}}. Linking only organizes the topics in this directory.',
   'directories.bindFailed': 'Could not link directory',
-  'topics.associateFailed': 'Could not add conversation to project',
+  'topics.associateFailed': 'Could not add topic to project',
   'topics.chooseLocation': 'Choose a working directory',
   'topics.addLocation': 'Add a working directory (optional)',
 
@@ -90,7 +90,7 @@ export default {
   'directories.boundTip':
     "This directory belongs to the project ({{path}}). Switch devices to use the project's directory on another device.",
   'directories.boundRoot':
-    'This conversation is bound to a project directory. Start a new conversation to use a different directory.',
+    'This topic is bound to a project directory. Start a new topic to use a different directory.',
   'directories.detectRepository': 'Detect GitHub repository',
   'directories.stagedNewTopic': 'A new topic will start in <project>{{name}}</project>',
   'directories.unavailable':
@@ -108,14 +108,14 @@ export default {
   'directories.repository': 'GitHub repository URL (optional)',
   'directories.repositoryHint':
     'This records the source repository. It does not clone or synchronize files. Do not include credentials.',
-  'directories.fileTopics': 'Also file these {{count}} conversations under this project and device',
+  'directories.fileTopics': 'Also file these {{count}} topics under this project and device',
   'directories.createProject': 'Create a project',
   'directories.empty': 'Link a device directory to start working with an Agent in this project.',
   'directories.start': 'Start work here',
   'directories.chooseAgent': 'Choose Agent',
-  'directories.conversations': 'Conversations',
-  'directories.noConversations': 'No conversations in this project yet.',
-  'directories.untitled': 'Untitled conversation',
+  'directories.conversations': 'Topics',
+  'directories.noConversations': 'No topics in this project yet.',
+  'directories.untitled': 'Untitled topic',
   'directories.openProject': 'Open project: {{name}}',
   'directories.startInProject': 'Start work in {{name}}',
   'directories.projectBinding': 'Project links',
@@ -184,7 +184,7 @@ export default {
   'list.emptyDescription': 'Create your first project to organize goals, tasks, and resources.',
   'list.deleteAction': 'Delete project',
   'list.deleteConfirmDescription':
-    'Delete “{{name}}”? Its project tasks, goals, conversations, and bindings will be permanently removed.',
+    'Delete “{{name}}”? Its project tasks, goals, topics, and bindings will be permanently removed.',
   'list.deleteConfirmTitle': 'Delete project?',
   'list.deleteError': 'Could not delete the project.',
   'list.deleteSuccess': '“{{name}}” deleted',
@@ -244,7 +244,7 @@ export default {
   'sidebar.agentsEmpty': 'No agents are connected yet',
   'sidebar.conversationsEmpty': 'No project topics yet',
   'sidebar.librariesEmpty': 'No libraries are connected yet',
-  'sidebar.newConversation': 'New conversation',
+  'sidebar.newConversation': 'New topic',
   'sidebar.title': 'Projects',
-  'sidebar.untitledConversation': 'Untitled conversation',
+  'sidebar.untitledConversation': 'Untitled topic',
 };

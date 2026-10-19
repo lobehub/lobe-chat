@@ -221,9 +221,8 @@ export const queryAgents = async (
  * virtual rows always excluded — so the count stays a faithful total for
  * paginated callers and for the assistants stats.
  * Used to report real totals (and pagination) when queryAgents is limited.
- * Accepts the same date filters as SessionModel.count so callers can compare
- * current vs. prior-period totals without falling back to the legacy
- * sessions table.
+ * Accepts date filters so callers can compare current vs. prior-period totals
+ * directly from the agents table.
  */
 export const countAgents = async (
   ctx: AgentModelContext,

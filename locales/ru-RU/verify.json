@@ -199,6 +199,7 @@
   "acceptance.gate.leadProbes": "{{count}} экспериментов завершено. Как только вы начнете, оставшиеся {{remaining}} единицы следуют этому плану партиями.",
   "acceptance.gate.leadRework": "Переработано: {{codes}}.",
   "acceptance.gate.nextWaveTitle": "Волна {{wave}}",
+  "acceptance.gate.planFiles": "{{count}} файлов",
   "acceptance.gate.planTitle": "План выполнения",
   "acceptance.gate.releaseWave": "Утвердить и выпустить волну {{wave}} ({{count}})",
   "acceptance.gate.remaining": "{{count}} еще после этого, каждая волна проверяется главным агентом. Около {{estimate}} токенов всего, по оценке экспериментов.",

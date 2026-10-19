@@ -16,6 +16,7 @@ import { toast } from '@lobehub/ui';
 import { t } from 'i18next';
 import { type StateCreator } from 'zustand';
 
+import { getActiveWorkspaceId } from '@/business/client/hooks/useActiveWorkspaceId';
 import { MESSAGE_CANCEL_FLAT } from '@/const/index';
 import { saveDraft } from '@/features/ChatInput/draftStorage';
 import { isHeterogeneousAgentStatusGuideError } from '@/features/Conversation/Error/heterogeneous';
@@ -263,9 +264,8 @@ export const runHeterogeneousFromExistingMessage = async (
     parentOperationId: string;
     prompt: string;
     /**
-     * Replay the topic's on-disk CLI transcript into this row instead of
-     * spawning the CLI (desktop restart recovery). The saved session id must
-     * resolve, or there is nothing to read.
+     * Replay the topic's on-disk CLI transcript into this row instead of spawning the CLI
+     * (desktop restart recovery). The saved session id must resolve, or there is nothing to read.
      */
     replayTranscript?: boolean;
     /** Claude profile root the interrupted run's transcript was written under. */
@@ -274,6 +274,7 @@ export const runHeterogeneousFromExistingMessage = async (
     replayTranscriptStartedAt?: string;
     /** Topic row when the caller already holds it (not necessarily in the paginated store). */
     topic?: ChatTopic;
+    workspaceId?: string | null; // where the caller's flow started; omitted = read now
   },
 ): Promise<{
   assistantMessageId: string;
@@ -296,7 +297,7 @@ export const runHeterogeneousFromExistingMessage = async (
   } = params;
   const agentId = context.agentId;
   if (!agentId) throw new Error('agentId is required for heterogeneous agent');
-
+  const workspaceId = 'workspaceId' in params ? params.workspaceId : getActiveWorkspaceId();
   await ensureEffectiveAgencyAccess(agentId);
   const { cwdChanged, reason, resumeBindingKey, resumeSessionId, workingDirectory } =
     resolveHeteroRunContext(chatStore, context, agentId, topicOverride);
@@ -329,12 +330,10 @@ export const runHeterogeneousFromExistingMessage = async (
     topicId: context.topicId ?? undefined,
   });
 
-  // Pull the new row into the store so the loading bubble is visible while
-  // the executor runs (the executor only dispatches updates, not creates).
-  // Scoped to THIS context: restart recovery runs this for a topic the user
-  // may not be looking at, and an unscoped refresh would hit the active topic
-  // instead — leaving the new row out of the store, so every step the executor
-  // chains under it renders as an orphan group.
+  // Pull the new row into the store so the loading bubble shows while the executor
+  // runs (it only dispatches updates, not creates). Scoped to THIS context: restart
+  // recovery runs this for a topic the user may not be looking at, and an unscoped
+  // refresh would leave the new row out, orphaning every step chained under it.
   await chatStore.refreshMessages(context);
 
   const { operationId: heteroOpId } = chatStore.startOperation({
@@ -365,6 +364,7 @@ export const runHeterogeneousFromExistingMessage = async (
     resumeBindingKey,
     resumeSessionId,
     workingDirectory,
+    workspaceId,
   });
 
   return {

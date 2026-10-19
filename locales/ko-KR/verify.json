@@ -199,6 +199,7 @@
   "acceptance.gate.leadProbes": "{{count}}개의 실험이 완료되었습니다. 시작하면 나머지 {{remaining}}개의 단위가 이 계획에 따라 배치로 실행됩니다.",
   "acceptance.gate.leadRework": "재작업됨: {{codes}}.",
   "acceptance.gate.nextWaveTitle": "웨이브 {{wave}}",
+  "acceptance.gate.planFiles": "{{count}} 파일",
   "acceptance.gate.planTitle": "실행 계획",
   "acceptance.gate.releaseWave": "웨이브 {{wave}} ({{count}}) 승인 및 릴리스",
   "acceptance.gate.remaining": "그 후 {{count}}개 더 있으며, 각 웨이브는 주요 에이전트가 검토합니다. 실험에서 추정된 총 약 {{estimate}} 토큰.",

@@ -27,6 +27,7 @@ import {
   registerGoalMetricCommands,
 } from './metric';
 import { goalReads, hasOperationToken } from './reads';
+import { registerGoalReportCommand } from './report';
 import { missingSeedDependencies, parseTaskFile } from './seedTasks';
 
 // Typed rather than inferred: an `as const` map is indexable by a widened
@@ -234,8 +235,8 @@ const admissionHint: Record<string, string> = {
     'this turn was handed a batch release; answer with release, or escalate without ask for the owner',
   release_unsolicited: 'release only answers a batch release handed to this turn',
   revise_turn_only:
-    'this turn was handed a plan the owner sent back; answer with revise_plan (the full revised recipe)',
-  revise_unsolicited: 'revise_plan only answers a plan the owner sent back to this turn',
+    'this turn was handed the batch plan to rewrite; answer with revise_plan (the full revised recipe)',
+  revise_unsolicited: 'revise_plan only answers a batch plan handed to this turn to rewrite',
   review_changed: 'task review feedback changed after this turn started',
   stale_input: 'the graph moved after this turn started, so the plan would apply to stale input',
   started_from_draft:
@@ -494,7 +495,7 @@ export function registerGoalCommand(program: Command) {
     )
     .requiredOption(
       '--file <path>',
-      'JSON plan: action tasks/wait/verify/retry/escalate/release/revise_plan, reason and action fields; a tasks plan may add "rollout" to run its units as a batch; release answers a batch release handed to this turn; revise_plan answers a plan the owner sent back, with "recipe" the full revised plan and optional "rerun" the experiment unit ids to run again on it (omitted: all)',
+      'JSON plan: action tasks/wait/verify/retry/escalate/release/revise_plan, reason and action fields; a tasks plan may add "rollout" to run its units as a batch; release answers a batch release handed to this turn; revise_plan answers a plan the owner sent back, with "recipe" the full revised plan and optional "rerun" the experiment unit ids to run again on it (omitted: all), and answers settled probes to distill with "recipe" and optional "rerun" the probe ids that fall short of it (omitted: none)',
     )
     .requiredOption('--token <token>', 'Current server-issued planning turn token')
     .option('--operation <id>', 'Defaults to LOBEHUB_OPERATION_ID')
@@ -539,39 +540,7 @@ export function registerGoalCommand(program: Command) {
       },
     );
 
-  goal
-    .command('report <id>')
-    .description("Submit this Goal's wrap-up report from its wrap-up run")
-    .requiredOption(
-      '--metadata-file <path>',
-      'JSON: headline, deliverableWorkId, chapters, mainline, nextSteps, graphCursor',
-    )
-    .requiredOption('--content-file <path>', 'The full written report in markdown')
-    .option('--operation <id>', 'Defaults to LOBEHUB_OPERATION_ID')
-    .option('--json', 'Output JSON')
-    .action(
-      async (
-        id: string,
-        options: { contentFile: string; json?: boolean; metadataFile: string; operation?: string },
-      ) => {
-        const operationId = options.operation ?? process.env.LOBEHUB_OPERATION_ID;
-        if (!operationId) throw new Error('Current wrap-up operation ID required');
-        const client = await getTrpcClient();
-        const endpoint = hasOperationToken()
-          ? client.goal.submitOperationReport
-          : client.goal.submitReport;
-        const result = await endpoint.mutate({
-          id,
-          operationId,
-          report: {
-            content: await readFile(options.contentFile, 'utf8'),
-            metadata: JSON.parse(await readFile(options.metadataFile, 'utf8')),
-          },
-        });
-        if (options.json) outputJson(result.data);
-        else console.log('Goal report recorded.');
-      },
-    );
+  registerGoalReportCommand(goal);
 
   goal
     .command('create <title>')
