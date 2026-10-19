@@ -40,7 +40,10 @@ const tool = (over: Record<string, unknown> = {}) => ({
 
 const makeCtx = (connectors: any[], tools: any[]) =>
   ({
-    connectorModel: { queryByIdentifiers: vi.fn().mockResolvedValue(connectors) },
+    connectorModel: {
+      queryByIdentifiers: vi.fn().mockResolvedValue(connectors),
+      resolveByIdentifiers: vi.fn().mockResolvedValue(connectors),
+    },
     connectorToolModel: { queryByConnector: vi.fn().mockResolvedValue(tools) },
   }) as any;
 
@@ -244,5 +247,45 @@ describe('readConnectorUiResourceById', () => {
       ),
     ).rejects.toHaveProperty('code', 'BAD_REQUEST');
     expect(mcpService.readUiResource).not.toHaveBeenCalled();
+  });
+
+  it('resolves the connector for the agent when one is given', async () => {
+    vi.mocked(mcpService.readUiResource).mockResolvedValue({ contents: [] } as any);
+    const ctx = makeCtx([connector], []);
+
+    await readConnectorUiResourceById(
+      { agentId: 'agt_1', identifier: 'my-conn', uri: 'ui://app' },
+      ctx,
+    );
+
+    expect(ctx.connectorModel.resolveByIdentifiers).toHaveBeenCalledWith(['my-conn'], 'agt_1');
+    expect(ctx.connectorModel.queryByIdentifiers).not.toHaveBeenCalled();
+  });
+
+  it('does not fetch a local-network connector from a cloud deployment', async () => {
+    (deviceGateway as any).isConfigured = true;
+
+    await expect(
+      readConnectorUiResourceById(
+        { identifier: 'my-conn', uri: 'ui://app' },
+        makeCtx([{ ...connector, mcpServerUrl: 'http://192.168.1.20:8080/mcp' }], []),
+      ),
+    ).rejects.toHaveProperty('code', 'BAD_REQUEST');
+    expect(mcpService.readUiResource).not.toHaveBeenCalled();
+  });
+});
+
+describe('callConnectorToolById agent resolution', () => {
+  it('resolves the connector for the agent when one is given', async () => {
+    vi.mocked(mcpService.callTool).mockResolvedValue({ success: true } as any);
+    const ctx = makeCtx([connector], [tool()]);
+
+    await callConnectorToolById(
+      { agentId: 'agt_1', identifier: 'my-conn', toolName: 'do_thing' },
+      ctx,
+    );
+
+    expect(ctx.connectorModel.resolveByIdentifiers).toHaveBeenCalledWith(['my-conn'], 'agt_1');
+    expect(ctx.connectorModel.queryByIdentifiers).not.toHaveBeenCalled();
   });
 });

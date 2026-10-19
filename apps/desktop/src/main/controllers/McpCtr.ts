@@ -105,12 +105,27 @@ interface GetStreamableMcpServerManifestInput {
   url: string;
 }
 
-export interface CallToolInput {
+export interface StdioCallToolInput {
   args: any;
   env: any;
+  http?: undefined;
   params: GetStdioMcpServerManifestInput;
   toolName: string;
 }
+
+/** A call to an HTTP endpoint only this machine can reach (localhost / LAN). */
+export interface HttpCallToolInput {
+  args: any;
+  http: {
+    auth?: { accessToken?: string; token?: string; type: 'none' | 'bearer' | 'oauth2' };
+    headers?: Record<string, string>;
+    name: string;
+    url: string;
+  };
+  toolName: string;
+}
+
+export type CallToolInput = StdioCallToolInput | HttpCallToolInput;
 
 export interface ReadUiResourceInput {
   env?: any;
@@ -605,6 +620,9 @@ export default class McpCtr extends ControllerModule {
   @IpcMethod()
   async callTool(payload: SuperJSONSerialized<CallToolInput>) {
     const input = deserializePayload<CallToolInput>(payload);
+    if (input.http) {
+      return serializePayload(await this.runHttpMcpTool(input.http, input.toolName, input.args));
+    }
     return serializePayload(await this.runStdioMcpTool(input));
   }
 
@@ -677,7 +695,7 @@ export default class McpCtr extends ControllerModule {
    * caller can shape its own error response.
    */
   async runStdioMcpTool(
-    input: CallToolInput,
+    input: StdioCallToolInput,
   ): Promise<{ content: string; state: unknown; success: boolean }> {
     return this.runMcpTool(
       {

@@ -765,6 +765,8 @@ export const connectorRouter = router({
   callTool: connectorWriteProcedure
     .input(
       z.object({
+        /** Resolve the identifier for this agent (agent-owned connector first). */
+        agentId: z.string().optional(),
         args: z.string().optional(),
         identifier: z.string().min(1),
         toolName: z.string().min(1),
@@ -789,7 +791,13 @@ export const connectorRouter = router({
    * Read the MCP Apps `ui://` resource a connector tool result renders with.
    */
   readUiResource: connectorProcedure
-    .input(z.object({ identifier: z.string().min(1), uri: z.string().startsWith('ui://') }))
+    .input(
+      z.object({
+        agentId: z.string().optional(),
+        identifier: z.string().min(1),
+        uri: z.string().startsWith('ui://'),
+      }),
+    )
     .query(async ({ input, ctx }) => {
       try {
         return await readConnectorUiResourceById(input, ctx);

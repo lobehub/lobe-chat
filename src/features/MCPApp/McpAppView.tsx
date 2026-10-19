@@ -1,10 +1,19 @@
 'use client';
 
 import { safeParseJSON } from '@lobechat/utils';
-import { createStaticStyles, cssVar, cx, Skeleton } from '@lobehub/ui';
+import {
+  Button,
+  createModal,
+  createStaticStyles,
+  cssVar,
+  cx,
+  Flexbox,
+  Skeleton,
+} from '@lobehub/ui';
 import { type AppBridge, buildAllowAttribute } from '@modelcontextprotocol/ext-apps/app-bridge';
 import { useLatest } from 'ahooks';
 import { memo, type ReactNode, useEffect, useMemo, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { useConversationStore } from '@/features/Conversation/store';
 import { useIsDark } from '@/hooks/useIsDark';
@@ -13,6 +22,7 @@ import { mcpAppKeys } from '@/libs/swr/keys';
 import { mcpService } from '@/services/mcp';
 
 import { buildHostContext, connectMcpAppBridge } from './bridge';
+import { getAppToolCallPolicy } from './toolCallPolicy';
 import { buildAppCsp, injectCsp, pickAppResource, toCallToolResult } from './utils';
 
 const DEFAULT_HEIGHT = 320;
@@ -46,6 +56,38 @@ export interface McpAppViewProps {
   toolCallId: string;
 }
 
+/** Resolves false on Cancel and on any other dismissal (Esc, mask, close). */
+const confirmAppToolCall = (texts: {
+  cancelText: string;
+  content: string;
+  okText: string;
+  title: string;
+}) =>
+  new Promise<boolean>((resolve) => {
+    let settled = false;
+    const settle = (allowed: boolean) => {
+      if (settled) return;
+      settled = true;
+      resolve(allowed);
+      modal.close();
+    };
+    const modal = createModal({
+      content: texts.content,
+      footer: (
+        <Flexbox horizontal gap={8} justify={'flex-end'}>
+          <Button onClick={() => settle(false)}>{texts.cancelText}</Button>
+          <Button type={'primary'} onClick={() => settle(true)}>
+            {texts.okText}
+          </Button>
+        </Flexbox>
+      ),
+      onOpenChange: (open) => {
+        if (!open) settle(false);
+      },
+      title: texts.title,
+    });
+  });
+
 /**
  * Renders an MCP Apps (SEP-1865) view: the `ui://` HTML a tool declares, in a
  * sandboxed iframe that talks to LobeHub over the MCP Apps postMessage protocol.
@@ -56,10 +98,12 @@ const McpAppView = memo<McpAppViewProps>(
     const [height, setHeight] = useState(DEFAULT_HEIGHT);
     const isDark = useIsDark();
     const sendMessage = useConversationStore((s) => s.sendMessage);
+    const agentId = useConversationStore((s) => s.context.agentId) || undefined;
+    const { t } = useTranslation('plugin');
 
     const { data, error, isLoading } = useClientDataSWR(
-      mcpAppKeys.resource(identifier, resourceUri),
-      () => mcpService.readMcpAppResource(identifier, resourceUri),
+      mcpAppKeys.resource(identifier, resourceUri, agentId),
+      () => mcpService.readMcpAppResource(identifier, resourceUri, agentId),
       { revalidateOnFocus: false, revalidateOnReconnect: false },
     );
 
@@ -71,7 +115,7 @@ const McpAppView = memo<McpAppViewProps>(
 
     // Everything the bridge reads after mount goes through a ref, so the
     // iframe session is created once per document instead of per render.
-    const latest = useLatest({ args, identifier, isDark, result, sendMessage });
+    const latest = useLatest({ agentId, args, identifier, isDark, result, sendMessage, t });
     const bridgeRef = useRef<AppBridge>(undefined);
 
     useEffect(() => {
@@ -79,20 +123,44 @@ const McpAppView = memo<McpAppViewProps>(
       if (!srcDoc || !target) return;
 
       const { bridge, dispose } = connectMcpAppBridge(target, {
-        // Views may only call tools on the server that rendered them.
-        callTool: async (name, toolArgs) =>
-          toCallToolResult(
+        // Views may only call tools on the server that rendered them, and
+        // under the same approval rules as the conversation.
+        callTool: async (name, toolArgs) => {
+          const { agentId: currentAgentId, identifier: currentIdentifier, t: tr } = latest.current;
+          const policy = getAppToolCallPolicy(currentIdentifier, name, currentAgentId);
+          const allowed =
+            policy === 'allow' ||
+            (policy === 'confirm' &&
+              (await confirmAppToolCall({
+                cancelText: tr('mcpApp.toolCall.confirm.cancel'),
+                content: tr('mcpApp.toolCall.confirm.content', {
+                  app: currentIdentifier,
+                  tool: name,
+                }),
+                okText: tr('mcpApp.toolCall.confirm.ok'),
+                title: tr('mcpApp.toolCall.confirm.title'),
+              })));
+
+          if (!allowed) {
+            return {
+              content: [{ text: tr('mcpApp.toolCall.rejected', { tool: name }), type: 'text' }],
+              isError: true,
+            };
+          }
+
+          return toCallToolResult(
             await mcpService.invokeMcpToolCall(
               {
                 apiName: name,
                 arguments: JSON.stringify(toolArgs),
                 id: `${toolCallId}:${name}`,
-                identifier: latest.current.identifier,
+                identifier: currentIdentifier,
                 type: 'mcp',
               },
-              {},
+              { agentId: currentAgentId },
             ),
-          ),
+          );
+        },
         hostContext: buildHostContext(latest.current.isDark),
         onSizeChange: (nextHeight) => setHeight(Math.min(nextHeight, MAX_HEIGHT)),
         sendMessage: (text) => latest.current.sendMessage({ message: text }),

@@ -867,6 +867,13 @@ export default {
   'list.item.local.title': 'Custom',
   'loading.content': 'Calling Skill…',
   'loading.plugin': 'Skill running…',
+  'mcpApp.toolCall.confirm.cancel': 'Deny',
+  'mcpApp.toolCall.confirm.content':
+    'The {{app}} view wants to run the tool "{{tool}}". This tool asks for approval before it runs.',
+  'mcpApp.toolCall.confirm.ok': 'Allow',
+  'mcpApp.toolCall.confirm.title': 'Allow this tool to run?',
+  'mcpApp.toolCall.rejected':
+    'The tool "{{tool}}" was not run: it is not available to this view or was not approved.',
   'mcpEmpty.deployment': 'No deployment options',
   'mcpEmpty.prompts': 'No prompts',
   'mcpEmpty.resources': 'No resources',

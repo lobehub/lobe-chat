@@ -106,6 +106,22 @@ describe('McpCtr MCP Apps', () => {
     expect(client.readResource).toHaveBeenCalledWith('ui://x');
   });
 
+  it('runs tool calls of local-network http servers over IPC', async () => {
+    const client = makeClient();
+    mcpClientMocks.mockReturnValue(client);
+
+    const result = await ctr.callTool(
+      serializeMcpIpcPayload({
+        args: { city: 'Paris' },
+        http: { name: 'local', url: 'http://127.0.0.1:3000/mcp' },
+        toolName: 'show_weather',
+      }) as any,
+    );
+
+    expect(client.callTool).toHaveBeenCalledWith('show_weather', { city: 'Paris' });
+    expect((deserializeMcpIpcPayload(result as any) as any).success).toBe(true);
+  });
+
   it('evicts a dead pooled session and retries the read on a fresh one', async () => {
     const dead = makeClient({
       readResource: vi.fn().mockRejectedValue(new Error('Not connected')),
