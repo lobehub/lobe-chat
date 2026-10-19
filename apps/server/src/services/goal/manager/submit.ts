@@ -282,8 +282,11 @@ export const submitPlan = async (
       await model.updateRolloutState(goalId, {
         ...rollout,
         pendingDistill: {
+          // What the probes produced that later units reuse ships with the plan.
+          ...(plan.files && { files: plan.files }),
           reason: plan.reason,
           recipe: plan.recipe,
+          ...(plan.removeFiles && { removedFiles: plan.removeFiles }),
           ...(plan.rerun?.length && { rerun: plan.rerun }),
         },
       });
