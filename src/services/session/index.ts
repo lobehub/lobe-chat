@@ -6,7 +6,6 @@ import { type MetaData } from '@/types/meta';
 import {
   type ChatSessionList,
   type LobeAgentSession,
-  type LobeSessions,
   type LobeSessionType,
   type SessionGroupItem,
   type UpdateSessionParams,
@@ -17,11 +16,6 @@ import {
  * Mobile still uses this, but should migrate to agentService.
  */
 export class SessionService {
-  hasSessions = async (): Promise<boolean> => {
-    const result = await this.countSessions();
-    return result === 0;
-  };
-
   /** @deprecated Use agentService.createAgent instead */
   createSession = async (
     type: LobeSessionType,
@@ -41,14 +35,6 @@ export class SessionService {
 
   getGroupedSessions = (): Promise<ChatSessionList> => {
     return lambdaClient.session.getGroupedSessions.query();
-  };
-
-  countSessions = async (params?: {
-    endDate?: string;
-    range?: [string, string];
-    startDate?: string;
-  }): Promise<number> => {
-    return lambdaClient.session.countSessions.query(params);
   };
 
   updateSession = (id: string, data: Partial<UpdateSessionParams>) => {
@@ -89,10 +75,6 @@ export class SessionService {
     signal?: AbortSignal,
   ) => {
     return lambdaClient.session.updateSessionChatConfig.mutate({ id, value }, { signal });
-  };
-
-  searchSessions = (keywords: string): Promise<LobeSessions> => {
-    return lambdaClient.session.searchSessions.query({ keywords });
   };
 
   removeSession = (id: string) => {

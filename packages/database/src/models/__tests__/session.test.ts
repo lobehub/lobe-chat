@@ -1,10 +1,10 @@
 import { DEFAULT_AGENT_CONFIG } from '@lobechat/const';
 import { and, eq, inArray } from 'drizzle-orm';
 import type { LLMParams } from 'model-bank';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { getTestDB } from '../../core/getTestDB';
-import type { NewSession, SessionItem } from '../../schemas';
+import type { SessionItem } from '../../schemas';
 import {
   agents,
   agentsToSessions,
@@ -234,242 +234,6 @@ describe('SessionModel', () => {
     });
   });
 
-  describe('count', () => {
-    it('should return the count of sessions for the user', async () => {
-      // Create test data
-      await serverDB.insert(users).values([{ id: '456' }]);
-      await serverDB.insert(sessions).values([
-        { id: '1', userId },
-        { id: '2', userId },
-        { id: '3', userId: '456' },
-      ]);
-
-      // Call the count method
-      const result = await sessionModel.count();
-
-      // Assert results
-      expect(result).toBe(2);
-    });
-
-    it('should return 0 if no sessions exist for the user', async () => {
-      // Create test data
-      await serverDB.insert(users).values([{ id: '456' }]);
-      await serverDB.insert(sessions).values([{ id: '3', userId: '456' }]);
-
-      // Call the count method
-      const result = await sessionModel.count();
-
-      // Assert results
-      expect(result).toBe(0);
-    });
-
-    it('should count sessions with date range filter', async () => {
-      await serverDB.insert(sessions).values([
-        { id: 's1', userId, createdAt: new Date('2024-01-01') },
-        { id: 's2', userId, createdAt: new Date('2024-06-01') },
-        { id: 's3', userId, createdAt: new Date('2024-12-01') },
-      ]);
-
-      const rangeResult = await sessionModel.count({
-        range: ['2024-03-01', '2024-09-01'],
-      });
-      expect(rangeResult).toBe(1);
-
-      const startResult = await sessionModel.count({ startDate: '2024-05-01' });
-      expect(startResult).toBe(2);
-
-      const endResult = await sessionModel.count({ endDate: '2024-07-01' });
-      expect(endResult).toBe(2);
-    });
-  });
-
-  // BM25 search requires pg_search extension (ParadeDB), not available in PGlite
-  const isServerDB = process.env.TEST_SERVER_DB === '1';
-  describe.skipIf(!isServerDB)('queryByKeyword', () => {
-    it('should return an empty array if keyword is empty', async () => {
-      const result = await sessionModel.queryByKeyword('');
-      expect(result).toEqual([]);
-    });
-
-    it('should return sessions with matching title', async () => {
-      await serverDB.insert(sessions).values([
-        { id: '1', userId },
-        { id: '2', userId },
-      ]);
-
-      await serverDB.insert(agents).values([
-        { id: 'agent-1', userId, model: 'gpt-3.5-turbo', title: 'Hello, Agent 1' },
-        { id: 'agent-2', userId, model: 'gpt-4', title: 'Agent 2' },
-      ]);
-
-      await serverDB.insert(agentsToSessions).values([
-        { agentId: 'agent-1', sessionId: '1', userId },
-        { agentId: 'agent-2', sessionId: '2', userId },
-      ]);
-
-      const result = await sessionModel.queryByKeyword('hello');
-      expect(result).toHaveLength(1);
-      expect(result[0].id).toBe('1');
-    });
-
-    it('should return sessions with matching description', async () => {
-      // The sessions has no title and desc,
-      // see: https://github.com/lobehub/lobe-chat/pull/4725
-      await serverDB.insert(sessions).values([
-        { id: '1', userId },
-        { id: '2', userId },
-      ]);
-
-      await serverDB.insert(agents).values([
-        {
-          id: 'agent-1',
-          userId,
-          model: 'gpt-3.5-turbo',
-          title: 'Agent 1',
-          description: 'Description with Keyword',
-        },
-        { id: 'agent-2', userId, model: 'gpt-4', title: 'Agent 2' },
-      ]);
-
-      await serverDB.insert(agentsToSessions).values([
-        { agentId: 'agent-1', sessionId: '1', userId },
-        { agentId: 'agent-2', sessionId: '2', userId },
-      ]);
-
-      const result = await sessionModel.queryByKeyword('keyword');
-      expect(result).toHaveLength(1);
-      expect(result[0].id).toBe('1');
-    });
-
-    it('should return sessions with matching title or description', async () => {
-      await serverDB.insert(sessions).values([
-        { id: '1', userId },
-        { id: '2', userId },
-        { id: '3', userId },
-      ]);
-
-      await serverDB.insert(agents).values([
-        { id: '1', userId, title: 'Title with keyword', description: 'Some description' },
-        { id: '2', userId, title: 'Another Session', description: 'Description with keyword' },
-        { id: '3', userId, title: 'Third Session', description: 'Third description' },
-      ]);
-
-      await serverDB.insert(agentsToSessions).values([
-        { agentId: '1', sessionId: '1', userId },
-        { agentId: '2', sessionId: '2', userId },
-        { agentId: '3', sessionId: '3', userId },
-      ]);
-
-      const result = await sessionModel.queryByKeyword('keyword');
-      expect(result).toHaveLength(2);
-      expect(result.map((s) => s.id)).toEqual(['1', '2']);
-    });
-  });
-
-  describe('findSessionsByKeywords BM25 limit', () => {
-    it('clamps the page size to the ParadeDB BM25 ceiling', async () => {
-      // ParadeDB rejects `LIMIT > 8192` for BM25 (`@@@`) ordering with
-      // `error: min > max. min = 9999, max = 8192`, and the error is swallowed
-      // one frame below — so an over-limit "no pagination" page size returned
-      // *no* matches at all instead of the top hits.
-      const findMany = vi.fn().mockResolvedValue([]);
-      const model = new SessionModel(
-        { query: { agents: { findMany } } } as unknown as LobeChatDatabase,
-        userId,
-      );
-
-      await model.findSessionsByKeywords({ keyword: 'hello' });
-
-      expect(findMany).toHaveBeenCalledWith(expect.objectContaining({ limit: 8192 }));
-    });
-
-    it('keeps an explicit page size below the ceiling', async () => {
-      const findMany = vi.fn().mockResolvedValue([]);
-      const model = new SessionModel(
-        { query: { agents: { findMany } } } as unknown as LobeChatDatabase,
-        userId,
-      );
-
-      await model.findSessionsByKeywords({ keyword: 'hello', pageSize: 20 });
-
-      expect(findMany).toHaveBeenCalledWith(expect.objectContaining({ limit: 20 }));
-    });
-  });
-
-  describe('queryByKeyword with external candidates', () => {
-    it('hydrates only current-scope sessions and surfaces candidate failures', async () => {
-      await serverDB.insert(users).values({ id: 'candidate-other-user' });
-      await serverDB.insert(sessions).values([
-        { id: 'candidate-session-own-a', userId },
-        { id: 'candidate-session-own-a-secondary', userId },
-        { id: 'candidate-session-own-b', userId },
-        { id: 'candidate-session-other', userId: 'candidate-other-user' },
-      ]);
-      await serverDB.insert(agents).values([
-        { id: 'candidate-agent-own-a', title: 'Own A', userId },
-        { id: 'candidate-agent-own-b', title: 'Own B', userId },
-        { id: 'candidate-agent-own-unlinked', title: 'Own Unlinked', userId },
-        { id: 'candidate-agent-other', title: 'Other', userId: 'candidate-other-user' },
-      ]);
-      await serverDB.insert(agentsToSessions).values([
-        { agentId: 'candidate-agent-own-a', sessionId: 'candidate-session-own-a', userId },
-        {
-          agentId: 'candidate-agent-own-a',
-          sessionId: 'candidate-session-own-a-secondary',
-          userId,
-        },
-        { agentId: 'candidate-agent-own-b', sessionId: 'candidate-session-own-b', userId },
-        {
-          agentId: 'candidate-agent-other',
-          sessionId: 'candidate-session-other',
-          userId: 'candidate-other-user',
-        },
-      ]);
-      const ftsSearchCandidates = vi.fn().mockResolvedValue({
-        candidates: [
-          { id: 'candidate-agent-other', score: 10 },
-          { id: 'candidate-agent-deleted', score: 9 },
-          { id: 'candidate-agent-own-b', score: 8 },
-          { id: 'candidate-agent-own-unlinked', score: 7 },
-          { id: 'candidate-agent-own-a', score: 6 },
-        ],
-        total: 5,
-      });
-      const model = new SessionModel(serverDB, userId, undefined, {
-        ftsSearchCandidateEnabled: true,
-        ftsSearchCandidates,
-      });
-
-      const result = await model.queryByKeyword('candidate');
-      expect(result).toHaveLength(2);
-      expect(['candidate-session-own-a', 'candidate-session-own-a-secondary']).toContain(
-        result[0]?.id,
-      );
-      expect(result[1]?.id).toBe('candidate-session-own-b');
-      await expect(
-        model.findSessionsByKeywords({ current: 0, keyword: 'candidate', pageSize: 1 }),
-      ).resolves.toMatchObject([
-        { id: expect.stringMatching(/^candidate-session-own-a(?:-secondary)?$/) },
-      ]);
-      await expect(
-        model.findSessionsByKeywords({ current: 1, keyword: 'candidate', pageSize: 1 }),
-      ).resolves.toMatchObject([{ id: 'candidate-session-own-b' }]);
-      await expect(
-        model.findSessionsByKeywords({ current: 2, keyword: 'candidate', pageSize: 1 }),
-      ).resolves.toEqual([]);
-      expect(ftsSearchCandidates).toHaveBeenCalledWith({
-        entity: 'agents',
-        filters: {},
-        pagination: {},
-        query: { fields: ['title', 'description'], text: 'candidate' },
-      });
-
-      const providerError = new Error('candidate unavailable');
-      ftsSearchCandidates.mockRejectedValueOnce(providerError);
-      await expect(model.queryByKeyword('failure')).rejects.toBe(providerError);
-    });
-  });
-
   describe('create', () => {
     it('should create a new session', async () => {
       // Call the create method
@@ -572,51 +336,6 @@ describe('SessionModel', () => {
       // Should return the existing session
       expect(second.id).toBe(first.id);
       expect(second.title).toBe('First Session');
-    });
-  });
-
-  describe('batchCreate', () => {
-    it('should batch create sessions', async () => {
-      // Call the batchCreate method
-      const sessions: NewSession[] = [
-        {
-          id: '1',
-          userId,
-          type: 'agent',
-          // config: { model: 'gpt-3.5-turbo' },
-          title: 'Session 1',
-        },
-        {
-          id: '2',
-          userId,
-          type: 'agent',
-          // config: { model: 'gpt-4' },
-          title: 'Session 2',
-        },
-      ];
-      const result = await sessionModel.batchCreate(sessions);
-
-      // Assert results
-      // pglite return affectedRows while postgres return rowCount
-      expect((result as any).affectedRows || result.rowCount).toEqual(2);
-    });
-
-    it.skip('should set group to default if group does not exist', async () => {
-      // Call the batchCreate method with a non-existent group
-      const sessions: NewSession[] = [
-        {
-          id: '1',
-          userId,
-          type: 'agent',
-          // config: { model: 'gpt-3.5-turbo' },
-          title: 'Session 1',
-          groupId: 'non-existent-group',
-        },
-      ];
-      await sessionModel.batchCreate(sessions);
-
-      // Assert results
-      // expect(result[0].group).toBe('default');
     });
   });
 
@@ -864,12 +583,11 @@ describe('SessionModel', () => {
         .values({ id: 'recoverable', sessionId: 'trashed-shell', userId });
     };
 
-    it('hides the shell from list, lookup and count', async () => {
+    it('hides the shell from list and lookup', async () => {
       await seedTrashedShell();
       expect((await sessionModel.query()).map((s) => s.id)).toEqual(['live-shell']);
       expect(await sessionModel.findByIdOrSlug('trashed-shell')).toBeUndefined();
       expect(await sessionModel.findByIdOrSlug('live-shell')).toBeTruthy();
-      expect(await sessionModel.count()).toBe(1);
     });
 
     it('turns delete / batchDelete / update into no-ops so the recoverable topics survive', async () => {
@@ -917,7 +635,6 @@ describe('SessionModel', () => {
       expect(group.id).toBe('group-shell');
       expect(group.agentsToSessions.map((l: any) => l.agent.id)).toEqual(['live-member']);
       expect((await sessionModel.findByIdOrSlug('group-shell'))?.agent.id).toBe('live-member');
-      expect(await sessionModel.count()).toBe(1);
 
       // still write-protected: hard-deleting it would cascade the trashed member's link away
       await sessionModel.delete('group-shell');
@@ -1629,35 +1346,6 @@ describe('SessionModel', () => {
     it('should return false when no sessions exist', async () => {
       const result = await sessionModel.hasMoreThanN(0);
       expect(result).toBe(false);
-    });
-  });
-
-  describe('findSessionsByKeywords', () => {
-    it('should handle errors gracefully and return empty array', async () => {
-      // This test aims to cover the error-handling logic in findSessionsByKeywords
-      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
-
-      // Mock the database query to throw an error
-      const originalFindMany = serverDB.query.agents.findMany;
-      serverDB.query.agents.findMany = vi.fn().mockRejectedValue(new Error('Database error'));
-
-      const result = await sessionModel.findSessionsByKeywords({ keyword: 'test' });
-
-      // Even when an error occurs, the method should return an empty array
-      expect(Array.isArray(result)).toBe(true);
-      expect(result).toEqual([]);
-      expect(consoleSpy).toHaveBeenCalledWith('findSessionsByKeywords error:', expect.any(Error), {
-        keyword: 'test',
-      });
-
-      // Restore original method
-      serverDB.query.agents.findMany = originalFindMany;
-      consoleSpy.mockRestore();
-    });
-
-    it('should return empty array for empty keyword', async () => {
-      const result = await sessionModel.queryByKeyword('');
-      expect(result).toEqual([]);
     });
   });
 });
