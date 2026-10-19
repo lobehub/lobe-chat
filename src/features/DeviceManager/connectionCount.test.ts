@@ -7,6 +7,11 @@ import {
   getWorkspaceConnectionState,
 } from './connectionCount';
 
+/** A `useDeviceList` result; unconfirmed (a stored copy, or nothing yet) unless stated. */
+const listState = (
+  state: { data?: DeviceListItem[]; error?: unknown; isConfirmed?: boolean } = {},
+) => ({ data: undefined, error: undefined, isConfirmed: false, isLoading: false, ...state });
+
 const device = (
   deviceId: string,
   scope: DeviceListItem['scope'],
@@ -58,20 +63,30 @@ describe('getWorkspaceConnectionState', () => {
     // The Electron title bar previously converted an undefined device list into a zero count after
     // an SWR error, presenting an unverified result as "No workspace device connection is online".
     // The unavailable state now preserves the distinction between a failed lookup and an empty list.
-    expect(getWorkspaceConnectionState(undefined, false, new Error('network unavailable'))).toBe(
-      'unavailable',
-    );
+    expect(
+      getWorkspaceConnectionState(listState({ error: new Error('network unavailable') })),
+    ).toBe('unavailable');
   });
 
   /** @example Cached presence remains useful when a background revalidation request fails. */
   it('uses cached device presence during a revalidation error', () => {
     expect(
       getWorkspaceConnectionState(
-        [device('workspace-device', 'workspace', 1)],
-        false,
-        new Error('revalidation failed'),
+        listState({
+          data: [device('workspace-device', 'workspace', 1)],
+          error: new Error('revalidation failed'),
+          isConfirmed: true,
+        }),
       ),
     ).toBe('connected');
+  });
+
+  it('reports disconnected once the server confirms no live workspace connection', () => {
+    expect(
+      getWorkspaceConnectionState(
+        listState({ data: [device('workspace-device', 'workspace', 0)], isConfirmed: true }),
+      ),
+    ).toBe('disconnected');
   });
 });
 
@@ -99,8 +114,20 @@ describe('persisted rows before the server confirms presence', () => {
   it('reads the workspace as connecting, not disconnected, until presence is confirmed', () => {
     const devices = [persisted('workspace-a', 'workspace')];
 
-    expect(getWorkspaceConnectionState(devices, false, undefined)).toBe('connecting');
-    expect(getWorkspaceConnectionState(devices, false, new Error('offline'))).toBe('unavailable');
+    expect(getWorkspaceConnectionState(listState({ data: devices }))).toBe('connecting');
+    expect(
+      getWorkspaceConnectionState(listState({ data: devices, error: new Error('offline') })),
+    ).toBe('unavailable');
+  });
+
+  /** @example A stale (or capped) stored copy holding only personal rows is not an empty pool. */
+  it('keeps a stored copy without workspace rows pending until the server answers', () => {
+    const devices = [persisted('personal-a', 'personal')];
+
+    expect(getWorkspaceConnectionState(listState({ data: devices }))).toBe('connecting');
+    expect(
+      getWorkspaceConnectionState(listState({ data: devices, error: new Error('offline') })),
+    ).toBe('unavailable');
   });
 
   it('says checking, not offline, for a persisted row with no connection', () => {

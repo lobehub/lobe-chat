@@ -1,5 +1,7 @@
 import type { DeviceListItem, DeviceScope } from '@lobechat/types';
 
+import type { DeviceListResult } from '@/store/device';
+
 /**
  * Counts live connections within one principal scope.
  *
@@ -38,22 +40,26 @@ export const getScopedConnectionCount = (
  * - Cached presence may remain available while background revalidation fails
  *
  * Expects:
- * - `devices` is already scoped to the active workspace by the caller's data hook
+ * - The `useDeviceList` result, already scoped to the active workspace
  *
  * Returns:
- * - A presentation state that distinguishes unavailable data from an authoritative empty list
+ * - A presentation state that distinguishes unavailable data from an authoritative empty list.
+ *   Until the server confirms the list, a restored copy says nothing: its
+ *   workspace rows carry unknown presence, and a copy without any (stale, or
+ *   past the persisted-row cap) is not proof the pool is empty.
  */
-export const getWorkspaceConnectionState = (
-  devices: DeviceListItem[] | undefined,
-  isLoading: boolean,
-  error: unknown,
-): 'connected' | 'connecting' | 'disconnected' | 'unavailable' => {
+export const getWorkspaceConnectionState = ({
+  data: devices,
+  error,
+  isConfirmed,
+  isLoading,
+}: Pick<DeviceListResult, 'data' | 'error' | 'isConfirmed' | 'isLoading'>):
+  'connected' | 'connecting' | 'disconnected' | 'unavailable' => {
   if (!devices && error) return 'unavailable';
   if (!devices && isLoading) return 'connecting';
 
   const count = getScopedConnectionCount(devices, 'workspace');
-  // Persisted rows not yet confirmed by the server: presence is unknown.
-  if (devices && count === undefined) return error ? 'unavailable' : 'connecting';
+  if (devices && (count === undefined || !isConfirmed)) return error ? 'unavailable' : 'connecting';
 
   return count ? 'connected' : 'disconnected';
 };
