@@ -81,7 +81,7 @@ The switches under **Automation** and **Comments in GitHub** follow the settings
 
 ## Self-hosted deployments
 
-A self-hosted deployment needs its own GitHub App. Set these environment variables on the server:
+A self-hosted deployment needs its own GitHub App and Redis (`REDIS_URL`), which holds the short-lived connection request; without Redis, **Connect account** fails. Set these environment variables on the server:
 
 | Variable                    | Required | Value                                                   |
 | --------------------------- | -------- | ------------------------------------------------------- |

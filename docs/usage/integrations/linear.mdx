@@ -36,9 +36,9 @@ In a Workspace, the connection belongs to that Workspace. Only Workspace members
 ## Disconnect Linear
 
 1. In **Connections**, open the menu next to the workspace and choose **Disconnect**.
-2. Confirm. LobeHub revokes its access token, and the workspace no longer appears in **Connections**.
+2. Confirm. LobeHub asks Linear to revoke its access token and removes the workspace from **Connections**.
 
-You can also revoke LobeHub from your Linear settings under authorized applications.
+Revocation is best-effort: if Linear cannot be reached, the workspace is still removed but the token may stay valid. To make sure access ends, also revoke LobeHub in your Linear settings under authorized applications.
 
 ## Troubleshooting
 
@@ -52,7 +52,7 @@ You can also revoke LobeHub from your Linear settings under authorized applicati
 
 ## Self-hosted deployments
 
-A self-hosted deployment needs its own Linear OAuth application:
+A self-hosted deployment needs Redis (`REDIS_URL`), which holds the short-lived connection request; without it, **Connect workspace** fails. It also needs its own Linear OAuth application:
 
 1. In Linear, go to **Settings → API → OAuth applications** and create an application.
 2. Set the callback URL to `<APP_URL>/api/webhooks/linear/oauth/callback`, where `<APP_URL>` is your LobeHub address. It must match `APP_URL` exactly.

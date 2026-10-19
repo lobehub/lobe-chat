@@ -34,9 +34,9 @@ LobeHub 只申请 **只读** 权限。这个连接用来识别你的 Linear 工�
 ## 断开 Linear
 
 1. 在 **连接** 中打开工作区右侧的菜单，选择 **断开连接**。
-2. 确认后，LobeHub 会撤销访问令牌，该工作区不再出现在 **连接** 中。
+2. 确认后，LobeHub 会请求 Linear 撤销访问令牌，并把该工作区从 **连接** 中移除。
 
-你也可以在 Linear 设置的已授权应用中撤销 LobeHub。
+撤销是尽力而为的：如果 Linear 暂时无法访问，工作区仍会被移除，但令牌可能仍然有效。要确保访问已终止，请同时在 Linear 设置的已授权应用中撤销 LobeHub。
 
 ## 常见问题
 
@@ -50,7 +50,7 @@ LobeHub 只申请 **只读** 权限。这个连接用来识别你的 Linear 工�
 
 ## 自托管部署
 
-自托管部署需要创建自己的 Linear OAuth 应用：
+自托管部署需要配置 Redis（`REDIS_URL`）来保存短期的连接请求，没有 Redis 时 **连接工作区** 会失败。此外还需要创建自己的 Linear OAuth 应用：
 
 1. 在 Linear 中进入 **Settings → API → OAuth applications**，创建一个应用。
 2. 把回调地址设为 `<APP_URL>/api/webhooks/linear/oauth/callback`，`<APP_URL>` 是你的 LobeHub 地址，必须与 `APP_URL` 完全一致。
