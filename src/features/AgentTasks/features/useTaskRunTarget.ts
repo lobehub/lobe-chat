@@ -2,7 +2,7 @@
 
 import { isDesktop } from '@lobechat/const';
 import type { DeviceExecutionTarget, DeviceListItem, WorkingDirConfig } from '@lobechat/types';
-import { useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { resolveWorkspaceSurface } from '@/features/ChatInput/ControlBar/useWorkspaceSurface';
@@ -65,6 +65,12 @@ export interface TaskRunTarget {
    * device the caller can see (see `devicePoolForAgent`).
    */
   devices?: DeviceListItem[];
+  /**
+   * The device list could not be confirmed: its request failed and no retry is
+   * in flight. The stored rows still cannot be pinned, but the control stays
+   * open so the user can retry ({@link retryDevices}) or follow the agent.
+   */
+  devicesFailed: boolean;
   directoryKind: TaskDirectoryKind;
   /** Where the run lands: the task's pin if it has one, else the agent's own target. */
   effectiveTarget: DeviceExecutionTarget;
@@ -97,6 +103,8 @@ export interface TaskRunTarget {
    * run side drops must not be shown as the target.
    */
   pinnedDeviceId?: string;
+  /** Re-request the device list after {@link devicesFailed}. */
+  retryDevices: () => void;
 }
 
 /**
@@ -116,8 +124,11 @@ export const useTaskRunTarget = (agentId: string, pinnedDeviceId?: string): Task
   const { t } = useTranslation('chat');
   const {
     data: devices,
+    error: devicesError,
     isConfirmed: isDevicesConfirmed,
     isLoading: isDevicesLoading,
+    isValidating: isDevicesValidating,
+    mutate: refreshDevices,
   } = useDeviceList();
   const isHetero = useAgentStore(agentByIdSelectors.isAgentHeterogeneousById(agentId));
   // Agent-level, not the active chat topic's: a task run carries no topic
@@ -242,17 +253,22 @@ export const useTaskRunTarget = (agentId: string, pinnedDeviceId?: string): Task
     return t(`heteroAgent.executionTarget.${inheritedTarget}`);
   })();
 
+  const devicesFailed = !isDevicesConfirmed && !!devicesError && !isDevicesValidating;
+  const retryDevices = useCallback(() => void refreshDevices(), [refreshDevices]);
+
   return {
     canSelect: canSelectExecutionTarget,
     deviceId,
     devices: pool,
+    devicesFailed,
     directoryKind,
     effectiveTarget,
     inheritedDirectory,
     inheritedLabel,
     inheritedTarget,
     isDeviceTarget,
-    isPending: isPreferenceLoading || isDevicesLoading || !isDevicesConfirmed,
+    isPending: isPreferenceLoading || isDevicesLoading || (!isDevicesConfirmed && !devicesFailed),
     pinnedDeviceId: pinApplies ? pinnedDeviceId : undefined,
+    retryDevices,
   };
 };

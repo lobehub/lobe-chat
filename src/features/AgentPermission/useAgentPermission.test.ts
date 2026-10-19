@@ -28,7 +28,7 @@ vi.mock('@/store/user', () => ({
 }));
 
 vi.mock('@/store/device/useDeviceList', () => ({
-  useDeviceList: () => ({ data: mocks.devices }),
+  useDeviceList: () => ({ data: mocks.devices, isConfirmed: true }),
 }));
 
 vi.mock('@/features/ResourcePermission/useResourcePermission', () => ({

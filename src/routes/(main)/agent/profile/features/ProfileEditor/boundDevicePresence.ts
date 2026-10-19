@@ -23,3 +23,31 @@ export const getBoundDevicePresence = (
   if (isDevicePresenceUnknown(boundDevice)) return 'checking';
   return boundDevice.online ? 'online' : 'offline';
 };
+
+/**
+ * State of the change-device select, which only offers online devices.
+ *
+ * Returns:
+ * - `error` when the unconfirmed list's request failed and no retry is in
+ *   flight — show why and offer a retry instead of an endless spinner
+ * - `loading` while the list is still the stored copy (its presence is not
+ *   known, and it may lack devices) or any stored row has unknown presence
+ * - `ready` once the server confirmed the list
+ */
+export const getDeviceSelectState = ({
+  error,
+  hasUnknownPresence,
+  isConfirmed,
+  isLoading,
+  isValidating,
+}: {
+  error: unknown;
+  hasUnknownPresence: boolean;
+  isConfirmed: boolean;
+  isLoading: boolean;
+  isValidating: boolean;
+}): 'error' | 'loading' | 'ready' => {
+  if (!isConfirmed && error && !isValidating) return 'error';
+  if (isLoading || !isConfirmed || hasUnknownPresence) return 'loading';
+  return 'ready';
+};

@@ -29,6 +29,8 @@ const mocks = vi.hoisted(() => ({
   agentState: { agentMap: {} as Record<string, { workspaceId?: string }> },
   devices: [] as { deviceId: string; scope?: string; visibility?: string }[],
   devicesConfirmed: true,
+  devicesError: undefined as unknown,
+  mutateDevices: vi.fn(),
   electron: { currentDeviceId: undefined as string | undefined, isDesktop: false },
 }));
 
@@ -54,8 +56,11 @@ vi.mock('react-i18next', () => ({
 vi.mock('@/store/device/useDeviceList', () => ({
   useDeviceList: () => ({
     data: mocks.devices,
+    error: mocks.devicesError,
     isConfirmed: mocks.devicesConfirmed,
     isLoading: false,
+    isValidating: false,
+    mutate: mocks.mutateDevices,
   }),
 }));
 
@@ -88,6 +93,8 @@ const deviceBoundAgent = {
 beforeEach(() => {
   mocks.activeTopicAgency = undefined;
   mocks.devicesConfirmed = true;
+  mocks.devicesError = undefined;
+  mocks.mutateDevices.mockReset();
   mocks.agency.agencyConfig = {};
   mocks.agency.canSelectExecutionTarget = true;
   mocks.agency.isPreferenceLoading = false;
@@ -112,6 +119,21 @@ describe('useTaskRunTarget', () => {
     rerender();
 
     expect(result.current.isPending).toBe(false);
+  });
+
+  it('unlocks with a retry, not a pin, when the unconfirmed device list fails to load', () => {
+    mocks.devices = [PERSONAL_DEVICE];
+    mocks.devicesConfirmed = false;
+    mocks.devicesError = new Error('network down');
+
+    const { result } = renderHook(() => useTaskRunTarget('agent-1'));
+
+    // Not stuck pending: the chip opens and says why, offering a retry.
+    expect(result.current.isPending).toBe(false);
+    expect(result.current.devicesFailed).toBe(true);
+
+    result.current.retryDevices();
+    expect(mocks.mutateDevices).toHaveBeenCalledTimes(1);
   });
 
   it('ignores the active chat topic device binding', () => {

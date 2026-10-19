@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { getBoundDevicePresence } from './boundDevicePresence';
+import { getBoundDevicePresence, getDeviceSelectState } from './boundDevicePresence';
 
 describe('getBoundDevicePresence', () => {
   it('says checking, not offline, while the stored copy lacks the bound device', () => {
@@ -24,5 +24,40 @@ describe('getBoundDevicePresence', () => {
 
   it('reports nothing bound', () => {
     expect(getBoundDevicePresence(undefined, undefined, true)).toBe('none');
+  });
+});
+
+describe('getDeviceSelectState', () => {
+  const base = {
+    error: undefined,
+    hasUnknownPresence: true,
+    isConfirmed: false,
+    isLoading: false,
+    isValidating: true,
+  };
+
+  it('loads while the list is the stored copy', () => {
+    expect(getDeviceSelectState(base)).toBe('loading');
+  });
+
+  it('surfaces a failed request of the unconfirmed list instead of loading forever', () => {
+    expect(getDeviceSelectState({ ...base, error: new Error('boom'), isValidating: false })).toBe(
+      'error',
+    );
+  });
+
+  it('shows a retry in flight as loading', () => {
+    expect(getDeviceSelectState({ ...base, error: new Error('boom') })).toBe('loading');
+  });
+
+  it('is ready once the server confirmed the list', () => {
+    expect(
+      getDeviceSelectState({
+        ...base,
+        hasUnknownPresence: false,
+        isConfirmed: true,
+        isValidating: false,
+      }),
+    ).toBe('ready');
   });
 });

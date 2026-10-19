@@ -55,8 +55,16 @@ const TaskDeviceChip = memo<TaskDeviceChipProps>(
     const { t } = useTranslation('chat');
     const [open, setOpen] = useState(false);
 
-    const { canSelect, devices, inheritedLabel, inheritedTarget, isPending, pinnedDeviceId } =
-      useTaskRunTarget(agentId, value);
+    const {
+      canSelect,
+      devices,
+      devicesFailed,
+      inheritedLabel,
+      inheritedTarget,
+      isPending,
+      pinnedDeviceId,
+      retryDevices,
+    } = useTaskRunTarget(agentId, value);
 
     // The agent's policy is author-controlled: the server's resolver would drop
     // this pin, so the control must not pretend it can set one.
@@ -145,10 +153,18 @@ const TaskDeviceChip = memo<TaskDeviceChipProps>(
         {isPending && (
           <div className={styles.sectionTitle}>{t('heteroAgent.executionTarget.loading')}</div>
         )}
-        {!isPending && devices && devices.length > 0 && (
+        {devicesFailed && (
+          <div className={styles.emptyHint}>
+            {t('heteroAgent.executionTarget.loadFailed')}{' '}
+            <a role="button" onClick={retryDevices}>
+              {t('retry', { ns: 'common' })}
+            </a>
+          </div>
+        )}
+        {!isPending && !devicesFailed && devices && devices.length > 0 && (
           <div className={styles.scroll}>{devices.map(renderDeviceRow)}</div>
         )}
-        {!isPending && devices?.length === 0 && (
+        {!isPending && !devicesFailed && devices?.length === 0 && (
           <div className={styles.emptyHint}>{t('heteroAgent.executionTarget.noDevices')}</div>
         )}
 

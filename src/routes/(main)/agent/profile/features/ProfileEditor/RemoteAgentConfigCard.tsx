@@ -25,11 +25,12 @@ import { BotIcon, CheckCircle2, MonitorSmartphone, RefreshCw, XCircle } from 'lu
 import { memo, useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import AsyncError from '@/components/AsyncError';
 import { deviceService } from '@/services/device';
 import { useAgentStore } from '@/store/agent';
 import { isDevicePresenceUnknown, useDeviceList } from '@/store/device';
 
-import { getBoundDevicePresence } from './boundDevicePresence';
+import { getBoundDevicePresence, getDeviceSelectState } from './boundDevicePresence';
 
 const styles = createStaticStyles(({ css }) => ({
   card: css`
@@ -113,11 +114,24 @@ const ChangeDeviceContent = memo<ChangeDeviceContentProps>(
     }, [saving, setCanDismissByClickOutside]);
 
     // The shared device replica (see useDeviceList), partitioned by workspace.
-    const { data: devices, isConfirmed, isLoading: loadingDevices } = useDeviceList();
+    const {
+      data: devices,
+      error: deviceListError,
+      isConfirmed,
+      isLoading: loadingDevices,
+      isValidating: validatingDevices,
+      mutate: refreshDevices,
+    } = useDeviceList();
     // Only online devices are offered, and neither a stored row's presence nor
     // a stored copy's missing rows are known until the server confirms the list
     // — keep the picker loading until then.
-    const presencePending = !isConfirmed || (devices ?? []).some(isDevicePresenceUnknown);
+    const selectState = getDeviceSelectState({
+      error: deviceListError,
+      hasUnknownPresence: (devices ?? []).some(isDevicePresenceUnknown),
+      isConfirmed,
+      isLoading: loadingDevices,
+      isValidating: validatingDevices,
+    });
 
     const onlineDevices = (devices ?? []).filter(
       (d) =>
@@ -169,7 +183,7 @@ const ChangeDeviceContent = memo<ChangeDeviceContentProps>(
       <Flexbox gap={16}>
         <Flexbox gap={12} paddingBlock={'12px 4px'}>
           <Select
-            loading={loadingDevices || presencePending}
+            loading={selectState === 'loading'}
             placeholder={t('platformAgentConfig.selectDevice')}
             style={{ width: '100%' }}
             value={selectedDeviceId}
@@ -187,6 +201,13 @@ const ChangeDeviceContent = memo<ChangeDeviceContentProps>(
             }))}
             onChange={handleDeviceSelect}
           />
+          {selectState === 'error' && (
+            <AsyncError
+              error={deviceListError}
+              variant={'inline'}
+              onRetry={() => void refreshDevices()}
+            />
+          )}
           {checkingCapability && (
             <Tag style={{ marginInlineEnd: 0 }}>
               {t('platformAgentConfig.availability.checking')}
