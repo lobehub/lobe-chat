@@ -4,7 +4,7 @@ import { Flexbox, Skeleton } from '@lobehub/ui';
 import { memo } from 'react';
 
 import { useToolResultPayload } from '@/hooks/useToolResultPayload';
-import { getMcpAppFromState } from '@/libs/mcp/mcpApp';
+import { getMcpAppFromState, unwrapMcpToolState } from '@/libs/mcp/mcpApp';
 import dynamic from '@/libs/next/dynamic';
 
 import { dataSelectors, useConversationStore } from '../../../../../store';
@@ -77,7 +77,7 @@ const ToolRender = memo<ToolRenderProps>(
           fallback={fallback}
           identifier={plugin.identifier}
           resourceUri={mcpApp.resourceUri}
-          result={{ content: resolvedContent, state: resolvedState }}
+          result={{ content: resolvedContent, state: unwrapMcpToolState(resolvedState) }}
           toolCallId={toolCallId}
         />
       );

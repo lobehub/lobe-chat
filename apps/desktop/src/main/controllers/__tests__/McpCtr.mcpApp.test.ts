@@ -91,4 +91,51 @@ describe('McpCtr MCP Apps', () => {
     ).rejects.toThrow('ui://');
     expect(client.readResource).toHaveBeenCalledTimes(1);
   });
+
+  it('reads views of local-network http servers', async () => {
+    const client = makeClient();
+    mcpClientMocks.mockReturnValue(client);
+
+    await ctr.readUiResource(
+      serializeMcpIpcPayload({
+        http: { name: 'local', url: 'http://127.0.0.1:3000/mcp' },
+        uri: 'ui://x',
+      }) as any,
+    );
+
+    expect(client.readResource).toHaveBeenCalledWith('ui://x');
+  });
+
+  it('evicts a dead pooled session and retries the read on a fresh one', async () => {
+    const dead = makeClient({
+      readResource: vi.fn().mockRejectedValue(new Error('Not connected')),
+    });
+    const fresh = makeClient();
+    mcpClientMocks.mockReturnValueOnce(dead).mockReturnValueOnce(fresh);
+
+    const result = await ctr.readUiResource(
+      serializeMcpIpcPayload({ params: stdioParams, uri: 'ui://x' }) as any,
+    );
+
+    expect(deserializeMcpIpcPayload(result as any)).toEqual({
+      contents: [{ text: '<html />', uri: 'ui://x' }],
+    });
+    expect(dead.disconnect).toHaveBeenCalled();
+
+    // the fresh session stays pooled for the next read
+    await ctr.readUiResource(serializeMcpIpcPayload({ params: stdioParams, uri: 'ui://x' }) as any);
+    expect(fresh.readResource).toHaveBeenCalledTimes(2);
+  });
+
+  it('does not retry application errors', async () => {
+    const client = makeClient({
+      readResource: vi.fn().mockRejectedValue(new Error('Resource not found')),
+    });
+    mcpClientMocks.mockReturnValue(client);
+
+    await expect(
+      ctr.readUiResource(serializeMcpIpcPayload({ params: stdioParams, uri: 'ui://x' }) as any),
+    ).rejects.toThrow('Resource not found');
+    expect(client.readResource).toHaveBeenCalledTimes(1);
+  });
 });

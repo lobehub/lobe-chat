@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { getMcpAppFromState, getToolUiResourceUri } from './mcpApp';
+import { getMcpAppFromState, getToolUiResourceUri, unwrapMcpToolState } from './mcpApp';
 
 describe('getToolUiResourceUri', () => {
   it('reads the nested and the deprecated flat key', () => {
@@ -19,6 +19,17 @@ describe('getMcpAppFromState', () => {
     expect(getMcpAppFromState({ content: [], mcpApp: { resourceUri: 'ui://a' } })).toEqual({
       resourceUri: 'ui://a',
     });
+  });
+
+  it('finds the reference in server AgentRuntime results, nested one level deeper', () => {
+    const state = {
+      content: 'sunny',
+      state: { content: [], mcpApp: { resourceUri: 'ui://a' } },
+      success: true,
+    };
+
+    expect(getMcpAppFromState(state)).toEqual({ resourceUri: 'ui://a' });
+    expect(unwrapMcpToolState(state)).toBe(state.state);
   });
 
   it('ignores states without a valid reference', () => {

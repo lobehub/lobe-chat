@@ -35,9 +35,21 @@ export const getToolUiResourceUri = (tool: { _meta?: unknown } | undefined): str
   return isUiUri(uri) ? uri : undefined;
 };
 
+/**
+ * The raw MCP tool result state. Server AgentRuntime calls persist the whole
+ * processed result (`{ content, state, success }`) as the plugin state, so the
+ * MCP result (with `mcpApp`) sits one level deeper there than on client calls.
+ */
+export const unwrapMcpToolState = <T = any>(state: T): T => {
+  const inner = (state as { state?: { content?: unknown } } | undefined)?.state;
+
+  return inner && typeof inner === 'object' && Array.isArray(inner.content) ? (inner as T) : state;
+};
+
 /** Read the MCP App reference a tool call stored on its result state. */
 export const getMcpAppFromState = (state: unknown): McpAppToolState | undefined => {
-  const mcpApp = (state as { mcpApp?: { resourceUri?: unknown } } | undefined)?.mcpApp;
+  const mcpApp = (unwrapMcpToolState(state) as { mcpApp?: { resourceUri?: unknown } } | undefined)
+    ?.mcpApp;
 
   return isUiUri(mcpApp?.resourceUri) ? { resourceUri: mcpApp.resourceUri } : undefined;
 };

@@ -265,11 +265,26 @@ class MCPService {
 
     const { params } = buildPluginMcpParams(plugin, identifier);
 
-    if (type === 'stdio') {
+    // Stdio servers and localhost / LAN endpoints are only reachable from this
+    // machine, so the desktop reads them over IPC instead of the server relay.
+    const isLocalHttp = type === 'http' && isDesktop && isLocalOrPrivateUrl(params.url);
+    if (type === 'stdio' || isLocalHttp) {
       if (!isDesktop) return;
 
-      const serialized = serializeMcpIpcPayload({ env: params.env, params, uri });
-      const result = await ensureElectronIpc().mcp.readUiResource(serialized as any);
+      const input = isLocalHttp
+        ? {
+            http: {
+              auth: params.auth,
+              headers: params.headers,
+              name: params.name,
+              url: params.url,
+            },
+            uri,
+          }
+        : { env: params.env, params, uri };
+      const result = await ensureElectronIpc().mcp.readUiResource(
+        serializeMcpIpcPayload(input) as any,
+      );
       return deserializeMcpIpcPayload(result) as ReadResourceResult;
     }
 

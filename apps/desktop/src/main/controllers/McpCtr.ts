@@ -113,8 +113,15 @@ export interface CallToolInput {
 }
 
 export interface ReadUiResourceInput {
-  env: any;
-  params: GetStdioMcpServerManifestInput;
+  env?: any;
+  /** HTTP endpoint only this machine can reach (localhost / LAN). */
+  http?: {
+    auth?: { accessToken?: string; token?: string; type: 'none' | 'bearer' | 'oauth2' };
+    headers?: Record<string, string>;
+    name: string;
+    url: string;
+  };
+  params?: GetStdioMcpServerManifestInput;
   uri: string;
 }
 
@@ -602,25 +609,54 @@ export default class McpCtr extends ControllerModule {
   }
 
   /**
-   * Read an MCP Apps `ui://` resource from a stdio server, so the chat can
-   * render a tool result's interactive view.
+   * Read an MCP Apps `ui://` resource from a stdio or local-network HTTP
+   * server, so the chat can render a tool result's interactive view.
    */
   @IpcMethod()
   async readUiResource(payload: SuperJSONSerialized<ReadUiResourceInput>) {
     const input = deserializePayload<ReadUiResourceInput>(payload);
     if (!input.uri?.startsWith('ui://')) throw new Error('Only ui:// resources can be read');
 
-    const client = await this.acquireClient({
-      args: input.params.args || [],
-      command: input.params.command,
-      env: input.env,
-      name: input.params.name,
-      type: 'stdio',
-    });
+    let params: MCPClientParams;
+    if (input.http) {
+      params = { ...input.http, type: 'http' };
+    } else if (input.params) {
+      params = {
+        args: input.params.args || [],
+        command: input.params.command,
+        env: input.env,
+        name: input.params.name,
+        type: 'stdio',
+      };
+    } else {
+      throw new Error('Missing MCP server params');
+    }
 
-    return serializePayload(
-      await this.withClientLease(client, () => client.readResource(input.uri)),
-    );
+    const read = (client: MCPClient) =>
+      this.withClientLease(client, () => client.readResource(input.uri));
+    // Reading is idempotent, so unlike tool calls a dead transport is retried
+    // too: the stale session is evicted and the read runs once on a fresh one.
+    const isSessionFailure = (error: unknown) =>
+      isStaleSessionError(error) || isDeadTransportError(error);
+
+    const client = await this.acquireClient(params);
+    try {
+      return serializePayload(await read(client));
+    } catch (error) {
+      if (!isSessionFailure(error)) throw error;
+
+      logger.warn('MCP App resource read failed on pooled session, retrying with a fresh one:', {
+        message: (error as Error).message,
+      });
+      await this.evictClient(params, client);
+      const retryClient = await this.acquireClient(params);
+      try {
+        return serializePayload(await read(retryClient));
+      } catch (retryError) {
+        if (isSessionFailure(retryError)) await this.evictClient(params, retryClient);
+        throw retryError;
+      }
+    }
   }
 
   /** Never fails the tool call: an unknown UI resource only means no interactive view. */

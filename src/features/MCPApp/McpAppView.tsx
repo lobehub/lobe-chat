@@ -5,10 +5,10 @@ import { createStaticStyles, cssVar, cx, Skeleton } from '@lobehub/ui';
 import { type AppBridge, buildAllowAttribute } from '@modelcontextprotocol/ext-apps/app-bridge';
 import { useLatest } from 'ahooks';
 import { memo, type ReactNode, useEffect, useMemo, useRef, useState } from 'react';
-import useSWR from 'swr';
 
 import { useConversationStore } from '@/features/Conversation/store';
 import { useIsDark } from '@/hooks/useIsDark';
+import { useClientDataSWR } from '@/libs/swr';
 import { mcpAppKeys } from '@/libs/swr/keys';
 import { mcpService } from '@/services/mcp';
 
@@ -57,7 +57,7 @@ const McpAppView = memo<McpAppViewProps>(
     const isDark = useIsDark();
     const sendMessage = useConversationStore((s) => s.sendMessage);
 
-    const { data, error, isLoading } = useSWR(
+    const { data, error, isLoading } = useClientDataSWR(
       mcpAppKeys.resource(identifier, resourceUri),
       () => mcpService.readMcpAppResource(identifier, resourceUri),
       { revalidateOnFocus: false, revalidateOnReconnect: false },
