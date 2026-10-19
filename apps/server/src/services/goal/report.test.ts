@@ -450,11 +450,14 @@ describe('buildGoalReportSkeleton', () => {
       kind: 'tool',
       toolName: 'lobe-goal-report.submitGoalReport',
     });
-    expect(tool).toContain('ONE self-contained HTML page');
+    expect(tool).toContain('ONE HTML page');
+    expect(tool).toContain('The page MUST be self-contained');
+    expect(tool).toContain('all CSS in <style> and all JS in <script>');
+    expect(tool).toContain('every diagram (the path, a timeline, a chart) drawn as inline <svg>');
     expect(tool).toContain('html: that HTML page');
 
     const cli = buildGoalReportInstruction(snapshot, 'accepted', { kind: 'cli' });
-    expect(cli).toContain('ONE self-contained HTML page');
+    expect(cli).toContain('The page MUST be self-contained');
     expect(cli).toContain('--html-file <html>');
   });
 

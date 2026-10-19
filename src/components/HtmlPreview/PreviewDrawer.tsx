@@ -29,9 +29,11 @@ interface HtmlPreviewDrawerProps {
   content: string;
   onClose: () => void;
   open: boolean;
+  /** Drawer title; a generic "HTML Preview" when omitted. */
+  title?: string;
 }
 
-const HtmlPreviewDrawer = memo<HtmlPreviewDrawerProps>(({ content, open, onClose }) => {
+const HtmlPreviewDrawer = memo<HtmlPreviewDrawerProps>(({ content, open, onClose, title }) => {
   const { t } = useTranslation('components');
   const [mode, setMode] = useState<'preview' | 'code'>('preview');
 
@@ -88,7 +90,7 @@ const HtmlPreviewDrawer = memo<HtmlPreviewDrawerProps>(({ content, open, onClose
       height={isDesktop ? `calc(100vh - ${TITLE_BAR_HEIGHT}px)` : '100vh'}
       open={open}
       placement="bottom"
-      title={t('HtmlPreview.title')}
+      title={title ?? t('HtmlPreview.title')}
       styles={{
         bodyContent: { height: '100%', padding: 0 },
         header: { paddingBlock: 8, paddingInline: 12 },

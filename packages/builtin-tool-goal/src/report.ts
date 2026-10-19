@@ -84,7 +84,7 @@ export const GoalReportManifest: BuiltinToolManifest = {
           goalId: { type: 'string' },
           html: {
             description:
-              'The same report as ONE self-contained HTML page (inline CSS and JS, no external files; images as data URIs or public URLs), built from the metadata above. It is what readers see as the report; content stays its plain-text fallback.',
+              'The same report as ONE self-contained HTML page, built from the metadata above. It MUST inline all CSS (<style>) and JS (<script>) and draw every diagram as inline <svg>; no external stylesheets, scripts, fonts, chart libraries or local files; images only as data URIs or public URLs. It is what readers see as the report; content stays its plain-text fallback.',
             type: 'string',
           },
           graphCursor: {
