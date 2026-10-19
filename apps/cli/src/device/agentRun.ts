@@ -4,6 +4,7 @@ import {
   buildHeteroExecStdinPayload,
   HETERO_EXEC_INHERIT_PROCESS_GROUP_ENV,
   type HeteroExecImageRef,
+  stripInheritedRunIdentity,
 } from '@lobechat/heterogeneous-agents/protocol';
 import { resolveHeteroSpawnCwd } from '@lobechat/heterogeneous-agents/workingDirectory';
 
@@ -118,17 +119,8 @@ export function spawnHeteroAgentRun(
   });
 
   // A connector can itself be started inside another agent run. Its ambient
-  // identity belongs to the launcher, not this dispatched conversation; CLI
-  // evidence commands must never attach this run's outputs to that ancestor.
-  const childEnv = { ...process.env };
-  for (const key of [
-    'LOBEHUB_AGENT_ID',
-    'LOBEHUB_ASSISTANT_MESSAGE_ID',
-    'LOBEHUB_TASK_ID',
-    'LOBEHUB_WORKSPACE_ID',
-  ]) {
-    delete childEnv[key];
-  }
+  // identity (and JWT file) belongs to that ancestor, not this dispatched run.
+  const childEnv = stripInheritedRunIdentity(process.env);
 
   return new Promise<AgentRunAckResult>((resolve) => {
     let settled = false;

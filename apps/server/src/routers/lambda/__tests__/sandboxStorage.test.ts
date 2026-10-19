@@ -99,6 +99,7 @@ vi.mock('@/server/services/market', () => ({
         readOccupancy: mockReadOccupancy,
         refreshUsage: mockRefreshUsage,
         stopInstance: mockStopInstance,
+        readStopTarget: async () => ({ sessionId: 'session-1', topicId: null }),
         writeFile: mockWriteFile,
       }),
     };
@@ -294,12 +295,11 @@ describe('sandboxStorageRouter', () => {
         sandboxStorageRouter.createCaller(ctx).stopInstance({ id: instanceId }),
       ).resolves.toEqual({ stopped: true });
 
-      expect(mockStopInstance).toHaveBeenCalledWith({ name: instanceId });
+      expect(mockStopInstance.mock.calls[0][0].expectedSessionId).toBe('session-1');
     });
 
     it('refuses an instance the caller does not own, before reaching the execution plane', async () => {
-      // A published instance is usually held by a colleague's conversation;
-      // reading access must not be enough to cut that run off.
+      // Reading a colleague's instance does not grant authority to stop it.
       mockInstanceFindOwnedById.mockResolvedValue(undefined);
 
       await expect(

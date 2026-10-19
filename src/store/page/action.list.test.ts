@@ -125,13 +125,18 @@ describe('pageActions — useFetchDocuments', () => {
     const [call] = await syncCalls('pageList');
 
     vi.mocked(documentService.queryDocuments).mockResolvedValue({
-      items: [row('docs_page'), row('upload_1', { fileType: 'text/plain' })],
-      total: 2,
+      items: [
+        row('docs_page'),
+        row('docs_html', { fileType: 'custom/html' }),
+        row('upload_1', { fileType: 'text/plain' }),
+      ],
+      total: 3,
     });
 
     const page = (await call.fetcher()) as { items: LobeDocument[] };
 
-    expect(page.items.map((item) => item.id)).toEqual(['docs_page']);
+    // An HTML page is a page too; an arbitrary upload is not.
+    expect(page.items.map((item) => item.id)).toEqual(['docs_page', 'docs_html']);
   });
 });
 

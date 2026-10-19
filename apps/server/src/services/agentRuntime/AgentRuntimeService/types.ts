@@ -1,4 +1,4 @@
-import type { Agent, GeneralAgentConfig } from '@lobechat/agent-runtime';
+import type { Agent, AgentState, GeneralAgentConfig } from '@lobechat/agent-runtime';
 import type { ISnapshotStore } from '@lobechat/agent-tracing';
 import {
   type ExecSubAgentParams,
@@ -16,6 +16,7 @@ import type {
 import type { IStreamEventManager } from '@/server/modules/AgentRuntime/types';
 import type { MessageService } from '@/server/services/message';
 import type { QueueService } from '@/server/services/queue';
+import type { SteerQueueScope } from '@/server/services/redis/steerQueue';
 import type { ToolExecutionService } from '@/server/services/toolExecution';
 
 import type { CompletionLifecycle } from '../CompletionLifecycle';
@@ -74,6 +75,7 @@ import type {
   acceptsMemberRuntimeEnd,
   controlCompletedToolResult,
   getOperationStatus,
+  injectQueuedFollowUp,
   interruptOperation,
   isOperationInterrupted,
   readQueuedMessagesFlag,
@@ -143,6 +145,29 @@ export interface AgentRuntimeDelegate {
    * placeholder before resuming the parked parent operation.
    */
   execVirtualSubAgent?: (params: ExecVirtualSubAgentParams) => Promise<ExecSubAgentResult>;
+  /**
+   * The run reached a decision point right before its next LLM call: take the
+   * follow-ups the user queued behind it into the run as a steer user message
+   * (merged, access re-checked, persisted where a composer send would anchor
+   * it). Follow-ups that cannot join a running turn (attachments, a different
+   * agent, tool / skill selections) stay queued for the hand-back. Resolves to
+   * `undefined` when nothing was taken in.
+   */
+  injectQueuedFollowUp?: (params: {
+    operationId: string;
+    scope: SteerQueueScope;
+    state: AgentState;
+  }) => Promise<{ messageId: string } | undefined>;
+  /**
+   * A top-level run just finished: start the follow-ups the user queued behind
+   * it as the next turn (the composer pipeline, with `steer`). Resolves to
+   * `undefined` when nothing was queued or the start failed — the follow-ups
+   * then stay queued; it never throws into the finishing step.
+   */
+  startQueuedFollowUp?: (params: {
+    operationId: string;
+    scope: SteerQueueScope;
+  }) => Promise<{ operationId: string } | undefined>;
   /**
    * Re-check that an Agent Share visitor run is STILL authorized to continue,
    * called on EVERY step. Without it, a revocation that lands mid-run (link →
@@ -276,6 +301,7 @@ export interface AgentRuntimeServiceContext {
   getPendingInterventions: Bound<typeof getPendingInterventions>;
   handleGroupMemberTimeout: Bound<typeof handleGroupMemberTimeout>;
   readonly humanIntervention: HumanInterventionHandler;
+  injectQueuedFollowUp: Bound<typeof injectQueuedFollowUp>;
   interruptOperation: Bound<typeof interruptOperation>;
   isCallSubAgentToolMessage: Bound<typeof isCallSubAgentToolMessage>;
   isOperationInterrupted: Bound<typeof isOperationInterrupted>;

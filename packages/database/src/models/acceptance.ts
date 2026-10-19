@@ -537,4 +537,29 @@ export class AcceptanceModel {
   delete = async (id: string) => {
     return this.db.delete(acceptances).where(and(eq(acceptances.id, id), this.ownership()));
   };
+
+  /**
+   * Delete every acceptance attached to the given subjects in the caller's
+   * user/workspace scope. Used when the subjects themselves are deleted (see
+   * `TaskSubtreeRepository.deleteSubtree`).
+   */
+  deleteBySubjects = async (
+    subjectType: AcceptanceSubjectType,
+    subjectIds: string[],
+  ): Promise<void> => {
+    if (subjectIds.length === 0) return;
+
+    await this.db
+      .delete(acceptances)
+      .where(
+        and(
+          eq(acceptances.subjectType, subjectType),
+          inArray(acceptances.subjectId, subjectIds),
+          buildWorkspaceWhere(
+            { userId: this.userId, workspaceId: this.workspaceId },
+            { userId: acceptances.userId, workspaceId: acceptances.workspaceId },
+          ),
+        ),
+      );
+  };
 }

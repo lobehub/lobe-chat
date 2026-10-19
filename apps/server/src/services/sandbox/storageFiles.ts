@@ -342,10 +342,43 @@ export const createSandboxStorageClient = ({ baseURL, headers }: SandboxStorageC
      * packing. `stopped: false` means nothing held it. Control plane only —
      * stopping a sandbox never starts one.
      */
-    stopInstance: async (params: { name: string }): Promise<{ stopped: boolean }> =>
-      request(`${CURRENT_STORAGE}/instances/${encodeURIComponent(params.name)}/stop`, {
-        method: 'POST',
-      }),
+    readStopTarget: async (params: {
+      name: string;
+    }): Promise<{ sessionId: string; topicId: string | null } | null> =>
+      request(`${CURRENT_STORAGE}/instances/${encodeURIComponent(params.name)}/stop-target`),
+
+    prepareStop: async (params: {
+      expectedSessionId: string;
+      name: string;
+      operationIds: string[];
+    }): Promise<{ prepared: boolean }> => {
+      const query = new URLSearchParams({
+        expectedSessionId: params.expectedSessionId,
+        prepare: 'true',
+      });
+      for (const id of params.operationIds) query.append('operationId', id);
+      return request(
+        `${CURRENT_STORAGE}/instances/${encodeURIComponent(params.name)}/stop?${query}`,
+        { method: 'POST' },
+      );
+    },
+
+    stopInstance: async (params: {
+      expectedSessionId?: string;
+      name: string;
+      operationIds?: string[];
+    }): Promise<{ stopped: boolean }> => {
+      const query = new URLSearchParams();
+      if (params.expectedSessionId) query.set('expectedSessionId', params.expectedSessionId);
+      for (const id of params.operationIds ?? []) query.append('operationId', id);
+      const suffix = query.size ? `?${query.toString()}` : '';
+      return request(
+        `${CURRENT_STORAGE}/instances/${encodeURIComponent(params.name)}/stop${suffix}`,
+        {
+          method: 'POST',
+        },
+      );
+    },
 
     /**
      * Start building an environment from its specification.

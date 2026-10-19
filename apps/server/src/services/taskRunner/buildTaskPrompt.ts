@@ -18,7 +18,7 @@ import {
   countUnchargedRuns,
   resolveTaskAttemptBudget,
 } from '@/server/services/goal/recoveryPolicy';
-import { resolveTaskAcceptance } from '@/server/services/verify/taskAcceptance';
+import { resolveTaskAcceptance } from '@/server/services/verify/taskAcceptanceResolution';
 
 /** Cap on unresolved checks carried into the next round's prompt. */
 const MAX_GOAL_FAILED_CHECKS = 8;

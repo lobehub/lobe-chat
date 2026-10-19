@@ -46,7 +46,7 @@ import {
   graphNodeLabel,
   isContainerKind,
 } from '../../Experiments/model';
-import { useGateCheckCopy } from '../BatchGate/useGateCheckCopy';
+import GateChecksHint from '../BatchGate/GateChecksHint';
 import {
   type GoalGraphView,
   type GoalNodeView,
@@ -54,11 +54,11 @@ import {
   scopeGraphView,
 } from '../goalGraphViewModel';
 import { GATE_COLOR, SKILL_COLOR, SKILL_ICON } from '../shared';
+import { buildBatchFlowNodes } from './batchFlowNodes';
 import {
   BatchExperimentProbeGroup,
+  BatchRetroGroup,
   BatchRoundFrame,
-  type BatchRoundFrameData,
-  type BatchWavesData,
   BatchWavesGroup,
   CELL_VISUAL,
 } from './BatchGroups';
@@ -352,6 +352,7 @@ const edgeTypes = { exploration: ExplorationEdge };
 
 const nodeTypes = {
   goalBatchExperimentProbe: BatchExperimentProbeGroup,
+  goalBatchRetro: BatchRetroGroup,
   goalBatchRound: BatchRoundFrame,
   goalBatchWaves: BatchWavesGroup,
   goalExperiment: GraphNodeView,
@@ -363,6 +364,7 @@ const nodeTypes = {
 /** Frames and groups a click passes through: their own buttons and cards act. */
 const PASSIVE_NODE_TYPES = new Set([
   'goalBatchExperimentProbe',
+  'goalBatchRetro',
   'goalBatchRound',
   'goalBatchWaves',
   'goalExperimentGroup',
@@ -382,7 +384,6 @@ type BatchRole = { kind: 'assay' | 'template'; model: BatchModel; round: BatchRo
 
 const useBatchCopy = () => {
   const { t } = useTranslation('chat');
-  const checkCopy = useGateCheckCopy();
   return useMemo(
     () => ({
       gate: (round: BatchRound, model: BatchModel): GraphNodeData['presentation'] => {
@@ -405,22 +406,12 @@ const useBatchCopy = () => {
         ) : (
           t('goalBatch.gate.checkCount', { count: model.gateChecks.length })
         );
-        const checks = (latest ? judged : model.gateChecks).map((check) => {
-          const { detail, label } = checkCopy(check);
-          const mark = 'passed' in check ? (check.passed ? '✓ ' : '✗ ') : '';
-          return `${mark}${label}${detail ? `（${detail}）` : ''}`;
-        });
         return {
           chip: { ...chip, text: t(`goalBatch.gate.status.${key}` as any) },
-          // How many conditions decide the release, and which, one hover away.
-          hint: (
-            <Flexbox gap={4}>
-              <span>{t('goalBatch.gate.hintTitle')}</span>
-              {checks.map((text, index) => (
-                <span key={index}>{latest ? text : `${index + 1}. ${text}`}</span>
-              ))}
-            </Flexbox>
-          ),
+          // Which conditions decide the release, and how each stands, one hover away —
+          // to the side, so it never covers the retro the gate sits under.
+          hint: <GateChecksHint checks={latest ? judged : model.gateChecks} />,
+          hintPlacement: 'rightTop',
           icon: DoorOpen,
           palette: GATE_COLOR,
           // Passed / sent back / waiting sits after the title, right-aligned.
@@ -450,7 +441,7 @@ const useBatchCopy = () => {
         title: t(batchPlanTitleKey(model, round), { revision: round.planVersion }),
       }),
     }),
-    [t, checkCopy],
+    [t],
   );
 };
 
@@ -818,65 +809,15 @@ const Canvas = memo<
     // round's waves and the frame each round's nodes sit in. They are not graph
     // nodes; their cards and squares open the real node underneath.
     const batchFlowNodes: FlowNode[] = useMemo(
-      () => [
-        ...[...batches].flatMap(([batchId, { layout, model }]) => {
-          if (!layout || !visibleIds.has(batchId)) return [];
-          const [first] = model.rounds;
-          // The roster waves a round owns, keeping each one's roster position.
-          const rowsOf = (revision: number) =>
-            model.waves.flatMap((cells, wave) =>
-              model.waveRounds[wave] === revision ? [{ cells, wave }] : [],
-            );
-          return layout.groups.map((group) => {
-            const round = model.rounds[group.revision - 1];
-            const base = {
-              draggable: false,
-              id: group.id,
-              ...placeInMap(group.id, group.box, batchId),
-              selectable: false,
-              width: group.box.width,
-            };
-            // A round's frame sits behind its nodes and the links between them.
-            if (group.kind === 'round')
-              return {
-                ...base,
-                data: { revision: group.revision } satisfies BatchRoundFrameData,
-                style: { height: group.box.height, width: group.box.width },
-                type: 'goalBatchRound',
-                zIndex: -1,
-              } satisfies FlowNode;
-            const data =
-              group.kind === 'experimentProbe'
-                ? {
-                    onEnter: () => onEnter(batchStageId(batchId, 0)),
-                    onSelect,
-                    probes: first.probes,
-                    started: first.probes.some((probe) => probe.state !== 'backlog'),
-                    views: graph.byId,
-                  }
-                : ({
-                    onEnter: () => onEnter(batchStageId(batchId, group.revision)),
-                    onSelect,
-                    probes: round.probes,
-                    revision: group.revision,
-                    rows: rowsOf(group.revision),
-                    started:
-                      group.revision === 1
-                        ? !first.assayId || first.gate === 'passed' || first.gate === 'rejected'
-                        : round.probes.some((probe) => probe.state !== 'backlog'),
-                    waveSize: model.waveSize,
-                  } satisfies BatchWavesData);
-            return {
-              ...base,
-              data,
-              // Width is the layout's; height hugs the content, the layout only reserves it.
-              style: { width: group.box.width },
-              type:
-                group.kind === 'experimentProbe' ? 'goalBatchExperimentProbe' : 'goalBatchWaves',
-            } satisfies FlowNode;
-          });
+      () =>
+        buildBatchFlowNodes({
+          batches,
+          byId: graph.byId,
+          onEnter,
+          onSelect,
+          placeInMap,
+          visibleIds,
         }),
-      ],
       [batches, visibleIds, graph.byId, onEnter, onSelect, placeInMap],
     );
 

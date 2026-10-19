@@ -415,8 +415,8 @@ export default {
   'mail.support': 'Email Support',
   'deleteHistoryMigrating':
     'Chat history is still migrating. It can be deleted once the migration finishes — please try again in a few minutes.',
-  'deleteSharedOwnerOnly':
-    "Only a workspace owner can delete this — it carries other members' conversations",
+  'deleteSharedContentOwnerOnly':
+    "Can't delete: this includes other members' topics, comments, or tasks. Ask a workspace owner to delete it.",
   'manageOnlyCreator': 'Only the creator or a workspace owner can do this',
   'openOnRight': 'Open on the right',
   'openOnRightHint': 'Release to open side-by-side on the right',
@@ -502,6 +502,12 @@ export default {
   'supportAgent.context.attached': 'Diagnostic info attached',
   'supportAgent.context.remove': 'Remove',
   'supportAgent.error.failed': 'Something went wrong while answering. Try again.',
+  'supportAgent.error.inspection_expired':
+    'This permission request expired. Start a new conversation to continue.',
+  'supportAgent.error.inspection_submitted':
+    'A permission response may already have been submitted. Its outcome is unknown. Start a new conversation to continue.',
+  'supportAgent.error.resume_failed':
+    'Unable to confirm that this conversation resumed. Start a new conversation to continue.',
   'supportAgent.error.invalid_conversation':
     'This conversation can no longer be continued. Send again to start a new one.',
   'supportAgent.error.rate_limited': "You've reached the hourly question limit. Try again later.",
@@ -511,6 +517,7 @@ export default {
   'supportAgent.inspect.accessHint':
     'For the next 10 minutes it can act as you in your account to investigate. It has been told to only read, and to change nothing unless you ask.',
   'supportAgent.inspect.allow': 'Allow',
+  'supportAgent.inspect.approvedDecision': 'You approved access to {{target}}.',
   'supportAgent.inspect.declined': 'You declined the request',
   'supportAgent.inspect.deny': 'Decline',
   'supportAgent.inspect.granted': 'Granted {{target}}',
@@ -529,6 +536,7 @@ export default {
   'supportAgent.inspect.target.agent': 'the configuration of the agent "{{title}}"',
   'supportAgent.inspect.target.conversation':
     'the full conversation "{{title}}" ({{total}} messages)',
+  'supportAgent.inspect.target.unavailable': 'an unavailable page',
   'supportAgent.inspect.untitled': 'Untitled',
   'supportAgent.newConversation': 'New conversation',
   'supportAgent.placeholder': 'Describe your question…',
@@ -590,6 +598,7 @@ export default {
   'tab.eval': 'Eval Lab',
   'tab.files': 'Files',
   'tab.generation': 'Generation',
+  'tab.goals': 'Goals',
   'tab.home': 'Home',
   'tab.knowledgeBase': 'Library',
   'tab.marketplace': 'Marketplace',

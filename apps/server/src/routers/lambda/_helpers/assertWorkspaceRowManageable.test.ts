@@ -48,6 +48,38 @@ describe('assertWorkspaceRowManageable', () => {
     }
   });
 
+  it('rejects a workspace admin by default', () => {
+    expect(() =>
+      assertWorkspaceRowManageable(
+        { userId: 'me', workspaceId: 'ws1', workspaceRole: 'admin' },
+        'someone-else',
+        'connector',
+      ),
+    ).toThrow(TRPCError);
+  });
+
+  it('allows a workspace admin when allowAdmin is set', () => {
+    expect(() =>
+      assertWorkspaceRowManageable(
+        { userId: 'me', workspaceId: 'ws1', workspaceRole: 'admin' },
+        'someone-else',
+        'task',
+        { allowAdmin: true },
+      ),
+    ).not.toThrow();
+  });
+
+  it('still rejects a member when allowAdmin is set', () => {
+    expect(() =>
+      assertWorkspaceRowManageable(
+        { userId: 'me', workspaceId: 'ws1', workspaceRole: 'member' },
+        'someone-else',
+        'task',
+        { allowAdmin: true },
+      ),
+    ).toThrow(TRPCError);
+  });
+
   it('rejects when the row has no creator recorded', () => {
     expect(() =>
       assertWorkspaceRowManageable(

@@ -5,6 +5,7 @@
   "agentLabel.create": "Nouveau label",
   "agentLabel.manage": "Gérer les labels",
   "agentLabel.menuTitle": "Labels",
+  "agentSkills.ensureFailed": "Certaines compétences dont cet agent dépend n'ont pas pu être installées automatiquement : {{skills}}. Vous pouvez les ajouter manuellement dans le Magasin de Compétences.",
   "agentViewAll.addToSidebar": "Afficher dans la barre latérale",
   "agentViewAll.empty": "Aucun agent pour le moment",
   "agentViewAll.form.grouping": "Regroupement",

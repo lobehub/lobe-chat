@@ -260,6 +260,7 @@ export interface HeterogeneousAgentExecutorParams {
   resumeSessionId?: string;
   workingDirectory?: string;
   workingDirectoryConfig?: WorkingDirConfig;
+  workspaceId?: string | null; // workspace the run started in (null = personal)
 }
 
 export interface HeterogeneousAgentExecutionOutcome {
@@ -524,6 +525,8 @@ export const executeHeterogeneousAgent = async (
     workingDirectory,
     workingDirectoryConfig,
   } = params;
+  // Navigation can move to another workspace during the awaits below.
+  const workspaceId = 'workspaceId' in params ? params.workspaceId : getActiveWorkspaceId();
   let outcome: HeterogeneousAgentExecutionOutcome | undefined;
   /** Set by `persistTerminalError`; surfaced on the outcome, see its doc. */
   let terminalErrorPersisted = false;
@@ -538,21 +541,18 @@ export const executeHeterogeneousAgent = async (
       ? heterogeneousProvider.apiConfig.model.trim() || undefined
       : undefined;
 
-  // Which real provider account this run consumes, resolved once after spawn
-  // from the FINAL env (so an agent-env override is attributed correctly, not
-  // the routed choice). Read by the per-turn usage→ledger hook below.
+  // The real provider account this run consumes, resolved once after spawn from the
+  // FINAL env (an agent-env override, not the routed choice). Read by the ledger hook.
   let runExternalAccountId: string | undefined;
-  // Settles when that identity read finishes, one way or another. Ledger rows
-  // are permanent, so a turn must never be submitted before this settles — an
-  // early unattributed row is one the later assignment cannot repair.
+  // Settles when that identity read finishes. Ledger rows are permanent, so no turn is
+  // submitted before this settles — a later assignment cannot repair an unattributed row.
   let runIdentitySettled: Promise<unknown> = Promise.resolve();
 
-  // Usage ledger: one turn's spend, attributed to the account the run is on —
-  // the "our own cost" half calibration crosses with the provider's utilization
-  // meter. Main-agent AND subagent turns both route here: a CC Task/subagent
-  // burns the same subscription as its parent, so skipping it would understate
-  // the account and skew calibration high. Fire-and-forget: accounting must
-  // never stall or fail the run, and the server dedupes by message id.
+  // Usage ledger: one turn's spend, attributed to the run's account — the "our own cost"
+  // half calibration crosses with the provider's utilization meter. Main-agent AND subagent
+  // turns route here: a CC Task/subagent burns its parent's subscription, so skipping it
+  // would understate the account and skew calibration high. Fire-and-forget: accounting
+  // must never stall or fail the run, and the server dedupes by message id.
   const recordQuotaLedgerUsage = (intent: {
     messageId: string;
     model?: string;
@@ -1163,7 +1163,7 @@ export const executeHeterogeneousAgent = async (
           { ns: 'chat' },
         ),
       );
-      await executeHeterogeneousAgent(get, { ...params, resumeSessionId: undefined });
+      await executeHeterogeneousAgent(get, { ...params, resumeSessionId: undefined, workspaceId });
     })();
 
     return true;
@@ -2009,15 +2009,15 @@ export const executeHeterogeneousAgent = async (
       : await resolveQuotaAccountSpawnPlan(context.agentId, adapterType);
 
     const sessionEnv = {
-      // Tell the CLI which LobeHub conversation it is running inside. The child
-      // (and every subprocess it spawns, e.g. `lh`) inherits these, so a tool
-      // running under the agent can attribute its output back to this topic
-      // without the agent having to pass ids it can't see. User-configured env
-      // wins — this is provenance, never an override the user can't escape.
+      // Tell the CLI which LobeHub conversation and workspace it runs inside.
+      // Every subprocess it spawns (e.g. `lh`) inherits these, so its output
+      // lands in this topic and workspace without ids the agent can't see.
+      // User-configured env wins — provenance, never an inescapable override.
       ...buildLobeHubSessionEnv({
         agentId: context.agentId,
         operationId,
         topicId: context.topicId,
+        workspaceId,
       }),
       ...quotaAccountPlan.env,
       // The agent's own env is the most specific choice and keeps winning —
@@ -2670,7 +2670,7 @@ export const executeHeterogeneousAgent = async (
       assistantMessageId,
       imageList,
       userId: userProfileSelectors.userId(getUserStoreState()),
-      workspaceId: getActiveWorkspaceId() ?? undefined,
+      workspaceId: workspaceId ?? undefined,
       operationId,
       // `/goal` travels as system-context instructions; the CLI gets only the
       // request so its own `/goal` command does not take the message over.

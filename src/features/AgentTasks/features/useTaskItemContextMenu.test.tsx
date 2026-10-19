@@ -8,13 +8,13 @@ import { useTaskItemContextMenu } from './useTaskItemContextMenu';
 
 const mocks = vi.hoisted(() => ({
   archiveTask: vi.fn(),
+  isAdmin: false,
   manageable: true,
   closeContextMenu: vi.fn(),
   copyToClipboard: vi.fn(),
   deleteTask: vi.fn(),
   messageSuccess: vi.fn(),
   toastError: vi.fn(),
-  toastInfo: vi.fn(),
   modalConfirm: vi.fn(),
   refreshTaskList: vi.fn(),
   runTask: vi.fn(),
@@ -31,9 +31,13 @@ vi.mock('@lobehub/ui', async (importOriginal) => {
   return {
     ...actual,
     copyToClipboard: mocks.copyToClipboard,
-    toast: { ...actual.toast, error: mocks.toastError, info: mocks.toastInfo, success: vi.fn() },
+    toast: { ...actual.toast, error: mocks.toastError, success: vi.fn() },
   };
 });
+
+vi.mock('@/business/client/hooks/useIsWorkspaceAdmin', () => ({
+  useIsWorkspaceAdmin: () => mocks.isAdmin,
+}));
 
 vi.mock('@/hooks/useResourceManageable', () => ({
   useResourceManageableChecker: () => () => mocks.manageable,
@@ -103,6 +107,7 @@ vi.mock('react-i18next', () => ({
 describe('useTaskItemContextMenu', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    mocks.isAdmin = false;
     mocks.manageable = true;
   });
 
@@ -154,7 +159,26 @@ describe('useTaskItemContextMenu', () => {
       expect(mocks.archiveTask).toHaveBeenCalledWith('T-1', false);
     });
 
-    it('warns instead of archiving work that can still run', async () => {
+    it('keeps restore available on an archived task whose work could still run', async () => {
+      const { result } = renderHook(() =>
+        useTaskItemContextMenu({
+          archivedAt: new Date(),
+          identifier: 'T-1',
+          priority: 0,
+          status: 'running',
+        }),
+      );
+      const item = result.current.items.find(
+        (entry) => entry && typeof entry === 'object' && 'key' in entry && entry.key === 'archive',
+      ) as { desc?: string; disabled: boolean; onClick: (info: unknown) => Promise<void> };
+
+      expect(item.disabled).toBe(false);
+      expect(item.desc).toBeUndefined();
+      await item.onClick({ domEvent: { stopPropagation: vi.fn() } });
+      expect(mocks.archiveTask).toHaveBeenCalledWith('T-1', false);
+    });
+
+    it('disables archiving work that can still run and says why', async () => {
       const { result } = renderHook(() =>
         useTaskItemContextMenu({
           archivedAt: null,
@@ -167,12 +191,12 @@ describe('useTaskItemContextMenu', () => {
       );
       const item = result.current.items.find(
         (entry) => entry && typeof entry === 'object' && 'key' in entry && entry.key === 'archive',
-      ) as { onClick: (info: unknown) => Promise<void> };
+      ) as { desc?: string; disabled: boolean; onClick: (info: unknown) => Promise<void> };
 
+      expect(item.disabled).toBe(true);
+      expect(item.desc).toBe('taskList.contextMenu.archiveBlocked');
       await item.onClick({ domEvent: { stopPropagation: vi.fn() } });
-
       expect(mocks.archiveTask).not.toHaveBeenCalled();
-      expect(mocks.toastInfo).toHaveBeenCalledWith('taskList.contextMenu.archiveBlocked');
     });
 
     it('tells the user when the archive request fails', async () => {
@@ -184,16 +208,33 @@ describe('useTaskItemContextMenu', () => {
       expect(mocks.toastError).toHaveBeenCalledWith('taskList.contextMenu.archiveFailed');
     });
 
-    it("disables archiving someone else's shared task", async () => {
+    it("disables archiving someone else's shared task and says why", async () => {
       mocks.manageable = false;
       const item = findArchiveItem(null) as unknown as {
+        desc?: string;
         disabled: boolean;
         onClick: (info: unknown) => Promise<void>;
       };
 
       expect(item.disabled).toBe(true);
+      expect(item.desc).toBe('taskList.contextMenu.archiveDenied.notCreatorOrAdmin');
       await click(item);
       expect(mocks.archiveTask).not.toHaveBeenCalled();
+    });
+
+    it("lets a workspace admin archive someone else's shared task", async () => {
+      mocks.manageable = false;
+      mocks.isAdmin = true;
+      const item = findArchiveItem(null) as unknown as {
+        desc?: string;
+        disabled: boolean;
+        onClick: (info: unknown) => Promise<void>;
+      };
+
+      expect(item.disabled).toBe(false);
+      expect(item.desc).toBeUndefined();
+      await click(item);
+      expect(mocks.archiveTask).toHaveBeenCalledWith('T-1', true);
     });
 
     it('offers no Run now on an archived task', () => {

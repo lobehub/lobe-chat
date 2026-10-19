@@ -1871,6 +1871,14 @@ export class ClaudeCompatibleStreamAdapter implements AgentEventAdapter {
    * not main-agent-scoped).
    */
   private handleUser(raw: any): HeterogeneousAgentEvent[] {
+    // A replayed user message (`--replay-user-messages`) is input the host
+    // delivered into a live session: the turn it opens answers the user, not a
+    // background task — even if a task notification lands before it opens.
+    if (raw.isReplay && !raw.parent_tool_use_id) {
+      this.hasUnhandledUserInput = true;
+      return [];
+    }
+
     const content = raw.message?.content;
     if (!Array.isArray(content)) return [];
 
@@ -2188,10 +2196,10 @@ export class ClaudeCompatibleStreamAdapter implements AgentEventAdapter {
     this.lastApiErrorText = undefined;
     this.streamedTextByMessageId.clear();
     this.streamedThinkingByMessageId.clear();
-    // Drop any unconsumed task-completion lineage so the next LLM run
-    // doesn't inherit it (e.g. a follow-up user turn would otherwise
-    // wrongly inherit the previous run's task-completion tag).
+    // Drop any unconsumed task-completion lineage so the next LLM run doesn't
+    // inherit it; the next turn follows no tool_result of this one either.
     this.pendingTaskCompletion = undefined;
+    this.hasUnhandledUserInput = false;
 
     const shouldEmitVisibleOutputEnd =
       this.options.runtimeEndStrategy === 'on-result' || this.activeTasks.size === 0;
@@ -2390,7 +2398,7 @@ export class ClaudeCompatibleStreamAdapter implements AgentEventAdapter {
         sourceToolName: task.sourceToolName,
         type: 'tool-stdout',
       };
-    } else if (this.pendingTaskCompletion) {
+    } else if (this.pendingTaskCompletion && !this.hasUnhandledUserInput) {
       // Natural turn that follows a `task_notification` — this is the
       // post-task summary. Tag it with the source-tool lineage so the
       // collector keeps it inside the same AssistantGroup as the
@@ -2463,12 +2471,3 @@ export class ClaudeCompatibleStreamAdapter implements AgentEventAdapter {
 }
 
 export class ClaudeCodeAdapter extends ClaudeCompatibleStreamAdapter {}
-
-export class ClaudeCodeSdkAdapter extends ClaudeCodeAdapter {
-  constructor() {
-    super({
-      runtimeEndStrategy: 'on-transport-close',
-      signalBackgroundTaskCompletion: true,
-    });
-  }
-}

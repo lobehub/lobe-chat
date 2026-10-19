@@ -5,6 +5,7 @@
   "agentLabel.create": "新しいラベル",
   "agentLabel.manage": "ラベルを管理",
   "agentLabel.menuTitle": "ラベル",
+  "agentSkills.ensureFailed": "このエージェントが依存しているいくつかのスキルを自動的にインストールできませんでした: {{skills}}。スキルストアで手動で追加することができます。",
   "agentViewAll.addToSidebar": "サイドバーに表示",
   "agentViewAll.empty": "エージェントがまだありません",
   "agentViewAll.form.grouping": "グループ化",

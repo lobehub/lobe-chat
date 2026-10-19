@@ -1,14 +1,17 @@
 import type { UIChatMessage } from '@lobechat/types';
 import { act, waitFor } from '@testing-library/react';
+import { unstable_serialize } from 'swr';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { useClientDataSWR } from '@/libs/swr';
+import { CACHE_TIERS } from '@/libs/swr/localStorageProvider';
 import { messageService } from '@/services/message';
 import {
   clearMessageListClientCacheState,
   MESSAGE_LIST_VERIFICATION_INTERVAL,
   runMessageListQuery,
 } from '@/services/message/cache';
+import { conversationMessagesKey } from '@/services/message/replica';
 import { useChatStore } from '@/store/chat';
 import { operationSelectors } from '@/store/chat/selectors';
 import { LOCAL_MESSAGE_SCOPE } from '@/store/chat/utils/localMessages';
@@ -53,7 +56,7 @@ const messageSyncKeys = () =>
   vi
     .mocked(useClientDataSWR)
     .mock.calls.map(([key]) => key as any[] | null)
-    .filter((key) => key?.[0] === 'message:list');
+    .filter((key) => key?.[0] === 'replica:sync' && key[1] === 'conversationMessages');
 
 const context = { agentId: 'test-session', threadId: null, topicId: 'test-topic' };
 
@@ -289,23 +292,29 @@ describe('useFetchMessages', () => {
     expect(messageService.getMessages).not.toHaveBeenCalled();
   });
 
-  it('keys the sync by the canonical read context', () => {
+  it('keys the sync by its entry, outside the SWR persistence tier', () => {
     // The SWR mock runs the fetcher; an unmocked list read rejects after the test.
     vi.mocked(messageService.getMessages).mockResolvedValue([]);
+    const shared = { ...context, topicShareId: 'share-1' };
 
     syncMessages({ ...context, threadId: 'thread-1' });
     syncMessages({ ...context, threadId: 'thread-2' });
+    syncMessages(shared);
 
-    const [first, second] = messageSyncKeys();
+    const keys = messageSyncKeys();
+    expect(keys).toHaveLength(3);
+    const [first, second, third] = keys;
     expect(first).not.toEqual(second);
-    expect(first![0]).toBe('message:list');
-    expect(first![1]).toEqual({
-      agentId: 'test-session',
-      groupId: null,
-      threadId: 'thread-1',
-      topicId: 'test-topic',
-    });
-    expect((second as any[])[1].threadId).toBe('thread-2');
+    expect(first![4]).toBe(conversationMessagesKey({ ...context, threadId: 'thread-1' }));
+    expect(second![4]).toBe(conversationMessagesKey({ ...context, threadId: 'thread-2' }));
+    expect(third![4]).toBe(conversationMessagesKey(shared));
+    // The replica persists transcripts itself; a key the SWR cache provider
+    // persists would store each one (memory-only shares too) a second time.
+    const persistedPatterns = [...CACHE_TIERS.idb, ...CACHE_TIERS.local];
+    for (const key of keys) {
+      const serialized = unstable_serialize(key);
+      expect(persistedPatterns.filter((pattern) => serialized.includes(pattern))).toEqual([]);
+    }
   });
 
   it('skips switch-time revalidation after a successful server verification', async () => {

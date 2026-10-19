@@ -1,5 +1,6 @@
+import { HTML_DOCUMENT_FILE_TYPE } from '@lobechat/const';
 import { Avatar, Icon } from '@lobehub/ui';
-import { FileTextIcon } from 'lucide-react';
+import { FileTextIcon, GlobeIcon } from 'lucide-react';
 import { type MouseEvent } from 'react';
 import { memo, useCallback, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -33,6 +34,7 @@ const PageListItem = memo<DocumentItemProps>(({ pageId, className }) => {
   const active = selectedPageId === pageId;
   const title = document?.title || t('pageList.untitled');
   const emoji = document?.metadata?.emoji;
+  const isHtmlPage = document?.fileType === HTML_DOCUMENT_FILE_TYPE;
 
   const toggleEditing = useCallback(
     (visible?: boolean) => {
@@ -71,13 +73,16 @@ const PageListItem = memo<DocumentItemProps>(({ pageId, className }) => {
     pageActions.selectPage(pageId);
   }, [pageId, activeWorkspaceSlug, addTab]);
 
-  // Icon with emoji support
+  // Icon with emoji support; an HTML page reads as an artifact (the chat's HTML
+  // artifact icon) rather than a text page.
   const icon = useMemo(() => {
     if (emoji) {
       return <Avatar avatar={emoji} size={28} />;
     }
-    return <Icon icon={FileTextIcon} size={{ size: 18, strokeWidth: 1.5 }} />;
-  }, [emoji]);
+    return (
+      <Icon icon={isHtmlPage ? GlobeIcon : FileTextIcon} size={{ size: 18, strokeWidth: 1.5 }} />
+    );
+  }, [emoji, isHtmlPage]);
 
   const dropdownMenu = useDropdownMenu({ pageId, toggleEditing });
 

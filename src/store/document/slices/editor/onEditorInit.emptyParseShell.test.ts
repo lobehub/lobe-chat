@@ -41,7 +41,7 @@ describe('onEditorInit empty-parse shell tolerance (Lexical error #38)', () => {
     });
 
     act(() => {
-      result.current.onEditorInit(mockEditor);
+      result.current.onEditorInit(mockEditor, 'doc-1');
     });
 
     // The empty-parse shell must not reach setDocument('json') — it would
@@ -70,7 +70,7 @@ describe('onEditorInit empty-parse shell tolerance (Lexical error #38)', () => {
     });
 
     act(() => {
-      result.current.onEditorInit(mockEditor);
+      result.current.onEditorInit(mockEditor, 'doc-legacy');
     });
 
     expect(mockEditor.setDocument).toHaveBeenCalledWith('json', JSON.stringify(legacy), {
