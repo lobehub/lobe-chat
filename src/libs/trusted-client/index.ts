@@ -18,6 +18,7 @@ export interface TrustedClientUserInfo {
    * It rides the token rather than the request body on purpose: it is the one
    * thing the execution plane must not let a caller choose for itself.
    */
+  sandboxOperation?: { operationId: string; topicId: string };
   sandboxStorage?: SandboxStorageClaim | null;
   userId: string;
   /**
@@ -89,9 +90,11 @@ export const generateTrustedClientToken = (userInfo: TrustedClientUserInfo): str
     // Omitted when there is no entitlement, which is the free-tier shape and
     // leaves today's tokens unchanged.
     // TODO: pass through buildTrustedClientPayload once the SDK carries it.
-    const signedPayload: TrustedClientPayload = userInfo.sandboxStorage
-      ? ({ ...payload, sandboxStorage: userInfo.sandboxStorage } as TrustedClientPayload)
-      : payload;
+    const signedPayload: TrustedClientPayload = {
+      ...payload,
+      ...(userInfo.sandboxStorage && { sandboxStorage: userInfo.sandboxStorage }),
+      ...(userInfo.sandboxOperation && { sandboxOperation: userInfo.sandboxOperation }),
+    };
 
     return createTrustedClientToken(signedPayload, MARKET_TRUSTED_CLIENT_SECRET);
   } catch (error) {

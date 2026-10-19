@@ -5,6 +5,7 @@ import { z } from 'zod';
 
 import { TopicModel } from '@/database/models/topic';
 import { router } from '@/libs/trpc/lambda';
+import { stopSandboxInstance } from '@/server/services/sandbox/stopInstance';
 
 import { rethrowDuplicateInstanceDirectory } from './constraintErrors';
 import {
@@ -391,12 +392,9 @@ export const instancesRouter = router({
    */
   stopInstance: instanceProcedure
     .input(z.object({ id: idSchema }))
-    .mutation(async ({ ctx, input }) => {
-      const instance = await ctx.instanceModel.findOwnedById(input.id);
-      if (!instance) throw new TRPCError({ code: 'NOT_FOUND', message: 'Instance not found' });
-
-      return ctx.client.stopInstance({ name: instance.id }).catch(mapStorageError);
-    }),
+    .mutation(async ({ ctx, input }) =>
+      stopSandboxInstance({ ...ctx, id: input.id }).catch(mapStorageError),
+    ),
   renameInstance: instanceProcedure
     .input(z.object({ id: idSchema, name: nameSchema }))
     .mutation(async ({ ctx, input }) => {
