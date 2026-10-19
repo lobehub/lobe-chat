@@ -76,7 +76,7 @@ const fikraChatModels: AIChatModelCard[] = [
     type: 'chat',
   },
   {
-    abilities: { functionCall: true },
+    abilities: { functionCall: true, reasoning: true, structuredOutput: true, video: true, vision: true },
     contextWindowTokens: 1048576,
     description: "Moonshot Kimi K3 for long-context agentic and coding workloads.",
     displayName: "Kimi K3",

@@ -23,7 +23,7 @@ describe('LobeFikraAI - custom features', () => {
 
   describe('params object', () => {
     it('should export params with correct baseURL', () => {
-      expect(params.baseURL).toBe('https://api.fikra.com/v1');
+      expect(params.baseURL).toBe('https://api.fikraapi.co.ke/v1');
     });
 
     it('should have correct provider', () => {
@@ -176,7 +176,7 @@ describe('LobeFikraAI - custom features', () => {
     it('should fetch and process models', async () => {
       const mockClient = {
         apiKey: 'test',
-        baseURL: 'https://api.fikra.com/v1',
+        baseURL: 'https://api.fikraapi.co.ke/v1',
         models: {
           list: vi.fn().mockResolvedValue({
             data: [
@@ -197,7 +197,7 @@ describe('LobeFikraAI - custom features', () => {
     it('should map model fields correctly', async () => {
       const mockClient = {
         apiKey: 'test',
-        baseURL: 'https://api.fikra.com/v1',
+        baseURL: 'https://api.fikraapi.co.ke/v1',
         models: {
           list: vi.fn().mockResolvedValue({
             data: [{ id: 'gpt-3.5-turbo', object: 'model', owned_by: 'openai' }],
@@ -214,7 +214,7 @@ describe('LobeFikraAI - custom features', () => {
     it('should filter unnecessary fields from raw model data', async () => {
       const mockClient = {
         apiKey: 'test',
-        baseURL: 'https://api.fikra.com/v1',
+        baseURL: 'https://api.fikraapi.co.ke/v1',
         models: {
           list: vi.fn().mockResolvedValue({
             data: [
@@ -239,7 +239,7 @@ describe('LobeFikraAI - custom features', () => {
     it('should handle empty model list', async () => {
       const mockClient = {
         apiKey: 'test',
-        baseURL: 'https://api.fikra.com/v1',
+        baseURL: 'https://api.fikraapi.co.ke/v1',
         models: {
           list: vi.fn().mockResolvedValue({
             data: [],
@@ -254,7 +254,7 @@ describe('LobeFikraAI - custom features', () => {
     it('should handle missing data field', async () => {
       const mockClient = {
         apiKey: 'test',
-        baseURL: 'https://api.fikra.com/v1',
+        baseURL: 'https://api.fikraapi.co.ke/v1',
         models: {
           list: vi.fn().mockResolvedValue({}),
         },
@@ -267,7 +267,7 @@ describe('LobeFikraAI - custom features', () => {
     it('should handle null data field', async () => {
       const mockClient = {
         apiKey: 'test',
-        baseURL: 'https://api.fikra.com/v1',
+        baseURL: 'https://api.fikraapi.co.ke/v1',
         models: {
           list: vi.fn().mockResolvedValue({
             data: null,
@@ -282,7 +282,7 @@ describe('LobeFikraAI - custom features', () => {
     it('should handle API error gracefully', async () => {
       const mockClient = {
         apiKey: 'test',
-        baseURL: 'https://api.fikra.com/v1',
+        baseURL: 'https://api.fikraapi.co.ke/v1',
         models: {
           list: vi.fn().mockRejectedValue(new Error('API Error')),
         },
@@ -294,7 +294,7 @@ describe('LobeFikraAI - custom features', () => {
     it('should handle network error', async () => {
       const mockClient = {
         apiKey: 'test',
-        baseURL: 'https://api.fikra.com/v1',
+        baseURL: 'https://api.fikraapi.co.ke/v1',
         models: {
           list: vi.fn().mockRejectedValue(new Error('Network Error')),
         },
@@ -306,7 +306,7 @@ describe('LobeFikraAI - custom features', () => {
     it('should handle unauthorized error', async () => {
       const mockClient = {
         apiKey: 'test',
-        baseURL: 'https://api.fikra.com/v1',
+        baseURL: 'https://api.fikraapi.co.ke/v1',
         models: {
           list: vi.fn().mockRejectedValue(new Error('Unauthorized')),
         },
@@ -318,7 +318,7 @@ describe('LobeFikraAI - custom features', () => {
     it('should process multi-provider model list', async () => {
       const mockClient = {
         apiKey: 'test',
-        baseURL: 'https://api.fikra.com/v1',
+        baseURL: 'https://api.fikraapi.co.ke/v1',
         models: {
           list: vi.fn().mockResolvedValue({
             data: [
@@ -338,7 +338,7 @@ describe('LobeFikraAI - custom features', () => {
     it('should merge with known model data from model-bank', async () => {
       const mockClient = {
         apiKey: 'test',
-        baseURL: 'https://api.fikra.com/v1',
+        baseURL: 'https://api.fikraapi.co.ke/v1',
         models: {
           list: vi.fn().mockResolvedValue({
             data: [{ id: 'gpt-3.5-turbo', object: 'model', owned_by: 'openai' }],
@@ -356,7 +356,7 @@ describe('LobeFikraAI - custom features', () => {
     it('should handle models not in model-bank', async () => {
       const mockClient = {
         apiKey: 'test',
-        baseURL: 'https://api.fikra.com/v1',
+        baseURL: 'https://api.fikraapi.co.ke/v1',
         models: {
           list: vi.fn().mockResolvedValue({
             data: [{ id: 'custom-model', object: 'model', owned_by: 'custom' }],
@@ -373,7 +373,7 @@ describe('LobeFikraAI - custom features', () => {
     it('should handle models with different owned_by values', async () => {
       const mockClient = {
         apiKey: 'test',
-        baseURL: 'https://api.fikra.com/v1',
+        baseURL: 'https://api.fikraapi.co.ke/v1',
         models: {
           list: vi.fn().mockResolvedValue({
             data: [
@@ -393,7 +393,7 @@ describe('LobeFikraAI - custom features', () => {
     it('should preserve object field in processed models', async () => {
       const mockClient = {
         apiKey: 'test',
-        baseURL: 'https://api.fikra.com/v1',
+        baseURL: 'https://api.fikraapi.co.ke/v1',
         models: {
           list: vi.fn().mockResolvedValue({
             data: [{ id: 'gpt-3.5-turbo', object: 'model', owned_by: 'openai' }],
@@ -408,7 +408,7 @@ describe('LobeFikraAI - custom features', () => {
     it('should call processMultiProviderModelList with correct arguments', async () => {
       const mockClient = {
         apiKey: 'test',
-        baseURL: 'https://api.fikra.com/v1',
+        baseURL: 'https://api.fikraapi.co.ke/v1',
         models: {
           list: vi.fn().mockResolvedValue({
             data: [{ id: 'gpt-3.5-turbo', object: 'model', owned_by: 'openai' }],
