@@ -1,6 +1,6 @@
 'use client';
 
-import { isSafeSandboxCwd } from '@lobechat/builtin-tool-cloud-sandbox';
+import { getSandboxCwdValidationError } from '@lobechat/builtin-tool-cloud-sandbox';
 import {
   Button,
   createModal,
@@ -11,7 +11,7 @@ import {
   useModalContext,
 } from '@lobehub/ui';
 import { t as translate } from 'i18next';
-import { memo, useState } from 'react';
+import { memo, useId, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useIMECompositionEvent } from '@/hooks/useIMECompositionEvent';
@@ -58,6 +58,7 @@ const CreateInstanceContent = memo<CreateInstanceContentProps>(
     const actions = useEnvironmentActions();
 
     const editing = Boolean(instance);
+    const directoryFeedbackId = useId();
 
     const [name, setName] = useState(instance?.name ?? '');
     const [workingDirectory, setWorkingDirectory] = useState(instance?.workingDirectory ?? '');
@@ -73,6 +74,7 @@ const CreateInstanceContent = memo<CreateInstanceContentProps>(
     // repopulates under the cursor cannot be cleared at all. The next edit to
     // the name picks it up again.
     const [directoryOwned, setDirectoryOwned] = useState(false);
+    const [directoryTouched, setDirectoryTouched] = useState(false);
     const [creating, setCreating] = useState(false);
     // An Enter that confirms an IME candidate is still an Enter to `keydown`,
     // so without this, typing a Chinese name submitted the dialog on the
@@ -85,9 +87,15 @@ const CreateInstanceContent = memo<CreateInstanceContentProps>(
     // would refuse is refused while the person is still typing rather than on
     // their next message. Editing only ever changes the name, and the directory
     // it came with was already accepted once.
+    const directoryIssue = getSandboxCwdValidationError(workingDirectory);
+    const directoryError =
+      !editing && (directoryTouched || workingDirectory !== '') && directoryIssue
+        ? t(`environments.instances.directoryError.${directoryIssue}`)
+        : undefined;
+    const directoryFeedback = directoryError || error;
     const canCreate = editing
       ? Boolean(name.trim()) && name.trim() !== instance!.name
-      : Boolean(name.trim()) && isSafeSandboxCwd(workingDirectory);
+      : Boolean(name.trim()) && !directoryIssue;
 
     const submit = async () => {
       if (!canCreate || creating) return;
@@ -194,12 +202,16 @@ const CreateInstanceContent = memo<CreateInstanceContentProps>(
               folder to another. A field that would fail on save is worse than
               a field that says why it cannot. */}
             <Input
+              aria-describedby={directoryFeedback ? directoryFeedbackId : undefined}
+              aria-invalid={Boolean(directoryError)}
+              aria-label={t('environments.instances.directoryLabel')}
               disabled={editing}
               placeholder={t('environments.instances.directoryHint')}
               value={workingDirectory}
               onChange={(event) => {
                 const next = event.target.value;
                 setWorkingDirectory(next);
+                setDirectoryTouched(true);
                 // Empty is not a choice, so it gives the field back rather
                 // than counting as one.
                 setDirectoryOwned(next.trim() !== '');
@@ -210,9 +222,9 @@ const CreateInstanceContent = memo<CreateInstanceContentProps>(
               }}
               {...compositionProps}
             />
-            {error && (
-              <Text fontSize={12} type={'danger'}>
-                {error}
+            {directoryFeedback && (
+              <Text aria-live={'polite'} fontSize={12} id={directoryFeedbackId} type={'danger'}>
+                {directoryFeedback}
               </Text>
             )}
           </Flexbox>

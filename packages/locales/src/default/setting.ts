@@ -4338,6 +4338,18 @@ When I am ___, I need ___
   // One line, because the field fills itself in from the name: almost nobody
   // has a decision to make here, and a paragraph over a solved field reads as
   // a warning that something is about to go wrong.
+  'environments.instances.directoryError.required':
+    'Enter a relative folder path, such as projects/my-app.',
+  'environments.instances.directoryError.relative':
+    'Use a relative path, such as projects/my-app, without a leading / or ~.',
+  'environments.instances.directoryError.whitespace':
+    'Remove spaces at the beginning or end of the folder path.',
+  'environments.instances.directoryError.reserved':
+    'The top-level .sandbox folder is reserved. Choose another folder.',
+  'environments.instances.directoryError.segments':
+    'Remove . or .. path segments and repeated or trailing slashes. For example: projects/my-app.',
+  'environments.instances.directoryError.tooLong':
+    'The folder path is too long. Shorten it to 1024 characters or fewer.',
   'environments.instances.directoryHint': 'Folder path. Cannot be changed once created.',
   'environments.sessions.stale': 'No end recorded',
   'environments.instances.remove': 'Delete copy',
