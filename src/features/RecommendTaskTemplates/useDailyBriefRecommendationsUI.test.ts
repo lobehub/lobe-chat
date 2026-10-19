@@ -1,13 +1,23 @@
 /**
  * @vitest-environment happy-dom
  */
-import type { TaskTemplate } from '@lobechat/const';
-import { renderHook, waitFor } from '@testing-library/react';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { randomUUID } from 'node:crypto';
 
-import { TASK_TEMPLATE_RECOMMENDATION_CACHE_VERSION, taskTemplateKeys } from '@/libs/swr/keys';
+import type { TaskTemplate } from '@lobechat/const';
+import { act, renderHook, waitFor } from '@testing-library/react';
+import type { PropsWithChildren } from 'react';
+import { createElement } from 'react';
+import { SWRConfig } from 'swr';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+
+import { cacheScope } from '@/libs/replica';
 import { taskTemplateService } from '@/services/taskTemplate';
 
+import { dailyRecommendKey, dailyRecommendResource } from './projection';
+import {
+  initialTaskTemplateRecommendationState,
+  useTaskTemplateRecommendationStore,
+} from './recommendationStore';
 import {
   resolveDailyBriefRecommendationDisplayMode,
   resolveDailyBriefRecommendationRequest,
@@ -15,25 +25,23 @@ import {
 } from './useDailyBriefRecommendationsUI';
 
 const {
-  mockMutate,
+  mockRefreshSeed,
   mockSetRefreshSeed,
   mockUseFetchBriefs,
   mockUseFetchLobehubConnectorConnections,
   mockUseFetchUserComposioConnections,
   mockUseResolvedInterestKeys,
-  mockUseSWR,
 } = vi.hoisted(() => ({
-  mockMutate: vi.fn(),
+  mockRefreshSeed: { value: '' },
   mockSetRefreshSeed: vi.fn(),
   mockUseFetchBriefs: vi.fn(),
   mockUseFetchLobehubConnectorConnections: vi.fn(),
   mockUseFetchUserComposioConnections: vi.fn(),
   mockUseResolvedInterestKeys: vi.fn(),
-  mockUseSWR: vi.fn(),
 }));
 
 vi.mock('ahooks', () => ({
-  useSessionStorageState: () => ['', mockSetRefreshSeed],
+  useSessionStorageState: () => [mockRefreshSeed.value, mockSetRefreshSeed],
 }));
 
 vi.mock('antd', async (importOriginal) => ({
@@ -48,10 +56,6 @@ vi.mock('react-i18next', () => ({
     i18n: { language: 'en-US', resolvedLanguage: 'en-US' },
     t: (key: string) => key,
   }),
-}));
-
-vi.mock('swr', () => ({
-  default: mockUseSWR,
 }));
 
 // The brief feed is a replica now: the hook only needs the feed to hold a
@@ -107,7 +111,7 @@ const template = {
 } satisfies TaskTemplate;
 
 describe('resolveDailyBriefRecommendationRequest', () => {
-  it('keeps the cache key available while interests are still initializing', () => {
+  it('keeps the entry key available while interests are still initializing', () => {
     const loading = resolveDailyBriefRecommendationRequest({
       interestKeys: null,
       isLogin: true,
@@ -123,55 +127,52 @@ describe('resolveDailyBriefRecommendationRequest', () => {
       refreshSeed: '',
     });
 
-    expect(loading.key).toEqual(ready.key);
+    expect(dailyRecommendKey(loading.params!)).toEqual(dailyRecommendKey(ready.params!));
     expect(loading.shouldFetch).toBe(false);
     expect(ready.shouldFetch).toBe(true);
   });
 
-  it('does not include interests in the persisted recommendation cache key', () => {
+  it('does not include interests in the persisted entry or the sync key', () => {
+    vi.spyOn(cacheScope, 'get').mockReturnValue('user-1:personal');
     const ai = resolveDailyBriefRecommendationRequest({
       interestKeys: ['ai'],
       isLogin: true,
       locale: 'zh-CN',
       recommendationCount: 3,
       refreshSeed: 'seed',
-    });
+    }).params!;
     const research = resolveDailyBriefRecommendationRequest({
       interestKeys: ['research'],
       isLogin: true,
       locale: 'zh-CN',
       recommendationCount: 3,
       refreshSeed: 'seed',
-    });
+    }).params!;
 
-    expect(ai.key).toEqual(research.key);
-    expect(ai.key).toEqual(taskTemplateKeys.listDailyRecommend('seed', 3, 'zh-CN'));
-    expect(ai.key?.[0]).toBe(
-      `taskTemplate:listDailyRecommend:v${TASK_TEMPLATE_RECOMMENDATION_CACHE_VERSION}`,
+    expect(dailyRecommendResource.storageKey(ai)).toEqual(
+      dailyRecommendResource.storageKey(research),
     );
+    expect(dailyRecommendResource.syncKey!(ai)).toEqual(dailyRecommendResource.syncKey!(research));
   });
 
-  it('keeps refresh seed, count, and locale in the cache key', () => {
-    expect(
-      resolveDailyBriefRecommendationRequest({
-        interestKeys: [],
-        isLogin: true,
-        locale: 'zh-CN',
-        recommendationCount: 3,
-        refreshSeed: 'seed-a',
-      }).key,
-    ).not.toEqual(
-      resolveDailyBriefRecommendationRequest({
-        interestKeys: [],
-        isLogin: true,
-        locale: 'en-US',
-        recommendationCount: 6,
-        refreshSeed: 'seed-b',
-      }).key,
-    );
+  it('keeps refresh seed, count, and locale in the entry key', () => {
+    const key = (locale: string, recommendationCount: number, refreshSeed: string) =>
+      dailyRecommendKey(
+        resolveDailyBriefRecommendationRequest({
+          interestKeys: [],
+          isLogin: true,
+          locale,
+          recommendationCount,
+          refreshSeed,
+        }).params!,
+      );
+
+    expect(key('zh-CN', 3, 'seed-a')).not.toEqual(key('zh-CN', 3, 'seed-b'));
+    expect(key('zh-CN', 3, 'seed-a')).not.toEqual(key('en-US', 3, 'seed-a'));
+    expect(key('zh-CN', 3, 'seed-a')).not.toEqual(key('zh-CN', 6, 'seed-a'));
   });
 
-  it('disables the cache key before login', () => {
+  it('disables the read before login', () => {
     expect(
       resolveDailyBriefRecommendationRequest({
         interestKeys: [],
@@ -180,7 +181,7 @@ describe('resolveDailyBriefRecommendationRequest', () => {
         recommendationCount: 3,
         refreshSeed: '',
       }),
-    ).toEqual({ key: null, shouldFetch: false });
+    ).toEqual({ params: null, shouldFetch: false });
   });
 });
 
@@ -242,38 +243,56 @@ describe('resolveDailyBriefRecommendationDisplayMode', () => {
   });
 });
 
+/** A fresh SWR cache per render: what a page reload starts from. */
+const wrapper = ({ children }: PropsWithChildren) =>
+  createElement(SWRConfig, { value: { dedupingInterval: 0, provider: () => new Map() } }, children);
+
+/** Never-resolving read: the first frame can only come from storage. */
+const pending = () => new Promise<never>(() => {});
+
+const params = (overrides: { count?: number; refreshSeed?: string } = {}) => ({
+  count: overrides.count ?? 3,
+  interestKeys: ['coding'],
+  locale: 'en-US',
+  refreshSeed: overrides.refreshSeed ?? '',
+});
+
 describe('useDailyBriefRecommendationsUI', () => {
+  let scope = '';
+
+  const seed = (data: unknown, overrides?: { count?: number; refreshSeed?: string }) =>
+    dailyRecommendResource.storage!.set(
+      { queryKey: dailyRecommendResource.storageKey(params(overrides)), scope },
+      { data: data as TaskTemplate[], updatedAt: 1 },
+    );
+
   beforeEach(() => {
     vi.clearAllMocks();
+    scope = `task-template-user-${randomUUID()}:personal`;
+    vi.spyOn(cacheScope, 'get').mockImplementation(() => scope);
+    vi.spyOn(cacheScope, 'use').mockImplementation(() => scope);
+    vi.spyOn(cacheScope, 'canPersist').mockReturnValue(true);
+    act(() => useTaskTemplateRecommendationStore.setState(initialTaskTemplateRecommendationState));
+    mockRefreshSeed.value = '';
     mockUseResolvedInterestKeys.mockReturnValue(['coding']);
-    mockUseSWR.mockReturnValue({
-      data: { data: [template], success: true },
-      isLoading: false,
-      isValidating: false,
-      mutate: mockMutate,
-    });
-  });
-
-  it('returns cards when recommendations are loaded and forwards locale/count inputs', async () => {
     vi.mocked(taskTemplateService.listDailyRecommend).mockResolvedValue({
       data: [template],
       success: true,
     });
+  });
 
-    const { result } = renderHook(() => useDailyBriefRecommendationsUI({ count: 2 }));
+  afterEach(() => {
+    localStorage.clear();
+    vi.restoreAllMocks();
+  });
 
-    expect(result.current).toMatchObject({
-      isValidating: false,
-      mode: 'cards',
-      templates: [template],
+  it('returns cards when recommendations are loaded and forwards locale/count inputs', async () => {
+    const { result } = renderHook(() => useDailyBriefRecommendationsUI({ count: 2 }), {
+      wrapper,
     });
-    expect(mockUseSWR.mock.calls[0][0]).toEqual(
-      taskTemplateKeys.listDailyRecommend('', 2, 'en-US'),
-    );
 
-    const fetcher = mockUseSWR.mock.calls[0][1];
-    await fetcher();
-
+    await waitFor(() => expect(result.current).toMatchObject({ mode: 'cards' }));
+    expect(result.current).toMatchObject({ templates: [template] });
     expect(taskTemplateService.listDailyRecommend).toHaveBeenCalledWith(['coding'], {
       count: 2,
       locale: 'en-US',
@@ -281,168 +300,198 @@ describe('useDailyBriefRecommendationsUI', () => {
     });
   });
 
-  it('keeps validating state visible while cached cards remain mounted', () => {
-    mockUseSWR.mockReturnValue({
-      data: { data: [template], success: true },
-      isLoading: false,
-      isValidating: true,
-      mutate: mockMutate,
-    });
+  // Regression: the recommendations were persisted by the SWR localStorage tier
+  // (`taskTemplate:` in CACHE_TIERS). They are a localStorage replica now: a
+  // reload paints the persisted cards before the network answers.
+  it('paints persisted cards on reload while the request is still pending', async () => {
+    await seed([template]);
+    vi.mocked(taskTemplateService.listDailyRecommend).mockImplementation(pending);
 
-    const { result } = renderHook(() => useDailyBriefRecommendationsUI());
+    const { result } = renderHook(() => useDailyBriefRecommendationsUI(), { wrapper });
 
-    expect(result.current).toMatchObject({ isValidating: true, mode: 'cards' });
+    await waitFor(() => expect(result.current).toMatchObject({ mode: 'cards' }));
+    expect(result.current).toMatchObject({ isValidating: true, templates: [template] });
+    expect(taskTemplateService.listDailyRecommend).toHaveBeenCalledTimes(1);
   });
 
-  it('drops recommendations that are missing connectors', () => {
-    const templateWithoutConnectors = {
-      category: 'engineering',
-      cronPattern: '0 9 * * *',
-      description: 'Description',
-      id: 102,
-      identifier: 'legacy-daily-engineering',
-      instruction: 'Instruction',
-      interests: ['coding'],
-      title: 'Legacy title',
-    } satisfies Omit<TaskTemplate, 'connectors'>;
-    mockUseSWR.mockReturnValue({
-      data: { data: [templateWithoutConnectors], success: true },
-      isLoading: false,
-      isValidating: false,
-      mutate: mockMutate,
+  it('paints persisted cards before interests resolve, then refreshes once they do', async () => {
+    await seed([template]);
+    mockUseResolvedInterestKeys.mockReturnValue(null);
+    const fresh = { ...template, id: 202, title: 'Fresh' };
+    vi.mocked(taskTemplateService.listDailyRecommend).mockResolvedValue({
+      data: [fresh],
+      success: true,
     });
 
-    const { result } = renderHook(() => useDailyBriefRecommendationsUI());
+    const { rerender, result } = renderHook(() => useDailyBriefRecommendationsUI(), { wrapper });
 
-    expect(result.current).toEqual({ mode: 'hidden' });
-    expect(mockUseFetchUserComposioConnections).toHaveBeenCalledWith(false);
-    expect(mockUseFetchLobehubConnectorConnections).toHaveBeenCalledWith(false);
+    await waitFor(() => expect(result.current).toMatchObject({ mode: 'cards' }));
+    expect(result.current).toMatchObject({ templates: [template] });
+    expect(taskTemplateService.listDailyRecommend).not.toHaveBeenCalled();
+
+    mockUseResolvedInterestKeys.mockReturnValue(['coding']);
+    rerender();
+
+    await waitFor(() => expect(result.current).toMatchObject({ templates: [fresh] }));
+    expect(taskTemplateService.listDailyRecommend).toHaveBeenCalledTimes(1);
   });
 
-  it('drops recommendations with malformed connector entries', () => {
-    const templateWithMalformedConnectors = {
-      ...template,
-      connectors: [null],
-    };
-    mockUseSWR.mockReturnValue({
-      data: { data: [templateWithMalformedConnectors], success: true },
-      isLoading: false,
-      isValidating: false,
-      mutate: mockMutate,
-    });
+  it('shows the skeleton while nothing is persisted and the first read is pending', async () => {
+    vi.mocked(taskTemplateService.listDailyRecommend).mockImplementation(pending);
 
-    const { result } = renderHook(() => useDailyBriefRecommendationsUI());
+    const { result } = renderHook(() => useDailyBriefRecommendationsUI(), { wrapper });
 
-    expect(result.current).toEqual({ mode: 'hidden' });
-    expect(mockUseFetchUserComposioConnections).toHaveBeenCalledWith(false);
-    expect(mockUseFetchLobehubConnectorConnections).toHaveBeenCalledWith(false);
+    await waitFor(() => expect(taskTemplateService.listDailyRecommend).toHaveBeenCalledTimes(1));
+    expect(result.current).toEqual({ mode: 'skeleton', skeletonCount: 3 });
   });
 
-  it('drops recommendations with unknown connector identifiers', () => {
-    const templateWithUnknownConnector = {
-      ...template,
-      connectors: [{ identifier: 'nonexistent-x', required: true, source: 'lobehub' }],
-    };
-    mockUseSWR.mockReturnValue({
-      data: { data: [templateWithUnknownConnector], success: true },
-      isLoading: false,
-      isValidating: false,
-      mutate: mockMutate,
+  it('persists the fetched cards for the next session', async () => {
+    const { result } = renderHook(() => useDailyBriefRecommendationsUI(), { wrapper });
+    await waitFor(() => expect(result.current).toMatchObject({ mode: 'cards' }));
+
+    await waitFor(async () => {
+      const row = await dailyRecommendResource.storage!.get({
+        queryKey: dailyRecommendResource.storageKey(params()),
+        scope,
+      });
+      expect(row?.data).toEqual([template]);
     });
-
-    const { result } = renderHook(() => useDailyBriefRecommendationsUI());
-
-    expect(result.current).toEqual({ mode: 'hidden' });
-    expect(mockUseFetchUserComposioConnections).toHaveBeenCalledWith(false);
-    expect(mockUseFetchLobehubConnectorConnections).toHaveBeenCalledWith(false);
   });
 
-  it('treats non-array recommendation payloads as empty data', () => {
-    mockUseSWR.mockReturnValue({
-      data: { data: { ...template }, success: true },
-      isLoading: false,
-      isValidating: false,
-      mutate: mockMutate,
-    });
+  it('never paints another identity’s persisted cards', async () => {
+    await dailyRecommendResource.storage!.set(
+      { queryKey: dailyRecommendResource.storageKey(params()), scope: 'someone-else:personal' },
+      { data: [{ ...template, title: 'Other user' }], updatedAt: 1 },
+    );
+    vi.mocked(taskTemplateService.listDailyRecommend).mockImplementation(pending);
 
-    const { result } = renderHook(() => useDailyBriefRecommendationsUI());
+    const { result } = renderHook(() => useDailyBriefRecommendationsUI(), { wrapper });
 
-    expect(result.current).toEqual({ mode: 'hidden' });
-    expect(mockUseFetchUserComposioConnections).toHaveBeenCalledWith(false);
-    expect(mockUseFetchLobehubConnectorConnections).toHaveBeenCalledWith(false);
+    await waitFor(() => expect(taskTemplateService.listDailyRecommend).toHaveBeenCalledTimes(1));
+    expect(result.current).toEqual({ mode: 'skeleton', skeletonCount: 3 });
   });
 
-  it('normalizes cached rows before removing a card', () => {
-    mockUseSWR.mockReturnValue({
-      data: { data: [template, null], success: true },
-      isLoading: false,
-      isValidating: false,
-      mutate: mockMutate,
-    });
+  it('keeps the previous cards on screen while a refresh seed loads', async () => {
+    const { rerender, result } = renderHook(() => useDailyBriefRecommendationsUI(), { wrapper });
+    await waitFor(() => expect(result.current).toMatchObject({ mode: 'cards' }));
 
-    const { result } = renderHook(() => useDailyBriefRecommendationsUI());
+    vi.mocked(taskTemplateService.listDailyRecommend).mockImplementation(pending);
+    mockRefreshSeed.value = 'next-seed';
+    rerender();
 
-    expect(result.current.mode).toBe('cards');
+    await waitFor(() =>
+      expect(taskTemplateService.listDailyRecommend).toHaveBeenLastCalledWith(['coding'], {
+        count: 3,
+        locale: 'en-US',
+        refreshSeed: 'next-seed',
+      }),
+    );
+    expect(result.current).toMatchObject({ mode: 'cards', templates: [template] });
+  });
+
+  it('removes a created card and persists the shorter list', async () => {
+    const { result } = renderHook(() => useDailyBriefRecommendationsUI(), { wrapper });
+    await waitFor(() => expect(result.current).toMatchObject({ mode: 'cards' }));
     if (result.current.mode !== 'cards') return;
 
-    result.current.onCreated(template.id);
-
-    const updater = mockMutate.mock.calls[0][0] as (current?: {
-      data: unknown;
-      success: boolean;
-    }) => unknown;
-    expect(updater({ data: [template, null], success: true })).toEqual({
-      data: [],
-      success: true,
-    });
-    expect(updater({ data: { ...template }, success: true })).toEqual({
-      data: [],
-      success: true,
-    });
-    expect(mockMutate.mock.calls[0][1]).toEqual({ revalidate: false });
-  });
-
-  it('drops legacy recommendations from pre-Market task-template servers', () => {
-    const legacyServerTemplate = {
-      category: 'engineering',
-      cronPattern: '0 9 * * *',
-      id: 'oss-intel-daily',
-      interests: ['coding'],
-      requiresSkills: [{ provider: 'github', source: 'lobehub' }],
-    };
-    mockUseSWR.mockReturnValue({
-      data: { data: [legacyServerTemplate], success: true },
-      isLoading: false,
-      isValidating: false,
-      mutate: mockMutate,
-    });
-
-    const { result } = renderHook(() => useDailyBriefRecommendationsUI());
+    const { onCreated } = result.current;
+    act(() => onCreated(template.id));
 
     expect(result.current).toEqual({ mode: 'hidden' });
+    await waitFor(async () => {
+      const row = await dailyRecommendResource.storage!.get({
+        queryKey: dailyRecommendResource.storageKey(params()),
+        scope,
+      });
+      expect(row?.data).toEqual([]);
+    });
+  });
+
+  it('rolls a dismissed card back when the server refuses', async () => {
+    const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    let reject!: (error: unknown) => void;
+    vi.mocked(taskTemplateService.dismiss).mockImplementation(
+      () => new Promise((_, rejectPromise) => (reject = rejectPromise)),
+    );
+
+    const { result } = renderHook(() => useDailyBriefRecommendationsUI(), { wrapper });
+    await waitFor(() => expect(result.current).toMatchObject({ mode: 'cards' }));
+    if (result.current.mode !== 'cards') return;
+
+    let dismissing: Promise<void> | undefined;
+    const { onDismiss } = result.current;
+    act(() => {
+      dismissing = onDismiss(template.id) as unknown as Promise<void>;
+    });
+    expect(result.current).toEqual({ mode: 'hidden' });
+
+    await act(async () => {
+      reject(new Error('dismiss failed'));
+      await dismissing;
+    });
+
+    expect(result.current).toMatchObject({ mode: 'cards', templates: [template] });
+    expect(consoleErrorSpy).toHaveBeenCalledWith('[taskTemplate:dismiss]', expect.any(Error));
+  });
+
+  it('drops persisted rows the cards cannot render', async () => {
+    await seed([
+      template,
+      null,
+      { ...template, connectors: [null], id: 103 },
+      {
+        ...template,
+        connectors: [{ identifier: 'nonexistent-x', required: true, source: 'lobehub' }],
+        id: 104,
+      },
+      { category: 'engineering', cronPattern: '0 9 * * *', id: 'oss-intel-daily', interests: [] },
+    ]);
+    vi.mocked(taskTemplateService.listDailyRecommend).mockImplementation(pending);
+
+    const { result } = renderHook(() => useDailyBriefRecommendationsUI(), { wrapper });
+
+    await waitFor(() => expect(result.current).toMatchObject({ mode: 'cards' }));
+    expect(result.current).toMatchObject({ templates: [template] });
+  });
+
+  it('treats a non-array response as empty', async () => {
+    vi.mocked(taskTemplateService.listDailyRecommend).mockResolvedValue({
+      data: { ...template },
+      success: true,
+    } as any);
+
+    const { result } = renderHook(() => useDailyBriefRecommendationsUI(), { wrapper });
+
+    await waitFor(() => expect(taskTemplateService.listDailyRecommend).toHaveBeenCalled());
+    await waitFor(() => expect(result.current).toEqual({ mode: 'hidden' }));
     expect(mockUseFetchUserComposioConnections).toHaveBeenCalledWith(false);
     expect(mockUseFetchLobehubConnectorConnections).toHaveBeenCalledWith(false);
   });
 
-  it('logs recommendation request errors instead of treating them as normal empty data', async () => {
+  it('logs a failed first load and hides instead of rendering an empty state', async () => {
     const error = new Error('market down');
     const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
-    mockUseSWR.mockReturnValue({
-      error,
-      isLoading: false,
-      isValidating: false,
-      mutate: mockMutate,
-    });
+    vi.mocked(taskTemplateService.listDailyRecommend).mockRejectedValue(error);
 
-    const { result } = renderHook(() => useDailyBriefRecommendationsUI());
+    const { result } = renderHook(() => useDailyBriefRecommendationsUI(), { wrapper });
 
-    try {
-      expect(result.current).toEqual({ mode: 'hidden' });
-      await waitFor(() =>
-        expect(consoleErrorSpy).toHaveBeenCalledWith('[taskTemplate:listDailyRecommend]', error),
-      );
-    } finally {
-      consoleErrorSpy.mockRestore();
-    }
+    await waitFor(() =>
+      expect(consoleErrorSpy).toHaveBeenCalledWith('[taskTemplate:listDailyRecommend]', error),
+    );
+    expect(result.current).toEqual({ mode: 'hidden' });
+  });
+
+  it('keeps persisted cards when the background refresh fails', async () => {
+    await seed([template]);
+    const error = new Error('market down');
+    const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    vi.mocked(taskTemplateService.listDailyRecommend).mockRejectedValue(error);
+
+    const { result } = renderHook(() => useDailyBriefRecommendationsUI(), { wrapper });
+
+    await waitFor(() =>
+      expect(consoleErrorSpy).toHaveBeenCalledWith('[taskTemplate:listDailyRecommend]', error),
+    );
+    expect(result.current).toMatchObject({ mode: 'cards', templates: [template] });
   });
 });

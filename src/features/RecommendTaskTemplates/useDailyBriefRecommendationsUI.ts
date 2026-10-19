@@ -1,17 +1,11 @@
-import type {
-  TaskTemplate,
-  TaskTemplateConnector,
-  TaskTemplateConnectorSource,
-} from '@lobechat/const';
+import type { TaskTemplate, TaskTemplateConnectorSource } from '@lobechat/const';
 import { TASK_TEMPLATE_RECOMMEND_COUNT } from '@lobechat/const';
 import { createNanoId } from '@lobechat/utils';
 import { toast } from '@lobehub/ui';
 import { useSessionStorageState } from 'ahooks';
 import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import useSWR from 'swr';
 
-import { taskTemplateKeys } from '@/libs/swr/keys';
 import { taskTemplateService } from '@/services/taskTemplate';
 import { useBriefStore } from '@/store/brief';
 import { briefListSelectors } from '@/store/brief/selectors';
@@ -19,7 +13,12 @@ import { useToolStore } from '@/store/tool';
 import { useUserStore } from '@/store/user';
 import { authSelectors } from '@/store/user/slices/auth/selectors';
 
-import { getProviderMeta } from './providerMeta';
+import {
+  dailyRecommendKey,
+  type DailyRecommendParams,
+  normalizeTaskTemplateRecommendations,
+} from './projection';
+import { dailyRecommendReplica, useTaskTemplateRecommendationStore } from './recommendationStore';
 import { useResolvedInterestKeys } from './useResolvedInterestKeys';
 
 const REFRESH_SEED_STORAGE_KEY = 'lobehub:taskTemplate:refreshSeed';
@@ -41,60 +40,6 @@ interface UseDailyBriefRecommendationsUIOptions {
   count?: number;
 }
 
-const isRecord = (value: unknown): value is Record<PropertyKey, unknown> =>
-  typeof value === 'object' && value !== null;
-
-const isTaskTemplateConnectorSource = (value: unknown): value is TaskTemplateConnectorSource =>
-  value === 'composio' || value === 'lobehub';
-
-const isTaskTemplateConnector = (value: unknown): value is TaskTemplateConnector => {
-  if (!isRecord(value)) return false;
-  if (typeof value.identifier !== 'string') return false;
-  if (!isTaskTemplateConnectorSource(value.source)) return false;
-  return (
-    typeof value.required === 'boolean' &&
-    Boolean(getProviderMeta({ identifier: value.identifier, source: value.source }))
-  );
-};
-
-const isTaskTemplateRecommendationCandidate = (value: unknown): value is TaskTemplate => {
-  if (!isRecord(value)) return false;
-  return (
-    typeof value.category === 'string' &&
-    Array.isArray(value.connectors) &&
-    value.connectors.every(isTaskTemplateConnector) &&
-    typeof value.cronPattern === 'string' &&
-    typeof value.description === 'string' &&
-    typeof value.id === 'number' &&
-    typeof value.identifier === 'string' &&
-    typeof value.instruction === 'string' &&
-    Array.isArray(value.interests) &&
-    typeof value.title === 'string'
-  );
-};
-
-/**
- * v2.2.6 returned legacy recommendation rows before `connectors` and text fields existed.
- * Drop legacy rows from version-skewed self-host servers so they cannot crash the home screen.
- */
-const normalizeTaskTemplateRecommendation = (template: unknown): TaskTemplate | undefined => {
-  if (!isTaskTemplateRecommendationCandidate(template)) return undefined;
-  return template;
-};
-
-/**
- * Persisted SWR data can be stale or corrupted, for example `{ data: { ... } }`.
- * Treat non-array payloads as empty so home rendering and cache mutations stay defensive.
- */
-const normalizeTaskTemplateRecommendations = (templates: unknown): TaskTemplate[] => {
-  if (!Array.isArray(templates)) return [];
-
-  return templates.flatMap((template) => {
-    const normalized = normalizeTaskTemplateRecommendation(template);
-    return normalized ? [normalized] : [];
-  });
-};
-
 interface ResolveDailyBriefRecommendationRequestParams {
   interestKeys: string[] | null;
   isLogin: boolean | undefined;
@@ -112,12 +57,11 @@ export const resolveDailyBriefRecommendationRequest = ({
 }: ResolveDailyBriefRecommendationRequestParams) => {
   const enabled = isLogin === true;
 
-  return {
-    key: enabled
-      ? taskTemplateKeys.listDailyRecommend(refreshSeed ?? '', recommendationCount, locale)
-      : null,
-    shouldFetch: enabled && interestKeys !== null,
-  };
+  const params: DailyRecommendParams | null = enabled
+    ? { count: recommendationCount, interestKeys, locale, refreshSeed: refreshSeed ?? '' }
+    : null;
+
+  return { params, shouldFetch: enabled && interestKeys !== null };
 };
 
 interface ResolveDailyBriefRecommendationDisplayModeParams {
@@ -184,31 +128,24 @@ export function useDailyBriefRecommendationsUI(
       }),
     [interestKeys, isLogin, locale, recommendationCount, refreshSeed],
   );
-  const canFetchRecommendations = recommendationRequest.shouldFetch && interestKeys !== null;
-  const recommendationFetcher = canFetchRecommendations
-    ? async () =>
-        taskTemplateService.listDailyRecommend(interestKeys, {
-          count: recommendationCount,
-          locale,
-          refreshSeed: refreshSeed || undefined,
-        })
-    : null;
-
-  const { data, error, isLoading, isValidating, mutate } = useSWR(
-    recommendationRequest.key,
-    recommendationFetcher,
-    {
-      keepPreviousData: true,
-      revalidateIfStale: canFetchRecommendations,
-      revalidateOnFocus: false,
-      revalidateOnMount: canFetchRecommendations,
-      revalidateOnReconnect: false,
-    },
+  const { params, shouldFetch: canFetchRecommendations } = recommendationRequest;
+  const key = params ? dailyRecommendKey(params) : undefined;
+  const entry = useTaskTemplateRecommendationStore((s) =>
+    key ? s.dailyRecommendMap[key] : undefined,
   );
+
+  // The persisted row hydrates as soon as the user is known; the network read
+  // waits for resolved interests (they are sent with the request).
+  const { error, isHydrated, isValidating, revalidate } = dailyRecommendReplica.useSync(params, {
+    revalidateIfStale: canFetchRecommendations,
+    revalidateOnFocus: false,
+    revalidateOnMount: canFetchRecommendations,
+    revalidateOnReconnect: false,
+  });
   const waitedForInterestsRef = useRef(false);
 
   useEffect(() => {
-    if (!recommendationRequest.key) {
+    if (!key) {
       waitedForInterestsRef.current = false;
       return;
     }
@@ -220,57 +157,52 @@ export function useDailyBriefRecommendationsUI(
 
     if (!waitedForInterestsRef.current) return;
     waitedForInterestsRef.current = false;
-    void mutate();
-  }, [interestKeys, mutate, recommendationRequest.key]);
+    void revalidate();
+  }, [interestKeys, key, revalidate]);
 
   useEffect(() => {
     if (error) console.error('[taskTemplate:listDailyRecommend]', error);
   }, [error]);
 
+  // A refresh mints a new seed (a new entry): keep the previous batch on screen
+  // until the new one lands instead of dropping back to the skeleton.
+  const previousRef = useRef<TaskTemplate[] | undefined>(undefined);
+  if (entry) previousRef.current = entry;
+  const shown = entry ?? (key && !error ? previousRef.current : undefined);
+
   const handleRefresh = useCallback(() => {
     setRefreshSeed(nextRefreshSeed());
   }, [setRefreshSeed]);
 
-  const removeTemplateFromList = useCallback(
-    (templateId: number) => {
-      mutate(
-        (current) =>
-          current
-            ? {
-                ...current,
-                data: normalizeTaskTemplateRecommendations(current.data).filter(
-                  (tmpl) => tmpl.id !== templateId,
-                ),
-              }
-            : current,
-        { revalidate: false },
-      );
-    },
-    [mutate],
-  );
-
   const handleCreated = useCallback(
     (templateId: number) => {
-      removeTemplateFromList(templateId);
+      if (!key) return;
+      dailyRecommendReplica.update(key, (current) =>
+        current?.filter((tmpl) => tmpl.id !== templateId),
+      );
     },
-    [removeTemplateFromList],
+    [key],
   );
 
   const handleDismiss = useCallback(
     async (templateId: number) => {
-      removeTemplateFromList(templateId);
+      if (!key || !useTaskTemplateRecommendationStore.getState().dailyRecommendMap[key]) return;
       try {
-        await taskTemplateService.dismiss(templateId);
+        // Rolls the card back if the server refuses.
+        await dailyRecommendReplica.optimistic(
+          key,
+          (current) => current.filter((tmpl) => tmpl.id !== templateId),
+          () => taskTemplateService.dismiss(templateId),
+        );
       } catch (error) {
         console.error('[taskTemplate:dismiss]', error);
         toast.error(t('taskTemplate.action.dismiss.error'));
-        mutate();
       }
     },
-    [mutate, removeTemplateFromList, t],
+    [key, t],
   );
 
-  const templates = useMemo(() => normalizeTaskTemplateRecommendations(data?.data ?? []), [data]);
+  const templates = useMemo(() => normalizeTaskTemplateRecommendations(shown), [shown]);
   const requiredSources = useMemo(() => {
     const sources = new Set<TaskTemplateConnectorSource>();
     for (const tmpl of templates) {
@@ -287,14 +219,16 @@ export function useDailyBriefRecommendationsUI(
 
   const displayMode = resolveDailyBriefRecommendationDisplayMode({
     canFetchRecommendations,
-    hasRecommendationKey: Boolean(recommendationRequest.key),
+    hasRecommendationKey: Boolean(key),
     hasTemplates: templates.length > 0,
     isInit,
-    isLoading,
+    // Nothing settled for this entry yet: its persisted row is still being read.
+    isLoading: !isHydrated,
     isValidating,
     isWaitingForInterestsFetch: interestKeys !== null && waitedForInterestsRef.current,
   });
-  if (error) return { mode: 'hidden' };
+  // A failed refresh keeps the cards it already has; a failed first load hides.
+  if (error && templates.length === 0) return { mode: 'hidden' };
   if (displayMode === 'hidden') return { mode: 'hidden' };
   if (displayMode === 'skeleton') return { mode: 'skeleton', skeletonCount: recommendationCount };
 

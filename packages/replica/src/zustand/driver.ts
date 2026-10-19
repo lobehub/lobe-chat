@@ -15,6 +15,13 @@ export interface ReplicaSyncSchedule {
   refreshWhenOffline?: boolean;
   revalidateIfStale?: boolean;
   revalidateOnFocus?: boolean;
+  /**
+   * Whether the first mount fetches. `false` leaves the first request to an
+   * explicit `revalidate`, for a read whose input outside the sync key is not
+   * ready yet. SWR only honors it on the first mount: a later key change still
+   * fetches when the new key has no cached data.
+   */
+  revalidateOnMount?: boolean;
   revalidateOnReconnect?: boolean;
 }
 
