@@ -8,7 +8,8 @@ import {
   createSelfFeedbackIntentService,
 } from '@/server/services/agentSignal/services/selfFeedbackIntent';
 
-import type { ServerRuntimeRegistration, ToolExecutionContext } from './types';
+import type { ToolExecutionContext } from '../types';
+import type { ServerRuntimeRegistration } from './types';
 
 /**
  * Registers the self-feedback intent builtin server runtime.
