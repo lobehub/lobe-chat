@@ -93,8 +93,16 @@ describe('LobeFalAI models', () => {
     openapi: buildFalOpenAPI(endpointId, properties),
   });
 
+  // fal rejects pages above 10 models when OpenAPI schemas are expanded
+  const rejectsLargePages = (url: URL) =>
+    url.searchParams.get('expand') === 'openapi-3.0' && Number(url.searchParams.get('limit')) > 10
+      ? new Response('{"error":{"type":"validation_error"}}', { status: 400 })
+      : undefined;
+
   const stubCatalog = (pages: Record<string, any[]>) => {
     const fetchMock = vi.fn(async (url: URL) => {
+      const rejected = rejectsLargePages(url);
+      if (rejected) return rejected;
       const category = url.searchParams.get('category') ?? '';
       return new Response(
         JSON.stringify({ has_more: false, models: pages[category] ?? [], next_cursor: null }),
@@ -175,6 +183,8 @@ describe('LobeFalAI models', () => {
 
   it('follows the catalog cursor', async () => {
     const fetchMock = vi.fn(async (url: URL) => {
+      const rejected = rejectsLargePages(url);
+      if (rejected) return rejected;
       const category = url.searchParams.get('category');
       if (category !== 'text-to-image') {
         return new Response(JSON.stringify({ has_more: false, models: [] }));
@@ -196,6 +206,50 @@ describe('LobeFalAI models', () => {
     const models = await instance.models();
 
     expect(models.map((model) => model.id)).toEqual(['a/first', 'b/second']);
+  });
+
+  it('retries rate-limited pages and keeps listed pages when a later page fails', async () => {
+    const calls: string[] = [];
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async (url: URL) => {
+        const rejected = rejectsLargePages(url);
+        if (rejected) return rejected;
+        const category = url.searchParams.get('category');
+        const cursor = url.searchParams.get('cursor');
+        calls.push(`${category}:${cursor ?? 'first'}`);
+        if (category === 'text-to-image') {
+          if (!cursor) {
+            return new Response(
+              JSON.stringify({
+                has_more: true,
+                models: [catalogModel('a/first', 'text-to-image', { prompt: { type: 'string' } })],
+                next_cursor: 'page-2',
+              }),
+            );
+          }
+          // The second page keeps failing: the first page must survive
+          return new Response('{}', { status: 500 });
+        }
+        if (category === 'text-to-video' && calls.filter((c) => c.startsWith('text-to-video')).length === 1) {
+          return new Response('{}', { headers: { 'retry-after': '0' }, status: 429 });
+        }
+        return new Response(
+          JSON.stringify({
+            has_more: false,
+            models:
+              category === 'text-to-video'
+                ? [catalogModel('b/video', 'text-to-video', { prompt: { type: 'string' } })]
+                : [],
+          }),
+        );
+      }),
+    );
+
+    const models = await instance.models();
+
+    expect(models.map((model) => model.id)).toEqual(['a/first', 'b/video']);
+    expect(calls.filter((call) => call.startsWith('text-to-video'))).toHaveLength(2);
   });
 
   it('throws InvalidProviderAPIKey when every catalog request is unauthorized', async () => {

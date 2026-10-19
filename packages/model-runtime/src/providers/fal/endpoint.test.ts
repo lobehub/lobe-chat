@@ -9,6 +9,8 @@ describe('resolveFalEndpointId', () => {
     ['black-forest-labs/flux-2-pro', 'black-forest-labs/flux-2-pro'],
     ['openai/gpt-image-1/text-to-image', 'openai/gpt-image-1/text-to-image'],
     ['someone/my-app/variant', 'someone/my-app/variant'],
+    // fal serves newer Seedream releases under the top-level bytedance owner
+    ['bytedance/seedream/v5/flash/edit', 'bytedance/seedream/v5/flash/edit'],
     ['fal-ai/flux/dev', 'fal-ai/flux/dev'],
     // Bare and legacy short ids keep resolving to fal-ai
     ['nano-banana', 'fal-ai/nano-banana'],

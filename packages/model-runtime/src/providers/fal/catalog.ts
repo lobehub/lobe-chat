@@ -25,11 +25,26 @@ const FAL_GENERATION_CATEGORIES = [
 
 type FalGenerationCategory = (typeof FAL_GENERATION_CATEGORIES)[number];
 
-/** Page size of a catalog request that expands OpenAPI schemas */
-const PAGE_SIZE = 50;
+/** fal caps the page size at 10 when a catalog request expands OpenAPI schemas */
+export const FAL_CATALOG_PAGE_SIZE = 10;
 
 /** Upper bound of pages per category, so a model fetch stays a bounded number of requests */
-const MAX_PAGES_PER_CATEGORY = 20;
+const MAX_PAGES_PER_CATEGORY = 40;
+
+/** Attempts per catalog request; fal rate limits (429) bursts of paginated requests */
+const MAX_ATTEMPTS = 4;
+const MAX_RETRY_DELAY_MS = 8000;
+
+const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+/** Delay before retrying a 429: fal's `Retry-After` seconds when sent, else exponential backoff */
+const retryDelay = (response: Response, attempt: number) => {
+  const retryAfter = Number(response.headers.get('retry-after'));
+  const delay = Number.isFinite(retryAfter) && response.headers.has('retry-after')
+    ? retryAfter * 1000
+    : 1000 * 2 ** attempt;
+  return Math.min(Math.max(delay, 0), MAX_RETRY_DELAY_MS);
+};
 
 interface FalCatalogModel {
   endpoint_id: string;
@@ -69,7 +84,12 @@ const requestCatalog = async (
     if (value !== undefined) url.searchParams.set(key, value);
   }
 
-  const response = await fetch(url, { headers: { Authorization: `Key ${apiKey}` }, signal });
+  let response = await fetch(url, { headers: { Authorization: `Key ${apiKey}` }, signal });
+  for (let attempt = 1; response.status === 429 && attempt < MAX_ATTEMPTS; attempt++) {
+    await wait(retryDelay(response, attempt - 1));
+    response = await fetch(url, { headers: { Authorization: `Key ${apiKey}` }, signal });
+  }
+
   if (!response.ok) {
     const error = new Error(`fal model catalog request failed: ${response.status}`);
     Object.assign(error, { status: response.status });
@@ -113,17 +133,25 @@ const listCategory = async (
   let cursor: string | undefined;
 
   for (let page = 0; page < MAX_PAGES_PER_CATEGORY; page++) {
-    const result = await requestCatalog(
-      apiKey,
-      {
-        category,
-        cursor,
-        expand: 'openapi-3.0',
-        limit: String(PAGE_SIZE),
-        status: 'active',
-      },
-      signal,
-    );
+    let result: FalCatalogPage;
+    try {
+      result = await requestCatalog(
+        apiKey,
+        {
+          category,
+          cursor,
+          expand: 'openapi-3.0',
+          limit: String(FAL_CATALOG_PAGE_SIZE),
+          status: 'active',
+        },
+        signal,
+      );
+    } catch (error) {
+      // Keep the pages already listed; only a category whose first page fails is lost
+      if (page === 0) throw error;
+      log('fal catalog %s stopped at page %d: %O', category, page, error);
+      break;
+    }
 
     for (const model of result.models ?? []) {
       const item = toModelListItem(model, type);
@@ -139,13 +167,19 @@ const listCategory = async (
 
 /**
  * List the fal endpoints that can run on the image and video generation pages, each with the
- * parameters derived from its input schema. A failing category is skipped so one bad page does
- * not hide the rest; only a failure of every category (e.g. an invalid key) is thrown.
+ * parameters derived from its input schema. Categories are listed one after another to stay
+ * under fal's rate limit. A failing category is skipped so it does not hide the rest; only a
+ * failure of every category (e.g. an invalid key) is thrown.
  */
 export const listFalGenerationModels = async (apiKey: string, signal?: AbortSignal) => {
-  const results = await Promise.allSettled(
-    FAL_GENERATION_CATEGORIES.map((category) => listCategory(apiKey, category, signal)),
-  );
+  const results: PromiseSettledResult<FalModelListItem[]>[] = [];
+  for (const category of FAL_GENERATION_CATEGORIES) {
+    try {
+      results.push({ status: 'fulfilled', value: await listCategory(apiKey, category, signal) });
+    } catch (reason) {
+      results.push({ reason, status: 'rejected' });
+    }
+  }
 
   const rejected = results.filter((result) => result.status === 'rejected');
   if (rejected.length === results.length) throw (rejected[0] as PromiseRejectedResult).reason;

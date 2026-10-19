@@ -3,14 +3,14 @@
  * other id with a `/` is a full fal endpoint id (`bytedance/seedance-2.5`,
  * `black-forest-labs/flux-2`, `<user>/<app>`) and is used verbatim.
  */
-const LEGACY_SHORT_ID_PREFIXES = [
-  'bytedance/seedream/',
-  'flux/',
-  'flux-kontext/',
-  'flux-pro/',
-  'hunyuan-image/',
-  'imagen4/',
-];
+const LEGACY_SHORT_ID_PREFIXES = ['flux/', 'flux-kontext/', 'flux-pro/', 'hunyuan-image/', 'imagen4/'];
+
+/**
+ * Legacy short ids under an owner fal also uses at the top level: `bytedance/seedream/v4` meant
+ * `fal-ai/bytedance/seedream/v4`, while newer releases live at `bytedance/seedream/v5/...`, so
+ * only these exact ids are rewritten.
+ */
+const LEGACY_SHORT_IDS = new Set(['bytedance/seedream/v4', 'bytedance/seedream/v4.5']);
 
 /**
  * Model families exposed as one card but served by separate fal endpoints: requests with
@@ -34,6 +34,7 @@ export const resolveFalEndpointId = (model: string) => {
   const id = model.trim().replaceAll(/^\/+|\/+$/g, '');
 
   if (!id.includes('/')) return `fal-ai/${id}`;
+  if (LEGACY_SHORT_IDS.has(id)) return `fal-ai/${id}`;
   if (LEGACY_SHORT_ID_PREFIXES.some((prefix) => id.startsWith(prefix))) return `fal-ai/${id}`;
 
   return id;
