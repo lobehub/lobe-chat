@@ -4,9 +4,20 @@ const REVIEW_SDK_SRC = 'https://web-assets.lobehub.com/review-sdk/assets/v1/lobe
 const REVIEW_DEFAULT_SERVER = 'https://app.lobehub.com';
 const SITE_WAKE_PARAM = 'lh-review';
 
+const HTML_ATTRIBUTE_ESCAPES: Record<string, string> = {
+  '"': '&quot;',
+  '&': '&amp;',
+  "'": '&#39;',
+  '<': '&lt;',
+  '>': '&gt;',
+};
+
+const escapeAttribute = (value: string) =>
+  value.replaceAll(/["&'<>]/g, (char) => HTML_ATTRIBUTE_ESCAPES[char]);
+
 export const siteSnippet = (siteId: string, server: string) =>
-  `<script src="${REVIEW_SDK_SRC}" data-site="${siteId}"${
-    server === REVIEW_DEFAULT_SERVER ? '' : ` data-server="${server}"`
+  `<script src="${REVIEW_SDK_SRC}" data-site="${escapeAttribute(siteId)}"${
+    server === REVIEW_DEFAULT_SERVER ? '' : ` data-server="${escapeAttribute(server)}"`
   }></script>`;
 
 export const reviewLink = (origins: string[]) => {

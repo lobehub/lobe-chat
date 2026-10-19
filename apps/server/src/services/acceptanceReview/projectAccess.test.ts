@@ -120,7 +120,7 @@ describe('site review access', () => {
       canComment: false,
       canApprove: false,
     });
-    await new ProjectMemberModel(db).clearRole(projectId, teammateId);
+    await new ProjectMemberModel(db).clearRole(workspaceId, projectId, teammateId);
     expect(await resolveAcceptanceCommentAccess(db, teammateId, siteAcceptanceId)).toMatchObject({
       canComment: true,
       canApprove: false,

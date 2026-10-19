@@ -117,7 +117,7 @@ describe('site review tokens', () => {
     const response = await call(guestId, '/session');
     expect(response.status).toBe(403);
     expect(await response.json()).toMatchObject({ error: { code: 'SITE_ACCESS_REVOKED' } });
-    await members.clearRole(projectId, guestId);
+    await members.clearRole(workspaceId, projectId, guestId);
     expect((await call(guestId, '/session')).status).toBe(200);
   });
 

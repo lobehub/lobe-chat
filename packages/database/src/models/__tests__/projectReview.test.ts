@@ -57,7 +57,7 @@ describe('ProjectSiteModel', () => {
       expect.objectContaining({ id: site.id }),
     ]);
 
-    const updated = await sites.update(site.id, {
+    const updated = await sites.update(project.id, site.id, {
       name: 'Preview',
       origins: ['http://localhost:3000'],
     });
@@ -65,7 +65,7 @@ describe('ProjectSiteModel', () => {
       expect.objectContaining({ name: 'Preview', origins: ['http://localhost:3000'] }),
     );
 
-    await sites.delete(site.id);
+    await sites.delete(project.id, site.id);
     expect(await sites.listByProject(project.id)).toEqual([]);
   });
 });
@@ -105,7 +105,7 @@ describe('ProjectMemberModel', () => {
     expect(await members.listByProject(projectId)).toHaveLength(1);
     await members.add({ projectId, userId: guestId, role: 'member' });
     expect(await members.findActive(projectId, guestId)).toMatchObject({ role: 'member' });
-    await members.clearRole(projectId, guestId);
+    await members.clearRole(workspaceId, projectId, guestId);
     expect(await members.findActive(projectId, guestId)).toBeNull();
   });
 

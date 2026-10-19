@@ -1,6 +1,5 @@
 import {
   ActionIcon,
-  Alert,
   Button,
   createModal,
   createStaticStyles,
@@ -141,7 +140,9 @@ function SiteForm({ onSaved, projectId, site }: SiteModalProps) {
         </Text>
       </Flexbox>
       {serverError && serverError.index === undefined ? (
-        <Alert showIcon title={serverError.message} type="error" />
+        <span className={styles.error} role="alert">
+          {serverError.message}
+        </span>
       ) : null}
       <Flexbox horizontal gap={8} justify="flex-end">
         <Button disabled={pending} onClick={close}>

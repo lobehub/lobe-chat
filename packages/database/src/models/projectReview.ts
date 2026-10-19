@@ -36,19 +36,23 @@ export class ProjectSiteModel {
   }
 
   async update(
+    projectId: string,
     id: string,
     value: Partial<Pick<NewProjectSite, 'acceptanceId' | 'name' | 'origins'>>,
   ) {
     const [site] = await this.db
       .update(projectSites)
       .set({ ...value, updatedAt: new Date() })
-      .where(eq(projectSites.id, id))
+      .where(and(eq(projectSites.projectId, projectId), eq(projectSites.id, id)))
       .returning();
     return site ?? null;
   }
 
-  async delete(id: string) {
-    const [site] = await this.db.delete(projectSites).where(eq(projectSites.id, id)).returning();
+  async delete(projectId: string, id: string) {
+    const [site] = await this.db
+      .delete(projectSites)
+      .where(and(eq(projectSites.projectId, projectId), eq(projectSites.id, id)))
+      .returning();
     return site ?? null;
   }
 }
@@ -128,10 +132,16 @@ export class ProjectMemberModel {
     return row?.member ?? null;
   }
 
-  async clearRole(projectId: string, userId: string) {
+  async clearRole(workspaceId: string, projectId: string, userId: string) {
     const [member] = await this.db
       .delete(projectMembers)
-      .where(and(eq(projectMembers.projectId, projectId), eq(projectMembers.userId, userId)))
+      .where(
+        and(
+          eq(projectMembers.workspaceId, workspaceId),
+          eq(projectMembers.projectId, projectId),
+          eq(projectMembers.userId, userId),
+        ),
+      )
       .returning();
     return member ?? null;
   }

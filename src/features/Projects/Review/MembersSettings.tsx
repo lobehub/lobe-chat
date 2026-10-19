@@ -22,6 +22,8 @@ export function MembersSettings({ projectId }: { projectId: string }) {
   if (error) return <AsyncError error={error} onRetry={() => mutate()} />;
   if (!data) return <SkeletonBar height={120} />;
   if (!data.workspaceId) return <Empty description={t('review.members.workspaceOnly')} />;
+  const availableMembers = data.availableMembers ?? [];
+  const members = data.members ?? [];
 
   const run = async (id: string, action: () => Promise<unknown>) => {
     setBusyId(id);
@@ -74,7 +76,7 @@ export function MembersSettings({ projectId }: { projectId: string }) {
             placeholder={t('review.members.selectMember')}
             style={{ flex: '1 1 240px', minWidth: 0 }}
             value={userId}
-            options={data.availableMembers.map((member) => ({
+            options={availableMembers.map((member) => ({
               label:
                 member.email && member.email !== member.name
                   ? `${member.name} (${member.email})`
@@ -98,7 +100,7 @@ export function MembersSettings({ projectId }: { projectId: string }) {
             {t('review.members.setRole')}
           </Button>
         </form>
-        {data.members.map((member) => (
+        {members.map((member) => (
           <MemberRow
             busy={busyId === member.id}
             key={member.id}

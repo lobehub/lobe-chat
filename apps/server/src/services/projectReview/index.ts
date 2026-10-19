@@ -88,7 +88,7 @@ export class ProjectReviewService {
     const name = input.name?.trim();
     const origins = input.origins ? this.normalizeOrigins(input.origins) : undefined;
 
-    const updated = await this.sites.update(siteId, { name, origins });
+    const updated = await this.sites.update(site.projectId, siteId, { name, origins });
     if (name && site.acceptanceId) {
       const [acceptance] = await this.db
         .select({ metadata: acceptances.metadata })
@@ -106,7 +106,9 @@ export class ProjectReviewService {
     const site = await this.findSite(siteId);
     await this.assertRole(site.projectId, ['member', 'admin']);
     await this.db.transaction(async (tx) => {
-      await tx.delete(projectSites).where(eq(projectSites.id, siteId));
+      await tx
+        .delete(projectSites)
+        .where(and(eq(projectSites.projectId, site.projectId), eq(projectSites.id, siteId)));
       if (site.acceptanceId)
         await tx.delete(acceptances).where(eq(acceptances.id, site.acceptanceId));
     });
@@ -153,7 +155,7 @@ export class ProjectReviewService {
       throw new TRPCError({ code: 'BAD_REQUEST', message: 'Project members require a workspace' });
     const member =
       role === null
-        ? await this.members.clearRole(projectId, userId)
+        ? await this.members.clearRole(project.workspaceId, projectId, userId)
         : await this.members.add({ projectId, userId, role, addedByUserId: this.userId });
     if (role !== null && !member)
       throw new TRPCError({
