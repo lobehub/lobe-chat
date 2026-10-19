@@ -82,7 +82,6 @@
   "acceptance.comments.approvalCount": "{{count}} рецензент(ов) одобрил(и)",
   "acceptance.comments.approve": "Одобрить эту доставку",
   "acceptance.comments.approveAgain": "Одобрить этот раунд",
-  "acceptance.comments.approveDescription": "Ваше мнение о рецензии. Оно не изменяет статус принятия — только владелец принимает доставку.",
   "acceptance.comments.approveSummaryPlaceholder": "Однострочное резюме (необязательно)",
   "acceptance.comments.approved": "Одобрено",
   "acceptance.comments.approvedAtRound": "Одобрено (раунд {{round}})",

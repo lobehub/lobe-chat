@@ -82,7 +82,6 @@
   "acceptance.comments.approvalCount": "{{count}} بازبین تایید کرده‌اند",
   "acceptance.comments.approve": "این تحویل را تایید کنید",
   "acceptance.comments.approveAgain": "این دور را دوباره تایید کنید",
-  "acceptance.comments.approveDescription": "نظر شما در مورد بازبینی. این وضعیت پذیرش را تغییر نمی‌دهد — فقط مالک تحویل را می‌پذیرد.",
   "acceptance.comments.approveSummaryPlaceholder": "خلاصه‌ای یک‌خطی (اختیاری)",
   "acceptance.comments.approved": "تایید شده",
   "acceptance.comments.approvedAtRound": "تایید شده (دور {{round}})",

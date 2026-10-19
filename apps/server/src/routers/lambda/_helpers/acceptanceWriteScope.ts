@@ -2,6 +2,16 @@ import { WorkspaceMemberModel } from '@/database/models/workspaceMember';
 import type { AcceptanceItem } from '@/database/schemas/verify';
 import type { LobeChatDatabase } from '@/database/type';
 
+/**
+ * Workspace roles that may decide on a teammate's acceptance. Admins run the
+ * workspace day to day, so a delivery waiting on its author must not be stuck
+ * until the one owner turns up; members and viewers weigh in through approvals
+ * and comments instead.
+ */
+const DECIDER_ROLES = new Set(['owner', 'admin']);
+
+const isDeciderRole = (role?: string | null) => Boolean(role && DECIDER_ROLES.has(role));
+
 export interface AcceptanceScopeCtx {
   serverDB: LobeChatDatabase;
   userId?: string | null;
@@ -11,7 +21,7 @@ export interface AcceptanceScopeCtx {
  * May this caller write to this acceptance?
  *
  * The creator always may. Beyond that, an acceptance that belongs to a workspace
- * may also be managed by an OWNER of **that** workspace — not of the caller's
+ * may also be managed by an OWNER or ADMIN of **that** workspace — not of the caller's
  * currently-active one, which is frequently a different workspace or none at
  * all. Reading membership off the row's own workspace is what makes the rule
  * stable no matter where the caller happens to be standing, and it is the same
@@ -29,7 +39,7 @@ export async function canManageAcceptance(
     acceptance.workspaceId,
     ctx.userId,
   );
-  return member?.role === 'owner';
+  return isDeciderRole(member?.role);
 }
 
 /**
@@ -58,6 +68,7 @@ export async function filterManageableAcceptances<
 
   return rows.filter(
     (row) =>
-      row.userId === userId || (row.workspaceId ? roles.get(row.workspaceId) === 'owner' : false),
+      row.userId === userId ||
+      (row.workspaceId ? isDeciderRole(roles.get(row.workspaceId)) : false),
   );
 }
