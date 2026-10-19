@@ -22,6 +22,11 @@ import { MeetingModel, MeetingStateError } from '@/database/models/meeting';
 import { router } from '@/libs/trpc/lambda';
 import { serverDatabase } from '@/libs/trpc/lambda/middleware';
 import { FileService } from '@/server/services/file';
+import {
+  MAX_LIVE_CHUNK_BASE64_CHARS,
+  MeetingTranscriptionError,
+  MeetingTranscriptionService,
+} from '@/server/services/meeting';
 
 const meetingProcedure = wsCompatProcedure.use(serverDatabase).use(async (opts) => {
   const { ctx } = opts;
@@ -33,6 +38,7 @@ const meetingProcedure = wsCompatProcedure.use(serverDatabase).use(async (opts) 
       fileModel: new FileModel(ctx.serverDB, ctx.userId, workspaceId),
       fileService: new FileService(ctx.serverDB, ctx.userId, workspaceId),
       meetingModel: new MeetingModel(ctx.serverDB, ctx.userId, workspaceId),
+      transcriptionService: new MeetingTranscriptionService(ctx.serverDB, ctx.userId, workspaceId),
     },
   });
 });
@@ -103,6 +109,16 @@ const minutesInput = z.object({
   model: z.string().max(255).nullish(),
   summary: z.string().max(20_000).nullish(),
 });
+
+/** HTTP-ish class of each transcription failure; the code itself travels as the message. */
+const TRANSCRIPTION_ERROR_STATUS = {
+  audio_missing: 'BAD_REQUEST',
+  audio_unsupported: 'BAD_REQUEST',
+  provider_not_configured: 'PRECONDITION_FAILED',
+  provider_unavailable: 'SERVICE_UNAVAILABLE',
+  quota_exceeded: 'TOO_MANY_REQUESTS',
+  transcription_failed: 'INTERNAL_SERVER_ERROR',
+} as const;
 
 const notFound = () => new TRPCError({ code: 'NOT_FOUND', message: 'Meeting not found' });
 
@@ -207,6 +223,59 @@ export const meetingRouter = router({
         return { data, message: 'Meeting created', success: true };
       } catch (error) {
         fail(error, 'create');
+      }
+    }),
+
+  /**
+   * Transcribe the stored recording end to end with speakers and timestamps,
+   * replacing any earlier refined transcript. Also the retry after `failed`.
+   * Resolves with the meeting: `ready`, or `failed` with `error.code` naming
+   * the fix (`provider_not_configured`, `quota_exceeded`, …).
+   */
+  refine: meetingWriteProcedure.input(idInput).mutation(async ({ ctx, input }) => {
+    try {
+      const data = await ctx.transcriptionService.refine(input.id);
+      if (!data) throw notFound();
+      return { data, message: 'Meeting refined', success: true };
+    } catch (error) {
+      fail(error, 'refine');
+    }
+  }),
+
+  /**
+   * Draft one slice of a live recording where no realtime gateway is deployed
+   * and store it as realtime segment `seq` (retries replace, never duplicate).
+   * Errors carry the meeting error code as their message.
+   */
+  transcribeLive: meetingWriteProcedure
+    .input(
+      z
+        .object({
+          audioBase64: z.string().min(1).max(MAX_LIVE_CHUNK_BASE64_CHARS),
+          endMs: offsetMs,
+          meetingId: z.string().min(1),
+          seq: z.number().int().min(0),
+          startMs: offsetMs,
+        })
+        .refine((value) => value.endMs >= value.startMs, {
+          message: 'endMs must not be before startMs',
+          path: ['endMs'],
+        }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      try {
+        const data = await ctx.transcriptionService.transcribeLiveChunk(input);
+        if (!data) throw notFound();
+        return { data, success: true };
+      } catch (error) {
+        if (error instanceof MeetingTranscriptionError) {
+          throw new TRPCError({
+            cause: error,
+            code: TRANSCRIPTION_ERROR_STATUS[error.code],
+            message: error.code,
+          });
+        }
+        fail(error, 'transcribe');
       }
     }),
 

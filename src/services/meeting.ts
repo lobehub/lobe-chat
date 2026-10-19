@@ -3,6 +3,7 @@ import type {
   MeetingPlatform,
   MeetingRealtimeProvider,
   MeetingRefineProvider,
+  MeetingSegmentSource,
   MeetingStatus,
 } from '@lobechat/types';
 
@@ -33,7 +34,9 @@ class MeetingService {
   list = async (params?: ListMeetingsParams) =>
     (await lambdaClient.meeting.list.query(params)).data;
 
-  detail = async (id: string) => (await lambdaClient.meeting.detail.query({ id })).data;
+  /** Meeting with one transcript: refined once available, else the live draft (`source` forces one). */
+  detail = async (id: string, source?: MeetingSegmentSource) =>
+    (await lambdaClient.meeting.detail.query({ id, source })).data;
 
   create = async (params: CreateMeetingParams) =>
     (await lambdaClient.meeting.create.mutate(params)).data;
@@ -58,6 +61,17 @@ class MeetingService {
       meetingId,
       segments: segments.map((segment) => ({ ...segment, source: 'realtime' as const })),
     });
+
+  /** Transcribe and store one live window (deployments without a realtime gateway). */
+  transcribeLive = async (params: {
+    audioBase64: string;
+    endMs: number;
+    meetingId: string;
+    seq: number;
+    startMs: number;
+  }) => (await lambdaClient.meeting.transcribeLive.mutate(params)).data;
+
+  refine = async (id: string) => (await lambdaClient.meeting.refine.mutate({ id })).data;
 }
 
 export const meetingService = new MeetingService();
