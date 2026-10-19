@@ -688,8 +688,12 @@ export class FileModel {
 
   /**
    * Find the user-uploaded files that can be safely deleted when a topic is
-   * removed: files attached to messages inside the topic that have **no other
-   * reference** surviving the deletion.
+   * removed: files this user created, attached to messages inside the topic,
+   * that have **no other reference** surviving the deletion.
+   *
+   * In a workspace the caller can attach another member's public file, so a
+   * candidate must be the caller's own upload, and references count no matter
+   * which member made them.
    *
    * Deleting a `files` row cascades to `messages_files` and `files_to_sessions`,
    * so a file still referenced elsewhere would silently disappear from there.
@@ -711,7 +715,14 @@ export class FileModel {
       .selectDistinct({ id: messagesFiles.fileId })
       .from(messagesFiles)
       .innerJoin(messages, eq(messagesFiles.messageId, messages.id))
-      .where(and(eq(messages.topicId, topicId), eq(messagesFiles.userId, this.userId)));
+      .innerJoin(files, eq(messagesFiles.fileId, files.id))
+      .where(
+        and(
+          eq(messages.topicId, topicId),
+          eq(messagesFiles.userId, this.userId),
+          eq(files.userId, this.userId),
+        ),
+      );
 
     const candidateIds = candidates.map((row) => row.id);
     if (candidateIds.length === 0) return [];
@@ -726,7 +737,8 @@ export class FileModel {
       ttsRefsOutsideTopic,
       evidenceRefs,
     ] = await Promise.all([
-      // same file attached to a message in a different topic (or no topic)
+      // same file attached to a message in a different topic (or no topic),
+      // by any member
       this.db
         .selectDistinct({ id: messagesFiles.fileId })
         .from(messagesFiles)
@@ -734,20 +746,14 @@ export class FileModel {
         .where(
           and(
             inArray(messagesFiles.fileId, candidateIds),
-            eq(messagesFiles.userId, this.userId),
             or(ne(messages.topicId, topicId), isNull(messages.topicId)),
           ),
         ),
-      // same file attached at the session level — survives topic deletion
+      // same file attached at the session level by any member — survives topic deletion
       this.db
         .selectDistinct({ id: filesToSessions.fileId })
         .from(filesToSessions)
-        .where(
-          and(
-            inArray(filesToSessions.fileId, candidateIds),
-            eq(filesToSessions.userId, this.userId),
-          ),
-        ),
+        .where(inArray(filesToSessions.fileId, candidateIds)),
       // knowledge base / agent knowledge / image generation: none of these
       // belong to the topic, so the file must outlive it
       this.db

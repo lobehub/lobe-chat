@@ -23,6 +23,7 @@ import {
   verifyCheckResults,
   verifyEvidence,
   verifyRuns,
+  workspaces,
 } from '../../schemas';
 import type { LobeChatDatabase } from '../../type';
 import { FileModel } from '../file';
@@ -294,5 +295,69 @@ describe('findDeletableFilesByTopicId', () => {
 
     const result = await fileModel.findDeletableFilesByTopicId(topicId);
     expect(result).toEqual([]);
+  });
+});
+
+describe('findDeletableFilesByTopicId in a workspace', () => {
+  const wsId = 'topic-cleanup-ws';
+  const wsFileModel = new FileModel(serverDB, userId, wsId);
+  const topicId = 'ws-topic-a';
+
+  beforeEach(async () => {
+    await serverDB
+      .insert(workspaces)
+      .values({ id: wsId, name: 'Cleanup WS', primaryOwnerId: userId, slug: 'cleanup-ws' });
+    await serverDB.insert(topics).values([
+      { id: topicId, userId, workspaceId: wsId },
+      { id: 'ws-topic-b', userId: 'user2', workspaceId: wsId },
+    ]);
+    await serverDB.insert(messages).values([
+      { id: 'ws-msg-a', role: 'user', topicId, userId, workspaceId: wsId },
+      { id: 'ws-msg-b', role: 'user', topicId: 'ws-topic-b', userId: 'user2', workspaceId: wsId },
+    ]);
+    await serverDB.insert(files).values(
+      [
+        { id: 'ws-own', owner: userId },
+        { id: 'ws-own-shared', owner: userId },
+        { id: 'ws-member', owner: 'user2' },
+      ].map(({ id, owner }) => ({
+        fileType: 'image/png',
+        id,
+        name: `${id}.png`,
+        size: 1,
+        url: `k-${id}`,
+        userId: owner,
+        visibility: 'public' as const,
+        workspaceId: wsId,
+      })),
+    );
+    // the caller attaches its own two files and another member's public file
+    await serverDB.insert(messagesFiles).values(
+      ['ws-own', 'ws-own-shared', 'ws-member'].map((fileId) => ({
+        fileId,
+        messageId: 'ws-msg-a',
+        userId,
+        workspaceId: wsId,
+      })),
+    );
+  });
+
+  it("never returns another member's file attached in the caller's topic", async () => {
+    const result = await wsFileModel.findDeletableFilesByTopicId(topicId);
+
+    expect(result).not.toContain('ws-member');
+  });
+
+  it('keeps an own file that another member attached in their topic', async () => {
+    await serverDB.insert(messagesFiles).values({
+      fileId: 'ws-own-shared',
+      messageId: 'ws-msg-b',
+      userId: 'user2',
+      workspaceId: wsId,
+    });
+
+    const result = await wsFileModel.findDeletableFilesByTopicId(topicId);
+
+    expect(result.sort()).toEqual(['ws-own']);
   });
 });
