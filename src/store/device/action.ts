@@ -1,11 +1,17 @@
-import type { DeviceListItem, WorkingDirEntry } from '@lobechat/types';
+import type { DeviceListItem, WorkingDirEntry, WorkingDirRepoType } from '@lobechat/types';
 
 import { refreshDeviceList } from '@/features/DeviceManager/const';
 import { createReplicaSlice, recordLens, type ReplicaSyncResult } from '@/libs/replica';
 import { deviceService } from '@/services/device';
 import { type StoreSetter } from '@/store/types';
+import { isTrpcErrorCode } from '@/utils/trpcError';
 
-import { nextWorkingDirs, removeWorkingDir, WORKING_DIRS_MAX } from './deviceCwd';
+import {
+  nextWorkingDirs,
+  removeWorkingDir,
+  setWorkingDirRepoType,
+  WORKING_DIRS_MAX,
+} from './deviceCwd';
 import { DEVICE_LIST_KEY, type DeviceListParams, deviceListResource } from './projection';
 import { deviceSelectors } from './selectors';
 import { type DeviceStore } from './store';
@@ -13,6 +19,9 @@ import { type DeviceStore } from './store';
 type Setter = StoreSetter<DeviceStore>;
 
 const LIST_PARAMS = {} as DeviceListParams;
+
+/** How long a repo-type correction that failed transiently waits before it may be re-sent. */
+const REPO_TYPE_SYNC_RETRY_MS = 60 * 1000;
 
 type UpdateDeviceInput = Parameters<typeof deviceService.updateDevice>[0];
 
@@ -32,6 +41,8 @@ export const deviceSlice = (set: Setter, get: () => DeviceStore, _api?: unknown)
 export class DeviceActionImpl {
   readonly #get: () => DeviceStore;
   readonly #list;
+  /** `syncWorkingDirRepoType` targets that may not be sent again before the given time. */
+  readonly #repoTypeSyncBlockedUntil = new Map<string, number>();
 
   constructor(set: Setter, get: () => DeviceStore, _api?: unknown) {
     void _api;
@@ -194,6 +205,67 @@ export class DeviceActionImpl {
           device.scope === 'workspace'
             ? deviceService.removeWorkspaceDeviceWorkingDir({ deviceId, path })
             : deviceService.updateDevice({ deviceId, workingDirs: updated }),
+      );
+    } finally {
+      await this.#revalidateDeviceLists();
+    }
+  };
+
+  /**
+   * Correct a device working dir's cached `repoType` in place after a live probe
+   * disagreed with it — e.g. a folder registered while still empty and cloned
+   * into afterwards. Neither reorders nor adds entries; a no-op when nothing
+   * changes, and until the server has confirmed the list (a persisted copy holds
+   * stale `workingDirs`, and a personal write sends the whole list). A failed
+   * write must not loop with the revalidation that restores the stale value, so
+   * its target is held back: for the rest of the session when the server refused
+   * it (a viewer cannot edit a shared device), for `REPO_TYPE_SYNC_RETRY_MS`
+   * after a transient failure. A write that succeeds holds nothing back, so a
+   * later legitimate change to the same value is sent.
+   *
+   * Resolves, when the correction was held back, the time it may be sent again
+   * (`Infinity` for never) so a caller can schedule the retry; otherwise
+   * `undefined`.
+   */
+  syncWorkingDirRepoType = async (
+    deviceId: string,
+    path: string,
+    repoType: WorkingDirRepoType | undefined,
+  ): Promise<number | undefined> => {
+    if (!deviceSelectors.isDeviceListConfirmed(this.#get())) return;
+    const device = this.#devices().find((d) => d.deviceId === deviceId);
+    if (!device) return;
+    const updated = setWorkingDirRepoType(device.workingDirs ?? [], path, repoType);
+    if (!updated) return;
+
+    const syncKey = JSON.stringify([deviceId, path, repoType ?? null]);
+    const blockedUntil = this.#repoTypeSyncBlockedUntil.get(syncKey) ?? 0;
+    if (blockedUntil > Date.now()) return blockedUntil;
+    // Held back while in flight too, so a re-render cannot send it twice.
+    this.#repoTypeSyncBlockedUntil.set(syncKey, Number.POSITIVE_INFINITY);
+
+    try {
+      await this.#patchDevice(
+        deviceId,
+        (d) => ({ ...d, workingDirs: updated }) as DeviceListItem,
+        async () => {
+          try {
+            await (device.scope === 'workspace'
+              ? deviceService.setWorkspaceDeviceWorkingDirRepoType({ deviceId, path, repoType })
+              : deviceService.updateDevice({ deviceId, workingDirs: updated }));
+            this.#repoTypeSyncBlockedUntil.delete(syncKey);
+          } catch (error) {
+            // Recorded before the rollback re-renders the stale entry, so a
+            // caller that re-runs on that render already learns when to retry.
+            const refused =
+              isTrpcErrorCode(error, 'FORBIDDEN') || isTrpcErrorCode(error, 'UNAUTHORIZED');
+            this.#repoTypeSyncBlockedUntil.set(
+              syncKey,
+              refused ? Number.POSITIVE_INFINITY : Date.now() + REPO_TYPE_SYNC_RETRY_MS,
+            );
+            throw error;
+          }
+        },
       );
     } finally {
       await this.#revalidateDeviceLists();
