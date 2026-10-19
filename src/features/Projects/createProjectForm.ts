@@ -41,6 +41,23 @@ export const getProjectFieldSuggestions = (name: string): ProjectFieldSuggestion
 export const isProjectIdentifierValid = (identifier: string) =>
   PROJECT_IDENTIFIER_REGEX.test(identifier.trim().toUpperCase());
 
+/**
+ * Whether an already-loaded project in the active scope claims `identifier`.
+ *
+ * Identifiers are unique per scope (`projects_identifier_workspace_id_unique`),
+ * so the form checks this inline and shows the conflict next to the field. The
+ * list is visibility-filtered, so another member's private project can slip
+ * past here — the server re-checks and answers `CONFLICT` for that case.
+ */
+export const isProjectIdentifierTaken = (
+  identifier: string,
+  projects: readonly { identifier: string }[],
+) => {
+  const normalized = identifier.trim().toUpperCase();
+
+  return Boolean(normalized) && projects.some((project) => project.identifier === normalized);
+};
+
 export const isProjectSlugValid = (slug: string) => {
   const normalizedSlug = slug.trim().toLowerCase();
   return !normalizedSlug || PROJECT_SLUG_REGEX.test(normalizedSlug);

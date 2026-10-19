@@ -21,7 +21,7 @@ import type { LobeChatDatabase } from '../../type';
 import { AgentModel } from '../agent';
 import { EnvironmentModel } from '../environment';
 import type { CreateProjectInput } from '../project';
-import { ProjectModel } from '../project';
+import { ProjectIdentifierTakenError, ProjectModel } from '../project';
 import { TaskModel } from '../task';
 import { TopicModel } from '../topic';
 
@@ -128,6 +128,49 @@ describe('ProjectModel', () => {
     await expect(
       member.create({ identifier: 'TEAM', name: 'Workspace duplicate' }),
     ).rejects.toThrow();
+  });
+
+  it('reports a taken identifier as a field error and leaves no orphan coordinator', async () => {
+    await model.create({ identifier: 'LOBE', name: 'First' });
+
+    expect(await model.isIdentifierTaken('lobe')).toBe(true);
+    expect(await model.isIdentifierTaken('MOBILE')).toBe(false);
+
+    const agentsBefore = await serverDB.select().from(agents).where(eq(agents.userId, userId));
+
+    await expect(model.create({ identifier: 'LOBE', name: 'Second' })).rejects.toThrow(
+      ProjectIdentifierTakenError,
+    );
+    // The check runs before the coordinator is inserted, so a collision must not
+    // leak an agent the failed transaction created.
+    expect(await serverDB.select().from(agents).where(eq(agents.userId, userId))).toHaveLength(
+      agentsBefore.length,
+    );
+  });
+
+  it('treats another member private project as occupying the identifier', async () => {
+    await serverDB.insert(workspaces).values({
+      id: 'private-identifier-workspace',
+      name: 'Private Identifier Workspace',
+      primaryOwnerId: userId,
+      slug: 'private-identifier-workspace',
+    });
+    const owner = new ProjectModel(serverDB, userId, 'private-identifier-workspace');
+    const member = new ProjectModel(serverDB, otherUserId, 'private-identifier-workspace');
+    const hidden = await owner.create({
+      identifier: 'PRIV',
+      name: 'Private',
+      visibility: 'private',
+    });
+
+    // The member cannot see the project — which is exactly why a visibility-aware
+    // check would wrongly report the identifier as free.
+    expect(await member.findById(hidden.id)).toBeNull();
+    // The unique index is scope-wide regardless of visibility, so it is taken.
+    expect(await member.isIdentifierTaken('PRIV')).toBe(true);
+    await expect(member.create({ identifier: 'PRIV', name: 'Clash' })).rejects.toThrow(
+      ProjectIdentifierTakenError,
+    );
   });
 
   it('requires identifiers to contain between 3 and 6 characters', async () => {

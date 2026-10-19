@@ -4,7 +4,7 @@ import { z } from 'zod';
 
 import { withScopedPermission } from '@/business/server/trpc-middlewares/rbacPermission';
 import { wsCompatProcedure } from '@/business/server/trpc-middlewares/workspaceAuth';
-import { ProjectModel } from '@/database/models/project';
+import { ProjectIdentifierTakenError, ProjectModel } from '@/database/models/project';
 import { router } from '@/libs/trpc/lambda';
 import { serverDatabase } from '@/libs/trpc/lambda/middleware';
 
@@ -131,6 +131,12 @@ export const projectRouter = router({
           success: true,
         };
       } catch (error) {
+        // A duplicate identifier is a field-level problem the client can show
+        // next to the input; `CONFLICT` keeps it distinguishable from a real
+        // server fault so callers stop rendering a generic failure toast.
+        if (error instanceof ProjectIdentifierTakenError) {
+          throw new TRPCError({ cause: error, code: 'CONFLICT', message: error.message });
+        }
         mapProjectError(error, 'create');
       }
     }),

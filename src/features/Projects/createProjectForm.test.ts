@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest';
 import {
   getCreateProjectInput,
   getProjectFieldSuggestions,
+  isProjectIdentifierTaken,
   isProjectIdentifierValid,
   isProjectSlugValid,
 } from './createProjectForm';
@@ -31,6 +32,17 @@ describe('createProjectForm', () => {
     expect(isProjectIdentifierValid('LOBE')).toBe(true);
     expect(isProjectIdentifierValid('LH')).toBe(false);
     expect(isProjectIdentifierValid('1LOBE')).toBe(false);
+  });
+
+  it('flags an identifier that another project in the scope already uses', () => {
+    const projects = [{ identifier: 'LOBE' }, { identifier: 'MOBILE' }];
+
+    expect(isProjectIdentifierTaken('LOBE', projects)).toBe(true);
+    expect(isProjectIdentifierTaken(' lobe ', projects)).toBe(true);
+    expect(isProjectIdentifierTaken('LOB', projects)).toBe(false);
+    // An empty field is "not yet filled in", not "taken".
+    expect(isProjectIdentifierTaken('  ', projects)).toBe(false);
+    expect(isProjectIdentifierTaken('LOBE', [])).toBe(false);
   });
 
   it('normalizes and includes a user-provided slug', () => {
