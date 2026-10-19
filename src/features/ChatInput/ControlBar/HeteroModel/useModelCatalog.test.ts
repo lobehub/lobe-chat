@@ -1,24 +1,194 @@
+/**
+ * @vitest-environment happy-dom
+ */
+import { randomUUID } from 'node:crypto';
+
 import { act, renderHook, waitFor } from '@testing-library/react';
 import type { PropsWithChildren } from 'react';
-import { createElement } from 'react';
-import { SWRConfig } from 'swr';
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { createElement, useEffect } from 'react';
+import { SWRConfig, useSWRConfig } from 'swr';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { cacheScope } from '@/libs/replica';
+import { setScopedMutate } from '@/libs/swr/mutate';
 import { heterogeneousAgentCatalogService } from '@/services/heterogeneousAgent';
+import {
+  heteroModelCatalogKey,
+  type HeteroModelCatalogParams,
+  heteroModelCatalogResource,
+} from '@/store/device/heteroModelCatalog/projection';
+import {
+  initialHeteroModelCatalogState,
+  useHeteroModelCatalogStore,
+} from '@/store/device/heteroModelCatalog/store';
 
 import { useModelCatalog } from './useModelCatalog';
+
+const MutateBridge = () => {
+  const { mutate } = useSWRConfig();
+  useEffect(() => setScopedMutate(mutate), [mutate]);
+  return null;
+};
 
 const createWrapper = () => {
   const value = { provider: () => new Map() };
 
   return function SWRTestWrapper({ children }: PropsWithChildren) {
-    return createElement(SWRConfig, { value }, children);
+    return createElement(SWRConfig, { value }, createElement(MutateBridge), children);
   };
 };
+
+/** Never-resolving discovery: the first frame can only come from storage. */
+const pendingDiscovery = () =>
+  new Promise<Awaited<ReturnType<typeof heterogeneousAgentCatalogService.listModels>>>(() => {});
+
+let scope = '';
+const seeded: HeteroModelCatalogParams[] = [];
+
+const seed = (params: HeteroModelCatalogParams, models: { id: string; modelId: string }[]) => {
+  seeded.push(params);
+  return heteroModelCatalogResource.storage!.set(
+    { queryKey: heteroModelCatalogResource.storageKey(params), scope },
+    {
+      data: {
+        models: models.map((model) => ({ ...model, providerId: params.type })),
+        status: 'success',
+        updatedAt: 1,
+      },
+      updatedAt: 1,
+    },
+  );
+};
+
+beforeEach(() => {
+  scope = `catalog-user-${randomUUID()}:personal`;
+  vi.spyOn(cacheScope, 'get').mockImplementation(() => scope);
+  vi.spyOn(cacheScope, 'use').mockImplementation(() => scope);
+  vi.spyOn(cacheScope, 'canPersist').mockReturnValue(true);
+  act(() => useHeteroModelCatalogStore.setState(initialHeteroModelCatalogState));
+});
+
+afterEach(async () => {
+  await Promise.all(
+    seeded.splice(0).map((params) =>
+      heteroModelCatalogResource.storage!.remove({
+        queryKey: heteroModelCatalogResource.storageKey(params),
+        scope,
+      }),
+    ),
+  );
+});
 
 describe('useModelCatalog', () => {
   afterEach(() => {
     vi.restoreAllMocks();
+  });
+
+  // Regression: the catalog lived only in SWR's memory cache, so after a reload
+  // the selector stayed empty until the CLI discovery (seconds) answered.
+  it('paints the persisted catalog of this device + agent before discovery answers', async () => {
+    const params = {
+      cwd: '/repo',
+      deviceId: 'device-1',
+      provider: { type: 'codex' },
+      type: 'codex',
+    } as const;
+    await seed(params, [{ id: 'gpt-cached', modelId: 'gpt-cached' }]);
+    const listModels = vi
+      .spyOn(heterogeneousAgentCatalogService, 'listModels')
+      .mockImplementation(pendingDiscovery);
+
+    const { result } = renderHook(
+      () =>
+        useModelCatalog({
+          ...params,
+          isDeviceListLoading: false,
+          isPreferenceLoading: false,
+          open: false,
+          targetReady: true,
+        }),
+      { wrapper: createWrapper() },
+    );
+
+    await waitFor(() => expect(result.current.data?.models[0]?.id).toBe('gpt-cached'));
+    // Something to paint: no loading row while discovery confirms in the background.
+    expect(result.current.isLoading).toBe(false);
+    expect(result.current.isValidating).toBe(true);
+    expect(listModels).toHaveBeenCalledWith(
+      expect.objectContaining({ cwd: '/repo', deviceId: 'device-1', type: 'codex' }),
+    );
+  });
+
+  it('never paints another device or agent type from storage', async () => {
+    await seed({ deviceId: 'device-2', provider: { type: 'codex' }, type: 'codex' }, [
+      { id: 'other-device', modelId: 'other-device' },
+    ]);
+    await seed({ deviceId: 'device-1', provider: { type: 'opencode' }, type: 'opencode' }, [
+      { id: 'other-agent', modelId: 'other-agent' },
+    ]);
+    vi.spyOn(heterogeneousAgentCatalogService, 'listModels').mockImplementation(pendingDiscovery);
+
+    const { result } = renderHook(
+      () =>
+        useModelCatalog({
+          deviceId: 'device-1',
+          isDeviceListLoading: false,
+          isPreferenceLoading: false,
+          open: false,
+          provider: { type: 'codex' },
+          targetReady: true,
+          type: 'codex',
+        }),
+      { wrapper: createWrapper() },
+    );
+
+    await waitFor(() =>
+      expect(useHeteroModelCatalogStore.getState().heteroModelCatalogReplica).toBeDefined(),
+    );
+    await new Promise((resolve) => setTimeout(resolve, 20));
+    expect(result.current.data).toBeUndefined();
+    expect(result.current.isLoading).toBe(true);
+  });
+
+  it('persists a confirmed catalog under a key that holds no provider env values', async () => {
+    const params = {
+      deviceId: 'device-1',
+      provider: { env: { OPENAI_API_KEY: 'sk-secret' }, type: 'codex' },
+      type: 'codex',
+    } as const;
+    seeded.push(params);
+    const catalog = {
+      models: [{ id: 'gpt-live', modelId: 'gpt-live', providerId: 'codex' }],
+      status: 'success' as const,
+      updatedAt: 3,
+    };
+    vi.spyOn(heterogeneousAgentCatalogService, 'listModels').mockResolvedValue(catalog);
+
+    const { result } = renderHook(
+      () =>
+        useModelCatalog({
+          ...params,
+          isDeviceListLoading: false,
+          isPreferenceLoading: false,
+          open: false,
+          targetReady: true,
+        }),
+      { wrapper: createWrapper() },
+    );
+
+    await waitFor(() => expect(result.current.data).toEqual(catalog));
+    const key = heteroModelCatalogKey(params);
+    expect(key).not.toContain('sk-secret');
+    await waitFor(async () =>
+      expect(
+        (
+          await heteroModelCatalogResource.storage!.get({
+            queryKey: heteroModelCatalogResource.storageKey(params),
+            scope,
+          })
+        )?.data,
+      ).toEqual(catalog),
+    );
   });
 
   it.each([
