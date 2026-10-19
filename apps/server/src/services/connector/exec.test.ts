@@ -4,11 +4,13 @@ import { ConnectorToolPermission } from '@/database/schemas';
 import { deviceGateway } from '@/server/services/deviceGateway';
 import { mcpService } from '@/server/services/mcp';
 
-import { callConnectorToolById } from './exec';
+import { callConnectorToolById, readConnectorUiResourceById } from './exec';
 import { scheduleStaleConnectorToolsRefresh } from './refresh';
 import { ensureFreshConnectorToken } from './tokens';
 
-vi.mock('@/server/services/mcp', () => ({ mcpService: { callTool: vi.fn() } }));
+vi.mock('@/server/services/mcp', () => ({
+  mcpService: { callTool: vi.fn(), readUiResource: vi.fn() },
+}));
 vi.mock('@/server/services/deviceGateway', () => ({ deviceGateway: { isConfigured: false } }));
 vi.mock('./tokens', () => ({ ensureFreshConnectorToken: vi.fn(async (c) => c) }));
 // The background tool-list refresh is exercised in refresh.test.ts. Here we only
@@ -208,5 +210,39 @@ describe('callConnectorToolById', () => {
 
     expect(res).toEqual({ success: true });
     expect(mcpService.callTool).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe('readConnectorUiResourceById', () => {
+  it('reads the resource with the connector credentials', async () => {
+    vi.mocked(mcpService.readUiResource).mockResolvedValue({ contents: [] } as any);
+    const ctx = makeCtx([connector], []);
+
+    await readConnectorUiResourceById({ identifier: 'my-conn', uri: 'ui://app' }, ctx);
+
+    expect(ensureFreshConnectorToken).toHaveBeenCalledWith(connector, ctx.connectorModel);
+    expect(mcpService.readUiResource).toHaveBeenCalledWith(
+      expect.objectContaining({ url: 'https://mcp.example.com' }),
+      'ui://app',
+    );
+  });
+
+  it('rejects missing, disabled and stdio connectors', async () => {
+    await expect(
+      readConnectorUiResourceById({ identifier: 'x', uri: 'ui://app' }, makeCtx([], [])),
+    ).rejects.toHaveProperty('code', 'NOT_FOUND');
+    await expect(
+      readConnectorUiResourceById(
+        { identifier: 'my-conn', uri: 'ui://app' },
+        makeCtx([{ ...connector, isEnabled: false }], []),
+      ),
+    ).rejects.toHaveProperty('code', 'FORBIDDEN');
+    await expect(
+      readConnectorUiResourceById(
+        { identifier: 'my-conn', uri: 'ui://app' },
+        makeCtx([{ ...connector, mcpConnectionType: 'stdio' }], []),
+      ),
+    ).rejects.toHaveProperty('code', 'BAD_REQUEST');
+    expect(mcpService.readUiResource).not.toHaveBeenCalled();
   });
 });

@@ -4,10 +4,14 @@ import { Flexbox, Skeleton } from '@lobehub/ui';
 import { memo } from 'react';
 
 import { useToolResultPayload } from '@/hooks/useToolResultPayload';
+import { getMcpAppFromState } from '@/libs/mcp/mcpApp';
+import dynamic from '@/libs/next/dynamic';
 
 import { dataSelectors, useConversationStore } from '../../../../../store';
 import CustomRender from './CustomRender';
 import { FallbackArgumentRender } from './FallbacktArgumentRender';
+
+const McpAppView = dynamic(() => import('@/features/MCPApp/McpAppView'), { ssr: false });
 
 interface ToolRenderProps {
   content: string;
@@ -55,13 +59,31 @@ const ToolRender = memo<ToolRenderProps>(
       );
     }
 
-    return (
+    const fallback = (
       <FallbackArgumentRender
         content={resolvedContent}
         requestArgs={plugin?.arguments}
         toolCallId={toolCallId}
       />
     );
+
+    // MCP Apps: the tool declared an interactive `ui://` view for its result
+    const mcpApp = getMcpAppFromState(resolvedState);
+    if (mcpApp && showCustomToolRender && plugin) {
+      return (
+        <McpAppView
+          apiName={plugin.apiName}
+          arguments={plugin.arguments}
+          fallback={fallback}
+          identifier={plugin.identifier}
+          resourceUri={mcpApp.resourceUri}
+          result={{ content: resolvedContent, state: resolvedState }}
+          toolCallId={toolCallId}
+        />
+      );
+    }
+
+    return fallback;
   },
 );
 

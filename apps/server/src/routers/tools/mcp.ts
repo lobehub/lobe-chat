@@ -127,6 +127,18 @@ export const mcpRouter = router({
       return await mcpService.listPrompts(input);
     }),
 
+  /**
+   * Read an MCP Apps `ui://` resource so the chat can render a tool result's
+   * interactive view.
+   */
+  readUiResource: mcpProcedure
+    .input(z.object({ params: mcpClientParamsSchema, uri: z.string().startsWith('ui://') }))
+    .query(async ({ input }) => {
+      checkStdioEnvironment(input.params);
+
+      return await mcpService.readUiResource(input.params, input.uri);
+    }),
+
   // callTool now accepts MCPClientParams, toolName, and args
   callTool: mcpProcedure
     // Executes tools with side effects — workspace viewers are read-only.

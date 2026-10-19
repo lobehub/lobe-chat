@@ -112,6 +112,12 @@ export interface CallToolInput {
   toolName: string;
 }
 
+export interface ReadUiResourceInput {
+  env: any;
+  params: GetStdioMcpServerManifestInput;
+  uri: string;
+}
+
 type SuperJSONSerialized<T = unknown> = McpIpcPayload<T>;
 
 const deserializePayload = deserializeMcpIpcPayload;
@@ -596,6 +602,38 @@ export default class McpCtr extends ControllerModule {
   }
 
   /**
+   * Read an MCP Apps `ui://` resource from a stdio server, so the chat can
+   * render a tool result's interactive view.
+   */
+  @IpcMethod()
+  async readUiResource(payload: SuperJSONSerialized<ReadUiResourceInput>) {
+    const input = deserializePayload<ReadUiResourceInput>(payload);
+    if (!input.uri?.startsWith('ui://')) throw new Error('Only ui:// resources can be read');
+
+    const client = await this.acquireClient({
+      args: input.params.args || [],
+      command: input.params.command,
+      env: input.env,
+      name: input.params.name,
+      type: 'stdio',
+    });
+
+    return serializePayload(
+      await this.withClientLease(client, () => client.readResource(input.uri)),
+    );
+  }
+
+  /** Never fails the tool call: an unknown UI resource only means no interactive view. */
+  private async getToolUiResourceUri(client: MCPClient, toolName: string) {
+    try {
+      return await client.getToolUiResourceUri(toolName);
+    } catch (error) {
+      logger.warn('Failed to resolve MCP App resource for tool:', { error, toolName });
+      return undefined;
+    }
+  }
+
+  /**
    * Core stdio MCP tool execution, shared by the renderer IPC path
    * ({@link callTool}) and the device-gateway tunnel (GatewayConnectionCtr,
    * which runs MCP calls forwarded from the cloud server). Returns the plain
@@ -665,6 +703,7 @@ export default class McpCtr extends ControllerModule {
       const runOn = (client: MCPClient) =>
         this.withClientLease(client, async () => {
           try {
+            const uiResourceUri = await this.getToolUiResourceUri(client, toolName);
             const raw = (await client.callTool(toolName, args)) as ToolCallResult;
             const processed = raw.isError
               ? raw.content
@@ -672,7 +711,13 @@ export default class McpCtr extends ControllerModule {
             const content = await toMarkdown(processed, (key) =>
               this.fileService.getFileHTTPURL(key),
             );
-            return { content, state: { ...raw, content: processed }, success: true };
+            const state = {
+              ...raw,
+              content: processed,
+              // MCP Apps: the `ui://` resource the chat renders this result with
+              ...(uiResourceUri && !raw.isError && { mcpApp: { resourceUri: uiResourceUri } }),
+            };
+            return { content, state, success: true };
           } catch (error) {
             throw Object.assign(error instanceof Error ? error : new Error(String(error)), {
               ranOnClient: client,

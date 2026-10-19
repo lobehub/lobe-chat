@@ -108,3 +108,31 @@ export const callConnectorToolById = async (
     toolName: params.toolName,
   });
 };
+
+/**
+ * Read an MCP Apps `ui://` resource from a connector's server, so the chat can
+ * render a connector tool result's interactive view. Same connector checks as
+ * {@link callConnectorToolById}, minus the per-tool ones.
+ */
+export const readConnectorUiResourceById = async (
+  params: { identifier: string; uri: string },
+  ctx: ConnectorToolSyncContext,
+) => {
+  const [connector] = await ctx.connectorModel.queryByIdentifiers([params.identifier]);
+  if (!connector) {
+    throw new ConnectorToolCallError('NOT_FOUND', 'Connector not found');
+  }
+  if (!connector.isEnabled) {
+    throw new ConnectorToolCallError('FORBIDDEN', 'Connector is disabled');
+  }
+  if (connector.mcpConnectionType === ConnectorMcpConnectionType.stdio) {
+    throw new ConnectorToolCallError(
+      'BAD_REQUEST',
+      'Interactive views are not supported for stdio connectors yet',
+    );
+  }
+
+  const fresh = await ensureFreshConnectorToken(connector, ctx.connectorModel);
+
+  return mcpService.readUiResource(buildConnectorMcpParams(fresh), params.uri);
+};

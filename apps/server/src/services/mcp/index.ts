@@ -13,6 +13,7 @@ import retry from 'async-retry';
 import debug from 'debug';
 
 import {
+  type McpAppToolState,
   type MCPClientParams,
   type McpPrompt,
   type McpResource,
@@ -44,6 +45,7 @@ export interface MCPToolCallProcessedResult {
   state: {
     content: any[];
     isError?: boolean;
+    mcpApp?: McpAppToolState;
   };
   success: boolean;
 }
@@ -185,6 +187,20 @@ export class MCPService {
     });
   }
 
+  /**
+   * Read an MCP Apps `ui://` resource (the HTML a tool result renders with).
+   * Only `ui://` URIs are allowed so this can't be used as a generic resource reader.
+   */
+  async readUiResource(params: MCPClientParams, uri: string) {
+    if (!uri.startsWith('ui://')) {
+      throw new TRPCError({ code: 'BAD_REQUEST', message: 'Only ui:// resources can be read' });
+    }
+
+    return this.withSessionRetry(params, `reading resource "${uri}"`, (client) =>
+      client.readResource(uri),
+    );
+  }
+
   // callTool now accepts an object with clientParams, toolName, argsStr, and processContentBlocks
   async callTool(options: {
     argsStr: any;
@@ -204,6 +220,10 @@ export class MCPService {
     return this.withSessionRetry(clientParams, `calling tool "${toolName}"`, async (client) => {
       log(`Calling tool "${toolName}" with args: %O`, args);
 
+      // Resolved before the call: a stale-session error here is retried by
+      // withSessionRetry, which must never re-run a tool that already executed.
+      const uiResourceUri = await client.getToolUiResourceUri(toolName);
+
       try {
         // Delegate the call to the MCPClient instance
         const result = await client.callTool(toolName, args); // Pass args directly
@@ -213,6 +233,13 @@ export class MCPService {
           result,
           processContentBlocksFn,
         );
+
+        // MCP Apps: let the chat UI know which `ui://` resource renders this result
+        if (uiResourceUri && !result.isError) {
+          processedResult.state.mcpApp = {
+            resourceUri: uiResourceUri,
+          };
+        }
 
         log(`Tool "${toolName}" called successfully, result: %O`, processedResult.state);
 

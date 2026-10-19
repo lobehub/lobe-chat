@@ -208,4 +208,17 @@ describe('toolSelectors', () => {
       expect(toolSelectors.isToolHasUI('non-existent')(mockState)).toBe(false);
     });
   });
+
+  describe('getRenderDisplayControl', () => {
+    it('expands MCP tool results that carry an interactive view', () => {
+      const state = { content: [], mcpApp: { resourceUri: 'ui://weather/view' } };
+
+      expect(toolSelectors.getRenderDisplayControl('plugin-1', 'api-1', state)(mockState)).toBe(
+        'expand',
+      );
+      expect(toolSelectors.getRenderDisplayControl('plugin-1', 'api-1', {})(mockState)).toBe(
+        'collapsed',
+      );
+    });
+  });
 });

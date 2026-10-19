@@ -6,6 +6,7 @@ import {
   isInstalledPluginAvailableInCurrentEnv,
   isToolAvailableInCurrentEnv,
 } from '@/helpers/toolAvailability';
+import { getMcpAppFromState } from '@/libs/mcp/mcpApp';
 import { type MetaData } from '@/types/meta';
 import { type LobeToolMeta } from '@/types/tool/tool';
 
@@ -108,6 +109,9 @@ const getRenderDisplayControl =
       (a) => a.name === apiName,
     )?.renderDisplayControl;
     if (manifestControl) return manifestControl;
+
+    // MCP Apps results open by default so their interactive view is visible
+    if (getMcpAppFromState(pluginState)) return 'expand';
 
     // Fallback for packages that don't ship a LobeChat manifest (e.g. Claude Code —
     // its tools come from Anthropic tool_use blocks at runtime).
