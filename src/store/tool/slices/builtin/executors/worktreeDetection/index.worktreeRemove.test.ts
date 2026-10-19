@@ -109,6 +109,31 @@ describe('recordGitCommandEffects — git worktree remove', () => {
     expect(chatMocks.updateTopicMetadata).toHaveBeenCalledWith('t1', BACK_IN_SOURCE);
   });
 
+  it('keeps a worktree removed and then recreated in one command', async () => {
+    // Shell order decides: the later add wins over the earlier remove of the same path.
+    chatMocks.topics = { t1: inWorktree() };
+    await recordGitCommandEffects({
+      command: `git worktree remove --force ${WORKTREE} && git worktree add ${WORKTREE} fix/x`,
+      topicId: 't1',
+    });
+    expect(chatMocks.updateTopicMetadata).not.toHaveBeenCalled();
+
+    chatMocks.topics = {
+      t1: { metadata: { workingDirectoryConfig: { path: SOURCE, repoType: 'github' } } },
+    };
+    await recordGitCommandEffects({
+      command: `git worktree remove ${WORKTREE}; git worktree add -b fix/y ${WORKTREE}`,
+      topicId: 't1',
+    });
+    expect(chatMocks.updateTopicMetadata).toHaveBeenCalledWith('t1', {
+      workingDirectoryConfig: {
+        git: { activeWorktree: WORKTREE, branch: 'fix/y', isWorktree: true },
+        path: SOURCE,
+        repoType: 'github',
+      },
+    });
+  });
+
   it('keeps the active worktree when a different one is removed', async () => {
     chatMocks.topics = { t1: inWorktree() };
     await recordGitCommandEffects({

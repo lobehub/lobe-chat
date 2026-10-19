@@ -212,6 +212,35 @@ const findInCommand = <T>(
   }
 };
 
+/**
+ * Shell-order position of the last command segment `matches` accepts, or -1. Walks
+ * segments exactly like {@link findInCommand}, so positions from two calls on the
+ * same command are comparable.
+ */
+const lastIndexInCommand = (
+  command: string | string[],
+  matches: (tokens: string[], env?: ShellEnv) => boolean,
+): number => {
+  if (Array.isArray(command)) {
+    if (!command.every((t) => typeof t === 'string')) return -1;
+    const wrapped = unwrapShellArgv(command);
+    if (wrapped !== undefined) return lastIndexInCommand(wrapped, matches);
+    return matches(command) ? 0 : -1;
+  }
+  if (typeof command !== 'string') return -1;
+
+  const env: ShellEnv = {};
+  let last = -1;
+  unwrapShellCommand(command)
+    .split(/[\n;|&]/)
+    .forEach((segment, index) => {
+      const tokens = tokenize(segment);
+      if (matches(tokens, env)) last = index;
+      collectSegmentAssignments(tokens, env);
+    });
+  return last;
+};
+
 const parseBranchFromGitOutput = (content?: string): string | undefined => {
   if (!content) return undefined;
 
@@ -887,17 +916,23 @@ export const recordGitCommandEffects = async (params: {
     nextConfig = applyWorktreeAddToConfig(nextConfig, source, worktreeInfo);
   }
 
-  // After the add, so a command that creates and removes a scratch worktree nets
-  // out. Left recorded, a removed worktree is a directory that no longer exists.
-  // Parsed rather than confirmed against the device: if a `;`-chained remove
-  // actually failed, dropping the selection is the cheap mistake to make.
+  // Left recorded, a removed worktree is a directory that no longer exists. Shell
+  // order decides against an add in the same command: add-then-remove of a scratch
+  // worktree nets out, remove-then-recreate keeps it. Parsed rather than confirmed
+  // against the device: if a `;`-chained remove actually failed, dropping the
+  // selection is the cheap mistake to make.
   const activeWorktree = nextConfig?.git?.activeWorktree;
   if (activeWorktree) {
     const removedPath = resolveWorktreePath(activeWorktree, source);
-    const removed = findInCommand(command, (tokens, env) =>
-      parseGitWorktreeRemoveTokens(tokens, source, env) === removedPath ? true : undefined,
+    const lastRemove = lastIndexInCommand(
+      command,
+      (tokens, env) => parseGitWorktreeRemoveTokens(tokens, source, env) === removedPath,
     );
-    if (removed) nextConfig = applyWorktreeExitToConfig(nextConfig, source);
+    const lastAdd = lastIndexInCommand(
+      command,
+      (tokens, env) => !!parseGitWorktreeAddTokens(tokens, source, env),
+    );
+    if (lastRemove > lastAdd) nextConfig = applyWorktreeExitToConfig(nextConfig, source);
   }
 
   const branchSwitch = parseGitBranchSwitch(command, resultContent);
