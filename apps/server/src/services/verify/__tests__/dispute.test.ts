@@ -15,13 +15,18 @@ const mocks = vi.hoisted(() => ({
   listByRuns: vi.fn(),
   panel: vi.fn(),
   run: vi.fn(),
+  runById: vi.fn(),
   findResult: vi.fn(),
   write: vi.fn(),
   upsert: vi.fn(),
 }));
 vi.mock('@/database/models/verifyRun', () => ({
   VerifyRunModel: vi.fn(function () {
-    return { findByOperation: mocks.run, listByAcceptance: mocks.listByAcceptance };
+    return {
+      findById: mocks.runById,
+      findByOperation: mocks.run,
+      listByAcceptance: mocks.listByAcceptance,
+    };
   }),
 }));
 vi.mock('@/database/models/verifyCheckResult', () => ({
@@ -104,6 +109,7 @@ beforeEach(() => {
   });
   mocks.upsert.mockResolvedValue({ id: 'res2', metadata: { visualization: 'kept' } });
   mocks.write.mockResolvedValue({ id: 'res2' });
+  mocks.runById.mockImplementation(async () => mocks.run());
   mocks.listByAcceptance.mockResolvedValue([{ id: 'r1' }, { id: 'r2' }]);
   mocks.listByRuns.mockResolvedValue([]);
   mocks.acceptance.mockResolvedValue({ config: {}, requirement: 'Show a sales report' });
@@ -239,6 +245,33 @@ describe('fileCheckDispute — guards', () => {
       expect(mocks.generate).not.toHaveBeenCalled();
     },
   );
+
+  it('refuses a dispute on a round a person already decided', async () => {
+    mocks.run.mockResolvedValue({
+      acceptanceId: 'a1',
+      id: 'r2',
+      plan: [item],
+      status: 'verifying',
+      userDecision: 'accept',
+    });
+
+    expect(await file()).toMatchObject({ error: 'ROUND_SETTLED', success: false });
+    expect(mocks.generate).not.toHaveBeenCalled();
+  });
+
+  /**
+   * Regression: the round settled while the panel was ruling, and the upheld
+   * ruling still landed on a failed, already-driven round.
+   */
+  it('reports a round that settled while the panel was ruling', async () => {
+    rule({ a: true, b: true, c: true });
+    // The claim lands; the ruling is refused because the round settled meanwhile.
+    mocks.write.mockResolvedValueOnce({ id: 'res2' }).mockResolvedValueOnce(undefined);
+    mocks.runById.mockResolvedValue({ id: 'r2', status: 'failed' });
+
+    expect(await file()).toMatchObject({ error: 'ROUND_SETTLED', success: false });
+    expect(mocks.generate).toHaveBeenCalledTimes(3);
+  });
 
   it('accepts a dispute while the round is still being worked on or judged', async () => {
     mocks.run.mockResolvedValue({

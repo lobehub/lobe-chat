@@ -185,6 +185,19 @@ const PROGRAMMATIC_TEST_PATTERNS: RegExp[] = [
   /单元测试|单测|集成测试|回归测试|类型检查|类型校验|测试覆盖率|代码覆盖率|静态检查|测试用例全部通过/,
 ];
 
+/**
+ * Round statuses past which a dispute can no longer change anything: the round
+ * has been judged (or handed to a repair round) and its Task driven, so a waiver
+ * written there would only rewrite metadata under a settled verdict.
+ */
+export const DISPUTE_SETTLED_RUN_STATUSES = [
+  'delivered',
+  'errored',
+  'failed',
+  'passed',
+  'repairing',
+] as const satisfies readonly VerifyRunStatus[];
+
 /** Why a builder disputes a check; see `VerifyCheckDisputeKind` in `@lobechat/types`. */
 export const VERIFY_DISPUTE_KINDS = ['invalid_criterion', 'missed_evidence'] as const;
 

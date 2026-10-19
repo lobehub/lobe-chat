@@ -1,9 +1,11 @@
 // @vitest-environment node
 import type { VerifyCheckItem } from '@lobechat/types';
+import { eq } from 'drizzle-orm';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { getTestDB } from '../../core/getTestDB';
 import {
+  acceptances,
   agentOperations,
   llmGenerationTracing,
   users,
@@ -49,6 +51,7 @@ afterEach(async () => {
   await serverDB.delete(verifyCheckResults);
   await serverDB.delete(llmGenerationTracing);
   await serverDB.delete(verifyRuns);
+  await serverDB.delete(acceptances);
   await serverDB.delete(agentOperations);
   await serverDB.delete(users);
 });
@@ -441,6 +444,38 @@ describe('VerifyCheckResultModel.writeDisputeIfOpen', () => {
       { holder: since, staleBefore: earlier() },
     );
     expect(await model.writeDisputeIfOpen(row.id, note, { staleBefore: later() })).toBeDefined();
+  });
+
+  /**
+   * Regression: a round that settled (or was accepted) while a panel was ruling
+   * still took the late ruling.
+   */
+  it.each([
+    ['settled', { status: 'failed' as const }],
+    ['decided by a person', { userDecision: 'accept' }],
+  ])('refuses once the round is %s', async (_label, patch) => {
+    const { model, row } = await seed();
+    await serverDB.update(verifyRuns).set(patch).where(eq(verifyRuns.id, verifyRunId));
+
+    expect(
+      await model.writeDisputeIfOpen(row.id, note, { staleBefore: earlier() }),
+    ).toBeUndefined();
+  });
+
+  it('refuses once the Acceptance is accepted', async () => {
+    const { model, row } = await seed();
+    const [acceptance] = await serverDB
+      .insert(acceptances)
+      .values({ status: 'accepted', subjectId: 'task-1', subjectType: 'task', userId })
+      .returning();
+    await serverDB
+      .update(verifyRuns)
+      .set({ acceptanceId: acceptance.id, roundIndex: 1 })
+      .where(eq(verifyRuns.id, verifyRunId));
+
+    expect(
+      await model.writeDisputeIfOpen(row.id, note, { staleBefore: earlier() }),
+    ).toBeUndefined();
   });
 
   it('is scoped to the owner', async () => {

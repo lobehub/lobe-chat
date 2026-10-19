@@ -1,7 +1,8 @@
+import { DISPUTE_SETTLED_RUN_STATUSES } from '@lobechat/const/verify';
 import { and, asc, desc, eq, inArray, isNull, sql } from 'drizzle-orm';
 
 import type { NewVerifyCheckResult, VerifyCheckResultItem } from '../schemas/verify';
-import { verifyCheckResults, verifyRuns } from '../schemas/verify';
+import { acceptances, verifyCheckResults, verifyRuns } from '../schemas/verify';
 import type { LobeChatDatabase } from '../type';
 import { buildWorkspacePayload, buildWorkspaceWhere } from '../utils/workspace';
 
@@ -129,9 +130,12 @@ export class VerifyCheckResultModel {
   };
 
   /**
-   * Write a builder's dispute onto a result, but only while no ruling has been
-   * decided on it and no other arbitration holds it. Only the `dispute` key is
-   * replaced, so metadata written by a concurrent verifier survives.
+   * Write a builder's dispute onto a result, but only while its round is still
+   * open (not settled, no human decision, Acceptance not accepted or closed), no
+   * ruling has been decided on it and no other arbitration holds it. Checked in
+   * the same statement as the write, so a round that settles while a panel is
+   * ruling refuses the late ruling. Only the `dispute` key is replaced, so
+   * metadata written by a concurrent verifier survives.
    *
    * A claim is the dispute's `arbitratingSince` timestamp. `holder` lets the
    * claimant itself write the ruling; a claim older than `staleBefore` (an
@@ -156,6 +160,17 @@ export class VerifyCheckResultModel {
           eq(verifyCheckResults.id, id),
           this.ownership(),
           sql`not (coalesce(${current} ->> 'kind', '') = 'invalid_criterion' and coalesce(${current} -> 'arbitration' ->> 'outcome', '') in ('upheld', 'overruled'))`,
+          sql`exists (
+            select 1 from ${verifyRuns}
+            left join ${acceptances} on ${acceptances.id} = ${verifyRuns.acceptanceId}
+            where ${verifyRuns.id} = ${verifyCheckResults.verifyRunId}
+              and ${verifyRuns.userDecision} is null
+              and coalesce(${verifyRuns.status}, '') not in (${sql.join(
+                DISPUTE_SETTLED_RUN_STATUSES.map((status) => sql`${status}`),
+                sql`, `,
+              )})
+              and coalesce(${acceptances.status}, '') not in ('accepted', 'closed')
+          )`,
           sql`(${claimedAt} is null or ${claimedAt}::timestamptz < ${guard.staleBefore.toISOString()}::timestamptz${
             guard.holder ? sql` or ${claimedAt} = ${guard.holder}` : sql``
           })`,

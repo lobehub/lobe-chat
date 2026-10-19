@@ -1,5 +1,5 @@
 import { TRACING_SCENARIOS } from '@lobechat/const';
-import { HOLISTIC_CHECK_TITLE } from '@lobechat/const/verify';
+import { DISPUTE_SETTLED_RUN_STATUSES, HOLISTIC_CHECK_TITLE } from '@lobechat/const/verify';
 import type { TracingOptions } from '@lobechat/llm-generation-tracing';
 import {
   chainVerifyDisputeArbitration,
@@ -81,8 +81,20 @@ const logicalCheckKey = (item: {
     ? `criterion:${item.sourceCriterionId}`
     : `item:${item.id}`;
 
-/** A round past these statuses has been judged and its Task driven; a waiver there would never settle. */
-const SETTLED_RUN_STATUSES = new Set(['delivered', 'errored', 'failed', 'passed', 'repairing']);
+/**
+ * A judged or decided round: a dispute can no longer change it. The guarded
+ * write re-checks this atomically, for a round that settles mid-arbitration.
+ */
+const isRoundSettled = (run: { status?: string | null; userDecision?: string | null }) =>
+  !!run.userDecision ||
+  (DISPUTE_SETTLED_RUN_STATUSES as readonly string[]).includes(run.status ?? '');
+
+const ROUND_SETTLED: FileCheckDisputeResult = {
+  error: 'ROUND_SETTLED',
+  message:
+    'This round has already been judged, so a dispute can no longer change it. File disputes while the run is still working; for a settled round, make the argument in your handoff.',
+  success: false,
+};
 
 /** An arbitration that has held its claim this long died; a new filing may take over. */
 const ARBITRATION_CLAIM_TTL_MS = 5 * 60 * 1000;
@@ -202,14 +214,7 @@ export const fileCheckDispute = async (
       success: false,
     };
   }
-  if (run.status && SETTLED_RUN_STATUSES.has(run.status)) {
-    return {
-      error: 'ROUND_SETTLED',
-      message:
-        'This round has already been judged, so a dispute can no longer change it. File disputes while the run is still working; for a settled round, make the argument in your handoff.',
-      success: false,
-    };
-  }
+  if (isRoundSettled(run)) return ROUND_SETTLED;
   const plan = (run.plan ?? []) as VerifyCheckItem[];
   const item = plan.find((candidate) => candidate.id === params.checkItemId);
   if (!item) {
@@ -266,6 +271,8 @@ export const fileCheckDispute = async (
     });
   // Read back what blocked a refused write, and answer with it.
   const refused = async (): Promise<FileCheckDisputeResult> => {
+    const latestRun = await runModel.findById(run.id);
+    if (!latestRun || isRoundSettled(latestRun)) return ROUND_SETTLED;
     const latest = readDispute((await resultModel.findById(result.id))?.metadata);
     const ruling = latest?.arbitration;
     if (latest?.kind === 'invalid_criterion' && ruling && ruling.outcome !== 'undecided') {
