@@ -125,6 +125,24 @@ describe('document detail replica', () => {
     expect(editor.setDocument).not.toHaveBeenCalled();
   });
 
+  it('adopts a fetched HTML page as HTML, keeping the editor and its saves out of it', async () => {
+    const html = '<!doctype html><html><body>Report</body></html>';
+    vi.mocked(documentService.getDocumentById).mockResolvedValue(
+      documentRow({ content: html, editorData: null, fileType: 'custom/html' }) as any,
+    );
+    const editor = createEditor();
+    renderDocument('doc-1', editor);
+
+    await waitFor(() =>
+      expect(useDocumentStore.getState().documents['doc-1']?.contentFormat).toBe('html'),
+    );
+    act(() => useDocumentStore.getState().handleContentChange());
+    expect(useDocumentStore.getState().documents['doc-1']).toMatchObject({
+      content: html,
+      isDirty: false,
+    });
+  });
+
   it('adopts a newer server body over a dirty draft when the sync revalidates', async () => {
     vi.mocked(documentService.getDocumentById).mockResolvedValue(documentRow() as any);
     const editor = createEditor();

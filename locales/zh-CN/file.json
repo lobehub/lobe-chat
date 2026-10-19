@@ -297,6 +297,7 @@
   "pageEditor.lock.editingBySomeone": "其他人正在编辑此页面，你的更改暂时无法保存。",
   "pageEditor.menu.copyLink": "复制链接",
   "pageEditor.menu.export": "导出",
+  "pageEditor.menu.export.html": "HTML 格式",
   "pageEditor.menu.export.markdown": "Markdown 格式",
   "pageEditor.menu.exportDocument": "导出文稿",
   "pageEditor.menu.importDocument": "导入文稿",
