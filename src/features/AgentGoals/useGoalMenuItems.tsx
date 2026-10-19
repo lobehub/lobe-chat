@@ -135,6 +135,8 @@ export const useGoalMenuItems = ({
 interface UseGoalItemMenuOptions {
   /** The goal's agent, resolved by the host: the route's agent first, then the goal's own. */
   agentId?: string | null;
+  /** The cross-agent list rendering the row, refreshed in place of an agent's or project's. */
+  globalScopeId?: string;
   goal: { agentId?: string | null; id: string; status: string; userId?: string | null };
   /** The project whose goal page renders the row; absent on an agent's page. */
   projectId?: string;
@@ -145,6 +147,7 @@ interface UseGoalItemMenuOptions {
 /** The action menu of a goal-list row (list or card view). */
 export const useGoalItemMenu = ({
   agentId,
+  globalScopeId,
   goal,
   projectId,
   routeAgentId,
@@ -152,7 +155,7 @@ export const useGoalItemMenu = ({
   // The row reads its status from the list, not the goal graph the store
   // actions refresh, so a status change refetches the list it was rendered in.
   const refreshGoals = useGoalStore((s) => s.refreshGoals);
-  const scopeId = projectId ? `project:${projectId}` : routeAgentId;
+  const scopeId = globalScopeId ?? (projectId ? `project:${projectId}` : routeAgentId);
   const handleStatusChanged = useCallback(() => {
     if (scopeId) void refreshGoals(scopeId);
   }, [refreshGoals, scopeId]);

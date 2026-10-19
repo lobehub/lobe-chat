@@ -89,6 +89,7 @@ import { preferenceListLoader } from '@/spa/router/preferenceListLoader';
 import { agentAccessLoader, agentGroupAccessLoader } from '@/spa/router/resourceAccessLoader';
 import { NoRouteSkeleton, routeMeta } from '@/spa/router/routeMeta';
 import { scheduledTaskListLoader } from '@/spa/router/scheduledTaskListLoader';
+import { taskWorkspaceChildren } from '@/spa/router/taskWorkspaceRoutes';
 import { withSegmentFallback } from '@/spa/router/withSegmentFallback';
 import { worksLoader } from '@/spa/router/worksLoader';
 import { SettingsTabs } from '@/store/global/initialState';
@@ -1173,51 +1174,7 @@ export const sharedMainAreaChildren: RouteObject[] = [
   },
 
   {
-    children: [
-      {
-        children: [
-          {
-            element: dynamicElement(() => import('@/routes/(main)/tasks'), 'Desktop > Tasks', {
-              preloadId: 'tasks',
-            }),
-            handle: { meta: tasksRouteMeta },
-            index: true,
-            loader: scheduledTaskListLoader,
-          },
-        ],
-        errorElement: <ErrorBoundary resetPath=".." />,
-        path: 'tasks',
-      },
-      {
-        children: [
-          {
-            element: dynamicElement(
-              () => import('@/routes/(main)/task/[taskId]'),
-              'Desktop > Task Detail',
-            ),
-            handle: { meta: taskRouteMeta },
-            // Optional readable title tail — see the agent-scoped route above.
-            path: ':taskId/:slug?',
-          },
-        ],
-        errorElement: <ErrorBoundary resetPath="../tasks" />,
-        path: 'task',
-      },
-      {
-        children: [
-          {
-            element: dynamicElement(
-              () => import('@/routes/(main)/goal/[goalId]'),
-              'Desktop > Goal Detail',
-            ),
-            handle: { meta: goalDetailRouteMeta },
-            path: ':goalId',
-          },
-        ],
-        errorElement: <ErrorBoundary resetPath="../tasks" />,
-        path: 'goal',
-      },
-    ],
+    children: taskWorkspaceChildren,
     element: dynamicLayout(
       () => import('@/routes/(main)/(task-workspace)/_layout'),
       'Desktop > Task Workspace > Layout',
