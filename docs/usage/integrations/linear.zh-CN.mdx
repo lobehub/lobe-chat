@@ -1,0 +1,57 @@
+---
+title: Linear 集成
+description: 通过 OAuth 把 Linear 工作区连接到 LobeHub，查看是谁连接的，不再需要时断开连接。
+tags:
+  - LobeHub
+  - 集成
+  - Linear
+  - OAuth
+---
+
+# Linear 集成
+
+**Linear 集成把一个 Linear 工作区连接到 LobeHub。** 你通过 Linear OAuth 授权一次，连接就会保存在你的账号或工作区下。
+
+LobeHub 只申请 **只读** 权限。这个连接用来识别你的 Linear 工作区和授权的用户，不能创建或修改 issue。
+
+> \[!NOTE]
+>
+> 集成目前是 Alpha 功能。先在 **设置 → 实验室 → 集成** 中开启，设置里才会出现 **集成**。
+>
+> 想让 Agent 在会话中查找和更新 Linear issue，请使用 Linear 连接器，见 [连接器](/docs/usage/agent/connectors)。
+
+## 连接 Linear
+
+1. 打开 **设置 → 集成 → Linear**。
+2. 点击 **连接工作区**，Linear 会打开授权页面。
+3. 选择要连接的 Linear 工作区，然后批准授权。
+4. Linear 会带你回到 LobeHub，页面提示 **已连接 Linear：\<工作区>**。
+
+连接后的工作区会出现在 **连接** 中，显示是谁、在什么时候连接的。要前往该工作区，在右侧菜单中选择 **在 Linear 中打开**。
+
+在 LobeHub 工作区中，连接属于该工作区。只有具备编辑权限的工作区成员才能连接或断开 Linear。
+
+## 断开 Linear
+
+1. 在 **连接** 中打开工作区右侧的菜单，选择 **断开连接**。
+2. 确认后，LobeHub 会请求 Linear 撤销访问令牌，并把该工作区从 **连接** 中移除。
+
+撤销是尽力而为的：如果 Linear 暂时无法访问，工作区仍会被移除，但令牌可能仍然有效。要确保访问已终止，请同时在 Linear 设置的已授权应用中撤销 LobeHub。
+
+## 常见问题
+
+| 提示                                | 处理方式                         |
+| --------------------------------- | ---------------------------- |
+| **已在 Linear 上取消授权。**              | 再次点击 **连接工作区** 并批准授权。        |
+| **连接请求已过期**                       | 从 **连接工作区** 重新开始，每次请求只能使用一次。 |
+| **Linear 已授权，但 LobeHub 未能保存此次连接** | 再次点击 **连接工作区**。              |
+| **只有工作区成员可以在此连接 Linear。**         | 请工作区所有者或管理员给你成员角色，或在个人账号下连接。 |
+| **当前部署未配置 Linear 应用**             | 见 [自托管部署](#自托管部署)。           |
+
+## 自托管部署
+
+自托管部署需要配置 Redis（`REDIS_URL`）来保存短期的连接请求，没有 Redis 时 **连接工作区** 会失败。此外还需要创建自己的 Linear OAuth 应用：
+
+1. 在 Linear 中进入 **Settings → API → OAuth applications**，创建一个应用。
+2. 把回调地址设为 `<APP_URL>/api/webhooks/linear/oauth/callback`，`<APP_URL>` 是你的 LobeHub 地址，必须与 `APP_URL` 完全一致。
+3. 在服务端设置 `LINEAR_CLIENT_ID` 和 `LINEAR_CLIENT_SECRET` 为该应用的 Client ID 和 Secret，然后重启 LobeHub。
