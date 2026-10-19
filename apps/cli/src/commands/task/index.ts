@@ -13,6 +13,7 @@ import {
   truncate,
 } from '../../utils/format';
 import { log } from '../../utils/logger';
+import { registerArchiveCommands } from './archive';
 import { resolveAssigneeUserId } from './assignee';
 import { registerCheckpointCommands } from './checkpoint';
 import { registerDepCommands } from './dep';
@@ -38,6 +39,7 @@ export function registerTaskCommand(program: Command) {
     .option('--root', 'Only show root tasks (no parent)')
     .option('--parent <id>', 'Filter by parent task ID')
     .option('--agent <id>', 'Filter by assignee agent ID')
+    .option('--archived', 'Include archived tasks')
     .option('-L, --limit <n>', 'Page size', '50')
     .option('--offset <n>', 'Offset', '0')
     .option('--tree', 'Display as tree structure')
@@ -46,6 +48,7 @@ export function registerTaskCommand(program: Command) {
     .action(
       async (options: {
         agent?: string;
+        archived?: boolean;
         board?: boolean;
         json?: string | boolean;
         limit?: string;
@@ -62,6 +65,7 @@ export function registerTaskCommand(program: Command) {
         if (options.root) input.parentTaskId = null;
         if (options.parent) input.parentTaskId = options.parent;
         if (options.agent) input.assigneeAgentId = options.agent;
+        if (options.archived) input.includeArchived = true;
         if (options.limit) input.limit = Number.parseInt(options.limit, 10);
         if (options.offset) input.offset = Number.parseInt(options.offset, 10);
 
@@ -762,6 +766,7 @@ export function registerTaskCommand(program: Command) {
 
   // Register subcommand groups
   registerLifecycleCommands(task);
+  registerArchiveCommands(task);
   registerCheckpointCommands(task);
   registerReviewCommands(task);
   registerDepCommands(task);

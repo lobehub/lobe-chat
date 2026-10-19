@@ -1,7 +1,6 @@
 import type { SFSymbol } from '@lobechat/electron-client-ipc';
 import type { ItemType } from '@lobehub/ui';
-import { Flexbox, Icon } from '@lobehub/ui';
-import { Text, toast } from '@lobehub/ui/base-ui';
+import { Flexbox, Icon, Text, toast } from '@lobehub/ui';
 import { GroupBotSquareIcon } from '@lobehub/ui/icons';
 import {
   BotIcon,
@@ -422,7 +421,7 @@ export const useCreateMenuItems = () => {
       navigate(`/page/${newPageId}`);
     } catch (error) {
       console.error('Failed to create page:', error);
-      toast.error('Failed to create page');
+      toast.error(tFile('pageList.createFailed'));
     }
   }, [canCreate, tFile, navigate, activeWorkspaceId]);
 

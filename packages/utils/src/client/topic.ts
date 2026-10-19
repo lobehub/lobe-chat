@@ -195,6 +195,9 @@ export const getTopicWorkingDirectoryEffectivePath = (topic: ChatTopic): string 
  * - `project-id:{projectId}` groups that merge every directory of one project
  *   into a single group, `project-directory:{id}` / path-based IDs for topics
  *   without a project, and `no-project` last.
+ * - Groups ordered with explicit-project groups first (the binding is
+ *   deliberate, not inferred from a directory), then directory-derived groups,
+ *   then `no-project`; each tier keeps most-recent-activity order.
  * - Basenames for unique projects and distinguishing path suffixes for collisions.
  */
 export const groupTopicsByProject = (
@@ -270,10 +273,17 @@ export const groupTopicsByProject = (
     },
   );
 
-  // Most-recently-active project first; "no project" always last
+  // Explicit-project groups first (the `projectId` binding is deliberate, not
+  // inferred), then directory-derived groups, then "no project" last. Within a
+  // tier the most recently active group leads.
+  const groupRank = (id: string): number => {
+    if (id === NO_PROJECT_GROUP_ID) return 2;
+    return id.startsWith(PROJECT_ID_GROUP_PREFIX) ? 0 : 1;
+  };
+
   return groups.sort((a, b) => {
-    if (a.id === NO_PROJECT_GROUP_ID) return 1;
-    if (b.id === NO_PROJECT_GROUP_ID) return -1;
+    const rankDiff = groupRank(a.id) - groupRank(b.id);
+    if (rankDiff !== 0) return rankDiff;
     const aTime = a.children[0] ? getTopicSortTime(a.children[0], field) : 0;
     const bTime = b.children[0] ? getTopicSortTime(b.children[0], field) : 0;
     return bTime - aTime;
@@ -335,6 +345,77 @@ export const groupTopicsByAgent = (
       id,
       title: children[0]?.agentTitle ?? children[0]?.agentName ?? undefined,
     }))
+    .sort((a, b) => {
+      const aTime = a.children[0] ? getTopicSortTime(a.children[0], field) : 0;
+      const bTime = b.children[0] ? getTopicSortTime(b.children[0], field) : 0;
+      return bTime - aTime;
+    });
+};
+
+// Device-based grouping
+const NO_DEVICE_GROUP_ID = 'no-device';
+const DEVICE_GROUP_PREFIX = 'device:';
+
+/**
+ * The directory shape `groupTopicsByDevice` needs to resolve a topic's device
+ * from its `projectWorkingDirectoryId` — structurally satisfied by the
+ * store's `ProjectDirectory`.
+ */
+export interface TopicDeviceDirectory {
+  deviceId?: string | null;
+  id: string;
+}
+
+/**
+ * Groups topics by the device they run on.
+ *
+ * Use when:
+ * - Rendering the "group by device" mode in a project-scoped topic sidebar
+ *   whose topics span multiple machines.
+ *
+ * Expects:
+ * - Topics with optional `metadata.boundDeviceId` (an explicit device binding
+ *   wins) and optional `projectWorkingDirectoryId`, resolved to a device via
+ *   `directories`.
+ *
+ * Returns:
+ * - `device:{deviceId}` groups sorted by most recent activity, and a
+ *   title-less `no-device` bucket for rows without any device attribution.
+ *   Groups carry no title — the renderer names them from its directory and
+ *   device registries.
+ */
+export const groupTopicsByDevice = (
+  topics: ChatTopic[],
+  field: 'createdAt' | 'updatedAt',
+  directories?: ReadonlyArray<TopicDeviceDirectory>,
+): GroupedTopic[] => {
+  if (!topics.length) return [];
+
+  const deviceIdByDirectoryId = new Map(
+    (directories ?? []).map((directory) => [directory.id, directory.deviceId]),
+  );
+  const groupsMap = new Map<string, ChatTopic[]>();
+  for (const topic of topics) {
+    const deviceId =
+      topic.metadata?.boundDeviceId ??
+      (topic.projectWorkingDirectoryId
+        ? deviceIdByDirectoryId.get(topic.projectWorkingDirectoryId)
+        : undefined);
+    const id = deviceId ? `${DEVICE_GROUP_PREFIX}${deviceId}` : NO_DEVICE_GROUP_ID;
+    const existing = groupsMap.get(id);
+    if (existing) {
+      existing.push(topic);
+    } else {
+      groupsMap.set(id, [topic]);
+    }
+  }
+
+  for (const children of groupsMap.values()) {
+    children.sort((a, b) => getTopicSortTime(b, field) - getTopicSortTime(a, field));
+  }
+
+  return Array.from(groupsMap.entries())
+    .map(([id, children]) => ({ children, id }))
     .sort((a, b) => {
       const aTime = a.children[0] ? getTopicSortTime(a.children[0], field) : 0;
       const bTime = b.children[0] ? getTopicSortTime(b.children[0], field) : 0;

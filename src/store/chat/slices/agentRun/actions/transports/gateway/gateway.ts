@@ -6,6 +6,7 @@ import {
   type ConnectionStatus,
   createOperationClient,
   type GatewayMuxClient,
+  isLlmRelayChannelId,
   isSessionTerminalEvent,
   type MuxOpLifecycleMessage,
   type OperationClient,
@@ -18,6 +19,7 @@ import type {
   ChatTopicMetadata,
   ChatTopicStatus,
   ConversationContext,
+  ExecAgentClientIds,
   ExecAgentResult,
   MessageMetadata,
   RuntimeMentionedAgent,
@@ -56,9 +58,15 @@ import {
 } from '@/store/chat/pendingSandboxSelection';
 import { consumePendingTopicRepos, getPendingTopicRepos } from '@/store/chat/pendingTopicRepos';
 import { topicSelectors } from '@/store/chat/selectors';
-import { INPUT_LOADING_OPERATION_TYPES } from '@/store/chat/slices/operation/types';
+import { operationSelectors } from '@/store/chat/slices/operation/selectors';
+import {
+  SETTLEABLE_TOPIC_RUN_OPERATION_TYPES,
+  TOPIC_VISIBLY_RUNNING_OPERATION_TYPES,
+} from '@/store/chat/slices/operation/types';
 import type { ChatStore } from '@/store/chat/store';
+import { isInterventionRunActive } from '@/store/chat/utils/interventionSync';
 import { messageMapKey } from '@/store/chat/utils/messageMapKey';
+import type { TopicMapScope } from '@/store/chat/utils/topicMapKey';
 import { topicMapKey } from '@/store/chat/utils/topicMapKey';
 import { getElectronStoreState } from '@/store/electron';
 import { getFileStoreState } from '@/store/file/store';
@@ -74,6 +82,7 @@ import { isTrpcErrorCode } from '@/utils/trpcError';
 
 import { resolveNewThreadIntent } from '../../dispatch/newThreadIntent';
 import { buildRunLifecycle } from '../../lifecycle/buildRunLifecycle';
+import { scheduleQueuedFollowUp } from '../../lifecycle/queuedFollowUp';
 import type { RunScope } from '../../lifecycle/types';
 import { createGatewayEventBuffer } from './gatewayEventBuffer';
 import { createGatewayEventHandler, isCompletedRuntimeEnd } from './gatewayEventHandler';
@@ -110,6 +119,51 @@ const interruptGatewayTaskOrThrow = async (
       `Gateway operation ${params.operationId ?? 'unknown'} cancellation unconfirmed`,
     );
   }
+};
+
+/**
+ * Waits for a server start request while honoring a caller abort locally.
+ *
+ * Use when:
+ * - The ChatInput Stop can fire while `execAgentTask` is still in flight.
+ *
+ * Expects:
+ * - `request` was issued WITHOUT the abort signal. Aborting the fetch only
+ *   drops the response: the server still persists the turn and dispatches the
+ *   run (for a connected device, it spawns the native CLI), and the client
+ *   would never learn the operation id needed to stop it.
+ *
+ * Returns:
+ * - The server result, or rejects with an AbortError as soon as the caller
+ *   aborts. After such an abort, `onAbandoned` receives the result the server
+ *   eventually returns so the caller can interrupt that orphaned run.
+ */
+const awaitStartRequest = <T>(
+  request: Promise<T>,
+  signal: AbortSignal | undefined,
+  onAbandoned: (result: T) => Promise<unknown>,
+): Promise<T> => {
+  if (!signal) return request;
+
+  return new Promise<T>((resolve, reject) => {
+    const onAbort = () => {
+      reject(new DOMException('Message send was cancelled', 'AbortError'));
+      request
+        .then(onAbandoned)
+        .catch((error) => console.error('[Gateway] interrupt after aborted start failed:', error));
+    };
+    signal.addEventListener('abort', onAbort, { once: true });
+    request.then(
+      (result) => {
+        signal.removeEventListener('abort', onAbort);
+        resolve(result);
+      },
+      (error) => {
+        signal.removeEventListener('abort', onAbort);
+        reject(error);
+      },
+    );
+  });
 };
 
 /**
@@ -432,6 +486,9 @@ export class GatewayActionImpl {
     if (this.#feedAttachedMuxes.has(mux)) return;
     this.#feedAttachedMuxes.add(mux);
     mux.on('lifecycle', (lifecycle: MuxOpLifecycleMessage) => {
+      // A one-shot relay channel (a single LLM call outside any run) is not a
+      // run of this user's: nothing in the feed is about it.
+      if (isLlmRelayChannelId(lifecycle.operationId)) return;
       this.#set(
         (state) => ({
           gatewayFeed: {
@@ -976,11 +1033,10 @@ export class GatewayActionImpl {
    */
   executeGatewayAgent = async (params: {
     /**
-     * Client-minted ids for the rows this run creates (fresh sends only). The
-     * server honours them verbatim, so the optimistic topic / message rows keep
-     * their ids instead of diverging from the server-minted ones.
+     * Client-minted ids for the rows this run creates (fresh sends only), honoured
+     * verbatim so optimistic rows keep their ids — see `ExecAgentClientIds`.
      */
-    clientIds?: { assistantMessageId?: string; topicId?: string; userMessageId?: string };
+    clientIds?: ExecAgentClientIds;
     /** Agent/runtime context used to execute the server operation. */
     context: ConversationContext;
     /** File IDs of already-uploaded attachments to attach to the new user message */
@@ -1010,6 +1066,12 @@ export class GatewayActionImpl {
      * without issuing a second legacy resume request.
      */
     precreatedResult?: ExecAgentResult;
+    /**
+     * Project working directory the NEW topic is born in — the blank
+     * conversation a project group's "+" staged. The caller reads it before the
+     * send adopts its minted topic, since that switch clears the staging.
+     */
+    projectWorkingDirectoryId?: string;
     /** Server operation whose visible output ended before this fresh turn. */
     replacesOperationId?: string;
     /** Diagnostic snapshot of the conversation's server runs, see `ExecAgentTaskParams`. */
@@ -1043,6 +1105,8 @@ export class GatewayActionImpl {
      * `phase: 'tool_result'` WITHOUT re-executing the tool.
      */
     resumeToolResult?: ResumeToolResultParam;
+    /** Skills the user selected in this message; forwarded as `selectedSkillIds`. */
+    selectedSkillIds?: string[];
     /**
      * Tool identifiers the user @-mentioned in this message. Forwarded to the
      * server as `selectedToolIds` so the server runtime enables them for this
@@ -1083,10 +1147,12 @@ export class GatewayActionImpl {
       parentMessageId,
       parentOperationId,
       precreatedResult,
+      projectWorkingDirectoryId,
       replacesOperationId,
       resumeApproval,
       resumeApprovals,
       resumeToolResult,
+      selectedSkillIds,
       selectedToolIds,
       mentionedAgents,
       tempMessageIds,
@@ -1161,7 +1227,9 @@ export class GatewayActionImpl {
     // Honour user-initiated cancel during phase-1 init: while we await the
     // execAgentTask round-trip the caller's loading state (e.g. `sendMessage`)
     // is still running, so the ChatInput stop button is active. Forward the
-    // signal into the request so the fetch aborts in-flight. If the server has
+    // abort into the round-trip wait (never into the fetch itself, see
+    // `awaitStartRequest`): the send rejects at once and the run the server
+    // still creates is interrupted when its result arrives. If the server has
     // already persisted the turn, interrupt generation but still reconcile the
     // message locally before returning.
     const abortSignal = parentOperationId
@@ -1194,8 +1262,8 @@ export class GatewayActionImpl {
     const serverResult =
       precreatedResult ??
       (agentShareId
-        ? await shareChatService.execAgentTask(
-            {
+        ? await awaitStartRequest(
+            shareChatService.execAgentTask({
               clientIds,
               fileIds,
               parentMessageId,
@@ -1207,11 +1275,17 @@ export class GatewayActionImpl {
               steer: metadata?.steer,
               topicId: executionContext.topicId,
               userInterventionConfig,
-            },
-            { signal: abortSignal },
+            }),
+            abortSignal,
+            (abandoned) =>
+              shareChatService.interruptTask(
+                agentShareId,
+                abandoned.topicId,
+                abandoned.operationId,
+              ),
           )
-        : await aiAgentService.execAgentTask(
-            {
+        : await awaitStartRequest(
+            aiAgentService.execAgentTask({
               agentId: executionContext.agentId,
               // Fresh sends only — resume flows never pass this, and the server drops
               // it defensively on resume-like params anyway.
@@ -1252,6 +1326,7 @@ export class GatewayActionImpl {
                 // supervisor turn loses its role on the step_start snapshot / refetch
                 // and renders as a generic assistant.
                 orchestrationRole: executionContext.orchestrationRole,
+                ...(isCreateNewTopic && projectWorkingDirectoryId && { projectWorkingDirectoryId }),
                 scope: executionContext.scope,
                 taskId,
                 threadId: executionContext.threadId,
@@ -1271,14 +1346,20 @@ export class GatewayActionImpl {
               resumeApproval,
               resumeApprovals,
               resumeToolResult,
+              selectedSkillIds,
               selectedToolIds,
               // A queued follow-up keeps its continuation mark on the row the
               // server persists, which replaces the optimistic one.
               steer: metadata?.steer,
               trigger: metadata?.trigger,
               userInterventionConfig,
-            },
-            { signal: abortSignal },
+            }),
+            abortSignal,
+            (abandoned) =>
+              interruptGatewayTaskOrThrow({
+                operationId: abandoned.operationId,
+                topicId: abandoned.topicId,
+              }),
           ));
     // A member continuation names the supervisor's run as `operationId` (safe
     // for older clients); this run is the member's continuation.
@@ -1527,7 +1608,7 @@ export class GatewayActionImpl {
     // without needing an out-of-band lookup.
     const { operationId: gatewayOpId } = this.#get().startOperation({
       context: resolvedMessageContext,
-      metadata: { serverOperationId: result.operationId },
+      metadata: { heteroAutoRetryAvailable: true, serverOperationId: result.operationId },
       parentOperationId,
       type: 'execServerAgentRuntime',
     });
@@ -1587,6 +1668,17 @@ export class GatewayActionImpl {
         });
         this.disconnectFromGateway(staleOpId);
       }
+    }
+
+    // A mounted Task drawer reads the by-id topic detail, independently of the
+    // sidebar list. Dispatch has persisted a new receipt; revalidate that detail
+    // after the optimistic marker patch without delaying stream connection.
+    if (result.heteroType && result.topicId && !agentShareId && !continuesGroupMember) {
+      void this.#get()
+        .refreshTopicDetail(result.topicId)
+        .catch((error) =>
+          console.error('[Gateway] Failed to refresh dispatched Topic configuration:', error),
+        );
     }
 
     // When the local operation is cancelled (e.g. user clicks stop), forward
@@ -2066,15 +2158,6 @@ export class GatewayActionImpl {
           succeeded,
         });
 
-        // Same supersede guard as executeGatewayAgent's onSessionComplete: a
-        // newer run may own this topic by now, and the settle below would
-        // retire it mid-flight.
-        const superseded = this.#isSupersededRunningOperation({
-          agentId: context.agentId,
-          operationId,
-          topicId,
-        });
-
         // Settle through the server exactly as executeGatewayAgent's
         // onSessionComplete does: ONE call that clears the marker and writes the
         // terminal status inside the topic row lock, comparing the operation id
@@ -2099,14 +2182,25 @@ export class GatewayActionImpl {
         // Share visitors cannot settle the creator-owned topic row (the topic
         // router is owner-scoped) — the local clear below still runs. Same
         // split as executeGatewayAgent's onSessionComplete.
-        const settle =
-          superseded || agentShareId
-            ? undefined
-            : topicService.settleRunningOperation(
-                topicId,
-                operationId,
-                viewing || !effectiveSucceeded ? 'active' : 'unread',
-              );
+        //
+        // Deliberately NOT also gated on a local supersede read. This tab's topic
+        // map is only a guess about whether another run claimed the topic, and
+        // the settle below is authoritative in a way the guess cannot be: it
+        // writes only while the SERVER's mark still names THIS operation, and
+        // answers `conflict` for a newer one, which `#restoreRunningOnSettleConflict`
+        // already consumes by re-pinning `running` and refetching the newer mark.
+        // Skipping the call on the guess dropped the settle entirely whenever the
+        // map was stale or the newer run never landed its server-side mark, and
+        // nothing retried it — the row then kept `status='running'` with a
+        // `runningOperation` naming a finished operation. `executeGatewayAgent`'s
+        // onSessionComplete (the path this one mirrors) has never had that guard.
+        const settle = agentShareId
+          ? undefined
+          : topicService.settleRunningOperation(
+              topicId,
+              operationId,
+              viewing || !effectiveSucceeded ? 'active' : 'unread',
+            );
         // Mirror into the local store — the server settle does NOT touch the
         // Zustand topic map that useGatewayReconnect (and the sidebar spinner)
         // read. Status omitted for the unwatched-clean case, which
@@ -2198,35 +2292,6 @@ export class GatewayActionImpl {
    * user switched agent/group, when the active-bucket `getTopicById` would miss the topic
    * and leave its marker stale.
    */
-  /**
-   * Whether a DIFFERENT run has since claimed this topic's `runningOperation`.
-   *
-   * Read from the local topic map, which every run's start writes optimistically
-   * — so a session closing after a newer run began can tell "my run ended" from
-   * "the topic is idle" and keep its hands off the newer run's markers.
-   *
-   * Deliberately false when the topic carries no marker at all (not loaded into
-   * `topicDataMap`, or already cleared): there is nothing to protect, and the
-   * caller's clear must still run so a dead marker never survives.
-   */
-  #isSupersededRunningOperation = (params: {
-    agentId?: string;
-    groupId?: string;
-    operationId: string;
-    topicId: string;
-  }): boolean => {
-    const { agentId, groupId, operationId, topicId } = params;
-    const state = this.#get();
-    const key = topicMapKey({
-      agentId: agentId ?? state.activeAgentId,
-      groupId: groupId ?? state.activeGroupId,
-    });
-    const owner = state.topicDataMap[key]?.items?.find((t) => t.id === topicId)?.metadata
-      ?.runningOperation?.operationId;
-
-    return !!owner && owner !== operationId;
-  };
-
   /**
    * Whether a silently-ended gateway run is over, judged from the server's own
    * reservation of the topic.
@@ -2340,6 +2405,255 @@ export class GatewayActionImpl {
   };
 
   /**
+   * Retire the local topic-run ops whose run the server no longer considers live.
+   *
+   * A gateway op normally settles on its terminal frame, but that frame can be
+   * lost: the socket resubscribes mid-run, the op's DO event buffer hibernates
+   * away, or — the case this exists for — an intervention continuation is
+   * dispatched out-of-band on a NEW operation whose stream delivers neither a
+   * terminal nor a disconnect, so the terminal-missing fallback never fires. The
+   * run is over on the server either way, and the leaked op is exactly what the
+   * topic row reads: `isTopicVisiblyRunning` drives the sidebar spinner and
+   * `getVisibleAgentRuntimeStartTimeByContext` its elapsed clock, so the row
+   * keeps spinning and counting over a finished topic. `cleanupStaleRunningTopics`
+   * cannot help on its own: the topic is idle on the server, so it never shows up
+   * in that watchdog's `statuses: ['running']` query.
+   *
+   * Liveness is read from the SERVER, never guessed from a local timer: the row
+   * must report no live run at all (`isInterventionRunActive` — no
+   * `runningOperation`, no task reservation, and a status outside
+   * running / waitingForHuman). A local run op still running on such a topic is
+   * unbacked by definition.
+   */
+  settleUnbackedTopicRuns = async (params: {
+    agentId?: string;
+    groupId?: string;
+    scope?: TopicMapScope;
+    topicId: string;
+  }): Promise<number> => {
+    const { topicId } = params;
+    if (!topicId) return 0;
+
+    // Cheap local pre-check first: without a candidate there is nothing to
+    // settle, and no reason to pay for a server read.
+    const candidates = this.#getSettleableLocalRuntimeOps(topicId);
+    if (candidates.length === 0) return 0;
+
+    // A missing / unreadable row is not evidence the run ended — leave the ops
+    // alone rather than settling them on an absent answer.
+    const topic = await topicService.getTopicDetail(topicId).catch(() => undefined);
+    if (!topic || isInterventionRunActive(topic)) return 0;
+
+    // Mirror the SERVER's authoritative terminal status instead of stamping
+    // `active` over it: a run that finished while the user was away settles the
+    // row to `unread`, and overwriting that would suppress the completion badge
+    // they come back for (or clobber `completed` / `failed`). Only a topic the
+    // user is actually looking at gets the `active` pin — the same split the
+    // terminal-frame path makes
+    // (`viewing || !effectiveSucceeded ? 'active' : undefined`).
+    const viewing = this.#get().activeTopicId === topicId;
+    const terminalStatus: ChatTopicStatus = viewing ? 'active' : (topic.status ?? 'active');
+
+    let settled = 0;
+    const drainedContextKeys = new Set<string>();
+    for (const op of candidates) {
+      // A terminal frame may have landed while the read was in flight.
+      if (this.#get().operations[op.id]?.status !== 'running') continue;
+
+      // The transport AND the server marker are keyed by the SERVER operation id,
+      // not by this tab's local Zustand op id — `connectToGateway` stores under
+      // `result.operationId`. Looking the connection up by the local id (as the
+      // first cut did) silently tore nothing down.
+      // `#isLiveLocalRuntimeOp` already guarantees the marker is present.
+      const serverOperationId = op.metadata.serverOperationId;
+      if (!serverOperationId) continue;
+
+      // Complete the op itself first: it is what every "a run is in flight"
+      // surface reads (sidebar spinner, elapsed clock, stop button). Doing it
+      // before the teardown below also makes the `disconnected` that teardown
+      // provokes a no-op.
+      this.#get().completeOperation(op.id);
+
+      // Then tear the transport down exactly like `reconcileSilentEnd` does.
+      // `internal_cleanupGatewayConnection` only drops store state, so without
+      // the `disconnect()` the discarded handle keeps a v1 reconnect timer
+      // opening sockets and a mux operation subscribed for a run nobody will
+      // ever read. (The transcript's canonical final state is NOT this sweep's
+      // job — it belongs to the conversation's own fetch/settle path, which has
+      // the session closure to synthesize a `notify_update` from.)
+      this.#get().gatewayConnections[serverOperationId]?.client?.disconnect();
+      this.internal_cleanupGatewayConnection(serverOperationId);
+
+      this.clearLocalRunningOperation({
+        agentId: params.agentId,
+        groupId: params.groupId,
+        operationId: serverOperationId,
+        scope: params.scope,
+        status: terminalStatus,
+        topicId,
+      });
+      settled++;
+
+      // Retiring the op is only half of what a lost terminal frame skipped: if a
+      // follow-up was queued behind the run, the same missing frame also skipped
+      // the queue drain. Close that gap on the queue-aware path.
+      await this.#drainQueuedFollowUpForSettledRun(op, drainedContextKeys);
+    }
+
+    return settled;
+  };
+
+  /**
+   * Drain the follow-up a user queued behind a leaked run the server COMPLETED.
+   *
+   * `buildRunLifecycle.completeRun` (on success) and
+   * `serverOperationReconciliation` (repairing a completed snapshot) both reach
+   * `scheduleQueuedFollowUp`, but a run whose terminal frame never landed
+   * reaches neither — the sweep retires the leaked op instead, and the queued
+   * message would stay stranded. This routes the sweep's retirement through the
+   * same queue-aware drain.
+   *
+   * Two gates keep it honest:
+   *
+   * 1. It needs a queued follow-up to rescue. That gate is checked FIRST, so the
+   *    common no-queue retirement pays neither the server read nor the drain.
+   * 2. Only a run the server recorded as COMPLETED drains. A failed / cancelled
+   *    run preserves its queue, exactly like the terminal paths. The outcome is
+   *    read from the server because the terminal frame — the only local carrier
+   *    of it — is what leaked; an unreadable / expired outcome counts as NOT
+   *    completed, so a queued follow-up is never auto-sent on an outcome we
+   *    cannot confirm.
+   */
+  #drainQueuedFollowUpForSettledRun = async (
+    op: ChatStore['operations'][string],
+    drainedContextKeys: Set<string>,
+  ): Promise<void> => {
+    if (!op.context.agentId) return;
+
+    const context = op.context as ConversationContext;
+    const contextKey = messageMapKey(context);
+
+    // Nothing queued behind this run → nothing to rescue, and no reason to pay
+    // for the server read below.
+    if (drainedContextKeys.has(contextKey)) return;
+    if (!this.#get().queuedMessages?.[contextKey]?.length) return;
+
+    // A newer turn in this context already owns the queue (the user sent it, or
+    // another run started) — leave the drain to it. Same guard the shared
+    // `scheduleQueuedFollowUp` applies on its send.
+    if (operationSelectors.hasNewerConversationOperation(op.id, context)(this.#get())) return;
+
+    const serverOperationId = op.metadata.serverOperationId;
+    if (!serverOperationId) return;
+
+    const outcome = await aiAgentService
+      .getOperationStatus({ operationId: serverOperationId })
+      .catch(() => null);
+    if (outcome?.isCompleted !== true) return;
+
+    drainedContextKeys.add(contextKey);
+    scheduleQueuedFollowUp(this.#get, context, op.id);
+  };
+
+  /**
+   * {@link settleUnbackedTopicRuns} across every topic this tab still holds a
+   * visibly-running op for.
+   *
+   * Backs the sidebar's stale-run sweep, where the topic ids come from the local
+   * op map instead of a server query: a topic the server already retired is idle,
+   * so it never appears in the `statuses: ['running']` query that drives
+   * `cleanupStaleRunningTopics`. Costs nothing without a candidate, so it is safe
+   * to call opportunistically (e.g. on a sidebar interval).
+   */
+  settleAllUnbackedTopicRuns = async (): Promise<number> => {
+    // Dedupe by the FULL scope, not by topicId alone. A leaked run's row lives in
+    // its own agent/group bucket, and `clearLocalRunningOperation` resolves that
+    // bucket from the params it is handed — so dropping the scope here made the
+    // sweep clear whichever agent happened to be active instead of the one the
+    // run came from, completing the op but leaving the real row spinning.
+    const candidates = new Map<
+      string,
+      { agentId?: string; groupId?: string; scope?: TopicMapScope; topicId: string }
+    >();
+    for (const op of Object.values(this.#get().operations)) {
+      if (!this.#isLiveLocalRuntimeOp(op)) continue;
+
+      const { agentId, groupId, topicId } = op.context;
+      if (!topicId) continue;
+
+      // Group MAIN topics are keyed `group_${groupId}` even though the op also
+      // carries the supervisor's agentId; leaving both would derive
+      // `group_agent_${groupId}_${agentId}` and never find the row. Mirrors the
+      // patch scope `cleanupStaleRunningTopics` uses and the optimistic-topic
+      // scope in conversationLifecycle.
+      const scope: TopicMapScope | undefined =
+        op.context.scope === 'group' && groupId ? 'group' : undefined;
+
+      const key = `${agentId ?? ''}|${groupId ?? ''}|${scope ?? ''}|${topicId}`;
+      if (!candidates.has(key)) candidates.set(key, { agentId, groupId, scope, topicId });
+    }
+    if (candidates.size === 0) return 0;
+
+    const settled = await Promise.all(
+      [...candidates.values()].map((candidate) => this.settleUnbackedTopicRuns(candidate)),
+    );
+
+    return settled.reduce((sum, count) => sum + count, 0);
+  };
+
+  /**
+   * Live topic-run ops this tab still holds for `topicId`, filtered to the ones
+   * old enough to settle.
+   *
+   * `LOCAL_RUN_SETTLE_MIN_AGE_MS` covers the dispatch window where this tab's op
+   * already exists but the server's own `runningOperation` / `running` status has
+   * not been read back yet — without it a just-started run could be retired
+   * against a stale read.
+   */
+  #getSettleableLocalRuntimeOps = (topicId: string) => {
+    const now = Date.now();
+
+    return Object.values(this.#get().operations).filter(
+      (op) =>
+        this.#isLiveLocalRuntimeOp(op) &&
+        op.context.topicId === topicId &&
+        typeof op.metadata.startTime === 'number' &&
+        now - op.metadata.startTime >= LOCAL_RUN_SETTLE_MIN_AGE_MS,
+    );
+  };
+
+  /**
+   * Whether `op` is one the topic row reports as running AND the sweep is
+   * allowed to retire. Three independent requirements, each closing a distinct
+   * way of killing a live turn:
+   *
+   * 1. Its type must be one the row reads ({@link
+   *    SETTLEABLE_TOPIC_RUN_OPERATION_TYPES}). Anything narrower leaks — an op
+   *    that pins the row but sits outside the filter can never be retired, so
+   *    the row spins until a reload.
+   * 2. It must be server-owned (`metadata.serverOperationId`). The sweep's claim
+   *    is "the server no longer backs this run", which is only meaningful for a
+   *    run the server ever owned. A local-only op owns its whole lifetime in
+   *    this tab, and completing it is destructive: the client-mode
+   *    `submitToolInteraction` / `skipToolInteraction` pre-dispatch phase
+   *    deliberately writes the topic back to `active` BEFORE awaiting its
+   *    optimistic writes, so an already-`active` server row is expected there
+   *    and says nothing about the run — and `#wasInterimOpStopped` then reads the
+   *    completed op as a user Stop, returning without ever starting the
+   *    continuation. `autoRetryPending` is the same shape (see
+   *    LOCAL_ONLY_TOPIC_RUN_OPERATION_TYPES).
+   * 3. It must not already be on its way out (`isAborting`).
+   *
+   * The leaked op this exists for is a gateway `execServerAgentRuntime`, which
+   * does carry `serverOperationId` — so requirement 2 costs nothing there.
+   */
+  #isLiveLocalRuntimeOp = (op: ChatStore['operations'][string]): boolean =>
+    SETTLEABLE_TOPIC_RUN_OPERATION_TYPES.includes(op.type) &&
+    op.status === 'running' &&
+    !op.metadata.isAborting &&
+    !!op.metadata.serverOperationId;
+
+  /**
    * Whether this tab has a live turn on `topicId` that belongs to a run other
    * than `serverOperationId` — e.g. a follow-up (or queued message) already sent
    * after this run ended. Operations of this run itself (its runtime op and its
@@ -2357,7 +2671,7 @@ export class GatewayActionImpl {
       return false;
     };
 
-    return INPUT_LOADING_OPERATION_TYPES.some((type) =>
+    return TOPIC_VISIBLY_RUNNING_OPERATION_TYPES.some((type) =>
       (operationsByType?.[type] ?? []).some((id) => {
         const op = operations?.[id];
         return (
@@ -2417,6 +2731,12 @@ export class GatewayActionImpl {
     groupId?: string;
     operationId: string;
     /**
+     * Explicit bucket scope. Group MAIN topic rows are keyed `group_${groupId}`
+     * while the op also carries the supervisor's agentId, so the auto-detected
+     * `group_agent` bucket would miss them.
+     */
+    scope?: TopicMapScope;
+    /**
      * Mirror the topic's terminal status into the local Zustand copy alongside
      * the metadata clear. Omit for the "clean completion, not watching" case —
      * that one is owned by `markTopicUnread` elsewhere.
@@ -2424,11 +2744,12 @@ export class GatewayActionImpl {
     status?: ChatTopicStatus;
     topicId: string;
   }): boolean => {
-    const { topicId, operationId, agentId, groupId, status } = params;
+    const { topicId, operationId, agentId, groupId, scope, status } = params;
     const state = this.#get();
     const key = topicMapKey({
       agentId: agentId ?? state.activeAgentId,
       groupId: groupId ?? state.activeGroupId,
+      scope,
     });
     const existingTopic = state.topicDataMap[key]?.items?.find((t) => t.id === topicId);
     if (!existingTopic) return false;
@@ -2451,6 +2772,7 @@ export class GatewayActionImpl {
         agentId,
         groupId,
         id: topicId,
+        scope,
         type: 'updateTopic',
         value: { metadata: { ...existingTopic.metadata, runningOperation: null } },
       });
@@ -2462,7 +2784,7 @@ export class GatewayActionImpl {
     // run start) reconciles to this status instead of reapplying the stale
     // 'running' one and stranding the spinner again.
     if (!status) return false;
-    state.internal_pinTopicStatus?.({ agentId, groupId, status, topicId });
+    state.internal_pinTopicStatus?.({ agentId, groupId, scope, status, topicId });
     return !markerOperationId;
   };
 
@@ -2480,6 +2802,13 @@ export class GatewayActionImpl {
 }
 
 export type GatewayAction = Pick<GatewayActionImpl, keyof GatewayActionImpl>;
+
+/**
+ * Grace period before an unbacked local run op may be retired. Covers the
+ * dispatch window where this tab's op exists but the server has not yet
+ * published its own `runningOperation` / `running` status.
+ */
+const LOCAL_RUN_SETTLE_MIN_AGE_MS = 30_000;
 
 const GATEWAY_CONNECT_WAIT_MS = 5000;
 

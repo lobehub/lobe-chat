@@ -878,8 +878,7 @@ export class PluginMCPStoreActionImpl {
   };
 
   uninstallMCPPlugin = async (identifier: string): Promise<void> => {
-    await pluginService.uninstallPlugin(identifier);
-    await this.#get().refreshPlugins();
+    await this.#get().uninstallPlugin(identifier);
 
     discoverService.reportMcpEvent({
       event: 'uninstall',

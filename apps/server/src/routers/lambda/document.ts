@@ -19,7 +19,7 @@ import { router } from '@/libs/trpc/lambda';
 import { serverDatabase } from '@/libs/trpc/lambda/middleware';
 import { DocumentService } from '@/server/services/document';
 import { resolveDocumentEditorData } from '@/server/services/document/editorData';
-import { canViewDocumentContent } from '@/server/services/documentAccess';
+import { canViewDocumentContent, getDocumentForViewer } from '@/server/services/documentAccess';
 import { FileService } from '@/server/services/file';
 import {
   assertCanPerformResourceAction,
@@ -373,7 +373,7 @@ export const documentRouter = router({
       // KB-scoped documents inherit the KB's public visibility, so direct
       // reads must honor the restricted-KB (member No-access) policy too.
       await assertContentsNotInRestrictedKnowledgeBase(ctx, [input.id]);
-      const doc = await ctx.documentService.getDocumentById(input.id);
+      const doc = await getDocumentForViewer(ctx, input.id);
       // `source` is a storage key for file-backed documents; sign it so PDF viewers
       // and downloads receive a usable URL. Absolute URLs (web sources) pass through.
       if (

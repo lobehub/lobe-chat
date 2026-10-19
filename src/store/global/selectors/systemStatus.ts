@@ -1,8 +1,10 @@
 import { type TopicGroupMode } from '@/types/topic';
 
 import type {
+  AgentDocumentSort,
   GlobalState,
   ModelDetailPanelExpandedKey,
+  ProjectTopicSubGroupMode,
   SystemStatus,
   WorkspaceOverridableField,
 } from '../initialState';
@@ -90,12 +92,26 @@ const collapsedTopicGroupKeys =
   (s: GlobalState): string[] | undefined =>
     s.status.collapsedTopicGroupKeysByMode?.[mode];
 
+const projectTopicSubGroupMode =
+  (groupId: string) =>
+  (s: GlobalState): ProjectTopicSubGroupMode =>
+    s.status.projectTopicSubGroupModeByGroup?.[groupId] ?? 'none';
+
 const agentSidebarSections =
   (agentId: string | undefined) =>
   (s: GlobalState): Record<string, boolean> | undefined =>
     agentId ? s.status.expandAgentSidebarSectionsByAgent?.[agentId] : undefined;
 
-const topicPageSize = (s: GlobalState): number => s.status.topicPageSize || 20;
+/** Upper bound of `topic.getTopics`'s `pageSize` input on the server. */
+export const MAX_TOPIC_PAGE_SIZE = 100;
+
+/**
+ * Clamped to the server's cap: the project sidebar's "load more" used to grow
+ * the persisted value past 100, after which every topic list request failed
+ * validation. Clamping on read recovers users who already persisted it.
+ */
+const topicPageSize = (s: GlobalState): number =>
+  Math.min(s.status.topicPageSize || 20, MAX_TOPIC_PAGE_SIZE);
 
 const agentPageSize = (s: GlobalState): number => s.status.agentPageSize || 5;
 
@@ -178,6 +194,7 @@ export const SIDEBAR_SPACER_ID = '__spacer__';
 
 export const DEFAULT_SIDEBAR_ITEMS: string[] = [
   'tasks',
+  'dashboard',
   'resource',
   'recents',
   'project',
@@ -423,6 +440,13 @@ const filePanelWidth = (s: GlobalState) => s.status.filePanelWidth;
 const groupAgentBuilderPanelWidth = (s: GlobalState) => s.status.groupAgentBuilderPanelWidth || 360;
 const imagePanelWidth = (s: GlobalState) => s.status.imagePanelWidth;
 const agentListViewMode = (s: GlobalState) => s.status.agentListViewMode || 'list';
+const DEFAULT_AGENT_DOCUMENT_SORT: AgentDocumentSort = {
+  by: 'name',
+  foldersFirst: true,
+  order: 'asc',
+};
+const agentDocumentSort = (s: GlobalState): AgentDocumentSort =>
+  s.status.agentDocumentSort ?? DEFAULT_AGENT_DOCUMENT_SORT;
 const agentListViewOptions = (s: GlobalState) => s.status.agentListViewOptions;
 const agentListExpandedGroupKeys = (s: GlobalState) => s.status.agentListExpandedGroupKeys ?? [];
 const agentListSidebarSectionCollapsed = (s: GlobalState) =>
@@ -471,6 +495,7 @@ const homeSelectedAgentId = (s: GlobalState) => s.status.homeSelectedAgentId;
 
 export const systemStatusSelectors = {
   agentBuilderPanelWidth,
+  agentDocumentSort,
   agentListExpandedGroupKeys,
   agentListSidebarSectionCollapsed,
   agentListViewMode,
@@ -540,6 +565,7 @@ export const systemStatusSelectors = {
   verifyReportPanelWidth,
   tokenDisplayFormatShort,
   collapsedTopicGroupKeys,
+  projectTopicSubGroupMode,
   topicPageSize,
   videoPanelWidth,
   videoTopicViewMode,

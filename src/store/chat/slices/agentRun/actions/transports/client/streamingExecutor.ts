@@ -11,6 +11,7 @@ import {
   GeneralChatAgent,
   isParkedStatus,
 } from '@lobechat/agent-runtime';
+import { createDryRunAudit, DASHBOARD_DRY_RUN_AUDIT } from '@lobechat/builtin-tool-dashboard';
 import { LobeAgentManifest } from '@lobechat/builtin-tool-lobe-agent';
 import { createPathScopeAudit } from '@lobechat/builtin-tool-local-system';
 import { PageAgentIdentifier } from '@lobechat/builtin-tool-page-agent';
@@ -22,7 +23,7 @@ import {
   resolveSubAgentModel,
 } from '@lobechat/const';
 import { type ToolsEngine } from '@lobechat/context-engine';
-import { buildTaskDetailPrompt, buildTaskListPrompt } from '@lobechat/prompts';
+import { FILE_PREVIEW_CHARS, isOversizedFileContent } from '@lobechat/prompts';
 import {
   buildGoalOverviewContext,
   type ConversationContext,
@@ -39,6 +40,7 @@ import { aiAgentService } from '@/services/aiAgent';
 import { isCanUseAudio, isCanUseVideo, isCanUseVision } from '@/services/chat/helper';
 import { type ResolvedAgentConfig } from '@/services/chat/mecha';
 import { composeEnabledTools, resolveAgentConfig } from '@/services/chat/mecha';
+import { dashboardService } from '@/services/dashboard';
 import { localFileService } from '@/services/electron/localFileService';
 import { messageService } from '@/services/message';
 import { hydrateProjectedConversation } from '@/services/message/hydrateProjectedTools';
@@ -61,7 +63,6 @@ import { messageMapKey } from '@/store/chat/utils/messageMapKey';
 import { getElectronStoreState } from '@/store/electron';
 import { getGoalStoreState } from '@/store/goal';
 import { getServerConfigStoreState, serverConfigSelectors } from '@/store/serverConfig';
-import { getTaskStoreState } from '@/store/task';
 import { pageAgentRuntime } from '@/store/tool/slices/builtin/executors/pageAgentRuntime';
 import { type StoreSetter } from '@/store/types';
 import { toolInterventionSelectors } from '@/store/user/selectors';
@@ -69,10 +70,14 @@ import { getUserStoreState } from '@/store/user/store';
 
 import { buildRunLifecycle } from '../../lifecycle/buildRunLifecycle';
 import type { RunParkedReason, RunScope } from '../../lifecycle/types';
+import { buildViewedTaskPrompt } from '../viewedTaskPrompt';
 
 const log = debug('lobe-store:streaming-executor');
 
 const dynamicInterventionAudits = {
+  [DASHBOARD_DRY_RUN_AUDIT]: createDryRunAudit({
+    loadVersion: (widgetId, versionId) => dashboardService.getVersion(widgetId, versionId),
+  }),
   pathScopeAudit: createPathScopeAudit({
     areAllPathsSafe: async ({ paths, resolveAgainstScope }) => {
       if (!isDesktop) return false;
@@ -83,22 +88,28 @@ const dynamicInterventionAudits = {
   }),
 };
 
-const hasReferTopicNode = (editorData: Record<string, any> | null | undefined): boolean => {
-  if (!editorData) return false;
-  const walk = (node: any): boolean => {
-    if (!node) return false;
-    if (node.type === 'refer-topic') return true;
-    if (Array.isArray(node.children)) return node.children.some(walk);
-    return false;
-  };
-  return walk(editorData.root);
-};
-
 const getMediaAvailability = (messages: UIChatMessage[]) => ({
   hasAudios: messages.some((message) => message.role === 'user' && !!message.audioList?.length),
   hasImages: messages.some((message) => message.role === 'user' && !!message.imageList?.length),
   hasVideos: messages.some((message) => message.role === 'user' && !!message.videoList?.length),
 });
+
+/**
+ * Whether any user attachment is long enough to be sent as a preview, either because it is
+ * oversized or because the attachment budget (`planAttachmentPreviews`) previews it. Mirrors the
+ * server's `readHasOversizedFiles`, which enables `readAttachment` for those previews.
+ */
+const hasPreviewableFiles = (messages: UIChatMessage[]) =>
+  messages.some(
+    (message) =>
+      message.role === 'user' &&
+      !!message.fileList?.some((file) => {
+        const length = file.content?.length ?? 0;
+        return (
+          length > FILE_PREVIEW_CHARS || isOversizedFileContent(length, file.originalCharCount)
+        );
+      }),
+  );
 
 /**
  * Core streaming execution actions for AI chat
@@ -230,7 +241,6 @@ export class StreamingExecutorActionImpl {
     }
 
     // Dynamically inject turn-scoped builtin tools.
-    const hasTopicReference = messages.some((m) => hasReferTopicNode(m.editorData));
     const mediaAvailability = getMediaAvailability(messages);
     const serverConfigState = getServerConfigStoreState();
     const multimodalUnderstandingConfigured =
@@ -246,7 +256,6 @@ export class StreamingExecutorActionImpl {
     const runtimePluginIds = [
       ...new Set([
         ...(pluginIds || []),
-        ...(hasTopicReference ? ['lobe-topic-reference'] : []),
         ...(shouldEnableMultimodalUnderstanding ? [LobeAgentManifest.identifier] : []),
       ]),
     ];
@@ -257,11 +266,10 @@ export class StreamingExecutorActionImpl {
         : effectivePluginIds;
 
     log(
-      '[internal_createAgentState] resolved plugins=%o, isSubAgent=%s, disableTools=%s, hasTopicReference=%s',
+      '[internal_createAgentState] resolved plugins=%o, isSubAgent=%s, disableTools=%s',
       effectivePluginIds,
       isSubAgent,
       disableTools,
-      hasTopicReference,
     );
 
     // Generate tools using ToolsEngine (centralized here, passed to chatService via agentConfig)
@@ -279,6 +287,7 @@ export class StreamingExecutorActionImpl {
       // sub-agent runs. Desktop client runs also need the local environment so
       // local-system can advertise IPC-only capabilities such as direct image reads.
       { executionEnv: isDesktop ? 'local' : undefined, isSubAgent, scope },
+      { hasOversizedFiles: hasPreviewableFiles(messages) },
     );
     // When skillActivateMode is 'manual':
     // Exclude only discovery tools (activator, skill-store) so runtime-managed defaults
@@ -419,28 +428,7 @@ export class StreamingExecutorActionImpl {
     const viewedTask = operation?.context.viewedTask;
     if (viewedTask) {
       try {
-        const taskState = getTaskStoreState();
-        let contextPrompt: string | undefined;
-
-        if (viewedTask.type === 'list') {
-          const viewedList = taskState.activeTaskListKey
-            ? taskState.taskListMap[taskState.activeTaskListKey]
-            : undefined;
-          const tasks = viewedList?.items ?? [];
-          contextPrompt = buildTaskListPrompt({
-            defaultAssigneeAgentId: operation.context.defaultTaskAssigneeAgentId,
-            tasks,
-            total: viewedList?.total || tasks.length,
-          });
-        } else {
-          const detail = taskState.taskDetailMap[viewedTask.taskId];
-          if (detail)
-            contextPrompt = buildTaskDetailPrompt({
-              defaultAssigneeAgentId: operation.context.defaultTaskAssigneeAgentId,
-              task: detail,
-            });
-        }
-
+        const contextPrompt = buildViewedTaskPrompt(operation.context);
         if (contextPrompt) {
           runtimeInitialContext = {
             ...runtimeInitialContext,
@@ -875,7 +863,11 @@ export class StreamingExecutorActionImpl {
             // Find the assistant message to update error
             const currentMessages = this.#get().messagesMap[messageKey] || [];
             const assistantMessage = currentMessages.findLast((m) => m.role === 'assistant');
-            if (assistantMessage) {
+            // A Stop during a retry backoff surfaces as the last attempt's
+            // provider error. The user ended the run, so the reply must read
+            // as stopped, not as failed.
+            const isCancelled = this.#get().operations[operationId]?.status === 'cancelled';
+            if (assistantMessage && !isCancelled) {
               await messageService.updateMessageError(assistantMessage.id, event.error, {
                 agentId,
                 groupId,

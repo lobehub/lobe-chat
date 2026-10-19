@@ -2,6 +2,7 @@ import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
 import { wsCompatProcedure } from '@/business/server/trpc-middlewares/workspaceAuth';
+import { TaskSearchRepo } from '@/database/repositories/taskSearch';
 import { router } from '@/libs/trpc/lambda';
 import { resolveMarketUserContext, serverDatabase } from '@/libs/trpc/lambda/middleware';
 import { DiscoverService } from '@/server/services/discover';
@@ -102,6 +103,7 @@ export const searchRouter = router({
             'plugin',
             'communityAgent',
             'knowledgeBase',
+            'task',
           ])
           .optional(),
       }),
@@ -148,6 +150,16 @@ export const searchRouter = router({
           }),
         ]);
         searchPromises.push(ftsSearchRepo.search({ ...input, excludeKnowledgeBaseIds }));
+      }
+
+      // Tasks are not in the full-text index; look them up by identifier/name.
+      if (!type || type === 'task') {
+        searchPromises.push(
+          new TaskSearchRepo(ctx.serverDB, ctx.userId, ctx.workspaceId ?? undefined).search({
+            limit: limitPerType,
+            query,
+          }),
+        );
       }
 
       // Marketplace searches: see `includeMarketplace` on the input schema —

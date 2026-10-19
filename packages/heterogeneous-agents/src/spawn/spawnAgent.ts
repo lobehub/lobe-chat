@@ -6,9 +6,12 @@ import { PassThrough } from 'node:stream';
 import type { AgentStreamEvent } from '@lobechat/agent-gateway-client';
 import { spawnManaged } from '@lobechat/utils/managedProcess';
 
+import { ClaudeCodeAdapter } from '../adapters/claudeCode';
 import type { AskUserBridge } from '../askUser/AskUserBridge';
 import { resolveHeterogeneousAgentCommand } from '../config';
 import { AgentStreamPipeline, type UploadHeterogeneousImage } from './agentStreamPipeline';
+import { ClaudeCodeLiveInput } from './claudeCodeLiveInput';
+import { readClaudeCodeSessionCost } from './claudeCodeSessionCost';
 import { isPathLikeCommand, resolveCliSpawnPlan } from './cliSpawn';
 import { readCodexSessionModel, resolveCodexInitialModel } from './codexModel';
 import { buildCursorAcpPrompt, CursorAcpSession } from './cursorAcpSession';
@@ -54,6 +57,12 @@ export interface SpawnAgentOptions {
    * plain string this is unused.
    */
   inputOptions?: BuildAgentInputOptions;
+  /**
+   * (Claude Code only) Keep stdin open while the session can still use input,
+   * exposing `sendUserMessage` / `interruptTurn` on the handle. Runtime end is
+   * then reported once at process exit instead of at every `result`.
+   */
+  liveInput?: boolean;
   /**
    * Optional tee for the child's RAW stdout bytes, invoked synchronously for
    * every chunk BEFORE the adapter sees it. The pipeline still consumes stdout
@@ -116,6 +125,11 @@ export interface SpawnAgentHandle {
    */
   interrupt?: (signal?: NodeJS.Signals) => void;
   /**
+   * (Claude Code `liveInput` only) Stop the current turn without ending the
+   * process, so background tasks keep running. False once input has closed.
+   */
+  interruptTurn?: () => boolean;
+  /**
    * Send a signal to the child. A dedicated Unix process group is signaled as
    * a tree; inherited-group children receive a direct signal because their
    * outer wrapper owns group-level cancellation.
@@ -123,6 +137,13 @@ export interface SpawnAgentHandle {
   kill: (signal?: NodeJS.Signals) => void;
   /** Spawned child PID, undefined if spawn failed pre-PID. */
   pid: number | undefined;
+  /**
+   * (Claude Code `liveInput` only) Deliver a user message into the running
+   * session; Claude Code reads it at its next tool boundary, or starts a turn
+   * for it when idle. Resolves false once input has closed — the caller then
+   * runs the message as a new turn instead.
+   */
+  sendUserMessage?: (prompt: AgentPromptInput, options?: { uuid?: string }) => Promise<boolean>;
   /**
    * The agent's native session id, extracted from the `system:init` event.
    * Available after the `events` async iterable has been fully consumed.
@@ -246,6 +267,8 @@ interface BuildSpawnArgsParams {
   includePartialMessages: boolean;
   /** Per-agent input args produced by `buildAgentInput` (e.g. Codex `--image`). */
   inputArgs: string[];
+  /** (Claude Code only) Replay consumed user messages for live input. */
+  liveInput?: boolean;
   /** Native session id for resume; undefined for fresh runs. */
   resumeSessionId: string | undefined;
 }
@@ -254,10 +277,12 @@ const buildClaudeCodeArgs = ({
   extraArgs,
   includePartialMessages,
   inputArgs,
+  liveInput,
   resumeSessionId,
 }: BuildSpawnArgsParams) => [
   ...CLAUDE_CODE_BASE_ARGS,
   ...(includePartialMessages ? ['--include-partial-messages'] : []),
+  ...(liveInput ? ['--replay-user-messages'] : []),
   ...CLAUDE_CODE_PERMISSION_ARGS(),
   ...(resumeSessionId ? ['--resume', resumeSessionId] : []),
   ...inputArgs,
@@ -702,14 +727,16 @@ export const spawnAgent = async (options: SpawnAgentOptions): Promise<SpawnAgent
   }
 
   const inputPlan = await buildAgentInput(options.agentType, options.prompt, options.inputOptions);
+  const liveInput = options.agentType === 'claude-code' && options.liveInput === true;
   const args = buildSpawnArgs({
     agentType: options.agentType,
     extraArgs: options.extraArgs ?? [],
     includePartialMessages: options.includePartialMessages ?? false,
     inputArgs: inputPlan.args,
+    liveInput,
     resumeSessionId: options.resumeSessionId,
   });
-  const childEnv = {
+  const childEnv: NodeJS.ProcessEnv = {
     ...process.env,
     ...(options.agentType === 'codebuddy' ? { CODEBUDDY_CODE_DISABLE_BACKGROUND_TASKS: '1' } : {}),
     ...options.env,
@@ -723,6 +750,17 @@ export const spawnAgent = async (options: SpawnAgentOptions): Promise<SpawnAgent
       ? await readCodexSessionModel(options.resumeSessionId, { env: childEnv })
       : undefined;
   const initialCumulativeUsage = resumedCodexSession?.cumulativeUsage;
+  const initialSessionCostUsd =
+    options.agentType === 'claude-code' && options.resumeSessionId
+      ? await readClaudeCodeSessionCost({
+          configDir: childEnv.CLAUDE_CONFIG_DIR,
+          cwd,
+          // Resolve from the child's environment: an overridden HOME moves the
+          // transcript the CLI resumes from.
+          home: childEnv.HOME,
+          sessionId: options.resumeSessionId,
+        })
+      : undefined;
 
   const cliSpawnPlan = await resolveCliSpawnPlan(command, args);
   const detached = platform() !== 'win32' && (options.detached ?? true);
@@ -735,11 +773,21 @@ export const spawnAgent = async (options: SpawnAgentOptions): Promise<SpawnAgent
   });
 
   const pipeline = new AgentStreamPipeline({
+    // A live session can run more turns after its first `result`, so the
+    // runtime ends once, at process exit, and the turn a background task's
+    // completion opens is grouped under the tool that started it.
+    adapter: liveInput
+      ? new ClaudeCodeAdapter({
+          runtimeEndStrategy: 'on-transport-close',
+          signalBackgroundTaskCompletion: true,
+        })
+      : undefined,
     agentType: options.agentType,
     cwd,
     env: childEnv,
     initialCumulativeUsage,
     initialModel,
+    initialSessionCostUsd,
     operationId: options.operationId,
     startedAt,
     uploadImage: options.uploadImage,
@@ -753,6 +801,7 @@ export const spawnAgent = async (options: SpawnAgentOptions): Promise<SpawnAgent
   // dependency.
   const queue: AgentStreamEvent[] = [];
   let killedByUs = false;
+  let sawErrorEvent = false;
   let streamEnded = false;
   let streamError: Error | undefined;
   let wakeup: (() => void) | undefined;
@@ -781,7 +830,10 @@ export const spawnAgent = async (options: SpawnAgentOptions): Promise<SpawnAgent
     },
   );
 
-  if (proc.stdin) {
+  const live = liveInput && proc.stdin ? new ClaudeCodeLiveInput(proc.stdin) : undefined;
+  if (live) {
+    live.send(inputPlan.stdin);
+  } else if (proc.stdin) {
     proc.stdin.write(inputPlan.stdin, () => {
       proc.stdin?.end();
     });
@@ -802,6 +854,7 @@ export const spawnAgent = async (options: SpawnAgentOptions): Promise<SpawnAgent
     pipelineQueue = pipelineQueue.then(async () => {
       try {
         const events = await pipeline.push(chunk);
+        sawErrorEvent ||= events.some((event) => event.type === 'error');
         for (const event of events) queue.push(event);
         wake();
       } catch (err) {
@@ -816,10 +869,23 @@ export const spawnAgent = async (options: SpawnAgentOptions): Promise<SpawnAgent
     pipelineQueue = pipelineQueue.then(async () => {
       try {
         const events = await pipeline.flush();
+        live?.finish();
+        const { code, signal } = await exit;
+        if (code === 0 && !killedByUs) events.push(...pipeline.validateCompletion());
+        sawErrorEvent ||= events.some((event) => event.type === 'error');
         for (const event of events) queue.push(event);
-        const { code } = await exit;
-        if (code === 0 && !killedByUs) {
-          for (const event of pipeline.validateCompletion()) queue.push(event);
+        // Only a clean exit after a finished turn ends the run here: a crash
+        // after a result is a failure, not a completion. Print mode exits 1
+        // when its last turn was an error result, which an interrupt is.
+        const lastTurn = live?.lastTurn;
+        const cleanExit =
+          code === 0 || (lastTurn?.aborted === true && code === 1 && signal === null);
+        if (lastTurn && cleanExit && !killedByUs && !sawErrorEvent) {
+          const end = lastTurn.aborted
+            ? { kind: 'aborted', reason: 'interrupted', terminalReason: lastTurn.terminalReason }
+            : { reason: 'complete' };
+          for (const event of pipeline.completeRuntime({ ...end, transport: 'cli-live' }))
+            queue.push(event);
         }
         // Kimi Code reports usage only via its on-disk session wire log, so
         // it can only be collected now that the process has exited. The hook
@@ -847,6 +913,7 @@ export const spawnAgent = async (options: SpawnAgentOptions): Promise<SpawnAgent
         // raw dump is diagnostic-only; never let it disrupt the run
       }
     }
+    live?.observe(chunk);
     enqueuePush(chunk);
   });
   stdout.on('end', enqueueFlush);
@@ -883,8 +950,17 @@ export const spawnAgent = async (options: SpawnAgentOptions): Promise<SpawnAgent
   return {
     events,
     exit,
+    ...(live && {
+      interruptTurn: () => live.interrupt(),
+      sendUserMessage: async (prompt: AgentPromptInput, sendOptions?: { uuid?: string }) => {
+        if (!live.isOpen) return false;
+        const plan = await buildAgentInput('claude-code', prompt, options.inputOptions);
+        return live.send(plan.stdin, sendOptions?.uuid);
+      },
+    }),
     kill: (signal: NodeJS.Signals = 'SIGINT') => {
       killedByUs = true;
+      live?.close();
       killProcessTree(proc, signal, detached);
     },
     pid: proc.pid,

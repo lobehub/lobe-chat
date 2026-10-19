@@ -1,0 +1,137 @@
+import type { Chat } from 'chat';
+
+import type { LobeChatDatabase } from '@/database/type';
+
+import type { AgentBridgeService } from '../AgentBridgeService';
+import type {
+  BotReactionMode,
+  BotReplyLocale,
+  DmSettings,
+  PlatformClient,
+  WatchKeywordEntry,
+} from '../platforms';
+
+export interface ResolvedAgentInfo {
+  agentId: string;
+  userId: string;
+  workspaceId?: string;
+}
+
+export interface RegisteredBot {
+  /** Chat SDK adapters keyed by platform id, as passed to the `Chat` config. */
+  adapters: Record<string, any>;
+  agentInfo: ResolvedAgentInfo;
+  chatBot: Chat<any>;
+  client: PlatformClient;
+}
+
+/** Context passed to every command handler — a minimal surface shared by both
+ *  native slash-command events and text-based message events. */
+export interface CommandContext {
+  /** Text after the command name (e.g. "/new foo" → "foo"). */
+  args: string;
+  /** Platform user ID of the invoking user. Optional because the source
+   *  event may not carry one (best-effort), but commands that gate on
+   *  identity (e.g. `/approve` requires the owner) treat its absence as
+   *  failure. */
+  authorUserId?: string;
+  /** Display name of the invoking user. Optional because some platforms
+   *  surface only the ID, not a friendly label. */
+  authorUserName?: string;
+  /** Read the conversation's persisted state (topicId / toolMode / …).
+   *  Wired to `thread.state` on text dispatch and `channel.state` on native
+   *  slash dispatch — the same store `setState` writes to on each path. */
+  getState: () => Promise<Record<string, any> | null>;
+  post: (text: string) => Promise<any>;
+  /**
+   * Post a reply visible only to the invoker.
+   *
+   * Set only on native-slash paths (Slack / Discord) where chat-sdk knows
+   * the interaction context — Slack uses native ephemeral, Discord uses an
+   * ephemeral interaction response, both fall back to a DM if needed
+   * (`fallbackToDM: true`). Undefined on text-based platforms (Telegram,
+   * Feishu) — handlers should fall back to `post` there since those
+   * platforms have no per-user ephemeral primitive.
+   *
+   * Used by `/feedback` so the user's feedback text and the bot's
+   * confirmation don't leak into the public channel; other commands keep
+   * using `post` to preserve the existing channel-visible behaviour
+   * (e.g. `/new` resetting is useful for everyone to see).
+   */
+  postEphemeral?: (text: string) => Promise<any>;
+  /** Locale to use for any system-generated reply text. Plumbed in by the
+   *  caller — text-based commands derive it per-message via the platform's
+   *  `extractAuthorLocale`, native slash commands fall back to the platform
+   *  default since their event shape doesn't always carry user locale. */
+  replyLocale: BotReplyLocale;
+  setState: (state: Record<string, any>, opts?: { replace?: boolean }) => Promise<any>;
+  threadId: string;
+}
+
+/** A single bot command definition.
+ *  Add new entries to `buildCommands()` to register additional commands. */
+export interface BotCommand {
+  /**
+   * Skip the allowFrom / DM-policy / group-policy gate for this command.
+   * Reserved for commands with no side effects that only reveal the
+   * caller's own data (e.g. `/whoami`), so an operator who hasn't filled in
+   * `settings.userId` yet can still discover it under a `pairing` /
+   * `allowlist` / `disabled` DM policy that would otherwise lock them out.
+   */
+  bypassGate?: boolean;
+  description: string;
+  handler: (ctx: CommandContext) => Promise<void>;
+  name: string;
+  /**
+   * Native slash-command argument schema for platforms that require
+   * arguments to be declared up-front (Discord, Slack). Without this,
+   * Discord registers the command as zero-arg — clicking it from the
+   * slash menu fires the handler with `ctx.args` empty even when the
+   * user expected to pass a value. Adapters flatten option values back
+   * into `event.text`, so the handler still reads `ctx.args` as before.
+   *
+   * Text-based platforms (Telegram / Feishu) ignore this and parse args
+   * from the trailing message text via the dispatch regex.
+   */
+  options?: Array<{
+    description: string;
+    name: string;
+    required?: boolean;
+  }>;
+}
+
+/**
+ * Access gate shared by the message handlers and the command dispatchers:
+ * global `allowFrom`, Guest / group / DM policy and the paid-feature check.
+ * Returns true when the inbound may proceed; on rejection the gate has
+ * already posted the appropriate notice in the thread.
+ */
+export type BotAccessGate = (
+  thread: { id: string; isDM?: boolean; post: (t: string) => Promise<unknown> },
+  author: { userId?: string; userName?: string },
+  replyLocale: BotReplyLocale,
+  caller: string,
+) => Promise<boolean>;
+
+/** Per-bot values `registerHandlers` hands to the DM / keyword catch-all. */
+export interface BotHandlerContext {
+  agentId: string;
+  applicationId: string;
+  bridge: AgentBridgeService;
+  charLimit?: number;
+  client: PlatformClient;
+  commands: BotCommand[];
+  detectReplyLocale: (message: { author?: unknown }) => BotReplyLocale;
+  displayToolCalls: boolean;
+  dmSettings: DmSettings;
+  isMessageMonitoringAllowed: (caller: string, threadId: string) => Promise<boolean>;
+  operatorUserId?: string;
+  passGatesOrNotify: BotAccessGate;
+  platform: string;
+  reactionMode: BotReactionMode;
+  serverDB: LobeChatDatabase;
+  userId: string;
+  watchKeywordEntries: WatchKeywordEntry[];
+  watchKeywords: ReadonlyArray<string>;
+  workspaceId?: string;
+}

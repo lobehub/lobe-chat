@@ -3,11 +3,12 @@ import type { LoaderFunctionArgs } from 'react-router';
 
 import { getSidebarTopicListParams } from '@/hooks/chatTopicListQuery';
 import { PRE_PAINT_HYDRATE_TIMEOUT, settleWithin } from '@/libs/replica/prePaint';
-import { readPersistedTranscript } from '@/services/message/replica';
 import { useAgentStore } from '@/store/agent';
 import { builtinAgentSelectors } from '@/store/agent/selectors';
 import { useChatStore } from '@/store/chat';
 import { messageMapKey } from '@/store/chat/utils/messageMapKey';
+import { useDeviceStore } from '@/store/device';
+import { useVerifyStore } from '@/store/verify';
 
 const builtinAgentSlugs = new Set<string>(Object.values(BUILTIN_AGENT_SLUGS));
 
@@ -47,7 +48,7 @@ export const preHydrateTopicListForRoute = async (routeAgentId?: string): Promis
 /**
  * Seed the persisted transcript of a route's topic into the chat store.
  *
- * The conversation is hosted on the chat store's bucket, so rows landing there
+ * The conversation renders the chat store's bucket, so rows landing there
  * before the route commits reach the Conversation as its first-frame messages:
  * a topic opened before paints from local data and only revalidates in the
  * background, instead of painting a skeleton until the network answers.
@@ -61,29 +62,49 @@ export const preHydrateMessagesForRoute = async (
 
   const context = { agentId, scope: 'main' as const, topicId };
   const seed = async () => {
-    const transcript = await readPersistedTranscript(context);
-    if (!transcript?.items.length) return;
+    await useChatStore.getState().preHydrateMessages(context);
 
-    const chat = useChatStore.getState();
-    // Rows already in memory (this session's, or streamed) are newer.
-    if (chat.dbMessagesMap[messageMapKey(context)]) return;
-    // `source: 'fetch'`: a stored server snapshot, not a local edit — it must
-    // not be written through as if it were fresh.
-    chat.replaceMessages(transcript.items, {
-      action: 'preHydrateMessages',
-      context,
-      source: 'fetch',
-    });
+    // Verify cards render from their own replica: seed the cards of the seeded
+    // transcript before the route commits, so a settled card paints in the same
+    // frame as its message instead of after its own mount-time storage read.
+    const messages = useChatStore.getState().dbMessagesMap[messageMapKey(context)] ?? [];
+    const verifyOperationIds = messages.flatMap((message) =>
+      message.role === 'verify' && message.metadata?.verifyOperationId
+        ? [message.metadata.verifyOperationId]
+        : [],
+    );
+    await useVerifyStore.getState().preHydrateVerifyRuns(verifyOperationIds);
   };
 
   await settleWithin(seed(), PRE_PAINT_HYDRATE_TIMEOUT);
 };
 
+/**
+ * Seed the persisted device list, so the input bar names the bound device and
+ * resolves its cwd on the first frame instead of after the mount-time hydrate.
+ */
+export const preHydrateDeviceListForRoute = (): Promise<void> =>
+  settleWithin(useDeviceStore.getState().preHydrateDeviceList(), PRE_PAINT_HYDRATE_TIMEOUT);
+
 /** Loader for the agent chat routes (`/agent/:aid`, `/agent/:aid/:topicId`). */
 export const agentChatTopicListLoader = async ({ params }: LoaderFunctionArgs): Promise<null> => {
+  /**
+   * A builtin slug (`inbox`, …) resolves to its id from `builtinAgentIdMap`, so
+   * the persisted builtin agent must be seeded before `resolveRouteAgentId` runs.
+   * The replica's storage read is the only place it can land pre-paint — the
+   * mount-time sync (and its hydrate) has not run yet.
+   */
+  if (params.aid && builtinAgentSlugs.has(params.aid)) {
+    await settleWithin(
+      useAgentStore.getState().preHydrateBuiltinAgent(params.aid),
+      PRE_PAINT_HYDRATE_TIMEOUT,
+    );
+  }
+
   await Promise.all([
     preHydrateTopicListForRoute(params.aid),
     preHydrateMessagesForRoute(params.aid, params.topicId),
+    preHydrateDeviceListForRoute(),
   ]);
 
   return null;

@@ -16,9 +16,8 @@ import {
   hasPendingInterventions,
   INTERVENTION_REFRESH_INTERVAL,
 } from '@/store/chat/utils/interventionSync';
-import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 import { useUserStore } from '@/store/user';
-import { authSelectors, settingsSelectors } from '@/store/user/selectors';
+import { authSelectors, labPreferSelectors, settingsSelectors } from '@/store/user/selectors';
 
 import WideScreenContainer from '../../WideScreenContainer';
 import SkeletonList from '../components/SkeletonList';
@@ -40,6 +39,7 @@ import { useInitialRevalidation } from './hooks/useInitialRevalidation';
 import { useMessageRefreshError } from './hooks/useMessageRefreshError';
 import { resolveMessageListFeedback } from './resolveMessageListFeedback';
 import { buildChatRows } from './utils/chatRows';
+import { hoistCompressedGroups } from './utils/compressedGroupOrder';
 import type { MessageDeepLink } from './utils/messageDeepLink';
 import { resolveMessageDeepLink } from './utils/messageDeepLink';
 import { resolveRefreshingRowId } from './utils/refreshingRow';
@@ -126,13 +126,11 @@ const ChatList = memo<ChatListProps>(
     messageDeepLink,
     showWelcome,
   }) => {
-    // Fetch messages (SWR key is null when skipFetch is true)
+    // The chat store owns the transcript; this view keeps its sync mounted.
     const context = useConversationStore((s) => s.context);
     const enableUserMemories = useUserStore(settingsSelectors.memoryEnabled);
-    const [skipFetch, useFetchMessages] = useConversationStore((s) => [
-      dataSelectors.skipFetch(s),
-      s.useFetchMessages,
-    ]);
+    const skipFetch = useConversationStore(dataSelectors.skipFetch);
+    const useFetchMessages = useChatStore((s) => s.useFetchMessages);
     const activeAgentId = useChatStore((s) => s.activeAgentId);
     // Pending cards still refresh during streaming; the data slice merges only
     // intervention changes so lagging DB snapshots cannot replace live text.
@@ -146,7 +144,7 @@ const ChatList = memo<ChatListProps>(
     const isCreatingTopic = useChatStore(
       (s) => !!context.topicId && s.creatingTopicIds.includes(context.topicId),
     );
-    const { enableAgentSelfIteration } = useServerConfigStore(featureFlagsSelectors);
+    const enableSelfLearning = useUserStore(labPreferSelectors.enableSelfLearning);
     const messagesSWR = useFetchMessages(context, {
       refreshInterval: hasPendingApproval ? INTERVENTION_REFRESH_INTERVAL : 0,
       revalidateOnFocus: hasPendingApproval || !isStreaming,
@@ -167,9 +165,16 @@ const ChatList = memo<ChatListProps>(
       isValidating: messagesSWR.isValidating,
     });
     const allDisplayMessages = useConversationStore(dataSelectors.displayMessages);
+    // A compression group summarises the history before the turn that triggered
+    // it, so it belongs above that turn's question rather than between the
+    // question and its answer.
+    const orderedMessages = useMemo(
+      () => hoistCompressedGroups(allDisplayMessages),
+      [allDisplayMessages],
+    );
     const displayMessages = useMemo(
-      () => (filterItem ? allDisplayMessages.filter(filterItem) : allDisplayMessages),
-      [allDisplayMessages, filterItem],
+      () => (filterItem ? orderedMessages.filter(filterItem) : orderedMessages),
+      [orderedMessages, filterItem],
     );
     const displayMessageIds = useMemo(() => displayMessages.map((m) => m.id), [displayMessages]);
     // Steered follow-up turns fold into the turn they interrupted. Custom item
@@ -194,7 +199,7 @@ const ChatList = memo<ChatListProps>(
     // anonymous, and agent-share visitors are not the owner these APIs scope to.
     const isSharePage = !!context.topicShareId || !!context.agentShareId;
     // TODO: Migrate Agent Signal receipts behind a dedicated user-visible receipt capability.
-    const canShowAgentSignalReceipts = enableAgentSelfIteration === true && !isSharePage;
+    const canShowAgentSignalReceipts = enableSelfLearning && !isSharePage;
     const { receiptsByAnchor } = useAgentSignalReceipts({
       agentId: canShowAgentSignalReceipts ? activeAgentId : undefined,
       displayMessages,

@@ -93,7 +93,15 @@ import {
   recordOpenAIResponsesResponse,
   resolveOpenAIResponseWithMetadata,
 } from './providerDiagnostics';
-import { parseStructuredToolArguments, StructuredOutputError } from './structuredOutput';
+import {
+  convertChatCompletionToolToResponseTool,
+  stripChatCompletionParameters,
+} from './responseTools';
+import {
+  parseStructuredOutputText,
+  parseStructuredToolArguments,
+  StructuredOutputError,
+} from './structuredOutput';
 
 export type { PollVideoStatusResult };
 export * from './createVideo';
@@ -1233,15 +1241,7 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
 
           const text = res.output_text;
           log('received structured output from Responses API, length: %d', text?.length || 0);
-          try {
-            const result = JSON.parse(text);
-            log('successfully parsed JSON output');
-            return result;
-          } catch (error) {
-            log('failed to parse JSON output: %O', error);
-            console.error('parse json error:', text);
-            return undefined;
-          }
+          return parseStructuredOutputText(text);
         }
 
         log('calling chat.completions.create for structured output');
@@ -1275,19 +1275,11 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
           await options?.onUsage?.(convertOpenAIUsage(res.usage, usagePayload));
         }
 
-        const text = res.choices[0].message.content!;
+        const text = res.choices?.[0]?.message?.content;
 
         log('received structured output from Chat Completions API, length: %d', text?.length || 0);
 
-        try {
-          const result = JSON.parse(text);
-          log('successfully parsed JSON output');
-          return result;
-        } catch (error) {
-          log('failed to parse JSON output: %O', error);
-          console.error('parse json error:', text);
-          return undefined;
-        }
+        return parseStructuredOutputText(text);
       } catch (error) {
         // Provider HTTP normalization must not hide the structured-output recovery signal.
         if (error instanceof StructuredOutputError) throw error;
@@ -1591,10 +1583,18 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
 
       const inputStartAt = Date.now();
 
-      const { messages, reasoning_effort, tools, reasoning, responseMode, max_tokens, ...res } =
-        responses?.handlePayload
-          ? (responses?.handlePayload(payload, this._options) as ChatStreamPayload)
-          : payload;
+      const {
+        messages,
+        reasoning_effort,
+        tools,
+        responsesTools,
+        reasoning,
+        responseMode,
+        max_tokens,
+        ...res
+      } = responses?.handlePayload
+        ? (responses?.handlePayload(payload, this._options) as ChatStreamPayload)
+        : payload;
       const requestModel =
         this.withMappedRequestModel({ model: res.model }, usageModel).model ?? usageModel;
       const reasoningSignatureScope = await this.getSignatureScope(
@@ -1602,12 +1602,6 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
         'reasoning',
         'responses',
       );
-
-      // remove penalty params and chat completion specific params
-      delete res.apiMode;
-      delete res.frequency_penalty;
-      delete res.presence_penalty;
-      delete res.preserveThinking;
 
       const input = await convertOpenAIResponseInputs(messages as any, {
         forceImageBase64: chatCompletion?.forceImageBase64,
@@ -1626,7 +1620,7 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
       );
 
       const postPayload = {
-        ...res,
+        ...stripChatCompletionParameters(res),
         ...(reasoning || reasoning_effort
           ? {
               reasoning: {
@@ -1639,7 +1633,7 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
         ...(max_tokens && { max_output_tokens: max_tokens }),
         store: false,
         stream: isStreaming || undefined,
-        tools: tools?.map((tool) => this.convertChatCompletionToolToResponseTool(tool)),
+        tools: responsesTools ?? tools?.map(convertChatCompletionToolToResponseTool),
         ...this.resolvePromptCacheKeyParams(
           res.model,
           options?.user,
@@ -1760,12 +1754,6 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
       );
     }
 
-    private convertChatCompletionToolToResponseTool = (
-      tool: ChatCompletionTool,
-    ): OpenAI.Responses.Tool => {
-      return { type: tool.type, ...tool.function } as any;
-    };
-
     private async generateObjectWithTools(
       payload: GenerateObjectPayload,
       options?: GenerateObjectOptions,
@@ -1821,7 +1809,7 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
             model,
             ...this.resolvePromptCacheKeyParams(model, options?.user),
             tool_choice: 'required',
-            tools: tools!.map((tool) => this.convertChatCompletionToolToResponseTool(tool)),
+            tools: tools!.map(convertChatCompletionToolToResponseTool),
             // Responses API replaced `user` with `safety_identifier`; some endpoints reject `user`
             safety_identifier: options?.user,
           } as any,

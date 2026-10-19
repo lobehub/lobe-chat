@@ -65,6 +65,14 @@ const HOME_GOAL_FETCH_LIMIT = 100;
  */
 const SERVER_ADVANCING_STATUSES = new Set<GoalStatus>(['planning', 'running', 'verifying']);
 
+/**
+ * Whether an open view must keep re-reading a goal in this status. A draft is
+ * arranged and usually started by its agent from the conversation, never from
+ * this view, so no local action would refresh its "Not started".
+ */
+const goalStatusPolled = (status: GoalStatus) =>
+  SERVER_ADVANCING_STATUSES.has(status) || status === 'draft';
+
 /** Kept coarse on purpose — this is liveness, not a progress bar. */
 const GOAL_GRAPH_POLL_INTERVAL = 5000;
 const PENDING_CLARIFICATIONS_POLL_INTERVAL = 30_000;
@@ -113,7 +121,7 @@ const goalAcceptanceUnsettled = (graph: GoalGraphSnapshot): boolean => {
  * for the graph snapshot itself.
  */
 const goalGraphShouldPoll = (graph: GoalGraphSnapshot): boolean =>
-  SERVER_ADVANCING_STATUSES.has(graph.goal.status) ||
+  goalStatusPolled(graph.goal.status) ||
   graph.report?.status === 'running' ||
   (graph.goal.status === 'achieved' && goalAcceptanceUnsettled(graph));
 
@@ -148,7 +156,7 @@ const topicGoalsRefreshInterval = (
   result: { goals: { goal: { status: GoalStatus } }[] } | undefined,
   generating?: boolean,
 ) =>
-  generating || result?.goals.some(({ goal }) => SERVER_ADVANCING_STATUSES.has(goal.status))
+  generating || result?.goals.some(({ goal }) => goalStatusPolled(goal.status))
     ? GOAL_GRAPH_POLL_INTERVAL
     : 0;
 
@@ -306,6 +314,11 @@ export class GoalActionImpl {
     await this.refreshGoalGraph(goalId);
   };
 
+  startGoal = async (goalId: string): Promise<void> => {
+    await goalService.start(goalId);
+    await this.refreshGoalGraph(goalId);
+  };
+
   setGoalBudget = async (
     goalId: string,
     budget: {
@@ -315,6 +328,42 @@ export class GoalActionImpl {
     },
   ): Promise<void> => {
     await goalService.setBudget({ id: goalId, ...budget });
+    await this.refreshGoalGraph(goalId);
+  };
+
+  /**
+   * The goal moves to the new agent's goal list, so both agents' lists re-read
+   * along with the page.
+   */
+  setGoalAgent = async (goalId: string, agentId: string): Promise<void> => {
+    await goalService.setAgent(goalId, agentId);
+    await Promise.all([
+      this.refreshGoalGraph(goalId),
+      revalidateReplica(goalListResource),
+      revalidateReplica(homeGoalListResource),
+    ]);
+  };
+
+  /** Unfinished Tasks move with the executor, so their rows on the page re-read too. */
+  setGoalTaskAgent = async (goalId: string, agentId: string | null): Promise<void> => {
+    await goalService.setTaskAgent(goalId, agentId);
+    await this.refreshGoalGraph(goalId);
+  };
+
+  setGoalModel = async (
+    goalId: string,
+    modelConfig: { model: string; provider: string } | null,
+  ): Promise<void> => {
+    await goalService.setModel(goalId, modelConfig);
+    await this.refreshGoalGraph(goalId);
+  };
+
+  /** Unfinished Tasks switch model with it, so their rows re-read too. */
+  setGoalTaskModel = async (
+    goalId: string,
+    modelConfig: { model: string; provider: string } | null,
+  ): Promise<void> => {
+    await goalService.setTaskModel(goalId, modelConfig);
     await this.refreshGoalGraph(goalId);
   };
 
@@ -328,15 +377,19 @@ export class GoalActionImpl {
    * own afterwards as its Work Tasks settle, so this is a nudge rather than the
    * loop the surface used to hold open.
    */
+  /** The goal's own planning-model provider, so the relay covers the model it plans on. */
+  #planningProvider = (goalId: string) =>
+    this.#get().goalGraphById[goalId]?.goal.config?.provider ?? undefined;
+
   advanceGoal = async (goalId: string): Promise<GoalTickResult> => {
-    const result = await goalService.advance(goalId);
+    const result = await goalService.advance(goalId, this.#planningProvider(goalId));
     await this.refreshGoalGraph(goalId);
     return result;
   };
 
   /** Exactly one coordinator step, for a caller that wants to inspect a single move. */
   tickGoal = async (goalId: string): Promise<GoalTickResult> => {
-    const result = await goalService.tick(goalId);
+    const result = await goalService.tick(goalId, this.#planningProvider(goalId));
     await this.refreshGoalGraph(goalId);
     return result;
   };
@@ -435,6 +488,16 @@ export class GoalActionImpl {
     // built from this client's snapshot would silently drop whatever a
     // concurrent editor or agent declared since the snapshot was read.
     await goalService.setMetricCriteria(goalId, [criterion], 'merge');
+    await this.refreshGoalGraph(goalId);
+    await this.refreshGoalMetricSeries(goalId);
+  };
+
+  /**
+   * Drop one clause so it no longer gates acceptance. Its observations stay in
+   * the series; the server reopens a goal this clause alone was parking.
+   */
+  removeGoalMetric = async (goalId: string, key: string): Promise<void> => {
+    await goalService.removeMetricCriteria(goalId, [key]);
     await this.refreshGoalGraph(goalId);
     await this.refreshGoalMetricSeries(goalId);
   };

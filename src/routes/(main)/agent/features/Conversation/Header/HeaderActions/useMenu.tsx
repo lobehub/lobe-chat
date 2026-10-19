@@ -1,8 +1,16 @@
 'use client';
 
-import type { DropdownItem } from '@lobehub/ui';
-import { Block, copyToClipboard, Flexbox, Icon } from '@lobehub/ui';
-import { confirmModal, type ModalInstance, Text, toast } from '@lobehub/ui/base-ui';
+import {
+  Block,
+  confirmModal,
+  copyToClipboard,
+  type DropdownItem,
+  Flexbox,
+  Icon,
+  type ModalInstance,
+  Text,
+  toast,
+} from '@lobehub/ui';
 import {
   Clock3Icon,
   Copy,
@@ -20,6 +28,7 @@ import { useTranslation } from 'react-i18next';
 import { useLocation, useParams } from 'react-router';
 
 import { useAuthorInfo } from '@/business/client/hooks/useAuthorInfo';
+import { useTopicBugReportMenuItem } from '@/business/client/hooks/useTopicBugReportMenuItem';
 import { openRenameModal } from '@/components/RenameModal';
 import { DOCUMENT_HISTORY_QUERY_LIST_LIMIT } from '@/const/documentHistory';
 import { isDesktop } from '@/const/version';
@@ -37,6 +46,8 @@ import { topicSelectors } from '@/store/chat/selectors';
 import { useDocumentStore } from '@/store/document';
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
+import { useUserStore } from '@/store/user';
+import { labPreferSelectors } from '@/store/user/selectors';
 
 interface TopicInfoHeaderProps {
   authorName: string;
@@ -76,7 +87,7 @@ export const useMenu = (): { menuHeader?: ReactNode; menuItems: () => DropdownIt
   ]);
   const openTopicInNewWindow = useGlobalStore((s) => s.openTopicInNewWindow);
 
-  const { agentId: activeAgentId, topicId: routeTopicId } = useAgentContext();
+  const { agentId: activeAgentId, threadId, topicId: routeTopicId } = useAgentContext();
   const activeTopic = useChatStore((s) =>
     routeTopicId ? topicSelectors.getTopicById(routeTopicId)(s) : undefined,
   );
@@ -185,6 +196,14 @@ export const useMenu = (): { menuHeader?: ReactNode; menuItems: () => DropdownIt
   const topicId = activeTopic?.id;
   const topicTitle = activeTopic?.title ?? '';
   const isFavorite = !!activeTopic?.favorite;
+
+  const enableTopicBugReport = useUserStore(labPreferSelectors.enableTopicBugReport);
+  const bugReportItem = useTopicBugReportMenuItem({
+    agentId: activeAgentId,
+    threadId: threadId ?? undefined,
+    topicId,
+  });
+
   const menuHeader = useMemo<ReactNode | undefined>(() => {
     if (!authorInfo?.fullName || !topicId) return undefined;
 
@@ -284,6 +303,7 @@ export const useMenu = (): { menuHeader?: ReactNode; menuItems: () => DropdownIt
             toast.success(t('actions.copySessionIdSuccess', { ns: 'topic' }));
           },
         },
+        ...(enableTopicBugReport && bugReportItem ? [bugReportItem] : []),
         { type: 'divider' as const },
       );
     }
@@ -335,6 +355,8 @@ export const useMenu = (): { menuHeader?: ReactNode; menuItems: () => DropdownIt
   }, [
     topicId,
     topicTitle,
+    bugReportItem,
+    enableTopicBugReport,
     isFavorite,
     activeAgentId,
     pathname,

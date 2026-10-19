@@ -9,12 +9,13 @@ import {
 import {
   type ChatTopicMetadata,
   type HeterogeneousReasoningEffort,
+  type HeterogeneousSpeedMode,
   type MessageMapScope,
   RequestTrigger,
   type UIChatMessage,
   type UpdateTopicMetadataInput,
 } from '@lobechat/types';
-import { toast } from '@lobehub/ui/base-ui';
+import { toast } from '@lobehub/ui';
 import isEqual from 'fast-deep-equal';
 import { t } from 'i18next';
 import type { AiModelReasoningConfig } from 'model-bank';
@@ -41,7 +42,6 @@ import { topicService } from '@/services/topic';
 import { getAiInfraStoreState } from '@/store/aiInfra';
 import { aiModelSelectors } from '@/store/aiInfra/slices/aiModel/selectors';
 import { type ChatStore } from '@/store/chat';
-import { evictMessageCache } from '@/store/chat/utils/evictMessageCache';
 import { snapshotAgentModel, snapshotAgentReasoning } from '@/store/chat/utils/snapshotAgentModel';
 import { topicMapKey, type TopicMapScope } from '@/store/chat/utils/topicMapKey';
 import {
@@ -423,6 +423,39 @@ export class ChatTopicActionImpl {
     await switchTopic(newTopicId);
   };
 
+  /**
+   * Fork the active topic from one of its messages: copy the conversation
+   * prefix (first message → `messageId`) into a separate new topic, then switch
+   * to it. The source topic keeps its full history untouched.
+   */
+  forkTopic = async (messageId: string): Promise<string | undefined> => {
+    const { activeTopicId, refreshTopic, switchTopic } = this.#get();
+    if (!activeTopicId) return;
+
+    const topic = topicSelectors.getTopicById(activeTopicId)(this.#get());
+
+    const loadingToast = toast.loading(t('forkLoading', { ns: 'topic' }));
+
+    try {
+      const newTopicId = await topicService.forkTopic({
+        id: activeTopicId,
+        messageId,
+        newTitle: t('forkTitle', { ns: 'topic', title: topic?.title ?? '' }),
+      });
+
+      await refreshTopic();
+      await switchTopic(newTopicId);
+      toast.success(t('forkSuccess', { ns: 'topic' }));
+
+      return newTopicId;
+    } catch (error) {
+      console.error('[forkTopic] Failed to fork topic:', error);
+      toast.error(t('forkFailed', { ns: 'topic' }));
+    } finally {
+      loadingToast.close();
+    }
+  };
+
   importTopic = async (data: string): Promise<string | undefined> => {
     const { activeAgentId, activeGroupId, refreshTopic, switchTopic } = this.#get();
 
@@ -643,12 +676,12 @@ export class ChatTopicActionImpl {
    * Model + pin land in one server write (`topic.updateTopicModel`) so a run or
    * a concurrent switch can never see the new model with the old model's pin.
    * Optimistically mirrors the server merge: `reasoningConfig` is replaced,
-   * `heteroEffort` only when given.
+   * `heteroEffort` and `heteroSpeed` only when given.
    */
   #writeTopicModelPin = async (
     id: string,
     value: {
-      metadata?: Pick<ChatTopicMetadata, 'heteroEffort' | 'reasoningConfig'>;
+      metadata?: Pick<ChatTopicMetadata, 'heteroEffort' | 'heteroSpeed' | 'reasoningConfig'>;
       model: string;
       provider: string;
     },
@@ -740,10 +773,10 @@ export class ChatTopicActionImpl {
   };
 
   /**
-   * Apply a heterogeneous (Claude Code / Codex) model + effort selection to one
-   * topic. When the selector pairs a model switch with an effort reset (the new
-   * model does not support the current effort) both land in the same write, so
-   * the topic never carries a model with an effort it cannot run.
+   * Apply a heterogeneous (Claude Code / Codex) model, effort and speed
+   * selection to one topic. When the selector pairs a model switch with an
+   * effort or speed reset (the new model does not support it) everything lands
+   * in the same write, so the topic never carries a model with a pin it cannot run.
    */
   updateTopicHeteroPin = async (
     id: string,
@@ -751,19 +784,30 @@ export class ChatTopicActionImpl {
       effort,
       model,
       provider,
-    }: { effort?: HeterogeneousReasoningEffort; model?: string; provider: string },
+      speed,
+    }: {
+      effort?: HeterogeneousReasoningEffort;
+      model?: string;
+      provider: string;
+      speed?: HeterogeneousSpeedMode;
+    },
   ): Promise<void> => {
-    if (model === undefined) {
-      if (effort !== undefined) await this.#get().updateTopicHeteroEffort(id, effort);
-      return;
-    }
-    /** Model resets and later effort selections must share one persistence order. */
+    const metadata: Pick<ChatTopicMetadata, 'heteroEffort' | 'heteroSpeed'> = {
+      ...(effort === undefined ? {} : { heteroEffort: effort }),
+      ...(speed === undefined ? {} : { heteroSpeed: speed }),
+    };
+    const hasMetadata = Object.keys(metadata).length > 0;
+    if (model === undefined && !hasMetadata) return;
+
+    /** Model resets and later effort/speed selections must share one persistence order. */
     await this.#enqueueTopicEffortWrite(id, () =>
-      this.#writeTopicModelPin(id, {
-        metadata: effort === undefined ? undefined : { heteroEffort: effort },
-        model,
-        provider,
-      }),
+      model === undefined
+        ? this.#writeTopicEffortPin(id, metadata)
+        : this.#writeTopicModelPin(id, {
+            metadata: hasMetadata ? metadata : undefined,
+            model,
+            provider,
+          }),
     );
   };
 
@@ -806,7 +850,7 @@ export class ChatTopicActionImpl {
    */
   #writeTopicEffortPin = async (
     id: string,
-    metadata: Pick<ChatTopicMetadata, 'heteroEffort' | 'reasoningConfig'>,
+    metadata: Pick<ChatTopicMetadata, 'heteroEffort' | 'heteroSpeed' | 'reasoningConfig'>,
   ): Promise<void> => {
     const { activeAgentId, activeGroupId } = this.#get();
     const containerKey =
@@ -1180,6 +1224,19 @@ export class ChatTopicActionImpl {
           }
         }),
       );
+
+      // Mirror sweep: a run the SERVER has already retired can still leave this
+      // tab holding a `running` local op — its terminal frame never landed (a
+      // lost socket, a hibernated DO buffer, or an intervention continuation
+      // dispatched on a new operation). Such a topic is idle on the server, so it
+      // never appears in the `statuses: ['running']` query above; derive the
+      // candidates from the local op map instead. Fire-and-forget: the sidebar
+      // should not wait on a per-topic server read.
+      void this.#get()
+        .settleAllUnbackedTopicRuns()
+        .catch((err) =>
+          console.error('[cleanupStaleRunningTopics] unbacked local run sweep failed:', err),
+        );
 
       const cleanedCount = cleanedResults.filter(Boolean).length;
 
@@ -1617,7 +1674,7 @@ export class ChatTopicActionImpl {
     this.#removeTopicDetails((topic) => topic.sessionId === activeAgentId);
     await refreshTopic();
     // drop every deleted topic's message cache (all belong to this agent)
-    void evictMessageCache((ctx) => ctx.agentId === activeAgentId);
+    void this.#get().evictConversationMessages((ctx) => ctx.agentId === activeAgentId);
 
     // switch to default topic
     switchTopic(null);
@@ -1635,7 +1692,7 @@ export class ChatTopicActionImpl {
     this.#removeTopicDetails(() => true);
     await refreshTopic();
     // drop every deleted topic's message cache (all belong to this group)
-    void evictMessageCache((ctx) => ctx.groupId === groupId);
+    void this.#get().evictConversationMessages((ctx) => ctx.groupId === groupId);
 
     // switch to default topic
     switchTopic(null);
@@ -1647,8 +1704,8 @@ export class ChatTopicActionImpl {
     await topicService.removeAllTopic();
     this.#removeTopicDetails(() => true);
     await refreshTopic();
-    // every topic is gone — wipe all cached message lists
-    void evictMessageCache(() => true);
+    // every topic is gone — wipe every persisted transcript
+    void this.#get().evictConversationMessages();
   };
 
   removeTopic = async (id: string, removeFiles?: boolean): Promise<void> => {
@@ -1661,7 +1718,7 @@ export class ChatTopicActionImpl {
     this.#get().internal_dispatchTopic({ type: 'deleteTopic', id }, 'removeTopic');
     await refreshTopic();
     // drop the deleted topic's message cache so it doesn't orphan in IndexedDB
-    void evictMessageCache((ctx) => ctx.topicId === id);
+    void this.#get().evictConversationMessages((ctx) => ctx.topicId === id);
 
     // switch back to default topic
     if (activeTopicId === id) switchTopic(null);
@@ -1682,7 +1739,7 @@ export class ChatTopicActionImpl {
     await refreshTopic();
     // drop the deleted topics' message caches
     const removed = new Set(topicIds);
-    void evictMessageCache((ctx) => !!ctx.topicId && removed.has(ctx.topicId));
+    void this.#get().evictConversationMessages((ctx) => !!ctx.topicId && removed.has(ctx.topicId));
 
     // Switch to default topic
     switchTopic(null);
@@ -1704,7 +1761,7 @@ export class ChatTopicActionImpl {
     // the moved topics' message cache is keyed by the old agent — drop it so the
     // next view under the target agent refetches instead of reading a stale key
     const moved = new Set(topicIds);
-    void evictMessageCache((ctx) => !!ctx.topicId && moved.has(ctx.topicId));
+    void this.#get().evictConversationMessages((ctx) => !!ctx.topicId && moved.has(ctx.topicId));
 
     // If the active topic was moved away, fall back to the default topic.
     if (activeTopicId && topicIds.includes(activeTopicId)) switchTopic(null);
@@ -1734,6 +1791,11 @@ export class ChatTopicActionImpl {
       this.#topicList.revalidate(containerKey),
       agentViewKey !== null && this.#topicAgentView.revalidate(agentViewKey),
     ]);
+  };
+
+  /** Revalidate one topic's by-id detail, e.g. after a dispatch wrote a new receipt. */
+  refreshTopicDetail = async (topicId: string): Promise<void> => {
+    await this.#topicDetail.revalidate(topicId);
   };
 
   internal_replaceTopicId = (params: {

@@ -53,7 +53,13 @@ export interface ReplicaPagingConfig<TItem, TCursor = any> {
 
 export interface ReplicaPageResult<TItem, TCursor> {
   items: TItem[];
-  /** Cursor mode: next page cursor; `null` = exhausted, `undefined` = unknown. */
+  /**
+   * Cursor mode: next page cursor; `null` = exhausted, `undefined` = unknown.
+   * Offset mode: the server's own verdict — `null` = exhausted, any other
+   * value = more pages (the engine still advances by page index); `undefined`
+   * falls back to `total` / a full page. A server that filters rows after
+   * paging returns short pages that are not the end, so it must report this.
+   */
   nextCursor?: TCursor | null;
   total?: number;
 }
@@ -132,6 +138,17 @@ const deriveHasMore = <TItem, TCursor>(
 ) => (data.total !== undefined ? data.total > serverCount : data.nextCursor !== null);
 
 const offsetNext = (more: boolean, nextIndex: number) => (more ? nextIndex : null);
+
+/** Offset mode: whether a page past the loaded ones exists. */
+const offsetHasMore = <TItem, TCursor>(
+  page: ReplicaPageResult<TItem, TCursor>,
+  total: number | undefined,
+  serverCount: number,
+  pageSize: number,
+) => {
+  if (page.nextCursor !== undefined) return page.nextCursor !== null;
+  return total !== undefined ? total > serverCount : page.items.length >= pageSize;
+};
 
 /**
  * Cursor to request the next page with; `null` → exhausted, `undefined` →
@@ -216,7 +233,7 @@ export const applyHeadPage = <TItem, TCursor>(
     const nextCursor =
       config.mode === 'offset'
         ? (offsetNext(
-            total !== undefined ? total > fresh.length : fresh.length >= options.pageSize,
+            offsetHasMore(page, total, fresh.length, options.pageSize),
             1,
           ) as TCursor | null)
         : page.nextCursor;
@@ -275,9 +292,16 @@ export const applyHeadPage = <TItem, TCursor>(
   }
 
   const headNext = config.mode === 'cursor' ? page.nextCursor : current.pages?.[0]?.next;
-  const pages = current.pages?.length
-    ? [{ count: fresh.length, next: headNext }, ...current.pages.slice(1)]
-    : [{ count: fresh.length, next: headNext }];
+  // A larger head absorbs rows the older pages were counted with; shed the
+  // overlap from the pages nearest the head so later trims cut at the boundary.
+  let overlap =
+    (current.pages ?? []).slice(1).reduce((sum, info) => sum + info.count, 0) - rest.length;
+  const olderPages = (current.pages ?? []).slice(1).map((info) => {
+    const shed = Math.min(info.count, Math.max(0, overlap));
+    overlap -= shed;
+    return shed ? { ...info, count: info.count - shed } : info;
+  });
+  const pages = [{ count: fresh.length, next: headNext }, ...olderPages];
   const data = {
     anchorId: anchorId ?? current.anchorId,
     currentPage: current.currentPage,
@@ -311,7 +335,7 @@ export const applyNextPage = <TItem, TCursor>(
 
   let next: TCursor | null | undefined;
   if (config.mode === 'offset') {
-    const more = total !== undefined ? total > serverCount : page.items.length >= current.pageSize;
+    const more = offsetHasMore(page, total, serverCount, current.pageSize);
     next = offsetNext(more, current.currentPage + 2) as TCursor | null;
   } else {
     // Only an empty page marks the end when the server reports no cursor.
@@ -499,7 +523,12 @@ export const toPersistedPage = <TItem, TCursor, TData extends ReplicaPagedData<T
   const lastKept = pages[keptPages - 1];
   const nextCursor =
     config.mode === 'offset'
-      ? ((count < (data.total ?? server.length) ? keptPages : null) as TCursor | null)
+      ? ((count < (data.total ?? server.length) ||
+        // Every loaded row survives: the server's own verdict on the page past
+        // them still holds (a filtered short page is not necessarily the end).
+        (count === server.length && data.total === undefined && data.nextCursor != null)
+          ? keptPages
+          : null) as TCursor | null)
       : aligned
         ? lastKept?.next
         : undefined;
