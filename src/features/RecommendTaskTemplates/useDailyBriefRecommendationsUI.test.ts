@@ -737,4 +737,51 @@ describe('useDailyBriefRecommendationsUI', () => {
     });
     expect(modes.every((mode) => mode === 'cards')).toBe(true);
   });
+
+  // Regression: cards painted from the synchronous peek had no store entry
+  // until hydration settled, so a dismiss / create in that window was dropped.
+  it('applies a dismiss made before hydration settles', async () => {
+    const other = { ...template, id: 102, title: 'Other' };
+    await seed([template, other]);
+    vi.mocked(taskTemplateService.listDailyRecommend).mockImplementation(pending);
+    vi.mocked(taskTemplateService.dismiss).mockResolvedValue(undefined as any);
+
+    const { result } = renderHook(() => useDailyBriefRecommendationsUI(), { wrapper });
+    const first = result.current;
+    if (first.mode !== 'cards') throw new Error('expected cards on the first render');
+
+    await act(async () => {
+      await first.onDismiss(template.id);
+    });
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve, 20));
+    });
+
+    expect(taskTemplateService.dismiss).toHaveBeenCalledWith(template.id);
+    expect(result.current).toMatchObject({ mode: 'cards', templates: [other] });
+    await waitFor(async () => {
+      const row = await dailyRecommendResource.storage!.get({
+        queryKey: dailyRecommendResource.storageKey(params()),
+        scope,
+      });
+      expect(row?.data).toEqual([other]);
+    });
+  });
+
+  it('applies a create made before hydration settles', async () => {
+    const other = { ...template, id: 102, title: 'Other' };
+    await seed([template, other]);
+    vi.mocked(taskTemplateService.listDailyRecommend).mockImplementation(pending);
+
+    const { result } = renderHook(() => useDailyBriefRecommendationsUI(), { wrapper });
+    const first = result.current;
+    if (first.mode !== 'cards') throw new Error('expected cards on the first render');
+
+    act(() => first.onCreated(template.id));
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve, 20));
+    });
+
+    expect(result.current).toMatchObject({ mode: 'cards', templates: [other] });
+  });
 });

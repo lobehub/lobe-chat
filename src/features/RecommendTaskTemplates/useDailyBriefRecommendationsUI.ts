@@ -218,6 +218,19 @@ export function useDailyBriefRecommendationsUI(
   // Card actions target the entry whose batch is on screen.
   const shownKey = entry || peeked ? key : retained ? retainedKey : undefined;
 
+  // Cards painted from the peek have no store entry yet: seed it (memory only,
+  // the row is already persisted) so an action in that window lands. A later
+  // hydrate only fills an empty entry, so it never overwrites the result.
+  const peekedRef = useRef(peeked);
+  peekedRef.current = peeked;
+  const seedPeeked = useCallback((target: string) => {
+    const batch = peekedRef.current;
+    if (!batch || useTaskTemplateRecommendationStore.getState().dailyRecommendMap[target]) return;
+    dailyRecommendReplica.update(target, () => normalizeTaskTemplateRecommendations(batch), {
+      persist: false,
+    });
+  }, []);
+
   const handleRefresh = useCallback(() => {
     setRefreshSeed(nextRefreshSeed());
   }, [setRefreshSeed]);
@@ -225,19 +238,21 @@ export function useDailyBriefRecommendationsUI(
   const handleCreated = useCallback(
     (templateId: number) => {
       if (!shownKey) return;
+      seedPeeked(shownKey);
       dailyRecommendReplica.update(shownKey, (current) =>
         current
           ? normalizeTaskTemplateRecommendations(current).filter((tmpl) => tmpl.id !== templateId)
           : current,
       );
     },
-    [shownKey],
+    [seedPeeked, shownKey],
   );
 
   const handleDismiss = useCallback(
     async (templateId: number) => {
-      if (!shownKey || !useTaskTemplateRecommendationStore.getState().dailyRecommendMap[shownKey])
-        return;
+      if (!shownKey) return;
+      seedPeeked(shownKey);
+      if (!useTaskTemplateRecommendationStore.getState().dailyRecommendMap[shownKey]) return;
       try {
         // Rolls the card back if the server refuses.
         await dailyRecommendReplica.optimistic(
@@ -252,7 +267,7 @@ export function useDailyBriefRecommendationsUI(
         toast.error(t('taskTemplate.action.dismiss.error'));
       }
     },
-    [shownKey, t],
+    [seedPeeked, shownKey, t],
   );
 
   const templates = useMemo(() => normalizeTaskTemplateRecommendations(shown), [shown]);
