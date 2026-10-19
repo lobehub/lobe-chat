@@ -21,7 +21,21 @@ export interface Translator<N extends string> {
 - `Namespaced<N, F>`: `F & NamespaceMarker<N>`.
 - `NamespacedTranslate<N, Result = string, Options = Record<string, unknown>>`: a branded `(key, options?) => Result`.
 
-Calls whose result type includes `undefined` (such as `find`) are optional: their keys need not exist in the default catalog. Passing a branded translator, or an object whose `t`/`find` fields are branded, into a type without the marker fails with `namespace erased`. `t.call`, `t.apply` and `t.bind` are rejected.
+### i18next
+
+i18next already brands its `TFunction` with `$TFunctionBrand` once `CustomTypeOptions.resources` is declared; make sure that declaration file is part of the program, or the brand resolves to `never`. Pass `i18nextPreset` as the extract options:
+
+```ts
+import { extractI18n, i18nextPreset } from '@lobechat/i18n-extractor';
+
+await extractI18n({ ...config, extract: i18nextPreset });
+```
+
+It sets `marker: '$TFunctionBrand'`, `translatorFields: ['t']`, `namespaceOption: 'ns'` (`t(key, { ns: 'topic' })` records `topic`; an omittable option also keeps the branded namespace) and `namespaceSeparator: ':'` (`t('error:title')` records `error` / `title`). i18next brands only the first namespace of `useTranslation(['a', 'b'])`, so reach the others through the option or the prefix.
+
+### Calls
+
+Calls whose result type includes `undefined` (such as `find`) are optional: their keys need not exist in the default catalog. Passing a branded translator, or an object whose `t`/`find` fields are branded, into a type without the marker fails with `namespace erased`. `t.call`, `t.apply` and `t.bind` are rejected. A translator listed in an `unknown`-typed array, such as a hook dependency list, is a reference and not an erasure.
 
 ## Key patterns
 
@@ -29,6 +43,8 @@ Calls whose result type includes `undefined` (such as `find`) are optional: thei
 | --------------------------------------------------------------------- | ---------------------------------------------------- |
 | `'title'`, `const key = 'title'`                                      | exactly `title`                                      |
 | `key: 'a' \| 'b'`, `` key: `level.${'low' \| 'high'}` ``              | each member                                          |
+| `` `status.${reason}` `` with `reason: 'safety' \| undefined`         | `status.safety` and `status.undefined`               |
+| `key as any`, `key!`, `(key)`, `key satisfies K`                      | whatever the inner expression retains                |
 | `` `status.${code}` `` with `code: string` (or any non-literal value) | every key matching `status\..*`                      |
 | `key: string`                                                         | the whole namespace, only with a `dynamicKeys` entry |
 | `key: any`, `unknown`, objects                                        | rejected                                             |
@@ -53,17 +69,17 @@ const { resources, report } = await extractI18n({
 });
 ```
 
-| Option        | Meaning                                                                                                                                                                         |
-| ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `root`        | Project root; `entries`, `tsconfig`, `dynamicKeys[].file` and report paths are relative to it.                                                                                  |
-| `entries`     | Files the graph starts from. `listSourceFiles(dir)` helps discover them.                                                                                                        |
-| `catalog`     | `defaultLanguage`, `languages` (array or sync/async function) and `load(language, namespace)` returning a flat `Record<string, string>`. Return `{}` for a missing translation. |
-| `dynamicKeys` | Allowlist for unbounded keys, matched by file and namespace. `reason` is required; a missing file fails.                                                                        |
-| `tsconfig`    | Defaults to `tsconfig.json`. `compilerOptions` overrides the parsed options.                                                                                                    |
-| `workspace`   | `{ packagesDirs }` (default `['packages']`) for `addWorkspacePaths`, or `false` to disable.                                                                                     |
-| `graph`       | `forbiddenImports`, `isBoundary`, `skip`, `mustResolve`; see `traceImportGraph`.                                                                                                |
-| `extract`     | `marker` (default `__i18nNamespace`), `translatorFields` (default `['t', 'find']`), `skip` for files that implement the translator itself.                                      |
-| `allowEmpty`  | Allow a result with no translation calls.                                                                                                                                       |
+| Option        | Meaning                                                                                                                                                                                                                      |
+| ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `root`        | Project root; `entries`, `tsconfig`, `dynamicKeys[].file` and report paths are relative to it.                                                                                                                               |
+| `entries`     | Files the graph starts from. `listSourceFiles(dir)` helps discover them.                                                                                                                                                     |
+| `catalog`     | `defaultLanguage`, `languages` (array or sync/async function) and `load(language, namespace)` returning a flat `Record<string, string>`. Return `{}` for a missing translation.                                              |
+| `dynamicKeys` | Allowlist for unbounded keys, matched by file and namespace. `reason` is required; a missing file fails.                                                                                                                     |
+| `tsconfig`    | Defaults to `tsconfig.json`. `compilerOptions` overrides the parsed options.                                                                                                                                                 |
+| `workspace`   | `{ packagesDirs }` (default `['packages']`) for `addWorkspacePaths`, or `false` to disable.                                                                                                                                  |
+| `graph`       | `forbiddenImports`, `isBoundary`, `skip`, `mustResolve`; see `traceImportGraph`.                                                                                                                                             |
+| `extract`     | `marker` (default `__i18nNamespace`), `translatorFields` (default `['t', 'find']`), `namespaceOption`, `namespaceSeparator`, `skip` for files that implement the translator itself. `i18nextPreset` fills these for i18next. |
+| `allowEmpty`  | Allow a result with no translation calls.                                                                                                                                                                                    |
 
 Every non-optional pattern must match at least one default-language key. `resources` has the shape `{ [language]: { [namespace]: { [key]: value } } }` for the default language plus every listed language. `report` records the traced file count, boundaries, import edges, call sites with their patterns, and per-namespace key counts, with paths relative to `root`.
 
