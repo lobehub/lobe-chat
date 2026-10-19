@@ -471,9 +471,8 @@ describe('ToolExecutionService', () => {
     });
   });
 
-  // Device-only MCP servers (stdio / localhost / LAN) can't be called from the
-  // cloud — with a device gateway configured, those calls must tunnel to the
-  // user's device instead of failing with a spawn/fetch error (#16533).
+  // Stdio always runs on a desktop device. Private HTTP uses the device when
+  // a gateway is configured; public HTTP can run directly on the server.
   describe('device-only MCP tunneling', () => {
     const makeService = (mcpService: any = { callTool: vi.fn() }) =>
       new ToolExecutionService({
@@ -719,16 +718,17 @@ describe('ToolExecutionService', () => {
       );
     });
 
-    it('keeps public HTTP MCP calls in-process on the server', async () => {
+    it.each([
+      [true, 'https://mcp.example.com'],
+      [false, 'http://192.168.1.10:8080/mcp'],
+    ])('keeps HTTP MCP calls on the server (gateway: %s, URL: %s)', async (configured, url) => {
+      (deviceGateway as any).isConfigured = configured;
       const callTool = vi.fn().mockResolvedValue({ ok: true });
       const service = makeService({ callTool });
 
       await service.executeTool(
         mcpPayload,
-        contextWith(
-          { name: 'my-mcp', type: 'http', url: 'https://mcp.example.com' },
-          { activeDeviceId: 'device-1' },
-        ),
+        contextWith({ name: 'my-mcp', type: 'http', url }, { activeDeviceId: 'device-1' }),
       );
 
       expect(callTool).toHaveBeenCalledTimes(1);
@@ -823,12 +823,12 @@ describe('ToolExecutionService', () => {
       });
     });
 
-    it('runs stdio in-process when no gateway is configured (standalone Electron)', async () => {
+    it('rejects stdio when no gateway is configured instead of executing on the server', async () => {
       (deviceGateway as any).isConfigured = false;
       const callTool = vi.fn().mockResolvedValue({ ok: true });
       const service = makeService({ callTool });
 
-      await service.executeTool(
+      const result = await service.executeTool(
         mcpPayload,
         contextWith(
           { args: [], command: 'npx', name: 'my-mcp', type: 'stdio' },
@@ -837,7 +837,9 @@ describe('ToolExecutionService', () => {
       );
 
       expect(deviceGateway.executeMcpCall).not.toHaveBeenCalled();
-      expect(callTool).toHaveBeenCalledTimes(1);
+      expect(result.success).toBe(false);
+      expect(result.error).toMatchObject({ code: 'MCP_DEVICE_UNAVAILABLE' });
+      expect(callTool).not.toHaveBeenCalled();
     });
   });
 });
