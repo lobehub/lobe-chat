@@ -546,65 +546,6 @@ export class SessionModel {
       .returning();
   };
 
-  updateConfig = async (sessionId: string, data: PartialDeep<AgentItem> | undefined | null) => {
-    if (!data || Object.keys(data).length === 0) return;
-
-    const session = await this.findByIdOrSlug(sessionId);
-    if (!session) return;
-
-    if (!session.agent) {
-      throw new Error(
-        'this session is not assign with agent, please contact with admin to fix this issue.',
-      );
-    }
-
-    // First process the params field: undefined means delete, null means disable flag
-    const existingParams = session.agent.params ?? {};
-    const updatedParams: Record<string, any> = { ...existingParams };
-
-    if (data.params) {
-      const incomingParams = data.params as Record<string, any>;
-      Object.keys(incomingParams).forEach((key) => {
-        const incomingValue = incomingParams[key];
-
-        // undefined means explicitly delete this field
-        if (incomingValue === undefined) {
-          delete updatedParams[key];
-          return;
-        }
-
-        // All other values (including null) are directly overwritten, null means disable this param on the frontend
-        updatedParams[key] = incomingValue;
-      });
-    }
-
-    // Build data to be merged, excluding params (processed separately)
-
-    const { params: _params, ...restData } = data;
-    const mergedValue = merge(session.agent, restData);
-
-    // Apply the processed parameters
-    mergedValue.params = Object.keys(updatedParams).length > 0 ? updatedParams : undefined;
-
-    // Final cleanup: ensure no undefined or null values enter the database
-    if (mergedValue.params) {
-      const params = mergedValue.params as Record<string, any>;
-      Object.keys(params).forEach((key) => {
-        if (params[key] === undefined) {
-          delete params[key];
-        }
-      });
-      if (Object.keys(params).length === 0) {
-        mergedValue.params = undefined;
-      }
-    }
-
-    return this.db
-      .update(agents)
-      .set(mergedValue)
-      .where(and(eq(agents.id, session.agent.id), this.agentsOwnership()));
-  };
-
   // **************** Helper *************** //
 
   private genId = () => idGenerator('sessions');

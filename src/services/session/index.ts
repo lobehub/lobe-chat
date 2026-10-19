@@ -1,8 +1,5 @@
-import { type PartialDeep } from 'type-fest';
-
 import { lambdaClient } from '@/libs/trpc/client';
-import { type LobeAgentChatConfig, type LobeAgentConfig } from '@/types/agent';
-import { type MetaData } from '@/types/meta';
+import { type LobeAgentConfig } from '@/types/agent';
 import {
   type ChatSessionList,
   type LobeAgentSession,
@@ -49,32 +46,6 @@ export class SessionService {
   getSessionConfig = async (id: string): Promise<LobeAgentConfig> => {
     // @ts-ignore
     return lambdaClient.agent.getAgentConfig.query({ sessionId: id });
-  };
-
-  updateSessionConfig = (
-    id: string,
-    config: PartialDeep<LobeAgentConfig>,
-    signal?: AbortSignal,
-  ) => {
-    return lambdaClient.session.updateSessionConfig.mutate(
-      { id, value: config },
-      {
-        context: { showNotification: false },
-        signal,
-      },
-    );
-  };
-
-  updateSessionMeta = (id: string, meta: Partial<MetaData>, signal?: AbortSignal) => {
-    return lambdaClient.session.updateSessionConfig.mutate({ id, value: meta }, { signal });
-  };
-
-  updateSessionChatConfig = (
-    id: string,
-    value: Partial<LobeAgentChatConfig>,
-    signal?: AbortSignal,
-  ) => {
-    return lambdaClient.session.updateSessionChatConfig.mutate({ id, value }, { signal });
   };
 
   removeSession = (id: string) => {

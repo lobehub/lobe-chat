@@ -10,12 +10,9 @@ import { ResourceTransferRequestModel } from '@/database/models/resourceTransfer
 import { SessionModel } from '@/database/models/session';
 import { SessionGroupModel } from '@/database/models/sessionGroup';
 import { insertAgentSchema, insertSessionSchema } from '@/database/schemas';
-import type { LobeChatDatabase } from '@/database/type';
 import { router } from '@/libs/trpc/lambda';
 import { serverDatabase } from '@/libs/trpc/lambda/middleware';
-import { assertCanEditResource } from '@/server/services/resourcePermission';
 import { TrashService } from '@/server/services/trash';
-import { AgentChatConfigSchema } from '@/types/agent';
 import { type ChatSessionList, type LobeGroupSession } from '@/types/session';
 import { TransferErrorCode } from '@/types/transferError';
 
@@ -23,35 +20,6 @@ import {
   assertWorkspaceRowManageable,
   isWorkspaceNonOwner,
 } from './_helpers/assertWorkspaceRowManageable';
-
-/**
- * Session config updates write through to the linked agent's config, so a
- * workspace member with view/use access must not use them as an edit
- * escalation. Resolves the session's linked agent and runs the edit guard.
- * No-op in personal mode (no workspaceId).
- */
-const assertCanEditSessionAgent = async (
-  ctx: {
-    serverDB: LobeChatDatabase;
-    sessionModel: SessionModel;
-    userId: string;
-    workspaceId?: string | null;
-  },
-  sessionId: string,
-) => {
-  if (!ctx.workspaceId) return;
-
-  const session = await ctx.sessionModel.findByIdOrSlug(sessionId);
-  if (!session?.agent?.id) return;
-
-  await assertCanEditResource({
-    db: ctx.serverDB,
-    resourceId: session.agent.id,
-    resourceType: 'agent',
-    userId: ctx.userId,
-    workspaceId: ctx.workspaceId,
-  });
-};
 
 const sessionProcedure = wsCompatProcedure.use(serverDatabase).use(async (opts) => {
   const { ctx } = opts;
@@ -218,34 +186,6 @@ export const sessionRouter = router({
       if (session) assertWorkspaceRowManageable(ctx, session.userId, 'session');
 
       return ctx.sessionModel.update(input.id, input.value);
-    }),
-  updateSessionChatConfig: sessionProcedure
-    .use(withScopedPermission('session:update'))
-    .input(
-      z.object({
-        id: z.string(),
-        value: AgentChatConfigSchema.partial(),
-      }),
-    )
-    .mutation(async ({ input, ctx }) => {
-      await assertCanEditSessionAgent(ctx, input.id);
-
-      return ctx.sessionModel.updateConfig(input.id, {
-        chatConfig: input.value,
-      });
-    }),
-  updateSessionConfig: sessionProcedure
-    .use(withScopedPermission('session:update'))
-    .input(
-      z.object({
-        id: z.string(),
-        value: z.object({}).passthrough().partial(),
-      }),
-    )
-    .mutation(async ({ input, ctx }) => {
-      await assertCanEditSessionAgent(ctx, input.id);
-
-      return ctx.sessionModel.updateConfig(input.id, input.value);
     }),
 });
 
