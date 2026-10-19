@@ -58,7 +58,7 @@ These switches decide what LobeHub does on its own when GitHub reports activity.
 | **Notify agents on CI failure**      | When a check fails, the Agent that opened the pull request is woken with the failing job log. At most three times per pull request; draft pull requests never wake an Agent.           |
 | **Notify agents on review feedback** | When a reviewer requests changes or comments, the feedback is delivered to that Agent.                                                                                                 |
 
-Only feedback from repository owners, members, and collaborators wakes an Agent. Comments from anyone else stay on GitHub and never become instructions for an Agent. The pull request author's own comments are ignored.
+Only feedback from repository owners, members, and collaborators, plus the Codex code review bot (`chatgpt-codex-connector[bot]`), wakes an Agent. Comments from anyone else stay on GitHub and never become instructions for an Agent. The pull request author's own comments are ignored.
 
 ## Comments in GitHub
 

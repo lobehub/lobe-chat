@@ -57,7 +57,7 @@ tags:
 | **CI 失败时通知智能体** | 检查失败时，带着失败 job 的日志唤醒发起这个 Pull Request 的 Agent。每个 Pull Request 最多三次；草稿 Pull Request 不会唤醒 Agent。 |
 | **评审反馈时通知智能体**  | 评审者要求修改或留下评论时，把意见送到该 Agent。                                                                    |
 
-只有仓库的 owner、member 和 collaborator 的反馈会唤醒 Agent。其他人的评论只留在 GitHub 上，不会变成给 Agent 的指令。Pull Request 作者自己的评论会被忽略。
+只有仓库的 owner、member、collaborator，以及 Codex 代码评审机器人（`chatgpt-codex-connector[bot]`）的反馈会唤醒 Agent。其他人的评论只留在 GitHub 上，不会变成给 Agent 的指令。Pull Request 作者自己的评论会被忽略。
 
 ## 在 GitHub 上评论
 
