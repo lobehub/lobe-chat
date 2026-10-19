@@ -88,6 +88,7 @@ import { pageListLoader } from '@/spa/router/pageListLoader';
 import { preferenceListLoader } from '@/spa/router/preferenceListLoader';
 import { agentAccessLoader, agentGroupAccessLoader } from '@/spa/router/resourceAccessLoader';
 import { NoRouteSkeleton, routeMeta } from '@/spa/router/routeMeta';
+import { scheduledTaskListLoader } from '@/spa/router/scheduledTaskListLoader';
 import { withSegmentFallback } from '@/spa/router/withSegmentFallback';
 import { worksLoader } from '@/spa/router/worksLoader';
 import { SettingsTabs } from '@/store/global/initialState';
@@ -366,6 +367,7 @@ export const sharedMainAreaChildren: RouteObject[] = [
               'Desktop > Chat > Tasks',
             ),
             handle: { meta: tasksRouteMeta },
+            loader: scheduledTaskListLoader,
             path: 'tasks',
           },
           {
@@ -1094,6 +1096,7 @@ export const sharedMainAreaChildren: RouteObject[] = [
           'Desktop > Project Tasks',
         ),
         handle: { meta: tasksRouteMeta },
+        loader: scheduledTaskListLoader,
         path: 'tasks',
       },
       {
@@ -1179,6 +1182,7 @@ export const sharedMainAreaChildren: RouteObject[] = [
             }),
             handle: { meta: tasksRouteMeta },
             index: true,
+            loader: scheduledTaskListLoader,
           },
         ],
         errorElement: <ErrorBoundary resetPath=".." />,
