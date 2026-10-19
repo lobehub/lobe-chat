@@ -1,0 +1,350 @@
+import { TRACING_SCENARIOS } from '@lobechat/const';
+import { HOLISTIC_CHECK_TITLE } from '@lobechat/const/verify';
+import type { TracingOptions } from '@lobechat/llm-generation-tracing';
+import {
+  chainVerifyDisputeArbitration,
+  DISPUTE_RULING_JSON_SCHEMA,
+  VERIFY_DISPUTE_PROMPT_VERSION,
+} from '@lobechat/prompts';
+import type {
+  VerifyCheckDispute,
+  VerifyCheckDisputeKind,
+  VerifyCheckItem,
+  VerifyCheckResultMetadata,
+  VerifyDisputeArbitration,
+  VerifyDisputeVote,
+} from '@lobechat/types';
+import { RequestTrigger } from '@lobechat/types';
+import debug from 'debug';
+import { z } from 'zod';
+
+import { AcceptanceModel } from '@/database/models/acceptance';
+import { DocumentModel } from '@/database/models/document';
+import { VerifyCheckResultModel } from '@/database/models/verifyCheckResult';
+import { VerifyEvidenceModel } from '@/database/models/verifyEvidence';
+import { VerifyRunModel } from '@/database/models/verifyRun';
+import type { VerifyCheckResultItem } from '@/database/schemas/verify';
+import type { LobeChatDatabase } from '@/database/type';
+import { AiGenerationService } from '@/server/services/aiGeneration';
+
+import { DISPUTE_PANEL_SIZE, resolveDisputePanelModelConfigs } from './goalReviewModelConfig';
+import type { VerifyModelConfig } from './modelConfig';
+
+const log = debug('lobe-server:verify-dispute');
+
+/** Long enough for a real argument, short enough to stay a claim and not a document. */
+export const MAX_DISPUTE_REASON_CHARS = 2000;
+
+const DisputeRulingSchema = z.object({ reason: z.string().nullish(), upheld: z.boolean() });
+
+export type FileCheckDisputeError =
+  | 'ALREADY_RULED'
+  | 'EMPTY_REASON'
+  | 'HOLISTIC_CHECK'
+  | 'NO_VERIFY_RUN'
+  | 'PANEL_UNAVAILABLE'
+  | 'UNKNOWN_CRITERION'
+  | 'UNKNOWN_EVIDENCE';
+
+export type FileCheckDisputeResult =
+  | { dispute: VerifyCheckDispute; message: string; success: true }
+  | { error: FileCheckDisputeError; message: string; success: false };
+
+export interface FileCheckDisputeParams {
+  checkItemId: string;
+  evidenceIds?: string[];
+  kind: VerifyCheckDisputeKind;
+  reason: string;
+  /** The Agent Run whose verify round holds the check. */
+  runOperationId: string;
+  /** Lets the panel fall back to the task's own model when a pinned member is unavailable. */
+  taskId?: string;
+}
+
+/**
+ * The same check across the rounds of one Acceptance. A criterion keeps its
+ * `sourceCriterionId` from round to round while its check item id is minted
+ * fresh, so that is the identity; an ad-hoc check without one is matched by title.
+ */
+const logicalCheckKey = (row: {
+  checkItemTitle?: string | null;
+  sourceCriterionId?: string | null;
+}) =>
+  row.sourceCriterionId
+    ? `criterion:${row.sourceCriterionId}`
+    : `title:${row.checkItemTitle ?? ''}`;
+
+const readDispute = (metadata: unknown): VerifyCheckDispute | undefined =>
+  (metadata as VerifyCheckResultMetadata | null | undefined)?.dispute;
+
+/**
+ * Ask every panel member at once, then count. Each member gets one retry, which
+ * absorbs a dropped connection without letting a nondeterministic second call
+ * replace a ruling that already landed.
+ */
+const runArbitrationPanel = async (
+  db: LobeChatDatabase,
+  userId: string,
+  workspaceId: string | undefined,
+  panel: VerifyModelConfig[],
+  chain: ReturnType<typeof chainVerifyDisputeArbitration>,
+): Promise<VerifyDisputeArbitration> => {
+  const ai = new AiGenerationService(db, userId, workspaceId);
+  const ask = async (member: VerifyModelConfig): Promise<VerifyDisputeVote> => {
+    for (let attempt = 0; attempt < 2; attempt++) {
+      try {
+        const raw = await ai.generateObject(
+          { ...chain, ...member, schema: DISPUTE_RULING_JSON_SCHEMA },
+          {
+            metadata: { trigger: RequestTrigger.Verify },
+            tracing: {
+              promptVersion: VERIFY_DISPUTE_PROMPT_VERSION,
+              scenario: TRACING_SCENARIOS.VerifyDisputeArbitration,
+              schemaName: DISPUTE_RULING_JSON_SCHEMA.name,
+            } satisfies TracingOptions,
+          },
+        );
+        const parsed = DisputeRulingSchema.safeParse(raw);
+        if (parsed.success) {
+          return {
+            ...member,
+            reason: parsed.data.reason ?? undefined,
+            status: 'judged',
+            upheld: parsed.data.upheld,
+          };
+        }
+        log('panel member %s/%s returned an unparseable ruling', member.provider, member.model);
+      } catch (error) {
+        log('panel member %s/%s failed: %O', member.provider, member.model, error);
+      }
+    }
+    return { ...member, status: 'errored' };
+  };
+
+  const votes = await Promise.all(panel.map(ask));
+  const majority = Math.floor(DISPUTE_PANEL_SIZE / 2) + 1;
+  const upheld = votes.filter((vote) => vote.upheld === true).length;
+  const overruled = votes.filter((vote) => vote.upheld === false).length;
+  return {
+    decidedAt: new Date().toISOString(),
+    outcome: upheld >= majority ? 'upheld' : overruled >= majority ? 'overruled' : 'undecided',
+    votes,
+  };
+};
+
+const describeArbitration = (title: string, arbitration: VerifyDisputeArbitration) => {
+  const judged = arbitration.votes.filter((vote) => vote.status === 'judged');
+  const tally = `${judged.filter((vote) => vote.upheld).length} of ${arbitration.votes.length} panel models upheld it`;
+  switch (arbitration.outcome) {
+    case 'upheld': {
+      return `Dispute upheld (${tally}). "${title}" is waived for this delivery: it no longer counts against it, and you do not need to satisfy it.`;
+    }
+    case 'overruled': {
+      const reasons = judged
+        .filter((vote) => vote.upheld === false && vote.reason)
+        .map((vote) => `- ${vote.reason}`);
+      return [
+        `Dispute overruled (${tally}). "${title}" stands: satisfy it and submit evidence for it. This check cannot be disputed again.`,
+        ...(reasons.length ? ['Why:', ...reasons] : []),
+      ].join('\n');
+    }
+    default: {
+      return `The panel reached no majority (${tally}), so "${title}" stands for now. Satisfy it if you can; you may file the dispute again.`;
+    }
+  }
+};
+
+/**
+ * File a builder's dispute of one check in its Agent Run's verify round.
+ *
+ * - `missed_evidence` records the builder's note; the next review reads it next
+ *   to the evidence. It changes no verdict by itself.
+ * - `invalid_criterion` is arbitrated right away by a panel of three models and
+ *   the majority rules. Upheld waives the check (see `isCheckWaivedByDispute`);
+ *   overruled is final for that check across the Acceptance, so a builder cannot
+ *   re-roll a panel it lost. A ruling upheld in an earlier round carries over to
+ *   a later round's check for free.
+ */
+export const fileCheckDispute = async (
+  db: LobeChatDatabase,
+  userId: string,
+  params: FileCheckDisputeParams,
+  workspaceId?: string,
+): Promise<FileCheckDisputeResult> => {
+  const reason = params.reason.trim().slice(0, MAX_DISPUTE_REASON_CHARS);
+  if (!reason) {
+    return {
+      error: 'EMPTY_REASON',
+      message: 'Explain why the check is wrong or where the evidence already proves it.',
+      success: false,
+    };
+  }
+
+  const runModel = new VerifyRunModel(db, userId, workspaceId);
+  const run = await runModel.findByOperation(params.runOperationId);
+  if (!run) {
+    return {
+      error: 'NO_VERIFY_RUN',
+      message: 'This run has no Acceptance round to dispute.',
+      success: false,
+    };
+  }
+  const plan = (run.plan ?? []) as VerifyCheckItem[];
+  const item = plan.find((candidate) => candidate.id === params.checkItemId);
+  if (!item) {
+    return {
+      error: 'UNKNOWN_CRITERION',
+      message: `No check "${params.checkItemId}" in this round. Use an id from the current criteria list.`,
+      success: false,
+    };
+  }
+  if (params.kind === 'invalid_criterion' && item.title === HOLISTIC_CHECK_TITLE) {
+    return {
+      error: 'HOLISTIC_CHECK',
+      message:
+        'The whole-delivery check restates the requirement itself, so it cannot be waived. Dispute a specific check instead.',
+      success: false,
+    };
+  }
+
+  const resultModel = new VerifyCheckResultModel(db, userId, workspaceId);
+  const result = await resultModel.upsertByCheckItem({
+    checkItemId: item.id,
+    checkItemIndex: item.index,
+    checkItemTitle: item.title,
+    operationId: params.runOperationId,
+    required: item.required,
+    verifierType: item.verifierType,
+    verifyRunId: run.id,
+  });
+
+  const evidenceIds = [...new Set(params.evidenceIds ?? [])];
+  if (evidenceIds.length > 0) {
+    const onCheck = new Set(
+      (await new VerifyEvidenceModel(db, userId, workspaceId).listByCheckResult(result.id)).map(
+        (row) => row.id,
+      ),
+    );
+    const unknown = evidenceIds.find((id) => !onCheck.has(id));
+    if (unknown) {
+      return {
+        error: 'UNKNOWN_EVIDENCE',
+        message: `Evidence ${unknown} is not attached to "${item.title}" in this round. Submit it for this check first, then point at it.`,
+        success: false,
+      };
+    }
+  }
+
+  const save = async (dispute: VerifyCheckDispute) => {
+    await resultModel.update(result.id, {
+      metadata: { ...(result.metadata as VerifyCheckResultMetadata | null), dispute },
+    });
+    return dispute;
+  };
+  const filed: VerifyCheckDispute = {
+    ...(evidenceIds.length ? { evidenceIds } : {}),
+    filedAt: new Date().toISOString(),
+    kind: params.kind,
+    reason,
+  };
+
+  // A round holds one dispute per check, so a decided ruling must not be
+  // replaced by a note: the waiver would vanish, and an overruled check could
+  // be re-arbitrated in the same round.
+  const current = readDispute(result.metadata);
+  const decided =
+    current?.kind === 'invalid_criterion' &&
+    (current.arbitration?.outcome === 'upheld' || current.arbitration?.outcome === 'overruled')
+      ? current.arbitration
+      : undefined;
+
+  if (params.kind === 'missed_evidence') {
+    if (decided) {
+      return {
+        error: 'ALREADY_RULED',
+        message: `A panel already ruled on "${item.title}" in this round (${decided.outcome}). Make the evidence argument in your handoff instead.`,
+        success: false,
+      };
+    }
+    const dispute = await save(filed);
+    return {
+      dispute,
+      message: `Recorded. The review of "${item.title}" will read your note next to its evidence; the note alone does not pass the check.`,
+      success: true,
+    };
+  }
+
+  // A ruling is per check, not per round: answer this round's own ruling
+  // again, then look for the check's rulings in earlier rounds.
+  if (decided) {
+    return {
+      dispute: current!,
+      message: describeArbitration(item.title, decided),
+      success: true,
+    };
+  }
+  if (run.acceptanceId) {
+    const rounds = await runModel.listByAcceptance(run.acceptanceId);
+    const key = logicalCheckKey({
+      checkItemTitle: item.title,
+      sourceCriterionId: item.sourceCriterionId,
+    });
+    const earlier = (await resultModel.listByRuns(rounds.map((round) => round.id)))
+      .filter((row: VerifyCheckResultItem) => row.id !== result.id && logicalCheckKey(row) === key)
+      .map((row) => readDispute(row.metadata)?.arbitration)
+      .filter((ruling): ruling is VerifyDisputeArbitration => !!ruling);
+    const overruled = earlier.find((ruling) => ruling.outcome === 'overruled');
+    if (overruled) {
+      return {
+        error: 'ALREADY_RULED',
+        message: `A panel already overruled a dispute of "${item.title}". The check stands: satisfy it.`,
+        success: false,
+      };
+    }
+    const upheld = earlier.find((ruling) => ruling.outcome === 'upheld');
+    if (upheld) {
+      const dispute = await save({ ...filed, arbitration: upheld });
+      return { dispute, message: describeArbitration(item.title, upheld), success: true };
+    }
+  }
+
+  const acceptance = run.acceptanceId
+    ? await new AcceptanceModel(db, userId, workspaceId).findById(run.acceptanceId)
+    : undefined;
+  const panel = await resolveDisputePanelModelConfigs(
+    db,
+    userId,
+    { taskId: params.taskId, verifierAgentId: acceptance?.config?.verifierAgentId },
+    workspaceId,
+  );
+  if (panel.length < DISPUTE_PANEL_SIZE) {
+    // Not saved as a ruling: the dispute can be filed again once models are available.
+    await save(filed);
+    return {
+      error: 'PANEL_UNAVAILABLE',
+      message: `Only ${panel.length} of the ${DISPUTE_PANEL_SIZE} review models a ruling needs are available, so the dispute was recorded but not arbitrated and "${item.title}" stands. Say so in your handoff so the owner can decide.`,
+      success: false,
+    };
+  }
+
+  const instruction = item.documentId
+    ? ((await new DocumentModel(db, userId, workspaceId).findById(item.documentId))?.content ??
+      undefined)
+    : undefined;
+  const arbitration = await runArbitrationPanel(
+    db,
+    userId,
+    workspaceId,
+    panel,
+    chainVerifyDisputeArbitration({
+      builderReason: reason,
+      instruction,
+      otherChecks: plan.filter((other) => other.id !== item.id).map((other) => other.title),
+      requirement: acceptance?.requirement ?? undefined,
+      title: item.title,
+    }),
+  );
+  log('dispute of %s in run %s → %s', item.id, run.id, arbitration.outcome);
+  const dispute = await save({ ...filed, arbitration });
+  return { dispute, message: describeArbitration(item.title, arbitration), success: true };
+};

@@ -1,5 +1,5 @@
-import { isDraftVerifyRun } from '@lobechat/const/verify';
-import type { VerifyRunMetadata } from '@lobechat/types';
+import { isCheckWaivedByDispute, isDraftVerifyRun } from '@lobechat/const/verify';
+import type { VerifyCheckResultMetadata, VerifyRunMetadata } from '@lobechat/types';
 
 import { GoalModel } from '@/database/models/goal';
 import { VerifyEvidenceModel } from '@/database/models/verifyEvidence';
@@ -125,6 +125,8 @@ export const reviewGoalDelivery = async (
       }
       if (check.result.userDecision === 'accepted' || check.result.userDecision === 'overridden')
         return;
+      // A panel already ruled this check invalid for this delivery.
+      if (isCheckWaivedByDispute(check.result.metadata)) return;
       if (check.result.userDecision === 'rejected') {
         escalate('rejected');
         feedback.push(
@@ -141,9 +143,11 @@ export const reviewGoalDelivery = async (
         return;
       }
       const checkResultId = check.result.id;
+      const dispute = (check.result.metadata as VerifyCheckResultMetadata | null)?.dispute;
       const judge = () =>
         predictor
           .predict({
+            builderRebuttal: dispute?.kind === 'missed_evidence' ? dispute.reason : undefined,
             checkResultId,
             includeTextEvidence: true,
             instructionDocumentId: check.planItem?.documentId,

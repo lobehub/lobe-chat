@@ -185,6 +185,21 @@ const PROGRAMMATIC_TEST_PATTERNS: RegExp[] = [
   /单元测试|单测|集成测试|回归测试|类型检查|类型校验|测试覆盖率|代码覆盖率|静态检查|测试用例全部通过/,
 ];
 
+/** Why a builder disputes a check; see `VerifyCheckDisputeKind` in `@lobechat/types`. */
+export const VERIFY_DISPUTE_KINDS = ['invalid_criterion', 'missed_evidence'] as const;
+
+/**
+ * Whether a panel upheld the builder's `invalid_criterion` dispute on this check
+ * result, which waives it: the rollup, the Goal review and the failure summary
+ * stop counting it against the delivery. Takes the raw metadata bag so every
+ * layer reads the same field.
+ */
+export const isCheckWaivedByDispute = (metadata: unknown): boolean => {
+  const dispute = (metadata as { dispute?: { arbitration?: { outcome?: string }; kind?: string } })
+    ?.dispute;
+  return dispute?.kind === 'invalid_criterion' && dispute.arbitration?.outcome === 'upheld';
+};
+
 /**
  * Stored title of the synthesized holistic fallback check (one broad agent
  * verify over the whole deliverable, used when a task opted into verify without
