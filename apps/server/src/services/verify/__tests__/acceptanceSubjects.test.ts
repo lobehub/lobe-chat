@@ -145,6 +145,23 @@ describe('AcceptanceService subjects', () => {
       });
     });
 
+    it('keys a task addressed by its identifier under the task id', async () => {
+      mocks.taskResolve.mockResolvedValue({
+        id: 'task_abc',
+        identifier: 'T-898',
+        name: 'Fix docs',
+        projectId: 'project-task',
+      });
+
+      await service().ensureForSubject('task', 'T-898', { requirement: 'req' });
+
+      expect(mocks.ensureForSubject).toHaveBeenCalledWith('task', 'task_abc', {
+        config: undefined,
+        projectId: 'project-task',
+        requirement: 'req',
+      });
+    });
+
     it('rejects a subject missing from the current workspace', async () => {
       mocks.taskResolve.mockResolvedValue(undefined);
 
@@ -152,6 +169,22 @@ describe('AcceptanceService subjects', () => {
         'task "task-x" not found in the current workspace',
       );
       expect(mocks.ensureForSubject).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('resolveCanonicalSubjectId', () => {
+    it('maps a task identifier to the task id', async () => {
+      mocks.taskResolve.mockResolvedValue({ id: 'task_abc', identifier: 'T-898' });
+
+      await expect(service().resolveCanonicalSubjectId('task', 'T-898')).resolves.toBe('task_abc');
+    });
+
+    it('passes an unknown task and non-task subjects through', async () => {
+      mocks.taskResolve.mockResolvedValue(null);
+
+      await expect(service().resolveCanonicalSubjectId('task', 'T-404')).resolves.toBe('T-404');
+      await expect(service().resolveCanonicalSubjectId('topic', 'tpc_1')).resolves.toBe('tpc_1');
+      expect(mocks.taskResolve).toHaveBeenCalledTimes(1);
     });
   });
 });
