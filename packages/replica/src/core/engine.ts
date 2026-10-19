@@ -8,7 +8,9 @@ import {
   getNextPageCursor,
   hasPagedItem,
   insertHeadItems,
+  joinPages,
   mapPagedItem,
+  pagingFor,
   type ReplicaPagedData,
   type ReplicaPageResult,
   type ReplicaPagingContext,
@@ -144,6 +146,7 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
 ) => {
   const { port } = options;
   const paging = resource.paging;
+  const at = (key: string) => pagingFor(paging!, key);
   const pagingCtx: ReplicaPagingContext<any> = { isClientOnly: options.isClientOnly };
   const prefix = options.actionPrefix ?? resource.name;
   const writeQueue = resource.storage ? new ReplicaWriteQueue<TData>(resource.storage) : undefined;
@@ -693,7 +696,7 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
    * same-pool query change (a re-sort, a view-mode switch) never drops them.
    * A cross-pool navigate is not "client-only" for the new params and is dropped.
    */
-  const keepClientOnlyRows = (incoming: TData, current: TData | undefined): TData => {
+  const keepClientOnlyRows = (incoming: TData, current: TData | undefined, key: string): TData => {
     if (!paging || !options.isClientOnly || !current) return incoming;
     const page = incoming as unknown as ReplicaPagedData<unknown, unknown>;
     const currentItems = (current as unknown as ReplicaPagedData<unknown, unknown>).items ?? [];
@@ -702,10 +705,7 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
       (item) => options.isClientOnly!(item) && !incomingIds.has(paging.getId(item)),
     );
     if (survivors.length === 0) return incoming;
-    const items =
-      paging.direction === 'forward'
-        ? [...survivors, ...page.items]
-        : [...page.items, ...survivors];
+    const items = joinPages(survivors, page.items, at(key).direction);
     return { ...(incoming as object), items } as TData;
   };
 
@@ -764,7 +764,7 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
     // Entities deleted while the read was in flight may still be in the row.
     const stored = withoutRemovedEntities(scope, cached.data);
     if (stored === undefined) return false;
-    const data = overwrite ? keepClientOnlyRows(stored, port.read(key)) : stored;
+    const data = overwrite ? keepClientOnlyRows(stored, port.read(key), key) : stored;
     const applied = dispatch({
       data,
       key,
@@ -803,7 +803,7 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
     const page = incoming as unknown as ReplicaPageResult<unknown, unknown>;
     const pageSize = (params as { pageSize?: number }).pageSize ?? page.items.length;
     const merged = {
-      ...applyHeadPage(confirmed as any, page, { pageSize, reset }, paging!, pagingCtx),
+      ...applyHeadPage(confirmed as any, page, { pageSize, reset }, at(key), pagingCtx),
       ...options.viewFields?.(params),
       isLoadingMore: loadingMore.has(key),
     };
@@ -1109,7 +1109,7 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
     if (paging.mode === 'cursor' && entry?.source === 'storage') return;
     const params = (entry?.params ?? fallbackParams) as TParams | undefined;
     if (params === undefined) return;
-    const cursor = getNextPageCursor(current, paging);
+    const cursor = getNextPageCursor(current, at(key));
     if (cursor === null || cursor === undefined) return;
 
     const query = entry?.query;
@@ -1136,7 +1136,7 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
       if (!isCurrent()) return void setLoading({ isLoadingMore: false });
       update(
         key,
-        (data) => data && (applyNextPage(data as any, page, paging, pagingCtx) as TData),
+        (data) => data && (applyNextPage(data as any, page, at(key), pagingCtx) as TData),
         { persist: (paging.persist?.pages ?? 1) > 1 },
       );
     } catch (error) {
@@ -1149,7 +1149,7 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
   /** Insert rows at the head (new / streamed items). */
   const insertHead = <TItem>(key: string, items: TItem[], { persist = false } = {}) =>
     paging
-      ? update(key, (data) => data && (insertHeadItems(data as any, items, paging) as TData), {
+      ? update(key, (data) => data && (insertHeadItems(data as any, items, at(key)) as TData), {
           persist,
         })
       : false;
@@ -1157,7 +1157,7 @@ export const createReplicaEngine = <TParams, TData, TFetched = TData>(
   /** Drop loaded pages, keeping the head (e.g. after an edit inside older pages). */
   const collapse = (key: string) =>
     paging
-      ? update(key, (data) => data && (collapseToHead(data as any, paging) as TData), {
+      ? update(key, (data) => data && (collapseToHead(data as any, at(key)) as TData), {
           persist: false,
         })
       : false;

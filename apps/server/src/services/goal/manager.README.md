@@ -84,7 +84,10 @@ commands. It submits a JSON file through `lh goal plan <goal-id> --token <turn> 
   what the probes ran into and answers `revise_plan` with the full plan, which
   becomes the plan skill's next version, and the same advance judges the gate
   straight from that step, so the owner reviews the probes against the plan
-  they taught. Without a
+  they taught. A probe whose delivery falls short of that plan (a skipped step,
+  failing CI, open review) the Agent names in `rerun`: it re-opens in place on
+  the plan, continuing its delivery, and the round is distilled again once the
+  re-runs settle, before the gate judges it. Without a
   turn to spend, the gate judges them on the plan as written.
 - `verify`: reason; requests the ordinary independent final acceptance Task.
   This does not mark the Goal achieved.

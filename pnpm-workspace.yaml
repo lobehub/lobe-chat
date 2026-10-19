@@ -68,6 +68,8 @@ overrides:
   '@lobehub/charts': ^6.0.0
   '@lobehub/fluent-emoji': ^5.0.0
   '@react-pdf/image': 3.0.4
+  # 0.2.11 moved the optional `import('zod-openapi')` out of try/catch, which fails the Turbopack build.
+  '@standard-community/standard-openapi': 0.2.10
   '@types/react': 19.2.13
   '@vitest/coverage-v8': 5.0.0
   baseline-browser-mapping: 2.10.31

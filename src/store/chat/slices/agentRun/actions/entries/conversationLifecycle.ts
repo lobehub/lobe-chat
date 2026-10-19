@@ -30,6 +30,7 @@ import { generateEntityId, nanoid } from '@lobechat/utils';
 import { toast } from '@lobehub/ui';
 import { t } from 'i18next';
 
+import { getActiveWorkspaceId } from '@/business/client/hooks/useActiveWorkspaceId';
 import { type ChatInputEditor } from '@/features/ChatInput';
 import { saveDraft } from '@/features/ChatInput/draftStorage';
 import {
@@ -348,15 +349,13 @@ export class ConversationLifecycleActionImpl {
     let detachCallerAbort = () => {};
     let hasNotifiedMessageAccepted = false;
     let sendOperationId: string | undefined = undefined;
-    // Where the user was when they hit send. This send's continuations adopt the
-    // topic it creates only while the conversation is still here — the awaited
-    // preflight (access check, snapshots, topic resolution) is long enough for
-    // the user to open another topic, and following them with a switchTopic
-    // would yank both the message list and the URL back (see the
-    // `onlyIfActiveTopicIn` guards below). The agent and group are pinned too:
-    // two blank views share `activeTopicId === null`, so the topic guard alone
-    // cannot tell "still on the origin blank view" from "moved to another
-    // agent's/group's blank view".
+    // Where the user was when they hit send. Continuations adopt the topic this send
+    // creates only while the conversation is still here — the awaited preflight (access
+    // check, snapshots, topic resolution) is long enough to open another topic, and a
+    // switchTopic would yank the message list and URL back (`onlyIfActiveTopicIn`
+    // below). Agent and group are pinned too: two blank views share
+    // `activeTopicId === null`. The workspace scopes the agent CLI run it may start.
+    const sendOriginWorkspaceId = getActiveWorkspaceId();
     const sendOriginActiveTopicId = this.#get().activeTopicId || null;
     const sendOriginActiveAgentId = this.#get().activeAgentId ?? null;
     const sendOriginActiveGroupId = this.#get().activeGroupId ?? null;
@@ -1829,6 +1828,7 @@ export class ConversationLifecycleActionImpl {
           resumeSessionId,
           workingDirectory,
           workingDirectoryConfig,
+          workspaceId: sendOriginWorkspaceId,
         });
 
         if (directMentionThreadId) {

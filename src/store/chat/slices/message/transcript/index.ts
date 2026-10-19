@@ -3,6 +3,7 @@ import debug from 'debug';
 
 import { readConversationMessageListPage } from '@/helpers/conversationMessageRead';
 import { createReplicaSlice, readReplicaStoredKeys } from '@/libs/replica';
+import { lambdaClient } from '@/libs/trpc/client';
 import { messageService } from '@/services/message';
 import {
   getMessageListCacheIdentity,
@@ -19,6 +20,11 @@ import {
   toPersistedTranscript,
   transcriptOf,
 } from '@/services/message/replica';
+import {
+  readMessagesForward,
+  SHARED_TOPIC_FIRST_PAGE,
+  takePrimedForwardMessagePage,
+} from '@/services/message/roundCursorPage';
 import { topicService } from '@/services/topic';
 import { operationSelectors } from '@/store/chat/slices/operation/selectors';
 import { topicSelectors } from '@/store/chat/slices/topic/selectors';
@@ -84,6 +90,17 @@ const createMessageTranscript = (set: StoreSetter<ChatStore>, get: () => ChatSto
   const bucketRows = (key: string) => get().dbMessagesMap[bucketOfKey(key).bucket];
 
   // ---- reads ---------------------------------------------------------------
+  const fetchForward = async (
+    context: ConversationMessageParams,
+    cursor: ConversationMessagePage['nextCursor'] = null,
+  ): Promise<ConversationMessageFetch> => {
+    const page = cursor
+      ? await readMessagesForward(lambdaClient, context, cursor)
+      : await (takePrimedForwardMessagePage(context) ??
+          readMessagesForward(lambdaClient, context, null, SHARED_TOPIC_FIRST_PAGE));
+    return { items: page.messages, nextCursor: page.newerCursor };
+  };
+
   const fetchHead = async (context: ConversationMessageParams): Promise<UIChatMessage[]> => {
     const syncKey = getMessageListCacheIdentity(context);
     const dbMessages = bucketRows(conversationMessagesKey(context)) ?? [];
@@ -195,7 +212,12 @@ const createMessageTranscript = (set: StoreSetter<ChatStore>, get: () => ChatSto
 
   const slice = createReplicaSlice(conversationMessagesResource, {
     actionPrefix: 'messageTranscript',
-    fetcher: (context, cursor) => (cursor ? fetchOlder(context, cursor) : fetchHead(context)),
+    fetcher: (context, cursor) =>
+      context.messageReadMode === 'forward'
+        ? fetchForward(context, cursor)
+        : cursor
+          ? fetchOlder(context, cursor)
+          : fetchHead(context),
     get,
     prepareHead,
     set,
