@@ -16,6 +16,7 @@ import {
   fileChunks,
   files,
   messageGroups,
+  messagePlugins,
   messageQueries,
   messageQueryChunks,
   messages,
@@ -2159,6 +2160,100 @@ describe('MessageModel Query Tests', () => {
 
       expect(result).toHaveLength(1);
       expect(result[0].id).toBe('creator-msg');
+    });
+
+    it('projects tool-call plugin fields for tool messages', async () => {
+      // Regression: tool-call metadata lives on the 1:1 message_plugins row;
+      // without the join, `tool_call_id` / `plugin` / `pluginState` were always
+      // absent and wiki-ingest image evidence could never match an
+      // analyzeMedia result to its originating call.
+      await serverDB.insert(messages).values([
+        {
+          id: 'q-plugin-tool',
+          userId,
+          role: 'tool',
+          content: 'IMAGE_READ_OK 1:abc\nanalysis text',
+        },
+        { id: 'q-plugin-user', userId, role: 'user', content: 'plain question' },
+      ]);
+      await serverDB.insert(messagePlugins).values({
+        id: 'q-plugin-tool',
+        apiName: 'analyzeMedia',
+        arguments: JSON.stringify({ question: 'describe', urls: ['https://r2.example/a.png'] }),
+        identifier: 'lobe-agent',
+        state: { model: 'gemini-vision', success: true },
+        toolCallId: 'call_123',
+        type: 'default',
+        userId,
+      });
+
+      const result = await messageModel.queryAll();
+      const toolRow = result.find((m) => m.id === 'q-plugin-tool') as any;
+      const userRow = result.find((m) => m.id === 'q-plugin-user') as any;
+
+      expect(toolRow.tool_call_id).toBe('call_123');
+      expect(toolRow.plugin.identifier).toBe('lobe-agent');
+      expect(toolRow.plugin.apiName).toBe('analyzeMedia');
+      expect(JSON.parse(toolRow.plugin.arguments).urls).toEqual(['https://r2.example/a.png']);
+      expect(toolRow.pluginState.model).toBe('gemini-vision');
+      expect(toolRow.pluginState.success).toBe(true);
+      // Non-tool rows have no plugin row: drizzle nullifies the whole nested
+      // object when every joined column is null (see queryByIds sender note).
+      expect(userRow.tool_call_id).toBeNull();
+      expect(userRow.plugin).toBeNull();
+    });
+
+    it('isolates plugin fields by ownership', async () => {
+      await serverDB.insert(messages).values({
+        id: 'q-other-tool',
+        userId: otherUserId,
+        role: 'tool',
+        content: 'foreign tool output',
+      });
+      await serverDB.insert(messagePlugins).values({
+        id: 'q-other-tool',
+        apiName: 'analyzeMedia',
+        identifier: 'lobe-agent',
+        state: { model: 'gemini-vision' },
+        toolCallId: 'call_other',
+        userId: otherUserId,
+      });
+
+      const result = await messageModel.queryAll();
+
+      expect(result).toHaveLength(0);
+    });
+
+    it('redacts inline base64 data URLs from exported plugin arguments', async () => {
+      // `lh message list --json` prints rows verbatim; inline media payloads
+      // reach several MB per URL, so the projection must keep the attribution
+      // (mime header) without dumping the base64 body.
+      const bigBody = 'A'.repeat(200_000);
+      await serverDB.insert(messages).values({
+        id: 'q-redact-tool',
+        userId,
+        role: 'tool',
+        content: 'vision result',
+      });
+      await serverDB.insert(messagePlugins).values({
+        id: 'q-redact-tool',
+        apiName: 'analyzeMedia',
+        arguments: JSON.stringify({
+          question: 'describe',
+          urls: [`data:image/png;base64,${bigBody}`],
+        }),
+        identifier: 'lobe-agent',
+        toolCallId: 'call_redact',
+        userId,
+      });
+
+      const result = await messageModel.queryAll();
+      const row = result.find((m) => m.id === 'q-redact-tool') as any;
+      const args = JSON.parse(row.plugin.arguments);
+
+      expect(args.urls[0]).toBe('data:image/png;base64,...redacted...');
+      expect(row.plugin.arguments.length).toBeLessThan(500);
+      expect(row.tool_call_id).toBe('call_redact');
     });
   });
 

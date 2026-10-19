@@ -95,7 +95,15 @@ export class MessageAnalyticsQueries extends MessageScope {
         tool_call_id: messagePlugins.toolCallId,
         plugin: {
           apiName: messagePlugins.apiName,
-          arguments: messagePlugins.arguments,
+          // `arguments` can carry inline-media payloads (data: URLs of up to
+          // ~2MB each — see builtin-tool-lobe-agent media limits), and this
+          // dump feeds `lh message list --json`, which prints rows verbatim.
+          // Redact data-URL bodies (keep the mime header + `,...` marker, the
+          // same shape `formatMediaUrlForError` uses) so the export stays
+          // attribution-complete without dumping megabytes of base64.
+          arguments: sql<
+            string | null
+          >`regexp_replace(${messagePlugins.arguments}, '(data:[a-z]+/[a-z0-9.+-]+;base64,)[A-Za-z0-9+/=\\s]{64,}', '\\1...redacted...', 'g')`,
           identifier: messagePlugins.identifier,
           type: messagePlugins.type,
         },
