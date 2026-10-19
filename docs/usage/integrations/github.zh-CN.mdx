@@ -17,7 +17,7 @@ tags:
 **GitHub 集成把 Agent 发起的 Pull Request 和 GitHub 上发生的事接起来。** 在你的个人账号或组织上安装 LobeHub GitHub App 后，LobeHub 会跟踪 Agent 发起的 Pull Request：
 
 - **合并** → 关联的验收标为已接受，对应任务完成。
-- **检查失败** → 发起这个 Pull Request 的 Agent 收到失败 job 的日志，接着修复。
+- **检查失败** → 发起这个 Pull Request 的 Agent 收到失败的检查（能获取时附带 job 日志），接着修复。
 - **评审反馈** → 要求修改和评审评论会送到该 Agent 的会话里。
 
 > \[!NOTE]
@@ -51,11 +51,11 @@ tags:
 
 这些开关决定 GitHub 上有动静时 LobeHub 自动做什么，三个开关默认都开启。
 
-| 开关              | 效果                                                                                             |
-| --------------- | ---------------------------------------------------------------------------------------------- |
-| **合并即验收通过**     | 关联的 Pull Request 被合并时，验收标为已接受，任务完成。堆叠的 Pull Request 需要所有关联且未关闭的 Pull Request 都已合并或关闭。          |
-| **CI 失败时通知智能体** | 检查失败时，带着失败 job 的日志唤醒发起这个 Pull Request 的 Agent。每个 Pull Request 最多三次；草稿 Pull Request 不会唤醒 Agent。 |
-| **评审反馈时通知智能体**  | 评审者要求修改或留下评论时，把意见送到该 Agent。                                                                    |
+| 开关              | 效果                                                                                                                        |
+| --------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| **合并即验收通过**     | 关联的 Pull Request 被合并时，验收标为已接受，任务完成。堆叠的 Pull Request 需要所有关联且未关闭的 Pull Request 都已合并或关闭。                                     |
+| **CI 失败时通知智能体** | 检查失败时，带着失败的检查（GitHub Actions job 在能获取时附带日志末尾）唤醒发起这个 Pull Request 的 Agent。每个 Pull Request 最多三次；草稿 Pull Request 不会唤醒 Agent。 |
+| **评审反馈时通知智能体**  | 评审者要求修改或留下评论时，把意见送到该 Agent。                                                                                               |
 
 只有仓库的 owner、member、collaborator，以及 Codex 代码评审机器人（`chatgpt-codex-connector[bot]`）的反馈会唤醒 Agent。其他人的评论只留在 GitHub 上，不会变成给 Agent 的指令。Pull Request 作者自己的评论会被忽略。
 
@@ -88,10 +88,10 @@ LobeHub 可以在关联的 Pull Request 下留一条评论，附上对应验收�
 | `GITHUB_APP_SLUG`           | 是  | 应用的 URL slug（`github.com/apps/<slug>`） |
 | `GITHUB_APP_PRIVATE_KEY`    | 是  | 应用私钥，原始 PEM 或 base64 编码后的 PEM          |
 | `GITHUB_APP_WEBHOOK_SECRET` | 是  | GitHub 签名 Webhook 时使用的密钥               |
-| `GITHUB_APP_CLIENT_ID`      | 否  | 应用的 Client ID                          |
-| `GITHUB_APP_CLIENT_SECRET`  | 否  | 应用的 Client Secret                      |
+| `GITHUB_APP_CLIENT_ID`      | 是  | 应用的 Client ID                          |
+| `GITHUB_APP_CLIENT_SECRET`  | 是  | 应用的 Client Secret                      |
 
-不配置 Client ID 和 Secret 时仍可连接，但 LobeHub 无法关联安装者的 GitHub 账号，Pull Request 只能按安装应用的账号匹配。
+请务必设置 Client ID 和 Secret。LobeHub 用它们确认发起连接的人确实能访问这个安装；不设置时会跳过这一校验。
 
 在 GitHub App 设置中填写以下地址（把 `<APP_URL>` 换成你的 LobeHub 地址）：
 

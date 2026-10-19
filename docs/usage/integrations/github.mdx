@@ -18,7 +18,7 @@ tags:
 **The GitHub Integration connects your Agents' pull requests to what happens on GitHub.** Once the LobeHub GitHub App is installed on your account or organization, LobeHub follows the pull requests your Agents open:
 
 - **Merge** → the linked acceptance is accepted and its task is completed.
-- **Failing checks** → the Agent that opened the pull request receives the failing job log and can fix it.
+- **Failing checks** → the Agent that opened the pull request receives the failing checks, plus the job log when available, and can fix them.
 - **Review feedback** → requested changes and review comments reach that Agent in its conversation.
 
 > \[!NOTE]
@@ -52,11 +52,11 @@ Pull requests without a link are still recorded but do not trigger any automatio
 
 These switches decide what LobeHub does on its own when GitHub reports activity. All three are on by default.
 
-| Switch                               | What happens                                                                                                                                                                           |
-| ------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Accept deliveries on merge**       | When a linked pull request is merged, its acceptance is accepted and the task is completed. With stacked pull requests, every linked open pull request must be merged or closed first. |
-| **Notify agents on CI failure**      | When a check fails, the Agent that opened the pull request is woken with the failing job log. At most three times per pull request; draft pull requests never wake an Agent.           |
-| **Notify agents on review feedback** | When a reviewer requests changes or comments, the feedback is delivered to that Agent.                                                                                                 |
+| Switch                               | What happens                                                                                                                                                                                                                          |
+| ------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Accept deliveries on merge**       | When a linked pull request is merged, its acceptance is accepted and the task is completed. With stacked pull requests, every linked open pull request must be merged or closed first.                                                |
+| **Notify agents on CI failure**      | When a check fails, the Agent that opened the pull request is woken with the failing checks and, for GitHub Actions jobs, the log tail when available. At most three times per pull request; draft pull requests never wake an Agent. |
+| **Notify agents on review feedback** | When a reviewer requests changes or comments, the feedback is delivered to that Agent.                                                                                                                                                |
 
 Only feedback from repository owners, members, and collaborators, plus the Codex code review bot (`chatgpt-codex-connector[bot]`), wakes an Agent. Comments from anyone else stay on GitHub and never become instructions for an Agent. The pull request author's own comments are ignored.
 
@@ -89,10 +89,10 @@ A self-hosted deployment needs its own GitHub App and Redis (`REDIS_URL`), which
 | `GITHUB_APP_SLUG`           | Yes      | The app's URL slug (`github.com/apps/<slug>`)           |
 | `GITHUB_APP_PRIVATE_KEY`    | Yes      | The app's private key, as raw PEM or base64-encoded PEM |
 | `GITHUB_APP_WEBHOOK_SECRET` | Yes      | The secret GitHub signs webhook deliveries with         |
-| `GITHUB_APP_CLIENT_ID`      | No       | The app's client ID                                     |
-| `GITHUB_APP_CLIENT_SECRET`  | No       | The app's client secret                                 |
+| `GITHUB_APP_CLIENT_ID`      | Yes      | The app's client ID                                     |
+| `GITHUB_APP_CLIENT_SECRET`  | Yes      | The app's client secret                                 |
 
-Without the client ID and secret, installations still connect, but LobeHub cannot link the installer's GitHub account, so pull requests are matched only through the installing account.
+Set the client ID and secret. LobeHub uses them to confirm that the person connecting can access the installation; without them that check is skipped.
 
 In the GitHub App settings, use these URLs (replace `<APP_URL>` with your LobeHub address):
 
