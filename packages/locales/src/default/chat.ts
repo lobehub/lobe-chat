@@ -2988,6 +2988,8 @@ export default {
   'taskList.contextMenu.copyDescription':
     'Clone this task (and all its subtasks) into another workspace. Status resets to backlog.',
   'taskList.contextMenu.copyFailed': 'Failed to copy task',
+  'taskList.contextMenu.copyContent': 'Copy Content',
+  'taskList.contextMenu.copyContentSuccess': 'Content copied',
   'taskList.contextMenu.copyId': 'Copy ID',
   'taskList.contextMenu.copyIdSuccess': 'ID copied',
   'taskList.contextMenu.copyLink': 'Copy Link',

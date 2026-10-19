@@ -2470,6 +2470,8 @@
   "taskList.contextMenu.archiveGoalBlocked": "This task is part of an active goal. Finish or close the goal before archiving it.",
   "taskList.contextMenu.archiveSuccess": "Task archived",
   "taskList.contextMenu.copyConfirm": "Copy",
+  "taskList.contextMenu.copyContent": "Copy Content",
+  "taskList.contextMenu.copyContentSuccess": "Content copied",
   "taskList.contextMenu.copyDescription": "Clone this task (and all its subtasks) into another workspace. Status resets to backlog.",
   "taskList.contextMenu.copyFailed": "Failed to copy task",
   "taskList.contextMenu.copyId": "Copy ID",

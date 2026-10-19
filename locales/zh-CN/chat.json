@@ -2470,6 +2470,8 @@
   "taskList.contextMenu.archiveGoalBlocked": "该任务属于进行中的目标，请先完成或关闭目标再归档",
   "taskList.contextMenu.archiveSuccess": "任务已归档",
   "taskList.contextMenu.copyConfirm": "复制",
+  "taskList.contextMenu.copyContent": "复制内容",
+  "taskList.contextMenu.copyContentSuccess": "内容已复制",
   "taskList.contextMenu.copyDescription": "将此任务（及其所有子任务）克隆到另一个工作区。状态将重置为待办。",
   "taskList.contextMenu.copyFailed": "任务复制失败",
   "taskList.contextMenu.copyId": "复制 ID",
