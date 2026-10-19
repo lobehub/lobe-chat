@@ -62,6 +62,7 @@
   "linear.installResult.error.exchange_failed": "Linear yetkilendirmeyi kabul etmedi. Lütfen tekrar bağlanmayı deneyin.",
   "linear.installResult.error.invalid_state": "Bağlantı isteğinin süresi doldu. Lütfen Çalışma alanını bağla işlemine yeniden başlayın.",
   "linear.installResult.error.missing_code": "Linear bir yetkilendirme kodu döndürmedi.",
+  "linear.installResult.error.save_failed": "Linear bağlantıyı yetkilendirdi, ancak LobeHub bunu kaydedemedi. Lütfen yeniden bağlanmayı deneyin.",
   "linear.installResult.error.unknown": "Linear bağlanamadı ({{code}}).",
   "linear.installResult.error.workspace_forbidden": "Sadece çalışma alanı üyeleri burada Linear'ı bağlayabilir.",
   "linear.installResult.success": "Linear bağlandı: {{account}}",

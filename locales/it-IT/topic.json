@@ -271,6 +271,7 @@
   "reportProblem.failed": "Impossibile inviare il rapporto. Riprova.",
   "reportProblem.placeholder": "Cosa è andato storto? (opzionale)",
   "reportProblem.rateLimited": "Hai inviato molti rapporti di recente. Riprova più tardi.",
+  "reportProblem.recentDesc": "Gli ID dell'argomento più recente e l'ambiente della tua app vengono inviati al team di supporto di LobeHub, che può quindi esaminare le esecuzioni, gli errori e la conversazione di quell'argomento.",
   "reportProblem.submit": "Invia",
   "reportProblem.success": "Rapporto inviato",
   "reportProblem.successDesc": "ID del rapporto: {{id}}",

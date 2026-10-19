@@ -271,6 +271,7 @@
   "reportProblem.failed": "Не удалось отправить отчет. Попробуйте еще раз.",
   "reportProblem.placeholder": "Что пошло не так? (необязательно)",
   "reportProblem.rateLimited": "Вы отправили много отчетов за последнее время. Попробуйте позже.",
+  "reportProblem.recentDesc": "Идентификаторы вашей последней темы и ваша среда приложения отправляются в команду поддержки LobeHub, которая затем может изучить выполнение, ошибки и разговоры по этой теме.",
   "reportProblem.submit": "Отправить",
   "reportProblem.success": "Отчет отправлен",
   "reportProblem.successDesc": "ID отчета: {{id}}",

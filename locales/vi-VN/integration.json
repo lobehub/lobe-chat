@@ -62,6 +62,7 @@
   "linear.installResult.error.exchange_failed": "Linear không chấp nhận quyền ủy quyền. Vui lòng thử kết nối lại.",
   "linear.installResult.error.invalid_state": "Yêu cầu kết nối đã hết hạn. Vui lòng bắt đầu lại từ Kết nối không gian làm việc.",
   "linear.installResult.error.missing_code": "Linear không trả về mã ủy quyền.",
+  "linear.installResult.error.save_failed": "Linear đã ủy quyền kết nối, nhưng LobeHub không thể lưu lại. Vui lòng thử kết nối lại.",
   "linear.installResult.error.unknown": "Kết nối Linear thất bại ({{code}}).",
   "linear.installResult.error.workspace_forbidden": "Chỉ thành viên không gian làm việc mới có thể kết nối Linear tại đây.",
   "linear.installResult.success": "Linear đã được kết nối: {{account}}",

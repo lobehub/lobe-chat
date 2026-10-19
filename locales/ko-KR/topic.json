@@ -271,6 +271,7 @@
   "reportProblem.failed": "보고서를 제출할 수 없습니다. 다시 시도하세요.",
   "reportProblem.placeholder": "무엇이 잘못되었나요? (선택 사항)",
   "reportProblem.rateLimited": "최근에 많은 보고서를 보냈습니다. 나중에 다시 시도하세요.",
+  "reportProblem.recentDesc": "가장 최근 주제의 ID와 앱 환경이 LobeHub 지원 팀에 전송되며, 이를 통해 해당 주제의 실행, 오류 및 대화를 조사할 수 있습니다.",
   "reportProblem.submit": "제출",
   "reportProblem.success": "보고서가 제출되었습니다",
   "reportProblem.successDesc": "보고서 ID: {{id}}",

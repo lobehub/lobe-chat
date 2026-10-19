@@ -271,6 +271,7 @@
   "reportProblem.failed": "Không thể gửi báo cáo. Vui lòng thử lại.",
   "reportProblem.placeholder": "Điều gì đã xảy ra? (tùy chọn)",
   "reportProblem.rateLimited": "Bạn đã gửi quá nhiều báo cáo gần đây. Vui lòng thử lại sau.",
+  "reportProblem.recentDesc": "ID của chủ đề gần đây nhất của bạn và môi trường ứng dụng của bạn sẽ được gửi đến nhóm hỗ trợ LobeHub, để họ có thể xem xét các lần chạy, lỗi và cuộc trò chuyện của chủ đề đó.",
   "reportProblem.submit": "Gửi",
   "reportProblem.success": "Báo cáo đã được gửi",
   "reportProblem.successDesc": "ID báo cáo: {{id}}",

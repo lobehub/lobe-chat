@@ -62,6 +62,7 @@
   "linear.installResult.error.exchange_failed": "Linear no aceptó la autorización. Por favor, intenta conectar de nuevo.",
   "linear.installResult.error.invalid_state": "La solicitud de conexión expiró. Por favor, comienza de nuevo desde Conectar espacio de trabajo.",
   "linear.installResult.error.missing_code": "Linear no devolvió un código de autorización.",
+  "linear.installResult.error.save_failed": "Linear autorizó la conexión, pero LobeHub no pudo guardarla. Por favor, intenta conectarte de nuevo.",
   "linear.installResult.error.unknown": "La conexión con Linear falló ({{code}}).",
   "linear.installResult.error.workspace_forbidden": "Solo los miembros del espacio de trabajo pueden conectar Linear aquí.",
   "linear.installResult.success": "Linear conectado: {{account}}",

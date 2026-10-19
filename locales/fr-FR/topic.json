@@ -271,6 +271,7 @@
   "reportProblem.failed": "Impossible de soumettre le rapport. Réessayez.",
   "reportProblem.placeholder": "Qu'est-ce qui s'est mal passé ? (facultatif)",
   "reportProblem.rateLimited": "Vous avez envoyé beaucoup de rapports récemment. Réessayez plus tard.",
+  "reportProblem.recentDesc": "Les identifiants de votre sujet le plus récent et l'environnement de votre application sont envoyés à l'équipe de support de LobeHub, qui peut ensuite examiner les exécutions, erreurs et conversations de ce sujet.",
   "reportProblem.submit": "Soumettre",
   "reportProblem.success": "Rapport soumis",
   "reportProblem.successDesc": "ID du rapport : {{id}}",

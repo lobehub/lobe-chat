@@ -271,6 +271,7 @@
   "reportProblem.failed": "گزارش ارسال نشد. دوباره تلاش کنید.",
   "reportProblem.placeholder": "چه مشکلی پیش آمد؟ (اختیاری)",
   "reportProblem.rateLimited": "شما اخیراً گزارش‌های زیادی ارسال کرده‌اید. بعداً دوباره تلاش کنید.",
+  "reportProblem.recentDesc": "شناسه‌های موضوع اخیر شما و محیط برنامه شما به تیم پشتیبانی LobeHub ارسال می‌شوند، که سپس می‌توانند اجرای آن موضوع، خطاها و مکالمه را بررسی کنند.",
   "reportProblem.submit": "ارسال",
   "reportProblem.success": "گزارش ارسال شد",
   "reportProblem.successDesc": "شناسه گزارش: {{id}}",
