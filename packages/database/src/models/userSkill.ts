@@ -21,7 +21,8 @@ import { FileModel } from './file';
  * its published versions in `files`.
  *
  * A skill is a `skills/bundle` row owned by the user and bound to no agent, so
- * any agent or run can load it by name. Under it sit its `SKILL.md`
+ * any agent or run can load it by name; its `content` is the skill's
+ * description. Under it sit its `SKILL.md`
  * (`skills/index`) and the files beside it (`skills/file`, the path in
  * `filename`): text in `content`, a binary file's bytes in the `files` row its
  * `fileId` links. These are ordinary documents, edited in place.
@@ -354,7 +355,8 @@ export class UserSkillModel {
         .insert(documents)
         .values(
           this.row({
-            content: '',
+            // The bundle reads as the skill it holds: its description.
+            content: params.description,
             description: params.description,
             fileType: SKILL_BUNDLE_FILE_TYPE,
             filename: params.name,

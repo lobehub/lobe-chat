@@ -76,6 +76,11 @@ describe('UserSkillModel', () => {
     });
     expect(skill.content).toContain('v1 body');
     expect(skill.archive).toMatchObject({ size: 42 });
+    const [bundle] = await serverDB
+      .select({ content: documents.content })
+      .from(documents)
+      .where(eq(documents.id, skill.id));
+    expect(bundle.content).toBe('Move one slice');
     expect(await model.listVersions(skill.id)).toMatchObject([
       { archive: skill.archive, version: 1 },
     ]);
