@@ -104,7 +104,7 @@ export const planDecomposition = async (
     // so: the server log and the first task's audit event carry the cause.
     let plannerFailure: string | undefined;
     const plan = await generator
-      .decompose({ clarifications, requirement })
+      .decompose({ clarifications, goalConfig: graph.goal.config, requirement })
       .catch((error: unknown) => {
         plannerFailure = describePlannerFailure(error);
         console.error(

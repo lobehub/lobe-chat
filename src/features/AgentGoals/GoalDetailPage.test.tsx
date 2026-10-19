@@ -38,6 +38,10 @@ vi.mock('@/store/goal', () => ({
     }),
 }));
 
+vi.mock('@/store/serverConfig', () => ({
+  useServerConfigStore: (selector: (s: any) => unknown) => selector({ featureFlags: {} }),
+}));
+
 vi.mock('@/store/chat', () => ({
   useChatStore: (selector: (s: any) => unknown) => selector({ clearPortalStack: vi.fn() }),
 }));
@@ -55,6 +59,11 @@ vi.mock('@/store/global', () => ({
 
 vi.mock('@/store/global/selectors', () => ({
   systemStatusSelectors: { showLeftPanel: () => false },
+}));
+
+// The main-agent picker follows a handover to the new agent's route.
+vi.mock('@/features/Workspace/useWorkspaceAwareNavigate', () => ({
+  useWorkspaceAwareNavigate: () => vi.fn(),
 }));
 
 vi.mock('@/hooks/usePermission', () => ({ usePermission: () => ({ allowed: mocks.canEdit }) }));

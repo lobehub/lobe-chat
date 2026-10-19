@@ -4,19 +4,17 @@ import { TRPCError } from '@trpc/server';
 import { GoalGraphModel } from '@/database/models/goalGraph';
 import { TaskModel } from '@/database/models/task';
 import { TaskTopicModel } from '@/database/models/taskTopic';
-import { assertAgentUsableBy } from '@/database/utils/agent-access';
 
 import { TaskService } from '../../task';
+import { GoalAssignmentService } from '../assignment';
 import {
   GOAL_ACCEPTANCE_TASK_TITLE,
   NO_FRONTIER_PAUSE_REASON,
   TERMINAL_NODE_STATUSES,
 } from '../decideNextMove';
-import { GoalManagerService } from '../manager';
 import { managerTurnsSpent } from '../recoveryPolicy';
 import { isGoalReportNode } from '../report';
 import type { CreateGoalNodeInput, GoalServiceContext } from './types';
-import { goalTaskAgentId } from './utils';
 
 /**
  * The graph model whose audit trail names `agentId` as the author, or the
@@ -65,127 +63,50 @@ export const updateRequirement = async (
 };
 
 /**
- * Hand the goal to a different agent. The goal agent supervises: it owns the
- * goal page and list entry and runs every planning turn. When it also does
- * the goal's own Tasks (no separate `taskAgentId`), every Task the
- * coordinator creates from here on goes to the new agent and — unless the
- * caller opts out — the unfinished ones move with it. A goal whose Tasks go
- * to a dedicated executor keeps them there; see `setTaskAgent`.
- *
- * The management conversation moves with supervision: it lives in the goal
- * agent's own history, so it is re-created for the new agent here instead of
- * being left pointing at the previous agent's topic until the next claim.
+ * Who works on a goal and with which model lives in `GoalAssignmentService`:
+ * handoffs, the Task executor and both model slots share its locked
+ * transactions, so these methods only bind it to this service's principal.
  */
-export const setAgent = async (
+const assignmentFor = (ctx: GoalServiceContext) =>
+  new GoalAssignmentService(ctx.db, ctx.userId, ctx.workspaceId);
+
+/** Hand the goal to a different agent; see `GoalAssignmentService.setAgent`. */
+export const setAgent = (
   ctx: GoalServiceContext,
-  goalId: string,
-  agentId: string,
-  options?: { goalOnly?: boolean },
-): Promise<{ goal: GoalItem; reassignedTaskIds: string[] }> => {
-  await assertAgentUsableBy(ctx.db, agentId, {
-    userId: ctx.userId,
-    workspaceId: ctx.workspaceId,
-  });
-  const goal = await ctx.goalModel.update(goalId, { agentId });
-  if (!goal) throw new TRPCError({ code: 'NOT_FOUND', message: 'Goal not found' });
+  ...args: Parameters<GoalAssignmentService['setAgent']>
+) => assignmentFor(ctx).setAgent(...args);
 
-  // The receipt carries the management topic, so the caller must get the row
-  // with the migrated one — not the copy read before the handoff.
-  const migrated = await new GoalManagerService(
-    ctx.db,
-    ctx.userId,
-    ctx.workspaceId,
-  ).moveConversationTo(goalId, agentId);
-
-  const reassignedTaskIds = await ctx.followGoalAgent(goal, agentId, options?.goalOnly);
-  return {
-    goal: migrated ? ((await ctx.goalModel.findById(goalId)) ?? goal) : goal,
-    reassignedTaskIds,
-  };
-};
-
-/**
- * After the goal agent changed: when that agent also does the goal's Tasks,
- * unfinished ones follow it unless the caller keeps them (`goalOnly`). A goal
- * with a dedicated executor keeps its Tasks there.
- */
-export const followGoalAgent = async (
+/** Unfinished Tasks follow a new goal agent; see `GoalAssignmentService.followGoalAgent`. */
+export const followGoalAgent = (
   ctx: GoalServiceContext,
-  goal: Pick<GoalItem, 'config' | 'id'>,
-  agentId: string,
-  goalOnly?: boolean,
-) => (goalOnly || goal.config?.taskAgentId ? [] : ctx.reassignUnfinishedTasks(goal.id, agentId));
+  ...args: Parameters<GoalAssignmentService['followGoalAgent']>
+) => assignmentFor(ctx).followGoalAgent(...args);
 
-/**
- * Route the goal's Tasks to a dedicated executor, or back to the goal agent
- * with `null`. The goal agent keeps supervising either way. Unfinished Tasks
- * move with the change unless the caller opts out.
- */
-export const setTaskAgent = async (
+/** Route Tasks to a dedicated executor; see `GoalAssignmentService.setTaskAgent`. */
+export const setTaskAgent = (
   ctx: GoalServiceContext,
-  goalId: string,
-  agentId: string | null,
-  options?: { goalOnly?: boolean },
-): Promise<{ goal: GoalItem; reassignedTaskIds: string[] }> => {
-  if (agentId) {
-    await assertAgentUsableBy(ctx.db, agentId, {
-      userId: ctx.userId,
-      workspaceId: ctx.workspaceId,
-    });
-  }
-  const current = await ctx.goalModel.findById(goalId);
-  if (!current) throw new TRPCError({ code: 'NOT_FOUND', message: 'Goal not found' });
-  // Naming the goal agent itself is the same as clearing: one agent, one slot.
-  const goal = await ctx.goalModel.updateTaskAgentId(
-    goalId,
-    agentId && agentId !== current.agentId ? agentId : null,
-  );
-  if (!goal) throw new TRPCError({ code: 'NOT_FOUND', message: 'Goal not found' });
+  ...args: Parameters<GoalAssignmentService['setTaskAgent']>
+) => assignmentFor(ctx).setTaskAgent(...args);
 
-  const assignee = goalTaskAgentId(goal);
-  const reassignedTaskIds =
-    options?.goalOnly || !assignee ? [] : await ctx.reassignUnfinishedTasks(goalId, assignee);
-  return { goal, reassignedTaskIds };
-};
-
-/**
- * The agent the next coordinator-created Task goes to.
- *
- * `taskAgentId` lives in JSON, so deleting the executor does not null it the
- * way the `agent_id` foreign key is nulled. Handing that stale id to
- * `createTask` fails with NOT_FOUND on every tick and the goal can never
- * create work again — so a missing executor falls back to the goal agent.
- */
-export const resolveTaskAssignee = async (ctx: GoalServiceContext, goal: GoalItem) => {
-  const taskAgentId = goal.config?.taskAgentId;
-  if (taskAgentId && !(await ctx.agentModel.existsById(taskAgentId)))
-    return goal.agentId ?? undefined;
-  return goalTaskAgentId(goal);
-};
-
-/**
- * Snapshot the graph AFTER the goal row moved: a task the coordinator binds
- * later inherits the new assignee from the goal, and a task bound before is in
- * this snapshot — so no concurrently created task can slip through the
- * handoff still pointing at the previous agent. A Task mid-run keeps its
- * current operation; `runTask` reads the assignee at its next dispatch.
- */
-export const reassignUnfinishedTasks = async (
+/** The model planning turns run on; see `GoalAssignmentService.setModel`. */
+export const setModel = (
   ctx: GoalServiceContext,
-  goalId: string,
-  agentId: string,
-) => {
-  const graph = await ctx.requireGraph(goalId);
-  const taskIds = graph.nodes.flatMap((node) => (node.taskId ? [node.taskId] : []));
-  const reassigned: string[] = [];
-  for (const task of await ctx.taskModel.findByIds(taskIds)) {
-    if (task.status === 'completed' || task.status === 'canceled') continue;
-    if (task.assigneeAgentId === agentId) continue;
-    await ctx.taskModel.update(task.id, { assigneeAgentId: agentId });
-    reassigned.push(task.id);
-  }
-  return reassigned;
-};
+  ...args: Parameters<GoalAssignmentService['setModel']>
+) => assignmentFor(ctx).setModel(...args);
+
+/** The model the goal's Tasks run on; see `GoalAssignmentService.setTaskModel`. */
+export const setTaskModel = (
+  ctx: GoalServiceContext,
+  ...args: Parameters<GoalAssignmentService['setTaskModel']>
+) => assignmentFor(ctx).setTaskModel(...args);
+
+/** The agent the next coordinator-created Task goes to. */
+export const resolveTaskAssignee = (ctx: GoalServiceContext, goal: GoalItem) =>
+  assignmentFor(ctx).resolveTaskAssignee(goal);
+
+/** Move unfinished Tasks (and their model) to `agentId`. */
+export const reassignUnfinishedTasks = (ctx: GoalServiceContext, goalId: string, agentId: string) =>
+  assignmentFor(ctx).reassignUnfinishedTasks(goalId, agentId);
 
 /**
  * Task access under the goal owner's principal — the identity the goal's
