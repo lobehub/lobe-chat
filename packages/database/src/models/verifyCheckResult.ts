@@ -1,4 +1,4 @@
-import { and, asc, desc, eq, inArray, isNull } from 'drizzle-orm';
+import { and, asc, desc, eq, inArray, isNull, sql } from 'drizzle-orm';
 
 import type { NewVerifyCheckResult, VerifyCheckResultItem } from '../schemas/verify';
 import { verifyCheckResults, verifyRuns } from '../schemas/verify';
@@ -125,6 +125,43 @@ export class VerifyCheckResultModel {
       );
     }
 
+    return row;
+  };
+
+  /**
+   * Write a builder's dispute onto a result, but only while no ruling has been
+   * decided on it and no other arbitration holds it. Only the `dispute` key is
+   * replaced, so metadata written by a concurrent verifier survives.
+   *
+   * A claim is the dispute's `arbitratingSince` timestamp. `holder` lets the
+   * claimant itself write the ruling; a claim older than `staleBefore` (an
+   * arbitration that died) no longer blocks anyone.
+   *
+   * @returns the updated row, or undefined when the guard refused the write.
+   */
+  writeDisputeIfOpen = async (
+    id: string,
+    dispute: Record<string, unknown>,
+    guard: { holder?: string; staleBefore: Date },
+  ): Promise<VerifyCheckResultItem | undefined> => {
+    const current = sql`${verifyCheckResults.metadata} -> 'dispute'`;
+    const claimedAt = sql`(${current} ->> 'arbitratingSince')`;
+    const [row] = await this.db
+      .update(verifyCheckResults)
+      .set({
+        metadata: sql`jsonb_set(coalesce(${verifyCheckResults.metadata}, '{}'::jsonb), '{dispute}', ${JSON.stringify(dispute)}::jsonb)`,
+      })
+      .where(
+        and(
+          eq(verifyCheckResults.id, id),
+          this.ownership(),
+          sql`not (coalesce(${current} ->> 'kind', '') = 'invalid_criterion' and coalesce(${current} -> 'arbitration' ->> 'outcome', '') in ('upheld', 'overruled'))`,
+          sql`(${claimedAt} is null or ${claimedAt}::timestamptz < ${guard.staleBefore.toISOString()}::timestamptz${
+            guard.holder ? sql` or ${claimedAt} = ${guard.holder}` : sql``
+          })`,
+        ),
+      )
+      .returning();
     return row;
   };
 

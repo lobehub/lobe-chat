@@ -355,3 +355,100 @@ describe('VerifyRunModel plan', () => {
     );
   });
 });
+
+describe('VerifyCheckResultModel.writeDisputeIfOpen', () => {
+  const later = () => new Date(Date.now() + 60_000);
+  const earlier = () => new Date(Date.now() - 60_000);
+  const seed = async (metadata?: Record<string, unknown>) => {
+    const model = new VerifyCheckResultModel(serverDB, userId);
+    const row = await model.create({
+      checkItemId: 'item-1',
+      checkItemIndex: 0,
+      metadata,
+      verifierType: 'llm',
+      verifyRunId,
+    });
+    return { model, row };
+  };
+  const note = { filedAt: 'now', kind: 'missed_evidence', reason: 'see it' };
+
+  it('writes only the dispute key, keeping the rest of the metadata', async () => {
+    const { model, row } = await seed({ visualization: { schemaVersion: 1 } });
+
+    expect(await model.writeDisputeIfOpen(row.id, note, { staleBefore: earlier() })).toBeDefined();
+    expect((await model.findById(row.id))?.metadata).toEqual({
+      dispute: note,
+      visualization: { schemaVersion: 1 },
+    });
+  });
+
+  it('refuses to replace a decided ruling', async () => {
+    const ruled = {
+      arbitration: { decidedAt: 'then', outcome: 'overruled', votes: [] },
+      filedAt: 'then',
+      kind: 'invalid_criterion',
+      reason: 'x',
+    };
+    const { model, row } = await seed({ dispute: ruled });
+
+    expect(
+      await model.writeDisputeIfOpen(row.id, note, { staleBefore: earlier() }),
+    ).toBeUndefined();
+    expect((await model.findById(row.id))?.metadata).toEqual({ dispute: ruled });
+  });
+
+  it('lets only one of two concurrent claims through', async () => {
+    const { model, row } = await seed();
+    const claim = (since: string) =>
+      model.writeDisputeIfOpen(
+        row.id,
+        { arbitratingSince: since, filedAt: since, kind: 'invalid_criterion', reason: since },
+        { staleBefore: earlier() },
+      );
+
+    const results = await Promise.all([
+      claim(new Date().toISOString()),
+      claim(later().toISOString()),
+    ]);
+    expect(results.filter(Boolean)).toHaveLength(1);
+  });
+
+  it('lets the claim holder write the ruling, and anyone in once the claim is stale', async () => {
+    const since = new Date().toISOString();
+    const { model, row } = await seed({
+      dispute: { arbitratingSince: since, filedAt: since, kind: 'invalid_criterion', reason: 'x' },
+    });
+
+    // Someone else is held off while the claim is fresh.
+    expect(
+      await model.writeDisputeIfOpen(row.id, note, { staleBefore: earlier() }),
+    ).toBeUndefined();
+    // The holder writes through its own claim.
+    const ruling = {
+      filedAt: since,
+      kind: 'invalid_criterion',
+      reason: 'x',
+      arbitration: { outcome: 'undecided' },
+    };
+    expect(
+      await model.writeDisputeIfOpen(row.id, ruling, { holder: since, staleBefore: earlier() }),
+    ).toBeDefined();
+
+    // A claim older than staleBefore no longer blocks a new filing.
+    await model.writeDisputeIfOpen(
+      row.id,
+      { arbitratingSince: since, filedAt: since, kind: 'invalid_criterion', reason: 'x' },
+      { holder: since, staleBefore: earlier() },
+    );
+    expect(await model.writeDisputeIfOpen(row.id, note, { staleBefore: later() })).toBeDefined();
+  });
+
+  it('is scoped to the owner', async () => {
+    const { row } = await seed();
+    const other = new VerifyCheckResultModel(serverDB, 'someone-else');
+
+    expect(
+      await other.writeDisputeIfOpen(row.id, note, { staleBefore: earlier() }),
+    ).toBeUndefined();
+  });
+});

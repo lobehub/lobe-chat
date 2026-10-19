@@ -39,10 +39,12 @@ const DisputeRulingSchema = z.object({ reason: z.string().nullish(), upheld: z.b
 
 export type FileCheckDisputeError =
   | 'ALREADY_RULED'
+  | 'ARBITRATION_IN_PROGRESS'
   | 'EMPTY_REASON'
   | 'HOLISTIC_CHECK'
   | 'NO_VERIFY_RUN'
   | 'PANEL_UNAVAILABLE'
+  | 'ROUND_SETTLED'
   | 'UNKNOWN_CRITERION'
   | 'UNKNOWN_EVIDENCE';
 
@@ -62,17 +64,29 @@ export interface FileCheckDisputeParams {
 }
 
 /**
- * The same check across the rounds of one Acceptance. A criterion keeps its
- * `sourceCriterionId` from round to round while its check item id is minted
- * fresh, so that is the identity; an ad-hoc check without one is matched by title.
+ * The same check across the rounds of one Acceptance, keyed exactly as the
+ * acceptance check union keys it: a flow node's check is its own occurrence
+ * even when several nodes reuse one criterion asset, so it keeps its item id;
+ * otherwise a criterion keeps its `sourceCriterionId` from round to round while
+ * its item id is minted fresh. An ad-hoc check without either is matched by title.
  */
-const logicalCheckKey = (row: {
-  checkItemTitle?: string | null;
+const logicalCheckKey = (item: {
+  id: string;
   sourceCriterionId?: string | null;
+  sourceFlowNode?: unknown;
+  title?: string | null;
 }) =>
-  row.sourceCriterionId
-    ? `criterion:${row.sourceCriterionId}`
-    : `title:${row.checkItemTitle ?? ''}`;
+  item.sourceFlowNode
+    ? `item:${item.id}`
+    : item.sourceCriterionId
+      ? `criterion:${item.sourceCriterionId}`
+      : `title:${item.title ?? ''}`;
+
+/** A round past these statuses has been judged and its Task driven; a waiver there would never settle. */
+const SETTLED_RUN_STATUSES = new Set(['delivered', 'errored', 'failed', 'passed', 'repairing']);
+
+/** An arbitration that has held its claim this long died; a new filing may take over. */
+const ARBITRATION_CLAIM_TTL_MS = 5 * 60 * 1000;
 
 const readDispute = (metadata: unknown): VerifyCheckDispute | undefined =>
   (metadata as VerifyCheckResultMetadata | null | undefined)?.dispute;
@@ -189,6 +203,14 @@ export const fileCheckDispute = async (
       success: false,
     };
   }
+  if (run.status && SETTLED_RUN_STATUSES.has(run.status)) {
+    return {
+      error: 'ROUND_SETTLED',
+      message:
+        'This round has already been judged, so a dispute can no longer change it. File disputes while the run is still working; for a settled round, make the argument in your handoff.',
+      success: false,
+    };
+  }
   const plan = (run.plan ?? []) as VerifyCheckItem[];
   const item = plan.find((candidate) => candidate.id === params.checkItemId);
   if (!item) {
@@ -235,11 +257,32 @@ export const fileCheckDispute = async (
     }
   }
 
-  const save = async (dispute: VerifyCheckDispute) => {
-    await resultModel.update(result.id, {
-      metadata: { ...(result.metadata as VerifyCheckResultMetadata | null), dispute },
+  // Every write is guarded: it lands only while no ruling is decided on this
+  // result and no other arbitration holds it, so concurrent filings cannot
+  // overwrite a ruling or each other.
+  const write = (dispute: VerifyCheckDispute, holder?: string) =>
+    resultModel.writeDisputeIfOpen(result.id, dispute as unknown as Record<string, unknown>, {
+      holder,
+      staleBefore: new Date(Date.now() - ARBITRATION_CLAIM_TTL_MS),
     });
-    return dispute;
+  // Read back what blocked a refused write, and answer with it.
+  const refused = async (): Promise<FileCheckDisputeResult> => {
+    const latest = readDispute((await resultModel.findById(result.id))?.metadata);
+    const ruling = latest?.arbitration;
+    if (latest?.kind === 'invalid_criterion' && ruling && ruling.outcome !== 'undecided') {
+      return params.kind === 'invalid_criterion'
+        ? { dispute: latest, message: describeArbitration(item.title, ruling), success: true }
+        : {
+            error: 'ALREADY_RULED',
+            message: `A panel already ruled on "${item.title}" in this round (${ruling.outcome}). Make the evidence argument in your handoff instead.`,
+            success: false,
+          };
+    }
+    return {
+      error: 'ARBITRATION_IN_PROGRESS',
+      message: `A panel is already ruling on "${item.title}". File the same dispute again in a minute to read its ruling.`,
+      success: false,
+    };
   };
   const filed: VerifyCheckDispute = {
     ...(evidenceIds.length ? { evidenceIds } : {}),
@@ -248,27 +291,10 @@ export const fileCheckDispute = async (
     reason,
   };
 
-  // A round holds one dispute per check, so a decided ruling must not be
-  // replaced by a note: the waiver would vanish, and an overruled check could
-  // be re-arbitrated in the same round.
-  const current = readDispute(result.metadata);
-  const decided =
-    current?.kind === 'invalid_criterion' &&
-    (current.arbitration?.outcome === 'upheld' || current.arbitration?.outcome === 'overruled')
-      ? current.arbitration
-      : undefined;
-
   if (params.kind === 'missed_evidence') {
-    if (decided) {
-      return {
-        error: 'ALREADY_RULED',
-        message: `A panel already ruled on "${item.title}" in this round (${decided.outcome}). Make the evidence argument in your handoff instead.`,
-        success: false,
-      };
-    }
-    const dispute = await save(filed);
+    if (!(await write(filed))) return refused();
     return {
-      dispute,
+      dispute: filed,
       message: `Recorded. The review of "${item.title}" will read your note next to its evidence; the note alone does not pass the check.`,
       success: true,
     };
@@ -276,25 +302,45 @@ export const fileCheckDispute = async (
 
   // A ruling is per check, not per round: answer this round's own ruling
   // again, then look for the check's rulings in earlier rounds.
-  if (decided) {
+  const current = readDispute(result.metadata);
+  if (
+    current?.kind === 'invalid_criterion' &&
+    current.arbitration &&
+    current.arbitration.outcome !== 'undecided'
+  ) {
     return {
-      dispute: current!,
-      message: describeArbitration(item.title, decided),
+      dispute: current,
+      message: describeArbitration(item.title, current.arbitration),
       success: true,
     };
   }
   if (run.acceptanceId) {
     const rounds = await runModel.listByAcceptance(run.acceptanceId);
-    const key = logicalCheckKey({
-      checkItemTitle: item.title,
-      sourceCriterionId: item.sourceCriterionId,
-    });
+    const planItems = new Map(
+      rounds.flatMap((round) =>
+        ((round.plan ?? []) as VerifyCheckItem[]).map(
+          (planned) => [`${round.id}:${planned.id}`, planned] as const,
+        ),
+      ),
+    );
+    const key = logicalCheckKey(item);
     const earlier = (await resultModel.listByRuns(rounds.map((round) => round.id)))
-      .filter((row: VerifyCheckResultItem) => row.id !== result.id && logicalCheckKey(row) === key)
+      .filter((row: VerifyCheckResultItem) => {
+        if (row.id === result.id) return false;
+        const planned = planItems.get(`${row.verifyRunId}:${row.checkItemId}`);
+        return (
+          logicalCheckKey(
+            planned ?? {
+              id: row.checkItemId,
+              sourceCriterionId: row.sourceCriterionId,
+              title: row.checkItemTitle,
+            },
+          ) === key
+        );
+      })
       .map((row) => readDispute(row.metadata)?.arbitration)
       .filter((ruling): ruling is VerifyDisputeArbitration => !!ruling);
-    const overruled = earlier.find((ruling) => ruling.outcome === 'overruled');
-    if (overruled) {
+    if (earlier.some((ruling) => ruling.outcome === 'overruled')) {
       return {
         error: 'ALREADY_RULED',
         message: `A panel already overruled a dispute of "${item.title}". The check stands: satisfy it.`,
@@ -303,10 +349,16 @@ export const fileCheckDispute = async (
     }
     const upheld = earlier.find((ruling) => ruling.outcome === 'upheld');
     if (upheld) {
-      const dispute = await save({ ...filed, arbitration: upheld });
+      const dispute = { ...filed, arbitration: upheld };
+      if (!(await write(dispute))) return refused();
       return { dispute, message: describeArbitration(item.title, upheld), success: true };
     }
   }
+
+  // Claim the check before paying for a panel: a concurrent filing that loses
+  // the claim gets the in-progress answer instead of rolling its own panel.
+  const claim = new Date().toISOString();
+  if (!(await write({ ...filed, arbitratingSince: claim }))) return refused();
 
   const acceptance = run.acceptanceId
     ? await new AcceptanceModel(db, userId, workspaceId).findById(run.acceptanceId)
@@ -318,8 +370,9 @@ export const fileCheckDispute = async (
     workspaceId,
   );
   if (panel.length < DISPUTE_PANEL_SIZE) {
-    // Not saved as a ruling: the dispute can be filed again once models are available.
-    await save(filed);
+    // Release the claim without a ruling: the dispute can be filed again once
+    // models are available.
+    if (!(await write(filed, claim))) return refused();
     return {
       error: 'PANEL_UNAVAILABLE',
       message: `Only ${panel.length} of the ${DISPUTE_PANEL_SIZE} review models a ruling needs are available, so the dispute was recorded but not arbitrated and "${item.title}" stands. Say so in your handoff so the owner can decide.`,
@@ -345,6 +398,8 @@ export const fileCheckDispute = async (
     }),
   );
   log('dispute of %s in run %s → %s', item.id, run.id, arbitration.outcome);
-  const dispute = await save({ ...filed, arbitration });
+  const dispute = { ...filed, arbitration };
+  // Only the claim holder writes the ruling; a takeover after a stale claim wins.
+  if (!(await write(dispute, claim))) return refused();
   return { dispute, message: describeArbitration(item.title, arbitration), success: true };
 };

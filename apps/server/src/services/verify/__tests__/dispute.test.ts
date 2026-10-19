@@ -14,7 +14,8 @@ const mocks = vi.hoisted(() => ({
   listByRuns: vi.fn(),
   panel: vi.fn(),
   run: vi.fn(),
-  update: vi.fn(),
+  findResult: vi.fn(),
+  write: vi.fn(),
   upsert: vi.fn(),
 }));
 vi.mock('@/database/models/verifyRun', () => ({
@@ -24,7 +25,12 @@ vi.mock('@/database/models/verifyRun', () => ({
 }));
 vi.mock('@/database/models/verifyCheckResult', () => ({
   VerifyCheckResultModel: vi.fn(function () {
-    return { listByRuns: mocks.listByRuns, update: mocks.update, upsertByCheckItem: mocks.upsert };
+    return {
+      findById: mocks.findResult,
+      listByRuns: mocks.listByRuns,
+      upsertByCheckItem: mocks.upsert,
+      writeDisputeIfOpen: mocks.write,
+    };
   }),
 }));
 vi.mock('@/database/models/verifyEvidence', () => ({
@@ -86,7 +92,7 @@ const rule = (rulings: Record<string, boolean | 'fail'>) =>
     if (ruling === 'fail') throw new Error('provider down');
     return { reason: `${model} says ${ruling}`, upheld: ruling };
   });
-const savedDispute = () => mocks.update.mock.calls.at(-1)?.[1].metadata.dispute;
+const savedDispute = () => mocks.write.mock.calls.at(-1)?.[1];
 
 beforeEach(() => {
   vi.clearAllMocks();
@@ -96,6 +102,7 @@ beforeEach(() => {
     plan: [{ ...item, id: 'c1', index: 0, title: 'Shows the report' }, item],
   });
   mocks.upsert.mockResolvedValue({ id: 'res2', metadata: { visualization: 'kept' } });
+  mocks.write.mockResolvedValue({ id: 'res2' });
   mocks.listByAcceptance.mockResolvedValue([{ id: 'r1' }, { id: 'r2' }]);
   mocks.listByRuns.mockResolvedValue([]);
   mocks.acceptance.mockResolvedValue({ config: {}, requirement: 'Show a sales report' });
@@ -115,8 +122,11 @@ describe('fileCheckDispute — invalid criterion', () => {
       arbitration: { outcome: 'upheld' },
       kind: 'invalid_criterion',
     });
-    // Existing metadata on the result survives the dispute write.
-    expect(mocks.update.mock.calls[0][1].metadata.visualization).toBe('kept');
+    // The check is claimed before the panel runs, and only that claim writes the ruling.
+    const [claimCall, rulingCall] = mocks.write.mock.calls;
+    expect(claimCall[1].arbitratingSince).toEqual(expect.any(String));
+    expect(rulingCall[2].holder).toBe(claimCall[1].arbitratingSince);
+    expect(rulingCall[1].arbitratingSince).toBeUndefined();
     expect(result.message).toContain('waived');
   });
 
@@ -170,7 +180,7 @@ describe('fileCheckDispute — invalid criterion', () => {
 
     expect(await file()).toMatchObject({ error: 'ALREADY_RULED', success: false });
     expect(mocks.generate).not.toHaveBeenCalled();
-    expect(mocks.update).not.toHaveBeenCalled();
+    expect(mocks.write).not.toHaveBeenCalled();
   });
 
   it('carries an earlier upheld ruling to this round without asking again', async () => {
@@ -213,6 +223,110 @@ describe('fileCheckDispute — invalid criterion', () => {
   });
 });
 
+describe('fileCheckDispute — guards', () => {
+  /**
+   * Regression: a dispute upheld after the round settled only rewrote metadata;
+   * the run, the Acceptance and the already-driven Task stayed failed.
+   */
+  it.each(['passed', 'failed', 'errored', 'repairing', 'delivered'])(
+    'refuses a dispute once the round is %s',
+    async (status) => {
+      mocks.run.mockResolvedValue({ acceptanceId: 'a1', id: 'r2', plan: [item], status });
+
+      expect(await file()).toMatchObject({ error: 'ROUND_SETTLED', success: false });
+      expect(mocks.write).not.toHaveBeenCalled();
+      expect(mocks.generate).not.toHaveBeenCalled();
+    },
+  );
+
+  it('accepts a dispute while the round is still being worked on or judged', async () => {
+    mocks.run.mockResolvedValue({
+      acceptanceId: 'a1',
+      id: 'r2',
+      plan: [item],
+      status: 'verifying',
+    });
+    rule({ a: false, b: false, c: false });
+
+    expect(await file()).toMatchObject({ success: true });
+  });
+
+  /**
+   * Regression: two concurrent filings both read an open dispute, each ran its
+   * own panel, and the last write could reverse the first ruling.
+   */
+  it('does not roll a second panel while another filing holds the check', async () => {
+    mocks.write.mockResolvedValueOnce(undefined);
+    mocks.findResult.mockResolvedValue({
+      id: 'res2',
+      metadata: {
+        dispute: {
+          arbitratingSince: 'now',
+          filedAt: 'now',
+          kind: 'invalid_criterion',
+          reason: 'x',
+        },
+      },
+    });
+
+    expect(await file()).toMatchObject({ error: 'ARBITRATION_IN_PROGRESS', success: false });
+    expect(mocks.panel).not.toHaveBeenCalled();
+    expect(mocks.generate).not.toHaveBeenCalled();
+  });
+
+  /**
+   * Regression: flow nodes reusing one criterion asset shared its
+   * sourceCriterionId, so one branch's ruling waived or blocked another branch.
+   */
+  it('keeps rulings of other flow occurrences of the same criterion apart', async () => {
+    const node = (id: string, nodeId: string) => ({
+      ...item,
+      id,
+      sourceFlowNode: { flowId: 'f1', nodeId },
+    });
+    mocks.run.mockResolvedValue({ acceptanceId: 'a1', id: 'r2', plan: [node('c2', 'b')] });
+    mocks.listByAcceptance.mockResolvedValue([
+      { id: 'r1', plan: [node('c1', 'a')] },
+      { id: 'r2', plan: [node('c2', 'b')] },
+    ]);
+    mocks.listByRuns.mockResolvedValue([
+      {
+        checkItemId: 'c1',
+        checkItemTitle: 'Exports a PDF',
+        id: 'res1',
+        metadata: { dispute: { arbitration: { outcome: 'overruled' }, kind: 'invalid_criterion' } },
+        sourceCriterionId: 'crit-2',
+        verifyRunId: 'r1',
+      },
+    ]);
+    rule({ a: true, b: true, c: true });
+
+    // Branch a's overruled ruling does not bind branch b: b gets its own panel.
+    expect(await file()).toMatchObject({ success: true });
+    expect(savedDispute().arbitration.outcome).toBe('upheld');
+  });
+
+  it('still carries a ruling to the same flow occurrence in a later round', async () => {
+    const node = { ...item, id: 'c2', sourceFlowNode: { flowId: 'f1', nodeId: 'b' } };
+    mocks.run.mockResolvedValue({ acceptanceId: 'a1', id: 'r2', plan: [node] });
+    mocks.listByAcceptance.mockResolvedValue([
+      { id: 'r1', plan: [node] },
+      { id: 'r2', plan: [node] },
+    ]);
+    mocks.listByRuns.mockResolvedValue([
+      {
+        checkItemId: 'c2',
+        id: 'res1',
+        metadata: { dispute: { arbitration: { outcome: 'overruled' }, kind: 'invalid_criterion' } },
+        verifyRunId: 'r1',
+      },
+    ]);
+
+    expect(await file()).toMatchObject({ error: 'ALREADY_RULED' });
+    expect(mocks.generate).not.toHaveBeenCalled();
+  });
+});
+
 describe('fileCheckDispute — missed evidence', () => {
   it('records the note for the next review without arbitrating', async () => {
     const result = await file({
@@ -236,23 +350,23 @@ describe('fileCheckDispute — missed evidence', () => {
    * waiver and let an overruled check be sent to the panel again.
    */
   it('keeps a ruling already made in this round instead of overwriting it', async () => {
-    mocks.upsert.mockResolvedValue({
-      id: 'res2',
-      metadata: {
-        dispute: {
-          arbitration: { decidedAt: 'then', outcome: 'overruled', votes: [] },
-          filedAt: 'then',
-          kind: 'invalid_criterion',
-          reason: 'Out of scope',
-        },
+    const ruled = {
+      dispute: {
+        arbitration: { decidedAt: 'then', outcome: 'overruled', votes: [] },
+        filedAt: 'then',
+        kind: 'invalid_criterion',
+        reason: 'Out of scope',
       },
-    });
+    };
+    mocks.upsert.mockResolvedValue({ id: 'res2', metadata: ruled });
+    // The guarded write refuses to replace a decided ruling.
+    mocks.write.mockResolvedValue(undefined);
+    mocks.findResult.mockResolvedValue({ id: 'res2', metadata: ruled });
 
     expect(await file({ kind: 'missed_evidence', reason: 'It is there' })).toMatchObject({
       error: 'ALREADY_RULED',
       success: false,
     });
-    expect(mocks.update).not.toHaveBeenCalled();
 
     // Filing the same dispute again answers the ruling rather than re-asking the panel.
     expect(await file()).toMatchObject({ success: true });
@@ -263,7 +377,7 @@ describe('fileCheckDispute — missed evidence', () => {
     expect(
       await file({ evidenceIds: ['other'], kind: 'missed_evidence', reason: 'See it' }),
     ).toMatchObject({ error: 'UNKNOWN_EVIDENCE', success: false });
-    expect(mocks.update).not.toHaveBeenCalled();
+    expect(mocks.write).not.toHaveBeenCalled();
   });
 
   it('rejects an empty argument', async () => {

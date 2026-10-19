@@ -822,6 +822,8 @@ export interface VerifyDisputeArbitration {
 
 /** A builder's dispute of one check, filed on the round's check result. */
 export interface VerifyCheckDispute {
+  /** Set while a panel is ruling; it is the claim that keeps a second panel out. */
+  arbitratingSince?: string;
   /** Only `invalid_criterion` disputes are arbitrated. */
   arbitration?: VerifyDisputeArbitration;
   /** Evidence rows on this check the builder points at. */
