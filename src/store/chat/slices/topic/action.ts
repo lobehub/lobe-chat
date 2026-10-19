@@ -79,7 +79,7 @@ import {
 } from './projection';
 import { type ChatTopicDispatch } from './reducer';
 import { topicSelectors } from './selectors';
-import { createTopicDetailSlice } from './topicDetail';
+import { createTopicDetailSlice, RUN_WATCH_INTERVAL } from './topicDetail';
 
 const n = setNamespace('t');
 
@@ -1457,7 +1457,7 @@ export class ChatTopicActionImpl {
     this.#topicDetail.useSync(topicId || null, {
       dedupingInterval: 1000,
       focusThrottleInterval: 5000,
-      refreshInterval: watchRuns ? 5000 : 0,
+      refreshInterval: watchRuns ? RUN_WATCH_INTERVAL : 0,
       refreshWhenHidden: false,
       refreshWhenOffline: false,
     });

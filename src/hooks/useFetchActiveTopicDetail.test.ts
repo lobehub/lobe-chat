@@ -4,6 +4,7 @@ import { SWRConfig } from 'swr';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { cacheScope, createReplicaState } from '@/libs/replica';
+import { scmService } from '@/services/scm';
 import { topicService } from '@/services/topic';
 import { useChatStore } from '@/store/chat';
 import { topicSelectors } from '@/store/chat/selectors';
@@ -70,6 +71,7 @@ describe('background runs in the active topic', () => {
       .internal_updateTopics(context.agentId, { items: [topic], pageSize: 20, total: 1 });
     config.serverConfig.agentGatewayUrl = 'wss://gateway.test';
     vi.spyOn(topicService, 'getTopicDetail').mockResolvedValue(topic);
+    vi.spyOn(scmService, 'hasWakeTarget').mockResolvedValue(true);
     // Network boundary: reconnect's local operation is what the real composer reads.
     vi.spyOn(useChatStore.getState(), 'reconnectToGatewayOperation').mockImplementation(
       async () => {
@@ -97,7 +99,7 @@ describe('background runs in the active topic', () => {
       status: 'running',
     });
     await act(async () => {
-      await vi.advanceTimersByTimeAsync(5_000);
+      await vi.advanceTimersByTimeAsync(15_000);
     });
     expect(result.current.isInputVisiblyLoading).toBe(true);
     expect(
@@ -150,7 +152,7 @@ describe('background runs in the active topic', () => {
       metadata: { runningOperation: next },
     });
     await act(async () => {
-      await vi.advanceTimersByTimeAsync(5000);
+      await vi.advanceTimersByTimeAsync(15_000);
     });
     expect(result.current.isInputVisiblyLoading).toBe(true);
     expect(useChatStore.getState().reconnectToGatewayOperation).toHaveBeenCalledTimes(2);
@@ -206,6 +208,50 @@ describe('background runs in the active topic', () => {
     });
     expect(result.current.isInputVisiblyLoading).toBe(false);
     expect(useChatStore.getState().reconnectToGatewayOperation).not.toHaveBeenCalled();
+  });
+
+  it('does not poll a known topic that no review or CI event can wake', async () => {
+    vi.useFakeTimers();
+    vi.mocked(scmService.hasWakeTarget).mockResolvedValue(false);
+    renderHook(useConversation, { wrapper });
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(60_000);
+    });
+    expect(scmService.hasWakeTarget).toHaveBeenCalledWith(context.topicId);
+    expect(topicService.getTopicDetail).not.toHaveBeenCalled();
+  });
+
+  it('starts watching once a local run links the topic to a pull request', async () => {
+    vi.useFakeTimers();
+    vi.mocked(scmService.hasWakeTarget).mockResolvedValue(false);
+    const { result } = renderHook(useConversation, { wrapper });
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(0);
+    });
+
+    // The agent opens a pull request during this run.
+    let operationId!: string;
+    act(() => {
+      ({ operationId } = useChatStore.getState().startOperation({ context, type: 'sendMessage' }));
+    });
+    vi.mocked(scmService.hasWakeTarget).mockResolvedValue(true);
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(3000);
+      useChatStore.getState().completeOperation(operationId);
+      // SWR revalidates a cached key on the next animation frame.
+      await vi.advanceTimersByTimeAsync(100);
+    });
+    expect(scmService.hasWakeTarget).toHaveBeenCalledTimes(2);
+    expect(topicService.getTopicDetail).toHaveBeenCalled();
+
+    vi.mocked(topicService.getTopicDetail).mockResolvedValue({
+      ...topic,
+      metadata: { runningOperation },
+    });
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(15_000);
+    });
+    expect(result.current.isInputVisiblyLoading).toBe(true);
   });
 
   it('does not poll known topics without a gateway', async () => {

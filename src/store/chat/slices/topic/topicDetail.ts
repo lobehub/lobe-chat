@@ -16,6 +16,9 @@ const topicOperations = (state: ChatStore, topicId: string) =>
     (op) => op.context.topicId === topicId && INPUT_LOADING_OPERATION_TYPES.includes(op.type),
   );
 
+/** Background run discovery cadence; armed only while SCM can wake the topic. */
+export const RUN_WATCH_INTERVAL = 15_000;
+
 /** Include terminal bookkeeping: its stream still owns the conversation. */
 export const hasLocalTopicRun = (state: ChatStore, topicId: string) =>
   topicOperations(state, topicId).some((op) => op.status === 'running');

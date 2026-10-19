@@ -1,3 +1,7 @@
+import useSWR from 'swr';
+
+import { scmKeys } from '@/libs/swr/keys';
+import { scmService } from '@/services/scm';
 import { useChatStore } from '@/store/chat';
 import { topicSelectors } from '@/store/chat/selectors';
 import { hasLocalTopicRun } from '@/store/chat/slices/topic/topicDetail';
@@ -8,6 +12,10 @@ import { useServerConfigStore } from '@/store/serverConfig';
  * SCM can wake an idle, already-open topic without a frontend send. Poll its
  * detail until the normal gateway reconnect owns a local operation; that path
  * supplies streaming, the composer's Stop control, and terminal cleanup.
+ *
+ * Polling is armed only while a review or CI event can still wake the topic.
+ * That check re-runs on entry, on focus, and after each local run, which is
+ * when the agent may have opened a pull request.
  */
 export const useFetchActiveTopicDetail = () => {
   const [activeTopicId, isMissingFromList, useFetchTopicDetail] = useChatStore((s) => [
@@ -18,13 +26,19 @@ export const useFetchActiveTopicDetail = () => {
     s.useFetchTopicDetail,
   ]);
   const gatewayEnabled = useServerConfigStore((s) => !!s.serverConfig.agentGatewayUrl);
-  const watchRuns = useChatStore(
+  const idle = useChatStore(
     (s) =>
       !!s.activeTopicId &&
       gatewayEnabled &&
       !s.creatingTopicIds.includes(s.activeTopicId) &&
       !hasLocalTopicRun(s, s.activeTopicId),
   );
+  const { data: wakeable } = useSWR(
+    idle && activeTopicId ? scmKeys.wakeTarget(activeTopicId) : null,
+    () => scmService.hasWakeTarget(activeTopicId!),
+    { shouldRetryOnError: false },
+  );
+  const watchRuns = idle && !!wakeable;
 
   useFetchTopicDetail(isMissingFromList || watchRuns ? activeTopicId : undefined, watchRuns);
 };
