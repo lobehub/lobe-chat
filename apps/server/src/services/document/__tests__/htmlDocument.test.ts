@@ -80,7 +80,30 @@ describe('DocumentService.updateDocument on an HTML document', () => {
     });
 
     const updates = documentModel.update.mock.calls[0][1];
-    expect(updates).toMatchObject({ content: html, fileType: HTML_DOCUMENT_FILE_TYPE });
-    expect(updates).not.toHaveProperty('editorData');
+    expect(updates).toMatchObject({
+      content: html,
+      editorData: null,
+      fileType: HTML_DOCUMENT_FILE_TYPE,
+    });
+  });
+
+  it('clears the rich-text editorData a page carried when only its type turns HTML', async () => {
+    documentModel.findById.mockResolvedValue({
+      editorData,
+      fileId: null,
+      fileType: 'custom/document',
+      id: 'doc-1',
+      updatedAt: new Date('2026-10-19T00:00:00.000Z'),
+    });
+
+    await service.updateDocument('doc-1', { fileType: HTML_DOCUMENT_FILE_TYPE });
+
+    // Left behind, the pre-HTML JSON would be what the editor loads (and saves)
+    // if the page is ever turned back into a rich-text page.
+    expect(documentModel.update.mock.calls[0][1]).toEqual({
+      editorData: null,
+      fileType: HTML_DOCUMENT_FILE_TYPE,
+    });
+    expect(createHistory).not.toHaveBeenCalled();
   });
 });

@@ -43,7 +43,11 @@ export const AGENT_ARTIFACT_SOURCE_TYPES = ['agent', 'agent-signal'] as const;
  */
 export const PAGE_DOCUMENT_SOURCE_TYPES: string[] = ['file', 'api'];
 
-export const PAGE_DOCUMENT_FILE_TYPES: string[] = [CUSTOM_DOCUMENT_FILE_TYPE, 'application/pdf'];
+export const PAGE_DOCUMENT_FILE_TYPES: string[] = [
+  CUSTOM_DOCUMENT_FILE_TYPE,
+  HTML_DOCUMENT_FILE_TYPE,
+  'application/pdf',
+];
 
 export const hasFilenameExtension = (filename: string): boolean =>
   /(?:^|[^.])\.[^.]+$/.test(filename);

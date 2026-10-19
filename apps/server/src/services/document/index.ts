@@ -750,11 +750,12 @@ export class DocumentService {
       }
 
       // An HTML document's body is its content alone: rich-text editorData sent
-      // with it (or with the write that makes it HTML) is never persisted.
-      const editorDataParam =
-        (params.fileType ?? currentDocument.fileType) === HTML_DOCUMENT_FILE_TYPE
-          ? undefined
-          : params.editorData;
+      // with it (or with the write that makes it HTML) is never persisted, and
+      // any the page carried before is cleared. Left behind, that pre-HTML JSON
+      // is what the editor would load and save if the page turned rich-text again.
+      const isHtmlDocument =
+        (params.fileType ?? currentDocument.fileType) === HTML_DOCUMENT_FILE_TYPE;
+      const editorDataParam = isHtmlDocument ? undefined : params.editorData;
 
       // Accepted-view projections used only for historyAppended comparison and
       // for the "before" snapshot written into history. The persisted editorData
@@ -804,6 +805,8 @@ export class DocumentService {
 
       if (editorDataParam !== undefined) {
         updates.editorData = editorDataParam;
+      } else if (isHtmlDocument && currentDocument.editorData != null) {
+        updates.editorData = null;
       }
 
       if (params.fileType !== undefined) {
