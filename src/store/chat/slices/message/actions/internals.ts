@@ -94,6 +94,17 @@ export class MessageInternalsActionImpl {
     transcript.settle(ctx);
   };
 
+  /** Insert a row this client created, so a stale read cannot drop it before it persists. */
+  internal_createClientMessage = (
+    id: string,
+    value: Extract<MessageDispatch, { type: 'createMessage' }>['value'],
+    context?: MessageDispatchContext,
+  ): void => {
+    this.#get().internal_dispatchMessage({ id, type: 'createMessage', value }, context, {
+      creationOrigin: 'client',
+    });
+  };
+
   internal_traceMessage = async (id: string, payload: TraceEventPayloads): Promise<void> => {
     // tracing the diff of update
     const message = displayMessageSelectors.getDisplayMessageById(id)(this.#get());

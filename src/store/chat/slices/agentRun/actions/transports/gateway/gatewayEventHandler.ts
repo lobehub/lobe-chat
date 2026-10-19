@@ -670,7 +670,6 @@ export const createGatewayEventHandler = (
                     },
                   },
                   dispatchContext,
-                  { creationOrigin: 'server' },
                 );
               } else {
                 // Older servers send only `{ id }` — fall back to a DB read.

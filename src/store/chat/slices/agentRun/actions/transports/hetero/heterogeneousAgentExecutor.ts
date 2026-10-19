@@ -513,6 +513,13 @@ export const executeHeterogeneousAgent = async (
   } = params;
   // Navigation can move to another workspace during the awaits below.
   const workspaceId = 'workspaceId' in params ? params.workspaceId : getActiveWorkspaceId();
+
+  /** Rows this executor creates; the write batcher persists them later. */
+  const createClientRow = (id: string, value: any, dispatchContext: { operationId: string }) =>
+    get().internal_dispatchMessage({ id, type: 'createMessage', value }, dispatchContext, {
+      creationOrigin: 'client',
+    });
+
   let outcome: HeterogeneousAgentExecutionOutcome | undefined;
   /** Set by `persistTerminalError`; surfaced on the outcome, see its doc. */
   let terminalErrorPersisted = false;
@@ -1211,11 +1218,7 @@ export const executeHeterogeneousAgent = async (
     return {
       stream: {
         create(msg) {
-          get().internal_dispatchMessage(
-            { id: msg.id, type: 'createMessage', value: msg as any },
-            dispatchCtx,
-            { creationOrigin: 'client' },
-          );
+          createClientRow(msg.id, msg as any, dispatchCtx);
         },
         replacePluginState(id, pluginState, metadata) {
           get().internal_dispatchMessage(
@@ -1641,11 +1644,7 @@ export const executeHeterogeneousAgent = async (
           console.error('[HeterogeneousAgent] Failed to create step assistant:', err);
           pendingCreateLedger.add(intent.messageId, messageToCreate);
         });
-        get().internal_dispatchMessage(
-          { id: intent.messageId, type: 'createMessage', value: messageToCreate },
-          { operationId },
-          { creationOrigin: 'client' },
-        );
+        createClientRow(intent.messageId, messageToCreate, { operationId });
         // Associate so cancellation / cleanup tracks the new step's message.
         get().associateMessageWithOperation(intent.messageId, operationId);
         return;
@@ -1761,11 +1760,7 @@ export const executeHeterogeneousAgent = async (
           });
           toolMsgIdByCallId.set(x.payload.id, x.toolMessageId);
           mainToolCallIds.add(x.payload.id);
-          get().internal_dispatchMessage(
-            { id: x.toolMessageId, type: 'createMessage', value: toolMsg },
-            { operationId },
-            { creationOrigin: 'client' },
-          );
+          createClientRow(x.toolMessageId, toolMsg, { operationId });
         }
 
         // Phase 3: backfill result_msg_id on assistant.tools[].

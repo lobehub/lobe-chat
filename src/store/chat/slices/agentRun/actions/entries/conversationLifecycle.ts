@@ -2403,20 +2403,16 @@ export class ConversationLifecycleActionImpl {
     });
 
     // Immediate UI feedback: render a pending compressed group from the first frame
-    this.#get().internal_dispatchMessage(
-      {
+    this.#get().internal_createClientMessage(
+      tempId,
+      createPendingCompressedGroup({
+        agentId,
+        groupId: context.groupId,
         id: tempId,
-        type: 'createMessage',
-        value: createPendingCompressedGroup({
-          agentId,
-          groupId: context.groupId,
-          id: tempId,
-          threadId: context.threadId,
-          topicId,
-        }) as any,
-      },
+        threadId: context.threadId,
+        topicId,
+      }) as any,
       { operationId },
-      { creationOrigin: 'client' },
     );
 
     try {

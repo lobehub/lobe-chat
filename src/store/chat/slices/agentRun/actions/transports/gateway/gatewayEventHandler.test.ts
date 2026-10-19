@@ -146,7 +146,6 @@ describe('createGatewayEventHandler', () => {
         }),
       },
       { operationId: 'op-1' },
-      { creationOrigin: 'server' },
     );
     // No DB roundtrip needed when the seed is present.
     expect(store.replaceMessages).not.toHaveBeenCalled();
