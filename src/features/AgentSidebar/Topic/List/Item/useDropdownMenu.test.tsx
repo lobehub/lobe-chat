@@ -55,6 +55,23 @@ vi.mock('@/business/client/hooks/useActiveWorkspaceId', () => ({
   useActiveWorkspaceId: () => workspaceMock.id,
 }));
 
+const labState = vi.hoisted(() => ({ enableTopicBugReport: false }));
+const bugReportTargetMock = vi.hoisted(() => vi.fn());
+vi.mock('@/business/client/hooks/useTopicBugReportMenuItem', () => ({
+  useTopicBugReportMenuItem: (target: unknown) => {
+    bugReportTargetMock(target);
+    return { key: 'reportProblem', label: 'actions.reportProblem' };
+  },
+}));
+vi.mock('@/store/user', () => ({
+  useUserStore: (selector: (state: typeof labState) => unknown) => selector(labState),
+}));
+vi.mock('@/store/user/selectors', () => ({
+  labPreferSelectors: {
+    enableTopicBugReport: (state: typeof labState) => state.enableTopicBugReport,
+  },
+}));
+
 vi.mock('@/components/RenameModal', () => ({
   openRenameModal: vi.fn(),
 }));
@@ -131,6 +148,7 @@ describe('useTopicItemDropdownMenu', () => {
     permissionMock.edit_own_content = true;
     versionMock.isDesktop = false;
     workspaceMock.id = null;
+    labState.enableTopicBugReport = false;
   });
 
   afterEach(() => {
@@ -278,7 +296,6 @@ describe('useTopicItemDropdownMenu', () => {
       'divider',
       'autoRename',
       'rename',
-      'diagnose',
       'divider',
       'openInNewTab',
       'openOnRight',
@@ -289,14 +306,29 @@ describe('useTopicItemDropdownMenu', () => {
       'copyTopicPrompt',
       'divider',
       'duplicate',
+      'share',
       'forwardToAgent',
       'moveToAgent',
       'divider',
-      'share',
+      'diagnose',
       'divider',
       'delete',
     ]);
     expect(getMenuItem(items, 'share')).toMatchObject({ label: 'shareModal.title' });
+  });
+
+  it('puts Report Bug next to the message chain check when the lab is on', () => {
+    labState.enableTopicBugReport = true;
+
+    const { result } = renderHook(() =>
+      useTopicItemDropdownMenu({ id: 'topic-1', title: 'Topic 1' }),
+    );
+    const keys = result.current
+      .dropdownMenu()
+      .map((item) => (item && 'key' in item ? item.key : 'divider'));
+
+    expect(keys.slice(-5)).toEqual(['divider', 'diagnose', 'reportProblem', 'divider', 'delete']);
+    expect(bugReportTargetMock).toHaveBeenCalledWith({ agentId: 'agent-1', topicId: 'topic-1' });
   });
 
   it('disables topic management actions for workspace viewers', () => {
