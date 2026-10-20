@@ -23,11 +23,24 @@ export interface PageSession {
   draft: PageDraft;
   setTitle: (title: string) => void;
   readonly title: string;
+  /**
+   * The stored version a session on the row read; absent for a room, which
+   * merges concurrent edits instead of refusing them.
+   */
+  readonly version?: string;
+}
+
+export interface OpenPageSessionOptions {
+  /**
+   * Refuse with {@link PageChangedError} unless the page is still at this
+   * {@link PageSession.version} (an edit computed against an earlier read).
+   */
+  expectedVersion?: string;
 }
 
 /** Where page edits are read from and written back to: the live room or the stored row. */
 export interface PageSessions {
-  openSession: (documentId: string) => Promise<PageSession>;
+  openSession: (documentId: string, options?: OpenPageSessionOptions) => Promise<PageSession>;
 }
 
 /** Who makes an edit, recorded on the version it produces. */
@@ -45,6 +58,18 @@ export const historyAttributionOf = (writer: PageWriter) => ({
   editorIds: [writer.userId],
   operationId: writer.operationId,
 });
+
+export const HTML_PAGE_UNSUPPORTED =
+  'This page is an HTML page: its body is one self-contained HTML document, not a node tree, ' +
+  'so the page tools cannot read or edit it.';
+
+/** The page has no editable node tree (an HTML page). */
+export class PageUnsupportedError extends Error {
+  constructor() {
+    super(HTML_PAGE_UNSUPPORTED);
+    this.name = 'PageUnsupportedError';
+  }
+}
 
 export class PageChangedError extends Error {
   constructor(readonly reason: 'changed' | 'locked') {

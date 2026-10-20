@@ -3,11 +3,20 @@ import {
   diffLiteXMLBlocks,
   EditorRuntime,
   formatModifyNodesResult,
+  type LiteXMLBlockDiffSummary,
+  type ModifyOperation,
   parseLiteXMLBlocks,
 } from '@lobechat/editor-runtime';
 
+import { withHeadlessEditorLock } from '@/server/services/agentDocuments/headlessEditor';
+
 import { runPageExclusive } from './queue';
-import { PageChangedError, type PageSession, type PageSessions } from './session';
+import {
+  PageChangedError,
+  type PageSession,
+  type PageSessions,
+  PageUnsupportedError,
+} from './session';
 
 export const PAGE_DIR = '/mnt/page';
 
@@ -102,84 +111,170 @@ interface ApplyResult {
   messages: string[];
 }
 
-const applyPageChanges = async (
-  session: PageSession,
+/** The page as a command saw it: its LiteXML in stable ids, title and stored version. */
+interface PageSnapshot {
+  stableXml: string;
+  title: string;
+  version?: string;
+}
+
+// Lexical numbers nodes from one process-wide counter, which a stored-id
+// hydration anywhere resets. No editor may live across the sandbox command,
+// so each phase opens its own under the headless-editor lock.
+const readPage = (sessions: PageSessions, documentId: string): Promise<PageSnapshot> =>
+  withHeadlessEditorLock(async () => {
+    const session = await sessions.openSession(documentId);
+    try {
+      const keyXml = session.draft.editor.export({ litexml: true }).litexml ?? '';
+      return {
+        stableXml: swapIds(keyXml, session.draft.stableIds()),
+        title: session.title,
+        version: session.version,
+      };
+    } finally {
+      session.draft.destroy();
+    }
+  });
+
+// Block operations in stable ids, addressed to the keys of a later session.
+const toSessionIds = (
+  operation: ModifyOperation,
+  stableToKey: Map<string, string>,
+): ModifyOperation => {
+  const key = (id: string) => stableToKey.get(id) ?? id;
+  switch (operation.action) {
+    case 'insert': {
+      return 'afterId' in operation
+        ? { ...operation, afterId: key(operation.afterId) }
+        : { ...operation, beforeId: key(operation.beforeId) };
+    }
+    case 'remove': {
+      return { ...operation, id: key(operation.id) };
+    }
+    case 'modify': {
+      const litexml = Array.isArray(operation.litexml)
+        ? operation.litexml.map((xml) => swapIds(xml, stableToKey))
+        : swapIds(operation.litexml, stableToKey);
+      return { ...operation, litexml };
+    }
+  }
+};
+
+const changedMessage = (error: PageChangedError) =>
+  error.reason === 'locked'
+    ? 'Nothing was written: another member is editing the page. Try again later.'
+    : `Nothing was written: the page changed after this command read it. Read ${PAGE_DIR}/doc.xml again and redo the edit.`;
+
+/**
+ * Applies what the command changed to the page as it is now. The block diff is
+ * taken against the page the command read, so edits others made meanwhile to
+ * other blocks survive in a room; a stored page that changed refuses instead.
+ */
+const writePage = async (
+  sessions: PageSessions,
   documentId: string,
-  snapshot: { keyXml: string; stableToKey: Map<string, string> },
+  base: PageSnapshot,
   parsed: ParsedPageOutput,
 ): Promise<ApplyResult> => {
   const messages: string[] = parsed.deleted.map(
     (file) => `warning: ${PAGE_DIR}/${file} was deleted; ignored.`,
   );
 
+  let operations: ModifyOperation[] = [];
+  let summary: LiteXMLBlockDiffSummary | undefined;
   const nextStableXml = parsed.changed['doc.xml'];
   if (nextStableXml !== undefined) {
-    const nextXml = swapIds(nextStableXml, snapshot.stableToKey);
-    if (nextXml.length > Math.max(4 * snapshot.keyXml.length, MIN_SIZE_LIMIT)) {
+    if (nextStableXml.length > Math.max(4 * base.stableXml.length, MIN_SIZE_LIMIT)) {
       messages.push(
         'Nothing was written: the edited page is too large compared with the current one.',
       );
       return { changed: false, messages };
     }
-    const diff = diffLiteXMLBlocks(snapshot.keyXml, nextXml);
+    const diff = diffLiteXMLBlocks(base.stableXml, nextStableXml);
     if (!diff.ok) {
       messages.push(`Nothing was written: ${PAGE_DIR}/doc.xml ${diff.reason}.`);
       return { changed: false, messages };
     }
     if (diff.operations.length === 0) {
       messages.push(`${PAGE_DIR}/doc.xml: no block changes detected.`);
-    } else {
-      const runtime = new EditorRuntime();
-      runtime.setEditor(session.draft.editor.kernel as any);
-      runtime.setCurrentDocId(documentId);
-      runtime.setTitleHandlers(
-        () => {},
-        () => session.title,
-      );
-      const result = await runtime.modifyNodes({ operations: diff.operations });
-      const { inserted, modified, removed } = diff.summary;
-      messages.push(
-        `${PAGE_DIR}/doc.xml: ${modified} modified, ${inserted} inserted, ${removed} removed; changes await the user's review.`,
-        formatModifyNodesResult(result),
-      );
     }
+    operations = diff.operations;
+    summary = diff.summary;
   }
 
-  const nextTitle = parsed.changed.title?.replace(/\r?\n$/, '');
-  if (nextTitle !== undefined && nextTitle !== session.title) {
+  let nextTitle = parsed.changed.title?.replace(/\r?\n$/, '');
+  if (nextTitle !== undefined && nextTitle !== base.title) {
     if (!nextTitle.trim() || /[\n\r]/.test(nextTitle)) {
       messages.push(
         `Nothing was written to the title: ${PAGE_DIR}/title must hold a single non-empty line.`,
       );
+      nextTitle = undefined;
     } else {
-      session.setTitle(nextTitle.trim());
-      messages.push(`${PAGE_DIR}/title: renamed to "${nextTitle.trim()}".`);
+      nextTitle = nextTitle.trim();
     }
+  } else {
+    nextTitle = undefined;
   }
 
-  let changed: boolean;
-  try {
-    changed = await session.commit();
-  } catch (error) {
-    if (!(error instanceof PageChangedError)) throw error;
-    messages.push(
-      error.reason === 'locked'
-        ? 'Nothing was written: another member is editing the page. Try again later.'
-        : `Nothing was written: the page changed after this command read it. Read ${PAGE_DIR}/doc.xml again and redo the edit.`,
-    );
-    return { changed: false, messages };
-  }
+  if (operations.length === 0 && nextTitle === undefined) return { changed: false, messages };
 
-  if (changed && nextStableXml !== undefined) {
-    const keyToStable = session.draft.stableIds();
-    const refreshed = swapIds(
-      session.draft.editor.export({ litexml: true }).litexml ?? '',
-      keyToStable,
-    );
-    messages.push(`${PAGE_DIR}/.meta/outline (ids after this edit):\n${buildOutline(refreshed)}`);
-  }
+  return withHeadlessEditorLock(async () => {
+    let session: PageSession;
+    try {
+      session = await sessions.openSession(documentId, { expectedVersion: base.version });
+    } catch (error) {
+      if (!(error instanceof PageChangedError)) throw error;
+      messages.push(changedMessage(error));
+      return { changed: false, messages };
+    }
 
-  return { changed, messages };
+    try {
+      if (operations.length > 0 && summary) {
+        const runtime = new EditorRuntime();
+        runtime.setEditor(session.draft.editor.kernel as any);
+        runtime.setCurrentDocId(documentId);
+        runtime.setTitleHandlers(
+          () => {},
+          () => session.title,
+        );
+        const stableToKey = invert(session.draft.stableIds());
+        const result = await runtime.modifyNodes({
+          operations: operations.map((operation) => toSessionIds(operation, stableToKey)),
+        });
+        const { inserted, modified, removed } = summary;
+        messages.push(
+          `${PAGE_DIR}/doc.xml: ${modified} modified, ${inserted} inserted, ${removed} removed; changes await the user's review.`,
+          formatModifyNodesResult(result),
+        );
+      }
+      if (nextTitle !== undefined) {
+        session.setTitle(nextTitle);
+        messages.push(`${PAGE_DIR}/title: renamed to "${nextTitle}".`);
+      }
+
+      let changed: boolean;
+      try {
+        changed = await session.commit();
+      } catch (error) {
+        if (!(error instanceof PageChangedError)) throw error;
+        messages.push(changedMessage(error));
+        return { changed: false, messages };
+      }
+
+      if (changed && operations.length > 0) {
+        const refreshed = swapIds(
+          session.draft.editor.export({ litexml: true }).litexml ?? '',
+          session.draft.stableIds(),
+        );
+        messages.push(
+          `${PAGE_DIR}/.meta/outline (ids after this edit):\n${buildOutline(refreshed)}`,
+        );
+      }
+      return { changed, messages };
+    } finally {
+      session.draft.destroy();
+    }
+  });
 };
 
 const withOutput = (result: SandboxCallToolResult, transform: (text: string) => string) => {
@@ -212,45 +307,39 @@ export const withPageSync = (
 
     const { documentId, sessions } = options;
     return runPageExclusive(documentId, async () => {
-      const session = await sessions.openSession(documentId);
+      let base: PageSnapshot;
       try {
-        const keyXml = session.draft.editor.export({ litexml: true }).litexml ?? '';
-        const keyToStable = session.draft.stableIds();
-        const stableXml = swapIds(keyXml, keyToStable);
-        const { title } = session;
-        const nonce = options.nonce?.() ?? crypto.randomUUID().replaceAll('-', '');
-
-        const result = await service.callTool(toolName, {
-          ...params,
-          command: wrapPageCommand(
-            params.command,
-            { outline: buildOutline(stableXml), title, xml: stableXml },
-            nonce,
-            options.pageDir,
-          ),
-        });
-        if (!result.success) return result;
-
-        const raw = (result.result ?? {}) as Record<string, unknown>;
-        const parsed = parsePageOutput(String(raw.stdout ?? raw.output ?? ''), nonce);
-        const applied = await applyPageChanges(
-          session,
-          documentId,
-          { keyXml, stableToKey: invert(keyToStable) },
-          parsed,
-        );
-        const notes = result.sessionExpiredAndRecreated
-          ? [
-              `note: the sandbox was recreated; files outside ${PAGE_DIR} from earlier calls are gone.`,
-            ]
-          : [];
-
-        return withOutput(result, () =>
-          [parsed.output.trimEnd(), ...applied.messages, ...notes].filter(Boolean).join('\n'),
-        );
-      } finally {
-        session.draft.destroy();
+        base = await readPage(sessions, documentId);
+      } catch (error) {
+        if (!(error instanceof PageUnsupportedError)) throw error;
+        const result = await service.callTool(toolName, params);
+        return withOutput(result, (text) => `${text}\nnote: ${error.message}`);
       }
+
+      const nonce = options.nonce?.() ?? crypto.randomUUID().replaceAll('-', '');
+      const result = await service.callTool(toolName, {
+        ...params,
+        command: wrapPageCommand(
+          params.command,
+          { outline: buildOutline(base.stableXml), title: base.title, xml: base.stableXml },
+          nonce,
+          options.pageDir,
+        ),
+      });
+      if (!result.success) return result;
+
+      const raw = (result.result ?? {}) as Record<string, unknown>;
+      const parsed = parsePageOutput(String(raw.stdout ?? raw.output ?? ''), nonce);
+      const applied = await writePage(sessions, documentId, base, parsed);
+      const notes = result.sessionExpiredAndRecreated
+        ? [
+            `note: the sandbox was recreated; files outside ${PAGE_DIR} from earlier calls are gone.`,
+          ]
+        : [];
+
+      return withOutput(result, () =>
+        [parsed.output.trimEnd(), ...applied.messages, ...notes].filter(Boolean).join('\n'),
+      );
     });
   },
   exportAndUploadFile: (path, filename, exportOptions) =>

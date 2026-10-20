@@ -1,6 +1,8 @@
-import { createHeadlessEditor, type HeadlessEditor } from '@lobehub/editor/headless';
+import type { HeadlessEditor } from '@lobehub/editor/headless';
 import type { SerializedEditorState, SerializedLexicalNode } from 'lexical';
 import * as Y from 'yjs';
+
+import { createDocumentHeadlessEditor } from '@/server/services/agentDocuments/headlessEditor';
 
 import { loadEditorYjs } from './editorYjs';
 import type { PageDraft } from './session';
@@ -66,7 +68,7 @@ export const openPageFork = async (
   const baseVector = Y.encodeStateVector(doc);
   const joining = !bootstrapFrom;
 
-  const editor = createHeadlessEditor({
+  const editor = createDocumentHeadlessEditor({
     additionalPlugins: [
       [
         YjsPlugin,

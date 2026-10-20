@@ -1,12 +1,14 @@
-import { createHeadlessEditor } from '@lobehub/editor/headless';
 import isEqual from 'fast-deep-equal';
 
 import type { LobeChatDatabase } from '@/database/type';
+import { createDocumentHeadlessEditor } from '@/server/services/agentDocuments/headlessEditor';
 import { DocumentService } from '@/server/services/document';
 
 import { editorDataFromRow, toStoredMarkdown } from './editorData';
 import {
   historyAttributionOf,
+  type OpenPageSessionOptions,
+  PageChangedError,
   type PageSession,
   type PageSessions,
   type PageWriter,
@@ -31,11 +33,15 @@ export class DbPageSessions implements PageSessions {
     this.documentService = new DocumentService(db, writer.userId, writer.workspaceId);
   }
 
-  async openSession(documentId: string): Promise<PageSession> {
+  async openSession(documentId: string, options?: OpenPageSessionOptions): Promise<PageSession> {
     const row = await this.documentService.getDocumentById(documentId);
     if (!row) throw new Error(`Page document not found: ${documentId}`);
+    const version = row.updatedAt.toISOString();
+    if (options?.expectedVersion && options.expectedVersion !== version) {
+      throw new PageChangedError('changed');
+    }
 
-    const editor = createHeadlessEditor();
+    const editor = createDocumentHeadlessEditor();
     const stored = editorDataFromRow(row);
     // `keepId` restores the stored node ids, so LiteXML ids match across sessions.
     if (stored) editor.hydrateEditorData(stored, { keepId: true });
@@ -74,6 +80,7 @@ export class DbPageSessions implements PageSessions {
         nextTitle = title;
       },
       title: initialTitle,
+      version,
     };
   }
 }

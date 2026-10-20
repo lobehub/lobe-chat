@@ -11,6 +11,7 @@ import * as Y from 'yjs';
 
 import { openPageFork, projectPageState } from '../fork';
 import { parsePageOutput, withPageSync } from '../sandboxSync';
+import { PageUnsupportedError } from '../session';
 
 const run = promisify(execFile);
 
@@ -182,5 +183,23 @@ describe('withPageSync', () => {
 
     expect(out).toContain('Nothing was written');
     expect(await markdownOf(room)).toBe('para one\n');
+  });
+  it('runs a command on an HTML page without mounting it', async () => {
+    const sandbox = withPageSync(shellSandbox, {
+      documentId: 'doc_1',
+      pageDir,
+      sessions: {
+        openSession: async () => {
+          throw new PageUnsupportedError();
+        },
+      },
+    });
+
+    const res = await sandbox.callTool('runCommand', { command: 'echo hello' });
+    const out = String((res.result as any).stdout);
+
+    expect(out).toContain('hello');
+    expect(out).toContain('HTML page');
+    expect(out).not.toContain('__LOBE_SYNC');
   });
 });

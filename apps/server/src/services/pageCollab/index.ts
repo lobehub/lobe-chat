@@ -1,3 +1,5 @@
+import { HTML_DOCUMENT_FILE_TYPE } from '@lobechat/const';
+
 import type { LobeChatDatabase } from '@/database/type';
 import { DocumentService } from '@/server/services/document';
 import { canPerformResourceAction, getResourceMeta } from '@/server/services/resourcePermission';
@@ -6,27 +8,28 @@ import { isSkillMarkdownDocument } from '@/utils/skillMarkdown';
 import { isPageCollabEnabled } from './config';
 import { DbPageSessions } from './dbSession';
 import { RoomPageSessions } from './roomSession';
-import type { PageSessions, PageWriter } from './session';
+import { type PageSessions, PageUnsupportedError, type PageWriter } from './session';
 
 export type PageAccess = 'edit' | 'none' | 'view';
 
 /**
  * Page edits go through the live room when collaboration is on, else to the
  * stored row. A SKILL.md never joins a room: its editor saves the frontmatter
- * alongside the body over HTTP, which a room would overwrite.
+ * alongside the body over HTTP, which a room would overwrite. An HTML page has
+ * no node tree to edit at all.
  */
 export const createPageSessions = (db: LobeChatDatabase, writer: PageWriter): PageSessions => {
   const stored = new DbPageSessions(db, writer);
-  if (!isPageCollabEnabled()) return stored;
-
-  const room = new RoomPageSessions(db, writer);
+  const room = isPageCollabEnabled() ? new RoomPageSessions(db, writer) : undefined;
   const documents = new DocumentService(db, writer.userId, writer.workspaceId);
+
   return {
-    openSession: async (documentId) => {
+    openSession: async (documentId, options) => {
       const row = await documents.getDocumentById(documentId);
-      return row && isSkillMarkdownDocument(row)
-        ? stored.openSession(documentId)
-        : room.openSession(documentId);
+      if (row?.fileType === HTML_DOCUMENT_FILE_TYPE) throw new PageUnsupportedError();
+      return room && !(row && isSkillMarkdownDocument(row))
+        ? room.openSession(documentId)
+        : stored.openSession(documentId, options);
     },
   };
 };

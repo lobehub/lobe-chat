@@ -3,14 +3,14 @@ import {
   diffLiteXMLBlocks,
   type ModifyOperation,
 } from '@lobechat/editor-runtime';
-import {
-  createHeadlessEditor,
-  type HeadlessEditor,
-  type HeadlessLiteXMLOperation,
-} from '@lobehub/editor/headless';
+import type { HeadlessEditor, HeadlessLiteXMLOperation } from '@lobehub/editor/headless';
 
 import type { LobeChatDatabase } from '@/database/type';
 import { isValidEditorData } from '@/libs/editor/isValidEditorData';
+import {
+  createDocumentHeadlessEditor,
+  withHeadlessEditorLock,
+} from '@/server/services/agentDocuments/headlessEditor';
 import type { DocumentService } from '@/server/services/document';
 import type { UpdateDocumentParams, UpdateDocumentResult } from '@/server/services/document/types';
 
@@ -33,7 +33,7 @@ const toHeadlessOperation = (operation: ModifyOperation): HeadlessLiteXMLOperati
 };
 
 const bodyEditorOf = (body: PageBody) => {
-  const editor = createHeadlessEditor();
+  const editor = createDocumentHeadlessEditor();
   if (isValidEditorData(body.editorData)) {
     editor.hydrateEditorData(body.editorData as unknown as SerializedEditor, { keepId: true });
   } else if (body.markdown?.trim()) {
@@ -79,22 +79,24 @@ export const writePageBodyThroughRoom = async (
 ): Promise<boolean> => {
   if (!isPageCollabEnabled()) return false;
 
-  return runPageExclusive(documentId, async () => {
-    const session = await new RoomPageSessions(db, writer).openLiveSession(documentId);
-    if (!session) return false;
+  return runPageExclusive(documentId, () =>
+    withHeadlessEditorLock(async () => {
+      const session = await new RoomPageSessions(db, writer).openLiveSession(documentId);
+      if (!session) return false;
 
-    try {
-      if (body.editorData !== undefined || body.markdown !== undefined) {
-        await applyBody(session.draft.editor, body);
+      try {
+        if (body.editorData !== undefined || body.markdown !== undefined) {
+          await applyBody(session.draft.editor, body);
+        }
+        if (body.title !== undefined && body.title !== session.title) session.setTitle(body.title);
+
+        await session.commit();
+        return true;
+      } finally {
+        session.draft.destroy();
       }
-      if (body.title !== undefined && body.title !== session.title) session.setTitle(body.title);
-
-      await session.commit();
-      return true;
-    } finally {
-      session.draft.destroy();
-    }
-  });
+    }),
+  );
 };
 
 /**
@@ -147,14 +149,16 @@ export const snapshotPageThroughRoom = async (
 ): Promise<boolean> => {
   if (!isPageCollabEnabled()) return false;
 
-  return runPageExclusive(documentId, async () => {
-    const session = await new RoomPageSessions(db, writer).openLiveSession(documentId);
-    if (!session) return false;
-    try {
-      await session.persistAs(writer.saveSource);
-      return true;
-    } finally {
-      session.draft.destroy();
-    }
-  });
+  return runPageExclusive(documentId, () =>
+    withHeadlessEditorLock(async () => {
+      const session = await new RoomPageSessions(db, writer).openLiveSession(documentId);
+      if (!session) return false;
+      try {
+        await session.persistAs(writer.saveSource);
+        return true;
+      } finally {
+        session.draft.destroy();
+      }
+    }),
+  );
 };

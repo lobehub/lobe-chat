@@ -27,6 +27,7 @@ vi.mock('../file', () => ({ FileService: vi.fn() }));
 vi.mock('../skill/resource', () => ({ SkillResourceService: vi.fn() }));
 
 vi.mock('@lobehub/editor/headless', () => ({
+  DEFAULT_HEADLESS_EDITOR_PLUGINS: [],
   createHeadlessEditor: vi.fn(() => {
     let markdown = '';
     return {

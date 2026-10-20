@@ -1,7 +1,7 @@
-import { createHeadlessEditor } from '@lobehub/editor/headless';
 import type { SerializedEditorState, SerializedLexicalNode } from 'lexical';
 
 import { isValidEditorData } from '@/libs/editor/isValidEditorData';
+import { createDocumentHeadlessEditor } from '@/server/services/agentDocuments/headlessEditor';
 import {
   composeSkillMarkdown,
   isSkillMarkdownDocument,
@@ -28,7 +28,7 @@ export const editorDataFromRow = (row: StoredPage): SerializedEditor | null => {
     : row.content;
   if (!markdown?.trim()) return null;
 
-  const editor = createHeadlessEditor();
+  const editor = createDocumentHeadlessEditor();
   try {
     editor.hydrateMarkdown(markdown, { keepId: true });
     return editor.export().editorData;
