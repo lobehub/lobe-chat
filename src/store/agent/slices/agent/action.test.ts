@@ -75,7 +75,6 @@ beforeEach(() => {
     builtinAgentMap: {},
     builtinAgentReplica: createReplicaState(),
     availableAgents: undefined,
-    availableAgentsStale: false,
     updateAgentConfigSignal: undefined,
     agentDocumentsMap: {},
     streamingSystemRole: undefined,
