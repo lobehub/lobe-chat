@@ -4,7 +4,6 @@ import debug from 'debug';
 
 import { UserModel } from '@/database/models/user';
 import { FileService } from '@/server/services/file';
-import { MarketService } from '@/server/services/market';
 import { createSandboxService, resolveSandboxSessionConfig } from '@/server/services/sandbox';
 import {
   isDirectLhInvocation,
@@ -14,6 +13,7 @@ import {
 } from '@/server/services/toolExecution/preprocessLhCommand';
 
 import { resolveContentWorkspaceId } from './resolveWorkspaceScope';
+import { createSandboxMarketService } from './sandboxMarket';
 import { type ServerRuntimeRegistration } from './types';
 
 const log = debug('lobe-server:cloud-sandbox');
@@ -151,14 +151,12 @@ export const cloudSandboxRuntime: ServerRuntimeRegistration = {
       workspaceId,
     });
 
-    const marketService = new MarketService({
+    const marketService = createSandboxMarketService(
+      context,
       accessToken,
-      userInfo: {
-        sandboxStorage: sandbox.claim,
-        userId: context.userId,
-        workspaceId,
-      },
-    });
+      workspaceId,
+      sandbox.claim,
+    );
     const fileService = new FileService(context.serverDB, context.userId, workspaceId);
     const sandboxService = createSandboxService({
       fileService,

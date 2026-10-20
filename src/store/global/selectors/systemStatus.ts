@@ -194,6 +194,7 @@ export const SIDEBAR_SPACER_ID = '__spacer__';
 
 export const DEFAULT_SIDEBAR_ITEMS: string[] = [
   'tasks',
+  'goals',
   'dashboard',
   'resource',
   'recents',

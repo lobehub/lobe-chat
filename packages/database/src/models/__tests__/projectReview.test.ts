@@ -121,7 +121,7 @@ describe('ProjectMemberModel', () => {
     await expect(members.add({ projectId, userId: guestId, role: 'member' })).resolves.toBeNull();
   });
 
-  it('rejects a member of another workspace, including a direct insert', async () => {
+  it('rejects a member of another workspace', async () => {
     const [other] = await serverDB
       .insert(workspaces)
       .values({
@@ -133,9 +133,7 @@ describe('ProjectMemberModel', () => {
     await serverDB.insert(workspaceMembers).values({ workspaceId: other.id, userId: guestId });
     await serverDB.delete(workspaceMembers).where(eq(workspaceMembers.workspaceId, workspaceId));
     await expect(members.add({ projectId, userId: guestId, role: 'member' })).resolves.toBeNull();
-    await expect(
-      serverDB.insert(projectMembers).values({ projectId, workspaceId: other.id, userId: guestId }),
-    ).rejects.toThrow();
+    expect(await serverDB.select().from(projectMembers)).toEqual([]);
   });
 
   it('revokes project access on workspace departure and does not restore it on rejoin', async () => {

@@ -245,7 +245,6 @@ export const sessionKeys = {
     groupId,
   ]),
   list: def('session:list', (isLogin: boolean | undefined) => ['session:list', isLogin]),
-  search: def('session:search', (keyword?: string) => ['session:search', keyword]),
 };
 
 // ---- thread -------------------------------------------------------------
@@ -612,7 +611,6 @@ export const statsKeys = {
   agents: def('stats:agents', () => ['stats:agents']),
   countAgents: def('stats:countAgents', () => ['stats:countAgents']),
   countMessages: def('stats:countMessages', () => ['stats:countMessages']),
-  countSessions: def('stats:countSessions', () => ['stats:countSessions']),
   countTopics: def('stats:countTopics', () => ['stats:countTopics']),
   heatmaps: def('stats:heatmaps', (type: string) => ['stats:heatmaps', type]),
   maxTaskDuration: def('stats:maxTaskDuration', () => ['stats:maxTaskDuration']),
@@ -664,6 +662,7 @@ export const scmKeys = {
     'scm:installations',
     workspaceId ?? null,
   ]),
+  wakeTarget: def('scm:wakeTarget', (topicId: string) => ['scm:wakeTarget', topicId]),
 };
 
 // ---- verify (deliverable judging) ---------------------------------------

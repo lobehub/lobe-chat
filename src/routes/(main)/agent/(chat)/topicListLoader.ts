@@ -80,6 +80,16 @@ export const preHydrateMessagesForRoute = async (
 };
 
 /**
+ * Seed the persisted sub-thread list of a route's topic, so the topic's thread
+ * rows and the thread portal header paint from local data on the first frame.
+ */
+export const preHydrateThreadsForRoute = async (topicId?: string): Promise<void> => {
+  if (!topicId) return;
+
+  await settleWithin(useChatStore.getState().preHydrateThreads(topicId), PRE_PAINT_HYDRATE_TIMEOUT);
+};
+
+/**
  * Seed the persisted device list, so the input bar names the bound device and
  * resolves its cwd on the first frame instead of after the mount-time hydrate.
  */
@@ -104,6 +114,7 @@ export const agentChatTopicListLoader = async ({ params }: LoaderFunctionArgs): 
   await Promise.all([
     preHydrateTopicListForRoute(params.aid),
     preHydrateMessagesForRoute(params.aid, params.topicId),
+    preHydrateThreadsForRoute(params.topicId),
     preHydrateDeviceListForRoute(),
   ]);
 

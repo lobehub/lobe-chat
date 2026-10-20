@@ -25,13 +25,12 @@ CREATE TABLE IF NOT EXISTS "project_sites" (
 	CONSTRAINT "project_sites_origins_not_empty" CHECK (cardinality("project_sites"."origins") > 0)
 );
 --> statement-breakpoint
-CREATE UNIQUE INDEX IF NOT EXISTS "projects_id_workspace_id_unique" ON "projects" USING btree ("id","workspace_id");--> statement-breakpoint
+ALTER TABLE "project_members" DROP CONSTRAINT IF EXISTS "project_members_project_id_projects_id_fk";--> statement-breakpoint
+ALTER TABLE "project_members" ADD CONSTRAINT "project_members_project_id_projects_id_fk" FOREIGN KEY ("project_id") REFERENCES "public"."projects"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "project_members" DROP CONSTRAINT IF EXISTS "project_members_user_id_users_id_fk";--> statement-breakpoint
+ALTER TABLE "project_members" ADD CONSTRAINT "project_members_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "project_members" DROP CONSTRAINT IF EXISTS "project_members_added_by_user_id_users_id_fk";--> statement-breakpoint
 ALTER TABLE "project_members" ADD CONSTRAINT "project_members_added_by_user_id_users_id_fk" FOREIGN KEY ("added_by_user_id") REFERENCES "public"."users"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "project_members" DROP CONSTRAINT IF EXISTS "project_members_project_workspace_fk";--> statement-breakpoint
-ALTER TABLE "project_members" ADD CONSTRAINT "project_members_project_workspace_fk" FOREIGN KEY ("project_id","workspace_id") REFERENCES "public"."projects"("id","workspace_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "project_members" DROP CONSTRAINT IF EXISTS "project_members_workspace_member_fk";--> statement-breakpoint
-ALTER TABLE "project_members" ADD CONSTRAINT "project_members_workspace_member_fk" FOREIGN KEY ("workspace_id","user_id") REFERENCES "public"."workspace_members"("workspace_id","user_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "project_sites" DROP CONSTRAINT IF EXISTS "project_sites_project_id_projects_id_fk";--> statement-breakpoint
 ALTER TABLE "project_sites" ADD CONSTRAINT "project_sites_project_id_projects_id_fk" FOREIGN KEY ("project_id") REFERENCES "public"."projects"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "project_sites" DROP CONSTRAINT IF EXISTS "project_sites_workspace_id_workspaces_id_fk";--> statement-breakpoint

@@ -62,6 +62,7 @@
   "linear.installResult.error.exchange_failed": "Linearが認証を受け入れませんでした。もう一度接続を試してください。",
   "linear.installResult.error.invalid_state": "接続リクエストの有効期限が切れました。ワークスペースを接続するところからやり直してください。",
   "linear.installResult.error.missing_code": "Linearが認証コードを返しませんでした。",
+  "linear.installResult.error.save_failed": "Linearは接続を承認しましたが、LobeHubは保存できませんでした。もう一度接続を試してください。",
   "linear.installResult.error.unknown": "Linearの接続に失敗しました（{{code}}）。",
   "linear.installResult.error.workspace_forbidden": "ワークスペースメンバーのみがここでLinearを接続できます。",
   "linear.installResult.success": "Linearが接続されました: {{account}}",

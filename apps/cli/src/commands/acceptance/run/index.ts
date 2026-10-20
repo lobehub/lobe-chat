@@ -1,6 +1,9 @@
+import { verifySurfaces } from '@lobechat/const/verify';
 import type { Command } from 'commander';
+import { Option } from 'commander';
 
 import { createPublicLambdaClient } from '../../../api/client';
+import { outputJson } from '../../../utils/format';
 import { installAction, type InstallOptions, withInstallOptions } from '../install';
 import { DECISIONS } from '../utils';
 import {
@@ -11,6 +14,11 @@ import {
 } from './evidence';
 import { ingestReportAction, withIngestReportOptions } from './ingest';
 import { reportGetAction, reportUpsertAction, withReportUpsertOptions } from './report';
+import {
+  createAcceptanceReportTemplate,
+  getAcceptanceReportJsonSchema,
+  validateAcceptanceReport,
+} from './reportSchema';
 import {
   decisionAction,
   resultIngestAction,
@@ -60,6 +68,45 @@ export function attachAcceptanceRunCommands(acceptance: Command): void {
   const run = acceptance
     .command('run')
     .description('Acceptance rounds (immutable verification snapshots)');
+
+  run
+    .command('schema')
+    .description('Print the result.json authoring JSON Schema, without login or network access')
+    .option('--example', 'Print a draft result.json with no executed cases')
+    .addOption(
+      new Option('--surface <surface>', 'Surface for the example plan')
+        .choices(verifySurfaces)
+        .default('web'),
+    )
+    .option('--json [fields]', 'Output JSON (default); optionally select top-level fields')
+    .action(
+      (options: {
+        example?: boolean;
+        json?: boolean | string;
+        surface: (typeof verifySurfaces)[number];
+      }) => {
+        outputJson(
+          options.example
+            ? createAcceptanceReportTemplate(options.surface)
+            : getAcceptanceReportJsonSchema(),
+          options.json,
+        );
+      },
+    );
+
+  run
+    .command('validate <reportDir>')
+    .description('Check local result.json and evidence files offline; never publish')
+    .option('--json [fields]', 'Output JSON (default); optionally select top-level fields')
+    .addHelpText(
+      'after',
+      '\nChecks the authoring schema, check IDs and local evidence. Account language, media inspection and remote plan membership remain unchecked. Invalid reports exit with code 1. Drafts are valid but unexecuted. Use ingest --dry-run for account checks.',
+    )
+    .action(async (reportDir: string, options: { json?: boolean | string }) => {
+      const result = await validateAcceptanceReport(reportDir);
+      outputJson(result, options.json);
+      if (!result.valid) process.exitCode = 1;
+    });
 
   withIngestReportOptions(
     run

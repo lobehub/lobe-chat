@@ -74,7 +74,6 @@ export const projects = pgTable(
     ...timestamps,
   },
   (t) => [
-    uniqueIndex('projects_id_workspace_id_unique').on(t.id, t.workspaceId),
     uniqueIndex('projects_slug_user_id_unique')
       .on(t.slug, t.userId)
       .where(sql`${t.workspaceId} IS NULL`),

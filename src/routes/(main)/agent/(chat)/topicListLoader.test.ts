@@ -5,12 +5,14 @@ import { PRE_PAINT_HYDRATE_TIMEOUT } from '@/libs/replica/prePaint';
 import {
   agentChatTopicListLoader,
   preHydrateMessagesForRoute,
+  preHydrateThreadsForRoute,
   preHydrateTopicListForRoute,
 } from './topicListLoader';
 
 const preHydrateTopicListMock = vi.hoisted(() => vi.fn(async () => true));
 const getSidebarTopicListParamsMock = vi.hoisted(() => vi.fn());
 const preHydrateMessagesMock = vi.hoisted(() => vi.fn(async () => true));
+const preHydrateThreadsMock = vi.hoisted(() => vi.fn(async (_topicId?: string) => true));
 const builtinAgentIdMap = vi.hoisted(() => ({ inbox: 'agt_inbox' }) as Record<string, string>);
 const preHydrateBuiltinAgentMock = vi.hoisted(() => vi.fn(async () => true));
 const preHydrateDeviceListMock = vi.hoisted(() => vi.fn(async () => true));
@@ -43,6 +45,7 @@ vi.mock('@/store/chat', () => ({
     getState: () => ({
       dbMessagesMap: chatState.dbMessagesMap,
       preHydrateMessages: preHydrateMessagesMock,
+      preHydrateThreads: preHydrateThreadsMock,
       preHydrateTopicList: preHydrateTopicListMock,
     }),
   },
@@ -210,5 +213,45 @@ describe('agent chat transcript pre-hydrate', () => {
     preHydrateMessagesMock.mockRejectedValueOnce(new Error('storage exploded'));
 
     await expect(preHydrateMessagesForRoute('agt_1', 'tpc_1')).resolves.toBeUndefined();
+  });
+});
+
+describe('agent chat thread list pre-hydrate', () => {
+  beforeEach(() => {
+    preHydrateThreadsMock.mockReset();
+    preHydrateThreadsMock.mockResolvedValue(true);
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  it("seeds the route topic's persisted threads before the route commits", async () => {
+    await agentChatTopicListLoader({ params: { aid: 'agt_1', topicId: 'tpc_1' } } as never);
+
+    expect(preHydrateThreadsMock).toHaveBeenCalledWith('tpc_1');
+  });
+
+  it('skips a route without a topic', async () => {
+    await agentChatTopicListLoader(loaderArgs('agt_1'));
+
+    expect(preHydrateThreadsMock).not.toHaveBeenCalled();
+  });
+
+  it('does not let a stalled thread read block the route', async () => {
+    vi.useFakeTimers();
+    preHydrateThreadsMock.mockImplementation(() => new Promise(() => {}));
+
+    const settled = vi.fn();
+    void preHydrateThreadsForRoute('tpc_1').then(settled);
+
+    await vi.advanceTimersByTimeAsync(PRE_PAINT_HYDRATE_TIMEOUT);
+    expect(settled).toHaveBeenCalled();
+  });
+
+  it('never rejects the route when the thread hydrate fails', async () => {
+    preHydrateThreadsMock.mockRejectedValueOnce(new Error('storage exploded'));
+
+    await expect(preHydrateThreadsForRoute('tpc_1')).resolves.toBeUndefined();
   });
 });

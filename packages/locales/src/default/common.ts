@@ -415,8 +415,8 @@ export default {
   'mail.support': 'Email Support',
   'deleteHistoryMigrating':
     'Chat history is still migrating. It can be deleted once the migration finishes — please try again in a few minutes.',
-  'deleteSharedOwnerOnly':
-    "Only a workspace owner can delete this — it carries other members' conversations",
+  'deleteSharedContentOwnerOnly':
+    "Can't delete: this includes other members' topics, comments, or tasks. Ask a workspace owner to delete it.",
   'manageOnlyCreator': 'Only the creator or a workspace owner can do this',
   'openOnRight': 'Open on the right',
   'openOnRightHint': 'Release to open side-by-side on the right',
@@ -598,6 +598,7 @@ export default {
   'tab.eval': 'Eval Lab',
   'tab.files': 'Files',
   'tab.generation': 'Generation',
+  'tab.goals': 'Goals',
   'tab.home': 'Home',
   'tab.knowledgeBase': 'Library',
   'tab.marketplace': 'Marketplace',

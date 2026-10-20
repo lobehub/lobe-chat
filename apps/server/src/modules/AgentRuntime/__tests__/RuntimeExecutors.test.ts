@@ -3684,14 +3684,14 @@ describe('RuntimeExecutors', { timeout: 60_000 }, () => {
         state: {},
         success: false,
       });
-      const loadAgentState = vi.fn().mockResolvedValue({ status: 'interrupted' });
-
+      const loadAgentState = vi.fn(async () => ({
+        status: mockToolExecutionService.executeTool.mock.calls.length ? 'interrupted' : 'running',
+      }));
       const executors = createRuntimeExecutors({
         ...ctx,
         loadAgentState,
       });
       const state = createMockState();
-
       const instruction = {
         payload: {
           parentMessageId: 'assistant-msg-123',

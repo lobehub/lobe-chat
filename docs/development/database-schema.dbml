@@ -2956,7 +2956,6 @@ table projects {
   updated_at "timestamp with time zone" [not null, default: `now()`]
 
   indexes {
-    (id, workspace_id) [name: 'projects_id_workspace_id_unique', unique]
     (slug, user_id) [name: 'projects_slug_user_id_unique', unique]
     (workspace_id, slug) [name: 'projects_slug_workspace_id_unique', unique]
     (identifier, user_id) [name: 'projects_identifier_user_id_unique', unique]
@@ -3009,8 +3008,6 @@ table project_members {
   updated_at "timestamp with time zone" [not null, default: `now()`]
 
   indexes {
-    
-    
     (project_id, user_id) [name: 'project_members_project_user_unique', unique]
     workspace_id [name: 'project_members_workspace_id_idx']
     user_id [name: 'project_members_user_id_idx']
