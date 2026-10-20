@@ -101,7 +101,11 @@ const Header = memo<HeaderProps>(
             {documentId && !fileBacked && <AutoSaveHint documentId={documentId} />}
             {documentId && !fileBacked && <ShareButton documentId={documentId} />}
             {topicPanelExpand !== undefined && (
-              <ToggleRightPanelButton expand={topicPanelExpand} onToggle={onToggleTopicPanel} />
+              <ToggleRightPanelButton
+                hideWhenExpanded
+                expand={topicPanelExpand}
+                onToggle={onToggleTopicPanel}
+              />
             )}
           </Flexbox>
         }

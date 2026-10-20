@@ -108,7 +108,15 @@ const panelProps = vi.hoisted(() => ({
 vi.mock('@/features/FloatingChatPanel', () => ({
   default: (props: Record<string, unknown>) => {
     panelProps.current = props;
-    return <div data-testid="floating-chat-panel" />;
+    return (
+      <div data-testid="floating-chat-panel">
+        <button
+          data-testid="collapse-topic-panel"
+          type="button"
+          onClick={props.onCollapse as () => void}
+        />
+      </div>
+    );
   },
 }));
 
@@ -237,23 +245,24 @@ describe('AgentDocumentPage', () => {
     });
   });
 
-  /** @example Clicking the header toggle collapses the topic panel, then reopens it. */
-  it('collapses and reopens the topic panel from the header toggle', () => {
+  /** @example The topic panel starts collapsed; the header opens it and the panel toolbar closes it. */
+  it('opens the topic panel from the header and collapses it from the panel toolbar', () => {
     // ROOT CAUSE:
     // The panel was pinned open with `expand` while the header toggle read and wrote
     // the global `showRightPanel`, so a click only hid the button itself. The page now
-    // owns one visibility state shared by the panel and the toggle.
+    // owns one visibility state: the header toggle opens it, the panel toolbar closes it.
     render(<AgentDocumentPage documentId="docs_abc" />);
 
-    expect(screen.getByTestId('right-panel').dataset.expand).toBe('true');
-    expect(headerProps.current?.topicPanelExpand).toBe(true);
-
-    fireEvent.click(screen.getByTestId('toggle-topic-panel'));
     expect(screen.getByTestId('right-panel').dataset.expand).toBe('false');
     expect(headerProps.current?.topicPanelExpand).toBe(false);
 
     fireEvent.click(screen.getByTestId('toggle-topic-panel'));
     expect(screen.getByTestId('right-panel').dataset.expand).toBe('true');
+    expect(headerProps.current?.topicPanelExpand).toBe(true);
+
+    fireEvent.click(screen.getByTestId('collapse-topic-panel'));
+    expect(screen.getByTestId('right-panel').dataset.expand).toBe('false');
+    expect(headerProps.current?.topicPanelExpand).toBe(false);
   });
 
   it('hides the topic panel toggle while the page has no topic panel', () => {

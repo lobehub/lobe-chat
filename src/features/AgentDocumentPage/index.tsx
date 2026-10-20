@@ -75,10 +75,11 @@ const AgentDocumentPage = memo<AgentDocumentPageProps>(({ documentId }) => {
   );
 
   // The topic panel owns its own visibility instead of the global
-  // `showRightPanel`: the panel opens by default on every document, and the
-  // header toggle must drive the same state the panel reads.
-  const [topicPanelExpand, setTopicPanelExpand] = useState(true);
+  // `showRightPanel`: it starts collapsed on every document. The header button
+  // opens it, and the panel toolbar collapses it, mirroring the task Copilot.
+  const [topicPanelExpand, setTopicPanelExpand] = useState(false);
   const toggleTopicPanel = useCallback(() => setTopicPanelExpand((expand) => !expand), []);
+  const collapseTopicPanel = useCallback(() => setTopicPanelExpand(false), []);
   const hasTopicPanel = !!chatAgentId && !!docChatTopicId;
 
   const backToChat = useCallback(
@@ -203,6 +204,7 @@ const AgentDocumentPage = memo<AgentDocumentPageProps>(({ documentId }) => {
               key={`${chatAgentId}:${docChatTopicId}:${documentId}`}
               mode="embedded"
               topicId={docChatTopicId}
+              onCollapse={collapseTopicPanel}
             />
           </Flexbox>
         </RightPanel>
