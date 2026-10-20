@@ -266,6 +266,7 @@
   "reportProblem.attachments.remove": "Удалить {{name}}",
   "reportProblem.attachments.tooLarge": "Вложения должны быть общим размером не более 4 МБ.",
   "reportProblem.attachments.tooMany": "Вы можете прикрепить до 5 файлов.",
+  "reportProblem.attachments.trigger": "Вставьте, перетащите или нажмите, чтобы добавить файлы",
   "reportProblem.attachments.uploadFailed": "Не удалось загрузить вложения. Ваш отчет все еще здесь. Попробуйте снова.",
   "reportProblem.desc": "Идентификаторы этой темы и ваша среда приложения отправляются в службу поддержки LobeHub, которая может изучить выполнение этой темы, ошибки и беседу.",
   "reportProblem.failed": "Не удалось отправить отчет. Попробуйте еще раз.",

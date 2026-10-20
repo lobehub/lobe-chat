@@ -266,6 +266,7 @@
   "reportProblem.attachments.remove": "{{name}} を削除",
   "reportProblem.attachments.tooLarge": "添付ファイルの合計サイズは4MB以下である必要があります。",
   "reportProblem.attachments.tooMany": "最大5ファイルを添付できます。",
+  "reportProblem.attachments.trigger": "ファイルを貼り付ける、ドロップする、またはクリックして追加",
   "reportProblem.attachments.uploadFailed": "添付ファイルをアップロードできませんでした。レポートはまだここにあります。もう一度お試しください。",
   "reportProblem.desc": "このトピックのIDとアプリ環境がLobeHubサポートチームに送信されます。これにより、このトピックの実行、エラー、会話を調査できます。",
   "reportProblem.failed": "レポートを送信できませんでした。もう一度お試しください。",

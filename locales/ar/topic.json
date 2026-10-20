@@ -266,6 +266,7 @@
   "reportProblem.attachments.remove": "إزالة {{name}}",
   "reportProblem.attachments.tooLarge": "يجب أن تكون المرفقات 4 ميجابايت أو أقل إجمالاً.",
   "reportProblem.attachments.tooMany": "يمكنك إرفاق ما يصل إلى 5 ملفات.",
+  "reportProblem.attachments.trigger": "الصق، اسحب، أو انقر لإضافة الملفات",
   "reportProblem.attachments.uploadFailed": "تعذر تحميل المرفقات. تقريرك لا يزال موجودًا هنا. حاول مرة أخرى.",
   "reportProblem.desc": "يتم إرسال معرفات هذا الموضوع وبيئة التطبيق الخاصة بك إلى فريق دعم LobeHub، الذي يمكنه بعد ذلك التحقق من تشغيل هذا الموضوع، الأخطاء والمحادثة.",
   "reportProblem.failed": "تعذر إرسال التقرير. حاول مرة أخرى.",

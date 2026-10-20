@@ -266,6 +266,7 @@
   "reportProblem.attachments.remove": "Remover {{name}}",
   "reportProblem.attachments.tooLarge": "Os anexos devem ter no máximo 4 MB no total.",
   "reportProblem.attachments.tooMany": "Você pode anexar até 5 arquivos.",
+  "reportProblem.attachments.trigger": "Cole, arraste ou clique para adicionar arquivos",
   "reportProblem.attachments.uploadFailed": "Não foi possível enviar os anexos. Seu relatório ainda está aqui. Tente novamente.",
   "reportProblem.desc": "Os IDs deste tópico e o ambiente do seu aplicativo são enviados para a equipe de suporte do LobeHub, que pode então analisar as execuções, erros e conversas deste tópico.",
   "reportProblem.failed": "Não foi possível enviar o relatório. Tente novamente.",

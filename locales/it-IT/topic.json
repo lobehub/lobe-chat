@@ -266,6 +266,7 @@
   "reportProblem.attachments.remove": "Rimuovi {{name}}",
   "reportProblem.attachments.tooLarge": "Gli allegati devono essere di 4 MB o meno in totale.",
   "reportProblem.attachments.tooMany": "Puoi allegare fino a 5 file.",
+  "reportProblem.attachments.trigger": "Incolla, trascina o fai clic per aggiungere file",
   "reportProblem.attachments.uploadFailed": "Impossibile caricare gli allegati. Il tuo rapporto è ancora qui. Riprova.",
   "reportProblem.desc": "Gli ID di questo argomento e l'ambiente della tua app vengono inviati al team di supporto di LobeHub, che può quindi esaminare le esecuzioni, gli errori e le conversazioni di questo argomento.",
   "reportProblem.failed": "Impossibile inviare il rapporto. Riprova.",
