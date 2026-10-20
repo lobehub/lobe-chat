@@ -92,6 +92,7 @@ import {
   DSH_COMMAND,
   ensureClaudeCodeResumeTranscript,
   getCodexAppServerUnsupportedArgs,
+  getHeterogeneousAgentPresetEnv,
   GrokAcpSession,
   isCursorAcpSessionNotFoundError,
   isDevinAcpSessionNotFoundError,
@@ -1077,9 +1078,7 @@ export default class HeterogeneousAgentCtr {
     const env: NodeJS.ProcessEnv = {
       ...withEmbeddedCliEnv(inheritedEnv),
       ...proxyEnv,
-      ...(session.agentType === 'codebuddy'
-        ? { CODEBUDDY_CODE_DISABLE_BACKGROUND_TASKS: '1' }
-        : {}),
+      ...getHeterogeneousAgentPresetEnv(session.agentType),
       ...session.env,
       ...(includeProcessOwnership
         ? managedProcessEnvironment(
