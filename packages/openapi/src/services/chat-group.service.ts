@@ -254,6 +254,9 @@ export class ChatGroupService extends BaseService {
   // codes to HTTP statuses, so they must not be flattened into a 400.
   private rethrow(error: unknown, operation: string): never {
     if (error instanceof TRPCError) throw error;
+    const details = error as { code?: string; cause?: { code?: string } };
+    if ((details?.code ?? details?.cause?.code) === '23505')
+      throw this.createConflictError('A chat group with this clientId already exists');
     this.handleServiceError(error, operation);
   }
 

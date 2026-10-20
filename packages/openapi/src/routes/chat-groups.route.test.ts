@@ -112,6 +112,19 @@ describe('POST /chat-groups', () => {
     expect(await db.select().from(agents).where(eq(agents.virtual, true))).toHaveLength(0);
   });
 
+  it('answers 409 on a clientId retry without leaving another supervisor behind', async () => {
+    await createGroup({ clientId: 'toby-1', members: [{ agentId: 'agt_a' }], title: 'Once' });
+
+    const res = await request('/', {
+      body: { clientId: 'toby-1', members: [{ agentId: 'agt_a' }], title: 'Twice' },
+      method: 'POST',
+    });
+
+    expect(res.status).toBe(409);
+    expect(await db.select().from(chatGroups)).toHaveLength(1);
+    expect(await db.select().from(agents).where(eq(agents.virtual, true))).toHaveLength(1);
+  });
+
   it('refuses a supervisor role for an existing agent', async () => {
     const res = await request('/', {
       body: { members: [{ agentId: 'agt_a', role: 'supervisor' }], title: 'Coup' },
