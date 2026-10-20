@@ -80,6 +80,15 @@ const styles = createStaticStyles(({ css }) => ({
   inline: css`
     padding-block: 8px;
   `,
+  inlineIcon: css`
+    flex: none;
+    margin-block-start: 3px;
+    color: ${cssVar.colorTextTertiary};
+  `,
+  message: css`
+    flex: 0 1 auto;
+    min-width: 0;
+  `,
   metric: css`
     color: ${cssVar.colorTextQuaternary};
   `,
@@ -117,15 +126,19 @@ const InlineError = ({ action, description, details, heading, justify }: InlineE
   return (
     <Flexbox className={styles.inline} gap={4}>
       <Flexbox horizontal align={'center'} gap={8} justify={justify} wrap={'wrap'}>
-        <Icon className={styles.icon} icon={TriangleAlertIcon} size={14} />
-        <Text color={cssVar.colorTextSecondary} fontSize={13}>
-          {heading}
-        </Text>
-        {description && (
-          <Text color={cssVar.colorTextTertiary} fontSize={13}>
-            {description}
+        {/* Icon and copy stay together; only the copy wraps in a narrow slot. */}
+        <Flexbox horizontal align={'flex-start'} className={styles.message} gap={8}>
+          <Icon className={styles.inlineIcon} icon={TriangleAlertIcon} size={14} />
+          <Text color={cssVar.colorTextSecondary} fontSize={13}>
+            {heading}
+            {description && (
+              <Text as={'span'} color={cssVar.colorTextTertiary} fontSize={13}>
+                {' '}
+                {description}
+              </Text>
+            )}
           </Text>
-        )}
+        </Flexbox>
         {action}
         {hasDetails && (
           <Button
