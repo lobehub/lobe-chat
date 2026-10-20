@@ -1148,7 +1148,14 @@ describe('aiAgentRouter — remote Human-in-the-loop', () => {
     });
   });
 
-  describe('group builder editing target inheritance', () => {
+  // The router's contract is pass-through: it forwards the claimed runtime
+  // action's appContext verbatim plus the parked operation id
+  // (`approvalSourceOperationId`). The Group Agent Builder target inheritance
+  // itself lives in the service pipeline — see
+  // `startOperation.editingGroupId.test.ts` (Codex P1 on #20626: a bare
+  // execAgent mock never reaches that enrichment, so asserting an inherited
+  // value here was both failing and vacuous).
+  describe('group builder editing target forwarding', () => {
     const execution = {
       autoStarted: true,
       messageId: 'assistant-continuation-group',
@@ -1198,33 +1205,26 @@ describe('aiAgentRouter — remote Human-in-the-loop', () => {
       });
     };
 
-    const seedGroupTargetOnSourceRow = async (operationId: string) => {
-      const { agentOperations } = await import('@/database/schemas');
-      const { eq } = await import('drizzle-orm');
-      await serverDB
-        .update(agentOperations)
-        .set({ appContext: { editingGroupId: 'cg_edited', scope: 'group_agent_builder' } })
-        .where(eq(agentOperations.id, operationId));
-    };
+    const execCallFor = () =>
+      aiAgentService.execAgent.mock.calls.find(
+        ([input]) => input?.appContext?.topicId === 'topic-runtime',
+      );
 
-    it('recovers the parked run editing group when the request names none', async () => {
+    it('forwards the appContext verbatim and names the parked operation for the service to enrich', async () => {
       const sourceOperationId = 'operation-group-source';
       await insertOperation(sourceOperationId, userId);
-      await seedGroupTargetOnSourceRow(sourceOperationId);
 
       await resolveGroupContinuation({
         resolutionRequestId: '018fbd8e-7baf-7c6d-8000-000000000051',
         sourceOperationId,
       });
 
-      expect(aiAgentService.execAgent).toHaveBeenCalledWith(
-        expect.objectContaining({
-          appContext: expect.objectContaining({ editingGroupId: 'cg_edited' }),
-        }),
-      );
+      const call = execCallFor();
+      expect(call?.[0]?.appContext).toEqual({ topicId: 'topic-runtime' });
+      expect(call?.[0]?.approvalSourceOperationId).toBe(sourceOperationId);
     });
 
-    it('keeps a continuation without a durable group target unchanged (ordinary topic)', async () => {
+    it('never injects an editing group at the router boundary (ordinary topic)', async () => {
       const sourceOperationId = 'operation-plain-source';
       await insertOperation(sourceOperationId, userId);
 
@@ -1233,16 +1233,12 @@ describe('aiAgentRouter — remote Human-in-the-loop', () => {
         sourceOperationId,
       });
 
-      const call = aiAgentService.execAgent.mock.calls.find(
-        ([input]) => input?.appContext?.topicId === 'topic-runtime',
-      );
-      expect(call?.[0]?.appContext).not.toHaveProperty('editingGroupId');
+      expect(execCallFor()?.[0]?.appContext).not.toHaveProperty('editingGroupId');
     });
 
-    it('lets the parked target win without overwriting a request-named group', async () => {
+    it('passes a request-named editing group through without rewriting it', async () => {
       const sourceOperationId = 'operation-group-explicit';
       await insertOperation(sourceOperationId, userId);
-      await seedGroupTargetOnSourceRow(sourceOperationId);
 
       await resolveGroupContinuation({
         appContext: { editingGroupId: 'cg_panel', topicId: 'topic-runtime' },
@@ -1250,11 +1246,12 @@ describe('aiAgentRouter — remote Human-in-the-loop', () => {
         sourceOperationId,
       });
 
-      expect(aiAgentService.execAgent).toHaveBeenCalledWith(
-        expect.objectContaining({
-          appContext: expect.objectContaining({ editingGroupId: 'cg_panel' }),
-        }),
-      );
+      const call = execCallFor();
+      expect(call?.[0]?.appContext).toEqual({
+        editingGroupId: 'cg_panel',
+        topicId: 'topic-runtime',
+      });
+      expect(call?.[0]?.approvalSourceOperationId).toBe(sourceOperationId);
     });
   });
 
