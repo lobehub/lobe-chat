@@ -28,6 +28,7 @@ import { TabHost, useSeedTabsOnBoot } from '@/features/Electron/TabHost';
 import TabCacheBridges from '@/features/Electron/titlebar/TabBar/TabCacheBridges';
 import TitleBar from '@/features/Electron/titlebar/TitleBar';
 import HotkeyHelperPanel from '@/features/HotkeyHelperPanel';
+import MeetingRecorderHost from '@/features/Meeting/Recorder/Host';
 import NavPanelShell from '@/features/NavPanel/Shell';
 import { DndContextWrapper } from '@/features/ResourceManager/DndContextWrapper';
 import { usePlatform } from '@/hooks/usePlatform';
@@ -100,6 +101,7 @@ const Layout: FC = () => {
           <CmdkLazy />
           <GlobalApprovalNotification />
         </Suspense>
+        <MeetingRecorderHost />
       </WorkspaceContextSlot>
     </HotkeysProvider>
   );

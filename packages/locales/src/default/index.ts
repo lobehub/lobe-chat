@@ -23,6 +23,7 @@ import integration from './integration';
 import knowledgeBase from './knowledgeBase';
 import labs from './labs';
 import marketAuth from './marketAuth';
+import meeting from './meeting';
 import memory from './memory';
 import messenger from './messenger';
 import metadata from './metadata';
@@ -80,6 +81,7 @@ const resources = {
   knowledgeBase,
   labs,
   marketAuth,
+  meeting,
   memory,
   messenger,
   metadata,

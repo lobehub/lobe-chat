@@ -84,6 +84,7 @@ import { channelDataLoader } from '@/spa/router/channelDataLoader';
 import { contextListLoader } from '@/spa/router/contextListLoader';
 import { identitiesListLoader } from '@/spa/router/identitiesListLoader';
 import { libraryTreeLoader } from '@/spa/router/libraryTreeLoader';
+import { meetingRoutes } from '@/spa/router/meetingRoutes';
 import { pageListLoader } from '@/spa/router/pageListLoader';
 import { preferenceListLoader } from '@/spa/router/preferenceListLoader';
 import { agentAccessLoader, agentGroupAccessLoader } from '@/spa/router/resourceAccessLoader';
@@ -1172,7 +1173,6 @@ export const sharedMainAreaChildren: RouteObject[] = [
     errorElement: <ErrorBoundary resetPath=".." />,
     path: 'project/:projectId',
   },
-
   {
     children: taskWorkspaceChildren,
     element: dynamicLayout(
@@ -1181,7 +1181,7 @@ export const sharedMainAreaChildren: RouteObject[] = [
       { preloadId: 'tasks' },
     ),
   },
-
+  ...meetingRoutes,
   // Pages routes
   {
     children: [
