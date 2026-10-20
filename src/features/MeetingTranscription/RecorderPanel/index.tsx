@@ -3,6 +3,7 @@
 import { Alert, Block, Button, createStaticStyles, cssVar, Flexbox, Icon, Text } from '@lobehub/ui';
 import dayjs from 'dayjs';
 import { MicIcon, PauseIcon, PlayIcon, SquareIcon } from 'lucide-react';
+import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwareNavigate';
@@ -42,6 +43,47 @@ const RecorderPanel = () => {
       title: t('recorder.defaultTitle', { date: dayjs().format('YYYY-MM-DD HH:mm') }),
     });
   const openTranscript = () => meetingId && navigate(`/meeting/${meetingId}`);
+
+  /** One action group per phase: start, the live controls, or what to do after stopping. */
+  let actions: ReactNode = null;
+  if (phase === 'idle' || phase === 'requesting_permission') {
+    actions = (
+      <Button
+        icon={<Icon icon={MicIcon} />}
+        loading={phase === 'requesting_permission'}
+        type={'primary'}
+        onClick={start}
+      >
+        {t('recorder.start')}
+      </Button>
+    );
+  } else if (live_) {
+    actions = (
+      <>
+        {phase === 'recording' ? (
+          <Button icon={<Icon icon={PauseIcon} />} onClick={recorder.pause}>
+            {t('recorder.pause')}
+          </Button>
+        ) : (
+          <Button icon={<Icon icon={PlayIcon} />} onClick={recorder.resume}>
+            {t('recorder.resume')}
+          </Button>
+        )}
+        <Button danger icon={<Icon icon={SquareIcon} />} onClick={recorder.stop}>
+          {t('recorder.stop')}
+        </Button>
+      </>
+    );
+  } else if (phase === 'done') {
+    actions = (
+      <>
+        <Button onClick={recorder.reset}>{t('recorder.newMeeting')}</Button>
+        <Button type={'primary'} onClick={openTranscript}>
+          {t('recorder.openTranscript')}
+        </Button>
+      </>
+    );
+  }
 
   return (
     <Flexbox gap={16} padding={24} style={{ marginInline: 'auto', maxWidth: 880, width: '100%' }}>
@@ -84,39 +126,7 @@ const RecorderPanel = () => {
         </Flexbox>
 
         <Flexbox horizontal gap={8}>
-          {(phase === 'idle' || phase === 'requesting_permission') && (
-            <Button
-              icon={<Icon icon={MicIcon} />}
-              loading={phase === 'requesting_permission'}
-              type={'primary'}
-              onClick={start}
-            >
-              {t('recorder.start')}
-            </Button>
-          )}
-          {phase === 'recording' && (
-            <Button icon={<Icon icon={PauseIcon} />} onClick={recorder.pause}>
-              {t('recorder.pause')}
-            </Button>
-          )}
-          {phase === 'paused' && (
-            <Button icon={<Icon icon={PlayIcon} />} onClick={recorder.resume}>
-              {t('recorder.resume')}
-            </Button>
-          )}
-          {live_ && (
-            <Button danger icon={<Icon icon={SquareIcon} />} onClick={recorder.stop}>
-              {t('recorder.stop')}
-            </Button>
-          )}
-          {phase === 'done' && (
-            <>
-              <Button onClick={recorder.reset}>{t('recorder.newMeeting')}</Button>
-              <Button type={'primary'} onClick={openTranscript}>
-                {t('recorder.openTranscript')}
-              </Button>
-            </>
-          )}
+          {actions}
         </Flexbox>
       </Block>
 
