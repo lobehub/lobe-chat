@@ -255,7 +255,7 @@ export class TaskLifecycleService {
       }
 
       if (currentTask) {
-        const requestedBy = (task: { context?: unknown } | undefined) =>
+        const requestedBy = (task: { context?: unknown } | null | undefined) =>
           (
             task?.context as {
               completion?: { requestedByOperationId?: string | null };
