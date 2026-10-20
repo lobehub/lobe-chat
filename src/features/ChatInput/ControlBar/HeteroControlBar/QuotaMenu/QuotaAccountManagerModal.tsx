@@ -264,10 +264,11 @@ const QuotaAccountManager = memo<{ agentId: string }>(({ agentId }) => {
         className={styles.radioGroup}
         gap={2}
         horizontal={false}
-        // Which mode is active is unknown until the bindings are on screen.
-        // `null`, not `undefined`: the group must stay controlled, or it keeps
-        // showing nothing selected once the bindings arrive.
-        value={bindingsLoaded ? selected : null}
+        // Which mode is active is unknown until the bindings are on screen. The
+        // group mounts again once they are, so it starts controlled by the
+        // confirmed mode instead of staying uncontrolled with nothing selected.
+        key={bindingsLoaded ? 'bindings-loaded' : 'bindings-loading'}
+        value={bindingsLoaded ? selected : undefined}
         options={[
           {
             disabled: busy || !bindingsLoaded,
