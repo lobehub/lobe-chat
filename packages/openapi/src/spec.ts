@@ -479,13 +479,14 @@ const ref = (schema: string): SchemaObject => ({ $ref: `#/components/schemas/${s
 const imMessageSchema: SchemaObject = {
   additionalProperties: false,
   properties: {
+    agentId: nullableString,
     content: { type: 'string' },
     createdAt: dateTime,
     error: { type: 'boolean' },
     id: { type: 'string' },
     role: { enum: ['assistant', 'user'], type: 'string' },
   },
-  required: ['content', 'createdAt', 'error', 'id', 'role'],
+  required: ['agentId', 'content', 'createdAt', 'error', 'id', 'role'],
   type: 'object',
 };
 
