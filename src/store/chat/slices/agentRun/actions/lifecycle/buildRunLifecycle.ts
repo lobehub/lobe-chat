@@ -19,12 +19,9 @@ import { markdownToTxt } from '@/utils/markdownToTxt';
 import { messageMapKey } from '../../../../utils/messageMapKey';
 import { displayMessageSelectors } from '../../../message/selectors/displayMessage';
 import type { OperationStatus } from '../../../operation/types';
-import {
-  AI_RUNTIME_OPERATION_TYPES,
-  mergeQueuedMessages,
-  reconstructUploadFilesFromQueue,
-} from '../../../operation/types';
+import { AI_RUNTIME_OPERATION_TYPES } from '../../../operation/types';
 import { topicSelectors } from '../../../topic/selectors';
+import { scheduleQueuedFollowUp } from './queuedFollowUp';
 import type {
   AgentRunLifecycle,
   RunCompleteEvent,
@@ -283,6 +280,7 @@ export const buildRunLifecycle = (
       }
     },
     afterRunComplete: async (event: RunCompleteEvent) => {
+      if (get().operations[event.operationId]?.metadata.terminalReconciled) return;
       if (adapter.runScope === 'sub_agent' || resolveTerminalDisposition(event) !== 'success')
         return;
 
@@ -352,6 +350,7 @@ export const buildRunLifecycle = (
     beforeRunComplete: NOOP,
     completeRun: async (event: RunCompleteEvent): Promise<RunCompleteResult> => {
       const { operationId, runtimeStatus } = event;
+      if (get().operations[operationId]?.metadata.terminalReconciled) return { requeued: false };
       // Effective terminal disposition, resolved from the client `runtimeStatus`
       // OR the normalized `status` gateway/hetero pass — so the same side effects
       // fire regardless of which transport reached this boundary.
@@ -433,50 +432,25 @@ export const buildRunLifecycle = (
         }
       }
 
+      // A server snapshot may have settled the run while a callback awaited IO.
+      if (get().operations[operationId]?.metadata.terminalReconciled) return { requeued: false };
+
       // 2. On success with queued messages: drain, complete, and re-trigger a new
       //    sendMessage. Only drain on success — on error the queue is preserved.
       //    Gated to TOP-LEVEL runs only: the input queue belongs to the parent
       //    run, so a nested sub-agent completion must never drain it (it would
       //    re-trigger the user's queued message mid-parent-run). See RunScope.
-      if (disposition === 'success' && adapter.runScope !== 'sub_agent') {
-        const remainingQueued = get().drainQueuedMessages(contextKey);
-        if (remainingQueued.length > 0) {
-          const merged = mergeQueuedMessages(remainingQueued);
+      if (
+        disposition === 'success' &&
+        adapter.runScope !== 'sub_agent' &&
+        (get().queuedMessages?.[contextKey]?.length ?? 0) > 0
+      ) {
+        completeSuccess();
+        emitComplete(operationId, runtimeStatus);
 
-          completeSuccess();
-          emitComplete(operationId, runtimeStatus);
+        scheduleQueuedFollowUp(get, context, operationId, resetActiveTopicRunningStatus);
 
-          const execContext = { ...context };
-          const mergedContent = merged.content;
-          const mergedFiles =
-            merged.filesPreview.length > 0
-              ? reconstructUploadFilesFromQueue(merged.filesPreview)
-              : merged.files.length > 0
-                ? (merged.files.map((id) => ({ id })) as any)
-                : undefined;
-
-          setTimeout(() => {
-            // Use the passed `get` (the live chat-store getter) rather than a
-            // direct `useChatStore` import: in prod they resolve to the same
-            // singleton sendMessage, and avoiding the value import keeps the chat
-            // store out of this module's graph — so gateway.ts can statically
-            // import buildRunLifecycle without re-entering the store mid-eval.
-            get()
-              .sendMessage({
-                context: execContext,
-                editorData: merged.editorData,
-                files: mergedFiles,
-                ...(merged.forceRuntime ? { forceRuntime: merged.forceRuntime } : {}),
-                message: mergedContent,
-                metadata: { ...merged.metadata, steer: true },
-              })
-              .catch((e: unknown) => {
-                console.error('[executeClientAgent] sendMessage for queued content failed:', e);
-              });
-          }, 100);
-
-          return { requeued: true };
-        }
+        return { requeued: true };
       }
 
       // 3. Complete the operation based on the terminal disposition.

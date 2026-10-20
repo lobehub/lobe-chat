@@ -1,6 +1,5 @@
 import { splitAssistantGroupFinalAnswer } from '@lobechat/conversation-flow';
-import { Flexbox } from '@lobehub/ui';
-import { createStaticStyles } from 'antd-style';
+import { createStaticStyles, Flexbox } from '@lobehub/ui';
 import isEqual from 'fast-deep-equal';
 import { Fragment, memo, useMemo } from 'react';
 
@@ -15,7 +14,7 @@ import { MessageAggregationContext } from '../../Contexts/MessageAggregationCont
 import { formatReasoningDuration } from '../toolDisplayNames';
 import { CollapsedMessage } from './CollapsedMessage';
 import type { GroupChainInput, GroupChainView } from './groupChain';
-import { buildChainView, getLastBlockCreatedAt, getTurnDurationMs } from './groupChain';
+import { buildChainView, getChainDurationsMs, getLastBlockCreatedAt } from './groupChain';
 import ProcessFold from './ProcessFold';
 import { renderChainSegment } from './renderChainSegment';
 import type { GroupRenderSegment } from './segments';
@@ -71,7 +70,11 @@ const Group = memo<GroupChildrenProps>(
     const [isCollapsed, generatingFlags] = useConversationStore(
       (s) => [
         messageStateSelectors.isMessageCollapsed(id)(s),
-        chains.map((chain) => messageStateSelectors.isAssistantGroupItemGenerating(chain.id)(s)),
+        chains.map(
+          (chain) =>
+            messageStateSelectors.isAssistantGroupItemGenerating(chain.id)(s) ||
+            messageStateSelectors.isMessageCreating(chain.id)(s),
+        ),
       ],
       isEqual,
     );
@@ -120,7 +123,7 @@ const Group = memo<GroupChildrenProps>(
       [chains, persistedFinishTypes],
     );
     const chainDurations = useConversationStore(
-      (s) => chains.map((chain) => getTurnDurationMs(s.dbMessages, chain.blocks)),
+      (s) => getChainDurationsMs(s.dbMessages, chains),
       isEqual,
     );
     const lastBlock = allBlocks.at(-1);

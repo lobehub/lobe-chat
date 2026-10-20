@@ -3,8 +3,8 @@
 import { DEFAULT_AVATAR } from '@lobechat/const';
 import type { BuiltinInspectorProps } from '@lobechat/types';
 import { Flexbox } from '@lobehub/ui';
-import { Avatar } from '@lobehub/ui/base-ui';
-import { createStaticStyles, cx, useTheme } from 'antd-style';
+import { Avatar } from '@lobehub/ui';
+import { createStaticStyles, cx, useTheme } from '@lobehub/ui';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -34,7 +34,6 @@ export const CallAgentInspector = memo<BuiltinInspectorProps<CallAgentParams>>(
     const theme = useTheme();
 
     const agentId = args?.agentId || partialArgs?.agentId;
-    const runAsTask = args?.runAsTask || partialArgs?.runAsTask;
 
     // Get agent meta from store
     const agentMeta = useAgentStore((s) =>
@@ -51,16 +50,12 @@ export const CallAgentInspector = memo<BuiltinInspectorProps<CallAgentParams>>(
       );
     }
 
-    const titleKey = runAsTask
-      ? 'builtins.lobe-agent-management.inspector.callAgent.task'
-      : 'builtins.lobe-agent-management.inspector.callAgent.sync';
-
     const agentName = agentMeta?.title || agentId;
 
     return (
       <Flexbox horizontal align={'center'} className={styles.root} gap={8}>
         <span className={cx(styles.title, isArgumentsStreaming && shinyTextStyles.shinyText)}>
-          {t(titleKey)}
+          {t('builtins.lobe-agent-management.inspector.callAgent.sync')}
         </span>
         {agentMeta && (
           <Avatar

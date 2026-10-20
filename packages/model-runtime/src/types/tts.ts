@@ -1,6 +1,7 @@
 export interface TextToSpeechPayload {
   input: string;
   model: string;
+  speed?: number;
   voice: string;
 }
 

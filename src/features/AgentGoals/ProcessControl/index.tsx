@@ -1,7 +1,6 @@
 'use client';
 
-import { Flexbox } from '@lobehub/ui';
-import { Accordion, type AccordionItemType, Tag, Text } from '@lobehub/ui/base-ui';
+import { Accordion, type AccordionItemType, Flexbox, Tag, Text } from '@lobehub/ui';
 import { memo, useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -16,6 +15,7 @@ import Deliverables from './Deliverables';
 import Findings from './Findings';
 import Frontier from './Frontier';
 import { buildGoalGraphView } from './goalGraphViewModel';
+import GoalResultTabs from './GoalResultTabs';
 import Graph from './Graph';
 import {
   isGoalClosed,
@@ -27,8 +27,10 @@ import {
 /**
  * The process-control band of the goal detail page: what can move now
  * (frontier), the map of how the goal got here, what it believes, and what it
- * has been doing. Renders only for goals that actually carry a Goal Graph —
- * a plain task-carried goal has no nodes and keeps the page it always had.
+ * has been doing. Once the goal finishes, this becomes the 执行过程 tab behind
+ * its 结果交付 (see `GoalResultTabs`). Renders only for goals that actually
+ * carry a Goal Graph — a plain task-carried goal has no nodes and keeps the
+ * page it always had.
  */
 
 interface ProcessControlProps {
@@ -36,11 +38,13 @@ interface ProcessControlProps {
   goalId: string;
   /** Owned by the page so it can swap its portal panel for the overlay's. */
   graphFullscreen: boolean;
+  /** Sends a question about the delivered result into the goal's conversation. */
+  onFollowUp?: (message: string) => void;
   onGraphFullscreenChange: (fullscreen: boolean) => void;
 }
 
 const ProcessControl = memo<ProcessControlProps>(
-  ({ goalId, graphFullscreen, onGraphFullscreenChange }) => {
+  ({ goalId, graphFullscreen, onFollowUp, onGraphFullscreenChange }) => {
     const { t } = useTranslation('chat');
     const { allowed: canEdit } = usePermission('create_content');
     const [lastSelectedId, setSelectedId] = useState<string>();
@@ -83,7 +87,6 @@ const ProcessControl = memo<ProcessControlProps>(
     // advances entirely on its own — the only legitimate human control over its
     // pace is pause/resume.
     const canAct = canEdit && !isGoalClosed(graph);
-    const hasExperiments = graph.nodes.some((view) => view.node.kind === 'experiment');
 
     const map = (
       <Graph
@@ -97,9 +100,10 @@ const ProcessControl = memo<ProcessControlProps>(
       />
     );
 
-    return (
-      <Flexbox gap={20}>
-        {hasExperiments && map}
+    const process = (
+      <Flexbox gap={40}>
+        {/* What waits on the reader comes first; the map explains it below. The
+            wide gap keeps the two reading as separate sections, not one block. */}
         <Flexbox gap={12}>
           <Frontier
             actions={actions}
@@ -110,13 +114,14 @@ const ProcessControl = memo<ProcessControlProps>(
           />
         </Flexbox>
 
-        {!hasExperiments && map}
+        {map}
 
         <Accordion
           defaultValue={['deliverables', 'findings', 'activity']}
-          gap={0}
+          gap={16}
           indicatorPlacement="inline"
-          styles={{ header: { paddingBlock: 6, paddingInline: 0 } }}
+          // One left edge for headings and their content, so a section's rows
+          // line up under its title instead of sitting on an indent.
           items={
             [
               // The structured acceptance standard the terminal goal acceptance is
@@ -179,8 +184,22 @@ const ProcessControl = memo<ProcessControlProps>(
               },
             ].filter(Boolean) as AccordionItemType[]
           }
+          styles={{
+            panel: { paddingInline: 0 },
+            trigger: { paddingBlock: 8, paddingInline: 0 },
+          }}
         />
       </Flexbox>
+    );
+
+    return (
+      <GoalResultTabs
+        graph={graph}
+        key={goalId}
+        process={process}
+        onFollowUp={onFollowUp}
+        onSelect={select}
+      />
     );
   },
 );

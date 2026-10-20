@@ -6,17 +6,13 @@ import { wsCompatProcedure } from '@/business/server/trpc-middlewares/workspaceA
 import { AgentModel } from '@/database/models/agent';
 import { ChatGroupModel } from '@/database/models/chatGroup';
 import { ResourcePermissionModel } from '@/database/models/resourcePermission';
+import { ResourceTransferRequestModel } from '@/database/models/resourceTransferRequest';
 import { SessionModel } from '@/database/models/session';
 import { SessionGroupModel } from '@/database/models/sessionGroup';
 import { insertAgentSchema, insertSessionSchema } from '@/database/schemas';
-import type { LobeChatDatabase } from '@/database/type';
 import { router } from '@/libs/trpc/lambda';
 import { serverDatabase } from '@/libs/trpc/lambda/middleware';
-import { createFtsSearchRepo } from '@/server/services/ftsSearch';
-import { assertCanEditResource } from '@/server/services/resourcePermission';
-import { AgentChatConfigSchema } from '@/types/agent';
-import { LobeMetaDataSchema } from '@/types/meta';
-import { type BatchTaskResult } from '@/types/service';
+import { TrashService } from '@/server/services/trash';
 import { type ChatSessionList, type LobeGroupSession } from '@/types/session';
 import { TransferErrorCode } from '@/types/transferError';
 
@@ -24,35 +20,6 @@ import {
   assertWorkspaceRowManageable,
   isWorkspaceNonOwner,
 } from './_helpers/assertWorkspaceRowManageable';
-
-/**
- * Session config updates write through to the linked agent's config, so a
- * workspace member with view/use access must not use them as an edit
- * escalation. Resolves the session's linked agent and runs the edit guard.
- * No-op in personal mode (no workspaceId).
- */
-const assertCanEditSessionAgent = async (
-  ctx: {
-    serverDB: LobeChatDatabase;
-    sessionModel: SessionModel;
-    userId: string;
-    workspaceId?: string | null;
-  },
-  sessionId: string,
-) => {
-  if (!ctx.workspaceId) return;
-
-  const session = await ctx.sessionModel.findByIdOrSlug(sessionId);
-  if (!session?.agent?.id) return;
-
-  await assertCanEditResource({
-    db: ctx.serverDB,
-    resourceId: session.agent.id,
-    resourceType: 'agent',
-    userId: ctx.userId,
-    workspaceId: ctx.workspaceId,
-  });
-};
 
 const sessionProcedure = wsCompatProcedure.use(serverDatabase).use(async (opts) => {
   const { ctx } = opts;
@@ -66,58 +33,13 @@ const sessionProcedure = wsCompatProcedure.use(serverDatabase).use(async (opts) 
   });
 });
 
-const sessionSearchProcedure = sessionProcedure.use(async (opts) => {
-  const { ctx } = opts;
-  const workspaceId = ctx.workspaceId ?? undefined;
-  const ftsSearchRepo = await createFtsSearchRepo({
-    db: ctx.serverDB,
-    userId: ctx.userId,
-    usage: 'session_search',
-    workspaceId,
-  });
-
-  return opts.next({
-    ctx: {
-      sessionModel: new SessionModel(ctx.serverDB, ctx.userId, workspaceId, ftsSearchRepo),
-    },
-  });
-});
-
 /**
  * @deprecated Session router is legacy. Use agent router for agent CRUD operations.
- * Session-based agent creation (createSession, batchCreateSessions) should migrate
+ * Session-based agent creation (createSession) should migrate
  * to agent.createAgent which uses agentModel.create directly.
  * Session query/update methods are still used by mobile but should be migrated.
  */
 export const sessionRouter = router({
-  /** @deprecated Use agent.createAgent instead */
-  batchCreateSessions: sessionProcedure
-    .use(withScopedPermission('session:create'))
-    .input(
-      z.array(
-        z
-          .object({
-            config: z.object({}).passthrough(),
-            group: z.string().optional(),
-            id: z.string(),
-            meta: LobeMetaDataSchema,
-            pinned: z.boolean().optional(),
-            type: z.string(),
-          })
-          .partial(),
-      ),
-    )
-    .mutation(async ({ input, ctx }): Promise<BatchTaskResult> => {
-      const data = await ctx.sessionModel.batchCreate(
-        input.map((item) => ({
-          ...item,
-          ...item.meta,
-        })) as any,
-      );
-
-      return { added: data.rowCount as number, ids: [], skips: [], success: true };
-    }),
-
   cloneSession: sessionProcedure
     .use(withScopedPermission('session:create'))
     .input(z.object({ id: z.string(), newTitle: z.string() }))
@@ -125,20 +47,6 @@ export const sessionRouter = router({
       const data = await ctx.sessionModel.duplicate(input.id, input.newTitle);
 
       return data?.id;
-    }),
-
-  countSessions: sessionProcedure
-    .input(
-      z
-        .object({
-          endDate: z.string().optional(),
-          range: z.tuple([z.string(), z.string()]).optional(),
-          startDate: z.string().optional(),
-        })
-        .optional(),
-    )
-    .query(async ({ ctx, input }) => {
-      return ctx.sessionModel.count(input);
     }),
 
   /** @deprecated Use agent.createAgent instead */
@@ -198,19 +106,6 @@ export const sessionRouter = router({
       return { sessionGroups, sessions: allSessions };
     }),
 
-  getSessions: sessionProcedure
-    .input(
-      z.object({
-        current: z.number().optional(),
-        pageSize: z.number().max(100).optional(),
-      }),
-    )
-    .query(async ({ input, ctx }) => {
-      const { current, pageSize } = input;
-
-      return ctx.sessionModel.query({ current, pageSize });
-    }),
-
   removeSession: sessionProcedure
     .use(withScopedPermission('session:delete'))
     .input(z.object({ id: z.string() }))
@@ -239,22 +134,43 @@ export const sessionRouter = router({
         }
       }
 
-      const { orphanedAgentIds, result } = await ctx.sessionModel.delete(input.id);
+      // A session is normally the legacy 1:1 shell of an agent: removing it
+      // means removing the agent, so route through the agent's recycle-bin
+      // cascade (agent + session + topics all stamped, restorable as one unit).
+      // When the agent has other shells (or this shell holds other agents),
+      // only this session goes — the agent must stay with its other sessions.
+      if (
+        session?.agent &&
+        (await ctx.sessionModel.isSoleShellOfAgent(session.id, session.agent.id))
+      ) {
+        const trashService = new TrashService(
+          ctx.serverDB,
+          ctx.userId,
+          ctx.workspaceId ?? undefined,
+        );
+        const trashed = await trashService.trashAgent(session.agent.id);
+        // Same as `agent.removeAgent`: the trashed agent is invisible to a
+        // pending handover's recipient too, so an acceptance would move
+        // ownership of recycle-bin content — void it now.
+        if (ctx.workspaceId) {
+          await new ResourceTransferRequestModel(
+            ctx.serverDB,
+            ctx.workspaceId,
+          ).invalidateForResources('agent', [session.agent.id]);
+        }
+        return trashed;
+      }
 
-      // Mirror `agent.removeAgent`: orphan-deleted shared agents must not
-      // leave dangling resource_permissions rows behind.
+      // No linked agent (a stray legacy row) or a shell the agent does not
+      // depend on: hard delete this session only, as before. An agent left
+      // without any shell is orphan-deleted by the model.
+      const { orphanedAgentIds, result } = await ctx.sessionModel.delete(input.id);
       if (ctx.workspaceId && orphanedAgentIds.length > 0) {
         const permissionModel = new ResourcePermissionModel(ctx.serverDB, ctx.workspaceId);
         await Promise.all(orphanedAgentIds.map((id) => permissionModel.removeAll('agent', id)));
       }
 
       return result;
-    }),
-
-  searchSessions: sessionSearchProcedure
-    .input(z.object({ keywords: z.string() }))
-    .query(async ({ input, ctx }) => {
-      return ctx.sessionModel.queryByKeyword(input.keywords);
     }),
 
   updateSession: sessionProcedure
@@ -270,34 +186,6 @@ export const sessionRouter = router({
       if (session) assertWorkspaceRowManageable(ctx, session.userId, 'session');
 
       return ctx.sessionModel.update(input.id, input.value);
-    }),
-  updateSessionChatConfig: sessionProcedure
-    .use(withScopedPermission('session:update'))
-    .input(
-      z.object({
-        id: z.string(),
-        value: AgentChatConfigSchema.partial(),
-      }),
-    )
-    .mutation(async ({ input, ctx }) => {
-      await assertCanEditSessionAgent(ctx, input.id);
-
-      return ctx.sessionModel.updateConfig(input.id, {
-        chatConfig: input.value,
-      });
-    }),
-  updateSessionConfig: sessionProcedure
-    .use(withScopedPermission('session:update'))
-    .input(
-      z.object({
-        id: z.string(),
-        value: z.object({}).passthrough().partial(),
-      }),
-    )
-    .mutation(async ({ input, ctx }) => {
-      await assertCanEditSessionAgent(ctx, input.id);
-
-      return ctx.sessionModel.updateConfig(input.id, input.value);
     }),
 });
 

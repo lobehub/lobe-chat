@@ -58,23 +58,26 @@ describe('GoalCriteriaGeneratorService', () => {
       ],
     };
     generateObject.mockResolvedValueOnce(draft);
-    await expect(service.decompose({ requirement: 'Upgrade office editing' })).resolves.toEqual(
-      draft,
-    );
+    // An answer without the understanding fields still plans, as a clear goal.
+    await expect(service.decompose({ requirement: 'Upgrade office editing' })).resolves.toEqual({
+      ...draft,
+      assumptions: [],
+      questions: [],
+    });
     expect(generateObject).toHaveBeenLastCalledWith(
       expect.objectContaining({ schema: expect.objectContaining({ name: 'goal_decomposition' }) }),
       expect.objectContaining({
         tracing: {
-          promptVersion: 'v5',
+          promptVersion: 'v9',
           scenario: 'goal_decompose',
           schemaName: 'goal_decomposition',
         },
       }),
     );
     generateObject.mockResolvedValueOnce({ ...draft, tasks: [{ title: 'Missing instruction' }] });
-    await expect(
-      service.decompose({ requirement: 'Upgrade office editing' }),
-    ).resolves.toBeUndefined();
+    await expect(service.decompose({ requirement: 'Upgrade office editing' })).rejects.toThrow(
+      'did not match the decomposition schema: tasks.0.instruction',
+    );
   });
 
   it('rejects criteria containing evidence values outside the supported enums', async () => {
@@ -117,5 +120,16 @@ describe('GoalCriteriaGeneratorService', () => {
       instruction: 'Publish the benchmark paper.',
       title: 'Publish benchmark paper',
     });
+  });
+
+  it("plans a goal's decomposition on the goal's own planning model", async () => {
+    const goalConfig = { model: 'gemini-3.8-flash', provider: 'google' };
+    generateObject.mockResolvedValueOnce({ problemStatement: 'p', tasks: [] });
+
+    await new GoalCriteriaGeneratorService({} as never, 'user-1')
+      .decompose({ goalConfig, requirement: 'Upgrade office editing' })
+      .catch(() => undefined);
+
+    expect(resolveGoalModelConfig).toHaveBeenCalledWith({}, 'user-1', goalConfig);
   });
 });

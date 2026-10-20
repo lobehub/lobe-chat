@@ -3,11 +3,11 @@ import { readFile } from 'node:fs/promises';
 import { homedir } from 'node:os';
 import path from 'node:path';
 
-import { parseClaudeAccountIdentity } from '../quota/identity';
 import { buildClaudeQuotaWindows } from '../quota/readings';
 import type { ClaudeCodeQuotaSnapshot, ClaudeCodeQuotaUnavailableReason } from '../quota/snapshot';
-import type { ClaudeUsagePayload } from '../quota/usageApi';
-import { mapClaudeUsageToReadings } from '../quota/usageApi';
+import { parseClaudeAccountIdentity } from './identity';
+import type { ClaudeUsagePayload } from './usageApi';
+import { mapClaudeUsageToReadings } from './usageApi';
 
 /**
  * How long a sampler host's snapshot cache may serve a Claude quota reading
@@ -105,6 +105,21 @@ const unavailableSnapshot = (
   reason,
   status: 'unavailable',
 });
+
+/**
+ * Anthropic answers a request from a blocked network or region with a 403
+ * `forbidden` error ("Request not allowed") before it ever looks at the token,
+ * so it says nothing about the login. A 403 for a bad token carries an auth /
+ * permission error type instead.
+ */
+const isRequestBlocked = async (response: Response) => {
+  try {
+    const body = (await response.json()) as { error?: { type?: unknown } };
+    return body?.error?.type === 'forbidden';
+  } catch {
+    return false;
+  }
+};
 
 const parseCredentialsJson = (raw: string): ClaudeOAuthCredentials | null => {
   try {
@@ -265,6 +280,13 @@ export const fetchClaudeCodeQuota = async (
       },
       signal: controller.signal,
     });
+
+    if (response.status === 403 && (await isRequestBlocked(response))) {
+      return unavailableSnapshot(
+        'request-blocked',
+        'Anthropic usage API blocked the request from this network (403)',
+      );
+    }
 
     if (response.status === 401 || response.status === 403) {
       return unavailableSnapshot(

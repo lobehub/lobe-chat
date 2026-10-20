@@ -1,13 +1,17 @@
 import { isDesktop } from '@lobechat/const';
 import { HeterogeneousAgentSessionErrorCode } from '@lobechat/electron-client-ipc';
 import { readHeterogeneousErrorContext } from '@lobechat/heterogeneous-agents/errors';
-import { type ILobeAgentRuntimeErrorType } from '@lobechat/model-runtime';
-import { AgentRuntimeErrorType, getErrorCodeSpec } from '@lobechat/model-runtime';
-import { type ChatMessageError, type ErrorType, type IToolErrorType } from '@lobechat/types';
-import { ChatErrorType } from '@lobechat/types';
+import { getErrorCodeSpec } from '@lobechat/model-runtime/errors';
+import {
+  AgentRuntimeErrorType,
+  ChatErrorType,
+  type ChatMessageError,
+  type ErrorType,
+  type ILobeAgentRuntimeErrorType,
+  type IToolErrorType,
+} from '@lobechat/types';
 import { isRecord } from '@lobechat/utils/object';
-import { Block, Highlighter } from '@lobehub/ui';
-import { type AlertProps, Skeleton, toast } from '@lobehub/ui/base-ui';
+import { type AlertProps, Block, Highlighter, Skeleton, toast } from '@lobehub/ui';
 import { memo, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -35,6 +39,7 @@ import { serverConfigSelectors, useServerConfigStore } from '@/store/serverConfi
 import { getRuntimeErrorMessage } from '@/utils/locale/runtimeErrorMessage';
 
 import ChatInvalidAPIKey from './ChatInvalidApiKey';
+import { readClientLlmWait } from './clientLlmWait';
 import { type DedicatedErrorCardType, isDedicatedErrorCardType } from './dedicatedErrorCards';
 import { isHeterogeneousAgentStatusGuideError } from './heterogeneous';
 import { useHeterogeneousAutoRetry } from './useHeterogeneousAutoRetry';
@@ -116,6 +121,11 @@ const DeprecatedModelError = dynamic(() => import('./DeprecatedModelError'), {
 const QuotaLimitError = dynamic(() => import('./QuotaLimitError'), { loading, ssr: false });
 
 const TraceIdError = dynamic(() => import('./TraceIdError'), { loading, ssr: false });
+
+const ClientLlmWaitingCard = dynamic(() => import('./ClientLlmWaitingCard'), {
+  loading,
+  ssr: false,
+});
 
 // `UnknownChatFetchError` is excluded: its localized copy is a generic
 // "unknown error" message, so the trace-id report UI is strictly more useful.
@@ -385,6 +395,7 @@ const ErrorMessageExtra = memo<ErrorExtraProps>(
         canRetry &&
         isHeterogeneousAgentStatusGuideError(sessionErrorBody) &&
         sessionErrorBody.code === HeterogeneousAgentSessionErrorCode.Overloaded,
+      messageId: data.id,
       onRetry: handleRetryAgentMessage,
       scopeId: resolvedScopeId,
     });
@@ -469,6 +480,19 @@ const ErrorMessageExtra = memo<ErrorExtraProps>(
       );
     }
 
+    // A run parked in `waiting_for_client` is still alive: show what it waits
+    // for and let this device take it, not a final error.
+    const clientLlmWait = readClientLlmWait(error);
+    if (clientLlmWait) {
+      return (
+        <ClientLlmWaitingCard
+          expiresAt={clientLlmWait.expiresAt}
+          id={data.id}
+          provider={clientLlmWait.provider}
+        />
+      );
+    }
+
     if (enableBusinessFeatures && businessChatErrorMessageExtra)
       return businessChatErrorMessageExtra;
 
@@ -513,7 +537,9 @@ const ErrorMessageExtra = memo<ErrorExtraProps>(
         }
 
         case AgentRuntimeErrorType.OllamaBizError: {
-          return <OllamaBizError {...data} />;
+          return (
+            <OllamaBizError {...data} alertError={{ ...alertError, message: displayMessage }} />
+          );
         }
 
         case AgentRuntimeErrorType.ExceededContextWindow: {
@@ -552,6 +578,7 @@ const ErrorMessageExtra = memo<ErrorExtraProps>(
 
       return (
         <TraceIdError
+          error={error}
           id={data.id}
           showRetry={!isSharedTopic}
           traceId={traceId}

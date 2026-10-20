@@ -1,8 +1,7 @@
 'use client';
 
 import { isDesktop } from '@lobechat/const';
-import { Flexbox } from '@lobehub/ui';
-import { createStaticStyles, cx } from 'antd-style';
+import { createStaticStyles, cx, Flexbox } from '@lobehub/ui';
 import isEqual from 'fast-deep-equal';
 import { type MouseEvent, type ReactNode } from 'react';
 import { memo, Suspense, useCallback } from 'react';
@@ -159,6 +158,19 @@ const MessageItem = memo<MessageItemProps>(
         }
 
         case 'assistant': {
+          if (continuations?.length)
+            return (
+              <AssistantGroupMessage
+                continuations={continuations}
+                defaultWorkflowExpandLevel={defaultWorkflowExpandLevel}
+                disableEditing={effectiveDisableEditing}
+                footerRender={footerRender}
+                id={id}
+                index={index}
+                isLatestItem={isLatestItem}
+              />
+            );
+
           return (
             <AssistantMessage
               disableEditing={effectiveDisableEditing}

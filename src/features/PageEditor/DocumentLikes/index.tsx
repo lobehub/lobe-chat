@@ -1,9 +1,16 @@
 'use client';
 
 import type { DocumentLikeSummary } from '@lobechat/types';
-import { Flexbox } from '@lobehub/ui';
-import { Avatar, Skeleton, Text, toast, Tooltip } from '@lobehub/ui/base-ui';
-import { createStaticStyles, cssVar } from 'antd-style';
+import {
+  Avatar,
+  createStaticStyles,
+  cssVar,
+  Flexbox,
+  Skeleton,
+  Text,
+  toast,
+  Tooltip,
+} from '@lobehub/ui';
 import { ThumbsUp } from 'lucide-react';
 import { memo, useCallback, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -15,6 +22,8 @@ import { documentLikeKeys } from '@/libs/swr/keys';
 import { documentLikeService } from '@/services/documentLike';
 import { useUserStore } from '@/store/user';
 import { userProfileSelectors } from '@/store/user/selectors';
+
+import { resolveDocumentSectionState } from '../isDocumentUnavailableError';
 
 const BUTTON_SIZE = 56;
 const ICON_SIZE = 22;
@@ -193,9 +202,12 @@ const DocumentLikes = memo<{ documentId: string }>(({ documentId }) => {
 
   if (!workspaceId) return null;
 
-  // A failed initial load must not masquerade as a zero-like page: surface a
-  // retryable error instead of the idle state with a dead button.
-  if (!data && error)
+  // A page that went private or is gone drops even the cached count and likers;
+  // a failed initial load must not masquerade as a zero-like page, so it
+  // surfaces a retryable error instead of the idle state with a dead button.
+  const sectionState = resolveDocumentSectionState(data, error);
+  if (sectionState === 'hidden') return null;
+  if (sectionState === 'error')
     return (
       <Flexbox data-document-likes align={'center'} className={styles.section} gap={16}>
         <AsyncError error={error} variant={'inline'} onRetry={() => void mutate()} />

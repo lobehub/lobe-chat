@@ -9,18 +9,19 @@ import type {
 import { isRemoteHeterogeneousType } from '@lobechat/heterogeneous-agents';
 import type { DeviceListItem } from '@lobechat/types';
 import { agentDisplayName } from '@lobechat/types';
-import { Flexbox, Icon, Input, TextArea, Tooltip } from '@lobehub/ui';
+import { createStaticStyles, cssVar, Flexbox, Icon, Tooltip } from '@lobehub/ui';
 import {
   Alert,
   Button,
   Checkbox,
   createModal,
+  Input,
   type ModalInstance,
   ScrollArea,
   Text,
+  TextArea,
   useModalContext,
-} from '@lobehub/ui/base-ui';
-import { createStaticStyles, cssVar } from 'antd-style';
+} from '@lobehub/ui';
 import { t as i18nT } from 'i18next';
 import {
   ArrowLeft,
@@ -35,14 +36,15 @@ import { memo, type ReactNode, useCallback, useEffect, useMemo, useState } from 
 import { useTranslation } from 'react-i18next';
 
 import { useActiveWorkspaceId } from '@/business/client/hooks/useActiveWorkspaceId';
+import AsyncError from '@/components/AsyncError';
 import CommandLine from '@/components/CommandLine';
 import { DOWNLOAD_URL } from '@/const/url';
 import { getDeviceIcon } from '@/features/DeviceManager/getDeviceIcon';
-import { useDeviceList } from '@/features/DeviceManager/useDeviceList';
 import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwareNavigate';
 import { deviceService } from '@/services/device';
 import { useAgentStore } from '@/store/agent';
 import { heteroAgentDefaultName } from '@/store/agent/utils/heteroAgentDefaultName';
+import { isDevicePresenceUnknown, useDeviceList } from '@/store/device';
 import { useElectronStore } from '@/store/electron';
 import { useHomeStore } from '@/store/home';
 
@@ -417,6 +419,8 @@ const ConnectAgentContent = memo<ConnectAgentContentProps>(
 
     const {
       data: devices,
+      error: deviceListError,
+      isConfirmed: isDeviceListConfirmed,
       isLoading: loadingDevices,
       isValidating: fetchingDevices,
       mutate: refetchDevices,
@@ -427,6 +431,9 @@ const ConnectAgentContent = memo<ConnectAgentContentProps>(
       [devices, restrictToWorkspaceDevices],
     );
     const onlineDevices = listedDevices.filter((d) => d.online);
+    // Rows painted from the persisted list until the server confirms presence:
+    // none of them is offline yet, so "no devices" would be a guess.
+    const presencePending = !isDeviceListConfirmed || listedDevices.some(isDevicePresenceUnknown);
 
     const deviceLabel = useCallback(
       (device: DeviceListItem) => device.friendlyName || device.hostname || device.deviceId,
@@ -634,10 +641,13 @@ const ConnectAgentContent = memo<ConnectAgentContentProps>(
     if (step === 0) {
       const isRefreshing = loadingDevices || fetchingDevices;
       const deviceListState = getDeviceListState({
+        error: deviceListError,
         hasDevices: listedDevices.length > 0,
+        isConfirmed: isDeviceListConfirmed,
         isFetching: isRefreshing,
       });
-      const showEmpty = !isDesktop && !isRefreshing && onlineDevices.length === 0;
+      const showEmpty =
+        !isDesktop && !isRefreshing && !presencePending && onlineDevices.length === 0;
 
       return (
         <Flexbox gap={16} paddingBlock={'16px 8px'}>
@@ -736,25 +746,35 @@ const ConnectAgentContent = memo<ConnectAgentContentProps>(
                     </Button>
                   </Flexbox>
                   <div className={styles.groupList}>
-                    {deviceListState === 'loading'
-                      ? [96, 140, 112].map((width) => (
-                          <SkeletonRow squareIcon key={width} width={width} />
-                        ))
-                      : listedDevices.map((device) => (
-                          <DeviceRow
-                            icon={getDeviceIcon(device.platform, 18)}
-                            key={device.deviceId}
-                            offline={!device.online}
-                            subtitle={device.hostname || device.deviceId}
-                            title={deviceLabel(device)}
-                            statusText={
-                              device.online
+                    {deviceListState === 'error' ? (
+                      <AsyncError
+                        error={deviceListError}
+                        variant={'inline'}
+                        onRetry={() => void refetchDevices()}
+                      />
+                    ) : deviceListState === 'loading' ? (
+                      [96, 140, 112].map((width) => (
+                        <SkeletonRow squareIcon key={width} width={width} />
+                      ))
+                    ) : (
+                      listedDevices.map((device) => (
+                        <DeviceRow
+                          icon={getDeviceIcon(device.platform, 18)}
+                          key={device.deviceId}
+                          offline={!device.online}
+                          subtitle={device.hostname || device.deviceId}
+                          title={deviceLabel(device)}
+                          statusText={
+                            isDevicePresenceUnknown(device)
+                              ? t('heteroAgent.executionTarget.presenceChecking')
+                              : device.online
                                 ? t('connectAgent.create.online')
                                 : t('connectAgent.create.offline')
-                            }
-                            onClick={() => pickTarget({ device, kind: 'device' })}
-                          />
-                        ))}
+                          }
+                          onClick={() => pickTarget({ device, kind: 'device' })}
+                        />
+                      ))
+                    )}
                   </div>
                 </Flexbox>
               )}
@@ -830,12 +850,7 @@ const ConnectAgentContent = memo<ConnectAgentContentProps>(
               <Text style={{ textAlign: 'center' }} type={'secondary'}>
                 {t('connectAgent.create.noneDetectedHint')}
               </Text>
-              <Button
-                icon={<Icon icon={RefreshCw} size={13} />}
-                size={'small'}
-                type={'primary'}
-                onClick={rescan}
-              >
+              <Button icon={<Icon icon={RefreshCw} size={13} />} type={'primary'} onClick={rescan}>
                 {t('connectAgent.create.rescanDevice')}
               </Button>
             </Flexbox>

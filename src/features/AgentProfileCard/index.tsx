@@ -1,8 +1,15 @@
 'use client';
 
-import { Center, Flexbox, Tooltip } from '@lobehub/ui';
-import { Avatar, Skeleton, Text } from '@lobehub/ui/base-ui';
-import { createStaticStyles, cssVar } from 'antd-style';
+import {
+  Avatar,
+  Center,
+  createStaticStyles,
+  cssVar,
+  Flexbox,
+  Skeleton,
+  Text,
+  Tooltip,
+} from '@lobehub/ui';
 import { memo, type ReactNode } from 'react';
 
 import { DEFAULT_AVATAR } from '@/const/meta';
@@ -40,19 +47,6 @@ const styles = createStaticStyles(({ css, cssVar }) => ({
     line-height: 1.5;
     color: ${cssVar.colorTextSecondary};
     text-overflow: ellipsis;
-  `,
-  descriptionSkeleton: css`
-    .ant-skeleton-paragraph {
-      margin-block-start: 4px !important;
-    }
-
-    .ant-skeleton-paragraph > li {
-      height: 12px !important;
-    }
-
-    .ant-skeleton-paragraph > li + li {
-      margin-block-start: 6px !important;
-    }
   `,
   header: css`
     position: relative;
@@ -132,11 +126,7 @@ const AgentProfileCard = memo<AgentProfileCardProps>(
                 </Text>
               </Tooltip>
             ) : loading ? (
-              <Skeleton.Text
-                className={styles.descriptionSkeleton}
-                rows={2}
-                width={['100%', '60%']}
-              />
+              <Skeleton.Text rows={2} width={['100%', '60%']} />
             ) : null}
           </Flexbox>
         </Flexbox>

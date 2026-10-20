@@ -1,30 +1,31 @@
-import { type MenuProps } from '@lobehub/ui';
-import { Icon } from '@lobehub/ui';
-import { confirmModal } from '@lobehub/ui/base-ui';
+import { type DropdownItem } from '@lobehub/ui';
+import { confirmModal, Icon } from '@lobehub/ui';
 import { PanelRight, PencilLine, Trash } from 'lucide-react';
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { openRenameModal } from '@/components/RenameModal';
 import { usePermission } from '@/hooks/usePermission';
 import { useChatStore } from '@/store/chat';
 
 interface ThreadItemDropdownMenuProps {
   id: string;
   sourceMessageId?: string;
-  toggleEditing: (visible?: boolean) => void;
+  title: string;
 }
 
 export const useThreadItemDropdownMenu = ({
   id,
   sourceMessageId,
-  toggleEditing,
-}: ThreadItemDropdownMenuProps): (() => MenuProps['items']) => {
+  title,
+}: ThreadItemDropdownMenuProps): (() => DropdownItem[]) => {
   const { t } = useTranslation(['thread', 'common']);
   const { allowed: canEditThread } = usePermission('edit_own_content');
 
-  const [removeThread, openThreadInPortal] = useChatStore((s) => [
+  const [removeThread, openThreadInPortal, updateThreadTitle] = useChatStore((s) => [
     s.removeThread,
     s.openThreadInPortal,
+    s.updateThreadTitle,
   ]);
 
   return useCallback(() => {
@@ -46,7 +47,10 @@ export const useThreadItemDropdownMenu = ({
         key: 'rename',
         label: t('rename', { ns: 'common' }),
         onClick: () => {
-          toggleEditing(true);
+          openRenameModal({
+            defaultValue: title,
+            onSave: (newTitle) => updateThreadTitle(id, newTitle),
+          });
         },
         sfSymbol: 'pencil',
       },
@@ -73,6 +77,15 @@ export const useThreadItemDropdownMenu = ({
         },
         sfSymbol: 'trash',
       },
-    ].filter(Boolean) as MenuProps['items'];
-  }, [id, sourceMessageId, canEditThread, removeThread, openThreadInPortal, toggleEditing, t]);
+    ].filter(Boolean) as DropdownItem[];
+  }, [
+    id,
+    sourceMessageId,
+    canEditThread,
+    removeThread,
+    openThreadInPortal,
+    title,
+    updateThreadTitle,
+    t,
+  ]);
 };

@@ -1370,6 +1370,50 @@ describe('GatewayConnectionCtr', () => {
       spawnMock.mockReset();
     });
 
+    describe.each(['openclaw', 'hermes'])('%s identity', (agentType) => {
+      it.each([
+        { agentId: 'agent-current', inherited: false, workspaceId: 'workspace-current' },
+        { agentId: 'agent-current', inherited: true, workspaceId: 'workspace-current' },
+        { agentId: undefined, inherited: true, workspaceId: undefined },
+      ])('isolates dispatched identity ($agentId, inherited=$inherited)', async (params) => {
+        for (const key of [
+          'AGENT_ID',
+          'TOPIC_ID',
+          'OPERATION_ID',
+          'ASSISTANT_MESSAGE_ID',
+          'TASK_ID',
+          'WORKSPACE_ID',
+        ]) {
+          vi.stubEnv(`LOBEHUB_${key}`, params.inherited ? `ancestor-${key}` : undefined);
+        }
+        spawnMock.mockReturnValue(makeMockChild());
+        const client = await connectAndOpen();
+        client.simulateToolCallRequest(
+          'runHeteroTask',
+          {
+            agentId: params.agentId,
+            agentType,
+            operationId: 'operation-current',
+            prompt: 'hello',
+            taskId: 'device-task-current',
+            topicId: 'topic-current',
+            workspaceId: params.workspaceId,
+          },
+          'req-identity',
+        );
+        await vi.advanceTimersByTimeAsync(0);
+
+        expect(spawnMock).toHaveBeenCalledTimes(1);
+        const env = spawnMock.mock.calls[0][2].env;
+        expect(env.LOBEHUB_AGENT_ID).toBe(params.agentId);
+        expect(env.LOBEHUB_TOPIC_ID).toBe('topic-current');
+        expect(env.LOBEHUB_OPERATION_ID).toBe('operation-current');
+        expect(env.LOBEHUB_WORKSPACE_ID).toBe(params.workspaceId);
+        expect(env.LOBEHUB_ASSISTANT_MESSAGE_ID).toBeUndefined();
+        expect(env.LOBEHUB_TASK_ID).toBeUndefined();
+      });
+    });
+
     it('always injects buildNotifyProtocol into the prompt', async () => {
       const child = makeMockChild();
       spawnMock.mockReturnValue(child);
@@ -2270,18 +2314,18 @@ describe('GatewayConnectionCtr', () => {
       await expect(ctr.getDeviceInfo()).resolves.toMatchObject({ hostname: 'mock-hostname' });
     });
 
-    it('should return device information', async () => {
-      mockStoreGet.mockImplementation((key: string) => {
-        if (key === 'gatewayEnabled') return true;
-        if (key === 'gatewayDeviceId') return 'my-device';
-        return undefined;
-      });
+    // Regression: pre-connect it reported the fallback UUID while pins stored the stable id.
+    it('reports the stable device id once signed in, even before connecting', async () => {
+      mockStoreGet.mockImplementation((key: string) =>
+        key === 'gatewayDeviceId' ? 'my-device' : undefined,
+      );
+      const sub = Buffer.from(JSON.stringify({ sub: 'user-1' })).toString('base64url');
+      vi.mocked(mockRemoteServerConfigCtr.getAccessToken).mockResolvedValueOnce(`h.${sub}.s`);
       ctr = new GatewayConnectionCtr(mockApp);
       ctr.afterFirstFrame();
-
-      const info = await ctr.getDeviceInfo();
-      expect(info).toEqual({
-        deviceId: 'my-device',
+      const stable = deriveDeviceId('user-1', { fallbackId: 'my-device' }).deviceId;
+      await expect(ctr.getDeviceInfo()).resolves.toEqual({
+        deviceId: stable,
         hostname: 'mock-hostname',
         platform: process.platform,
       });

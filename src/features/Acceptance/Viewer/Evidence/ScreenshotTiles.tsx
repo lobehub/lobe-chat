@@ -1,12 +1,11 @@
 'use client';
 
-import { Flexbox, Icon, Image } from '@lobehub/ui';
-import { Text } from '@lobehub/ui/base-ui';
-import { createStaticStyles, cssVar, cx } from 'antd-style';
+import { createStaticStyles, cssVar, cx, Flexbox, Icon, Image, Text } from '@lobehub/ui';
 import { Check, MessageSquare, X } from 'lucide-react';
 import { memo, type ReactNode, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { FLOATING_ACTION_HOST } from './FloatingCommentAction';
 import type { EvidenceOverlay } from './overlay';
 import {
   annotationInSlice,
@@ -329,6 +328,8 @@ const AnnotationFace = memo<{ name?: string; size?: number; src?: string | null 
 AnnotationFace.displayName = 'AcceptanceAnnotationFace';
 
 interface ScreenshotTilesProps {
+  /** Floats over the picture (see `FloatingCommentAction`). */
+  action?: ReactNode;
   alt: string;
   annotations?: EvidenceOverlay[];
   caption?: ReactNode;
@@ -340,7 +341,7 @@ interface ScreenshotTilesProps {
 }
 
 export const ScreenshotTiles = memo<ScreenshotTilesProps>(
-  ({ alt, annotations, caption, fileHeight, fileWidth, flat = false, src }) => {
+  ({ action, alt, annotations, caption, fileHeight, fileWidth, flat = false, src }) => {
     const { t } = useTranslation('verify');
     const [natural, setNatural] = useState(
       fileWidth && fileHeight ? { height: fileHeight, width: fileWidth } : undefined,
@@ -429,10 +430,11 @@ export const ScreenshotTiles = memo<ScreenshotTilesProps>(
 
     const shell = (width: string | number, body: ReactNode) => (
       <Flexbox gap={4} style={{ maxWidth: '100%', width }}>
-        <div className={styles.stage}>
+        <div className={styles.stage} {...(action ? { [FLOATING_ACTION_HOST]: '' } : {})}>
           {body}
           {pins}
           {note}
+          {action}
         </div>
         {caption}
       </Flexbox>

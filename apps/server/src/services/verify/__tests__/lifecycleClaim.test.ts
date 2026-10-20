@@ -15,6 +15,7 @@ const {
   finalizeVerifyRun,
   recordHeterogeneousDeliverableEvidence,
   resolveTaskAcceptance,
+  resultListByRun,
   startEvidenceSubmission,
   updateStatus,
 } = vi.hoisted(() => ({
@@ -28,6 +29,7 @@ const {
   operationFindById: vi.fn(),
   recordHeterogeneousDeliverableEvidence: vi.fn(),
   resolveTaskAcceptance: vi.fn(),
+  resultListByRun: vi.fn(),
   startEvidenceSubmission: vi.fn(),
   updateStatus: vi.fn(),
 }));
@@ -49,6 +51,11 @@ vi.mock('@/database/models/agentOperation', () => ({
 vi.mock('@/database/models/verifyEvidence', () => ({
   VerifyEvidenceModel: vi.fn(function () {
     return { listByRun: evidenceListByRun };
+  }),
+}));
+vi.mock('@/database/models/verifyCheckResult', () => ({
+  VerifyCheckResultModel: vi.fn(function () {
+    return { listByRun: resultListByRun };
   }),
 }));
 vi.mock('@/database/models/document', () => ({
@@ -112,9 +119,11 @@ describe('runVerifyOnCompletion — verification claim', () => {
       operationFindById,
       recordHeterogeneousDeliverableEvidence,
       resolveTaskAcceptance,
+      resultListByRun,
       startEvidenceSubmission,
       updateStatus,
     ].forEach((m) => m.mockReset());
+    resultListByRun.mockResolvedValue([]);
     resolveTaskAcceptance.mockResolvedValue({
       acceptance: { id: 'acceptance-1' },
       config: { enabled: true },
@@ -157,6 +166,43 @@ describe('runVerifyOnCompletion — verification claim', () => {
     expect(execute).not.toHaveBeenCalled();
   });
 
+  it("leaves carried checks out of a repair round's evidence turn", async () => {
+    // Fresh rows on a carried check reopen it, so asking for them would re-judge
+    // every carried check on the repair turn's own delta reply.
+    findByOperation.mockResolvedValue({
+      ...confirmedRun,
+      plan: [
+        { id: 'carried', required: true },
+        { id: 'repaired', required: true },
+      ],
+    });
+    operationFindById.mockResolvedValue({
+      agentId: 'builder',
+      id: 'op-1',
+      model: 'm',
+      provider: 'p',
+      taskId: 'task-1',
+      topicId: 'topic-1',
+    });
+    resultListByRun.mockResolvedValue([
+      {
+        checkItemId: 'carried',
+        metadata: { carriedFrom: { checkResultId: 'r', roundIndex: 1, verifyRunId: 'run-0' } },
+        status: 'passed',
+      },
+    ]);
+    evidenceListByRun.mockResolvedValue([
+      { checkItemId: 'carried', metadata: { carriedFromEvidenceId: 'e1' }, type: 'text' },
+    ]);
+    claimEvidenceCollection.mockResolvedValue(true);
+
+    await runVerifyOnCompletion(db, 'u1', params);
+
+    expect(startEvidenceSubmission).toHaveBeenCalledWith(
+      expect.objectContaining({ plan: [{ id: 'repaired', required: true }] }),
+    );
+  });
+
   it('still collects when a criterion is missing a declared evidence type', async () => {
     findByOperation.mockResolvedValue({
       ...confirmedRun,
@@ -182,6 +228,47 @@ describe('runVerifyOnCompletion — verification claim', () => {
     await runVerifyOnCompletion(db, 'u1', params);
 
     expect(startEvidenceSubmission).toHaveBeenCalledTimes(1);
+  });
+
+  /**
+   * Regression (T-545): a CLI builder evidenced every criterion with
+   * `result submit`, but the plan also named `deliverable`-scoped text it never
+   * uploads. The handoff counted those as missing, so the builder's final
+   * report was pasted into every check even though the structural gate ignores
+   * that scope.
+   */
+  it('treats deliverable-scoped requirements as covered, like the structural gate', async () => {
+    findByOperation.mockResolvedValue({
+      ...confirmedRun,
+      plan: [
+        {
+          id: 'c1',
+          required: true,
+          verifierConfig: {
+            requiredEvidence: [
+              { scope: 'deliverable', type: 'text' },
+              { scope: 'deliverable', type: 'transcript' },
+            ],
+          },
+        },
+      ],
+    });
+    operationFindById.mockResolvedValue({
+      agentId: 'builder',
+      id: 'op-1',
+      model: null,
+      provider: 'claude-code',
+      taskId: 'task-1',
+      topicId: 'topic-1',
+    });
+    evidenceListByRun.mockResolvedValue([{ checkItemId: 'c1', type: 'transcript' }]);
+    claimEvidenceCollection.mockResolvedValue(true);
+
+    await runVerifyOnCompletion(db, 'u1', params);
+
+    expect(recordHeterogeneousDeliverableEvidence).not.toHaveBeenCalled();
+    expect(startEvidenceSubmission).not.toHaveBeenCalled();
+    expect(execute).toHaveBeenCalledTimes(1);
   });
 
   /**

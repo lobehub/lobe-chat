@@ -9,9 +9,20 @@ import type {
   VerifySurface,
   VerifyVerdict,
 } from '@lobechat/types';
-import { Block, Center, Empty, Flexbox, Icon, Image, Markdown } from '@lobehub/ui';
-import { Button, Text } from '@lobehub/ui/base-ui';
-import { createStaticStyles, cssVar, cx } from 'antd-style';
+import {
+  Block,
+  Button,
+  Center,
+  createStaticStyles,
+  cssVar,
+  cx,
+  Empty,
+  Flexbox,
+  Icon,
+  Image,
+  Markdown,
+  Text,
+} from '@lobehub/ui';
 import type { TFunction } from 'i18next';
 import {
   AlertTriangle,
@@ -70,6 +81,7 @@ import {
   markdownTextEvidenceTypes,
   rendersAsMarkdown,
 } from './MarkdownEvidence';
+import { originTopicHref } from './originLink';
 import { readVisualizationManifest } from './visualization';
 import { VisualizationRenderer } from './VisualizationRenderer';
 
@@ -1182,7 +1194,7 @@ const CodingScopeCard = memo<{
   );
   const date = formatScopeDate(testedAt);
   const surfaces = renderableSurfaces(context.surfaces);
-  const originTopicId = origin?.topicId;
+  const originHref = originTopicHref(origin);
   const hasScope =
     Boolean(branch) ||
     Boolean(commit) ||
@@ -1190,7 +1202,7 @@ const CodingScopeCard = memo<{
     hasPullRequest ||
     surfaces.length > 0 ||
     Boolean(date) ||
-    Boolean(originTopicId);
+    Boolean(originHref);
 
   if (!hasScope) return null;
 
@@ -1266,10 +1278,10 @@ const CodingScopeCard = memo<{
         )}
         {/* Only ever rendered for the report's author — the server redacts `origin`
             from a bundle fetched by anyone else holding the shared link. */}
-        {originTopicId && (
+        {originHref && (
           <a
             className={cx(styles.scopeMetaItem, styles.originLink)}
-            href={`/chat?topic=${originTopicId}`}
+            href={originHref}
             rel="noreferrer"
             target="_blank"
             title={t('report.scope.origin')}

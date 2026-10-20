@@ -31,6 +31,9 @@ export default {
     'Give a port on the working device a link, so a dev server running there can be opened from here. The link only works for people who can reach that device.',
   'features.deviceTunnel.title': 'Remote Port Links',
   'features.heteroSessionImport.title': 'Local Agent Session Import',
+  'features.goals.desc':
+    'Hand the agent a goal: it breaks the goal into tasks, tracks progress, and delivers the result for you to review.',
+  'features.goals.title': 'Goals',
   'features.imessage.desc':
     'Connect agents to iMessage through the local LobeHub Desktop BlueBubbles bridge.',
   'features.imessage.title': 'iMessage Channel',
@@ -51,6 +54,9 @@ export default {
   'features.oauthApps.desc':
     'Show OAuth app management in personal and workspace settings. This feature is hidden by default.',
   'features.oauthApps.title': 'OAuth Apps',
+  'features.persistentSandbox.desc':
+    'Keep files the cloud sandbox writes. Its working directory survives session recycling and is shared across your topics, instead of being discarded with the sandbox. Requires a paid plan; large downloads and dependencies still belong in /tmp.',
+  'features.persistentSandbox.title': 'Persistent Sandbox',
   'features.projects.desc':
     'Organize long-running goals into dedicated workspaces with their own agents, knowledge bases, and tasks.',
   'features.projects.title': 'Project Workspaces',
@@ -58,13 +64,17 @@ export default {
     'Add an Acceptance section to the task detail: describe acceptance in one sentence and let AI generate editable verify criteria.',
   'features.taskVerify.title': 'Acceptance',
   'features.selfLearning.desc':
-    'Show what each agent has learned from real practice — its rule base, which rules actually get used, and which layers are still blank.',
+    'Let every agent learn from your conversations in the background: it remembers facts, refines skills, collects lessons, and reviews its day each night. Rounds you send back become rules. Each nightly review covers at most 50 conversations. See it all under Memory → Self-evolving.',
   'features.selfLearning.title': 'Self-evolving',
-  'features.topicAcceptance.desc':
-    'Author a delivery checklist for the current topic right above the composer, so the conversation is held to standards you can edit any time.',
-  'features.topicAcceptance.title': 'Topic Acceptance',
+  'features.topicBugReport.desc':
+    'Adds Report Bug to the topic menu. Send the topic’s IDs, your app environment, and optional attachments to the LobeHub support team.',
+  'features.topicBugReport.title': 'Report Bug',
+  'features.workspaceOnboarding.desc':
+    'When you first enter a workspace you just created, set it up with the new guided flow: connect the team’s apps, get a team profile, hire the team assistant, invite members, connect team chats and devices, and pick starter tasks. Off keeps the previous setup flow.',
+  'features.workspaceOnboarding.title': 'New Workspace Onboarding',
   'group.desktop': 'Desktop',
   'group.general': 'General',
+  'group.workspace': 'Workspace',
   'stage.alpha.desc':
     'Internal testing only. Not recommended for daily use yet — it may change or break at any time.',
   'stage.alpha.label': 'Alpha',
