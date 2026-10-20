@@ -23,6 +23,9 @@ export interface QuotaHistory {
   windows: QuotaWindowRow[];
 }
 
+/** A history read: a part whose request failed is `undefined`. */
+export type QuotaHistoryFetched = { [K in keyof QuotaHistory]: QuotaHistory[K] | undefined };
+
 /**
  * The account list is one entry for the whole scope: every panel, the account
  * manager and the calendar resolve their account from it.
@@ -72,7 +75,7 @@ export const quotaReadingsResource = defineReplica<string, QuotaLatestReading[]>
  * One account's 90-day calendar history. The reading series is the heaviest
  * payload of the domain, so only the most recently opened accounts persist.
  */
-export const quotaHistoryResource = defineReplica<string, QuotaHistory>({
+export const quotaHistoryResource = defineReplica<string, QuotaHistory, QuotaHistoryFetched>({
   key: (accountId) => accountId,
   name: 'agentQuotaHistory',
   persist: { maxEntries: 5 },

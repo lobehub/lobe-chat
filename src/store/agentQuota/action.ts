@@ -17,6 +17,7 @@ import {
   type QuotaBinding,
   quotaBindingsResource,
   type QuotaHistory,
+  type QuotaHistoryFetched,
   quotaHistoryResource,
   type QuotaLatestReading,
   quotaPanelResource,
@@ -125,16 +126,34 @@ export class ActionImpl {
     this.#history = createReplicaSlice(quotaHistoryResource, {
       actionPrefix: 'quotaHistory',
       effects: confirmOn('history'),
-      fetcher: async (accountId): Promise<QuotaHistory> => {
-        const [windows, snapshots, usageTurns] = await Promise.all([
+      fetcher: async (accountId): Promise<QuotaHistoryFetched> => {
+        const [windows, snapshots, usageTurns] = await Promise.allSettled([
           agentQuotaService.getWindows(accountId, QUOTA_HISTORY_WINDOW_LIMIT),
           agentQuotaService.listSnapshots(accountId, QUOTA_HISTORY_DAYS),
           agentQuotaService.listUsageTurns(accountId, QUOTA_HISTORY_DAYS),
         ]);
-        return { snapshots, usageTurns, windows };
+        // Nothing answered: fail the refresh so the last history stays on screen.
+        if ([windows, snapshots, usageTurns].every((result) => result.status === 'rejected'))
+          throw (windows as PromiseRejectedResult).reason;
+        // A part that failed stays `undefined`; `merge` keeps its last confirmed value.
+        return {
+          snapshots: snapshots.status === 'fulfilled' ? snapshots.value : undefined,
+          usageTurns: usageTurns.status === 'fulfilled' ? usageTurns.value : undefined,
+          windows: windows.status === 'fulfilled' ? windows.value : undefined,
+        };
       },
       get,
-      merge: sameValue,
+      // One part failing keeps the parts that answered, and that part's last
+      // confirmed value (or nothing on a first read).
+      merge: (incoming, confirmed) =>
+        sameValue<QuotaHistory>(
+          {
+            snapshots: incoming.snapshots ?? confirmed?.snapshots ?? [],
+            usageTurns: incoming.usageTurns ?? confirmed?.usageTurns ?? [],
+            windows: incoming.windows ?? confirmed?.windows ?? [],
+          },
+          confirmed,
+        ),
       set,
       stateKey: 'quotaHistoryReplica',
       view: recordLens<Store, QuotaHistory>('quotaHistoryMap'),

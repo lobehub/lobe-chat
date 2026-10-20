@@ -436,6 +436,44 @@ describe('agent quota replicas', () => {
       );
     });
 
+    it('keeps the parts that answered when one history request fails', async () => {
+      const snapshot = { capturedAt: 1, limitType: 'session', scopeKey: '', utilization: 5 };
+      const turn = { occurredAt: 1 };
+      await persistRow(quotaHistoryResource, 'a1', {
+        snapshots: [],
+        usageTurns: [turn],
+        windows: [],
+      });
+      let release!: (value: unknown[]) => void;
+      vi.spyOn(agentQuotaService, 'getWindows').mockImplementation(
+        () => new Promise((resolve) => (release = resolve)) as never,
+      );
+      vi.spyOn(agentQuotaService, 'listSnapshots').mockResolvedValue([snapshot] as never);
+      vi.spyOn(agentQuotaService, 'listUsageTurns').mockRejectedValue(new Error('flaky'));
+
+      const { result } = renderHook(
+        () => useAgentQuotaStore.getState().useFetchQuotaHistory('a1'),
+        { wrapper },
+      );
+      await waitFor(() =>
+        expect(agentQuotaSelectors.history('a1')(useAgentQuotaStore.getState())).toBeDefined(),
+      );
+      await act(async () => release([{ id: 'w1' }]));
+
+      await waitFor(() =>
+        expect(agentQuotaSelectors.history('a1')(useAgentQuotaStore.getState())).toEqual({
+          snapshots: [snapshot],
+          // The failed part keeps its last confirmed value.
+          usageTurns: [turn],
+          windows: [{ id: 'w1' }],
+        }),
+      );
+      expect(result.current.error).toBeFalsy();
+      expect(
+        agentQuotaSelectors.isHistoryConfirmed(scope, 'a1')(useAgentQuotaStore.getState()),
+      ).toBe(true);
+    });
+
     it('keeps the last history on screen when a refresh fails', async () => {
       const history = {
         snapshots: [{ capturedAt: 1, limitType: 'session', scopeKey: '', utilization: 5 }],
@@ -444,8 +482,8 @@ describe('agent quota replicas', () => {
       } as unknown as QuotaHistory;
       await persistRow(quotaHistoryResource, 'a1', history);
       vi.spyOn(agentQuotaService, 'getWindows').mockRejectedValue(new Error('offline'));
-      vi.spyOn(agentQuotaService, 'listSnapshots').mockResolvedValue([]);
-      vi.spyOn(agentQuotaService, 'listUsageTurns').mockResolvedValue([]);
+      vi.spyOn(agentQuotaService, 'listSnapshots').mockRejectedValue(new Error('offline'));
+      vi.spyOn(agentQuotaService, 'listUsageTurns').mockRejectedValue(new Error('offline'));
 
       const { result } = renderHook(
         () => useAgentQuotaStore.getState().useFetchQuotaHistory('a1'),
