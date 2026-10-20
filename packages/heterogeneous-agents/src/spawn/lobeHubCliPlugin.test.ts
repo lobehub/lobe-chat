@@ -7,11 +7,16 @@ import { parse } from 'yaml';
 
 import {
   buildHeterogeneousPrompt,
+  lobeHubCliGuide,
   lobeHubCliGuideBlock,
   lobeHubCliSkillBody,
   lobeHubCliSkillDescription,
 } from '../protocol';
-import { prepareClaudeCodeLobeHubCli, resolveLobeHubCliPluginDir } from './lobeHubCliPlugin';
+import {
+  claudeCodeLoadsPluginSkills,
+  prepareClaudeCodeLobeHubCli,
+  resolveLobeHubCliPluginDir,
+} from './lobeHubCliPlugin';
 
 const posixOnly = process.platform === 'win32' ? it.skip : it;
 
@@ -77,38 +82,143 @@ describe('LobeHub CLI plugin', () => {
   });
 
   describe('prepareClaudeCodeLobeHubCli', () => {
+    const version = '2.1.301';
     const prompt = buildHeterogeneousPrompt({
       isNewSession: true,
       prompt: 'fix the failing test',
       systemContext: 'selected code',
     });
+    const withoutGuide = [
+      { text: 'selected code', type: 'text' },
+      { text: 'fix the failing test', type: 'text' },
+    ];
+    const unwritableRoot = async () => {
+      await mkdir(rootDir, { mode: 0o700 });
+      await chmod(rootDir, 0o755);
+    };
 
     it('swaps the in-message guide for the plugin and keeps everything else', async () => {
-      const delivery = await prepareClaudeCodeLobeHubCli(prompt, [], { rootDir });
+      const delivery = await prepareClaudeCodeLobeHubCli(prompt, [], { rootDir, version });
 
       expect(prompt).toContainEqual(lobeHubCliGuideBlock);
-      expect(delivery.prompt).toEqual([
-        { text: 'selected code', type: 'text' },
-        { text: 'fix the failing test', type: 'text' },
+      expect(delivery.prompt).toEqual(withoutGuide);
+      expect(delivery.args).toEqual([
+        '--plugin-dir',
+        await resolveLobeHubCliPluginDir({ rootDir }),
       ]);
-      expect(delivery.args).toEqual(['--plugin-dir', delivery.pluginDir]);
     });
+
+    // Regression: Claude Code before plugin skills rejects `--plugin-dir` and
+    // never starts the turn; the binary checks accept any version.
+    it.each(['1.2.3', '2.0.19', 'unknown', undefined])(
+      'keeps the guide in the prompt for Claude Code %s',
+      async (oldVersion) => {
+        const delivery = await prepareClaudeCodeLobeHubCli(prompt, [], {
+          rootDir,
+          version: oldVersion,
+        });
+
+        expect(delivery).toEqual({ args: [], prompt });
+      },
+    );
 
     it('keeps the guide in the prompt when skills are disabled', async () => {
       const delivery = await prepareClaudeCodeLobeHubCli(prompt, ['--disable-slash-commands'], {
         rootDir,
+        version,
       });
 
       expect(delivery).toEqual({ args: [], prompt });
     });
 
-    posixOnly('keeps the guide in the prompt when the plugin cannot be written', async () => {
-      await mkdir(rootDir, { mode: 0o700 });
-      await chmod(rootDir, 0o755);
+    posixOnly('keeps the guide in the prompt of a new session without a plugin', async () => {
+      await unwritableRoot();
 
-      const delivery = await prepareClaudeCodeLobeHubCli(prompt, [], { rootDir });
+      const delivery = await prepareClaudeCodeLobeHubCli(prompt, [], { rootDir, version });
 
       expect(delivery).toEqual({ args: [], prompt });
     });
+
+    // Regression: a resumed turn carries no in-message copy, and earlier turns
+    // may have had the plugin, so losing the plugin must not lose the guide.
+    // (An appended system prompt would not reach it: `--resume` keeps the
+    // session's original one.)
+    posixOnly('puts the guide back into a resumed turn that has no plugin', async () => {
+      await unwritableRoot();
+
+      const delivery = await prepareClaudeCodeLobeHubCli('carry on', [], {
+        resumed: true,
+        rootDir,
+        version,
+      });
+
+      expect(delivery).toEqual({
+        args: [],
+        prompt: [lobeHubCliGuideBlock, { text: 'carry on', type: 'text' }],
+      });
+    });
+
+    posixOnly('adds no second copy to a resumed turn that already carries one', async () => {
+      await unwritableRoot();
+      // A dispatcher predating the tag sends the guide untagged.
+      const untagged = [
+        { text: lobeHubCliGuide, type: 'text' as const },
+        { text: 'hi', type: 'text' as const },
+      ];
+
+      const delivery = await prepareClaudeCodeLobeHubCli(untagged, [], {
+        resumed: true,
+        rootDir,
+        version,
+      });
+
+      expect(delivery).toEqual({ args: [], prompt: untagged });
+    });
+
+    it('keeps a resumed turn unchanged apart from loading the plugin', async () => {
+      const delivery = await prepareClaudeCodeLobeHubCli('carry on', [], {
+        resumed: true,
+        rootDir,
+        version,
+      });
+
+      expect(delivery).toEqual({
+        args: ['--plugin-dir', await resolveLobeHubCliPluginDir({ rootDir })],
+        prompt: 'carry on',
+      });
+    });
+  });
+
+  posixOnly("moves to the user's cache directory when the temp root is unusable", async () => {
+    const env = { HOME: process.env.HOME, TMPDIR: process.env.TMPDIR };
+    const owner = String(process.getuid!());
+    process.env.TMPDIR = path.join(parent, 'tmp');
+    process.env.HOME = path.join(parent, 'home');
+    try {
+      await mkdir(path.join(parent, 'tmp', `lobehub-cli-plugin-${owner}`), { recursive: true });
+      await chmod(path.join(parent, 'tmp', `lobehub-cli-plugin-${owner}`), 0o777);
+
+      const pluginDir = await resolveLobeHubCliPluginDir();
+
+      expect(pluginDir?.startsWith(path.join(parent, 'home', '.cache', 'lobehub-cli-plugin'))).toBe(
+        true,
+      );
+    } finally {
+      for (const [key, value] of Object.entries(env)) {
+        if (value === undefined) delete process.env[key];
+        else process.env[key] = value;
+      }
+    }
+  });
+
+  it.each([
+    ['2.0.20', true],
+    ['2.1.0', true],
+    ['10.0.0', true],
+    ['2.1.301 (Claude Code)', true],
+    ['2.0.19', false],
+    ['1.9.99', false],
+  ])('treats Claude Code %s as loading plugin skills: %s', (version, expected) => {
+    expect(claudeCodeLoadsPluginSkills(version)).toBe(expected);
   });
 });

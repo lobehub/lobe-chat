@@ -163,6 +163,8 @@ export {
 export { JsonlStreamProcessor } from './jsonlProcessor';
 export {
   buildLobeHubCliPluginFiles,
+  CLAUDE_CODE_PLUGIN_SKILLS_MIN_VERSION,
+  claudeCodeLoadsPluginSkills,
   type ClaudeCodeLobeHubCliDelivery,
   LOBEHUB_CLI_PLUGIN_NAME,
   LOBEHUB_CLI_SKILL_NAME,

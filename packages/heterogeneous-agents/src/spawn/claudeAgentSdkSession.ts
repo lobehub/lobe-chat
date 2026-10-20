@@ -77,8 +77,10 @@ export const buildClaudeSdkUserMessageFromStreamJson = (stdinPayload: string): S
 
 const parseClaudeSdkExtraArgs = (
   args: string[],
-): Pick<ClaudeAgentSdkOptions, 'effort' | 'extraArgs' | 'model'> => {
+): Pick<ClaudeAgentSdkOptions, 'effort' | 'extraArgs' | 'model' | 'plugins'> => {
   const extraArgs: Record<string, string | null> = {};
+  // `--plugin-dir` repeats, which `extraArgs` (one value per flag) cannot carry.
+  const plugins: NonNullable<ClaudeAgentSdkOptions['plugins']> = [];
   let model: string | undefined;
   let effort: ClaudeAgentSdkOptions['effort'];
 
@@ -102,6 +104,12 @@ const parseClaudeSdkExtraArgs = (
       continue;
     }
 
+    if (key === 'plugin-dir' && hasValue) {
+      plugins.push({ path: next, type: 'local' });
+      index += 1;
+      continue;
+    }
+
     extraArgs[key] = hasValue ? next : null;
     if (hasValue) index += 1;
   }
@@ -110,6 +118,7 @@ const parseClaudeSdkExtraArgs = (
     ...(effort ? { effort } : {}),
     extraArgs: Object.keys(extraArgs).length > 0 ? extraArgs : undefined,
     ...(model ? { model } : {}),
+    ...(plugins.length > 0 ? { plugins } : {}),
   };
 };
 
@@ -173,8 +182,6 @@ export interface ClaudeAgentSdkSessionOptions {
   onSessionId: (sessionId: string) => void;
   onStderr: (data: string) => Promise<void> | void;
   operationId: string;
-  /** Local plugin roots loaded for this session only (e.g. the `lh` guide skill). */
-  pluginDirs?: string[];
   resumeSessionId?: string;
   sessionId: string;
   stdinPayload: string;
@@ -329,9 +336,6 @@ export class ClaudeAgentSdkSession {
       includePartialMessages: true,
       pathToClaudeCodeExecutable: executablePath,
       permissionMode: 'bypassPermissions',
-      ...(this.options.pluginDirs?.length
-        ? { plugins: this.options.pluginDirs.map((path) => ({ path, type: 'local' as const })) }
-        : {}),
       spawnClaudeCodeProcess: (spawnOptions) =>
         spawnClaudeCodeCliProcess(spawnOptions, {
           onProcessSpawn: this.options.onProcessSpawn,

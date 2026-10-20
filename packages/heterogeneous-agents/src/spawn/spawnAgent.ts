@@ -40,6 +40,11 @@ export interface SpawnAgentOptions {
    * path or is wrapped by a launcher.
    */
   command?: string;
+  /**
+   * Version of the CLI being spawned, when the caller detected it. Claude Code
+   * gets the `lh` guide as a skill only on a version known to load one.
+   */
+  commandVersion?: string;
   /** Working directory for the spawned child. Defaults to `process.cwd()`. */
   cwd?: string;
   /** Create a dedicated Unix process group. Disable beneath a detached wrapper. */
@@ -485,7 +490,10 @@ export const spawnAgent = async (options: SpawnAgentOptions): Promise<SpawnAgent
   // other conversation is not answering it.
   const lobeHubCli =
     options.agentType === 'claude-code' && options.env?.LOBEHUB_TOPIC_ID
-      ? await prepareClaudeCodeLobeHubCli(options.prompt, options.extraArgs)
+      ? await prepareClaudeCodeLobeHubCli(options.prompt, options.extraArgs, {
+          resumed: Boolean(options.resumeSessionId),
+          version: options.commandVersion,
+        })
       : { args: [], prompt: options.prompt };
   const promptPlan = await buildAgentInput(
     options.agentType,

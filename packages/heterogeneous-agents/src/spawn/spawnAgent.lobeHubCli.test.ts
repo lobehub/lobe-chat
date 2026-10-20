@@ -62,6 +62,8 @@ const run = async (options: Partial<Parameters<typeof spawnAgent>[0]>) => {
   nextFakeProc = fake.proc;
   const handle = await spawnAgent({
     agentType: 'claude-code',
+    // What `lh hetero exec` passes on from its validated `claude --version`.
+    commandVersion: '2.1.301',
     operationId: 'op-1',
     prompt: 'hello',
     ...options,
@@ -132,6 +134,17 @@ describe('spawnAgent — LobeHub CLI guide for Claude Code', () => {
 
   it('leaves a run outside any LobeHub conversation untouched', async () => {
     const { args, userContent } = await run({ prompt: firstTurnPrompt });
+
+    expect(pluginDirArg(args)).toBeUndefined();
+    expect(userContent[0]).toEqual({ text: lobeHubCliGuide, type: 'text' });
+  });
+
+  it('keeps the guide in the prompt for a Claude Code that predates plugin skills', async () => {
+    const { args, userContent } = await run({
+      commandVersion: '2.0.11',
+      env: { LOBEHUB_TOPIC_ID: 'tpc_1' },
+      prompt: firstTurnPrompt,
+    });
 
     expect(pluginDirArg(args)).toBeUndefined();
     expect(userContent[0]).toEqual({ text: lobeHubCliGuide, type: 'text' });

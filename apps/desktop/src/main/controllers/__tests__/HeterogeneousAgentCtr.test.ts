@@ -1512,6 +1512,7 @@ describe('HeterogeneousAgentCtr', () => {
 
       const ctr = new HeterogeneousAgentCtr({
         appStoragePath,
+        binaryManager: { detect: async () => ({ available: true, version: '2.1.301' }) },
         storeManager: { get: vi.fn() },
       } as any);
       const { sessionId } = await ctr.startSession({
@@ -1542,7 +1543,6 @@ describe('HeterogeneousAgentCtr', () => {
       const line = writes[0].trimEnd();
       expect(line.endsWith('\n') || writes[0].endsWith('\n')).toBe(true);
       const msg = JSON.parse(line);
-      // The `lh` guide rides along as a skill, never as words in the user's turn.
       expect(cliArgs).toContain('--plugin-dir');
       expect(msg).toMatchObject({
         message: { content: [{ text: prompt, type: 'text' }], role: 'user' },

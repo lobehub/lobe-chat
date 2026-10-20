@@ -219,13 +219,13 @@ describe('ClaudeAgentSdkSession plugins', () => {
     sdkQueryMock.mockReset();
   });
 
-  const runWith = async (pluginDirs?: string[]) => {
+  const optionsFor = async (args: string[]) => {
     sdkQueryMock.mockImplementation(() => ({
       async *[Symbol.asyncIterator]() {},
       close: vi.fn(),
     }));
     await new ClaudeAgentSdkSession({
-      args: [],
+      args,
       commandPath: 'claude',
       cwd: os.tmpdir(),
       env: {} as NodeJS.ProcessEnv,
@@ -235,20 +235,28 @@ describe('ClaudeAgentSdkSession plugins', () => {
       onSessionId: () => {},
       onStderr: () => {},
       operationId: 'op-sdk-plugins',
-      pluginDirs,
       sessionId: 'session-1',
       stdinPayload: `${JSON.stringify({ message: { content: 'hi', role: 'user' }, type: 'user' })}\n`,
     }).run();
     return sdkQueryMock.mock.calls[0][0].options;
   };
 
-  it('loads the session plugins, e.g. the one carrying the `lh` guide', async () => {
-    await expect(runWith(['/tmp/lobehub-plugin'])).resolves.toMatchObject({
-      plugins: [{ path: '/tmp/lobehub-plugin', type: 'local' }],
-    });
+  // `extraArgs` holds one value per flag, so a user's own `--plugin-dir` and the
+  // one carrying the `lh` guide would overwrite each other there.
+  it('loads every `--plugin-dir` as a session plugin', async () => {
+    const options = await optionsFor(['--plugin-dir', '/user/plugin', '--plugin-dir', '/lobehub']);
+
+    expect(options.plugins).toEqual([
+      { path: '/user/plugin', type: 'local' },
+      { path: '/lobehub', type: 'local' },
+    ]);
+    expect(options.extraArgs?.['plugin-dir']).toBeUndefined();
   });
 
-  it('passes no plugins option when there are none', async () => {
-    await expect(runWith()).resolves.not.toHaveProperty('plugins');
+  it('passes an appended system prompt through to the CLI', async () => {
+    const options = await optionsFor(['--append-system-prompt', 'guide']);
+
+    expect(options.extraArgs).toEqual({ 'append-system-prompt': 'guide' });
+    expect(options).not.toHaveProperty('plugins');
   });
 });

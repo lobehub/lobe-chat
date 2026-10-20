@@ -23,13 +23,17 @@ const DESKTOP_CLAUDE_CODE_ARGS = [
 export const claudeCodeDriver: HeterogeneousAgentDriver = {
   async buildSpawnPlan({
     args,
+    cliVersion,
     helpers,
     mcpConfigPath,
     promptInput,
     resumeSessionId,
   }: HeterogeneousAgentBuildPlanParams) {
     // The `lh` guide rides along as a skill, not as text in the user's turn.
-    const lobeHubCli = await prepareClaudeCodeLobeHubCli(promptInput, args);
+    const lobeHubCli = await prepareClaudeCodeLobeHubCli(promptInput, args, {
+      resumed: Boolean(resumeSessionId),
+      version: cliVersion,
+    });
     const { stdin: stdinPayload } = await helpers.buildAgentInput('claude-code', lobeHubCli.prompt);
 
     return {

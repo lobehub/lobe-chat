@@ -1,11 +1,13 @@
 import { createHash, randomUUID } from 'node:crypto';
 import { lstat, mkdir, rename, rm, writeFile } from 'node:fs/promises';
-import { tmpdir } from 'node:os';
+import { homedir, tmpdir } from 'node:os';
 import path from 'node:path';
 
-import type { AgentPromptInput } from '../protocol';
+import type { AgentContentBlock, AgentPromptInput } from '../protocol';
 import {
   LOBEHUB_CLI_GUIDE_CONTEXT,
+  lobeHubCliGuide,
+  lobeHubCliGuideBlock,
   lobeHubCliSkillBody,
   lobeHubCliSkillDescription,
 } from '../protocol/lobeHubCliGuide';
@@ -21,13 +23,57 @@ import {
  * turns included, so it never needs the once-per-session bookkeeping the
  * in-message copy does — and nothing lands in the CLI's transcript as words
  * the user said.
+ *
+ * Only a Claude Code that loads plugin skills gets this; an older or unknown
+ * build keeps the in-message guide exactly as before, since it would reject
+ * `--plugin-dir` and fail to launch.
  */
 
 export const LOBEHUB_CLI_PLUGIN_NAME = 'lobehub';
 export const LOBEHUB_CLI_SKILL_NAME = 'lobehub';
 
+/**
+ * Claude Code loads skills, plugin ones included, from 2.0.20 (plugins arrived
+ * in 2.0.12). The CLI binary checks accept any version, so this gates delivery.
+ */
+export const CLAUDE_CODE_PLUGIN_SKILLS_MIN_VERSION = '2.0.20';
+
 /** `claude --disable-slash-commands` disables every skill, plugin ones included. */
 const CLAUDE_CODE_DISABLE_SKILLS_FLAG = '--disable-slash-commands';
+
+const parseVersion = (version: string) =>
+  version
+    .match(/(\d+)\.(\d+)\.(\d+)/)
+    ?.slice(1, 4)
+    .map(Number);
+
+/** Whether a reported Claude Code version loads plugin skills; unknown means no. */
+export const claudeCodeLoadsPluginSkills = (version: string | undefined): boolean => {
+  const actual = version ? parseVersion(version) : undefined;
+  if (!actual) return false;
+
+  const minimum = parseVersion(CLAUDE_CODE_PLUGIN_SKILLS_MIN_VERSION)!;
+  const differing = actual.findIndex((part, index) => part !== minimum[index]);
+  return differing === -1 || actual[differing] > minimum[differing];
+};
+
+const hasFlag = (args: readonly string[], flag: string) =>
+  args.some((arg) => arg === flag || arg.startsWith(`${flag}=`));
+
+const toBlocks = (prompt: AgentPromptInput): AgentContentBlock[] =>
+  typeof prompt === 'string' ? (prompt ? [{ text: prompt, type: 'text' }] : []) : prompt;
+
+/** `## LobeHub CLI (`lh`)` — also how dispatchers predating the tag start the guide. */
+const LOBEHUB_CLI_GUIDE_HEADING = lobeHubCliGuide.slice(0, lobeHubCliGuide.indexOf('\n'));
+
+/** Whether the prompt carries the guide, tagged or from a dispatcher predating the tag. */
+const carriesLobeHubCliGuide = (prompt: AgentPromptInput) =>
+  toBlocks(prompt).some(
+    (block) =>
+      block.type === 'text' &&
+      (block.context === LOBEHUB_CLI_GUIDE_CONTEXT ||
+        block.text.startsWith(LOBEHUB_CLI_GUIDE_HEADING)),
+  );
 
 /** Plugin files keyed by their path inside the plugin root. */
 export const buildLobeHubCliPluginFiles = (): Record<string, string> => ({
@@ -53,9 +99,18 @@ export const buildLobeHubCliPluginFiles = (): Record<string, string> => ({
   ].join('\n'),
 });
 
-const defaultRootDir = () => {
+/**
+ * Where the plugin may live, in order. The shared temp directory comes first;
+ * the user's cache directory backs it when the temp root is unusable (another
+ * user created it, a cleanup changed it), so the plugin is only unavailable when
+ * neither can be written — and then Claude Code's own writes fail as well.
+ */
+const defaultRootDirs = () => {
   const owner = typeof process.getuid === 'function' ? String(process.getuid()) : 'user';
-  return path.join(tmpdir(), `lobehub-cli-plugin-${owner}`);
+  return [
+    path.join(tmpdir(), `lobehub-cli-plugin-${owner}`),
+    path.join(homedir(), '.cache', 'lobehub-cli-plugin'),
+  ];
 };
 
 /**
@@ -112,13 +167,17 @@ const materializePlugin = async (rootDir: string): Promise<string> => {
 /**
  * Directory of the plugin carrying the guide, written on first use and checked
  * on every spawn — a long-lived desktop process outlives temp-directory
- * cleanups. Resolves `undefined` when it cannot be written safely; callers then
- * keep the guide in the prompt, so a run never loses it.
+ * cleanups. Resolves `undefined` when no root can be written safely; callers
+ * then keep the guide in the prompt, so a run never loses it.
  */
-export const resolveLobeHubCliPluginDir = (
+export const resolveLobeHubCliPluginDir = async (
   options: { rootDir?: string } = {},
-): Promise<string | undefined> =>
-  materializePlugin(options.rootDir ?? defaultRootDir()).catch(() => undefined);
+): Promise<string | undefined> => {
+  for (const rootDir of options.rootDir ? [options.rootDir] : defaultRootDirs()) {
+    const pluginDir = await materializePlugin(rootDir).catch(() => undefined);
+    if (pluginDir) return pluginDir;
+  }
+};
 
 /** Drop the in-message copy of the guide, which a native skill now carries. */
 export const omitLobeHubCliGuide = (prompt: AgentPromptInput): AgentPromptInput =>
@@ -129,11 +188,9 @@ export const omitLobeHubCliGuide = (prompt: AgentPromptInput): AgentPromptInput 
       );
 
 export interface ClaudeCodeLobeHubCliDelivery {
-  /** Spawn arguments loading the plugin; empty when the guide stays in the prompt. */
+  /** Spawn arguments loading the plugin; empty when the guide is in the prompt. */
   args: string[];
-  /** The plugin root, for the Agent SDK's `plugins` option. */
-  pluginDir?: string;
-  /** The prompt to send, without the in-message guide when the plugin carries it. */
+  /** The prompt to send: without the in-message guide exactly when `args` carries it. */
   prompt: AgentPromptInput;
 }
 
@@ -142,18 +199,28 @@ export interface ClaudeCodeLobeHubCliDelivery {
  * launch inside a LobeHub conversation goes through this, so the plugin and the
  * removal of the in-message copy always come together.
  *
+ * Without the plugin the guide stays in the prompt as before. A resumed turn
+ * carries no in-message copy (`isNewSession`) and its earlier turns may have
+ * had the plugin, so there the guide is put back into the prompt rather than
+ * lost. An appended system prompt would not do: on `--resume` Claude Code keeps
+ * the system prompt the session started with and ignores a new one.
+ *
  * @param args the spawn's own arguments; skills disabled there keep the guide in
  * the prompt.
+ * @param options.version the Claude Code version the caller detected.
+ * @param options.resumed whether this launch resumes a native session.
  */
 export const prepareClaudeCodeLobeHubCli = async (
   prompt: AgentPromptInput,
   args: readonly string[] = [],
-  options: { rootDir?: string } = {},
+  options: { resumed?: boolean; rootDir?: string; version?: string } = {},
 ): Promise<ClaudeCodeLobeHubCliDelivery> => {
-  if (args.includes(CLAUDE_CODE_DISABLE_SKILLS_FLAG)) return { args: [], prompt };
+  if (hasFlag(args, CLAUDE_CODE_DISABLE_SKILLS_FLAG)) return { args: [], prompt };
+  if (!claudeCodeLoadsPluginSkills(options.version)) return { args: [], prompt };
 
   const pluginDir = await resolveLobeHubCliPluginDir(options);
-  if (!pluginDir) return { args: [], prompt };
+  if (pluginDir) return { args: ['--plugin-dir', pluginDir], prompt: omitLobeHubCliGuide(prompt) };
 
-  return { args: ['--plugin-dir', pluginDir], pluginDir, prompt: omitLobeHubCliGuide(prompt) };
+  if (!options.resumed || carriesLobeHubCliGuide(prompt)) return { args: [], prompt };
+  return { args: [], prompt: [lobeHubCliGuideBlock, ...toBlocks(prompt)] };
 };

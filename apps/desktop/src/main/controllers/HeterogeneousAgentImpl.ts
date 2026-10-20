@@ -1019,6 +1019,7 @@ export default class HeterogeneousAgentCtr {
       // spawn() can't (login-shell PATH, app-bundled Codex CLI, …).
       const useResolvedPath = Boolean(status?.path) && !command.includes(path.sep);
       session.resolvedCommandPath = useResolvedPath ? status!.path : undefined;
+      session.cliVersion = status?.version;
       // Carry the login-shell PATH the detector resolved through, so a
       // `#!/usr/bin/env node` shim spawned by absolute path still finds `node`.
       session.resolvedCommandSearchPath = useResolvedPath ? status!.resolvedPathEnv : undefined;
@@ -1510,7 +1511,7 @@ export default class HeterogeneousAgentCtr {
 
   /**
    * Build the Claude SDK's stream-json user message (text + base64 images) and
-   * the plugin carrying the `lh` guide, which then stays out of that message.
+   * the arguments carrying the `lh` guide, which then stays out of that message.
    */
   private async buildStreamJsonInput(params: SendPromptParams, session: AgentSession) {
     const lobeHubCli = await prepareClaudeCodeLobeHubCli(
@@ -1521,11 +1522,12 @@ export default class HeterogeneousAgentCtr {
         systemContext: params.systemContext,
       }),
       session.args,
+      { resumed: Boolean(session.agentSessionId), version: session.cliVersion },
     );
     const plan = await buildAgentInput('claude-code', lobeHubCli.prompt, {
       cacheDir: this.fileCacheDir,
     });
-    return { pluginDir: lobeHubCli.pluginDir, stdin: plan.stdin };
+    return { args: lobeHubCli.args, stdin: plan.stdin };
   }
 
   // ─── IPC methods ───
@@ -1794,6 +1796,7 @@ export default class HeterogeneousAgentCtr {
       });
       spawnPlan = await driver.buildSpawnPlan({
         args: session.args,
+        cliVersion: session.cliVersion,
         helpers: {
           buildAgentInput: async (agentType, input) => {
             try {
@@ -2049,7 +2052,10 @@ export default class HeterogeneousAgentCtr {
     const cwd = session.cwd || electronApp.getPath('desktop');
     const spawnEnv = this.buildSessionSpawnEnv(session);
     const commandPath = session.resolvedCommandPath ?? this.resolveSessionCommand(session);
-    const { pluginDir, stdin: stdinPayload } = await this.buildStreamJsonInput(params, session);
+    const { args: lobeHubCliArgs, stdin: stdinPayload } = await this.buildStreamJsonInput(
+      params,
+      session,
+    );
     const traceSession = await this.createCliTraceSession({
       cliArgs: ['sdk-stream', ...session.args],
       cwd,
@@ -2069,7 +2075,7 @@ export default class HeterogeneousAgentCtr {
     // executable it launches) exists.
     const startedAt = new Date().toISOString();
     const sdkSession = new ClaudeAgentSdkSession({
-      args: session.args,
+      args: [...session.args, ...lobeHubCliArgs],
       commandPath,
       configDir: spawnEnv.CLAUDE_CONFIG_DIR ?? session.hostedProviderBinding?.profileDir,
       cwd,
@@ -2103,7 +2109,6 @@ export default class HeterogeneousAgentCtr {
       },
       onStderr: (data) => this.appendCliTraceFile(traceSession, 'stderr.log', data),
       operationId: params.operationId,
-      pluginDirs: pluginDir ? [pluginDir] : undefined,
       resumeSessionId: session.agentSessionId,
       sessionId: session.sessionId,
       stdinPayload,
