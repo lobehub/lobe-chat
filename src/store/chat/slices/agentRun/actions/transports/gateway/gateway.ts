@@ -1139,6 +1139,10 @@ export class GatewayActionImpl {
               trigger: metadata?.trigger,
               userInterventionConfig,
               userMessage,
+              // Dual-write for servers that predate `userMessage` (they read only these
+              // top-level fields and strip the rest); a current server folds them in.
+              contextSelections: userMessage?.metadata?.contextSelections,
+              pageSelections: userMessage?.metadata?.pageSelections,
             }),
             abortSignal,
             (abandoned) =>

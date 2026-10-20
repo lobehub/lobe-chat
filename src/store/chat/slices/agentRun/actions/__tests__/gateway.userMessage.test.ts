@@ -50,7 +50,28 @@ describe('executeGatewayAgent: the composer-authored user message', () => {
     ).rejects.toThrow('stop');
 
     expect(aiAgentService.execAgentTask).toHaveBeenCalledWith(
-      expect.objectContaining({ userMessage }),
+      expect.objectContaining({
+        // Mirrored at the top level for servers that predate `userMessage`.
+        contextSelections: userMessage.metadata!.contextSelections,
+        pageSelections: userMessage.metadata!.pageSelections,
+        userMessage,
+      }),
     );
+  });
+
+  it('sends no selection fields for a plain-text send', async () => {
+    const action = new GatewayActionImpl(vi.fn(), () => ({ topicDataMap: {} }) as any, undefined);
+
+    await expect(
+      action.executeGatewayAgent({
+        context: { agentId: 'agent-1', topicId: 'topic-1' },
+        message: 'Hello',
+      }),
+    ).rejects.toThrow('stop');
+
+    const request = vi.mocked(aiAgentService.execAgentTask).mock.calls[0][0];
+    expect(request.userMessage).toBeUndefined();
+    expect(request.contextSelections).toBeUndefined();
+    expect(request.pageSelections).toBeUndefined();
   });
 });

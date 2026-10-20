@@ -3,10 +3,12 @@ import { CLIENT_PROTOCOL_VERSION } from '@lobechat/agent-gateway-client';
 import type {
   ClientLlmWaitItem,
   ComposerUserMessage,
+  ContextSelection,
   ExecAgentAppContext,
   ExecAgentClientIds,
   ExecAgentLlmExecutor,
   ExecAgentResult,
+  PageSelection,
   ResumeClientLlmWaitResult,
   RuntimeMentionedAgent,
   ScheduleAgentRunParams,
@@ -147,6 +149,8 @@ export interface ExecAgentTaskParams {
    * live, to tell whether the client never saw it or its stop never landed.
    */
   clientOperations?: ClientOperationSnapshot[];
+  /** @deprecated Mirror of `userMessage.metadata.contextSelections` for servers that predate it. */
+  contextSelections?: ContextSelection[];
   deviceId?: string;
   existingMessageIds?: string[];
   /** File IDs of already-uploaded attachments to attach to the new user message */
@@ -158,6 +162,8 @@ export interface ExecAgentTaskParams {
    * context so the supervisor run delegates to them instead of answering itself.
    */
   mentionedAgents?: RuntimeMentionedAgent[];
+  /** @deprecated Mirror of `userMessage.metadata.pageSelections` for servers that predate it. */
+  pageSelections?: PageSelection[];
   /** Parent message ID for regeneration/continue (skip user message creation, branch from this message) */
   parentMessageId?: string;
   prompt: string;
