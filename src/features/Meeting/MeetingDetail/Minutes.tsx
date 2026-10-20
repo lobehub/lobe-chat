@@ -1,6 +1,5 @@
 import type { MeetingActionItem } from '@lobechat/types';
 import {
-  Alert,
   Button,
   createStaticStyles,
   cssVar,
@@ -22,6 +21,7 @@ import type { ReactNode } from 'react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import AsyncError from '@/components/AsyncError';
 import { type MeetingDetail, meetingService } from '@/services/meeting';
 import { isMeetingProcessing, meetingActions } from '@/store/meeting';
 
@@ -148,11 +148,11 @@ const Minutes = ({ meeting, onSeek, segmentStarts, speakerNameByLabel }: Minutes
   );
 
   const errorAlert = minutesError && (
-    <Alert
-      showIcon
+    <AsyncError
       action={regenerate}
+      justify={'start'}
       title={t('minutes.error.title')}
-      type={'error'}
+      variant={'inline'}
       description={t(`minutes.error.${minutesError.code}`, {
         defaultValue: t('minutes.error.summarization_failed'),
       })}

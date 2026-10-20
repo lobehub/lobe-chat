@@ -1,6 +1,8 @@
-import { ActionIcon, createStaticStyles, cssVar, Flexbox, Input, Text } from '@lobehub/ui';
+import { ActionIcon, createStaticStyles, cssVar, Flexbox, Text } from '@lobehub/ui';
 import { PencilIcon } from 'lucide-react';
-import { memo, useEffect, useRef, useState } from 'react';
+import { memo, useEffect, useRef } from 'react';
+
+import { openRenameModal } from '@/components/RenameModal';
 
 import { formatClock } from '../format';
 import type { SpeakerView } from './speakers';
@@ -76,57 +78,26 @@ interface SpeakerNameProps {
   renameLabel: string;
 }
 
-/** Speaker name with an inline rename, so a diarized "Speaker 2" can become a person. */
-const SpeakerName = ({ color, name, onRename, renameLabel }: SpeakerNameProps) => {
-  const [editing, setEditing] = useState(false);
-  const [value, setValue] = useState(name);
-
-  const save = async () => {
-    setEditing(false);
-    const next = value.trim();
-    if (next && next !== name) await onRename?.(next);
-  };
-
-  if (editing)
-    return (
-      <Input
-        autoFocus
-        aria-label={renameLabel}
+/** Speaker name with a rename dialog, so a diarized "Speaker 2" can become a person. */
+const SpeakerName = ({ color, name, onRename, renameLabel }: SpeakerNameProps) => (
+  <Flexbox horizontal align={'center'} gap={2}>
+    <span className={styles.name} style={{ color: color ?? cssVar.colorTextSecondary }}>
+      {name}
+    </span>
+    {onRename && (
+      <ActionIcon
+        className={styles.rename}
+        icon={PencilIcon}
         size={'small'}
-        style={{ width: 180 }}
-        value={value}
-        onBlur={() => void save()}
-        onChange={(event) => setValue(event.target.value)}
-        onClick={(event) => event.stopPropagation()}
-        onKeyDown={(event) => {
+        title={renameLabel}
+        onClick={(event) => {
           event.stopPropagation();
-          if (event.key === 'Enter') void save();
-          if (event.key === 'Escape') setEditing(false);
+          openRenameModal({ defaultValue: name, onSave: onRename, title: renameLabel });
         }}
       />
-    );
-
-  return (
-    <Flexbox horizontal align={'center'} gap={2}>
-      <span className={styles.name} style={{ color: color ?? cssVar.colorTextSecondary }}>
-        {name}
-      </span>
-      {onRename && (
-        <ActionIcon
-          className={styles.rename}
-          icon={PencilIcon}
-          size={'small'}
-          title={renameLabel}
-          onClick={(event) => {
-            event.stopPropagation();
-            setValue(name);
-            setEditing(true);
-          }}
-        />
-      )}
-    </Flexbox>
-  );
-};
+    )}
+  </Flexbox>
+);
 
 interface SegmentRowProps {
   active: boolean;
