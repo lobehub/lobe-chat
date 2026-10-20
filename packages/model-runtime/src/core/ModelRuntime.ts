@@ -12,6 +12,7 @@ import type {
   ChatCompletionErrorPayload,
   ChatMethodOptions,
   ChatStreamPayload,
+  DecisionMode,
   DecisionOptions,
   DecisionPayload,
   DecisionQuestions,
@@ -41,6 +42,7 @@ import type {
 import { AgentRuntimeError } from '../utils/createError';
 import { createVideoWithCompletionMode } from '../utils/videoCompletionMode';
 import type { LobeRuntimeAI } from './BaseAI';
+import { planDecision } from './decision';
 
 const { logger: timing } = createTimingHelpers('lobe-server:chat:lobehub:timing');
 
@@ -153,6 +155,23 @@ export interface ModelRuntimeHooks {
   onChatStreamError?: (
     error: unknown,
     context: { options?: ChatMethodOptions; payload: ChatStreamPayload },
+  ) => void | Promise<void>;
+
+  /**
+   * Always fires after `decide` returns or throws (after the request passed validation), for
+   * per-call tracing like `onGenerateObjectComplete`. `usage` is undefined when none was
+   * reported. Hook failures are swallowed and logged.
+   */
+  onDecideComplete?: (
+    data: {
+      error?: { code?: string; message?: string; stack?: string };
+      latencyMs: number;
+      mode: DecisionMode;
+      response?: DecisionResponse;
+      success: boolean;
+      usage?: ModelUsage;
+    },
+    context: { options?: DecisionOptions; payload: DecisionPayload },
   ) => void | Promise<void>;
 
   onDecideError?: (
@@ -618,39 +637,58 @@ export class ModelRuntime {
     }
   }
 
+  /**
+   * Answer typed questions about one state. A decision model (model-bank `type: 'decision'`)
+   * on a provider with native `decide` answers with probabilities; any other model is emulated
+   * through `generateObject`. Requests are validated before any I/O and responses after it;
+   * `response.providerMetadata.lobehub.decisionMode` says which path served the call.
+   */
   async decide<Q extends DecisionQuestions>(
     payload: DecisionPayload<Q>,
     options?: DecisionOptions,
   ): Promise<DecisionResponse<Q>> {
-    // Unlike the optional-chained passthroughs above, an unsupported provider must not
-    // resolve to `undefined`: callers branch on the answers and would read it as a result.
-    // Thrown before the hooks run, so there is nothing for `onDecideError` to release.
-    const decide = this._runtime.decide?.bind(this._runtime);
-    if (!decide) {
-      throw AgentRuntimeError.chat({
-        error: new Error('Decision models are not supported by this provider'),
-        errorType: AgentRuntimeErrorType.CapabilityNotSupported,
-        provider: getRuntimeProviderId(this._runtime),
-      });
-    }
+    const runtime = this._runtime;
+    // Validation and capability checks throw before the hooks run, so there is nothing for
+    // `onDecideError` to release.
+    const plan = await planDecision(
+      {
+        decide: runtime.decide?.bind(runtime),
+        generateObject: runtime.generateObject?.bind(runtime),
+      },
+      payload,
+      options,
+      { provider: getRuntimeProviderId(runtime) },
+    );
+
+    const startTime = Date.now();
+    let usage: ModelUsage | undefined;
+    const fireComplete = async (data: {
+      error?: { code?: string; message?: string; stack?: string };
+      response?: DecisionResponse;
+      success: boolean;
+    }) => {
+      if (!this._hooks?.onDecideComplete) return;
+      try {
+        await this._hooks.onDecideComplete(
+          { ...data, latencyMs: Date.now() - startTime, mode: plan.mode, usage },
+          { options, payload },
+        );
+      } catch (e) {
+        console.error('[ModelRuntime] onDecideComplete hook error:', e);
+      }
+    };
 
     try {
       const hookOptions = this._hooks?.beforeDecide && !options ? {} : options;
       await this._hooks?.beforeDecide?.(payload, hookOptions);
 
-      const startTime = Date.now();
-      let usage: ModelUsage | undefined;
-      const finalOptions = this._hooks?.onDecideFinal
-        ? {
-            ...hookOptions,
-            onUsage: async (reported: ModelUsage) => {
-              usage = reported;
-              await hookOptions?.onUsage?.(reported);
-            },
-          }
-        : hookOptions;
-
-      const response = await decide(payload, finalOptions);
+      const response = await plan.run({
+        ...hookOptions,
+        onUsage: async (reported: ModelUsage) => {
+          usage = reported;
+          await hookOptions?.onUsage?.(reported);
+        },
+      });
 
       if (this._hooks?.onDecideFinal) {
         try {
@@ -663,7 +701,8 @@ export class ModelRuntime {
         }
       }
 
-      return response as DecisionResponse<Q>;
+      await fireComplete({ response, success: true });
+      return response;
     } catch (error) {
       if (this._hooks?.onDecideError) {
         await this._hooks.onDecideError(error as ChatCompletionErrorPayload, {
@@ -671,6 +710,15 @@ export class ModelRuntime {
           payload,
         });
       }
+      const err = error as Error & { code?: string; errorType?: string };
+      await fireComplete({
+        error: {
+          code: err?.errorType ?? err?.code ?? err?.name ?? err?.constructor?.name,
+          message: describeGenerateObjectError(err),
+          stack: err?.stack,
+        },
+        success: false,
+      });
       throw error;
     }
   }

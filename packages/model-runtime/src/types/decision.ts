@@ -69,16 +69,25 @@ export interface DecisionChoiceAnswer<K extends string = string> {
    * correct, so do not threshold it like a predicate probability.
    */
   confidence?: number;
-  /** Option key → probability, one entry per requested option. */
-  probabilities: Record<K, number>;
+  /**
+   * Option key → probability, one entry per requested option. Absent when the decision was
+   * emulated through `generateObject`, which has no calibrated distribution to report.
+   */
+  probabilities?: Record<K, number>;
   type: 'choice';
 }
 
 export interface DecisionScoreAnswer {
   confidence?: number;
-  /** Probability per rubric level, in the same order as the requested `criteria`. */
-  probabilities: number[];
-  /** Probability-weighted mean of the zero-based level index; it may fall between levels. */
+  /**
+   * Probability per rubric level, in the same order as the requested `criteria`. Absent when
+   * the decision was emulated through `generateObject`.
+   */
+  probabilities?: number[];
+  /**
+   * Probability-weighted mean of the zero-based level index; it may fall between levels.
+   * An emulated decision reports the single chosen level index instead.
+   */
   score: number;
   type: 'score';
 }
@@ -100,6 +109,27 @@ export type DecisionAnswer<Q extends DecisionQuestion = DecisionQuestion> =
         ? DecisionChoiceAnswer<Extract<keyof Q['criteria'], string>>
         : DecisionScoreAnswer);
 
+/**
+ * How a decision was produced:
+ * - `native`: a decision model answered through the provider's `decide` endpoint.
+ * - `emulated`: a chat model answered through `generateObject`; answers carry no probabilities.
+ */
+export type DecisionMode = 'emulated' | 'native';
+
+export interface DecisionLobeHubMetadata {
+  decisionMode: DecisionMode;
+  /**
+   * Question name → the short evidence the model wrote before answering. Only emulated
+   * decisions produce it.
+   */
+  evidence?: Record<string, string>;
+}
+
+export interface DecisionProviderMetadata {
+  [provider: string]: Record<string, unknown> | undefined;
+  lobehub?: DecisionLobeHubMetadata & Record<string, unknown>;
+}
+
 export interface DecisionResponse<Q extends DecisionQuestions = DecisionQuestions> {
   answers: { [K in keyof Q]: DecisionAnswer<Q[K]> };
   id?: string;
@@ -107,6 +137,16 @@ export interface DecisionResponse<Q extends DecisionQuestions = DecisionQuestion
   model: string;
   /** Upstream provider that served the request, when reported. */
   provider?: string;
+  /**
+   * Set by `ModelRuntime.decide`. `lobehub.decisionMode` tells native and emulated answers
+   * apart; other keys hold provider-specific data.
+   */
+  providerMetadata?: DecisionProviderMetadata;
+  /**
+   * Token usage reported for the call, summed across attempts when an emulated decision had
+   * to retry. Undefined when the provider reports none; it is never filled with zeros.
+   */
+  usage?: ModelUsage;
 }
 
 export interface DecisionOptions {
@@ -114,12 +154,26 @@ export interface DecisionOptions {
   /** Metadata passed to hooks (billing, tracing, route attempts), e.g. `trigger`. */
   metadata?: Record<string, unknown>;
   /**
+   * How `ModelRuntime.decide` serves the request:
+   * - `auto` (default): native when the provider implements `decide` and model-bank lists the
+   *   model as `type: 'decision'`; otherwise emulated through `generateObject`.
+   * - `native`: always call the provider's `decide`; fails when the provider has none.
+   *   Use it for decision models that model-bank does not list (e.g. remote-only ids).
+   * - `emulated`: always answer through `generateObject`.
+   */
+  mode?: 'auto' | DecisionMode;
+  /**
    * Receives the provider-reported token usage (with `cost` when the model has pricing)
    * after a successful decision.
    */
   onUsage?: (usage: ModelUsage) => void | Promise<void>;
   pricingContext?: ModelPricingContext;
   signal?: AbortSignal;
+  /**
+   * Structured tracing config consumed by tracing hooks (`onDecideComplete`), like
+   * `GenerateObjectOptions.tracing`.
+   */
+  tracing?: Record<string, unknown>;
   /**
    * userId for the request
    */

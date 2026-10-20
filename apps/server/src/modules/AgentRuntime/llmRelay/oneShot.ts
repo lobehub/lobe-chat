@@ -2,11 +2,15 @@ import type { LlmRelayDeadlines } from '@lobechat/agent-gateway-client';
 import type {
   ChatMethodOptions,
   ChatStreamPayload,
+  DecisionOptions,
+  DecisionPayload,
+  DecisionQuestions,
   GenerateObjectOptions,
   GenerateObjectPayload,
   ModelRuntime,
   PullModelParams,
 } from '@lobechat/model-runtime';
+import { runDecision } from '@lobechat/model-runtime';
 import debug from 'debug';
 
 import type { LobeChatDatabase } from '@/database/type';
@@ -42,7 +46,7 @@ const log = debug('lobe-server:agent-runtime:llm-relay:one-shot');
 /** The runtime methods a request-scoped caller uses, wherever the call runs. */
 export type RequestModelRuntime = Pick<
   ModelRuntime,
-  'chat' | 'generateObject' | 'models' | 'pullModel'
+  'chat' | 'decide' | 'generateObject' | 'models' | 'pullModel'
 >;
 
 /**
@@ -73,6 +77,26 @@ class OneShotRelayRuntime implements RequestModelRuntime {
 
   async generateObject(payload: GenerateObjectPayload, options?: GenerateObjectOptions) {
     return (await this.call()).generateObject(payload, options);
+  }
+
+  /**
+   * Device-only providers (Ollama, LM Studio, …) serve no decision models, so the decision is
+   * emulated here on top of relayed `generateObject` calls, each its own relay call so an
+   * invalid-output retry gets a fresh call id.
+   */
+  async decide<Q extends DecisionQuestions>(
+    payload: DecisionPayload<Q>,
+    options?: DecisionOptions,
+  ) {
+    return runDecision(
+      {
+        generateObject: (objectPayload, objectOptions) =>
+          this.generateObject(objectPayload, objectOptions),
+      },
+      payload,
+      { ...options, mode: 'emulated' },
+      { provider: this.params.provider },
+    );
   }
 
   async models() {

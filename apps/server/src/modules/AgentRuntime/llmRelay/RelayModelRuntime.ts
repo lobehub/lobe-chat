@@ -7,13 +7,16 @@ import type {
 import type {
   ChatMethodOptions,
   ChatStreamPayload,
+  DecisionOptions,
+  DecisionPayload,
+  DecisionQuestions,
   GenerateObjectOptions,
   GenerateObjectPayload,
   ModelRuntime,
   ProviderResponseDiagnostics,
   PullModelParams,
 } from '@lobechat/model-runtime';
-import { createCallbacksTransformer } from '@lobechat/model-runtime';
+import { createCallbacksTransformer, runDecision } from '@lobechat/model-runtime';
 import type { ModelUsage } from '@lobechat/types';
 import debug from 'debug';
 import type Redis from 'ioredis';
@@ -95,7 +98,7 @@ const createAbortError = () => {
  */
 export class RelayModelRuntime implements Pick<
   ModelRuntime,
-  'chat' | 'generateObject' | 'handleChatStreamError' | 'models' | 'pullModel'
+  'chat' | 'decide' | 'generateObject' | 'handleChatStreamError' | 'models' | 'pullModel'
 > {
   readonly result: RelayAttemptResult = { usageEstimated: false };
 
@@ -132,6 +135,27 @@ export class RelayModelRuntime implements Pick<
   ): Promise<any> {
     const reader = await this.start('generateObject', payload, payload.model);
     return this.collectResult(reader, options.signal);
+  }
+
+  /**
+   * A decision emulated on top of one relayed `generateObject` call. Device-only providers
+   * serve no decision models, and the device protocol has no `decide` method. This instance
+   * owns a single call id, so an invalid output is not retried here; a request-scoped caller
+   * (`OneShotRelayRuntime.decide`) retries with fresh calls instead.
+   */
+  async decide<Q extends DecisionQuestions>(
+    payload: DecisionPayload<Q>,
+    options: DecisionOptions = {},
+  ) {
+    return runDecision(
+      {
+        generateObject: (objectPayload, objectOptions) =>
+          this.generateObject(objectPayload, objectOptions),
+      },
+      payload,
+      { ...options, mode: 'emulated' },
+      { invalidOutputRetries: 0, provider: this.params.provider },
+    );
   }
 
   /** The provider's model list, as the device's runtime reads it. */
