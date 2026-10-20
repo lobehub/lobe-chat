@@ -357,6 +357,50 @@ const toPatchLines = (text: string) => {
   return lines;
 };
 
+/** Above this LCS table size an edit is shown as a whole-snippet replacement. */
+const MAX_LCS_CELLS = 1_000_000;
+
+/**
+ * Line diff of an edit's old/new snippets as unified-patch body lines: shared
+ * lines become context (` `) so only real changes count as added/deleted.
+ */
+const diffSnippetLines = (oldLines: string[], newLines: string[]): string[] => {
+  const m = oldLines.length;
+  const n = newLines.length;
+  if (m * n > MAX_LCS_CELLS) {
+    return [...oldLines.map((line) => `-${line}`), ...newLines.map((line) => `+${line}`)];
+  }
+
+  // lcs[i][j] = LCS length of oldLines[i..] and newLines[j..]
+  const lcs = Array.from({ length: m + 1 }, () => Array.from<number>({ length: n + 1 }).fill(0));
+  for (let i = m - 1; i >= 0; i--) {
+    for (let j = n - 1; j >= 0; j--) {
+      lcs[i][j] =
+        oldLines[i] === newLines[j]
+          ? lcs[i + 1][j + 1] + 1
+          : Math.max(lcs[i + 1][j], lcs[i][j + 1]);
+    }
+  }
+
+  const lines: string[] = [];
+  let i = 0;
+  let j = 0;
+  while (i < m || j < n) {
+    if (i < m && j < n && oldLines[i] === newLines[j]) {
+      lines.push(` ${oldLines[i]}`);
+      i += 1;
+      j += 1;
+    } else if (i < m && (j === n || lcs[i + 1][j] >= lcs[i][j + 1])) {
+      lines.push(`-${oldLines[i]}`);
+      i += 1;
+    } else {
+      lines.push(`+${newLines[j]}`);
+      j += 1;
+    }
+  }
+  return lines;
+};
+
 /**
  * Build a display-only unified patch from Claude Code's own tool arguments
  * (`Write.content`, `Edit.old_string/new_string`, `MultiEdit.edits[]`). CC
@@ -385,8 +429,7 @@ const buildClaudeCodePatch = (
       if (oldLines.length === 0 && newLines.length === 0) continue;
       hunks.push(
         `@@ -1,${oldLines.length} +1,${newLines.length} @@`,
-        ...oldLines.map((line) => `-${line}`),
-        ...newLines.map((line) => `+${line}`),
+        ...diffSnippetLines(oldLines, newLines),
       );
     }
   }

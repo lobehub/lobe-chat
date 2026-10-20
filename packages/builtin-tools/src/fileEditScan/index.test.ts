@@ -344,6 +344,18 @@ describe('scanOperationFileEdits', () => {
       ]);
       expect(result[0].diffTexts[0]).toContain('@@ -1,1 +1,1 @@\n-old\n+new');
     });
+
+    it('keeps lines shared by old_string and new_string as context', () => {
+      const [entry] = scanOperationFileEdits([
+        ccCall('t1', 'Edit', {
+          file_path: '/a.md',
+          new_string: 'a\nnew\nb',
+          old_string: 'a\nold\nb',
+        }),
+      ]);
+      expect(entry).toMatchObject({ linesAdded: 1, linesDeleted: 1 });
+      expect(entry.diffTexts[0]).toContain('@@ -1,3 +1,3 @@\n a\n-old\n+new\n b');
+    });
   });
 
   describe('terminal-state folding', () => {
