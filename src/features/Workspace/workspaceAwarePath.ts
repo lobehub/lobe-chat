@@ -49,6 +49,7 @@ export const WORKSPACE_SETTINGS_TABS: ReadonlySet<string> = new Set([
   'creds',
   'credits',
   'devices',
+  'environments',
   'general',
   'hotkey',
   // Third-party integrations bind to the workspace that connected them.
@@ -69,6 +70,7 @@ export const WORKSPACE_SETTINGS_TABS: ReadonlySet<string> = new Set([
   // deep-links still land on `/:slug/settings/statistics`.
   'stats',
   'storage',
+  'teams',
   'usage',
 ]);
 

@@ -1,3 +1,5 @@
+import { MirroredTerminalEchoGuard } from '../mirroredTerminalEcho';
+import { isSessionTerminalEvent } from '../terminalEvent';
 import type {
   AgentStreamEvent,
   AgentStreamSessionCompletion,
@@ -100,6 +102,7 @@ class OperationSubscriptionImpl implements OperationSubscription {
   private _lastEventId: string;
   private lastSeq: number;
   private readonly listeners: ListenerMap;
+  private readonly terminalEchoGuard: MirroredTerminalEchoGuard;
 
   constructor(
     private readonly mux: GatewayMuxClient,
@@ -111,6 +114,7 @@ class OperationSubscriptionImpl implements OperationSubscription {
     this._lastEventId = options.lastEventId ?? '';
     this.lastSeq = Number(this._lastEventId) || 0;
     this.listeners = new ListenerMap(`GatewayMuxClient:${operationId}`);
+    this.terminalEchoGuard = new MirroredTerminalEchoGuard(operationId, 'v2');
   }
 
   get active(): boolean {
@@ -183,6 +187,11 @@ class OperationSubscriptionImpl implements OperationSubscription {
     this.end();
   }
 
+  /** @internal A (re)subscribe was sent: its replay starts now. */
+  beginReplay(): void {
+    this.terminalEchoGuard.beginReplay();
+  }
+
   /** @internal */
   handleMessage(message: MuxOperationMessage): void {
     if (!this._active) return;
@@ -213,19 +222,28 @@ class OperationSubscriptionImpl implements OperationSubscription {
         // subscription — only THIS op's terminal (or one with no operationId,
         // legacy gateway) is terminal here. Mirrors v1 exactly.
         const isOwnTerminal =
-          (agentEvent.type === 'agent_runtime_end' || agentEvent.type === 'error') &&
+          isSessionTerminalEvent(agentEvent) &&
           (!agentEvent.operationId || agentEvent.operationId === this.operationId);
+        this.terminalEchoGuard.observe(agentEvent);
         this.listeners.emit('agent_event', agentEvent);
         if (isOwnTerminal) this.finish({ source: 'agent_event' });
         break;
       }
 
       case 'session_complete': {
+        // A member's mirrored terminal echoed back as the end of this op — see
+        // `MirroredTerminalEchoGuard`.
+        if (this.terminalEchoGuard.consumeEcho('session_complete')) break;
         this.finish({ source: 'raw_session_complete' });
         break;
       }
 
       case 'status_change': {
+        if (
+          isTerminalStatus(message.status) &&
+          this.terminalEchoGuard.consumeEcho('status_change', message.status)
+        )
+          break;
         this.listeners.emit('status_change', message.status);
         if (isTerminalStatus(message.status)) {
           this.finish({ source: 'status_change', status: message.status });
@@ -242,9 +260,17 @@ class OperationSubscriptionImpl implements OperationSubscription {
         // `pending` = the op DO has not seen `init` yet; the hub replays later.
         // Non-terminal status = the run is alive, keep streaming. Never guess
         // completion from silence (see v1 AgentStreamClient).
-        if (!message.pending && isTerminalStatus(message.status)) {
+        if (
+          !message.pending &&
+          isTerminalStatus(message.status) &&
+          // A status left by a mirrored member's terminal — see
+          // `MirroredTerminalEchoGuard.isStaleResumeStatus`.
+          !this.terminalEchoGuard.isStaleResumeStatus(message.status, { gap: message.gap })
+        ) {
           this.finish({ source: 'resume_status', status: message.status });
+          break;
         }
+        if (!message.pending) this.terminalEchoGuard.endReplay();
         break;
       }
 
@@ -871,6 +897,7 @@ export class GatewayMuxClient {
       type: 'subscribe',
     });
     if (!sent) return;
+    subscription.beginReplay();
     subscription.notifyStatus('connected');
     subscription.emit('connected');
   }

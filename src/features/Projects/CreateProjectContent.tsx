@@ -1,5 +1,13 @@
-import { Flexbox, Input } from '@lobehub/ui';
-import { Button, ModalFooter, Text, toast, useModalContext } from '@lobehub/ui/base-ui';
+import {
+  Button,
+  cssVar,
+  Flexbox,
+  Input,
+  ModalFooter,
+  Text,
+  toast,
+  useModalContext,
+} from '@lobehub/ui';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -107,9 +115,10 @@ const CreateProjectContent = memo<CreateProjectOptions>(({ onCreated }) => {
             {t('create.identifierLabel')}
           </Text>
           <Input
+            aria-invalid={identifierInvalid}
             maxLength={6}
             placeholder={t('create.identifierPlaceholder')}
-            status={identifierInvalid ? 'error' : undefined}
+            style={identifierInvalid ? { borderColor: cssVar.colorError } : undefined}
             value={form.identifier}
             onPressEnter={handleCreate}
             onChange={(event) =>
@@ -125,9 +134,10 @@ const CreateProjectContent = memo<CreateProjectOptions>(({ onCreated }) => {
             {t('create.slugLabel')}
           </Text>
           <Input
+            aria-invalid={!slugValid}
             maxLength={100}
             placeholder={t('create.slugPlaceholder')}
-            status={slugValid ? undefined : 'error'}
+            style={slugValid ? undefined : { borderColor: cssVar.colorError }}
             value={form.slug}
             onPressEnter={handleCreate}
             onChange={(event) =>

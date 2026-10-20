@@ -1,10 +1,10 @@
 # Structured Report Rounds (`lh acceptance run ingest`)
 
-Per-criterion `result submit` (SKILL.md Step 3) assumes a verify plan already
-exists. When it doesn't — a standalone delivery, or any run where **you** author
-the checks, which is the usual case — publish a **structured report round**
-instead: a self-contained directory that
-`lh acceptance run ingest` uploads as one immutable verification round. The
+Every round is a **structured report round**: a self-contained directory that
+`lh acceptance run ingest` uploads as one immutable verification round. You
+author the checks here, which is the usual case; when a verify plan was handed to
+you, the same directory is keyed by its check item ids and ingested into the
+plan's round ([plan-format.md](./plan-format.md)). The
 acceptance page renders itself from `result.json`: provenance, the overall
 conclusion, and the check list from `plan[]` paired with `cases[]`, each with
 its evidence inline — **images render as figures, before/after pairs render
@@ -19,8 +19,8 @@ never gets that rendering; the structured round does.
 - [result.json schema](#resultjson-schema)
 - [Rules](#rules)
 
-Rule of thumb: **plan exists → per-criterion submit; you author the checks →
-structured round ingest.** Never mix both for the same delivery round.
+Rule of thumb: **you author the checks → `ingest`; a plan was handed to you →
+`ingest --operation`.** Never mix both for the same delivery round.
 
 ## No operation id needed
 
@@ -34,9 +34,17 @@ never point a second ingest at a directory you already published:
 # $1 = subject key (see Directory layout), $2 = a short slug for this round.
 new_round() {
   dir=".acceptances/$1/$(date +%Y%m%d-%H%M%S)-$2"
-  mkdir -p "$dir/assets" && printf '%s' "$dir"
+  mkdir -p "$dir/assets" || return
+  # Fresh clones and worktrees never carry the self-ignoring file, so seed it
+  # before anything is written; an existing one is left untouched.
+  [ -e .acceptances/.gitignore ] || printf '*\n' > .acceptances/.gitignore || return
+  printf '%s' "$dir"
 }
 ```
+
+Run it from the repository root. It is the only supported way to create a round
+directory by hand: it keeps the whole tree out of `git status` before the first
+`result.json` or screenshot exists.
 
 ```bash
 # A. first external-project round — creates a standalone acceptance.
@@ -100,8 +108,11 @@ Three things the shape buys, none of them cosmetic:
 - **The tree is git-invisible.** `.acceptances/.gitignore` contains `*`, which
   ignores the whole directory including itself, so evidence binaries never land
   as untracked noise and the project's own `.gitignore` is never rewritten.
-  Create that file before writing evidence; a general-purpose skill installer
-  does not seed it. `lh acceptance run ingest` also ensures it exists.
+  The file ignores itself, so a fresh clone or worktree never has it, and a
+  general-purpose skill installer does not seed it either. `new_round` creates
+  it before anything is written; `lh acceptance install` and
+  `lh acceptance run ingest` also ensure it exists, but ingest runs only after
+  the round has already been written.
 
 Writing a round somewhere else still works — `ingest` takes an explicit path —
 but then keeping it out of git is on you.
@@ -144,8 +155,8 @@ supersedes? }`.
    one-paragraph verdict into `summary.conclusion`.
 5. **Write `proposal.md` — the round's own note to the reviewer.** What this
    round delivers and where you want their eyes, the way a person writes a pull
-   request description: a few sentences, in the language the user is conversing
-   in. `ingest` posts it into the acceptance's discussion as a message on this
+   request description: a few sentences, in the
+   [report language](../SKILL.md#two-paths--no-id-is-required). `ingest` posts it into the acceptance's discussion as a message on this
    round, so it is the first thing a reviewer reads and they can answer it in
    place. It is NOT the verification write-up — do not restate the checks or the
    verdict, those are `result.json` and `report.md`. Every round gets one: the
@@ -154,7 +165,7 @@ supersedes? }`.
    checks.
 6. **`report.md` is the narrative tail only** — this-round notes, follow-ups,
    score. Do NOT repeat the scope block or a case table; those double up on the
-   page. Write it in the language the user is conversing in.
+   page. Write it in the report language.
 7. **Review, then publish:** hand the completed plan, report, original evidence,
    and an explicit file list with relevant diff text or prepared diff artifact
    paths (including in-round repairs, base and tested revision, and affected case IDs)
@@ -402,8 +413,31 @@ Choose the layout by comparison intent, not by the source image dimensions:
   full width matters more than simultaneous scanning, such as a very wide,
   shallow toolbar or timeline strip.
 
-A comparison pair means the same view in two states — sequential steps of a
+A comparison pair means the same view, reached by the same operation and held
+in the same state, on the pre-change code (`before`) and the delivered code
+(`after`). Two states of one build — loading vs loaded, empty vs filled — are
+ordinary evidence, not a pair; a skeleton change pairs the old skeleton with
+the new one, and the loaded page goes in plain evidence. Sequential steps of a
 flow are ordinary ordered evidence with captions, not a pair.
+
+### Video chapters
+
+A `video` evidence entry takes `chapters`: `step` (an action, with `label`),
+`check` (a claim true of that frame, with `note`) and `flag` (an anomaly you
+noticed and disclose, with `note`), each at `t` seconds. The page puts them on
+the player's timeline and captions each claim over its frame:
+
+```json
+{ "path": "assets/scroll-top.mp4",
+  "description": "Five scrolls at the top of a short topic.",
+  "chapters": [
+    { "kind": "step", "t": 6, "label": "Scroll #3" },
+    { "kind": "check", "t": 7.9, "note": "Scroll #3: no skeleton, first question still in place" }
+  ] }
+```
+
+Derive `t` from logged marks, never from memory, and disclose every anomaly as a
+`flag` — [video-chapters.md](./video-chapters.md).
 
 ## Rules
 

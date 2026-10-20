@@ -1,8 +1,23 @@
 'use client';
 
-import { Empty, Flexbox, List, SearchBar, stopPropagation, Tooltip } from '@lobehub/ui';
-import { Accordion, Avatar, Button, Checkbox, Switch, Text } from '@lobehub/ui/base-ui';
-import { createStaticStyles, cssVar, cx } from 'antd-style';
+import {
+  Accordion,
+  Avatar,
+  Button,
+  Checkbox,
+  createStaticStyles,
+  cssVar,
+  cx,
+  Empty,
+  Flexbox,
+  List,
+  ModalFooter,
+  SearchBar,
+  stopPropagation,
+  Switch,
+  Text,
+  Tooltip,
+} from '@lobehub/ui';
 import { omit } from 'es-toolkit/compat';
 import { Users } from 'lucide-react';
 import { type ChangeEvent } from 'react';
@@ -53,7 +68,7 @@ const TemplateItem = memo<{
             {template.description}
           </Text>
           <Flexbox horizontal align="center" gap={4}>
-            <Users size={11} style={{ color: '#999' }} />
+            <Users size={11} style={{ color: cssVar.colorTextTertiary }} />
             <Text style={{ fontSize: 11 }} type="secondary">
               {t('groupWizard.memberCount', {
                 count: template.members.filter((member) => member !== null && member !== undefined)
@@ -454,8 +469,8 @@ const ChatGroupWizard = memo<ChatGroupWizardProps>(
               </Tooltip>
             ) : null,
             key: agentId,
+            label: title,
             showAction: true,
-            title,
           };
         })
 
@@ -530,7 +545,7 @@ const ChatGroupWizard = memo<ChatGroupWizardProps>(
         title={t('groupWizard.title')}
         width={900}
         footer={
-          <Flexbox horizontal gap={8} justify="end">
+          <ModalFooter>
             <Button onClick={handleCancel}>{t('cancel', { ns: 'common' })}</Button>
             <Button
               disabled={confirmDisabled}
@@ -540,7 +555,7 @@ const ChatGroupWizard = memo<ChatGroupWizardProps>(
             >
               {t('groupWizard.createGroup')}
             </Button>
-          </Flexbox>
+          </ModalFooter>
         }
         onCancel={handleCancel}
       >
@@ -642,7 +657,7 @@ const ChatGroupWizard = memo<ChatGroupWizardProps>(
                     {t('groupWizard.host.title')}
                   </Text>
                   <Text
-                    style={{ color: '#999', fontSize: 12 }}
+                    style={{ color: cssVar.colorTextTertiary, fontSize: 12 }}
                     type={isHostRemoved ? 'secondary' : undefined}
                   >
                     {t('groupWizard.host.description')}
@@ -673,6 +688,7 @@ const ChatGroupWizard = memo<ChatGroupWizardProps>(
                 {selectedTemplate ? (
                   templateMemberItems.length > 0 ? (
                     <List
+                      styles={{ item: { paddingInlineEnd: 56 } }}
                       items={templateMemberItems.map((member) => ({
                         actions: (
                           <Switch
@@ -702,12 +718,12 @@ const ChatGroupWizard = memo<ChatGroupWizardProps>(
                           </Tooltip>
                         ) : null,
                         key: member.key,
-                        showAction: true,
-                        title: (
+                        label: (
                           <Text type={member.isRemoved ? 'secondary' : undefined}>
                             {member.title}
                           </Text>
                         ),
+                        showAction: true,
                       }))}
                     />
                   ) : (
@@ -719,7 +735,10 @@ const ChatGroupWizard = memo<ChatGroupWizardProps>(
                     />
                   )
                 ) : selectedAgentListItems.length > 0 ? (
-                  <List items={selectedAgentListItems} />
+                  <List
+                    items={selectedAgentListItems}
+                    styles={{ item: { paddingInlineEnd: 56 } }}
+                  />
                 ) : (
                   <Empty
                     description={t('memberSelection.noSelectedAgents')}

@@ -1,10 +1,11 @@
 'use client';
 
-import 'antd/dist/reset.css';
+import '@lobehub/ui/theme.css';
+import '@lobehub/ui/global.css';
+import '@lobehub/ui/style.css';
 
 import { type NeutralColors, type PrimaryColors } from '@lobehub/ui';
-import { ConfigProvider, FontLoader, ThemeProvider } from '@lobehub/ui';
-import { createStaticStyles, cx } from 'antd-style';
+import { ConfigProvider, createStaticStyles, cx, FontLoader, setLobeTheme } from '@lobehub/ui';
 import * as m from 'motion/react-m';
 import { type ReactNode } from 'react';
 import { memo, useEffect, useMemo, useState } from 'react';
@@ -12,7 +13,6 @@ import { memo, useEffect, useMemo, useState } from 'react';
 import Link from '@/components/Link';
 import { genFontFamily, genFontFamilyCode } from '@/const/font';
 import { LOBE_THEME_NEUTRAL_COLOR, LOBE_THEME_PRIMARY_COLOR } from '@/const/theme';
-import { useIsDark } from '@/hooks/useIsDark';
 import { getUILocaleAndResources } from '@/libs/getUILocaleAndResources';
 import type { UILocaleResources } from '@/libs/getUILocaleAndResources.utils';
 import { resolveUILocale } from '@/libs/getUILocaleAndResources.utils';
@@ -98,12 +98,10 @@ const AppTheme = memo<AppThemeProps>(
     customFontFamily,
   }) => {
     const language = useGlobalStore(systemStatusSelectors.language);
-    const isDark = useIsDark();
-
-    const [primaryColor, neutralColor, animationMode] = useUserStore((s) => [
+    const [primaryColor, neutralColor, fontAntialiasing] = useUserStore((s) => [
       userGeneralSettingsSelectors.primaryColor(s),
       userGeneralSettingsSelectors.neutralColor(s),
-      userGeneralSettingsSelectors.animationMode(s),
+      userGeneralSettingsSelectors.fontAntialiasing(s),
     ]);
     const [userFontFamily, userFontFamilyCode] = useUserStore((s) => [
       preferenceSelectors.fontFamily(s),
@@ -152,10 +150,26 @@ const AppTheme = memo<AppThemeProps>(
     }, [primaryColor]);
 
     useEffect(() => {
+      setLobeTheme({
+        neutralColor: neutralColor ?? defaultNeutralColor,
+        primaryColor: primaryColor ?? defaultPrimaryColor,
+      });
+    }, [primaryColor, neutralColor, defaultPrimaryColor, defaultNeutralColor]);
+
+    useEffect(() => {
+      const { style } = document.documentElement;
+      style.setProperty('--lobe-font-family', fontFamily);
+      style.setProperty('--lobe-font-family-code', fontFamilyCode);
+    }, [fontFamily, fontFamilyCode]);
+
+    useEffect(() => {
       setCookie(LOBE_THEME_NEUTRAL_COLOR, neutralColor);
     }, [neutralColor]);
 
-    const currentAppearence = isDark ? 'dark' : 'light';
+    useEffect(() => {
+      if (fontAntialiasing) delete document.documentElement.dataset.fontAntialiasing;
+      else document.documentElement.dataset.fontAntialiasing = 'off';
+    }, [fontAntialiasing]);
 
     return (
       <ConfigProvider
@@ -169,29 +183,11 @@ const AppTheme = memo<AppThemeProps>(
           proxy: globalCDN ? 'unpkg' : undefined,
         }}
       >
-        <ThemeProvider
-          appearance={currentAppearence}
-          className={cx(styles.app, styles.scrollbar, styles.scrollbarPolyfill)}
-          defaultAppearance={currentAppearence}
-          defaultThemeMode={currentAppearence}
-          customTheme={{
-            neutralColor: neutralColor ?? defaultNeutralColor,
-            primaryColor: primaryColor ?? defaultPrimaryColor,
-          }}
-          theme={{
-            cssVar: { key: 'lobe-vars' },
-            token: {
-              fontFamily,
-              fontFamilyCode,
-              motion: animationMode !== 'disabled',
-              motionUnit: animationMode === 'agile' ? 0.05 : 0.1,
-            },
-          }}
-        >
+        <div className={cx(styles.app, styles.scrollbar, styles.scrollbarPolyfill)}>
           {!!customFontURL && <FontLoader url={customFontURL} />}
           <GlobalStyle />
           {children}
-        </ThemeProvider>
+        </div>
       </ConfigProvider>
     );
   },

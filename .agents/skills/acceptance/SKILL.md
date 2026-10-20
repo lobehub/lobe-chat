@@ -2,7 +2,7 @@
 name: acceptance
 license: Apache-2.0
 metadata:
-  version: "0.5.2"
+  version: "0.8.1"
 description: >
   End-to-end verification and self-evidence for a delivery in any repository,
   with or without a preconfigured verify plan. Discover an existing plan when
@@ -132,10 +132,15 @@ have an operation id only when the invocation names one. Never hunt the
 environment for one, and never report this skill inapplicable — a round without
 an operation is simply recorded as `standalone`.
 
-| You have                        | Path                                                                                                                 |
-| ------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
-| No plan — you author the checks | Write `result.json` + `assets/`, publish with `lh acceptance run ingest` — [report.md](references/report.md)         |
-| An operation id you were given  | `lh verify plan state`, then `result submit --operation` per criterion — [plan-format.md](references/plan-format.md) |
+| You have                        | Path                                                                                                                                                   |
+| ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| No plan — you author the checks | Write `result.json` + `assets/`, publish with `lh acceptance run ingest` — [report.md](references/report.md)                                           |
+| An operation id you were given  | Read the frozen plan, write the same round directory keyed by its check item ids, publish with `ingest --operation` — [plan-format.md](references/plan-format.md) |
+
+The paths differ only in where the checks come from and which round the ingest
+lands in. Capture is identical: the surface guides, recordings with
+[chapters](references/video-chapters.md), before/after pairs, screenshots you
+looked at, `proposal.md`. A handed-down plan never licenses a lighter capture.
 
 Pass `--subject` (`task:<id>` / `topic:<id>` / `document:<id>`) only when the
 caller named one; otherwise ingest attaches the round itself when it can and
@@ -143,10 +148,18 @@ creates a standalone acceptance when it cannot. On the first ingest, always supp
 `--requirement "<one-sentence business goal>"` — the durable goal of the whole
 acceptance, not this round's scope; it is immutable once recorded.
 
-Prerequisites: `lh` is authed (`lh acceptance run list --json` returns `[]` or
-data; an auth error means stop and surface it), and only the UI driver the
-selected surface needs is installed — probe before adding dependencies, and never
-substitute a private agent plugin.
+Prerequisites: run `lh acceptance preflight --json` before writing any plan or
+report text — an auth error means stop and surface it — and install only the UI
+driver the selected surface needs; probe before adding dependencies, and never
+substitute a private agent plugin. Its `language.locale` is the **report
+language**: write every human-readable field (title, plan, case names,
+observations, evidence descriptions, conclusion, `report.md`, `proposal.md`) in
+it, even when the prompt that invoked you is in another language — a delegating
+agent's prompt does not show which language the user reads. The publish commands
+reject text in the wrong script, so run `lh acceptance run ingest <dir> --dry-run`
+as soon as the plan is in `result.json`, before executing it. When
+`language.status` is `unset`, use the language the user converses in. On a CLI
+without `preflight`, check auth with `lh acceptance run list --json`.
 
 ## Optional user-journey flows
 
@@ -300,12 +313,12 @@ excuse below was made in a real round.
 
 | Excuse                                                                                                 | Reality                                                                                                                                                                                                                         |
 | ------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| "Injection is hard; happy-path plus unit tests covers it"                                              | The error state _was_ the goal. Walk the probe ladder ([probe-mock-patterns.md](references/probe-mock-patterns.md) A) before calling it blocked. (M2)                                                                           |
-| "The branch name says what to verify" / "Loading the living logs first…"                               | The task lives in the user's words. Recover it, or confirm a labeled guess with one structured question — silently; never narrate setup. (M3, M21)                                                                              |
-| "The black frame is probably display sleep / a permission"                                             | Measure first: pixel brightness, the permission bit, an A/B with one variable toggled. Publish "confirmed by X" or "suspected", never a guess. (M4)                                                                             |
-| "Let me ask how they want it run" / "I'll click Sign in and you authorize" / "too small to screenshot" | Environment mechanics are yours: full isolated run, auth by direct injection (never an interactive login — it hijacks the user's browser), a screenshot for every user-facing change. Ask only about the product decision. (M8) |
-| "One more config edit and the env will boot" / "I'll mock it" / "I'll drive the rest myself"           | Timebox. Inventory running instances, probe for the real capability before mocking (a mock that records nothing is not in the path), re-delegate a dead subagent's remaining steps, revert experiments and ask. (M17)           |
-| "The fix is in and tests pass — verified"                                                              | Reproduce the failure's precondition first, then verify with it held. A run that cannot fail proves nothing; "reproduces sometimes" means an unnamed precondition. When the mocked seam is the suspect, drop the mock. (M31)    |
+| "Injection is hard; happy-path plus unit tests covers it"                                              | The error state _was_ the goal. Walk the probe ladder ([probe-mock-patterns.md](references/probe-mock-patterns.md) A) before calling it blocked. |
+| "The branch name says what to verify" / "Loading the living logs first…"                               | The task lives in the user's words. Recover it, or confirm a labeled guess with one structured question — silently; never narrate setup. |
+| "The black frame is probably display sleep / a permission"                                             | Measure first: pixel brightness, the permission bit, an A/B with one variable toggled. Publish "confirmed by X" or "suspected", never a guess. |
+| "Let me ask how they want it run" / "I'll click Sign in and you authorize" / "too small to screenshot" | Environment mechanics are yours: full isolated run, auth by direct injection (never an interactive login — it hijacks the user's browser), a screenshot for every user-facing change. Ask only about the product decision. |
+| "One more config edit and the env will boot" / "I'll mock it" / "I'll drive the rest myself"           | Timebox. Inventory running instances, probe for the real capability before mocking (a mock that records nothing is not in the path), re-delegate a dead subagent's remaining steps. Search the project layer (`.agents/acceptance/`, including `references/`) for the exact error before asking; if it has no fix, revert experiments and ask for the missing prerequisite. |
+| "The fix is in and tests pass — verified"                                                              | Reproduce the failure's precondition first, then verify with it held. A run that cannot fail proves nothing; "reproduces sometimes" means an unnamed precondition. When the mocked seam is the suspect, drop the mock. |
 
 ## Pick the surface by the user-visible outcome
 
@@ -322,7 +335,7 @@ passing tests support that evidence; they do not replace it.
 | New/changed API **plus** the UI consuming it                | **Web**, full-stack (agent-browser + network capture) | [surfaces/web.md](surfaces/web.md#web-full-stack)      |
 | Desktop-only behavior (native windows, IPC, packaged shell) | **Electron** (agent-browser `--cdp`)                  | [surfaces/electron.md](surfaces/electron.md)           |
 | Native macOS app / OS chrome agent-browser can't reach      | **Native** (osascript + screencapture, local macOS)   | [surfaces/native.md](surfaces/native.md)               |
-| Native iOS behavior, gestures, device-size layout           | **iOS Simulator** (AXe/native CLI + `simctl`)         | [surfaces/ios-simulator.md](surfaces/ios-simulator.md) |
+| Native iOS behavior, gestures, device-size layout           | **iOS Simulator** (sim-use/AXe + `simctl`)            | [surfaces/ios-simulator.md](surfaces/ios-simulator.md) |
 
 - **Use CLI alone only when the required outcome has no UI surface.** If a visible
   outcome cannot be exercised, report that acceptance as incomplete instead of
@@ -334,6 +347,15 @@ passing tests support that evidence; they do not replace it.
   [report.md](references/report.md#structured-visualizations). **A deliverable
   the user hears needs `audio`** —
   [evidence.md](references/evidence.md#audio-deliverables).
+- **A change to UI users already see needs before/after evidence.** When the
+  delivery changes existing copy, labels, toasts, layout, or style, each such
+  case requires a `comparison` pair of the same view on the pre-change and
+  post-change code — [report.md](references/report.md#beforeafter-comparison-pairs).
+  An after-only shot of a toast reading `重命名遇到了问题，请重试` does not show
+  it replaced `Rename failed`. Prove the before half really runs the old code
+  ([probe-mock-patterns.md](references/probe-mock-patterns.md) A6); text that
+  does not render visibly, such as an `aria-label`, also needs the DOM reading.
+  UI with no prior state is exempt.
 - **Auth is a gate scoped to the surface**: authenticate that surface first or
   every capture lands on the sign-in page. Web:
   [auth-web.md](references/auth-web.md).
@@ -352,7 +374,7 @@ safety — are in [evidence.md](references/evidence.md).
 
 ## Keep checklist explanations brief
 
-Write each check's `observation` and inline explanation in the user's language,
+Write each check's `observation` and inline explanation in the report language,
 usually 1–3 short sentences: what was done, what happened, and any limitation
 needed to judge that outcome. Do not paste the execution report into the check.
 Omit repeated titles, verdict labels, SHA/port/ID headers, environment boilerplate,
@@ -367,10 +389,23 @@ process. Keep required evidence complete; shorten its presentation, not the work
 
 ## Final handoff (mandatory)
 
+**Cloud browser links use `https://lobehub.com`.** For all acceptance, round,
+cleanup, and upgrade URLs in this skill (including instructions below that say
+"verbatim"), normalize LobeHub Cloud origins to `https://lobehub.com`, preserving
+the path, query, and fragment. Cloud hosts are `lobehub.com` and its subdomains.
+Keep self-hosted and development origins unchanged. This changes display links,
+not the CLI's configured API server.
+Keep the Skill installation resource at
+`https://app.lobehub.com/acceptance/skill.md`.
+
 Close every browser session this run opened
 (`agent-browser --session <name> close`, [web teardown](surfaces/web.md#web-teardown))
 before handing off; a session left open keeps a full browser running
-indefinitely.
+indefinitely. Stop this run's [resource guard](references/resource-guard.md)
+(`resource-guard.sh stop --state-dir <run state dir>`) as well, and state in the
+round report whether it
+reached yellow or red and what that stopped; a run that hit red must say which
+checks it left `blocked` instead of passing.
 
 Before declaring the task done, prove coverage: for each check with
 `requiredEvidence`, every declared `type` is present at least once. Report it
@@ -388,12 +423,8 @@ or a `storage_block:` error. Do not stop at "upload failed" or "noted in the PR"
   an atomic submission that failed before saving a result.
 - Give **both recovery options**, in the user's language, using available
   `recovery.cleanupUrl` and `recovery.upgradeUrl` verbatim and following
-  `recovery.message`, with one compatibility exception: if a personal cleanup
-  link points to `https://lobehub.com/acceptance` (with or without a trailing
-  slash), change its origin to `https://app.lobehub.com`, preserving its path,
-  query, and fragment. The apex `/acceptance` route is the product introduction,
-  not the acceptance manager. Never delete user data automatically. Deletion is
-  permanent.
+  `recovery.message`, applying the Cloud browser-link rule above. Never delete
+  user data automatically. Deletion is permanent.
   - Personal scope: **clean up unneeded acceptances** or **upgrade the personal
     plan**. Acceptance cleanup requires selecting "permanently delete all rounds,
     reports, and evidence files"; deleting only a record or evidence association
@@ -413,9 +444,8 @@ or a `storage_block:` error. Do not stop at "upload failed" or "noted in the PR"
   workspace, and use `/:workspaceSlug/resource` and
   `/:workspaceSlug/settings/plans`; there is no `/:workspaceSlug/acceptance`
   route. If lookup fails, give scope-specific guidance without guessed links.
-  Strip URL username/password when constructing display links. For LobeHub Cloud
-  (CLI server `https://app.lobehub.com` or `https://lobehub.com`), personal cleanup
-  uses `https://app.lobehub.com/acceptance`; personal plan upgrades use
+  Strip URL username/password when constructing display links. For LobeHub Cloud,
+  personal cleanup uses `https://lobehub.com/acceptance`; personal plan upgrades use
   `https://lobehub.com/settings/plans`. Workspace resource and plan paths use
   `https://lobehub.com`. Keep self-hosted users on their configured server.
 - Preserve local reports, artifacts, and the returned retry instructions. Stop
@@ -426,18 +456,27 @@ or a `storage_block:` error. Do not stop at "upload failed" or "noted in the PR"
   verdicts; read back coverage and do not claim the delivery is complete while
   required evidence is missing.
 
+**Record the deployed preview.** When the delivery is deployed somewhere a
+reviewer can open (a pull-request preview, a staging URL, a dev server on this
+machine), run `lh acceptance preview <acceptanceId> <url>` after the round is
+published. The URL must be https, or http on `localhost`/`127.0.0.1`. The
+acceptance page then offers "Review on preview", where reviewers comment on the
+live page; `lh acceptance feedback` lists those comments with the page URL and
+the `file:line` they were pinned to. Skip this when nothing is deployed — never
+invent a URL.
+
 The final response for a completed handoff MUST include the published acceptance
 URL together with the coverage result — never only a check-result id or a prose
 claim. Obtain the links from the path you actually executed:
 
 - **Authored round:** copy `acceptanceUrl` returned by
   `lh acceptance run ingest --json` verbatim.
-- **Operation-plan round:** follow the read-only
-  [plan handoff lookup](references/plan-format.md#resolve-the-plan-rounds-handoff-links).
-  It resolves the supplied operation ID to its existing run, acceptance, and
-  round using the CLI's actual server configuration. Copy its
-  `acceptanceUrl` output. Do not run authored ingest, create another
-  acceptance, or resubmit evidence merely to obtain a link.
+- **Operation-plan round:** copy `acceptanceUrl` returned by
+  `lh acceptance run ingest --operation <id> --json`. When the plan needed no
+  ingest, or the CLI predates plan-round ingest, follow the read-only
+  [plan handoff lookup](references/plan-format.md#resolve-the-plan-rounds-handoff-links)
+  instead. Do not ingest without `--operation`, create another acceptance, or
+  resubmit evidence merely to obtain a link.
 
 Never guess a host, acceptance ID, or round index. The documented plan lookup is
 the only reconstruction needed for CLIs whose submission output contains only an
@@ -460,11 +499,17 @@ Coverage: 2/2 criteria, all required evidence uploaded
 
 - **Engine-level capture over OS capture.** `agent-browser screenshot` / `dom` /
   `eval` run headless; `screencapture` / osascript are macOS-only. iOS: `xcrun
-simctl io` over host-window capture. Rounds land under `.acceptances/`, which
-  the CLI keeps out of git.
-- **Upload as you go.** Evidence keyed to its check mid-run survives a crash near
-  the end.
+simctl io` over host-window capture. Rounds land under `.acceptances/`;
+  allocate them with `new_round` ([report.md](references/report.md#no-operation-id-needed)),
+  which seeds the `.acceptances/.gitignore` that keeps them out of git.
+- **Save as you go.** Write each artifact into the round's `assets/` and its case
+  into `result.json` the moment it is captured, so a crash near the end loses
+  nothing; then publish the round once.
 - **Don't invent evidence.** Capture only the types a check declares.
+- **Chapter every recording.** Log a mark for each step and each claim you
+  verify on a frame, and disclose every anomaly you noticed as a `flag`; the
+  reviewer seeks to them instead of watching the whole clip —
+  [video-chapters.md](references/video-chapters.md).
 
 ## Reference map
 
@@ -473,15 +518,18 @@ For both acceptance-checker handoffs and review output, read
 
 | Need                                           | Reference                                                                                                                                                                               |
 | ---------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Bounding a run's memory use                    | [resource-guard.md](references/resource-guard.md) |
 | The project layer, bootstrapping an adapter    | [project-adapter.md](references/project-adapter.md)                                                                                                                                     |
 | Mistakes checklist (read every round)          | [common-mistakes.md](references/common-mistakes.md)                                                                                                                                     |
 | Forcing state, error injection, runtime probes | [probe-mock-patterns.md](references/probe-mock-patterns.md)                                                                                                                             |
 | Authored rounds, `result.json`, ingest         | [report.md](references/report.md)                                                                                                                                                       |
-| Plan-driven rounds: schema, submit, coverage   | [plan-format.md](references/plan-format.md)                                                                                                                                             |
+| Plan-driven rounds: plan, ingest, coverage     | [plan-format.md](references/plan-format.md)                                                                                                                                             |
 | Evidence media, provenance, submission, safety | [evidence.md](references/evidence.md)                                                                                                                                                   |
 | Interaction cost overlay                       | [interaction-cost.md](references/interaction-cost.md)                                                                                                                                   |
 | Web/Electron Chromium CLI commands             | [agent-browser.md](references/agent-browser.md)                                                                                                                                         |
+| iOS Simulator driver CLI commands              | [sim-use.md](references/sim-use.md) (preferred), [axe.md](references/axe.md) (fallback) |
 | Bundled CDP screenshot and macOS capture preflight | [screenshot-helpers.md](references/screenshot-helpers.md) |
 | Authenticated Web session                      | [auth-web.md](references/auth-web.md)                                                                                                                                                   |
 | Native macOS / OS-owned step                   | [computer-use.md](references/computer-use.md)                                                                                                                                           |
+| Video chapters: steps, checks, flags on a clip | [video-chapters.md](references/video-chapters.md)                                                                                                                                                                                  |
 | Temporal evidence: Web/Electron, iOS, native   | [recording-cdp.md](references/recording-cdp.md), [recording-ios-simulator.md](references/recording-ios-simulator.md), [recording-native-macos.md](references/recording-native-macos.md) |

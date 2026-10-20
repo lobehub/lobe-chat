@@ -1,3 +1,4 @@
+export * from './appMenu';
 export * from './binary';
 export * from './bootstrap';
 export * from './browserControl';
@@ -9,6 +10,7 @@ export * from './git';
 export * from './heterogeneousAgent';
 export * from './imessageBridge';
 export * from './localDatabase';
+export * from './localFilePreviewFailure';
 export * from './localSystem';
 export * from './mcpInstall';
 export * from './notification';

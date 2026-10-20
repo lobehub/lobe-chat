@@ -10,6 +10,7 @@ import { isAbortError } from '@/server/services/agentRuntime/abort';
 import type { ExecRunContext, InternalExecAgentParams } from '../types';
 import type { ApprovalClaimState } from './approvalResume';
 import type { OperationPrepResult } from './operationPrep';
+import { traceStartStage } from './sendTracing';
 import type { ToolDiscoveryResult } from './toolDiscovery';
 
 const log = debug('lobe-server:ai-agent-service');
@@ -25,6 +26,10 @@ export interface StartOperationDeps {
 }
 
 export interface StartOperationInput {
+  /** See {@link InternalExecAgentParams.acceptsFileWorks}. */
+  acceptsFileWorks?: boolean;
+  /** See {@link InternalExecAgentParams.acceptsMemberRuntimeEnd}. */
+  acceptsMemberRuntimeEnd?: boolean;
   approvalClaim: ApprovalClaimState;
   approvalSourceOperationId?: string;
   approvalSourceToolMessageIds: string[];
@@ -32,6 +37,8 @@ export interface StartOperationInput {
   botContext?: InternalExecAgentParams['botContext'];
   botPlatformContext?: InternalExecAgentParams['botPlatformContext'];
   clientIp?: string;
+  /** Wire protocol the calling client declared; `2` opts the run into message_patch delivery. */
+  clientProtocol?: 1 | 2;
   /** Tri-state disabled plugin identifiers, kept on the world slot for the context rules. */
   disabledPluginIds?: string[];
   discordContext?: any;
@@ -44,6 +51,8 @@ export interface StartOperationInput {
   /** Final runtime context — base prep context with 16b/16c overrides applied. */
   initialContext: OperationPrepResult['initialContext'];
   initialStepCount?: number;
+  /** Relay executor the calling client declared; lands on `state.host.llmExecutor`. */
+  llmExecutor?: InternalExecAgentParams['llmExecutor'];
   maxSteps?: number;
   onOperationCreated?: InternalExecAgentParams['onOperationCreated'];
   operationId: string;
@@ -93,6 +102,8 @@ export const startOperation = async (
     userMessageId,
   } = ctx;
   const {
+    acceptsFileWorks,
+    acceptsMemberRuntimeEnd,
     approvalClaim,
     approvalSourceOperationId,
     approvalSourceToolMessageIds,
@@ -145,8 +156,35 @@ export const startOperation = async (
   // Wrap in try-catch to handle operation startup failures (e.g., QStash unavailable)
   // If createOperation fails, we still have valid messages that need error info
   try {
+    // A server-internal approval continuation (no client of its own declared
+    // anything — client-facing routes always pass a boolean) streams to the
+    // parked operation's client: carry its `member_runtime_end` declaration over
+    // (read here, before the parked operation is retired below).
+    const memberRuntimeEndAccepted =
+      acceptsMemberRuntimeEnd ??
+      (approvalSourceOperationId
+        ? await deps.agentRuntimeService.acceptsMemberRuntimeEnd(approvalSourceOperationId)
+        : undefined);
+    // Same client, same device: the continuation also keeps the parked
+    // operation's relay executor, or its next device-only call has none.
+    const llmExecutor =
+      input.llmExecutor ??
+      (approvalSourceOperationId
+        ? await deps.agentRuntimeService.getLlmExecutor(approvalSourceOperationId)
+        : undefined);
+    // Its `file_works` declaration too, or the continuation's terminal push
+    // would drop the file Work card the parked client can render.
+    const fileWorksAccepted =
+      acceptsFileWorks ??
+      (approvalSourceOperationId
+        ? await deps.agentRuntimeService.acceptsFileWorks(approvalSourceOperationId)
+        : undefined);
     const result = await deps.agentRuntimeService.createOperation({
+      acceptsFileWorks: fileWorksAccepted,
+      acceptsMemberRuntimeEnd: memberRuntimeEndAccepted,
+      clientProtocol: input.clientProtocol,
       includeFinalState: input.includeFinalState,
+      llmExecutor,
       activeDeviceId: discovery.activeDeviceId,
       activeDeviceScope: discovery.activeDeviceScope,
       agentConfig,
@@ -157,7 +195,7 @@ export const startOperation = async (
             // Mirrors `shareConfig.allowReadMemory` so `BuiltinToolsExecutor`
             // can re-check the memory tool's grant at dispatch time (the
             // actual chokepoint) via `isShareBlockedDataToolCall` — see
-            // `shareGate.ts`.
+            // `shareGate/dispatch.ts`.
             allowReadMemory: shareGate.shareConfig.allowReadMemory,
             // Mirrors `shareConfig.toolGrants` so tool runtimes resolved
             // outside `toolManifestMap` (e.g. `activateSkill`, which queries
@@ -369,7 +407,9 @@ export const startOperation = async (
     let gatewayToken: string | undefined;
     if (!deps.withholdGatewayToken) {
       try {
-        gatewayToken = await signUserJWT(shareGate?.visitorUserId ?? deps.userId);
+        gatewayToken = await traceStartStage('sign_gateway_token', () =>
+          signUserJWT(shareGate?.visitorUserId ?? deps.userId),
+        );
       } catch {
         log('execAgent: failed to sign gateway JWT, gateway auth will be unavailable');
       }

@@ -1,7 +1,7 @@
 'use client';
 
-import { Flexbox, FormGroup } from '@lobehub/ui';
-import { createStaticStyles, cssVar } from 'antd-style';
+import { createStaticStyles, cssVar, Flexbox } from '@lobehub/ui';
+import { Form } from '@lobehub/ui/form';
 import { type ReactNode } from 'react';
 
 import { useUserStore } from '@/store/user';
@@ -98,11 +98,10 @@ const SettingsProfileSkeleton = () => {
   const email = useUserStore(userProfileSelectors.email);
 
   return (
-    <FormGroup
+    <Form.Group
       aria-busy
       collapsible={false}
       data-testid={'settings-profile-skeleton'}
-      gap={16}
       title={<SkeletonBar height={18} width={80} />}
       variant={'filled'}
     >
@@ -130,7 +129,7 @@ const SettingsProfileSkeleton = () => {
           </>
         )}
       </Flexbox>
-    </FormGroup>
+    </Form.Group>
   );
 };
 

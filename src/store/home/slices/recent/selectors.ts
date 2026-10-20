@@ -1,30 +1,25 @@
 import { type HomeStore } from '@/store/home/store';
 
-import type { RecentEntityRef } from './initialState';
+import { type RecentEntityRef, toRecentEntityRef } from './initialState';
+import { resourceRecentKey, type ResourceRecentParams } from './projection';
 
-const query = (scope: string, queryKey: string) => (s: HomeStore) =>
-  s.recentsByScope[scope]?.queries[queryKey];
-const syncStatus = (scope: string, queryKey: string) => (s: HomeStore) =>
-  s.recentsByScope[scope]?.syncStatusByQuery[queryKey];
-const item = (scope: string, queryKey: string, ref: RecentEntityRef) => (s: HomeStore) => {
-  const scopedState = s.recentsByScope[scope];
-  const recentItem = scopedState?.queries[queryKey]?.items.find(
-    (item) => `${item.type}:${item.id}` === ref,
-  );
-  const optimisticTitle = scopedState?.optimisticTitles[ref]?.title;
+/** Items of one recents query; `undefined` until it is hydrated or fetched. */
+const query = (queryKey: string) => (s: HomeStore) => s.recentListMap[queryKey];
 
-  if (!recentItem || optimisticTitle === undefined) return recentItem;
+const item = (queryKey: string, ref: RecentEntityRef) => (s: HomeStore) =>
+  s.recentListMap[queryKey]?.find((recent) => toRecentEntityRef(recent) === ref);
 
-  // A pending task rename has to carry the slug source with it, so the row's
-  // link is built from the name the user just typed rather than the one the
-  // server still has.
-  return recentItem.type === 'task'
-    ? { ...recentItem, slugTitle: optimisticTitle, title: optimisticTitle }
-    : { ...recentItem, title: optimisticTitle };
-};
+/** Resource home recent files; `undefined` until hydrated or fetched. */
+const resourceFiles = (params: ResourceRecentParams) => (s: HomeStore) =>
+  s.resourceRecentFilesMap[resourceRecentKey(params)];
+
+/** Resource home recent pages; `undefined` until hydrated or fetched. */
+const resourcePages = (params: ResourceRecentParams) => (s: HomeStore) =>
+  s.resourceRecentPagesMap[resourceRecentKey(params)];
 
 export const homeRecentSelectors = {
   item,
   query,
-  syncStatus,
+  resourceFiles,
+  resourcePages,
 };

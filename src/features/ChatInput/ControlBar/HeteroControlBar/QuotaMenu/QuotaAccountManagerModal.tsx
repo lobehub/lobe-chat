@@ -1,17 +1,17 @@
 'use client';
 
 import { currentUtilization, isWeeklyAllLimit } from '@lobechat/heterogeneous-agents/quota';
-import { DropdownMenu, Flexbox, Icon, Input } from '@lobehub/ui';
+import { createStaticStyles, cssVar, DropdownMenu, Flexbox, Icon } from '@lobehub/ui';
 import {
   ActionIcon,
   Button,
   createModal,
+  Input,
   type ModalInstance,
   RadioGroup,
   Switch,
   Text,
-} from '@lobehub/ui/base-ui';
-import { createStaticStyles, cssVar } from 'antd-style';
+} from '@lobehub/ui';
 import { t as i18nT } from 'i18next';
 import {
   CheckIcon,
