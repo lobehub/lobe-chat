@@ -508,6 +508,7 @@ export default {
   'editedFiles.title_one': 'Edited {{count}} file',
   'editedFiles.title_other': 'Edited {{count}} files',
   'editedFiles.hideChanges': 'Hide changes',
+  'editedFiles.previewUnavailable': 'Preview unavailable',
   'editedFiles.showLess': 'Show fewer files',
   'editedFiles.showMore_one': 'Show {{count}} more file',
   'editedFiles.showMore_other': 'Show {{count}} more files',
