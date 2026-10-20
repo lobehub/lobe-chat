@@ -13,10 +13,16 @@ const log = debug('lobe-server:verify-acceptance');
  * accept (e.g. the round failed but the user accepted anyway) and when an
  * ingested round delivers. Best-effort: a task error must not undo the
  * recorded acceptance.
+ *
+ * `callerOperationId` is the Agent Run that published the delivery. When that
+ * run is the task's own running topic, completion is deferred to the end of
+ * the run instead of interrupting it mid-tool-call (the agent would read the
+ * interrupt as a refused command and stop).
  */
 export const completeTaskSubject = async (
   deps: AcceptanceServiceDeps,
   subjectId: string,
+  callerOperationId?: string,
 ): Promise<void> => {
   try {
     const taskModel = new TaskModel(deps.db, deps.userId, deps.workspaceId);
@@ -25,11 +31,14 @@ export const completeTaskSubject = async (
 
     // TaskService cascades checkpoint / sibling rollup / downstream unlock —
     // the same completion path settle.ts drives on a passed verify.
-    await new TaskService(deps.db, deps.userId, deps.workspaceId).updateStatus({
+    const result = await new TaskService(deps.db, deps.userId, deps.workspaceId).updateStatus({
       id: task.id,
+      ...(callerOperationId ? { operationId: callerOperationId } : {}),
       status: 'completed',
     });
-    log('acceptance → task %s completed', task.id);
+    if (result.completionDeferred)
+      log('acceptance → task %s completes when run %s ends', task.id, callerOperationId);
+    else log('acceptance → task %s completed', task.id);
   } catch (error) {
     log('completeTaskSubject failed (non-fatal): %O', error);
   }
@@ -60,12 +69,14 @@ export const resolveLifecycleTask = async (deps: AcceptanceServiceDeps, subjectI
  *
  * @returns `completed` when the task now reads completed, `rejected` when a
  * reject won, `skipped` when the task does not follow the acceptance or could
- * not be completed.
+ * not be completed — including a completion deferred to the end of
+ * `callerOperationId`'s run (see {@link completeTaskSubject}).
  */
 export const completeTaskForDelivery = async (
   deps: AcceptanceServiceDeps,
   acceptanceId: string,
   subjectId: string,
+  callerOperationId?: string,
 ): Promise<'completed' | 'rejected' | 'skipped'> => {
   try {
     const task = await resolveLifecycleTask(deps, subjectId);
@@ -75,7 +86,7 @@ export const completeTaskForDelivery = async (
     if (before?.status === 'rejected') return 'rejected';
     if (before?.status !== 'delivered') return 'skipped';
 
-    await completeTaskSubject(deps, task.id);
+    await completeTaskSubject(deps, task.id, callerOperationId);
     // `completeTaskSubject` is best-effort and swallows its own failures (e.g. a
     // running operation that could not be interrupted). Only a task that really
     // reads completed counts — anything else lets the caller fall back.

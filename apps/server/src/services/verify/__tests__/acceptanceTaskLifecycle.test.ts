@@ -88,6 +88,7 @@ describe('AcceptanceService task lifecycle', () => {
     mocks.taskResolve.mockResolvedValue({ automationMode: null, id: 'task_1', status: 'running' });
     // The row read back after the completion write.
     mocks.taskFindById.mockResolvedValue({ id: 'task_1', status: 'completed' });
+    mocks.taskServiceUpdateStatus.mockResolvedValue({});
   });
 
   describe('delivered → task completed', () => {
@@ -111,6 +112,28 @@ describe('AcceptanceService task lifecycle', () => {
       expect(mocks.updatePolicyStatus).toHaveBeenCalledWith('acc-1', 'delivered');
       expect(mocks.taskServiceUpdateStatus).toHaveBeenCalledWith({
         id: 'task_1',
+        status: 'completed',
+      });
+    });
+
+    it('hands the publishing run to the completion so the task does not interrupt it', async () => {
+      // An agent ingesting acceptance for the task it is running: interrupting
+      // that run mid-command surfaced as a refused tool call and stopped it.
+      mocks.listByAcceptance.mockResolvedValue([
+        {
+          id: 'run-1',
+          metadata: { origin: { operationId: 'op-self' } },
+          roundIndex: 1,
+          status: null,
+        },
+      ]);
+      mocks.taskServiceUpdateStatus.mockResolvedValue({ completionDeferred: true });
+      mocks.taskFindById.mockResolvedValue({ id: 'task_1', status: 'running' });
+
+      await expect(service().recomputeStatus('acc-1')).resolves.toBe('delivered');
+      expect(mocks.taskServiceUpdateStatus).toHaveBeenCalledWith({
+        id: 'task_1',
+        operationId: 'op-self',
         status: 'completed',
       });
     });
