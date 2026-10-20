@@ -5,8 +5,51 @@ import { z } from 'zod';
 import { withScopedPermission } from '@/business/server/trpc-middlewares/rbacPermission';
 import { wsCompatProcedure } from '@/business/server/trpc-middlewares/workspaceAuth';
 import { ProjectModel } from '@/database/models/project';
+import type { LobeChatDatabase } from '@/database/type';
 import { router } from '@/libs/trpc/lambda';
 import { serverDatabase } from '@/libs/trpc/lambda/middleware';
+import { assertCanPerformResourceAction } from '@/server/services/resourcePermission';
+import { getWorkspaceScopedPermissionMatches } from '@/server/services/workspacePermission';
+
+interface ProjectAccessCtx {
+  serverDB: LobeChatDatabase;
+  userId: string;
+  workspaceId?: string | null;
+}
+
+/**
+ * The caller's workspace capability on agents. Owners and admins hold
+ * `AGENT_UPDATE:all` and may manage members of every public project; ordinary
+ * members hold `:owner`, which is still enough to link knowledge; viewers hold
+ * neither. Personal mode has no workspace and writes its own projects.
+ */
+const resolveProjectCapability = async ({ serverDB, userId, workspaceId }: ProjectAccessCtx) => {
+  if (!workspaceId) return { canWrite: true, isWorkspaceAdmin: false };
+  const { hasAllScope, hasOwnerScope } = await getWorkspaceScopedPermissionMatches({
+    action: 'AGENT_UPDATE',
+    db: serverDB,
+    userId,
+    workspaceId,
+  });
+  return { canWrite: hasAllScope || hasOwnerScope, isWorkspaceAdmin: hasAllScope };
+};
+
+/** Linking a resource lends it to everyone in the project, so the caller must be able to use it. */
+const assertCanUseResource = async (
+  { serverDB, userId, workspaceId }: ProjectAccessCtx,
+  resourceType: 'agent' | 'knowledgeBase',
+  resourceId: string,
+) => {
+  if (!workspaceId) return;
+  await assertCanPerformResourceAction({
+    action: 'use',
+    db: serverDB,
+    resourceId,
+    resourceType,
+    userId,
+    workspaceId,
+  });
+};
 
 const projectProcedure = wsCompatProcedure.use(serverDatabase).use(async (opts) => {
   const { ctx } = opts;
@@ -18,6 +61,32 @@ const projectProcedure = wsCompatProcedure.use(serverDatabase).use(async (opts) 
 });
 
 const projectWriteProcedure = projectProcedure.use(withScopedPermission('agent:update'));
+
+/** Member management also opens to workspace admins, so it needs the resolved capability. */
+const projectMemberProcedure = projectWriteProcedure.use(async (opts) => {
+  const { ctx } = opts;
+  const { isWorkspaceAdmin } = await resolveProjectCapability(ctx);
+  return opts.next({
+    ctx: {
+      projectModel: new ProjectModel(ctx.serverDB, ctx.userId, ctx.workspaceId ?? undefined, {
+        isWorkspaceAdmin,
+      }),
+    },
+  });
+});
+
+const projectAgentPatchInput = {
+  enabled: z.boolean().optional(),
+  responsibility: z.string().max(2000).nullish(),
+  role: z.string().max(100).nullish(),
+  sortOrder: z.number().int().optional(),
+};
+
+const projectKnowledgeBasePatchInput = {
+  enabled: z.boolean().optional(),
+  sortOrder: z.number().int().optional(),
+};
+
 const idInput = z.object({ id: z.string() });
 const PROJECT_SLUG_REGEX = /^[a-z0-9]+(?:[-_][a-z0-9]+)*$/;
 const projectIdentifierInput = z
@@ -65,18 +134,11 @@ export const projectRouter = router({
       }
     }),
 
-  addAgent: projectWriteProcedure
-    .input(
-      idInput.extend({
-        agentId: z.string(),
-        enabled: z.boolean().optional(),
-        responsibility: z.string().nullish(),
-        role: z.string().nullish(),
-        sortOrder: z.number().int().optional(),
-      }),
-    )
+  addAgent: projectMemberProcedure
+    .input(idInput.extend({ agentId: z.string(), ...projectAgentPatchInput }))
     .mutation(async ({ ctx, input: { id, ...input } }) => {
       try {
+        await assertCanUseResource(ctx, 'agent', input.agentId);
         return {
           data: requireResult(await ctx.projectModel.addAgent(id, input)),
           message: 'Agent added to project',
@@ -88,15 +150,10 @@ export const projectRouter = router({
     }),
 
   addKnowledgeBase: projectWriteProcedure
-    .input(
-      idInput.extend({
-        enabled: z.boolean().optional(),
-        knowledgeBaseId: z.string(),
-        sortOrder: z.number().int().optional(),
-      }),
-    )
+    .input(idInput.extend({ knowledgeBaseId: z.string(), ...projectKnowledgeBasePatchInput }))
     .mutation(async ({ ctx, input: { id, ...input } }) => {
       try {
+        await assertCanUseResource(ctx, 'knowledgeBase', input.knowledgeBaseId);
         return {
           data: requireResult(await ctx.projectModel.addKnowledgeBase(id, input)),
           message: 'Knowledge base added to project',
@@ -162,15 +219,23 @@ export const projectRouter = router({
         ctx.projectModel,
         requireResult(await ctx.projectModel.findByIdOrSlug(input.id)),
       );
-      const [agents, completionReviews, knowledgeBases, tasks, works] = await Promise.all([
-        ctx.projectModel.listAgents(project.id),
-        ctx.projectModel.listCompletionReviews(project.id),
-        ctx.projectModel.listKnowledgeBases(project.id),
-        ctx.projectModel.listTasks(project.id),
-        ctx.projectModel.listWorks(project.id),
-      ]);
+      const [agents, completionReviews, knowledgeBases, tasks, works, capability] =
+        await Promise.all([
+          ctx.projectModel.listAgents(project.id),
+          ctx.projectModel.listCompletionReviews(project.id),
+          ctx.projectModel.listKnowledgeBases(project.id),
+          ctx.projectModel.listTasks(project.id),
+          ctx.projectModel.listWorks(project.id),
+          resolveProjectCapability(ctx),
+        ]);
+      const isCreator = project.userId === ctx.userId;
+      const permissions = {
+        canManage: isCreator && capability.canWrite,
+        canManageKnowledgeBases: capability.canWrite,
+        canManageMembers: capability.canWrite && (isCreator || capability.isWorkspaceAdmin),
+      };
       return {
-        data: { agents, completionReviews, knowledgeBases, project, tasks, works },
+        data: { agents, completionReviews, knowledgeBases, permissions, project, tasks, works },
         success: true,
       };
     } catch (error) {
@@ -249,7 +314,7 @@ export const projectRouter = router({
       }
     }),
 
-  removeAgent: projectWriteProcedure
+  removeAgent: projectMemberProcedure
     .input(idInput.extend({ agentId: z.string() }))
     .mutation(async ({ ctx, input }) => {
       try {
@@ -331,6 +396,40 @@ export const projectRouter = router({
         };
       } catch (error) {
         mapProjectError(error, 'update');
+      }
+    }),
+
+  updateAgent: projectMemberProcedure
+    .input(idInput.extend({ agentId: z.string(), ...projectAgentPatchInput }))
+    .mutation(async ({ ctx, input: { agentId, id, ...patch } }) => {
+      try {
+        return {
+          data: requireResult(
+            await ctx.projectModel.updateAgent(id, agentId, patch),
+            'Binding not found',
+          ),
+          message: 'Project agent updated',
+          success: true,
+        };
+      } catch (error) {
+        mapProjectError(error, 'updateAgent');
+      }
+    }),
+
+  updateKnowledgeBase: projectWriteProcedure
+    .input(idInput.extend({ knowledgeBaseId: z.string(), ...projectKnowledgeBasePatchInput }))
+    .mutation(async ({ ctx, input: { id, knowledgeBaseId, ...patch } }) => {
+      try {
+        return {
+          data: requireResult(
+            await ctx.projectModel.updateKnowledgeBase(id, knowledgeBaseId, patch),
+            'Binding not found',
+          ),
+          message: 'Project knowledge base updated',
+          success: true,
+        };
+      } catch (error) {
+        mapProjectError(error, 'updateKnowledgeBase');
       }
     }),
 

@@ -296,6 +296,89 @@ describe('ProjectModel', () => {
     expect(await model.removeKnowledgeBase(project.id, knowledgeBase.id)).toBe(false);
   });
 
+  it('updates member and knowledge bindings in place without re-adding them', async () => {
+    const project = await createProject(model, { name: 'Updates' });
+    const [agent] = await serverDB.insert(agents).values({ title: 'Writer', userId }).returning();
+    const [knowledgeBase] = await serverDB
+      .insert(knowledgeBases)
+      .values({ name: 'Style guide', userId })
+      .returning();
+    await model.addAgent(project.id, { agentId: agent.id, role: 'writer' });
+    await model.addKnowledgeBase(project.id, { knowledgeBaseId: knowledgeBase.id });
+
+    expect(
+      await model.updateAgent(project.id, agent.id, { responsibility: 'Drafts copy' }),
+    ).toEqual(expect.objectContaining({ responsibility: 'Drafts copy', role: 'writer' }));
+    expect(await model.updateAgent(project.id, 'missing-agent', { role: 'x' })).toBeNull();
+    await expect(
+      model.updateAgent(project.id, project.coordinatorAgentId, { enabled: false }),
+    ).rejects.toThrow('The project coordinator cannot be disabled');
+    await expect(
+      model.addAgent(project.id, { agentId: project.coordinatorAgentId, enabled: false }),
+    ).rejects.toThrow('The project coordinator cannot be disabled');
+    expect(
+      await model.updateAgent(project.id, project.coordinatorAgentId, { responsibility: 'Leads' }),
+    ).toEqual(expect.objectContaining({ enabled: true, responsibility: 'Leads' }));
+
+    expect(await model.getEnabledKnowledgeBaseIds(project.id)).toEqual([knowledgeBase.id]);
+    expect(
+      await model.updateKnowledgeBase(project.id, knowledgeBase.id, { enabled: false }),
+    ).toEqual(expect.objectContaining({ enabled: false }));
+    expect(await model.getEnabledKnowledgeBaseIds(project.id)).toEqual([]);
+    expect(await model.updateKnowledgeBase(project.id, 'missing-kb', { enabled: true })).toBeNull();
+    expect(await otherModel.getEnabledKnowledgeBaseIds(project.id)).toEqual([]);
+  });
+
+  it('lets workspace admins manage members and every reader link knowledge', async () => {
+    const workspaceId = 'project-binding-workspace';
+    const adminUserId = 'project-model-admin';
+    await serverDB.insert(users).values({ id: adminUserId });
+    await serverDB.insert(workspaces).values({
+      id: workspaceId,
+      name: 'Binding Workspace',
+      primaryOwnerId: userId,
+      slug: workspaceId,
+    });
+    const creator = new ProjectModel(serverDB, userId, workspaceId);
+    const member = new ProjectModel(serverDB, otherUserId, workspaceId);
+    const admin = new ProjectModel(serverDB, adminUserId, workspaceId, { isWorkspaceAdmin: true });
+    const project = await createProject(creator, { name: 'Shared' });
+    const privateProject = await createProject(creator, { name: 'Mine', visibility: 'private' });
+    const [agent] = await serverDB
+      .insert(agents)
+      .values({ title: 'Shared agent', userId: otherUserId, workspaceId })
+      .returning();
+    const [knowledgeBase] = await serverDB
+      .insert(knowledgeBases)
+      .values({ name: 'Shared KB', userId: otherUserId, workspaceId })
+      .returning();
+
+    expect(await member.addAgent(project.id, { agentId: agent.id })).toBeNull();
+    expect(await member.removeAgent(project.id, agent.id)).toBe(false);
+    expect(await admin.addAgent(project.id, { agentId: agent.id, role: 'analyst' })).toEqual(
+      expect.objectContaining({ addedByUserId: adminUserId, role: 'analyst' }),
+    );
+    expect(await member.updateAgent(project.id, agent.id, { role: 'lead' })).toBeNull();
+    expect(await admin.updateAgent(project.id, agent.id, { role: 'lead' })).toEqual(
+      expect.objectContaining({ role: 'lead' }),
+    );
+    expect(await admin.removeAgent(project.id, agent.id)).toBe(true);
+    // Admin reach widens member management only; project settings stay with the creator.
+    expect(await admin.update(project.id, { name: 'Renamed' })).toBeNull();
+
+    expect(
+      await member.addKnowledgeBase(project.id, { knowledgeBaseId: knowledgeBase.id }),
+    ).toEqual(expect.objectContaining({ addedByUserId: otherUserId }));
+    expect(
+      await member.updateKnowledgeBase(project.id, knowledgeBase.id, { sortOrder: 3 }),
+    ).toEqual(expect.objectContaining({ sortOrder: 3 }));
+    expect(await member.removeKnowledgeBase(project.id, knowledgeBase.id)).toBe(true);
+    expect(
+      await member.addKnowledgeBase(privateProject.id, { knowledgeBaseId: knowledgeBase.id }),
+    ).toBeNull();
+    expect(await admin.addAgent(privateProject.id, { agentId: agent.id })).toBeNull();
+  });
+
   it('returns null or false for binding operations on inaccessible projects and resources', async () => {
     const foreignProject = await createProject(otherModel, { name: 'Foreign' });
     const [foreignKnowledgeBase] = await serverDB

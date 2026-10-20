@@ -49,10 +49,23 @@ export interface ProjectAgentInput {
   sortOrder?: number;
 }
 
+export type ProjectAgentPatch = Omit<ProjectAgentInput, 'agentId'>;
+
 export interface ProjectKnowledgeBaseInput {
   enabled?: boolean;
   knowledgeBaseId: string;
   sortOrder?: number;
+}
+
+export type ProjectKnowledgeBasePatch = Omit<ProjectKnowledgeBaseInput, 'knowledgeBaseId'>;
+
+export interface ProjectAccessOptions {
+  /**
+   * The caller curates every shared resource in the workspace (resource
+   * `UPDATE:all`, held by workspace owners and admins). Resolved by the server
+   * layer; this model only knows row ownership.
+   */
+  isWorkspaceAdmin?: boolean;
 }
 
 export interface ProjectWorkInput {
@@ -65,6 +78,7 @@ export class ProjectModel {
     private readonly db: LobeChatDatabase,
     private readonly userId: string,
     private readonly workspaceId?: string,
+    private readonly access: ProjectAccessOptions = {},
   ) {}
 
   private readable() {
@@ -73,6 +87,20 @@ export class ProjectModel {
 
   private manageable() {
     return and(this.readable(), eq(projects.userId, this.userId));
+  }
+
+  /** Inviting and removing agents: the project creator and workspace admins. */
+  private membersManageable() {
+    return this.workspaceId && this.access.isWorkspaceAdmin ? this.readable() : this.manageable();
+  }
+
+  /**
+   * Linking knowledge is open to everyone who can see the project. Capability
+   * (viewers cannot write) is gated by the router, and each knowledge base is
+   * still checked for the caller's own `use` access before it is linked.
+   */
+  private knowledgeBasesManageable() {
+    return this.readable();
   }
 
   async create(input: CreateProjectInput) {
@@ -286,7 +314,9 @@ export class ProjectModel {
   }
 
   async addAgent(projectId: string, input: ProjectAgentInput) {
-    if (!(await this.findManageableById(projectId))) return null;
+    const project = await this.findMembersManageableById(projectId);
+    if (!project) return null;
+    this.assertCoordinatorStaysEnabled(project, input.agentId, input);
     const [agent] = await this.db
       .select({ id: agents.id })
       .from(agents)
@@ -321,8 +351,21 @@ export class ProjectModel {
     return binding;
   }
 
+  /** Change an existing member's role, responsibility, availability, or order. */
+  async updateAgent(projectId: string, agentId: string, patch: ProjectAgentPatch) {
+    const project = await this.findMembersManageableById(projectId);
+    if (!project) return null;
+    this.assertCoordinatorStaysEnabled(project, agentId, patch);
+    const [binding] = await this.db
+      .update(projectAgents)
+      .set({ ...patch, updatedAt: new Date() })
+      .where(and(eq(projectAgents.projectId, projectId), eq(projectAgents.agentId, agentId)))
+      .returning();
+    return binding ?? null;
+  }
+
   async removeAgent(projectId: string, agentId: string) {
-    const project = await this.findManageableById(projectId);
+    const project = await this.findMembersManageableById(projectId);
     if (!project) return false;
     if (project.coordinatorAgentId === agentId) {
       throw new Error('The project coordinator cannot be removed');
@@ -332,6 +375,16 @@ export class ProjectModel {
       .where(and(eq(projectAgents.projectId, projectId), eq(projectAgents.agentId, agentId)))
       .returning({ id: projectAgents.id });
     return deleted.length > 0;
+  }
+
+  private assertCoordinatorStaysEnabled(
+    project: { coordinatorAgentId: string | null },
+    agentId: string,
+    patch: { enabled?: boolean },
+  ) {
+    if (project.coordinatorAgentId === agentId && patch.enabled === false) {
+      throw new Error('The project coordinator cannot be disabled');
+    }
   }
 
   async listKnowledgeBases(projectId: string) {
@@ -353,7 +406,7 @@ export class ProjectModel {
   }
 
   async addKnowledgeBase(projectId: string, input: ProjectKnowledgeBaseInput) {
-    if (!(await this.findManageableById(projectId))) return null;
+    if (!(await this.findKnowledgeBasesManageableById(projectId))) return null;
     const [knowledgeBase] = await this.db
       .select({ id: knowledgeBases.id })
       .from(knowledgeBases)
@@ -385,8 +438,28 @@ export class ProjectModel {
     return binding;
   }
 
+  /** Toggle or reorder a linked knowledge base. */
+  async updateKnowledgeBase(
+    projectId: string,
+    knowledgeBaseId: string,
+    patch: ProjectKnowledgeBasePatch,
+  ) {
+    if (!(await this.findKnowledgeBasesManageableById(projectId))) return null;
+    const [binding] = await this.db
+      .update(projectKnowledgeBases)
+      .set({ ...patch, updatedAt: new Date() })
+      .where(
+        and(
+          eq(projectKnowledgeBases.projectId, projectId),
+          eq(projectKnowledgeBases.knowledgeBaseId, knowledgeBaseId),
+        ),
+      )
+      .returning();
+    return binding ?? null;
+  }
+
   async removeKnowledgeBase(projectId: string, knowledgeBaseId: string) {
-    if (!(await this.findManageableById(projectId))) return false;
+    if (!(await this.findKnowledgeBasesManageableById(projectId))) return false;
     const deleted = await this.db
       .delete(projectKnowledgeBases)
       .where(
@@ -496,7 +569,13 @@ export class ProjectModel {
         ),
       )
       .limit(1);
-    if (!task?.projectId || !(await this.findById(task.projectId))) return [];
+    if (!task?.projectId) return [];
+    return this.getEnabledKnowledgeBaseIds(task.projectId);
+  }
+
+  /** Enabled knowledge bases linked to a readable project, in project order. */
+  async getEnabledKnowledgeBaseIds(projectId: string) {
+    if (!(await this.findById(projectId))) return [];
 
     const rows = await this.db
       .select({ id: projectKnowledgeBases.knowledgeBaseId })
@@ -504,14 +583,15 @@ export class ProjectModel {
       .innerJoin(knowledgeBases, eq(projectKnowledgeBases.knowledgeBaseId, knowledgeBases.id))
       .where(
         and(
-          eq(projectKnowledgeBases.projectId, task.projectId),
+          eq(projectKnowledgeBases.projectId, projectId),
           eq(projectKnowledgeBases.enabled, true),
           buildWorkspaceWhere(
             { userId: this.userId, workspaceId: this.workspaceId },
             knowledgeBases,
           ),
         ),
-      );
+      )
+      .orderBy(asc(projectKnowledgeBases.sortOrder), asc(projectKnowledgeBases.createdAt));
     return rows.map(({ id }) => id);
   }
 
@@ -599,6 +679,24 @@ export class ProjectModel {
       .select()
       .from(projects)
       .where(and(eq(projects.id, id), this.manageable()))
+      .limit(1);
+    return project ?? null;
+  }
+
+  private async findMembersManageableById(id: string) {
+    const [project] = await this.db
+      .select()
+      .from(projects)
+      .where(and(eq(projects.id, id), this.membersManageable()))
+      .limit(1);
+    return project ?? null;
+  }
+
+  private async findKnowledgeBasesManageableById(id: string) {
+    const [project] = await this.db
+      .select()
+      .from(projects)
+      .where(and(eq(projects.id, id), this.knowledgeBasesManageable()))
       .limit(1);
     return project ?? null;
   }
