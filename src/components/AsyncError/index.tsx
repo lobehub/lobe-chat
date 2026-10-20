@@ -2,7 +2,7 @@
 
 import { Button, Center, createStaticStyles, cssVar, Flexbox, Icon, Text } from '@lobehub/ui';
 import { RotateCwIcon, TriangleAlertIcon } from 'lucide-react';
-import { memo, type ReactNode } from 'react';
+import { memo, type ReactNode, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { normalizeAsyncError } from '@/libs/swr/normalizeError';
@@ -16,7 +16,9 @@ import { normalizeAsyncError } from '@/libs/swr/normalizeError';
  *
  * - `page`   — full detail page / whole surface: centered hero + Reload.
  * - `block`  — a card / settings tab / widget: bordered block + Reload.
- * - `inline` — a list row / small slot: single line + retry link.
+ * - `inline` — a list row / small slot: single line + retry link. Raw technical
+ *              detail (provider message, error code) goes in `details`, folded
+ *              behind a "Show details" toggle so the line stays readable.
  * - `metric` — a stat / aggregate slot: a **failed** marker where a number
  *              would sit, so an errored fetch never reads as a confident `$0`.
  */
@@ -31,8 +33,15 @@ export interface AsyncErrorProps {
   action?: ReactNode;
   /** Override the auto-derived description (status-based copy otherwise). */
   description?: ReactNode;
+  /**
+   * `inline` only: raw technical detail (provider message, error code), hidden
+   * until the user expands it.
+   */
+  details?: ReactNode;
   /** The thrown error; normalized for status-specific copy + retryable gating. */
   error?: unknown;
+  /** `inline` only: center the line (list slots) or start-align it (rows, cards). */
+  justify?: 'center' | 'start';
   /** Retry the same request (SWR `mutate` / query refetch). Hidden if absent. */
   onRetry?: () => void;
   /** Whether an explicit Retry action is currently in flight. */
@@ -55,6 +64,18 @@ const styles = createStaticStyles(({ css }) => ({
   icon: css`
     color: ${cssVar.colorTextTertiary};
   `,
+  details: css`
+    overflow: auto;
+
+    max-height: 160px;
+    margin: 0;
+
+    font-family: ${cssVar.fontFamilyCode};
+    font-size: 12px;
+    color: ${cssVar.colorTextTertiary};
+    word-break: break-word;
+    white-space: pre-wrap;
+  `,
   inline: css`
     padding-block: 8px;
   `,
@@ -69,8 +90,64 @@ const styles = createStaticStyles(({ css }) => ({
   `,
 }));
 
+const RetryLink = ({ onRetry, retrying }: { onRetry?: () => void; retrying: boolean }) => {
+  const { t } = useTranslation('error');
+
+  return (
+    <Button disabled={retrying} loading={retrying} size={'small'} type={'text'} onClick={onRetry}>
+      {t('error.retry')}
+    </Button>
+  );
+};
+
+interface InlineErrorProps {
+  action?: ReactNode;
+  details?: ReactNode;
+  heading: ReactNode;
+  justify: 'center' | 'start';
+}
+
+const InlineError = ({ action, details, heading, justify }: InlineErrorProps) => {
+  const { t } = useTranslation('error');
+  const [expanded, setExpanded] = useState(false);
+  const hasDetails = details !== undefined && details !== null && details !== '';
+
+  return (
+    <Flexbox className={styles.inline} gap={4}>
+      <Flexbox horizontal align={'center'} gap={8} justify={justify} wrap={'wrap'}>
+        <Icon className={styles.icon} icon={TriangleAlertIcon} size={14} />
+        <Text color={cssVar.colorTextSecondary} fontSize={13}>
+          {heading}
+        </Text>
+        {action}
+        {hasDetails && (
+          <Button
+            aria-expanded={expanded}
+            size={'small'}
+            type={'text'}
+            onClick={() => setExpanded((value) => !value)}
+          >
+            {expanded ? t('asyncState.hideDetails') : t('asyncState.showDetails')}
+          </Button>
+        )}
+      </Flexbox>
+      {hasDetails && expanded && <pre className={styles.details}>{details}</pre>}
+    </Flexbox>
+  );
+};
+
 const AsyncError = memo<AsyncErrorProps>(
-  ({ variant = 'block', error, onRetry, retrying = false, title, description, action }) => {
+  ({
+    variant = 'block',
+    error,
+    onRetry,
+    retrying = false,
+    title,
+    description,
+    details,
+    justify = 'center',
+    action,
+  }) => {
     const { t } = useTranslation('error');
     const { status, retryable } = normalizeAsyncError(error);
 
@@ -107,23 +184,12 @@ const AsyncError = memo<AsyncErrorProps>(
     // ─── inline: single-line row failure with a retry link ───
     if (variant === 'inline') {
       return (
-        <Flexbox horizontal align={'center'} className={styles.inline} gap={8} justify={'center'}>
-          <Icon className={styles.icon} icon={TriangleAlertIcon} size={14} />
-          <Text color={cssVar.colorTextSecondary} fontSize={13}>
-            {heading}
-          </Text>
-          {showRetry && (
-            <Button
-              disabled={retrying}
-              loading={retrying}
-              size={'small'}
-              type={'text'}
-              onClick={onRetry}
-            >
-              {t('error.retry')}
-            </Button>
-          )}
-        </Flexbox>
+        <InlineError
+          action={action ?? (showRetry && <RetryLink retrying={retrying} onRetry={onRetry} />)}
+          details={details}
+          heading={heading}
+          justify={justify}
+        />
       );
     }
 
