@@ -67,20 +67,29 @@ describe('mergeQueuedFollowUps', () => {
     expect(merged.mentionedAgents).toEqual([{ id: 'a1', name: 'A' }]);
   });
 
-  it('keeps the selections attached to every follow-up, in queue order', () => {
+  it('keeps every follow-up’s attached content in queue order, and rich text only when sent alone', () => {
     const quote = (id: string) => ({ content: id, id, source: 'text' as const });
+    const page = { content: 'p2', id: 'p2', pageId: 'page-1' };
+    const doc = (text: string) => ({ root: { children: [{ text }], type: 'root' } });
     const merged = mergeQueuedFollowUps([
       followUp('second', 2, {
-        contextSelections: [quote('q2')],
-        pageSelections: [{ content: 'p2', id: 'p2', pageId: 'page-1' }],
+        userMessage: {
+          editorData: doc('second'),
+          metadata: { contextSelections: [quote('q2')], pageSelections: [page] },
+        },
       }),
-      followUp('first', 1, { contextSelections: [quote('q1')] }),
+      followUp('first', 1, { userMessage: { metadata: { contextSelections: [quote('q1')] } } }),
       followUp('third', 3, {}),
     ]);
 
-    expect(merged.contextSelections).toEqual([quote('q1'), quote('q2')]);
-    expect(merged.pageSelections).toEqual([{ content: 'p2', id: 'p2', pageId: 'page-1' }]);
-    expect(mergeQueuedFollowUps([followUp('only', 1, {})]).contextSelections).toBeUndefined();
+    expect(merged.userMessage).toEqual({
+      metadata: { contextSelections: [quote('q1'), quote('q2')], pageSelections: [page] },
+    });
+    expect(mergeQueuedFollowUps([followUp('only', 1, {})]).userMessage).toBeUndefined();
+    expect(
+      mergeQueuedFollowUps([followUp('only', 1, { userMessage: { editorData: doc('only') } })])
+        .userMessage,
+    ).toEqual({ editorData: doc('only') });
   });
 
   it('runs with the newest settings and drops per-send client ids once merged', () => {

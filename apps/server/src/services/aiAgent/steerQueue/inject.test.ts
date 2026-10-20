@@ -67,10 +67,13 @@ describe('canJoinRunningTurn', () => {
   it.each([
     ['an attachment', { fileIds: ['f1'] }],
     [
-      'an attached selection',
-      { contextSelections: [{ content: 'q', id: 'c1', source: 'text' as const }] },
+      'attached content',
+      {
+        userMessage: {
+          metadata: { contextSelections: [{ content: 'q', id: 'c1', source: 'text' as const }] },
+        },
+      },
     ],
-    ['a page selection', { pageSelections: [{ content: 'p', id: 'p1', pageId: 'page-1' }] }],
     ['a selected tool', { selectedToolIds: ['t1'] }],
     ['a selected skill', { selectedSkillIds: ['s1'] }],
     ['an @-mention', { mentionedAgents: [{ id: 'a2', name: 'B' }] }],
@@ -135,6 +138,17 @@ describe('injectQueuedFollowUp', () => {
     mocks.create.mockResolvedValue({ id: 'msg-steer' });
     mocks.assertCanUseWorkspaceAgent.mockResolvedValue(undefined);
     mocks.assertCanUseAgentRunConversation.mockResolvedValue(undefined);
+  });
+
+  it('keeps the rich text of a single follow-up that joins the run', async () => {
+    const editorData = { root: { children: [], type: 'root' } };
+    mocks.drain.mockResolvedValue([followUp('only', 1, { userMessage: { editorData } })]);
+
+    await expect(inject()).resolves.toEqual({ messageId: 'msg-steer' });
+
+    expect(mocks.create).toHaveBeenCalledWith(
+      expect.objectContaining({ content: 'only', editorData }),
+    );
   });
 
   it('joins the queued follow-ups into the run as one steer user message', async () => {

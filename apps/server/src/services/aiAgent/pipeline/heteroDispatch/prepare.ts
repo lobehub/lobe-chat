@@ -36,11 +36,10 @@ export const prepareHeteroRun = async (
     | 'agentConfig'
     | 'appContext'
     | 'assistantMessageId'
-    | 'contextSelections'
-    | 'pageSelections'
     | 'prompt'
     | 'shareGate'
     | 'topicId'
+    | 'userMessageMetadata'
   >,
   input: Pick<
     HeteroDispatchInput,
@@ -53,15 +52,7 @@ export const prepareHeteroRun = async (
   >,
   operationId: string,
 ) => {
-  const {
-    agentConfig,
-    appContext,
-    assistantMessageId,
-    contextSelections,
-    pageSelections,
-    prompt,
-    topicId,
-  } = ctx;
+  const { agentConfig, appContext, assistantMessageId, prompt, topicId, userMessageMetadata } = ctx;
   const {
     heteroType,
     heterogeneousProvider,
@@ -180,6 +171,8 @@ export const prepareHeteroRun = async (
   // desktop's in-process run hands its CLI.
   const providerContext = agentConfig.agencyConfig?.heterogeneousProvider?.systemContext;
   const viewedTaskContext = await buildViewedTaskContextPrompt(deps, appContext, operationTaskId);
+  const contextSelections = userMessageMetadata?.contextSelections;
+  const pageSelections = userMessageMetadata?.pageSelections;
   const selectionContext = contextSelections?.length
     ? formatContextSelections(contextSelections)
     : pageSelections?.length

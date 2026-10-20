@@ -2,12 +2,11 @@ import type { AgentStreamClientFeature } from '@lobechat/agent-gateway-client';
 import { CLIENT_PROTOCOL_VERSION } from '@lobechat/agent-gateway-client';
 import type {
   ClientLlmWaitItem,
-  ContextSelection,
+  ComposerUserMessage,
   ExecAgentAppContext,
   ExecAgentClientIds,
   ExecAgentLlmExecutor,
   ExecAgentResult,
-  PageSelection,
   ResumeClientLlmWaitResult,
   RuntimeMentionedAgent,
   ScheduleAgentRunParams,
@@ -148,8 +147,6 @@ export interface ExecAgentTaskParams {
    * live, to tell whether the client never saw it or its stop never landed.
    */
   clientOperations?: ClientOperationSnapshot[];
-  /** Content attached from the conversation, a page or code; persisted on the user message. */
-  contextSelections?: ContextSelection[];
   deviceId?: string;
   existingMessageIds?: string[];
   /** File IDs of already-uploaded attachments to attach to the new user message */
@@ -161,8 +158,6 @@ export interface ExecAgentTaskParams {
    * context so the supervisor run delegates to them instead of answering itself.
    */
   mentionedAgents?: RuntimeMentionedAgent[];
-  /** Page-editor selections, mirrored from `contextSelections` for compatibility. */
-  pageSelections?: PageSelection[];
   /** Parent message ID for regeneration/continue (skip user message creation, branch from this message) */
   parentMessageId?: string;
   prompt: string;
@@ -192,6 +187,8 @@ export interface ExecAgentTaskParams {
    */
   trigger?: string;
   userInterventionConfig?: UserInterventionConfig;
+  /** The composer-authored part of the new user message; see `ExecAgentParams.userMessage`. */
+  userMessage?: ComposerUserMessage;
 }
 
 /**

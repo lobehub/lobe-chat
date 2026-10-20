@@ -1,4 +1,4 @@
-import type { ContextSelection, PageSelection } from '@lobechat/types';
+import type { ComposerUserMessage } from '@lobechat/types';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { aiAgentService } from '@/services/aiAgent';
@@ -9,14 +9,17 @@ vi.mock('@/services/aiAgent', () => ({
   aiAgentService: { execAgentTask: vi.fn(), interruptTask: vi.fn() },
 }));
 
-const contextSelections: ContextSelection[] = [
-  { content: 'Quoted reply', format: 'text', id: 'selection-1', source: 'text' },
-];
-const pageSelections: PageSelection[] = [
-  { content: 'Selected paragraph', id: 'page-selection-1', pageId: 'page-1' },
-];
+const userMessage: ComposerUserMessage = {
+  editorData: { root: { children: [], type: 'root' } },
+  metadata: {
+    contextSelections: [
+      { content: 'Quoted reply', format: 'text', id: 'selection-1', source: 'text' },
+    ],
+    pageSelections: [{ content: 'Selected paragraph', id: 'page-selection-1', pageId: 'page-1' }],
+  },
+};
 
-describe('executeGatewayAgent: attached selections', () => {
+describe('executeGatewayAgent: the composer-authored user message', () => {
   beforeEach(() => {
     (globalThis as any).window = {
       global_serverConfigStore: {
@@ -33,22 +36,21 @@ describe('executeGatewayAgent: attached selections', () => {
   });
 
   // The server persists the user row on this path and replaces the optimistic
-  // one with it. Without the selections in the start request, the quote the
-  // user attached vanished from the bubble and never reached the agent.
-  it('forwards the selections to the server start request', async () => {
+  // one with it, so whatever the start request leaves out vanishes from the
+  // bubble and never reaches the agent.
+  it('forwards the user message to the server start request', async () => {
     const action = new GatewayActionImpl(vi.fn(), () => ({ topicDataMap: {} }) as any, undefined);
 
     await expect(
       action.executeGatewayAgent({
         context: { agentId: 'agent-1', topicId: 'topic-1' },
-        contextSelections,
         message: 'Explain this',
-        pageSelections,
+        userMessage,
       }),
     ).rejects.toThrow('stop');
 
     expect(aiAgentService.execAgentTask).toHaveBeenCalledWith(
-      expect.objectContaining({ contextSelections, pageSelections }),
+      expect.objectContaining({ userMessage }),
     );
   });
 });

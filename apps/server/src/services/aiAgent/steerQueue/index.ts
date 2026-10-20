@@ -1,5 +1,7 @@
 import { randomUUID } from 'node:crypto';
 
+import type { ComposerUserMessage, MessageMetadata } from '@lobechat/types';
+import { COMPOSER_USER_MESSAGE_METADATA_KEYS, toComposerUserMessage } from '@lobechat/types';
 import { TRPCError } from '@trpc/server';
 import debug from 'debug';
 
@@ -50,6 +52,24 @@ export interface QueuedFollowUp extends SteerQueueEntry {
 const uniq = <T>(items: T[]) => [...new Set(items)];
 
 /**
+ * Every follow-up's attached content is kept, in queue order. Rich text belongs
+ * to one message's text, so it survives only when a single follow-up is sent:
+ * a merged send's text is the joined prompts.
+ */
+const mergeComposerUserMessages = (
+  messages: (ComposerUserMessage | undefined)[],
+): ComposerUserMessage | undefined => {
+  const metadata: Record<string, unknown[]> = {};
+  for (const key of COMPOSER_USER_MESSAGE_METADATA_KEYS) {
+    const values = messages.flatMap((message): unknown[] => message?.metadata?.[key] ?? []);
+    if (values.length) metadata[key] = values;
+  }
+  const editorData = messages.length === 1 ? messages[0]?.editorData : undefined;
+
+  return toComposerUserMessage({ editorData, metadata: metadata as MessageMetadata });
+};
+
+/**
  * Fold every waiting follow-up into one request, the way the client merges its
  * own queue: the texts in queue order, every attachment and selection kept.
  * The newest entry decides the run settings (model, device, approvals), since
@@ -60,8 +80,6 @@ export const mergeQueuedFollowUps = (entries: QueuedFollowUp[]): QueuedFollowUpR
   const latest = sorted.at(-1)!.request;
 
   const fileIds = uniq(sorted.flatMap((entry) => entry.request.fileIds ?? []));
-  const contextSelections = sorted.flatMap((entry) => entry.request.contextSelections ?? []);
-  const pageSelections = sorted.flatMap((entry) => entry.request.pageSelections ?? []);
   const selectedSkillIds = uniq(sorted.flatMap((entry) => entry.request.selectedSkillIds ?? []));
   const selectedToolIds = uniq(sorted.flatMap((entry) => entry.request.selectedToolIds ?? []));
   const mentionedAgents = [
@@ -75,13 +93,12 @@ export const mergeQueuedFollowUps = (entries: QueuedFollowUp[]): QueuedFollowUpR
     // Client-minted row ids belong to one optimistic send; a merged send
     // creates rows none of the queued sends announced.
     clientIds: sorted.length === 1 ? latest.clientIds : undefined,
-    contextSelections: contextSelections.length ? contextSelections : undefined,
     fileIds: fileIds.length ? fileIds : undefined,
     mentionedAgents: mentionedAgents.length ? mentionedAgents : undefined,
-    pageSelections: pageSelections.length ? pageSelections : undefined,
     prompt: sorted.map((entry) => entry.request.prompt).join('\n\n'),
     selectedSkillIds: selectedSkillIds.length ? selectedSkillIds : undefined,
     selectedToolIds: selectedToolIds.length ? selectedToolIds : undefined,
+    userMessage: mergeComposerUserMessages(sorted.map((entry) => entry.request.userMessage)),
   };
 };
 

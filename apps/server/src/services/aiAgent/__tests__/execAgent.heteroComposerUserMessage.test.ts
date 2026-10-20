@@ -1,4 +1,5 @@
-import type { ContextSelection } from '@lobechat/types';
+import type { ComposerUserMessageMetadata, ContextSelection } from '@lobechat/types';
+import { COMPOSER_USER_MESSAGE_METADATA_KEYS } from '@lobechat/types';
 import { afterEach, beforeEach, describe, expect, it, type MockInstance, vi } from 'vitest';
 
 import { AgentOperationModel } from '@/database/models/agentOperation';
@@ -253,7 +254,7 @@ vi.mock('@/server/services/heterogeneousAgent/remoteDeviceHeteroContext', () => 
   buildRemoteDeviceHeteroContext: mockBuildRemoteDeviceHeteroContext,
 }));
 
-describe('AiAgentService.execAgent - hetero runs keep the selections attached to the message', () => {
+describe('AiAgentService.execAgent - hetero runs keep the composer-authored user message', () => {
   let service: AiAgentService;
   const spies: MockInstance[] = [];
 
@@ -297,21 +298,66 @@ describe('AiAgentService.execAgent - hetero runs keep the selections attached to
     for (const spy of spies.splice(0)) spy.mockRestore();
   });
 
-  it('persists the selections on the user message so the quote survives the server rows', async () => {
+  // One sample per composer-authored field. Typed as the full metadata, so a
+  // field added to `ComposerUserMessageMetadataSchema` without a sample here
+  // fails type-check — and the assertion below then checks it is persisted.
+  const everyComposerField = {
+    contextSelections,
+    localSystemToolSnapshots: [
+      {
+        apiName: 'readFile',
+        arguments: { path: '/repo/README.md' },
+        capturedAt: '2026-10-20T00:00:00.000Z',
+        content: '# Readme',
+        identifier: 'lobe-local-system',
+        snapshotId: 'snapshot-1',
+        success: true,
+        toolCallId: 'call-1',
+      },
+    ],
+    pageSelections: [
+      {
+        content: 'Selected page paragraph',
+        id: 'page-selection-1',
+        pageId: 'page-1',
+        xml: '<p>Selected page paragraph</p>',
+      },
+    ],
+  } satisfies Required<ComposerUserMessageMetadata>;
+
+  it('persists every composer-authored field and the rich text on the user message', async () => {
+    const editorData = { root: { children: [], type: 'root' } };
+
     await service.execAgent({
       agentId: 'agent-1',
-      contextSelections,
       prompt: 'Explain this',
+      userMessage: { editorData, metadata: everyComposerField },
     });
 
-    expect(userMessageCreate()?.metadata).toMatchObject({ contextSelections });
+    expect(Object.keys(everyComposerField).sort()).toEqual(
+      [...COMPOSER_USER_MESSAGE_METADATA_KEYS].sort(),
+    );
+    expect(userMessageCreate()?.editorData).toEqual(editorData);
+    expect(userMessageCreate()?.metadata).toMatchObject(everyComposerField);
+  });
+
+  it('keeps server-derived fields authoritative over the composer metadata', async () => {
+    await service.execAgent({
+      agentId: 'agent-1',
+      prompt: 'Explain this',
+      trigger: 'chat',
+      // A client cannot smuggle a server-owned field through the composer shape.
+      userMessage: { metadata: { contextSelections, trigger: 'bot' } as any },
+    });
+
+    expect(userMessageCreate()?.metadata).toMatchObject({ contextSelections, trigger: 'chat' });
   });
 
   it('hands the selections to the device run system context', async () => {
     await service.execAgent({
       agentId: 'agent-1',
-      contextSelections,
       prompt: 'Explain this',
+      userMessage: { metadata: { contextSelections } },
     });
 
     const { agentSystemContext } = mockBuildRemoteDeviceHeteroContext.mock.calls[0][0];
@@ -322,15 +368,8 @@ describe('AiAgentService.execAgent - hetero runs keep the selections attached to
   it('falls back to page selections when only those are attached', async () => {
     await service.execAgent({
       agentId: 'agent-1',
-      pageSelections: [
-        {
-          content: 'Selected page paragraph',
-          id: 'page-selection-1',
-          pageId: 'page-1',
-          xml: '<p>Selected page paragraph</p>',
-        },
-      ],
       prompt: 'Explain this',
+      userMessage: { metadata: { pageSelections: everyComposerField.pageSelections } },
     });
 
     expect(userMessageCreate()?.metadata).toMatchObject({

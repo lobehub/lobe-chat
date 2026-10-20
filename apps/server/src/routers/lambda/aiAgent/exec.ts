@@ -25,6 +25,7 @@ import {
   ExecAgentsSchema,
   ExecGroupAgentSchema,
   ExecSubAgentTaskSchema,
+  foldLegacyUserMessageFields,
   ScheduleAgentRunSchema,
 } from './execSchemas';
 import { assertCanUseAgentRunConversation } from './guards';
@@ -271,7 +272,7 @@ export const execRouter = router({
           workspaceId: ctx.workspaceId,
         },
         {
-          ...input,
+          ...foldLegacyUserMessageFields(input),
           acceptsFileWorks: acceptsFileWorksOf(input.streamFeatures),
           acceptsMemberRuntimeEnd: acceptsMemberRuntimeEndOf(input.streamFeatures),
         },
