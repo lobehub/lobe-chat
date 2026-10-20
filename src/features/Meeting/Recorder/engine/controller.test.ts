@@ -243,6 +243,54 @@ describe('MeetingRecorderController', () => {
     expect(harness.recorder).toMatchObject({ error: undefined, phase: 'done' });
   });
 
+  it('finishes the meeting with the upload retry when it was stopped offline', async () => {
+    const uploadRecording = vi
+      .fn<(file: File) => Promise<string>>()
+      .mockRejectedValueOnce(new TypeError('Failed to fetch'))
+      .mockResolvedValueOnce('file_2');
+    harness = createHarness({ uploadRecording });
+    harness.api.finish.mockRejectedValueOnce(new TypeError('Failed to fetch'));
+
+    await harness.controller.start({ title: 'x' });
+    harness.push(voiced());
+    harness.push(voiced());
+    await harness.controller.stop();
+    expect(harness.recorder).toMatchObject({ error: 'upload_failed', phase: 'done' });
+
+    await harness.controller.retryUpload();
+
+    // The stop never reached the server, so the retry saves it before the upload.
+    expect(harness.api.finish).toHaveBeenCalledTimes(2);
+    expect(harness.api.finish).toHaveBeenLastCalledWith('mtg_1', 400);
+    expect(harness.api.finish.mock.invocationCallOrder[1]).toBeLessThan(
+      harness.api.attachAudio.mock.invocationCallOrder[0],
+    );
+    expect(harness.api.refine).toHaveBeenCalledWith('mtg_1');
+  });
+
+  it('says the upload failed because the connection is down', async () => {
+    harness = createHarness({
+      network: {
+        isNetworkError: (error) => error instanceof TypeError,
+        isOnline: () => true,
+        waitOnline: async () => undefined,
+      },
+      uploadRecording: vi
+        .fn<(file: File) => Promise<string>>()
+        .mockRejectedValueOnce(new TypeError('Failed to fetch'))
+        .mockResolvedValueOnce('file_2'),
+    });
+
+    await harness.controller.start({ title: 'x' });
+    harness.push(voiced());
+    await harness.controller.stop();
+    expect(harness.recorder).toMatchObject({ error: 'upload_offline', phase: 'done' });
+
+    await harness.controller.retryUpload();
+    expect(harness.api.attachAudio).toHaveBeenCalledWith('mtg_1', 'file_2');
+    expect(harness.recorder.error).toBeUndefined();
+  });
+
   it('ignores a second start while a meeting is recording', async () => {
     await harness.controller.start({ title: 'x' });
     await harness.controller.start({ title: 'y' });

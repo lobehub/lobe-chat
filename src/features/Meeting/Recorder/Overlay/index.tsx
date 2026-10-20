@@ -206,6 +206,7 @@ const DoneBody = () => {
   const navigate = useWorkspaceAwareNavigate();
   const meetingId = useMeetingStore((s) => s.recorder.meetingId);
   const error = useMeetingStore((s) => s.recorder.error);
+  const uploadError = error === 'upload_failed' || error === 'upload_offline';
 
   const openMeeting = () => {
     if (!meetingId) return;
@@ -215,13 +216,21 @@ const DoneBody = () => {
 
   return (
     <Flexbox gap={14}>
-      {error === 'upload_failed' ? (
-        <Alert showIcon title={t('recorder.uploadFailed')} type={'warning'} />
+      {uploadError ? (
+        <Alert
+          showIcon
+          type={'warning'}
+          title={
+            error === 'upload_offline'
+              ? t('recorder.uploadFailedOffline')
+              : t('recorder.uploadFailed')
+          }
+        />
       ) : (
         <Text weight={500}>{t('recorder.done.title')}</Text>
       )}
       <Flexbox horizontal gap={8}>
-        {error === 'upload_failed' && (
+        {uploadError && (
           <Button block onClick={() => void meetingRecorder.retryUpload()}>
             {t('recorder.uploadRetry')}
           </Button>

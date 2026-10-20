@@ -11,6 +11,12 @@ const styles = createStaticStyles(({ css }) => ({
     font-size: 12px;
     color: ${cssVar.colorTextTertiary};
   `,
+  status: css`
+    font-size: 12px;
+    line-height: 1.5;
+    color: ${cssVar.colorTextTertiary};
+    text-align: end;
+  `,
   scroll: css`
     overflow-y: auto;
     overscroll-behavior: contain;
@@ -56,21 +62,23 @@ const LiveTranscript = () => {
   const status =
     live === 'unavailable'
       ? t('live.unavailable')
-      : live === 'lagging'
-        ? t('live.lagging')
-        : paused
-          ? t('live.paused')
-          : pendingWindows > 0
-            ? t('live.pending')
-            : undefined;
+      : live === 'offline'
+        ? t('live.offline')
+        : live === 'lagging'
+          ? t('live.lagging')
+          : paused
+            ? t('live.paused')
+            : pendingWindows > 0
+              ? t('live.pending')
+              : undefined;
 
   return (
     <Flexbox gap={6}>
-      <Flexbox horizontal align={'center'} justify={'space-between'}>
-        <Text fontSize={12} type={'secondary'} weight={500}>
+      <Flexbox horizontal align={'flex-start'} gap={12} justify={'space-between'}>
+        <Text fontSize={12} style={{ flexShrink: 0 }} type={'secondary'} weight={500}>
           {t('live.title')}
         </Text>
-        {status && <span className={styles.hint}>{status}</span>}
+        {status && <span className={styles.status}>{status}</span>}
       </Flexbox>
       <div aria-live={'polite'} className={styles.scroll} ref={scrollRef}>
         {segments.length === 0 ? (

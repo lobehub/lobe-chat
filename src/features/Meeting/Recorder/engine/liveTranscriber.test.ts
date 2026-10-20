@@ -93,4 +93,97 @@ describe('LiveTranscriber', () => {
 
     await expect(transcriber.drain(10)).resolves.toBe(false);
   });
+
+  it('holds windows while offline and transcribes all of them once the connection is back', async () => {
+    let online = true;
+    let reconnect: () => void = () => undefined;
+    const network = {
+      isNetworkError: (error: unknown) => error instanceof TypeError,
+      isOnline: () => online,
+      waitOnline: () =>
+        new Promise<void>((resolve) => {
+          reconnect = () => {
+            online = true;
+            resolve();
+          };
+        }),
+    };
+    const transcribe = vi.fn(async (w: LiveWindow) => {
+      // The connection drops while the second window is in flight.
+      if (w.startMs === 1000 && transcribe.mock.calls.length === 2) {
+        online = false;
+        throw new TypeError('Failed to fetch');
+      }
+      return `text at ${w.startMs}`;
+    });
+    const onSegment = vi.fn();
+    const onStatus = vi.fn();
+    const transcriber = new LiveTranscriber({
+      network,
+      onSegment,
+      onStatus,
+      transcribe,
+      wait: () => Promise.resolve(),
+    });
+
+    transcriber.enqueue(window(0));
+    transcriber.enqueue(window(1000));
+    transcriber.enqueue(window(2000));
+    transcriber.enqueue(window(3000));
+    await expect(transcriber.drain(20)).resolves.toBe(false);
+    expect(onStatus).toHaveBeenLastCalledWith({ pendingWindows: 3, state: 'offline' });
+
+    reconnect();
+    await expect(transcriber.drain(1000)).resolves.toBe(true);
+
+    expect(onSegment.mock.calls.map(([segment]) => segment.text)).toEqual([
+      'text at 0',
+      'text at 1000',
+      'text at 2000',
+      'text at 3000',
+    ]);
+    expect(onStatus).toHaveBeenLastCalledWith({ pendingWindows: 0, state: 'live' });
+  });
+
+  it('waits out an outage the browser does not report, probing until requests go through', async () => {
+    let down = false;
+    const waitOnline = vi.fn(async () => {
+      // Each probe interval; the connection comes back after the third one.
+      if (waitOnline.mock.calls.length >= 3) down = false;
+    });
+    const transcribe = vi.fn(async (w: LiveWindow) => {
+      if (down) throw new TypeError('Failed to fetch');
+      if (w.startMs === 1000 && transcribe.mock.calls.length === 2) {
+        down = true;
+        throw new TypeError('Failed to fetch');
+      }
+      return `text at ${w.startMs}`;
+    });
+    const onSegment = vi.fn();
+    const onStatus = vi.fn();
+    const transcriber = new LiveTranscriber({
+      network: {
+        isNetworkError: (error) => error instanceof TypeError,
+        isOnline: () => true,
+        waitOnline,
+      },
+      onSegment,
+      onStatus,
+      transcribe,
+      wait: () => Promise.resolve(),
+    });
+
+    transcriber.enqueue(window(0));
+    transcriber.enqueue(window(1000));
+    transcriber.enqueue(window(2000));
+    await expect(transcriber.drain(1000)).resolves.toBe(true);
+
+    expect(onStatus.mock.calls.some(([status]) => status.state === 'offline')).toBe(true);
+    expect(onSegment.mock.calls.map(([segment]) => segment.text)).toEqual([
+      'text at 0',
+      'text at 1000',
+      'text at 2000',
+    ]);
+    expect(onStatus).toHaveBeenLastCalledWith({ pendingWindows: 0, state: 'live' });
+  });
 });

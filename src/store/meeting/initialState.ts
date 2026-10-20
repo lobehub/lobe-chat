@@ -22,7 +22,9 @@ export type RecorderErrorCode =
   /** The meeting could not be created; retry the start. */
   | 'start_failed'
   /** The audio could not be uploaded; the recording is kept for a retry. */
-  | 'upload_failed';
+  | 'upload_failed'
+  /** As `upload_failed`, because the connection is down; retry once back online. */
+  | 'upload_offline';
 
 /**
  * Health of the live transcript. Recording never depends on it:
@@ -30,7 +32,7 @@ export type RecorderErrorCode =
  * - `unavailable`: no speech-to-text model is configured, so only audio is kept.
  * - `lagging`: the last window failed; later windows keep going.
  */
-export type LiveTranscriptState = 'live' | 'unavailable' | 'lagging';
+export type LiveTranscriptState = 'live' | 'unavailable' | 'lagging' | 'offline';
 
 /** A finished piece of the live draft, offsets in ms from the start of the recording. */
 export interface LiveSegment {

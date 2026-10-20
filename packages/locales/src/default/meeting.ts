@@ -83,6 +83,8 @@ export default {
   'live.error.quota_exceeded.title': 'Live transcript stopped: quota used up',
   'live.lagging': 'The live transcript is behind. Recording is not affected.',
   'live.openSettings': 'Open settings',
+  'live.offline':
+    "You're offline. Recording continues; the live transcript catches up once you're back online.",
   'live.paused': 'Paused. Nothing is recorded until you resume.',
   'live.pending': 'Transcribing…',
   'live.retryNow': 'Retry now',
@@ -159,6 +161,8 @@ export default {
   'recorder.stop': 'End',
   'recorder.title': 'Meeting recording',
   'recorder.uploadFailed': 'The recording could not be uploaded. It is kept here until you retry.',
+  'recorder.uploadFailedOffline':
+    "No network connection, so the recording could not be uploaded. It is kept here; choose Retry upload once you're back online.",
   'recorder.uploadRetry': 'Retry upload',
   'refine.error.audio_missing': 'The recording was not saved, so it cannot be transcribed.',
   'refine.error.audio_unsupported': 'This recording format cannot be transcribed.',
