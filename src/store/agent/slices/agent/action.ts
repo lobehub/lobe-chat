@@ -10,20 +10,19 @@ import { toast } from '@lobehub/ui';
 import isEqual from 'fast-deep-equal';
 import { t } from 'i18next';
 import { produce } from 'immer';
-import type { SWRResponse } from 'swr';
 import type { PartialDeep } from 'type-fest';
 
 import { getActiveWorkspaceId } from '@/business/client/hooks/useActiveWorkspaceId';
 import { MESSAGE_CANCEL_FLAT } from '@/const/message';
 import { analyticsClient } from '@/libs/analytics/client';
 import {
+  cacheScope,
   createReplicaSlice,
   recordLens,
+  type ReplicaLens,
   type ReplicaSyncResult,
   revalidateReplica,
 } from '@/libs/replica';
-import { mutate, useClientDataSWR, useClientDataSWRWithSync } from '@/libs/swr';
-import { agentConfigKeys } from '@/libs/swr/keys';
 import { getCacheScope } from '@/libs/swr/useCacheScope';
 import type { AvailableAgentItem, CreateAgentParams, CreateAgentResult } from '@/services/agent';
 import { agentService, AVAILABLE_AGENTS_CONTEXT_QUERY_LIMIT } from '@/services/agent';
@@ -49,7 +48,15 @@ import { heteroAgentDefaultName } from '../../utils/heteroAgentDefaultName';
 import { setLocalAgentWorkingDirectory } from '../../utils/localAgentWorkingDirectoryStorage';
 import { getSidebarAgentNames } from '../../utils/sidebarAgentNames';
 import type { AgentSliceState, LoadingState, SaveStatus } from './initialState';
-import { agentConfigResource } from './projection';
+import {
+  agentConfigResource,
+  agentSlugIdResource,
+  AVAILABLE_AGENTS_KEY,
+  availableAgentsResource,
+  HETERO_SERVER_DEFAULT_CAPABILITY_KEY,
+  heteroServerDefaultCapabilityResource,
+  type ServerDefaultHeterogeneousCapability,
+} from './projection';
 
 const AGENT_META_KEYS = [
   'avatar',
@@ -119,6 +126,26 @@ export interface AgentConfigSyncResult extends ReplicaSyncResult {
   mutate: () => Promise<unknown>;
 }
 
+const EMPTY_PARAMS = {} as Record<string, never>;
+
+/**
+ * Several surfaces read the same one-entry replica (every open conversation, the
+ * profile editor and the model bar): one request answers all of them, while a
+ * write, a focus or a manual retry still refetches.
+ */
+const SHARED_READ_DEDUPING_INTERVAL = 10_000;
+
+/** A store field that holds the whole value of a single-entry replica. */
+const singleValueLens = <T>(
+  field: keyof AgentStore & string,
+  key: string,
+): ReplicaLens<AgentStore, T> => ({
+  clear: () => ({ [field]: undefined }) as Partial<AgentStore>,
+  get: (state, entryKey) => (entryKey === key ? (state[field] as T | undefined) : undefined),
+  keys: (state) => (state[field] === undefined ? [] : [key]),
+  set: (_state, _key, data) => ({ [field]: data }) as Partial<AgentStore>,
+});
+
 /**
  * Agent Slice Actions
  * Handles agent CRUD operations (config/meta updates)
@@ -135,6 +162,9 @@ export class AgentSliceActionImpl {
   readonly #updateAgentConfigControllers = new Map<string, AbortController>();
   readonly #updateAgentMetaControllers = new Map<string, AbortController>();
   readonly #config;
+  readonly #slugId;
+  readonly #available;
+  readonly #heteroCapability;
 
   constructor(set: Setter, get: () => AgentStore, _api?: unknown) {
     void _api;
@@ -167,6 +197,39 @@ export class AgentSliceActionImpl {
       set,
       stateKey: 'agentConfigReplica',
       view: recordLens<AgentStore, PartialDeep<AgentItem>>('agentMap'),
+    });
+    this.#slugId = createReplicaSlice(agentSlugIdResource, {
+      actionPrefix: 'agentSlugId',
+      fetcher: ({ slug }) => agentService.resolveAgentIdBySlug(slug),
+      get,
+      // No visible agent owns the slug (anymore): drop the entry and its
+      // persisted row, so the route stops painting the agent it used to name.
+      isMissing: (agentId) => !agentId,
+      merge: (incoming, confirmed) => (!incoming || incoming === confirmed ? undefined : incoming),
+      set,
+      stateKey: 'agentSlugIdReplica',
+      view: recordLens<AgentStore, string>('agentSlugIdMap'),
+    });
+    this.#available = createReplicaSlice(availableAgentsResource, {
+      actionPrefix: 'availableAgents',
+      fetcher: () => agentService.queryAgents({ limit: AVAILABLE_AGENTS_CONTEXT_QUERY_LIMIT }),
+      get,
+      merge: (incoming, confirmed) => (isEqual(incoming, confirmed) ? undefined : incoming),
+      set,
+      stateKey: 'availableAgentsReplica',
+      view: singleValueLens<AvailableAgentItem[]>('availableAgents', AVAILABLE_AGENTS_KEY),
+    });
+    this.#heteroCapability = createReplicaSlice(heteroServerDefaultCapabilityResource, {
+      actionPrefix: 'heteroServerDefaultCapability',
+      fetcher: () => aiAgentService.getServerDefaultHeterogeneousCapability(),
+      get,
+      merge: (incoming, confirmed) => (isEqual(incoming, confirmed) ? undefined : incoming),
+      set,
+      stateKey: 'heteroServerDefaultCapabilityReplica',
+      view: singleValueLens<ServerDefaultHeterogeneousCapability>(
+        'heteroServerDefaultCapability',
+        HETERO_SERVER_DEFAULT_CAPABILITY_KEY,
+      ),
     });
   }
 
@@ -518,10 +581,47 @@ export class AgentSliceActionImpl {
     return this.#toAgentConfigSyncResult(sync, agentId);
   };
 
-  useFetchServerDefaultHeterogeneousCapability = (enabled: boolean) =>
-    useClientDataSWR(enabled ? agentConfigKeys.serverDefaultHeterogeneousCapability() : null, () =>
-      aiAgentService.getServerDefaultHeterogeneousCapability(),
-    );
+  /**
+   * Fetch orchestration only; read the value through
+   * `agentSelectors.heteroServerDefaultCapability`.
+   */
+  useFetchServerDefaultHeterogeneousCapability = (enabled: boolean): ReplicaSyncResult =>
+    this.#heteroCapability.useSync(enabled ? EMPTY_PARAMS : null, {
+      dedupingInterval: SHARED_READ_DEDUPING_INTERVAL,
+    });
+
+  /**
+   * Resolve a user-chosen `/agent/<slug>` to its agent id. Fetch orchestration
+   * only: read the id through `agentSelectors.getAgentIdBySlug` (the persisted
+   * copy paints first) and wait for `agentSelectors.isAgentSlugConfirmed`
+   * before redirecting to it — a slug can move to another agent between sessions.
+   */
+  useResolveAgentSlug = (slug: string | null | undefined): ReplicaSyncResult =>
+    this.#slugId.useSync(slug ? { slug } : null, { revalidateOnFocus: false });
+
+  /**
+   * Seed a slug's persisted `slug → id` from the route loader, before the
+   * route commits, so the first frame already knows which agent it shows.
+   */
+  preHydrateAgentSlug = async (slug: string): Promise<string | undefined> => {
+    const scope = cacheScope.get();
+    this.#slugId.ensureScope(scope);
+    await this.#slugId.hydrate({ slug }, scope);
+
+    return this.#get().agentSlugIdMap[slug];
+  };
+
+  /**
+   * An agent's slug was renamed: the old slug no longer names it and the new
+   * one does. Confirmed by the rename response, so no lookup is needed.
+   */
+  internal_confirmAgentSlug = (agentId: string, slug: string): void => {
+    const scope = cacheScope.get();
+    for (const [cachedSlug, cachedAgentId] of Object.entries(this.#get().agentSlugIdMap)) {
+      if (cachedAgentId === agentId && cachedSlug !== slug) this.#slugId.remove(cachedSlug);
+    }
+    this.#slugId.replace({ slug }, agentId, scope);
+  };
 
   /**
    * Re-trigger the agent config fetch after a failure. Clears the recorded
@@ -604,22 +704,42 @@ export class AgentSliceActionImpl {
     return this.#toAgentConfigSyncResult(sync, agentId);
   };
 
-  useFetchAvailableAgents = (enabled: boolean): SWRResponse<AvailableAgentItem[]> => {
-    return useClientDataSWRWithSync<AvailableAgentItem[]>(
-      enabled ? agentConfigKeys.available() : null,
-      () => agentService.queryAgents({ limit: AVAILABLE_AGENTS_CONTEXT_QUERY_LIMIT }),
-      {
-        onData: (data) => {
-          this.#set({ availableAgents: data }, false, 'useFetchAvailableAgents');
-        },
-        revalidateOnFocus: false,
-      },
-    );
+  /** Fetch orchestration only; read the list from `availableAgents`. */
+  useFetchAvailableAgents = (enabled: boolean): ReplicaSyncResult =>
+    this.#available.useSync(enabled ? EMPTY_PARAMS : null, {
+      dedupingInterval: SHARED_READ_DEDUPING_INTERVAL,
+      revalidateOnFocus: false,
+    });
+
+  /**
+   * The agents changed (create / delete / sidebar refresh). Mounted
+   * conversations refetch now; until a fresh list is confirmed, the chat
+   * context does not trust the copy it holds.
+   */
+  invalidateAvailableAgents = (): void => {
+    this.#set({ availableAgentsStale: true }, false, 'invalidateAvailableAgents');
+    void this.#available.revalidate(AVAILABLE_AGENTS_KEY);
   };
 
-  invalidateAvailableAgents = (): void => {
-    this.#set({ availableAgents: undefined }, false, 'invalidateAvailableAgents');
-    void mutate(agentConfigKeys.available());
+  /**
+   * The list the chat context delegates to. The local copy answers at once;
+   * after an invalidation (or with nothing local) it is fetched fresh, joining
+   * a request already in flight when there is no invalidation to honour.
+   */
+  getAvailableAgents = async (): Promise<AvailableAgentItem[]> => {
+    const { availableAgents: current, availableAgentsStale: fresh } = this.#get();
+    if (current && !fresh) return current;
+
+    if (fresh) this.#set({ availableAgentsStale: false }, false, 'getAvailableAgents');
+    try {
+      const { data } = await this.#available.fetch(EMPTY_PARAMS, { fresh });
+      return data;
+    } catch (error) {
+      if (fresh) this.#set({ availableAgentsStale: true }, false, 'getAvailableAgents/error');
+      // A failed refresh keeps the last confirmed list usable.
+      if (current) return current;
+      throw error;
+    }
   };
 
   ensureAgentDocuments = async (

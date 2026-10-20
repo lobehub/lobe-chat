@@ -28,6 +28,7 @@ export const useAgentIdentityForm = ({ agentId, onSaved }: UseAgentIdentityFormO
   const meta = useAgentStore(agentSelectors.getAgentMetaById(agentId));
   const slug = useAgentStore(agentSelectors.getAgentSlugById(agentId));
   const refreshAgentConfig = useAgentStore((s) => s.internal_refreshAgentConfig);
+  const confirmAgentSlug = useAgentStore((s) => s.internal_confirmAgentSlug);
   const updateAgentMeta = useHomeStore((s) => s.updateAgentMeta);
 
   const [name, setName] = useState(meta.name || '');
@@ -52,6 +53,8 @@ export const useAgentIdentityForm = ({ agentId, onSaved }: UseAgentIdentityFormO
           setError(t(`settingAgent.slug.error.${result.reason ?? 'invalid'}`));
           return;
         }
+        // The old slug no longer names this agent; the new one does.
+        confirmAgentSlug(agentId, trimmedSlug);
         await refreshAgentConfig(agentId);
       }
 
