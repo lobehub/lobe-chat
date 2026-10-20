@@ -82,6 +82,48 @@ const resourceSchemas: Record<string, SchemaObject> = {
     required: ['id', 'name', 'createdAt', 'updatedAt'],
     type: 'object',
   },
+  ChatGroup: {
+    additionalProperties: false,
+    properties: {
+      avatar: nullableString,
+      backgroundColor: nullableString,
+      createdAt: dateTime,
+      description: nullableString,
+      id: { type: 'string' },
+      members: {
+        items: {
+          additionalProperties: false,
+          properties: {
+            agentId: { type: 'string' },
+            enabled: nullableBoolean,
+            order: { type: ['integer', 'null'] },
+            role: {
+              enum: ['supervisor', 'participant', 'assistant', null],
+              type: ['string', 'null'],
+            },
+          },
+          required: ['agentId', 'enabled', 'order', 'role'],
+          type: 'object',
+        },
+        type: 'array',
+      },
+      pinned: nullableBoolean,
+      title: nullableString,
+      updatedAt: dateTime,
+    },
+    required: [
+      'id',
+      'title',
+      'description',
+      'avatar',
+      'backgroundColor',
+      'pinned',
+      'members',
+      'createdAt',
+      'updatedAt',
+    ],
+    type: 'object',
+  },
   ChatResponse: {
     additionalProperties: false,
     properties: {
@@ -417,6 +459,7 @@ const groupResources: Record<string, { listKey: string; schema: string }> = {
   'agent-groups': { listKey: 'agentGroups', schema: 'AgentGroup' },
   'agents': { listKey: 'agents', schema: 'Agent' },
   'api-keys': { listKey: 'apiKeys', schema: 'ApiKey' },
+  'chat-groups': { listKey: 'chatGroups', schema: 'ChatGroup' },
   'files': { listKey: 'files', schema: 'File' },
   'knowledge-bases': { listKey: 'knowledgeBases', schema: 'KnowledgeBase' },
   'messages': { listKey: 'messages', schema: 'Message' },
@@ -514,6 +557,7 @@ const CREATED_OPERATIONS = new Set([
   'POST agent-groups',
   'POST agents/{id}/duplicate',
   'POST api-keys',
+  'POST chat-groups',
   'POST eval/benchmarks',
   'POST eval/datasets',
   'POST eval/datasets/{datasetId}/test-cases',
@@ -683,6 +727,10 @@ const getSuccessSchema = (group: string, rest: string, method: string): SchemaOb
       required: [resource.listKey],
       type: 'object',
     });
+  }
+
+  if (group === 'chat-groups' && rest === '{id}/members') {
+    return successEnvelope(ref('ChatGroup'));
   }
 
   if (method === 'delete') {
