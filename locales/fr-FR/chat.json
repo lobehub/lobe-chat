@@ -963,7 +963,6 @@
   "goalProcess.metricDetail.budget.runsValue": "{{count}} exécutions",
   "goalProcess.metricDetail.budget.saveFailed": "Impossible de mettre à jour le budget",
   "goalProcess.metricDetail.budget.title": "Budget",
-  "goalProcess.metricDetail.budget.tokensValue": "{{value}} jetons",
   "goalProcess.metricDetail.budget.totalCost": "Plafond des coûts totaux",
   "goalProcess.metricDetail.budget.uncapped": "Sans limite",
   "goalProcess.metricDetail.duration.now": "maintenant",

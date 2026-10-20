@@ -2805,7 +2805,6 @@ export default {
   'goalProcess.metricDetail.budget.perTaskEmpty': 'No run has been billed yet.',
   'goalProcess.metricDetail.budget.perTaskTitle': 'Where it went',
   'goalProcess.metricDetail.budget.runsValue': '{{count}} runs',
-  'goalProcess.metricDetail.budget.tokensValue': '{{value}} tokens',
   'goalProcess.metricDetail.budget.raiseNote':
     'Raising a cap is what restarts a goal the coordinator parked on its budget \u2014 it starts moving again on its own, no Resume needed. Leave a field empty to run uncapped.',
   'goalProcess.metricDetail.budget.rounds': 'Rounds',

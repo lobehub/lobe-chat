@@ -963,7 +963,6 @@
   "goalProcess.metricDetail.budget.runsValue": "{{count}} اجرا",
   "goalProcess.metricDetail.budget.saveFailed": "به‌روزرسانی بودجه امکان‌پذیر نبود",
   "goalProcess.metricDetail.budget.title": "بودجه",
-  "goalProcess.metricDetail.budget.tokensValue": "{{value}} توکن",
   "goalProcess.metricDetail.budget.totalCost": "حد کل هزینه",
   "goalProcess.metricDetail.budget.uncapped": "بدون محدودیت",
   "goalProcess.metricDetail.duration.now": "اکنون",
