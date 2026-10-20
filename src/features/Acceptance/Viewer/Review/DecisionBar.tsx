@@ -436,19 +436,16 @@ const DecisionBar = memo<DecisionBarProps>(
                   >
                     {t('acceptance.bar.addComment')}
                   </Button>
-                  {!embedded && (
-                    <Button disabled={pending} type={'primary'} onClick={onCopyReview}>
-                      {t('acceptance.bar.copyReview')}
-                    </Button>
-                  )}
-                  {embedded && rerunAvailable && (
+                  {/* One commit action per host: standalone copies the repair
+                  prompt; embedded drafts it into the composer beside the bar. */}
+                  {(!embedded || rerunAvailable) && (
                     <Button
                       disabled={pending}
-                      loading={rerunPending}
+                      loading={embedded && rerunPending}
                       type={'primary'}
-                      onClick={onRerun}
+                      onClick={embedded ? onRerun : onCopyReview}
                     >
-                      {t('acceptance.bar.rerun')}
+                      {t(embedded ? 'acceptance.bar.rerun' : 'acceptance.bar.copyReview')}
                     </Button>
                   )}
                 </>
