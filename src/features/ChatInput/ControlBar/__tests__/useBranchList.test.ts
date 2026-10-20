@@ -138,8 +138,10 @@ describe('useBranchList', () => {
 
   it('keeps the persisted list when the device cannot answer', async () => {
     await seed([branch('main', true), branch('feat/kept')]);
-    // `undefined` is the service's mapping of a device that could not answer.
-    vi.mocked(gitService.listGitBranches).mockResolvedValue(undefined);
+    // The router rejects (BAD_GATEWAY) when the device could not answer.
+    vi.mocked(gitService.listGitBranches).mockRejectedValue(
+      new Error('The device could not list branches.'),
+    );
 
     const { result } = renderHook(() => useBranchList(DEVICE, PATH, true), { wrapper });
 

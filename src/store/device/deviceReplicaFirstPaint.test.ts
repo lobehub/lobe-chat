@@ -137,13 +137,16 @@ describe('device replicas paint from storage first', () => {
     expect(gitService.listGitRemoteBranches).toHaveBeenCalledWith({ deviceId: DEVICE, path: CWD });
   });
 
-  // Review P2: a gateway outage used to arrive as `[]` and replace the cached list.
+  // Review P2: a gateway outage used to arrive as `[]` and replace the cached list;
+  // it now rejects, and the replica keeps its copy.
   it('keeps the persisted remote branches when the device cannot answer', async () => {
     await remoteBranchStorage.set(
       { queryKey: REMOTE_BRANCH_ROW, scope },
       { data: { value: [{ name: 'origin/main' }] }, updatedAt: 1 },
     );
-    vi.mocked(gitService.listGitRemoteBranches).mockResolvedValue(undefined);
+    vi.mocked(gitService.listGitRemoteBranches).mockRejectedValue(
+      new Error('The device could not list remote branches.'),
+    );
 
     const { result } = renderHook(() => useGitRemoteBranches(CWD, true, DEVICE), { wrapper });
 
