@@ -102,6 +102,7 @@ import {
   parseStructuredToolArguments,
   StructuredOutputError,
 } from './structuredOutput';
+import { toASRSegments, toTranscriptionParams } from './transcription';
 
 export type { PollVideoStatusResult };
 export * from './createVideo';
@@ -1365,7 +1366,7 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
 
     async transcribe(payload: ASRPayload, options?: ASROptions): Promise<ASRResponse> {
       const log = debug(`${this.logPrefix}:transcribe`);
-      const { file, fileName, model, language, prompt, responseFormat, temperature } = payload;
+      const { file, fileName, model } = payload;
       const requestModel = withMappedModelId(payload, this.modelIdMappingOptions).model;
       log('transcribe called with model: %s, audio size: %d bytes', model, file?.size || 0);
 
@@ -1376,14 +1377,7 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
           file instanceof File ? file : new File([file], fileName || 'audio', { type: file.type });
 
         const transcription = await this.getTranscriptionClient().audio.transcriptions.create(
-          {
-            file: uploadFile,
-            language,
-            model: requestModel,
-            prompt,
-            response_format: responseFormat,
-            temperature,
-          },
+          toTranscriptionParams(payload, uploadFile, requestModel),
           { headers: options?.headers, signal: options?.signal },
         );
 
@@ -1397,7 +1391,7 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
           if (usage) await options.onUsage(usage);
         }
 
-        return { text };
+        return { text, ...toASRSegments(transcription) };
       } catch (error) {
         throw this.handleError(error);
       }
