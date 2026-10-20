@@ -45,4 +45,12 @@ describe('createStyleSnapshotApi', () => {
       Object.defineProperty(window, 'innerWidth', { configurable: true, value: width });
     }
   });
+
+  it('reads storage only when used, so blocked storage does not break DevDock', () => {
+    const api = createStyleSnapshotApi(() => {
+      throw new Error('storage blocked');
+    });
+
+    expect(() => api.capture('x', 'body')).toThrow('storage blocked');
+  });
 });

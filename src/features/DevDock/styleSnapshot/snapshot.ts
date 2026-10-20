@@ -1,6 +1,8 @@
 const STYLE_PROPS = [
   'display',
   'position',
+  'zIndex',
+  'visibility',
   'flexDirection',
   'flexWrap',
   'alignItems',
@@ -20,6 +22,7 @@ const STYLE_PROPS = [
   'height',
   'minWidth',
   'maxWidth',
+  'transform',
   'color',
   'backgroundColor',
   'backgroundImage',
@@ -29,21 +32,34 @@ const STYLE_PROPS = [
   'lineHeight',
   'letterSpacing',
   'textAlign',
+  'textDecorationLine',
+  'textOverflow',
   'whiteSpace',
   'borderTopWidth',
   'borderRightWidth',
   'borderBottomWidth',
   'borderLeftWidth',
   'borderTopStyle',
+  'borderRightStyle',
+  'borderBottomStyle',
+  'borderLeftStyle',
   'borderTopColor',
+  'borderRightColor',
+  'borderBottomColor',
+  'borderLeftColor',
   'borderTopLeftRadius',
   'borderTopRightRadius',
   'borderBottomRightRadius',
   'borderBottomLeftRadius',
+  'outlineStyle',
+  'outlineWidth',
+  'outlineColor',
   'boxShadow',
   'opacity',
   'cursor',
+  'pointerEvents',
   'transition',
+  'animationName',
 ] as const;
 
 type StyleProp = (typeof STYLE_PROPS)[number];
@@ -65,38 +81,65 @@ export interface StyleSnapshotDiff {
   text?: [string, string];
 }
 
+const ANIMATED = 'animated';
+const PSEUDO_ELEMENTS = ['::before', '::after'] as const;
+
 const isAnimating = (element: Element) =>
   element.getAnimations?.().some((animation) => animation.playState === 'running') ?? false;
 
+const pickStyle = (computed: CSSStyleDeclaration, animated: boolean) =>
+  Object.fromEntries(
+    STYLE_PROPS.map((prop) => [prop, animated ? ANIMATED : computed[prop]]),
+  ) as Record<StyleProp, string>;
+
 // Boxes are relative to the root so a recentered modal or a scrolled page does
-// not register as a change. Boxes under a running animation (spinners) change
-// every frame, so they are not recorded.
+// not register as a change; a scrolled container inside the root would, so
+// capture refuses it. Elements under a running animation (spinners, pulses)
+// change every frame, so neither their boxes nor their styles are recorded.
 export const captureStyles = (root: Element): StyleSnapshotEntry[] => {
   const origin = root.getBoundingClientRect();
   const entries: StyleSnapshotEntry[] = [];
 
+  const assertNotScrolled = (element: Element) => {
+    if (element.scrollTop || element.scrollLeft)
+      throw new Error(
+        `[styleSnapshot] a ${element.tagName} under the root is scrolled; scroll it back to the start before capturing`,
+      );
+  };
+
   const visit = (element: Element, key: string, insideAnimation: boolean) => {
     const computed = getComputedStyle(element);
     if (computed.display === 'none') return;
+    assertNotScrolled(element);
 
     const animated = insideAnimation || isAnimating(element);
     const rect = element.getBoundingClientRect();
     entries.push({
       box: animated
-        ? 'animated'
+        ? ANIMATED
         : [rect.x - origin.x, rect.y - origin.y, rect.width, rect.height]
             .map((n) => Math.round(n))
             .join(','),
       key,
       label: `${element.tagName}:${(element.textContent ?? '').trim().slice(0, 24)}`,
-      style: Object.fromEntries(STYLE_PROPS.map((prop) => [prop, computed[prop]])) as Record<
-        StyleProp,
-        string
-      >,
+      style: pickStyle(computed, animated),
     });
+
+    for (const pseudo of PSEUDO_ELEMENTS) {
+      const pseudoStyle = getComputedStyle(element, pseudo);
+      if (['', 'none', 'normal'].includes(pseudoStyle.content)) continue;
+      entries.push({
+        box: ANIMATED,
+        key: `${key}${pseudo}`,
+        label: `${element.tagName}${pseudo}:${pseudoStyle.content.slice(0, 24)}`,
+        style: pickStyle(pseudoStyle, animated),
+      });
+    }
+
     [...element.children].forEach((child, index) => visit(child, `${key}.${index}`, animated));
   };
 
+  assertNotScrolled(root);
   [...root.children].forEach((child, index) => visit(child, String(index), false));
   return entries;
 };

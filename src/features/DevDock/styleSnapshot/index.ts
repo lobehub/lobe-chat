@@ -35,10 +35,14 @@ const findRoot = (selector: string) => {
   return root;
 };
 
-export const createStyleSnapshotApi = (storage: Storage = localStorage): StyleSnapshotApi => ({
+// Storage is read on use: a privacy-restricted browser throws on access, which
+// at install time would take the whole DevDock chunk down with it.
+export const createStyleSnapshotApi = (
+  getStorage: () => Storage = () => localStorage,
+): StyleSnapshotApi => ({
   capture: (name, selector = 'body') => {
     const entries = captureStyles(findRoot(selector));
-    storage.setItem(
+    getStorage().setItem(
       STORAGE_PREFIX + name,
       JSON.stringify({
         selector,
@@ -49,13 +53,14 @@ export const createStyleSnapshotApi = (storage: Storage = localStorage): StyleSn
     return entries.length;
   },
   clear: () => {
+    const storage = getStorage();
     const keys = Array.from({ length: storage.length }, (_, index) => storage.key(index));
     for (const key of keys) {
       if (key?.startsWith(STORAGE_PREFIX)) storage.removeItem(key);
     }
   },
   compare: (name, selector) => {
-    const raw = storage.getItem(STORAGE_PREFIX + name);
+    const raw = getStorage().getItem(STORAGE_PREFIX + name);
     if (!raw) throw new Error(`[styleSnapshot] no snapshot named ${name}`);
     const saved = JSON.parse(raw) as StoredSnapshot;
     if (saved.viewport !== viewport())

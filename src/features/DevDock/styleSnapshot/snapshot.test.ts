@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { captureStyles, diffStyleSnapshots, packSnapshot, unpackSnapshot } from './snapshot';
 
@@ -11,6 +11,7 @@ const mount = (html: string) => {
 
 afterEach(() => {
   document.body.innerHTML = '';
+  vi.restoreAllMocks();
 });
 
 describe('captureStyles', () => {
@@ -35,11 +36,40 @@ describe('captureStyles', () => {
     const spinner = root.firstElementChild as HTMLElement;
     spinner.getAnimations = () => [{ playState: 'running' } as Animation];
 
-    expect(captureStyles(root).map(({ box, label }) => [label, box])).toEqual([
+    const entries = captureStyles(root);
+    expect(entries.map(({ box, label }) => [label, box])).toEqual([
       ['DIV:spin', 'animated'],
       ['SPAN:spin', 'animated'],
       ['P:still', '0,0,0,0'],
     ]);
+    expect(entries[0].style.opacity).toBe('animated');
+  });
+
+  it('records ::before and ::after that render content', () => {
+    const root = mount('<p>a</p>');
+    const real = window.getComputedStyle.bind(window);
+    vi.spyOn(window, 'getComputedStyle').mockImplementation((element, pseudo) => {
+      const style = real(element);
+      if (pseudo !== '::before') return style;
+      return new Proxy(style, {
+        get: (target, prop) =>
+          prop === 'content' ? '"*"' : prop === 'color' ? 'red' : Reflect.get(target, prop),
+      });
+    });
+
+    const entries = captureStyles(root);
+    expect(entries.map(({ key, label }) => [key, label])).toEqual([
+      ['0', 'P:a'],
+      ['0::before', 'P::before:"*"'],
+    ]);
+    expect(entries[1].style.color).toBe('red');
+  });
+
+  it('refuses to capture while something under the root is scrolled', () => {
+    const root = mount('<div><p>a</p></div>');
+    Object.defineProperty(root.firstElementChild, 'scrollTop', { value: 120 });
+
+    expect(() => captureStyles(root)).toThrow('scrolled');
   });
 });
 
@@ -72,6 +102,14 @@ describe('diffStyleSnapshots', () => {
 
     expect(diffStyleSnapshots(before, after)).toEqual([{ added: true, key: '1', label: 'B:b' }]);
     expect(diffStyleSnapshots(after, before)).toEqual([{ key: '1', label: 'B:b', removed: true }]);
+  });
+
+  it('tracks transforms, which do not change a square box', () => {
+    const root = mount('<div style="width: 10px; height: 10px">a</div>');
+    const before = captureStyles(root);
+    (root.firstElementChild as HTMLElement).style.transform = 'rotate(90deg)';
+
+    expect(diffStyleSnapshots(before, captureStyles(root))[0].changed).toHaveProperty('transform');
   });
 
   it('returns nothing for identical snapshots', () => {
