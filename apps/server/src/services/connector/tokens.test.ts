@@ -73,6 +73,16 @@ describe('refreshExpiredConnectorTokens', () => {
     expect(discoverAuthorizationServerMetadata).not.toHaveBeenCalled();
   });
 
+  it('does not refresh a token whose expiry is unknown', async () => {
+    const unknown = oauthConnector('unknown-expiry', NOW);
+    delete unknown.credentials.expiresAt;
+
+    const result = await refreshExpiredConnectorTokens([unknown], { update: vi.fn() } as any);
+
+    expect(result).toEqual([unknown]);
+    expect(discoverAuthorizationServerMetadata).not.toHaveBeenCalled();
+  });
+
   it('keeps the stored credentials when the authorization server hangs', async () => {
     vi.mocked(refreshConnectorToken).mockReturnValue(new Promise(() => {}));
     const expired = oauthConnector('slow', NOW - 1000);

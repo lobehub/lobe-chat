@@ -39,6 +39,9 @@ const isRefreshDue = (connector: DecryptedConnector): boolean => {
   return !creds.expiresAt || creds.expiresAt - EXPIRY_SKEW_MS <= Date.now();
 };
 
+const hasKnownExpiry = (connector: DecryptedConnector): boolean =>
+  connector.credentials?.type === 'oauth2' && !!connector.credentials.expiresAt;
+
 /**
  * Lazily refresh a connector's OAuth access token when it is expired (or about
  * to expire). Persists the rotated credentials and returns the connector with
@@ -179,8 +182,12 @@ export const refreshExpiredConnectorTokens = (
   Promise.all(
     connectors.map(async (connector) => {
       // Disabled connectors never reach the manifests, so refreshing them only
-      // delays the run and rotates credentials nobody uses.
-      if (!connector.isEnabled || !isRefreshDue(connector)) return connector;
+      // delays the run and rotates credentials nobody uses. A token without a
+      // known expiry (the server omitted `expires_in`) is not known to be
+      // stale; refreshing it here would rotate it on every chat.
+      if (!connector.isEnabled || !hasKnownExpiry(connector) || !isRefreshDue(connector)) {
+        return connector;
+      }
 
       const refresh = refreshOnce(connector, connectorModel);
       let timer: ReturnType<typeof setTimeout> | undefined;

@@ -888,7 +888,7 @@ describe('ToolExecutionService', () => {
 
       expect(result.success).toBe(false);
       expect(result.content).toContain("set up on this agent creator's side");
-      expect(result.content).toContain('do not ask them to sign in or authorize');
+      expect(result.content).toContain('do not ask them to sign in, authorize, or reconnect');
       expect(result.error).toMatchObject({ code: 'UNAUTHORIZED', kind: 'stop' });
     });
 
