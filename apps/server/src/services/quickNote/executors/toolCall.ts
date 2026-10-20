@@ -7,6 +7,7 @@ import { DocumentService } from '@/server/services/document';
 import { assertCanEditResource } from '@/server/services/resourcePermission';
 import { BuiltinToolsExecutor } from '@/server/services/toolExecution/builtin';
 
+import { assertQuickNoteCreatePermission } from './permission';
 import type { QuickNoteToolCallPayload } from './schemas';
 import {
   QUICK_NOTE_DIRECT_TOOL_CALLS,
@@ -43,12 +44,15 @@ const parseMarkdown = (payload: QuickNoteToolCallPayload) => {
  * Writes the Markdown into a new private Page through `lobe-page-agent.initPage`.
  *
  * The Page is created in the apply transaction, so a failed write leaves no empty Page behind.
+ * Requires `DOCUMENT_CREATE`, like creating a Page from the Page list.
  */
 const writeNewPage = async (
   ctx: QuickNoteExecutorContext,
   payload: QuickNoteToolCallPayload,
   markdown: string,
 ): Promise<QuickNoteExecutorResult> => {
+  await assertQuickNoteCreatePermission(ctx, 'DOCUMENT_CREATE');
+
   const page = await new DocumentService(ctx.db, ctx.userId, ctx.workspaceId).createDocument({
     content: '',
     title: payload.title ?? 'Quick Note',
