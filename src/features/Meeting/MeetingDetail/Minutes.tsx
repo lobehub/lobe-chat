@@ -142,12 +142,7 @@ const Minutes = ({ meeting, onSeek, segmentStarts, speakerNameByLabel }: Minutes
   };
 
   const regenerate = (
-    <Button
-      icon={RefreshCwIcon}
-      loading={generating}
-      size={'small'}
-      onClick={() => void generate()}
-    >
+    <Button icon={RefreshCwIcon} loading={generating} onClick={() => void generate()}>
       {minutes ? t('minutes.regenerate') : t('minutes.generate')}
     </Button>
   );
