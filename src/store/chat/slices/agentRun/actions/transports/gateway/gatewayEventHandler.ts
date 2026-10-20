@@ -38,20 +38,11 @@ import { notifyDesktopHumanApprovalRequired } from '@/store/chat/utils/desktopNo
 import { messageMapKey } from '@/store/chat/utils/messageMapKey';
 
 import { applyMessagePatch } from './messagePatch';
-
-// `agent_runtime_end` reasons that are NOT a clean completion: a mid-stream
-// cancel and a deferred-tool park. These must NOT mark the topic unread, and
-// must take the non-success branch in `onSessionComplete` so the run clears
-// back to 'active' rather than persisting as an unread completion.
-const NON_COMPLETION_RUNTIME_END_REASONS = new Set(['interrupted', 'waiting_for_async_tool']);
-
-/**
- * Whether an `agent_runtime_end` event represents a clean completion (vs. a
- * cancel / park). A clean completion is the only ending that should surface an
- * unread badge.
- */
-export const isCompletedRuntimeEnd = (reason?: string | null): boolean =>
-  !NON_COMPLETION_RUNTIME_END_REASONS.has(reason ?? '');
+import {
+  findTerminalAssistantError,
+  isCompletedRuntimeEnd,
+  resolveRuntimeEndStatus,
+} from './runtimeEndReason';
 
 // Lazy-loaded to break the import cycle:
 //   gateway.ts → gatewayEventHandler.ts → executors/index.ts (which pulls in
@@ -1370,15 +1361,24 @@ export const createGatewayEventHandler = (
           //   • completed → completeRun completes the op, marks the topic unread,
           //     drains the input queue, then afterRunComplete fires the desktop
           //     notification (skipped if a queued follow-up was scheduled).
+          //   • failed → completeRun lands the op in `failed`; afterRunComplete
+          //     fires the failure notification.
           //   • cancelled → completeRun only completes the op (no unread badge,
           //     no queue drain, no notification) — same as the old inline path.
           if (runtimeType === 'gateway' && runLifecycle) {
-            const status = isCompletedRuntimeEnd(data?.reason) ? 'completed' : 'cancelled';
+            const status = resolveRuntimeEndStatus(data?.reason);
             const { requeued } = await runLifecycle.completeRun({
               ...lifecycleEventBase,
               status,
             });
-            if (!requeued && status === 'completed') {
+            if (status === 'failed') {
+              // The failed row's content is the loading placeholder: announce the error.
+              await runLifecycle.afterRunComplete({
+                ...lifecycleEventBase,
+                notification: { error: findTerminalAssistantError(terminalMessages) },
+                status,
+              });
+            } else if (!requeued && status === 'completed') {
               // Notification body, resolved most-authoritative first:
               //
               // 1. the terminal snapshot's final assistant text — server-

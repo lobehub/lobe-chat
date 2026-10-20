@@ -85,7 +85,7 @@ import { buildRunLifecycle } from '../../lifecycle/buildRunLifecycle';
 import { scheduleQueuedFollowUp } from '../../lifecycle/queuedFollowUp';
 import type { RunScope } from '../../lifecycle/types';
 import { createGatewayEventBuffer } from './gatewayEventBuffer';
-import { createGatewayEventHandler, isCompletedRuntimeEnd } from './gatewayEventHandler';
+import { createGatewayEventHandler } from './gatewayEventHandler';
 import { createGatewayEventRouter } from './gatewayEventRouter';
 import { createGatewayMemberStreamHandler, mergeGroupSnapshot } from './gatewayMemberStreamHandler';
 import {
@@ -95,6 +95,7 @@ import {
   markGatewayMuxUnavailable,
 } from './muxRegistry';
 import { flagQueuedMessagesOnRunStart, syncQueuedMessagesFlag } from './queuedMessagesFlag';
+import { isCompletedRuntimeEnd } from './runtimeEndReason';
 
 const getGatewayServerConfig = () =>
   (typeof window !== 'undefined'
@@ -741,10 +742,9 @@ export class GatewayActionImpl {
       if (isOwnOp && isSessionTerminalEvent(event)) {
         receivedTerminalEvent = true;
       }
-      // Only a clean completion counts as success — a cancel ('interrupted') or
-      // deferred-tool park ('waiting_for_async_tool') must take the non-success
-      // branch so onSessionComplete clears the run back to 'active' instead of
-      // leaving the topic persisted as an unread completion.
+      // Only a clean completion counts as success — a cancel, park or failure
+      // (see `isCompletedRuntimeEnd`) takes the non-success branch so the topic
+      // settles back to 'active' instead of persisting as an unread completion.
       if (
         isOwnOp &&
         event.type === 'agent_runtime_end' &&
