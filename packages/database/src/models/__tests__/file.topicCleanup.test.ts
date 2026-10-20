@@ -4,6 +4,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { getTestDB } from '../../core/getTestDB';
 import {
   acceptances,
+  agentDocuments,
   agents,
   agentsFiles,
   documents,
@@ -214,6 +215,55 @@ describe('findDeletableFilesByTopicId', () => {
     const result = await fileModel.findDeletableFilesByTopicId(topicId);
 
     expect(result).toEqual(['tf-mirror']);
+  });
+
+  it("preserves an agent's imported file document, live or trashed, but not an unbound mirror", async () => {
+    const ids = ['tf-agent-doc', 'tf-agent-doc-trashed', 'tf-unbound-mirror'];
+    await serverDB.insert(files).values(
+      ids.map((id) => ({
+        fileType: 'application/pdf',
+        id,
+        name: `${id}.pdf`,
+        size: 1,
+        url: `k-${id}`,
+        userId,
+      })),
+    );
+    await serverDB
+      .insert(messagesFiles)
+      .values(ids.map((fileId) => ({ fileId, messageId: 'tf-msg-1', userId })));
+    // Every one of these is `sourceType='file'`, like `AgentDocumentsService.importFile` writes.
+    const docs = await serverDB
+      .insert(documents)
+      .values(
+        ids.map((fileId) => ({
+          content: '',
+          fileId,
+          fileType: 'application/pdf',
+          source: `k-${fileId}`,
+          sourceType: 'file' as const,
+          totalCharCount: 0,
+          totalLineCount: 0,
+          userId,
+        })),
+      )
+      .returning({ fileId: documents.fileId, id: documents.id });
+    const docOf = (fileId: string) => docs.find((doc) => doc.fileId === fileId)!.id;
+    await serverDB.insert(agents).values({ id: 'tf-vfs-agent', userId });
+    await serverDB.insert(agentDocuments).values([
+      { agentId: 'tf-vfs-agent', documentId: docOf('tf-agent-doc'), filename: 'a.pdf', userId },
+      {
+        agentId: 'tf-vfs-agent',
+        deletedAt: new Date(),
+        documentId: docOf('tf-agent-doc-trashed'),
+        filename: 'b.pdf',
+        userId,
+      },
+    ]);
+
+    const result = await fileModel.findDeletableFilesByTopicId(topicId);
+
+    expect(result).toEqual(['tf-unbound-mirror']);
   });
 
   it("preserves TTS audio of a message outside the topic, not of the topic's own", async () => {
