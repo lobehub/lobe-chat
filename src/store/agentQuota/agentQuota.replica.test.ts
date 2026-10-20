@@ -417,6 +417,28 @@ describe('agent quota replicas', () => {
           ?.map((b) => b.id),
       ).toEqual(['b1', 'b9']);
     });
+
+    it('loads the bindings before a write made while they were still unloaded', async () => {
+      // Persisted accounts painted, but this agent's bindings never loaded.
+      expect(
+        agentQuotaSelectors.bindings('agent-1')(useAgentQuotaStore.getState()),
+      ).toBeUndefined();
+      vi.spyOn(agentQuotaService, 'listBindings')
+        .mockResolvedValueOnce([binding('b1', 'a1', 'pinned')])
+        // The follow-up refresh fails: the confirmed row must still land.
+        .mockRejectedValue(new Error('offline'));
+      vi.spyOn(agentQuotaService, 'bindAccount').mockResolvedValue(
+        binding('b9', 'a9', 'pool') as never,
+      );
+
+      await act(() => useAgentQuotaStore.getState().bindQuotaAccount('agent-1', 'a9', 'pool'));
+
+      expect(
+        agentQuotaSelectors
+          .bindings('agent-1')(useAgentQuotaStore.getState())
+          ?.map((b) => `${b.accountId}:${b.role}`),
+      ).toEqual(['a1:pinned', 'a9:pool']);
+    });
   });
 
   describe('calendar history', () => {

@@ -239,6 +239,8 @@ export class ActionImpl {
 
   /** Pin one account for an agent (Manual mode); any previous pin drops back to the pool. */
   switchQuotaAccount = async (agentId: string, accountId: string): Promise<void> => {
+    const loading = this.#ensureBindings(agentId);
+    if (loading) await loading;
     await this.#bindings.optimistic(
       agentId,
       (bindings) =>
@@ -260,6 +262,8 @@ export class ActionImpl {
     accountId: string,
     role: 'pinned' | 'pool' | 'disabled',
   ): Promise<void> => {
+    const loading = this.#ensureBindings(agentId);
+    if (loading) await loading;
     await this.#bindings.optimistic(
       agentId,
       (bindings) =>
@@ -277,6 +281,8 @@ export class ActionImpl {
 
   /** Drop an account from an agent's pool; the row leaves the replica and its stored copy. */
   unbindQuotaAccount = async (agentId: string, bindingId: string): Promise<void> => {
+    const loading = this.#ensureBindings(agentId);
+    if (loading) await loading;
     await this.#bindings.optimistic(
       agentId,
       (bindings) => bindings.filter((binding) => binding.id !== bindingId),
@@ -299,6 +305,18 @@ export class ActionImpl {
   };
 
   // ---- internals ----
+
+  /**
+   * An optimistic write (and its confirmation) only lands on a loaded view, so
+   * load the agent's bindings first: a write made while the persisted accounts
+   * already painted but the bindings read is still out would otherwise reach
+   * the server and never reach the replica. A loaded view returns nothing, so
+   * the optimistic update still paints in the same tick as the click.
+   */
+  #ensureBindings = (agentId: string): Promise<unknown> | undefined =>
+    this.#get().quotaBindingsMap[agentId] === undefined
+      ? this.readQuotaBindings(agentId)
+      : undefined;
 
   #markApplied = (resource: QuotaResourceName, { key, scope }: SettleContext) => {
     const id = quotaConfirmedKey(scope, resource, key);

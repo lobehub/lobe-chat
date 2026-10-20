@@ -140,7 +140,11 @@ const QuotaAccountManager = memo<{ agentId: string }>(({ agentId }) => {
   const accountsConfirmed = useAgentQuotaStore(agentQuotaSelectors.isAccountsConfirmed(scope));
   // The replica paints the last-known pool on open; the server confirms behind it.
   const accounts = useAgentQuotaStore(agentQuotaSelectors.accounts) ?? EMPTY_ACCOUNTS;
-  const bindings = useAgentQuotaStore(agentQuotaSelectors.bindings(agentId)) ?? EMPTY_BINDINGS;
+  const loadedBindings = useAgentQuotaStore(agentQuotaSelectors.bindings(agentId));
+  const bindings = loadedBindings ?? EMPTY_BINDINGS;
+  // Until this agent's bindings are on screen, every row would read as "off":
+  // keep the per-account controls disabled instead of acting on that guess.
+  const bindingsLoaded = loadedBindings !== undefined;
   const readingsMap = useAgentQuotaStore((s) => s.quotaReadingsMap);
   const weeklyById = useMemo(
     () =>
@@ -361,7 +365,7 @@ const QuotaAccountManager = memo<{ agentId: string }>(({ agentId }) => {
                       <span className={styles.interactive} onClick={preventRadioSelection}>
                         <Switch
                           checked={rotate}
-                          disabled={busy}
+                          disabled={busy || !bindingsLoaded}
                           size={'small'}
                           onChange={(v) => void setRotation(a.id, v)}
                         />
