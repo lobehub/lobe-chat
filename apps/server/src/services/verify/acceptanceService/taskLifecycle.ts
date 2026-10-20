@@ -44,6 +44,11 @@ export const completeTaskSubject = async (
   }
 };
 
+/** The run a deferred completion waits for — see {@link completeTaskSubject}. */
+const pendingCompletionOperation = (task: { context?: unknown }) =>
+  (task.context as { completion?: { requestedByOperationId?: string | null } } | null)?.completion
+    ?.requestedByOperationId ?? undefined;
+
 /**
  * The task whose status follows its acceptance's lifecycle: delivered →
  * completed, rejected → reopened. Goal graph tasks are driven by their
@@ -91,14 +96,20 @@ export const completeTaskForDelivery = async (
     // running operation that could not be interrupted). Only a task that really
     // reads completed counts — anything else lets the caller fall back.
     const written = await new TaskModel(deps.db, deps.userId, deps.workspaceId).findById(task.id);
-    if (written?.status !== 'completed') return 'skipped';
+    // A completion deferred to the caller's run is re-checked like a written
+    // one: a reject that read the task before the deferral had nothing to withdraw.
+    const deferred =
+      written?.status === 'running' &&
+      !!callerOperationId &&
+      pendingCompletionOperation(written) === callerOperationId;
+    if (written?.status !== 'completed' && !deferred) return 'skipped';
 
     const after = await deps.acceptanceModel.findPolicyById(acceptanceId);
     if (after?.status === 'rejected') {
       await reopenRejectedTaskSubject(deps, task.id);
       return 'rejected';
     }
-    return 'completed';
+    return deferred ? 'skipped' : 'completed';
   } catch (error) {
     log('completeTaskForDelivery failed (non-fatal): %O', error);
     return 'skipped';
@@ -123,8 +134,7 @@ export const reopenRejectedTaskSubject = async (
     const taskModel = new TaskModel(deps.db, deps.userId, deps.workspaceId);
 
     if (task?.status === 'running') {
-      const pending = (task.context as { completion?: { requestedByOperationId?: string } } | null)
-        ?.completion?.requestedByOperationId;
+      const pending = pendingCompletionOperation(task);
       if (!pending) return;
 
       await taskModel.updateContext(task.id, { completion: { requestedByOperationId: null } });

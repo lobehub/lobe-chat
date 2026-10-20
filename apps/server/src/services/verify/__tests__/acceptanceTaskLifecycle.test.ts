@@ -260,6 +260,32 @@ describe('AcceptanceService task lifecycle', () => {
       );
     });
 
+    it('withdraws a deferred completion when the reject lands while it is being deferred', async () => {
+      // The reject read the task before the marker existed, so it had nothing to withdraw.
+      const deferredTask = {
+        automationMode: null,
+        context: { completion: { requestedByOperationId: 'op-self' } },
+        id: 'task_1',
+        status: 'running',
+      };
+      mocks.taskResolve
+        .mockResolvedValueOnce({ automationMode: null, id: 'task_1', status: 'running' })
+        .mockResolvedValueOnce({ automationMode: null, id: 'task_1', status: 'running' })
+        .mockResolvedValue(deferredTask);
+      mocks.taskServiceUpdateStatus.mockImplementationOnce(async () => {
+        stored.status = 'rejected';
+        return { completionDeferred: true };
+      });
+      mocks.taskFindById.mockResolvedValueOnce(deferredTask);
+
+      await expect(service().completeTaskForDelivery('acc-1', 'task_1', 'op-self')).resolves.toBe(
+        'rejected',
+      );
+      expect(mocks.taskUpdateContext).toHaveBeenCalledWith('task_1', {
+        completion: { requestedByOperationId: null },
+      });
+    });
+
     it('reports the completion as skipped when the task could not be completed', async () => {
       // completeTaskSubject swallows the failure; the row still reads running.
       mocks.taskServiceUpdateStatus.mockRejectedValueOnce(new Error('interrupt failed'));
