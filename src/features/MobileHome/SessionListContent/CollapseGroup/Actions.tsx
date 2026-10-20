@@ -34,7 +34,7 @@ const Actions = memo<ActionsProps>(
     const [isGroupModalOpen, setIsGroupModalOpen] = useState(false);
     const [isCreatingGroup, setIsCreatingGroup] = useState(false);
 
-    const { create, loading, allowed: canCreate } = useCreateAgent();
+    const { create, loading, allowed: canCreate, reason: createReason } = useCreateAgent();
     const { allowed: canEdit } = usePermission('edit_own_content');
     const [removeSessionGroup, refreshAgentList] = useHomeStore((s) => [
       s.removeGroup,
@@ -58,12 +58,13 @@ const Actions = memo<ActionsProps>(
       disabled: !canCreate || loading,
       key: 'newAgent',
       label: t('newAgent'),
+      title: createReason,
       onClick: async ({ domEvent }: MenuInfo) => {
         domEvent.stopPropagation();
         const creatingToast = toast.loading(t('sessionGroup.creatingAgent'));
         try {
-          await create({ groupId: id, pinned: isPinned, visibility });
-          toast.success(t('sessionGroup.createAgentSuccess'));
+          const result = await create({ groupId: id, pinned: isPinned, visibility });
+          if (result && !result.hasWarnings) toast.success(t('sessionGroup.createAgentSuccess'));
         } finally {
           creatingToast.close();
         }

@@ -1,4 +1,4 @@
-import { Button, Flexbox } from '@lobehub/ui';
+import { Button, Flexbox, Tooltip } from '@lobehub/ui';
 import { Plus } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
@@ -12,19 +12,23 @@ const AddButton = ({
   visibility?: 'private' | 'public';
 }) => {
   const { t } = useTranslation('chat');
-  const { create, loading } = useCreateAgent();
+  const { allowed, create, loading, reason } = useCreateAgent();
   return (
     <Flexbox flex={1} padding={16}>
-      <Button
-        block
-        icon={Plus}
-        loading={loading}
-        style={{ marginTop: 8 }}
-        type={'fill'}
-        onClick={() => create({ groupId, visibility })}
-      >
-        {t('newAgent')}
-      </Button>
+      <Tooltip title={reason}>
+        <Button
+          block
+          aria-description={reason}
+          disabled={!allowed || loading}
+          icon={Plus}
+          loading={loading}
+          style={{ marginTop: 8 }}
+          type={'fill'}
+          onClick={() => create({ groupId, visibility })}
+        >
+          {t('newAgent')}
+        </Button>
+      </Tooltip>
     </Flexbox>
   );
 };
