@@ -73,7 +73,7 @@ export const createRouter = router({
         resolvedTopics.flatMap((item) => item.messages ?? []),
       );
 
-      const data = await ctx.topicModel.batchCreate(resolvedTopics as any);
+      const data = await ctx.topicRepo.batchCreate(resolvedTopics as any);
 
       return { added: data.length, ids: [], skips: [], success: true };
     }),
@@ -85,7 +85,7 @@ export const createRouter = router({
       // Duplicating a visitor topic would copy its content into creator scope
       // (see `assertCreatorTopicTargets` on `batchMoveTopics` above).
       await assertCreatorTopicTargets(guardCtx(ctx), [input.id]);
-      const data = await ctx.topicModel.duplicate(input.id, input.newTitle);
+      const data = await ctx.topicRepo.duplicate(input.id, input.newTitle);
 
       return data.topic.id;
     }),
@@ -109,7 +109,7 @@ export const createRouter = router({
     .mutation(async ({ input, ctx }) => {
       await assertCanUseTopicTargets(guardCtx(ctx), [input.id]);
       await assertCreatorTopicTargets(guardCtx(ctx), [input.id]);
-      const data = await ctx.topicModel.duplicate(input.id, input.newTitle, {
+      const data = await ctx.topicRepo.duplicate(input.id, input.newTitle, {
         upToMessageId: input.messageId,
       });
 
@@ -200,7 +200,7 @@ export const createRouter = router({
             })
         : undefined;
 
-      const data = await ctx.topicModel.create({
+      const data = await ctx.topicRepo.create({
         ...rest,
         agentId: resolved.agentId,
         sessionId: resolved.sessionId,

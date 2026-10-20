@@ -302,6 +302,8 @@
   "pageEditor.menu.importDocument": "Импортирай страница",
   "pageEditor.menu.move": "Премести",
   "pageEditor.menu.pin": "Закачи страница",
+  "pageEditor.noAccess.description": "Тази страница е частна или е в библиотека, до която нямате достъп. Помолете нейния създател или мениджър на библиотеката за достъп.",
+  "pageEditor.noAccess.title": "Нямате достъп до тази страница",
   "pageEditor.saveFailed": "Неуспешно запазване на страницата, моля опитайте отново по-късно",
   "pageEditor.saving": "Запазване...",
   "pageEditor.titlePlaceholder": "Без заглавие",

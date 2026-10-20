@@ -3,6 +3,7 @@ import { buildInvokeAgentResultAttributes } from '@lobechat/observability-otel/m
 import debug from 'debug';
 
 import { logToolCallPc } from '../../formalObservation';
+import { steerQueueScopeOf } from '../../steerQueueScope';
 import type { AgentRuntimeServiceContext } from '../types';
 import type { StepRunResult } from './runStep';
 
@@ -12,15 +13,17 @@ const log = debug('lobe-server:agent-runtime-service');
 export type StepCompletionDeps = Pick<
   AgentRuntimeServiceContext,
   | 'completionLifecycle'
+  | 'delegate'
   | 'determineCompletionReason'
   | 'recordInterventionLifecycleCompletion'
   | 'traceRecorder'
   | 'tryResumeParentFromAsyncTool'
+  | 'userId'
 >;
 /**
  * The run stops here: emit the completion signals, dispatch the completion
  * hooks, record a parked intervention, re-check a just-parked async-tool
- * barrier and finalize the trace.
+ * barrier, finalize the trace and start the follow-ups queued behind it.
  */
 export async function finishOperation(
   deps: StepCompletionDeps,
@@ -105,4 +108,24 @@ export async function finishOperation(
       state: stepResult.newState,
     });
   logToolCallPc(operationId, stepIndex, 'post.trace_finalized', () => ({ reason }));
+
+  // Follow-ups the user queued behind this run start as the next turn right
+  // here, instead of after the client hears the run ended and sends them
+  // itself. Only after the hooks above: they persist the terminal row and
+  // release the topic, which the next turn has to claim. A parked run keeps
+  // its queue until it really ends; a failed or stopped one leaves it to the
+  // user.
+  const steerScope = steerQueueScopeOf(stepResult.newState, deps.userId);
+  if (stepResult.newState.status === 'done' && steerScope && deps.delegate.startQueuedFollowUp) {
+    try {
+      await deps.delegate.startQueuedFollowUp({ operationId, scope: steerScope });
+    } catch (error) {
+      log(
+        '[%s][%d] Starting queued follow-ups failed (non-fatal): %O',
+        operationId,
+        stepIndex,
+        error,
+      );
+    }
+  }
 }

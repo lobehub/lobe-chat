@@ -1,6 +1,10 @@
 import { randomUUID } from 'node:crypto';
 
-import { CUSTOM_DOCUMENT_FILE_TYPE, CUSTOM_FOLDER_FILE_TYPE } from '@lobechat/const';
+import {
+  CUSTOM_DOCUMENT_FILE_TYPE,
+  CUSTOM_FOLDER_FILE_TYPE,
+  HTML_DOCUMENT_FILE_TYPE,
+} from '@lobechat/const';
 import { type LobeChatDatabase } from '@lobechat/database';
 import { type DocumentItem } from '@lobechat/database/schemas';
 import { documents, files } from '@lobechat/database/schemas';
@@ -745,6 +749,14 @@ export class DocumentService {
         }
       }
 
+      // An HTML document's body is its content alone: rich-text editorData sent
+      // with it (or with the write that makes it HTML) is never persisted, and
+      // any the page carried before is cleared. Left behind, that pre-HTML JSON
+      // is what the editor would load and save if the page turned rich-text again.
+      const isHtmlDocument =
+        (params.fileType ?? currentDocument.fileType) === HTML_DOCUMENT_FILE_TYPE;
+      const editorDataParam = isHtmlDocument ? undefined : params.editorData;
+
       // Accepted-view projections used only for historyAppended comparison and
       // for the "before" snapshot written into history. The persisted editorData
       // keeps any pending diff nodes — they're only normalized when the user
@@ -753,9 +765,7 @@ export class DocumentService {
         (currentDocument.editorData ?? {}) as Record<string, any>,
       );
       const nextEditorDataAccepted =
-        params.editorData === undefined
-          ? undefined
-          : normalizeEditorDataDiffNodes(params.editorData);
+        editorDataParam === undefined ? undefined : normalizeEditorDataDiffNodes(editorDataParam);
       const historyAppended =
         nextEditorDataAccepted !== undefined &&
         !isEqual(nextEditorDataAccepted, currentEditorDataAccepted);
@@ -771,8 +781,13 @@ export class DocumentService {
       // (title/emoji) pass through, since the autosave always re-sends the
       // unchanged body. The lease auto-expires in Redis; when Redis is down this
       // returns null (fail-open) so the lock can't block saving.
+      // Switching a page into or out of HTML replaces the body other members see
+      // (and clears its editorData), so it is a body change even with no content.
+      const htmlTypeChanged =
+        isHtmlDocument !== (currentDocument.fileType === HTML_DOCUMENT_FILE_TYPE);
       const contentChanged =
         historyAppended ||
+        htmlTypeChanged ||
         (params.content !== undefined && params.content !== currentDocument.content);
       if (contentChanged && this.isCollaborativeDocument(currentDocument)) {
         const canWrite = await this.editLockService.canWrite('document', id, params.lockOwnerId);
@@ -793,8 +808,10 @@ export class DocumentService {
         updates.totalLineCount = params.content.split('\n').length;
       }
 
-      if (params.editorData !== undefined) {
-        updates.editorData = params.editorData;
+      if (editorDataParam !== undefined) {
+        updates.editorData = editorDataParam;
+      } else if (isHtmlDocument && currentDocument.editorData != null) {
+        updates.editorData = null;
       }
 
       if (params.fileType !== undefined) {

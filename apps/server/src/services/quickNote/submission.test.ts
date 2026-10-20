@@ -5,7 +5,7 @@ import { forceQuickNoteSubmission, QuickNoteSubmissionError } from './submission
 
 const valid = { contextQueries: [], relatedResources: [], summary: 'Useful', tags: ['speech'] };
 
-const run = (generateObject: ReturnType<typeof vi.fn>) =>
+const run = (generateObject: (...args: any[]) => Promise<any>) =>
   forceQuickNoteSubmission({
     generator: { generateObject },
     instructions: 'INSTRUCTIONS',

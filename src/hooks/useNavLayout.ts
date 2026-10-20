@@ -11,6 +11,8 @@ import {
   serverConfigSelectors,
   useServerConfigStore,
 } from '@/store/serverConfig';
+import { useUserStore } from '@/store/user';
+import { labPreferSelectors } from '@/store/user/selectors';
 
 export interface NavItem {
   hidden?: boolean;
@@ -43,6 +45,7 @@ export const useNavLayout = (): NavLayout => {
   const { showMarket, hideGitHub, enableQuickNote } = useServerConfigStore(featureFlagsSelectors);
   const activeWorkspaceSlug = useActiveWorkspaceSlug();
   const enableDashboard = useServerConfigStore(serverConfigSelectors.enableDashboard);
+  const enableGoals = useUserStore(labPreferSelectors.enableGoals);
 
   const topNavItems = useMemo(
     () =>
@@ -64,6 +67,14 @@ export const useNavLayout = (): NavLayout => {
           key: SidebarTabKey.Tasks,
           title: t('tab.tasks'),
           url: '/tasks',
+        },
+        {
+          // Behind the same lab toggle as the agent-scoped goal pages.
+          hidden: !enableGoals,
+          icon: getRouteById('goals')!.icon,
+          key: SidebarTabKey.Goals,
+          title: t('tab.goals'),
+          url: '/goals',
         },
         {
           // Personal boards only for now — workspace-level boards have no UI
@@ -88,7 +99,7 @@ export const useNavLayout = (): NavLayout => {
           url: '/note',
         },
       ] as NavItem[],
-    [t, toggleCommandMenu, activeWorkspaceSlug, enableDashboard, enableQuickNote],
+    [t, toggleCommandMenu, activeWorkspaceSlug, enableDashboard, enableGoals, enableQuickNote],
   );
 
   const bottomMenuItems = useMemo(

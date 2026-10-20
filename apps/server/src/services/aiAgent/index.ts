@@ -30,6 +30,7 @@ import { TaskModel } from '@/database/models/task';
 import { ThreadModel } from '@/database/models/thread';
 import { TopicModel } from '@/database/models/topic';
 import { UserModel } from '@/database/models/user';
+import { TopicRepository } from '@/database/repositories/topic';
 import { createStreamEventManager } from '@/server/modules/AgentRuntime/factory';
 import { AgentService } from '@/server/services/agent';
 import { AgentDocumentsService } from '@/server/services/agentDocuments';
@@ -48,6 +49,7 @@ import type {
 } from '@/server/services/agentRuntime/types';
 import { ComposioService } from '@/server/services/composio';
 import { MarketService } from '@/server/services/market';
+import type { SteerQueueScope } from '@/server/services/redis/steerQueue';
 
 import { createGraphAwareAgentFactory } from './helpers/agentFactory';
 import { InterventionController } from './intervention/InterventionController';
@@ -64,6 +66,9 @@ import { scheduleAgentRun } from './pipeline/scheduleAgentRun';
 import { runWithTopicStart, type TopicStartDeps } from './pipeline/topicStart';
 import type { RunFacts } from './runFacts';
 import { resolveAgentSenderFromOperation } from './sourceAttribution';
+import { startQueuedFollowUp } from './steerQueue';
+import { injectQueuedFollowUp } from './steerQueue/inject';
+import { findOwnLiveRuns } from './steerQueue/liveRuns';
 import type { SubAgentLlmRelayRequest } from './subAgentLlmRelay';
 import { closeSubAgentLlmRelay, openSubAgentLlmRelay } from './subAgentLlmRelay';
 import type { SubAgentRunDeps } from './subAgentRuns';
@@ -161,6 +166,8 @@ export class AiAgentService {
         execSubAgent: this.execSubAgent,
         execVirtualSubAgent: this.execVirtualSubAgent,
         execGroupMember: this.execGroupMember,
+        injectQueuedFollowUp: this.injectQueuedFollowUp,
+        startQueuedFollowUp: this.startQueuedFollowUp,
         verifyShareRunStillAuthorized: this.verifyShareRunStillAuthorized,
       },
       workspaceId: wsId,
@@ -231,6 +238,8 @@ export class AiAgentService {
     return {
       agentOperationModel: this.agentOperationModel,
       agentRuntimeService: this.agentRuntimeService,
+      findOwnLiveRuns: (scope) =>
+        findOwnLiveRuns({ db: this.db, workspaceId: this.workspaceId }, scope),
       interruptTask: (p) => this.interruptTask(p),
       topicModel: this.topicModel,
       userId: this.userId,
@@ -540,7 +549,10 @@ export class AiAgentService {
     // - no topicId is provided (default behavior for group chat)
     if (newTopic || !inputTopicId) {
       topicId = await createGroupAgentTopic(
-        { ...this.precreatedTopicDeps(), topicModel: this.topicModel },
+        {
+          ...this.precreatedTopicDeps(),
+          topicRepo: new TopicRepository(this.db, this.userId, this.workspaceId),
+        },
         { agentId, groupId, message, newTopic },
       );
       isCreateNewTopic = true;
@@ -618,6 +630,36 @@ export class AiAgentService {
     agentId: string;
     shareId: string;
   }): Promise<boolean> => AgentShareModel.isRunStillAuthorized(this.db, params);
+
+  /**
+   * `AgentRuntimeDelegate.startQueuedFollowUp` implementation — see
+   * `startQueuedFollowUp` in `./steerQueue`.
+   *
+   * Arrow field (not a method) so it stays bound when handed to
+   * AgentRuntimeService.
+   */
+  /**
+   * `AgentRuntimeDelegate.injectQueuedFollowUp` implementation — see
+   * `injectQueuedFollowUp` in `./steerQueue/inject`.
+   *
+   * Arrow field (not a method) so it stays bound when handed to
+   * AgentRuntimeService.
+   */
+  injectQueuedFollowUp = async (params: {
+    operationId: string;
+    scope: SteerQueueScope;
+    state: AgentState;
+  }) =>
+    injectQueuedFollowUp(
+      { db: this.db, userId: this.userId, workspaceId: this.workspaceId },
+      params,
+    );
+
+  startQueuedFollowUp = async (params: { operationId: string; scope: SteerQueueScope }) =>
+    startQueuedFollowUp(
+      { aiAgentService: this, db: this.db, userId: this.userId, workspaceId: this.workspaceId },
+      params,
+    );
 
   /**
    * Execute an agent in an isolated Thread context.

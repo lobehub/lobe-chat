@@ -1,5 +1,5 @@
 import type { VerifyCheckDefinition } from './acceptanceFlow';
-import type { GoalReleaseGateDossier } from './goal';
+import type { GoalReleaseGateDossier } from './goalRollout';
 /**
  * Verify (delivery checker) domain types — the shared vocabulary, frozen-item
  * shape, Toulmin narrative, and rubric run-policy config. Kept here (not in the
@@ -505,7 +505,7 @@ export interface VerifyCodingScope {
   branch?: string;
   /** Git commit (short sha) of the code under test. */
   commit?: string;
-  /** Entry point / command exercised, e.g. "lh verify ingest-report". */
+  /** Entry point / command exercised, e.g. "lh acceptance run ingest". */
   entry?: string;
   /** Associated pull request, when the verification run has one. */
   pullRequest?: VerifyCodingPullRequest;

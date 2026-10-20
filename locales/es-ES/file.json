@@ -302,6 +302,8 @@
   "pageEditor.menu.importDocument": "Importar página",
   "pageEditor.menu.move": "Mover",
   "pageEditor.menu.pin": "Fijar página",
+  "pageEditor.noAccess.description": "Esta página es privada o está en una biblioteca a la que no puedes acceder. Pide acceso a su creador o a un administrador de la biblioteca.",
+  "pageEditor.noAccess.title": "No tienes acceso a esta página",
   "pageEditor.saveFailed": "No se pudo guardar la página, por favor inténtelo de nuevo más tarde",
   "pageEditor.saving": "Guardando...",
   "pageEditor.titlePlaceholder": "Sin título",

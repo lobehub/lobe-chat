@@ -4,6 +4,7 @@
 import { act, render, screen, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
+import AsyncError from '@/components/AsyncError';
 import { useDocumentStore } from '@/store/document';
 import { editorSelectors } from '@/store/document/slices/editor';
 
@@ -121,7 +122,7 @@ describe('DocumentIdMode', () => {
     render(<DocumentIdMode documentId="doc-1" editor={editor} onInit={onInit} />);
 
     await waitFor(() => {
-      expect(onEditorInit).toHaveBeenCalledWith(editor);
+      expect(onEditorInit).toHaveBeenCalledWith(editor, 'doc-1');
       expect(onInit).toHaveBeenCalledWith(editor);
     });
   });
@@ -239,6 +240,27 @@ describe('DocumentIdMode', () => {
 
     expect(screen.getByTestId('async-error')).toBeInTheDocument();
     expect(screen.queryByTestId('internal-editor')).not.toBeInTheDocument();
+  });
+
+  it('should explain missing access instead of a load failure on FORBIDDEN', () => {
+    const editor = {
+      getLexicalEditor: vi.fn(() => ({})),
+    } as any;
+    useFetchDocument.mockReturnValueOnce({
+      ...createFetchDocumentResult(),
+      error: Object.assign(new Error('forbidden'), { data: { code: 'FORBIDDEN' } }),
+    });
+    vi.mocked(editorSelectors.isDocumentLoading).mockReturnValueOnce(() => true);
+
+    render(<DocumentIdMode documentId="doc-1" editor={editor} />);
+
+    expect(screen.queryByTestId('not-found')).not.toBeInTheDocument();
+    expect(vi.mocked(AsyncError).mock.lastCall?.[0]).toEqual(
+      expect.objectContaining({
+        description: 'pageEditor.noAccess.description',
+        title: 'pageEditor.noAccess.title',
+      }),
+    );
   });
 
   it('should render not found when the document fetch resolves to null', () => {

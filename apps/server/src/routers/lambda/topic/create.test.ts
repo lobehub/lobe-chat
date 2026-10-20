@@ -8,8 +8,8 @@ vi.mock('@/database/core/db-adaptor', () => ({
 }));
 
 const mockTopicBatchCreate = vi.fn();
-vi.mock('@/database/models/topic', () => ({
-  TopicModel: vi.fn(function () {
+vi.mock('@/database/repositories/topic', () => ({
+  TopicRepository: vi.fn(function () {
     return { batchCreate: mockTopicBatchCreate };
   }),
 }));

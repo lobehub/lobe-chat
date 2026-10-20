@@ -7,8 +7,8 @@ import { isMessageListKey } from '@/libs/swr/keys';
 import {
   invalidateMessageListClientState,
   isMessageListServerVerified,
-  messageListKey,
 } from '@/services/message/cache';
+import { revalidateConversationMessages } from '@/services/message/replica';
 import { operationSelectors } from '@/store/chat/slices/operation/selectors';
 import { type ChatStore } from '@/store/chat/store';
 import {
@@ -59,7 +59,8 @@ export class MessageQueryActionImpl {
     // will be shared by the coordinator when the hook mounts.
     if (isMessageListServerVerified({ agentId, groupId, threadId, topicId })) return;
 
-    await mutate(messageListKey({ agentId, groupId, threadId, topicId }));
+    const transcript = getMessageTranscript(this.#set, this.#get);
+    await transcript.slice.revalidate(transcript.keyOf({ agentId, groupId, threadId, topicId }));
   };
 
   refreshMessages = async (context?: Partial<ConversationContext>): Promise<void> => {
@@ -67,15 +68,33 @@ export class MessageQueryActionImpl {
     const topicId = context?.topicId !== undefined ? context.topicId : this.#get().activeTopicId;
 
     // A force refresh owns both invalidation layers. Do this synchronously
-    // before SWR mutate so an inactive key with no subscriber still loses its
-    // verification window and any older in-flight generation.
+    // before the revalidation so an inactive entry with no subscriber still
+    // loses its verification window and any older in-flight generation.
     invalidateMessageListClientState((ctx) => ctx.agentId === agentId && ctx.topicId === topicId);
 
-    // Invalidate every `message:list` entry for this agent+topic (any scope /
-    // thread / page-size variant).
-    await mutate((key) =>
-      isMessageListKey(key, (ctx) => ctx.agentId === agentId && ctx.topicId === topicId),
+    // Revalidate every transcript sync of this agent+topic (any scope / thread
+    // / share variant).
+    await revalidateConversationMessages(
+      (ctx) => ctx.agentId === agentId && ctx.topicId === topicId,
     );
+  };
+
+  /**
+   * Drop the transcripts of deleted conversations from memory and storage
+   * (every one when `predicate` is omitted). Nothing is refetched: the
+   * conversation is gone.
+   *
+   * Installs upgraded from before the replica still hold `message:list` rows
+   * in the SWR IndexedDB tier, which never expires them; those are purged too
+   * until the SWR persistence layer is removed.
+   */
+  evictConversationMessages = async (
+    predicate?: (context: ConversationContext) => boolean,
+  ): Promise<void> => {
+    await Promise.all([
+      getMessageTranscript(this.#set, this.#get).evict(predicate),
+      mutate((key) => isMessageListKey(key, predicate), undefined, { revalidate: false }),
+    ]);
   };
 
   prefetchMessages = async (context: ConversationContext): Promise<void> => {

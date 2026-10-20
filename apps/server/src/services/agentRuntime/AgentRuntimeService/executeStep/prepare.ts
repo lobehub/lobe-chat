@@ -1,7 +1,8 @@
-import type {
-  AgentRunClientLlmWait,
-  AgentRuntimeContext,
-  AgentState,
+import {
+  type AgentRunClientLlmWait,
+  type AgentRuntimeContext,
+  type AgentState,
+  findCurrentTurnPendingToolMessages,
 } from '@lobechat/agent-runtime';
 import { type ChatToolPayload } from '@lobechat/types';
 import debug from 'debug';
@@ -15,11 +16,24 @@ import type { AgentRuntimeServiceContext } from '../types';
 
 const log = debug('lobe-server:agent-runtime-service');
 
+/**
+ * Decision points after which the agent calls the LLM again: the tool (or
+ * sub-agent) results of the turn are all in, so a user message can join here
+ * without splitting an assistant's tool calls from their results.
+ */
+const LLM_NEXT_PHASES = new Set([
+  'tool_result',
+  'tools_batch_result',
+  'sub_agent_result',
+  'sub_agents_batch_result',
+]);
+
 /** What this module reads off the service. */
 export type StepPrepareDeps = Pick<
   AgentRuntimeServiceContext,
   | 'computeDeviceContext'
   | 'humanIntervention'
+  | 'injectQueuedFollowUp'
   | 'readQueuedMessagesFlag'
   | 'refreshMessagesFromDB'
   | 'resolveAsyncToolResumeParentMessageId'
@@ -222,14 +236,45 @@ export async function prepareStepInput(
     }
   }
 
-  // Queued follow-ups live in the client's composer, not in this state.
-  // The client mirrors them into a flag; the agent reads it from the step
-  // context and hands the turn back at its next decision point, so the
-  // follow-up starts as the next turn instead of after the whole run.
+  // A follow-up the user queued behind this run joins it here, right before
+  // the next LLM call, so the model reads it on its next step instead of after
+  // the whole run. Re-entered like an async-tool resume: messages refreshed
+  // from the DB (which now hold the steer message) and a `user_input` phase
+  // anchored on it. Not while a tool of this turn still waits for approval —
+  // the agent has to park for that first.
+  if (
+    currentContext &&
+    !forcedFinishState &&
+    LLM_NEXT_PHASES.has(currentContext.phase) &&
+    findCurrentTurnPendingToolMessages(currentState.messages).length === 0
+  ) {
+    const injected = await deps.injectQueuedFollowUp(operationId, stepIndex, currentState);
+    if (injected) {
+      currentState = structuredClone(currentState);
+      currentState.messages = await deps.refreshMessagesFromDB(currentState);
+      currentState.lastModified = new Date().toISOString();
+      currentContext = {
+        ...currentContext,
+        payload: { parentMessageId: injected.messageId },
+        phase: 'user_input',
+      } as AgentRuntimeContext;
+    }
+  }
+
+  // Queued follow-ups that could not join (or arrived too late for this
+  // decision point) live outside this state: in the client's composer,
+  // which mirrors them into a flag, or in the server-side steer queue. The
+  // agent reads either from the step context and hands the turn back at its
+  // next decision point, so the follow-up starts as the next turn instead of
+  // after the whole run.
   // This read is authoritative for the step: a value carried in on the
   // incoming context must not keep a hand-back the user has withdrawn.
   if (currentContext && !forcedFinishState) {
-    const hasQueuedMessages = await deps.readQueuedMessagesFlag(operationId, stepIndex);
+    const hasQueuedMessages = await deps.readQueuedMessagesFlag(
+      operationId,
+      stepIndex,
+      currentState,
+    );
     if (hasQueuedMessages !== Boolean(currentContext.stepContext?.hasQueuedMessages)) {
       const stepContext = { ...currentContext.stepContext };
       if (hasQueuedMessages) stepContext.hasQueuedMessages = true;

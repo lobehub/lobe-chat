@@ -26,6 +26,7 @@ import InlineToolbar from './InlineToolbar';
 import LinearFilePlugin from './LinearFilePlugin';
 import { registerAttachmentClickOpen } from './registerAttachmentClickOpen';
 import { registerBlockDecoratorCaretGuard } from './registerBlockDecoratorCaretGuard';
+import { registerImageFilePastePreference } from './registerImageFilePastePreference';
 import { needsImageRehost, rehostImage } from './rehostImage';
 import { useFileUpload, useImageUpload } from './useImageUpload';
 
@@ -262,6 +263,14 @@ const InternalEditor = memo<InternalEditorProps>(
     useEffect(() => {
       if (!editor) return;
       const unregister = registerAttachmentClickOpen(editor);
+      return () => unregister?.();
+    }, [editor]);
+
+    // Copy Image from apps like Discord puts an image-only HTML flavor next to
+    // the bitmap; upload the bitmap instead of rehosting the remote URL.
+    useEffect(() => {
+      if (!editor) return;
+      const unregister = registerImageFilePastePreference(editor);
       return () => unregister?.();
     }, [editor]);
 

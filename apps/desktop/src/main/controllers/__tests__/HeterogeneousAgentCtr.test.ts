@@ -1860,8 +1860,8 @@ describe('HeterogeneousAgentCtr', () => {
         expect(options.env).not.toHaveProperty('ANTHROPIC_API_KEY');
         expect(options.env).not.toHaveProperty('ANTHROPIC_AUTH_TOKEN');
         expect(options.env).not.toHaveProperty('ANTHROPIC_BASE_URL');
-        // Unrelated inherited vars must still pass through.
-        expect(options.env.PATH).toBe(process.env.PATH);
+        // Unrelated inherited vars pass through, behind the bundled CLI's dir.
+        expect(options.env.PATH).toBe(`/fake/userData/bin${path.delimiter}${process.env.PATH}`);
       } finally {
         for (const [key, value] of Object.entries(original)) {
           if (value === undefined) delete process.env[key];
@@ -3434,9 +3434,7 @@ describe('HeterogeneousAgentCtr', () => {
     });
 
     it('carries the detector login-shell PATH into the spawn env for `env node` shims', async () => {
-      // `codex` resolved via the login-shell PATH (mise/nvm). Spawning the
-      // absolute shim under the leaner inherited PATH would fail at its
-      // `#!/usr/bin/env node` shebang — the resolved PATH must reach the child.
+      // A login-shell-resolved shim needs that PATH for its `#!/usr/bin/env node` shebang.
       const resolvedPath = '/Users/h/.local/share/mise/shims/codex';
       const searchPath = '/Users/h/.local/share/mise/shims:/usr/bin:/bin';
       const detect = vi
@@ -3454,7 +3452,9 @@ describe('HeterogeneousAgentCtr', () => {
       await ctr.sendPrompt({ operationId: 'op-test', prompt: 'hello', sessionId });
 
       expect(spawnCalls[0].command).toBe(resolvedPath);
-      expect(spawnCalls[0].options.env.PATH).toBe(searchPath);
+      expect(spawnCalls[0].options.env.PATH).toBe(
+        `/fake/userData/bin${path.delimiter}${searchPath}`,
+      );
     });
 
     it('keeps an explicit path-like command for spawn instead of the detector result', async () => {

@@ -50,9 +50,14 @@ export const subjectRouter = router({
   getBySubject: acceptanceProcedure
     .input(z.object({ subjectId: z.string(), subjectType: subjectTypeSchema }))
     .query(async ({ ctx, input }) => {
-      const acceptance = await ctx.acceptanceService.acceptanceModel.findBySubject(
+      // `task:T-898` and `task:task_xxx` name the same aggregate.
+      const subjectId = await ctx.acceptanceService.resolveCanonicalSubjectId(
         input.subjectType,
         input.subjectId,
+      );
+      const acceptance = await ctx.acceptanceService.acceptanceModel.findBySubject(
+        input.subjectType,
+        subjectId,
       );
       if (!acceptance) return null;
 

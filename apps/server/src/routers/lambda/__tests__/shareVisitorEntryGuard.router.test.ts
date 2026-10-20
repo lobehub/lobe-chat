@@ -22,16 +22,27 @@ const mockTopicUpdate = vi.fn();
 vi.mock('@/database/models/topic', () => ({
   TopicModel: vi.fn(function () {
     return {
-      batchCreate: mockTopicBatchCreate,
-      batchMoveToAgent: mockTopicBatchMoveToAgent,
       create: mockTopicCreate,
       delete: mockTopicDelete,
-      duplicate: mockTopicDuplicate,
       findOwnersByIds: mockTopicFindOwnersByIds,
       findOwnTopicById: mockTopicFindOwnTopicById,
       findShareVisitorTopicIds: mockTopicFindShareVisitorTopicIds,
       settleRunningOperation: mockTopicSettleRunningOperation,
       update: mockTopicUpdate,
+    };
+  }),
+}));
+
+// Cross-aggregate topic writes (create with messages, batch create, clone/fork,
+// move) go through TopicRepository; share the spies so guard tests still prove
+// the write never ran.
+vi.mock('@/database/repositories/topic', () => ({
+  TopicRepository: vi.fn(function () {
+    return {
+      batchCreate: mockTopicBatchCreate,
+      batchMoveToAgent: mockTopicBatchMoveToAgent,
+      create: mockTopicCreate,
+      duplicate: mockTopicDuplicate,
     };
   }),
 }));

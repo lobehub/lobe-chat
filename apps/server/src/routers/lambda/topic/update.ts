@@ -126,7 +126,7 @@ export const updateRouter = router({
       // boundary rather than in the model defaults.
       await assertCreatorTopicTargets(guardCtx(ctx), input.topicIds);
 
-      return ctx.topicModel.batchMoveToAgent(input.topicIds, input.targetAgentId);
+      return ctx.topicRepo.batchMoveToAgent(input.topicIds, input.targetAgentId);
     }),
   cancelRateLimitContinuation: topicProcedure
     .use(withScopedPermission('topic:update'))

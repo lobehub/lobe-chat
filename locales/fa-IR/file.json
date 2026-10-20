@@ -302,6 +302,8 @@
   "pageEditor.menu.importDocument": "وارد کردن صفحه",
   "pageEditor.menu.move": "انتقال",
   "pageEditor.menu.pin": "سنجاق کردن صفحه",
+  "pageEditor.noAccess.description": "این صفحه خصوصی است یا در کتابخانه‌ای است که شما به آن دسترسی ندارید. از سازنده آن یا مدیر کتابخانه درخواست دسترسی کنید.",
+  "pageEditor.noAccess.title": "شما به این صفحه دسترسی ندارید",
   "pageEditor.saveFailed": "ذخیره صفحه انجام نشد، لطفاً بعداً دوباره تلاش کنید",
   "pageEditor.saving": "در حال ذخیره...",
   "pageEditor.titlePlaceholder": "بدون عنوان",

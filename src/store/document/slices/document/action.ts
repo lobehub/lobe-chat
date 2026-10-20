@@ -10,12 +10,13 @@ import { createReplicaSlice, recordLens } from '@/libs/replica';
 import { documentService } from '@/services/document';
 import { pageActions } from '@/store/page';
 import type { StoreSetter } from '@/store/types';
-import { isSkillMarkdownDocument, parseSkillMarkdownFrontmatter } from '@/utils/skillMarkdown';
+import { parseSkillMarkdownFrontmatter } from '@/utils/skillMarkdown';
 import { setNamespace } from '@/utils/storeDebug';
 import { isTrpcErrorCode } from '@/utils/trpcError';
 
 import type { DocumentStore } from '../../store';
 import { useDocumentStore } from '../../store';
+import { resolveDocumentContentFormat } from '../editor/contentFormat';
 import type { DocumentContentFormat, DocumentSourceType } from '../editor/initialState';
 import type { DocumentDetail } from './projection';
 import { documentDetailResource } from './projection';
@@ -404,7 +405,7 @@ export class DocumentActionImpl {
     this.#get().initDocumentWithEditor({
       autoSave,
       content: document.content,
-      contentFormat: isSkillMarkdownDocument(document) ? 'skillMarkdown' : 'markdown',
+      contentFormat: resolveDocumentContentFormat(document),
       documentId,
       editor,
       editorData: document.editorData,

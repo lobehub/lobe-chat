@@ -39,6 +39,7 @@ import { GoalService } from './index';
 import { decideFailedTurn, GoalManagerService, MAX_FAILED_MANAGER_TURNS } from './manager';
 import * as scheduler from './scheduler';
 import { GoalStartService } from './start';
+import { answerDistill, pendingRelease as heldRelease } from './testUtils';
 import { GoalWaitService } from './wait';
 
 vi.mock('@/database/core/db-adaptor', () => ({ getServerDB: () => db }));
@@ -1972,13 +1973,10 @@ describe('a batch the main Agent declares', () => {
     await service().tick(started.id);
     const probes = (await service().graph(started.id)).nodes.filter((n) => n.kind === 'task');
     await settle(probes.map((n) => n.id));
-    await service().tick(started.id);
+    await answerDistill(service(), db, userId, started.id, batchPlan.rollout.recipe);
     return started;
   };
-  const pendingRelease = async (id: string) =>
-    (await service().graph(id)).decisions.find(
-      (d) => d.status === 'pending' && d.options?.some((option) => option.id === 'release'),
-    );
+  const pendingRelease = (id: string) => heldRelease(service(), id);
   const approve = async (id: string) => {
     const pending = await pendingRelease(id);
     expect(pending).toBeDefined();
@@ -1996,12 +1994,12 @@ describe('a batch the main Agent declares', () => {
     return { op: op!, state };
   };
 
-  it('holds the first wave for the owner, without starting a planning turn', async () => {
-    const { id, state } = await probesPassed();
+  it('holds the first wave for the owner once the probes taught the plan', async () => {
+    const { id } = await probesPassed();
 
     expect((await service().graph(id)).nodes.some((n) => n.title === 'Project skills')).toBe(false);
     expect(await pendingRelease(id)).toBeDefined();
-    expect((await model().findById(id))!.config!.managerState!.token).toBe(state.token);
+    expect((await model().findById(id))!.config!.managerState!.problemKind).toBe('rollout_distill');
 
     await approve(id);
 
@@ -2122,7 +2120,8 @@ describe('a batch the main Agent declares', () => {
     expect(after.rollout!.spec!.recipeOutline).toBe(recipe);
     // Their results, not the old ones, go back to the owner for the release.
     await settle(reruns);
-    await service().tick(id);
+    // The re-run units are new probes: they teach the plan again before the review.
+    await answerDistill(service(), db, userId, id, recipe);
     expect((await pendingRelease(id))!.nodeId).not.toBe(pending!.nodeId);
   });
 

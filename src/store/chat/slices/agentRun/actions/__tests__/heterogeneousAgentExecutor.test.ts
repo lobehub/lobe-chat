@@ -701,7 +701,7 @@ describe('heterogeneousAgentExecutor DB persistence', () => {
               }),
           ],
           {
-            params: { heterogeneousProvider: provider, operationId },
+            params: { heterogeneousProvider: provider, operationId, workspaceId: 'ws-1' },
             store: createMockStore({ topicDataMap: {} }),
           },
         );
@@ -713,12 +713,11 @@ describe('heterogeneousAgentExecutor DB persistence', () => {
           LOBEHUB_AGENT_ID: 'agent-1',
           ...(operationId ? { LOBEHUB_OPERATION_ID: operationId } : {}),
           LOBEHUB_TOPIC_ID: 'topic-1',
+          LOBEHUB_WORKSPACE_ID: 'ws-1', // the caller's captured workspace, not live navigation
         })),
       );
-      expect(mockSendPrompt.mock.calls.map(([params]) => params.operationId)).toEqual([
-        'op-1',
-        'op-2',
-      ]);
+      const sent = mockSendPrompt.mock.calls.map(([p]) => [p.operationId, p.workspaceId]);
+      expect(sent.flat()).toEqual(['op-1', 'ws-1', 'op-2', 'ws-1']);
     },
   );
 

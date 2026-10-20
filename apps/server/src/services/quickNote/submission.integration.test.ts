@@ -133,7 +133,7 @@ describe('Quick Note run output via submitResult', () => {
       generator: { generateObject },
     }).onRunComplete({ lastAssistantContent: '', reason: 'done', runId: run.id });
 
-    expect(completed?.run).toMatchObject({
+    expect(completed && 'run' in completed ? completed.run : completed).toMatchObject({
       status: 'completed',
       summary: 'Compare two speech models',
     });
@@ -171,7 +171,7 @@ describe('Quick Note run output via submitResult', () => {
       generator: { generateObject },
     }).onRunComplete({ lastAssistantContent: DSML_ONLY, reason: 'max_steps', runId: run.id });
 
-    expect(completed?.run).toMatchObject({
+    expect(completed && 'run' in completed ? completed.run : completed).toMatchObject({
       status: 'completed',
       summary: 'Compare two speech models',
     });
@@ -213,7 +213,9 @@ describe('Quick Note run output via submitResult', () => {
       runId: run.id,
     });
 
-    expect(completed?.run).toMatchObject({ status: 'completed' });
+    expect(completed && 'run' in completed ? completed.run : completed).toMatchObject({
+      status: 'completed',
+    });
     expect(generateObject).not.toHaveBeenCalled();
   });
 

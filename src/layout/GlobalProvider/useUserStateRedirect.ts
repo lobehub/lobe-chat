@@ -19,6 +19,8 @@ const RESERVED_FIRST_SEGMENTS = new Set([
   'desktop-onboarding',
   'devtools',
   'eval',
+  'goal',
+  'goals',
   'group',
   'image',
   'me',

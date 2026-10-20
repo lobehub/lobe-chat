@@ -123,195 +123,198 @@ export const validateResumePayload = (
   }
 };
 
-export const ExecAgentSchema = z
-  .object({
-    includeFinalState: z.boolean().optional(),
-    /**
-     * Gateway stream features the calling client handles. `member_runtime_end`:
-     * a group member's terminal arrives on the supervisor's channel under that
-     * name instead of `agent_runtime_end`. `file_works`: pushed snapshots may
-     * carry `file` Work summaries. Free-form strings so an older server
-     * ignores features it does not know rather than rejecting the run.
-     */
-    streamFeatures: z.array(z.string()).optional(),
-    /**
-     * Wire protocol the calling client speaks. `2` declares it reconciles its
-     * message list from `message_patch` revisions, so the run may stop pushing
-     * whole `uiMessages` snapshots. Absent ⇒ 1 (an older bundle, the CLI, or a
-     * server-initiated run), which keeps the pushed snapshots.
-     */
-    clientProtocol: z.union([z.literal(1), z.literal(2)]).optional(),
-    /**
-     * The calling client can execute single LLM attempts the server relays to
-     * it (`llm_execute`) for providers only this device can reach. Sent only
-     * when the client is inside the `agent_llm_relay` rollout.
-     */
-    llmExecutor: LlmExecutorSchema.optional(),
-    /** The agent ID to run (either agentId or slug is required) */
-    agentId: z.string().optional(),
-    /** Application context for message storage */
-    appContext: z
-      .object({
-        conversationAgentId: z.string().optional(),
-        defaultTaskAssigneeAgentId: z.string().optional(),
-        documentId: z.string().nullish(),
-        /** The agent being edited when scope is 'agent_builder' (not the builder builtin itself). */
-        editingAgentId: z.string().optional(),
-        /** The group being edited when scope is 'group_agent_builder' (not a group chat turn). */
-        editingGroupId: z.string().optional(),
-        groupId: z.string().nullish(),
-        // The shared declaration, not a copy of it: a local `z.object()` here
-        // silently strips whatever the type gained and the call still answers
-        // 200, so the two must be one thing.
-        initialTopicMetadata: initialTopicMetadataSchema.optional(),
-        /**
-         * Branch this run into a new thread (subtopic) under the resolved topic.
-         * The gateway path never calls `aiChat.sendMessageInServer`, so this is
-         * the only way the composer's "start a new subtopic" intent reaches the
-         * server — without it the turn lands on the topic's main spine.
-         */
-        newThread: CreateThreadWithMessageSchema.optional(),
-        /**
-         * Group orchestration role of the run, stamped onto the assistant
-         * message's `metadata.orchestrationRole` so the supervisor/member
-         * identity survives the gateway step_start snapshot / refetch.
-         */
-        orchestrationRole: z.enum(['supervisor', 'member']).optional(),
-        /** Bind a NEW topic to this project working directory (ignored with topicId). */
-        projectWorkingDirectoryId: z.string().optional(),
-        scope: z.string().nullish(),
-        sessionId: z.string().optional(),
-        taskId: z.string().nullish(),
-        threadId: z.string().nullish(),
-        topicId: z.string().nullish(),
-      })
-      .optional(),
-    /** Whether to auto-start execution after creating operation */
-    autoStart: z.boolean().optional().default(true),
-    /** Client-minted row ids, honoured verbatim (see `execAgentClientIdsSchema`). */
-    clientIds: execAgentClientIdsSchema,
-    /** Explicit device ID to bind to the topic and activate for this run */
-    deviceId: z.string().optional(),
-    /** Current desktop device hint, honored only for an effective local target */
-    localDeviceId: z.string().optional(),
-    /** Optional existing message IDs to include in context */
-    existingMessageIds: z.array(z.string()).optional().default([]),
-    /** File IDs of already-uploaded attachments to attach to the new user message */
-    fileIds: z.array(z.string()).optional(),
-    /** Parent message ID for regeneration/continue (skip user message creation, branch from this message) */
-    parentMessageId: z.string().optional(),
-    /** Existing gateway operation this fresh turn atomically supersedes. */
-    replacesOperationId: z.string().optional(),
-    /**
-     * The server runs the composer tracked on this conversation at send time.
-     * Diagnostic only: recorded when this send has to supersede a live run.
-     */
-    clientOperations: z
-      .array(
-        z.object({
-          isAborting: z.boolean().optional(),
-          operationId: z.string(),
-          status: z.string(),
-          visibleLoadingDone: z.boolean().optional(),
-        }),
-      )
-      .max(MAX_CLIENT_OPERATION_SNAPSHOT)
-      .optional(),
-    /** The user input/prompt */
-    prompt: z.string(),
-    /**
-     * Resume a previous op paused on `human_approve_required`. When set, the
-     * new op writes the decision to the target tool message and either runs
-     * the approved tool (`approved`), halts with reason=`human_rejected`
-     * (`rejected`), or surfaces the rejection as user feedback so the LLM
-     * can continue (`rejected_continue`).
-     */
-    resumeApproval: ResumeApprovalDecisionSchema.optional(),
-    /**
-     * Batch form of `resumeApproval` — one entry per pending tool the user
-     * resolved in a single action ("approve all" on a parallel tool batch).
-     * The op applies every decision, then runs all approved tools in ONE
-     * `call_tools_batch` and continues the LLM once with the full result set.
-     *
-     * Prefer this over firing N `resumeApproval` ops for a parallel batch: each
-     * of those continues the LLM while the not-yet-approved tools are still
-     * empty rows, which forks the parent chain and shows the model blank
-     * results. Mutually exclusive with `resumeApproval`.
-     */
-    resumeApprovals: z.array(ResumeApprovalDecisionSchema).min(1).optional(),
-    /**
-     * Resume a previous op paused on a `humanIntervention: 'always'` tool (e.g.
-     * lobe-agent `askUserQuestion`). When set, the new op writes the
-     * human-provided answer as the target tool message's result and resumes from
-     * `phase: 'tool_result'` — the tool is NOT re-executed, so the runtime never
-     * overwrites the answer with a fresh "pending" placeholder. Mutually
-     * exclusive with `resumeApproval`.
-     */
-    resumeToolResult: ResumeToolResultSchema.optional(),
-    /**
-     * Tool identifiers the user @-mentioned in this message. Enabled for this
-     * run in addition to the agent's pinned plugins, so a mentioned tool that
-     * isn't pinned to the agent (e.g. a custom MCP connector picked from the @
-     * list) is callable. Scoped to the caller's own installed tools/connectors
-     * by the user-scoped lookups downstream, so it can't enable others' tools.
-     */
-    selectedToolIds: z.array(z.string()).optional(),
-    /**
-     * Skill identifiers the user selected for this message. Their bodies are
-     * injected directly for this turn and every later turn of the topic, the
-     * same way a pinned skill is, instead of waiting for `activateSkill`.
-     * Persisted on the user message as `metadata.selectedSkillIds`.
-     */
-    selectedSkillIds: z.array(z.string()).optional(),
-    /**
-     * Agents the user @-mentioned in this message (multi-mention). When present
-     * (and non-group), the run enables the callAgent tool and injects the
-     * mentioned-agents delegation context so the supervisor delegates to them
-     * instead of answering itself. Mirrors the client runtime's
-     * `initialContext.mentionedAgents` + injected callAgent manifest.
-     */
-    mentionedAgents: z.array(z.object({ id: z.string(), name: z.string() })).optional(),
-    /** The agent slug to run (either agentId or slug is required) */
-    slug: z.string().optional(),
-    /**
-     * What initiated this operation, persisted to `agent_operations.trigger`.
-     * Defaults to `'chat'` when omitted — first-party SPA / desktop user
-     * messages are the dominant caller. Pass a more specific value (`'cli'`,
-     * `'openapi'`, `'eval'`, …) to override.
-     */
-    /**
-     * The prompt was queued while the previous turn was still running. The
-     * persisted user message carries `metadata.steer` so it renders as a
-     * continuation of that turn instead of a new one.
-     */
-    steer: z.boolean().optional(),
-    trigger: z
-      .string()
-      .refine((value) => value !== RequestTrigger.Bot, {
-        message: 'The bot trigger is reserved for authenticated server-side bot ingress',
-      })
-      .optional(),
-    /**
-     * The operation the launching agent's run belongs to, when another agent
-     * started this run (agent → agent: a sibling agent calling `lh agent run`).
-     * The launcher's own agent id is deliberately not sent — device-dispatched
-     * runs strip it — and neither is its topic: the server reads both from this
-     * operation row (ownership-scoped, the caller's own) and stamps
-     * `metadata.agentSender` on the created user message. An unknown, foreign,
-     * or topic-less operation simply resolves to nothing.
-     */
-    sourceOperationId: z.string().optional(),
-    /**
-     * User intervention configuration for tool approvals.
-     * Pass `{ approvalMode: 'headless' }` from headless clients (CLI, cron, bots)
-     * so tool calls auto-execute without waiting for human approval.
-     */
-    userInterventionConfig: UserInterventionConfigSchema.optional(),
-  })
-  .refine((data) => data.agentId || data.slug, {
-    message: 'Either agentId or slug must be provided',
-  })
-  .superRefine(validateResumePayload);
+/**
+ * Fields of an execAgent request. Exported without the refinements so a queued
+ * follow-up (`agentSteerQueue.append`) can carry the fresh-send subset of it.
+ */
+export const ExecAgentFieldsSchema = z.object({
+  includeFinalState: z.boolean().optional(),
+  /**
+   * Gateway stream features the calling client handles. `member_runtime_end`:
+   * a group member's terminal arrives on the supervisor's channel under that
+   * name instead of `agent_runtime_end`. `file_works`: pushed snapshots may
+   * carry `file` Work summaries. Free-form strings so an older server
+   * ignores features it does not know rather than rejecting the run.
+   */
+  streamFeatures: z.array(z.string()).optional(),
+  /**
+   * Wire protocol the calling client speaks. `2` declares it reconciles its
+   * message list from `message_patch` revisions, so the run may stop pushing
+   * whole `uiMessages` snapshots. Absent ⇒ 1 (an older bundle, the CLI, or a
+   * server-initiated run), which keeps the pushed snapshots.
+   */
+  clientProtocol: z.union([z.literal(1), z.literal(2)]).optional(),
+  /**
+   * The calling client can execute single LLM attempts the server relays to
+   * it (`llm_execute`) for providers only this device can reach. Sent only
+   * when the client is inside the `agent_llm_relay` rollout.
+   */
+  llmExecutor: LlmExecutorSchema.optional(),
+  /** The agent ID to run (either agentId or slug is required) */
+  agentId: z.string().optional(),
+  /** Application context for message storage */
+  appContext: z
+    .object({
+      conversationAgentId: z.string().optional(),
+      defaultTaskAssigneeAgentId: z.string().optional(),
+      documentId: z.string().nullish(),
+      /** The agent being edited when scope is 'agent_builder' (not the builder builtin itself). */
+      editingAgentId: z.string().optional(),
+      /** The group being edited when scope is 'group_agent_builder' (not a group chat turn). */
+      editingGroupId: z.string().optional(),
+      groupId: z.string().nullish(),
+      // The shared declaration, not a copy of it: a local `z.object()` here
+      // silently strips whatever the type gained and the call still answers
+      // 200, so the two must be one thing.
+      initialTopicMetadata: initialTopicMetadataSchema.optional(),
+      /**
+       * Branch this run into a new thread (subtopic) under the resolved topic.
+       * The gateway path never calls `aiChat.sendMessageInServer`, so this is
+       * the only way the composer's "start a new subtopic" intent reaches the
+       * server — without it the turn lands on the topic's main spine.
+       */
+      newThread: CreateThreadWithMessageSchema.optional(),
+      /**
+       * Group orchestration role of the run, stamped onto the assistant
+       * message's `metadata.orchestrationRole` so the supervisor/member
+       * identity survives the gateway step_start snapshot / refetch.
+       */
+      orchestrationRole: z.enum(['supervisor', 'member']).optional(),
+      /** Bind a NEW topic to this project working directory (ignored with topicId). */
+      projectWorkingDirectoryId: z.string().optional(),
+      scope: z.string().nullish(),
+      sessionId: z.string().optional(),
+      taskId: z.string().nullish(),
+      threadId: z.string().nullish(),
+      topicId: z.string().nullish(),
+    })
+    .optional(),
+  /** Whether to auto-start execution after creating operation */
+  autoStart: z.boolean().optional().default(true),
+  /** Client-minted row ids, honoured verbatim (see `execAgentClientIdsSchema`). */
+  clientIds: execAgentClientIdsSchema,
+  /** Explicit device ID to bind to the topic and activate for this run */
+  deviceId: z.string().optional(),
+  /** Current desktop device hint, honored only for an effective local target */
+  localDeviceId: z.string().optional(),
+  /** Optional existing message IDs to include in context */
+  existingMessageIds: z.array(z.string()).optional().default([]),
+  /** File IDs of already-uploaded attachments to attach to the new user message */
+  fileIds: z.array(z.string()).optional(),
+  /** Parent message ID for regeneration/continue (skip user message creation, branch from this message) */
+  parentMessageId: z.string().optional(),
+  /** Existing gateway operation this fresh turn atomically supersedes. */
+  replacesOperationId: z.string().optional(),
+  /**
+   * The server runs the composer tracked on this conversation at send time.
+   * Diagnostic only: recorded when this send has to supersede a live run.
+   */
+  clientOperations: z
+    .array(
+      z.object({
+        isAborting: z.boolean().optional(),
+        operationId: z.string(),
+        status: z.string(),
+        visibleLoadingDone: z.boolean().optional(),
+      }),
+    )
+    .max(MAX_CLIENT_OPERATION_SNAPSHOT)
+    .optional(),
+  /** The user input/prompt */
+  prompt: z.string(),
+  /**
+   * Resume a previous op paused on `human_approve_required`. When set, the
+   * new op writes the decision to the target tool message and either runs
+   * the approved tool (`approved`), halts with reason=`human_rejected`
+   * (`rejected`), or surfaces the rejection as user feedback so the LLM
+   * can continue (`rejected_continue`).
+   */
+  resumeApproval: ResumeApprovalDecisionSchema.optional(),
+  /**
+   * Batch form of `resumeApproval` — one entry per pending tool the user
+   * resolved in a single action ("approve all" on a parallel tool batch).
+   * The op applies every decision, then runs all approved tools in ONE
+   * `call_tools_batch` and continues the LLM once with the full result set.
+   *
+   * Prefer this over firing N `resumeApproval` ops for a parallel batch: each
+   * of those continues the LLM while the not-yet-approved tools are still
+   * empty rows, which forks the parent chain and shows the model blank
+   * results. Mutually exclusive with `resumeApproval`.
+   */
+  resumeApprovals: z.array(ResumeApprovalDecisionSchema).min(1).optional(),
+  /**
+   * Resume a previous op paused on a `humanIntervention: 'always'` tool (e.g.
+   * lobe-agent `askUserQuestion`). When set, the new op writes the
+   * human-provided answer as the target tool message's result and resumes from
+   * `phase: 'tool_result'` — the tool is NOT re-executed, so the runtime never
+   * overwrites the answer with a fresh "pending" placeholder. Mutually
+   * exclusive with `resumeApproval`.
+   */
+  resumeToolResult: ResumeToolResultSchema.optional(),
+  /**
+   * Tool identifiers the user @-mentioned in this message. Enabled for this
+   * run in addition to the agent's pinned plugins, so a mentioned tool that
+   * isn't pinned to the agent (e.g. a custom MCP connector picked from the @
+   * list) is callable. Scoped to the caller's own installed tools/connectors
+   * by the user-scoped lookups downstream, so it can't enable others' tools.
+   */
+  selectedToolIds: z.array(z.string()).optional(),
+  /**
+   * Skill identifiers the user selected for this message. Their bodies are
+   * injected directly for this turn and every later turn of the topic, the
+   * same way a pinned skill is, instead of waiting for `activateSkill`.
+   * Persisted on the user message as `metadata.selectedSkillIds`.
+   */
+  selectedSkillIds: z.array(z.string()).optional(),
+  /**
+   * Agents the user @-mentioned in this message (multi-mention). When present
+   * (and non-group), the run enables the callAgent tool and injects the
+   * mentioned-agents delegation context so the supervisor delegates to them
+   * instead of answering itself. Mirrors the client runtime's
+   * `initialContext.mentionedAgents` + injected callAgent manifest.
+   */
+  mentionedAgents: z.array(z.object({ id: z.string(), name: z.string() })).optional(),
+  /** The agent slug to run (either agentId or slug is required) */
+  slug: z.string().optional(),
+  /**
+   * What initiated this operation, persisted to `agent_operations.trigger`.
+   * Defaults to `'chat'` when omitted — first-party SPA / desktop user
+   * messages are the dominant caller. Pass a more specific value (`'cli'`,
+   * `'openapi'`, `'eval'`, …) to override.
+   */
+  /**
+   * The prompt was queued while the previous turn was still running. The
+   * persisted user message carries `metadata.steer` so it renders as a
+   * continuation of that turn instead of a new one.
+   */
+  steer: z.boolean().optional(),
+  trigger: z
+    .string()
+    .refine((value) => value !== RequestTrigger.Bot, {
+      message: 'The bot trigger is reserved for authenticated server-side bot ingress',
+    })
+    .optional(),
+  /**
+   * The operation the launching agent's run belongs to, when another agent
+   * started this run (agent → agent: a sibling agent calling `lh agent run`).
+   * The launcher's own agent id is deliberately not sent — device-dispatched
+   * runs strip it — and neither is its topic: the server reads both from this
+   * operation row (ownership-scoped, the caller's own) and stamps
+   * `metadata.agentSender` on the created user message. An unknown, foreign,
+   * or topic-less operation simply resolves to nothing.
+   */
+  sourceOperationId: z.string().optional(),
+  /**
+   * User intervention configuration for tool approvals.
+   * Pass `{ approvalMode: 'headless' }` from headless clients (CLI, cron, bots)
+   * so tool calls auto-execute without waiting for human approval.
+   */
+  userInterventionConfig: UserInterventionConfigSchema.optional(),
+});
+
+export const ExecAgentSchema = ExecAgentFieldsSchema.refine((data) => data.agentId || data.slug, {
+  message: 'Either agentId or slug must be provided',
+}).superRefine(validateResumePayload);
 
 export type ExecAgentInput = z.infer<typeof ExecAgentSchema>;
 

@@ -859,7 +859,7 @@ describe('hetero exec command', () => {
 
     const call = mockSpawnAgent.mock.calls[0][0];
     expect(call.operationId).toBe('op-server-allocated');
-    expect(call.includePartialMessages).toBe(true);
+    expect(call).toMatchObject({ includePartialMessages: true, liveInput: true });
   });
 
   it("echoes the run's operation and conversation into a server-ingest agent's env", async () => {

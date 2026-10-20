@@ -550,6 +550,7 @@ describe('Home InputArea useSend', () => {
         await result.current.send({
           clearContent: vi.fn(),
           editor: {} as Parameters<SendButtonHandler>[0]['editor'],
+          getEditorData: () => undefined,
           getMarkdownContent: () => 'Report',
         });
       });

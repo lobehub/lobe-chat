@@ -302,6 +302,8 @@
   "pageEditor.menu.importDocument": "Sayfa İçe Aktar",
   "pageEditor.menu.move": "Taşı",
   "pageEditor.menu.pin": "Sayfayı Sabitle",
+  "pageEditor.noAccess.description": "Bu sayfa özeldir veya erişemediğiniz bir kütüphanede bulunmaktadır. Erişim için sayfanın yaratıcısından veya bir kütüphane yöneticisinden izin isteyin.",
+  "pageEditor.noAccess.title": "Bu sayfaya erişiminiz yok",
   "pageEditor.saveFailed": "Sayfa kaydedilemedi, lütfen daha sonra tekrar deneyin",
   "pageEditor.saving": "Kaydediliyor...",
   "pageEditor.titlePlaceholder": "Başlıksız",

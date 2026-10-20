@@ -1,7 +1,7 @@
 'use client';
 
-import type { UIChatMessage } from '@lobechat/types';
-import { createStaticStyles, cx, Flexbox, Icon, Markdown } from '@lobehub/ui';
+import type { CompressionGroupMetadata, UIChatMessage } from '@lobechat/types';
+import { createStaticStyles, cx, Divider, Flexbox, Icon, Markdown } from '@lobehub/ui';
 import { ActionIcon, confirmModal, Tabs, type TabsItem } from '@lobehub/ui';
 import isEqual from 'fast-deep-equal';
 import { ChevronDown, ChevronUp, History, Sparkles, Undo2 } from 'lucide-react';
@@ -15,17 +15,42 @@ import { shinyTextStyles } from '@/styles/loading';
 
 import { dataSelectors, useConversationStore } from '../../store';
 import CompressedMessageItem from './CompressedMessageItem';
-import { isCompressionSummaryGenerating, shouldShowCompressedGroupPanel } from './logic';
+import {
+  getCompressedTurnCount,
+  isCompressionSummaryGenerating,
+  shouldShowCompressedGroupPanel,
+} from './logic';
 import { useGroupPreferences } from './useGroupPreferences';
 
-const styles = createStaticStyles(({ css }) => ({
+const styles = createStaticStyles(({ css, cssVar }) => ({
+  collapsedButton: css`
+    cursor: pointer;
+
+    display: inline-flex;
+    gap: 6px;
+    align-items: center;
+
+    padding-block: 2px;
+    padding-inline: 8px;
+    border: none;
+    border-radius: 6px;
+
+    font-size: 12px;
+    color: ${cssVar.colorTextDescription};
+
+    background: none;
+
+    transition: color 0.2s ease;
+
+    &:hover {
+      color: ${cssVar.colorText};
+    }
+  `,
   container: css`
     margin-block-end: 8px;
   `,
-  header: css`
-    .ant-tabs-nav {
-      margin-block-end: 0;
-    }
+  divider: css`
+    margin: 0;
   `,
   messagesContainer: css`
     padding-block: 8px;
@@ -79,6 +104,18 @@ const CompressedGroupMessage = memo<CompressedGroupMessageProps>(({ id }) => {
     isGeneratingSummary,
   });
 
+  // How much history this group folded away, phrased as conversation turns.
+  const compressedTurnCount = useMemo(
+    () =>
+      getCompressedTurnCount({
+        compressedMessages,
+        originalMessageCount: (
+          (message as UIChatMessage | undefined)?.metadata as CompressionGroupMetadata | undefined
+        )?.originalMessageCount,
+      }),
+    [compressedMessages, message],
+  );
+
   const tabItems: TabsItem[] = useMemo(
     () => [
       {
@@ -92,53 +129,63 @@ const CompressedGroupMessage = memo<CompressedGroupMessageProps>(({ id }) => {
         label: t('compression.history'),
       },
     ],
-    [],
+    [t],
   );
+
+  if (isGeneratingSummary) {
+    return (
+      <Flexbox className={styles.container} gap={8}>
+        <Flexbox horizontal>
+          <span className={cx(shinyTextStyles.shinyText)}>{t('compressedHistory')}</span>
+        </Flexbox>
+        <StreamingMarkdown>{content}</StreamingMarkdown>
+      </Flexbox>
+    );
+  }
 
   return (
     <Flexbox className={styles.container} gap={8}>
-      {isGeneratingSummary ? (
+      {expanded ? (
         <>
-          <Flexbox horizontal>
-            {/*<Icon icon={FolderArchive} size={14} />*/}
-            <span className={cx(isGeneratingSummary ? shinyTextStyles.shinyText : '')}>
-              {t('compressedHistory')}
-            </span>
+          <Flexbox horizontal align={'center'} distribution={'space-between'} width={'100%'}>
+            <Tabs
+              activeKey={activeTab}
+              items={tabItems}
+              variant={'rounded'}
+              onChange={setActiveTab}
+            />
+            <Flexbox horizontal gap={4}>
+              <ActionIcon
+                icon={Undo2}
+                size={'small'}
+                title={t('compression.cancel')}
+                onClick={handleCancelCompression}
+              />
+              <ActionIcon icon={ChevronUp} size={'small'} onClick={toggleExpanded} />
+            </Flexbox>
           </Flexbox>
-          <StreamingMarkdown>{content}</StreamingMarkdown>
+          {!showPanelContent ? null : activeTab === 'summary' ? (
+            <Markdown variant={'chat'}>{content}</Markdown>
+          ) : (
+            <Flexbox className={styles.messagesContainer} gap={4}>
+              {compressedMessages?.map((msg) => (
+                <CompressedMessageItem key={msg.id} message={msg} />
+              ))}
+            </Flexbox>
+          )}
         </>
       ) : (
-        <Flexbox horizontal align={'center'} distribution={'space-between'} width={'100%'}>
-          <Tabs
-            activeKey={isGeneratingSummary ? 'summary' : activeTab}
-            className={styles.header}
-            items={tabItems}
-            variant={'rounded'}
-            onChange={setActiveTab}
-          />
-          <Flexbox horizontal gap={4}>
-            <ActionIcon
-              icon={Undo2}
-              size={'small'}
-              title={t('compression.cancel')}
-              onClick={handleCancelCompression}
-            />
-            <ActionIcon
-              icon={expanded ? ChevronUp : ChevronDown}
-              size={'small'}
-              onClick={toggleExpanded}
-            />
-          </Flexbox>
-        </Flexbox>
-      )}
-      {!showPanelContent ? null : activeTab === 'summary' ? (
-        <Markdown variant={'chat'}>{content}</Markdown>
-      ) : (
-        <Flexbox className={styles.messagesContainer} gap={4}>
-          {compressedMessages?.map((msg) => (
-            <CompressedMessageItem key={msg.id} message={msg} />
-          ))}
-        </Flexbox>
+        <Divider className={styles.divider}>
+          <button className={styles.collapsedButton} type={'button'} onClick={toggleExpanded}>
+            <Icon icon={History} size={14} />
+            <span>
+              {compressedTurnCount > 0
+                ? t('compression.collapsed', { turns: compressedTurnCount })
+                : t('compression.collapsedUnknown')}
+            </span>
+            <Icon icon={ChevronDown} size={14} />
+          </button>
+        </Divider>
       )}
     </Flexbox>
   );

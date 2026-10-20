@@ -5,6 +5,8 @@ import {
   agentDocumentReaderResource,
 } from '@/store/agentDocument/projection';
 import { documentDetailResource } from '@/store/document/slices/document/projection';
+import { fileDocumentResource } from '@/store/file/slices/document/projection';
+import { resourceListResource } from '@/store/file/slices/resource/projection';
 import { notebookDocumentsResource } from '@/store/notebook/projection';
 import { pageDetailResource, pageListResource } from '@/store/page/projection';
 import { agentDocumentSkillsResource } from '@/store/tool/slices/agentDocumentSkills/projection';
@@ -18,13 +20,21 @@ export interface InvalidateDocumentMutationParams {
   documentId?: string;
   refreshDocumentEditor?: boolean;
   refreshPageDocuments?: boolean;
+  refreshResources?: boolean;
   topicId?: string;
 }
 
 export const invalidateDocumentMutation = async (
   params: InvalidateDocumentMutationParams,
 ): Promise<void> => {
-  const { agentId, documentId, refreshDocumentEditor, refreshPageDocuments, topicId } = params;
+  const {
+    agentId,
+    documentId,
+    refreshDocumentEditor,
+    refreshPageDocuments,
+    refreshResources,
+    topicId,
+  } = params;
   const revalidations: Promise<unknown>[] = [];
 
   if (documentId) {
@@ -42,6 +52,11 @@ export const invalidateDocumentMutation = async (
 
   if (documentId || refreshPageDocuments) {
     revalidations.push(revalidateReplica(pageListResource));
+  }
+
+  if (refreshResources) {
+    if (documentId) revalidations.push(revalidateReplica(fileDocumentResource, documentId));
+    revalidations.push(revalidateReplica(resourceListResource));
   }
 
   if (topicId) {
