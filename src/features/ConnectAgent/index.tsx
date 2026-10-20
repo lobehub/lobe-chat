@@ -381,12 +381,14 @@ const AgentScanRow = memo<{
 
 interface ConnectAgentContentProps {
   groupId?: string;
+  initialDevice?: DeviceListItem;
   onTitleChange: (title: string) => void;
+  showOpenChat?: boolean;
   visibility?: 'private' | 'public';
 }
 
 const ConnectAgentContent = memo<ConnectAgentContentProps>(
-  ({ groupId, onTitleChange, visibility }) => {
+  ({ groupId, initialDevice, onTitleChange, showOpenChat = true, visibility }) => {
     const { t } = useTranslation('chat');
     const { close, setCanDismissByClickOutside } = useModalContext();
     const navigate = useWorkspaceAwareNavigate();
@@ -399,8 +401,10 @@ const ConnectAgentContent = memo<ConnectAgentContentProps>(
     const activeWorkspaceId = useActiveWorkspaceId();
     const restrictToWorkspaceDevices = Boolean(activeWorkspaceId);
 
-    const [step, setStep] = useState(0);
-    const [target, setTarget] = useState<ScanTarget | null>(null);
+    const [step, setStep] = useState(initialDevice ? 1 : 0);
+    const [target, setTarget] = useState<ScanTarget | null>(() =>
+      initialDevice ? { device: initialDevice, kind: 'device' } : null,
+    );
     const [selectedTypes, setSelectedTypes] = useState<HeterogeneousAgentType[]>([]);
     const [profiles, setProfiles] = useState<
       Partial<Record<RemoteHeterogeneousAgentType, ConnectAgentProfile>>
@@ -412,6 +416,11 @@ const ConnectAgentContent = memo<ConnectAgentContentProps>(
     const [done, setDone] = useState<CreatedAgent[] | null>(null);
 
     const { scan, state: scanState } = useAgentScan();
+
+    // Opened on a known machine: start at its agent inventory.
+    useEffect(() => {
+      if (initialDevice) void scan({ device: initialDevice, kind: 'device' });
+    }, [initialDevice, scan]);
 
     useEffect(() => {
       setCanDismissByClickOutside(!creating);
@@ -607,7 +616,7 @@ const ConnectAgentContent = memo<ConnectAgentContentProps>(
     if (done) {
       return (
         <Flexbox gap={8} paddingBlock={'16px 8px'}>
-          <SectionLabel>{t('connectAgent.create.doneHint')}</SectionLabel>
+          {showOpenChat && <SectionLabel>{t('connectAgent.create.doneHint')}</SectionLabel>}
           <div className={styles.groupList}>
             {done.map((agent) => (
               <div className={`${styles.row} ${styles.rowStatic}`} key={agent.agentId}>
@@ -622,9 +631,11 @@ const ConnectAgentContent = memo<ConnectAgentContentProps>(
                   </Text>
                 </Flexbox>
                 <div className={styles.dot} />
-                <Button size={'small'} onClick={() => openChat(agent.agentId)}>
-                  {t('connectAgent.create.openChat')}
-                </Button>
+                {showOpenChat && (
+                  <Button size={'small'} onClick={() => openChat(agent.agentId)}>
+                    {t('connectAgent.create.openChat')}
+                  </Button>
+                )}
               </div>
             ))}
           </div>
@@ -1004,6 +1015,10 @@ ConnectAgentContent.displayName = 'ConnectAgentContent';
 
 export interface OpenConnectAgentModalOptions {
   groupId?: string;
+  /** Skip the machine picker and scan this device's agents right away. */
+  initialDevice?: DeviceListItem;
+  /** Offer "open chat" on the done view; off for hosts that must not navigate away. */
+  showOpenChat?: boolean;
   visibility?: 'private' | 'public';
 }
 
@@ -1016,6 +1031,8 @@ export const openConnectAgentModal = (options?: OpenConnectAgentModalOptions): M
     content: (
       <ConnectAgentContent
         groupId={options?.groupId}
+        initialDevice={options?.initialDevice}
+        showOpenChat={options?.showOpenChat}
         visibility={options?.visibility}
         onTitleChange={(title) => holder.instance?.update({ title })}
       />
