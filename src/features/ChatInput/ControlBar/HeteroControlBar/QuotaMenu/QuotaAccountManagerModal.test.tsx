@@ -1,7 +1,7 @@
 /**
  * @vitest-environment happy-dom
  */
-import { act, render, screen } from '@testing-library/react';
+import { act, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { agentQuotaService } from '@/services/agentQuota';
@@ -112,5 +112,29 @@ describe('QuotaAccountManager', () => {
         .getByRole('radio', { name: /heteroAgent\.claudeQuota\.manage\.modeAuto/ })
         .getAttribute('aria-disabled'),
     ).not.toBe('true');
+  });
+
+  it('offers Remove for a hydrated binding only after the server confirms it', async () => {
+    let answerBindings!: (rows: QuotaBinding[]) => void;
+    vi.spyOn(agentQuotaService, 'listBindings').mockImplementation(
+      () => new Promise((resolve) => (answerBindings = resolve)),
+    );
+    act(() =>
+      useAgentQuotaStore.setState({
+        quotaAccountsMap: { [QUOTA_ACCOUNTS_KEY]: [account('a1')] },
+        quotaBindingsMap: { 'agent-1': [binding('stale', 'a1', 'pool')] },
+      }),
+    );
+    const removeItem = () =>
+      screen.findByRole('menuitem', { name: /heteroAgent\.claudeQuota\.manage\.remove/ });
+
+    render(<QuotaAccountManager agentId={'agent-1'} />);
+    fireEvent.click(screen.getByRole('button', { name: 'heteroAgent.claudeQuota.manage.more' }));
+
+    expect((await removeItem()).getAttribute('aria-disabled')).toBe('true');
+
+    await act(async () => answerBindings([binding('b1', 'a1', 'pool')]));
+
+    expect((await removeItem()).getAttribute('aria-disabled')).not.toBe('true');
   });
 });

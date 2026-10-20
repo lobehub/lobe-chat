@@ -236,13 +236,14 @@ const QuotaAccountManager = memo<{ agentId: string }>(({ agentId }) => {
 
   const remove = useCallback(
     (accountId: string) => {
-      const b = bindingOf(accountId);
+      // An unconfirmed (hydrated) binding id may already be gone on the server.
+      const b = canEditBindings ? bindingOf(accountId) : undefined;
       if (!b) return;
       // Removing the account currently staged for switch cancels the stage.
       if (pending === accountId) setPending(null);
       return run(() => unbindQuotaAccount(agentId, b.id));
     },
-    [agentId, bindingOf, pending, run, unbindQuotaAccount],
+    [agentId, bindingOf, canEditBindings, pending, run, unbindQuotaAccount],
   );
 
   const startEdit = useCallback((a: Account) => {
@@ -310,7 +311,7 @@ const QuotaAccountManager = memo<{ agentId: string }>(({ agentId }) => {
               { type: 'divider' as const },
               {
                 danger: true,
-                disabled: !bindingOf(a.id),
+                disabled: !canEditBindings || !bindingOf(a.id),
                 icon: <Icon icon={Trash2Icon} />,
                 key: 'remove',
                 label: t('heteroAgent.claudeQuota.manage.remove'),
