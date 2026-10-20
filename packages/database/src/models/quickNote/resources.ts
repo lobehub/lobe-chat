@@ -13,6 +13,7 @@ import {
   topics,
 } from '../../schemas';
 import type { LobeChatDatabase } from '../../type';
+import { notShareVisitorTopic } from '../../utils/shareVisitor';
 import { type QuickNoteContext, quickNoteOwnershipWhere } from './context';
 import type { LinkQuickNoteResourceParams } from './types';
 
@@ -132,7 +133,8 @@ const authorizeResource = async (
     const [topic] = await db
       .select({ id: topics.id })
       .from(topics)
-      .where(and(eq(topics.id, reference.id), topicOwnership));
+      // Agent Share visitor Topics carry the creator's ids but are not the creator's context.
+      .where(and(eq(topics.id, reference.id), topicOwnership, notShareVisitorTopic()));
 
     return topic ? {} : undefined;
   }

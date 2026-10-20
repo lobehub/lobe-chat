@@ -5,7 +5,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { getTestDB } from '@/database/core/getTestDB';
 import { QuickNoteModel } from '@/database/models/quickNote';
 import { QuickNoteRepository } from '@/database/repositories/quickNote';
-import { quickNoteRuns, tasks, taskTopics, topics, users } from '@/database/schemas';
+import { messages, quickNoteRuns, tasks, taskTopics, topics, users } from '@/database/schemas';
 import { enqueueAgentSignalSourceEvent } from '@/server/services/agentSignal';
 
 import { QuickNoteProcessingService } from '.';
@@ -221,6 +221,58 @@ describe('Quick Note context candidates', () => {
     for (const ids of [found.map(({ id }) => id), candidates.map(({ id }) => id)]) {
       expect(ids).toContain('plain-task-topic');
       expect(ids).not.toContain('qn-task-topic');
+    }
+  });
+  // ROOT CAUSE:
+  // Context lookup scoped Topics by owner/workspace only. Agent Share visitor Topics keep the
+  // creator's ids (told apart by a non-null `senderId`), so a visitor's conversation could be put
+  // into the Analyze prompt or linked onto the creator's note.
+  it('excludes Agent Share visitor conversations', async () => {
+    await db.insert(topics).values({
+      content: 'moshi visitor notes',
+      id: 'share-visitor-topic',
+      senderId: 'share-visitor',
+      title: 'moshi visitor',
+      userId,
+    });
+    await db.insert(messages).values({
+      content: 'moshi question from a visitor',
+      id: 'share-visitor-message',
+      role: 'user',
+      topicId: 'share-visitor-topic',
+      userId,
+    });
+    const note = await caller.create({
+      content: 'moshi',
+      editorData: { markdown: 'moshi' },
+      resources: [
+        { id: 'share-visitor-topic', type: 'topic' },
+        { id: 'plain-task-topic', type: 'topic' },
+      ],
+    });
+    const run = await repo.claimRun(note.id, {
+      kind: 'analyze',
+      renderSourceText,
+      trigger: 'manual',
+    });
+
+    const found: { id: string }[] = await service['findContextResources'](
+      ['moshi'],
+      note.documentId,
+    );
+    const candidates: { id: string }[] = await service['collectContextCandidates'](
+      note.id,
+      run!.sourceHistoryId,
+    );
+    const linked = (await caller.agenticDetails({ id: note.id })).resources;
+
+    for (const ids of [
+      found.map(({ id }) => id),
+      candidates.map(({ id }) => id),
+      linked.map(({ resourceId }) => resourceId),
+    ]) {
+      expect(ids).toContain('plain-task-topic');
+      expect(ids).not.toContain('share-visitor-topic');
     }
   });
 });

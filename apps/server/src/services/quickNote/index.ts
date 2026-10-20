@@ -27,6 +27,7 @@ import {
   topics,
 } from '@/database/schemas';
 import type { LobeChatDatabase } from '@/database/type';
+import { notShareVisitorMessage, notShareVisitorTopic } from '@/database/utils/shareVisitor';
 import { AiAgentService } from '@/server/services/aiAgent';
 import { AiGenerationService } from '@/server/services/aiGeneration';
 import { createFtsSearchRepo } from '@/server/services/ftsSearch';
@@ -798,13 +799,33 @@ export class QuickNoteProcessingService {
     };
   };
 
+  /**
+   * Topics Analyze may read or link as context: this scope's conversations, never an Agent Share
+   * visitor's. Visitor Topics carry the creator's user and workspace ids, so the ownership
+   * predicate alone would surface them (see `notShareVisitorTopic`).
+   */
+  private contextTopicScope = () =>
+    and(
+      this.workspaceId
+        ? eq(topics.workspaceId, this.workspaceId)
+        : and(eq(topics.userId, this.userId), isNull(topics.workspaceId)),
+      notShareVisitorTopic(),
+    );
+
+  /** Messages Analyze may read as context; the twin of {@link contextTopicScope}. */
+  private contextMessageScope = () =>
+    and(
+      this.workspaceId
+        ? eq(messages.workspaceId, this.workspaceId)
+        : and(eq(messages.userId, this.userId), isNull(messages.workspaceId)),
+      notShareVisitorMessage(),
+    );
+
   private collectContextCandidates = async (
     quickNoteId: string,
     sourceHistoryId: string,
   ): Promise<QuickNoteContextCandidate[]> => {
-    const workspaceWhere = this.workspaceId
-      ? eq(topics.workspaceId, this.workspaceId)
-      : and(eq(topics.userId, this.userId), isNull(topics.workspaceId));
+    const workspaceWhere = this.contextTopicScope();
     const documentWhere = this.workspaceId
       ? and(
           eq(documents.workspaceId, this.workspaceId),
@@ -911,9 +932,7 @@ export class QuickNoteProcessingService {
       .limit(5);
     if (recentTopics.length === 0) return [];
 
-    const messageWhere = this.workspaceId
-      ? eq(messages.workspaceId, this.workspaceId)
-      : and(eq(messages.userId, this.userId), isNull(messages.workspaceId));
+    const messageWhere = this.contextMessageScope();
     const recentMessages = await this.db
       .select({ content: messages.content, topicId: messages.topicId })
       .from(messages)
@@ -949,12 +968,8 @@ export class QuickNoteProcessingService {
     const queries = normalizeQuickNoteContextQueries(contextQueries);
     if (queries.length === 0) return [];
 
-    const workspaceWhere = this.workspaceId
-      ? eq(topics.workspaceId, this.workspaceId)
-      : and(eq(topics.userId, this.userId), isNull(topics.workspaceId));
-    const messageWhere = this.workspaceId
-      ? eq(messages.workspaceId, this.workspaceId)
-      : and(eq(messages.userId, this.userId), isNull(messages.workspaceId));
+    const workspaceWhere = this.contextTopicScope();
+    const messageWhere = this.contextMessageScope();
     const documentWhere = this.workspaceId
       ? and(
           eq(documents.workspaceId, this.workspaceId),
