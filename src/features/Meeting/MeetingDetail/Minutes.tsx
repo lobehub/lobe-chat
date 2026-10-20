@@ -33,6 +33,7 @@ const styles = createStaticStyles(({ css }) => ({
     cursor: pointer;
 
     display: inline-flex;
+    flex: none;
     gap: 2px;
     align-items: center;
 
@@ -42,6 +43,7 @@ const styles = createStaticStyles(({ css }) => ({
     font-size: 12px;
     font-variant-numeric: tabular-nums;
     color: ${cssVar.colorTextTertiary};
+    white-space: nowrap;
 
     background: none;
 
