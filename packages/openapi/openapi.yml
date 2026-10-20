@@ -12818,28 +12818,53 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                agentId:
-                  type: string
-                  minLength: 1
-                clientMessageId:
-                  type: string
-                  pattern: ^msg_[\w-]{8,64}$
-                content:
-                  type: string
-                  minLength: 1
-                  maxLength: 100000
-                groupId:
-                  type: string
-                  minLength: 1
-                topicId:
-                  anyOf:
-                    - type: string
+              anyOf:
+                - type: object
+                  properties:
+                    agentId:
+                      type: string
                       minLength: 1
-                    - type: "null"
-              required:
-                - content
+                    clientMessageId:
+                      type: string
+                      pattern: ^msg_[\w-]{8,64}$
+                    content:
+                      type: string
+                      minLength: 1
+                      maxLength: 100000
+                    groupId:
+                      type: string
+                      minLength: 1
+                    topicId:
+                      anyOf:
+                        - type: string
+                          minLength: 1
+                        - type: "null"
+                  required:
+                    - agentId
+                    - content
+                - type: object
+                  properties:
+                    agentId:
+                      type: string
+                      minLength: 1
+                    clientMessageId:
+                      type: string
+                      pattern: ^msg_[\w-]{8,64}$
+                    content:
+                      type: string
+                      minLength: 1
+                      maxLength: 100000
+                    groupId:
+                      type: string
+                      minLength: 1
+                    topicId:
+                      anyOf:
+                        - type: string
+                          minLength: 1
+                        - type: "null"
+                  required:
+                    - content
+                    - groupId
   /api/v1/im/topics/{topicId}/sync:
     get:
       operationId: syncImTopic

@@ -5866,10 +5866,16 @@ export type PostApiV1GoalsByIdRestartResponse = PostApiV1GoalsByIdRestartRespons
 
 export type PostApiV1ImMessagesData = {
     body: {
-        agentId?: string;
+        agentId: string;
         clientMessageId?: string;
         content: string;
         groupId?: string;
+        topicId?: string | null;
+    } | {
+        agentId?: string;
+        clientMessageId?: string;
+        content: string;
+        groupId: string;
         topicId?: string | null;
     };
     path?: never;
