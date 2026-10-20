@@ -224,6 +224,8 @@ components:
               - role
             type: object
           type: array
+        personal:
+          type: boolean
         pinned:
           type:
             - boolean
@@ -241,6 +243,7 @@ components:
         - description
         - avatar
         - backgroundColor
+        - personal
         - pinned
         - members
         - createdAt
@@ -3759,6 +3762,13 @@ paths:
           name: pageSize
           schema:
             type: string
+        - in: query
+          name: personal
+          schema:
+            type: string
+            enum:
+              - "true"
+              - "false"
       responses:
         "200":
           content:
@@ -3886,6 +3896,8 @@ paths:
                           - assistant
                     required:
                       - agentId
+                personal:
+                  type: boolean
                 title:
                   type: string
                   minLength: 1
@@ -4088,6 +4100,8 @@ paths:
                   type:
                     - string
                     - "null"
+                personal:
+                  type: boolean
                 pinned:
                   type: boolean
                 title:

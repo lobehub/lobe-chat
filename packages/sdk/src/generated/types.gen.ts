@@ -65,6 +65,7 @@ export type ChatGroup = {
         order: number | null;
         role: 'supervisor' | 'participant' | 'assistant' | null;
     }>;
+    personal: boolean;
     pinned: boolean | null;
     title: string | null;
     updatedAt: string;
@@ -1769,6 +1770,7 @@ export type GetApiV1ChatGroupsData = {
     query?: {
         page?: string;
         pageSize?: string;
+        personal?: 'true' | 'false';
     };
     url: '/api/v1/chat-groups';
 };
@@ -1837,6 +1839,7 @@ export type PostApiV1ChatGroupsData = {
             agentId: string;
             role?: 'participant' | 'assistant';
         }>;
+        personal?: boolean;
         title: string;
     };
     path?: never;
@@ -2022,6 +2025,7 @@ export type PatchApiV1ChatGroupsByIdData = {
         avatar?: string | null;
         backgroundColor?: string | null;
         description?: string | null;
+        personal?: boolean;
         pinned?: boolean;
         title?: string;
     };
