@@ -1,21 +1,29 @@
-import { Alert, createStaticStyles, useThemeMode } from '@lobehub/ui';
+import { Alert, useThemeMode } from '@lobehub/ui';
+import { cssVar } from '@lobehub/ui/stylex/cssVar.stylex';
+import * as stylex from '@stylexjs/stylex';
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useUserStore } from '@/store/user';
 import { userGeneralSettingsSelectors } from '@/store/user/selectors';
 
-const styles = createStaticStyles(({ css }) => ({
-  frame: css`
-    flex: 1;
-
-    width: 100%;
-    min-height: 0;
-    border: 0;
-
-    background: transparent;
-  `,
-}));
+const styles = stylex.create({
+  details: {
+    color: cssVar.colorTextSecondary,
+    fontFamily: cssVar.fontFamilyCode,
+    fontSize: 12,
+    margin: 0,
+    whiteSpace: 'pre-wrap',
+    wordBreak: 'break-word',
+  },
+  frame: {
+    backgroundColor: 'transparent',
+    borderWidth: 0,
+    flex: '1',
+    minHeight: 0,
+    width: '100%',
+  },
+});
 
 interface CanvasError {
   component?: string;
@@ -72,17 +80,22 @@ const CanvasFrame = memo<{ src: string }>(({ src }) => {
     <>
       {errors.length > 0 && (
         <Alert
+          description={t('canvas.runtimeErrorsHint')}
           title={t('canvas.runtimeErrors', { count: errors.length })}
           type={'warning'}
-          description={errors
-            .map((error) =>
-              error.component ? `<${error.component}> ${error.message}` : error.message,
-            )
-            .join('\n')}
+          extra={
+            <pre {...stylex.props(styles.details)}>
+              {errors
+                .map((error) =>
+                  error.component ? `<${error.component}> ${error.message}` : error.message,
+                )
+                .join('\n')}
+            </pre>
+          }
         />
       )}
       <iframe
-        className={styles.frame}
+        {...stylex.props(styles.frame)}
         ref={ref}
         sandbox="allow-scripts allow-popups allow-forms allow-downloads"
         src={src}

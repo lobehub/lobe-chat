@@ -12,9 +12,11 @@ import {
   validateCanvasProject,
 } from '@lobechat/canvas';
 import type { CanvasWorkVersionMetadata } from '@lobechat/types';
+import pMap from 'p-map';
 
 import type { CanvasStorageQuotaResult } from '@/business/server/canvasStorage';
 import { CanvasFileModel } from '@/database/models/canvasFile';
+import { CanvasFileRepository } from '@/database/repositories/canvasFile';
 import type { LobeChatDatabase } from '@/database/type';
 
 export interface CanvasBlobStore {
@@ -54,13 +56,17 @@ const basename = (path: string) => path.slice(path.lastIndexOf('/') + 1);
 export const isOwnCanvasManifestKey = (userId: string, key: string) =>
   key.startsWith(`canvas/${userId}/`) && !key.includes('..');
 
+const BLOB_READ_CONCURRENCY = 8;
+
 export class CanvasStorageService {
   private deps: CanvasStorageDeps;
   private files: CanvasFileModel;
+  private fileRegistry: CanvasFileRepository;
 
   constructor(deps: CanvasStorageDeps) {
     this.deps = deps;
     this.files = new CanvasFileModel(deps.db, deps.userId, deps.workspaceId);
+    this.fileRegistry = new CanvasFileRepository(deps.db, deps.userId, deps.workspaceId);
   }
 
   get ownerId() {
@@ -96,16 +102,16 @@ export class CanvasStorageService {
   }
 
   async loadProject(manifest: CanvasManifest): Promise<Map<string, CanvasCommitFile>> {
-    const entries = await Promise.all(
-      Object.entries(manifest.files).map(
-        async ([path, entry]): Promise<[string, CanvasCommitFile]> => {
-          if (!isCanvasTextPath(path)) {
-            return [path, { content: new Uint8Array(0), hash: entry.hash, path, size: entry.size }];
-          }
-          const bytes = await this.deps.store.read(this.blobKey(entry.hash));
-          return [path, { content: decoder.decode(bytes), path }];
-        },
-      ),
+    const entries = await pMap(
+      Object.entries(manifest.files),
+      async ([path, entry]): Promise<[string, CanvasCommitFile]> => {
+        if (!isCanvasTextPath(path)) {
+          return [path, { content: new Uint8Array(0), hash: entry.hash, path, size: entry.size }];
+        }
+        const bytes = await this.deps.store.read(this.blobKey(entry.hash));
+        return [path, { content: decoder.decode(bytes), path }];
+      },
+      { concurrency: BLOB_READ_CONCURRENCY },
     );
     return new Map(entries);
   }
@@ -162,7 +168,7 @@ export class CanvasStorageService {
       uploaded.add(file.hash);
     }
 
-    await this.files.register(
+    await this.fileRegistry.register(
       canvasId,
       [...added.values()].map((file) => ({
         contentType: file.contentType,

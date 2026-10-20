@@ -34,7 +34,7 @@ export const checkScriptText = (file: string, text: string, lineOffset = 1): Can
   return issues;
 };
 
-const CSS_URL_PATTERN = /url\(\s*(["']?)([^\s"')]+)\1\s*\)/g;
+const CSS_URL_PATTERN = /url\(\s*(["']?)([^\s"'()]+)\1\s*\)/g;
 const CSS_IMPORT_PATTERN = /@import\s+(["'])([^"']+)\1/g;
 
 export const collectCssRefs = (text: string): { href: string; index: number }[] => {

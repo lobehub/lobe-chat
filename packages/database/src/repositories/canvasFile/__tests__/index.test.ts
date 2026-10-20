@@ -1,11 +1,12 @@
 // @vitest-environment node
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
-import { getTestDB } from '../../core/getTestDB';
-import { users, workspaceMembers, workspaces } from '../../schemas';
-import type { LobeChatDatabase } from '../../type';
-import { CanvasFileModel } from '../canvasFile';
-import { FileModel } from '../file';
+import { getTestDB } from '../../../core/getTestDB';
+import { CanvasFileModel } from '../../../models/canvasFile';
+import { FileModel } from '../../../models/file';
+import { users, workspaceMembers, workspaces } from '../../../schemas';
+import type { LobeChatDatabase } from '../../../type';
+import { CanvasFileRepository } from '../index';
 
 const serverDB: LobeChatDatabase = await getTestDB();
 const userId = 'canvas-file-user';
@@ -28,11 +29,12 @@ const blob = (hash: string, size = 10) => ({
   url: `canvas/${userId}/blobs/${hash}`,
 });
 
-describe('CanvasFileModel', () => {
+describe('CanvasFileRepository', () => {
   it('registers one file row per canvas blob and counts it toward storage usage', async () => {
+    const repository = new CanvasFileRepository(serverDB, userId);
+    await repository.register('cvs_a', [blob('h1', 100), blob('h2', 50)]);
+    await repository.register('cvs_a', [blob('h1', 100)]);
     const model = new CanvasFileModel(serverDB, userId);
-    await model.register('cvs_a', [blob('h1', 100), blob('h2', 50)]);
-    await model.register('cvs_a', [blob('h1', 100)]);
 
     expect(
       (await model.listByHashes(['h1', 'h2'])).map((row) => [row.canvasId, row.fileHash]),
@@ -46,7 +48,7 @@ describe('CanvasFileModel', () => {
   });
 
   it('keeps blobs owned per user', async () => {
-    await new CanvasFileModel(serverDB, userId).register('cvs_a', [blob('h1')]);
+    await new CanvasFileRepository(serverDB, userId).register('cvs_a', [blob('h1')]);
 
     expect(await new CanvasFileModel(serverDB, otherUserId).listByHashes(['h1'])).toEqual([]);
   });
@@ -60,7 +62,7 @@ describe('CanvasFileModel', () => {
       { role: 'owner', userId, workspaceId },
       { role: 'editor', userId: otherUserId, workspaceId },
     ]);
-    await new CanvasFileModel(serverDB, userId, workspaceId).register('cvs_a', [blob('h1')]);
+    await new CanvasFileRepository(serverDB, userId, workspaceId).register('cvs_a', [blob('h1')]);
 
     expect(
       await new CanvasFileModel(serverDB, otherUserId, workspaceId).listByHashes(['h1']),
@@ -68,9 +70,10 @@ describe('CanvasFileModel', () => {
   });
 
   it('removes a canvas and reports blobs no other canvas still uses', async () => {
+    const repository = new CanvasFileRepository(serverDB, userId);
+    await repository.register('cvs_a', [blob('shared'), blob('only-a')]);
+    await repository.register('cvs_b', [blob('shared')]);
     const model = new CanvasFileModel(serverDB, userId);
-    await model.register('cvs_a', [blob('shared'), blob('only-a')]);
-    await model.register('cvs_b', [blob('shared')]);
 
     const orphaned = await model.deleteByCanvas('cvs_a');
 

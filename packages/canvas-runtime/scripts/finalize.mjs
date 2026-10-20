@@ -7,7 +7,11 @@ const dist = path.resolve(here, '../dist');
 const jsFile = path.join(dist, 'canvas-runtime.js');
 const cssFiles = fs.readdirSync(dist).filter((file) => file.endsWith('.css'));
 const css = cssFiles.map((file) => fs.readFileSync(path.join(dist, file), 'utf8')).join('\n');
-const inject = `(function(){if(document.getElementById('lobe-canvas-style'))return;var s=document.createElement('style');s.id='lobe-canvas-style';s.textContent=${JSON.stringify(css)};(document.head||document.documentElement).appendChild(s)})();\n`;
+const cssLiteral = JSON.stringify(css)
+  .replaceAll('<', String.raw`\u003c`)
+  .replaceAll('\u2028', String.raw`\u2028`)
+  .replaceAll('\u2029', String.raw`\u2029`);
+const inject = `(function(){if(document.getElementById('lobe-canvas-style'))return;var s=document.createElement('style');s.id='lobe-canvas-style';s.textContent=${cssLiteral};(document.head||document.documentElement).appendChild(s)})();\n`;
 
 fs.writeFileSync(jsFile, inject + fs.readFileSync(jsFile, 'utf8'));
 for (const file of cssFiles) fs.rmSync(path.join(dist, file));

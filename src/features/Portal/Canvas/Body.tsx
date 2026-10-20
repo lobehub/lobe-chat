@@ -1,4 +1,6 @@
-import { createStaticStyles, cssVar, Empty, Flexbox, Skeleton, Text } from '@lobehub/ui';
+import { Empty, Flexbox, Skeleton, Text } from '@lobehub/ui';
+import { cssVar } from '@lobehub/ui/stylex/cssVar.stylex';
+import * as stylex from '@stylexjs/stylex';
 import { Loader2Icon, PanelsTopLeftIcon } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -7,43 +9,47 @@ import CanvasFrame from './CanvasFrame';
 import { useAwaitingCanvasSave, useCanvasVersion, useCanvasView } from './useCanvasVersion';
 import { usePendingCanvasUpdate } from './usePendingCanvasUpdate';
 
-const styles = createStaticStyles(({ css }) => ({
-  body: css`
-    position: relative;
-    height: 100%;
-    min-height: 0;
-  `,
-  dimmed: css`
-    pointer-events: none;
-    opacity: 0.45;
-    filter: grayscale(1);
-    transition: opacity 0.2s ease;
-  `,
-  pill: css`
-    position: absolute;
-    z-index: 1;
-    inset-block-start: 16px;
-    inset-inline-start: 50%;
-    transform: translateX(-50%);
+const spin = stylex.keyframes({
+  to: { transform: 'rotate(360deg)' },
+});
 
-    padding-block: 6px;
-    padding-inline: 12px;
-    border: 1px solid ${cssVar.colorBorder};
-    border-radius: 999px;
-
-    background: ${cssVar.colorBgElevated};
-    box-shadow: ${cssVar.boxShadowSecondary};
-  `,
-  spin: css`
-    animation: lobe-canvas-spin 1s linear infinite;
-
-    @keyframes lobe-canvas-spin {
-      to {
-        transform: rotate(360deg);
-      }
-    }
-  `,
-}));
+const styles = stylex.create({
+  body: {
+    height: '100%',
+    minHeight: 0,
+    position: 'relative',
+  },
+  content: {
+    minHeight: 0,
+  },
+  dimmed: {
+    filter: 'grayscale(1)',
+    opacity: 0.45,
+    pointerEvents: 'none',
+    transition: 'opacity 0.2s ease',
+  },
+  pill: {
+    backgroundColor: cssVar.colorBgElevated,
+    borderColor: cssVar.colorBorder,
+    borderRadius: 999,
+    borderStyle: 'solid',
+    borderWidth: 1,
+    boxShadow: cssVar.boxShadowSecondary,
+    insetBlockStart: 16,
+    insetInlineStart: '50%',
+    paddingBlock: 6,
+    paddingInline: 12,
+    position: 'absolute',
+    transform: 'translateX(-50%)',
+    zIndex: 1,
+  },
+  spin: {
+    animationDuration: '1s',
+    animationIterationCount: 'infinite',
+    animationName: spin,
+    animationTimingFunction: 'linear',
+  },
+});
 
 const Body = memo(() => {
   const { t } = useTranslation('portal');
@@ -70,18 +76,14 @@ const Body = memo(() => {
   }
 
   return (
-    <Flexbox className={styles.body}>
+    <Flexbox {...stylex.props(styles.body)}>
       {showPending && (
-        <Flexbox horizontal align={'center'} className={styles.pill} gap={8}>
-          <Loader2Icon className={styles.spin} size={14} />
+        <Flexbox horizontal align={'center'} gap={8} {...stylex.props(styles.pill)}>
+          <Loader2Icon size={14} {...stylex.props(styles.spin)} />
           <Text fontSize={12}>{t('canvas.generating', { version: data.latestVersion + 1 })}</Text>
         </Flexbox>
       )}
-      <Flexbox
-        className={showPending ? styles.dimmed : undefined}
-        flex={1}
-        style={{ minHeight: 0 }}
-      >
+      <Flexbox flex={1} {...stylex.props(styles.content, showPending && styles.dimmed)}>
         <CanvasFrame src={data.previewUrl} />
       </Flexbox>
     </Flexbox>

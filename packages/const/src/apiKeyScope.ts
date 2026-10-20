@@ -206,6 +206,8 @@ export const TRPC_NAMESPACE_API_KEY_RULES: Record<string, TrpcNamespaceScopeRule
   // decrypts stored bot/messenger credentials and calls external channel APIs
   botMessage: 'blocked',
   brief: rw('chat:read', 'chat:write'),
+  // publish opens a public site from stored files; no key-based client drives canvases
+  canvas: 'blocked',
   changelog: 'open',
   chunk: rw('knowledge:read', 'knowledge:write'),
   comfyui: rw('model:read', 'model:write'),

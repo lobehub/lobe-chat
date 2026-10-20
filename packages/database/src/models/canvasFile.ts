@@ -1,7 +1,7 @@
 import { FileSource } from '@lobechat/types';
 import { and, eq, inArray, sql } from 'drizzle-orm';
 
-import { files, globalFiles } from '../schemas';
+import { files } from '../schemas';
 import type { LobeChatDatabase } from '../type';
 import { buildWorkspacePayload, buildWorkspaceWhere } from '../utils/workspace';
 
@@ -42,46 +42,25 @@ export class CanvasFileModel {
       .where(and(this.ownership(), inArray(files.fileHash, hashes)));
   };
 
-  register = async (canvasId: string, blobs: CanvasBlobRecord[]) => {
-    const existing = new Set(
-      (await this.listByHashes(blobs.map((item) => item.hash)))
-        .filter((row) => row.canvasId === canvasId)
-        .map((row) => row.fileHash),
-    );
-    const fresh = blobs.filter((item) => !existing.has(item.hash));
-    if (fresh.length === 0) return;
+  insertFiles = async (canvasId: string, blobs: CanvasBlobRecord[]) => {
+    if (blobs.length === 0) return;
 
-    await this.db.transaction(async (tx) => {
-      await tx
-        .insert(globalFiles)
-        .values(
-          fresh.map((item) => ({
-            creator: this.userId,
+    await this.db.insert(files).values(
+      blobs.map((item) =>
+        buildWorkspacePayload(
+          { userId: this.userId, workspaceId: this.workspaceId },
+          {
+            fileHash: item.hash,
             fileType: item.contentType,
-            hashId: item.hash,
+            metadata: { canvasId },
+            name: item.name,
             size: item.size,
+            source: FileSource.Canvas,
             url: item.url,
-          })),
-        )
-        .onConflictDoNothing();
-
-      await tx.insert(files).values(
-        fresh.map((item) =>
-          buildWorkspacePayload(
-            { userId: this.userId, workspaceId: this.workspaceId },
-            {
-              fileHash: item.hash,
-              fileType: item.contentType,
-              metadata: { canvasId },
-              name: item.name,
-              size: item.size,
-              source: FileSource.Canvas,
-              url: item.url,
-            },
-          ),
+          },
         ),
-      );
-    });
+      ),
+    );
   };
 
   deleteByCanvas = async (canvasId: string): Promise<string[]> => {

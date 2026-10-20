@@ -1,7 +1,9 @@
 'use client';
 
 import type { BuiltinInspector, BuiltinInspectorProps } from '@lobechat/types';
-import { createStaticStyles, cx } from '@lobehub/ui';
+import { cx } from '@lobehub/ui';
+import { cssVar } from '@lobehub/ui/stylex/cssVar.stylex';
+import * as stylex from '@stylexjs/stylex';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -10,29 +12,26 @@ import { inspectorTextStyles, shinyTextStyles } from '@/styles';
 import type { CanvasApiNameType, CanvasSaveState } from '../../types';
 import { CanvasApiName, CanvasIdentifier } from '../../types';
 
-const styles = createStaticStyles(({ css, cssVar }) => ({
-  chip: css`
-    overflow: hidden;
-    flex-shrink: 1;
-
-    min-width: 0;
-    margin-inline-start: 6px;
-    padding-block: 2px;
-    padding-inline: 8px;
-    border-radius: 999px;
-
-    font-size: 12px;
-    color: ${cssVar.colorTextSecondary};
-    text-overflow: ellipsis;
-    white-space: nowrap;
-
-    background: ${cssVar.colorFillTertiary};
-  `,
-  failed: css`
-    color: ${cssVar.colorError};
-    background: ${cssVar.colorErrorBg};
-  `,
-}));
+const styles = stylex.create({
+  chip: {
+    backgroundColor: cssVar.colorFillTertiary,
+    borderRadius: 999,
+    color: cssVar.colorTextSecondary,
+    flexShrink: 1,
+    fontSize: 12,
+    marginInlineStart: 6,
+    minWidth: 0,
+    overflow: 'hidden',
+    paddingBlock: 2,
+    paddingInline: 8,
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+  },
+  failed: {
+    backgroundColor: cssVar.colorErrorBg,
+    color: cssVar.colorError,
+  },
+});
 
 type Props = BuiltinInspectorProps<Record<string, any>, CanvasSaveState>;
 
@@ -50,8 +49,8 @@ const createInspector = (apiName: CanvasApiNameType) => {
         <span className={cx(busy && shinyTextStyles.shinyText)}>
           {t(`builtins.${CanvasIdentifier}.apiName.${apiName}`)}
         </span>
-        {chip && <span className={styles.chip}>{chip}</span>}
-        {issueCount > 0 && <span className={cx(styles.chip, styles.failed)}>{issueCount}</span>}
+        {chip && <span {...stylex.props(styles.chip)}>{chip}</span>}
+        {issueCount > 0 && <span {...stylex.props(styles.chip, styles.failed)}>{issueCount}</span>}
       </div>
     );
   });

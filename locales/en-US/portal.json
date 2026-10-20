@@ -43,6 +43,7 @@
   "canvas.publish.failed": "Couldn’t publish. Try again.",
   "canvas.publish.success": "Published v{{version}}",
   "canvas.runtimeErrors": "This canvas reported errors ({{count}})",
+  "canvas.runtimeErrorsHint": "Some components could not render. Ask the agent to fix the canvas, or expand to see details.",
   "canvas.title": "Canvas",
   "document.saveConflict": "This document was updated elsewhere. Refreshing to the latest version.",
   "document.todos.allCompleted": "All tasks completed",

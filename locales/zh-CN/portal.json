@@ -43,6 +43,7 @@
   "canvas.publish.failed": "发布失败，请重试",
   "canvas.publish.success": "已发布 v{{version}}",
   "canvas.runtimeErrors": "画布运行时报错（{{count}}）",
+  "canvas.runtimeErrorsHint": "部分组件未能渲染。可以让助手修复画布，或展开查看详情。",
   "canvas.title": "画布",
   "document.saveConflict": "文档已在别处更新，正在刷新为最新版本",
   "document.todos.allCompleted": "所有任务已完成",
