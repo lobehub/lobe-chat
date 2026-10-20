@@ -48,7 +48,7 @@ import { isDevicePresenceUnknown, useDeviceList } from '@/store/device';
 import { useElectronStore } from '@/store/electron';
 import { useHomeStore } from '@/store/home';
 
-import { getDeviceListState } from './deviceListState';
+import { getDeviceListState, isListableDevice } from './deviceListState';
 import type { ConnectableProvider, ConnectAgentProfile } from './providers';
 import { buildConnectAgentConfig, CONNECTABLE_PROVIDERS } from './providers';
 import type { ScanTarget } from './useAgentScan';
@@ -401,9 +401,14 @@ const ConnectAgentContent = memo<ConnectAgentContentProps>(
     const activeWorkspaceId = useActiveWorkspaceId();
     const restrictToWorkspaceDevices = Boolean(activeWorkspaceId);
 
-    const [step, setStep] = useState(initialDevice ? 1 : 0);
+    // A preselected device the picker would not list starts at the picker instead.
+    const preselected =
+      initialDevice && isListableDevice(initialDevice, restrictToWorkspaceDevices)
+        ? initialDevice
+        : undefined;
+    const [step, setStep] = useState(preselected ? 1 : 0);
     const [target, setTarget] = useState<ScanTarget | null>(() =>
-      initialDevice ? { device: initialDevice, kind: 'device' } : null,
+      preselected ? { device: preselected, kind: 'device' } : null,
     );
     const [selectedTypes, setSelectedTypes] = useState<HeterogeneousAgentType[]>([]);
     const [profiles, setProfiles] = useState<
@@ -431,7 +436,7 @@ const ConnectAgentContent = memo<ConnectAgentContentProps>(
     } = useDeviceList();
 
     const listedDevices = useMemo(
-      () => (devices ?? []).filter((d) => !restrictToWorkspaceDevices || d.scope === 'workspace'),
+      () => (devices ?? []).filter((d) => isListableDevice(d, restrictToWorkspaceDevices)),
       [devices, restrictToWorkspaceDevices],
     );
     const onlineDevices = listedDevices.filter((d) => d.online);
