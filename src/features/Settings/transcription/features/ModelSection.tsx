@@ -11,6 +11,7 @@ import { Form, type FormGroupItem, useForm } from '@lobehub/ui/form';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import InfoTooltip from '@/components/InfoTooltip';
 import { FORM_STYLE } from '@/const/layoutTokens';
 import { electronLocalAsrService } from '@/services/electron/localAsr';
 import { formatSize, formatSpeed } from '@/utils/format';
@@ -125,10 +126,16 @@ const PackDescription = ({ pack, progress }: Omit<PackRowProps, 'onSettled'>) =>
           </Text>
         </Flexbox>
       )}
+      {/* The row description sits inside the field <label>, so the raw error is
+          folded into a hover tooltip rather than a button toggle that the label
+          would activate on every click. */}
       {status === 'corrupted' && error && (
-        <Text fontSize={12} type={'danger'}>
-          {t('localAsr.models.error', { error })}
-        </Text>
+        <Flexbox horizontal align={'center'} gap={4}>
+          <Text fontSize={12} type={'danger'}>
+            {t('localAsr.models.corruptedHint')}
+          </Text>
+          <InfoTooltip size={12} title={error} />
+        </Flexbox>
       )}
     </Flexbox>
   );

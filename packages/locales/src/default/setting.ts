@@ -4536,6 +4536,7 @@ When I am ___, I need ___
   'localAsr.hardware.reason.native_runtime_missing':
     'The local engine is missing from this installation. Reinstall LobeHub to restore it.',
   'localAsr.models.title': 'Local models',
+  'localAsr.models.corruptedHint': 'Model files are damaged. Download again to fix.',
   'localAsr.models.desc': 'Stored in {{dir}}. Each file is checked against its SHA-256 before use.',
   'localAsr.models.pack.asr-sensevoice': 'Speech recognition',
   'localAsr.models.pack.diarization': 'Speaker identification',
@@ -4557,7 +4558,6 @@ When I am ___, I need ___
   'localAsr.models.deleteConfirm.desc': 'This frees {{size}}. You can download it again later.',
   'localAsr.models.verifyOk': 'All files passed SHA-256 verification',
   'localAsr.models.verifyFailed': 'Some files failed verification. Download the model again.',
-  'localAsr.models.error': 'Download failed: {{error}}',
   'localAsr.test.title': 'Try transcription',
   'localAsr.test.desc': 'Uses the engine selected above. In local mode nothing is uploaded.',
   'localAsr.test.live.title': 'Live transcription',
