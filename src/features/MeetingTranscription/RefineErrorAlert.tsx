@@ -29,12 +29,12 @@ const RefineErrorAlert = ({ code, loading, onRetry }: RefineErrorAlertProps) => 
         action={
           <Flexbox horizontal gap={8}>
             {(code === 'provider_not_configured' || code === 'quota_exceeded') && (
-              <Button size={'small'} onClick={() => navigate('/settings/service-model')}>
+              <Button onClick={() => navigate('/settings/service-model')}>
                 {t('live.openSettings')}
               </Button>
             )}
             {retryable && (
-              <Button loading={loading} size={'small'} onClick={onRetry}>
+              <Button loading={loading} onClick={onRetry}>
                 {t('refine.retry')}
               </Button>
             )}
