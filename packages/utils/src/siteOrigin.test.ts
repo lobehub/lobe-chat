@@ -17,6 +17,21 @@ describe('normalizeSiteOrigin', () => {
     });
   });
 
+  it('rejects a port outside the URL range and canonicalizes leading zeros', () => {
+    expect(normalizeSiteOrigin('https://fieldnotes.app:99999')).toEqual({
+      ok: false,
+      reason: 'invalid',
+    });
+    expect(normalizeSiteOrigin('https://fieldnotes.app:65535')).toEqual({
+      ok: true,
+      origin: 'https://fieldnotes.app:65535',
+    });
+    expect(normalizeSiteOrigin('https://fieldnotes.app:00443')).toEqual({
+      ok: true,
+      origin: 'https://fieldnotes.app',
+    });
+  });
+
   it('allows plain http only for loopback hosts', () => {
     expect(normalizeSiteOrigin('http://localhost:3000')).toEqual({
       ok: true,

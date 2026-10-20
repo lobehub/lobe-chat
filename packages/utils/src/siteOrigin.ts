@@ -9,6 +9,7 @@ const DEFAULT_PORTS: Record<string, string> = { http: '80', https: '443' };
 const LOOPBACK_HOSTS = new Set(['localhost', '127.0.0.1', '[::1]']);
 const ORIGIN_PATTERN = /^([a-z][\d+.a-z-]*):\/\/([^#/?]*)([#/?].*)?$/is;
 const AUTHORITY_PATTERN = /^(\[[^\]]+\]|[^:]+)(?::(\d+))?$/;
+const MAX_PORT = 65_535;
 
 const fail = (reason: SiteOriginError): SiteOriginResult => ({ ok: false, reason });
 
@@ -51,7 +52,13 @@ export const normalizeSiteOrigin = (input: string): SiteOriginResult => {
     }
   }
 
-  const port = parts[2] && parts[2] !== DEFAULT_PORTS[scheme] ? `:${Number(parts[2])}` : '';
+  // `new URL` rejects ports above 65535, so such an origin could never match a request.
+  const portNumber = parts[2] === undefined ? undefined : Number(parts[2]);
+  if (portNumber !== undefined && portNumber > MAX_PORT) return fail('invalid');
+  const port =
+    portNumber !== undefined && String(portNumber) !== DEFAULT_PORTS[scheme]
+      ? `:${portNumber}`
+      : '';
   return { ok: true, origin: `${scheme}://${wildcard ? '*.' : ''}${hostname}${port}` };
 };
 
