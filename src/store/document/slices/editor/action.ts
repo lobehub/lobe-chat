@@ -464,7 +464,13 @@ export class EditorActionImpl {
       // leaving the pre-edit body there would render stale content — and keep
       // rendering it when the confirming read is slow or fails.
       const cachedDetail = this.#get().documentDetailMap[id]?.document;
-      if (cachedDetail) {
+      // A read that landed while this save was in flight may already hold a
+      // newer writer's revision; mirroring this save over it would regress it.
+      const cachedIsNewer =
+        !!savedAt &&
+        !!cachedDetail?.updatedAt &&
+        new Date(cachedDetail.updatedAt).getTime() > savedAt.getTime();
+      if (cachedDetail && !cachedIsNewer) {
         this.#get().internal_adoptDocumentDetail(
           id,
           {
