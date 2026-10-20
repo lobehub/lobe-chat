@@ -53,9 +53,12 @@ const entitlement = vi.hoisted(() => ({ claim: vi.fn() }));
 /** The storage key of every client the router made, in order: whose drive each call reached. */
 const reached = vi.hoisted(() => [] as (string | undefined)[]);
 
-vi.mock('@/business/server/trpc-middlewares/workspaceAuth', async () => {
+vi.mock('@/business/server/trpc-middlewares/workspaceAuth', async (importOriginal) => {
+  // Only the workspace gate is replaced; routers mounted beside this one (the
+  // environment aliases) import the module's other middlewares as they are.
+  const actual = await importOriginal<Record<string, unknown>>();
   const mod = await vi.importActual<{ trpc: any }>('@/libs/trpc/lambda/init');
-  return { wsCompatProcedure: mod.trpc.procedure };
+  return { ...actual, wsCompatProcedure: mod.trpc.procedure };
 });
 
 vi.mock('@/libs/trpc/lambda/middleware', () => ({

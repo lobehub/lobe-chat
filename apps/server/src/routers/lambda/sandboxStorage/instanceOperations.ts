@@ -1,7 +1,13 @@
-import { EnvironmentInstanceModel, InstanceDirectoryOverlapError } from '@/database/models/environmentInstance';
-import { SandboxStorageFilesError } from '@/server/services/sandbox/storageFiles';
-import { derivedInstanceDirectory, MAX_DERIVED_DIRECTORY_ATTEMPTS } from '@lobechat/utils/environmentInstance';
+import {
+  derivedInstanceDirectory,
+  MAX_DERIVED_DIRECTORY_ATTEMPTS,
+} from '@lobechat/utils/environmentInstance';
 import { TRPCError } from '@trpc/server';
+
+import type { EnvironmentInstanceModel } from '@/database/models/environmentInstance';
+import { InstanceDirectoryOverlapError } from '@/database/models/environmentInstance';
+import { sandboxStorageBinding } from '@/server/services/sandbox';
+import { SandboxStorageFilesError } from '@/server/services/sandbox/storageFiles';
 
 import { isDuplicateInstanceDirectory } from './constraintErrors';
 import { isFolderOccupied } from './driveScope';
@@ -85,7 +91,11 @@ export const createDerivedInstance = async (
  * row permanently, because the environment holding it cannot be deleted
  * either while an instance references it.
  */
-export const deleteInstanceSnapshot = (client: SandboxStorageClient, id: string, topicId?: string) =>
+export const deleteInstanceSnapshot = (
+  client: SandboxStorageClient,
+  id: string,
+  topicId?: string,
+) =>
   client.deleteInstance({ name: id, topicId }).catch((error: unknown) => {
     if (error instanceof SandboxStorageFilesError && error.status === 404) return;
 

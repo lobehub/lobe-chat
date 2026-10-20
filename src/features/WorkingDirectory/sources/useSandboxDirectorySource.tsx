@@ -99,7 +99,9 @@ export const useSandboxDirectorySource = ({
     const isSharedDrive = isWorkspace && drive === 'public';
     // Which environments may initialize a folder on this drive: the ones whose
     // directories are made here, and only the caller's own.
-    const initializable = (environment: Parameters<typeof canEdit>[0]) =>
+    const initializable = (
+      environment: Parameters<typeof canEdit>[0] & { visibility?: string | null },
+    ) =>
       canEdit(environment) &&
       (!isWorkspace ||
         (drive === 'personal'
