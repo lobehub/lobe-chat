@@ -1465,15 +1465,15 @@ export const createGatewayEventHandler = (
           get().internal_toggleToolCallingStreaming(currentAssistantMessageId, undefined);
           endReasoningIfNeeded();
 
-          // An errored run is a FAILED run, not a completed one — failed runs
-          // receive no unread badge, no queue drain, and no notification.
-          // For gateway, drive the terminal disposition through the
-          // shared lifecycle so the op lands in `failed` (no unread badge, no queue
-          // drain, no notification). hetero never forwards `error` to this handler
-          // (its executor routes errors through persistTerminalError), but keep the
-          // legacy completeOperation for any other caller for safety.
+          // Failed run: no unread/drain, but notify here — this event ends the session,
+          // so a later `agent_runtime_end` is dropped. hetero never forwards `error`.
           if (runtimeType === 'gateway' && runLifecycle) {
-            await runLifecycle.completeRun({ ...lifecycleEventBase, status: 'failed' });
+            const failedEvent = { ...lifecycleEventBase, status: 'failed' as const };
+            await runLifecycle.completeRun(failedEvent);
+            await runLifecycle.afterRunComplete({
+              ...failedEvent,
+              notification: { error: messageError },
+            });
           } else {
             get().completeOperation(operationId);
           }

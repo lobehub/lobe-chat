@@ -94,6 +94,35 @@ describe('createGatewayEventHandler — failed run terminal', () => {
     );
   });
 
+  it('announces a run that fails with an `error` event, once, before the dropped end event', async () => {
+    vi.spyOn(messageService, 'updateMessageError').mockResolvedValue({ success: true } as any);
+    const lifecycle = createLifecycle();
+    const handler = createGatewayEventHandler(createStore, {
+      assistantMessageId: 'answer-msg',
+      context,
+      operationId: 'op-1',
+      runLifecycle: lifecycle as any,
+      runtimeType: 'gateway',
+    });
+
+    handler(makeEvent('error', { message: 'Provider quota exceeded', type: 'ProviderBizError' }));
+    handler(makeEvent('agent_runtime_end', { reason: 'error' }));
+    await flush();
+
+    expect(lifecycle.completeRun).toHaveBeenCalledWith(
+      expect.objectContaining({ status: 'failed' }),
+    );
+    expect(lifecycle.afterRunComplete).toHaveBeenCalledTimes(1);
+    expect(lifecycle.afterRunComplete).toHaveBeenCalledWith(
+      expect.objectContaining({
+        notification: {
+          error: expect.objectContaining({ message: 'Provider quota exceeded' }),
+        },
+        status: 'failed',
+      }),
+    );
+  });
+
   it('still announces a failed run whose snapshot carries no error', async () => {
     const lifecycle = createLifecycle();
     const handler = createGatewayEventHandler(createStore, {
