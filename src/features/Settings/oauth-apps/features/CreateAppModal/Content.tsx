@@ -35,7 +35,6 @@ const styles = stylex.create({
     outlineOffset: { 'default': null, ':focus-visible': '2px' },
   },
   // LobeHub's primary is a near-black neutral, so the selection rides a
-
   // text-colored border alone — no fill, which read as a disabled block.
   typeCardSelected: { borderColor: cssVar.colorText },
   typeCheck: { flex: 'none', marginInlineStart: 'auto', color: cssVar.colorText },

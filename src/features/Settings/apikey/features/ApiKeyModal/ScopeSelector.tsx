@@ -28,7 +28,6 @@ const styles = stylex.create({
     rowGap: '12px',
     columnGap: '16px',
     // same card treatment as the full-access row so the whole Scope block
-
     // reads as one system
     padding: '12px',
     borderWidth: '1px',
