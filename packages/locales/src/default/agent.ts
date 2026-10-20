@@ -669,9 +669,13 @@ export default {
   'share.visitor.input.send': 'Send',
   'share.visitor.input.stop': 'Stop',
   'share.visitor.privacyNotice':
-    'This topic runs on the owner’s account and may be visible to them. Avoid sharing sensitive information.',
+    'This topic runs on the creator’s account. Only you can see its messages.',
+  'share.visitor.privacyNoticeCreatorVisible':
+    'This topic runs on the creator’s account, and the creator can read its messages. Avoid sharing sensitive information.',
   'share.visitor.privacyNoticeWorkspace':
-    'This topic is paid for by the Workspace and may be visible to the Agent creator. Avoid sharing sensitive information.',
+    'This topic runs in the owner Workspace. Only you can see its messages.',
+  'share.visitor.privacyNoticeWorkspaceCreatorVisible':
+    'This topic runs in the owner Workspace, and the Agent creator can read its messages. Avoid sharing sensitive information.',
   'share.visitor.profile.about': 'About',
   'share.visitor.profile.createdBy': 'Created by {{creator}}',
   'share.visitor.profile.cta': 'Start a topic',
