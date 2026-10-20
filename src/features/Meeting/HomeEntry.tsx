@@ -20,7 +20,8 @@ const styles = createStaticStyles(({ css }) => ({
 const RecordingLabel = () => {
   const { t } = useTranslation('meeting');
   const durationMs = useMeetingStore((s) => s.recorder.durationMs);
-  return <>{t('entry.recording', { time: formatClock(durationMs) })}</>;
+  const paused = useMeetingStore((s) => s.recorder.phase === 'paused');
+  return <>{t(paused ? 'entry.paused' : 'entry.recording', { time: formatClock(durationMs) })}</>;
 };
 
 /**

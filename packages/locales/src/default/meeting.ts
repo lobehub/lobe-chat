@@ -42,6 +42,7 @@ export default {
   'detail.transcript.unknownSpeaker': 'Speaker',
   'entry.notes': 'Meeting notes',
   'entry.record': 'Record meeting',
+  'entry.paused': 'Paused {{time}}',
   'entry.recording': 'Recording {{time}}',
   'entry.tooltip': 'Record a meeting with a live transcript',
   'error.capture_interrupted.desc': 'Recording is paused. Reconnect a microphone, then resume.',
