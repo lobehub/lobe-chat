@@ -466,5 +466,25 @@ describe('discoverTools - share gate blocks ungranted connectors early', () => {
       expect(manifestMap.gmail).toBeDefined();
       expect(sourceMap.gmail).toBe('composio');
     });
+
+    it('does not read a granted connection the owner disabled on the Agent', async () => {
+      mockGetAgentConfig.mockResolvedValue({
+        chatConfig: {},
+        id: 'agent-1',
+        model: 'gpt-4',
+        plugins: [{ identifier: 'gmail', mode: 'disabled' }],
+        provider: 'openai',
+        systemRole: '',
+      });
+
+      await visitorTurn([{ identifier: 'gmail' }, { identifier: 'linear' }]);
+
+      expect(mockGetComposioManifests).toHaveBeenCalledWith(expect.anything(), {
+        identifiers: ['linear'],
+      });
+      expect(mockGetLobehubSkillManifests).toHaveBeenCalledWith(
+        expect.objectContaining({ providerIds: ['linear'] }),
+      );
+    });
   });
 });
