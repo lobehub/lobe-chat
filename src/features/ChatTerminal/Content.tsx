@@ -22,28 +22,17 @@ import {
   SquareTerminalIcon,
   XIcon,
 } from 'lucide-react';
-import { memo, useEffect, useMemo, useRef } from 'react';
+import { memo, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { resolveTargetDeviceId } from '@/helpers/agentWorkingDirectory';
-import { resolveExecutionTarget } from '@/helpers/executionTarget';
-import { useIsGatewayModeEnabled } from '@/helpers/gatewayMode';
-import { useEffectiveAgencyConfig } from '@/hooks/useEffectiveAgencyConfig';
-import { useEffectiveWorkingDirectory } from '@/hooks/useEffectiveWorkingDirectory';
 import { useChatStore } from '@/store/chat';
-import { canHostTerminal, deviceSelectors, useDeviceStore } from '@/store/device';
-import { useElectronStore } from '@/store/electron';
 import { useGlobalStore } from '@/store/global';
 
 import SplitView from './SplitView';
 import type { TerminalTab } from './store';
 import { useChatTerminalStore } from './store';
-import {
-  buildTargetOptions,
-  LOCAL_TARGET,
-  resolveTerminalCwd,
-  resolveTerminalDevice,
-} from './targetOptions';
+import { buildTargetOptions, LOCAL_TARGET } from './targetOptions';
+import { useTerminalTarget } from './useTerminalTarget';
 
 const EMPTY_TABS: TerminalTab[] = [];
 
@@ -104,24 +93,7 @@ const Content = memo(() => {
 
   const topicId = useChatStore((s) => s.activeTopicId);
   const agentId = useChatStore((s) => s.activeAgentId);
-  const currentDeviceId = useElectronStore((s) => s.gatewayDeviceInfo?.deviceId);
   const toggleTerminalPanel = useGlobalStore((s) => s.toggleTerminalPanel);
-
-  // The device the conversation runs on — the same resolution the chat input's
-  // device picker shows, so the terminal opens next to the agent's files.
-  const { agencyConfig, isPreferenceLoading, workspaceScoped } = useEffectiveAgencyConfig(
-    agentId || undefined,
-  );
-  const deviceRoutingAvailable = useIsGatewayModeEnabled(agentId || undefined);
-  const executionTarget = resolveExecutionTarget(agencyConfig, {
-    clientExecutionAvailable: isDesktop,
-    deviceRoutingAvailable,
-    isHetero: !!agencyConfig?.heterogeneousProvider?.type,
-    workspaceScoped,
-  });
-  const boundDeviceId = executionTarget === 'device' ? agencyConfig?.boundDeviceId : undefined;
-  // Bound to this very desktop: its own PTY is the same machine, minus a gateway hop.
-  const topicDeviceId = isDesktop && boundDeviceId === currentDeviceId ? undefined : boundDeviceId;
 
   // Tabs are bound to the topic: sessions created here only show for this topic.
   const topicKey = topicId || (agentId ? `agent:${agentId}` : 'global');
@@ -138,37 +110,11 @@ const Content = memo(() => {
   const closePane = useChatTerminalStore((s) => s.closePane);
   const setActivePane = useChatTerminalStore((s) => s.setActivePane);
   const setPaneFlex = useChatTerminalStore((s) => s.setPaneFlex);
-  const devicePick = useChatTerminalStore((s) => s.devicePickByTopic[topicKey]);
-  const setTerminalDevice = useChatTerminalStore((s) => s.setTerminalDevice);
 
-  // The panel shell only fetches the list on the web; desktop needs it here to
-  // follow a topic bound to a remote device.
-  const { error: deviceListError } = useDeviceStore((s) => s.useFetchDevices)(true);
-  const devices = useDeviceStore(deviceSelectors.deviceList);
-  const deviceListConfirmed = useDeviceStore(deviceSelectors.isDeviceListConfirmed);
-  // Only devices that can actually open a shell. An offline row, or one whose
-  // live connections are all desktop ones, answers a terminal RPC with a
-  // refusal — offering it would fail the session the moment it is claimed.
-  const targets = useMemo(() => devices.filter(canHostTerminal), [devices]);
-  const { deviceId: targetDeviceId, ready: canSpawn } = resolveTerminalDevice({
-    configLoading: isPreferenceLoading,
-    listSettled: deviceListConfirmed || !!deviceListError,
-    localAvailable: isDesktop,
-    pick: devicePick,
-    targets,
-    topicDeviceId,
-  });
-
-  const effectiveWorkingDirectory = useEffectiveWorkingDirectory(agentId || undefined);
-  const targetDefaultCwd = useDeviceStore(deviceSelectors.getDeviceDefaultCwd(targetDeviceId));
-  const cwd = resolveTerminalCwd({
-    deviceDefaultCwd: targetDefaultCwd,
-    terminalDeviceId: targetDeviceId ?? currentDeviceId,
-    workingDirectory: effectiveWorkingDirectory,
-    workingDirectoryDeviceId: resolveTargetDeviceId(agencyConfig, currentDeviceId, {
-      workspaceScoped,
-    }),
-  });
+  const { canSpawn, cwd, selectTarget, targetDeviceId, targets } = useTerminalTarget(
+    topicKey,
+    agentId || undefined,
+  );
 
   const activeTab = tabs.find((tab) => tab.id === activeTabId) ?? tabs.at(-1);
 
@@ -205,16 +151,6 @@ const Content = memo(() => {
       onClick: () => closeOtherTabs(topicKey, tabId),
     },
   ];
-
-  /**
-   * Point the topic at another machine. Existing shells keep running where they
-   * started, so open one — otherwise picking a device looks like it did nothing.
-   */
-  const selectTarget = (next: string) => {
-    const deviceId = next === LOCAL_TARGET ? undefined : next;
-    setTerminalDevice(topicKey, deviceId);
-    void createTab(topicKey, cwd, deviceId);
-  };
 
   const targetOptions = buildTargetOptions(
     targets,
