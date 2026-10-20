@@ -415,12 +415,7 @@ const ConnectAgentContent = memo<ConnectAgentContentProps>(
     const [createError, setCreateError] = useState<string | undefined>();
     const [done, setDone] = useState<CreatedAgent[] | null>(null);
 
-    const { scan, state: scanState } = useAgentScan();
-
-    // Opened on a known machine: start at its agent inventory.
-    useEffect(() => {
-      if (initialDevice) void scan({ device: initialDevice, kind: 'device' });
-    }, [initialDevice, scan]);
+    const { rescan: rescanTarget, state: scanState } = useAgentScan(target);
 
     useEffect(() => {
       setCanDismissByClickOutside(!creating);
@@ -470,22 +465,17 @@ const ConnectAgentContent = memo<ConnectAgentContentProps>(
     const single = selectedProviders.length === 1 ? selectedProviders[0] : null;
     const singleVersion = single ? scanState.agents?.[single.type]?.version : undefined;
 
-    const pickTarget = useCallback(
-      (next: ScanTarget) => {
-        setTarget(next);
-        setSelectedTypes([]);
-        setProfiles({});
-        setStep(1);
-        void scan(next);
-      },
-      [scan],
-    );
+    const pickTarget = useCallback((next: ScanTarget) => {
+      setTarget(next);
+      setSelectedTypes([]);
+      setProfiles({});
+      setStep(1);
+    }, []);
 
     const rescan = useCallback(() => {
-      if (!target) return;
       setSelectedTypes([]);
-      void scan(target);
-    }, [scan, target]);
+      rescanTarget();
+    }, [rescanTarget]);
 
     const toggleType = useCallback(
       (provider: ConnectableProvider) => {
