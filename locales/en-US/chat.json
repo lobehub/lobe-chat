@@ -1565,6 +1565,8 @@
   "input.addAiPrefillUnsupported": "The current model doesn’t support ending the conversation with an assistant message. Follow it with a user message before sending.",
   "input.addUser": "Add a user message",
   "input.agentModeUnsupportedModel": "The current model doesn’t support agentic tool calling. Switch to a model with agent capability for the best experience.",
+  "input.agentSlugMoved": "This link now opens a different agent. Switching to it — try again once it opens. Your draft is kept.",
+  "input.agentSlugUnconfirmed": "Couldn’t confirm which agent this link opens. Check your connection, then try again.",
   "input.costEstimate.creditsPerMillionTokens": "{{credits}} credits/M tokens",
   "input.costEstimate.hint": "Estimated cost: ~{{credits}} credits",
   "input.costEstimate.inputLabel": "Input",

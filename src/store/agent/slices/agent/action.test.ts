@@ -193,7 +193,7 @@ describe('AgentSlice Actions', () => {
         await result.current.createAgent({ config: { title: 'New Agent' } });
       });
 
-      expect(result.current.availableAgents).toBeUndefined();
+      expect(result.current.availableAgentsStale).toBe(true);
     });
 
     it('should seed a personal name matching the user language', async () => {
@@ -432,7 +432,7 @@ describe('AgentSlice Actions', () => {
   });
 
   describe('invalidateAvailableAgents', () => {
-    it('should clear cached available agents', () => {
+    it('should stop trusting cached available agents', () => {
       const { result } = renderHook(() => useAgentStore());
 
       act(() => {
@@ -454,7 +454,7 @@ describe('AgentSlice Actions', () => {
         result.current.invalidateAvailableAgents();
       });
 
-      expect(result.current.availableAgents).toBeUndefined();
+      expect(result.current.availableAgentsStale).toBe(true);
     });
   });
 
@@ -1275,7 +1275,7 @@ describe('AgentSlice Actions', () => {
         description: 'New Desc',
         title: 'New Title',
       });
-      expect(result.current.availableAgents).toBeUndefined();
+      expect(result.current.availableAgentsStale).toBe(true);
     });
 
     it('rolls back and rethrows when an optimistic projection owns the failure UI', async () => {

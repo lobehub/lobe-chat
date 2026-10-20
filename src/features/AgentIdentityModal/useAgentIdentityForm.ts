@@ -2,6 +2,7 @@ import { BUILTIN_AGENT_SLUGS } from '@lobechat/builtin-agents';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { cacheScope } from '@/libs/replica';
 import { agentService } from '@/services/agent';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
@@ -28,6 +29,7 @@ export const useAgentIdentityForm = ({ agentId, onSaved }: UseAgentIdentityFormO
   const meta = useAgentStore(agentSelectors.getAgentMetaById(agentId));
   const slug = useAgentStore(agentSelectors.getAgentSlugById(agentId));
   const refreshAgentConfig = useAgentStore((s) => s.internal_refreshAgentConfig);
+  const confirmAgentSlug = useAgentStore((s) => s.internal_confirmAgentSlug);
   const updateAgentMeta = useHomeStore((s) => s.updateAgentMeta);
 
   const [name, setName] = useState(meta.name || '');
@@ -47,11 +49,16 @@ export const useAgentIdentityForm = ({ agentId, onSaved }: UseAgentIdentityFormO
     try {
       const trimmedSlug = slugLocked ? slug : nextSlug.trim().toLowerCase();
       if (trimmedSlug && trimmedSlug !== (slug || '')) {
+        // The rename belongs to the identity it was sent from, even if the user
+        // switches workspace before it answers.
+        const scope = cacheScope.get();
         const result = await agentService.updateAgentSlug(agentId, trimmedSlug);
         if (!result.success) {
           setError(t(`settingAgent.slug.error.${result.reason ?? 'invalid'}`));
           return;
         }
+        // The old slug no longer names this agent; the new one does.
+        confirmAgentSlug(agentId, trimmedSlug, { previousSlug: slug || undefined, scope });
         await refreshAgentConfig(agentId);
       }
 
