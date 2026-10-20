@@ -14,6 +14,9 @@ import {
 
 const siteReviewTitle = (name: string) => `Site review · ${name}`;
 
+/** The acceptance page opens the first exact origin; a wildcard has no address to open. */
+const sitePreviewUrl = (origins: string[]) => origins.find((origin) => !origin.includes('://*.'));
+
 export interface SiteInput {
   name: string;
   origins: string[];
@@ -40,7 +43,7 @@ export class ProjectReviewService {
     const project = await this.assertRole(projectId, ['member', 'admin']);
     const origins = this.normalizeOrigins(input.origins);
     const name = input.name.trim();
-    const previewUrl = origins.find((origin) => !origin.includes('://*.'));
+    const previewUrl = sitePreviewUrl(origins);
 
     return this.db.transaction(async (tx) => {
       const [site] = await tx
@@ -88,18 +91,41 @@ export class ProjectReviewService {
     const name = input.name?.trim();
     const origins = input.origins ? this.normalizeOrigins(input.origins) : undefined;
 
-    const updated = await this.sites.update(site.projectId, siteId, { name, origins });
-    if (name && site.acceptanceId) {
-      const [acceptance] = await this.db
-        .select({ metadata: acceptances.metadata })
-        .from(acceptances)
-        .where(eq(acceptances.id, site.acceptanceId));
-      await this.db
-        .update(acceptances)
-        .set({ metadata: { ...acceptance?.metadata, title: siteReviewTitle(name) } })
-        .where(eq(acceptances.id, site.acceptanceId));
-    }
-    return updated;
+    return this.db.transaction(async (tx) => {
+      const updated = await new ProjectSiteModel(tx).update(site.projectId, siteId, {
+        name,
+        origins,
+      });
+      if (!site.acceptanceId) return updated;
+
+      if (name) {
+        const [acceptance] = await tx
+          .select({ metadata: acceptances.metadata })
+          .from(acceptances)
+          .where(eq(acceptances.id, site.acceptanceId));
+        await tx
+          .update(acceptances)
+          .set({ metadata: { ...acceptance?.metadata, title: siteReviewTitle(name) } })
+          .where(eq(acceptances.id, site.acceptanceId));
+      }
+
+      // Keep the standing review's preview on an origin the site still registers.
+      if (origins) {
+        const previewUrl = sitePreviewUrl(origins);
+        const runs = await tx
+          .select({ id: verifyRuns.id, metadata: verifyRuns.metadata })
+          .from(verifyRuns)
+          .where(eq(verifyRuns.acceptanceId, site.acceptanceId));
+        for (const run of runs) {
+          const { previewUrl: _previous, ...metadata } = run.metadata ?? {};
+          await tx
+            .update(verifyRuns)
+            .set({ metadata: previewUrl ? { ...metadata, previewUrl } : metadata })
+            .where(eq(verifyRuns.id, run.id));
+        }
+      }
+      return updated;
+    });
   }
 
   async deleteSite(siteId: string) {

@@ -123,6 +123,35 @@ describe('ProjectReviewService', () => {
       });
     });
 
+    it('moves the standing preview with the registered origins', async () => {
+      const service = as(ownerId);
+      const site = await service.createSite(projectId, {
+        name: 'Marketing site',
+        origins: ['https://fieldnotes.app'],
+      });
+      const preview = async () => {
+        const [run] = await db
+          .select()
+          .from(verifyRuns)
+          .where(eq(verifyRuns.acceptanceId, site.acceptanceId!));
+        return run.metadata?.previewUrl;
+      };
+
+      await service.updateSite(site.id, { origins: ['https://www.fieldnotes.app'] });
+      expect(await preview()).toBe('https://www.fieldnotes.app');
+
+      await service.updateSite(site.id, { origins: ['https://*.fieldnotes.app'] });
+      expect(await preview()).toBeUndefined();
+
+      await service.updateSite(site.id, {
+        origins: ['https://*.fieldnotes.app', 'https://fieldnotes.app'],
+      });
+      expect(await preview()).toBe('https://fieldnotes.app');
+
+      await service.updateSite(site.id, { name: 'Landing pages' });
+      expect(await preview()).toBe('https://fieldnotes.app');
+    });
+
     it('renames the standing review with the site and deletes both together', async () => {
       const service = as(ownerId);
       const site = await service.createSite(projectId, {
