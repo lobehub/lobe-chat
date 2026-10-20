@@ -1,0 +1,97 @@
+import { act, fireEvent, render, screen } from '@testing-library/react';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+
+import TableOfContents from './index';
+
+vi.mock('react-i18next', () => ({
+  useTranslation: () => ({ t: (key: string) => key }),
+}));
+
+// jsdom has no layout: keep the first heading at the pane top and the rest
+// below the active threshold.
+const setBody = (content: HTMLElement, html: string) => {
+  content.innerHTML = `<div data-lexical-editor>${html}</div>`;
+  for (const [index, heading] of [...content.querySelectorAll('h1, h2')].entries()) {
+    heading.getBoundingClientRect = () => ({ top: index === 0 ? 0 : 500 }) as DOMRect;
+  }
+};
+
+const flush = async () => {
+  await act(async () => {
+    await new Promise((resolve) => setTimeout(resolve, 0));
+  });
+};
+
+const setup = () => {
+  const pane = document.createElement('div');
+  const content = document.createElement('div');
+  pane.append(content);
+  document.body.append(pane);
+  pane.scrollTo = vi.fn();
+  Object.defineProperty(pane, 'scrollHeight', { configurable: true, value: 2000 });
+  setBody(content, '<h1>Intro</h1><h2>Usage</h2><h2>FAQ</h2>');
+
+  render(<TableOfContents contentRef={{ current: content }} scrollRef={{ current: pane }} />);
+  return { content, pane };
+};
+
+const activeText = () =>
+  screen.getAllByRole('link').find((el) => el.getAttribute('aria-current'))?.textContent;
+
+describe('TableOfContents', () => {
+  beforeEach(() => {
+    vi.spyOn(window, 'requestAnimationFrame').mockImplementation((cb) => {
+      cb(0);
+      return 0;
+    });
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+    document.body.innerHTML = '';
+  });
+
+  it('expands on keyboard focus and collapses when focus leaves', async () => {
+    setup();
+    await flush();
+
+    expect(screen.queryAllByRole('link')).toHaveLength(0);
+
+    fireEvent.focus(screen.getByRole('button'));
+    expect(screen.getAllByRole('link').map((el) => el.textContent)).toEqual([
+      'Intro',
+      'Usage',
+      'FAQ',
+    ]);
+
+    fireEvent.blur(screen.getByRole('button'), { relatedTarget: document.body });
+    expect(screen.queryAllByRole('link')).toHaveLength(0);
+  });
+
+  it('drops the pinned heading when the document is replaced', async () => {
+    const { content } = setup();
+    await flush();
+
+    fireEvent.focus(screen.getByRole('button'));
+    fireEvent.click(screen.getByRole('link', { name: 'FAQ' }));
+    expect(activeText()).toBe('FAQ');
+
+    setBody(content, '<h1>Other</h1><h2>Details</h2><h2>More</h2>');
+    await flush();
+
+    expect(activeText()).toBe('Other');
+  });
+
+  it('releases the pin on scrollbar pointer input', async () => {
+    const { pane } = setup();
+    await flush();
+
+    fireEvent.focus(screen.getByRole('button'));
+    fireEvent.click(screen.getByRole('link', { name: 'FAQ' }));
+    expect(activeText()).toBe('FAQ');
+
+    fireEvent.pointerDown(pane);
+    fireEvent.scroll(pane);
+    expect(activeText()).toBe('Intro');
+  });
+});

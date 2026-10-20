@@ -14,6 +14,9 @@ const ACTIVE_THRESHOLD = 96;
 const SCROLL_MARGIN = 24;
 const MIN_HEADINGS = 2;
 
+const prefersReducedMotion = () =>
+  window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
+
 const styles = stylex.create({
   container: {
     alignItems: 'flex-end',
@@ -176,6 +179,8 @@ const TableOfContents = memo<TableOfContentsProps>(({ contentRef, scrollRef }) =
     };
 
     pane.addEventListener('scroll', handleScroll, { passive: true });
+    // Pointer input covers scrollbar clicks and thumb drags.
+    pane.addEventListener('pointerdown', releasePin, { passive: true });
     pane.addEventListener('wheel', releasePin, { passive: true });
     pane.addEventListener('touchstart', releasePin, { passive: true });
     pane.addEventListener('keydown', releasePin);
@@ -183,6 +188,7 @@ const TableOfContents = memo<TableOfContentsProps>(({ contentRef, scrollRef }) =
     return () => {
       cancelAnimationFrame(frame);
       pane.removeEventListener('scroll', handleScroll);
+      pane.removeEventListener('pointerdown', releasePin);
       pane.removeEventListener('wheel', releasePin);
       pane.removeEventListener('touchstart', releasePin);
       pane.removeEventListener('keydown', releasePin);
@@ -198,7 +204,10 @@ const TableOfContents = memo<TableOfContentsProps>(({ contentRef, scrollRef }) =
       setActiveIndex(index);
 
       const offset = heading.element.getBoundingClientRect().top - pane.getBoundingClientRect().top;
-      pane.scrollTo({ behavior: 'smooth', top: pane.scrollTop + offset - SCROLL_MARGIN });
+      pane.scrollTo({
+        behavior: prefersReducedMotion() ? 'auto' : 'smooth',
+        top: pane.scrollTop + offset - SCROLL_MARGIN,
+      });
     },
     [scrollRef],
   );
