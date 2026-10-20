@@ -224,6 +224,14 @@ export const workspaceSettingsContentRoute: RouteObject = {
       handle: { meta: routeMeta({ Skeleton: createSurfaceSkeleton('list') }) },
       path: 'environments',
     },
+    {
+      element: dynamicElement(
+        () => import('@/routes/(main)/[workspaceSlug]/settings/drive'),
+        'Desktop > Workspace > Settings > Drive',
+      ),
+      handle: { meta: routeMeta({ Skeleton: createSurfaceSkeleton('list') }) },
+      path: 'drive',
+    },
     // Account-level tabs mirrored inside the workspace so members can
     // adjust user settings without leaving the workspace. Same pages
     // as personal `/settings/*`; only the chrome is workspace-owned.

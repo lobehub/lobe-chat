@@ -1309,8 +1309,9 @@ export class ConversationLifecycleActionImpl {
         : undefined;
     const sandboxInstanceMetadata: ChatTopicMetadata | undefined = pendingSandboxSelection
       ? {
+          sandboxDrive: pendingSandboxSelection.drive,
           sandboxInstanceId: pendingSandboxSelection.instanceId,
-          sandboxMode: pendingSandboxSelection.mode,
+          sandboxWorkingDirectory: pendingSandboxSelection.workingDirectory,
         }
       : undefined;
     /** First-send persistence bypasses turnSetup, so both runtime paths must carry the effort snapshot. */
