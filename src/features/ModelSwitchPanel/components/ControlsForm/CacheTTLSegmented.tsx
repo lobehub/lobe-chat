@@ -1,4 +1,4 @@
-import { Segmented } from '@lobehub/ui/base-ui';
+import { Segmented } from '@lobehub/ui';
 import { memo } from 'react';
 
 type CacheTTL = '5m' | '1h';
