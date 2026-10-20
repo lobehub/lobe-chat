@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 
-import { parseQuickNoteAnalyzeOutput, renderQuickNoteSourceText } from '.';
+import { buildQuickNoteDiveInstruction, renderQuickNoteSourceText } from '.';
 
-/** @example Quick Note agent boundaries normalize rich-text input and structured output. */
+/** @example Quick Note agent boundaries normalize rich-text input. */
 describe('QuickNoteProcessingService helpers', () => {
   /** @example Lexical text nodes become a compact source string for an immutable Run prompt. */
   it('renders nested editor text without leaking structural JSON', () => {
@@ -20,22 +20,12 @@ describe('QuickNoteProcessingService helpers', () => {
     expect(renderQuickNoteSourceText({ markdown: 'Remember this' })).toBe('Remember this');
   });
 
-  /** @example Analyze accepts a fenced JSON result produced by a chat model. */
-  it('parses and bounds Analyze output', () => {
-    const parsed = parseQuickNoteAnalyzeOutput(
-      '```json\n{"annotation":"Useful","tags":["one","two","three","four","five","six"],"contextQueries":[" voice ","audio%","voice","_"],"relatedResources":[{"type":"topic","id":"tpc_1","selector":{"quote":"duplex"}},{"type":"topic","id":"tpc_1"},{"type":"document","id":"docs_1","selector":"invalid"},{"type":"invalid","id":"bad"}],"proposals":[{"kind":"task","content":"Review the experiment"},{"kind":"page","content":"Invalid kind"}]}\n```',
-    );
+  /** @example A Dive brief carries the note and its comments verbatim. */
+  it('builds a self-contained Dive brief', () => {
+    const brief = buildQuickNoteDiveInstruction('调研 moshi', ['focus on latency']);
 
-    /** @example Only the five lightweight tags allowed by the agent contract survive. */
-    expect(parsed).toEqual({
-      annotation: 'Useful',
-      contextQueries: ['voice', 'audio'],
-      proposals: [{ content: 'Review the experiment', kind: 'task' }],
-      relatedResources: [
-        { id: 'tpc_1', selector: { quote: 'duplex' }, type: 'topic' },
-        { id: 'docs_1', type: 'document' },
-      ],
-      tags: ['one', 'two', 'three', 'four', 'five'],
-    });
+    expect(brief).toContain('<quick_note>\n调研 moshi\n</quick_note>');
+    expect(brief).toContain('- focus on latency');
+    expect(buildQuickNoteDiveInstruction('x', [])).not.toContain('quick_note_comments');
   });
 });

@@ -18,9 +18,9 @@ const TopicChatDrawer = lazy(() => import('@/features/AgentTasks/AgentTaskDetail
 const NoteDetail = memo<{ id: string }>(({ id }) => {
   const notesInit = useQuickNoteStore((s) => s.notesInit);
   const exists = useQuickNoteStore((s) => Boolean(quickNoteSelectors.noteById(id)(s)));
-  const [panelExpanded, toggleAnnotationPanel] = useQuickNoteStore((s) => [
-    s.annotationPanelExpanded,
-    s.toggleAnnotationPanel,
+  const [panelExpanded, toggleAiPanel] = useQuickNoteStore((s) => [
+    s.aiPanelExpanded,
+    s.toggleAiPanel,
   ]);
   const topicDrawerOpen = useTaskStore(taskDetailSelectors.activeTopicDrawerTopicId);
 
@@ -33,7 +33,7 @@ const NoteDetail = memo<{ id: string }>(({ id }) => {
       <RightPanel
         backgroundColor={cssVar.colorFillQuaternary}
         expand={panelExpanded}
-        onExpandChange={toggleAnnotationPanel}
+        onExpandChange={toggleAiPanel}
       >
         <AiPanel noteId={id} />
       </RightPanel>

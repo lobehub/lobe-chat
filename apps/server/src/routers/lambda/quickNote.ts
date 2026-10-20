@@ -1,7 +1,8 @@
 import { AGENT_SIGNAL_SOURCE_TYPES } from '@lobechat/agent-signal/source';
 import {
   QUICK_NOTE_ANALYZE_TRIGGERS,
-  QUICK_NOTE_PROPOSAL_DECISION_STATUSES,
+  QUICK_NOTE_RESOURCE_TYPES,
+  type TaskContext,
 } from '@lobechat/types';
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
@@ -9,12 +10,20 @@ import { z } from 'zod';
 import { withScopedPermission } from '@/business/server/trpc-middlewares/rbacPermission';
 import { wsCompatProcedure } from '@/business/server/trpc-middlewares/workspaceAuth';
 import { QuickNoteModel } from '@/database/models/quickNote';
+import { TaskModel } from '@/database/models/task';
 import { QuickNoteRepository } from '@/database/repositories/quickNote';
 import { router } from '@/libs/trpc/lambda';
 import { serverDatabase } from '@/libs/trpc/lambda/middleware';
 import { enqueueAgentSignalSourceEvent } from '@/server/services/agentSignal';
 import { QuickNoteProcessingService } from '@/server/services/quickNote';
+import { isQuickNoteTextEquivalent } from '@/server/services/quickNote/contentChange';
+import {
+  QuickNoteApplyError,
+  type QuickNoteApplyErrorCode,
+} from '@/server/services/quickNote/executors/types';
 import { assertQuickNoteEnabled } from '@/server/services/quickNote/featureGate';
+import { QuickNoteProposalService } from '@/server/services/quickNote/proposals';
+import { renderQuickNoteSourceText } from '@/server/services/quickNote/sourceText';
 
 const quickNoteProcedure = wsCompatProcedure
   .use(async ({ ctx, next }) => {
@@ -36,6 +45,17 @@ const createInput = z.object({
   content: z.string().default(''),
   editorData: editorDataSchema.optional(),
   location: z.string().nullish(),
+  /** Product objects the capture was sent from; linked as `context` resources. */
+  resources: z
+    .array(
+      z.object({
+        id: z.string().min(1),
+        selector: z.record(z.string(), z.unknown()).optional(),
+        type: z.enum(QUICK_NOTE_RESOURCE_TYPES),
+      }),
+    )
+    .max(20)
+    .optional(),
   tags: z.array(z.string()).max(20).default([]),
 });
 
@@ -58,15 +78,39 @@ const updateCommentInput = z.object({
 });
 
 const updateProposalInput = z.object({
-  content: z.string().trim().min(1),
-  editorData: editorDataSchema,
+  payload: z.record(z.string(), z.unknown()),
   proposalId: z.string().uuid(),
 });
 
 const decideProposalInput = z.object({
-  decisionStatus: z.enum(QUICK_NOTE_PROPOSAL_DECISION_STATUSES).exclude(['pending']),
+  /** Applying goes through `applyProposal`; this records a dismissal. */
+  decisionStatus: z.literal('dismissed'),
   proposalId: z.string().uuid(),
+  /** Optional user-supplied reason, stored with the dismissal. */
+  reason: z.string().trim().max(500).optional(),
 });
+
+const APPLY_ERROR_CODES: Record<QuickNoteApplyErrorCode, TRPCError['code']> = {
+  forbidden: 'FORBIDDEN',
+  invalid_payload: 'BAD_REQUEST',
+  not_found: 'NOT_FOUND',
+  not_pending: 'CONFLICT',
+  tool_failed: 'BAD_REQUEST',
+  unsupported_target: 'BAD_REQUEST',
+  unsupported_tool: 'BAD_REQUEST',
+};
+
+/** Maps a Proposal apply/validation failure onto a tRPC error the client can show. */
+const rethrowApplyError = (error: unknown): never => {
+  if (error instanceof QuickNoteApplyError) {
+    throw new TRPCError({
+      cause: error,
+      code: APPLY_ERROR_CODES[error.code],
+      message: error.message,
+    });
+  }
+  throw error;
+};
 
 /**
  * Server-owned Quick Note CRUD and Agent Run entrypoints.
@@ -75,24 +119,29 @@ const decideProposalInput = z.object({
  * content remains Document-backed and every mutation is owner/workspace scoped.
  */
 export const quickNoteRouter = router({
-  acceptProposal: quickNoteWriteProcedure
-    .input(z.object({ proposalId: z.string().uuid() }))
-    .mutation(async ({ ctx, input }) => {
-      const repo = new QuickNoteRepository(ctx.serverDB, ctx.userId, ctx.workspaceId ?? undefined);
-      const result = await repo.acceptTaskProposal(input.proposalId);
-      if (!result) {
-        throw new TRPCError({
-          code: 'NOT_FOUND',
-          message: 'Current Task Proposal not found',
-        });
-      }
-      return result;
-    }),
-
   agenticDetails: quickNoteProcedure.input(idInput).query(async ({ ctx, input }) => {
     const model = new QuickNoteModel(ctx.serverDB, ctx.userId, ctx.workspaceId ?? undefined);
     return model.queryAgenticDetails(input.id);
   }),
+
+  /**
+   * Applies a pending (current or stale) Proposal through its executor. Idempotent: applying again
+   * returns the stored result with `applied: false`.
+   */
+  applyProposal: quickNoteWriteProcedure
+    .input(z.object({ proposalId: z.string().uuid() }))
+    .mutation(async ({ ctx, input }) => {
+      const service = new QuickNoteProposalService(
+        ctx.serverDB,
+        ctx.userId,
+        ctx.workspaceId ?? undefined,
+      );
+      try {
+        return await service.apply(input.proposalId);
+      } catch (error) {
+        return rethrowApplyError(error);
+      }
+    }),
 
   analyze: quickNoteWriteProcedure.input(analyzeInput).mutation(async ({ ctx, input }) => {
     if (
@@ -104,7 +153,11 @@ export const quickNoteRouter = router({
 
     const model = new QuickNoteModel(ctx.serverDB, ctx.userId, ctx.workspaceId ?? undefined);
     const repo = new QuickNoteRepository(ctx.serverDB, ctx.userId, ctx.workspaceId ?? undefined);
-    const run = await repo.claimRun(input.id, { kind: 'analyze', trigger: input.trigger });
+    const run = await repo.claimRun(input.id, {
+      kind: 'analyze',
+      renderSourceText: renderQuickNoteSourceText,
+      trigger: input.trigger,
+    });
     if (!run) throw new TRPCError({ code: 'NOT_FOUND', message: 'Quick Note not found' });
 
     try {
@@ -171,21 +224,26 @@ export const quickNoteRouter = router({
   decideProposal: quickNoteWriteProcedure
     .input(decideProposalInput)
     .mutation(async ({ ctx, input }) => {
-      const model = new QuickNoteModel(ctx.serverDB, ctx.userId, ctx.workspaceId ?? undefined);
-      const proposal = await model.decideProposal(input.proposalId, input.decisionStatus);
+      const service = new QuickNoteProposalService(
+        ctx.serverDB,
+        ctx.userId,
+        ctx.workspaceId ?? undefined,
+      );
+      const proposal = await service.dismiss(input.proposalId, input.reason);
       if (!proposal) throw new TRPCError({ code: 'NOT_FOUND', message: 'Proposal not found' });
       return proposal;
     }),
 
+  /** Creates a Task from the note and its Comments and starts it; returns before any model call. */
   dive: quickNoteWriteProcedure.input(idInput).mutation(async ({ ctx, input }) => {
     const service = new QuickNoteProcessingService(
       ctx.serverDB,
       ctx.userId,
       ctx.workspaceId ?? undefined,
     );
-    const run = await service.startDive(input.id);
-    if (!run) throw new TRPCError({ code: 'NOT_FOUND', message: 'Quick Note not found' });
-    return run;
+    const result = await service.dive(input.id);
+    if (!result) throw new TRPCError({ code: 'NOT_FOUND', message: 'Quick Note not found' });
+    return result;
   }),
 
   list: quickNoteProcedure.query(async ({ ctx }) => {
@@ -203,6 +261,35 @@ export const quickNoteRouter = router({
     return model.queryProposals(input.id);
   }),
 
+  /**
+   * Tasks this note started (applied `task` Proposals and Dives), newest first. These Tasks are
+   * hidden from task lists, so the note sidebar is where they are found.
+   */
+  listTasks: quickNoteProcedure.input(idInput).query(async ({ ctx, input }) => {
+    const model = new QuickNoteModel(ctx.serverDB, ctx.userId, ctx.workspaceId ?? undefined);
+    if (!(await model.findWithContent(input.id))) return [];
+
+    const { tasks } = await new TaskModel(
+      ctx.serverDB,
+      ctx.userId,
+      ctx.workspaceId ?? undefined,
+    ).list({ limit: 50, quickNoteId: input.id });
+
+    return tasks.map((task) => {
+      const source = (task.context as TaskContext | null)?.source;
+      return {
+        createdAt: task.createdAt,
+        id: task.id,
+        identifier: task.identifier,
+        name: task.name,
+        proposalId: source?.proposalId ?? null,
+        runId: source?.runId ?? null,
+        status: task.status,
+        updatedAt: task.updatedAt,
+      };
+    });
+  }),
+
   updateComment: quickNoteWriteProcedure
     .input(updateCommentInput)
     .mutation(async ({ ctx, input }) => {
@@ -212,26 +299,43 @@ export const quickNoteRouter = router({
       return comment;
     }),
 
+  /**
+   * Saves the note. Cosmetic edits (whitespace, punctuation, case) keep the Analyze schedule and
+   * never invalidate Proposals; a real text edit restarts the quiet period and asks Agent Signal,
+   * asynchronously, whether the meaning changed.
+   */
   updateContent: quickNoteWriteProcedure.input(updateInput).mutation(async ({ ctx, input }) => {
-    const repo = new QuickNoteRepository(ctx.serverDB, ctx.userId, ctx.workspaceId ?? undefined);
+    const workspaceId = ctx.workspaceId ?? undefined;
+    const repo = new QuickNoteRepository(ctx.serverDB, ctx.userId, workspaceId);
     const analyzeSettings = await QuickNoteModel.getAnalyzeSettings(ctx.serverDB, ctx.userId);
+    const quietUntil = new Date(Date.now() + analyzeSettings.autoAnalyze.idleDelayMs);
     const updated = await repo.updateContent(input.id, {
       content: input.content,
-      analyzeDueAt:
-        analyzeSettings.autoAnalyze.enabled && input.content.trim()
-          ? new Date(Date.now() + analyzeSettings.autoAnalyze.idleDelayMs)
-          : null,
+      analyzeDueAt: analyzeSettings.autoAnalyze.enabled && input.content.trim() ? quietUntil : null,
+      // Debounced meaning-change check: a real edit (re)arms it for when typing goes quiet, and
+      // the sweep then compares the note as it is at that time. Staleness never waits for Auto
+      // Analyze to be on.
+      contentCheckDueAt: quietUntil,
       editorData: input.editorData,
+      isEquivalentText: isQuickNoteTextEquivalent,
     });
     if (!updated) throw new TRPCError({ code: 'NOT_FOUND', message: 'Quick Note not found' });
+
     return updated;
   }),
 
+  /** Overwrites a pending Proposal's payload after validating it for the Proposal's kind. */
   updateProposal: quickNoteWriteProcedure
     .input(updateProposalInput)
     .mutation(async ({ ctx, input }) => {
-      const repo = new QuickNoteRepository(ctx.serverDB, ctx.userId, ctx.workspaceId ?? undefined);
-      const proposal = await repo.updateProposal(input.proposalId, input);
+      const service = new QuickNoteProposalService(
+        ctx.serverDB,
+        ctx.userId,
+        ctx.workspaceId ?? undefined,
+      );
+      const proposal = await service
+        .updatePayload(input.proposalId, input.payload)
+        .catch(rethrowApplyError);
       if (!proposal) throw new TRPCError({ code: 'NOT_FOUND', message: 'Proposal not found' });
       return proposal;
     }),

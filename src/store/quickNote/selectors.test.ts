@@ -7,12 +7,12 @@ import { initialState, type QuickNoteState } from './initialState';
 import { quickNoteSelectors } from './selectors';
 
 const note: QuickNoteItem = {
-  annotation: { content: 'Existing analysis', divedAt: 1000 },
   collection: 'Research',
   content: 'Original note',
   createdAt: 1000,
   id: 'note-1',
   run: { kind: 'analyze', status: 'completed' },
+  summary: { completedAt: 1000, content: 'Existing analysis' },
   tags: ['Voice'],
   updatedAt: 1000,
 };
@@ -22,8 +22,8 @@ const stateWith = (notes: QuickNoteItem[]): QuickNoteState => ({ ...initialState
 const base = stateWith([note]);
 const contentEdited = stateWith([{ ...note, content: 'Edited note' }]);
 const polledClone = stateWith(structuredClone([note]));
-const reannotated = stateWith([
-  { ...note, annotation: { content: 'New analysis', divedAt: 2000 }, tags: ['Audio'] },
+const resummarized = stateWith([
+  { ...note, summary: { completedAt: 2000, content: 'New analysis' }, tags: ['Audio'] },
 ]);
 
 // ROOT CAUSE:
@@ -46,15 +46,15 @@ describe('quickNoteSelectors render isolation', () => {
     expect(isEqual(select(base), select(polledClone))).toBe(true);
   });
 
-  it('propagates real annotation and tag changes', () => {
-    const view = quickNoteSelectors.aiPanelViewById(note.id)(reannotated);
+  it('propagates real summary and tag changes', () => {
+    const view = quickNoteSelectors.aiPanelViewById(note.id)(resummarized);
 
-    /** @example Real annotation changes still reach the AI panel. */
-    expect(view).toMatchObject({ annotationContent: 'New analysis', tags: ['Audio'] });
+    /** @example Real summary changes still reach the AI panel. */
+    expect(view).toMatchObject({ summaryContent: 'New analysis', tags: ['Audio'] });
     expect(isEqual(quickNoteSelectors.aiPanelViewById(note.id)(base), view)).toBe(false);
     /** @example Real tag changes still update the filter. */
-    expect(quickNoteSelectors.tags(reannotated)).toEqual([{ count: 1, name: 'Audio' }]);
-    expect(isEqual(quickNoteSelectors.tags(base), quickNoteSelectors.tags(reannotated))).toBe(
+    expect(quickNoteSelectors.tags(resummarized)).toEqual([{ count: 1, name: 'Audio' }]);
+    expect(isEqual(quickNoteSelectors.tags(base), quickNoteSelectors.tags(resummarized))).toBe(
       false,
     );
   });
@@ -62,11 +62,49 @@ describe('quickNoteSelectors render isolation', () => {
   it('reports an empty view for a missing note', () => {
     /** @example A missing note renders nothing in the AI panel. */
     expect(quickNoteSelectors.aiPanelViewById('missing')(base)).toEqual({
-      annotationContent: undefined,
-      dived: false,
       exists: false,
       hasContent: false,
+      summaryContent: undefined,
+      summaryState: 'emptyNote',
       tags: [],
     });
+  });
+});
+
+// ROOT CAUSE:
+// The panel only knew "summary or not", so a note whose analysis finished without a summary
+// (keep-only, or a page write) kept saying the summary would appear after analysis.
+/** @example Waiting and finished-without-summary read differently. */
+describe('quickNoteSelectors summary state', () => {
+  const unsummarized = { ...note, summary: undefined };
+  const stateOf = (patch: Partial<QuickNoteItem>) =>
+    quickNoteSelectors.aiPanelViewById(note.id)(stateWith([{ ...unsummarized, ...patch }]))
+      .summaryState;
+
+  it('is ready when a summary exists', () => {
+    expect(quickNoteSelectors.aiPanelViewById(note.id)(base).summaryState).toBe('ready');
+  });
+
+  it('is none when the latest analysis completed without a summary', () => {
+    expect(stateOf({ run: { kind: 'analyze', status: 'completed' } })).toBe('none');
+  });
+
+  it.each([
+    ['never analyzed', { run: undefined }],
+    ['running', { run: { kind: 'analyze', status: 'running' } }],
+    ['pending', { run: { kind: 'analyze', status: 'pending' } }],
+    ['failed', { run: { kind: 'analyze', status: 'failed' } }],
+    [
+      're-scheduled after an edit',
+      { analyzeDueAt: 5000, run: { kind: 'analyze', status: 'completed' } },
+    ],
+  ] as const)('is waiting when %s', (_, patch) => {
+    expect(stateOf(patch as Partial<QuickNoteItem>)).toBe('waiting');
+  });
+
+  it('is emptyNote for a blank note', () => {
+    expect(stateOf({ content: '  ', run: { kind: 'analyze', status: 'completed' } })).toBe(
+      'emptyNote',
+    );
   });
 });

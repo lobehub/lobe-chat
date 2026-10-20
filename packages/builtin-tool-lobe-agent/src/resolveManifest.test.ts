@@ -2,22 +2,29 @@ import { describe, expect, it } from 'vitest';
 
 import { LobeAgentManifest } from './manifest';
 import { resolveLobeAgentManifest } from './resolveManifest';
-import { systemPromptWithoutSubAgent } from './systemRole';
+import { systemPromptMediaOnly, systemPromptWithoutSubAgent } from './systemRole';
 import { LobeAgentApiName } from './types';
 
 const apiNames = (manifest: { api: { name: string }[] }) => manifest.api.map((a) => a.name);
 
 describe('resolveLobeAgentManifest', () => {
-  /** @example Quick Note cannot bypass callAgent restrictions with callSubAgent. */
-  it('hides sub-agent delegation in Quick Note', () => {
+  /** @example Quick Note mounts lobe-agent for media inspection only. */
+  it('exposes only analyzeMedia in Quick Note', () => {
     const result = resolveLobeAgentManifest({ scope: 'quick_note' })!;
 
-    /** @example The alternate delegation API is unavailable. */
-    expect(apiNames(result)).not.toContain(LobeAgentApiName.callSubAgent);
-    /** @example Other tools remain available. */
-    expect(apiNames(result)).toContain(LobeAgentApiName.analyzeMedia);
-    /** @example The prompt matches the available capabilities. */
-    expect(result.systemRole).toBe(systemPromptWithoutSubAgent);
+    /** @example Delegation, planning, todos, questions, and vent are not in the tool list. */
+    expect(apiNames(result)).toEqual([LobeAgentApiName.analyzeMedia]);
+    /** @example The prompt only describes the mounted tool. */
+    expect(result.systemRole).toBe(systemPromptMediaOnly);
+    expect(result.systemRole).toContain('analyzeMedia');
+    expect(result.systemRole).not.toContain('callSubAgent');
+    expect(result.systemRole).not.toContain('createPlan');
+    expect(result.systemRole).not.toContain('askUserQuestion');
+    /** @example Sub-agent runs inside Quick Note get the same narrow manifest. */
+    expect(apiNames(resolveLobeAgentManifest({ isSubAgent: true, scope: 'quick_note' })!)).toEqual([
+      LobeAgentApiName.analyzeMedia,
+    ]);
+    expect(result.identifier).toBe(LobeAgentManifest.identifier);
   });
 
   it('returns the full static manifest in a normal (main, non-sub-agent) turn', () => {

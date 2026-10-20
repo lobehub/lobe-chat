@@ -5,8 +5,6 @@ import {
   documents,
   quickNoteProposals,
   quickNoteResources,
-  quickNoteRunInputs,
-  quickNoteRunResources,
   quickNoteRuns,
 } from '@lobechat/database/schemas';
 import { and, desc, eq, gte, inArray, lt, notExists, or } from 'drizzle-orm';
@@ -78,31 +76,13 @@ export class DocumentHistoryService {
         this.db
           .select({ id: quickNoteProposals.id })
           .from(quickNoteProposals)
-          .where(
-            or(
-              eq(quickNoteProposals.sourceHistoryId, documentHistories.id),
-              eq(quickNoteProposals.currentHistoryId, documentHistories.id),
-              eq(quickNoteProposals.acceptedHistoryId, documentHistories.id),
-            ),
-          ),
+          .where(eq(quickNoteProposals.sourceHistoryId, documentHistories.id)),
       ),
       notExists(
         this.db
           .select({ id: quickNoteResources.id })
           .from(quickNoteResources)
           .where(eq(quickNoteResources.sourceHistoryId, documentHistories.id)),
-      ),
-      notExists(
-        this.db
-          .select({ id: quickNoteRunInputs.id })
-          .from(quickNoteRunInputs)
-          .where(eq(quickNoteRunInputs.documentHistoryId, documentHistories.id)),
-      ),
-      notExists(
-        this.db
-          .select({ id: quickNoteRunResources.id })
-          .from(quickNoteRunResources)
-          .where(eq(quickNoteRunResources.documentHistoryId, documentHistories.id)),
       ),
     );
 

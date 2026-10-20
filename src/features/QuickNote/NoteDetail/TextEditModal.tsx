@@ -67,7 +67,7 @@ const TextEditContent = memo<QuickNoteTextEditModalProps>(
 
 TextEditContent.displayName = 'QuickNoteTextEditContent';
 
-/** Opens a modal that edits one piece of Quick Note text (a Comment or a Proposal). */
+/** Opens a modal that edits one piece of Quick Note text, such as a Comment. */
 export const openQuickNoteTextEditModal = ({
   title,
   ...props
@@ -84,5 +84,4 @@ export const openQuickNoteTextEditModal = ({
 /** Modal titles resolved outside React. */
 export const quickNoteTextEditTitles = {
   comment: () => t('agentic.comment.edit', { ns: 'note' }),
-  proposal: () => t('agentic.proposal.editTitle', { ns: 'note' }),
 };

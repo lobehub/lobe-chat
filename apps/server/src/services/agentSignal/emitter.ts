@@ -96,6 +96,18 @@ const withSelfIterationPolicy = (
   },
 });
 
+const QUICK_NOTE_SOURCE_TYPES = new Set<string>([
+  AGENT_SIGNAL_SOURCE_TYPES.quickNoteAnalyzeRequested,
+  AGENT_SIGNAL_SOURCE_TYPES.quickNoteContentChanged,
+  AGENT_SIGNAL_SOURCE_TYPES.quickNoteProposalDecided,
+]);
+
+/**
+ * Quick Note processing is gated by its own feature flag and settings, not by the Agent Signal
+ * self-iteration opt-in, so its sources always reach the runtime.
+ */
+const isQuickNoteSourceType = (sourceType: string) => QUICK_NOTE_SOURCE_TYPES.has(sourceType);
+
 /**
  * Emits one source event into the AgentSignal pipeline and executes matching policies.
  *
@@ -115,7 +127,7 @@ export const emitAgentSignalSourceEvent = async <TSourceType extends AgentSignal
   options: AgentSignalEmitOptions = {},
 ): Promise<DedupedSourceEventResult | GeneratedAgentSignalEmissionResult | undefined> => {
   const selfIterationEnabled =
-    input.sourceType === AGENT_SIGNAL_SOURCE_TYPES.quickNoteAnalyzeRequested ||
+    isQuickNoteSourceType(input.sourceType) ||
     (await isAgentSignalEnabledForUser(context.db, context.userId));
 
   if (!selfIterationEnabled) {
@@ -163,7 +175,7 @@ export const enqueueAgentSignalSourceEvent = async <TSourceType extends AgentSig
   }
 
   if (
-    input.sourceType !== AGENT_SIGNAL_SOURCE_TYPES.quickNoteAnalyzeRequested &&
+    !isQuickNoteSourceType(input.sourceType) &&
     !(await isAgentSignalEnabledForUser(db, context.userId))
   ) {
     return {

@@ -11,7 +11,7 @@ import type { AgentSignalSourceType } from '@lobechat/agent-signal/source';
 import { createSourceEvent } from '@lobechat/agent-signal/source';
 
 import { ExpertiseIngestionService } from '@/server/services/expertise/ingestion';
-import { QuickNoteProcessingService } from '@/server/services/quickNote';
+import type { QuickNoteProcessingService } from '@/server/services/quickNote';
 
 import { acquireAgentSignalDailyBudget } from './budget';
 import type {
@@ -21,7 +21,7 @@ import type {
 } from './emitter';
 import { projectAgentSignalObservability } from './observability/projector';
 import { persistAgentSignalObservability } from './observability/store';
-import type { CreateDefaultAgentSignalPoliciesOptions } from './policies';
+import type { CreateDefaultAgentSignalPoliciesOptions, QuickNotePolicyOptions } from './policies';
 import { createDefaultAgentSignalPolicies } from './policies';
 import { createProcedurePolicyOptions } from './procedure';
 import type { RuntimeGuardBackend } from './runtime/AgentSignalRuntime';
@@ -98,6 +98,35 @@ const buildRuntimeOrchestrationResult = (
   };
 };
 
+const createQuickNotePolicyOptions = (
+  context: AgentSignalExecutionContext,
+  procedure: NonNullable<CreateDefaultAgentSignalPoliciesOptions['procedure']>,
+): QuickNotePolicyOptions => {
+  // One service per source execution, so the decisions backend is resolved at most once.
+  // The Quick Note module graph (decision backend, proposal executors, Agent runtime) is loaded
+  // only when a Quick Note handler actually runs, so every other source skips that import cost.
+  let service: Promise<QuickNoteProcessingService> | undefined;
+  const quickNote = () =>
+    (service ??= import('@/server/services/quickNote').then(
+      ({ QuickNoteProcessingService }) =>
+        new QuickNoteProcessingService(context.db, context.userId, context.workspaceId),
+    ));
+
+  return {
+    completeWithoutGeneration: async (runId) =>
+      (await quickNote()).completeWithoutGeneration(runId),
+    dispatchGeneration: async (runId) => (await quickNote()).dispatchGeneration(runId),
+    judgeContentChange: async (params) => (await quickNote()).judgeContentChange(params),
+    judgeRun: async (runId) => (await quickNote()).judgeRun(runId),
+    markProposalsStale: async (quickNoteId) => (await quickNote()).markProposalsStale(quickNoteId),
+    procedure: {
+      now: procedure.now,
+      receiptStore: procedure.receiptStore,
+      recordStore: procedure.recordStore,
+    },
+  };
+};
+
 const createPolicyOptions = (
   context: AgentSignalExecutionContext,
   options: ExecuteAgentSignalSourceEventOptions,
@@ -162,14 +191,7 @@ const createPolicyOptions = (
     classifierDiagnostics: policyOptions?.classifierDiagnostics,
     nightlyReview: policyOptions?.nightlyReview,
     procedure: procedurePolicyOptions,
-    quickNoteAnalyze: {
-      dispatch: (runId) =>
-        new QuickNoteProcessingService(
-          context.db,
-          context.userId,
-          context.workspaceId,
-        ).dispatchAnalyzeRun(runId),
-    },
+    quickNoteAnalyze: createQuickNotePolicyOptions(context, procedurePolicyOptions),
     selfFeedbackIntent: policyOptions?.selfFeedbackIntent,
     selfReflection: policyOptions?.selfReflection,
     userMemory: {

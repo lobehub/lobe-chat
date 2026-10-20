@@ -74,7 +74,7 @@ export const useToggleRightPanelHotkey = () => {
     HotkeyEnum.ToggleRightPanel,
     () => {
       if (isQuickNoteRoute) {
-        useQuickNoteStore.getState().toggleAnnotationPanel();
+        useQuickNoteStore.getState().toggleAiPanel();
         return;
       }
 

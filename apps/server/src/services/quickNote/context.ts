@@ -4,6 +4,8 @@ export interface QuickNoteContextCandidate {
   content?: string | null;
   /** Stable Document or Topic identifier. */
   id: string;
+  /** Set on Documents already linked to the note; a write-document draft may append to these. */
+  linked?: boolean;
   /** Candidate display title. */
   title?: string | null;
   /** Canonical product resource family. */

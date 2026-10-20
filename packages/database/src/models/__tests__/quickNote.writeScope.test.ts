@@ -7,8 +7,6 @@ import { QuickNoteRepository } from '../../repositories/quickNote';
 import {
   quickNoteProposals,
   quickNoteResources,
-  quickNoteRunInputs,
-  quickNoteRunResources,
   quickNoteRuns,
   quickNotes,
   users,
@@ -23,6 +21,8 @@ const otherUserId = 'quick-note-write-scope-other-user';
 const quickNoteRepo = new QuickNoteRepository(serverDB, userId);
 const otherModel = new QuickNoteModel(serverDB, otherUserId);
 
+const renderSourceText = () => 'Owner capture';
+
 beforeEach(async () => {
   await serverDB.delete(users);
   await serverDB.insert(users).values([{ id: userId }, { id: otherUserId }]);
@@ -32,66 +32,80 @@ afterEach(async () => {
   await serverDB.delete(users);
 });
 
-/** Creates a note with an accepted Annotation, one pending Proposal, and an active Dive Run. */
+/** Creates a note with a completed Analyze Run, one pending Proposal, and an active Run. */
 const seed = async () => {
   const note = await quickNoteRepo.create({ content: 'Owner capture' });
-  const analyze = await quickNoteRepo.claimRun(note.id, { kind: 'analyze' });
-  const output = await quickNoteRepo.acceptAnnotation(analyze!.id, {
-    content: 'Owner annotation',
-    proposals: [{ content: 'Owner proposal', kind: 'task' }],
+  const analyze = await quickNoteRepo.claimRun(note.id, { kind: 'analyze', renderSourceText });
+  const output = await quickNoteRepo.completeRun(analyze!.id, {
+    proposals: [{ kind: 'task', payload: { instruction: 'Owner proposal' } }],
+    summary: 'Owner summary',
   });
-  const dive = await quickNoteRepo.claimRun(note.id, { kind: 'dive' });
+  const active = await quickNoteRepo.claimRun(note.id, {
+    kind: 'signal_enrichment',
+    renderSourceText,
+  });
 
-  return { dive: dive!, note, output: output! };
+  return { active: active!, analyze: analyze!, note, output: output! };
 };
 
 describe('QuickNoteModel write scope', () => {
   /** @example Single-aggregate write helpers refuse rows outside the caller's scope. */
   it('does not mutate another owner’s Quick Note rows', async () => {
-    const { dive, note, output } = await seed();
+    const { active, analyze, note, output } = await seed();
     const proposal = output.proposals[0];
     const [noteBefore] = await serverDB.select().from(quickNotes).where(eq(quickNotes.id, note.id));
 
     const saved = await otherModel.recordContentSave(note.id, { updatedAt: new Date(0) });
     const deleted = await otherModel.deleteRecord(note.id);
-    const pointed = await otherModel.setProposalCurrentHistory(
-      proposal.id,
-      output.documentHistory.id,
-      new Date(0),
-    );
+    const edited = await otherModel.updateProposalPayload(proposal.id, { instruction: 'x' });
     await otherModel.markPendingProposalsStale(note.id, new Date(0));
-    const annotation = await otherModel.createAnnotationResource({
-      documentId: output.resource.documentId!,
+    const created = await otherModel.createProposal({
+      kind: 'task',
+      payload: { instruction: 'Injected' },
       quickNoteId: note.id,
-      sourceHistoryId: dive.sourceHistoryId,
+      runId: analyze.id,
+      sourceHistoryId: analyze.sourceHistoryId,
     });
-    const recorded = await otherModel.recordRunResource({
-      documentHistoryId: output.documentHistory.id,
-      resourceId: output.resource.id,
-      runId: dive.id,
-    });
+    const linked = await otherModel.linkUserResources(note.id, analyze.sourceHistoryId, [
+      { id: note.documentId, type: 'document' },
+    ]);
     // The Analyze Run is already completed, so only the ownership guard can refuse this insert.
-    const inserted = await otherModel.insertPendingRun(note.id, dive.sourceHistoryId, {
+    const inserted = await otherModel.insertPendingRun(note.id, active.sourceHistoryId, {
+      inputSnapshot: {
+        comments: [],
+        pendingProposals: [],
+        source: 'x',
+        sourceHistoryId: active.sourceHistoryId,
+      },
       kind: 'analyze',
     });
-    const pinned = await otherModel.pinRunInputs(dive.id, note.id, dive.sourceHistoryId);
-    await otherModel.completeAnnotationRun(dive.id, {
-      analyzeDueAt: null,
-      quickNoteId: note.id,
-      sourceDocumentEditorData: null,
-      sourceHistoryEditorData: null,
-      tags: ['hijacked'],
+    const completed = await otherModel.completeRun(
+      active.id,
+      {
+        analyzeDueAt: null,
+        quickNoteId: note.id,
+        sourceDocumentEditorData: null,
+        sourceHistoryEditorData: null,
+        tags: ['hijacked'],
+      },
+      { summary: 'Hijacked', tags: ['hijacked'] },
+    );
+    const attached = await otherModel.attachOperation(active.id, {
+      agentId: 'agt_foreign',
+      executionConfig: { agentId: 'agt_foreign', maxSteps: 1, pluginIds: [] },
+      operationId: 'op_foreign',
     });
+    const failed = await otherModel.failRun(active.id, { message: 'Hijacked' });
 
     const [noteAfter] = await serverDB.select().from(quickNotes).where(eq(quickNotes.id, note.id));
-    const [proposalAfter] = await serverDB
+    const proposals = await serverDB
       .select()
       .from(quickNoteProposals)
-      .where(eq(quickNoteProposals.id, proposal.id));
-    const [diveAfter] = await serverDB
+      .where(eq(quickNoteProposals.quickNoteId, note.id));
+    const [activeAfter] = await serverDB
       .select()
       .from(quickNoteRuns)
-      .where(eq(quickNoteRuns.id, dive.id));
+      .where(eq(quickNoteRuns.id, active.id));
     const resources = await serverDB
       .select()
       .from(quickNoteResources)
@@ -100,39 +114,32 @@ describe('QuickNoteModel write scope', () => {
       .select()
       .from(quickNoteRuns)
       .where(and(eq(quickNoteRuns.quickNoteId, note.id), eq(quickNoteRuns.kind, 'analyze')));
-    const diveInputs = await serverDB
-      .select()
-      .from(quickNoteRunInputs)
-      .where(eq(quickNoteRunInputs.runId, dive.id));
-    const diveEvidence = await serverDB
-      .select()
-      .from(quickNoteRunResources)
-      .where(eq(quickNoteRunResources.runId, dive.id));
 
     /** @example No helper reports a write for a foreign id. */
-    expect({ annotation, deleted, inserted, pinned, pointed, recorded, saved }).toEqual({
-      annotation: undefined,
+    expect({ attached, completed, created, deleted, edited, failed, inserted, saved }).toEqual({
+      attached: undefined,
+      completed: undefined,
+      created: undefined,
       deleted: undefined,
+      edited: undefined,
+      failed: undefined,
       inserted: undefined,
-      pinned: false,
-      pointed: undefined,
-      recorded: false,
       saved: undefined,
     });
-    /** @example No foreign Run was started and no extra inputs were pinned. */
+    expect(linked).toEqual([]);
+    /** @example No foreign Run was started. */
     expect(analyzeRuns).toHaveLength(1);
-    expect(diveInputs.filter(({ role }) => role === 'source')).toHaveLength(1);
     /** @example The note row keeps its timestamps and tags. */
     expect(noteAfter).toEqual(noteBefore);
-    /** @example The Proposal keeps its revision pointer and stays current. */
-    expect(proposalAfter).toMatchObject({
-      currentHistoryId: proposal.currentHistoryId,
+    /** @example The Proposal keeps its payload and stays current; nothing was injected. */
+    expect(proposals).toHaveLength(1);
+    expect(proposals[0]).toMatchObject({
+      payload: { instruction: 'Owner proposal' },
       validity: 'current',
     });
-    /** @example The active Run is not completed by another owner. */
-    expect(diveAfter?.status).toBe('pending');
-    /** @example No foreign Annotation binding or Run evidence was added. */
-    expect(resources).toHaveLength(1);
-    expect(diveEvidence).toEqual([]);
+    /** @example The active Run is not completed, started, or failed by another owner. */
+    expect(activeAfter).toMatchObject({ operationId: null, status: 'pending', summary: null });
+    /** @example No foreign resource link was added. */
+    expect(resources).toEqual([]);
   });
 });

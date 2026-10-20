@@ -6,9 +6,73 @@ import { QuickNoteRepository } from '@/database/repositories/quickNote';
 import { getServerDB } from '@/database/server';
 import { getServerFeatureFlagsStateFromRuntimeConfig } from '@/server/featureFlags';
 import { enqueueAgentSignalSourceEvent } from '@/server/services/agentSignal';
+import { renderQuickNoteSourceText } from '@/server/services/quickNote/sourceText';
+
+const PAGE_SIZE = 100;
 
 /**
- * Claims due Automatic Analyze Runs for clients that are no longer online.
+ * Emits the debounced "did the meaning change?" checks whose edits have gone quiet.
+ *
+ * Each real edit pushed `content_check_due_at` back, so one check runs per edit burst and reads
+ * the note as it is now. Notes without current pending Proposals are cleared without a check.
+ *
+ * Returns:
+ * - How many checks were enqueued.
+ */
+const sweepContentChecks = async (
+  db: Awaited<ReturnType<typeof getServerDB>>,
+  now: Date,
+  isEnabled: (userId: string) => Promise<boolean>,
+) => {
+  let after: { contentCheckDueAt: Date; id: string } | undefined;
+  let enqueued = 0;
+
+  while (enqueued < PAGE_SIZE) {
+    const candidates = await QuickNoteModel.findDueContentCheckCandidates(db, {
+      after,
+      limit: PAGE_SIZE,
+      now,
+    });
+    for (const candidate of candidates) {
+      if (!(await isEnabled(candidate.userId))) continue;
+      // Clearing the due time is the claim; a newer edit moved it forward and wins instead.
+      if (!(await QuickNoteModel.claimContentCheck(db, candidate.id, now))) continue;
+
+      const workspaceId = candidate.workspaceId ?? undefined;
+      const proposals = await new QuickNoteModel(db, candidate.userId, workspaceId).queryProposals(
+        candidate.id,
+      );
+      if (
+        !proposals.some(
+          ({ decisionStatus, validity }) => decisionStatus === 'pending' && validity === 'current',
+        )
+      ) {
+        continue;
+      }
+
+      const result = await enqueueAgentSignalSourceEvent(
+        {
+          payload: { quickNoteId: candidate.id, userId: candidate.userId },
+          scopeKey: `quick-note:${candidate.id}`,
+          sourceId: `${candidate.id}:content-check:${candidate.contentCheckDueAt?.getTime()}`,
+          sourceType: AGENT_SIGNAL_SOURCE_TYPES.quickNoteContentChanged,
+        },
+        { userId: candidate.userId, workspaceId },
+      );
+      if (result.accepted) enqueued += 1;
+      if (enqueued === PAGE_SIZE) break;
+    }
+    const last = candidates.at(-1);
+    if (candidates.length < PAGE_SIZE || !last?.contentCheckDueAt) break;
+    after = { contentCheckDueAt: last.contentCheckDueAt, id: last.id };
+  }
+
+  return enqueued;
+};
+
+/**
+ * Claims due Automatic Analyze Runs for clients that are no longer online, and runs the
+ * debounced meaning-change checks of edited notes.
  *
  * Call stack:
  *
@@ -16,7 +80,10 @@ import { enqueueAgentSignalSourceEvent } from '@/server/services/agentSignal';
  *   -> {@link sweepQuickNoteAnalyze}
  *     -> {@link QuickNoteModel.findDueAnalyzeCandidates}
  *       -> {@link QuickNoteRepository.claimRun}
- *         -> Agent Signal Workflow
+ *         -> Agent Signal Workflow (`quick_note.analyze.requested`)
+ *     -> {@link sweepContentChecks}
+ *       -> {@link QuickNoteModel.claimContentCheck}
+ *         -> Agent Signal Workflow (`quick_note.content.changed`)
  *
  * Use when:
  * - The deployment invokes the signed sweep route once per minute.
@@ -26,15 +93,22 @@ import { enqueueAgentSignalSourceEvent } from '@/server/services/agentSignal';
  * - Agent Signal scope and Run constraints deduplicate client/sweep races.
  *
  * Returns:
- * - Claimed and enqueued Run counts for cron observability.
+ * - Claimed and enqueued Run counts, and enqueued content checks, for cron observability.
  */
 export const sweepQuickNoteAnalyze = async (context: Context) => {
   try {
     const db = await getServerDB();
     // Keyset traversal skips rollout-disabled prefixes without changing their scheduled work.
     const now = new Date();
-    const pageSize = 100;
+    const pageSize = PAGE_SIZE;
     const enabledUsers = new Map<string, boolean>();
+    const isEnabled = async (userId: string) => {
+      if (!enabledUsers.has(userId)) {
+        const flags = await getServerFeatureFlagsStateFromRuntimeConfig(userId);
+        enabledUsers.set(userId, flags.enableQuickNote === true);
+      }
+      return enabledUsers.get(userId) === true;
+    };
     let after: { analyzeDueAt: Date; id: string } | undefined;
     let checked = 0;
     let enqueued = 0;
@@ -47,17 +121,17 @@ export const sweepQuickNoteAnalyze = async (context: Context) => {
       });
       for (const candidate of candidates) {
         checked += 1;
-        if (!enabledUsers.has(candidate.userId)) {
-          const flags = await getServerFeatureFlagsStateFromRuntimeConfig(candidate.userId);
-          enabledUsers.set(candidate.userId, flags.enableQuickNote === true);
-        }
-        if (!enabledUsers.get(candidate.userId)) continue;
+        if (!(await isEnabled(candidate.userId))) continue;
         const repo = new QuickNoteRepository(
           db,
           candidate.userId,
           candidate.workspaceId ?? undefined,
         );
-        const run = await repo.claimRun(candidate.id, { kind: 'analyze', trigger: 'automatic' });
+        const run = await repo.claimRun(candidate.id, {
+          kind: 'analyze',
+          renderSourceText: renderQuickNoteSourceText,
+          trigger: 'automatic',
+        });
         if (!run) continue;
 
         const result = await enqueueAgentSignalSourceEvent(
@@ -86,7 +160,9 @@ export const sweepQuickNoteAnalyze = async (context: Context) => {
       after = { analyzeDueAt: last.analyzeDueAt, id: last.id };
     }
 
-    return context.json({ checked, enqueued, success: true });
+    const contentChecks = await sweepContentChecks(db, now, isEnabled);
+
+    return context.json({ checked, contentChecks, enqueued, success: true });
   } catch (error) {
     console.error('[quick-note/sweep]', error);
     return context.json({ error: error instanceof Error ? error.message : 'Internal error' }, 500);

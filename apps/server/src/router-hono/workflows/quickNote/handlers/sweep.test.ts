@@ -8,13 +8,19 @@ import { sweepQuickNoteAnalyze } from './sweep';
 const mocks = vi.hoisted(() => ({
   candidates: vi.fn(),
   claim: vi.fn(),
+  claimContentCheck: vi.fn(),
+  contentCheckCandidates: vi.fn(),
   enqueue: vi.fn(),
   flags: vi.fn(),
+  queryProposals: vi.fn(),
 }));
 vi.mock('@/database/server', () => ({ getServerDB: vi.fn().mockResolvedValue({}) }));
 vi.mock('@/database/models/quickNote', () => ({
   QuickNoteModel: class {
+    static claimContentCheck = mocks.claimContentCheck;
     static findDueAnalyzeCandidates = mocks.candidates;
+    static findDueContentCheckCandidates = mocks.contentCheckCandidates;
+    queryProposals = mocks.queryProposals;
   },
 }));
 vi.mock('@/database/repositories/quickNote', () => ({
@@ -27,7 +33,10 @@ vi.mock('@/server/featureFlags', () => ({
 }));
 vi.mock('@/server/services/agentSignal', () => ({ enqueueAgentSignalSourceEvent: mocks.enqueue }));
 
-beforeEach(() => vi.resetAllMocks());
+beforeEach(() => {
+  vi.resetAllMocks();
+  mocks.contentCheckCandidates.mockResolvedValue([]);
+});
 
 /** @example Offline automatic analysis observes the same user rollout as interactive requests. */
 describe('Quick Note sweep rollout', () => {
@@ -49,10 +58,16 @@ describe('Quick Note sweep rollout', () => {
     const app = new Hono().post('/sweep', sweepQuickNoteAnalyze);
     const response = await app.request('/sweep', { method: 'POST' });
     /** @example The enabled candidate is processed successfully. */
-    expect(await response.json()).toEqual({ checked: 2, enqueued: 1, success: true });
+    expect(await response.json()).toEqual({
+      checked: 2,
+      contentChecks: 0,
+      enqueued: 1,
+      success: true,
+    });
     /** @example The disabled candidate never acquires a run. */
     expect(mocks.claim).toHaveBeenCalledExactlyOnceWith('allowed-note', {
       kind: 'analyze',
+      renderSourceText: expect.any(Function),
       trigger: 'automatic',
     });
   });
@@ -81,10 +96,74 @@ describe('Quick Note sweep rollout', () => {
       .post('/sweep', sweepQuickNoteAnalyze)
       .request('/sweep', { method: 'POST' });
     /** @example The second page's eligible user receives automatic analysis. */
-    expect(await response.json()).toEqual({ checked: 101, enqueued: 1, success: true });
+    expect(await response.json()).toEqual({
+      checked: 101,
+      contentChecks: 0,
+      enqueued: 1,
+      success: true,
+    });
     /** @example The next query resumes after the disabled page rather than rereading it. */
     expect(mocks.candidates.mock.calls[1][1]).toMatchObject({
       after: { id: 'disabled-99', analyzeDueAt: new Date(0) },
     });
+  });
+});
+
+/** @example Edits are checked once they go quiet, not on every keystroke. */
+describe('Quick Note sweep content checks', () => {
+  const pending = [{ decisionStatus: 'pending', validity: 'current' }];
+
+  const sweep = async () =>
+    (
+      await new Hono().post('/sweep', sweepQuickNoteAnalyze).request('/sweep', { method: 'POST' })
+    ).json();
+
+  beforeEach(() => {
+    mocks.candidates.mockResolvedValue([]);
+    mocks.flags.mockResolvedValue({ enableQuickNote: true });
+    mocks.enqueue.mockResolvedValue({ accepted: true });
+  });
+
+  it('emits one check per due note, keyed by its due time, without a fixed baseline', async () => {
+    const dueAt = new Date('2026-10-20T01:00:00Z');
+    mocks.contentCheckCandidates.mockResolvedValue([
+      { contentCheckDueAt: dueAt, id: 'note-1', userId: 'tester', workspaceId: null },
+    ]);
+    mocks.claimContentCheck.mockResolvedValue(true);
+    mocks.queryProposals.mockResolvedValue(pending);
+
+    expect(await sweep()).toMatchObject({ contentChecks: 1 });
+    expect(mocks.enqueue).toHaveBeenCalledExactlyOnceWith(
+      {
+        payload: { quickNoteId: 'note-1', userId: 'tester' },
+        scopeKey: 'quick-note:note-1',
+        sourceId: `note-1:content-check:${dueAt.getTime()}`,
+        sourceType: 'quick_note.content.changed',
+      },
+      { userId: 'tester', workspaceId: undefined },
+    );
+  });
+
+  /** @example A later edit pushed the due time back, so that later time runs the check. */
+  it('skips a note whose check was re-armed after the scan', async () => {
+    mocks.contentCheckCandidates.mockResolvedValue([
+      { contentCheckDueAt: new Date(0), id: 'note-1', userId: 'tester', workspaceId: null },
+    ]);
+    mocks.claimContentCheck.mockResolvedValue(false);
+
+    expect(await sweep()).toMatchObject({ contentChecks: 0 });
+    expect(mocks.enqueue).not.toHaveBeenCalled();
+  });
+
+  it('clears the check without a model call when no Proposal can go stale', async () => {
+    mocks.contentCheckCandidates.mockResolvedValue([
+      { contentCheckDueAt: new Date(0), id: 'note-1', userId: 'tester', workspaceId: null },
+    ]);
+    mocks.claimContentCheck.mockResolvedValue(true);
+    mocks.queryProposals.mockResolvedValue([{ decisionStatus: 'pending', validity: 'stale' }]);
+
+    expect(await sweep()).toMatchObject({ contentChecks: 0 });
+    expect(mocks.claimContentCheck).toHaveBeenCalledOnce();
+    expect(mocks.enqueue).not.toHaveBeenCalled();
   });
 });

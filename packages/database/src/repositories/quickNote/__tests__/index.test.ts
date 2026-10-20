@@ -3,13 +3,13 @@ import { and, eq, inArray } from 'drizzle-orm';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { getTestDB } from '../../../core/getTestDB';
+import type { ClaimQuickNoteRunParams } from '../../../models/quickNote';
 import { QuickNoteModel } from '../../../models/quickNote';
+import { TaskModel } from '../../../models/task';
 import {
   documentHistories,
   documents,
   quickNoteResources,
-  quickNoteRunInputs,
-  quickNoteRunResources,
   quickNoteRuns,
   quickNotes,
   tasks,
@@ -27,6 +27,16 @@ const quickNoteModel = new QuickNoteModel(serverDB, userId);
 const quickNoteRepo = new QuickNoteRepository(serverDB, userId);
 const otherRepo = new QuickNoteRepository(serverDB, otherUserId);
 
+/** Test renderer: Markdown editor projections render to their Markdown text. */
+const renderSourceText = (editorData: Record<string, unknown>) =>
+  typeof editorData.markdown === 'string' ? editorData.markdown : '';
+
+const claim = (
+  id: string,
+  params: Omit<ClaimQuickNoteRunParams, 'renderSourceText'> = { kind: 'analyze' },
+  repo = quickNoteRepo,
+) => repo.claimRun(id, { ...params, renderSourceText });
+
 beforeEach(async () => {
   await serverDB.delete(users);
   await serverDB.insert(users).values([{ id: userId }, { id: otherUserId }]);
@@ -36,10 +46,10 @@ afterEach(async () => {
   await serverDB.delete(users);
 });
 
-/** @example A capture creates its private content and conversation containers atomically. */
 describe('QuickNoteRepository', () => {
-  /** @example Creating "Remember Tokyo" returns the persisted note and backing IDs. */
-  it('creates a Quick Note with one backing Document and Topic', async () => {
+  /** @example Creating "Remember Tokyo" returns the persisted note and its backing Document. */
+  it('creates a Quick Note with one backing Document and no Topic', async () => {
+    const topicsBefore = await serverDB.select().from(topics).where(eq(topics.userId, userId));
     const note = await quickNoteRepo.create({
       content: 'Remember Tokyo',
       editorData: { root: { children: [] } },
@@ -51,7 +61,7 @@ describe('QuickNoteRepository', () => {
       .select()
       .from(documents)
       .where(eq(documents.id, note.documentId));
-    const [topic] = await serverDB.select().from(topics).where(eq(topics.id, note.topicId));
+    const topicsAfter = await serverDB.select().from(topics).where(eq(topics.userId, userId));
 
     /** @example The source content remains in the hidden backing Document. */
     expect(document).toMatchObject({
@@ -60,10 +70,81 @@ describe('QuickNoteRepository', () => {
       userId,
       visibility: 'private',
     });
-    /** @example The hidden Topic is scoped to the same owner. */
-    expect(topic).toMatchObject({ trigger: 'quick-note', userId });
+    /** @example Capture alone no longer creates a hidden Topic. */
+    expect(topicsAfter).toHaveLength(topicsBefore.length);
     /** @example The main record owns organization rather than copied content. */
     expect(note).toMatchObject({ location: 'Shanghai', tags: ['travel'], userId });
+  });
+
+  /** @example A capture sent from a Topic and a Page links both as user-supplied context. */
+  it('links accessible create-time resources as context and skips the rest', async () => {
+    await serverDB.insert(topics).values({ id: 'qn-sent-topic', title: 'Origin chat', userId });
+    await serverDB.insert(documents).values([
+      {
+        content: 'Origin page',
+        fileType: 'text/plain',
+        id: 'qn-sent-page',
+        source: 'manual',
+        sourceType: 'api',
+        title: 'Origin page',
+        totalCharCount: 11,
+        totalLineCount: 1,
+        userId,
+      },
+      {
+        content: 'Foreign page',
+        fileType: 'text/plain',
+        id: 'qn-foreign-page',
+        source: 'manual',
+        sourceType: 'api',
+        totalCharCount: 12,
+        totalLineCount: 1,
+        userId: otherUserId,
+      },
+    ]);
+
+    const note = await quickNoteRepo.create({
+      content: 'Sent from elsewhere',
+      editorData: { markdown: 'Sent from elsewhere' },
+      resources: [
+        { id: 'qn-sent-topic', selector: { messageId: 'msg_1' }, type: 'topic' },
+        { id: 'qn-sent-page', type: 'page' },
+        { id: 'qn-foreign-page', type: 'document' },
+      ],
+    });
+    const resources = await serverDB
+      .select()
+      .from(quickNoteResources)
+      .where(eq(quickNoteResources.quickNoteId, note.id));
+    const [history] = await serverDB
+      .select()
+      .from(documentHistories)
+      .where(eq(documentHistories.id, resources[0].sourceHistoryId));
+    const details = await quickNoteModel.queryAgenticDetails(note.id);
+
+    /** @example Only the two accessible references are linked. */
+    expect(resources.map(({ resourceId }) => resourceId).sort()).toEqual([
+      'qn-sent-page',
+      'qn-sent-topic',
+    ]);
+    /** @example User-supplied links are context without a producing Run. */
+    expect(resources.every(({ role, runId }) => role === 'context' && runId === null)).toBe(true);
+    /** @example Links are bound to a system revision of the initial source. */
+    expect(history).toMatchObject({ documentId: note.documentId, saveSource: 'system' });
+    /** @example The selector is kept with the link. */
+    expect(resources.find(({ resourceId }) => resourceId === 'qn-sent-topic')?.selector).toEqual({
+      messageId: 'msg_1',
+    });
+
+    await quickNoteRepo.updateContent(note.id, {
+      content: 'Edited after sending',
+      editorData: { markdown: 'Edited after sending' },
+    });
+    const afterEdit = await quickNoteModel.queryAgenticDetails(note.id);
+
+    /** @example User-supplied links stay visible on the detail surface after a source edit. */
+    expect(details.resources).toHaveLength(2);
+    expect(afterEdit.resources).toHaveLength(2);
   });
 
   /** @example Rich-text autosaves retain bounded Document History revisions. */
@@ -104,7 +185,7 @@ describe('QuickNoteRepository', () => {
     const editorData = { root: { children: [{ text: 'Version one' }] } };
     const note = await quickNoteRepo.create({ content: 'Version one', editorData });
 
-    const run = await quickNoteRepo.claimRun(note.id, { kind: 'analyze', trigger: 'manual' });
+    const run = await claim(note.id, { kind: 'analyze', trigger: 'manual' });
 
     const [history] = await serverDB
       .select()
@@ -134,8 +215,8 @@ describe('QuickNoteRepository', () => {
       editorData: { root: { children: [] } },
     });
 
-    const first = await quickNoteRepo.claimRun(note.id, { kind: 'analyze' });
-    const second = await quickNoteRepo.claimRun(note.id, { kind: 'analyze' });
+    const first = await claim(note.id);
+    const second = await claim(note.id);
     const runs = await serverDB
       .select()
       .from(quickNoteRuns)
@@ -147,216 +228,137 @@ describe('QuickNoteRepository', () => {
     expect(runs).toHaveLength(1);
   });
 
-  /** @example Analyze accepts one Document-backed Annotation for its pinned source history. */
-  it('persists accepted Annotation output with Run provenance', async () => {
-    const note = await quickNoteRepo.create({ content: 'Unclassified thought' });
-    const run = await quickNoteRepo.claimRun(note.id, { kind: 'analyze' });
+  /** @example A Run records the rendered text of the source, Comments, and pending Proposals. */
+  it('persists a rendered input snapshot that later edits do not change', async () => {
+    const note = await quickNoteRepo.create({
+      content: 'Compare gpt-live and moshi',
+      editorData: { markdown: 'Compare gpt-live and moshi' },
+    });
+    const comment = await quickNoteModel.createComment(note.id, { content: 'Initial feedback' });
+    const first = await claim(note.id);
+    const firstOutput = await quickNoteRepo.completeRun(first!.id, {
+      proposals: [{ kind: 'task', payload: { instruction: 'Research both' }, preset: 'research' }],
+      summary: 'Two speech models',
+    });
+    await quickNoteModel.updateComment(comment!.id, { content: 'Revised feedback' });
 
-    const output = await quickNoteRepo.acceptAnnotation(run!.id, {
-      content: 'A concise interpretation',
-      editorData: { root: { children: [{ text: 'A concise interpretation' }] } },
+    const second = await claim(note.id);
+    const [firstRun] = await serverDB
+      .select()
+      .from(quickNoteRuns)
+      .where(eq(quickNoteRuns.id, first!.id));
+    const secondContext = await quickNoteModel.getRunContext(second!.id);
+
+    /** @example The first Run keeps the Comment text present at claim time. */
+    expect(firstRun.inputSnapshot).toEqual({
+      comments: [{ content: 'Initial feedback', id: comment!.id }],
+      pendingProposals: [],
+      source: 'Compare gpt-live and moshi',
+      sourceHistoryId: first!.sourceHistoryId,
+    });
+    /** @example A later Run sees the overwritten Comment and the pending Proposal payload. */
+    expect(secondContext?.inputSnapshot).toEqual({
+      comments: [{ content: 'Revised feedback', id: comment!.id }],
+      pendingProposals: [
+        {
+          id: firstOutput!.proposals[0].id,
+          kind: 'task',
+          payload: { instruction: 'Research both' },
+        },
+      ],
+      source: 'Compare gpt-live and moshi',
+      sourceHistoryId: second!.sourceHistoryId,
+    });
+  });
+
+  /** @example Completing an Analyze Run stores its summary, decision, tags, and Proposals. */
+  it('completes a Run with summary, decision, tags, and Proposals', async () => {
+    const note = await quickNoteRepo.create({ content: 'Unclassified thought' });
+    const run = await claim(note.id);
+    const decision = {
+      backend: 'shim',
+      evidence: 'Mentions research explicitly',
+      model: 'openai/gpt-mini',
+      preset: 'research' as const,
+      primary: 'delegate' as const,
+      scores: { delegate: 3, enrich: 2, keep: 1, link: 0 } as const,
+    };
+
+    const output = await quickNoteRepo.completeRun(run!.id, {
+      decision,
+      proposals: [{ kind: 'task', payload: { instruction: 'Research it' }, preset: 'research' }],
+      summary: '  A concise interpretation  ',
       tags: ['idea'],
     });
+    const repeated = await quickNoteRepo.completeRun(run!.id, { summary: 'Twice' });
+    const [details] = await quickNoteModel.queryDetails();
 
-    const [resource] = await serverDB
-      .select()
-      .from(quickNoteResources)
-      .where(eq(quickNoteResources.id, output!.resource.id));
-    const [annotationDocument] = await serverDB
-      .select()
-      .from(documents)
-      .where(eq(documents.id, resource.documentId!));
-    const [outputHistory] = await serverDB
-      .select()
-      .from(documentHistories)
-      .where(eq(documentHistories.id, output!.documentHistory.id));
-    const [runResource] = await serverDB
-      .select()
-      .from(quickNoteRunResources)
-      .where(eq(quickNoteRunResources.runId, run!.id));
-
-    /** @example Annotation is a private canonical Document, not copied into the binding. */
-    expect(annotationDocument).toMatchObject({
-      content: 'A concise interpretation',
-      sourceType: 'quick-note',
-      visibility: 'private',
+    /** @example The Run carries the trimmed summary and the full decision. */
+    expect(output?.run).toMatchObject({
+      decision,
+      status: 'completed',
+      summary: 'A concise interpretation',
     });
-    /** @example Annotation lineage belongs to the exact source snapshot read by the Run. */
-    expect(resource).toMatchObject({ role: 'annotation', sourceHistoryId: run!.sourceHistoryId });
-    /** @example Accepted output uses an immutable LLM-authored Document History. */
-    expect(outputHistory).toMatchObject({ saveSource: 'llm_call' });
-    /** @example Provenance connects the producing Run to the accepted output revision. */
-    expect(runResource).toMatchObject({
-      documentHistoryId: outputHistory.id,
-      resourceId: resource.id,
+    /** @example A Proposal keeps its AI draft as the original payload. */
+    expect(output?.proposals[0]).toMatchObject({
+      decisionStatus: 'pending',
+      kind: 'task',
+      originalPayload: { instruction: 'Research it' },
+      payload: { instruction: 'Research it' },
+      preset: 'research',
+      validity: 'current',
+    });
+    /** @example A terminal Run cannot be completed twice. */
+    expect(repeated).toBeUndefined();
+    /** @example The list projection exposes the latest summary and merged tags. */
+    expect(details).toMatchObject({
+      summary: { content: 'A concise interpretation' },
+      tags: ['idea'],
     });
   });
 
-  /** @example Analyze emits an inert Document-backed Task Proposal with independent state. */
-  it('versions Proposal content and separates source validity from user decision', async () => {
-    const note = await quickNoteRepo.create({ content: 'An actionable note' });
-    const run = await quickNoteRepo.claimRun(note.id, { kind: 'analyze' });
-    const output = await quickNoteRepo.acceptAnnotation(run!.id, {
-      content: 'A concise interpretation',
-      proposals: [{ content: 'Prepare a small training-data experiment.', kind: 'task' }],
+  /** @example Cosmetic edits neither invalidate suggestions nor reschedule Analyze. */
+  it('classifies text edits without marking Proposals stale', async () => {
+    const note = await quickNoteRepo.create({ content: '我好喜欢北京' });
+    const run = await claim(note.id);
+    const output = await quickNoteRepo.completeRun(run!.id, {
+      proposals: [{ kind: 'task', payload: { instruction: 'x', name: 'y' } }],
     });
-    const proposal = output!.proposals[0];
-    const edited = await quickNoteRepo.updateProposal(proposal.id, {
-      content: 'Prepare and review a small training-data experiment.',
-      editorData: { markdown: 'Prepare and review a small training-data experiment.' },
-    });
+    const dueAt = new Date('2026-10-20T01:00:00Z');
+    const nextDueAt = new Date('2026-10-20T02:00:00Z');
+    await serverDB
+      .update(quickNotes)
+      .set({ analyzeDueAt: dueAt })
+      .where(eq(quickNotes.id, note.id));
+    const isEquivalentText = (previous: string, next: string) =>
+      previous.replaceAll('。', '') === next.replaceAll('。', '');
 
-    await quickNoteRepo.updateContent(note.id, {
-      content: 'The source changed after the suggestion.',
-      editorData: { markdown: 'The source changed after the suggestion.' },
+    const equivalent = await quickNoteRepo.updateContent(note.id, {
+      analyzeDueAt: nextDueAt,
+      content: '我好喜欢北京。',
+      editorData: { markdown: '我好喜欢北京。' },
+      isEquivalentText,
     });
-    const [stale] = await quickNoteModel.queryProposals(note.id);
-    const otherModel = new QuickNoteModel(serverDB, otherUserId);
-    const rejectedDecision = await otherModel.decideProposal(proposal.id, 'dismissed');
-    const rejectedEdit = await otherRepo.updateProposal(proposal.id, {
-      content: 'Cross-owner proposal edit',
-      editorData: { markdown: 'Cross-owner proposal edit' },
+    const changed = await quickNoteRepo.updateContent(note.id, {
+      analyzeDueAt: nextDueAt,
+      content: '我不喜欢北京。',
+      editorData: { markdown: '我不喜欢北京。' },
+      isEquivalentText,
     });
-    const hiddenProposals = await otherModel.queryProposals(note.id);
-    const accepted = await quickNoteModel.decideProposal(proposal.id, 'accepted');
-    const [proposalDocument] = await serverDB
-      .select()
-      .from(documents)
-      .where(eq(documents.id, proposal.documentId));
+    const [proposal] = await quickNoteModel.queryProposals(note.id);
 
-    /** @example Proposal text lives in a private Document rather than the lifecycle row. */
-    expect(proposalDocument).toMatchObject({
-      content: 'Prepare and review a small training-data experiment.',
-      sourceType: 'quick-note',
-      visibility: 'private',
-    });
-    /** @example User editing advances the current Document History identity. */
-    expect(edited?.proposal.currentHistoryId).toBe(edited?.history.id);
-    /** @example A source edit invalidates but does not dismiss the pending Proposal. */
-    expect(stale).toMatchObject({ decisionStatus: 'pending', validity: 'stale' });
-    /** @example Acceptance pins the exact edited version while retaining stale provenance. */
-    expect(accepted).toMatchObject({
-      acceptedHistoryId: edited?.history.id,
-      decisionStatus: 'accepted',
-      validity: 'stale',
-    });
-    /** @example Another owner cannot edit or list the Proposal. */
-    expect(rejectedEdit).toBeUndefined();
-    /** @example Another owner cannot decide the Proposal. */
-    expect(rejectedDecision).toBeUndefined();
-    /** @example Proposal reads remain scoped through the parent Quick Note. */
-    expect(hiddenProposals).toEqual([]);
+    /** @example A trailing full stop keeps the existing Analyze schedule. */
+    expect(equivalent).toMatchObject({ analyzeDueAt: dueAt, contentChange: 'equivalent' });
+    /** @example A real edit restarts the quiet period. */
+    expect(changed).toMatchObject({ analyzeDueAt: nextDueAt, contentChange: 'changed' });
+    /** @example Staleness is decided asynchronously, never by the save itself. */
+    expect(proposal).toMatchObject({ id: output!.proposals[0].id, validity: 'current' });
   });
 
-  /** @example Accepting a current Task Proposal creates exactly the explicit downstream object. */
-  it('converts an accepted Task Proposal and links the created Task', async () => {
-    const note = await quickNoteRepo.create({ content: 'Ship the duplex model experiment' });
-    const run = await quickNoteRepo.claimRun(note.id, { kind: 'analyze' });
-    const output = await quickNoteRepo.acceptAnnotation(run!.id, {
-      content: 'A concrete next action',
-      proposals: [{ content: 'Train a small duplex model experiment.', kind: 'task' }],
-    });
-
-    const accepted = await quickNoteRepo.acceptTaskProposal(output!.proposals[0].id);
-    const [task] = await serverDB.select().from(tasks).where(eq(tasks.id, accepted!.task.id));
-    const details = await quickNoteModel.queryAgenticDetails(note.id);
-    const acceptedAgain = await quickNoteRepo.acceptTaskProposal(output!.proposals[0].id);
-
-    /** @example The created Task keeps the edited Proposal body as its instruction. */
-    expect(task).toMatchObject({
-      instruction: 'Train a small duplex model experiment.',
-      visibility: 'private',
-    });
-    /** @example The exact Proposal version becomes terminally accepted. */
-    expect(accepted?.proposal).toMatchObject({
-      acceptedHistoryId: output!.proposals[0].currentHistoryId,
-      decisionStatus: 'accepted',
-    });
-    /** @example The created Task is immediately visible as typed Quick Note context. */
-    expect(details.resources).toEqual([
-      expect.objectContaining({
-        resourceId: task.id,
-        resourceType: 'task',
-        taskIdentifier: task.identifier,
-      }),
-    ]);
-    /** @example Repeated acceptance cannot create a second Task. */
-    expect(acceptedAgain).toBeUndefined();
-  });
-
-  /** @example A Run records the exact current source, Comment, and Proposal revisions it sees. */
-  it('pins all mutable context through immutable Run Inputs', async () => {
-    const note = await quickNoteRepo.create({ content: 'A note with follow-up context' });
-    const comment = await quickNoteModel.createComment(note.id, {
-      content: 'Initial feedback',
-    });
-    const analyze = await quickNoteRepo.claimRun(note.id, { kind: 'analyze' });
-    const analyzeContext = await quickNoteModel.getRunContext(analyze!.id);
-    await quickNoteModel.updateComment(comment!.comment.id, { content: 'Revised feedback' });
-    const output = await quickNoteRepo.acceptAnnotation(analyze!.id, {
-      content: 'A concise interpretation',
-      proposals: [{ content: 'Review this later.', kind: 'task' }],
-    });
-    const editedProposal = await quickNoteRepo.updateProposal(output!.proposals[0].id, {
-      content: 'Review this with the latest feedback.',
-      editorData: { markdown: 'Review this with the latest feedback.' },
-    });
-
-    const dive = await quickNoteRepo.claimRun(note.id, { kind: 'dive' });
-    const diveContext = await quickNoteModel.getRunContext(dive!.id);
-    const persistedInputs = await serverDB
-      .select()
-      .from(quickNoteRunInputs)
-      .where(eq(quickNoteRunInputs.runId, dive!.id));
-
-    /** @example The first Run remains fixed to the Comment text present at claim time. */
-    expect(analyzeContext?.inputs.find(({ role }) => role === 'comment')?.commentContent).toBe(
-      'Initial feedback',
-    );
-    /** @example A later Run consumes the latest Comment revision. */
-    expect(diveContext?.inputs.find(({ role }) => role === 'comment')?.commentContent).toBe(
-      'Revised feedback',
-    );
-    /** @example The later Run pins the edited Proposal Document History. */
-    expect(diveContext?.inputs.find(({ role }) => role === 'proposal')?.documentHistoryId).toBe(
-      editedProposal?.history.id,
-    );
-    /** @example Source, Comment, and Proposal are three independently auditable inputs. */
-    expect(persistedInputs.map(({ role }) => role).sort()).toEqual([
-      'comment',
-      'proposal',
-      'source',
-    ]);
-  });
-
-  /** @example Editing the source creates a separate Annotation lineage on the next Run. */
-  it('keeps Annotation resources separate across source histories', async () => {
+  /** @example An old Run remains auditable but cannot change current tags after editing. */
+  it('does not let a stale Run mutate current tags or due time', async () => {
     const note = await quickNoteRepo.create({ content: 'Version one' });
-    const firstRun = await quickNoteRepo.claimRun(note.id, { kind: 'analyze' });
-    await quickNoteRepo.acceptAnnotation(firstRun!.id, { content: 'Annotation one' });
-
-    await quickNoteRepo.updateContent(note.id, {
-      content: 'Version two',
-      editorData: { root: { children: [{ text: 'Version two' }] } },
-    });
-    const secondRun = await quickNoteRepo.claimRun(note.id, { kind: 'analyze' });
-    await quickNoteRepo.acceptAnnotation(secondRun!.id, { content: 'Annotation two' });
-
-    const resources = await serverDB
-      .select()
-      .from(quickNoteResources)
-      .where(eq(quickNoteResources.quickNoteId, note.id));
-
-    /** @example Each pinned source version has its own Annotation Document lineage. */
-    expect(resources).toHaveLength(2);
-    /** @example Source histories never share the same lineage identity. */
-    expect(new Set(resources.map((resource) => resource.sourceHistoryId)).size).toBe(2);
-  });
-
-  /** @example An old Run remains auditable but cannot become the current Annotation after editing. */
-  it('does not project a stale Run over a newer source revision', async () => {
-    const note = await quickNoteRepo.create({ content: 'Version one' });
-    const oldRun = await quickNoteRepo.claimRun(note.id, { kind: 'analyze' });
+    const oldRun = await claim(note.id);
     const dueAt = new Date('2026-08-24T01:00:00Z');
     await quickNoteRepo.updateContent(note.id, {
       content: 'Version two',
@@ -364,31 +366,55 @@ describe('QuickNoteRepository', () => {
       editorData: { root: { children: [{ text: 'Version two' }] } },
     });
 
-    await quickNoteRepo.acceptAnnotation(oldRun!.id, {
-      content: 'Stale annotation',
+    const output = await quickNoteRepo.completeRun(oldRun!.id, {
+      summary: 'Stale summary',
       tags: ['stale-tag'],
     });
-    const [details] = await quickNoteModel.queryDetails();
     const [persistedNote] = await serverDB
       .select()
       .from(quickNotes)
       .where(eq(quickNotes.id, note.id));
 
-    /** @example The old output is retained in resources but hidden from the current projection. */
-    expect(details.annotation).toBeUndefined();
+    /** @example The stale Run itself is still completed with its summary for auditing. */
+    expect(output?.run).toMatchObject({ status: 'completed', summary: 'Stale summary' });
     /** @example The newer edit remains eligible for a fresh Analyze claim. */
     expect(persistedNote.analyzeDueAt).toEqual(dueAt);
     /** @example Stale interpretation metadata cannot leak into the current source revision. */
     expect(persistedNote.tags).toEqual([]);
   });
 
-  /** @example Removing a Quick Note cleans generated private containers and outputs. */
-  it('deletes generated Documents and Topic without touching unrelated Documents', async () => {
+  /** @example Another owner cannot complete, claim, or create against a foreign note. */
+  it('keeps Run claim and completion owner-scoped', async () => {
+    const note = await quickNoteRepo.create({ content: 'Private' });
+    const run = await claim(note.id);
+
+    const foreignClaim = await claim(note.id, { kind: 'analyze' }, otherRepo);
+    const foreignComplete = await otherRepo.completeRun(run!.id, { summary: 'Hijack' });
+    const [persisted] = await serverDB
+      .select()
+      .from(quickNoteRuns)
+      .where(eq(quickNoteRuns.id, run!.id));
+
+    expect(foreignClaim).toBeUndefined();
+    expect(foreignComplete).toBeUndefined();
+    expect(persisted.status).toBe('pending');
+  });
+
+  /** @example Removing a Quick Note cleans its source Document and its Runs' Topics. */
+  it('deletes the source Document and Run Topics without touching unrelated objects', async () => {
     const note = await quickNoteRepo.create({ content: 'Disposable' });
-    const run = await quickNoteRepo.claimRun(note.id, { kind: 'analyze' });
-    const output = await quickNoteRepo.acceptAnnotation(run!.id, {
-      content: 'Generated',
-      proposals: [{ content: 'Generated proposal', kind: 'task' }],
+    const run = await claim(note.id);
+    await serverDB.insert(topics).values([
+      { id: 'qn-run-topic', title: 'Run topic', userId },
+      { id: 'qn-unrelated-topic', title: 'Keep me', userId },
+    ]);
+    await serverDB
+      .update(quickNoteRuns)
+      .set({ topicId: 'qn-run-topic' })
+      .where(eq(quickNoteRuns.id, run!.id));
+    await quickNoteRepo.completeRun(run!.id, {
+      proposals: [{ kind: 'task', payload: { instruction: 'Generated' } }],
+      summary: 'Generated',
     });
     await quickNoteModel.createComment(note.id, { content: 'Disposable feedback' });
     const unrelatedDocumentId = 'quick-note-unrelated-document';
@@ -403,28 +429,71 @@ describe('QuickNoteRepository', () => {
       userId,
     });
 
+    const foreignDelete = await otherRepo.delete(note.id);
     const deleted = await quickNoteRepo.delete(note.id);
     const remainingDocuments = await serverDB
       .select({ id: documents.id })
       .from(documents)
-      .where(
-        inArray(documents.id, [
-          note.documentId,
-          output!.resource.documentId!,
-          output!.proposals[0].documentId,
-          unrelatedDocumentId,
-        ]),
-      );
+      .where(inArray(documents.id, [note.documentId, unrelatedDocumentId]));
     const remainingTopics = await serverDB
       .select({ id: topics.id })
       .from(topics)
-      .where(eq(topics.id, note.topicId));
+      .where(inArray(topics.id, ['qn-run-topic', 'qn-unrelated-topic']));
+    const remainingRuns = await serverDB
+      .select()
+      .from(quickNoteRuns)
+      .where(eq(quickNoteRuns.quickNoteId, note.id));
 
-    /** @example The owner can delete the capture exactly once. */
+    /** @example Another owner cannot delete the capture. */
+    expect(foreignDelete).toBe(false);
+    /** @example The owner can delete the capture. */
     expect(deleted).toBe(true);
     /** @example Only the unrelated user Document remains. */
     expect(remainingDocuments).toEqual([{ id: unrelatedDocumentId }]);
-    /** @example The hidden Topic is removed with the capture. */
-    expect(remainingTopics).toEqual([]);
+    /** @example The Run Topic is removed with the capture; unrelated Topics stay. */
+    expect(remainingTopics).toEqual([{ id: 'qn-unrelated-topic' }]);
+    /** @example Runs cascade with the capture. */
+    expect(remainingRuns).toEqual([]);
+  });
+
+  // ROOT CAUSE:
+  // Tasks a note started stay hidden from task lists and Recent (they are listed in the note
+  // sidebar). Deleting the note left them reachable only by direct link.
+  /** @example Deleting a note returns its Tasks to the normal task list. */
+  it('turns the Tasks a deleted note started into ordinary Tasks', async () => {
+    const note = await quickNoteRepo.create({ content: 'Research moshi' });
+    const otherNote = await quickNoteRepo.create({ content: 'Keep me' });
+    const seedTask = (id: string, quickNoteId: string, seq: number) =>
+      serverDB.insert(tasks).values({
+        context: { keep: true, source: { quickNoteId, runId: 'r', type: 'quick_note' } },
+        createdByUserId: userId,
+        id,
+        identifier: `T-${seq}`,
+        instruction: 'Compare moshi',
+        seq,
+      });
+    await seedTask('task-of-deleted-note', note.id, 1);
+    await seedTask('task-of-kept-note', otherNote.id, 2);
+    const taskModel = new TaskModel(serverDB, userId);
+    const before = await taskModel.list();
+
+    await otherRepo.delete(note.id);
+    const afterForeign = await serverDB
+      .select()
+      .from(tasks)
+      .where(eq(tasks.id, 'task-of-deleted-note'));
+    await quickNoteRepo.delete(note.id);
+    const listed = await taskModel.list();
+    const [detached] = await serverDB
+      .select()
+      .from(tasks)
+      .where(eq(tasks.id, 'task-of-deleted-note'));
+
+    expect(before.tasks).toEqual([]);
+    /** @example Another owner's delete changes nothing. */
+    expect(afterForeign[0].context).toMatchObject({ source: { quickNoteId: note.id } });
+    /** @example The detached Task is listed again; the other note's Task stays hidden. */
+    expect(listed.tasks.map(({ id }) => id)).toEqual(['task-of-deleted-note']);
+    expect(detached.context).toEqual({ keep: true });
   });
 });

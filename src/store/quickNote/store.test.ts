@@ -5,10 +5,11 @@ import { type QuickNoteItem, type QuickNoteProposal, quickNoteService } from '@/
 import {
   ANALYZE_POLL_INTERVAL,
   ANALYZE_SETTLE_DELAY,
-  DIVE_POLL_INTERVAL,
   PERSIST_DEBOUNCE,
+  STALE_CHECK_REFRESH_DELAYS,
 } from './action';
 import { initialState, type QuickNoteState } from './initialState';
+import { TASK_STATUS_REFRESH_DELAYS } from './proposalAction';
 import { quickNoteSelectors } from './selectors';
 import { useQuickNoteStore } from './store';
 
@@ -83,13 +84,15 @@ describe('quickNoteSelectors', () => {
     ]);
   });
 
-  it('pendingProposalsById returns only pending proposals', () => {
+  /** @example Stale proposals stay actionable; superseded and decided ones move to history. */
+  it('splits actionable and archived proposals', () => {
     const createProposal = (patch: Partial<QuickNoteProposal>): QuickNoteProposal => ({
-      content: '',
       createdAt: 1000,
       decisionStatus: 'pending',
       id: 'proposal-1',
       kind: 'task',
+      originalPayload: {},
+      payload: {},
       updatedAt: 1000,
       validity: 'current',
       ...patch,
@@ -103,6 +106,8 @@ describe('quickNoteSelectors', () => {
             createProposal({ decisionStatus: 'pending', id: 'p1' }),
             createProposal({ decisionStatus: 'accepted', id: 'p2' }),
             createProposal({ decisionStatus: 'dismissed', id: 'p3' }),
+            createProposal({ decisionStatus: 'pending', id: 'p4', validity: 'stale' }),
+            createProposal({ decisionStatus: 'pending', id: 'p5', validity: 'superseded' }),
           ],
           resources: [],
         },
@@ -111,10 +116,15 @@ describe('quickNoteSelectors', () => {
 
     expect(
       quickNoteSelectors
-        .pendingProposalsById('a')(withDetails)
+        .actionableProposalsById('a')(withDetails)
         .map((p) => p.id),
-    ).toEqual(['p1']);
-    expect(quickNoteSelectors.pendingProposalsById('missing')(withDetails)).toEqual([]);
+    ).toEqual(['p1', 'p4']);
+    expect(
+      quickNoteSelectors
+        .archivedProposalsById('a')(withDetails)
+        .map((p) => p.id),
+    ).toEqual(['p2', 'p3', 'p5']);
+    expect(quickNoteSelectors.actionableProposalsById('missing')(withDetails)).toEqual([]);
   });
 });
 
@@ -124,12 +134,7 @@ describe('quickNote actions', () => {
     resetStore();
     vi.spyOn(quickNoteService, 'analyze').mockResolvedValue({ accepted: false });
     vi.spyOn(quickNoteService, 'createNote').mockResolvedValue(createNoteItem({ id: 'created' }));
-    vi.spyOn(quickNoteService, 'dive').mockResolvedValue({
-      id: 'run-1',
-      kind: 'dive',
-      operationId: 'op-1',
-      status: 'running',
-    } as Awaited<ReturnType<typeof quickNoteService.dive>>);
+    vi.spyOn(quickNoteService, 'dive').mockResolvedValue({ taskId: 'task-1' });
     vi.spyOn(quickNoteService, 'removeNote').mockResolvedValue();
     vi.spyOn(quickNoteService, 'updateNoteContent').mockImplementation(async () => ({
       analyzeDueAt: Date.now() + ANALYZE_SETTLE_DELAY,
@@ -153,32 +158,6 @@ describe('quickNote actions', () => {
     expect(quickNoteService.analyze).toHaveBeenCalledWith('created', 'automatic');
   });
 
-  /** @example A different active kind must not terminate observation of a concurrent Dive. */
-  it('keeps observing Dive while Analyze occupies the run projection', async () => {
-    const note = createNoteItem({ content: 'source', run: { kind: 'dive', status: 'running' } });
-    const getNotes = vi.spyOn(quickNoteService, 'getNotes').mockResolvedValue([note]);
-    await useQuickNoteStore.getState().initNotes();
-    getNotes.mockResolvedValue([{ ...note, run: { kind: 'analyze', status: 'running' } }]);
-    await vi.advanceTimersByTimeAsync(6000);
-    /** @example More than three reconciliation attempts do not discard an active concurrent run. */
-    expect(useQuickNoteStore.getState().divingNoteIds).toContain(note.id);
-    getNotes.mockResolvedValue([note]);
-    await vi.advanceTimersByTimeAsync(1000);
-    /** @example Observation continues when Dive becomes the visible run again. */
-    expect(useQuickNoteStore.getState().divingNoteIds).toContain(note.id);
-    getNotes.mockResolvedValue([
-      {
-        ...note,
-        annotation: { content: 'completed annotation', divedAt: 9000 },
-        run: { kind: 'dive', status: 'completed' },
-      },
-    ]);
-    await vi.advanceTimersByTimeAsync(1000);
-    /** @example The eventual result is projected and the busy state clears. */
-    expect(useQuickNoteStore.getState().notes[0].annotation?.content).toBe('completed annotation');
-    expect(useQuickNoteStore.getState().divingNoteIds).not.toContain(note.id);
-  });
-
   /** @example Outages progressively reduce full-list traffic. */
   it('backs off consecutive polling failures', async () => {
     const note = createNoteItem({ run: { kind: 'analyze', status: 'running' } });
@@ -192,7 +171,7 @@ describe('quickNote actions', () => {
 
   /** @example Inactive surfaces suspend requests and resume their pending runs on return. */
   it('pauses polling and resumes without losing the active run', async () => {
-    const note = createNoteItem({ run: { kind: 'dive', status: 'running' } });
+    const note = createNoteItem({ run: { kind: 'analyze', status: 'running' } });
     const getNotes = vi.spyOn(quickNoteService, 'getNotes').mockResolvedValue([note]);
     await useQuickNoteStore.getState().initNotes();
     useQuickNoteStore.getState().setPollingActive(false);
@@ -206,28 +185,35 @@ describe('quickNote actions', () => {
   });
 
   /** @example Status polling preserves another note's unsaved editor projection. */
-  it.each(['analyze', 'dive'] as const)('preserves pending edits while %s polls', async (kind) => {
-    // ROOT CAUSE:
-    // Polling replaced all notes with server text before the debounce saved local editor JSON.
-    // Reconciliation must preserve pending edits on every note, not only the running note.
-    const running = createNoteItem({ id: 'polling', run: { kind, status: 'running' } });
-    const editing = createNoteItem({ id: 'editing', content: 'old', editorData: { revision: 0 } });
-    vi.spyOn(quickNoteService, 'getNotes').mockResolvedValue([running, editing]);
-    await useQuickNoteStore.getState().initNotes();
-    await vi.advanceTimersByTimeAsync(500);
-    useQuickNoteStore.getState().updateNoteContent('editing', 'new', { revision: 1 });
-    await vi.advanceTimersByTimeAsync(500);
-    /** @example The poll cannot combine old server text with the new editor payload. */
-    expect(useQuickNoteStore.getState().notes.find(({ id }) => id === 'editing')).toMatchObject({
-      content: 'new',
-      editorData: { revision: 1 },
-    });
-    await useQuickNoteStore.getState().flushPendingWrites();
-    /** @example Durable text and editor JSON describe the same revision. */
-    expect(quickNoteService.updateNoteContent).toHaveBeenCalledWith('editing', 'new', {
-      revision: 1,
-    });
-  });
+  it.each(['analyze', 'signal_enrichment'] as const)(
+    'preserves pending edits while %s polls',
+    async (kind) => {
+      // ROOT CAUSE:
+      // Polling replaced all notes with server text before the debounce saved local editor JSON.
+      // Reconciliation must preserve pending edits on every note, not only the running note.
+      const running = createNoteItem({ id: 'polling', run: { kind, status: 'running' } });
+      const editing = createNoteItem({
+        id: 'editing',
+        content: 'old',
+        editorData: { revision: 0 },
+      });
+      vi.spyOn(quickNoteService, 'getNotes').mockResolvedValue([running, editing]);
+      await useQuickNoteStore.getState().initNotes();
+      await vi.advanceTimersByTimeAsync(500);
+      useQuickNoteStore.getState().updateNoteContent('editing', 'new', { revision: 1 });
+      await vi.advanceTimersByTimeAsync(500);
+      /** @example The poll cannot combine old server text with the new editor payload. */
+      expect(useQuickNoteStore.getState().notes.find(({ id }) => id === 'editing')).toMatchObject({
+        content: 'new',
+        editorData: { revision: 1 },
+      });
+      await useQuickNoteStore.getState().flushPendingWrites();
+      /** @example Durable text and editor JSON describe the same revision. */
+      expect(quickNoteService.updateNoteContent).toHaveBeenCalledWith('editing', 'new', {
+        revision: 1,
+      });
+    },
+  );
 
   /** @example A delayed poll cannot undo an edit acknowledged while the poll was in flight. */
   it('preserves an acknowledged edit against an older in-flight poll response', async () => {
@@ -295,9 +281,11 @@ describe('quickNote actions', () => {
     const oldRequest = useQuickNoteStore.getState().initNotes();
     useQuickNoteStore.getState().reset();
     await useQuickNoteStore.getState().initNotes();
-    resolveOld([createNoteItem({ id: 'private-old', run: { kind: 'dive', status: 'running' } })]);
+    resolveOld([
+      createNoteItem({ id: 'private-old', run: { kind: 'analyze', status: 'running' } }),
+    ]);
     await oldRequest;
-    await vi.advanceTimersByTimeAsync(DIVE_POLL_INTERVAL);
+    await vi.advanceTimersByTimeAsync(ANALYZE_POLL_INTERVAL);
     /** @example The old response neither replaces the new list nor restarts old polling. */
     expect(useQuickNoteStore.getState().notes.map(({ id }) => id)).toEqual(['current-scope']);
     /** @example Only one hydration request per scope was made. */
@@ -337,34 +325,6 @@ describe('quickNote actions', () => {
     expect(getNotes).toHaveBeenCalledTimes(2);
     expect(useQuickNoteStore.getState().notes).toEqual(seeded);
     expect(useQuickNoteStore.getState().notesLoadError).toBe(false);
-  });
-
-  /** @example An active Dive restored from the server keeps polling until its operation finishes. */
-  it('resumes polling an active Dive after initialization', async () => {
-    const running = createNoteItem({
-      content: '恢复 Dive',
-      id: 'active-dive',
-      run: { kind: 'dive', operationId: 'op-1', status: 'running' },
-    });
-    const completed = {
-      ...running,
-      annotation: { content: '已完成', divedAt: 2000 },
-      run: { ...running.run!, status: 'completed' as const },
-    };
-    const getNotes = vi
-      .spyOn(quickNoteService, 'getNotes')
-      .mockResolvedValueOnce([running])
-      .mockResolvedValueOnce([completed]);
-
-    await useQuickNoteStore.getState().initNotes();
-    await vi.advanceTimersByTimeAsync(DIVE_POLL_INTERVAL);
-
-    /** @example Refresh recovery performs a follow-up status request. */
-    expect(getNotes).toHaveBeenCalledTimes(2);
-    /** @example The recovered terminal projection leaves the note out of the active Dive set. */
-    expect(useQuickNoteStore.getState().divingNoteIds).toEqual([]);
-    /** @example The accepted Annotation is projected into the existing panel state. */
-    expect(useQuickNoteStore.getState().notes[0].annotation?.content).toBe('已完成');
   });
 
   it('createNote prepends the server-created note', async () => {
@@ -419,7 +379,7 @@ describe('quickNote actions', () => {
   });
 
   /** @example Completed background Analyze appears in the open note without a reload. */
-  it('polls an accepted Analyze claim until its Annotation is projected', async () => {
+  it('polls an accepted Analyze claim until its summary is projected', async () => {
     resetStore({ notes: [createNoteItem({ id: 'a' })], notesInit: true });
     vi.spyOn(quickNoteService, 'analyze').mockResolvedValue({
       accepted: true,
@@ -432,8 +392,8 @@ describe('quickNote actions', () => {
       },
     } as Awaited<ReturnType<typeof quickNoteService.analyze>>);
     const completed = createNoteItem({
-      annotation: { content: '轻量理解', divedAt: 2000 },
       content: 'hello',
+      summary: { completedAt: 2000, content: '轻量理解' },
       id: 'a',
       run: { kind: 'analyze', operationId: 'op-1', status: 'completed' },
     });
@@ -443,8 +403,8 @@ describe('quickNote actions', () => {
     await vi.advanceTimersByTimeAsync(PERSIST_DEBOUNCE + ANALYZE_SETTLE_DELAY);
     await vi.advanceTimersByTimeAsync(ANALYZE_POLL_INTERVAL);
 
-    /** @example The accepted Annotation replaces the pre-Run local projection. */
-    expect(useQuickNoteStore.getState().notes[0].annotation?.content).toBe('轻量理解');
+    /** @example The new summary replaces the pre-Run local projection. */
+    expect(useQuickNoteStore.getState().notes[0].summary?.content).toBe('轻量理解');
   });
 
   /** @example Clicking Analyze saves the visible revision before requesting a manual Run. */
@@ -567,108 +527,41 @@ describe('quickNote actions', () => {
     expect(useQuickNoteStore.getState().saveStatus).toBe('saved');
   });
 
-  it('diveInto recovers the completed Annotation from server state', async () => {
-    resetStore({ notes: [createNoteItem({ content: '记一下', id: 'a' })], notesInit: true });
-    vi.spyOn(quickNoteService, 'getNotes').mockResolvedValue([
-      createNoteItem({
-        annotation: { content: '解释', divedAt: 2000 },
-        content: '记一下',
-        id: 'a',
-        run: { kind: 'dive', operationId: 'op-1', status: 'completed' },
-      }),
-    ]);
-
-    await useQuickNoteStore.getState().diveInto('a');
-    expect(quickNoteSelectors.isDiving('a')(useQuickNoteStore.getState())).toBe(true);
-
-    await vi.advanceTimersByTimeAsync(DIVE_POLL_INTERVAL);
-
-    const state = useQuickNoteStore.getState();
-    expect(quickNoteSelectors.isDiving('a')(state)).toBe(false);
-    expect(state.notes[0].annotation?.divedAt).toBeTruthy();
-    expect(state.notes[0].annotation?.content).toBe('解释');
-  });
-
-  /** @example A terminal status visible before its completion projection triggers a bounded retry. */
-  it('reconciles a terminal Dive whose Annotation becomes visible on the next poll', async () => {
-    resetStore({ notes: [createNoteItem({ content: '记一下', id: 'a' })], notesInit: true });
-    const terminalWithoutProjection = createNoteItem({
-      content: '记一下',
-      id: 'a',
-      run: { kind: 'dive', operationId: 'op-1', status: 'completed' },
-    });
-    const terminalWithProjection = createNoteItem({
-      ...terminalWithoutProjection,
-      annotation: { content: '最终解释', divedAt: 3000 },
-    });
-    const getNotes = vi
-      .spyOn(quickNoteService, 'getNotes')
-      .mockResolvedValueOnce([terminalWithoutProjection])
-      .mockResolvedValueOnce([terminalWithProjection]);
-
-    await useQuickNoteStore.getState().diveInto('a');
-    await vi.advanceTimersByTimeAsync(DIVE_POLL_INTERVAL);
-
-    // ROOT CAUSE:
-    //
-    // A completion-status read can win the race against the asynchronous completion projection.
-    // The old behavior stopped polling immediately and left the Annotation panel stale until reload.
-    //
-    // We keep the Dive pending for a bounded reconciliation read when its projection is absent.
-    expect(quickNoteSelectors.isDiving('a')(useQuickNoteStore.getState())).toBe(true);
-    expect(useQuickNoteStore.getState().notes[0].annotation).toBeUndefined();
-
-    await vi.advanceTimersByTimeAsync(DIVE_POLL_INTERVAL);
-
-    /** @example The second read accepts the completed projection without a page reload. */
-    expect(getNotes).toHaveBeenCalledTimes(2);
-    expect(quickNoteSelectors.isDiving('a')(useQuickNoteStore.getState())).toBe(false);
-    expect(useQuickNoteStore.getState().notes[0].annotation?.content).toBe('最终解释');
-  });
-
-  /** @example A repeated Dive waits for a newer Annotation instead of accepting the previous one. */
-  it('reconciles a repeated Dive while its previous Annotation is still visible', async () => {
-    const previousAnnotation = { content: '上一次解释', divedAt: 2000 };
+  /** @example Dive starts a Task and hands its id back for navigation; the summary is untouched. */
+  it('diveInto returns the created task and refreshes the task list', async () => {
+    const summary = { completedAt: 2000, content: '概述' };
     resetStore({
-      notes: [createNoteItem({ annotation: previousAnnotation, content: '再分析一次', id: 'a' })],
+      notes: [createNoteItem({ content: '记一下', id: 'a', summary })],
       notesInit: true,
     });
-    const terminalWithPreviousProjection = createNoteItem({
-      annotation: previousAnnotation,
-      content: '再分析一次',
-      id: 'a',
-      run: { kind: 'dive', operationId: 'op-2', status: 'completed' },
-    });
-    const terminalWithCurrentProjection = createNoteItem({
-      ...terminalWithPreviousProjection,
-      annotation: { content: '本次解释', divedAt: 3000 },
-    });
-    const getNotes = vi
-      .spyOn(quickNoteService, 'getNotes')
-      .mockResolvedValueOnce([terminalWithPreviousProjection])
-      .mockResolvedValueOnce([terminalWithCurrentProjection]);
+    const refreshTasks = vi.fn().mockResolvedValue(undefined);
+    useQuickNoteStore.setState({ refreshTasks });
 
-    await useQuickNoteStore.getState().diveInto('a');
-    await vi.advanceTimersByTimeAsync(DIVE_POLL_INTERVAL);
-
-    // ROOT CAUSE:
-    //
-    // Presence-only reconciliation mistakes the previous Dive's Annotation for the current result.
-    // That can stop polling before the completion hook projects the new Annotation.
-    //
-    // We pin the pre-Dive Annotation timestamp and wait until the projection advances.
+    const pending = useQuickNoteStore.getState().diveInto('a');
+    /** @example The Dive button shows progress while the request is in flight. */
     expect(quickNoteSelectors.isDiving('a')(useQuickNoteStore.getState())).toBe(true);
-    expect(useQuickNoteStore.getState().notes[0].annotation?.content).toBe('上一次解释');
 
-    await vi.advanceTimersByTimeAsync(DIVE_POLL_INTERVAL);
-
-    /** @example A newer projection completes the repeated Dive without requiring a page reload. */
-    expect(getNotes).toHaveBeenCalledTimes(2);
+    await expect(pending).resolves.toBe('task-1');
+    expect(quickNoteService.dive).toHaveBeenCalledWith('a');
+    expect(refreshTasks).toHaveBeenCalledWith('a');
     expect(quickNoteSelectors.isDiving('a')(useQuickNoteStore.getState())).toBe(false);
-    expect(useQuickNoteStore.getState().notes[0].annotation?.content).toBe('本次解释');
+    /** @example Only the bounded Task-status re-read is scheduled; the summary is not replaced. */
+    expect(vi.getTimerCount()).toBe(1);
+    await vi.advanceTimersByTimeAsync(60_000);
+    expect(vi.getTimerCount()).toBe(0);
+    expect(useQuickNoteStore.getState().notes[0].summary).toEqual(summary);
   });
 
-  /** @example Dive flushes a pending rich-text revision before the server claims its snapshot. */
+  /** @example A failed Dive clears its busy state and surfaces the error to the caller. */
+  it('diveInto clears the busy state when the request fails', async () => {
+    resetStore({ notes: [createNoteItem({ content: '记一下', id: 'a' })], notesInit: true });
+    vi.mocked(quickNoteService.dive).mockRejectedValueOnce(new Error('boom'));
+
+    await expect(useQuickNoteStore.getState().diveInto('a')).rejects.toThrow('boom');
+    expect(useQuickNoteStore.getState().divingNoteIds).toEqual([]);
+  });
+
+  /** @example Dive flushes a pending rich-text revision before the server reads the note. */
   it('persists the latest editor revision before starting Dive', async () => {
     resetStore({ notes: [createNoteItem({ content: '旧内容', id: 'a' })], notesInit: true });
 
@@ -679,27 +572,284 @@ describe('quickNote actions', () => {
     expect(quickNoteService.updateNoteContent).toHaveBeenCalledWith('a', '最新内容', {
       revision: 2,
     });
-    /** @example The server cannot pin a stale revision before the editor save completes. */
+    /** @example The Task cannot read a stale revision before the editor save completes. */
     expect(vi.mocked(quickNoteService.updateNoteContent).mock.invocationCallOrder[0]).toBeLessThan(
       vi.mocked(quickNoteService.dive).mock.invocationCallOrder[0],
     );
   });
 
-  it('diveInto ignores empty notes', () => {
+  it('diveInto ignores empty notes', async () => {
     resetStore({ notes: [createNoteItem({ content: '   ', id: 'a' })], notesInit: true });
 
-    useQuickNoteStore.getState().diveInto('a');
+    await expect(useQuickNoteStore.getState().diveInto('a')).resolves.toBeUndefined();
+    expect(quickNoteService.dive).not.toHaveBeenCalled();
     expect(useQuickNoteStore.getState().divingNoteIds).toEqual([]);
   });
 
-  it('toggleAnnotationPanel flips and accepts an explicit target', () => {
-    expect(useQuickNoteStore.getState().annotationPanelExpanded).toBe(true);
+  describe('proposals', () => {
+    const refreshAgenticDetails = vi.fn();
+    const refreshTasks = vi.fn();
 
-    useQuickNoteStore.getState().toggleAnnotationPanel();
-    expect(useQuickNoteStore.getState().annotationPanelExpanded).toBe(false);
+    beforeEach(() => {
+      refreshAgenticDetails.mockReset().mockResolvedValue(undefined);
+      refreshTasks.mockReset().mockResolvedValue(undefined);
+      useQuickNoteStore.setState({ refreshAgenticDetails, refreshTasks });
+    });
 
-    useQuickNoteStore.getState().toggleAnnotationPanel(true);
-    expect(useQuickNoteStore.getState().annotationPanelExpanded).toBe(true);
+    /** @example Apply refreshes both the proposal list and the executed tasks. */
+    it('applies a proposal once while it is processing', async () => {
+      let resolveApply!: (
+        value: Awaited<ReturnType<typeof quickNoteService.applyProposal>>,
+      ) => void;
+      const apply = vi.spyOn(quickNoteService, 'applyProposal').mockImplementation(
+        () =>
+          new Promise((resolve) => {
+            resolveApply = resolve;
+          }),
+      );
+
+      const first = useQuickNoteStore.getState().applyProposal('a', 'p1');
+      /** @example A double click while busy does not apply twice. */
+      await expect(useQuickNoteStore.getState().applyProposal('a', 'p1')).resolves.toBeUndefined();
+      expect(quickNoteSelectors.isProcessingProposal('p1')(useQuickNoteStore.getState())).toBe(
+        true,
+      );
+
+      const result = { applied: true, proposal: { id: 'p1' } } as Awaited<
+        ReturnType<typeof quickNoteService.applyProposal>
+      >;
+      resolveApply(result);
+
+      await expect(first).resolves.toBe(result);
+      expect(apply).toHaveBeenCalledTimes(1);
+      expect(refreshAgenticDetails).toHaveBeenCalledWith('a');
+      expect(refreshTasks).toHaveBeenCalledWith('a');
+      expect(useQuickNoteStore.getState().processingProposalIds).toEqual([]);
+    });
+
+    // ROOT CAUSE:
+    // The Task starts after the apply response, so the one refresh right after apply still saw
+    // `backlog` and 「已执行」 showed 待办 until a refocus.
+    /** @example After a Task starts, its status is re-read until it leaves backlog. */
+    it('re-reads started Tasks until they leave backlog', async () => {
+      const task = (status: string) => ({
+        createdAt: 1,
+        id: 't1',
+        identifier: 'T-1',
+        proposalId: 'p1',
+        runId: 'r1',
+        status,
+        updatedAt: 1,
+      });
+      useQuickNoteStore.setState({ taskMap: { a: [task('backlog')] } });
+      vi.spyOn(quickNoteService, 'applyProposal').mockResolvedValue({
+        applied: true,
+        proposal: { id: 'p1', resultType: 'task' },
+      } as Awaited<ReturnType<typeof quickNoteService.applyProposal>>);
+
+      await useQuickNoteStore.getState().applyProposal('a', 'p1');
+      expect(refreshTasks).toHaveBeenCalledTimes(1);
+
+      await vi.advanceTimersByTimeAsync(TASK_STATUS_REFRESH_DELAYS[0]);
+      expect(refreshTasks).toHaveBeenCalledTimes(2);
+
+      refreshTasks.mockImplementation(async () => {
+        useQuickNoteStore.setState({ taskMap: { a: [task('running')] } });
+      });
+      await vi.advanceTimersByTimeAsync(TASK_STATUS_REFRESH_DELAYS[1]);
+      expect(refreshTasks).toHaveBeenCalledTimes(3);
+      expect(useQuickNoteStore.getState().taskMap.a[0].status).toBe('running');
+
+      await vi.advanceTimersByTimeAsync(60_000);
+      /** @example The re-reads are bounded. */
+      expect(refreshTasks).toHaveBeenCalledTimes(3);
+    });
+
+    it('stops re-reading once the started Task is running', async () => {
+      useQuickNoteStore.setState({ notes: [createNoteItem({ content: 'dive', id: 'a' })] });
+      refreshTasks.mockImplementation(async () => {
+        useQuickNoteStore.setState({
+          taskMap: {
+            a: [
+              {
+                createdAt: 1,
+                id: 't1',
+                identifier: 'T-1',
+                proposalId: null,
+                runId: null,
+                status: 'running',
+                updatedAt: 1,
+              },
+            ],
+          },
+        });
+      });
+
+      await useQuickNoteStore.getState().diveInto('a');
+      await vi.advanceTimersByTimeAsync(60_000);
+
+      expect(refreshTasks).toHaveBeenCalledTimes(2);
+    });
+
+    /** @example A conflict refreshes the stale sidebar and rethrows for the toast. */
+    it('refreshes details and rethrows when apply fails', async () => {
+      const conflict = Object.assign(new Error('dismissed'), { data: { code: 'CONFLICT' } });
+      vi.spyOn(quickNoteService, 'applyProposal').mockRejectedValue(conflict);
+
+      await expect(useQuickNoteStore.getState().applyProposal('a', 'p1')).rejects.toBe(conflict);
+      expect(refreshAgenticDetails).toHaveBeenCalledWith('a');
+      expect(useQuickNoteStore.getState().processingProposalIds).toEqual([]);
+    });
+
+    /** @example Every dismiss reason code reaches the server unchanged. */
+    it.each(['not_now', 'not_wanted', 'duplicate', 'other', undefined] as const)(
+      'dismisses with reason %s',
+      async (reason) => {
+        const dismiss = vi
+          .spyOn(quickNoteService, 'dismissProposal')
+          .mockResolvedValue({} as Awaited<ReturnType<typeof quickNoteService.dismissProposal>>);
+
+        await useQuickNoteStore.getState().dismissProposal('a', 'p1', reason);
+
+        expect(dismiss).toHaveBeenCalledWith('p1', reason);
+        expect(refreshAgenticDetails).toHaveBeenCalledWith('a');
+      },
+    );
+
+    /** @example An edit overwrites the payload the user saw. */
+    it('updates a proposal payload', async () => {
+      const update = vi
+        .spyOn(quickNoteService, 'updateProposal')
+        .mockResolvedValue({} as Awaited<ReturnType<typeof quickNoteService.updateProposal>>);
+      const payload = { instruction: 'New', name: 'Task' };
+
+      await useQuickNoteStore.getState().updateProposal('a', 'p1', payload);
+
+      expect(update).toHaveBeenCalledWith('p1', payload);
+      expect(refreshAgenticDetails).toHaveBeenCalledWith('a');
+    });
+  });
+
+  // ROOT CAUSE:
+  // The server marks Proposals stale only after its debounced meaning check (minute sweep + model
+  // call), long after the save returned, and nothing re-read them, so 「原文已修改」 appeared only
+  // after a reload or refocus.
+  /** @example A real edit re-reads current Proposals around the server's meaning check. */
+  describe('stale check refresh', () => {
+    const CHECK_DELAY = 6000;
+    const proposal = (validity: QuickNoteProposal['validity']): QuickNoteProposal => ({
+      createdAt: 1000,
+      decisionStatus: 'pending',
+      id: 'p1',
+      kind: 'task',
+      originalPayload: {},
+      payload: {},
+      updatedAt: 1000,
+      validity,
+    });
+    const refreshAgenticDetails = vi.fn();
+    const withProposal = (validity: QuickNoteProposal['validity']) => ({
+      agenticDetailMap: { a: { comments: [], proposals: [proposal(validity)], resources: [] } },
+    });
+
+    beforeEach(() => {
+      vi.mocked(quickNoteService.updateNoteContent).mockImplementation(async () => ({
+        contentChange: 'changed',
+        contentCheckDueAt: Date.now() + CHECK_DELAY,
+      }));
+      refreshAgenticDetails.mockReset().mockResolvedValue(undefined);
+      resetStore({
+        notes: [createNoteItem({ id: 'a' })],
+        notesInit: true,
+        ...withProposal('current'),
+      });
+      useQuickNoteStore.setState({ refreshAgenticDetails });
+    });
+
+    const edit = async (content = 'a different idea') => {
+      useQuickNoteStore.getState().updateNoteContent('a', content);
+      await vi.advanceTimersByTimeAsync(PERSIST_DEBOUNCE);
+    };
+
+    it('refreshes after the check is due and stops once the Proposal turns stale', async () => {
+      await edit();
+      await vi.advanceTimersByTimeAsync(CHECK_DELAY + STALE_CHECK_REFRESH_DELAYS[0] - 1);
+      /** @example Nothing is read before the check can have run. */
+      expect(refreshAgenticDetails).not.toHaveBeenCalled();
+
+      await vi.advanceTimersByTimeAsync(1);
+      expect(refreshAgenticDetails).toHaveBeenCalledWith('a');
+
+      refreshAgenticDetails.mockImplementation(async () => {
+        useQuickNoteStore.setState(withProposal('stale'));
+      });
+      await vi.advanceTimersByTimeAsync(STALE_CHECK_REFRESH_DELAYS[1]);
+      expect(refreshAgenticDetails).toHaveBeenCalledTimes(2);
+
+      await vi.advanceTimersByTimeAsync(10 * 60_000);
+      /** @example The series stops as soon as the badge can show. */
+      expect(refreshAgenticDetails).toHaveBeenCalledTimes(2);
+    });
+
+    it('gives up after a bounded number of retries', async () => {
+      await edit();
+      await vi.advanceTimersByTimeAsync(30 * 60_000);
+      expect(refreshAgenticDetails).toHaveBeenCalledTimes(STALE_CHECK_REFRESH_DELAYS.length);
+    });
+
+    it('does not refresh without current Proposals or for a cosmetic edit', async () => {
+      resetStore({
+        notes: [createNoteItem({ id: 'a' })],
+        notesInit: true,
+        ...withProposal('stale'),
+      });
+      useQuickNoteStore.setState({ refreshAgenticDetails });
+      await edit();
+      await vi.advanceTimersByTimeAsync(30 * 60_000);
+      expect(refreshAgenticDetails).not.toHaveBeenCalled();
+
+      resetStore({
+        notes: [createNoteItem({ id: 'a' })],
+        notesInit: true,
+        ...withProposal('current'),
+      });
+      useQuickNoteStore.setState({ refreshAgenticDetails });
+      vi.mocked(quickNoteService.updateNoteContent).mockResolvedValue({
+        contentChange: 'equivalent',
+      });
+      await edit();
+      await vi.advanceTimersByTimeAsync(30 * 60_000);
+      expect(refreshAgenticDetails).not.toHaveBeenCalled();
+    });
+
+    it('stops when the surface goes inactive or another note opens', async () => {
+      await edit();
+      useQuickNoteStore.getState().setPollingActive(false);
+      await vi.advanceTimersByTimeAsync(30 * 60_000);
+      expect(refreshAgenticDetails).not.toHaveBeenCalled();
+
+      useQuickNoteStore.getState().setPollingActive(true);
+      await edit('another idea');
+      useQuickNoteStore.setState({ activeNoteId: 'b' });
+      await vi.advanceTimersByTimeAsync(30 * 60_000);
+      expect(refreshAgenticDetails).not.toHaveBeenCalled();
+
+      /** @example The same edit on the open note does refresh. */
+      useQuickNoteStore.setState({ activeNoteId: 'a' });
+      await edit('a third idea');
+      await vi.advanceTimersByTimeAsync(30 * 60_000);
+      expect(refreshAgenticDetails).toHaveBeenCalled();
+    });
+  });
+
+  it('toggleAiPanel flips and accepts an explicit target', () => {
+    expect(useQuickNoteStore.getState().aiPanelExpanded).toBe(true);
+
+    useQuickNoteStore.getState().toggleAiPanel();
+    expect(useQuickNoteStore.getState().aiPanelExpanded).toBe(false);
+
+    useQuickNoteStore.getState().toggleAiPanel(true);
+    expect(useQuickNoteStore.getState().aiPanelExpanded).toBe(true);
   });
 
   it('collection and tag filters are mutually exclusive', () => {

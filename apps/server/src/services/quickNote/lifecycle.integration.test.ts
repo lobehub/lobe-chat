@@ -5,10 +5,11 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { getTestDB } from '@/database/core/getTestDB';
 import { QuickNoteModel } from '@/database/models/quickNote';
 import { QuickNoteRepository } from '@/database/repositories/quickNote';
-import { quickNoteRuns, users } from '@/database/schemas';
+import { quickNoteRuns, tasks, taskTopics, topics, users } from '@/database/schemas';
 import { enqueueAgentSignalSourceEvent } from '@/server/services/agentSignal';
 
 import { QuickNoteProcessingService } from '.';
+import { renderQuickNoteSourceText as renderSourceText } from './sourceText';
 
 // NOTICE:
 // Route tests reuse the isolated migration-backed database instead of an application connection.
@@ -58,7 +59,11 @@ describe('Quick Note dispatch lifecycle', () => {
   it('keeps the run active until related resources are linked', async () => {
     const note = await repo.create({ content: 'source', editorData: { markdown: 'source' } });
     const related = await repo.create({ content: 'related' });
-    const run = await repo.claimRun(note.id, { kind: 'analyze', trigger: 'manual' });
+    const run = await repo.claimRun(note.id, {
+      kind: 'analyze',
+      renderSourceText,
+      trigger: 'manual',
+    });
     let statusWhileLinking: string | undefined;
     const ownedModel = service['model'];
     const linkResource = ownedModel.linkResource;
@@ -71,7 +76,7 @@ describe('Quick Note dispatch lifecycle', () => {
       runId: run!.id,
       reason: 'done',
       lastAssistantContent: JSON.stringify({
-        annotation: 'result',
+        summary: 'result',
         tags: [],
         proposals: [],
         relatedResources: [{ type: 'document', id: related.documentId }],
@@ -81,6 +86,8 @@ describe('Quick Note dispatch lifecycle', () => {
     expect(statusWhileLinking).toBe('pending');
     /** @example Completion is visible only after linking succeeded. */
     expect((await model.getRunContext(run!.id))?.status).toBe('completed');
+    /** @example The linked resource records the Run that found it. */
+    expect((await model.queryResources(note.id))[0]).toMatchObject({ runId: run!.id });
   });
 
   /** @example Disabling automatic analysis lets a later manual request create a fresh run. */
@@ -88,12 +95,20 @@ describe('Quick Note dispatch lifecycle', () => {
     // ROOT CAUSE:
     // Returning run_unavailable left the automatic claim pending and blocked manual retries.
     const note = await repo.create({ content: 'source', editorData: { markdown: 'source' } });
-    const run = await repo.claimRun(note.id, { kind: 'analyze', trigger: 'automatic' });
-    await service.dispatchAnalyzeRun(run!.id);
+    const run = await repo.claimRun(note.id, {
+      kind: 'analyze',
+      renderSourceText,
+      trigger: 'automatic',
+    });
+    await service.judgeRun(run!.id);
     /** @example The declined claim is terminal. */
     expect(await model.getRunContext(run!.id)).toMatchObject({ status: 'failed' });
-    await service.dispatchAnalyzeRun(run!.id);
-    const retry = await repo.claimRun(note.id, { kind: 'analyze', trigger: 'manual' });
+    await service.judgeRun(run!.id);
+    const retry = await repo.claimRun(note.id, {
+      kind: 'analyze',
+      renderSourceText,
+      trigger: 'manual',
+    });
     /** @example Duplicate delivery does not revive the old claim. */
     expect(retry).toMatchObject({ status: 'pending', trigger: 'manual' });
     /** @example Manual retry owns a new run ID. */
@@ -116,7 +131,11 @@ describe('Quick Note dispatch lifecycle', () => {
       .where(eq(quickNoteRuns.quickNoteId, note.id));
     /** @example Failure is persisted before the error reaches the caller. */
     expect(failed.status).toBe('failed');
-    const retry = await repo.claimRun(note.id, { kind: 'analyze', trigger: 'manual' });
+    const retry = await repo.claimRun(note.id, {
+      kind: 'analyze',
+      renderSourceText,
+      trigger: 'manual',
+    });
     /** @example The active-run uniqueness constraint no longer blocks a fresh claim. */
     expect(retry!.id).not.toBe(failed.id);
   });
@@ -145,10 +164,63 @@ describe('Quick Note dispatch lifecycle', () => {
   /** @example Turning off automatic analysis does not cancel work already dispatched. */
   it('leaves an already-running automatic run unchanged on duplicate delivery', async () => {
     const note = await repo.create({ content: 'source', editorData: { markdown: 'source' } });
-    const run = await repo.claimRun(note.id, { kind: 'analyze', trigger: 'automatic' });
+    const run = await repo.claimRun(note.id, {
+      kind: 'analyze',
+      renderSourceText,
+      trigger: 'automatic',
+    });
     await db.update(quickNoteRuns).set({ status: 'running' }).where(eq(quickNoteRuns.id, run!.id));
-    await service.dispatchAnalyzeRun(run!.id);
+    await service.judgeRun(run!.id);
     /** @example A settings change affects future dispatch only. */
     expect(await model.getRunContext(run!.id)).toMatchObject({ status: 'running' });
+  });
+});
+
+/** @example Context lookup never offers a Quick Note's own Task conversations back as context. */
+describe('Quick Note context candidates', () => {
+  const seedTaskTopic = async (id: string, context: Record<string, unknown>, seq: number) => {
+    await db
+      .insert(topics)
+      .values({ content: `moshi ${id} notes`, id, title: `moshi ${id}`, userId });
+    await db.insert(tasks).values({
+      context,
+      createdByUserId: userId,
+      id: `task-${id}`,
+      identifier: `T-${seq}`,
+      instruction: 'Compare moshi',
+      seq,
+    });
+    await db.insert(taskTopics).values({ seq: 1, taskId: `task-${id}`, topicId: id, userId });
+  };
+
+  beforeEach(async () => {
+    await seedTaskTopic('qn-task-topic', { source: { quickNoteId: 'n', type: 'quick_note' } }, 1);
+    await seedTaskTopic('plain-task-topic', {}, 2);
+  });
+
+  // ROOT CAUSE:
+  // Only Quick Note Run Topics were excluded, so the `link` step attached the conversations of
+  // Tasks a Quick Note had started (apply / Dive) back onto notes as unrelated context.
+  it('excludes conversations of Tasks a Quick Note started', async () => {
+    const note = await repo.create({ content: 'moshi', editorData: { markdown: 'moshi' } });
+    const run = await repo.claimRun(note.id, {
+      kind: 'analyze',
+      renderSourceText,
+      trigger: 'manual',
+    });
+
+    const found: { id: string }[] = await service['findContextResources'](
+      ['moshi'],
+      note.documentId,
+    );
+    const candidates: { id: string }[] = await service['collectContextCandidates'](
+      note.id,
+      run!.sourceHistoryId,
+    );
+
+    for (const ids of [found.map(({ id }) => id), candidates.map(({ id }) => id)]) {
+      expect(ids).toContain('plain-task-topic');
+      expect(ids).not.toContain('qn-task-topic');
+    }
   });
 });

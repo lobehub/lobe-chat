@@ -6,9 +6,9 @@ import { getTestDB } from '../../core/getTestDB';
 import { QuickNoteRepository } from '../../repositories/quickNote';
 import {
   documents,
-  quickNoteCommentRevisions,
   quickNoteComments,
-  quickNoteRunResources,
+  quickNoteProposals,
+  quickNoteResources,
   quickNotes,
   topics,
   users,
@@ -16,6 +16,10 @@ import {
 } from '../../schemas';
 import type { LobeChatDatabase } from '../../type';
 import { QuickNoteModel } from '../quickNote';
+import {
+  QUICK_NOTE_FAILURE_RETRY_BASE_MS,
+  QUICK_NOTE_MAX_AUTOMATIC_FAILURES,
+} from '../quickNote/runs';
 
 const serverDB: LobeChatDatabase = await getTestDB();
 
@@ -24,6 +28,25 @@ const otherUserId = 'quick-note-model-other-user';
 const quickNoteModel = new QuickNoteModel(serverDB, userId);
 const quickNoteRepo = new QuickNoteRepository(serverDB, userId);
 const otherRepo = new QuickNoteRepository(serverDB, otherUserId);
+
+const renderSourceText = (editorData: Record<string, unknown>) =>
+  typeof editorData.markdown === 'string' ? editorData.markdown : '';
+
+/** Claims an Analyze Run for an owned note. */
+const claimAnalyze = (id: string) =>
+  quickNoteRepo.claimRun(id, { kind: 'analyze', renderSourceText });
+
+/** Creates a note whose completed Run produced one pending Task Proposal. */
+const seedProposal = async (content = 'Research duplex speech models') => {
+  const note = await quickNoteRepo.create({ content });
+  const run = await claimAnalyze(note.id);
+  const output = await quickNoteRepo.completeRun(run!.id, {
+    proposals: [{ kind: 'task', payload: { instruction: content }, preset: 'research' }],
+    summary: 'Summary',
+  });
+
+  return { note, proposal: output!.proposals[0], run: run! };
+};
 
 beforeEach(async () => {
   await serverDB.delete(users);
@@ -59,42 +82,33 @@ describe('QuickNoteModel', () => {
     expect(document?.content).toBe('private note');
   });
 
-  /** @example Editing feedback preserves the submitted text that an earlier Run consumed. */
-  it('keeps Comment revisions append-only and owner-scoped', async () => {
+  /** @example Editing feedback overwrites the Comment; Runs keep their own snapshot text. */
+  it('overwrites Comment content and keeps Comments owner-scoped', async () => {
     const note = await quickNoteRepo.create({ content: 'An unresolved capture' });
     const created = await quickNoteModel.createComment(note.id, {
       content: 'Please consider the data requirement.',
       editorData: { markdown: 'Please consider the data requirement.' },
     });
-    const updated = await quickNoteModel.updateComment(created!.comment.id, {
+    const updated = await quickNoteModel.updateComment(created!.id, {
       content: 'Please consider the training data requirement.',
       editorData: { markdown: 'Please consider the training data requirement.' },
     });
     const otherModel = new QuickNoteModel(serverDB, otherUserId);
-    const rejected = await otherModel.updateComment(created!.comment.id, {
+    const rejected = await otherModel.updateComment(created!.id, {
       content: 'Cross-owner edit',
     });
     const rejectedCreate = await otherModel.createComment(note.id, { content: 'Cross-owner add' });
     const hiddenComments = await otherModel.queryComments(note.id);
-    const revisions = await serverDB
-      .select()
-      .from(quickNoteCommentRevisions)
-      .where(eq(quickNoteCommentRevisions.commentId, created!.comment.id))
-      .orderBy(quickNoteCommentRevisions.createdAt, quickNoteCommentRevisions.id);
-    const [comment] = await serverDB
+    const comments = await serverDB
       .select()
       .from(quickNoteComments)
-      .where(eq(quickNoteComments.id, created!.comment.id));
+      .where(eq(quickNoteComments.quickNoteId, note.id));
 
-    /** @example The lightweight Comment row contains only its current projection. */
-    expect(comment.content).toBe('Please consider the training data requirement.');
-    /** @example Create and edit each produce a stable revision identity. */
-    expect(revisions.map(({ content }) => content)).toEqual([
-      'Please consider the data requirement.',
-      'Please consider the training data requirement.',
-    ]);
-    /** @example The edit API returns the newly submitted revision. */
-    expect(updated?.revision.content).toBe('Please consider the training data requirement.');
+    /** @example One Comment row holds only the latest content. */
+    expect(comments).toHaveLength(1);
+    expect(comments[0].content).toBe('Please consider the training data requirement.');
+    /** @example The edit API returns the updated Comment. */
+    expect(updated?.content).toBe('Please consider the training data requirement.');
     /** @example Another owner cannot rewrite the feedback stream. */
     expect(rejected).toBeUndefined();
     /** @example Another owner cannot append feedback to the capture. */
@@ -103,23 +117,28 @@ describe('QuickNoteModel', () => {
     expect(hiddenComments).toEqual([]);
   });
 
-  /** @example Refresh recovery exposes an active Dive even if another Run completed later. */
+  /** @example Refresh recovery exposes an active Run even if another Run completed later. */
   it('prefers an active Run in the list projection', async () => {
-    const note = await quickNoteRepo.create({ content: 'Dive while analyze completes' });
-    const dive = await quickNoteRepo.claimRun(note.id, { kind: 'dive' });
-    const analyze = await quickNoteRepo.claimRun(note.id, { kind: 'analyze' });
-    await quickNoteRepo.acceptAnnotation(analyze!.id, { content: 'Light annotation' });
+    const note = await quickNoteRepo.create({ content: 'Enrich while analyze completes' });
+    const enrichment = await quickNoteRepo.claimRun(note.id, {
+      kind: 'signal_enrichment',
+      renderSourceText,
+    });
+    const analyze = await claimAnalyze(note.id);
+    await quickNoteRepo.completeRun(analyze!.id, { summary: 'Light summary' });
 
     const [details] = await quickNoteModel.queryDetails();
 
-    /** @example The active Dive remains recoverable rather than being hidden by Analyze. */
-    expect(details.run).toMatchObject({ kind: dive!.kind, status: 'pending' });
+    /** @example The active Run remains recoverable rather than being hidden by Analyze. */
+    expect(details.run).toMatchObject({ kind: enrichment!.kind, status: 'pending' });
+    /** @example The completed Run's summary is still projected. */
+    expect(details.summary).toMatchObject({ content: 'Light summary' });
   });
 
   /** @example Analyze can accept typed owned resources but not another user's Document. */
   it('links only owner-accessible typed Context resources', async () => {
     const note = await quickNoteRepo.create({ content: 'Connect this note' });
-    const run = await quickNoteRepo.claimRun(note.id, { kind: 'analyze' });
+    const run = await claimAnalyze(note.id);
     await serverDB.insert(documents).values([
       {
         content: 'Owned context',
@@ -163,8 +182,8 @@ describe('QuickNoteModel', () => {
     );
     const provenance = await serverDB
       .select()
-      .from(quickNoteRunResources)
-      .where(eq(quickNoteRunResources.runId, run!.id));
+      .from(quickNoteResources)
+      .where(eq(quickNoteResources.runId, run!.id));
     const details = await quickNoteModel.queryAgenticDetails(note.id);
 
     /** @example The owned canonical Document becomes a Context resource. */
@@ -173,6 +192,7 @@ describe('QuickNoteModel', () => {
       resourceId: 'quick-note-owned-context',
       resourceType: 'document',
       role: 'context',
+      runId: run!.id,
       sourceHistoryId: run!.sourceHistoryId,
     });
     /** @example Cross-owner Documents cannot be attached through model output. */
@@ -185,14 +205,8 @@ describe('QuickNoteModel', () => {
       resourceId: relatedTopicId,
       resourceType: 'topic',
     });
-    /** @example The producing Run records provenance without fabricating a Document History. */
-    expect(provenance).toHaveLength(2);
-    /** @example One provenance row points at the accepted resource; row order is unspecified. */
-    expect(provenance).toEqual(
-      expect.arrayContaining([
-        expect.objectContaining({ documentHistoryId: null, resourceId: accepted!.id }),
-      ]),
-    );
+    /** @example The producing Run is recorded directly on both links. */
+    expect(provenance.map(({ id }) => id).sort()).toEqual([accepted!.id, acceptedTopic!.id].sort());
     /** @example The detail projection resolves product-native labels for both resource families. */
     expect(details.resources).toEqual(
       expect.arrayContaining([
@@ -260,13 +274,14 @@ describe('QuickNoteModel', () => {
     const defaultEnabled = await quickNoteRepo.create({ content: 'eligible' });
     const disabled = await otherRepo.create({ content: 'ineligible' });
     const dueAt = new Date('2026-08-24T00:00:00Z');
+    // Only a real text change (re)schedules Analyze.
     await quickNoteRepo.updateContent(defaultEnabled.id, {
-      content: 'eligible',
+      content: 'eligible now',
       analyzeDueAt: dueAt,
       editorData: { root: { children: [] } },
     });
     await otherRepo.updateContent(disabled.id, {
-      content: 'ineligible',
+      content: 'ineligible now',
       analyzeDueAt: dueAt,
       editorData: { root: { children: [] } },
     });
@@ -294,5 +309,244 @@ describe('QuickNoteModel', () => {
     });
     /** @example The tie-breaker advances to the second capture without skipping equal due times. */
     expect(next.map(({ id }) => id)).toEqual([second.id]);
+  });
+
+  /** @example A user can refine a Proposal only until they decide on it. */
+  it('edits a Proposal payload only while pending and keeps the original draft', async () => {
+    const { proposal } = await seedProposal();
+    const otherModel = new QuickNoteModel(serverDB, otherUserId);
+
+    const edited = await quickNoteModel.updateProposalPayload(proposal.id, {
+      instruction: 'Research duplex speech models and latency',
+    });
+    const foreignEdit = await otherModel.updateProposalPayload(proposal.id, { instruction: 'x' });
+    await quickNoteModel.decideProposal(proposal.id, 'dismissed');
+    const afterDecision = await quickNoteModel.updateProposalPayload(proposal.id, {
+      instruction: 'Too late',
+    });
+    const [persisted] = await serverDB
+      .select()
+      .from(quickNoteProposals)
+      .where(eq(quickNoteProposals.id, proposal.id));
+
+    /** @example The edit overwrites the payload but keeps the AI draft for diffing. */
+    expect(edited).toMatchObject({
+      originalPayload: { instruction: 'Research duplex speech models' },
+      payload: { instruction: 'Research duplex speech models and latency' },
+    });
+    /** @example Another owner and a decided Proposal both reject edits. */
+    expect(foreignEdit).toBeUndefined();
+    expect(afterDecision).toBeUndefined();
+    expect(persisted.payload).toEqual({ instruction: 'Research duplex speech models and latency' });
+  });
+
+  /** @example Dismissing records when and why, and a decision is final. */
+  it('records decided_at and the dismiss reason once', async () => {
+    const { note, proposal } = await seedProposal();
+    const otherModel = new QuickNoteModel(serverDB, otherUserId);
+
+    const foreign = await otherModel.decideProposal(proposal.id, 'dismissed', 'Not mine');
+    const dismissed = await quickNoteModel.decideProposal(
+      proposal.id,
+      'dismissed',
+      '  Already done  ',
+    );
+    const again = await quickNoteModel.decideProposal(proposal.id, 'accepted');
+    const [listed] = await quickNoteModel.queryProposals(note.id);
+
+    expect(foreign).toBeUndefined();
+    /** @example The decision carries its timestamp and trimmed reason. */
+    expect(dismissed).toMatchObject({ decisionStatus: 'dismissed', dismissReason: 'Already done' });
+    expect(dismissed?.decidedAt).toBeInstanceOf(Date);
+    /** @example A decided Proposal cannot be decided again. */
+    expect(again).toBeUndefined();
+    expect(listed).toMatchObject({ decisionStatus: 'dismissed', dismissReason: 'Already done' });
+  });
+
+  /** @example Applying twice returns the same result instead of producing a second object. */
+  it('marks a Proposal applied idempotently', async () => {
+    const { proposal } = await seedProposal();
+    const dismissedSeed = await seedProposal('Another note');
+    const otherModel = new QuickNoteModel(serverDB, otherUserId);
+
+    const foreign = await otherModel.markProposalApplied(proposal.id, 'task', 'task_foreign');
+    const applied = await quickNoteModel.markProposalApplied(proposal.id, 'task', 'task_1');
+    const repeated = await quickNoteModel.markProposalApplied(proposal.id, 'task', 'task_2');
+    await quickNoteModel.decideProposal(dismissedSeed.proposal.id, 'dismissed');
+    const afterDismiss = await quickNoteModel.markProposalApplied(
+      dismissedSeed.proposal.id,
+      'task',
+      'task_3',
+    );
+
+    expect(foreign).toBeUndefined();
+    /** @example The first apply accepts the Proposal and records its product object. */
+    expect(applied).toMatchObject({
+      decisionStatus: 'accepted',
+      resultId: 'task_1',
+      resultType: 'task',
+    });
+    expect(applied?.decidedAt).toBeInstanceOf(Date);
+    /** @example A repeated apply returns the original result unchanged. */
+    expect(repeated).toMatchObject({ resultId: 'task_1' });
+    /** @example A dismissed Proposal cannot be applied. */
+    expect(afterDismiss).toBeUndefined();
+  });
+
+  /** @example Executors lock only pending Proposals; stale ones stay applicable. */
+  it('locks pending Proposals including stale ones', async () => {
+    const { note, proposal } = await seedProposal();
+    await quickNoteModel.markPendingProposalsStale(note.id, new Date());
+
+    const locked = await serverDB.transaction(async (tx) =>
+      new QuickNoteModel(tx as LobeChatDatabase, userId).lockPendingProposal(proposal.id),
+    );
+    const foreign = await new QuickNoteModel(serverDB, otherUserId).lockPendingProposal(
+      proposal.id,
+    );
+    await quickNoteModel.decideProposal(proposal.id, 'dismissed');
+    const decided = await quickNoteModel.lockPendingProposal(proposal.id);
+
+    expect(locked).toMatchObject({ id: proposal.id, validity: 'stale' });
+    expect(foreign).toBeUndefined();
+    expect(decided).toBeUndefined();
+  });
+
+  // ROOT CAUSE:
+  // Only stale Proposals were superseded. With Auto Analyze on, the next Run lands before the
+  // debounced meaning check marks anything stale, so earlier suggestions stayed pending + current.
+  /** @example A newer judgement supersedes every pending earlier suggestion, not decided ones. */
+  it.each([
+    ['current', false],
+    ['stale', true],
+  ])('supersedes a %s pending Proposal of an earlier Run', async (_, markStale) => {
+    const { note, proposal: decided } = await seedProposal();
+    await quickNoteModel.decideProposal(decided.id, 'dismissed');
+    const earlierRun = await claimAnalyze(note.id);
+    const earlierOutput = await quickNoteRepo.completeRun(earlierRun!.id, {
+      proposals: [{ kind: 'topic', payload: { title: 'Discuss' } }],
+    });
+    const pending = earlierOutput!.proposals[0];
+    if (markStale) await quickNoteModel.markPendingProposalsStale(note.id, new Date());
+    const foreign = await new QuickNoteModel(serverDB, otherUserId).supersedeEarlierProposals(
+      note.id,
+      '00000000-0000-0000-0000-000000000000',
+    );
+    const latestRun = await claimAnalyze(note.id);
+    const latestOutput = await quickNoteRepo.completeRun(latestRun!.id, {
+      proposals: [{ kind: 'goal', payload: { title: 'New goal' } }],
+    });
+    const repeated = await quickNoteModel.supersedeEarlierProposals(note.id, latestRun!.id);
+    const byId = new Map(
+      (await quickNoteModel.queryProposals(note.id)).map((proposal) => [proposal.id, proposal]),
+    );
+
+    expect(foreign).toEqual([]);
+    /** @example Completing a Run of the current source supersedes the earlier pending Proposal. */
+    expect(latestOutput!.superseded.map(({ id }) => id)).toEqual([pending.id]);
+    expect(repeated).toEqual([]);
+    expect(byId.get(pending.id)).toMatchObject({
+      decisionStatus: 'pending',
+      validity: 'superseded',
+    });
+    /** @example A decided Proposal keeps its record. */
+    expect(byId.get(decided.id)).toMatchObject({
+      decisionStatus: 'dismissed',
+      validity: 'current',
+    });
+    /** @example The new Run's Proposal stays current. */
+    expect(byId.get(latestOutput!.proposals[0].id)?.validity).toBe('current');
+  });
+});
+
+/** @example The list projects when the latest Run finished, for 「已分析 HH:MM」. */
+describe('QuickNoteModel run completion time', () => {
+  it('lists the latest Run with its completion time', async () => {
+    const { note } = await seedProposal();
+    const [details] = await quickNoteModel.queryDetails();
+
+    expect(details.id).toBe(note.id);
+    expect(details.run).toMatchObject({ completedAt: expect.any(Date), status: 'completed' });
+  });
+});
+
+// ROOT CAUSE:
+// A failed Run kept `analyze_due_at`, so the minute sweep claimed the same note again and again
+// (four full Agent runs in 3.5 minutes) until the user edited it.
+/** @example Automatic Analyze backs off after failures and stops at the cap for one version. */
+describe('QuickNoteModel failed Run scheduling', () => {
+  const error = { code: 'start_failed', message: 'boom' };
+  const dueAtOf = async (id: string) => {
+    const [row] = await serverDB
+      .select({ dueAt: quickNotes.analyzeDueAt })
+      .from(quickNotes)
+      .where(eq(quickNotes.id, id));
+    return row?.dueAt?.getTime() ?? null;
+  };
+  const seedDueNote = async (content = 'Research duplex speech models') => {
+    const note = await quickNoteRepo.create({
+      analyzeDueAt: new Date(Date.now() - 1000),
+      content,
+      editorData: { markdown: content },
+    });
+    return note;
+  };
+  const failNextRun = async (id: string, retryable?: boolean) => {
+    const run = await claimAnalyze(id);
+    await quickNoteModel.failRun(
+      run!.id,
+      error,
+      retryable === undefined ? undefined : { retryable },
+    );
+  };
+
+  it('backs off, then stops retrying after the cap until the note changes', async () => {
+    const note = await seedDueNote();
+
+    for (let failure = 1; failure < QUICK_NOTE_MAX_AUTOMATIC_FAILURES; failure += 1) {
+      const before = Date.now();
+      await failNextRun(note.id);
+      /** @example 1 min after the first failure, 2 min after the second. */
+      expect(await dueAtOf(note.id)).toBeGreaterThanOrEqual(
+        before + QUICK_NOTE_FAILURE_RETRY_BASE_MS * 2 ** (failure - 1),
+      );
+    }
+    await failNextRun(note.id);
+    /** @example The cap clears the schedule; the sweep no longer claims the note. */
+    expect(await dueAtOf(note.id)).toBeNull();
+
+    // A real edit re-arms Automatic Analyze and starts a fresh failure count.
+    await quickNoteRepo.updateContent(note.id, {
+      analyzeDueAt: new Date(Date.now() - 1000),
+      content: 'Research sesame latency',
+      editorData: { markdown: 'Research sesame latency' },
+    });
+    const before = Date.now();
+    await failNextRun(note.id);
+    expect(await dueAtOf(note.id)).toBeGreaterThanOrEqual(
+      before + QUICK_NOTE_FAILURE_RETRY_BASE_MS,
+    );
+    expect(await dueAtOf(note.id)).toBeLessThan(before + 2 * QUICK_NOTE_FAILURE_RETRY_BASE_MS);
+  });
+
+  it('stops at once after a non-retryable failure', async () => {
+    const note = await seedDueNote();
+    await failNextRun(note.id, false);
+    expect(await dueAtOf(note.id)).toBeNull();
+  });
+
+  it('leaves the schedule of a newer edit alone', async () => {
+    const note = await seedDueNote();
+    const run = await claimAnalyze(note.id);
+    const newerDueAt = new Date(Date.now() + 6000);
+    await quickNoteRepo.updateContent(note.id, {
+      analyzeDueAt: newerDueAt,
+      content: 'Edited while running',
+      editorData: { markdown: 'Edited while running' },
+    });
+
+    await quickNoteModel.failRun(run!.id, error, { retryable: false });
+
+    expect(await dueAtOf(note.id)).toBe(newerDueAt.getTime());
   });
 });

@@ -1,13 +1,14 @@
 'use client';
 
 import { HotkeyEnum } from '@lobechat/const/hotkeys';
-import { ActionIcon, Button, cssVar, Flexbox, Markdown, Tag, Text } from '@lobehub/ui';
+import { ActionIcon, Button, cssVar, Flexbox, Markdown, Tag, Text, Tooltip } from '@lobehub/ui';
 import isEqual from 'fast-deep-equal';
 import { PanelRightClose, Sparkles } from 'lucide-react';
-import { memo, useEffect, useRef, useState } from 'react';
+import { memo, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { quickNoteSelectors, useQuickNoteStore } from '@/store/quickNote';
+import type { QuickNoteSummaryState } from '@/store/quickNote/selectors';
 import { useUserStore } from '@/store/user';
 import { settingsSelectors } from '@/store/user/selectors';
 
@@ -16,10 +17,12 @@ import AgenticSections from './AgenticSections';
 import AnalyzeAction from './AnalyzeAction';
 import AnalyzeSettings from './AnalyzeSettings';
 import CommentComposer from './CommentComposer';
+import DecisionLine from './DecisionLine';
 import type { AiStatus } from './resolveAiStatus';
 import { resolveAiStatus } from './resolveAiStatus';
 import Runs from './Runs';
 import { styles } from './style';
+import { useDiveIntoNote } from './useDiveIntoNote';
 
 const STATUS_LABEL_KEYS: Record<AiStatus['key'], string | undefined> = {
   analyzed: 'ai.status.analyzed',
@@ -29,6 +32,13 @@ const STATUS_LABEL_KEYS: Record<AiStatus['key'], string | undefined> = {
   running: 'ai.status.running',
   scheduled: 'ai.status.scheduled',
 };
+
+const SUMMARY_PLACEHOLDER_KEYS = {
+  emptyNote: 'summary.emptyNote',
+  none: 'summary.none',
+  ready: 'summary.waiting',
+  waiting: 'summary.waiting',
+} as const satisfies Record<QuickNoteSummaryState, string>;
 
 const StatusText = memo<{ noteId: string }>(({ noteId }) => {
   const [now, setNow] = useState(Date.now());
@@ -63,25 +73,17 @@ StatusText.displayName = 'QuickNoteAiStatusText';
 
 const AiPanel = memo<{ noteId: string }>(({ noteId }) => {
   const { t } = useTranslation('note');
-  const { annotationContent, dived, exists, hasContent, tags } = useQuickNoteStore(
+  const { exists, hasContent, summaryContent, summaryState, tags } = useQuickNoteStore(
     quickNoteSelectors.aiPanelViewById(noteId),
     isEqual,
   );
   const run = useQuickNoteStore(quickNoteSelectors.runById(noteId), isEqual);
   const diving = useQuickNoteStore(quickNoteSelectors.isDiving(noteId));
-  const [diveInto, toggleAnnotationPanel] = useQuickNoteStore((s) => [
-    s.diveInto,
-    s.toggleAnnotationPanel,
-  ]);
-  const bodyRef = useRef<HTMLDivElement>(null);
+  const toggleAiPanel = useQuickNoteStore((s) => s.toggleAiPanel);
+  const diveIntoNote = useDiveIntoNote(noteId);
   const toggleRightPanelHotkey = useUserStore(
     settingsSelectors.getHotkeyById(HotkeyEnum.ToggleRightPanel),
   );
-
-  useEffect(() => {
-    if (!diving || !bodyRef.current) return;
-    bodyRef.current.scrollTop = bodyRef.current.scrollHeight;
-  }, [diving, annotationContent]);
 
   if (!exists) return null;
 
@@ -104,39 +106,42 @@ const AiPanel = memo<{ noteId: string }>(({ noteId }) => {
           <AnalyzeSettings />
           <ActionIcon
             icon={PanelRightClose}
-            title={t('annotation.togglePanel')}
+            title={t('ai.togglePanel')}
             tooltipProps={{ hotkey: toggleRightPanelHotkey }}
-            onClick={() => toggleAnnotationPanel(false)}
+            onClick={() => toggleAiPanel(false)}
           />
         </Flexbox>
       </Flexbox>
       <Flexbox flex={1} style={{ overflow: 'hidden' }}>
-        <Flexbox flex={1} ref={bodyRef} style={{ overflowY: 'auto' }}>
+        <Flexbox flex={1} style={{ overflowY: 'auto' }}>
           <Flexbox className={styles.section} gap={8}>
-            {annotationContent ? (
+            {summaryContent ? (
               <Markdown fontSize={13} variant={'chat'}>
-                {annotationContent}
+                {summaryContent}
               </Markdown>
             ) : (
               <Text color={cssVar.colorTextTertiary} fontSize={12}>
-                {hasContent ? t('annotation.waiting') : t('annotation.emptyNote')}
+                {t(SUMMARY_PLACEHOLDER_KEYS[summaryState])}
               </Text>
             )}
+            {run?.decision && <DecisionLine decision={run.decision} />}
             <Flexbox horizontal align={'center'} gap={8} justify={'space-between'}>
               <Flexbox horizontal gap={6} wrap={'wrap'}>
                 {tags.map((tag) => (
                   <Tag key={tag}>{tag}</Tag>
                 ))}
               </Flexbox>
-              <Button
-                disabled={!hasContent}
-                icon={Sparkles}
-                loading={diving}
-                style={{ flex: 'none' }}
-                onClick={() => diveInto(noteId)}
-              >
-                {dived ? t('annotation.redive') : t('annotation.dive')}
-              </Button>
+              <Tooltip title={t('dive.desc')}>
+                <Button
+                  disabled={!hasContent}
+                  icon={Sparkles}
+                  loading={diving}
+                  style={{ flex: 'none' }}
+                  onClick={() => void diveIntoNote()}
+                >
+                  {t('dive.action')}
+                </Button>
+              </Tooltip>
             </Flexbox>
           </Flexbox>
           <AgenticSections noteId={noteId} />

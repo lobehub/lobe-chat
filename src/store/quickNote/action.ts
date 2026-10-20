@@ -6,25 +6,24 @@ import type { StoreSetter } from '@/store/types';
 import { flattenActions } from '@/store/utils/flattenActions';
 
 import { initialState } from './initialState';
+import { createQuickNoteProposalSlice, type QuickNoteProposalAction } from './proposalAction';
 import type { QuickNoteStore } from './store';
 
 /** Quiet period after a persisted edit before the client asks the server to claim Analyze. */
 export const ANALYZE_SETTLE_DELAY = 6000;
-/** Poll interval used to recover terminal Dive state through the existing service boundary. */
-export const DIVE_POLL_INTERVAL = 1000;
 /** Poll interval used to project completed background Analyze into the open panel. */
 export const ANALYZE_POLL_INTERVAL = 1000;
-/**
- * Bounded follow-up reads after a Dive first appears terminal without its Annotation projection.
- *
- * The Agent Operation and its completion hook are delivered independently, so one status read can
- * observe the terminal operation before the Annotation transaction becomes visible.
- */
-export const DIVE_TERMINAL_RECONCILE_ATTEMPTS = 3;
 /** Editor save debounce that limits network writes while typing. */
 export const PERSIST_DEBOUNCE = 1000;
 /** Maximum time an active editor may defer its next durable save. */
 export const PERSIST_MAX_WAIT = 5000;
+/**
+ * Delays after a meaning check's due time at which the open note re-reads its Proposals.
+ *
+ * The server sweep claims due checks once a minute and then asks the model, so the result lands
+ * up to about a minute after the due time; later attempts back off and the series stops there.
+ */
+export const STALE_CHECK_REFRESH_DELAYS = [15_000, 45_000, 90_000, 180_000];
 
 type Setter = StoreSetter<QuickNoteStore>;
 
@@ -36,7 +35,7 @@ const agenticDetailKey = (id: string) => ['QUICK_NOTE_AGENTIC_DETAIL', id] as co
  * Coordinates optimistic Quick Note editing with server-owned persistence and Runs.
  *
  * Use when:
- * - Existing Quick Note components need CRUD, save status, Analyze, and Dive actions.
+ * - Existing Quick Note components need CRUD, save status, and Analyze actions.
  *
  * Expects:
  * - The service owns durable state; local records are optimistic projections only.
@@ -53,15 +52,12 @@ export class QuickNoteActionImpl {
   readonly #listKey = ['QUICK_NOTE_LIST', ++quickNoteListGeneration] as const;
   #pollingActive = true;
   readonly #observedAnalyze = new Set<string>();
-  readonly #observedDive = new Set<string>();
   readonly #pollFailures = new Map<string, number>();
   readonly #dirtyIds = new Set<string>();
   readonly #pendingEditorData = new Map<string, Record<string, unknown>>();
   readonly #analyzeTimers = new Map<string, ReturnType<typeof setTimeout>>();
   readonly #analyzePollers = new Map<string, ReturnType<typeof setTimeout>>();
-  readonly #divePollers = new Map<string, ReturnType<typeof setTimeout>>();
-  readonly #diveBaselineAnnotationTimes = new Map<string, number | undefined>();
-  readonly #diveTerminalReconcileAttempts = new Map<string, number>();
+  readonly #staleCheckTimers = new Map<string, ReturnType<typeof setTimeout>>();
 
   constructor(set: Setter, get: () => QuickNoteStore, _api?: unknown) {
     void _api;
@@ -87,7 +83,7 @@ export class QuickNoteActionImpl {
   reset = (): void => {
     this.#disposed = true;
     this.#persist.cancel();
-    for (const timers of [this.#analyzeTimers, this.#analyzePollers, this.#divePollers]) {
+    for (const timers of [this.#analyzeTimers, this.#analyzePollers, this.#staleCheckTimers]) {
       for (const timer of timers.values()) clearTimeout(timer);
       timers.clear();
     }
@@ -96,7 +92,10 @@ export class QuickNoteActionImpl {
     this.#rawSet(
       {
         ...initialState,
-        ...flattenActions<QuickNoteAction>([new QuickNoteActionImpl(this.#rawSet, this.#get)]),
+        ...flattenActions<QuickNoteStoreAction>([
+          new QuickNoteActionImpl(this.#rawSet, this.#get),
+          createQuickNoteProposalSlice(this.#rawSet, this.#get),
+        ]),
       },
       false,
       'resetQuickNoteStore',
@@ -118,13 +117,14 @@ export class QuickNoteActionImpl {
   setPollingActive = (active: boolean): void => {
     if (this.#disposed) return;
     this.#pollingActive = active;
-    for (const timers of [this.#analyzePollers, this.#divePollers]) {
-      for (const timer of timers.values()) clearTimeout(timer);
-      timers.clear();
+    for (const timer of this.#analyzePollers.values()) clearTimeout(timer);
+    this.#analyzePollers.clear();
+    if (!active) {
+      // An inactive surface re-reads its Proposals on return (SWR revalidates on focus).
+      this.#cancelStaleCheckRefresh();
+      return;
     }
-    if (!active) return;
     for (const id of this.#observedAnalyze) this.#scheduleAnalyzePoll(id);
-    for (const id of this.#observedDive) this.#scheduleDivePoll(id);
   };
 
   /**
@@ -169,11 +169,6 @@ export class QuickNoteActionImpl {
     if (this.#notesHydrated) return;
     this.#notesHydrated = true;
 
-    const divingNoteIds = notes
-      .filter(
-        (note) => note.run?.kind === 'dive' && ['pending', 'running'].includes(note.run.status),
-      )
-      .map((note) => note.id);
     const analyzingActiveNoteIds = notes
       .filter(
         (note) => note.run?.kind === 'analyze' && ['pending', 'running'].includes(note.run.status),
@@ -181,7 +176,6 @@ export class QuickNoteActionImpl {
       .map((note) => note.id);
     this.#set(
       {
-        divingNoteIds,
         notes,
         notesInit: true,
         notesLoadError: false,
@@ -189,13 +183,6 @@ export class QuickNoteActionImpl {
       false,
       'initNotes/success',
     );
-    for (const id of divingNoteIds) {
-      this.#diveBaselineAnnotationTimes.set(
-        id,
-        notes.find((note) => note.id === id)?.annotation?.divedAt,
-      );
-      this.#scheduleDivePoll(id);
-    }
     for (const id of analyzingActiveNoteIds) this.#scheduleAnalyzePoll(id);
     for (const note of notes) {
       if (note.analyzeDueAt && !analyzingActiveNoteIds.includes(note.id)) {
@@ -286,108 +273,28 @@ export class QuickNoteActionImpl {
     }
   };
 
-  updateProposal = async (
-    quickNoteId: string,
-    proposalId: string,
-    content: string,
-  ): Promise<void> => {
-    const trimmed = content.trim();
-    if (!trimmed || this.#get().processingProposalIds.includes(proposalId)) return;
-
-    this.#set(
-      { processingProposalIds: [...this.#get().processingProposalIds, proposalId] },
-      false,
-      'updateProposal/start',
-    );
-    try {
-      await quickNoteService.updateProposal(proposalId, trimmed);
-      await this.refreshAgenticDetails(quickNoteId);
-    } finally {
-      this.#set(
-        {
-          processingProposalIds: this.#get().processingProposalIds.filter(
-            (id) => id !== proposalId,
-          ),
-        },
-        false,
-        'updateProposal/end',
-      );
-    }
-  };
-
-  acceptProposal = async (quickNoteId: string, proposalId: string) => {
-    if (this.#get().processingProposalIds.includes(proposalId)) return undefined;
-    this.#set(
-      { processingProposalIds: [...this.#get().processingProposalIds, proposalId] },
-      false,
-      'acceptProposal/start',
-    );
-    try {
-      const result = await quickNoteService.acceptProposal(proposalId);
-      await this.refreshAgenticDetails(quickNoteId);
-      return result;
-    } finally {
-      this.#set(
-        {
-          processingProposalIds: this.#get().processingProposalIds.filter(
-            (id) => id !== proposalId,
-          ),
-        },
-        false,
-        'acceptProposal/end',
-      );
-    }
-  };
-
-  dismissProposal = async (quickNoteId: string, proposalId: string): Promise<void> => {
-    if (this.#get().processingProposalIds.includes(proposalId)) return;
-    this.#set(
-      { processingProposalIds: [...this.#get().processingProposalIds, proposalId] },
-      false,
-      'dismissProposal/start',
-    );
-    try {
-      await quickNoteService.dismissProposal(proposalId);
-      await this.refreshAgenticDetails(quickNoteId);
-    } finally {
-      this.#set(
-        {
-          processingProposalIds: this.#get().processingProposalIds.filter(
-            (id) => id !== proposalId,
-          ),
-        },
-        false,
-        'dismissProposal/end',
-      );
-    }
-  };
-
   removeNote = async (id: string) => {
     await quickNoteService.removeNote(id);
     const analyzeTimer = this.#analyzeTimers.get(id);
     if (analyzeTimer) clearTimeout(analyzeTimer);
     const analyzePoller = this.#analyzePollers.get(id);
     if (analyzePoller) clearTimeout(analyzePoller);
-    const divePoller = this.#divePollers.get(id);
-    if (divePoller) clearTimeout(divePoller);
     this.#analyzeTimers.delete(id);
     this.#analyzePollers.delete(id);
-    this.#divePollers.delete(id);
+    this.#cancelStaleCheckRefresh(id);
     this.#observedAnalyze.delete(id);
-    this.#observedDive.delete(id);
     this.#pollFailures.delete('analyze:' + id);
-    this.#pollFailures.delete('dive:' + id);
-    this.#diveBaselineAnnotationTimes.delete(id);
-    this.#diveTerminalReconcileAttempts.delete(id);
     this.#dirtyIds.delete(id);
     this.#pendingEditorData.delete(id);
-    const { activeNoteId, agenticDetailMap, notes } = this.#get();
+    const { activeNoteId, agenticDetailMap, notes, taskMap } = this.#get();
     const { [id]: _, ...remainingAgenticDetails } = agenticDetailMap;
+    const { [id]: __, ...remainingTasks } = taskMap;
     this.#set(
       {
         activeNoteId: activeNoteId === id ? undefined : activeNoteId,
         agenticDetailMap: remainingAgenticDetails,
         notes: notes.filter((note) => note.id !== id),
+        taskMap: remainingTasks,
       },
       false,
       'removeNote',
@@ -469,7 +376,7 @@ export class QuickNoteActionImpl {
                     kind: result.run.kind,
                     operationId: result.run.operationId,
                     status: result.run.status,
-                    threadId: result.run.threadId,
+                    topicId: result.run.topicId,
                     trigger,
                   },
                 }
@@ -489,38 +396,6 @@ export class QuickNoteActionImpl {
     }
   };
 
-  diveInto = async (id: string) => {
-    const { divingNoteIds, notes } = this.#get();
-    if (divingNoteIds.includes(id)) return;
-
-    const note = notes.find((item) => item.id === id);
-    if (!note || !note.content.trim()) return;
-
-    // Dive must pin the latest durable revision, including edits still inside the save debounce.
-    await this.#persist.flush();
-    if (this.#disposed || this.#get().saveStatus === 'failed') return;
-
-    this.#set({ divingNoteIds: [...divingNoteIds, id] }, false, 'diveInto/start');
-    this.#diveBaselineAnnotationTimes.set(
-      id,
-      this.#get().notes.find((item) => item.id === id)?.annotation?.divedAt,
-    );
-    this.#diveTerminalReconcileAttempts.delete(id);
-
-    try {
-      await quickNoteService.dive(id);
-      this.#scheduleDivePoll(id);
-    } catch (error) {
-      this.#set(
-        { divingNoteIds: this.#get().divingNoteIds.filter((item) => item !== id) },
-        false,
-        'diveInto/failed',
-      );
-      this.#diveBaselineAnnotationTimes.delete(id);
-      throw error;
-    }
-  };
-
   setActiveCollection = (collection: string | null) => {
     this.#set({ activeCollection: collection, activeTag: null }, false, 'setActiveCollection');
   };
@@ -533,12 +408,8 @@ export class QuickNoteActionImpl {
     this.#set({ searchKeywords }, false, 'setSearchKeywords');
   };
 
-  toggleAnnotationPanel = (expand?: boolean) => {
-    this.#set(
-      { annotationPanelExpanded: expand ?? !this.#get().annotationPanelExpanded },
-      false,
-      'toggleAnnotationPanel',
-    );
+  toggleAiPanel = (expand?: boolean) => {
+    this.#set({ aiPanelExpanded: expand ?? !this.#get().aiPanelExpanded }, false, 'toggleAiPanel');
   };
 
   retrySave = () => {
@@ -577,6 +448,9 @@ export class QuickNoteActionImpl {
                 'persist/analyzeDueAt',
               );
               if (result.analyzeDueAt) this.#scheduleAnalyze(id, result.analyzeDueAt);
+              if (result.contentChange === 'changed' && result.contentCheckDueAt) {
+                this.#scheduleStaleCheckRefresh(id, result.contentCheckDueAt);
+              }
             }
           }),
         );
@@ -610,6 +484,69 @@ export class QuickNoteActionImpl {
           }
         },
         Math.max(0, dueAt - Date.now()),
+      ),
+    );
+  };
+
+  /** Ids of the note's Proposals still pending against the current source. */
+  #currentProposalIds = (id: string) =>
+    (this.#get().agenticDetailMap[id]?.proposals ?? [])
+      .filter(
+        (proposal) => proposal.decisionStatus === 'pending' && proposal.validity === 'current',
+      )
+      .map((proposal) => proposal.id);
+
+  #cancelStaleCheckRefresh = (id?: string) => {
+    const ids = id === undefined ? [...this.#staleCheckTimers.keys()] : [id];
+    for (const key of ids) {
+      const timer = this.#staleCheckTimers.get(key);
+      if (timer) clearTimeout(timer);
+      this.#staleCheckTimers.delete(key);
+    }
+  };
+
+  /**
+   * Re-reads an open note's Proposals around the time the server marks them stale.
+   *
+   * Use when:
+   * - A save changed the text and the note has current pending Proposals. The server judges the
+   *   meaning change after the quiet period (minute sweep + model call) and may then mark them
+   *   stale; without this the badge only appeared after a reload or refocus.
+   *
+   * Expects:
+   * - `dueAt` is the server's `content_check_due_at`; a later real edit re-arms it.
+   *
+   * Returns:
+   * - Nothing. Stops after {@link STALE_CHECK_REFRESH_DELAYS}, once a tracked Proposal is no
+   *   longer current, when another note is opened, or when the surface goes inactive.
+   */
+  #scheduleStaleCheckRefresh = (id: string, dueAt: number, attempt = 0) => {
+    if (this.#disposed || !this.#pollingActive) return;
+    const tracked = this.#currentProposalIds(id);
+    if (tracked.length === 0 || attempt >= STALE_CHECK_REFRESH_DELAYS.length) {
+      this.#cancelStaleCheckRefresh(id);
+      return;
+    }
+
+    this.#cancelStaleCheckRefresh(id);
+    this.#staleCheckTimers.set(
+      id,
+      setTimeout(
+        async () => {
+          this.#staleCheckTimers.delete(id);
+          const { activeNoteId } = this.#get();
+          if (this.#disposed || (activeNoteId && activeNoteId !== id)) return;
+
+          try {
+            await this.#get().refreshAgenticDetails(id);
+          } catch {
+            // A transient failure is retried by the next attempt.
+          }
+          const current = new Set(this.#currentProposalIds(id));
+          if (tracked.some((proposalId) => !current.has(proposalId))) return;
+          this.#scheduleStaleCheckRefresh(id, dueAt, attempt + 1);
+        },
+        Math.max(0, dueAt - Date.now()) + STALE_CHECK_REFRESH_DELAYS[attempt],
       ),
     );
   };
@@ -664,7 +601,11 @@ export class QuickNoteActionImpl {
               this.#scheduleAnalyzePoll(id);
             } else {
               this.#observedAnalyze.delete(id);
-              await this.refreshAgenticDetails(id);
+              // A delegate scored 4 may have started a Task without a Proposal.
+              await Promise.all([this.refreshAgenticDetails(id), this.#get().refreshTasks(id)]);
+              if ((this.#get().taskMap[id] ?? []).some((task) => task.status === 'backlog')) {
+                this.#get().refreshTasksUntilStarted(id);
+              }
             }
           } catch {
             // Keep recovering background Analyze after a transient status request failure.
@@ -683,74 +624,12 @@ export class QuickNoteActionImpl {
       ),
     );
   };
-
-  #scheduleDivePoll = (id: string) => {
-    if (this.#disposed) return;
-    this.#observedDive.add(id);
-    if (!this.#pollingActive) return;
-    const existing = this.#divePollers.get(id);
-    if (existing) clearTimeout(existing);
-
-    this.#divePollers.set(
-      id,
-      setTimeout(
-        async () => {
-          this.#divePollers.delete(id);
-          try {
-            const notes = await this.#getPolledNotes();
-            const note = notes.find((item) => item.id === id);
-            this.#pollFailures.delete('dive:' + id);
-            // The list exposes one active run; another kind can hide this run until it finishes.
-            const active = Boolean(note?.run && ['pending', 'running'].includes(note.run.status));
-            const baselineAnnotationTime = this.#diveBaselineAnnotationTimes.get(id);
-            const reconcileAttempts = this.#diveTerminalReconcileAttempts.get(id) ?? 0;
-            const projectionPending =
-              Boolean(note) &&
-              !active &&
-              note?.annotation?.divedAt === baselineAnnotationTime &&
-              reconcileAttempts < DIVE_TERMINAL_RECONCILE_ATTEMPTS;
-
-            if (projectionPending) {
-              this.#diveTerminalReconcileAttempts.set(id, reconcileAttempts + 1);
-            } else if (!active) {
-              this.#diveBaselineAnnotationTimes.delete(id);
-              this.#diveTerminalReconcileAttempts.delete(id);
-            }
-
-            this.#set(
-              {
-                divingNoteIds:
-                  active || projectionPending
-                    ? this.#get().divingNoteIds
-                    : this.#get().divingNoteIds.filter((item) => item !== id),
-                notes,
-              },
-              false,
-              active || projectionPending ? 'diveInto/poll' : 'diveInto/done',
-            );
-
-            if (active || projectionPending) this.#scheduleDivePoll(id);
-            else {
-              this.#observedDive.delete(id);
-              await this.refreshAgenticDetails(id);
-            }
-          } catch {
-            // Keep recovering the operation after a transient status request failure.
-            // Exponential delay caps outage traffic at one retry per 30 seconds for this observation.
-            this.#pollFailures.set('dive:' + id, (this.#pollFailures.get('dive:' + id) ?? 0) + 1);
-            this.#scheduleDivePoll(id);
-          }
-        },
-        Math.min(
-          30_000,
-          DIVE_POLL_INTERVAL * 2 ** Math.min(this.#pollFailures.get('dive:' + id) ?? 0, 5),
-        ),
-      ),
-    );
-  };
 }
 
 export type QuickNoteAction = Pick<QuickNoteActionImpl, keyof QuickNoteActionImpl>;
+
+/** Every action flattened into the Quick Note store. */
+export type QuickNoteStoreAction = QuickNoteAction & QuickNoteProposalAction;
 
 /** Creates the Quick Note action slice for the shared Zustand store. */
 export const createQuickNoteSlice = (set: Setter, get: () => QuickNoteStore, _api?: unknown) =>

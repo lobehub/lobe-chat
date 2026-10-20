@@ -1,16 +1,44 @@
 import type {
   QuickNoteAnalyzeTrigger,
+  QuickNoteDelegatePreset,
   QuickNoteProposalDecisionStatus,
   QuickNoteProposalKind,
+  QuickNoteProposalPayload,
   QuickNoteProposalValidity,
   QuickNoteResourceRole,
   QuickNoteResourceType,
+  QuickNoteRunDecision,
   QuickNoteRunExecutionConfig,
+  QuickNoteRunKind,
 } from '@lobechat/types';
 
-export interface QuickNoteAnnotation {
+/** Latest AI summary of a Quick Note, projected from its newest Run that wrote one. */
+export interface QuickNoteSummary {
+  /** Completion time of the Run that produced the summary, in milliseconds. */
+  completedAt: number;
   content: string;
-  divedAt?: number;
+}
+
+/** Codes a user can pick when dismissing a Proposal; stored as the dismissal reason. */
+export const QUICK_NOTE_DISMISS_REASONS = ['not_now', 'not_wanted', 'duplicate', 'other'] as const;
+
+/** A dismissal reason code. */
+export type QuickNoteDismissReason = (typeof QUICK_NOTE_DISMISS_REASONS)[number];
+
+/** A Task this note started (applied `task` Proposal or Dive), listed in the note sidebar. */
+export interface QuickNoteTask {
+  /** Creation timestamp in milliseconds. */
+  createdAt: number;
+  id: string;
+  /** Human-readable identifier used by the task detail route, such as `T-12`. */
+  identifier: string;
+  name?: string | null;
+  /** The applied Proposal, absent for Dive. */
+  proposalId: string | null;
+  runId: string | null;
+  status: string;
+  /** Last-update timestamp in milliseconds. */
+  updatedAt: number;
 }
 
 /** User feedback attached to one Quick Note and consumed by later Runs. */
@@ -29,18 +57,28 @@ export interface QuickNoteComment {
 
 /** Editable Agent suggestion that can become a downstream product object. */
 export interface QuickNoteProposal {
-  /** Current plain-text Proposal body. */
-  content: string;
   /** Creation timestamp in milliseconds. */
   createdAt: number;
+  /** When the user decided, in milliseconds. */
+  decidedAt?: number | null;
   /** The user's terminal or pending decision. */
   decisionStatus: QuickNoteProposalDecisionStatus;
-  /** Optional rich-text source for the current Proposal version. */
-  editorData?: Record<string, unknown> | null;
+  /** Optional user-supplied dismissal reason. */
+  dismissReason?: string | null;
   /** Stable Proposal identifier. */
   id: string;
   /** Product object family created after acceptance. */
   kind: QuickNoteProposalKind;
+  /** The AI draft of `payload`. */
+  originalPayload: QuickNoteProposalPayload;
+  /** Full arguments of the target action, including user edits. */
+  payload: QuickNoteProposalPayload;
+  /** Built-in `delegate` preset that produced the Proposal. */
+  preset?: QuickNoteDelegatePreset | null;
+  /** Identifier of the object produced by applying the Proposal. */
+  resultId?: string | null;
+  /** Product object family produced by applying the Proposal: `task`, `topic`, `goal` or `page`. */
+  resultType?: string | null;
   /** Last-edit timestamp in milliseconds. */
   updatedAt: number;
   /** Whether the Proposal still matches the current Quick Note revision. */
@@ -63,6 +101,8 @@ export interface QuickNoteResource {
   resourceType: QuickNoteResourceType;
   /** Meaning of the link for the current source revision. */
   role: QuickNoteResourceRole;
+  /** Run that linked the resource; absent for user-supplied links. */
+  runId?: string | null;
   /** Optional native selection, such as a quoted message range. */
   selector?: Record<string, unknown> | null;
   /** Task identifier used by the task detail route when applicable. */
@@ -83,7 +123,6 @@ export interface QuickNoteAgenticDetails {
 export interface QuickNoteItem {
   /** Time when the current saved revision becomes eligible for Automatic Analysis. */
   analyzeDueAt?: number;
-  annotation?: QuickNoteAnnotation;
   collection?: string;
   content: string;
   createdAt: number;
@@ -93,14 +132,20 @@ export interface QuickNoteItem {
   location?: string;
   run?: {
     agentId?: string | null;
+    /** When the Run reached a terminal status, in milliseconds. */
+    completedAt?: number | null;
+    /** Intent judgement of the Run, when it produced one. */
+    decision?: QuickNoteRunDecision | null;
     executionConfig?: QuickNoteRunExecutionConfig | null;
-    kind: 'analyze' | 'dive' | 'signal_enrichment';
+    kind: QuickNoteRunKind;
     operationId?: string | null;
     status: 'canceled' | 'completed' | 'failed' | 'pending' | 'running' | 'superseded';
-    threadId?: string | null;
+    /** Topic created by the Run's agent operation. */
+    topicId?: string | null;
     trigger?: QuickNoteAnalyzeTrigger | null;
   };
+  /** Latest AI summary; absent until a Run writes one. */
+  summary?: QuickNoteSummary;
   tags: string[];
-  topicId?: string;
   updatedAt: number;
 }

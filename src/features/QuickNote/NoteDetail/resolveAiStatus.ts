@@ -14,8 +14,11 @@ export const resolveAiStatus = (note: QuickNoteItem, now: number): AiStatus => {
   if (note.analyzeDueAt && note.analyzeDueAt > now)
     return { key: 'scheduled', seconds: Math.max(1, Math.ceil((note.analyzeDueAt - now) / 1000)) };
 
-  if (note.annotation?.divedAt || note.run?.status === 'completed')
-    return { at: note.annotation?.divedAt ?? note.updatedAt, key: 'analyzed' };
+  // 「已分析 HH:MM」 is when the latest Run finished; `updatedAt` moves with every edit or save.
+  if (note.run?.status === 'completed' && note.run.completedAt)
+    return { at: note.run.completedAt, key: 'analyzed' };
+  if (note.summary || note.run?.status === 'completed')
+    return { at: note.summary?.completedAt ?? note.updatedAt, key: 'analyzed' };
 
   return { key: 'idle' };
 };

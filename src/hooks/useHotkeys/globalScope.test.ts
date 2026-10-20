@@ -25,7 +25,7 @@ const mocks = vi.hoisted(() => ({
   hotkeyCallback: undefined as (() => void) | undefined,
   pathname: '/',
   toggleAgentBuilderPanel: vi.fn(),
-  toggleAnnotationPanel: vi.fn(),
+  toggleAiPanel: vi.fn(),
   toggleRightPanel: vi.fn(),
   toggleTaskAgentPanel: vi.fn(),
   useHotkeyById: vi.fn(),
@@ -56,7 +56,7 @@ vi.mock('@/store/global', () => ({
 
 vi.mock('@/store/quickNote', () => ({
   useQuickNoteStore: {
-    getState: () => ({ toggleAnnotationPanel: mocks.toggleAnnotationPanel }),
+    getState: () => ({ toggleAiPanel: mocks.toggleAiPanel }),
   },
 }));
 
@@ -69,7 +69,7 @@ describe('globalScope hotkeys', () => {
     mocks.hotkeyCallback = undefined;
     mocks.pathname = '/';
     mocks.toggleAgentBuilderPanel.mockReset();
-    mocks.toggleAnnotationPanel.mockReset();
+    mocks.toggleAiPanel.mockReset();
     mocks.toggleRightPanel.mockReset();
     mocks.toggleTaskAgentPanel.mockReset();
     mocks.useHotkeyById.mockReset();
@@ -110,7 +110,7 @@ describe('globalScope hotkeys', () => {
   });
 
   describe('useToggleRightPanelHotkey', () => {
-    it('should toggle the quick note annotation panel on note routes', () => {
+    it('should toggle the quick note AI panel on note routes', () => {
       mocks.pathname = '/note/abc';
 
       renderHook(() => useToggleRightPanelHotkey());
@@ -119,7 +119,7 @@ describe('globalScope hotkeys', () => {
         mocks.hotkeyCallback?.();
       });
 
-      expect(mocks.toggleAnnotationPanel).toHaveBeenCalledTimes(1);
+      expect(mocks.toggleAiPanel).toHaveBeenCalledTimes(1);
       expect(mocks.toggleRightPanel).not.toHaveBeenCalled();
     });
 

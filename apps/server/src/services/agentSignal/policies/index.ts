@@ -9,7 +9,7 @@ import type { CreateFeedbackDomainJudgePolicyOptions } from './analyzeIntent/fee
 import type { CreateFeedbackSatisfactionJudgePolicyOptions } from './analyzeIntent/feedbackSatisfaction';
 import type { CreateCompletionPolicyOptions } from './completionPolicy';
 import { createCompletionPolicy } from './completionPolicy';
-import type { QuickNoteAnalyzeSourceHandlerOptions } from './quickNoteAnalyze';
+import type { QuickNotePolicyOptions } from './quickNoteAnalyze';
 import { createQuickNoteAnalyzePolicy } from './quickNoteAnalyze';
 import type { CreateReviewNightlyPolicyOptions } from './reviewNightly';
 import { createReviewNightlyPolicy } from './reviewNightly';
@@ -32,7 +32,7 @@ export interface CreateDefaultAgentSignalPoliciesOptions extends CreateFeedbackD
   feedbackSatisfactionJudge?: CreateFeedbackSatisfactionJudgePolicyOptions;
   nightlyReview?: CreateReviewNightlyPolicyOptions['nightlyReview'];
   procedure?: CreateAnalyzeIntentPolicyOptions['procedure'];
-  quickNoteAnalyze?: QuickNoteAnalyzeSourceHandlerOptions;
+  quickNoteAnalyze?: QuickNotePolicyOptions;
   selfFeedbackIntent?: CreateReviewNightlyPolicyOptions['selfFeedbackIntent'];
   selfReflection?: CreateReviewNightlyPolicyOptions['selfReflection'];
   skillIntentClassifier?: CreateAnalyzeIntentPolicyOptions['skillIntentClassifier'];

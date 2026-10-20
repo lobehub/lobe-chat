@@ -57,8 +57,8 @@ const EditorArea = memo<{ noteId: string }>(({ noteId }) => {
   const navigate = useWorkspaceAwareNavigate();
   const editor = useEditor();
   const removeNote = useQuickNoteStore((s) => s.removeNote);
-  const panelExpanded = useQuickNoteStore((s) => s.annotationPanelExpanded);
-  const toggleAnnotationPanel = useQuickNoteStore((s) => s.toggleAnnotationPanel);
+  const panelExpanded = useQuickNoteStore((s) => s.aiPanelExpanded);
+  const toggleAiPanel = useQuickNoteStore((s) => s.toggleAiPanel);
   const noteMeta = useQuickNoteStore((s) => {
     const note = quickNoteSelectors.noteById(noteId)(s);
     return note ? formatNoteMeta(note) : undefined;
@@ -126,9 +126,9 @@ const EditorArea = memo<{ noteId: string }>(({ noteId }) => {
             <ActionIcon
               icon={PanelRightOpen}
               size={'small'}
-              title={t('annotation.togglePanel')}
+              title={t('ai.togglePanel')}
               tooltipProps={{ hotkey: toggleRightPanelHotkey }}
-              onClick={() => toggleAnnotationPanel(true)}
+              onClick={() => toggleAiPanel(true)}
             />
           )}
         </Flexbox>

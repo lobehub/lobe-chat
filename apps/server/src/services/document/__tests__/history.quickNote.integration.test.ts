@@ -2,10 +2,9 @@
 import {
   documentHistories,
   documents,
-  quickNoteRunInputs,
+  quickNoteResources,
   quickNoteRuns,
   quickNotes,
-  topics,
   users,
 } from '@lobechat/database/schemas';
 import { eq } from 'drizzle-orm';
@@ -46,13 +45,7 @@ beforeEach(async () => {
       source: 'api',
     },
   ]);
-  await db.insert(topics).values({ id: 'quick-note-history-topic', userId });
-  await db.insert(quickNotes).values({
-    documentId: sourceId,
-    id: noteId,
-    topicId: 'quick-note-history-topic',
-    userId,
-  });
+  await db.insert(quickNotes).values({ documentId: sourceId, id: noteId, userId });
 });
 
 afterEach(async () => {
@@ -100,30 +93,25 @@ describe('Quick Note history retention', () => {
     ).toHaveLength(21);
   });
 
-  /** @example A context document can keep saving after a pinned system revision ages out. */
-  it('keeps pinned context inputs without blocking subsequent saves', async () => {
-    const source = await service.createHistory({
+  /** @example A source revision pinned by a resource link survives later system saves. */
+  it('keeps resource-pinned source revisions without blocking subsequent saves', async () => {
+    const pinned = await service.createHistory({
       documentId: sourceId,
-      editorData,
-      savedAt,
-      saveSource: 'manual',
-    });
-    const context = await service.createHistory({
-      documentId: contextId,
       editorData,
       savedAt,
       saveSource: 'system',
     });
-    const [run] = await db
-      .insert(quickNoteRuns)
-      .values({ kind: 'analyze', quickNoteId: noteId, sourceHistoryId: source.id })
-      .returning();
-    await db
-      .insert(quickNoteRunInputs)
-      .values({ documentHistoryId: context.id, role: 'resource', runId: run.id, userId });
+    await db.insert(quickNoteResources).values({
+      quickNoteId: noteId,
+      resourceId: contextId,
+      resourceType: 'document',
+      role: 'context',
+      sourceHistoryId: pinned.id,
+      userId,
+    });
     for (let index = 1; index <= 6; index++) {
       await service.createHistory({
-        documentId: contextId,
+        documentId: sourceId,
         editorData,
         saveSource: 'system',
         savedAt: new Date(savedAt.getTime() + index * 1000),
@@ -131,7 +119,7 @@ describe('Quick Note history retention', () => {
     }
     /** @example The pinned revision remains available after six later saves. */
     expect(
-      await db.select().from(documentHistories).where(eq(documentHistories.id, context.id)),
+      await db.select().from(documentHistories).where(eq(documentHistories.id, pinned.id)),
     ).toHaveLength(1);
   });
 

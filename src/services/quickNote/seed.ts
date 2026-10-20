@@ -22,10 +22,10 @@ export const createSeedNotes = (): QuickNoteItem[] => {
       updatedAt: now - 40 * MINUTE,
     },
     {
-      annotation: {
+      summary: {
         content:
           '这条随手记围绕「冒险家艾略特的千年奇谭」展开。\n\n概述：一款 HD-2D 风格的游戏引起了兴趣，值得作为灵感素材留档。\n\n可能的后续线索：\n- 看一下实机演示和发售时间\n- 归档到灵感集合，方便之后翻阅',
-        divedAt: now - 80 * MINUTE,
+        completedAt: now - 80 * MINUTE,
       },
       collection: 'Personal',
       content: '[截图] 冒险家艾略特的千年奇谭 这个 HD-2D 感觉有点意思，先记一下。',

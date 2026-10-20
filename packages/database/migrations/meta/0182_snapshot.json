@@ -6,7 +6,7 @@
   },
   "dialect": "postgresql",
   "enums": {},
-  "id": "b119717d-3457-4bf3-9d1e-e0a9e24476ab",
+  "id": "92d51b55-1f6d-4113-a986-6384842c9973",
   "policies": {},
   "prevId": "99e50879-4239-4179-94cb-d4a391b46df4",
   "roles": {},
@@ -25754,107 +25754,6 @@
       },
       "isRLSEnabled": false
     },
-    "public.quick_note_comment_revisions": {
-      "name": "quick_note_comment_revisions",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
-        },
-        "comment_id": {
-          "name": "comment_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "content": {
-          "name": "content",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "editor_data": {
-          "name": "editor_data",
-          "type": "jsonb",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "editor_user_id": {
-          "name": "editor_user_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        }
-      },
-      "indexes": {
-        "quick_note_comment_revisions_comment_id_idx": {
-          "name": "quick_note_comment_revisions_comment_id_idx",
-          "columns": [
-            {
-              "expression": "comment_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
-        "quick_note_comment_revisions_editor_user_id_idx": {
-          "name": "quick_note_comment_revisions_editor_user_id_idx",
-          "columns": [
-            {
-              "expression": "editor_user_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        }
-      },
-      "foreignKeys": {
-        "quick_note_comment_revisions_comment_id_quick_note_comments_id_fk": {
-          "name": "quick_note_comment_revisions_comment_id_quick_note_comments_id_fk",
-          "tableFrom": "quick_note_comment_revisions",
-          "tableTo": "quick_note_comments",
-          "columnsFrom": ["comment_id"],
-          "columnsTo": ["id"],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "quick_note_comment_revisions_editor_user_id_users_id_fk": {
-          "name": "quick_note_comment_revisions_editor_user_id_users_id_fk",
-          "tableFrom": "quick_note_comment_revisions",
-          "tableTo": "users",
-          "columnsFrom": ["editor_user_id"],
-          "columnsTo": ["id"],
-          "onDelete": "set null",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
     "public.quick_note_comments": {
       "name": "quick_note_comments",
       "schema": "",
@@ -26071,27 +25970,27 @@
           "primaryKey": false,
           "notNull": true
         },
-        "document_id": {
-          "name": "document_id",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "current_history_id": {
-          "name": "current_history_id",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "accepted_history_id": {
-          "name": "accepted_history_id",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": false
-        },
         "kind": {
           "name": "kind",
           "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "preset": {
+          "name": "preset",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "payload": {
+          "name": "payload",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "original_payload": {
+          "name": "original_payload",
+          "type": "jsonb",
           "primaryKey": false,
           "notNull": true
         },
@@ -26108,6 +26007,30 @@
           "primaryKey": false,
           "notNull": true,
           "default": "'current'"
+        },
+        "decided_at": {
+          "name": "decided_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "dismiss_reason": {
+          "name": "dismiss_reason",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "result_type": {
+          "name": "result_type",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "result_id": {
+          "name": "result_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
         },
         "accessed_at": {
           "name": "accessed_at",
@@ -26132,21 +26055,6 @@
         }
       },
       "indexes": {
-        "quick_note_proposals_document_id_unique": {
-          "name": "quick_note_proposals_document_id_unique",
-          "columns": [
-            {
-              "expression": "document_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": true,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
         "quick_note_proposals_run_id_idx": {
           "name": "quick_note_proposals_run_id_idx",
           "columns": [
@@ -26167,36 +26075,6 @@
           "columns": [
             {
               "expression": "source_history_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
-        "quick_note_proposals_current_history_id_idx": {
-          "name": "quick_note_proposals_current_history_id_idx",
-          "columns": [
-            {
-              "expression": "current_history_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
-        "quick_note_proposals_accepted_history_id_idx": {
-          "name": "quick_note_proposals_accepted_history_id_idx",
-          "columns": [
-            {
-              "expression": "accepted_history_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -26310,33 +26188,6 @@
           "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
-        },
-        "quick_note_proposals_document_id_documents_id_fk": {
-          "name": "quick_note_proposals_document_id_documents_id_fk",
-          "tableFrom": "quick_note_proposals",
-          "tableTo": "documents",
-          "columnsFrom": ["document_id"],
-          "columnsTo": ["id"],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "quick_note_proposals_current_history_id_document_histories_id_fk": {
-          "name": "quick_note_proposals_current_history_id_document_histories_id_fk",
-          "tableFrom": "quick_note_proposals",
-          "tableTo": "document_histories",
-          "columnsFrom": ["current_history_id"],
-          "columnsTo": ["id"],
-          "onDelete": "restrict",
-          "onUpdate": "no action"
-        },
-        "quick_note_proposals_accepted_history_id_document_histories_id_fk": {
-          "name": "quick_note_proposals_accepted_history_id_document_histories_id_fk",
-          "tableFrom": "quick_note_proposals",
-          "tableTo": "document_histories",
-          "columnsFrom": ["accepted_history_id"],
-          "columnsTo": ["id"],
-          "onDelete": "set null",
-          "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {},
@@ -26379,6 +26230,12 @@
           "type": "varchar(255)",
           "primaryKey": false,
           "notNull": true
+        },
+        "run_id": {
+          "name": "run_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
         },
         "document_id": {
           "name": "document_id",
@@ -26472,39 +26329,26 @@
           "method": "btree",
           "with": {}
         },
-        "quick_note_resources_annotation_unique": {
-          "name": "quick_note_resources_annotation_unique",
-          "columns": [
-            {
-              "expression": "quick_note_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            },
-            {
-              "expression": "source_history_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            },
-            {
-              "expression": "role",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": true,
-          "where": "\"quick_note_resources\".\"role\" = 'annotation'",
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
         "quick_note_resources_source_history_id_idx": {
           "name": "quick_note_resources_source_history_id_idx",
           "columns": [
             {
               "expression": "source_history_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "quick_note_resources_run_id_idx": {
+          "name": "quick_note_resources_run_id_idx",
+          "columns": [
+            {
+              "expression": "run_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -26598,6 +26442,15 @@
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
+        "quick_note_resources_run_id_quick_note_runs_id_fk": {
+          "name": "quick_note_resources_run_id_quick_note_runs_id_fk",
+          "tableFrom": "quick_note_resources",
+          "tableTo": "quick_note_runs",
+          "columnsFrom": ["run_id"],
+          "columnsTo": ["id"],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
         "quick_note_resources_document_id_documents_id_fk": {
           "name": "quick_note_resources_document_id_documents_id_fk",
           "tableFrom": "quick_note_resources",
@@ -26605,437 +26458,6 @@
           "columnsFrom": ["document_id"],
           "columnsTo": ["id"],
           "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.quick_note_run_inputs": {
-      "name": "quick_note_run_inputs",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
-        },
-        "run_id": {
-          "name": "run_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "user_id": {
-          "name": "user_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "workspace_id": {
-          "name": "workspace_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "role": {
-          "name": "role",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "document_history_id": {
-          "name": "document_history_id",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "comment_revision_id": {
-          "name": "comment_revision_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        }
-      },
-      "indexes": {
-        "quick_note_run_inputs_document_history_unique": {
-          "name": "quick_note_run_inputs_document_history_unique",
-          "columns": [
-            {
-              "expression": "run_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            },
-            {
-              "expression": "role",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            },
-            {
-              "expression": "document_history_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": true,
-          "where": "\"quick_note_run_inputs\".\"document_history_id\" IS NOT NULL",
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
-        "quick_note_run_inputs_comment_revision_unique": {
-          "name": "quick_note_run_inputs_comment_revision_unique",
-          "columns": [
-            {
-              "expression": "run_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            },
-            {
-              "expression": "role",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            },
-            {
-              "expression": "comment_revision_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": true,
-          "where": "\"quick_note_run_inputs\".\"comment_revision_id\" IS NOT NULL",
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
-        "quick_note_run_inputs_run_id_idx": {
-          "name": "quick_note_run_inputs_run_id_idx",
-          "columns": [
-            {
-              "expression": "run_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
-        "quick_note_run_inputs_document_history_id_idx": {
-          "name": "quick_note_run_inputs_document_history_id_idx",
-          "columns": [
-            {
-              "expression": "document_history_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
-        "quick_note_run_inputs_comment_revision_id_idx": {
-          "name": "quick_note_run_inputs_comment_revision_id_idx",
-          "columns": [
-            {
-              "expression": "comment_revision_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
-        "quick_note_run_inputs_user_id_idx": {
-          "name": "quick_note_run_inputs_user_id_idx",
-          "columns": [
-            {
-              "expression": "user_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
-        "quick_note_run_inputs_workspace_id_idx": {
-          "name": "quick_note_run_inputs_workspace_id_idx",
-          "columns": [
-            {
-              "expression": "workspace_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        }
-      },
-      "foreignKeys": {
-        "quick_note_run_inputs_run_id_quick_note_runs_id_fk": {
-          "name": "quick_note_run_inputs_run_id_quick_note_runs_id_fk",
-          "tableFrom": "quick_note_run_inputs",
-          "tableTo": "quick_note_runs",
-          "columnsFrom": ["run_id"],
-          "columnsTo": ["id"],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "quick_note_run_inputs_user_id_users_id_fk": {
-          "name": "quick_note_run_inputs_user_id_users_id_fk",
-          "tableFrom": "quick_note_run_inputs",
-          "tableTo": "users",
-          "columnsFrom": ["user_id"],
-          "columnsTo": ["id"],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "quick_note_run_inputs_workspace_id_workspaces_id_fk": {
-          "name": "quick_note_run_inputs_workspace_id_workspaces_id_fk",
-          "tableFrom": "quick_note_run_inputs",
-          "tableTo": "workspaces",
-          "columnsFrom": ["workspace_id"],
-          "columnsTo": ["id"],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "quick_note_run_inputs_document_history_id_document_histories_id_fk": {
-          "name": "quick_note_run_inputs_document_history_id_document_histories_id_fk",
-          "tableFrom": "quick_note_run_inputs",
-          "tableTo": "document_histories",
-          "columnsFrom": ["document_history_id"],
-          "columnsTo": ["id"],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "quick_note_run_inputs_comment_revision_id_quick_note_comment_revisions_id_fk": {
-          "name": "quick_note_run_inputs_comment_revision_id_quick_note_comment_revisions_id_fk",
-          "tableFrom": "quick_note_run_inputs",
-          "tableTo": "quick_note_comment_revisions",
-          "columnsFrom": ["comment_revision_id"],
-          "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {
-        "quick_note_run_inputs_exactly_one_revision_check": {
-          "name": "quick_note_run_inputs_exactly_one_revision_check",
-          "value": "num_nonnulls(\"quick_note_run_inputs\".\"document_history_id\", \"quick_note_run_inputs\".\"comment_revision_id\") = 1"
-        }
-      },
-      "isRLSEnabled": false
-    },
-    "public.quick_note_run_resources": {
-      "name": "quick_note_run_resources",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
-        },
-        "run_id": {
-          "name": "run_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "user_id": {
-          "name": "user_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "workspace_id": {
-          "name": "workspace_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "resource_id": {
-          "name": "resource_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "document_history_id": {
-          "name": "document_history_id",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        }
-      },
-      "indexes": {
-        "quick_note_run_resources_identity_unique": {
-          "name": "quick_note_run_resources_identity_unique",
-          "columns": [
-            {
-              "expression": "run_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            },
-            {
-              "expression": "resource_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": true,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
-        "quick_note_run_resources_resource_id_idx": {
-          "name": "quick_note_run_resources_resource_id_idx",
-          "columns": [
-            {
-              "expression": "resource_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
-        "quick_note_run_resources_document_history_id_idx": {
-          "name": "quick_note_run_resources_document_history_id_idx",
-          "columns": [
-            {
-              "expression": "document_history_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
-        "quick_note_run_resources_user_id_idx": {
-          "name": "quick_note_run_resources_user_id_idx",
-          "columns": [
-            {
-              "expression": "user_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
-        "quick_note_run_resources_workspace_id_idx": {
-          "name": "quick_note_run_resources_workspace_id_idx",
-          "columns": [
-            {
-              "expression": "workspace_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        }
-      },
-      "foreignKeys": {
-        "quick_note_run_resources_run_id_quick_note_runs_id_fk": {
-          "name": "quick_note_run_resources_run_id_quick_note_runs_id_fk",
-          "tableFrom": "quick_note_run_resources",
-          "tableTo": "quick_note_runs",
-          "columnsFrom": ["run_id"],
-          "columnsTo": ["id"],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "quick_note_run_resources_user_id_users_id_fk": {
-          "name": "quick_note_run_resources_user_id_users_id_fk",
-          "tableFrom": "quick_note_run_resources",
-          "tableTo": "users",
-          "columnsFrom": ["user_id"],
-          "columnsTo": ["id"],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "quick_note_run_resources_workspace_id_workspaces_id_fk": {
-          "name": "quick_note_run_resources_workspace_id_workspaces_id_fk",
-          "tableFrom": "quick_note_run_resources",
-          "tableTo": "workspaces",
-          "columnsFrom": ["workspace_id"],
-          "columnsTo": ["id"],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "quick_note_run_resources_resource_id_quick_note_resources_id_fk": {
-          "name": "quick_note_run_resources_resource_id_quick_note_resources_id_fk",
-          "tableFrom": "quick_note_run_resources",
-          "tableTo": "quick_note_resources",
-          "columnsFrom": ["resource_id"],
-          "columnsTo": ["id"],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "quick_note_run_resources_document_history_id_document_histories_id_fk": {
-          "name": "quick_note_run_resources_document_history_id_document_histories_id_fk",
-          "tableFrom": "quick_note_run_resources",
-          "tableTo": "document_histories",
-          "columnsFrom": ["document_history_id"],
-          "columnsTo": ["id"],
-          "onDelete": "set null",
           "onUpdate": "no action"
         }
       },
@@ -27068,8 +26490,8 @@
           "primaryKey": false,
           "notNull": true
         },
-        "thread_id": {
-          "name": "thread_id",
+        "topic_id": {
+          "name": "topic_id",
           "type": "text",
           "primaryKey": false,
           "notNull": false
@@ -27114,6 +26536,24 @@
         "error": {
           "name": "error",
           "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "input_snapshot": {
+          "name": "input_snapshot",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "decision": {
+          "name": "decision",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "summary": {
+          "name": "summary",
+          "type": "text",
           "primaryKey": false,
           "notNull": false
         },
@@ -27182,11 +26622,11 @@
           "method": "btree",
           "with": {}
         },
-        "quick_note_runs_thread_id_idx": {
-          "name": "quick_note_runs_thread_id_idx",
+        "quick_note_runs_topic_id_idx": {
+          "name": "quick_note_runs_topic_id_idx",
           "columns": [
             {
-              "expression": "thread_id",
+              "expression": "topic_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -27269,11 +26709,11 @@
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
-        "quick_note_runs_thread_id_threads_id_fk": {
-          "name": "quick_note_runs_thread_id_threads_id_fk",
+        "quick_note_runs_topic_id_topics_id_fk": {
+          "name": "quick_note_runs_topic_id_topics_id_fk",
           "tableFrom": "quick_note_runs",
-          "tableTo": "threads",
-          "columnsFrom": ["thread_id"],
+          "tableTo": "topics",
+          "columnsFrom": ["topic_id"],
           "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
@@ -27331,12 +26771,6 @@
           "primaryKey": false,
           "notNull": true
         },
-        "topic_id": {
-          "name": "topic_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
         "tags": {
           "name": "tags",
           "type": "text[]",
@@ -27358,6 +26792,12 @@
         },
         "analyze_due_at": {
           "name": "analyze_due_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "content_check_due_at": {
+          "name": "content_check_due_at",
           "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": false
@@ -27390,21 +26830,6 @@
           "columns": [
             {
               "expression": "document_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": true,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
-        "quick_notes_topic_id_unique": {
-          "name": "quick_notes_topic_id_unique",
-          "columns": [
-            {
-              "expression": "topic_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -27459,6 +26884,21 @@
           "concurrently": false,
           "method": "btree",
           "with": {}
+        },
+        "quick_notes_content_check_due_at_idx": {
+          "name": "quick_notes_content_check_due_at_idx",
+          "columns": [
+            {
+              "expression": "content_check_due_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
         }
       },
       "foreignKeys": {
@@ -27485,15 +26925,6 @@
           "tableFrom": "quick_notes",
           "tableTo": "documents",
           "columnsFrom": ["document_id"],
-          "columnsTo": ["id"],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "quick_notes_topic_id_topics_id_fk": {
-          "name": "quick_notes_topic_id_topics_id_fk",
-          "tableFrom": "quick_notes",
-          "tableTo": "topics",
-          "columnsFrom": ["topic_id"],
           "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"

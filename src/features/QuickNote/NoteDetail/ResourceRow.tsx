@@ -7,13 +7,11 @@ import { FileText, Link2, ListTodo, MessageSquareText, MessagesSquare } from 'lu
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { openDocumentModal } from '@/features/DocumentModal/loader';
-import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwareNavigate';
 import type { QuickNoteResource } from '@/services/quickNote';
-import { useTaskStore } from '@/store/task';
 
 import { formatNoteDate } from '../utils';
 import { resolveQuickNoteResourceOpenTarget } from './resolveResourceOpenTarget';
+import { useOpenQuickNoteTarget } from './useOpenQuickNoteTarget';
 
 const getResourceIcon = (type: QuickNoteResource['resourceType']): LucideIcon => {
   switch (type) {
@@ -62,27 +60,14 @@ const resolveTrailingText = (resource: QuickNoteResource, t: TFunction<'note'>):
 
 const ResourceRow = memo<{ resource: QuickNoteResource }>(({ resource }) => {
   const { t } = useTranslation('note');
-  const navigate = useWorkspaceAwareNavigate();
-  const openTopicDrawer = useTaskStore((s) => s.openTopicDrawer);
+  const openQuickNoteTarget = useOpenQuickNoteTarget();
   const title = resource.label?.trim() || resource.resourceId;
   const ResourceIcon = getResourceIcon(resource.resourceType);
   const openTarget = resolveQuickNoteResourceOpenTarget(resource);
   const trailingText = resolveTrailingText(resource, t);
 
   const handleOpen = () => {
-    switch (openTarget?.kind) {
-      case 'document': {
-        void openDocumentModal(openTarget.documentId);
-        return;
-      }
-      case 'topic': {
-        openTopicDrawer(openTarget.topicId, { agentId: openTarget.agentId, title });
-        return;
-      }
-      case 'task': {
-        navigate(`/task/${encodeURIComponent(openTarget.taskId)}`);
-      }
-    }
+    if (openTarget) openQuickNoteTarget(openTarget, resource.label?.trim() || undefined);
   };
 
   const row = (

@@ -1,5 +1,12 @@
 import type { QuickNoteResource } from '@/services/quickNote';
 
+/** A product-native surface that opens one object linked from a Quick Note. */
+export type QuickNoteOpenTarget =
+  | { documentId: string; kind: 'document' }
+  | { agentId: string; kind: 'topic'; topicId: string }
+  | { kind: 'task'; taskId: string }
+  | { goalId: string; kind: 'goal' };
+
 /**
  * Resolves a typed Quick Note resource to its product-native open target.
  *
@@ -14,11 +21,13 @@ import type { QuickNoteResource } from '@/services/quickNote';
  * Returns:
  * - A native open target for supported resources, otherwise `undefined`.
  */
-export const resolveQuickNoteResourceOpenTarget = (resource: QuickNoteResource) => {
+export const resolveQuickNoteResourceOpenTarget = (
+  resource: QuickNoteResource,
+): QuickNoteOpenTarget | undefined => {
   switch (resource.resourceType) {
     case 'document':
     case 'page': {
-      return { documentId: resource.resourceId, kind: 'document' as const };
+      return { documentId: resource.resourceId, kind: 'document' };
     }
     case 'conversation':
     case 'topic': {
@@ -26,12 +35,12 @@ export const resolveQuickNoteResourceOpenTarget = (resource: QuickNoteResource) 
 
       return {
         agentId: resource.agentId,
-        kind: 'topic' as const,
+        kind: 'topic',
         topicId: resource.resourceId,
       };
     }
     case 'task': {
-      return { kind: 'task' as const, taskId: resource.resourceId };
+      return { kind: 'task', taskId: resource.resourceId };
     }
     default: {
       return undefined;

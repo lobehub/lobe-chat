@@ -47,20 +47,32 @@ describe('resolveAiStatus', () => {
     expect(resolveAiStatus(note, 2000)).toEqual({ key: 'scheduled', seconds: 1 });
   });
 
-  it('returns analyzed using the annotation dive time', () => {
+  it('returns analyzed using the summary completion time', () => {
     const note = createNote({
-      annotation: { content: 'summary', divedAt: 1500 },
+      summary: { completedAt: 1500, content: 'summary' },
       updatedAt: 1800,
     });
     expect(resolveAiStatus(note, 2000)).toEqual({ at: 1500, key: 'analyzed' });
   });
 
-  it('returns analyzed using updatedAt when the run completed without a dive time', () => {
+  it('returns analyzed using updatedAt when the run completed without a summary', () => {
     const note = createNote({
       run: { kind: 'analyze', status: 'completed' },
       updatedAt: 1800,
     });
     expect(resolveAiStatus(note, 2000)).toEqual({ at: 1800, key: 'analyzed' });
+  });
+
+  // ROOT CAUSE:
+  // The time came from the note's `updated_at` (or an older summary), which moves with every
+  // edit, so 「已分析 HH:MM」 showed the last save rather than when the analysis finished.
+  it('returns analyzed using the latest Run completion time', () => {
+    const note = createNote({
+      run: { completedAt: 1600, kind: 'analyze', status: 'completed' },
+      summary: { completedAt: 1200, content: 'older summary' },
+      updatedAt: 1900,
+    });
+    expect(resolveAiStatus(note, 2000)).toEqual({ at: 1600, key: 'analyzed' });
   });
 
   it('returns idle when nothing has happened yet', () => {
