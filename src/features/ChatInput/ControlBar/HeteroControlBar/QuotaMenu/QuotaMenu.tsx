@@ -246,6 +246,14 @@ interface LoadQuotaOptions {
   revalidate?: boolean;
 }
 
+interface PendingQuotaError<S> {
+  nextQuota: S;
+  options: LoadQuotaOptions;
+  requestId: number;
+  requestScope?: string;
+  requestSourceKey: string;
+}
+
 /**
  * Shared quota popover for local CLI agents: gauge trigger with the tightest
  * remaining percent in each compact group, plus per-window progress bars and
@@ -275,13 +283,16 @@ const QuotaMenu = <S extends QuotaSnapshotBase>({
   // or a remount paints it (with its "updated N ago" line) before the sampler
   // answers, and every applied sample is written back to it.
   const useHydrateQuotaPanel = useAgentQuotaStore((s) => s.useHydrateQuotaPanel);
-  useHydrateQuotaPanel(sourceKey);
+  const { isHydrated } = useHydrateQuotaPanel(sourceKey);
   const quota = (useAgentQuotaStore(agentQuotaSelectors.panel(sourceKey)) as S | undefined) ?? null;
   const [refreshError, setRefreshError] = useState<S | null>(null);
   const [now, setNow] = useState(() => Date.now());
   const lastTransientErrorAtRef = useRef(0);
   const requestIdRef = useRef(0);
   const sourceKeyRef = useRef(sourceKey);
+  const isHydratedRef = useRef(isHydrated);
+  /** An error sampled before the stored snapshot hydrated, applied once it has. */
+  const pendingErrorRef = useRef<PendingQuotaError<S> | null>(null);
 
   /** What the panel of `key` shows now, read outside render. */
   const readQuota = useCallback(
@@ -338,6 +349,20 @@ const QuotaMenu = <S extends QuotaSnapshotBase>({
 
       if (nextQuota.status === 'error') {
         lastTransientErrorAtRef.current = Date.now();
+
+        // Writing the error before the stored snapshot hydrated would make the
+        // replica ignore that snapshot and drop its stored row: hold the error
+        // until hydration settles, then judge it against what was restored.
+        if (!isHydratedRef.current) {
+          pendingErrorRef.current = {
+            nextQuota,
+            options,
+            requestId,
+            requestScope,
+            requestSourceKey,
+          };
+          return;
+        }
 
         // A failed refresh keeps the last good snapshot on screen (and in storage).
         if (hasQuotaDataForSnapshot(readQuota(requestSourceKey))) {
@@ -404,6 +429,20 @@ const QuotaMenu = <S extends QuotaSnapshotBase>({
   useEffect(() => {
     void loadQuota();
   }, [loadQuota, sourceKey]);
+
+  useEffect(() => {
+    isHydratedRef.current = isHydrated;
+    const pending = pendingErrorRef.current;
+    if (!isHydrated || !pending) return;
+    pendingErrorRef.current = null;
+    applyQuotaResult(
+      pending.nextQuota,
+      pending.options,
+      pending.requestId,
+      pending.requestSourceKey,
+      pending.requestScope,
+    );
+  }, [applyQuotaResult, isHydrated]);
 
   useEffect(() => {
     const interval = window.setInterval(() => setNow(Date.now()), QUOTA_STALE_MS);

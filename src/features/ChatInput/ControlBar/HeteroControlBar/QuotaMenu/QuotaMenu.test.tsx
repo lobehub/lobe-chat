@@ -8,10 +8,13 @@ import type { ReactNode } from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { openQuotaCalendarModal } from '@/features/AgentQuotaCalendar';
+import { cacheScope } from '@/libs/replica';
+import { hashQuotaSourceKey, quotaPanelResource } from '@/store/agentQuota/projection';
 
 import ClaudeCodeQuotaMenu from './ClaudeCodeQuotaMenu';
 import CodexQuotaMenu from './CodexQuotaMenu';
 import KimiCodeQuotaMenu from './KimiCodeQuotaMenu';
+import { createQuotaSourceKey } from './QuotaMenu';
 import {
   claudeSnapshot,
   codexSnapshot,
@@ -284,6 +287,50 @@ describe('KimiCodeQuotaMenu', () => {
     mockService.getKimiCodeQuota.mockImplementation(() => new Promise(() => {}));
     render(<KimiCodeQuotaMenu />);
     await waitFor(() => expect(badge().textContent).toContain('compactLeft:92'));
+  });
+
+  it('keeps the stored snapshot when a reload samples an error before hydration', async () => {
+    vi.spyOn(cacheScope, 'canPersist').mockReturnValue(true);
+    const storage = quotaPanelResource.storage!;
+    const sourceKey = createQuotaSourceKey('kimi-code', 'agent-1', undefined, undefined);
+    await storage.set(
+      { queryKey: hashQuotaSourceKey(sourceKey), scope: cacheScope.get() },
+      {
+        data: kimiCodeSnapshot({
+          session: { resetsAt: null, usedPercent: 8, windowMinutes: 300 },
+        }),
+        updatedAt: 1,
+      },
+    );
+
+    // Cold reload, offline: the sampler fails while IndexedDB is still answering.
+    let releaseStorage!: () => void;
+    const storageReady = new Promise<void>((resolve) => {
+      releaseStorage = resolve;
+    });
+    const read = storage.get.bind(storage);
+    vi.spyOn(storage, 'get').mockImplementation(async (key) => {
+      await storageReady;
+      return read(key);
+    });
+    mockService.getKimiCodeQuota.mockRejectedValue(new Error('offline'));
+    const badge = () => screen.getByRole('button', { name: 'heteroAgent.kimiCodeQuota.tooltip' });
+
+    render(<KimiCodeQuotaMenu />);
+    await waitFor(() => expect(mockService.getKimiCodeQuota).toHaveBeenCalled());
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve, 20));
+    });
+    releaseStorage();
+
+    await waitFor(() => expect(badge().textContent).toContain('compactLeft:92'));
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve, 20));
+    });
+    vi.mocked(storage.get).mockRestore();
+    expect(
+      await storage.get({ queryKey: hashQuotaSourceKey(sourceKey), scope: cacheScope.get() }),
+    ).toMatchObject({ data: { session: { usedPercent: 8 }, status: 'ok' } });
   });
 
   it('omits the monthly cap line when the charge limit is disabled', async () => {
