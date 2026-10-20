@@ -11,6 +11,7 @@ import { meetingService } from '@/services/meeting';
 import { formatOffset } from '../format';
 import RefineErrorAlert from '../RefineErrorAlert';
 import SegmentList from '../SegmentList';
+import { toTranscriptSegments } from './segments';
 
 /** Statuses during which the server is still producing the transcript. */
 const IN_PROGRESS = new Set(['uploading', 'transcribing']);
@@ -44,17 +45,7 @@ const MeetingTranscript = ({ meetingId }: MeetingTranscriptProps) => {
   }
   if (!data) return <Empty description={t('transcript.notFound')} />;
 
-  const speakerLabel = new Map(
-    data.speakers.map((speaker) => [speaker.id, speaker.displayName || speaker.label]),
-  );
-  const segments = data.segments.map((segment) => ({
-    endMs: segment.endMs,
-    id: segment.id,
-    seq: segment.seq,
-    speaker: segment.speakerId ? speakerLabel.get(segment.speakerId) : undefined,
-    startMs: segment.startMs,
-    text: segment.text,
-  }));
+  const segments = toTranscriptSegments(data);
   const speakerCount = new Set(segments.map((segment) => segment.speaker).filter(Boolean)).size;
 
   const retry = async () => {
