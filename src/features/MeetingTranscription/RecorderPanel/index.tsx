@@ -6,6 +6,7 @@ import { MicIcon, PauseIcon, PlayIcon, SquareIcon } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import AsyncError from '@/components/AsyncError';
 import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwareNavigate';
 
 import { formatOffset } from '../format';
@@ -131,23 +132,25 @@ const RecorderPanel = () => {
       </Block>
 
       {error && (
-        <Alert
-          data-testid="meeting-recorder-error"
-          description={t(`error.${error}.desc`)}
-          title={t(`error.${error}.title`)}
-          type={error === 'capture_interrupted' ? 'warning' : 'error'}
-          action={
-            error === 'upload_failed' ? (
-              <Button type={'primary'} onClick={recorder.retryProcessing}>
-                {t('live.retryNow')}
-              </Button>
-            ) : phase === 'idle' ? (
-              <Button type={'primary'} onClick={start}>
-                {t('live.retryNow')}
-              </Button>
-            ) : undefined
-          }
-        />
+        <div data-testid="meeting-recorder-error">
+          <AsyncError
+            description={t(`error.${error}.desc`)}
+            justify={'start'}
+            title={t(`error.${error}.title`)}
+            variant={'inline'}
+            action={
+              error === 'upload_failed' ? (
+                <Button size={'small'} onClick={recorder.retryProcessing}>
+                  {t('live.retryNow')}
+                </Button>
+              ) : phase === 'idle' ? (
+                <Button size={'small'} onClick={start}>
+                  {t('live.retryNow')}
+                </Button>
+              ) : undefined
+            }
+          />
+        </div>
       )}
 
       {(live_ || phase === 'finishing') && (
