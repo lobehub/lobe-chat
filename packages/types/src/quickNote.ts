@@ -186,26 +186,34 @@ export type QuickNoteDelegatePreset = (typeof QUICK_NOTE_DELEGATE_PRESETS)[numbe
 
 /** Intent judgement stored on the Analyze Run that produced it. */
 export interface QuickNoteRunDecision {
-  /** Decisions implementation that answered, such as `shim` or `openrouter`. */
-  backend: string;
-  /** Model-written evidence, produced before the scores. */
+  /**
+   * How `ModelRuntime.decide` answered: `native` for a decision model (fractional scores),
+   * `emulated` for a chat model through structured output (integer levels plus evidence).
+   */
+  decisionMode: 'emulated' | 'native';
+  /** Model-written evidence for the primary label (and preset); empty for native decisions. */
   evidence: string;
   /**
    * Whether a Comment explicitly asks to turn the note into a Goal. A `goal` preset is only
-   * selected when its own score is 4 or this is true.
+   * selected when the `delegate` level is 4 or this is true.
    */
   explicitGoalRequest?: boolean;
-  /** Model that produced the judgement, as `provider/model` when known. */
+  /** Model that produced the judgement. */
   model?: string | null;
   /** The `delegate` preset hit by the judgement, when any. */
   preset?: QuickNoteDelegatePreset | null;
   /**
-   * Independent 0–4 score per `delegate` preset; only meaningful when `delegate` scores high.
+   * 0–4 fit per `delegate` preset from the preset choice: its probability on the 0–4 scale for
+   * native decisions, 4 for the chosen preset for emulated ones.
    */
   presetScores?: Partial<Record<QuickNoteDelegatePreset, QuickNoteActionScore>>;
   /** Highest-scoring label; `keep` on ties or when nothing else scores. */
   primary: QuickNoteActionLabel;
-  /** Independent 0–4 score per action label. */
+  /** Provider of {@link QuickNoteRunDecision.model}. */
+  provider?: string | null;
+  /** Question name to reason, for questions the model refused (they count as level 0 / no). */
+  refusals?: Record<string, string>;
+  /** Independent 0–4 level per action label. */
   scores: Record<QuickNoteActionLabel, QuickNoteActionScore>;
 }
 

@@ -26,7 +26,7 @@ const model = new QuickNoteModel(db, userId);
 const repo = new QuickNoteRepository(db, userId);
 
 const researchDecision: QuickNoteRunDecision = {
-  backend: 'tool_choice',
+  decisionMode: 'emulated',
   evidence: '"调研一下"',
   explicitGoalRequest: false,
   preset: 'research',

@@ -1,5 +1,6 @@
 // @vitest-environment node
-import type { DecisionResponse, QuickNoteRunDecision } from '@lobechat/types';
+import type { DecisionResponse } from '@lobechat/model-runtime';
+import type { QuickNoteRunDecision } from '@lobechat/types';
 import { eq } from 'drizzle-orm';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -10,7 +11,7 @@ import { TaskModel } from '@/database/models/task';
 import { QuickNoteRepository } from '@/database/repositories/quickNote';
 import { documents, quickNotes, tasks, users } from '@/database/schemas';
 import { enqueueAgentSignalSourceEvent } from '@/server/services/agentSignal';
-import type { DecisionBackend } from '@/server/services/decision';
+import type { AiGenerationService } from '@/server/services/aiGeneration';
 
 import { QuickNoteProcessingService } from '.';
 import { QuickNoteApplyError } from './executors';
@@ -49,7 +50,7 @@ const enqueued = (sourceType: string) =>
     .mock.calls.filter(([input]) => input.sourceType === sourceType);
 
 const researchDecision = (delegate: 3 | 4): QuickNoteRunDecision => ({
-  backend: 'tool_choice',
+  decisionMode: 'emulated',
   evidence: '"调研一下"',
   explicitGoalRequest: false,
   preset: 'research',
@@ -80,7 +81,7 @@ const seedJudgedRun = async (content: string, decision: QuickNoteRunDecision) =>
 };
 
 const writeDecision = (delegate: 3 | 4): QuickNoteRunDecision => ({
-  backend: 'tool_choice',
+  decisionMode: 'emulated',
   evidence: '"加到 moshi 调研页"',
   explicitGoalRequest: false,
   preset: 'write_document',
@@ -501,41 +502,148 @@ describe('Quick Note Analyze completion', () => {
       renderSourceText,
       trigger: 'manual',
     });
+    // Emulated on a chat model: integer levels, evidence in provider metadata.
     const decide = vi.fn().mockResolvedValue({
       answers: {
-        intent: {
-          choice: 'keep',
-          evidence: '"我好喜欢"',
-          scores: { delegate: 0, enrich: 0, keep: 4, link: 0 },
-          type: 'choice',
-        },
-        preset: {
-          choice: 'research',
-          scores: { discuss: 0, goal: 0, research: 0, write_document: 0 },
-          type: 'choice',
-        },
+        delegate: { score: 0, type: 'score' },
+        enrich: { score: 0, type: 'score' },
+        keep: { score: 4, type: 'score' },
+        link: { score: 0, type: 'score' },
+        preset: { choice: 'research', type: 'choice' },
       },
-      backend: 'tool_choice',
-      id: 'dec-1',
-      model: 'mini',
-      provider: 'lobehub',
-      usage: { input_tokens: 1, output_tokens: 1 },
+      model: 'gpt-5-mini',
+      providerMetadata: {
+        lobehub: { decisionMode: 'emulated', evidence: { keep: '"我好喜欢"', preset: 'n/a' } },
+      },
+      usage: { totalInputTokens: 1, totalOutputTokens: 1 },
     } satisfies DecisionResponse);
     const service = new QuickNoteProcessingService(db, userId, undefined, {
-      decisionBackend: { decide } as DecisionBackend,
+      decider: { decide } as unknown as Pick<AiGenerationService, 'decide'>,
     });
 
     const judged = await service.judgeRun(run!.id);
     await service.completeWithoutGeneration(run!.id);
 
     expect(decide).toHaveBeenCalledTimes(1);
+    const [payload, options] = decide.mock.calls[0];
+    expect(payload).toMatchObject({
+      model: expect.any(String),
+      provider: expect.any(String),
+      state: { comments: [], note: '我好喜欢北京', pending_proposals: [] },
+    });
+    expect(Object.keys(payload.questions)).toEqual([
+      'delegate',
+      'enrich',
+      'keep',
+      'link',
+      'preset',
+    ]);
+    expect(options).toEqual({ metadata: { trigger: 'quick_note' } });
     expect(judged?.plan).toEqual({ enrich: false, link: false });
     expect(await model.getRunContext(run!.id)).toMatchObject({
-      decision: { primary: 'keep', scores: { keep: 4 } },
+      decision: {
+        decisionMode: 'emulated',
+        evidence: '"我好喜欢"',
+        model: 'gpt-5-mini',
+        primary: 'keep',
+        provider: payload.provider,
+        scores: { keep: 4 },
+      },
       status: 'completed',
     });
     expect(await model.queryProposals(note.id)).toHaveLength(0);
     expect(execAgent).not.toHaveBeenCalled();
+  });
+
+  it.each([
+    [3.62, true],
+    [3.4, false],
+  ])(
+    'plans a research Task from a native fractional delegate score %s (auto-apply: %s)',
+    async (delegate, autoApply) => {
+      const note = await repo.create({
+        content: '调研一下 gpt-live 和 moshi 的差异',
+        editorData: { markdown: '调研一下 gpt-live 和 moshi 的差异' },
+      });
+      const run = await repo.claimRun(note.id, {
+        kind: 'analyze',
+        renderSourceText,
+        trigger: 'manual',
+      });
+      // Native decision model: probability-weighted means and a preset distribution.
+      const decide = vi.fn().mockResolvedValue({
+        answers: {
+          delegate: { probabilities: [0, 0, 0.05, 0.28, 0.67], score: delegate, type: 'score' },
+          enrich: { score: 1.2, type: 'score' },
+          keep: { score: 0.3, type: 'score' },
+          link: { score: 0.1, type: 'score' },
+          preset: {
+            choice: 'research',
+            probabilities: { discuss: 0.1, goal: 0.05, research: 0.8, write_document: 0.05 },
+            type: 'choice',
+          },
+        },
+        model: 'typesafe/jev-1.13',
+        providerMetadata: { lobehub: { decisionMode: 'native' } },
+      } satisfies DecisionResponse);
+      const service = new QuickNoteProcessingService(db, userId, undefined, {
+        decider: { decide } as unknown as Pick<AiGenerationService, 'decide'>,
+      });
+
+      const judged = await service.judgeRun(run!.id);
+
+      expect(judged?.plan).toEqual({
+        delegate: { autoApply, preset: 'research', score: autoApply ? 4 : 3 },
+        enrich: false,
+        link: false,
+      });
+      expect((await model.getRunContext(run!.id))?.decision).toMatchObject({
+        decisionMode: 'native',
+        evidence: '',
+        model: 'typesafe/jev-1.13',
+        preset: 'research',
+        primary: 'delegate',
+      });
+    },
+  );
+
+  it('treats a fully refused judgement as keep and records the reasons', async () => {
+    const note = await repo.create({ content: 'x', editorData: { markdown: 'x' } });
+    const run = await repo.claimRun(note.id, {
+      kind: 'analyze',
+      renderSourceText,
+      trigger: 'manual',
+    });
+    const refusal = { reason: 'policy', type: 'refusal' } as const;
+    const decide = vi.fn().mockResolvedValue({
+      answers: {
+        delegate: refusal,
+        enrich: refusal,
+        keep: refusal,
+        link: refusal,
+        preset: refusal,
+      },
+      model: 'gpt-5-mini',
+      providerMetadata: { lobehub: { decisionMode: 'emulated', evidence: {} } },
+    } satisfies DecisionResponse);
+    const service = new QuickNoteProcessingService(db, userId, undefined, {
+      decider: { decide } as unknown as Pick<AiGenerationService, 'decide'>,
+    });
+
+    const judged = await service.judgeRun(run!.id);
+
+    expect(judged?.plan).toEqual({ enrich: false, link: false });
+    expect(judged?.decision).toMatchObject({
+      preset: null,
+      primary: 'keep',
+      refusals: {
+        delegate: 'policy',
+        enrich: 'policy',
+        keep: 'policy',
+        link: 'policy',
+        preset: 'policy',
+      },
+    });
   });
 
   // ROOT CAUSE:
@@ -662,15 +770,13 @@ describe('Quick Note source edits', () => {
     expect(await QuickNoteModel.claimContentCheck(db, note.id, last)).toBe(false);
 
     const decide = vi.fn().mockResolvedValue({
-      answers: { meaning_changed: { noul: 1, type: 'noul' } },
-      backend: 'tool_choice',
+      answers: { meaningChanged: { probability: 1, type: 'predicate' } },
       id: 'dec-3',
-      model: 'mini',
-      provider: 'lobehub',
-      usage: { input_tokens: 1, output_tokens: 1 },
+      model: 'typesafe/jev-1.13',
+      providerMetadata: { lobehub: { decisionMode: 'native' } },
     });
     const service = new QuickNoteProcessingService(db, userId, undefined, {
-      decisionBackend: { decide } as DecisionBackend,
+      decider: { decide } as unknown as Pick<AiGenerationService, 'decide'>,
     });
     expect(await service.judgeContentChange({ quickNoteId: note.id })).toMatchObject({
       status: 'changed',
@@ -696,7 +802,7 @@ describe('Quick Note source edits', () => {
     });
     const decide = vi.fn();
     const service = new QuickNoteProcessingService(db, userId, undefined, {
-      decisionBackend: { decide } as DecisionBackend,
+      decider: { decide } as unknown as Pick<AiGenerationService, 'decide'>,
     });
 
     expect(await service.judgeContentChange({ quickNoteId: note.id })).toMatchObject({
@@ -726,22 +832,20 @@ describe('Quick Note source edits', () => {
     expect(await contentCheckDueAt(note.id)).toBeInstanceOf(Date);
   });
 
-  it('marks Proposals stale only when the noul check says the meaning changed', async () => {
+  it('marks Proposals stale only when the meaningChanged predicate says so', async () => {
     const { note, run } = await seedTaskProposal('调研 moshi');
     await repo.updateContent(note.id, {
       content: '调研 gpt-live 的定价',
       editorData: { markdown: '调研 gpt-live 的定价' },
     });
     const decide = vi.fn().mockResolvedValue({
-      answers: { meaning_changed: { noul: 1, type: 'noul' } },
-      backend: 'tool_choice',
+      answers: { meaningChanged: { probability: 1, type: 'predicate' } },
       id: 'dec-2',
-      model: 'mini',
-      provider: 'lobehub',
-      usage: { input_tokens: 1, output_tokens: 1 },
+      model: 'typesafe/jev-1.13',
+      providerMetadata: { lobehub: { decisionMode: 'native' } },
     });
     const service = new QuickNoteProcessingService(db, userId, undefined, {
-      decisionBackend: { decide } as DecisionBackend,
+      decider: { decide } as unknown as Pick<AiGenerationService, 'decide'>,
     });
 
     const result = await service.judgeContentChange({
@@ -756,6 +860,35 @@ describe('Quick Note source edits', () => {
     });
   });
 
+  it.each([
+    [{ probability: 0.5, type: 'predicate' }, 'changed', 0.5],
+    [{ probability: 0.49, type: 'predicate' }, 'unchanged', 0.49],
+    // A refusal never stales Proposals: that needs a positive answer.
+    [{ reason: 'cannot compare', type: 'refusal' }, 'unchanged', 0],
+  ] as const)('maps a meaningChanged answer %o to %s', async (answer, status, probability) => {
+    const { note, run } = await seedTaskProposal('调研 moshi');
+    await repo.updateContent(note.id, {
+      content: '调研 gpt-live 的定价',
+      editorData: { markdown: '调研 gpt-live 的定价' },
+    });
+    const decide = vi.fn().mockResolvedValue({
+      answers: { meaningChanged: answer },
+      model: 'gpt-5-mini',
+      providerMetadata: { lobehub: { decisionMode: 'emulated', evidence: {} } },
+    });
+    const service = new QuickNoteProcessingService(db, userId, undefined, {
+      decider: { decide } as unknown as Pick<AiGenerationService, 'decide'>,
+    });
+
+    expect(
+      await service.judgeContentChange({ baselineRunId: run.id, quickNoteId: note.id }),
+    ).toEqual({ baselineRunId: run.id, probability, status });
+    expect(decide.mock.calls[0][0].questions.meaningChanged).toMatchObject({
+      criteria: { false: expect.any(String), true: expect.any(String) },
+      type: 'predicate',
+    });
+  });
+
   it('skips the model when the edit is cosmetic relative to the baseline', async () => {
     const { note, run } = await seedTaskProposal('调研 moshi');
     await repo.updateContent(note.id, {
@@ -764,7 +897,7 @@ describe('Quick Note source edits', () => {
     });
     const decide = vi.fn();
     const service = new QuickNoteProcessingService(db, userId, undefined, {
-      decisionBackend: { decide } as DecisionBackend,
+      decider: { decide } as unknown as Pick<AiGenerationService, 'decide'>,
     });
 
     expect(

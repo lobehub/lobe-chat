@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import {
+  buildQuickNoteMeaningChangeQuestions,
   isQuickNoteMeaningChanged,
   isQuickNoteTextEquivalent,
   normalizeQuickNoteText,
@@ -34,9 +35,20 @@ describe('isQuickNoteTextEquivalent', () => {
   });
 });
 
+describe('buildQuickNoteMeaningChangeQuestions', () => {
+  it('asks one predicate with both criteria', () => {
+    const { meaningChanged } = buildQuickNoteMeaningChangeQuestions();
+    expect(meaningChanged.type).toBe('predicate');
+    expect(meaningChanged.instructions).toBeTruthy();
+    expect(meaningChanged.criteria.true).toBeTruthy();
+    expect(meaningChanged.criteria.false).toBeTruthy();
+  });
+});
+
 describe('isQuickNoteMeaningChanged', () => {
-  it('counts only a yes probability above one half', () => {
+  it('counts a yes probability of one half or more', () => {
     expect(isQuickNoteMeaningChanged(0.75)).toBe(true);
-    expect(isQuickNoteMeaningChanged(0.5)).toBe(false);
+    expect(isQuickNoteMeaningChanged(0.5)).toBe(true);
+    expect(isQuickNoteMeaningChanged(0.49)).toBe(false);
   });
 });

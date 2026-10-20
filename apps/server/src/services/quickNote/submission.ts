@@ -14,9 +14,9 @@ import { and, asc, desc, eq, isNull } from 'drizzle-orm';
 import { agentOperations, messagePlugins, messages } from '@/database/schemas';
 import type { LobeChatDatabase } from '@/database/type';
 import type { AiGenerationService } from '@/server/services/aiGeneration';
-import { isToolCapabilityError } from '@/server/services/decision/toolChoiceBackend';
 
 import { extractQuickNoteOutputJson, validateQuickNoteSubmission } from './generation';
+import { isToolCapabilityError } from './toolCapability';
 
 const log = debug('lobe-server:quick-note:submission');
 

@@ -25,6 +25,8 @@ type ModelAssignmentItemKey = Exclude<
 
 interface SystemAgentModelItem {
   contextLimit?: boolean;
+  /** The slot's server path answers through `decide`, so decision models are offered too. */
+  includeDecisionModels?: boolean;
   key: ModelAssignmentItemKey;
   modelType?: 'chat' | 'embedding';
 }
@@ -36,7 +38,7 @@ type SavingGroup = 'assignments' | 'memory' | 'optional';
 const SYSTEM_AGENT_MODEL_ITEMS: SystemAgentModelItem[] = [
   { key: 'expertise' },
   { key: 'goal' },
-  { key: 'quickNoteDecision' },
+  { includeDecisionModels: true, key: 'quickNoteDecision' },
   { key: 'topic' },
   { key: 'generationTopic' },
   { key: 'translation' },
@@ -165,31 +167,34 @@ const ModelAssignmentsForm = memo(() => {
     label: t('defaultAgent.title'),
   };
 
-  const systemModelItems: FormFieldProps[] = SYSTEM_AGENT_MODEL_ITEMS.map(({ key }) => {
-    const value = systemAgentSettings[key];
+  const systemModelItems: FormFieldProps[] = SYSTEM_AGENT_MODEL_ITEMS.map(
+    ({ includeDecisionModels, key }) => {
+      const value = systemAgentSettings[key];
 
-    return {
-      children: (
-        <Tooltip title={reason}>
-          <Flexbox
-            align="center"
-            direction="horizontal"
-            gap={12}
-            style={{ width: 'min(100%, 448px)' }}
-          >
-            <ModelSelect
-              disabled={!canManageServiceModel}
-              showAbility={false}
-              style={{ minWidth: 0, width: '100%' }}
-              value={value}
-              onChange={(props) => updateSystemAgentModel(key, props)}
-            />
-          </Flexbox>
-        </Tooltip>
-      ),
-      label: t(`systemAgent.${key}.title`),
-    } satisfies FormFieldProps;
-  });
+      return {
+        children: (
+          <Tooltip title={reason}>
+            <Flexbox
+              align="center"
+              direction="horizontal"
+              gap={12}
+              style={{ width: 'min(100%, 448px)' }}
+            >
+              <ModelSelect
+                disabled={!canManageServiceModel}
+                includeDecisionModels={includeDecisionModels}
+                showAbility={false}
+                style={{ minWidth: 0, width: '100%' }}
+                value={value}
+                onChange={(props) => updateSystemAgentModel(key, props)}
+              />
+            </Flexbox>
+          </Tooltip>
+        ),
+        label: t(`systemAgent.${key}.title`),
+      } satisfies FormFieldProps;
+    },
+  );
 
   const memoryModelItems: FormFieldProps[] = MEMORY_MODEL_ITEMS.map(
     ({ contextLimit, key, modelType }) => {

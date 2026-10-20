@@ -42,8 +42,6 @@ export const TRACING_SCENARIOS = {
   UnderstandingAnalysis: 'understanding_analysis',
   UnderstandingDetailedPersona: 'understanding_detailed_persona',
   Unknown: 'unknown',
-  QuickNoteContentChange: 'quick_note_content_change',
-  QuickNoteIntent: 'quick_note_intent',
   QuickNoteSubmit: 'quick_note_submit',
   ReviewPredict: 'review_predict',
   VerifyJudge: 'verify_judge',

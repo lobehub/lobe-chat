@@ -276,9 +276,10 @@ describe('QuickNoteRepository', () => {
     const note = await quickNoteRepo.create({ content: 'Unclassified thought' });
     const run = await claim(note.id);
     const decision = {
-      backend: 'shim',
+      decisionMode: 'emulated' as const,
       evidence: 'Mentions research explicitly',
-      model: 'openai/gpt-mini',
+      model: 'gpt-mini',
+      provider: 'openai',
       preset: 'research' as const,
       primary: 'delegate' as const,
       scores: { delegate: 3, enrich: 2, keep: 1, link: 0 } as const,

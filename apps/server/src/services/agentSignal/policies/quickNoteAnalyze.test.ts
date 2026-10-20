@@ -16,7 +16,7 @@ import { AGENT_SIGNAL_POLICY_ACTION_TYPES, AGENT_SIGNAL_POLICY_SIGNAL_TYPES } fr
 const runId = '11111111-1111-1111-1111-111111111111';
 
 const decision: QuickNoteRunDecision = {
-  backend: 'tool_choice',
+  decisionMode: 'emulated',
   evidence: '"调研一下"',
   preset: 'research',
   presetScores: { research: 4 },

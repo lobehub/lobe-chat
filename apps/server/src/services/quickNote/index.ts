@@ -1,6 +1,5 @@
 import { BUILTIN_AGENT_SLUGS, quickNoteAnalyzeProtocol } from '@lobechat/builtin-agents';
 import { QuickNoteIdentifier } from '@lobechat/builtin-tool-quick-note';
-import { TRACING_SCENARIOS } from '@lobechat/const';
 import {
   type QuickNoteAnalyzeTrigger,
   type QuickNoteResourceReference,
@@ -30,7 +29,6 @@ import {
 import type { LobeChatDatabase } from '@/database/type';
 import { AiAgentService } from '@/server/services/aiAgent';
 import { AiGenerationService } from '@/server/services/aiGeneration';
-import { createDecisionBackend, type DecisionBackend } from '@/server/services/decision';
 import { createFtsSearchRepo } from '@/server/services/ftsSearch';
 
 import { resolveQuickNoteAgentId } from './agent';
@@ -46,6 +44,7 @@ import {
   type QuickNoteContextCandidate,
   rankQuickNoteContextCandidates,
 } from './context';
+import { resolveQuickNoteDecisionModel } from './decisionModel';
 import { createQuickNoteTask, scheduleQuickNoteTaskKickoff } from './executors';
 import {
   buildQuickNoteGenerationInstructions,
@@ -105,8 +104,11 @@ const titleFromSource = (source: string) =>
     ?.slice(0, 80) || 'Quick Note';
 
 export interface QuickNoteProcessingServiceDeps {
-  /** Decisions backend; defaults to the deployment's backend on the `quickNoteDecision` slot. */
-  decisionBackend?: DecisionBackend;
+  /**
+   * Answers the intent and meaning-change questions through `ModelRuntime.decide`: natively for
+   * a decision model, emulated for a chat model. Defaults to {@link AiGenerationService}.
+   */
+  decider?: Pick<AiGenerationService, 'decide'>;
   /** Structured-output generator for the forced `submitResult` call. */
   generator?: Pick<AiGenerationService, 'generateObject'>;
   /** Proposal apply/dismiss service used for auto-apply. */
@@ -136,7 +138,7 @@ export type QuickNoteContentChangeResult =
  * quickNote router `analyze` / sweep
  *   -> QuickNoteRepository.claimRun (input snapshot)
  *     -> `quick_note.analyze.requested` (Agent Signal source)
- *       -> {@link QuickNoteProcessingService.judgeRun} (decisions backend, step 1)
+ *       -> {@link QuickNoteProcessingService.judgeRun} (`AiGenerationService.decide`, step 1)
  *         -> `quick_note.intent.decided` (signal)
  *           -> {@link QuickNoteProcessingService.completeWithoutGeneration} (keep only)
  *           -> {@link QuickNoteProcessingService.dispatchGeneration} (step 2 Agent run)
@@ -171,14 +173,9 @@ export class QuickNoteProcessingService {
     this.repo = new QuickNoteRepository(db, userId, workspaceId);
   }
 
-  private get decisionBackend(): DecisionBackend {
-    this.deps.decisionBackend ??= createDecisionBackend({
-      db: this.db,
-      systemAgentKey: 'quickNoteDecision',
-      userId: this.userId,
-      workspaceId: this.workspaceId,
-    });
-    return this.deps.decisionBackend;
+  private get decider(): Pick<AiGenerationService, 'decide'> {
+    this.deps.decider ??= new AiGenerationService(this.db, this.userId, this.workspaceId);
+    return this.deps.decider;
   }
 
   private get generator(): Pick<AiGenerationService, 'generateObject'> {
@@ -273,19 +270,20 @@ export class QuickNoteProcessingService {
     };
 
     try {
-      const response = await this.decisionBackend.decide(
+      const { model, provider } = await resolveQuickNoteDecisionModel(this.db, this.userId);
+      const response = await this.decider.decide(
         {
+          model,
+          provider,
           questions: buildQuickNoteIntentQuestions(snapshot.comments.length > 0),
-          session_id: `quick-note:${run.quickNoteId}`,
           state: buildQuickNoteIntentState(snapshot),
         },
-        {
-          scenario: TRACING_SCENARIOS.QuickNoteIntent,
-          tracing: { inputHint: snapshot.source.slice(0, 200), metadata: { runId } },
-          trigger: RequestTrigger.QuickNote,
-        },
+        { metadata: { trigger: RequestTrigger.QuickNote } },
       );
-      const decision = toQuickNoteRunDecision(response);
+      const decision = toQuickNoteRunDecision(response, { provider });
+      if (decision.refusals) {
+        log('intent questions refused for run %s: %O', runId, decision.refusals);
+      }
       const recorded = await this.model.recordRunDecision(runId, decision);
       if (!recorded) return undefined;
 
@@ -352,7 +350,7 @@ export class QuickNoteProcessingService {
    *
    * Returns:
    * - `equivalent` when the texts only differ cosmetically, `changed` / `unchanged` from the
-   *   decisions `noul` answer, or `unavailable` when there are no current pending Proposals to
+   *   `meaningChanged` predicate (a refusal counts as `unchanged`), or `unavailable` when there are no current pending Proposals to
    *   protect, or the note or baseline Run is gone.
    */
   judgeContentChange = async (params: {
@@ -388,19 +386,22 @@ export class QuickNoteProcessingService {
       return { baselineRunId, status: 'equivalent' };
     }
 
-    const response = await this.decisionBackend.decide(
+    const { model, provider } = await resolveQuickNoteDecisionModel(this.db, this.userId);
+    const response = await this.decider.decide(
       {
+        model,
+        provider,
         questions: buildQuickNoteMeaningChangeQuestions(),
-        session_id: `quick-note:${params.quickNoteId}`,
         state: { current: current ?? '', previous },
       },
-      {
-        scenario: TRACING_SCENARIOS.QuickNoteContentChange,
-        tracing: { metadata: { baselineRunId } },
-        trigger: RequestTrigger.QuickNote,
-      },
+      { metadata: { trigger: RequestTrigger.QuickNote } },
     );
-    const probability = response.answers.meaning_changed.noul;
+    const answer = response.answers.meaningChanged;
+    // A refusal keeps Proposals as they are: marking them stale needs a positive answer.
+    if (answer.type === 'refusal') {
+      log('meaning-change check refused for note %s: %s', params.quickNoteId, answer.reason);
+    }
+    const probability = answer.type === 'predicate' ? answer.probability : 0;
 
     return {
       baselineRunId,
