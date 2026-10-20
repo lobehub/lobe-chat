@@ -175,7 +175,7 @@ describe('findDeletableFilesByTopicId', () => {
     expect(result).toEqual(['tf-msg']);
   });
 
-  it('preserves a file a non-mirror document is built on, but not its own parse mirror', async () => {
+  it('preserves a file any document is built on, including its parsed Page', async () => {
     await serverDB.insert(files).values(
       ['tf-doc', 'tf-mirror'].map((id) => ({
         fileType: 'application/pdf',
@@ -186,9 +186,13 @@ describe('findDeletableFilesByTopicId', () => {
         userId,
       })),
     );
-    await serverDB
-      .insert(messagesFiles)
-      .values(['tf-doc', 'tf-mirror'].map((fileId) => ({ fileId, messageId: 'tf-msg-1', userId })));
+    await serverDB.insert(messagesFiles).values(
+      ['tf-msg', 'tf-doc', 'tf-mirror'].map((fileId) => ({
+        fileId,
+        messageId: 'tf-msg-1',
+        userId,
+      })),
+    );
     await serverDB.insert(documents).values([
       {
         content: 'note',
@@ -200,6 +204,8 @@ describe('findDeletableFilesByTopicId', () => {
         totalLineCount: 1,
         userId,
       },
+      // What both a Page Explorer import and a chat attachment's parse write:
+      // the rows are indistinguishable, and either may be a Page the user kept.
       {
         content: 'parsed',
         fileId: 'tf-mirror',
@@ -214,11 +220,12 @@ describe('findDeletableFilesByTopicId', () => {
 
     const result = await fileModel.findDeletableFilesByTopicId(topicId);
 
-    expect(result).toEqual(['tf-mirror']);
+    // tf-msg has no document, so it is still cleaned up
+    expect(result).toEqual(['tf-msg']);
   });
 
-  it("preserves an agent's imported file document, live or trashed, but not an unbound mirror", async () => {
-    const ids = ['tf-agent-doc', 'tf-agent-doc-trashed', 'tf-unbound-mirror'];
+  it('preserves a file an agent imported into its documents, live or trashed', async () => {
+    const ids = ['tf-agent-doc', 'tf-agent-doc-trashed'];
     await serverDB.insert(files).values(
       ids.map((id) => ({
         fileType: 'application/pdf',
@@ -263,7 +270,7 @@ describe('findDeletableFilesByTopicId', () => {
 
     const result = await fileModel.findDeletableFilesByTopicId(topicId);
 
-    expect(result).toEqual(['tf-unbound-mirror']);
+    expect(result).toEqual([]);
   });
 
   it("preserves TTS audio of a message outside the topic, not of the topic's own", async () => {

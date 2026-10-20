@@ -25,7 +25,6 @@ import type { PgTransaction } from 'drizzle-orm/pg-core';
 
 import type { FileItem, NewFile, NewGlobalFile } from '../schemas';
 import {
-  agentDocuments,
   agentsFiles,
   asyncTasks,
   chunks,
@@ -703,10 +702,10 @@ export class FileModel {
    * - at the session level (`files_to_sessions`), which outlives a single topic,
    * - to a knowledge base (`knowledge_base_files`) or an agent (`agents_files`),
    * - to an image generation (`generations`), whose record the delete would drop,
-   * - to a document that is not the file's own parse mirror (`sourceType='file'`
-   *   mirrors are bookkeeping that `deleteMany` removes with the file),
-   * - to a file-backed document an agent imported into its VFS (`agent_documents`,
-   *   trashed bindings included — they can still be restored),
+   * - to any document (`documents.fileId`). A parsed copy of the file
+   *   (`sourceType='file'`) is not disposable: a Page imported in Page Explorer,
+   *   a chat attachment's parse and an agent's VFS import are indistinguishable
+   *   rows, all listed as Pages, and `deleteMany` would delete them with the file,
    * - as the TTS audio of a message outside the topic (`message_tts`), or
    * - as acceptance evidence (`verify_evidence`), whose attachment would be lost.
    *
@@ -737,7 +736,6 @@ export class FileModel {
       agentRefs,
       generationRefs,
       documentRefs,
-      agentDocumentRefs,
       ttsRefsOutsideTopic,
       evidenceRefs,
     ] = await Promise.all([
@@ -772,23 +770,11 @@ export class FileModel {
         .selectDistinct({ id: generations.fileId })
         .from(generations)
         .where(inArray(generations.fileId, candidateIds)),
-      // a document built on the file, other than its own parse mirror
+      // any document built on the file: deleting the file would delete or
+      // orphan it, and a parsed copy may be a Page the user kept
       this.db
         .selectDistinct({ id: documents.fileId })
         .from(documents)
-        .where(
-          and(
-            inArray(documents.fileId, candidateIds),
-            or(ne(documents.sourceType, 'file'), isNull(documents.sourceType)),
-          ),
-        ),
-      // an agent's imported copy is also `sourceType='file'`, but unlike a parse
-      // mirror it is content the agent still uses: `deleteMany` would drop it
-      // and cascade the agent's binding away
-      this.db
-        .selectDistinct({ id: documents.fileId })
-        .from(documents)
-        .innerJoin(agentDocuments, eq(agentDocuments.documentId, documents.id))
         .where(inArray(documents.fileId, candidateIds)),
       // TTS audio of a message that survives the topic: the delete would
       // cascade its TTS row away. Audio of the topic's own messages goes with them.
@@ -816,7 +802,6 @@ export class FileModel {
       ...agentRefs.map((row) => row.id),
       ...generationRefs.map((row) => row.id),
       ...documentRefs.map((row) => row.id),
-      ...agentDocumentRefs.map((row) => row.id),
       ...ttsRefsOutsideTopic.map((row) => row.id),
       ...evidenceRefs.map((row) => row.id),
     ]);
