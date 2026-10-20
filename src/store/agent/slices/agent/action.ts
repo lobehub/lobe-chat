@@ -128,6 +128,9 @@ export interface AgentConfigSyncResult extends ReplicaSyncResult {
 
 const EMPTY_PARAMS = {} as Record<string, never>;
 
+const isSlugConfirmed = (state: AgentStore, slug: string) =>
+  !!state.agentSlugIdMap[slug] && state.agentSlugIdReplica.entries[slug]?.source === 'server';
+
 /**
  * Several surfaces read the same one-entry replica (every open conversation, the
  * profile editor and the model bar): one request answers all of them, while a
@@ -165,6 +168,10 @@ export class AgentSliceActionImpl {
   readonly #slugId;
   readonly #available;
   readonly #heteroCapability;
+  /** The refresh the chat context is waiting on, shared by concurrent sends. */
+  #availableAgentsRefresh?: Promise<AvailableAgentItem[]>;
+  /** Bumped by every invalidation, so a read started before it cannot confirm the list. */
+  #availableAgentsGeneration = 0;
 
   constructor(set: Setter, get: () => AgentStore, _api?: unknown) {
     void _api;
@@ -615,12 +622,40 @@ export class AgentSliceActionImpl {
    * An agent's slug was renamed: the old slug no longer names it and the new
    * one does. Confirmed by the rename response, so no lookup is needed.
    */
-  internal_confirmAgentSlug = (agentId: string, slug: string): void => {
-    const scope = cacheScope.get();
-    for (const [cachedSlug, cachedAgentId] of Object.entries(this.#get().agentSlugIdMap)) {
-      if (cachedAgentId === agentId && cachedSlug !== slug) this.#slugId.remove(cachedSlug);
+  internal_confirmAgentSlug = (
+    agentId: string,
+    slug: string,
+    {
+      previousSlug,
+      scope = cacheScope.get(),
+    }: {
+      /** The slug the agent had before the rename; its persisted row may not be loaded. */
+      previousSlug?: string;
+      /** The scope the rename was sent from: a response landing after a switch stays there. */
+      scope?: string;
+    } = {},
+  ): void => {
+    const staleSlugs = new Set<string>(previousSlug ? [previousSlug] : []);
+    if (scope === cacheScope.get()) {
+      for (const [cachedSlug, cachedAgentId] of Object.entries(this.#get().agentSlugIdMap)) {
+        if (cachedAgentId === agentId) staleSlugs.add(cachedSlug);
+      }
     }
+    staleSlugs.delete(slug);
+    // `remove` also drops the persisted row of a slug that is not loaded.
+    for (const staleSlug of staleSlugs) void this.#slugId.remove(staleSlug, scope);
+    // Dropped by the engine when `scope` is no longer the active one.
     this.#slugId.replace({ slug }, agentId, scope);
+  };
+
+  /**
+   * The server's answer for a slug, joining the route's lookup when it is in
+   * flight. Resolves `undefined` when no visible agent owns the slug.
+   */
+  confirmAgentSlugTarget = async (slug: string): Promise<string | undefined> => {
+    if (isSlugConfirmed(this.#get(), slug)) return this.#get().agentSlugIdMap[slug];
+    const { data } = await this.#slugId.fetch({ slug });
+    return data ?? undefined;
   };
 
   /**
@@ -717,6 +752,9 @@ export class AgentSliceActionImpl {
    * context does not trust the copy it holds.
    */
   invalidateAvailableAgents = (): void => {
+    this.#availableAgentsGeneration += 1;
+    // A read already in flight may hold the pre-change list: later callers start anew.
+    this.#availableAgentsRefresh = undefined;
     this.#set({ availableAgentsStale: true }, false, 'invalidateAvailableAgents');
     void this.#available.revalidate(AVAILABLE_AGENTS_KEY);
   };
@@ -727,16 +765,30 @@ export class AgentSliceActionImpl {
    * a request already in flight when there is no invalidation to honour.
    */
   getAvailableAgents = async (): Promise<AvailableAgentItem[]> => {
-    const { availableAgents: current, availableAgentsStale: fresh } = this.#get();
-    if (current && !fresh) return current;
+    const { availableAgents: current, availableAgentsStale: stale } = this.#get();
+    if (current && !stale) return current;
 
-    if (fresh) this.#set({ availableAgentsStale: false }, false, 'getAvailableAgents');
+    // Concurrent sends share one refresh; the list stays stale until it lands.
+    if (!this.#availableAgentsRefresh) {
+      const generation = this.#availableAgentsGeneration;
+      const refresh = this.#available
+        .fetch(EMPTY_PARAMS, { fresh: stale })
+        .then(({ data }) => {
+          // Only a read started after the latest change confirms the list.
+          if (generation === this.#availableAgentsGeneration && this.#get().availableAgentsStale)
+            this.#set({ availableAgentsStale: false }, false, 'getAvailableAgents');
+          return data;
+        })
+        .finally(() => {
+          if (this.#availableAgentsRefresh === refresh) this.#availableAgentsRefresh = undefined;
+        });
+      this.#availableAgentsRefresh = refresh;
+    }
+
     try {
-      const { data } = await this.#available.fetch(EMPTY_PARAMS, { fresh });
-      return data;
+      return await this.#availableAgentsRefresh;
     } catch (error) {
-      if (fresh) this.#set({ availableAgentsStale: true }, false, 'getAvailableAgents/error');
-      // A failed refresh keeps the last confirmed list usable.
+      // A failed refresh keeps the last confirmed list usable (and still stale).
       if (current) return current;
       throw error;
     }

@@ -111,7 +111,11 @@ describe('useAgentIdentityForm', () => {
 
     expect(mocks.updateAgentSlug).toHaveBeenCalledExactlyOnceWith('agent-a', 'new-slug');
     // The local `slug → id` copy follows the rename, so neither slug route paints a stale agent.
-    expect(mocks.confirmAgentSlug).toHaveBeenCalledExactlyOnceWith('agent-a', 'new-slug');
+    expect(mocks.confirmAgentSlug).toHaveBeenCalledExactlyOnceWith('agent-a', 'new-slug', {
+      // The old slug's row may only be persisted, and the rename keeps its scope.
+      previousSlug: 'old-slug',
+      scope: expect.any(String),
+    });
     expect(mocks.refreshAgentConfig).toHaveBeenCalledWith('agent-a');
     expect(onSaved).toHaveBeenCalled();
   });

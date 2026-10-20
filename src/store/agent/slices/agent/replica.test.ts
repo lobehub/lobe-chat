@@ -260,6 +260,49 @@ describe('agent store replicas', () => {
         ).toBe('agt_writer'),
       );
     });
+
+    // Codex P2: after a reload the old slug may sit only in storage.
+    it('drops the previous slug’s persisted row on a rename even when it is not loaded', async () => {
+      await agentSlugIdResource.storage!.set(
+        { queryKey: SLUG_KEY('my-writer'), scope },
+        { data: 'agt_writer', updatedAt: 1 },
+      );
+
+      act(() =>
+        useAgentStore
+          .getState()
+          .internal_confirmAgentSlug('agt_writer', 'new-writer', { previousSlug: 'my-writer' }),
+      );
+
+      await waitFor(async () =>
+        expect(
+          await agentSlugIdResource.storage!.get({ queryKey: SLUG_KEY('my-writer'), scope }),
+        ).toBeUndefined(),
+      );
+      let hydrated: string | undefined;
+      await act(async () => {
+        hydrated = await useAgentStore.getState().preHydrateAgentSlug('my-writer');
+      });
+      expect(hydrated).toBeUndefined();
+    });
+
+    // Codex P2: a rename answered after a workspace switch belongs to the old scope.
+    it('never writes a rename confirmed after a scope switch into the new scope', async () => {
+      const renamedIn = scope;
+      useScope(`agent-store-user-${randomUUID()}:personal`);
+
+      act(() =>
+        useAgentStore
+          .getState()
+          .internal_confirmAgentSlug('agt_writer', 'new-writer', { scope: renamedIn }),
+      );
+
+      expect(useAgentStore.getState().agentSlugIdMap['new-writer']).toBeUndefined();
+      await new Promise((resolve) => setTimeout(resolve, 20));
+      expect(
+        await agentSlugIdResource.storage!.get({ queryKey: SLUG_KEY('new-writer'), scope }),
+      ).toBeUndefined();
+    });
   });
 
   describe('available agents', () => {
@@ -354,6 +397,49 @@ describe('agent store replicas', () => {
       expect(listed).toEqual([agentItem('agt_1')]);
       // Still untrusted: the next send tries a fresh list again.
       expect(useAgentStore.getState().availableAgentsStale).toBe(true);
+    });
+
+    // Codex P2: a second send while the fresh read is in flight must not get the stale list.
+    it('shares one fresh read between concurrent sends and stays stale until it lands', async () => {
+      act(() => useAgentStore.setState({ availableAgents: [agentItem('agt_old')] }));
+      act(() => useAgentStore.getState().invalidateAvailableAgents());
+      let resolveList!: (value: any) => void;
+      vi.mocked(agentService.queryAgents).mockImplementation(
+        () => new Promise((resolve) => (resolveList = resolve)),
+      );
+
+      const first = useAgentStore.getState().getAvailableAgents();
+      const second = useAgentStore.getState().getAvailableAgents();
+      expect(useAgentStore.getState().availableAgentsStale).toBe(true);
+
+      await act(async () => resolveList([agentItem('agt_new')]));
+
+      await expect(first).resolves.toEqual([agentItem('agt_new')]);
+      await expect(second).resolves.toEqual([agentItem('agt_new')]);
+      expect(agentService.queryAgents).toHaveBeenCalledTimes(1);
+      expect(useAgentStore.getState().availableAgentsStale).toBe(false);
+    });
+
+    it('does not let a read from before a change confirm the list', async () => {
+      act(() => useAgentStore.setState({ availableAgents: [agentItem('agt_old')] }));
+      act(() => useAgentStore.getState().invalidateAvailableAgents());
+      const answers: ((value: any) => void)[] = [];
+      vi.mocked(agentService.queryAgents).mockImplementation(
+        () => new Promise((resolve) => answers.push(resolve)),
+      );
+
+      const before = useAgentStore.getState().getAvailableAgents();
+      // Another agent is created while that read is in flight.
+      act(() => useAgentStore.getState().invalidateAvailableAgents());
+      const after = useAgentStore.getState().getAvailableAgents();
+
+      await act(async () => answers[0]([agentItem('agt_mid')]));
+      await before;
+      expect(useAgentStore.getState().availableAgentsStale).toBe(true);
+
+      await act(async () => answers[1]([agentItem('agt_new')]));
+      await expect(after).resolves.toEqual([agentItem('agt_new')]);
+      expect(useAgentStore.getState().availableAgentsStale).toBe(false);
     });
 
     it('keeps the last list when a background refresh fails', async () => {
