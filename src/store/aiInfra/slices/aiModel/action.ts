@@ -44,7 +44,9 @@ const REASONING_CONFIG_DEDUPING_INTERVAL = 10_000;
  * that "nothing saved" is still a confirmed (and persisted) value.
  */
 const modelReasoningConfigLens: ReplicaLens<AiInfraStore, AiModelReasoningConfigEntry> = {
-  clear: () => ({ modelReasoningConfigMap: {} }),
+  // A scope reset also drops the previous scope's in-flight save markers:
+  // left behind, they would make the new scope drop its own responses.
+  clear: () => ({ modelReasoningConfigMap: {}, modelReasoningConfigUpdatingKeys: [] }),
   get: (state, key) =>
     key in state.modelReasoningConfigMap
       ? { value: state.modelReasoningConfigMap[key] }
@@ -311,15 +313,18 @@ export class AiModelActionImpl {
       toast.error(t('reasoningEffort.updateFailed', { ns: 'chat' }));
       throw error;
     } finally {
-      this.#set(
-        (state) => ({
-          modelReasoningConfigUpdatingKeys: state.modelReasoningConfigUpdatingKeys.filter(
-            (i) => i !== key,
-          ),
-        }),
-        false,
-        `updateModelReasoningConfig/settled/${key}`,
-      );
+      // After a scope switch the marker is already gone; one with the same key
+      // now belongs to a save of the new scope.
+      if (isSameScope())
+        this.#set(
+          (state) => ({
+            modelReasoningConfigUpdatingKeys: state.modelReasoningConfigUpdatingKeys.filter(
+              (i) => i !== key,
+            ),
+          }),
+          false,
+          `updateModelReasoningConfig/settled/${key}`,
+        );
     }
 
     if (!isSameScope()) return;

@@ -221,6 +221,35 @@ describe('AiModelAction reasoning config', () => {
       ).toBeUndefined();
     });
 
+    it('lets the new scope load the model while a save of the previous scope is in flight', async () => {
+      vi.spyOn(aiModelService, 'getAiModelReasoningConfig').mockImplementation(pending);
+      const sync = renderHook(
+        () => useStore.getState().useFetchAiModelReasoningConfig('gpt-5.2', 'openai'),
+        { wrapper },
+      );
+      vi.spyOn(aiModelService, 'updateAiModelReasoningConfig').mockImplementation(pending);
+      act(() => {
+        void useStore.getState().updateModelReasoningConfig('gpt-5.2', 'openai', {
+          reasoningEffort: 'high',
+        });
+      });
+      expect(useStore.getState().modelReasoningConfigUpdatingKeys).toEqual(['openai/gpt-5.2']);
+
+      // Switch identity; the new scope's own config must land
+      useScope(`ai-model-user-${randomUUID()}:personal`);
+      vi.spyOn(aiModelService, 'getAiModelReasoningConfig').mockResolvedValue({
+        reasoningEffort: 'low',
+      });
+      sync.rerender();
+
+      await waitFor(() =>
+        expect(useStore.getState().modelReasoningConfigMap['openai/gpt-5.2']).toEqual({
+          reasoningEffort: 'low',
+        }),
+      );
+      expect(useStore.getState().modelReasoningConfigUpdatingKeys).toEqual([]);
+    });
+
     it('should rollback the optimistic value and toast on failure', async () => {
       act(() => {
         useStore.setState({
