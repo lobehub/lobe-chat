@@ -261,6 +261,38 @@ export class QuickNoteModel {
   };
 
   /**
+   * Drops the due Analyze and meaning-change check times of a user's notes.
+   *
+   * Use when:
+   * - The sweep finds a due note whose owner does not have Quick Note enabled. Without this, every
+   *   one-minute sweep rescans that user's due rows ahead of enabled users' notes.
+   *
+   * Expects:
+   * - Only times already due at `now` are cleared; a later time stays and is handled when due.
+   * - The user's next real edit schedules work again.
+   *
+   * Returns:
+   * - How many notes had due work dropped.
+   */
+  static retireDueWork = async (db: LobeChatDatabase, userId: string, now: Date) => {
+    const retired = await db
+      .update(quickNotes)
+      .set({
+        analyzeDueAt: sql`CASE WHEN ${quickNotes.analyzeDueAt} <= ${now} THEN NULL ELSE ${quickNotes.analyzeDueAt} END`,
+        contentCheckDueAt: sql`CASE WHEN ${quickNotes.contentCheckDueAt} <= ${now} THEN NULL ELSE ${quickNotes.contentCheckDueAt} END`,
+      })
+      .where(
+        and(
+          eq(quickNotes.userId, userId),
+          or(lte(quickNotes.analyzeDueAt, now), lte(quickNotes.contentCheckDueAt, now)),
+        ),
+      )
+      .returning({ id: quickNotes.id });
+
+    return retired.length;
+  };
+
+  /**
    * Inserts the Quick Note row for an already-created backing Document.
    *
    * Use when:

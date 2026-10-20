@@ -14,6 +14,7 @@ const mocks = vi.hoisted(() => ({
   flags: vi.fn(),
   queryProposals: vi.fn(),
   releaseContentCheck: vi.fn(),
+  retireDueWork: vi.fn(),
 }));
 vi.mock('@/database/server', () => ({ getServerDB: vi.fn().mockResolvedValue({}) }));
 vi.mock('@/database/models/quickNote', () => ({
@@ -22,6 +23,7 @@ vi.mock('@/database/models/quickNote', () => ({
     static findDueAnalyzeCandidates = mocks.candidates;
     static findDueContentCheckCandidates = mocks.contentCheckCandidates;
     static releaseContentCheck = mocks.releaseContentCheck;
+    static retireDueWork = mocks.retireDueWork;
     queryProposals = mocks.queryProposals;
   },
 }));
@@ -108,6 +110,36 @@ describe('Quick Note sweep rollout', () => {
     expect(mocks.candidates.mock.calls[1][1]).toMatchObject({
       after: { id: 'disabled-99', analyzeDueAt: new Date(0) },
     });
+  });
+});
+
+/** @example Due work of rollout-disabled users is dropped instead of rescanned every minute. */
+describe('Quick Note sweep disabled users', () => {
+  // ROOT CAUSE:
+  // Skipped candidates kept their overdue timestamps, so every sweep rescanned a disabled prefix
+  // from the start and a large one could exhaust the request before reaching enabled notes.
+  it("retires a disabled user's due work once per sweep", async () => {
+    mocks.candidates.mockResolvedValue([
+      { analyzeDueAt: new Date(0), id: 'denied-1', userId: 'other' },
+      { analyzeDueAt: new Date(0), id: 'denied-2', userId: 'other' },
+      { analyzeDueAt: new Date(0), id: 'allowed', userId: 'tester' },
+    ]);
+    mocks.contentCheckCandidates.mockResolvedValue([
+      { contentCheckDueAt: new Date(0), id: 'denied-3', userId: 'other', workspaceId: null },
+    ]);
+    mocks.flags.mockImplementation(async (userId: string) =>
+      mapFeatureFlagsEnvToState({ quick_note: ['tester'] }, userId),
+    );
+    mocks.claim.mockResolvedValue({ id: 'run', quickNoteId: 'allowed', sourceHistoryId: 'h' });
+    mocks.enqueue.mockResolvedValue({ accepted: true });
+
+    await new Hono().post('/sweep', sweepQuickNoteAnalyze).request('/sweep', { method: 'POST' });
+
+    /** @example One retirement covers all of the disabled user's due notes. */
+    expect(mocks.retireDueWork).toHaveBeenCalledOnce();
+    expect(mocks.retireDueWork.mock.calls[0].slice(1)).toEqual(['other', expect.any(Date)]);
+    /** @example The disabled user's content check is not claimed either. */
+    expect(mocks.claimContentCheck).not.toHaveBeenCalled();
   });
 });
 

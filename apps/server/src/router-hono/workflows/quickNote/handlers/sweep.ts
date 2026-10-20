@@ -103,6 +103,7 @@ const sweepContentChecks = async (
  *
  * Expects:
  * - Candidate selection already filters the user's effective Auto Analyze setting.
+ * - Due work of users without Quick Note is retired on first sight, so it is scanned once.
  * - Agent Signal scope and Run constraints deduplicate client/sweep races.
  *
  * Returns:
@@ -111,14 +112,17 @@ const sweepContentChecks = async (
 export const sweepQuickNoteAnalyze = async (context: Context) => {
   try {
     const db = await getServerDB();
-    // Keyset traversal skips rollout-disabled prefixes without changing their scheduled work.
     const now = new Date();
     const pageSize = PAGE_SIZE;
     const enabledUsers = new Map<string, boolean>();
     const isEnabled = async (userId: string) => {
       if (!enabledUsers.has(userId)) {
         const flags = await getServerFeatureFlagsStateFromRuntimeConfig(userId);
-        enabledUsers.set(userId, flags.enableQuickNote === true);
+        const enabled = flags.enableQuickNote === true;
+        enabledUsers.set(userId, enabled);
+        // A rollout-disabled user's due rows would otherwise be rescanned ahead of enabled users'
+        // notes on every sweep. Retire them once; the user's next edit schedules work again.
+        if (!enabled) await QuickNoteModel.retireDueWork(db, userId, now);
       }
       return enabledUsers.get(userId) === true;
     };

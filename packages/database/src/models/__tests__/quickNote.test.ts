@@ -383,6 +383,41 @@ describe('QuickNoteModel', () => {
     expect(await readDueAt()).toEqual(newerDueAt);
   });
 
+  /** @example Due work of a user without Quick Note leaves the sweep queue for good. */
+  it('retires only the due work of the given user', async () => {
+    const now = new Date('2026-08-24T00:00:00Z');
+    const later = new Date('2026-08-24T01:00:00Z');
+    const due = await quickNoteRepo.create({ content: 'due' });
+    const future = await quickNoteRepo.create({ content: 'future' });
+    const foreign = await otherRepo.create({ content: 'foreign' });
+    await serverDB
+      .update(quickNotes)
+      .set({ analyzeDueAt: now, contentCheckDueAt: now })
+      .where(inArray(quickNotes.id, [due.id, foreign.id]));
+    await serverDB
+      .update(quickNotes)
+      .set({ analyzeDueAt: later, contentCheckDueAt: now })
+      .where(eq(quickNotes.id, future.id));
+
+    expect(await QuickNoteModel.retireDueWork(serverDB, userId, now)).toBe(2);
+
+    const rows = await serverDB
+      .select()
+      .from(quickNotes)
+      .where(inArray(quickNotes.id, [due.id, future.id, foreign.id]));
+    const byId = new Map(rows.map((row) => [row.id, row]));
+    /** @example Due times are cleared. */
+    expect(byId.get(due.id)).toMatchObject({ analyzeDueAt: null, contentCheckDueAt: null });
+    /** @example A time that is not yet due is kept. */
+    expect(byId.get(future.id)).toMatchObject({ analyzeDueAt: later, contentCheckDueAt: null });
+    /** @example Other users' work is untouched. */
+    expect(byId.get(foreign.id)).toMatchObject({ analyzeDueAt: now, contentCheckDueAt: now });
+    /** @example The sweep no longer finds the retired notes. */
+    expect(
+      (await QuickNoteModel.findDueAnalyzeCandidates(serverDB, { now })).map(({ id }) => id),
+    ).not.toContain(due.id);
+  });
+
   /** @example A user can refine a Proposal only until they decide on it. */
   it('edits a Proposal payload only while pending and keeps the original draft', async () => {
     const { proposal } = await seedProposal();
