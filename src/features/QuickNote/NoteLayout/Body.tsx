@@ -18,6 +18,9 @@ const Body = memo(() => {
   const notesInit = useQuickNoteStore((s) => s.notesInit);
   const notesLoadError = useQuickNoteStore((s) => s.notesLoadError);
   const searchKeywords = useQuickNoteStore((s) => s.searchKeywords);
+  const filterActive = useQuickNoteStore((s) =>
+    Boolean(s.searchKeywords.trim() || s.activeCollection || s.activeTag),
+  );
 
   return (
     <Flexbox>
@@ -28,7 +31,11 @@ const Body = memo(() => {
           <SkeletonList />
         </Flexbox>
       ) : noteIds.length === 0 ? (
-        <EmptyState searchActive={Boolean(searchKeywords.trim())} />
+        // Filters run over loaded pages only, so a match may still sit on an older page.
+        <Flexbox>
+          <EmptyState filterActive={filterActive} searchActive={Boolean(searchKeywords.trim())} />
+          <LoadMoreNotes />
+        </Flexbox>
       ) : (
         <Flexbox gap={4} paddingBlock={4} paddingInline={8}>
           {noteIds.map((noteId) => (

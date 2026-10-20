@@ -102,6 +102,7 @@
   "list.count": "{{count}} 条",
   "list.empty": "没有匹配的随手记",
   "list.emptyHint": "记下一闪而过的想法，都会收在这里。",
+  "list.emptyLoaded": "已加载的随手记中没有匹配项，更早的随手记中可能有。",
   "list.loadFailed": "随手记加载失败。",
   "list.loadMore": "加载更多随手记",
   "list.loadMoreFailed": "更多随手记加载失败。",

@@ -9,20 +9,30 @@ import { useQuickNoteStore } from '@/store/quickNote';
 
 import { useCreateNote } from '../useCreateNote';
 
-const EmptyState = memo<{ searchActive: boolean }>(({ searchActive }) => {
+interface EmptyStateProps {
+  /** A search, collection or tag filter hides the loaded notes. */
+  filterActive: boolean;
+  /** The search box holds keywords. */
+  searchActive: boolean;
+}
+
+const EmptyState = memo<EmptyStateProps>(({ filterActive, searchActive }) => {
   const { t } = useTranslation('note');
   const setSearchKeywords = useQuickNoteStore((s) => s.setSearchKeywords);
+  const hasMore = useQuickNoteStore((s) => s.notesHasMore);
   const handleCreate = useCreateNote();
 
-  if (searchActive)
+  if (searchActive || (filterActive && hasMore))
     return (
       <Flexbox align={'center'} gap={8} paddingBlock={24} paddingInline={16}>
         <Text align={'center'} color={cssVar.colorTextTertiary} fontSize={12}>
-          {t('list.empty')}
+          {hasMore ? t('list.emptyLoaded') : t('list.empty')}
         </Text>
-        <Button size={'small'} type={'text'} onClick={() => setSearchKeywords('')}>
-          {t('list.clearSearch')}
-        </Button>
+        {searchActive && (
+          <Button size={'small'} type={'text'} onClick={() => setSearchKeywords('')}>
+            {t('list.clearSearch')}
+          </Button>
+        )}
       </Flexbox>
     );
 

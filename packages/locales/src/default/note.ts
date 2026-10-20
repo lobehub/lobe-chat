@@ -107,6 +107,7 @@ export default {
   'list.count_other': '{{count}} notes',
   'list.empty': 'No matching notes',
   'list.emptyHint': 'Capture a fleeting thought — it lands here.',
+  'list.emptyLoaded': 'No matches in the notes loaded so far. Older notes may match.',
   'list.loadFailed': 'Notes could not be loaded.',
   'list.loadMore': 'Load more notes',
   'list.loadMoreFailed': 'More notes could not be loaded.',
