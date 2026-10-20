@@ -2,6 +2,7 @@ import i18next from 'i18next';
 import resourcesToBackend from 'i18next-resources-to-backend';
 import { initReactI18next } from 'react-i18next';
 
+import { authErrorResourceOverrides } from '@/business/client/authErrorResourceOverrides';
 import { DEFAULT_LANG } from '@/const/locale';
 import defaultAuth from '@/locales/default/auth';
 import defaultAuthError from '@/locales/default/authError';
@@ -13,7 +14,7 @@ import { normalizeLocale } from '@/locales/resources';
 
 const defaultResources = {
   auth: defaultAuth,
-  authError: defaultAuthError,
+  authError: { ...defaultAuthError, ...authErrorResourceOverrides['en-US'] },
   common: defaultCommon,
   error: defaultError,
   marketAuth: defaultMarketAuth,
@@ -30,7 +31,8 @@ const loadZhNamespace = async (ns: AuthI18nNamespace) => {
       return import('@/../locales/zh-CN/auth.json');
     }
     case 'authError': {
-      return import('@/../locales/zh-CN/authError.json');
+      const mod = await import('@/../locales/zh-CN/authError.json');
+      return { ...((mod as any).default ?? mod), ...authErrorResourceOverrides['zh-CN'] };
     }
     case 'common': {
       return import('@/../locales/zh-CN/common.json');
