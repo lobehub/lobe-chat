@@ -58,6 +58,7 @@ export const useFileItemClick = ({
   const setMode = useResourceManagerStore((s) => s.setMode);
   const setCurrentViewItemId = useResourceManagerStore((s) => s.setCurrentViewItemId);
   const openDetailPanel = useResourceManagerStore((s) => s.openDetailPanel);
+  const closeDetailPanel = useResourceManagerStore((s) => s.closeDetailPanel);
 
   const handleClick = useCallback(() => {
     const selectFile = () => {
@@ -116,6 +117,10 @@ export const useFileItemClick = ({
       return;
     }
 
+    // The preview state is global: drop a panel left open elsewhere so leaving
+    // the editor doesn't reveal a stale preview.
+    cancelPendingPanelOpen();
+    closeDetailPanel();
     setCurrentViewItemId(id);
     setMode(isPage ? 'page' : 'editor');
     // Update URL query parameter for shareable links
@@ -134,6 +139,7 @@ export const useFileItemClick = ({
     setMode,
     setCurrentViewItemId,
     openDetailPanel,
+    closeDetailPanel,
     onOpen,
   ]);
 

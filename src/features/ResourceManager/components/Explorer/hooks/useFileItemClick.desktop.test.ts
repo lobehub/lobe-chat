@@ -123,6 +123,25 @@ describe('useFileItemClick (desktop shell)', () => {
     expect(useResourceManagerStore.getState().detailPanelId).toBeUndefined();
   });
 
+  it('clears a preview left open outside the knowledge base when opening the editor', async () => {
+    useResourceManagerStore.setState({ detailPanelId: 'file_other', detailPanelIsPage: true });
+    const { result } = renderFileClick({
+      id: 'file_1',
+      isFolder: false,
+      isPage: false,
+      libraryId: 'kb_1',
+      openInPanel: true,
+    });
+
+    await act(async () => {
+      result.current();
+    });
+
+    expect(useResourceManagerStore.getState().mode).toBe('editor');
+    expect(useResourceManagerStore.getState().detailPanelId).toBeUndefined();
+    expect(useResourceManagerStore.getState().detailPanelIsPage).toBe(false);
+  });
+
   it('opens the page editor directly when clicking a page inside a knowledge base', async () => {
     const { result } = renderFileClick({
       id: 'page_1',
