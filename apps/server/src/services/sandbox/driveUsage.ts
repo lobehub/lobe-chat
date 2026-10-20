@@ -51,11 +51,17 @@ export const readDriveUsage = async ({
   userId,
   workspaceId,
 }: ReadDriveUsageInput) => {
+  const seesMembers = !!workspaceId && !!role && USAGE_ADMIN_ROLES.has(role);
+
+  // For an owner or admin the public drive's read also lists every drive in
+  // the pool, so the members' figures come from that one call.
   const read = async (drive: SandboxDrive) => {
     const resolved = await access.client(drive);
     if (!resolved) return null;
 
-    return resolved.client.getStorage().catch(() => null);
+    return resolved.client
+      .getStorage({ withDrives: seesMembers && drive === 'public' })
+      .catch(() => null);
   };
 
   const drives = await pMap(
@@ -66,7 +72,7 @@ export const readDriveUsage = async ({
   const reported = drives.find((entry) => entry.info?.workspaceUsageBytes != null)?.info;
 
   let members: MemberDriveUsage[] | null = null;
-  if (workspaceId && role && USAGE_ADMIN_ROLES.has(role)) {
+  if (workspaceId && seesMembers) {
     const rows = await serverDB
       .select({
         avatar: users.avatar,
@@ -80,33 +86,50 @@ export const readDriveUsage = async ({
         and(eq(workspaceMembers.workspaceId, workspaceId), isNull(workspaceMembers.deletedAt)),
       );
 
-    // Bounded, since a workspace can be large.
-    members = await pMap(
-      rows.filter((row) => row.userId !== userId),
-      async (row) => {
-        const key = deriveSandboxStorageKey({ drive: 'personal', userId: row.userId, workspaceId });
-        const info = key
-          ? await new MarketService({
-              userInfo: {
-                sandboxStorage: { key, quotaBytes: claim.quotaBytes },
-                userId,
-                workspaceId,
-              },
-            })
-              .getSandboxStorageClient()
-              .getStorage()
-              .catch(() => null)
-          : null;
+    const others = rows.filter((row) => row.userId !== userId);
+    const describe = (row: (typeof others)[number], usageBytes: number | null) => ({
+      avatar: row.avatar ?? null,
+      name: row.fullName || row.username || null,
+      usageBytes,
+      userId: row.userId,
+    });
+    const keyOf = (memberId: string) =>
+      deriveSandboxStorageKey({ drive: 'personal', userId: memberId, workspaceId });
 
-        return {
-          avatar: row.avatar ?? null,
-          name: row.fullName || row.username || null,
-          usageBytes: info?.usageBytes ?? null,
-          userId: row.userId,
-        };
-      },
-      { concurrency: 5 },
-    );
+    const pooled = drives.find((entry) => entry.drive === 'public')?.info?.workspaceDrives;
+    if (pooled) {
+      // One read answered for the whole pool. A member with no row there has
+      // never had a session on their drive, so nothing was ever measured.
+      const usageByKey = new Map(pooled.map((entry) => [entry.storageKey, entry.usageBytes]));
+      members = others.map((row) => {
+        const key = keyOf(row.userId);
+        return describe(row, (key && usageByKey.get(key)) ?? null);
+      });
+    } else {
+      // An execution plane that cannot list the pool: one read per member,
+      // bounded, since a workspace can be large.
+      members = await pMap(
+        others,
+        async (row) => {
+          const key = keyOf(row.userId);
+          const info = key
+            ? await new MarketService({
+                userInfo: {
+                  sandboxStorage: { key, quotaBytes: claim.quotaBytes },
+                  userId,
+                  workspaceId,
+                },
+              })
+                .getSandboxStorageClient()
+                .getStorage()
+                .catch(() => null)
+            : null;
+
+          return describe(row, info?.usageBytes ?? null);
+        },
+        { concurrency: 5 },
+      );
+    }
   }
 
   const measured = [

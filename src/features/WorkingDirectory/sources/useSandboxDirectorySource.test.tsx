@@ -77,6 +77,28 @@ describe('useSandboxDirectorySource listing', () => {
     expect(sandboxStorageService.listInstances).toHaveBeenCalledTimes(2);
   });
 
+  it('should fail the root listing when the environments cannot be read', async () => {
+    // Without them a private environment's directory reads as public, and a
+    // public agent could pick a folder it cannot run in.
+    const failure = new Error('environments unavailable');
+    vi.mocked(sandboxStorageService.listInstances).mockResolvedValue({ instances: [] } as any);
+    vi.mocked(environmentService.listEnvironments).mockRejectedValue(failure);
+
+    const { result } = renderListing();
+
+    await waitFor(() => expect(result.current.error).toBe(failure));
+  });
+
+  it('should keep the root loading until the environments arrive', async () => {
+    vi.mocked(sandboxStorageService.listInstances).mockResolvedValue({ instances: [] } as any);
+    vi.mocked(environmentService.listEnvironments).mockReturnValue(new Promise(() => {}));
+
+    const { result } = renderListing();
+
+    await waitFor(() => expect(result.current.directory).toBeDefined());
+    expect(result.current.isLoading).toBe(true);
+  });
+
   it('should not read the environment directories below the root', async () => {
     const { result } = renderListing('projects');
 

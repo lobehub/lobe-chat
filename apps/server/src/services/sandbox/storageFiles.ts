@@ -52,6 +52,11 @@ export interface SandboxStorageInfo {
   usageBytes: number | null;
   usageCheckedAt: string | null;
   /**
+   * Every drive in that pool with its stored figure, when the read asked for
+   * them (`withDrives`). Absent from an execution plane that predates it.
+   */
+  workspaceDrives?: { storageKey: string; usageBytes: number | null }[];
+  /**
    * A workspace drive's pool: its public drive plus every member's personal
    * one, which is the figure the quota is judged on. Absent for a personal
    * account's drive.
@@ -292,8 +297,14 @@ export const createSandboxStorageClient = ({ baseURL, headers }: SandboxStorageC
         method: 'POST',
       }),
 
-    getStorage: async (params: RequestContext = {}): Promise<SandboxStorageInfo> => {
+    getStorage: async (
+      params: RequestContext & {
+        /** Also list every drive in a workspace pool with its figure, in this one read. */
+        withDrives?: boolean;
+      } = {},
+    ): Promise<SandboxStorageInfo> => {
       const query = withTopic(new URLSearchParams(), params);
+      if (params.withDrives) query.set('drives', 'true');
       const suffix = query.size > 0 ? `?${query.toString()}` : '';
 
       return request(`${CURRENT_STORAGE}${suffix}`);

@@ -35,6 +35,9 @@ const styles = stylex.create({
     height: '100%',
     minWidth: 4,
   },
+  meterFillBilled: {
+    backgroundColor: cssVar.colorWarning,
+  },
   meterFillOver: {
     backgroundColor: cssVar.colorError,
   },
@@ -59,8 +62,9 @@ const percentOf = (bytes: number | null | undefined, quota: number) =>
  * The storage page is for the folders on a drive; how much they hold is
  * second to that, so the figure takes a line's worth of room and the
  * breakdown — each drive, each member's for an admin, departed members'
- * drives — opens from it on demand. Over the quota it turns red, because then
- * the next write is refused and the figure stops being secondary.
+ * drives — opens from it on demand. Over a quota the plan cannot bill past it
+ * turns red, because then the next write is refused and the figure stops
+ * being secondary; billed overage reads as a warning instead.
  *
  * Read from what was last measured; measuring walks the volume, so it waits
  * for the refresh in the breakdown.
@@ -75,6 +79,7 @@ const DriveUsage = memo(() => {
   const { quotaBytes, totalUsageBytes } = data;
   const isWorkspace = (data.drives ?? []).length > 1;
   const over = totalUsageBytes !== null && totalUsageBytes > quotaBytes;
+  const refused = over && !data.overageAllowed;
 
   return (
     <Popover
@@ -94,12 +99,16 @@ const DriveUsage = memo(() => {
           <span
             {...stylex.props(
               styles.meterFill,
-              over && styles.meterFillOver,
+              over && (refused ? styles.meterFillOver : styles.meterFillBilled),
               styles.meterWidth(`${percentOf(totalUsageBytes, quotaBytes)}%`),
             )}
           />
         </span>
-        <Text fontSize={12} style={{ whiteSpace: 'nowrap' }} type={over ? 'danger' : 'secondary'}>
+        <Text
+          fontSize={12}
+          style={{ whiteSpace: 'nowrap' }}
+          type={refused ? 'danger' : over ? 'warning' : 'secondary'}
+        >
           {totalUsageBytes === null
             ? t('drive.usage.unmeasured', { total: formatSize(quotaBytes) })
             : t('drive.usage.used', {

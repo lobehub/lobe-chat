@@ -374,19 +374,26 @@ export const useSandboxDirectorySource = ({
             : undefined,
           entries,
           // At the root the instances say which folders are environment
-          // directories (and who holds them); without them a held folder would
-          // list as a plain one that can be picked, so their failure fails the
-          // listing too.
-          error: folders.error ?? (isRoot ? instances.error : undefined),
+          // directories (and who holds them), and the environments whether
+          // one is private — which a public agent cannot run in. Without
+          // either, a folder would list as pickable when it is not, so the
+          // root waits for both and fails with either.
+          error: folders.error ?? (isRoot ? (instances.error ?? environments.error) : undefined),
           hasMore: false,
-          isLoading: folders.isLoading || (isRoot && instances.isLoading),
+          isLoading:
+            folders.isLoading || (isRoot && (instances.isLoading || environments.isLoading)),
           isLoadingMore: false,
           isRefreshing: folders.isValidating && !folders.isLoading,
           loadMore: () => {},
           refresh: async () => {
-            await Promise.all([folders.mutate(), instances.mutate()]);
+            await Promise.all([folders.mutate(), instances.mutate(), environments.mutate()]);
           },
-          retry: () => void Promise.all([folders.mutate(), isRoot && instances.mutate()]),
+          retry: () =>
+            void Promise.all([
+              folders.mutate(),
+              isRoot && instances.mutate(),
+              isRoot && environments.mutate(),
+            ]),
         };
       },
     } satisfies DirectorySource;

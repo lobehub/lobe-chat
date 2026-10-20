@@ -4519,6 +4519,8 @@ When I am ___, I need ___
   'drive.usage.showFewerMembers': 'Show fewer',
   'drive.usage.over':
     'Storage is over quota. Free up space or upgrade before more files can be saved.',
+  'drive.usage.overBilled':
+    'Over the quota. Files keep saving, and the extra is billed as pay-as-you-go overage.',
   'drive.retained.title': "Departed members' personal drives",
   'drive.retained.hint':
     'Kept for 30 days after a member leaves, then deleted automatically. They count toward the workspace pool until then. Only the amount is shown, never the files.',
@@ -4558,6 +4560,11 @@ When I am ___, I need ___
   'environments.instances.rebuildPersonalDesc':
     '{{names}} is still on the public drive and is hidden. Private environments now keep their folders on your personal drive.',
   'environments.instances.rebuildPersonal': 'Rebuild on personal drive',
+  'environments.instances.publishPublic': 'Initialize on the public drive',
+  'environments.instances.publishPublicDesc':
+    'Published to the workspace, but its folders are on your personal drive, where members cannot reach them. Members can run it once it has a folder on the public drive.',
+  'environments.instances.publishPublicFailed': 'Could not create a copy on the public drive',
+  'environments.instances.publishPublicStarted': 'Building a copy on the public drive',
   'environments.instances.rebuildPersonalStarted': 'Building a new copy on your personal drive',
   'environments.instances.rebuildPersonalFailed':
     'Could not create the copy on your personal drive',

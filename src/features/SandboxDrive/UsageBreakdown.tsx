@@ -116,9 +116,10 @@ const formatPercent = (value: number) =>
  * the pool. Two hues carry the drives (validated for colour-blind separation;
  * the legend icons and values carry identity as well, never colour alone);
  * other members are the de-emphasised grey, because the caller acts on their
- * own drives and only reads the rest. Over the quota every segment turns to
- * the danger colour, because then the bar's message is "writes are refused",
- * not "this is how it splits".
+ * own drives and only reads the rest. Over a quota the plan does not bill past,
+ * every segment turns to the danger colour, because then the bar's message is
+ * "writes are refused", not "this is how it splits"; with pay-as-you-go the
+ * split stays and the figures say it is being billed.
  */
 export const UsageBreakdown = memo<{
   data: DriveUsageData;
@@ -147,6 +148,9 @@ export const UsageBreakdown = memo<{
   // beyond the caller's drives is other members'.
   const othersBytes = isWorkspace && total !== null ? Math.max(0, total - known) : 0;
   const over = total !== null && total > quotaBytes;
+  // Over the quota is only a refusal when the plan cannot bill the overage;
+  // with pay-as-you-go the writes go on and the extra is charged.
+  const refused = over && !data.overageAllowed;
   const scale = Math.max(quotaBytes, total ?? 0);
 
   const segments: Segment[] = (
@@ -195,7 +199,11 @@ export const UsageBreakdown = memo<{
             {t(isWorkspace ? 'drive.usage.poolTitle' : 'drive.usage.title')}
           </Text>
           <Flexbox horizontal align={'baseline'} gap={6} wrap={'wrap'}>
-            <Text fontSize={inPopover ? 20 : 24} type={over ? 'danger' : undefined} weight={600}>
+            <Text
+              fontSize={inPopover ? 20 : 24}
+              type={refused ? 'danger' : over ? 'warning' : undefined}
+              weight={600}
+            >
               {total === null ? '—' : formatSize(total)}
             </Text>
             <Text fontSize={13} type={'secondary'}>
@@ -204,7 +212,7 @@ export const UsageBreakdown = memo<{
           </Flexbox>
         </Flexbox>
         <Flexbox horizontal align={'center'} flex={'none'} gap={4}>
-          <Text fontSize={12} type={over ? 'danger' : 'secondary'}>
+          <Text fontSize={12} type={refused ? 'danger' : over ? 'warning' : 'secondary'}>
             {total === null
               ? t('drive.usage.unmeasuredShort')
               : over
@@ -241,7 +249,7 @@ export const UsageBreakdown = memo<{
               <span
                 {...stylex.props(
                   styles.segment,
-                  tones[over ? 'over' : segment.key],
+                  tones[refused ? 'over' : segment.key],
                   styles.width(`${percent(segment.bytes, scale)}%`),
                 )}
               />
@@ -366,8 +374,8 @@ export const UsageBreakdown = memo<{
       {isWorkspace && <RetainedMemberDrives />}
 
       {over && (
-        <Text fontSize={12} type={'danger'}>
-          {t('drive.usage.over')}
+        <Text fontSize={12} type={refused ? 'danger' : 'warning'}>
+          {t(refused ? 'drive.usage.over' : 'drive.usage.overBilled')}
         </Text>
       )}
     </Flexbox>
