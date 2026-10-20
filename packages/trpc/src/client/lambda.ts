@@ -23,6 +23,9 @@ let last401Time = 0;
 let lastMarket401Time = 0;
 const MIN_401_INTERVAL = 5000; // 5 seconds
 
+const isPublicShareRoute = () =>
+  typeof location !== 'undefined' && location.pathname.startsWith('/share/');
+
 // `@trpc/client` throws `TransformResultError` when a response body parses as
 // JSON but is not a `TRPCResponse` — the desktop proxy's 502 network envelope
 // (`{ errorType, body }`), a gateway/WAF JSON error page, and so on. Its message
@@ -96,8 +99,10 @@ const errorHandlingLink: TRPCLink<LambdaRouter> = () => {
                   if (now - last401Time > MIN_401_INTERVAL) {
                     last401Time = now;
                     // Desktop app doesn't have the web auth routes like `/signin`,
-                    // so skip the login redirect/notification there.
-                    if (!isDesktop) {
+                    // so skip the login redirect/notification there. A public
+                    // share page renders without a session, so a 401 from a side
+                    // query there must not log the reader out or leave the page.
+                    if (!isDesktop && !isPublicShareRoute()) {
                       const { getUserStoreState } = await import('@/store/user/store');
                       const { isSignedIn, logout } = getUserStoreState();
                       // If user is still marked as signed in but got 401,
@@ -107,9 +112,11 @@ const errorHandlingLink: TRPCLink<LambdaRouter> = () => {
                         params.set('reason', 'sessionExpired');
                         await logout({ redirectTo: `/signin?${params.toString()}` });
                       } else {
+                        // No session to expire: ask to sign in without the
+                        // "session expired" notice.
                         const { loginRequired } =
                           await import('@/components/Error/loginRequiredNotification');
-                        loginRequired.redirect({ reason: 'sessionExpired' });
+                        loginRequired.redirect();
                       }
                     }
                   }
