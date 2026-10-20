@@ -46,6 +46,9 @@ export class UserSettingsActionImpl {
    */
   #toolChannelsWrite: Promise<unknown> = Promise.resolve();
 
+  /** Latest queued write per personal system-agent entry; see updatePersonalSystemAgent. */
+  readonly #personalSystemAgentWrites = new Map<PersonalSystemAgentKey, Promise<unknown>>();
+
   constructor(set: Setter, get: () => UserStore, _api?: unknown) {
     void _api;
     this.#set = set;
@@ -302,8 +305,27 @@ export class UserSettingsActionImpl {
       'optimistic_updatePersonalSystemAgent',
     );
 
-    await userService.updatePersonalSystemAgent(key, value);
-    await this.#get().refreshUserState();
+    // Writes to one entry run in call order, so a slower earlier save (model A)
+    // cannot land after a later one (model B). A failed earlier write must not
+    // block later ones; its caller still receives its own rejection.
+    const write = (this.#personalSystemAgentWrites.get(key) ?? Promise.resolve())
+      .catch(() => {})
+      .then(() => userService.updatePersonalSystemAgent(key, value));
+    this.#personalSystemAgentWrites.set(key, write);
+
+    try {
+      await write;
+    } catch (error) {
+      // Chat reads these settings directly, so drop the unsaved optimistic
+      // value. The rejection still reaches the caller for its retry state.
+      await this.#get()
+        .refreshUserState()
+        .catch(() => {});
+      throw error;
+    }
+    // Only the latest write refreshes: an intermediate refresh would pull a
+    // value that a queued write is about to replace.
+    if (this.#personalSystemAgentWrites.get(key) === write) await this.#get().refreshUserState();
   };
 
   updateToolChannels = async (channels: {

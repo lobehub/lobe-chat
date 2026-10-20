@@ -257,6 +257,72 @@ describe('SettingsAction', () => {
       expect(userService.updateUserSettings).not.toHaveBeenCalled();
       expect(result.current.settings.systemAgent?.followUpAction?.enabled).toBe(false);
     });
+
+    it('should send rapid writes to one entry one at a time, in call order', async () => {
+      const { result } = renderHook(() => useUserStore());
+      const resolvers: Array<() => void> = [];
+      vi.mocked(userService.updatePersonalSystemAgent).mockImplementation(
+        () => new Promise((resolve) => resolvers.push(() => resolve(undefined as any))),
+      );
+
+      let first!: Promise<void>;
+      let second!: Promise<void>;
+      act(() => {
+        first = result.current.updatePersonalSystemAgent('followUpAction', {
+          model: 'model-a',
+          provider: 'openai',
+        });
+        second = result.current.updatePersonalSystemAgent('followUpAction', {
+          model: 'model-b',
+          provider: 'openai',
+        });
+      });
+
+      // model-b is not sent until model-a has committed, so it cannot be overwritten
+      await vi.waitFor(() =>
+        expect(userService.updatePersonalSystemAgent).toHaveBeenCalledTimes(1),
+      );
+      expect(userService.updatePersonalSystemAgent).toHaveBeenLastCalledWith('followUpAction', {
+        model: 'model-a',
+        provider: 'openai',
+      });
+
+      await act(async () => {
+        resolvers[0]();
+        await first;
+      });
+      await vi.waitFor(() =>
+        expect(userService.updatePersonalSystemAgent).toHaveBeenCalledTimes(2),
+      );
+      expect(userService.updatePersonalSystemAgent).toHaveBeenLastCalledWith('followUpAction', {
+        model: 'model-b',
+        provider: 'openai',
+      });
+
+      await act(async () => {
+        resolvers[1]();
+        await second;
+      });
+    });
+
+    it('should revalidate and rethrow when the write fails', async () => {
+      const refreshUserState = vi.fn().mockResolvedValue(undefined);
+      useUserStore.setState({ refreshUserState });
+      const { result } = renderHook(() => useUserStore());
+      vi.mocked(userService.updatePersonalSystemAgent).mockRejectedValueOnce(
+        new Error('network error'),
+      );
+
+      let write!: Promise<void>;
+      act(() => {
+        write = result.current.updatePersonalSystemAgent('inputCompletion', { enabled: true });
+      });
+
+      // The caller still sees the failure (save hint shows retry) ...
+      await expect(write).rejects.toThrow('network error');
+      // ... and the unsaved optimistic value is replaced by the server state
+      expect(refreshUserState).toHaveBeenCalledTimes(1);
+    });
   });
 
   describe('updateToolChannels', () => {
