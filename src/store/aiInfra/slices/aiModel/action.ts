@@ -1,5 +1,4 @@
 import { toast } from '@lobehub/ui';
-import isEqual from 'fast-deep-equal';
 import { t } from 'i18next';
 import type {
   AiModelReasoningConfig,
@@ -9,21 +8,54 @@ import type {
   ToggleAiModelEnableParams,
   UpdateAiModelParams,
 } from 'model-bank';
-import type { SWRResponse } from 'swr';
 
-import { createReplicaSlice, recordLens, type ReplicaSyncResult } from '@/libs/replica';
-import { mutate, useClientDataSWR } from '@/libs/swr';
-import { aiModelKeys } from '@/libs/swr/keys';
+import {
+  createReplicaSlice,
+  recordLens,
+  type ReplicaLens,
+  type ReplicaSyncResult,
+} from '@/libs/replica';
 import { aiModelService } from '@/services/aiModel';
 import type { AiInfraStore } from '@/store/aiInfra/store';
 import type { StoreSetter } from '@/store/types';
 
 import { modelReasoningConfigKey } from './initialState';
-import { aiModelListEntity, aiModelListResource } from './projection';
+import {
+  aiModelListEntity,
+  aiModelListResource,
+  type AiModelReasoningConfigEntry,
+  aiModelReasoningConfigResource,
+} from './projection';
 import { aiModelSelectors } from './selectors';
 import { deduplicateRemoteModels } from './utils';
 
 const MAX_DUPLICATE_MODEL_IDS_IN_WARNING = 3;
+
+/**
+ * The effort picker, the chat input loader and the sub-agent controls can all
+ * mount for the same model at once; one request serves them all.
+ */
+const REASONING_CONFIG_DEDUPING_INTERVAL = 10_000;
+
+/**
+ * `modelReasoningConfigMap` keeps its flat `Record<key, config | undefined>`
+ * shape for the existing selectors: key presence means "settled", and an
+ * `undefined` value means "nothing saved". The replica entry wraps the value so
+ * that "nothing saved" is still a confirmed (and persisted) value.
+ */
+const modelReasoningConfigLens: ReplicaLens<AiInfraStore, AiModelReasoningConfigEntry> = {
+  clear: () => ({ modelReasoningConfigMap: {} }),
+  get: (state, key) =>
+    key in state.modelReasoningConfigMap
+      ? { value: state.modelReasoningConfigMap[key] }
+      : undefined,
+  set: (state, key, data) => {
+    const modelReasoningConfigMap = { ...state.modelReasoningConfigMap };
+    if (data === undefined) delete modelReasoningConfigMap[key];
+    else modelReasoningConfigMap[key] = data.value;
+    return { modelReasoningConfigMap };
+  },
+};
 
 /** Sync result of one provider's model list: replica flags plus the SWR-era aliases. */
 export interface AiProviderModelsSyncResult extends ReplicaSyncResult {
@@ -42,6 +74,7 @@ export const createAiModelSlice = (set: Setter, get: () => AiInfraStore, _api?: 
 export class AiModelActionImpl {
   readonly #get: () => AiInfraStore;
   readonly #list;
+  readonly #reasoningConfig;
   readonly #set: Setter;
 
   constructor(set: Setter, get: () => AiInfraStore, _api?: unknown) {
@@ -56,6 +89,21 @@ export class AiModelActionImpl {
       set,
       stateKey: 'aiModelListReplica',
       view: recordLens<AiInfraStore, AiProviderModelListItem[]>('aiModelListMap'),
+    });
+    this.#reasoningConfig = createReplicaSlice(aiModelReasoningConfigResource, {
+      actionPrefix: 'aiModelReasoningConfig',
+      fetcher: async ({ model, provider }) => ({
+        value: (await aiModelService.getAiModelReasoningConfig(model, provider)) ?? undefined,
+      }),
+      get,
+      // Don't clobber an in-flight optimistic value with a stale response
+      prepareHead: (incoming, _current, { model, provider }) =>
+        get().modelReasoningConfigUpdatingKeys.includes(modelReasoningConfigKey(provider, model))
+          ? undefined
+          : incoming,
+      set,
+      stateKey: 'modelReasoningConfigReplica',
+      view: modelReasoningConfigLens,
     });
   }
 
@@ -268,20 +316,30 @@ export class AiModelActionImpl {
       );
     }
 
-    // Revalidate only AFTER the updating marker is cleared: the server merges
-    // this partial write into previously saved fields, and the fetch hook's
-    // onSuccess skips writes while the key is marked updating — revalidating
-    // inside the try block would drop server-preserved sibling fields whenever
-    // the optimistic base (`previous`) had not been fetched yet.
-    await mutate(aiModelKeys.reasoningConfig(provider, id));
+    // The saved value is confirmed now: persist it, so a reload paints it
+    // even when the refresh below never lands.
+    this.#reasoningConfig.update(key, () => ({ value: this.#get().modelReasoningConfigMap[key] }));
+
+    // Refresh only AFTER the updating marker is cleared: the server merges
+    // this partial write into previously saved fields, and the replica drops
+    // responses while the key is marked updating — refreshing inside the try
+    // block would drop server-preserved sibling fields whenever the optimistic
+    // base (`previous`) had not been fetched yet.
+    try {
+      await this.#reasoningConfig.fetch({ model: id, provider }, { fresh: true });
+    } catch {
+      // best-effort: the saved value above stays
+    }
   };
 
   /**
    * Best-effort imperative warm-up of the model-instance reasoning config for
    * non-React callers — e.g. the client sub-agent executor, whose override
-   * model may never mount a ChatInput fetch hook. No-op when the key is
-   * already cached or an optimistic update is in flight; fetch failures are
-   * swallowed so the send path falls back to defaults instead of breaking.
+   * model may never mount a ChatInput fetch hook. No-op when the server has
+   * already settled the key (a fetch or the runtime-state seed); a value only
+   * restored from the local replica is confirmed first, since the send path
+   * must not run on a stale copy. Fetch failures are swallowed so the send
+   * path falls back to the local value or defaults instead of breaking.
    */
   ensureModelReasoningConfig = async (id: string, provider: string): Promise<void> => {
     // Right after a reload the model metadata may still be hydrating — settle
@@ -295,57 +353,31 @@ export class AiModelActionImpl {
     if (!aiModelSelectors.isModelHasReasoningExtendParams(id, provider)(this.#get())) return;
 
     const key = modelReasoningConfigKey(provider, id);
-    if (key in this.#get().modelReasoningConfigMap) return;
+    const state = this.#get();
+    if (state.modelReasoningConfigUpdatingKeys.includes(key)) return;
+    const restoredOnly = state.modelReasoningConfigReplica.entries[key]?.source === 'storage';
+    if (key in state.modelReasoningConfigMap && !restoredOnly) return;
 
     try {
-      const data = await aiModelService.getAiModelReasoningConfig(id, provider);
-
-      const state = this.#get();
-      if (state.modelReasoningConfigUpdatingKeys.includes(key)) return;
-      if (key in state.modelReasoningConfigMap) return;
-
-      this.#set(
-        (s) => ({
-          // An empty config keeps the key (value undefined) so repeated calls
-          // don't refetch a model that simply has nothing saved yet
-          modelReasoningConfigMap: { ...s.modelReasoningConfigMap, [key]: data },
-        }),
-        false,
-        `ensureModelReasoningConfig/${key}`,
-      );
+      await this.#reasoningConfig.fetch({ model: id, provider });
     } catch {
-      // best-effort: resolver falls back to level defaults
+      // best-effort: resolver falls back to the local value or level defaults
     }
   };
 
+  /**
+   * Fetch orchestration for one model instance's saved reasoning defaults.
+   * Hydrates the persisted copy first, so the effort picker paints the saved
+   * level on the first frame, then lets the network confirm. Read the value
+   * through `aiModelSelectors.modelReasoningConfig`.
+   */
   useFetchAiModelReasoningConfig = (
     id: string | undefined,
     provider: string | undefined,
-  ): SWRResponse<AiModelReasoningConfig | null> => {
-    return useClientDataSWR<AiModelReasoningConfig | null>(
-      id && provider ? aiModelKeys.reasoningConfig(provider, id) : null,
-      async ([, provider, id]) =>
-        (await aiModelService.getAiModelReasoningConfig(id as string, provider as string)) ?? null,
-      {
-        onSuccess: (data) => {
-          const key = modelReasoningConfigKey(provider!, id!);
-          // Don't clobber an in-flight optimistic value with a stale response
-          if (this.#get().modelReasoningConfigUpdatingKeys.includes(key)) return;
-          // The store map keeps its `| undefined` shape — only SWR needs null.
-          const value = data ?? undefined;
-          if (isEqual(value, this.#get().modelReasoningConfigMap[key])) return;
-
-          this.#set(
-            (state) => ({
-              modelReasoningConfigMap: { ...state.modelReasoningConfigMap, [key]: value },
-            }),
-            false,
-            `useFetchAiModelReasoningConfig/${key}`,
-          );
-        },
-      },
-    );
-  };
+  ): ReplicaSyncResult =>
+    this.#reasoningConfig.useSync(id && provider ? { model: id, provider } : null, {
+      dedupingInterval: REASONING_CONFIG_DEDUPING_INTERVAL,
+    });
 
   updateAiModelsConfig = async (
     id: string,
