@@ -1,6 +1,9 @@
-import { act, renderHook } from '@testing-library/react';
-import { describe, expect, it, vi } from 'vitest';
+import { act, cleanup, renderHook } from '@testing-library/react';
+import { createElement, type PropsWithChildren, useLayoutEffect } from 'react';
+import { MemoryRouter } from 'react-router';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 
+import { commentAnchorId } from '../../Comments/anchor';
 import type { EvidenceOverlay } from '../overlay';
 import { useVideoThreads, videoThreadsOf } from './useVideoThreads';
 
@@ -13,13 +16,28 @@ const overlay = (threadId: string, start?: number, replies: string[] = []): Evid
 
 const overlays = [overlay('late', 6), overlay('image'), overlay('early', 2, ['early-reply'])];
 
+const router = (commentId?: string) =>
+  function Wrapper({ children }: PropsWithChildren) {
+    return createElement(MemoryRouter, {
+      children,
+      initialEntries: [
+        `/acceptance/test/checks/check#${commentId ? commentAnchorId(commentId) : ''}`,
+      ],
+    });
+  };
+
+afterEach(() => {
+  cleanup();
+  vi.unstubAllGlobals();
+});
+
 describe('video threads', () => {
   it('lists only timed threads, in playing order', () => {
     expect(videoThreadsOf(overlays).map((item) => item.threadId)).toEqual(['early', 'late']);
   });
 
   it('keeps one thread unfolded and folds it on a second press', () => {
-    const { result } = renderHook(() => useVideoThreads(overlays, undefined, vi.fn()));
+    const { result } = renderHook(() => useVideoThreads(overlays, vi.fn()), { wrapper: router() });
     expect(result.current.openId).toBeUndefined();
 
     act(() => {
@@ -36,9 +54,9 @@ describe('video threads', () => {
 
   it('opens the thread a reply link addresses and shows its frame once', () => {
     const onAnchor = vi.fn();
-    const { result, rerender } = renderHook(() =>
-      useVideoThreads(overlays, 'early-reply', onAnchor),
-    );
+    const { result, rerender } = renderHook(() => useVideoThreads(overlays, onAnchor), {
+      wrapper: router('early-reply'),
+    });
     expect(result.current.openId).toBe('early');
     expect(onAnchor).toHaveBeenCalledWith(expect.objectContaining({ threadId: 'early' }));
 
@@ -46,5 +64,48 @@ describe('video threads', () => {
     rerender();
     expect(result.current.openId).toBeUndefined();
     expect(onAnchor).toHaveBeenCalledTimes(1);
+  });
+
+  it.each(['early', 'early-reply'])(
+    'scrolls to %s after asynchronously loaded comments unfold',
+    (commentId) => {
+      vi.stubGlobal(
+        'ResizeObserver',
+        class {
+          observe() {}
+          disconnect() {}
+        },
+      );
+      const target = document.createElement('div');
+      target.id = commentAnchorId(commentId);
+      target.scrollIntoView = vi.fn();
+      const onAnchor = vi.fn();
+      const { result, rerender } = renderHook(
+        ({ items }) => {
+          const state = useVideoThreads(items, onAnchor);
+          // The thread's DOM is committed only when the addressed row opens.
+          useLayoutEffect(() => {
+            if (state.openId === 'early') document.body.append(target);
+            return () => target.remove();
+          }, [state.openId]);
+          return state;
+        },
+        { initialProps: { items: [] as EvidenceOverlay[] }, wrapper: router(commentId) },
+      );
+      expect(target.scrollIntoView).not.toHaveBeenCalled();
+      rerender({ items: overlays });
+      expect(result.current.openId).toBe('early');
+      expect(target.scrollIntoView).toHaveBeenCalledWith({ block: 'center' });
+      expect(onAnchor).toHaveBeenCalledTimes(1);
+    },
+  );
+
+  it('does not claim the page fragment in an embedded viewer', () => {
+    const onAnchor = vi.fn();
+    const { result } = renderHook(() => useVideoThreads(overlays, onAnchor, true), {
+      wrapper: router('early-reply'),
+    });
+    expect(result.current.openId).toBeUndefined();
+    expect(onAnchor).not.toHaveBeenCalled();
   });
 });

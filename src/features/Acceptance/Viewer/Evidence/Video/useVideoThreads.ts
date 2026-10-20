@@ -1,6 +1,8 @@
 import type { AcceptanceCommentTime } from '@lobechat/types';
 import { useEffect, useRef, useState } from 'react';
+import { useLocation } from 'react-router';
 
+import { commentIdFromHash, useCommentAnchor } from '../../Comments/anchor';
 import type { EvidenceOverlay } from '../overlay';
 
 export type VideoThread = EvidenceOverlay & {
@@ -27,9 +29,11 @@ export const threadAddressedBy = (threads: VideoThread[], commentId?: string) =>
  */
 export const useVideoThreads = (
   overlays: EvidenceOverlay[],
-  anchored: string | undefined,
   onAnchor: (thread: VideoThread) => void,
+  embedded = false,
 ) => {
+  const { hash } = useLocation();
+  const anchored = embedded ? undefined : commentIdFromHash(hash);
   const threads = videoThreadsOf(overlays);
   const [openId, setOpenId] = useState(() => threadAddressedBy(threads, anchored)?.threadId);
   const handled = useRef<string | undefined>(undefined);
@@ -41,6 +45,10 @@ export const useVideoThreads = (
     onAnchor(thread);
     // The list arrives after the fragment is read; re-check when it does.
   }, [anchored, overlays]);
+
+  // Expanding an asynchronously loaded thread commits its root/reply anchors
+  // in a second render. Retry the scroll after that commit, not just on fetch.
+  useCommentAnchor(openId, embedded);
 
   return {
     open: (id: string) => setOpenId(id),

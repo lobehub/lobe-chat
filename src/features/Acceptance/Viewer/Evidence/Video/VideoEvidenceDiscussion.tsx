@@ -10,7 +10,7 @@ import { useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useOptionalAcceptanceScope } from '../../AcceptanceScope';
-import { useCommentAnchor } from '../../Comments/anchor';
+import { commentAnchorId } from '../../Comments/anchor';
 import { type EvidenceOverlay, overlayColor } from '../overlay';
 import { useVideoThreads, type VideoThread } from './useVideoThreads';
 import {
@@ -140,9 +140,10 @@ export const VideoEvidenceDiscussion = ({
   const { t } = useTranslation('verify');
   const player = useRef<VideoEvidencePlayerHandle>(null);
   const scope = useOptionalAcceptanceScope();
-  const anchored = useCommentAnchor(overlays, scope?.embedded);
-  const { open, openId, threads, toggle } = useVideoThreads(overlays, anchored, (thread) =>
-    player.current?.focus(thread.time),
+  const { open, openId, threads, toggle } = useVideoThreads(
+    overlays,
+    (thread) => player.current?.focus(thread.time, { reveal: false }),
+    scope?.embedded,
   );
 
   // Numbered per video in playing order, so the list counts up the way the
@@ -247,7 +248,11 @@ export const VideoEvidenceDiscussion = ({
                     size={14}
                   />
                 </button>
-                {isOpen && <div {...stylex.props(styles.thread)}>{item.panel}</div>}
+                {isOpen && (
+                  <div {...stylex.props(styles.thread)} id={commentAnchorId(item.threadId)}>
+                    {item.panel}
+                  </div>
+                )}
               </div>
             );
           })}
