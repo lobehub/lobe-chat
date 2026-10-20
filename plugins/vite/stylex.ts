@@ -3,7 +3,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import stylex from '@stylexjs/unplugin/vite';
-import type { PluginOption } from 'vite';
+import type { PluginOption, UserConfig } from 'vite';
 
 import { stylexProxiedDevCssPlugin } from './stylexDevCss';
 import { createStylexEntryCss } from './stylexEntryCss';
@@ -98,9 +98,12 @@ export function stylexPluginForVitest(): PluginOption {
   return [
     stylexPlugin(),
     {
-      config: () => ({
-        test: { server: { deps: { inline: [/@lobehub[/\\]ui[/\\]es[/\\]stylex[/\\]/] } } },
-      }),
+      // `test` is declared by Vitest's augmentation of its own Vite copy, which a
+      // host repo on another Vitest major does not see.
+      config: () =>
+        ({
+          test: { server: { deps: { inline: [/@lobehub[/\\]ui[/\\]es[/\\]stylex[/\\]/] } } },
+        }) as UserConfig,
       name: 'lobe-stylex-vitest-deps',
     },
   ];

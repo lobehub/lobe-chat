@@ -277,10 +277,10 @@ export const convertCss = (template: CssTemplate, names: TokenNames): ConvertedS
     declared.push({ context: `${pseudoElement}|${conditions.join('|')}`, prop });
     const props = roots.get(pseudoElement) ?? new Map<string, ValueNode>();
     roots.set(pseudoElement, props);
-    let node = props.get(prop) ?? { children: new Map() };
+    let node: ValueNode = props.get(prop) ?? { children: new Map() };
     props.set(prop, node);
     for (const condition of conditions) {
-      const child = node.children.get(condition) ?? { children: new Map() };
+      const child: ValueNode = node.children.get(condition) ?? { children: new Map() };
       node.children.set(condition, child);
       node = child;
     }
