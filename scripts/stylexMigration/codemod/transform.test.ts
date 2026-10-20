@@ -200,4 +200,37 @@ export const A = ({ on }: { on: boolean }) => <Text className={cx(!on && styles.
       '<Text className={stylex.props(!on && styles.a).className} />',
     );
   });
+
+  it('keeps compound template conditions grouped', () => {
+    const source = `import { createStaticStyles } from '@lobehub/ui';
+const styles = createStaticStyles(({ css }) => ({
+  a: css\`gap: 1px;\`,
+  b: css\`gap: 2px;\`,
+  c: css\`gap: 3px;\`,
+}));
+export const A = ({ x, y }: { x?: boolean; y?: boolean }) => (
+  <>
+    <div className={\`\${styles.a} \${x || y ? styles.b : ''}\`} />
+    <div className={\`\${styles.a} \${x ?? y ? '' : styles.b}\`} />
+    <div className={\`\${styles.a} \${x ? (y ? styles.b : styles.c) : ''}\`} />
+  </>
+);
+`;
+    const out = squash(transformSource(source).code);
+
+    expect(out).toContain('<div {...stylex.props(styles.a, (x || y) && styles.b)} />');
+    expect(out).toContain('<div {...stylex.props(styles.a, !(x ?? y) && styles.b)} />');
+    expect(out).toContain('<div {...stylex.props(styles.a, x && (y ? styles.b : styles.c))} />');
+  });
+
+  it('rejects class templates stored outside JSX', () => {
+    const source = `import { createStaticStyles } from '@lobehub/ui';
+const styles = createStaticStyles(({ css }) => ({ a: css\`gap: 1px;\`, b: css\`gap: 2px;\` }));
+export const A = () => {
+  const cls = \`\${styles.a} \${styles.b}\`;
+  return <div className={cls} />;
+};
+`;
+    expect(() => transformSource(source)).toThrow(UnsupportedCssError);
+  });
 });

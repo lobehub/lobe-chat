@@ -232,8 +232,18 @@ export const expandShorthand = (prop: string, value: string): [string, string][]
         ['backgroundColor', 'transparent'],
         ['backgroundImage', 'none'],
       ];
+    if (/^(?:inherit|initial|unset|revert|revert-layer)$/.test(value.trim()))
+      return [
+        ['backgroundColor', value],
+        ['backgroundImage', value],
+      ];
     const isImage = /^(?:url|image-set|(?:repeating-)?(?:linear|radial|conic)-gradient)\(/;
-    if (parts.length === 1 && !isImage.test(parts[0])) return [['backgroundColor', value]];
+    // The shorthand also resets the image a component may have set.
+    if (parts.length === 1 && !isImage.test(parts[0]))
+      return [
+        ['backgroundColor', value],
+        ['backgroundImage', 'none'],
+      ];
     throw new UnsupportedCssError(`background: ${value}`);
   }
   if (prop === 'animation') throw new UnsupportedCssError(`animation: ${value}`);

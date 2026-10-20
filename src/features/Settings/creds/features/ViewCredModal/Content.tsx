@@ -26,6 +26,7 @@ const styles = stylex.create({
     fontSize: '13px',
     color: cssVar.colorTextSecondary,
     backgroundColor: cssVar.colorFillQuaternary,
+    backgroundImage: 'none',
   },
   kvRow: {
     display: 'flex',
@@ -51,6 +52,7 @@ const styles = stylex.create({
     fontFamily: cssVar.fontFamilyCode,
     fontSize: '13px',
     backgroundColor: cssVar.colorBgContainer,
+    backgroundImage: 'none',
   },
   maskedValue: { color: cssVar.colorTextQuaternary, letterSpacing: '2px' },
   toggleBtn: {
@@ -63,6 +65,7 @@ const styles = stylex.create({
     color: { 'default': cssVar.colorTextTertiary, ':hover': cssVar.colorText },
     transition: 'all 0.2s',
     backgroundColor: { 'default': null, ':hover': cssVar.colorFillSecondary },
+    backgroundImage: { 'default': null, ':hover': 'none' },
   },
   valuesSection: { marginBlockStart: '16px' },
   valuesTitle: { marginBlockEnd: '12px', fontWeight: 500 },

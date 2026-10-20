@@ -28,6 +28,7 @@ const styles = stylex.create({
     marginBlockEnd: '12px',
     borderRadius: '12px',
     backgroundColor: cssVar.colorFillSecondary,
+    backgroundImage: 'none',
   },
   title: { marginBlockEnd: '4px', fontWeight: 500 },
 });

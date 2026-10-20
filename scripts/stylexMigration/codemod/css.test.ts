@@ -295,8 +295,30 @@ describe('expandShorthand', () => {
         ['borderBottomLeftRadius', '8px'],
       ],
     ],
-    ['background', 'rgb(0 0 0 / 50%)', [['backgroundColor', 'rgb(0 0 0 / 50%)']]],
-    ['background', '__lobeX0__', [['backgroundColor', '__lobeX0__']]],
+    [
+      'background',
+      'rgb(0 0 0 / 50%)',
+      [
+        ['backgroundColor', 'rgb(0 0 0 / 50%)'],
+        ['backgroundImage', 'none'],
+      ],
+    ],
+    [
+      'background',
+      '__lobeX0__',
+      [
+        ['backgroundColor', '__lobeX0__'],
+        ['backgroundImage', 'none'],
+      ],
+    ],
+    [
+      'background',
+      'inherit',
+      [
+        ['backgroundColor', 'inherit'],
+        ['backgroundImage', 'inherit'],
+      ],
+    ],
     [
       'background',
       'none',
