@@ -27,6 +27,7 @@ import { isMeetingProcessing, meetingActions } from '@/store/meeting';
 
 import { formatClock } from '../format';
 import ActionItems from './ActionItems';
+import { minutesLists } from './normalize';
 
 const styles = createStaticStyles(({ css }) => ({
   cite: css`
@@ -182,6 +183,8 @@ const Minutes = ({ meeting, onSeek, segmentStarts, speakerNameByLabel }: Minutes
     );
   }
 
+  const { actionItems, chapters, decisions, keywords } = minutesLists(minutes);
+
   const citation = (item: Pick<MeetingActionItem, 'segmentIds' | 'startMs'>) => (
     <Citation
       fallbackMs={item.startMs}
@@ -207,9 +210,9 @@ const Minutes = ({ meeting, onSeek, segmentStarts, speakerNameByLabel }: Minutes
         ) : (
           empty
         )}
-        {minutes.keywords.length > 0 && (
+        {keywords.length > 0 && (
           <Flexbox horizontal gap={6} wrap={'wrap'}>
-            {minutes.keywords.map((keyword) => (
+            {keywords.map((keyword) => (
               <Tag key={keyword} size={'small'}>
                 {keyword}
               </Tag>
@@ -227,9 +230,9 @@ const Minutes = ({ meeting, onSeek, segmentStarts, speakerNameByLabel }: Minutes
         testId={'meeting-minutes-chapters'}
         title={t('minutes.chapters')}
       >
-        {minutes.chapters.length === 0
+        {chapters.length === 0
           ? empty
-          : minutes.chapters.map((chapter, index) => (
+          : chapters.map((chapter, index) => (
               <Flexbox horizontal align={'baseline'} className={styles.item} gap={8} key={index}>
                 <button
                   className={styles.cite}
@@ -248,9 +251,9 @@ const Minutes = ({ meeting, onSeek, segmentStarts, speakerNameByLabel }: Minutes
         testId={'meeting-minutes-decisions'}
         title={t('minutes.decisions')}
       >
-        {minutes.decisions.length === 0
+        {decisions.length === 0
           ? empty
-          : minutes.decisions.map((decision, index) => (
+          : decisions.map((decision, index) => (
               <Flexbox className={styles.item} gap={4} key={index}>
                 <Text>{decision.text}</Text>
                 {citation(decision)}
@@ -263,7 +266,7 @@ const Minutes = ({ meeting, onSeek, segmentStarts, speakerNameByLabel }: Minutes
         title={t('minutes.actionItems')}
       >
         <ActionItems
-          items={minutes.actionItems}
+          items={actionItems}
           meetingId={meeting.id}
           renderCitation={citation}
           speakerNameByLabel={speakerNameByLabel}

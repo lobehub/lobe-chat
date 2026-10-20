@@ -28,6 +28,7 @@ import { useUserStore } from '@/store/user';
 import { preferenceSelectors } from '@/store/user/selectors';
 
 import { buildActionItemDrafts, type DraftMap, selectedTaskItems } from './actionItemDrafts';
+import { taskCreationCounts } from './normalize';
 
 const styles = createStaticStyles(({ css }) => ({
   item: css`
@@ -139,13 +140,11 @@ const ActionItems = ({
     if (toCreate.length === 0) return;
     setCreating(true);
     try {
-      const result = await meetingService.createTasks(meetingId, toCreate);
-      if (result.created.length > 0) {
-        toast.success(t('actionItem.createSuccess', { count: result.created.length }));
-      }
-      if (result.failed.length > 0) {
-        toast.error(t('actionItem.createPartialFailed', { count: result.failed.length }));
-      }
+      const { created, failed } = taskCreationCounts(
+        await meetingService.createTasks(meetingId, toCreate),
+      );
+      if (created > 0) toast.success(t('actionItem.createSuccess', { count: created }));
+      if (failed > 0) toast.error(t('actionItem.createPartialFailed', { count: failed }));
       await meetingActions.refreshMeetingDetail(meetingId);
     } catch {
       toast.error(t('actionItem.createFailed'));
