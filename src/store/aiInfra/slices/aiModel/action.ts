@@ -273,12 +273,17 @@ export class AiModelActionImpl {
   ): Promise<void> => {
     const key = modelReasoningConfigKey(provider, id);
     const previous = this.#get().modelReasoningConfigMap[key];
+    const saved = { ...previous, ...value };
+    // The identity / workspace the save belongs to. A switch while it is in
+    // flight clears the map; nothing of this save may land in the new scope.
+    const scope = aiModelReasoningConfigResource.scope.get();
+    const isSameScope = () => aiModelReasoningConfigResource.scope.get() === scope;
 
     this.#set(
       (state) => ({
         modelReasoningConfigMap: {
           ...state.modelReasoningConfigMap,
-          [key]: { ...previous, ...value },
+          [key]: saved,
         },
         modelReasoningConfigUpdatingKeys: [...state.modelReasoningConfigUpdatingKeys, key],
       }),
@@ -289,18 +294,19 @@ export class AiModelActionImpl {
     try {
       await aiModelService.updateAiModelReasoningConfig(id, provider, value);
     } catch (error) {
-      this.#set(
-        (state) => {
-          const modelReasoningConfigMap = { ...state.modelReasoningConfigMap };
-          // A leftover `[key]: undefined` would read as "cached empty" and stop
-          // ensureModelReasoningConfig from ever fetching the server value
-          if (previous === undefined) delete modelReasoningConfigMap[key];
-          else modelReasoningConfigMap[key] = previous;
-          return { modelReasoningConfigMap };
-        },
-        false,
-        `updateModelReasoningConfig/rollback/${key}`,
-      );
+      if (isSameScope())
+        this.#set(
+          (state) => {
+            const modelReasoningConfigMap = { ...state.modelReasoningConfigMap };
+            // A leftover `[key]: undefined` would read as "cached empty" and stop
+            // ensureModelReasoningConfig from ever fetching the server value
+            if (previous === undefined) delete modelReasoningConfigMap[key];
+            else modelReasoningConfigMap[key] = previous;
+            return { modelReasoningConfigMap };
+          },
+          false,
+          `updateModelReasoningConfig/rollback/${key}`,
+        );
 
       toast.error(t('reasoningEffort.updateFailed', { ns: 'chat' }));
       throw error;
@@ -316,9 +322,11 @@ export class AiModelActionImpl {
       );
     }
 
+    if (!isSameScope()) return;
+
     // The saved value is confirmed now: persist it, so a reload paints it
     // even when the refresh below never lands.
-    this.#reasoningConfig.update(key, () => ({ value: this.#get().modelReasoningConfigMap[key] }));
+    this.#reasoningConfig.update(key, () => ({ value: saved }));
 
     // Refresh only AFTER the updating marker is cleared: the server merges
     // this partial write into previously saved fields, and the replica drops
@@ -326,7 +334,7 @@ export class AiModelActionImpl {
     // block would drop server-preserved sibling fields whenever the optimistic
     // base (`previous`) had not been fetched yet.
     try {
-      await this.#reasoningConfig.fetch({ model: id, provider }, { fresh: true });
+      await this.#reasoningConfig.fetch({ model: id, provider }, { fresh: true, scope });
     } catch {
       // best-effort: the saved value above stays
     }

@@ -172,6 +172,55 @@ describe('AiModelAction reasoning config', () => {
       );
     });
 
+    it('keeps a save that settles after a scope switch out of the new scope', async () => {
+      vi.spyOn(aiModelService, 'getAiModelReasoningConfig').mockImplementation(pending);
+      const sync = renderHook(
+        () => useStore.getState().useFetchAiModelReasoningConfig('gpt-5.2', 'openai'),
+        { wrapper },
+      );
+      let finishSave!: () => void;
+      vi.spyOn(aiModelService, 'updateAiModelReasoningConfig').mockImplementation(
+        () => new Promise((r) => (finishSave = () => r(undefined as any))),
+      );
+      const fetchSpy = vi
+        .spyOn(aiModelService, 'getAiModelReasoningConfig')
+        .mockResolvedValue({ reasoningEffort: 'low' });
+
+      let saving!: Promise<void>;
+      act(() => {
+        saving = useStore.getState().updateModelReasoningConfig('gpt-5.2', 'openai', {
+          reasoningEffort: 'high',
+        });
+      });
+
+      // The account / workspace changes while the save is in flight
+      useScope(`ai-model-user-${randomUUID()}:personal`);
+      vi.spyOn(aiModelService, 'getAiModelReasoningConfig').mockImplementation(pending);
+      sync.rerender();
+      await waitFor(() =>
+        expect('openai/gpt-5.2' in useStore.getState().modelReasoningConfigMap).toBe(false),
+      );
+      fetchSpy.mockClear();
+
+      await act(async () => {
+        finishSave();
+        await saving;
+      });
+
+      expect('openai/gpt-5.2' in useStore.getState().modelReasoningConfigMap).toBe(false);
+      expect(
+        useStore.getState().modelReasoningConfigReplica.entries['openai/gpt-5.2'],
+      ).toBeUndefined();
+      expect(fetchSpy).not.toHaveBeenCalled();
+      await new Promise((r) => setTimeout(r, 50));
+      expect(
+        await aiModelReasoningConfigResource.storage!.get({
+          queryKey: REASONING_STORAGE_KEY,
+          scope,
+        }),
+      ).toBeUndefined();
+    });
+
     it('should rollback the optimistic value and toast on failure', async () => {
       act(() => {
         useStore.setState({
