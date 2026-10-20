@@ -11,6 +11,7 @@ import type { LobeChatDatabase, Transaction } from '../../type';
 import { GROUP_SUPERVISOR_ROLE, resolveGroupMembershipType } from '../../utils/groupMembership';
 import { normalizeInboxAgentMeta } from '../../utils/inboxAgent';
 import { buildWorkspaceWhere } from '../../utils/workspace';
+import { GROUP_HAS_INACCESSIBLE_MEMBER } from './constants';
 import {
   type CopyAgentGroupToWorkspaceOptions,
   copyGroupToWorkspace,
@@ -264,6 +265,18 @@ export class AgentGroupRepository {
     // A failed group insert (e.g. a duplicate clientId on retry) must not
     // leave the synthetic supervisor agent behind.
     return this.db.transaction(async (trx) => {
+      const memberIds = [...new Set(agentMembers)];
+      if (memberIds.length > 0) {
+        const visibleMembers = await trx
+          .select({ id: agents.id })
+          .from(agents)
+          .where(and(inArray(agents.id, memberIds), this.scope.agentOwnership()));
+
+        if (visibleMembers.length !== memberIds.length) {
+          throw new Error(GROUP_HAS_INACCESSIBLE_MEMBER);
+        }
+      }
+
       // 1. Create supervisor agent (virtual agent)
       const [supervisorAgent] = await trx
         .insert(agents)

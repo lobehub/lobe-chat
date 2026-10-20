@@ -601,6 +601,24 @@ describe('AgentGroupRepository', () => {
       expect(after).toHaveLength(before.length);
     });
 
+    it('should refuse member agents the caller cannot see', async () => {
+      await serverDB.insert(users).values({ id: 'foreign-owner' }).onConflictDoNothing();
+      await serverDB
+        .insert(agents)
+        .values({ id: 'foreign-agent', title: 'Foreign', userId: 'foreign-owner' });
+
+      await expect(
+        agentGroupRepo.createGroupWithSupervisor({ title: 'Leaky' }, ['foreign-agent']),
+      ).rejects.toThrow(GROUP_HAS_INACCESSIBLE_MEMBER);
+
+      expect(await serverDB.select().from(chatGroups).where(eq(chatGroups.title, 'Leaky'))).toEqual(
+        [],
+      );
+      expect(await serverDB.select().from(agents).where(eq(agents.userId, userId))).toEqual(
+        expect.not.arrayContaining([expect.objectContaining({ virtual: true })]),
+      );
+    });
+
     it('should create group with supervisor and member agents', async () => {
       // Create member agents first
       await serverDB.insert(agents).values([
