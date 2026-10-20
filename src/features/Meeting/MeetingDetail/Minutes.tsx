@@ -1,18 +1,40 @@
-import type { MeetingActionItem, MeetingDecision } from '@lobechat/types';
-import { createStaticStyles, cssVar, Flexbox, Icon, Markdown, Tag, Text } from '@lobehub/ui';
-import { CircleCheckIcon, ListTodoIcon, PlayIcon, SparklesIcon } from 'lucide-react';
+import type { MeetingActionItem } from '@lobechat/types';
+import {
+  Button,
+  createStaticStyles,
+  cssVar,
+  Flexbox,
+  Icon,
+  Markdown,
+  Tag,
+  Text,
+} from '@lobehub/ui';
+import {
+  BookmarkIcon,
+  CircleCheckIcon,
+  ListTodoIcon,
+  PlayIcon,
+  RefreshCwIcon,
+  SparklesIcon,
+} from 'lucide-react';
 import type { ReactNode } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwareNavigate';
+import AsyncError from '@/components/AsyncError';
+import { type MeetingDetail, meetingService } from '@/services/meeting';
+import { isMeetingProcessing, meetingActions } from '@/store/meeting';
 
 import { formatClock } from '../format';
+import ActionItems from './ActionItems';
+import { minutesLists } from './normalize';
 
 const styles = createStaticStyles(({ css }) => ({
   cite: css`
     cursor: pointer;
 
     display: inline-flex;
+    flex: none;
     gap: 2px;
     align-items: center;
 
@@ -22,6 +44,7 @@ const styles = createStaticStyles(({ css }) => ({
     font-size: 12px;
     font-variant-numeric: tabular-nums;
     color: ${cssVar.colorTextTertiary};
+    white-space: nowrap;
 
     background: none;
 
@@ -45,17 +68,13 @@ const styles = createStaticStyles(({ css }) => ({
   `,
 }));
 
-interface MinutesData {
-  actionItems: MeetingActionItem[];
-  decisions: MeetingDecision[];
-  summary: string | null;
-}
-
 interface MinutesProps {
-  minutes: MinutesData | null;
+  meeting: Pick<MeetingDetail, 'error' | 'id' | 'minutes' | 'status'>;
   onSeek: (ms: number) => void;
   /** Start offset of each transcript segment, for the citations. */
   segmentStarts: Map<string, number>;
+  /** Shown name of each diarization label, for owners the minutes name by label. */
+  speakerNameByLabel: Map<string, string>;
 }
 
 const Section = ({
@@ -79,10 +98,13 @@ const Section = ({
 );
 
 const Citation = ({
+  fallbackMs,
   onSeek,
   segmentIds,
   segmentStarts,
 }: {
+  /** Stored offset of the source, used when its segments were replaced by a later refine. */
+  fallbackMs?: number;
   onSeek: (ms: number) => void;
   segmentIds: string[];
   segmentStarts: Map<string, number>;
@@ -91,9 +113,9 @@ const Citation = ({
   const starts = segmentIds
     .map((id) => segmentStarts.get(id))
     .filter((ms): ms is number => ms !== undefined);
-  if (starts.length === 0) return null;
+  if (starts.length === 0 && fallbackMs === undefined) return null;
 
-  const first = Math.min(...starts);
+  const first = starts.length > 0 ? Math.min(...starts) : fallbackMs!;
   return (
     <button className={styles.cite} type={'button'} onClick={() => onSeek(first)}>
       <Icon icon={PlayIcon} size={12} />
@@ -102,22 +124,79 @@ const Citation = ({
   );
 };
 
-const ACTION_STATUS_COLOR = { created: 'success', dismissed: undefined, suggested: 'processing' };
-
-const Minutes = ({ minutes, onSeek, segmentStarts }: MinutesProps) => {
+const Minutes = ({ meeting, onSeek, segmentStarts, speakerNameByLabel }: MinutesProps) => {
   const { t } = useTranslation('meeting');
-  const navigate = useWorkspaceAwareNavigate();
+  const [generating, setGenerating] = useState(false);
+  const { minutes } = meeting;
   const empty = <Text type={'secondary'}>{t('minutes.empty')}</Text>;
+  const minutesError = meeting.error?.stage === 'minutes' ? meeting.error : undefined;
 
-  if (!minutes)
+  const generate = async () => {
+    setGenerating(true);
+    try {
+      await meetingService.generateMinutes(meeting.id);
+    } finally {
+      await meetingActions.refreshMeetingDetail(meeting.id).catch(() => undefined);
+      setGenerating(false);
+    }
+  };
+
+  const regenerate = (
+    <Button icon={RefreshCwIcon} loading={generating} onClick={() => void generate()}>
+      {minutes ? t('minutes.regenerate') : t('minutes.generate')}
+    </Button>
+  );
+
+  const errorAlert = minutesError && (
+    <AsyncError
+      action={regenerate}
+      justify={'start'}
+      title={t('minutes.error.title')}
+      variant={'inline'}
+      description={t(`minutes.error.${minutesError.code}`, {
+        defaultValue: t('minutes.error.summarization_failed'),
+      })}
+    />
+  );
+
+  if (!minutes) {
+    const busy = meeting.status === 'summarizing' || generating;
     return (
       <Section icon={SparklesIcon} testId={'meeting-minutes'} title={t('minutes.title')}>
-        <Text type={'secondary'}>{t('minutes.pending')}</Text>
+        {errorAlert ??
+          (busy ? (
+            <Text type={'secondary'}>{t('minutes.generating')}</Text>
+          ) : isMeetingProcessing(meeting.status) ? (
+            <Text type={'secondary'}>{t('minutes.pending')}</Text>
+          ) : (
+            <Flexbox align={'flex-start'} gap={8}>
+              <Text type={'secondary'}>{t('minutes.notGenerated')}</Text>
+              {regenerate}
+            </Flexbox>
+          ))}
       </Section>
     );
+  }
+
+  const { actionItems, chapters, decisions, keywords } = minutesLists(minutes);
+
+  const citation = (item: Pick<MeetingActionItem, 'segmentIds' | 'startMs'>) => (
+    <Citation
+      fallbackMs={item.startMs}
+      segmentIds={item.segmentIds}
+      segmentStarts={segmentStarts}
+      onSeek={onSeek}
+    />
+  );
 
   return (
     <Flexbox gap={12}>
+      {errorAlert}
+      {meeting.status === 'summarizing' && (
+        <Text fontSize={12} type={'secondary'}>
+          {t('minutes.generating')}
+        </Text>
+      )}
       <Section icon={SparklesIcon} testId={'meeting-minutes-summary'} title={t('minutes.summary')}>
         {minutes.summary ? (
           <Markdown fontSize={14} variant={'chat'}>
@@ -126,22 +205,53 @@ const Minutes = ({ minutes, onSeek, segmentStarts }: MinutesProps) => {
         ) : (
           empty
         )}
+        {keywords.length > 0 && (
+          <Flexbox horizontal gap={6} wrap={'wrap'}>
+            {keywords.map((keyword) => (
+              <Tag key={keyword} size={'small'}>
+                {keyword}
+              </Tag>
+            ))}
+          </Flexbox>
+        )}
+        {!minutesError && (
+          <Flexbox horizontal justify={'flex-end'}>
+            {regenerate}
+          </Flexbox>
+        )}
+      </Section>
+      <Section
+        icon={BookmarkIcon}
+        testId={'meeting-minutes-chapters'}
+        title={t('minutes.chapters')}
+      >
+        {chapters.length === 0
+          ? empty
+          : chapters.map((chapter, index) => (
+              <Flexbox horizontal align={'baseline'} className={styles.item} gap={8} key={index}>
+                <button
+                  className={styles.cite}
+                  type={'button'}
+                  onClick={() => onSeek(chapter.startMs)}
+                >
+                  <Icon icon={PlayIcon} size={12} />
+                  {formatClock(chapter.startMs)}
+                </button>
+                <Text>{chapter.title}</Text>
+              </Flexbox>
+            ))}
       </Section>
       <Section
         icon={CircleCheckIcon}
         testId={'meeting-minutes-decisions'}
         title={t('minutes.decisions')}
       >
-        {minutes.decisions.length === 0
+        {decisions.length === 0
           ? empty
-          : minutes.decisions.map((decision, index) => (
+          : decisions.map((decision, index) => (
               <Flexbox className={styles.item} gap={4} key={index}>
                 <Text>{decision.text}</Text>
-                <Citation
-                  segmentIds={decision.segmentIds}
-                  segmentStarts={segmentStarts}
-                  onSeek={onSeek}
-                />
+                {citation(decision)}
               </Flexbox>
             ))}
       </Section>
@@ -150,44 +260,12 @@ const Minutes = ({ minutes, onSeek, segmentStarts }: MinutesProps) => {
         testId={'meeting-minutes-action-items'}
         title={t('minutes.actionItems')}
       >
-        {minutes.actionItems.length === 0
-          ? empty
-          : minutes.actionItems.map((item) => (
-              <Flexbox className={styles.item} gap={6} key={item.id}>
-                <Flexbox horizontal align={'flex-start'} gap={8} justify={'space-between'}>
-                  <Text style={{ minWidth: 0 }}>{item.text}</Text>
-                  <Tag color={ACTION_STATUS_COLOR[item.status]} size={'small'}>
-                    {t(`actionItem.status.${item.status}`)}
-                  </Tag>
-                </Flexbox>
-                <Flexbox horizontal align={'center'} gap={12} wrap={'wrap'}>
-                  {item.assigneeHint && (
-                    <Text fontSize={12} type={'secondary'}>
-                      {t('actionItem.assignee', { name: item.assigneeHint })}
-                    </Text>
-                  )}
-                  {item.dueDate && (
-                    <Text fontSize={12} type={'secondary'}>
-                      {t('actionItem.due', { date: item.dueDate })}
-                    </Text>
-                  )}
-                  <Citation
-                    segmentIds={item.segmentIds}
-                    segmentStarts={segmentStarts}
-                    onSeek={onSeek}
-                  />
-                  {item.taskId && (
-                    <button
-                      className={styles.cite}
-                      type={'button'}
-                      onClick={() => navigate(`/task/${item.taskId}`)}
-                    >
-                      {t('actionItem.openTask')}
-                    </button>
-                  )}
-                </Flexbox>
-              </Flexbox>
-            ))}
+        <ActionItems
+          items={actionItems}
+          meetingId={meeting.id}
+          renderCitation={citation}
+          speakerNameByLabel={speakerNameByLabel}
+        />
       </Section>
     </Flexbox>
   );

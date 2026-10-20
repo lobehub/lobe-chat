@@ -40,6 +40,8 @@ export interface MeetingRecorderDeps {
     }) => Promise<{ id: string } | undefined>;
     finish: (meetingId: string, durationMs: number) => Promise<unknown>;
     pause: (meetingId: string) => Promise<unknown>;
+    /** Post-recording pass: full transcript with speakers, then the minutes. */
+    refine: (meetingId: string) => Promise<unknown>;
     resume: (meetingId: string) => Promise<unknown>;
   };
   createAudioRecorder: (stream: MediaStream) => AudioRecorder;
@@ -281,6 +283,11 @@ export class MeetingRecorderController {
       await this.#deps.api.attachAudio(meetingId, fileId);
       this.#pendingUpload = undefined;
       this.#patch({ error: undefined, phase: 'done' }, 'stop/uploaded');
+      // Runs on the server for minutes; the meeting page follows its status, so nothing waits here.
+      void this.#deps.api
+        .refine(meetingId)
+        .catch((error) => console.error('[meeting:recorder] refine not started', error))
+        .finally(() => this.#deps.refreshMeetings());
     } catch (error) {
       console.error('[meeting:recorder] audio upload failed', error);
       this.#patch({ error: 'upload_failed', phase: 'done' }, 'stop/uploadFailed');

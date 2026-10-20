@@ -2,6 +2,7 @@ import type {
   MeetingActionItem,
   MeetingChapter,
   MeetingDecision,
+  MeetingError,
   MeetingLanguage,
   MeetingPlatform,
   MeetingRealtimeProvider,
@@ -66,6 +67,8 @@ export const meetings = pgTable(
      * that captured it, e.g. `~/Library/Application Support/LobeHub/meetings/mtg_x.wav`.
      */
     localAudioPath: text('local_audio_path'),
+    /** Why the meeting is `failed`, so the UI can name the fix; NULL otherwise. */
+    error: jsonb('error').$type<MeetingError>(),
 
     visibility: text('visibility').$type<MeetingVisibility>().notNull().default('private'),
     ...timestamps,

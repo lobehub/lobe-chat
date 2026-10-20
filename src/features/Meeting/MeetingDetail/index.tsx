@@ -18,7 +18,7 @@ import { useTranslation } from 'react-i18next';
 import { createSurfaceSkeleton } from '@/components/Skeleton/Surface';
 import NavHeader from '@/features/NavHeader';
 import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwareNavigate';
-import type { MeetingDetail } from '@/services/meeting';
+import { type MeetingDetail, meetingService } from '@/services/meeting';
 import {
   isMeetingProcessing,
   meetingActions,
@@ -32,6 +32,7 @@ import { MEETING_LIST_PATH } from '../paths';
 import MeetingStatusTag from '../StatusTag';
 import AudioPlayer from './AudioPlayer';
 import Minutes from './Minutes';
+import { transcriptLists } from './normalize';
 import { buildSpeakerViews } from './speakers';
 import Transcript from './Transcript';
 import { usePlayback } from './usePlayback';
@@ -111,20 +112,40 @@ const MeetingBody = ({ meeting }: { meeting: MeetingDetail }) => {
   const playback = usePlayback(meeting.durationMs);
   const [follow, setFollow] = useState(true);
   const { seek } = playback;
+  const { segments, speakers: speakerList } = transcriptLists(meeting);
 
   const speakers = useMemo(
-    () => buildSpeakerViews(meeting.speakers, (index) => t('detail.transcript.speaker', { index })),
-    [meeting.speakers, t],
+    () => buildSpeakerViews(speakerList, (index) => t('detail.transcript.speaker', { index })),
+    [speakerList, t],
   );
   const segmentStarts = useMemo(
-    () => new Map(meeting.segments.map((segment) => [segment.id, segment.startMs])),
-    [meeting.segments],
+    () => new Map(segments.map((segment) => [segment.id, segment.startMs])),
+    [segments],
   );
-  const activeIndex = findActiveSegment(meeting.segments, playback.currentMs);
+  const activeIndex = findActiveSegment(segments, playback.currentMs);
   const onSeek = useCallback((ms: number) => seek(ms), [seek]);
+  const meetingId = meeting.id;
+  const onRenameSpeaker = useCallback(
+    async (speakerId: string, name: string) => {
+      await meetingService.renameSpeaker(meetingId, speakerId, name);
+      await meetingActions.refreshMeetingDetail(meetingId);
+    },
+    [meetingId],
+  );
+  /** Diarization label ("S3") → the name shown for that speaker ("发言人 3", or the given name). */
+  const speakerNameByLabel = useMemo(
+    () =>
+      new Map(
+        speakerList.flatMap((speaker) => {
+          const view = speakers.get(speaker.id);
+          return view ? [[speaker.label, view.name] as const] : [];
+        }),
+      ),
+    [speakerList, speakers],
+  );
 
   const processing = isMeetingProcessing(meeting.status);
-  const isDraft = meeting.segmentSource === 'realtime' && meeting.segments.length > 0;
+  const isDraft = meeting.segmentSource === 'realtime' && segments.length > 0;
   const audioHint = meeting.localAudioPath ? t('audio.local') : t('audio.unavailable');
 
   return (
@@ -163,17 +184,24 @@ const MeetingBody = ({ meeting }: { meeting: MeetingDetail }) => {
         <Transcript
           activeIndex={activeIndex}
           follow={follow && playback.playing}
-          segments={meeting.segments}
+          renameLabel={t('detail.transcript.renameSpeaker')}
+          segments={segments}
           speakers={speakers}
           unknownSpeaker={t('detail.transcript.unknownSpeaker')}
           emptyText={
             processing ? t('detail.transcript.emptyProcessing') : t('detail.transcript.empty')
           }
+          onRenameSpeaker={onRenameSpeaker}
           onSeek={onSeek}
         />
       </div>
       <div className={styles.side}>
-        <Minutes minutes={meeting.minutes} segmentStarts={segmentStarts} onSeek={onSeek} />
+        <Minutes
+          meeting={meeting}
+          segmentStarts={segmentStarts}
+          speakerNameByLabel={speakerNameByLabel}
+          onSeek={onSeek}
+        />
       </div>
     </div>
   );

@@ -43,6 +43,7 @@ const createHarness = (overrides: Partial<MeetingRecorderDeps> = {}) => {
     create: vi.fn(async () => ({ id: 'mtg_1' })),
     finish: vi.fn(async () => undefined),
     pause: vi.fn(async () => undefined),
+    refine: vi.fn(async () => undefined),
     resume: vi.fn(async () => undefined),
   };
   const transcribe = vi.fn(async () => 'hello world');
@@ -211,6 +212,8 @@ describe('MeetingRecorderController', () => {
     expect(file).toBeInstanceOf(File);
     expect((file as File).name).toBe('Weekly sync.webm');
     expect(harness.api.attachAudio).toHaveBeenCalledWith('mtg_1', 'file_1');
+    // With the audio stored, the post-recording pass (transcript, then minutes) starts.
+    expect(harness.api.refine).toHaveBeenCalledWith('mtg_1');
     expect(harness.recorder).toMatchObject({ error: undefined, phase: 'done' });
     // The recorder must stop before the capture closes the stream.
     expect(
@@ -230,6 +233,7 @@ describe('MeetingRecorderController', () => {
     await harness.controller.stop();
     expect(harness.recorder).toMatchObject({ error: 'upload_failed', phase: 'done' });
     expect(harness.api.attachAudio).not.toHaveBeenCalled();
+    expect(harness.api.refine).not.toHaveBeenCalled();
 
     await harness.controller.retryUpload();
 

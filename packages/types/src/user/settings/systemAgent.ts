@@ -26,6 +26,14 @@ export interface UserSystemAgentConfig {
   goal: SystemAgentItem;
   historyCompress: SystemAgentItem;
   inputCompletion: SystemAgentItem;
+  /** Model that writes meeting minutes and extracts their action items from the transcript. */
+  meetingMinutes: SystemAgentItem;
+  /**
+   * Speech-to-text model for the authoritative post-recording meeting transcript, and the
+   * near-live draft where no realtime gateway is deployed. A diarizing model (name contains
+   * `diarize`) also labels speakers.
+   */
+  meetingTranscription: SystemAgentItem;
   /** Model used to turn onboarding evidence into background-safe task recommendations. */
   onboardingTaskRecommender: SystemAgentItem;
   /** Model used to synthesize connector evidence into the onboarding understanding. */
