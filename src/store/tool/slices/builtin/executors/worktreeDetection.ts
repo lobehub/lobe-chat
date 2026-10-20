@@ -1,9 +1,5 @@
 import { isDesktop } from '@lobechat/const';
-import type {
-  DeviceGitLinkedPullRequest,
-  DeviceGitUpstreamRef,
-  WorkingDirConfig,
-} from '@lobechat/types';
+import type { DeviceGitUpstreamRef } from '@lobechat/types';
 import { getWorkingDirSourcePath } from '@lobechat/types';
 import isEqual from 'fast-deep-equal';
 
@@ -12,6 +8,17 @@ import { topicSelectors } from '@/store/chat/selectors';
 import { getChatStoreState } from '@/store/chat/store';
 import { getGitStatusStoreState } from '@/store/device/gitStatus/store';
 import { getElectronStoreState } from '@/store/electron';
+
+import {
+  applyBranchToConfig,
+  applyDetachedToConfig,
+  applyPullRequestToConfig,
+  applyPushToConfig,
+  applyWorktreeAddToConfig,
+  applyWorktreeExitToConfig,
+  type PullRequestCreateInfo,
+  type WorktreeAddInfo,
+} from './worktreeConfigEffects';
 
 /**
  * Detect git / gh side effects in a heterogeneous CLI agent's successful shell
@@ -93,11 +100,6 @@ const CC_EXIT_PATTERN = /^Exited\b/;
  */
 const CC_SESSION_ENTER_MARKER = 'The session is now working in the worktree';
 
-interface WorktreeAddInfo {
-  branch?: string;
-  path: string;
-}
-
 interface WorktreeAddParseResult {
   branch?: string;
   /** Resolved absolute path, present only when the command yielded a trustworthy literal. */
@@ -107,11 +109,6 @@ interface WorktreeAddParseResult {
 }
 
 type BranchSwitchInfo = { branch: string } | { detached: true };
-
-interface PullRequestCreateInfo {
-  branch?: string;
-  pullRequest: DeviceGitLinkedPullRequest;
-}
 
 const stripQuotes = (token: string): string => {
   if (token.length >= 2) {
@@ -533,166 +530,6 @@ const parseGitPush = (
   if (!remoteBranch) return undefined;
 
   return { branch: remoteBranch, remote: push.remote ?? 'origin' };
-};
-
-const applyBranchToConfig = (
-  currentConfig: WorkingDirConfig | undefined,
-  source: string,
-  branch: string,
-): WorkingDirConfig => {
-  const branchChanged = currentConfig?.git?.branch !== branch;
-  const git: NonNullable<WorkingDirConfig['git']> = {
-    ...currentConfig?.git,
-    branch,
-  };
-
-  delete git.detached;
-  // The old branch's remote ref and PR describe a branch the topic has left. Held
-  // onto, `upstream` would aim the PR lookup at the wrong head — worse than none.
-  if (branchChanged) {
-    delete git.github;
-    delete git.upstream;
-  }
-
-  return {
-    ...currentConfig,
-    git,
-    path: source,
-    ...(currentConfig?.repoType ? { repoType: currentConfig.repoType } : {}),
-  };
-};
-
-const applyDetachedToConfig = (
-  currentConfig: WorkingDirConfig | undefined,
-  source: string,
-): WorkingDirConfig => {
-  const git: NonNullable<WorkingDirConfig['git']> = {
-    ...currentConfig?.git,
-    detached: true,
-  };
-
-  delete git.branch;
-  delete git.github;
-  delete git.upstream;
-
-  return {
-    ...currentConfig,
-    git,
-    path: source,
-    ...(currentConfig?.repoType ? { repoType: currentConfig.repoType } : {}),
-  };
-};
-
-const applyPullRequestToConfig = (
-  currentConfig: WorkingDirConfig | undefined,
-  source: string,
-  info: PullRequestCreateInfo,
-): WorkingDirConfig => {
-  const branch = info.branch ?? currentConfig?.git?.branch;
-  const git: NonNullable<WorkingDirConfig['git']> = {
-    ...currentConfig?.git,
-    ...(branch ? { branch } : {}),
-    github: {
-      pullRequest: info.pullRequest,
-      pullRequestStatus: 'ok',
-    },
-  };
-
-  delete git.detached;
-
-  return {
-    ...currentConfig,
-    git,
-    path: source,
-    repoType: 'github',
-  };
-};
-
-/**
- * Record where the branch now publishes to. This is what makes the PR lookup work at
- * all for a worktree: its local branch name (`worktree-feat+x`) never exists on the
- * remote, so only the ref the push actually created (`feat/y`) can find the PR.
- */
-const applyPushToConfig = (
-  currentConfig: WorkingDirConfig | undefined,
-  source: string,
-  upstream: DeviceGitUpstreamRef,
-): WorkingDirConfig => {
-  const previous = currentConfig?.git?.upstream?.branch;
-  const git: NonNullable<WorkingDirConfig['git']> = {
-    ...currentConfig?.git,
-    upstream,
-  };
-
-  // Re-pointing the branch at a DIFFERENT remote ref orphans the PR bound to the old
-  // one. Only a change invalidates it — a first push must not drop a PR that a
-  // preceding `gh pr create` in the same run just recorded.
-  if (previous && previous !== upstream.branch) delete git.github;
-
-  return {
-    ...currentConfig,
-    git,
-    path: source,
-    ...(currentConfig?.repoType ? { repoType: currentConfig.repoType } : {}),
-  };
-};
-
-const applyWorktreeAddToConfig = (
-  currentConfig: WorkingDirConfig | undefined,
-  source: string,
-  info: WorktreeAddInfo,
-): WorkingDirConfig => {
-  const branchChanged = !!info.branch && currentConfig?.git?.branch !== info.branch;
-  const git: NonNullable<WorkingDirConfig['git']> = {
-    ...currentConfig?.git,
-    activeWorktree: info.path,
-    ...(info.branch ? { branch: info.branch } : {}),
-    isWorktree: true,
-  };
-
-  if (info.branch) delete git.detached;
-  if (branchChanged) {
-    delete git.github;
-    delete git.upstream;
-  }
-
-  return {
-    ...currentConfig,
-    git,
-    path: source,
-    ...(currentConfig?.repoType ? { repoType: currentConfig.repoType } : {}),
-  };
-};
-
-/**
- * The session left the worktree and is back in the source repo. `branch`, its
- * `upstream` ref and the linked `github` PR described the worktree's branch, not the
- * source repo's, so they are dropped rather than left pointing at a branch the topic
- * is no longer on — the source branch is unknown until the next `git switch` /
- * `checkout` refreshes it.
- */
-const applyWorktreeExitToConfig = (
-  currentConfig: WorkingDirConfig | undefined,
-  source: string,
-): WorkingDirConfig => {
-  const git: NonNullable<WorkingDirConfig['git']> = {
-    ...currentConfig?.git,
-    isWorktree: false,
-  };
-
-  delete git.activeWorktree;
-  if (currentConfig?.git?.isWorktree) {
-    delete git.branch;
-    delete git.github;
-    delete git.upstream;
-  }
-
-  return {
-    ...currentConfig,
-    git,
-    path: source,
-    ...(currentConfig?.repoType ? { repoType: currentConfig.repoType } : {}),
-  };
 };
 
 /** Collapse `.`/`..` segments in a POSIX path without touching the filesystem. */
