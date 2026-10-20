@@ -887,7 +887,7 @@ describe('ToolExecutionService', () => {
       const result = await run({ agentShareVisitor: { shareId: 'share-1' } });
 
       expect(result.success).toBe(false);
-      expect(result.content).toContain("belongs to this agent's creator");
+      expect(result.content).toContain("set up on this agent creator's side");
       expect(result.content).toContain('do not ask them to sign in or authorize');
       expect(result.error).toMatchObject({ code: 'UNAUTHORIZED', kind: 'stop' });
     });

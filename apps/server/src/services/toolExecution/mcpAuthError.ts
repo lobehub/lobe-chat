@@ -30,13 +30,14 @@ export const isMcpAuthorizationError = (error: unknown): boolean => {
  * Model-visible content for an MCP credential rejection. The raw transport
  * error says nothing about who owns the connection, so models guessed and told
  * Agent Share visitors to "reauthorize in the browser" — but a shared run
- * executes with the creator's connection, which the visitor can neither see
- * nor repair (LOBE-14771).
+ * executes with a connection from the creator's side (theirs, or one a
+ * workspace member authorized), which the visitor can neither see nor repair
+ * (LOBE-14771).
  */
 export const buildMcpAuthorizationErrorContent = (
   identifier: string,
   options: { isShareVisitor: boolean },
 ): string =>
   options.isShareVisitor
-    ? `The '${identifier}' connection belongs to this agent's creator, and its authorization has expired or been revoked. The person in this shared conversation cannot reconnect it and has no sign-in or authorization option here. Tell them this tool is unavailable until the agent's creator reconnects it, do not ask them to sign in or authorize anything, and continue with what you can do without this tool.`
+    ? `The '${identifier}' connection was set up on this agent creator's side (by the creator or a member of their workspace), and its authorization has expired or been revoked. The person in this shared conversation cannot reconnect it and has no sign-in or authorization option here. Tell them this tool is unavailable until it is reconnected on the creator's side, do not ask them to sign in or authorize anything, and continue with what you can do without this tool.`
     : `The '${identifier}' connection's authorization has expired or been revoked (HTTP 401). Ask the user to reconnect '${identifier}' in their tool or connector settings, then retry.`;

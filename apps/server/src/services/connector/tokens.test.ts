@@ -20,6 +20,7 @@ const oauthConnector = (id: string, expiresAt: number) =>
     credentials: { accessToken: `old-${id}`, expiresAt, refreshToken: 'refresh', type: 'oauth2' },
     id,
     identifier: id,
+    isEnabled: true,
     mcpServerUrl: 'https://mcp.example.com/mcp',
     oidcConfig: { clientId: 'client', issuer: 'https://auth.example.com' },
   }) as any;
@@ -60,6 +61,15 @@ describe('refreshExpiredConnectorTokens', () => {
     const result = await refreshExpiredConnectorTokens([valid], { update: vi.fn() } as any);
 
     expect(result).toEqual([valid]);
+    expect(discoverAuthorizationServerMetadata).not.toHaveBeenCalled();
+  });
+
+  it('skips disabled connectors, which never reach the manifests', async () => {
+    const disabled = { ...oauthConnector('disabled', NOW - 1000), isEnabled: false };
+
+    const result = await refreshExpiredConnectorTokens([disabled], { update: vi.fn() } as any);
+
+    expect(result).toEqual([disabled]);
     expect(discoverAuthorizationServerMetadata).not.toHaveBeenCalled();
   });
 

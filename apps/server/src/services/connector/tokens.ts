@@ -178,7 +178,9 @@ export const refreshExpiredConnectorTokens = (
 ): Promise<DecryptedConnector[]> =>
   Promise.all(
     connectors.map(async (connector) => {
-      if (!isRefreshDue(connector)) return connector;
+      // Disabled connectors never reach the manifests, so refreshing them only
+      // delays the run and rotates credentials nobody uses.
+      if (!connector.isEnabled || !isRefreshDue(connector)) return connector;
 
       const refresh = refreshOnce(connector, connectorModel);
       let timer: ReturnType<typeof setTimeout> | undefined;
