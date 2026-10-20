@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it } from 'vitest';
 
-import { captureStyles, diffStyleSnapshots } from './snapshot';
+import { captureStyles, diffStyleSnapshots, packSnapshot, unpackSnapshot } from './snapshot';
 
 const mount = (html: string) => {
   const root = document.createElement('div');
@@ -57,5 +57,16 @@ describe('diffStyleSnapshots', () => {
     const root = mount('<div style="padding: 4px"><span>x</span></div>');
 
     expect(diffStyleSnapshots(captureStyles(root), captureStyles(root))).toEqual([]);
+  });
+});
+
+describe('packSnapshot', () => {
+  it('stores each distinct style once and restores the entries', () => {
+    const root = mount('<p style="color: red">a</p><p style="color: red">b</p><p>c</p>');
+    const entries = captureStyles(root);
+    const packed = packSnapshot(entries);
+
+    expect(packed.styles).toHaveLength(2);
+    expect(unpackSnapshot(packed)).toEqual(entries);
   });
 });

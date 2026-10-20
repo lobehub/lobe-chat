@@ -1,16 +1,21 @@
 import {
   captureStyles,
   diffStyleSnapshots,
+  type PackedSnapshot,
+  packSnapshot,
   type StyleSnapshotDiff,
-  type StyleSnapshotEntry,
+  unpackSnapshot,
 } from './snapshot';
 
 const STORAGE_PREFIX = 'lobe-style-snapshot:';
 
 interface StoredSnapshot {
-  entries: StyleSnapshotEntry[];
   selector: string;
+  snapshot: PackedSnapshot;
+  viewport: string;
 }
+
+const viewport = () => `${window.innerWidth}x${window.innerHeight}`;
 
 export interface StyleSnapshotApi {
   capture: (name: string, selector?: string) => number;
@@ -35,7 +40,11 @@ export const createStyleSnapshotApi = (storage: Storage = localStorage): StyleSn
     const entries = captureStyles(findRoot(selector));
     storage.setItem(
       STORAGE_PREFIX + name,
-      JSON.stringify({ entries, selector } satisfies StoredSnapshot),
+      JSON.stringify({
+        selector,
+        snapshot: packSnapshot(entries),
+        viewport: viewport(),
+      } satisfies StoredSnapshot),
     );
     return entries.length;
   },
@@ -49,7 +58,14 @@ export const createStyleSnapshotApi = (storage: Storage = localStorage): StyleSn
     const raw = storage.getItem(STORAGE_PREFIX + name);
     if (!raw) throw new Error(`[styleSnapshot] no snapshot named ${name}`);
     const saved = JSON.parse(raw) as StoredSnapshot;
-    return diffStyleSnapshots(saved.entries, captureStyles(findRoot(selector ?? saved.selector)));
+    if (saved.viewport !== viewport())
+      throw new Error(
+        `[styleSnapshot] viewport changed from ${saved.viewport} to ${viewport()}; resize back before comparing`,
+      );
+    return diffStyleSnapshots(
+      unpackSnapshot(saved.snapshot),
+      captureStyles(findRoot(selector ?? saved.selector)),
+    );
   },
 });
 

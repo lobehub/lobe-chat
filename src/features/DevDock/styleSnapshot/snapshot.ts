@@ -128,3 +128,41 @@ export const diffStyleSnapshots = (
 
   return diffs;
 };
+
+export interface PackedSnapshot {
+  rows: [key: string, label: string, box: string, style: number][];
+  styles: string[];
+}
+
+const STYLE_SEPARATOR = '\u0001';
+
+// localStorage holds ~5 MB per origin; most elements share one computed style.
+export const packSnapshot = (entries: StyleSnapshotEntry[]): PackedSnapshot => {
+  const styles: string[] = [];
+  const ids = new Map<string, number>();
+  const rows = entries.map(({ box, key, label, style }): PackedSnapshot['rows'][number] => {
+    const packed = STYLE_PROPS.map((prop) => style[prop]).join(STYLE_SEPARATOR);
+    let id = ids.get(packed);
+    if (id === undefined) {
+      id = styles.length;
+      styles.push(packed);
+      ids.set(packed, id);
+    }
+    return [key, label, box, id];
+  });
+  return { rows, styles };
+};
+
+export const unpackSnapshot = ({ rows, styles }: PackedSnapshot): StyleSnapshotEntry[] =>
+  rows.map(([key, label, box, id]) => {
+    const values = styles[id].split(STYLE_SEPARATOR);
+    return {
+      box,
+      key,
+      label,
+      style: Object.fromEntries(STYLE_PROPS.map((prop, index) => [prop, values[index]])) as Record<
+        StyleProp,
+        string
+      >,
+    };
+  });

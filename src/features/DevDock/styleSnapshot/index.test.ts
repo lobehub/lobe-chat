@@ -32,4 +32,17 @@ describe('createStyleSnapshotApi', () => {
   it('names the selector that matched nothing', () => {
     expect(() => createStyleSnapshotApi().capture('x', '#missing')).toThrow('#missing');
   });
+
+  it('refuses to compare across viewport sizes', () => {
+    document.body.innerHTML = '<main></main>';
+    createStyleSnapshotApi().capture('list', 'main');
+    const width = window.innerWidth;
+    Object.defineProperty(window, 'innerWidth', { configurable: true, value: width + 100 });
+
+    try {
+      expect(() => createStyleSnapshotApi().compare('list')).toThrow('viewport');
+    } finally {
+      Object.defineProperty(window, 'innerWidth', { configurable: true, value: width });
+    }
+  });
 });
