@@ -20,6 +20,7 @@
   "detail.transcript.unknownSpeaker": "发言人",
   "entry.notes": "会议纪要",
   "entry.record": "录制会议",
+  "entry.paused": "已暂停 {{time}}",
   "entry.recording": "录音中 {{time}}",
   "entry.tooltip": "录制会议，实时生成逐字稿",
   "list.empty.action": "录制第一场会议",
