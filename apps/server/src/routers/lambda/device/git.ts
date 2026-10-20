@@ -156,7 +156,8 @@ export const gitRouter = router({
         userId: ctx.userId,
         workspaceId: ctx.workspaceId,
       });
-      return result ?? [];
+      // `null` = the device could not answer; `[]` is a real answer (unborn repo).
+      return result ?? null;
     }),
   /**
    * Checkout (or create) a branch in a directory on a remote device, via the
@@ -397,7 +398,8 @@ export const gitRouter = router({
         userId: ctx.userId,
         workspaceId: ctx.workspaceId,
       });
-      return result ?? [];
+      // `null` = the device could not answer; `[]` is a real answer (no `origin`).
+      return result ?? null;
     }),
   /**
    * Repo-relative paths of dirty working-tree files for a directory on a remote

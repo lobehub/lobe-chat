@@ -137,6 +137,23 @@ describe('device replicas paint from storage first', () => {
     expect(gitService.listGitRemoteBranches).toHaveBeenCalledWith({ deviceId: DEVICE, path: CWD });
   });
 
+  // Review P2: a gateway outage used to arrive as `[]` and replace the cached list.
+  it('keeps the persisted remote branches when the device cannot answer', async () => {
+    await remoteBranchStorage.set(
+      { queryKey: REMOTE_BRANCH_ROW, scope },
+      { data: { value: [{ name: 'origin/main' }] }, updatedAt: 1 },
+    );
+    vi.mocked(gitService.listGitRemoteBranches).mockResolvedValue(undefined);
+
+    const { result } = renderHook(() => useGitRemoteBranches(CWD, true, DEVICE), { wrapper });
+
+    await waitFor(() => expect(result.current.error).toBeTruthy());
+    expect(result.current.data?.map((b) => b.name)).toEqual(['origin/main']);
+    expect((await remoteBranchStorage.get({ queryKey: REMOTE_BRANCH_ROW, scope }))?.data).toEqual({
+      value: [{ name: 'origin/main' }],
+    });
+  });
+
   it('paints the persisted tunnel links, then the server list replaces them', async () => {
     await tunnelStorage.set({ queryKey: TUNNEL_ROW, scope }, { data: [link], updatedAt: 1 });
     let answer!: (links: unknown[]) => void;
@@ -172,6 +189,43 @@ describe('device replicas paint from storage first', () => {
     answer({ ports: [port(3000)], supported: true });
     await waitFor(() => expect(result.current.data?.ports.map((p) => p.port)).toEqual([3000]));
     expect((result.current as { isConfirmed?: boolean }).isConfirmed).toBe(true);
+  });
+
+  // Review P2: a topic hook that mounts after the composer already fetched the
+  // shared row (e.g. hovering a background topic) gets no new response inside
+  // the dedupe window; it must still write the confirmed PR back to the topic.
+  it('writes a PR the composer already confirmed back to a topic that mounts later', async () => {
+    vi.mocked(gitService.getLinkedPullRequest).mockResolvedValue({
+      ghMissing: false,
+      pullRequest: { number: 9, state: 'open', title: 'feat', url: 'https://x/9' } as any,
+      pullRequestStatus: 'ok',
+    });
+    useChatStore.setState({ activeAgentId: 'agent-1' });
+    const metadata = {
+      workingDirectory: CWD,
+      workingDirectoryConfig: { git: { branch: 'feat/late' }, path: CWD, repoType: 'github' },
+    } as any;
+    const update = vi.fn().mockResolvedValue(undefined);
+    useChatStore.setState({ internal_updateTopicLinkedPullRequest: update } as any);
+
+    const { result, rerender } = renderHook(
+      ({ withTopic }: { withTopic: boolean }) => {
+        useChatStore
+          .getState()
+          .useFetchTopicLinkedPullRequest(withTopic ? 'topic-late' : undefined, metadata);
+        return useFetchGitLinkedPR(undefined, CWD, 'feat/late', true);
+      },
+      { initialProps: { withTopic: false }, wrapper },
+    );
+    await waitFor(() => expect(result.current.data?.pullRequest?.number).toBe(9));
+    expect(update).not.toHaveBeenCalled();
+
+    rerender({ withTopic: true });
+
+    await waitFor(() => expect(update).toHaveBeenCalled());
+    expect(update.mock.calls[0][0]).toMatchObject({ branch: 'feat/late', topicId: 'topic-late' });
+    expect(update.mock.calls[0][1]).toMatchObject({ pullRequest: { number: 9 } });
+    expect(gitService.getLinkedPullRequest).toHaveBeenCalledTimes(1);
   });
 
   // Regression: the topic refresh and the composer's lookup used the same SWR

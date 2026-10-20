@@ -55,7 +55,6 @@ import {
   resolveTopicGitTransport,
   toWorkingDirGithubState,
 } from '@/store/chat/utils/topicWorkingDirGit';
-import { useGitReviewStore } from '@/store/device/gitReview/store';
 import { useGlobalStore } from '@/store/global';
 import { getHomeStoreState } from '@/store/home';
 import { type StoreSetter } from '@/store/types';
@@ -81,9 +80,10 @@ import {
 import { type ChatTopicDispatch } from './reducer';
 import { topicSelectors } from './selectors';
 import { createTopicDetailSlice, RUN_WATCH_INTERVAL } from './topicDetail';
-
-/** Forwarded to SWR as given: a failed `gh` lookup is not retried. */
-const LINKED_PR_NO_RETRY = { shouldRetryOnError: false };
+import {
+  type TopicLinkedPullRequestRefreshParams,
+  useTopicLinkedPullRequestSync,
+} from './topicLinkedPullRequest';
 
 const n = setNamespace('t');
 
@@ -192,14 +192,6 @@ export interface RemoveUnstarredTopicOptions {
 }
 
 type Setter = StoreSetter<ChatStore>;
-
-interface TopicLinkedPullRequestRefreshParams {
-  branch: string;
-  deviceId?: string;
-  path: string;
-  pullRequestNumber?: number;
-  topicId: string;
-}
 
 export const chatTopic = (set: Setter, get: () => ChatStore, _api?: unknown) =>
   new ChatTopicActionImpl(set, get, _api);
@@ -1314,43 +1306,12 @@ export class ChatTopicActionImpl {
     return true;
   };
 
-  /**
-   * Keep a topic's recorded PR state current. Reads through the device's
-   * linked-PR replica, so with no recorded PR number it shares the composer's
-   * row and request for the same branch. Only a device answer (`onSuccess`)
-   * is written back to the topic: a row hydrated from storage is not proof.
-   */
-  useFetchTopicLinkedPullRequest = (topicId?: string, metadata?: ChatTopicMetadata) => {
-    const params = topicId
-      ? this.#resolveTopicLinkedPullRequestRefreshParams(topicId, metadata)
-      : undefined;
-
-    return useGitReviewStore.getState().slices.linkedPR.useSync(
-      params
-        ? {
-            branch: params.branch,
-            deviceId: params.deviceId,
-            path: params.path,
-            pullRequestNumber: params.pullRequestNumber,
-          }
-        : null,
-      {
-        dedupingInterval: 60 * 1000,
-        focusThrottleInterval: 60 * 1000,
-        onSuccess: (read) => {
-          if (!params) return;
-
-          void this.#get()
-            .internal_updateTopicLinkedPullRequest(params, read.value)
-            .catch((error) => {
-              console.error('[useFetchTopicLinkedPullRequest] sync failed:', error);
-            });
-        },
-        revalidateOnFocus: true,
-        ...LINKED_PR_NO_RETRY,
-      },
+  /** Keep a topic's recorded PR state current (see `useTopicLinkedPullRequestSync`). */
+  useFetchTopicLinkedPullRequest = (topicId?: string, metadata?: ChatTopicMetadata) =>
+    useTopicLinkedPullRequestSync(
+      topicId ? this.#resolveTopicLinkedPullRequestRefreshParams(topicId, metadata) : undefined,
+      (params, pr) => this.#get().internal_updateTopicLinkedPullRequest(params, pr),
     );
-  };
 
   autoRenameTopicTitle = async (id: string, topicAgentId?: string): Promise<void> => {
     const { activeAgentId, summaryTopicTitle } = this.#get();

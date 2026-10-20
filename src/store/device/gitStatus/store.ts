@@ -82,6 +82,12 @@ export type GitStatusKind =
   | 'workingTreeStatus'
   | 'worktrees';
 
+/** Reject a read the device could not answer, so the replica keeps its copy. */
+const requireAnswer = <T>(value: T | undefined, what: string): T => {
+  if (value === undefined) throw new Error(`Unable to load ${what}`);
+  return value;
+};
+
 const createSlices = (
   set: (partial: Partial<GitStatusStore>, replace?: false, action?: any) => void,
   get: () => GitStatusStore,
@@ -106,14 +112,12 @@ const createSlices = (
   }),
   branches: createReplicaSlice(gitBranchListResource, {
     actionPrefix: 'gitStatus/branches',
-    fetcher: async (params: GitStatusParams) => {
-      const value = await gitService.listGitBranches(params);
-      // The device RPC answers `[]` when the gateway or the device fails, and a
-      // directory the switcher opens on is on a branch, so a remote `[]` is an
-      // unknown result: keep the persisted list instead of persisting "none".
-      if (params.deviceId && value.length === 0) throw new Error('Unable to load branches');
-      return { value };
-    },
+    // `undefined` is a remote device that could not answer: an unknown result,
+    // so the persisted list stays instead of being replaced by "none". `[]` is a
+    // real answer (an unborn repository).
+    fetcher: async (params: GitStatusParams) => ({
+      value: requireAnswer(await gitService.listGitBranches(params), 'branches'),
+    }),
     get,
     set,
     stateKey: 'gitBranchListReplica',
@@ -130,8 +134,9 @@ const createSlices = (
   }),
   remoteBranches: createReplicaSlice(gitRemoteBranchListResource, {
     actionPrefix: 'gitStatus/remoteBranches',
+    // As for local branches: `undefined` is unknown, `[]` is "no origin".
     fetcher: async (params: GitStatusParams) => ({
-      value: await gitService.listGitRemoteBranches(params),
+      value: requireAnswer(await gitService.listGitRemoteBranches(params), 'remote branches'),
     }),
     get,
     set,

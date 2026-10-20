@@ -207,6 +207,14 @@ export const usePortTunnels = (options: {
     error,
     exposePort,
     isLoading,
+    /**
+     * The links could not be read and none are known: "couldn't ask" must not
+     * read as "nothing is open". With links already known, a failed refresh
+     * keeps them on screen (`refreshFailed`) — opening or revoking one is a
+     * separate call that may well succeed.
+     */
+    listFailed: !!error && tunnels.length === 0,
+    refreshFailed: !!error && tunnels.length > 0,
     openLink,
     refresh: mutate,
     refreshDetected: detection.mutate,

@@ -229,13 +229,14 @@ const PortSwitcher = memo<PortSwitcherProps>(({ active, deviceId, workingDirecto
     detectionAvailable,
     detectionChecking,
     detectionLoading,
-    error,
     exposePort,
     isLoading,
+    listFailed,
     openLink,
     otherPorts,
     refresh,
     refreshDetected,
+    refreshFailed,
     revokeLink,
     tunnels,
   } = usePortTunnels({ active, cwd: workingDirectory, deviceId, onOpened: close, open });
@@ -352,6 +353,15 @@ const PortSwitcher = memo<PortSwitcherProps>(({ active, deviceId, workingDirecto
     </div>
   );
 
+  const loadFailedState = (
+    <div className={styles.state}>
+      {t('workingPanel.overview.ports.loadFailed')}
+      <button className={styles.retry} type={'button'} onClick={() => void refresh()}>
+        {tCommon('retry')}
+      </button>
+    </div>
+  );
+
   let body: ReactNode;
   if (isLoading) {
     body = (
@@ -360,16 +370,9 @@ const PortSwitcher = memo<PortSwitcherProps>(({ active, deviceId, workingDirecto
         {t('workingPanel.overview.ports.loading')}
       </div>
     );
-  } else if (error) {
+  } else if (listFailed) {
     // "We couldn't ask" must not read as "nothing is open".
-    body = (
-      <div className={styles.state}>
-        {t('workingPanel.overview.ports.loadFailed')}
-        <button className={styles.retry} type={'button'} onClick={() => void refresh()}>
-          {tCommon('retry')}
-        </button>
-      </div>
-    );
+    body = loadFailedState;
   } else if (tunnels.length === 0 && detected.length === 0 && detectionChecking) {
     // An empty earlier probe is not "nothing listens": wait for the device.
     body = checkingState;
@@ -384,6 +387,8 @@ const PortSwitcher = memo<PortSwitcherProps>(({ active, deviceId, workingDirecto
   } else {
     body = (
       <>
+        {/* A failed refresh keeps the links already known. */}
+        {refreshFailed && loadFailedState}
         {tunnels.map(renderLink)}
         {/* Ports from an earlier probe paint while the device is asked again;
             whether they still listen is unknown until it answers. */}

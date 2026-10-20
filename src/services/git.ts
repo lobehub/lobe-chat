@@ -53,16 +53,19 @@ export interface GitLinkedPRSummary {
  * symmetric: both transports expose the same granular git operations.
  */
 class GitService {
-  /** Local branches of a working directory. */
-  listGitBranches({
+  /**
+   * Local branches of a working directory. `undefined` when a remote device
+   * could not answer — distinct from `[]`, which an unborn repo really has.
+   */
+  async listGitBranches({
     deviceId,
     path,
   }: {
     deviceId?: string;
     path: string;
-  }): Promise<DeviceGitBranchListItem[]> {
+  }): Promise<DeviceGitBranchListItem[] | undefined> {
     return deviceId
-      ? lambdaClient.device.listGitBranches.query({ deviceId, path })
+      ? ((await lambdaClient.device.listGitBranches.query({ deviceId, path })) ?? undefined)
       : electronGitService.listGitBranches(path);
   }
 
@@ -379,16 +382,20 @@ class GitService {
       : electronGitService.getGitBranchDiff({ baseRef, path });
   }
 
-  /** Remote branches (`refs/remotes/origin/*`) of a working directory. */
-  listGitRemoteBranches({
+  /**
+   * Remote branches (`refs/remotes/origin/*`) of a working directory.
+   * `undefined` when a remote device could not answer — distinct from `[]`, which
+   * a repository without `origin` really has.
+   */
+  async listGitRemoteBranches({
     deviceId,
     path,
   }: {
     deviceId?: string;
     path: string;
-  }): Promise<GitRemoteBranchListItem[]> {
+  }): Promise<GitRemoteBranchListItem[] | undefined> {
     return deviceId
-      ? lambdaClient.device.listGitRemoteBranches.query({ deviceId, path })
+      ? ((await lambdaClient.device.listGitRemoteBranches.query({ deviceId, path })) ?? undefined)
       : electronGitService.listGitRemoteBranches(path);
   }
 

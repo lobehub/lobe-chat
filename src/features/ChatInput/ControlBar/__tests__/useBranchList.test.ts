@@ -136,9 +136,10 @@ describe('useBranchList', () => {
     await waitFor(async () => expect(await stored()).toEqual(['main']));
   });
 
-  it('keeps the persisted list when a remote read fails (the RPC answers [])', async () => {
+  it('keeps the persisted list when the device cannot answer', async () => {
     await seed([branch('main', true), branch('feat/kept')]);
-    vi.mocked(gitService.listGitBranches).mockResolvedValue([]);
+    // `undefined` is the service's mapping of a device that could not answer.
+    vi.mocked(gitService.listGitBranches).mockResolvedValue(undefined);
 
     const { result } = renderHook(() => useBranchList(DEVICE, PATH, true), { wrapper });
 
@@ -147,6 +148,19 @@ describe('useBranchList', () => {
     expect(names(result.current.branches)).toEqual(['main', 'feat/kept']);
     expect(result.current.loadFailed).toBe(false);
     expect(await stored()).toEqual(['main', 'feat/kept']);
+  });
+
+  // Review P2: an unborn repository really has no branches; that answer must
+  // settle the switcher instead of reading as a failure Retry can never fix.
+  it('accepts an empty list from the device as an answer', async () => {
+    await seed([branch('main', true)]);
+    vi.mocked(gitService.listGitBranches).mockResolvedValue([]);
+
+    const { result } = renderHook(() => useBranchList(DEVICE, PATH, true), { wrapper });
+
+    await waitFor(() => expect(result.current.branches).toEqual([]));
+    expect(result.current.error).toBeUndefined();
+    expect(result.current.loadFailed).toBe(false);
   });
 
   it('reports a failure with nothing to show as a load failure', async () => {

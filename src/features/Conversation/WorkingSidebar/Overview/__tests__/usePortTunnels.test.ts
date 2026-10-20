@@ -239,6 +239,25 @@ describe('usePortTunnels', () => {
   });
 
   describe('list states', () => {
+    it('keeps the known links on screen when a refresh fails', () => {
+      tunnels.value = [link];
+      tunnels.error = new Error('offline');
+
+      // Review P2: a failed background refresh must not hide every cached link
+      // behind the Retry state.
+      expect(setup().result.current).toMatchObject({
+        listFailed: false,
+        refreshFailed: true,
+        tunnels: [link],
+      });
+    });
+
+    it('reports a failure with no known links as a load failure', () => {
+      tunnels.value = undefined;
+      tunnels.error = new Error('offline');
+      expect(setup().result.current).toMatchObject({ listFailed: true, refreshFailed: false });
+    });
+
     it('hides a persisted link that has expired since', () => {
       tunnels.value = [
         { ...link, expiresAt: Date.now() - 1000, port: 4000, slug: 'expired' },
