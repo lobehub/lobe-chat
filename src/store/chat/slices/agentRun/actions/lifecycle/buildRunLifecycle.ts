@@ -9,7 +9,10 @@ import type { AgentRuntimeType } from '@/store/chat/slices/agentRun/actions/disp
 import { emitClientAgentSignalSourceEvent } from '@/store/chat/slices/agentRun/actions/lifecycle/agentSignalBridge';
 import { snapshotTopicWorkingDirGit } from '@/store/chat/slices/agentRun/actions/lifecycle/snapshotWorkingDirGit';
 import type { ChatStore } from '@/store/chat/store';
-import { notifyDesktopAgentCompleted } from '@/store/chat/utils/desktopNotification';
+import {
+  notifyDesktopAgentCompleted,
+  notifyDesktopAgentFailed,
+} from '@/store/chat/utils/desktopNotification';
 import {
   hasCompletedAssistantText,
   isAudioOnlyFirstUserMessage,
@@ -281,8 +284,17 @@ export const buildRunLifecycle = (
     },
     afterRunComplete: async (event: RunCompleteEvent) => {
       if (get().operations[event.operationId]?.metadata.terminalReconciled) return;
-      if (adapter.runScope === 'sub_agent' || resolveTerminalDisposition(event) !== 'success')
+      if (adapter.runScope === 'sub_agent') return;
+
+      const disposition = resolveTerminalDisposition(event);
+      if (disposition === 'failed' && event.notification) {
+        await notifyDesktopAgentFailed(get, {
+          context: { agentId, groupId, topicId, workspaceSlug },
+          error: event.notification.error,
+        });
         return;
+      }
+      if (disposition !== 'success') return;
 
       // A voice-only first message cannot be summarized at the post-persist seam:
       // its content is empty and the assistant row is still a loading placeholder.

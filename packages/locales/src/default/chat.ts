@@ -339,10 +339,15 @@ export default {
   'defaultGroupChat': 'Group',
   'defaultList': 'Default List',
   'defaultSession': 'Default Agent',
+  'desktopNotification.agentFailed.body': 'Open the conversation for details',
+  'desktopNotification.agentFailed.title': '{{name}} ran into a problem',
   'desktopNotification.aiReplyCompleted.body': 'Agent reply is ready',
   'desktopNotification.aiReplyCompleted.title': 'Reply completed',
   'desktopNotification.humanApprovalRequired.body': 'An Agent needs your approval to continue',
   'desktopNotification.humanApprovalRequired.title': 'Approval required',
+  'desktopNotification.workingDirectoryUnavailable.body': 'Working directory unavailable: {{path}}',
+  'desktopNotification.workingDirectoryUnavailable.bodyWithoutPath':
+    'Working directory unavailable: the folder saved for this conversation no longer exists',
   'cliDetectionTimeoutGuide.actions.openSystemTools': 'Open System Tools',
   'cliDetectionTimeoutGuide.actions.retry': 'Detect again',
   'cliDetectionTimeoutGuide.desc':
