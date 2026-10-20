@@ -335,6 +335,19 @@ describe('usePortTunnels', () => {
       expect(setup().result.current.detected.map((p) => p.port)).toEqual([5173]);
     });
 
+    // Review P2: a port from an earlier probe may have stopped since; exposing
+    // it would create, persist and open a link onto nothing.
+    it('does not expose a port from an unconfirmed probe', async () => {
+      detection.data = { ports: [port({ port: 5173 })], supported: true };
+      detection.isConfirmed = false;
+      const { result } = setup();
+
+      await act(() => result.current.exposePort(5173));
+
+      expect(createTunnel).not.toHaveBeenCalled();
+      expect(window.open).not.toHaveBeenCalled();
+    });
+
     it('drops the earlier probe when the device cannot confirm it', () => {
       detection.data = { ports: [port({ port: 5173 })], supported: true };
       detection.isConfirmed = false;

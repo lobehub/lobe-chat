@@ -330,6 +330,9 @@ const PortSwitcher = memo<PortSwitcherProps>(({ active, deviceId, workingDirecto
   const renderDetected = (item: DeviceListeningPort) => (
     <DropdownMenuItem
       className={cx(styles.item, styles.idle)}
+      // A port from an earlier probe may have stopped: shown, not exposable,
+      // until the device confirms it still listens.
+      disabled={detectionChecking}
       key={item.port}
       onClick={(event) => {
         event.preventDefault();

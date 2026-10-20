@@ -169,6 +169,9 @@ export const usePortTunnels = (options: {
         toast.error(t('workingPanel.overview.ports.invalidPort'));
         return;
       }
+      // The ports on screen come from an earlier probe: one may have stopped
+      // since, and a link to it would open onto nothing. Wait for the device.
+      if (detectionChecking) return;
 
       const tab = reserveTab();
       if (!tab && !isDesktop) {
@@ -190,7 +193,7 @@ export const usePortTunnels = (options: {
         setCreatingPort(undefined);
       }
     },
-    [deviceId, navigateTab, onOpened, reserveTab, t],
+    [detectionChecking, deviceId, navigateTab, onOpened, reserveTab, t],
   );
 
   return {
