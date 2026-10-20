@@ -227,6 +227,7 @@ const PortSwitcher = memo<PortSwitcherProps>(({ active, deviceId, workingDirecto
     creatingPort,
     detected,
     detectionAvailable,
+    detectionChecking,
     detectionLoading,
     error,
     exposePort,
@@ -344,6 +345,13 @@ const PortSwitcher = memo<PortSwitcherProps>(({ active, deviceId, workingDirecto
     </DropdownMenuItem>
   );
 
+  const checkingState = (
+    <div className={styles.state}>
+      <Icon spin icon={LoaderCircleIcon} size={13} />
+      {t('workingPanel.overview.ports.detected.checking')}
+    </div>
+  );
+
   let body: ReactNode;
   if (isLoading) {
     body = (
@@ -362,6 +370,9 @@ const PortSwitcher = memo<PortSwitcherProps>(({ active, deviceId, workingDirecto
         </button>
       </div>
     );
+  } else if (tunnels.length === 0 && detected.length === 0 && detectionChecking) {
+    // An empty earlier probe is not "nothing listens": wait for the device.
+    body = checkingState;
   } else if (tunnels.length === 0 && detected.length === 0) {
     body = (
       <div className={styles.empty}>
@@ -374,6 +385,9 @@ const PortSwitcher = memo<PortSwitcherProps>(({ active, deviceId, workingDirecto
     body = (
       <>
         {tunnels.map(renderLink)}
+        {/* Ports from an earlier probe paint while the device is asked again;
+            whether they still listen is unknown until it answers. */}
+        {detected.length > 0 && detectionChecking && checkingState}
         {detected.map(renderDetected)}
       </>
     );
@@ -388,9 +402,10 @@ const PortSwitcher = memo<PortSwitcherProps>(({ active, deviceId, workingDirecto
           value={t('workingPanel.overview.ports.title')}
           trailing={
             <>
-              {detected.length > 0 && (
+              {detected.length > 0 && !detectionChecking && (
                 // A running dev server the user hasn't exposed yet — say so
-                // without making them open the menu.
+                // without making them open the menu. Ports from an earlier
+                // probe are not known to be running, so they wait for the device.
                 <span className={styles.available}>
                   {t('workingPanel.overview.ports.detected.available', { count: detected.length })}
                 </span>

@@ -30,11 +30,11 @@ import {
   type ReplicaPageResult,
   type ReplicaSyncResult,
 } from '@/libs/replica';
-import { mutate, useClientDataSWRWithSync } from '@/libs/swr';
-import { cronKeys, deviceKeys, topicKeys } from '@/libs/swr/keys';
+import { mutate } from '@/libs/swr';
+import { cronKeys, topicKeys } from '@/libs/swr/keys';
 import { getCacheScope } from '@/libs/swr/useCacheScope';
 import { aiChatService } from '@/services/aiChat';
-import { type GitLinkedPRSummary, gitService } from '@/services/git';
+import { type GitLinkedPRSummary } from '@/services/git';
 import { messageService } from '@/services/message';
 import type { TopicBatchDeleteScope } from '@/services/topic';
 import { topicService } from '@/services/topic';
@@ -55,6 +55,7 @@ import {
   resolveTopicGitTransport,
   toWorkingDirGithubState,
 } from '@/store/chat/utils/topicWorkingDirGit';
+import { useGitReviewStore } from '@/store/device/gitReview/store';
 import { useGlobalStore } from '@/store/global';
 import { getHomeStoreState } from '@/store/home';
 import { type StoreSetter } from '@/store/types';
@@ -80,6 +81,9 @@ import {
 import { type ChatTopicDispatch } from './reducer';
 import { topicSelectors } from './selectors';
 import { createTopicDetailSlice, RUN_WATCH_INTERVAL } from './topicDetail';
+
+/** Forwarded to SWR as given: a failed `gh` lookup is not retried. */
+const LINKED_PR_NO_RETRY = { shouldRetryOnError: false };
 
 const n = setNamespace('t');
 
@@ -1310,46 +1314,40 @@ export class ChatTopicActionImpl {
     return true;
   };
 
-  useFetchTopicLinkedPullRequest = (
-    topicId?: string,
-    metadata?: ChatTopicMetadata,
-  ): SWRResponse<GitLinkedPRSummary | undefined> => {
+  /**
+   * Keep a topic's recorded PR state current. Reads through the device's
+   * linked-PR replica, so with no recorded PR number it shares the composer's
+   * row and request for the same branch. Only a device answer (`onSuccess`)
+   * is written back to the topic: a row hydrated from storage is not proof.
+   */
+  useFetchTopicLinkedPullRequest = (topicId?: string, metadata?: ChatTopicMetadata) => {
     const params = topicId
       ? this.#resolveTopicLinkedPullRequestRefreshParams(topicId, metadata)
       : undefined;
 
-    return useClientDataSWRWithSync<GitLinkedPRSummary | undefined>(
+    return useGitReviewStore.getState().slices.linkedPR.useSync(
       params
-        ? deviceKeys.gitLinkedPR(
-            params.deviceId ?? 'local',
-            params.path,
-            params.branch,
-            params.pullRequestNumber,
-          )
-        : null,
-      params
-        ? () =>
-            gitService.getLinkedPullRequest({
-              branch: params.branch,
-              deviceId: params.deviceId,
-              path: params.path,
-              pullRequestNumber: params.pullRequestNumber,
-            })
+        ? {
+            branch: params.branch,
+            deviceId: params.deviceId,
+            path: params.path,
+            pullRequestNumber: params.pullRequestNumber,
+          }
         : null,
       {
         dedupingInterval: 60 * 1000,
         focusThrottleInterval: 60 * 1000,
-        onData: (prData) => {
+        onSuccess: (read) => {
           if (!params) return;
 
           void this.#get()
-            .internal_updateTopicLinkedPullRequest(params, prData)
+            .internal_updateTopicLinkedPullRequest(params, read.value)
             .catch((error) => {
               console.error('[useFetchTopicLinkedPullRequest] sync failed:', error);
             });
         },
         revalidateOnFocus: true,
-        shouldRetryOnError: false,
+        ...LINKED_PR_NO_RETRY,
       },
     );
   };
