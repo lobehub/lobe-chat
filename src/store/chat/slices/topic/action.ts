@@ -1748,10 +1748,9 @@ export class ChatTopicActionImpl {
     ]);
   };
 
-  /** Revalidate one topic's by-id detail, e.g. after a dispatch wrote a new receipt. */
-  refreshTopicDetail = async (topicId: string): Promise<void> => {
-    await this.#topicDetail.revalidate(topicId);
-  };
+  /** Re-read one topic's by-id detail; `fetch` also reads it when no view has it mounted. */
+  refreshTopicDetail = (id: string, fetch?: boolean): Promise<unknown> =>
+    fetch ? this.#topicDetail.fetch(id, { fresh: true }) : this.#topicDetail.revalidate(id);
 
   internal_replaceTopicId = (params: {
     agentId?: string;

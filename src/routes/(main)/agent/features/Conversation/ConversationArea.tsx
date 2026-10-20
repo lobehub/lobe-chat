@@ -26,6 +26,7 @@ import { mergeConversationHooks } from '@/features/Conversation/utils/mergeConve
 import { useGatewayReconnect } from '@/hooks/useGatewayReconnect';
 import { useOperationState } from '@/hooks/useOperationState';
 import { useScheduledRunWatch } from '@/hooks/useScheduledRunWatch';
+import { useTopicRunEvents } from '@/hooks/useTopicRunEvents';
 import { useAgentStore } from '@/store/agent';
 import { agentByIdSelectors, chatConfigByIdSelectors } from '@/store/agent/selectors';
 import { useChatStore } from '@/store/chat';
@@ -94,6 +95,8 @@ const Conversation = memo(() => {
       : undefined,
   );
   useGatewayReconnect(context.topicId, runningOperation, context.agentId);
+  // A run started on another device pushes here, so it streams without a refetch.
+  useTopicRunEvents(context.topicId, context.agentId);
 
   // While the topic is parked as `scheduled`, pull the cron dispatch into the
   // store when `runAt` passes — nothing pushes it, and the reconnect above
