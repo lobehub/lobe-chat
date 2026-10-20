@@ -1,4 +1,3 @@
-import { createProjectCoordinatorAgentConfig } from '@lobechat/builtin-agents';
 import type { ProjectStatus, ProjectVisibility } from '@lobechat/types';
 import { and, asc, desc, eq, inArray, isNull, max, or, sql } from 'drizzle-orm';
 
@@ -86,6 +85,15 @@ export interface CreateProjectInput {
   visibility?: ProjectVisibility;
 }
 
+/**
+ * Input for the single-aggregate insert. The coordinator agent belongs to
+ * AgentModel's aggregate, so it is created by `ProjectRepository.create` first
+ * and only its id reaches this model.
+ */
+export interface InsertProjectInput extends CreateProjectInput {
+  coordinatorAgentId: string;
+}
+
 export interface UpdateProjectInput {
   avatar?: string | null;
   description?: string | null;
@@ -164,7 +172,7 @@ export class ProjectModel {
     return Boolean(existing);
   }
 
-  async create(input: CreateProjectInput) {
+  async create(input: InsertProjectInput) {
     const identifier = input.identifier.trim().toUpperCase();
     if (identifier.length < 3 || identifier.length > 6) {
       throw new Error('Project identifier must be between 3 and 6 characters');
@@ -173,9 +181,8 @@ export class ProjectModel {
     try {
       return await this.db.transaction(async (tx) => {
         // Check the identifier inline, in the same scope the unique index
-        // enforces and before the coordinator agent is created: a collision must
-        // fail as a field error, not as a mid-transaction query failure that
-        // also throws away the agent insert.
+        // enforces, so a collision fails as a field error instead of a
+        // mid-transaction query failure.
         const [existing] = await tx
           .select({ id: projects.id })
           .from(projects)
@@ -183,35 +190,19 @@ export class ProjectModel {
           .limit(1);
         if (existing) throw new ProjectIdentifierTakenError(identifier);
 
-        const coordinatorConfig = createProjectCoordinatorAgentConfig({
-          avatar: input.avatar,
-          description: input.description,
-          identifier,
-          name: input.name,
-        });
-        const coordinator = await new AgentModel(
-          tx as LobeChatDatabase,
-          this.userId,
-          this.workspaceId,
-        ).create({
-          ...coordinatorConfig,
-          visibility: input.visibility,
-          virtual: true,
-        });
-
         const [project] = await tx
           .insert(projects)
           .values(
             buildWorkspacePayload(
               { userId: this.userId, workspaceId: this.workspaceId },
-              { ...input, coordinatorAgentId: coordinator.id, identifier },
+              { ...input, identifier },
             ),
           )
           .returning();
 
         await tx.insert(projectAgents).values({
           addedByUserId: this.userId,
-          agentId: coordinator.id,
+          agentId: input.coordinatorAgentId,
           projectId: project.id,
           responsibility: 'Coordinates project conversations, work, and resources',
           role: 'coordinator',

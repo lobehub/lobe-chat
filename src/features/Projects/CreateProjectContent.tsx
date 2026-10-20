@@ -15,8 +15,8 @@ import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwar
 import { type ProjectListItem, useLoadedProjectList, useProjectStore } from '@/store/project';
 
 import {
+  applyProjectName,
   getCreateProjectInput,
-  getProjectFieldSuggestions,
   isProjectIdentifierTaken,
   isProjectIdentifierValid,
   isProjectSlugValid,
@@ -81,14 +81,7 @@ const CreateProjectContent = memo<CreateProjectOptions>(({ onCreated }) => {
   };
 
   const updateName = (name: string) => {
-    const suggestions = getProjectFieldSuggestions(name);
-    setForm((current) => ({
-      ...current,
-      identifier: current.identifierEdited ? current.identifier : suggestions.identifier,
-      identifierConflict: false,
-      name,
-      slug: current.slugEdited ? current.slug : suggestions.slug,
-    }));
+    setForm((current) => applyProjectName(current, name));
   };
 
   const handleCreate = async () => {

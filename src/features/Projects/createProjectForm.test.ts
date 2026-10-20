@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import {
+  applyProjectName,
   getCreateProjectInput,
   getProjectFieldSuggestions,
   isProjectIdentifierTaken,
@@ -32,6 +33,34 @@ describe('createProjectForm', () => {
     expect(isProjectIdentifierValid('LOBE')).toBe(true);
     expect(isProjectIdentifierValid('LH')).toBe(false);
     expect(isProjectIdentifierValid('1LOBE')).toBe(false);
+  });
+
+  it('keeps a server-confirmed conflict until the identifier itself changes', () => {
+    const base = {
+      identifier: 'LOBE',
+      identifierConflict: true,
+      identifierEdited: true,
+      name: 'lobehub-mobile',
+      slug: 'lobehub-mobile',
+      slugEdited: false,
+    };
+
+    // A manually chosen identifier survives a rename, so the conflict must too.
+    expect(applyProjectName(base, 'LobeHub Mobile')).toMatchObject({
+      identifier: 'LOBE',
+      identifierConflict: true,
+    });
+
+    // A derived identifier that still resolves to the same prefix is unchanged.
+    expect(
+      applyProjectName({ ...base, identifierEdited: false, name: 'LobeHub' }, 'lobehub-web'),
+    ).toMatchObject({ identifier: 'LOBE', identifierConflict: true });
+
+    // Once the derived identifier changes, the old conflict no longer applies.
+    expect(applyProjectName({ ...base, identifierEdited: false }, 'Mobile App')).toMatchObject({
+      identifier: 'MOBI',
+      identifierConflict: false,
+    });
   });
 
   it('flags an identifier that another project in the scope already uses', () => {

@@ -5,6 +5,7 @@ import { z } from 'zod';
 import { withScopedPermission } from '@/business/server/trpc-middlewares/rbacPermission';
 import { wsCompatProcedure } from '@/business/server/trpc-middlewares/workspaceAuth';
 import { ProjectIdentifierTakenError, ProjectModel } from '@/database/models/project';
+import { ProjectRepository } from '@/database/repositories/project';
 import { router } from '@/libs/trpc/lambda';
 import { serverDatabase } from '@/libs/trpc/lambda/middleware';
 
@@ -13,6 +14,7 @@ const projectProcedure = wsCompatProcedure.use(serverDatabase).use(async (opts) 
   return opts.next({
     ctx: {
       projectModel: new ProjectModel(ctx.serverDB, ctx.userId, ctx.workspaceId ?? undefined),
+      projectRepo: new ProjectRepository(ctx.serverDB, ctx.userId, ctx.workspaceId ?? undefined),
     },
   });
 });
@@ -126,7 +128,7 @@ export const projectRouter = router({
     .mutation(async ({ ctx, input }) => {
       try {
         return {
-          data: await ctx.projectModel.create(input),
+          data: await ctx.projectRepo.create(input),
           message: 'Project created',
           success: true,
         };
