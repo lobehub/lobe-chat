@@ -1,7 +1,7 @@
 diff --git a/es/headless.js b/es/headless.js
 --- a/es/headless.js
 +++ b/es/headless.js
-@@ -7630,7 +7630,7 @@
+@@ -8124,7 +8124,7 @@
  	get height() {
  		return this.__height;
  	}
@@ -10,7 +10,7 @@ diff --git a/es/headless.js b/es/headless.js
  		super(opt.src, opt.altText, opt.maxWidth, opt.width, opt.height, opt.key);
  		this.__loading = true;
  		this.__status = "uploaded";
-@@ -7746,7 +7746,7 @@
+@@ -8240,7 +8240,7 @@
  	static getType() {
  		return "image";
  	}

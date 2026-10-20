@@ -1,8 +1,6 @@
 'use client';
 
-import { Flexbox, Icon } from '@lobehub/ui';
-import { Text } from '@lobehub/ui/base-ui';
-import { createStaticStyles, cssVar, cx } from 'antd-style';
+import { createStaticStyles, cssVar, cx, Flexbox, Icon, Text } from '@lobehub/ui';
 import { ChevronRight } from 'lucide-react';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -51,6 +49,7 @@ const LinkedGoalRow = memo<{ item: GoalListItem }>(({ item }) => {
   const openGoal = useChatStore((s) => s.openGoal);
   const { goal, pendingDecisions, taskDone, taskTotal } = item;
   const open = () => openGoal(goal.id);
+  const planning = taskTotal === 0 && (goal.status === 'planning' || goal.status === 'running');
 
   return (
     <Flexbox
@@ -85,7 +84,8 @@ const LinkedGoalRow = memo<{ item: GoalListItem }>(({ item }) => {
         )
       )}
       <Text fontSize={12} style={{ flexShrink: 0 }} type={'secondary'}>
-        {t(goalStatusKey(goal.status))}
+        {/* A `/goal` run marks its goal running at creation; until the plan lands a Task it is still being planned. */}
+        {planning ? t('goalTask.status.planning') : t(goalStatusKey(goal.status))}
       </Text>
       <Icon color={cssVar.colorTextQuaternary} icon={ChevronRight} size={14} />
     </Flexbox>

@@ -2,9 +2,7 @@
 
 import type { WorkingDirConfig, WorkingDirEntry } from '@lobechat/types';
 import { getWorkingDirEffectivePath, getWorkingDirSourcePath } from '@lobechat/types';
-import { Flexbox, Icon, Popover, Tooltip } from '@lobehub/ui';
-import { Text } from '@lobehub/ui/base-ui';
-import { cx } from 'antd-style';
+import { cx, Flexbox, Icon, Popover, Text, Tooltip } from '@lobehub/ui';
 import { CheckIcon, ChevronDownIcon, FolderPlusIcon, SquircleDashed } from 'lucide-react';
 import { memo, useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -17,7 +15,7 @@ import {
   getWorkingDirectoryPathString,
 } from '@/helpers/workingDirectoryPath';
 import { deviceService } from '@/services/device';
-import { deviceSelectors, useDeviceStore } from '@/store/device';
+import { useDeviceList } from '@/store/device';
 
 import { taskExecutionStyles as styles } from './taskExecutionStyles';
 import TaskPickerOption from './TaskPickerOption';
@@ -51,12 +49,16 @@ const TaskWorkingDirectoryChip = memo<TaskWorkingDirectoryChipProps>(
     const { t: tDevice } = useTranslation('device');
     const [open, setOpen] = useState(false);
 
-    const rawRecents = useDeviceStore(deviceSelectors.getDeviceWorkingDirs(deviceId));
-    const rawDeviceDefaultCwd = useDeviceStore(deviceSelectors.getDeviceDefaultCwd(deviceId));
-    const deviceDefaultCwd = getWorkingDirectoryPathString(rawDeviceDefaultCwd);
+    // `useDeviceList` mounts the device replica's sync itself: a task page may
+    // render nothing else that fetches the list, which left the recents empty
+    // on a cold load.
+    const { data: devices } = useDeviceList();
+    const device = devices?.find((item) => item.deviceId === deviceId);
+    const deviceDefaultCwd = getWorkingDirectoryPathString(device?.defaultCwd ?? undefined);
+    const rawRecents = device?.workingDirs;
 
     const recents = useMemo(
-      () => rawRecents.filter((entry) => !!getWorkingDirectoryPathString(entry.path)),
+      () => (rawRecents ?? []).filter((entry) => !!getWorkingDirectoryPathString(entry.path)),
       [rawRecents],
     );
 

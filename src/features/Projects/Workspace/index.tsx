@@ -1,8 +1,16 @@
 'use client';
 
-import { Center, Flexbox } from '@lobehub/ui';
-import { Button, Spin, Tag, Text, TextArea } from '@lobehub/ui/base-ui';
-import { createStaticStyles, cssVar } from 'antd-style';
+import {
+  Button,
+  Center,
+  createStaticStyles,
+  cssVar,
+  Flexbox,
+  Spin,
+  Tag,
+  Text,
+  TextArea,
+} from '@lobehub/ui';
 import { SendHorizontalIcon, SparklesIcon } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -92,10 +100,11 @@ const ProjectWorkspace = memo(() => {
   const enabled = useUserStore(labPreferSelectors.enableProjects);
   const detail = useCurrentProjectDetail(projectId);
   const [message, setMessage] = useState('');
-  const { error, mutate } = useProjectStore((s) => s.useFetchProjectDetail)(projectId);
+  const { error, revalidate } = useProjectStore((s) => s.useFetchProjectDetail)(projectId);
 
   if (!enabled) return <ProjectDisabled />;
-  if (error) return <AsyncError error={error} variant={'page'} onRetry={() => mutate()} />;
+  if (error && !detail)
+    return <AsyncError error={error} variant={'page'} onRetry={() => revalidate()} />;
   if (!detail)
     return (
       <Center height={'100%'}>

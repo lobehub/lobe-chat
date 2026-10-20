@@ -1,3 +1,4 @@
+import type { AgentRunLlmExecutor } from '@lobechat/agent-runtime';
 import type { BotPlatformContext } from '@lobechat/context-engine';
 import type {
   BotSenderMetadata,
@@ -38,9 +39,13 @@ export interface ExecRunContext {
   /** Persisted assistant placeholder row id (spinner anchor / error sink). */
   assistantMessageId: string;
   canUseDevice: boolean;
+  /** Selections attached to this turn's user message; see `ExecAgentParams.contextSelections`. */
+  contextSelections?: ExecAgentParams['contextSelections'];
   deviceAccessReason: DeviceAccessReason;
   /** Effective model for this run (topic-pinned model already applied). */
   model: string;
+  /** Page-editor selections attached to this turn; see `ExecAgentParams.pageSelections`. */
+  pageSelections?: ExecAgentParams['pageSelections'];
   parentMessageId?: string;
   /** Persistence-attribution agent id (Agent Signal marker aware). */
   persistAgentId: string;
@@ -74,6 +79,12 @@ export interface ExecRunContext {
  * This extends the public ExecAgentParams with server-side only options
  */
 export interface InternalExecAgentParams extends ExecAgentParams {
+  /**
+   * The calling client renders `file` Works in pushed snapshots, derived from
+   * the `streamFeatures` it declared on `aiAgent.execAgent`. See
+   * `OperationCreationParams.acceptsFileWorks`.
+   */
+  acceptsFileWorks?: boolean;
   /**
    * The calling client handles `member_runtime_end`, derived from the
    * `streamFeatures` it declared on `aiAgent.execAgent`. See
@@ -179,6 +190,11 @@ export interface InternalExecAgentParams extends ExecAgentParams {
    * and a refusal here destroys the message before it is ever persisted.
    */
   interactiveStart?: boolean;
+  /**
+   * The client's relay executor. Server callers may also set the channel it
+   * relays on (`channelOperationId`), which a client never can.
+   */
+  llmExecutor?: AgentRunLlmExecutor;
   /** Maximum steps for the agent operation */
   maxSteps?: number;
   /**
@@ -246,6 +262,13 @@ export interface InternalExecAgentParams extends ExecAgentParams {
     rejectionReason?: string;
     toolCallId: string;
   };
+  /**
+   * Skill identifiers the user selected for this message. Persisted on the
+   * user message (`metadata.selectedSkillIds`) and, together with the ones
+   * earlier turns of the topic selected, injected with their bodies like a
+   * pinned skill. Never widens what the skill pool already allows.
+   */
+  selectedSkillIds?: string[];
   /**
    * Tool identifiers the user @-mentioned in this message. Merged into the
    * agent's plugin set for this run (alongside `additionalPluginIds`) so a

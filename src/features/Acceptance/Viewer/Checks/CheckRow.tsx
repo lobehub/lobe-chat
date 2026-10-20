@@ -2,9 +2,20 @@
 
 import { readEvidenceChapters } from '@lobechat/const/verify';
 import type { AcceptanceCommentThread } from '@lobechat/types';
-import { copyToClipboard, Flexbox, Icon, Tooltip } from '@lobehub/ui';
-import { ActionIcon, Button, Tag, Text, TextArea } from '@lobehub/ui/base-ui';
-import { cssVar, cx, useResponsive } from 'antd-style';
+import {
+  ActionIcon,
+  Button,
+  copyToClipboard,
+  cssVar,
+  cx,
+  Flexbox,
+  Icon,
+  Tag,
+  Text,
+  TextArea,
+  Tooltip,
+  useResponsive,
+} from '@lobehub/ui';
 import dayjs from 'dayjs';
 import {
   AudioLines,
@@ -42,6 +53,7 @@ import { threadsForCheck } from '../Comments/threads';
 import {
   canMarkEvidence,
   evidenceCounts,
+  evidenceShortcut,
   hasAnnotatableEvidence,
   isRejectable,
 } from '../Evidence/evidence';
@@ -235,9 +247,10 @@ export const AcceptanceCheckRow = memo<{
       canCommentOnAcceptanceEvidence(bundle, comments.canComment) &&
       Boolean(check.result) &&
       hasAnnotatableEvidence(check);
-    const openEvidenceComment = () =>
+    const openEvidenceComment = (initialEvidenceId?: string) =>
       openEvidenceCommentModal({
         evidence: check.evidence,
+        initialEvidenceId,
         onConfirm: async ({ content, evidenceId, rect }) => {
           await comments.create({
             anchor: { checkItemId: check.id, evidenceId, rect },
@@ -248,6 +261,25 @@ export const AcceptanceCheckRow = memo<{
           return true;
         },
       });
+
+    // The picture's own shortcut opens whatever the bottom of the row offers:
+    // a region comment for a reader, marking a send-back for the author, who
+    // gives region feedback through the reject instead.
+    const shortcut = evidenceShortcut({
+      canComment: canCommentEvidence,
+      canMark: reviewable && !activeReview && canMarkEvidence(check, desktop),
+      // EvidenceList turns a phone reviewer's tap into the same marking.
+      tapMarks: !desktop && canReview,
+    });
+    const floatingComment =
+      shortcut === 'comment'
+        ? { label: t('acceptance.comments.commentThisEvidence'), open: openEvidenceComment }
+        : shortcut === 'annotate'
+          ? {
+              label: t('acceptance.review.annotate'),
+              open: (id: string) => openReject(undefined, id),
+            }
+          : undefined;
 
     /**
      * @param fromProposal - when set, the modal opens prefilled with the
@@ -653,6 +685,7 @@ export const AcceptanceCheckRow = memo<{
               evidence={check.evidence}
               overlays={commentOverlays}
               reviewNotes={activeReview?.action === 'reject' ? activeReview.annotations : undefined}
+              onComment={floatingComment}
               onRefreshEvidenceUrl={refreshEvidenceUrl}
               onReviewEvidence={canReview ? (id) => openReject(undefined, id) : undefined}
             />

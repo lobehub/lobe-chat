@@ -1,7 +1,7 @@
 'use client';
 
 import { SELF_HOSTING_DOCUMENTS } from '@lobechat/const';
-import { Alert, Button } from '@lobehub/ui/base-ui';
+import { Alert, Button } from '@lobehub/ui';
 import { useTranslation } from 'react-i18next';
 import urlJoin from 'url-join';
 

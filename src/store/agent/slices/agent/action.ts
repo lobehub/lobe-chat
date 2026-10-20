@@ -2,11 +2,11 @@ import { isDesktop, randomAgentName } from '@lobechat/const';
 import { type AgentContextDocument } from '@lobechat/context-engine';
 import { getHeterogeneousTypeLabel } from '@lobechat/heterogeneous-agents';
 import {
+  applyWorkingDirByDevicePatch,
   isChatGroupSessionId,
   type LobeAgentAgencyConfig,
-  pruneWorkingDirByDeviceDeletes,
 } from '@lobechat/types';
-import { toast } from '@lobehub/ui/base-ui';
+import { toast } from '@lobehub/ui';
 import isEqual from 'fast-deep-equal';
 import { t } from 'i18next';
 import { produce } from 'immer';
@@ -16,26 +16,23 @@ import type { PartialDeep } from 'type-fest';
 import { getActiveWorkspaceId } from '@/business/client/hooks/useActiveWorkspaceId';
 import { MESSAGE_CANCEL_FLAT } from '@/const/message';
 import { analyticsClient } from '@/libs/analytics/client';
-import { mutate, useClientDataSWR, useClientDataSWRWithSync } from '@/libs/swr';
 import {
-  agentConfigKeys,
-  agentProjectionKeys,
-  builtinAgentKeys,
-  isAgentConfigKey,
-  isAgentListKey,
-} from '@/libs/swr/keys';
+  createReplicaSlice,
+  recordLens,
+  type ReplicaSyncResult,
+  revalidateReplica,
+} from '@/libs/replica';
+import { mutate, useClientDataSWR, useClientDataSWRWithSync } from '@/libs/swr';
+import { agentConfigKeys } from '@/libs/swr/keys';
 import { getCacheScope } from '@/libs/swr/useCacheScope';
 import type { AvailableAgentItem, CreateAgentParams, CreateAgentResult } from '@/services/agent';
 import { agentService, AVAILABLE_AGENTS_CONTEXT_QUERY_LIMIT } from '@/services/agent';
-import {
-  type AgentDocumentListItem,
-  agentDocumentService,
-  agentDocumentSWRKeys,
-  resolveAgentDocumentsContext,
-} from '@/services/agentDocument';
+import { resolveAgentDocumentsContext } from '@/services/agentDocument';
 import { aiAgentService } from '@/services/aiAgent';
 import { useGlobalStore } from '@/store/global';
 import { globalGeneralSelectors } from '@/store/global/selectors';
+// Projection module only (no store import), so this does not cycle through the home store.
+import { agentListResource } from '@/store/home/slices/agentList/projection';
 import type { StoreSetter } from '@/store/types';
 import { getUserStoreState } from '@/store/user';
 import { userProfileSelectors } from '@/store/user/selectors';
@@ -50,28 +47,28 @@ import { merge } from '@/utils/merge';
 import type { AgentStore } from '../../store';
 import { heteroAgentDefaultName } from '../../utils/heteroAgentDefaultName';
 import { setLocalAgentWorkingDirectory } from '../../utils/localAgentWorkingDirectoryStorage';
+import { getSidebarAgentNames } from '../../utils/sidebarAgentNames';
 import type { AgentSliceState, LoadingState, SaveStatus } from './initialState';
-import { agentConfigProjection, agentConfigWriteQueue } from './projection';
-import { agentConfigReducer } from './reducer';
+import { agentConfigResource } from './projection';
 
-export type AgentMetaUpdate = Partial<
-  Pick<
-    AgentItem,
-    | 'avatar'
-    | 'backgroundColor'
-    | 'description'
-    | 'marketIdentifier'
-    | 'metadata'
-    | 'name'
-    | 'profile'
-    | 'societyId'
-    | 'tags'
-    | 'title'
-  >
->;
-type AgencyConfigPatch = PartialDeep<LobeAgentAgencyConfig>;
+const AGENT_META_KEYS = [
+  'avatar',
+  'backgroundColor',
+  'description',
+  'marketIdentifier',
+  'metadata',
+  'name',
+  'profile',
+  'societyId',
+  'tags',
+  'title',
+] as const satisfies readonly (keyof AgentItem)[];
+const AGENT_META_FIELDS: ReadonlySet<string> = new Set(AGENT_META_KEYS);
 
+export type AgentMetaUpdate = Partial<Pick<AgentItem, (typeof AGENT_META_KEYS)[number]>>;
 interface AgentConfigUpdateOptions {
+  /** Devices whose directory selection was explicitly edited, never cached sibling entries. */
+  replaceWorkingDirDeviceIds?: string[];
   /** Propagate the persistence failure so a scoped editor can render failed + Retry. */
   rethrow?: boolean;
   /** Keep generic error messaging for ordinary config controls. @default true */
@@ -83,26 +80,44 @@ interface AgentMetaUpdateOptions {
   rethrow?: boolean;
 }
 
-const preserveWorkingDirDeleteMarkers = (
-  merged: LobeAgentAgencyConfig,
-  patch: AgencyConfigPatch,
-): void => {
-  const incoming = patch.workingDirByDevice;
-  if (!incoming) return;
-
-  const deletions = Object.keys(incoming).filter((key) => incoming[key] === undefined);
-  if (deletions.length === 0) return;
-
-  const workingDirByDevice = {
-    ...merged.workingDirByDevice,
-  } as Record<string, string | undefined>;
-
-  for (const key of deletions) {
-    workingDirByDevice[key] = undefined;
-  }
-
-  merged.workingDirByDevice = workingDirByDevice as Record<string, string>;
+/**
+ * Deep-merge a partial config into the current one. `profile` is replaced as a
+ * whole and explicitly edited working directory selections are replaced atomically.
+ * Returns `current` itself when nothing changed, so readers keep their reference.
+ */
+export const mergeAgentConfig = (
+  current: PartialDeep<AgentItem> | undefined,
+  config: PartialDeep<LobeAgentConfig>,
+  options?: { replaceWorkingDirDeviceIds?: string[]; workingDirByDeviceSnapshot?: boolean },
+): PartialDeep<AgentItem> => {
+  const { value } = produce({ value: current ?? {} }, (draft) => {
+    draft.value = merge(draft.value, config);
+    // The character sheet is authored as one document — `AgentModel`
+    // replaces it rather than merging — so mirror that here, or a trait the
+    // user just cleared reappears until the next full fetch.
+    if (Object.hasOwn(config, 'profile')) draft.value.profile = config.profile;
+    const agencyConfig = draft.value.agencyConfig;
+    if (agencyConfig && options?.workingDirByDeviceSnapshot) {
+      // Complete server snapshots also remove device entries omitted by the server.
+      agencyConfig.workingDirByDevice = config.agencyConfig?.workingDirByDevice;
+    } else {
+      applyWorkingDirByDevicePatch(
+        agencyConfig,
+        config.agencyConfig,
+        options?.replaceWorkingDirDeviceIds,
+      );
+    }
+  });
+  return current && isEqual(current, value) ? current : value;
 };
+
+/** `useFetchAgentConfig` result: replica sync flags plus the SWR-era aliases. */
+export interface AgentConfigSyncResult extends ReplicaSyncResult {
+  /** A request is in flight and there is nothing in `agentMap` to show yet. */
+  isLoading: boolean;
+  /** Alias of `revalidate`. */
+  mutate: () => Promise<unknown>;
+}
 
 /**
  * Agent Slice Actions
@@ -119,41 +134,56 @@ export class AgentSliceActionImpl {
   readonly #pendingAgentDocuments = new Map<string, Promise<AgentContextDocument[] | undefined>>();
   readonly #updateAgentConfigControllers = new Map<string, AbortController>();
   readonly #updateAgentMetaControllers = new Map<string, AbortController>();
+  readonly #config;
 
   constructor(set: Setter, get: () => AgentStore, _api?: unknown) {
     void _api;
     this.#set = set;
     this.#get = get;
+    this.#config = createReplicaSlice(agentConfigResource, {
+      actionPrefix: 'agentConfig',
+      fetcher: async ({ agentId }) =>
+        (await agentService.getAgentConfigById(agentId)) as LobeAgentConfig | null,
+      get,
+      // A successful fetch that resolves to null means the agent doesn't
+      // exist or the caller lost access (e.g. a workspace agent switched back
+      // to private) — a settled state, not "still loading". Every path that
+      // fetches the config (the sync hooks and `prefetchAgentConfig`) settles
+      // it the same way.
+      effects: {
+        onApplied: (_data, { agentId }) => this.#clearAgentNotFound(agentId),
+        onMissing: ({ agentId }) => this.#markAgentNotFound(agentId),
+      },
+      // `null` drops the cached config (and its persisted row): surfaces
+      // reading `agentMap` (title/avatar in the sidebar or header) must not
+      // keep showing an agent the viewer lost access to next to the 404.
+      isMissing: (incoming) => !incoming,
+      // The endpoint returns a complete, authoritative profile: replace the
+      // entry instead of patching it, so fields cleared on the server (e.g.
+      // `editorData: null`) don't survive from an older local copy. An
+      // unchanged profile keeps its reference.
+      merge: (incoming, confirmed) =>
+        !incoming || isEqual(incoming, confirmed) ? undefined : incoming,
+      set,
+      stateKey: 'agentConfigReplica',
+      view: recordLens<AgentStore, PartialDeep<AgentItem>>('agentMap'),
+    });
   }
 
-  #hydrateAgentConfig = async (agentId: string, scope: string): Promise<number> => {
-    const cached = await agentConfigProjection.get({ queryKey: agentId, scope });
-    if (!cached || getCacheScope() !== scope) return Date.now();
-
-    const transition = agentConfigReducer(this.#get(), {
-      data: cached.data,
-      id: agentId,
-      scope,
-      type: 'hydrate',
-    });
-    this.#set(transition.state, false, 'hydrateAgentConfig');
-    return Date.now();
+  /** Confirmed, persisted value of an agent's config. */
+  #replaceConfirmedAgentConfig = (
+    agentId: string,
+    scope: string,
+    data: PartialDeep<AgentItem>,
+  ): void => {
+    this.#config.replace({ agentId }, data as LobeAgentConfig, scope);
   };
 
-  #replaceConfirmedAgentConfig = (agentId: string, scope: string, data: LobeAgentConfig): void => {
-    const transition = agentConfigReducer(this.#get(), {
-      data,
-      id: agentId,
-      scope,
-      type: 'replace',
-    });
-    this.#set(transition.state, false, 'replaceConfirmedAgentConfig');
-    for (const effect of transition.effects)
-      agentConfigWriteQueue.set(
-        { queryKey: effect.id, scope: effect.scope },
-        { data: effect.data, updatedAt: Date.now() },
-      );
-  };
+  #toAgentConfigSyncResult = (sync: ReplicaSyncResult, agentId: string): AgentConfigSyncResult => ({
+    ...sync,
+    isLoading: sync.isValidating && !this.#get().agentMap[agentId],
+    mutate: sync.revalidate,
+  });
 
   #createAgentScopedAbortController = (
     controllers: Map<string, AbortController>,
@@ -199,10 +229,9 @@ export class AgentSliceActionImpl {
 
   createAgent = async (params: CreateAgentParams): Promise<CreateAgentResult> => {
     // Seed a default name so a new agent has an identity before the Agent
-    // Builder conversation produces one; the builder may replace it later. This
-    // lives here rather than in the create endpoint because the language only
-    // resolves on the client (`auto` follows the browser). A caller that already
-    // carries a name — e.g. a market agent — keeps it.
+    // Builder conversation produces one; the builder may replace it later. It is
+    // drawn here, not in the create endpoint, because the language (`auto` follows
+    // the browser) resolves on the client. A caller's own name (market) is kept.
     //
     // A heterogeneous agent never draws a random personal name. In personal or
     // workspace-private scope its name is the product title; a shared workspace
@@ -219,7 +248,7 @@ export class AgentSliceActionImpl {
               visibility: params.visibility,
               workspaceId: getActiveWorkspaceId(),
             })
-          : randomAgentName(locale)),
+          : randomAgentName(locale, await getSidebarAgentNames())),
     };
 
     const result = await agentService.createAgent({ ...params, config });
@@ -452,69 +481,41 @@ export class AgentSliceActionImpl {
     );
   };
 
-  useFetchAgentConfig = (
-    isLogin: boolean | undefined,
-    agentId: string,
-  ): SWRResponse<LobeAgentConfig> => {
-    const scope = getCacheScope();
-    const swrKey =
-      isLogin === true && agentId && !isChatGroupSessionId(agentId)
-        ? agentConfigKeys.config(agentId, scope)
-        : null;
-
-    useClientDataSWR(swrKey ? agentProjectionKeys.configHydration(scope, agentId) : null, () =>
-      this.#hydrateAgentConfig(agentId, scope),
-    );
-
-    return useClientDataSWR<LobeAgentConfig>(
-      swrKey,
-      async () => {
-        const data = await agentService.getAgentConfigById(agentId);
-        return data as LobeAgentConfig;
+  useFetchAgentConfig = (isLogin: boolean | undefined, agentId: string): AgentConfigSyncResult => {
+    const sync = this.#config.useSync(agentId ? { agentId } : null, {
+      enabled: isLogin === true && !isChatGroupSessionId(agentId),
+      onError: (error: any) => {
+        this.#set(
+          (state) => ({
+            agentConfigErrorMap: {
+              ...state.agentConfigErrorMap,
+              [agentId]: error?.message || String(error),
+            },
+          }),
+          false,
+          'fetchAgentConfig/error',
+        );
       },
-      {
-        onSuccess: (data) => {
-          // A successful fetch that resolves to null means the agent doesn't
-          // exist or the caller lost access (e.g. a workspace agent switched
-          // back to private) — a settled state, not "still loading".
-          if (!data) {
-            this.#markAgentNotFound(agentId);
-            return;
-          }
-          this.#clearAgentNotFound(agentId);
-          // This endpoint returns a complete, authoritative profile snapshot.
-          // Replace the cached entry instead of applying patch semantics: fields
-          // cleared on the server (for example editorData: null) may be omitted
-          // from the response and must not survive from an older local profile.
-          if (getCacheScope() !== scope) return;
-          this.#replaceConfirmedAgentConfig(agentId, scope, data);
-          // Only adopt the fetched agent as the active one when nothing is
-          // active yet. The active agent is owned by the route-level sync
-          // (AgentIdSync on desktop/mobile, the popup pages' own setState).
-          // A background or secondary config fetch — e.g. the inbox config
-          // requested by the home input, a side-panel copilot, or another
-          // open tab — must NOT hijack `activeAgentId` away from the routed
-          // agent, which would otherwise flash the conversation header/welcome
-          // back to the inbox ("Lobe AI") agent.
-          if (!this.#get().activeAgentId) {
-            this.#set({ activeAgentId: data.id }, false, 'fetchAgentConfig');
-          }
-          this.#clearAgentConfigError(agentId);
-        },
-        onError: (error) => {
-          this.#set(
-            (state) => ({
-              agentConfigErrorMap: {
-                ...state.agentConfigErrorMap,
-                [agentId]: error?.message || String(error),
-              },
-            }),
-            false,
-            'fetchAgentConfig/error',
-          );
-        },
+      onSuccess: (data) => {
+        // Not found is settled by the resource effects.
+        if (!data) return;
+        // Only adopt the fetched agent as the active one when nothing is
+        // active yet. The active agent is owned by the route-level sync
+        // (AgentIdSync on desktop/mobile, the popup pages' own setState).
+        // A background or secondary config fetch — e.g. the inbox config
+        // requested by the home input, a side-panel copilot, or another
+        // open tab — must NOT hijack `activeAgentId` away from the routed
+        // agent, which would otherwise flash the conversation header/welcome
+        // back to the inbox ("Lobe AI") agent. A response of a previous scope
+        // never lands in `agentMap`, so it adopts nothing either.
+        if (!this.#get().activeAgentId && this.#get().agentMap[agentId]) {
+          this.#set({ activeAgentId: data.id }, false, 'fetchAgentConfig');
+        }
+        this.#clearAgentConfigError(agentId);
       },
-    );
+    });
+
+    return this.#toAgentConfigSyncResult(sync, agentId);
   };
 
   useFetchServerDefaultHeterogeneousCapability = (enabled: boolean) =>
@@ -525,17 +526,26 @@ export class AgentSliceActionImpl {
   /**
    * Re-trigger the agent config fetch after a failure. Clears the recorded
    * error first so consumers fall back to the loading skeleton, then
-   * revalidates every SWR entry for this agent (keys may carry a workspace
-   * suffix, hence the filter form).
+   * revalidates this agent's sync in the active scope.
    */
   retryAgentConfigFetch = async (agentId?: string): Promise<void> => {
     const id = agentId ?? this.#get().activeAgentId;
     if (!id) return;
-    const scope = getCacheScope();
 
     this.#clearAgentConfigError(id);
 
-    await mutate((key) => isAgentConfigKey(key, id, scope));
+    await this.#config.revalidate(id);
+  };
+
+  /**
+   * Warm an agent's config before navigation (sidebar hover). Skips agents
+   * already in `agentMap`; the page's own sync revalidates them on mount.
+   */
+  prefetchAgentConfig = async (agentId: string): Promise<void> => {
+    if (!agentId || this.#get().agentMap[agentId]) return;
+    // Joins the page's own sync when it is already in flight; the replica
+    // applies the scope / removal / clear guards and the not-found effects.
+    await this.#config.fetch({ agentId });
   };
 
   #markAgentNotFound = (agentId: string) => {
@@ -543,21 +553,14 @@ export class AgentSliceActionImpl {
     if (agentNotFoundMap[agentId] && !agentMap[agentId]) return;
 
     this.#set(
-      (state) => {
-        // Also drop the previously cached config: surfaces reading `agentMap`
-        // (title/avatar in the sidebar or header) must not keep showing an
-        // agent the viewer lost access to next to the 404 content area.
-        const nextAgentMap = { ...state.agentMap };
-        delete nextAgentMap[agentId];
-        return {
-          agentMap: nextAgentMap,
-          agentNotFoundMap: { ...state.agentNotFoundMap, [agentId]: true },
-        };
-      },
+      (state) => ({ agentNotFoundMap: { ...state.agentNotFoundMap, [agentId]: true } }),
       false,
       'markAgentNotFound',
     );
-    agentConfigWriteQueue.remove({ queryKey: agentId, scope: getCacheScope() });
+    // Also forget the head query of the dropped config (the `null` response
+    // already removed it and its persisted row): a request in flight from
+    // before must not repaint the agent next to the 404 content area.
+    this.#config.remove(agentId);
   };
 
   #clearAgentNotFound = (agentId: string) => {
@@ -588,47 +591,17 @@ export class AgentSliceActionImpl {
     );
   };
 
+  /** Like `useFetchAgentConfig`, but never touches `activeAgentId` or the error map. */
   useHydrateAgentConfig = (
     isLogin: boolean | undefined,
     agentId: string,
-  ): SWRResponse<LobeAgentConfig> => {
-    const scope = getCacheScope();
-    const swrKey =
-      isLogin === true && agentId && !isChatGroupSessionId(agentId)
-        ? agentConfigKeys.config(agentId, scope)
-        : null;
+  ): AgentConfigSyncResult => {
+    // The not-found state is settled by the resource effects.
+    const sync = this.#config.useSync(agentId ? { agentId } : null, {
+      enabled: isLogin === true && !isChatGroupSessionId(agentId),
+    });
 
-    useClientDataSWR(swrKey ? agentProjectionKeys.configHydration(scope, agentId) : null, () =>
-      this.#hydrateAgentConfig(agentId, scope),
-    );
-
-    return useClientDataSWR<LobeAgentConfig>(
-      swrKey,
-      async () => {
-        const data = await agentService.getAgentConfigById(agentId);
-        return data as LobeAgentConfig;
-      },
-      {
-        onSuccess: (data) => {
-          if (!data) {
-            this.#markAgentNotFound(agentId);
-            return;
-          }
-          this.#clearAgentNotFound(agentId);
-          if (getCacheScope() === scope) this.#replaceConfirmedAgentConfig(agentId, scope, data);
-        },
-      },
-    );
-  };
-
-  useFetchAgentDocuments = (agentId?: string | null): SWRResponse<AgentDocumentListItem[]> => {
-    return useClientDataSWRWithSync<AgentDocumentListItem[]>(
-      agentId ? agentDocumentSWRKeys.documentsList(agentId) : null,
-      async () => agentDocumentService.listDocuments({ agentId: agentId! }),
-      {
-        revalidateOnFocus: false,
-      },
-    );
+    return this.#toAgentConfigSyncResult(sync, agentId);
   };
 
   useFetchAvailableAgents = (enabled: boolean): SWRResponse<AvailableAgentItem[]> => {
@@ -677,30 +650,25 @@ export class AgentSliceActionImpl {
     return request;
   };
 
-  internal_dispatchAgentMap = (id: string, config: PartialDeep<LobeAgentConfig>): void => {
-    const agentMap = produce(this.#get().agentMap, (draft) => {
-      if (!draft[id]) {
-        draft[id] = config;
-      } else {
-        draft[id] = merge(draft[id], config);
-        // The character sheet is authored as one document — `AgentModel`
-        // replaces it rather than merging — so mirror that here, or a trait the
-        // user just cleared reappears until the next full fetch.
-        if (Object.hasOwn(config, 'profile')) draft[id].profile = config.profile;
-        // merge() can't drop keys; honor `undefined` as a per-device delete so
-        // clearing a working directory takes effect optimistically.
-        pruneWorkingDirByDeviceDeletes(draft[id].agencyConfig, config.agencyConfig);
-      }
+  /**
+   * Merge a partial config into `agentMap` (optimistic edits, configs other
+   * stores already fetched). In-memory only: the persisted row holds confirmed
+   * server values, written through `#replaceConfirmedAgentConfig`.
+   */
+  internal_dispatchAgentMap = (
+    id: string,
+    config: PartialDeep<LobeAgentConfig>,
+    options?: { replaceWorkingDirDeviceIds?: string[]; workingDirByDeviceSnapshot?: boolean },
+  ): void => {
+    this.#config.update(id, (current) => mergeAgentConfig(current, config, options), {
+      persist: false,
     });
-
-    if (isEqual(this.#get().agentMap, agentMap)) return;
-
-    this.#set({ agentMap }, false, 'dispatchAgentMap');
   };
 
   #mergeLatestAgencyConfigPatch = (
     id: string,
     data: PartialDeep<LobeAgentConfig>,
+    replaceWorkingDirDeviceIds: string[] = [],
   ): PartialDeep<LobeAgentConfig> => {
     const agencyConfigPatch = data.agencyConfig;
     if (!agencyConfigPatch) return data;
@@ -709,10 +677,18 @@ export class AgentSliceActionImpl {
     const agencyConfig = merge(
       currentAgencyConfig ?? {},
       agencyConfigPatch,
-    ) as LobeAgentAgencyConfig;
+    ) as PartialDeep<LobeAgentAgencyConfig>;
 
-    pruneWorkingDirByDeviceDeletes(agencyConfig, agencyConfigPatch);
-    preserveWorkingDirDeleteMarkers(agencyConfig, agencyConfigPatch);
+    // Settings editors may spread a stale agencyConfig. Only directory edits
+    // explicitly identify devices whose selections should be written.
+    delete agencyConfig.workingDirByDevice;
+    const directoryPatch = agencyConfigPatch.workingDirByDevice;
+    if (directoryPatch) {
+      const entries = replaceWorkingDirDeviceIds
+        .filter((deviceId) => Object.hasOwn(directoryPatch, deviceId))
+        .map((deviceId) => [deviceId, directoryPatch[deviceId]]);
+      if (entries.length > 0) agencyConfig.workingDirByDevice = Object.fromEntries(entries);
+    }
 
     return { ...data, agencyConfig };
   };
@@ -724,22 +700,28 @@ export class AgentSliceActionImpl {
     options?: AgentConfigUpdateOptions,
   ): Promise<void> => {
     const { internal_dispatchAgentMap, updateSaveStatus } = this.#get();
-    const mergedData = this.#mergeLatestAgencyConfigPatch(id, data);
+    const replaceWorkingDirDeviceIds = options?.replaceWorkingDirDeviceIds;
+    const mergedData = this.#mergeLatestAgencyConfigPatch(id, data, replaceWorkingDirDeviceIds);
     const scope = getCacheScope();
 
     // 1. Optimistic update (instant UI feedback)
-    internal_dispatchAgentMap(id, mergedData);
+    internal_dispatchAgentMap(id, mergedData, { replaceWorkingDirDeviceIds });
     updateSaveStatus('saving');
 
     try {
       // 2. API call returns updated agent data
-      const result = await agentService.updateAgentConfig(id, mergedData, signal);
+      const result = await agentService.updateAgentConfig(
+        id,
+        mergedData,
+        signal,
+        replaceWorkingDirDeviceIds,
+      );
 
       // 3. Apply returned data, then invalidate the SWR key for later subscribers.
       if (result?.success && result.agent) {
-        internal_dispatchAgentMap(id, result.agent);
+        internal_dispatchAgentMap(id, result.agent, { workingDirByDeviceSnapshot: true });
         const confirmed = this.#get().agentMap[id];
-        if (confirmed) this.#replaceConfirmedAgentConfig(id, scope, confirmed as LobeAgentConfig);
+        if (confirmed) this.#replaceConfirmedAgentConfig(id, scope, confirmed);
         // Refresh agent:config so cached model A cannot replay after a
         // successful model A -> B update.
         await this.#get().internal_refreshAgentConfig(id, result.agent, scope);
@@ -791,11 +773,18 @@ export class AgentSliceActionImpl {
 
       // 3. Apply returned data, then seed related caches for later subscribers.
       if (result?.success && result.agent) {
-        internal_dispatchAgentMap(id, result.agent);
+        // Metadata saves run independently of config saves. Their full server
+        // response may predate a newer config, so confirm only metadata fields.
+        const confirmedMeta = Object.fromEntries(
+          Object.entries(result.agent).filter(
+            ([key]) => key === 'id' || AGENT_META_FIELDS.has(key),
+          ),
+        );
+        internal_dispatchAgentMap(id, confirmedMeta);
         const confirmed = this.#get().agentMap[id];
-        if (confirmed) this.#replaceConfirmedAgentConfig(id, scope, confirmed as LobeAgentConfig);
-        await this.#get().internal_refreshAgentConfig(id, result.agent, scope);
-        void mutate((key) => isAgentListKey(key, scope));
+        if (confirmed) this.#replaceConfirmedAgentConfig(id, scope, confirmed);
+        await this.#get().internal_refreshAgentConfig(id, confirmed as LobeAgentConfig, scope);
+        void revalidateReplica(agentListResource);
         this.#get().invalidateAvailableAgents();
       }
       updateSaveStatus('saved');
@@ -806,12 +795,8 @@ export class AgentSliceActionImpl {
         console.error('[AgentStore] Failed to save meta:', error);
         updateSaveStatus('idle');
         if (options?.rethrow) {
-          if (previous) this.#replaceConfirmedAgentConfig(id, scope, previous as LobeAgentConfig);
-          else {
-            const agentMap = { ...this.#get().agentMap };
-            delete agentMap[id];
-            this.#set({ agentMap }, false, 'rollbackAgentMeta');
-          }
+          if (previous) this.#replaceConfirmedAgentConfig(id, scope, previous);
+          else this.#config.update(id, () => undefined, { persist: false });
           throw error;
         }
       }
@@ -828,21 +813,20 @@ export class AgentSliceActionImpl {
       .filter(([, agentId]) => agentId === id)
       .map(([slug]) => slug);
 
-    /** Reuse the authoritative update response; other mutations still need a network refresh. */
+    /**
+     * Reuse the authoritative update response (the replica already holds it);
+     * other mutations still need a network refresh.
+     */
     if (updatedAgent) {
-      await Promise.all([
-        mutate(agentConfigKeys.config(id, scope), updatedAgent, { revalidate: false }),
-        ...slugs.map((slug) =>
-          mutate(builtinAgentKeys.init(slug, scope), updatedAgent as AgentItem, {
-            revalidate: false,
-          }),
-        ),
-      ]);
+      slugs.forEach((slug) =>
+        this.#get().internal_replaceBuiltinAgent(slug, updatedAgent as AgentItem, scope),
+      );
       return;
     }
 
+    if (scope !== getCacheScope()) return;
     await Promise.all([
-      mutate((key) => isAgentConfigKey(key, id, scope)),
+      this.#config.revalidate(id),
       ...slugs.map((slug) => this.#get().refreshBuiltinAgent(slug)),
     ]);
   };

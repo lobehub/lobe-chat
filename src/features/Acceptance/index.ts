@@ -7,11 +7,11 @@ export {
   type CriterionRowProps,
   openCriterionEditModal,
   type OpenCriterionEditModalProps,
+  rowKeyDownHandler,
 } from './CriterionList';
 export {
   useAcceptanceBundle,
   useAcceptanceBySubject,
-  useVerifyReportSummariesInfinite,
   useVerifyResults,
   useVerifyState,
 } from './hooks';

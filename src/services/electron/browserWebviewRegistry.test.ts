@@ -93,8 +93,22 @@ describe('browserWebviewRegistry', () => {
     await browserWebviewRegistry.detach('topic-1', viewport);
 
     expect(webview?.parentElement).toBe(retainedHost);
-    expect(webview?.style.left).toBe('-10000px');
+    expect(webview?.style.left).toBe('0px');
     expect(webview?.style.opacity).toBe('0');
+  });
+
+  it('parks a background guest inside the viewport so Chromium keeps drawing it', async () => {
+    // An off-screen guest gets no compositor frames: capturePage then hangs or
+    // rejects with UnknownVizError, which broke screenshots for background runs.
+    const webview = await resolveWebview('background-topic');
+
+    expect(webview).toHaveStyle({
+      left: '0px',
+      opacity: '0',
+      pointerEvents: 'none',
+      position: 'fixed',
+      top: '0px',
+    });
   });
 
   it('resyncs fixed bounds when the host moves without resizing', async () => {
@@ -121,7 +135,7 @@ describe('browserWebviewRegistry', () => {
     vi.useRealTimers();
   });
 
-  it('moves a zero-sized guest offscreen so its last compositor frame cannot remain visible', async () => {
+  it('hides a zero-sized guest so its last compositor frame cannot remain visible', async () => {
     vi.useFakeTimers();
 
     const { browserWebviewRegistry } = await import('./browserWebviewRegistry');
@@ -142,7 +156,12 @@ describe('browserWebviewRegistry', () => {
     await vi.advanceTimersByTimeAsync(120);
 
     const bridge = document.querySelector<HTMLElement>('[data-browser-resize-bridge="true"]');
-    expect(webview).toHaveStyle({ left: '-10000px', opacity: '0', width: '1200px' });
+    expect(webview).toHaveStyle({
+      left: '0px',
+      opacity: '0',
+      pointerEvents: 'none',
+      width: '1200px',
+    });
     expect(bridge).toHaveStyle({ pointerEvents: 'none', visibility: 'hidden' });
 
     width = 360;
@@ -155,7 +174,7 @@ describe('browserWebviewRegistry', () => {
     vi.useRealTimers();
   });
 
-  it('moves the guest offscreen when a collapsed ancestor clips a fixed-width host', async () => {
+  it('hides the guest when a collapsed ancestor clips a fixed-width host', async () => {
     vi.useFakeTimers();
 
     const { browserWebviewRegistry } = await import('./browserWebviewRegistry');
@@ -180,7 +199,12 @@ describe('browserWebviewRegistry', () => {
     panelWidth = 0;
     await vi.advanceTimersByTimeAsync(120);
 
-    expect(webview).toHaveStyle({ left: '-10000px', opacity: '0', width: '1200px' });
+    expect(webview).toHaveStyle({
+      left: '0px',
+      opacity: '0',
+      pointerEvents: 'none',
+      width: '1200px',
+    });
 
     panelWidth = 360;
     await vi.advanceTimersByTimeAsync(120);
@@ -197,7 +221,7 @@ describe('browserWebviewRegistry', () => {
     portalRoot.id = 'lobe-ui-theme-app';
     document.body.append(portalRoot);
     const draggablePanel = document.createElement('aside');
-    draggablePanel.className = 'ant-draggable-panel';
+    draggablePanel.className = 'lobe-draggable-panel';
     draggablePanel.getBoundingClientRect = () =>
       ({ height: 600, left: 320, right: 680, top: 40, width: 360 }) as DOMRect;
     document.body.append(draggablePanel);
@@ -207,10 +231,15 @@ describe('browserWebviewRegistry', () => {
     draggablePanel.append(viewport);
 
     const resizeHandle = document.createElement('div');
-    resizeHandle.className = 'ant-draggable-panel-left-handle';
+    resizeHandle.className = 'lobe-draggable-panel__handle';
     draggablePanel.append(resizeHandle);
-    const forwardedMouseDown = vi.fn();
-    resizeHandle.addEventListener('mousedown', forwardedMouseDown);
+    const PointerEventCtor = (typeof PointerEvent === 'undefined'
+      ? MouseEvent
+      : PointerEvent) as typeof MouseEvent;
+    const forwardedPointerDown = vi.fn();
+    const forwardedPointerMove = vi.fn();
+    resizeHandle.addEventListener('pointerdown', forwardedPointerDown);
+    resizeHandle.addEventListener('pointermove', forwardedPointerMove);
 
     const attaching = browserWebviewRegistry.attach('resizable-topic', viewport);
     const webview = document.querySelector<HTMLElement>('webview');
@@ -223,7 +252,7 @@ describe('browserWebviewRegistry', () => {
     expect(webview?.style.width).toBe('360px');
 
     bridge?.dispatchEvent(
-      new MouseEvent('mousedown', {
+      new PointerEventCtor('pointerdown', {
         bubbles: true,
         button: 0,
         buttons: 1,
@@ -232,10 +261,31 @@ describe('browserWebviewRegistry', () => {
       }),
     );
 
-    expect(forwardedMouseDown).toHaveBeenCalledOnce();
+    expect(forwardedPointerDown).toHaveBeenCalledOnce();
     expect(webview?.style.pointerEvents).toBe('none');
 
-    window.dispatchEvent(new MouseEvent('mouseup', { bubbles: true }));
+    window.dispatchEvent(
+      new PointerEventCtor('pointermove', {
+        bubbles: true,
+        clientX: 260,
+        clientY: 200,
+      }),
+    );
+    // The replayed event bubbles back into the same capture listener on `window`.
+    // Getting a second call here means the forwarder re-entered itself instead of
+    // moving the panel.
+    expect(forwardedPointerMove).toHaveBeenCalledTimes(1);
+
+    window.dispatchEvent(
+      new PointerEventCtor('pointermove', {
+        bubbles: true,
+        clientX: 240,
+        clientY: 200,
+      }),
+    );
+    expect(forwardedPointerMove).toHaveBeenCalledTimes(2);
+
+    window.dispatchEvent(new PointerEventCtor('pointerup', { bubbles: true }));
     expect(webview?.style.pointerEvents).toBe('auto');
 
     await browserWebviewRegistry.detach('resizable-topic', viewport);

@@ -6,11 +6,12 @@ import type {
   TrashListParams,
   TrashListResult,
   TrashResourceType,
+  TrashRootFilter,
 } from '@lobechat/types';
 import { and, asc, count, desc, eq, inArray, isNull, lt, lte, or, sql } from 'drizzle-orm';
 
 import type { NewTrashItemRow, TrashItemRow } from '../schemas';
-import { agents, messages, topics, trashItems } from '../schemas';
+import { agents, dashboards, messages, topics, trashItems, widgets } from '../schemas';
 import type { LobeChatDatabase, Transaction } from '../type';
 import { buildWorkspaceWhere } from '../utils/workspace';
 
@@ -19,6 +20,7 @@ const REGISTER_CHUNK_SIZE = 500;
 
 export interface TrashRegisterEntry {
   meta?: TrashItemMeta | null;
+  projectId: string | null;
   resourceId: string;
   resourceType: TrashResourceType;
   title?: string | null;
@@ -41,8 +43,10 @@ export interface TrashRegisterParams {
  */
 const ROOT_TABLES: Record<TrashResourceType, { id: any; isDeleted: any; table: any }> = {
   agent: { id: agents.id, isDeleted: agents.isDeleted, table: agents },
+  dashboard: { id: dashboards.id, isDeleted: dashboards.isDeleted, table: dashboards },
   message: { id: messages.id, isDeleted: messages.isDeleted, table: messages },
   topic: { id: topics.id, isDeleted: topics.isDeleted, table: topics },
+  widget: { id: widgets.id, isDeleted: widgets.isDeleted, table: widgets },
 };
 
 const toTrashItem = (row: TrashItemRow): TrashItem => ({
@@ -79,6 +83,26 @@ export class TrashModel {
 
   private ownership = () =>
     buildWorkspaceWhere({ userId: this.userId, workspaceId: this.workspaceId }, trashItems);
+
+  /**
+   * The roots one recycle-bin view covers. The list, its counts and "empty
+   * trash" all build on this, so a filter can never show one set of rows and
+   * count or purge another. Children are never matched on their own: a
+   * cascade is listed, counted and purged through its root, whatever project
+   * its children were recorded under.
+   */
+  private rootsWhere = ({ deletedByUserId, projectId, resourceType }: TrashRootFilter = {}) =>
+    and(
+      this.ownership(),
+      isNull(trashItems.rootId),
+      resourceType ? eq(trashItems.resourceType, resourceType) : undefined,
+      deletedByUserId ? eq(trashItems.deletedByUserId, deletedByUserId) : undefined,
+      projectId === undefined
+        ? undefined
+        : projectId === null
+          ? isNull(trashItems.projectId)
+          : eq(trashItems.projectId, projectId),
+    );
 
   // ─────────────────────────── writes ───────────────────────────
 
@@ -129,6 +153,7 @@ export class TrashModel {
       const rootValues: NewTrashItemRow[] = params.cascades.map(({ root }) => ({
         ...stamp,
         meta: root.meta ?? null,
+        projectId: root.projectId,
         resourceId: root.resourceId,
         resourceType: root.resourceType,
         rootId: null,
@@ -140,6 +165,7 @@ export class TrashModel {
           .insert(trashItems)
           .values(rootValues.slice(i, i + REGISTER_CHUNK_SIZE))
           .onConflictDoUpdate({
+            // Preserve the first project context, including historical NULL, on retries.
             set: {
               deletedAt: sql`excluded.deleted_at`,
               deletedByUserId: sql`excluded.deleted_by_user_id`,
@@ -159,6 +185,7 @@ export class TrashModel {
         return (children ?? []).map((child) => ({
           ...stamp,
           meta: child.meta ?? null,
+          projectId: child.projectId,
           resourceId: child.resourceId,
           resourceType: child.resourceType,
           rootId: rootRow.id,
@@ -188,6 +215,56 @@ export class TrashModel {
     if (ids.length === 0) return;
     const db = trx ?? this.db;
     await db.delete(trashItems).where(inArray(trashItems.id, ids));
+  };
+
+  /**
+   * Drop the roots of topics / messages that were trashed on their own before
+   * the agent they belong to (directly or through its legacy session shells),
+   * and so kept separate registry rows. Called while that agent is being
+   * purged: the FK cascade deletes those resources, so their rows would
+   * otherwise linger in the bin pointing at nothing.
+   */
+  removeRootsUnderAgents = async (
+    parents: { agentIds: string[]; sessionIds: string[] },
+    trx?: Transaction,
+  ) => {
+    if (parents.agentIds.length === 0) return;
+    const db = trx ?? this.db;
+    const topicOwner =
+      parents.sessionIds.length > 0
+        ? or(
+            inArray(topics.agentId, parents.agentIds),
+            inArray(topics.sessionId, parents.sessionIds),
+          )
+        : inArray(topics.agentId, parents.agentIds);
+    const ownedTopicIds = db.select({ id: topics.id }).from(topics).where(topicOwner);
+    const messageOwner = or(
+      inArray(messages.agentId, parents.agentIds),
+      parents.sessionIds.length > 0 ? inArray(messages.sessionId, parents.sessionIds) : undefined,
+      inArray(messages.topicId, ownedTopicIds),
+    );
+
+    await db
+      .delete(trashItems)
+      .where(
+        and(
+          this.ownership(),
+          isNull(trashItems.rootId),
+          or(
+            and(
+              eq(trashItems.resourceType, 'topic'),
+              inArray(trashItems.resourceId, ownedTopicIds),
+            ),
+            and(
+              eq(trashItems.resourceType, 'message'),
+              inArray(
+                trashItems.resourceId,
+                db.select({ id: messages.id }).from(messages).where(messageOwner),
+              ),
+            ),
+          ),
+        ),
+      );
   };
 
   removeByResources = async (
@@ -224,12 +301,7 @@ export class TrashModel {
       .from(trashItems)
       .where(
         and(
-          this.ownership(),
-          isNull(trashItems.rootId),
-          params.resourceType ? eq(trashItems.resourceType, params.resourceType) : undefined,
-          params.deletedByUserId
-            ? eq(trashItems.deletedByUserId, params.deletedByUserId)
-            : undefined,
+          this.rootsWhere(params),
           cursor
             ? or(
                 lt(trashItems.deletedAt, cursor.deletedAt),
@@ -249,18 +321,15 @@ export class TrashModel {
     };
   };
 
-  countByType = async (options?: { deletedByUserId?: string }): Promise<TrashCountByType> => {
+  /** Roots per type under the same filter as `list` (the type filter itself aside). */
+  countByType = async (
+    filter: Omit<TrashRootFilter, 'resourceType'> = {},
+  ): Promise<TrashCountByType> => {
     const rows = await this.db
       .select({ resourceType: trashItems.resourceType, total: count() })
       .from(trashItems)
       .where(
-        and(
-          this.ownership(),
-          isNull(trashItems.rootId),
-          options?.deletedByUserId
-            ? eq(trashItems.deletedByUserId, options.deletedByUserId)
-            : undefined,
-        ),
+        this.rootsWhere({ deletedByUserId: filter.deletedByUserId, projectId: filter.projectId }),
       )
       .groupBy(trashItems.resourceType);
 
@@ -300,29 +369,19 @@ export class TrashModel {
     return db.select().from(trashItems).where(eq(trashItems.rootId, rootId));
   };
 
-  /** Every root in scope — used by "empty trash". */
-  listAllRootIds = async (options?: {
-    /** Restrict to roots this user trashed — a workspace non-owner may only empty their own. */
-    deletedByUserId?: string;
-    /** Cap the ids returned — empty-trash works one bounded batch per request. */
-    limit?: number;
-    resourceType?: TrashResourceType;
-  }): Promise<string[]> => {
+  /** Roots matching a recycle-bin view, oldest first — used by "empty trash". */
+  listAllRootIds = async (
+    options: TrashRootFilter & {
+      /** Cap the ids returned — empty-trash works one bounded batch per request. */
+      limit?: number;
+    } = {},
+  ): Promise<string[]> => {
     const query = this.db
       .select({ id: trashItems.id })
       .from(trashItems)
-      .where(
-        and(
-          this.ownership(),
-          isNull(trashItems.rootId),
-          options?.resourceType ? eq(trashItems.resourceType, options.resourceType) : undefined,
-          options?.deletedByUserId
-            ? eq(trashItems.deletedByUserId, options.deletedByUserId)
-            : undefined,
-        ),
-      )
+      .where(this.rootsWhere(options))
       .orderBy(asc(trashItems.deletedAt), asc(trashItems.id));
-    const rows = await (options?.limit ? query.limit(options.limit) : query);
+    const rows = await (options.limit ? query.limit(options.limit) : query);
     return rows.map((row) => row.id);
   };
 
@@ -363,7 +422,8 @@ export class TrashModel {
           and(
             eq(trashItems.resourceType, resourceType),
             isNull(trashItems.rootId),
-            sql`NOT EXISTS (SELECT 1 FROM ${source.table} WHERE ${source.id} = ${trashItems.resourceId} AND ${source.isDeleted} = true)`,
+            // `::text` because some roots (widgets, dashboards) key on uuid while the registry stores text ids
+            sql`NOT EXISTS (SELECT 1 FROM ${source.table} WHERE ${source.id}::text = ${trashItems.resourceId} AND ${source.isDeleted} = true)`,
           ),
         )
         .returning({ id: trashItems.id });

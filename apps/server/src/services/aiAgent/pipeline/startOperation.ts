@@ -10,6 +10,7 @@ import { isAbortError } from '@/server/services/agentRuntime/abort';
 import type { ExecRunContext, InternalExecAgentParams } from '../types';
 import type { ApprovalClaimState } from './approvalResume';
 import type { OperationPrepResult } from './operationPrep';
+import { traceStartStage } from './sendTracing';
 import type { ToolDiscoveryResult } from './toolDiscovery';
 
 const log = debug('lobe-server:ai-agent-service');
@@ -25,6 +26,8 @@ export interface StartOperationDeps {
 }
 
 export interface StartOperationInput {
+  /** See {@link InternalExecAgentParams.acceptsFileWorks}. */
+  acceptsFileWorks?: boolean;
   /** See {@link InternalExecAgentParams.acceptsMemberRuntimeEnd}. */
   acceptsMemberRuntimeEnd?: boolean;
   approvalClaim: ApprovalClaimState;
@@ -48,6 +51,8 @@ export interface StartOperationInput {
   /** Final runtime context — base prep context with 16b/16c overrides applied. */
   initialContext: OperationPrepResult['initialContext'];
   initialStepCount?: number;
+  /** Relay executor the calling client declared; lands on `state.host.llmExecutor`. */
+  llmExecutor?: InternalExecAgentParams['llmExecutor'];
   maxSteps?: number;
   onOperationCreated?: InternalExecAgentParams['onOperationCreated'];
   operationId: string;
@@ -97,6 +102,7 @@ export const startOperation = async (
     userMessageId,
   } = ctx;
   const {
+    acceptsFileWorks,
     acceptsMemberRuntimeEnd,
     approvalClaim,
     approvalSourceOperationId,
@@ -159,10 +165,35 @@ export const startOperation = async (
       (approvalSourceOperationId
         ? await deps.agentRuntimeService.acceptsMemberRuntimeEnd(approvalSourceOperationId)
         : undefined);
+    // Same client, same device: the continuation also keeps the parked
+    // operation's relay executor, or its next device-only call has none.
+    const llmExecutor =
+      input.llmExecutor ??
+      (approvalSourceOperationId
+        ? await deps.agentRuntimeService.getLlmExecutor(approvalSourceOperationId)
+        : undefined);
+    // Its `file_works` declaration too, or the continuation's terminal push
+    // would drop the file Work card the parked client can render.
+    const fileWorksAccepted =
+      acceptsFileWorks ??
+      (approvalSourceOperationId
+        ? await deps.agentRuntimeService.acceptsFileWorks(approvalSourceOperationId)
+        : undefined);
+    // The Group Agent Builder target is server state captured on the parked
+    // operation row. A continuation is the SAME builder conversation: it must
+    // re-bind to the edited group instead of relying on the resumed topic's
+    // `metadata.editingGroupId`, which older topics never received — the member
+    // tools would then answer `No active group found`. Never trusted from the
+    // resolving client; read back from the durable row.
+    const inheritedEditingGroupId = approvalSourceOperationId
+      ? await deps.agentRuntimeService.getOperationEditingGroupId(approvalSourceOperationId)
+      : undefined;
     const result = await deps.agentRuntimeService.createOperation({
+      acceptsFileWorks: fileWorksAccepted,
       acceptsMemberRuntimeEnd: memberRuntimeEndAccepted,
       clientProtocol: input.clientProtocol,
       includeFinalState: input.includeFinalState,
+      llmExecutor,
       activeDeviceId: discovery.activeDeviceId,
       activeDeviceScope: discovery.activeDeviceScope,
       agentConfig,
@@ -173,7 +204,7 @@ export const startOperation = async (
             // Mirrors `shareConfig.allowReadMemory` so `BuiltinToolsExecutor`
             // can re-check the memory tool's grant at dispatch time (the
             // actual chokepoint) via `isShareBlockedDataToolCall` — see
-            // `shareGate.ts`.
+            // `shareGate/dispatch.ts`.
             allowReadMemory: shareGate.shareConfig.allowReadMemory,
             // Mirrors `shareConfig.toolGrants` so tool runtimes resolved
             // outside `toolManifestMap` (e.g. `activateSkill`, which queries
@@ -238,7 +269,14 @@ export const startOperation = async (
         // owned by the builtin builder agent, so the edited group only rides
         // here. Read by the group-agent-builder server runtime and by the
         // `<current_group_context>` injector.
-        ...(editingGroupId ? { editingGroupId } : {}),
+        //
+        // An intervention continuation arrives without the group (the parked
+        // run's client is gone), so the parked operation's durable target
+        // stands in — the same inheritance `fileWorks` / `memberRuntimeEnd`
+        // already use. An explicit request value always wins.
+        ...(editingGroupId || inheritedEditingGroupId
+          ? { editingGroupId: editingGroupId ?? inheritedEditingGroupId }
+          : {}),
         // Run-scoped Agent Signal marker for background self-iteration / memory
         // runs — lands in state.origin.signal so the completion path can
         // project receipts/briefs. Undefined for ordinary chat runs.
@@ -385,7 +423,9 @@ export const startOperation = async (
     let gatewayToken: string | undefined;
     if (!deps.withholdGatewayToken) {
       try {
-        gatewayToken = await signUserJWT(shareGate?.visitorUserId ?? deps.userId);
+        gatewayToken = await traceStartStage('sign_gateway_token', () =>
+          signUserJWT(shareGate?.visitorUserId ?? deps.userId),
+        );
       } catch {
         log('execAgent: failed to sign gateway JWT, gateway auth will be unavailable');
       }

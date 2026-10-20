@@ -15,6 +15,11 @@ import type { ScmChangeRequestItem } from '../../schemas';
 import { scmChangeRequests, scmInstallations } from '../../schemas';
 import type { LobeChatDatabase } from '../../type';
 
+const ownedByScope = (scope: { userId: string; workspaceId?: string | null }) =>
+  scope.workspaceId
+    ? eq(scmChangeRequests.workspaceId, scope.workspaceId)
+    : and(eq(scmChangeRequests.userId, scope.userId), isNull(scmChangeRequests.workspaceId));
+
 /**
  * Conclusions worth waking an agent over: something broke and there is
  * something to fix. A cancelled or stale run is not one of them — usually a
@@ -199,9 +204,7 @@ export class ScmChangeRequestModel {
     scope: { userId: string; workspaceId?: string | null },
     options: { limit?: number } = {},
   ): Promise<ScmChangeRequestItem[]> => {
-    const owned = scope.workspaceId
-      ? eq(scmChangeRequests.workspaceId, scope.workspaceId)
-      : and(eq(scmChangeRequests.userId, scope.userId), isNull(scmChangeRequests.workspaceId));
+    const owned = ownedByScope(scope);
 
     const connected = db
       .select({ id: scmInstallations.id })
@@ -221,6 +224,35 @@ export class ScmChangeRequestModel {
       .where(or(owned, inArray(scmChangeRequests.installationId, connected)))
       .orderBy(desc(scmChangeRequests.updatedAt))
       .limit(options.limit ?? 50);
+  };
+
+  /**
+   * Whether a provider event could still wake `topicId`: the static half of
+   * `ScmControlService.wake`'s gate. Scoped like that wake, which resolves the
+   * topic under the row's own tenant. Lets an open conversation poll for a
+   * background run only when one can actually arrive.
+   */
+  static hasWakeTarget = async (
+    db: LobeChatDatabase,
+    scope: { userId: string; workspaceId?: string | null },
+    topicId: string,
+    maxWakes: number,
+  ): Promise<boolean> => {
+    const [row] = await db
+      .select({ id: scmChangeRequests.id })
+      .from(scmChangeRequests)
+      .where(
+        and(
+          eq(scmChangeRequests.topicId, topicId),
+          eq(scmChangeRequests.state, 'open'),
+          eq(scmChangeRequests.isDraft, false),
+          lt(scmChangeRequests.wakeCount, maxWakes),
+          ownedByScope(scope),
+        ),
+      )
+      .limit(1);
+
+    return !!row;
   };
 
   static listByTopic = async (

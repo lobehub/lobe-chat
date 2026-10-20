@@ -1,7 +1,10 @@
 import type { DeviceGitWorktreeListItem } from '@lobechat/types';
-import { copyToClipboard, Icon, Tooltip } from '@lobehub/ui';
 import {
   confirmModal,
+  copyToClipboard,
+  createStaticStyles,
+  cssVar,
+  cx,
   DropdownMenuFooter,
   DropdownMenuHeader,
   DropdownMenuItem,
@@ -11,10 +14,11 @@ import {
   DropdownMenuRoot,
   DropdownMenuScrollViewport,
   DropdownMenuTrigger,
+  Icon,
   Input,
   toast,
-} from '@lobehub/ui/base-ui';
-import { createStaticStyles, cssVar, cx } from 'antd-style';
+  Tooltip,
+} from '@lobehub/ui';
 import {
   CheckIcon,
   CopyIcon,
@@ -38,14 +42,14 @@ import {
   useState,
 } from 'react';
 import { useTranslation } from 'react-i18next';
-import useSWR from 'swr';
 
-import { deviceKeys } from '@/libs/swr/keys';
 import { gitService } from '@/services/git';
 import { useFetchGitWorkingTreeStatus } from '@/store/device';
 
 import { openCreateBranchModal } from './CreateBranchModal';
+import { gitMenuTriggerStyles } from './gitMenuTriggerStyles';
 import { openRenameBranchModal } from './RenameBranchModal';
+import { useBranchList } from './useBranchList';
 import { useSwitchWorktree } from './useSwitchWorktree';
 import { findWorktreeForBranch, getPathName } from './worktreeHelpers';
 
@@ -55,28 +59,23 @@ const styles = createStaticStyles(({ css }) => ({
     text-overflow: ellipsis;
     white-space: nowrap;
   `,
-  triggerAnchor: css`
-    display: inline-flex;
-    flex: none;
-  `,
-  /* See WorktreeSwitcher.triggerFill — keeps a full-row custom trigger's hover
-     background aligned with the popup-open background. */
-  triggerFill: css`
-    display: flex;
-    width: 100%;
-
-    > * {
-      flex: 1;
-    }
-  `,
   footer: css`
     border-block-start: 1px solid ${cssVar.colorSplit};
   `,
   header: css`
     padding: 0;
   `,
+  // Fill the list slot like `list` does, so the footer stays pinned to the
+  // bottom of the fixed-height popup while loading / empty.
   emptyState: css`
+    display: flex;
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+
+    min-height: 0;
     padding-block: 12px;
+
     font-size: 12px;
     color: ${cssVar.colorTextTertiary};
     text-align: center;
@@ -159,7 +158,13 @@ const styles = createStaticStyles(({ css }) => ({
     flex: 1;
     min-height: 0;
   `,
+  // The base popup only becomes a flex column once the virtual list mounts;
+  // force it so the loading / empty placeholder can fill the list slot too.
   popup: css`
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+
     width: 300px;
     height: 360px;
   `,
@@ -234,6 +239,8 @@ interface BranchSwitcherProps {
   placement?: 'topLeft' | 'bottomLeft' | 'bottomRight';
   /** The repo the conversation is anchored to (worktrees hang off it). */
   sourcePath: string;
+  /** The conversation the switch is recorded on; omitted, the global active topic. */
+  topicId?: string | null;
   /** Used to route a checkout into the worktree that already holds the branch. */
   worktrees: DeviceGitWorktreeListItem[];
 }
@@ -252,6 +259,7 @@ const BranchSwitcher = memo<BranchSwitcherProps>(
     onOptimisticCheckout,
     placement = 'topLeft',
     sourcePath,
+    topicId,
     worktrees,
     children,
   }) => {
@@ -260,18 +268,17 @@ const BranchSwitcher = memo<BranchSwitcherProps>(
     const [search, setSearch] = useState('');
     const [busyBranch, setBusyBranch] = useState<string | null>(null);
     const currentRowRef = useRef<HTMLDivElement>(null);
-    const switchWorktree = useSwitchWorktree({ agentId, isGithub, sourcePath });
+    const switchWorktree = useSwitchWorktree({ agentId, isGithub, sourcePath, topicId });
 
+    // The persisted list paints the moment the dropdown opens; the read refreshes it.
     const {
-      data: branches = [],
-      isLoading,
+      branches,
       error: branchesError,
-      mutate: mutateBranches,
-    } = useSWR(
-      open ? deviceKeys.gitBranches(deviceId ?? 'local', path) : null,
-      () => gitService.listGitBranches({ deviceId, path }),
-      { keepPreviousData: true, revalidateOnFocus: false, shouldRetryOnError: false },
-    );
+      isLoading,
+      loadFailed,
+      refreshBranches,
+      revalidate: mutateBranches,
+    } = useBranchList(deviceId, path, open);
     const { data: workingStatus, mutate: mutateWorkingStatus } = useFetchGitWorkingTreeStatus(
       deviceId,
       path,
@@ -344,7 +351,7 @@ const BranchSwitcher = memo<BranchSwitcherProps>(
           setBusyBranch(branch);
           onOpenChange(false);
           try {
-            await switchWorktree(owner.path);
+            await switchWorktree(owner.path, branch);
           } finally {
             onAfterCheckout?.();
             setBusyBranch(null);
@@ -396,12 +403,13 @@ const BranchSwitcher = memo<BranchSwitcherProps>(
         // the optimistic label back to the real branch.
         onAfterCheckout?.();
         if (result.success) {
+          void refreshBranches();
           onOpenChange(false);
           return undefined;
         }
         return result.error || t('workingDirectory.checkoutFailed');
       },
-      [deviceId, onAfterCheckout, onOptimisticCheckout, onOpenChange, path, t],
+      [deviceId, onAfterCheckout, onOptimisticCheckout, onOpenChange, path, refreshBranches, t],
     );
 
     const openCreateBranch = useCallback(() => {
@@ -411,7 +419,7 @@ const BranchSwitcher = memo<BranchSwitcherProps>(
 
     // Rename a branch from a modal. Closes the dropdown first (mirrors create),
     // then reconciles via onAfterCheckout — a renamed current branch updates the
-    // header label, and the list refetches when the dropdown reopens.
+    // header label — and re-reads the list, so its next open paints the new name.
     const handleRename = useCallback(
       (event: MouseEvent, branch: string) => {
         event.stopPropagation();
@@ -427,12 +435,15 @@ const BranchSwitcher = memo<BranchSwitcherProps>(
               to: newName,
             });
             onAfterCheckout?.();
-            if (result.success) return undefined;
+            if (result.success) {
+              void refreshBranches();
+              return undefined;
+            }
             return result.error || t('workingDirectory.renameFailed');
           },
         });
       },
-      [deviceId, onAfterCheckout, onOpenChange, path, t],
+      [deviceId, onAfterCheckout, onOpenChange, path, refreshBranches, t],
     );
 
     const handleCopy = useCallback(
@@ -462,20 +473,19 @@ const BranchSwitcher = memo<BranchSwitcherProps>(
           onOk: async () => {
             const result = await gitService.deleteGitBranch({ branch, deviceId, path });
             onAfterCheckout?.();
-            if (!result.success) {
-              toast.error(result.error || t('workingDirectory.deleteFailed'));
-            }
+            if (result.success) void refreshBranches();
+            else toast.error(result.error || t('workingDirectory.deleteFailed'));
           },
           title: t('workingDirectory.deleteBranchTitle'),
         });
       },
-      [deviceId, onAfterCheckout, onOpenChange, path, t, tCommon],
+      [deviceId, onAfterCheckout, onOpenChange, path, refreshBranches, t, tCommon],
     );
 
     return (
       <DropdownMenuRoot open={open} onOpenChange={onOpenChange}>
-        <DropdownMenuTrigger className={styles.triggerAnchor}>
-          <div className={styles.triggerFill}>{children}</div>
+        <DropdownMenuTrigger>
+          <div className={gitMenuTriggerStyles.trigger}>{children}</div>
         </DropdownMenuTrigger>
         <DropdownMenuPortal>
           <DropdownMenuPositioner placement={placement} sideOffset={8}>
@@ -508,7 +518,8 @@ const BranchSwitcher = memo<BranchSwitcherProps>(
 
               {isLoading && branches.length === 0 ? (
                 <div className={styles.emptyState}>{t('workingDirectory.branchesLoading')}</div>
-              ) : !isLoading && branchesError ? (
+              ) : loadFailed ? (
+                // A failed refresh keeps the list it already has on screen.
                 <div className={styles.emptyState}>{t('workingDirectory.branchesLoadFailed')}</div>
               ) : filtered.length === 0 ? (
                 <div className={styles.emptyState}>
@@ -521,6 +532,11 @@ const BranchSwitcher = memo<BranchSwitcherProps>(
                   virtual
                   className={styles.list}
                   getItemLabel={(_, index) => filtered[index]?.name}
+                  // The virtual viewport sizes itself on mount: a background
+                  // refresh that adds branches while the dropdown is open
+                  // would otherwise leave the extra rows (often the current
+                  // branch, last) undrawn. Remount when the count changes.
+                  key={filtered.length}
                   listItemHeight={32}
                 >
                   {filtered.map((branch) => {

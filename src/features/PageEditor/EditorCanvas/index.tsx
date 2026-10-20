@@ -52,11 +52,13 @@ const EditorCanvas = memo<EditorCanvasProps>(({ askCopilotTarget, placeholder, s
 
   return (
     <SharedEditorCanvas
+      allowContentBleed
       className={mentionPlainClassName}
       collab={!!collabPlugin}
       documentId={documentId}
       editable={editable}
       editor={editor}
+      enableInlineMath={false}
       extraPlugins={extraPlugins}
       mentionOption={mentionOption}
       placeholder={placeholder || t('pageEditor.editorPlaceholder')}

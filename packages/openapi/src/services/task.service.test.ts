@@ -82,7 +82,7 @@ vi.mock('@/server/services/task/assignmentNotification', () => ({
 const CALLER = 'me';
 const WORKSPACE = 'ws-1';
 
-describe('TaskRestService creator gate on delete', () => {
+describe('TaskRestService delete scope', () => {
   const service = (workspaceId?: string) =>
     new TaskRestService({} as LobeChatDatabase, CALLER, workspaceId);
 
@@ -92,10 +92,17 @@ describe('TaskRestService creator gate on delete', () => {
     resolveMock.mockResolvedValue({ createdByUserId: 'other-member', id: 'task-1' });
   });
 
-  it('refuses deleting a task created by another workspace member', async () => {
-    await expect(service(WORKSPACE).deleteTask('task-1')).rejects.toThrow(
-      /Only the creator or a workspace owner/,
-    );
+  it('deletes a visible task created by another workspace member', async () => {
+    deleteTaskMock.mockResolvedValue({ id: 'task-1' });
+
+    await expect(service(WORKSPACE).deleteTask('task-1')).resolves.toEqual({ id: 'task-1' });
+    expect(deleteTaskMock).toHaveBeenCalledWith('task-1');
+  });
+
+  it('reports a task the caller cannot see as not found', async () => {
+    resolveMock.mockResolvedValue(null);
+
+    await expect(service(WORKSPACE).deleteTask('task-1')).rejects.toThrow(/Task not found/);
     expect(deleteTaskMock).not.toHaveBeenCalled();
   });
 

@@ -172,15 +172,19 @@ Text-to-speech generation.
 **Source**: `apps/cli/src/commands/generate/tts.ts`
 
 ```bash
-lh gen tts <text> [-o <file>] [--voice <voice>] [--speed <n>] [--model <model>]
+lh gen tts <text> [-o <file>] [--voice <voice>] [--speed <n>] [-m <model>] [-p <provider>]
 ```
 
-| Option                | Description                 | Default      |
-| --------------------- | --------------------------- | ------------ |
-| `-o, --output <file>` | Output audio file path      | `output.mp3` |
-| `--voice <voice>`     | Voice name                  | `alloy`      |
-| `--speed <n>`         | Speed multiplier (0.25-4.0) | `1`          |
-| `--model <model>`     | TTS model                   | `tts-1`      |
+| Option                      | Description                              | Default      |
+| --------------------------- | ---------------------------------------- | ------------ |
+| `-o, --output <file>`       | Output audio file path                   | `output.mp3` |
+| `--voice <voice>`           | Voice name                               | `alloy`      |
+| `--speed <n>`               | Speed multiplier (0.25-4.0)              | `1`          |
+| `-m, --model <model>`       | Model ID (`provider/model` supported)    | `tts-1`      |
+| `-p, --provider <provider>` | Provider (derived from model if omitted) | `openai`     |
+
+Uses the selected provider's saved configuration through ModelRuntime, with the same
+authenticated tRPC client as `lh gen asr`.
 
 ---
 

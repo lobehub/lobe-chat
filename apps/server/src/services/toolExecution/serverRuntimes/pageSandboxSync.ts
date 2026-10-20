@@ -7,17 +7,15 @@ import type { ToolExecutionContext } from '../types';
 
 export type SandboxWrapper = (service: ISandboxService) => ISandboxService;
 
-export const pageSandboxWrapper = (context: ToolExecutionContext): SandboxWrapper | undefined => {
-  const {
-    agentId,
-    documentId,
-    operationId,
-    rootOperationId,
-    scope,
-    serverDB,
-    userId,
-    workspaceId,
-  } = context;
+/**
+ * @param workspaceId The run's resolved workspace; `context.workspaceId` is empty
+ *   on most dispatch paths (see `resolveContentWorkspaceId`).
+ */
+export const pageSandboxWrapper = (
+  context: ToolExecutionContext,
+  workspaceId = context.workspaceId,
+): SandboxWrapper | undefined => {
+  const { agentId, documentId, operationId, rootOperationId, scope, serverDB, userId } = context;
   if (scope !== 'page' || !documentId || !serverDB || !userId) return undefined;
 
   return (service) =>

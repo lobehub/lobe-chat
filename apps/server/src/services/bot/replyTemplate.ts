@@ -5,9 +5,6 @@ import {
 } from '@lobechat/model-runtime/errors';
 import type { ChatErrorBudgetContext, ChatErrorHeterogeneousContext } from '@lobechat/types';
 
-import modelRuntimeEnglish from '@/locales/default/modelRuntime';
-
-import modelRuntimeChinese from '../../../../../locales/zh-CN/modelRuntime.json';
 import type { StepPresentationData } from '../agentRuntime/types';
 import { getExtremeAck } from './ackPhrases';
 // Import from the leaf modules (`const` / `utils`) instead of the
@@ -739,7 +736,7 @@ export function renderAgentError(
   heterogeneous?: ChatErrorHeterogeneousContext,
 ): string {
   const strings = getSystemStrings(lng);
-  const heteroReply = renderHeterogeneousError(heterogeneous, lng);
+  const heteroReply = renderHeterogeneousError(heterogeneous);
   if (heteroReply) return appendOperationId(heteroReply, operationId);
 
   const normalized = normalizeChatMessageError({
@@ -766,14 +763,6 @@ export function renderAgentError(
   }
 
   const friendlyKey = errorType ? FRIENDLY_ERROR_BY_TYPE[errorType] : undefined;
-  if (!friendlyKey && spec && !spec.isFallback) {
-    // Reuse the same maintained translations as message error cards. Never
-    // interpolate raw provider error text into a shared IM channel.
-    const catalog: Record<string, string> =
-      lng === 'zh-CN' ? modelRuntimeChinese : modelRuntimeEnglish;
-    const copy = catalog[spec.code];
-    if (copy && !copy.includes('{{')) return withReference(`${strings.error}\n${copy}`);
-  }
   const stringKey =
     (friendlyKey && BUDGET_ADMISSION_KEYS.has(friendlyKey) && budget?.budgetTypeAtError
       ? BUDGET_SCOPE_ERROR.get(budget.budgetTypeAtError)

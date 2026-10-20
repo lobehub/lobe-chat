@@ -1,8 +1,7 @@
 'use client';
 
 import { DEFAULT_BLOCK_ANCHOR_PADDING, EditorProvider } from '@lobehub/editor/react';
-import { Flexbox } from '@lobehub/ui';
-import { createStaticStyles, cssVar } from 'antd-style';
+import { createStaticStyles, cssVar, Flexbox } from '@lobehub/ui';
 import type { CSSProperties, FC, ReactNode, UIEvent } from 'react';
 import { memo, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 
@@ -15,7 +14,7 @@ import { useRegisterFilesHotkeys } from '@/hooks/useHotkeys';
 import { usePermission } from '@/hooks/usePermission';
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
-import { usePageStore } from '@/store/page';
+import { pageActions } from '@/store/page';
 import { StyleSheet } from '@/utils/styles';
 
 import { usePageCollabEligible, usePageCollabEnabled } from './collab/usePageCollab';
@@ -28,6 +27,7 @@ import DocumentLikes from './DocumentLikes';
 import EditorCanvas from './EditorCanvas';
 import { recallEditorScrollTop, rememberEditorScrollTop } from './editorScrollMemory';
 import Header from './Header';
+import HtmlPageBody, { useIsHtmlPage } from './HtmlPageBody';
 import LockedAlert from './LockedAlert';
 import LockStatusBanner from './LockStatusBanner';
 import { PageAgentProvider } from './PageAgentProvider';
@@ -161,6 +161,7 @@ const PageEditorCanvas = memo<PageEditorCanvasProps>((props) => {
   const editable = usePageEditable();
   const editor = usePageEditorStore((s) => s.editor);
   const documentId = usePageEditorStore((s) => s.documentId);
+  const isHtmlPage = useIsHtmlPage(documentId);
   const wideScreen = useGlobalStore(systemStatusSelectors.wideScreen);
   const tableBleedInline = wideScreen
     ? `${TABLE_BASE_BLEED}px`
@@ -378,10 +379,10 @@ const PageEditorCanvas = memo<PageEditorCanvasProps>((props) => {
         onScroll={handleEditorScroll}
       >
         <WideScreenContainer
-          wrapperStyle={{ cursor: editable ? 'text' : 'default' }}
+          wrapperStyle={{ cursor: editable && !isHtmlPage ? 'text' : 'default' }}
           onChange={notifyEditorLayoutChange}
           onClick={() => {
-            if (!editable) return;
+            if (!editable || isHtmlPage) return;
 
             editor?.focus();
           }}
@@ -401,8 +402,14 @@ const PageEditorCanvas = memo<PageEditorCanvasProps>((props) => {
             {/* Prominent in-body notice when another member holds the lock; the
                 compact status badge lives in the Header (EditingIndicator). */}
             <LockedAlert />
-            <EditorCanvas askCopilotTarget={askCopilotTarget} />
-            <BlockCommentMarker hostRef={editorContentRef} />
+            {isHtmlPage ? (
+              <HtmlPageBody />
+            ) : (
+              <>
+                <EditorCanvas askCopilotTarget={askCopilotTarget} />
+                <BlockCommentMarker hostRef={editorContentRef} />
+              </>
+            )}
             {documentId && <DocumentLikes documentId={documentId} key={documentId} />}
             <DocumentComments />
           </Flexbox>
@@ -475,7 +482,6 @@ export const PageEditor: FC<PageEditorProps> = ({
   syncPageAgentActiveState,
 }) => {
   const { allowed: canEdit } = usePermission('edit_own_content');
-  const deletePage = usePageStore((s) => s.deletePage);
   const collabEnabled = usePageCollabEnabled();
   // Known once the document loads; a SKILL.md then leaves the room path.
   const collabEligible = usePageCollabEligible(pageId);
@@ -501,7 +507,7 @@ export const PageEditor: FC<PageEditorProps> = ({
           onDelete={() => {
             if (!canEdit) return;
 
-            deletePage(pageId || '');
+            pageActions.deletePage(pageId || '');
           }}
           onEmojiChange={(emoji) => {
             if (!canEdit) return;

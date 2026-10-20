@@ -1,8 +1,7 @@
 'use client';
 
 import { buildAcceptanceRepairPrompt } from '@lobechat/prompts';
-import { copyToClipboard, Flexbox } from '@lobehub/ui';
-import { Button, Text, toast } from '@lobehub/ui/base-ui';
+import { Button, copyToClipboard, Flexbox, Text, toast } from '@lobehub/ui';
 import dayjs from 'dayjs';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -240,6 +239,7 @@ const AcceptanceDecision = ({ onDraftToComposer }: AcceptanceDecisionProps) => {
             // viewer's promise, not the server's gate — the copy path below
             // opts out of dispatch explicitly.
             dispatchAvailable: Boolean(data.origin?.topic),
+            acceptanceId: acceptance.id,
             onConfirm: async (comment) => {
               if (!data.origin?.topic) {
                 const rejected = await runAction(() =>

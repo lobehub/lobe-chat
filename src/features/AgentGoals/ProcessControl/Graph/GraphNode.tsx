@@ -1,10 +1,10 @@
 'use client';
 
-import { Flexbox, Icon, Tooltip } from '@lobehub/ui';
+import type { GoalNodeStatus } from '@lobechat/types';
+import { createStaticStyles, cssVar, cx, Flexbox, Icon, Tooltip } from '@lobehub/ui';
 import { Handle, type NodeProps, Position } from '@xyflow/react';
-import { createStaticStyles, cssVar, cx } from 'antd-style';
-import { FileBox, type LucideIcon, Repeat2, ShieldCheck } from 'lucide-react';
-import { memo } from 'react';
+import { FileBox, Info, type LucideIcon, Repeat2, ShieldCheck } from 'lucide-react';
+import { memo, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { TASK_STATUS_VISUALS } from '@/components/ExecutionStatus';
@@ -27,6 +27,8 @@ import { experimentStatusVisual } from './experimentStatus';
  */
 
 export interface GraphNodeData extends Record<string, unknown> {
+  /** A container's status when its node's own does not tell it — an open batch. */
+  containerStatus?: GoalNodeStatus;
   dim: boolean;
   /** Called out by the host — a detour on a report chapter's local map. */
   highlighted?: boolean;
@@ -35,6 +37,24 @@ export interface GraphNodeData extends Record<string, unknown> {
   /** On the path the wrap-up report marked as the one that led to the result. */
   mainline?: boolean;
   memberCount?: number;
+  /**
+   * Host-authored copy for a card whose role the node alone does not carry — a
+   * batch's plan revision or release gate. `chip: null` drops the state chip.
+   */
+  presentation?: {
+    chip?: StateChip | null;
+    /** Detail behind an info icon beside the title, e.g. what a gate checks. */
+    hint?: ReactNode;
+    /** Where the hint opens; beside the card when above would cover its neighbours. */
+    hintPlacement?: 'rightTop' | 'top';
+    icon?: LucideIcon;
+    /** Glyph colours when the card is not its kind — a release gate. */
+    palette?: { line: string; soft: string };
+    /** Put the state chip at the right of the title instead of a row above it. */
+    trailingChip?: boolean;
+    subtitle?: ReactNode;
+    title?: string;
+  };
   running: boolean;
   selected: boolean;
   stale: boolean;
@@ -174,10 +194,13 @@ const styles = createStaticStyles(({ css }) => ({
     font-variant-numeric: tabular-nums;
     color: ${cssVar.colorTextTertiary};
   `,
-  /* A ring, not a fill: the kind tint and the state chip must stay readable. */
+  /* A ring, not a fill: the kind tint and the state chip must stay readable.
+     Blue, not `colorPrimary` — the primary is near-black here, so the ring read
+     as a heavier version of the plain card border and told nothing apart. The
+     cards carry the mainline; the lines between them stay ordinary. */
   mainline: css`
-    border-color: ${cssVar.colorPrimary};
-    box-shadow: 0 0 0 1px ${cssVar.colorPrimary};
+    border-color: ${cssVar.colorInfo};
+    box-shadow: 0 0 0 1px ${cssVar.colorInfo};
   `,
   selected: css`
     border-color: ${cssVar.colorPrimaryBorder};
@@ -193,6 +216,16 @@ const styles = createStaticStyles(({ css }) => ({
     text-overflow: ellipsis;
     white-space: nowrap;
   `,
+  hint: css`
+    cursor: help;
+
+    display: inline-flex;
+
+    margin-inline-start: 4px;
+
+    color: ${cssVar.colorTextTertiary};
+    vertical-align: -2px;
+  `,
   title: css`
     font-size: 13px;
     font-weight: 500;
@@ -200,10 +233,13 @@ const styles = createStaticStyles(({ css }) => ({
   `,
 }));
 
-interface StateChip {
+export interface StateChip {
   color: string;
-  /** The task family's status glyph; running renders the animated ring instead. */
-  icon?: LucideIcon;
+  /**
+   * The task family's status glyph; omitted, running renders the animated ring
+   * instead, and `null` renders the text alone.
+   */
+  icon?: LucideIcon | null;
   text: string;
 }
 
@@ -232,6 +268,13 @@ const useStateChip = (data: GraphNodeData): StateChip | null => {
   // Running renders the same animated ring the frontier and home surfaces use.
   if (running)
     return { color: TASK_STATUS_VISUALS.running.color, text: t('goalProcess.node.running') };
+  // The goal ended under this run: it was stopped, not still going.
+  if (view.halted)
+    return {
+      color: TASK_STATUS_VISUALS.canceled.color,
+      icon: TASK_STATUS_VISUALS.canceled.icon,
+      text: t('goalProcess.node.stopped'),
+    };
   if (node.kind === 'task' && node.status === 'resolved')
     return {
       color: TASK_STATUS_VISUALS.completed.color,
@@ -280,9 +323,11 @@ const GraphNodeView = memo<NodeProps>(({ data }) => {
   const nodeData = data as GraphNodeData;
   const { dim, highlighted, isGate, mainline, running, selected, stale, subtitle, view } = nodeData;
   const { node } = view;
-  const chip = useStateChip(nodeData);
+  const stateChip = useStateChip(nodeData);
+  const { presentation } = nodeData;
+  const chip = presentation && 'chip' in presentation ? presentation.chip : stateChip;
   const kind = nodeData.kind ?? node.kind;
-  const palette = KIND_COLOR[kind];
+  const palette = nodeData.presentation?.palette ?? KIND_COLOR[kind];
   const isTask = node.kind === 'task';
   const attempts = view.attempts.length;
   // Coordinator-authored node titles are English; recognized ones localize.
@@ -294,6 +339,14 @@ const GraphNodeView = memo<NodeProps>(({ data }) => {
         className={styles.handle}
         isConnectable={false}
         position={Position.Top}
+        type={'target'}
+      />
+      {/* A later round's plan is fed from beside it, by the group the break surfaced in. */}
+      <Handle
+        className={styles.handle}
+        id={'l'}
+        isConnectable={false}
+        position={Position.Left}
         type={'target'}
       />
       <div
@@ -310,7 +363,7 @@ const GraphNodeView = memo<NodeProps>(({ data }) => {
       >
         {/* Status reads first: its own top row, left-aligned, with the running
             clock riding right behind it (review: bottom placements read poorly). */}
-        {(chip || highlighted || view.humanTouches.length > 0) && (
+        {!presentation?.trailingChip && (chip || highlighted || view.humanTouches.length > 0) && (
           <div className={styles.statusRow}>
             {highlighted && (
               <span className={styles.chipText} style={{ color: cssVar.colorWarningText }}>
@@ -326,7 +379,7 @@ const GraphNodeView = memo<NodeProps>(({ data }) => {
               <Flexbox horizontal align={'center'} gap={5}>
                 {chip.icon ? (
                   <Icon color={chip.color} icon={chip.icon} size={13} />
-                ) : (
+                ) : chip.icon === null ? null : (
                   <RunningGlyph size={13} />
                 )}
                 <span className={styles.chipText} style={{ color: chip.color }}>
@@ -350,14 +403,32 @@ const GraphNodeView = memo<NodeProps>(({ data }) => {
         )}
         <div className={styles.head}>
           <div className={styles.glyph} style={{ background: palette.soft, color: palette.line }}>
-            <Icon icon={KIND_ICON[kind]} size={16} />
+            <Icon icon={presentation?.icon ?? KIND_ICON[kind]} size={16} />
           </div>
           <Flexbox gap={2} style={{ flex: 1, minWidth: 0 }}>
             <span className={styles.title}>
-              {coordinatorTitleKey ? t(coordinatorTitleKey as any) : node.title}
+              {presentation?.title ??
+                (coordinatorTitleKey ? t(coordinatorTitleKey as any) : node.title)}
+              {presentation?.hint && (
+                <Tooltip placement={presentation.hintPlacement} title={presentation.hint}>
+                  <span data-hint className={cx('nodrag', styles.hint)} role="img">
+                    <Icon icon={Info} size={13} />
+                  </span>
+                </Tooltip>
+              )}
             </span>
-            {subtitle && <span className={styles.subtitle}>{subtitle}</span>}
+            {(presentation?.subtitle ?? subtitle) && (
+              <span className={styles.subtitle}>{presentation?.subtitle ?? subtitle}</span>
+            )}
           </Flexbox>
+          {presentation?.trailingChip && chip && (
+            <Flexbox horizontal align={'center'} gap={5} style={{ flex: 'none' }}>
+              {chip.icon && <Icon color={chip.color} icon={chip.icon} size={13} />}
+              <span className={styles.chipText} style={{ color: chip.color }}>
+                {chip.text}
+              </span>
+            </Flexbox>
+          )}
         </div>
         {node.kind === 'experiment' && (
           <div className={styles.metrics}>

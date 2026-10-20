@@ -6,6 +6,8 @@ export interface SettingsSearchContext {
   enableBusinessFeatures: boolean;
   enableComposio: boolean;
   enableGatewayMode: boolean;
+  /** Workspaces are available to this user */
+  enableWorkspace: boolean;
   /** Whether the signed-in user has an email on their profile */
   hasEmail: boolean;
   hideDocs: boolean;
@@ -69,6 +71,13 @@ export const TAB_SEARCH_EN_KEYWORDS: Partial<Record<SettingsTabs, string[]>> = {
   [SettingsTabs.Hotkey]: ['hotkey', 'shortcut', 'keyboard'],
   [SettingsTabs.Labs]: ['labs', 'experiment', 'beta', 'preview', 'developer'],
   [SettingsTabs.Memory]: ['memory', 'memories', 'personalization'],
+  [SettingsTabs.Environments]: [
+    'sandbox',
+    'environments',
+    'instances',
+    'setup script',
+    'repository',
+  ],
   [SettingsTabs.Messenger]: [
     'messenger',
     'chat platform',
@@ -424,15 +433,18 @@ export const SETTINGS_SEARCH_ITEMS: SettingsSearchItem[] = [
   // Labs — derived from the LAB_FEATURES catalog the page renders, so a new
   // lab flag becomes searchable without a second registration. Anchors use
   // `labs-${flag}`, matching the SettingsSearchAnchor wrap on each toggle.
-  ...LAB_FEATURES.map(({ desktopOnly, flag, i18nKey, searchKeywords }): SettingsSearchItem => ({
-    anchor: `labs-${flag}`,
-    descKey: `features.${i18nKey}.desc`,
-    keywords: searchKeywords,
-    labelKey: `features.${i18nKey}.title`,
-    ns: 'labs',
-    tab: SettingsTabs.Labs,
-    ...(desktopOnly ? { visible: (ctx: SettingsSearchContext) => ctx.isDesktop } : {}),
-  })),
+  ...LAB_FEATURES.map(
+    ({ desktopOnly, flag, i18nKey, searchKeywords, workspaceOnly }): SettingsSearchItem => ({
+      anchor: `labs-${flag}`,
+      descKey: `features.${i18nKey}.desc`,
+      keywords: searchKeywords,
+      labelKey: `features.${i18nKey}.title`,
+      ns: 'labs',
+      tab: SettingsTabs.Labs,
+      ...(desktopOnly ? { visible: (ctx: SettingsSearchContext) => ctx.isDesktop } : {}),
+      ...(workspaceOnly ? { visible: (ctx: SettingsSearchContext) => ctx.enableWorkspace } : {}),
+    }),
+  ),
   // Service Model
   {
     anchor: 'service-model-assignments',
