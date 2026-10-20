@@ -1,15 +1,6 @@
 'use client';
 
-import {
-  ActionIcon,
-  Alert,
-  Button,
-  createStaticStyles,
-  cssVar,
-  Flexbox,
-  Spin,
-  Text,
-} from '@lobehub/ui';
+import { ActionIcon, Button, createStaticStyles, cssVar, Flexbox, Spin, Text } from '@lobehub/ui';
 import dayjs from 'dayjs';
 import {
   CircleStopIcon,
@@ -23,6 +14,7 @@ import {
 import { useCallback, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import AsyncError from '@/components/AsyncError';
 import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwareNavigate';
 import { meetingActions, type RecorderPhase, useMeetingStore } from '@/store/meeting';
 
@@ -164,7 +156,7 @@ const IdleBody = () => {
     <Flexbox gap={14}>
       <PermissionNotice />
       {error === 'start_failed' && (
-        <Alert showIcon title={t('recorder.startFailed')} type={'error'} />
+        <AsyncError justify={'start'} title={t('recorder.startFailed')} variant={'inline'} />
       )}
       <MicrophoneSelect />
       <Button block icon={MicIcon} size={'large'} type={'primary'} onClick={start}>
@@ -217,9 +209,9 @@ const DoneBody = () => {
   return (
     <Flexbox gap={14}>
       {uploadError ? (
-        <Alert
-          showIcon
-          type={'warning'}
+        <AsyncError
+          justify={'start'}
+          variant={'inline'}
           title={
             error === 'upload_offline'
               ? t('recorder.uploadFailedOffline')
