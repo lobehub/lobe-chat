@@ -78,6 +78,24 @@ describe('refreshExpiredConnectorTokens', () => {
     expect(onTimeout).toHaveBeenCalledTimes(1);
   });
 
+  it('retries on a later run after a refresh hung past the timeout', async () => {
+    vi.mocked(refreshConnectorToken).mockReturnValue(new Promise(() => {}));
+    const expired = oauthConnector('hung', NOW - 1000);
+    const model = { update: vi.fn() } as any;
+
+    const first = refreshExpiredConnectorTokens([expired], model);
+    await vi.advanceTimersByTimeAsync(5000);
+    await first;
+
+    vi.mocked(refreshConnectorToken).mockResolvedValue({
+      tokens: { access_token: 'recovered', expires_in: 3600, token_type: 'Bearer' },
+    } as any);
+    const [connector] = await refreshExpiredConnectorTokens([expired], model);
+
+    expect(refreshConnectorToken).toHaveBeenCalledTimes(2);
+    expect(connector.credentials).toMatchObject({ accessToken: 'recovered' });
+  });
+
   it('keeps the stored credentials when the refresh is rejected', async () => {
     vi.mocked(refreshConnectorToken).mockRejectedValue(new Error('invalid_grant'));
     const expired = oauthConnector('revoked', NOW - 1000);
@@ -136,5 +154,18 @@ describe('refreshExpiredConnectorTokens', () => {
 
     expect((await pending)[0].credentials).toMatchObject({ accessToken: 'winner' });
     expect(findById).toHaveBeenCalledTimes(2);
+  });
+
+  it('uses a rotated token whose authorization server omitted an expiry', async () => {
+    vi.mocked(refreshConnectorToken).mockRejectedValue(new Error('invalid_grant'));
+    const expired = oauthConnector('no-expiry', NOW - 1000);
+    const rotated = { ...expired, credentials: { accessToken: 'winner', type: 'oauth2' } };
+
+    const [connector] = await refreshExpiredConnectorTokens([expired], {
+      findById: vi.fn().mockResolvedValue(rotated),
+      update: vi.fn(),
+    } as any);
+
+    expect(connector.credentials).toMatchObject({ accessToken: 'winner' });
   });
 });

@@ -103,8 +103,8 @@ const readRotatedCredentials = async (
     latestCreds?.type === 'oauth2' &&
     staleCreds?.type === 'oauth2' &&
     latestCreds.accessToken !== staleCreds.accessToken &&
-    latestCreds.expiresAt &&
-    latestCreds.expiresAt - EXPIRY_SKEW_MS > Date.now()
+    // Servers may omit `expires_in`, so a rotated token can lack an expiry.
+    (!latestCreds.expiresAt || latestCreds.expiresAt - EXPIRY_SKEW_MS > Date.now())
   ) {
     return { ...connector, credentials: latestCreds };
   }
@@ -153,7 +153,7 @@ const refreshOnce = (
   if (pending) return pending;
 
   const refresh = ensureFreshConnectorToken(connector, connectorModel).finally(() => {
-    inFlightRefreshes.delete(connector.id);
+    if (inFlightRefreshes.get(connector.id) === refresh) inFlightRefreshes.delete(connector.id);
   });
   inFlightRefreshes.set(connector.id, refresh);
   return refresh;
@@ -180,16 +180,22 @@ export const refreshExpiredConnectorTokens = (
     connectors.map(async (connector) => {
       if (!isRefreshDue(connector)) return connector;
 
+      const refresh = refreshOnce(connector, connectorModel);
       let timer: ReturnType<typeof setTimeout> | undefined;
       const timeout = new Promise<DecryptedConnector>((resolve) => {
         timer = setTimeout(() => {
           log('token refresh timed out for connector=%s', connector.id);
+          // A refresh that never settles would otherwise stay shared forever,
+          // making every later run wait on it instead of retrying.
+          if (inFlightRefreshes.get(connector.id) === refresh) {
+            inFlightRefreshes.delete(connector.id);
+          }
           options.onTimeout?.();
           resolve(connector);
         }, RUN_TOKEN_REFRESH_TIMEOUT_MS);
       });
       try {
-        return await Promise.race([refreshOnce(connector, connectorModel), timeout]);
+        return await Promise.race([refresh, timeout]);
       } finally {
         clearTimeout(timer);
       }
