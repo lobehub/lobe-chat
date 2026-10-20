@@ -84,7 +84,7 @@ export const useLocateInOtherScope = (
 };
 
 export interface OtherScopeRecovery {
-  /** Still probing; render nothing rather than flash the generic error. */
+  /** Still probing; show a loading frame rather than flash the generic error. */
   pending: boolean;
   /** The scope that holds the resource, when one was found. */
   scope?: OtherScope;

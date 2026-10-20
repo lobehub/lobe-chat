@@ -166,6 +166,7 @@ const GoalDetailPage = memo<GoalDetailPageProps>(({ agentId, goalId }) => {
     return (
       <OtherScopeAsyncError
         error={error}
+        pendingFallback={<GoalDetailSkeleton />}
         probe={(client: ScopedLambdaClient) => probeGoalGraph(client, goalId)}
         resourceKey={`goal:${goalId}`}
         variant={'page'}
