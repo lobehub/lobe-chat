@@ -125,6 +125,36 @@ describe('HeteroSessionImporterRepo.importSessions', () => {
     expect(pluginRow.apiName).toBe('Bash');
   });
 
+  it('pins the agent heterogeneous runtime type onto the created topic', async () => {
+    const heteroAgentId = 'session-importer-hetero-agent';
+    await serverDB.insert(agents).values({
+      agencyConfig: { heterogeneousProvider: { command: 'codex', type: 'codex' } },
+      id: heteroAgentId,
+      title: 'Codex Agent',
+      userId,
+    });
+
+    const repo = new HeteroSessionImporterRepo(serverDB, userId);
+    const [result] = await repo.importSessions({
+      agentId: heteroAgentId,
+      sessions: [basePayload()],
+    });
+
+    const [topic] = await serverDB.select().from(topics).where(eq(topics.id, result.topicId));
+    // an imported CLI session has no pinned model, but the runtime must be
+    // attributable — a NULL provider reads as "not a hetero session"
+    expect(topic.provider).toBe('codex');
+    expect(topic.model).toBeNull();
+  });
+
+  it('leaves the topic provider unset when the agent is not heterogeneous', async () => {
+    const repo = new HeteroSessionImporterRepo(serverDB, userId);
+    const [result] = await repo.importSessions({ agentId, sessions: [basePayload()] });
+
+    const [topic] = await serverDB.select().from(topics).where(eq(topics.id, result.topicId));
+    expect(topic.provider).toBeNull();
+  });
+
   it('is idempotent: re-importing the same payload inserts nothing', async () => {
     const repo = new HeteroSessionImporterRepo(serverDB, userId);
     await repo.importSessions({ agentId, sessions: [basePayload()] });
@@ -138,6 +168,54 @@ describe('HeteroSessionImporterRepo.importSessions', () => {
       .select()
       .from(messages)
       .where(and(eq(messages.userId, userId)));
+    expect(rows).toHaveLength(3);
+  });
+
+  it('treats a trashed imported message as an existing client identity on re-import', async () => {
+    const repo = new HeteroSessionImporterRepo(serverDB, userId);
+    await repo.importSessions({ agentId, sessions: [basePayload()] });
+    await serverDB
+      .update(messages)
+      .set({ deletedAt: new Date('2026-09-10T00:00:00Z'), isDeleted: true })
+      .where(eq(messages.clientId, 'cc-s1-a1'));
+
+    const [second] = await repo.importSessions({ agentId, sessions: [basePayload()] });
+
+    expect(second.insertedMessages).toBe(0);
+    expect(second.skippedMessages).toBe(3);
+    const rows = await serverDB
+      .select({ id: messages.id })
+      .from(messages)
+      .where(eq(messages.clientId, 'cc-s1-a1'));
+    expect(rows).toHaveLength(1);
+  });
+
+  it('rejects incremental syncs while the imported topic is trashed', async () => {
+    const repo = new HeteroSessionImporterRepo(serverDB, userId);
+    const [first] = await repo.importSessions({ agentId, sessions: [basePayload()] });
+    await serverDB
+      .update(topics)
+      .set({ deletedAt: new Date('2026-09-10T00:00:00Z'), isDeleted: true })
+      .where(eq(topics.id, first.topicId));
+
+    const grown = basePayload();
+    grown.workingDirectory = '/repo/after-trash';
+    grown.messages.push({
+      clientId: 'cc-s1-a2',
+      content: 'must not be imported while trashed',
+      createdAt: '2026-07-01T00:00:03.000Z',
+      parentClientId: 'cc-s1-r1',
+      provider: 'claude-code',
+      role: 'assistant',
+    });
+
+    await expect(repo.importSessions({ agentId, sessions: [grown] })).rejects.toThrow(
+      'restore it before syncing',
+    );
+
+    const [topic] = await serverDB.select().from(topics).where(eq(topics.id, first.topicId));
+    expect(topic.metadata).not.toMatchObject({ workingDirectory: '/repo/after-trash' });
+    const rows = await serverDB.select().from(messages).where(eq(messages.topicId, first.topicId));
     expect(rows).toHaveLength(3);
   });
 

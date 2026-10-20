@@ -1,7 +1,5 @@
 import { type DropdownItem } from '@lobehub/ui';
-import { DropdownMenu, Icon, Tooltip } from '@lobehub/ui';
-import { confirmModal } from '@lobehub/ui/base-ui';
-import { App } from 'antd';
+import { confirmModal, DropdownMenu, Icon, toast, Tooltip } from '@lobehub/ui';
 import {
   BookMinusIcon,
   BookPlusIcon,
@@ -13,12 +11,11 @@ import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useActiveWorkspaceId } from '@/business/client/hooks/useActiveWorkspaceId';
-import { useIsWorkspaceOwner } from '@/business/client/hooks/useIsWorkspaceOwner';
 import RepoIcon from '@/components/LibIcon';
 import { useKnowledgeBaseListContext } from '@/features/ResourceManager/components/KnowledgeBaseListProvider';
+import { useResourceManagerStore } from '@/features/ResourceManager/store';
 import { openWorkspaceDeleteAllModal } from '@/features/WorkspaceDeleteAllModal';
 import { usePermission } from '@/hooks/usePermission';
-import { useResourceManagerStore } from '@/routes/(main)/resource/features/store';
 import { useKnowledgeBaseStore } from '@/store/library';
 
 import ActionIconWithChevron from './ActionIconWithChevron';
@@ -38,7 +35,6 @@ interface BatchActionsDropdownProps {
 
 const BatchActionsDropdown = memo<BatchActionsDropdownProps>(({ selectCount, onActionClick }) => {
   const { t } = useTranslation(['components', 'common', 'file', 'knowledgeBase']);
-  const { message } = App.useApp();
 
   const libraryId = useResourceManagerStore((s) => s.libraryId);
   const [resolveSelectedResourceIds, selectAllState, listVisibility] = useResourceManagerStore(
@@ -48,12 +44,7 @@ const BatchActionsDropdown = memo<BatchActionsDropdownProps>(({ selectCount, onA
   const knowledgeBases = useKnowledgeBaseListContext();
   const activeWorkspaceId = useActiveWorkspaceId();
   const { allowed: canEditResources, reason } = usePermission('edit_own_content');
-  const isWorkspaceOwner = useIsWorkspaceOwner();
   const isWorkspaceDeleteAll = !!activeWorkspaceId && selectAllState === 'all';
-  // Owners deleting a select-all query hit the server's workspace-wide path
-  // (restrictToCreator = false), so they must see the workspace-wide label and
-  // the elevated acknowledge modal — same contract as the header trash button.
-  const isWorkspaceOwnerDeleteAll = isWorkspaceDeleteAll && isWorkspaceOwner;
 
   const menuItems = useMemo<DropdownItem[]>(() => {
     const items: DropdownItem[] = [];
@@ -109,7 +100,7 @@ const BatchActionsDropdown = memo<BatchActionsDropdownProps>(({ selectCount, onA
         try {
           const effectiveSelectedIds = await resolveSelectedResourceIds();
           await addFilesToKnowledgeBase(kb.id, effectiveSelectedIds);
-          message.success(
+          toast.success(
             t('addToKnowledgeBase.addSuccess', {
               count: selectAllState === 'all' ? effectiveSelectedIds.length : selectCount,
               ns: 'knowledgeBase',
@@ -117,7 +108,7 @@ const BatchActionsDropdown = memo<BatchActionsDropdownProps>(({ selectCount, onA
           );
         } catch (e) {
           console.error(e);
-          message.error(t('addToKnowledgeBase.error', { ns: 'knowledgeBase' }));
+          toast.error(t('addToKnowledgeBase.error', { ns: 'knowledgeBase' }));
         }
       },
     }));
@@ -140,7 +131,7 @@ const BatchActionsDropdown = memo<BatchActionsDropdownProps>(({ selectCount, onA
             okText: t('FileManager.actions.removeFromLibrary'),
             onOk: async () => {
               await onActionClick('removeFromKnowledgeBase');
-              message.success(t('FileManager.actions.removeFromLibrarySuccess'));
+              toast.success(t('FileManager.actions.removeFromLibrarySuccess'));
             },
             title: t('FileManager.actions.removeFromLibrary'),
           });
@@ -184,23 +175,16 @@ const BatchActionsDropdown = memo<BatchActionsDropdownProps>(({ selectCount, onA
         disabled: selectCount === 0,
         icon: <Icon icon={Trash2Icon} />,
         key: 'delete',
-        label: t(
-          isWorkspaceOwnerDeleteAll
-            ? 'FileManager.actions.deleteAll'
-            : isWorkspaceDeleteAll
-              ? 'FileManager.actions.deleteAllOwn'
-              : 'delete',
-          {
-            ns: isWorkspaceDeleteAll ? 'components' : 'common',
-          },
-        ),
+        label: t(isWorkspaceDeleteAll ? 'FileManager.actions.deleteAll' : 'delete', {
+          ns: isWorkspaceDeleteAll ? 'components' : 'common',
+        }),
         onClick: async () => {
           const handleDelete = async () => {
             await onActionClick('delete');
-            message.success(t('FileManager.actions.deleteSuccess'));
+            toast.success(t('FileManager.actions.deleteSuccess'));
           };
 
-          if (isWorkspaceOwnerDeleteAll) {
+          if (isWorkspaceDeleteAll) {
             openWorkspaceDeleteAllModal({
               acknowledgeText: t('FileManager.actions.confirmDeleteAllWorkspaceAcknowledge'),
               cancelText: t('cancel', { ns: 'common' }),
@@ -216,9 +200,7 @@ const BatchActionsDropdown = memo<BatchActionsDropdownProps>(({ selectCount, onA
             cancelText: t('cancel', { ns: 'common' }),
             content: t(
               selectAllState === 'all'
-                ? isWorkspaceDeleteAll
-                  ? 'FileManager.actions.confirmDeleteAllOwnFiles'
-                  : 'FileManager.actions.confirmDeleteAllFiles'
+                ? 'FileManager.actions.confirmDeleteAllFiles'
                 : 'FileManager.actions.confirmDeleteMultiFiles',
               { count: selectCount },
             ),
@@ -242,13 +224,11 @@ const BatchActionsDropdown = memo<BatchActionsDropdownProps>(({ selectCount, onA
     addFilesToKnowledgeBase,
     resolveSelectedResourceIds,
     t,
-    message,
     knowledgeBases,
     canEditResources,
     listVisibility,
     activeWorkspaceId,
     isWorkspaceDeleteAll,
-    isWorkspaceOwnerDeleteAll,
   ]);
 
   return (

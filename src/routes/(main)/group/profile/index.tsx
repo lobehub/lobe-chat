@@ -5,7 +5,8 @@ import { type FC } from 'react';
 import { memo, Suspense } from 'react';
 import { useParams } from 'react-router';
 
-import Loading from '@/components/Loading/BrandTextLoading';
+import { delayed } from '@/components/Skeleton/Delayed';
+import ProfileSkeleton from '@/components/Skeleton/Profile';
 import ResourceConfigAccessGate from '@/features/ResourcePermission/ResourceConfigAccessGate';
 import WideScreenContainer from '@/features/WideScreenContainer';
 import { useAgentGroupStore } from '@/store/agentGroup';
@@ -28,7 +29,7 @@ const ProfileArea = memo(() => {
   return (
     <Flexbox flex={1} height={'100%'} style={{ minWidth: 0, overflow: 'hidden' }}>
       {isGroupsLoading ? (
-        <Loading debugId="ProfileArea" />
+        <ProfileSkeleton variant={'group'} />
       ) : (
         <>
           <Header />
@@ -55,8 +56,9 @@ const GroupProfile: FC = () => {
   const { gid } = useParams<{ gid: string }>();
 
   return (
-    <Suspense fallback={<Loading debugId="GroupProfile" />}>
+    <Suspense fallback={delayed(<ProfileSkeleton variant={'group'} />)}>
       <ResourceConfigAccessGate
+        loading={<ProfileSkeleton variant={'group'} />}
         redirectPath={`/group/${gid ?? ''}`}
         resourceId={gid}
         resourceType="agentGroup"

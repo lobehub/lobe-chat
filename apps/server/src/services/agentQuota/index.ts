@@ -2,6 +2,11 @@ import {
   type AccountLoad,
   calibrateCapacity,
   computeTurnCostUsd,
+  currentUtilization,
+  isScopedWeeklyLimit,
+  isSessionLimit,
+  isWeeklyAllLimit,
+  type KimiCodeExtraUsage,
   MIN_CALIBRATION_SAMPLES,
   projectWindows,
   type QuotaAccountIdentity,
@@ -28,11 +33,32 @@ import {
   QuotaCostSource,
 } from '@/database/types/agentQuota';
 
-import { claudeModelPrice } from './pricing';
+import { claudeModelPrice, codexModelPrice } from './pricing';
+
+const readQuotaWindowMetadata = (raw: Record<string, unknown> | null) => ({
+  ...(typeof raw?.windowMinutes === 'number' &&
+  Number.isFinite(raw.windowMinutes) &&
+  raw.windowMinutes > 0
+    ? { windowMinutes: raw.windowMinutes }
+    : {}),
+  ...(typeof raw?.limitName === 'string' || raw?.limitName === null
+    ? { limitName: raw.limitName }
+    : {}),
+});
 
 export interface AccountLoadView extends AccountLoad {
   capacityUsd?: number;
   label?: string | null;
+}
+
+/** One assistant turn's spend, as the usage calendar consumes it. */
+export interface QuotaUsageTurn {
+  /** USD, or null when the model bank has no price for the model. */
+  cost: number | null;
+  model: string | null;
+  occurredAt: number;
+  /** All token classes summed — what "tokens burned" means to the user. */
+  tokens: number;
 }
 
 /**
@@ -67,6 +93,7 @@ export class AgentQuotaService {
   ingestSnapshot = async (params: {
     credentialRef?: QuotaAccountCredentialRef;
     deviceId?: string;
+    extraUsage?: KimiCodeExtraUsage | null;
     identity: QuotaAccountIdentity;
     provider: string;
     readings: QuotaLimitReading[];
@@ -76,6 +103,14 @@ export class AgentQuotaService {
       params.identity as AccountIdentityInput,
       params.credentialRef ? { credentialRef: params.credentialRef } : {},
     );
+    // The wallet is not a limit reading, so it can't ride the snapshots table —
+    // keep the latest sample on the account row or the persisted view loses the
+    // Extra Usage section between live samples.
+    if (params.extraUsage !== undefined) {
+      await this.accounts.update(account.id, {
+        metadata: { ...account.metadata, extraUsage: params.extraUsage },
+      });
+    }
     await this.ingestReadings(account.id, params.readings, params.deviceId);
     // Ingestion is the only moment new evidence arrives, so it is also the only
     // sensible calibration trigger. Cheap and self-guarding: without enough clean
@@ -102,6 +137,7 @@ export class AgentQuotaService {
         capturedAt: new Date(r.capturedAt),
         deviceId,
         isActive: r.isActive,
+        raw: { windowMinutes: r.windowMinutes, limitName: r.limitName },
         limitType: r.limitType,
         resetsAt: r.resetsAt == null ? null : new Date(r.resetsAt),
         scopeKey: r.scopeKey,
@@ -176,7 +212,7 @@ export class AgentQuotaService {
         method: result.method,
         sampleCount: result.sampleCount,
         scopeKey,
-        windowSeconds: windowSecondsForKind(limitType),
+        windowSeconds: list[0]?.windowSeconds ?? windowSecondsForKind(limitType),
       });
     }
   };
@@ -206,10 +242,21 @@ export class AgentQuotaService {
     if (!externalEventId) return;
 
     const account = params.externalAccountId
-      ? await this.accounts.findByExternalId(params.provider, params.externalAccountId)
+      ? ((await this.accounts.findByExternalId(params.provider, params.externalAccountId)) ??
+        // A first-run turn can arrive before any snapshot ingestion created the
+        // account row. Create it here or the turn is permanently unattributed —
+        // later snapshot ingestion does not backfill existing ledger rows. The
+        // remaining identity fields are enriched by the next snapshot upsert.
+        (await this.accounts.upsertByIdentity(params.provider, {
+          externalAccountId: params.externalAccountId,
+        })))
       : null;
 
-    const price = params.model ? claudeModelPrice(params.model) : null;
+    const price = params.model
+      ? params.provider === 'codex'
+        ? codexModelPrice(params.model)
+        : claudeModelPrice(params.model)
+      : null;
     const costUsd = price ? computeTurnCostUsd(params.usage, price) : null;
 
     const row = {
@@ -244,28 +291,100 @@ export class AgentQuotaService {
     }
   };
 
+  /**
+   * The newest reading per limit bucket, as plain numbers. This is the display
+   * read model: unlike `agent_quota_windows` it also carries limits the
+   * provider reports without a `resets_at` (an untouched model-scoped weekly),
+   * which have no window to be projected into.
+   */
+  listLatestReadings = async (accountId: string): Promise<QuotaLimitReading[]> => {
+    const rows = await this.snapshots.latestPerBucket(accountId);
+
+    return rows.map((row) => ({
+      ...readQuotaWindowMetadata(row.raw),
+      capturedAt: row.capturedAt.getTime(),
+      isActive: row.isActive ?? undefined,
+      limitType: row.limitType,
+      resetsAt: row.resetsAt?.getTime() ?? null,
+      scopeKey: row.scopeKey,
+      severity: row.severity ?? undefined,
+      utilization: row.utilization,
+    }));
+  };
+
+  /**
+   * The full reading series since `since`, oldest first — the burn-down /
+   * usage-calendar read model. Same plain-number mapping as
+   * `listLatestReadings`.
+   */
+  listSnapshotSeries = async (accountId: string, since: Date): Promise<QuotaLimitReading[]> => {
+    const rows = await this.snapshots.listRange(accountId, since);
+
+    return rows.map((row) => ({
+      ...readQuotaWindowMetadata(row.raw),
+      capturedAt: row.capturedAt.getTime(),
+      isActive: row.isActive ?? undefined,
+      limitType: row.limitType,
+      resetsAt: row.resetsAt?.getTime() ?? null,
+      scopeKey: row.scopeKey,
+      severity: row.severity ?? undefined,
+      utilization: row.utilization,
+    }));
+  };
+
+  /**
+   * Per-turn spend since `since`, oldest first — the token/cost half of the
+   * usage calendar. Returned as flat turns rather than pre-bucketed days: the
+   * calendar groups by the *viewer's* local day, which the server cannot know.
+   */
+  listUsageTurns = async (accountId: string, since: Date): Promise<QuotaUsageTurn[]> => {
+    const rows = await this.ledger.listSince(accountId, since);
+
+    return rows.map((row) => ({
+      cost: row.costUsd == null ? null : Number(row.costUsd),
+      model: row.model,
+      occurredAt: row.occurredAt.getTime(),
+      tokens:
+        (row.inputTokens ?? 0) +
+        (row.outputTokens ?? 0) +
+        (row.cacheReadTokens ?? 0) +
+        (row.cacheWriteTokens ?? 0) +
+        (row.reasoningTokens ?? 0),
+    }));
+  };
+
   /** Build the LB load view for a set of accounts from their latest readings. */
-  resolveAccountLoads = async (accountIds: string[]): Promise<AccountLoadView[]> => {
+  resolveAccountLoads = async (
+    accountIds: string[],
+    now: number = Date.now(),
+  ): Promise<AccountLoadView[]> => {
     const accounts = await this.accounts.list();
     const byId = new Map(accounts.map((a) => [a.id, a]));
 
     return Promise.all(
       accountIds.map(async (accountId) => {
         const account = byId.get(accountId);
-        const buckets = await this.snapshots.latestPerBucket(accountId);
+        const buckets = await this.listLatestReadings(accountId);
         const scopedWeeklyUtil: Record<string, number> = {};
         let sessionUtil = 0;
         let weeklyUtil = 0;
         let rateLimitedUntil: number | null = null;
 
         for (const b of buckets) {
-          if (b.limitType === 'session') {
-            sessionUtil = b.utilization;
-            if (b.utilization >= 100 && b.resetsAt) rateLimitedUntil = b.resetsAt.getTime();
-          } else if (b.limitType === 'weekly_scoped' && b.scopeKey) {
-            scopedWeeklyUtil[b.scopeKey] = b.utilization;
-          } else if (b.limitType.startsWith('weekly')) {
-            weeklyUtil = Math.max(weeklyUtil, b.utilization);
+          // A reading whose window has rolled over describes spend that has
+          // since refilled; counting it would keep an account benched long
+          // after its quota came back.
+          const utilization = currentUtilization(b, now);
+
+          if (isSessionLimit(b)) {
+            sessionUtil = utilization;
+            // `utilization` is already 0 once the window rolled over, so a
+            // stale 100% cannot bench the account past its own reset.
+            if (utilization >= 100 && b.resetsAt) rateLimitedUntil = b.resetsAt;
+          } else if (isScopedWeeklyLimit(b)) {
+            scopedWeeklyUtil[b.scopeKey] = utilization;
+          } else if (isWeeklyAllLimit(b)) {
+            weeklyUtil = Math.max(weeklyUtil, utilization);
           }
         }
 
@@ -297,7 +416,7 @@ export class AgentQuotaService {
    */
   selectForAgent = async (
     agentId: string,
-    options: { modelScope?: string; now?: number } = {},
+    options: { modelScope?: string; now?: number; provider?: string } = {},
   ): Promise<{
     accountId: string;
     credentialMode: string;
@@ -322,9 +441,19 @@ export class AgentQuotaService {
 
   private selectAccountId = async (
     agentId: string,
-    options: { modelScope?: string; now?: number },
+    options: { modelScope?: string; now?: number; provider?: string },
   ): Promise<{ accountId: string; reason: 'pinned' | 'balanced' } | null> => {
-    const bindings = (await this.bindings.listByAgent(agentId)).filter((b) => b.enabled);
+    let bindings = (await this.bindings.listByAgent(agentId)).filter((b) => b.enabled);
+    // Bindings are written provider-blind; a caller that names its provider
+    // must never be routed onto another provider's account, pinned or pooled.
+    if (options.provider) {
+      const candidates = await Promise.all(
+        bindings.map((binding) => this.accounts.findById(binding.accountId)),
+      );
+      bindings = bindings.filter(
+        (binding, index) => candidates[index]?.provider === options.provider,
+      );
+    }
     const pinned = bindings.find((b) => b.role === QuotaBindingRole.pinned);
     if (pinned) return { accountId: pinned.accountId, reason: 'pinned' };
 
@@ -332,7 +461,10 @@ export class AgentQuotaService {
     if (pool.length === 0) return null;
 
     const now = options.now ?? Date.now();
-    const loads = await this.resolveAccountLoads(pool.map((b) => b.accountId));
+    const loads = await this.resolveAccountLoads(
+      pool.map((b) => b.accountId),
+      now,
+    );
     const priorityById = new Map(pool.map((b) => [b.accountId, b.priority]));
     const withPriority = loads.map((l) => ({ ...l, priority: priorityById.get(l.accountId) ?? 0 }));
 

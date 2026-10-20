@@ -20,7 +20,7 @@ import {
   getErrorCodeSpec,
   isEmptyModelCompletion,
   ModelEmptyError,
-} from '@lobechat/model-runtime';
+} from '@lobechat/model-runtime/errors';
 import type { ChatMessageError, MessageMetadata, ModelReasoning } from '@lobechat/types';
 import { ChatErrorType } from '@lobechat/types';
 import { t } from 'i18next';
@@ -145,6 +145,34 @@ class ClientLLMRetryPolicy implements LLMRetryPolicy {
       },
       { operationId: this.operationId },
     );
+
+    // callLlm only invokes onError for the terminal attempt. End the operation
+    // here so Stop/loading clear with the message error, not after outer completeRun.
+    const operation = this.get().operations[this.operationId];
+    if (operation?.status === 'running') {
+      this.get().failOperation(this.operationId, {
+        message: localizedError.message || 'LLM execution failed',
+        type: String(localizedError.type ?? 'runtime_error'),
+      });
+
+      // Match completeRun's client failed-path topic reset. streamingExecutor
+      // writes status:'running' at start; without this, the sidebar keeps the
+      // spinner until the outer loop later reaches completeRun.
+      const { agentId, groupId, scope, topicId } = operation.context;
+      if (topicId && scope !== 'sub_agent') {
+        void this.get()
+          .updateTopicStatus?.({
+            agentId,
+            groupId,
+            ...(scope === 'group' || scope === 'group_agent' ? { scope } : {}),
+            status: 'active',
+            topicId,
+          })
+          ?.catch((error) => {
+            console.error('[ClientLLMTransport] topic status reset failed:', error);
+          });
+      }
+    }
   }
 
   onRetry(_input: LLMRetryInput) {
@@ -155,9 +183,32 @@ class ClientLLMRetryPolicy implements LLMRetryPolicy {
     return resolveLLMRetryBudget(provider, CLIENT_LLM_RETRY_POLICY);
   }
 
-  async waitForRetry(delayMs: number): Promise<void> {
-    await sleep(delayMs);
-  }
+  /**
+   * Wakes early when the operation is aborted. `callLlm` re-checks for an
+   * interrupt right after this resolves, so Stop during a backoff (up to 30s
+   * between attempts) ends the run at once instead of keeping the spinner
+   * until the delay elapses.
+   *
+   * An arrow field because `callLlm` invokes it unbound.
+   */
+  waitForRetry = async (delayMs: number): Promise<void> => {
+    const signal = this.get().operations[this.operationId]?.abortController?.signal;
+    if (!signal) {
+      await sleep(delayMs);
+      return;
+    }
+    if (signal.aborted) return;
+
+    await new Promise<void>((resolve) => {
+      const wake = () => {
+        clearTimeout(timer);
+        signal.removeEventListener('abort', wake);
+        resolve();
+      };
+      const timer = setTimeout(wake, delayMs);
+      signal.addEventListener('abort', wake, { once: true });
+    });
+  };
 }
 
 interface ClientLLMTransportOptions {
@@ -369,6 +420,8 @@ export class ClientLLMTransport implements LLMTransport {
         if (streamChunk.type === 'reasoning') reasoning += streamChunk.text;
       },
       signal,
+      topicId:
+        this.context.get().operations[this.context.operationId]?.context.topicId ?? undefined,
     });
 
     if (streamError) throw streamError;

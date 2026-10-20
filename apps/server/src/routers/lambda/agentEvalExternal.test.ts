@@ -15,28 +15,40 @@ const mocks = vi.hoisted(() => ({
 vi.mock('@/database/core/db-adaptor', () => ({ getServerDB: vi.fn(async () => ({})) }));
 
 vi.mock('@/database/models/agentEval', () => ({
-  AgentEvalDatasetModel: vi.fn().mockImplementation(() => ({})),
-  AgentEvalRunModel: vi.fn().mockImplementation(() => ({
-    findById: mocks.findRunById,
-    update: mocks.updateRun,
-  })),
-  AgentEvalRunTopicModel: vi.fn().mockImplementation(() => ({
-    findByRunId: mocks.findRunTopics,
-    updateByRunAndTopic: mocks.updateRunTopic,
-  })),
-  AgentEvalTestCaseModel: vi.fn().mockImplementation(() => ({
-    countByDatasetId: mocks.countByDatasetId,
-  })),
+  AgentEvalDatasetModel: vi.fn().mockImplementation(function () {
+    return {};
+  }),
+  AgentEvalRunModel: vi.fn().mockImplementation(function () {
+    return {
+      findById: mocks.findRunById,
+      update: mocks.updateRun,
+    };
+  }),
+  AgentEvalRunTopicModel: vi.fn().mockImplementation(function () {
+    return {
+      findByRunId: mocks.findRunTopics,
+      updateByRunAndTopic: mocks.updateRunTopic,
+    };
+  }),
+  AgentEvalTestCaseModel: vi.fn().mockImplementation(function () {
+    return {
+      countByDatasetId: mocks.countByDatasetId,
+    };
+  }),
 }));
 
 vi.mock('@/database/models/thread', () => ({
-  ThreadModel: vi.fn().mockImplementation(() => ({})),
+  ThreadModel: vi.fn().mockImplementation(function () {
+    return {};
+  }),
 }));
 
 vi.mock('@/server/services/agentEvalRun', () => ({
-  AgentEvalRunService: vi.fn().mockImplementation(() => ({
-    evaluateAndFinalizeRun: mocks.evaluateAndFinalizeRun,
-  })),
+  AgentEvalRunService: vi.fn().mockImplementation(function () {
+    return {
+      evaluateAndFinalizeRun: mocks.evaluateAndFinalizeRun,
+    };
+  }),
   RUN_CREATE_ID_CONFLICT: 'RUN_CREATE_ID_CONFLICT',
 }));
 
@@ -47,7 +59,7 @@ beforeEach(() => {
 });
 
 describe('agentEvalExternalRouter.reportResult', () => {
-  it('keeps a partially executed multi-case run running', async () => {
+  it('promotes an external error while keeping a partially executed run running', async () => {
     const run = {
       config: { k: 1 },
       datasetId: 'dataset-1',
@@ -60,34 +72,48 @@ describe('agentEvalExternalRouter.reportResult', () => {
       status: 'external',
       topicId: 'topic-1',
     };
-    const completedTopic = {
+    const error = { message: 'Agent execution timed out', type: 'AgentTimeoutError' };
+    const erroredTopic = {
       evalResult: { awaitingExternalEval: false },
-      passed: true,
-      score: 1,
-      status: 'passed',
+      passed: false,
+      score: 0,
+      status: 'error',
       topicId: 'topic-1',
     };
 
     mocks.findRunById.mockResolvedValue(run);
     mocks.findRunTopics
       .mockResolvedValueOnce([awaitingTopic])
-      .mockResolvedValueOnce([completedTopic]);
+      .mockResolvedValueOnce([erroredTopic]);
     mocks.countByDatasetId.mockResolvedValue(10);
     mocks.evaluateAndFinalizeRun.mockResolvedValue({
       completedCases: 1,
-      errorCases: 0,
+      errorCases: 1,
       timeoutCases: 0,
       totalCases: 10,
     });
     mocks.updateRun.mockResolvedValue({ ...run, status: 'running' });
 
     const result = await caller().reportResult({
-      correct: true,
+      correct: false,
+      result: { error },
       runId: run.id,
-      score: 1,
+      score: 0,
       topicId: awaitingTopic.topicId,
     });
 
+    expect(mocks.updateRunTopic).toHaveBeenCalledWith(
+      run.id,
+      awaitingTopic.topicId,
+      expect.objectContaining({
+        evalResult: expect.objectContaining({
+          error: 'AgentTimeoutError: Agent execution timed out',
+          errorDetail: error,
+          externalResult: { error },
+        }),
+        status: 'error',
+      }),
+    );
     expect(result.runStatus).toBe('running');
     expect(mocks.updateRun).toHaveBeenCalledWith(
       run.id,
@@ -136,5 +162,70 @@ describe('agentEvalExternalRouter.reportResult', () => {
       expect.objectContaining({ expectedTotalCases: 1 }),
     );
     expect(result.runStatus).toBe('completed');
+  });
+
+  it.each(['pending', 'running'] as const)(
+    'keeps the run running while another topic is still %s',
+    async (activeStatus) => {
+      const run = {
+        config: { caseSelection: { caseIds: ['c1', 'c2'], mode: 'include' }, k: 1 },
+        datasetId: 'dataset-1',
+        id: 'run-1',
+        metrics: null,
+        startedAt: new Date(),
+      };
+      const reportingTopic = {
+        evalResult: { awaitingExternalEval: true },
+        status: 'external',
+        topicId: 'topic-1',
+      };
+      const passedTopic = {
+        evalResult: { awaitingExternalEval: false },
+        passed: true,
+        score: 1,
+        status: 'passed',
+        topicId: 'topic-1',
+      };
+      const activeTopic = { status: activeStatus, topicId: 'topic-2' };
+
+      mocks.findRunById.mockResolvedValue(run);
+      mocks.findRunTopics
+        .mockResolvedValueOnce([reportingTopic, activeTopic])
+        .mockResolvedValueOnce([passedTopic, activeTopic]);
+      mocks.countByDatasetId.mockResolvedValue(2);
+      mocks.evaluateAndFinalizeRun.mockResolvedValue({
+        completedCases: 2,
+        errorCases: 0,
+        timeoutCases: 0,
+        totalCases: 2,
+      });
+      mocks.updateRun.mockResolvedValue({ ...run, status: 'running' });
+
+      const result = await caller().reportResult({
+        correct: true,
+        runId: run.id,
+        score: 1,
+        topicId: reportingTopic.topicId,
+      });
+
+      expect(result.runStatus).toBe('running');
+      expect(mocks.updateRun).toHaveBeenCalledWith(
+        run.id,
+        expect.objectContaining({ status: 'running' }),
+      );
+    },
+  );
+});
+
+describe('agentEvalExternalRouter.runSetStatus', () => {
+  it('sets an existing run to running', async () => {
+    mocks.findRunById.mockResolvedValue({ id: 'run-1', status: 'external' });
+    mocks.updateRun.mockResolvedValue({ id: 'run-1', status: 'running' });
+
+    const result = await caller().runSetStatus({ runId: 'run-1', status: 'running' });
+
+    expect(mocks.updateRun).toHaveBeenCalledWith('run-1', { status: 'running' });
+    expect(mocks.evaluateAndFinalizeRun).not.toHaveBeenCalled();
+    expect(result).toEqual({ runId: 'run-1', status: 'running', success: true });
   });
 });

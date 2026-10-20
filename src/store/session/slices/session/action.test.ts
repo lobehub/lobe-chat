@@ -1,7 +1,7 @@
+import { toast } from '@lobehub/ui';
 import { act, renderHook } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { message } from '@/components/AntdStaticMethods';
 import { chatGroupService } from '@/services/chatGroup';
 import { sessionService } from '@/services/session';
 import { useSessionStore } from '@/store/session';
@@ -16,10 +16,8 @@ vi.mock('@/services/session', () => ({
     cloneSession: vi.fn(),
     updateSessionGroup: vi.fn(),
     removeSession: vi.fn(),
-    getAllSessions: vi.fn(),
     updateSession: vi.fn(),
     updateSessionGroupId: vi.fn(),
-    searchSessions: vi.fn(),
     updateSessionPinned: vi.fn(),
   },
 }));
@@ -30,12 +28,12 @@ vi.mock('@/services/chatGroup', () => ({
   },
 }));
 
-vi.mock('@/components/AntdStaticMethods', () => ({
-  message: {
-    loading: vi.fn(),
-    success: vi.fn(),
+vi.mock('@lobehub/ui', async (importOriginal) => ({
+  ...(await importOriginal<object>()),
+  toast: {
     error: vi.fn(),
-    destroy: vi.fn(),
+    loading: vi.fn(() => ({ close: vi.fn() })),
+    success: vi.fn(),
   },
 }));
 
@@ -101,13 +99,11 @@ describe('SessionAction', () => {
       const sessionId = 'session-id';
       const duplicatedSessionId = 'duplicated-session-id';
       vi.mocked(sessionService.cloneSession).mockResolvedValue(duplicatedSessionId);
-      vi.mocked(message.loading).mockResolvedValue(true);
-
       await act(async () => {
         await result.current.duplicateSession(sessionId);
       });
 
-      expect(message.loading).toHaveBeenCalled();
+      expect(toast.loading).toHaveBeenCalled();
       expect(sessionService.cloneSession).toHaveBeenCalledWith(sessionId, expect.any(String));
     });
   });

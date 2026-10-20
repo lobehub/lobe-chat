@@ -2,8 +2,9 @@
 
 import { DEFAULT_AVATAR } from '@lobechat/const';
 import type { BuiltinStreamingProps } from '@lobechat/types';
-import { Avatar, Flexbox, Markdown } from '@lobehub/ui';
-import { createStaticStyles, useTheme } from 'antd-style';
+import { Flexbox, Markdown } from '@lobehub/ui';
+import { Avatar } from '@lobehub/ui';
+import { createStaticStyles, useTheme } from '@lobehub/ui';
 import { memo } from 'react';
 
 import { useAgentGroupStore } from '@/store/agentGroup';

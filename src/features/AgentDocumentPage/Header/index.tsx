@@ -1,8 +1,7 @@
 'use client';
 
-import { ActionIcon, Flexbox, Text } from '@lobehub/ui';
-import { DropdownMenu } from '@lobehub/ui/base-ui';
-import { cssVar, cx } from 'antd-style';
+import { agentDisplayName } from '@lobechat/types';
+import { ActionIcon, cssVar, cx, DropdownMenu, Flexbox, Text } from '@lobehub/ui';
 import { MoreHorizontal } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -22,6 +21,8 @@ interface HeaderProps {
   agentDocumentId?: string;
   agentId: string;
   documentId: string;
+  /** Hide editor-only actions for original uploaded files. */
+  fileBacked?: boolean;
   itemError?: unknown;
   onBack: () => void;
   onDeleted: () => void;
@@ -30,7 +31,17 @@ interface HeaderProps {
 }
 
 const Header = memo<HeaderProps>(
-  ({ agentId, agentDocumentId, documentId, itemError, onBack, onDeleted, title, updatedAt }) => {
+  ({
+    agentId,
+    agentDocumentId,
+    documentId,
+    fileBacked,
+    itemError,
+    onBack,
+    onDeleted,
+    title,
+    updatedAt,
+  }) => {
     const { t } = useTranslation(['file', 'chat']);
     const meta = useAgentStore(agentSelectors.getAgentMetaById(agentId));
     const showTitleError = !!itemError && !title;
@@ -42,6 +53,7 @@ const Header = memo<HeaderProps>(
       agentId,
       documentId,
       onDeleted,
+      fileBacked,
       title,
       updatedAt,
     });
@@ -58,7 +70,7 @@ const Header = memo<HeaderProps>(
               onClick={onBack}
             >
               <Text style={{ color: cssVar.colorTextSecondary }}>
-                {meta.title || t('untitledAgent', { ns: 'chat' })}
+                {agentDisplayName(meta, t('untitledAgent', { ns: 'chat' }))}
               </Text>
             </Flexbox>
             <Text style={{ color: cssVar.colorTextQuaternary, flexShrink: 0 }}>/</Text>
@@ -69,21 +81,21 @@ const Header = memo<HeaderProps>(
             >
               {resolvedTitle}
             </Text>
-          </Flexbox>
-        }
-        right={
-          <Flexbox horizontal align={'center'} gap={4}>
-            {documentId && <AutoSaveHint documentId={documentId} />}
-            {documentId && <ShareButton documentId={documentId} />}
-            <ToggleRightPanelButton hideWhenExpanded />
             <DropdownMenu
               iconSpaceMode={'group'}
               items={menuItems}
-              placement={'bottomRight'}
+              placement={'bottomLeft'}
               popupProps={{ style: { minWidth: 200 } }}
             >
               <ActionIcon icon={MoreHorizontal} size={DESKTOP_HEADER_ICON_SMALL_SIZE} />
             </DropdownMenu>
+          </Flexbox>
+        }
+        right={
+          <Flexbox horizontal align={'center'} gap={4}>
+            {documentId && !fileBacked && <AutoSaveHint documentId={documentId} />}
+            {documentId && !fileBacked && <ShareButton documentId={documentId} />}
+            <ToggleRightPanelButton hideWhenExpanded />
           </Flexbox>
         }
       />

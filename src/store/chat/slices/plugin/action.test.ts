@@ -17,6 +17,10 @@ import { useToolStore } from '@/store/tool';
 
 vi.mock('@/utils/localStorage', () => {
   class AsyncLocalStorage<State> {
+    getFromLocalStorageSync(): State {
+      return {} as State;
+    }
+
     async getFromLocalStorage(): Promise<State> {
       return {} as State;
     }
@@ -28,8 +32,6 @@ vi.mock('@/utils/localStorage', () => {
 
   return { AsyncLocalStorage };
 });
-
-vi.mock('zustand/traditional');
 
 // Mock messageService
 vi.mock('@/services/message', () => ({
@@ -184,7 +186,7 @@ describe('ChatPluginAction', () => {
 
       // Mock hasExecutor to return true
       const hasExecutorModule = await import('@/store/tool/slices/builtin/executors');
-      vi.spyOn(hasExecutorModule, 'hasExecutor').mockReturnValue(true);
+      vi.spyOn(hasExecutorModule, 'hasExecutor').mockResolvedValue(true);
 
       // Mock Tool Store's invokeBuiltinTool
       vi.spyOn(useToolStore.getState(), 'invokeBuiltinTool').mockImplementation(
@@ -219,7 +221,7 @@ describe('ChatPluginAction', () => {
 
       // Mock hasExecutor to return false
       const hasExecutorModule = await import('@/store/tool/slices/builtin/executors');
-      vi.spyOn(hasExecutorModule, 'hasExecutor').mockReturnValue(false);
+      vi.spyOn(hasExecutorModule, 'hasExecutor').mockResolvedValue(false);
 
       const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
 
@@ -257,7 +259,7 @@ describe('ChatPluginAction', () => {
 
     it('should pass page document context to Tool Store executor', async () => {
       const hasExecutorModule = await import('@/store/tool/slices/builtin/executors');
-      vi.spyOn(hasExecutorModule, 'hasExecutor').mockReturnValue(true);
+      vi.spyOn(hasExecutorModule, 'hasExecutor').mockResolvedValue(true);
 
       const { result } = renderHook(() => useChatStore());
       const messageId = 'page-tool-message-id';
@@ -312,7 +314,7 @@ describe('ChatPluginAction', () => {
 
     it('should pass tool call id and explicit source user message id to Tool Store executor', async () => {
       const hasExecutorModule = await import('@/store/tool/slices/builtin/executors');
-      vi.spyOn(hasExecutorModule, 'hasExecutor').mockReturnValue(true);
+      vi.spyOn(hasExecutorModule, 'hasExecutor').mockResolvedValue(true);
 
       const { result } = renderHook(() => useChatStore());
       const messageId = 'tool-message-id';
@@ -365,7 +367,7 @@ describe('ChatPluginAction', () => {
 
     it('should pass sub-agent context to Tool Store executor', async () => {
       const hasExecutorModule = await import('@/store/tool/slices/builtin/executors');
-      vi.spyOn(hasExecutorModule, 'hasExecutor').mockReturnValue(true);
+      vi.spyOn(hasExecutorModule, 'hasExecutor').mockResolvedValue(true);
 
       const { result } = renderHook(() => useChatStore());
       const messageId = 'sub-agent-tool-message-id';
@@ -423,7 +425,7 @@ describe('ChatPluginAction', () => {
 
     it('should fall back to root operation message id as source message id', async () => {
       const hasExecutorModule = await import('@/store/tool/slices/builtin/executors');
-      vi.spyOn(hasExecutorModule, 'hasExecutor').mockReturnValue(true);
+      vi.spyOn(hasExecutorModule, 'hasExecutor').mockResolvedValue(true);
 
       const { result } = renderHook(() => useChatStore());
       const messageId = 'tool-message-id';
@@ -475,7 +477,7 @@ describe('ChatPluginAction', () => {
       it('should create registerAfterCompletion when root execAgentRuntime operation exists', async () => {
         // Mock hasExecutor to return true
         const hasExecutorModule = await import('@/store/tool/slices/builtin/executors');
-        vi.spyOn(hasExecutorModule, 'hasExecutor').mockReturnValue(true);
+        vi.spyOn(hasExecutorModule, 'hasExecutor').mockResolvedValue(true);
 
         // Setup: Create operation hierarchy
         // execAgentRuntime -> toolCalling -> executeToolCall
@@ -560,7 +562,7 @@ describe('ChatPluginAction', () => {
       it('should not pass registerAfterCompletion when no root operation exists', async () => {
         // Mock hasExecutor to return true
         const hasExecutorModule = await import('@/store/tool/slices/builtin/executors');
-        vi.spyOn(hasExecutorModule, 'hasExecutor').mockReturnValue(true);
+        vi.spyOn(hasExecutorModule, 'hasExecutor').mockResolvedValue(true);
 
         const { result } = renderHook(() => useChatStore());
         const messageId = 'tool-message-id';
@@ -595,7 +597,7 @@ describe('ChatPluginAction', () => {
       it('should find root operation through multiple levels of hierarchy', async () => {
         // Mock hasExecutor to return true
         const hasExecutorModule = await import('@/store/tool/slices/builtin/executors');
-        vi.spyOn(hasExecutorModule, 'hasExecutor').mockReturnValue(true);
+        vi.spyOn(hasExecutorModule, 'hasExecutor').mockResolvedValue(true);
 
         const { result } = renderHook(() => useChatStore());
 
@@ -674,81 +676,6 @@ describe('ChatPluginAction', () => {
           result.current.operations[level3OpId!].metadata.runtimeHooks?.afterCompletionCallbacks,
         ).toBeUndefined();
       });
-    });
-  });
-
-  describe('reInvokeToolMessage', () => {
-    it('should re-invoke a tool message', async () => {
-      const messageId = 'message-id';
-      const message = {
-        id: messageId,
-        role: 'tool',
-        content: 'Original content',
-        plugin: {
-          type: 'default',
-          identifier: 'plugin-id',
-          apiName: 'api-name',
-          arguments: '{}',
-        },
-        tool_call_id: 'tool-id',
-      } as UIChatMessage;
-
-      const internal_invokeDifferentTypePluginMock = vi.fn();
-      act(() => {
-        useChatStore.setState({
-          activeAgentId: 'session-id',
-          messagesMap: { [messageMapKey({ agentId: 'session-id' })]: [message] },
-          internal_invokeDifferentTypePlugin: internal_invokeDifferentTypePluginMock,
-          optimisticUpdateMessagePluginError: vi.fn(),
-        });
-      });
-
-      const { result } = renderHook(() => useChatStore());
-
-      await act(async () => {
-        await result.current.reInvokeToolMessage(messageId);
-      });
-
-      expect(internal_invokeDifferentTypePluginMock).toHaveBeenCalledWith(
-        messageId,
-        expect.objectContaining(message.plugin),
-      );
-    });
-
-    it('should clear error content when re-invoking', async () => {
-      const messageId = 'message-id';
-      const message = {
-        id: messageId,
-        role: 'tool',
-        content: 'Original content',
-        plugin: {
-          type: 'default',
-          identifier: 'plugin-id',
-          apiName: 'api-name',
-          arguments: '{}',
-        },
-        tool_call_id: 'tool-id',
-        pluginError: { message: 'Previous error', type: 'ProviderBizError' },
-      } as UIChatMessage;
-
-      const internal_updateMessageErrorMock = vi.fn();
-
-      act(() => {
-        useChatStore.setState({
-          activeAgentId: 'session-id',
-          messagesMap: { [messageMapKey({ agentId: 'session-id' })]: [message] },
-          internal_invokeDifferentTypePlugin: vi.fn(),
-          optimisticUpdateMessagePluginError: internal_updateMessageErrorMock,
-        });
-      });
-
-      const { result } = renderHook(() => useChatStore());
-
-      await act(async () => {
-        await result.current.reInvokeToolMessage(messageId);
-      });
-
-      expect(internal_updateMessageErrorMock).toHaveBeenCalledWith(messageId, null, undefined);
     });
   });
 

@@ -1,10 +1,7 @@
 'use client';
 
 import { AGENT_CHAT_URL } from '@lobechat/const';
-import { Flexbox } from '@lobehub/ui';
-import { Button, Select } from '@lobehub/ui/base-ui';
-import { App } from 'antd';
-import { createStaticStyles } from 'antd-style';
+import { Button, createStaticStyles, Flexbox, Select, toast } from '@lobehub/ui';
 import { customAlphabet } from 'nanoid/non-secure';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -16,6 +13,7 @@ import { useMarketAuth } from '@/layout/AuthProvider/MarketAuth';
 import { lambdaClient } from '@/libs/trpc/client';
 import { agentService } from '@/services/agent';
 import { discoverService } from '@/services/discover';
+import { ensureAgentMarketSkillsAndWarn } from '@/services/ensureAgentMarketSkills';
 import { marketApiService } from '@/services/marketApi';
 import { useAgentStore } from '@/store/agent';
 import { useHomeStore } from '@/store/home';
@@ -82,7 +80,7 @@ const ForkAndChat = memo<{ mobile?: boolean }>(({ mobile }) => {
   const [isLoading, setIsLoading] = useState(false);
   const createAgent = useAgentStore((s) => s.createAgent);
   const refreshAgentList = useHomeStore((s) => s.refreshAgentList);
-  const { message } = App.useApp();
+
   const navigate = useWorkspaceAwareNavigate();
   const { t } = useTranslation('discover');
   const { isAuthenticated, signIn } = useMarketAuth();
@@ -122,7 +120,7 @@ const ForkAndChat = memo<{ mobile?: boolean }>(({ mobile }) => {
 
       if (existingAgentId) {
         // User has already forked this agent, navigate to existing fork
-        message.info(t('fork.alreadyForked'));
+        toast.info(t('fork.alreadyForked'));
         navigate(AGENT_CHAT_URL(existingAgentId, mobile));
         return;
       }
@@ -201,13 +199,17 @@ const ForkAndChat = memo<{ mobile?: boolean }>(({ mobile }) => {
         source: location.pathname,
       });
 
-      message.success(t('fork.success'));
+      toast.success(t('fork.success'));
 
-      // Step 6: Navigate to chat
+      // Step 6: Install the Market skills the agent references. The agent already
+      // exists, so this never throws and only ever adds a non-blocking warning.
+      await ensureAgentMarketSkillsAndWarn(config.plugins);
+
+      // Step 7: Navigate to chat
       navigate(AGENT_CHAT_URL(result!.agentId, mobile));
     } catch (error: any) {
       console.error('Fork failed:', error);
-      message.error(t('fork.failed'));
+      toast.error(t('fork.failed'));
     } finally {
       setIsLoading(false);
     }

@@ -10,7 +10,7 @@ import {
   UserPersonaExtractor,
 } from '@lobechat/memory-user-memory';
 import type { UserServiceModelConfig } from '@lobechat/types';
-import { desc, eq } from 'drizzle-orm';
+import { and, desc, eq } from 'drizzle-orm';
 
 import { getBusinessModelRuntimeHooks } from '@/business/server/model-runtime';
 import { UserModel } from '@/database/models/user';
@@ -18,9 +18,11 @@ import { UserMemoryModel } from '@/database/models/userMemory';
 import { UserPersonaModel } from '@/database/models/userMemory/persona';
 import { AiInfraRepos } from '@/database/repositories/aiInfra';
 import { type LobeChatDatabase } from '@/database/type';
+import { notTrashed } from '@/database/utils/softDelete';
 import { type MemoryAgentConfig } from '@/server/globalConfig/parseMemoryExtractionConfig';
 import { parseMemoryExtractionConfig } from '@/server/globalConfig/parseMemoryExtractionConfig';
 import { KeyVaultsGateKeeper } from '@/server/modules/KeyVaultsEncrypt';
+import { getUserScopedAiProviderRuntimeState } from '@/server/services/aiProviderAccess';
 import {
   type ProviderKeyVaultMap,
   type RuntimeResolveOptions,
@@ -100,8 +102,10 @@ export class UserPersonaService {
     // purely user-level feature with no workspace concept; the payload carries no
     // workspaceId, so provider config is resolved against the user's personal scope.
     const aiInfraRepos = new AiInfraRepos(this.db, payload.userId, {});
-    const runtimeState = await aiInfraRepos.getAiProviderRuntimeState(
-      KeyVaultsGateKeeper.getUserKeyVaults,
+    const runtimeState = await getUserScopedAiProviderRuntimeState(
+      payload.userId,
+      () => aiInfraRepos.getAiProviderRuntimeState(KeyVaultsGateKeeper.getUserKeyVaults),
+      { throwOnUnresolvedAccess: true },
     );
     const providerId = await AiInfraRepos.tryMatchingProviderFrom(runtimeState, {
       fallbackProvider: agentConfig.provider,
@@ -194,7 +198,7 @@ export const buildUserPersonaJobInput = async (db: LobeChatDatabase, userId: str
     db.query.userMemories.findMany({
       limit: 20,
       orderBy: [desc(userMemories.capturedAt)],
-      where: eq(userMemories.userId, userId),
+      where: and(eq(userMemories.userId, userId), notTrashed(userMemories.isDeleted)),
     }),
   ]);
 

@@ -10,6 +10,7 @@ import {
   updateBotRuntimeStatus,
 } from '@/server/services/gateway/runtimeStatus';
 
+import { warnAttachmentFailures } from '../attachmentDelivery';
 import {
   type BotPlatformRuntimeContext,
   type BotProviderConfig,
@@ -22,7 +23,14 @@ import {
 } from '../types';
 import { formatUsageStats } from '../utils';
 import { DiscordApi } from './api';
-import { patchDiscordForwardedInteractions, patchDiscordThreadRecovery } from './patch';
+import { isSoloDiscordBotThread } from './chatComposition';
+import { DISCORD_BOT_TOKEN_PATTERN, DISCORD_PUBLIC_KEY_PATTERN } from './const';
+import {
+  collectDiscordMentionNames,
+  resolveDiscordMentions,
+  sanitizeDiscordUserInput,
+} from './mentions';
+import { patchDiscordForwardedInteractions } from './patch';
 import { batchDiscordFiles, materializeAttachmentsForDiscord } from './sendAttachments';
 
 const log = debug('bot-platform:discord:bot');
@@ -98,11 +106,7 @@ class DiscordGatewayClient implements PlatformClient {
         this.bot = null;
       }
 
-      const adapter = createDiscordAdapter({
-        applicationId: this.config.applicationId,
-        botToken: this.config.credentials.botToken,
-        publicKey: this.config.credentials.publicKey,
-      });
+      const adapter = this.buildAdapter();
 
       const { Chat, ConsoleLogger } = await import('chat');
 
@@ -211,17 +215,30 @@ class DiscordGatewayClient implements PlatformClient {
 
   applyChatPatches(chatBot: ChatBot<any>): void {
     patchDiscordForwardedInteractions(chatBot);
-    patchDiscordThreadRecovery(chatBot);
   }
 
   createAdapter(): Record<string, any> {
     return {
-      discord: createDiscordAdapter({
-        applicationId: this.config.applicationId,
-        botToken: this.config.credentials.botToken,
-        publicKey: this.config.credentials.publicKey,
-      }),
+      discord: this.buildAdapter(),
     };
+  }
+
+  /**
+   * `@chat-adapter/discord` falls back to `userName: "bot"` and never resolves
+   * the real bot name, while chat-sdk's `detectMention` treats `@<userName>`
+   * in the message text as a mention. Without an explicit name, any message
+   * containing a literal "@bot" counts as an @-mention of EVERY Discord bot in
+   * the thread. Real mentions are matched by the adapter through
+   * `data.mentions` / `<@applicationId>`, so the text fallback only needs a
+   * per-bot name that natural text never contains.
+   */
+  private buildAdapter(): DiscordAdapter {
+    return createDiscordAdapter({
+      applicationId: this.config.applicationId,
+      botToken: this.config.credentials.botToken,
+      publicKey: this.config.credentials.publicKey,
+      userName: `lobehub-discord-${this.config.applicationId}`,
+    });
   }
 
   /**
@@ -244,6 +261,17 @@ class DiscordGatewayClient implements PlatformClient {
     }
   }
 
+  async isSoloBotConversation(platformThreadId: string): Promise<boolean> {
+    const parts = platformThreadId.split(':');
+    // Only real guild threads have a member list scoped narrowly enough to
+    // establish 1:1 composition. DMs are already handled by thread.isDM;
+    // top-level guild channels stay mention-only because Discord has no
+    // per-channel member list and GUILD_MEMBERS is a privileged intent.
+    if (parts.length !== 4 || parts[1] === '@me' || !parts[3]) return false;
+
+    return isSoloDiscordBotThread(this.discord, this.applicationId, parts[3]);
+  }
+
   getMessenger(platformThreadId: string): PlatformMessenger {
     const channelId = extractChannelId(platformThreadId);
     const threadId = platformThreadId.split(':')[3];
@@ -257,7 +285,8 @@ class DiscordGatewayClient implements PlatformClient {
           await discord.createMessage(channelId, text);
           return;
         }
-        const files = await materializeAttachmentsForDiscord(attachments);
+        const { failures, files } = await materializeAttachmentsForDiscord(attachments);
+        warnAttachmentFailures('bot-platform:discord:reply', failures);
         if (files.length === 0) {
           await discord.createMessage(channelId, text);
           return;
@@ -437,12 +466,22 @@ class DiscordGatewayClient implements PlatformClient {
     return [];
   }
 
-  sanitizeUserInput(text: string): string {
-    return text.replaceAll(new RegExp(`<@!?${this.applicationId}>\\s*`, 'g'), '').trim();
+  resolveMentions(text: string, message?: unknown): string {
+    return resolveDiscordMentions(text, collectDiscordMentionNames(message));
+  }
+
+  sanitizeUserInput(text: string, message?: unknown): string {
+    return sanitizeDiscordUserInput(text, this.applicationId, message);
   }
 
   shouldSubscribe(threadId: string): boolean {
     return isSubscribableThread(threadId);
+  }
+
+  shouldExpireIdleTopic(threadId: string): boolean {
+    // Only DMs are an unbounded stream; a guild thread is one conversation.
+    const [, guildId, , discordThreadId] = threadId.split(':');
+    return guildId === '@me' || !discordThreadId;
   }
 
   /**
@@ -526,6 +565,22 @@ export class DiscordClientFactory extends ClientFactory {
     if (!credentials.botToken) errors.push({ field: 'botToken', message: 'Bot Token is required' });
     if (!credentials.publicKey)
       errors.push({ field: 'publicKey', message: 'Public Key is required' });
+
+    if (errors.length > 0) return { errors, valid: false };
+
+    // Name the actual problem before spending a round-trip on it — a
+    // malformed public key can't be caught by the API call at all, and a
+    // malformed token would come back as a generic auth failure.
+    if (!new RegExp(DISCORD_PUBLIC_KEY_PATTERN).test(credentials.publicKey))
+      errors.push({
+        field: 'publicKey',
+        message: 'Public Key must be a 64-character hex string',
+      });
+    if (!new RegExp(DISCORD_BOT_TOKEN_PATTERN).test(credentials.botToken))
+      errors.push({
+        field: 'botToken',
+        message: 'Bot Token must be three dot-separated segments, as shown in the Discord portal',
+      });
 
     if (errors.length > 0) return { errors, valid: false };
 

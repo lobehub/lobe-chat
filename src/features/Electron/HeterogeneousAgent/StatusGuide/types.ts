@@ -1,4 +1,6 @@
 import type { HeterogeneousAgentSessionError } from '@lobechat/electron-client-ipc';
+import type { LocalHeterogeneousAgentType } from '@lobechat/heterogeneous-agents';
+import { LOCAL_HETEROGENEOUS_AGENT_TYPES } from '@lobechat/heterogeneous-agents';
 import type { ComponentType } from 'react';
 
 export type HeterogeneousAgentStatusGuideVariant = 'compact' | 'embedded' | 'inline';
@@ -37,18 +39,14 @@ export interface HeterogeneousAgentStatusGuideProps {
   onDismiss?: () => void;
   onOpenSystemTools?: () => void;
   onRetry?: () => void;
+  onTransfer?: () => void;
   schedule?: HeterogeneousAgentScheduleState;
   variant?: HeterogeneousAgentStatusGuideVariant;
 }
 
-export const SUPPORTED_HETEROGENEOUS_AGENT_TYPES = [
-  'amp',
-  'claude-code',
-  'codex',
-  'opencode',
-] as const;
+export const SUPPORTED_HETEROGENEOUS_AGENT_TYPES = LOCAL_HETEROGENEOUS_AGENT_TYPES;
 
-export type SupportedHeterogeneousAgentType = (typeof SUPPORTED_HETEROGENEOUS_AGENT_TYPES)[number];
+export type SupportedHeterogeneousAgentType = LocalHeterogeneousAgentType;
 
 export interface HeterogeneousAgentGuideConfig {
   docsUrl: string;
@@ -66,6 +64,7 @@ export interface HeterogeneousAgentGuideStateProps {
   onDismiss?: () => void;
   onOpenSystemTools?: () => void;
   onRetry?: () => void;
+  onTransfer?: () => void;
   schedule?: HeterogeneousAgentScheduleState;
   variant: HeterogeneousAgentStatusGuideVariant;
 }

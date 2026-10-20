@@ -4,14 +4,19 @@ import { Flexbox } from '@lobehub/ui';
 import { memo, useMemo } from 'react';
 
 import AsyncBoundary from '@/components/AsyncBoundary';
-import { useFolderPath } from '@/routes/(main)/resource/features/hooks/useFolderPath';
-import { useResourceManagerUrlSync } from '@/routes/(main)/resource/features/hooks/useResourceManagerUrlSync';
-import { useResourceManagerStore } from '@/routes/(main)/resource/features/store';
-import { sortFileList } from '@/routes/(main)/resource/features/store/selectors';
+import { useFolderPath } from '@/features/ResourceManager/hooks/useFolderPath';
+import { useResourceManagerUrlSync } from '@/features/ResourceManager/hooks/useResourceManagerUrlSync';
+import { useResourceManagerStore } from '@/features/ResourceManager/store';
+import {
+  getResourceQueryVisibility,
+  getResourceSourceFilter,
+  sortFileList,
+} from '@/features/ResourceManager/store/selectors';
 import { useFetchResources, useResourceStore } from '@/store/file/slices/resource/hooks';
 
 import { KnowledgeBaseListProvider } from '../KnowledgeBaseListProvider';
 import EmptyPlaceholder from './EmptyPlaceholder';
+import FileDetailPanel from './FileDetailPanel';
 import Header from './Header';
 import { useResetSelectionOnQueryChange } from './hooks/useResetSelectionOnQueryChange';
 import ListView from './ListView';
@@ -32,16 +37,25 @@ const ResourceExplorer = memo(() => {
   useResourceManagerUrlSync();
 
   // Get state from Resource Manager store
-  const [libraryId, category, viewMode, searchQuery, sorter, sortType, listVisibility] =
-    useResourceManagerStore((s) => [
-      s.libraryId,
-      s.category,
-      s.viewMode,
-      s.searchQuery,
-      s.sorter,
-      s.sortType,
-      s.listVisibility,
-    ]);
+  const [
+    libraryId,
+    category,
+    viewMode,
+    searchQuery,
+    sorter,
+    sortType,
+    listVisibility,
+    sourceFilter,
+  ] = useResourceManagerStore((s) => [
+    s.libraryId,
+    s.category,
+    s.viewMode,
+    s.searchQuery,
+    s.sorter,
+    s.sortType,
+    s.listVisibility,
+    getResourceSourceFilter(s),
+  ]);
 
   // Get folder path for empty state check
   const { currentFolderSlug } = useFolderPath();
@@ -52,17 +66,28 @@ const ResourceExplorer = memo(() => {
       // Only use category filter when NOT in a specific library
       // When viewing a library, show all items regardless of category
       category: libraryId ? undefined : category,
+      includeContentPreview: viewMode === 'masonry',
       libraryId,
       parentId: currentFolderSlug || null,
       showFilesInKnowledgeBase: false,
       sortType,
       sorter,
-      // Two-mode narrowing: `'private'` shows own private rows, `'workspace'`
-      // shows public rows. Personal mode ignores the value server-side so
-      // sending it there is a harmless no-op.
-      visibility: listVisibility === 'private' ? ('private' as const) : ('public' as const),
+      sourceFilter,
+      // The two-mode narrowing belongs to the resource home. A concrete
+      // library supplies its own visibility boundary and must not inherit the
+      // user's last home filter.
+      visibility: getResourceQueryVisibility(libraryId, listVisibility),
     }),
-    [category, libraryId, currentFolderSlug, sortType, sorter, listVisibility],
+    [
+      category,
+      libraryId,
+      currentFolderSlug,
+      sortType,
+      sorter,
+      listVisibility,
+      sourceFilter,
+      viewMode,
+    ],
   );
 
   // Use SWR for data fetching with automatic caching and revalidation.
@@ -101,43 +126,50 @@ const ResourceExplorer = memo(() => {
     searchQuery,
   });
 
+  // Inline split-screen dock: rendered next to the list so a file click can
+  // show its detail without leaving the surface.
+  const detailPanelMount = useMemo(() => <FileDetailPanel />, []);
+
   const showEmptyStatus = !isLoading && !isValidating && data?.length === 0;
 
   return (
     <KnowledgeBaseListProvider>
       <Flexbox height={'100%'}>
         <Header />
-        <div style={{ flex: 1, overflow: 'hidden', position: 'relative' }}>
-          {/*
-            AsyncBoundary gates error → empty → data. `isLoading` stays false here
-            because the list/masonry views own their own skeletons (loading is a
-            content swap inside them, not a full relayout), so the boundary only
-            arbitrates the failed-vs-empty-vs-data precedence the call site got wrong.
-          */}
-          <AsyncBoundary
-            data={data}
-            empty={<EmptyPlaceholder />}
-            error={error}
-            errorVariant={'block'}
-            isEmpty={showEmptyStatus}
-            onRetry={() => mutate()}
-          >
-            {viewMode === 'list' ? (
-              <ListView
-                isLoading={isLoading}
-                isValidating={isValidating}
-                queryParams={queryParams}
-              />
-            ) : (
-              <MasonryView
-                isLoading={isLoading}
-                isValidating={isValidating}
-                queryParams={queryParams}
-              />
-            )}
-          </AsyncBoundary>
-          <SearchResultsOverlay />
-        </div>
+        <Flexbox horizontal flex={1} style={{ minHeight: 0, overflow: 'hidden' }}>
+          <div style={{ flex: 1, overflow: 'hidden', position: 'relative', minWidth: 0 }}>
+            {/*
+              AsyncBoundary gates error → empty → data. `isLoading` stays false here
+              because the list/masonry views own their own skeletons (loading is a
+              content swap inside them, not a full relayout), so the boundary only
+              arbitrates the failed-vs-empty-vs-data precedence the call site got wrong.
+            */}
+            <AsyncBoundary
+              data={data}
+              empty={<EmptyPlaceholder />}
+              error={error}
+              errorVariant={'block'}
+              isEmpty={showEmptyStatus}
+              onRetry={() => mutate()}
+            >
+              {viewMode === 'list' ? (
+                <ListView
+                  isLoading={isLoading}
+                  isValidating={isValidating}
+                  queryParams={queryParams}
+                />
+              ) : (
+                <MasonryView
+                  isLoading={isLoading}
+                  isValidating={isValidating}
+                  queryParams={queryParams}
+                />
+              )}
+            </AsyncBoundary>
+            <SearchResultsOverlay />
+          </div>
+          {detailPanelMount}
+        </Flexbox>
       </Flexbox>
     </KnowledgeBaseListProvider>
   );

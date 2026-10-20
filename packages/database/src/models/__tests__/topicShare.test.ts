@@ -1,6 +1,6 @@
 // @vitest-environment node
-import { WORKSPACE_SYSTEM_ROLES } from '@lobechat/const/rbac';
 import { TRPCError } from '@trpc/server';
+import { eq } from 'drizzle-orm';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { getTestDB } from '../../core/getTestDB';
@@ -12,11 +12,10 @@ import {
   topics,
   topicShares,
   users,
+  workspaceMembers,
   workspaces,
 } from '../../schemas';
 import type { LobeChatDatabase } from '../../type';
-import { seedWorkspaceRoles } from '../../utils/seedWorkspaceRoles';
-import { RbacModel } from '../rbac';
 import { TopicShareModel } from '../topicShare';
 
 const serverDB: LobeChatDatabase = await getTestDB();
@@ -106,6 +105,25 @@ describe('TopicShareModel', () => {
 
       expect(result).toBeDefined();
       expect(result!.visibility).toBe('link');
+    });
+
+    it('stops resolving once the topic is in the recycle bin', async () => {
+      // A trashed topic keeps its share row and its messages until purge, and
+      // this query carries no user scope (that is the point of a public link),
+      // so without an explicit gate an anonymous visitor could keep reading a
+      // deleted conversation.
+      const created = await topicShareModel.create(topicId, 'link');
+      expect(await TopicShareModel.findByShareId(serverDB, created.id)).toBeDefined();
+
+      await serverDB
+        .update(topics)
+        .set({ deletedAt: new Date(), isDeleted: true })
+        .where(eq(topics.id, topicId));
+
+      expect(await TopicShareModel.findByShareId(serverDB, created.id)).toBeNull();
+      await expect(
+        TopicShareModel.findByShareIdWithAccessCheck(serverDB, created.id, userId),
+      ).rejects.toMatchObject({ code: 'NOT_FOUND' });
     });
 
     it('should return null when share does not exist', async () => {
@@ -301,16 +319,10 @@ describe('TopicShareModel', () => {
     });
 
     describe('findByShareIdWithAccessCheck — private is creator-only, even in a workspace', () => {
-      beforeEach(async () => {
-        await seedWorkspaceRoles(serverDB, workspaceId);
-      });
-
       it('rejects a workspace member (viewer role) for a private share', async () => {
-        await new RbacModel(serverDB, userId2).assignWorkspaceRole({
-          roleName: WORKSPACE_SYSTEM_ROLES.VIEWER,
-          userId: userId2,
-          workspaceId,
-        });
+        await serverDB
+          .insert(workspaceMembers)
+          .values({ role: 'viewer', userId: userId2, workspaceId });
         const created = await wsShareModel.create(wsTopicId, 'private');
 
         try {

@@ -1,10 +1,8 @@
 import {
-  type AssistantContentBlock,
   type ChatImageItem,
   type ChatMessageError,
   type ChatMessagePluginError,
   type ChatToolPayload,
-  type ChatToolPayloadWithResult,
   type ChatVideoItem,
   type CreateMessageParams,
   type GroundingSearch,
@@ -21,6 +19,7 @@ import { type StateCreator } from 'zustand';
 import { messageService } from '@/services/message';
 
 import { type Store as ConversationStore } from '../../../action';
+import { isSameConversationContext } from '../../../utils/contextGuard';
 import { dataSelectors } from '../../data/selectors';
 
 /**
@@ -185,7 +184,7 @@ export const messageCRUDSlice: StateCreator<
     const result = await messageService.updateMessage(messageId, { tools: [tool] }, context);
 
     if (result?.success && result.messages) {
-      replaceMessages(result.messages);
+      replaceMessages(result.messages, { expectedContext: context });
     }
   },
 
@@ -196,7 +195,7 @@ export const messageCRUDSlice: StateCreator<
     await messageService.removeMessagesByAssistant(context.agentId, context.topicId ?? undefined);
 
     // Clear local state
-    replaceMessages([]);
+    replaceMessages([], { expectedContext: context });
   },
 
   // ===== Create ===== //
@@ -216,11 +215,15 @@ export const messageCRUDSlice: StateCreator<
       });
 
       // Replace with server response
-      replaceMessages(result.messages);
+      if (!isSameConversationContext(context, get().context)) return undefined;
+      replaceMessages(result.messages, { expectedContext: context });
+
       internal_toggleMessageLoading(false, tempId);
 
       return result.id;
     } catch (e) {
+      if (!isSameConversationContext(context, get().context)) return undefined;
+
       internal_toggleMessageLoading(false, tempId);
 
       // Update temp message with error
@@ -286,7 +289,7 @@ export const messageCRUDSlice: StateCreator<
     const result = await messageService.removeMessage(id, context);
 
     if (result?.success && result.messages) {
-      replaceMessages(result.messages);
+      replaceMessages(result.messages, { expectedContext: context });
     }
   },
 
@@ -294,25 +297,9 @@ export const messageCRUDSlice: StateCreator<
     const state = get();
     const { internal_dispatchMessage, replaceMessages, context } = state;
 
-    const message = dataSelectors.getDisplayMessageById(id)(state);
-    if (!message) return;
+    if (!dataSelectors.getDisplayMessageById(id)(state)) return;
 
-    let ids = [message.id];
-
-    // Handle assistantGroup and supervisor messages: delete all child blocks and tool results
-    if ((message.role === 'assistantGroup' || message.role === 'supervisor') && message.children) {
-      const childIds = message.children.map((child: AssistantContentBlock) => child.id);
-      ids = ids.concat(childIds);
-
-      // Collect all tool result IDs from children
-      const toolResultIds = message.children.flatMap((child: AssistantContentBlock) => {
-        if (!child.tools) return [];
-        return child.tools
-          .filter((tool: ChatToolPayloadWithResult) => tool.result?.id)
-          .map((tool: ChatToolPayloadWithResult) => tool.result!.id);
-      });
-      ids = ids.concat(toolResultIds);
-    }
+    const ids = dataSelectors.deletableRowMessageIds(id)(state);
 
     // Optimistic update
     internal_dispatchMessage({ ids, type: 'deleteMessages' });
@@ -326,7 +313,7 @@ export const messageCRUDSlice: StateCreator<
         : await messageService.removeMessages(ids, context);
 
     if (result?.success && result.messages) {
-      replaceMessages(result.messages);
+      replaceMessages(result.messages, { expectedContext: context });
     }
   },
 
@@ -340,7 +327,7 @@ export const messageCRUDSlice: StateCreator<
     const result = await messageService.removeMessages(ids, context);
 
     if (result?.success && result.messages) {
-      replaceMessages(result.messages);
+      replaceMessages(result.messages, { expectedContext: context });
     }
   },
 
@@ -366,7 +353,7 @@ export const messageCRUDSlice: StateCreator<
     const result = await messageService.removeMessage(id, context);
 
     if (result?.success && result.messages) {
-      replaceMessages(result.messages);
+      replaceMessages(result.messages, { expectedContext: context });
     }
   },
 
@@ -390,7 +377,7 @@ export const messageCRUDSlice: StateCreator<
       );
 
       if (result?.success && result.messages) {
-        replaceMessages(result.messages);
+        replaceMessages(result.messages, { expectedContext: context });
       }
     }
   },
@@ -432,7 +419,7 @@ export const messageCRUDSlice: StateCreator<
     );
 
     if (result?.success && result.messages) {
-      replaceMessages(result.messages);
+      replaceMessages(result.messages, { expectedContext: context });
     }
   },
 
@@ -450,7 +437,7 @@ export const messageCRUDSlice: StateCreator<
     const result = await messageService.updateMessage(id, { error }, context);
 
     if (result?.success && result.messages) {
-      replaceMessages(result.messages);
+      replaceMessages(result.messages, { expectedContext: context });
     }
   },
 
@@ -464,7 +451,7 @@ export const messageCRUDSlice: StateCreator<
     const result = await messageService.updateMessageMetadata(id, metadata, context);
 
     if (result?.success && result.messages) {
-      replaceMessages(result.messages);
+      replaceMessages(result.messages, { expectedContext: context });
     }
   },
 
@@ -482,7 +469,7 @@ export const messageCRUDSlice: StateCreator<
     const result = await messageService.updateMessagePlugin(id, value, context);
 
     if (result?.success && result.messages) {
-      replaceMessages(result.messages);
+      replaceMessages(result.messages, { expectedContext: context });
     }
   },
 
@@ -493,7 +480,7 @@ export const messageCRUDSlice: StateCreator<
     const result = await messageService.updateMessagePluginError(id, error, context);
 
     if (result?.success && result.messages) {
-      replaceMessages(result.messages);
+      replaceMessages(result.messages, { expectedContext: context });
     }
   },
 
@@ -504,7 +491,7 @@ export const messageCRUDSlice: StateCreator<
     const result = await messageService.updateMessageRAG(id, data, context);
 
     if (result?.success && result.messages) {
-      replaceMessages(result.messages);
+      replaceMessages(result.messages, { expectedContext: context });
     }
   },
 
@@ -529,7 +516,7 @@ export const messageCRUDSlice: StateCreator<
       );
 
       if (result?.success && result.messages) {
-        replaceMessages(result.messages);
+        replaceMessages(result.messages, { expectedContext: context });
       }
     }
   },
@@ -600,7 +587,7 @@ export const messageCRUDSlice: StateCreator<
     const updatePromise = (async () => {
       const result = await messageService.updateToolArguments(toolCallId, nextValue, context);
       if (result?.success && result.messages) {
-        replaceMessages(result.messages);
+        replaceMessages(result.messages, { expectedContext: context });
       }
     })();
 
@@ -616,16 +603,18 @@ export const messageCRUDSlice: StateCreator<
     try {
       await updatePromise;
     } finally {
-      // Remove the completed promise
-      set(
-        (state) => {
-          const newMap = new Map(state.pendingArgsUpdates);
-          newMap.delete(toolCallId);
-          return { pendingArgsUpdates: newMap };
-        },
-        false,
-        'updatePluginArguments/complete',
-      );
+      if (isSameConversationContext(context, get().context)) {
+        // Remove the completed promise
+        set(
+          (state) => {
+            const newMap = new Map(state.pendingArgsUpdates);
+            newMap.delete(toolCallId);
+            return { pendingArgsUpdates: newMap };
+          },
+          false,
+          'updatePluginArguments/complete',
+        );
+      }
     }
   },
 

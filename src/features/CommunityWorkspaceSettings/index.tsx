@@ -1,22 +1,20 @@
 'use client';
 
 import { OFFICIAL_URL } from '@lobechat/const';
+import { Block, Center, createStaticStyles, cssVar, Flexbox, Icon, Tooltip } from '@lobehub/ui';
 import {
   Avatar,
-  Block,
-  Center,
-  Flexbox,
-  Icon,
+  Button,
   Input,
+  Table,
+  type TableColumn,
+  Tabs,
   Tag,
   Text,
   TextArea,
-  Tooltip,
+  toast,
+  Upload,
 } from '@lobehub/ui';
-import { Button, Tabs } from '@lobehub/ui/base-ui';
-import type { TableColumnsType, UploadProps } from 'antd';
-import { App, Input as AntInput, Table, Upload } from 'antd';
-import { createStaticStyles, cssVar } from 'antd-style';
 import {
   ArrowLeft,
   CircleHelp,
@@ -143,7 +141,7 @@ PageContainer.displayName = 'CommunityWorkspaceSettingsPageContainer';
 
 const MembersCard = memo<{ canManage: boolean }>(({ canManage }) => {
   const { t } = useTranslation('discover');
-  const { message } = App.useApp();
+
   const { canSync, isLoading, members, refresh } = useCommunityWorkspaceMembers();
   const [syncing, setSyncing] = useState(false);
 
@@ -154,17 +152,17 @@ const MembersCard = memo<{ canManage: boolean }>(({ canManage }) => {
     try {
       await syncCommunityWorkspaceMembers();
       await refresh();
-      message.success(t('user.workspaceProfile.settings.members.syncSuccess'));
+      toast.success(t('user.workspaceProfile.settings.members.syncSuccess'));
     } catch (error) {
-      message.error(
+      toast.error(
         (error as Error).message || t('user.workspaceProfile.settings.members.syncFailed'),
       );
     } finally {
       setSyncing(false);
     }
-  }, [message, refresh, t]);
+  }, [refresh, t]);
 
-  const columns = useMemo<TableColumnsType<CommunityWorkspaceMember>>(
+  const columns = useMemo<TableColumn<CommunityWorkspaceMember>[]>(
     () => [
       {
         dataIndex: 'displayName',
@@ -295,7 +293,7 @@ const isValidUrl = (value: string) => {
 
 const CommunityWorkspaceSettings = memo(() => {
   const { t } = useTranslation('discover');
-  const { message } = App.useApp();
+
   const navigate = useWorkspaceAwareNavigate();
   const { allowed: canManageSettings, reason: permissionReason } = usePermission('manage_settings');
   const uploadWithProgress = useFileStore((s) => s.uploadWithProgress);
@@ -372,20 +370,18 @@ const CommunityWorkspaceSettings = memo(() => {
       try {
         await updateCommunityWorkspaceProfile(input);
         await refresh();
-        message.success(t('user.workspaceProfile.settings.updateSuccess'));
+        toast.success(t('user.workspaceProfile.settings.updateSuccess'));
       } catch (error) {
         if (field === 'namespace' && isCommunityWorkspaceNamespaceTakenError(error)) {
           setNamespaceError(t('user.workspaceProfile.settings.namespaceTaken'));
         } else {
-          message.error(
-            (error as Error).message || t('user.workspaceProfile.settings.updateFailed'),
-          );
+          toast.error((error as Error).message || t('user.workspaceProfile.settings.updateFailed'));
         }
       } finally {
         setSavingField(null);
       }
     },
-    [canEdit, message, refresh, t],
+    [canEdit, refresh, t],
   );
 
   const buildSaveButton = (field: string, disabled: boolean, onClick: () => void) => {
@@ -421,7 +417,7 @@ const CommunityWorkspaceSettings = memo(() => {
   const handleAvatarUpload = useCallback(
     async (file: File) => {
       if (file.size > MAX_FILE_SIZE) {
-        message.error(t('user.workspaceProfile.errors.fileTooLarge'));
+        toast.error(t('user.workspaceProfile.errors.fileTooLarge'));
         return;
       }
 
@@ -429,7 +425,7 @@ const CommunityWorkspaceSettings = memo(() => {
       try {
         const result = await uploadWithProgress({ file });
         if (!result?.url) {
-          message.error(t('user.workspaceProfile.errors.uploadFailed'));
+          toast.error(t('user.workspaceProfile.errors.uploadFailed'));
           return;
         }
         setAvatarUrl(
@@ -437,21 +433,18 @@ const CommunityWorkspaceSettings = memo(() => {
         );
       } catch (error) {
         console.error('[CommunityWorkspaceSettings] Avatar upload failed:', error);
-        message.error(t('user.workspaceProfile.errors.uploadFailed'));
+        toast.error(t('user.workspaceProfile.errors.uploadFailed'));
       } finally {
         setAvatarUploading(false);
       }
     },
-    [message, t, uploadWithProgress],
+    [t, uploadWithProgress],
   );
 
-  const handleBannerUpload: UploadProps['customRequest'] = useCallback(
-    async (options: Parameters<NonNullable<UploadProps['customRequest']>>[0]) => {
-      const file = options.file as File;
-
+  const handleBannerUpload = useCallback(
+    async (file: File) => {
       if (file.size > MAX_FILE_SIZE) {
-        message.error(t('user.workspaceProfile.errors.fileTooLarge'));
-        options.onError?.(new Error('File too large'));
+        toast.error(t('user.workspaceProfile.errors.fileTooLarge'));
         return;
       }
 
@@ -459,24 +452,21 @@ const CommunityWorkspaceSettings = memo(() => {
       try {
         const result = await uploadWithProgress({ file });
         if (!result?.url) {
-          message.error(t('user.workspaceProfile.errors.uploadFailed'));
-          options.onError?.(new Error('Upload failed'));
+          toast.error(t('user.workspaceProfile.errors.uploadFailed'));
           return;
         }
         const url = result.url.startsWith('/')
           ? `${window.location.origin}${result.url}`
           : result.url;
         setBannerUrl(url);
-        options.onSuccess?.(result);
       } catch (error) {
         console.error('[CommunityWorkspaceSettings] Banner upload failed:', error);
-        message.error(t('user.workspaceProfile.errors.uploadFailed'));
-        options.onError?.(error as Error);
+        toast.error(t('user.workspaceProfile.errors.uploadFailed'));
       } finally {
         setBannerUploading(false);
       }
     },
-    [message, t, uploadWithProgress],
+    [t, uploadWithProgress],
   );
 
   if (!profile) {
@@ -524,10 +514,10 @@ const CommunityWorkspaceSettings = memo(() => {
             )}
           >
             <Input
-              showCount
               disabled={!canEdit}
               maxLength={DISPLAY_NAME_MAX}
               style={{ maxWidth: 420 }}
+              suffix={`${displayName.length} / ${DISPLAY_NAME_MAX}`}
               value={displayName}
               onChange={(e) => setDisplayName(e.target.value)}
             />
@@ -546,13 +536,14 @@ const CommunityWorkspaceSettings = memo(() => {
               })
             }
           >
-            <AntInput
-              showCount
-              addonBefore={ORGANIZATION_URL_PREFIX}
+            <Input
+              aria-invalid={!!namespaceValidation}
+              data-invalid={namespaceValidation ? '' : undefined}
               disabled={!canEdit}
               maxLength={NAMESPACE_MAX}
-              status={namespaceValidation ? 'error' : undefined}
+              prefix={ORGANIZATION_URL_PREFIX}
               style={{ maxWidth: 560 }}
+              suffix={`${namespace.length} / ${NAMESPACE_MAX}`}
               value={namespace}
               onChange={(e) => {
                 setNamespace(e.target.value);
@@ -589,8 +580,9 @@ const CommunityWorkspaceSettings = memo(() => {
             )}
           >
             <Input
+              aria-invalid={!!websiteError}
+              data-invalid={websiteError ? '' : undefined}
               disabled={!canEdit}
-              status={websiteError ? 'error' : undefined}
               style={{ maxWidth: 560 }}
               value={websiteUrl}
               prefix={
@@ -651,11 +643,10 @@ const CommunityWorkspaceSettings = memo(() => {
             <Flexbox gap={8} width="100%">
               <Upload
                 accept="image/*"
-                customRequest={handleBannerUpload}
                 disabled={!canEdit}
                 maxCount={1}
-                showUploadList={false}
                 style={{ display: 'block', width: '100%' }}
+                onFiles={([file]) => handleBannerUpload(file)}
               >
                 <div
                   style={{

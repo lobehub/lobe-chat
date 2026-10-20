@@ -1,7 +1,15 @@
 import { BRANDING_NAME } from '@lobechat/business-const';
-import { Avatar, Block, Collapse, Flexbox, Grid, Text } from '@lobehub/ui';
+import {
+  Accordion,
+  Avatar,
+  Block,
+  createStaticStyles,
+  Flexbox,
+  Grid,
+  Text,
+  useTheme,
+} from '@lobehub/ui';
 import { ChatList } from '@lobehub/ui/chat';
-import { createStaticStyles, useTheme } from 'antd-style';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -27,63 +35,55 @@ const styles = createStaticStyles(({ css, cssVar }) => {
   };
 });
 
-const MemberCard = memo(
-  ({
-    agent,
-    currentVersion,
-  }: {
-    agent: any;
-    currentVersion: any;
-  }) => {
-    return (
-      <Block
-        height={'100%'}
-        variant={'outlined'}
-        width={'100%'}
-        style={{
-          cursor: 'default',
-          overflow: 'hidden',
-        }}
-      >
-        <Flexbox gap={12} padding={16}>
-          {/* Avatar and Basic Info */}
-          <Flexbox horizontal align={'flex-start'} gap={12}>
-            <Avatar
-              avatar={currentVersion.avatar || agent.name?.[0]}
-              shape={'square'}
-              size={40}
-              style={{ flex: 'none' }}
-            />
-            <Flexbox
-              flex={1}
-              gap={4}
-              style={{
-                overflow: 'hidden',
-              }}
-            >
-              <Text ellipsis as={'h3'} className={styles.title}>
-                {currentVersion.name || agent.name}
-              </Text>
-            </Flexbox>
-          </Flexbox>
-
-          {/* Description */}
-          {currentVersion.description && currentVersion.description !== 'No description provided' && (
-            <Text
-              as={'p'}
-              className={styles.desc}
-              ellipsis={{
-                rows: 2,
-              }}
-            >
-              {currentVersion.description}
+const MemberCard = memo(({ agent, currentVersion }: { agent: any; currentVersion: any }) => {
+  return (
+    <Block
+      height={'100%'}
+      variant={'outlined'}
+      width={'100%'}
+      style={{
+        cursor: 'default',
+        overflow: 'hidden',
+      }}
+    >
+      <Flexbox gap={12} padding={16}>
+        {/* Avatar and Basic Info */}
+        <Flexbox horizontal align={'flex-start'} gap={12}>
+          <Avatar
+            avatar={currentVersion.avatar || agent.name?.[0]}
+            shape={'square'}
+            size={40}
+            style={{ flex: 'none' }}
+          />
+          <Flexbox
+            flex={1}
+            gap={4}
+            style={{
+              overflow: 'hidden',
+            }}
+          >
+            <Text ellipsis as={'h3'} className={styles.title}>
+              {currentVersion.name || agent.name}
             </Text>
-          )}
+          </Flexbox>
         </Flexbox>
-      </Block>
-    );
-  },
-);
+
+        {/* Description */}
+        {currentVersion.description && currentVersion.description !== 'No description provided' && (
+          <Text
+            as={'p'}
+            className={styles.desc}
+            ellipsis={{
+              rows: 2,
+            }}
+          >
+            {currentVersion.description}
+          </Text>
+        )}
+      </Flexbox>
+    </Block>
+  );
+});
 
 MemberCard.displayName = 'MemberCard';
 
@@ -148,15 +148,16 @@ const Overview = memo(() => {
 
   return (
     <Flexbox gap={16}>
-      <Collapse
-        defaultActiveKey={['summary']}
-        expandIconPlacement={'end'}
+      <Accordion
+        defaultValue={['summary']}
+        indicatorPlacement={'end'}
+        styles={{ content: { padding: '12px 16px' } }}
         variant={'outlined'}
         items={[
           {
             children: summary || description,
             key: 'summary',
-            label: t('groupAgents.details.summary.title', { defaultValue: 'Summary' }),
+            title: t('groupAgents.details.summary.title', { defaultValue: 'Summary' }),
           },
         ]}
       />

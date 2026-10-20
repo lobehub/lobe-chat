@@ -1,12 +1,13 @@
 'use client';
 
-import { Accordion, AccordionItem, Flexbox, Text } from '@lobehub/ui';
+import { Accordion, Flexbox, Text } from '@lobehub/ui';
 import { memo, useMemo } from 'react';
-import { Link, useLocation } from 'react-router';
+import { Link } from 'react-router';
 
 import { useActiveWorkspaceSlug } from '@/business/client/hooks/useActiveWorkspaceSlug';
 import NavItem from '@/features/NavPanel/components/NavItem';
 import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwareNavigate';
+import { useActiveLocation } from '@/hooks/useActiveLocation';
 import { DEFAULT_WORKSPACE_SETTINGS_TAB, WorkspaceSettingsTabs } from '@/types/workspaceSettings';
 import { isModifierClick } from '@/utils/navigation';
 
@@ -14,7 +15,7 @@ import { useWorkspaceSettingCategory, WorkspaceSettingsGroupKey } from '../hooks
 
 const Body = memo(() => {
   const navigate = useWorkspaceAwareNavigate();
-  const location = useLocation();
+  const location = useActiveLocation();
   const slug = useActiveWorkspaceSlug();
   const groups = useWorkspaceSettingCategory();
 
@@ -33,26 +34,25 @@ const Body = memo(() => {
     <Flexbox paddingInline={4}>
       <Accordion
         gap={8}
-        defaultExpandedKeys={[
+        indicatorPlacement="inline"
+        styles={{ trigger: { paddingBlock: 4, paddingInline: '8px 4px' } }}
+        defaultValue={[
+          WorkspaceSettingsGroupKey.Account,
           WorkspaceSettingsGroupKey.General,
           WorkspaceSettingsGroupKey.Subscription,
           WorkspaceSettingsGroupKey.Agent,
-          WorkspaceSettingsGroupKey.Developer,
           WorkspaceSettingsGroupKey.Admin,
+          WorkspaceSettingsGroupKey.System,
+          WorkspaceSettingsGroupKey.Developer,
         ]}
-      >
-        {groups.map((group) => (
-          <AccordionItem
-            itemKey={group.key}
-            key={group.key}
-            paddingBlock={4}
-            paddingInline={'8px 4px'}
-            title={
-              <Text ellipsis fontSize={12} type={'secondary'} weight={500}>
-                {group.title}
-              </Text>
-            }
-          >
+        items={groups.map((group) => ({
+          key: group.key,
+          title: (
+            <Text ellipsis fontSize={12} type={'secondary'} weight={500}>
+              {group.title}
+            </Text>
+          ),
+          children: (
             <Flexbox gap={1} paddingBlock={1}>
               {group.items.map((item) => {
                 const url = `/${slug}/settings/${item.key}`;
@@ -71,9 +71,9 @@ const Body = memo(() => {
                 );
               })}
             </Flexbox>
-          </AccordionItem>
-        ))}
-      </Accordion>
+          ),
+        }))}
+      />
     </Flexbox>
   );
 });

@@ -1,3 +1,4 @@
+import { RequestTrigger } from '@lobechat/types';
 import { render, screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -104,8 +105,8 @@ vi.mock('@lobehub/editor', () => ({
 }));
 vi.mock('@lobehub/editor/react', () => {
   const Editor = Object.assign(
-    vi.fn(({ editable }: { editable?: boolean }) => (
-      <div data-editable={String(editable)} data-testid="mock-editor" />
+    vi.fn(({ content, editable }: { content?: string; editable?: boolean }) => (
+      <div data-content={content} data-editable={String(editable)} data-testid="mock-editor" />
     )),
     {
       withProps: vi.fn((plugin, props) => [plugin, props]),
@@ -117,7 +118,10 @@ vi.mock('@lobehub/editor/react', () => {
     useEditorState: vi.fn(() => ({ isEmpty: true })),
   };
 });
-vi.mock('@lobehub/ui', () => ({ combineKeys: vi.fn(() => 'alt+enter') }));
+vi.mock('@lobehub/ui', async (importOriginal) => ({
+  ...(await importOriginal<Record<string, unknown>>()),
+  combineKeys: vi.fn(() => 'alt+enter'),
+}));
 vi.mock('fuse.js', () => ({
   default: class Fuse {
     search() {
@@ -158,9 +162,12 @@ vi.mock('@/services/aiChat', () => ({
   },
 }));
 vi.mock('@/store/chat', () => ({
-  useChatStore: Object.assign(<T,>(selector: StoreSelector<T>) => selector({}), {
-    getState: () => ({ activeTopicId: undefined }),
-  }),
+  useChatStore: Object.assign(
+    <T,>(selector: StoreSelector<T>) => selector({ useFetchTopicDetail: () => {} }),
+    {
+      getState: () => ({ activeTopicId: undefined }),
+    },
+  ),
 }));
 vi.mock('@/store/serverConfig', () => ({
   useServerConfigStore: <T,>(selector: StoreSelector<T>) =>
@@ -199,6 +206,9 @@ vi.mock('@/store/user/selectors', () => ({
 }));
 
 vi.mock('../hooks/useAgentId', () => ({ useAgentId: () => 'agent-id' }));
+vi.mock('../hooks/useLargeFileLocalPath', () => ({
+  useLargeFileLocalPath: () => (files: File[]) => files,
+}));
 vi.mock('../store', () => {
   const editor = {
     dispatchCommand: vi.fn(),
@@ -271,6 +281,15 @@ describe('ChatInput InputEditor', () => {
     expect(screen.getByTestId('mock-editor')).toHaveAttribute('data-editable', 'false');
   });
 
+  it('initializes the editor with content captured by a fallback input', () => {
+    render(<InputEditor initialContent="typed before the editor loaded" />);
+
+    expect(screen.getByTestId('mock-editor')).toHaveAttribute(
+      'data-content',
+      'typed before the editor loaded',
+    );
+  });
+
   it('renders the editor at 16px on mobile', async () => {
     permission.allowed = true;
     platform.isMobile = true;
@@ -286,6 +305,28 @@ describe('ChatInput InputEditor', () => {
     render(<InputEditor />);
 
     expect((await getEditorStyle())?.fontSize).toBeUndefined();
+  });
+
+  it('tags autocomplete requests with the input completion trigger', async () => {
+    permission.allowed = true;
+    mocks.inputCompletionConfig.enabled = true;
+    mocks.generateJSON.mockResolvedValueOnce({ data: { completion: ' world' } });
+
+    render(<InputEditor />);
+
+    const autoCompleteProps = await getAutoCompleteProps();
+
+    await autoCompleteProps.onAutoComplete({
+      abortSignal: new AbortController().signal,
+      afterText: '',
+      input: 'hello',
+      suggestionId: 'suggestion-1',
+    });
+
+    expect(mocks.generateJSON).toHaveBeenCalledTimes(1);
+    expect(mocks.generateJSON.mock.calls[0][0].metadata).toEqual({
+      trigger: RequestTrigger.InputCompletion,
+    });
   });
 
   it('pauses autocomplete after a non-abort generation error', async () => {

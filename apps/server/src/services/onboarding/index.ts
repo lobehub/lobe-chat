@@ -13,6 +13,7 @@ import type {
   SaveUserQuestionInput,
   UserAgentOnboarding,
   UserAgentOnboardingContext,
+  UserOnboarding,
 } from '@lobechat/types';
 import {
   MAX_ONBOARDING_STEPS,
@@ -35,6 +36,8 @@ import {
   userPersonaDocuments,
 } from '@/database/schemas';
 import type { LobeChatDatabase } from '@/database/type';
+import { notShareVisitorTopic, notShareVisitorTopicRef } from '@/database/utils/shareVisitor';
+import { notTrashed } from '@/database/utils/softDelete';
 import { KeyVaultsGateKeeper } from '@/server/modules/KeyVaultsEncrypt';
 import { AgentService } from '@/server/services/agent';
 import { AgentDocumentsService } from '@/server/services/agentDocuments';
@@ -50,9 +53,10 @@ const STRUCTURED_FIELD_LABELS: Record<SaveUserQuestionField, string> = {
 
 const AGENT_MANAGEMENT_IDENTIFIER = 'lobe-agent-management';
 const GROUP_AGENT_BUILDER_IDENTIFIER = 'lobe-group-agent-builder';
+const AGENT_ONBOARDING_VERSION = 1;
 
 const defaultAgentOnboardingState = (): UserAgentOnboarding => ({
-  version: CURRENT_ONBOARDING_VERSION,
+  version: AGENT_ONBOARDING_VERSION,
 });
 
 const formatNaturalList = (items: string[]) => {
@@ -193,30 +197,62 @@ export class OnboardingService {
 
   private transferToInbox = async (topicId: string): Promise<void> => {
     const inboxAgentId = await this.getInboxAgentId();
-    const topic = await this.topicModel.findById(topicId);
+    // Use the creator-scoped lookup so an `activeTopicId` pointing at an
+    // agent-share visitor topic (which lives under the creator's userId with
+    // a non-null `senderId`) resolves to nothing and turns the transfer into
+    // a no-op. The `notShareVisitor*` predicates below keep the write guarded
+    // as defense in depth even if a caller ever bypasses the lookup.
+    const topic = await this.topicModel.findOwnTopicById(topicId);
 
     if (!topic || topic.agentId === inboxAgentId) return;
 
     await this.db.transaction(async (tx) => {
-      await tx
+      const [updatedTopic] = await tx
         .update(topics)
         .set({ agentId: inboxAgentId, updatedAt: topics.updatedAt })
-        .where(and(eq(topics.id, topicId), eq(topics.userId, this.userId)));
+        .where(
+          and(
+            eq(topics.id, topicId),
+            eq(topics.userId, this.userId),
+            notTrashed(topics.isDeleted),
+            notShareVisitorTopic(),
+          ),
+        )
+        .returning({ id: topics.id });
+
+      // The topic may have been trashed after the creator-scoped pre-read.
+      // The guarded update is the transaction's serialization point: when it
+      // loses that race, do not re-parent children behind the hidden topic.
+      if (!updatedTopic) return;
 
       await tx
         .update(messages)
         .set({ agentId: inboxAgentId, updatedAt: messages.updatedAt })
-        .where(and(eq(messages.topicId, topicId), eq(messages.userId, this.userId)));
+        .where(
+          and(
+            eq(messages.topicId, topicId),
+            eq(messages.userId, this.userId),
+            notTrashed(messages.isDeleted),
+            notShareVisitorTopicRef(messages.topicId),
+          ),
+        );
 
       await tx
         .update(threads)
         .set({ agentId: inboxAgentId, updatedAt: threads.updatedAt })
-        .where(and(eq(threads.topicId, topicId), eq(threads.userId, this.userId)));
+        .where(
+          and(
+            eq(threads.topicId, topicId),
+            eq(threads.userId, this.userId),
+            notTrashed(threads.isDeleted),
+            notShareVisitorTopicRef(threads.topicId),
+          ),
+        );
     });
   };
 
   private ensureState = (state?: UserAgentOnboarding): UserAgentOnboarding => {
-    if (!state || (state.version ?? 0) < CURRENT_ONBOARDING_VERSION) {
+    if (!state || (state.version ?? 0) < AGENT_ONBOARDING_VERSION) {
       return defaultAgentOnboardingState();
     }
 
@@ -246,7 +282,7 @@ export class OnboardingService {
 
     return {
       ...nextState,
-      version: nextState.version ?? CURRENT_ONBOARDING_VERSION,
+      version: nextState.version ?? AGENT_ONBOARDING_VERSION,
     };
   };
 
@@ -319,6 +355,7 @@ export class OnboardingService {
           eq(messages.topicId, topicId),
           eq(messages.userId, this.userId),
           eq(messages.role, 'user'),
+          notTrashed(messages.isDeleted),
         ),
       );
 
@@ -343,7 +380,7 @@ export class OnboardingService {
       phase,
       startedAt: existing?.startedAt ?? now,
       userIdentityCompletedAt: existing?.userIdentityCompletedAt,
-      version: CURRENT_ONBOARDING_VERSION,
+      version: AGENT_ONBOARDING_VERSION,
     };
 
     if (existing?.agentMarketplacePick) {
@@ -886,7 +923,7 @@ export class OnboardingService {
       agentOnboarding: {
         ...state,
         finishedAt,
-        version: CURRENT_ONBOARDING_VERSION,
+        version: AGENT_ONBOARDING_VERSION,
       },
       onboarding: {
         currentStep: MAX_ONBOARDING_STEPS,
@@ -924,12 +961,42 @@ export class OnboardingService {
     }
   };
 
-  reset = async () => {
-    const previousState = this.ensureState((await this.getUserState()).agentOnboarding);
-    const understandingCleanup = previousState.activeTopicId
-      ? await this.understandingRepository.removeForReset(previousState.activeTopicId)
-      : undefined;
+  private resetUnderstandingData = async (state?: UserAgentOnboarding): Promise<void> => {
+    const activeTopicId = this.ensureState(state).activeTopicId;
+    if (!activeTopicId) return;
+
+    const understandingCleanup = await this.understandingRepository.removeForReset(activeTopicId);
     if (understandingCleanup) await this.cleanupUnderstandingReset(understandingCleanup.id);
+  };
+
+  /**
+   * Updates the classic onboarding cursor and invalidates generated data on a fresh run.
+   *
+   * Use when:
+   * - Persisting normal onboarding step navigation
+   * - Restarting at the welcome step or moving to a new onboarding version
+   *
+   * Expects:
+   * - The complete classic onboarding state accepted by the user router
+   *
+   * Returns:
+   * - The underlying user update result
+   */
+  updateOnboarding = async (input: UserOnboarding) => {
+    const previousState = await this.getUserState();
+    const isRestart = input.currentStep === 1;
+    const isVersionChange = previousState.onboarding?.version !== input.version;
+
+    if (isRestart || isVersionChange) {
+      await this.resetUnderstandingData(previousState.agentOnboarding);
+    }
+
+    return this.userModel.updateUser({ onboarding: input });
+  };
+
+  reset = async () => {
+    const previousState = await this.getUserState();
+    await this.resetUnderstandingData(previousState.agentOnboarding);
     const state = defaultAgentOnboardingState();
 
     // Preserve users.full_name and users.username on reset.

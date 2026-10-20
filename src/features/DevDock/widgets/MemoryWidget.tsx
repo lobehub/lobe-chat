@@ -1,9 +1,26 @@
 'use client';
 
-import { createStaticStyles, cssVar } from 'antd-style';
-import { memo, useEffect, useState } from 'react';
+import { createStaticStyles, cssVar, cx, Popover } from '@lobehub/ui';
+import { memo, useState } from 'react';
+
+import { DOCK_Z_INDEX } from '../const';
+import { barButtonStyles } from './BarButton';
+import { formatCompactSize } from './memoryFormat';
+import MemoryPopover from './MemoryPopover';
+import { isMemorySamplingSupported, useMemorySamples } from './memorySamples';
+import { isMemoryHigh } from './metricUtils';
 
 const styles = createStaticStyles(({ css }) => ({
+  active: css`
+    color: ${cssVar.colorText};
+    background: ${cssVar.colorFillSecondary};
+  `,
+  high: css`
+    color: ${cssVar.colorError};
+  `,
+  mid: css`
+    color: ${cssVar.colorWarning};
+  `,
   text: css`
     font-family: ${cssVar.fontFamilyCode};
     font-size: 11px;
@@ -12,39 +29,46 @@ const styles = createStaticStyles(({ css }) => ({
   `,
 }));
 
-interface HeapSample {
-  limit: number;
-  used: number;
-}
-
-const readHeap = (): HeapSample | null => {
-  const memory = (
-    performance as Performance & {
-      memory?: { jsHeapSizeLimit: number; usedJSHeapSize: number };
-    }
-  ).memory;
-  if (!memory) return null;
-  return { limit: memory.jsHeapSizeLimit, used: memory.usedJSHeapSize };
-};
-
 const MemoryWidget = memo(() => {
-  const [heap, setHeap] = useState<HeapSample | null>(() => readHeap());
+  const samples = useMemorySamples();
+  const [open, setOpen] = useState(false);
 
-  useEffect(() => {
-    if (!readHeap()) return;
-    const timer = setInterval(() => setHeap(readHeap()), 2000);
-    return () => clearInterval(timer);
-  }, []);
+  if (!isMemorySamplingSupported() || !samples) return null;
 
-  if (!heap) return null;
-
-  const usedMB = Math.round(heap.used / 1_048_576);
-  const percent = ((heap.used / heap.limit) * 100).toFixed(1);
+  const { jsHeapUsedBytes, jsHeapLimitBytes, renderer } = samples.latest;
+  const percent = (jsHeapUsedBytes / jsHeapLimitBytes) * 100;
+  const high = isMemoryHigh(percent, renderer?.privateBytes);
 
   return (
-    <span className={styles.text} title={'JS heap used / limit'}>
-      {usedMB} MB · {percent}%
-    </span>
+    <Popover
+      arrow={false}
+      content={<MemoryPopover />}
+      open={open}
+      placement={'topRight'}
+      positionerProps={{ sideOffset: 6 }}
+      styles={{ content: { padding: 0 } }}
+      trigger={'click'}
+      zIndex={DOCK_Z_INDEX + 1}
+      onOpenChange={setOpen}
+    >
+      <button
+        type={'button'}
+        className={cx(
+          barButtonStyles.button,
+          styles.text,
+          high ? styles.high : percent >= 70 ? styles.mid : undefined,
+          open && styles.active,
+        )}
+        title={
+          renderer
+            ? 'R = Renderer private footprint (red at 1 GiB) · J = JS heap used — click for the full breakdown'
+            : 'J = JS heap used — click for the full breakdown'
+        }
+      >
+        {renderer && `R${formatCompactSize(renderer.privateBytes)} · `}J
+        {formatCompactSize(jsHeapUsedBytes)}
+      </button>
+    </Popover>
   );
 });
 

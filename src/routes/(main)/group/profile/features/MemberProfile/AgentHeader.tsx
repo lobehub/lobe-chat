@@ -1,8 +1,7 @@
 'use client';
 
 import { DEFAULT_AVATAR, EDITOR_DEBOUNCE_TIME } from '@lobechat/const';
-import { Block, Flexbox, Icon, Input, Skeleton, Tooltip } from '@lobehub/ui';
-import { message } from 'antd';
+import { Block, Flexbox, Icon, Input, Skeleton, toast, Tooltip } from '@lobehub/ui';
 import { debounce } from 'es-toolkit/compat';
 import isEqual from 'fast-deep-equal';
 import { PaletteIcon } from 'lucide-react';
@@ -88,7 +87,7 @@ const AgentHeader = memo<AgentHeaderProps>(({ readOnly, disabled: disabledProp }
       if (disabled) return;
 
       if (file.size > MAX_AVATAR_SIZE) {
-        message.error(t('settingAgent.avatar.sizeExceeded', { ns: 'setting' }));
+        toast.error(t('settingAgent.avatar.sizeExceeded', { ns: 'setting' }));
         return;
       }
 
@@ -199,8 +198,8 @@ const AgentHeader = memo<AgentHeaderProps>(({ readOnly, disabled: disabledProp }
                 <Suspense
                   fallback={
                     <Flexbox gap={8}>
-                      <Skeleton.Button block style={{ height: 38 }} />
-                      <Skeleton.Button block style={{ height: 38 }} />
+                      <Skeleton height={38} />
+                      <Skeleton height={38} />
                     </Flexbox>
                   }
                 >
@@ -233,6 +232,7 @@ const AgentHeader = memo<AgentHeaderProps>(({ readOnly, disabled: disabledProp }
         style={{
           fontSize: 36,
           fontWeight: 600,
+          height: 'auto',
           padding: 0,
           width: '100%',
         }}

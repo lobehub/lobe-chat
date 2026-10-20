@@ -1,7 +1,6 @@
 'use client';
 
-import { Flexbox } from '@lobehub/ui';
-import { createStaticStyles, cssVar } from 'antd-style';
+import { createStaticStyles, cssVar, Flexbox } from '@lobehub/ui';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -13,7 +12,7 @@ const styles = createStaticStyles(({ css }) => ({
 
     width: 100%;
     min-height: 40px;
-    padding-block: 4px;
+    padding-block: 2px 4px;
     padding-inline: 12px;
     border-block-start: 1px solid ${cssVar.colorBorderSecondary};
 

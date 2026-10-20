@@ -1,9 +1,10 @@
-import { Flexbox, Input, TextArea } from '@lobehub/ui';
-import { Button } from '@lobehub/ui/base-ui';
+import { Button, Flexbox, Input, TextArea } from '@lobehub/ui';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { useResourceManagerStore } from '@/routes/(main)/resource/features/store';
+import { useActiveWorkspaceSlug } from '@/business/client/hooks/useActiveWorkspaceSlug';
+import { useResourceManagerStore } from '@/features/ResourceManager/store';
+import { buildLibraryPath } from '@/features/ResourceManager/utils/resourcePath';
 import { useKnowledgeBaseStore } from '@/store/library';
 
 interface CreateFormProps {
@@ -26,6 +27,7 @@ const CreateForm = memo<CreateFormProps>(({ id, initialValues, onClose, onSucces
   // personal-mode create still resolves to 'public' — matching the pre-column
   // default and giving `buildWorkspaceWhere` nothing to filter on.
   const listVisibility = useResourceManagerStore((s) => s.listVisibility);
+  const activeWorkspaceSlug = useActiveWorkspaceSlug();
 
   const isEditMode = !!id;
 
@@ -36,23 +38,33 @@ const CreateForm = memo<CreateFormProps>(({ id, initialValues, onClose, onSucces
     const values = {
       description: description.trim(),
       name: name.trim(),
-      visibility: listVisibility === 'private' ? ('private' as const) : ('public' as const),
     };
 
     try {
       if (isEditMode) {
+        // Edit only touches the metadata the form shows. `listVisibility`
+        // describes the sidebar mode the user happens to be browsing in, not
+        // this library's visibility — sending it would silently take a shared
+        // library private just because its description was edited from the
+        // Private tab. Publish / make-private have their own guarded entries.
         await updateKnowledgeBase(id, values);
         setLoading(false);
         onClose?.();
       } else {
-        const newId = await createNewKnowledgeBase(values);
+        const newId = await createNewKnowledgeBase({
+          ...values,
+          visibility: listVisibility === 'private' ? ('private' as const) : ('public' as const),
+        });
         setLoading(false);
 
         if (onSuccess) {
           onSuccess(newId);
           onClose?.();
         } else {
-          window.location.href = `/resource/library/${newId}`;
+          // Workspace routes are mounted under `/:workspaceSlug`, so the hard
+          // navigation must carry the active slug or it lands in the personal
+          // scope where the new library does not resolve.
+          window.location.href = buildLibraryPath(newId, activeWorkspaceSlug);
         }
       }
     } catch (e) {

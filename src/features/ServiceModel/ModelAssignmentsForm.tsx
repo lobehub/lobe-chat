@@ -1,15 +1,14 @@
 'use client';
 
-import type { FormGroupItemType, FormItemProps } from '@lobehub/ui';
-import { Flexbox, Form, InputNumber, Skeleton, Tooltip } from '@lobehub/ui';
-import { Switch } from '@lobehub/ui/base-ui';
-import { ConfigProvider } from 'antd';
+import { Flexbox, InputNumber, Switch, TextArea, Tooltip } from '@lobehub/ui';
+import { Form, type FormFieldProps, type FormGroupItem, useForm } from '@lobehub/ui/form';
 import isEqual from 'fast-deep-equal';
 import { memo, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import AsyncError from '@/components/AsyncError';
 import AutoSaveHint from '@/components/Editor/AutoSaveHint';
+import { RouteLoading } from '@/components/Skeleton/RouteSegment';
 import { FORM_STYLE } from '@/const/layoutTokens';
 import ModelSelect from '@/features/ModelSelect';
 import { SettingsSearchAnchor } from '@/features/SettingsSearch/anchor';
@@ -19,9 +18,14 @@ import { useUserStore } from '@/store/user';
 import { settingsSelectors } from '@/store/user/selectors';
 import type { SystemAgentItem, UserServiceModelConfigKey } from '@/types/user/settings';
 
+type ModelAssignmentItemKey = Exclude<
+  UserServiceModelConfigKey,
+  'asr' | 'onboardingTaskRecommender' | 'onboardingUnderstanding'
+>;
+
 interface SystemAgentModelItem {
   contextLimit?: boolean;
-  key: UserServiceModelConfigKey;
+  key: ModelAssignmentItemKey;
   modelType?: 'chat' | 'embedding';
 }
 
@@ -30,6 +34,8 @@ type LoadingKey = 'defaultAgent' | UserServiceModelConfigKey;
 type SavingGroup = 'assignments' | 'memory' | 'optional';
 
 const SYSTEM_AGENT_MODEL_ITEMS: SystemAgentModelItem[] = [
+  { key: 'expertise' },
+  { key: 'goal' },
   { key: 'topic' },
   { key: 'generationTopic' },
   { key: 'translation' },
@@ -38,6 +44,7 @@ const SYSTEM_AGENT_MODEL_ITEMS: SystemAgentModelItem[] = [
 ];
 
 const OPTIONAL_FEATURE_ITEMS: SystemAgentModelItem[] = [
+  { key: 'topicAutoSummary' },
   { key: 'followUpAction' },
   { key: 'inputCompletion' },
   { key: 'promptRewrite' },
@@ -74,6 +81,7 @@ const ModelAssignmentsForm = memo(() => {
   // shared save-state — the write-side counterpart to the read-side AsyncError above.
   const [savingGroup, setSavingGroup] = useState<SavingGroup>();
   const { status: saveStatus, lastSavedAt, save, retry } = useSaveState();
+  const form = useForm();
 
   useEffect(() => {
     if (loadingKey === 'defaultAgent') setLoadingKey(undefined);
@@ -81,7 +89,7 @@ const ModelAssignmentsForm = memo(() => {
 
   const groupOfKey = (key: UserServiceModelConfigKey): SavingGroup => {
     if (MEMORY_MODEL_ITEMS.some((item) => item.key === key)) return 'memory';
-    if (OPTIONAL_FEATURE_ITEMS.some((item) => item.key === key)) return 'optional';
+    if (key === 'asr' || OPTIONAL_FEATURE_ITEMS.some((item) => item.key === key)) return 'optional';
     return 'assignments';
   };
 
@@ -95,7 +103,7 @@ const ModelAssignmentsForm = memo(() => {
           onRetry={() => refreshUserState()}
         />
       );
-    return <Skeleton active paragraph={{ rows: 8 }} title={false} />;
+    return <RouteLoading />;
   }
 
   const updateDefaultAgentModel = async ({
@@ -131,7 +139,7 @@ const ModelAssignmentsForm = memo(() => {
     }
   };
 
-  const defaultAgentItem: FormItemProps = {
+  const defaultAgentItem: FormFieldProps = {
     children: (
       <Tooltip title={reason}>
         <Flexbox
@@ -150,11 +158,13 @@ const ModelAssignmentsForm = memo(() => {
         </Flexbox>
       </Tooltip>
     ),
-    desc: t('defaultAgent.model.desc'),
+    // No `desc` here or on the rows below: in Model Assignments the label plus
+    // the picker already say what the row does, and a line of prose per row
+    // just pushes the list apart. The other groups keep theirs.
     label: t('defaultAgent.title'),
   };
 
-  const systemModelItems: FormItemProps[] = SYSTEM_AGENT_MODEL_ITEMS.map(({ key }) => {
+  const systemModelItems: FormFieldProps[] = SYSTEM_AGENT_MODEL_ITEMS.map(({ key }) => {
     const value = systemAgentSettings[key];
 
     return {
@@ -176,18 +186,22 @@ const ModelAssignmentsForm = memo(() => {
           </Flexbox>
         </Tooltip>
       ),
-      desc: t(`systemAgent.${key}.modelDesc`),
       label: t(`systemAgent.${key}.title`),
-    } satisfies FormItemProps;
+    } satisfies FormFieldProps;
   });
 
-  const memoryModelItems: FormItemProps[] = MEMORY_MODEL_ITEMS.map(
+  const memoryModelItems: FormFieldProps[] = MEMORY_MODEL_ITEMS.map(
     ({ contextLimit, key, modelType }) => {
       const value = systemAgentSettings[key];
 
       return {
         children: (
-          <Flexbox direction="vertical" gap={8} style={{ width: 448 }}>
+          <Flexbox
+            align="center"
+            direction="horizontal"
+            gap={12}
+            style={{ width: 'min(100%, 448px)' }}
+          >
             <ModelSelect
               modelType={modelType}
               showAbility={false}
@@ -196,57 +210,70 @@ const ModelAssignmentsForm = memo(() => {
               onChange={(props) => updateSystemAgentModel(key, props)}
             />
             {contextLimit && (
-              <ConfigProvider theme={{ token: { controlHeight: 32 } }}>
-                <InputNumber
-                  min={1}
-                  placeholder={t('serviceModel.contextLimit.placeholder')}
-                  style={{ alignSelf: 'flex-end', width: 180 }}
-                  value={value.contextLimit}
-                  onChange={(contextLimit) =>
-                    updateSystemAgentModel(key, {
-                      contextLimit: typeof contextLimit === 'number' ? contextLimit : undefined,
-                    })
-                  }
-                />
-              </ConfigProvider>
+              <InputNumber
+                min={1}
+                placeholder={t('serviceModel.contextLimit.placeholder')}
+                // Sits beside the picker, so it keeps the picker's height and
+                // holds its width while the picker takes the slack.
+                style={{ flex: 'none', width: 140 }}
+                value={value.contextLimit}
+                onChange={(contextLimit) =>
+                  updateSystemAgentModel(key, {
+                    contextLimit: typeof contextLimit === 'number' ? contextLimit : undefined,
+                  })
+                }
+              />
             )}
           </Flexbox>
         ),
         desc: t(`systemAgent.${key}.modelDesc`),
         label: t(`systemAgent.${key}.title`),
-      } satisfies FormItemProps;
+      } satisfies FormFieldProps;
     },
   );
 
-  const optionalFeatureItems: FormItemProps[] = OPTIONAL_FEATURE_ITEMS.map(({ key }) => {
+  const optionalFeatureItems: FormFieldProps[] = OPTIONAL_FEATURE_ITEMS.map(({ key }) => {
     const value = systemAgentSettings[key];
     const featureDisabled = value.enabled === false;
 
     return {
       children: (
         <Tooltip title={reason}>
-          <Flexbox
-            align="center"
-            direction="horizontal"
-            gap={12}
-            style={{ width: 'min(100%, 448px)' }}
-          >
-            <ModelSelect
-              disabled={!canManageServiceModel}
-              showAbility={false}
-              style={{ minWidth: 0, width: '100%' }}
-              value={value}
-              onChange={(props) => updateSystemAgentModel(key, props)}
-            />
-            <Flexbox align="center" direction="horizontal" gap={8}>
-              <Switch
-                aria-label={t(`systemAgent.${key}.title`)}
-                checked={value.enabled}
-                disabled={!canManageServiceModel}
-                loading={loadingKey === key}
-                onChange={(enabled) => updateSystemAgentModel(key, { enabled })}
-              />
+          <Flexbox gap={12} style={{ width: 'min(100%, 448px)' }}>
+            <Flexbox align="center" direction="horizontal" gap={12} justify="flex-end">
+              {/* Which model runs a feature is only worth asking once the feature
+                itself is on — off, the picker is a dead control, so the switch
+                stands alone until it's flipped back. */}
+              {!featureDisabled && (
+                <ModelSelect
+                  disabled={!canManageServiceModel}
+                  showAbility={false}
+                  style={{ minWidth: 0, width: '100%' }}
+                  value={value}
+                  onChange={(props) => updateSystemAgentModel(key, props)}
+                />
+              )}
+              <Flexbox align="center" direction="horizontal" gap={8}>
+                <Switch
+                  aria-label={t(`systemAgent.${key}.title`)}
+                  checked={value.enabled}
+                  disabled={!canManageServiceModel}
+                  loading={loadingKey === key}
+                  onChange={(enabled) => updateSystemAgentModel(key, { enabled })}
+                />
+              </Flexbox>
             </Flexbox>
+            {key === 'topicAutoSummary' && !featureDisabled && (
+              <TextArea
+                autoSize={{ maxRows: 8, minRows: 3 }}
+                defaultValue={value.customPrompt}
+                disabled={!canManageServiceModel}
+                placeholder={t('systemAgent.topicAutoSummary.promptPlaceholder')}
+                onBlur={(event) =>
+                  updateSystemAgentModel(key, { customPrompt: event.currentTarget.value.trim() })
+                }
+              />
+            )}
           </Flexbox>
         </Tooltip>
       ),
@@ -260,15 +287,44 @@ const ModelAssignmentsForm = memo(() => {
           {t(`systemAgent.${key}.title`)}
         </span>
       ),
-    } satisfies FormItemProps;
+    } satisfies FormFieldProps;
   });
+
+  const asrValue = systemAgentSettings.asr;
+  const asrItem: FormFieldProps = {
+    children: (
+      <Tooltip title={reason}>
+        <Flexbox
+          align="center"
+          direction="horizontal"
+          gap={12}
+          style={{ width: 'min(100%, 448px)' }}
+        >
+          <ModelSelect
+            allowClear
+            disabled={!canManageServiceModel}
+            modelType={'asr'}
+            placeholder={t('systemAgent.asr.placeholder')}
+            showAbility={false}
+            style={{ minWidth: 0, width: '100%' }}
+            // Empty means unconfigured: render the placeholder rather than a blank selection.
+            value={asrValue.model && asrValue.provider ? asrValue : undefined}
+            onChange={(props) => updateSystemAgentModel('asr', props)}
+            onClear={() => updateSystemAgentModel('asr', { model: '', provider: '' })}
+          />
+        </Flexbox>
+      </Tooltip>
+    ),
+    desc: t('systemAgent.asr.modelDesc'),
+    label: t('systemAgent.asr.title'),
+  };
 
   const renderSaveHint = (group: SavingGroup) =>
     savingGroup === group && (
       <AutoSaveHint lastUpdatedTime={lastSavedAt} saveStatus={saveStatus} onRetry={retry} />
     );
 
-  const modelAssignments: FormGroupItemType = {
+  const modelAssignments: FormGroupItem = {
     children: [defaultAgentItem, ...systemModelItems],
     extra: renderSaveHint('assignments'),
     title: (
@@ -278,8 +334,8 @@ const ModelAssignmentsForm = memo(() => {
     ),
   };
 
-  const optionalFeatures: FormGroupItemType = {
-    children: optionalFeatureItems,
+  const optionalFeatures: FormGroupItem = {
+    children: [...optionalFeatureItems, asrItem],
     extra: renderSaveHint('optional'),
     title: (
       <SettingsSearchAnchor id={'service-model-optional-features'}>
@@ -288,7 +344,7 @@ const ModelAssignmentsForm = memo(() => {
     ),
   };
 
-  const memoryModels: FormGroupItemType = {
+  const memoryModels: FormGroupItem = {
     children: memoryModelItems,
     extra: renderSaveHint('memory'),
     title: (
@@ -301,6 +357,7 @@ const ModelAssignmentsForm = memo(() => {
   return (
     <Form
       collapsible={false}
+      form={form}
       items={[modelAssignments, memoryModels, optionalFeatures]}
       itemsType={'group'}
       variant={'filled'}

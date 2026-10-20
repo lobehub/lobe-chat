@@ -10,6 +10,11 @@ import {
 import { gatewayEnv } from '@/envs/gateway';
 import { redisEnv } from '@/envs/redis';
 import { KeyVaultsGateKeeper } from '@/server/modules/KeyVaultsEncrypt';
+import {
+  isAnyMessageGatewayEnabled,
+  isMessageGatewayHostConfigured,
+  resolveMessageGatewayHost,
+} from '@/server/services/gateway/MessageGatewayClient';
 
 const log = debug('lobe-server:messenger:config');
 
@@ -45,7 +50,7 @@ export const getMessengerConfig = () => {
 
 export const messengerEnv = getMessengerConfig();
 
-export type MessengerPlatform = 'telegram' | 'slack' | 'discord' | 'wechat';
+export type MessengerPlatform = 'telegram' | 'slack' | 'discord' | 'wechat' | 'linq';
 
 export interface MessengerTelegramConfig {
   botToken: string;
@@ -80,6 +85,32 @@ export interface MessengerDiscordConfig {
 export interface MessengerWechatConfig {
   enabled: true;
 }
+
+/**
+ * Linq (iMessage / SMS) — a pool of LobeHub-owned numbers shared by every
+ * user. No number belongs to a user or an agent: inbound routes by the
+ * sender's handle, and a person links their phone by texting a one-time code
+ * to any pool number.
+ */
+export interface MessengerLinqConfig {
+  /** REST base override; defaults to the Linq package's `https://api.linqapp.com/v3`. */
+  apiBaseUrl?: string;
+  apiKey: string;
+  /** Shared pool numbers in E.164. Never empty. */
+  numbers: string[];
+  /** Standard Webhooks signing secret (`whsec_…`) of the account-level webhook. */
+  webhookSecret: string;
+}
+
+/** Accept the pool as a JSON array or a comma / whitespace separated string. */
+export const parseLinqNumberPool = (raw: unknown): string[] => {
+  const values = Array.isArray(raw) ? raw : typeof raw === 'string' ? raw.split(/[\s,]+/) : [];
+  const numbers = values
+    .filter((value): value is string => typeof value === 'string')
+    .map((value) => value.trim())
+    .filter((value) => /^\+\d{8,15}$/.test(value));
+  return [...new Set(numbers)];
+};
 
 // ---------------------------------------------------------------------------
 // In-process cache.
@@ -171,13 +202,22 @@ export const getMessengerDiscordConfig = async (): Promise<MessengerDiscordConfi
 };
 
 export const getMessengerWechatConfig = async (): Promise<MessengerWechatConfig | null> => {
-  // WeChat owns a long-polling connection in the Message Gateway, with Redis
+  // WeChat owns a long-polling connection in a message gateway, with Redis
   // backing its QR session and per-user connection state. Do not advertise an
   // enabled provider until the runtime can actually complete that lifecycle.
+  //
+  // Two conditions, and both are load-bearing: the runtime only enters gateway
+  // mode when the default host is configured (`isAnyMessageGatewayEnabled`),
+  // and WeChat's connection is only reachable if the host that OWNS WeChat is
+  // configured — which is the Node host once it is routed there. Checking only
+  // the second would advertise WeChat in a Node-only deployment, where the
+  // runtime stays in-process and nothing ever serves those links.
+  const gatewayReady =
+    isAnyMessageGatewayEnabled() &&
+    isMessageGatewayHostConfigured(resolveMessageGatewayHost('wechat'));
   if (
     gatewayEnv.MESSAGE_GATEWAY_ENABLED !== '1' ||
-    !gatewayEnv.MESSAGE_GATEWAY_URL ||
-    !gatewayEnv.MESSAGE_GATEWAY_SERVICE_TOKEN ||
+    !gatewayReady ||
     !redisEnv.REDIS_URL ||
     process.env.DISABLE_REDIS
   ) {
@@ -185,6 +225,28 @@ export const getMessengerWechatConfig = async (): Promise<MessengerWechatConfig 
   }
 
   return fetchAndCache<MessengerWechatConfig>('wechat', () => ({ enabled: true }));
+};
+
+export const getMessengerLinqConfig = async (): Promise<MessengerLinqConfig | null> => {
+  // Link codes and webhook replay claims live in Redis; without it a person
+  // could never complete a link, so the platform is not advertised.
+  if (!redisEnv.REDIS_URL || process.env.DISABLE_REDIS) return null;
+
+  return fetchAndCache<MessengerLinqConfig>('linq', (row) => {
+    const c = row.credentials as Partial<
+      Record<'apiBaseUrl' | 'apiKey' | 'webhookSecret', string>
+    > & {
+      numbers?: unknown;
+    };
+    const numbers = parseLinqNumberPool(c.numbers);
+    if (!c.apiKey || !c.webhookSecret || numbers.length === 0) return null;
+    return {
+      apiBaseUrl: c.apiBaseUrl || undefined,
+      apiKey: c.apiKey,
+      numbers,
+      webhookSecret: c.webhookSecret,
+    };
+  });
 };
 
 export const isMessengerPlatformEnabled = async (platform: MessengerPlatform): Promise<boolean> => {
@@ -201,6 +263,9 @@ export const isMessengerPlatformEnabled = async (platform: MessengerPlatform): P
     case 'wechat': {
       return !!(await getMessengerWechatConfig());
     }
+    case 'linq': {
+      return !!(await getMessengerLinqConfig());
+    }
     default: {
       return false;
     }
@@ -208,7 +273,7 @@ export const isMessengerPlatformEnabled = async (platform: MessengerPlatform): P
 };
 
 export const getEnabledMessengerPlatforms = async (): Promise<MessengerPlatform[]> => {
-  const platforms = ['telegram', 'slack', 'discord', 'wechat'] as const;
+  const platforms = ['telegram', 'slack', 'discord', 'wechat', 'linq'] as const;
   const checks = await Promise.all(
     platforms.map(async (p) => ((await isMessengerPlatformEnabled(p)) ? p : null)),
   );

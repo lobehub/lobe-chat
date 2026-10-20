@@ -1,4 +1,11 @@
 // @vitest-environment node
+// Vitest 5 races the first dynamic import inside `translation()` against
+// `vi.mock` registration (vitest#7040). Resolving the mocked default modules
+// here — at module scope, after `vi.mock` hoisting and before any test runs —
+// makes the loader hit the mock instead of the real locale file.
+import '@/locales/default/models';
+import '@/locales/default/providers';
+
 import { cookies } from 'next/headers';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -98,6 +105,12 @@ describe('translation', () => {
     expect(t('nested.key')).toBe('Nested value');
   });
 
+  it('should fallback to the default locale when a locale file is missing a key', async () => {
+    const { t } = await translation('common', 'fr-FR');
+
+    expect(t('key2', { param: 'fallback' })).toBe('Value 2 with fallback');
+  });
+
   it('should handle multiple parameters in translation string', async () => {
     const { t } = await translation('common', 'en-US');
     expect(t('multiParam', { name: 'John', count: '5' })).toBe('Hello John, you have 5 messages');
@@ -140,12 +153,20 @@ describe('translation', () => {
   it('should fallback to default module when locale JSON is missing (models)', async () => {
     vi.spyOn(console, 'warn').mockImplementation(() => {});
 
+    // Vitest 5 races the concurrent first imports inside `translation` against mock
+    // registration (vitest#7040), so warm the default module through the loader first.
+    await translation('models', 'en-US');
+
     const { t } = await translation('models', 'zz-ZZ');
     expect(t('gpt-4.description')).toBe('GPT-4 description');
   });
 
   it('should fallback to default module when locale JSON is missing (providers)', async () => {
     vi.spyOn(console, 'warn').mockImplementation(() => {});
+
+    // Vitest 5 races the concurrent first imports inside `translation` against mock
+    // registration (vitest#7040), so warm the default module through the loader first.
+    await translation('providers', 'en-US');
 
     const { t } = await translation('providers', 'zz-ZZ');
     expect(t('openai.description')).toBe('OpenAI provider description');

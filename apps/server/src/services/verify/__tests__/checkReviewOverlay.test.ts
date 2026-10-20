@@ -29,6 +29,23 @@ const timelineEntry = (resultId: string, roundIndex: number) => ({
 const byId = (...rows: VerifyCheckResultItem[]) => new Map(rows.map((row) => [row.id, row]));
 
 describe('buildCheckReviewOverlay', () => {
+  it('carries who decided, so a teammate’s reject is not credited to the reader', () => {
+    const rejected = result('r1', {
+      userDecision: 'rejected',
+      userDecisionDetail: {
+        comment: 'contrast',
+        decidedAt: '2026-07-16T01:00:00.000Z',
+        decidedBy: 'user-teammate',
+      },
+    });
+    const overlay = buildCheckReviewOverlay(
+      { timeline: [timelineEntry('r1', 1)] },
+      byId(rejected),
+      1,
+    );
+    expect(overlay.reviews[0]).toMatchObject({ action: 'reject', decidedBy: 'user-teammate' });
+  });
+
   it('returns no standing verdict when no result row carries a decision', () => {
     const overlay = buildCheckReviewOverlay(
       { timeline: [timelineEntry('r1', 1)] },
@@ -51,6 +68,21 @@ describe('buildCheckReviewOverlay', () => {
       3,
     );
     expect(overlay.userReview).toMatchObject({ action: 'accept', roundIndex: 1, stale: false });
+  });
+
+  it('an ignored check stays out of scope across later rounds', () => {
+    const ignored = result('r1', {
+      userDecision: 'overridden',
+      userDecisionDetail: { decidedAt: '2026-07-16T01:00:00.000Z' },
+    });
+    const overlay = buildCheckReviewOverlay(
+      { timeline: [timelineEntry('r1', 1), timelineEntry('r3', 3)] },
+      byId(ignored, result('r3')),
+      3,
+    );
+
+    expect(overlay.userReview).toMatchObject({ action: 'ignore', roundIndex: 1, stale: false });
+    expect(overlay.reviews.map((entry) => entry.action)).toEqual(['ignore']);
   });
 
   it('a reject at the current round stands; a newer round demotes it to history', () => {

@@ -5,29 +5,38 @@ import { render, screen } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { messageMapKey } from '@/store/chat/utils/messageMapKey';
+
 import AgentDocumentPage from './index';
+
+vi.mock('@/features/FileViewer/FileDocumentPreview', () => ({
+  FileDocumentPreview: ({ fileId }: { fileId?: string | null }) => (
+    <div data-file-id={fileId} data-testid="original-file-preview" />
+  ),
+}));
 
 vi.mock('react-router', () => ({
   useParams: () => ({ aid: 'agent-from-url' }),
 }));
 
-vi.mock('@lobehub/ui', () => ({
-  Flexbox: ({ children, ...props }: { children?: ReactNode; [key: string]: unknown }) => (
-    <div {...(props as Record<string, unknown>)}>{children}</div>
-  ),
+const pageEditorProps = vi.hoisted(() => ({
+  current: undefined as undefined | Record<string, unknown>,
 }));
 
 vi.mock('@/features/PageEditor', () => ({
-  PageEditor: ({ pageId, header }: { header?: ReactNode; pageId?: string }) => (
-    <div data-page-id={pageId} data-testid="page-editor">
-      {header}
-    </div>
-  ),
+  PageEditor: (props: { header?: ReactNode; pageId?: string }) => {
+    pageEditorProps.current = props;
+    return (
+      <div data-page-id={props.pageId} data-testid="page-editor">
+        {props.header}
+      </div>
+    );
+  },
 }));
 
-vi.mock('@/features/WideScreenContainer', () => ({
+vi.mock('@/features/RightPanel', () => ({
   default: ({ children }: { children?: ReactNode }) => (
-    <div data-testid="wide-screen-container">{children}</div>
+    <aside data-testid="right-panel">{children}</aside>
   ),
 }));
 
@@ -94,6 +103,23 @@ vi.mock('@/features/FloatingChatPanel', () => ({
 }));
 
 describe('AgentDocumentPage', () => {
+  /** @example Opening an imported file as a page preserves its original-file preview. */
+  it('previews uploads instead of mounting the page editor', () => {
+    // ROOT CAUSE:
+    // The standalone route always mounted PageEditor, even for file-backed records.
+    // It now uses the same file preview as the chat portal and keeps the document chat panel.
+    agentDocumentItemState.current.item = {
+      fileId: 'file-original',
+      filename: 'source.unknown',
+      id: 'agent-document-1',
+    };
+    render(<AgentDocumentPage documentId="docs_uploaded" />);
+    /** @example The uploaded file renders without an editable copy. */
+    expect(screen.getByTestId('original-file-preview').dataset.fileId).toBe('file-original');
+    expect(screen.queryByTestId('page-editor')).toBeNull();
+    expect(screen.getByTestId('floating-chat-panel')).toBeTruthy();
+  });
+
   beforeEach(() => {
     agentDocumentItemState.current = {
       error: undefined,
@@ -109,6 +135,7 @@ describe('AgentDocumentPage', () => {
     };
     headerProps.current = undefined;
     panelProps.current = undefined;
+    pageEditorProps.current = undefined;
     docChatTopicCalls.current = [];
     navigateMock.mockClear();
   });
@@ -148,7 +175,7 @@ describe('AgentDocumentPage', () => {
   it('renders FloatingChatPanel anchored on the URL agent + doc-scoped topic', () => {
     render(<AgentDocumentPage documentId="docs_abc" />);
 
-    const container = screen.getByTestId('wide-screen-container');
+    const container = screen.getByTestId('right-panel');
     const panel = screen.getByTestId('floating-chat-panel');
     expect(container).toContainElement(panel);
     expect(panelProps.current).toMatchObject({
@@ -156,6 +183,16 @@ describe('AgentDocumentPage', () => {
       agentId: 'agent-from-url',
       documentId: 'docs_abc',
       topicId: 'doc-topic-1',
+    });
+    expect(pageEditorProps.current?.askCopilotTarget).toEqual({
+      contextKey: messageMapKey({
+        agentId: 'agent-from-url',
+        documentId: 'docs_abc',
+        scope: 'main',
+        threadId: null,
+        topicId: 'doc-topic-1',
+      }),
+      writable: true,
     });
   });
 

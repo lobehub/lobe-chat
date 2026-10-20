@@ -3,27 +3,39 @@ import {
   CUSTOM_FOLDER_FILE_TYPE,
   MARKDOWN_MIME_TYPES,
 } from '@lobechat/const';
-import { Checkbox, showContextMenu, stopPropagation } from '@lobehub/ui';
-import { createStaticStyles, cssVar, cx } from 'antd-style';
+import {
+  Checkbox,
+  createStaticStyles,
+  cssVar,
+  cx,
+  Icon,
+  stopPropagation,
+  Tooltip,
+} from '@lobehub/ui';
+import { LockIcon } from 'lucide-react';
 import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { useActiveWorkspaceId } from '@/business/client/hooks/useActiveWorkspaceId';
 import {
   getTransparentDragImage,
   useDragActive,
   useSetCurrentDrag,
-} from '@/routes/(main)/resource/features/DndContextWrapper';
-import { documentService } from '@/services/document';
+} from '@/features/ResourceManager/DndContextWrapper';
+import { showContextMenu } from '@/libs/contextMenu';
 import { getChunkTargetId, useFileStore } from '@/store/file';
 import { type FileListItem } from '@/types/files';
 
-import { useFileItemClick } from '../../hooks/useFileItemClick';
+import { useFileItemClick, useFileItemDoubleClick } from '../../hooks/useFileItemClick';
 import DropdownMenu from '../../ItemDropdown/DropdownMenu';
 import { useFileItemDropdown } from '../../ItemDropdown/useFileItemDropdown';
+import AudioFileItem from './AudioFileItem';
 import DefaultFileItem from './DefaultFileItem';
 import ImageFileItem from './ImageFileItem';
 import MarkdownFileItem from './MarkdownFileItem';
 import NoteFileItem from './NoteFileItem';
+import VideoFileItem from './VideoFileItem';
+import WebpageFileItem from './WebpageFileItem';
 
 // Image file types
 const IMAGE_TYPES = new Set([
@@ -64,29 +76,6 @@ const isCustomPage = (fileType?: string, name?: string) => {
     lowerName?.endsWith('.pptx') ||
     lowerName?.endsWith('.odt');
   return !isPDF && !isOfficeFile && fileType === CUSTOM_NOTE_TYPE;
-};
-
-// Helper function to extract text from editor's JSON format for preview
-const extractTextFromEditorJSON = (editorData: any): string => {
-  if (!editorData || !editorData.root || !editorData.root.children) {
-    return '';
-  }
-
-  const extractFromNode = (node: any): string => {
-    if (!node) return '';
-
-    // If node has text, return it
-    if (node.text) return node.text;
-
-    // If node has children, recursively extract text
-    if (node.children && Array.isArray(node.children)) {
-      return node.children.map((child: any) => extractFromNode(child)).join('');
-    }
-
-    return '';
-  };
-
-  return editorData.root.children.map((node: any) => extractFromNode(node)).join('\n');
 };
 
 const styles = createStaticStyles(({ css }) => ({
@@ -142,6 +131,28 @@ const styles = createStaticStyles(({ css }) => ({
   content: css`
     position: relative;
   `,
+  /**
+   * Always visible, unlike the hover-only checkbox and dropdown above it: the
+   * point of the badge is that a private card is recognisable at a glance while
+   * scanning a library that mixes both scopes.
+   */
+  privateBadge: css`
+    position: absolute;
+    z-index: 2;
+    inset-block-end: 8px;
+    inset-inline-start: 8px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 4px;
+    border-radius: ${cssVar.borderRadius};
+
+    color: ${cssVar.colorTextSecondary};
+
+    background: ${cssVar.colorBgMask};
+  `,
   contentWithPadding: css`
     padding: 12px;
   `,
@@ -194,6 +205,7 @@ const MasonryFileItem = memo<MasonryFileItemProps>(
     embeddingStatus,
     finishEmbedding,
     chunkCount,
+    contentPreview,
     url,
     name,
     fileType,
@@ -212,11 +224,8 @@ const MasonryFileItem = memo<MasonryFileItemProps>(
     userId,
     visibility,
   }) => {
-    const { t } = useTranslation('components');
+    const { t } = useTranslation(['components', 'chat']);
     const chunkTargetId = getChunkTargetId({ fileId, id });
-    const [markdownContent, setMarkdownContent] = useState<string>('');
-    const [isLoadingMarkdown, setIsLoadingMarkdown] = useState(false);
-
     const isDragActive = useDragActive();
     const setCurrentDrag = useSetCurrentDrag();
     const [isDragging, setIsDragging] = useState(false);
@@ -225,15 +234,19 @@ const MasonryFileItem = memo<MasonryFileItemProps>(
     // Memoize computed values that don't change
     const computedValues = useMemo(
       () => ({
+        isAudio: !!fileType?.startsWith('audio'),
         isFolder: fileType === CUSTOM_FOLDER_FILE_TYPE,
         isImage: fileType && IMAGE_TYPES.has(fileType),
         isMarkdown: isMarkdownFile(name, fileType),
         isPage: isCustomPage(fileType, name),
+        isVideo: !!fileType?.startsWith('video'),
+        // web clippings: article documents plus raw html captures
+        isWebpage: fileType === 'article' || !!fileType?.startsWith('text/html'),
       }),
       [fileType, name],
     );
 
-    const { isImage, isMarkdown, isPage, isFolder } = computedValues;
+    const { isAudio, isImage, isMarkdown, isPage, isFolder, isVideo, isWebpage } = computedValues;
 
     // Use shared click handler hook
     const handleItemClick = useFileItemClick({
@@ -242,8 +255,10 @@ const MasonryFileItem = memo<MasonryFileItemProps>(
       isPage,
       libraryId: knowledgeBaseId,
       onOpen,
+      openInPanel: true,
       slug,
     });
+    const handleItemDoubleClick = useFileItemDoubleClick({ id, isPage });
 
     // Memoize drag data to prevent recreation
     const dragData = useMemo(
@@ -330,63 +345,23 @@ const MasonryFileItem = memo<MasonryFileItemProps>(
       };
     }, [isInView]);
 
-    // Fetch markdown content only when in viewport
-    useEffect(() => {
-      if ((isMarkdown || isPage) && isInView && !markdownContent) {
-        setIsLoadingMarkdown(true);
-
-        const fetchContent = async () => {
-          try {
-            let text: string;
-
-            if (isPage) {
-              // For custom pages, fetch from document service
-              const page = await documentService.getDocumentById(id);
-              const content = page?.content || '';
-
-              // Try to parse as JSON (editor's native format) and convert to markdown for preview
-              try {
-                const editorData = JSON.parse(content);
-                // Since we can't easily convert JSON to markdown here without an editor instance,
-                // we'll extract plain text from the JSON structure for preview
-                text = extractTextFromEditorJSON(editorData);
-              } catch {
-                // If it's not JSON, use it as-is (might be old markdown format)
-                text = content;
-              }
-            } else if (url) {
-              // For regular markdown files, fetch from URL
-              const res = await fetch(url);
-              text = await res.text();
-            } else {
-              text = '';
-            }
-
-            // For custom pages, take more content for better preview; for regular markdown, take first 500 chars
-            const preview = isPage ? text.slice(0, 1000) : text.slice(0, 500);
-            setMarkdownContent(preview);
-          } catch (error) {
-            console.error('Failed to fetch markdown content:', error);
-            setMarkdownContent('');
-          } finally {
-            setIsLoadingMarkdown(false);
-          }
-        };
-
-        fetchContent();
-      }
-    }, [isMarkdown, isPage, url, isInView, markdownContent, id]);
-
     const { menuItems } = useFileItemDropdown({
+      fileId,
       fileType,
       filename: name,
       id,
       libraryId: knowledgeBaseId,
+      size,
       sourceType,
       url,
       userId,
       visibility,
     });
+
+    // Personal mode has no second audience, so `visibility` carries no meaning
+    // there and every card would wear a lock for nothing.
+    const activeWorkspaceId = useActiveWorkspaceId();
+    const isPrivate = Boolean(activeWorkspaceId) && visibility === 'private';
 
     return (
       <div
@@ -431,15 +406,39 @@ const MasonryFileItem = memo<MasonryFileItemProps>(
           <DropdownMenu items={menuItems} />
         </div>
 
+        {isPrivate && (
+          <Tooltip title={t('resources.visibility.privateTooltip', { ns: 'chat' })}>
+            <div className={styles.privateBadge}>
+              <Icon icon={LockIcon} size={14} />
+            </div>
+          </Tooltip>
+        )}
+
         <div
           className={cx(
             styles.content,
-            !isImage && !isMarkdown && !isPage && styles.contentWithPadding,
+            !isImage &&
+              !isMarkdown &&
+              !isPage &&
+              !isVideo &&
+              !isAudio &&
+              !isWebpage &&
+              styles.contentWithPadding,
           )}
           onClick={handleItemClick}
+          onDoubleClick={handleItemDoubleClick}
         >
           {(() => {
             switch (true) {
+              case isWebpage: {
+                return <WebpageFileItem contentPreview={contentPreview} name={name} url={url} />;
+              }
+              case isVideo && !!url: {
+                return <VideoFileItem isInView={isInView} name={name} size={size} url={url} />;
+              }
+              case isAudio && !!url: {
+                return <AudioFileItem isInView={isInView} name={name} size={size} url={url} />;
+              }
               case isImage && !!url: {
                 return (
                   <ImageFileItem
@@ -452,6 +451,7 @@ const MasonryFileItem = memo<MasonryFileItemProps>(
                     finishEmbedding={finishEmbedding}
                     id={chunkTargetId}
                     isInView={isInView}
+                    metadata={metadata}
                     name={name}
                     size={size}
                     url={url}
@@ -464,13 +464,12 @@ const MasonryFileItem = memo<MasonryFileItemProps>(
                     chunkCount={chunkCount ?? undefined}
                     chunkingError={chunkingError}
                     chunkingStatus={chunkingStatus ?? undefined}
+                    contentPreview={contentPreview}
                     embeddingError={embeddingError}
                     embeddingStatus={embeddingStatus ?? undefined}
                     fileType={fileType}
                     finishEmbedding={finishEmbedding}
                     id={chunkTargetId}
-                    isLoadingMarkdown={isLoadingMarkdown}
-                    markdownContent={markdownContent}
                     metadata={metadata}
                     name={name}
                   />
@@ -482,13 +481,12 @@ const MasonryFileItem = memo<MasonryFileItemProps>(
                     chunkCount={chunkCount ?? undefined}
                     chunkingError={chunkingError}
                     chunkingStatus={chunkingStatus ?? undefined}
+                    contentPreview={contentPreview}
                     embeddingError={embeddingError}
                     embeddingStatus={embeddingStatus ?? undefined}
                     fileType={fileType}
                     finishEmbedding={finishEmbedding}
                     id={chunkTargetId}
-                    isLoadingMarkdown={isLoadingMarkdown}
-                    markdownContent={markdownContent}
                     name={name}
                     size={size}
                   />

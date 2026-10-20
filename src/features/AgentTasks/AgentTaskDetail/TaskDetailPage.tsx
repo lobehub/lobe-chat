@@ -1,5 +1,4 @@
-import { Flexbox } from '@lobehub/ui';
-import { Button } from '@lobehub/ui/base-ui';
+import { Button, Flexbox } from '@lobehub/ui';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router';
@@ -7,8 +6,6 @@ import { Link } from 'react-router';
 import NotFound from '@/components/404';
 import AsyncError from '@/components/AsyncError';
 import AutoSaveHint from '@/components/Editor/AutoSaveHint';
-import Loading from '@/components/Loading/BrandTextLoading';
-import DocumentPreviewModal from '@/features/DocumentModal/Preview';
 import NavHeader from '@/features/NavHeader';
 import ToggleRightPanelButton from '@/features/RightPanel/ToggleRightPanelButton';
 import WideScreenContainer from '@/features/WideScreenContainer';
@@ -18,8 +15,10 @@ import { useTaskStore } from '@/store/task';
 import { taskDetailSelectors } from '@/store/task/selectors';
 
 import Breadcrumb from '../shared/Breadcrumb';
+import TaskDetailCopyActions from './TaskDetailCopyActions';
 import TaskDetailHeaderActions from './TaskDetailHeaderActions';
 import TaskDetailSections from './TaskDetailSections';
+import TaskDetailSkeleton from './TaskDetailSkeleton';
 import TopicChatDrawer from './TopicChatDrawer';
 import { useActiveTaskDetail } from './useActiveTaskDetail';
 
@@ -89,13 +88,16 @@ const TaskDetailPage = memo<TaskDetailPageProps>(({ taskId, showTaskAgentPanelTo
           </>
         }
         right={
-          showTaskAgentPanelToggle ? (
-            <ToggleRightPanelButton
-              hideWhenExpanded
-              expand={showTaskAgentPanel}
-              onToggle={() => toggleTaskAgentPanel()}
-            />
-          ) : undefined
+          <>
+            <TaskDetailCopyActions />
+            {showTaskAgentPanelToggle ? (
+              <ToggleRightPanelButton
+                hideWhenExpanded
+                expand={showTaskAgentPanel}
+                onToggle={() => toggleTaskAgentPanel()}
+              />
+            ) : undefined}
+          </>
         }
         styles={{
           left: {
@@ -105,12 +107,14 @@ const TaskDetailPage = memo<TaskDetailPageProps>(({ taskId, showTaskAgentPanelTo
         }}
       />
       <Flexbox flex={1} style={{ minHeight: 0, overflowY: 'auto' }}>
+        {/* Detail is prose — instruction, deliverables, activity — so it keeps the
+            centered reading column rather than the list page's full-bleed rows,
+            whose value is the horizontal room for their metadata columns. */}
         <WideScreenContainer>
-          {isInitialLoading ? <Loading debugId="TaskDetail" /> : <TaskDetailSections />}
+          {isInitialLoading ? <TaskDetailSkeleton chrome={'body'} /> : <TaskDetailSections />}
         </WideScreenContainer>
       </Flexbox>
       <TopicChatDrawer />
-      <DocumentPreviewModal />
     </Flexbox>
   );
 });

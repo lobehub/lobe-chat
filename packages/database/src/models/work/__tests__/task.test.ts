@@ -2,6 +2,7 @@
 import { eq } from 'drizzle-orm';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
+import { TaskSubtreeRepository } from '../../../repositories/taskSubtree';
 import { messages, topics, works, workspaces, workVersions } from '../../../schemas';
 import { TaskModel } from '../../task';
 import { WorkModel } from '..';
@@ -100,7 +101,7 @@ describe('WorkModel · task', () => {
     expect(worksInConversation[0]).toMatchObject({
       id: work?.id,
       task: { name: 'Work MVP plan', priority: 2, status: 'backlog' },
-      taskDeleted: false,
+      resourceDeleted: false,
     });
 
     const byOperation = await workModel.listByRootOperation({ rootOperationId: 'op-root' });
@@ -707,7 +708,7 @@ describe('WorkModel · task', () => {
     });
 
     // Tool-driven deletion: the task row is removed first, then the dispatch
-    // layer drops the Work by its internal id (LOBE-11606).
+    // layer drops the Work by its internal id.
     await taskModel.delete(task.id);
     await workModel.deleteTaskWork({ taskId: task.id });
 
@@ -752,14 +753,14 @@ describe('WorkModel · task', () => {
     expect(workRows).toHaveLength(1);
     expect(versionRows.length).toBeGreaterThan(0);
     // The task-joined lists now surface the orphan via LEFT JOIN, rendered from
-    // its version snapshot and flagged `taskDeleted` so the UI shows "task
+    // its version snapshot and flagged `resourceDeleted` so the UI shows "task
     // deleted" instead of dropping the card entirely.
     const orphaned = await workModel.listByConversation({ threadId, topicId });
     expect(orphaned).toHaveLength(1);
     expect(orphaned[0]).toMatchObject({
       id: work!.id,
       task: expect.objectContaining({ name: 'Keep my Work' }),
-      taskDeleted: true,
+      resourceDeleted: true,
     });
   });
 
@@ -905,7 +906,10 @@ describe('WorkModel · workspace task visibility', () => {
     expect(expectTaskListItem(memberView[0]).task.name).toBe('Shared task');
 
     // The task transition mirrors visibility onto Work in the same transaction.
-    await ownerTasks.updateVisibility(task.id, 'private');
+    await new TaskSubtreeRepository(serverDB, userId, workspaceId).updateVisibility(
+      task.id,
+      'private',
+    );
 
     const [mirrored] = await serverDB
       .select({ visibility: works.visibility })
@@ -984,7 +988,7 @@ describe('WorkModel · workspace task visibility', () => {
 
     const ownerView = await ownerWorks.listByConversation({ topicId });
     expect(ownerView).toHaveLength(1);
-    expect(expectTaskListItem(ownerView[0]).taskDeleted).toBe(true);
+    expect(expectTaskListItem(ownerView[0]).resourceDeleted).toBe(true);
 
     expect(await memberWorks.listByConversation({ topicId })).toHaveLength(0);
   });

@@ -1,36 +1,37 @@
 'use client';
 
-import { Flexbox, Icon, Text } from '@lobehub/ui';
-import { Select } from '@lobehub/ui/base-ui';
-import { createStaticStyles, cssVar } from 'antd-style';
+import { createStaticStyles, Icon } from '@lobehub/ui';
 import {
   AlertTriangleIcon,
   CheckIcon,
-  EyeIcon,
   EyeOffIcon,
+  FolderIcon,
   InfoIcon,
+  KeyRoundIcon,
   type LucideIcon,
-  PencilIcon,
-  PlayIcon,
   UsersIcon,
 } from 'lucide-react';
-import { memo, useState } from 'react';
+import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-
-import type { PermissionResourceType, ResourceAccessLevel } from '@/services/resourcePermission';
 
 export type VisibilityConfirmVariant = 'makePrivate' | 'publish';
 
 export interface VisibilityConfirmContentProps {
   /**
-   * When provided on the `publish` variant, renders a Notion-style General
-   * access select (resource-specific edit/use or edit/view choices) and writes
-   * the choice into the ref so the caller's `onOk` can apply it after the
-   * publish succeeds. A plain ref (not state) because `confirmModal` content
-   * lives outside the caller's render tree.
+   * The resource carries state captured from a running session — an
+   * environment's home directory, its CLI logins, whatever a setup command
+   * left behind. Publishing it does not only make the row visible: members
+   * can run instances of it and reach that state. "Members will see this"
+   * does not say any of it, so the caller has to ask for the bullet that does.
    */
-  accessLevelRef?: { current: ResourceAccessLevel };
-  resourceType?: PermissionResourceType;
+  capturedState?: boolean;
+  /**
+   * The resource sits in a library. Going private does not pull it out of one
+   * — the row stays filed where the author put it and simply stops resolving
+   * for everyone else — so the dialog has to say that, or the author is left
+   * guessing whether their library just lost an entry.
+   */
+  inLibrary?: boolean;
   variant: VisibilityConfirmVariant;
 }
 
@@ -45,8 +46,23 @@ interface Item {
 }
 
 interface VariantConfig {
-  items: readonly [Item, Item, Item];
+  items: readonly Item[];
 }
+
+/** Appended to `publish` when the caller says the resource carries captured session state. */
+const CAPTURED_STATE_ITEM: Item = {
+  emphasis: true,
+  icon: KeyRoundIcon,
+  key: 'visibilityConfirm.publish.itemCapturedState',
+  tone: 'danger',
+};
+
+/** Appended to `makePrivate` when the caller says the resource is filed in a library. */
+const LIBRARY_ITEM: Item = {
+  icon: FolderIcon,
+  key: 'visibilityConfirm.makePrivate.itemLibrary',
+  tone: 'info',
+};
 
 // 3 consequences per direction — the order matters (immediate → follow-on →
 // irreversible tail), and mirrors the tone escalation across the pair. Keep
@@ -141,19 +157,6 @@ const styles = createStaticStyles(({ css, cssVar }) => ({
   suffix: css`
     color: ${cssVar.colorTextTertiary};
   `,
-  optionRow: css`
-    padding-block: 2px;
-  `,
-  // The trigger's value text span shrink-wraps its content by default, which
-  // leaves `marginInlineStart: auto` on the option desc with no free space —
-  // stretch it so the selected option's desc stays right-aligned like in the
-  // dropdown list.
-  selectValue: css`
-    > span {
-      flex: 1;
-      min-width: 0;
-    }
-  `,
 }));
 
 const rowIconClass = (tone: Tone) => {
@@ -181,128 +184,41 @@ const rowIconClass = (tone: Tone) => {
  * separate hero icon here.
  */
 const VisibilityConfirmContent = memo<VisibilityConfirmContentProps>(
-  ({ accessLevelRef, resourceType, variant }) => {
-    const { t } = useTranslation(['common', 'setting']);
+  ({ capturedState, inLibrary, variant }) => {
+    const { t } = useTranslation('common');
     const config = CONFIG[variant];
     const irreversibleSuffix = t('visibilityConfirm.irreversible');
-    const [accessLevel, setAccessLevel] = useState<ResourceAccessLevel>(
-      accessLevelRef?.current ?? (resourceType === 'document' ? 'view' : 'use'),
-    );
-    const showAccessSelect = variant === 'publish' && !!accessLevelRef && !!resourceType;
+    // Second-to-last, so the irreversible tail keeps the closing position it
+    // holds in both variants.
+    const extra =
+      variant === 'makePrivate' && inLibrary
+        ? LIBRARY_ITEM
+        : variant === 'publish' && capturedState
+          ? CAPTURED_STATE_ITEM
+          : undefined;
+    const items = extra
+      ? [...config.items.slice(0, -1), extra, ...config.items.slice(-1)]
+      : config.items;
 
     return (
-      <Flexbox gap={12}>
-        <ul className={styles.list}>
-          {config.items.map((item) => {
-            const ItemIcon = item.icon;
-            return (
-              <li className={styles.row} key={item.key}>
-                <span className={`${styles.rowIcon} ${rowIconClass(item.tone)}`}>
-                  <Icon icon={ItemIcon} size={14} />
-                </span>
-                <span className={item.emphasis ? styles.emphasis : undefined}>
-                  {t(item.key as any)}
-                  {item.showIrreversible && (
-                    <span className={styles.suffix}>{irreversibleSuffix}</span>
-                  )}
-                </span>
-              </li>
-            );
-          })}
-        </ul>
-        {showAccessSelect && (
-          <Flexbox gap={6}>
-            <Text style={{ fontSize: 13, fontWeight: 500 }}>
-              {t('permission.generalAccess.label', { ns: 'setting' })}
-            </Text>
-            <Select
-              classNames={{ value: styles.selectValue }}
-              style={{ width: '100%' }}
-              value={accessLevel}
-              options={[
-                {
-                  label: (
-                    <Flexbox horizontal align={'center'} className={styles.optionRow} gap={8}>
-                      <Icon icon={PencilIcon} size={14} />
-                      <Text style={{ fontSize: 13, fontWeight: 500 }}>
-                        {t('permission.generalAccess.editable', { ns: 'setting' })}
-                      </Text>
-                      <Text
-                        style={{
-                          color: cssVar.colorTextTertiary,
-                          fontSize: 12,
-                          marginInlineStart: 'auto',
-                        }}
-                      >
-                        {t('permission.generalAccess.editableDesc', { ns: 'setting' })}
-                      </Text>
-                    </Flexbox>
-                  ),
-                  title: t('permission.generalAccess.editable', { ns: 'setting' }),
-                  value: 'edit',
-                },
-                ...(resourceType !== 'document'
-                  ? [
-                      {
-                        label: (
-                          <Flexbox horizontal align={'center'} className={styles.optionRow} gap={8}>
-                            <Icon icon={PlayIcon} size={14} />
-                            <Text style={{ fontSize: 13, fontWeight: 500 }}>
-                              {t('permission.generalAccess.usable', { ns: 'setting' })}
-                            </Text>
-                            <Text
-                              style={{
-                                color: cssVar.colorTextTertiary,
-                                fontSize: 12,
-                                marginInlineStart: 'auto',
-                              }}
-                            >
-                              {t('permission.generalAccess.usableDesc', { ns: 'setting' })}
-                            </Text>
-                          </Flexbox>
-                        ),
-                        title: t('permission.generalAccess.usable', { ns: 'setting' }),
-                        value: 'use' as const,
-                      },
-                    ]
-                  : []),
-                ...(resourceType === 'document'
-                  ? [
-                      {
-                        label: (
-                          <Flexbox horizontal align={'center'} className={styles.optionRow} gap={8}>
-                            <Icon icon={EyeIcon} size={14} />
-                            <Text style={{ fontSize: 13, fontWeight: 500 }}>
-                              {t('permission.generalAccess.viewable', { ns: 'setting' })}
-                            </Text>
-                            <Text
-                              style={{
-                                color: cssVar.colorTextTertiary,
-                                fontSize: 12,
-                                marginInlineStart: 'auto',
-                              }}
-                            >
-                              {t('permission.generalAccess.viewableDocumentDesc', {
-                                ns: 'setting',
-                              })}
-                            </Text>
-                          </Flexbox>
-                        ),
-                        title: t('permission.generalAccess.viewable', { ns: 'setting' }),
-                        value: 'view' as const,
-                      },
-                    ]
-                  : []),
-              ]}
-              onChange={(nextAccessLevel) => {
-                if (!nextAccessLevel) return;
-                setAccessLevel(nextAccessLevel as ResourceAccessLevel);
-                accessLevelRef!.current = nextAccessLevel as ResourceAccessLevel;
-              }}
-            />
-          </Flexbox>
-        )}
-      </Flexbox>
+      <ul className={styles.list}>
+        {items.map((item) => {
+          const ItemIcon = item.icon;
+          return (
+            <li className={styles.row} key={item.key}>
+              <span className={`${styles.rowIcon} ${rowIconClass(item.tone)}`}>
+                <Icon icon={ItemIcon} size={14} />
+              </span>
+              <span className={item.emphasis ? styles.emphasis : undefined}>
+                {t(item.key as any)}
+                {item.showIrreversible && (
+                  <span className={styles.suffix}>{irreversibleSuffix}</span>
+                )}
+              </span>
+            </li>
+          );
+        })}
+      </ul>
     );
   },
 );

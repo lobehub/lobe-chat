@@ -124,6 +124,51 @@ export default {
   'messenger.list.wechat.description':
     'Scan with WeChat to chat privately with your LobeHub agents and switch agents with /agents.',
   'messenger.paidBadge': 'Pro',
+  'messenger.push.alwaysAvailable': 'Ready to send',
+  'messenger.push.alwaysAvailableHint':
+    'Messages go to your linked {{platform}} account as a direct message.',
+  'messenger.push.alwaysDescription':
+    'The bot can proactively send direct messages to your linked {{platform}} account at any time.',
+  'messenger.push.expiresIn': 'expires in {{value}}',
+  'messenger.push.loadFailed': 'Could not load proactive message status.',
+  'messenger.push.placeholder': 'Write a message to send to {{platform}}…',
+  'messenger.push.queued':
+    '{{count}} queued message(s) will be delivered after you message the bot in {{platform}}.',
+  'messenger.push.queuedBusyToast':
+    'Another message is still being delivered — yours is queued behind it. Message the bot in {{platform}} to receive it.',
+  'messenger.push.queuedQuotaToast':
+    'No sends left in this window — your message is queued. Message the bot in {{platform}} to reset the window and receive it.',
+  'messenger.push.queuedRetryToast':
+    'Part of your message could not be delivered — the rest is queued and will be retried after you message the bot in {{platform}}.',
+  'messenger.push.queuedToast':
+    'The send window is closed — your message is queued. Message the bot in {{platform}} to receive it.',
+  'messenger.push.resource.description':
+    'The file will be sent as an attachment to your linked {{platform}} account.',
+  'messenger.push.resource.oversizeFileConsequence': 'Sent as a download link.',
+  'messenger.push.resource.oversizeImageCompress': 'Compress it',
+  'messenger.push.resource.oversizeImageCompressHint':
+    'Re-encoded as a JPEG under {{limit}} so it shows up inline. Some quality is lost, and an animated image cannot be compressed — it is sent as a link instead.',
+  'messenger.push.resource.oversizeImageLink': 'Send a link',
+  'messenger.push.resource.oversizeImageLinkHint':
+    'The original file is sent as a download link — full quality, but not shown inline in the chat.',
+  'messenger.push.resource.oversizeMeta': 'over the {{limit}} {{platform}} limit',
+  'messenger.push.resource.placeholder': 'Add a message (optional)…',
+  'messenger.push.retry': 'Try again',
+  'messenger.push.sectionTitle': 'Message Push',
+  'messenger.push.send': 'Send to {{platform}}',
+  'messenger.push.sentToast': 'Sent to {{platform}}.',
+  'messenger.push.sentWindowedToast':
+    'Sent to {{platform}} ({{remaining}} sends left in this window).',
+  'messenger.push.target': 'Destination workspace',
+  'messenger.push.title': 'Proactive push',
+  'messenger.push.unavailableToast': 'Push is temporarily unavailable. Please try again later.',
+  'messenger.push.unlinkedToast':
+    'Your {{platform}} connection is unavailable. Reconnect it and try again.',
+  'messenger.push.windowClosed': 'Send window closed',
+  'messenger.push.windowClosedHint': 'Send any message to the bot in {{platform}} to open it.',
+  'messenger.push.windowedDescription':
+    '{{platform}} only lets the bot message you inside a send window — reply anything to reset it to {{max}} sends / 24 hours.',
+  'messenger.push.windowOpen': 'Send window open',
   'messenger.setActiveFailed': 'Failed to set as active.',
   'messenger.setActiveSuccess': 'Active agent updated.',
   'messenger.subtitle':
@@ -233,4 +278,31 @@ export default {
     'Your account is now connected to {{platform}}. Open {{platform}} and send your first message.',
   'verify.success.openBot': 'Open in {{platform}}',
   'verify.success.title': 'Linked successfully!',
+  'messenger.linq.accountLabel': 'Phone',
+  'messenger.linq.code.expired': 'This link code expired. Generate a new one to continue.',
+  'messenger.linq.code.label': 'Your one-time link code',
+  'messenger.linq.code.sendTo': 'Text it to {{number}}',
+  'messenger.linq.code.tip':
+    'Scan the QR code with your phone camera or tap Open in Messages on your phone, then send the prefilled message. The number is shared — LobeHub recognizes you by the phone you text from. The code works once.',
+  'messenger.linq.code.waiting': 'Waiting for your message…',
+  'messenger.linq.connectCta': 'Get link code',
+  'messenger.linq.connected': 'iMessage connected.',
+  'messenger.linq.error.alreadyLinkedToOther':
+    'This phone number is already connected to another LobeHub account.',
+  'messenger.linq.error.codeUnavailable': 'Could not create a link code. Please try again.',
+  'messenger.linq.error.pollFailed':
+    'Could not check the link status. Please generate a new code and try again.',
+  'messenger.linq.error.unlinkBeforeRelink':
+    'Disconnect the current phone number before connecting another one.',
+  'messenger.linq.openMessages': 'Open in Messages',
+  'messenger.linq.retry': 'Get a new code',
+  'messenger.linq.setupTitle': 'Connect iMessage',
+  'messenger.list.linq.description':
+    'Text your LobeHub agents from iMessage or SMS — no app to install, and /agents switches agents.',
+  'messenger.unlinkConfirmLinq':
+    'Messages from this phone number will no longer reach your agents. You can reconnect any time with a new link code.',
+  'messenger.linq.code.expiresAt': 'Valid until {{time}}',
+  'messenger.linq.error.refreshFailed':
+    'Your phone is connected, but this page could not refresh. Try again.',
+  'messenger.linq.refresh': 'Refresh',
 };

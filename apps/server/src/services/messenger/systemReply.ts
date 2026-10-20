@@ -8,6 +8,8 @@ interface MessengerSystemStrings {
   activeAgentChangedToast: (title: string) => string;
   activeMarker: string;
   agentNotFound: string;
+  /** Safe instruction when agent selection cannot be shown privately. */
+  agentsDirectMessageOnly: string;
   agentsEmpty: string;
   agentsHeading: string;
   agentsHint: string;
@@ -19,6 +21,11 @@ interface MessengerSystemStrings {
   currentMarker: string;
   genericError: string;
   help: string;
+  modeAgentLabel: string;
+  modeChangedToast: (label: string) => string;
+  modeChatLabel: string;
+  modeDirectMessageOnly: string;
+  modePicker: string;
   needLink: string;
   newDirectMessageOnly: string;
   newStarted: string;
@@ -34,12 +41,15 @@ interface MessengerSystemStrings {
   scopesHint: string;
   scopesUsage: (count: number) => string;
   scopeSwitched: (name: string, agentTitle?: string) => string;
+  staleAgent: string;
   staleScope: string;
   startDirectMessageOnly: string;
   stopDirectMessageOnly: string;
   stopNotActive: string;
   stopRequested: string;
   stopUnable: string;
+  /** Safe instruction when workspace selection cannot be shown privately. */
+  switchDirectMessageOnly: string;
   unknownAction: string;
   unknownCommand: (name: string) => string;
 }
@@ -54,6 +64,8 @@ const EN_US: MessengerSystemStrings = {
   activeAgentChangedToast: (title) => `Switched to ${title}.`,
   activeMarker: 'active',
   agentNotFound: 'Agent not found.',
+  agentsDirectMessageOnly:
+    'Open your direct message with the LobeHub bot and send `/agents` there.',
   agentsEmpty: 'You have no agents yet. Create one in LobeHub, then come back to /agents.',
   agentsHeading: 'Your agents:',
   agentsHint: 'Reply with /agents <n> to switch the active agent.',
@@ -70,9 +82,15 @@ const EN_US: MessengerSystemStrings = {
     '• /switch — switch the active scope (personal or a workspace)',
     '• /agents — list your agents and switch the active one',
     '• /new — start a new conversation',
+    '• /mode — show or switch the conversation mode (agent | chat)',
     '• /stop — stop the current execution',
     '• /feedback <message> — send feedback to the LobeHub team (no AI reply)',
   ].join('\n'),
+  modeAgentLabel: 'Agent Mode',
+  modeChangedToast: (label) => `Switched to ${label}.`,
+  modeChatLabel: 'Chat Mode',
+  modeDirectMessageOnly: 'Open your direct message with the LobeHub bot and send `/mode` there.',
+  modePicker: 'Pick the conversation mode:',
   needLink: 'You need to /start to bind your account first.',
   newDirectMessageOnly: 'Open your direct message with the LobeHub bot and send `/new` there.',
   newStarted: 'Started a new conversation. Your next message begins a fresh topic.',
@@ -93,11 +111,15 @@ const EN_US: MessengerSystemStrings = {
   scopesUsage: (count) => `Usage: /switch <n>, where n is between 1 and ${count}.`,
   startDirectMessageOnly:
     'Open your direct message with the LobeHub bot and send `/start` there to link your account.',
+  staleAgent:
+    'Your active agent is no longer available — it may have been deleted or moved to another workspace. Send /agents to pick another one.',
   staleScope: 'Your active workspace is no longer available. Send /switch to choose another scope.',
   stopDirectMessageOnly: 'Open your direct message with the LobeHub bot and send `/stop` there.',
   stopNotActive: 'No active execution to stop.',
   stopRequested: 'Stop requested.',
   stopUnable: 'Unable to stop the current execution.',
+  switchDirectMessageOnly:
+    'Open your direct message with the LobeHub bot and send `/switch` there.',
   unknownAction: 'Unknown action.',
   unknownCommand: (name) => `Unknown command: /${name}`,
 };
@@ -111,6 +133,7 @@ const ZH_CN: MessengerSystemStrings = {
   activeAgentChangedToast: (title) => `已切换到 ${title}。`,
   activeMarker: '当前',
   agentNotFound: '未找到该 Agent。',
+  agentsDirectMessageOnly: '请在与 LobeHub 机器人的私聊中发送 `/agents`。',
   agentsEmpty: '你还没有 Agent。请先在 LobeHub 创建，然后再发送 /agents。',
   agentsHeading: '你的 Agent：',
   agentsHint: '回复 /agents <序号> 可切换当前 Agent。',
@@ -127,9 +150,15 @@ const ZH_CN: MessengerSystemStrings = {
     '• /switch — 切换当前空间（个人账号或工作区）',
     '• /agents — 查看 Agent 并切换当前 Agent',
     '• /new — 开启新对话',
+    '• /mode — 查看或切换会话模式（agent | chat）',
     '• /stop — 停止当前执行',
     '• /feedback <内容> — 向 LobeHub 团队发送反馈（不会触发 AI 回复）',
   ].join('\n'),
+  modeAgentLabel: 'Agent 模式',
+  modeChangedToast: (label) => `已切换到${label}。`,
+  modeChatLabel: 'Chat 模式',
+  modeDirectMessageOnly: '请在与 LobeHub 机器人的私聊中发送 `/mode`。',
+  modePicker: '请选择会话模式：',
   needLink: '请先发送 /start 绑定你的 LobeHub 账号。',
   newDirectMessageOnly: '请在与 LobeHub 机器人的私聊中发送 `/new`。',
   newStarted: '已开启新对话，下一条消息会创建一个新话题。',
@@ -149,11 +178,13 @@ const ZH_CN: MessengerSystemStrings = {
   scopesHint: '回复 /switch <序号> 可切换空间。',
   scopesUsage: (count) => `用法：/switch <序号>，序号范围为 1–${count}。`,
   startDirectMessageOnly: '请打开与 LobeHub 机器人的私聊，并在那里发送 `/start` 绑定账号。',
+  staleAgent: '当前 Agent 已不可用，可能已被删除或移动到其他工作区。请发送 /agents 重新选择。',
   staleScope: '当前工作区已不可用。请发送 /switch 选择其他空间。',
   stopDirectMessageOnly: '请在与 LobeHub 机器人的私聊中发送 `/stop`。',
   stopNotActive: '当前没有正在执行的任务可以停止。',
   stopRequested: '已发出停止请求。',
   stopUnable: '无法停止当前执行。',
+  switchDirectMessageOnly: '请在与 LobeHub 机器人的私聊中发送 `/switch`。',
   unknownAction: '未知操作。',
   unknownCommand: (name) => `未知命令：/${name}`,
 };
@@ -165,6 +196,7 @@ const WECHAT_ZH_CN: MessengerSystemStrings = {
     '• /switch — 切换当前空间（个人账号或工作区）',
     '• /agents — 查看 Agent 并切换当前 Agent',
     '• /new — 开启新对话',
+    '• /mode — 查看或切换会话模式（agent | chat）',
     '• /stop — 停止当前执行',
     '• /feedback <内容> — 向 LobeHub 团队发送反馈（不会触发 AI 回复）',
   ].join('\n'),

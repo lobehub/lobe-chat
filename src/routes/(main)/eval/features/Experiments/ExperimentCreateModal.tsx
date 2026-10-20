@@ -3,14 +3,17 @@
 import type { AgentEvalExperiment } from '@lobechat/types';
 import {
   Button,
+  Input,
   ModalFooter,
   type ModalInstance,
   Select,
+  TextArea,
+  toast,
   useModalContext,
-} from '@lobehub/ui/base-ui';
-import { App, Form, Input } from 'antd';
+} from '@lobehub/ui';
+import { Form, useForm } from '@lobehub/ui/form';
 import { t } from 'i18next';
-import { memo, useEffect } from 'react';
+import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { benchmarkSelectors, useEvalStore } from '@/store/eval';
@@ -29,25 +32,14 @@ interface ExperimentModalContentProps extends ExperimentModalProps {
 const ExperimentModalContent = memo<ExperimentModalContentProps>(
   ({ experiment, formId, onLoadingChange, onSuccess }) => {
     const { t } = useTranslation('eval');
-    const { message } = App.useApp();
+
     const { close } = useModalContext();
-    const [form] = Form.useForm();
     const createExperiment = useEvalStore((s) => s.createExperiment);
     const updateExperiment = useEvalStore((s) => s.updateExperiment);
     const useFetchBenchmarks = useEvalStore((s) => s.useFetchBenchmarks);
     const benchmarkList = useEvalStore(benchmarkSelectors.benchmarkList);
 
     useFetchBenchmarks();
-
-    useEffect(() => {
-      if (experiment) {
-        form.setFieldsValue({
-          benchmarkIds: experiment.benchmarks.map((benchmark) => benchmark.id),
-          description: experiment.description || undefined,
-          name: experiment.name,
-        });
-      }
-    }, [experiment, form]);
 
     const handleSubmit = async (values: {
       benchmarkIds: string[];
@@ -60,11 +52,11 @@ const ExperimentModalContent = memo<ExperimentModalContentProps>(
           ? await updateExperiment({ ...values, id: experiment.id })
           : await createExperiment(values);
 
-        message.success(experiment ? t('experiment.edit.success') : t('experiment.create.title'));
+        toast.success(experiment ? t('experiment.edit.success') : t('experiment.create.title'));
         close();
         onSuccess?.(result.id);
       } catch (error) {
-        message.error(
+        toast.error(
           error instanceof Error
             ? error.message
             : experiment
@@ -76,24 +68,35 @@ const ExperimentModalContent = memo<ExperimentModalContentProps>(
       }
     };
 
+    const form = useForm({
+      initialValues: experiment
+        ? {
+            benchmarkIds: experiment.benchmarks.map((benchmark) => benchmark.id),
+            description: experiment.description || undefined,
+            name: experiment.name,
+          }
+        : undefined,
+      onSubmit: handleSubmit,
+    });
+
     return (
-      <Form form={form} id={formId} layout="vertical" onFinish={handleSubmit}>
-        <Form.Item
+      <Form form={form} id={formId} layout="vertical">
+        <Form.Field
           label={t('experiment.create.name.label')}
           name="name"
-          rules={[{ message: t('experiment.create.nameRequired'), required: true }]}
+          required={t('experiment.create.nameRequired')}
         >
           <Input placeholder={t('experiment.create.name.placeholder')} />
-        </Form.Item>
+        </Form.Field>
 
-        <Form.Item label={t('experiment.create.description.label')} name="description">
-          <Input.TextArea placeholder={t('experiment.create.description.placeholder')} rows={3} />
-        </Form.Item>
+        <Form.Field label={t('experiment.create.description.label')} name="description">
+          <TextArea placeholder={t('experiment.create.description.placeholder')} rows={3} />
+        </Form.Field>
 
-        <Form.Item
+        <Form.Field
           label={t('experiment.create.benchmarks.label')}
           name="benchmarkIds"
-          rules={[{ message: t('experiment.create.benchmarksRequired'), required: true }]}
+          required={t('experiment.create.benchmarksRequired')}
         >
           <Select
             mode="multiple"
@@ -103,7 +106,7 @@ const ExperimentModalContent = memo<ExperimentModalContentProps>(
               value: benchmark.id,
             }))}
           />
-        </Form.Item>
+        </Form.Field>
       </Form>
     );
   },

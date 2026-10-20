@@ -1,9 +1,16 @@
 'use client';
 
-import type { DropdownItem } from '@lobehub/ui';
-import { Block, Flexbox, Icon, Text } from '@lobehub/ui';
-import { confirmModal, type ModalInstance } from '@lobehub/ui/base-ui';
-import { App } from 'antd';
+import {
+  Block,
+  confirmModal,
+  copyToClipboard,
+  type DropdownItem,
+  Flexbox,
+  Icon,
+  type ModalInstance,
+  Text,
+  toast,
+} from '@lobehub/ui';
 import {
   Clock3Icon,
   Copy,
@@ -21,9 +28,11 @@ import { useTranslation } from 'react-i18next';
 import { useLocation, useParams } from 'react-router';
 
 import { useAuthorInfo } from '@/business/client/hooks/useAuthorInfo';
+import { useTopicBugReportMenuItem } from '@/business/client/hooks/useTopicBugReportMenuItem';
 import { openRenameModal } from '@/components/RenameModal';
 import { DOCUMENT_HISTORY_QUERY_LIST_LIMIT } from '@/const/documentHistory';
 import { isDesktop } from '@/const/version';
+import { useAgentContext } from '@/features/Conversation/useAgentContext';
 import { confirmRemoveTopic } from '@/features/DeleteTopicConfirm';
 import { openDocumentCompareModal } from '@/features/PageEditor/History/CompareModal';
 import { formatHistoryAbsoluteTime } from '@/features/PageEditor/History/formatHistoryDate';
@@ -37,6 +46,8 @@ import { topicSelectors } from '@/store/chat/selectors';
 import { useDocumentStore } from '@/store/document';
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
+import { useUserStore } from '@/store/user';
+import { labPreferSelectors } from '@/store/user/selectors';
 
 interface TopicInfoHeaderProps {
   authorName: string;
@@ -65,9 +76,9 @@ const TopicInfoHeader = ({ authorName, title, updatedAtLabel }: TopicInfoHeaderP
   </Block>
 );
 
-export const useMenu = (): { menuHeader?: ReactNode; menuItems: DropdownItem[] } => {
+export const useMenu = (): { menuHeader?: ReactNode; menuItems: () => DropdownItem[] } => {
   const { t } = useTranslation(['chat', 'topic', 'common', 'file']);
-  const { message } = App.useApp();
+
   const { pathname } = useLocation();
 
   const [wideScreen, toggleWideScreen] = useGlobalStore((s) => [
@@ -76,9 +87,11 @@ export const useMenu = (): { menuHeader?: ReactNode; menuItems: DropdownItem[] }
   ]);
   const openTopicInNewWindow = useGlobalStore((s) => s.openTopicInNewWindow);
 
-  const activeAgentId = useChatStore((s) => s.activeAgentId);
-  const activeTopic = useChatStore(topicSelectors.currentActiveTopic);
-  const workingDirectory = useChatStore(topicSelectors.currentTopicWorkingDirectory);
+  const { agentId: activeAgentId, threadId, topicId: routeTopicId } = useAgentContext();
+  const activeTopic = useChatStore((s) =>
+    routeTopicId ? topicSelectors.getTopicById(routeTopicId)(s) : undefined,
+  );
+  const workingDirectory = useChatStore(topicSelectors.getTopicWorkingDirectory(routeTopicId));
   const [autoRenameTopicTitle, favoriteTopic, removeTopic, updateTopicTitle] = useChatStore((s) => [
     s.autoRenameTopicTitle,
     s.favoriteTopic,
@@ -106,7 +119,7 @@ export const useMenu = (): { menuHeader?: ReactNode; menuItems: DropdownItem[] }
 
       const { editor, markDirty, performSave } = useDocumentStore.getState();
       if (!editor) {
-        message.error(t('pageEditor.history.restoreError', { ns: 'file' }));
+        toast.error(t('pageEditor.history.restoreError', { ns: 'file' }));
         return;
       }
 
@@ -124,7 +137,7 @@ export const useMenu = (): { menuHeader?: ReactNode; menuItems: DropdownItem[] }
               `header-actions-history-${docId}`,
             );
 
-            editor.setDocument('json', JSON.stringify(result.editorData));
+            editor.setDocument('json', JSON.stringify(result.editorData), { keepId: true });
             markDirty(docId);
             await performSave(docId, undefined, {
               restoreFromHistoryId: item.id,
@@ -133,14 +146,14 @@ export const useMenu = (): { menuHeader?: ReactNode; menuItems: DropdownItem[] }
             onSuccess?.();
           } catch (error) {
             console.error('[HeaderActions] Failed to restore history item:', error);
-            message.error(t('pageEditor.history.restoreError', { ns: 'file' }));
+            toast.error(t('pageEditor.history.restoreError', { ns: 'file' }));
             throw error;
           }
         },
         title: t('pageEditor.history.restoreConfirm.title', { ns: 'file' }),
       });
     },
-    [docId, message, t],
+    [docId, t],
   );
 
   const openCompareModal = useCallback(async (): Promise<void> => {
@@ -155,7 +168,7 @@ export const useMenu = (): { menuHeader?: ReactNode; menuItems: DropdownItem[] }
       const items = result.items ?? [];
 
       if (items.length === 0) {
-        message.info(t('pageEditor.history.empty', { ns: 'file' }));
+        toast.info(t('pageEditor.history.empty', { ns: 'file' }));
         return;
       }
 
@@ -174,15 +187,23 @@ export const useMenu = (): { menuHeader?: ReactNode; menuItems: DropdownItem[] }
       compareInstanceRef.current = instance;
     } catch (error) {
       console.error('[HeaderActions] Failed to open document compare modal:', error);
-      message.error(t('pageEditor.history.compareError', { ns: 'file' }));
+      toast.error(t('pageEditor.history.compareError', { ns: 'file' }));
     }
-  }, [docId, handleRestoreHistory, message, saveSourceLabels, t]);
+  }, [docId, handleRestoreHistory, saveSourceLabels, t]);
 
   const authorInfo = useAuthorInfo(activeTopic?.userId);
 
   const topicId = activeTopic?.id;
   const topicTitle = activeTopic?.title ?? '';
   const isFavorite = !!activeTopic?.favorite;
+
+  const enableTopicBugReport = useUserStore(labPreferSelectors.enableTopicBugReport);
+  const bugReportItem = useTopicBugReportMenuItem({
+    agentId: activeAgentId,
+    threadId: threadId ?? undefined,
+    topicId,
+  });
+
   const menuHeader = useMemo<ReactNode | undefined>(() => {
     if (!authorInfo?.fullName || !topicId) return undefined;
 
@@ -209,7 +230,7 @@ export const useMenu = (): { menuHeader?: ReactNode; menuItems: DropdownItem[] }
     );
   }, [activeTopic?.updatedAt, authorInfo?.fullName, topicId, t]);
 
-  const menuItems = useMemo<DropdownItem[]>(() => {
+  const menuItems = useCallback((): DropdownItem[] => {
     const items: DropdownItem[] = [];
 
     if (topicId) {
@@ -256,7 +277,7 @@ export const useMenu = (): { menuHeader?: ReactNode; menuItems: DropdownItem[] }
           label: t('actions.copyWorkingDirectory', { ns: 'topic' }),
           onClick: () => {
             void navigator.clipboard.writeText(workingDirectory);
-            message.success(t('actions.copyWorkingDirectorySuccess', { ns: 'topic' }));
+            toast.success(t('actions.copyWorkingDirectorySuccess', { ns: 'topic' }));
           },
         });
       }
@@ -277,11 +298,12 @@ export const useMenu = (): { menuHeader?: ReactNode; menuItems: DropdownItem[] }
           icon: <Icon icon={Hash} />,
           key: 'copySessionId',
           label: t('actions.copySessionId', { ns: 'topic' }),
-          onClick: () => {
-            void navigator.clipboard.writeText(topicId);
-            message.success(t('actions.copySessionIdSuccess', { ns: 'topic' }));
+          onClick: async () => {
+            await copyToClipboard(topicId);
+            toast.success(t('actions.copySessionIdSuccess', { ns: 'topic' }));
           },
         },
+        ...(enableTopicBugReport && bugReportItem ? [bugReportItem] : []),
         { type: 'divider' as const },
       );
     }
@@ -333,6 +355,8 @@ export const useMenu = (): { menuHeader?: ReactNode; menuItems: DropdownItem[] }
   }, [
     topicId,
     topicTitle,
+    bugReportItem,
+    enableTopicBugReport,
     isFavorite,
     activeAgentId,
     pathname,
@@ -347,7 +371,6 @@ export const useMenu = (): { menuHeader?: ReactNode; menuItems: DropdownItem[] }
     toggleWideScreen,
     openCompareModal,
     t,
-    message,
   ]);
 
   return { menuHeader, menuItems };

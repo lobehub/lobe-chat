@@ -1,5 +1,4 @@
-import { Skeleton } from '@lobehub/ui';
-import { css, cx } from 'antd-style';
+import { css, cx, Skeleton } from '@lobehub/ui';
 
 const switchLoading = cx(css`
   width: 44px !important;
@@ -9,5 +8,5 @@ const switchLoading = cx(css`
 `);
 
 export const SkeletonSwitch = () => {
-  return <Skeleton.Button active className={switchLoading} />;
+  return <Skeleton className={switchLoading} height={36} />;
 };

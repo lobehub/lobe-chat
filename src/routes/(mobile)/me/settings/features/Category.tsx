@@ -1,6 +1,6 @@
 'use client';
 
-import { createStaticStyles, cssVar } from 'antd-style';
+import { createStaticStyles, cssVar } from '@lobehub/ui';
 import { Fragment, memo } from 'react';
 
 import Cell from '@/components/Cell';
@@ -16,8 +16,6 @@ const styles = createStaticStyles(({ css }) => ({
     font-size: 12px;
     font-weight: 500;
     color: ${cssVar.colorTextSecondary};
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
   `,
 }));
 

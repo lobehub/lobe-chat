@@ -101,6 +101,7 @@ describe('createClientRuntimeExecutors call_llm', () => {
       async ({ messages, model, provider }) => ({
         options: {},
         params: { messages: messages as any, model, provider },
+        replayAssistantReasoning: false,
       }),
     );
     vi.spyOn(messageService, 'batchMutate').mockImplementation(async (operations) => ({
@@ -276,8 +277,17 @@ describe('createClientRuntimeExecutors call_llm', () => {
       createState([userMessage]),
     );
 
-    expect(messageService.batchMutate).toHaveBeenCalledTimes(1);
-    expect(messageService.batchMutate).toHaveBeenCalledWith([
+    // Reuse stamps operation provenance first, then persists the streamed
+    // content — both target the seeded message; neither creates a duplicate.
+    expect(messageService.batchMutate).toHaveBeenCalledTimes(2);
+    expect(messageService.batchMutate).toHaveBeenNthCalledWith(1, [
+      expect.objectContaining({
+        id: assistantMessage.id,
+        type: 'updateMessage',
+        value: expect.objectContaining({ metadata: { operationId } }),
+      }),
+    ]);
+    expect(messageService.batchMutate).toHaveBeenNthCalledWith(2, [
       expect.objectContaining({ id: assistantMessage.id, type: 'updateMessage' }),
     ]);
   });

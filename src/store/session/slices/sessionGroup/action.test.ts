@@ -8,15 +8,6 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
-vi.mock('@/components/AntdStaticMethods', () => ({
-  message: {
-    loading: vi.fn(),
-    success: vi.fn(),
-    error: vi.fn(),
-    destroy: vi.fn(),
-  },
-}));
-
 describe('createSessionGroupSlice', () => {
   describe('addSessionGroup', () => {
     it('should add a session group and refresh sessions', async () => {

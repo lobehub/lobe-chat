@@ -1,7 +1,10 @@
 import path from 'node:path';
 
 import { defineConfig, type UserConfig } from 'vite';
+import zodCompiler from 'zod-compiler/vite';
 
+import { viteCompletionSounds } from '../../plugins/vite/completionSounds';
+import { viteOsPlatformResolve } from '../../plugins/vite/osPlatformResolve';
 import { externalRuntimeModules } from './external-runtime-deps.config.mjs';
 import { getNativeExternalDependencies } from './native-deps.config.mjs';
 import {
@@ -53,18 +56,29 @@ export default defineConfig(async (env) => {
         ],
         output: {
           assetFileNames: 'chunks/[name]-[hash].[ext]',
-          // Prevent shared deps from being bundled into index.js to avoid side-effect pollution.
-          // Pattern: when a module is imported by both the main bundle (statically) and a
-          // dynamic-import chunk (lazy loader), rolldown places it in main and makes the
-          // chunk back-reference `require("./index.js")`. Electron's main entry isn't in
-          // Node's CJS cache, so that require recompiles `index.js` from scratch — which
-          // re-runs `new App()` at top-level and triggers `protocol.registerSchemesAsPrivileged`
-          // *after* the app is ready → throw.
+          dynamicImportInCjs: false,
+          // Rolldown hoists chunk requires above any entry statement, so the V8
+          // compile cache has to be switched on from a banner to cover `main-app`.
+          banner: (chunk) =>
+            chunk.isEntry ? 'require("node:module").enableCompileCache?.();' : '',
+          // Keep Electron's side-effectful entry as a tiny bootstrap and put the
+          // application graph in a normal CommonJS chunk. Electron evaluates its entry
+          // outside the usual CJS cache path; when a deferred chunk back-references
+          // `index.js`, the entry can otherwise run again after app.ready. A regular
+          // `main-app` chunk is cached by Node, so lazy features can safely reuse any
+          // module from the eager graph without re-running `new App()`.
           //
-          // Same root cause as the original `debug` regression fixed in #11827. Isolate
-          // each shared module into its own vendor chunk so both ends reference the vendor
-          // chunk instead of back-referencing main.
+          // This is intentionally one architectural boundary rather than a growing list
+          // of shared vendor packages. Forcing Ajv, semver, env schemas, and similar
+          // dependencies into manual chunks de-optimizes tree-shaking and increases the
+          // amount of JavaScript parsed before renderer navigation.
           manualChunks(id: string) {
+            const normalizedId = id.replaceAll('\\', '/').split('?')[0];
+
+            if (/apps\/desktop\/src\/main\/core\/App\.ts$/.test(normalizedId)) {
+              return 'main-app';
+            }
+
             if (id.includes('node_modules/debug')) {
               return 'vendor-debug';
             }
@@ -89,7 +103,6 @@ export default defineConfig(async (env) => {
 
             // Split i18n json resources by namespace (ns), not by locale.
             // Example: ".../resources/locales/zh-CN/common.json?import" -> "locales-common"
-            const normalizedId = id.replaceAll('\\', '/').split('?')[0];
             const match = normalizedId.match(/\/locales\/[^/]+\/([^/]+)\.json$/);
 
             if (match?.[1]) return `locales-${match[1]}`;
@@ -104,12 +117,19 @@ export default defineConfig(async (env) => {
     define: {
       ...processEnvDefine,
       'process.env.DESKTOP_EXTERNAL_NAVIGATION_HOSTS': JSON.stringify(externalNavigationHosts),
+      'process.env.RENDERER_OTA_PUBLIC_KEY': JSON.stringify(process.env.RENDERER_OTA_PUBLIC_KEY),
       'process.env.UPDATE_CHANNEL': JSON.stringify(process.env.UPDATE_CHANNEL),
       'process.env.UPDATE_SERVER_URL': JSON.stringify(process.env.UPDATE_SERVER_URL),
     },
+    plugins: [
+      viteOsPlatformResolve(),
+      zodCompiler(),
+      viteCompletionSounds({ aiffDir: path.resolve(__dirname, 'resources/sounds') }),
+    ],
     publicDir: false,
     resolve: {
       alias: mainProcessAlias,
+      dedupe: ['@sentry/electron'],
       conditions: ['node'],
       mainFields: ['module', 'jsnext:main', 'jsnext'],
     },

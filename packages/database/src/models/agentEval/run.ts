@@ -67,7 +67,7 @@ export class AgentEvalRunModel {
       .select()
       .from(agentEvalRuns)
       .where(and(...conditions))
-      .orderBy(desc(agentEvalRuns.createdAt))
+      .orderBy(desc(agentEvalRuns.createdAt), desc(agentEvalRuns.id))
       .$dynamic();
 
     if (filter?.limit !== undefined) {
@@ -79,6 +79,30 @@ export class AgentEvalRunModel {
     }
 
     return query;
+  };
+
+  /**
+   * Count runs with optional filters (same predicates as `query`)
+   */
+  count = async (filter?: {
+    datasetId?: string;
+    status?: 'idle' | 'pending' | 'running' | 'completed' | 'failed' | 'aborted' | 'external';
+  }) => {
+    const conditions = [this.ownership()];
+
+    if (filter?.datasetId) {
+      conditions.push(eq(agentEvalRuns.datasetId, filter.datasetId));
+    }
+
+    if (filter?.status) {
+      conditions.push(eq(agentEvalRuns.status, filter.status));
+    }
+
+    const result = await this.db
+      .select({ value: count() })
+      .from(agentEvalRuns)
+      .where(and(...conditions));
+    return Number(result[0]?.value) || 0;
   };
 
   /**
@@ -101,6 +125,19 @@ export class AgentEvalRunModel {
       .update(agentEvalRuns)
       .set({ ...value, updatedAt: new Date() })
       .where(and(eq(agentEvalRuns.id, id), this.ownership()))
+      .returning();
+    return result;
+  };
+
+  /**
+   * Atomically queue a newly-created idle run. This prevents idempotent REST
+   * retries from dispatching the same QStash workflow more than once.
+   */
+  queue = async (id: string) => {
+    const [result] = await this.db
+      .update(agentEvalRuns)
+      .set({ status: 'pending', updatedAt: new Date() })
+      .where(and(eq(agentEvalRuns.id, id), eq(agentEvalRuns.status, 'idle'), this.ownership()))
       .returning();
     return result;
   };

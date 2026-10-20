@@ -21,17 +21,8 @@ const storeMock = vi.hoisted(() => ({
     { id: string; userId?: string; visibility?: 'private' | 'public' | null } | undefined,
 }));
 
-vi.mock('react-i18next', () => ({
-  useTranslation: () => ({
-    t: (key: string) => key,
-  }),
-}));
-
-vi.mock('@lobehub/ui', () => ({
-  Icon: () => null,
-}));
-
-vi.mock('antd', () => ({
+vi.mock('antd', async (importOriginal) => ({
+  ...(await importOriginal<object>()),
   App: {
     useApp: () => ({
       message: {
@@ -76,21 +67,13 @@ vi.mock('@/store/page', () => ({
     getDocumentById: (_id: string) => (_s: unknown) => storeMock.document,
     getFilteredDocuments: (_s: unknown) => (storeMock.document ? [storeMock.document] : []),
   },
-  usePageStore: Object.assign(
-    (selector: (state: Record<string, unknown>) => unknown) =>
-      selector({
-        duplicatePage: vi.fn(),
-        publishPageToWorkspace: vi.fn(),
-        removePage: vi.fn(),
-      }),
-    {
-      getState: () => ({
-        duplicatePage: vi.fn(),
-        publishPageToWorkspace: vi.fn(),
-        removePage: vi.fn(),
-      }),
-    },
-  ),
+  pageActions: {
+    duplicatePage: vi.fn(),
+    publishPageToWorkspace: vi.fn(),
+    removePage: vi.fn(),
+    setPageVisibility: vi.fn(),
+  },
+  usePageStore: (selector: (state: Record<string, unknown>) => unknown) => selector({}),
 }));
 
 vi.mock('@/store/user', () => ({
@@ -150,6 +133,17 @@ describe('Page list item dropdown menu', () => {
     expect(getMenuItem(items, 'rename')).toMatchObject({ disabled: true });
     expect(getMenuItem(items, 'duplicate')).toMatchObject({ disabled: true });
     expect(getMenuItem(items, 'delete')).toMatchObject({ disabled: true });
+  });
+
+  it("lets a workspace editor delete another member's page", () => {
+    storeMock.activeWorkspaceId = 'ws-1';
+    storeMock.document = { id: 'page-1', userId: 'another-member', visibility: 'public' };
+
+    const { result } = renderHook(() =>
+      useDropdownMenu({ pageId: 'page-1', toggleEditing: vi.fn() }),
+    );
+
+    expect(getMenuItem(result.current(), 'delete')).toMatchObject({ disabled: false });
   });
 
   it('exposes "publish to workspace" for private pages in workspace mode', () => {

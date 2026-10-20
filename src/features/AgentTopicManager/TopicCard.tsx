@@ -2,12 +2,12 @@
 
 import { AGENT_CHAT_TOPIC_URL } from '@lobechat/const';
 import { formatPrice, formatTokenNumber } from '@lobechat/utils/format';
-import { Block, Checkbox, Flexbox, Icon, Tag, Text } from '@lobehub/ui';
-import { createStaticStyles, cssVar } from 'antd-style';
+import { Block, Checkbox, createStaticStyles, cssVar, Flexbox, Icon, Tag, Text } from '@lobehub/ui';
 import { CircleDollarSign, FolderIcon, MessageSquare, Star, Zap } from 'lucide-react';
 import { memo, type MouseEvent, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { getPlatformIcon } from '@/features/AgentChannel/const';
 import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwareNavigate';
 import { useActivityTime } from '@/hooks/useActivityTime';
 import type { ChatTopic } from '@/types/topic';
@@ -116,6 +116,9 @@ const TopicCard = memo<TopicCardProps>(({ topic, agentId }) => {
 
   const projectLabel = getProjectLabel(topic);
   const status = topic.status ?? 'active';
+  // Bot source platform icon (same identity mark as the sidebar topic item).
+  const botPlatform = topic.metadata?.bot?.platform;
+  const BotPlatformIcon = botPlatform ? getPlatformIcon(botPlatform) : undefined;
   // Preview priority: user-written description → AI history summary → first user
   // message (sliced server-side when neither richer field exists).
   const preview =
@@ -147,6 +150,13 @@ const TopicCard = memo<TopicCardProps>(({ topic, agentId }) => {
         {topic.favorite && (
           <Icon icon={Star} size={13} style={{ color: cssVar.colorWarning, flexShrink: 0 }} />
         )}
+        {BotPlatformIcon && (
+          <BotPlatformIcon
+            color={cssVar.colorTextDescription}
+            size={14}
+            style={{ flexShrink: 0 }}
+          />
+        )}
         <Text className={styles.title} fontSize={14} weight={600}>
           {topic.title || t('defaultTitle')}
         </Text>
@@ -159,7 +169,7 @@ const TopicCard = memo<TopicCardProps>(({ topic, agentId }) => {
       )}
 
       {projectLabel && (
-        <Tag bordered={false} icon={<Icon icon={FolderIcon} size={11} />} size={'small'}>
+        <Tag icon={<Icon icon={FolderIcon} size={11} />} size={'small'}>
           {projectLabel}
         </Tag>
       )}

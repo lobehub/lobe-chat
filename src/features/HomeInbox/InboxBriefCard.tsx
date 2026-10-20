@@ -1,18 +1,34 @@
 import { DEFAULT_AVATAR, INBOX_SESSION_ID } from '@lobechat/const';
-import { Avatar, Block, Flexbox, Text } from '@lobehub/ui';
-import { createStaticStyles, cssVar } from 'antd-style';
+import { agentDisplayName } from '@lobechat/types';
+import {
+  Avatar,
+  Block,
+  Button,
+  createStaticStyles,
+  cssVar,
+  cx,
+  Flexbox,
+  Icon,
+  Text,
+} from '@lobehub/ui';
+import { Target } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { DEFAULT_INBOX_AVATAR } from '@/const/meta';
+import { openGateReportModal } from '@/features/Acceptance/Viewer/Gate';
 import { taskDetailPath } from '@/features/AgentTasks/shared/taskDetailPath';
 import BriefCardActions from '@/features/DailyBrief/BriefCardActions';
 import BriefCardArtifacts from '@/features/DailyBrief/BriefCardArtifacts';
 import BriefCardSummary from '@/features/DailyBrief/BriefCardSummary';
+import BriefPriorityIcon from '@/features/DailyBrief/BriefPriorityIcon';
+import SelfReviewBriefDetails from '@/features/DailyBrief/SelfReviewBriefDetails';
 import { styles as briefStyles } from '@/features/DailyBrief/style';
 import { type BriefItem } from '@/features/DailyBrief/types';
+import { useSelfReviewBriefView } from '@/features/DailyBrief/useSelfReviewBriefView';
+import { homeType } from '@/features/Home/components/homeType';
+import Time from '@/features/Home/components/Time';
 import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwareNavigate';
-import Time from '@/routes/(main)/home/features/components/Time';
 
 import StatusGlyph from './StatusGlyph';
 
@@ -22,21 +38,18 @@ const styles = createStaticStyles(({ css, cssVar }) => ({
   `,
   taskName: css`
     overflow: hidden;
-
-    font-size: 12px;
-    color: ${cssVar.colorTextTertiary};
     text-overflow: ellipsis;
     white-space: nowrap;
   `,
   taskRef: css`
     flex: none;
     font-family: ${cssVar.fontFamilyCode};
-    font-size: 11px;
-    color: ${cssVar.colorTextTertiary};
   `,
 }));
 
 interface InboxBriefCardProps {
+  /** Rendered inside a rail card, which already draws the shell. */
+  bare?: boolean;
   brief: BriefItem;
 }
 
@@ -45,12 +58,18 @@ interface InboxBriefCardProps {
  * top spanning the full width; the agent avatar sits next to the *content* it
  * produced, not next to the metadata.
  */
-const InboxBriefCard = memo<InboxBriefCardProps>(({ brief }) => {
+const InboxBriefCard = memo<InboxBriefCardProps>(({ bare, brief }) => {
   const { t } = useTranslation('common');
   const navigate = useWorkspaceAwareNavigate();
 
   const agent = brief.agent;
   const isInbox = agent?.id === INBOX_SESSION_ID;
+  const agentName = agent
+    ? agentDisplayName(agent, isInbox ? t('inbox.title', { ns: 'chat' }) : t('defaultSession'))
+    : undefined;
+  // A nightly self-review proposal describes itself from its frozen actions, so
+  // the card says what would change instead of "a suggestion needs review".
+  const selfReview = useSelfReviewBriefView(brief.metadata);
   const canNavigate = Boolean(brief.taskId);
 
   // Error briefs carry their title + human, localized summary from the server
@@ -60,23 +79,34 @@ const InboxBriefCard = memo<InboxBriefCardProps>(({ brief }) => {
   const isError = brief.type === 'error';
 
   const hasTaskMeta = Boolean(brief.taskStatus || brief.taskIdentifier || brief.taskName);
+  // A goal brief has no task of its own; the goal it speaks for takes the
+  // meta row, and a click there lands on the goal.
+  const goal = brief.metadata?.goal;
+  const openGoal = () => {
+    if (!goal) return;
+    navigate(
+      brief.agentId ? `/agent/${brief.agentId}/goal/${goal.goalId}` : `/goal/${goal.goalId}`,
+    );
+  };
 
   const openTask = () => {
     if (!brief.taskId) return;
-    navigate(taskDetailPath(brief.taskId, brief.agentId ?? undefined));
+    navigate(taskDetailPath(brief.taskId, brief.agentId ?? undefined, brief.taskName));
   };
 
-  return (
-    <Block
-      className={briefStyles.card}
-      gap={10}
-      padding={12}
-      style={{ borderRadius: cssVar.borderRadiusLG }}
-      variant={'outlined'}
-    >
+  const content = (
+    <>
       {/* A brief raised outside a task has no status / ref / name to show, which
           left the meta row as an empty band with a lone timestamp. Drop the row
           entirely in that case and let the title line carry the time. */}
+      {!hasTaskMeta && goal && (
+        <Flexbox horizontal align={'center'} className={styles.meta} gap={7} onClick={openGoal}>
+          <Icon color={cssVar.colorTextTertiary} icon={Target} size={14} />
+          <span className={cx(homeType.meta, styles.taskName)}>{goal.goalTitle}</span>
+          <Flexbox flex={1} />
+          <Time date={brief.createdAt} />
+        </Flexbox>
+      )}
       {hasTaskMeta && (
         <Flexbox
           horizontal
@@ -95,8 +125,12 @@ const InboxBriefCard = memo<InboxBriefCardProps>(({ brief }) => {
           ) : (
             brief.taskStatus && <StatusGlyph status={brief.taskStatus} variant={'task'} />
           )}
-          {brief.taskIdentifier && <span className={styles.taskRef}>{brief.taskIdentifier}</span>}
-          {brief.taskName && <span className={styles.taskName}>{brief.taskName}</span>}
+          {brief.taskIdentifier && (
+            <span className={cx(homeType.meta, styles.taskRef)}>{brief.taskIdentifier}</span>
+          )}
+          {brief.taskName && (
+            <span className={cx(homeType.meta, styles.taskName)}>{brief.taskName}</span>
+          )}
           <Flexbox flex={1} />
           <Time date={brief.createdAt} />
         </Flexbox>
@@ -110,32 +144,71 @@ const InboxBriefCard = memo<InboxBriefCardProps>(({ brief }) => {
             shape={'circle'}
             size={28}
             style={{ flex: 'none' }}
-            title={
-              agent.title || (isInbox ? t('inbox.title', { ns: 'chat' }) : t('defaultSession'))
-            }
+            title={agentName}
           />
         )}
         <Flexbox flex={1} gap={6} style={{ minWidth: 0 }}>
           <Flexbox horizontal align={'center'} gap={8}>
-            <Text ellipsis style={{ flex: 1, minWidth: 0 }} weight={500}>
-              {brief.title}
+            {/* Priority sits in one place on every card — right before the title — so
+                a scan down the queue reads levels in a single column. */}
+            <BriefPriorityIcon priority={brief.priority} />
+            <Text ellipsis className={homeType.itemTitle} style={{ flex: 1, minWidth: 0 }}>
+              {selfReview?.title ?? brief.title}
             </Text>
-            {!hasTaskMeta && <Time date={brief.createdAt} />}
+            {!hasTaskMeta && !goal && <Time date={brief.createdAt} />}
           </Flexbox>
-          <BriefCardSummary summary={brief.summary} />
+          {selfReview ? (
+            <SelfReviewBriefDetails
+              agentName={agentName}
+              content={selfReview.content}
+              details={selfReview.details}
+            />
+          ) : (
+            <BriefCardSummary summary={brief.summary} />
+          )}
           <BriefCardArtifacts artifacts={brief.artifacts} />
         </Flexbox>
       </Flexbox>
 
+      {/* A held batch release is decided in its report, opened right here. */}
+      {goal?.reviewAcceptanceId && !brief.resolvedAction && (
+        <Flexbox horizontal justify={'flex-end'}>
+          <Button
+            size={'small'}
+            type={'primary'}
+            onClick={() => openGateReportModal({ acceptanceId: goal.reviewAcceptanceId! })}
+          >
+            {t('goalProcess.gate.openReview', { ns: 'chat' })}
+          </Button>
+        </Flexbox>
+      )}
       <BriefCardActions
         actions={brief.actions}
+        agentId={brief.agentId ?? brief.agent?.id}
         briefId={brief.id}
         briefType={brief.type}
+        labelsLocalized={!!goal}
+        recommendedActionKey={goal?.recommendedAction}
         resolvedAction={brief.resolvedAction}
         taskId={brief.taskId}
         taskStatus={brief.taskStatus}
         topicId={brief.topicId}
+        topicTitle={brief.taskName}
       />
+    </>
+  );
+
+  if (bare) return <Flexbox gap={10}>{content}</Flexbox>;
+
+  return (
+    <Block
+      className={briefStyles.card}
+      gap={10}
+      padding={12}
+      style={{ borderRadius: cssVar.borderRadiusLG }}
+      variant={'outlined'}
+    >
+      {content}
     </Block>
   );
 });

@@ -1,8 +1,7 @@
 'use client';
 
 import { EDITOR_DEBOUNCE_TIME } from '@lobechat/const';
-import { Block, Flexbox, Icon, Input, Skeleton, Tooltip } from '@lobehub/ui';
-import { message } from 'antd';
+import { Block, Flexbox, Icon, Input, Skeleton, toast, Tooltip } from '@lobehub/ui';
 import { debounce } from 'es-toolkit/compat';
 import isEqual from 'fast-deep-equal';
 import { PaletteIcon } from 'lucide-react';
@@ -79,7 +78,7 @@ const GroupHeader = memo(() => {
       if (!canEdit || !gid) return;
 
       if (file.size > MAX_AVATAR_SIZE) {
-        message.error(t('avatar.sizeExceeded'));
+        toast.error(t('avatar.sizeExceeded'));
         return;
       }
 
@@ -162,8 +161,8 @@ const GroupHeader = memo(() => {
                 <Suspense
                   fallback={
                     <Flexbox gap={8}>
-                      <Skeleton.Button block style={{ height: 38 }} />
-                      <Skeleton.Button block style={{ height: 38 }} />
+                      <Skeleton height={38} />
+                      <Skeleton height={38} />
                     </Flexbox>
                   }
                 >
@@ -198,6 +197,7 @@ const GroupHeader = memo(() => {
           style={{
             fontSize: 36,
             fontWeight: 600,
+            height: 'auto',
             padding: 0,
             width: '100%',
           }}

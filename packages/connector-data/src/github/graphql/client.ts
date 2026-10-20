@@ -36,6 +36,28 @@ export interface GitHubGraphQLRequest<Variables extends Record<string, unknown>>
 /** @internal Test seam and protocol adapter. */
 export interface GitHubConnectorTransport {
   getAuthenticatedUser: () => Promise<{ id: number | string; login: string }>;
+  /**
+   * Every repository the token can reach, across the owner's own account and
+   * the organizations they belong to — not the contribution-shaped listings
+   * above, which rank by evidence of work and would hide a repository the
+   * person has never touched but wants to build in.
+   */
+  listAccessibleRepositories: (input: { page: number; perPage: number }) => Promise<
+    Array<{
+      defaultBranch?: string | null;
+      isPrivate?: boolean;
+      name?: string | null;
+      owner?: string | null;
+    }>
+  >;
+  /** The branches of one repository, for choosing what an environment checks out. */
+  listRepositoryBranches: (input: {
+    owner: string;
+    /** 1-based page of `perPage` branches. Omitted means the first. */
+    page?: number;
+    perPage: number;
+    repository: string;
+  }) => Promise<Array<{ name?: string | null }>>;
   listRepositoryContributors: (input: {
     owner: string;
     perPage: number;
@@ -122,47 +144,42 @@ export const execute = async <Response, Variables extends Record<string, unknown
   transport,
   variables,
 }: ExecuteOptions<Response, Variables>): Promise<Response> =>
-  withConnectorRetry(
-    async () => {
-      let response: unknown;
+  withConnectorRetry(async () => {
+    let response: unknown;
 
-      try {
-        response = await transport.request({ operation, query, variables });
-      } catch (error) {
-        const errors = getGraphQLErrors(error);
-        const status = getErrorStatus(error);
-        log('GraphQL request failed: %O', {
-          errorName: getErrorName(error),
-          ...(errors === undefined ? {} : { errors }),
-          operation,
-          ...(status === undefined ? {} : { status }),
-        });
-        throw error;
-      }
-
-      const result = schema.safeParse(response);
-      if (result.success) return result.data;
-
-      log('GraphQL response validation failed: %O', {
-        issues: result.error.issues.slice(0, MAX_ISSUES).map(({ code, path }) => ({
-          code,
-          path: getIssuePath(path),
-        })),
+    try {
+      response = await transport.request({ operation, query, variables });
+    } catch (error) {
+      const errors = getGraphQLErrors(error);
+      const status = getErrorStatus(error);
+      log('GraphQL request failed: %O', {
+        errorName: getErrorName(error),
+        ...(errors === undefined ? {} : { errors }),
         operation,
+        ...(status === undefined ? {} : { status }),
       });
-      throw new ConnectorDataError({
-        code: 'github_response_invalid',
-        operation,
-        provider: 'github',
-        retryable: false,
-      });
-    },
-    {
-      code: 'github_request_failed',
+      throw error;
+    }
+
+    const result = schema.safeParse(response);
+    if (result.success) return result.data;
+
+    log('GraphQL response validation failed: %O', {
+      issues: result.error.issues.slice(0, MAX_ISSUES).map(({ code, path }) => ({
+        code,
+        path: getIssuePath(path),
+      })),
+      operation,
+    });
+    throw new ConnectorDataError({
+      cause: result.error,
+      code: 'github_response_invalid',
+      message: result.error.message,
       operation,
       provider: 'github',
-    },
-  );
+      retryable: false,
+    });
+  });
 
 /** @internal */
 export const createOctokitTransport = (accessToken: string): GitHubConnectorTransport => {
@@ -190,6 +207,30 @@ export const createOctokitTransport = (accessToken: string): GitHubConnectorTran
       return response.data.map(({ contributions, login }) => ({
         contributions,
         login,
+      }));
+    },
+    listRepositoryBranches: async ({ owner, page, perPage, repository }) => {
+      const response = await octokit.rest.repos.listBranches({
+        owner,
+        page,
+        per_page: perPage,
+        repo: repository,
+      });
+
+      return response.data.map(({ name }) => ({ name }));
+    },
+    listAccessibleRepositories: async ({ page, perPage }) => {
+      const response = await octokit.rest.repos.listForAuthenticatedUser({
+        page,
+        per_page: perPage,
+        sort: 'updated',
+      });
+
+      return response.data.map(({ default_branch, name, owner, private: isPrivate }) => ({
+        defaultBranch: default_branch,
+        isPrivate,
+        name,
+        owner: owner?.login,
       }));
     },
     listUserOrganizations: async ({ perPage }) => {

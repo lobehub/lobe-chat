@@ -1,9 +1,6 @@
 'use client';
 
-import { Flexbox } from '@lobehub/ui';
-import { Button, Select } from '@lobehub/ui/base-ui';
-import { App } from 'antd';
-import { createStaticStyles } from 'antd-style';
+import { Button, createStaticStyles, Flexbox, Select, toast } from '@lobehub/ui';
 import { customAlphabet } from 'nanoid/non-secure';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -87,7 +84,7 @@ const ForkGroupAndChat = memo<{ mobile?: boolean }>(() => {
     memberAgents = [],
   } = useDetailContext();
   const [isLoading, setIsLoading] = useState(false);
-  const { message } = App.useApp();
+
   const { t } = useTranslation('discover');
   const navigate = useWorkspaceAwareNavigate();
   const loadGroups = useAgentGroupStore((s) => s.loadGroups);
@@ -123,13 +120,13 @@ const ForkGroupAndChat = memo<{ mobile?: boolean }>(() => {
 
       if (existingGroupId) {
         // User has already forked this group, navigate to existing fork
-        message.info(t('fork.alreadyForked'));
+        toast.info(t('fork.alreadyForked'));
         navigate(urlJoin('/group', existingGroupId));
         return;
       }
 
       if (!config) {
-        message.error(
+        toast.error(
           t('groupAgents.noConfig', { defaultValue: 'Group configuration not available' }),
         );
         return;
@@ -261,13 +258,13 @@ const ForkGroupAndChat = memo<{ mobile?: boolean }>(() => {
         source: location.pathname,
       });
 
-      message.success(t('fork.success'));
+      toast.success(t('fork.success'));
 
       // Step 8: Navigate to chat
       navigate(urlJoin('/group', result.groupId));
     } catch (error: any) {
       console.error('Fork group failed:', error);
-      message.error(t('fork.failed'));
+      toast.error(t('fork.failed'));
     } finally {
       setIsLoading(false);
     }

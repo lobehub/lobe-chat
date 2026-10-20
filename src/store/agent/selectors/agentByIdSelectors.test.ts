@@ -3,6 +3,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { globalAgentContextManager } from '@/helpers/GlobalAgentContextManager';
 import { type AgentStoreState } from '@/store/agent/initialState';
 import { initialAgentSliceState } from '@/store/agent/slices/agent/initialState';
+import { initialAgentArtworkSliceState } from '@/store/agent/slices/artwork/initialState';
 import { initialBuiltinAgentSliceState } from '@/store/agent/slices/builtin/initialState';
 
 import { agentByIdSelectors } from './agentByIdSelectors';
@@ -14,6 +15,7 @@ vi.mock('@lobechat/const', async (importOriginal) => ({
 }));
 
 const createState = (overrides: Partial<AgentStoreState> = {}): AgentStoreState => ({
+  ...initialAgentArtworkSliceState,
   ...initialAgentSliceState,
   ...initialBuiltinAgentSliceState,
   ...overrides,
@@ -205,6 +207,25 @@ describe('agentByIdSelectors', () => {
       const state = createState({ agentMap: {} });
 
       expect(agentByIdSelectors.getAgentTTSVoiceById('missing')(state)).toBe('alloy');
+    });
+  });
+
+  describe('hasAgentConfigInScope', () => {
+    it('only treats a cached config as renderable in the scope that wrote it', () => {
+      const state = createState({
+        agentConfigReplica: { entries: {}, scope: 'user-1:workspace-a' },
+        agentMap: { 'agent-1': { title: 'From workspace A' } },
+      });
+
+      expect(agentByIdSelectors.hasAgentConfigInScope('agent-1', 'user-1:workspace-a')(state)).toBe(
+        true,
+      );
+      // After a workspace switch the entry is still in `agentMap`, but it
+      // belongs to the previous scope.
+      expect(agentByIdSelectors.hasAgentConfigInScope('agent-1', 'user-1:workspace-b')(state)).toBe(
+        false,
+      );
+      expect(agentByIdSelectors.hasAgentConfigInScope('', 'user-1:workspace-a')(state)).toBe(false);
     });
   });
 

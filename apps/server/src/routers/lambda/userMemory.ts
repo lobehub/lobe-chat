@@ -61,7 +61,7 @@ const personalUserMemoryProcedure = userMemoryProcedure.use(async ({ ctx, next }
   if (ctx.workspaceId) {
     throw new TRPCError({
       code: 'FORBIDDEN',
-      message: 'Persona versions are available only in personal scope',
+      message: 'Persona is available only in personal scope',
     });
   }
   return next();
@@ -118,9 +118,25 @@ export const userMemoryRouter = router({
       return ctx.activityModel.delete(input.id);
     }),
 
+  /**
+   * Delete the caller's persona without changing their memory entries.
+   * Triggering workflow: PersonaHeader confirmation -> memoryCRUDService.deletePersona
+   * -> userMemory.deletePersona -> UserPersonaModel.deletePersona.
+   */
+  deletePersona: personalUserMemoryWriteProcedure.mutation(async ({ ctx }) => {
+    await ctx.personaModel.deletePersona();
+    return { success: true };
+  }),
+
   deleteAll: userMemoryWriteProcedure.mutation(async ({ ctx }) => {
     await ctx.userMemoryModel.deleteAll();
     await ctx.personaModel.deletePersona();
+
+    // Reset all topics' userMemoryExtractStatus so they can be re-extracted
+    // after memories are purged. Without this, isTopicExtracted() skips them
+    // forever because the status remains 'completed' even though the memories
+    // no longer exist. Fixes #18498
+    await ctx.topicModel.resetMemoryExtractStatus();
 
     return { success: true };
   }),

@@ -4,13 +4,15 @@ import { memo } from 'react';
 import { createPortal } from 'react-dom';
 
 import { useDevDockStore } from '@/features/DevDock/store';
+import { useDevDockMounted } from '@/hooks/useDevDockMounted';
 
 import { messageStateSelectors, useConversationStore, virtuaListSelectors } from '../../../store';
 import { AT_BOTTOM_THRESHOLD } from './const';
 
 export const ScrollDebugThresholdOverlay = memo<{ atBottom: boolean }>(({ atBottom }) => {
+  const mounted = useDevDockMounted();
   const enabled = useDevDockStore((s) => s.scrollDebug);
-  if (!enabled) return null;
+  if (!mounted || !enabled) return null;
 
   return (
     <div
@@ -59,15 +61,17 @@ export const ScrollDebugThresholdOverlay = memo<{ atBottom: boolean }>(({ atBott
 ScrollDebugThresholdOverlay.displayName = 'ScrollDebugThresholdOverlay';
 
 const DebugInspector = memo(() => {
+  const mounted = useDevDockMounted();
   const enabled = useDevDockStore((s) => s.scrollDebug);
   const atBottom = useConversationStore(virtuaListSelectors.atBottom);
+  const autoScrollDetached = useConversationStore(virtuaListSelectors.autoScrollDetached);
   const isScrolling = useConversationStore(virtuaListSelectors.isScrolling);
   const isGenerating = useConversationStore(messageStateSelectors.isAIGenerating);
   const virtuaScrollMethods = useConversationStore((s) => s.virtuaScrollMethods);
 
-  if (!enabled) return null;
+  if (!mounted || !enabled) return null;
 
-  const shouldAutoScroll = atBottom && isGenerating && !isScrolling;
+  const shouldAutoScroll = atBottom && !autoScrollDetached && isGenerating && !isScrolling;
   const scrollOffset = virtuaScrollMethods?.getScrollOffset?.() ?? 0;
   const scrollSize = virtuaScrollMethods?.getScrollSize?.() ?? 0;
   const viewportSize = virtuaScrollMethods?.getViewportSize?.() ?? 0;
@@ -180,6 +184,9 @@ const DebugInspector = memo(() => {
           </div>
           <div style={{ color: isScrolling ? '#f59e0b' : '#6b7280', fontSize: 10 }}>
             scrolling: {isScrolling ? 'YES' : 'NO'}
+          </div>
+          <div style={{ color: autoScrollDetached ? '#f59e0b' : '#6b7280', fontSize: 10 }}>
+            detached: {autoScrollDetached ? 'YES' : 'NO'}
           </div>
         </div>
 

@@ -36,7 +36,8 @@ vi.mock('ahooks', () => ({
   useSessionStorageState: () => ['', mockSetRefreshSeed],
 }));
 
-vi.mock('antd', () => ({
+vi.mock('antd', async (importOriginal) => ({
+  ...(await importOriginal<object>()),
   App: {
     useApp: () => ({ message: { error: vi.fn() } }),
   },
@@ -53,10 +54,13 @@ vi.mock('swr', () => ({
   default: mockUseSWR,
 }));
 
+// The brief feed is a replica now: the hook only needs the feed to hold a
+// value for the scope (`briefListMap` has an entry) to leave its skeleton —
+// see `briefListSelectors.isBriefsInit`.
 vi.mock('@/store/brief', () => ({
   useBriefStore: (selector: (state: any) => unknown) =>
     selector({
-      isBriefsInit: true,
+      briefListMap: { unresolved: [] },
       useFetchBriefs: mockUseFetchBriefs,
     }),
 }));
@@ -258,7 +262,11 @@ describe('useDailyBriefRecommendationsUI', () => {
 
     const { result } = renderHook(() => useDailyBriefRecommendationsUI({ count: 2 }));
 
-    expect(result.current).toMatchObject({ mode: 'cards', templates: [template] });
+    expect(result.current).toMatchObject({
+      isValidating: false,
+      mode: 'cards',
+      templates: [template],
+    });
     expect(mockUseSWR.mock.calls[0][0]).toEqual(
       taskTemplateKeys.listDailyRecommend('', 2, 'en-US'),
     );
@@ -271,6 +279,19 @@ describe('useDailyBriefRecommendationsUI', () => {
       locale: 'en-US',
       refreshSeed: undefined,
     });
+  });
+
+  it('keeps validating state visible while cached cards remain mounted', () => {
+    mockUseSWR.mockReturnValue({
+      data: { data: [template], success: true },
+      isLoading: false,
+      isValidating: true,
+      mutate: mockMutate,
+    });
+
+    const { result } = renderHook(() => useDailyBriefRecommendationsUI());
+
+    expect(result.current).toMatchObject({ isValidating: true, mode: 'cards' });
   });
 
   it('drops recommendations that are missing connectors', () => {

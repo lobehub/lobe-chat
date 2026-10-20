@@ -1,7 +1,6 @@
 'use client';
 
-import { Markdown, ScrollArea } from '@lobehub/ui';
-import { createStaticStyles } from 'antd-style';
+import { createStaticStyles, Markdown, ScrollArea } from '@lobehub/ui';
 import type { RefObject } from 'react';
 import { memo, useEffect } from 'react';
 
@@ -44,15 +43,6 @@ const StreamingMarkdown = memo<StreamingMarkdownProps>(({ children, maxHeight = 
       disableContentFit
       scrollFade
       className={styles.scrollRoot}
-      contentProps={{
-        style: {
-          color: 'inherit',
-          display: 'block',
-          fontSize: 'inherit',
-          gap: 0,
-          lineHeight: 'inherit',
-        },
-      }}
       viewportProps={{
         className: styles.container,
         ref: ref as RefObject<HTMLDivElement>,

@@ -1,8 +1,7 @@
 'use client';
 
 import type { UIChatMessage } from '@lobechat/types';
-import { Flexbox, ScrollArea } from '@lobehub/ui';
-import { createStaticStyles } from 'antd-style';
+import { createStaticStyles, Flexbox, ScrollArea } from '@lobehub/ui';
 import type { RefObject } from 'react';
 import { memo, useMemo } from 'react';
 
@@ -44,8 +43,7 @@ interface ContentBlocksScrollFromMessages extends ContentBlocksScrollBaseProps {
 }
 
 export type ContentBlocksScrollProps =
-  | ContentBlocksScrollFromBlocks
-  | ContentBlocksScrollFromMessages;
+  ContentBlocksScrollFromBlocks | ContentBlocksScrollFromMessages;
 
 const ContentBlocksScroll = memo<ContentBlocksScrollProps>((props) => {
   const { disableEditing, onScroll, scroll = true, scrollRef, variant } = props;
@@ -93,16 +91,7 @@ const ContentBlocksScroll = memo<ContentBlocksScrollProps>((props) => {
       disableContentFit
       scrollFade
       className={styles.scrollRoot}
-      contentProps={{
-        style: {
-          color: 'inherit',
-          display: 'block',
-          fontSize: 'inherit',
-          gap: 0,
-          lineHeight: 'inherit',
-          paddingInlineEnd: 12,
-        },
-      }}
+      contentProps={{ style: { paddingInlineEnd: 12 } }}
       scrollbarProps={{
         style: {
           marginInlineEnd: 2,

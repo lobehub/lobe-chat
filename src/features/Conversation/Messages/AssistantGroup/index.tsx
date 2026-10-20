@@ -10,6 +10,8 @@ import { useTranslation } from 'react-i18next';
 import { MESSAGE_ACTION_BAR_PORTAL_ATTRIBUTES } from '@/const/messageActionPortal';
 import AgentGroupAvatar from '@/features/AgentGroupAvatar';
 import { ChatItem } from '@/features/Conversation/ChatItem';
+import { useMessageCommentCount } from '@/features/TopicComment/hooks';
+import MessageCommentBadge from '@/features/TopicComment/MessageCommentBadge';
 import { useOpenChatSettings } from '@/hooks/useInterceptingRoutes';
 import dynamic from '@/libs/next/dynamic';
 import { useAgentStore } from '@/store/agent';
@@ -28,19 +30,27 @@ import {
   messageStateSelectors,
   useConversationStore,
 } from '../../store';
+import type { SteerContinuation } from '../../store/slices/data/steerChains';
 import { getOperationFinalRootId } from '../../store/slices/data/workSummaries';
 import InterruptedHint from '../Assistant/components/InterruptedHint';
 import Usage from '../components/Extras/Usage';
 import MessageBranch from '../components/MessageBranch';
+import RefreshingIndicator from '../components/RefreshingIndicator';
 import {
   useSetMessageItemActionElementPortialContext,
   useSetMessageItemActionTypeContext,
 } from '../Contexts/message-action-context';
+import EditedFilesCard from '../EditedFilesCard';
+import { useOperationEditedFiles } from '../EditedFilesCard/useOperationEditedFiles';
+import GoalTaskCard from '../GoalTaskCard';
+import { useOperationGoals } from '../GoalTaskCard/useOperationGoals';
 import MessageWorks from '../MessageWorks';
 import SignalCallbacks from '../SignalCallbacks';
 import FileListViewer from '../User/components/FileListViewer';
 import Group from './components/Group';
+import { resolveWorkflowExpandLevel } from './components/segments';
 import type { WorkflowExpandLevelDefault } from './components/WorkflowCollapse';
+import { buildContinuationChains, collectSignalCallbacks } from './utils/continuations';
 
 const EditState = dynamic(() => import('./components/EditState'), {
   ssr: false,
@@ -69,6 +79,8 @@ const findLatestWorkRootOperationId = (
 };
 
 interface GroupMessageProps {
+  /** Later turns steered onto this one, rendered as one continuous chain. */
+  continuations?: SteerContinuation[];
   defaultWorkflowExpandLevel?: WorkflowExpandLevelDefault;
   disableEditing?: boolean;
   footerRender?: ReactNode;
@@ -77,8 +89,18 @@ interface GroupMessageProps {
   isLatestItem?: boolean;
 }
 
+const EMPTY_CONTINUATIONS: SteerContinuation[] = [];
+
 const GroupMessage = memo<GroupMessageProps>(
-  ({ defaultWorkflowExpandLevel, id, index, disableEditing, footerRender, isLatestItem }) => {
+  ({
+    continuations = EMPTY_CONTINUATIONS,
+    defaultWorkflowExpandLevel,
+    id,
+    index,
+    disableEditing,
+    footerRender,
+    isLatestItem,
+  }) => {
     // Get message and actionsConfig from ConversationStore
     const item = useConversationStore(dataSelectors.getDisplayMessageById(id), isEqual)!;
 
@@ -86,7 +108,7 @@ const GroupMessage = memo<GroupMessageProps>(
       agentId,
       usage,
       createdAt,
-      children,
+      children: groupChildren,
       performance,
       model,
       provider,
@@ -95,7 +117,34 @@ const GroupMessage = memo<GroupMessageProps>(
       signalCallbacks,
       taskCompletions,
     } = item;
+    const children = useMemo(
+      () =>
+        item.role === 'assistant' ? [item as unknown as AssistantContentBlock] : groupChildren,
+      [groupChildren, item],
+    );
     const avatar = useAgentMeta(agentId);
+    const continuationMessages = useConversationStore(
+      (s) => continuations.map((c) => dataSelectors.getDisplayMessageById(c.groupId)(s)),
+      isEqual,
+    );
+    const chains = useMemo(
+      () => buildContinuationChains(continuations, continuationMessages),
+      [continuationMessages, continuations],
+    );
+    const allSignalCallbacks = useMemo(
+      () =>
+        collectSignalCallbacks(
+          signalCallbacks as UISignalCallbacksBlock[] | undefined,
+          continuationMessages,
+        ),
+      [continuationMessages, signalCallbacks],
+    );
+    const tailMessage = continuationMessages.at(-1);
+    const tailId = chains.at(-1)?.id ?? id;
+    const allChildren = useMemo(
+      () => [...(children ?? []), ...chains.flatMap((chain) => chain.blocks)],
+      [chains, children],
+    );
 
     // Supervisor messages render the GROUP's identity (avatar + name + 主管 badge)
     // rather than the supervisor agent's own bare meta (whose title is literally
@@ -109,15 +158,49 @@ const GroupMessage = memo<GroupMessageProps>(
       isEqual,
     );
     const { t } = useTranslation('chat');
+    const { count: commentCount, topicId: commentTopicId } = useMessageCommentCount(id);
+
+    const streamingExpandLevel = useUserStore(
+      userGeneralSettingsSelectors.workflowStreamingExpandLevel,
+    );
+    const workflowExpandLevel = useMemo(
+      () => resolveWorkflowExpandLevel(defaultWorkflowExpandLevel, streamingExpandLevel),
+      [defaultWorkflowExpandLevel, streamingExpandLevel],
+    );
 
     // Collect fileList from all children blocks
-    const aggregatedFileList = useMemo(() => {
-      if (!children || children.length === 0) return [];
-      return children.flatMap((child: AssistantContentBlock) => child.fileList || []);
-    }, [children]);
+    const aggregatedFileList = useMemo(
+      () => allChildren.flatMap((child: AssistantContentBlock) => child.fileList || []),
+      [allChildren],
+    );
     const workRootOperationId = useMemo(
-      () => findLatestWorkRootOperationId(metadata, children, taskCompletions),
-      [children, metadata, taskCompletions],
+      () => findLatestWorkRootOperationId(metadata, allChildren, taskCompletions),
+      [allChildren, metadata, taskCompletions],
+    );
+    // Codex-style aggregate of files edited this round. Purely derived from the
+    // group's tool calls (entity-format files are excluded — they surface as
+    // `file` Works below), so it rides the same afterActions slot as Works.
+    // The card is a turn-end artifact, so skip the scan entirely while the group
+    // (or any child block) is still streaming: `children` changes on every token,
+    // and the finished card is all users see anyway.
+    const isGroupGenerating = useConversationStore(
+      messageStateSelectors.isAssistantGroupItemGenerating(tailId),
+    );
+    const editedFiles = useOperationEditedFiles(
+      isGroupGenerating ? undefined : allChildren,
+      // The sandbox-entity → Work handoff only happens on server-runtime rounds
+      // (the work anchor marks them); without it the card keeps every entry.
+      !!workRootOperationId,
+    );
+    const derivedGoals = useOperationGoals(allChildren);
+    // A goal a CLI agent creates with `lh` gets its card as soon as it exists:
+    // `/goal` keeps the same run going to plan it, and the card is how the user
+    // sees the goal while that happens. A builtin createGoal call already renders
+    // live inline, so its card stays a turn-end artifact like edited files.
+    const operationGoals = useMemo(
+      () =>
+        isGroupGenerating ? derivedGoals.filter((goal) => goal.source === 'command') : derivedGoals,
+      [derivedGoals, isGroupGenerating],
     );
 
     const isInbox = useAgentStore(builtinAgentSelectors.isInboxAgent);
@@ -125,18 +208,30 @@ const GroupMessage = memo<GroupMessageProps>(
     const openChatSettings = useOpenChatSettings();
 
     // Get the latest message block from the group that doesn't contain tools
-    const lastAssistantMsg = useConversationStore(
-      dataSelectors.getGroupLatestMessageWithoutTools(id),
+    const groupLatestMsg = useConversationStore(
+      dataSelectors.getGroupLatestMessageWithoutTools(tailId),
     );
+    const lastAssistantMsg =
+      tailMessage?.role === 'assistant'
+        ? tailMessage.tools?.length
+          ? undefined
+          : tailMessage
+        : groupLatestMsg;
 
     const contentId = lastAssistantMsg?.id;
+    const groupChains = useMemo(
+      () => chains.map((chain, i) => (i === chains.length - 1 ? { ...chain, contentId } : chain)),
+      [chains, contentId],
+    );
 
     // Get editing and interrupted state from ConversationStore
     const editing = useConversationStore(messageStateSelectors.isMessageEditing(contentId || ''));
     // Check interrupted on both the group root and the active block, because
     // continuation runs attach their operations to lastBlockId (contentId),
     // not the group root.
-    const groupInterrupted = useConversationStore(messageStateSelectors.isMessageInterrupted(id));
+    const groupInterrupted = useConversationStore(
+      messageStateSelectors.isMessageInterrupted(tailId),
+    );
     const blockInterrupted = useConversationStore(
       messageStateSelectors.isMessageInterrupted(contentId || ''),
     );
@@ -201,36 +296,68 @@ const GroupMessage = memo<GroupMessageProps>(
     return (
       <ChatItem
         showTitle
-        avatar={isSupervisor ? { ...avatar, title: groupMeta.title } : avatar}
+        // The supervisor row is labelled by the group, not by the agent behind it —
+        // drop `name` too, or the renderer's name-first resolution would surface the
+        // agent's personal name over the group title.
+        avatar={isSupervisor ? { ...avatar, name: undefined, title: groupMeta.title } : avatar}
         id={id}
         placement={'left'}
         time={createdAt}
-        titleAddon={isSupervisor ? <Tag>{t('supervisor.label')}</Tag> : undefined}
         actionAddon={
-          reactions.length > 0 ? (
-            <ReactionDisplay
-              isActive={isReactionActive}
-              reactions={reactions}
-              onReactionClick={handleReactionClick}
-            />
+          reactions.length > 0 || (commentCount > 0 && commentTopicId) ? (
+            <>
+              {reactions.length > 0 && (
+                <ReactionDisplay
+                  isActive={isReactionActive}
+                  reactions={reactions}
+                  onReactionClick={handleReactionClick}
+                />
+              )}
+              {commentCount > 0 && commentTopicId && (
+                <MessageCommentBadge count={commentCount} messageId={id} topicId={commentTopicId} />
+              )}
+            </>
           ) : undefined
         }
         actions={
-          !disableEditing && (
-            <>
-              {isDevMode && branch && (
-                <MessageBranch
-                  activeBranchIndex={branch.activeBranchIndex}
-                  count={branch.count}
-                  messageId={id}
-                />
-              )}
-              {actionBarHolder}
-            </>
-          )
+          <>
+            {!disableEditing && (
+              <>
+                {isDevMode && branch && (
+                  <MessageBranch
+                    activeBranchIndex={branch.activeBranchIndex}
+                    count={branch.count}
+                    messageId={id}
+                  />
+                )}
+                {actionBarHolder}
+              </>
+            )}
+            {/* Model + token usage rides the action row instead of claiming a
+                band of its own between the answer and the round's artifacts. */}
+            {isDevMode && model && (
+              <Flexbox horizontal align={'center'} paddingInline={8}>
+                <Usage model={model} performance={performance} provider={provider!} usage={usage} />
+              </Flexbox>
+            )}
+          </>
         }
-        afterActions={
-          workRootOperationId ? <MessageWorks rootOperationId={workRootOperationId} /> : undefined
+        belowMessage={
+          // Virtual round artifacts (edited files / Goal handoffs) are derived
+          // from the group's tool calls and stay visible after the tool steps
+          // collapse. They sit above the action row — they are the round's
+          // result, while the action row is chrome about the message. Only
+          // mount the wrapper when one exists: a work anchor can be present
+          // while `MessageWorks` itself resolves to null.
+          editedFiles.length > 0 || operationGoals.length > 0 ? (
+            <Flexbox gap={8}>
+              {editedFiles.length > 0 && <EditedFilesCard entries={editedFiles} />}
+              {operationGoals.length > 0 && <GoalTaskCard goals={operationGoals} />}
+              {workRootOperationId && <MessageWorks rootOperationId={workRootOperationId} />}
+            </Flexbox>
+          ) : workRootOperationId ? (
+            <MessageWorks rootOperationId={workRootOperationId} />
+          ) : undefined
         }
         customAvatarRender={
           isSupervisor
@@ -242,6 +369,12 @@ const GroupMessage = memo<GroupMessageProps>(
                 />
               )
             : undefined
+        }
+        titleAddon={
+          <>
+            {isSupervisor && <Tag>{t('supervisor.label')}</Tag>}
+            <RefreshingIndicator messageId={id} />
+          </>
         }
         onAvatarClick={onAvatarClick}
         onMouseEnter={onMouseEnter}
@@ -260,24 +393,25 @@ const GroupMessage = memo<GroupMessageProps>(
               enableProcessFold
               blocks={children}
               content={lastAssistantMsg?.content}
-              contentId={contentId}
+              contentId={groupChains.length > 0 ? undefined : contentId}
+              continuations={groupChains}
               // Folding a finished turn's process is the default behavior now
               // (graduated from Labs) — always on for the conversation.
-              defaultWorkflowExpandLevel={defaultWorkflowExpandLevel}
+              defaultWorkflowExpandLevel={workflowExpandLevel}
               disableEditing={disableEditing}
               id={id}
               isLatestItem={isLatestItem}
               messageIndex={index}
             />
           )}
-          {(signalCallbacks as UISignalCallbacksBlock[] | undefined)?.map((block) => (
+          {allSignalCallbacks.map((block) => (
             <SignalCallbacks block={block} key={block.sourceToolMessageId} />
           ))}
           {taskCompletions && taskCompletions.length > 0 && (
             <Group
               blocks={taskCompletions}
               contentId={taskCompletions.at(-1)?.id}
-              defaultWorkflowExpandLevel={defaultWorkflowExpandLevel}
+              defaultWorkflowExpandLevel={workflowExpandLevel}
               disableEditing={disableEditing}
               id={id}
               messageIndex={index}
@@ -291,9 +425,6 @@ const GroupMessage = memo<GroupMessageProps>(
           </div>
         )}
         {interrupted && <InterruptedHint />}
-        {isDevMode && model && (
-          <Usage model={model} performance={performance} provider={provider!} usage={usage} />
-        )}
         {footerRender}
         <Suspense fallback={null}>
           {editing && contentId && <EditState content={lastAssistantMsg?.content} id={contentId} />}

@@ -1,9 +1,9 @@
-import { App } from 'antd';
+import { toast } from '@lobehub/ui';
 import { Undo2 } from 'lucide-react';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { cleanSpeakerTag } from '@/store/chat/utils/cleanSpeakerTag';
+import { cleanBotPromptTags } from '@/store/chat/utils/parseReferencedMessage';
 import { unescapeMarkdown } from '@/store/chat/utils/unescapeMarkdown';
 import { useFileStore } from '@/store/file';
 import { type UploadFileItem } from '@/types/files/upload';
@@ -23,7 +23,7 @@ export const restoreToInputAction = defineAction({
   key: 'restoreToInput',
   useBuild: (ctx) => {
     const { t } = useTranslation('common');
-    const { message } = App.useApp();
+
     const editor = useConversationStore((s) => s.editor);
     const updateInputMessage = useConversationStore((s) => s.updateInputMessage);
 
@@ -39,7 +39,7 @@ export const restoreToInputAction = defineAction({
 
           // 1. Restore text. Prefer the persisted editor JSON (round-trips rich
           //    formatting) and fall back to the markdown content otherwise.
-          const markdown = unescapeMarkdown(cleanSpeakerTag(content ?? ''));
+          const markdown = unescapeMarkdown(cleanBotPromptTags(content ?? ''));
           const hasEditorData =
             editorData && typeof editorData === 'object' && Object.keys(editorData).length > 0;
 
@@ -99,12 +99,12 @@ export const restoreToInputAction = defineAction({
           }
 
           editor.focus();
-          message.success(t('restoreToInputSuccess'));
+          toast.success(t('restoreToInputSuccess'));
         },
         icon: Undo2,
         key: 'restoreToInput',
         label: t('restoreToInput'),
       };
-    }, [t, message, ctx.role, ctx.data, editor, updateInputMessage]);
+    }, [t, ctx.role, ctx.data, editor, updateInputMessage]);
   },
 });

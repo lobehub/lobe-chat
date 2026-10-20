@@ -52,7 +52,6 @@ function setup(options: { hasConnection?: boolean; sendReturns?: boolean } = {})
               connect: vi.fn(),
               disconnect: vi.fn(),
               on: vi.fn(),
-              sendInterrupt: vi.fn(),
               sendToolResult,
             },
             status: 'connected',
@@ -491,6 +490,8 @@ describe('internal_executeClientTool', () => {
         operationId: 'op-1',
       });
 
+      await vi.waitFor(() => expect(invokeExecutorMock).toHaveBeenCalledTimes(1));
+
       // Simulate a reconnect landing while the executor is still running:
       // a fresh entry appears in gatewayConnections.
       const reconnectedSend = vi.fn(() => true);
@@ -499,7 +500,6 @@ describe('internal_executeClientTool', () => {
           connect: vi.fn(),
           disconnect: vi.fn(),
           on: vi.fn(),
-          sendInterrupt: vi.fn(),
           sendToolResult: reconnectedSend,
         },
         status: 'connected',

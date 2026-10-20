@@ -25,6 +25,25 @@ describe('CodexAdapter', () => {
     expect(adapter.sessionId).toBe('thread-123');
   });
 
+  it('includes the native thread id in initial and deferred stream starts', () => {
+    const adapter = new CodexAdapter();
+    adapter.adapt({ thread_id: 'thread-resumable', type: 'thread.started' });
+
+    expect(adapter.adapt({ type: 'turn.started' })).toMatchObject([
+      { data: { provider: 'codex', sessionId: 'thread-resumable' }, type: 'stream_start' },
+    ]);
+
+    adapter.adapt({ type: 'turn.started' });
+    const nextStep = adapter.adapt({
+      item: { id: 'item-next', text: 'Next step', type: 'agent_message' },
+      type: 'item.completed',
+    });
+    expect(nextStep[0]).toMatchObject({
+      data: { newStep: true, provider: 'codex', sessionId: 'thread-resumable' },
+      type: 'stream_start',
+    });
+  });
+
   it('emits stream start and text chunks for turn + agent messages', () => {
     const adapter = new CodexAdapter();
 
@@ -42,10 +61,111 @@ describe('CodexAdapter', () => {
       data: { provider: 'codex' },
       type: 'stream_start',
     });
+    expect(start[0].data).not.toHaveProperty('sessionId');
     expect(text[0]).toMatchObject({
       data: { chunkType: 'text', content: 'hello from codex' },
       type: 'stream_chunk',
     });
+  });
+
+  it('streams app-server agent message deltas without duplicating the completed item', () => {
+    const adapter = new CodexAdapter();
+
+    adapter.adapt({ type: 'turn.started' });
+    const first = adapter.adapt({
+      delta: 'hello ',
+      item_id: 'item_0',
+      type: 'item.agent_message.delta',
+    });
+    const second = adapter.adapt({
+      delta: 'from app-server',
+      item_id: 'item_0',
+      type: 'item.agent_message.delta',
+    });
+    const completed = adapter.adapt({
+      item: {
+        id: 'item_0',
+        text: 'hello from app-server',
+        type: 'agent_message',
+      },
+      type: 'item.completed',
+    });
+
+    expect([...first, ...second].map((event) => event.data?.content).filter(Boolean)).toEqual([
+      'hello ',
+      'from app-server',
+    ]);
+    expect(completed).toEqual([]);
+  });
+
+  it('preserves whitespace-only app-server text deltas', () => {
+    const adapter = new CodexAdapter();
+    adapter.adapt({ type: 'turn.started' });
+
+    const events = adapter.adapt({
+      delta: ' ',
+      item_id: 'item_0',
+      type: 'item.agent_message.delta',
+    });
+
+    expect(events).toMatchObject([
+      { data: { chunkType: 'text', content: ' ' }, type: 'stream_chunk' },
+    ]);
+  });
+
+  it('streams cumulative command output snapshots before the final result', () => {
+    const adapter = new CodexAdapter();
+    adapter.adapt({ type: 'turn.started' });
+    adapter.adapt({
+      item: {
+        command: 'printf hello',
+        id: 'command-1',
+        status: 'in_progress',
+        type: 'command_execution',
+      },
+      type: 'item.started',
+    });
+
+    const first = adapter.adapt({
+      delta: 'hel',
+      item_id: 'command-1',
+      type: 'item.command_execution.output_delta',
+    });
+    const second = adapter.adapt({
+      delta: 'lo',
+      item_id: 'command-1',
+      type: 'item.command_execution.output_delta',
+    });
+
+    expect(first).toMatchObject([
+      {
+        data: {
+          chunkType: 'tool_state',
+          pluginState: { output: 'hel', stdout: 'hel' },
+          snapshotMode: 'replace',
+          snapshotSeq: 1,
+          toolCallId: 'command-1',
+        },
+        type: 'stream_chunk',
+      },
+    ]);
+    expect(second[0]).toMatchObject({
+      data: { pluginState: { output: 'hello' }, snapshotSeq: 2 },
+      type: 'stream_chunk',
+    });
+
+    const truncated = adapter.adapt({
+      delta: 'x'.repeat(25_001),
+      item_id: 'command-1',
+      type: 'item.command_execution.output_delta',
+    });
+    const afterTruncation = adapter.adapt({
+      delta: 'not retained',
+      item_id: 'command-1',
+      type: 'item.command_execution.output_delta',
+    });
+    expect(truncated[0].data.pluginState.output).toContain('[Output truncated:');
+    expect(afterTruncation).toEqual([]);
   });
 
   it('emits model metadata when the host configures the Codex session', () => {
@@ -79,6 +199,72 @@ describe('CodexAdapter', () => {
     expect(adapter.adapt({ model: 'gpt-5.5', type: 'session_configured' })).toEqual([]);
   });
 
+  it.each([
+    'Reconnecting... 2/5 (request timed out)',
+    'Reconnecting... 2/5 (stream disconnected before completion: Connection refused (os error 61))',
+    'Reconnecting... 1/5',
+    'Reconnecting... waiting for network',
+  ])('keeps the turn and pending tools alive during %s', (message) => {
+    const adapter = new CodexAdapter();
+    adapter.adapt({ type: 'turn.started' });
+    const item = {
+      command: 'printf recovered',
+      id: 'command-recovery',
+      status: 'in_progress',
+      type: 'command_execution',
+    };
+    adapter.adapt({ item, type: 'item.started' });
+
+    expect(adapter.adapt({ message, type: 'error' })).toMatchObject([
+      { data: { message }, type: 'stream_retry' },
+    ]);
+    const tool = adapter.adapt({
+      item: { ...item, aggregated_output: 'recovered', exit_code: 0, status: 'completed' },
+      type: 'item.completed',
+    });
+    expect(tool.map((event) => event.type)).toEqual(['tool_result', 'tool_end']);
+    expect(tool[1].data).toMatchObject({ isSuccess: true, toolCallId: item.id });
+    const text = adapter.adapt({
+      item: { id: 'answer', text: 'Recovery completed.', type: 'agent_message' },
+      type: 'item.completed',
+    });
+    expect(text.at(-1)).toMatchObject({
+      data: { chunkType: 'text', content: 'Recovery completed.' },
+      type: 'stream_chunk',
+    });
+    expect(adapter.adapt({ type: 'turn.completed' }).map((event) => event.type)).toEqual([
+      'stream_end',
+      'visible_output_end',
+      'agent_runtime_end',
+    ]);
+    expect(adapter.flush()).toEqual([]);
+  });
+
+  it('emits a terminal failure exactly once after reconnect attempts are exhausted', () => {
+    const adapter = new CodexAdapter();
+    adapter.adapt({ type: 'turn.started' });
+    for (const attempt of [1, 2]) {
+      expect(
+        adapter.adapt({ message: `Reconnecting... ${attempt}/2 (timeout)`, type: 'error' }),
+      ).toMatchObject([{ type: 'stream_retry' }]);
+    }
+
+    // The event type is authoritative, even when the final message repeats a retry notice.
+    const failure = {
+      error: { message: 'Reconnecting... 2/2 (timeout)' },
+      type: 'turn.failed',
+    };
+    const events = adapter.adapt(failure);
+    expect(events.map((event) => event.type)).toEqual([
+      'stream_end',
+      'visible_output_end',
+      'error',
+    ]);
+    expect(events.at(-1)?.data.message).toBe(failure.error.message);
+    expect(adapter.adapt(failure)).toEqual([]);
+    expect(adapter.adapt({ type: 'turn.completed' })).toEqual([]);
+  });
+
   it('emits terminal errors from Codex JSONL error events', () => {
     const adapter = new CodexAdapter();
     const rawMessage = JSON.stringify({
@@ -109,6 +295,38 @@ describe('CodexAdapter', () => {
         "The 'gpt-5.5' model requires a newer version of Codex. Please upgrade to the latest app or CLI and try again.",
       stderr: rawMessage,
     });
+  });
+
+  it.each(['error', 'turn.failed'])(
+    'classifies capacity failures from %s for auto-retry',
+    (type) => {
+      const adapter = new CodexAdapter();
+      const message = 'Selected model is at capacity. Please try a different model.';
+      adapter.adapt({ type: 'turn.started' });
+
+      const events = adapter.adapt(
+        type === 'error' ? { message, type } : { error: { message }, type },
+      );
+
+      expect(events.at(-1)).toMatchObject({
+        data: {
+          agentType: 'codex',
+          clearEchoedContent: true,
+          code: 'overloaded',
+          details: { kind: 'server_overloaded' },
+          message,
+          stderr: message,
+        },
+        type: 'error',
+      });
+      expect(adapter.adapt({ error: { message }, type: 'turn.failed' })).toEqual([]);
+    },
+  );
+
+  it('does not auto-retry unrelated model errors', () => {
+    const adapter = new CodexAdapter();
+    const events = adapter.adapt({ message: 'Selected model is unavailable.', type: 'error' });
+    expect(events.at(-1)?.data).not.toHaveProperty('code');
   });
 
   it('classifies Codex usage-limit errors with retry metadata', () => {
@@ -900,6 +1118,35 @@ describe('CodexAdapter', () => {
       }),
     ]);
     expect(adapter.flush()).toEqual([]);
+  });
+
+  it('marks an interrupted turn as cancelled instead of successful', () => {
+    const adapter = new CodexAdapter();
+    adapter.adapt({ type: 'turn.started' });
+    adapter.adapt({
+      item: {
+        command: 'sleep 30',
+        id: 'command-interrupted',
+        status: 'in_progress',
+        type: 'command_execution',
+      },
+      type: 'item.started',
+    });
+
+    const terminal = adapter.adapt({ reason: 'interrupted', type: 'turn.completed' });
+
+    expect(terminal).toContainEqual(
+      expect.objectContaining({
+        data: { isSuccess: false, toolCallId: 'command-interrupted' },
+        type: 'tool_end',
+      }),
+    );
+    expect(terminal).toContainEqual(
+      expect.objectContaining({
+        data: { reason: 'interrupted' },
+        type: 'agent_runtime_end',
+      }),
+    );
   });
 
   it('ignores todo item.updated events that have no active started tool', () => {

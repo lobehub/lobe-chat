@@ -1,4 +1,9 @@
-import type { ChatToolPayload, RuntimeStepContext, WorkRegistrationIntent } from '@lobechat/types';
+import type {
+  ChatToolPayload,
+  RuntimeStepContext,
+  StepContextTodoItem,
+  WorkRegistrationIntent,
+} from '@lobechat/types';
 
 import type { AgentState } from '../types';
 import type { RuntimeRetryKind } from '../utils';
@@ -8,6 +13,13 @@ export interface ToolRunResult {
   content: string;
   /** Server tool paused (client/device dispatch) — result arrives later. */
   deferred?: boolean;
+  /**
+   * Wall time the tool took on the DEVICE, by the device's own clock, when the
+   * call was dispatched to one. Paired with the server-observed
+   * `executionTime`, the difference is pure dispatch overhead — the number that
+   * decides whether moving the agent loop onto the device is worth it.
+   */
+  deviceExecutionTime?: number;
   error?: unknown;
   executionTime?: number;
   state?: Record<string, any>;
@@ -21,6 +33,20 @@ export interface ToolRunResult {
    */
   workRegistration?: WorkRegistrationIntent;
 }
+
+export interface ToolForwardingRequest {
+  data: Pick<ChatToolPayload, 'apiName' | 'identifier'> & { args: Record<string, unknown> };
+  metadata: {
+    caseId?: string;
+    callIndex: number;
+    operationId: string;
+    stepIndex: number;
+  };
+  type: 'toolCall';
+}
+
+export type ToolForwardingResponse =
+  { data: ToolRunResult; success: true } | { error?: unknown; success: false };
 
 /**
  * A Work version ready to persist: the executor pairs the tool's registration
@@ -50,6 +76,8 @@ export interface ToolRunExecution {
   interrupted?: boolean;
   mocked?: boolean;
   result: ToolRunResult;
+  /** Server-owned verdict; tools cannot supply this through their result. */
+  resultBlocked?: boolean;
   /** The transport already persisted the result into its tool message. */
   resultPersisted?: boolean;
   /** Existing/pre-created tool message owned by the transport. */
@@ -63,11 +91,23 @@ export interface ToolRunExecution {
  * adapter is constructed — NOT passed here — so this stays transport-neutral.
  */
 export interface ToolRunContext {
+  /**
+   * Forwarded from `RuntimeOperationContext.abortSignal`. Transports that reach
+   * the network (or a device) should thread it into their request so an
+   * interrupt actually stops the work, not just stops waiting for it.
+   */
+  abortSignal?: AbortSignal;
   activatedSkills?: unknown[];
   activeDeviceId?: string;
   agentId?: string;
   assistantMessageId?: string;
   callIndex: number;
+  /**
+   * Todo items as of this tool call, reconstructed from message history. Tool
+   * runtimes that mutate todos need it because their own persistence (the plan
+   * document) is optional — see `PlanExecutionRuntime.resolveExistingTodos`.
+   */
+  currentTodos?: StepContextTodoItem[];
   effectiveManifestMap: Record<string, any>;
   groupId?: string;
   messageId?: string;
@@ -100,6 +140,11 @@ export interface ToolRunContext {
  * client adapter wraps `internal_invokeDifferentTypePlugin`.
  */
 export interface ToolTransport {
+  /** Execution-entry control; a returned result settles this call without launching it. */
+  beforeToolCall?: (
+    call: ChatToolPayload,
+    context: ToolRunContext,
+  ) => Promise<ToolRunExecution | undefined>;
   /** This runtime can execute tools whose source is the client directly. */
   canRunClientTools?: boolean;
   getCost?: (toolName: string) => number;

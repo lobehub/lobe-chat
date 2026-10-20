@@ -4,17 +4,41 @@ import type { ChatMethodOptions, ModelRuntime } from '@lobechat/model-runtime';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import type { RuntimeExecutorContext } from '../context';
+import { formatErrorForState } from '../formatErrorForState';
 import { createServerCallLlmAttempt } from './serverCallLlmAttempt';
 import type { ServerCallLlmTooling } from './serverCallLlmTooling';
+
+const recordModelCompletionFailureMock = vi.hoisted(() => vi.fn());
+
+/**
+ * Behaves like a real runtime error hook: the trace id is attached only after an async side
+ * effect (writing the error log), so the attempt must await the hook before rethrowing.
+ */
+const attachTraceIdLater = async (error: { _responseBody?: unknown }) => {
+  await new Promise((resolve) => setTimeout(resolve, 0));
+  error._responseBody = { traceId: 'trace-1' };
+};
 
 vi.mock('@lobechat/model-runtime', async () => {
   const { isEmptyModelCompletion, ModelEmptyError } =
     await import('../../../../../../packages/model-runtime/src/errors/modelEmptyCompletion');
+  const { isModelRefusalFinishReason, ModelRefusalError } =
+    await import('../../../../../../packages/model-runtime/src/errors/modelRefusal');
   const { consumeStreamUntilDone } =
     await import('../../../../../../packages/model-runtime/src/utils/consumeStream');
 
-  return { consumeStreamUntilDone, isEmptyModelCompletion, ModelEmptyError };
+  return {
+    consumeStreamUntilDone,
+    isEmptyModelCompletion,
+    isModelRefusalFinishReason,
+    ModelEmptyError,
+    ModelRefusalError,
+  };
 });
+
+vi.mock('@/business/server/recordModelCompletionFailure', () => ({
+  recordModelCompletionFailure: recordModelCompletionFailureMock,
+}));
 
 vi.mock('@/envs/file', () => ({
   fileEnv: { NEXT_PUBLIC_S3_FILE_PATH: 'files' },
@@ -42,7 +66,12 @@ const resolved = {
 const createAttempt = (
   runCallbacks: (options: ChatMethodOptions) => Promise<void>,
   blobStore?: BlobStore,
-  attemptOverrides?: { clientIp?: string; userAgent?: string },
+  attemptOverrides?: {
+    clientIp?: string;
+    agentShareVisitorIds?: { agentId: string; shareId: string; visitorUserId: string };
+    userAgent?: string;
+  },
+  abortSignal?: AbortSignal,
 ) => {
   const publishStreamChunk = vi.fn().mockResolvedValue('event-1');
   const streamManager = {
@@ -50,6 +79,7 @@ const createAttempt = (
     publishStreamEvent: vi.fn().mockResolvedValue('event-2'),
   } as unknown as RuntimeExecutorContext['streamManager'];
   const ctx = {
+    abortSignal,
     messageModel: {} as RuntimeExecutorContext['messageModel'],
     operationId: 'operation-1',
     serverDB: {} as RuntimeExecutorContext['serverDB'],
@@ -62,6 +92,7 @@ const createAttempt = (
     await runCallbacks(options!);
     return new Response('done');
   });
+  const handleChatStreamError = vi.fn();
   const events: AgentEvent[] = [];
   const onFirstChunk = vi.fn();
   const attempt = createServerCallLlmAttempt({
@@ -78,7 +109,10 @@ const createAttempt = (
     maxAttempts: 3,
     messageCount: 1,
     model: 'test-model',
-    modelRuntime: { chat } as unknown as Pick<ModelRuntime, 'chat'>,
+    modelRuntime: { chat, handleChatStreamError } as unknown as Pick<
+      ModelRuntime,
+      'chat' | 'handleChatStreamError'
+    >,
     onFirstChunk,
     operationLogId: 'operation-1:2',
     provider: 'test-provider',
@@ -88,7 +122,7 @@ const createAttempt = (
     ...attemptOverrides,
   });
 
-  return { attempt, chat, events, onFirstChunk, publishStreamChunk };
+  return { attempt, chat, events, handleChatStreamError, onFirstChunk, publishStreamChunk };
 };
 
 describe('ServerCallLlmAttempt', () => {
@@ -110,6 +144,7 @@ describe('ServerCallLlmAttempt', () => {
         await callback?.onToolsCalling?.({ chunk: [], toolsCalling: [rawToolCall] });
         await callback?.onCompletion?.({
           finishReason: 'tool_use',
+          reasoning: { content: 'Reasoning', signature: 'encrypted-signature' },
           speed: { tps: 20, ttft: 100 },
           text: '',
           usage: { totalInputTokens: 10, totalOutputTokens: 5, totalTokens: 15 },
@@ -124,6 +159,10 @@ describe('ServerCallLlmAttempt', () => {
     expect(snapshot.content).toBe('Visible answer');
     expect(snapshot.thinkingContent).toBe('Reasoning');
     expect(snapshot.grounding).toEqual({ searchQueries: ['docs'] });
+    expect(snapshot.reasoning).toEqual({
+      content: 'Reasoning',
+      signature: 'encrypted-signature',
+    });
     expect(snapshot.finishReason).toBe('tool_use');
     expect(snapshot.speed).toEqual({ tps: 20, ttft: 100 });
     expect(snapshot.usage).toEqual({
@@ -181,6 +220,36 @@ describe('ServerCallLlmAttempt', () => {
     );
   });
 
+  // A share run is billed to the CREATOR's account, so without this the spend
+  // row is indistinguishable from the creator's own usage.
+  it('forwards share attribution into the chat call metadata', async () => {
+    const { attempt, chat } = createAttempt(
+      async ({ callback }) => {
+        await callback?.onText?.('Answer');
+        await callback?.onCompletion?.({ text: '', usage: { totalOutputTokens: 1 } });
+      },
+      undefined,
+      {
+        agentShareVisitorIds: {
+          agentId: 'agt_shared',
+          shareId: 'share-1',
+          visitorUserId: 'visitor-1',
+        },
+      },
+    );
+
+    await attempt.execute();
+
+    expect(chat).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.objectContaining({
+        metadata: expect.objectContaining({
+          agentShare: { agentId: 'agt_shared', shareId: 'share-1', visitorUserId: 'visitor-1' },
+        }),
+      }),
+    );
+  });
+
   it('leaves clientIp / userAgent metadata undefined when not provided', async () => {
     const { attempt, chat } = createAttempt(async ({ callback }) => {
       await callback?.onText?.('Answer');
@@ -194,8 +263,15 @@ describe('ServerCallLlmAttempt', () => {
     expect(metadata.userAgent).toBeUndefined();
   });
 
-  it('keeps partial output and usage readable after a stream error', async () => {
-    const { attempt } = createAttempt(async ({ callback }) => {
+  it('records provider evidence while keeping partial output readable after a stream error', async () => {
+    const providerEvidence = {
+      providerResponse: {
+        apiMode: 'google_generate_content',
+        rawEvents: [{ candidates: [], responseId: 'response-1' }],
+      },
+    };
+    const { attempt } = createAttempt(async ({ callback, diagnostics }) => {
+      Object.assign(diagnostics!, providerEvidence);
       await callback?.onText?.('Partial answer');
       await callback?.onCompletion?.({
         text: '',
@@ -221,6 +297,163 @@ describe('ServerCallLlmAttempt', () => {
         usage: { totalOutputTokens: 3 },
       }),
     );
+    expect(recordModelCompletionFailureMock).toHaveBeenCalledWith(
+      expect.objectContaining({
+        reason: 'stream_error',
+        response: expect.objectContaining({
+          streamError: {
+            errorType: 'ProviderBizError',
+            message: 'provider stream failed',
+            status: 503,
+          },
+        }),
+        runtime: expect.objectContaining({ provider: providerEvidence }),
+      }),
+    );
+  });
+
+  it('records a provider error raised before any response event', async () => {
+    const { attempt } = createAttempt(async () => {
+      throw new Error('upstream request failed');
+    });
+
+    await expect(attempt.execute()).rejects.toThrow('upstream request failed');
+    expect(recordModelCompletionFailureMock).toHaveBeenCalledWith(
+      expect.objectContaining({
+        reason: 'provider_error',
+        response: expect.objectContaining({
+          error: { message: 'upstream request failed', name: 'Error' },
+        }),
+      }),
+    );
+  });
+
+  it('does not record an aborted provider request as a failure', async () => {
+    const { attempt } = createAttempt(async ({ diagnostics }) => {
+      Object.assign(diagnostics!, { providerResponse: { aborted: true } });
+      throw new Error('Request aborted');
+    });
+
+    await expect(attempt.execute()).rejects.toThrow('Request aborted');
+    expect(recordModelCompletionFailureMock).not.toHaveBeenCalled();
+  });
+
+  it('hands the operation abort signal to the provider so an interrupt stops the stream', async () => {
+    const interrupt = new AbortController();
+    const { attempt } = createAttempt(
+      async ({ callback, signal }) => {
+        await callback?.onThinking?.('Planning the article');
+        interrupt.abort();
+        if (signal?.aborted) {
+          await callback?.onCompletion?.({ finishReason: 'abort', text: '' });
+          return;
+        }
+        await callback?.onText?.('Full article of the cancelled request');
+        await callback?.onCompletion?.({ text: '', usage: { totalOutputTokens: 800 } });
+      },
+      undefined,
+      undefined,
+      interrupt.signal,
+    );
+
+    await attempt.execute();
+
+    expect(attempt.snapshot()).toMatchObject({
+      content: '',
+      finishReason: 'abort',
+      thinkingContent: 'Planning the article',
+      usage: undefined,
+    });
+  });
+
+  it('stores an in-band stream error with the trace id attached by the error hook', async () => {
+    const { attempt, handleChatStreamError } = createAttempt(async ({ callback }) => {
+      await callback?.onError?.({ errorType: 'ProviderBizError', message: 'Provider timed out' });
+    });
+    handleChatStreamError.mockImplementation(attachTraceIdLater);
+
+    const error = await attempt.execute().catch((error: unknown) => error);
+
+    expect(error).toMatchObject({ message: 'LLM stream error: Provider timed out' });
+    expect(handleChatStreamError).toHaveBeenCalledWith(error, {
+      options: expect.objectContaining({
+        metadata: expect.objectContaining({ operationId: 'operation-1' }),
+      }),
+      payload: expect.objectContaining({ model: 'test-model' }),
+    });
+    expect(formatErrorForState(error).body).toMatchObject({ traceId: 'trace-1' });
+  });
+
+  it('stores a fallback failure raised mid-stream with the error hook trace id', async () => {
+    const fallbackError = {
+      error: { message: 'Access to Anthropic models is not allowed for this account.' },
+      errorType: 'ProviderBizError',
+      provider: 'lobehub',
+    };
+    const { attempt, chat, handleChatStreamError } = createAttempt(async () => {});
+    chat.mockImplementationOnce(
+      async () =>
+        new Response(
+          new ReadableStream({
+            pull(controller) {
+              controller.error(fallbackError);
+            },
+          }),
+        ),
+    );
+
+    handleChatStreamError.mockImplementation(attachTraceIdLater);
+
+    await expect(attempt.execute()).rejects.toBe(fallbackError);
+    expect(handleChatStreamError).toHaveBeenCalledWith(fallbackError, expect.anything());
+    expect(formatErrorForState(fallbackError).body).toMatchObject({ traceId: 'trace-1' });
+  });
+
+  it('stores a plain stream read failure with the error hook trace id', async () => {
+    const readError = new TypeError('terminated');
+    const { attempt, chat, handleChatStreamError } = createAttempt(async () => {});
+    chat.mockImplementationOnce(
+      async () =>
+        new Response(
+          new ReadableStream({
+            pull(controller) {
+              controller.error(readError);
+            },
+          }),
+        ),
+    );
+    handleChatStreamError.mockImplementation(attachTraceIdLater);
+
+    await expect(attempt.execute()).rejects.toBe(readError);
+    expect(formatErrorForState(readError).body).toMatchObject({ traceId: 'trace-1' });
+  });
+
+  it('leaves errors thrown by chat() and empty completions to their own handlers', async () => {
+    const { attempt: rejected, handleChatStreamError: rejectedHook } = createAttempt(async () => {
+      throw new Error('upstream request failed');
+    });
+    await expect(rejected.execute()).rejects.toThrow('upstream request failed');
+    expect(rejectedHook).not.toHaveBeenCalled();
+
+    const { ModelEmptyError } = await import('@lobechat/model-runtime');
+    const emptyError = new ModelEmptyError();
+    const {
+      attempt: empty,
+      chat,
+      handleChatStreamError: emptyHook,
+    } = createAttempt(async () => {});
+    chat.mockImplementationOnce(
+      async () =>
+        new Response(
+          new ReadableStream({
+            pull(controller) {
+              controller.error(emptyError);
+            },
+          }),
+        ),
+    );
+    await expect(empty.execute()).rejects.toBe(emptyError);
+    expect(emptyHook).not.toHaveBeenCalled();
   });
 
   it('salvages a natural-stop answer emitted only in reasoning', async () => {
@@ -279,6 +512,240 @@ describe('ServerCallLlmAttempt', () => {
           { image: 'https://files.example/image.png', type: 'image' },
         ],
         hasContentImages: true,
+      }),
+    );
+  });
+
+  it('accepts an image-only multimodal completion as non-empty', async () => {
+    const blobStore: BlobStore = {
+      persistBase64: vi.fn().mockResolvedValue({
+        fileId: 'file-1',
+        key: 'files/generations/image.png',
+        url: 'https://files.example/image.png',
+      }),
+      resolveUrl: vi.fn(),
+    };
+    const { attempt } = createAttempt(async ({ callback }) => {
+      await callback?.onContentPart?.({
+        content: 'BASE64_IMAGE',
+        mimeType: 'image/png',
+        partType: 'image',
+      });
+      await callback?.onCompletion?.({
+        finishReason: 'stop',
+        text: '',
+        usage: { outputImageTokens: 1120, totalOutputTokens: 1120 },
+      });
+    }, blobStore);
+
+    await expect(attempt.execute()).resolves.toBeUndefined();
+    expect(attempt.snapshot()).toEqual(
+      expect.objectContaining({
+        content: '',
+        contentParts: [{ image: 'https://files.example/image.png', type: 'image' }],
+        hasContentImages: true,
+      }),
+    );
+  });
+
+  it('classifies an empty refusal separately and records complete normalized evidence', async () => {
+    const { attempt } = createAttempt(async ({ callback }) => {
+      await callback?.onContentPart?.({
+        content: '',
+        partType: 'text',
+        thoughtSignature: 'content-thought-signature',
+      });
+      await callback?.onReasoningPart?.({
+        content: '',
+        partType: 'text',
+        thoughtSignature: 'reasoning-thought-signature',
+      });
+      await callback?.onCompletion?.({
+        finishReason: 'refusal',
+        reasoning: { content: '', signature: 'reasoning-signature' },
+        text: '',
+        usage: { totalInputTokens: 10, totalOutputTokens: 0, totalTokens: 10 },
+      });
+    });
+
+    await expect(attempt.execute()).rejects.toMatchObject({
+      errorType: 'ModelRefusal',
+      message: 'The model declined to answer this request.',
+    });
+    expect(recordModelCompletionFailureMock).toHaveBeenCalledWith(
+      expect.objectContaining({
+        attempt: 1,
+        maxAttempts: 3,
+        model: 'test-model',
+        operationId: 'operation-1',
+        operationLogId: 'operation-1:2',
+        provider: 'test-provider',
+        reason: 'refusal',
+        request: expect.objectContaining({
+          messages: [{ content: 'Question', role: 'user' }],
+        }),
+        response: {
+          base64ImageEvents: [],
+          completion: expect.objectContaining({
+            finishReason: 'refusal',
+            reasoning: { content: '', signature: 'reasoning-signature' },
+          }),
+          contentPartEvents: [
+            {
+              content: '',
+              partType: 'text',
+              thoughtSignature: 'content-thought-signature',
+            },
+          ],
+          output: expect.objectContaining({
+            finishReason: 'refusal',
+            reasoning: { content: '', signature: 'reasoning-signature' },
+          }),
+          reasoningPartEvents: [
+            {
+              content: '',
+              partType: 'text',
+              thoughtSignature: 'reasoning-thought-signature',
+            },
+          ],
+        },
+        stepIndex: 2,
+        topicId: 'topic-1',
+        trigger: 'user',
+        userId: 'user-1',
+      }),
+    );
+  });
+
+  it('keeps a refusal with visible provider text as a normal completion', async () => {
+    const { attempt } = createAttempt(async ({ callback }) => {
+      await callback?.onText?.('I cannot help with that request.');
+      await callback?.onCompletion?.({
+        finishReason: 'refusal',
+        text: 'I cannot help with that request.',
+        usage: { totalOutputTokens: 8 },
+      });
+    });
+
+    await expect(attempt.execute()).resolves.toBeUndefined();
+    expect(attempt.snapshot().content).toBe('I cannot help with that request.');
+    expect(recordModelCompletionFailureMock).not.toHaveBeenCalled();
+  });
+
+  it('classifies a refusal with only hidden reasoning as ModelRefusal', async () => {
+    const { attempt } = createAttempt(async ({ callback }) => {
+      await callback?.onThinking?.('Internal refusal analysis');
+      await callback?.onCompletion?.({
+        finishReason: 'refusal',
+        reasoning: { content: 'Internal refusal analysis', signature: 'reasoning-signature' },
+        text: '',
+        usage: { totalOutputTokens: 12 },
+      });
+    });
+
+    await expect(attempt.execute()).rejects.toMatchObject({
+      diagnostics: expect.objectContaining({ reasoningLength: 25 }),
+      errorType: 'ModelRefusal',
+    });
+    expect(recordModelCompletionFailureMock).toHaveBeenCalledWith(
+      expect.objectContaining({ reason: 'refusal' }),
+    );
+  });
+
+  it('classifies a blank GLM sensitive-content stop as ModelRefusal', async () => {
+    const { attempt } = createAttempt(async ({ callback }) => {
+      await callback?.onCompletion?.({ finishReason: 'sensitive', text: '' });
+    });
+
+    await expect(attempt.execute()).rejects.toMatchObject({
+      diagnostics: expect.objectContaining({ finishReason: 'sensitive' }),
+      errorType: 'ModelRefusal',
+    });
+    expect(recordModelCompletionFailureMock).toHaveBeenCalledWith(
+      expect.objectContaining({ reason: 'refusal' }),
+    );
+  });
+
+  it('records an unexplained blank completion before throwing ModelEmptyError', async () => {
+    const { attempt } = createAttempt(async ({ callback }) => {
+      await callback?.onCompletion?.({
+        finishReason: 'stop',
+        text: '',
+        usage: { totalInputTokens: 5, totalOutputTokens: 0, totalTokens: 5 },
+      });
+    });
+
+    await expect(attempt.execute()).rejects.toMatchObject({
+      errorType: 'ModelEmptyCompletion',
+      message: 'The model provider returned an empty completion.',
+    });
+    expect(recordModelCompletionFailureMock).toHaveBeenCalledWith(
+      expect.objectContaining({
+        reason: 'empty_completion',
+        response: expect.objectContaining({
+          completion: expect.objectContaining({ finishReason: 'stop' }),
+          output: expect.objectContaining({ finishReason: 'stop' }),
+        }),
+      }),
+    );
+  });
+
+  it('records route and provider-boundary evidence with an empty completion', async () => {
+    const rawResponseBody = 'data: {"type":"message_delta"}\n\ndata: {"type":"message_stop"}\n\n';
+    const providerEvidence = {
+      providerRequest: {
+        apiMode: 'messages',
+        payload: { messages: [{ content: 'Final provider prompt', role: 'user' }] },
+        sentAt: 100,
+      },
+      providerResponse: {
+        eventCount: 5,
+        hasNonWhitespaceText: false,
+        hasNonWhitespaceThinking: false,
+        rawEvents: [
+          { delta: { stop_reason: 'end_turn' }, type: 'message_delta' },
+          { type: 'message_stop' },
+        ],
+        rawResponse: {
+          body: rawResponseBody,
+          byteLength: new TextEncoder().encode(rawResponseBody).byteLength,
+          status: 'captured',
+        },
+        requestId: 'request-1',
+        status: 200,
+        stopReason: 'end_turn',
+        thinkingChars: 1,
+      },
+    };
+    const routeEvidence = {
+      apiType: 'deepseek',
+      channelId: 'deepseek',
+      optionIndex: 0,
+      providerId: 'lobehub',
+      routerId: 'deepseek',
+      success: true,
+      totalOptions: 3,
+    };
+    const { attempt } = createAttempt(async ({ callback, diagnostics, metadata }) => {
+      Object.assign(diagnostics!, providerEvidence);
+      metadata!.routeAttempt = routeEvidence;
+      await callback?.onThinking?.(' ');
+      await callback?.onCompletion?.({
+        finishReason: 'end_turn',
+        text: '',
+        usage: { totalInputTokens: 206_384, totalOutputTokens: 1, totalTokens: 206_385 },
+      });
+    });
+
+    await expect(attempt.execute()).rejects.toMatchObject({
+      errorType: 'ModelEmptyCompletion',
+    });
+    expect(recordModelCompletionFailureMock).toHaveBeenCalledWith(
+      expect.objectContaining({
+        runtime: {
+          provider: providerEvidence,
+          route: routeEvidence,
+        },
       }),
     );
   });

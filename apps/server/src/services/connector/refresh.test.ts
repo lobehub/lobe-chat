@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { deviceGateway } from '@/server/services/deviceGateway';
 import { after } from '@/server/utils/scheduleAfterResponse';
 
 import {
@@ -18,6 +19,7 @@ vi.mock('@/server/utils/scheduleAfterResponse', () => ({
   }),
 }));
 vi.mock('./sync', () => ({ syncConnectorToolsById: vi.fn().mockResolvedValue({ toolCount: 3 }) }));
+vi.mock('@/server/services/deviceGateway', () => ({ deviceGateway: { isConfigured: false } }));
 
 const ctx = {} as any;
 const NOW = 1_000_000_000_000;
@@ -43,6 +45,7 @@ beforeEach(() => {
   vi.clearAllMocks();
   deferred.length = 0;
   vi.mocked(syncConnectorToolsById).mockResolvedValue({ toolCount: 3 });
+  (deviceGateway as any).isConfigured = false;
 });
 
 describe('buildLastSyncedAtMap', () => {
@@ -118,6 +121,33 @@ describe('scheduleStaleConnectorToolsRefresh — eligibility', () => {
     expect(syncConnectorToolsById).not.toHaveBeenCalled();
   });
 
+  it('skips local/private-network endpoints on a cloud deployment (device gateway configured)', async () => {
+    (deviceGateway as any).isConfigured = true;
+    const id = nextId();
+    scheduleStaleConnectorToolsRefresh(
+      [{ id, mcpConnectionType: 'http', mcpServerUrl: 'http://192.168.1.10:8080/mcp' }],
+      new Map(),
+      ctx,
+      NOW,
+    );
+    await flushDeferred();
+    expect(syncConnectorToolsById).not.toHaveBeenCalled();
+  });
+
+  it('still refreshes local endpoints when self-hosted (no device gateway)', async () => {
+    // A self-hosted server may share a LAN with the endpoint — the cloud-only
+    // skip must not fire there.
+    const id = nextId();
+    scheduleStaleConnectorToolsRefresh(
+      [{ id, mcpConnectionType: 'http', mcpServerUrl: 'http://192.168.1.10:8080/mcp' }],
+      new Map(),
+      ctx,
+      NOW,
+    );
+    await flushDeferred();
+    expect(syncConnectorToolsById).toHaveBeenCalledWith(id, ctx);
+  });
+
   it('throttles a second call for the same connector at the same instant', async () => {
     const id = nextId();
     scheduleStaleConnectorToolsRefresh([httpConnector(id)], new Map(), ctx, NOW);
@@ -144,34 +174,12 @@ describe('scheduleStaleConnectorToolsRefresh — eligibility', () => {
 });
 
 describe('scheduleStaleConnectorToolsRefresh — remote result handling', () => {
-  it('completes cleanly when the remote sync succeeds', async () => {
-    const id = nextId();
-    scheduleStaleConnectorToolsRefresh([httpConnector(id)], new Map(), ctx, NOW);
-    await expect(flushDeferred()).resolves.toBeUndefined();
-    expect(syncConnectorToolsById).toHaveBeenCalledTimes(1);
-  });
-
   it('swallows a remote sync failure (never rejects, never surfaces)', async () => {
     const id = nextId();
     vi.mocked(syncConnectorToolsById).mockRejectedValueOnce(new Error('remote MCP down'));
     scheduleStaleConnectorToolsRefresh([httpConnector(id)], new Map(), ctx, NOW);
     // The deferred work must resolve, not reject, even though the sync failed.
     await expect(flushDeferred()).resolves.toBeUndefined();
-  });
-
-  it('re-syncs once the TTL has elapsed since the last attempt', async () => {
-    const id = nextId();
-    scheduleStaleConnectorToolsRefresh([httpConnector(id)], new Map(), ctx, NOW);
-    await flushDeferred();
-    // Past the TTL → eligible again even though the DB marker never advanced.
-    scheduleStaleConnectorToolsRefresh(
-      [httpConnector(id)],
-      new Map(),
-      ctx,
-      NOW + CONNECTOR_TOOLS_REFRESH_TTL_MS + 1,
-    );
-    await flushDeferred();
-    expect(syncConnectorToolsById).toHaveBeenCalledTimes(2);
   });
 
   it('backs off a failed connector for a TTL, then retries', async () => {

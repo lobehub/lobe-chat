@@ -21,15 +21,18 @@ const { getTrpcClient: mockGetTrpcClient } = vi.hoisted(() => ({
 }));
 
 vi.mock('../api/client', () => ({ getTrpcClient: mockGetTrpcClient }));
-vi.mock('../utils/logger', () => ({
-  log: { debug: vi.fn(), error: vi.fn(), info: vi.fn(), warn: vi.fn() },
-  setVerbose: vi.fn(),
+// Scope resolution falls through to the persisted `workspace use` value, which
+// must not leak the developer's own machine state into these assertions.
+vi.mock('../settings', () => ({
+  loadActiveWorkspace: () => undefined,
+  resolveServerUrl: () => 'https://app.lobehub.com',
 }));
-
 describe('config command', () => {
   let consoleSpy: ReturnType<typeof vi.spyOn>;
+  const originalWorkspaceId = process.env.LOBEHUB_WORKSPACE_ID;
 
   beforeEach(() => {
+    delete process.env.LOBEHUB_WORKSPACE_ID;
     consoleSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
     mockGetTrpcClient.mockResolvedValue(mockTrpcClient);
     mockTrpcClient.user.getUserState.query.mockReset();
@@ -41,6 +44,8 @@ describe('config command', () => {
 
   afterEach(() => {
     consoleSpy.mockRestore();
+    if (originalWorkspaceId === undefined) delete process.env.LOBEHUB_WORKSPACE_ID;
+    else process.env.LOBEHUB_WORKSPACE_ID = originalWorkspaceId;
   });
 
   function createProgram() {
@@ -73,7 +78,51 @@ describe('config command', () => {
       const program = createProgram();
       await program.parseAsync(['node', 'test', 'whoami', '--json']);
 
-      expect(consoleSpy).toHaveBeenCalledWith(JSON.stringify(state, null, 2));
+      expect(consoleSpy).toHaveBeenCalledWith(
+        JSON.stringify(
+          { ...state, scope: 'personal', scopeSource: 'personal', workspaceId: null },
+          null,
+          2,
+        ),
+      );
+    });
+
+    // Every command resolves its scope from this env var, so reporting it is
+    // what lets a caller — usually an agent editing its own config — tell a
+    // real "not found" from "I'm looking in the wrong workspace".
+    it('should report the active workspace scope', async () => {
+      process.env.LOBEHUB_WORKSPACE_ID = 'ws-42';
+      mockTrpcClient.user.getUserState.query.mockResolvedValue({ userId: 'u1' });
+
+      const program = createProgram();
+      await program.parseAsync(['node', 'test', 'whoami']);
+
+      expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining('workspace ws-42'));
+    });
+
+    it('should report personal scope when no workspace is set', async () => {
+      mockTrpcClient.user.getUserState.query.mockResolvedValue({ userId: 'u1' });
+
+      const program = createProgram();
+      await program.parseAsync(['node', 'test', 'whoami']);
+
+      expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining('personal'));
+    });
+
+    it('should carry the workspace scope into --json output', async () => {
+      process.env.LOBEHUB_WORKSPACE_ID = 'ws-42';
+      mockTrpcClient.user.getUserState.query.mockResolvedValue({ userId: 'u1' });
+
+      const program = createProgram();
+      await program.parseAsync(['node', 'test', 'whoami', '--json']);
+
+      expect(consoleSpy).toHaveBeenCalledWith(
+        JSON.stringify(
+          { userId: 'u1', scope: 'workspace', scopeSource: 'env', workspaceId: 'ws-42' },
+          null,
+          2,
+        ),
+      );
     });
   });
 

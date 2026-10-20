@@ -481,14 +481,14 @@ describe('ChatGroupModel', () => {
 
       const result = await chatGroupModel.addAgentToGroup('test-group', 'test-agent', {
         order: 5,
-        role: 'moderator',
+        role: 'assistant',
       });
 
       expect(result.chatGroupId).toBe('test-group');
       expect(result.agentId).toBe('test-agent');
       expect(result.userId).toBe(userId);
       expect(result.order).toBe(5);
-      expect(result.role).toBe('moderator');
+      expect(result.role).toBe('assistant');
     });
 
     it('should add agent with default options', async () => {
@@ -515,6 +515,88 @@ describe('ChatGroupModel', () => {
   });
 
   describe('addAgentsToGroup', () => {
+    it('should refuse a group-owned agent joining a second group', async () => {
+      // `resolveGroupMembershipType` treats a virtual member as owned by ITS
+      // group — the delete path takes it down with the group, the transfer
+      // path rehomes it. Both are only sound while it belongs to one group.
+      // The member picker already filters virtual agents, which left this
+      // enforced by a query rather than by the write.
+      await serverDB.transaction(async (trx) => {
+        await trx.insert(chatGroups).values([
+          { id: 'owner-group', title: 'Owner', userId },
+          { id: 'poacher-group', title: 'Poacher', userId },
+        ]);
+        await trx.insert(agentsTable).values({
+          id: 'group-built-member',
+          title: 'Group Built',
+          userId,
+          virtual: true,
+        });
+        await trx.insert(chatGroupsAgents).values({
+          agentId: 'group-built-member',
+          chatGroupId: 'owner-group',
+          userId,
+        });
+      });
+
+      await expect(
+        chatGroupModel.addAgentsToGroup('poacher-group', ['group-built-member']),
+      ).rejects.toThrow(/cannot join another group/);
+
+      const rosters = await serverDB
+        .select()
+        .from(chatGroupsAgents)
+        .where(eq(chatGroupsAgents.agentId, 'group-built-member'));
+      expect(rosters).toHaveLength(1);
+      expect(rosters[0].chatGroupId).toBe('owner-group');
+    });
+
+    it('should refuse a builtin agent joining a group', async () => {
+      // Builtins are `virtual` too, so membership rules would classify one as
+      // group-OWNED — and removal deletes owned members. Adding your Inbox to
+      // a group and then leaving would delete the Inbox.
+      await serverDB.transaction(async (trx) => {
+        await trx.insert(chatGroups).values({ id: 'builtin-add-group', title: 'B', userId });
+        await trx.insert(agentsTable).values({
+          id: 'my-inbox',
+          slug: 'inbox',
+          title: 'Inbox',
+          userId,
+          virtual: true,
+        });
+      });
+
+      await expect(
+        chatGroupModel.addAgentsToGroup('builtin-add-group', ['my-inbox']),
+      ).rejects.toThrow(/builtin agent cannot join/);
+
+      const roster = await serverDB
+        .select()
+        .from(chatGroupsAgents)
+        .where(eq(chatGroupsAgents.agentId, 'my-inbox'));
+      expect(roster).toHaveLength(0);
+    });
+
+    it('should let a freshly built virtual agent join its first group', async () => {
+      // The group agent builder creates `virtual: true` and adds it here. The
+      // invariant is "exactly one group", not "never joins one" — rejecting
+      // every virtual agent breaks the builder outright.
+      await serverDB.transaction(async (trx) => {
+        await trx.insert(chatGroups).values({ id: 'builder-group', title: 'Builder', userId });
+        await trx.insert(agentsTable).values({
+          id: 'freshly-built',
+          title: 'Freshly Built',
+          userId,
+          virtual: true,
+        });
+      });
+
+      const result = await chatGroupModel.addAgentsToGroup('builder-group', ['freshly-built']);
+
+      expect(result.added).toHaveLength(1);
+      expect(result.added[0].agentId).toBe('freshly-built');
+    });
+
     it('should add multiple agents to group', async () => {
       // Create test data
       await serverDB.transaction(async (trx) => {
@@ -963,11 +1045,11 @@ describe('ChatGroupModel', () => {
 
       const result = await chatGroupModel.updateAgentInGroup('update-agent-group', 'update-agent', {
         order: 5,
-        role: 'moderator',
+        role: 'assistant',
       });
 
       expect(result.order).toBe(5);
-      expect(result.role).toBe('moderator');
+      expect(result.role).toBe('assistant');
       expect(result.updatedAt).toBeInstanceOf(Date);
     });
   });
@@ -1336,7 +1418,7 @@ describe('ChatGroupModel', () => {
     });
   });
 
-  describe('member agent demoted to private (LOBE-11772)', () => {
+  describe('member agent demoted to private ', () => {
     // Public workspace group owned by `userId` with two members: a public agent
     // and an agent `userId` switched back to private after it joined. Viewer is
     // `otherUserId` (same workspace) — every roster read must drop the private

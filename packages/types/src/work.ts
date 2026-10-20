@@ -1,11 +1,20 @@
+import type { GoalReportMetadata } from './goalReport';
 import type { TaskStatus } from './task';
 
-export type WorkType = 'document' | 'external' | 'task';
+/**
+ * `goal_report` is the wrap-up report of a Goal: one Work per goal, a new
+ * version per acceptance result. It is read through the goal graph, not the
+ * generic Work lists.
+ */
+export type WorkType = 'document' | 'external' | 'file' | 'goal_report' | 'task';
+/** Work types the generic Work lists return; a `goal_report` is read through its goal. */
+export type ListedWorkType = Exclude<WorkType, 'goal_report'>;
 export type LinearWorkResourceType = 'linear_document' | 'linear_issue';
 export type GithubWorkResourceType = 'github_issue' | 'github_pull_request';
 /** Every resource type backed by the unified `external` Work type. */
 export type ExternalWorkResourceType = GithubWorkResourceType | LinearWorkResourceType;
-export type WorkResourceType = 'document' | ExternalWorkResourceType | 'task';
+export type WorkResourceType =
+  'document' | ExternalWorkResourceType | 'file' | 'goal_report' | 'task';
 export type WorkVisibility = 'private' | 'public';
 /**
  * How a version changed the Work. Not derivable from `version === 1`: updating
@@ -23,8 +32,68 @@ export type WorkVersionChangeType = 'created' | 'updated';
 export type WorkDisplayField =
   'content' | 'description' | 'identifier' | 'status' | 'title' | 'url';
 
+/**
+ * Server-written Agent Share provenance on a `works` row. Mirrors the
+ * document/file provenance: a Work registered by a share visitor's run stays
+ * owned by the CREATOR (the run executes under their account) but is fenced
+ * off from the creator's ordinary Work surfaces and served back only to the
+ * visitor's own share topic.
+ */
+export interface AgentShareWorkProvenance {
+  shareId: string;
+  topicId: string;
+  visitorUserId: string;
+}
+
+export interface WorkMetadata {
+  agentShare?: AgentShareWorkProvenance;
+}
+
+/**
+ * Explicit read/write boundary for the Work registry, same shape as
+ * `DocumentAccessScope`: `ordinary` sees only rows WITHOUT share provenance;
+ * `agentShare` sees only rows stamped with exactly this share/topic/visitor.
+ */
+export type WorkAccessScope =
+  ({ type: 'agentShare' } & AgentShareWorkProvenance) | { type: 'ordinary' };
+
+export const ordinaryWorkAccessScope = {
+  type: 'ordinary',
+} as const satisfies WorkAccessScope;
+
+export const agentShareWorkAccessScope = (
+  provenance: AgentShareWorkProvenance,
+): WorkAccessScope => ({
+  shareId: provenance.shareId,
+  topicId: provenance.topicId,
+  type: 'agentShare',
+  visitorUserId: provenance.visitorUserId,
+});
+
 export interface WorkVersionMetadata {
   agentDocumentId?: string;
+  /**
+   * `file` Work — the edited file's identity in the file store, when the entity
+   * file was persisted. `filePath` is always present for a file Work; the
+   * remaining fields are populated only once the file is registered/uploaded.
+   */
+  fileId?: string;
+  /** `file` Work — the edited file's path within the operation (its resource identity). */
+  filePath?: string;
+  /** `file` Work — size in bytes of the edited file. */
+  fileSize?: number;
+  /** `file` Work — durable, fetchable URL of the persisted file. */
+  fileUrl?: string;
+  /** `goal_report` Work — the structured storyline; the full report is the version's `content`. */
+  goalReport?: GoalReportMetadata;
+  /** `goal_report` Work — the report as an HTML page: a `custom/html` document id. */
+  goalReportPageId?: string;
+  /** `file` Work — lines added by this version's edit (0 when the source tool reports none). */
+  linesAdded?: number;
+  /** `file` Work — lines deleted by this version's edit (0 when the source tool reports none). */
+  linesDeleted?: number;
+  /** `file` Work — MIME type of the edited file. */
+  mimeType?: string;
 }
 
 export interface WorkVersionCumulativeUsage {
@@ -75,6 +144,18 @@ export type WorkListBaseItem = WorkItem & {
    * origin topic was deleted (originTopicId is set-null) or never stamped.
    */
   originTopicTitle?: string | null;
+  /**
+   * The live resource row backing this Work (the task / the document) no longer
+   * exists. It was deleted outside the tool-dispatch path, which deliberately
+   * orphans the Work rather than removing it (see `models/work/context.ts`), so
+   * the card renders from its version snapshot and opening it would 404 — the
+   * UI shows a "resource deleted" badge and offers removal instead.
+   *
+   * Derived per query from a LEFT JOIN miss on the backing table, never
+   * persisted. Always `false` for `external` and `file` Works: they have no
+   * local backing row that could go missing.
+   */
+  resourceDeleted: boolean;
 };
 
 export interface WorkVersionItem {
@@ -142,14 +223,6 @@ export interface TaskWorkListItem extends WorkListBaseItem {
     priority: number | null;
     status: TaskStatus | string | null;
   };
-  /**
-   * The live task row backing this Work no longer exists (deleted outside the
-   * tool-dispatch path, which deliberately orphans the Work). When true, the
-   * `task` fields fall back to the version snapshot and the UI renders the card
-   * as "task deleted". Derived from a `tasks` LEFT JOIN missing its row, not a
-   * persisted flag.
-   */
-  taskDeleted: boolean;
   type: 'task';
 }
 
@@ -163,7 +236,21 @@ export interface ExternalWorkListItem extends WorkListBaseItem {
   type: 'external';
 }
 
-export type WorkListItem = DocumentWorkListItem | ExternalWorkListItem | TaskWorkListItem;
+/**
+ * A file Work: an entity-format file (pptx/xlsx/docx/pdf, …) edited during an
+ * operation. Its resource identity is `${userId}:${topicId}:${filePath}` (the
+ * sandbox is per user+topic, so file identity intrinsically includes the user).
+ * Its display columns come entirely from the `works` row — the per-version file
+ * identity (path, fileId, url, line deltas) lives in {@link WorkVersionMetadata}.
+ * Fully display-backed like document/external (no live table join).
+ */
+export interface FileWorkListItem extends WorkListBaseItem {
+  resourceType: 'file';
+  type: 'file';
+}
+
+export type WorkListItem =
+  DocumentWorkListItem | ExternalWorkListItem | FileWorkListItem | TaskWorkListItem;
 
 export interface TaskWorkVersionEventItem extends TaskWorkListItem {
   version: WorkVersionPreview;
@@ -177,30 +264,46 @@ export interface ExternalWorkVersionEventItem extends ExternalWorkListItem {
   version: WorkVersionPreview;
 }
 
+export interface FileWorkVersionEventItem extends FileWorkListItem {
+  version: WorkVersionPreview;
+}
+
 export type WorkVersionEventItem =
-  DocumentWorkVersionEventItem | ExternalWorkVersionEventItem | TaskWorkVersionEventItem;
+  | DocumentWorkVersionEventItem
+  | ExternalWorkVersionEventItem
+  | FileWorkVersionEventItem
+  | TaskWorkVersionEventItem;
 export type WorkVersionEventMap = Record<string, WorkVersionEventItem[]>;
 
+export type WorkSummaryVersionPreview = WorkVersionPreview &
+  Pick<WorkVersionItem, 'cumulativeUsage'>;
+
 export interface TaskWorkSummaryItem extends TaskWorkListItem {
-  event: WorkVersionPreview;
+  event: WorkSummaryVersionPreview;
   totalCost: number | null;
   version: Pick<WorkVersionItem, 'createdAt' | 'id' | 'version'> | null;
 }
 
 export interface DocumentWorkSummaryItem extends DocumentWorkListItem {
-  event: WorkVersionPreview;
+  event: WorkSummaryVersionPreview;
   totalCost: number | null;
   version: Pick<WorkVersionItem, 'createdAt' | 'id' | 'version'> | null;
 }
 
 export interface ExternalWorkSummaryItem extends ExternalWorkListItem {
-  event: WorkVersionPreview;
+  event: WorkSummaryVersionPreview;
+  totalCost: number | null;
+  version: Pick<WorkVersionItem, 'createdAt' | 'id' | 'version'> | null;
+}
+
+export interface FileWorkSummaryItem extends FileWorkListItem {
+  event: WorkSummaryVersionPreview;
   totalCost: number | null;
   version: Pick<WorkVersionItem, 'createdAt' | 'id' | 'version'> | null;
 }
 
 export type WorkSummaryItem =
-  DocumentWorkSummaryItem | ExternalWorkSummaryItem | TaskWorkSummaryItem;
+  DocumentWorkSummaryItem | ExternalWorkSummaryItem | FileWorkSummaryItem | TaskWorkSummaryItem;
 export type WorkSummaryMap = Record<string, WorkSummaryItem[]>;
 
 export interface RegisterDocumentWorkParams {
@@ -222,6 +325,43 @@ export interface RegisterDocumentWorkParams {
   topicId?: string | null;
 }
 
+/**
+ * Register (or add a version to) a `file` Work — an entity-format file
+ * (pptx/xlsx/docx/pdf, …) edited during an operation. Its resource identity is
+ * `${userId}:${topicId}:${filePath}`, so re-editing the same file in a later
+ * operation adds a version to the same Work. The card shows only the basename
+ * `title`; the per-version file identity (fileId / url / mime / size / line
+ * deltas) rides in {@link WorkVersionMetadata}.
+ *
+ * `changeType` is NOT part of the params: the DB layer derives it from whether
+ * the Work already exists (first registration → `created`, any later one →
+ * `updated`).
+ */
+export interface RegisterFileWorkParams {
+  agentId?: string | null;
+  cumulativeCost?: number | null;
+  cumulativeUsage?: WorkVersionCumulativeUsage | null;
+  /** The edited file's path within the operation — half of the resource identity. */
+  filePath: string;
+  messageId?: string | null;
+  /** Per-version file identity + line deltas persisted into the version metadata. */
+  metadata: WorkVersionMetadata;
+  rootOperationId?: string | null;
+  threadId?: string | null;
+  /** Card title — the edited file's basename. */
+  title: string;
+  /** Dedup key for one-version-per-operation (`op:${operationId}`). */
+  toolCallId?: string | null;
+  /** Tool/plugin identifier that produced this version. */
+  toolIdentifier: string;
+  toolName: string;
+  /** Owning topic; combined with `filePath` into the Work resource identity. */
+  topicId: string;
+  userId: string;
+  /** Defaults to `private` when omitted — edited files are user-private. */
+  visibility?: WorkVisibility;
+}
+
 export interface DeleteDocumentWorkParams {
   agentDocumentId?: string | null;
   agentId?: string | null;
@@ -231,6 +371,17 @@ export interface DeleteDocumentWorkParams {
 export interface DeleteTaskWorkParams {
   /** Internal task id (`works.resourceId` for `resourceType: 'task'`). */
   taskId: string;
+}
+
+/**
+ * User-initiated removal of one Work card, addressed by the Work's own id
+ * rather than a backing resource — the resource is typically already gone (see
+ * {@link WorkListBaseItem.resourceDeleted}), which is exactly why the user has
+ * no other way to clear the card.
+ */
+export interface DeleteWorkParams {
+  /** `works.id` of the card to remove. */
+  id: string;
 }
 
 export interface RegisterExternalWorkParams {

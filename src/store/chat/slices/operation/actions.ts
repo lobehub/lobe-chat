@@ -10,6 +10,7 @@ import { getHomeStoreState } from '@/store/home';
 import { type StoreSetter } from '@/store/types';
 import { setNamespace } from '@/utils/storeDebug';
 
+import { operationSelectors } from './selectors';
 import {
   type AfterCompletionCallback,
   AI_RUNTIME_OPERATION_TYPES,
@@ -47,9 +48,40 @@ export class OperationActionsImpl {
     this.#get = get;
   }
 
-  internal_getConversationContext = (context?: { operationId?: string }): MessageMapKeyInput => {
-    if (context?.operationId) {
-      const operation = this.#get().operations[context.operationId];
+  /**
+   * Abandons unclaimed automatic recovery when a conversation changes branches.
+   *
+   * Use when:
+   * - Either conversation surface selects another persisted reply.
+   *
+   * Expects:
+   * - The full message context, including thread and share scopes.
+   *
+   * Returns:
+   * - No value; unrelated conversations and explicit Retry remain unchanged.
+   *
+   * Call stack:
+   *
+   * switchMessageBranch (conversation or chat store)
+   *   -> {@link OperationActionsImpl.revokeHeteroAutoRetry}
+   *     -> {@link OperationActionsImpl.updateOperationMetadata}
+   */
+  revokeHeteroAutoRetry = (context: MessageMapKeyInput): void => {
+    for (const operation of operationSelectors.getOperationsByContext(context)(this.#get())) {
+      if (operation.metadata.heteroAutoRetryAvailable) {
+        this.updateOperationMetadata(operation.id, { heteroAutoRetryAvailable: false });
+      }
+    }
+  };
+
+  internal_getConversationContext = (reference?: {
+    context?: MessageMapKeyInput;
+    operationId?: string;
+  }): MessageMapKeyInput => {
+    if (reference?.context) return reference.context;
+
+    if (reference?.operationId) {
+      const operation = this.#get().operations[reference.operationId];
       if (!operation) {
         // The op was already cleaned up (e.g. completed CC turn whose
         // runtime_end fired and was GC'd 30s later), but a late caller
@@ -59,17 +91,17 @@ export class OperationActionsImpl {
         // degrade to the global-state fallback and log loudly.
         log(
           '[internal_getConversationContext] WARNING: Operation not found, falling back to global state: %s',
-          context.operationId,
+          reference.operationId,
         );
         console.warn(
           '[internal_getConversationContext] operation not found, using global state:',
-          context.operationId,
+          reference.operationId,
         );
       } else {
-        const { agentId, topicId, threadId, scope, isNew, groupId, documentId } = operation.context;
+        const { agentId, topicId, threadId, scope, groupId, documentId } = operation.context;
         log(
           '[internal_getConversationContext] get from operation %s: agentId=%s, topicId=%s, threadId=%s, scope=%s, groupId=%s, documentId=%s',
-          context.operationId,
+          reference.operationId,
           agentId,
           topicId,
           threadId,
@@ -123,14 +155,13 @@ export class OperationActionsImpl {
 
     // If parent operation exists and context is not fully provided, inherit from parent
     let context: OperationContext = partialContext || {};
+    const parentOp = parentOperationId ? this.#get().operations[parentOperationId] : undefined;
+    const inheritedTurnStartTime = parentOp?.metadata.turnStartTime;
 
-    if (parentOperationId) {
-      const parentOp = this.#get().operations[parentOperationId];
-      if (parentOp) {
-        // Inherit parent's context, allow partial override
-        context = { ...parentOp.context, ...partialContext };
-        log('[startOperation] inherit context from parent %s: %o', parentOperationId, context);
-      }
+    if (parentOp) {
+      // Inherit parent's context, allow partial override
+      context = { ...parentOp.context, ...partialContext };
+      log('[startOperation] inherit context from parent %s: %o', parentOperationId, context);
     }
 
     log('[startOperation] create operation %s (type=%s, context=%o)', operationId, type, context);
@@ -146,6 +177,7 @@ export class OperationActionsImpl {
       abortController,
       metadata: {
         startTime: now,
+        ...(inheritedTurnStartTime === undefined ? {} : { turnStartTime: inheritedTurnStartTime }),
         ...metadata,
       },
       parentOperationId,
@@ -276,6 +308,9 @@ export class OperationActionsImpl {
 
   completeOperation = (operationId: string, metadata?: Partial<OperationMetadata>): void => {
     const operation = this.#get().operations[operationId];
+    // Late stream/session callbacks cannot overwrite the persisted terminal
+    // outcome (or reset its duration) after snapshot reconciliation.
+    if (operation?.metadata.terminalReconciled) return;
     if (operation) {
       log(
         '[completeOperation] operation %s (type=%s) completed, duration=%dms',
@@ -310,6 +345,20 @@ export class OperationActionsImpl {
       false,
       n(`completeOperation/${operationId}`),
     );
+
+    if (
+      operation &&
+      AI_RUNTIME_OPERATION_TYPES.includes(operation.type) &&
+      operation.status !== 'completed'
+    ) {
+      const state = this.#get();
+      const { agentId, topicId } = operation.context;
+      if (!agentId || !topicId) return;
+      // A run that finishes after the user switched away must still persist to
+      // its own conversation, so rebuild the operation's context with a definite
+      // agent/topic: `OperationContext` exposes them as optional.
+      state.internal_settleTranscript({ ...operation.context, agentId, topicId });
+    }
   };
 
   getOperationAbortSignal = (operationId: string): AbortSignal => {
@@ -381,17 +430,34 @@ export class OperationActionsImpl {
     );
   };
 
-  cancelOperation = (operationId: string, reason: string = 'User cancelled'): void => {
+  /**
+   * Cancels an operation and reports whether its transport shutdown was confirmed.
+   *
+   * Use when:
+   * - A caller needs to stop an operation and its child operations.
+   * - A replacement task must not start after a failed transport cancellation.
+   *
+   * Expects:
+   * - `operationId` may already be absent or terminal; those states are safe no-ops.
+   * - Registered cancel handlers reject when their underlying transport remains active.
+   *
+   * Returns:
+   * - `true` when every cancellation handler settled successfully, otherwise `false`.
+   */
+  cancelOperation = async (
+    operationId: string,
+    reason: string = 'User cancelled',
+  ): Promise<boolean> => {
     const operation = this.#get().operations[operationId];
     if (!operation) {
       log('[cancelOperation] operation not found: %s', operationId);
-      return;
+      return true;
     }
 
     // Skip if already cancelled or completed
     if (operation.status === 'cancelled' || operation.status === 'completed') {
       log('[cancelOperation] operation %s already %s, skipping', operationId, operation.status);
-      return;
+      return true;
     }
 
     log(
@@ -416,7 +482,10 @@ export class OperationActionsImpl {
       this.#get().updateOperationMetadata(operationId, { isAborting: true });
     }
 
-    // 3. Call cancel handler if registered
+    // 3. Call cancel handler if registered. The local state transition below
+    // remains synchronous, while callers such as Send now can await the returned
+    // promise before starting a replacement native writer.
+    let cancelHandler = Promise.resolve(true);
     if (operation.onCancelHandler) {
       log('[cancelOperation] calling cancel handler for %s (type=%s)', operationId, operation.type);
 
@@ -427,15 +496,21 @@ export class OperationActionsImpl {
         metadata: operation.metadata,
       };
 
-      // Execute handler asynchronously (don't block cancellation flow)
-      // Use try-catch to handle synchronous errors, then wrap in Promise for async errors
+      // Start the handler without delaying the synchronous local state transition.
+      // The returned cancellation promise still waits for this work so replacement
+      // operations can coordinate with the underlying transport shutdown.
       try {
-        Promise.resolve(operation.onCancelHandler(cancelContext)).catch((err) => {
-          log('[cancelOperation] cancel handler error for %s: %O', operationId, err);
-        });
+        cancelHandler = Promise.resolve(operation.onCancelHandler(cancelContext)).then(
+          () => true,
+          (err) => {
+            log('[cancelOperation] cancel handler error for %s: %O', operationId, err);
+            return false;
+          },
+        );
       } catch (err) {
         // Handle synchronous errors from handler
         log('[cancelOperation] cancel handler synchronous error for %s: %O', operationId, err);
+        cancelHandler = Promise.resolve(false);
       }
     }
 
@@ -455,13 +530,37 @@ export class OperationActionsImpl {
       n(`cancelOperation/${operationId}`),
     );
 
-    // 4. Cancel all child operations recursively
+    // 5. Cancel all child operations recursively
+    let childCancellations: Promise<boolean>[] = [];
     if (operation.childOperationIds && operation.childOperationIds.length > 0) {
       log('[cancelOperation] cancelling %d child operations', operation.childOperationIds.length);
-      operation.childOperationIds.forEach((childId) => {
-        this.#get().cancelOperation(childId, 'Parent operation cancelled');
-      });
+      childCancellations = operation.childOperationIds.map((childId) =>
+        this.#get().cancelOperation(childId, 'Parent operation cancelled'),
+      );
     }
+
+    const confirmations = await Promise.all([cancelHandler, ...childCancellations]);
+    const cancellationConfirmed = confirmations.every(Boolean);
+    if (cancellationConfirmed) return true;
+
+    // The native transport may still own resources even though the optimistic
+    // UI transition above marked the operation cancelled. Restore the blocker
+    // so another send cannot mistake an unconfirmed shutdown for an idle chat.
+    this.#set(
+      produce((state: ChatStore) => {
+        const op = state.operations[operationId];
+        if (!op || op.status !== 'cancelled' || op.metadata.cancelReason !== reason) return;
+
+        op.status = 'running';
+        delete op.metadata.cancelReason;
+        delete op.metadata.duration;
+        delete op.metadata.endTime;
+      }),
+      false,
+      n(`cancelOperationFailed/${operationId}`),
+    );
+
+    return false;
   };
 
   failOperation = (
@@ -469,6 +568,7 @@ export class OperationActionsImpl {
     error: { code?: string; details?: any; message: string; type: string },
   ): void => {
     const operation = this.#get().operations[operationId];
+    if (operation?.metadata.terminalReconciled) return;
     if (operation) {
       log(
         '[failOperation] operation %s (type=%s) failed: %s',
@@ -531,8 +631,11 @@ export class OperationActionsImpl {
       if (filter.groupId !== undefined) {
         matches = matches && op.context.groupId === filter.groupId;
       }
-      if (filter.agentId !== undefined) {
-        matches = matches && op.context.agentId === filter.agentId;
+      if (filter.scope !== undefined) {
+        matches = matches && op.context.scope === filter.scope;
+      }
+      if (filter.isNew !== undefined) {
+        matches = matches && op.context.isNew === filter.isNew;
       }
 
       if (matches) {
@@ -759,6 +862,10 @@ export class OperationActionsImpl {
       n(`enqueueMessage/${contextKey}`),
     );
 
+    // Soft: a running Gateway run hands its turn back at the next step boundary
+    // instead of finishing every remaining step before the follow-up starts.
+    if (message.interruptMode === 'soft') this.#get().internal_syncQueuedMessagesFlag(contextKey);
+
     // Hard interrupt: cancel the running operation
     if (message.interruptMode === 'hard' && runningOperationId) {
       const op = this.#get().operations[runningOperationId];
@@ -828,6 +935,10 @@ export class OperationActionsImpl {
       false,
       n(`removeQueuedMessage/${contextKey}/${messageId}`),
     );
+
+    // The last queued message is gone: let the run finish its turn normally.
+    if (!this.#get().queuedMessages[contextKey]?.length)
+      this.#get().internal_syncQueuedMessagesFlag(contextKey);
   };
 
   clearMessageQueue = (contextKey: string): void => {
@@ -838,6 +949,8 @@ export class OperationActionsImpl {
       false,
       n(`clearMessageQueue/${contextKey}`),
     );
+
+    this.#get().internal_syncQueuedMessagesFlag(contextKey);
   };
 }
 

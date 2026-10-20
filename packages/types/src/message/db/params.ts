@@ -15,7 +15,7 @@ import {
   ChatImageItemSchema,
   ChatMessageErrorSchema,
   ChatToolPayloadSchema,
-  MessageMetadataSchema,
+  ClientMessageMetadataSchema,
   MessageToolCallSchema,
   ModelReasoningSchema,
   ModelUsageSchema,
@@ -24,8 +24,22 @@ import type { UIChatMessage } from '../ui';
 
 export interface QueryMessageParams {
   agentId?: string | null;
+  /**
+   * Round-cursor for loading older history: only rows strictly older than this
+   * `(createdAt, id)` tuple are returned, newest-first windowed like the main
+   * page. Callers pass the oldest already-loaded mainline message so pages join
+   * contiguously; offset paging (`current`) is unused by the chat read path.
+   */
+  before?: { createdAt: Date; id: string };
   current?: number;
   groupId?: string | null;
+  /**
+   * Opt-in for `file` work summaries embedded in the message payload. Absent →
+   * the legacy set, so already-deployed clients (whose descriptor table lacks
+   * `file`) never receive a `file` summary that would crash their works UI. New
+   * clients set it. Ignored when `skipWorks` is set.
+   */
+  includeFileWorks?: boolean;
   pageSize?: number;
   sessionId?: string | null;
   /**
@@ -136,7 +150,7 @@ export const UpdateMessageParamsSchema = z
     editorData: z.record(z.string(), z.any()).nullish(),
     error: ChatMessageErrorSchema.nullish(),
     imageList: z.array(ChatImageItemSchema).optional(),
-    metadata: MessageMetadataSchema.optional(),
+    metadata: ClientMessageMetadataSchema.optional(),
     model: z.string().optional(),
     observationId: z.string().optional(),
     provider: z.string().optional(),

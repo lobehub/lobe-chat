@@ -7,6 +7,7 @@ import { type NextRequest } from 'next/server';
 import urlJoin from 'url-join';
 
 import { appEnv } from '@/envs/app';
+import { OIDC_DISCOVERY_PATH } from '@/libs/oidc-provider/routes';
 
 const log = debug('lobe-oidc:http-adapter');
 
@@ -27,6 +28,8 @@ export const convertHeadersToNodeHeaders = (nextHeaders: Headers): Record<string
  * Create a Node.js HTTP request object for OIDC Provider
  * @param req Next.js request object
  */
+const DISCOVERY_PROVIDER_PATH = '/.well-known/openid-configuration';
+
 export const createNodeRequest = async (req: NextRequest): Promise<IncomingMessage> => {
   // Build URL object
   const url = new URL(req.url);
@@ -37,6 +40,14 @@ export const createNodeRequest = async (req: NextRequest): Promise<IncomingMessa
   // Ensure path always starts with /
   if (!providerPath.startsWith('/')) {
     providerPath = '/' + providerPath;
+  }
+
+  // Discovery is the one route oidc-provider hardcodes, so it cannot be moved
+  // under the `/oidc` prefix the way every other route is. The document lives
+  // where clients look for it (`/oidc/.well-known/openid-configuration`, the
+  // issuer plus the well-known suffix) and is translated back here.
+  if (providerPath === OIDC_DISCOVERY_PATH) {
+    providerPath = DISCOVERY_PROVIDER_PATH;
   }
 
   log('Creating Node.js request from Next.js request');
@@ -141,6 +152,14 @@ export const createNodeResponse = (resolvePromise: () => void): ResponseCollecto
       const lowerName = name.toLowerCase();
       log('Setting header: %s = %s', lowerName, value);
       state.responseHeaders[lowerName] = value;
+    },
+
+    get statusCode() {
+      return state.responseStatus;
+    },
+
+    set statusCode(status: number) {
+      state.responseStatus = status;
     },
 
     write: (chunk: string | Buffer) => {

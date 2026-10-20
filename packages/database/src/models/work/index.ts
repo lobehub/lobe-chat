@@ -1,21 +1,31 @@
 import {
   type DeleteDocumentWorkParams,
   type DeleteTaskWorkParams,
+  type DeleteWorkParams,
   isWorkSkillProvider,
   type RegisterDocumentWorkParams,
   type RegisterExternalWorkParams,
+  type RegisterFileWorkParams,
   type RegisterSkillToolResultWorkParams,
   type RegisterTaskWorkParams,
   type SkillToolResultWorkInput,
+  type WorkAccessScope,
   type WorkItem,
   type WorkSkillProvider,
+  type WorkVisibility,
 } from '@lobechat/types';
 
 import type { LobeChatDatabase } from '../../type';
 import type { WorkContext } from './context';
 import { registerDocumentWork } from './document';
 import { registerExternalWork } from './external';
-import { normalizeGithubToolResult } from './githubToolResult';
+import { findFileWorkVersionByToolCall, registerFileWork } from './file';
+import { normalizeGithubShellToolResult, normalizeGithubToolResult } from './githubToolResult';
+import {
+  findLatestGoalReportVersion,
+  registerGoalReportWork,
+  type RegisterGoalReportWorkParams,
+} from './goalReport';
 import { normalizeLinearToolResult } from './linearToolResult';
 import * as queries from './queries';
 import { registerTaskWork } from './task';
@@ -45,8 +55,19 @@ const SKILL_TOOL_RESULT_NORMALIZERS = {
 export class WorkModel {
   private readonly ctx: WorkContext;
 
-  constructor(db: LobeChatDatabase, userId: string, workspaceId?: string) {
-    this.ctx = { db, userId, workspaceId };
+  /**
+   * @param accessScope - Agent Share boundary; defaults to the ordinary
+   * (creator-facing) scope. Share-runtime callers pass
+   * `agentShareWorkAccessScope(...)` so registration stamps provenance and
+   * reads stay confined to that visitor topic.
+   */
+  constructor(
+    db: LobeChatDatabase,
+    userId: string,
+    workspaceId?: string,
+    accessScope?: WorkAccessScope,
+  ) {
+    this.ctx = { accessScope, db, userId, workspaceId };
   }
 
   registerTask = (params: RegisterTaskWorkParams): Promise<WorkItem | null> =>
@@ -57,6 +78,26 @@ export class WorkModel {
 
   registerExternal = (params: RegisterExternalWorkParams): Promise<WorkItem | null> =>
     registerExternalWork(this.ctx, params);
+
+  registerFile = (params: RegisterFileWorkParams): Promise<WorkItem> =>
+    registerFileWork(this.ctx, params);
+
+  registerGoalReport = (params: RegisterGoalReportWorkParams): Promise<WorkItem> =>
+    registerGoalReportWork(this.ctx, params);
+
+  findLatestGoalReport = (goalId: string) => findLatestGoalReportVersion(this.ctx, goalId);
+
+  /**
+   * Existence probe for a file Work's one-version-per-operation dedup key, so
+   * the server consumer can skip a redundant export/upload on a retry. See
+   * {@link findFileWorkVersionByToolCall}.
+   */
+  findFileVersionByToolCall = (params: {
+    filePath: string;
+    toolCallId: string;
+    topicId: string;
+    userId: string;
+  }): Promise<{ id: string } | null> => findFileWorkVersionByToolCall(this.ctx, params);
 
   handleSkillToolResult = async (
     params: RegisterSkillToolResultWorkParams,
@@ -72,24 +113,58 @@ export class WorkModel {
     return this.registerExternal({ ...operation.params, toolIdentifier: provider });
   };
 
+  /**
+   * Register a github Work from a heterogeneous / device SHELL tool result
+   * (codex `command_execution`, claude-code `Bash`, lobe-local-system
+   * `runCommand`) that ran `gh issue|pr create/edit`. Unlike
+   * {@link handleSkillToolResult} the version keeps the REAL producing tool as
+   * its identifier (codex / claude-code / …) instead of a skill provider —
+   * the github identity still lands on the same `owner/repo#number` Work row,
+   * so both surfaces dedupe together.
+   */
+  registerShellGithubResult = async (
+    params: SkillToolResultWorkInput & { toolIdentifier: string },
+  ): Promise<WorkItem | null> => {
+    const { toolIdentifier, ...rest } = params;
+
+    const operation = normalizeGithubShellToolResult(rest);
+    if (!operation) return null;
+
+    return this.registerExternal({ ...operation.params, toolIdentifier });
+  };
+
   deleteDocumentWork = (params: DeleteDocumentWorkParams): Promise<void> =>
     writes.deleteDocumentWork(this.ctx, params);
 
   deleteTaskWork = (params: DeleteTaskWorkParams): Promise<void> =>
     writes.deleteTaskWork(this.ctx, params);
 
-  listByRootOperation = (params: { limit?: number; rootOperationId?: string | null }) =>
-    queries.listByRootOperation(this.ctx, params);
+  deleteWork = (params: DeleteWorkParams): Promise<void> => writes.deleteWork(this.ctx, params);
 
-  listByRootOperations = (params: { limit?: number; rootOperationIds?: string[] | null }) =>
-    queries.listByRootOperations(this.ctx, params);
+  /** See {@link writes.setTaskWorksVisibility}. */
+  setTaskWorksVisibility = (taskIds: string[], visibility: WorkVisibility): Promise<void> =>
+    writes.setTaskWorksVisibility(this.ctx, taskIds, visibility);
+
+  listByRootOperation = (params: {
+    includeFileWorks?: boolean;
+    limit?: number;
+    rootOperationId?: string | null;
+  }) => queries.listByRootOperation(this.ctx, params);
+
+  listByRootOperations = (params: {
+    includeFileWorks?: boolean;
+    limit?: number;
+    rootOperationIds?: string[] | null;
+  }) => queries.listByRootOperations(this.ctx, params);
 
   listSummariesByRootOperations = (params: {
+    includeFileWorks?: boolean;
     limit?: number;
     rootOperationIds?: string[] | null;
   }) => queries.listSummariesByRootOperations(this.ctx, params);
 
   listByConversation = (params: {
+    includeFileWorks?: boolean;
     limit?: number;
     threadId?: string | null;
     topicId?: string | null;

@@ -1,8 +1,8 @@
 import { useCallback } from 'react';
-import { useSearchParams } from 'react-router';
 
+import { useResourceManagerStore } from '@/features/ResourceManager/store';
 import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwareNavigate';
-import { useResourceManagerStore } from '@/routes/(main)/resource/features/store';
+import { useActiveLocation } from '@/hooks/useActiveLocation';
 
 export interface UseFileItemClickOptions {
   id: string;
@@ -10,8 +10,33 @@ export interface UseFileItemClickOptions {
   isPage: boolean;
   libraryId?: string | null;
   onOpen?: (id: string) => void;
+  /**
+   * Explorer rows (list / masonry) outside a knowledge base preview files and
+   * pages in the inline right detail panel. Inside a knowledge base the content
+   * itself is the point of the visit, so a click opens the detail directly. The
+   * library sidebar tree is navigation and also stays mounted where no explorer
+   * (and so no panel) exists, e.g. the Permissions page, so it keeps opening the
+   * fullscreen editor.
+   */
+  openInPanel?: boolean;
   slug?: string | null;
 }
+
+/**
+ * How long a first click waits before expanding a closed detail panel. Expanding
+ * the panel narrows the explorer (the masonry drops columns), which can move the
+ * clicked card before a second click lands and swallow the double click.
+ */
+export const DETAIL_PANEL_OPEN_DELAY_MS = 250;
+
+let pendingPanelOpen: ReturnType<typeof setTimeout> | undefined;
+
+const cancelPendingPanelOpen = () => {
+  if (pendingPanelOpen === undefined) return;
+
+  clearTimeout(pendingPanelOpen);
+  pendingPanelOpen = undefined;
+};
 
 /**
  * Shared hook for handling file item click across different view modes (list/masonry)
@@ -23,20 +48,42 @@ export const useFileItemClick = ({
   isFolder,
   isPage,
   onOpen,
+  openInPanel = false,
 }: UseFileItemClickOptions) => {
   const navigate = useWorkspaceAwareNavigate();
-  const [searchParams, setSearchParams] = useSearchParams();
+  // Read/write the URL through the active-tab facade rather than
+  // `useSearchParams`: this hook also runs in the library sidebar, which Electron
+  // portals into the shell's frozen root router.
+  const { pathname, search } = useActiveLocation();
   const setMode = useResourceManagerStore((s) => s.setMode);
   const setCurrentViewItemId = useResourceManagerStore((s) => s.setCurrentViewItemId);
+  const openDetailPanel = useResourceManagerStore((s) => s.openDetailPanel);
+  const closeDetailPanel = useResourceManagerStore((s) => s.closeDetailPanel);
 
   const handleClick = useCallback(() => {
+    const selectFile = () => {
+      const newParams = new URLSearchParams(search);
+      newParams.set('file', id);
+
+      // The library sidebar stays mounted on the standalone Permissions page.
+      // A search-only navigation there would keep the tab on `/permission`, so
+      // selecting a page/file appeared to do nothing. Return to the library
+      // surface first, then let its `file` query restore the selected content.
+      if (libraryId && pathname.endsWith(`/resource/library/${libraryId}/permission`)) {
+        navigate(`/resource/library/${libraryId}?${newParams.toString()}`);
+        return;
+      }
+
+      navigate({ search: `?${newParams.toString()}` }, { replace: true });
+    };
+
     if (isFolder) {
       // Navigate to folder using slug-based routing (Google Drive style)
       const folderSlug = slug || id;
 
       if (libraryId) {
         // Preserve existing query parameters (view and sort preferences)
-        const newParams = new URLSearchParams(searchParams);
+        const newParams = new URLSearchParams(search);
         // Remove 'file' parameter when navigating to folder
         newParams.delete('file');
 
@@ -44,35 +91,41 @@ export const useFileItemClick = ({
         const basePath = `/resource/library/${libraryId}/${folderSlug}`;
         navigate(queryString ? `${basePath}?${queryString}` : basePath);
       }
-    } else if (isPage) {
-      // Switch to page view mode
-      setCurrentViewItemId(id);
-      setMode('page');
-      // Update URL query parameter for shareable links
-      setSearchParams(
-        (prev) => {
-          const newParams = new URLSearchParams(prev);
-          newParams.set('file', id);
-          return newParams;
-        },
-        { replace: true },
-      );
-    } else {
-      // Set mode to editor for regular files
-      setCurrentViewItemId(id);
-      setMode('editor');
-      // Update URL query parameter for shareable links
-      setSearchParams(
-        (prev) => {
-          const newParams = new URLSearchParams(prev);
-          newParams.set('file', id);
-          return newParams;
-        },
-        { replace: true },
-      );
-      // Call onOpen if provided for backwards compatibility
-      onOpen?.(id);
+      return;
     }
+
+    if (openInPanel && !libraryId) {
+      // A plain click is a "look at this" gesture — the promise of the explorer
+      // is to keep the working list visible. Fullscreen focus stays available as
+      // the explicit double click (see `useFileItemDoubleClick`).
+      const open = () => {
+        openDetailPanel(id, isPage);
+        onOpen?.(id);
+      };
+
+      cancelPendingPanelOpen();
+      // Switching an already open panel keeps the layout, so it can be instant.
+      if (useResourceManagerStore.getState().detailPanelId) {
+        open();
+        return;
+      }
+
+      pendingPanelOpen = setTimeout(() => {
+        pendingPanelOpen = undefined;
+        open();
+      }, DETAIL_PANEL_OPEN_DELAY_MS);
+      return;
+    }
+
+    // The preview state is global: drop a panel left open elsewhere so leaving
+    // the editor doesn't reveal a stale preview.
+    cancelPendingPanelOpen();
+    closeDetailPanel();
+    setCurrentViewItemId(id);
+    setMode(isPage ? 'page' : 'editor');
+    // Update URL query parameter for shareable links
+    selectFile();
+    onOpen?.(id);
   }, [
     isFolder,
     slug,
@@ -80,12 +133,40 @@ export const useFileItemClick = ({
     libraryId,
     isPage,
     navigate,
-    searchParams,
-    setSearchParams,
+    openInPanel,
+    pathname,
+    search,
     setMode,
     setCurrentViewItemId,
+    openDetailPanel,
+    closeDetailPanel,
     onOpen,
   ]);
 
   return handleClick;
+};
+
+/**
+ * Double click = the committed "open this item" gesture: leave the list into
+ * the fullscreen page editor or file editor. Keeps the `?file=` deep-link write
+ * so a restored tab still lands on this item.
+ */
+export const useFileItemDoubleClick = ({ id, isPage }: { id: string; isPage: boolean }) => {
+  const setMode = useResourceManagerStore((s) => s.setMode);
+  const setCurrentViewItemId = useResourceManagerStore((s) => s.setCurrentViewItemId);
+  const closeDetailPanel = useResourceManagerStore((s) => s.closeDetailPanel);
+  const { search } = useActiveLocation();
+  const navigate = useWorkspaceAwareNavigate();
+
+  return useCallback(() => {
+    // Both clicks of the double click scheduled a panel open; drop it.
+    cancelPendingPanelOpen();
+    closeDetailPanel();
+    setCurrentViewItemId(id);
+    setMode(isPage ? 'page' : 'editor');
+
+    const newParams = new URLSearchParams(search);
+    newParams.set('file', id);
+    navigate({ search: `?${newParams.toString()}` }, { replace: true });
+  }, [closeDetailPanel, id, isPage, setCurrentViewItemId, setMode, navigate, search]);
 };

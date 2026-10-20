@@ -21,6 +21,8 @@ describe('buildWorkspaceAwarePath', () => {
       '/acme/community/agent/jailbreak',
     );
     expect(buildWorkspaceAwarePath('/group/group-1', 'acme')).toBe('/acme/group/group-1');
+    expect(buildWorkspaceAwarePath('/project/project-1', 'acme')).toBe('/acme/project/project-1');
+    expect(buildWorkspaceAwarePath('/projects', 'acme')).toBe('/acme/projects');
   });
 
   it('prefixes deep agent and evaluation paths used by cross-page navigation', () => {
@@ -35,9 +37,17 @@ describe('buildWorkspaceAwarePath', () => {
     );
   });
 
+  // Regression: `/goal/:goalId` is mirrored under `/:workspaceSlug`, but the
+  // prefix allowlist missed it — a copied workspace goal link (a goal with no
+  // agent, e.g. a project goal) opened in the personal scope.
+  it('prefixes top-level goal paths', () => {
+    expect(buildWorkspaceAwarePath('/goal/goal_1', 'acme')).toBe('/acme/goal/goal_1');
+    expect(buildWorkspaceAwarePath('/goal', 'acme')).toBe('/acme/goal');
+  });
+
   it('bypasses the prefix when `escape` is true', () => {
-    expect(buildWorkspaceAwarePath('/settings/profile', 'acme', { escape: true })).toBe(
-      '/settings/profile',
+    expect(buildWorkspaceAwarePath('/settings/memory', 'acme', { escape: true })).toBe(
+      '/settings/memory',
     );
     expect(buildWorkspaceAwarePath('/settings/plans', 'acme', { escape: true })).toBe(
       '/settings/plans',
@@ -64,6 +74,7 @@ describe('buildWorkspaceAwarePath', () => {
   });
 
   it('skips prefix for personal-only top-level paths', () => {
+    expect(buildWorkspaceAwarePath('/apps', 'acme')).toBe('/apps');
     expect(buildWorkspaceAwarePath('/onboarding/agent', 'acme')).toBe('/onboarding/agent');
     expect(buildWorkspaceAwarePath('/me/profile', 'acme')).toBe('/me/profile');
     expect(buildWorkspaceAwarePath('/share/t/foo', 'acme')).toBe('/share/t/foo');
@@ -84,6 +95,7 @@ describe('buildWorkspaceAwarePath', () => {
     expect(buildWorkspaceAwarePath('/settings/skill', 'acme')).toBe('/acme/settings/skill');
     expect(buildWorkspaceAwarePath('/settings/connector', 'acme')).toBe('/acme/settings/connector');
     expect(buildWorkspaceAwarePath('/settings/devices', 'acme')).toBe('/acme/settings/devices');
+    expect(buildWorkspaceAwarePath('/settings/labels', 'acme')).toBe('/acme/settings/labels');
     expect(buildWorkspaceAwarePath('/settings/audit-log', 'acme')).toBe('/acme/settings/audit-log');
     expect(buildWorkspaceAwarePath('/settings/storage', 'acme')).toBe('/acme/settings/storage');
     expect(buildWorkspaceAwarePath('/settings/credential', 'acme')).toBe(
@@ -91,6 +103,11 @@ describe('buildWorkspaceAwarePath', () => {
     );
     // Legacy alias — prefixed, then the router redirects to `credential`.
     expect(buildWorkspaceAwarePath('/settings/creds', 'acme')).toBe('/acme/settings/creds');
+    expect(buildWorkspaceAwarePath('/settings/statistics', 'acme')).toBe(
+      '/acme/settings/statistics',
+    );
+    // Legacy alias — prefixed, then the router redirects to `statistics`.
+    expect(buildWorkspaceAwarePath('/settings/stats', 'acme')).toBe('/acme/settings/stats');
     expect(buildWorkspaceAwarePath('/settings/oauth-apps', 'acme')).toBe(
       '/acme/settings/oauth-apps',
     );
@@ -102,11 +119,26 @@ describe('buildWorkspaceAwarePath', () => {
     );
   });
 
+  // Account-level tabs are mirrored under the workspace so members can reach
+  // them without leaving it.
+  it('prefixes the account-level settings tabs', () => {
+    expect(buildWorkspaceAwarePath('/settings/profile', 'acme')).toBe('/acme/settings/profile');
+    expect(buildWorkspaceAwarePath('/settings/appearance', 'acme')).toBe(
+      '/acme/settings/appearance',
+    );
+    expect(buildWorkspaceAwarePath('/settings/hotkey', 'acme')).toBe('/acme/settings/hotkey');
+    expect(buildWorkspaceAwarePath('/settings/messenger', 'acme')).toBe('/acme/settings/messenger');
+    expect(buildWorkspaceAwarePath('/settings/messenger/slack', 'acme')).toBe(
+      '/acme/settings/messenger/slack',
+    );
+    expect(buildWorkspaceAwarePath('/settings/advanced', 'acme')).toBe('/acme/settings/advanced');
+    expect(buildWorkspaceAwarePath('/settings/labs', 'acme')).toBe('/acme/settings/labs');
+    expect(buildWorkspaceAwarePath('/settings/about', 'acme')).toBe('/acme/settings/about');
+  });
+
   it('skips prefix for personal-only settings sub-paths', () => {
-    expect(buildWorkspaceAwarePath('/settings/profile', 'acme')).toBe('/settings/profile');
     expect(buildWorkspaceAwarePath('/settings/llm', 'acme')).toBe('/settings/llm');
     expect(buildWorkspaceAwarePath('/settings/memory', 'acme')).toBe('/settings/memory');
-    expect(buildWorkspaceAwarePath('/settings/messenger', 'acme')).toBe('/settings/messenger');
     expect(buildWorkspaceAwarePath('/settings/referral', 'acme')).toBe('/settings/referral');
     expect(buildWorkspaceAwarePath('/settings/system-tools', 'acme')).toBe(
       '/settings/system-tools',

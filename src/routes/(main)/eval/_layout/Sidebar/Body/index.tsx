@@ -1,6 +1,6 @@
 'use client';
 
-import { Accordion, Flexbox } from '@lobehub/ui';
+import { AccordionRoot, Flexbox } from '@lobehub/ui';
 import { LayoutDashboardIcon } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -8,14 +8,15 @@ import { useTranslation } from 'react-i18next';
 import NavItem from '@/features/NavPanel/components/NavItem';
 import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwareNavigate';
 import WorkspaceLink from '@/features/Workspace/WorkspaceLink';
-import { usePathname } from '@/libs/router/navigation';
+import { useActiveLocation } from '@/hooks/useActiveLocation';
 import { useEvalStore } from '@/store/eval';
 
 import BenchmarkList from './BenchmarkList';
+import DatasetList from './DatasetList';
 import ExperimentList from './ExperimentList';
 
 const useActiveKey = () => {
-  const pathname = usePathname();
+  const { pathname } = useActiveLocation();
   if (pathname === '/eval') return 'dashboard';
 
   const benchMatch = pathname.match(/\/eval\/bench\/([^/]+)/);
@@ -23,6 +24,9 @@ const useActiveKey = () => {
 
   const experimentMatch = pathname.match(/\/eval\/experiments\/([^/]+)/);
   if (experimentMatch) return `experiment-${experimentMatch[1]}`;
+
+  const datasetMatch = pathname.match(/\/eval\/datasets\/([^/]+)/);
+  if (datasetMatch) return `dataset-${datasetMatch[1]}`;
 
   return 'dashboard';
 };
@@ -53,10 +57,15 @@ const Body = memo(() => {
           />
         </WorkspaceLink>
       </Flexbox>
-      <Accordion defaultExpandedKeys={['benchmarks', 'experiments']} gap={8}>
+      <AccordionRoot
+        defaultValue={['benchmarks', 'datasets', 'experiments']}
+        indicatorPlacement="inline"
+        style={{ gap: 8 }}
+      >
         <ExperimentList activeKey={activeKey} itemKey="experiments" />
         <BenchmarkList activeKey={activeKey} itemKey="benchmarks" />
-      </Accordion>
+        <DatasetList activeKey={activeKey} itemKey="datasets" />
+      </AccordionRoot>
     </Flexbox>
   );
 });

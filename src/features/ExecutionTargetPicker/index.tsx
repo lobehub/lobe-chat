@@ -1,8 +1,7 @@
 'use client';
 
 import type { DeviceExecutionTarget, DeviceListItem } from '@lobechat/types';
-import { Icon } from '@lobehub/ui';
-import { createStaticStyles, cssVar } from 'antd-style';
+import { createStaticStyles, cssVar, Icon } from '@lobehub/ui';
 import { BoxIcon, LaptopIcon, MonitorOffIcon, SparklesIcon } from 'lucide-react';
 import { memo } from 'react';
 
@@ -59,6 +58,43 @@ export const parseExecutionTargetValue = (
   return ['auto', 'local', 'none', 'sandbox'].includes(target) ? { target } : undefined;
 };
 
+export interface ExecutionTargetSelection {
+  deviceId?: string;
+  target: DeviceExecutionTarget;
+}
+
+/**
+ * Resolve the execution target an agent currently points at.
+ *
+ * Shared by the Agent Profile picker (which renders it) and the Permission page
+ * (which can only fix a target that actually resolves) so the two surfaces
+ * cannot disagree about what "no environment picked yet" means. A `device`
+ * target whose bound device is gone — unshared, deleted, still loading —
+ * resolves to `undefined` rather than a dangling selection.
+ */
+export const resolveExecutionTargetSelection = ({
+  boundDeviceId,
+  configuredTarget,
+  devices,
+  isHeterogeneous,
+}: {
+  boundDeviceId?: string;
+  configuredTarget?: DeviceExecutionTarget;
+  devices: DeviceListItem[];
+  isHeterogeneous: boolean;
+}): ExecutionTargetSelection | undefined => {
+  if (configuredTarget === 'device') {
+    const boundDevice = devices.find((device) => device.deviceId === boundDeviceId);
+    return boundDevice ? { deviceId: boundDevice.deviceId, target: 'device' } : undefined;
+  }
+
+  if (isSharedExecutionTarget(configuredTarget)) return { target: configuredTarget };
+
+  // Built-in-runtime agents default to "no environment" when nothing is stored;
+  // heterogeneous ones genuinely have no selection until the author picks one.
+  return configuredTarget === undefined && !isHeterogeneous ? { target: 'none' } : undefined;
+};
+
 export const groupExecutionTargetDevices = (devices: DeviceListItem[] | undefined) => ({
   personal: (devices ?? []).filter((device) => device.scope === 'personal'),
   privateWorkspace: (devices ?? []).filter(
@@ -71,6 +107,49 @@ export const groupExecutionTargetDevices = (devices: DeviceListItem[] | undefine
     (device) => device.scope === 'workspace' && device.visibility !== 'private',
   ),
 });
+
+/**
+ * The devices an agent's runs can actually reach.
+ *
+ * A deviceId encodes the identity it was enrolled under
+ * (`sha256(machineUUID + userId)` for personal, `… + workspace:<id>` for
+ * workspace), so the two pools are not interchangeable: a workspace agent
+ * cannot resolve a personal machine, nor a personal agent a workspace one.
+ * Offering the other pool would let a user pin a machine the run can never use
+ * — and a Task makes that worse than a chat, because its scheduled runs execute
+ * under the workspace principal rather than whoever is looking at it.
+ *
+ * Order is the picker's: the workspace pool lists private rows before public
+ * ones, the personal pool is flat.
+ */
+export const devicePoolForAgent = (
+  devices: DeviceListItem[] | undefined,
+  workspaceAgent: boolean,
+): DeviceListItem[] => {
+  const { personal, privateWorkspace, workspace } = groupExecutionTargetDevices(devices);
+
+  return workspaceAgent ? [...privateWorkspace, ...workspace] : personal;
+};
+
+/**
+ * The devices a Task may pin.
+ *
+ * Narrower than {@link devicePoolForAgent} for a workspace agent: a Task's
+ * scheduled and heartbeat runs execute as the task's creator, and a private
+ * workspace device is only resolvable by the member who enrolled it
+ * (`DeviceModel.findWorkspaceDeviceById`). A collaborator's private machine
+ * pinned on a shared task is therefore unreachable for automation — and the
+ * creator's private machine is unreachable for a collaborator's manual run — so
+ * only public workspace devices are offered.
+ */
+export const devicePoolForTask = (
+  devices: DeviceListItem[] | undefined,
+  workspaceAgent: boolean,
+): DeviceListItem[] => {
+  const { personal, publicWorkspace } = groupExecutionTargetDevices(devices);
+
+  return workspaceAgent ? publicWorkspace : personal;
+};
 
 interface ExecutionTargetIconProps {
   devicePlatform?: string | null;
@@ -106,13 +185,23 @@ interface ExecutionTargetDeviceStatusProps {
   offlineLabel: string;
   online: boolean;
   onlineLabel: string;
+  /**
+   * Shown instead of offline for a row restored from the persisted device list
+   * (`onlineUnknown`): its `online: false` is a placeholder until the server
+   * confirms presence.
+   */
+  unknown?: boolean;
+  unknownLabel: string;
 }
 
 export const ExecutionTargetDeviceStatus = memo<ExecutionTargetDeviceStatusProps>(
-  ({ offlineLabel, online, onlineLabel }) => (
+  ({ offlineLabel, online, onlineLabel, unknown, unknownLabel }) => (
     <span className={styles.status}>
-      <span aria-hidden className={online ? styles.dotOnline : styles.dotOffline} />
-      <span>{online ? onlineLabel : offlineLabel}</span>
+      <span
+        aria-hidden
+        className={unknown ? styles.dotOffline : online ? styles.dotOnline : styles.dotOffline}
+      />
+      <span>{unknown ? unknownLabel : online ? onlineLabel : offlineLabel}</span>
     </span>
   ),
 );

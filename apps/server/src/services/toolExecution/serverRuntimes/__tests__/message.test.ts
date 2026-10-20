@@ -6,11 +6,58 @@ import type { ToolExecutionContext } from '../../types';
 // ==================== Mocks ====================
 
 const mockQuery = vi.fn();
+const mockProviderFindById = vi.fn();
+const mockFindEnabledByApplicationId = vi.fn();
 
 vi.mock('@/database/models/agentBotProvider', () => ({
-  AgentBotProviderModel: vi.fn().mockImplementation(() => ({
-    query: mockQuery,
-  })),
+  AgentBotProviderModel: vi.fn().mockImplementation(function () {
+    return {
+      findById: mockProviderFindById,
+      findEnabledByApplicationId: mockFindEnabledByApplicationId,
+      query: mockQuery,
+    };
+  }),
+}));
+
+// The topic carries the inbound IM context (`metadata.bot`) the runtime
+// routes current-conversation sends through.
+const mockTopicFindById = vi.fn();
+
+vi.mock('@/database/models/topic', () => ({
+  TopicModel: vi.fn().mockImplementation(function () {
+    return { findById: mockTopicFindById };
+  }),
+}));
+
+// Messenger install store — resolves the inbound `messengerInstallationKey`.
+const mockResolveByKey = vi.fn();
+
+vi.mock('@/server/services/messenger/installations', () => ({
+  getInstallationStore: vi.fn(() => ({ resolveByKey: mockResolveByKey })),
+}));
+
+// Per-bot runtime status, so the failed-bot skip can be exercised.
+const mockGetBotRuntimeStatus = vi.fn();
+
+vi.mock('@/server/services/gateway/runtimeStatus', async (importOriginal) => ({
+  ...(await importOriginal<Record<string, unknown>>()),
+  getBotRuntimeStatus: mockGetBotRuntimeStatus,
+}));
+
+// WeChat client — records which bot token each send went out through.
+const mockWechatSendMessage = vi.fn();
+const wechatClientTokens: string[] = [];
+
+vi.mock('@lobechat/chat-adapter-wechat', async (importOriginal) => ({
+  ...(await importOriginal<Record<string, unknown>>()),
+  WechatApiClient: vi.fn().mockImplementation(function (botToken: string) {
+    return {
+      sendMessage: async (...args: unknown[]) => {
+        wechatClientTokens.push(botToken);
+        return mockWechatSendMessage(...args);
+      },
+    };
+  }),
 }));
 
 // ── System Bot model mocks ──────────────────────────────
@@ -36,16 +83,20 @@ const mockLinkDelete = vi.fn();
 const mockLinkDeleteByPlatform = vi.fn();
 const mockLinkFindById = vi.fn();
 const mockLinkFindByPlatform = vi.fn();
+const mockLinkFindByIdWithCredentials = vi.fn();
 
 vi.mock('@/database/models/messengerAccountLink', () => ({
-  MessengerAccountLinkModel: vi.fn().mockImplementation(() => ({
-    delete: mockLinkDelete,
-    deleteByPlatform: mockLinkDeleteByPlatform,
-    findById: mockLinkFindById,
-    findByPlatform: mockLinkFindByPlatform,
-    list: mockLinkList,
-    setActiveAgent: mockLinkSetActiveAgent,
-  })),
+  MessengerAccountLinkModel: vi.fn().mockImplementation(function () {
+    return {
+      delete: mockLinkDelete,
+      deleteByPlatform: mockLinkDeleteByPlatform,
+      findById: mockLinkFindById,
+      findByIdWithCredentials: mockLinkFindByIdWithCredentials,
+      findByPlatform: mockLinkFindByPlatform,
+      list: mockLinkList,
+      setActiveAgent: mockLinkSetActiveAgent,
+    };
+  }),
 }));
 
 // WeChat uninstall tears down the per-user gateway poller and clears the
@@ -53,10 +104,12 @@ vi.mock('@/database/models/messengerAccountLink', () => ({
 const mockDisconnectUserMessenger = vi.fn();
 
 vi.mock('@/server/services/gateway', () => ({
-  GatewayService: vi.fn().mockImplementation(() => ({
-    disconnectUserMessenger: mockDisconnectUserMessenger,
-    ensureUserMessengerConnected: vi.fn(),
-  })),
+  GatewayService: vi.fn().mockImplementation(function () {
+    return {
+      disconnectUserMessenger: mockDisconnectUserMessenger,
+      ensureUserMessengerConnected: vi.fn(),
+    };
+  }),
 }));
 
 vi.mock('@/server/modules/AgentRuntime/redis', () => ({
@@ -99,6 +152,15 @@ vi.mock('@/server/modules/KeyVaultsEncrypt', () => ({
   },
 }));
 
+// Proactive push entry — the runtime's `sendMessengerPush` handler is a
+// pass-through to this module; mocking it keeps the heavy MessengerRouter
+// transitive imports out of the test runtime.
+const mockSendMessengerPush = vi.fn();
+
+vi.mock('@/server/services/messenger/push', () => ({
+  sendMessengerPush: mockSendMessengerPush,
+}));
+
 // Stub the bot-settings helper so the test never loads its transitive
 // imports (BotMessageRouter -> AiAgentService -> ModelRuntime). ModelRuntime
 // reads server-only env at module construction, which the vitest client
@@ -108,7 +170,9 @@ vi.mock('@/server/modules/KeyVaultsEncrypt', () => ({
 vi.mock('@/server/services/bot/agentBotProviderSettings', () => ({
   assertBotAccessSettings: vi.fn(),
   invalidateBotAfterUpdate: vi.fn().mockResolvedValue(undefined),
-  mergeBotSettingsForPersist: vi.fn((_platform, settings) => settings),
+  mergeBotSettingsForPersist: vi.fn(function (_platform, settings) {
+    return settings;
+  }),
 }));
 
 // Mock platform API constructors
@@ -118,89 +182,106 @@ const mockDiscordEditMessage = vi.fn();
 const mockDiscordDeleteMessage = vi.fn();
 
 vi.mock('@/server/services/bot/platforms/discord/api', () => ({
-  DiscordApi: vi.fn().mockImplementation(() => ({
-    createMessage: mockDiscordCreateMessage,
-    createPoll: vi.fn(),
-    createReaction: vi.fn(),
-    deleteMessage: mockDiscordDeleteMessage,
-    editMessage: mockDiscordEditMessage,
-    getChannel: vi.fn(),
-    getGuildChannels: vi.fn(),
-    getGuildMember: vi.fn(),
-    getMessages: mockDiscordGetMessages,
-    getPinnedMessages: vi.fn(),
-    getReactions: vi.fn(),
-    listActiveThreads: vi.fn(),
-    pinMessage: vi.fn(),
-    searchGuildMessages: vi.fn(),
-    startThreadFromMessage: vi.fn(),
-    startThreadWithoutMessage: vi.fn(),
-    unpinMessage: vi.fn(),
-  })),
+  DiscordApi: vi.fn().mockImplementation(function () {
+    return {
+      createMessage: mockDiscordCreateMessage,
+      createPoll: vi.fn(),
+      createReaction: vi.fn(),
+      deleteMessage: mockDiscordDeleteMessage,
+      editMessage: mockDiscordEditMessage,
+      getChannel: vi.fn(),
+      getGuildChannels: vi.fn(),
+      getGuildMember: vi.fn(),
+      getMessages: mockDiscordGetMessages,
+      getPinnedMessages: vi.fn(),
+      getReactions: vi.fn(),
+      listActiveThreads: vi.fn(),
+      pinMessage: vi.fn(),
+      searchGuildMessages: vi.fn(),
+      startThreadFromMessage: vi.fn(),
+      startThreadWithoutMessage: vi.fn(),
+      unpinMessage: vi.fn(),
+    };
+  }),
 }));
 
 const mockTelegramSendMessage = vi.fn();
 vi.mock('@/server/services/bot/platforms/telegram/api', () => ({
-  TelegramApi: vi.fn().mockImplementation(() => ({
-    deleteMessage: vi.fn(),
-    editMessageText: vi.fn(),
-    getChat: vi.fn(),
-    getChatMember: vi.fn(),
-    createForumTopic: vi.fn(),
-    pinChatMessage: vi.fn(),
-    sendMessage: mockTelegramSendMessage,
-    sendMessageToTopic: vi.fn(),
-    sendPoll: vi.fn(),
-    setMessageReaction: vi.fn(),
-    unpinChatMessage: vi.fn(),
-  })),
+  TelegramApi: vi.fn().mockImplementation(function () {
+    return {
+      deleteMessage: vi.fn(),
+      editMessageText: vi.fn(),
+      getChat: vi.fn(),
+      getChatMember: vi.fn(),
+      createForumTopic: vi.fn(),
+      pinChatMessage: vi.fn(),
+      sendMessage: mockTelegramSendMessage,
+      sendMessageToTopic: vi.fn(),
+      sendPoll: vi.fn(),
+      setMessageReaction: vi.fn(),
+      unpinChatMessage: vi.fn(),
+    };
+  }),
 }));
 
 const mockSlackPostMessage = vi.fn();
 vi.mock('@/server/services/bot/platforms/slack/api', () => ({
   SLACK_API_BASE: 'https://slack.com/api',
-  SlackApi: vi.fn().mockImplementation(() => ({
-    addReaction: vi.fn(),
-    deleteMessage: vi.fn(),
-    getChannelInfo: vi.fn(),
-    getHistory: vi.fn(),
-    getReactions: vi.fn(),
-    listChannels: vi.fn(),
-    listPins: vi.fn(),
-    pinMessage: vi.fn(),
-    postMessage: mockSlackPostMessage,
-    postMessageInThread: vi.fn(),
-    removeReaction: vi.fn(),
-    search: vi.fn(),
-    unpinMessage: vi.fn(),
-    updateMessage: vi.fn(),
-    getUserInfo: vi.fn(),
-    getReplies: vi.fn(),
-  })),
+  SlackApi: vi.fn().mockImplementation(function () {
+    return {
+      addReaction: vi.fn(),
+      deleteMessage: vi.fn(),
+      getChannelInfo: vi.fn(),
+      getHistory: vi.fn(),
+      getReactions: vi.fn(),
+      listChannels: vi.fn(),
+      listPins: vi.fn(),
+      pinMessage: vi.fn(),
+      postMessage: mockSlackPostMessage,
+      postMessageInThread: vi.fn(),
+      removeReaction: vi.fn(),
+      search: vi.fn(),
+      unpinMessage: vi.fn(),
+      updateMessage: vi.fn(),
+      getUserInfo: vi.fn(),
+      getReplies: vi.fn(),
+    };
+  }),
 }));
 
 const mockFeishuSendMessage = vi.fn();
-vi.mock('@lobechat/chat-adapter-feishu', () => ({
-  LarkApiClient: vi.fn().mockImplementation(() => ({
-    addReaction: vi.fn(),
-    deleteMessage: vi.fn(),
-    editMessage: vi.fn(),
-    getChatInfo: vi.fn(),
-    getUserInfo: vi.fn(),
-    listMessages: vi.fn(),
-    replyMessage: vi.fn(),
-    sendMessage: mockFeishuSendMessage,
-  })),
+const mockFeishuGetDocxRawContent = vi.fn();
+const mockFeishuGetDocxDocument = vi.fn();
+vi.mock('@lobechat/chat-adapter-feishu', async (importOriginal) => ({
+  // Keep the pure helpers (URL parsing, content flattening) real — only the
+  // HTTP client is mocked.
+  ...(await importOriginal<Record<string, unknown>>()),
+  LarkApiClient: vi.fn().mockImplementation(function () {
+    return {
+      addReaction: vi.fn(),
+      deleteMessage: vi.fn(),
+      editMessage: vi.fn(),
+      getChatInfo: vi.fn(),
+      getDocxDocument: mockFeishuGetDocxDocument,
+      getDocxRawContent: mockFeishuGetDocxRawContent,
+      getUserInfo: vi.fn(),
+      listMessages: vi.fn(),
+      replyMessage: vi.fn(),
+      sendMessage: mockFeishuSendMessage,
+    };
+  }),
 }));
 
 const mockQQSendGroupMessage = vi.fn();
 vi.mock('@lobechat/chat-adapter-qq', () => ({
-  QQApiClient: vi.fn().mockImplementation(() => ({
-    sendC2CMessage: vi.fn(),
-    sendDmsMessage: vi.fn(),
-    sendGroupMessage: mockQQSendGroupMessage,
-    sendGuildMessage: vi.fn(),
-  })),
+  QQApiClient: vi.fn().mockImplementation(function () {
+    return {
+      sendC2CMessage: vi.fn(),
+      sendDmsMessage: vi.fn(),
+      sendGroupMessage: mockQQSendGroupMessage,
+      sendGuildMessage: vi.fn(),
+    };
+  }),
 }));
 
 // Import after mocks
@@ -222,6 +303,24 @@ const mockProviderFor = (platform: string, credentials: Record<string, string>) 
     return [];
   });
 };
+
+beforeEach(() => {
+  mockGetBotRuntimeStatus.mockReset();
+  mockGetBotRuntimeStatus.mockImplementation(async (platform: string, applicationId: string) => ({
+    applicationId,
+    platform,
+    status: 'connected',
+    updatedAt: 0,
+  }));
+  mockTopicFindById.mockReset();
+  mockResolveByKey.mockReset();
+  mockProviderFindById.mockReset();
+  mockFindEnabledByApplicationId.mockReset();
+  mockLinkFindByIdWithCredentials.mockReset();
+  mockWechatSendMessage.mockReset();
+  mockWechatSendMessage.mockResolvedValue({});
+  wechatClientTokens.length = 0;
+});
 
 // ==================== Tests ====================
 
@@ -381,6 +480,41 @@ describe('messageRuntime', () => {
         platform: 'feishu',
       });
     });
+
+    it('reads a docx document linked from the chat', async () => {
+      mockProviderFor('feishu', { appSecret: 'feishu-secret' });
+      mockFeishuGetDocxRawContent.mockResolvedValue('参会人：A、B\n总结：上线延期一周');
+      mockFeishuGetDocxDocument.mockResolvedValue({ documentId: 'DocTok', title: '评审会纪要' });
+
+      const runtime = await messageRuntime.factory(validContext);
+      const result = await runtime.readDocument({
+        platform: 'feishu',
+        url: 'https://lobe-hub.feishu.cn/docx/DocTok?from=chat',
+      });
+
+      expect(result.success).toBe(true);
+      expect(mockFeishuGetDocxRawContent).toHaveBeenCalledWith('DocTok');
+      expect(result.content).toContain('Document: 评审会纪要');
+      expect(result.content).toContain('总结：上线延期一周');
+      expect(result.state).toMatchObject({
+        documentId: 'DocTok',
+        kind: 'docx',
+        platform: 'feishu',
+      });
+    });
+
+    it('reports readDocument as unsupported on a platform without a document API', async () => {
+      mockProviderFor('discord', { botToken: 'discord-token' });
+
+      const runtime = await messageRuntime.factory(validContext);
+      const result = await runtime.readDocument({
+        platform: 'discord',
+        url: 'https://example.com/doc',
+      });
+
+      expect(result.success).toBe(false);
+      expect(result.content).toContain('not supported on discord');
+    });
   });
 
   describe('QQ adapter', () => {
@@ -488,6 +622,220 @@ describe('messageRuntime', () => {
     });
   });
 
+  // ==================== Connection routing ====================
+  // A WeChat account can hold both a per-agent bot integration and a System
+  // Bot connection. Sends must go out through the connection the caller
+  // named, or — for the conversation the run is replying in — through the one
+  // it arrived on; never through an arbitrary (possibly failed) bot.
+  describe('connection routing', () => {
+    const failedBot = {
+      applicationId: 'stale@im.bot',
+      credentials: { botToken: 'stale-bot-token' },
+      enabled: true,
+      id: 'bot-stale',
+      platform: 'wechat',
+      workspaceId: null,
+    };
+
+    const messengerLink = {
+      applicationId: 'fresh@im.bot',
+      credentials: { botToken: 'messenger-token' },
+      id: 'link-1',
+      platform: 'wechat',
+      tenantId: 'wx-user@im.wechat',
+    };
+
+    beforeEach(() => {
+      mockQuery.mockImplementation(async (params?: { platform?: string }) =>
+        params?.platform === 'wechat' ? [failedBot] : [],
+      );
+      mockGetBotRuntimeStatus.mockImplementation(
+        async (platform: string, applicationId: string) => ({
+          applicationId,
+          platform,
+          status: applicationId === failedBot.applicationId ? 'failed' : 'connected',
+          updatedAt: 0,
+        }),
+      );
+    });
+
+    it('sends through the System Bot connection the conversation arrived on, not a per-agent bot', async () => {
+      mockTopicFindById.mockResolvedValue({
+        metadata: {
+          bot: {
+            applicationId: 'messenger-wechat-wx-user@im.wechat',
+            messengerInstallationKey: 'wechat:wx-user@im.wechat',
+            platform: 'wechat',
+            platformThreadId: 'wechat:dm:wx-user@im.wechat',
+          },
+        },
+      });
+      mockResolveByKey.mockResolvedValue({
+        applicationId: 'fresh@im.bot',
+        botToken: 'messenger-token',
+        installationKey: 'wechat:wx-user@im.wechat',
+        metadata: {},
+        platform: 'wechat',
+        tenantId: 'wx-user@im.wechat',
+      });
+
+      const runtime = await messageRuntime.factory({ ...validContext, topicId: 'topic-1' });
+      const result = await runtime.sendMessage({
+        channelId: 'wx-user@im.wechat',
+        content: 'here is your file',
+        platform: 'wechat',
+      });
+
+      expect(result.success).toBe(true);
+      expect(mockResolveByKey).toHaveBeenCalledWith('wechat:wx-user@im.wechat');
+      expect(wechatClientTokens).toEqual(['messenger-token']);
+    });
+
+    it('sends through the per-agent bot the conversation arrived on', async () => {
+      mockTopicFindById.mockResolvedValue({
+        metadata: {
+          bot: {
+            applicationId: 'agent-bot@im.bot',
+            platform: 'wechat',
+            platformThreadId: 'wechat:dm:wx-user@im.wechat',
+          },
+        },
+      });
+      mockFindEnabledByApplicationId.mockResolvedValue({
+        applicationId: 'agent-bot@im.bot',
+        credentials: { botToken: 'agent-bot-token' },
+        enabled: true,
+        platform: 'wechat',
+        workspaceId: null,
+      });
+
+      const runtime = await messageRuntime.factory({ ...validContext, topicId: 'topic-1' });
+      await runtime.sendMessage({
+        channelId: 'wx-user@im.wechat',
+        content: 'hi',
+        platform: 'wechat',
+      });
+
+      expect(mockFindEnabledByApplicationId).toHaveBeenCalledWith('wechat', 'agent-bot@im.bot');
+      expect(wechatClientTokens).toEqual(['agent-bot-token']);
+    });
+
+    it('honors an explicit messengerInstallationId instead of routing by platform', async () => {
+      mockLinkFindByIdWithCredentials.mockResolvedValue(messengerLink);
+
+      const runtime = await messageRuntime.factory(validContext);
+      const result = await runtime.sendMessage({
+        channelId: 'wx-user@im.wechat',
+        content: 'hi',
+        messengerInstallationId: 'link-1',
+        platform: 'wechat',
+      });
+
+      expect(result.success).toBe(true);
+      expect(mockLinkFindByIdWithCredentials).toHaveBeenCalledWith('link-1', 'wechat', {});
+      expect(wechatClientTokens).toEqual(['messenger-token']);
+      expect(mockWechatSendMessage).toHaveBeenCalledWith('wx-user@im.wechat', 'hi', '');
+    });
+
+    it('honors an explicit botId even when it is not the platform default', async () => {
+      mockProviderFindById.mockResolvedValue({
+        applicationId: 'other@im.bot',
+        credentials: { botToken: 'explicit-bot-token' },
+        enabled: true,
+        platform: 'wechat',
+        workspaceId: null,
+      });
+
+      const runtime = await messageRuntime.factory(validContext);
+      await runtime.sendMessage({
+        botId: 'bot-other',
+        channelId: 'wx-user@im.wechat',
+        content: 'hi',
+        platform: 'wechat',
+      });
+
+      expect(mockProviderFindById).toHaveBeenCalledWith('bot-other');
+      expect(wechatClientTokens).toEqual(['explicit-bot-token']);
+    });
+
+    it('rejects a botId that belongs to a different platform', async () => {
+      mockProviderFindById.mockResolvedValue({
+        applicationId: 'discord-app',
+        credentials: { botToken: 'discord-token' },
+        enabled: true,
+        platform: 'discord',
+        workspaceId: null,
+      });
+
+      const runtime = await messageRuntime.factory(validContext);
+      const result = await runtime.sendMessage({
+        botId: 'bot-discord',
+        channelId: 'wx-user@im.wechat',
+        content: 'hi',
+        platform: 'wechat',
+      });
+
+      expect(result.success).toBe(false);
+      expect(result.content).toContain('is a discord connection, but the call targets wechat');
+    });
+
+    it('never auto-picks a failed bot, falling back to the WeChat System Bot connection', async () => {
+      mockLinkFindByPlatform.mockResolvedValue({ id: 'link-1', platform: 'wechat' });
+      mockLinkFindByIdWithCredentials.mockResolvedValue(messengerLink);
+
+      const runtime = await messageRuntime.factory(validContext);
+      const result = await runtime.sendMessage({
+        channelId: 'wx-user@im.wechat',
+        content: 'hi',
+        platform: 'wechat',
+      });
+
+      expect(result.success).toBe(true);
+      expect(wechatClientTokens).toEqual(['messenger-token']);
+    });
+
+    it('names the failed bot when there is nothing usable to fall back to', async () => {
+      mockLinkFindByPlatform.mockResolvedValue(undefined);
+
+      const runtime = await messageRuntime.factory(validContext);
+      const result = await runtime.sendMessage({
+        channelId: 'wx-user@im.wechat',
+        content: 'hi',
+        platform: 'wechat',
+      });
+
+      expect(result.success).toBe(false);
+      expect(result.content).toContain('Every enabled wechat bot is in a failed state');
+      expect(result.content).toContain('stale@im.bot');
+      expect(wechatClientTokens).toEqual([]);
+    });
+
+    it('keeps platform routing for a platform other than the conversation’s', async () => {
+      mockTopicFindById.mockResolvedValue({
+        metadata: {
+          bot: {
+            applicationId: 'messenger-wechat-wx-user@im.wechat',
+            messengerInstallationKey: 'wechat:wx-user@im.wechat',
+            platform: 'wechat',
+            platformThreadId: 'wechat:dm:wx-user@im.wechat',
+          },
+        },
+      });
+      mockProviderFor('discord', { botToken: 'discord-token' });
+      mockDiscordCreateMessage.mockResolvedValue({ id: 'msg-9' });
+
+      const runtime = await messageRuntime.factory({ ...validContext, topicId: 'topic-1' });
+      const result = await runtime.sendMessage({
+        channelId: 'ch-1',
+        content: 'cross-post',
+        platform: 'discord',
+      });
+
+      expect(result.success).toBe(true);
+      expect(mockResolveByKey).not.toHaveBeenCalled();
+    });
+  });
+
   // ==================== System Bot management () ====================
   // Each test exercises both layers in one shot:
   //  1. `botProvider.<method>` in `apps/server/src/services/toolExecution/serverRuntimes/message/index.ts`
@@ -517,6 +865,7 @@ describe('messageRuntime', () => {
       mockGetMessengerDiscordConfig,
       mockGetMessengerTelegramConfig,
       mockListSerializedPlatforms,
+      mockSendMessengerPush,
     ]) {
       fn.mockReset();
     }
@@ -610,12 +959,14 @@ describe('messageRuntime', () => {
         botToken: 'tg-env-token',
         botUsername: 'lobehub_bot',
       });
-      mockLinkFindByPlatform.mockResolvedValueOnce({
-        createdAt: new Date('2026-03-01T00:00:00Z'),
-        platform: 'telegram',
-        tenantId: '',
-        userId: 'user-1',
-      });
+      mockLinkList.mockResolvedValueOnce([
+        {
+          createdAt: new Date('2026-03-01T00:00:00Z'),
+          platform: 'telegram',
+          tenantId: '',
+          userId: 'user-1',
+        },
+      ]);
 
       const runtime = await messageRuntime.factory(validContext);
       const result = await runtime.listMessengers({});
@@ -630,18 +981,19 @@ describe('messageRuntime', () => {
         tenantId: '',
         tenantName: 'Telegram',
       });
-      expect(mockLinkFindByPlatform).toHaveBeenCalledWith('telegram');
     });
 
     it('omits the telegram singleton when env config is missing', async () => {
       mockListByInstallerUserId.mockResolvedValueOnce([]);
       mockGetMessengerTelegramConfig.mockResolvedValueOnce(null);
-      mockLinkFindByPlatform.mockResolvedValueOnce({
-        createdAt: new Date('2026-03-01T00:00:00Z'),
-        platform: 'telegram',
-        tenantId: '',
-        userId: 'user-1',
-      });
+      mockLinkList.mockResolvedValueOnce([
+        {
+          createdAt: new Date('2026-03-01T00:00:00Z'),
+          platform: 'telegram',
+          tenantId: '',
+          userId: 'user-1',
+        },
+      ]);
 
       const runtime = await messageRuntime.factory(validContext);
       const result = await runtime.listMessengers({});
@@ -656,7 +1008,7 @@ describe('messageRuntime', () => {
         botToken: 'tg-env-token',
         botUsername: 'lobehub_bot',
       });
-      mockLinkFindByPlatform.mockResolvedValueOnce(undefined);
+      mockLinkList.mockResolvedValueOnce([]);
 
       const runtime = await messageRuntime.factory(validContext);
       const result = await runtime.listMessengers({});
@@ -681,12 +1033,14 @@ describe('messageRuntime', () => {
         botToken: 'tg-env-token',
         botUsername: 'lobehub_bot',
       });
-      mockLinkFindByPlatform.mockResolvedValueOnce({
-        createdAt: new Date('2026-03-01T00:00:00Z'),
-        platform: 'telegram',
-        tenantId: '',
-        userId: 'user-1',
-      });
+      mockLinkList.mockResolvedValueOnce([
+        {
+          createdAt: new Date('2026-03-01T00:00:00Z'),
+          platform: 'telegram',
+          tenantId: '',
+          userId: 'user-1',
+        },
+      ]);
 
       const runtime = await messageRuntime.factory(validContext);
       const result = await runtime.listMessengers({});
@@ -772,12 +1126,14 @@ describe('messageRuntime', () => {
         botToken: 'tg-env-token',
         botUsername: 'lobehub_bot',
       });
-      mockLinkFindByPlatform.mockResolvedValueOnce({
-        createdAt: new Date('2026-03-01T00:00:00Z'),
-        platform: 'telegram',
-        tenantId: '',
-        userId: 'user-1',
-      });
+      mockLinkList.mockResolvedValueOnce([
+        {
+          createdAt: new Date('2026-03-01T00:00:00Z'),
+          platform: 'telegram',
+          tenantId: '',
+          userId: 'user-1',
+        },
+      ]);
 
       const runtime = await messageRuntime.factory(validContext);
       const result = await runtime.getMessengerDetail({ installationId: 'telegram:singleton' });
@@ -794,7 +1150,7 @@ describe('messageRuntime', () => {
         botToken: 'tg-env-token',
         botUsername: 'lobehub_bot',
       });
-      mockLinkFindByPlatform.mockResolvedValueOnce(undefined);
+      mockLinkList.mockResolvedValueOnce([]);
 
       const runtime = await messageRuntime.factory(validContext);
       const result = await runtime.getMessengerDetail({ installationId: 'telegram:singleton' });
@@ -1034,6 +1390,158 @@ describe('messageRuntime', () => {
 
       expect(result.success).toBe(true);
       expect(mockLinkDeleteByPlatform).toHaveBeenCalledWith('slack', 'T1');
+    });
+  });
+
+  describe('System Bot — sendMessengerPush', () => {
+    it('pushes to the caller’s Telegram DM without discovery', async () => {
+      mockSendMessengerPush.mockResolvedValueOnce({ status: 'sent' });
+
+      const runtime = await messageRuntime.factory(validContext);
+      const result = await runtime.sendMessengerPush({
+        content: 'task done',
+        platform: 'telegram',
+      });
+
+      expect(result.success).toBe(true);
+      expect(result.state.status).toBe('sent');
+      expect(mockSendMessengerPush).toHaveBeenCalledWith({
+        content: 'task done',
+        platform: 'telegram',
+        serverDB: validContext.serverDB,
+        tenantId: undefined,
+        userId: 'user-1',
+      });
+    });
+
+    it('asks for workspace selection when several Slack workspaces are linked', async () => {
+      // `resolveSlackPushTenant` lists links; `listMessengers` (name
+      // enrichment) hits the installation model + wechat-synthesis link list.
+      mockLinkList.mockResolvedValue([
+        { activeAgentId: null, platform: 'slack', platformUserId: 'U1', tenantId: 'T1' },
+        { activeAgentId: null, platform: 'slack', platformUserId: 'U1', tenantId: 'T2' },
+      ]);
+      mockListByInstallerUserId.mockResolvedValueOnce([
+        {
+          applicationId: 'A1',
+          createdAt: new Date('2026-01-01T00:00:00Z'),
+          id: 'inst-1',
+          metadata: { tenantName: 'Acme Corp' },
+          platform: 'slack',
+          revokedAt: null,
+          tenantId: 'T1',
+        },
+      ]);
+      mockGetMessengerTelegramConfig.mockResolvedValueOnce(null);
+
+      const runtime = await messageRuntime.factory(validContext);
+      const result = await runtime.sendMessengerPush({ content: 'hi', platform: 'slack' });
+
+      expect(result.success).toBe(true);
+      expect(result.state.status).toBe('needs_workspace_selection');
+      expect(result.state.workspaces).toEqual([
+        { tenantId: 'T1', tenantName: 'Acme Corp' },
+        { tenantId: 'T2', tenantName: undefined },
+      ]);
+      expect(result.content).toContain('Acme Corp');
+      expect(mockSendMessengerPush).not.toHaveBeenCalled();
+    });
+
+    // The TRPC route caps this with Zod, but this runtime reaches the push
+    // service directly and BaseExecutor forwards params unvalidated — so the
+    // advertised 2000-character limit only exists here.
+    it('rejects content past the advertised length instead of pushing it', async () => {
+      const runtime = await messageRuntime.factory(validContext);
+      const result = await runtime.sendMessengerPush({
+        content: 'x'.repeat(2001),
+        platform: 'telegram',
+      });
+
+      expect(result.success).toBe(false);
+      expect(result.content).toContain('2000');
+      expect(mockSendMessengerPush).not.toHaveBeenCalled();
+    });
+
+    it('accepts content exactly at the limit', async () => {
+      mockLinkList.mockResolvedValueOnce([
+        { activeAgentId: null, platform: 'telegram', platformUserId: 'C1', tenantId: '' },
+      ]);
+      mockSendMessengerPush.mockResolvedValueOnce({ status: 'sent' });
+
+      const runtime = await messageRuntime.factory(validContext);
+      const result = await runtime.sendMessengerPush({
+        content: 'x'.repeat(2000),
+        platform: 'telegram',
+      });
+
+      expect(result.success).toBe(true);
+      expect(mockSendMessengerPush).toHaveBeenCalled();
+    });
+
+    it('auto-resolves the tenant when exactly one Slack workspace is linked', async () => {
+      mockLinkList.mockResolvedValueOnce([
+        { activeAgentId: null, platform: 'slack', platformUserId: 'U1', tenantId: 'T1' },
+        { activeAgentId: null, platform: 'telegram', platformUserId: 'C1', tenantId: '' },
+      ]);
+      mockSendMessengerPush.mockResolvedValueOnce({ status: 'sent' });
+
+      const runtime = await messageRuntime.factory(validContext);
+      const result = await runtime.sendMessengerPush({ content: 'hi', platform: 'slack' });
+
+      expect(result.success).toBe(true);
+      expect(result.state.tenantId).toBe('T1');
+      expect(mockSendMessengerPush).toHaveBeenCalledWith(
+        expect.objectContaining({ platform: 'slack', tenantId: 'T1' }),
+      );
+    });
+
+    it('skips disambiguation when the caller already passed a Slack tenantId', async () => {
+      mockSendMessengerPush.mockResolvedValueOnce({ status: 'sent' });
+
+      const runtime = await messageRuntime.factory(validContext);
+      const result = await runtime.sendMessengerPush({
+        content: 'hi',
+        platform: 'slack',
+        tenantId: 'T2',
+      });
+
+      expect(result.success).toBe(true);
+      expect(mockLinkList).not.toHaveBeenCalled();
+      expect(mockSendMessengerPush).toHaveBeenCalledWith(
+        expect.objectContaining({ tenantId: 'T2' }),
+      );
+    });
+
+    it('surfaces the WeChat queued semantics as a deliver-later success', async () => {
+      mockSendMessengerPush.mockResolvedValueOnce({ status: 'queued' });
+
+      const runtime = await messageRuntime.factory(validContext);
+      const result = await runtime.sendMessengerPush({ content: 'reminder', platform: 'wechat' });
+
+      expect(result.success).toBe(true);
+      expect(result.state.status).toBe('queued');
+      expect(result.content).toContain('send any message to the LobeHub WeChat bot');
+    });
+
+    it('directs the user to Settings → Messenger when the platform is unlinked', async () => {
+      mockSendMessengerPush.mockResolvedValueOnce({ status: 'unlinked' });
+
+      const runtime = await messageRuntime.factory(validContext);
+      const result = await runtime.sendMessengerPush({ content: 'hi', platform: 'discord' });
+
+      expect(result.success).toBe(false);
+      expect(result.state.status).toBe('unlinked');
+      expect(result.content).toContain('Settings → Messenger');
+    });
+
+    it('reports unavailable without retrying', async () => {
+      mockSendMessengerPush.mockResolvedValueOnce({ status: 'unavailable' });
+
+      const runtime = await messageRuntime.factory(validContext);
+      const result = await runtime.sendMessengerPush({ content: 'hi', platform: 'telegram' });
+
+      expect(result.success).toBe(false);
+      expect(result.state.status).toBe('unavailable');
     });
   });
 });

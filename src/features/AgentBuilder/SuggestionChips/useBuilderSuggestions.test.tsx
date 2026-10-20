@@ -1,9 +1,11 @@
+import { RequestTrigger } from '@lobechat/types';
 import { act, renderHook, waitFor } from '@testing-library/react';
 import type { PropsWithChildren } from 'react';
 import { createElement } from 'react';
-import { SWRConfig } from 'swr';
+import { type State, SWRConfig, unstable_serialize } from 'swr';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { swrKeys } from '@/libs/swr/keys';
 import { aiChatService } from '@/services/aiChat';
 
 import { useBuilderSuggestions } from './useBuilderSuggestions';
@@ -35,8 +37,8 @@ const baseParams = {
   targetId: 'target-agent',
 } satisfies Parameters<typeof useBuilderSuggestions>[0];
 
-const createSWRWrapper = () => {
-  const value = { provider: () => new Map() };
+const createSWRWrapper = (cache: Map<string, State> = new Map()) => {
+  const value = { provider: () => cache };
 
   return function SWRTestWrapper({ children }: PropsWithChildren) {
     return createElement(SWRConfig, { value }, children);
@@ -63,6 +65,20 @@ describe('useBuilderSuggestions', () => {
     vi.spyOn(aiChatService, 'recordTracingFeedback').mockResolvedValue({
       ok: true,
     } as RecordTracingFeedbackResult);
+  });
+
+  it('tags suggestion requests with the builder suggestion trigger', async () => {
+    const { result } = renderHook((props) => useBuilderSuggestions(props), {
+      initialProps: baseParams,
+      wrapper: createSWRWrapper(),
+    });
+
+    await waitFor(() => {
+      expect(result.current.suggestions[0]?.title).toBe('first title');
+    });
+    expect(vi.mocked(aiChatService.generateJSON).mock.calls[0][0].metadata).toEqual({
+      trigger: RequestTrigger.BuilderSuggestion,
+    });
   });
 
   it('does not regenerate when autosave updates context for the same target', async () => {
@@ -108,6 +124,63 @@ describe('useBuilderSuggestions', () => {
     });
 
     expect(getGeneratedUserContent(1)).toContain('manual refresh context');
+    expect(result.current.suggestions[0]?.title).toBe('second title');
+  });
+
+  // Regression: suggestions are persisted via the tiered SWR
+  // cache provider. A cache hit (e.g. hydrated from localStorage on a revisit)
+  // must render directly without paying another LLM generation.
+  it('serves a persisted cache hit without regenerating', async () => {
+    const cache = new Map<string, State>();
+    const key = unstable_serialize(
+      swrKeys.agentBuilder.suggestions(
+        baseParams.mode,
+        baseParams.builderAgentId,
+        baseParams.targetId,
+        baseParams.locale,
+      ),
+    );
+    cache.set(key, {
+      data: {
+        suggestions: [{ prompt: 'cached prompt', title: 'cached title' }],
+        tracingId: 'trace-cached',
+      },
+    });
+
+    const { result } = renderHook((props) => useBuilderSuggestions(props), {
+      initialProps: baseParams,
+      wrapper: createSWRWrapper(cache),
+    });
+
+    await waitFor(() => {
+      expect(result.current.suggestions[0]?.title).toBe('cached title');
+    });
+    await waitForNextTick();
+
+    expect(aiChatService.generateJSON).not.toHaveBeenCalled();
+  });
+
+  // Persisted entries are generated in the UI language, so a language switch
+  // must miss the cache and regenerate instead of serving old-locale chips.
+  it('regenerates when the UI locale changes', async () => {
+    vi.mocked(aiChatService.generateJSON)
+      .mockResolvedValueOnce(makeEnvelope('first'))
+      .mockResolvedValueOnce(makeEnvelope('second'));
+
+    const { rerender, result } = renderHook((props) => useBuilderSuggestions(props), {
+      initialProps: baseParams,
+      wrapper: createSWRWrapper(),
+    });
+
+    await waitFor(() => {
+      expect(result.current.suggestions[0]?.title).toBe('first title');
+    });
+
+    rerender({ ...baseParams, locale: 'en-US' });
+
+    await waitFor(() => {
+      expect(aiChatService.generateJSON).toHaveBeenCalledTimes(2);
+    });
     expect(result.current.suggestions[0]?.title).toBe('second title');
   });
 

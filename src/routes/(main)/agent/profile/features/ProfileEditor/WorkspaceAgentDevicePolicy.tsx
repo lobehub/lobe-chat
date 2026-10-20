@@ -2,32 +2,26 @@
 
 import { HETEROGENEOUS_TYPE_LABELS } from '@lobechat/heterogeneous-agents';
 import type { DeviceExecutionTarget, DeviceListItem, LobeAgentAgencyConfig } from '@lobechat/types';
-import { Flexbox } from '@lobehub/ui';
-import type { SelectOptions } from '@lobehub/ui/base-ui';
-import { Select } from '@lobehub/ui/base-ui';
-import { createStaticStyles, cssVar } from 'antd-style';
+import type { SelectOptions } from '@lobehub/ui';
+import { createStaticStyles, cssVar, Flexbox, Select } from '@lobehub/ui';
 import { MonitorSmartphone } from 'lucide-react';
 import { memo, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import AsyncError from '@/components/AsyncError';
-import { useDeviceList } from '@/features/DeviceManager/useDeviceList';
 import {
   ExecutionTargetDeviceStatus,
   ExecutionTargetIcon,
   executionTargetValue,
   groupExecutionTargetDevices,
-  isSharedExecutionTarget,
   parseExecutionTargetValue,
+  resolveExecutionTargetSelection,
 } from '@/features/ExecutionTargetPicker';
 import { isHeterogeneousSandboxExecutionAvailable } from '@/helpers/executionTarget';
 import { useAgentStore } from '@/store/agent';
+import { useDeviceList } from '@/store/device';
 
-import {
-  WorkspaceAgentPolicyCard,
-  WorkspaceAgentSelectionPolicyMenu,
-} from './WorkspaceAgentPolicyCard';
-import { getWorkspaceAgentSelectionPolicyLabelKeys } from './workspaceAgentSelectionPolicyLabels';
+import { WorkspaceAgentPolicyCard } from './WorkspaceAgentPolicyCard';
 
 const styles = createStaticStyles(({ css }) => ({
   option: css`
@@ -118,16 +112,19 @@ interface ExecutionTargetLabelProps {
   offlineLabel: string;
   onlineLabel: string;
   target: DeviceExecutionTarget;
+  unknownLabel: string;
 }
 
 const ExecutionTargetLabel = memo<ExecutionTargetLabelProps>(
-  ({ compact, description, device, label, offlineLabel, onlineLabel, target }) => {
+  ({ compact, description, device, label, offlineLabel, onlineLabel, target, unknownLabel }) => {
     const icon = <ExecutionTargetIcon devicePlatform={device?.platform} target={target} />;
     const secondary = device ? (
       <ExecutionTargetDeviceStatus
         offlineLabel={offlineLabel}
         online={device.online}
         onlineLabel={onlineLabel}
+        unknown={device.onlineUnknown}
+        unknownLabel={unknownLabel}
       />
     ) : (
       description
@@ -172,7 +169,7 @@ const WorkspaceAgentDevicePolicy = memo<WorkspaceAgentDevicePolicyProps>(
     const config = useAgentStore((s) => s.agentMap[agentId]);
     const updateAgentConfigById = useAgentStore((s) => s.updateAgentConfigById);
 
-    const { data: devices, error, isLoading, mutate } = useDeviceList();
+    const { data: devices, error, isConfirmed, isLoading, mutate } = useDeviceList();
     const { publicWorkspace: publicWorkspaceDevices } = useMemo(
       () => groupExecutionTargetDevices(devices),
       [devices],
@@ -181,10 +178,6 @@ const WorkspaceAgentDevicePolicy = memo<WorkspaceAgentDevicePolicyProps>(
     const heterogeneousType = agencyConfig?.heterogeneousProvider?.type;
     const isHeterogeneous = !!heterogeneousType;
     const supportsSandbox = isHeterogeneousSandboxExecutionAvailable(heterogeneousType);
-    const boundDevice = publicWorkspaceDevices.find(
-      (device) => device.deviceId === agencyConfig?.boundDeviceId,
-    );
-    const isFixed = agencyConfig?.executionTargetSelectionPolicy === 'fixed';
 
     const targetLabels = useMemo(
       () => ({
@@ -220,6 +213,7 @@ const WorkspaceAgentDevicePolicy = memo<WorkspaceAgentDevicePolicyProps>(
           offlineLabel={t('chat:heteroAgent.executionTarget.offline')}
           onlineLabel={t('chat:heteroAgent.executionTarget.online')}
           target={target}
+          unknownLabel={t('chat:heteroAgent.executionTarget.presenceChecking')}
         />
       ),
       [t, targetLabels],
@@ -235,6 +229,7 @@ const WorkspaceAgentDevicePolicy = memo<WorkspaceAgentDevicePolicyProps>(
           offlineLabel={t('chat:heteroAgent.executionTarget.offline')}
           onlineLabel={t('chat:heteroAgent.executionTarget.online')}
           target={'device'}
+          unknownLabel={t('chat:heteroAgent.executionTarget.presenceChecking')}
         />
       ),
       [t],
@@ -264,27 +259,33 @@ const WorkspaceAgentDevicePolicy = memo<WorkspaceAgentDevicePolicyProps>(
         },
       ];
 
-      const workspaceOptions = isLoading
-        ? [
-            {
-              disabled: true,
-              label: t('chat:heteroAgent.executionTarget.loading'),
-              value: 'status:loading',
-            },
-          ]
-        : publicWorkspaceDevices.length > 0
-          ? publicWorkspaceDevices.map((device) => ({
-              label: renderDeviceLabel(device),
-              title: device.friendlyName || device.hostname || device.deviceId,
-              value: executionTargetValue('device', device.deviceId),
-            }))
-          : [
+      // Until the server confirms the list, the stored copy may hold devices that
+      // were since deleted or unshared (binding one would point the agent at an
+      // unresolvable machine) or lack ones that exist: show its rows, but only
+      // the confirmed list can be picked from or reported empty.
+      const workspaceOptions =
+        isLoading || (!isConfirmed && publicWorkspaceDevices.length === 0)
+          ? [
               {
                 disabled: true,
-                label: t('settingAgent.devicePolicy.noPublicDevice'),
-                value: 'status:empty',
+                label: t('chat:heteroAgent.executionTarget.loading'),
+                value: 'status:loading',
               },
-            ];
+            ]
+          : publicWorkspaceDevices.length > 0
+            ? publicWorkspaceDevices.map((device) => ({
+                disabled: !isConfirmed,
+                label: renderDeviceLabel(device),
+                title: device.friendlyName || device.hostname || device.deviceId,
+                value: executionTargetValue('device', device.deviceId),
+              }))
+            : [
+                {
+                  disabled: true,
+                  label: t('settingAgent.devicePolicy.noPublicDevice'),
+                  value: 'status:empty',
+                },
+              ];
 
       return [
         ...sharedTargets,
@@ -299,6 +300,7 @@ const WorkspaceAgentDevicePolicy = memo<WorkspaceAgentDevicePolicyProps>(
       ];
     }, [
       error,
+      isConfirmed,
       isLoading,
       isHeterogeneous,
       publicWorkspaceDevices,
@@ -309,21 +311,15 @@ const WorkspaceAgentDevicePolicy = memo<WorkspaceAgentDevicePolicyProps>(
       targetLabels,
     ]);
 
-    const configuredTarget = agencyConfig?.executionTarget;
-    const selectedTarget =
-      configuredTarget === 'device' && boundDevice
-        ? { deviceId: boundDevice.deviceId, target: 'device' as const }
-        : isSharedExecutionTarget(configuredTarget) && configuredTarget !== 'device'
-          ? { target: configuredTarget }
-          : configuredTarget === undefined && !isHeterogeneous
-            ? { target: 'none' as const }
-            : undefined;
+    const selectedTarget = resolveExecutionTargetSelection({
+      boundDeviceId: agencyConfig?.boundDeviceId,
+      configuredTarget: agencyConfig?.executionTarget,
+      devices: publicWorkspaceDevices,
+      isHeterogeneous,
+    });
     const selectedValue = selectedTarget
       ? executionTargetValue(selectedTarget.target, selectedTarget.deviceId)
       : undefined;
-    const canLockCurrentTarget =
-      !!selectedTarget && (selectedTarget.target !== 'sandbox' || supportsSandbox);
-    const labelKeys = getWorkspaceAgentSelectionPolicyLabelKeys(config?.visibility === 'private');
 
     const saveAgencyConfig = useCallback(
       (patch: Partial<LobeAgentAgencyConfig>) =>
@@ -333,31 +329,12 @@ const WorkspaceAgentDevicePolicy = memo<WorkspaceAgentDevicePolicyProps>(
 
     if (!config?.workspaceId) return null;
 
+    // Whether members may switch this environment is configured on the Agent's
+    // Permission page — this card only picks the environment itself.
     return (
       <WorkspaceAgentPolicyCard
         icon={MonitorSmartphone}
         title={t('settingAgent.devicePolicy.title')}
-        action={
-          <WorkspaceAgentSelectionPolicyMenu
-            locked={isFixed}
-            lockedDisabled={!isFixed && !canLockCurrentTarget}
-            lockedLabel={t(labelKeys.locked)}
-            unlockedLabel={t(labelKeys.unlocked)}
-            onChange={(locked) => {
-              if (!locked) {
-                void saveAgencyConfig({ executionTargetSelectionPolicy: 'member' });
-                return;
-              }
-              if (!selectedTarget) return;
-
-              void saveAgencyConfig({
-                ...(selectedTarget.deviceId ? { boundDeviceId: selectedTarget.deviceId } : {}),
-                executionTarget: selectedTarget.target,
-                executionTargetSelectionPolicy: 'fixed',
-              });
-            }}
-          />
-        }
       >
         {showDevicePicker ? (
           <Select

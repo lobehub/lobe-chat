@@ -1,15 +1,22 @@
-import * as runtimeModule from '@lobechat/model-runtime';
+import * as runtimeModule from '@lobechat/model-runtime/getModelPropertyWithFallback';
 import type { AIImageModelCard, EnabledAiModel, ModelParamsSchema, Pricing } from 'model-bank';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import {
+  filterEnabledProvidersByModelType,
+  filterHiddenBuiltinModels,
+  getAsrModelList,
   getChatModelList,
   getEmbeddingModelList,
   getImageModelList,
   normalizeChatModel,
   normalizeEmbeddingModel,
   normalizeImageModel,
+  resolveUserScopedBuiltinModelState,
 } from '../action';
+
+vi.mock('@/store/user', () => ({ useUserStore: vi.fn() }));
+vi.mock('@/store/user/selectors', () => ({ authSelectors: { isLoaded: vi.fn() } }));
 
 const createChatModel = (overrides: Partial<EnabledAiModel> = {}): EnabledAiModel => ({
   abilities: overrides.abilities ?? { functionCall: true },
@@ -53,6 +60,70 @@ describe('aiProvider action helpers', () => {
 
   afterEach(() => {
     vi.restoreAllMocks();
+  });
+
+  describe('filterHiddenBuiltinModels', () => {
+    const models = [
+      createChatModel({ id: 'public-model', providerId: 'lobehub' }),
+      createChatModel({ id: 'hidden-model', providerId: 'lobehub' }),
+      createChatModel({ id: 'hidden-model', providerId: 'openai' }),
+    ];
+
+    it('returns the cached array unchanged when no models are hidden', () => {
+      expect(filterHiddenBuiltinModels(models, [])).toBe(models);
+    });
+
+    it('returns the cached array unchanged while hidden models are not loaded', () => {
+      expect(filterHiddenBuiltinModels(models, undefined)).toBe(models);
+    });
+
+    it('filters a matching provider and model id without mutating the cached array', () => {
+      const result = filterHiddenBuiltinModels(models, [
+        { id: 'hidden-model', providerId: 'lobehub' },
+      ]);
+
+      expect(result).toEqual([models[0], models[2]]);
+      expect(models).toHaveLength(3);
+    });
+  });
+
+  describe('resolveUserScopedBuiltinModelState', () => {
+    it('does not rebuild complete client caches when the server policy is unresolved', () => {
+      const allBuiltinAiModels = [
+        createChatModel({ enabled: false, id: 'disabled-model', providerId: 'lobehub' }),
+      ];
+      const runtimeState = {
+        enabledAiModels: [],
+        enabledAiProviders: [],
+        enabledChatAiProviders: [],
+        enabledImageAiProviders: [],
+        enabledVideoAiProviders: [],
+        hiddenBuiltinModelsResolved: false,
+        runtimeConfig: {},
+      };
+
+      expect(resolveUserScopedBuiltinModelState(allBuiltinAiModels, runtimeState, [])).toEqual({
+        builtinAiModelList: [],
+        enabledAiModels: [],
+        hiddenBuiltinModels: undefined,
+      });
+    });
+  });
+
+  describe('filterEnabledProvidersByModelType', () => {
+    const providers = [
+      { id: 'lobehub', source: 'builtin' as const },
+      { id: 'openai', source: 'builtin' as const },
+    ];
+
+    it('removes providers without a visible model of the requested type', () => {
+      const models = [
+        createChatModel({ providerId: 'lobehub' }),
+        createImageModel({ providerId: 'openai' }),
+      ];
+
+      expect(filterEnabledProvidersByModelType(providers, models, 'image')).toEqual([providers[1]]);
+    });
   });
 
   describe('normalizeChatModel', () => {
@@ -304,6 +375,27 @@ describe('aiProvider action helpers', () => {
 
       expect(result.map((model) => model.id)).toEqual(['text-embedding-3-small']);
       expect(result[0].displayName).toBe('Text Embedding 3 Small');
+    });
+  });
+
+  describe('getAsrModelList', () => {
+    it('collects only visible speech-to-text models for a provider', async () => {
+      const result = await getAsrModelList(
+        [
+          createChatModel({ id: 'gpt-4o', providerId: 'openai' }),
+          createEmbeddingModel({ id: 'whisper-1', providerId: 'openai', type: 'asr' }),
+          createEmbeddingModel({
+            id: 'hidden-asr',
+            providerId: 'openai',
+            type: 'asr',
+            visible: false,
+          }),
+          createEmbeddingModel({ id: 'other-asr', providerId: 'groq', type: 'asr' }),
+        ],
+        'openai',
+      );
+
+      expect(result.map((model) => model.id)).toEqual(['whisper-1']);
     });
   });
 

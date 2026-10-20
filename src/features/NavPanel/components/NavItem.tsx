@@ -1,15 +1,27 @@
 'use client';
 
-import { type BlockProps, type GenericItemType, type IconProps } from '@lobehub/ui';
-import { Block, Center, ContextMenuTrigger, Flexbox, Icon, Text } from '@lobehub/ui';
-import { createStaticStyles, cssVar, cx } from 'antd-style';
-import { type ReactNode } from 'react';
+import { type BlockProps, type DropdownItem, type IconProps } from '@lobehub/ui';
+import {
+  Block,
+  Center,
+  ContextMenuTrigger,
+  createStaticStyles,
+  cssVar,
+  cx,
+  Flexbox,
+  Icon,
+  Spin,
+  Text,
+} from '@lobehub/ui';
+import { type FocusEvent, type PointerEvent, type ReactNode } from 'react';
 import { memo } from 'react';
 
-import NeuralNetworkLoading from '@/components/NeuralNetworkLoading';
 import { isModifierClick } from '@/utils/navigation';
 
+import { type LazyActions, useLazyActions } from './useLazyActions';
+
 const ACTION_CLASS_NAME = 'nav-item-actions';
+const CONTENT_CLASS_NAME = 'nav-item-content';
 
 const styles = createStaticStyles(({ css }) => ({
   container: css`
@@ -17,23 +29,38 @@ const styles = createStaticStyles(({ css }) => ({
     overflow: hidden;
     min-width: 32px;
 
-    .${ACTION_CLASS_NAME} {
-      width: 0;
-      margin-inline-end: 2px;
-      opacity: 0;
-      transition: opacity 0.2s ${cssVar.motionEaseOut};
-
-      &:has([data-popup-open]) {
-        width: unset;
+    /* focus-visible, not focus-within: closing a dropdown hands focus back to its
+       trigger, which would pin the actions open after the pointer has left. */
+    &:hover,
+    &:has(.${ACTION_CLASS_NAME} :focus-visible),
+    &:has([data-popup-open]) {
+      .${ACTION_CLASS_NAME} {
+        pointer-events: auto;
         opacity: 1;
+      }
+
+      /* Fade the covered text itself instead of painting a row-colored plate over it,
+         so the overlay matches any row background (hover / active / none). */
+      .${CONTENT_CLASS_NAME} {
+        mask-image: linear-gradient(
+          to right,
+          #000 calc(100% - 56px),
+          transparent calc(100% - 28px)
+        );
       }
     }
 
-    &:hover {
-      .${ACTION_CLASS_NAME} {
-        width: unset;
-        opacity: 1;
-      }
+    /* Overlay instead of in-flow so revealing the actions never re-truncates the title. */
+    .${ACTION_CLASS_NAME} {
+      pointer-events: none;
+
+      position: absolute;
+      inset-block: 0;
+      inset-inline-end: 0;
+
+      padding-inline-end: 6px;
+
+      opacity: 0;
     }
   `,
 }));
@@ -44,9 +71,17 @@ export interface NavItemSlots {
 }
 
 export interface NavItemProps extends Omit<BlockProps, 'children' | 'title'> {
-  actions?: ReactNode;
+  /**
+   * Pass a thunk to defer mounting until the row is first pointed at or focused.
+   * Actions are invisible until `:hover` anyway, and an overlay-bearing action (a
+   * dropdown, a popover) costs a dozen fibers per row — enough to matter in a
+   * list. Focus counts as well as the pointer: a keyboard user tabs to the row
+   * and must still find the actions in the tab order. Once mounted it stays
+   * mounted, so an open popup survives the pointer leaving the row.
+   */
+  actions?: LazyActions;
   active?: boolean;
-  contextMenuItems?: GenericItemType[] | (() => GenericItemType[]);
+  contextMenuItems?: DropdownItem[] | (() => DropdownItem[]);
   /**
    * Optional second line rendered under the title (e.g. a topic's project
    * directory). When set, the row grows to fit both lines; when omitted the
@@ -90,8 +125,25 @@ const NavItem = memo<NavItemProps>(
     extra,
     slots,
     style,
+    onFocus,
+    onPointerEnter,
     ...rest
   }) => {
+    const { mount: mountLazyActions, node: renderedActions } = useLazyActions(actions);
+
+    const handlePointerEnter = (e: PointerEvent<HTMLDivElement>) => {
+      mountLazyActions();
+      onPointerEnter?.(e);
+    };
+
+    // Focus, not just the pointer: a keyboard user reaches the row by tabbing,
+    // which never fires `pointerenter`. Without this the actions would be absent
+    // from the tab order entirely rather than merely invisible.
+    const handleFocus = (e: FocusEvent<HTMLDivElement>) => {
+      mountLazyActions();
+      onFocus?.(e);
+    };
+
     const iconColor = active ? cssVar.colorText : cssVar.colorTextDescription;
     const textColor = titleColor ?? (active ? cssVar.colorText : cssVar.colorTextSecondary);
     const variant = active ? 'filled' : 'borderless';
@@ -139,6 +191,8 @@ const NavItem = memo<NavItemProps>(
         }}
         {...linkProps}
         {...rest}
+        onFocus={handleFocus}
+        onPointerEnter={handlePointerEnter}
       >
         {icon && (
           <Center
@@ -151,7 +205,7 @@ const NavItem = memo<NavItemProps>(
             width={28}
           >
             {loading ? (
-              <NeuralNetworkLoading size={iconSize} />
+              <Spin size={iconSize} variant="network" />
             ) : (
               <Icon color={iconColor} icon={icon} size={iconSize} />
             )}
@@ -159,7 +213,14 @@ const NavItem = memo<NavItemProps>(
         )}
 
         {iconPostfix}
-        <Flexbox horizontal align={'center'} flex={1} gap={8} style={{ overflow: 'hidden' }}>
+        <Flexbox
+          horizontal
+          align={'center'}
+          className={CONTENT_CLASS_NAME}
+          flex={1}
+          gap={8}
+          style={{ overflow: 'hidden' }}
+        >
           {titlePrefix}
           {description ? (
             <Flexbox flex={1} gap={3} style={{ overflow: 'hidden' }}>
@@ -179,9 +240,26 @@ const NavItem = memo<NavItemProps>(
               {title}
             </Text>
           )}
+          {extra && (
+            <Flexbox
+              horizontal
+              align={'center'}
+              gap={2}
+              justify={'flex-end'}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+              }}
+            >
+              {extra}
+            </Flexbox>
+          )}
+        </Flexbox>
+        {actions && (
           <Flexbox
             horizontal
             align={'center'}
+            className={ACTION_CLASS_NAME}
             gap={2}
             justify={'flex-end'}
             onClick={(e) => {
@@ -189,29 +267,16 @@ const NavItem = memo<NavItemProps>(
               e.stopPropagation();
             }}
           >
-            {extra}
-            {actions && (
-              <Flexbox
-                horizontal
-                align={'center'}
-                className={ACTION_CLASS_NAME}
-                gap={2}
-                justify={'flex-end'}
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                }}
-              >
-                {actions}
-              </Flexbox>
-            )}
+            {renderedActions}
           </Flexbox>
-        </Flexbox>
+        )}
       </Block>
     );
     if (!contextMenuItems) return Content;
     return <ContextMenuTrigger items={contextMenuItems}>{Content}</ContextMenuTrigger>;
   },
 );
+
+NavItem.displayName = 'NavItem';
 
 export default NavItem;

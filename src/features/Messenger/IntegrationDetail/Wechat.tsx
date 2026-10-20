@@ -1,21 +1,28 @@
 'use client';
 
-import { InfoCircleOutlined } from '@ant-design/icons';
-import { Alert, Block, Flexbox, Icon, Text } from '@lobehub/ui';
-import { Button } from '@lobehub/ui/base-ui';
-import { App, QRCode } from 'antd';
-import { createStaticStyles } from 'antd-style';
-import { ExternalLinkIcon, QrCodeIcon, RefreshCwIcon, XIcon } from 'lucide-react';
+import {
+  Alert,
+  Block,
+  Button,
+  createStaticStyles,
+  Flexbox,
+  Icon,
+  QRCode,
+  Spin,
+  Text,
+  toast,
+} from '@lobehub/ui';
+import { ExternalLinkIcon, InfoIcon, QrCodeIcon, RefreshCwIcon, XIcon } from 'lucide-react';
 import { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import AsyncError from '@/components/AsyncError';
-import NeuralNetworkLoading from '@/components/NeuralNetworkLoading';
 import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwareNavigate';
 import { usePermission } from '@/hooks/usePermission';
 import { messengerService } from '@/services/messenger';
 
 import { getMessengerErrorMessage } from '../i18n';
+import { MessengerPushSection } from './MessengerPush';
 import {
   DetailLayout,
   IntegrationDetailSkeleton,
@@ -23,7 +30,6 @@ import {
   useMessengerData,
   UserAgentConnection,
 } from './shared';
-import WechatPushSection from './WechatPush';
 
 const QR_POLL_INTERVAL_MS = 2000;
 const QR_SIZE = 220;
@@ -179,7 +185,7 @@ const WechatQrSetup = memo<WechatQrSetupProps>(({ autoStart, disabled, onCancel,
               {t('messenger.wechat.connectCta')}
             </Button>
           )}
-          {state.stage === 'loading' && <NeuralNetworkLoading size={48} />}
+          {state.stage === 'loading' && <Spin size="large" />}
           {state.stage === 'ready' && (
             <QRCode
               aria-label={t('messenger.wechat.setupTitle')}
@@ -212,7 +218,7 @@ const WechatQrSetup = memo<WechatQrSetupProps>(({ autoStart, disabled, onCancel,
         )}
 
         <Text className={styles.tips} type="secondary">
-          <InfoCircleOutlined style={{ marginInlineEnd: 4 }} />
+          <Icon icon={InfoIcon} style={{ marginInlineEnd: 4 }} />
           {t('messenger.wechat.qr.tip')}
         </Text>
 
@@ -241,7 +247,7 @@ interface WechatDetailProps {
 
 const WechatDetail = memo<WechatDetailProps>(({ access, name, onBack }) => {
   const { t } = useTranslation('messenger');
-  const { message } = App.useApp();
+
   const navigate = useWorkspaceAwareNavigate();
   const { allowed: canCreate } = usePermission('create_content');
   const { allowed: canEdit } = usePermission('edit_own_content');
@@ -268,7 +274,7 @@ const WechatDetail = memo<WechatDetailProps>(({ access, name, onBack }) => {
   const handleConfirmed = async () => {
     await Promise.all([data.linksMutate(), data.installationsMutate()]);
     setRescanning(false);
-    message.success(t('messenger.wechat.connected'));
+    toast.success(t('messenger.wechat.connected'));
   };
 
   const headerAction =
@@ -285,10 +291,14 @@ const WechatDetail = memo<WechatDetailProps>(({ access, name, onBack }) => {
   return (
     <DetailLayout
       hasConnections
-      extraSections={!paidBlocked && hasConnection ? <WechatPushSection /> : undefined}
       headerAction={headerAction}
       name={name}
       platform="wechat"
+      extraSections={
+        !paidBlocked && hasConnection ? (
+          <MessengerPushSection name={name} platform="wechat" />
+        ) : undefined
+      }
       sectionTitle={
         hasConnection ? t('messenger.detail.connections.title') : t('messenger.wechat.setupTitle')
       }

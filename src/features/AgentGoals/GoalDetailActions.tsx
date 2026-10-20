@@ -1,0 +1,32 @@
+import { ActionIcon, DropdownMenu } from '@lobehub/ui';
+import { MoreHorizontalIcon } from 'lucide-react';
+import { memo } from 'react';
+import { useTranslation } from 'react-i18next';
+
+import { goalSelectors, useGoalStore } from '@/store/goal';
+
+import { useGoalMenuItems } from './useGoalMenuItems';
+
+interface GoalDetailActionsProps {
+  /** Absent for a goal with no responsible agent — e.g. one created from a project. */
+  agentId?: string;
+  goalId: string;
+  projectId?: string | null;
+}
+
+const GoalDetailActions = memo<GoalDetailActionsProps>(({ agentId, goalId, projectId }) => {
+  const { t } = useTranslation('chat');
+  const status = useGoalStore((s) => goalSelectors.goalGraph(goalId)(s)?.goal.status);
+  const creatorUserId = useGoalStore((s) => goalSelectors.goalGraph(goalId)(s)?.goal.userId);
+  const items = useGoalMenuItems({ agentId, creatorUserId, goalId, projectId, status });
+
+  return (
+    <DropdownMenu items={items} placement={'bottomRight'}>
+      <ActionIcon icon={MoreHorizontalIcon} size={'small'} title={t('goalDetail.moreActions')} />
+    </DropdownMenu>
+  );
+});
+
+GoalDetailActions.displayName = 'GoalDetailActions';
+
+export default GoalDetailActions;

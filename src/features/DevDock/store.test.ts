@@ -16,7 +16,9 @@ describe('DevDock store', () => {
       activePanelId: null,
       expanded: true,
       maximized: false,
+      mesurer: false,
       panelHeight: 360,
+      pinOverrides: {},
       reactScan: false,
       scrollDebug: false,
     });
@@ -43,9 +45,30 @@ describe('DevDock store', () => {
 
   it('persists UI state to localStorage', () => {
     useDevDockStore.getState().setExpanded(false);
+    useDevDockStore.getState().setMesurer(true);
     useDevDockStore.getState().setScrollDebug(true);
     useDevDockStore.getState().setReactScan(true);
 
-    expect(readPersisted()).toMatchObject({ expanded: false, reactScan: true, scrollDebug: true });
+    expect(readPersisted()).toMatchObject({
+      expanded: false,
+      mesurer: true,
+      reactScan: true,
+      scrollDebug: true,
+    });
+  });
+
+  it('merges pin overrides per id and persists them', () => {
+    useDevDockStore.getState().setPinned('reload', true);
+    useDevDockStore.getState().setPinned('fps', false);
+
+    expect(useDevDockStore.getState().pinOverrides).toEqual({ fps: false, reload: true });
+    expect(readPersisted().pinOverrides).toEqual({ fps: false, reload: true });
+  });
+
+  it('flips an existing override without dropping others', () => {
+    useDevDockStore.getState().setPinned('reload', true);
+    useDevDockStore.getState().setPinned('reload', false);
+
+    expect(useDevDockStore.getState().pinOverrides).toEqual({ reload: false });
   });
 });

@@ -1,6 +1,5 @@
 export { ImageGenerationManifest } from '../manifest';
 export * from '../types';
-export { imageGenerationExecutor } from './executor';
 export { ImageGenerationInspector, ImageGenerationInspectors } from './Inspector';
 export {
   GenerateImageRender,
@@ -9,3 +8,4 @@ export {
   ImageGenerationRenders,
   ListImageModelsRender,
 } from './Render';
+export { GenerateImageStreaming, ImageGenerationStreamings } from './Streaming';

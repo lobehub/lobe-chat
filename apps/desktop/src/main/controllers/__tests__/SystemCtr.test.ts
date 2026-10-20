@@ -50,22 +50,13 @@ const invokeIpc = async <T = any>(
   return handler(fakeEvent, payload);
 };
 
-// Mock logger
-vi.mock('@/utils/logger', () => ({
-  createLogger: () => ({
-    debug: vi.fn(),
-    error: vi.fn(),
-    info: vi.fn(),
-    warn: vi.fn(),
-  }),
-}));
-
 // Mock electron
 vi.mock('electron', () => ({
   app: {
     getAppPath: vi.fn(() => '/mock/app/path'),
     getLocale: vi.fn(() => 'en-US'),
     getPath: vi.fn((name: string) => `/mock/path/${name}`),
+    getPreferredSystemLanguages: vi.fn(() => ['en-US']),
   },
   desktopCapturer: {
     getSources: vi.fn(async () => []),
@@ -91,9 +82,15 @@ vi.mock('electron', () => ({
   },
 }));
 
-// Mock electron-is
-vi.mock('electron-is', () => ({
+// Mock platform detection
+vi.mock('@/utils/platform', () => ({
   macOS: vi.fn(() => true),
+}));
+
+// Sever RemoteServerConfigCtr's heavy import chain — the class only serves as
+// the getController token here, and mockApp.getController ignores it anyway.
+vi.mock('../RemoteServerConfigCtr', () => ({
+  default: class MockRemoteServerConfigCtr {},
 }));
 
 vi.mock('font-list', () => ({
@@ -129,10 +126,23 @@ const mockI18n = {
   ns: vi.fn((namespace: string) => (key: string) => `${namespace}.${key}`),
 };
 
+const mockGetDesktopBootstrapIdentity = vi.fn(() => ({
+  isIdentityResolved: true,
+  userId: 'user_1',
+}));
+
+const mockPermissionGuide = {
+  open: vi.fn(async (_permission: string) => false),
+};
+
 const mockApp = {
   appStoragePath: '/mock/storage',
   browserManager: mockBrowserManager,
+  getController: vi.fn(() => ({
+    getDesktopBootstrapIdentity: mockGetDesktopBootstrapIdentity,
+  })),
   i18n: mockI18n,
+  permissionGuide: mockPermissionGuide,
   storeManager: mockStoreManager,
 } as unknown as App;
 
@@ -148,6 +158,7 @@ describe('SystemController', () => {
     __resetMacPermissionsModuleCache();
     __setMacPermissionsModule(permissionsMock as any);
     fontListGetFonts2Mock.mockResolvedValue([]);
+    mockPermissionGuide.open.mockResolvedValue(false);
     controller = new SystemController(mockApp);
   });
 
@@ -170,6 +181,25 @@ describe('SystemController', () => {
         },
       });
     });
+
+    it('omits user folders that Electron cannot resolve instead of throwing', async () => {
+      const { app } = await import('electron');
+      const getPath = vi.mocked(app.getPath);
+      const original = getPath.getMockImplementation();
+      getPath.mockImplementation((name: string) => {
+        if (name === 'pictures') throw new Error("Failed to get 'pictures' path");
+        return `/mock/path/${name}`;
+      });
+
+      try {
+        const result = await invokeIpc('system.getAppState');
+
+        expect(result.userPath.pictures).toBeUndefined();
+        expect(result.userPath.home).toBe('/mock/path/home');
+      } finally {
+        getPath.mockImplementation(original!);
+      }
+    });
   });
 
   describe('desktop onboarding', () => {
@@ -177,6 +207,37 @@ describe('SystemController', () => {
       await invokeIpc('system.setDesktopOnboardingCompleted', true);
 
       expect(mockStoreManager.set).toHaveBeenCalledWith('desktopOnboardingCompleted', true);
+    });
+  });
+
+  describe('setLastWorkspaceSlug', () => {
+    it("records the slug under the current account's entry", async () => {
+      mockStoreManager.get.mockReturnValueOnce({ user_2: 'other' });
+
+      await invokeIpc('system.setLastWorkspaceSlug', 'acme');
+
+      expect(mockStoreManager.set).toHaveBeenCalledWith('lastWorkspaceSlugByAccount', {
+        user_1: 'acme',
+        user_2: 'other',
+      });
+    });
+
+    it("clears only the current account's entry on personal scope", async () => {
+      mockStoreManager.get.mockReturnValueOnce({ user_1: 'acme', user_2: 'other' });
+
+      await invokeIpc('system.setLastWorkspaceSlug', null);
+
+      expect(mockStoreManager.set).toHaveBeenCalledWith('lastWorkspaceSlugByAccount', {
+        user_2: 'other',
+      });
+    });
+
+    it('does nothing when no account identity is available', async () => {
+      mockGetDesktopBootstrapIdentity.mockReturnValueOnce({ isIdentityResolved: true } as any);
+
+      await invokeIpc('system.setLastWorkspaceSlug', 'acme');
+
+      expect(mockStoreManager.set).not.toHaveBeenCalled();
     });
   });
 
@@ -203,6 +264,47 @@ describe('SystemController', () => {
     });
   });
 
+  describe('permission drag guide', () => {
+    it('should guide accessibility through the drag panel without pre-registering the app', async () => {
+      mockPermissionGuide.open.mockResolvedValue(true);
+      permissionsMock.getAuthStatus.mockReturnValue('denied');
+
+      const result = await invokeIpc('system.requestAccessibilityAccess');
+
+      expect(mockPermissionGuide.open).toHaveBeenCalledWith('accessibility');
+      expect(permissionsMock.askForAccessibilityAccess).not.toHaveBeenCalled();
+      expect(result).toBe(false);
+
+      permissionsMock.getAuthStatus.mockReturnValue('authorized');
+    });
+
+    it('should guide screen recording without the system prompt', async () => {
+      mockPermissionGuide.open.mockResolvedValue(true);
+      permissionsMock.getAuthStatus.mockReturnValue('denied');
+
+      await invokeIpc('system.requestScreenAccess');
+
+      expect(mockPermissionGuide.open).toHaveBeenCalledWith('screen');
+      expect(permissionsMock.askForScreenCaptureAccess).not.toHaveBeenCalled();
+
+      permissionsMock.getAuthStatus.mockReturnValue('authorized');
+    });
+
+    it('should skip the Full Disk Access dialog when the guide opens', async () => {
+      const { dialog } = await import('electron');
+      mockPermissionGuide.open.mockResolvedValue(true);
+      permissionsMock.getAuthStatus.mockReturnValue('denied');
+
+      const result = await invokeIpc('system.promptFullDiskAccessIfNotGranted');
+
+      expect(result).toBe('opened_settings');
+      expect(mockPermissionGuide.open).toHaveBeenCalledWith('fullDisk');
+      expect(dialog.showMessageBox).not.toHaveBeenCalled();
+
+      permissionsMock.getAuthStatus.mockReturnValue('authorized');
+    });
+  });
+
   describe('accessibility', () => {
     it('should request accessibility access on macOS', async () => {
       permissionsMock.getAuthStatus.mockReturnValue('authorized');
@@ -215,7 +317,7 @@ describe('SystemController', () => {
     });
 
     it('should return true on non-macOS when requesting accessibility access', async () => {
-      const { macOS } = await import('electron-is');
+      const { macOS } = await import('@/utils/platform');
       vi.mocked(macOS).mockReturnValue(false);
       // Clear the injected module to simulate non-macOS behavior
       __setMacPermissionsModule(null);
@@ -274,7 +376,7 @@ describe('SystemController', () => {
     });
 
     it('should return true on non-macOS', async () => {
-      const { macOS } = await import('electron-is');
+      const { macOS } = await import('@/utils/platform');
       const { shell } = await import('electron');
       vi.mocked(macOS).mockReturnValue(false);
       // Clear the injected module to simulate non-macOS behavior
@@ -313,7 +415,7 @@ describe('SystemController', () => {
     });
 
     it('should return true on non-macOS and not open settings', async () => {
-      const { macOS } = await import('electron-is');
+      const { macOS } = await import('@/utils/platform');
       vi.mocked(macOS).mockReturnValue(false);
 
       const result = await invokeIpc('system.requestScreenAccess');
@@ -348,7 +450,7 @@ describe('SystemController', () => {
     });
 
     it('should return true on non-macOS', async () => {
-      const { macOS } = await import('electron-is');
+      const { macOS } = await import('@/utils/platform');
       vi.mocked(macOS).mockReturnValue(false);
 
       const result = await invokeIpc('system.getFullDiskAccessStatus');

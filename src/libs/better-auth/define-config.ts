@@ -22,8 +22,14 @@ import {
 } from '@/libs/better-auth/email-templates';
 import { emailWhitelist } from '@/libs/better-auth/plugins/email-whitelist';
 import { initBetterAuthSSOProviders } from '@/libs/better-auth/sso';
-import { createSecondaryStorage, getTrustedOrigins } from '@/libs/better-auth/utils/config';
+import {
+  createSecondaryStorage,
+  getPasskeyOrigins,
+  getTrustedOrigins,
+} from '@/libs/better-auth/utils/config';
+import { expireLegacyHostOnlyCookies } from '@/libs/better-auth/utils/host-only-cookies';
 import { parseSSOProviders } from '@/libs/better-auth/utils/server';
+import { clearMismatchedOIDCSession } from '@/libs/oidc-provider/session-cleanup';
 import { EmailService } from '@/server/services/email';
 import { UserService } from '@/server/services/user';
 
@@ -82,17 +88,24 @@ const getPasskeyRpID = (): string | undefined => {
 };
 
 /**
- * Get passkey origins array.
- * Returns undefined if APP_URL is not set (e.g., in e2e tests).
+ * Browsers silently drop a cookie whose `Domain` the current host is not a member of.
+ * Applying a production domain on a preview deployment (`*.vercel.app`) or localhost would
+ * therefore erase every auth cookie instead of widening it, so fall back to host-only there.
  */
-const getPasskeyOrigins = (): string[] | undefined => {
-  if (!appEnv.APP_URL) return undefined;
+const resolveCookieDomain = (cookieDomain?: string): string | undefined => {
+  if (!cookieDomain) return undefined;
+
+  const base = cookieDomain.replace(/^\./, '');
   try {
-    return [new URL(appEnv.APP_URL).origin];
+    const { hostname } = new URL(appEnv.APP_URL);
+    if (hostname !== base && !hostname.endsWith(`.${base}`)) return undefined;
   } catch {
     return undefined;
   }
+
+  return cookieDomain;
 };
+
 const MAGIC_LINK_EXPIRES_IN = 900;
 // OTP expiration time (in seconds) - 5 minutes for mobile OTP verification
 const OTP_EXPIRES_IN = 300;
@@ -102,10 +115,19 @@ const enabledSSOProviders = parseSSOProviders(authEnv.AUTH_SSO_PROVIDERS);
 const { socialProviders, genericOAuthProviders } = initBetterAuthSSOProviders();
 
 interface CustomBetterAuthOptions {
+  /**
+   * Share auth cookies across every subdomain of this domain (e.g. `.example.com`).
+   * Omit to keep cookies host-only.
+   */
+  cookieDomain?: string;
+  /** Namespace every Better Auth cookie so colocated deployments cannot overwrite each other. */
+  cookiePrefix?: string;
   plugins: BetterAuthPlugin[];
 }
 
 export function defineConfig(customOptions: CustomBetterAuthOptions) {
+  const cookieDomain = resolveCookieDomain(customOptions.cookieDomain);
+
   const options = {
     account: {
       accountLinking: {
@@ -215,6 +237,21 @@ export function defineConfig(customOptions: CustomBetterAuthOptions) {
      * Ref: https://www.better-auth.com/docs/reference/options#databasehooks
      */
     databaseHooks: {
+      session: {
+        create: {
+          before: async (session, context) => {
+            try {
+              await clearMismatchedOIDCSession(serverDB, session.userId, context);
+            } catch (error) {
+              /**
+               * OIDC cleanup is a provider-specific recovery guard. Its failure must not prevent
+               * Better Auth from creating the primary application session.
+               */
+              console.error('[Better Auth] Failed to clear a stale OIDC session:', error);
+            }
+          },
+        },
+      },
       user: {
         create: {
           after: async (user) => {
@@ -250,6 +287,10 @@ export function defineConfig(customOptions: CustomBetterAuthOptions) {
 
     socialProviders,
     advanced: {
+      ...(cookieDomain && {
+        crossSubDomainCookies: { domain: cookieDomain, enabled: true },
+      }),
+      ...(customOptions.cookiePrefix && { cookiePrefix: customOptions.cookiePrefix }),
       database: {
         /**
          * Align Better Auth user IDs with our shared idGenerator for consistency.
@@ -307,9 +348,7 @@ export function defineConfig(customOptions: CustomBetterAuthOptions) {
         // Extract rpID from auth URL (e.g., 'lobehub.com' from 'https://lobehub.com')
         // Returns undefined if AUTH_URL is not set (e.g., in e2e tests)
         rpID: getPasskeyRpID(),
-        // Support multiple origins: web + Android APK key hashes
-        // Android origin format: android:apk-key-hash:<base64url-sha256-fingerprint>
-        // Returns undefined if AUTH_URL is not set (e.g., in e2e tests)
+        // Keep Android APK origins aligned with the public Digital Asset Links declaration.
         origin: getPasskeyOrigins(),
       }),
       ...(genericOAuthProviders.length > 0
@@ -341,5 +380,12 @@ export function defineConfig(customOptions: CustomBetterAuthOptions) {
     ],
   } satisfies BetterAuthOptions;
 
-  return betterAuth(options);
+  const instance = betterAuth(options);
+  if (!cookieDomain) return instance;
+
+  const handleRequest = instance.handler;
+  instance.handler = async (request) =>
+    expireLegacyHostOnlyCookies(request, await handleRequest(request), cookieDomain);
+
+  return instance;
 }

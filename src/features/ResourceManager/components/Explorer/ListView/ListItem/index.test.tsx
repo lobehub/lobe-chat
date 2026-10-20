@@ -1,33 +1,12 @@
 import { render, screen } from '@testing-library/react';
-import type { CSSProperties, ReactNode } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 
 import FileListItem from './index';
 
-vi.mock('@lobehub/ui', () => {
-  const Box = ({ children, className, style, ...props }: any) => {
-    const domProps = Object.fromEntries(
-      Object.entries(props).filter(([key]) => key.startsWith('data-') || key.startsWith('aria-')),
-    );
-
-    return (
-      <div className={className} style={style as CSSProperties} {...domProps}>
-        {children}
-      </div>
-    );
-  };
-
-  return {
-    Avatar: ({ alt }: { alt: string }) => <span data-testid="avatar">{alt}</span>,
-    Center: Box,
-    Checkbox: ({ checked, disabled }: { checked?: boolean; disabled?: boolean }) => (
-      <input readOnly checked={checked} disabled={disabled} type="checkbox" />
-    ),
-    ContextMenuTrigger: ({ children }: { children: ReactNode }) => <>{children}</>,
-    Flexbox: Box,
-    Tooltip: ({ children }: { children: ReactNode }) => <>{children}</>,
-  };
-});
+vi.mock('@lobehub/ui', async (importOriginal) => ({
+  ...(await importOriginal<object>()),
+  Avatar: ({ alt }: { alt: string }) => <span data-testid="avatar">{alt}</span>,
+}));
 
 vi.mock('react-i18next', () => ({
   useTranslation: () => ({
@@ -36,7 +15,7 @@ vi.mock('react-i18next', () => ({
   }),
 }));
 
-vi.mock('@/routes/(main)/resource/features/store', () => ({
+vi.mock('@/features/ResourceManager/store', () => ({
   useResourceManagerStore: (selector: (state: any) => unknown) =>
     selector({
       libraryId: undefined,
@@ -47,7 +26,7 @@ vi.mock('@/routes/(main)/resource/features/store', () => ({
     }),
 }));
 
-vi.mock('@/routes/(main)/resource/features/store/selectors', () => ({
+vi.mock('@/features/ResourceManager/store/selectors', () => ({
   isExplorerItemSelected: () => false,
 }));
 
@@ -66,6 +45,7 @@ vi.mock('@/store/file', () => ({
 
 vi.mock('../../hooks/useFileItemClick', () => ({
   useFileItemClick: () => vi.fn(),
+  useFileItemDoubleClick: () => vi.fn(),
 }));
 
 vi.mock('../../ItemDropdown/useFileItemDropdown', () => ({
@@ -153,6 +133,6 @@ describe('FileListItem', () => {
   it('disables selection for rows the workspace member did not upload', () => {
     render(<FileListItem {...baseProps} selectable={false} />);
 
-    expect(screen.getByRole('checkbox')).toBeDisabled();
+    expect(screen.getByRole('checkbox')).toHaveAttribute('aria-disabled', 'true');
   });
 });

@@ -1,4 +1,5 @@
 import { ClaudeCodeIdentifier } from '@lobechat/builtin-tool-claude-code';
+import { CredsApiName, CredsIdentifier } from '@lobechat/builtin-tool-creds';
 import { LobeAgentApiName, LobeAgentIdentifier } from '@lobechat/builtin-tool-lobe-agent';
 import {
   UserInteractionApiName,
@@ -14,6 +15,11 @@ import { pickString } from '@lobechat/utils';
 
 import { installMarketplaceAgents } from '@/services/installMarketplaceAgents';
 import { topicService } from '@/services/topic';
+
+const CURSOR_IDENTIFIER = 'cursor';
+const DEVIN_IDENTIFIER = 'devin';
+const DROID_IDENTIFIER = 'droid';
+const QODER_IDENTIFIER = 'qoder';
 
 interface SubmitToolInteractionOptions {
   createUserMessage?: boolean;
@@ -38,7 +44,7 @@ type CustomInteractionSubmitHandler = (
   context?: CustomInteractionContext,
 ) => Promise<CustomInteractionSubmitResult | undefined>;
 
-const isAgentMarketplaceCall = (identifier: string, apiName?: string) =>
+export const isAgentMarketplaceCall = (identifier: string, apiName?: string) =>
   identifier === WebOnboardingIdentifier && apiName === WebOnboardingApiName.showAgentMarketplace;
 
 const isLobeAgentAskUserQuestion = (identifier: string, apiName?: string) =>
@@ -134,8 +140,13 @@ const customInteractionSubmitHandlers: Array<{
   match: (identifier: string, apiName?: string) => boolean;
 }> = [
   {
+    // `createUserMessage: false` — the completed tool card already renders the
+    // answers from `pluginState.askUserAnswers`, so the client runtime must
+    // resume from the tool result instead of synthesizing a `role: 'user'`
+    // message (which duplicated the answer as a user bubble). This also aligns
+    // with the Gateway resume path, which never creates a user turn here.
     handler: async (payload) => ({
-      options: { pluginState: { askUserAnswers: payload } },
+      options: { createUserMessage: false, pluginState: { askUserAnswers: payload } },
       payload,
     }),
     match: isAskUserQuestionCall,
@@ -156,10 +167,41 @@ const findCustomInteractionSubmitHandler = (identifier: string, apiName?: string
  * because the answer ships back through IPC, not through a synthetic user
  * turn.
  */
-const HETERO_CUSTOM_INTERACTION_IDENTIFIERS = new Set<string>([ClaudeCodeIdentifier]);
+const HETERO_CUSTOM_INTERACTION_IDENTIFIERS = new Set<string>([
+  ClaudeCodeIdentifier,
+  CURSOR_IDENTIFIER,
+  DEVIN_IDENTIFIER,
+  DROID_IDENTIFIER,
+  QODER_IDENTIFIER,
+]);
 
 export const isHeteroInteractionIdentifier = (identifier: string) =>
   HETERO_CUSTOM_INTERACTION_IDENTIFIERS.has(identifier);
+
+/**
+ * Custom forms whose submit is an ordinary tool approval: the card performs
+ * its side effect itself (e.g. writing a secret to the credential store) and
+ * then lets the tool run, so the run never carries the form's input. The host
+ * drops the submit payload and approves; skip becomes reject-and-continue.
+ */
+export const isApprovalBackedInteraction = (identifier: string, apiName?: string) =>
+  identifier === CredsIdentifier && apiName === CredsApiName.requestCredsInput;
+
+type InteractionAction =
+  | { payload: Record<string, unknown>; type: 'submit' }
+  | { payload?: Record<string, unknown>; reason?: string; type: 'skip' }
+  | { payload?: Record<string, unknown>; type: 'cancel' };
+
+/**
+ * Maps an approval-backed form's action to the tool decision. The result has
+ * no room for the payload, so nothing the form submits can reach the run.
+ */
+export const toApprovalDecision = (
+  action: InteractionAction,
+): { type: 'approve' } | { reason?: string; type: 'reject' } =>
+  action.type === 'submit'
+    ? { type: 'approve' }
+    : { reason: action.type === 'skip' ? action.reason : undefined, type: 'reject' };
 
 /**
  * lobe-agent reuses the user-interaction `askUserQuestion` card. Unlike the
@@ -171,6 +213,7 @@ export const isCustomInteractionIdentifier = (identifier: string, apiName?: stri
   identifier === UserInteractionIdentifier ||
   isLobeAgentAskUserQuestion(identifier, apiName) ||
   isHeteroInteractionIdentifier(identifier) ||
+  isApprovalBackedInteraction(identifier, apiName) ||
   Boolean(findCustomInteractionSubmitHandler(identifier, apiName));
 
 export const prepareCustomInteractionSubmit = async (

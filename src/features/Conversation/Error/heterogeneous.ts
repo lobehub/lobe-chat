@@ -13,9 +13,11 @@ import type { UIChatMessage } from '@lobechat/types';
  */
 export const HETEROGENEOUS_AGENT_STATUS_GUIDE_ERROR_CODES = new Set<string>([
   HeterogeneousAgentSessionErrorCode.AuthRequired,
+  HeterogeneousAgentSessionErrorCode.CliDetectionTimeout,
   HeterogeneousAgentSessionErrorCode.CliNotFound,
   HeterogeneousAgentSessionErrorCode.Overloaded,
   HeterogeneousAgentSessionErrorCode.RateLimit,
+  HeterogeneousAgentSessionErrorCode.WorkingDirectoryNotFound,
 ]);
 
 export const isHeterogeneousAgentStatusGuideError = (
@@ -28,8 +30,17 @@ export const isHeterogeneousAgentStatusGuideError = (
   return (
     (agentType === 'amp' ||
       agentType === 'claude-code' ||
+      agentType === 'codebuddy' ||
       agentType === 'codex' ||
-      agentType === 'opencode') &&
+      agentType === 'cursor' ||
+      agentType === 'droid' ||
+      agentType === 'devin' ||
+      agentType === 'grok-build' ||
+      agentType === 'kimi-code' ||
+      agentType === 'opencode' ||
+      agentType === 'pi' ||
+      agentType === 'qoder' ||
+      agentType === 'trae') &&
     typeof code === 'string' &&
     HETEROGENEOUS_AGENT_STATUS_GUIDE_ERROR_CODES.has(code)
   );

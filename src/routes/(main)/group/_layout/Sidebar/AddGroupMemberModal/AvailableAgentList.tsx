@@ -1,7 +1,7 @@
 'use client';
 
-import { Flexbox, SearchBar, Skeleton, Text } from '@lobehub/ui';
-import { createStaticStyles } from 'antd-style';
+import { agentDisplayName } from '@lobechat/types';
+import { createStaticStyles, Flexbox, SearchBar, Skeleton, Text } from '@lobehub/ui';
 import isEqual from 'fast-deep-equal';
 import { type ChangeEvent } from 'react';
 import { memo, useCallback, useMemo, useState } from 'react';
@@ -71,7 +71,7 @@ const AvailableAgentList = memo<AvailableAgentListProps>(({ agents, isLoading })
 
     const searchLower = searchTerm.toLowerCase();
     return agents.filter((agent) => {
-      const title = agent.title || '';
+      const title = agentDisplayName(agent) ?? '';
       const description = agent.description || '';
       return (
         title.toLowerCase().includes(searchLower) || description.toLowerCase().includes(searchLower)
@@ -111,9 +111,9 @@ const AvailableAgentList = memo<AvailableAgentListProps>(({ agents, isLoading })
       <Flexbox flex={1} style={{ minHeight: 0 }}>
         {isLoading ? (
           <Flexbox gap={8} padding={8}>
-            <Skeleton active paragraph={{ rows: 1 }} title={false} />
-            <Skeleton active paragraph={{ rows: 1 }} title={false} />
-            <Skeleton active paragraph={{ rows: 1 }} title={false} />
+            <Skeleton.Text rows={1} />
+            <Skeleton.Text rows={1} />
+            <Skeleton.Text rows={1} />
           </Flexbox>
         ) : filteredAgents.length === 0 ? (
           <AgentSelectionEmpty

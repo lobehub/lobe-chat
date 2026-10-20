@@ -4,7 +4,8 @@ import { DEFAULT_MODEL_PROVIDER_LIST } from 'model-bank/modelProviders';
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { useCategory } from '@/routes/(main)/settings/hooks/useCategory';
+import { SUPPORTED_MESSENGER_PLATFORMS } from '@/features/Messenger/constants';
+import { useCategory } from '@/features/Settings/hooks/useCategory';
 import { SettingsTabs } from '@/store/global/initialState';
 import {
   featureFlagsSelectors,
@@ -13,6 +14,7 @@ import {
 } from '@/store/serverConfig';
 import { useUserStore } from '@/store/user';
 import { authSelectors, userProfileSelectors } from '@/store/user/selectors';
+import { getPlatform } from '@/utils/platform';
 
 import {
   SETTINGS_SEARCH_ITEMS,
@@ -20,7 +22,7 @@ import {
   TAB_SEARCH_EN_KEYWORDS,
   TAB_SEARCH_KEYWORDS_KEYS,
 } from './items';
-import { createSettingsSearchFuse, MAX_SEARCH_RESULTS } from './matcher';
+import { createSettingsSearchFuse, searchSettingsIndex } from './matcher';
 import { containsHan, loadPinyinTexts, type PinyinTexts } from './pinyin';
 
 export interface SettingsSearchResult {
@@ -77,10 +79,11 @@ export const useSettingsSearch = (
 } => {
   const { t } = useTranslation(['setting', 'labs', 'electron', 'subscription', 'spend', 'auth']);
   const categoryGroups = useCategory();
-  const { enableSTT, hideDocs, showAiImage } = useServerConfigStore(featureFlagsSelectors);
+  const { hideDocs, showAiImage } = useServerConfigStore(featureFlagsSelectors);
   const enableBusinessFeatures = useServerConfigStore(serverConfigSelectors.enableBusinessFeatures);
   const enableGatewayMode = useServerConfigStore(serverConfigSelectors.enableGatewayMode);
   const enableComposio = useServerConfigStore(serverConfigSelectors.enableComposio);
+  const enableWorkspace = useServerConfigStore(serverConfigSelectors.enableWorkspace);
   const disableEmailPassword = useServerConfigStore(serverConfigSelectors.disableEmailPassword);
   const isLogin = useUserStore(authSelectors.isLogin);
   const hasEmail = useUserStore((s) => !!userProfileSelectors.userProfile(s)?.email);
@@ -97,11 +100,12 @@ export const useSettingsSearch = (
       enableBusinessFeatures: !!enableBusinessFeatures,
       enableComposio: !!enableComposio,
       enableGatewayMode: !!enableGatewayMode,
-      enableSTT: !!enableSTT,
+      enableWorkspace: !!enableWorkspace,
       hasEmail,
       hideDocs: !!hideDocs,
       isDesktop,
       isLogin: !!isLogin,
+      isWindows: getPlatform() === 'Windows',
       showAiImage: !!showAiImage,
     };
 
@@ -174,6 +178,27 @@ export const useSettingsSearch = (
       });
     }
 
+    // IM notification channels (Telegram / Slack / …) live on the notification
+    // page with per-platform anchors. Index them from the same catalog the page
+    // renders so a search for the platform name deep-links to that row.
+    // Those rows come from the business notification section, so they only
+    // exist with business features on.
+    const notificationTab = visibleTabs.get(SettingsTabs.Notification);
+    if (notificationTab && enableBusinessFeatures)
+      for (const platform of SUPPORTED_MESSENGER_PLATFORMS) {
+        entries.push({
+          anchor: `notification-${platform.id}`,
+          breadcrumb: `${notificationTab.groupTitle} › ${notificationTab.label}`,
+          haystack: [platform.name.toLowerCase(), platform.id.toLowerCase(), 'messenger', 'im'],
+          icon: notificationTab.icon,
+          key: `item-notification-${platform.id}`,
+          label: platform.name,
+          pinyinBase: [platform.name.toLowerCase()],
+          tab: SettingsTabs.Notification,
+          url: `${notificationTab.url}#notification-${platform.id}`,
+        });
+      }
+
     // Builtin OAuth connectors (Notion, GitHub, …): searching a connector name
     // should land on the connector page. The page has no per-connector deep
     // link, so these navigate to the tab itself. Availability ultimately
@@ -220,7 +245,7 @@ export const useSettingsSearch = (
     enableBusinessFeatures,
     enableComposio,
     enableGatewayMode,
-    enableSTT,
+    enableWorkspace,
     hasEmail,
     hideDocs,
     isLogin,
@@ -264,9 +289,9 @@ export const useSettingsSearch = (
     const q = query.trim();
     if (!q) return [];
 
-    return fuse
-      .search(q, { limit: MAX_SEARCH_RESULTS })
-      .map(({ item: { haystack: _h, pinyinBase: _p, ...result } }) => result);
+    return searchSettingsIndex(fuse, q).map(
+      ({ haystack: _h, pinyinBase: _p, ...result }) => result,
+    );
   }, [query, fuse]);
 
   return { isIndexing: needsPinyin && !pinyin.settled, results };

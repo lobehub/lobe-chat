@@ -4,34 +4,71 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { AcceptanceService } from '../acceptanceService';
 
 const mocks = vi.hoisted(() => ({
+  attachToAcceptance: vi.fn(),
+  distilRejections: vi.fn(),
   findById: vi.fn(),
+  findOwnTopicById: vi.fn(),
+  findPolicyById: vi.fn(),
+  findReportByRun: vi.fn(),
+  findRunById: vi.fn(),
+  foldIntoRound: vi.fn(),
+  ensureForSubject: vi.fn(),
+  listResultsByRun: vi.fn(),
   listByAcceptance: vi.fn(),
   setDecision: vi.fn(),
   taskResolve: vi.fn(),
   updateStatus: vi.fn(),
+  updatePolicyStatus: vi.fn(),
 }));
 
 vi.mock('@/database/models/acceptance', () => ({
-  AcceptanceModel: vi.fn(() => ({
-    findById: mocks.findById,
-    updateStatus: mocks.updateStatus,
-  })),
+  AcceptanceModel: vi.fn(function () {
+    return {
+      ensureForSubject: mocks.ensureForSubject,
+      findById: mocks.findById,
+      findPolicyById: mocks.findPolicyById,
+      updatePolicyStatus: mocks.updatePolicyStatus,
+      updateStatus: mocks.updateStatus,
+    };
+  }),
 }));
 vi.mock('@/database/models/verifyRun', () => ({
-  VerifyRunModel: vi.fn(() => ({
-    listByAcceptance: mocks.listByAcceptance,
-    setDecision: mocks.setDecision,
-  })),
+  VerifyRunModel: vi.fn(function () {
+    return {
+      attachToAcceptance: mocks.attachToAcceptance,
+      findById: mocks.findRunById,
+      foldIntoRound: mocks.foldIntoRound,
+      listByAcceptance: mocks.listByAcceptance,
+      setDecision: mocks.setDecision,
+    };
+  }),
 }));
-vi.mock('@/database/models/verifyCheckResult', () => ({ VerifyCheckResultModel: vi.fn() }));
+vi.mock('@/database/models/verifyCheckResult', () => ({
+  VerifyCheckResultModel: vi.fn(function () {
+    return { listByRun: mocks.listResultsByRun };
+  }),
+}));
 vi.mock('@/database/models/verifyEvidence', () => ({ VerifyEvidenceModel: vi.fn() }));
-vi.mock('@/database/models/verifyReport', () => ({ VerifyReportModel: vi.fn() }));
-vi.mock('@/database/models/task', () => ({
-  TaskModel: vi.fn(() => ({ resolve: mocks.taskResolve })),
+vi.mock('@/database/models/verifyReport', () => ({
+  VerifyReportModel: vi.fn(function () {
+    return { findByRun: mocks.findReportByRun };
+  }),
 }));
-vi.mock('@/database/models/topic', () => ({ TopicModel: vi.fn() }));
+vi.mock('@/database/models/task', () => ({
+  TaskModel: vi.fn(function () {
+    return { resolve: mocks.taskResolve };
+  }),
+}));
+vi.mock('@/database/models/topic', () => ({
+  TopicModel: vi.fn(function () {
+    return { findOwnTopicById: mocks.findOwnTopicById };
+  }),
+}));
 vi.mock('@/database/models/document', () => ({ DocumentModel: vi.fn() }));
 vi.mock('@/server/services/task', () => ({ TaskService: vi.fn() }));
+vi.mock('@/server/workflows/expertiseRejection', () => ({
+  ExpertiseRejectionWorkflow: { trigger: mocks.distilRejections },
+}));
 
 const service = () => new AcceptanceService({} as any, 'user-1');
 
@@ -45,7 +82,40 @@ const acceptance = (status: string) => ({
 describe('AcceptanceService decision gating', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    // A run that has not executed yet — the only kind that may fold into a draft.
+    mocks.listResultsByRun.mockResolvedValue([]);
+    mocks.findPolicyById.mockImplementation(function (...args) {
+      return mocks.findById(...args);
+    });
     mocks.listByAcceptance.mockResolvedValue([{ id: 'run-1', roundIndex: 1 }]);
+  });
+
+  it('creates a standalone acceptance without resolving a LobeHub task, topic, or document', async () => {
+    mocks.ensureForSubject.mockResolvedValue({ id: 'acc-standalone' });
+
+    await service().ensureForSubject('standalone', 'external-delivery-1', {
+      requirement: 'The external delivery works',
+      title: 'External delivery',
+    });
+
+    expect(mocks.taskResolve).not.toHaveBeenCalled();
+    expect(mocks.ensureForSubject).toHaveBeenCalledWith('standalone', 'external-delivery-1', {
+      metadata: { title: 'External delivery' },
+      projectId: null,
+      requirement: 'The external delivery works',
+    });
+  });
+
+  it('treats an agent-share visitor topic as a non-existent subject', async () => {
+    // findOwnTopicById excludes visitor topics, so it resolves null here even
+    // though the id exists as a raw row — the creator must not be able to
+    // attach an acceptance to a visitor's conversation.
+    mocks.findOwnTopicById.mockResolvedValue(undefined);
+
+    await expect(
+      service().ensureForSubject('topic', 'tpc-visitor-1', { requirement: 'The topic works' }),
+    ).rejects.toThrow('topic "tpc-visitor-1" not found in the current workspace');
+    expect(mocks.ensureForSubject).not.toHaveBeenCalled();
   });
 
   it.each(['pending', 'planned', 'verifying', 'repairing'])(
@@ -66,6 +136,143 @@ describe('AcceptanceService decision gating', () => {
     mocks.findById.mockResolvedValue(acceptance('rejected'));
     await expect(service().reject('acc-1', 'again')).rejects.toThrow('re-opens it');
     expect(mocks.setDecision).not.toHaveBeenCalled();
+  });
+
+  it('keeps a manually closed acceptance terminal during status recomputation', async () => {
+    mocks.findById.mockResolvedValue(acceptance('closed'));
+
+    await expect(service().recomputeStatus('acc-1')).resolves.toBe('closed');
+    expect(mocks.listByAcceptance).not.toHaveBeenCalled();
+    expect(mocks.updateStatus).not.toHaveBeenCalled();
+  });
+
+  it.each(['accepted', 'closed'])(
+    'refuses to attach a new round after the acceptance is %s',
+    async (status) => {
+      mocks.findById.mockResolvedValue(acceptance(status));
+      mocks.findRunById.mockResolvedValue({ acceptanceId: null, id: 'run-2' });
+
+      await expect(service().attachRun('run-2', 'acc-1')).rejects.toThrow(`already been ${status}`);
+      expect(mocks.attachToAcceptance).not.toHaveBeenCalled();
+    },
+  );
+
+  it('keeps an already-attached run idempotent after acceptance', async () => {
+    mocks.findById.mockResolvedValue(acceptance('accepted'));
+    const existing = { acceptanceId: 'acc-1', id: 'run-1', roundIndex: 1 };
+    mocks.findRunById.mockResolvedValue(existing);
+
+    await expect(service().attachRun('run-1', 'acc-1')).resolves.toBe(existing);
+    expect(mocks.attachToAcceptance).not.toHaveBeenCalled();
+  });
+
+  it('attaches a workspace task run through internal policy scope', async () => {
+    mocks.findPolicyById.mockResolvedValue(acceptance('planned'));
+    mocks.findRunById.mockResolvedValue({ acceptanceId: null, id: 'run-2' });
+    mocks.attachToAcceptance.mockResolvedValue({
+      acceptanceId: 'acc-1',
+      id: 'run-2',
+      roundIndex: 2,
+    });
+
+    await expect(service().attachPolicyRun('run-2', 'acc-1')).resolves.toMatchObject({
+      acceptanceId: 'acc-1',
+    });
+    expect(mocks.attachToAcceptance).toHaveBeenCalledWith('run-2', 'acc-1', undefined);
+  });
+
+  it('distils the previous round once a new one lands', async () => {
+    mocks.findById.mockResolvedValue(acceptance('rejected'));
+    mocks.findRunById.mockResolvedValue({ acceptanceId: null, id: 'run-2' });
+    mocks.listByAcceptance.mockResolvedValue([
+      { id: 'run-1', planConfirmedAt: new Date(), roundIndex: 1, status: 'failed' },
+    ]);
+    mocks.attachToAcceptance.mockResolvedValue({
+      acceptanceId: 'acc-1',
+      id: 'run-2',
+      roundIndex: 2,
+    });
+
+    await service().attachRun('run-2', 'acc-1');
+
+    // The settled round is the previous one, never the round that just landed.
+    expect(mocks.distilRejections).toHaveBeenCalledWith({
+      acceptanceId: 'acc-1',
+      userId: 'user-1',
+      verifyRunId: 'run-1',
+      workspaceId: undefined,
+    });
+  });
+
+  it('does not distil when the incoming run only folds into a draft round', async () => {
+    mocks.findById.mockResolvedValue(acceptance('planned'));
+    mocks.findRunById.mockResolvedValue({ acceptanceId: null, id: 'run-2', plan: [] });
+    mocks.listByAcceptance.mockResolvedValue([
+      { id: 'run-1', planConfirmedAt: null, roundIndex: 1, status: 'planned', userDecision: null },
+    ]);
+    mocks.foldIntoRound.mockResolvedValue({ acceptanceId: 'acc-1', id: 'run-1', roundIndex: 1 });
+
+    await service().attachRun('run-2', 'acc-1');
+
+    // No new round opened, so nothing settled — distilling here would read a round the
+    // reviewer is still working on.
+    expect(mocks.distilRejections).not.toHaveBeenCalled();
+  });
+
+  it('folds a new run into the draft round instead of opening another', async () => {
+    mocks.findById.mockResolvedValue(acceptance('planned'));
+    mocks.findRunById.mockResolvedValue({ acceptanceId: null, id: 'run-2', plan: [] });
+    mocks.listByAcceptance.mockResolvedValue([
+      { id: 'run-1', planConfirmedAt: null, roundIndex: 1, status: 'planned', userDecision: null },
+    ]);
+    mocks.foldIntoRound.mockResolvedValue({ acceptanceId: 'acc-1', id: 'run-1', roundIndex: 1 });
+
+    await expect(service().attachRun('run-2', 'acc-1')).resolves.toMatchObject({ id: 'run-1' });
+    expect(mocks.foldIntoRound).toHaveBeenCalledWith('run-2', 'run-1');
+    expect(mocks.attachToAcceptance).not.toHaveBeenCalled();
+  });
+
+  /**
+   * Regression: a verification driven through the CLI writes its results before the
+   * Task drive binds the round. `foldIntoRound` refuses any source with results, so
+   * picking the fold path for it threw, the binder swallowed the throw, and the round
+   * stayed orphaned — the Goal review then errored on "no Acceptance" anyway.
+   */
+  it('appends an executed run after the draft instead of trying to fold it', async () => {
+    mocks.findById.mockResolvedValue(acceptance('planned'));
+    mocks.findRunById.mockResolvedValue({ acceptanceId: null, id: 'run-2', plan: [] });
+    mocks.listByAcceptance.mockResolvedValue([
+      { id: 'run-1', planConfirmedAt: null, roundIndex: 1, status: 'planned', userDecision: null },
+    ]);
+    mocks.listResultsByRun.mockResolvedValue([{ id: 'result-1', verifyRunId: 'run-2' }]);
+    mocks.attachToAcceptance.mockResolvedValue({
+      acceptanceId: 'acc-1',
+      id: 'run-2',
+      roundIndex: 2,
+    });
+
+    await expect(service().attachRun('run-2', 'acc-1')).resolves.toMatchObject({ id: 'run-2' });
+    expect(mocks.foldIntoRound).not.toHaveBeenCalled();
+    expect(mocks.attachToAcceptance).toHaveBeenCalledWith('run-2', 'acc-1', undefined);
+  });
+
+  it('opens a new round when the newest one is no longer a draft', async () => {
+    mocks.findById.mockResolvedValue(acceptance('planned'));
+    mocks.findRunById.mockResolvedValue({ acceptanceId: null, id: 'run-3', plan: [] });
+    // Ascending chain: an abandoned draft sits behind an executed newer round.
+    mocks.listByAcceptance.mockResolvedValue([
+      { id: 'run-1', planConfirmedAt: null, roundIndex: 1, status: 'planned', userDecision: null },
+      { id: 'run-2', planConfirmedAt: new Date(), roundIndex: 2, status: null, userDecision: null },
+    ]);
+    mocks.attachToAcceptance.mockResolvedValue({
+      acceptanceId: 'acc-1',
+      id: 'run-3',
+      roundIndex: 3,
+    });
+
+    await expect(service().attachRun('run-3', 'acc-1')).resolves.toMatchObject({ id: 'run-3' });
+    expect(mocks.foldIntoRound).not.toHaveBeenCalled();
+    expect(mocks.attachToAcceptance).toHaveBeenCalledWith('run-3', 'acc-1', undefined);
   });
 
   it.each(['delivered', 'errored'])('accepts a settled (%s) delivery', async (status) => {
@@ -92,5 +299,32 @@ describe('AcceptanceService decision gating', () => {
       expect.objectContaining({ comment: 'dark mode needs a screenshot' }),
     );
     expect(mocks.updateStatus).toHaveBeenCalledWith('acc-1', 'rejected');
+  });
+
+  it.each([
+    ['accept', (svc: ReturnType<typeof service>) => svc.accept('acc-1', 'looks good')],
+    ['reject', (svc: ReturnType<typeof service>) => svc.reject('acc-1', 'not yet')],
+  ])('distils the final round when the reviewer settles by %s', async (_verb, decide) => {
+    mocks.findById.mockResolvedValue(acceptance('delivered'));
+
+    await decide(service());
+
+    // No later round will ever follow this one, so a terminal decision is the only thing that can
+    // settle it. Without this the last round of every acceptance is silently never learned from.
+    expect(mocks.distilRejections).toHaveBeenCalledWith({
+      acceptanceId: 'acc-1',
+      userId: 'user-1',
+      verifyRunId: 'run-1',
+      workspaceId: undefined,
+    });
+  });
+
+  it('refuses a terminal decision with no round, and distils nothing', async () => {
+    mocks.findById.mockResolvedValue(acceptance('delivered'));
+    mocks.listByAcceptance.mockResolvedValue([]);
+
+    await expect(service().accept('acc-1')).rejects.toThrow('no verification round');
+    expect(mocks.distilRejections).not.toHaveBeenCalled();
+    expect(mocks.updateStatus).not.toHaveBeenCalled();
   });
 });

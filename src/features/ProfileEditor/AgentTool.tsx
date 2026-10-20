@@ -1,15 +1,13 @@
 'use client';
 
-import { COMPOSIO_APP_TYPES, LOBEHUB_SKILL_PROVIDERS } from '@lobechat/const';
-import { getActivePluginIds, parsePluginEntry, upsertPluginMode } from '@lobechat/types';
+import { getConnectorCatalog } from '@lobechat/const';
+import { getActivePluginIds, upsertPluginMode } from '@lobechat/types';
 import type { ItemType } from '@lobehub/ui';
-import { Avatar, Flexbox, Icon } from '@lobehub/ui';
-import { Button } from '@lobehub/ui/base-ui';
+import { Avatar, Button, cssVar, Flexbox, Icon } from '@lobehub/ui';
 import { McpIcon, SkillsIcon } from '@lobehub/ui/icons';
-import { cssVar } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import { PlusIcon } from 'lucide-react';
-import React, { memo, Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { memo, Suspense, useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import ActionDropdown from '@/features/ChatInput/ActionBar/components/ActionDropdown';
@@ -23,6 +21,7 @@ import MarketAgentSkillPopoverContent from '@/features/ChatInput/ActionBar/Tools
 import MarketSkillIcon from '@/features/ChatInput/ActionBar/Tools/MarketSkillIcon';
 import ToolItem from '@/features/ChatInput/ActionBar/Tools/ToolItem';
 import ToolItemDetailPopover from '@/features/ChatInput/ActionBar/Tools/ToolItemDetailPopover';
+import { useResourceAccess } from '@/features/ResourcePermission/useResourceAccess';
 import { createSkillStoreModal } from '@/features/SkillStore';
 import { useCheckPluginsIsInstalled } from '@/hooks/useCheckPluginsIsInstalled';
 import { useFetchInstalledPlugins } from '@/hooks/useFetchInstalledPlugins';
@@ -37,12 +36,14 @@ import {
   composioStoreSelectors,
   pluginSelectors,
 } from '@/store/tool/selectors';
+import { agentSkillListResource } from '@/store/tool/slices/agentSkills/projection';
 import type { LobeToolMetaWithAvailability } from '@/store/tool/slices/builtin/selectors';
 import { connectorSelectors } from '@/store/tool/slices/connector';
 
 import PluginTag from './PluginTag';
 import PopoverContent from './PopoverContent';
 import { getVisibleProfileToolIds } from './profileToolVisibility';
+import { selectProfileToolCatalogsSynced, useStalePluginAutoResolve } from './staleProfilePlugins';
 
 export interface AgentToolProps {
   /**
@@ -95,6 +96,17 @@ const AgentTool = memo<AgentToolProps>(
     const effectiveAgentId = agentId || activeAgentId || '';
     const config = useAgentStore(agentSelectors.getAgentConfigById(effectiveAgentId), isEqual);
     const isManualSkillMode = config?.chatConfig?.skillActivateMode === 'manual';
+    // Workspace General access on this agent. A private agent is creator-only and
+    // has no shared access row, so skip the query for it (same shape as the
+    // prompt editor's gate). Only the automatic stale-plugin cleanup below reads
+    // this — the visible controls keep their own `canEdit` gating.
+    const isPrivateAgent = useAgentStore(
+      (s) => s.agentMap[effectiveAgentId]?.visibility === 'private',
+    );
+    const { canEditResource, isAccessResolved } = useResourceAccess(
+      'agent',
+      isPrivateAgent ? undefined : effectiveAgentId || undefined,
+    );
 
     // Plugin state management — pinned identifiers only (a disabled entry
     // is a distinct, valid config state; this component has no tri-state UI
@@ -189,6 +201,11 @@ const AgentTool = memo<AgentToolProps>(
       [agentConnectors, excludeAgentConnectors],
     );
     const isConnectorsInit = useToolStore((s) => s.isConnectorsInit);
+    const isToolStoreCatalogSynced = useToolStore(selectProfileToolCatalogsSynced);
+    // Not `serverConfigInit`: it is also set by the error fallback, whose default
+    // config hides the Composio and LobeHub Skill catalogs.
+    const isServerConfigLoaded = useServerConfigStore((s) => s.serverConfigLoaded);
+    const isToolCatalogSynced = isToolStoreCatalogSynced && isServerConfigLoaded;
     const fetchConnectors = useToolStore((s) => s.fetchConnectors);
     useEffect(() => {
       if (!isConnectorsInit) fetchConnectors();
@@ -227,10 +244,34 @@ const AgentTool = memo<AgentToolProps>(
       [togglePlugin],
     );
 
-    // Get all Composio server type identifiers (used to filter the builtin list)
-    const allComposioTypeIdentifiers = useMemo(
-      () => new Set(COMPOSIO_APP_TYPES.map((type) => type.identifier)),
-      [],
+    const connectorCatalog = useMemo(
+      () =>
+        getConnectorCatalog({
+          composio: isComposioEnabledInEnv,
+          lobehub: isLobehubSkillEnabled,
+        }),
+      [isComposioEnabledInEnv, isLobehubSkillEnabled],
+    );
+    const connectorIdentifiers = useMemo(
+      () =>
+        new Set(
+          connectorCatalog.map((item) =>
+            item.type === 'lobehub' ? item.provider.id : item.serverType.identifier,
+          ),
+        ),
+      [connectorCatalog],
+    );
+    const composioConnectorTypes = useMemo(
+      () =>
+        connectorCatalog
+          .filter((item) => item.type === 'composio')
+          .map(({ serverType }) => serverType),
+      [connectorCatalog],
+    );
+    const lobehubConnectorProviders = useMemo(
+      () =>
+        connectorCatalog.filter((item) => item.type === 'lobehub').map(({ provider }) => provider),
+      [connectorCatalog],
     );
 
     // Get all skill identifiers (used to filter the builtin list)
@@ -256,10 +297,8 @@ const AgentTool = memo<AgentToolProps>(
         ) as ListType;
       }
 
-      // Filter out Composio tools if Composio is enabled
-      if (isComposioEnabledInEnv) {
-        list = list.filter((item) => !allComposioTypeIdentifiers.has(item.identifier));
-      }
+      // Connector identifiers are rendered through their canonical owner below.
+      list = list.filter((item) => !connectorIdentifiers.has(item.identifier));
 
       // Filter out skills (they are shown separately)
       list = list.filter((item) => !allSkillIdentifiers.has(item.identifier));
@@ -267,8 +306,7 @@ const AgentTool = memo<AgentToolProps>(
       return list;
     }, [
       profileBuiltinList,
-      allComposioTypeIdentifiers,
-      isComposioEnabledInEnv,
+      connectorIdentifiers,
       filterAvailableInWeb,
       useAllMetaList,
       allSkillIdentifiers,
@@ -278,7 +316,7 @@ const AgentTool = memo<AgentToolProps>(
     const composioServerItems = useMemo(
       () =>
         isComposioEnabledInEnv
-          ? COMPOSIO_APP_TYPES.map((type) => ({
+          ? composioConnectorTypes.map((type) => ({
               icon: (
                 <ComposioSkillIcon icon={type.icon} label={type.label} size={SKILL_ICON_SIZE} />
               ),
@@ -307,14 +345,14 @@ const AgentTool = memo<AgentToolProps>(
               ),
             }))
           : [],
-      [isComposioEnabledInEnv, allComposioServers, effectiveAgentId, t],
+      [isComposioEnabledInEnv, composioConnectorTypes, allComposioServers, effectiveAgentId, t],
     );
 
     // LobeHub Skill Provider list items
     const lobehubSkillItems = useMemo(
       () =>
         isLobehubSkillEnabled
-          ? LOBEHUB_SKILL_PROVIDERS.map((provider) => ({
+          ? lobehubConnectorProviders.map((provider) => ({
               icon: (
                 <LobehubSkillIcon
                   icon={provider.icon}
@@ -343,7 +381,7 @@ const AgentTool = memo<AgentToolProps>(
               ),
             }))
           : [],
-      [isLobehubSkillEnabled, effectiveAgentId, t],
+      [isLobehubSkillEnabled, lobehubConnectorProviders, effectiveAgentId, t],
     );
 
     // Handle plugin remove via Tag close - use byId actions
@@ -718,14 +756,11 @@ const AgentTool = memo<AgentToolProps>(
       // 2. Installed plugins
       for (const plugin of installedPluginList) all.add(plugin.identifier);
 
-      // 3. Composio server types (if enabled)
-      if (isComposioEnabledInEnv) {
-        for (const type of COMPOSIO_APP_TYPES) all.add(type.identifier);
-      }
-
-      // 4. LobeHub Skill providers (if enabled)
-      if (isLobehubSkillEnabled) {
-        for (const provider of LOBEHUB_SKILL_PROVIDERS) all.add(provider.id);
+      // 3. Canonical connector identifiers
+      for (const connector of connectorCatalog) {
+        all.add(
+          connector.type === 'lobehub' ? connector.provider.id : connector.serverType.identifier,
+        );
       }
 
       // 5. Builtin skills
@@ -744,50 +779,35 @@ const AgentTool = memo<AgentToolProps>(
     }, [
       knownBuiltinList,
       installedPluginList,
-      isComposioEnabledInEnv,
-      isLobehubSkillEnabled,
+      connectorCatalog,
       installedBuiltinSkills,
       marketAgentSkills,
       userAgentSkills,
       customConnectors,
     ]);
 
-    // Track whether initial cleanup has been performed
-    const cleanupDoneRef = useRef(false);
-
-    // Auto-remove stale plugin IDs from the agent config
-    // Uses a short debounce to allow async data (SWR) to complete loading
-    useEffect(() => {
-      if (cleanupDoneRef.current) return;
-      if (validIdentifiers.size === 0) return;
-      const rawPlugins = config?.plugins ?? [];
-      if (rawPlugins.length === 0) return;
-      // Don't prune until the connector store has loaded — connector identifiers
-      // are absent from validIdentifiers until fetchConnectors() resolves, so
-      // running cleanup before that would incorrectly mark enabled connectors as stale.
-      if (!isConnectorsInit) return;
-
-      // Defer cleanup to avoid race with async data loading (SWR, Composio, etc.)
-      const timer = setTimeout(() => {
-        // Checked (and filtered) by identifier regardless of entry shape, so
-        // a stale disabled/pinned object entry is pruned exactly like a
-        // stale legacy string one — untouched valid entries keep their
-        // original shape (lazy per-item upgrade).
-        const isValid = (entry: (typeof rawPlugins)[number]) =>
-          validIdentifiers.has(parsePluginEntry(entry).identifier);
-        const hasStale = rawPlugins.some((entry) => !isValid(entry));
-
-        if (hasStale && effectiveAgentId) {
-          const cleanedPlugins = rawPlugins.filter(isValid);
-          updateAgentConfigById(effectiveAgentId, { plugins: cleanedPlugins });
-        }
-
-        cleanupDoneRef.current = true;
-      }, 500);
-
-      return () => clearTimeout(timer);
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [validIdentifiers]);
+    // Self-heal unresolved plugin entries once the catalogs are complete. They
+    // may be Market skills that are not installed yet, so the server is asked
+    // first and only entries it says are not skills are removed.
+    useStalePluginAutoResolve({
+      agentId: effectiveAgentId,
+      canEditContent: canEdit,
+      canEditResource,
+      getScope: () => agentSkillListResource.scope.get(),
+      getCurrentPlugins: () =>
+        agentSelectors.getAgentConfigById(effectiveAgentId)(useAgentStore.getState())?.plugins,
+      isAccessResolved,
+      isConnectorsInit,
+      isToolCatalogSynced,
+      plugins: config?.plugins,
+      scope: agentSkillListResource.scope.use(),
+      // Best-effort: the user never asked for this, so a rejection (edit lock
+      // held by another member, access revoked between render and write) must
+      // not claim "your change was not applied". It retries on the next open.
+      updatePlugins: (id, nextPlugins) =>
+        updateAgentConfigById(id, { plugins: nextPlugins }, { showErrorMessage: false }),
+      validIdentifiers,
+    });
 
     // Only display tools that this profile surface actually manages. Runtime-
     // managed entries remain untouched in config for compatibility with other

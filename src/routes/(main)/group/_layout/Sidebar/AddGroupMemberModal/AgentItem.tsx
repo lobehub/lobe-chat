@@ -1,8 +1,8 @@
 'use client';
 
-import { Avatar, Checkbox, Flexbox, Text } from '@lobehub/ui';
+import { agentDisplayName } from '@lobechat/types';
+import { Avatar, Checkbox, createStaticStyles, Flexbox, Text } from '@lobehub/ui';
 import { useHover } from 'ahooks';
-import { createStaticStyles } from 'antd-style';
 import { X } from 'lucide-react';
 import { memo, useRef } from 'react';
 
@@ -76,7 +76,7 @@ const AgentItem = memo<AgentItemProps>(({ agent, defaultTitle, showCheckbox, sho
   const toggleAgent = useAgentSelectionStore((s) => s.toggleAgent);
   const removeAgent = useAgentSelectionStore((s) => s.removeAgent);
 
-  const title = agent.title || defaultTitle;
+  const title = agentDisplayName(agent, defaultTitle);
   const avatar = agent.avatar || DEFAULT_AVATAR;
   const avatarBackground = agent.backgroundColor ?? undefined;
 

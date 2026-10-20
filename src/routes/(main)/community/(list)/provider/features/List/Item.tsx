@@ -1,11 +1,20 @@
-import { Github, ModelTag, ProviderCombine } from '@lobehub/icons';
-import { ActionIcon, Block, Flexbox, MaskShadow, stopPropagation, Text } from '@lobehub/ui';
-import { createStaticStyles, cssVar } from 'antd-style';
+import { Github } from '@lobehub/icons';
+import {
+  ActionIcon,
+  Block,
+  createStaticStyles,
+  cssVar,
+  Flexbox,
+  MaskShadow,
+  stopPropagation,
+  Text,
+} from '@lobehub/ui';
 import { GlobeIcon } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import urlJoin from 'url-join';
 
+import { ModelTag, ProviderCombine } from '@/components/LobeIcons';
 import { GITHUB } from '@/const/url';
 import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwareNavigate';
 import WorkspaceLink from '@/features/Workspace/WorkspaceLink';

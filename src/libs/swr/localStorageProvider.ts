@@ -483,7 +483,6 @@ export const CACHE_TIERS = {
     'message:', // chat messages (conversation + legacy stores)
     'topic:', // topic lists / agent view / search
     'agent:', // sidebar agent list + agent documents
-    'group:detail', // group detail (group list stays in localStorage)
     'task:', // task lists + detail
     'document:', // editor document content
     'page:', // page detail / list / meta
@@ -492,11 +491,13 @@ export const CACHE_TIERS = {
   ],
   /** Small, frequently-changing list shells → localStorage (sync first paint). */
   local: [
-    'recent:list',
+    // Home's chat-mode recents still uses the SWR persistence tier. The mixed
+    // Recent projection is persisted by its Zustand localStorage snapshot.
+    'recent:topicList',
     'fetchRecentTopics',
     'fetchRecentResources',
     'fetchRecentPages',
-    'group:list',
+    'agentBuilder:suggestions', // builder opening-suggestion chips (skip LLM regen on revisit)
     'taskTemplate:', // home task-template recommendations
     'modelConfig:', // small remote model config shells used by home starter chips
   ],

@@ -2,12 +2,32 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { imageGenerationRuntime } from '../imageGeneration';
 
+// Narrow shape of the `callerContext` the runtime passes to every
+// `*Router.createCaller`, just enough to type-check the spend-attribution
+// assertions below without pulling in the full tRPC caller context type.
+interface ImageCallerContext {
+  spendOrigin?: {
+    agentShare: { agentId: string; shareId: string; visitorUserId: string };
+    trigger: string;
+  };
+}
+
 const callerMocks = vi.hoisted(() => ({
-  aiModel: vi.fn(() => ({})),
-  aiProvider: vi.fn(() => ({})),
-  generation: vi.fn(() => ({})),
-  generationTopic: vi.fn(() => ({})),
-  image: vi.fn(() => ({})),
+  aiModel: vi.fn(function () {
+    return {};
+  }),
+  aiProvider: vi.fn(function () {
+    return {};
+  }),
+  generation: vi.fn(function () {
+    return {};
+  }),
+  generationTopic: vi.fn(function () {
+    return {};
+  }),
+  image: vi.fn(function (_ctx: ImageCallerContext) {
+    return {};
+  }),
 }));
 
 vi.mock('@/server/routers/lambda/aiModel', () => ({
@@ -54,6 +74,36 @@ describe('imageGenerationRuntime', () => {
     expect(callerMocks.generation).toHaveBeenCalledWith(callerContext);
     expect(callerMocks.generationTopic).toHaveBeenCalledWith(callerContext);
     expect(callerMocks.image).toHaveBeenCalledWith(callerContext);
+  });
+
+  it('projects share attribution onto the image caller so visitor spend stays attributed', () => {
+    imageGenerationRuntime.factory({
+      agentShareVisitor: {
+        agentId: 'agent-1',
+        allowReadMemory: true,
+        toolGrants: [{ identifier: 'lobe-image-generation' }],
+        shareId: 'share-1',
+        visitorUserId: 'visitor-1',
+      },
+      toolManifestMap: {},
+      userId: 'creator-1',
+    });
+
+    const [callerContext] = callerMocks.image.mock.calls.at(-1)!;
+    expect(callerContext.spendOrigin).toEqual({
+      agentShare: { agentId: 'agent-1', shareId: 'share-1', visitorUserId: 'visitor-1' },
+      trigger: 'agent_share',
+    });
+    // Permission fields of the runtime object must never leak into billing metadata.
+    expect(callerContext.spendOrigin!.agentShare).not.toHaveProperty('allowReadMemory');
+    expect(callerContext.spendOrigin!.agentShare).not.toHaveProperty('toolGrants');
+  });
+
+  it('omits spend attribution for a non-share run', () => {
+    imageGenerationRuntime.factory({ toolManifestMap: {}, userId: 'user-1' });
+
+    const [callerContext] = callerMocks.image.mock.calls.at(-1)!;
+    expect(callerContext.spendOrigin).toBeUndefined();
   });
 
   it('preserves public agent visibility for generated image topics', async () => {
@@ -147,6 +197,37 @@ describe('imageGenerationRuntime', () => {
           ],
         },
       ],
+    });
+  });
+
+  it('does not list models hidden for the current user', async () => {
+    callerMocks.aiProvider.mockReturnValue({
+      getAiProviderRuntimeState: vi.fn().mockResolvedValue({
+        enabledImageAiProviders: [{ id: 'lobehub', name: 'LobeHub' }],
+        hiddenBuiltinModels: [{ id: 'hidden-image', providerId: 'lobehub' }],
+      }),
+    });
+    callerMocks.aiModel.mockReturnValue({
+      getAiProviderModelList: vi.fn(async ({ limit }: { limit?: number }) => {
+        const models = [{ id: 'hidden-image' }, { id: 'visible-image' }];
+        return typeof limit === 'number' ? models.slice(0, limit) : models;
+      }),
+    });
+
+    const runtime = imageGenerationRuntime.factory({
+      toolManifestMap: {},
+      userId: 'user-1',
+      workspaceId: 'workspace-1',
+    });
+
+    const result = await runtime.listImageModels({ limit: 1, provider: 'lobehub' });
+
+    expect(result).toMatchObject({
+      state: {
+        providers: [{ id: 'lobehub', models: [{ id: 'visible-image' }] }],
+        totalModels: 1,
+      },
+      success: true,
     });
   });
 

@@ -6,12 +6,22 @@ import { memo, useCallback, useMemo } from 'react';
 import { usePermission } from '@/hooks/usePermission';
 
 import { type MessageActionItem, type MessageActionItemOrDivider } from '../../../types';
-import { DIVIDER_KEY, type MessageActionContext, type MessageActionSlot } from './types';
+import { resolveSlots } from './resolveSlots';
+import { type MessageActionContext, type MessageActionSlot } from './types';
 import { useBuildActions } from './useBuildActions';
 
-const DIVIDER: MessageActionItemOrDivider = { type: 'divider' };
-const VIEWER_BAR: MessageActionSlot[] = ['copy'];
+const VIEWER_BAR: MessageActionSlot[] = ['copy', 'comments'];
 
+/**
+ * Prepares an item for `ActionIconGroup`, which owns dispatch for the items it
+ * is handed — our own `handleClick` is not part of that contract, so it is
+ * stripped and re-dispatched through `onActionClick`.
+ *
+ * Submenu children are the exception: `ActionIconGroup` only attaches an
+ * `onClick` to top-level menu items, and the underlying menu ignores any item
+ * that has none. A nested child therefore has to carry its own — without this,
+ * clicking a submenu entry closes the menu and does nothing at all.
+ */
 const stripHandleClick = (item: MessageActionItemOrDivider): ActionIconGroupItemType => {
   if ('type' in item && item.type === 'divider') return item as unknown as ActionIconGroupItemType;
   const { children, ...rest } = item as MessageActionItem;
@@ -21,7 +31,7 @@ const stripHandleClick = (item: MessageActionItemOrDivider): ActionIconGroupItem
     return {
       ...baseItem,
       children: children.map((child) => {
-        const nextChild = { ...child } as MessageActionItem;
+        const nextChild = { ...child, onClick: () => child.handleClick?.() } as MessageActionItem;
         delete (nextChild as { handleClick?: unknown }).handleClick;
         return nextChild;
       }),
@@ -30,37 +40,13 @@ const stripHandleClick = (item: MessageActionItemOrDivider): ActionIconGroupItem
   return baseItem as ActionIconGroupItemType;
 };
 
+/** Top-level items by key; submenu children carry their own dispatch. */
 const buildActionsMap = (items: MessageActionItemOrDivider[]): Map<string, MessageActionItem> => {
   const map = new Map<string, MessageActionItem>();
   for (const item of items) {
-    if ('key' in item && item.key) {
-      map.set(String(item.key), item as MessageActionItem);
-      if ('children' in item && item.children) {
-        for (const child of item.children) {
-          if (child.key) {
-            map.set(`${item.key}.${child.key}`, child as unknown as MessageActionItem);
-          }
-        }
-      }
-    }
+    if ('key' in item && item.key) map.set(String(item.key), item as MessageActionItem);
   }
   return map;
-};
-
-const resolveSlots = (
-  slots: MessageActionSlot[],
-  built: Record<string, MessageActionItem | null>,
-): MessageActionItemOrDivider[] => {
-  const out: MessageActionItemOrDivider[] = [];
-  for (const slot of slots) {
-    if (slot === DIVIDER_KEY) {
-      out.push(DIVIDER);
-      continue;
-    }
-    const item = built[slot];
-    if (item) out.push(item);
-  }
-  return out;
 };
 
 interface MessageActionBarProps {
@@ -84,36 +70,44 @@ export const MessageActionBar = memo<MessageActionBarProps>(({ ctx, bar, leading
 
   const effectiveBar = canEdit ? bar : VIEWER_BAR;
   const effectiveMenu = canEdit ? menu : undefined;
+  const [barSlots, menuSlots] = useMemo(() => {
+    const shouldPromoteComments =
+      Boolean(built.comments) &&
+      !effectiveBar.includes('comments') &&
+      Boolean(effectiveMenu?.includes('comments'));
 
-  const barItems = useMemo(() => resolveSlots(effectiveBar, built), [effectiveBar, built]);
+    return [
+      shouldPromoteComments ? [...effectiveBar, 'comments'] : effectiveBar,
+      shouldPromoteComments ? effectiveMenu?.filter((slot) => slot !== 'comments') : effectiveMenu,
+    ];
+  }, [built.comments, effectiveBar, effectiveMenu]);
+
+  const barItems = useMemo(() => resolveSlots(barSlots, built), [barSlots, built]);
   const menuItems = useMemo(
-    () => (effectiveMenu ? resolveSlots(effectiveMenu, built) : undefined),
-    [effectiveMenu, built],
+    () => (menuSlots ? resolveSlots(menuSlots, built) : undefined),
+    [menuSlots, built],
   );
 
   const items = useMemo(
     () => barItems.filter((item) => !('disabled' in item && item.disabled)).map(stripHandleClick),
     [barItems],
   );
-  const menuStripped = useMemo(() => menuItems?.map(stripHandleClick), [menuItems]);
+  // An all-null menu (every slot's action opted out) must collapse to no menu —
+  // ActionIconGroup renders the overflow trigger for any truthy array, even [].
+  const menuStripped = useMemo(
+    () => (menuItems?.length ? menuItems.map(stripHandleClick) : undefined),
+    [menuItems],
+  );
 
   const allActions = useMemo(
     () => buildActionsMap([...barItems, ...(menuItems ?? [])]),
     [barItems, menuItems],
   );
 
+  // Submenu children dispatch themselves (see `stripHandleClick`); what reaches
+  // here is always a top-level item.
   const handleAction = useCallback(
     (event: ActionIconGroupEvent) => {
-      if (event.keyPath && event.keyPath.length > 1) {
-        const parentKey = event.keyPath.at(-1);
-        const childKey = event.keyPath[0];
-        const parent = allActions.get(parentKey!);
-        if (parent && 'children' in parent && parent.children) {
-          const child = parent.children.find((c) => c.key === childKey);
-          child?.handleClick?.();
-          return;
-        }
-      }
       const action = allActions.get(event.key);
       action?.handleClick?.();
     },

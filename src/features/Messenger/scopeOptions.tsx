@@ -1,5 +1,4 @@
-import { Avatar, Flexbox, Tag, Text } from '@lobehub/ui';
-import { createStaticStyles } from 'antd-style';
+import { Avatar, createStaticStyles, Flexbox, Tag, Text } from '@lobehub/ui';
 
 export const PERSONAL_SCOPE = 'personal';
 

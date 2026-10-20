@@ -1,4 +1,9 @@
-import { type FilesTabs, type FileUploader, type SortType } from '@/types/files';
+import {
+  type FilesTabs,
+  type FileUploader,
+  type ResourceSourceFilter,
+  type SortType,
+} from '@/types/files';
 
 /**
  * Unified resource item that represents both files and documents
@@ -21,6 +26,7 @@ export interface ResourceItem {
 
   // Document-specific (optional)
   content?: string | null;
+  contentPreview?: string | null;
   // Timestamps
   createdAt: Date;
 
@@ -68,6 +74,7 @@ export interface ResourceItem {
  */
 export interface ResourceQueryParams {
   category?: FilesTabs;
+  includeContentPreview?: boolean;
   libraryId?: string;
   limit?: number;
   offset?: number;
@@ -76,6 +83,11 @@ export interface ResourceQueryParams {
   showFilesInKnowledgeBase?: boolean;
   sorter?: 'name' | 'createdAt' | 'size';
   sortType?: SortType;
+  /**
+   * Origin narrowing driven by the explorer's source filter chips
+   * (all / AI-generated / uploaded / acceptance evidence).
+   */
+  sourceFilter?: ResourceSourceFilter;
   /**
    * Workspace-mode visibility narrowing driven by the Sidebar mode toggle.
    * `'private'` shows the caller's own private rows; `'public'` shows

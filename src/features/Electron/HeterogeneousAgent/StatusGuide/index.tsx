@@ -5,9 +5,11 @@ import { memo } from 'react';
 
 import { resolveHeterogeneousAgentGuideConfig } from './config';
 import AuthRequiredState from './states/AuthRequiredState';
+import CliDetectionTimeoutState from './states/CliDetectionTimeoutState';
 import CliInstallState from './states/CliInstallState';
 import OverloadedState from './states/OverloadedState';
 import RateLimitState from './states/RateLimitState';
+import WorkingDirectoryState from './states/WorkingDirectoryState';
 import type { HeterogeneousAgentStatusGuideProps } from './types';
 
 const HeterogeneousAgentStatusGuide = memo<HeterogeneousAgentStatusGuideProps>(
@@ -18,6 +20,7 @@ const HeterogeneousAgentStatusGuide = memo<HeterogeneousAgentStatusGuideProps>(
     onDismiss,
     onOpenSystemTools,
     onRetry,
+    onTransfer,
     schedule,
     variant = 'inline',
   }) => {
@@ -32,6 +35,7 @@ const HeterogeneousAgentStatusGuide = memo<HeterogeneousAgentStatusGuideProps>(
       onDismiss,
       onOpenSystemTools,
       onRetry,
+      onTransfer,
       schedule,
       variant,
     };
@@ -41,12 +45,20 @@ const HeterogeneousAgentStatusGuide = memo<HeterogeneousAgentStatusGuideProps>(
         return <AuthRequiredState {...stateProps} />;
       }
 
+      case HeterogeneousAgentSessionErrorCode.CliDetectionTimeout: {
+        return <CliDetectionTimeoutState {...stateProps} />;
+      }
+
       case HeterogeneousAgentSessionErrorCode.RateLimit: {
         return <RateLimitState {...stateProps} />;
       }
 
       case HeterogeneousAgentSessionErrorCode.Overloaded: {
         return <OverloadedState {...stateProps} />;
+      }
+
+      case HeterogeneousAgentSessionErrorCode.WorkingDirectoryNotFound: {
+        return <WorkingDirectoryState {...stateProps} />;
       }
 
       default: {

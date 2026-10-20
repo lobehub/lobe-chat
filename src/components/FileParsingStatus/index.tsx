@@ -1,8 +1,16 @@
-import { Flexbox, Icon, Tag, Tooltip } from '@lobehub/ui';
-import { Button } from '@lobehub/ui/base-ui';
-import { Badge } from 'antd';
-import { createStaticStyles, cssVar, cx } from 'antd-style';
-import { BoltIcon, Loader2Icon, RotateCwIcon } from 'lucide-react';
+import {
+  Badge,
+  Button,
+  createStaticStyles,
+  cssVar,
+  cx,
+  Flexbox,
+  Icon,
+  Spin,
+  Tag,
+  Tooltip,
+} from '@lobehub/ui';
+import { BoltIcon, RotateCwIcon } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -107,11 +115,9 @@ const FileParsingStatus = memo<FileParsingStatusProps>(
               >
                 <Tag
                   className={cx('chunk-tag', className)}
+                  icon={preparingEmbedding ? <Spin size="small" /> : <Icon icon={BoltIcon} />}
                   style={{ cursor: 'pointer' }}
                   variant={'filled'}
-                  icon={
-                    preparingEmbedding ? <Icon spin icon={Loader2Icon} /> : <Icon icon={BoltIcon} />
-                  }
                   onClick={() => {
                     onClick?.(AsyncTaskStatus.Success);
                   }}

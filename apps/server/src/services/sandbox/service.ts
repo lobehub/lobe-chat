@@ -102,7 +102,15 @@ export class SandboxMiddlewareService implements SandboxService {
     }
   }
 
-  async exportAndUploadFile(path: string, filename: string): Promise<SandboxExportFileResult> {
+  async exportAndUploadFile(
+    path: string,
+    filename: string,
+    options?: {
+      /** Server-owned file-record metadata, e.g. Agent Share provenance. */
+      metadata?: Record<string, unknown>;
+      storageName?: string;
+    },
+  ): Promise<SandboxExportFileResult> {
     const { fileService, topicId } = this.options;
 
     if (!fileService) {
@@ -113,12 +121,25 @@ export class SandboxMiddlewareService implements SandboxService {
       };
     }
 
-    log('Exporting file: %s from path: %s, topicId: %s', filename, path, topicId);
+    // The object's storage key uses `storageName` when provided so callers can
+    // guarantee a collision-proof, immutable object per (operation, path); the
+    // file record's display `name` always stays the user-facing `filename`, so a
+    // download never surfaces the mangled key. Defaults to `filename` for the
+    // common case where display name and key are the same.
+    const storageName = options?.storageName ?? filename;
+
+    log(
+      'Exporting file: %s (key: %s) from path: %s, topicId: %s',
+      filename,
+      storageName,
+      path,
+      topicId,
+    );
 
     try {
       const now = Date.now();
       const today = new Date(now).toISOString().split('T')[0];
-      const key = `code-interpreter-exports/${today}/${topicId}/${filename}`;
+      const key = `code-interpreter-exports/${today}/${topicId}/${storageName}`;
       const upload = await fileService.createPreSignedUpload(key);
 
       const exported = await this.provider.exportFileToUploadUrl({
@@ -131,8 +152,8 @@ export class SandboxMiddlewareService implements SandboxService {
       if (!exported.success) {
         return {
           error: {
+            ...exported.error,
             message: exported.error?.message || 'Failed to export file from sandbox',
-            name: exported.error?.name,
           },
           filename,
           success: false,
@@ -152,6 +173,7 @@ export class SandboxMiddlewareService implements SandboxService {
       const { fileId, url } = await fileService.createFileRecord({
         fileHash,
         fileType: mimeType,
+        ...(options?.metadata ? { metadata: options.metadata } : {}),
         name: filename,
         size: fileSize,
         url: key,
@@ -180,8 +202,12 @@ export class SandboxMiddlewareService implements SandboxService {
 export const normalizeSandboxCommandResult = (
   result: SandboxCallToolResult,
 ): SandboxCommandResult => {
+  const sessionState = result.sessionExpiredAndRecreated
+    ? { sessionExpiredAndRecreated: true }
+    : {};
   if (!result.success) {
     return {
+      ...sessionState,
       exitCode: 1,
       output: '',
       stderr: result.error?.message || 'Command execution failed',
@@ -197,6 +223,7 @@ export const normalizeSandboxCommandResult = (
   const success = typeof raw.success === 'boolean' ? raw.success : exitCode === 0;
 
   return {
+    ...sessionState,
     exitCode,
     output,
     stderr,
