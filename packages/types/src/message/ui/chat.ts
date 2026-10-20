@@ -230,6 +230,12 @@ export interface UIChatMessage {
    * every member addressable, e.g. by a `#<message-id>` deep link.
    */
   compressedOmittedIds?: string[];
+  /**
+   * Conversation turns (mainline `user` messages) across the WHOLE group, set
+   * when `compressedOmittedIds` is: `compressedMessages` then holds only the
+   * newest members and undercounts the history it folded away.
+   */
+  compressedTurnCount?: number;
   content: string;
   /**
    * Character length of the STORED tool result body, kept when the read path

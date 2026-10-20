@@ -71,6 +71,8 @@ describe('MessageModel.query compression group member cap', () => {
       expect(node.compressedOmittedIds).toHaveLength(omitted);
       expect(node.compressedOmittedIds[0]).toBe('big-0000');
       expect(node.compressedOmittedIds.at(-1)).toBe('big-0021');
+      // Every even index is a user message: the whole group's turns, not the slice's.
+      expect(node.compressedTurnCount).toBe(Math.ceil(total / 2));
       const ids = node.compressedMessages.map((m: any) => m.id);
       expect(ids).not.toContain('big-0000');
       expect(ids).not.toContain('big-0021');
@@ -102,6 +104,7 @@ describe('MessageModel.query compression group member cap', () => {
       const node = result.find((m) => m.role === 'compressedGroup') as any;
 
       expect(node.compressedOmittedIds).toBeUndefined();
+      expect(node.compressedTurnCount).toBeUndefined();
       expect(node.compressedMessages).toHaveLength(2);
     });
   });

@@ -237,7 +237,11 @@ export const buildMessageGroupNode = (
 
   return {
     compressedMessages: [...stateMessages, ...parse(groupMsgs).flatList],
-    ...(compressedOmittedIds.length > 0 && { compressedOmittedIds }),
+    ...(compressedOmittedIds.length > 0 && {
+      compressedOmittedIds,
+      compressedTurnCount:
+        records.filter((record) => record.role === 'user').length || records.length,
+    }),
     content: group.content,
     createdAt: group.createdAt,
     id: group.id,
