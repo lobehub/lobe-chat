@@ -345,6 +345,17 @@ describe('scanOperationFileEdits', () => {
       expect(result[0].diffTexts[0]).toContain('@@ -1,1 +1,1 @@\n-old\n+new');
     });
 
+    it('counts content lines that look like patch headers', () => {
+      const result = scanOperationFileEdits([
+        ccCall('t1', 'Write', { content: '++counter\n', file_path: '/a.c' }),
+        ccCall('t2', 'Edit', { file_path: '/b.c', new_string: 'x', old_string: '--old' }),
+      ]);
+      expect(result.map((r) => [r.linesAdded, r.linesDeleted])).toEqual([
+        [1, 0],
+        [1, 1],
+      ]);
+    });
+
     it('keeps lines shared by old_string and new_string as context', () => {
       const [entry] = scanOperationFileEdits([
         ccCall('t1', 'Edit', {

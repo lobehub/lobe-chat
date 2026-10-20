@@ -413,7 +413,7 @@ const buildClaudeCodePatch = (
   apiName: FileEditToolCallRecord['apiName'],
   path: string,
   args: Record<string, unknown>,
-): string | undefined => {
+): Pick<EditOpBase, 'diffText' | 'linesAdded' | 'linesDeleted'> | undefined => {
   const hunks: string[] = [];
 
   if (apiName === 'Write') {
@@ -435,18 +435,31 @@ const buildClaudeCodePatch = (
   }
 
   if (hunks.length === 0) return undefined;
+  // Count from the hunk bodies: a content line like `++x` would read as a
+  // `+++` file header once the patch is assembled.
+  let linesAdded = 0;
+  let linesDeleted = 0;
+  for (const line of hunks) {
+    if (line.startsWith('@@')) continue;
+    if (line.startsWith('+')) linesAdded += 1;
+    else if (line.startsWith('-')) linesDeleted += 1;
+  }
   const headerPath = path.replace(/^\/+/, '');
-  return [`--- a/${headerPath}`, `+++ b/${headerPath}`, ...hunks].join('\n');
+  return {
+    diffText: [`--- a/${headerPath}`, `+++ b/${headerPath}`, ...hunks].join('\n'),
+    linesAdded,
+    linesDeleted,
+  };
 };
 
 const extractClaudeCodeOps = (record: FileEditToolCallRecord): EditOp[] => {
   const args = parseArguments(record.arguments);
   const path = normalizePath(args?.file_path);
   if (!path) return [];
-  const diffText = buildClaudeCodePatch(record.apiName, path, args!);
-  const deltas = diffText
-    ? { diffText, ...countPatchDeltas(diffText) }
-    : { linesAdded: 0, linesDeleted: 0 };
+  const deltas = buildClaudeCodePatch(record.apiName, path, args!) ?? {
+    linesAdded: 0,
+    linesDeleted: 0,
+  };
   // Write is create-or-overwrite (ambiguous), Edit/MultiEdit always modify.
   if (record.apiName === 'Write') {
     return [{ ...deltas, path, toolCallId: record.toolCallId, type: 'write' }];
