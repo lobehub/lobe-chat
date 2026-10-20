@@ -426,10 +426,12 @@ export const ExecSubAgentTaskSchema = z.object({
 /**
  * Fold the deprecated top-level selection fields into `userMessage.metadata`,
  * so everything downstream reads one shape. `userMessage` wins when a client
- * sends both.
+ * sends both. Applied wherever a request enters: `execAgent`, a queued
+ * follow-up's append, and every queued entry read back from Redis (an entry
+ * stored before this shape existed still carries the old fields).
  */
 export const foldLegacyUserMessageFields = <
-  T extends Pick<ExecAgentInput, 'contextSelections' | 'pageSelections' | 'userMessage'>,
+  T extends Partial<Pick<ExecAgentInput, 'contextSelections' | 'pageSelections' | 'userMessage'>>,
 >({
   contextSelections,
   pageSelections,

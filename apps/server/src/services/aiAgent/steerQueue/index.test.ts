@@ -152,6 +152,24 @@ describe('startQueuedFollowUp', () => {
     );
   });
 
+  it('reads a follow-up queued in the old shape (top-level selections) as attached content', async () => {
+    const quote = { content: 'Quoted reply', id: 'selection-1', source: 'text' as const };
+    const page = { content: 'Selected paragraph', id: 'page-1', pageId: 'page-1' };
+    // Stored by a client from before `userMessage`; it survives in Redis across a deploy.
+    drain.mockResolvedValue([
+      followUp('legacy', 1, { contextSelections: [quote], pageSelections: [page] } as any),
+    ]);
+
+    await startQueuedFollowUp(ctx, finished({ topicId: 'tpc-1' }));
+
+    const request = startComposerRun.mock.calls[0][1];
+    expect(request.userMessage).toEqual({
+      metadata: { contextSelections: [quote], pageSelections: [page] },
+    });
+    expect(request).not.toHaveProperty('contextSelections');
+    expect(request).not.toHaveProperty('pageSelections');
+  });
+
   it('puts the follow-ups back when the next turn cannot start', async () => {
     const entries = [followUp('a', 1, {})];
     drain.mockResolvedValue(entries);

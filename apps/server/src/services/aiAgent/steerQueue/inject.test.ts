@@ -204,6 +204,23 @@ describe('injectQueuedFollowUp', () => {
     );
   });
 
+  it('does not join an old-shape follow-up whose quote sits in top-level selections', async () => {
+    // Queued by a client from before `userMessage`. Joined as a plain steer
+    // message, its quote would be dropped; it must start a turn of its own.
+    const quote = { content: 'Quoted reply', id: 'selection-1', source: 'text' as const };
+    const entries = [followUp('legacy', 1, { contextSelections: [quote] } as any)];
+    mocks.drain.mockResolvedValue(entries);
+
+    await expect(inject()).resolves.toBeUndefined();
+
+    expect(mocks.create).not.toHaveBeenCalled();
+    expect(mocks.settle).toHaveBeenCalledWith(
+      scope,
+      expect.any(String),
+      entries.map((e) => e.id),
+    );
+  });
+
   it('puts the follow-ups back when the message cannot be persisted', async () => {
     const entries = [followUp('a', 1)];
     mocks.drain.mockResolvedValue(entries);

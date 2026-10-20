@@ -6,6 +6,7 @@ import { TRPCError } from '@trpc/server';
 import debug from 'debug';
 
 import { assertCanUseWorkspaceAgent } from '@/server/routers/lambda/_helpers/workspaceAgentGuard';
+import { foldLegacyUserMessageFields } from '@/server/routers/lambda/aiAgent/execSchemas';
 import { assertCanUseAgentRunConversation } from '@/server/routers/lambda/aiAgent/guards';
 import { redisService } from '@/server/services/redis';
 import type { SteerQueueEntry, SteerQueueScope } from '@/server/services/redis/steerQueue';
@@ -197,7 +198,11 @@ export const drainOwnFollowUps = async (
     return drain();
   });
 
-  const entries = drained.filter((entry) => entry.userId === ctx.userId);
+  const entries = drained
+    .filter((entry) => entry.userId === ctx.userId)
+    // Entries queued before `userMessage` existed (they live in Redis across a
+    // deploy) still carry the top-level selection fields; read them as one shape.
+    .map((entry) => ({ ...entry, request: foldLegacyUserMessageFields(entry.request) }));
   if (entries.length < drained.length) {
     // Acknowledged along with the rest of the batch; never sent.
     log('[%s] Dropped %d foreign queued follow-ups', operationId, drained.length - entries.length);
