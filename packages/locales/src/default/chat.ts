@@ -970,6 +970,8 @@ export default {
   'inputQueue.queuedHint': 'Sends when the current step finishes',
   'inputQueue.queuedMergeHint': 'Merged and sent when the current step finishes',
   'inputQueue.sendNow': 'Send now (interrupts current run)',
+  'inputQueue.alreadyDelivered': 'Already sent to the agent',
+  'inputQueue.withdrawFailed': 'Couldn’t take the message back. Try again.',
   'intentUnderstanding.title': 'Understanding your intent...',
   'inviteMembers': 'Invite members',
   'knowledgeBase.all': 'All Content',
