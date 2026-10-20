@@ -1,17 +1,8 @@
 'use client';
 
-import {
-  ActionIcon,
-  Avatar,
-  Button,
-  createStaticStyles,
-  cssVar,
-  Flexbox,
-  Icon,
-  Text,
-  toast,
-  Tooltip,
-} from '@lobehub/ui';
+import { ActionIcon, Avatar, Button, Flexbox, Icon, Text, toast, Tooltip } from '@lobehub/ui';
+import { cssVar } from '@lobehub/ui/stylex/cssVar.stylex';
+import * as stylex from '@stylexjs/stylex';
 import type { LucideIcon } from 'lucide-react';
 import { LockIcon, RefreshCwIcon, UserRoundIcon, UsersIcon } from 'lucide-react';
 import { memo, useState } from 'react';
@@ -27,66 +18,83 @@ type DriveUsageData = NonNullable<ReturnType<typeof useDriveUsage>['data']>;
 /** How many members the ranking shows before it folds the rest away. */
 const MEMBERS_FOLDED = 5;
 
-const styles = createStaticStyles(({ css }) => ({
+const styles = stylex.create({
   // One bar for the whole quota; each drive is a segment of it. The 2px gap in
   // the surface colour is what separates segments — never a stroke.
-  bar: css`
-    display: flex;
-    gap: 2px;
+  bar: {
+    backgroundColor: cssVar.colorFillTertiary,
+    borderRadius: 4,
+    display: 'flex',
+    gap: 2,
+    height: 8,
+    width: '100%',
+  },
+  dot: {
+    borderRadius: '50%',
+    flex: 'none',
+    height: 8,
+    width: 8,
+  },
+  legendIcon: {
+    color: cssVar.colorTextTertiary,
+  },
+  memberBar: {
+    backgroundColor: cssVar.colorFillSecondary,
+    borderRadius: 2,
+    flex: 'none',
+    height: 4,
+    overflow: 'hidden',
+    width: 96,
+  },
+  memberFill: {
+    backgroundColor: cssVar.colorTextSecondary,
+    borderRadius: 2,
+    display: 'block',
+    height: '100%',
+  },
+  memberSize: {
+    flex: 'none',
+    textAlign: 'end',
+    width: 72,
+  },
+  popover: {
+    maxWidth: 'min(380px, 80vw)',
+    minWidth: 300,
+  },
+  row: {
+    minHeight: 32,
+  },
+  segment: {
+    borderEndEndRadius: { 'default': null, ':last-child': 4 },
+    borderEndStartRadius: { 'default': null, ':first-child': 4 },
+    borderStartEndRadius: { 'default': null, ':last-child': 4 },
+    borderStartStartRadius: { 'default': null, ':first-child': 4 },
+    flex: 'none',
+    height: '100%',
+    minWidth: 4,
+  },
+  shrinkable: {
+    minWidth: 0,
+  },
+  width: (width: string) => ({ width }),
+});
 
-    width: 100%;
-    height: 8px;
-    border-radius: 4px;
-
-    background: ${cssVar.colorFillTertiary};
-  `,
-  dot: css`
-    flex: none;
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-  `,
-  memberBar: css`
-    overflow: hidden;
-    flex: none;
-
-    width: 96px;
-    height: 4px;
-    border-radius: 2px;
-
-    background: ${cssVar.colorFillSecondary};
-  `,
-  memberFill: css`
-    display: block;
-    height: 100%;
-    border-radius: 2px;
-    background: ${cssVar.colorTextSecondary};
-  `,
-  row: css`
-    min-height: 32px;
-  `,
-  segment: css`
-    flex: none;
-    min-width: 4px;
-    height: 100%;
-
-    &:first-child {
-      border-start-start-radius: 4px;
-      border-end-start-radius: 4px;
-    }
-
-    &:last-child {
-      border-start-end-radius: 4px;
-      border-end-end-radius: 4px;
-    }
-  `,
-}));
+/**
+ * Each segment's colour. Two hues carry the caller's drives (validated for
+ * colour-blind separation); other members are the de-emphasised grey; over
+ * the quota everything is the danger colour.
+ */
+const tones = stylex.create({
+  others: { backgroundColor: cssVar.colorTextQuaternary },
+  over: { backgroundColor: cssVar.colorError },
+  personal: { backgroundColor: cssVar.purple },
+  public: { backgroundColor: cssVar.geekblue },
+});
 
 interface Segment {
   bytes: number;
-  color: string;
   icon: LucideIcon;
-  key: string;
+  key: 'others' | 'personal' | 'public';
   label: string;
 }
 
@@ -145,21 +153,18 @@ export const UsageBreakdown = memo<{
     [
       isWorkspace && {
         bytes: publicBytes,
-        color: cssVar.geekblue,
         icon: UsersIcon,
         key: 'public',
         label: t('drive.tabs.public'),
       },
       {
         bytes: personalBytes,
-        color: cssVar.purple,
         icon: LockIcon,
         key: 'personal',
         label: t('drive.tabs.personal'),
       },
       isWorkspace && {
         bytes: othersBytes,
-        color: cssVar.colorTextQuaternary,
         icon: UserRoundIcon,
         key: 'others',
         label: t('drive.usage.others'),
@@ -182,13 +187,10 @@ export const UsageBreakdown = memo<{
   };
 
   return (
-    <Flexbox
-      gap={16}
-      style={inPopover ? { maxWidth: 'min(380px, 80vw)', minWidth: 300 } : undefined}
-    >
+    <Flexbox className={inPopover ? stylex.props(styles.popover).className : undefined} gap={16}>
       {/* The figure first: how much is used, against how much there is. */}
       <Flexbox horizontal align={'flex-start'} gap={12} justify={'space-between'}>
-        <Flexbox gap={4} style={{ minWidth: 0 }}>
+        <Flexbox className={stylex.props(styles.shrinkable).className} gap={4}>
           <Text fontSize={12} type={'secondary'}>
             {t(isWorkspace ? 'drive.usage.poolTitle' : 'drive.usage.title')}
           </Text>
@@ -224,8 +226,8 @@ export const UsageBreakdown = memo<{
 
       <div
         aria-label={t(isWorkspace ? 'drive.usage.poolTitle' : 'drive.usage.title')}
-        className={styles.bar}
         role={'img'}
+        {...stylex.props(styles.bar)}
       >
         {segments
           .filter((segment) => segment.bytes > 0)
@@ -237,11 +239,11 @@ export const UsageBreakdown = memo<{
               )}%`}
             >
               <span
-                className={styles.segment}
-                style={{
-                  background: over ? cssVar.colorError : segment.color,
-                  width: `${percent(segment.bytes, scale)}%`,
-                }}
+                {...stylex.props(
+                  styles.segment,
+                  tones[over ? 'over' : segment.key],
+                  styles.width(`${percent(segment.bytes, scale)}%`),
+                )}
               />
             </Tooltip>
           ))}
@@ -257,14 +259,18 @@ export const UsageBreakdown = memo<{
               <Flexbox
                 horizontal
                 align={'center'}
-                className={styles.row}
+                className={stylex.props(styles.row).className}
                 gap={8}
                 justify={'space-between'}
                 key={segment.key}
               >
                 <Flexbox horizontal align={'center'} gap={8}>
-                  <span className={styles.dot} style={{ background: segment.color }} />
-                  <Icon icon={segment.icon} size={13} style={{ color: cssVar.colorTextTertiary }} />
+                  <span {...stylex.props(styles.dot, tones[segment.key])} />
+                  <Icon
+                    className={stylex.props(styles.legendIcon).className}
+                    icon={segment.icon}
+                    size={13}
+                  />
                   <Text fontSize={13}>{segment.label}</Text>
                 </Flexbox>
                 <Text fontSize={13} type={'secondary'}>
@@ -277,8 +283,12 @@ export const UsageBreakdown = memo<{
           <Flexbox horizontal style={{ columnGap: 20, rowGap: 8 }} wrap={'wrap'}>
             {segments.map((segment) => (
               <Flexbox horizontal align={'center'} gap={6} key={segment.key}>
-                <span className={styles.dot} style={{ background: segment.color }} />
-                <Icon icon={segment.icon} size={13} style={{ color: cssVar.colorTextTertiary }} />
+                <span {...stylex.props(styles.dot, tones[segment.key])} />
+                <Icon
+                  className={stylex.props(styles.legendIcon).className}
+                  icon={segment.icon}
+                  size={13}
+                />
                 <Text fontSize={13}>{segment.label}</Text>
                 <Text fontSize={13} type={'secondary'}>
                   {formatSize(segment.bytes)}
@@ -302,26 +312,34 @@ export const UsageBreakdown = memo<{
             <Flexbox
               horizontal
               align={'center'}
-              className={styles.row}
+              className={stylex.props(styles.row).className}
               gap={12}
               key={member.userId}
             >
-              <Flexbox horizontal align={'center'} flex={1} gap={8} style={{ minWidth: 0 }}>
+              <Flexbox
+                horizontal
+                align={'center'}
+                className={stylex.props(styles.shrinkable).className}
+                flex={1}
+                gap={8}
+              >
                 <Avatar avatar={member.avatar || member.name || member.userId} size={22} />
                 <Text ellipsis fontSize={13}>
                   {member.name || member.userId}
                 </Text>
               </Flexbox>
               {/* Relative to the largest member, so the ranking reads at a glance. */}
-              <span className={styles.memberBar}>
+              <span {...stylex.props(styles.memberBar)}>
                 <span
-                  className={styles.memberFill}
-                  style={{ width: `${percent(member.usageBytes ?? 0, largestMember)}%` }}
+                  {...stylex.props(
+                    styles.memberFill,
+                    styles.width(`${percent(member.usageBytes ?? 0, largestMember)}%`),
+                  )}
                 />
               </span>
               <Text
+                className={stylex.props(styles.memberSize).className}
                 fontSize={13}
-                style={{ flex: 'none', textAlign: 'end', width: 72 }}
                 type={'secondary'}
               >
                 {member.usageBytes === null

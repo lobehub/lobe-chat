@@ -1,8 +1,9 @@
-import { EnvironmentInstanceModel } from '@/database/models/environmentInstance';
-import { type DriveAccess, isPathWithin, sandboxStorageBinding } from '@/server/services/sandbox';
-import { SandboxStorageFilesError } from '@/server/services/sandbox/storageFiles';
 import type { SandboxDrive } from '@lobechat/builtin-tool-cloud-sandbox';
 import { TRPCError } from '@trpc/server';
+
+import type { EnvironmentInstanceModel } from '@/database/models/environmentInstance';
+import { type DriveAccess, isPathWithin, sandboxStorageBinding } from '@/server/services/sandbox';
+import { SandboxStorageFilesError } from '@/server/services/sandbox/storageFiles';
 
 import { mapStorageError, type SandboxStorageClient } from './procedures';
 
@@ -111,7 +112,10 @@ export const assertNotLeftOnPublicDrive = async (
 export const isPublicDrive = (ctx: Pick<DriveContext, 'drive' | 'workspaceId'>) =>
   !!ctx.workspaceId && ctx.drive === 'public';
 
-export const resolveDriveScope = async (ctx: DriveContext, instanceId?: string): Promise<DriveScope> => {
+export const resolveDriveScope = async (
+  ctx: DriveContext,
+  instanceId?: string,
+): Promise<DriveScope> => {
   if (instanceId) {
     const instance = await ctx.instanceModel.findById(instanceId);
     if (!instance) throw new TRPCError({ code: 'NOT_FOUND', message: 'Instance not found' });

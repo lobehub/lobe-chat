@@ -9,11 +9,11 @@ import { router } from '@/libs/trpc/lambda';
 import { serverDatabase } from '@/libs/trpc/lambda/middleware';
 import { ConnectorDataService } from '@/server/services/connectorData';
 
+import { configurationSchema } from './_schema/environment';
 import {
   rethrowDuplicateEnvironmentName,
   rethrowEnvironmentInUse,
 } from './sandboxStorage/constraintErrors';
-import { configurationSchema } from './_schema/environment';
 import { idSchema, nameSchema, visibilitySchema } from './sandboxStorage/schemas';
 
 /**

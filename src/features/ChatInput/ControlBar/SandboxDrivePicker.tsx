@@ -1,6 +1,8 @@
 'use client';
 
-import { createStaticStyles, cssVar, cx, Flexbox, Icon, Popover, Skeleton, Text, Tooltip } from '@lobehub/ui';
+import { cx, Flexbox, Icon, Popover, Skeleton, Text, Tooltip } from '@lobehub/ui';
+import { cssVar } from '@lobehub/ui/stylex/cssVar.stylex';
+import * as stylex from '@stylexjs/stylex';
 import {
   ChevronDownIcon,
   FolderClockIcon,
@@ -28,64 +30,53 @@ import OptionRow from './OptionRow';
 import { isPersistentSelection, type SandboxSelection } from './useSandboxPlacement';
 import { workingDirectoryChipStyles } from './workingDirectoryChipStyles';
 
-const styles = createStaticStyles(({ css }) => ({
-  header: css`
-    display: flex;
-    gap: 6px;
-    align-items: center;
-    justify-content: space-between;
+const styles = stylex.create({
+  header: {
+    alignItems: 'center',
+    display: 'flex',
+    gap: 6,
+    justifyContent: 'space-between',
+    paddingBlock: 4,
+  },
+  headerInfo: {
+    color: cssVar.colorTextQuaternary,
+    cursor: 'help',
+  },
+  headerTitle: {
+    color: cssVar.colorTextTertiary,
+    fontSize: 12,
+    fontWeight: 500,
+  },
+  manageButton: {
+    alignItems: 'center',
+    backgroundColor: 'transparent',
+    borderStyle: 'none',
+    color: { 'default': cssVar.colorTextQuaternary, ':hover': cssVar.colorPrimary },
+    cursor: 'pointer',
+    display: 'flex',
+    fontSize: 11,
+    gap: 3,
+    padding: 0,
+    transition: 'color 0.2s',
+  },
+  notice: {
+    backgroundColor: cssVar.colorWarningBg,
+    borderRadius: cssVar.borderRadius,
+    color: cssVar.colorWarningText,
+    fontSize: 12,
+    paddingBlock: 8,
+    paddingInline: 8,
+  },
+  // StyleX longhands outrank the row's own emotion padding.
+  option: {
+    paddingInline: 0,
+  },
+  warning: {
+    color: cssVar.colorWarning,
+  },
+});
 
-    padding-block: 4px;
-  `,
-  headerInfo: css`
-    cursor: help;
-    color: ${cssVar.colorTextQuaternary};
-  `,
-  headerTitle: css`
-    font-size: 12px;
-    font-weight: 500;
-    color: ${cssVar.colorTextTertiary};
-  `,
-  manageButton: css`
-    cursor: pointer;
-
-    display: flex;
-    gap: 3px;
-    align-items: center;
-
-    padding: 0;
-    border: none;
-
-    font-size: 11px;
-    color: ${cssVar.colorTextQuaternary};
-
-    background: none;
-
-    transition: color 0.2s;
-
-    &:hover {
-      color: ${cssVar.colorPrimary};
-    }
-  `,
-  notice: css`
-    padding-block: 8px;
-    padding-inline: 8px;
-    border-radius: ${cssVar.borderRadius};
-
-    font-size: 12px;
-    color: ${cssVar.colorWarningText};
-
-    background: ${cssVar.colorWarningBg};
-  `,
-  option: css`
-    && {
-      padding-inline: 0;
-    }
-  `,
-  warning: css`
-    color: ${cssVar.colorWarning};
-  `,
-}));
+const optionClassName = stylex.props(styles.option).className;
 
 /** How often a building environment directory is re-read while the chip names it. */
 const BUILD_REFRESH_MS = 4000;
@@ -229,17 +220,17 @@ const SandboxDrivePicker = memo<SandboxDrivePickerProps>(
 
     const content = (
       <Flexbox gap={2} style={{ maxWidth: 360, minWidth: 280 }}>
-        <div className={styles.header}>
+        <div {...stylex.props(styles.header)}>
           <Flexbox horizontal align={'center'} gap={4}>
-            <span className={styles.headerTitle}>{t('sandboxDrive.pickerTitle')}</span>
+            <span {...stylex.props(styles.headerTitle)}>{t('sandboxDrive.pickerTitle')}</span>
             <Tooltip title={t('sandboxDrive.pickerInfoTooltip')}>
-              <span className={styles.headerInfo}>
+              <span {...stylex.props(styles.headerInfo)}>
                 <Icon icon={InfoIcon} size={12} />
               </span>
             </Tooltip>
           </Flexbox>
           <button
-            className={styles.manageButton}
+            {...stylex.props(styles.manageButton)}
             type={'button'}
             onClick={() => {
               setOpen(false);
@@ -251,11 +242,13 @@ const SandboxDrivePicker = memo<SandboxDrivePickerProps>(
           </button>
         </div>
 
-        {fallbackMessage && <Text className={styles.notice}>{fallbackMessage}</Text>}
+        {fallbackMessage && (
+          <Text className={stylex.props(styles.notice).className}>{fallbackMessage}</Text>
+        )}
 
         <OptionRow
           active={!persistent}
-          className={styles.option}
+          className={optionClassName}
           desc={t('sandboxStorage.ephemeralDesc')}
           icon={<Icon icon={TimerIcon} size={16} />}
           label={t('sandboxStorage.ephemeral')}
@@ -265,7 +258,7 @@ const SandboxDrivePicker = memo<SandboxDrivePickerProps>(
         {entitled && persistent && currentLabel && (
           <OptionRow
             active
-            className={styles.option}
+            className={optionClassName}
             icon={<Icon icon={currentIcon} size={16} />}
             label={currentLabel}
             desc={
@@ -290,7 +283,7 @@ const SandboxDrivePicker = memo<SandboxDrivePickerProps>(
 
         {entitled && (
           <OptionRow
-            className={styles.option}
+            className={optionClassName}
             desc={t('sandboxDrive.browseDesc')}
             icon={<Icon icon={persistent ? FolderOpenIcon : HardDriveIcon} size={16} />}
             label={t(persistent ? 'sandboxDrive.browseOther' : 'sandboxDrive.browse')}
@@ -303,7 +296,7 @@ const SandboxDrivePicker = memo<SandboxDrivePickerProps>(
           // same list, in the same shape, so the row reads as one more place
           // files could go — and the tag says why it is not simply selectable.
           <OptionRow
-            className={styles.option}
+            className={optionClassName}
             desc={t('sandboxStorage.persistentUpsellDesc')}
             icon={<Icon icon={FolderClockIcon} size={16} />}
             label={t('sandboxDrive.upsell')}
@@ -333,8 +326,11 @@ const SandboxDrivePicker = memo<SandboxDrivePickerProps>(
         <div>
           <Tooltip title={fallbackMessage}>
             <div
-              className={cx(workingDirectoryChipStyles.chip, fallback && styles.warning)}
               data-testid={'sandbox-drive-chip'}
+              className={cx(
+                workingDirectoryChipStyles.chip,
+                fallback && stylex.props(styles.warning).className,
+              )}
             >
               {chipIcon}
               {resolving ? (

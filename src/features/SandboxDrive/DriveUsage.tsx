@@ -1,6 +1,8 @@
 'use client';
 
-import { createStaticStyles, cssVar, Flexbox, Icon, Popover, Skeleton, Text } from '@lobehub/ui';
+import { Flexbox, Icon, Popover, Skeleton, Text } from '@lobehub/ui';
+import { cssVar } from '@lobehub/ui/stylex/cssVar.stylex';
+import * as stylex from '@stylexjs/stylex';
 import { ChevronDownIcon } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -12,44 +14,41 @@ import { useDriveUsage } from './useDriveData';
 
 export { UsageBreakdown as DriveUsageBreakdown } from './UsageBreakdown';
 
-const styles = createStaticStyles(({ css }) => ({
+const styles = stylex.create({
+  chevron: {
+    color: cssVar.colorTextTertiary,
+  },
   // A track that reads as one even when nearly empty, and a fill that never
   // shrinks below a sliver — "almost nothing used" still shows as a start.
-  meter: css`
-    overflow: hidden;
-    display: inline-flex;
-    flex: none;
-
-    width: 72px;
-    height: 4px;
-    border-radius: 2px;
-
-    background: ${cssVar.colorFillSecondary};
-  `,
-  meterFill: css`
-    min-width: 4px;
-    height: 100%;
-    border-radius: 2px;
-  `,
-  trigger: css`
-    cursor: pointer;
-
-    padding-block: 4px;
-    padding-inline: 8px;
-    border: none;
-    border-radius: ${cssVar.borderRadius};
-
-    background: none;
-
-    &:hover {
-      background: ${cssVar.colorFillTertiary};
-    }
-
-    &:focus-visible {
-      outline: 2px solid ${cssVar.colorPrimaryBorder};
-    }
-  `,
-}));
+  meter: {
+    backgroundColor: cssVar.colorFillSecondary,
+    borderRadius: 2,
+    display: 'inline-flex',
+    flex: 'none',
+    height: 4,
+    overflow: 'hidden',
+    width: 72,
+  },
+  meterFill: {
+    backgroundColor: cssVar.colorPrimary,
+    borderRadius: 2,
+    height: '100%',
+    minWidth: 4,
+  },
+  meterFillOver: {
+    backgroundColor: cssVar.colorError,
+  },
+  meterWidth: (width: string) => ({ width }),
+  trigger: {
+    backgroundColor: { 'default': 'transparent', ':hover': cssVar.colorFillTertiary },
+    borderRadius: cssVar.borderRadius,
+    borderStyle: 'none',
+    cursor: 'pointer',
+    outline: { 'default': null, ':focus-visible': `2px solid ${cssVar.colorPrimaryBorder}` },
+    paddingBlock: 4,
+    paddingInline: 8,
+  },
+});
 
 const percentOf = (bytes: number | null | undefined, quota: number) =>
   quota > 0 && bytes ? Math.min(100, (bytes / quota) * 100) : 0;
@@ -88,16 +87,16 @@ const DriveUsage = memo(() => {
         align={'center'}
         aria-label={t(isWorkspace ? 'drive.usage.poolTitle' : 'drive.usage.title')}
         as={'button'}
-        className={styles.trigger}
+        className={stylex.props(styles.trigger).className}
         gap={8}
       >
-        <span className={styles.meter}>
+        <span {...stylex.props(styles.meter)}>
           <span
-            className={styles.meterFill}
-            style={{
-              background: over ? cssVar.colorError : cssVar.colorPrimary,
-              width: `${percentOf(totalUsageBytes, quotaBytes)}%`,
-            }}
+            {...stylex.props(
+              styles.meterFill,
+              over && styles.meterFillOver,
+              styles.meterWidth(`${percentOf(totalUsageBytes, quotaBytes)}%`),
+            )}
           />
         </span>
         <Text fontSize={12} style={{ whiteSpace: 'nowrap' }} type={over ? 'danger' : 'secondary'}>
@@ -108,7 +107,7 @@ const DriveUsage = memo(() => {
                 used: formatSize(totalUsageBytes),
               })}
         </Text>
-        <Icon icon={ChevronDownIcon} size={12} style={{ color: cssVar.colorTextTertiary }} />
+        <Icon className={stylex.props(styles.chevron).className} icon={ChevronDownIcon} size={12} />
       </Flexbox>
     </Popover>
   );

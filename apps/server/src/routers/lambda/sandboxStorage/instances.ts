@@ -1,17 +1,29 @@
-import { TopicModel } from '@/database/models/topic';
-import { router } from '@/libs/trpc/lambda';
-import { stopSandboxInstance } from '@/server/services/sandbox/stopInstance';
-import { forgetDriveFolders, sandboxStorageBinding } from '@/server/services/sandbox';
 import type { SandboxDrive } from '@lobechat/builtin-tool-cloud-sandbox';
 import { TRPCError } from '@trpc/server';
 import pMap from 'p-map';
 import { z } from 'zod';
 
+import { TopicModel } from '@/database/models/topic';
+import { router } from '@/libs/trpc/lambda';
+import { forgetDriveFolders, sandboxStorageBinding } from '@/server/services/sandbox';
+import { stopSandboxInstance } from '@/server/services/sandbox/stopInstance';
+
 import { rethrowDuplicateInstanceDirectory } from './constraintErrors';
-import { assertFolderFree, assertNotLeftOnPublicDrive, driveForEnvironment, resolveInstanceDrive } from './driveScope';
+import {
+  assertFolderFree,
+  assertNotLeftOnPublicDrive,
+  driveForEnvironment,
+  resolveInstanceDrive,
+} from './driveScope';
 import { createDerivedInstance, deleteInstanceSnapshot, isBuildable } from './instanceOperations';
 import { instanceProcedure, mapStorageError } from './procedures';
-import { driveSchema, idSchema, instanceDirectorySchema, nameSchema, topicIdSchema } from './schemas';
+import {
+  driveSchema,
+  idSchema,
+  instanceDirectorySchema,
+  nameSchema,
+  topicIdSchema,
+} from './schemas';
 
 /**
  * The topic the execution plane keys its file-browser console sessions to.

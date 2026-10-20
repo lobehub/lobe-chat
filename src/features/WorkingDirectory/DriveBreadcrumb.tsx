@@ -1,48 +1,46 @@
 'use client';
 
-import { createStaticStyles, cssVar, Flexbox, Icon } from '@lobehub/ui';
+import { Flexbox, Icon } from '@lobehub/ui';
+import { cssVar } from '@lobehub/ui/stylex/cssVar.stylex';
+import * as stylex from '@stylexjs/stylex';
 import type { LucideIcon } from 'lucide-react';
 import { ChevronRightIcon } from 'lucide-react';
 import { memo } from 'react';
 
-const styles = createStaticStyles(({ css }) => ({
-  crumb: css`
-    cursor: pointer;
-
-    overflow: hidden;
-
-    max-width: 200px;
-    padding: 0;
-    border: none;
-
-    font-size: 13px;
-    color: ${cssVar.colorTextSecondary};
-    text-overflow: ellipsis;
-    white-space: nowrap;
-
-    background: none;
-
-    &:hover {
-      color: ${cssVar.colorText};
-    }
-
-    &:focus-visible {
-      border-radius: ${cssVar.borderRadiusSM};
-      outline: 2px solid ${cssVar.colorPrimaryBorder};
-    }
-  `,
-  current: css`
-    overflow: hidden;
-
-    max-width: 240px;
-
-    font-size: 13px;
-    font-weight: 500;
-    color: ${cssVar.colorText};
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  `,
-}));
+const styles = stylex.create({
+  crumb: {
+    backgroundColor: 'transparent',
+    borderRadius: { 'default': null, ':focus-visible': cssVar.borderRadiusSM },
+    borderStyle: 'none',
+    color: { 'default': cssVar.colorTextSecondary, ':hover': cssVar.colorText },
+    cursor: 'pointer',
+    fontSize: 13,
+    maxWidth: 200,
+    outline: { 'default': null, ':focus-visible': `2px solid ${cssVar.colorPrimaryBorder}` },
+    overflow: 'hidden',
+    padding: 0,
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+  },
+  current: {
+    color: cssVar.colorText,
+    fontSize: 13,
+    fontWeight: 500,
+    maxWidth: 240,
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+  },
+  iconCrumb: {
+    display: 'inline-flex',
+  },
+  muted: {
+    color: cssVar.colorTextTertiary,
+  },
+  separator: {
+    color: cssVar.colorTextQuaternary,
+  },
+});
 
 interface DriveBreadcrumbProps {
   /** Beside the root's name — the drive's own mark. */
@@ -89,7 +87,7 @@ export const DriveBreadcrumb = memo<DriveBreadcrumbProps>(
         wrap={'wrap'}
       >
         {icon && !rootIconOnly && (
-          <Icon icon={icon} size={14} style={{ color: cssVar.colorTextTertiary }} />
+          <Icon className={stylex.props(styles.muted).className} icon={icon} size={14} />
         )}
         {crumbs.map((crumb, index) => {
           const last = index === crumbs.length - 1;
@@ -99,10 +97,9 @@ export const DriveBreadcrumb = memo<DriveBreadcrumbProps>(
             return (
               <button
                 aria-label={crumb.label}
-                className={styles.crumb}
+                {...stylex.props(styles.crumb, styles.iconCrumb)}
                 disabled={last}
                 key={'root'}
-                style={{ display: 'inline-flex' }}
                 title={crumb.label}
                 type={'button'}
                 onClick={() => onNavigate('')}
@@ -116,18 +113,18 @@ export const DriveBreadcrumb = memo<DriveBreadcrumbProps>(
             <Flexbox horizontal align={'center'} gap={4} key={crumb.path || 'root'}>
               {index > 0 && (
                 <Icon
+                  className={stylex.props(styles.separator).className}
                   icon={ChevronRightIcon}
                   size={12}
-                  style={{ color: cssVar.colorTextQuaternary }}
                 />
               )}
               {last ? (
-                <span aria-current={'page'} className={styles.current} title={crumb.label}>
+                <span aria-current={'page'} {...stylex.props(styles.current)} title={crumb.label}>
                   {crumb.label}
                 </span>
               ) : (
                 <button
-                  className={styles.crumb}
+                  {...stylex.props(styles.crumb)}
                   title={crumb.label}
                   type={'button'}
                   onClick={() => onNavigate(crumb.path)}

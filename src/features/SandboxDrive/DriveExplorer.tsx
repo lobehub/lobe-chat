@@ -6,8 +6,6 @@ import {
   Alert,
   Button,
   confirmModal,
-  createStaticStyles,
-  cssVar,
   DropdownMenu,
   Flexbox,
   Icon,
@@ -16,6 +14,8 @@ import {
   toast,
   Tooltip,
 } from '@lobehub/ui';
+import { cssVar } from '@lobehub/ui/stylex/cssVar.stylex';
+import * as stylex from '@stylexjs/stylex';
 import dayjs from 'dayjs';
 import {
   FileIcon,
@@ -51,44 +51,49 @@ const SIZE_WIDTH = 72;
 const TIME_WIDTH = 88;
 const ACTIONS_WIDTH = 28;
 
-const styles = createStaticStyles(({ css }) => ({
-  frame: css`
-    overflow: hidden;
-    border: 1px solid ${cssVar.colorBorderSecondary};
-    border-radius: ${cssVar.borderRadiusLG};
-    background: ${cssVar.colorBgContainer};
-  `,
-  list: css`
-    overflow-y: auto;
-    min-height: 240px;
-    max-height: min(560px, 60vh);
-    padding: 4px;
-  `,
-  row: css`
-    min-height: 40px;
-    padding-block: 4px;
-    padding-inline: 12px;
-    border-radius: ${cssVar.borderRadius};
-
-    &:hover {
-      background: ${cssVar.colorFillQuaternary};
-    }
-  `,
-  clickable: css`
-    cursor: pointer;
-
-    &:focus-visible {
-      outline: 2px solid ${cssVar.colorPrimaryBorder};
-      outline-offset: -2px;
-    }
-  `,
-  toolbar: css`
-    min-height: 48px;
-    padding-block: 8px;
-    padding-inline: 12px;
-    border-block-end: 1px solid ${cssVar.colorBorderSecondary};
-  `,
-}));
+const styles = stylex.create({
+  clickable: {
+    cursor: 'pointer',
+    outline: { 'default': null, ':focus-visible': `2px solid ${cssVar.colorPrimaryBorder}` },
+    outlineOffset: { 'default': null, ':focus-visible': -2 },
+  },
+  entryIcon: {
+    color: cssVar.colorTextSecondary,
+    flex: 'none',
+  },
+  frame: {
+    backgroundColor: cssVar.colorBgContainer,
+    borderColor: cssVar.colorBorderSecondary,
+    borderRadius: cssVar.borderRadiusLG,
+    borderStyle: 'solid',
+    borderWidth: 1,
+    overflow: 'hidden',
+  },
+  list: {
+    maxHeight: 'min(560px, 60vh)',
+    minHeight: 240,
+    overflowY: 'auto',
+    padding: 4,
+  },
+  muted: {
+    color: cssVar.colorTextTertiary,
+  },
+  row: {
+    backgroundColor: { 'default': null, ':hover': cssVar.colorFillQuaternary },
+    borderRadius: cssVar.borderRadius,
+    minHeight: 40,
+    paddingBlock: 4,
+    paddingInline: 12,
+  },
+  toolbar: {
+    borderBlockEndColor: cssVar.colorBorderSecondary,
+    borderBlockEndStyle: 'solid',
+    borderBlockEndWidth: 1,
+    minHeight: 48,
+    paddingBlock: 8,
+    paddingInline: 12,
+  },
+});
 
 interface DriveExplorerProps {
   drive: SandboxDrive;
@@ -238,8 +243,13 @@ const DriveExplorer = memo<DriveExplorerProps>(({ drive, isWorkspace, toolbarExt
   );
 
   return (
-    <Flexbox className={styles.frame}>
-      <Flexbox horizontal align={'center'} className={styles.toolbar} gap={12}>
+    <Flexbox className={stylex.props(styles.frame).className}>
+      <Flexbox
+        horizontal
+        align={'center'}
+        className={stylex.props(styles.toolbar).className}
+        gap={12}
+      >
         <Flexbox horizontal align={'center'} flex={1} gap={8} style={{ minWidth: 0 }} wrap={'wrap'}>
           <DriveBreadcrumb
             icon={HardDriveIcon}
@@ -250,9 +260,9 @@ const DriveExplorer = memo<DriveExplorerProps>(({ drive, isWorkspace, toolbarExt
           {/* Who else sees what is here: the one fact that tells the two drives apart. */}
           <Flexbox horizontal align={'center'} gap={4}>
             <Icon
+              className={stylex.props(styles.muted).className}
               icon={scope === 'public' ? UsersIcon : LockIcon}
               size={12}
-              style={{ color: cssVar.colorTextTertiary }}
             />
             <Text fontSize={12} type={'secondary'}>
               {t(`drive.scope.${scope}`)}
@@ -298,10 +308,10 @@ const DriveExplorer = memo<DriveExplorerProps>(({ drive, isWorkspace, toolbarExt
         />
       )}
 
-      <Flexbox className={styles.list} gap={2}>
+      <Flexbox className={stylex.props(styles.list).className} gap={2}>
         {readOnlyHere && (
           <Flexbox horizontal align={'center'} gap={6} paddingBlock={6} paddingInline={12}>
-            <Icon icon={LockIcon} size={12} style={{ color: cssVar.colorTextTertiary }} />
+            <Icon className={stylex.props(styles.muted).className} icon={LockIcon} size={12} />
             <Text fontSize={12} type={'secondary'}>
               {t('drive.explorer.readOnlyHint')}
             </Text>
@@ -362,7 +372,7 @@ const DriveExplorer = memo<DriveExplorerProps>(({ drive, isWorkspace, toolbarExt
               <Flexbox
                 horizontal
                 align={'center'}
-                className={`${styles.row} ${open ? styles.clickable : ''}`}
+                className={stylex.props(styles.row, open && styles.clickable).className}
                 data-testid={'drive-entry'}
                 gap={10}
                 key={entry.path}
@@ -381,9 +391,9 @@ const DriveExplorer = memo<DriveExplorerProps>(({ drive, isWorkspace, toolbarExt
                 }
               >
                 <Icon
+                  className={stylex.props(styles.entryIcon).className}
                   icon={environment ? PackageIcon : entry.isDirectory ? FolderIcon : FileIcon}
                   size={16}
-                  style={{ color: cssVar.colorTextSecondary, flex: 'none' }}
                 />
                 <Flexbox horizontal align={'center'} flex={1} gap={8} style={{ minWidth: 0 }}>
                   <Text ellipsis fontSize={13}>
