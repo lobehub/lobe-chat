@@ -31,13 +31,17 @@ export const useListNavigation = (source: 'list' | 'search') => {
 
     const home = useHomeStore.getState();
     const groups = [...home.agentGroups, ...home.privateAgentGroups];
+    const pinnedItem = [...home.pinnedAgents, ...home.privatePinnedAgents].find(
+      (child) => child.id === item.id && child.type === item.type,
+    );
+    const categoryId = groupId === undefined ? (item.groupId ?? pinnedItem?.groupId) : groupId;
     const group = groups.find((group) =>
-      groupId
-        ? group.id === groupId
+      categoryId
+        ? group.id === categoryId
         : group.items.some((child) => child.id === item.id && child.type === item.type),
     );
     const isUngrouped =
-      groupId === null ||
+      categoryId === null ||
       [...home.ungroupedAgents, ...home.privateUngroupedAgents].some(
         (child) => child.id === item.id && child.type === item.type,
       );

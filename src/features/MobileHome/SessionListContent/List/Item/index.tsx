@@ -18,7 +18,11 @@ const AgentItem = ({ item, groupId }: { item: SidebarAgentItem; groupId?: string
   const [open, setOpen] = useState(false);
   const activeAgentId = useAgentStore((s) => s.activeAgentId);
   const activeGroupId = useAgentGroupStore((s) => s.activeGroupId);
-  const loading = useChatStore(operationSelectors.isAgentVisiblyRunning(item.id));
+  const loading = useChatStore(
+    item.type === 'group'
+      ? operationSelectors.isGroupVisiblyRunning(item.id)
+      : operationSelectors.isAgentVisiblyRunning(item.id),
+  );
   return (
     <ListItem
       actions={<Actions groupId={groupId} item={item} setOpen={setOpen} />}
@@ -41,7 +45,7 @@ const AgentItem = ({ item, groupId }: { item: SidebarAgentItem; groupId?: string
       }
       styles={{
         container: { gap: 12 },
-        content: { gap: 6, maskImage: 'linear-gradient(90deg, #000 90%, transparent)' },
+        content: { gap: 6, maskImage: 'linear-gradient(90deg, black 90%, transparent)' },
       }}
     />
   );

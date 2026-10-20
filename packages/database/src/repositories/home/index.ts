@@ -413,19 +413,23 @@ export class HomeRepository {
 
     for (const item of allItems) {
       const { groupId, isPrivate, ...sidebarItem } = item;
-      const cleanedItem = cleanObject(sidebarItem) as SidebarAgentItem;
+      const validGroupIds = isPrivate ? privateGroupIds : groupIds;
+      const categoryId = groupId && validGroupIds.has(groupId) ? groupId : null;
+      const cleanedItem = {
+        ...cleanObject(sidebarItem),
+        groupId: categoryId,
+      } as SidebarAgentItem;
 
       if (item.pinned) {
         (isPrivate ? privatePinned : pinned).push(cleanedItem);
         continue;
       }
 
-      const validGroupIds = isPrivate ? privateGroupIds : groupIds;
-      if (groupId && validGroupIds.has(groupId)) {
+      if (categoryId) {
         const bucket = isPrivate ? privateGroupedMap : groupedMap;
-        const existing = bucket.get(groupId) || [];
+        const existing = bucket.get(categoryId) || [];
         existing.push(cleanedItem);
-        bucket.set(groupId, existing);
+        bucket.set(categoryId, existing);
       } else if (isPrivate) {
         privateUngrouped.push(cleanedItem);
       } else {

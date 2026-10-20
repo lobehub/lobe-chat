@@ -29,18 +29,21 @@ const AgentList = ({ dataSource, groupId, visibility, showAddButton = true }: Ag
   const isInit = useHomeStore(homeAgentListSelectors.isAgentListInit);
   if (!isInit) return <SkeletonList />;
   return dataSource.length
-    ? dataSource.map((item) => (
-        <LazyLoad className={styles} key={item.id}>
-          <WorkspaceLink
-            aria-label={item.id}
-            key={item.id}
-            to={item.type === 'group' ? GROUP_CHAT_URL(item.id) : AGENT_CHAT_URL(item.id, true)}
-            onClick={(event) => onNavigate(event, item, groupId)}
-          >
-            <AgentItem groupId={groupId} item={item} />
-          </WorkspaceLink>
-        </LazyLoad>
-      ))
+    ? dataSource.map((item) => {
+        const categoryId = groupId === undefined ? (item.groupId ?? null) : groupId;
+        return (
+          <LazyLoad className={styles} key={item.id}>
+            <WorkspaceLink
+              aria-label={item.id}
+              key={item.id}
+              to={item.type === 'group' ? GROUP_CHAT_URL(item.id) : AGENT_CHAT_URL(item.id, true)}
+              onClick={(event) => onNavigate(event, item, categoryId)}
+            >
+              <AgentItem groupId={categoryId} item={item} />
+            </WorkspaceLink>
+          </LazyLoad>
+        );
+      })
     : showAddButton && <AddButton groupId={groupId ?? undefined} visibility={visibility} />;
 };
 

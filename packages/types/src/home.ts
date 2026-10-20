@@ -61,6 +61,8 @@ export interface SidebarAgentItem {
    * Only present for chat groups (type === 'group')
    */
   groupAvatar?: string | null;
+  /** Sidebar category ID, independent of chat-group identity; null means ungrouped. */
+  groupId?: string | null;
   /**
    * Heterogeneous agent runtime type (e.g. `claude-code`) when the agent is
    * driven by an external CLI. `null` / absent means it's a regular LobeHub
