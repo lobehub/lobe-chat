@@ -38,6 +38,24 @@ export interface SecretInputViewProps {
 }
 
 /**
+ * Whether Save must stay disabled: blocked (lookup failed / permission lost /
+ * type mismatch — the fields are replaced by the reason, so a completed form
+ * must not submit over it), inert (disabled or a write in flight), or
+ * incomplete without a prose confirmation pending.
+ */
+export const isSecretSubmitDisabled = ({
+  blockedReason,
+  complete,
+  inert,
+  proseWarning,
+}: {
+  blockedReason?: ReactNode;
+  complete: boolean;
+  inert: boolean;
+  proseWarning?: string[] | undefined;
+}) => inert || !!blockedReason || (!complete && !proseWarning);
+
+/**
  * Password-style form for secrets that must not enter the agent context. See
  * {@link useSecretInputForm} for how long the values are kept, and for the
  * prose guard that holds a submit whose values look like pasted chat text
@@ -89,7 +107,7 @@ const SecretInputView = memo<SecretInputViewProps>(
             {labels.cancel}
           </Button>
           <Button
-            disabled={inert || (!complete && !proseWarning)}
+            disabled={isSecretSubmitDisabled({ blockedReason, complete, inert, proseWarning })}
             loading={submitting}
             type={'primary'}
             onClick={() => void handleSubmit()}
