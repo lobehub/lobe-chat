@@ -244,6 +244,8 @@ const DeviceOverview = ({ canOperate, device }: DeviceOverviewProps) => {
 
   const channels = device.channels ?? [];
   const online = channels.length > 0;
+  // The persisted copy carries no channels: presence is unknown, not offline.
+  const presenceUnknown = !!device.onlineUnknown;
 
   const newest = data?.points.at(-1);
   const cores = data?.cpuCount ?? null;
@@ -302,7 +304,11 @@ const DeviceOverview = ({ canOperate, device }: DeviceOverviewProps) => {
                   width: 6,
                 }}
               />
-              {online ? t('devices.status.online') : t('devices.status.offline')}
+              {presenceUnknown
+                ? t('devices.status.checking')
+                : online
+                  ? t('devices.status.online')
+                  : t('devices.status.offline')}
             </span>
           </InfoRow>
           <InfoRow icon={MonitorIcon} label={t('devices.detail.os')}>
