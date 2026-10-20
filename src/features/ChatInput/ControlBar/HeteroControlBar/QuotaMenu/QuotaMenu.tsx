@@ -168,6 +168,11 @@ export const createQuotaSourceKey = (...parts: QuotaSourcePart[]) =>
 
 export interface QuotaSnapshotBase {
   error: string | null;
+  /**
+   * The live sample failed (transport / IPC) instead of reporting a state: the
+   * panel treats it like an error and keeps the last good snapshot.
+   */
+  sampleFailed?: boolean;
   status: 'error' | 'ok' | 'unavailable';
   updatedAt: number;
 }
@@ -347,7 +352,7 @@ const QuotaMenu = <S extends QuotaSnapshotBase>({
     ) => {
       if (!isCurrentRequest(requestId, requestSourceKey)) return;
 
-      if (nextQuota.status === 'error') {
+      if (nextQuota.status === 'error' || nextQuota.sampleFailed) {
         lastTransientErrorAtRef.current = Date.now();
 
         // Writing the error before the stored snapshot hydrated would make the

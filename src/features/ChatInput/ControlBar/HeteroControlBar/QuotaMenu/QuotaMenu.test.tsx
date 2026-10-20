@@ -927,6 +927,27 @@ describe('ClaudeCodeQuotaMenu', () => {
     expect(mockService.getClaudeCodeQuota).not.toHaveBeenCalled();
   });
 
+  it('keeps the stored snapshot when a cold load of a device fails to sample', async () => {
+    vi.spyOn(cacheScope, 'canPersist').mockReturnValue(true);
+    const storage = quotaPanelResource.storage!;
+    const sourceKey = createQuotaSourceKey('claude-code', 'agent-1', 'remote-device', undefined);
+    const row = { queryKey: hashQuotaSourceKey(sourceKey), scope: cacheScope.get() };
+    await storage.set(row, {
+      data: claudeSnapshot({ session: { resetsAt: null, usedPercent: 8, windowMinutes: 300 } }),
+      updatedAt: 1,
+    });
+    // No trusted device account yet on a cold load, and the device RPC fails.
+    mockLambdaClaudeQuota.mockRejectedValue(new Error('device offline'));
+
+    render(<ClaudeCodeQuotaMenu deviceId="remote-device" />);
+
+    await waitFor(() => expect(mockLambdaClaudeQuota).toHaveBeenCalled());
+    await waitForQuotaIdle();
+    expect(screen.getAllByText('92%').length).toBeGreaterThan(0);
+    expect(screen.queryByText('heteroAgent.quota.unavailable')).toBeNull();
+    expect(await storage.get(row)).toMatchObject({ data: { status: 'ok' } });
+  });
+
   it('does not reuse another device account when the newly selected device is unavailable', async () => {
     const capturedAt = Date.now();
     const account = persistedAccount();

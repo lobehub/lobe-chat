@@ -58,6 +58,7 @@ const unavailableSnapshot = (
  */
 type ClaudeCodePanelSnapshot = ClaudeCodeQuotaSnapshot & {
   refreshUnavailableReason?: ClaudeCodeQuotaSnapshot['reason'];
+  sampleFailed?: boolean;
 };
 
 const isRateLimitError = (quota: ClaudeCodeQuotaSnapshot) => quota.error?.includes('429') ?? false;
@@ -110,6 +111,7 @@ const ClaudeCodeQuotaMenu = memo<ClaudeCodeQuotaMenuProps>(({ deviceId, env }) =
       // 2) Throttled live refresh + ingest. Paint the persisted windows before
       // awaiting the live fetch so the panel never blocks on it.
       let live: ClaudeCodeQuotaSnapshot | null = null;
+      let liveFailed = false;
       if (
         force ||
         options?.revalidate ||
@@ -120,7 +122,10 @@ const ClaudeCodeQuotaMenu = memo<ClaudeCodeQuotaMenuProps>(({ deviceId, env }) =
           const interim = buildClaudePanelSnapshot(account, readings, null);
           if (hasRenderableWindow(interim)) options?.onInterim?.(interim);
         }
-        live = await fetchClaudeCodeQuotaSnapshot({ deviceId, env, force }).catch(() => null);
+        live = await fetchClaudeCodeQuotaSnapshot({ deviceId, env, force }).catch(() => {
+          liveFailed = true;
+          return null;
+        });
 
         const externalAccountId = live?.identity?.externalAccountId;
         if (live?.status === 'ok' && externalAccountId && live.readings?.length) {
@@ -173,6 +178,9 @@ const ClaudeCodeQuotaMenu = memo<ClaudeCodeQuotaMenuProps>(({ deviceId, env }) =
           ? { ...merged, refreshUnavailableReason: live.reason }
           : merged;
       }
+      // A failed live fetch with nothing to show still reads as "unavailable",
+      // but flagged, so the panel keeps the last snapshot it already shows.
+      if (!live && liveFailed) return { ...unavailableSnapshot(), sampleFailed: true };
       return live ?? merged ?? unavailableSnapshot();
     },
     [agentId, deviceId, env, trustedDeviceAccounts],
