@@ -2,7 +2,6 @@ import type Anthropic from '@anthropic-ai/sdk';
 import type { ModelUsage } from '@lobechat/types';
 
 import type { ChatPayloadForTransformStream } from '../streams/protocol';
-import type { ComputeChatCostOptions } from './utils/computeChatCost';
 import { withUsageCost } from './utils/withUsageCost';
 
 export const buildAnthropicInitialUsage = (
@@ -60,21 +59,6 @@ const mergeDeltaUsage = (
   return base;
 };
 
-/**
- * Anthropic cards price `textInput_cacheWrite` with a `ttl` lookup (`5m` / `1h`), but the request
- * builder writes a plain `cache_control: { type: 'ephemeral' }`, which the API stores as a
- * five-minute cache. Nothing told the pricing layer that, so the lookup key stayed unresolved and
- * every cache write on those cards was billed as 0.
- *
- * Declare the TTL the builder actually uses, while letting a caller-supplied value win.
- */
-const withCacheWriteTtl = (
-  payload: ChatPayloadForTransformStream | undefined,
-): ComputeChatCostOptions => ({
-  ...payload?.pricingOptions,
-  lookupParams: { ttl: '5m', ...payload?.pricingOptions?.lookupParams },
-});
-
 export const convertAnthropicUsage = (
   messageEvent: Anthropic.MessageStreamEvent,
   streamContextUsage?: ModelUsage,
@@ -86,7 +70,7 @@ export const convertAnthropicUsage = (
     }
     case 'message_delta': {
       const usage = mergeDeltaUsage(streamContextUsage, messageEvent.usage);
-      return usage && withUsageCost(usage, payload?.pricing, withCacheWriteTtl(payload));
+      return usage && withUsageCost(usage, payload?.pricing, payload?.pricingOptions);
     }
     default: {
       return streamContextUsage;

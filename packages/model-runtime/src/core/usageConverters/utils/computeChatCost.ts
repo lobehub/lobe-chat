@@ -474,15 +474,6 @@ export const computeChatCost = (
     if (unit.strategy === 'lookup') {
       const lookupUnit = unit as LookupPricingUnit;
 
-      // A cache write whose TTL was not reported (converters that forward no
-      // pricing options, non-streaming generation) was made at the API default.
-      const lookupOptions: ComputeChatCostOptions | undefined =
-        unit.name === 'textInput_cacheWrite' &&
-        lookupUnit.lookup.pricingParams?.includes('ttl') &&
-        options?.lookupParams?.ttl === undefined
-          ? { ...options, lookupParams: { ...options?.lookupParams, ttl: '5m' } }
-          : options;
-
       // Providers can report per-TTL cache-write splits (Anthropic
       // `usage.cache_creation`): server tools add automatic 5m writes even when
       // the request's own cache_control uses a 1h TTL, so the reported split
@@ -502,8 +493,8 @@ export const computeChatCost = (
 
           for (const [ttl, tokens] of ttlSplits) {
             const bucket = computeLookupCredits(lookupUnit, tokens, {
-              ...lookupOptions,
-              lookupParams: { ...lookupOptions?.lookupParams, ttl },
+              ...options,
+              lookupParams: { ...options?.lookupParams, ttl },
             });
             if (bucket.issues) {
               issues.push(bucket.issues);
@@ -534,7 +525,7 @@ export const computeChatCost = (
         credits: rawCredits,
         key,
         issues: lookupIssue,
-      } = computeLookupCredits(lookupUnit, quantity, lookupOptions);
+      } = computeLookupCredits(lookupUnit, quantity, options);
 
       if (lookupIssue) issues.push(lookupIssue);
 
