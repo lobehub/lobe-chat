@@ -9,7 +9,6 @@ import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useSingleton } from '@/hooks/useSingleton';
-import { sx } from '@/styles/sx';
 
 import type { AcceptanceEvidence } from '../Checks/types';
 import {
@@ -217,7 +216,7 @@ export const VideoCommentEditor = ({
                 stamp={
                   <>
                     <button
-                      {...sx(styles.stamp)}
+                      {...stylex.props(styles.stamp)}
                       type={'button'}
                       aria-label={t('acceptance.comments.video.showFrame', {
                         time: formatVideoTime(note.time.start),

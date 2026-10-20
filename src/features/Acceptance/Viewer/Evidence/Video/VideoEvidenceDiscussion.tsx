@@ -9,8 +9,6 @@ import type { ReactNode } from 'react';
 import { useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { sx } from '@/styles/sx';
-
 import { useOptionalAcceptanceScope } from '../../AcceptanceScope';
 import { useCommentAnchor } from '../../Comments/anchor';
 import { type EvidenceOverlay, overlayColor } from '../overlay';
@@ -23,6 +21,7 @@ import {
 import { formatVideoTime } from './videoTime';
 
 const styles = stylex.create({
+  badgeColor: (color: string) => ({ backgroundColor: color }),
   item: {
     scrollMarginBlock: 96,
     borderRadius: cssVar.borderRadius,
@@ -209,28 +208,28 @@ export const VideoEvidenceDiscussion = ({
             const messages = item.commentIds?.length ?? 1;
             return (
               <div
-                {...sx([styles.item, isOpen && styles.itemOpen])}
+                {...stylex.props([styles.item, isOpen && styles.itemOpen])}
                 id={`video-thread-${item.threadId}`}
                 key={item.threadId}
               >
                 <button
                   aria-expanded={isOpen}
-                  {...sx(styles.row)}
+                  {...stylex.props(styles.row)}
                   type={'button'}
                   onClick={() => select(item)}
                 >
-                  <span {...sx(styles.badge, undefined, { background: overlayColor(item) })}>
+                  <span {...stylex.props(styles.badge, styles.badgeColor(overlayColor(item)))}>
                     {index + 1}
                   </span>
-                  <span {...sx(styles.stamp)}>{formatVideoTime(item.time.start)}</span>
+                  <span {...stylex.props(styles.stamp)}>{formatVideoTime(item.time.start)}</span>
                   {/* Open, the thread below names the author and says it in full. */}
-                  <span {...sx(styles.author)}>{isOpen ? '' : item.authorName}</span>
-                  <span {...sx([styles.excerpt, item.resolved && styles.resolved])}>
+                  <span {...stylex.props(styles.author)}>{isOpen ? '' : item.authorName}</span>
+                  <span {...stylex.props([styles.excerpt, item.resolved && styles.resolved])}>
                     {isOpen ? '' : item.comment}
                   </span>
                   {messages > 1 && (
                     <span
-                      {...sx(styles.meta)}
+                      {...stylex.props(styles.meta)}
                       title={t('acceptance.comments.sectionMessages', { count: messages })}
                     >
                       <Icon icon={MessageSquare} size={12} />
@@ -238,17 +237,17 @@ export const VideoEvidenceDiscussion = ({
                     </span>
                   )}
                   {item.resolved && (
-                    <span {...sx(styles.meta)} title={t('acceptance.comments.resolved')}>
+                    <span {...stylex.props(styles.meta)} title={t('acceptance.comments.resolved')}>
                       <Icon icon={CheckCircle2} size={14} />
                     </span>
                   )}
                   <Icon
-                    {...sx([styles.chevron, isOpen && styles.chevronOpen])}
+                    {...stylex.props([styles.chevron, isOpen && styles.chevronOpen])}
                     icon={ChevronRight}
                     size={14}
                   />
                 </button>
-                {isOpen && <div {...sx(styles.thread)}>{item.panel}</div>}
+                {isOpen && <div {...stylex.props(styles.thread)}>{item.panel}</div>}
               </div>
             );
           })}

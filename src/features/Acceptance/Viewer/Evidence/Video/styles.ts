@@ -12,12 +12,8 @@ export const styles = createStaticStyles(({ css }) => ({
     &:fullscreen > [data-video-controls] {
       flex: none;
     }
-  `,
-  stage: css`
-    display: flex;
-    justify-content: center;
 
-    :fullscreen > & {
+    &:fullscreen > [data-acceptance-video-stage] {
       container-type: size;
       flex: 1;
       align-items: center;
@@ -25,15 +21,27 @@ export const styles = createStaticStyles(({ css }) => ({
       min-width: 0;
       min-height: 0;
     }
-  `,
-  frame: css`
-    max-width: var(--acceptance-video-frame-width);
 
-    :fullscreen & {
+    &:fullscreen > [data-acceptance-video-stage] > .lobe-video__frame {
       flex: none;
       width: min(100cqw, calc(100cqh * var(--acceptance-video-aspect)));
       max-width: none;
       height: min(100cqh, calc(100cqw / var(--acceptance-video-aspect)));
+    }
+  `,
+  stage: css`
+    display: flex;
+    justify-content: center;
+  `,
+  frame: css`
+    max-width: var(--acceptance-video-frame-width);
+  `,
+  // Keep stepping and fullscreen visible on a phone; the frame is also named on its comment card.
+  compactControls: css`
+    @media (width <= 767px) {
+      .lobe-video__frame-number {
+        display: none;
+      }
     }
   `,
   overlay: css`

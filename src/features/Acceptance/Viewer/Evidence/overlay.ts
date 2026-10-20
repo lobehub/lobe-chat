@@ -1,5 +1,5 @@
 import type { AcceptanceCommentTime, AcceptanceReviewAnnotation } from '@lobechat/types';
-import { cssVar } from 'antd-style';
+import { cssVar } from '@lobehub/ui';
 import type { ReactNode } from 'react';
 
 /**

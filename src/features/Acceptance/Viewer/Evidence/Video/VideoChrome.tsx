@@ -31,11 +31,11 @@ const Regions = ({ active, regions }: { active?: string; regions: FrameRegion[] 
     .filter((region) => isOnFrame(region.start, time, paused))
     .map((region) => (
       <div
+        key={region.key}
+        style={{ ...percent(region.rect), borderColor: region.color }}
         className={
           region.label === undefined && region.color === undefined ? styles.region : styles.mark
         }
-        key={region.key}
-        style={{ ...percent(region.rect), borderColor: region.color }}
       >
         {region.label !== undefined ? (
           <span

@@ -7,8 +7,6 @@ import { SquareDashedMousePointer, Trash2 } from 'lucide-react';
 import type { ReactNode, Ref } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { sx } from '@/styles/sx';
-
 /** The point where the side panel folds under the stage, matching the modal shell. */
 
 const styles = stylex.create({
@@ -174,17 +172,17 @@ export const CommentWorkspace = ({
   stageMode,
   strip,
 }: CommentWorkspaceProps) => (
-  <div {...sx(styles.root)}>
-    <div {...sx(styles.body)}>
-      <div {...sx(styles.stage)} inert={inert}>
+  <div {...stylex.props(styles.root)}>
+    <div {...stylex.props(styles.body)}>
+      <div {...stylex.props(styles.stage)} inert={inert}>
         {strip}
-        <div {...sx(stageMode === 'fit' ? styles.fit : styles.scroll)}>{stage}</div>
+        <div {...stylex.props(stageMode === 'fit' ? styles.fit : styles.scroll)}>{stage}</div>
       </div>
-      <div {...sx(styles.panel)} inert={inert}>
+      <div {...stylex.props(styles.panel)} inert={inert}>
         {panel}
       </div>
     </div>
-    <div {...sx(styles.footer)}>{footer}</div>
+    <div {...stylex.props(styles.footer)}>{footer}</div>
   </div>
 );
 
@@ -206,8 +204,8 @@ export const DraftPanelHeading = ({ count }: { count: number }) => {
 export const DraftEmpty = ({ body }: { body: string }) => {
   const { t } = useTranslation('verify');
   return (
-    <Center {...sx(styles.empty)}>
-      <Center {...sx(styles.emptyIcon)}>
+    <Center {...stylex.props(styles.empty)}>
+      <Center {...stylex.props(styles.emptyIcon)}>
         <Icon icon={SquareDashedMousePointer} size={20} />
       </Center>
       <Text strong>{t('acceptance.comments.draftEmptyTitle')}</Text>
@@ -247,9 +245,9 @@ export const DraftNote = ({
 }: DraftNoteProps) => {
   const { t } = useTranslation('verify');
   return (
-    <div {...sx([styles.note, active && styles.noteActive])}>
+    <div {...stylex.props([styles.note, active && styles.noteActive])}>
       <Flexbox horizontal align={'center'} gap={8}>
-        <span {...sx(styles.badge)}>{index}</span>
+        <span {...stylex.props(styles.badge)}>{index}</span>
         <Flexbox horizontal align={'center'} flex={1} gap={8} style={{ minWidth: 0 }}>
           {stamp}
         </Flexbox>
@@ -262,7 +260,7 @@ export const DraftNote = ({
         />
       </Flexbox>
       <TextArea
-        {...sx(styles.field)}
+        {...stylex.props(styles.field)}
         aria-label={t('acceptance.comments.draftNumber', { index })}
         autoFocus={autoFocus}
         autoSize={{ maxRows: 8, minRows: 2 }}
@@ -308,16 +306,16 @@ export const DraftFooter = ({
     <>
       <div
         aria-live={'polite'}
-        {...sx([styles.status, error && styles.statusError])}
+        {...stylex.props([styles.status, error && styles.statusError])}
         role={error ? 'alert' : undefined}
       >
         {status}
       </div>
-      <Button {...sx(styles.cancel)} disabled={loading} onClick={onCancel}>
+      <Button {...stylex.props(styles.cancel)} disabled={loading} onClick={onCancel}>
         {t('acceptance.actions.cancel')}
       </Button>
       <Button
-        {...sx(styles.send)}
+        {...stylex.props(styles.send)}
         disabled={disabled}
         loading={loading}
         type={'primary'}
@@ -331,7 +329,7 @@ export const DraftFooter = ({
 
 /** A link-styled line in the footer status that takes you to what blocks sending. */
 export const StatusLink = ({ children, onClick }: { children: ReactNode; onClick: () => void }) => (
-  <button {...sx(styles.statusLink)} type={'button'} onClick={onClick}>
+  <button {...stylex.props(styles.statusLink)} type={'button'} onClick={onClick}>
     {children}
   </button>
 );

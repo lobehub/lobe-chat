@@ -6,7 +6,15 @@ import type {
   AcceptanceReviewAnnotation,
   VerifyEvidenceChapter,
 } from '@lobechat/types';
-import { cx, Flexbox, useVideo, useVideoPlayer, useVideoState, Video, type VideoPlayer } from '@lobehub/ui';
+import {
+  cx,
+  Flexbox,
+  useVideo,
+  useVideoPlayer,
+  useVideoState,
+  Video,
+  type VideoPlayer,
+} from '@lobehub/ui';
 import type { CSSProperties, ReactNode, RefObject } from 'react';
 import { memo, useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -166,9 +174,9 @@ export const VideoEvidencePlayer = memo<VideoEvidencePlayerProps>(
 
     return (
       <Flexbox gap={8} ref={root} width={'100%'}>
-        <div className={FLOATING_ACTION_HOST} style={{ width: '100%' }}>
+        <div {...{ [FLOATING_ACTION_HOST]: '' }} style={{ position: 'relative', width: '100%' }}>
           <Video.Root
-            className={styles.player}
+            className={cx(styles.player, styles.compactControls)}
             defaultPlaybackRate={defaultRate}
             markers={markers}
             maxHeight={frameMaxHeight ? undefined : MAX_HEIGHT}
@@ -187,7 +195,6 @@ export const VideoEvidencePlayer = memo<VideoEvidencePlayerProps>(
                   : `min(100%, ${Math.max(MIN_PLAYER_WIDTH, frameWidth)}px)`,
               } as CSSProperties
             }
-            style={frameMaxHeight ? { width: '100%' } : undefined}
             onRateChange={storeRate}
             onRetry={onRefreshSource}
             onMarkerClick={(marker) => {
@@ -195,37 +202,28 @@ export const VideoEvidencePlayer = memo<VideoEvidencePlayerProps>(
               if (key !== undefined) onMarkClick?.(key);
             }}
           >
-            <Video.Frame
-              style={
-                frameMaxHeight
-                  ? {
-                      height: frameMaxHeight,
-                      marginInline: 'auto',
-                      maxWidth: '100%',
-                      width: 'auto',
-                    }
-                  : undefined
-              }
-            >
-              {onRegion ? (
-                <CommentSurface
-                  active={activeMark}
-                  player={player}
-                  regions={regions}
-                  onRegion={onRegion}
-                />
-              ) : (
-                <FrameRegions active={activeMark} regions={regions} />
-              )}
-              <Video.Caption />
-              {!onRegion && <Video.CenterPlay />}
-              <Video.LoadError />
-            </Video.Frame>
+            <div data-acceptance-video-stage className={styles.stage}>
+              <Video.Frame className={styles.frame}>
+                {onRegion ? (
+                  <CommentSurface
+                    active={activeMark}
+                    player={player}
+                    regions={regions}
+                    onRegion={onRegion}
+                  />
+                ) : (
+                  <FrameRegions active={activeMark} regions={regions} />
+                )}
+                <Video.Caption />
+                {!onRegion && <Video.CenterPlay />}
+                <Video.LoadError />
+              </Video.Frame>
             </div>
             <Video.Controls frameStep />
           </Video.Root>
           {onComment && (
             <FloatingCommentAction
+              title={t('acceptance.comments.commentMedia')}
               onClick={() => {
                 player.pause();
                 onComment(player.getState().time);
