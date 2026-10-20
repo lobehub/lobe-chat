@@ -359,6 +359,25 @@ describe('agent quota replicas', () => {
       expect(listAccounts).toHaveBeenCalledTimes(2);
       expect(accounts.map((a) => a.id)).toEqual(['a2']);
     });
+
+    it('discards a read still in flight from the previous data context', async () => {
+      let answer!: (rows: QuotaAccount[]) => void;
+      vi.spyOn(agentQuotaService, 'listAccounts')
+        // The re-read for the new context stays offline here.
+        .mockRejectedValue(new Error('offline'))
+        .mockImplementationOnce(() => new Promise((resolve) => (answer = resolve)));
+      const read = useAgentQuotaStore.getState().readQuotaAccounts();
+
+      act(() => stores.reset());
+      answer([account('old')]);
+      await read.catch(() => undefined);
+      await tick();
+
+      expect(agentQuotaSelectors.accounts(useAgentQuotaStore.getState())).toBeUndefined();
+      expect(await storedRow<QuotaAccount[]>(quotaAccountsResource, QUOTA_ACCOUNTS_KEY)).toBe(
+        undefined,
+      );
+    });
   });
 
   describe('bindings', () => {

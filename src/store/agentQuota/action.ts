@@ -308,8 +308,19 @@ export class ActionImpl {
    * Drop every quota view and confirmation when the data context changes
    * (desktop `refreshUserData` / `disconnectRemoteServer`), even when the next
    * context derives the same scope string; mounted syncs refetch from empty.
+   * `clear()` advances each replica's clear generation, so a read still in
+   * flight from the previous context is discarded instead of repopulating (and
+   * persisting) what was just dropped; it also deletes that context's rows.
    */
   reset = (): void => {
+    for (const slice of [
+      this.#accounts,
+      this.#bindings,
+      this.#readings,
+      this.#history,
+      this.#panel,
+    ])
+      void slice.clear();
     this.#appliedAt.clear();
     this.#set({ ...initialState }, false, 'resetAgentQuotaStore');
   };
