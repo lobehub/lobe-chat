@@ -88,7 +88,17 @@ const AcceptanceIdentity = ({ focusSlot, statusSlot, topicSlot }: AcceptanceIden
           reader came to judge — and it sat where the title's own meaning
           should carry. */}
       <Flexbox horizontal align={'center'} className={styles.titleRow} gap={10} wrap={'wrap'}>
-        <Text ellipsis as={'h1'} style={{ fontSize: 18, margin: 0, minWidth: 0 }}>
+        {/* The subject is what the reader came to name, and Chinese titles run
+            long: a single line ended most of them mid-phrase, so the page never
+            said which record was open. Two lines before the ellipsis, and the
+            row lets the title own the width it needs — sharing a row with the
+            Share control is a reason to wrap, not to cut sooner. */}
+        <Text
+          as={'h1'}
+          lineClamp={2}
+          style={{ fontSize: 18, margin: 0, minWidth: 0, wordBreak: 'break-word' }}
+          title={subject.title ?? subject.id}
+        >
           {subject.title ?? subject.id}
         </Text>
         {focusSlot && <div data-role={'focus-entry'}>{focusSlot}</div>}
