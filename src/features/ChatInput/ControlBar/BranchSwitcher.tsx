@@ -532,6 +532,11 @@ const BranchSwitcher = memo<BranchSwitcherProps>(
                   virtual
                   className={styles.list}
                   getItemLabel={(_, index) => filtered[index]?.name}
+                  // The virtual viewport sizes itself on mount: a background
+                  // refresh that adds branches while the dropdown is open
+                  // would otherwise leave the extra rows (often the current
+                  // branch, last) undrawn. Remount when the count changes.
+                  key={filtered.length}
                   listItemHeight={32}
                 >
                   {filtered.map((branch) => {
