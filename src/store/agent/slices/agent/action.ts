@@ -168,8 +168,8 @@ export class AgentSliceActionImpl {
   readonly #slugId;
   readonly #available;
   readonly #heteroCapability;
-  /** The refresh the chat context is waiting on, shared by concurrent sends. */
-  #availableAgentsRefresh?: Promise<AvailableAgentItem[]>;
+  /** The refresh the chat context is waiting on, shared by concurrent sends of one scope. */
+  #availableAgentsRefresh?: { promise: Promise<AvailableAgentItem[]>; scope: string };
   /** Bumped by every invalidation, so a read started before it cannot confirm the list. */
   #availableAgentsGeneration = 0;
 
@@ -768,25 +768,36 @@ export class AgentSliceActionImpl {
     const { availableAgents: current, availableAgentsStale: stale } = this.#get();
     if (current && !stale) return current;
 
-    // Concurrent sends share one refresh; the list stays stale until it lands.
-    if (!this.#availableAgentsRefresh) {
+    // Concurrent sends of one identity share one refresh; the list stays stale
+    // until it lands. A send of another identity never joins it: its raw answer
+    // would hand that identity's agents to this one.
+    const scope = cacheScope.get();
+    let refresh = this.#availableAgentsRefresh;
+    if (refresh?.scope !== scope) {
       const generation = this.#availableAgentsGeneration;
-      const refresh = this.#available
-        .fetch(EMPTY_PARAMS, { fresh: stale })
+      const promise = this.#available
+        .fetch(EMPTY_PARAMS, { fresh: stale, scope })
         .then(({ data }) => {
-          // Only a read started after the latest change confirms the list.
-          if (generation === this.#availableAgentsGeneration && this.#get().availableAgentsStale)
+          // Only a read started after the latest change, in the identity still
+          // active, confirms the list.
+          if (
+            generation === this.#availableAgentsGeneration &&
+            scope === cacheScope.get() &&
+            this.#get().availableAgentsStale
+          )
             this.#set({ availableAgentsStale: false }, false, 'getAvailableAgents');
           return data;
         })
         .finally(() => {
-          if (this.#availableAgentsRefresh === refresh) this.#availableAgentsRefresh = undefined;
+          if (this.#availableAgentsRefresh?.promise === promise)
+            this.#availableAgentsRefresh = undefined;
         });
+      refresh = { promise, scope };
       this.#availableAgentsRefresh = refresh;
     }
 
     try {
-      return await this.#availableAgentsRefresh;
+      return await refresh.promise;
     } catch (error) {
       // A failed refresh keeps the last confirmed list usable (and still stale).
       if (current) return current;

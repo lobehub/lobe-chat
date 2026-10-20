@@ -442,6 +442,26 @@ describe('agent store replicas', () => {
       expect(useAgentStore.getState().availableAgentsStale).toBe(false);
     });
 
+    // Codex P1: a refresh started under identity A must never answer a send of identity B.
+    it('never hands a refresh started in another identity to this one', async () => {
+      act(() => useAgentStore.getState().invalidateAvailableAgents());
+      const answers: ((value: any) => void)[] = [];
+      vi.mocked(agentService.queryAgents).mockImplementation(
+        () => new Promise((resolve) => answers.push(resolve)),
+      );
+
+      const inA = useAgentStore.getState().getAvailableAgents();
+      useScope(`agent-store-user-${randomUUID()}:personal`);
+      const inB = useAgentStore.getState().getAvailableAgents();
+
+      expect(agentService.queryAgents).toHaveBeenCalledTimes(2);
+      await act(async () => answers[0]([agentItem('agt_private_to_a')]));
+      await act(async () => answers[1]([agentItem('agt_of_b')]));
+
+      await expect(inB).resolves.toEqual([agentItem('agt_of_b')]);
+      await inA.catch(() => undefined);
+    });
+
     it('keeps the last list when a background refresh fails', async () => {
       vi.mocked(agentService.queryAgents).mockResolvedValueOnce([agentItem('agt_1')]);
       const sync = renderHook(() => useAgentStore.getState().useFetchAvailableAgents(true), {

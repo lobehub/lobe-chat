@@ -1,4 +1,6 @@
 import { BUILTIN_AGENT_SLUGS } from '@lobechat/builtin-agents';
+import { toast } from '@lobehub/ui';
+import { t } from 'i18next';
 import { useMemo, useRef } from 'react';
 import { useParams } from 'react-router';
 
@@ -10,6 +12,9 @@ import { looksLikeSlug } from './useResolvedAgentRouteId';
 
 const builtinAgentSlugs = new Set<string>(Object.values(BUILTIN_AGENT_SLUGS));
 
+/** `ok`: send; `moved`: the slug names another agent now; `unconfirmed`: the lookup failed. */
+export type SlugRouteSendCheck = 'moved' | 'ok' | 'unconfirmed';
+
 /**
  * Whether a send on `/agent/<slug>` may go to the agent on screen.
  *
@@ -19,23 +24,26 @@ const builtinAgentSlugs = new Set<string>(Object.values(BUILTIN_AGENT_SLUGS));
  * only when it names the agent the conversation shows; otherwise the route is
  * about to switch agents and the draft stays in the composer.
  */
-export const canSendOnSlugRoute = async (slug: string | undefined): Promise<boolean> => {
-  if (!slug || builtinAgentSlugs.has(slug) || !looksLikeSlug(slug)) return true;
+export const checkSendOnSlugRoute = async (
+  slug: string | undefined,
+): Promise<SlugRouteSendCheck> => {
+  if (!slug || builtinAgentSlugs.has(slug) || !looksLikeSlug(slug)) return 'ok';
 
   const state = useAgentStore.getState();
-  if (agentSelectors.isAgentSlugConfirmed(slug)(state)) return true;
+  if (agentSelectors.isAgentSlugConfirmed(slug)(state)) return 'ok';
 
   const shownAgentId = agentSelectors.getAgentIdBySlug(slug)(state);
-  if (!shownAgentId) return false;
 
   try {
-    return (await state.confirmAgentSlugTarget(slug)) === shownAgentId;
+    const confirmedAgentId = await state.confirmAgentSlugTarget(slug);
+    if (!shownAgentId || !confirmedAgentId) return 'unconfirmed';
+    return confirmedAgentId === shownAgentId ? 'ok' : 'moved';
   } catch {
-    return false;
+    return 'unconfirmed';
   }
 };
 
-/** Conversation hooks that hold a send on an unconfirmed slug route (see `canSendOnSlugRoute`). */
+/** Conversation hooks that hold a send on an unconfirmed slug route (see `checkSendOnSlugRoute`). */
 export const useSlugRouteSendGuard = (): ConversationHooks => {
   const { aid } = useParams<{ aid?: string }>();
   const aidRef = useRef(aid);
@@ -43,8 +51,15 @@ export const useSlugRouteSendGuard = (): ConversationHooks => {
 
   return useMemo(
     () => ({
-      onBeforeSendMessage: async () =>
-        (await canSendOnSlugRoute(aidRef.current)) ? undefined : false,
+      onBeforeSendMessage: async () => {
+        const check = await checkSendOnSlugRoute(aidRef.current);
+        if (check === 'ok') return;
+
+        // The draft stays in the composer; say why, so Send never looks dead.
+        if (check === 'moved') toast.info(t('input.agentSlugMoved', { ns: 'chat' }));
+        else toast.error(t('input.agentSlugUnconfirmed', { ns: 'chat' }));
+        return false;
+      },
     }),
     [],
   );
