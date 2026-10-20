@@ -17,7 +17,11 @@ interface ProfileRowProps {
 }
 
 const styles = stylex.create({
-  action: { flexShrink: 0, marginInlineStart: 'auto' },
+  action: {
+    flexShrink: 0,
+    // Keep action trailing even for action-only rows (AvatarRow / PasswordRow) where body has no children and space-between degenerates to flex-start.
+    marginInlineStart: 'auto',
+  },
   body: {
     display: 'flex',
     flex: '1',
@@ -26,11 +30,7 @@ const styles = stylex.create({
     justifyContent: 'space-between',
     minWidth: '0',
   },
-  label: {
-    flexGrow: { default: 0, [media.md]: 0 },
-    flexShrink: { default: 0, [media.md]: 0 },
-    flexBasis: { default: '160px', [media.md]: 'auto' },
-  },
+  label: { flexGrow: 0, flexShrink: 0, flexBasis: { default: '160px', [media.md]: 'auto' } },
   row: {
     display: 'flex',
     gap: { default: '24px', [media.md]: '12px' },

@@ -28,13 +28,16 @@ const styles = stylex.create({
     borderStyle: 'solid',
     borderColor: { 'default': cssVar.colorBorderSecondary, ':hover': cssVar.colorBorder },
     borderRadius: cssVar.borderRadiusLG,
-    transition: 'border-color 0.15s ease,\n      background 0.15s ease',
+    transition: 'border-color 0.15s ease, background 0.15s ease',
     outlineWidth: { 'default': null, ':focus-visible': '2px' },
     outlineStyle: { 'default': null, ':focus-visible': 'solid' },
     outlineColor: { 'default': null, ':focus-visible': cssVar.colorBorder },
     outlineOffset: { 'default': null, ':focus-visible': '2px' },
   },
-  typeCardSelected: { borderColor: { 'default': cssVar.colorText, ':hover': cssVar.colorText } },
+  // LobeHub's primary is a near-black neutral, so the selection rides a
+
+  // text-colored border alone — no fill, which read as a disabled block.
+  typeCardSelected: { borderColor: cssVar.colorText },
   typeCheck: { flex: 'none', marginInlineStart: 'auto', color: cssVar.colorText },
   typeDesc: { fontSize: '12px', lineHeight: 1.5, color: cssVar.colorTextTertiary },
   typeIcon: {

@@ -27,6 +27,9 @@ const styles = stylex.create({
     gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
     rowGap: '12px',
     columnGap: '16px',
+    // same card treatment as the full-access row so the whole Scope block
+
+    // reads as one system
     padding: '12px',
     borderWidth: '1px',
     borderStyle: 'solid',
@@ -34,6 +37,8 @@ const styles = stylex.create({
     borderRadius: cssVar.borderRadius,
   },
   grantCheck: { flex: 'none', color: cssVar.colorSuccess },
+  /* Granted-only list: one row per domain the key actually reaches. Hairline
+     separators, no card-in-card — the surrounding card is the container. */
   grantList: {
     paddingBlock: '4px',
     paddingInline: '12px',

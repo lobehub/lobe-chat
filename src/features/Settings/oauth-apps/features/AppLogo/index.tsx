@@ -7,6 +7,7 @@ import { AppWindowIcon } from 'lucide-react';
 import { memo } from 'react';
 
 const styles = stylex.create({
+  // An upload target reads as an empty slot: outline only, no fill.
   dashed: { borderWidth: '1px', borderStyle: 'dashed', borderColor: cssVar.colorBorder },
   filled: { backgroundColor: cssVar.colorFillTertiary, backgroundImage: 'none' },
   placeholder: {

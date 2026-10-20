@@ -10,7 +10,7 @@ const styles = stylex.create({
   close: { position: 'absolute', insetBlockStart: '16px', insetInlineEnd: '16px' },
   container: {
     position: 'relative',
-    width: { default: '100%', [media.sm]: '100%' },
+    width: '100%',
     paddingInline: { default: '40px', [media.sm]: '12px' },
     borderWidth: '1px',
     borderStyle: 'solid',

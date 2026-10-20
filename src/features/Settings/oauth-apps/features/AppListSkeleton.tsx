@@ -7,6 +7,7 @@ import * as stylex from '@stylexjs/stylex';
 import { SkeletonBar } from '@/components/Skeleton';
 
 const styles = stylex.create({
+  // Same card chrome as the loaded list column in `OAuthApps`.
   listCol: {
     overflow: 'hidden',
     borderWidth: '1px',
@@ -16,6 +17,7 @@ const styles = stylex.create({
     backgroundColor: cssVar.colorBgContainer,
     backgroundImage: 'none',
   },
+  // Same padding and gap as `AppItem`'s row.
   row: { paddingBlock: '12px', paddingInline: '12px' },
 });
 

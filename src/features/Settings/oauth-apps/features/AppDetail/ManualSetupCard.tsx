@@ -57,13 +57,9 @@ const ManualSetupCard: FC<ManualSetupCardProps> = ({ applicationType }) => {
     <SectionCard
       extra={
         <Icon
+          className={stylex.props(styles.chevron, open && styles.chevronOpen).className}
           icon={ChevronDownIcon}
           size={16}
-          className={
-            open
-              ? stylex.props(styles.chevron, styles.chevronOpen).className
-              : stylex.props(styles.chevron).className
-          }
           onClick={toggle}
         />
       }

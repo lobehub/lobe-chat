@@ -63,6 +63,9 @@ const styles = stylex.create({
     alignItems: 'center',
     justifyContent: 'space-between',
   },
+  // The stats slot is a business stub that renders nothing in the open-source
+
+  // build; an empty bordered card must not be left behind.
   statsCard: {
     padding: '16px',
     borderWidth: '1px',

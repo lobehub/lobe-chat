@@ -37,7 +37,10 @@ interface SortState {
   order: 'ascend' | 'descend';
 }
 
-const styles = stylex.create({ pagination: { paddingInline: '24px' } });
+const styles = stylex.create({
+  // Line the footer up with InlineTable's first/last cells.
+  pagination: { paddingInline: '24px' },
+});
 
 const UsageTable = memo<UsageChartProps>(({ dateStrings }) => {
   const { t } = useTranslation('auth');
