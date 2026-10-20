@@ -509,6 +509,27 @@ describe('ProjectModel', () => {
     }
   });
 
+  it('lets every member who can see a project file work in it', async () => {
+    const workspaceId = 'project-task-workspace';
+    await serverDB.insert(workspaces).values({
+      id: workspaceId,
+      name: 'Task Workspace',
+      primaryOwnerId: userId,
+      slug: workspaceId,
+    });
+    const creator = new ProjectModel(serverDB, userId, workspaceId);
+    const project = await createProject(creator, { name: 'Shared work' });
+    const privateProject = await createProject(creator, { name: 'Solo', visibility: 'private' });
+    const memberTasks = new TaskModel(serverDB, otherUserId, workspaceId);
+
+    expect(await memberTasks.create({ instruction: 'Pitch in', projectId: project.id })).toEqual(
+      expect.objectContaining({ identifier: `${project.identifier}-1` }),
+    );
+    await expect(
+      memberTasks.create({ instruction: 'Sneak in', projectId: privateProject.id }),
+    ).rejects.toThrow('Project not found');
+  });
+
   it('returns null or false for binding operations on inaccessible projects and resources', async () => {
     const foreignProject = await createProject(otherModel, { name: 'Foreign' });
     const [foreignKnowledgeBase] = await serverDB

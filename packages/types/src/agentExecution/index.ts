@@ -174,6 +174,14 @@ export interface ExecAgentAppContext {
    */
   orchestrationRole?: 'supervisor' | 'member';
   /**
+   * Project the run belongs to. On a NEW topic it is written onto the row, so
+   * a conversation started from the project home is born inside the project
+   * even without a working directory. For an existing topic the server
+   * resolves it from the topic (or the run's task) and fills it in here, so
+   * every downstream stage reads one value.
+   */
+  projectId?: string;
+  /**
    * Project working directory a NEW topic is born in — the blank conversation a
    * project group's "+" opened. The topic is bound to it and the run routes to
    * the directory's device. Ignored when a topicId is already provided.
