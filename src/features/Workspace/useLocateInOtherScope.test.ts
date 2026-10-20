@@ -5,12 +5,13 @@ import { renderHook, waitFor } from '@testing-library/react';
 import { createElement, type ReactNode } from 'react';
 import { MemoryRouter } from 'react-router';
 import { SWRConfig } from 'swr';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import {
   buildOtherScopePath,
   probeScopes,
   SCOPE_PROBE_CONCURRENCY,
+  SCOPE_PROBE_TIMEOUT_MS,
   useOtherScopeRecovery,
 } from './useLocateInOtherScope';
 
@@ -173,5 +174,25 @@ describe('probeScopes', () => {
 
     await expect(probeScopes(scopes, probe)).resolves.toBeNull();
     expect(probe).toHaveBeenCalledTimes(scopes.length);
+  });
+
+  describe('when a probe never settles', () => {
+    beforeEach(() => vi.useFakeTimers());
+    afterEach(() => vi.useRealTimers());
+
+    it('treats the check as not found after SCOPE_PROBE_TIMEOUT_MS and aborts the probes', async () => {
+      const { calls, probe } = controlledProbe();
+      let result: unknown = 'pending';
+      void probeScopes(scopes, probe).then((scope) => (result = scope));
+
+      await vi.advanceTimersByTimeAsync(SCOPE_PROBE_TIMEOUT_MS - 1);
+      expect(result).toBe('pending');
+      expect(calls).toHaveLength(SCOPE_PROBE_CONCURRENCY);
+
+      await vi.advanceTimersByTimeAsync(1);
+      expect(result).toBeNull();
+      expect(calls.every((c) => c.signal.aborted)).toBe(true);
+      expect(calls).toHaveLength(SCOPE_PROBE_CONCURRENCY);
+    });
   });
 });

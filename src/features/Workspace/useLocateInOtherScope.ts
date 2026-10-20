@@ -47,9 +47,17 @@ export type ScopeProbe = (client: ScopedLambdaClient, signal: AbortSignal) => Pr
 export const SCOPE_PROBE_CONCURRENCY = 3;
 
 /**
+ * Deadline for the whole cross-scope check. A probe that never settles must not
+ * hold the page on its loading frame: past this, the check counts as "not
+ * found" and the page falls back to the original error and its Retry.
+ */
+export const SCOPE_PROBE_TIMEOUT_MS = 10_000;
+
+/**
  * Find the first candidate scope `probe` succeeds in. Candidates start in order
  * (personal first) with at most {@link SCOPE_PROBE_CONCURRENCY} in flight; the
- * first success aborts the rest and starts no more.
+ * first success aborts the rest and starts no more. Resolves `null` when every
+ * candidate misses or {@link SCOPE_PROBE_TIMEOUT_MS} passes first.
  */
 export const probeScopes = (candidates: OtherScope[], probe: ScopeProbe) =>
   new Promise<OtherScope | null>((resolve) => {
@@ -61,9 +69,11 @@ export const probeScopes = (candidates: OtherScope[], probe: ScopeProbe) =>
     const settle = (scope: OtherScope | null) => {
       if (settled) return;
       settled = true;
+      clearTimeout(deadline);
       controller.abort();
       resolve(scope);
     };
+    const deadline = setTimeout(() => settle(null), SCOPE_PROBE_TIMEOUT_MS);
 
     const launch = () => {
       while (!settled && inFlight < SCOPE_PROBE_CONCURRENCY && next < candidates.length) {
