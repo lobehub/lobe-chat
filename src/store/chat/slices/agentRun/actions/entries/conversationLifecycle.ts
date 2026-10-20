@@ -106,8 +106,6 @@ import { messageMapKey } from '@/store/chat/utils/messageMapKey';
 import { snapshotAgentModel, snapshotAgentReasoning } from '@/store/chat/utils/snapshotAgentModel';
 import { topicMapKey } from '@/store/chat/utils/topicMapKey';
 import { deviceSelectors, getDeviceStoreState } from '@/store/device';
-import { useDocumentStore } from '@/store/document';
-import { preparePageForAgent } from '@/store/document/preparePageForAgent';
 import { getElectronStoreState } from '@/store/electron';
 import { getFileStoreState } from '@/store/file/store';
 import { useGlobalStore } from '@/store/global';
@@ -133,6 +131,7 @@ import {
   parseSingleAgentMentionDirectRoute,
   processCommands,
 } from './commandBus';
+import { pageConversationNeedsGateway, preparePageConversation } from './pageConversation';
 import {
   attachSendTimeMetadataToUserMessage,
   mergePartialPersistedMessages,
@@ -458,11 +457,8 @@ export class ConversationLifecycleActionImpl {
     );
     const { workspaceScoped } = topicBinding;
     let { agencyConfig } = topicBinding;
-    // Page tools only run on the server runtime, so a page conversation ignores
-    // the user's Gateway Mode opt-out whenever a gateway exists.
     const isGatewayMode =
-      this.#get().isGatewayModeEnabled(agentId) ||
-      (context.scope === 'page' && this.#get().isGatewayAvailable());
+      this.#get().isGatewayModeEnabled(agentId) || pageConversationNeedsGateway(context);
     const boundTopic = context.topicId
       ? topicSelectors.getTopicById(context.topicId)(this.#get())
       : undefined;
@@ -584,24 +580,7 @@ export class ConversationLifecycleActionImpl {
     const hasMentionedAgents =
       !context.groupId && !directMentionRoute && mentionedAgents.length > 0;
 
-    // Callers that create a document and send before its editor mounts (e.g.
-    // sendAsWrite) pass the new documentId explicitly; the active document is
-    // only a fallback, since it may still be the previous page.
-    const activePageDocumentId =
-      context.scope === 'page' && !context.documentId
-        ? (useDocumentStore.getState().activeDocumentId ?? undefined)
-        : undefined;
-
-    // The agent reads the page when it edits it; a room page that has not
-    // synced yet only gets a warning, since its edits merge either way.
-    const pageDocumentId = context.documentId ?? activePageDocumentId;
-    if (
-      context.scope === 'page' &&
-      pageDocumentId &&
-      (await preparePageForAgent(pageDocumentId)) === 'notSynced'
-    ) {
-      toast.warning(t('pageEditor.collab.notSynced', { ns: 'file' }));
-    }
+    const activePageDocumentId = await preparePageConversation(context);
 
     // Whether this send has to create the topic. From here on this flag — NOT
     // `!operationContext.topicId` — is the "new topic" test: the conversation
