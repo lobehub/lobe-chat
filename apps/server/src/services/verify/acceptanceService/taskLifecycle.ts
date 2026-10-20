@@ -132,16 +132,23 @@ export const reopenRejectedTaskSubject = async (
   subjectId: string,
 ): Promise<void> => {
   try {
-    const task = await resolveLifecycleTask(deps, subjectId);
+    let task = await resolveLifecycleTask(deps, subjectId);
     const taskModel = new TaskModel(deps.db, deps.userId, deps.workspaceId);
 
     if (task?.status === 'running') {
       const pending = pendingCompletionOperation(task);
       if (!pending) return;
 
-      await taskModel.updateContext(task.id, { completion: { requestedByOperationId: null } });
-      log('acceptance rejected → task %s pending completion by run %s withdrawn', task.id, pending);
-      return;
+      if (await taskModel.withdrawCompletionRequest(task.id, pending)) {
+        log(
+          'acceptance rejected → task %s pending completion by run %s withdrawn',
+          task.id,
+          pending,
+        );
+        return;
+      }
+      // The run consumed the request first and completed the task: reopen it.
+      task = await taskModel.findById(task.id);
     }
     if (task?.status !== 'completed') return;
 

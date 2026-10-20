@@ -75,6 +75,7 @@ describe('TaskLifecycleService.onTopicComplete', () => {
   let service: TaskLifecycleService;
   let updateStatus: ReturnType<typeof vi.fn>;
   let updateStatusIfCurrent: ReturnType<typeof vi.fn>;
+  let completeIfCompletionRequested: ReturnType<typeof vi.fn>;
   let updateContext: ReturnType<typeof vi.fn>;
   let findById: ReturnType<typeof vi.fn>;
   let updateHeartbeat: ReturnType<typeof vi.fn>;
@@ -93,6 +94,7 @@ describe('TaskLifecycleService.onTopicComplete', () => {
 
     updateStatus = vi.fn().mockResolvedValue(null);
     updateStatusIfCurrent = vi.fn();
+    completeIfCompletionRequested = vi.fn();
     updateContext = vi.fn().mockResolvedValue(null);
     findById = vi.fn();
     updateHeartbeat = vi.fn().mockResolvedValue(undefined);
@@ -104,6 +106,7 @@ describe('TaskLifecycleService.onTopicComplete', () => {
     const taskModel = (service as any).taskModel;
     taskModel.updateStatus = updateStatus;
     taskModel.updateStatusIfCurrent = updateStatusIfCurrent;
+    taskModel.completeIfCompletionRequested = completeIfCompletionRequested;
     taskModel.updateContext = updateContext;
     taskModel.findById = findById;
     taskModel.updateHeartbeat = updateHeartbeat;
@@ -276,7 +279,7 @@ describe('TaskLifecycleService.onTopicComplete', () => {
         automationMode: null,
         context: { completion: { requestedByOperationId: 'op-1' } },
       });
-      updateStatusIfCurrent.mockResolvedValue({ ...task, status: 'completed' });
+      completeIfCompletionRequested.mockResolvedValue({ ...task, status: 'completed' });
       findById.mockResolvedValue(task);
 
       await service.onTopicComplete({
@@ -287,23 +290,20 @@ describe('TaskLifecycleService.onTopicComplete', () => {
         topicId: 'topic-1',
       });
 
-      expect(updateStatusIfCurrent).toHaveBeenCalledWith('task-1', 'running', 'completed', {
-        completedAt: expect.any(Date),
-        error: null,
-      });
+      // The request is consumed by the same write that completes the task.
+      expect(completeIfCompletionRequested).toHaveBeenCalledWith('task-1', 'op-1');
       expect(updateStatus).not.toHaveBeenCalledWith('task-1', 'paused', expect.anything());
       expect(cascadeOnCompletion).toHaveBeenCalledWith('task-1');
     });
 
-    it('does not complete when the request was withdrawn while the topic was settling', async () => {
-      // A rejected acceptance delivery clears the request after the task was first read.
+    it('pauses for review when the request was withdrawn while the topic was settling', async () => {
+      // A rejected acceptance delivery withdrew the request after the task was first read.
       const task = baseTask({
         automationMode: null,
         context: { completion: { requestedByOperationId: 'op-1' } },
       });
-      findById
-        .mockResolvedValueOnce(task)
-        .mockResolvedValue({ ...task, context: { completion: { requestedByOperationId: null } } });
+      findById.mockResolvedValue(task);
+      completeIfCompletionRequested.mockResolvedValue(null);
 
       await service.onTopicComplete({
         operationId: 'op-1',
@@ -313,13 +313,10 @@ describe('TaskLifecycleService.onTopicComplete', () => {
         topicId: 'topic-1',
       });
 
-      expect(updateStatusIfCurrent).not.toHaveBeenCalledWith(
-        'task-1',
-        'running',
-        'completed',
-        expect.anything(),
-      );
-      expect(updateStatus).toHaveBeenCalledWith('task-1', 'paused', { error: null });
+      expect(cascadeOnCompletion).not.toHaveBeenCalled();
+      expect(updateStatusIfCurrent).toHaveBeenCalledWith('task-1', 'running', 'paused', {
+        error: null,
+      });
     });
 
     it.each(['schedule', 'heartbeat'] as const)(
@@ -407,10 +404,10 @@ describe('TaskLifecycleService.onTopicComplete', () => {
         });
         const parentTask = baseTask({ id: 'parent-task', identifier: 'TASK-0' });
         updateStatusIfCurrent.mockResolvedValue(task);
-        findById.mockResolvedValueOnce(task);
-        // A pending completion request is re-read before it is honored.
-        if (automationMode) findById.mockResolvedValueOnce(task);
-        findById.mockResolvedValueOnce(parentTask).mockResolvedValue(task);
+        findById
+          .mockResolvedValueOnce(task)
+          .mockResolvedValueOnce(parentTask)
+          .mockResolvedValue(task);
         (service as any).taskModel.shouldPauseAfterComplete = vi.fn().mockReturnValue(true);
 
         await service.onTopicComplete({
