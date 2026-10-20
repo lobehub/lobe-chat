@@ -17,11 +17,26 @@ import type { LobeChatDatabase } from '@/database/type';
 import { AgentRuntimeCoordinator } from '@/server/modules/AgentRuntime/AgentRuntimeCoordinator';
 
 import { CompletionLifecycle } from './CompletionLifecycle';
+import { getServerHooks } from './hooks/serverHooks';
 import type { SerializedHook } from './hooks/types';
 import { OperationTraceRecorder } from './OperationTraceRecorder';
 import { createDefaultSnapshotStore } from './snapshotStore';
 
 const log = debug('lobe-server:abandon-operation');
+
+/**
+ * Report a failure that leaves terminal state unsettled.
+ *
+ * Everything on this path is best-effort, but some of it is not optional:
+ * when the durable row, the run row or the terminal hook fails here, the run
+ * ends with a row still claiming to be `running` and nothing left to report it
+ * — a Task that never settles, a Goal that waits on it, and a user looking at a
+ * spinner. Those failures get a real log line; the ones that only
+ * cost a retry stay on `debug`.
+ */
+const reportSettleFailure = (message: string, context: unknown): void => {
+  console.error(`[abandon-operation] ${message}: %O`, context);
+};
 
 interface AbandonOperationOptions {
   coordinator?: AgentRuntimeCoordinator;
@@ -124,7 +139,12 @@ export class AbandonOperationService {
     const state = await this.coordinator.loadAgentState(operationId);
     if (!state) {
       log('[%s] no agent state in coordinator — already cleaned up', operationId);
-      await this.finalizeRunningOperationWithoutState(operationId, reason, result);
+      await this.finalizeRunningOperationWithoutState(
+        operationId,
+        reason,
+        result,
+        options?.settledAsAbandoned,
+      );
       return result;
     }
     result.found = true;
@@ -138,7 +158,8 @@ export class AbandonOperationService {
     const shouldDispatchAbandonedLifecycle =
       state.status === 'running' ||
       state.status === 'waiting_for_human' ||
-      state.status === 'waiting_for_async_tool';
+      state.status === 'waiting_for_async_tool' ||
+      state.status === 'waiting_for_client';
     const message = `${ABANDONED_OPERATION_ERROR_PREFIX} ${reason}`;
     const error: ChatMessageError = {
       body: { message },
@@ -225,7 +246,10 @@ export class AbandonOperationService {
           result.assistantMessageUpdated = true;
         }
       } catch (e) {
-        log('[%s] assistant failure row write failed (non-fatal): %O', operationId, e);
+        reportSettleFailure(
+          `abandoned op failed to mark its assistant message (op=${operationId})`,
+          e,
+        );
       }
     }
 
@@ -236,7 +260,7 @@ export class AbandonOperationService {
         });
         await topicModel.settleRunningOperation(origin.topicId, operationId);
       } catch (e) {
-        log('[%s] abandoned op runningOperation cleanup failed (non-fatal): %O', operationId, e);
+        reportSettleFailure(`abandoned op failed to settle its topic (op=${operationId})`, e);
       }
     }
 
@@ -249,7 +273,10 @@ export class AbandonOperationService {
           skipErrorMessageWrite: result.assistantMessageUpdated,
         });
       } catch (e) {
-        log('[%s] abandoned op lifecycle dispatch failed (non-fatal): %O', operationId, e);
+        reportSettleFailure(
+          `abandoned op failed to dispatch its terminal hooks (op=${operationId})`,
+          e,
+        );
       }
     }
 
@@ -261,21 +288,26 @@ export class AbandonOperationService {
     // silently, and a throw inside it is swallowed as non-fatal. Any of those
     // used to leave the operation `running` forever — nothing else retires a
     // non-Goal op, so it stayed live on the dashboard and blocked its own
-    // recovery. `settleRunning` is idempotent and only matches rows still in
-    // `running`, so it cannot overwrite the richer outcome when the dispatch
-    // did happen.
+    // recovery. `settleLive` is idempotent and only matches rows still live, so
+    // it cannot overwrite the richer outcome when the dispatch did happen. It
+    // also covers a parked row (`waiting_for_human` / `waiting_for_async_tool`):
+    // a sub-agent child parked on its own nested call skips the dispatch above,
+    // and once abandoned nothing can ever resume it.
     if (origin.userId) {
       try {
         const settled = await new AgentOperationModel(
           this.db,
           origin.userId,
           origin.workspaceId,
-        ).settleRunning(operationId, 'error');
+        ).settleLive(operationId, 'error');
         if (settled) {
           log('[%s] durable row settled by abandon safety net', operationId);
         }
       } catch (e) {
-        log('[%s] abandon safety-net settle failed (non-fatal): %O', operationId, e);
+        reportSettleFailure(
+          `abandon safety net could not retire the durable row (op=${operationId})`,
+          e,
+        );
       }
     }
 
@@ -365,9 +397,21 @@ export class AbandonOperationService {
     operationId: string,
     reason: string,
     result: FinalizeAbandonedResult,
+    settledAsAbandoned?: boolean,
   ): Promise<void> {
     const op = await this.findOperationRow(operationId);
-    if (!op || !['running', 'waiting_for_human', 'waiting_for_async_tool'].includes(op.status)) {
+    // A caller that already claimed the row (`settleStaleRunning`) has moved it
+    // to `abandoned`, so that status still needs the topic / placeholder /
+    // hook side effects below — otherwise the row retires while the turn keeps
+    // loading.
+    const preClaimed = settledAsAbandoned === true && op?.status === 'abandoned';
+    if (
+      !op ||
+      (!preClaimed &&
+        !['running', 'waiting_for_human', 'waiting_for_async_tool', 'waiting_for_client'].includes(
+          op.status,
+        ))
+    ) {
       return;
     }
 
@@ -380,24 +424,30 @@ export class AbandonOperationService {
       type: AgentRuntimeErrorType.AgentRuntimeError,
     };
 
-    try {
-      await new AgentOperationModel(
-        this.db,
-        op.userId,
-        op.workspaceId ?? undefined,
-      ).recordCompletion(operationId, {
-        completedAt: new Date(),
-        completionReason: 'error',
-        error: { message, type: String(error.type) },
-        llmCalls: 0,
-        processingTimeMs: op.startedAt ? Date.now() - new Date(op.startedAt).getTime() : null,
-        status: 'error',
-        stepCount: 0,
-        toolCalls: 0,
-        totalTokens: 0,
-      });
-    } catch (e) {
-      log('[%s] no-state abandon: recordCompletion failed (non-fatal): %O', operationId, e);
+    // The pre-claim already wrote the terminal row; do not overwrite it.
+    if (!preClaimed) {
+      try {
+        await new AgentOperationModel(
+          this.db,
+          op.userId,
+          op.workspaceId ?? undefined,
+        ).recordCompletion(operationId, {
+          completedAt: new Date(),
+          completionReason: 'error',
+          error: { message, type: String(error.type) },
+          llmCalls: 0,
+          processingTimeMs: op.startedAt ? Date.now() - new Date(op.startedAt).getTime() : null,
+          status: 'error',
+          stepCount: 0,
+          toolCalls: 0,
+          totalTokens: 0,
+        });
+      } catch (e) {
+        reportSettleFailure(
+          `no-state abandon could not retire the durable row (op=${operationId})`,
+          e,
+        );
+      }
     }
 
     const settled = await this.settleOperationTopic(op, operationId);
@@ -435,7 +485,11 @@ export class AbandonOperationService {
     // run the hooks belong to, the same rule `heteroFinish` applies.
     if (settled.ownershipUnproven) return;
     const serializedHooks = settled.hooks ?? readDurableHooks(op.metadata);
-    if (!serializedHooks?.length) return;
+    if (
+      !serializedHooks?.length &&
+      !getServerHooks().some((hook) => hook.type === 'onComplete' || hook.type === 'onError')
+    )
+      return;
 
     try {
       await new CompletionLifecycle(this.db, op.userId, op.workspaceId ?? undefined, {
@@ -453,10 +507,17 @@ export class AbandonOperationService {
           userId: op.userId,
         },
         'error',
-        { skipErrorMessageWrite: true },
+        // Persist onto the pre-claimed `abandoned` row instead of being refused
+        // as a conflicting terminal owner, which would skip the hooks.
+        preClaimed
+          ? { settledAsAbandoned: true, skipErrorMessageWrite: true }
+          : { skipErrorMessageWrite: true },
       );
     } catch (e) {
-      log('[%s] no-state abandon: lifecycle dispatch failed (non-fatal): %O', operationId, e);
+      reportSettleFailure(
+        `no-state abandon failed to dispatch its terminal hooks (op=${operationId})`,
+        e,
+      );
     }
   }
 
@@ -575,7 +636,13 @@ export class AbandonOperationService {
         }
         return { ...topicHooks, ...(await this.findPlaceholderMessage(op, operationId)) };
       } catch (e) {
-        log('[%s] no-state abandon: topic lookup failed (non-fatal): %O', operationId, e);
+        // The topic could not be settled, so this run's hooks are suppressed —
+        // which means the Task behind it never hears that it ended. Visible
+        // even though the path continues.
+        reportSettleFailure(
+          `no-state abandon could not settle its topic, so the terminal hooks are suppressed (op=${operationId})`,
+          e,
+        );
         // A failed settle cannot rule out a newer operation on the topic, and
         // firing this run's task hook would then pause the replacement's Task.
         return { ...(await this.findPlaceholderMessage(op, operationId)), ownershipUnproven: true };

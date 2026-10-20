@@ -1,9 +1,7 @@
 'use client';
 
 import { type CredType } from '@lobechat/types';
-import { Flexbox } from '@lobehub/ui';
-import { Card } from 'antd';
-import { createStaticStyles } from 'antd-style';
+import { Block, createStaticStyles, Flexbox } from '@lobehub/ui';
 import { File, Globe, Key, TerminalSquare } from 'lucide-react';
 import { type FC } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -11,6 +9,7 @@ import { useTranslation } from 'react-i18next';
 const styles = createStaticStyles(({ css, cssVar }) => ({
   card: css`
     cursor: pointer;
+    border-radius: ${cssVar.borderRadiusLG};
     transition: all 0.2s;
 
     &:hover {
@@ -25,6 +24,7 @@ const styles = createStaticStyles(({ css, cssVar }) => ({
   description: css`
     font-size: 12px;
     color: ${cssVar.colorTextSecondary};
+    text-align: center;
   `,
   grid: css`
     display: grid;
@@ -87,10 +87,11 @@ const CredTypeSelector: FC<CredTypeSelectorProps> = ({ disabled, onSelect }) => 
   return (
     <div className={styles.grid}>
       {typeConfigs.map(({ type, icon, description }) => (
-        <Card
+        <Block
           className={`${styles.card} ${disabled ? styles.cardDisabled : ''}`}
           key={type}
-          size="small"
+          padding={12}
+          variant={'outlined'}
           onClick={() => {
             if (disabled) return;
             onSelect(type);
@@ -101,7 +102,7 @@ const CredTypeSelector: FC<CredTypeSelectorProps> = ({ disabled, onSelect }) => 
             <div className={styles.title}>{t(`creds.types.${type}`)}</div>
             <div className={styles.description}>{t(description as any)}</div>
           </Flexbox>
-        </Card>
+        </Block>
       ))}
     </div>
   );

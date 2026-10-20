@@ -54,4 +54,16 @@ describe('resolveDocumentEditorData', () => {
     ).resolves.toBeUndefined();
     await expect(resolveDocumentEditorData({})).resolves.toBeUndefined();
   });
+
+  it('never builds or keeps editorData for an HTML document', async () => {
+    const content = '<!doctype html><html><body><h1>Report</h1></body></html>';
+    const editorData = { root: { children: [{ type: 'paragraph' }], type: 'root' } };
+
+    await expect(
+      resolveDocumentEditorData({ content, fileType: 'custom/html' }),
+    ).resolves.toBeUndefined();
+    await expect(
+      resolveDocumentEditorData({ content, editorData, fileType: 'custom/html' }),
+    ).resolves.toBeUndefined();
+  });
 });

@@ -1,8 +1,7 @@
 'use client';
 
 import type { AssistantContentBlock, EmojiReaction, UISignalCallbacksBlock } from '@lobechat/types';
-import { Flexbox } from '@lobehub/ui';
-import { Tag } from '@lobehub/ui/base-ui';
+import { Flexbox, Tag } from '@lobehub/ui';
 import isEqual from 'fast-deep-equal';
 import type { MouseEventHandler, ReactNode } from 'react';
 import { memo, Suspense, useCallback, useMemo } from 'react';
@@ -36,6 +35,7 @@ import { getOperationFinalRootId } from '../../store/slices/data/workSummaries';
 import InterruptedHint from '../Assistant/components/InterruptedHint';
 import Usage from '../components/Extras/Usage';
 import MessageBranch from '../components/MessageBranch';
+import RefreshingIndicator from '../components/RefreshingIndicator';
 import {
   useSetMessageItemActionElementPortialContext,
   useSetMessageItemActionTypeContext,
@@ -108,7 +108,7 @@ const GroupMessage = memo<GroupMessageProps>(
       agentId,
       usage,
       createdAt,
-      children,
+      children: groupChildren,
       performance,
       model,
       provider,
@@ -117,6 +117,11 @@ const GroupMessage = memo<GroupMessageProps>(
       signalCallbacks,
       taskCompletions,
     } = item;
+    const children = useMemo(
+      () =>
+        item.role === 'assistant' ? [item as unknown as AssistantContentBlock] : groupChildren,
+      [groupChildren, item],
+    );
     const avatar = useAgentMeta(agentId);
     const continuationMessages = useConversationStore(
       (s) => continuations.map((c) => dataSelectors.getDisplayMessageById(c.groupId)(s)),
@@ -187,7 +192,16 @@ const GroupMessage = memo<GroupMessageProps>(
       // (the work anchor marks them); without it the card keeps every entry.
       !!workRootOperationId,
     );
-    const operationGoals = useOperationGoals(isGroupGenerating ? undefined : allChildren);
+    const derivedGoals = useOperationGoals(allChildren);
+    // A goal a CLI agent creates with `lh` gets its card as soon as it exists:
+    // `/goal` keeps the same run going to plan it, and the card is how the user
+    // sees the goal while that happens. A builtin createGoal call already renders
+    // live inline, so its card stays a turn-end artifact like edited files.
+    const operationGoals = useMemo(
+      () =>
+        isGroupGenerating ? derivedGoals.filter((goal) => goal.source === 'command') : derivedGoals,
+      [derivedGoals, isGroupGenerating],
+    );
 
     const isInbox = useAgentStore(builtinAgentSelectors.isInboxAgent);
     const [toggleSystemRole] = useGlobalStore((s) => [s.toggleSystemRole]);
@@ -289,7 +303,6 @@ const GroupMessage = memo<GroupMessageProps>(
         id={id}
         placement={'left'}
         time={createdAt}
-        titleAddon={isSupervisor ? <Tag>{t('supervisor.label')}</Tag> : undefined}
         actionAddon={
           reactions.length > 0 || (commentCount > 0 && commentTopicId) ? (
             <>
@@ -356,6 +369,12 @@ const GroupMessage = memo<GroupMessageProps>(
                 />
               )
             : undefined
+        }
+        titleAddon={
+          <>
+            {isSupervisor && <Tag>{t('supervisor.label')}</Tag>}
+            <RefreshingIndicator messageId={id} />
+          </>
         }
         onAvatarClick={onAvatarClick}
         onMouseEnter={onMouseEnter}

@@ -1,6 +1,5 @@
-import { DropdownMenu, Flexbox, Icon, TooltipGroup } from '@lobehub/ui';
-import { ActionIcon, Text } from '@lobehub/ui/base-ui';
-import { type ItemType } from 'antd/es/menu/interface';
+import type { ItemType } from '@lobehub/ui';
+import { ActionIcon, DropdownMenu, Flexbox, Icon, Text, TooltipGroup } from '@lobehub/ui';
 import isEqual from 'fast-deep-equal';
 import { ArrowDownUpIcon, LucideCheck } from 'lucide-react';
 import { type AiProviderModelListItem } from 'model-bank';

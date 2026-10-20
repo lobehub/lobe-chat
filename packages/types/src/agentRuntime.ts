@@ -133,8 +133,7 @@ export interface AgentShareVisitorContext {
   skillGrants?: string[];
   /**
    * Mirrors `shareConfig.toolGrants` so tool runtimes that resolve their
-   * target outside `toolManifestMap` (e.g. `activateSkill`,
-   * `lobe-topic-reference`) can apply the same allowlist the assembled tool set
+   * target outside `toolManifestMap` (e.g. `activateSkill`) can apply the same allowlist the assembled tool set
    * already enforces.
    */
   toolGrants?: AgentShareToolGrant[];
@@ -283,6 +282,23 @@ export const AgentRuntimeErrorType = {
   OperationInactivityTimeout: 'OperationInactivityTimeout',
 
   InvalidOllamaArgs: 'InvalidOllamaArgs',
+  /**
+   * The model can only be reached from the user's own device, and no open
+   * LobeHub client picked up the request (no client declared it can run this
+   * provider, or none claimed the call in time). Retrying once a client is
+   * open recovers the run.
+   */
+  ClientLlmExecutorUnavailable: 'ClientLlmExecutorUnavailable',
+  /**
+   * The device running a relayed model request stopped sending output
+   * (closed, refreshed or lost its connection) before the request finished.
+   */
+  ClientLlmExecutorLost: 'ClientLlmExecutorLost',
+  /**
+   * A relayed model request on the user's device did not produce its first
+   * output, or did not finish, within the allowed time.
+   */
+  ClientLlmTimeout: 'ClientLlmTimeout',
   OllamaBizError: 'OllamaBizError',
   OllamaServiceUnavailable: 'OllamaServiceUnavailable',
 

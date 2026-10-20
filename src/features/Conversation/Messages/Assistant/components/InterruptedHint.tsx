@@ -1,6 +1,11 @@
-import { createStaticStyles } from 'antd-style';
+import { createStaticStyles } from '@lobehub/ui';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
+
+import { useChatStore } from '@/store/chat';
+import { operationSelectors } from '@/store/chat/selectors';
+
+import { contextSelectors, useConversationStore } from '../../../store';
 
 const styles = createStaticStyles(({ css, cssVar }) => ({
   container: css`
@@ -12,6 +17,10 @@ const styles = createStaticStyles(({ css, cssVar }) => ({
 
 const InterruptedHint = memo(() => {
   const { t } = useTranslation('chat');
+  const context = useConversationStore(contextSelectors.context);
+  const handingOff = useChatStore(operationSelectors.isSteerHandoffPending(context));
+
+  if (handingOff) return null;
 
   return (
     <div className={styles.container}>

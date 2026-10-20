@@ -1,12 +1,8 @@
-import { type PartialDeep } from 'type-fest';
-
 import { lambdaClient } from '@/libs/trpc/client';
-import { type LobeAgentChatConfig, type LobeAgentConfig } from '@/types/agent';
-import { type MetaData } from '@/types/meta';
+import { type LobeAgentConfig } from '@/types/agent';
 import {
   type ChatSessionList,
   type LobeAgentSession,
-  type LobeSessions,
   type LobeSessionType,
   type SessionGroupItem,
   type UpdateSessionParams,
@@ -17,11 +13,6 @@ import {
  * Mobile still uses this, but should migrate to agentService.
  */
 export class SessionService {
-  hasSessions = async (): Promise<boolean> => {
-    const result = await this.countSessions();
-    return result === 0;
-  };
-
   /** @deprecated Use agentService.createAgent instead */
   createSession = async (
     type: LobeSessionType,
@@ -43,14 +34,6 @@ export class SessionService {
     return lambdaClient.session.getGroupedSessions.query();
   };
 
-  countSessions = async (params?: {
-    endDate?: string;
-    range?: [string, string];
-    startDate?: string;
-  }): Promise<number> => {
-    return lambdaClient.session.countSessions.query(params);
-  };
-
   updateSession = (id: string, data: Partial<UpdateSessionParams>) => {
     const { group, pinned, meta, updatedAt } = data;
     return lambdaClient.session.updateSession.mutate({
@@ -63,36 +46,6 @@ export class SessionService {
   getSessionConfig = async (id: string): Promise<LobeAgentConfig> => {
     // @ts-ignore
     return lambdaClient.agent.getAgentConfig.query({ sessionId: id });
-  };
-
-  updateSessionConfig = (
-    id: string,
-    config: PartialDeep<LobeAgentConfig>,
-    signal?: AbortSignal,
-  ) => {
-    return lambdaClient.session.updateSessionConfig.mutate(
-      { id, value: config },
-      {
-        context: { showNotification: false },
-        signal,
-      },
-    );
-  };
-
-  updateSessionMeta = (id: string, meta: Partial<MetaData>, signal?: AbortSignal) => {
-    return lambdaClient.session.updateSessionConfig.mutate({ id, value: meta }, { signal });
-  };
-
-  updateSessionChatConfig = (
-    id: string,
-    value: Partial<LobeAgentChatConfig>,
-    signal?: AbortSignal,
-  ) => {
-    return lambdaClient.session.updateSessionChatConfig.mutate({ id, value }, { signal });
-  };
-
-  searchSessions = (keywords: string): Promise<LobeSessions> => {
-    return lambdaClient.session.searchSessions.query({ keywords });
   };
 
   removeSession = (id: string) => {

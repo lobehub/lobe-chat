@@ -182,7 +182,7 @@ export function createThreadHooks(
   messageModel: MessageModel,
   threadId: string,
   startedAt: string,
-  sourceMessageId: string,
+  sourceMessageId: string | undefined,
   logScope: 'execSubAgent' | 'execVirtualSubAgent',
   usageBaseline: ThreadUsageBaseline = {},
 ): AgentHook[] {
@@ -255,13 +255,14 @@ export function createThreadHooks(
         }
 
         try {
-          // Update source message with summary
+          // Bridged runs publish through result control; only standalone thread
+          // runs own a source-message summary write here.
           const lastAssistantMessage = finalState.messages
             ?.slice()
             .reverse()
             .find((m: { role: string }) => m.role === 'assistant');
 
-          if (lastAssistantMessage?.content) {
+          if (sourceMessageId && lastAssistantMessage?.content) {
             await messageModel.update(sourceMessageId, {
               content: lastAssistantMessage.content,
             });
@@ -385,6 +386,11 @@ export function createGroupActionMemberBridgeHook(
   agentRuntimeService: AgentRuntimeService,
   params: {
     anchorMessageId: string;
+    /**
+     * Absolute member deadline (epoch ms). Carried in the serialized bridge so
+     * an approval continuation can re-arm the timeout watchdog.
+     */
+    deadlineAt?: number;
     expectedMembers: number;
     groupToolMessageId: string;
     mode: GroupActionMemberMode;
@@ -395,6 +401,7 @@ export function createGroupActionMemberBridgeHook(
 ): AgentHook {
   const {
     anchorMessageId,
+    deadlineAt,
     expectedMembers,
     groupToolMessageId,
     mode,
@@ -430,6 +437,7 @@ export function createGroupActionMemberBridgeHook(
     webhook: {
       body: {
         anchorMessageId,
+        ...(deadlineAt && { deadlineAt }),
         expectedMembers,
         groupToolMessageId,
         mode,

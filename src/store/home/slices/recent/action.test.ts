@@ -1,14 +1,30 @@
+/**
+ * @vitest-environment happy-dom
+ *
+ * Recents are a replica: the sidebar paints the persisted rows on the first
+ * frame, and a rename shows at once in every loaded recents query.
+ */
+import { randomUUID } from 'node:crypto';
+
 import type { RecentItem } from '@lobechat/types';
-import { act, waitFor } from '@testing-library/react';
+import { act, renderHook, waitFor } from '@testing-library/react';
+import type { PropsWithChildren } from 'react';
+import { createElement, useEffect } from 'react';
+import { SWRConfig, useSWRConfig } from 'swr';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import * as swr from '@/libs/swr';
-import { recentKeys } from '@/libs/swr/keys';
-import * as cacheScope from '@/libs/swr/useCacheScope';
+import { cacheScope } from '@/libs/replica';
+import { setScopedMutate } from '@/libs/swr/mutate';
+import { fileService } from '@/services/file';
+import { recentService } from '@/services/recent';
 import { taskService } from '@/services/task';
 import { useHomeStore } from '@/store/home';
 import { createRecentQueryKey, initialRecentState } from '@/store/home/slices/recent/initialState';
-import { recentProjection } from '@/store/home/slices/recent/projection';
+import {
+  recentFileListResource,
+  recentListResource,
+  recentPageListResource,
+} from '@/store/home/slices/recent/projection';
 import { homeRecentSelectors } from '@/store/home/slices/recent/selectors';
 
 const item = (id: string, title: string, type: RecentItem['type'] = 'task'): RecentItem => ({
@@ -34,12 +50,55 @@ const deferred = <T>() => {
   return { promise, reject, resolve };
 };
 
-const replaceQuery = (scope: string, queryKey: string, items: RecentItem[]) =>
-  useHomeStore.getState().internal_replaceRecentQuery(scope, queryKey, items);
+const MutateBridge = () => {
+  const { mutate } = useSWRConfig();
+  useEffect(() => setScopedMutate(mutate), [mutate]);
+  return null;
+};
+const wrapper = ({ children }: PropsWithChildren) =>
+  createElement(
+    SWRConfig,
+    { value: { dedupingInterval: 0, provider: () => new Map() } },
+    createElement(MutateBridge),
+    children,
+  );
+
+const SIDEBAR = createRecentQueryKey(11);
+const DRAWER = createRecentQueryKey(50);
+const titleOf = (queryKey: string, ref: `${RecentItem['type']}:${string}`) =>
+  homeRecentSelectors.item(queryKey, ref)(useHomeStore.getState())?.title;
+
+let scope = '';
+const useScope = (next: string) => {
+  scope = next;
+  vi.spyOn(cacheScope, 'get').mockImplementation(() => scope);
+  vi.spyOn(cacheScope, 'use').mockImplementation(() => scope);
+  vi.spyOn(cacheScope, 'canPersist').mockReturnValue(true);
+};
+
+/** Load the sidebar (10 + 1 rows) and, optionally, the drawer through the real sync path. */
+const load = async (sidebar: RecentItem[], drawer?: RecentItem[]) => {
+  vi.spyOn(recentService, 'getAll').mockImplementation(async (limit) =>
+    limit === 50 ? (drawer ?? []) : sidebar,
+  );
+  renderHook(
+    () => {
+      useHomeStore((s) => s.useFetchRecents)(true, 10);
+      useHomeStore((s) => s.useFetchAllRecents)(!!drawer);
+    },
+    { wrapper },
+  );
+  await waitFor(() => {
+    expect(useHomeStore.getState().recentListMap[SIDEBAR]).toBeDefined();
+    if (drawer) expect(useHomeStore.getState().recentListMap[DRAWER]).toBeDefined();
+  });
+};
 
 beforeEach(() => {
-  useHomeStore.setState({ ...initialRecentState });
-  vi.spyOn(cacheScope, 'getCacheScope').mockReturnValue('user-1:ws-A');
+  useScope(`recent-user-${randomUUID()}:personal`);
+  act(() => useHomeStore.setState({ ...initialRecentState }));
+  vi.spyOn(fileService, 'getRecentFiles').mockImplementation(() => new Promise(() => {}));
+  vi.spyOn(fileService, 'getRecentPages').mockImplementation(() => new Promise(() => {}));
 });
 
 afterEach(() => {
@@ -47,148 +106,266 @@ afterEach(() => {
   localStorage.clear();
 });
 
-describe('RecentActionImpl', () => {
-  it('keeps list projections isolated by scope and query', () => {
-    const compactQuery = createRecentQueryKey(11);
-    const drawerQuery = createRecentQueryKey(50);
+describe('recents replica', () => {
+  it('paints the persisted rows before the network answers', async () => {
+    await recentListResource.storage!.set(
+      { queryKey: recentListResource.storageKey({ limit: 11 }), scope },
+      { data: [item('a', 'Cached')], updatedAt: 1 },
+    );
+    vi.spyOn(recentService, 'getAll').mockImplementation(() => new Promise(() => {}));
 
-    act(() => {
-      replaceQuery('user-1:ws-A', compactQuery, [item('a', 'Compact')]);
-      replaceQuery('user-1:ws-A', drawerQuery, [item('a', 'Drawer'), item('b', 'B')]);
+    const { result } = renderHook(() => useHomeStore((s) => s.useFetchRecents)(true, 10), {
+      wrapper,
     });
 
-    expect(
-      homeRecentSelectors.query('user-1:ws-A', compactQuery)(useHomeStore.getState())?.items,
-    ).toEqual([item('a', 'Compact')]);
-    expect(
-      homeRecentSelectors.query('user-1:ws-A', drawerQuery)(useHomeStore.getState())?.items,
-    ).toEqual([item('a', 'Drawer'), item('b', 'B')]);
+    await waitFor(() => expect(titleOf(SIDEBAR, 'task:a')).toBe('Cached'));
+    expect(result.current.isValidating).toBe(true);
   });
 
-  it('persists query projections through the async storage contract', async () => {
-    const queryKey = createRecentQueryKey(11);
-    act(() => replaceQuery('user-1:ws-A', queryKey, [item('a', 'Cached')]));
-
-    const persisted = await recentProjection.get({ queryKey, scope: 'user-1:ws-A' });
-    expect(persisted?.data[0].title).toBe('Cached');
-    expect(persisted?.data[0].updatedAt).toEqual(new Date(0));
-  });
-
-  it('ignores storage hydration that resolves after server data', async () => {
-    const queryKey = createRecentQueryKey(11);
-    const cached = deferred<Awaited<ReturnType<typeof recentProjection.get>>>();
-    vi.spyOn(recentProjection, 'get').mockReturnValue(cached.promise);
-
-    const hydration = useHomeStore.getState().hydrateRecentQuery('user-1:ws-A', queryKey);
-    act(() => replaceQuery('user-1:ws-A', queryKey, [item('a', 'Server')]));
-    cached.resolve({ data: [item('a', 'Cached')], updatedAt: 1 });
-    await hydration;
-
-    expect(
-      homeRecentSelectors.query('user-1:ws-A', queryKey)(useHomeStore.getState())?.items[0].title,
-    ).toBe('Server');
-  });
-
-  it('ignores a query update after the active cache scope changed', () => {
-    act(() => replaceQuery('user-1:ws-B', createRecentQueryKey(11), [item('stale', 'STALE')]));
-    expect(useHomeStore.getState().recentsByScope['user-1:ws-B']).toBeUndefined();
+  it('does not fetch while logged out', () => {
+    const getAll = vi.spyOn(recentService, 'getAll');
+    renderHook(() => useHomeStore((s) => s.useFetchRecents)(false, 10), { wrapper });
+    expect(getAll).not.toHaveBeenCalled();
   });
 
   it('shows an optimistic title and rolls it back when persistence fails', async () => {
-    const queryKey = createRecentQueryKey(11);
+    await load([item('a', 'Old')]);
     const request = deferred<TaskUpdateResult>();
     vi.spyOn(taskService, 'update').mockReturnValue(request.promise);
-    act(() => replaceQuery('user-1:ws-A', queryKey, [item('a', 'Old')]));
 
     const renamePromise = useHomeStore
       .getState()
-      .renameRecent({ id: 'a', scope: 'user-1:ws-A', title: 'Draft', type: 'task' });
-    expect(
-      homeRecentSelectors.item('user-1:ws-A', queryKey, 'task:a')(useHomeStore.getState())?.title,
-    ).toBe('Draft');
+      .renameRecent({ id: 'a', title: 'Draft', type: 'task' });
+    expect(titleOf(SIDEBAR, 'task:a')).toBe('Draft');
 
-    await Promise.resolve();
     request.reject(new Error('failed'));
     await expect(renamePromise).rejects.toThrow('failed');
-    expect(
-      homeRecentSelectors.item('user-1:ws-A', queryKey, 'task:a')(useHomeStore.getState())?.title,
-    ).toBe('Old');
+    expect(titleOf(SIDEBAR, 'task:a')).toBe('Old');
   });
 
-  it('fans a confirmed rename out to every loaded query projection', async () => {
-    const compactQuery = createRecentQueryKey(11);
-    const drawerQuery = createRecentQueryKey(50);
+  it('renames the entity in every loaded query, not same-id rows of other types', async () => {
+    await load(
+      [item('same', 'Task')],
+      [item('same', 'Task'), item('same', 'Document', 'document')],
+    );
     vi.spyOn(taskService, 'update').mockResolvedValue(taskUpdateResult);
-    act(() => {
-      replaceQuery('user-1:ws-A', compactQuery, [item('same', 'Task', 'task')]);
-      replaceQuery('user-1:ws-A', drawerQuery, [
-        item('same', 'Task', 'task'),
-        item('same', 'Document', 'document'),
-      ]);
+
+    await act(() =>
+      useHomeStore.getState().renameRecent({ id: 'same', title: 'Renamed', type: 'task' }),
+    );
+
+    expect(titleOf(SIDEBAR, 'task:same')).toBe('Renamed');
+    expect(titleOf(DRAWER, 'task:same')).toBe('Renamed');
+    expect(titleOf(DRAWER, 'document:same')).toBe('Document');
+  });
+
+  it('carries the slug source with a task rename', async () => {
+    await load([item('a', 'Old')]);
+    vi.spyOn(taskService, 'update').mockResolvedValue(taskUpdateResult);
+
+    await act(() => useHomeStore.getState().renameRecent({ id: 'a', title: 'New', type: 'task' }));
+
+    expect(homeRecentSelectors.item(SIDEBAR, 'task:a')(useHomeStore.getState())).toMatchObject({
+      slugTitle: 'New',
+      title: 'New',
     });
-
-    await useHomeStore
-      .getState()
-      .renameRecent({ id: 'same', scope: 'user-1:ws-A', title: 'Renamed', type: 'task' });
-
-    expect(
-      homeRecentSelectors.item('user-1:ws-A', compactQuery, 'task:same')(useHomeStore.getState())
-        ?.title,
-    ).toBe('Renamed');
-    expect(
-      homeRecentSelectors.item('user-1:ws-A', drawerQuery, 'task:same')(useHomeStore.getState())
-        ?.title,
-    ).toBe('Renamed');
-    expect(
-      homeRecentSelectors.item('user-1:ws-A', drawerQuery, 'document:same')(useHomeStore.getState())
-        ?.title,
-    ).toBe('Document');
   });
 
   it('serializes repeated renames and keeps the latest optimistic title', async () => {
-    const queryKey = createRecentQueryKey(11);
+    await load([item('a', 'Old')]);
     const firstRequest = deferred<TaskUpdateResult>();
     const secondRequest = deferred<TaskUpdateResult>();
     const updateSpy = vi
       .spyOn(taskService, 'update')
       .mockReturnValueOnce(firstRequest.promise)
       .mockReturnValueOnce(secondRequest.promise);
-    act(() => replaceQuery('user-1:ws-A', queryKey, [item('a', 'Old')]));
 
     const firstRename = useHomeStore
       .getState()
-      .renameRecent({ id: 'a', scope: 'user-1:ws-A', title: 'First', type: 'task' });
+      .renameRecent({ id: 'a', title: 'First', type: 'task' });
     const secondRename = useHomeStore
       .getState()
-      .renameRecent({ id: 'a', scope: 'user-1:ws-A', title: 'Second', type: 'task' });
+      .renameRecent({ id: 'a', title: 'Second', type: 'task' });
 
     await waitFor(() => expect(updateSpy).toHaveBeenCalledTimes(1));
-    expect(
-      homeRecentSelectors.item('user-1:ws-A', queryKey, 'task:a')(useHomeStore.getState())?.title,
-    ).toBe('Second');
+    expect(titleOf(SIDEBAR, 'task:a')).toBe('Second');
 
     firstRequest.resolve(taskUpdateResult);
     await firstRename;
     await waitFor(() => expect(updateSpy).toHaveBeenCalledTimes(2));
-    expect(
-      homeRecentSelectors.item('user-1:ws-A', queryKey, 'task:a')(useHomeStore.getState())?.title,
-    ).toBe('Second');
+    expect(titleOf(SIDEBAR, 'task:a')).toBe('Second');
 
     secondRequest.resolve(taskUpdateResult);
     await secondRename;
-    expect(
-      homeRecentSelectors.item('user-1:ws-A', queryKey, 'task:a')(useHomeStore.getState())?.title,
-    ).toBe('Second');
+    expect(titleOf(SIDEBAR, 'task:a')).toBe('Second');
   });
 
-  it('revalidates both list surfaces only in the requested scope', async () => {
-    const mutateSpy = vi.spyOn(swr, 'mutate').mockResolvedValue(undefined as never);
+  it('keeps a newer pending rename when an older one fails', async () => {
+    await load([item('a', 'Old')]);
+    const firstRequest = deferred<TaskUpdateResult>();
+    const secondRequest = deferred<TaskUpdateResult>();
+    vi.spyOn(taskService, 'update')
+      .mockReturnValueOnce(firstRequest.promise)
+      .mockReturnValueOnce(secondRequest.promise);
 
-    await act(() => useHomeStore.getState().refreshRecents('user-1:ws-A'));
+    const firstRename = useHomeStore
+      .getState()
+      .renameRecent({ id: 'a', title: 'First', type: 'task' });
+    const secondRename = useHomeStore
+      .getState()
+      .renameRecent({ id: 'a', title: 'Second', type: 'task' });
 
-    expect(mutateSpy).toHaveBeenCalledTimes(2);
-    const matcher = mutateSpy.mock.calls[0][0] as (key: unknown) => boolean;
-    expect(matcher(recentKeys.list(true, 10, 'user-1:ws-A'))).toBe(true);
-    expect(matcher(recentKeys.list(true, 10, 'user-1:ws-B'))).toBe(false);
+    firstRequest.reject(new Error('failed'));
+    await expect(firstRename).rejects.toThrow('failed');
+    expect(titleOf(SIDEBAR, 'task:a')).toBe('Second');
+
+    secondRequest.resolve(taskUpdateResult);
+    await secondRename;
+  });
+});
+
+type RecentFileRow = Awaited<ReturnType<typeof fileService.getRecentFiles>>[number];
+type RecentPageRow = Awaited<ReturnType<typeof fileService.getRecentPages>>[number];
+
+const fileRow = (id: string, url: string): RecentFileRow =>
+  ({
+    chunkCount: 3,
+    createdAt: new Date(0),
+    fileType: 'image/png',
+    id,
+    name: `${id}.png`,
+    url,
+  }) as unknown as RecentFileRow;
+
+const pageRow = (id: string): RecentPageRow =>
+  ({
+    content: 'the whole page body',
+    editorData: { root: {} },
+    id,
+    metadata: { emoji: '📄' },
+    name: id,
+    updatedAt: new Date(0),
+  }) as unknown as RecentPageRow;
+
+const storedRow = <T>(
+  resource: { storage?: { get: (key: { queryKey: string; scope: string }) => Promise<T> } },
+  queryKey: string,
+) => resource.storage!.get({ queryKey, scope });
+
+describe('resource home recents replica', () => {
+  it('paints the persisted file and page cards before the network answers', async () => {
+    await recentFileListResource.storage!.set(
+      { queryKey: 'private', scope },
+      {
+        data: [{ createdAt: new Date(0), fileType: 'image/png', id: 'f1', name: 'Cached file' }],
+        updatedAt: 1,
+      },
+    );
+    await recentPageListResource.storage!.set(
+      { queryKey: 'private', scope },
+      { data: [{ id: 'p1', name: 'Cached page', updatedAt: new Date(0) }], updatedAt: 1 },
+    );
+
+    const { result } = renderHook(
+      () => ({
+        files: useHomeStore((s) => s.useFetchResourceRecentFiles)({ visibility: 'private' }),
+        pages: useHomeStore((s) => s.useFetchResourceRecentPages)({ visibility: 'private' }),
+      }),
+      { wrapper },
+    );
+
+    await waitFor(() => {
+      const state = useHomeStore.getState();
+      expect(homeRecentSelectors.resourceFiles({ visibility: 'private' })(state)?.[0].name).toBe(
+        'Cached file',
+      );
+      expect(homeRecentSelectors.resourcePages({ visibility: 'private' })(state)?.[0].name).toBe(
+        'Cached page',
+      );
+    });
+    expect(result.current.files.isValidating).toBe(true);
+    expect(result.current.pages.isValidating).toBe(true);
+  });
+
+  it('keeps each visibility in its own entry', async () => {
+    vi.mocked(fileService.getRecentPages).mockImplementation(async (_limit, visibility) => [
+      pageRow(`page-${visibility}`),
+    ]);
+
+    renderHook(
+      () => {
+        useHomeStore((s) => s.useFetchResourceRecentPages)({ visibility: 'private' });
+        useHomeStore((s) => s.useFetchResourceRecentPages)({ visibility: 'public' });
+      },
+      { wrapper },
+    );
+
+    await waitFor(() => {
+      const state = useHomeStore.getState();
+      expect(homeRecentSelectors.resourcePages({ visibility: 'private' })(state)?.[0].id).toBe(
+        'page-private',
+      );
+      expect(homeRecentSelectors.resourcePages({ visibility: 'public' })(state)?.[0].id).toBe(
+        'page-public',
+      );
+    });
+  });
+
+  it('persists slim page cards, never the page body', async () => {
+    vi.mocked(fileService.getRecentPages).mockResolvedValue([pageRow('p1')]);
+
+    renderHook(() => useHomeStore((s) => s.useFetchResourceRecentPages)({}), { wrapper });
+
+    await waitFor(async () =>
+      expect((await storedRow(recentPageListResource, 'all'))?.data).toEqual([
+        { emoji: '📄', id: 'p1', name: 'p1', updatedAt: new Date(0) },
+      ]),
+    );
+  });
+
+  it('drops credential-bearing file URLs from the persisted copy only', async () => {
+    vi.mocked(fileService.getRecentFiles).mockResolvedValue([
+      fileRow('signed', 'https://s3.example.com/a.png?X-Amz-Signature=secret'),
+      fileRow('proxy', 'https://app.example.com/f/proxy'),
+    ]);
+
+    renderHook(() => useHomeStore((s) => s.useFetchResourceRecentFiles)({}), { wrapper });
+
+    await waitFor(async () =>
+      expect((await storedRow(recentFileListResource, 'all'))?.data).toBeDefined(),
+    );
+    const persisted = (await storedRow(recentFileListResource, 'all'))!.data;
+    expect(persisted.map((card) => card.url)).toEqual([
+      undefined,
+      'https://app.example.com/f/proxy',
+    ]);
+    expect(persisted[0]).not.toHaveProperty('chunkCount');
+    expect(JSON.stringify(localStorage)).not.toContain('X-Amz-Signature');
+    // The session still shows the thumbnail it was handed.
+    expect(
+      homeRecentSelectors
+        .resourceFiles({})(useHomeStore.getState())
+        ?.map((card) => card.url),
+    ).toEqual([
+      'https://s3.example.com/a.png?X-Amz-Signature=secret',
+      'https://app.example.com/f/proxy',
+    ]);
+  });
+
+  it("never paints another workspace's cards", async () => {
+    await recentFileListResource.storage!.set(
+      { queryKey: 'all', scope: `${scope}-other-workspace` },
+      {
+        data: [{ createdAt: new Date(0), fileType: 'image/png', id: 'x', name: 'Theirs' }],
+        updatedAt: 1,
+      },
+    );
+
+    const { result } = renderHook(() => useHomeStore((s) => s.useFetchResourceRecentFiles)({}), {
+      wrapper,
+    });
+
+    await waitFor(() => expect(result.current.isHydrated).toBe(true));
+    expect(homeRecentSelectors.resourceFiles({})(useHomeStore.getState())).toBeUndefined();
   });
 });

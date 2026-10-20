@@ -1,8 +1,16 @@
 'use client';
 
-import { Block, Flexbox, Icon } from '@lobehub/ui';
-import { Avatar, confirmModal, Skeleton, Text, toast } from '@lobehub/ui/base-ui';
-import { createStaticStyles } from 'antd-style';
+import {
+  Avatar,
+  Block,
+  confirmModal,
+  createStaticStyles,
+  Flexbox,
+  Icon,
+  Skeleton,
+  Text,
+  toast,
+} from '@lobehub/ui';
 import { ArrowLeftIcon, BookOpenIcon } from 'lucide-react';
 import { memo, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -66,8 +74,6 @@ const styles = createStaticStyles(({ css, cssVar }) => ({
     font-size: 11px;
     font-weight: 500;
     color: ${cssVar.colorTextTertiary};
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
   `,
 }));
 
