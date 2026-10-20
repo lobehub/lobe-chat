@@ -1,13 +1,16 @@
-import { Block, Center, Empty, Flexbox } from '@lobehub/ui';
 import {
   AccordionHeader,
   AccordionItem,
   AccordionRoot,
   AccordionTrigger,
+  Block,
+  Center,
+  cssVar,
   Divider,
+  Empty,
+  Flexbox,
   Text,
-} from '@lobehub/ui/base-ui';
-import { cssVar } from 'antd-style';
+} from '@lobehub/ui';
 import { ClipboardCheckIcon } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { memo, useCallback, useMemo, useState } from 'react';
@@ -45,6 +48,8 @@ interface TaskListProps {
    * so it never disagrees with the empty signal.
    */
   data?: unknown;
+  /** Call to action under the empty state, e.g. creating the collection's first task. */
+  emptyAction?: ReactNode;
   emptyDescription?: string;
   /** Thrown error from the list SWR — surfaced as a failure state, not a skeleton. */
   error?: unknown;
@@ -265,6 +270,7 @@ const TaskList = memo<TaskListProps>((props) => {
   const emptyState = (
     <Center height={'80vh'} width={'100%'}>
       <Empty
+        action={props.emptyAction}
         description={props.emptyDescription ?? t('taskList.empty')}
         icon={ClipboardCheckIcon}
       />

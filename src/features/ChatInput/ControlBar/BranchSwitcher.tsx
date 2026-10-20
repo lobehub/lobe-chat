@@ -1,7 +1,10 @@
 import type { DeviceGitWorktreeListItem } from '@lobechat/types';
-import { copyToClipboard, Icon, Tooltip } from '@lobehub/ui';
 import {
   confirmModal,
+  copyToClipboard,
+  createStaticStyles,
+  cssVar,
+  cx,
   DropdownMenuFooter,
   DropdownMenuHeader,
   DropdownMenuItem,
@@ -11,10 +14,11 @@ import {
   DropdownMenuRoot,
   DropdownMenuScrollViewport,
   DropdownMenuTrigger,
+  Icon,
   Input,
   toast,
-} from '@lobehub/ui/base-ui';
-import { createStaticStyles, cssVar, cx } from 'antd-style';
+  Tooltip,
+} from '@lobehub/ui';
 import {
   CheckIcon,
   CopyIcon,
@@ -236,6 +240,8 @@ interface BranchSwitcherProps {
   placement?: 'topLeft' | 'bottomLeft' | 'bottomRight';
   /** The repo the conversation is anchored to (worktrees hang off it). */
   sourcePath: string;
+  /** The conversation the switch is recorded on; omitted, the global active topic. */
+  topicId?: string | null;
   /** Used to route a checkout into the worktree that already holds the branch. */
   worktrees: DeviceGitWorktreeListItem[];
 }
@@ -254,6 +260,7 @@ const BranchSwitcher = memo<BranchSwitcherProps>(
     onOptimisticCheckout,
     placement = 'topLeft',
     sourcePath,
+    topicId,
     worktrees,
     children,
   }) => {
@@ -262,7 +269,7 @@ const BranchSwitcher = memo<BranchSwitcherProps>(
     const [search, setSearch] = useState('');
     const [busyBranch, setBusyBranch] = useState<string | null>(null);
     const currentRowRef = useRef<HTMLDivElement>(null);
-    const switchWorktree = useSwitchWorktree({ agentId, isGithub, sourcePath });
+    const switchWorktree = useSwitchWorktree({ agentId, isGithub, sourcePath, topicId });
 
     const {
       data: branches = [],
@@ -346,7 +353,7 @@ const BranchSwitcher = memo<BranchSwitcherProps>(
           setBusyBranch(branch);
           onOpenChange(false);
           try {
-            await switchWorktree(owner.path);
+            await switchWorktree(owner.path, branch);
           } finally {
             onAfterCheckout?.();
             setBusyBranch(null);

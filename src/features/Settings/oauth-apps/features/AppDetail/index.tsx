@@ -1,18 +1,18 @@
 'use client';
 
-import { Flexbox } from '@lobehub/ui';
 import {
   ActionIcon,
   Alert,
   Button,
   confirmModal,
+  createStaticStyles,
+  Flexbox,
   Skeleton,
   Tabs,
   Tag,
   Text,
   toast,
-} from '@lobehub/ui/base-ui';
-import { createStaticStyles } from 'antd-style';
+} from '@lobehub/ui';
 import dayjs from 'dayjs';
 import { ArrowLeftIcon, PowerIcon, PowerOffIcon, Trash2Icon } from 'lucide-react';
 import { type FC, useEffect } from 'react';
@@ -76,6 +76,16 @@ const styles = createStaticStyles(({ css, cssVar }) => ({
     color: ${cssVar.colorTextTertiary};
   `,
 }));
+
+/** The app page while it loads; also shown while the Labs flag resolves on a direct visit. */
+export const AppDetailSkeleton = () => (
+  <Flexbox gap={16}>
+    <Skeleton.Text rows={1} width={200} />
+    <div className={styles.card}>
+      <Skeleton.Text rows={4} />
+    </div>
+  </Flexbox>
+);
 
 const TAB_KEYS = ['overview', 'credentials', 'advanced'] as const;
 
@@ -192,15 +202,7 @@ const AppDetail: FC<AppDetailProps> = ({ canEdit, id, onBack, onChanged }) => {
       />
     );
 
-  if (!detail)
-    return (
-      <Flexbox gap={16}>
-        <Skeleton.Text rows={1} width={200} />
-        <div className={styles.card}>
-          <Skeleton.Text rows={4} />
-        </div>
-      </Flexbox>
-    );
+  if (!detail) return <AppDetailSkeleton />;
 
   const isWebApp = detail.applicationType === 'web';
   const isDisabled = !detail.enabled;

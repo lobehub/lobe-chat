@@ -6,6 +6,7 @@ import {
   type ConnectionStatus,
   createOperationClient,
   type GatewayMuxClient,
+  isLlmRelayChannelId,
   isSessionTerminalEvent,
   type MuxOpLifecycleMessage,
   type OperationClient,
@@ -18,6 +19,7 @@ import type {
   ChatTopicMetadata,
   ChatTopicStatus,
   ConversationContext,
+  ExecAgentClientIds,
   ExecAgentResult,
   MessageMetadata,
   RuntimeMentionedAgent,
@@ -484,6 +486,9 @@ export class GatewayActionImpl {
     if (this.#feedAttachedMuxes.has(mux)) return;
     this.#feedAttachedMuxes.add(mux);
     mux.on('lifecycle', (lifecycle: MuxOpLifecycleMessage) => {
+      // A one-shot relay channel (a single LLM call outside any run) is not a
+      // run of this user's: nothing in the feed is about it.
+      if (isLlmRelayChannelId(lifecycle.operationId)) return;
       this.#set(
         (state) => ({
           gatewayFeed: {
@@ -1028,11 +1033,10 @@ export class GatewayActionImpl {
    */
   executeGatewayAgent = async (params: {
     /**
-     * Client-minted ids for the rows this run creates (fresh sends only). The
-     * server honours them verbatim, so the optimistic topic / message rows keep
-     * their ids instead of diverging from the server-minted ones.
+     * Client-minted ids for the rows this run creates (fresh sends only), honoured
+     * verbatim so optimistic rows keep their ids — see `ExecAgentClientIds`.
      */
-    clientIds?: { assistantMessageId?: string; topicId?: string; userMessageId?: string };
+    clientIds?: ExecAgentClientIds;
     /** Agent/runtime context used to execute the server operation. */
     context: ConversationContext;
     /** File IDs of already-uploaded attachments to attach to the new user message */
@@ -1062,6 +1066,12 @@ export class GatewayActionImpl {
      * without issuing a second legacy resume request.
      */
     precreatedResult?: ExecAgentResult;
+    /**
+     * Project working directory the NEW topic is born in — the blank
+     * conversation a project group's "+" staged. The caller reads it before the
+     * send adopts its minted topic, since that switch clears the staging.
+     */
+    projectWorkingDirectoryId?: string;
     /** Server operation whose visible output ended before this fresh turn. */
     replacesOperationId?: string;
     /** Diagnostic snapshot of the conversation's server runs, see `ExecAgentTaskParams`. */
@@ -1095,6 +1105,8 @@ export class GatewayActionImpl {
      * `phase: 'tool_result'` WITHOUT re-executing the tool.
      */
     resumeToolResult?: ResumeToolResultParam;
+    /** Skills the user selected in this message; forwarded as `selectedSkillIds`. */
+    selectedSkillIds?: string[];
     /**
      * Tool identifiers the user @-mentioned in this message. Forwarded to the
      * server as `selectedToolIds` so the server runtime enables them for this
@@ -1135,10 +1147,12 @@ export class GatewayActionImpl {
       parentMessageId,
       parentOperationId,
       precreatedResult,
+      projectWorkingDirectoryId,
       replacesOperationId,
       resumeApproval,
       resumeApprovals,
       resumeToolResult,
+      selectedSkillIds,
       selectedToolIds,
       mentionedAgents,
       tempMessageIds,
@@ -1312,6 +1326,7 @@ export class GatewayActionImpl {
                 // supervisor turn loses its role on the step_start snapshot / refetch
                 // and renders as a generic assistant.
                 orchestrationRole: executionContext.orchestrationRole,
+                ...(isCreateNewTopic && projectWorkingDirectoryId && { projectWorkingDirectoryId }),
                 scope: executionContext.scope,
                 taskId,
                 threadId: executionContext.threadId,
@@ -1331,6 +1346,7 @@ export class GatewayActionImpl {
               resumeApproval,
               resumeApprovals,
               resumeToolResult,
+              selectedSkillIds,
               selectedToolIds,
               // A queued follow-up keeps its continuation mark on the row the
               // server persists, which replaces the optimistic one.
@@ -1652,6 +1668,17 @@ export class GatewayActionImpl {
         });
         this.disconnectFromGateway(staleOpId);
       }
+    }
+
+    // A mounted Task drawer reads the by-id topic detail, independently of the
+    // sidebar list. Dispatch has persisted a new receipt; revalidate that detail
+    // after the optimistic marker patch without delaying stream connection.
+    if (result.heteroType && result.topicId && !agentShareId && !continuesGroupMember) {
+      void this.#get()
+        .refreshTopicDetail(result.topicId)
+        .catch((error) =>
+          console.error('[Gateway] Failed to refresh dispatched Topic configuration:', error),
+        );
     }
 
     // When the local operation is cancelled (e.g. user clicks stop), forward
@@ -2131,15 +2158,6 @@ export class GatewayActionImpl {
           succeeded,
         });
 
-        // Same supersede guard as executeGatewayAgent's onSessionComplete: a
-        // newer run may own this topic by now, and the settle below would
-        // retire it mid-flight.
-        const superseded = this.#isSupersededRunningOperation({
-          agentId: context.agentId,
-          operationId,
-          topicId,
-        });
-
         // Settle through the server exactly as executeGatewayAgent's
         // onSessionComplete does: ONE call that clears the marker and writes the
         // terminal status inside the topic row lock, comparing the operation id
@@ -2164,14 +2182,25 @@ export class GatewayActionImpl {
         // Share visitors cannot settle the creator-owned topic row (the topic
         // router is owner-scoped) — the local clear below still runs. Same
         // split as executeGatewayAgent's onSessionComplete.
-        const settle =
-          superseded || agentShareId
-            ? undefined
-            : topicService.settleRunningOperation(
-                topicId,
-                operationId,
-                viewing || !effectiveSucceeded ? 'active' : 'unread',
-              );
+        //
+        // Deliberately NOT also gated on a local supersede read. This tab's topic
+        // map is only a guess about whether another run claimed the topic, and
+        // the settle below is authoritative in a way the guess cannot be: it
+        // writes only while the SERVER's mark still names THIS operation, and
+        // answers `conflict` for a newer one, which `#restoreRunningOnSettleConflict`
+        // already consumes by re-pinning `running` and refetching the newer mark.
+        // Skipping the call on the guess dropped the settle entirely whenever the
+        // map was stale or the newer run never landed its server-side mark, and
+        // nothing retried it — the row then kept `status='running'` with a
+        // `runningOperation` naming a finished operation. `executeGatewayAgent`'s
+        // onSessionComplete (the path this one mirrors) has never had that guard.
+        const settle = agentShareId
+          ? undefined
+          : topicService.settleRunningOperation(
+              topicId,
+              operationId,
+              viewing || !effectiveSucceeded ? 'active' : 'unread',
+            );
         // Mirror into the local store — the server settle does NOT touch the
         // Zustand topic map that useGatewayReconnect (and the sidebar spinner)
         // read. Status omitted for the unwatched-clean case, which
@@ -2263,35 +2292,6 @@ export class GatewayActionImpl {
    * user switched agent/group, when the active-bucket `getTopicById` would miss the topic
    * and leave its marker stale.
    */
-  /**
-   * Whether a DIFFERENT run has since claimed this topic's `runningOperation`.
-   *
-   * Read from the local topic map, which every run's start writes optimistically
-   * — so a session closing after a newer run began can tell "my run ended" from
-   * "the topic is idle" and keep its hands off the newer run's markers.
-   *
-   * Deliberately false when the topic carries no marker at all (not loaded into
-   * `topicDataMap`, or already cleared): there is nothing to protect, and the
-   * caller's clear must still run so a dead marker never survives.
-   */
-  #isSupersededRunningOperation = (params: {
-    agentId?: string;
-    groupId?: string;
-    operationId: string;
-    topicId: string;
-  }): boolean => {
-    const { agentId, groupId, operationId, topicId } = params;
-    const state = this.#get();
-    const key = topicMapKey({
-      agentId: agentId ?? state.activeAgentId,
-      groupId: groupId ?? state.activeGroupId,
-    });
-    const owner = state.topicDataMap[key]?.items?.find((t) => t.id === topicId)?.metadata
-      ?.runningOperation?.operationId;
-
-    return !!owner && owner !== operationId;
-  };
-
   /**
    * Whether a silently-ended gateway run is over, judged from the server's own
    * reservation of the topic.

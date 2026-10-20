@@ -10,7 +10,7 @@ import type { AgentDocumentItem } from '@/features/AgentDocumentsExplorer/types'
 import { canGoNative } from '@/libs/contextMenu/canGoNative';
 import { toNativeTemplate } from '@/libs/contextMenu/toNativeTemplate';
 
-import type { ExplorerTreeHandle, ExplorerTreeNode } from '../types';
+import type { ExplorerTreeHandle, ExplorerTreeNode, ExplorerTreeNodeComparator } from '../types';
 import { isItemToggleEventPath } from './eventPath';
 import ExplorerTree, { buildFileAppearanceCSS, getItemPathFromEventPath } from './ExplorerTree';
 
@@ -477,5 +477,84 @@ describe('ExplorerTree flattenEmptyDirectories', () => {
     await waitFor(() => expect(root()?.querySelector('[data-item-path="SOP/"]')).not.toBeNull());
     expect(root()?.querySelector('[data-item-path="SOP/Runs/"]')).not.toBeNull();
     expect(root()?.querySelector('[data-item-flattened-subitems]')).toBeNull();
+  });
+});
+
+// ─── sort ────────────────────────────────────────────────────────────────────
+
+interface RankData {
+  rank: number;
+}
+
+const getSortedRowPaths = (container: HTMLElement): string[] => {
+  const root = container.querySelector('file-tree-container')?.shadowRoot;
+  return [...(root?.querySelectorAll<HTMLElement>('[data-item-path]') ?? [])].map(
+    (row) => row.dataset.itemPath!,
+  );
+};
+
+const rankedNodes: ExplorerTreeNode<RankData>[] = [
+  { data: { rank: 2 }, id: 'docs', isFolder: true, name: 'docs', parentId: null },
+  { data: { rank: 1 }, id: 'b', name: 'b.md', parentId: null },
+  { data: { rank: 3 }, id: 'a', name: 'a.md', parentId: null },
+  { data: { rank: 2 }, id: 'docs-x', name: 'x.md', parentId: 'docs' },
+  { data: { rank: 1 }, id: 'docs-y', name: 'y.md', parentId: 'docs' },
+];
+
+const byRank: ExplorerTreeNodeComparator<RankData> = (a, b) => a.data!.rank - b.data!.rank;
+const byRankDesc: ExplorerTreeNodeComparator<RankData> = (a, b) => b.data!.rank - a.data!.rank;
+
+describe('ExplorerTree sort', () => {
+  it('orders siblings at every depth with the comparator, files mixed with folders', async () => {
+    const view = render(
+      <ExplorerTree defaultExpandedIds={['docs']} nodes={rankedNodes} sort={byRank} />,
+    );
+
+    await waitFor(() =>
+      expect(getSortedRowPaths(view.container)).toEqual([
+        'b.md',
+        'docs/',
+        'docs/y.md',
+        'docs/x.md',
+        'a.md',
+      ]),
+    );
+  });
+
+  it('re-sorts in place when the comparator changes, keeping folders open', async () => {
+    const view = render(
+      <ExplorerTree defaultExpandedIds={['docs']} nodes={rankedNodes} sort={byRank} />,
+    );
+    await waitFor(() => expect(getSortedRowPaths(view.container)[0]).toBe('b.md'));
+
+    view.rerender(
+      <ExplorerTree defaultExpandedIds={['docs']} nodes={rankedNodes} sort={byRankDesc} />,
+    );
+
+    await waitFor(() =>
+      expect(getSortedRowPaths(view.container)).toEqual([
+        'a.md',
+        'docs/',
+        'docs/x.md',
+        'docs/y.md',
+        'b.md',
+      ]),
+    );
+  });
+
+  it('re-sorts when the data reorders rows whose paths did not change', async () => {
+    const view = render(<ExplorerTree nodes={rankedNodes} sort={byRank} />);
+    await waitFor(() =>
+      expect(getSortedRowPaths(view.container)).toEqual(['b.md', 'docs/', 'a.md']),
+    );
+
+    const bumped = rankedNodes.map((node) =>
+      node.id === 'a' ? { ...node, data: { rank: 0 } } : node,
+    );
+    view.rerender(<ExplorerTree nodes={bumped} sort={byRank} />);
+
+    await waitFor(() =>
+      expect(getSortedRowPaths(view.container)).toEqual(['a.md', 'b.md', 'docs/']),
+    );
   });
 });

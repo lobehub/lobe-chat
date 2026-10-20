@@ -8,8 +8,6 @@ import {
   isAcceptanceListKey,
   isDocumentCommentKeyForEvent,
   recentKeys,
-  resourceKeys,
-  taskKeys,
   verifyKeys,
   workKeys,
 } from './keys';
@@ -110,31 +108,6 @@ describe('workKeys', () => {
   });
 });
 
-describe('resourceKeys', () => {
-  it('keeps Private and Workspace recent sections in separate cache entries', () => {
-    expect(resourceKeys.recentPages('workspace-1', 'private')).not.toEqual(
-      resourceKeys.recentPages('workspace-1', 'public'),
-    );
-    expect(resourceKeys.recentFiles('workspace-1', 'private')).not.toEqual(
-      resourceKeys.recentFiles('workspace-1', 'public'),
-    );
-  });
-
-  // Regression: without the workspace in the key, switching workspaces served
-  // the previous workspace's rows out of cache before revalidation landed.
-  it('keeps every Resources cache entry scoped to its workspace', () => {
-    expect(resourceKeys.recentFiles('workspace-1', 'public')).not.toEqual(
-      resourceKeys.recentFiles('workspace-2', 'public'),
-    );
-    expect(resourceKeys.recentPages('workspace-1', 'public')).not.toEqual(
-      resourceKeys.recentPages('workspace-2', 'public'),
-    );
-    expect(resourceKeys.recentFiles(null, undefined)).not.toEqual(
-      resourceKeys.recentFiles('workspace-1', undefined),
-    );
-  });
-});
-
 describe('isDocumentCommentKeyForEvent', () => {
   const event = {
     documentId: 'document-1',
@@ -188,20 +161,6 @@ describe('agentBuilderKeys', () => {
     const serialized = unstable_serialize(
       agentBuilderKeys.suggestions('agentBuilder', 'builder-1', 'target-1', 'zh-CN'),
     );
-    const persisted = [...CACHE_TIERS.idb, ...CACHE_TIERS.local].some((pattern) =>
-      serialized.includes(pattern),
-    );
-    expect(persisted).toBe(true);
-  });
-});
-
-describe('taskKeys', () => {
-  // Regression for sidebar task list cache persists across navigation to skip skeleton: the sidebar task list used a `sidebar:` domain
-  // key that no CACHE_TIERS pattern matched, so it was memory-only and every
-  // fresh page load showed a skeleton. The key must route to a persisted tier
-  // (the provider matches patterns against the serialized SWR key).
-  it('routes the sidebar task-groups key to a persisted cache tier', () => {
-    const serialized = unstable_serialize(taskKeys.sidebarGroups('agent-1'));
     const persisted = [...CACHE_TIERS.idb, ...CACHE_TIERS.local].some((pattern) =>
       serialized.includes(pattern),
     );

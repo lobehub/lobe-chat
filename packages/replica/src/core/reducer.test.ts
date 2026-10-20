@@ -38,6 +38,8 @@ const createHarness = (initialView: Record<string, List> = {}) => {
 
 const S = 'user-1:personal';
 const append = (item: string) => (list: List) => [...list, item];
+/** A seed write merges into its input, as a replayed seed must (see `seedPatches`). */
+const seedWith = (item: string) => (list: List | undefined) => [...(list ?? []), item];
 
 describe('replicaReducer', () => {
   describe('hydrate vs replace ordering', () => {
@@ -148,6 +150,135 @@ describe('replicaReducer', () => {
       h.run({ data: () => undefined, key: 'k', scope: S, type: 'replace' });
       expect(h.view.k).toBe(before);
       expect(h.state.entries.k.source).toBe('server');
+    });
+
+    it('hydrates over a provisional seed (a list row standing in for a detail)', () => {
+      const h = createHarness();
+      // The seed makes the object resolvable before its own detail is known.
+      h.run({
+        apply: seedWith('seed'),
+        key: 'k',
+        persist: false,
+        scope: S,
+        source: 'seed',
+        type: 'update',
+      });
+      expect(h.view.k).toEqual(['seed']);
+      expect(h.state.entries.k.source).toBe('seed');
+
+      // The persisted detail hydrates instead of being blocked, and the seed's
+      // own (fresher) fields are merged back over it.
+      h.run({ data: ['persisted'], key: 'k', scope: S, type: 'hydrate' });
+      expect(h.view.k).toEqual(['persisted', 'seed']);
+      expect(h.state.entries.k.source).toBe('storage');
+      expect(h.effects).toEqual([]);
+    });
+
+    it('keeps a confirmed local write authoritative over a late hydrate', () => {
+      const h = createHarness();
+      h.run({ apply: () => ['local'], key: 'k', persist: true, scope: S, type: 'update' });
+      expect(h.state.entries.k.source).toBe('local');
+
+      h.run({ data: ['persisted'], key: 'k', scope: S, type: 'hydrate' });
+      expect(h.view.k).toEqual(['local']);
+    });
+
+    // A confirmed write made over a seed (e.g. a rename while the detail is still
+    // reading storage) must survive the late hydrate that replaces the seed:
+    // it is replayed onto the hydrated value, which then persists.
+    it('replays a confirmed write made over a seed onto the late hydrate', () => {
+      const h = createHarness();
+      h.run({
+        apply: seedWith('seed'),
+        key: 'k',
+        persist: false,
+        scope: S,
+        source: 'seed',
+        type: 'update',
+      });
+      h.run({ apply: append('confirmed'), key: 'k', persist: true, scope: S, type: 'update' });
+      // Still provisional: persisting the seed would clobber the stored detail.
+      expect(h.effects).toEqual([]);
+
+      h.run({ data: ['persisted'], key: 'k', scope: S, type: 'hydrate' });
+      expect(h.view.k).toEqual(['persisted', 'seed', 'confirmed']);
+      expect(h.state.entries.k.source).toBe('local');
+      expect(h.effects).toEqual([
+        { data: ['persisted', 'seed', 'confirmed'], key: 'k', scope: S, type: 'persist' },
+      ]);
+
+      // Now authoritative: another late hydrate cannot clobber it either.
+      h.run({ data: ['stale'], key: 'k', scope: S, type: 'hydrate' });
+      expect(h.view.k).toEqual(['persisted', 'seed', 'confirmed']);
+    });
+
+    it('replays the latest seed and later writes, but persists neither seeds nor in-memory writes', () => {
+      const h = createHarness();
+      h.run({
+        apply: seedWith('seed'),
+        key: 'k',
+        persist: false,
+        scope: S,
+        source: 'seed',
+        type: 'update',
+      });
+      h.run({
+        apply: append('reseeded'),
+        key: 'k',
+        persist: false,
+        scope: S,
+        source: 'seed',
+        type: 'update',
+      });
+      h.run({ apply: append('memory'), key: 'k', persist: false, scope: S, type: 'update' });
+
+      h.run({ data: ['persisted'], key: 'k', scope: S, type: 'hydrate' });
+      // The re-seed supersedes the first seed (same source); the in-memory
+      // write still replays after it.
+      expect(h.view.k).toEqual(['persisted', 'reseeded', 'memory']);
+      expect(h.effects).toEqual([]);
+    });
+
+    // Repeated refreshes of one source must not grow the remembered history:
+    // a later seed of the same tag supersedes the earlier one since the last
+    // confirmed write, while other tags and confirmed writes keep their order.
+    it('coalesces repeated seeds of one tag, keeping their order around confirmed writes', () => {
+      const h = createHarness();
+      const seed = (item: string, seedTag: string) =>
+        h.run({
+          apply: seedWith(item),
+          key: 'k',
+          persist: false,
+          scope: S,
+          seedTag,
+          source: 'seed',
+          type: 'update',
+        });
+      for (let i = 0; i < 50; i++) seed(`list-${i}`, 'list');
+      seed('session', 'session');
+      seed('list-last', 'list');
+      h.run({ apply: append('confirmed'), key: 'k', persist: true, scope: S, type: 'update' });
+      seed('list-after', 'list');
+
+      expect(h.state.entries.k.seedPatches).toHaveLength(4);
+      h.run({ data: ['persisted'], key: 'k', scope: S, type: 'hydrate' });
+      expect(h.view.k).toEqual(['persisted', 'session', 'list-last', 'confirmed', 'list-after']);
+    });
+
+    it('does not hydrate over a seed that carries an in-flight overlay', () => {
+      const h = createHarness();
+      h.run({
+        apply: seedWith('seed'),
+        key: 'k',
+        persist: false,
+        scope: S,
+        source: 'seed',
+        type: 'update',
+      });
+      h.run({ apply: append('opt'), id: 1, key: 'k', scope: S, type: 'optimistic' });
+
+      h.run({ data: ['persisted'], key: 'k', scope: S, type: 'hydrate' });
+      expect(h.view.k).toEqual(['seed', 'opt']);
     });
   });
 
@@ -282,6 +413,24 @@ describe('replicaReducer', () => {
       h.run({ apply: () => ['b'], key: 'k', persist: false, scope: S, type: 'update' });
 
       expect(h.view.k).toEqual(['b']);
+      expect(h.effects).toEqual([]);
+    });
+
+    it('a seed never persists, even when its write asks to', () => {
+      const h = createHarness();
+      h.run({
+        apply: () => ['seed'],
+        key: 'k',
+        persist: true,
+        scope: S,
+        source: 'seed',
+        type: 'update',
+      });
+      // A later write on top of the seed keeps it provisional.
+      h.run({ apply: append('patched'), key: 'k', persist: true, scope: S, type: 'update' });
+
+      expect(h.view.k).toEqual(['seed', 'patched']);
+      expect(h.state.entries.k.source).toBe('seed');
       expect(h.effects).toEqual([]);
     });
 

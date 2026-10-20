@@ -35,19 +35,29 @@ const mocks = vi.hoisted(() => ({
   updateTaskVisibility: vi.fn(),
 }));
 
-vi.mock('@lobehub/ui', async (importOriginal) => ({
-  ...(await importOriginal<object>()),
-  DropdownMenu: ({ children, items }: { children?: ReactNode; items: MenuItem[] }) => {
-    mocks.dropdownItems = items;
-    return <>{children}</>;
-  },
-  copyToClipboard: vi.fn(),
-}));
-
-vi.mock('@lobehub/ui/base-ui', async (importOriginal) => ({
-  ...(await importOriginal<object>()),
-  confirmModal: (opts: unknown) => mocks.confirmModal(opts),
-}));
+vi.mock('@lobehub/ui', async (importOriginal) => {
+  const actual = await importOriginal<Record<string, unknown>>();
+  const factories: ((original: typeof importOriginal) => unknown)[] = [
+    async (importOriginal) => ({
+      ...(await importOriginal<object>()),
+      DropdownMenu: ({ children, items }: { children?: ReactNode; items: MenuItem[] }) => {
+        mocks.dropdownItems = items;
+        return <>{children}</>;
+      },
+      copyToClipboard: vi.fn(),
+    }),
+    async (importOriginal) => ({
+      ...(await importOriginal<object>()),
+      confirmModal: (opts: unknown) => mocks.confirmModal(opts),
+    }),
+  ];
+  const merged: Record<string, unknown> = { ...actual };
+  for (const factory of factories) {
+    const part = (await factory(importOriginal)) as Record<string, unknown>;
+    for (const [key, value] of Object.entries(part)) if (value !== actual[key]) merged[key] = value;
+  }
+  return merged;
+});
 
 vi.mock('antd', async (importOriginal) => ({
   ...(await importOriginal<object>()),
@@ -114,6 +124,19 @@ describe('TaskDetailHeaderActions', () => {
     mocks.activeWorkspaceId = 'ws-1';
     mocks.currentUserId = 'user-1';
     mocks.isWorkspaceOwner = false;
+  });
+
+  it('lists copy content right below copy link, ahead of the transfer group', () => {
+    render(<TaskDetailHeaderActions />);
+
+    expect(mocks.dropdownItems.slice(0, 6).map((item) => item?.key ?? item?.type)).toEqual([
+      'copyId',
+      'copyLink',
+      'copyContent',
+      'divider',
+      'transfer-task',
+      'copy-task',
+    ]);
   });
 
   it('includes task transfer and copy actions in the detail menu', () => {

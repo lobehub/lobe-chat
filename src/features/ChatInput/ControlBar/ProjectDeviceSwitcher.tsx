@@ -1,37 +1,41 @@
 'use client';
 
-import { Flexbox, Icon, Popover } from '@lobehub/ui';
-import { confirmModal, toast } from '@lobehub/ui/base-ui';
-import { createStaticStyles, cssVar } from 'antd-style';
+import { createStaticStyles, cssVar, Flexbox, Icon, Popover, Tooltip } from '@lobehub/ui';
 import { ChevronDownIcon } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useChatInputResourceAccess } from '@/features/ChatInput/hooks/useChatInputResourceAccess';
-import { useDeviceList } from '@/features/DeviceManager/useDeviceList';
 import { ExecutionTargetDeviceStatus, ExecutionTargetIcon } from '@/features/ExecutionTargetPicker';
 import { useAgentStore } from '@/store/agent';
 import { agentByIdSelectors } from '@/store/agent/selectors';
-import { useChatStore } from '@/store/chat';
-import { useProjectDirectoryStore } from '@/store/projectWorkingDirectory';
+import { useDeviceList } from '@/store/device';
+import { type ProjectDirectory } from '@/store/projectWorkingDirectory';
 
 import OptionRow from './OptionRow';
-import { listProjectDeviceTargets, projectDirectoryDeviceName } from './projectDeviceTargets';
-import { useProjectTopicDirectory } from './useProjectTopicDirectory';
+import {
+  listProjectDeviceTargets,
+  type ProjectDeviceTarget,
+  projectDirectoryDeviceName,
+} from './projectDeviceTargets';
 import { workingDirectoryChipStyles } from './workingDirectoryChipStyles';
 
 const styles = createStaticStyles(({ css }) => ({
+  // Picking a device here really picks an environment, and the path is what
+  // tells them apart, so it wraps in full instead of truncating.
   desc: css`
-    overflow: hidden;
-    max-width: 200px;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    min-width: 0;
+    overflow-wrap: anywhere;
   `,
   hint: css`
     padding-block: 6px;
     padding-inline: 8px;
     font-size: 11px;
     color: ${cssVar.colorTextDescription};
+  `,
+  status: css`
+    flex: none;
+    white-space: nowrap;
   `,
   title: css`
     padding-block: 4px;
@@ -44,8 +48,13 @@ const styles = createStaticStyles(({ css }) => ({
 }));
 
 interface ProjectDeviceSwitcherProps {
+  /** Tag on the current directory's row, naming what runs there. */
+  activeTag?: string;
   agentId: string;
-  topicId: string;
+  directories: ProjectDirectory[];
+  directoryId?: string;
+  /** Picked another device's project directory. */
+  onSelect: (target: ProjectDeviceTarget) => void;
 }
 
 /**
@@ -54,16 +63,22 @@ interface ProjectDeviceSwitcherProps {
  * The directory belongs to the project, so the only choice left is which
  * device to run on — and each device brings the project's own directory there.
  * Only devices the project has a directory on are offered; picking one moves
- * the conversation to that directory rather than to an arbitrary path.
+ * the conversation to that directory rather than to an arbitrary path. The
+ * directory itself has no chip of its own; its path rides on this trigger's
+ * tooltip.
  */
-const ProjectDeviceSwitcher = ({ agentId, topicId }: ProjectDeviceSwitcherProps) => {
+const ProjectDeviceSwitcher = ({
+  activeTag,
+  agentId,
+  directories,
+  directoryId,
+  onSelect,
+}: ProjectDeviceSwitcherProps) => {
   const { t } = useTranslation('chat');
   const [open, setOpen] = useState(false);
   const { canUseResource } = useChatInputResourceAccess();
-  const { directories, directory, directoryId } = useProjectTopicDirectory(topicId);
+  const directory = directories.find((d) => d.id === directoryId);
   const { data: devices } = useDeviceList();
-  const moveTopic = useProjectDirectoryStore((s) => s.moveTopic);
-  const refreshTopic = useChatStore((s) => s.refreshTopic);
   // The shared row, not the topic-pinned effective config: a fixed target is
   // the author's setting, and it is what the server checks the move against.
   const agencyConfig = useAgentStore(agentByIdSelectors.getAgencyConfigById(agentId));
@@ -76,30 +91,13 @@ const ProjectDeviceSwitcher = ({ agentId, topicId }: ProjectDeviceSwitcherProps)
 
   const targets = listProjectDeviceTargets(directories, devices, directoryId, fixedDeviceId);
 
-  const handleSelect = ({ active, directory: target, label }: (typeof targets)[number]) => {
+  const handleSelect = (target: ProjectDeviceTarget) => {
     setOpen(false);
-    if (active) return;
-    confirmModal({
-      cancelText: t('cancel', { ns: 'common' }),
-      content: t('heteroAgent.executionTarget.switchProjectTopic.content', {
-        device: label,
-        directory: target.name,
-      }),
-      okText: t('heteroAgent.executionTarget.switchTopic.ok'),
-      onOk: async () => {
-        try {
-          await moveTopic({ directoryId: target.id, topicId });
-          await refreshTopic();
-        } catch (error) {
-          toast.error((error as Error).message);
-        }
-      },
-      title: t('heteroAgent.executionTarget.switchTopic.title'),
-    });
+    if (!target.active) onSelect(target);
   };
 
   const content = (
-    <Flexbox style={{ maxWidth: 320, minWidth: 280 }}>
+    <Flexbox style={{ maxWidth: 400, minWidth: 280 }}>
       <div className={styles.title}>{t('heteroAgent.executionTarget.title')}</div>
       {targets.map((target) => {
         const selectable = target.online && target.allowed;
@@ -109,16 +107,20 @@ const ProjectDeviceSwitcher = ({ agentId, topicId }: ProjectDeviceSwitcherProps)
             disabled={!selectable}
             key={target.directory.id}
             label={target.label}
-            tags={target.active ? [t('heteroAgent.executionTarget.topicTag')] : []}
+            tags={target.active && activeTag ? [activeTag] : []}
             desc={
               target.allowed ? (
                 <>
                   <span className={styles.desc}>{target.directory.path}</span>
-                  <ExecutionTargetDeviceStatus
-                    offlineLabel={t('heteroAgent.executionTarget.offline')}
-                    online={target.online}
-                    onlineLabel={t('heteroAgent.executionTarget.online')}
-                  />
+                  <span className={styles.status}>
+                    <ExecutionTargetDeviceStatus
+                      offlineLabel={t('heteroAgent.executionTarget.offline')}
+                      online={target.online}
+                      onlineLabel={t('heteroAgent.executionTarget.online')}
+                      unknown={target.onlineUnknown}
+                      unknownLabel={t('heteroAgent.executionTarget.presenceChecking')}
+                    />
+                  </span>
                 </>
               ) : (
                 <span className={styles.desc}>{t('heteroAgent.executionTarget.fixedTip')}</span>
@@ -135,6 +137,18 @@ const ProjectDeviceSwitcher = ({ agentId, topicId }: ProjectDeviceSwitcherProps)
     </Flexbox>
   );
 
+  const trigger = (
+    <div className={workingDirectoryChipStyles.chip}>
+      <ExecutionTargetIcon devicePlatform={directory?.platform} target={'device'} />
+      <span className={workingDirectoryChipStyles.label}>
+        {directory
+          ? projectDirectoryDeviceName(directory, devices)
+          : t('heteroAgent.executionTarget.unknownDevice')}
+      </span>
+      <Icon icon={ChevronDownIcon} size={12} />
+    </div>
+  );
+
   return (
     <Popover
       content={content}
@@ -144,14 +158,14 @@ const ProjectDeviceSwitcher = ({ agentId, topicId }: ProjectDeviceSwitcherProps)
       trigger="click"
       onOpenChange={setOpen}
     >
-      <div className={workingDirectoryChipStyles.chip}>
-        <ExecutionTargetIcon devicePlatform={directory?.platform} target={'device'} />
-        <span className={workingDirectoryChipStyles.label}>
-          {directory
-            ? projectDirectoryDeviceName(directory, devices)
-            : t('heteroAgent.executionTarget.unknownDevice')}
-        </span>
-        <Icon icon={ChevronDownIcon} size={12} />
+      <div>
+        {open || !directory ? (
+          trigger
+        ) : (
+          <Tooltip title={t('directories.boundTip', { ns: 'project', path: directory.path })}>
+            {trigger}
+          </Tooltip>
+        )}
       </div>
     </Popover>
   );

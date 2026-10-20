@@ -415,6 +415,34 @@ describe('fetchClaudeCodeQuota', () => {
     expect(result.error).toContain('401');
   });
 
+  it('reports a network-blocked 403 as request-blocked, not an expired login', async () => {
+    setPlatform('linux');
+    vi.mocked(readFile).mockResolvedValue(credentialsJson(FRESH_EXPIRES_AT));
+    vi.mocked(fetch).mockResolvedValue({
+      json: async () => ({ error: { message: 'Request not allowed', type: 'forbidden' } }),
+      ok: false,
+      status: 403,
+    } as Response);
+
+    const result = await fetchClaudeCodeQuota();
+
+    expect(result).toMatchObject({ reason: 'request-blocked', status: 'unavailable' });
+  });
+
+  it('keeps a token-rejecting 403 as an expired login', async () => {
+    setPlatform('linux');
+    vi.mocked(readFile).mockResolvedValue(credentialsJson(FRESH_EXPIRES_AT));
+    vi.mocked(fetch).mockResolvedValue({
+      json: async () => ({ error: { message: 'OAuth token revoked', type: 'permission_error' } }),
+      ok: false,
+      status: 403,
+    } as Response);
+
+    const result = await fetchClaudeCodeQuota();
+
+    expect(result).toMatchObject({ reason: 'credentials-expired', status: 'unavailable' });
+  });
+
   it('surfaces a 429 as a transient error', async () => {
     setPlatform('linux');
     vi.mocked(readFile).mockResolvedValue(credentialsJson(FRESH_EXPIRES_AT));

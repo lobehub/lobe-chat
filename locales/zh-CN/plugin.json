@@ -162,7 +162,7 @@
   "builtins.lobe-agent-documents.inspector.opsCount": "{{count}} 项操作",
   "builtins.lobe-agent-documents.inspector.opsResult": "{{success}}/{{total}} 项",
   "builtins.lobe-agent-documents.inspector.scope.agent": "在代理中",
-  "builtins.lobe-agent-documents.inspector.scope.currentTopic": "在主题中",
+  "builtins.lobe-agent-documents.inspector.scope.currentTopic": "在话题中",
   "builtins.lobe-agent-documents.moveDocuments.destination": "移动到",
   "builtins.lobe-agent-documents.moveDocuments.from": "原位置：{{parent}}",
   "builtins.lobe-agent-documents.moveDocuments.itemsToMove": "共 {{count}} 项待移动",

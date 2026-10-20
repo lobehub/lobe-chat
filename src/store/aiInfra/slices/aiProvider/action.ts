@@ -536,6 +536,24 @@ const projectRuntimeState = (
   providerBindingAgentTypes: data.providerBindingAgentTypes ?? {},
 });
 
+const projectRuntimeStateDisplay = (
+  state: AiInfraStore,
+  data: AiProviderRuntimeStateView,
+): Partial<AiInfraStore> =>
+  state.isInitAiProviderRuntimeState
+    ? {}
+    : {
+        enabledAiModels: data.enabledAiModels,
+        enabledAiProviders: data.enabledAiProviders,
+        enabledAsrModelList: data.enabledAsrModelList || [],
+        enabledChatModelList: data.enabledChatModelList || [],
+        enabledEmbeddingModelList: data.enabledEmbeddingModelList || [],
+        enabledImageModelList: data.enabledImageModelList || [],
+        enabledVideoModelList: data.enabledVideoModelList || [],
+        modelRedirects: data.modelRedirects,
+        providerBindingAgentTypes: data.providerBindingAgentTypes ?? {},
+      };
+
 const aiProviderRuntimeStateLens: ReplicaLens<AiInfraStore, AiProviderRuntimeStateView> = {
   clear: () => ({
     aiProviderRuntimeConfig: {},
@@ -564,7 +582,12 @@ const aiProviderRuntimeStateLens: ReplicaLens<AiInfraStore, AiProviderRuntimeSta
     // the next confirmed value (or the scope `clear`).
     if (data === undefined) return { aiProviderRuntimeStateMap: next };
 
-    return { aiProviderRuntimeStateMap: next, ...projectRuntimeState(state, data) };
+    return {
+      aiProviderRuntimeStateMap: next,
+      ...(data.isDisplaySnapshot
+        ? projectRuntimeStateDisplay(state, data)
+        : projectRuntimeState(state, data)),
+    };
   },
 };
 

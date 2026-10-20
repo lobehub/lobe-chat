@@ -19,7 +19,7 @@ import {
   extractTodosFromMessages,
   redactResultForEvents,
 } from '../utils';
-import { selectToolManifestMap, selectToolSourceMap } from '../utils/operationToolSet';
+import { selectEffectiveToolManifestMap, selectToolSourceMap } from '../utils/operationToolSet';
 import { settleAbortedToolRows } from './abortedToolRows';
 
 const TOOL_EXECUTION_PHASE = 'tool_execution';
@@ -114,15 +114,8 @@ const parseToolArgs = (tool: ChatToolPayload): Record<string, unknown> => {
   }
 };
 
-const buildEffectiveManifestMap = (state: AgentState): Record<string, any> => ({
-  ...selectToolManifestMap(state),
-  ...Object.fromEntries(
-    (state.activatedStepTools ?? [])
-      .filter((activation) => activation.manifest)
-      .map((activation) => [activation.id, activation.manifest!]),
-  ),
-});
-
+const buildEffectiveManifestMap = (state: AgentState): Record<string, any> =>
+  selectEffectiveToolManifestMap(state);
 /**
  * Resource an API call mutates, read from the argument its manifest names in
  * `serializeBy`. Undefined when the API declares none or the argument is not a
@@ -559,16 +552,21 @@ const persistActivatedTools = ({
       Array<{ identifier: string }> | undefined;
     if (!discoveredTools?.length) continue;
 
+    // The set is updated inside the filter, not after mapping the batch: two
+    // results in the same step (or one result listing the same tool twice)
+    // would otherwise both pass and be appended twice.
     const newActivations = discoveredTools
-      .filter((tool) => !existingIds.has(tool.identifier))
+      .filter((tool) => {
+        if (existingIds.has(tool.identifier)) return false;
+        existingIds.add(tool.identifier);
+        return true;
+      })
       .map((tool) => ({
         activatedAtStep: stepCount,
         id: tool.identifier,
         manifest: effectiveManifestMap[tool.identifier],
         source: 'discovery' as const,
       }));
-
-    for (const activation of newActivations) existingIds.add(activation.id);
 
     if (newActivations.length > 0) {
       newState.activatedStepTools = [...(newState.activatedStepTools ?? []), ...newActivations];

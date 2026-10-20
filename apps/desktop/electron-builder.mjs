@@ -21,6 +21,7 @@ import {
   resolveComputerUseHelperVersion,
   verifyComputerUseHelper,
 } from './scripts/computerUseHelper.mjs';
+import { notarizeMacApp } from './scripts/notarizeMacApp.mjs';
 import { packBuiltinCore } from './scripts/packBuiltinCore.mjs';
 import { toSparkleBuildVersion } from './scripts/sparkleBuildVersion.mjs';
 import { resolveSparklePackaging } from './scripts/sparklePackaging.mjs';
@@ -203,6 +204,23 @@ const config = {
     console.info('📦 Building CLI for embedding...');
     execSync('npm run build:cli', { stdio: 'inherit', cwd: __dirname });
 
+    // The shell window has no React/i18next runtime. Bundle only its translated strings.
+    const updateStrings = {};
+    for (const locale of ['en-US', 'zh-CN']) {
+      const messages = JSON.parse(
+        await fs.readFile(path.join(__dirname, '../../locales', locale, 'electron.json'), 'utf8'),
+      );
+      updateStrings[locale] = Object.fromEntries(
+        Object.entries(messages)
+          .filter(([key]) => key.startsWith('startupUpdate.'))
+          .map(([key, value]) => [key.slice('startupUpdate.'.length), value]),
+      );
+    }
+    await fs.writeFile(
+      path.join(__dirname, 'shell/update/strings.json'),
+      JSON.stringify(updateStrings, null, 2) + '\n',
+    );
+
     execSync('node scripts/shellAbi.mjs --write', { stdio: 'inherit', cwd: __dirname });
     const { shellAbi } = JSON.parse(
       await fs.readFile(path.join(__dirname, 'shell/abi.json'), 'utf8'),
@@ -269,6 +287,12 @@ const config = {
         { version: computerUseHelperVersion },
       );
       console.info('✅ Computer Use helper kept its notarized signature');
+
+      if (hasAppleCertificate) {
+        await notarizeMacApp(
+          path.join(context.appOutDir, `${context.packager.appInfo.productFilename}.app`),
+        );
+      }
     }
   },
   appId: macAppId,
@@ -381,7 +405,8 @@ const config = {
     hardenedRuntime: hasAppleCertificate,
     // Ship the notarized helper as built; re-signing drops its stapled ticket.
     signIgnore: [COMPUTER_USE_HELPER_SIGN_IGNORE],
-    notarize: hasAppleCertificate,
+    // Notarized in afterSign so a transient staple failure retries instead of failing the build.
+    notarize: false,
     ...(hasAppleCertificate ? {} : { identity: null }),
     target: [
       { arch: [arch === 'arm64' ? 'arm64' : 'x64'], target: 'dmg' },

@@ -19,6 +19,12 @@ export interface ExplorerTreeNode<TData = unknown> {
   parentId?: string | null;
 }
 
+/** Orders sibling rows; return < 0 to put `a` first. */
+export type ExplorerTreeNodeComparator<TData = unknown> = (
+  a: ExplorerTreeNode<TData>,
+  b: ExplorerTreeNode<TData>,
+) => number;
+
 export interface ExplorerTreeMoveEvent<TData = unknown> {
   /** @deprecated Transitional compatibility for the current @pierre/trees bridge. */
   index?: number;
@@ -155,6 +161,12 @@ export interface ExplorerTreeProps<TData = unknown> {
   ) => boolean | void;
   overscan?: number;
   selectedIds?: string[];
+  /**
+   * Sibling order. Without it the tree lists folders first, then names by code
+   * point. Whether a comparator is used is fixed on mount; passing a new one
+   * (or nodes that it orders differently) re-sorts the rows in place.
+   */
+  sort?: ExplorerTreeNodeComparator<TData>;
   style?: CSSProperties;
   /** Raw CSS injected into the pierre/trees shadow DOM via FILE_TREE_UNSAFE_CSS_ATTRIBUTE. */
   unsafeCSS?: string;

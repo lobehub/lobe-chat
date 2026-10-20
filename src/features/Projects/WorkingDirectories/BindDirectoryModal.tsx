@@ -1,14 +1,15 @@
-import { Flexbox, Icon } from '@lobehub/ui';
 import {
   Alert,
   Avatar,
   Button,
   createModal,
+  Flexbox,
+  Icon,
   ModalFooter,
   Select,
   Text,
   useModalContext,
-} from '@lobehub/ui/base-ui';
+} from '@lobehub/ui';
 import { t } from 'i18next';
 import { FolderIcon, PlusIcon } from 'lucide-react';
 import { useState } from 'react';
@@ -16,7 +17,7 @@ import { useTranslation } from 'react-i18next';
 
 import AsyncError from '@/components/AsyncError';
 import { getDeviceIcon } from '@/features/DeviceManager/getDeviceIcon';
-import { useDeviceStore } from '@/store/device';
+import { deviceSelectors, useDeviceStore } from '@/store/device';
 import { useCurrentProjectList, useProjectStore } from '@/store/project';
 import { useProjectDirectoryStore, useProjectEnvironments } from '@/store/projectWorkingDirectory';
 
@@ -44,7 +45,7 @@ function BindDirectoryContent(options: BindDirectoryOptions) {
   const projectSync = useProjectStore((s) => s.useFetchProjectList)();
   const projects = useCurrentProjectList();
   useDeviceStore((s) => s.useFetchDevices)(true);
-  const devices = useDeviceStore((s) => s.devices);
+  const devices = useDeviceStore(deviceSelectors.deviceList);
   const device = devices.find((d) => d.deviceId === options.deviceId);
   const deviceName = device?.friendlyName ?? options.deviceId;
   const environmentsRequest = useProjectDirectoryStore((s) => s.useFetchEnvironments)();

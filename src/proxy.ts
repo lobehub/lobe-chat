@@ -64,6 +64,7 @@ export const config = {
     '/signin(.*)',
     '/verify-email(.*)',
     '/verify-im(.*)',
+    // Retired report links: the Workbench redirects them into Acceptance.
     '/verify',
     '/verify/(.*)',
     '/reset-password(.*)',

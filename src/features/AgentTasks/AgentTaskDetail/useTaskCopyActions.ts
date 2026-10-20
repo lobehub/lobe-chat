@@ -1,5 +1,4 @@
-import { copyToClipboard } from '@lobehub/ui';
-import { toast } from '@lobehub/ui/base-ui';
+import { copyToClipboard, toast } from '@lobehub/ui';
 import { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -23,6 +22,7 @@ export const useTaskCopyActions = () => {
   const taskId = useTaskStore(taskDetailSelectors.activeTaskId);
   const taskAgentId = useTaskStore(taskDetailSelectors.activeTaskAgentId);
   const taskTitle = useTaskStore(taskDetailSelectors.activeTaskName);
+  const instruction = useTaskStore(taskDetailSelectors.activeTaskInstruction);
 
   const copyId = useCallback(async () => {
     if (!taskId) return;
@@ -50,5 +50,16 @@ export const useTaskCopyActions = () => {
     toast.success(t('taskList.contextMenu.copyLinkSuccess'));
   }, [link, t]);
 
-  return { copyId, copyLink, link, taskId };
+  // The instruction is stored as markdown, so the copy pastes cleanly into
+  // other agents, issues or chats.
+  const content = instruction?.trim() ? instruction : undefined;
+
+  const copyContent = useCallback(async () => {
+    if (!content) return;
+
+    await copyToClipboard(content);
+    toast.success(t('taskList.contextMenu.copyContentSuccess'));
+  }, [content, t]);
+
+  return { copyContent, copyId, copyLink, hasContent: !!content, link, taskId };
 };

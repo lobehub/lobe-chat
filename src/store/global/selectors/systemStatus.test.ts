@@ -138,6 +138,19 @@ describe('systemStatusSelectors', () => {
     });
   });
 
+  describe('topicPageSize', () => {
+    it('defaults to 20', () => {
+      expect(systemStatusSelectors.topicPageSize(initialState)).toBe(20);
+    });
+
+    // A value above the server's `getTopics` cap failed every topic list
+    // request; earlier builds could persist one from the project sidebar.
+    it('clamps a persisted value above the server cap', () => {
+      const s: GlobalState = merge(initialState, { status: { topicPageSize: 140 } });
+      expect(systemStatusSelectors.topicPageSize(s)).toBe(100);
+    });
+  });
+
   describe('modelDetailPanelExpandedKeys', () => {
     it('should expand every section by default', () => {
       const s: GlobalState = {
@@ -263,7 +276,9 @@ describe('systemStatusSelectors', () => {
         status: { sidebarItems: stored },
       });
       expect(systemStatusSelectors.sidebarItems(null)(s)).toEqual([
-        // Defaults missing from a saved layout (here the newer `dashboard`) are backfilled.
+        // Defaults missing from a saved layout (here the newer `goals` and
+        // `dashboard`) are backfilled.
+        'goals',
         'dashboard',
         'private',
         'agent',
@@ -282,6 +297,7 @@ describe('systemStatusSelectors', () => {
     it('should preserve a canonically-positioned spacer', () => {
       const stored = [
         'pages',
+        'goals',
         'dashboard',
         'project',
         'recents',
@@ -321,6 +337,7 @@ describe('systemStatusSelectors', () => {
       expect(systemStatusSelectors.sidebarItems(null)(s)).toEqual([
         'tasks',
         'pages',
+        'goals',
         'dashboard',
         'recents',
         'project',
@@ -367,6 +384,7 @@ describe('systemStatusSelectors', () => {
       // the legacy state was saved) is backfilled at the head of the block.
       expect(items).toEqual([
         'tasks',
+        'goals',
         'dashboard',
         'resource',
         'private',
@@ -390,6 +408,7 @@ describe('systemStatusSelectors', () => {
       // backfilled at the head of the block; recents/agent keep legacy order.
       expect(items).toEqual([
         'tasks',
+        'goals',
         'dashboard',
         'resource',
         'private',

@@ -501,6 +501,13 @@ export const resultTrailSource = (graph: Pick<GoalGraphView, 'report'>): ResultT
   return { kind: 'story', metadata: parsed.data, report: report.latest };
 };
 
+/**
+ * The HTML page the latest report wrote, which leads the result page. A newer
+ * wrap-up still writing keeps the previous page on screen until it lands.
+ */
+export const goalReportPageId = (graph: Pick<GoalGraphView, 'report'>): string | undefined =>
+  graph.report?.latest?.pageDocumentId || undefined;
+
 /** Whether the wrap-up agent is writing this result's storyline right now. */
 export const isGoalReportOrganizing = (graph: Pick<GoalGraphView, 'report'>): boolean =>
   graph.report?.status === 'running';

@@ -1,10 +1,17 @@
 import type { SFSymbol } from '@lobechat/electron-client-ipc';
 import { getWorkingDirEffectivePath } from '@lobechat/types';
 import { nanoid } from '@lobechat/utils';
-import { Flexbox, Icon, type IconProps } from '@lobehub/ui';
-import { ActionIcon, type DropdownItem, DropdownMenu, Skeleton } from '@lobehub/ui/base-ui';
+import {
+  ActionIcon,
+  type DropdownItem,
+  DropdownMenu,
+  Flexbox,
+  Icon,
+  type IconProps,
+  Skeleton,
+} from '@lobehub/ui';
+import { createStaticStyles, cssVar } from '@lobehub/ui';
 import { SkillsIcon } from '@lobehub/ui/icons';
-import { createStaticStyles, cssVar } from 'antd-style';
 import {
   BoxesIcon,
   CheckIcon,
@@ -38,7 +45,6 @@ import {
   useState,
 } from 'react';
 import { useTranslation } from 'react-i18next';
-import useSWR from 'swr';
 
 import { useBusinessWorkingSidebarTabs } from '@/business/client/features/WorkingSidebarTabs';
 import { useActiveWorkspaceId } from '@/business/client/hooks/useActiveWorkspaceId';
@@ -50,7 +56,6 @@ import {
 } from '@/features/AgentSidebar/Topic/List/Item/metaCardData';
 import { useRepoType } from '@/features/ChatInput/ControlBar/useRepoType';
 import { useSandboxMode } from '@/features/ChatInput/ControlBar/useSandboxMode';
-import SkeletonList from '@/features/NavPanel/components/SkeletonList';
 import { getPortalViewWidth } from '@/features/Portal/portalWidth';
 import TopicCommentsSidebar from '@/features/Portal/TopicComments/Sidebar';
 import RightPanel from '@/features/RightPanel';
@@ -63,30 +68,29 @@ import { useEffectiveAgencyConfig } from '@/hooks/useEffectiveAgencyConfig';
 import { useEffectiveWorkingDirectory } from '@/hooks/useEffectiveWorkingDirectory';
 import { useLocalStorageState } from '@/hooks/useLocalStorageState';
 import type { NativeContextMenuItem } from '@/libs/contextMenu/types';
-import { sandboxStorageService } from '@/services/sandboxStorage';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors, chatConfigByIdSelectors } from '@/store/agent/selectors';
 import { useChatStore } from '@/store/chat';
 import { chatPortalSelectors, portalThreadSelectors, topicSelectors } from '@/store/chat/selectors';
 import { PortalViewType } from '@/store/chat/slices/portal/initialState';
 import { messageMapKey } from '@/store/chat/utils/messageMapKey';
-import {
-  deviceSelectors,
-  useDeviceStore,
-  useFetchGitBranch,
-  useFetchGitLinkedPR,
-} from '@/store/device';
+import { deviceSelectors, useDeviceStore } from '@/store/device';
 import { useElectronStore } from '@/store/electron';
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
+import { sandboxActions, sandboxSelectors, useSandboxStore } from '@/store/sandbox';
 
 import { type ComposerTarget, createComposerTarget, resolveThreadComposerTarget } from '../types';
-import Files from './Files';
+import DeferredSkeleton from './DeferredSkeleton';
+import FilesPane from './Files/FilesPane';
+import { useFilesPaneLocation } from './Files/useFilesPaneLocation';
 import { sidebarWidthBudget } from './fitsBesidePortal';
 import { MAX_PANEL_WIDTH, MIN_PANEL_WIDTH, OVERVIEW_PANEL_WIDTH } from './layout';
 import Overview from './Overview';
+import { getStatusDeviceId } from './Overview/overviewData';
 import OverviewSlot from './OverviewSlot';
 import PullRequest from './PullRequest';
+import { useLinkedPullRequest } from './PullRequest/useLinkedPullRequest';
 import ResourcesSection from './ResourcesSection';
 import Review from './Review';
 import WorkspaceTab from './WorkspaceTab';
@@ -368,10 +372,8 @@ const AgentWorkingSidebar = memo<AgentWorkingSidebarProps>(({ availableWidth }) 
   // tree + git reads go over RPC, so both Review and Files are reachable even
   // when runtimeMode isn't `local`.
   const isDeviceMode = effectiveTarget === 'device' && !!agencyConfig?.boundDeviceId;
-  // `targetDeviceId` also identifies the local desktop for per-device working
-  // directory state. Files/Review only need a deviceId when routing through a
-  // remote device RPC; local "This device" must keep Electron IPC + file-open
-  // actions enabled.
+  // `targetDeviceId` also names the local desktop (directory state, Overview status).
+  // Files/Review route a deviceId only for remote RPC; "This device" keeps Electron IPC.
   const remoteDeviceId = isDeviceMode ? agencyConfig.boundDeviceId : undefined;
   const isLocalExecution = effectiveTarget === 'local';
   // A cloud-sandbox run keeps its files in the persistent workspace, so it has a
@@ -393,40 +395,33 @@ const AgentWorkingSidebar = memo<AgentWorkingSidebarProps>(({ availableWidth }) 
   // Scoped to the bound instance's directory, or the workspace root when the
   // run keeps files without one. The empty string IS the root here, which is
   // why the tab's gate is the topic rather than a truthy path.
-  const { data: sandboxInstances } = useSWR(
-    isSandboxExecution && sandboxInstanceId ? ['sandbox-instance-dir', sandboxInstanceId] : null,
-    () => sandboxStorageService.getInstance({ id: sandboxInstanceId! }),
-  );
-  const sandboxDirectory = sandboxInstances?.workingDirectory ?? '';
+  // A replica, so a reload paints the directory (and the Files tab) from the
+  // last answer; `null` is an instance known to be gone.
+  const sandboxDirectoryId = isSandboxExecution ? sandboxInstanceId : undefined;
+  sandboxActions.useFetchInstanceDirectory(sandboxDirectoryId);
+  const sandboxDir = useSandboxStore(sandboxSelectors.instanceDirectory(sandboxDirectoryId));
+  const sandboxDirectory = sandboxDir ?? '';
   // The empty string IS the workspace root, so an unresolved instance does not
   // read as "no directory yet" — it reads as "the whole workspace", and the
   // tree would list every instance's folder for as long as the lookup took.
-  const sandboxDirectoryKnown = !sandboxInstanceId || sandboxInstances !== undefined;
+  const sandboxDirectoryKnown = !sandboxInstanceId || sandboxDir !== undefined;
 
   const filesystemEnvironmentAvailable = isLocalExecution || isDeviceMode;
   const environmentWorkingDirectory = filesystemEnvironmentAvailable ? workingDirectory : undefined;
   const environmentRepoType = filesystemEnvironmentAvailable ? repoType : undefined;
-  // Files tab is an agent-mode affordance — in plain chat mode the working
-  // directory is irrelevant to the user, so hide the tab even when one resolves.
-  // Which directory the tree shows, and therefore whether there is a tree at
-  // all. Kept as one value rather than a pair of conditions: the sandbox's root
-  // is the empty string, so "has a directory" and "is truthy" part ways here,
-  // and the tab's availability has to follow the value it will render.
-  // A directory is only showable when something can actually read it: the
-  // sandbox through its workspace API, a device or this machine through the
-  // filesystem. A topic can carry a path persisted on a desktop the web client
-  // has no way to reach, and that path is not a tree — it is a string.
-  // An instance is what makes a sandbox tree addressable. Persistent mode with
-  // none picked is the workspace root, which the execution plane can only
-  // resolve through a conversation — so that one still waits for the topic.
-  const filesDirectory =
-    isSandboxExecution && (sandboxInstanceId || sandboxTopicId)
-      ? sandboxDirectoryKnown
-        ? sandboxDirectory
-        : undefined
-      : filesystemEnvironmentAvailable
-        ? workingDirectory
-        : undefined;
+  // Files is agent-mode only; the hook owns which directory (if any) is showable.
+  const { deviceId: filesDeviceId, directory: filesDirectory } = useFilesPaneLocation({
+    activeAgentId,
+    filesystemEnvironmentAvailable,
+    isSandboxExecution,
+    remoteDeviceId,
+    sandboxDirectory,
+    sandboxDirectoryKnown,
+    sandboxInstanceId,
+    sandboxTopicId,
+    topicId,
+    workingDirectory,
+  });
   const filesAvailable = !isChatMode && filesDirectory !== undefined;
   const reviewAvailable = (isLocalExecution || isDeviceMode) && !!workingDirectory && !!repoType;
   const snapshotConfig =
@@ -437,24 +432,17 @@ const AgentWorkingSidebar = memo<AgentWorkingSidebarProps>(({ availableWidth }) 
   const isGithub =
     repoType === 'github' || (!repoType && !!snapshotConfig?.git?.github?.pullRequest);
   const gitPath = filesystemEnvironmentAvailable && isGithub ? workingDirectory : undefined;
-  const { data: branchData } = useFetchGitBranch(remoteDeviceId, gitPath);
-  const { data: linkedPR, mutate: refreshPullRequest } = useFetchGitLinkedPR(
-    remoteDeviceId,
+  const {
+    pullRequest,
+    refresh: refreshPullRequest,
+    ...pullRequestLink // confirmed, confirmError, onRetryConfirm
+  } = useLinkedPullRequest({
+    available: filesystemEnvironmentAvailable && !!workingDirectory,
+    deviceId: remoteDeviceId,
     gitPath,
-    branchData?.branch,
     isGithub,
-  );
-  const snapshotPR =
-    !branchData || (snapshotConfig?.git?.branch === branchData.branch && !branchData.detached)
-      ? snapshotConfig?.git?.github?.pullRequest
-      : undefined;
-  // A settled empty lookup supersedes the snapshot; failures may keep displaying it.
-  const pullRequest =
-    filesystemEnvironmentAvailable && workingDirectory
-      ? linkedPR?.pullRequestStatus === 'ok'
-        ? linkedPR.pullRequest
-        : (linkedPR?.pullRequest ?? snapshotPR)
-      : undefined;
+    snapshot: snapshotConfig?.git,
+  });
   const paramsAvailable = !isHetero;
   // The in-app browser pages are renderer-retained Electron webviews — desktop only.
   const browserAvailable = isDesktop;
@@ -720,7 +708,6 @@ const AgentWorkingSidebar = memo<AgentWorkingSidebarProps>(({ availableWidth }) 
     },
     [availableTabs, updateOpenedTabs, updatePinnedTabs],
   );
-
   const unpinTab = useCallback(
     (tab: string) => {
       // A tab restored only through its agent pin should remain open in the
@@ -730,7 +717,6 @@ const AgentWorkingSidebar = memo<AgentWorkingSidebarProps>(({ availableWidth }) 
     },
     [updateOpenedTabs, updatePinnedTabs],
   );
-
   const closeTabs = useCallback(
     (tabs: string[], fallbackTab = 'overview') => {
       const removableTabs = new Set(tabs.filter((tab) => !pinnedTabsSet.has(tab)));
@@ -1043,6 +1029,7 @@ const AgentWorkingSidebar = memo<AgentWorkingSidebarProps>(({ availableWidth }) 
                   pullRequest={pullRequest}
                   repoType={environmentRepoType}
                   sourcePath={sourceWorkingDirectory}
+                  statusDeviceId={getStatusDeviceId(effectiveTarget, agencyConfig?.boundDeviceId)}
                   workingDirectory={environmentWorkingDirectory}
                   onOpenTab={openTab}
                   onRefreshPullRequest={refreshPullRequest}
@@ -1128,7 +1115,20 @@ const AgentWorkingSidebar = memo<AgentWorkingSidebarProps>(({ availableWidth }) 
             />
           </Flexbox>
           <Flexbox className={styles.body} width={'100%'}>
-            {!contentReady && <SkeletonList paddingBlock={8} paddingInline={8} rows={6} />}
+            {!contentReady && storedTab !== 'files' && activeTab !== 'files' && (
+              <DeferredSkeleton />
+            )}
+            <FilesPane
+              active={!!showRightPanel && activeTab === 'files'}
+              available={filesAvailable}
+              className={styles.pane}
+              contentReady={contentReady || (activeTab === 'files' && filesAvailable)}
+              deviceId={filesDeviceId}
+              directory={filesDirectory}
+              prefetch={activeTab === 'files' && (!showRightPanel || !contentReady)}
+              sandboxInstanceId={isSandboxExecution ? sandboxInstanceId : undefined}
+              sandboxTopicId={sandboxTopicId}
+            />
             {contentReady && (
               <>
                 {commentsAvailable && (
@@ -1165,6 +1165,7 @@ const AgentWorkingSidebar = memo<AgentWorkingSidebarProps>(({ availableWidth }) 
                     <Flexbox className={styles.pane}>
                       <PullRequest
                         active={!!showRightPanel && activeTab === 'pr'}
+                        {...pullRequestLink}
                         deviceId={remoteDeviceId}
                         key={JSON.stringify([remoteDeviceId, workingDirectory, pullRequest.number])}
                         number={pullRequest.number}
@@ -1172,18 +1173,6 @@ const AgentWorkingSidebar = memo<AgentWorkingSidebarProps>(({ availableWidth }) 
                         url={pullRequest.url}
                         workingDirectory={workingDirectory}
                         onOpenTab={openTab}
-                      />
-                    </Flexbox>
-                  </Activity>
-                )}
-                {filesAvailable && (
-                  <Activity mode={showRightPanel && activeTab === 'files' ? 'visible' : 'hidden'}>
-                    <Flexbox className={styles.pane}>
-                      <Files
-                        deviceId={remoteDeviceId}
-                        sandboxInstanceId={isSandboxExecution ? sandboxInstanceId : undefined}
-                        sandboxTopicId={sandboxTopicId}
-                        workingDirectory={filesDirectory}
                       />
                     </Flexbox>
                   </Activity>

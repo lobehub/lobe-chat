@@ -61,13 +61,14 @@ export class LocalStorageQueryProjectionStorage<T> implements QueryProjectionSto
     localStorage.removeItem(this.#key(key));
   };
 
+  /**
+   * Rejects when the write did not land (a quota error, see `ReplicaStorage.set`):
+   * the replica engine only treats a row as holding a value after a confirmed
+   * write. Callers that persist best-effort catch it.
+   */
   set = async (key: QueryProjectionKey, projection: QueryProjection<T>): Promise<void> => {
     if (typeof window === 'undefined') return;
 
-    try {
-      localStorage.setItem(this.#key(key), this.#codec.stringify(projection));
-    } catch {
-      // Projection persistence is best-effort; the server remains the durable SoT.
-    }
+    localStorage.setItem(this.#key(key), this.#codec.stringify(projection));
   };
 }

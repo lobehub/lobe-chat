@@ -2,7 +2,7 @@
 
 import type { IEditor } from '@lobehub/editor';
 import type { EditorState as LobehubEditorState } from '@lobehub/editor/react';
-import { toast } from '@lobehub/ui/base-ui';
+import { toast } from '@lobehub/ui';
 import isEqual from 'fast-deep-equal';
 import { t } from 'i18next';
 
@@ -15,6 +15,8 @@ import { setNamespace } from '@/utils/storeDebug';
 
 import type { DocumentStore } from '../../store';
 import { documentDetailResource } from '../document/projection';
+import type { DocumentFormatFields } from './contentFormat';
+import { hasDocumentFormatFields, resolveDocumentContentFormat } from './contentFormat';
 import type { DocumentDispatch } from './reducer';
 import { documentReducer } from './reducer';
 
@@ -29,11 +31,13 @@ export interface SaveMetadata {
 }
 
 export interface SaveExecutionOptions {
+  /** Persist title/emoji without reading, writing or acknowledging the editor body. */
+  metadataOnly?: boolean;
   restoreFromHistoryId?: string;
   saveSource?: 'autosave' | 'manual' | 'restore' | 'system' | 'llm_call';
 }
 
-export interface RemoteDocumentRow {
+export interface RemoteDocumentRow extends DocumentFormatFields {
   content?: string | null;
   editorData?: unknown;
   updatedAt: Date | string;
@@ -89,7 +93,7 @@ export class EditorActionImpl {
     if (!editor || !id || id !== activeDocumentId) return false;
 
     const doc = documents[id];
-    if (!doc) return false;
+    if (!doc || doc.contentFormat === 'html') return false;
 
     try {
       const editorMarkdown = (editor.getDocument('markdown') as unknown as string) || '';
@@ -209,10 +213,27 @@ export class EditorActionImpl {
     const sameBody =
       content === (doc.lastSavedContent ?? '') &&
       isEqual(editorData, doc.lastSavedEditorData ?? null);
+    // A remote write can change the type alone (`lh doc edit --file-type`): the
+    // HTML guards and the SKILL.md frontmatter split must follow the new type.
+    const contentFormat = hasDocumentFormatFields(row)
+      ? resolveDocumentContentFormat(row)
+      : doc.contentFormat;
+    const formatChanged = contentFormat !== doc.contentFormat;
+    const skillFrontmatter =
+      contentFormat === 'skillMarkdown'
+        ? parseSkillMarkdownFrontmatter(content).frontmatter
+        : undefined;
 
     if (sameBody) {
       internal_dispatchDocument(
-        { id: documentId, type: 'updateDocument', value: { lastUpdatedTime: updatedAt } },
+        {
+          id: documentId,
+          type: 'updateDocument',
+          value: {
+            lastUpdatedTime: updatedAt,
+            ...(formatChanged ? { contentFormat, skillFrontmatter } : {}),
+          },
+        },
         n('reconcileRemote/rebased'),
       );
       return 'rebased';
@@ -225,10 +246,9 @@ export class EditorActionImpl {
         type: 'updateDocument',
         value: {
           content,
+          contentFormat,
           editorData,
-          ...(doc.contentFormat === 'skillMarkdown'
-            ? { skillFrontmatter: parseSkillMarkdownFrontmatter(content).frontmatter }
-            : {}),
+          ...(contentFormat === 'skillMarkdown' || formatChanged ? { skillFrontmatter } : {}),
           isDirty: false,
           lastSavedContent: content,
           lastSavedEditorData: editorData,
@@ -242,19 +262,35 @@ export class EditorActionImpl {
     return 'adopted';
   };
 
-  onEditorInit = async (editor: IEditor): Promise<void> => {
-    const { activeDocumentId, documents } = this.#get();
-    if (!editor || !activeDocumentId) return;
+  /**
+   * Hydrate the document owned by this canvas. A child's initialization effect can
+   * run before the parent's activeDocumentId update, so the global selection is
+   * not a reliable identity for the body being mounted.
+   */
+  onEditorInit = async (editor: IEditor, documentId: string): Promise<void> => {
+    const { documents } = this.#get();
+    if (!editor) return;
 
-    const doc = documents[activeDocumentId];
+    const doc = documents[documentId];
 
-    if (!doc) return;
+    if (!doc || doc.contentFormat === 'html') return;
 
     // Check if editorData is valid and non-empty
+    const editorDataRoot = (doc.editorData as { root?: { children?: unknown[] } } | null)?.root;
+    // A childless root (empty-parse shell) throws Lexical error #38 on hydration;
+    // treat it as no editor data so the markdown/empty fallbacks below take over.
+    // Only the targeted Lexical shell shape (root node present with an empty
+    // children array) is rejected — legacy non-Lexical payloads without a root
+    // node (e.g. { type: 'doc', content: [] }) keep loading via setDocument('json').
+    const isEmptyParseShell =
+      !!editorDataRoot &&
+      Array.isArray(editorDataRoot.children) &&
+      editorDataRoot.children.length === 0;
     const hasValidEditorData =
       doc.editorData &&
       typeof doc.editorData === 'object' &&
-      Object.keys(doc.editorData).length > 0;
+      Object.keys(doc.editorData).length > 0 &&
+      !isEmptyParseShell;
 
     // SKILL.md frontmatter is metadata, not editable document body. Keep it out of the rich
     // Markdown editor because `---` fences are otherwise parsed as Markdown dividers/headings,
@@ -316,7 +352,7 @@ export class EditorActionImpl {
     const id = documentId || this.#get().activeDocumentId;
     if (!id) return;
 
-    this.syncEditorContent(id, { triggerAutoSave: false });
+    if (!options?.metadataOnly) this.syncEditorContent(id, { triggerAutoSave: false });
     const previous = this.#inflightSaves.get(id) ?? Promise.resolve();
     const run = previous.catch(() => {}).then(() => this.#runSave(id, metadata, options));
     this.#inflightSaves.set(id, run);
@@ -339,7 +375,19 @@ export class EditorActionImpl {
     const doc = documents[id];
     if (!doc) return;
 
-    const hasMetadataChanges = metadata?.emoji !== undefined || metadata?.title !== undefined;
+    const hasEmojiChange = metadata !== undefined && 'emoji' in metadata;
+    const hasMetadataChanges = hasEmojiChange || metadata?.title !== undefined;
+    const savedMetadata = hasEmojiChange
+      ? Object.fromEntries(
+          Object.entries({
+            ...this.#get().documentDetailMap[id]?.document?.metadata,
+            emoji: metadata?.emoji,
+          }).filter(([, value]) => value !== undefined),
+        )
+      : undefined;
+    // An HTML page's body is never edited here: only its title / emoji save.
+    const metadataOnly = options?.metadataOnly === true || doc.contentFormat === 'html';
+    if (metadataOnly && !hasMetadataChanges) return;
 
     // Skip save if neither document content nor metadata changed
     if (!doc.isDirty && !hasMetadataChanges) return;
@@ -351,7 +399,7 @@ export class EditorActionImpl {
       const currentContent = doc.content ?? '';
       const currentEditorData = doc.editorData;
 
-      if (!isValidEditorData(currentEditorData)) {
+      if (!metadataOnly && !isValidEditorData(currentEditorData)) {
         console.warn('[DocumentStore] Refusing to save invalid editorData:', currentEditorData);
         internal_dispatchDocument({ id, type: 'updateDocument', value: { saveStatus: 'idle' } });
         return;
@@ -362,12 +410,13 @@ export class EditorActionImpl {
       // in DiffAllToolbar, which mutates editor state before calling performSave.
       const requestSave = (expectedUpdatedAt?: Date) =>
         documentService.updateDocument({
-          content: currentContent,
-          editorData: JSON.stringify(currentEditorData),
+          ...(!metadataOnly
+            ? { content: currentContent, editorData: JSON.stringify(currentEditorData) }
+            : {}),
           ...(expectedUpdatedAt ? { expectedUpdatedAt } : {}),
           id,
           lockOwnerId: doc.lockOwnerId,
-          metadata: metadata?.emoji ? { emoji: metadata.emoji } : undefined,
+          metadata: savedMetadata,
           restoreFromHistoryId: options?.restoreFromHistoryId,
           saveSource: options?.saveSource,
           title: metadata?.title,
@@ -394,10 +443,16 @@ export class EditorActionImpl {
         id,
         type: 'updateDocument',
         value: {
-          isDirty:
-            current?.content !== currentContent || !isEqual(current?.editorData, currentEditorData),
-          lastSavedContent: currentContent,
-          lastSavedEditorData: structuredClone(currentEditorData),
+          // A metadata response cannot acknowledge body edits that it never sent.
+          ...(!metadataOnly
+            ? {
+                isDirty:
+                  current?.content !== currentContent ||
+                  !isEqual(current?.editorData, currentEditorData),
+                lastSavedContent: currentContent,
+                lastSavedEditorData: structuredClone(currentEditorData),
+              }
+            : {}),
           ...(savedAt ? { lastUpdatedTime: savedAt } : {}),
           saveBlockedByLock: false,
           saveStatus: 'saved',
@@ -409,13 +464,18 @@ export class EditorActionImpl {
       // leaving the pre-edit body there would render stale content — and keep
       // rendering it when the confirming read is slow or fails.
       const cachedDetail = this.#get().documentDetailMap[id]?.document;
-      if (cachedDetail) {
+      // A read that landed while this save was in flight may already hold a
+      // newer writer's revision; mirroring this save over it would regress it.
+      const cachedIsNewer =
+        !!savedAt &&
+        !!cachedDetail?.updatedAt &&
+        new Date(cachedDetail.updatedAt).getTime() > savedAt.getTime();
+      if (cachedDetail && !cachedIsNewer) {
         this.#get().internal_adoptDocumentDetail(
           id,
           {
             ...cachedDetail,
-            content: currentContent,
-            editorData: currentEditorData,
+            ...(!metadataOnly ? { content: currentContent, editorData: currentEditorData } : {}),
             // Mirror the metadata this save wrote, exactly as the server applies
             // it (`title` also renames `filename`; `metadata` is replaced). A
             // stale title / emoji here would be republished by the next body
@@ -423,14 +483,14 @@ export class EditorActionImpl {
             ...(metadata?.title !== undefined
               ? { filename: metadata.title, title: metadata.title }
               : {}),
-            ...(metadata?.emoji ? { metadata: { emoji: metadata.emoji } } : {}),
+            ...(savedMetadata ? { metadata: savedMetadata } : {}),
             updatedAt: savedAt ?? cachedDetail.updatedAt,
           },
           scope,
         );
       }
 
-      if (this.#get().documents[id]?.isDirty && doc.autoSave !== false) {
+      if (!metadataOnly && this.#get().documents[id]?.isDirty && doc.autoSave !== false) {
         this.#get().triggerDebouncedSave(id);
       }
     } catch (error) {

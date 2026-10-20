@@ -53,6 +53,9 @@ const { mockTrpcClient } = vi.hoisted(() => ({
     device: {
       listDevices: { query: vi.fn() },
     },
+    user: {
+      getUserState: { query: vi.fn() },
+    },
   },
 }));
 
@@ -134,6 +137,16 @@ describe('agent command', () => {
         (fn as ReturnType<typeof vi.fn>).mockReset();
       }
     }
+    for (const method of Object.values(mockTrpcClient.user)) {
+      for (const fn of Object.values(method)) {
+        (fn as ReturnType<typeof vi.fn>).mockReset();
+      }
+    }
+    // `lh agent run --no-headless` reads the saved tool approval mode from
+    // user.getUserState before deciding what to send. After mockReset a bare
+    // vi.fn() returns undefined and `undefined.query(...)` throws before the
+    // CLI's own `.catch()` can absorb it, so default to "no saved setting".
+    mockTrpcClient.user.getUserState.query.mockResolvedValue(undefined);
   });
 
   afterEach(async () => {
@@ -316,6 +329,18 @@ describe('agent command', () => {
 
       const program = createProgram();
       await program.parseAsync(['node', 'test', 'agent', 'edit', 'a1', '--title', 'Updated']);
+
+      expect(mockTrpcClient.agent.updateAgentConfig.mutate).toHaveBeenCalledWith({
+        agentId: 'a1',
+        value: { title: 'Updated' },
+      });
+    });
+
+    it('should accept update as an alias of edit', async () => {
+      mockTrpcClient.agent.updateAgentConfig.mutate.mockResolvedValue({});
+
+      const program = createProgram();
+      await program.parseAsync(['node', 'test', 'agent', 'update', 'a1', '--title', 'Updated']);
 
       expect(mockTrpcClient.agent.updateAgentConfig.mutate).toHaveBeenCalledWith({
         agentId: 'a1',

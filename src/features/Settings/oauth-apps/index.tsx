@@ -1,4 +1,3 @@
-import { Skeleton } from '@lobehub/ui/base-ui';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router';
 
@@ -9,6 +8,8 @@ import { usePermission } from '@/hooks/usePermission';
 import { useUserStore } from '@/store/user';
 import { labPreferSelectors, preferenceSelectors } from '@/store/user/selectors';
 
+import { AppDetailSkeleton } from './features/AppDetail';
+import AppListSkeleton from './features/AppListSkeleton';
 import CreateAppButton from './features/CreateAppButton';
 import OAuthApps from './features/OAuthApps';
 import { useOAuthAppList } from './features/useOAuthAppList';
@@ -30,7 +31,15 @@ const Page = () => {
   const { data: apps } = useOAuthAppList(isPreferenceInit && enableOAuthApps);
   const listEmpty = apps?.length === 0;
 
-  if (!isPreferenceInit) return <Skeleton.Text rows={5} />;
+  // Keep the page header and the body's own skeleton while the Labs flag
+  // resolves; the Create button waits for the flag because disabled means 404.
+  if (!isPreferenceInit)
+    return (
+      <>
+        <SettingHeader title={t('tab.oauthApps')} />
+        {params.sub ? <AppDetailSkeleton /> : <AppListSkeleton />}
+      </>
+    );
   if (!enableOAuthApps) return <NotFound />;
 
   return (
