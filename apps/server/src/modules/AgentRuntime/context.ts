@@ -12,6 +12,7 @@ import type { HookDispatcher } from '@/server/services/agentRuntime/hooks/HookDi
 import type {
   ExecGroupMemberParams,
   ExecGroupMemberResult,
+  GroupActionMemberBridgeParams,
 } from '@/server/services/agentRuntime/types';
 import { type ToolExecutionService } from '@/server/services/toolExecution';
 
@@ -60,9 +61,17 @@ export interface RuntimeExecutorContext {
    */
   execVirtualSubAgent?: (params: ExecVirtualSubAgentParams) => Promise<ExecSubAgentResult>;
   hookDispatcher?: HookDispatcher;
+  isInterrupted?: (operationId: string) => Promise<boolean>;
   loadAgentState?: (operationId: string) => Promise<AgentState | null>;
   messageModel: MessageModel;
   modelRuntimeConfig?: AgentState['modelRuntimeConfig'];
+  /** Check the shared completion barrier after a startup-failure receipt is published. */
+  onGroupMemberResult?: (
+    params: Pick<
+      GroupActionMemberBridgeParams,
+      'anchorMessageId' | 'expectedMembers' | 'groupToolMessageId' | 'parentOperationId'
+    >,
+  ) => Promise<boolean>;
   operationId: string;
   serverDB: LobeChatDatabase;
   stepIndex: number;

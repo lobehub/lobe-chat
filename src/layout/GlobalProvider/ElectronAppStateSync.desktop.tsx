@@ -1,7 +1,9 @@
 'use client';
 
 import { useWatchBroadcast } from '@lobechat/electron-client-ipc';
-import { useEffect } from 'react';
+import { Button, createModal, ModalFooter } from '@lobehub/ui';
+import { useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { useMacWindowFullscreen } from '@/features/Electron/system/useMacWindowFullscreen';
 import { rendererOtaService } from '@/services/electron/rendererOta';
@@ -20,6 +22,61 @@ import { useElectronStore } from '@/store/electron';
  */
 const ElectronAppStateSync = () => {
   useMacWindowFullscreen();
+  const { t: tElectron } = useTranslation('electron');
+  const { t } = useTranslation('common');
+  const dismissConfirmation = useRef<(() => void) | null>(null);
+  useWatchBroadcast('reloadConfirmationRequested', () => {
+    dismissConfirmation.current?.();
+    let resolved = false;
+    const resolve = (proceed: boolean) => {
+      if (resolved) return;
+      resolved = true;
+      return rendererOtaService.resolveUnloadConfirmation(proceed).catch(console.error);
+    };
+    const modal = createModal({
+      title: tElectron('updater.confirmReloadTitle'),
+      content: tElectron('updater.confirmReloadDescription'),
+      footer: (
+        <ModalFooter>
+          <Button
+            onClick={() => {
+              void resolve(false);
+              modal.close();
+            }}
+          >
+            {t('cancel')}
+          </Button>
+          <Button
+            type={'primary'}
+            onClick={() => {
+              void resolve(true);
+              modal.close();
+            }}
+          >
+            {tElectron('updater.confirmReloadContinue')}
+          </Button>
+        </ModalFooter>
+      ),
+      onOpenChange: (open) => {
+        if (!open) void resolve(false);
+      },
+    });
+    dismissConfirmation.current = () => {
+      resolved = true;
+      modal.close();
+    };
+  });
+
+  useWatchBroadcast('reloadConfirmationCancelled', () => {
+    dismissConfirmation.current?.();
+    dismissConfirmation.current = null;
+  });
+  useEffect(
+    () => () => {
+      dismissConfirmation.current?.();
+    },
+    [],
+  );
 
   const [useInitElectronAppState, updateElectronAppState] = useElectronStore((s) => [
     s.useInitElectronAppState,

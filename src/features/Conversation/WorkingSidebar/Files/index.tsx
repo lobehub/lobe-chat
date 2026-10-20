@@ -1,10 +1,20 @@
 'use client';
 
 import type { ProjectFileIndexEntry } from '@lobechat/electron-client-ipc';
-import { Center, Empty, Flexbox, Icon, stopPropagation } from '@lobehub/ui';
-import { ActionIcon, Button, DropdownMenu, Input, Spin } from '@lobehub/ui/base-ui';
+import {
+  ActionIcon,
+  Button,
+  Center,
+  createStaticStyles,
+  DropdownMenu,
+  Empty,
+  Flexbox,
+  Icon,
+  Input,
+  Spin,
+  stopPropagation,
+} from '@lobehub/ui';
 import type { GitStatusEntry } from '@pierre/trees';
-import { createStaticStyles } from 'antd-style';
 import {
   CheckIcon,
   ChevronDownIcon,
@@ -29,15 +39,16 @@ import type { ExplorerTreeHandle } from '@/features/ExplorerTree/types';
 import { useClientDataSWR } from '@/libs/swr';
 import { projectFileService } from '@/services/projectFile';
 import { useGlobalStore } from '@/store/global';
+import { isPersistedPartialIndex } from '@/store/projectFile';
 
 import { filterProjectFileEntries, mergeMissingDeletedEntries } from './fileFilter';
 import { FILE_TREE_UNSAFE_CSS } from './fileTreeStyle';
 import { isExcludedProjectFileEntry } from './fileVisibility';
 import { getAncestorIds, getParentRelativePath, PROJECT_ROOT_NODE_ID } from './treePaths';
 import { useCollapsedDirectoryChildren } from './useCollapsedDirectoryChildren';
+import { useFilesTreeSources } from './useFilesTreeSources';
 import { useFileTreeActions } from './useFileTreeActions';
-import { buildGitStatusEntries, useGitWorkingTreeFiles } from './useGitWorkingTreeFiles';
-import { useProjectFiles } from './useProjectFiles';
+import { buildGitStatusEntries } from './useGitWorkingTreeFiles';
 
 interface FilesProps {
   /**
@@ -209,15 +220,13 @@ const Files = memo<FilesProps>(
     // sandbox both answer over the network, and neither can be handed to Electron
     // to reveal in a file manager.
     const isSandbox = !!sandboxTopicId || !!sandboxInstanceId;
-    const { data, error, isLoading } = useProjectFiles(deviceId, workingDirectory, {
+    const {
+      git: { data: gitFiles, error: gitError },
+      project: { data, error, isLoading, isValidating },
+    } = useFilesTreeSources(deviceId, workingDirectory, {
       instanceId: sandboxInstanceId,
       topicId: sandboxTopicId,
     });
-    const { data: gitFiles } = useGitWorkingTreeFiles(
-      deviceId,
-      workingDirectory,
-      data?.source === 'git',
-    );
     const projectSource = data?.source;
     const projectRoot = data?.root ?? workingDirectory;
 
@@ -493,6 +502,14 @@ const Files = memo<FilesProps>(
     );
 
     const isEmpty = displayEntries.length === 0;
+    // A large project's saved tree keeps only its shallowest entries. Its own
+    // refresh replaces it within moments; only when that refresh is not running
+    // (it failed, or has not been retried) is the partial tree worth flagging.
+    const showsPartialIndex = isPersistedPartialIndex(data) && !isValidating;
+    // A restored tree / overlay is painted before the host answers again. When
+    // that refresh fails the saved view stays on screen, so it must say that it
+    // could not be revalidated instead of reading as the current directory.
+    const showsRefreshFailure = !!data && !!(error || gitError);
 
     if (!data && isLoading) {
       return (
@@ -607,8 +624,14 @@ const Files = memo<FilesProps>(
             />
           </div>
         )}
-        {truncatedCount > 0 && (
-          <div className={styles.truncated}>{t('workingPanel.files.truncatedNotice')}</div>
+        {showsRefreshFailure ? (
+          <div className={styles.truncated}>{t('workingPanel.files.refreshFailed')}</div>
+        ) : showsPartialIndex ? (
+          <div className={styles.truncated}>{t('workingPanel.files.partialIndexNotice')}</div>
+        ) : (
+          truncatedCount > 0 && (
+            <div className={styles.truncated}>{t('workingPanel.files.truncatedNotice')}</div>
+          )
         )}
       </Flexbox>
     );

@@ -1,6 +1,6 @@
 {
   "name": "@lobehub/cli",
-  "version": "0.0.61",
+  "version": "0.0.66",
   "type": "module",
   "bin": {
     "lh": "dist/index.js",
@@ -29,6 +29,7 @@
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
+    "@lydell/node-pty": "1.2.0-beta.15",
     "ws": "^8.21.0"
   },
   "devDependencies": {
@@ -63,7 +64,8 @@
     "tsdown": "^0.21.10",
     "typescript": "^6.0.3",
     "url-join": "^5.0.0",
-    "vitest": "5.0.0"
+    "vitest": "5.0.0",
+    "zod": "^4.4.3"
   },
   "engines": {
     "node": ">=22.15"

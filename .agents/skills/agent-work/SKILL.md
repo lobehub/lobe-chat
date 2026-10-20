@@ -33,6 +33,13 @@ A share visitor's run executes as the creator, so owner scope alone cannot separ
 - The resource unique indexes include the visitor topic id, so the creator and each visitor topic keep separate rows for the same external resource.
 - Visitor read payloads drop the creator's `userId` / `workspaceId` and gate spend on `showModelInfo` (`toVisitorMessage`).
 
+## Orphaned Works (backing resource deleted)
+
+`works.resourceId` has no FK, and deleting a document, task, or file never cascades into its Work (LOBE-13917). Deleting the Work would also drop its version history and its project and goal references. Each read surface handles orphans itself:
+
+- **Resource-page galleries hide orphans.** These are `listByWorkspace` surfaces: `/resource`, `/resource/works`, and the project dashboard. They filter orphans out with `resourceLiveFilter` (`packages/database/src/models/work/internal.ts`). A task or document must still exist and not be trashed. A file Work's current-version `fileId` must point to a `files` row that exists and is not trashed. Restoring the resource brings the card back. Any new gallery-style Work list must apply the same filter.
+- **Conversation surfaces keep the card.** These are `listByConversation` and the cards under messages; the conversation did produce the Work. `resourceDeleted` drives a click-time prompt (`useResourceDeletedPrompt`) that lets the user remove it.
+
 ## Registration write paths
 
 Four write paths, two timing classes:

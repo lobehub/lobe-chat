@@ -1,4 +1,4 @@
-import type { TopicCommentItem } from '@lobechat/types';
+import type { LayersEnum, TopicCommentItem } from '@lobechat/types';
 
 import { type PortalArtifact } from '@/types/artifact';
 
@@ -14,16 +14,19 @@ export enum PortalViewType {
   AcceptanceCheck = 'acceptanceCheck',
   AgentDetail = 'agentDetail',
   Artifact = 'artifact',
+  DashboardWidget = 'dashboardWidget',
   Document = 'document',
   FilePreview = 'filePreview',
   Goal = 'goal',
   GoalMetric = 'goalMetric',
   GoalNode = 'goalNode',
+  GoalNorthStar = 'goalNorthStar',
   GoalReport = 'goalReport',
   GoalReportChapter = 'goalReportChapter',
   GroupThread = 'groupThread',
   Home = 'home',
   LocalFile = 'localFile',
+  MemoryDetail = 'memoryDetail',
   MessageDetail = 'messageDetail',
   Notebook = 'notebook',
   TaskDetail = 'taskDetail',
@@ -91,16 +94,21 @@ export type PortalViewData =
   | { goalId: string; type: PortalViewType.Goal }
   | { goalId: string; metric: GoalMetricKind; type: PortalViewType.GoalMetric }
   | { goalId: string; nodeId: string; type: PortalViewType.GoalNode }
+  /** One declared north-star clause of a goal, keyed by its metric series key. */
+  | { goalId: string; metricKey: string; type: PortalViewType.GoalNorthStar }
   | { goalId: string; type: PortalViewType.GoalReport }
   | { chapterIndex: number; goalId: string; type: PortalViewType.GoalReportChapter }
   | { acceptanceId: string; type: PortalViewType.Acceptance }
   | { acceptanceId: string; checkId: string; type: PortalViewType.AcceptanceCheck }
   | { agentId: string; type: PortalViewType.AgentDetail }
   | { artifact: PortalArtifact; type: PortalViewType.Artifact }
+  | { runId?: string; type: PortalViewType.DashboardWidget; widgetId: string }
   | { agentDocumentId?: string; documentId: string; type: PortalViewType.Document }
   | { type: PortalViewType.Notebook }
   | { file: PortalFile; type: PortalViewType.FilePreview }
   | { type: PortalViewType.LocalFile }
+  /** `id` is the layer-specific row id (e.g. a preference id), not the base memory id. */
+  | { id: string; layer: LayersEnum; type: PortalViewType.MemoryDetail }
   | { messageId: string; type: PortalViewType.MessageDetail }
   | {
       identifier: string;

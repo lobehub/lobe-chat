@@ -18,6 +18,7 @@ const testState = vi.hoisted(() => ({
     updateTopicMetadata: vi.fn(),
   },
   currentDeviceId: 'this-machine' as string | undefined,
+  resolveGatewayDeviceId: vi.fn(async (): Promise<string | undefined> => undefined),
   effective: {
     agencyConfig: undefined as Record<string, unknown> | undefined,
     isPreferenceLoading: false,
@@ -51,6 +52,7 @@ vi.mock('@/store/device', () => ({
 }));
 
 vi.mock('@/store/electron', () => ({
+  getElectronStoreState: () => ({ resolveGatewayDeviceId: testState.resolveGatewayDeviceId }),
   useElectronStore: (selector: (s: { gatewayDeviceInfo?: { deviceId?: string } }) => unknown) =>
     selector({ gatewayDeviceInfo: { deviceId: testState.currentDeviceId } }),
 }));
@@ -126,9 +128,11 @@ describe('useCommitWorkingDirectory — localTarget', () => {
     const { result } = renderHook(() => useCommitWorkingDirectory('agent-id'));
     await result.current.commit({ path: 'C:/work' }, { localTarget: true });
 
-    expect(testState.agent.updateAgentConfigById).toHaveBeenCalledWith('agent-id', {
-      agencyConfig: { workingDirByDevice: { 'this-machine': { path: 'C:/work' } } },
-    });
+    expect(testState.agent.updateAgentConfigById).toHaveBeenCalledWith(
+      'agent-id',
+      { agencyConfig: { workingDirByDevice: { 'this-machine': { path: 'C:/work' } } } },
+      { replaceWorkingDirDeviceIds: ['this-machine'] },
+    );
   });
 
   it('leaves ordinary writes routed by the resolved config', async () => {
@@ -144,13 +148,49 @@ describe('useCommitWorkingDirectory — localTarget', () => {
     const { result } = renderHook(() => useCommitWorkingDirectory('agent-id'));
     await result.current.commit({ path: 'C:/work' });
 
-    expect(testState.agent.updateAgentConfigById).toHaveBeenCalledWith('agent-id', {
-      agencyConfig: {
-        boundDeviceId: 'other-device',
-        executionTarget: 'device',
-        workingDirByDevice: { 'other-device': { path: 'C:/work' } },
+    expect(testState.agent.updateAgentConfigById).toHaveBeenCalledWith(
+      'agent-id',
+      { agencyConfig: { workingDirByDevice: { 'other-device': { path: 'C:/work' } } } },
+      { replaceWorkingDirDeviceIds: ['other-device'] },
+    );
+  });
+
+  it('writes only the selected device instead of replaying other directory choices', async () => {
+    testState.agent.agencyConfig = {
+      executionTarget: 'local',
+      workingDirByDevice: {
+        'this-machine': { git: { activeWorktree: '/titu-worktree' }, path: '/titu' },
+        'other-device': '/remote/repo',
       },
-    });
+    };
+    const { result } = renderHook(() => useCommitWorkingDirectory('agent-id'));
+
+    await result.current.commit({ path: '/lobehub', repoType: 'github' });
+    expect(testState.agent.updateAgentConfigById).toHaveBeenLastCalledWith(
+      'agent-id',
+      {
+        agencyConfig: {
+          workingDirByDevice: { 'this-machine': { path: '/lobehub', repoType: 'github' } },
+        },
+      },
+      { replaceWorkingDirDeviceIds: ['this-machine'] },
+    );
+
+    await result.current.clear();
+    expect(testState.agent.updateAgentConfigById).toHaveBeenLastCalledWith(
+      'agent-id',
+      { agencyConfig: { workingDirByDevice: { 'this-machine': undefined } } },
+      { replaceWorkingDirDeviceIds: ['this-machine'] },
+    );
+
+    await result.current.commitAgentDefault('/plain-folder');
+    expect(testState.agent.updateAgentConfigById).toHaveBeenLastCalledWith(
+      'agent-id',
+      {
+        agencyConfig: { workingDirByDevice: { 'this-machine': '/plain-folder' } },
+      },
+      { replaceWorkingDirDeviceIds: ['this-machine'] },
+    );
   });
 });
 
@@ -203,6 +243,32 @@ describe('useCommitWorkingDirectory — topic device provenance', () => {
     ]);
     expect(patch.boundDeviceId).toBeUndefined();
   });
+
+  // Regression: an unresolved target wrote the new path with no machine, which
+  // erased the topic's pin and left the picker on the agent default.
+  it('keeps the topic pin when the target machine cannot be resolved', async () => {
+    testState.effective.agencyConfig = { executionTarget: 'device' };
+    const { result } = renderHook(() => useCommitWorkingDirectory('agent-id'));
+    await result.current.commit({ path: '/Users/me/repo-c' });
+
+    expect(testState.chat.updateTopicMetadata).toHaveBeenCalledWith(
+      'topic-id',
+      expect.objectContaining({ boundDeviceId: 'device-a', workingDirectory: '/Users/me/repo-c' }),
+    );
+  });
+
+  it('pins an unbound topic to this desktop when the target cannot be resolved', async () => {
+    testState.effective.agencyConfig = { executionTarget: 'device' };
+    testState.chat.topic = { metadata: {} } as ChatTopic;
+    testState.resolveGatewayDeviceId.mockResolvedValueOnce('this-desktop');
+    const { result } = renderHook(() => useCommitWorkingDirectory('agent-id'));
+    await result.current.commit({ path: '/Users/me/repo-c' });
+
+    expect(testState.chat.updateTopicMetadata).toHaveBeenCalledWith(
+      'topic-id',
+      expect.objectContaining({ boundDeviceId: 'this-desktop' }),
+    );
+  });
 });
 
 describe('useCommitWorkingDirectory — commitAgentDefault', () => {
@@ -240,8 +306,25 @@ describe('useCommitWorkingDirectory — commitAgentDefault', () => {
     expect(testState.agent.updateAgentConfigById).toHaveBeenCalledWith(
       'agent-id',
       { agencyConfig: { workingDirByDevice: { 'this-machine': '/work' } } },
-      { rethrow: true, showErrorMessage: false },
+      { replaceWorkingDirDeviceIds: ['this-machine'], rethrow: true, showErrorMessage: false },
     );
+  });
+
+  it('rejects a failed folder pick before the caller starts a new topic', async () => {
+    testState.agent.updateAgentConfigById = vi.fn(
+      async (_id: string, _patch: unknown, options?: { rethrow?: boolean }) => {
+        if (options?.rethrow) throw new Error('save failed');
+      },
+    );
+    const { result } = renderHook(() => useCommitWorkingDirectory('agent-id', null));
+    const startTopic = vi.fn();
+
+    await expect(
+      result.current
+        .commit({ path: '/work' }, { rethrow: true, showErrorMessage: false })
+        .then(startTopic),
+    ).rejects.toThrow('save failed');
+    expect(startTopic).not.toHaveBeenCalled();
   });
 
   it('exposes the workspace preference loading state for writers to wait on', () => {

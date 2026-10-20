@@ -5,13 +5,22 @@ import {
   getTopicMetadataWorkingDirectoryEffectivePath,
   getTopicMetadataWorkingDirectorySourcePath,
 } from '@lobechat/utils/client/topic';
-import { Flexbox, Icon, Popover, Tooltip } from '@lobehub/ui';
-import { Skeleton, Tag, Text } from '@lobehub/ui/base-ui';
-import { createStaticStyles, cssVar, useTheme } from 'antd-style';
+import {
+  createStaticStyles,
+  cssVar,
+  Flexbox,
+  Icon,
+  Popover,
+  Skeleton,
+  Tag,
+  Text,
+  Tooltip,
+  useTheme,
+} from '@lobehub/ui';
 import dayjs from 'dayjs';
 import isEqual from 'fast-deep-equal';
 import { MessageSquareDashed } from 'lucide-react';
-import type { CSSProperties, DragEvent, RefObject } from 'react';
+import type { CSSProperties, DragEvent, MouseEvent, RefObject } from 'react';
 import { memo, Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -22,6 +31,7 @@ import { TOPIC_STATUS_VISUALS } from '@/components/ExecutionStatus';
 import RingLoadingIcon from '@/components/RingLoading';
 import UnreadDot from '@/components/UnreadDot';
 import { isDesktop } from '@/const/version';
+import { getPlatformIcon } from '@/features/AgentChannel/const';
 import { TopicMigrationIndicator } from '@/features/AgentTransferMigration';
 import DirIcon from '@/features/ChatInput/ControlBar/DirIcon';
 import { useHasDraft } from '@/features/ChatInput/draftStorage';
@@ -31,13 +41,11 @@ import { getProjectConversationPath } from '@/features/Projects/Layout/navigatio
 import TopicCreatorAvatar, { useTopicCreator } from '@/features/TopicCreatorAvatar';
 import { buildWorkspaceAwarePath } from '@/features/Workspace/workspaceAwarePath';
 import { getWorkingDirectoryName } from '@/helpers/workingDirectoryPath';
-import { getPlatformIcon } from '@/routes/(main)/agent/channel/const';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors, builtinAgentSelectors } from '@/store/agent/selectors';
 import { useChatStore } from '@/store/chat';
 import { operationSelectors } from '@/store/chat/selectors';
 import { messageMapKey } from '@/store/chat/utils/messageMapKey';
-import { useElectronStore } from '@/store/electron';
 
 import { useTopicNavigation } from '../../hooks/useTopicNavigation';
 import ThreadList from '../../TopicListContent/ThreadList';
@@ -52,6 +60,7 @@ import {
   PR_STATE_VISUAL,
 } from './metaCardData';
 import MetaHoverCard from './MetaHoverCard';
+import { openTopicInNewTab, recordTopicClickOrigin } from './openTopicTab';
 
 // Base UI Popover plays an opacity/scale enter+exit transition driven by these
 // CSS vars on the positioner. Zero them so the meta hover card appears instantly
@@ -111,11 +120,6 @@ const styles = createStaticStyles(({ css }) => ({
   `,
 }));
 
-// Module-scoped so a click on any topic cancels a pending click on another.
-// Per-item refs can't do that, which lets rapid clicks across items all
-// fire — each racing to write activeTopicId (see ).
-let pendingSingleClickTimer: ReturnType<typeof setTimeout> | null = null;
-
 /**
  * The mobile surface renders its topic list in a modal and never mounts the
  * working sidebar — the desktop host of a topic's thread list. Without nesting
@@ -132,13 +136,6 @@ let pendingSingleClickTimer: ReturnType<typeof setTimeout> | null = null;
 const isMobileSurface = () => typeof __MOBILE__ !== 'undefined' && __MOBILE__;
 // Nesting cue: keeps the rows visually under their topic row.
 const NESTED_THREAD_LIST_INDENT = 32;
-
-const cancelPendingSingleClick = () => {
-  if (pendingSingleClickTimer) {
-    clearTimeout(pendingSingleClickTimer);
-    pendingSingleClickTimer = null;
-  }
-};
 
 const getWorkingDirectoryDisplay = (metadata: ChatTopicMetadata | undefined) => {
   const config = metadata?.workingDirectoryConfig;
@@ -225,6 +222,12 @@ interface TopicItemProps {
    */
   showWorkingDirectory?: boolean;
   status?: ChatTopicStatus | null;
+  /**
+   * Group headers that already identify the owning agent (the by-agent
+   * grouping) suppress the row's leading agent avatar — the identity lives in
+   * the header, and the row keeps its status/identity icons instead.
+   */
+  suppressAgentAvatar?: boolean;
   title: string;
   /** Creator of the topic; drives the workspace creator avatar. */
   userId?: string;
@@ -257,6 +260,7 @@ const TopicItemRow = memo<TopicItemRowProps>(
     isTopicActive,
     navRef,
     showThreadList,
+    suppressAgentAvatar,
   }) => {
     const scopedTopic = useScopedTopic(id);
     const scope = useTopicListScope();
@@ -274,7 +278,10 @@ const TopicItemRow = memo<TopicItemRowProps>(
     const activeWorkspaceSlug = useActiveWorkspaceSlug();
     // Creator of the topic — resolves only inside an active workspace; drives
     // the identity-first icon layout below.
-    const author = useTopicCreator(isSharedAgent ? userId : undefined);
+    const author = useTopicCreator(
+      isSharedAgent && !metadata?.bot ? userId : undefined,
+      metadata?.botCreator,
+    );
 
     const loadingRingColor = isDarkMode
       ? cssVar.colorWarningBorder
@@ -312,29 +319,24 @@ const TopicItemRow = memo<TopicItemRowProps>(
     const handleDragStart = useCallback(
       (event: DragEvent) => {
         if (!id) return;
-        cancelPendingSingleClick();
         startTopicDrag(event, { topicId: id, topicTitle: title });
       },
       [id, title],
     );
 
-    const handleClick = useCallback(() => {
-      if (isDesktop) {
-        cancelPendingSingleClick();
-        pendingSingleClickTimer = setTimeout(() => {
-          pendingSingleClickTimer = null;
-          void navRef.current.navigateToTopic(id);
-        }, 250);
-      } else {
+    const handleClick = useCallback(
+      (event?: MouseEvent) => {
+        if (event && event.detail > 1) return;
+        if (isDesktop && id) recordTopicClickOrigin(id);
         void navRef.current.navigateToTopic(id);
-      }
-    }, [id, navRef]);
+      },
+      [id, navRef],
+    );
 
     const handleDoubleClick = useCallback(async () => {
       if (!id || !activeAgentId || !isDesktop) return;
-      cancelPendingSingleClick();
       if (scope && href) {
-        useElectronStore.getState().addTab(href);
+        openTopicInNewTab(id, href);
         void navRef.current.navigateToTopic(id);
         return;
       }
@@ -342,11 +344,10 @@ const TopicItemRow = memo<TopicItemRowProps>(
         void navRef.current.navigateToTopic(id, { skipPopupFocus: true });
         return;
       }
-      useElectronStore
-        .getState()
-        .addTab(
-          buildWorkspaceAwarePath(AGENT_CHAT_TOPIC_URL(activeAgentId, id), activeWorkspaceSlug),
-        );
+      openTopicInNewTab(
+        id,
+        buildWorkspaceAwarePath(AGENT_CHAT_TOPIC_URL(activeAgentId, id), activeWorkspaceSlug),
+      );
       void navRef.current.navigateToTopic(id);
     }, [id, activeAgentId, activeWorkspaceSlug, navRef, scope, href]);
 
@@ -553,21 +554,26 @@ const TopicItemRow = memo<TopicItemRowProps>(
     // shrinks into a bottom-right corner badge. Personal mode keeps the
     // original layout untouched.
     const ownIconNode = statusIconNode ?? identityIconNode;
-    const leadingIconNode = scopedTopic ? (
-      <Avatar
-        name={scopedTopic.agentName || scopedTopic.agentTitle || undefined}
-        size={20}
-        title={scopedTopic.agentName || scopedTopic.agentTitle || undefined}
-        avatar={
-          scopedTopic.agentAvatar ||
-          (activeAgentId === inboxId ? DEFAULT_INBOX_AVATAR : DEFAULT_AVATAR)
-        }
-      />
-    ) : author ? (
-      <TopicCreatorAvatar corner={ownIconNode} userId={userId} />
-    ) : (
-      (ownIconNode ?? idleIconPlaceholder)
-    );
+    const leadingIconNode =
+      scopedTopic && !suppressAgentAvatar ? (
+        <Avatar
+          name={scopedTopic.agentName || scopedTopic.agentTitle || undefined}
+          size={20}
+          title={scopedTopic.agentName || scopedTopic.agentTitle || undefined}
+          avatar={
+            scopedTopic.agentAvatar ||
+            (activeAgentId === inboxId ? DEFAULT_INBOX_AVATAR : DEFAULT_AVATAR)
+          }
+        />
+      ) : author ? (
+        <TopicCreatorAvatar
+          botCreator={metadata?.botCreator}
+          corner={ownIconNode}
+          userId={userId}
+        />
+      ) : (
+        (ownIconNode ?? idleIconPlaceholder)
+      );
 
     const navItem = (
       <TopicItemContextMenu fav={fav} id={id} status={status} title={title}>
@@ -583,7 +589,7 @@ const TopicItemRow = memo<TopicItemRowProps>(
           titleColor={cssVar.colorText}
           extra={
             <>
-              {scopedTopic && ownIconNode}
+              {scopedTopic && !suppressAgentAvatar && ownIconNode}
               <TopicMigrationIndicator agentId={activeAgentId} topicId={id} />
               {/* Gated on the SAME boolean that draws the running ring: both say
                   "this row is visibly running", and a row that stopped spinning

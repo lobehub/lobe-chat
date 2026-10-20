@@ -455,8 +455,8 @@ export class TaskTopicModel {
   }
 
   /**
-   * A goal's spend and round count in one aggregate: how many runs those tasks
-   * produced and what they cost.
+   * Usage for one or more Tasks in one aggregate: how many runs they produced,
+   * their tokens, and what they cost.
    *
    * The Goal page renders these numbers and the coordinator enforces the budget
    * against them, so both read them from here — a second definition of "what
@@ -467,12 +467,30 @@ export class TaskTopicModel {
    * as a round but contribute nothing to the sum.
    */
   async sumRunCostByTaskIds(taskIds: string[]): Promise<{
-    byTask: { runs: number; taskId: string; totalCost: number; totalTokens: number }[];
+    byTask: {
+      runs: number;
+      taskId: string;
+      totalCost: number;
+      totalInputTokens: number;
+      totalOutputTokens: number;
+      totalTokens: number;
+    }[];
     runs: number;
     totalCost: number;
+    totalInputTokens: number;
+    totalOutputTokens: number;
     totalTokens: number;
   }> {
-    if (taskIds.length === 0) return { byTask: [], runs: 0, totalCost: 0, totalTokens: 0 };
+    if (taskIds.length === 0) {
+      return {
+        byTask: [],
+        runs: 0,
+        totalCost: 0,
+        totalInputTokens: 0,
+        totalOutputTokens: 0,
+        totalTokens: 0,
+      };
+    }
 
     // Grouped once, then folded — one round trip serves both the enforced
     // total and the per-Task breakdown the cost panel lists.
@@ -481,6 +499,8 @@ export class TaskTopicModel {
         runs: count(),
         taskId: taskTopics.taskId,
         totalCost: sql<string>`coalesce(sum(${topics.totalCost}), 0)`,
+        totalInputTokens: sql<string>`coalesce(sum(${topics.totalInputTokens}), 0)`,
+        totalOutputTokens: sql<string>`coalesce(sum(${topics.totalOutputTokens}), 0)`,
         totalTokens: sql<string>`coalesce(sum(${topics.totalTokens}), 0)`,
       })
       .from(taskTopics)
@@ -492,6 +512,8 @@ export class TaskTopicModel {
       runs: row.runs,
       taskId: row.taskId,
       totalCost: Number(row.totalCost ?? 0),
+      totalInputTokens: Number(row.totalInputTokens ?? 0),
+      totalOutputTokens: Number(row.totalOutputTokens ?? 0),
       totalTokens: Number(row.totalTokens ?? 0),
     }));
 
@@ -499,6 +521,8 @@ export class TaskTopicModel {
       byTask,
       runs: byTask.reduce((sum, row) => sum + row.runs, 0),
       totalCost: byTask.reduce((sum, row) => sum + row.totalCost, 0),
+      totalInputTokens: byTask.reduce((sum, row) => sum + row.totalInputTokens, 0),
+      totalOutputTokens: byTask.reduce((sum, row) => sum + row.totalOutputTokens, 0),
       totalTokens: byTask.reduce((sum, row) => sum + row.totalTokens, 0),
     };
   }

@@ -14,10 +14,13 @@ import {
 } from '@/types/topic';
 import {
   getTopicSortTime,
+  groupTopicsByAgent,
+  groupTopicsByDevice,
   groupTopicsByProject,
   groupTopicsByStatus,
   groupTopicsByTime,
   groupTopicsByUpdatedTime,
+  type TopicDeviceDirectory,
 } from '@/utils/client/topic';
 
 import { type ChatStoreState } from '../../initialState';
@@ -200,7 +203,7 @@ const getTopicReasoningConfigForModel =
 
 /**
  * Everything a topic pins for a heterogeneous run — the model/provider columns
- * plus `metadata.heteroEffort`. Undefined when nothing is pinned, so callers
+ * plus `metadata.heteroEffort` / `heteroSpeed`. Undefined when nothing is pinned, so callers
  * can pass it straight to `applyTopicModelToHeterogeneousProvider`.
  */
 export const resolveTopicHeteroPin = (
@@ -208,11 +211,13 @@ export const resolveTopicHeteroPin = (
 ): HeterogeneousTopicPin | undefined => {
   if (!topic) return undefined;
   const effort = topic.metadata?.heteroEffort;
-  if (!topic.model && effort === undefined) return undefined;
+  const speed = topic.metadata?.heteroSpeed;
+  if (!topic.model && effort === undefined && speed === undefined) return undefined;
 
   return {
     ...(topic.model ? { model: topic.model, provider: topic.provider || '' } : {}),
     ...(effort === undefined ? {} : { effort }),
+    ...(speed === undefined ? {} : { speed }),
   };
 };
 
@@ -300,6 +305,17 @@ const sortTopics = (topics: ChatTopic[], sortBy: TopicSortBy): ChatTopic[] => {
   return [...topics].sort((a, b) => getTopicSortTime(b, field) - getTopicSortTime(a, field));
 };
 
+// The active topic the sidebar pins into its list — except one the user just
+// archived while on it, which must hide at once (see `justArchivedTopicId`).
+// With archived topics shown, it keeps its pin so it survives the page slice.
+const sidebarActiveTopic = (
+  s: ChatStoreState,
+  includeCompleted: boolean,
+): ChatTopic | undefined => {
+  const topic = currentActiveTopic(s);
+  return !includeCompleted && topic && topic.id === s.justArchivedTopicId ? undefined : topic;
+};
+
 // Limit topics for sidebar display based on user's page size preference
 const displayTopicsForSidebar =
   (pageSize: number, sortBy: TopicSortBy = 'updatedAt', includeCompleted = true) =>
@@ -307,7 +323,13 @@ const displayTopicsForSidebar =
     const topics = currentTopicsWithoutSystemTriggers(s);
     if (!topics) return undefined;
 
-    return selectSidebarTopics(topics, pageSize, sortBy, includeCompleted, currentActiveTopic(s));
+    return selectSidebarTopics(
+      topics,
+      pageSize,
+      sortBy,
+      includeCompleted,
+      sidebarActiveTopic(s, includeCompleted),
+    );
   };
 
 export const selectSidebarTopics = (
@@ -356,6 +378,7 @@ const getGroupFn = (
   groupMode: TopicGroupMode,
   sortBy: TopicSortBy,
   loadingTopicIds?: ReadonlySet<string>,
+  directories?: ReadonlyArray<TopicDeviceDirectory>,
 ) => {
   const field: 'createdAt' | 'updatedAt' = sortBy === 'createdAt' ? 'createdAt' : 'updatedAt';
   if (groupMode === 'byProject') {
@@ -372,6 +395,17 @@ const getGroupFn = (
         ...group,
         title: t(`groupTitle.byStatus.${group.id}` as any, { ns: 'topic' }),
       }));
+  }
+  if (groupMode === 'byAgent') {
+    // Agent names come from row metadata (project feeds join them per topic);
+    // buckets without attribution stay title-less and the group item names
+    // them from its agent context.
+    return (topics: ChatTopic[]) => groupTopicsByAgent(topics, field);
+  }
+  if (groupMode === 'byDevice') {
+    // Device names resolve at render time from the directory and device
+    // registries, so groups stay title-less here.
+    return (topics: ChatTopic[]) => groupTopicsByDevice(topics, field, directories);
   }
   return sortBy === 'updatedAt' ? groupTopicsByUpdatedTime : groupTopicsByTime;
 };
@@ -406,7 +440,8 @@ export const groupSidebarTopics = (
   groupMode: TopicGroupMode,
   sortBy: TopicSortBy,
   loadingTopicIds?: ReadonlySet<string>,
-) => buildGroupedTopics(topics, getGroupFn(groupMode, sortBy, loadingTopicIds));
+  directories?: ReadonlyArray<TopicDeviceDirectory>,
+) => buildGroupedTopics(topics, getGroupFn(groupMode, sortBy, loadingTopicIds, directories));
 
 const groupedTopicsSelector =
   (groupFn: typeof groupTopicsByTime = groupTopicsByTime) =>

@@ -360,6 +360,57 @@ describe('AgentModel', () => {
   });
 
   describe('getAgentSnapshotForTaskCreate', () => {
+    it('reports the native model provider without changing the Agent snapshot', async () => {
+      await serverDB.insert(agents).values({
+        agencyConfig: { heterogeneousProvider: { authMode: 'subscription', type: 'codex' } },
+        id: 'native-task-snapshot',
+        model: 'codex',
+        provider: 'openai',
+        userId,
+      });
+      expect(await agentModel.getAgentSnapshotForTaskCreate('native-task-snapshot')).toMatchObject({
+        modelOverrideProvider: 'codex',
+        snapshot: { model: 'codex', provider: 'openai' },
+      });
+    });
+
+    /** @example A Task snapshot exposes its personal binding without rewriting runtime identity. */
+    it('reports the API binding provider for model-only Task creation', async () => {
+      await serverDB.insert(agents).values({
+        agencyConfig: {
+          heterogeneousProvider: {
+            authMode: 'api',
+            type: 'codex',
+            apiConfig: { model: 'gpt-5.4', providerId: 'personal-provider' },
+          },
+        },
+        id: 'api-bound-task-snapshot',
+        model: 'codex',
+        provider: 'openai',
+        userId,
+      });
+      /** @example Provider inference and inherited runtime snapshots remain distinct. */
+      expect(
+        await agentModel.getAgentSnapshotForTaskCreate('api-bound-task-snapshot'),
+      ).toMatchObject({
+        modelOverrideProvider: 'personal-provider',
+        snapshot: { model: 'codex', provider: 'openai' },
+      });
+    });
+
+    it('does not substitute the native provider for API authentication', async () => {
+      await serverDB.insert(agents).values({
+        agencyConfig: { heterogeneousProvider: { authMode: 'api', type: 'codex' } },
+        id: 'api-task-snapshot',
+        model: 'codex',
+        provider: 'openai',
+        userId,
+      });
+      expect(await agentModel.getAgentSnapshotForTaskCreate('api-task-snapshot')).toMatchObject({
+        modelOverrideProvider: null,
+      });
+    });
+
     it('returns model/provider snapshot + visibility in one call', async () => {
       const agentId = 'snap-task-create-1';
       await serverDB.insert(agents).values({
@@ -3241,9 +3292,9 @@ describe('AgentModel', () => {
         .values({ systemRole: 'OLD PROMPT', userId })
         .returning();
 
-      const original = (agentModel as any).assertWorkspaceDeviceBinding.bind(agentModel);
+      const original = (agentModel as any).ctx.assertWorkspaceDeviceBinding;
       const spy = vi
-        .spyOn(agentModel as any, 'assertWorkspaceDeviceBinding')
+        .spyOn((agentModel as any).ctx, 'assertWorkspaceDeviceBinding')
         .mockImplementationOnce(async (...args: unknown[]) => {
           await agentModel.update(agent.id, { editorData: null, systemRole: 'NEW PROMPT' });
           return original(...args);
@@ -3489,6 +3540,85 @@ describe('AgentModel', () => {
       expect((result?.agencyConfig as any)?.workingDirByDevice).toEqual({ 'device-b': '/b' });
       expect((result?.agencyConfig as any)?.executionTarget).toBe('local');
     });
+
+    it('replaces a device directory selection without retaining stale repository metadata', async () => {
+      const [agent] = await serverDB
+        .insert(agents)
+        .values({
+          userId,
+          agencyConfig: {
+            executionTarget: 'local',
+            workingDirByDevice: {
+              'device-a': {
+                git: { activeWorktree: '/repos/titu-worktree', branch: 'master' },
+                path: '/repos/titu',
+                repoType: 'github',
+              },
+              'device-b': '/remote/repo',
+            },
+          },
+        })
+        .returning();
+
+      await agentModel.updateConfig(
+        agent.id,
+        {
+          agencyConfig: { workingDirByDevice: { 'device-a': { path: '/repos/lobehub' } } },
+        },
+        ['device-a'],
+      );
+
+      const result = await serverDB.query.agents.findFirst({ where: eq(agents.id, agent.id) });
+      expect(result?.agencyConfig).toEqual({
+        executionTarget: 'local',
+        workingDirByDevice: {
+          'device-a': { path: '/repos/lobehub' },
+          'device-b': '/remote/repo',
+        },
+      });
+    });
+
+    it.each([undefined, ['device-a']])(
+      'preserves newer Git fields on unmarked devices in a cached complete map (%j)',
+      async (replaceWorkingDirDeviceIds) => {
+        const newerDeviceB = {
+          git: { activeWorktree: '/repos/b-worktree', branch: 'feature-b' },
+          path: '/repos/b',
+          repoType: 'github' as const,
+        };
+        const [agent] = await serverDB
+          .insert(agents)
+          .values({
+            userId,
+            agencyConfig: {
+              workingDirByDevice: {
+                'device-a': { path: '/repos/a' },
+                'device-b': newerDeviceB,
+              },
+            },
+          })
+          .returning();
+
+        await agentModel.updateConfig(
+          agent.id,
+          {
+            agencyConfig: {
+              workingDirByDevice: {
+                'device-a': { path: '/repos/a-new' },
+                'device-b': { path: '/repos/b' },
+              },
+            },
+          },
+          replaceWorkingDirDeviceIds,
+        );
+
+        const result = await serverDB.query.agents.findFirst({ where: eq(agents.id, agent.id) });
+        expect(result?.agencyConfig?.workingDirByDevice).toEqual({
+          'device-a': { path: '/repos/a-new' },
+          'device-b': newerDeviceB,
+        });
+      },
+    );
 
     it('should still upsert a workingDirByDevice entry when value is a path', async () => {
       const [agent] = await serverDB

@@ -17,6 +17,7 @@ const displayMessageIds = (s: State) => s.displayMessages.map((m) => m.id);
 const dbMessages = (s: State) => s.dbMessages;
 const messagesInit = (s: State) => s.messagesInit;
 const skipFetch = (s: State) => s.skipFetch;
+const hasLaterMessages = (s: State) => s.hasLaterMessages;
 
 const getDisplayMessageById = (id: string) => (s: State) => {
   // First, try to find in top-level displayMessages
@@ -76,7 +77,7 @@ const findLastBlockId = (block: AssistantContentBlock | undefined): string | und
  * Recursively finds the last message ID in a message tree
  * Priority: children > tools > self
  */
-const findLastMessageIdRecursive = (node: UIChatMessage | undefined): string | undefined => {
+export const findLastMessageIdRecursive = (node: UIChatMessage | undefined): string | undefined => {
   if (!node) return undefined;
 
   // Priority 1: Dive into children recursively
@@ -172,6 +173,23 @@ const rowMemberIds = (id: string) => (s: State) =>
 
 const hostRowOf = (id: string) => (s: State) =>
   collectSteerChains(s.displayMessages).hostOf.get(id) ?? id;
+
+/**
+ * The last message of the row that contains `id`.
+ *
+ * A row's id is its host — the *first* turn of the row. Steered continuations
+ * (see `collectSteerChains`) render inside that same row, so the row's id and
+ * the message the user is actually looking at are two different things. Any
+ * action that must act on what the user sees has to resolve to the row tail;
+ * otherwise it silently acts on the chain head. A plain (non-chained) row
+ * resolves to itself, so this is a no-op there.
+ */
+const rowTailId = (id: string) => (s: State) => {
+  const { byHost, hostOf } = collectSteerChains(s.displayMessages);
+  const hostId = hostOf.get(id) ?? id;
+
+  return byHost.get(hostId)?.continuations.at(-1)?.groupId ?? hostId;
+};
 
 const collectDeletableMessageIds = (message: UIChatMessage | undefined): string[] => {
   if (!message) return [];
@@ -326,6 +344,7 @@ const getVerifyOrdinal = (id: string) => (s: State) => {
 };
 
 export const dataSelectors = {
+  hasLaterMessages,
   isRefreshingAt,
   currentTopicSummary,
   dbMessages,
@@ -351,6 +370,7 @@ export const dataSelectors = {
   messagesInit,
   pendingInterventions,
   rowMemberIds,
+  rowTailId,
   skipFetch,
   taskCallbackTaskIds,
   workSummariesByRootOperationId,

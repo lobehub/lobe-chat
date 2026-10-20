@@ -1,8 +1,18 @@
 export default {
+  'startupUpdate.requiredTitle': 'Update required',
+  'startupUpdate.requiredDescription': 'This version has a security issue. Update to continue.',
+  'startupUpdate.checking': 'Checking for updates…',
+  'startupUpdate.downloading': 'Downloading update',
+  'startupUpdate.applying': 'Restarting LobeHub…',
+  'startupUpdate.error': 'Couldn’t finish the update',
+  'startupUpdate.retry': 'Retry',
+  'startupUpdate.quit': 'Quit',
+
   'navigation.agentShare': 'Share',
   'navigation.agents': 'Agents',
   'navigation.channels': 'Channels',
   'navigation.chat': 'Chat',
+  'navigation.dashboard': 'Dashboards',
   'navigation.discover': 'Discover',
   'navigation.discoverAssistants': 'Discover Agents',
   'navigation.discoverMcp': 'Discover MCP',
@@ -52,7 +62,7 @@ export default {
   'navigation.goals': 'Goals',
   'navigation.topics': 'Topics',
   'navigation.unpin': 'Unpin',
-  'navigation.verifyReports': 'Verification Reports',
+  'navigation.video': 'Video',
   'notification.finishChatGeneration': 'AI message generation completed',
   'tab.closeCurrentTab': 'Close Tab',
   'tab.closeLeftTabs': 'Close Tabs to the Left',
@@ -160,6 +170,13 @@ export default {
   'updater.newVersionAvailableDesc':
     'A new version {{version}} has been found, would you like to download it now?',
   'updater.rendererReady': 'Version {{version}} is ready',
+  'updater.confirmReloadTitle': 'Leave this page?',
+  'updater.confirmReloadDescription':
+    'You may have unsaved changes or work in progress. Continuing may lose that work.',
+  'updater.confirmReloadContinue': 'Continue anyway',
+  'updater.rendererUpdateDeferred':
+    'A page prevented reloading. Finish your current work, then try updating again.',
+  'updater.rendererUpdated': 'Updated to version {{version}}',
   'updater.rendererUpdateError': "Couldn't install the update. Try again.",
   'updater.restartAndInstall': 'Install updates and restart',
   'updater.updateError': 'Update error',

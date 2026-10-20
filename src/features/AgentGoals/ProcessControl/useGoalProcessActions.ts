@@ -1,4 +1,3 @@
-import { experimentOwner } from '@lobechat/utils/goalGraph';
 import { useCallback, useMemo } from 'react';
 
 import { goalService } from '@/services/goal';
@@ -7,18 +6,17 @@ import { useGoalStore } from '@/store/goal';
 
 import { isExperiment } from '../Experiments/model';
 import type { FrontierActions } from './Frontier';
-import { type GoalGraphView, opensOnResultSurface } from './goalGraphViewModel';
+import { type GoalGraphView } from './goalGraphViewModel';
 
 /**
  * Where a click on a goal graph node lands, shared by every host of the
- * process-control sections (goal page, conversation portal). A Task with a
- * delivery to read, or a healthy run in flight, lands on its result surface —
- * the live run while it works, the report once it settles. A Task waiting or in
- * trouble opens the original Task detail, where configuration and failure
- * context live. Everything else opens the node drill-down.
+ * process-control sections (goal page, conversation portal) and every link to
+ * a node. A node with a Task behind it shows the original Task detail —
+ * configuration, runs and deliveries all live there — so a Task link never
+ * lands on a node drill-down or a partial view of the Task. Everything else
+ * opens the node drill-down.
  */
 export const useGoalNodeSelect = (goalId: string, graph?: GoalGraphView) => {
-  const openTaskResult = useChatStore((s) => s.openTaskResult);
   const openTaskDetail = useChatStore((s) => s.openTaskDetail);
   const openGoalNode = useChatStore((s) => s.openGoalNode);
 
@@ -30,15 +28,9 @@ export const useGoalNodeSelect = (goalId: string, graph?: GoalGraphView) => {
         openGoalNode(goalId, nodeId);
         return;
       }
-      if (
-        graph &&
-        experimentOwner({ nodes: graph.nodes.map((item) => item.node), edges: graph.edges }, nodeId)
-      )
-        openTaskDetail(taskId);
-      else if (view && opensOnResultSurface(view)) openTaskResult(taskId);
-      else openTaskDetail(taskId);
+      openTaskDetail(taskId);
     },
-    [goalId, graph, openGoalNode, openTaskDetail, openTaskResult],
+    [goalId, graph, openGoalNode, openTaskDetail],
   );
 };
 

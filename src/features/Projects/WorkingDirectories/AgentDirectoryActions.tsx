@@ -1,7 +1,12 @@
-import { AGENT_CHAT_TOPIC_URL } from '@lobechat/const';
 import type { ChatTopic } from '@lobechat/types';
-import { ActionIcon, DropdownMenu, toast } from '@lobehub/ui/base-ui';
-import { MoreHorizontalIcon, PlusIcon } from 'lucide-react';
+import { ActionIcon, type DropdownItem, DropdownMenu, Icon, toast } from '@lobehub/ui';
+import {
+  ArrowUpRightIcon,
+  LinkIcon,
+  MoreHorizontalIcon,
+  PlusIcon,
+  SettingsIcon,
+} from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -18,11 +23,24 @@ export function AgentDirectoryActions({
   path,
   topics,
   onLegacyStart,
+  hideStartAction = false,
+  pathOnly = false,
+  extraMenuItems,
 }: {
   agentId: string;
   path: string;
   topics: ChatTopic[];
-  onLegacyStart: () => Promise<void>;
+  onLegacyStart: (projectWorkingDirectoryId?: string) => Promise<void>;
+  /** Render only the binding/menu affordance; the caller provides its own start action. */
+  hideStartAction?: boolean;
+  /**
+   * A plain path group: never resolve a project directory by path. A project
+   * that registered the same path must not adopt new topics started here; the
+   * menu offers binding instead so the user files the group explicitly.
+   */
+  pathOnly?: boolean;
+  /** Group-level actions appended to the "more" menu after a divider. */
+  extraMenuItems?: DropdownItem[];
 }) {
   const { t } = useTranslation('project');
   const navigate = useWorkspaceAwareNavigate();
@@ -33,24 +51,27 @@ export function AgentDirectoryActions({
   const pinnedDevice = topics[0]?.metadata?.boundDeviceId;
   const deviceId =
     pinnedDevice ?? resolveTargetDeviceId(agencyConfig, currentDeviceId, { workspaceScoped });
-  const request = useProjectDirectoryStore((s) => s.useFetchDirectories)();
+  // Keep the directories query warm for the binding menu below.
+  useProjectDirectoryStore((s) => s.useFetchDirectories)();
   const directories = useProjectDirectories();
   const bindingId = topics[0]?.projectWorkingDirectoryId;
-  const bindings = directories.filter((directory) =>
-    bindingId
-      ? directory.id === bindingId
-      : directory.deviceId === deviceId &&
-        directory.path.replace(/[\\/]+$/, '') === path.replace(/[\\/]+$/, ''),
-  );
+  const bindings = pathOnly
+    ? []
+    : directories.filter((directory) =>
+        bindingId
+          ? directory.id === bindingId
+          : directory.deviceId === deviceId &&
+            directory.path.replace(/[\\/]+$/, '') === path.replace(/[\\/]+$/, ''),
+      );
   const [pending, setPending] = useState(false);
-  const startTopic = useProjectDirectoryStore((s) => s.startTopic);
-  const start = async (id?: string) => {
+  // "+" opens the new-topic composer for this group; it must never create a
+  // topic. The row is persisted on the first message, which is also when the
+  // directory is applied — the caller stages it so the deferred topic is still
+  // born inside the project instead of dropping into a path-only conversation.
+  const start = async (projectWorkingDirectoryId?: string) => {
     setPending(true);
     try {
-      if (id) {
-        const topic = await startTopic(id, agentId, t('directories.untitled'));
-        navigate(AGENT_CHAT_TOPIC_URL(agentId, topic.id));
-      } else await onLegacyStart();
+      await onLegacyStart(projectWorkingDirectoryId);
     } catch (error) {
       console.error('Failed to start directory conversation', error);
       toast.error(error instanceof Error ? error.message : t('operationFailed', { ns: 'common' }));
@@ -66,12 +87,14 @@ export function AgentDirectoryActions({
       <DropdownMenu
         items={[
           ...bindings.map((directory) => ({
+            icon: <Icon icon={ArrowUpRightIcon} />,
             key: `open-${directory.id}`,
             label: t('topics.viewProject'),
             onClick: () => navigate(`/project/${directory.projectSlug ?? directory.projectId}`),
           })),
           ...(bindings.length ? [{ type: 'divider' as const }] : []),
           ...bindings.map((directory) => ({
+            icon: <Icon icon={SettingsIcon} />,
             key: `settings-${directory.id}`,
             label: t('topics.settings'),
             onClick: () =>
@@ -81,6 +104,7 @@ export function AgentDirectoryActions({
             ? []
             : [
                 {
+                  icon: <Icon icon={LinkIcon} />,
                   key: 'bind',
                   label: t('directories.bind'),
                   disabled: !deviceId,
@@ -95,6 +119,7 @@ export function AgentDirectoryActions({
                     }),
                 },
               ]),
+          ...(extraMenuItems?.length ? [{ type: 'divider' as const }, ...extraMenuItems] : []),
         ]}
       >
         <ActionIcon
@@ -105,22 +130,18 @@ export function AgentDirectoryActions({
           onClick={(e) => e.stopPropagation()}
         />
       </DropdownMenu>
-      <ActionIcon
-        icon={PlusIcon}
-        size="small"
-        title={t('directories.start')}
-        disabled={
-          pending ||
-          !request.hasData ||
-          !!request.error ||
-          bindings.length > 1 ||
-          (!!bindingId && !bindings.length)
-        }
-        onClick={(e) => {
-          e.stopPropagation();
-          void start(bindings[0]?.id);
-        }}
-      />
+      {!hideStartAction && (
+        <ActionIcon
+          disabled={pending}
+          icon={PlusIcon}
+          size="small"
+          title={t('directories.start')}
+          onClick={(e) => {
+            e.stopPropagation();
+            void start(bindings[0]?.id);
+          }}
+        />
+      )}
     </>
   );
 }

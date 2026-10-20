@@ -8,7 +8,9 @@ import {
   APP_UPDATE_UNSUPPORTED_MESSAGE,
   CLI_UPDATE_UNSUPPORTED_MESSAGE,
   DEVICE_RPC_METHODS,
+  deviceRpcClients,
   executeDeviceRpc,
+  TERMINAL_UNSUPPORTED_MESSAGE,
   TRASH_UNSUPPORTED_MESSAGE,
 } from '../dispatch';
 import type { DeviceControlDeps } from '../types';
@@ -621,5 +623,96 @@ describe('executeDeviceRpc', () => {
       makeDeps(),
     )) as { success: boolean };
     expect(result.success).toBe(false);
+  });
+
+  describe('interactive terminal', () => {
+    /** The PTY handlers a host opts into; absent they all refuse. */
+    const terminalDeps = () => ({
+      closeTerminal: vi.fn(async () => ({ closed: true })),
+      createTerminalSession: vi.fn(async () => ({
+        cwd: '/home/dev',
+        id: 'term_1',
+        pid: 4242,
+        shell: '/bin/bash',
+      })),
+      readTerminal: vi.fn(async () => ({ chunk: 'aGk=', exited: false, nextCursor: 2 })),
+      resizeTerminal: vi.fn(async () => {}),
+      writeTerminal: vi.fn(async () => {}),
+    });
+
+    it('publishes the terminal RPCs on the device surface', () => {
+      expect(DEVICE_RPC_METHODS).toEqual(
+        expect.arrayContaining([
+          'createTerminalSession',
+          'writeTerminal',
+          'readTerminal',
+          'resizeTerminal',
+          'closeTerminal',
+        ]),
+      );
+    });
+
+    it('routes each terminal RPC to its host handler', async () => {
+      const terminals = terminalDeps();
+      const deps: DeviceControlDeps = { ...makeDeps(), ...terminals };
+
+      await executeDeviceRpc('createTerminalSession', { cols: 80, rows: 24 }, deps);
+      expect(terminals.createTerminalSession).toHaveBeenCalledWith({ cols: 80, rows: 24 });
+
+      await executeDeviceRpc('writeTerminal', { data: 'bHM=', id: 'term_1' }, deps);
+      expect(terminals.writeTerminal).toHaveBeenCalledWith({ data: 'bHM=', id: 'term_1' });
+
+      await executeDeviceRpc('readTerminal', { cursor: 0, id: 'term_1' }, deps);
+      expect(terminals.readTerminal).toHaveBeenCalledWith({ cursor: 0, id: 'term_1' });
+
+      await executeDeviceRpc('resizeTerminal', { cols: 120, id: 'term_1', rows: 40 }, deps);
+      expect(terminals.resizeTerminal).toHaveBeenCalledWith({ cols: 120, id: 'term_1', rows: 40 });
+
+      await executeDeviceRpc('closeTerminal', { id: 'term_1' }, deps);
+      expect(terminals.closeTerminal).toHaveBeenCalledWith({ id: 'term_1' });
+    });
+
+    it('refuses every terminal RPC on a host that has no PTY handlers', async () => {
+      // A desktop client serves its own terminal over IPC and does not opt in,
+      // so a terminal opened against it must fail loudly rather than hang.
+      const deps = makeDeps();
+      for (const method of [
+        'createTerminalSession',
+        'writeTerminal',
+        'readTerminal',
+        'resizeTerminal',
+        'closeTerminal',
+      ] as const) {
+        await expect(executeDeviceRpc(method, { id: 'term_1' }, deps)).rejects.toThrow(
+          TERMINAL_UNSUPPORTED_MESSAGE,
+        );
+      }
+    });
+  });
+});
+
+describe('deviceRpcClients', () => {
+  const desktopOnly = [
+    'trashLocalFiles',
+    'getAppUpdateState',
+    'checkAppUpdate',
+    'installAppUpdate',
+  ];
+  const cliOnly = ['getCliUpdateState', 'checkCliUpdate', 'restartCli'];
+
+  it.each(desktopOnly)('routes %s, which the CLI rejects, to the desktop', (method) => {
+    expect(deviceRpcClients(method)).toEqual(['desktop']);
+  });
+
+  it.each(cliOnly)('routes %s, which the desktop rejects, to the CLI', (method) => {
+    expect(deviceRpcClients(method)).toEqual(['cli']);
+  });
+
+  it('lets any client serve the other methods', () => {
+    const shared = DEVICE_RPC_METHODS.filter(
+      (method) => !desktopOnly.includes(method) && !cliOnly.includes(method),
+    );
+    for (const method of shared) expect(deviceRpcClients(method)).toBeUndefined();
+    expect(deviceRpcClients('unknownMethod')).toBeUndefined();
   });
 });

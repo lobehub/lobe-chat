@@ -14,17 +14,13 @@
  * Each factory also exposes `.root` (the namespace string) for `mutate`
  * matchers that compare `key[0]`.
  *
- * Document / page / notebook / agent-document keys are defined in
+ * Document / page / agent-document keys are defined in
  * `@/services/document/swrKeys` (already a factory, widely imported) and
  * re-exported here so the whole set is reachable from one place.
  */
 import { type ConversationContext } from '@lobechat/types';
 
-import {
-  agentDocumentSWRKeys,
-  documentSWRKeys,
-  notebookSWRKeys,
-} from '@/services/document/swrKeys';
+import { agentDocumentSWRKeys } from '@/services/document/swrKeys';
 
 type KeyFactory<A extends unknown[]> = ((...args: A) => readonly unknown[]) & { root: string };
 
@@ -140,36 +136,6 @@ export const topicKeys = {
   ]),
 };
 
-// ---- topic comment ------------------------------------------------------
-export const topicCommentKeys = {
-  detail: def('topicComment:detail', (commentId: string) => ['topicComment:detail', commentId]),
-  replies: def(
-    'topicComment:replies',
-    (workspaceId: string | null, rootCommentId: string, cursor?: string) => [
-      'topicComment:replies',
-      workspaceId ?? '',
-      rootCommentId,
-      cursor ?? '',
-    ],
-  ),
-  summary: def('topicComment:summary', (topicId: string) => ['topicComment:summary', topicId]),
-  threads: def(
-    'topicComment:threads',
-    (workspaceId: string | null, topicId: string, messageId?: string, cursor?: string) => [
-      'topicComment:threads',
-      workspaceId ?? '',
-      topicId,
-      messageId ?? '',
-      cursor ?? '',
-    ],
-  ),
-  warmup: def('topicComment:warmup', (workspaceId: string, topicId: string) => [
-    'topicComment:warmup',
-    workspaceId,
-    topicId,
-  ]),
-};
-
 // ---- acceptance comment -------------------------------------------------
 export const acceptanceCommentKeys = {
   list: def('acceptanceComment:list', (acceptanceId: string) => [
@@ -243,20 +209,6 @@ export const isDocumentCommentKeyForEvent = (
   return false;
 };
 
-// ---- agent labels -------------------------------------------------------
-export const agentLabelKeys = {
-  /**
-   * Agent label registry (workspace-shared, or personal). Keyed by workspace:
-   * the registries are disjoint per scope, so a shared key would serve the
-   * previous workspace's labels across a switch.
-   */
-  list: def('agentLabel:list', (isLogin: boolean, workspaceId: string | null | undefined) => [
-    'agentLabel:list',
-    isLogin,
-    workspaceId ?? null,
-  ]),
-};
-
 // ---- agent builder (opening-suggestion chips) ---------------------------
 // Persisted to the localStorage tier (see `CACHE_TIERS.local`) so revisits skip
 // the LLM generation instead of paying a skeleton + a generateJSON call every
@@ -280,8 +232,6 @@ export const agentBuilderKeys = {
 
 // ---- group --------------------------------------------------------------
 export const groupKeys = {
-  detail: def('group:detail', (groupId: string) => ['group:detail', groupId]),
-  list: def('group:list', (isLogin: boolean) => ['group:list', isLogin]),
   /** Agent picker for the "add member" modal. */
   queryAgents: def('group:queryAgents', () => ['group:queryAgents']),
   /** Agent picker for the "create group" modal. */
@@ -295,7 +245,6 @@ export const sessionKeys = {
     groupId,
   ]),
   list: def('session:list', (isLogin: boolean | undefined) => ['session:list', isLogin]),
-  search: def('session:search', (keyword?: string) => ['session:search', keyword]),
 };
 
 // ---- thread -------------------------------------------------------------
@@ -312,79 +261,28 @@ export const recentKeys = {
     scope,
     view,
   ]),
+  trayList: def('recent:trayList', (limit: number, scope: string) => [
+    'recent:trayList',
+    limit,
+    scope,
+  ]),
 };
 
-// ---- task ---------------------------------------------------------------
-export const isScheduledTaskListKey = (key: unknown): boolean =>
-  Array.isArray(key) && key[0] === 'task:scheduledList';
-
-export const isMyTaskListKey = (key: unknown): boolean =>
-  Array.isArray(key) && key[0] === 'task:myList';
-
 /**
- * Goal Graph reads. Keyed by the `goals` row id (not the carrier task's
- * identifier) because that is what every `goal.*` procedure takes.
+ * Goal reads that have no local-first projection: the pending queues are live
+ * "what needs you" feeds, and the topic link is a discovery poll.
+ *
+ * The goal list, the home roll-up, the graph snapshot and the metric series
+ * used to live here — they are `@lobechat/replica` resources now (see
+ * `src/store/goal/projection.ts`), so their sync keys are not SWR cache keys.
  */
 export const goalKeys = {
-  graph: def('goal:graph', (goalId: string) => ['goal:graph', goalId]),
-  metricSeries: def('goal:metricSeries', (goalId: string) => ['goal:metricSeries', goalId]),
   /** Clarifications waiting on the user across every goal they own. */
   pendingClarifications: def('goal:pendingClarifications', () => ['goal:pendingClarifications']),
   /** Gates and sign-offs waiting on the user across every goal, for the approval island. */
   pendingForIsland: def('goal:pendingForIsland', () => ['goal:pendingForIsland']),
   /** Goals whose planning conversation is this topic (`subject_type = 'topic'`). */
   topicGoals: def('goal:topicGoals', (topicId: string) => ['goal:topicGoals', topicId]),
-};
-
-export const taskKeys = {
-  /**
-   * The home rail's cross-agent goal roll-up. Scoped by cache scope like the
-   * other home feeds — goals are workspace rows, so a list left over from the
-   * previous workspace holds ids this one cannot open.
-   */
-  homeGoals: def('task:homeGoals', (scope: string) => ['task:homeGoals', scope]),
-  /**
-   * Home's automated-task roll-up: the tasks that fire on a schedule or a
-   * heartbeat. Kept off `list` because it is a different result set entirely —
-   * sharing the key would let one section's fetch overwrite the other's.
-   */
-  /**
-   * The Tasks page's "My tasks" tab: work assigned to, or created by, the
-   * caller. Its own root for the same reason as `scheduledList` — a different
-   * result set from `list`, so a shared entry would let one tab's fetch
-   * overwrite the other's.
-   */
-  myList: def(
-    'task:myList',
-    (scope: 'assigned' | 'created', statuses?: string[], limit?: number, offset?: number) => [
-      'task:myList',
-      scope,
-      // Status narrowing is part of the identity: "hide completed" and "show
-      // all" are different server pages, not a client-side view of one page.
-      statuses ? [...statuses].sort().join(',') : 'all',
-      ...(limit === undefined && offset === undefined ? [] : [{ limit, offset }]),
-    ],
-  ),
-  scheduledList: def(
-    'task:scheduledList',
-    (
-      agentKey: string | undefined,
-      visibility: 'all' | 'private' | 'workspace' = 'all',
-      limit?: number,
-      offset?: number,
-    ) => [
-      'task:scheduledList',
-      agentKey,
-      visibility,
-      ...(limit === undefined && offset === undefined ? [] : [{ limit, offset }]),
-    ],
-  ),
-  /**
-   * AgentSidebar task panel. Lives in the `task:` domain (not a `sidebar:`
-   * one) so the tiered cache provider persists it to IndexedDB and the second
-   * open renders from cache instead of a skeleton.
-   */
-  sidebarGroups: def('task:sidebarGroups', (agentId: string) => ['task:sidebarGroups', agentId]),
 };
 
 // ---- work ---------------------------------------------------------------
@@ -413,13 +311,10 @@ export const workKeys = {
 };
 
 // ---- brief --------------------------------------------------------------
+// The unresolved brief feed no longer has an SWR key: it moved onto
+// `@lobechat/replica` (`briefList`, partitioned by identity scope). Only the
+// day-scoped news digest still reads through SWR.
 export const briefKeys = {
-  /**
-   * Unresolved brief feed, keyed by login + identity scope. Briefs are per-user
-   * AND per-workspace rows, so an entry fetched in one scope must never be
-   * served in another — its ids are unreachable there.
-   */
-  list: def('brief:list', (isLogin: boolean, scope: string) => ['brief:list', isLogin, scope]),
   /**
    * Day-scoped news digest (`insight` + `result`, resolved included), keyed by
    * the viewer's local day (`YYYY-MM-DD`) on top of the identity scope.
@@ -432,12 +327,6 @@ export const briefKeys = {
   ]),
 };
 
-// ---- home inbox ---------------------------------------------------------
-export const homeInboxKeys = {
-  /** Account-wide topics powering the home inbox (running + unread + needs-input). */
-  topics: def('home:inboxTopics', (isLogin: boolean) => ['home:inboxTopics', isLogin]),
-};
-
 // ---- agent config / available / search ----------------------------------
 export const agentConfigKeys = {
   available: def('agent:available', () => ['agent:available']),
@@ -448,13 +337,15 @@ export const agentConfigKeys = {
 };
 
 // ---- aiModel ------------------------------------------------------------
+// The provider model list and the provider list live in `@lobechat/replica`
+// resources now (see `src/store/aiInfra/slices/*/projection.ts`); only the
+// paged disabled-models fetch and the per-model reasoning config are SWR keys.
 export const aiModelKeys = {
   disabledModelsPage: def('aiModel:disabledModelsPage', (providerId: string, offset: number) => [
     'aiModel:disabledModelsPage',
     providerId,
     offset,
   ]),
-  list: def('aiModel:list', (provider: string | undefined) => ['aiModel:list', provider]),
   reasoningConfig: def('aiModel:reasoningConfig', (provider: string, model: string) => [
     'aiModel:reasoningConfig',
     provider,
@@ -463,31 +354,27 @@ export const aiModelKeys = {
 };
 
 // ---- image generation ---------------------------------------------------
+// The topic list and the per-topic batches live in `@lobechat/replica`
+// resources now (see `src/store/image/slices/*/projection.ts`); only the
+// generation-status poll is still an SWR key.
 export const imageKeys = {
-  generationBatches: def('image:generationBatches', (topicId: string) => [
-    'image:generationBatches',
-    topicId,
-  ]),
   generationStatus: def('image:generationStatus', (generationId: string, asyncTaskId?: string) => [
     'image:generationStatus',
     generationId,
     asyncTaskId,
   ]),
-  generationTopics: def('image:generationTopics', () => ['image:generationTopics']),
 };
 
 // ---- video generation ---------------------------------------------------
+// The topic list and the per-topic batches live in `@lobechat/replica`
+// resources now (see `src/store/video/slices/*/projection.ts`); only the
+// generation-status poll is still an SWR key.
 export const videoKeys = {
-  generationBatches: def('video:generationBatches', (topicId: string) => [
-    'video:generationBatches',
-    topicId,
-  ]),
   generationStatus: def('video:generationStatus', (generationId: string, asyncTaskId?: string) => [
     'video:generationStatus',
     generationId,
     asyncTaskId,
   ]),
-  generationTopics: def('video:generationTopics', () => ['video:generationTopics']),
 };
 
 // ---- serverConfig -------------------------------------------------------
@@ -496,178 +383,11 @@ export const serverConfigKeys = {
 };
 
 // ---- discover (marketplace) ---------------------------------------------
-// NOTE: discover/eval/ragEval/knowledgeBase/device/userMemory/agentKnowledge/
-// agentBot/file prefixes are deliberately kept OUT of `CACHE_TIERS`
+// NOTE: discover/eval/ragEval/knowledgeBase/device/userMemory/file prefixes
+// are deliberately kept OUT of `CACHE_TIERS`
 // (see localStorageProvider.ts) so this key-convergence introduces no new
 // persistence — they stay memory-only exactly as before.
 export const discoverKeys = {
-  assistantCategories: def('discover:assistantCategories', (locale: string, params: unknown) => [
-    'discover:assistantCategories',
-    locale,
-    params,
-  ]),
-  assistantDetail: def('discover:assistantDetail', (locale: string, params: unknown) => [
-    'discover:assistantDetail',
-    locale,
-    params,
-  ]),
-  assistantIdentifiers: def('discover:assistantIdentifiers', (source?: string) => [
-    'discover:assistantIdentifiers',
-    source,
-  ]),
-  assistantList: def('discover:assistantList', (locale: string, params: unknown) => [
-    'discover:assistantList',
-    locale,
-    params,
-  ]),
-  favoriteAgents: def('discover:favoriteAgents', (userId: number, params?: unknown) => [
-    'discover:favoriteAgents',
-    userId,
-    params,
-  ]),
-  favoritePlugins: def('discover:favoritePlugins', (userId: number, params?: unknown) => [
-    'discover:favoritePlugins',
-    userId,
-    params,
-  ]),
-  followCounts: def('discover:followCounts', (userId: number) => ['discover:followCounts', userId]),
-  followStatus: def('discover:followStatus', (userId: number) => ['discover:followStatus', userId]),
-  followers: def('discover:followers', (userId: number, params?: unknown) => [
-    'discover:followers',
-    userId,
-    params,
-  ]),
-  following: def('discover:following', (userId: number, params?: unknown) => [
-    'discover:following',
-    userId,
-    params,
-  ]),
-  groupAgentCategories: def('discover:groupAgentCategories', (locale: string, params: unknown) => [
-    'discover:groupAgentCategories',
-    locale,
-    params,
-  ]),
-  groupAgentDetail: def(
-    'discover:groupAgentDetail',
-    (locale: string, identifier: string, version?: string) => [
-      'discover:groupAgentDetail',
-      locale,
-      identifier,
-      version,
-    ],
-  ),
-  groupAgentIdentifiers: def('discover:groupAgentIdentifiers', () => [
-    'discover:groupAgentIdentifiers',
-  ]),
-  groupAgentList: def('discover:groupAgentList', (locale: string, params: unknown) => [
-    'discover:groupAgentList',
-    locale,
-    params,
-  ]),
-  mcpCategories: def('discover:mcpCategories', (locale: string, params: unknown) => [
-    'discover:mcpCategories',
-    locale,
-    params,
-  ]),
-  mcpDetail: def('discover:mcpDetail', (locale: string, identifier: string, version?: string) => [
-    'discover:mcpDetail',
-    locale,
-    identifier,
-    version,
-  ]),
-  mcpList: def('discover:mcpList', (locale: string, params: unknown) => [
-    'discover:mcpList',
-    locale,
-    params,
-  ]),
-  modelCategories: def('discover:modelCategories', (params: unknown) => [
-    'discover:modelCategories',
-    params,
-  ]),
-  modelDetail: def('discover:modelDetail', (locale: string, identifier: string) => [
-    'discover:modelDetail',
-    locale,
-    identifier,
-  ]),
-  modelIdentifiers: def('discover:modelIdentifiers', () => ['discover:modelIdentifiers']),
-  modelList: def('discover:modelList', (locale: string, params: unknown) => [
-    'discover:modelList',
-    locale,
-    params,
-  ]),
-  pluginCategories: def('discover:pluginCategories', (locale: string, params: unknown) => [
-    'discover:pluginCategories',
-    locale,
-    params,
-  ]),
-  pluginDetail: def(
-    'discover:pluginDetail',
-    (locale: string, identifier: string, withManifest?: boolean) => [
-      'discover:pluginDetail',
-      locale,
-      identifier,
-      withManifest,
-    ],
-  ),
-  pluginIdentifiers: def('discover:pluginIdentifiers', () => ['discover:pluginIdentifiers']),
-  pluginList: def('discover:pluginList', (locale: string, params: unknown) => [
-    'discover:pluginList',
-    locale,
-    params,
-  ]),
-  providerDetail: def('discover:providerDetail', (locale: string, identifier: string) => [
-    'discover:providerDetail',
-    locale,
-    identifier,
-  ]),
-  providerIdentifiers: def('discover:providerIdentifiers', () => ['discover:providerIdentifiers']),
-  providerList: def('discover:providerList', (locale: string, params: unknown) => [
-    'discover:providerList',
-    locale,
-    params,
-  ]),
-  skillCategories: def('discover:skillCategories', (locale: string, params: unknown) => [
-    'discover:skillCategories',
-    locale,
-    params,
-  ]),
-  skillComments: def('discover:skillComments', (identifier: string, params: unknown) => [
-    'discover:skillComments',
-    identifier,
-    params,
-  ]),
-  skillDetail: def(
-    'discover:skillDetail',
-    (locale: string, identifier: string, version?: string) => [
-      'discover:skillDetail',
-      locale,
-      identifier,
-      version,
-    ],
-  ),
-  skillList: def('discover:skillList', (locale: string, params: unknown) => [
-    'discover:skillList',
-    locale,
-    params,
-  ]),
-  skillRatingDistribution: def('discover:skillRatingDistribution', (identifier: string) => [
-    'discover:skillRatingDistribution',
-    identifier,
-  ]),
-  skillRelated: def(
-    'discover:skillRelated',
-    (locale: string, category: string, identifier: string) => [
-      'discover:skillRelated',
-      locale,
-      category,
-      identifier,
-    ],
-  ),
-  userProfile: def('discover:userProfile', (locale: string, username: string) => [
-    'discover:userProfile',
-    locale,
-    username,
-  ]),
   // -- marketplace detail "related agents" lists (UI) --
   mcpAgents: def('discover:mcpAgents', (identifier: string, page: number) => [
     'discover:mcpAgents',
@@ -694,12 +414,7 @@ export const discoverKeys = {
 export const evalKeys = {
   benchmarkDetail: def('eval:benchmarkDetail', (id: string) => ['eval:benchmarkDetail', id]),
   benchmarks: def('eval:benchmarks', () => ['eval:benchmarks']),
-  datasetDetail: def('eval:datasetDetail', (id: string) => ['eval:datasetDetail', id]),
   datasetRuns: def('eval:datasetRuns', (datasetId: string) => ['eval:datasetRuns', datasetId]),
-  datasetsAll: def('eval:datasetsAll', () => ['eval:datasetsAll']),
-  datasets: def('eval:datasets', (benchmarkId: string) => ['eval:datasets', benchmarkId]),
-  experimentDetail: def('eval:experimentDetail', (id: string) => ['eval:experimentDetail', id]),
-  experiments: def('eval:experiments', () => ['eval:experiments']),
   runDetail: def('eval:runDetail', (id: string) => ['eval:runDetail', id]),
   runResults: def('eval:runResults', (id: string) => ['eval:runResults', id]),
   runs: def('eval:runs', (benchmarkId?: string) => ['eval:runs', benchmarkId]),
@@ -728,24 +443,7 @@ export const ragEvalKeys = {
   ]),
 };
 
-// ---- knowledge base -----------------------------------------------------
-export const knowledgeBaseKeys = {
-  item: def('knowledgeBase:item', (id: string) => ['knowledgeBase:item', id]),
-  list: def(
-    'knowledgeBase:list',
-    (workspaceId?: string | null, visibility?: 'private' | 'public') => {
-      const base = workspaceId ? ['knowledgeBase:list', workspaceId] : ['knowledgeBase:list'];
-      return visibility ? [...base, visibility] : base;
-    },
-  ),
-};
-
 // ---- device -------------------------------------------------------------
-export const trashKeys = {
-  countByType: def('trash:countByType', () => ['trash:countByType']),
-  list: def('trash:list', (resourceType?: string | null) => ['trash:list', resourceType ?? 'all']),
-};
-
 export const deviceKeys = {
   cliUpdateState: def('device:cliUpdateState', (workspaceId: string | null, deviceId: string) => [
     'device:cliUpdateState',
@@ -771,16 +469,6 @@ export const deviceKeys = {
     'device:tunnels',
     workspaceId,
     deviceId,
-  ]),
-  gitAheadBehind: def('device:gitAheadBehind', (deviceId: string, path: string) => [
-    'device:gitAheadBehind',
-    deviceId,
-    path,
-  ]),
-  gitBranch: def('device:gitBranch', (deviceId: string, path: string) => [
-    'device:gitBranch',
-    deviceId,
-    path,
   ]),
   gitBranches: def('device:gitBranches', (deviceId: string, path: string) => [
     'device:gitBranches',
@@ -841,17 +529,6 @@ export const deviceKeys = {
       baseRef,
     ],
   ),
-  gitWorkingTreeStatus: def('device:gitWorkingTreeStatus', (deviceId: string, path: string) => [
-    'device:gitWorkingTreeStatus',
-    deviceId,
-    path,
-  ]),
-  gitWorktrees: def('device:gitWorktrees', (deviceId: string, path: string) => [
-    'device:gitWorktrees',
-    deviceId,
-    path,
-  ]),
-  listDevices: def('device:listDevices', () => ['device:listDevices']),
   repoType: def('device:repoType', (path: string) => ['device:repoType', path]),
 };
 
@@ -865,13 +542,6 @@ export const userMemoryKeys = {
   contexts: def('userMemory:contexts', (params: unknown) => ['userMemory:contexts', params]),
   experiences: def('userMemory:experiences', (params: unknown) => [
     'userMemory:experiences',
-    params,
-  ]),
-  /** Injection identities (distinct from the paginated `identityList`). */
-  identities: def('userMemory:identities', () => ['userMemory:identities']),
-  /** Paginated identity list for the memory home views. */
-  identityList: def('userMemory:identityList', (params: unknown) => [
-    'userMemory:identityList',
     params,
   ]),
   memoryDetail: def('userMemory:memoryDetail', (layer: string, id: string) => [
@@ -889,31 +559,17 @@ export const userMemoryKeys = {
     cacheKey,
   ]),
   tags: def('userMemory:tags', () => ['userMemory:tags']),
-  topicMemories: def('userMemory:topicMemories', (topicId: string) => [
-    'userMemory:topicMemories',
-    topicId,
-  ]),
 };
 
 // ---- tool (skills / plugins / builtin / mcp / composio stores) -------------
 export const toolKeys = {
+  agentSkillDetail: def('tool:agentSkillDetail', (id: string) => ['tool:agentSkillDetail', id]),
+  agentSkills: def('tool:agentSkills', () => ['tool:agentSkills']),
   composioAppTools: def('tool:composioAppTools', (appSlug: string) => [
     'tool:composioAppTools',
     appSlug,
   ]),
   composioConnections: def('tool:composioConnections', () => ['tool:composioConnections']),
-  installedPlugins: def('tool:installedPlugins', () => ['tool:installedPlugins']),
-  lobehubSkillConnections: def('tool:lobehubSkillConnections', () => [
-    'tool:lobehubSkillConnections',
-  ]),
-  lobehubSkillTools: def('tool:lobehubSkillTools', (provider: string) => [
-    'tool:lobehubSkillTools',
-    provider,
-  ]),
-  uninstalledBuiltins: def('tool:uninstalledBuiltins', (workspaceId: string | null | undefined) => [
-    'tool:uninstalledBuiltins',
-    workspaceId,
-  ]),
 };
 
 // ---- global -------------------------------------------------------------
@@ -923,26 +579,8 @@ export const globalKeys = {
   systemStatus: def('global:systemStatus', () => ['global:systemStatus']),
 };
 
-// ---- agent knowledge (kept off the `agent:` idb tier on purpose) --------
-export const agentKnowledgeKeys = {
-  list: def(
-    'agentKnowledge:list',
-    (agentId: string | undefined, visibility?: 'private' | 'public') => {
-      const base = ['agentKnowledge:list', agentId] as const;
-      return visibility ? [...base, visibility] : base;
-    },
-  ),
-};
-
-// ---- agent bot ----------------------------------------------------------
-export const agentBotKeys = {
-  platformDefinitions: def('agentBot:platformDefinitions', () => ['agentBot:platformDefinitions']),
-  providers: def('agentBot:providers', (agentId: string) => ['agentBot:providers', agentId]),
-};
-
 // ---- file ---------------------------------------------------------------
 export const fileKeys = {
-  knowledgeItems: def('file:knowledgeItems', (params: unknown) => ['file:knowledgeItems', params]),
   ttsFile: def('file:ttsFile', (messageId: string) => ['file:ttsFile', messageId]),
 };
 
@@ -973,7 +611,6 @@ export const statsKeys = {
   agents: def('stats:agents', () => ['stats:agents']),
   countAgents: def('stats:countAgents', () => ['stats:countAgents']),
   countMessages: def('stats:countMessages', () => ['stats:countMessages']),
-  countSessions: def('stats:countSessions', () => ['stats:countSessions']),
   countTopics: def('stats:countTopics', () => ['stats:countTopics']),
   heatmaps: def('stats:heatmaps', (type: string) => ['stats:heatmaps', type]),
   maxTaskDuration: def('stats:maxTaskDuration', () => ['stats:maxTaskDuration']),
@@ -1025,6 +662,7 @@ export const scmKeys = {
     'scm:installations',
     workspaceId ?? null,
   ]),
+  wakeTarget: def('scm:wakeTarget', (topicId: string) => ['scm:wakeTarget', topicId]),
 };
 
 // ---- verify (deliverable judging) ---------------------------------------
@@ -1064,18 +702,6 @@ const acceptanceListKeyParts = ({ filter, projectId, scope, source }: Acceptance
 ];
 
 export const verifyKeys = {
-  acceptanceBundle: def('verify:acceptanceBundle', (acceptanceId: string) => [
-    'verify:acceptanceBundle',
-    acceptanceId,
-  ]),
-  acceptanceBySubject: def(
-    'verify:acceptanceBySubject',
-    (subjectType: string, subjectId: string) => [
-      'verify:acceptanceBySubject',
-      subjectType,
-      subjectId,
-    ],
-  ),
   /** Statuses for a known subject set. Ids are sorted+joined so the key is order-free. */
   acceptanceStatuses: def(
     'verify:acceptanceStatuses',
@@ -1087,7 +713,7 @@ export const verifyKeys = {
   ),
   /**
    * One scroll page of the list panel. Keyed by workspace + the status split +
-   * the cursor, mirroring `reportSummaries` — the sibling paged feed.
+   * the cursor.
    */
   acceptancePurgePreview: def('verify:acceptancePurgePreview', (acceptanceId: string) => [
     'verify:acceptancePurgePreview',
@@ -1121,23 +747,17 @@ export const verifyKeys = {
     'verify:reportBundle',
     verifyRunId,
   ]),
-  reportSummaries: def(
-    'verify:reportSummaries',
-    (workspaceId?: string | null, q?: string, cursor?: string) => [
-      'verify:reportSummaries',
-      workspaceId ?? '',
-      q ?? '',
-      cursor ?? '',
-    ],
-  ),
-  results: def('verify:results', (operationId: string) => ['verify:results', operationId]),
   rubric: def('verify:rubric', (rubricId: string) => ['verify:rubric', rubricId]),
+  /** The acceptance round an old `/verify/:runId` link redirects to. */
+  runAcceptanceRound: def('verify:runAcceptanceRound', (verifyRunId: string) => [
+    'verify:runAcceptanceRound',
+    verifyRunId,
+  ]),
   rubricCriteria: def('verify:rubricCriteria', (rubricId: string) => [
     'verify:rubricCriteria',
     rubricId,
   ]),
   rubrics: def('verify:rubrics', () => ['verify:rubrics']),
-  state: def('verify:state', (operationId: string) => ['verify:state', operationId]),
   tracing: def('verify:tracing', (tracingId: string) => ['verify:tracing', tracingId]),
 };
 
@@ -1219,14 +839,6 @@ export const shareKeys = {
 export const forkKeys = {
   groupSource: def('fork:groupSource', (identifier: string) => ['fork:groupSource', identifier]),
   source: def('fork:source', (identifier: string) => ['fork:source', identifier]),
-};
-
-// ---- portal -------------------------------------------------------------
-export const portalKeys = {
-  documentHeader: def('portal:documentHeader', (documentId: string) => [
-    'portal:documentHeader',
-    documentId,
-  ]),
 };
 
 // ---- local file ---------------------------------------------------------
@@ -1342,10 +954,6 @@ export const topicActionKeys = {
 };
 
 // ---- misc remaining domains ---------------------------------------------
-export const homeKeys = {
-  dailyBrief: def('home:dailyBrief', (userId: string) => ['home:dailyBrief', userId]),
-};
-
 /**
  * Daily task-template recommendation cache schema version. Bump this when the
  * persisted recommendation row shape changes incompatibly so desktop clients
@@ -1371,33 +979,6 @@ export const resourceKeys = {
     params,
     workspaceId,
   ]),
-  // Every Resources cache entry is workspace-scoped: the same visibility means
-  // different rows in each workspace, so leaving `workspaceId` out of the key
-  // makes a workspace switch serve the previous workspace's rows from cache.
-  recentFiles: def(
-    'resource:recentFiles',
-    (workspaceId: string | null, visibility?: 'private' | 'public') => [
-      'resource:recentFiles',
-      workspaceId,
-      visibility ?? null,
-    ],
-  ),
-  recentPages: def(
-    'resource:recentPages',
-    (workspaceId: string | null, visibility?: 'private' | 'public') => [
-      'resource:recentPages',
-      workspaceId,
-      visibility ?? null,
-    ],
-  ),
-  search: def('resource:search', (params: unknown, workspaceId: string | null) => [
-    'resource:search',
-    params,
-    workspaceId,
-  ]),
-};
-export const providerKeys = {
-  clientConfig: def('provider:clientConfig', (id: string) => ['provider:clientConfig', id]),
 };
 export const recommendationsKeys = {
   heteroDetections: def('recommendations:heteroDetections', () => [
@@ -1413,14 +994,6 @@ export const gatewayKeys = {
 };
 export const userKeys = {
   checkTrace: def('user:checkTrace', () => ['user:checkTrace']),
-  initState: def('user:initState', () => ['user:initState']),
-};
-export const builtinAgentKeys = {
-  init: def('builtinAgent:init', (slug: string, scope: string) => [
-    'builtinAgent:init',
-    slug,
-    scope,
-  ]),
 };
 export const imessageKeys = {
   bridgeStatus: def('imessage:bridgeStatus', () => ['imessage:bridgeStatus']),
@@ -1451,23 +1024,18 @@ export const matchDomain =
  */
 export const swrKeys = {
   agent: agentConfigKeys,
-  agentBot: agentBotKeys,
   agentBuilder: agentBuilderKeys,
   agentDocument: agentDocumentSWRKeys,
   agentHome: agentHomeKeys,
-  agentKnowledge: agentKnowledgeKeys,
-  agentLabel: agentLabelKeys,
   agentProfile: agentProfileKeys,
   agentSignal: agentSignalKeys,
   aiModel: aiModelKeys,
   auth: authKeys,
   brief: briefKeys,
-  builtinAgent: builtinAgentKeys,
   changelog: changelogKeys,
   cron: cronKeys,
   device: deviceKeys,
   discover: discoverKeys,
-  document: documentSWRKeys,
   electron: electronKeys,
   eval: evalKeys,
   expertise: expertiseKeys,
@@ -1478,21 +1046,16 @@ export const swrKeys = {
   goal: goalKeys,
   global: globalKeys,
   group: groupKeys,
-  home: homeKeys,
   image: imageKeys,
   imessage: imessageKeys,
   inbox: inboxKeys,
-  knowledgeBase: knowledgeBaseKeys,
   localFile: localFileKeys,
   message: messageKeys,
   messenger: messengerKeys,
   scm: scmKeys,
-  notebook: notebookSWRKeys,
   ollama: ollamaKeys,
   onboarding: onboardingKeys,
   openInApp: openInAppKeys,
-  portal: portalKeys,
-  provider: providerKeys,
   ragEval: ragEvalKeys,
   recent: recentKeys,
   recommendations: recommendationsKeys,
@@ -1501,17 +1064,14 @@ export const swrKeys = {
   session: sessionKeys,
   share: shareKeys,
   stats: statsKeys,
-  task: taskKeys,
   taskTemplate: taskTemplateKeys,
   thread: threadKeys,
   tool: toolKeys,
   topic: topicKeys,
-  topicComment: topicCommentKeys,
   acceptanceComment: acceptanceCommentKeys,
   documentComment: documentCommentKeys,
   documentLike: documentLikeKeys,
   topicAction: topicActionKeys,
-  trash: trashKeys,
   user: userKeys,
   userMemory: userMemoryKeys,
   verify: verifyKeys,
