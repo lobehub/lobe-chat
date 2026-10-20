@@ -30,7 +30,7 @@ const AgentItem = ({ item, groupId }: { item: SidebarAgentItem; groupId?: string
       loading={loading}
       pin={item.pinned}
       showAction={open}
-      title={agentDisplayName(item, t('untitledAgent'))}
+      title={agentDisplayName(item, t(item.type === 'group' ? 'untitledGroup' : 'untitledAgent'))}
       type={item.type}
       addon={
         item.type === 'agent' && item.model ? (

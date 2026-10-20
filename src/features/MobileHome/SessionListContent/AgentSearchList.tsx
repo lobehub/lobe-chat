@@ -31,7 +31,10 @@ export const AgentSearchList = memo<AgentSearchListProps>(({ dataSource }) => {
   const isMobile = useServerConfigStore((s) => s.isMobile);
 
   return dataSource?.map((item) => {
-    const title = agentDisplayName(item, t('untitledAgent'));
+    const title = agentDisplayName(
+      item,
+      t(item.type === 'group' ? 'untitledGroup' : 'untitledAgent'),
+    );
 
     return (
       <LazyLoad className={styles.container} key={item.id}>
