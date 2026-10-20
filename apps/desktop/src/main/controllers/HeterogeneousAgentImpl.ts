@@ -1509,10 +1509,7 @@ export default class HeterogeneousAgentCtr {
     return !session.resumeSessionId || session.transcriptRebuiltForResume === true;
   }
 
-  /**
-   * Build the Claude SDK's stream-json user message (text + base64 images) and
-   * the arguments carrying the `lh` guide, which then stays out of that message.
-   */
+  /** The SDK's stream-json user message, and the arguments carrying the `lh` guide out of it. */
   private async buildStreamJsonInput(params: SendPromptParams, session: AgentSession) {
     const lobeHubCli = await prepareClaudeCodeLobeHubCli(
       buildHeterogeneousPrompt({
@@ -2052,19 +2049,16 @@ export default class HeterogeneousAgentCtr {
     const cwd = session.cwd || electronApp.getPath('desktop');
     const spawnEnv = this.buildSessionSpawnEnv(session);
     const commandPath = session.resolvedCommandPath ?? this.resolveSessionCommand(session);
-    const { args: lobeHubCliArgs, stdin: stdinPayload } = await this.buildStreamJsonInput(
-      params,
-      session,
-    );
+    const input = await this.buildStreamJsonInput(params, session);
     const traceSession = await this.createCliTraceSession({
       cliArgs: ['sdk-stream', ...session.args],
       cwd,
       imageList: params.imageList ?? [],
       session,
-      stdinPayload,
+      stdinPayload: input.stdin,
     });
 
-    void this.writeCliTraceFile(traceSession, 'stdin.txt', stdinPayload);
+    void this.writeCliTraceFile(traceSession, 'stdin.txt', input.stdin);
 
     if (session.cancelledByUs) {
       await this.completeCancelledSessionBeforeLaunch(session);
@@ -2075,7 +2069,7 @@ export default class HeterogeneousAgentCtr {
     // executable it launches) exists.
     const startedAt = new Date().toISOString();
     const sdkSession = new ClaudeAgentSdkSession({
-      args: [...session.args, ...lobeHubCliArgs],
+      args: [...session.args, ...input.args],
       commandPath,
       configDir: spawnEnv.CLAUDE_CONFIG_DIR ?? session.hostedProviderBinding?.profileDir,
       cwd,
@@ -2111,7 +2105,7 @@ export default class HeterogeneousAgentCtr {
       operationId: params.operationId,
       resumeSessionId: session.agentSessionId,
       sessionId: session.sessionId,
-      stdinPayload,
+      stdinPayload: input.stdin,
       uploadImage: this.uploadResultImage,
     });
 
