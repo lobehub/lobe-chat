@@ -10,6 +10,7 @@ import WorkspaceLink from '@/features/Workspace/WorkspaceLink';
 import { useServerConfigStore } from '@/store/serverConfig';
 
 import ListItem from './ListItem';
+import { useListNavigation } from './useListNavigation';
 
 const styles = createStaticStyles(({ css }) => ({
   container: css`
@@ -26,6 +27,7 @@ interface AgentSearchListProps {
 
 export const AgentSearchList = memo<AgentSearchListProps>(({ dataSource }) => {
   const { t } = useTranslation('chat');
+  const onNavigate = useListNavigation('search');
   const isMobile = useServerConfigStore((s) => s.isMobile);
 
   return dataSource?.map((item) => {
@@ -37,6 +39,7 @@ export const AgentSearchList = memo<AgentSearchListProps>(({ dataSource }) => {
           aria-label={title}
           className={styles.link}
           to={item.type === 'group' ? GROUP_CHAT_URL(item.id) : AGENT_CHAT_URL(item.id, isMobile)}
+          onClick={(event) => onNavigate(event, item)}
         >
           <ListItem
             avatar={item.avatar || DEFAULT_AVATAR}
@@ -49,7 +52,7 @@ export const AgentSearchList = memo<AgentSearchListProps>(({ dataSource }) => {
               },
               content: {
                 gap: 6,
-                maskImage: `linear-gradient(90deg, #000 90%, transparent)`,
+                maskImage: `linear-gradient(90deg, black 90%, transparent)`,
               },
             }}
           />

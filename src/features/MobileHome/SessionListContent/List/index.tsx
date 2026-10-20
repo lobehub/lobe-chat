@@ -8,6 +8,7 @@ import { useHomeStore } from '@/store/home';
 import { homeAgentListSelectors } from '@/store/home/selectors';
 
 import SkeletonList from '../../SkeletonList';
+import { useListNavigation } from '../useListNavigation';
 import AddButton from './AddButton';
 import AgentItem from './Item';
 
@@ -24,6 +25,7 @@ interface AgentListProps {
   visibility?: 'private' | 'public';
 }
 const AgentList = ({ dataSource, groupId, visibility, showAddButton = true }: AgentListProps) => {
+  const onNavigate = useListNavigation('list');
   const isInit = useHomeStore(homeAgentListSelectors.isAgentListInit);
   if (!isInit) return <SkeletonList />;
   return dataSource.length
@@ -33,6 +35,7 @@ const AgentList = ({ dataSource, groupId, visibility, showAddButton = true }: Ag
             aria-label={item.id}
             key={item.id}
             to={item.type === 'group' ? GROUP_CHAT_URL(item.id) : AGENT_CHAT_URL(item.id, true)}
+            onClick={(event) => onNavigate(event, item, groupId)}
           >
             <AgentItem groupId={groupId} item={item} />
           </WorkspaceLink>

@@ -25,7 +25,10 @@ import { openRenameGroupModal } from './Modals/RenameGroupModal';
 const DefaultMode = memo(() => {
   const { t } = useTranslation('chat');
 
-  const [configGroupModalOpen, setConfigGroupModalOpen] = useState(false);
+  const [configGroupModal, setConfigGroupModal] = useState<{
+    open: boolean;
+    scope: 'private' | 'public';
+  }>({ open: false, scope: 'public' });
 
   const isLogin = useUserStore(authSelectors.isLogin);
   const useFetchAgentList = useHomeStore((s) => s.useFetchAgentList);
@@ -36,7 +39,10 @@ const DefaultMode = memo(() => {
   const privatePinned = useHomeStore(homeAgentListSelectors.privatePinnedAgents, isEqual);
   const filteredDefaultSessions = [...defaultList, ...privateUngroupedList];
   const filteredPinnedSessions = [...pinnedList, ...keep(privatePinned)];
-  const filteredCustomSessionGroups = [...customList, ...privateGroupList].map((group) => ({
+  const filteredCustomSessionGroups = [
+    ...customList,
+    ...privateGroupList.map((group) => ({ ...group, visibility: 'private' as const })),
+  ].map((group) => ({
     ...group,
     children: group.items,
   }));
@@ -51,7 +57,12 @@ const DefaultMode = memo(() => {
     filteredPinnedSessions &&
       filteredPinnedSessions.length > 0 && {
         children: <SessionList dataSource={filteredPinnedSessions} />,
-        extra: <Actions isPinned openConfigModal={() => setConfigGroupModalOpen(true)} />,
+        extra: (
+          <Actions
+            isPinned
+            openConfigModal={() => setConfigGroupModal({ open: true, scope: 'public' })}
+          />
+        ),
         key: SessionDefaultGroup.Pinned,
         label: t('pin'),
       },
@@ -61,7 +72,7 @@ const DefaultMode = memo(() => {
         <Actions
           isCustomGroup
           id={id}
-          openConfigModal={() => setConfigGroupModalOpen(true)}
+          openConfigModal={() => setConfigGroupModal({ open: true, scope: visibility ?? 'public' })}
           openRenameModal={() => openRenameGroupModal(id)}
           visibility={visibility}
         />
@@ -71,7 +82,9 @@ const DefaultMode = memo(() => {
     })),
     {
       children: <SessionList dataSource={filteredDefaultSessions || []} groupId={null} />,
-      extra: <Actions openConfigModal={() => setConfigGroupModalOpen(true)} />,
+      extra: (
+        <Actions openConfigModal={() => setConfigGroupModal({ open: true, scope: 'public' })} />
+      ),
       key: SessionDefaultGroup.Default,
       label: t('defaultList'),
     },
@@ -86,8 +99,9 @@ const DefaultMode = memo(() => {
         onChange={(expandSessionGroupKeys) => updateSystemStatus({ expandSessionGroupKeys })}
       />
       <ConfigGroupModal
-        open={configGroupModalOpen}
-        onCancel={() => setConfigGroupModalOpen(false)}
+        open={configGroupModal.open}
+        scope={configGroupModal.scope}
+        onCancel={() => setConfigGroupModal((state) => ({ ...state, open: false }))}
       />
     </>
   );

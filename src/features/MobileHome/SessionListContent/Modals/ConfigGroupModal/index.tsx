@@ -25,16 +25,22 @@ const styles = createStaticStyles(({ css, cssVar }) => ({
   `,
 }));
 
-const ConfigGroupModal = memo<{ onCancel?: () => void; open?: boolean }>(({ open, onCancel }) => {
+interface ConfigGroupModalProps {
+  onCancel?: () => void;
+  open?: boolean;
+  scope?: 'private' | 'public';
+}
+
+const ConfigGroupModal = memo<ConfigGroupModalProps>(({ open, onCancel, scope = 'public' }) => {
   const { t } = useTranslation('chat');
   const { allowed: canCreate, reason: createReason } = usePermission('create_content');
   const { allowed: canEdit } = usePermission('edit_own_content');
   const sessionGroupItems = useHomeStore(
     (s) =>
-      [
-        ...homeAgentListSelectors.agentGroups(s),
-        ...homeAgentListSelectors.privateAgentGroups(s),
-      ].map(({ id, name, sort }) => ({ id, name, sort })),
+      (scope === 'private'
+        ? homeAgentListSelectors.privateAgentGroups(s)
+        : homeAgentListSelectors.agentGroups(s)
+      ).map(({ id, name, sort }) => ({ id, name, sort })),
     isEqual,
   );
   const [addSessionGroup, updateSessionGroupSort] = useHomeStore((s) => [
@@ -81,8 +87,11 @@ const ConfigGroupModal = memo<{ onCancel?: () => void; open?: boolean }>(({ open
           onClick={async () => {
             if (!canCreate) return;
             setLoading(true);
-            await addSessionGroup(t('sessionGroup.newGroup'));
-            setLoading(false);
+            try {
+              await addSessionGroup(t('sessionGroup.newGroup'), scope);
+            } finally {
+              setLoading(false);
+            }
           }}
         >
           {t('sessionGroup.createGroup')}

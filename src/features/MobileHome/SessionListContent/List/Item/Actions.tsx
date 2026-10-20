@@ -86,7 +86,10 @@ const Actions = ({
     {
       key: 'duplicate',
       title: createReason,
-      disabled: !canCreate || !access.canUseResource,
+      disabled:
+        !canCreate ||
+        !access.isAccessResolved ||
+        !(item.type === 'group' ? access.canEditResource : access.canUseResource),
       icon: <Icon icon={Copy} />,
       label: t('duplicate', { ns: 'common' }),
       onClick: () =>
