@@ -12,11 +12,7 @@ import { downloadFile } from '@/utils/client/downloadFile';
 import FilePreview from './FilePreview';
 import PagePreview from './PagePreview';
 import { useDetailPanelFile } from './useDetailPanelFile';
-import {
-  DETAIL_PANEL_MAX_WIDTH,
-  DETAIL_PANEL_MIN_WIDTH,
-  useDetailPanelWidth,
-} from './useDetailPanelWidth';
+import { DETAIL_PANEL_MIN_WIDTH, useDetailPanelWidth } from './useDetailPanelWidth';
 
 /**
  * In-context right dock for the explorer list: single click on a file row
@@ -41,7 +37,6 @@ const FileDetailPanel = memo(() => {
       backgroundColor={cssVar.colorBgContainer}
       expand={!!detailPanelId}
       expandable={false}
-      maxWidth={DETAIL_PANEL_MAX_WIDTH}
       minWidth={DETAIL_PANEL_MIN_WIDTH}
       placement={'right'}
       size={{ height: '100%', width }}

@@ -3,7 +3,6 @@ import { useCallback, useState } from 'react';
 
 export const DETAIL_PANEL_DEFAULT_WIDTH = 480;
 export const DETAIL_PANEL_MIN_WIDTH = 320;
-export const DETAIL_PANEL_MAX_WIDTH = 960;
 
 /**
  * The detail panel width is controlled, so a resize must be written back here or
