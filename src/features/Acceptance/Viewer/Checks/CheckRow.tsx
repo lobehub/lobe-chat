@@ -38,8 +38,7 @@ import { useTranslation } from 'react-i18next';
 import { hasRenderableEvidence, readVisualizationManifest } from '../../Report/visualization';
 import { VisualizationDeltaBadge, VisualizationRenderer } from '../../Report/VisualizationRenderer';
 import { checkDisplayTitle } from '../../utils';
-import CommentThread from '../Comments/CommentThread';
-import ThreadEvidence from '../Comments/ThreadEvidence';
+import { HistoricalComments } from '../Comments/HistoricalComments';
 import { useCheckComments } from '../Comments/useCheckComments';
 import {
   canMarkEvidence,
@@ -595,41 +594,16 @@ export const AcceptanceCheckRow = memo<{
                 <Text fontSize={12} type={'secondary'}>
                   {t('acceptance.comments.historicalRegions', { count: staleThreads.length })}
                 </Text>
-                {staleThreads.map((thread) => {
-                  const evidence = thread.root.evidenceId
-                    ? evidenceById.get(thread.root.evidenceId)
-                    : undefined;
-                  return (
-                    <Flexbox
-                      horizontal
-                      align={'flex-start'}
-                      gap={12}
-                      key={thread.root.id}
-                      wrap={'wrap'}
-                    >
-                      {evidence && (
-                        <ThreadEvidence
-                          stale
-                          comment={thread.root}
-                          evidence={evidence}
-                          roundIndex={
-                            check.timeline.find((entry) =>
-                              entry.evidence.some((item) => item.id === thread.root.evidenceId),
-                            )?.roundIndex
-                          }
-                        />
-                      )}
-                      <Flexbox flex={1} style={{ minWidth: 200 }}>
-                        <CommentThread
-                          canComment={comments.canComment}
-                          canResolve={canResolveThread(thread)}
-                          thread={thread}
-                          {...commentActions}
-                        />
-                      </Flexbox>
-                    </Flexbox>
-                  );
-                })}
+                <HistoricalComments
+                  canComment={comments.canComment}
+                  canResolveThread={canResolveThread}
+                  evidenceById={evidenceById}
+                  overlays={commentOverlays}
+                  threads={staleThreads}
+                  timeline={check.timeline}
+                  onRefreshEvidenceUrl={refreshEvidenceUrl}
+                  {...commentActions}
+                />
               </Flexbox>
             )}
             {check.state === 'not_executed' && (

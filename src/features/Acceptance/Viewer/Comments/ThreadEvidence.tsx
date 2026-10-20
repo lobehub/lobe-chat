@@ -1,14 +1,15 @@
 'use client';
 
 import type { AcceptanceCommentItem } from '@lobechat/types';
-import { createStaticStyles, cssVar, Flexbox, Text } from '@lobehub/ui';
+import { Button, createModal, createStaticStyles, cssVar, Flexbox, Icon, Text } from '@lobehub/ui';
+import { Play } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useOptionalAcceptanceScope } from '../AcceptanceScope';
 import type { AcceptanceEvidence } from '../Checks/types';
 import { AnnotatedImage } from '../Evidence/Annotation';
-import { VideoEvidencePlayer } from '../Evidence/Video/VideoEvidencePlayer';
+import { VideoEvidencePlayer, type VideoMark } from '../Evidence/Video/VideoEvidencePlayer';
 import { formatVideoTime } from '../Evidence/Video/videoTime';
 import { useEvidenceUrlRefresh } from '../useAcceptanceBundle';
 import { useAcceptanceAuthorColor } from './authorColor';
@@ -56,6 +57,34 @@ interface ThreadEvidenceProps {
   stale: boolean;
 }
 
+/** Mounted only inside the preview; each retry can replace an expired signed URL. */
+const ThreadVideoPreview = ({
+  mark,
+  onRefreshSource,
+  src,
+}: {
+  mark: VideoMark;
+  onRefreshSource?: () => Promise<string | undefined>;
+  src: string;
+}) => {
+  const [source, setSource] = useState(src);
+  return (
+    <VideoEvidencePlayer
+      initialTime={mark.time.start}
+      marks={[mark]}
+      src={source}
+      onRefreshSource={
+        onRefreshSource
+          ? async () => {
+              const next = await onRefreshSource();
+              if (next) setSource(next);
+            }
+          : undefined
+      }
+    />
+  );
+};
+
 /**
  * The picture the remark was written against, kept with the remark.
  *
@@ -94,20 +123,35 @@ const ThreadEvidence = memo<ThreadEvidenceProps>(({ comment, evidence, roundInde
   return (
     <Flexbox className={styles.wrapper} gap={4}>
       {evidence.type === 'video' && comment.time ? (
-        <VideoEvidencePlayer
-          initialTime={comment.time.start}
-          src={evidence.fileUrl}
-          marks={[
-            {
-              color: authorColor(comment.authorUserId),
-              comment: comment.content,
-              key: comment.id,
-              rect: comment.rect,
-              time: comment.time,
-            },
-          ]}
-          onRefreshSource={refresh ? () => refresh(evidence.id) : undefined}
-        />
+        <Button
+          icon={<Icon icon={Play} />}
+          style={{ minHeight: 44, width: THUMBNAIL_WIDTH }}
+          onClick={() =>
+            createModal({
+              content: (
+                <ThreadVideoPreview
+                  src={evidence.fileUrl!}
+                  mark={{
+                    color: authorColor(comment.authorUserId),
+                    comment: comment.content,
+                    key: comment.id,
+                    rect: comment.rect!,
+                    time: comment.time!,
+                  }}
+                  onRefreshSource={refresh ? () => refresh(evidence.id) : undefined}
+                />
+              ),
+              footer: null,
+              styles: { popup: { height: '100dvh', width: '100vw' } },
+              title: t('acceptance.comments.video.showFrame', {
+                time: formatVideoTime(comment.time!.start),
+              }),
+              width: 'min(900px, 96vw)',
+            })
+          }
+        >
+          {t('acceptance.comments.video.showFrame', { time: formatVideoTime(comment.time.start) })}
+        </Button>
       ) : (
         <div className={styles.crop}>
           <div
