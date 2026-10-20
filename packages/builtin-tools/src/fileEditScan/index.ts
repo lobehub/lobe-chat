@@ -415,13 +415,18 @@ const buildClaudeCodePatch = (
   args: Record<string, unknown>,
 ): Pick<EditOpBase, 'diffText' | 'linesAdded' | 'linesDeleted'> | undefined => {
   const hunks: string[] = [];
+  const edits: unknown[] =
+    apiName === 'Write'
+      ? []
+      : apiName === 'MultiEdit' && Array.isArray(args.edits)
+        ? args.edits
+        : [args];
 
   if (apiName === 'Write') {
     const content = typeof args.content === 'string' ? toPatchLines(args.content) : [];
     if (content.length === 0) return undefined;
     hunks.push(`@@ -0,0 +1,${content.length} @@`, ...content.map((line) => `+${line}`));
   } else {
-    const edits = apiName === 'MultiEdit' && Array.isArray(args.edits) ? args.edits : [args];
     for (const edit of edits) {
       if (!isRecord(edit)) continue;
       const oldLines = typeof edit.old_string === 'string' ? toPatchLines(edit.old_string) : [];
@@ -443,6 +448,13 @@ const buildClaudeCodePatch = (
     if (line.startsWith('@@')) continue;
     if (line.startsWith('+')) linesAdded += 1;
     else if (line.startsWith('-')) linesDeleted += 1;
+  }
+  // `replace_all` applies the hunk at every occurrence, and the arguments do
+  // not say how many there were — leave the counts unknown rather than wrong.
+  const replacesAll = edits.some((edit) => isRecord(edit) && edit.replace_all === true);
+  if (replacesAll) {
+    linesAdded = 0;
+    linesDeleted = 0;
   }
   const headerPath = path.replace(/^\/+/, '');
   return {

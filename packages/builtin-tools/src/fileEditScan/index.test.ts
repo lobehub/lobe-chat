@@ -356,6 +356,19 @@ describe('scanOperationFileEdits', () => {
       ]);
     });
 
+    it('leaves replace_all deltas unknown but keeps the snapshot', () => {
+      const [entry] = scanOperationFileEdits([
+        ccCall('t1', 'Edit', {
+          file_path: '/a.ts',
+          new_string: 'next',
+          old_string: 'prev',
+          replace_all: true,
+        }),
+      ]);
+      expect(entry).toMatchObject({ linesAdded: 0, linesDeleted: 0 });
+      expect(entry.diffTexts[0]).toContain('-prev\n+next');
+    });
+
     it('keeps lines shared by old_string and new_string as context', () => {
       const [entry] = scanOperationFileEdits([
         ccCall('t1', 'Edit', {
