@@ -2621,6 +2621,7 @@ export default {
   'goalProcess.graph.exitFullscreen': 'Exit fullscreen',
   'goalProcess.graph.bridgeHops_one': 'via {{count}} step not shown',
   'goalProcess.graph.bridgeHops_other': 'via {{count}} steps not shown',
+  'goalProcess.linked.checking': 'Confirming status…',
   'goalProcess.linked.open': 'Open goal progress',
   'goalProcess.portal.openPage': 'Open goal page',
   'goalProcess.portal.title': 'Goal',
