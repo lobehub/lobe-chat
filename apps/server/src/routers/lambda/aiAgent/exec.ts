@@ -422,6 +422,9 @@ export const execRouter = router({
           selectedSkillIds: task.selectedSkillIds,
           slug,
           trigger: trigger ?? RequestTrigger.Chat,
+          // The user message's own content (rich text, attached content), with
+          // the deprecated top-level selections folded in like the single route.
+          userMessage: foldLegacyUserMessageFields(task).userMessage,
         });
 
         return {
