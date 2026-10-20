@@ -40,12 +40,22 @@ export const stylexTokenModules = [
 
 const classNamePrefix = 'lh';
 
-export function stylexPlugin(): PluginOption {
+export interface StylexPluginOptions {
+  overlaySrcDirs?: string[];
+}
+
+// A host repo that overlays this one resolves `@/*` to its own src before ours,
+// so StyleX must try the same directories in the same order to find its
+// `.stylex.ts` files.
+export const stylexAliases = (overlaySrcDirs: string[] = []) => {
+  const srcDirs = [...new Set([...overlaySrcDirs, path.join(repoRoot, 'src')])];
+  return { '@/*': srcDirs.map((dir) => path.join(dir, '*')) };
+};
+
+export function stylexPlugin({ overlaySrcDirs }: StylexPluginOptions = {}): PluginOption {
   const entryCss = createStylexEntryCss(classNamePrefix);
   const plugin = stylex({
-    aliases: {
-      '@/*': [path.join(repoRoot, 'src/*')],
-    },
+    aliases: stylexAliases(overlaySrcDirs),
     classNamePrefix,
     cssInjectionTarget: entryCss.cssInjectionTarget,
     dev: !isTest && process.env.NODE_ENV !== 'production',

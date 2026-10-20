@@ -484,6 +484,7 @@ const isDev = process.env.NODE_ENV !== 'production';
 
 interface SharedRendererOptions {
   platform: Platform;
+  stylexOverlaySrcDirs?: string[];
   tsconfigPaths?: boolean;
 }
 
@@ -522,7 +523,7 @@ export function sharedRendererPlugins(options: SharedRendererOptions) {
         exclude: [/\.(css|json|html)$/],
         hotKeys: ['altKey', 'ctrlKey'],
       }),
-    stylexPlugin(),
+    stylexPlugin({ overlaySrcDirs: options.stylexOverlaySrcDirs }),
     react(),
     ...(options.platform === 'desktop' ? [] : [...lobeIconImports(), ...lobeUiImports()]),
   ];
