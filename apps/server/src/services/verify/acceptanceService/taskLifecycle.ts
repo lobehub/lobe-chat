@@ -17,7 +17,8 @@ const log = debug('lobe-server:verify-acceptance');
  * `callerOperationId` is the Agent Run that published the delivery. When that
  * run is the task's own running topic, completion is deferred to the end of
  * the run instead of interrupting it mid-tool-call (the agent would read the
- * interrupt as a refused command and stop).
+ * interrupt as a refused command and stop). A later completion of the same
+ * delivery (accept, merged PR) keeps waiting for the run already pending.
  */
 export const completeTaskSubject = async (
   deps: AcceptanceServiceDeps,
@@ -28,16 +29,17 @@ export const completeTaskSubject = async (
     const taskModel = new TaskModel(deps.db, deps.userId, deps.workspaceId);
     const task = await taskModel.resolve(subjectId);
     if (!task || ['canceled', 'completed', 'failed'].includes(task.status)) return;
+    const operationId = callerOperationId ?? pendingCompletionOperation(task);
 
     // TaskService cascades checkpoint / sibling rollup / downstream unlock —
     // the same completion path settle.ts drives on a passed verify.
     const result = await new TaskService(deps.db, deps.userId, deps.workspaceId).updateStatus({
       id: task.id,
-      ...(callerOperationId ? { operationId: callerOperationId } : {}),
+      ...(operationId ? { operationId } : {}),
       status: 'completed',
     });
     if (result.completionDeferred)
-      log('acceptance → task %s completes when run %s ends', task.id, callerOperationId);
+      log('acceptance → task %s completes when run %s ends', task.id, operationId);
     else log('acceptance → task %s completed', task.id);
   } catch (error) {
     log('completeTaskSubject failed (non-fatal): %O', error);

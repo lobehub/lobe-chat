@@ -300,6 +300,42 @@ describe('AcceptanceService task lifecycle', () => {
     });
   });
 
+  describe('accepted while the delivering run is still going', () => {
+    beforeEach(() => {
+      mocks.findById.mockResolvedValue(taskAcceptance('delivered'));
+      mocks.listByAcceptance.mockResolvedValue([{ id: 'run-1', roundIndex: 1 }]);
+      mocks.taskResolve.mockResolvedValue({
+        automationMode: null,
+        context: { completion: { requestedByOperationId: 'op-self' } },
+        id: 'task_1',
+        status: 'running',
+      });
+    });
+
+    it('keeps waiting for that run on accept instead of interrupting it', async () => {
+      await service().accept('acc-1');
+
+      expect(mocks.taskServiceUpdateStatus).toHaveBeenCalledWith({
+        id: 'task_1',
+        operationId: 'op-self',
+        status: 'completed',
+      });
+    });
+
+    it('keeps waiting for that run when a merged pull request accepts it', async () => {
+      await service().acceptFromScmMerge('acc-1', {
+        number: 1,
+        repoFullName: 'lobehub/lobehub',
+      } as any);
+
+      expect(mocks.taskServiceUpdateStatus).toHaveBeenCalledWith({
+        id: 'task_1',
+        operationId: 'op-self',
+        status: 'completed',
+      });
+    });
+  });
+
   describe('rejected → task reopened', () => {
     beforeEach(() => {
       mocks.findById.mockResolvedValue(taskAcceptance('delivered'));
