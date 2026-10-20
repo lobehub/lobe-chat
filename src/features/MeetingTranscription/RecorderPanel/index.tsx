@@ -105,12 +105,7 @@ const RecorderPanel = () => {
             </Button>
           )}
           {live_ && (
-            <Button
-              danger
-              icon={<Icon icon={SquareIcon} />}
-              type={'primary'}
-              onClick={recorder.stop}
-            >
+            <Button danger icon={<Icon icon={SquareIcon} />} onClick={recorder.stop}>
               {t('recorder.stop')}
             </Button>
           )}
@@ -133,11 +128,11 @@ const RecorderPanel = () => {
           type={error === 'capture_interrupted' ? 'warning' : 'error'}
           action={
             error === 'upload_failed' ? (
-              <Button size={'small'} type={'primary'} onClick={recorder.retryProcessing}>
+              <Button type={'primary'} onClick={recorder.retryProcessing}>
                 {t('live.retryNow')}
               </Button>
             ) : phase === 'idle' ? (
-              <Button size={'small'} type={'primary'} onClick={start}>
+              <Button type={'primary'} onClick={start}>
                 {t('live.retryNow')}
               </Button>
             ) : undefined
