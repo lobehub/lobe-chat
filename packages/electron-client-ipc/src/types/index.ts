@@ -9,6 +9,7 @@ export * from './devtools';
 export * from './git';
 export * from './heterogeneousAgent';
 export * from './imessageBridge';
+export * from './localAsr';
 export * from './localDatabase';
 export * from './localFilePreviewFailure';
 export * from './localSystem';

@@ -4,6 +4,7 @@ import { Avatar } from '@lobehub/ui';
 import { SkillsIcon } from '@lobehub/ui/icons';
 import {
   AppWindowIcon,
+  AudioLines,
   BellIcon,
   Blocks,
   BlocksIcon,
@@ -262,6 +263,11 @@ export const useCategory = () => {
         icon: TerminalSquare,
         key: SettingsTabs.SystemTools,
         label: t('tab.systemTools'),
+      },
+      isDesktop && {
+        icon: AudioLines,
+        key: SettingsTabs.Transcription,
+        label: t('tab.transcription'),
       },
       {
         icon: Database,
