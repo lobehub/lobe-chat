@@ -30,6 +30,17 @@ describe('captureStyles', () => {
 
     expect(captureStyles(root).map(({ label }) => label)).toEqual(['P:shown']);
   });
+  it('does not record boxes inside a running animation', () => {
+    const root = mount('<div><span>spin</span></div><p>still</p>');
+    const spinner = root.firstElementChild as HTMLElement;
+    spinner.getAnimations = () => [{ playState: 'running' } as Animation];
+
+    expect(captureStyles(root).map(({ box, label }) => [label, box])).toEqual([
+      ['DIV:spin', 'animated'],
+      ['SPAN:spin', 'animated'],
+      ['P:still', '0,0,0,0'],
+    ]);
+  });
 });
 
 describe('diffStyleSnapshots', () => {
@@ -41,6 +52,16 @@ describe('diffStyleSnapshots', () => {
 
     expect(diffStyleSnapshots(before, after)).toEqual([
       { changed: { color: ['red', 'blue'] }, key: '0', label: 'DIV:a' },
+    ]);
+  });
+
+  it('reports text that changed, which explains layout shifts', () => {
+    const root = mount('<p>7 minutes ago</p>');
+    const before = captureStyles(root);
+    root.firstElementChild!.textContent = '10 minutes ago';
+
+    expect(diffStyleSnapshots(before, captureStyles(root))).toEqual([
+      { key: '0', label: 'P:7 minutes ago', text: ['P:7 minutes ago', 'P:10 minutes ago'] },
     ]);
   });
 

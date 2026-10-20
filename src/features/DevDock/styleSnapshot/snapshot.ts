@@ -62,23 +62,31 @@ export interface StyleSnapshotDiff {
   key: string;
   label: string;
   removed?: true;
+  text?: [string, string];
 }
 
+const isAnimating = (element: Element) =>
+  element.getAnimations?.().some((animation) => animation.playState === 'running') ?? false;
+
 // Boxes are relative to the root so a recentered modal or a scrolled page does
-// not register as a change.
+// not register as a change. Boxes under a running animation (spinners) change
+// every frame, so they are not recorded.
 export const captureStyles = (root: Element): StyleSnapshotEntry[] => {
   const origin = root.getBoundingClientRect();
   const entries: StyleSnapshotEntry[] = [];
 
-  const visit = (element: Element, key: string) => {
+  const visit = (element: Element, key: string, insideAnimation: boolean) => {
     const computed = getComputedStyle(element);
     if (computed.display === 'none') return;
 
+    const animated = insideAnimation || isAnimating(element);
     const rect = element.getBoundingClientRect();
     entries.push({
-      box: [rect.x - origin.x, rect.y - origin.y, rect.width, rect.height]
-        .map((n) => Math.round(n))
-        .join(','),
+      box: animated
+        ? 'animated'
+        : [rect.x - origin.x, rect.y - origin.y, rect.width, rect.height]
+            .map((n) => Math.round(n))
+            .join(','),
       key,
       label: `${element.tagName}:${(element.textContent ?? '').trim().slice(0, 24)}`,
       style: Object.fromEntries(STYLE_PROPS.map((prop) => [prop, computed[prop]])) as Record<
@@ -86,10 +94,10 @@ export const captureStyles = (root: Element): StyleSnapshotEntry[] => {
         string
       >,
     });
-    [...element.children].forEach((child, index) => visit(child, `${key}.${index}`));
+    [...element.children].forEach((child, index) => visit(child, `${key}.${index}`, animated));
   };
 
-  [...root.children].forEach((child, index) => visit(child, String(index)));
+  [...root.children].forEach((child, index) => visit(child, String(index), false));
   return entries;
 };
 
@@ -113,12 +121,14 @@ export const diffStyleSnapshots = (
         changed[prop] = [prev.style[prop], next.style[prop]];
     }
     const boxChanged = prev.box !== next.box;
-    if (boxChanged || Object.keys(changed).length > 0)
+    const textChanged = prev.label !== next.label;
+    if (boxChanged || textChanged || Object.keys(changed).length > 0)
       diffs.push({
         ...(boxChanged && { box: [prev.box, next.box] as [string, string] }),
         ...(Object.keys(changed).length > 0 && { changed }),
         key: prev.key,
         label: prev.label,
+        ...(textChanged && { text: [prev.label, next.label] as [string, string] }),
       });
   }
 
