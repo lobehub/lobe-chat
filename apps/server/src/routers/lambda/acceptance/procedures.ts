@@ -5,7 +5,6 @@ import {
   requireWorkspaceRoleWhenScoped,
   wsCompatProcedure,
 } from '@/business/server/trpc-middlewares/workspaceAuth';
-import { WorkspaceMemberModel } from '@/database/models/workspaceMember';
 import type { AcceptanceItem } from '@/database/schemas/verify';
 import { acceptances } from '@/database/schemas/verify';
 import type { LobeChatDatabase } from '@/database/type';
@@ -76,20 +75,4 @@ export const resolveAcceptanceForWrite = async (
       { actorUserId: ctx.userId },
     ),
   };
-};
-
-export const canReadAcceptance = async (
-  ctx: { serverDB: LobeChatDatabase; userId?: string | null },
-  acceptance: AcceptanceItem,
-) => {
-  if (ctx.userId && ctx.userId === acceptance.userId) return true;
-  if (acceptance.visibility === 'public') return true;
-  if (!ctx.userId || !acceptance.workspaceId) return false;
-  // Membership in the acceptance's OWN workspace — not the viewer's currently
-  // active one, which may be a different workspace entirely.
-  const member = await new WorkspaceMemberModel(ctx.serverDB, ctx.userId).getMember(
-    acceptance.workspaceId,
-    ctx.userId,
-  );
-  return Boolean(member);
 };

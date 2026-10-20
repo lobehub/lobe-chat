@@ -23,8 +23,9 @@ import {
 } from '@/server/services/verify';
 import { listAcceptancePullRequests } from '@/server/services/verify/acceptancePullRequests';
 
+import { canReadAcceptance } from '../_helpers/acceptanceReadScope';
 import { canManageAcceptance } from '../_helpers/acceptanceWriteScope';
-import { canReadAcceptance, publicAcceptanceProcedure } from './procedures';
+import { publicAcceptanceProcedure } from './procedures';
 
 /** Cap on concurrent evidence/attachment file lookups while building one bundle. */
 const FILE_META_RESOLVE_CONCURRENCY = 5;
@@ -57,7 +58,10 @@ export const bundleRouter = router({
         throw new TRPCError({ code: 'NOT_FOUND', message: 'Acceptance not found' });
       }
 
-      const isOwner = Boolean(ctx.userId) && ctx.userId === acceptance.userId;
+      const isOwner =
+        acceptance.subjectType !== 'site' &&
+        Boolean(ctx.userId) &&
+        ctx.userId === acceptance.userId;
       if (!isOwner && !(await canReadAcceptance(ctx, acceptance))) {
         throw new TRPCError({ code: 'NOT_FOUND', message: 'Acceptance not found' });
       }
