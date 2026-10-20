@@ -194,10 +194,11 @@ export const imageRouter = router({
 
       // Backfill lookup-pricing params (e.g. quality/resolution) from model
       // card defaults so omitted optional parameters don't break cost
-      // computation before charging.
+      // computation before charging. Use the resolved model ID so business
+      // aliases without their own model-bank card still resolve pricing.
       generationParams = await applyLookupPricingParamDefaults(
-        generationParams as Record<string, unknown>,
-        model,
+        generationParams,
+        resolvedModelId,
         provider,
       );
 

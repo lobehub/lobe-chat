@@ -126,6 +126,23 @@ describe('applyLookupPricingParamDefaults', () => {
 
     expect(result).toEqual({ prompt: 'a red apple', quality: 'medium' });
   });
+
+  it('treats null lookup params as missing and backfills defaults', async () => {
+    getModelPricingMock.mockResolvedValue(lookupPricing);
+    getModelParametersMock.mockResolvedValue(modelParameters);
+
+    const result = await applyLookupPricingParamDefaults(
+      { prompt: 'a red apple', quality: null, resolution: null },
+      'grok-imagine-image-2.0',
+      'lobehub',
+    );
+
+    expect(result).toEqual({
+      prompt: 'a red apple',
+      quality: 'medium',
+      resolution: '1k',
+    });
+  });
 });
 
 describe('validateNoUrlsInConfig utility', () => {

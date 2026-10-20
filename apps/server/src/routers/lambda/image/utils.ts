@@ -13,12 +13,16 @@ import { getModelParameters, getModelPricing } from '@lobechat/model-runtime';
  * upstream provider would apply anyway (xAI defaults to `medium`/`1k`).
  *
  * Non-lookup pricing and fully-absent model cards return the params untouched.
+ *
+ * Generic over the params object so required fields (e.g. `prompt`) survive
+ * the round trip for callers; `null` lookup values are treated as missing,
+ * matching `computeImageCost` which rejects both `null` and `undefined`.
  */
-export const applyLookupPricingParamDefaults = async (
-  generationParams: Record<string, unknown>,
+export const applyLookupPricingParamDefaults = async <T extends Record<string, unknown>>(
+  generationParams: T,
   model: string,
   provider: string,
-): Promise<Record<string, unknown>> => {
+): Promise<T> => {
   let pricingParams: string[] | undefined;
 
   try {
@@ -38,7 +42,9 @@ export const applyLookupPricingParamDefaults = async (
 
   if (!pricingParams || pricingParams.length === 0) return generationParams;
 
-  const missingParams = pricingParams.filter((param) => generationParams[param] === undefined);
+  const missingParams = pricingParams.filter(
+    (param) => generationParams[param] === undefined || generationParams[param] === null,
+  );
   if (missingParams.length === 0) return generationParams;
 
   const parameters = (await getModelParameters(model, provider)) as
