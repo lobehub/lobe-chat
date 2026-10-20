@@ -51,18 +51,18 @@ const RebuildNotice = memo<RebuildNoticeProps>(({ editable, environment }) => {
   if (legacy.length === 0 && !unpublished) return null;
 
   const keys = unpublished
-    ? {
+    ? ({
         action: 'environments.instances.publishPublic',
         desc: 'environments.instances.publishPublicDesc',
         failed: 'environments.instances.publishPublicFailed',
         started: 'environments.instances.publishPublicStarted',
-      }
-    : {
+      } as const)
+    : ({
         action: 'environments.instances.rebuildPersonal',
         desc: 'environments.instances.rebuildPersonalDesc',
         failed: 'environments.instances.rebuildPersonalFailed',
         started: 'environments.instances.rebuildPersonalStarted',
-      };
+      } as const);
 
   const rebuild = async () => {
     setRebuilding(true);

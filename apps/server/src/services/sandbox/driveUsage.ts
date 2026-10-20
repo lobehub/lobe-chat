@@ -103,7 +103,7 @@ export const readDriveUsage = async ({
       const usageByKey = new Map(pooled.map((entry) => [entry.storageKey, entry.usageBytes]));
       members = others.map((row) => {
         const key = keyOf(row.userId);
-        return describe(row, (key && usageByKey.get(key)) ?? null);
+        return describe(row, key ? (usageByKey.get(key) ?? null) : null);
       });
     } else {
       // An execution plane that cannot list the pool: one read per member,
