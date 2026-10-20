@@ -73,10 +73,12 @@ export interface TaskListOptions extends TaskListFilterOptions {
 }
 
 /**
- * Rows not created by a Quick Note. `IS DISTINCT FROM` keeps tasks whose context has no source
- * (the JSON path is NULL), which `<>` would drop.
+ * Rows not created by a Quick Note. The COALESCE keeps tasks whose context has no source (the
+ * JSON path is NULL), which a bare `<>` would drop. It is spelled this way rather than
+ * `IS DISTINCT FROM` because a null test on an extracted jsonb value crashes the pg_search
+ * planner (see `jsonbNullTest.test.ts`).
  */
-export const NOT_QUICK_NOTE_TASK = sql`(${tasks.context} -> 'source' ->> 'type') IS DISTINCT FROM 'quick_note'`;
+export const NOT_QUICK_NOTE_TASK = sql`COALESCE(${tasks.context} -> 'source' ->> 'type', '') <> 'quick_note'`;
 
 /** Rows a Quick Note created, the complement of {@link NOT_QUICK_NOTE_TASK}. */
 export const QUICK_NOTE_TASK = sql`(${tasks.context} -> 'source' ->> 'type') = 'quick_note'`;
