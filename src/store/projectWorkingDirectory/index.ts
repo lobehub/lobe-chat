@@ -99,6 +99,8 @@ interface ProjectDirectoryStore extends ProjectDirectoryStoreState {
   createProjectTopic: (
     ...args: ServiceParams<'createProjectTopic'>
   ) => Promise<ServiceData<'createProjectTopic'>>;
+  /** Move a directory conversation to its project's directory on another device. */
+  moveTopic: (...args: ServiceParams<'moveTopic'>) => Promise<ServiceData<'moveTopic'>>;
   /** Create or rename an environment. */
   saveEnvironment: (
     ...args: ServiceParams<'saveEnvironment'>
@@ -203,6 +205,17 @@ export const useProjectDirectoryStore: UseBoundStoreWithEqualityFn<
         projectTopics.revalidate(input.projectId),
         // The topic now points at a directory, so every projection that lists
         // it (one directory's, or a set of directories') is stale too.
+        directoryTopics.revalidate(),
+        environmentTopics.revalidate(),
+      ]);
+      return result.data;
+    },
+    moveTopic: async (input) => {
+      const result = await projectWorkingDirectoryService.moveTopic(input);
+      await Promise.all([
+        result.data.projectId && projectTopics.revalidate(result.data.projectId),
+        // The topic left one directory for another, so both directories'
+        // projections are stale.
         directoryTopics.revalidate(),
         environmentTopics.revalidate(),
       ]);
@@ -314,6 +327,27 @@ export const useProjectDirectories = (projectId?: string) =>
   useProjectDirectoryStore((state) =>
     rowsOf(state.directoriesMap, projectId ?? ALL_PROJECTS_KEY, EMPTY_DIRECTORIES),
   );
+
+/**
+ * One directory row, outside React. Only the scope-wide (`all`) projection and
+ * the row's own project projection would list it; they revalidate
+ * independently, so the most recently confirmed of them decides — including
+ * when it no longer lists the row (the directory was deleted), which returns
+ * `undefined` so callers fall back to the server.
+ */
+export const findProjectDirectory = (id: string): ProjectDirectory | undefined => {
+  const { directoriesMap, directoriesReplica } = useProjectDirectoryStore.getState();
+  const projectId = Object.values(directoriesMap)
+    .flat()
+    .find((row) => row.id === id)?.projectId;
+  if (!projectId) return undefined;
+
+  const freshness = (key: string) => directoriesReplica.entries[key]?.updatedAt ?? 0;
+  const newestKey = [ALL_PROJECTS_KEY, projectId]
+    .filter((key) => directoriesMap[key])
+    .reduce((newest, key) => (freshness(key) > freshness(newest) ? key : newest));
+  return directoriesMap[newestKey].find((row) => row.id === id);
+};
 
 /** Environments of one project, or every environment of the scope. */
 export const useProjectEnvironments = (projectId?: string) =>

@@ -380,6 +380,14 @@ export interface LlmRelayDeadlines {
 }
 
 /**
+ * Model-runtime method a relayed call runs on the device. `chat` streams the
+ * normalized protocol chunks; `generateObject` and `models` upload their
+ * return value as JSON text split into `result_part` chunks; `pullModel`
+ * uploads the provider's raw progress stream as `progress` chunks (text).
+ */
+export type LlmRelayMethod = 'chat' | 'generateObject' | 'models' | 'pullModel';
+
+/**
  * Server → Client (`llm_execute`): run one LLM attempt locally and stream its
  * normalized protocol chunks back. Carries no messages and no credentials: the
  * request body is fetched from `GET /api/agent/llm-relay/:callId/payload`, and
@@ -397,6 +405,8 @@ export interface LlmExecuteData {
    * sent as the `x-llm-relay-lease` header. Expires with the attempt.
    */
   leaseToken: string;
+  /** Runtime method to call; absent ⇒ `chat` (servers before one-shot relay). */
+  method?: LlmRelayMethod;
   model: string;
   operationId: string;
   /**

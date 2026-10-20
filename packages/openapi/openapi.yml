@@ -19137,6 +19137,8 @@ paths:
                   type:
                     - boolean
                     - "null"
+                strict_tool_resume:
+                  type: boolean
                 temperature:
                   anyOf:
                     - type: number
@@ -19195,6 +19197,11 @@ paths:
                             required:
                               - type
                     - type: "null"
+                tools_mode:
+                  type: string
+                  enum:
+                    - additional
+                    - exclusive
                 top_p:
                   anyOf:
                     - type: number

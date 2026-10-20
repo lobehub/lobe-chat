@@ -18,6 +18,7 @@ const mocks = vi.hoisted(() => ({
 interface MockGlobalConfigOptions {
   agentGatewayProtocol?: number;
   agentGatewayUrl?: string;
+  appUrl?: string;
   enableAgentGateway?: boolean;
   toolNameMaxLengthEnv?: string;
 }
@@ -44,6 +45,7 @@ const mockGlobalConfigDependencies = (
         ? {}
         : { AGENT_GATEWAY_PROTOCOL: options.agentGatewayProtocol }),
       ...(options.agentGatewayUrl ? { AGENT_GATEWAY_URL: options.agentGatewayUrl } : {}),
+      ...(options.appUrl ? { APP_URL: options.appUrl } : {}),
       ...(options.enableAgentGateway === undefined
         ? {}
         : { ENABLE_AGENT_GATEWAY: options.enableAgentGateway }),
@@ -277,5 +279,15 @@ describe('getServerGlobalConfig', () => {
       'deviceGatewayUrl',
       'https://device-gateway.example.com',
     );
+  });
+
+  it('should expose the OIDC issuer derived from APP_URL, as the provider does', async () => {
+    await expect(
+      loadServerConfig(false, { appUrl: 'https://chat.example.com/' }),
+    ).resolves.toHaveProperty('oidcIssuer', 'https://chat.example.com/oidc');
+  });
+
+  it('should omit the OIDC issuer when APP_URL is not configured', async () => {
+    await expect(loadServerConfig(false)).resolves.not.toHaveProperty('oidcIssuer');
   });
 });

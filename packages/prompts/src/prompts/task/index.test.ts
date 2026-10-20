@@ -130,7 +130,10 @@ describe('buildTaskRunPrompt', () => {
     );
 
     expect(result).toContain('Automation: heartbeat, every 4h');
-    expect(result).toContain('NEVER set this task to completed');
+    expect(result).toContain('NEVER end the loop for that, and never set it to canceled or failed');
+    // A tick may retire the loop only when the instruction's own end condition is met.
+    expect(result).toContain('when the Instruction defines an end condition');
+    expect(result).toContain('Do not ask the user to stop it instead');
   });
 
   it('should render a schedule automation line with the cron pattern and timezone', () => {
@@ -150,7 +153,7 @@ describe('buildTaskRunPrompt', () => {
     );
 
     expect(result).toContain('Automation: cron "0 9 * * *" (Asia/Shanghai)');
-    expect(result).toContain('NEVER set this task to completed');
+    expect(result).toContain('NEVER end the loop for that, and never set it to canceled or failed');
   });
 
   it('should not render an automation line for non-automation tasks', () => {
@@ -458,8 +461,8 @@ describe('buildTaskRunPrompt', () => {
     expect(result).toContain('include artifact paths, commands, and observed results');
     expect(result).toContain('an independent verifier decides whether this Task is complete');
     expect(result).toContain('Run the Acceptance inside this Task, not after it');
-    expect(result).toContain('lh acceptance install');
-    expect(result).toContain('lh acceptance run result submit');
+    expect(result).toMatch(/`lh acceptance install`.*plan path.*chapters on every recording/);
+    expect(result).not.toContain('lh acceptance run result submit'); // the skill owns publishing
     expect(result).toContain('proved by a screenshot or recording');
     // The portable skill is pulled to disk by CLI builders and is absent from
     // `builtinSkills`, so it must never be named as an unconditional step.
@@ -484,7 +487,7 @@ describe('buildTaskRunPrompt', () => {
     expect(result).toContain('Verify — delivery acceptance');
     expect(result).toContain('Run the Acceptance inside this Task, not after it');
     expect(result).toContain('Criterion ids are minted when this run starts');
-    expect(result).toContain('lh verify plan state');
+    expect(result).toContain('lh acceptance plan state');
   });
 
   it('should omit the verify section when verify is disabled', () => {
