@@ -18,6 +18,7 @@ const mocks = vi.hoisted(() => ({
   setDecision: vi.fn(),
   taskFindById: vi.fn(),
   taskResolve: vi.fn(),
+  taskUpdateContext: vi.fn(),
   taskServiceUpdateStatus: vi.fn(),
   taskUpdateStatusIfCurrent: vi.fn(),
   updatePolicyStatus: vi.fn(),
@@ -51,6 +52,7 @@ vi.mock('@/database/models/task', () => ({
     return {
       findById: mocks.taskFindById,
       resolve: mocks.taskResolve,
+      updateContext: mocks.taskUpdateContext,
       updateStatusIfCurrent: mocks.taskUpdateStatusIfCurrent,
     };
   }),
@@ -305,6 +307,23 @@ describe('AcceptanceService task lifecycle', () => {
       });
 
       await service().reject('acc-1', 'Fix the header');
+      expect(mocks.taskUpdateStatusIfCurrent).not.toHaveBeenCalled();
+      expect(mocks.taskUpdateContext).not.toHaveBeenCalled();
+    });
+
+    it('withdraws a completion still waiting for the delivering run to end', async () => {
+      // Otherwise onTopicComplete would complete a task whose delivery was rejected.
+      mocks.taskResolve.mockResolvedValue({
+        automationMode: null,
+        context: { completion: { requestedByOperationId: 'op-self' } },
+        id: 'task_1',
+        status: 'running',
+      });
+
+      await service().reject('acc-1', 'Fix the header');
+      expect(mocks.taskUpdateContext).toHaveBeenCalledWith('task_1', {
+        completion: { requestedByOperationId: null },
+      });
       expect(mocks.taskUpdateStatusIfCurrent).not.toHaveBeenCalled();
     });
 

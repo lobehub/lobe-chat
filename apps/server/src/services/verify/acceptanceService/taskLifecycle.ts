@@ -109,6 +109,10 @@ export const completeTaskForDelivery = async (
  * Rejecting a delivery reopens the task it completed, so the task is not left
  * reading "done" while its repair is pending. Only a completed task moves —
  * one the user already paused, canceled or restarted keeps its own state.
+ *
+ * A delivery from the task's own run is completed only once that run ends
+ * (see {@link completeTaskSubject}); a reject landing before then withdraws
+ * the pending completion, so the run ends the way an undelivered one would.
  */
 export const reopenRejectedTaskSubject = async (
   deps: AcceptanceServiceDeps,
@@ -116,14 +120,20 @@ export const reopenRejectedTaskSubject = async (
 ): Promise<void> => {
   try {
     const task = await resolveLifecycleTask(deps, subjectId);
+    const taskModel = new TaskModel(deps.db, deps.userId, deps.workspaceId);
+
+    if (task?.status === 'running') {
+      const pending = (task.context as { completion?: { requestedByOperationId?: string } } | null)
+        ?.completion?.requestedByOperationId;
+      if (!pending) return;
+
+      await taskModel.updateContext(task.id, { completion: { requestedByOperationId: null } });
+      log('acceptance rejected → task %s pending completion by run %s withdrawn', task.id, pending);
+      return;
+    }
     if (task?.status !== 'completed') return;
 
-    await new TaskModel(deps.db, deps.userId, deps.workspaceId).updateStatusIfCurrent(
-      task.id,
-      'completed',
-      'paused',
-      { completedAt: null },
-    );
+    await taskModel.updateStatusIfCurrent(task.id, 'completed', 'paused', { completedAt: null });
     log('acceptance rejected → task %s reopened as paused', task.id);
   } catch (error) {
     log('reopenRejectedTaskSubject failed (non-fatal): %O', error);
