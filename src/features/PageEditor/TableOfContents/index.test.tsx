@@ -115,4 +115,14 @@ describe('TableOfContents', () => {
 
     expect(pane.scrollTo).toHaveBeenCalledWith(expect.objectContaining({ behavior: 'auto' }));
   });
+
+  it('keeps the first heading active when the page fits without scrolling', async () => {
+    const { pane } = setup();
+    Object.defineProperty(pane, 'scrollHeight', { configurable: true, value: 0 });
+    fireEvent.scroll(pane);
+    await flush();
+
+    fireEvent.focus(screen.getByRole('button'));
+    expect(activeText()).toBe('Intro');
+  });
 });

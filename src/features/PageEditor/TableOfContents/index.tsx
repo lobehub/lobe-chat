@@ -126,7 +126,10 @@ const TableOfContents = memo<TableOfContentsProps>(({ contentRef, scrollRef }) =
       }
 
       const paneTop = pane.getBoundingClientRect().top;
-      const atBottom = pane.scrollTop + pane.clientHeight >= pane.scrollHeight - 1;
+      // A page that fits in the pane has nothing to scroll and starts at the top.
+      const atBottom =
+        pane.scrollHeight > pane.clientHeight &&
+        pane.scrollTop + pane.clientHeight >= pane.scrollHeight - 1;
       setActiveIndex(
         findActiveIndex(
           list.map(({ element }) => element.getBoundingClientRect().top - paneTop),
