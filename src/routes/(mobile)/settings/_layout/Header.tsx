@@ -30,9 +30,10 @@ const TAB_TITLE_KEY: Partial<Record<SettingsTabs, string>> = {
 };
 
 const WORKSPACE_TAB_TITLE_KEY: Record<string, string> = {
-  budget: 'subscription:tab.budget',
-  general: 'setting:workspaceSetting.tab.general',
-  members: 'setting:workspaceSetting.tab.members',
+  'budget': 'subscription:tab.budget',
+  'chat-preference': 'setting:tab.chatPreference',
+  'general': 'setting:workspaceSetting.tab.general',
+  'members': 'setting:workspaceSetting.tab.members',
 };
 
 const Header = memo(() => {

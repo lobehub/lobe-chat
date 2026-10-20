@@ -3,7 +3,7 @@
 import { Flexbox, Switch } from '@lobehub/ui';
 import { Form, type FormFieldProps, type FormGroupItem, useForm } from '@lobehub/ui/form';
 import isEqual from 'fast-deep-equal';
-import { memo, useState } from 'react';
+import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import AsyncError from '@/components/AsyncError';
@@ -12,10 +12,62 @@ import { RouteLoading } from '@/components/Skeleton/RouteSegment';
 import { FORM_STYLE } from '@/const/layoutTokens';
 import ModelSelect from '@/features/ModelSelect';
 import { SettingsSearchAnchor } from '@/features/SettingsSearch/anchor';
-import { useSaveState } from '@/hooks/useSaveState';
 import { useUserStore } from '@/store/user';
 import { settingsSelectors } from '@/store/user/selectors';
 import { PERSONAL_SYSTEM_AGENT_KEYS, type PersonalSystemAgentKey } from '@/types/user/settings';
+
+import { useChatAssistRow } from './useChatAssistRow';
+
+interface ChatAssistControlProps {
+  itemKey: PersonalSystemAgentKey;
+}
+
+/** One row's switch + model picker, with the row's own save hint. */
+const ChatAssistControl = memo<ChatAssistControlProps>(({ itemKey }) => {
+  const { t } = useTranslation('setting');
+  const {
+    loading,
+    saveState: { status: saveStatus, lastSavedAt, retry },
+    update,
+    value,
+  } = useChatAssistRow(itemKey);
+  const featureDisabled = value.enabled === false;
+
+  return (
+    <Flexbox
+      align="center"
+      direction="horizontal"
+      gap={12}
+      justify="flex-end"
+      style={{ width: 'min(100%, 448px)' }}
+    >
+      {saveStatus !== 'idle' && (
+        <AutoSaveHint
+          lastUpdatedTime={lastSavedAt}
+          saveStatus={saveStatus}
+          style={{ flex: 'none' }}
+          onRetry={retry}
+        />
+      )}
+      {!featureDisabled && (
+        <ModelSelect
+          showAbility={false}
+          style={{ minWidth: 0, width: '100%' }}
+          value={value}
+          onChange={({ model, provider }) => update({ model, provider })}
+        />
+      )}
+      <Switch
+        aria-label={t(`systemAgent.${itemKey}.title`)}
+        checked={value.enabled}
+        loading={loading}
+        onChange={(enabled) => update({ enabled })}
+      />
+    </Flexbox>
+  );
+});
+
+ChatAssistControl.displayName = 'ChatAssistControl';
 
 /**
  * The chat-assist entries of the service-model settings that stay personal
@@ -26,15 +78,11 @@ import { PERSONAL_SYSTEM_AGENT_KEYS, type PersonalSystemAgentKey } from '@/types
 const ChatAssistForm = memo(() => {
   const { t } = useTranslation('setting');
   const systemAgentSettings = useUserStore(settingsSelectors.currentSystemAgent, isEqual);
-  const [updatePersonalSystemAgent, isUserStateInit, isUserStateInitError, refreshUserState] =
-    useUserStore((s) => [
-      s.updatePersonalSystemAgent,
-      s.isUserStateInit,
-      s.isUserStateInitError,
-      s.refreshUserState,
-    ]);
-  const [loadingKey, setLoadingKey] = useState<PersonalSystemAgentKey>();
-  const { status: saveStatus, lastSavedAt, save, retry } = useSaveState();
+  const [isUserStateInit, isUserStateInitError, refreshUserState] = useUserStore((s) => [
+    s.isUserStateInit,
+    s.isUserStateInitError,
+    s.refreshUserState,
+  ]);
   const form = useForm();
 
   if (!isUserStateInit) {
@@ -49,47 +97,11 @@ const ChatAssistForm = memo(() => {
     return <RouteLoading />;
   }
 
-  const update = async (
-    key: PersonalSystemAgentKey,
-    value: { enabled?: boolean; model?: string; provider?: string },
-  ) => {
-    setLoadingKey(key);
-    try {
-      await save(() => updatePersonalSystemAgent(key, value));
-    } finally {
-      setLoadingKey(undefined);
-    }
-  };
-
   const items: FormFieldProps[] = PERSONAL_SYSTEM_AGENT_KEYS.map((key) => {
-    const value = systemAgentSettings[key];
-    const featureDisabled = value.enabled === false;
+    const featureDisabled = systemAgentSettings[key].enabled === false;
 
     return {
-      children: (
-        <Flexbox
-          align="center"
-          direction="horizontal"
-          gap={12}
-          justify="flex-end"
-          style={{ width: 'min(100%, 448px)' }}
-        >
-          {!featureDisabled && (
-            <ModelSelect
-              showAbility={false}
-              style={{ minWidth: 0, width: '100%' }}
-              value={value}
-              onChange={({ model, provider }) => update(key, { model, provider })}
-            />
-          )}
-          <Switch
-            aria-label={t(`systemAgent.${key}.title`)}
-            checked={value.enabled}
-            loading={loadingKey === key}
-            onChange={(enabled) => update(key, { enabled })}
-          />
-        </Flexbox>
-      ),
+      children: <ChatAssistControl itemKey={key} />,
       desc: t(`systemAgent.${key}.modelDesc`),
       label: (
         <SettingsSearchAnchor id={`chat-preference-${key}`}>
@@ -104,9 +116,6 @@ const ChatAssistForm = memo(() => {
   const group: FormGroupItem = {
     children: items,
     desc: t('chatPreference.assist.desc'),
-    extra: saveStatus !== 'idle' && (
-      <AutoSaveHint lastUpdatedTime={lastSavedAt} saveStatus={saveStatus} onRetry={retry} />
-    ),
     title: t('chatPreference.assist.title'),
   };
 
