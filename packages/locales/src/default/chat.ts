@@ -339,10 +339,15 @@ export default {
   'defaultGroupChat': 'Group',
   'defaultList': 'Default List',
   'defaultSession': 'Default Agent',
+  'desktopNotification.agentFailed.body': 'Open the conversation for details',
+  'desktopNotification.agentFailed.title': '{{name}} ran into a problem',
   'desktopNotification.aiReplyCompleted.body': 'Agent reply is ready',
   'desktopNotification.aiReplyCompleted.title': 'Reply completed',
   'desktopNotification.humanApprovalRequired.body': 'An Agent needs your approval to continue',
   'desktopNotification.humanApprovalRequired.title': 'Approval required',
+  'desktopNotification.workingDirectoryUnavailable.body': 'Working directory unavailable: {{path}}',
+  'desktopNotification.workingDirectoryUnavailable.bodyWithoutPath':
+    'Working directory unavailable: the folder saved for this conversation no longer exists',
   'cliDetectionTimeoutGuide.actions.openSystemTools': 'Open System Tools',
   'cliDetectionTimeoutGuide.actions.retry': 'Detect again',
   'cliDetectionTimeoutGuide.desc':
@@ -503,6 +508,7 @@ export default {
   'editedFiles.title_one': 'Edited {{count}} file',
   'editedFiles.title_other': 'Edited {{count}} files',
   'editedFiles.hideChanges': 'Hide changes',
+  'editedFiles.previewUnavailable': 'Preview unavailable',
   'editedFiles.showLess': 'Show fewer files',
   'editedFiles.showMore_one': 'Show {{count}} more file',
   'editedFiles.showMore_other': 'Show {{count}} more files',
@@ -855,6 +861,7 @@ export default {
   'heteroAgent.executionTarget.gateway': 'Gateway',
   'heteroAgent.executionTarget.gatewayDesc':
     'Run through the device gateway so other clients can follow progress',
+  'heteroAgent.executionTarget.loadFailed': 'Couldn’t load devices.',
   'heteroAgent.executionTarget.loading': 'Loading devices…',
   'heteroAgent.executionTarget.local': 'Local device',
   'heteroAgent.executionTarget.localDesc': 'Run as a local process on this desktop app',
@@ -878,6 +885,7 @@ export default {
   'heteroAgent.executionTarget.online': 'Online',
   'heteroAgent.executionTarget.onlineConnections_one': 'Online · {{count}} connection',
   'heteroAgent.executionTarget.onlineConnections_other': 'Online · {{count}} connections',
+  'heteroAgent.executionTarget.presenceChecking': 'Checking status…',
   'heteroAgent.executionTarget.projectDevicesHint':
     "Only devices with this project's working directory are listed. Add a directory for another device in the project settings.",
   'heteroAgent.executionTarget.switchProjectTopic.content':
@@ -913,6 +921,10 @@ export default {
   'input.addUser': 'Add a user message',
   'input.agentModeUnsupportedModel':
     'The current model doesn’t support agentic tool calling. Switch to a model with agent capability for the best experience.',
+  'input.agentSlugMoved':
+    'This link now opens a different agent. Switching to it — try again once it opens. Your draft is kept.',
+  'input.agentSlugUnconfirmed':
+    'Couldn’t confirm which agent this link opens. Check your connection, then try again.',
   'input.costEstimate.creditsPerMillionTokens': '{{credits}} credits/M tokens',
   'input.costEstimate.hint': 'Estimated cost: ~{{credits}} credits',
   'input.costEstimate.inputLabel': 'Input',
@@ -963,6 +975,8 @@ export default {
   'inputQueue.queuedHint': 'Sends when the current step finishes',
   'inputQueue.queuedMergeHint': 'Merged and sent when the current step finishes',
   'inputQueue.sendNow': 'Send now (interrupts current run)',
+  'inputQueue.alreadyDelivered': 'Already sent to the agent',
+  'inputQueue.withdrawFailed': 'Couldn’t take the message back. Try again.',
   'intentUnderstanding.title': 'Understanding your intent...',
   'inviteMembers': 'Invite members',
   'knowledgeBase.all': 'All Content',
@@ -2803,7 +2817,6 @@ export default {
   'goalProcess.metricDetail.budget.perTaskEmpty': 'No run has been billed yet.',
   'goalProcess.metricDetail.budget.perTaskTitle': 'Where it went',
   'goalProcess.metricDetail.budget.runsValue': '{{count}} runs',
-  'goalProcess.metricDetail.budget.tokensValue': '{{value}} tokens',
   'goalProcess.metricDetail.budget.raiseNote':
     'Raising a cap is what restarts a goal the coordinator parked on its budget \u2014 it starts moving again on its own, no Resume needed. Leave a field empty to run uncapped.',
   'goalProcess.metricDetail.budget.rounds': 'Rounds',
@@ -2988,6 +3001,8 @@ export default {
   'taskList.contextMenu.copyDescription':
     'Clone this task (and all its subtasks) into another workspace. Status resets to backlog.',
   'taskList.contextMenu.copyFailed': 'Failed to copy task',
+  'taskList.contextMenu.copyContent': 'Copy Content',
+  'taskList.contextMenu.copyContentSuccess': 'Content copied',
   'taskList.contextMenu.copyId': 'Copy ID',
   'taskList.contextMenu.copyIdSuccess': 'ID copied',
   'taskList.contextMenu.copyLink': 'Copy Link',
@@ -3447,6 +3462,7 @@ export default {
   'workingPanel.overview.ports.copy': 'Copy link',
   'workingPanel.overview.ports.createFailed': 'Could not expose the port',
   'workingPanel.overview.ports.detected.available': '{{count}} to open',
+  'workingPanel.overview.ports.detected.checking': 'Checking which ports are running…',
   'workingPanel.overview.ports.detected.expose': 'Open',
   'workingPanel.overview.ports.detected.heading': 'Detected',
   'workingPanel.overview.ports.detected.hideOthers': 'Hide other ports',

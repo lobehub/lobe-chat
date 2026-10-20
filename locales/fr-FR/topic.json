@@ -266,6 +266,7 @@
   "reportProblem.attachments.remove": "Supprimer {{name}}",
   "reportProblem.attachments.tooLarge": "Les pièces jointes doivent faire 4 Mo ou moins au total.",
   "reportProblem.attachments.tooMany": "Vous pouvez joindre jusqu'à 5 fichiers.",
+  "reportProblem.attachments.trigger": "Collez, déposez ou cliquez pour ajouter des fichiers",
   "reportProblem.attachments.uploadFailed": "Impossible de télécharger les pièces jointes. Votre rapport est toujours là. Réessayez.",
   "reportProblem.desc": "Les identifiants de ce sujet et l'environnement de votre application sont envoyés à l'équipe de support de LobeHub, qui pourra ensuite examiner les exécutions, erreurs et conversations de ce sujet.",
   "reportProblem.failed": "Impossible de soumettre le rapport. Réessayez.",

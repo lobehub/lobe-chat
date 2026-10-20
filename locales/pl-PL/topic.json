@@ -266,6 +266,7 @@
   "reportProblem.attachments.remove": "Usuń {{name}}",
   "reportProblem.attachments.tooLarge": "Załączniki muszą mieć łącznie 4 MB lub mniej.",
   "reportProblem.attachments.tooMany": "Możesz dołączyć maksymalnie 5 plików.",
+  "reportProblem.attachments.trigger": "Wklej, upuść lub kliknij, aby dodać pliki",
   "reportProblem.attachments.uploadFailed": "Nie udało się przesłać załączników. Twój raport nadal tutaj jest. Spróbuj ponownie.",
   "reportProblem.desc": "Identyfikatory tego tematu i środowisko Twojej aplikacji są wysyłane do zespołu wsparcia LobeHub, który może następnie przeanalizować przebiegi, błędy i rozmowy związane z tym tematem.",
   "reportProblem.failed": "Nie udało się przesłać zgłoszenia. Spróbuj ponownie.",

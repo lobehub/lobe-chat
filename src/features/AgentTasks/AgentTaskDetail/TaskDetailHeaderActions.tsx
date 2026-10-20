@@ -11,6 +11,7 @@ import {
   ArchiveRestoreIcon,
   CopyIcon,
   EyeOffIcon,
+  FileTextIcon,
   LinkIcon,
   MoreHorizontal,
   Trash,
@@ -39,7 +40,7 @@ const TaskDetailHeaderActions = memo(() => {
   const navigate = useWorkspaceAwareNavigate();
   const activeWorkspaceId = useActiveWorkspaceId();
   const { allowed: canEditTask } = usePermission('create_content');
-  const { copyId, copyLink, taskId } = useTaskCopyActions();
+  const { copyContent, copyId, copyLink, hasContent, taskId } = useTaskCopyActions();
   const visibility = useTaskStore(taskDetailSelectors.activeTaskVisibility);
   const createdByUserId = useTaskStore(taskDetailSelectors.activeTaskCreatedByUserId);
   const currentUserId = useUserStore(userProfileSelectors.userId);
@@ -149,6 +150,13 @@ const TaskDetailHeaderActions = memo(() => {
         label: t('taskList.contextMenu.copyLink'),
         onClick: copyLink,
       },
+      {
+        disabled: !hasContent,
+        icon: <Icon icon={FileTextIcon} />,
+        key: 'copyContent',
+        label: t('taskList.contextMenu.copyContent'),
+        onClick: copyContent,
+      },
       { type: 'divider' },
       {
         desc: archiveDeniedKey && t(archiveDeniedKey),
@@ -210,11 +218,21 @@ const TaskDetailHeaderActions = memo(() => {
 
     if (transferGroup.length === 0) return baseItems;
 
-    return [...baseItems.slice(0, 3), ...transferGroup, { type: 'divider' }, ...baseItems.slice(3)];
+    // Slot the transfer group right after the copy group's divider.
+    const copyGroupEnd = baseItems.findIndex((item) => item?.type === 'divider') + 1;
+
+    return [
+      ...baseItems.slice(0, copyGroupEnd),
+      ...transferGroup,
+      { type: 'divider' },
+      ...baseItems.slice(copyGroupEnd),
+    ];
   }, [
     taskId,
     copyId,
     copyLink,
+    copyContent,
+    hasContent,
     activeWorkspaceId,
     visibility,
     createdByUserId,

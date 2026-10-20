@@ -126,6 +126,19 @@ describe('TaskDetailHeaderActions', () => {
     mocks.isWorkspaceOwner = false;
   });
 
+  it('lists copy content right below copy link, ahead of the transfer group', () => {
+    render(<TaskDetailHeaderActions />);
+
+    expect(mocks.dropdownItems.slice(0, 6).map((item) => item?.key ?? item?.type)).toEqual([
+      'copyId',
+      'copyLink',
+      'copyContent',
+      'divider',
+      'transfer-task',
+      'copy-task',
+    ]);
+  });
+
   it('includes task transfer and copy actions in the detail menu', () => {
     render(<TaskDetailHeaderActions />);
 

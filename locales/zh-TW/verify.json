@@ -82,7 +82,6 @@
   "acceptance.comments.approvalCount": "{{count}} 位審核者已批准",
   "acceptance.comments.approve": "批准此交付",
   "acceptance.comments.approveAgain": "再次批准此輪",
-  "acceptance.comments.approveDescription": "您的審核意見。這不會改變接受狀態——只有擁有者才能接受交付。",
   "acceptance.comments.approveSummaryPlaceholder": "一行摘要（可選）",
   "acceptance.comments.approved": "已批准",
   "acceptance.comments.approvedAtRound": "已批准（第 {{round}} 輪）",

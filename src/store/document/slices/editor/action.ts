@@ -17,6 +17,7 @@ import type { DocumentStore } from '../../store';
 import { documentDetailResource } from '../document/projection';
 import type { DocumentFormatFields } from './contentFormat';
 import { hasDocumentFormatFields, resolveDocumentContentFormat } from './contentFormat';
+import type { EditorContentState } from './initialState';
 import type { DocumentDispatch } from './reducer';
 import { documentReducer } from './reducer';
 
@@ -53,6 +54,8 @@ export class EditorActionImpl {
   readonly #get: () => DocumentStore;
   readonly #set: Setter;
   readonly #inflightSaves = new Map<string, Promise<void>>();
+  /** Document whose body each editor instance was last loaded with. */
+  readonly #editorDocumentIds = new WeakMap<IEditor, string>();
 
   constructor(set: Setter, get: () => DocumentStore, _api?: unknown) {
     void _api;
@@ -91,6 +94,12 @@ export class EditorActionImpl {
     const id = documentId || activeDocumentId;
 
     if (!editor || !id || id !== activeDocumentId) return false;
+    // A document switch moves `activeDocumentId` before the editor in the store
+    // holds the new body (each canvas mount creates its own editor, and the store
+    // keeps the previous one until it updates). Reading it now would write the
+    // previous document's body into this one.
+    const loadedDocumentId = this.#editorDocumentIds.get(editor);
+    if (loadedDocumentId !== undefined && loadedDocumentId !== id) return false;
 
     const doc = documents[id];
     if (!doc || doc.contentFormat === 'html') return false;
@@ -275,6 +284,11 @@ export class EditorActionImpl {
 
     if (!doc || doc.contentFormat === 'html') return;
 
+    this.#loadDocumentIntoEditor(editor, doc);
+    this.#editorDocumentIds.set(editor, documentId);
+  };
+
+  #loadDocumentIntoEditor = (editor: IEditor, doc: EditorContentState): void => {
     // Check if editorData is valid and non-empty
     const editorDataRoot = (doc.editorData as { root?: { children?: unknown[] } } | null)?.root;
     // A childless root (empty-parse shell) throws Lexical error #38 on hydration;
@@ -464,7 +478,13 @@ export class EditorActionImpl {
       // leaving the pre-edit body there would render stale content — and keep
       // rendering it when the confirming read is slow or fails.
       const cachedDetail = this.#get().documentDetailMap[id]?.document;
-      if (cachedDetail) {
+      // A read that landed while this save was in flight may already hold a
+      // newer writer's revision; mirroring this save over it would regress it.
+      const cachedIsNewer =
+        !!savedAt &&
+        !!cachedDetail?.updatedAt &&
+        new Date(cachedDetail.updatedAt).getTime() > savedAt.getTime();
+      if (cachedDetail && !cachedIsNewer) {
         this.#get().internal_adoptDocumentDetail(
           id,
           {

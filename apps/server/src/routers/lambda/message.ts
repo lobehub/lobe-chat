@@ -32,6 +32,7 @@ import {
   assertCanUseTopicTargets,
   assertCanViewMessageTargets,
 } from './_helpers/conversationResourceGuard';
+import { getMessagesPageSizeSchema } from './_helpers/getMessagesPageSize';
 import { messagesByCursorInputSchema, readMessagesByCursor } from './_helpers/messagesByCursor';
 import { projectSharedTopicMessages } from './_helpers/projectSharedTopicMessages';
 import { resolveAgentIdFromSession, resolveContext } from './_helpers/resolveContext';
@@ -462,7 +463,7 @@ export const messageRouter = router({
         // set, so already-deployed clients (no `file` descriptor) never receive
         // a `file` summary that would crash their works UI. New clients set it.
         includeFileWorks: z.boolean().optional(),
-        pageSize: z.number().optional(),
+        pageSize: getMessagesPageSizeSchema,
         /**
          * Hand back render-facing tool view models instead of the stored
          * payloads (`@lobechat/tool-view-model`). Opt-in per read: see the

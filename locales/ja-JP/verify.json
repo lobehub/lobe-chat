@@ -82,7 +82,6 @@
   "acceptance.comments.approvalCount": "{{count}} 人のレビュアーが承認しました",
   "acceptance.comments.approve": "この納品を承認する",
   "acceptance.comments.approveAgain": "このラウンドを再承認する",
-  "acceptance.comments.approveDescription": "あなたのレビュー意見です。受け入れステータスは変更されません — オーナーのみが納品を受け入れます。",
   "acceptance.comments.approveSummaryPlaceholder": "一行の要約（オプション）",
   "acceptance.comments.approved": "承認済み",
   "acceptance.comments.approvedAtRound": "承認済み（ラウンド {{round}}）",

@@ -266,6 +266,7 @@
   "reportProblem.attachments.remove": "移除 {{name}}",
   "reportProblem.attachments.tooLarge": "附件總大小必須小於或等於 4 MB。",
   "reportProblem.attachments.tooMany": "您最多可以附加 5 個檔案。",
+  "reportProblem.attachments.trigger": "貼上、拖放或點擊以新增檔案",
   "reportProblem.attachments.uploadFailed": "無法上傳附件。您的報告仍在此處。請再試一次。",
   "reportProblem.desc": "此主題的 ID 和您的應用程式環境將發送至 LobeHub 支援團隊，他們可以檢查此主題的執行、錯誤和對話。",
   "reportProblem.failed": "無法提交報告。請再試一次。",
