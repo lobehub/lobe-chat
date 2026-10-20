@@ -224,8 +224,16 @@ export class ActionImpl {
   readQuotaBindings = (agentId: string, options?: ReadOptions): Promise<QuotaBinding[]> =>
     this.#read('bindings', this.#bindings, agentId, 'quotaBindingsMap', options);
 
-  readQuotaReadings = (accountId: string, options?: ReadOptions): Promise<QuotaLatestReading[]> =>
-    this.#read('readings', this.#readings, accountId, 'quotaReadingsMap', options);
+  /**
+   * A `fresh` readings read follows an ingest (local, device-side or a reset),
+   * which also appended to the account's snapshot series and windows: refresh a
+   * loaded calendar history too instead of leaving it a dedupe window behind.
+   */
+  readQuotaReadings = (accountId: string, options?: ReadOptions): Promise<QuotaLatestReading[]> => {
+    if (options?.fresh && this.#get().quotaHistoryMap[accountId] !== undefined)
+      void this.#refresh(this.#history, accountId);
+    return this.#read('readings', this.#readings, accountId, 'quotaReadingsMap', options);
+  };
 
   // ---- writes (account manager) ----
 

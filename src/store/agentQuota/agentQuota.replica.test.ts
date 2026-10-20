@@ -486,6 +486,28 @@ describe('agent quota replicas', () => {
       ).toBe(true);
     });
 
+    it('refreshes a loaded history when an ingest re-reads the readings', async () => {
+      const before = { snapshots: [], usageTurns: [], windows: [{ id: 'w-old' }] };
+      vi.spyOn(agentQuotaService, 'getWindows')
+        .mockResolvedValueOnce(before.windows as never)
+        .mockResolvedValue([{ id: 'w-new' }] as never);
+      vi.spyOn(agentQuotaService, 'listSnapshots').mockResolvedValue([]);
+      vi.spyOn(agentQuotaService, 'listUsageTurns').mockResolvedValue([]);
+      vi.spyOn(agentQuotaService, 'getLatestReadings').mockResolvedValue([]);
+      renderHook(() => useAgentQuotaStore.getState().useFetchQuotaHistory('a1'), { wrapper });
+      await waitFor(() =>
+        expect(agentQuotaSelectors.history('a1')(useAgentQuotaStore.getState())).toEqual(before),
+      );
+
+      await useAgentQuotaStore.getState().readQuotaReadings('a1', { fresh: true });
+
+      await waitFor(() =>
+        expect(agentQuotaSelectors.history('a1')(useAgentQuotaStore.getState())?.windows).toEqual([
+          { id: 'w-new' },
+        ]),
+      );
+    });
+
     it('keeps the last history on screen when a refresh fails', async () => {
       const history = {
         snapshots: [{ capturedAt: 1, limitType: 'session', scopeKey: '', utilization: 5 }],
