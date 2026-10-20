@@ -1,4 +1,8 @@
-import type { MeetingPlatform, MeetingRealtimeProvider } from '@lobechat/types';
+import type {
+  MeetingPlatform,
+  MeetingRealtimeProvider,
+  MeetingRefineProvider,
+} from '@lobechat/types';
 
 import type {
   LiveSegment,
@@ -9,7 +13,7 @@ import type {
 } from '@/store/meeting';
 
 import { LevelMeter } from './levelMeter';
-import { LiveTranscriber } from './liveTranscriber';
+import { LiveTranscriber, type NetworkStatus } from './liveTranscriber';
 import { frameLevel, type LiveWindow, LiveWindowCutter } from './liveWindows';
 
 /** PCM capture of the microphone stream: 200 ms frames of 16 kHz mono PCM16. */
@@ -28,28 +32,70 @@ export interface AudioRecorder {
   stop: () => Promise<Blob>;
 }
 
+/** One refined, diarized segment produced on this device. */
+export interface LocalRefinedSegment {
+  endMs: number;
+  speakerLabel?: string;
+  startMs: number;
+  text: string;
+}
+
+/**
+ * Desktop on-device transcription for one recording. The engine records the
+ * audio to a file on this device, drafts the live transcript from the frames,
+ * and refines the file with speakers afterwards — the audio is never uploaded.
+ */
+export interface LocalTranscriptionSession {
+  cancel: () => Promise<void>;
+  pause: () => void;
+  pushFrame: (frame: ArrayBuffer) => void;
+  refine: (audioPath: string) => Promise<LocalRefinedSegment[]>;
+  resume: () => void;
+  start: (handlers: {
+    onError: () => void;
+    onFinal: (segment: { endMs?: number; startMs?: number; text: string }) => void;
+  }) => Promise<void>;
+  /** Resolve with the path of the recording on this device. */
+  stop: () => Promise<{ audioPath?: string }>;
+}
+
 export interface MeetingRecorderDeps {
   api: {
     appendRealtimeSegments: (meetingId: string, segments: LiveSegment[]) => Promise<unknown>;
     attachAudio: (meetingId: string, fileId: string) => Promise<unknown>;
+    attachLocalAudio?: (meetingId: string, localAudioPath: string) => Promise<unknown>;
+    completeLocalRefine?: (meetingId: string, segments: LocalRefinedSegment[]) => Promise<unknown>;
     create: (params: {
       platform: MeetingPlatform;
       realtimeProvider: MeetingRealtimeProvider;
-      refineProvider: 'cloud';
+      refineProvider: MeetingRefineProvider;
       title: string;
     }) => Promise<{ id: string } | undefined>;
+    failLocalRefine?: (
+      meetingId: string,
+      code: 'audio_missing' | 'transcription_failed',
+      message?: string,
+    ) => Promise<unknown>;
     finish: (meetingId: string, durationMs: number) => Promise<unknown>;
     pause: (meetingId: string) => Promise<unknown>;
     /** Post-recording pass: full transcript with speakers, then the minutes. */
     refine: (meetingId: string) => Promise<unknown>;
     resume: (meetingId: string) => Promise<unknown>;
+    startLocalRefine?: (meetingId: string) => Promise<unknown>;
   };
   createAudioRecorder: (stream: MediaStream) => AudioRecorder;
   createCapture: (stream: MediaStream) => Promise<FrameCapture>;
+  /**
+   * The on-device session when the user chose local transcription and this
+   * device can run it, otherwise `undefined` (the cloud path is used).
+   */
+  createLocalSession?: () => Promise<LocalTranscriptionSession | undefined>;
   frameMs: number;
   getUserMedia: (deviceId?: string) => Promise<MediaStream>;
   /** Live transcription for one window, or `undefined` when no model is configured. */
   liveTranscribe: () => ((window: LiveWindow) => Promise<string>) | undefined;
+  /** Connectivity; live windows wait for the connection instead of being dropped. */
+  network?: NetworkStatus;
   platform: MeetingPlatform;
   /** Fire-and-forget refresh of the meetings list after a meeting changes. */
   refreshMeetings: () => void;
@@ -88,8 +134,12 @@ export class MeetingRecorderController {
   #audio?: AudioRecorder;
   #capture?: FrameCapture;
   #cutter?: LiveWindowCutter;
+  #local?: LocalTranscriptionSession;
+  #localMeetingId?: string;
   /** Recording kept after a failed upload, so `retryUpload` can send it again. */
   #pendingUpload?: File;
+  /** Duration of a stop whose `finish` did not reach the server, sent again before the upload. */
+  #pendingFinishMs?: number;
   #segments: LiveSegment[] = [];
   #transcriber?: LiveTranscriber;
 
@@ -129,6 +179,7 @@ export class MeetingRecorderController {
     this.levels.reset();
     this.#segments = [];
     this.#pendingUpload = undefined;
+    this.#pendingFinishMs = undefined;
     this.#patch(
       {
         durationMs: 0,
@@ -164,13 +215,14 @@ export class MeetingRecorderController {
       return;
     }
 
-    const transcribe = this.#deps.liveTranscribe();
+    const local = await this.#startLocalSession();
+    const transcribe = local ? undefined : this.#deps.liveTranscribe();
     let meetingId: string | undefined;
     try {
       const meeting = await this.#deps.api.create({
         platform: this.#deps.platform,
-        realtimeProvider: transcribe ? 'cloud' : 'none',
-        refineProvider: 'cloud',
+        realtimeProvider: local ? 'local' : transcribe ? 'cloud' : 'none',
+        refineProvider: local ? 'local' : 'cloud',
         title,
       });
       meetingId = meeting?.id;
@@ -178,6 +230,7 @@ export class MeetingRecorderController {
       console.error('[meeting:recorder] cannot create meeting', error);
     }
     if (!meetingId) {
+      await local?.cancel().catch(() => undefined);
       await capture.cancel();
       this.#patch({ error: 'start_failed', phase: 'idle' }, 'start/createFailed');
       return;
@@ -186,11 +239,16 @@ export class MeetingRecorderController {
     this.#capture = capture;
     this.#cutter = new LiveWindowCutter({ frameMs: this.#deps.frameMs });
     this.#transcriber = transcribe ? this.#createTranscriber(meetingId, transcribe) : undefined;
-    this.#audio = this.#deps.createAudioRecorder(stream);
-    this.#audio.start();
+    this.#local = local;
+    this.#localMeetingId = meetingId;
+    // The local engine records the audio itself, to a file on this device.
+    if (!local) {
+      this.#audio = this.#deps.createAudioRecorder(stream);
+      this.#audio.start();
+    }
 
     this.#patch(
-      { live: transcribe ? 'live' : 'unavailable', meetingId, phase: 'recording' },
+      { live: local || transcribe ? 'live' : 'unavailable', meetingId, phase: 'recording' },
       'start/recording',
     );
     this.#deps.refreshMeetings();
@@ -206,6 +264,7 @@ export class MeetingRecorderController {
     if (phase !== 'recording' || !meetingId) return;
 
     this.#audio?.pause();
+    this.#local?.pause();
     this.#transcriber?.enqueue(this.#cutter?.flush());
     this.levels.reset();
     this.#patch({ phase: 'paused' }, 'pause');
@@ -219,6 +278,7 @@ export class MeetingRecorderController {
     if (phase !== 'paused' || !meetingId) return;
 
     this.#audio?.resume();
+    this.#local?.resume();
     this.#patch({ phase: 'recording' }, 'resume');
     await this.#deps.api.resume(meetingId).catch((error) => {
       console.warn('[meeting:recorder] resume not saved', error);
@@ -231,6 +291,8 @@ export class MeetingRecorderController {
 
     this.#patch({ phase: 'finishing' }, 'stop/finishing');
     this.levels.reset();
+
+    if (this.#local) return this.#stopLocal(meetingId, durationMs);
 
     // Stop the recorder before the capture: closing the capture ends the
     // stream's tracks, which would end the recording without its last chunk.
@@ -247,7 +309,10 @@ export class MeetingRecorderController {
     this.#cutter = undefined;
     this.#transcriber = undefined;
 
-    await this.#deps.api.finish(meetingId, durationMs).catch((error) => {
+    // Offline at stop: keep the duration and finish again with the upload retry,
+    // otherwise the meeting would stay `recording` and could never be refined.
+    this.#pendingFinishMs = durationMs;
+    await this.#saveFinish(meetingId).catch((error) => {
       console.error('[meeting:recorder] finish not saved', error);
     });
 
@@ -264,10 +329,11 @@ export class MeetingRecorderController {
     this.#deps.refreshMeetings();
   }
 
-  /** Send the kept recording again after `upload_failed`. */
+  /** Send the kept recording again after `upload_failed` / `upload_offline`. */
   async retryUpload() {
     const { error, meetingId } = this.#recorder;
-    if (error !== 'upload_failed' || !meetingId || !this.#pendingUpload) return;
+    const uploadError = error === 'upload_failed' || error === 'upload_offline';
+    if (!uploadError || !meetingId || !this.#pendingUpload) return;
 
     this.#patch({ error: undefined, phase: 'finishing' }, 'retryUpload');
     await this.#upload(meetingId);
@@ -279,6 +345,7 @@ export class MeetingRecorderController {
     if (!file) return;
 
     try {
+      await this.#saveFinish(meetingId);
       const fileId = await this.#deps.uploadRecording(file);
       await this.#deps.api.attachAudio(meetingId, fileId);
       this.#pendingUpload = undefined;
@@ -290,8 +357,99 @@ export class MeetingRecorderController {
         .finally(() => this.#deps.refreshMeetings());
     } catch (error) {
       console.error('[meeting:recorder] audio upload failed', error);
-      this.#patch({ error: 'upload_failed', phase: 'done' }, 'stop/uploadFailed');
+      const offline = this.#deps.network?.isNetworkError(error);
+      this.#patch(
+        { error: offline ? 'upload_offline' : 'upload_failed', phase: 'done' },
+        'stop/uploadFailed',
+      );
     }
+  }
+
+  /** Open the on-device session; any failure falls back to the cloud path. */
+  async #startLocalSession() {
+    let session: LocalTranscriptionSession | undefined;
+    try {
+      session = await this.#deps.createLocalSession?.();
+      if (!session) return undefined;
+      await session.start({
+        onError: () => this.#patch({ live: 'lagging' }, 'local/error'),
+        onFinal: (segment) => this.#onLocalSegment(segment),
+      });
+      return session;
+    } catch (error) {
+      console.warn('[meeting:recorder] local transcription unavailable, using the cloud', error);
+      await session?.cancel().catch(() => undefined);
+      return undefined;
+    }
+  }
+
+  #onLocalSegment({ endMs, startMs, text }: { endMs?: number; startMs?: number; text: string }) {
+    const meetingId = this.#localMeetingId;
+    const trimmed = text.trim();
+    if (!meetingId || !trimmed) return;
+
+    const end = endMs ?? this.#recorder.durationMs;
+    const segment: LiveSegment = {
+      endMs: end,
+      seq: this.#segments.length,
+      startMs: Math.min(startMs ?? end, end),
+      text: trimmed,
+    };
+    this.#segments = [...this.#segments, segment];
+    this.#patch({ live: 'live', segments: this.#segments }, 'local/segment');
+    void this.#deps.api.appendRealtimeSegments(meetingId, [segment]).catch((error) => {
+      console.warn('[meeting:recorder] live segment not saved', error);
+    });
+  }
+
+  async #stopLocal(meetingId: string, durationMs: number) {
+    const local = this.#local!;
+    const { audioPath } = await local.stop().catch((error) => {
+      console.error('[meeting:recorder] local recording could not be finalized', error);
+      return { audioPath: undefined };
+    });
+    await this.#capture?.stop().catch(() => undefined);
+    this.#capture = undefined;
+    this.#local = undefined;
+    this.#localMeetingId = undefined;
+
+    // Store where the recording lives first, so finishing moves straight on to `transcribing`.
+    if (audioPath) {
+      await this.#deps.api.attachLocalAudio?.(meetingId, audioPath).catch((error) => {
+        console.error('[meeting:recorder] local audio path not saved', error);
+      });
+    }
+    await this.#deps.api.finish(meetingId, durationMs).catch((error) => {
+      console.error('[meeting:recorder] finish not saved', error);
+    });
+    this.#patch({ phase: 'done' }, audioPath ? 'stop/localSaved' : 'stop/noAudio');
+    this.#deps.refreshMeetings();
+
+    if (audioPath) void this.#refineLocally(local, meetingId, audioPath);
+  }
+
+  /** Refine on this device; the meeting page follows the status, so nothing waits here. */
+  async #refineLocally(local: LocalTranscriptionSession, meetingId: string, audioPath: string) {
+    const { api } = this.#deps;
+    try {
+      await api.startLocalRefine?.(meetingId);
+      this.#deps.refreshMeetings();
+      const segments = await local.refine(audioPath);
+      await api.completeLocalRefine?.(meetingId, segments);
+    } catch (error) {
+      console.error('[meeting:recorder] local refine failed', error);
+      await api
+        .failLocalRefine?.(meetingId, 'transcription_failed', (error as Error)?.message)
+        .catch(() => undefined);
+    } finally {
+      this.#deps.refreshMeetings();
+    }
+  }
+
+  async #saveFinish(meetingId: string) {
+    if (this.#pendingFinishMs === undefined) return;
+    await this.#deps.api.finish(meetingId, this.#pendingFinishMs);
+    this.#pendingFinishMs = undefined;
   }
 
   #onFrame(frame: ArrayBuffer) {
@@ -299,12 +457,14 @@ export class MeetingRecorderController {
 
     const level = frameLevel(frame);
     this.levels.push(level);
+    this.#local?.pushFrame(frame);
     this.#transcriber?.enqueue(this.#cutter?.push(frame, level));
     this.#patch({ durationMs: this.#recorder.durationMs + this.#deps.frameMs }, 'frame');
   }
 
   #createTranscriber(meetingId: string, transcribe: (window: LiveWindow) => Promise<string>) {
     return new LiveTranscriber({
+      network: this.#deps.network,
       onSegment: (segment) => {
         this.#segments = [...this.#segments, segment];
         this.#patch({ segments: this.#segments }, 'live/segment');

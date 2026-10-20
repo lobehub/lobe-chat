@@ -2,6 +2,7 @@ import {
   FileSource,
   MEETING_ACTION_ITEM_STATUSES,
   MEETING_ASSIGNEE_TYPES,
+  MEETING_ERROR_CODES,
   MEETING_LANGUAGES,
   MEETING_PLATFORMS,
   MEETING_REALTIME_PROVIDERS,
@@ -57,6 +58,8 @@ const MAX_OFFSET_MS = 24 * 60 * 60 * 1000;
 const MAX_SEGMENTS_PER_APPEND = 500;
 
 const idInput = z.object({ id: z.string().min(1) });
+/** Segments in one on-device refine result: ~8 h of speech at a few seconds per segment. */
+const MAX_LOCAL_REFINE_SEGMENTS = 10_000;
 const title = z.string().trim().min(1).max(255);
 const offsetMs = z.number().int().min(0).max(MAX_OFFSET_MS);
 
@@ -65,6 +68,18 @@ const segmentInput = z
     endMs: offsetMs,
     seq: z.number().int().min(0),
     source: z.enum(MEETING_SEGMENT_SOURCES),
+    speakerLabel: z.string().trim().min(1).max(64).nullish(),
+    startMs: offsetMs,
+    text: z.string().max(10_000),
+  })
+  .refine((segment) => segment.endMs >= segment.startMs, {
+    message: 'endMs must not be before startMs',
+    path: ['endMs'],
+  });
+
+const localRefineSegment = z
+  .object({
+    endMs: offsetMs,
     speakerLabel: z.string().trim().min(1).max(64).nullish(),
     startMs: offsetMs,
     text: z.string().max(10_000),
@@ -253,6 +268,48 @@ export const meetingRouter = router({
       fail(error, 'refine');
     }
   }),
+
+  /**
+   * Desktop local mode: the device that holds the recording reports its own
+   * refine pass — `start` (meeting → `transcribing`), `complete` with the
+   * diarized transcript (then the minutes are written, as after `refine`), or
+   * `fail`. Only text reaches the server; the audio stays on the device.
+   */
+  refineLocal: meetingWriteProcedure
+    .input(
+      z.discriminatedUnion('stage', [
+        z.object({ id: z.string().min(1), stage: z.literal('start') }),
+        z.object({
+          id: z.string().min(1),
+          segments: z.array(localRefineSegment).max(MAX_LOCAL_REFINE_SEGMENTS),
+          stage: z.literal('complete'),
+        }),
+        z.object({
+          code: z.enum(MEETING_ERROR_CODES),
+          id: z.string().min(1),
+          message: z.string().max(2000).optional(),
+          stage: z.literal('fail'),
+        }),
+      ]),
+    )
+    .mutation(async ({ ctx, input }) => {
+      try {
+        const service = ctx.transcriptionService;
+        const data =
+          input.stage === 'start'
+            ? await service.startLocalRefine(input.id)
+            : input.stage === 'complete'
+              ? await service.completeLocalRefine(input.id, input.segments)
+              : await service.failLocalRefine(input.id, {
+                  code: input.code,
+                  message: input.message,
+                });
+        if (!data) throw notFound();
+        return { data, message: 'Local refine saved', success: true };
+      } catch (error) {
+        fail(error, 'refine');
+      }
+    }),
 
   /**
    * Draft one slice of a live recording where no realtime gateway is deployed

@@ -1,6 +1,7 @@
 import type {
   MeetingActionItem,
   MeetingAssigneeType,
+  MeetingErrorCode,
   MeetingLanguage,
   MeetingPlatform,
   MeetingRealtimeProvider,
@@ -22,6 +23,13 @@ export interface CreateMeetingParams {
 export interface MeetingSegmentParams {
   endMs: number;
   seq: number;
+  startMs: number;
+  text: string;
+}
+
+export interface LocalRefineSegmentParams {
+  endMs: number;
+  speakerLabel?: string;
   startMs: number;
   text: string;
 }
@@ -85,6 +93,20 @@ class MeetingService {
   }) => (await lambdaClient.meeting.transcribeLive.mutate(params)).data;
 
   refine = async (id: string) => (await lambdaClient.meeting.refine.mutate({ id })).data;
+
+  /** Keep the recording on this device: store its path, never the audio. */
+  attachLocalAudio = (id: string, localAudioPath: string) =>
+    lambdaClient.meeting.attachAudio.mutate({ id, localAudioPath });
+
+  /** Desktop local mode: report the on-device refine pass (text only). */
+  startLocalRefine = (id: string) =>
+    lambdaClient.meeting.refineLocal.mutate({ id, stage: 'start' });
+
+  completeLocalRefine = async (id: string, segments: LocalRefineSegmentParams[]) =>
+    (await lambdaClient.meeting.refineLocal.mutate({ id, segments, stage: 'complete' })).data;
+
+  failLocalRefine = (id: string, code: MeetingErrorCode, message?: string) =>
+    lambdaClient.meeting.refineLocal.mutate({ code, id, message, stage: 'fail' });
 
   /** (Re)generate the minutes from the final transcript. */
   generateMinutes = async (id: string) =>

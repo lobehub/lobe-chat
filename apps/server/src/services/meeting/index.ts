@@ -28,6 +28,13 @@ export interface LiveChunkInput {
   startMs: number;
 }
 
+export interface LocalRefineSegment {
+  endMs: number;
+  speakerLabel?: string | null;
+  startMs: number;
+  text: string;
+}
+
 const toLanguage = (language: string) => (language === 'auto' ? undefined : language);
 
 /**
@@ -98,6 +105,31 @@ export class MeetingTranscriptionService {
 
     // The final transcript is in: write the minutes from it straight away.
     return new MeetingMinutesService(this.db, this.userId, this.workspaceId).generate(meetingId);
+  }
+
+  /**
+   * Desktop local mode: the device that captured the audio transcribes it with
+   * speakers, so the server only ever receives text. `startLocalRefine` moves
+   * the meeting to `transcribing` while the device works, `completeLocalRefine`
+   * stores the device's transcript and writes the minutes, and
+   * `failLocalRefine` records why the device could not finish.
+   */
+  async startLocalRefine(meetingId: string) {
+    return this.meetingModel.startRefine(meetingId);
+  }
+
+  async completeLocalRefine(meetingId: string, segments: LocalRefineSegment[]) {
+    const seqSegments = segments.map((segment, seq) => ({ ...segment, seq }));
+    const meeting = await this.meetingModel.completeRefine(meetingId, seqSegments, {
+      next: 'summarizing',
+    });
+    if (!meeting) return undefined;
+
+    return new MeetingMinutesService(this.db, this.userId, this.workspaceId).generate(meetingId);
+  }
+
+  async failLocalRefine(meetingId: string, error: Omit<MeetingError, 'stage'>) {
+    return this.meetingModel.failRefine(meetingId, { ...error, stage: 'refine' });
   }
 
   /**

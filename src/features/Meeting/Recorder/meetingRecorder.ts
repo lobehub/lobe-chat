@@ -14,7 +14,9 @@ import { getUserStoreState } from '@/store/user';
 import { systemAgentSelectors } from '@/store/user/selectors';
 
 import { type AudioRecorder, MeetingRecorderController } from './engine/controller';
+import { isNetworkError } from './engine/networkError';
 import { blobToBase64, encodeWav } from './engine/wav';
+import { createLocalMeetingSession } from './localSession';
 
 const PREFERRED_MIME_TYPES = ['audio/webm;codecs=opus', 'audio/webm', 'audio/mp4'];
 
@@ -102,17 +104,36 @@ export const meetingRecorder = new MeetingRecorderController({
   api: {
     appendRealtimeSegments: meetingService.appendRealtimeSegments,
     attachAudio: meetingService.attachAudio,
+    attachLocalAudio: meetingService.attachLocalAudio,
+    completeLocalRefine: meetingService.completeLocalRefine,
     create: meetingService.create,
+    failLocalRefine: meetingService.failLocalRefine,
     finish: meetingService.finish,
     pause: meetingService.pause,
     refine: meetingService.refine,
     resume: meetingService.resume,
+    startLocalRefine: meetingService.startLocalRefine,
   },
   createAudioRecorder,
   createCapture: BrowserAudioWorkletCapture.create,
+  createLocalSession: createLocalMeetingSession,
   frameMs: REALTIME_ASR_AUDIO.frameDurationMs,
   getUserMedia,
   liveTranscribe,
+  network: {
+    isNetworkError,
+    isOnline: () => typeof navigator === 'undefined' || navigator.onLine,
+    waitOnline: (timeoutMs) =>
+      new Promise<void>((resolve) => {
+        const done = () => {
+          clearTimeout(timer);
+          window.removeEventListener('online', done);
+          resolve();
+        };
+        const timer = setTimeout(done, timeoutMs);
+        window.addEventListener('online', done);
+      }),
+  },
   platform: isDesktop ? 'desktop' : 'web',
   refreshMeetings: () => {
     void meetingActions.refreshMeetings().catch(() => undefined);

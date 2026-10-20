@@ -109,6 +109,75 @@ describe('meeting transcription integration', () => {
     vi.clearAllMocks();
   });
 
+  it('stores a transcript refined on the desktop without the audio leaving the device', async () => {
+    const owner = meetingRouter.createCaller(context(ownerId));
+    const { data: meeting } = await owner.create({
+      platform: 'desktop',
+      realtimeProvider: 'local',
+      refineProvider: 'local',
+      title: '本地周会',
+    });
+    const id = meeting!.id;
+    await owner.attachAudio({ id, localAudioPath: '/Users/me/meetings/rec.wav' });
+    await owner.finish({ durationMs: 20_000, id });
+
+    // The server-side refine cannot reach a device-only recording.
+    const { data: serverRefine } = await owner.refine({ id });
+    expect(serverRefine).toMatchObject({ error: { code: 'audio_missing' }, status: 'failed' });
+
+    const { data: started } = await owner.refineLocal({ id, stage: 'start' });
+    expect(started).toMatchObject({ error: null, status: 'transcribing' });
+
+    const { data } = await owner.refineLocal({
+      id,
+      segments: [
+        { endMs: 6500, speakerLabel: 'speaker_1', startMs: 400, text: '大家好，我们开始周会。' },
+        { endMs: 13_000, speakerLabel: 'speaker_2', startMs: 7000, text: 'ASR 已经接上了。' },
+      ],
+      stage: 'complete',
+    });
+    expect(data).toMatchObject({ audioFileId: null, status: 'ready' });
+    expect(transcribe).not.toHaveBeenCalled();
+
+    const { data: detail } = await owner.detail({ id });
+    expect(detail!.segmentSource).toBe('refine');
+    expect(detail!.speakers.map((speaker) => speaker.label)).toEqual(['speaker_1', 'speaker_2']);
+    expect(detail!.segments.map(({ startMs, text }) => ({ startMs, text }))).toEqual([
+      { startMs: 400, text: '大家好，我们开始周会。' },
+      { startMs: 7000, text: 'ASR 已经接上了。' },
+    ]);
+    expect(detail!.minutes).toMatchObject({ summary: 'Weekly sync.' });
+  });
+
+  it('records why the desktop could not refine a local recording', async () => {
+    const owner = meetingRouter.createCaller(context(ownerId));
+    const { data: meeting } = await owner.create({
+      platform: 'desktop',
+      realtimeProvider: 'local',
+      refineProvider: 'local',
+      title: '本地周会',
+    });
+    await owner.attachAudio({ id: meeting!.id, localAudioPath: '/tmp/rec.wav' });
+    await owner.finish({ durationMs: 5000, id: meeting!.id });
+    await owner.refineLocal({ id: meeting!.id, stage: 'start' });
+
+    const { data } = await owner.refineLocal({
+      code: 'transcription_failed',
+      id: meeting!.id,
+      message: 'model missing',
+      stage: 'fail',
+    });
+    expect(data).toMatchObject({
+      error: { code: 'transcription_failed', message: 'model missing', stage: 'refine' },
+      status: 'failed',
+    });
+
+    const stranger = meetingRouter.createCaller(context(strangerId));
+    await expect(stranger.refineLocal({ id: meeting!.id, stage: 'start' })).rejects.toMatchObject({
+      code: 'NOT_FOUND',
+    });
+  });
+
   it('refines the stored recording into a transcript with speakers and timestamps', async () => {
     transcribe.mockResolvedValue(diarized);
     const { id, owner } = await recordedMeeting();
