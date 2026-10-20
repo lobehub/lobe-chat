@@ -249,8 +249,8 @@ interface LoadQuotaOptions {
 interface PendingQuotaError<S> {
   nextQuota: S;
   options: LoadQuotaOptions;
+  requestContext?: string;
   requestId: number;
-  requestScope?: string;
   requestSourceKey: string;
 }
 
@@ -311,8 +311,8 @@ const QuotaMenu = <S extends QuotaSnapshotBase>({
   );
 
   const setQuotaSnapshot = useCallback(
-    (nextQuota: S, key: string = sourceKeyRef.current, scope?: string) => {
-      getAgentQuotaStoreState().setQuotaPanel(key, nextQuota, scope);
+    (nextQuota: S, key: string = sourceKeyRef.current, context?: string) => {
+      getAgentQuotaStoreState().setQuotaPanel(key, nextQuota, context);
     },
     [],
   );
@@ -343,7 +343,7 @@ const QuotaMenu = <S extends QuotaSnapshotBase>({
       options: LoadQuotaOptions = {},
       requestId = requestIdRef.current,
       requestSourceKey = sourceKeyRef.current,
-      requestScope?: string,
+      requestContext?: string,
     ) => {
       if (!isCurrentRequest(requestId, requestSourceKey)) return;
 
@@ -358,7 +358,7 @@ const QuotaMenu = <S extends QuotaSnapshotBase>({
             nextQuota,
             options,
             requestId,
-            requestScope,
+            requestContext,
             requestSourceKey,
           };
           return;
@@ -374,7 +374,7 @@ const QuotaMenu = <S extends QuotaSnapshotBase>({
       }
 
       setRefreshError(null);
-      setQuotaSnapshot(nextQuota, requestSourceKey, requestScope);
+      setQuotaSnapshot(nextQuota, requestSourceKey, requestContext);
     },
     [hasQuotaDataForSnapshot, isCurrentRequest, readQuota, setQuotaSnapshot],
   );
@@ -382,8 +382,9 @@ const QuotaMenu = <S extends QuotaSnapshotBase>({
   const loadQuota = useCallback(
     async (options: LoadQuotaOptions = {}) => {
       const requestSourceKey = sourceKeyRef.current;
-      // A sample started under one identity must not land in another's replica.
-      const requestScope = getAgentQuotaStoreState().getQuotaScope();
+      // A sample started under one identity (or before a user-data reset) must
+      // not land in another data context's replica.
+      const requestContext = getAgentQuotaStoreState().getQuotaContext();
       const requestId = requestIdRef.current + 1;
       requestIdRef.current = requestId;
 
@@ -398,10 +399,10 @@ const QuotaMenu = <S extends QuotaSnapshotBase>({
             // Progressive paint: show the fast (persisted) snapshot while the
             // live refresh continues; requestId still guards stale sources.
             if (!isCurrentRequest(requestId, requestSourceKey)) return;
-            setQuotaSnapshot(interimQuota, requestSourceKey, requestScope);
+            setQuotaSnapshot(interimQuota, requestSourceKey, requestContext);
           },
         });
-        applyQuotaResult(nextQuota, options, requestId, requestSourceKey, requestScope);
+        applyQuotaResult(nextQuota, options, requestId, requestSourceKey, requestContext);
       } catch (error) {
         console.error('Failed to fetch agent quota:', error);
         applyQuotaResult(
@@ -409,7 +410,7 @@ const QuotaMenu = <S extends QuotaSnapshotBase>({
           options,
           requestId,
           requestSourceKey,
-          requestScope,
+          requestContext,
         );
       } finally {
         if (isCurrentRequest(requestId, requestSourceKey)) {
@@ -440,7 +441,7 @@ const QuotaMenu = <S extends QuotaSnapshotBase>({
       pending.options,
       pending.requestId,
       pending.requestSourceKey,
-      pending.requestScope,
+      pending.requestContext,
     );
   }, [applyQuotaResult, isHydrated]);
 

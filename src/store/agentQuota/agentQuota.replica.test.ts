@@ -189,12 +189,25 @@ describe('agent quota replicas', () => {
 
     it('drops a sample captured under the previous identity', async () => {
       renderHook(() => useAgentQuotaStore.getState().useHydrateQuotaPanel(SOURCE), { wrapper });
-      const previousScope = scope;
+      const previousContext = useAgentQuotaStore.getState().getQuotaContext();
       scope = `quota-user-${randomUUID()}:personal`;
 
-      act(() => useAgentQuotaStore.getState().setQuotaPanel(SOURCE, panel(10), previousScope));
+      act(() => useAgentQuotaStore.getState().setQuotaPanel(SOURCE, panel(10), previousContext));
 
       expect(agentQuotaSelectors.panel(SOURCE)(useAgentQuotaStore.getState())).toBeUndefined();
+    });
+
+    it('drops a sample started before a user-data reset that kept the same scope', async () => {
+      renderHook(() => useAgentQuotaStore.getState().useHydrateQuotaPanel(SOURCE), { wrapper });
+      const previousContext = useAgentQuotaStore.getState().getQuotaContext();
+
+      // Desktop refreshUserData / disconnect: same scope string, new data context.
+      act(() => stores.reset());
+      act(() => useAgentQuotaStore.getState().setQuotaPanel(SOURCE, panel(10), previousContext));
+
+      expect(agentQuotaSelectors.panel(SOURCE)(useAgentQuotaStore.getState())).toBeUndefined();
+      await tick();
+      expect(await storedRow(quotaPanelResource, hashQuotaSourceKey(SOURCE))).toBeUndefined();
     });
   });
 

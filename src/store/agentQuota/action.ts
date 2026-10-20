@@ -81,6 +81,8 @@ export class ActionImpl {
   readonly #panel;
   /** When each `<scope>|<resource>|<key>` last applied a server answer. */
   readonly #appliedAt = new Map<string, number>();
+  /** Advanced by every `reset()`, so a live panel sample from before it is dropped. */
+  #resetGeneration = 0;
 
   constructor(set: Setter, get: () => Store, _api?: unknown) {
     void _api;
@@ -194,16 +196,20 @@ export class ActionImpl {
   useHydrateQuotaPanel = (sourceKey: string): ReplicaSyncResult =>
     this.#panel.useSync(hashQuotaSourceKey(sourceKey));
 
-  /** The identity (user + workspace) a panel sample is captured under. */
-  getQuotaScope = (): string => quotaPanelResource.scope.get();
+  /**
+   * The data context a panel sample is captured under: the identity (user +
+   * workspace) plus the reset generation, since a desktop `refreshUserData` /
+   * `disconnectRemoteServer` can change the context without changing the scope.
+   */
+  getQuotaContext = (): string => `${quotaPanelResource.scope.get()}\u0000${this.#resetGeneration}`;
 
-  /** Record what a panel now shows; a sample started under another identity is dropped. */
+  /** Record what a panel now shows; a sample started under another data context is dropped. */
   setQuotaPanel = (
     sourceKey: string,
     snapshot: QuotaPanelSnapshot,
-    scope = quotaPanelResource.scope.get(),
+    context = this.getQuotaContext(),
   ): void => {
-    if (scope !== quotaPanelResource.scope.get()) return;
+    if (context !== this.getQuotaContext()) return;
     this.#panel.update(hashQuotaSourceKey(sourceKey), () => snapshot);
   };
 
@@ -313,6 +319,8 @@ export class ActionImpl {
     ])
       void slice.clear();
     this.#appliedAt.clear();
+    // Live panel samples are not replica fetches, so `clear()` cannot retire them.
+    this.#resetGeneration += 1;
     this.#set({ ...initialState }, false, 'resetAgentQuotaStore');
   };
 
