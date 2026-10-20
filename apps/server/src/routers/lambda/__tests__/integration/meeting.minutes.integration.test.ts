@@ -334,6 +334,32 @@ describe('meeting minutes integration', () => {
     expect((await owner.detail({ id })).data!.minutes!.summary).toBe(generated.summary);
   });
 
+  it('assigns the to-dos of a speaker once that speaker is named after a member or agent', async () => {
+    generateObject.mockResolvedValue({
+      ...generated,
+      actionItems: [
+        { assignee: 'S3', dueDate: '', segmentIndexes: [2], text: '完成竞品调研' },
+        { assignee: 'S1', dueDate: '', segmentIndexes: [0], text: '整理议程' },
+      ],
+    });
+    const { id, owner } = await refinedMeeting();
+    const { data: detail } = await owner.detail({ id });
+    expect(detail!.minutes!.actionItems.every((item) => !item.assignee)).toBe(true);
+
+    const speaker = detail!.speakers.find((row) => row.label === 'S1')!;
+    await owner.renameSpeaker({
+      displayName: 'Research Agent',
+      meetingId: id,
+      speakerId: speaker.id,
+    });
+
+    const { data: after } = await owner.detail({ id });
+    const [s3Item, s1Item] = after!.minutes!.actionItems;
+    expect(s1Item.assignee).toEqual({ id: agentId, name: 'Research Agent', type: 'agent' });
+    // Another speaker's to-do is untouched.
+    expect(s3Item.assignee).toBeUndefined();
+  });
+
   it('rejects an assignee that is not a member or visible agent', async () => {
     const { id, owner } = await refinedMeeting();
     const { data: detail } = await owner.detail({ id });

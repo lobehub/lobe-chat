@@ -70,6 +70,8 @@ interface MinutesProps {
   onSeek: (ms: number) => void;
   /** Start offset of each transcript segment, for the citations. */
   segmentStarts: Map<string, number>;
+  /** Shown name of each diarization label, for owners the minutes name by label. */
+  speakerNameByLabel: Map<string, string>;
 }
 
 const Section = ({
@@ -119,7 +121,7 @@ const Citation = ({
   );
 };
 
-const Minutes = ({ meeting, onSeek, segmentStarts }: MinutesProps) => {
+const Minutes = ({ meeting, onSeek, segmentStarts, speakerNameByLabel }: MinutesProps) => {
   const { t } = useTranslation('meeting');
   const [generating, setGenerating] = useState(false);
   const { minutes } = meeting;
@@ -258,7 +260,12 @@ const Minutes = ({ meeting, onSeek, segmentStarts }: MinutesProps) => {
         testId={'meeting-minutes-action-items'}
         title={t('minutes.actionItems')}
       >
-        <ActionItems items={minutes.actionItems} meetingId={meeting.id} renderCitation={citation} />
+        <ActionItems
+          items={minutes.actionItems}
+          meetingId={meeting.id}
+          renderCitation={citation}
+          speakerNameByLabel={speakerNameByLabel}
+        />
       </Section>
     </Flexbox>
   );

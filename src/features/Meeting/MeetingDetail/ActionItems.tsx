@@ -7,11 +7,11 @@ import {
   cssVar,
   DayjsDatePicker,
   Flexbox,
-  Input,
   Select,
   type SelectOptions,
   Tag,
   Text,
+  TextArea,
   toast,
 } from '@lobehub/ui';
 import dayjs from 'dayjs';
@@ -59,6 +59,8 @@ interface ActionItemsProps {
   meetingId: string;
   /** Jump-to-source button for one item, rendered by the parent that owns playback. */
   renderCitation: (item: MeetingActionItem) => React.ReactNode;
+  /** Shown name of each diarization label, so an owner named "S3" reads as that speaker. */
+  speakerNameByLabel: Map<string, string>;
 }
 
 /**
@@ -67,7 +69,12 @@ interface ActionItemsProps {
  * given a deadline before it becomes a task. Created items link to their
  * task; dismissed ones can be restored.
  */
-const ActionItems = ({ items, meetingId, renderCitation }: ActionItemsProps) => {
+const ActionItems = ({
+  items,
+  meetingId,
+  renderCitation,
+  speakerNameByLabel,
+}: ActionItemsProps) => {
   const { t } = useTranslation('meeting');
   const navigate = useWorkspaceAwareNavigate();
   const [drafts, setDrafts] = useState<DraftMap>(() => buildActionItemDrafts(items));
@@ -178,9 +185,10 @@ const ActionItems = ({ items, meetingId, renderCitation }: ActionItemsProps) => 
                     style={{ marginBlockStart: 6 }}
                     onChange={(checked) => patchDraft(item.id, { checked })}
                   />
-                  <Input
+                  <TextArea
                     aria-label={t('actionItem.text')}
-                    style={{ flex: 1, paddingInline: 0 }}
+                    autoSize={{ maxRows: 4, minRows: 1 }}
+                    style={{ flex: 1, paddingInline: 0, resize: 'none' }}
                     value={draft.text}
                     variant={'borderless'}
                     onChange={(event) => patchDraft(item.id, { text: event.target.value })}
@@ -230,7 +238,9 @@ const ActionItems = ({ items, meetingId, renderCitation }: ActionItemsProps) => 
                 >
                   {item.assigneeHint && !draft.assignee && (
                     <Text fontSize={12} type={'secondary'}>
-                      {t('actionItem.mentioned', { name: item.assigneeHint })}
+                      {t('actionItem.mentioned', {
+                        name: speakerNameByLabel.get(item.assigneeHint) ?? item.assigneeHint,
+                      })}
                     </Text>
                   )}
                   {renderCitation(item)}

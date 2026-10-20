@@ -191,12 +191,7 @@ export class MeetingMinutesService {
         actionItems: [...kept, ...fresh],
         model: `${provider}/${model}`,
       });
-      log(
-        'minutes %s: %d action items in %dms',
-        meetingId,
-        fresh.length,
-        Date.now() - startedAt,
-      );
+      log('minutes %s: %d action items in %dms', meetingId, fresh.length, Date.now() - startedAt);
 
       const preference = await new UserModel(this.db, this.userId).getUserPreference();
       if (preference?.meeting?.autoCreateTasks && fresh.length > 0) {
@@ -224,6 +219,28 @@ export class MeetingMinutesService {
       console.error('[meeting:minutes] failed', meetingId, meetingError);
       return this.meetingModel.failMinutes(meetingId, meetingError);
     }
+  }
+
+  /**
+   * Once a diarized speaker gets a name, give it the suggested to-dos the
+   * minutes attributed to that speaker's label ("S3") and that nobody has
+   * assigned yet, when the name matches one member or agent. Items the user
+   * already assigned, created or dismissed are left alone.
+   */
+  async assignSpeakerItems(meetingId: string, label: string, displayName: string | null) {
+    if (!displayName) return undefined;
+
+    const candidates = await this.listAssigneeCandidates();
+    const assignee = matchAssignee(displayName, candidates, { speakerNames: new Map() });
+    if (!assignee) return undefined;
+
+    return this.meetingModel.updateActionItems(meetingId, (items) =>
+      items.map((item) =>
+        item.status === 'suggested' && !item.assignee && item.assigneeHint?.trim() === label
+          ? { ...item, assignee }
+          : item,
+      ),
+    );
   }
 
   /**

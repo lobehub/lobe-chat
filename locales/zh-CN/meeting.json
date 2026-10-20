@@ -33,6 +33,7 @@
   "detail.transcript.draftHint": "实时草稿。处理完成后会替换为带说话人的完整逐字稿。",
   "detail.transcript.empty": "暂无逐字稿",
   "detail.transcript.emptyProcessing": "处理完成后，逐字稿会显示在这里。",
+  "detail.transcript.renameSpeaker": "重命名发言人",
   "detail.transcript.speaker": "发言人 {{index}}",
   "detail.transcript.title": "逐字稿",
   "detail.transcript.unknownSpeaker": "发言人",

@@ -36,6 +36,7 @@ export default {
     'Live draft. When processing finishes, it is replaced by the full transcript with speakers.',
   'detail.transcript.empty': 'No transcript yet',
   'detail.transcript.emptyProcessing': 'The transcript appears here when processing finishes.',
+  'detail.transcript.renameSpeaker': 'Rename speaker',
   'detail.transcript.speaker': 'Speaker {{index}}',
   'detail.transcript.title': 'Transcript',
   'detail.transcript.unknownSpeaker': 'Speaker',

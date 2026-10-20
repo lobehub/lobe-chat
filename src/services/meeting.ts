@@ -62,6 +62,10 @@ class MeetingService {
 
   rename = (id: string, title: string) => lambdaClient.meeting.rename.mutate({ id, title });
 
+  /** Name a diarized speaker; to-dos the minutes gave that speaker follow the name. */
+  renameSpeaker = (meetingId: string, speakerId: string, displayName: string | null) =>
+    lambdaClient.meeting.renameSpeaker.mutate({ displayName, meetingId, speakerId });
+
   delete = (id: string) => lambdaClient.meeting.delete.mutate({ id });
 
   /** Store live-draft segments; a repeated `seq` replaces the stored row. */

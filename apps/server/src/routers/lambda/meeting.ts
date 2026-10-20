@@ -461,7 +461,11 @@ export const meetingRouter = router({
       }
     }),
 
-  /** Name a diarized speaker; `null` falls back to the speaker label. */
+  /**
+   * Name a diarized speaker; `null` falls back to the speaker label. Suggested
+   * to-dos owned by that speaker are assigned to the member or agent the name
+   * matches.
+   */
   renameSpeaker: meetingWriteProcedure
     .input(
       z.object({
@@ -478,6 +482,12 @@ export const meetingRouter = router({
           input.displayName,
         );
         if (!data) throw new TRPCError({ code: 'NOT_FOUND', message: 'Speaker not found' });
+
+        // Naming a speaker is how a to-do the minutes gave to "S3" reaches a member or agent.
+        await ctx.minutesService
+          .assignSpeakerItems(input.meetingId, data.label, input.displayName)
+          .catch((error) => console.error('[meeting:renameSpeaker] assignees not updated', error));
+
         return { data, message: 'Speaker renamed', success: true };
       } catch (error) {
         fail(error, 'rename speaker of');

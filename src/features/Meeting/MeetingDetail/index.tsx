@@ -18,7 +18,7 @@ import { useTranslation } from 'react-i18next';
 import { createSurfaceSkeleton } from '@/components/Skeleton/Surface';
 import NavHeader from '@/features/NavHeader';
 import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwareNavigate';
-import type { MeetingDetail } from '@/services/meeting';
+import { type MeetingDetail, meetingService } from '@/services/meeting';
 import {
   isMeetingProcessing,
   meetingActions,
@@ -122,6 +122,25 @@ const MeetingBody = ({ meeting }: { meeting: MeetingDetail }) => {
   );
   const activeIndex = findActiveSegment(meeting.segments, playback.currentMs);
   const onSeek = useCallback((ms: number) => seek(ms), [seek]);
+  const meetingId = meeting.id;
+  const onRenameSpeaker = useCallback(
+    async (speakerId: string, name: string) => {
+      await meetingService.renameSpeaker(meetingId, speakerId, name);
+      await meetingActions.refreshMeetingDetail(meetingId);
+    },
+    [meetingId],
+  );
+  /** Diarization label ("S3") → the name shown for that speaker ("发言人 3", or the given name). */
+  const speakerNameByLabel = useMemo(
+    () =>
+      new Map(
+        meeting.speakers.flatMap((speaker) => {
+          const view = speakers.get(speaker.id);
+          return view ? [[speaker.label, view.name] as const] : [];
+        }),
+      ),
+    [meeting.speakers, speakers],
+  );
 
   const processing = isMeetingProcessing(meeting.status);
   const isDraft = meeting.segmentSource === 'realtime' && meeting.segments.length > 0;
@@ -163,17 +182,24 @@ const MeetingBody = ({ meeting }: { meeting: MeetingDetail }) => {
         <Transcript
           activeIndex={activeIndex}
           follow={follow && playback.playing}
+          renameLabel={t('detail.transcript.renameSpeaker')}
           segments={meeting.segments}
           speakers={speakers}
           unknownSpeaker={t('detail.transcript.unknownSpeaker')}
           emptyText={
             processing ? t('detail.transcript.emptyProcessing') : t('detail.transcript.empty')
           }
+          onRenameSpeaker={onRenameSpeaker}
           onSeek={onSeek}
         />
       </div>
       <div className={styles.side}>
-        <Minutes meeting={meeting} segmentStarts={segmentStarts} onSeek={onSeek} />
+        <Minutes
+          meeting={meeting}
+          segmentStarts={segmentStarts}
+          speakerNameByLabel={speakerNameByLabel}
+          onSeek={onSeek}
+        />
       </div>
     </div>
   );
