@@ -233,4 +233,17 @@ export const A = () => {
 `;
     expect(() => transformSource(source)).toThrow(UnsupportedCssError);
   });
+
+  it('keeps comments written above a style entry', () => {
+    const source = `import { createStaticStyles } from '@lobehub/ui';
+const styles = createStaticStyles(({ css }) => ({
+  // Renders nothing in the open-source build.
+  stats: css\`gap: 1px;\`,
+}));
+export const A = () => <div className={styles.stats} />;
+`;
+    expect(transformSource(source).code).toMatch(
+      /\/\/ Renders nothing in the open-source build\.[\t\v\f\r \xA0\u1680\u2000-\u200A\u2028\u2029\u202F\u205F\u3000\uFEFF]*\n\s*stats:/,
+    );
+  });
 });

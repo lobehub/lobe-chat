@@ -213,6 +213,47 @@ describe('convertCss', () => {
   });
 });
 
+describe('convertCss output details', () => {
+  it('keeps comments next to the property they explain', () => {
+    const { code } = block`
+      display: flex;
+      /* Keep action trailing even for action-only rows. */
+      margin-inline-start: auto;
+      // Matches the list column.
+      padding: 8px;
+    `;
+
+    expect(code).toContain(
+      '\n// Keep action trailing even for action-only rows.\nmarginInlineStart:',
+    );
+    expect(code).toContain('\n// Matches the list column.\npadding:');
+  });
+
+  it('collapses line breaks inside a value', () => {
+    const { code } = block`
+      transition:
+        border-color 0.15s ease,
+        background 0.15s ease;
+    `;
+
+    expect(object(code)).toEqual({
+      transition: 'border-color 0.15s ease, background 0.15s ease',
+    });
+  });
+
+  it('drops media conditions that repeat the default value', () => {
+    const { code } = block`
+      flex-grow: 0;
+      ${'responsive.md'} {
+        flex-grow: 0;
+        gap: 12px;
+      }
+    `;
+
+    expect(object(code)).toEqual({ flexGrow: 0, gap: { 'default': null, 'media.md': '12px' } });
+  });
+});
+
 describe('expandShorthand', () => {
   it.each([
     [
