@@ -140,13 +140,9 @@ const RecorderPanel = () => {
             variant={'inline'}
             action={
               error === 'upload_failed' ? (
-                <Button size={'small'} onClick={recorder.retryProcessing}>
-                  {t('live.retryNow')}
-                </Button>
+                <Button onClick={recorder.retryProcessing}>{t('live.retryNow')}</Button>
               ) : phase === 'idle' ? (
-                <Button size={'small'} onClick={start}>
-                  {t('live.retryNow')}
-                </Button>
+                <Button onClick={start}>{t('live.retryNow')}</Button>
               ) : undefined
             }
           />
