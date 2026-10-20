@@ -166,34 +166,6 @@ describe('one-shot relay', () => {
     );
   });
 
-  it('emulates decide over relayed generateObject calls, retrying invalid output on a fresh call', async () => {
-    const result = await runWithLlmRelayRequest(REQUEST, USER_ID, async () => {
-      const runtime = await initModelRuntimeForRequest({} as any, USER_ID, 'ollama');
-      const decision = runtime.decide({
-        model: 'qwen3:1.7b',
-        questions: {
-          urgent: {
-            criteria: { false: 'Can wait', true: 'Needs action today' },
-            instructions: 'Is this urgent?',
-            type: 'predicate',
-          },
-        },
-        state: 'Server is down',
-      });
-      const first = await answer(0, { q0: { evidence: 'Outage.', refused: false, value: 7 } });
-      const second = await answer(1, { q0: { evidence: 'Outage.', refused: false, value: 0.95 } });
-      return { executes: [first, second], response: await decision };
-    });
-
-    expect(result.response).toEqual({
-      answers: { urgent: { probability: 0.95, type: 'predicate' } },
-      model: 'qwen3:1.7b',
-      providerMetadata: { lobehub: { decisionMode: 'emulated', evidence: { urgent: 'Outage.' } } },
-    });
-    expect(result.executes.map((e) => e.method)).toEqual(['generateObject', 'generateObject']);
-    expect(result.executes.map((e) => e.callId)).toEqual([`${CHANNEL}:1`, `${CHANNEL}:2`]);
-  });
-
   it('treats a call made after the request ended (deferred work) as having no tab', async () => {
     const runtime = await runWithLlmRelayRequest(REQUEST, USER_ID, () =>
       initModelRuntimeForRequest({} as any, USER_ID, 'ollama'),

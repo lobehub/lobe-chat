@@ -155,23 +155,20 @@ describe('AiGenerationService.decide', () => {
   const decide = vi.fn();
   const initSpy = vi.spyOn(ModelRuntimeModule, 'initModelRuntimeFromDB');
 
-  const questions = {
-    meaningChanged: {
-      criteria: { false: 'Same meaning', true: 'Meaning changed' },
-      instructions: 'Did the meaning change?',
-      type: 'predicate' as const,
-    },
-  };
-
   beforeEach(() => {
     decide.mockReset();
     initSpy.mockReset();
-    resolveProviderRelay.mockReset();
-    resolveProviderRelay.mockResolvedValue(undefined);
     initSpy.mockResolvedValue({ decide } as any);
   });
 
-  it('resolves the provider runtime and forwards the payload, trigger, onUsage, mode and tracing', async () => {
+  it('resolves the provider runtime and forwards the payload, trigger, onUsage and signal', async () => {
+    const questions = {
+      meaningChanged: {
+        criteria: { false: 'Same meaning', true: 'Meaning changed' },
+        instructions: 'Did the meaning change?',
+        type: 'predicate' as const,
+      },
+    };
     const response = {
       answers: { meaningChanged: { probability: 0.1, type: 'predicate' } },
       model: 'gpt-5-mini',
@@ -183,38 +180,14 @@ describe('AiGenerationService.decide', () => {
     const ai = new AiGenerationService({} as any, 'user-1', 'ws-1');
     const result = await ai.decide(
       { model: 'gpt-5-mini', provider: 'openai', questions, state: 'note' },
-      {
-        metadata: { trigger: RequestTrigger.Chat },
-        mode: 'emulated',
-        onUsage,
-        signal,
-        tracing: { scenario: 'quick_note_intent' },
-      },
+      { metadata: { trigger: RequestTrigger.Chat }, onUsage, signal },
     );
 
     expect(result).toBe(response);
     expect(initSpy).toHaveBeenCalledWith({}, 'user-1', 'openai', 'ws-1');
     expect(decide).toHaveBeenCalledWith(
       { model: 'gpt-5-mini', questions, state: 'note' },
-      {
-        metadata: { trigger: RequestTrigger.Chat },
-        mode: 'emulated',
-        onUsage,
-        signal,
-        tracing: { scenario: 'quick_note_intent' },
-      },
+      { metadata: { trigger: RequestTrigger.Chat }, onUsage, signal },
     );
-  });
-
-  it('fails at once with no_executor for a device-only provider in background work', async () => {
-    resolveProviderRelay.mockResolvedValue({ runtimeProvider: 'ollama' });
-
-    await expect(
-      new AiGenerationService({} as any, 'user-1').decide(
-        { model: 'qwen3:1.7b', provider: 'ollama', questions, state: 'note' },
-        { metadata: { trigger: RequestTrigger.Chat } },
-      ),
-    ).rejects.toMatchObject({ error: { reason: 'no_executor' } });
-    expect(initSpy).not.toHaveBeenCalled();
   });
 });

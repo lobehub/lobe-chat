@@ -1,12 +1,5 @@
 export * from './core/BaseAI';
 export { pruneReasoningPayload } from './core/contextBuilders/openai';
-export type {
-  DecisionGenerateObject,
-  DecisionPlan,
-  DecisionRuntime,
-  PlanDecisionParams,
-} from './core/decision';
-export { planDecision, runDecision } from './core/decision';
 export { mergeModelRuntimeHooks } from './core/mergeHooks';
 export type { ModelRuntimeHooks } from './core/ModelRuntime';
 export { ModelRuntime } from './core/ModelRuntime';

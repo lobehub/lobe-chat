@@ -1,6 +1,5 @@
 import type { ModelUsage } from '@lobechat/types';
 import { AgentRuntimeErrorType } from '@lobechat/types';
-import createDebug from 'debug';
 import { z } from 'zod';
 
 import type {
@@ -11,40 +10,13 @@ import type {
   DecisionResponse,
   GenerateObjectOptions,
   GenerateObjectPayload,
-  GenerateObjectSchema,
 } from '../../types';
 import { AgentRuntimeError } from '../../utils/createError';
-
-const log = createDebug('lobe-model-runtime:decide:emulate');
 
 export type DecisionGenerateObject = (
   payload: GenerateObjectPayload,
   options?: GenerateObjectOptions,
 ) => Promise<unknown>;
-
-export interface EmulateDecisionParams {
-  generateObject: DecisionGenerateObject;
-  /**
-   * Extra `generateObject` calls allowed when the model returns output that fails validation.
-   * Defaults to 1. Transport errors and refusals are never retried here.
-   */
-  invalidOutputRetries?: number;
-  provider: string;
-}
-
-/**
- * The model sees internal keys instead of caller-chosen names: question names and option
- * labels may contain characters a JSON schema or a strict structured-output mode rejects, and
- * short codes keep the output small.
- */
-interface QuestionPlan {
-  /** Internal property key, e.g. `q0`. */
-  key: string;
-  name: string;
-  /** For choice questions: internal option code (`c0`…) → caller option key. */
-  options?: string[];
-  question: DecisionQuestion;
-}
 
 const SYSTEM_PROMPT = `You are a careful classifier. You read one state and answer every question about it in a single JSON object.
 
@@ -59,270 +31,202 @@ Answer formats:
 - score: "value" is the integer index of the rubric level that best matches the state.
 - predicate: "value" is your probability, from 0 to 1, that the proposition is true. Stay near 0 or 1 when the evidence is clear, and near 0.5 only when it is balanced.`;
 
-const buildPlans = (payload: DecisionPayload): QuestionPlan[] =>
-  Object.entries(payload.questions).map(([name, question], index) => ({
-    key: `q${index}`,
-    name,
-    options: question.type === 'choice' ? Object.keys(question.criteria) : undefined,
-    question,
-  }));
+/** How one question is described to the model, constrained, validated and mapped back. */
+interface QuestionSpec {
+  lines: string[];
+  schema: Record<string, unknown>;
+  toAnswer: (value: any) => DecisionAnswer;
+  value: z.ZodTypeAny;
+}
 
-const describeQuestion = ({ key, options, question }: QuestionPlan) => {
-  const lines = [`${key} (${question.type})`, `Instructions: ${question.instructions}`];
-
+// Choice options become internal codes (`c0`…): caller keys may hold characters a strict JSON
+// schema rejects, and short codes keep the output small.
+const specFor = (question: DecisionQuestion): QuestionSpec => {
   switch (question.type) {
     case 'choice': {
-      lines.push('Options:');
-      options!.forEach((option, index) => {
-        const description = question.criteria[option];
-        lines.push(
-          `- c${index}: ${JSON.stringify(option)}${description ? ` — ${description}` : ''}`,
-        );
-      });
-      break;
+      const options = Object.keys(question.criteria);
+      const codes = options.map((_, i) => `c${i}`);
+      return {
+        lines: options.map((option, i) => {
+          const hint = question.criteria[option];
+          return `- ${codes[i]}: ${JSON.stringify(option)}${hint ? ` — ${hint}` : ''}`;
+        }),
+        schema: { enum: codes, type: 'string' },
+        toAnswer: (code: string) => ({ choice: options[codes.indexOf(code)], type: 'choice' }),
+        value: z.string().refine((code) => codes.includes(code), 'unknown option code'),
+      };
     }
     case 'score': {
-      lines.push('Rubric levels (lowest to highest):');
-      question.criteria.forEach((level, index) => lines.push(`- ${index}: ${level}`));
-      break;
+      return {
+        lines: question.criteria.map((level, i) => `- ${i}: ${level}`),
+        schema: { enum: question.criteria.map((_, i) => i), type: 'integer' },
+        toAnswer: (score: number) => ({ score, type: 'score' }),
+        value: z
+          .number()
+          .int()
+          .min(0)
+          .max(question.criteria.length - 1),
+      };
     }
     case 'predicate': {
-      lines.push(`True when: ${question.criteria.true}`, `False when: ${question.criteria.false}`);
-      break;
-    }
-  }
-
-  return lines.join('\n');
-};
-
-/** Keep the state inside its delimiters even when it contains the closing tag. */
-const formatState = (state: DecisionPayload['state']) =>
-  (typeof state === 'string' ? state : JSON.stringify(state, null, 2)).replaceAll(
-    '</state>',
-    '<\\/state>',
-  );
-
-const buildUserPrompt = (payload: DecisionPayload, plans: QuestionPlan[]) =>
-  [
-    '<questions>',
-    plans.map(describeQuestion).join('\n\n'),
-    '</questions>',
-    '',
-    '<state>',
-    formatState(payload.state),
-    '</state>',
-  ].join('\n');
-
-const nullable = (schema: Record<string, unknown>) => ({ anyOf: [schema, { type: 'null' }] });
-
-const buildValueSchema = ({ options, question }: QuestionPlan) => {
-  switch (question.type) {
-    case 'choice': {
-      return nullable({ enum: options!.map((_, index) => `c${index}`), type: 'string' });
-    }
-    case 'score': {
-      return nullable({ enum: question.criteria.map((_, index) => index), type: 'integer' });
-    }
-    case 'predicate': {
-      return nullable({ description: 'Probability from 0 to 1', type: 'number' });
+      return {
+        lines: [`True when: ${question.criteria.true}`, `False when: ${question.criteria.false}`],
+        schema: { description: 'Probability from 0 to 1', type: 'number' },
+        toAnswer: (probability: number) => ({ probability, type: 'predicate' }),
+        value: z.number().min(0).max(1),
+      };
     }
   }
 };
 
-const buildSchema = (plans: QuestionPlan[]): GenerateObjectSchema => ({
-  name: 'decision',
-  schema: {
-    additionalProperties: false,
-    properties: Object.fromEntries(
-      plans.map((plan) => [
-        plan.key,
-        {
-          additionalProperties: false,
-          // Property order matters: evidence first, so the answer follows from it.
-          properties: {
-            evidence: { type: 'string' },
-            refused: { type: 'boolean' },
-            value: buildValueSchema(plan),
-          },
-          required: ['evidence', 'refused', 'value'],
-          type: 'object',
-        },
-      ]),
-    ),
-    required: plans.map((plan) => plan.key),
-    type: 'object',
-  },
-  strict: true,
+const objectSchema = (properties: Record<string, unknown>) => ({
+  additionalProperties: false,
+  properties,
+  required: Object.keys(properties),
+  type: 'object' as const,
 });
 
-const buildValueValidator = ({ options, question }: QuestionPlan) => {
-  switch (question.type) {
-    case 'choice': {
-      return z
-        .string()
-        .regex(/^c\d+$/)
-        .refine((code) => Number(code.slice(1)) < options!.length, 'unknown option code');
-    }
-    case 'score': {
-      return z
-        .number()
-        .int()
-        .min(0)
-        .max(question.criteria.length - 1);
-    }
-    case 'predicate': {
-      return z.number().min(0).max(1);
-    }
+const addUsage = (total: ModelUsage | undefined, next: ModelUsage): ModelUsage => {
+  const sum: Record<string, unknown> = { ...total };
+  for (const [key, value] of Object.entries(next)) {
+    const current = sum[key];
+    sum[key] = typeof value === 'number' && typeof current === 'number' ? current + value : value;
   }
+  return sum as ModelUsage;
 };
 
-const buildOutputValidator = (plans: QuestionPlan[]) =>
-  z.object(
-    Object.fromEntries(
-      plans.map((plan) => [
-        plan.key,
-        z.discriminatedUnion('refused', [
-          z.object({
-            evidence: z.string(),
-            refused: z.literal(true),
-            value: z.unknown().optional(),
-          }),
-          z.object({
-            evidence: z.string(),
-            refused: z.literal(false),
-            value: buildValueValidator(plan),
-          }),
-        ]),
-      ]),
-    ),
-  );
-
-type EmulatedOutput = Record<
-  string,
-  { evidence: string; refused: false; value: number | string } | { evidence: string; refused: true }
->;
-
 const parseOutput = (raw: unknown) => {
-  if (typeof raw !== 'string') return raw;
   try {
-    return JSON.parse(raw);
+    return typeof raw === 'string' ? JSON.parse(raw) : raw;
   } catch {
     return raw;
   }
 };
 
-const toAnswer = (plan: QuestionPlan, item: EmulatedOutput[string]): DecisionAnswer => {
-  if (item.refused) return { reason: item.evidence || undefined, type: 'refusal' };
-
-  switch (plan.question.type) {
-    case 'choice': {
-      const option = plan.options![Number((item.value as string).slice(1))];
-      return { choice: option, type: 'choice' };
-    }
-    case 'score': {
-      return { score: item.value as number, type: 'score' };
-    }
-    case 'predicate': {
-      return { probability: item.value as number, type: 'predicate' };
-    }
-  }
-};
-
-const addUsage = (total: ModelUsage | undefined, next: ModelUsage): ModelUsage => {
-  if (!total) return { ...next };
-  const sum: Record<string, unknown> = { ...total };
-  for (const [key, value] of Object.entries(next)) {
-    const current = sum[key];
-    sum[key] =
-      typeof value === 'number' && typeof current === 'number'
-        ? current + value
-        : (current ?? value);
-  }
-  return sum as ModelUsage;
-};
-
 /**
- * Answers decision questions with an ordinary chat model through `generateObject`: one call
- * answers every question, with evidence written before each answer. Output that fails
- * validation is retried (once by default) with the validation error fed back; refusals are
- * valid answers and are returned as `{ type: 'refusal' }`.
- *
- * Emulated answers carry no `probabilities`: a chat model's self-reported numbers are not a
- * calibrated distribution. Choice and score answers are the single picked option or level; a
- * predicate answer is the model's probability estimate. The evidence goes to
- * `providerMetadata.lobehub.evidence`.
+ * Answers decision questions with a chat model through one strict `generateObject` call.
+ * Output that fails validation is retried once with the error fed back; refusals are valid
+ * answers. Choice and score answers carry no `probabilities` (a chat model has no calibrated
+ * distribution); the evidence goes to `providerMetadata.lobehub.evidence`.
  */
 export const emulateDecision = async (
   payload: DecisionPayload,
   options: DecisionOptions | undefined,
-  { generateObject, invalidOutputRetries = 1, provider }: EmulateDecisionParams,
+  { generateObject, provider }: { generateObject: DecisionGenerateObject; provider: string },
 ): Promise<DecisionResponse> => {
-  const plans = buildPlans(payload);
-  const schema = buildSchema(plans);
-  const validator = buildOutputValidator(plans);
+  const questions = Object.entries(payload.questions).map(([name, question], i) => ({
+    key: `q${i}`,
+    name,
+    question,
+    spec: specFor(question),
+  }));
+
+  const described = questions
+    .map(({ key, question, spec }) =>
+      [`${key} (${question.type})`, `Instructions: ${question.instructions}`, ...spec.lines].join(
+        '\n',
+      ),
+    )
+    .join('\n\n');
+  const state =
+    typeof payload.state === 'string' ? payload.state : JSON.stringify(payload.state, null, 2);
   const messages: GenerateObjectPayload['messages'] = [
     { content: SYSTEM_PROMPT, role: 'system' },
-    { content: buildUserPrompt(payload, plans), role: 'user' },
+    {
+      // Keep the state inside its delimiters even when it contains the closing tag.
+      content: `<questions>\n${described}\n</questions>\n\n<state>\n${state.replaceAll('</state>', '<\\/state>')}\n</state>`,
+      role: 'user',
+    },
   ];
 
+  const schema = {
+    name: 'decision',
+    schema: objectSchema(
+      Object.fromEntries(
+        questions.map(({ key, spec }) => [
+          key,
+          // Evidence first, so the answer follows from it.
+          objectSchema({
+            evidence: { type: 'string' },
+            refused: { type: 'boolean' },
+            value: { anyOf: [spec.schema, { type: 'null' }] },
+          }),
+        ]),
+      ),
+    ),
+    strict: true,
+  };
+  const validator = z.object(
+    Object.fromEntries(
+      questions.map(({ key, spec }) => [
+        key,
+        z.discriminatedUnion('refused', [
+          z.object({ evidence: z.string(), refused: z.literal(true), value: z.unknown() }),
+          z.object({ evidence: z.string(), refused: z.literal(false), value: spec.value }),
+        ]),
+      ]),
+    ),
+  );
+
   let usage: ModelUsage | undefined;
+  const { onUsage, ...forwarded } = options ?? {};
   const generateOptions: GenerateObjectOptions = {
-    headers: options?.headers,
-    metadata: options?.metadata,
+    ...forwarded,
     onUsage: (reported) => {
       usage = addUsage(usage, reported);
     },
-    pricingContext: options?.pricingContext,
-    signal: options?.signal,
-    user: options?.user,
   };
 
-  let lastProblem = '';
-  for (let attempt = 0; attempt <= invalidOutputRetries; attempt++) {
-    log('emulate model=%s questions=%d attempt=%d', payload.model, plans.length, attempt);
+  let problem = '';
+  for (let attempt = 0; attempt < 2; attempt++) {
     const raw = parseOutput(
       await generateObject({ messages, model: payload.model, schema }, generateOptions),
     );
     const parsed = validator.safeParse(raw);
 
     if (parsed.success) {
-      const output = parsed.data as EmulatedOutput;
-      if (usage) await options?.onUsage?.(usage);
-
+      if (usage) await onUsage?.(usage);
+      const output = parsed.data as Record<
+        string,
+        { evidence: string; refused: boolean; value: unknown }
+      >;
       return {
         answers: Object.fromEntries(
-          plans.map((plan) => [plan.name, toAnswer(plan, output[plan.key])]),
+          questions.map(({ key, name, spec }) => {
+            const { evidence, refused, value } = output[key];
+            const answer: DecisionAnswer = refused
+              ? { reason: evidence || undefined, type: 'refusal' }
+              : spec.toAnswer(value);
+            return [name, answer];
+          }),
         ),
         model: payload.model,
         providerMetadata: {
           lobehub: {
             decisionMode: 'emulated',
-            evidence: Object.fromEntries(
-              plans.map((plan) => [plan.name, output[plan.key].evidence]),
-            ),
+            evidence: Object.fromEntries(questions.map((q) => [q.name, output[q.key].evidence])),
           },
         },
         ...(usage && { usage }),
       };
     }
 
-    lastProblem = parsed.error.issues
+    problem = parsed.error.issues
       .map((issue) => `${issue.path.join('.') || '(root)'}: ${issue.message}`)
       .join('; ');
-    log('invalid emulated output: %s', lastProblem);
     messages.push(
       { content: JSON.stringify(raw ?? null), role: 'assistant' },
       {
-        content: `That output is invalid (${lastProblem}). Answer again with one JSON object that follows the schema exactly.`,
+        content: `That output is invalid (${problem}). Answer again with one JSON object that follows the schema exactly.`,
         role: 'user',
       },
     );
   }
 
   // Report what the failed attempts consumed, so billing still sees the spend.
-  if (usage) await options?.onUsage?.(usage);
+  if (usage) await onUsage?.(usage);
   throw AgentRuntimeError.chat({
-    error: { message: `Invalid decision response: ${lastProblem}` },
+    error: { message: `Invalid decision response: ${problem}` },
     errorType: AgentRuntimeErrorType.ProviderBizError,
     provider,
   });

@@ -7,10 +7,11 @@ import type {
   GenerateObjectPayload,
   GenerateObjectSchema,
 } from '@lobechat/model-runtime';
-import type { ModelUsage, OpenAIChatMessage, RequestTrigger } from '@lobechat/types';
+import type { OpenAIChatMessage, RequestTrigger } from '@lobechat/types';
 
 import type { LobeChatDatabase } from '@/database/type';
 import { initModelRuntimeForRequest } from '@/server/modules/AgentRuntime/llmRelay/oneShot';
+import { initModelRuntimeFromDB } from '@/server/modules/ModelRuntime';
 
 export interface AiGenerationObjectInput {
   messages: OpenAIChatMessage[] | GenerateObjectPayload['messages'];
@@ -39,19 +40,6 @@ export interface AiGenerationObjectOptions {
    * `@lobechat/llm-generation-tracing` at call sites.
    */
   tracing?: Record<string, unknown>;
-}
-
-export interface AiGenerationDecideInput<
-  Q extends DecisionQuestions = DecisionQuestions,
-> extends DecisionPayload<Q> {
-  provider: string;
-}
-
-export interface AiGenerationDecideOptions extends AiGenerationObjectOptions {
-  /** See `DecisionOptions.mode`; defaults to `auto` (native for decision models). */
-  mode?: DecisionOptions['mode'];
-  /** Receives the reported usage (with `cost` when the model has pricing). */
-  onUsage?: (usage: ModelUsage) => void | Promise<void>;
 }
 
 /**
@@ -103,23 +91,19 @@ export class AiGenerationService {
 
   /**
    * Answer typed questions about one state (`ModelRuntime.decide`): natively for decision
-   * models, emulated through `generateObject` for chat models. Same wiring as
-   * {@link generateObject}: `metadata.trigger` attributes the spend, `tracing` feeds the
-   * `llm_generation_tracing` hook.
+   * models, emulated through `generateObject` for chat models. Runs on the server runtime
+   * only; device-relayed providers are not supported here.
    */
   async decide<Q extends DecisionQuestions>(
-    { provider, ...payload }: AiGenerationDecideInput<Q>,
-    options: AiGenerationDecideOptions,
+    { provider, ...payload }: DecisionPayload<Q> & { provider: string },
+    options: Pick<AiGenerationObjectOptions, 'metadata' | 'signal'> &
+      Pick<DecisionOptions, 'onUsage'>,
   ): Promise<DecisionResponse<Q>> {
-    const runtime = await initModelRuntimeForRequest(this.db, this.userId, provider, {
-      workspaceId: this.workspaceId,
-    });
+    const runtime = await initModelRuntimeFromDB(this.db, this.userId, provider, this.workspaceId);
     return runtime.decide(payload as DecisionPayload<Q>, {
       metadata: options.metadata,
-      mode: options.mode,
       onUsage: options.onUsage,
       signal: options.signal,
-      tracing: options.tracing,
     });
   }
 }

@@ -109,27 +109,6 @@ export type DecisionAnswer<Q extends DecisionQuestion = DecisionQuestion> =
         ? DecisionChoiceAnswer<Extract<keyof Q['criteria'], string>>
         : DecisionScoreAnswer);
 
-/**
- * How a decision was produced:
- * - `native`: a decision model answered through the provider's `decide` endpoint.
- * - `emulated`: a chat model answered through `generateObject`; answers carry no probabilities.
- */
-export type DecisionMode = 'emulated' | 'native';
-
-export interface DecisionLobeHubMetadata {
-  decisionMode: DecisionMode;
-  /**
-   * Question name → the short evidence the model wrote before answering. Only emulated
-   * decisions produce it.
-   */
-  evidence?: Record<string, string>;
-}
-
-export interface DecisionProviderMetadata {
-  [provider: string]: Record<string, unknown> | undefined;
-  lobehub?: DecisionLobeHubMetadata & Record<string, unknown>;
-}
-
 export interface DecisionResponse<Q extends DecisionQuestions = DecisionQuestions> {
   answers: { [K in keyof Q]: DecisionAnswer<Q[K]> };
   id?: string;
@@ -138,14 +117,13 @@ export interface DecisionResponse<Q extends DecisionQuestions = DecisionQuestion
   /** Upstream provider that served the request, when reported. */
   provider?: string;
   /**
-   * Set by `ModelRuntime.decide`. `lobehub.decisionMode` tells native and emulated answers
-   * apart; other keys hold provider-specific data.
+   * Set by `ModelRuntime.decide`: which path served the call, plus the evidence an emulated
+   * decision wrote per question name.
    */
-  providerMetadata?: DecisionProviderMetadata;
-  /**
-   * Token usage reported for the call, summed across attempts when an emulated decision had
-   * to retry. Undefined when the provider reports none; it is never filled with zeros.
-   */
+  providerMetadata?: {
+    lobehub?: { decisionMode: 'emulated' | 'native'; evidence?: Record<string, string> };
+  };
+  /** Reported token usage, summed across attempts when an emulated decision retried. */
   usage?: ModelUsage;
 }
 
@@ -154,26 +132,12 @@ export interface DecisionOptions {
   /** Metadata passed to hooks (billing, tracing, route attempts), e.g. `trigger`. */
   metadata?: Record<string, unknown>;
   /**
-   * How `ModelRuntime.decide` serves the request:
-   * - `auto` (default): native when the provider implements `decide` and model-bank lists the
-   *   model as `type: 'decision'`; otherwise emulated through `generateObject`.
-   * - `native`: always call the provider's `decide`; fails when the provider has none.
-   *   Use it for decision models that model-bank does not list (e.g. remote-only ids).
-   * - `emulated`: always answer through `generateObject`.
-   */
-  mode?: 'auto' | DecisionMode;
-  /**
    * Receives the provider-reported token usage (with `cost` when the model has pricing)
    * after a successful decision.
    */
   onUsage?: (usage: ModelUsage) => void | Promise<void>;
   pricingContext?: ModelPricingContext;
   signal?: AbortSignal;
-  /**
-   * Structured tracing config consumed by tracing hooks (`onDecideComplete`), like
-   * `GenerateObjectOptions.tracing`.
-   */
-  tracing?: Record<string, unknown>;
   /**
    * userId for the request
    */

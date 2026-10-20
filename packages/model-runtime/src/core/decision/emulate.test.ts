@@ -131,19 +131,6 @@ describe('emulateDecision', () => {
     expect(onUsage).toHaveBeenCalledWith({ inputTextTokens: 20 });
   });
 
-  it('does not retry when retries are disabled', async () => {
-    const generateObject = vi.fn().mockResolvedValue({});
-
-    await expect(
-      emulateDecision(payload, undefined, {
-        generateObject,
-        invalidOutputRetries: 0,
-        provider: 'ollama',
-      }),
-    ).rejects.toMatchObject({ errorType: AgentRuntimeErrorType.ProviderBizError });
-    expect(generateObject).toHaveBeenCalledTimes(1);
-  });
-
   it('returns refusals as answers without retrying', async () => {
     const generateObject = vi.fn().mockResolvedValue({
       ...validOutput,
