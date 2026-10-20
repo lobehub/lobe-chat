@@ -1,5 +1,8 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { useAgentQuotaStore } from '@/store/agentQuota';
+import { initialState } from '@/store/agentQuota/initialState';
+
 import { agentQuotaService } from './agentQuota';
 import { heterogeneousAgentService } from './electron/heterogeneousAgent';
 import { createKimiCodeQuotaReader } from './kimiCodeQuota';
@@ -47,6 +50,9 @@ const sample = {
 
 beforeEach(() => {
   vi.resetAllMocks();
+  // Reads go through the global quota replica: start every case without the
+  // previous case's accounts / readings (they would answer inside the dedupe window).
+  useAgentQuotaStore.setState(initialState, false);
   vi.mocked(agentQuotaService.listAccounts).mockResolvedValue([account] as never);
   vi.mocked(agentQuotaService.listBindings).mockResolvedValue([]);
   vi.mocked(agentQuotaService.getLatestReadings).mockResolvedValue([reading]);
