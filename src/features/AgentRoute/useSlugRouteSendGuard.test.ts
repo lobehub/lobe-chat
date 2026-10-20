@@ -125,6 +125,16 @@ describe('useSlugRouteSendGuard', () => {
     expect(toast.error).not.toHaveBeenCalled();
   });
 
+  // Codex P1: regenerate and continue start a generation too.
+  it('holds regenerate and continue on an unconfirmed slug route as well', async () => {
+    confirmAgentSlugTarget.mockResolvedValue('agt_other');
+    const { result } = renderHook(() => useSlugRouteSendGuard(), { wrapper: routeWrapper });
+
+    await expect(result.current.onBeforeRegenerate!('msg_1')).resolves.toBe(false);
+    await expect(result.current.onBeforeContinue!('msg_1')).resolves.toBe(false);
+    expect(confirmAgentSlugTarget).toHaveBeenCalledTimes(2);
+  });
+
   it('lets a confirmed send through silently', async () => {
     confirmAgentSlugTarget.mockResolvedValue('agt_writer');
     const { result } = renderHook(() => useSlugRouteSendGuard(), { wrapper: routeWrapper });

@@ -921,9 +921,9 @@ export default {
   'input.agentModeUnsupportedModel':
     'The current model doesn’t support agentic tool calling. Switch to a model with agent capability for the best experience.',
   'input.agentSlugMoved':
-    'This link now opens a different agent. Switching to it — your message is still in the input.',
+    'This link now opens a different agent. Switching to it — try again once it opens. Your draft is kept.',
   'input.agentSlugUnconfirmed':
-    'Couldn’t confirm which agent this link opens. Check your connection, then send again.',
+    'Couldn’t confirm which agent this link opens. Check your connection, then try again.',
   'input.costEstimate.creditsPerMillionTokens': '{{credits}} credits/M tokens',
   'input.costEstimate.hint': 'Estimated cost: ~{{credits}} credits',
   'input.costEstimate.inputLabel': 'Input',

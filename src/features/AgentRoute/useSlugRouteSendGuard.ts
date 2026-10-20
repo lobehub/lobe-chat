@@ -43,24 +43,31 @@ export const checkSendOnSlugRoute = async (
   }
 };
 
-/** Conversation hooks that hold a send on an unconfirmed slug route (see `checkSendOnSlugRoute`). */
+/**
+ * Conversation hooks that hold every generation on an unconfirmed slug route
+ * (see `checkSendOnSlugRoute`): a send, a regenerate and a continue would all
+ * run against the agent painted from the local copy.
+ */
 export const useSlugRouteSendGuard = (): ConversationHooks => {
   const { aid } = useParams<{ aid?: string }>();
   const aidRef = useRef(aid);
   aidRef.current = aid;
 
-  return useMemo(
-    () => ({
-      onBeforeSendMessage: async () => {
-        const check = await checkSendOnSlugRoute(aidRef.current);
-        if (check === 'ok') return;
+  return useMemo(() => {
+    const guard = async (): Promise<false | undefined> => {
+      const check = await checkSendOnSlugRoute(aidRef.current);
+      if (check === 'ok') return;
 
-        // The draft stays in the composer; say why, so Send never looks dead.
-        if (check === 'moved') toast.info(t('input.agentSlugMoved', { ns: 'chat' }));
-        else toast.error(t('input.agentSlugUnconfirmed', { ns: 'chat' }));
-        return false;
-      },
-    }),
-    [],
-  );
+      // Nothing is lost (a draft stays in the composer); say why, so the action never looks dead.
+      if (check === 'moved') toast.info(t('input.agentSlugMoved', { ns: 'chat' }));
+      else toast.error(t('input.agentSlugUnconfirmed', { ns: 'chat' }));
+      return false;
+    };
+
+    return {
+      onBeforeContinue: guard,
+      onBeforeRegenerate: guard,
+      onBeforeSendMessage: guard,
+    };
+  }, []);
 };
