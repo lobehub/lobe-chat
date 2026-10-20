@@ -14,6 +14,33 @@ const minimaxChatModels: AIChatModelCard[] = [
     },
     contextWindowTokens: 1_000_000,
     description:
+      'MiniMax M3.1 Flash supports native image and video understanding with adjustable reasoning effort.',
+    displayName: 'MiniMax M3.1 Flash',
+    enabled: true,
+    family: 'minimax',
+    generation: 'minimax-m3.1',
+    id: 'MiniMax-M3.1-Flash',
+    maxOutput: 524_288,
+    pricing: {
+      currency: 'USD',
+      units: [
+        { name: 'textInput', rate: 0.15, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.6, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput_cacheRead', rate: 0.015, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2026-10-19',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+      video: true,
+      vision: true,
+    },
+    contextWindowTokens: 1_000_000,
+    description:
       "MiniMax M3 is MiniMax's first multimodal model, with native image and video understanding and strong coding and agentic capabilities.",
     displayName: 'MiniMax M3',
     enabled: true,
@@ -24,9 +51,33 @@ const minimaxChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'USD',
       units: [
-        { name: 'textInput', rate: 0.6, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 2.4, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textInput_cacheRead', rate: 0.12, strategy: 'fixed', unit: 'millionTokens' },
+        {
+          name: 'textInput',
+          strategy: 'tiered',
+          tiers: [
+            { rate: 0.3, upTo: 512_000 },
+            { rate: 0.6, upTo: 'infinity' },
+          ],
+          unit: 'millionTokens',
+        },
+        {
+          name: 'textOutput',
+          strategy: 'tiered',
+          tiers: [
+            { rate: 1.2, upTo: 512_000 },
+            { rate: 2.4, upTo: 'infinity' },
+          ],
+          unit: 'millionTokens',
+        },
+        {
+          name: 'textInput_cacheRead',
+          strategy: 'tiered',
+          tiers: [
+            { rate: 0.06, upTo: 512_000 },
+            { rate: 0.12, upTo: 'infinity' },
+          ],
+          unit: 'millionTokens',
+        },
       ],
     },
     releasedAt: '2026-06-01',

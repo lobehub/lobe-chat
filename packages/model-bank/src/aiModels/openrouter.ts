@@ -3,6 +3,39 @@ import type { AIChatModelCard } from '../types/aiModel';
 // https://openrouter.ai/docs/api-reference/list-available-models
 const openrouterChatModels: AIChatModelCard[] = [
   {
+    abilities: { functionCall: true, reasoning: true, video: true, vision: true },
+    contextWindowTokens: 1_000_000,
+    displayName: 'MiniMax M3.1 Flash (free)',
+    enabled: true,
+    id: 'minimax/minimax-m3.1-flash:free',
+    maxOutput: 524_288,
+    pricing: {
+      currency: 'USD',
+      units: [
+        { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: { functionCall: true, reasoning: true, video: true, vision: true },
+    contextWindowTokens: 524_288,
+    displayName: 'MiniMax M3',
+    enabled: true,
+    id: 'minimax/minimax-m3',
+    maxOutput: 512_000,
+    pricing: {
+      currency: 'USD',
+      units: [
+        { name: 'textInput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 1.2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput_cacheRead', rate: 0.06, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    type: 'chat',
+  },
+  {
     contextWindowTokens: 2_000_000,
     description:
       'Based on context length, topic, and complexity, your request is routed to Llama 3 70B Instruct, Claude 3.5 Sonnet (self-moderated), or GPT-4o.',

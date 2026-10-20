@@ -178,7 +178,9 @@ describe('LobeOpenRouterAI - custom features', () => {
     it('should use model maxOutput when no max_tokens provided', async () => {
       // Mock OpenRouterModels to have a specific maxOutput
       const { openrouter } = await import('model-bank');
-      const modelWithMaxOutput = openrouter.find((m) => m.maxOutput !== undefined);
+      const modelWithMaxOutput = openrouter.find(
+        (m) => m.maxOutput !== undefined && m.id !== 'minimax/minimax-m3.1-flash:free',
+      );
 
       if (modelWithMaxOutput) {
         await instance.chat({

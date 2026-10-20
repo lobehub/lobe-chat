@@ -1213,15 +1213,32 @@ describe('computeChatPricing', () => {
 
       const input = result?.breakdown.find((item) => item.unit.name === 'textInput');
       expect(input?.quantity).toBe(100_000);
-      expect(input?.credits).toBe(60_000);
+      expect(input?.credits).toBe(30_000);
 
       const cached = result?.breakdown.find((item) => item.unit.name === 'textInput_cacheRead');
       expect(cached?.quantity).toBe(20_000);
-      expect(cached?.credits).toBe(2_400);
+      expect(cached?.credits).toBe(1_200);
 
       const output = result?.breakdown.find((item) => item.unit.name === 'textOutput');
       expect(output?.quantity).toBe(10_000);
-      expect(output?.credits).toBe(24_000);
+      expect(output?.credits).toBe(12_000);
+
+      const longContext = computeChatCost(pricing, {
+        ...usage,
+        inputCacheMissTokens: 580_000,
+        inputTextTokens: 600_000,
+        totalInputTokens: 600_000,
+        totalTokens: 610_000,
+      });
+      expect(longContext?.breakdown.find((item) => item.unit.name === 'textInput')?.credits).toBe(
+        348_000,
+      );
+      expect(
+        longContext?.breakdown.find((item) => item.unit.name === 'textInput_cacheRead')?.credits,
+      ).toBe(2_400);
+      expect(longContext?.breakdown.find((item) => item.unit.name === 'textOutput')?.credits).toBe(
+        24_000,
+      );
     });
   });
 
