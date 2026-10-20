@@ -31,6 +31,9 @@ import { asyncTasks } from './asyncTask';
 import { users } from './user';
 import { workspaces } from './workspace';
 
+export const nextDocumentUpdatedAt = () =>
+  sql`GREATEST(date_trunc('milliseconds', clock_timestamp()), "documents"."updated_at" + interval '1 millisecond')`;
+
 export const DOCUMENT_FOLDER_TYPE = 'custom/folder';
 
 /** File type used by the parent document for a managed skill bundle. */
@@ -38,6 +41,18 @@ export const SKILL_BUNDLE_FILE_TYPE = 'skills/bundle';
 
 /** File type used by the SKILL.md index document inside a managed skill bundle. */
 export const SKILL_INDEX_FILE_TYPE = 'skills/index';
+
+/** File type of a script file inside a skill bundle; its language sits in `metadata.language`. */
+export const SKILL_SCRIPT_FILE_TYPE = 'skills/script';
+
+/** File type of one frozen version of a user skill's `SKILL.md`, kept under its bundle. */
+export const SKILL_VERSION_FILE_TYPE = 'skills/version';
+
+/**
+ * Source attribution of a user-level skill: a bundle owned by the user, not
+ * bound to any agent, so any agent or run can load it by name.
+ */
+export const USER_SKILL_SOURCE = 'user-skills';
 
 /** Source attribution stored on documents created by skill-management tooling. */
 export const SKILL_MANAGEMENT_SOURCE = 'agent-signal:skill-management';
@@ -150,6 +165,10 @@ export const documents = pgTable(
     /** Recycle bin — see `schemas/trash.ts`. */
     ...softDeleteColumns(),
     ...timestamps,
+    updatedAt: timestamptz('updated_at')
+      .notNull()
+      .defaultNow()
+      .$onUpdate(() => nextDocumentUpdatedAt()),
   },
   (table) => [
     index('documents_source_idx').on(table.source),

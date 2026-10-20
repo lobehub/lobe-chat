@@ -1,16 +1,14 @@
 'use client';
 
-import { Flexbox, Icon } from '@lobehub/ui';
-import { Button, Text } from '@lobehub/ui/base-ui';
-import { createStaticStyles, cssVar } from 'antd-style';
+import { Button, createStaticStyles, cssVar, Flexbox, Icon, Text } from '@lobehub/ui';
 import {
   BadgeCheck,
   CircleAlert,
   ListTodo,
   Loader2,
   MessageSquarePlus,
-  RefreshCw,
   RotateCcw,
+  Wrench,
 } from 'lucide-react';
 import { memo, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -18,6 +16,20 @@ import { useTranslation } from 'react-i18next';
 import { acceptanceContentLayout } from '../layout';
 
 const styles = createStaticStyles(({ css }) => ({
+  repairingArc: css`
+    transform-origin: center;
+    animation: acceptance-repairing-orbit 1.2s linear infinite;
+
+    @keyframes acceptance-repairing-orbit {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      animation: none;
+    }
+  `,
   /* Floats over the scrolling checklist — the decision stays reachable
      however deep the review goes. */
   bar: css`
@@ -102,6 +114,49 @@ type BarState = 'accepted' | 'live' | 'rejected' | 'settled';
  * At zero it reads as a dashed "not started" circle; the completed state is
  * rendered by the bar as the BadgeCheck disc, not here.
  */
+/**
+ * A repair round in flight: a steady wrench — what is happening — inside a
+ * travelling arc — that it is still happening. Same ring geometry as the review
+ * dial, so the bar's marks read as one family instead of a spinning reload glyph.
+ */
+const RepairingMark = memo(() => {
+  const size = 20;
+  const stroke = 2;
+  const radius = (size - stroke) / 2;
+  const circumference = 2 * Math.PI * radius;
+
+  return (
+    <div style={{ flex: 'none', height: size, position: 'relative', width: size }}>
+      <svg height={size} width={size}>
+        <circle
+          cx={size / 2}
+          cy={size / 2}
+          fill={'none'}
+          r={radius}
+          stroke={cssVar.colorWarningBg}
+          strokeWidth={stroke}
+        />
+        <circle
+          className={styles.repairingArc}
+          cx={size / 2}
+          cy={size / 2}
+          fill={'none'}
+          r={radius}
+          stroke={cssVar.colorWarning}
+          strokeDasharray={`${circumference * 0.3} ${circumference}`}
+          strokeLinecap={'round'}
+          strokeWidth={stroke}
+        />
+      </svg>
+      <Flexbox align={'center'} justify={'center'} style={{ inset: 0, position: 'absolute' }}>
+        <Icon color={cssVar.colorWarning} icon={Wrench} size={10} />
+      </Flexbox>
+    </div>
+  );
+});
+
+RepairingMark.displayName = 'AcceptanceRepairingMark';
+
 const ProgressRing = memo<{ done: number; total: number }>(({ done, total }) => {
   const size = 20;
   const stroke = 2;
@@ -234,11 +289,9 @@ const DecisionBar = memo<DecisionBarProps>(
 
     const stateMeta = {
       accepted: { color: cssVar.colorSuccess, icon: BadgeCheck },
-      // A repair round is an in-progress TASK — warn-coloured refresh, matching
-      // the task-process cue; a plain verify stays neutral info.
-      live: repairing
-        ? { color: cssVar.colorWarning, icon: RefreshCw }
-        : { color: cssVar.colorInfo, icon: Loader2 },
+      // A repair round renders its own RepairingMark below; a plain verify
+      // stays a neutral info spinner.
+      live: { color: cssVar.colorInfo, icon: Loader2 },
       rejected: { color: cssVar.colorError, icon: RotateCcw },
       settled: null,
     }[state];
@@ -269,7 +322,9 @@ const DecisionBar = memo<DecisionBarProps>(
     return (
       <div className={styles.bar}>
         <Flexbox horizontal align={'center'} className={styles.summary} gap={8}>
-          {stateMeta ? (
+          {state === 'live' && repairing ? (
+            <RepairingMark />
+          ) : stateMeta ? (
             // accepted / live / rejected — a plain coloured status mark.
             <Icon
               color={stateMeta.color}

@@ -1,14 +1,12 @@
 'use client';
 
-import type { ClaudeCodeQuotaSnapshot } from '@lobechat/electron-client-ipc';
-import { Flexbox } from '@lobehub/ui';
-import { ActionIcon, Button, Text } from '@lobehub/ui/base-ui';
-import { createStaticStyles, cssVar } from 'antd-style';
+import type { QuotaAccountIdentity } from '@lobechat/heterogeneous-agents/quota';
+import { ActionIcon, Button, createStaticStyles, cssVar, Flexbox, Text } from '@lobehub/ui';
 import { CalendarDaysIcon } from 'lucide-react';
 import { memo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { openQuotaCalendarModal } from '@/features/AgentQuotaCalendar';
+import { openQuotaCalendarModal, type QuotaCalendarProvider } from '@/features/AgentQuotaCalendar';
 import { useAgentId } from '@/features/ChatInput/hooks/useAgentId';
 
 import { openQuotaAccountManagerModal } from './QuotaAccountManagerModal';
@@ -32,8 +30,9 @@ const styles = createStaticStyles(({ css }) => ({
  */
 const QuotaAccountSwitcher = memo<{
   placement?: 'top' | 'bottom';
-  snapshot: ClaudeCodeQuotaSnapshot;
-}>(({ snapshot, placement = 'top' }) => {
+  provider: QuotaCalendarProvider;
+  snapshot: { identity?: QuotaAccountIdentity | null };
+}>(({ snapshot, provider, placement = 'top' }) => {
   const { t } = useTranslation('chat');
   const agentId = useAgentId();
   const identity = snapshot.identity;
@@ -66,12 +65,23 @@ const QuotaAccountSwitcher = memo<{
           size={'small'}
           style={{ flex: 'none' }}
           title={t('heteroAgent.claudeQuota.calendar.entry')}
-          onClick={() => openQuotaCalendarModal({ externalAccountId: identity?.externalAccountId })}
+          onClick={() =>
+            openQuotaCalendarModal({ externalAccountId: identity?.externalAccountId, provider })
+          }
         />
       </Flexbox>
-      <Button size={'small'} style={{ flex: 'none' }} onClick={openManager}>
-        {t('heteroAgent.claudeQuota.manage.entry')}
-      </Button>
+      {/*
+       * The account manager edits provider-blind agent bindings and runtime
+       * routing only honors them for claude-code, so offering it from another
+       * provider's panel could pin a foreign account onto Claude runs. Until
+       * management and routing are provider-scoped end to end, the other
+       * providers get a calendar-only header.
+       */}
+      {provider === 'claude-code' && (
+        <Button size={'small'} style={{ flex: 'none' }} onClick={openManager}>
+          {t('heteroAgent.claudeQuota.manage.entry')}
+        </Button>
+      )}
     </Flexbox>
   );
 });

@@ -1,4 +1,7 @@
 {
+  "error.invalidFormat.desc": "まだ読むことはできます。レイアウトが元の形式と異なる場合があります。",
+  "error.invalidFormat.ownerHint": "エディターで再保存して、元のレイアウトを復元してください。",
+  "error.invalidFormat.title": "このページは元の形式で表示できませんでした",
   "popover.copyLink": "リンクをコピー",
   "popover.copyLinkSuccess": "リンクをコピーしました",
   "popover.linkHint": "リンクを知っている人はこのページを閲覧できます",

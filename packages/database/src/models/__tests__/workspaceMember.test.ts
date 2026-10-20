@@ -12,6 +12,8 @@ import {
   workspaceInvitations,
   workspaceMembers,
   workspaces,
+  workspaceTeamMembers,
+  workspaceTeams,
 } from '../../schemas';
 import type { LobeChatDatabase } from '../../type';
 import { WorkspaceMemberModel } from '../workspaceMember';
@@ -118,6 +120,33 @@ describe('WorkspaceMemberModel', () => {
       await model.addMember({ userId: memberId, workspaceId });
 
       expect(await model.getMember(otherWorkspaceId, memberId)).toBeUndefined();
+    });
+  });
+
+  describe('getRolesInWorkspaces', () => {
+    it("returns the user's active role per workspace in one read", async () => {
+      const model = new WorkspaceMemberModel(serverDB, inviterId);
+      await model.addMember({ role: 'viewer', userId: memberId, workspaceId });
+      await model.addMember({ role: 'admin', userId: memberId, workspaceId: otherWorkspaceId });
+      await model.addMember({ userId: otherUserId, workspaceId });
+
+      const roles = await model.getRolesInWorkspaces([workspaceId, otherWorkspaceId], memberId);
+
+      expect(Object.fromEntries(roles)).toEqual({
+        [otherWorkspaceId]: 'admin',
+        [workspaceId]: 'viewer',
+      });
+    });
+
+    it('omits workspaces the user left or never joined', async () => {
+      const model = new WorkspaceMemberModel(serverDB, inviterId);
+      await model.addMember({ userId: memberId, workspaceId });
+      await model.removeMember(workspaceId, memberId);
+
+      expect(await model.getRolesInWorkspaces([workspaceId, otherWorkspaceId], memberId)).toEqual(
+        new Map(),
+      );
+      expect(await model.getRolesInWorkspaces([], memberId)).toEqual(new Map());
     });
   });
 
@@ -272,6 +301,29 @@ describe('WorkspaceMemberModel', () => {
           and(eq(workspaceMembers.workspaceId, workspaceId), eq(workspaceMembers.userId, memberId)),
         );
       expect(row.deletedAt).not.toBeNull();
+    });
+
+    it('drops their team memberships so a re-invite does not restore them', async () => {
+      const model = new WorkspaceMemberModel(serverDB, inviterId);
+      await model.addMember({ userId: memberId, workspaceId });
+      await model.addMember({ userId: memberId, workspaceId: otherWorkspaceId });
+      await serverDB.insert(workspaceTeams).values([
+        { id: 'wm-team', identifier: 'ENG', name: 'Eng', workspaceId },
+        { id: 'wm-other-team', identifier: 'ENG', name: 'Eng', workspaceId: otherWorkspaceId },
+      ]);
+      await serverDB.insert(workspaceTeamMembers).values([
+        { teamId: 'wm-team', userId: memberId, workspaceId },
+        { teamId: 'wm-other-team', userId: memberId, workspaceId: otherWorkspaceId },
+      ]);
+
+      await model.removeMember(workspaceId, memberId);
+      await model.addMember({ userId: memberId, workspaceId });
+
+      const rows = await serverDB
+        .select({ teamId: workspaceTeamMembers.teamId })
+        .from(workspaceTeamMembers)
+        .where(eq(workspaceTeamMembers.userId, memberId));
+      expect(rows).toEqual([{ teamId: 'wm-other-team' }]);
     });
 
     it('does not touch members of other workspaces', async () => {

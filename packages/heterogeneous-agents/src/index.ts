@@ -6,16 +6,11 @@ export {
   QoderAdapter,
 } from './adapters';
 export {
-  buildClaudeCodeDirectEnv,
-  type BuildClaudeCodeDirectEnvInput,
-  type BuildClaudeCodeDirectEnvResult,
-  CLAUDE_CODE_API_LOCAL_ONLY_ERROR,
-  HETEROGENEOUS_PROVIDER_BINDING_LOCAL_ONLY_ERROR,
-  HETEROGENEOUS_PROVIDER_BINDING_PERSONAL_ONLY_ERROR,
-  normalizeAnthropicSdkBaseURL,
-  sanitizeClaudeCodeDirectArgs,
-  sanitizeClaudeCodeDirectEnv,
-} from './claudeCodeDirectEnv';
+  appendAttachedFilesToPrompt,
+  buildAttachedFilesPrompt,
+  collectHeteroAttachedFiles,
+  type HeteroAttachedFileRef,
+} from './attachedFiles';
 export type {
   HeterogeneousAgentCliError,
   HeterogeneousAgentDescriptor,
@@ -23,6 +18,8 @@ export type {
   HeterogeneousAgentType,
   LocalHeterogeneousAgentDescriptor,
   LocalHeterogeneousAgentType,
+  LocalRuntimeHeterogeneousAgentDescriptor,
+  LocalRuntimeHeterogeneousAgentType,
   RemoteHeterogeneousAgentDescriptor,
   RemoteHeterogeneousAgentType,
 } from './config';
@@ -48,8 +45,10 @@ export {
   HETEROGENEOUS_AGENT_CONFIGS,
   isHeterogeneousAgentAuthRequired,
   isLocalHeterogeneousType,
+  isLocalRuntimeHeterogeneousType,
   isRemoteHeterogeneousType,
   LOCAL_HETEROGENEOUS_AGENT_TYPES,
+  LOCAL_RUNTIME_HETEROGENEOUS_AGENT_CONFIGS,
   OPENCODE_CLI_INSTALL_COMMANDS,
   OPENCODE_CLI_INSTALL_DOCS_URL,
   PI_CLI_INSTALL_COMMANDS,
@@ -105,32 +104,27 @@ export type {
   ResolveHeterogeneousProviderBindingInput,
   ResolveHeterogeneousProviderBindingResult,
   ServerDefaultHeterogeneousAgentType,
-  ServerDefaultHeterogeneousCompatibilityProfile,
   ServerDefaultHeterogeneousIngress,
-  ServerDefaultHeterogeneousModelPolicy,
   ServerDefaultHeterogeneousTokenHeader,
 } from './providerBinding';
 export {
+  CLAUDE_CODE_API_LOCAL_ONLY_ERROR,
   formatHeterogeneousProviderBindingError,
   getHeterogeneousProviderBindingCapability,
   getProviderInferenceProtocols,
   getServerDefaultHeterogeneousAgentConfig,
   HETEROGENEOUS_PROVIDER_BINDING_AGENT_TYPES,
+  HETEROGENEOUS_PROVIDER_BINDING_LOCAL_ONLY_ERROR,
+  HETEROGENEOUS_PROVIDER_BINDING_PERSONAL_ONLY_ERROR,
   isHeterogeneousProviderBindingSupported,
   isServerDefaultHeterogeneousAgentType,
-  isServerDefaultHeterogeneousProfileModel,
   resolveHeterogeneousProviderBinding,
   resolveProviderBindingProtocol,
   SERVER_DEFAULT_HETEROGENEOUS_AGENT_CONFIG,
   SERVER_DEFAULT_HETEROGENEOUS_AGENT_TYPES,
-  SERVER_DEFAULT_HETEROGENEOUS_PROFILE_DEFAULT_MODELS,
 } from './providerBinding';
 export { createAdapter, listAgentTypes, listLocalAgentTypes } from './registry';
 export type { HeterogeneousAgentScanMap, HeterogeneousAgentScanStatus } from './scan/types';
-export {
-  classifyHeteroProcessFailure,
-  isHeteroStatusGuideErrorData,
-} from './spawn/classifyProcessFailure';
 export type {
   CreateMessageIntent,
   CreateThreadIntent,

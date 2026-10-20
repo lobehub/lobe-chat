@@ -23,6 +23,9 @@ let last401Time = 0;
 let lastMarket401Time = 0;
 const MIN_401_INTERVAL = 5000; // 5 seconds
 
+const isPublicShareRoute = () =>
+  typeof location !== 'undefined' && location.pathname.startsWith('/share/');
+
 // `@trpc/client` throws `TransformResultError` when a response body parses as
 // JSON but is not a `TRPCResponse` — the desktop proxy's 502 network envelope
 // (`{ errorType, body }`), a gateway/WAF JSON error page, and so on. Its message
@@ -96,8 +99,10 @@ const errorHandlingLink: TRPCLink<LambdaRouter> = () => {
                   if (now - last401Time > MIN_401_INTERVAL) {
                     last401Time = now;
                     // Desktop app doesn't have the web auth routes like `/signin`,
-                    // so skip the login redirect/notification there.
-                    if (!isDesktop) {
+                    // so skip the login redirect/notification there. A public
+                    // share page renders without a session, so a 401 from a side
+                    // query there must not log the reader out or leave the page.
+                    if (!isDesktop && !isPublicShareRoute()) {
                       const { getUserStoreState } = await import('@/store/user/store');
                       const { isSignedIn, logout } = getUserStoreState();
                       // If user is still marked as signed in but got 401,
@@ -107,9 +112,11 @@ const errorHandlingLink: TRPCLink<LambdaRouter> = () => {
                         params.set('reason', 'sessionExpired');
                         await logout({ redirectTo: `/signin?${params.toString()}` });
                       } else {
+                        // No session to expire: ask to sign in without the
+                        // "session expired" notice.
                         const { loginRequired } =
                           await import('@/components/Error/loginRequiredNotification');
-                        loginRequired.redirect({ reason: 'sessionExpired' });
+                        loginRequired.redirect();
                       }
                     }
                   }
@@ -201,7 +208,31 @@ const initialLoadProcedures = new Set(['user.getUserState', 'config.getGlobalCon
 // its `JSON.parse` with `Unexpected token '<'`. Split it out so a slow message
 // read only slows itself.
 const slowProcedures = new Set(['market.getAssistantList', 'message.getMessages']);
-const SKIP_BATCH_PROCEDURES = new Set([...initialLoadProcedures, ...slowProcedures]);
+// Procedures whose latency is felt directly as "the UI is stuck". The gateway
+// token refresh gates every reconnect: until it answers, the client cannot
+// register the local operation that drives the status tray, the sidebar elapsed
+// time and the stop button — so a topic switch shows a live run as idle for as
+// long as the slowest procedure sharing its batch. It is a cheap read; give it
+// its own request instead of the shared queue.
+const latencyCriticalProcedures = new Set([
+  'aiAgent.refreshGatewayToken',
+  // The share-visitor mirror of the same reconnect handshake.
+  'shareChat.refreshGatewayToken',
+]);
+const SKIP_BATCH_PROCEDURES = new Set([
+  ...initialLoadProcedures,
+  ...slowProcedures,
+  ...latencyCriticalProcedures,
+]);
+
+// Every `device.*` read leaves the server and hops to one of the user's own
+// machines, where the server waits out a 10-60s RPC timeout if that machine is
+// asleep, offline or busy. Batched with ordinary lambda reads, one such hop
+// holds the whole batch's response — opening a topic with a working directory
+// fires several of them at once (git branch / ahead-behind / working tree /
+// linked PR / agent quota). Keep them batched among themselves, but in their
+// own dataloader so they can only ever delay each other.
+const DEVICE_RPC_PREFIX = 'device.';
 
 // Queries whose input can exceed the GET URL budget (`maxURLLength` 2083):
 // the transfer-job status poll sends the visible-topic candidate set (up to
@@ -211,18 +242,57 @@ const SKIP_BATCH_PROCEDURES = new Set([...initialLoadProcedures, ...slowProcedur
 const LARGE_INPUT_QUERY_PROCEDURES = new Set([
   'agent.getTransferJobStatus',
   'group.getTransferJobStatus',
+  // Takes every projected tool row of a topic at once; ~60 ids already exceed
+  // the batched GET's 2083-char budget, and a tool-heavy topic is exactly when
+  // it is called.
+  'message.getToolResultPayloads',
 ]);
 
+/**
+ * Operation context key for the one-shot LLM relay headers (`withLlmRelay`):
+ * the tab subscribed a gateway channel for this call's LLM requests, and the
+ * server must see which. Per call, so such a call never shares a batch.
+ */
+export const LLM_RELAY_HEADERS_CONTEXT_KEY = 'llmRelayHeaders';
+
+const getLlmRelayHeaders = (op: { context: Record<string, unknown> }) =>
+  op.context?.[LLM_RELAY_HEADERS_CONTEXT_KEY] as Record<string, string> | undefined;
+
+/** TRPC call options carrying a one-shot relay's headers; none without a relay. */
+export const withLlmRelay = (relay?: { headers: Record<string, string> }) =>
+  relay ? { context: { [LLM_RELAY_HEADERS_CONTEXT_KEY]: relay.headers } } : undefined;
+
 // 3. splitLink to conditionally disable batching
-const buildHttpLinks = (options: typeof linkOptions) =>
+const buildBatchedHttpLinks = (options: typeof linkOptions) =>
   splitLink({
     condition: (op) => LARGE_INPUT_QUERY_PROCEDURES.has(op.path),
     false: splitLink({
       condition: (op) => SKIP_BATCH_PROCEDURES.has(op.path),
-      false: httpBatchLink({ ...options, maxURLLength: 2083 }),
+      false: splitLink({
+        condition: (op) => op.path.startsWith(DEVICE_RPC_PREFIX),
+        // Two distinct link instances on purpose: each `httpBatchLink` owns its
+        // own dataloader, which is what keeps the device hops in a separate HTTP
+        // request from everything else.
+        false: httpBatchLink({ ...options, maxURLLength: 2083 }),
+        true: httpBatchLink({ ...options, maxURLLength: 2083 }),
+      }),
       true: httpLink(options),
     }),
     true: httpLink({ ...options, methodOverride: 'POST' }),
+  });
+
+const buildHttpLinks = (options: typeof linkOptions) =>
+  splitLink({
+    condition: (op) => !!getLlmRelayHeaders(op),
+    false: buildBatchedHttpLinks(options),
+    true: httpLink({
+      ...options,
+      headers: async ({ op }) => ({
+        ...(await options.headers()),
+        ...getLlmRelayHeaders(op),
+      }),
+      methodOverride: 'POST',
+    }),
   });
 
 const customSplitLink = splitLink({

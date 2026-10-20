@@ -1,28 +1,36 @@
 'use client';
 
-import type { AcceptanceCommentItem } from '@lobechat/types';
-import { Flexbox, Icon } from '@lobehub/ui';
-import { Button, Text } from '@lobehub/ui/base-ui';
-import { createStaticStyles, cssVar, cx } from 'antd-style';
-import { BadgeCheck, GitCommitHorizontal } from 'lucide-react';
+import type { AcceptanceCommentThread } from '@lobechat/types';
+import { Button, createStaticStyles, cssVar, Flexbox, Text } from '@lobehub/ui';
+import { BadgeCheck, Undo2 } from 'lucide-react';
 import { nanoid } from 'nanoid';
-import { memo, useMemo } from 'react';
+import { memo, useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { useActivityTime } from '@/hooks/useActivityTime';
 import { useUserStore } from '@/store/user';
 import { authSelectors, userProfileSelectors } from '@/store/user/selectors';
 import { buildAuthReturnUrl, currentReturnPath } from '@/utils/authReturnUrl';
 
 import { useAcceptanceScope } from '../AcceptanceScope';
 import { useAcceptanceBundle } from '../useAcceptanceBundle';
-import { commentAnchorId, useCommentAnchor } from './anchor';
-import CommentCard, { commentAuthorName, CommentAvatar } from './CommentCard';
+import { useCommentAnchor } from './anchor';
+import { commentAuthorName } from './CommentCard';
 import CommentComposer from './CommentComposer';
+import DiscussionAside from './DiscussionAside';
+import {
+  CheckReference,
+  entryStyles,
+  TimelineMessage,
+  TimelineRegion,
+  TimelineRound,
+} from './DiscussionEntries';
+import { type DiscussionSection, groupDiscussionByRound } from './discussionRounds';
 import type { DiscussionEntry } from './discussionTimeline';
 import { buildDiscussionTimeline } from './discussionTimeline';
 import { useAcceptanceComments } from './hooks';
-import { styles, TIMELINE_NODE } from './styles';
+import RoundSection from './RoundSection';
+import { styles } from './styles';
+import TimelineEvent from './TimelineEvent';
 
 /** Enough room to start writing without the box dominating the column. */
 const COMPOSER_MIN_HEIGHT = 80;
@@ -56,10 +64,28 @@ const SignInPrompt = memo(() => {
 SignInPrompt.displayName = 'AcceptanceDiscussionSignInPrompt';
 
 const local = createStaticStyles(({ css }) => ({
+  composer: css`
+    margin-block: 12px 4px;
+  `,
   empty: css`
     padding-block: 16px;
     font-size: 13px;
     color: ${cssVar.colorTextTertiary};
+  `,
+  feed: css`
+    flex: 999 1 480px;
+    min-width: 0;
+  `,
+  round: css`
+    & + & {
+      margin-block-start: 28px;
+    }
+  `,
+  layout: css`
+    display: flex;
+    flex-wrap: wrap;
+    gap: 32px;
+    align-items: flex-start;
   `,
   signInPrompt: css`
     padding-block: 16px;
@@ -71,160 +97,91 @@ const local = createStaticStyles(({ css }) => ({
   `,
 }));
 
-/** A round landing or an approval — a dot on the rail and one line of text. */
-const TimelineEvent = memo<{ at: Date; icon: typeof BadgeCheck; text: string }>(
-  ({ at, icon, text }) => {
-    const time = useActivityTime(at);
-    return (
-      <Flexbox
-        horizontal
-        align={'center'}
-        className={cx(styles.timelineEntry, styles.eventEntry)}
-        gap={12}
-      >
-        <span className={styles.eventDot}>
-          <Icon icon={icon} size={12} />
-        </span>
-        <Flexbox horizontal align={'center'} className={styles.event} gap={8} wrap={'wrap'}>
-          <span>{text}</span>
-          <span className={styles.meta} title={time.title}>
-            {time.text}
-          </span>
-        </Flexbox>
-      </Flexbox>
-    );
-  },
-);
+const entryCommentIds = (entry: DiscussionEntry): string[] => {
+  if (entry.kind === 'message') return [entry.comment.id];
+  if (entry.kind === 'region')
+    return [entry.thread.root.id, ...entry.thread.replies.map((reply) => reply.id)];
+  if (entry.kind === 'round' && entry.proposal) return [entry.proposal.id];
+  return [];
+};
 
-TimelineEvent.displayName = 'AcceptanceTimelineEvent';
+const sectionKey = (section: DiscussionSection) => String(section.roundIndex ?? 'before');
 
 /**
- * A round. With a note it IS the agent's turn: one entry whose header says
- * "<agent> completed round N" and whose body is what they wrote. The landing
- * and the author are the same sentence, so neither an event row above the note
- * nor a second author line is needed. Without a note it stays the plain event.
- */
-const TimelineRound = memo<{
-  anchored?: boolean;
-  at: Date;
-  onReact: (id: string, emoji: string, on: boolean) => Promise<void>;
-  proposal?: AcceptanceCommentItem;
-  reactable: boolean;
-  roundIndex: number;
-}>(({ anchored, at, onReact, proposal, reactable, roundIndex }) => {
-  const { t } = useTranslation('verify');
-  if (!proposal)
-    return (
-      <TimelineEvent
-        at={at}
-        icon={GitCommitHorizontal}
-        text={t('acceptance.comments.roundLanded', { round: roundIndex })}
-      />
-    );
-  return (
-    <Flexbox
-      horizontal
-      align={'flex-start'}
-      className={styles.timelineEntry}
-      gap={12}
-      id={commentAnchorId(proposal.id)}
-    >
-      <span className={styles.timelineNode}>
-        <CommentAvatar comment={proposal} size={TIMELINE_NODE} />
-      </span>
-      <Flexbox className={cx(styles.box, anchored && styles.boxAnchored)}>
-        <CommentCard
-          anchored
-          comment={proposal}
-          reactable={reactable}
-          nameOverride={t('acceptance.comments.roundCompletedBy', {
-            name: commentAuthorName(proposal.author),
-            round: roundIndex,
-          })}
-          onReact={onReact}
-        />
-      </Flexbox>
-    </Flexbox>
-  );
-});
-
-TimelineRound.displayName = 'AcceptanceTimelineRound';
-
-/** One chat message: the author's face on the rail, the remark beside it. */
-const TimelineMessage = memo<{
-  anchored: boolean;
-  comment: AcceptanceCommentItem;
-  onDelete: (id: string) => Promise<void>;
-  onReact: (id: string, emoji: string, on: boolean) => Promise<void>;
-  reactable: boolean;
-  /** Written by whoever is reading — GitHub paints their own turns blue. */
-  self: boolean;
-}>(({ anchored, comment, onDelete, onReact, reactable, self }) => (
-  <Flexbox
-    horizontal
-    align={'flex-start'}
-    className={styles.timelineEntry}
-    gap={12}
-    id={commentAnchorId(comment.id)}
-  >
-    <span className={styles.timelineNode}>
-      <CommentAvatar comment={comment} size={TIMELINE_NODE} />
-    </span>
-    <Flexbox className={cx(styles.box, self && styles.boxSelf, anchored && styles.boxAnchored)}>
-      <CommentCard
-        anchored
-        comment={comment}
-        reactable={reactable}
-        onDelete={onDelete}
-        onReact={onReact}
-      />
-    </Flexbox>
-  </Flexbox>
-));
-
-TimelineMessage.displayName = 'AcceptanceTimelineMessage';
-
-/*
- * The rail runs inside the boxes rather than under the avatars, so nothing here
- * needs to sit above the line: the opaque boxes cover it, the event dots stand
- * on it, and the gaps between turns are where it shows.
- */
-
-/**
- * The delivery's chat: one message per turn, strung on a rail with the rounds
- * that landed and the approvals people gave, and the composer at the end.
+ * The delivery's activity, one section per round: what landed, what people
+ * said about it, and how it was decided. The newest round reads first and
+ * open; older rounds fold to their header line.
  *
- * Only chat lives here. A note circled on a screenshot reads next to that spot
- * and nowhere else, so it stays on the check that owns the evidence — which is
- * also why nothing here offers "reply" or "resolve": those belong to a note
- * about a place, not to a remark in a conversation.
+ * Deciding stays on the checklist, where the evidence is — the aside only
+ * points there.
  */
-const AcceptanceDiscussion = memo(() => {
+const AcceptanceDiscussion = memo<{ onOpenChecks?: () => void }>(({ onOpenChecks }) => {
   const { t } = useTranslation('verify');
   const { acceptanceId, embedded } = useAcceptanceScope();
   const viewerId = useUserStore(userProfileSelectors.userId);
   const isSignedIn = useUserStore(authSelectors.isLogin);
   const { data } = useAcceptanceBundle(acceptanceId);
-  const { canComment, create, error, isLoading, items, react, remove, threads } =
-    useAcceptanceComments(acceptanceId);
+  const {
+    canApprove,
+    canComment,
+    create,
+    error,
+    isLoading,
+    items,
+    react,
+    remove,
+    setResolved,
+    threads,
+  } = useAcceptanceComments(acceptanceId);
+  const [toggled, setToggled] = useState<Record<string, boolean>>({});
 
   const currentRunId = data?.rounds.at(-1)?.run.id;
   const anchoredId = useCommentAnchor(items, embedded);
+  const checksById = useMemo(
+    () => new Map((data?.checks ?? []).map((check) => [check.id, check])),
+    [data?.checks],
+  );
 
   const timeline = useMemo(
     () =>
       buildDiscussionTimeline({
         approvals: items.filter((item) => item.kind === 'approval'),
+        checks: data?.checks,
         items,
         rounds: (data?.rounds ?? []).map(({ run }) => ({
           createdAt: run.createdAt,
+          decisionDetail: run.decisionDetail,
           id: run.id,
           roundIndex: run.roundIndex,
+          userDecision: run.userDecision,
         })),
         threads,
       }),
-    [data?.rounds, items, threads],
+    [data?.checks, data?.rounds, items, threads],
   );
+  const sections = useMemo(() => groupDiscussionByRound(timeline), [timeline]);
+  const anchoredSection = anchoredId
+    ? sections.find((section) =>
+        section.entries.some((entry) => entryCommentIds(entry).includes(anchoredId)),
+      )
+    : undefined;
+
+  // Same rule as on the check row: whoever raised a note may close it, and
+  // the delivery's reviewers may close anyone's.
+  const canResolveThread = useCallback(
+    (thread: AcceptanceCommentThread) =>
+      canApprove ||
+      (Boolean(viewerId) && thread.root.authorUserId === viewerId && !thread.root.deletedAt),
+    [canApprove, viewerId],
+  );
+  const replyToRegion = (rootId: string, content: string, attachments: { fileId: string }[]) =>
+    create({
+      attachments,
+      clientId: `${rootId}:${Date.now()}`,
+      content,
+      contextRunId: currentRunId,
+      parentCommentId: rootId,
+    });
 
   if (isLoading && timeline.length === 0 && !canComment) return null;
 
@@ -241,6 +198,55 @@ const AcceptanceDiscussion = memo(() => {
           onReact={react}
         />
       );
+    if (entry.kind === 'region')
+      return (
+        <TimelineRegion
+          anchored={entry.thread.root.id === anchoredId}
+          canComment={canComment}
+          canResolve={canResolveThread(entry.thread)}
+          key={entry.thread.root.id}
+          thread={entry.thread}
+          check={
+            entry.thread.root.checkItemId
+              ? checksById.get(entry.thread.root.checkItemId)
+              : undefined
+          }
+          onDelete={remove}
+          onReply={replyToRegion}
+          onResolve={setResolved}
+        />
+      );
+    if (entry.kind === 'checkReject') {
+      const check = checksById.get(entry.checkItemId);
+      return (
+        <TimelineEvent
+          at={entry.at}
+          icon={Undo2}
+          key={`reject-${entry.checkItemId}-${entry.at.getTime()}`}
+          text={
+            <>
+              <CheckReference check={check} />{' '}
+              {t('acceptance.comments.checkRejected', { round: entry.roundIndex })}
+              {entry.annotationCount > 0 &&
+                ` · ${t('acceptance.comments.checkRejectedRegions', { count: entry.annotationCount })}`}
+            </>
+          }
+        >
+          {entry.comment && <div className={entryStyles.quote}>{entry.comment}</div>}
+        </TimelineEvent>
+      );
+    }
+    if (entry.kind === 'roundReject')
+      return (
+        <TimelineEvent
+          at={entry.at}
+          icon={Undo2}
+          key={`round-reject-${entry.roundIndex}`}
+          text={t('acceptance.comments.roundRejected', { round: entry.roundIndex })}
+        >
+          {entry.comment && <div className={entryStyles.quote}>{entry.comment}</div>}
+        </TimelineEvent>
+      );
     if (entry.kind === 'approval') {
       const who =
         entry.approval.contextRoundIndex === null
@@ -252,8 +258,7 @@ const AcceptanceDiscussion = memo(() => {
               round: entry.approval.contextRoundIndex,
             });
       // The reviewer's optional one-line summary. Written into the same row and
-      // read nowhere else, so it belongs on the line that announces it — a
-      // field nobody can read back is worse than no field.
+      // read nowhere else, so it belongs on the line that announces it.
       const said = entry.approval.content.trim();
       return (
         <TimelineEvent
@@ -270,51 +275,82 @@ const AcceptanceDiscussion = memo(() => {
         comment={entry.comment}
         key={entry.comment.id}
         reactable={canComment}
-        self={Boolean(viewerId) && entry.comment.authorUserId === viewerId}
         onDelete={remove}
         onReact={react}
       />
     );
   };
 
-  return (
-    <Flexbox>
-      {timeline.length === 0 && (
-        <span className={local.empty}>{t('acceptance.comments.empty')}</span>
-      )}
-      {timeline.map((entry) => renderEntry(entry))}
-
-      {/* Last, like GitHub's Conversation: you read the thread, then answer it. */}
-      {canComment ? (
-        <Flexbox className={cx(styles.timelineEntry, styles.nodelessEntry, styles.tailEntry)}>
-          <Flexbox className={styles.composerBlock}>
-            <CommentComposer
-              minHeight={COMPOSER_MIN_HEIGHT}
-              placeholder={t('acceptance.comments.placeholder')}
-              onSubmit={(content, attachments) =>
-                create({
-                  attachments,
-                  clientId: nanoid(),
-                  content,
-                  contextRunId: currentRunId,
-                })
-              }
-            />
-          </Flexbox>
-        </Flexbox>
-      ) : error ? (
-        // A read that failed says nothing about permission.
-        <Text fontSize={13} type={'secondary'}>
-          {t('acceptance.comments.loadFailed')}
-        </Text>
-      ) : isLoading ? null : isSignedIn ? ( // Neither line below is true yet while the answer is in flight.
-        <Text fontSize={13} type={'secondary'}>
-          {t('acceptance.comments.readOnly')}
-        </Text>
-      ) : (
-        <SignInPrompt />
-      )}
+  const reply = canComment ? (
+    <Flexbox className={local.composer}>
+      <Flexbox className={styles.composerBlock}>
+        <CommentComposer
+          borderless
+          minHeight={COMPOSER_MIN_HEIGHT}
+          placeholder={t('acceptance.comments.placeholder')}
+          onSubmit={(content, attachments) =>
+            create({
+              attachments,
+              clientId: nanoid(),
+              content,
+              contextRunId: currentRunId,
+            })
+          }
+        />
+      </Flexbox>
     </Flexbox>
+  ) : error ? (
+    // A read that failed says nothing about permission.
+    <Text fontSize={13} type={'secondary'}>
+      {t('acceptance.comments.loadFailed')}
+    </Text>
+  ) : isLoading ? null : isSignedIn ? ( // Neither line below is true yet while the answer is in flight.
+    <Text fontSize={13} type={'secondary'}>
+      {t('acceptance.comments.readOnly')}
+    </Text>
+  ) : (
+    <SignInPrompt />
+  );
+
+  const ungrouped = sections.length <= 1 && (sections[0]?.roundIndex ?? null) === null;
+
+  return (
+    <div className={local.layout}>
+      <Flexbox className={local.feed}>
+        {timeline.length === 0 && (
+          <span className={local.empty}>{t('acceptance.comments.empty')}</span>
+        )}
+        {ungrouped ? (
+          <>
+            {sections[0]?.entries.map((entry) => renderEntry(entry))}
+            {reply}
+          </>
+        ) : (
+          sections.map((section, index) => {
+            const key = sectionKey(section);
+            const open = toggled[key] ?? (index === 0 || section === anchoredSection);
+            return (
+              <div className={local.round} key={key}>
+                <RoundSection
+                  open={open}
+                  section={section}
+                  onToggle={() => setToggled((state) => ({ ...state, [key]: !open }))}
+                >
+                  {section.entries.map((entry) => renderEntry(entry))}
+                </RoundSection>
+                {index === 0 && reply}
+              </div>
+            );
+          })
+        )}
+      </Flexbox>
+      <DiscussionAside
+        items={items}
+        latestRound={data?.rounds.at(-1)?.run.roundIndex ?? undefined}
+        status={data?.acceptance.status}
+        onOpenChecks={onOpenChecks}
+      />
+    </div>
   );
 });
 

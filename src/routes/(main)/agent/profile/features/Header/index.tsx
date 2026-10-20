@@ -1,8 +1,7 @@
 import { isDesktop } from '@lobechat/const';
 import { getActivePluginIds, type LobeAgentConfig } from '@lobechat/types';
-import { DropdownMenu, Flexbox, Icon } from '@lobehub/ui';
-import { ActionIcon, confirmModal, type ModalInstance, toast } from '@lobehub/ui/base-ui';
-import { cssVar } from 'antd-style';
+import { cssVar, DropdownMenu, Flexbox, Icon } from '@lobehub/ui';
+import { ActionIcon, confirmModal, type ModalInstance, toast } from '@lobehub/ui';
 import isEqual from 'fast-deep-equal';
 import type { TFunction } from 'i18next';
 import {
@@ -175,7 +174,9 @@ const Header = memo(() => {
         toast.success(t('confirmRemoveSessionSuccess', { ns: 'chat' }));
         navigate('/');
       },
-      title: t('confirmRemoveSessionItemAlert', { ns: 'chat' }),
+      content: t('confirmRemoveSessionItemAlert', { ns: 'chat' }),
+      okText: t('delete', { ns: 'common' }),
+      title: t('delete', { ns: 'common' }),
     });
   }, [activeAgentId, canManage, navigate, removeAgent, t]);
 
@@ -252,7 +253,9 @@ const Header = memo(() => {
   );
 
   const { visible: shareVisible } = useAgentShareSupported(activeAgentId);
-  const canShareAgent = shareVisible === true && canConfigure;
+  // External sharing is stronger than General Access `edit`: only the Agent
+  // creator or a Workspace admin (`canManageResource`) may manage the link.
+  const canShareAgent = shareVisible === true && canManage;
 
   const showMarketSubmission = !!config && !isBuiltinAgent && !isHeterogeneous;
   const canSubmitToMarket = showMarketSubmission && canManage && !lockedByOther && !lockPending;

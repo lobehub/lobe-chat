@@ -97,6 +97,10 @@ export interface ModelTokensUsage {
 
   // Output tokens breakdown
   outputTextTokens?: number;
+  /**
+   * Generated video tokens, billed through the `videoGeneration` pricing unit.
+   */
+  outputVideoTokens?: number;
   rejectedPredictionTokens?: number;
 
   // Total tokens
@@ -127,6 +131,7 @@ export const ModelUsageSchema = z.object({
   outputImageTokens: z.number().optional(),
   outputAudioTokens: z.number().optional(),
   outputReasoningTokens: z.number().optional(),
+  outputVideoTokens: z.number().optional(),
 
   // Prediction tokens
   acceptedPredictionTokens: z.number().optional(),
@@ -139,6 +144,9 @@ export const ModelUsageSchema = z.object({
 
   // Cost
   cost: z.number().optional(),
+
+  // Provider-native subscription credits (e.g. Qoder), separate from USD cost
+  credits: z.number().optional(),
 });
 
 export const ModelPerformanceSchema = z.object({
@@ -195,6 +203,96 @@ export interface AgentDispatchMetadata {
   visibility: 'internal';
 }
 
+/**
+ * The agent that authored a user turn on another agent's behalf (agent → agent
+ * dispatch: a sibling agent calling `lh agent run`). Such rows are persisted
+ * inside the RECEIVING agent's conversation, where the joined `sender` is the
+ * human owner — so without this block the bubble reads as if the user typed it
+ * themselves. The server reads it from the OPERATION that launched the run, and
+ * the UI shows it as the author, using `topicAgentId` + `topicId` to jump back
+ * to where the run was launched.
+ */
+export interface AgentSenderMetadata {
+  /**
+   * The agent that ran the launching turn — the AUTHOR of this message. Taken
+   * from the operation's own agent, which is not always the topic's owner: a
+   * heterogeneous `callSubAgent` child executes in an isolation thread **on its
+   * spawner's topic**, so the child sends while the topic belongs to the parent.
+   */
+  agentId: string;
+  /** Sending agent's avatar at send time; snapshotted so a later delete can't blank the bubble. */
+  avatar?: string;
+  /**
+   * The group conversation the launching turn ran in, when it ran in one rather
+   * than in a one-to-one topic. A group's turns are routed under
+   * `/group/<chatGroupId>/<topicId>`; the agent route would open the supervisor's
+   * own conversation instead of the group the turn actually came from.
+   */
+  chatGroupId?: string;
+  /** Sending agent's personal name at send time; resolve the label with `agentDisplayName`. */
+  name?: string;
+  /**
+   * The thread the launching turn ran in, reopened with `?portalThread=<id>`.
+   * Without it the link lands on the topic's main transcript, which is not where
+   * the turn happened.
+   */
+  threadId?: string;
+  /** Sending agent's role title at send time; the fallback label when it has no name. */
+  title?: string;
+  /**
+   * The agent that OWNS `topicId`, when it is not `agentId`. The jump-back link
+   * targets `/agent/<topicAgentId>/<topicId>` — only the topic's own agent has
+   * that conversation, so a sub-agent sender must not become the link's segment.
+   */
+  topicAgentId?: string;
+  /** The topic the run was launched from, for jumping back. */
+  topicId?: string;
+  /**
+   * The source topic's own name at send time. Snapshotted rather than looked up
+   * because the source topic belongs to ANOTHER agent's conversation, so the
+   * receiving side's topic list does not carry it.
+   */
+  topicTitle?: string;
+}
+
+export const AgentSenderMetadataSchema = z.object({
+  agentId: z.string(),
+  avatar: z.string().optional(),
+  chatGroupId: z.string().optional(),
+  name: z.string().optional(),
+  threadId: z.string().optional(),
+  title: z.string().optional(),
+  topicAgentId: z.string().optional(),
+  topicId: z.string().optional(),
+  topicTitle: z.string().optional(),
+});
+
+/**
+ * Where a server-injected user turn came from when no human typed it: a
+ * provider event (GitHub CI failure, review feedback, …) that woke the
+ * agent. Rendered as a badge on the bubble and usable as a filter key.
+ */
+export interface ExternalOriginMetadata {
+  /** What happened, in the provider's event vocabulary (`ci_failed`, `review_changes_requested`, …). */
+  kind: string;
+  /** Human label of the resource, e.g. `lobehub/lobehub#19728`. */
+  label: string;
+  /** Provider id, e.g. `github`. */
+  provider: string;
+  /** LobeHub-side id of the tracked resource (`scm_change_requests.id`), for lookups. */
+  resourceId?: string;
+  /** Link to the provider resource. */
+  url?: string;
+}
+
+export const ExternalOriginMetadataSchema = z.object({
+  kind: z.string(),
+  label: z.string(),
+  provider: z.string(),
+  resourceId: z.string().optional(),
+  url: z.string().optional(),
+});
+
 export const BotSenderMetadataSchema = z.object({
   avatar: z.string().optional(),
   fullName: z.string().optional(),
@@ -224,13 +322,16 @@ export interface BotSenderMetadata {
 
 export const MessageMetadataSchema = ModelUsageSchema.merge(ModelPerformanceSchema).extend({
   botSender: BotSenderMetadataSchema.optional(),
+  externalOrigin: ExternalOriginMetadataSchema.optional(),
   agentDispatch: AgentDispatchMetadataSchema.optional(),
+  agentSender: AgentSenderMetadataSchema.optional(),
   collapsed: z.boolean().optional(),
   contextSelections: z.array(ContextSelectionSchema).optional(),
   // Hetero-agent (Claude Code) per-message provenance. Listed here so zod does
   // NOT strip them from writes going through UpdateMessageParamsSchema /
   // CreateMessageParamsSchema (the renderer executor's `messageService` path).
   heteroMessageId: z.string().optional(),
+  codexTurnId: z.string().optional(),
   heteroSessionId: z.string().optional(),
   // Durable watermark for replace-only heterogeneous tool-state snapshots.
   // The pair is scoped by operation so a later run may restart seq at 1.
@@ -252,6 +353,7 @@ export const MessageMetadataSchema = ModelUsageSchema.merge(ModelPerformanceSche
   performance: ModelPerformanceSchema.optional(),
   reactions: z.array(EmojiReactionSchema).optional(),
   scope: z.string().optional(),
+  selectedSkillIds: z.array(z.string()).optional(),
   // External-signal lineage for Monitor-style callback turns ().
   signal: MessageSignalSchema.optional(),
   steer: z.boolean().optional(),
@@ -270,11 +372,32 @@ export const MessageMetadataSchema = ModelUsageSchema.merge(ModelPerformanceSche
   usage: ModelUsageSchema.optional(),
 });
 
+/**
+ * `agentSender` is written only by the server, from a verified source operation
+ * (see `resolveAgentSenderFromOperation`), and the renderer trusts it over the
+ * persisted human sender. A client-supplied copy would let any caller make a
+ * message read as another agent's, so client-writable inputs drop it.
+ */
+export const ClientMessageMetadataSchema = MessageMetadataSchema.omit({ agentSender: true });
+
+/** Drops server-owned blocks from metadata a client sent untyped (passthrough / record inputs). */
+export const omitServerOwnedMessageMetadata = <T>(metadata: T): T => {
+  if (!metadata || typeof metadata !== 'object' || !('agentSender' in metadata)) return metadata;
+  const { agentSender: _agentSender, ...rest } = metadata as Record<string, unknown>;
+  return rest as T;
+};
+
 export interface ModelUsage extends ModelTokensUsage {
   /**
    * dollar
    */
   cost?: number;
+  /**
+   * Provider-native subscription credits consumed (e.g. Qoder), for runs whose
+   * CLI reports credits instead of token counts. Not USD — separate from
+   * `cost` so spend math never mixes units.
+   */
+  credits?: number;
 }
 
 export interface ModelPerformance {
@@ -319,9 +442,15 @@ export interface MessageMetadata {
    */
   agentDispatch?: AgentDispatchMetadata;
   /**
+   * Sending agent of an agent → agent turn; see `AgentSenderMetadata`.
+   */
+  agentSender?: AgentSenderMetadata;
+  /**
    * Real platform author of a bot-channel user message; see `BotSenderMetadata`.
    */
   botSender?: BotSenderMetadata;
+  /** Native Codex turn, distinct from an assistant item inside that turn. */
+  codexTurnId?: string;
   /**
    * Message collapse state
    * true: collapsed, false/undefined: expanded
@@ -346,6 +475,17 @@ export interface MessageMetadata {
   cost?: number;
   /** @deprecated use `metadata.performance` instead */
   duration?: number;
+  /**
+   * Where the model request behind this message ran. `client`: the server
+   * relayed it to the user's device (a local model only that device can
+   * reach), so the platform neither paid for nor billed it. Absent: the server.
+   */
+  executionSite?: 'client';
+  /**
+   * The provider event that produced this server-injected user turn
+   * (GitHub CI failure, review feedback, …). See {@link ExternalOriginMetadata}.
+   */
+  externalOrigin?: ExternalOriginMetadata;
   finishType?: string;
   /** Operation owning the durable heterogeneous tool-state watermark. */
   heterogeneousToolStateOperationId?: string;
@@ -417,11 +557,11 @@ export interface MessageMetadata {
   isSupervisor?: boolean;
   /** @deprecated use `metadata.performance` instead */
   latency?: number;
+
   /**
    * Local-system tool snapshots materialized when the user sent @file mentions.
    */
   localSystemToolSnapshots?: LocalSystemToolSnapshot[];
-
   /**
    * Orchestration role of the message author within a group conversation.
    * `'supervisor'` = the group's coordinating agent, `'member'` = a delegated
@@ -471,6 +611,11 @@ export interface MessageMetadata {
    * See MessageMapScope for available values
    */
   scope?: string;
+  /**
+   * Skills the user selected for this user turn, injected with their bodies
+   * on this and every later turn of the topic by the server runtime.
+   */
+  selectedSkillIds?: string[];
   /**
    * External-signal lineage for messages produced as reactive replies
    * to an out-of-band trigger (Monitor stdout push, webhook callback,
@@ -534,6 +679,11 @@ export interface MessageMetadata {
    * but new writers should target the top-level `usage` instead.
    */
   usage?: ModelUsage;
+  /**
+   * The model reported no usage, so the server estimated the token counts from
+   * the request and the output text. Only set alongside `executionSite: 'client'`.
+   */
+  usageEstimated?: boolean;
   /**
    * Agent Run operation id this verify card belongs to (for role='verify' messages).
    * References `agent_operations.id`; the card reads the verify plan + results off it.

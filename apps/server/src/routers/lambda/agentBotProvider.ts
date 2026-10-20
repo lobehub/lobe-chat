@@ -36,6 +36,10 @@ import {
   platformRegistry,
   withResolvedConcurrencySettings,
 } from '@/server/services/bot/platforms';
+import {
+  beginFeishuAppRegistration,
+  pollFeishuAppRegistration,
+} from '@/server/services/bot/platforms/feishu/registration';
 import { GatewayService } from '@/server/services/gateway';
 import { getBotRuntimeStatus } from '@/server/services/gateway/runtimeStatus';
 
@@ -458,15 +462,21 @@ export const agentBotProviderRouter = router({
         platform,
       );
 
+      // A failed check is a normal outcome of this procedure, not a transport
+      // error: return it so the client keeps the per-error `code` and can show
+      // a readable hint next to the platform's raw message.
       if (!result.valid) {
-        throw new TRPCError({
-          code: 'BAD_REQUEST',
-          message:
-            result.errors?.map((e) => `${e.field}: ${e.message}`).join('; ') || 'Validation failed',
-        });
+        const errors = result.errors?.length
+          ? result.errors
+          : [{ field: 'credentials', message: 'Validation failed' }];
+        return {
+          errors,
+          message: errors.map((e) => `${e.field}: ${e.message}`).join('; '),
+          valid: false as const,
+        };
       }
 
-      return { valid: true };
+      return { valid: true as const };
     }),
 
   /**
@@ -567,6 +577,46 @@ export const agentBotProviderRouter = router({
         workspaceId: ctx.workspaceId ?? undefined,
       });
       return pollQrStatus(input.qrcode);
+    }),
+
+  /** Feishu / Lark scan-to-create: returns the QR link that creates the bot app. */
+  feishuRegisterBegin: authedProcedure
+    .input(
+      z.object({
+        avatar: z.string().url().optional(),
+        desc: z.string().max(200).optional(),
+        name: z.string().max(64).optional(),
+        platform: z.enum(['feishu', 'lark']),
+      }),
+    )
+    .mutation(async ({ input, ctx }) => {
+      await assertBotFeatureAccess({
+        action: 'manage',
+        platform: input.platform,
+        userId: ctx.userId,
+        workspaceId: ctx.workspaceId ?? undefined,
+      });
+      const { platform: _platform, ...preset } = input;
+      return beginFeishuAppRegistration(preset);
+    }),
+
+  /** Polls the scan; on success returns the new app's credentials and tenant brand. */
+  feishuRegisterPoll: authedProcedure
+    .input(
+      z.object({
+        brand: z.enum(['feishu', 'lark']),
+        deviceCode: z.string(),
+        platform: z.enum(['feishu', 'lark']),
+      }),
+    )
+    .query(async ({ input, ctx }) => {
+      await assertBotFeatureAccess({
+        action: 'manage',
+        platform: input.platform,
+        userId: ctx.userId,
+        workspaceId: ctx.workspaceId ?? undefined,
+      });
+      return pollFeishuAppRegistration(input.deviceCode, input.brand);
     }),
 
   update: agentBotProviderProcedureWrite

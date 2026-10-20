@@ -5,23 +5,22 @@ import {
   type AgentArtworkStyle,
   DEFAULT_AGENT_ARTWORK_STYLE,
 } from '@lobechat/prompts';
-import { Center, Flexbox, Icon, Tooltip } from '@lobehub/ui';
+import { Center, createStaticStyles, cssVar, Flexbox, Icon, Tooltip } from '@lobehub/ui';
 import {
   ActionIcon,
   Avatar,
   Button,
   type DropdownItem,
   DropdownMenu,
+  Spin,
   Text,
   toast,
-} from '@lobehub/ui/base-ui';
-import { createStaticStyles, cssVar } from 'antd-style';
+} from '@lobehub/ui';
 import { Check, ImageIcon, MoreHorizontal, Trash2, UploadIcon, WandSparkles } from 'lucide-react';
 import { memo, useCallback, useId, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import EmojiPicker from '@/components/EmojiPicker';
-import NeuralNetworkLoading from '@/components/NeuralNetworkLoading';
 import {
   openAgentArtworkStudio,
   styleReferencesForArtworkStyle,
@@ -49,10 +48,6 @@ const styles = createStaticStyles(({ css }) => ({
     border-radius: calc(${cssVar.borderRadiusLG} + 4px);
 
     background: ${cssVar.colorBgContainer};
-
-    .ant-avatar:focus {
-      outline: none;
-    }
   `,
   avatarGenerating: css`
     pointer-events: none;
@@ -96,11 +91,6 @@ const styles = createStaticStyles(({ css }) => ({
     .agent-background:hover &,
     .agent-background:focus-within & {
       opacity: 1;
-    }
-  `,
-  avatarPicker: css`
-    .ant-tabs-tab:has([id$='-tab-generate']) {
-      order: -1;
     }
   `,
   compactBackground: css`
@@ -387,7 +377,7 @@ export const AgentProfileArtwork = memo<AgentProfileArtworkProps>(
           {generating === 'background' ? (
             <Center className={styles.generationFeedback}>
               <Flexbox align={'center'} gap={10}>
-                <NeuralNetworkLoading size={32} />
+                <Spin size="large" variant="network" />
                 <Flexbox align={'center'} gap={4}>
                   <Text className={styles.generationTitle}>
                     {t('settingAgent.artwork.background.generating')}
@@ -496,7 +486,7 @@ export const AgentProfileArtwork = memo<AgentProfileArtworkProps>(
             key={avatarRemountKey(avatar)}
             locale={locale}
             open={canEdit ? undefined : false}
-            popupClassName={`${styles.avatarPicker} agent-avatar-artwork-picker`}
+            popupClassName="agent-avatar-artwork-picker"
             popupProps={{ placement: 'bottomLeft' }}
             shape={'square'}
             size={72}
@@ -543,7 +533,7 @@ export const AgentProfileArtwork = memo<AgentProfileArtworkProps>(
           />
           {generating === 'avatar' ? (
             <Center className={styles.avatarGenerating}>
-              <NeuralNetworkLoading size={28} />
+              <Spin size="middle" variant="network" />
             </Center>
           ) : null}
           {/* Hover-revealed corner badge as the direct studio entry. */}

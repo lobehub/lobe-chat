@@ -1,8 +1,9 @@
-import type { TopicCommentItem } from '@lobechat/types';
+import type { LayersEnum, TopicCommentItem } from '@lobechat/types';
 
 import { projectFileService } from '@/services/projectFile';
 import { type ChatStore } from '@/store/chat/store';
 import { useGlobalStore } from '@/store/global';
+import { getServerConfigStoreState } from '@/store/serverConfig';
 import { type StoreSetter } from '@/store/types';
 import { type PortalArtifact } from '@/types/artifact';
 
@@ -26,6 +27,10 @@ const getCurrentViewType = (portalStack: PortalViewData[]): PortalViewType | nul
   const top = portalStack.at(-1);
   return top?.type ?? null;
 };
+
+/** `filePath` is `dir` itself or lies beneath it, with either path separator (Windows uses a backslash). */
+const isSameOrInsidePath = (filePath: string, dir: string) =>
+  filePath === dir || filePath.startsWith(`${dir}/`) || filePath.startsWith(`${dir}\\`);
 
 const findLocalFileIndexById = (
   openLocalFiles: Array<OpenLocalFileParams & { id?: string }>,
@@ -508,6 +513,10 @@ export class ChatPortalActionImpl {
     this.#get().pushPortalView({ agentDocumentId, documentId, type: PortalViewType.Document });
   };
 
+  openMemoryDetail = (params: { id: string; layer: LayersEnum }): void => {
+    this.#get().pushPortalView({ ...params, type: PortalViewType.MemoryDetail });
+  };
+
   openFilePreview = (file: PortalFile): void => {
     this.#get().pushPortalView({ file, type: PortalViewType.FilePreview });
   };
@@ -587,6 +596,63 @@ export class ChatPortalActionImpl {
     );
   };
 
+  /**
+   * Points open tabs at the paths their files were renamed or moved to, so a
+   * tab — and its unsaved buffer — follows the file instead of going stale.
+   * Moving a folder carries every tab beneath it.
+   */
+  retargetLocalFiles = (moves: { from: string; to: string }[], deviceId?: string): void => {
+    const { activeLocalFileId, activeLocalFileIdsByScope, dirtyLocalFileContents, openLocalFiles } =
+      this.#get();
+    const nextPathOf = (filePath: string) => {
+      for (const { from, to } of moves) {
+        if (isSameOrInsidePath(filePath, from)) return `${to}${filePath.slice(from.length)}`;
+      }
+    };
+
+    const idMap = new Map<string, string>();
+    const nextFiles = openLocalFiles.map((file) => {
+      if (file.sandboxTopicId || file.deviceId !== deviceId) return file;
+      const filePath = nextPathOf(file.filePath);
+      if (!filePath) return file;
+      const next = { ...file, filePath };
+      next.id = createLocalFileTabId(next);
+      idMap.set(getLocalFileTabId(file), next.id);
+      return next;
+    });
+    if (idMap.size === 0) return;
+
+    const remap = (id: string) => idMap.get(id) ?? id;
+    const nextActiveId = activeLocalFileId && remap(activeLocalFileId);
+    const nextActive = nextActiveId && nextFiles.find((file) => file.id === nextActiveId);
+    this.#set(
+      {
+        activeLocalFileId: nextActiveId,
+        activeLocalFileIdsByScope: Object.fromEntries(
+          Object.entries(activeLocalFileIdsByScope).map(([scope, id]) => [scope, remap(id)]),
+        ),
+        ...(nextActive ? { activeLocalFilePath: nextActive.filePath } : {}),
+        dirtyLocalFileContents: Object.fromEntries(
+          Object.entries(dirtyLocalFileContents).map(([id, content]) => [remap(id), content]),
+        ),
+        openLocalFiles: nextFiles,
+      },
+      false,
+      'retargetLocalFiles',
+    );
+  };
+
+  /** Closes the tabs of files that were deleted, including everything under a deleted folder. */
+  closeLocalFilesAt = (paths: string[], deviceId?: string): void => {
+    const removed = this.#get().openLocalFiles.filter(
+      (file) =>
+        !file.sandboxTopicId &&
+        file.deviceId === deviceId &&
+        paths.some((path) => isSameOrInsidePath(file.filePath, path)),
+    );
+    for (const file of removed) this.#get().closeLocalFileTab(getLocalFileTabId(file));
+  };
+
   saveLocalFile = async ({
     deviceId,
     filePath,
@@ -624,6 +690,17 @@ export class ChatPortalActionImpl {
 
   openMessageDetail = (messageId: string): void => {
     this.#get().pushPortalView({ messageId, type: PortalViewType.MessageDetail });
+  };
+
+  /** A dashboard widget in full: data, the dry run that produced a preview, versions and logs. */
+  openDashboardWidget = (widgetId: string, runId?: string): void => {
+    // The widget view only exists while the `dashboard` feature flag is on.
+    if (getServerConfigStoreState()?.featureFlags.enableDashboard !== true) return;
+    this.#get().pushPortalView({
+      ...(runId ? { runId } : {}),
+      type: PortalViewType.DashboardWidget,
+      widgetId,
+    });
   };
 
   openNotebook = (): void => {
@@ -665,6 +742,16 @@ export class ChatPortalActionImpl {
       false,
       'drillIntoGoalNode',
     );
+  };
+
+  /** The wrap-up report's full text, read beside the result page. */
+  openGoalReport = (goalId: string): void => {
+    this.#get().pushPortalView({ goalId, type: PortalViewType.GoalReport });
+  };
+
+  /** One storyline chapter's local map: its main path and the detours off it. */
+  openGoalReportChapter = (goalId: string, chapterIndex: number): void => {
+    this.#get().pushPortalView({ chapterIndex, goalId, type: PortalViewType.GoalReportChapter });
   };
 
   openGoalMetric = (goalId: string, metric: GoalMetricKind): void => {

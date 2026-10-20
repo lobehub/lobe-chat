@@ -1,14 +1,11 @@
 'use client';
 
 import { type FlexboxProps } from '@lobehub/ui';
-import { Flexbox, Tooltip } from '@lobehub/ui';
-import { Badge } from 'antd';
-import { createStaticStyles, cssVar } from 'antd-style';
+import { Badge, createStaticStyles, cssVar, Flexbox, Spin, Tooltip } from '@lobehub/ui';
 import { isUndefined } from 'es-toolkit/compat';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import NeuralNetworkLoading from '@/components/NeuralNetworkLoading';
 import { useClientDataSWR } from '@/libs/swr';
 import { statsKeys } from '@/libs/swr/keys';
 import { agentService } from '@/services/agent';
@@ -68,7 +65,7 @@ const DataStatistics = memo<Omit<FlexboxProps, 'children'>>(({ style, ...rest })
 
   const { t } = useTranslation('common');
 
-  const loading = <NeuralNetworkLoading size={20} />;
+  const loading = <Spin size="middle" />;
 
   const items = [
     {

@@ -1,10 +1,7 @@
 'use client';
 
 import { agentDisplayName } from '@lobechat/types';
-import { Icon } from '@lobehub/ui';
-import { Text } from '@lobehub/ui/base-ui';
-import { Breadcrumb as AntBreadcrumb } from 'antd';
-import { createStaticStyles } from 'antd-style';
+import { Breadcrumb, createStaticStyles, Icon, Text } from '@lobehub/ui';
 import { ChevronRight } from 'lucide-react';
 import { memo, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -17,13 +14,7 @@ import { useAgentRoutePath } from './useAgentRoutePath';
 
 const styles = createStaticStyles(({ css }) => ({
   breadcrumb: css`
-    ol {
-      align-items: center;
-    }
-
-    li,
-    .ant-breadcrumb-link,
-    .ant-breadcrumb-link > a {
+    a {
       display: flex;
       align-items: center;
     }
@@ -61,7 +52,7 @@ const AgentBreadcrumb = memo<AgentBreadcrumbProps>(({ agentId, extraItems, title
   const agentHomePath = buildAgentPath();
 
   return (
-    <AntBreadcrumb
+    <Breadcrumb
       className={styles.breadcrumb}
       separator={<Icon icon={ChevronRight} size={14} />}
       items={[

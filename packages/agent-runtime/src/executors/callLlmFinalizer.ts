@@ -65,16 +65,20 @@ const buildMessageMetadata = ({
   answerSalvagedFromReasoning,
   currentStepSpeed,
   currentStepUsage,
+  executionSite,
   finishType,
   hasContentImages,
   interruptedMidStream,
+  usageEstimated,
 }: {
   answerSalvagedFromReasoning?: boolean;
   currentStepSpeed?: ModelPerformance;
   currentStepUsage?: ModelUsage;
+  executionSite?: LLMAttemptOutput['executionSite'];
   finishType?: string;
   hasContentImages?: boolean;
   interruptedMidStream?: boolean;
+  usageEstimated?: boolean;
 }): CallLlmMessageMetadata | undefined => {
   const metadata: CallLlmMessageMetadata = {
     ...(currentStepUsage && { ...currentStepUsage, usage: currentStepUsage }),
@@ -83,6 +87,8 @@ const buildMessageMetadata = ({
     ...(hasContentImages && { isMultimodal: true }),
     ...(answerSalvagedFromReasoning && { answerSalvagedFromReasoning: true }),
     ...(interruptedMidStream && { interruptedMidStream: true }),
+    ...(executionSite && { executionSite }),
+    ...(usageEstimated && currentStepUsage && { usageEstimated: true }),
   };
 
   return Object.keys(metadata).length > 0 ? metadata : undefined;
@@ -182,8 +188,10 @@ const persistFinalMessage = async ({
     answerSalvagedFromReasoning: output.answerSalvagedFromReasoning,
     currentStepSpeed: output.speed,
     currentStepUsage: output.usage,
+    executionSite: output.executionSite,
     finishType: output.finishReason,
     hasContentImages: output.hasContentImages,
+    usageEstimated: output.usageEstimated,
   });
   const workAnchor = buildWorkAnchor({
     operationId: host.operation.operationId,
@@ -279,20 +287,27 @@ export const finalizeCallLlmTurn = async ({
   stepLabel,
 }: FinalizeCallLlmTurnInput): Promise<InstructionExecutionResult> => {
   const { operation, transports } = host;
-  const toolCallRepeatGuard = updateToolCallRepeatGuard(
-    state.toolCallRepeatGuard,
-    output.toolsCalling,
-  );
-  const finalizedOutput =
-    output.finishReason !== 'abort' && hasRepeatedToolCall(toolCallRepeatGuard)
-      ? {
-          ...output,
-          content: `Stopped after the same tool call was requested ${TOOL_CALL_REPEAT_LIMIT} consecutive times.`,
-          finishReason: 'tool_call_repeat_limit',
-          toolCalls: [],
-          toolsCalling: [],
-        }
-      : output;
+  const repeatCounts = updateToolCallRepeatGuard(state.toolCallRepeatGuard, output.toolsCalling);
+  const stoppedByRepeatLimit = output.finishReason !== 'abort' && hasRepeatedToolCall(repeatCounts);
+  // Carried on the state so the terminal reason can name this stop. Sticky once
+  // set: later turns emit no tool calls, and `updateToolCallRepeatGuard` resets
+  // its counts on those, which would otherwise erase the only trace of why the
+  // run ended.
+  const toolCallRepeatGuard = {
+    ...repeatCounts,
+    ...((stoppedByRepeatLimit || state.toolCallRepeatGuard?.stoppedByRepeatLimit) && {
+      stoppedByRepeatLimit: true,
+    }),
+  };
+  const finalizedOutput = stoppedByRepeatLimit
+    ? {
+        ...output,
+        content: `Stopped after the same tool call was requested ${TOOL_CALL_REPEAT_LIMIT} consecutive times.`,
+        finishReason: 'tool_call_repeat_limit',
+        toolCalls: [],
+        toolsCalling: [],
+      }
+    : output;
 
   events.push({
     result: {
@@ -422,7 +437,9 @@ export const persistInterruptedCallLlmResult = async ({
       metadata: buildMessageMetadata({
         currentStepSpeed: output.speed,
         currentStepUsage: output.usage,
+        executionSite: output.executionSite,
         interruptedMidStream: true,
+        usageEstimated: output.usageEstimated,
       }),
       reasoning: output.thinkingContent ? { content: output.thinkingContent } : undefined,
       tools: sanitizePersistedTools(output.toolsCalling),

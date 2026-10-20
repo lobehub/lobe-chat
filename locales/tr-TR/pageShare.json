@@ -1,4 +1,7 @@
 {
+  "error.invalidFormat.desc": "Hâlâ okuyabilirsiniz. Düzen orijinalinden farklı olabilir.",
+  "error.invalidFormat.ownerHint": "Orijinal düzeni geri yüklemek için düzenleyicide yeniden kaydedin.",
+  "error.invalidFormat.title": "Bu sayfa orijinal formatında gösterilemedi",
   "popover.copyLink": "Bağlantıyı Kopyala",
   "popover.copyLinkSuccess": "Bağlantı kopyalandı",
   "popover.linkHint": "Bağlantıya sahip olan herkes bu sayfayı görüntüleyebilir",

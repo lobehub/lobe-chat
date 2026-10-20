@@ -1,3 +1,4 @@
+import { AcceptanceEvidenceIdentifier } from '@lobechat/builtin-tool-acceptance-evidence';
 import { DEFAULT_MAX_REPAIR_ROUNDS } from '@lobechat/const/verify';
 import type { VerifyCheckItem, VerifyRunMetadata } from '@lobechat/types';
 import debug from 'debug';
@@ -9,9 +10,12 @@ import { VerifyRubricModel } from '@/database/models/verifyRubric';
 import { VerifyRunModel } from '@/database/models/verifyRun';
 import type { VerifyCheckResultItem } from '@/database/schemas/verify';
 import type { LobeChatDatabase } from '@/database/type';
+import { CompletionLifecycle } from '@/server/services/agentRuntime/CompletionLifecycle';
 import { AiAgentService } from '@/server/services/aiAgent';
 
 import { AcceptanceService } from './acceptanceService';
+import { carryPassedResultsForward } from './carryForward';
+import { settleFailedRepair } from './repairTerminal';
 import { VerifyStatusService } from './statusService';
 
 const log = debug('lobe-server:verify-repair');
@@ -96,7 +100,7 @@ export const createRepairRunner = (params: {
     params;
   if (!agentId || !topicId) return undefined;
 
-  return async ({ instruction, operationId, verifyMessageId }) => {
+  return async ({ failedItemIds, instruction, operationId, verifyMessageId }) => {
     const operationModel = new AgentOperationModel(db, userId, workspaceId);
 
     const round = await countRepairRounds(operationModel, operationId);
@@ -105,50 +109,102 @@ export const createRepairRunner = (params: {
       return null;
     }
 
+    let preparationFailed = false;
+    const prepareRepairRound = async (repairOperationId: string) => {
+      try {
+        await db.transaction(async (tx) => {
+          const repairDB = tx as unknown as LobeChatDatabase;
+          // Re-snapshot the same plan onto the repair op's session + confirm, so the
+          // repair run re-verifies (round N+1) against its corrected deliverable.
+          const runModel = new VerifyRunModel(repairDB, userId, workspaceId);
+          const sourceRun = await runModel.findByOperation(operationId);
+          const plan = (sourceRun?.plan ?? []) as VerifyCheckItem[];
+          if (plan.length > 0) {
+            const repairRun = await runModel.ensureForOperation(repairOperationId);
+            await runModel.setPlan(repairRun.id, plan);
+            // Carry the source run's policy bag (e.g. the task's maxRepairRounds
+            // override) onto this round so its own auto-repair derives the same cap
+            // instead of falling back to the rubric/default.
+            if (sourceRun?.metadata) await runModel.setMetadata(repairRun.id, sourceRun.metadata);
+            await runModel.confirmPlan(repairRun.id);
+
+            // A repair is the next immutable round of the same business acceptance,
+            // not an unrelated verification session. Attach it before it settles so
+            // the aggregate immediately advances from "repairing" to the live round.
+            if (sourceRun?.acceptanceId) {
+              await new AcceptanceService(repairDB, userId, workspaceId).attachPolicyRun(
+                repairRun.id,
+                sourceRun.acceptanceId,
+              );
+            }
+
+            // The repair is asked to fix the failed checks only, so the rest keep
+            // the verdict and evidence they already earned instead of being
+            // judged again on a turn that never touched them.
+            if (sourceRun) {
+              await carryPassedResultsForward(
+                repairDB,
+                userId,
+                {
+                  excludeItemIds: failedItemIds,
+                  operationId: repairOperationId,
+                  plan,
+                  sourceRoundIndex: sourceRun.roundIndex,
+                  sourceRunId: sourceRun.id,
+                  targetRunId: repairRun.id,
+                },
+                workspaceId,
+              );
+            }
+          }
+        });
+      } catch (error) {
+        preparationFailed = true;
+        console.error('Failed to prepare repair round for %s: %O', operationId, error);
+        await new CompletionLifecycle(db, userId, workspaceId).completeOperation(
+          {
+            operationId: repairOperationId,
+            userId,
+            error: {
+              type: 'ServerAgentRuntimeError',
+              message: error instanceof Error ? error.message : String(error),
+            },
+          },
+          'error',
+        );
+        throw error;
+      }
+    };
+
     // Re-run the original agent in the same topic. The feedback lives on the
     // verify message (surfaced into context by VerifyMessageProcessor), so we run
     // off history instead of injecting a user turn; `instruction` is passed only
     // for the operation title / logs. `verifyMessageId` parents the new turn under
     // the verify card it responds to.
-    const result = await new AiAgentService(db, userId, { workspaceId }).execAgent({
-      agentId,
-      appContext: { topicId },
-      autoStart: true,
-      ...(model ? { model } : {}),
-      ...(verifyMessageId ? { parentMessageId: verifyMessageId } : {}),
-      parentOperationId: operationId,
-      prompt: instruction,
-      ...(provider ? { provider } : {}),
-      suppressUserMessage: true,
-      ...(taskId ? { taskId } : {}),
-      userInterventionConfig: { approvalMode: 'headless' },
-    });
+    const result = await new AiAgentService(db, userId, { workspaceId })
+      .execAgent({
+        additionalPluginIds: [AcceptanceEvidenceIdentifier],
+        agentId,
+        appContext: { topicId },
+        autoStart: true,
+        onOperationCreated: prepareRepairRound,
+        ...(model ? { model } : {}),
+        ...(verifyMessageId ? { parentMessageId: verifyMessageId } : {}),
+        parentOperationId: operationId,
+        prompt: instruction,
+        ...(provider ? { provider } : {}),
+        suppressUserMessage: true,
+        ...(taskId ? { taskId } : {}),
+        userInterventionConfig: { approvalMode: 'headless' },
+      })
+      .catch((error) => {
+        // Heterogeneous dispatch propagates preparation errors; the normal
+        // runtime returns success:false. Neither has spawned a repair.
+        if (preparationFailed) return null;
+        throw error;
+      });
+    if (!result?.success) return null;
     const repairOperationId = result.operationId;
-
-    // Re-snapshot the same plan onto the repair op's session + confirm, so the
-    // repair run re-verifies (round N+1) against its corrected deliverable.
-    const runModel = new VerifyRunModel(db, userId, workspaceId);
-    const sourceRun = await runModel.findByOperation(operationId);
-    const plan = (sourceRun?.plan ?? []) as VerifyCheckItem[];
-    if (plan.length > 0) {
-      const repairRun = await runModel.ensureForOperation(repairOperationId);
-      await runModel.setPlan(repairRun.id, plan);
-      // Carry the source run's policy bag (e.g. the task's maxRepairRounds
-      // override) onto this round so its own auto-repair derives the same cap
-      // instead of falling back to the rubric/default.
-      if (sourceRun?.metadata) await runModel.setMetadata(repairRun.id, sourceRun.metadata);
-      await runModel.confirmPlan(repairRun.id);
-
-      // A repair is the next immutable round of the same business acceptance,
-      // not an unrelated verification session. Attach it before it settles so
-      // the aggregate immediately advances from "repairing" to the live round.
-      if (sourceRun?.acceptanceId) {
-        await new AcceptanceService(db, userId, workspaceId).attachPolicyRun(
-          repairRun.id,
-          sourceRun.acceptanceId,
-        );
-      }
-    }
 
     log('repair op %s → %s (round %d)', operationId, repairOperationId, round + 1);
     return { repairOperationId };
@@ -168,7 +224,7 @@ export const maybeAutoRepair = async (
   userId: string,
   operationId: string,
   workspaceId?: string,
-): Promise<void> => {
+): Promise<{ repairOperationId: string } | null | undefined> => {
   const operationModel = new AgentOperationModel(db, userId, workspaceId);
   const run = await new VerifyRunModel(db, userId, workspaceId).findByOperation(operationId);
   const plan = (run?.plan ?? []) as VerifyCheckItem[];
@@ -210,7 +266,7 @@ export const maybeAutoRepair = async (
     userId,
     workspaceId,
   });
-  await new VerifyRepairService(db, userId, workspaceId).triggerAutoRepair(operationId, spawner);
+  return new VerifyRepairService(db, userId, workspaceId).triggerAutoRepair(operationId, spawner);
 };
 
 // `errored` = the verifier couldn't run (infra), so there's no delivery fault to
@@ -230,6 +286,10 @@ const buildInstruction = (
   return [
     'The delivery checker found unresolved issues with the previous result. Fix only these, then stop:',
     ...lines,
+    '',
+    'The checks not listed here already passed and are carried forward; do not re-submit their evidence.',
+    'Submit fresh evidence for each check listed above to this run.',
+    'Your final reply is read by the verifier as the deliverable: describe the complete delivery as it now stands (what is implemented, where, and the evidence for it), not only what changed in this turn.',
   ].join('\n');
 };
 
@@ -239,7 +299,11 @@ export class VerifyRepairService {
   private readonly resultModel: VerifyCheckResultModel;
   private readonly statusService: VerifyStatusService;
 
-  constructor(db: LobeChatDatabase, userId: string, workspaceId?: string) {
+  constructor(
+    private readonly db: LobeChatDatabase,
+    private readonly userId: string,
+    private readonly workspaceId?: string,
+  ) {
     this.messageModel = new MessageModel(db, userId, workspaceId);
     this.runModel = new VerifyRunModel(db, userId, workspaceId);
     this.resultModel = new VerifyCheckResultModel(db, userId, workspaceId);
@@ -254,9 +318,45 @@ export class VerifyRepairService {
     const results = await this.resultModel.listByRun(run.id);
     const byItem = new Map(results.map((r) => [r.checkItemId, r]));
 
+    // An optional check never gates delivery, so it must not spend a repair
+    // round either: a passing round whose only gap was an optional video kept
+    // re-running the builder until the repair cap.
     return plan
-      .filter((item) => item.onFail === 'auto_repair' && isFailed(byItem.get(item.id)))
+      .filter(
+        (item) =>
+          item.required !== false && item.onFail === 'auto_repair' && isFailed(byItem.get(item.id)),
+      )
       .map((item) => ({ item, result: byItem.get(item.id) }));
+  }
+
+  /**
+   * A round stops owning its acceptance once a later round exists or another
+   * round has already passed. Parallel attempts of one Task (a recovered topic
+   * next to a still-running repair chain) otherwise kept repairing a stale
+   * round after the acceptance was delivered, and left a failed round as the
+   * acceptance's latest state.
+   */
+  private async isSuperseded(operationId: string): Promise<boolean> {
+    const run = await this.runModel.findByOperation(operationId);
+    if (!run?.acceptanceId) return false;
+
+    const rounds = await this.runModel.listByAcceptance(run.acceptanceId);
+    return rounds.some(
+      (round) =>
+        round.id !== run.id &&
+        ((round.roundIndex ?? 0) > (run.roundIndex ?? 0) ||
+          (round.status === 'passed' && round.userDecision !== 'reject')),
+    );
+  }
+
+  /**
+   * Mark a failed round's auto-repair as declined, so readers (the persisted
+   * verify card) can treat its `failed` status as final rather than transient.
+   */
+  private async declineRepair(operationId: string): Promise<null> {
+    const run = await this.runModel.findByOperation(operationId);
+    if (run) await this.runModel.recordAutoRepair(run.id, 'declined');
+    return null;
   }
 
   /**
@@ -269,9 +369,13 @@ export class VerifyRepairService {
   ): Promise<{ repairOperationId: string } | null> {
     const failures = await this.collectRepairable(operationId);
     if (failures.length === 0) return null;
+    if (await this.isSuperseded(operationId)) {
+      log('op %s round is superseded within its acceptance, not repairing', operationId);
+      return this.declineRepair(operationId);
+    }
     if (!spawner) {
       log('auto-repair eligible for op %s but no spawner available', operationId);
-      return null;
+      return this.declineRepair(operationId);
     }
 
     const failedItemIds = failures.map((f) => f.item.id);
@@ -294,11 +398,13 @@ export class VerifyRepairService {
       operationId,
       verifyMessageId: verifyMessage?.id,
     });
-    if (!spawned) return null;
+    // Cap reached, or the spawn failed: the failure stands as this round's verdict.
+    if (!spawned) return this.declineRepair(operationId);
 
     // Link the repair operation onto each failed result and flip the rollup.
     const run = await this.runModel.findByOperation(operationId);
     if (run) {
+      await this.runModel.recordAutoRepair(run.id, 'spawned');
       for (const { item } of failures) {
         await this.resultModel.updateByCheckItem(run.id, item.id, {
           repairOperationId: spawned.repairOperationId,
@@ -306,6 +412,9 @@ export class VerifyRepairService {
       }
     }
     await this.statusService.markRepairing(operationId);
+    // A fast startup failure can precede the plan/parent writes above. Reconcile
+    // after both exist as well as from the completion hook.
+    await settleFailedRepair(this.db, this.userId, spawned.repairOperationId, this.workspaceId);
     log('triggered auto-repair op %s → %s', operationId, spawned.repairOperationId);
 
     return spawned;

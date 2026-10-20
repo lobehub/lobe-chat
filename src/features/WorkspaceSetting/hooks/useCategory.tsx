@@ -1,14 +1,16 @@
 import { isDesktop } from '@lobechat/const';
-import { Avatar } from '@lobehub/ui/base-ui';
+import { Avatar } from '@lobehub/ui';
 import { SkillsIcon } from '@lobehub/ui/icons';
 import {
   AppWindowIcon,
   BellIcon,
   Blocks,
+  BlocksIcon,
   Brain,
   Building2,
   ChartColumnBigIcon,
   Coins,
+  ContainerIcon,
   CreditCard,
   Database,
   EllipsisIcon,
@@ -26,6 +28,7 @@ import {
   Sparkles,
   TagIcon,
   Users,
+  UsersRound,
 } from 'lucide-react';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -73,6 +76,10 @@ export const useWorkspaceSettingCategory = (): WorkspaceSettingCategoryGroup[] =
   // immediately 403s.
   const { allowed: canCreateContent } = usePermission('create_content');
   const enableOAuthApps = useUserStore(labPreferSelectors.enableOAuthApps);
+  const enableIntegrations = useUserStore(labPreferSelectors.enableIntegrations);
+  // Behind the same experiment that gates the persistent sandbox itself: a tab
+  // for environments nothing can run in would be a dead end.
+  const enablePersistentSandbox = useUserStore(labPreferSelectors.enablePersistentSandbox);
   const { hideDocs } = useServerConfigStore(featureFlagsSelectors);
   const [avatar, username] = useUserStore((s) => [
     userProfileSelectors.userAvatar(s),
@@ -124,6 +131,18 @@ export const useWorkspaceSettingCategory = (): WorkspaceSettingCategoryGroup[] =
               key: WorkspaceSettingsTabs.Messenger,
               label: t('tab.messenger'),
             },
+            // An installation connected here belongs to the workspace, so
+            // every member sees the same one. Labs alpha, like the personal
+            // surface.
+            ...(enableIntegrations
+              ? [
+                  {
+                    icon: BlocksIcon,
+                    key: WorkspaceSettingsTabs.Integrations,
+                    label: t('tab.integrations'),
+                  },
+                ]
+              : []),
           ],
           key: WorkspaceSettingsGroupKey.Account,
           title: t('group.profile'),
@@ -141,9 +160,19 @@ export const useWorkspaceSettingCategory = (): WorkspaceSettingCategoryGroup[] =
               label: t('workspaceSetting.tab.members'),
             },
             {
+              icon: UsersRound,
+              key: WorkspaceSettingsTabs.Teams,
+              label: t('workspaceSetting.tab.teams'),
+            },
+            {
               icon: MonitorSmartphoneIcon,
               key: WorkspaceSettingsTabs.Devices,
               label: t('tab.devices'),
+            },
+            enablePersistentSandbox && {
+              icon: ContainerIcon,
+              key: WorkspaceSettingsTabs.Environments,
+              label: t('tab.environments'),
             },
             {
               icon: BellIcon,
@@ -155,7 +184,7 @@ export const useWorkspaceSettingCategory = (): WorkspaceSettingCategoryGroup[] =
               key: WorkspaceSettingsTabs.Stats,
               label: tAuth('tab.stats'),
             },
-          ],
+          ].filter(Boolean) as WorkspaceSettingCategoryItem[],
           key: WorkspaceSettingsGroupKey.General,
           title: t('workspaceSetting.group.workspace'),
         },
@@ -305,6 +334,8 @@ export const useWorkspaceSettingCategory = (): WorkspaceSettingCategoryGroup[] =
       tLabs,
       tSubscription,
       enableOAuthApps,
+      enableIntegrations,
+      enablePersistentSandbox,
       canManageWorkspace,
       canViewBilling,
       canCreateContent,

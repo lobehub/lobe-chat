@@ -41,7 +41,7 @@ describe('serverMessagesEngine', () => {
    */
   describe('system-message context forwarded to the engine', () => {
     it('forwards project instructions', async () => {
-      const result = await serverMessagesEngine({
+      const { messages: result } = await serverMessagesEngine({
         messages: createBasicMessages(),
         model: 'gpt-4',
         projectInstructions: [{ content: 'Use bun, not npm.', source: 'AGENTS.md' }],
@@ -55,7 +55,7 @@ describe('serverMessagesEngine', () => {
     });
 
     it('forwards the connector ownership note', async () => {
-      const result = await serverMessagesEngine({
+      const { messages: result } = await serverMessagesEngine({
         connectorOwnershipNote: 'Gmail runs on Alice’s account.',
         messages: createBasicMessages(),
         model: 'gpt-4',
@@ -69,7 +69,7 @@ describe('serverMessagesEngine', () => {
     });
 
     it('keeps the connector note ahead of the project instructions', async () => {
-      const result = await serverMessagesEngine({
+      const { messages: result } = await serverMessagesEngine({
         connectorOwnershipNote: 'CONNECTOR-NOTE',
         messages: createBasicMessages(),
         model: 'gpt-4',
@@ -87,7 +87,7 @@ describe('serverMessagesEngine', () => {
     });
 
     it('leaves the system message alone when a run has neither', async () => {
-      const result = await serverMessagesEngine({
+      const { messages: result } = await serverMessagesEngine({
         messages: createBasicMessages(),
         model: 'gpt-4',
         provider: 'openai',
@@ -103,20 +103,22 @@ describe('serverMessagesEngine', () => {
     const items = [{ status: 'processing' as const, text: 'Keep server context in sync' }];
 
     it('forwards non-empty planTodo state to MessagesEngine', async () => {
-      const result = await serverMessagesEngine({
+      const { messages: result } = await serverMessagesEngine({
         messages: createBasicMessages(),
         model: 'gpt-4',
         planTodo: { enabled: true, todos: { items, updatedAt: 'now' } },
         provider: 'openai',
       });
-      const userContent = result.find((message) => message.role === 'user')?.content;
+      const userMessages = result.filter((message) => message.role === 'user');
 
-      expect(userContent).toContain('<todo_context>');
-      expect(userContent).toContain('Keep server context in sync');
+      expect(userMessages).toHaveLength(2);
+      expect(userMessages[0].content).toBe('Hello');
+      expect(userMessages[1].content).toContain('<todo_context>');
+      expect(userMessages[1].content).toContain('Keep server context in sync');
     });
 
     it('does not inject an empty TODO state', async () => {
-      const result = await serverMessagesEngine({
+      const { messages: result } = await serverMessagesEngine({
         messages: createBasicMessages(),
         model: 'gpt-4',
         planTodo: { enabled: true, todos: { items: [], updatedAt: 'canonical-clear' } },
@@ -137,15 +139,19 @@ describe('serverMessagesEngine', () => {
         provider: 'openai',
         stepContext: { todos },
       }).process();
-      const serverResult = await serverMessagesEngine({
+      const { messages: serverResult } = await serverMessagesEngine({
         messages: createBasicMessages(),
         model: 'gpt-4',
         planTodo: { enabled: true, todos },
         provider: 'openai',
       });
 
-      expect(serverResult.find((message) => message.role === 'user')?.content).toBe(
-        clientResult.messages.find((message) => message.role === 'user')?.content,
+      expect(
+        serverResult.filter((message) => message.role === 'user').map(({ content }) => content),
+      ).toEqual(
+        clientResult.messages
+          .filter((message) => message.role === 'user')
+          .map(({ content }) => content),
       );
     });
   });
@@ -154,7 +160,7 @@ describe('serverMessagesEngine', () => {
     it('should process messages with required parameters', async () => {
       const messages = createBasicMessages();
 
-      const result = await serverMessagesEngine({
+      const { messages: result } = await serverMessagesEngine({
         messages,
         model: 'gpt-4',
         provider: 'openai',
@@ -177,7 +183,7 @@ describe('serverMessagesEngine', () => {
       const messages = createBasicMessages();
       const systemRole = 'You are a helpful assistant';
 
-      const result = await serverMessagesEngine({
+      const { messages: result } = await serverMessagesEngine({
         messages,
         model: 'gpt-4',
         provider: 'openai',
@@ -188,13 +194,53 @@ describe('serverMessagesEngine', () => {
       expect(result[0].content).toBe(systemRole + '\n\n' + getCurrentDateContent());
     });
 
+    it('renders the cloud-sandbox workspace placeholders to the ephemeral wording unless the builder supplies them', async () => {
+      const messages = createBasicMessages();
+      const systemRole =
+        '<env>{{sandbox_workspace}}</env><session>{{sandbox_session_files}}</session>';
+
+      // No additionalVariables — the run got no persistent workspace: the
+      // original ephemeral-session wording must render, never the literal tokens.
+      const { messages: fallback } = await serverMessagesEngine({
+        messages,
+        model: 'gpt-4',
+        provider: 'openai',
+        systemRole,
+      });
+      expect(fallback[0].content).not.toContain('{{sandbox_workspace}}');
+      expect(fallback[0].content).not.toContain('{{sandbox_session_files}}');
+      expect(fallback[0].content).toContain(
+        'Files created here are temporary and session-specific',
+      );
+      expect(fallback[0].content).toContain('Files from previous sessions may not persist');
+
+      // The builder's persistent-workspace guidance overrides both fallbacks.
+      const { messages: resolved } = await serverMessagesEngine({
+        additionalVariables: {
+          sandbox_session_files: '- Files in your working directory persist',
+          sandbox_workspace: '- Your working directory is a persistent workspace',
+        },
+        messages,
+        model: 'gpt-4',
+        provider: 'openai',
+        systemRole,
+      });
+      expect(resolved[0].content).toContain(
+        '<env>- Your working directory is a persistent workspace</env>',
+      );
+      expect(resolved[0].content).toContain(
+        '<session>- Files in your working directory persist</session>',
+      );
+      expect(resolved[0].content).not.toContain('temporary and session-specific');
+    });
+
     it('renders {{workingDirectory}} to a fallback instead of leaking the literal ', async () => {
       const messages = createBasicMessages();
       const systemRole = '<working-directory>{{workingDirectory}}</working-directory>';
 
       // No additionalVariables — e.g. a web-originated device run whose bound cwd
       // could not be resolved. The literal must never survive into the prompt.
-      const fallback = await serverMessagesEngine({
+      const { messages: fallback } = await serverMessagesEngine({
         messages,
         model: 'gpt-4',
         provider: 'openai',
@@ -204,7 +250,7 @@ describe('serverMessagesEngine', () => {
       expect(fallback[0].content).toContain('(not specified, use user Home directory as default)');
 
       // A resolved cwd (deviceSystemInfo.workingDirectory) overrides the fallback.
-      const resolved = await serverMessagesEngine({
+      const { messages: resolved } = await serverMessagesEngine({
         additionalVariables: { workingDirectory: '/Users/tj/project' },
         messages,
         model: 'gpt-4',
@@ -224,7 +270,7 @@ describe('serverMessagesEngine', () => {
         'Minute: {{minute}} Second: {{second}} Month: {{month}} Year: {{year}} ' +
         'ISO: {{iso}} Timestamp: {{timestamp}} Locale: {{locale}}';
 
-      const result = await serverMessagesEngine({
+      const { messages: result } = await serverMessagesEngine({
         messages,
         model: 'gpt-4',
         provider: 'openai',
@@ -244,7 +290,7 @@ describe('serverMessagesEngine', () => {
     it('lets additionalVariables override the locale fallback', async () => {
       const messages = createBasicMessages();
 
-      const result = await serverMessagesEngine({
+      const { messages: result } = await serverMessagesEngine({
         additionalVariables: { locale: 'zh-CN' },
         messages,
         model: 'gpt-4',
@@ -261,7 +307,7 @@ describe('serverMessagesEngine', () => {
 
       // Kiritimati is UTC+14 — always a different hour (and often day) than UTC,
       // so a UTC-based rendering cannot accidentally pass.
-      const result = await serverMessagesEngine({
+      const { messages: result } = await serverMessagesEngine({
         messages,
         model: 'gpt-4',
         provider: 'openai',
@@ -284,7 +330,7 @@ describe('serverMessagesEngine', () => {
     it('should inject model knowledge cutoff when provided', async () => {
       const messages = createBasicMessages();
 
-      const result = await serverMessagesEngine({
+      const { messages: result } = await serverMessagesEngine({
         messages,
         model: 'gpt-4',
         modelKnowledgeCutoff: '2024-06',
@@ -303,7 +349,7 @@ describe('serverMessagesEngine', () => {
     it('should inject model name and id when displayName is provided', async () => {
       const messages = createBasicMessages();
 
-      const result = await serverMessagesEngine({
+      const { messages: result } = await serverMessagesEngine({
         messages,
         model: 'claude-fable-5',
         modelDisplayName: 'Fable 5',
@@ -321,7 +367,7 @@ describe('serverMessagesEngine', () => {
     });
 
     it('should handle empty messages', async () => {
-      const result = await serverMessagesEngine({
+      const { messages: result } = await serverMessagesEngine({
         messages: [],
         model: 'gpt-4',
         provider: 'openai',
@@ -332,7 +378,7 @@ describe('serverMessagesEngine', () => {
     });
 
     it('should include file URLs in server-side file context', async () => {
-      const result = await serverMessagesEngine({
+      const { messages: result } = await serverMessagesEngine({
         messages: [
           {
             content: 'Read this',
@@ -361,8 +407,42 @@ describe('serverMessagesEngine', () => {
       expect(content[0].text).toContain('url="https://app.example.com/f/file1"');
     });
 
+    it('sends attachments planned for preview as previews', async () => {
+      const content = 'row,value\n'.repeat(1000);
+      const { messages: result } = await serverMessagesEngine({
+        attachmentPreviewFileIds: ['file1'],
+        messages: [
+          {
+            content: 'Read this',
+            createdAt: Date.now(),
+            fileList: [
+              {
+                content,
+                fileType: 'text/csv',
+                id: 'file1',
+                name: 'data.csv',
+                size: content.length,
+                url: 'https://app.example.com/f/file1',
+              },
+            ],
+            id: 'msg-1',
+            role: 'user',
+            updatedAt: Date.now(),
+          } as UIChatMessage,
+        ],
+        model: 'gpt-4',
+        provider: 'openai',
+      });
+
+      const userMessage = result.find((message) => message.role === 'user');
+      const text = (userMessage?.content as any[])[0].text as string;
+
+      expect(text).toContain('truncated="true"');
+      expect(text).not.toContain(content);
+    });
+
     it('should pass active topic document initial context into MessagesEngine', async () => {
-      const result = await serverMessagesEngine({
+      const { messages: result } = await serverMessagesEngine({
         initialContext: {
           activeTopicDocument: {
             agentDocumentId: 'agd_1',
@@ -394,7 +474,7 @@ describe('serverMessagesEngine', () => {
     it('should inject file contents', async () => {
       const messages = createBasicMessages();
 
-      const result = await serverMessagesEngine({
+      const { messages: result } = await serverMessagesEngine({
         knowledge: {
           fileContents: [
             {
@@ -418,7 +498,7 @@ describe('serverMessagesEngine', () => {
     it('should inject knowledge bases', async () => {
       const messages = createBasicMessages();
 
-      const result = await serverMessagesEngine({
+      const { messages: result } = await serverMessagesEngine({
         knowledge: {
           knowledgeBases: [
             {
@@ -457,7 +537,7 @@ describe('serverMessagesEngine', () => {
         },
       ];
 
-      const result = await serverMessagesEngine({
+      const { messages: result } = await serverMessagesEngine({
         capabilities: { isCanUseFC: () => true },
         messages,
         model: 'gpt-4',
@@ -478,7 +558,7 @@ describe('serverMessagesEngine', () => {
     it('should skip tool system role when no manifests', async () => {
       const messages = createBasicMessages();
 
-      const result = await serverMessagesEngine({
+      const { messages: result } = await serverMessagesEngine({
         messages,
         model: 'gpt-4',
         provider: 'openai',
@@ -518,7 +598,7 @@ describe('serverMessagesEngine', () => {
       const messages = createBasicMessages();
 
       // Should not throw
-      const result = await serverMessagesEngine({
+      const { messages: result } = await serverMessagesEngine({
         messages,
         model: 'gpt-4',
         provider: 'openai',
@@ -528,11 +608,109 @@ describe('serverMessagesEngine', () => {
     });
   });
 
+  describe('stale tool result trimming', () => {
+    const READ_CONTENT = 'x'.repeat(120_000);
+
+    // A readFile result superseded by a later write to the same path, outside
+    // the default recency window and past the default size gate, so the trim
+    // fires unless the switch disables it. No createdAt → cold cache.
+    const supersededReadMessages = (): UIChatMessage[] =>
+      [
+        {
+          content: '',
+          id: 'a1',
+          role: 'assistant',
+          tools: [
+            {
+              apiName: 'readFile',
+              arguments: JSON.stringify({ path: '/a.ts' }),
+              id: 'call-readFile',
+              identifier: 'lobe-local-system',
+              type: 'builtin',
+            },
+          ],
+        },
+        {
+          content: READ_CONTENT,
+          id: 't1',
+          plugin: {
+            apiName: 'readFile',
+            arguments: JSON.stringify({ path: '/a.ts' }),
+            identifier: 'lobe-local-system',
+          },
+          pluginState: { loc: [0, 200], path: '/a.ts' },
+          role: 'tool',
+          tool_call_id: 'call-readFile',
+        },
+        {
+          content: '',
+          id: 'a2',
+          role: 'assistant',
+          tools: [
+            {
+              apiName: 'writeFile',
+              arguments: JSON.stringify({ path: '/a.ts' }),
+              id: 'call-writeFile',
+              identifier: 'lobe-local-system',
+              type: 'builtin',
+            },
+          ],
+        },
+        {
+          content: 'Successfully wrote to /a.ts',
+          id: 't2',
+          plugin: {
+            apiName: 'writeFile',
+            arguments: JSON.stringify({ path: '/a.ts' }),
+            identifier: 'lobe-local-system',
+          },
+          pluginState: { path: '/a.ts', success: true },
+          role: 'tool',
+          tool_call_id: 'call-writeFile',
+        },
+        ...Array.from({ length: 21 }, (_, i) => ({
+          content: `recent ${i}`,
+          id: `pad-${i}`,
+          role: 'assistant',
+        })),
+      ] as unknown as UIChatMessage[];
+
+    const payloadText = (messages: any[]) =>
+      messages
+        .map((m) => (typeof m.content === 'string' ? m.content : JSON.stringify(m.content)))
+        .join('\n');
+
+    it('trims stale tool results by default', async () => {
+      const { messages: result } = await serverMessagesEngine({
+        messages: supersededReadMessages(),
+        model: 'gpt-4',
+        provider: 'openai',
+      });
+
+      const payload = payloadText(result);
+      expect(payload).not.toContain(READ_CONTENT);
+      expect(payload).toContain('superseded by a later write');
+    });
+
+    it('forwards enableStaleToolResultTrim: false to the engine', async () => {
+      const { messages: result } = await serverMessagesEngine({
+        enableStaleToolResultTrim: false,
+        messages: supersededReadMessages(),
+        model: 'gpt-4',
+        provider: 'openai',
+      });
+
+      const payload = payloadText(result);
+      expect(payload).toContain(READ_CONTENT);
+      expect(payload).not.toContain('superseded by a later write');
+    });
+  });
+
   describe('user memory injection', () => {
     it('should inject user memories when provided', async () => {
       const messages = createBasicMessages();
 
-      const result = await serverMessagesEngine({
+      const { messages: result } = await serverMessagesEngine({
         messages,
         model: 'gpt-4',
         provider: 'openai',
@@ -564,7 +742,7 @@ describe('serverMessagesEngine', () => {
     it('should skip user memory when memories is undefined', async () => {
       const messages = createBasicMessages();
 
-      const result = await serverMessagesEngine({
+      const { messages: result } = await serverMessagesEngine({
         messages,
         model: 'gpt-4',
         provider: 'openai',
@@ -583,7 +761,7 @@ describe('serverMessagesEngine', () => {
     it('should inject Agent Builder context when provided', async () => {
       const messages = createBasicMessages();
 
-      const result = await serverMessagesEngine({
+      const { messages: result } = await serverMessagesEngine({
         agentBuilderContext: {
           config: { model: 'gpt-4', systemRole: 'Test role' },
           meta: { description: 'Test agent', title: 'Test' },
@@ -599,7 +777,7 @@ describe('serverMessagesEngine', () => {
     it('should inject Page Editor context when provided', async () => {
       const messages = createBasicMessages();
 
-      const result = await serverMessagesEngine({
+      const { messages: result } = await serverMessagesEngine({
         messages,
         model: 'gpt-4',
         pageContentContext: {
@@ -630,7 +808,7 @@ describe('serverMessagesEngine', () => {
         } as UIChatMessage,
       ];
 
-      const result = await serverMessagesEngine({
+      const { messages: result } = await serverMessagesEngine({
         inputTemplate: 'Please respond to: {{text}}',
         messages,
         model: 'gpt-4',
@@ -647,7 +825,7 @@ describe('serverMessagesEngine', () => {
       const messages = createBasicMessages();
       const historySummary = 'Previous conversation about AI';
 
-      const result = await serverMessagesEngine({
+      const { messages: result } = await serverMessagesEngine({
         historySummary,
         messages,
         model: 'gpt-4',
@@ -709,7 +887,7 @@ describe('serverMessagesEngine', () => {
         } as UIChatMessage,
       ];
 
-      const result = await serverMessagesEngine({
+      const { messages: result } = await serverMessagesEngine({
         inputTemplate: '{{text}} (tz: {{timezone}})',
         messages,
         model: 'gpt-4',
@@ -734,7 +912,7 @@ describe('serverMessagesEngine', () => {
         } as UIChatMessage,
       ];
 
-      const result = await serverMessagesEngine({
+      const { messages: result } = await serverMessagesEngine({
         additionalVariables: {
           customVar: 'custom-value',
         },
@@ -751,7 +929,7 @@ describe('serverMessagesEngine', () => {
     it('should handle empty additionalVariables', async () => {
       const messages = createBasicMessages();
 
-      const result = await serverMessagesEngine({
+      const { messages: result } = await serverMessagesEngine({
         additionalVariables: {},
         messages,
         model: 'gpt-4',
@@ -767,7 +945,7 @@ describe('serverMessagesEngine', () => {
     it('should forward discordContext when provided', async () => {
       const messages = createBasicMessages();
 
-      const result = await serverMessagesEngine({
+      const { messages: result } = await serverMessagesEngine({
         discordContext: {
           channel: { id: 'ch-1', name: 'general' },
           guild: { id: 'guild-1', name: 'Test Guild' },
@@ -783,7 +961,7 @@ describe('serverMessagesEngine', () => {
     it('should forward evalContext when provided', async () => {
       const messages = createBasicMessages();
 
-      const result = await serverMessagesEngine({
+      const { messages: result } = await serverMessagesEngine({
         evalContext: {
           envPrompt: 'This is an evaluation environment',
         },
@@ -798,7 +976,7 @@ describe('serverMessagesEngine', () => {
     it('should forward agentManagementContext when provided', async () => {
       const messages = createBasicMessages();
 
-      const result = await serverMessagesEngine({
+      const { messages: result } = await serverMessagesEngine({
         agentManagementContext: {
           availablePlugins: [
             { identifier: 'web-browsing', name: 'Web Browsing', type: 'builtin' as const },
@@ -815,7 +993,7 @@ describe('serverMessagesEngine', () => {
     it('should handle multiple extended contexts simultaneously', async () => {
       const messages = createBasicMessages();
 
-      const result = await serverMessagesEngine({
+      const { messages: result } = await serverMessagesEngine({
         agentBuilderContext: {
           config: { model: 'gpt-4', systemRole: 'Test role' },
           meta: { description: 'Test agent', title: 'Test' },

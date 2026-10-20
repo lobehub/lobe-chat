@@ -1,11 +1,9 @@
 import type { SidebarAgentItem } from '@lobechat/types';
 import { agentDisplayName, agentSecondaryDisplayName } from '@lobechat/types';
-import { Icon } from '@lobehub/ui';
-import { ActionIcon } from '@lobehub/ui/base-ui';
-import { createStaticStyles, cssVar } from 'antd-style';
-import { Loader2, PinIcon } from 'lucide-react';
+import { ActionIcon, createStaticStyles, cssVar, Spin } from '@lobehub/ui';
+import { PinIcon } from 'lucide-react';
 import { type CSSProperties, type DragEvent } from 'react';
-import { memo, useCallback, useMemo, useState } from 'react';
+import { memo, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import NavItem from '@/features/NavPanel/components/NavItem';
@@ -89,7 +87,6 @@ const AgentItem = memo<AgentItemProps>(({ item, style, className, onNavigate, se
   const unreadCount = item.unreadCount ?? 0;
   const { t } = useTranslation('chat');
   const { openCreateGroupModal } = useAgentModal();
-  const [anchor, setAnchor] = useState<HTMLElement | null>(null);
   const openAgentInNewWindow = useGlobalStore((s) => s.openAgentInNewWindow);
 
   const prefetchAgent = usePrefetchAgent();
@@ -147,7 +144,7 @@ const AgentItem = memo<AgentItemProps>(({ item, style, className, onNavigate, se
   // Memoize avatar icon (show loader when updating, running spinner or unread badge at bottom-right)
   const avatarIcon = useMemo(() => {
     if (isUpdating) {
-      return <Icon spin color={cssVar.colorTextDescription} icon={Loader2} size={18} />;
+      return <Spin size="small" style={{ color: cssVar.colorTextDescription }} />;
     }
 
     const avatarNode = (
@@ -163,7 +160,7 @@ const AgentItem = memo<AgentItemProps>(({ item, style, className, onNavigate, se
         <span className={styles.wrapper}>
           {avatarNode}
           <span className={styles.runningBadge}>
-            <Icon spin icon={Loader2} size={9} />
+            <Spin size={9} style={{ color: 'inherit' }} />
           </span>
         </span>
       );
@@ -182,11 +179,11 @@ const AgentItem = memo<AgentItemProps>(({ item, style, className, onNavigate, se
   }, [isUpdating, isLoading, avatar, backgroundColor, displayTitle, unreadCount]);
 
   const dropdownMenu = useAgentDropdownMenu({
-    anchor,
     avatar: typeof avatar === 'string' ? avatar : undefined,
     backgroundColor: backgroundColor || undefined,
     group: undefined, // TODO: pass group from parent if needed
     id,
+    name: item.name,
     openCreateGroupModal: handleOpenCreateGroupModal,
     pinned: pinned ?? false,
     slug,
@@ -198,7 +195,6 @@ const AgentItem = memo<AgentItemProps>(({ item, style, className, onNavigate, se
   return (
     <WorkspaceLink
       aria-label={displayTitle}
-      ref={setAnchor}
       to={agentUrl}
       onClick={onNavigate}
       onMouseEnter={handleMouseEnter}

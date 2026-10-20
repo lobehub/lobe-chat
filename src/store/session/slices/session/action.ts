@@ -1,8 +1,7 @@
-import { toast } from '@lobehub/ui/base-ui';
+import { toast } from '@lobehub/ui';
 import isEqual from 'fast-deep-equal';
 import { t } from 'i18next';
 import { type SWRResponse } from 'swr';
-import useSWR from 'swr';
 import { type PartialDeep } from 'type-fest';
 
 import { DEFAULT_AGENT_LOBE_SESSION, INBOX_SESSION_ID } from '@/const/session';
@@ -252,7 +251,9 @@ export class SessionActionImpl {
               workspaceId: null,
             }));
 
-            chatGroupStore.internal_updateGroupMaps(chatGroups);
+            // Session rows are synthesized: only their real fields may seed a
+            // group detail (see `GroupSeedSource`).
+            chatGroupStore.internal_updateGroupMaps(chatGroups, 'session');
           }
 
           this.#set(
@@ -262,18 +263,6 @@ export class SessionActionImpl {
           );
         },
       },
-    );
-  };
-
-  useSearchSessions = (keyword?: string): SWRResponse<any> => {
-    return useSWR<LobeSessions>(
-      sessionKeys.search(keyword),
-      async () => {
-        if (!keyword) return [];
-
-        return sessionService.searchSessions(keyword);
-      },
-      { revalidateOnFocus: false, revalidateOnMount: false },
     );
   };
 

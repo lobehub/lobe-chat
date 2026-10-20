@@ -16,6 +16,7 @@ import urlJoin from 'url-join';
 
 import NavItem from '@/features/NavPanel/components/NavItem';
 import { useResourceAccess } from '@/features/ResourcePermission/useResourceAccess';
+import { useSelfLearningSurface } from '@/features/SelfLearning/SurfaceGate/useSelfLearningSurface';
 import { useActiveLocation } from '@/hooks/useActiveLocation';
 import { useActiveRouteParams } from '@/hooks/useActiveRouteParams';
 import { usePermission } from '@/hooks/usePermission';
@@ -60,8 +61,8 @@ const Nav = memo(() => {
   const switchTopic = useChatStore((s) => s.switchTopic);
   const [openNewTopicOrSaveTopic] = useChatStore((s) => [s.openNewTopicOrSaveTopic]);
   const isNewTopicSendInFlight = useChatStore(topicSelectors.isNewTopicSendInFlight);
-  const enableTopicAcceptance = useUserStore(labPreferSelectors.enableTopicAcceptance);
-  const enableSelfLearning = useUserStore(labPreferSelectors.enableSelfLearning);
+  const enableGoals = useUserStore(labPreferSelectors.enableGoals);
+  const { enabled: enableSelfLearning } = useSelfLearningSurface();
 
   const { mutate } = useActionSWR(topicActionKeys.openNewOrSave(), openNewTopicOrSaveTopic);
   const handleNewTopic = () => {
@@ -121,7 +122,7 @@ const Nav = memo(() => {
           }}
         />
       )}
-      {enableTopicAcceptance && (
+      {enableGoals && (
         <NavItem
           active={isGoalsActive}
           icon={TargetIcon}

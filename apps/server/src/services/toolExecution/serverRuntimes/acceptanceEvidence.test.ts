@@ -54,12 +54,22 @@ describe('acceptanceEvidenceRuntime', () => {
       id: 'evidence-op',
       parentOperationId: 'parent-op',
     });
-    mocks.runFindByOperation.mockResolvedValue({
-      id: 'run-1',
-      plan: [
-        { id: 'criterion-1', index: 0, required: true, title: 'Document', verifierType: 'llm' },
-      ],
-    });
+    mocks.runFindByOperation.mockImplementation(async (operationId) =>
+      operationId === 'evidence-op'
+        ? null
+        : {
+            id: 'run-1',
+            plan: [
+              {
+                id: 'criterion-1',
+                index: 0,
+                required: true,
+                title: 'Document',
+                verifierType: 'llm',
+              },
+            ],
+          },
+    );
     mocks.resultUpsert.mockResolvedValue({ id: 'result-1' });
     mocks.evidenceCreateMany.mockResolvedValue([]);
     mocks.evidenceListByRun.mockResolvedValue([]);
@@ -127,6 +137,34 @@ describe('acceptanceEvidenceRuntime', () => {
     expect(mocks.resultUpsert).toHaveBeenCalledWith(
       expect.objectContaining({ operationId: 'task-op' }),
     );
+  });
+
+  it('submits repair evidence into the repair round instead of its failed parent', async () => {
+    mocks.operationFindById.mockResolvedValue({ id: 'repair-op', parentOperationId: 'parent-op' });
+    mocks.runFindByOperation.mockImplementation(async (id) => ({
+      id: id === 'repair-op' ? 'repair-run' : 'parent-run',
+      plan: [
+        { id: 'criterion-1', index: 0, required: true, title: 'Document', verifierType: 'llm' },
+      ],
+    }));
+    const runtime = acceptanceEvidenceRuntime.factory({
+      operationId: 'repair-op',
+      serverDB: {} as never,
+      toolManifestMap: {},
+      userId: 'user-1',
+    });
+    expect(
+      (
+        await runtime.submitEvidence({
+          checkItemId: 'criterion-1',
+          evidence: [{ content: 'corrected output', type: 'text' }],
+        })
+      ).success,
+    ).toBe(true);
+    expect(mocks.resultUpsert).toHaveBeenCalledWith(
+      expect.objectContaining({ operationId: 'repair-op', verifyRunId: 'repair-run' }),
+    );
+    expect(mocks.runFindByOperation).not.toHaveBeenCalledWith('parent-op');
   });
 
   it('keeps writing into the parent run from the post-run evidence turn', async () => {
@@ -335,6 +373,74 @@ describe('acceptanceEvidenceRuntime', () => {
       expect.objectContaining({ error: 'UNBACKED_VISUAL_EVIDENCE', success: false }),
     );
     expect(mocks.evidenceCreateMany).not.toHaveBeenCalled();
+  });
+
+  it('records the gif and transcript types a criterion can require', async () => {
+    // The tool only offered markdown/screenshot/text/video, so a repair turn told
+    // to supply a required gif or transcript could only send the wrong type and
+    // fail the structural gate again, round after round.
+    mocks.operationFindById.mockResolvedValue({ id: 'task-op', parentOperationId: null });
+    mocks.fileFindById.mockResolvedValue({ id: 'files_gif' });
+    const runtime = acceptanceEvidenceRuntime.factory({
+      operationId: 'task-op',
+      serverDB: {} as never,
+      toolManifestMap: {},
+      userId: 'user-1',
+    });
+
+    const result = await runtime.submitEvidence({
+      checkItemId: 'criterion-1',
+      evidence: [
+        { content: 'Rename applied in the list', fileId: 'files_gif', type: 'gif' },
+        { content: '$ lh task view T-1\nstatus: done', type: 'transcript' },
+      ],
+    });
+
+    expect(result.success).toBe(true);
+    expect(mocks.evidenceCreateMany).toHaveBeenCalledWith([
+      expect.objectContaining({ fileId: 'files_gif', type: 'gif' }),
+      expect.objectContaining({ type: 'transcript' }),
+    ]);
+  });
+
+  it('stores a GIF cited as a screenshot as a gif', async () => {
+    mocks.operationFindById.mockResolvedValue({ id: 'task-op', parentOperationId: null });
+    mocks.fileFindById.mockResolvedValue({ fileType: 'image/gif', id: 'files_gif', name: 'a.gif' });
+    const runtime = acceptanceEvidenceRuntime.factory({
+      operationId: 'task-op',
+      serverDB: {} as never,
+      toolManifestMap: {},
+      userId: 'user-1',
+    });
+
+    const result = await runtime.submitEvidence({
+      checkItemId: 'criterion-1',
+      evidence: [{ content: 'Rename applied', fileId: 'files_gif', type: 'screenshot' }],
+    });
+
+    expect(result.success).toBe(true);
+    expect(mocks.evidenceCreateMany).toHaveBeenCalledWith([
+      expect.objectContaining({ fileId: 'files_gif', type: 'gif' }),
+    ]);
+  });
+
+  it('rejects a gif with no artifact behind it', async () => {
+    mocks.operationFindById.mockResolvedValue({ id: 'task-op', parentOperationId: null });
+    const runtime = acceptanceEvidenceRuntime.factory({
+      operationId: 'task-op',
+      serverDB: {} as never,
+      toolManifestMap: {},
+      userId: 'user-1',
+    });
+
+    const result = await runtime.submitEvidence({
+      checkItemId: 'criterion-1',
+      evidence: [{ content: 'recorded a gif of the rename', type: 'gif' }],
+    });
+
+    expect(result).toEqual(
+      expect.objectContaining({ error: 'UNBACKED_VISUAL_EVIDENCE', success: false }),
+    );
   });
 
   it('rejects an unknown files.id before the evidence foreign key is evaluated', async () => {

@@ -1,6 +1,5 @@
-import { copyToClipboard } from '@lobehub/ui';
-import { toast } from '@lobehub/ui/base-ui';
-import { useCallback } from 'react';
+import { copyToClipboard, toast } from '@lobehub/ui';
+import { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useActiveWorkspaceSlug } from '@/business/client/hooks/useActiveWorkspaceSlug';
@@ -23,6 +22,7 @@ export const useTaskCopyActions = () => {
   const taskId = useTaskStore(taskDetailSelectors.activeTaskId);
   const taskAgentId = useTaskStore(taskDetailSelectors.activeTaskAgentId);
   const taskTitle = useTaskStore(taskDetailSelectors.activeTaskName);
+  const instruction = useTaskStore(taskDetailSelectors.activeTaskInstruction);
 
   const copyId = useCallback(async () => {
     if (!taskId) return;
@@ -31,18 +31,35 @@ export const useTaskCopyActions = () => {
     toast.success(t('taskList.contextMenu.copyIdSuccess'));
   }, [taskId, t]);
 
+  // Carry the title into the link so a pasted URL says what the task is.
+  const link = useMemo(
+    () =>
+      taskId
+        ? `${appOrigin}${buildWorkspaceAwarePath(
+            taskDetailPath(taskId, taskAgentId ?? undefined, taskTitle),
+            activeWorkspaceSlug,
+          )}`
+        : undefined,
+    [taskId, taskAgentId, taskTitle, appOrigin, activeWorkspaceSlug],
+  );
+
   const copyLink = useCallback(async () => {
-    if (!taskId) return;
+    if (!link) return;
 
-    // Carry the title into the copied link so a pasted URL says what the task is.
-    const taskUrl = `${appOrigin}${buildWorkspaceAwarePath(
-      taskDetailPath(taskId, taskAgentId ?? undefined, taskTitle),
-      activeWorkspaceSlug,
-    )}`;
-
-    await copyToClipboard(taskUrl);
+    await copyToClipboard(link);
     toast.success(t('taskList.contextMenu.copyLinkSuccess'));
-  }, [taskId, taskAgentId, taskTitle, appOrigin, activeWorkspaceSlug, t]);
+  }, [link, t]);
 
-  return { copyId, copyLink, taskId };
+  // The instruction is stored as markdown, so the copy pastes cleanly into
+  // other agents, issues or chats.
+  const content = instruction?.trim() ? instruction : undefined;
+
+  const copyContent = useCallback(async () => {
+    if (!content) return;
+
+    await copyToClipboard(content);
+    toast.success(t('taskList.contextMenu.copyContentSuccess'));
+  }, [content, t]);
+
+  return { copyContent, copyId, copyLink, hasContent: !!content, link, taskId };
 };

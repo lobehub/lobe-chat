@@ -5,8 +5,12 @@ import { render, screen, waitFor } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
+import { TopicListScopeContext } from '../../TopicListScope';
 import TopicItem from './index';
 
+const scopedTopicMock = vi.hoisted(() => ({
+  value: undefined as { agentId: string; agentAvatar: string; agentName: string } | undefined,
+}));
 const useTopicNavigationMock = vi.hoisted(() => vi.fn());
 const prefetchMessagesMock = vi.hoisted(() => vi.fn());
 const activeTopicIdMock = vi.hoisted(() => ({ value: undefined as string | undefined }));
@@ -40,6 +44,8 @@ vi.mock('motion/react-m', () => ({
     <span {...props}>{children}</span>
   ),
 }));
+
+vi.mock('../../useScopedTopics', () => ({ useScopedTopic: () => scopedTopicMock.value }));
 
 vi.mock('@/const/version', () => ({ isDesktop: false }));
 vi.mock('@/features/NavPanel/components/NavItem', () => ({
@@ -75,14 +81,18 @@ vi.mock('@/features/ChatInput/ControlBar/DirIcon', () => ({
 vi.mock('@/business/client/hooks/useActiveWorkspaceSlug', () => ({
   useActiveWorkspaceSlug: () => 'team',
 }));
-vi.mock('@/routes/(main)/agent/channel/const', () => ({
+vi.mock('@/features/AgentChannel/const', () => ({
   getPlatformIcon: () => null,
 }));
 vi.mock('@/store/agent', () => ({
   // `agentMap` is read by `agentSelectors.currentAgentVisibility`.
   useAgentStore: (
-    selector: (state: { activeAgentId: string; agentMap: Record<string, unknown> }) => unknown,
-  ) => selector({ activeAgentId: 'agt_test', agentMap: {} }),
+    selector: (state: {
+      activeAgentId: string;
+      agentMap: Record<string, unknown>;
+      builtinAgentIdMap: Record<string, string>;
+    }) => unknown,
+  ) => selector({ activeAgentId: 'agt_test', agentMap: {}, builtinAgentIdMap: {} }),
 }));
 vi.mock('@/store/chat', () => {
   const useChatStore = (
@@ -139,14 +149,17 @@ vi.mock('./Actions', () => ({
 vi.mock('./useDropdownMenu', () => ({
   useTopicItemDropdownMenu: () => ({ dropdownMenu: [] }),
 }));
+// The row only decides *whether* to mount the thread list; the list itself has
+// its own tests (`ThreadList/*.test.ts`), so stub it to a marker here.
 vi.mock('../../TopicListContent/ThreadList', () => ({
   default: ({ topicId }: { topicId: string }) => (
-    <div data-testid="topic-thread-list" data-topic-id={topicId} />
+    <div data-testid="thread-list" data-topic-id={topicId} />
   ),
 }));
 
 describe('TopicItem active state', () => {
   afterEach(() => {
+    scopedTopicMock.value = undefined;
     prefetchMessagesMock.mockClear();
     activeTopicIdMock.value = undefined;
     agentRuntimeRunningMock.value = false;
@@ -154,6 +167,36 @@ describe('TopicItem active state', () => {
     topicUnreadCompletedMock.value = false;
     topicMetaCardMock.value = undefined;
     vi.useRealTimers();
+  });
+
+  it('renders the Project row Agent avatar and keeps its link in the Project', () => {
+    scopedTopicMock.value = {
+      agentId: 'other-agent',
+      agentAvatar: '/avatars/other.png',
+      agentName: 'Other Agent',
+    };
+    useTopicNavigationMock.mockReturnValue({
+      isInAgentSubRoute: false,
+      isInTopicContextRoute: true,
+      routeTopicId: 'project-topic',
+      urlTopicId: 'project-topic',
+      focusTopicPopup: vi.fn(),
+      navigateToTopic: vi.fn(),
+    });
+    render(
+      <TopicListScopeContext value={{ projectId: 'project-1' }}>
+        <TopicItem id="project-topic" title="Project work" />
+      </TopicListScopeContext>,
+    );
+    expect(screen.getByRole('img', { name: 'Other Agent' })).toHaveAttribute(
+      'src',
+      '/avatars/other.png',
+    );
+    expect(screen.getByTestId('nav-item')).toHaveAttribute(
+      'data-href',
+      '/team/project/project-1/conversation/project-topic',
+    );
+    expect(screen.getByTestId('nav-item')).toHaveAttribute('data-active', 'true');
   });
 
   it('keeps the current topic highlighted on topic page sub-routes', () => {
@@ -168,7 +211,6 @@ describe('TopicItem active state', () => {
     render(<TopicItem id="tpc_test" title="Topic" />);
 
     expect(screen.getByTestId('nav-item')).toHaveAttribute('data-active', 'true');
-    expect(screen.getByTestId('topic-thread-list')).toHaveAttribute('data-topic-id', 'tpc_test');
   });
 
   it('does not highlight a stale topic while visiting non-topic agent sub-routes', () => {
@@ -183,7 +225,6 @@ describe('TopicItem active state', () => {
     render(<TopicItem id="tpc_test" title="Topic" />);
 
     expect(screen.getByTestId('nav-item')).toHaveAttribute('data-active', 'false');
-    expect(screen.queryByTestId('topic-thread-list')).not.toBeInTheDocument();
   });
 
   it('prefixes the cmd-click href with the active workspace slug', () => {
@@ -219,6 +260,59 @@ describe('TopicItem active state', () => {
     expect(screen.getByText('00:33')).toBeInTheDocument();
   });
 
+  // After a page refresh only the ACTIVE topic is reconnected into the
+  // in-memory operation store; every other running row has no local
+  // operation and its timer must fall back to the server-list's
+  // `runStartedAt` or it renders nothing (the arrow-pointed rows in the bug
+  // report's screenshot).
+  it('falls back to the server runStartedAt when no local operation exists', () => {
+    vi.useFakeTimers();
+    const now = Date.UTC(2026, 0, 1, 0, 2, 37);
+    vi.setSystemTime(now);
+    runningStartTimeMock.value = undefined;
+    useTopicNavigationMock.mockReturnValue({
+      isInAgentSubRoute: false,
+      isInTopicContextRoute: false,
+      navigateToTopic: vi.fn(),
+      routeTopicId: undefined,
+    });
+
+    render(
+      <TopicItem
+        id="tpc_test"
+        runStartedAt={new Date(now - 157_000).toISOString()}
+        status="running"
+        title="Topic"
+      />,
+    );
+
+    expect(screen.getByText('02:37')).toBeInTheDocument();
+  });
+
+  it('prefers the local operation start over the server runStartedAt', () => {
+    vi.useFakeTimers();
+    const now = Date.UTC(2026, 0, 1, 0, 0, 33);
+    vi.setSystemTime(now);
+    runningStartTimeMock.value = now - 33_000;
+    useTopicNavigationMock.mockReturnValue({
+      isInAgentSubRoute: false,
+      isInTopicContextRoute: false,
+      navigateToTopic: vi.fn(),
+      routeTopicId: undefined,
+    });
+
+    render(
+      <TopicItem
+        id="tpc_test"
+        runStartedAt={new Date(now - 157_000).toISOString()}
+        status="running"
+        title="Topic"
+      />,
+    );
+
+    expect(screen.getByText('00:33')).toBeInTheDocument();
+  });
+
   it('preserves the masked running-tail icon state for the active topic', () => {
     activeTopicIdMock.value = 'tpc_test';
     agentRuntimeRunningMock.value = true;
@@ -234,6 +328,40 @@ describe('TopicItem active state', () => {
 
     expect(screen.queryByTestId('ring-loading')).not.toBeInTheDocument();
     expect(screen.queryByTestId('topic-item-icon')).not.toBeInTheDocument();
+  });
+
+  // Same masked tail, now with the server fallback in play: the answer is
+  // visibly complete (ring masked) while the operation finishes its terminal
+  // bookkeeping, which on the server routinely runs for seconds. `runStartedAt`
+  // only knows the persisted `running` status, so it stays set across that
+  // whole window — without the ring's own gate the row kept counting next to a
+  // finished answer.
+  it('hides the running elapsed time during the masked running tail', () => {
+    vi.useFakeTimers();
+    const now = Date.UTC(2026, 0, 1, 0, 2, 37);
+    vi.setSystemTime(now);
+    runningStartTimeMock.value = undefined;
+    activeTopicIdMock.value = 'tpc_test';
+    agentRuntimeRunningMock.value = true;
+    useTopicNavigationMock.mockReturnValue({
+      isInAgentSubRoute: false,
+      isInTopicContextRoute: true,
+      navigateToTopic: vi.fn(),
+      routeTopicId: 'tpc_test',
+      urlTopicId: 'tpc_test',
+    });
+
+    render(
+      <TopicItem
+        id="tpc_test"
+        runStartedAt={new Date(now - 157_000).toISOString()}
+        status="running"
+        title="Topic"
+      />,
+    );
+
+    expect(screen.queryByTestId('ring-loading')).not.toBeInTheDocument();
+    expect(screen.queryByText('02:37')).not.toBeInTheDocument();
   });
 
   it('keeps idle topics iconless', () => {
@@ -386,5 +514,52 @@ describe('TopicItem active state', () => {
     render(<TopicItem id="tpc_test" status={status} title="Topic" />);
 
     expect(screen.getByTestId('topic-item-icon')).toHaveAttribute('data-icon', icon);
+  });
+});
+
+// The mobile surface has no working sidebar (the desktop host of a topic's
+// threads), so the rows nest under the topic row there — but only under the
+// route's topic. Mounting them under an inactive topic opened its thread while
+// `activeTopicId` still pointed elsewhere, and fetched threads per topic.
+describe('TopicItem mobile thread list', () => {
+  const navigateTo = (urlTopicId?: string) => {
+    useTopicNavigationMock.mockReturnValue({
+      isInAgentSubRoute: false,
+      isInTopicContextRoute: false,
+      navigateToTopic: vi.fn(),
+      routeTopicId: undefined,
+      urlTopicId,
+    });
+  };
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  it('nests the route topic threads on the mobile surface', () => {
+    vi.stubGlobal('__MOBILE__', true);
+    navigateTo('tpc_test');
+
+    render(<TopicItem id="tpc_test" title="Topic" />);
+
+    expect(screen.getByTestId('thread-list')).toHaveAttribute('data-topic-id', 'tpc_test');
+  });
+
+  it('does not nest an inactive topic threads on the mobile surface', () => {
+    vi.stubGlobal('__MOBILE__', true);
+    navigateTo('tpc_other');
+
+    render(<TopicItem id="tpc_test" title="Topic" />);
+
+    expect(screen.queryByTestId('thread-list')).not.toBeInTheDocument();
+  });
+
+  it('does not nest the thread list on the desktop surface', () => {
+    vi.stubGlobal('__MOBILE__', false);
+    navigateTo('tpc_test');
+
+    render(<TopicItem id="tpc_test" title="Topic" />);
+
+    expect(screen.queryByTestId('thread-list')).not.toBeInTheDocument();
   });
 });

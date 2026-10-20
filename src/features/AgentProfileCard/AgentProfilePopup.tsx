@@ -1,10 +1,16 @@
 'use client';
 
 import { agentDisplayName, type AgentItem } from '@lobechat/types';
-import { Flexbox, Icon, Popover } from '@lobehub/ui';
-import { ActionIcon, Skeleton, Text } from '@lobehub/ui/base-ui';
+import {
+  ActionIcon,
+  createStaticStyles,
+  Flexbox,
+  Icon,
+  Popover,
+  Skeleton,
+  Text,
+} from '@lobehub/ui';
 import { SkillsIcon } from '@lobehub/ui/icons';
-import { createStaticStyles } from 'antd-style';
 import { BookOpen, FileText, Settings, SquareTerminal } from 'lucide-react';
 import { memo, type PropsWithChildren, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -37,11 +43,9 @@ const styles = createStaticStyles(({ css, cssVar }) => ({
   `,
   sectionTitle: css`
     margin-block-end: 8px;
-
     font-size: 11px;
     font-weight: 600;
     color: ${cssVar.colorTextTertiary};
-    text-transform: uppercase;
   `,
   statItem: css`
     color: ${cssVar.colorTextSecondary};

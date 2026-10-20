@@ -2,14 +2,14 @@ import type { TaskDetailActivity } from '@lobechat/types';
 import { useEditor } from '@lobehub/editor/react';
 import { LexicalRenderer } from '@lobehub/editor/renderer';
 import { Block, type DropdownItem, DropdownMenu, Flexbox, Icon, Markdown } from '@lobehub/ui';
-import { ActionIcon, Avatar, Button, confirmModal, Text } from '@lobehub/ui/base-ui';
-import { cssVar } from 'antd-style';
+import { ActionIcon, Avatar, Button, confirmModal, cssVar, Text } from '@lobehub/ui';
 import { MessageCircle, MoreHorizontal, Pencil, Trash } from 'lucide-react';
 import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { AttachmentUploadButton } from '@/features/AttachmentInput';
-import { mentionFilledClassName } from '@/features/ChatInput/InputEditor/mentionStyle';
+import { mentionPlainClassName } from '@/features/ChatInput/InputEditor/mentionStyle';
+import { richTextImageRenderers } from '@/features/Conversation/Messages/User/components/richTextImageRenderers';
 import { EditorCanvas } from '@/features/EditorCanvas';
 import { seedAttachments } from '@/features/EditorCanvas/attachmentRegistry';
 import {
@@ -28,6 +28,7 @@ import { styles } from '../shared/style';
 // as the Linear-style card on its own row instead of the default inline pill.
 const FILE_WRAPPER_STYLE = { marginBlock: 8 };
 const rendererOverrides = {
+  ...richTextImageRenderers,
   file: (node: Record<string, any>) => (
     <div style={FILE_WRAPPER_STYLE}>
       <LinearFileCard node={node as Parameters<typeof LinearFileCard>[0]['node']} />
@@ -158,7 +159,7 @@ const CommentCard = memo<CommentCardProps>(({ activity }) => {
 
       {isEditing && (
         <>
-          <div className={mentionFilledClassName}>
+          <div className={mentionPlainClassName}>
             <EditorCanvas
               editor={editor}
               editorData={editorData}
@@ -183,7 +184,7 @@ const CommentCard = memo<CommentCardProps>(({ activity }) => {
       )}
       {!isEditing && Boolean(activity.editorData) && (
         <LexicalRenderer
-          className={mentionFilledClassName}
+          className={mentionPlainClassName}
           overrides={rendererOverrides}
           value={activity.editorData as Parameters<typeof LexicalRenderer>[0]['value']}
           variant={'chat'}

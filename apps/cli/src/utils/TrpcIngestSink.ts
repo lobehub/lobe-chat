@@ -1,8 +1,11 @@
-import type { LocalHeterogeneousAgentType } from '@lobechat/heterogeneous-agents';
+import type {
+  LocalHeterogeneousAgentType,
+  LocalRuntimeHeterogeneousAgentType,
+} from '@lobechat/heterogeneous-agents';
 import type { AgentStreamEvent } from '@lobechat/heterogeneous-agents/spawn';
 
 import type { TrpcClient } from '../api/client';
-import type { IngestSink } from './BatchIngester';
+import type { IngestAck, IngestSink } from './BatchIngester';
 
 /**
  * `IngestSink` implementation that forwards batches to the server via tRPC
@@ -14,7 +17,7 @@ import type { IngestSink } from './BatchIngester';
 export class TrpcIngestSink implements IngestSink {
   constructor(
     private readonly client: TrpcClient,
-    private readonly agentType: LocalHeterogeneousAgentType,
+    private readonly agentType: LocalHeterogeneousAgentType | LocalRuntimeHeterogeneousAgentType,
     private readonly operationId: string,
     private readonly topicId: string,
     private readonly assistantMessageId?: string,
@@ -49,13 +52,17 @@ export class TrpcIngestSink implements IngestSink {
     }
   }
 
-  async ingest(events: AgentStreamEvent[]): Promise<void> {
-    await this.client.aiAgent.heteroIngest.mutate({
+  async ingest(events: AgentStreamEvent[]): Promise<IngestAck> {
+    const ack = (await this.client.aiAgent.heteroIngest.mutate({
       agentType: this.agentType,
       assistantMessageId: this.assistantMessageId,
       events: events as any,
       operationId: this.operationId,
       topicId: this.topicId,
-    });
+    })) as { accepted?: boolean; reason?: string } | undefined;
+
+    // Servers older than the refusal contract answer `{ ack: true }` with no
+    // verdict; only an explicit `false` means the batch was discarded.
+    return { accepted: ack?.accepted !== false, reason: ack?.reason };
   }
 }

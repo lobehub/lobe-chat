@@ -1,7 +1,7 @@
 'use client';
 
-import { copyToClipboard, Flexbox } from '@lobehub/ui';
-import { Button, Text, toast } from '@lobehub/ui/base-ui';
+import { buildAcceptanceRepairPrompt } from '@lobechat/prompts';
+import { Button, copyToClipboard, Flexbox, Text, toast } from '@lobehub/ui';
 import dayjs from 'dayjs';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -14,7 +14,6 @@ import { verifyService } from '@/services/verify';
 
 import { useAcceptanceScope } from '../AcceptanceScope';
 import { checkFilterState, isException } from '../Checks/checkState';
-import { buildRepairPrompt } from '../Checks/checkWork';
 import { useAcceptanceComments } from '../Comments/hooks';
 import { flowPlanPhase } from '../Plan/planReview';
 import { acceptanceCheckPath } from '../routes';
@@ -24,7 +23,9 @@ import { formatAcceptanceCountsText, LIVE_ACCEPTANCE_STATUSES } from '../verdict
 import { canReviewAcceptance } from '../visibility';
 import DecisionBar from './DecisionBar';
 import FeedbackDrawer, { type FeedbackListEntry } from './FeedbackDrawer';
+import { draftRepairPromptInMobile } from './mobileBridge';
 import { openAcceptModal, openGroupFeedbackModal, openRejectModal } from './modals';
+import { rejectCopyOnly } from './rejectCopyOnly';
 
 interface AcceptanceDecisionProps {
   onDraftToComposer?: (text: string) => boolean;
@@ -182,7 +183,7 @@ const AcceptanceDecision = ({ onDraftToComposer }: AcceptanceDecisionProps) => {
     }
   };
 
-  const repairPrompt = buildRepairPrompt(acceptance.id);
+  const repairPrompt = buildAcceptanceRepairPrompt(acceptance.id);
 
   return (
     <>
@@ -225,6 +226,7 @@ const AcceptanceDecision = ({ onDraftToComposer }: AcceptanceDecisionProps) => {
           })
         }
         onCopyReview={async () => {
+          if (draftRepairPromptInMobile(acceptance.id, repairPrompt)) return;
           await copyToClipboard(repairPrompt);
           toast.success({
             placement: 'top',
@@ -233,8 +235,40 @@ const AcceptanceDecision = ({ onDraftToComposer }: AcceptanceDecisionProps) => {
         }}
         onRejectComment={() =>
           openRejectModal({
-            onConfirm: (comment) =>
-              runAction(() => verifyService.rejectDelivery(acceptance.id, comment)),
+            // `origin` is only visible to the record owner, so this is the
+            // viewer's promise, not the server's gate — the copy path below
+            // opts out of dispatch explicitly.
+            dispatchAvailable: Boolean(data.origin?.topic),
+            acceptanceId: acceptance.id,
+            onConfirm: async (comment) => {
+              if (!data.origin?.topic) {
+                const rejected = await runAction(() =>
+                  rejectCopyOnly({
+                    acceptanceId: acceptance.id,
+                    comment,
+                    copy: copyToClipboard,
+                    reject: (options) =>
+                      verifyService.rejectDelivery(acceptance.id, options.comment, options),
+                  }),
+                );
+                if (rejected)
+                  toast.success({ placement: 'top', title: t('acceptance.bar.copied') });
+                return rejected;
+              }
+              return runAction(async () => {
+                // The server sends the delivery back to its authoring agent when
+                // the rounds name one — say so, since the reject itself is quiet.
+                const { repairDispatch } = await verifyService.rejectDelivery(
+                  acceptance.id,
+                  comment,
+                );
+                if (repairDispatch.dispatched) {
+                  toast.success({ placement: 'top', title: t('acceptance.bar.rerunSent') });
+                } else if (repairDispatch.reason === 'failed') {
+                  toast.error(repairDispatch.error ?? t('acceptance.actionError'));
+                }
+              });
+            },
           })
         }
         onRerun={async () => {

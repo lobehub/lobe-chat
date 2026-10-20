@@ -21,6 +21,7 @@ import type { DocumentCommentItem } from '../schemas/documentComment';
 import { documentCommentMentions, documentComments } from '../schemas/documentComment';
 import { documents } from '../schemas/file';
 import type { LobeChatDatabase } from '../type';
+import { notTrashed } from '../utils/softDelete';
 
 export const DOCUMENT_COMMENT_WORKSPACE_REQUIRED =
   'Document comments are workspace-scoped; a workspaceId is required';
@@ -94,6 +95,12 @@ export interface UpdateDocumentCommentResult {
 }
 
 export interface ListDocumentCommentThreadsParams {
+  /**
+   * Restrict to roots with (`true`) or without (`false`) a selection anchor.
+   * Anchored threads render beside the text, document-level ones below it, so
+   * each surface pages its own subset instead of filtering a mixed list.
+   */
+  anchored?: boolean;
   cursor?: string;
   documentId: string;
   limit?: number;
@@ -128,7 +135,7 @@ export class DocumentCommentModel {
       const [document] = await tx
         .select({ id: documents.id, userId: documents.userId, workspaceId: documents.workspaceId })
         .from(documents)
-        .where(eq(documents.id, params.documentId))
+        .where(and(eq(documents.id, params.documentId), notTrashed(documents.isDeleted)))
         .limit(1)
         .for('update');
 
@@ -435,12 +442,14 @@ export class DocumentCommentModel {
 
   async listThreads(params: ListDocumentCommentThreadsParams) {
     const workspaceId = this.requireWorkspaceId();
-    const { cursor, documentId, limit = 20 } = params;
+    const { anchored, cursor, documentId, limit = 20 } = params;
     const conditions = [
       eq(documentComments.documentId, documentId),
       eq(documentComments.workspaceId, workspaceId),
       isNull(documentComments.parentCommentId),
     ];
+    if (anchored === true) conditions.push(isNotNull(documentComments.selectionAnchor));
+    if (anchored === false) conditions.push(isNull(documentComments.selectionAnchor));
     const decodedCursor = decodeCursor(cursor);
     if (decodedCursor) {
       const createdAt = sql`${decodedCursor.createdAt}::timestamptz`;

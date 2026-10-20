@@ -1,12 +1,20 @@
 'use client';
 
-import { CaretDownFilled, LoadingOutlined } from '@ant-design/icons';
 import { DERIVED_DOCUMENT_SOURCE_TYPE } from '@lobechat/const';
-import { Block, Flexbox, Icon, stopPropagation, Tooltip } from '@lobehub/ui';
-import { ActionIcon, toast } from '@lobehub/ui/base-ui';
-import { Input } from 'antd';
-import { cx } from 'antd-style';
-import { FileText, FolderIcon, FolderOpenIcon, LockIcon } from 'lucide-react';
+import {
+  ActionIcon,
+  Block,
+  Center,
+  cx,
+  Flexbox,
+  Icon,
+  Input,
+  Spin,
+  stopPropagation,
+  toast,
+  Tooltip,
+} from '@lobehub/ui';
+import { ChevronDownIcon, FileText, FolderIcon, FolderOpenIcon, LockIcon } from 'lucide-react';
 import * as m from 'motion/react-m';
 import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -69,7 +77,7 @@ export const HierarchyNode = memo<HierarchyNodeProps>(
 
     const [isRenaming, setIsRenaming] = useState(false);
     const [renamingValue, setRenamingValue] = useState(item.name);
-    const inputRef = useRef<any>(null);
+    const inputRef = useRef<HTMLInputElement>(null);
 
     const { isPage, emoji } = useMemo(() => {
       const lowerFileType = item.fileType?.toLowerCase();
@@ -105,7 +113,7 @@ export const HierarchyNode = memo<HierarchyNodeProps>(
 
     const handleRenameConfirm = useCallback(async () => {
       if (!renamingValue.trim()) {
-        toast.error('Folder name cannot be empty');
+        toast.error(t('FileManager.actions.folderNameRequired', { ns: 'components' }));
         return;
       }
 
@@ -116,13 +124,13 @@ export const HierarchyNode = memo<HierarchyNodeProps>(
 
       try {
         await renameItem(item.id, parentKey, renamingValue.trim());
-        toast.success('Renamed successfully');
+        toast.success(t('FileManager.actions.renameSuccess', { ns: 'components' }));
         setIsRenaming(false);
       } catch (error) {
         console.error('Rename error:', error);
-        toast.error('Rename failed');
+        toast.error(t('FileManager.actions.renameError', { ns: 'components' }));
       }
-    }, [item.id, item.name, parentKey, renamingValue, renameItem]);
+    }, [item.id, item.name, parentKey, renamingValue, renameItem, t]);
 
     // A folder freshly created from the tree's per-folder "+" enters inline
     // rename as soon as its row mounts (the parent was expanded/revalidated by
@@ -322,7 +330,9 @@ export const HierarchyNode = memo<HierarchyNodeProps>(
             {flat ? (
               <div style={{ width: 20 }} />
             ) : isLoading ? (
-              <ActionIcon spin icon={LoadingOutlined as any} size={'small'} style={{ width: 20 }} />
+              <Center flex={'none'} width={20}>
+                <Spin size={'small'} />
+              </Center>
             ) : (
               <m.div
                 animate={{ rotate: isExpanded ? 0 : -90 }}
@@ -330,7 +340,7 @@ export const HierarchyNode = memo<HierarchyNodeProps>(
                 transition={{ duration: 0.2, ease: 'easeInOut' }}
               >
                 <ActionIcon
-                  icon={CaretDownFilled as any}
+                  icon={ChevronDownIcon}
                   size={'small'}
                   style={{ width: 20 }}
                   onClick={(e) => {

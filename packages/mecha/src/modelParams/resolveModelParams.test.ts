@@ -1,6 +1,11 @@
 import { describe, expect, it, vi } from 'vitest';
 
-import { resolveHistoryCount, resolveModelParams } from './resolveModelParams';
+import {
+  createFrozenModelParamsProviders,
+  readFrozenModelFacts,
+  resolveHistoryCount,
+  resolveModelParams,
+} from './resolveModelParams';
 import type { ModelCardFacts, ModelParamsProviders, ModelParamsRequest } from './types';
 
 const cards: ModelCardFacts[] = [
@@ -310,5 +315,157 @@ describe('resolveHistoryCount', () => {
     expect(resolveHistoryCount(20)).toBe(21);
     expect(resolveHistoryCount(undefined)).toBeUndefined();
     expect(resolveHistoryCount(null)).toBeUndefined();
+  });
+});
+
+describe('frozen model facts', () => {
+  const liveProviders = () => ({
+    findTopicReasoningPin: vi.fn<NonNullable<ModelParamsProviders['findTopicReasoningPin']>>(
+      async () => ({
+        model: 'gpt-4',
+        provider: 'openai',
+        reasoningConfig: { reasoningEffort: 'low' },
+      }),
+    ),
+    getModelReasoningConfig: vi.fn<NonNullable<ModelParamsProviders['getModelReasoningConfig']>>(
+      async () => ({ reasoningEffort: 'high' }),
+    ),
+    getUserModelRow: vi.fn<NonNullable<ModelParamsProviders['getUserModelRow']>>(async () => ({
+      displayName: 'My GPT-4',
+    })),
+    listModelCards: vi.fn(() => cards),
+  });
+
+  it('resolves the same params off the snapshot without reading a single source again', async () => {
+    const live = liveProviders();
+    const expected = await resolveModelParams(request(), live);
+
+    const facts = await readFrozenModelFacts(request(), live);
+    const reads = liveProviders();
+    // The live sources are laid underneath on purpose: the snapshot must answer
+    // everything, so none of them may be touched.
+    const fromSnapshot = await resolveModelParams(request(), {
+      ...reads,
+      ...createFrozenModelParamsProviders(facts),
+    });
+
+    expect(fromSnapshot.modelDisplayName).toBe(expected.modelDisplayName);
+    expect(fromSnapshot.modelKnowledgeCutoff).toBe(expected.modelKnowledgeCutoff);
+    expect(fromSnapshot.modelExtendParams).toEqual(expected.modelExtendParams);
+    expect(fromSnapshot.resolvedExtendParams).toEqual(expected.resolvedExtendParams);
+    expect(fromSnapshot.capabilities.isCanUseFC('gpt-4', 'openai')).toBe(true);
+    expect(fromSnapshot.capabilities.isCanUseVision('gpt-4', 'openai')).toBe(true);
+    expect(reads.findTopicReasoningPin).not.toHaveBeenCalled();
+    expect(reads.getModelReasoningConfig).not.toHaveBeenCalled();
+    expect(reads.getUserModelRow).not.toHaveBeenCalled();
+    expect(reads.listModelCards).not.toHaveBeenCalled();
+  });
+
+  it('survives the state round-trip as plain JSON', async () => {
+    const facts = await readFrozenModelFacts(request(), liveProviders());
+    // Deliberately JSON, not structuredClone: the state is stored as JSON.
+    // eslint-disable-next-line unicorn/prefer-structured-clone
+    expect(JSON.parse(JSON.stringify(facts))).toEqual(facts);
+    // Only the two cards the rules can match, never the whole bank.
+    expect(facts.cards.map((card) => `${card.providerId}/${card.id}`)).toEqual([
+      'openai/gpt-4',
+      'lobehub/gpt-4',
+    ]);
+  });
+
+  it('keeps the effort the run started with when the user edits it mid-run', async () => {
+    const live = liveProviders();
+    const facts = await readFrozenModelFacts(request(), live);
+    expect(facts.reasoningConfig).toEqual({ reasoningEffort: 'low' });
+
+    // The user re-pins the topic and changes the model-instance config: the
+    // running operation must keep answering with what it froze.
+    live.findTopicReasoningPin.mockResolvedValue({
+      model: 'gpt-4',
+      provider: 'openai',
+      reasoningConfig: { reasoningEffort: 'high' },
+    });
+    const later = await resolveModelParams(request(), createFrozenModelParamsProviders(facts));
+    expect(later.resolvedExtendParams).toMatchObject({ reasoning_effort: 'low' });
+  });
+
+  it('freezes no reasoning source for a model that cannot consume one', async () => {
+    const live = liveProviders();
+    const facts = await readFrozenModelFacts(request({ model: 'plain' }), live);
+    expect(facts.reasoningConfig).toBeUndefined();
+    expect(live.findTopicReasoningPin).not.toHaveBeenCalled();
+    expect(live.getModelReasoningConfig).not.toHaveBeenCalled();
+  });
+
+  it('answers for the frozen model only, so another model cannot inherit its row', async () => {
+    const facts = await readFrozenModelFacts(request(), liveProviders());
+    const other = await resolveModelParams(
+      request({ model: 'plain' }),
+      createFrozenModelParamsProviders(facts),
+    );
+    expect(other.userModelRow).toBeUndefined();
+    expect(other.modelDisplayName).toBeUndefined();
+    // No card for the compression model in the snapshot: function calling is
+    // assumed and no native media is claimed, as for any unknown card.
+    expect(other.capabilities.isCanUseFC('plain', 'openai')).toBe(true);
+    expect(other.capabilities.isCanUseVision('plain', 'openai')).toBe(false);
+  });
+
+  it('merges the user deployment alias over the bundled card when freezing', async () => {
+    // Codex P1 (4256356269): a user-configured alias must win over the bundled
+    // card, otherwise deployment-catalog providers inject the catalog default
+    // and 404 wherever only the user's endpoint exists.
+    const live = liveProviders();
+    live.getUserModelRow.mockResolvedValue({ deploymentName: 'prod-endpoint' });
+
+    const facts = await readFrozenModelFacts(
+      request({ model: 'deepseek-v4-pro', provider: 'deepseek' }),
+      live,
+    );
+    const frozenCard = facts.cards.find((card) => card.providerId === 'deepseek');
+    expect(frozenCard?.deploymentName).toBe('prod-endpoint');
+    // The bundled card is preserved apart from the alias.
+    expect(frozenCard).toMatchObject({ displayName: 'DeepSeek V4 Pro', id: 'deepseek-v4-pro' });
+    // And the transport's lookup answers from the snapshot as stored.
+    expect(
+      facts.cards.find(
+        (card) =>
+          card.providerId === 'deepseek' &&
+          (card.id === 'deepseek-v4-pro' || card.deploymentName === 'deepseek-v4-pro'),
+      )?.deploymentName,
+    ).toBe('prod-endpoint');
+  });
+
+  it('freezes a minimal deployment card for a custom model the bank has no card for', async () => {
+    const live = liveProviders();
+    live.getUserModelRow.mockResolvedValue({ deploymentName: 'prod-endpoint' });
+
+    // No bundled card under volcengine: the user row alone still names the
+    // deployment the transport must inject.
+    const facts = await readFrozenModelFacts(
+      request({ model: 'deepseek-v4-pro', provider: 'volcengine' }),
+      live,
+    );
+    expect(facts.cards[0]).toEqual({
+      deploymentName: 'prod-endpoint',
+      id: 'deepseek-v4-pro',
+      providerId: 'volcengine',
+    });
+    // The canonical card of the same id elsewhere is frozen untouched.
+    expect(facts.cards.slice(1)).not.toContainEqual(
+      expect.objectContaining({ providerId: 'volcengine' }),
+    );
+  });
+
+  it('keeps the bundled deployment name when the user row has none', async () => {
+    const live = liveProviders();
+    live.getUserModelRow.mockResolvedValue({ displayName: 'My model' });
+
+    const facts = await readFrozenModelFacts(
+      request({ model: 'deepseek-v4-pro', provider: 'deepseek' }),
+      live,
+    );
+    const frozenCard = facts.cards.find((card) => card.providerId === 'deepseek');
+    expect(frozenCard?.deploymentName).toBeUndefined();
   });
 });

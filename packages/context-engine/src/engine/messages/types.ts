@@ -101,6 +101,11 @@ export interface FileContextConfig {
   enabled: boolean;
   /** Whether to include file URLs (desktop typically uses false) */
   includeFileUrl: boolean;
+  /**
+   * Attachments sent as a preview plus file id because the request's attachment
+   * budget is spent (see `planAttachmentPreviews`).
+   */
+  previewFileIds?: string[];
 }
 
 /**
@@ -209,6 +214,8 @@ export interface AgentGroupConfig {
 export interface PlanTodoConfig {
   /** Whether plan/todo context injection is enabled */
   enabled?: boolean;
+  /** Whether to inject the current todos into this LLM call */
+  injectTodos?: boolean;
   /** The current plan to inject (injected before first user message) */
   plan?: Plan;
   /** The current todo list to inject (injected at end of last user message) */
@@ -247,6 +254,11 @@ export interface MessagesEngineParams {
   enableAgentMode?: boolean;
   /** Whether to enable history message count limit */
   enableHistoryCount?: boolean;
+  /**
+   * Whether stale tool results are replaced with short placeholders in the
+   * model context. Undefined / true → trimming enabled (default).
+   */
+  enableStaleToolResultTrim?: boolean;
   /** Whether to inject the operation expertise snapshot */
   enableExpertise?: boolean;
   /** Force finish flag: when true, injects summary prompt for max-steps completion */

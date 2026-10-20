@@ -1,18 +1,23 @@
 'use client';
 
 import { MAX_RESOURCE_COLLABORATORS_PER_ADD } from '@lobechat/const';
-import { Empty, Flexbox, Icon, SearchBar } from '@lobehub/ui';
 import {
   Avatar,
   Button,
+  createStaticStyles,
+  cssVar,
+  cx,
+  Empty,
+  Flexbox,
+  Icon,
+  SearchBar,
   SkeletonAvatar,
   SkeletonText,
   Text,
   toast,
   useModalContext,
-} from '@lobehub/ui/base-ui';
+} from '@lobehub/ui';
 import { useHover } from 'ahooks';
-import { createStaticStyles, cssVar, cx } from 'antd-style';
 import { CheckIcon, SearchXIcon, UsersIcon } from 'lucide-react';
 import { memo, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -264,7 +269,7 @@ const AddCollaboratorsContent = memo<AddCollaboratorsContentProps>(
           ) : filtered.length === 0 ? (
             <Empty
               icon={isSearchMiss ? SearchXIcon : UsersIcon}
-              paddingBlock={48}
+              style={{ paddingBlock: 48 }}
               description={t(
                 isSearchMiss
                   ? 'permission.collaborators.addModal.noMatch'

@@ -15,6 +15,7 @@ import { mobileAgentSettingsRouteMeta } from '@/features/RouteMeta/mobileRouteMe
 import WorkspaceProviderRedirect from '@/features/WorkspaceSetting/ProviderRedirect';
 import { agentRouteMeta } from '@/routes/(main)/agent/features/routeMeta';
 import { loadRouteWithBuiltinToolSurfaces } from '@/spa/initialize/toolSurfaces';
+import { agentChatTopicListLoader } from '@/spa/router/agentChatTopicListLoader';
 import { routeMeta } from '@/spa/router/routeMeta';
 import { dynamicElement, dynamicLayout, ErrorBoundary, redirectElement } from '@/utils/router';
 
@@ -43,10 +44,12 @@ export const sharedMainAreaChildren: RouteObject[] = [
             element: mobileChatElement,
             handle: { meta: agentRouteMeta },
             index: true,
+            loader: agentChatTopicListLoader,
           },
           {
             element: mobileChatElement,
             handle: { meta: agentRouteMeta },
+            loader: agentChatTopicListLoader,
             path: ':topicId',
           },
           {
@@ -289,6 +292,23 @@ export const sharedMainAreaChildren: RouteObject[] = [
     ),
   },
 
+  // Page detail. Mobile has no page list, so `/page` itself goes home; without
+  // these routes `/page/:id` fell through to the `*` redirect.
+  {
+    children: [
+      {
+        element: redirectElement('..'),
+        index: true,
+      },
+      {
+        element: dynamicElement(() => import('@/routes/(mobile)/page/[id]'), 'Mobile > Page'),
+        path: ':id',
+      },
+    ],
+    errorElement: <ErrorBoundary />,
+    path: 'page',
+  },
+
   ...BusinessMobileRoutesWithMainLayout,
 ];
 
@@ -528,6 +548,20 @@ export const mobileRoutes: RouteObject[] = [
                   'Mobile > Workspace > Settings > Members',
                 ),
                 path: 'members',
+              },
+              {
+                element: dynamicElement(
+                  () => import('@/routes/(main)/[workspaceSlug]/settings/teams'),
+                  'Mobile > Workspace > Settings > Teams',
+                ),
+                path: 'teams',
+              },
+              {
+                element: dynamicElement(
+                  () => import('@/routes/(main)/[workspaceSlug]/settings/teams'),
+                  'Mobile > Workspace > Settings > Teams > Detail',
+                ),
+                path: 'teams/:teamId',
               },
               {
                 element: dynamicElement(

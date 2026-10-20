@@ -1,4 +1,7 @@
 {
+  "error.invalidFormat.desc": "Aún puedes leerlo. El diseño puede diferir del original.",
+  "error.invalidFormat.ownerHint": "Vuelve a guardarlo en el editor para restaurar el diseño original.",
+  "error.invalidFormat.title": "Esta página no se pudo mostrar en su formato original",
   "popover.copyLink": "Copiar enlace",
   "popover.copyLinkSuccess": "Enlace copiado",
   "popover.linkHint": "Cualquiera con el enlace puede ver esta página",

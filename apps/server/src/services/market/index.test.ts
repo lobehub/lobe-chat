@@ -468,6 +468,30 @@ describe('MarketService', () => {
       });
     });
 
+    it('should keep error_description when Market rejects the request with a flat auth error', async () => {
+      const service = new MarketService();
+      const authError = Object.assign(new Error('invalid_trust_token'), {
+        errorBody: { error: 'invalid_trust_token', error_description: 'Token expired' },
+        status: 401,
+      });
+      (service as any).market.skills.callTool = vi.fn().mockRejectedValue(authError);
+
+      const result = await service.executeLobehubSkill({
+        args: {},
+        provider: 'notion',
+        toolName: 'notion-fetch',
+      });
+
+      expect(result).toEqual({
+        content: JSON.stringify({
+          error: 'invalid_trust_token',
+          error_description: 'Token expired',
+        }),
+        error: { code: 'invalid_trust_token', message: 'invalid_trust_token: Token expired' },
+        success: false,
+      });
+    });
+
     it('should use a generic failure message when an unsuccessful response has no detail', async () => {
       const service = new MarketService();
       const mockCallTool = vi.fn().mockResolvedValue({
@@ -500,7 +524,10 @@ describe('MarketService', () => {
       (service as any).market.skills.listLiveTools = vi.fn().mockResolvedValue(liveResponse);
       (service as any).market.skills.listTools = vi.fn().mockResolvedValue({ tools: [] });
 
-      await expect(service.listSkillTools('posthog')).resolves.toBe(liveResponse);
+      await expect(service.listSkillTools('posthog')).resolves.toEqual({
+        ...liveResponse,
+        source: 'live',
+      });
 
       expect((service as any).market.skills.listLiveTools).toHaveBeenCalledWith('posthog');
       expect((service as any).market.skills.listTools).not.toHaveBeenCalled();
@@ -514,7 +541,10 @@ describe('MarketService', () => {
       (service as any).market.skills.listLiveTools = vi.fn().mockRejectedValue(new Error('boom'));
       (service as any).market.skills.listTools = vi.fn().mockResolvedValue(staticResponse);
 
-      await expect(service.listSkillTools('posthog')).resolves.toBe(staticResponse);
+      await expect(service.listSkillTools('posthog')).resolves.toEqual({
+        ...staticResponse,
+        source: 'static',
+      });
 
       expect((service as any).market.skills.listLiveTools).toHaveBeenCalledWith('posthog');
       expect((service as any).market.skills.listTools).toHaveBeenCalledWith('posthog');
@@ -528,7 +558,10 @@ describe('MarketService', () => {
       (service as any).market.skills.listLiveTools = vi.fn().mockResolvedValue({ tools: [] });
       (service as any).market.skills.listTools = vi.fn().mockResolvedValue(staticResponse);
 
-      await expect(service.listSkillTools('posthog')).resolves.toBe(staticResponse);
+      await expect(service.listSkillTools('posthog')).resolves.toEqual({
+        ...staticResponse,
+        source: 'static',
+      });
 
       expect((service as any).market.skills.listTools).toHaveBeenCalledWith('posthog');
     });
@@ -541,7 +574,10 @@ describe('MarketService', () => {
       (service as any).market.skills.listLiveTools = vi.fn().mockResolvedValue(null);
       (service as any).market.skills.listTools = vi.fn().mockResolvedValue(staticResponse);
 
-      await expect(service.listSkillTools('posthog')).resolves.toBe(staticResponse);
+      await expect(service.listSkillTools('posthog')).resolves.toEqual({
+        ...staticResponse,
+        source: 'static',
+      });
 
       expect((service as any).market.skills.listTools).toHaveBeenCalledWith('posthog');
     });
@@ -963,4 +999,22 @@ describe('MarketService.searchSkill', () => {
       }),
     );
   });
+});
+
+describe('MarketService.getSkillCategories', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it.each([{ locale: 'zh-CN', q: 'meeting' }, undefined])(
+    'should forward category filters to Market: %j',
+    async (params) => {
+      const service = new MarketService();
+      const categories = [{ category: 'productivity-tasks', count: 2 }];
+      vi.mocked(service.market.marketSkills.getCategories).mockResolvedValue(categories);
+
+      expect(await service.getSkillCategories(params)).toEqual(categories);
+      if (params) expect(service.market.marketSkills.getCategories).toHaveBeenCalledWith(params);
+    },
+  );
 });

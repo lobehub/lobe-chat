@@ -1,5 +1,8 @@
 // Cloud-only feature; namespace kept here so locale dictionary stays centralized.
 export default {
+  'error.invalidFormat.desc': 'You can still read it. Layout may differ from the original.',
+  'error.invalidFormat.ownerHint': 'Re-save it in the editor to restore the original layout.',
+  'error.invalidFormat.title': "This page couldn't be shown in its original format",
   'popover.copyLink': 'Copy Link',
   'popover.copyLinkSuccess': 'Link copied',
   'popover.linkHint': 'Anyone with the link can view this page',

@@ -1,4 +1,7 @@
 {
+  "error.invalidFormat.desc": "Bạn vẫn có thể đọc nó. Bố cục có thể khác so với bản gốc.",
+  "error.invalidFormat.ownerHint": "Lưu lại trong trình chỉnh sửa để khôi phục bố cục ban đầu.",
+  "error.invalidFormat.title": "Trang này không thể hiển thị theo định dạng ban đầu",
   "popover.copyLink": "Sao chép liên kết",
   "popover.copyLinkSuccess": "Liên kết đã được sao chép",
   "popover.linkHint": "Bất kỳ ai có liên kết đều có thể xem trang này",

@@ -5,6 +5,7 @@ import { browserExecutor } from '@lobechat/builtin-tool-browser/client/executor'
 import { calculatorExecutor } from '@lobechat/builtin-tool-calculator/executor';
 import { cloudSandboxExecutor } from '@lobechat/builtin-tool-cloud-sandbox/executor';
 import { credsExecutor } from '@lobechat/builtin-tool-creds/executor';
+import { dashboardExecutor } from '@lobechat/builtin-tool-dashboard/client/executor';
 import { goalExecutor } from '@lobechat/builtin-tool-goal/client/executor';
 import { groupAgentBuilderExecutor } from '@lobechat/builtin-tool-group-agent-builder/executor';
 import { groupManagementExecutor } from '@lobechat/builtin-tool-group-management/executor';
@@ -13,6 +14,7 @@ import { knowledgeBaseExecutor } from '@lobechat/builtin-tool-knowledge-base/cli
 import { lobeAgentExecutor } from '@lobechat/builtin-tool-lobe-agent/client/executor';
 import { memoryExecutor } from '@lobechat/builtin-tool-memory/executor';
 import { taskExecutor } from '@lobechat/builtin-tool-task/client/executor';
+import { videoGenerationExecutor } from '@lobechat/builtin-tool-video-generation/executor';
 
 import type { IBuiltinToolExecutor } from '../types';
 import {
@@ -32,12 +34,12 @@ import {
 } from './heteroCli';
 import { activatorExecutor } from './lobe-activator';
 import { agentDocumentsExecutor } from './lobe-agent-documents';
+import { attachmentsExecutor } from './lobe-attachments';
 import { messageExecutor } from './lobe-message';
 import { notebookExecutor } from './lobe-notebook';
 import { pageAgentExecutor } from './lobe-page-agent';
 import { skillStoreExecutor } from './lobe-skill-store';
 import { skillsExecutor } from './lobe-skills';
-import { topicReferenceExecutor } from './lobe-topic-reference';
 import { userInteractionExecutor } from './lobe-user-interaction';
 import { webBrowsing } from './lobe-web-browsing';
 import { webOnboardingExecutor } from './lobe-web-onboarding';
@@ -62,6 +64,7 @@ export const builtinToolExecutors = [
   agentBuilderExecutor,
   agentDocumentsExecutor,
   agentManagementExecutor,
+  attachmentsExecutor,
   auvExecutor,
   calculatorExecutor,
   cloudSandboxExecutor,
@@ -80,8 +83,9 @@ export const builtinToolExecutors = [
   skillStoreExecutor,
   skillsExecutor,
   taskExecutor,
+  dashboardExecutor,
+  videoGenerationExecutor,
   activatorExecutor,
-  topicReferenceExecutor,
   userInteractionExecutor,
   lobeAgentExecutor,
   webOnboardingExecutor,

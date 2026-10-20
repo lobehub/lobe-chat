@@ -1,10 +1,17 @@
 import type { SFSymbol } from '@lobechat/electron-client-ipc';
 import { getWorkingDirEffectivePath } from '@lobechat/types';
 import { nanoid } from '@lobechat/utils';
-import { Flexbox, Icon, type IconProps } from '@lobehub/ui';
-import { ActionIcon, type DropdownItem, DropdownMenu, Skeleton } from '@lobehub/ui/base-ui';
+import {
+  ActionIcon,
+  type DropdownItem,
+  DropdownMenu,
+  Flexbox,
+  Icon,
+  type IconProps,
+  Skeleton,
+} from '@lobehub/ui';
+import { createStaticStyles, cssVar } from '@lobehub/ui';
 import { SkillsIcon } from '@lobehub/ui/icons';
-import { createStaticStyles, cssVar } from 'antd-style';
 import {
   BoxesIcon,
   CheckIcon,
@@ -43,8 +50,12 @@ import { useBusinessWorkingSidebarTabs } from '@/business/client/features/Workin
 import { useActiveWorkspaceId } from '@/business/client/hooks/useActiveWorkspaceId';
 import { DESKTOP_HEADER_ICON_SMALL_SIZE } from '@/const/layoutTokens';
 import { isDesktop } from '@/const/version';
+import {
+  getPullRequestState,
+  PR_STATE_VISUAL,
+} from '@/features/AgentSidebar/Topic/List/Item/metaCardData';
 import { useRepoType } from '@/features/ChatInput/ControlBar/useRepoType';
-import SkeletonList from '@/features/NavPanel/components/SkeletonList';
+import { useSandboxMode } from '@/features/ChatInput/ControlBar/useSandboxMode';
 import { getPortalViewWidth } from '@/features/Portal/portalWidth';
 import TopicCommentsSidebar from '@/features/Portal/TopicComments/Sidebar';
 import RightPanel from '@/features/RightPanel';
@@ -67,12 +78,19 @@ import { deviceSelectors, useDeviceStore } from '@/store/device';
 import { useElectronStore } from '@/store/electron';
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
+import { sandboxActions, sandboxSelectors, useSandboxStore } from '@/store/sandbox';
 
 import { type ComposerTarget, createComposerTarget, resolveThreadComposerTarget } from '../types';
-import Files from './Files';
+import DeferredSkeleton from './DeferredSkeleton';
+import FilesPane from './Files/FilesPane';
+import { useFilesPaneLocation } from './Files/useFilesPaneLocation';
 import { sidebarWidthBudget } from './fitsBesidePortal';
+import { MAX_PANEL_WIDTH, MIN_PANEL_WIDTH, OVERVIEW_PANEL_WIDTH } from './layout';
 import Overview from './Overview';
+import { getStatusDeviceId } from './Overview/overviewData';
 import OverviewSlot from './OverviewSlot';
+import PullRequest from './PullRequest';
+import { useLinkedPullRequest } from './PullRequest/useLinkedPullRequest';
 import ResourcesSection from './ResourcesSection';
 import Review from './Review';
 import WorkspaceTab from './WorkspaceTab';
@@ -174,10 +192,7 @@ const styles = createStaticStyles(({ css }) => ({
 const REVIEW_TREE_STORAGE_KEY = 'lobechat-review-tree';
 const OPEN_TABS_STORAGE_KEY = 'lobechat-working-sidebar-open-tabs-v1';
 const PINNED_TABS_STORAGE_KEY = 'lobechat-working-sidebar-pinned-tabs-v1';
-const OVERVIEW_PANEL_WIDTH = 340;
 const OVERVIEW_TRANSITION = { duration: 0.25, ease: [0.32, 0.72, 0, 1] } as const;
-const MIN_PANEL_WIDTH = 300;
-const MAX_PANEL_WIDTH = 1200;
 // Two-pane Review (diff list + file-tree rail) is cramped below this.
 const TWO_PANE_MIN_WIDTH = 560;
 
@@ -237,7 +252,7 @@ const AgentWorkingSidebar = memo<AgentWorkingSidebarProps>(({ availableWidth }) 
     // the resources pane's document fetch so a collapsed sidebar doesn't pull the
     // full agent-document list into the conversation's initial batch.
     s.status.showRightPanel,
-    s.status.showWorkingOverview ?? !s.status.showRightPanel,
+    systemStatusSelectors.showWorkingOverview(s),
     s.status.workingSidebarTab,
     s.status.workingSidebarTabRequest,
   ]);
@@ -326,6 +341,7 @@ const AgentWorkingSidebar = memo<AgentWorkingSidebarProps>(({ availableWidth }) 
   const topicWorkingDirectoryConfig = useChatStore(
     (s) => topicSelectors.currentTopicMetadata(s)?.workingDirectoryConfig,
   );
+  const topicDeviceId = useChatStore((s) => topicSelectors.currentTopicMetadata(s)?.boundDeviceId);
   const deviceDirs = useDeviceStore(deviceSelectors.getDeviceWorkingDirs(targetDeviceId));
   const sourceWorkingDirectory = useMemo(() => {
     if (!workingDirectory) return undefined;
@@ -356,19 +372,77 @@ const AgentWorkingSidebar = memo<AgentWorkingSidebarProps>(({ availableWidth }) 
   // tree + git reads go over RPC, so both Review and Files are reachable even
   // when runtimeMode isn't `local`.
   const isDeviceMode = effectiveTarget === 'device' && !!agencyConfig?.boundDeviceId;
-  // `targetDeviceId` also identifies the local desktop for per-device working
-  // directory state. Files/Review only need a deviceId when routing through a
-  // remote device RPC; local "This device" must keep Electron IPC + file-open
-  // actions enabled.
+  // `targetDeviceId` also names the local desktop (directory state, Overview status).
+  // Files/Review route a deviceId only for remote RPC; "This device" keeps Electron IPC.
   const remoteDeviceId = isDeviceMode ? agencyConfig.boundDeviceId : undefined;
   const isLocalExecution = effectiveTarget === 'local';
+  // A cloud-sandbox run keeps its files in the persistent workspace, so it has a
+  // tree to show too — read through the topic's warm session rather than a
+  // device. Only when the run actually persists: a throwaway box keeps nothing,
+  // and pointing the panel at the workspace would let another conversation's
+  // files read as this one's.
+  // Through the same hook the composer writes with, so the panel sees a choice
+  // the moment it is made. Before a conversation exists the choice is buffered
+  // on the agent rather than stored on a topic, and reading the topic's
+  // metadata directly meant the panel could not see it: the composer said
+  // "cloud sandbox, Lobehub Dev" while the panel showed nothing and explained
+  // nothing. A device's tree needs no conversation either.
+  const { selection: sandboxSelection } = useSandboxMode(activeAgentId ?? '');
+  const sandboxInstanceId = sandboxSelection.instanceId;
+  const isSandboxExecution =
+    effectiveTarget === 'sandbox' && sandboxSelection.mode === 'persistent';
+  const sandboxTopicId = isSandboxExecution ? (topicId ?? undefined) : undefined;
+  // Scoped to the bound instance's directory, or the workspace root when the
+  // run keeps files without one. The empty string IS the root here, which is
+  // why the tab's gate is the topic rather than a truthy path.
+  // A replica, so a reload paints the directory (and the Files tab) from the
+  // last answer; `null` is an instance known to be gone.
+  const sandboxDirectoryId = isSandboxExecution ? sandboxInstanceId : undefined;
+  sandboxActions.useFetchInstanceDirectory(sandboxDirectoryId);
+  const sandboxDir = useSandboxStore(sandboxSelectors.instanceDirectory(sandboxDirectoryId));
+  const sandboxDirectory = sandboxDir ?? '';
+  // The empty string IS the workspace root, so an unresolved instance does not
+  // read as "no directory yet" — it reads as "the whole workspace", and the
+  // tree would list every instance's folder for as long as the lookup took.
+  const sandboxDirectoryKnown = !sandboxInstanceId || sandboxDir !== undefined;
+
   const filesystemEnvironmentAvailable = isLocalExecution || isDeviceMode;
   const environmentWorkingDirectory = filesystemEnvironmentAvailable ? workingDirectory : undefined;
   const environmentRepoType = filesystemEnvironmentAvailable ? repoType : undefined;
-  // Files tab is an agent-mode affordance — in plain chat mode the working
-  // directory is irrelevant to the user, so hide the tab even when one resolves.
-  const filesAvailable = !isChatMode && (isLocalExecution || isDeviceMode) && !!workingDirectory;
+  // Files is agent-mode only; the hook owns which directory (if any) is showable.
+  const { deviceId: filesDeviceId, directory: filesDirectory } = useFilesPaneLocation({
+    activeAgentId,
+    filesystemEnvironmentAvailable,
+    isSandboxExecution,
+    remoteDeviceId,
+    sandboxDirectory,
+    sandboxDirectoryKnown,
+    sandboxInstanceId,
+    sandboxTopicId,
+    topicId,
+    workingDirectory,
+  });
+  const filesAvailable = !isChatMode && filesDirectory !== undefined;
   const reviewAvailable = (isLocalExecution || isDeviceMode) && !!workingDirectory && !!repoType;
+  const snapshotConfig =
+    (topicDeviceId ? topicDeviceId === targetDeviceId : isLocalExecution) &&
+    getWorkingDirEffectivePath(topicWorkingDirectoryConfig) === workingDirectory
+      ? topicWorkingDirectoryConfig
+      : deviceDirs.find((entry) => getWorkingDirEffectivePath(entry) === workingDirectory);
+  const isGithub =
+    repoType === 'github' || (!repoType && !!snapshotConfig?.git?.github?.pullRequest);
+  const gitPath = filesystemEnvironmentAvailable && isGithub ? workingDirectory : undefined;
+  const {
+    pullRequest,
+    refresh: refreshPullRequest,
+    ...pullRequestLink // confirmed, confirmError, onRetryConfirm
+  } = useLinkedPullRequest({
+    available: filesystemEnvironmentAvailable && !!workingDirectory,
+    deviceId: remoteDeviceId,
+    gitPath,
+    isGithub,
+    snapshot: snapshotConfig?.git,
+  });
   const paramsAvailable = !isHetero;
   // The in-app browser pages are renderer-retained Electron webviews — desktop only.
   const browserAvailable = isDesktop;
@@ -415,6 +489,15 @@ const AgentWorkingSidebar = memo<AgentWorkingSidebarProps>(({ availableWidth }) 
       ...(reviewAvailable
         ? [{ icon: ClipboardListIcon, key: 'review', label: t('workingPanel.review.title') }]
         : []),
+      ...(pullRequest
+        ? [
+            {
+              icon: PR_STATE_VISUAL[getPullRequestState(pullRequest)].icon,
+              key: 'pr',
+              label: `#${pullRequest.number}`,
+            },
+          ]
+        : []),
       ...(filesAvailable
         ? [{ icon: FilesIcon, key: 'files', label: t('workingPanel.files.title') }]
         : []),
@@ -443,6 +526,7 @@ const AgentWorkingSidebar = memo<AgentWorkingSidebarProps>(({ availableWidth }) 
       filesAvailable,
       isHetero,
       paramsAvailable,
+      pullRequest,
       reviewAvailable,
       t,
     ],
@@ -624,7 +708,6 @@ const AgentWorkingSidebar = memo<AgentWorkingSidebarProps>(({ availableWidth }) 
     },
     [availableTabs, updateOpenedTabs, updatePinnedTabs],
   );
-
   const unpinTab = useCallback(
     (tab: string) => {
       // A tab restored only through its agent pin should remain open in the
@@ -634,7 +717,6 @@ const AgentWorkingSidebar = memo<AgentWorkingSidebarProps>(({ availableWidth }) 
     },
     [updateOpenedTabs, updatePinnedTabs],
   );
-
   const closeTabs = useCallback(
     (tabs: string[], fallbackTab = 'overview') => {
       const removableTabs = new Set(tabs.filter((tab) => !pinnedTabsSet.has(tab)));
@@ -870,6 +952,7 @@ const AgentWorkingSidebar = memo<AgentWorkingSidebarProps>(({ availableWidth }) 
 
     const workspaceGroup = group('workspace', t('workingPanel.openMenu.workspace'), [
       'review',
+      'pr',
       'files',
       'works',
       'comments',
@@ -943,10 +1026,13 @@ const AgentWorkingSidebar = memo<AgentWorkingSidebarProps>(({ availableWidth }) 
                   agentId={activeAgentId}
                   deviceId={remoteDeviceId}
                   environmentAvailable={filesystemEnvironmentAvailable}
+                  pullRequest={pullRequest}
                   repoType={environmentRepoType}
                   sourcePath={sourceWorkingDirectory}
+                  statusDeviceId={getStatusDeviceId(effectiveTarget, agencyConfig?.boundDeviceId)}
                   workingDirectory={environmentWorkingDirectory}
                   onOpenTab={openTab}
+                  onRefreshPullRequest={refreshPullRequest}
                 />
               </Flexbox>
             </m.div>
@@ -1029,7 +1115,20 @@ const AgentWorkingSidebar = memo<AgentWorkingSidebarProps>(({ availableWidth }) 
             />
           </Flexbox>
           <Flexbox className={styles.body} width={'100%'}>
-            {!contentReady && <SkeletonList paddingBlock={8} paddingInline={8} rows={6} />}
+            {!contentReady && storedTab !== 'files' && activeTab !== 'files' && (
+              <DeferredSkeleton />
+            )}
+            <FilesPane
+              active={!!showRightPanel && activeTab === 'files'}
+              available={filesAvailable}
+              className={styles.pane}
+              contentReady={contentReady || (activeTab === 'files' && filesAvailable)}
+              deviceId={filesDeviceId}
+              directory={filesDirectory}
+              prefetch={activeTab === 'files' && (!showRightPanel || !contentReady)}
+              sandboxInstanceId={isSandboxExecution ? sandboxInstanceId : undefined}
+              sandboxTopicId={sandboxTopicId}
+            />
             {contentReady && (
               <>
                 {commentsAvailable && (
@@ -1061,10 +1160,20 @@ const AgentWorkingSidebar = memo<AgentWorkingSidebarProps>(({ availableWidth }) 
                     />
                   </Flexbox>
                 )}
-                {filesAvailable && (
-                  <Activity mode={showRightPanel && activeTab === 'files' ? 'visible' : 'hidden'}>
+                {pullRequest && workingDirectory && (
+                  <Activity mode={showRightPanel && activeTab === 'pr' ? 'visible' : 'hidden'}>
                     <Flexbox className={styles.pane}>
-                      <Files deviceId={remoteDeviceId} workingDirectory={workingDirectory} />
+                      <PullRequest
+                        active={!!showRightPanel && activeTab === 'pr'}
+                        {...pullRequestLink}
+                        deviceId={remoteDeviceId}
+                        key={JSON.stringify([remoteDeviceId, workingDirectory, pullRequest.number])}
+                        number={pullRequest.number}
+                        summary={pullRequest}
+                        url={pullRequest.url}
+                        workingDirectory={workingDirectory}
+                        onOpenTab={openTab}
+                      />
                     </Flexbox>
                   </Activity>
                 )}

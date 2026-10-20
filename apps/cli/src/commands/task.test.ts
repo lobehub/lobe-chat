@@ -60,7 +60,7 @@ describe('task create', () => {
           id: 'task_1',
           identifier: 'T-1',
           name: 'Personal task',
-          url: 'https://app.example.com/task/T-1',
+          url: 'https://app.example.com/task/T-1/personal-task',
         },
         null,
         2,
@@ -81,7 +81,7 @@ describe('task create', () => {
 
     expect(mockLogInfo).toHaveBeenCalledWith(expect.stringContaining('LOBE-321'));
     expect(consoleSpy).toHaveBeenCalledWith(
-      expect.stringContaining('https://app.example.com/lobehub/task/LOBE-321'),
+      expect.stringContaining('https://app.example.com/lobehub/task/LOBE-321/workspace-task'),
     );
   });
 });
@@ -141,5 +141,39 @@ describe('task edit', () => {
       expect.objectContaining({ assigneeAgentId: 'agt_new', id: 'task_1' }),
     );
     expect(mockUpdateStatus).not.toHaveBeenCalled();
+  });
+});
+
+describe('task usage', () => {
+  const mockUsage = vi.fn();
+
+  beforeEach(() => {
+    mockUsage.mockReset().mockResolvedValue({
+      data: {
+        byTask: [],
+        runs: 2,
+        taskId: 'task_1',
+        taskIdentifier: 'T-1',
+        totalCost: 0.125,
+        totalInputTokens: 1200,
+        totalOutputTokens: 300,
+        totalTokens: 1500,
+      },
+      success: true,
+    });
+    mockGetTrpcClient.mockResolvedValue({ task: { usage: { query: mockUsage } } });
+  });
+
+  it('prints the task aggregate as JSON', async () => {
+    const consoleSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
+    const program = new Command();
+    program.exitOverride();
+    registerTaskCommand(program);
+
+    await program.parseAsync(['node', 'test', 'task', 'usage', 'T-1', '--json']);
+
+    expect(mockUsage).toHaveBeenCalledWith({ id: 'T-1' });
+    expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining('"totalCost": 0.125'));
+    consoleSpy.mockRestore();
   });
 });

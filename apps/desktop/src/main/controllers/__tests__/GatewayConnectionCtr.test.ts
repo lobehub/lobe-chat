@@ -217,7 +217,12 @@ vi.mock('@lobechat/heterogeneous-agents/scanHost', () => ({
 }));
 
 vi.mock('node:os', () => ({
-  default: { hostname: vi.fn(() => 'mock-hostname'), tmpdir: vi.fn(() => '/tmp') },
+  default: {
+    arch: vi.fn(() => 'arm64'),
+    hostname: vi.fn(() => 'mock-hostname'),
+    release: vi.fn(() => '24.0.0'),
+    tmpdir: vi.fn(() => '/tmp'),
+  },
 }));
 
 vi.mock('@lobechat/device-gateway-client', () => ({
@@ -234,6 +239,11 @@ vi.mock('fflate', () => ({ unzipSync: vi.fn() }));
 // ─── Mock Controllers ───
 
 const mockLocalFileCtr = {
+  getSkillDirectoryDeps: vi.fn(() => ({})),
+  trashLocalFiles: vi.fn().mockResolvedValue({
+    items: [{ path: '/proj/a.txt', success: true }],
+    success: true,
+  }),
   handleEditFile: vi.fn().mockResolvedValue({ success: true }),
   handleGlobFiles: vi.fn().mockResolvedValue({ files: [] }),
   handleGrepContent: vi.fn().mockResolvedValue({ matches: [] }),
@@ -325,6 +335,10 @@ describe('GatewayConnectionCtr', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue(Response.json({ result: { data: { json: [] } } })),
+    );
     vi.useFakeTimers();
     resolveRemotePlatformRuntimeMock.mockImplementation(
       async (type: 'hermes' | 'openclaw', baseEnv: NodeJS.ProcessEnv = process.env) => ({
@@ -355,6 +369,7 @@ describe('GatewayConnectionCtr', () => {
   afterEach(() => {
     ctr.disconnect();
     vi.unstubAllEnvs();
+    vi.unstubAllGlobals();
     vi.useRealTimers();
   });
 
@@ -615,7 +630,7 @@ describe('GatewayConnectionCtr', () => {
   // ─── Reconnection ───
 
   describe('reconnection', () => {
-    it('should broadcast reconnecting status when client emits reconnecting', async () => {
+    it('should broadcast reconnecting status once the reconnect outlasts the grace period', async () => {
       ctr.afterFirstFrame();
       await vi.advanceTimersByTimeAsync(0);
       const client = MockGatewayClient.lastInstance!;
@@ -623,7 +638,11 @@ describe('GatewayConnectionCtr', () => {
       mockBroadcast.mockClear();
 
       client.simulateReconnecting(1000);
+      expect(mockBroadcast).not.toHaveBeenCalledWith('gatewayConnectionStatusChanged', {
+        status: 'reconnecting',
+      });
 
+      vi.advanceTimersByTime(5000);
       expect(mockBroadcast).toHaveBeenCalledWith('gatewayConnectionStatusChanged', {
         status: 'reconnecting',
       });
@@ -907,6 +926,18 @@ describe('GatewayConnectionCtr', () => {
           success: false,
         },
       });
+    });
+  });
+
+  describe('device RPC host deps', () => {
+    it('hands the device-control dispatcher an OS-trash handler backed by LocalFileCtr', async () => {
+      const deps = (ctr as any).deviceControlDeps;
+
+      await expect(deps.trashLocalFiles({ paths: ['/proj/a.txt'] })).resolves.toEqual({
+        items: [{ path: '/proj/a.txt', success: true }],
+        success: true,
+      });
+      expect(mockLocalFileCtr.trashLocalFiles).toHaveBeenCalledWith({ paths: ['/proj/a.txt'] });
     });
   });
 
@@ -1337,6 +1368,50 @@ describe('GatewayConnectionCtr', () => {
     beforeEach(() => {
       execFileSyncMock.mockReturnValue('/usr/local/bin/lh\n');
       spawnMock.mockReset();
+    });
+
+    describe.each(['openclaw', 'hermes'])('%s identity', (agentType) => {
+      it.each([
+        { agentId: 'agent-current', inherited: false, workspaceId: 'workspace-current' },
+        { agentId: 'agent-current', inherited: true, workspaceId: 'workspace-current' },
+        { agentId: undefined, inherited: true, workspaceId: undefined },
+      ])('isolates dispatched identity ($agentId, inherited=$inherited)', async (params) => {
+        for (const key of [
+          'AGENT_ID',
+          'TOPIC_ID',
+          'OPERATION_ID',
+          'ASSISTANT_MESSAGE_ID',
+          'TASK_ID',
+          'WORKSPACE_ID',
+        ]) {
+          vi.stubEnv(`LOBEHUB_${key}`, params.inherited ? `ancestor-${key}` : undefined);
+        }
+        spawnMock.mockReturnValue(makeMockChild());
+        const client = await connectAndOpen();
+        client.simulateToolCallRequest(
+          'runHeteroTask',
+          {
+            agentId: params.agentId,
+            agentType,
+            operationId: 'operation-current',
+            prompt: 'hello',
+            taskId: 'device-task-current',
+            topicId: 'topic-current',
+            workspaceId: params.workspaceId,
+          },
+          'req-identity',
+        );
+        await vi.advanceTimersByTimeAsync(0);
+
+        expect(spawnMock).toHaveBeenCalledTimes(1);
+        const env = spawnMock.mock.calls[0][2].env;
+        expect(env.LOBEHUB_AGENT_ID).toBe(params.agentId);
+        expect(env.LOBEHUB_TOPIC_ID).toBe('topic-current');
+        expect(env.LOBEHUB_OPERATION_ID).toBe('operation-current');
+        expect(env.LOBEHUB_WORKSPACE_ID).toBe(params.workspaceId);
+        expect(env.LOBEHUB_ASSISTANT_MESSAGE_ID).toBeUndefined();
+        expect(env.LOBEHUB_TASK_ID).toBeUndefined();
+      });
     });
 
     it('always injects buildNotifyProtocol into the prompt', async () => {
@@ -2196,18 +2271,61 @@ describe('GatewayConnectionCtr', () => {
   });
 
   describe('getDeviceInfo', () => {
-    it('should return device information', async () => {
-      mockStoreGet.mockImplementation((key: string) => {
-        if (key === 'gatewayEnabled') return true;
-        if (key === 'gatewayDeviceId') return 'my-device';
-        return undefined;
-      });
-      ctr = new GatewayConnectionCtr(mockApp);
-      ctr.afterFirstFrame();
+    it('backfills the registered local device when reading its info without reconnecting', async () => {
+      mockStoreGet.mockImplementation((key: string) =>
+        key === 'gatewayDeviceId' ? 'my-device' : false,
+      );
+      mockGatewayConnectionSrv.loadOrCreateDeviceId();
+      const fetchMock = vi.mocked(fetch);
+      fetchMock.mockResolvedValueOnce(
+        Response.json({
+          result: {
+            data: {
+              json: [
+                {
+                  architecture: null,
+                  deviceId: 'my-device',
+                  identitySource: 'machine-id',
+                  registered: true,
+                  scope: 'personal',
+                },
+              ],
+            },
+          },
+        }),
+      );
 
       const info = await ctr.getDeviceInfo();
-      expect(info).toEqual({
-        deviceId: 'my-device',
+
+      expect(info.deviceId).toBe('my-device');
+      expect(fetchMock).toHaveBeenCalledTimes(2);
+      expect(JSON.parse(fetchMock.mock.calls[1][1]!.body as string)).toEqual({
+        json: {
+          architecture: 'arm64',
+          deviceId: 'my-device',
+        },
+      });
+      expect(MockGatewayClient.lastInstance).toBeNull();
+    });
+
+    it('still returns local info if the registry cannot be reached', async () => {
+      mockGatewayConnectionSrv.loadOrCreateDeviceId();
+      vi.mocked(fetch).mockRejectedValueOnce(new Error('offline'));
+      await expect(ctr.getDeviceInfo()).resolves.toMatchObject({ hostname: 'mock-hostname' });
+    });
+
+    // Regression: pre-connect it reported the fallback UUID while pins stored the stable id.
+    it('reports the stable device id once signed in, even before connecting', async () => {
+      mockStoreGet.mockImplementation((key: string) =>
+        key === 'gatewayDeviceId' ? 'my-device' : undefined,
+      );
+      const sub = Buffer.from(JSON.stringify({ sub: 'user-1' })).toString('base64url');
+      vi.mocked(mockRemoteServerConfigCtr.getAccessToken).mockResolvedValueOnce(`h.${sub}.s`);
+      ctr = new GatewayConnectionCtr(mockApp);
+      ctr.afterFirstFrame();
+      const stable = deriveDeviceId('user-1', { fallbackId: 'my-device' }).deviceId;
+      await expect(ctr.getDeviceInfo()).resolves.toEqual({
+        deviceId: stable,
         hostname: 'mock-hostname',
         platform: process.platform,
       });

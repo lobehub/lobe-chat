@@ -1,4 +1,37 @@
 import type { ShareVisibility } from '../topic';
+import type { WorkItem } from '../work';
+
+/** A creator-authored visitor task, independent of the agent's opening questions. */
+export interface AgentShareDemoCase {
+  description: string;
+  /** Displayed as the example task and carried into the visitor's conversation draft. */
+  prompt: string;
+}
+
+/** Explicit public projection: no conversation, message, owner, or tool provenance. */
+export type SharedAgentWork = Pick<
+  WorkItem,
+  | 'createdAt'
+  | 'description'
+  | 'id'
+  | 'identifier'
+  | 'resourceType'
+  | 'status'
+  | 'title'
+  | 'type'
+  | 'updatedAt'
+  | 'url'
+> & { totalCost: number | null };
+
+/** Creator-side delivery aggregates; selection for the showcase does not change the sample. */
+export interface SharedAgentDeliveryStats {
+  /** Mean elapsed seconds across finished operations with valid timestamps. */
+  averageOperationDurationSeconds: number | null;
+  /** Mean measured Work cost; cumulative versions from one operation are not added twice. */
+  averageWorkCost: number | null;
+  lastDeliveredAt: Date | null;
+  workCount: number;
+}
 
 /**
  * The share's own rules, restated for the visitor BEFORE they invest in a
@@ -9,6 +42,11 @@ import type { ShareVisibility } from '../topic';
 export interface SharedAgentTerms {
   /** Whether the creator opted into reading visitor conversations. */
   allowCreatorViewSessions: boolean;
+  /**
+   * Total upload space (bytes) the creator opened to visitor attachments on
+   * this share; `0` means attachments are off and the composer hides them.
+   */
+  maxFileStorage: number;
   /** Maximum conversations this visitor may open against the share. */
   maxTopicsPerVisitor: number;
   /** Maximum message turns allowed inside one shared conversation. */
@@ -19,13 +57,19 @@ export interface SharedAgentTerms {
  * Aggregate reach of the share. `views` is a raw page-view counter (not
  * deduplicated); `visitors` and `conversations` come from the share's topics.
  */
-export interface SharedAgentStats {
+export interface SharedAgentStats extends SharedAgentDeliveryStats {
   conversations: number;
   views: number;
   visitors: number;
 }
 
 /** Agent metadata exposed to signed-in visitors of an agent share. */
+export interface SharedAgentUploadAbility {
+  audio: boolean;
+  image: boolean;
+  video: boolean;
+}
+
 export interface SharedAgentData {
   agentId: string;
   agentMeta: {
@@ -43,6 +87,8 @@ export interface SharedAgentData {
     tags: string[];
     title: string | null;
   };
+  /** Who funds visitor execution, without exposing the owning Workspace id. */
+  billingScope: 'personal' | 'workspace';
   /**
    * Who published this share. In a market of user-made agents the creator is
    * the quality signal a visitor has before any usage number exists.
@@ -51,12 +97,20 @@ export interface SharedAgentData {
     avatar: string | null;
     name: string | null;
   };
+  demoCases: AgentShareDemoCase[];
+  featuredWorks: SharedAgentWork[];
   /**
    * True when the requesting user (`ctx.userId`) is the creator of the
    * shared agent — lets the client render owner-only affordances (e.g. an
    * "edit share" link) instead of the plain visitor UI.
    */
   isOwner: boolean;
+  /**
+   * Slug of the Workspace that owns a Workspace share, returned only to its
+   * owner so the "settings" link can open the share inside that Workspace
+   * rather than the active one. Always `null` for visitors and personal shares.
+   */
+  ownerWorkspaceSlug: string | null;
   shareId: string;
   /** The share's custom URL slug, if the creator has set one. `null` otherwise. */
   slug: string | null;
@@ -67,6 +121,13 @@ export interface SharedAgentData {
    * — never the granted API list, which is owner-facing configuration.
    */
   toolGrants: string[];
+  /**
+   * Which media the visitor composer may attach, derived server-side from
+   * the agent's model abilities so the model itself stays hidden (it is
+   * owner-facing unless `showModelInfo` opts in). Documents are always
+   * allowed; these only gate direct media input.
+   */
+  uploadAbility: SharedAgentUploadAbility;
   visibility: ShareVisibility;
 }
 

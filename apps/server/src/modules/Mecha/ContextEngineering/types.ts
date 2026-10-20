@@ -13,11 +13,11 @@ import type {
   LobeToolManifest,
   OnboardingContext,
   PlanTodoConfig,
+  ProjectInstructionFile,
   SkillMeta,
   ToolDiscoveryConfig,
   TopicReferenceItem,
   UserMemoryData,
-  ProjectInstructionFile,
   WorkspaceContext,
 } from '@lobechat/context-engine';
 import type { AgentIdentityContext, PageContentContext } from '@lobechat/prompts';
@@ -85,6 +85,11 @@ export interface ServerMessagesEngineParams {
   additionalContexts?: readonly RuntimeAdditionalContextFragment[];
   /** Additional variable values to merge with defaults (e.g. device paths) */
   additionalVariables?: Record<string, string>;
+  /**
+   * Attachments sent as a preview plus file id because the request's attachment
+   * budget is spent (planned by `shouldCompress`).
+   */
+  attachmentPreviewFileIds?: string[];
   /** Agent documents to inject into context based on load rules and positions */
   agentDocuments?: AgentContextDocument[];
   /** Immutable expertise captured when the operation started. */
@@ -132,6 +137,12 @@ export interface ServerMessagesEngineParams {
 
   /** Whether to enable history message count limit */
   enableHistoryCount?: boolean;
+
+  /**
+   * Whether stale tool results are replaced with short placeholders in the
+   * model context. Undefined / true → trimming enabled (default).
+   */
+  enableStaleToolResultTrim?: boolean;
 
   /** Force finish flag: when true, injects summary prompt for max-steps completion */
   forceFinish?: boolean;

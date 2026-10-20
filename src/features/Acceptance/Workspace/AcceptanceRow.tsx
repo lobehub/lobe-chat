@@ -1,10 +1,18 @@
 'use client';
 
 import type { AcceptanceStatus } from '@lobechat/types';
-import { Center, Flexbox, Icon } from '@lobehub/ui';
-import type { DropdownItem } from '@lobehub/ui/base-ui';
-import { ActionIcon, Checkbox, DropdownMenu, toast } from '@lobehub/ui/base-ui';
-import { createStaticStyles, cssVar } from 'antd-style';
+import type { DropdownItem } from '@lobehub/ui';
+import {
+  ActionIcon,
+  Center,
+  Checkbox,
+  createStaticStyles,
+  cssVar,
+  DropdownMenu,
+  Flexbox,
+  Icon,
+  toast,
+} from '@lobehub/ui';
 import dayjs from 'dayjs';
 import {
   BadgeCheck,
@@ -27,11 +35,11 @@ import { useNavigate } from 'react-router';
 
 import { openRenameModal } from '@/components/RenameModal';
 import NavItem from '@/features/NavPanel/components/NavItem';
-import { mutate as globalMutate } from '@/libs/swr';
-import { verifyKeys } from '@/libs/swr/keys';
 import type { AcceptanceListItem } from '@/services/verify';
 import { verifyService } from '@/services/verify';
+import { useVerifyStore } from '@/store/verify';
 
+import { acceptanceListPath } from '../Viewer/routes';
 import { getAcceptanceStatusActions } from '../Viewer/statusActions';
 import { openAcceptanceDeleteConfirm } from './AcceptanceDeleteConfirm';
 import { openMergeAcceptanceModal } from './MergeAcceptanceModal';
@@ -125,7 +133,7 @@ const AcceptanceRow = memo<{
   const title = item.subject.title || item.subjectId;
 
   const refresh = () =>
-    Promise.all([onChanged(), globalMutate(verifyKeys.acceptanceBundle(item.id))]);
+    Promise.all([onChanged(), useVerifyStore.getState().refreshAcceptanceBundle(item.id)]);
 
   /**
    * The shared rename dialog, same as a topic's. An in-place input inside a
@@ -211,7 +219,10 @@ const AcceptanceRow = memo<{
         try {
           const summary = await verifyService.mergeAcceptance(item.id, targetId);
           if (active) navigate(`/acceptance/${targetId}`, { replace: true });
-          await Promise.all([onChanged(), globalMutate(verifyKeys.acceptanceBundle(targetId))]);
+          await Promise.all([
+            onChanged(),
+            useVerifyStore.getState().refreshAcceptanceBundle(targetId),
+          ]);
           toast.success(t('acceptance.workspace.merge.success', { count: summary.movedChecks }));
           return true;
         } catch (error) {
@@ -233,7 +244,7 @@ const AcceptanceRow = memo<{
         setMutating(true);
         try {
           await verifyService.deleteAcceptance(item.id, purge);
-          if (active) navigate('/acceptance', { replace: true });
+          if (active) navigate(acceptanceListPath(), { replace: true });
           await onChanged();
           toast.success(t('acceptance.workspace.deleteSuccess'));
         } finally {
@@ -243,30 +254,32 @@ const AcceptanceRow = memo<{
     });
   };
 
-  const statusItems: DropdownItem[] = getAcceptanceStatusActions(item.status).map((action) => {
-    if (action === 'accept') {
+  const statusItems: DropdownItem[] = getAcceptanceStatusActions(item.status, item.subjectType).map(
+    (action) => {
+      if (action === 'accept') {
+        return {
+          icon: <Icon icon={CircleCheck} />,
+          key: action,
+          label: t('acceptance.workspace.actions.markAccepted'),
+          onClick: () => void changeStatus('accepted'),
+        };
+      }
+      if (action === 'reopen') {
+        return {
+          icon: <Icon icon={RotateCcw} />,
+          key: action,
+          label: t('acceptance.workspace.actions.reopen'),
+          onClick: () => void changeStatus('delivered'),
+        };
+      }
       return {
-        icon: <Icon icon={CircleCheck} />,
+        icon: <Icon icon={X} />,
         key: action,
-        label: t('acceptance.workspace.actions.markAccepted'),
-        onClick: () => void changeStatus('accepted'),
+        label: t('acceptance.workspace.actions.markClosed'),
+        onClick: () => void changeStatus('closed'),
       };
-    }
-    if (action === 'reopen') {
-      return {
-        icon: <Icon icon={RotateCcw} />,
-        key: action,
-        label: t('acceptance.workspace.actions.reopen'),
-        onClick: () => void changeStatus('delivered'),
-      };
-    }
-    return {
-      icon: <Icon icon={X} />,
-      key: action,
-      label: t('acceptance.workspace.actions.markClosed'),
-      onClick: () => void changeStatus('closed'),
-    };
-  });
+    },
+  );
 
   // Deciding the delivery is what this menu is FOR — status leads, then the
   // filing actions, then the destructive one behind its own divider. Buried
@@ -334,8 +347,10 @@ const AcceptanceRow = memo<{
       // Only where the grouping does not already say it, and only when the row
       // actually has one — stamping "ungrouped" on every other row would cost a
       // line of height to say nothing.
+      // Someone else's acceptance (a participated row) offers no menu: every
+      // entry in it is a write its owner alone may make.
       actions={
-        selectable ? undefined : (
+        selectable || !item.canManage ? undefined : (
           <DropdownMenu
             iconSpaceMode={'group'}
             items={menuItems}
@@ -380,8 +395,8 @@ const AcceptanceRow = memo<{
           : undefined
       }
       onClick={(e) => {
-        if (selectable || e.shiftKey || e.metaKey || e.ctrlKey) {
-          onToggleSelect?.(e.shiftKey);
+        if (onToggleSelect && (selectable || e.shiftKey || e.metaKey || e.ctrlKey)) {
+          onToggleSelect(e.shiftKey);
           return;
         }
         navigate(`/acceptance/${item.id}`);

@@ -6,7 +6,7 @@ import { type CSSProperties, useMemo } from 'react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { mentionFilledClassName } from '@/features/ChatInput/InputEditor/mentionStyle';
+import { mentionPlainClassName } from '@/features/ChatInput/InputEditor/mentionStyle';
 import type { ComposerTarget } from '@/features/Conversation/types';
 import { EditorCanvas as SharedEditorCanvas } from '@/features/EditorCanvas';
 
@@ -46,10 +46,12 @@ const EditorCanvas = memo<EditorCanvasProps>(({ askCopilotTarget, placeholder, s
 
   return (
     <SharedEditorCanvas
-      className={mentionFilledClassName}
+      allowContentBleed
+      className={mentionPlainClassName}
       documentId={documentId}
       editable={editable}
       editor={editor}
+      enableInlineMath={false}
       extraPlugins={extraPlugins}
       mentionOption={mentionOption}
       placeholder={placeholder || t('pageEditor.editorPlaceholder')}

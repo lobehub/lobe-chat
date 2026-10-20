@@ -1110,11 +1110,11 @@ describe('createGatewayEventHandler', () => {
       expect(store.completeOperation).not.toHaveBeenCalled();
       expect(messageService.updateMessageError).toHaveBeenCalledWith(
         'msg-initial',
-        {
+        expect.objectContaining({
           body: { message: 'Something went wrong' },
           message: 'Something went wrong',
           type: 'AgentRuntimeError',
-        },
+        }),
         {
           agentId: 'agent-1',
           groupId: undefined,
@@ -1129,11 +1129,11 @@ describe('createGatewayEventHandler', () => {
           id: 'msg-initial',
           type: 'updateMessage',
           value: {
-            error: {
+            error: expect.objectContaining({
               body: { message: 'Something went wrong' },
               message: 'Something went wrong',
               type: 'AgentRuntimeError',
-            },
+            }),
           },
         },
         { operationId: 'op-1' },
@@ -1159,11 +1159,11 @@ describe('createGatewayEventHandler', () => {
       expect(store.completeOperation).not.toHaveBeenCalled();
       expect(messageService.updateMessageError).toHaveBeenCalledWith(
         'msg-step2',
-        {
-          body: { message: 'Timeout' },
+        expect.objectContaining({
+          body: { error: 'Timeout' },
           message: 'Timeout',
           type: 'AgentRuntimeError',
-        },
+        }),
         {
           agentId: 'agent-1',
           groupId: undefined,
@@ -1179,7 +1179,7 @@ describe('createGatewayEventHandler', () => {
           value: expect.objectContaining({
             error: expect.objectContaining({
               message: 'Timeout',
-              body: { message: 'Timeout' },
+              body: { error: 'Timeout' },
             }),
           }),
         }),
@@ -1209,33 +1209,37 @@ describe('createGatewayEventHandler', () => {
 
       expect(messageService.updateMessageError).toHaveBeenCalledWith(
         'msg-initial',
-        {
+        expect.objectContaining({
+          errorRef: 'H8001',
           body: {
             agentType: 'codex',
             code: 'cli_not_found',
+            details: { kind: 'cli_not_found' },
             docsUrl: 'https://github.com/openai/codex',
             installCommands: ['npm install -g @openai/codex'],
             message: 'Codex CLI was not found',
           },
           message: 'Codex CLI was not found',
           type: 'AgentRuntimeError',
-        },
+        }),
         expect.any(Object),
       );
       expect(store.internal_dispatchMessage).toHaveBeenCalledWith(
         expect.objectContaining({
           value: {
-            error: {
+            error: expect.objectContaining({
+              errorRef: 'H8001',
               body: {
                 agentType: 'codex',
                 code: 'cli_not_found',
+                details: { kind: 'cli_not_found' },
                 docsUrl: 'https://github.com/openai/codex',
                 installCommands: ['npm install -g @openai/codex'],
                 message: 'Codex CLI was not found',
               },
               message: 'Codex CLI was not found',
               type: 'AgentRuntimeError',
-            },
+            }),
           },
         }),
         { operationId: 'op-1' },
@@ -1424,6 +1428,51 @@ describe('createGatewayEventHandler', () => {
       expect(store.markTopicUnread).not.toHaveBeenCalled();
     });
 
+    it.each(['no_executor', 'claim_timeout', 'not_delivered'])(
+      'leaves a relay call no client took (%s) to the server: no failure, no row write',
+      async (reason) => {
+        const store = createMockStore();
+        const handler = createHandler(store);
+
+        // What a replay on reconnect delivers long after the run parked.
+        handler(
+          makeEvent('error', {
+            error: { reason, recoverable: true },
+            errorType: 'ClientLlmExecutorUnavailable',
+            provider: 'lmstudio',
+          }),
+        );
+        await flush();
+
+        expect(store.failOperation).not.toHaveBeenCalled();
+        expect(store.completeOperation).not.toHaveBeenCalled();
+        expect(messageService.updateMessageError).not.toHaveBeenCalled();
+        expect(store.internal_dispatchMessage).not.toHaveBeenCalledWith(
+          expect.objectContaining({ value: expect.objectContaining({ error: expect.anything() }) }),
+          expect.anything(),
+        );
+        // It shows what the server wrote instead (the waiting notice).
+        expect(messageService.getMessages).toHaveBeenCalled();
+      },
+    );
+
+    it('still fails the run on a relay error no client can fix (wait_timeout)', async () => {
+      const store = createMockStore();
+      const handler = createHandler(store);
+
+      handler(
+        makeEvent('error', {
+          error: { reason: 'wait_timeout', recoverable: true },
+          errorType: 'ClientLlmExecutorUnavailable',
+          provider: 'lmstudio',
+        }),
+      );
+      await flush();
+
+      expect(store.failOperation).toHaveBeenCalledWith('op-1', expect.anything());
+      expect(messageService.updateMessageError).toHaveBeenCalled();
+    });
+
     it('error event preserves runtime payload errorType and budget context', async () => {
       const store = createMockStore();
       const handler = createHandler(store);
@@ -1479,7 +1528,7 @@ describe('createGatewayEventHandler', () => {
             provider: 'lobehub',
           }),
           message: 'Payment required',
-          type: 'ProviderBizError',
+          type: 'InsufficientQuota',
         }),
         expect.anything(),
       );

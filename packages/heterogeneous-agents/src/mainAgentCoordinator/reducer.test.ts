@@ -381,14 +381,6 @@ describe('main agent reducer', () => {
     expect(ofKind(r.intents, 'createAssistant')[0]).toMatchObject({ parentId: 'SIG' });
   });
 
-  it('falls back to the current assistant only before any tool exists', () => {
-    const { steps } = run([textEvent('hi'), newStepEvent()]); // no tool ever seen
-    expect(ofKind(steps[1], 'createAssistant')[0]).toMatchObject({
-      messageId: 'msg_1',
-      parentId: 'A0',
-    });
-  });
-
   it('resolves a main tool_result via the global tool map', () => {
     const { steps } = run([
       toolsEvent([tool('t1')]),
@@ -433,6 +425,34 @@ describe('main agent reducer', () => {
     });
     expect(state.ended).toBe(true);
     expect(state.accContent).toBe(''); // reset → idempotent re-finalize
+  });
+
+  it('persists the open turn on visible_output_end while the run stays open', () => {
+    const { steps, state } = run([
+      initEvent('claude-opus-4-8', 'claude-code'),
+      reasoningEvent('thinking'),
+      textEvent('final answer'),
+      { data: {}, type: 'visible_output_end' },
+    ]);
+    expect(steps[3]).toEqual([
+      {
+        content: 'final answer',
+        kind: 'persistAssistant',
+        messageId: 'A0',
+        model: 'claude-opus-4-8',
+        provider: 'claude-code',
+        reasoning: 'thinking',
+      },
+    ]);
+    // Not a terminal: the accumulators stay so the later terminal flush
+    // rewrites the same content instead of blanking it.
+    expect(state.ended).toBeFalsy();
+    expect(state.accContent).toBe('final answer');
+  });
+
+  it('emits nothing on visible_output_end when the turn has no text', () => {
+    const { steps } = run([{ data: {}, type: 'visible_output_end' }]);
+    expect(steps[0]).toEqual([]);
   });
 
   it('suppresses echoed content and stamps the error on AuthRequired terminal error', () => {

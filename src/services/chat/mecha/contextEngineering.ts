@@ -1,3 +1,4 @@
+import { LobeHubIdentifier } from '@lobechat/builtin-skills/manifests';
 import { LobeActivatorIdentifier } from '@lobechat/builtin-tool-activator';
 import { AgentBuilderIdentifier } from '@lobechat/builtin-tool-agent-builder';
 import { isDesktop } from '@lobechat/const';
@@ -9,6 +10,7 @@ import type {
   ToolDiscoveryConfig,
   UserMemoryData,
 } from '@lobechat/context-engine';
+import { mentionsTopic } from '@lobechat/context-engine';
 import { type ContextSnapshot, gatherContextFacts, runContextEngineering } from '@lobechat/mecha';
 import { historySummaryPrompt } from '@lobechat/prompts';
 import {
@@ -59,6 +61,11 @@ interface ContextEngineeringContext {
   additionalContexts?: readonly RuntimeAdditionalContextFragment[];
   /** The agent ID that will respond (for group context injection) */
   agentId?: string;
+  /**
+   * Attachments sent as a preview plus file id because the request's attachment
+   * budget is spent (planned by `shouldCompress`).
+   */
+  attachmentPreviewFileIds?: string[];
   /**
    * Identifiers the agent has explicitly disabled (`agents.plugins` tri-state).
    * Excluded from the client skill candidate pool entirely — not just left
@@ -113,6 +120,7 @@ interface ContextEngineeringContext {
 // REVIEW: Maybe we can constrain identity, preference, exp to reorder or trim the context instead of passing everything in
 export const contextEngineering = async ({
   additionalContexts,
+  attachmentPreviewFileIds,
   messages = [],
   manifests,
   tools,
@@ -192,7 +200,12 @@ export const contextEngineering = async ({
 
   const fileContents = agentFiles
     .filter((file) => file.enabled && file.content)
-    .map((file) => ({ content: file.content!, fileId: file.id, filename: file.name }));
+    .map((file) => ({
+      content: file.content!,
+      fileId: file.id,
+      filename: file.name,
+      originalChars: file.originalCharCount,
+    }));
 
   const knowledgeBases = agentKnowledgeBases
     .filter((kb) => kb.enabled)
@@ -242,15 +255,16 @@ export const contextEngineering = async ({
     : undefined;
   const agentMeta = agentId ? agentSelectors.getAgentMetaById(agentId)(agentStoreState) : undefined;
   const agentItem = agentId ? agentByIdSelectors.getAgentById(agentId)(agentStoreState) : undefined;
-  const isInAutoSkillMode =
-    agentChatConfigSelectors.skillActivateMode(agentStoreState) !== 'manual';
+  // The responding agent's chat config — the transient target's own row when
+  // there is one, otherwise the current agent's.
+  const respondingChatConfig =
+    agentConfig?.chatConfig ?? agentChatConfigSelectors.currentChatConfig(agentStoreState);
   const facts = await gatherContextFacts(
     {
       agent: {
         // The current-agent chat config carries the skill activation mode the
         // management rule reads, even when `agentId` is a transient target.
-        chatConfig:
-          agentConfig?.chatConfig ?? agentChatConfigSelectors.currentChatConfig(agentStoreState),
+        chatConfig: respondingChatConfig,
         description: agentMeta?.description,
         slug: agentItem?.slug,
         title: agentMeta?.title,
@@ -279,13 +293,18 @@ export const contextEngineering = async ({
   // In manual mode: only expose user-selected skills (filtered by pluginIds).
   let enabledSkills: OperationSkillSet['skills'] | undefined;
   if (plugins) {
-    const skillSet = await resolveClientSkills(plugins, disabledPluginIds);
-    if (isInAutoSkillMode) {
-      enabledSkills = skillSet.skills;
-    } else {
-      const selectedIds = new Set(plugins);
-      enabledSkills = skillSet.skills.filter((s) => selectedIds.has(s.identifier));
-    }
+    // Manual mode narrows the pool itself, so an unselected skill is neither
+    // listed nor resolvable by `activateSkill`.
+    enabledSkills = (
+      await resolveClientSkills(
+        plugins,
+        disabledPluginIds,
+        agentChatConfigSelectors.skillActivateMode(agentStoreState),
+        // Reading another topic (`<refer_topic>` or a raw `tpc_` id) goes through `lh topic view`,
+        // which the lobehub skill teaches.
+        mentionsTopic(messages) ? [LobeHubIdentifier] : undefined,
+      )
+    ).skills;
   }
 
   // One timezone for every date the prompt renders — the core's temporal
@@ -299,6 +318,9 @@ export const contextEngineering = async ({
     agent: {
       documents: facts.agentDocuments,
       enableHistoryCount,
+      // Pass the raw value through (explicit false preserved); the engine
+      // treats undefined as enabled.
+      enableStaleToolResultTrim: respondingChatConfig.enableStaleToolResultTrim,
       historyCount,
       // The agent's identity lives on the agent row (name/title), not in the
       // prompt text — inject it so the model can answer "who are you?" with
@@ -309,7 +331,11 @@ export const contextEngineering = async ({
       systemRole,
     },
     // Desktop local/static URLs are not fetchable by remote providers or cloud tools.
-    fileContext: { enabled: true, includeFileUrl: !isDesktop },
+    fileContext: {
+      enabled: true,
+      includeFileUrl: !isDesktop,
+      previewFileIds: attachmentPreviewFileIds,
+    },
     model: {
       capabilities: { isCanUseAudio, isCanUseFC, isCanUseVideo, isCanUseVision },
       displayName: getRuntimeModelDisplayName(model, provider),
@@ -360,7 +386,7 @@ export const contextEngineering = async ({
 
   log('Input messages count: %d', messages.length);
 
-  const processed = await runContextEngineering(snapshot);
+  const { messages: processed } = await runContextEngineering(snapshot);
 
   log('Output messages count: %d', processed.length);
 

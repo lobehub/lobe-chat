@@ -1,7 +1,10 @@
 import type { CallLLMPayload } from '@lobechat/agent-runtime';
 import { MessagesEngine } from '@lobechat/context-engine';
+import { readFrozenModelFacts } from '@lobechat/mecha';
 import type { UIChatMessage } from '@lobechat/types';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+
+import { createServerModelParamsProviders } from '@/server/modules/Mecha/ModelParams/providers';
 
 import type { RuntimeExecutorContext } from '../context';
 import { resolveServerCallLlmContextHints } from './serverCallLlmContextHints';
@@ -667,5 +670,168 @@ describe('resolveServerCallLlmContextHints - model-instance reasoning config', (
     });
 
     expect(getModelReasoningConfigMock).not.toHaveBeenCalled();
+  });
+});
+
+describe('resolveServerCallLlmContextHints - frozen operation facts', () => {
+  const frozenCtx = (): RuntimeExecutorContext => ({
+    ...createCtx(),
+    modelRuntimeConfig: {
+      mediaCapabilities: { vision: true },
+      modelFacts: {
+        cards: [
+          {
+            abilities: { functionCall: true, vision: true },
+            displayName: 'GPT-4 (frozen)',
+            extendParams: ['reasoningEffort'],
+            id: 'gpt-4',
+            knowledgeCutoff: '2024-01',
+            providerId: 'openai',
+          },
+        ],
+        mediaCapabilities: { vision: true },
+        model: 'gpt-4',
+        provider: 'openai',
+        reasoningConfig: { reasoningEffort: 'low' },
+      },
+      model: 'gpt-4',
+      provider: 'openai',
+      topicId: undefined,
+    } as RuntimeExecutorContext['modelRuntimeConfig'],
+    topicId: 'tpc_1',
+  });
+
+  it('reads no model source on a step and keeps the effort the run started with', async () => {
+    // What the user changed after the run started — none of it may be read.
+    getModelReasoningConfigMock.mockResolvedValue({ reasoningEffort: 'high' });
+    findTopicByIdMock.mockResolvedValue({
+      metadata: { reasoningConfig: { reasoningEffort: 'high' } },
+      model: 'gpt-4',
+      provider: 'openai',
+    });
+
+    const hints = await resolveServerCallLlmContextHints({
+      ctx: frozenCtx(),
+      world: { agent: { chatConfig: {} } },
+      llmPayload,
+      model: 'gpt-4',
+      provider: 'openai',
+    });
+
+    expect(hints.resolvedExtendParams).toMatchObject({ reasoning_effort: 'low' });
+    expect(hints.modelDisplayName).toBe('GPT-4 (frozen)');
+    expect(hints.capabilities.isCanUseVision('gpt-4', 'openai')).toBe(true);
+    expect(loadModelsMock).not.toHaveBeenCalled();
+    expect(findByIdAndProviderMock).not.toHaveBeenCalled();
+    expect(getModelReasoningConfigMock).not.toHaveBeenCalled();
+    expect(findTopicByIdMock).not.toHaveBeenCalled();
+  });
+
+  it('resolves a step exactly as the live sources would have', async () => {
+    getModelReasoningConfigMock.mockResolvedValue({ reasoningEffort: 'high' });
+    findByIdAndProviderMock.mockResolvedValue({
+      abilities: { vision: true },
+      displayName: 'My GPT-4',
+      settings: { extendParams: ['reasoningEffort'] },
+    });
+    const ctx = createCtx();
+    const args = {
+      llmPayload,
+      model: 'gpt-4',
+      provider: 'openai',
+      world: { agent: { chatConfig: {} } },
+    };
+
+    const live = await resolveServerCallLlmContextHints({ ...args, ctx });
+    // Non-trivial to compare against: the user's row and reasoning config both
+    // reached the payload.
+    expect(live.resolvedExtendParams).toMatchObject({ reasoning_effort: 'high' });
+    expect(live.modelDisplayName).toBe('My GPT-4');
+
+    // What discovery freezes onto the operation, read through the same server
+    // providers the live path used.
+    const modelFacts = await readFrozenModelFacts(
+      { agent: {}, model: 'gpt-4', provider: 'openai', topicId: ctx.topicId },
+      createServerModelParamsProviders({
+        builtinModels: await loadModelsMock(),
+        serverDB: ctx.serverDB,
+        userId: ctx.userId,
+      }),
+    );
+    const frozen = await resolveServerCallLlmContextHints({
+      ...args,
+      ctx: { ...ctx, modelRuntimeConfig: { modelFacts, model: 'gpt-4', provider: 'openai' } },
+    });
+
+    expect(frozen.resolvedExtendParams).toEqual(live.resolvedExtendParams);
+    expect(frozen.modelDisplayName).toBe(live.modelDisplayName);
+    expect(frozen.modelKnowledgeCutoff).toBe(live.modelKnowledgeCutoff);
+    expect(frozen.preserveThinkingForPayload).toBe(live.preserveThinkingForPayload);
+    expect(frozen.shouldReplayAssistantReasoning).toBe(live.shouldReplayAssistantReasoning);
+    expect(frozen.capabilities.isCanUseVision('gpt-4', 'openai')).toBe(
+      live.capabilities.isCanUseVision('gpt-4', 'openai'),
+    );
+  });
+
+  it('freezes the user-configured deployment alias over the bundled card', async () => {
+    // Codex P1 (4256356269): the settings flow persists a user alias in
+    // ai_models.config.deploymentName; the server sourcing path must carry it
+    // into the frozen facts, or the transport injects the bundled alias and
+    // calls 404 wherever only the user's endpoint exists.
+    loadModelsMock.mockResolvedValue([
+      {
+        abilities: {},
+        config: { deploymentName: 'deepseek-v4-pro-ga-260813' },
+        displayName: 'DeepSeek V4 Pro 0813',
+        id: 'deepseek-v4-pro-ga',
+        providerId: 'volcengine',
+      },
+    ]);
+    findByIdAndProviderMock.mockResolvedValue({
+      config: { deploymentName: 'prod-endpoint' },
+      displayName: 'DeepSeek V4 Pro 0813',
+    });
+
+    const ctx = createCtx();
+    const modelFacts = await readFrozenModelFacts(
+      { agent: {}, model: 'deepseek-v4-pro-ga', provider: 'volcengine', topicId: ctx.topicId },
+      createServerModelParamsProviders({
+        builtinModels: await loadModelsMock(),
+        serverDB: ctx.serverDB,
+        userId: ctx.userId,
+      }),
+    );
+
+    expect(modelFacts.cards.find((card) => card.providerId === 'volcengine')?.deploymentName).toBe(
+      'prod-endpoint',
+    );
+    expect(modelFacts.userModelRow?.deploymentName).toBe('prod-endpoint');
+  });
+
+  it('resolves live for an attempt on another model', async () => {
+    await resolveServerCallLlmContextHints({
+      ctx: frozenCtx(),
+      world: { agent: { chatConfig: {} } },
+      llmPayload,
+      model: 'gpt-4o-mini',
+      provider: 'openai',
+    });
+
+    expect(loadModelsMock).toHaveBeenCalled();
+  });
+
+  it('resolves live for an operation created before the snapshot existed', async () => {
+    await resolveServerCallLlmContextHints({
+      ctx: {
+        ...createCtx(),
+        modelRuntimeConfig: { model: 'gpt-4', provider: 'openai' },
+      },
+      world: { agent: { chatConfig: {} } },
+      llmPayload,
+      model: 'gpt-4',
+      provider: 'openai',
+    });
+
+    expect(loadModelsMock).toHaveBeenCalled();
   });
 });

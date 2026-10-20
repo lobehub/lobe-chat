@@ -12,6 +12,7 @@ import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
 import { isCanUseFC } from '@/helpers/isCanUseFC';
 import * as toolEngineeringModule from '@/helpers/toolEngineering';
 import { agentDocumentService } from '@/services/agentDocument';
+import { oneShotRelay } from '@/services/llmRelay';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors, chatConfigByIdSelectors } from '@/store/agent/selectors';
 import { aiModelSelectors, useAiInfraStore } from '@/store/aiInfra';
@@ -1260,7 +1261,7 @@ describe('ChatService', () => {
         );
         expect(requestMessages[0].content).toContain('<available_skills>');
         expect(requestMessages[0].content).toContain(
-          'Use the runSkill tool to activate a skill when needed.',
+          'Use the activateSkill tool to activate a skill when needed.',
         );
         expect(requestMessages[0].content).toContain('<tool name="SEO">');
         expect(requestMessages[1]).toEqual(
@@ -1764,6 +1765,86 @@ describe('ChatService', () => {
       );
     });
 
+    // Within the LLM relay a device-only provider is called by the server and
+    // relayed back to this tab: the browser must not dial it itself.
+    it('sends a device-only provider through the server with the one-shot relay headers', async () => {
+      vi.spyOn(chatHelper, 'isEnableFetchOnClient').mockReturnValue(true);
+      vi.spyOn(oneShotRelay, 'needsRelay').mockReturnValue(true);
+      const relayHeaders = {
+        'x-lobe-client-id': 'tab-1',
+        'x-lobe-llm-relay-channel': 'llmcall:user-1:abcdefgh',
+      };
+      const run = vi
+        .spyOn(oneShotRelay, 'run')
+        .mockImplementation(async (_provider, request) =>
+          request({ channel: relayHeaders['x-lobe-llm-relay-channel'], headers: relayHeaders }),
+        );
+      const initializeWithClientStore = vi.spyOn(mechaModule, 'initializeWithClientStore');
+
+      await chatService.getChatCompletion({ messages: [], model: 'qwen3', provider: 'ollama' });
+
+      expect(run).toHaveBeenCalledWith('ollama', expect.any(Function), { signal: undefined });
+      const [url, options] = mockFetchSSE.mock.calls[0];
+      expect(url).toContain('/ollama');
+      expect(options.fetcher).toBeUndefined();
+      expect(options.headers).toMatchObject(relayHeaders);
+      expect(options.requestContext.fetchOnClient).toBe(false);
+      expect(initializeWithClientStore).not.toHaveBeenCalled();
+    });
+
+    // A relayed call that fails on the device streams its executor's error
+    // (`{ provider, errorType, error }`). Callers read the `ChatMessageError`
+    // shape the legacy browser path gave them: the Ollama provider checker
+    // dereferenced `body.error` and crashed the settings page on a missing model.
+    it('hands a relayed device error to the caller as a ChatMessageError', async () => {
+      vi.spyOn(chatHelper, 'isEnableFetchOnClient').mockReturnValue(true);
+      vi.spyOn(oneShotRelay, 'needsRelay').mockReturnValue(true);
+      vi.spyOn(oneShotRelay, 'run').mockImplementation(async (_provider, request) =>
+        request({ channel: 'llmcall:user-1:abcdefgh', headers: {} }),
+      );
+      const relayedError = {
+        error: { message: "model 'gpt-oss:20b' not found", name: 'ResponseError', status_code: 404 },
+        errorType: 'OllamaBizError',
+        provider: 'ollama',
+      };
+      mockFetchSSE.mockImplementation(async (_url: string, options: any) => {
+        options.onErrorHandle(relayedError);
+        return new Response('');
+      });
+      const onErrorHandle = vi.fn();
+
+      await chatService.getChatCompletion(
+        { messages: [], model: 'gpt-oss:20b', provider: 'ollama' },
+        { onErrorHandle },
+      );
+
+      expect(onErrorHandle).toHaveBeenCalledWith({
+        body: relayedError,
+        message: "model 'gpt-oss:20b' not found",
+        type: 'OllamaBizError',
+      });
+    });
+
+    // An abort while the relay channel is still being set up must not sit out
+    // the subscribe timeout (manual compaction, preset-task loading state).
+    it("hands the caller's abort signal to the relay setup", async () => {
+      vi.spyOn(chatHelper, 'isEnableFetchOnClient').mockReturnValue(true);
+      vi.spyOn(oneShotRelay, 'needsRelay').mockReturnValue(true);
+      const run = vi
+        .spyOn(oneShotRelay, 'run')
+        .mockImplementation(async (_provider, request) => request());
+      const controller = new AbortController();
+
+      await chatService.getChatCompletion(
+        { messages: [], model: 'qwen3', provider: 'ollama' },
+        { signal: controller.signal },
+      );
+
+      expect(run).toHaveBeenCalledWith('ollama', expect.any(Function), {
+        signal: controller.signal,
+      });
+    });
+
     it('should make a POST request with the correct payload', async () => {
       const params: Partial<ChatStreamPayload> = {
         model: 'test-model',
@@ -1917,6 +1998,25 @@ describe('ChatService', () => {
   });
 
   describe('fetchPresetTaskResult', () => {
+    it('should forward the preset task trigger as request metadata', async () => {
+      const getChatCompletionSpy = vi
+        .spyOn(chatService, 'getChatCompletion')
+        .mockResolvedValue(new Response(''));
+
+      await chatService.fetchPresetTaskResult({
+        params: {
+          messages: [{ content: 'Hello', role: 'user' as const }],
+          model: 'gpt-4',
+          provider: 'openai',
+        },
+        trigger: RequestTrigger.TopicTitle,
+      });
+
+      expect(getChatCompletionSpy.mock.calls[0][1]?.metadata).toEqual({
+        trigger: RequestTrigger.TopicTitle,
+      });
+    });
+
     it('should not wait for agent documents on preset task chains', async () => {
       vi.spyOn(chatService, 'getChatCompletion').mockResolvedValue(new Response(''));
       vi.spyOn(agentDocumentService, 'getContextDocuments').mockResolvedValue([]);
@@ -1928,6 +2028,7 @@ describe('ChatService', () => {
           model: 'gpt-4',
           provider: 'openai',
         },
+        trigger: RequestTrigger.Translate,
       });
 
       expect(agentDocumentService.getContextDocuments).not.toHaveBeenCalled();
@@ -1972,6 +2073,7 @@ describe('ChatService', () => {
         onLoadingChange,
         abortController,
         trace,
+        trigger: RequestTrigger.Translate,
       });
 
       expect(onFinish).toHaveBeenCalledWith('AI response', {
@@ -2012,6 +2114,7 @@ describe('ChatService', () => {
         onLoadingChange,
         abortController,
         trace,
+        trigger: RequestTrigger.Translate,
       });
 
       expect(onError).toHaveBeenCalledWith(expect.any(Error), {

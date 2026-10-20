@@ -1,13 +1,21 @@
 'use client';
 
-import { type BlockProps, type GenericItemType, type IconProps } from '@lobehub/ui';
-import { Block, Center, ContextMenuTrigger, Flexbox, Icon } from '@lobehub/ui';
-import { Text } from '@lobehub/ui/base-ui';
-import { createStaticStyles, cssVar, cx } from 'antd-style';
+import { type BlockProps, type DropdownItem, type IconProps } from '@lobehub/ui';
+import {
+  Block,
+  Center,
+  ContextMenuTrigger,
+  createStaticStyles,
+  cssVar,
+  cx,
+  Flexbox,
+  Icon,
+  Spin,
+  Text,
+} from '@lobehub/ui';
 import { type FocusEvent, type PointerEvent, type ReactNode } from 'react';
 import { memo } from 'react';
 
-import NeuralNetworkLoading from '@/components/NeuralNetworkLoading';
 import { isModifierClick } from '@/utils/navigation';
 
 import { type LazyActions, useLazyActions } from './useLazyActions';
@@ -73,7 +81,7 @@ export interface NavItemProps extends Omit<BlockProps, 'children' | 'title'> {
    */
   actions?: LazyActions;
   active?: boolean;
-  contextMenuItems?: GenericItemType[] | (() => GenericItemType[]);
+  contextMenuItems?: DropdownItem[] | (() => DropdownItem[]);
   /**
    * Optional second line rendered under the title (e.g. a topic's project
    * directory). When set, the row grows to fit both lines; when omitted the
@@ -197,7 +205,7 @@ const NavItem = memo<NavItemProps>(
             width={28}
           >
             {loading ? (
-              <NeuralNetworkLoading size={iconSize} />
+              <Spin size={iconSize} variant="network" />
             ) : (
               <Icon color={iconColor} icon={icon} size={iconSize} />
             )}

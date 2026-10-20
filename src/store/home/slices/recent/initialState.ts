@@ -1,38 +1,37 @@
 import type { RecentItem } from '@lobechat/types';
 
+import { createReplicaState, type ReplicaState } from '@/libs/replica';
+
+import type { RecentFileCard, RecentPageCard } from './projection';
+
+export { createRecentQueryKey } from './projection';
+
+/** `${type}:${id}`: ids of different entity types can collide. */
 export type RecentEntityRef = `${RecentItem['type']}:${string}`;
 
-export const createRecentQueryKey = (limit: number): string => `limit:${limit}`;
-
-export interface RecentOptimisticTitle {
-  mutationId: number;
-  title: string;
-}
-
-export interface RecentScopeState {
-  hydrationStatusByQuery: Record<string, 'failed' | 'hydrated' | 'hydrating'>;
-  optimisticTitles: Partial<Record<RecentEntityRef, RecentOptimisticTitle>>;
-  queries: Record<string, RecentQueryState>;
-  syncStatusByQuery: Record<string, RecentSyncState>;
-}
-
-export interface RecentQueryState {
-  items: RecentItem[];
-  source: 'server' | 'storage';
-  updatedAt: number;
-}
-
-export interface RecentSyncState {
-  error?: unknown;
-  isValidating: boolean;
-}
+export const toRecentEntityRef = (item: Pick<RecentItem, 'id' | 'type'>): RecentEntityRef =>
+  `${item.type}:${item.id}`;
 
 export interface RecentState {
   allRecentsDrawerOpen: boolean;
-  recentsByScope: Record<string, RecentScopeState>;
+  /** Recents per query (`limit:N`), the view of the `recentList` replica. */
+  recentListMap: Record<string, RecentItem[]>;
+  /** Replica bookkeeping for `recentListMap`. */
+  recentListReplica: ReplicaState<RecentItem[]>;
+  /** Resource home "Recent files" per visibility, the view of the `resourceRecentFiles` replica. */
+  resourceRecentFilesMap: Record<string, RecentFileCard[]>;
+  resourceRecentFilesReplica: ReplicaState<RecentFileCard[]>;
+  /** Resource home "Recent pages" per visibility, the view of the `resourceRecentPages` replica. */
+  resourceRecentPagesMap: Record<string, RecentPageCard[]>;
+  resourceRecentPagesReplica: ReplicaState<RecentPageCard[]>;
 }
 
 export const initialRecentState: RecentState = {
   allRecentsDrawerOpen: false,
-  recentsByScope: {},
+  recentListMap: {},
+  recentListReplica: createReplicaState(),
+  resourceRecentFilesMap: {},
+  resourceRecentFilesReplica: createReplicaState(),
+  resourceRecentPagesMap: {},
+  resourceRecentPagesReplica: createReplicaState(),
 };

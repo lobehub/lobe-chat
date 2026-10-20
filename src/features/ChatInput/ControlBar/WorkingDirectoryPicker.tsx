@@ -3,13 +3,21 @@
 import { isDesktop } from '@lobechat/const';
 import type { WorkingDirEntry } from '@lobechat/types';
 import { getWorkingDirSourcePath } from '@lobechat/types';
-import { Flexbox, Icon, Input, Popover, Tooltip } from '@lobehub/ui';
-import { ActionIcon, toast } from '@lobehub/ui/base-ui';
-import { createStaticStyles, cssVar, cx } from 'antd-style';
+import {
+  ActionIcon,
+  createStaticStyles,
+  cssVar,
+  cx,
+  Flexbox,
+  Icon,
+  Input,
+  Popover,
+  toast,
+  Tooltip,
+} from '@lobehub/ui';
 import {
   CheckIcon,
   ChevronDownIcon,
-  FolderIcon,
   FolderOpenIcon,
   FolderPlusIcon,
   SearchIcon,
@@ -19,8 +27,7 @@ import {
 import { memo, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { useConversationStore } from '@/features/Conversation/store';
-import { openAddWorkingDirModal } from '@/features/WorkingDirectory';
+import { openPickWorkingDirModal } from '@/features/WorkingDirectory';
 import {
   resolveAgentWorkingDirectorySource,
   resolveTargetDeviceId,
@@ -30,7 +37,6 @@ import {
   getWorkingDirectoryPathString,
 } from '@/helpers/workingDirectoryPath';
 import { useEffectiveAgencyConfig } from '@/hooks/useEffectiveAgencyConfig';
-import { deviceService } from '@/services/device';
 import { electronSystemService } from '@/services/electron/system';
 import { useAgentStore } from '@/store/agent';
 import { useChatStore } from '@/store/chat';
@@ -40,9 +46,12 @@ import { useElectronStore } from '@/store/electron';
 import { useUserStore } from '@/store/user';
 import { authSelectors } from '@/store/user/selectors';
 
+import { useTopicId } from '../hooks/useTopicId';
+import DashedFolderIcon from './DashedFolderIcon';
 import DirIcon from './DirIcon';
 import { useCommitWorkingDirectory } from './useCommitWorkingDirectory';
 import { useMigrateDeviceRecents } from './useMigrateDeviceRecents';
+import { workingDirectoryChipStyles } from './workingDirectoryChipStyles';
 
 // Show the in-place search box only once the list is long enough that scanning
 // gets tedious — a short list doesn't need the extra chrome.
@@ -60,34 +69,6 @@ const styles = createStaticStyles(({ css }) => ({
     color: ${cssVar.colorTextTertiary};
 
     background: ${cssVar.colorFillSecondary};
-  `,
-  button: css`
-    cursor: pointer;
-
-    display: flex;
-    flex: none;
-    gap: 6px;
-    align-items: center;
-
-    padding-block: 2px;
-    padding-inline: 4px;
-    border-radius: 4px;
-
-    font-size: 12px;
-    color: ${cssVar.colorTextSecondary};
-    white-space: nowrap;
-
-    transition: background 0.2s;
-
-    &:hover {
-      background: ${cssVar.colorFillTertiary};
-    }
-  `,
-  buttonLabel: css`
-    overflow: hidden;
-    max-width: 140px;
-    text-overflow: ellipsis;
-    white-space: nowrap;
   `,
   chooseFolderItem: css`
     cursor: pointer;
@@ -174,14 +155,6 @@ const styles = createStaticStyles(({ css }) => ({
     padding-block: 2px;
     padding-inline: 8px;
     border-block-end: 1px solid ${cssVar.colorSplit};
-
-    .ant-input-affix-wrapper {
-      padding-inline: 0;
-    }
-
-    .ant-input-prefix {
-      margin-inline-end: 8px;
-    }
   `,
   sectionTitle: css`
     padding-block: 6px 2px;
@@ -234,27 +207,9 @@ const AddRemoteFolderRow = memo<{
 }>(({ defaultCwd, deviceId, onBeforeOpen, onPick }) => {
   const { t } = useTranslation('device');
 
-  // Validate the selected or manually entered path on the target device: block
-  // on a definitive negative, otherwise commit with the detected repoType so the
-  // recent entry shows the right (git / github) icon. An unreachable device
-  // (null) is treated as "can't verify" and allowed through without a repoType.
-  const handleSubmit = async (path: string): Promise<string | undefined> => {
-    const result = deviceId ? await deviceService.statPath(deviceId, path) : undefined;
-    if (result) {
-      if (!result.exists) return t('workingDirectory.pathNotExist');
-      if (!result.isDirectory) return t('workingDirectory.pathNotDirectory');
-    }
-    onPick({ path, repoType: result?.repoType });
-    return undefined;
-  };
-
   const handleClick = () => {
     onBeforeOpen();
-    openAddWorkingDirModal({
-      defaultPath: defaultCwd || undefined,
-      deviceId,
-      onSubmit: handleSubmit,
-    });
+    openPickWorkingDirModal({ defaultPath: defaultCwd || undefined, deviceId, onPick });
   };
   return (
     <Flexbox
@@ -288,7 +243,7 @@ interface WorkingDirectoryPickerProps {
  * runs in when nothing is picked is never invisible.
  */
 const WorkingDirectoryPicker = memo<WorkingDirectoryPickerProps>(({ agentId }) => {
-  const topicId = useConversationStore((s) => s.context.topicId);
+  const topicId = useTopicId();
   const { t } = useTranslation('device');
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState('');
@@ -304,7 +259,7 @@ const WorkingDirectoryPicker = memo<WorkingDirectoryPickerProps>(({ agentId }) =
   // Effective config (shared row + this member's device override)
   // so recents / default cwd / the selected-repo label all resolve against the
   // device THIS member's run actually targets.
-  const { agencyConfig, workspaceScoped } = useEffectiveAgencyConfig(agentId);
+  const { agencyConfig, workspaceScoped } = useEffectiveAgencyConfig(agentId, { topicId });
   const currentDeviceId = useElectronStore((s) => s.gatewayDeviceInfo?.deviceId);
   const targetDeviceId = resolveTargetDeviceId(agencyConfig, currentDeviceId, {
     workspaceScoped,
@@ -502,6 +457,7 @@ const WorkingDirectoryPicker = memo<WorkingDirectoryPickerProps>(({ agentId }) =
             placeholder={t('workingDirectory.searchPlaceholder')}
             prefix={<Icon icon={SearchIcon} size={14} />}
             size="small"
+            style={{ paddingInline: 0 }}
             value={search}
             variant="borderless"
             onChange={(e) => setSearch(e.target.value)}
@@ -534,7 +490,9 @@ const WorkingDirectoryPicker = memo<WorkingDirectoryPickerProps>(({ agentId }) =
         <ChooseLocalFolderRow defaultPath={selectedDir} onPick={pick} />
       ) : (
         <AddRemoteFolderRow
-          defaultCwd={deviceDefaultCwd}
+          // Start the browser at the directory this conversation actually runs in
+          // (topic / agent override first), not the bare home folder.
+          defaultCwd={selectedDir || deviceDefaultCwd}
           deviceId={targetDeviceId}
           onBeforeOpen={() => setOpen(false)}
           onPick={pick}
@@ -545,16 +503,16 @@ const WorkingDirectoryPicker = memo<WorkingDirectoryPickerProps>(({ agentId }) =
 
   const displayName = selectedDir
     ? (getWorkingDirectoryName(selectedDir) ?? selectedDir)
-    : t('workingDirectory.title');
+    : t('workingDirectory.unselected');
 
   const trigger = (
-    <div className={styles.button}>
+    <div className={workingDirectoryChipStyles.chip}>
       {selectedDir ? (
         <DirIcon repoType={recents.find((r) => r.path === selectedDir)?.repoType} />
       ) : (
-        <Icon icon={FolderIcon} size={14} />
+        <DashedFolderIcon size={14} />
       )}
-      <span className={styles.buttonLabel}>{displayName}</span>
+      <span className={workingDirectoryChipStyles.label}>{displayName}</span>
       <Icon icon={ChevronDownIcon} size={12} />
     </div>
   );

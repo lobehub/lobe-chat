@@ -1,9 +1,13 @@
-import type { AgentState } from '@lobechat/agent-runtime';
+import { type AgentState, selectToolSourceMap } from '@lobechat/agent-runtime';
 import { formatWebOnboardingStateMessage } from '@lobechat/builtin-tool-web-onboarding/utils';
 import { defaultUninstalledBuiltinTools } from '@lobechat/builtin-tools';
 import { AGENT_PLAN_FILE_TYPE } from '@lobechat/const';
 import type { ContextFactProviders, ContextFactRequest } from '@lobechat/mecha';
-import { getActivePluginIds } from '@lobechat/types';
+import {
+  agentShareDocumentAccessScope,
+  getActivePluginIds,
+  ordinaryDocumentAccessScope,
+} from '@lobechat/types';
 
 import { loadModels } from '@/business/client/model-bank/loadModels';
 import { composioEnv } from '@/config/composio';
@@ -25,6 +29,7 @@ import { buildPostProcessUrl, log } from '@/server/modules/AgentRuntime/executor
 import { AgentDocumentsService } from '@/server/services/agentDocuments';
 import { MarketService } from '@/server/services/market';
 import { OnboardingService } from '@/server/services/onboarding';
+import { resolveSandboxSessionConfig } from '@/server/services/sandbox';
 import { toAgentContextDocuments } from '@/utils/agentDocumentContextMapping';
 
 export interface ServerContextFactSource {
@@ -63,6 +68,13 @@ export const createServerContextFactProviders = ({
   if (!serverDB || !userId) return {};
   const db = serverDB;
   const workspaceId = state.origin?.workspaceId ?? ctx.workspaceId;
+  const documentAccessScope = ctx.agentShareVisitor
+    ? agentShareDocumentAccessScope({
+        shareId: ctx.agentShareVisitor.shareId,
+        topicId: state.origin?.topicId ?? ctx.topicId ?? '',
+        visitorUserId: ctx.agentShareVisitor.visitorUserId,
+      })
+    : ordinaryDocumentAccessScope;
 
   return {
     findTopic: async (topicId) => {
@@ -181,6 +193,8 @@ export const createServerContextFactProviders = ({
         db,
         userId,
         workspaceId,
+        undefined,
+        documentAccessScope,
       ).getAgentContextDocuments(agentId);
       return toAgentContextDocuments(docs);
     },
@@ -191,7 +205,7 @@ export const createServerContextFactProviders = ({
     // providers, so presence in the tool set is the connection).
     listConnectedConnectorIds: async (agentId) => {
       const connected = await loadConnectedComposioIds(db, userId, ctx.workspaceId, agentId);
-      const sourceMap = state.operationToolSet?.sourceMap ?? state.toolSourceMap ?? {};
+      const sourceMap = selectToolSourceMap(state);
       for (const [identifier, source] of Object.entries(sourceMap)) {
         if (source === 'lobehubSkill') connected.add(identifier);
       }
@@ -199,6 +213,12 @@ export const createServerContextFactProviders = ({
     },
 
     listCredentials: async ({ workspaceId: scopeWorkspaceId }) => {
+      // Frozen when the operation was created, so a run renders {{CREDS_LIST}}
+      // without a Market round trip per step. The scope must match: inside a
+      // workspace the agent only sees that workspace's shared credentials.
+      const frozen = state.operationCredentials;
+      if (frozen && frozen.workspaceId === scopeWorkspaceId) return frozen.credentials;
+
       // Read market accessToken from DB so the server-side runtime can
       // authenticate with the Market API instead of falling back to an
       // anonymous trustedClientToken (which 401s on creds endpoints).
@@ -311,6 +331,28 @@ export const createServerContextFactProviders = ({
 
     listSandboxFiles: async (topicId) =>
       new FileModel(db, userId).findFilesToInitInSandbox(topicId),
+
+    // Resolved from the same inputs the cloud-sandbox runtime uses, so the model
+    // is never told its files persist while its tools write to a directory that
+    // does not — or the reverse. Keyed on `ctx.workspaceId` for the same reason
+    // the runtime is: that is the workspace the trust token carries, and the
+    // entitlement has to agree with the token that presents it.
+    resolveSandboxPersistence: async () => {
+      const { mode, cwd, claim, workingDir } = await resolveSandboxSessionConfig({
+        isShareVisitorRun: Boolean(ctx.agentShareVisitor),
+        serverDB: db,
+        topicId: ctx.topicId ?? state.origin?.topicId,
+        userId,
+        // The run's workspace, the same one every other fact here is scoped to.
+        // Reading the raw context instead looked the topic up in the personal
+        // scope on any path that does not carry the id, found nothing, and
+        // described a disposable sandbox to a run that had a persistent one —
+        // so the model was told its files would not survive and worked in /tmp.
+        workspaceId,
+      });
+
+      return claim ? { cwd, mode, workingDir } : undefined;
+    },
 
     listTopicMessages: async (topic) => {
       const messages = await new MessageModel(db, userId, ctx.workspaceId).query(

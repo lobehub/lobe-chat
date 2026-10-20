@@ -1,5 +1,5 @@
 import { LOBE_CHAT_CLOUD } from '@lobechat/business-const';
-import { toast } from '@lobehub/ui/base-ui';
+import { toast } from '@lobehub/ui';
 import { t } from 'i18next';
 
 import { handleFileUploadError } from '@/business/client/handleFileUploadError';
@@ -70,7 +70,7 @@ interface UploadWithProgressResult {
   url: string;
 }
 
-const normalizeUploadedFileType = async (
+export const normalizeUploadedFileType = async (
   file: File,
 ): Promise<{ detectedMimeType?: string; file: File }> => {
   const { fileTypeFromBlob } = await import('file-type');

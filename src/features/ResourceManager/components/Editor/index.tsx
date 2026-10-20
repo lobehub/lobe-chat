@@ -1,8 +1,6 @@
 'use client';
 
-import { Flexbox } from '@lobehub/ui';
-import { ActionIcon, createModal, Skeleton } from '@lobehub/ui/base-ui';
-import { cssVar, useTheme } from 'antd-style';
+import { ActionIcon, createModal, cssVar, Flexbox, Skeleton, useTheme } from '@lobehub/ui';
 import { t as i18nT } from 'i18next';
 import { ArrowLeftIcon, DownloadIcon, InfoIcon } from 'lucide-react';
 import { memo } from 'react';
@@ -118,7 +116,7 @@ const FileEditorCanvas = memo<FileEditorProps>(({ onBack }) => {
           }}
         />
         <Flexbox flex={1} style={{ minHeight: 0, overflow: 'hidden' }}>
-          <FileContent fileId={currentViewItemId} />
+          <FileContent fileId={currentViewItemId} onClose={onBack} />
         </Flexbox>
       </Flexbox>
     </Flexbox>

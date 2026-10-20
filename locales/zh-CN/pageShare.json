@@ -1,4 +1,7 @@
 {
+  "error.invalidFormat.desc": "这篇分享仍可阅读，排版可能和原文不完全一致。",
+  "error.invalidFormat.ownerHint": "在编辑器里重新保存即可修复。",
+  "error.invalidFormat.title": "无法按原文格式显示",
   "popover.copyLink": "复制链接",
   "popover.copyLinkSuccess": "链接已复制",
   "popover.linkHint": "拥有链接的任何人都可查看此页面",

@@ -58,7 +58,7 @@ For Modal specifically, see the dedicated **modal** skill — use the imperative
 
 Keep transient state in its smallest useful owner. Extract a custom hook when state transitions and handlers obscure rendering or form a reusable unit; do not extract solely because a component has a particular number of hooks.
 
-Split a component only to establish a real state, reuse, render-update, or mountable-capability boundary. Do not split solely to make files smaller. Decomposing a heavy domain feature into host-assembled atoms is owned by **`compose-atoms`**.
+Split a component only to establish a real state, reuse, render-update, or mountable-capability boundary. Do not split solely to make files smaller; when a file reaches the 1200-line limit in **`source-layout`**, find one of these boundaries rather than cutting at a line count. Decomposing a heavy domain feature into host-assembled atoms is owned by **`compose-atoms`**.
 
 ## Render Performance and Memoization
 
@@ -82,7 +82,7 @@ Use `Flexbox` and `Center` from `@lobehub/ui`. See `references/layout-kit.md` fo
 
 ## Related Skills
 
-- **`ux`**: loading visuals and user-facing interaction design. Do not use antd `Spin` / `<Spin />`.
+- **`ux`**: loading visuals (scenario → loader table in `references/feedback.md` §4.1) and user-facing interaction design.
 - **`modal`**: imperative base-ui modal patterns.
 - **`spa-routes`**: SPA navigation, route ownership, router configuration, and `.desktop` variants.
 - **`compose-atoms`**: split a heavy domain feature into mountable capability atoms; each host imports only what it mounts.

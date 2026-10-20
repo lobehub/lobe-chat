@@ -1,9 +1,15 @@
 'use client';
 
 import { isDraftVerifyRun } from '@lobechat/const/verify';
-import { Flexbox } from '@lobehub/ui';
-import { ActionIcon, Select, Text, toast } from '@lobehub/ui/base-ui';
-import { createStaticStyles, useResponsive } from 'antd-style';
+import {
+  ActionIcon,
+  createStaticStyles,
+  Flexbox,
+  Select,
+  Text,
+  toast,
+  useResponsive,
+} from '@lobehub/ui';
 import { ChevronsDownUp, ChevronsUpDown } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { useCallback, useEffect, useState } from 'react';
@@ -34,6 +40,7 @@ import {
   userReviewState,
 } from './checkState';
 import { EMPTY_ID_SET, setAggregateEntry } from './expandState';
+import { collectGroupFeedback } from './readPresentation';
 
 const styles = createStaticStyles(({ css }) => ({
   filters: css`
@@ -222,12 +229,7 @@ const AcceptanceCheckInventory = ({
     : [];
   const allGroupsCollapsed =
     groupKeys.length > 0 && groupKeys.every((key) => collapsedGroups.has(key));
-  const groupFeedback = data.rounds.flatMap((round) =>
-    (round.run.decisionDetail?.groupFeedback ?? []).map((entry) => ({
-      ...entry,
-      roundIndex: round.run.roundIndex ?? 0,
-    })),
-  );
+  const groupFeedback = collectGroupFeedback(data.rounds);
   const currentRound = data.rounds.at(-1)?.run.roundIndex ?? 0;
 
   return (

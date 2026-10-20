@@ -1,3 +1,4 @@
+import type { ReviewAnchor } from './acceptanceReview';
 import type { DocumentCommentJson } from './documentComment';
 import type { AcceptanceAttachment, AcceptanceReviewAnnotation } from './verify';
 
@@ -32,6 +33,8 @@ export type AcceptanceCommentKind = 'approval' | 'comment' | 'proposal' | 'react
 export interface AcceptanceCommentAttachmentRef {
   fileId: string;
 }
+
+export type AcceptanceCommentSource = ReviewAnchor;
 
 /** One emoji on one comment, already tallied for display. */
 export interface AcceptanceCommentReaction {
@@ -109,6 +112,7 @@ export interface AcceptanceCommentItem extends AcceptanceCommentAnchor {
   reactions: AcceptanceCommentReaction[];
   resolvedAt: Date | null;
   resolvedByUserId: string | null;
+  source: AcceptanceCommentSource | null;
   updatedAt: Date;
 }
 

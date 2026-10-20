@@ -1,4 +1,4 @@
-import { toast } from '@lobehub/ui/base-ui';
+import { toast } from '@lobehub/ui';
 import { renderHook } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -48,7 +48,7 @@ vi.mock('@lobechat/const', () => ({
   },
 }));
 
-vi.mock('@lobehub/ui/base-ui', () => ({
+vi.mock('@lobehub/ui', () => ({
   toast: { error: vi.fn() },
 }));
 
@@ -121,7 +121,7 @@ describe('useSelectExecutionTarget', () => {
     it('pins the given deviceId when switching to a specific device', async () => {
       const { result } = renderHook(() => useSelectExecutionTarget('agent-id'));
 
-      await result.current('device', 'device-2');
+      await expect(result.current('device', 'device-2')).resolves.toBe(true);
 
       expect(testState.agent.updateAgentConfigById).toHaveBeenCalledWith(
         'agent-id',
@@ -315,7 +315,7 @@ describe('useSelectExecutionTarget', () => {
         .mockRejectedValue(new Error('save failed'));
       const { result } = renderHook(() => useSelectExecutionTarget('agent-id'));
 
-      await expect(result.current('sandbox')).resolves.toBeUndefined();
+      await expect(result.current('sandbox')).resolves.toBe(false);
 
       expect(toast.error).toHaveBeenCalledWith('saveAgentConfigFail');
       expect(testState.agent.updateAgentConfigById).not.toHaveBeenCalled();
@@ -327,7 +327,7 @@ describe('useSelectExecutionTarget', () => {
         .mockRejectedValue(new Error('save failed'));
       const { result } = renderHook(() => useSelectExecutionTarget('agent-id'));
 
-      await expect(result.current('sandbox', undefined, { silent: true })).resolves.toBeUndefined();
+      await expect(result.current('sandbox', undefined, { silent: true })).resolves.toBe(false);
 
       expect(toast.error).not.toHaveBeenCalled();
     });

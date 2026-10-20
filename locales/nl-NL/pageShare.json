@@ -1,4 +1,7 @@
 {
+  "error.invalidFormat.desc": "Je kunt het nog steeds lezen. De lay-out kan afwijken van het origineel.",
+  "error.invalidFormat.ownerHint": "Sla het opnieuw op in de editor om de originele lay-out te herstellen.",
+  "error.invalidFormat.title": "Deze pagina kon niet in het originele formaat worden weergegeven",
   "popover.copyLink": "Kopieer link",
   "popover.copyLinkSuccess": "Link gekopieerd",
   "popover.linkHint": "Iedereen met de link kan deze pagina bekijken",

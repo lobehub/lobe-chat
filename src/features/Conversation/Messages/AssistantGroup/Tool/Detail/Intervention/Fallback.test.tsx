@@ -36,6 +36,18 @@ vi.mock('react-i18next', () => ({
 
 vi.mock('@lobechat/builtin-tools/interventions', () => ({
   getBuiltinIntervention: (identifier?: string, apiName?: string) => {
+    if (identifier === 'gated' && apiName === 'review') {
+      return ({ onApprovalBlockedChange }: BuiltinInterventionProps) => (
+        <>
+          <button type="button" onClick={() => onApprovalBlockedChange?.(true)}>
+            block
+          </button>
+          <button type="button" onClick={() => onApprovalBlockedChange?.(false)}>
+            release
+          </button>
+        </>
+      );
+    }
     if (identifier !== 'devin' || apiName !== 'askUserQuestion') return;
 
     return ({ onInteractionAction }: BuiltinInterventionProps) => (
@@ -70,6 +82,11 @@ vi.mock('@/store/tool', () => ({
     getPluginTitle: (meta?: { title?: string }) => meta?.title,
   },
   useToolStore: (selector: (state: unknown) => unknown) => selector({}),
+}));
+
+vi.mock('@/store/chat', () => ({
+  useChatStore: (selector: (state: unknown) => unknown) =>
+    selector({ runQuestionSubmission: vi.fn() }),
 }));
 
 vi.mock('@/store/user', () => ({
@@ -109,7 +126,11 @@ vi.mock('../Arguments', () => ({
 }));
 
 vi.mock('./ApprovalActions', () => ({
-  default: () => <div>approval-actions</div>,
+  default: ({ approveDisabled }: { approveDisabled?: boolean }) => (
+    <div data-approve-disabled={String(!!approveDisabled)} data-testid="approval-actions">
+      approval-actions
+    </div>
+  ),
 }));
 
 vi.mock('./KeyValueEditor', () => ({
@@ -190,5 +211,27 @@ describe('heterogeneous custom intervention', () => {
         'Allow Devin to continue?': 'allow-once',
       });
     });
+  });
+});
+
+describe('approval-mode builtin intervention', () => {
+  it('holds the approve action while the intervention blocks approval', () => {
+    render(
+      <Intervention
+        apiName="review"
+        id="message-gated"
+        identifier="gated"
+        requestArgs="{}"
+        toolCallId="gated-1"
+      />,
+    );
+    const actions = screen.getByTestId('approval-actions');
+    expect(actions).toHaveAttribute('data-approve-disabled', 'false');
+
+    fireEvent.click(screen.getByText('block'));
+    expect(actions).toHaveAttribute('data-approve-disabled', 'true');
+
+    fireEvent.click(screen.getByText('release'));
+    expect(actions).toHaveAttribute('data-approve-disabled', 'false');
   });
 });

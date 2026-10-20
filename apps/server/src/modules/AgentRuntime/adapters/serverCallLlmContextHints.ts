@@ -4,13 +4,14 @@ import {
   stripAssistantReasoningForReplay,
 } from '@lobechat/agent-runtime';
 import {
+  createFrozenModelParamsProviders,
   type ResolvedModelExtendParamList,
   type ResolvedModelParams,
   resolveModelExtendParamList,
   resolveModelParams,
 } from '@lobechat/mecha';
 import type { UIChatMessage } from '@lobechat/types';
-import type { LobeDefaultAiModelListItem } from 'model-bank';
+import type { AiModelConfig, LobeDefaultAiModelListItem } from 'model-bank';
 
 import { loadModels } from '@/business/client/model-bank/loadModels';
 import type { AiModelModel } from '@/database/models/aiModel';
@@ -73,6 +74,10 @@ export const resolveModelExtendParamsForUser = async ({
             if (!row) return null;
             return {
               abilities: row.abilities,
+              // Carried so the frozen facts merge the user's deployment alias
+              // over the bundled card; without it the transport injects the
+              // catalog default instead of the user's endpoint.
+              deploymentName: (row.config as AiModelConfig | null)?.deploymentName ?? null,
               displayName: row.displayName,
               extendParams: row.settings?.extendParams ?? undefined,
             };
@@ -95,8 +100,17 @@ export const resolveServerCallLlmContextHints = async ({
   world,
 }: ResolveServerCallLlmContextHintsInput): Promise<ServerCallLlmContextHints> => {
   const agentConfig = world?.agent;
-  const builtinModels = await loadModels();
   const snapshot = ctx.modelRuntimeConfig;
+  // The run froze its model facts when the operation was created. Reuse them
+  // for the model they were read for: the bank, the user's model row and the
+  // reasoning config are then read zero times per step, and a card or effort
+  // the user edits mid-run cannot change the payload between two steps. An
+  // attempt on another model (a compression model), or an operation created
+  // before the snapshot existed, resolves live.
+  const frozenFacts =
+    snapshot?.modelFacts?.model === model && snapshot.modelFacts.provider === provider
+      ? snapshot.modelFacts
+      : undefined;
 
   const resolved = await resolveModelParams(
     {
@@ -108,20 +122,23 @@ export const resolveServerCallLlmContextHints = async ({
       // Tool discovery is fixed for the operation; keep native inputs on the
       // same snapshot across retries, settings edits and worker invocations.
       mediaCapabilities:
-        snapshot?.model === model && snapshot.provider === provider
+        frozenFacts?.mediaCapabilities ??
+        (snapshot?.model === model && snapshot.provider === provider
           ? snapshot.mediaCapabilities
-          : undefined,
+          : undefined),
       model,
       provider,
       searchDecision: world?.searchDecision,
       topicId: ctx.topicId,
     },
-    createServerModelParamsProviders({
-      builtinModels,
-      serverDB: ctx.serverDB,
-      userId: ctx.userId,
-      workspaceId: ctx.workspaceId,
-    }),
+    frozenFacts
+      ? createFrozenModelParamsProviders(frozenFacts)
+      : createServerModelParamsProviders({
+          builtinModels: await loadModels(),
+          serverDB: ctx.serverDB,
+          userId: ctx.userId,
+          workspaceId: ctx.workspaceId,
+        }),
   );
 
   const messages = llmPayload.messages as UIChatMessage[];

@@ -8,10 +8,12 @@ import BrowserSidebarCtr from './BrowserSidebarCtr';
 import BrowserWindowsCtr from './BrowserWindowsCtr';
 import CliCtr from './CliCtr';
 import CompletionSoundCtr from './CompletionSoundCtr';
+import ConnectorOAuthCtr from './ConnectorOAuthCtr';
 import DevtoolsCtr from './DevtoolsCtr';
 import GatewayConnectionCtr from './GatewayConnectionCtr';
 import GitCtr from './GitCtr';
 import HeterogeneousAgentCtr from './HeterogeneousAgentCtr';
+import HeteroSessionCtr from './HeteroSessionCtr';
 import ImessageBridgeCtr from './ImessageBridgeCtr';
 import LocalDatabaseCtr from './LocalDatabaseCtr';
 import LocalFileCtr from './LocalFileCtr';
@@ -36,6 +38,7 @@ import WorkspaceCtr from './WorkspaceCtr';
 
 export const controllerIpcConstructors = [
   HeterogeneousAgentCtr,
+  HeteroSessionCtr,
   AuthCtr,
   AuvCtr,
   BrowserControlCtr,
@@ -43,6 +46,7 @@ export const controllerIpcConstructors = [
   BrowserWindowsCtr,
   CliCtr,
   CompletionSoundCtr,
+  ConnectorOAuthCtr,
   DevtoolsCtr,
   GatewayConnectionCtr,
   GitCtr,

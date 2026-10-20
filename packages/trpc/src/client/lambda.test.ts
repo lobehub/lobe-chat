@@ -1,7 +1,7 @@
 import superjson from 'superjson';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { lambdaClient } from './lambda';
+import { lambdaClient, withLlmRelay } from './lambda';
 
 vi.mock('@/const/version', () => ({ isDesktop: false }));
 vi.mock('@/services/_auth', () => ({ createHeaderWithAuth: async () => ({}) }));
@@ -71,6 +71,111 @@ describe('lambdaClient large-input query transport', () => {
       expect(body.json[arrayField]).toHaveLength(expectedLength);
     },
   );
+});
+
+describe('lambdaClient transport lanes', () => {
+  const fetchMock = vi.fn();
+
+  // A batched request expects an array body with one entry per operation in it
+  // (the procedures are comma-joined in the path); an unbatched one expects the
+  // plain result object. Answering both shapes keeps a wrongly-shared batch from
+  // failing as a transport error instead of the assertion that describes it.
+  const respondByLane = (input: RequestInfo | URL) => {
+    const url = String(input);
+    if (!url.includes('batch=1')) return Promise.resolve(okTrpcResponse(null));
+
+    const procedures = url.split('/trpc/lambda/')[1]?.split('?')[0]?.split(',') ?? [''];
+    return Promise.resolve(
+      new Response(
+        JSON.stringify(procedures.map(() => ({ result: { data: superjson.serialize(null) } }))),
+        { headers: { 'content-type': 'application/json' }, status: 200 },
+      ),
+    );
+  };
+
+  const requestedUrls = () =>
+    fetchMock.mock.calls.map(([input]) => String(input as RequestInfo | URL));
+
+  beforeEach(() => {
+    vi.stubGlobal('fetch', fetchMock);
+    vi.stubGlobal('location', new URL('http://localhost/chat'));
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+    fetchMock.mockReset();
+  });
+
+  // Regression: every `device.*` read hops from the server to one of the user's
+  // own machines and is capped by a 10-60s RPC timeout. Batched with ordinary
+  // lambda reads, one sleeping laptop held the whole batch's response — opening a
+  // topic with a working directory fires several such hops at once, which is what
+  // made an obviously-live run render as idle after a topic switch.
+  it('keeps device.* hops out of the batch carrying ordinary lambda reads', async () => {
+    fetchMock.mockImplementation(respondByLane);
+
+    await Promise.all([
+      lambdaClient.device.gitBranch.query({ deviceId: 'dev_1', path: '/repo' }),
+      lambdaClient.agent.getAgentConfigById.query({ agentId: 'agt_test' }),
+    ]);
+
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+    const urls = requestedUrls();
+    expect(
+      urls.some(
+        (url) => url.includes('device.gitBranch') && !url.includes('agent.getAgentConfigById'),
+      ),
+    ).toBe(true);
+    expect(
+      urls.some(
+        (url) => url.includes('agent.getAgentConfigById') && !url.includes('device.gitBranch'),
+      ),
+    ).toBe(true);
+  });
+
+  // The gateway reconnect cannot register its local operation — and so cannot
+  // show the status tray, the sidebar elapsed time or the stop button — until
+  // this token comes back. It is a cheap read; it must never queue behind a
+  // slower sibling in the shared batch.
+  it('sends the gateway token refresh as its own unbatched request', async () => {
+    fetchMock.mockImplementation(respondByLane);
+
+    await Promise.all([
+      lambdaClient.aiAgent.refreshGatewayToken.query({ topicId: 'tpc_1' }),
+      lambdaClient.agent.getAgentConfigById.query({ agentId: 'agt_test' }),
+    ]);
+
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+    const tokenUrl = requestedUrls().find((url) => url.includes('aiAgent.refreshGatewayToken'));
+    expect(tokenUrl).toBeDefined();
+    expect(tokenUrl).not.toContain('batch=1');
+    expect(tokenUrl).not.toContain('agent.getAgentConfigById');
+  });
+
+  // One-shot relay: the server reads the channel this tab subscribed from the
+  // request headers, so the call carries its own headers and never shares a
+  // batch with calls that must not be relayed.
+  it('sends a call with one-shot relay headers unbatched, with its headers', async () => {
+    fetchMock.mockImplementation(respondByLane);
+    const relay = {
+      headers: { 'x-lobe-client-id': 'tab-1', 'x-lobe-llm-relay-channel': 'llmcall:u:abcdefgh' },
+    };
+
+    await Promise.all([
+      lambdaClient.agent.getAgentConfigById.query({ agentId: 'agt_test' }, withLlmRelay(relay)),
+      lambdaClient.agent.getAgentConfigById.query({ agentId: 'agt_other' }),
+    ]);
+
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+    const relayed = fetchMock.mock.calls.find(([, init]) =>
+      new Headers((init as RequestInit).headers).has('x-lobe-llm-relay-channel'),
+    );
+    expect(relayed).toBeDefined();
+    expect(String(relayed![0])).not.toContain('batch=1');
+    const headers = new Headers((relayed![1] as RequestInit).headers);
+    expect(headers.get('x-lobe-llm-relay-channel')).toBe('llmcall:u:abcdefgh');
+    expect(headers.get('x-lobe-client-id')).toBe('tab-1');
+  });
 });
 
 describe('lambdaClient unreadable response handling', () => {

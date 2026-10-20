@@ -1,5 +1,7 @@
 import { Command } from 'commander';
 
+import { registerAcceptanceCommands } from './commands/acceptance';
+import { registerVerifyCommand } from './commands/acceptance/deprecatedVerify';
 import { registerAgentCommand } from './commands/agent';
 import { registerAgentGroupCommand } from './commands/agent-group';
 import { registerAgentSignalCommand } from './commands/agent-signal';
@@ -8,8 +10,10 @@ import { registerBotCommand } from './commands/bot';
 import { registerCompletionCommand } from './commands/completion';
 import { registerConfigCommand } from './commands/config';
 import { registerConnectCommand } from './commands/connect';
+import { registerDashboardCommand } from './commands/dashboard';
 import { registerDeviceCommand } from './commands/device';
 import { registerDocCommand } from './commands/doc';
+import { registerDoctorCommand } from './commands/doctor';
 import { registerEvalCommand } from './commands/eval';
 import { registerFileCommand } from './commands/file';
 import { registerGenerateCommand } from './commands/generate';
@@ -37,8 +41,7 @@ import { registerTopicCommand } from './commands/topic';
 import { registerTraceCommand } from './commands/trace';
 import { registerUpdateCommand } from './commands/update';
 import { registerUserCommand } from './commands/user';
-import { registerVerifyCommand } from './commands/verify';
-import { registerAcceptanceCommands } from './commands/verifyAcceptance';
+import { registerWidgetCommand } from './commands/widget';
 import { registerWorkspaceCommand } from './commands/workspace';
 import { CLI_DISPLAY_NAME, CLI_PRIMARY_BIN, CLI_PRODUCT_NAME } from './constants/identity';
 import { cliVersion } from './pkg';
@@ -80,6 +83,7 @@ export function createProgram() {
   registerConnectCommand(program);
   registerDeviceCommand(program);
   registerStatusCommand(program);
+  registerDoctorCommand(program);
   registerDocCommand(program);
   registerSearchCommand(program);
   registerKbCommand(program);
@@ -104,6 +108,8 @@ export function createProgram() {
   registerNotifyCommand(program);
   registerProviderCommand(program);
   registerProjectCommand(program);
+  registerDashboardCommand(program);
+  registerWidgetCommand(program);
   registerPluginCommand(program);
   registerWorkspaceCommand(program);
   registerUserCommand(program);

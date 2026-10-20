@@ -1,4 +1,7 @@
 {
+  "error.invalidFormat.desc": "لا يزال بإمكانك قراءته. قد يختلف التنسيق عن الأصل.",
+  "error.invalidFormat.ownerHint": "أعد حفظه في المحرر لاستعادة التنسيق الأصلي.",
+  "error.invalidFormat.title": "تعذر عرض هذه الصفحة بتنسيقها الأصلي",
   "popover.copyLink": "نسخ الرابط",
   "popover.copyLinkSuccess": "تم نسخ الرابط",
   "popover.linkHint": "يمكن لأي شخص لديه الرابط عرض هذه الصفحة",

@@ -3,34 +3,48 @@
 import type { UIChatMessage } from '@lobechat/types';
 import { Flexbox } from '@lobehub/ui';
 import type { ReactNode } from 'react';
-import { memo, useCallback, useMemo } from 'react';
+import { memo, useCallback, useEffect, useMemo } from 'react';
 
 import AsyncError from '@/components/AsyncError';
 import { useFetchTopicMemories } from '@/hooks/useFetchMemoryForTopic';
 import { useFetchNotebookDocuments } from '@/hooks/useFetchNotebookDocuments';
-import { getMessageListCacheIdentity } from '@/services/message/cache';
+import { getMessageListCacheIdentity, isMessageListServerVerified } from '@/services/message/cache';
 import { useAgentStore } from '@/store/agent';
 import { useChatStore } from '@/store/chat';
 import { operationSelectors } from '@/store/chat/selectors';
-import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
+import {
+  hasPendingInterventions,
+  INTERVENTION_REFRESH_INTERVAL,
+} from '@/store/chat/utils/interventionSync';
 import { useUserStore } from '@/store/user';
-import { authSelectors, settingsSelectors } from '@/store/user/selectors';
+import { authSelectors, labPreferSelectors, settingsSelectors } from '@/store/user/selectors';
 
 import WideScreenContainer from '../../WideScreenContainer';
 import SkeletonList from '../components/SkeletonList';
 import MessageItem from '../Messages';
 import type { WorkflowExpandLevelDefault } from '../Messages/AssistantGroup/components/WorkflowCollapse';
+import { BackgroundRunHintContext } from '../Messages/Contexts/BackgroundRunHintContext';
 import { MessageActionProvider } from '../Messages/Contexts/MessageActionProvider';
-import { dataSelectors, inputSelectors, useConversationStore } from '../store';
+import {
+  dataSelectors,
+  inputSelectors,
+  useConversationStore,
+  useConversationStoreApi,
+} from '../store';
 import AgentSignalReceiptList from './components/AgentSignalReceiptList';
 import { RefreshError } from './components/RefreshError';
 import VirtualizedList from './components/VirtualizedList';
 import { useAgentSignalReceipts } from './hooks/useAgentSignalReceipts';
+import { useForwardPagingFallback } from './hooks/useForwardPagingFallback';
+import { useInitialRevalidation } from './hooks/useInitialRevalidation';
 import { useMessageRefreshError } from './hooks/useMessageRefreshError';
+import { type InitialScrollPosition } from './hooks/useTopicScrollPersist';
 import { resolveMessageListFeedback } from './resolveMessageListFeedback';
 import { buildChatRows } from './utils/chatRows';
+import { hoistCompressedGroups } from './utils/compressedGroupOrder';
 import type { MessageDeepLink } from './utils/messageDeepLink';
 import { resolveMessageDeepLink } from './utils/messageDeepLink';
+import { resolveRefreshingRowId } from './utils/refreshingRow';
 
 const MessageAuthorConfigLoader = memo<{ agentId: string; isLogin: boolean | undefined }>(
   ({ agentId, isLogin }) => {
@@ -45,12 +59,12 @@ MessageAuthorConfigLoader.displayName = 'MessageAuthorConfigLoader';
 export interface ChatListProps {
   /**
    * Default expand level for assistant workflow (tool-call) groups. When set,
-   * pins the initial/reset state and skips the built-in auto-collapse after
-   * streaming. Users can still toggle locally.
+   * pins the initial/reset state and overrides the built-in defaults
+   * (streaming `semi`, completion `collapsed`). Users can still toggle locally.
    * - 'collapsed': show summary only
    * - 'semi': constrained scrollable tool list
    * - 'full': all tool details expanded
-   * Pass an object (e.g. `{ streaming: 'full' }`) to override only one phase.
+   * Pass an object (e.g. `{ completion: 'full' }`) to override only one phase.
    * Only applies to the default item renderer; ignored when `itemContent` is supplied.
    */
   defaultWorkflowExpandLevel?: WorkflowExpandLevelDefault;
@@ -77,11 +91,27 @@ export interface ChatListProps {
    */
   headerSlot?: ReactNode;
   /**
+   * Hide the "task keeps running on the server, you can leave" loading copy and
+   * show the plain dot loader instead (e.g. on external visitor surfaces).
+   */
+  hideBackgroundRunHint?: boolean;
+  /**
+   * Where the conversation opens: the saved position or the end (`bottom`,
+   * default), or always the first message (`top`, e.g. in share page).
+   */
+  initialScrollPosition?: InitialScrollPosition;
+  /**
    * Custom item renderer. If not provided, uses default ChatItem.
    */
   itemContent?: (index: number, id: string) => ReactNode;
   /** Message hash target to locate after the virtual list has rendered. */
   messageDeepLink?: MessageDeepLink;
+  /**
+   * The conversation reads forward (`messageReadMode: 'forward'`) but the
+   * server cannot page forward. The owner of the context should switch it back
+   * to the newest-first read.
+   */
+  onForwardPagingUnsupported?: () => void;
   /**
    * Force showing welcome component even when messages exist
    */
@@ -103,25 +133,25 @@ const ChatList = memo<ChatListProps>(
     filterItem,
     footerSlot,
     headerSlot,
+    hideBackgroundRunHint,
+    initialScrollPosition,
     welcome,
     itemContent,
     messageDeepLink,
+    onForwardPagingUnsupported,
     showWelcome,
   }) => {
-    // Fetch messages (SWR key is null when skipFetch is true)
+    // The chat store owns the transcript; this view keeps its sync mounted.
     const context = useConversationStore((s) => s.context);
+    const paging = context.messageReadMode === 'forward' ? 'forward' : 'backward';
     const enableUserMemories = useUserStore(settingsSelectors.memoryEnabled);
-    const [skipFetch, useFetchMessages] = useConversationStore((s) => [
-      dataSelectors.skipFetch(s),
-      s.useFetchMessages,
-    ]);
+    const skipFetch = useConversationStore(dataSelectors.skipFetch);
+    const useFetchMessages = useChatStore((s) => s.useFetchMessages);
     const activeAgentId = useChatStore((s) => s.activeAgentId);
-    // Suppress SWR focus revalidate while the current topic is streaming —
-    // the server-pushed UIChatMessage[] snapshot at step boundaries is the
-    // source of truth during that window. A focus refetch could hit DB
-    // mid-fan-out and clobber the in-memory streamed state with a stale
-    // assistant placeholder.
+    // Pending cards still refresh during streaming; the data slice merges only
+    // intervention changes so lagging DB snapshots cannot replace live text.
     const isStreaming = useChatStore(operationSelectors.isAgentRuntimeRunningByContext(context));
+    const hasPendingApproval = useConversationStore((s) => hasPendingInterventions(s.dbMessages));
     // A client-minted topic whose server row does not exist yet (first-send
     // window) must not be fetched: the query would legitimately return an empty
     // list and `onData` would wipe the optimistic messages already on screen.
@@ -130,21 +160,43 @@ const ChatList = memo<ChatListProps>(
     const isCreatingTopic = useChatStore(
       (s) => !!context.topicId && s.creatingTopicIds.includes(context.topicId),
     );
-    const { enableAgentSelfIteration } = useServerConfigStore(featureFlagsSelectors);
+    const enableSelfLearning = useUserStore(labPreferSelectors.enableSelfLearning);
     const messagesSWR = useFetchMessages(context, {
-      revalidateOnFocus: !isStreaming,
+      refreshInterval: hasPendingApproval ? INTERVENTION_REFRESH_INTERVAL : 0,
+      revalidateOnFocus: hasPendingApproval || !isStreaming,
       skipFetch: skipFetch || isCreatingTopic,
+      syncInterventions: true,
     });
+    const laterMessagesError = useConversationStore((s) => s.laterMessagesError);
+    const isFallingBack = useForwardPagingFallback({
+      errors: [messagesSWR.error, laterMessagesError],
+      onUnsupported: onForwardPagingUnsupported,
+      paging,
+    });
+    const messageListIdentity = getMessageListCacheIdentity(context);
     const refreshError = useMessageRefreshError({
-      error: messagesSWR.error,
-      identity: getMessageListCacheIdentity(context),
+      error: isFallingBack ? undefined : messagesSWR.error,
+      identity: messageListIdentity,
       isValidating: messagesSWR.isValidating,
       mutate: messagesSWR.mutate,
     });
+    const isServerVerified = useCallback(() => isMessageListServerVerified(context), [context]);
+    const isInitialRevalidation = useInitialRevalidation({
+      identity: messageListIdentity,
+      isServerVerified,
+      isValidating: messagesSWR.isValidating,
+    });
     const allDisplayMessages = useConversationStore(dataSelectors.displayMessages);
+    // A compression group summarises the history before the turn that triggered
+    // it, so it belongs above that turn's question rather than between the
+    // question and its answer.
+    const orderedMessages = useMemo(
+      () => hoistCompressedGroups(allDisplayMessages),
+      [allDisplayMessages],
+    );
     const displayMessages = useMemo(
-      () => (filterItem ? allDisplayMessages.filter(filterItem) : allDisplayMessages),
-      [allDisplayMessages, filterItem],
+      () => (filterItem ? orderedMessages.filter(filterItem) : orderedMessages),
+      [orderedMessages, filterItem],
     );
     const displayMessageIds = useMemo(() => displayMessages.map((m) => m.id), [displayMessages]);
     // Steered follow-up turns fold into the turn they interrupted. Custom item
@@ -169,7 +221,7 @@ const ChatList = memo<ChatListProps>(
     // anonymous, and agent-share visitors are not the owner these APIs scope to.
     const isSharePage = !!context.topicShareId || !!context.agentShareId;
     // TODO: Migrate Agent Signal receipts behind a dedicated user-visible receipt capability.
-    const canShowAgentSignalReceipts = enableAgentSelfIteration === true && !isSharePage;
+    const canShowAgentSignalReceipts = enableSelfLearning && !isSharePage;
     const { receiptsByAnchor } = useAgentSignalReceipts({
       agentId: canShowAgentSignalReceipts ? activeAgentId : undefined,
       displayMessages,
@@ -242,10 +294,25 @@ const ChatList = memo<ChatListProps>(
     const isNewConversation = !context.topicId;
     const feedback = resolveMessageListFeedback({
       error: refreshError.error,
+      isInitialRevalidation,
       isNewConversation,
       isStreaming,
       messagesInit,
     });
+
+    // The hint renders inside the latest assistant row, which subscribes to the
+    // store itself (virtua would not repaint a cached row from a prop change).
+    // Resolved against the rows actually rendered: folded steer chains in the
+    // default list, flat (and possibly filtered) messages for custom renderers.
+    const refreshingRowId = useMemo(
+      () =>
+        feedback.showRefreshing ? resolveRefreshingRowId(displayMessages, !itemContent) : undefined,
+      [displayMessages, feedback.showRefreshing, itemContent],
+    );
+    const storeApi = useConversationStoreApi();
+    useEffect(() => {
+      storeApi.setState({ refreshingRowId });
+    }, [refreshingRowId, storeApi]);
 
     // `messagesInit` is the settled-data signal: [] is a valid loaded result.
     // A first-load failure owns the whole surface, while a background failure
@@ -289,13 +356,17 @@ const ChatList = memo<ChatListProps>(
         </WideScreenContainer>
       ) : (
         <MessageActionProvider withSingletonActionsBar={!disableActionsBar}>
-          <VirtualizedList
-            dataSource={rowIds}
-            footerSlot={footerSlot}
-            headerSlot={headerSlot}
-            itemContent={itemContent ?? defaultItemContent}
-            messageDeepLink={resolvedMessageDeepLink}
-          />
+          <BackgroundRunHintContext value={!hideBackgroundRunHint}>
+            <VirtualizedList
+              dataSource={rowIds}
+              footerSlot={footerSlot}
+              headerSlot={headerSlot}
+              initialScrollPosition={initialScrollPosition}
+              itemContent={itemContent ?? defaultItemContent}
+              messageDeepLink={resolvedMessageDeepLink}
+              paging={paging}
+            />
+          </BackgroundRunHintContext>
         </MessageActionProvider>
       );
 
