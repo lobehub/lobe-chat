@@ -7,11 +7,18 @@ import type {
   ReadCanvasParams,
   UpdateCanvasParams,
 } from '@lobechat/builtin-tool-canvas';
-import { applyCanvasChanges, isCanvasTextPath, normalizeCanvasPath } from '@lobechat/canvas';
+import {
+  applyCanvasChanges,
+  type CanvasChangeSet,
+  collectCanvasFileRefs,
+  isCanvasTextPath,
+  normalizeCanvasPath,
+} from '@lobechat/canvas';
 import { nanoid } from '@lobechat/utils';
 
 import type { WorkModel } from '@/database/models/work';
 
+import type { CanvasFileRefResolution, CanvasFileRefResolver } from './fileRefs';
 import type { CanvasStorageService } from './storage';
 
 const READ_TEXT_CHAR_BUDGET = 60_000;
@@ -19,6 +26,7 @@ const READ_TEXT_CHAR_BUDGET = 60_000;
 interface CanvasToolServiceDeps {
   agentId?: string | null;
   findGuideState: () => Promise<unknown>;
+  resolveFileRefs?: CanvasFileRefResolver;
   storage: CanvasStorageService;
   storageFor: (ownerId: string) => CanvasStorageService;
   topicId?: string | null;
@@ -50,8 +58,18 @@ export class CanvasToolServiceImpl implements CanvasToolService {
     return state?.guideRead === true;
   };
 
+  private resolveFileRefs = async (changes: CanvasChangeSet): Promise<CanvasFileRefResolution> => {
+    const writes = collectCanvasFileRefs(changes);
+    if (writes.length === 0 || !this.deps.resolveFileRefs)
+      return { contents: new Map(), issues: [] };
+    return this.deps.resolveFileRefs(writes);
+  };
+
   create = async (params: CreateCanvasParams): Promise<CanvasSaveOutcome> => {
-    const changes = applyCanvasChanges(new Map(), { writes: params.files });
+    const fileRefs = await this.resolveFileRefs({ writes: params.files });
+    if (fileRefs.issues.length > 0) return { issues: fileRefs.issues, ok: false };
+
+    const changes = applyCanvasChanges(new Map(), { writes: params.files }, fileRefs.contents);
     if (!changes.ok) return { error: changes.error, issues: [], ok: false };
 
     const canvasId = `cvs_${nanoid()}`;
@@ -73,10 +91,13 @@ export class CanvasToolServiceImpl implements CanvasToolService {
     if (!current || !manifestKey) return notFound(params.canvasId);
     if (current.work.userId !== this.deps.storage.ownerId) return ownerOnly(params.canvasId);
 
+    const fileRefs = await this.resolveFileRefs(params);
+    if (fileRefs.issues.length > 0) return { issues: fileRefs.issues, ok: false };
+
     const base = await this.deps.storage.loadProject(
       await this.deps.storage.readManifest(manifestKey),
     );
-    const changes = applyCanvasChanges(base, params);
+    const changes = applyCanvasChanges(base, params, fileRefs.contents);
     if (!changes.ok) return { error: changes.error, issues: [], ok: false };
 
     const result = await this.deps.storage.commit(params.canvasId, changes.files);

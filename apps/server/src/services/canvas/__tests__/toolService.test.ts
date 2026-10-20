@@ -5,6 +5,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { WorkModel } from '@/database/models/work';
 import { agents, users, workspaceMembers, workspaces } from '@/database/schemas';
 
+import type { CanvasFileRefResolver } from '../fileRefs';
 import { type CanvasBlobStore, CanvasStorageService } from '../storage';
 import { CanvasToolServiceImpl } from '../toolService';
 
@@ -33,6 +34,7 @@ const setup = (
   overrides: {
     actorId?: string;
     findGuideState?: () => Promise<unknown>;
+    resolveFileRefs?: CanvasFileRefResolver;
     store?: CanvasBlobStore;
     topicId?: string;
     workspaceId?: string;
@@ -52,6 +54,7 @@ const setup = (
   const service = new CanvasToolServiceImpl({
     agentId,
     findGuideState: overrides.findGuideState ?? vi.fn().mockResolvedValue({ guideRead: true }),
+    resolveFileRefs: overrides.resolveFileRefs,
     storage,
     storageFor,
     topicId: 'topicId' in overrides ? overrides.topicId : 'topic-1',
@@ -117,6 +120,55 @@ describe('CanvasToolServiceImpl', () => {
     const manifest = await storage.readManifest(updated.metadata.manifestKey);
     const file = await storage.readFile(manifest, 'index.html');
     expect(new TextDecoder().decode(file?.bytes)).toContain('<h1>New</h1>');
+  });
+
+  it('saves a referenced file into the canvas on create and update', async () => {
+    const logo = new Uint8Array([137, 80, 78, 71]);
+    const resolveFileRefs: CanvasFileRefResolver = vi.fn(async (writes) => ({
+      contents: new Map(writes.map((write) => [write.fileRef, logo])),
+      issues: [],
+    }));
+    const { service, storage, workModel } = setup({ resolveFileRefs });
+    const created = await service.create({
+      files: [
+        { content: page('<img src="img/logo.png" alt="Logo">'), path: 'index.html' },
+        { fileRef: 'file_logo', path: 'img/logo.png' },
+      ],
+      title: 'Brand',
+    });
+    await registerFromOutcome(workModel, created, 'call-1');
+    if (!created.ok) throw new Error('create failed');
+
+    const updated = await service.update({
+      canvasId: created.canvasId,
+      writes: [{ fileRef: 'msg_a1b2c3.image_1', path: 'img/photo.png' }],
+    });
+
+    expect(updated.ok).toBe(true);
+    if (!updated.ok) return;
+    const manifest = await storage.readManifest(updated.metadata.manifestKey);
+    expect((await storage.readFile(manifest, 'img/logo.png'))?.bytes).toEqual(logo);
+    expect((await storage.readFile(manifest, 'img/photo.png'))?.bytes).toEqual(logo);
+    expect(resolveFileRefs).toHaveBeenLastCalledWith([
+      { fileRef: 'msg_a1b2c3.image_1', path: 'img/photo.png' },
+    ]);
+  });
+
+  it('fails the save with the issues of a reference that cannot be resolved', async () => {
+    const issue = { file: 'img/logo.png', message: 'nope', rule: 'unresolved-file-ref' as const };
+    const { service } = setup({
+      resolveFileRefs: vi.fn(async () => ({ contents: new Map(), issues: [issue] })),
+    });
+
+    const outcome = await service.create({
+      files: [
+        { content: page('<img src="img/logo.png" alt="Logo">'), path: 'index.html' },
+        { fileRef: 'file_other', path: 'img/logo.png' },
+      ],
+      title: 'Brand',
+    });
+
+    expect(outcome).toEqual({ issues: [issue], ok: false });
   });
 
   it('turns a bad edit or an unknown canvas into a failed outcome', async () => {

@@ -12,20 +12,26 @@ const fileWriteSchema = {
   additionalProperties: false,
   properties: {
     content: {
-      description: 'Full file content. Base64 when encoding is "base64".',
+      description:
+        'Full file content. Base64 when encoding is "base64". Omit when fileRef is given.',
       type: 'string',
     },
     encoding: {
-      description: 'Use "base64" for binary assets such as images. Defaults to utf8.',
+      description: 'Use "base64" for small generated binary assets. Defaults to utf8.',
       enum: ['utf8', 'base64'],
       type: 'string',
     },
+    fileRef: {
+      description:
+        'Copy an existing file into the project instead of writing content: a file id from <file id="..."> or a media ref from <image ref="..."> in this conversation.',
+      type: 'string',
+    },
     path: {
-      description: 'Project-relative path, e.g. "index.html" or "data/cost.json".',
+      description: 'Project-relative path, e.g. "index.html" or "img/logo.png".',
       type: 'string',
     },
   },
-  required: ['path', 'content'],
+  required: ['path'],
   type: 'object',
 };
 

@@ -7,6 +7,7 @@ A Canvas is a small web project (HTML, CSS, JS, JSON data and assets) that rende
 ## Project
 
 - The entry page is \`index.html\`. Further pages, \`.css\`, \`.js\`, \`.json\` and assets (png/jpg/svg/webp/fonts) live next to it and are referenced by relative paths.
+- To use a file that already exists — one the user attached (\`<file id>\`, \`<image ref>\`) or one in their files — write it with \`fileRef\` instead of \`content\`, e.g. \`{ "path": "img/photo.jpg", "fileRef": "msg_xxx.image_1" }\`, then reference \`img/photo.jpg\` from the page. Never paste such a file as base64. If a fileRef cannot be resolved the save is refused with the reason; drop or replace that asset and save again.
 - No build step: write plain HTML, CSS and JS that runs as written. No npm, no imports from URLs, no frameworks.
 - There is no network: \`fetch\`, \`XMLHttpRequest\`, \`WebSocket\`, remote scripts, remote images and remote stylesheets are rejected. Put the data in the project: inline JSON attributes, a \`<script type="application/json" data-prop="...">\` child, or a \`.json\` file referenced with a \`<name>-src\` attribute.
 - Do not add a \`<script>\` for the component runtime; the host injects it.

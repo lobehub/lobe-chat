@@ -2,8 +2,14 @@ import type { CanvasProjectFile } from '../validate/types';
 import { normalizeCanvasPath } from './path';
 
 export interface CanvasFileWrite {
-  content: string;
+  content?: string;
   encoding?: 'base64' | 'utf8';
+  fileRef?: string;
+  path: string;
+}
+
+export interface CanvasFileRefWrite {
+  fileRef: string;
   path: string;
 }
 
@@ -24,6 +30,16 @@ export type CanvasChangeResult =
 
 const decodeBase64 = (value: string) => Uint8Array.from(atob(value), (char) => char.charCodeAt(0));
 
+// Strict tool-calling models fill every schema property, so a plain write arrives with fileRef "".
+export const isCanvasFileRefWrite = (write: CanvasFileWrite): write is CanvasFileRefWrite =>
+  typeof write.fileRef === 'string' && write.fileRef.length > 0;
+
+export const collectCanvasFileRefs = (changes: CanvasChangeSet): CanvasFileRefWrite[] =>
+  (changes.writes ?? []).filter(isCanvasFileRefWrite).map((write) => ({
+    fileRef: write.fileRef,
+    path: normalizeCanvasPath(write.path) ?? write.path,
+  }));
+
 const countOccurrences = (text: string, search: string) => {
   let count = 0;
   for (let index = text.indexOf(search); index !== -1; index = text.indexOf(search, index + 1)) {
@@ -35,11 +51,27 @@ const countOccurrences = (text: string, search: string) => {
 export const applyCanvasChanges = (
   base: ReadonlyMap<string, CanvasProjectFile>,
   changes: CanvasChangeSet,
+  resolvedFileRefs: ReadonlyMap<string, string | Uint8Array> = new Map(),
 ): CanvasChangeResult => {
   const files = new Map(base);
 
   for (const write of changes.writes ?? []) {
     const path = normalizeCanvasPath(write.path) ?? write.path;
+    if (isCanvasFileRefWrite(write)) {
+      const content = resolvedFileRefs.get(write.fileRef);
+      if (content === undefined) {
+        return {
+          error: `"${path}": fileRef "${write.fileRef}" could not be resolved.`,
+          ok: false,
+        };
+      }
+      files.set(path, { content, path });
+      continue;
+    }
+
+    if (write.content === undefined) {
+      return { error: `"${path}": provide content or fileRef.`, ok: false };
+    }
     let content: string | Uint8Array = write.content;
     if (write.encoding === 'base64') {
       try {

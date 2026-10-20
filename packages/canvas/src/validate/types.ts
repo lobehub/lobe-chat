@@ -3,6 +3,7 @@ export type CanvasIssueRule =
   | 'duplicate-path'
   | 'entry-missing'
   | 'file-too-large'
+  | 'file-type-mismatch'
   | 'hard-coded-color'
   | 'invalid-attribute'
   | 'invalid-path'
@@ -15,7 +16,8 @@ export type CanvasIssueRule =
   | 'self-closing-component'
   | 'too-many-files'
   | 'unknown-attribute'
-  | 'unknown-component';
+  | 'unknown-component'
+  | 'unresolved-file-ref';
 
 export interface CanvasIssue {
   file?: string;

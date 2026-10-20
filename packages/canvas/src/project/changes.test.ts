@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { applyCanvasChanges } from './changes';
+import { applyCanvasChanges, collectCanvasFileRefs } from './changes';
 
 const base = new Map([
   ['index.html', { content: '<h1>Old title</h1><p>body</p>', path: 'index.html' }],
@@ -57,5 +57,49 @@ describe('applyCanvasChanges', () => {
     expect(
       applyCanvasChanges(binary, { edits: [{ newText: 'b', oldText: 'a', path: 'a.png' }] }),
     ).toMatchObject({ ok: false });
+  });
+
+  it('fills fileRef writes from the resolved contents', () => {
+    const bytes = new Uint8Array([1, 2, 3]);
+    const result = applyCanvasChanges(
+      new Map(),
+      { writes: [{ fileRef: 'file_logo', path: './img/logo.png' }] },
+      new Map([['file_logo', bytes]]),
+    );
+
+    expect(textOf(result, 'img/logo.png')).toBe(bytes);
+  });
+
+  it('refuses a fileRef write that was not resolved', () => {
+    const result = applyCanvasChanges(new Map(), {
+      writes: [{ fileRef: 'file_missing', path: 'img/logo.png' }],
+    });
+
+    expect(result).toEqual({
+      error: '"img/logo.png": fileRef "file_missing" could not be resolved.',
+      ok: false,
+    });
+  });
+});
+
+describe('collectCanvasFileRefs', () => {
+  it('treats an empty fileRef as a plain content write', () => {
+    const changes = {
+      writes: [{ content: 'body{}', encoding: 'utf8' as const, fileRef: '', path: 'app.css' }],
+    };
+
+    expect(collectCanvasFileRefs(changes)).toEqual([]);
+    expect(textOf(applyCanvasChanges(new Map(), changes), 'app.css')).toBe('body{}');
+  });
+
+  it('lists the fileRef writes with normalized paths', () => {
+    expect(
+      collectCanvasFileRefs({
+        writes: [
+          { content: 'body{}', path: 'app.css' },
+          { fileRef: 'msg_abc.image_1', path: './img/photo.jpg' },
+        ],
+      }),
+    ).toEqual([{ fileRef: 'msg_abc.image_1', path: 'img/photo.jpg' }]);
   });
 });
