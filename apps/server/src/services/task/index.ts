@@ -693,11 +693,20 @@ export class TaskService {
           const current = await model.findById(taskId);
           if (current) {
             // `context` is a whole-column replace: when the caller ships their
-            // own pocket it is the base, otherwise the row as locked.
+            // own pocket it is the base, otherwise the row as locked. The
+            // schedule columns must NOT use `??`: the tRPC and REST schemas
+            // use an explicit `null` to clear a field, and `??` would swap
+            // that clear for the locked row's old value — the probe would
+            // stamp a window for a row the write is about to disable, and a
+            // later re-enable would preserve that stale stamp and replay an
+            // occurrence from the disabled interval. Only `undefined` means
+            // "not part of this patch".
             const arming = armScheduleOnColumnWrite({
-              automationMode: data.automationMode ?? current.automationMode,
+              automationMode:
+                data.automationMode !== undefined ? data.automationMode : current.automationMode,
               context: data.context ?? current.context,
-              schedulePattern: data.schedulePattern ?? current.schedulePattern,
+              schedulePattern:
+                data.schedulePattern !== undefined ? data.schedulePattern : current.schedulePattern,
               status: current.status,
             });
             if (arming.context) data.context = arming.context;

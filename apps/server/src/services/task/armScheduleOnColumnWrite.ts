@@ -18,11 +18,15 @@ import type { TaskStatus } from '@lobechat/types';
  * column commit would leave a window where the dispatcher sees an unstamped
  * dispatchable row and replays a grace-window occurrence.
  *
- * Stamps only when the resulting task is actually dispatchable (schedule mode
- * with a cron pattern, not terminal/paused/running/scheduled) and the task has
- * no stamp yet: re-arming must not reset an existing quota window, and the
- * `updateStatus` path keeps its own stamping — the two must not double-stamp on
- * a transition that carries schedule columns.
+ * Stamps when the resulting task is dispatchable (schedule mode with a cron
+ * pattern, not terminal/paused/running) and the task has no stamp yet. A
+ * `scheduled` row is dispatched too (`getScheduledTasks` only excludes
+ * terminal/paused/running), so it must be stamped here as well: a heartbeat
+ * task switched to cron keeps status `scheduled` and never passes the
+ * `updateStatus` stamping branch. Re-arming must not reset an existing quota
+ * window — the `scheduleStartedAt` check below guards that — and the
+ * `updateStatus` path keeps its own stamping, so the two must not double-stamp
+ * on a transition that carries schedule columns.
  */
 export const armScheduleOnColumnWrite = (task: {
   automationMode: string | null;
@@ -38,7 +42,6 @@ export const armScheduleOnColumnWrite = (task: {
   if (
     status === 'running' ||
     status === 'paused' ||
-    status === 'scheduled' ||
     status === 'completed' ||
     status === 'failed' ||
     status === 'canceled'
