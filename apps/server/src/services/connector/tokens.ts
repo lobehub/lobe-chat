@@ -32,6 +32,13 @@ export const tokensToCredentials = (
   };
 };
 
+/** Whether the connector holds a refreshable OAuth token that is expired or about to expire. */
+const isRefreshDue = (connector: DecryptedConnector): boolean => {
+  const creds = connector.credentials;
+  if (!creds || creds.type !== 'oauth2' || !creds.refreshToken) return false;
+  return !creds.expiresAt || creds.expiresAt - EXPIRY_SKEW_MS <= Date.now();
+};
+
 /**
  * Lazily refresh a connector's OAuth access token when it is expired (or about
  * to expire). Persists the rotated credentials and returns the connector with
@@ -45,8 +52,9 @@ export const ensureFreshConnectorToken = async (
   const creds = connector.credentials;
   const oidc = connector.oidcConfig;
 
-  if (!creds || creds.type !== 'oauth2' || !creds.refreshToken) return connector;
-  if (creds.expiresAt && creds.expiresAt - EXPIRY_SKEW_MS > Date.now()) return connector;
+  if (!creds || creds.type !== 'oauth2' || !creds.refreshToken || !isRefreshDue(connector)) {
+    return connector;
+  }
   if (!oidc?.issuer || !oidc.clientId) return connector;
 
   try {
@@ -75,6 +83,115 @@ export const ensureFreshConnectorToken = async (
     return { ...connector, credentials };
   } catch {
     log('token refresh failed for connector=%s', connector.id);
+    return reloadIfRotatedElsewhere(connector, connectorModel);
+  }
+};
+
+/**
+ * How long a failed refresh waits for a concurrent winner to persist the
+ * rotated token before re-reading once more.
+ */
+const ROTATION_PERSIST_GRACE_MS = 1000;
+
+const readRotatedCredentials = async (
+  connector: DecryptedConnector,
+  connectorModel: ConnectorModel,
+): Promise<DecryptedConnector | undefined> => {
+  const staleCreds = connector.credentials;
+  const latestCreds = (await connectorModel.findById(connector.id))?.credentials;
+  if (
+    latestCreds?.type === 'oauth2' &&
+    staleCreds?.type === 'oauth2' &&
+    latestCreds.accessToken !== staleCreds.accessToken &&
+    latestCreds.expiresAt &&
+    latestCreds.expiresAt - EXPIRY_SKEW_MS > Date.now()
+  ) {
+    return { ...connector, credentials: latestCreds };
+  }
+};
+
+/**
+ * A rotating authorization server invalidates a refresh token once it is used,
+ * so when two runs refresh the same connector concurrently the loser fails
+ * with credentials the winner already replaced. Re-read the row — once more
+ * after a short grace, since the winner may still be persisting — and use the
+ * winner's token instead of failing the run with a stale one.
+ */
+const reloadIfRotatedElsewhere = async (
+  connector: DecryptedConnector,
+  connectorModel: ConnectorModel,
+): Promise<DecryptedConnector> => {
+  try {
+    const rotated = await readRotatedCredentials(connector, connectorModel);
+    if (rotated) return rotated;
+
+    await new Promise((resolve) => setTimeout(resolve, ROTATION_PERSIST_GRACE_MS));
+    return (await readRotatedCredentials(connector, connectorModel)) ?? connector;
+  } catch {
+    log('reloading connector=%s after a failed refresh failed', connector.id);
     return connector;
   }
 };
+
+/**
+ * Upper bound a run waits on one authorization server. On timeout the run
+ * keeps the stored credentials; the refresh still finishes and persists.
+ */
+const RUN_TOKEN_REFRESH_TIMEOUT_MS = 5000;
+
+/**
+ * Refreshes in flight on this instance, keyed by connector id, so concurrent
+ * runs of one shared agent spend the refresh token once instead of racing.
+ */
+const inFlightRefreshes = new Map<string, Promise<DecryptedConnector>>();
+
+const refreshOnce = (
+  connector: DecryptedConnector,
+  connectorModel: ConnectorModel,
+): Promise<DecryptedConnector> => {
+  const pending = inFlightRefreshes.get(connector.id);
+  if (pending) return pending;
+
+  const refresh = ensureFreshConnectorToken(connector, connectorModel).finally(() => {
+    inFlightRefreshes.delete(connector.id);
+  });
+  inFlightRefreshes.set(connector.id, refresh);
+  return refresh;
+};
+
+/**
+ * Refresh expired OAuth tokens before an agent run bakes connector credentials
+ * into its tool manifests. Without this the runtime only refreshed through the
+ * background tool sync scheduled after the run started, so the first call after
+ * every access-token expiry 401'd even when the refresh token was still valid —
+ * and the model then reported a connection that only needed a refresh as one
+ * the owner must reconnect (LOBE-14771).
+ *
+ * `connectorModel` must carry the gatekeeper so rotated credentials are
+ * persisted encrypted. Never throws; a connector that cannot be refreshed is
+ * returned unchanged, and `onTimeout` reports each one that hit the time limit.
+ */
+export const refreshExpiredConnectorTokens = (
+  connectors: DecryptedConnector[],
+  connectorModel: ConnectorModel,
+  options: { onTimeout?: () => void } = {},
+): Promise<DecryptedConnector[]> =>
+  Promise.all(
+    connectors.map(async (connector) => {
+      if (!isRefreshDue(connector)) return connector;
+
+      let timer: ReturnType<typeof setTimeout> | undefined;
+      const timeout = new Promise<DecryptedConnector>((resolve) => {
+        timer = setTimeout(() => {
+          log('token refresh timed out for connector=%s', connector.id);
+          options.onTimeout?.();
+          resolve(connector);
+        }, RUN_TOKEN_REFRESH_TIMEOUT_MS);
+      });
+      try {
+        return await Promise.race([refreshOnce(connector, connectorModel), timeout]);
+      } finally {
+        clearTimeout(timer);
+      }
+    }),
+  );
