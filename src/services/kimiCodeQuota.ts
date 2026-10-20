@@ -154,11 +154,19 @@ export const createKimiCodeQuotaReader = (source: KimiCodeQuotaSource) => {
         snapshot.readings?.length
       ) {
         trustedAccountId = snapshot.identity.externalAccountId;
-        await agentQuotaService.ingestKimiCodeSnapshot({
+        const account = await agentQuotaService.ingestKimiCodeSnapshot({
           extraUsage: snapshot.extraUsage,
           identity: snapshot.identity,
           readings: snapshot.readings,
         });
+        // The replica still holds the pre-ingest account / readings: refresh both,
+        // so a reader mounted inside the dedupe window does not paint them again.
+        await Promise.all([
+          readPersisted(quotaReads().readQuotaAccounts({ fresh: true }), []),
+          account?.id
+            ? readPersisted(quotaReads().readQuotaReadings(account.id, { fresh: true }), [])
+            : undefined,
+        ]);
       }
     },
   });

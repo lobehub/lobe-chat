@@ -164,4 +164,21 @@ describe('account-scoped Kimi Code quota', () => {
     expect(result.identity?.externalAccountId).toBe('external-b');
     expect(result.session?.usedPercent).toBe(80);
   });
+
+  it('refreshes the quota replica after accepting a local snapshot', async () => {
+    const first = createKimiCodeQuotaReader({});
+    expect((await first({})).session?.usedPercent).toBe(23);
+
+    // A reset lands locally and is ingested; the server now holds the new reading.
+    const resetReading = { ...reading, capturedAt: Date.now() + 1, utilization: 0 };
+    vi.mocked(agentQuotaService.getLatestReadings).mockResolvedValue([resetReading]);
+    await first.acceptLocalSnapshot({
+      ...sample,
+      readings: [resetReading],
+      session: { ...sample.session, usedPercent: 0 },
+    });
+
+    // A reader mounted right after (inside the dedupe window) must not repaint the old reading.
+    expect((await createKimiCodeQuotaReader({})({})).session?.usedPercent).toBe(0);
+  });
 });
