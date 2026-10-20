@@ -312,10 +312,18 @@ export class ToolExecutionService {
       // Private HTTP also uses the device when a gateway is configured, while
       // self-hosted servers without one can still access their LAN over HTTP.
       if (mcpParams.type === 'stdio' || (isDeviceOnlyMcp && deviceGateway.isConfigured)) {
-        const tunnelTarget =
-          deviceGateway.isConfigured && context.userId
-            ? await this.resolveMcpTunnelTarget(context)
-            : undefined;
+        if (!deviceGateway.isConfigured) {
+          const message = `MCP server '${identifier}' uses stdio and must run on a desktop device, but this server's device gateway is not configured. Configure a device gateway on the server and connect the desktop app on the machine that hosts this MCP server, then retry.`;
+          return {
+            content: message,
+            error: { code: 'MCP_GATEWAY_NOT_CONFIGURED', message },
+            success: false,
+          };
+        }
+
+        const tunnelTarget = context.userId
+          ? await this.resolveMcpTunnelTarget(context)
+          : undefined;
         if (!tunnelTarget) {
           log('Device-only MCP %s:%s has no reachable device — failing fast', identifier, apiName);
           const message = `MCP server '${identifier}' only your own machine can reach (stdio or local network). No online LobeHub desktop app was found to run it (a device connected only through the \`lh connect\` CLI cannot run MCP servers) — open the LobeHub desktop app on the machine that hosts this MCP server, then retry.`;
