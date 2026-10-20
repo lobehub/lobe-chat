@@ -257,17 +257,17 @@ export class QuickNoteRepository {
         proposals.push(proposal);
       }
 
-      const completed = await model.completeRun(runId, run, params);
-      if (!completed) throw new Error(QUICK_NOTE_SCOPE_LOST);
+      const completion = await model.completeRun(runId, run, params);
+      if (!completion) throw new Error(QUICK_NOTE_SCOPE_LOST);
 
       // A judgement of the current source is authoritative: it replaces every earlier pending
       // suggestion, stale or not (the debounced meaning check is only a hint shown before the new
       // judgement lands). A Run of an outdated revision never supersedes anything.
-      const superseded = isEqual(run.sourceDocumentEditorData, run.sourceHistoryEditorData)
+      const superseded = completion.sourceIsCurrent
         ? await model.supersedeEarlierProposals(run.quickNoteId, runId)
         : [];
 
-      return { proposals, run: completed, superseded };
+      return { proposals, run: completion.run, superseded };
     });
 
   /**

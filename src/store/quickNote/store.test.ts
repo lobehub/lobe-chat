@@ -493,6 +493,39 @@ describe('quickNote actions', () => {
     expect(useQuickNoteStore.getState().saveStatus).toBe('saved');
   });
 
+  /** @example An older save never lands after a newer one. */
+  it('sends the next save of a note only after the previous one settles', async () => {
+    // ROOT CAUSE:
+    // A save fired after the debounce while the previous request was still in flight. The server
+    // keeps the last write it receives, so a slow older revision could overwrite the newer one.
+    let resolveFirstSave: ((value: { analyzeDueAt?: number }) => void) | undefined;
+    const updateNoteContent = vi
+      .spyOn(quickNoteService, 'updateNoteContent')
+      .mockImplementationOnce(
+        () =>
+          new Promise<{ analyzeDueAt?: number }>((resolve) => {
+            resolveFirstSave = resolve;
+          }),
+      )
+      .mockResolvedValue({});
+    resetStore({ notes: [createNoteItem({ id: 'a' })], notesInit: true });
+
+    useQuickNoteStore.getState().updateNoteContent('a', 'first', { revision: 1 });
+    await vi.advanceTimersByTimeAsync(PERSIST_DEBOUNCE);
+    useQuickNoteStore.getState().updateNoteContent('a', 'second', { revision: 2 });
+    await vi.advanceTimersByTimeAsync(PERSIST_DEBOUNCE);
+
+    /** @example The newer revision waits while the older request is in flight. */
+    expect(updateNoteContent).toHaveBeenCalledTimes(1);
+
+    resolveFirstSave?.({});
+    await vi.advanceTimersByTimeAsync(0);
+
+    /** @example It is sent once the older request has settled. */
+    expect(updateNoteContent).toHaveBeenNthCalledWith(2, 'a', 'second', { revision: 2 });
+    expect(useQuickNoteStore.getState().saveStatus).toBe('saved');
+  });
+
   it('marks the save as failed when persistence throws', async () => {
     vi.spyOn(quickNoteService, 'updateNoteContent').mockRejectedValue(new Error('offline'));
     resetStore({ notes: [createNoteItem({ id: 'a' })], notesInit: true });

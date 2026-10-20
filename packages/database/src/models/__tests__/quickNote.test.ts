@@ -311,6 +311,34 @@ describe('QuickNoteModel', () => {
     expect(next.map(({ id }) => id)).toEqual([second.id]);
   });
 
+  /** @example A check whose enqueue failed is due again, unless a newer edit re-armed it. */
+  it('releases a claimed content check without overriding a newer edit', async () => {
+    const dueAt = new Date('2026-08-24T00:00:00Z');
+    const note = await quickNoteRepo.create({ content: 'checked' });
+    await serverDB
+      .update(quickNotes)
+      .set({ contentCheckDueAt: dueAt })
+      .where(eq(quickNotes.id, note.id));
+    const readDueAt = async () =>
+      (await serverDB.select().from(quickNotes).where(eq(quickNotes.id, note.id)))[0]
+        .contentCheckDueAt;
+
+    expect(await QuickNoteModel.claimContentCheck(serverDB, note.id, dueAt)).toBe(true);
+    /** @example The released check is due again at its original time. */
+    expect(await QuickNoteModel.releaseContentCheck(serverDB, note.id, dueAt)).toBe(true);
+    expect(await readDueAt()).toEqual(dueAt);
+
+    const newerDueAt = new Date('2026-08-24T00:05:00Z');
+    await QuickNoteModel.claimContentCheck(serverDB, note.id, dueAt);
+    await serverDB
+      .update(quickNotes)
+      .set({ contentCheckDueAt: newerDueAt })
+      .where(eq(quickNotes.id, note.id));
+    /** @example A newer edit's later due time wins over the released one. */
+    expect(await QuickNoteModel.releaseContentCheck(serverDB, note.id, dueAt)).toBe(false);
+    expect(await readDueAt()).toEqual(newerDueAt);
+  });
+
   /** @example A user can refine a Proposal only until they decide on it. */
   it('edits a Proposal payload only while pending and keeps the original draft', async () => {
     const { proposal } = await seedProposal();

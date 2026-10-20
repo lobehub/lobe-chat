@@ -39,27 +39,40 @@ const sweepContentChecks = async (
       if (!(await QuickNoteModel.claimContentCheck(db, candidate.id, now))) continue;
 
       const workspaceId = candidate.workspaceId ?? undefined;
-      const proposals = await new QuickNoteModel(db, candidate.userId, workspaceId).queryProposals(
-        candidate.id,
-      );
-      if (
-        !proposals.some(
-          ({ decisionStatus, validity }) => decisionStatus === 'pending' && validity === 'current',
-        )
-      ) {
-        continue;
-      }
+      let accepted: boolean;
+      try {
+        const proposals = await new QuickNoteModel(
+          db,
+          candidate.userId,
+          workspaceId,
+        ).queryProposals(candidate.id);
+        if (
+          !proposals.some(
+            ({ decisionStatus, validity }) =>
+              decisionStatus === 'pending' && validity === 'current',
+          )
+        ) {
+          continue;
+        }
 
-      const result = await enqueueAgentSignalSourceEvent(
-        {
-          payload: { quickNoteId: candidate.id, userId: candidate.userId },
-          scopeKey: `quick-note:${candidate.id}`,
-          sourceId: `${candidate.id}:content-check:${candidate.contentCheckDueAt?.getTime()}`,
-          sourceType: AGENT_SIGNAL_SOURCE_TYPES.quickNoteContentChanged,
-        },
-        { userId: candidate.userId, workspaceId },
-      );
-      if (result.accepted) enqueued += 1;
+        const result = await enqueueAgentSignalSourceEvent(
+          {
+            payload: { quickNoteId: candidate.id, userId: candidate.userId },
+            scopeKey: `quick-note:${candidate.id}`,
+            sourceId: `${candidate.id}:content-check:${candidate.contentCheckDueAt?.getTime()}`,
+            sourceType: AGENT_SIGNAL_SOURCE_TYPES.quickNoteContentChanged,
+          },
+          { userId: candidate.userId, workspaceId },
+        );
+        accepted = result.accepted;
+      } catch (error) {
+        // The claim cleared the due time; without it the retried sweep would never see this edit.
+        if (candidate.contentCheckDueAt) {
+          await QuickNoteModel.releaseContentCheck(db, candidate.id, candidate.contentCheckDueAt);
+        }
+        throw error;
+      }
+      if (accepted) enqueued += 1;
       if (enqueued === PAGE_SIZE) break;
     }
     const last = candidates.at(-1);

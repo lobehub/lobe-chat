@@ -13,6 +13,7 @@ const mocks = vi.hoisted(() => ({
   enqueue: vi.fn(),
   flags: vi.fn(),
   queryProposals: vi.fn(),
+  releaseContentCheck: vi.fn(),
 }));
 vi.mock('@/database/server', () => ({ getServerDB: vi.fn().mockResolvedValue({}) }));
 vi.mock('@/database/models/quickNote', () => ({
@@ -20,6 +21,7 @@ vi.mock('@/database/models/quickNote', () => ({
     static claimContentCheck = mocks.claimContentCheck;
     static findDueAnalyzeCandidates = mocks.candidates;
     static findDueContentCheckCandidates = mocks.contentCheckCandidates;
+    static releaseContentCheck = mocks.releaseContentCheck;
     queryProposals = mocks.queryProposals;
   },
 }));
@@ -165,5 +167,29 @@ describe('Quick Note sweep content checks', () => {
     expect(await sweep()).toMatchObject({ contentChecks: 0 });
     expect(mocks.claimContentCheck).toHaveBeenCalledOnce();
     expect(mocks.enqueue).not.toHaveBeenCalled();
+  });
+
+  /** @example A failed enqueue leaves the check due, so the retried sweep runs it. */
+  it('re-arms the claimed check when enqueueing fails', async () => {
+    // ROOT CAUSE:
+    // The claim cleared `content_check_due_at` before enqueueing; a throw returned 500 but left it
+    // null, so the QStash retry found nothing due and the edit was never meaning-checked.
+    const dueAt = new Date('2026-10-20T01:00:00Z');
+    mocks.contentCheckCandidates.mockResolvedValue([
+      { contentCheckDueAt: dueAt, id: 'note-1', userId: 'tester', workspaceId: null },
+    ]);
+    mocks.claimContentCheck.mockResolvedValue(true);
+    mocks.queryProposals.mockResolvedValue(pending);
+    mocks.enqueue.mockRejectedValue(new Error('queue unavailable'));
+
+    const response = await new Hono()
+      .post('/sweep', sweepQuickNoteAnalyze)
+      .request('/sweep', { method: 'POST' });
+
+    /** @example The sweep still fails so QStash retries it. */
+    expect(response.status).toBe(500);
+    /** @example The claimed due time is restored for that retry. */
+    expect(mocks.releaseContentCheck).toHaveBeenCalledOnce();
+    expect(mocks.releaseContentCheck.mock.calls[0].slice(1)).toEqual(['note-1', dueAt]);
   });
 });

@@ -23,6 +23,7 @@ import {
 } from '@/server/services/quickNote/executors/types';
 import { assertQuickNoteEnabled } from '@/server/services/quickNote/featureGate';
 import { QuickNoteProposalService } from '@/server/services/quickNote/proposals';
+import { filterViewableResources } from '@/server/services/quickNote/resourceAccess';
 import { renderQuickNoteSourceText } from '@/server/services/quickNote/sourceText';
 
 const quickNoteProcedure = wsCompatProcedure
@@ -121,7 +122,14 @@ const rethrowApplyError = (error: unknown): never => {
 export const quickNoteRouter = router({
   agenticDetails: quickNoteProcedure.input(idInput).query(async ({ ctx, input }) => {
     const model = new QuickNoteModel(ctx.serverDB, ctx.userId, ctx.workspaceId ?? undefined);
-    return model.queryAgenticDetails(input.id);
+    const details = await model.queryAgenticDetails(input.id);
+    // Workspace RBAC can change after linking, so a Document the caller lost access to is hidden.
+    const resources = await filterViewableResources(
+      { db: ctx.serverDB, userId: ctx.userId, workspaceId: ctx.workspaceId ?? undefined },
+      details.resources,
+      ({ resourceId, resourceType }) => ({ id: resourceId, type: resourceType }),
+    );
+    return { ...details, resources };
   }),
 
   /**
@@ -196,8 +204,17 @@ export const quickNoteRouter = router({
   create: quickNoteWriteProcedure.input(createInput).mutation(async ({ ctx, input }) => {
     const repo = new QuickNoteRepository(ctx.serverDB, ctx.userId, ctx.workspaceId ?? undefined);
     const settings = await QuickNoteModel.getAnalyzeSettings(ctx.serverDB, ctx.userId);
+    // The database checks workspace and visibility only; RBAC and Document access need the server.
+    const resources =
+      input.resources &&
+      (await filterViewableResources(
+        { db: ctx.serverDB, userId: ctx.userId, workspaceId: ctx.workspaceId ?? undefined },
+        input.resources,
+        (reference) => reference,
+      ));
     return repo.create({
       ...input,
+      resources,
       analyzeDueAt:
         settings.autoAnalyze.enabled && input.content?.trim()
           ? new Date(Date.now() + settings.autoAnalyze.idleDelayMs)

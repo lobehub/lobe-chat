@@ -55,6 +55,8 @@ export class QuickNoteActionImpl {
   readonly #pollFailures = new Map<string, number>();
   readonly #dirtyIds = new Set<string>();
   readonly #pendingEditorData = new Map<string, Record<string, unknown>>();
+  /** The in-flight save of each note; the next save of that note waits for it. */
+  readonly #inFlightSaves = new Map<string, Promise<void>>();
   readonly #analyzeTimers = new Map<string, ReturnType<typeof setTimeout>>();
   readonly #analyzePollers = new Map<string, ReturnType<typeof setTimeout>>();
   readonly #staleCheckTimers = new Map<string, ReturnType<typeof setTimeout>>();
@@ -430,27 +432,41 @@ export class QuickNoteActionImpl {
       try {
         await Promise.all(
           ids.map(async (id) => {
-            const note = this.#get().notes.find((item) => item.id === id);
-            const editorData = this.#pendingEditorData.get(id);
-            if (!note || !editorData) return;
-            const result = await quickNoteService.updateNoteContent(id, note.content, editorData);
-            // A newer editor change may arrive while this network write is in flight.
-            // Only clear the exact payload that this invocation durably saved.
-            if (this.#pendingEditorData.get(id) === editorData) {
-              this.#pendingEditorData.delete(id);
-              this.#set(
-                {
-                  notes: this.#get().notes.map((item) =>
-                    item.id === id ? { ...item, analyzeDueAt: result.analyzeDueAt } : item,
-                  ),
-                },
-                false,
-                'persist/analyzeDueAt',
-              );
-              if (result.analyzeDueAt) this.#scheduleAnalyze(id, result.analyzeDueAt);
-              if (result.contentChange === 'changed' && result.contentCheckDueAt) {
-                this.#scheduleStaleCheckRefresh(id, result.contentCheckDueAt);
+            const previous = this.#inFlightSaves.get(id);
+            const save = (async () => {
+              // The server keeps the last write it receives, so an older request finishing after
+              // a newer one would overwrite it. Writes of one note therefore go one at a time,
+              // and each sends whatever is pending once the previous one has settled.
+              await previous?.catch(() => {});
+              if (this.#disposed) return;
+              const note = this.#get().notes.find((item) => item.id === id);
+              const editorData = this.#pendingEditorData.get(id);
+              if (!note || !editorData) return;
+              const result = await quickNoteService.updateNoteContent(id, note.content, editorData);
+              // A newer editor change may arrive while this network write is in flight.
+              // Only clear the exact payload that this invocation durably saved.
+              if (this.#pendingEditorData.get(id) === editorData) {
+                this.#pendingEditorData.delete(id);
+                this.#set(
+                  {
+                    notes: this.#get().notes.map((item) =>
+                      item.id === id ? { ...item, analyzeDueAt: result.analyzeDueAt } : item,
+                    ),
+                  },
+                  false,
+                  'persist/analyzeDueAt',
+                );
+                if (result.analyzeDueAt) this.#scheduleAnalyze(id, result.analyzeDueAt);
+                if (result.contentChange === 'changed' && result.contentCheckDueAt) {
+                  this.#scheduleStaleCheckRefresh(id, result.contentCheckDueAt);
+                }
               }
+            })();
+            this.#inFlightSaves.set(id, save);
+            try {
+              await save;
+            } finally {
+              if (this.#inFlightSaves.get(id) === save) this.#inFlightSaves.delete(id);
             }
           }),
         );

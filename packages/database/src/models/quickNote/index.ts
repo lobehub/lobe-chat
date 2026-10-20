@@ -1,6 +1,6 @@
 import { DEFAULT_QUICK_NOTE_SETTINGS } from '@lobechat/const';
 import type { UserQuickNoteSettings } from '@lobechat/types';
-import { and, desc, eq, gt, inArray, isNotNull, lte, or, sql } from 'drizzle-orm';
+import { and, desc, eq, gt, inArray, isNotNull, isNull, lte, or, sql } from 'drizzle-orm';
 
 import { documents, quickNoteRuns, quickNotes, userSettings } from '../../schemas';
 import type { LobeChatDatabase } from '../../type';
@@ -227,6 +227,28 @@ export class QuickNoteModel {
       .returning({ id: quickNotes.id });
 
     return claimed.length > 0;
+  };
+
+  /**
+   * Gives back a claimed meaning-change check whose follow-up work failed.
+   *
+   * Use when:
+   * - The sweep claimed a check with {@link QuickNoteModel.claimContentCheck} but could not enqueue it.
+   *
+   * Expects:
+   * - `dueAt` is the due time the claim cleared. A newer edit that set a later time keeps it.
+   *
+   * Returns:
+   * - `true` when the check was re-armed.
+   */
+  static releaseContentCheck = async (db: LobeChatDatabase, id: string, dueAt: Date) => {
+    const released = await db
+      .update(quickNotes)
+      .set({ contentCheckDueAt: dueAt })
+      .where(and(eq(quickNotes.id, id), isNull(quickNotes.contentCheckDueAt)))
+      .returning({ id: quickNotes.id });
+
+    return released.length > 0;
   };
 
   /**

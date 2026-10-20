@@ -59,6 +59,7 @@ import {
   toQuickNoteRunDecision,
 } from './intent';
 import { QuickNoteProposalService } from './proposals';
+import { filterViewableResources } from './resourceAccess';
 import { renderQuickNoteSourceText } from './sourceText';
 import { resolveQuickNoteRunOutput } from './submission';
 
@@ -477,9 +478,15 @@ export class QuickNoteProcessingService {
               ) === index,
           )
           .slice(0, 5);
+        // The Agent may report any Document id; keep only those this user may view.
+        const viewableResources = await filterViewableResources(
+          { db: this.db, userId: this.userId, workspaceId: this.workspaceId },
+          relatedResources,
+          (resource) => resource,
+        );
         // Publish terminal state only after its related-resource projection is durable.
         await pMap(
-          relatedResources,
+          viewableResources,
           (resource) => this.model.linkResource(params.runId, resource),
           { concurrency: 5 },
         );

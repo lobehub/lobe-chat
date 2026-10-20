@@ -81,13 +81,7 @@ describe('QuickNoteModel write scope', () => {
     });
     const completed = await otherModel.completeRun(
       active.id,
-      {
-        analyzeDueAt: null,
-        quickNoteId: note.id,
-        sourceDocumentEditorData: null,
-        sourceHistoryEditorData: null,
-        tags: ['hijacked'],
-      },
+      { quickNoteId: note.id, sourceHistoryEditorData: null },
       { summary: 'Hijacked', tags: ['hijacked'] },
     );
     const attached = await otherModel.attachOperation(active.id, {

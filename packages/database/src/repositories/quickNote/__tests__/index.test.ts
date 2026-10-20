@@ -384,6 +384,38 @@ describe('QuickNoteRepository', () => {
     expect(persistedNote.tags).toEqual([]);
   });
 
+  /** @example A save that lands between the completion read and its write still wins. */
+  it('re-checks the source after reading the Run for completion', async () => {
+    // ROOT CAUSE:
+    // Completion decided "current" from the editor data read before its write. A save committing
+    // in between left the Run looking current, so it cleared the new due time and wrote its tags.
+    const note = await quickNoteRepo.create({ content: 'Version one' });
+    const run = await claim(note.id);
+    const snapshot = await quickNoteModel.findRunForCompletion(run!.id);
+    const dueAt = new Date('2026-08-24T01:00:00Z');
+    await quickNoteRepo.updateContent(note.id, {
+      analyzeDueAt: dueAt,
+      content: 'Version two',
+      editorData: { root: { children: [{ text: 'Version two' }] } },
+    });
+
+    const completion = await quickNoteModel.completeRun(run!.id, snapshot!, {
+      summary: 'Outdated summary',
+      tags: ['outdated-tag'],
+    });
+    const [persistedNote] = await serverDB
+      .select()
+      .from(quickNotes)
+      .where(eq(quickNotes.id, note.id));
+
+    /** @example The Run completes but is reported as judging an outdated source. */
+    expect(completion).toMatchObject({ run: { status: 'completed' }, sourceIsCurrent: false });
+    /** @example The newer edit keeps its Automatic Analyze due time. */
+    expect(persistedNote.analyzeDueAt).toEqual(dueAt);
+    /** @example Outdated tags do not reach the current note. */
+    expect(persistedNote.tags).toEqual([]);
+  });
+
   /** @example Another owner cannot complete, claim, or create against a foreign note. */
   it('keeps Run claim and completion owner-scoped', async () => {
     const note = await quickNoteRepo.create({ content: 'Private' });

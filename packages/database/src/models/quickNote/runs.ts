@@ -188,22 +188,20 @@ export const findRunForCompletion = async (ctx: QuickNoteContext, runId: string)
  * Completes a Run with its accepted output and refreshes the parent Quick Note metadata.
  *
  * Expects:
- * - `run` is the snapshot read by {@link findRunForCompletion} in the same transaction.
+ * - Runs inside a transaction; the parent Quick Note row stays locked until it commits.
+ * - `run` identifies the Run's note and pinned source revision. Whether that revision is still
+ *   current is re-read after the lock, not taken from an earlier snapshot: a save that committed
+ *   in between would otherwise have its new due time cleared by an outdated Run.
  * - A stale Run (source edited since its snapshot) keeps the Quick Note's due time and tags.
  *
  * Returns:
- * - The completed Run, or `undefined` when it is inaccessible or no longer pending/running.
+ * - The completed Run and whether its source is still current, or `undefined` when it is
+ *   inaccessible or no longer pending/running.
  */
 export const completeRun = async (
   ctx: QuickNoteContext,
   runId: string,
-  run: {
-    analyzeDueAt: Date | null;
-    quickNoteId: string;
-    sourceDocumentEditorData: unknown;
-    sourceHistoryEditorData: unknown;
-    tags: string[];
-  },
+  run: { quickNoteId: string; sourceHistoryEditorData: unknown },
   output: Pick<CompleteQuickNoteRunParams, 'decision' | 'summary' | 'tags'>,
 ) => {
   const [completed] = await ctx.db
@@ -226,18 +224,35 @@ export const completeRun = async (
     .returning();
   if (!completed) return undefined;
 
-  const sourceIsCurrent = isEqual(run.sourceDocumentEditorData, run.sourceHistoryEditorData);
+  // A source save writes the Document and then this row in one transaction, so holding the row
+  // lock means no newer source can commit before this completion does. The lock is its own
+  // statement: a locking read that waited would re-check only the locked row, not the Document.
   await ctx.db
-    .update(quickNotes)
-    .set({
-      analyzeDueAt: sourceIsCurrent ? null : run.analyzeDueAt,
-      // A stale Run remains auditable, but its interpretation must not mutate current metadata.
-      tags: sourceIsCurrent && output.tags ? [...new Set([...run.tags, ...output.tags])] : run.tags,
-      updatedAt: new Date(),
-    })
+    .select({ id: quickNotes.id })
+    .from(quickNotes)
+    .where(and(eq(quickNotes.id, run.quickNoteId), quickNoteOwnershipWhere(ctx)))
+    .for('update');
+  const [current] = await ctx.db
+    .select({ editorData: documents.editorData, tags: quickNotes.tags })
+    .from(quickNotes)
+    .innerJoin(documents, eq(documents.id, quickNotes.documentId))
     .where(and(eq(quickNotes.id, run.quickNoteId), quickNoteOwnershipWhere(ctx)));
+  if (!current) return undefined;
 
-  return completed;
+  const sourceIsCurrent = isEqual(current.editorData, run.sourceHistoryEditorData);
+  // A stale Run remains auditable, but its interpretation must not mutate current metadata.
+  if (sourceIsCurrent) {
+    await ctx.db
+      .update(quickNotes)
+      .set({
+        analyzeDueAt: null,
+        tags: output.tags ? [...new Set([...current.tags, ...output.tags])] : current.tags,
+        updatedAt: new Date(),
+      })
+      .where(and(eq(quickNotes.id, run.quickNoteId), quickNoteOwnershipWhere(ctx)));
+  }
+
+  return { run: completed, sourceIsCurrent };
 };
 
 /**
