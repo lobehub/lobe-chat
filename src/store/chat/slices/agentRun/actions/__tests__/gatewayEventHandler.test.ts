@@ -27,12 +27,12 @@ vi.mock('@/services/work', async (importOriginal) => {
   };
 });
 vi.mock('@/store/chat/utils/desktopNotification', () => ({
+  notifyDesktopAgentFailed: vi.fn().mockResolvedValue(undefined),
   notifyDesktopHumanApprovalRequired: vi.fn().mockResolvedValue(undefined),
 }));
 vi.mock('@/store/chat/slices/agentRun/actions/lifecycle/agentSignalBridge', () => ({
   emitClientAgentSignalSourceEvent: vi.fn().mockResolvedValue(undefined),
 }));
-
 const getExecutorMock = vi.fn();
 vi.mock('@/store/tool/slices/builtin/executors', () => ({
   getExecutor: (...args: unknown[]) => getExecutorMock(...args),
