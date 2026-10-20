@@ -355,11 +355,12 @@ export class ActionImpl {
     resource: QuotaResourceName,
     slice: {
       ensureScope: (scope: string) => void;
-      fetch: (params: string, options?: ReadOptions) => Promise<{ data: T }>;
+      fetch: (params: string, options?: ReadOptions) => Promise<{ applied: boolean; data: T }>;
     },
     key: string,
     field: 'quotaAccountsMap' | 'quotaBindingsMap' | 'quotaReadingsMap',
     { fresh = false }: ReadOptions = {},
+    retried = false,
   ): Promise<T> => {
     const scope = quotaAccountsResource.scope.get();
     // The samplers read with no view mounted: drop a previous identity's
@@ -376,15 +377,24 @@ export class ActionImpl {
     )
       return cached;
 
+    let result: { applied: boolean; data: T };
     try {
-      const { data } = await slice.fetch(key, fresh ? { fresh: true } : undefined);
-      return data;
+      result = await slice.fetch(key, fresh ? { fresh: true } : undefined);
     } catch (error) {
       // A failed refresh keeps answering with the last confirmed value of this
       // identity — never with one an identity switch left behind meanwhile.
       if (cached !== undefined && quotaAccountsResource.scope.get() === scope) return cached;
       throw error;
     }
+    if (result.applied) return result.data;
+
+    // The replica dropped this answer: a write's `fresh` read superseded it, the
+    // entry was removed, or the identity changed. Answer with what the replica
+    // now holds (e.g. the switched pin) instead of the outdated response.
+    const current = (this.#get()[field] as Record<string, T>)[key];
+    if (current !== undefined && quotaAccountsResource.scope.get() === scope) return current;
+    if (retried) throw new Error(`[agentQuota] ${resource} read for "${key}" was superseded`);
+    return this.#read(resource, slice, key, field, { fresh: true }, true);
   };
 }
 

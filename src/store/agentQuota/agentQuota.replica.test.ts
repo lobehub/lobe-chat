@@ -443,6 +443,28 @@ describe('agent quota replicas', () => {
       ).toEqual(['b1', 'b9']);
     });
 
+    it('answers a read a fresh read superseded with the replica value, not the outdated response', async () => {
+      let answerStale!: (rows: QuotaBinding[]) => void;
+      let answerFresh!: (rows: QuotaBinding[]) => void;
+      vi.spyOn(agentQuotaService, 'listBindings')
+        .mockImplementationOnce(() => new Promise((resolve) => (answerStale = resolve)))
+        .mockImplementationOnce(() => new Promise((resolve) => (answerFresh = resolve)));
+
+      // A sampler read is out when a write's fresh refresh starts.
+      const samplerRead = useAgentQuotaStore.getState().readQuotaBindings('agent-1');
+      const writeRefresh = useAgentQuotaStore
+        .getState()
+        .readQuotaBindings('agent-1', { fresh: true });
+      answerFresh([binding('b1', 'a1', 'pool'), binding('b2', 'a2', 'pinned')]);
+      await writeRefresh;
+      answerStale([binding('b1', 'a1', 'pinned'), binding('b2', 'a2', 'pool')]);
+
+      expect((await samplerRead).map((b) => `${b.accountId}:${b.role}`)).toEqual([
+        'a1:pool',
+        'a2:pinned',
+      ]);
+    });
+
     it('loads the bindings before a write made while they were still unloaded', async () => {
       // Persisted accounts painted, but this agent's bindings never loaded.
       expect(
