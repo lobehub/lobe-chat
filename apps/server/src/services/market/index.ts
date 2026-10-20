@@ -826,16 +826,23 @@ export class MarketService {
    * provider whose tools could not be listed (with its `providerId`), or the
    * connection lookup itself (without one). Lets callers tell degraded
    * discovery apart from a user with no connected skills.
+   * @param options.providerIds - Only build manifests for these providers. The
+   * tool list of any other connection is never requested.
    * @returns Array of tool manifests for connected skills
    */
   async getLobehubSkillManifests(options?: {
     onError?: (error: unknown, providerId?: string) => void;
+    providerIds?: string[];
   }): Promise<LobeToolManifest[]> {
     try {
       // 1. Get user's connected skills
-      const { connections } = await this.market.connect.listConnections({
+      const { connections: allConnections } = await this.market.connect.listConnections({
         signal: AbortSignal.timeout(LOBEHUB_SKILL_DISCOVERY_TIMEOUT_MS),
       });
+      const providerIds = options?.providerIds && new Set(options.providerIds);
+      const connections = providerIds
+        ? allConnections?.filter((connection) => providerIds.has((connection as any).providerId))
+        : allConnections;
       if (!connections || connections.length === 0) {
         log('getLobehubSkillManifests: no connected skills found');
         return [];
