@@ -50,7 +50,12 @@ describe('findActiveIndex', () => {
     expect(findActiveIndex([200, 600], 80)).toBe(0);
   });
 
+  it('picks the last heading once the pane reaches the bottom', () => {
+    expect(findActiveIndex([-300, 40, 600], 80, true)).toBe(2);
+  });
+
   it('returns -1 without headings', () => {
     expect(findActiveIndex([], 80)).toBe(-1);
+    expect(findActiveIndex([], 80, true)).toBe(-1);
   });
 });

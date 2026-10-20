@@ -6,8 +6,6 @@ import type { RefObject } from 'react';
 import { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { sx } from '@/styles/sx';
-
 import type { TocHeading } from './headings';
 import { collectHeadings, findActiveIndex, findBodyRoot } from './headings';
 
@@ -41,6 +39,7 @@ const styles = stylex.create({
     whiteSpace: 'nowrap',
     width: '100%',
   },
+  itemIndent: (indent: number) => ({ paddingInlineStart: indent }),
   itemActive: {
     color: { 'default': cssVar.colorPrimary, ':hover': cssVar.colorPrimary },
     fontWeight: 500,
@@ -51,6 +50,7 @@ const styles = stylex.create({
     height: 2,
     transition: 'background-color 0.15s',
   },
+  lineWidth: (width: number) => ({ width }),
   lineActive: {
     backgroundColor: cssVar.colorText,
   },
@@ -103,24 +103,32 @@ const TableOfContents = memo<TableOfContentsProps>(({ contentRef, scrollRef }) =
   const [activeIndex, setActiveIndex] = useState(-1);
   const [expanded, setExpanded] = useState(false);
   // A clicked heading near the end of the page may never reach the top of the
-  // pane, so it stays active until the user scrolls on their own.
-  const pinnedIndexRef = useRef<number | null>(null);
+  // pane, so it stays active until the user scrolls on their own. Pinning the
+  // element rather than its index drops the pin once the heading is gone, e.g.
+  // after switching to another document.
+  const pinnedRef = useRef<HTMLElement | null>(null);
 
   const updateActive = useCallback(
     (list: TocHeading[]) => {
       const pane = scrollRef.current;
       if (!pane) return;
 
-      if (pinnedIndexRef.current !== null) {
-        setActiveIndex(pinnedIndexRef.current);
-        return;
+      if (pinnedRef.current) {
+        const pinnedIndex = list.findIndex(({ element }) => element === pinnedRef.current);
+        if (pinnedIndex !== -1) {
+          setActiveIndex(pinnedIndex);
+          return;
+        }
+        pinnedRef.current = null;
       }
 
       const paneTop = pane.getBoundingClientRect().top;
+      const atBottom = pane.scrollTop + pane.clientHeight >= pane.scrollHeight - 1;
       setActiveIndex(
         findActiveIndex(
           list.map(({ element }) => element.getBoundingClientRect().top - paneTop),
           ACTIVE_THRESHOLD,
+          atBottom,
         ),
       );
     },
@@ -164,7 +172,7 @@ const TableOfContents = memo<TableOfContentsProps>(({ contentRef, scrollRef }) =
     };
 
     const releasePin = () => {
-      pinnedIndexRef.current = null;
+      pinnedRef.current = null;
     };
 
     pane.addEventListener('scroll', handleScroll, { passive: true });
@@ -186,7 +194,7 @@ const TableOfContents = memo<TableOfContentsProps>(({ contentRef, scrollRef }) =
       const pane = scrollRef.current;
       if (!pane) return;
 
-      pinnedIndexRef.current = index;
+      pinnedRef.current = heading.element;
       setActiveIndex(index);
 
       const offset = heading.element.getBoundingClientRect().top - pane.getBoundingClientRect().top;
@@ -201,16 +209,28 @@ const TableOfContents = memo<TableOfContentsProps>(({ contentRef, scrollRef }) =
     <nav
       aria-label={t('pageEditor.toc.title')}
       {...stylex.props(styles.container)}
+      onFocus={() => setExpanded(true)}
       onMouseEnter={() => setExpanded(true)}
       onMouseLeave={() => setExpanded(false)}
+      onBlur={(event) => {
+        if (!event.currentTarget.contains(event.relatedTarget)) setExpanded(false);
+      }}
     >
-      <div {...stylex.props(styles.lines)}>
+      {/* Focusable so keyboard users can open the panel the way hover does. */}
+      <div
+        aria-label={t('pageEditor.toc.title')}
+        role="button"
+        tabIndex={0}
+        {...stylex.props(styles.lines)}
+      >
         {headings.map((heading, index) => (
           <div
             key={index}
-            {...sx([styles.line, index === activeIndex && styles.lineActive], undefined, {
-              width: LINE_WIDTH[heading.level],
-            })}
+            {...stylex.props(
+              styles.line,
+              styles.lineWidth(LINE_WIDTH[heading.level]),
+              index === activeIndex && styles.lineActive,
+            )}
           />
         ))}
       </div>
@@ -222,9 +242,11 @@ const TableOfContents = memo<TableOfContentsProps>(({ contentRef, scrollRef }) =
               aria-current={index === activeIndex ? 'location' : undefined}
               key={index}
               role="link"
-              {...sx([styles.item, index === activeIndex && styles.itemActive], undefined, {
-                paddingInlineStart: ITEM_INDENT[heading.level],
-              })}
+              {...stylex.props(
+                styles.item,
+                styles.itemIndent(ITEM_INDENT[heading.level]),
+                index === activeIndex && styles.itemActive,
+              )}
               tabIndex={0}
               title={heading.text}
               onClick={() => scrollToHeading(heading, index)}

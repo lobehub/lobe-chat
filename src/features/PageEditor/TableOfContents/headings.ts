@@ -31,9 +31,14 @@ export const collectHeadings = (root: ParentNode | null | undefined): TocHeading
 /**
  * Index of the heading whose section is being read: the last heading that has
  * scrolled past `threshold` px below the top of the viewport. Before the first
- * heading is reached, the first one is active.
+ * heading is reached, the first one is active. Once the pane is scrolled to the
+ * bottom, a short final section may never reach the threshold, so the last
+ * heading is active.
  */
-export const findActiveIndex = (offsets: number[], threshold: number): number => {
+export const findActiveIndex = (offsets: number[], threshold: number, atBottom = false): number => {
+  if (offsets.length === 0) return -1;
+  if (atBottom) return offsets.length - 1;
+
   let active = 0;
 
   for (const [index, offset] of offsets.entries()) {
@@ -41,5 +46,5 @@ export const findActiveIndex = (offsets: number[], threshold: number): number =>
     active = index;
   }
 
-  return offsets.length === 0 ? -1 : active;
+  return active;
 };
