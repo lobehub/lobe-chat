@@ -419,9 +419,13 @@ export const convertCss = (template: CssTemplate, names: TokenNames): ConvertedS
 
   const renderNode = (node: ValueNode): string => {
     checkConditionOrder(node);
-    for (const [condition, child] of node.children) {
-      if (child.children.size === 0 && child.value === node.value) node.children.delete(condition);
-    }
+    // A condition repeating the default only does nothing when every condition
+    // does; otherwise it may be the one overriding another (`:active` after
+    // `:hover`, a narrow media query inside a wider one).
+    const allRepeatDefault = [...node.children.values()].every(
+      (child) => child.children.size === 0 && child.value === node.value,
+    );
+    if (allRepeatDefault) node.children.clear();
     if (node.children.size === 0) return node.value ?? 'null';
     const entries = [`default: ${node.value ?? 'null'}`];
     for (const [condition, child] of node.children)
@@ -429,13 +433,13 @@ export const convertCss = (template: CssTemplate, names: TokenNames): ConvertedS
     return `{ ${entries.join(', ')} }`;
   };
   const key = (prop: string) => (/^[$A-Z_][\w$]*$/i.test(prop) ? prop : JSON.stringify(prop));
-  const commentLines = (texts: string[] = []) =>
-    texts
+  const commentLines = (texts: string[] = []) => {
+    const lines = texts
       .flatMap((t) => t.split('\n'))
       .map((line) => line.trim().replace(/^\*\s?/, ''))
-      .filter(Boolean)
-      .map((line) => `\n// ${line}\n`)
-      .join('');
+      .filter(Boolean);
+    return lines.length > 0 ? `\n${lines.map((line) => `// ${line}`).join('\n')}\n` : '';
+  };
   const renderProps = (props: Map<string, ValueNode>, pseudoElement: string) =>
     [...props].map(
       ([prop, node]) =>

@@ -252,6 +252,48 @@ describe('convertCss output details', () => {
 
     expect(object(code)).toEqual({ flexGrow: 0, gap: { 'default': null, 'media.md': '12px' } });
   });
+
+  it('keeps a default-equal condition that overrides another condition', () => {
+    const pressed = block`
+      background-color: red;
+      &:hover {
+        background-color: blue;
+      }
+      &:active {
+        background-color: red;
+      }
+    `;
+    const narrow = block`
+      gap: 24px;
+      ${'responsive.lg'} {
+        gap: 12px;
+      }
+      ${'responsive.md'} {
+        gap: 24px;
+      }
+    `;
+
+    expect(object(pressed.code).backgroundColor).toEqual({
+      'default': 'red',
+      ':hover': 'blue',
+      ':active': 'red',
+    });
+    expect(object(narrow.code).gap).toEqual({
+      'default': '24px',
+      'media.lg': '12px',
+      'media.md': '24px',
+    });
+  });
+
+  it('keeps a multi-line comment as one note', () => {
+    const { code } = block`
+      /* First line
+         second line. */
+      display: flex;
+    `;
+
+    expect(code).toContain('\n// First line\n// second line.\ndisplay:');
+  });
 });
 
 describe('expandShorthand', () => {

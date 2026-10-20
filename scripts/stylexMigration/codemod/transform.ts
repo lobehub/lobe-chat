@@ -147,9 +147,11 @@ export const transformSource = (source: string, fileName = 'file.tsx'): Transfor
         const converted = convertCss({ expressions, quasis }, names);
         usesCssVar ||= converted.usesCssVar;
         usesMedia ||= converted.usesMedia;
-        const leadingComments = (ts.getLeadingCommentRanges(source, prop.getFullStart()) ?? [])
-          .map(({ end, pos }) => `\n${source.slice(pos, end)}\n`)
-          .join('');
+        const commentRanges = ts.getLeadingCommentRanges(source, prop.getFullStart()) ?? [];
+        const leadingComments =
+          commentRanges.length > 0
+            ? `\n${commentRanges.map(({ end, pos }) => source.slice(pos, end)).join('\n')}\n`
+            : '';
         entries.push(`${leadingComments}${text(prop.name)}: ${converted.code}`);
       }
       replace(init, `stylex.create({ ${entries.join(', ')} })`);
