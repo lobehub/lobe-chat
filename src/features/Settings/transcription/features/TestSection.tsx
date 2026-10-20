@@ -207,12 +207,7 @@ const FileTest = ({
     <Flexbox align={'flex-end'} gap={8} style={{ width: '100%' }}>
       <Flexbox horizontal gap={8}>
         {recordingPath && (
-          <Button
-            icon={Users}
-            loading={!!progress}
-            type={'primary'}
-            onClick={() => transcribe(recordingPath)}
-          >
+          <Button icon={Users} loading={!!progress} onClick={() => transcribe(recordingPath)}>
             {t('localAsr.test.file.refineRecording')}
           </Button>
         )}

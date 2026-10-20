@@ -154,6 +154,27 @@ describe('LocalAsrModelManager', () => {
     await expect(stat(path.join(dir, 'model.onnx'))).rejects.toThrow();
   });
 
+  it('treats a malformed verified manifest as empty', async () => {
+    await writeFile(path.join(dir, 'verified.json'), 'null');
+    const manager = create(serveAll);
+
+    expect((await manager.getPackStates())[0].status).toBe('not_downloaded');
+    expect((await manager.download('asr-sensevoice')).status).toBe('ready');
+  });
+
+  it('keeps only own string entries from the verified manifest', async () => {
+    await writeFile(
+      path.join(dir, 'verified.json'),
+      JSON.stringify({ '__proto__': { polluted: 'yes' }, 'model.onnx': 42 }),
+    );
+    const manager = create(serveAll);
+    await manager.download('asr-sensevoice');
+
+    const manifest = JSON.parse(await readFile(path.join(dir, 'verified.json'), 'utf8'));
+    expect(Object.keys(manifest).sort()).toEqual(['model.onnx', 'tokens.txt']);
+    expect(({} as Record<string, unknown>).polluted).toBeUndefined();
+  });
+
   it('stops on cancel and keeps the partial file for resuming', async () => {
     const ref: { manager?: LocalAsrModelManager } = {};
     const fetcher: typeof fetch = async (_input, init) => {

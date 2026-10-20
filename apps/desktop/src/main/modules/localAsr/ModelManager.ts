@@ -361,12 +361,22 @@ export class LocalAsrModelManager {
     this.onProgress?.(payload);
   }
 
+  /** Copies only catalog file names with string hashes into a null-prototype record. */
   private async readManifest(): Promise<Manifest> {
+    const manifest: Manifest = Object.create(null);
+    let parsed: unknown;
     try {
-      return JSON.parse(await readFile(path.join(this.dir, MANIFEST_FILE), 'utf8')) as Manifest;
+      parsed = JSON.parse(await readFile(path.join(this.dir, MANIFEST_FILE), 'utf8'));
     } catch {
-      return {};
+      return manifest;
     }
+    if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) return manifest;
+
+    const known = new Set(this.packs.flatMap((pack) => pack.files.map((file) => file.name)));
+    for (const [name, hash] of Object.entries(parsed)) {
+      if (known.has(name) && typeof hash === 'string') manifest[name] = hash;
+    }
+    return manifest;
   }
 
   private async writeManifest(manifest: Manifest) {
