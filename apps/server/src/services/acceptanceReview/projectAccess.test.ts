@@ -15,6 +15,7 @@ import {
   createTestUser,
 } from '@/server/routers/lambda/__tests__/integration/setup';
 import { resolveAcceptanceCommentAccess } from '@/server/routers/lambda/_helpers/acceptanceCommentAccess';
+import { canReadAcceptance } from '@/server/routers/lambda/_helpers/acceptanceReadScope';
 
 import { resolveReviewAccess } from './access';
 import { resolveProjectReviewRole } from './projectAccess';
@@ -173,5 +174,30 @@ describe('site review access', () => {
     expect(await resolveProjectReviewRole(db, teammateId, project)).toBe('admin');
     expect(await resolveProjectReviewRole(db, viewerId, project)).toBe('viewer');
     expect(await resolveProjectReviewRole(db, strangerId, project)).toBeNull();
+  });
+
+  it('opens a project delivery filed outside the workspace to whoever may discuss it', async () => {
+    const [acceptance] = await db
+      .insert(acceptances)
+      .values({
+        projectId,
+        subjectId: randomUUID(),
+        subjectType: 'standalone',
+        userId: ownerId,
+        visibility: 'private',
+        workspaceId: null,
+      })
+      .returning();
+    const canRead = (userId: string) => canReadAcceptance({ serverDB: db, userId }, acceptance);
+
+    await expect(
+      resolveAcceptanceCommentAccess(db, teammateId, acceptance.id),
+    ).resolves.toBeTruthy();
+    expect(await canRead(teammateId)).toBe(true);
+    expect(await canRead(viewerId)).toBe(true);
+    await expect(resolveAcceptanceCommentAccess(db, strangerId, acceptance.id)).rejects.toThrow(
+      TRPCError,
+    );
+    expect(await canRead(strangerId)).toBe(false);
   });
 });
