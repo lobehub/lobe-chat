@@ -925,7 +925,7 @@ describe('Quick Note Dive', () => {
     expect(runTask).toHaveBeenCalledWith({ taskId, trigger: 'manual' });
     expect(execAgent).not.toHaveBeenCalled();
     // No summary is written by Dive.
-    expect((await model.queryDetails())[0].summary).toBeUndefined();
+    expect((await model.queryDetails()).items[0].summary).toBeUndefined();
   });
 
   it('responds before the Task start finishes', async () => {

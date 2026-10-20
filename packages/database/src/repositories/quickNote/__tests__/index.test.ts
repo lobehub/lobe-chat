@@ -292,7 +292,9 @@ describe('QuickNoteRepository', () => {
       tags: ['idea'],
     });
     const repeated = await quickNoteRepo.completeRun(run!.id, { summary: 'Twice' });
-    const [details] = await quickNoteModel.queryDetails();
+    const {
+      items: [details],
+    } = await quickNoteModel.queryDetails();
 
     /** @example The Run carries the trimmed summary and the full decision. */
     expect(output?.run).toMatchObject({
