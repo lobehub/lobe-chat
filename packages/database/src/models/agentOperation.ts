@@ -5,7 +5,7 @@ import {
   type ServerDefaultHeterogeneousRelayInvocation,
   type VerifyRunStatus,
 } from '@lobechat/types';
-import { and, eq, gte, inArray, isNotNull, or, sql } from 'drizzle-orm';
+import { and, desc, eq, gte, inArray, isNotNull, or, sql } from 'drizzle-orm';
 
 import { today } from '@/utils/time';
 
@@ -19,6 +19,7 @@ import { agentOperations } from '../schemas/agentOperations';
 import type { LobeChatDatabase } from '../type';
 import { notShareVisitorTopicRef } from '../utils/shareVisitor';
 import { buildWorkspaceWhere } from '../utils/workspace';
+import { findLiveTopicOperations, findScopedOperation } from './agentOperationQueries';
 
 /**
  * Verify rollup states. Aliases the single `VerifyRunStatus` source of truth in
@@ -245,6 +246,7 @@ export class AgentOperationModel {
               'running',
               'waiting_for_human',
               'waiting_for_async_tool',
+              'waiting_for_client',
             ]),
             eq(agentOperations.status, params.status),
           ),
@@ -351,6 +353,32 @@ export class AgentOperationModel {
     operationId: string,
     status: 'done' | 'error' | 'interrupted',
   ): Promise<boolean> {
+    return this.settleFrom(operationId, status, ['running']);
+  }
+
+  /**
+   * Like {@link settleRunning}, but also retires a row parked in
+   * `waiting_for_human` / `waiting_for_async_tool`. For callers that already
+   * know the run is dead: a parked row whose runtime was abandoned has nothing
+   * left that could ever resume it.
+   */
+  async settleLive(
+    operationId: string,
+    status: 'done' | 'error' | 'interrupted',
+  ): Promise<boolean> {
+    return this.settleFrom(operationId, status, [
+      'running',
+      'waiting_for_human',
+      'waiting_for_async_tool',
+      'waiting_for_client',
+    ]);
+  }
+
+  private async settleFrom(
+    operationId: string,
+    status: 'done' | 'error' | 'interrupted',
+    fromStatuses: AgentOperationStatus[],
+  ): Promise<boolean> {
     const [row] = await this.db
       .update(agentOperations)
       .set({
@@ -361,7 +389,7 @@ export class AgentOperationModel {
       .where(
         and(
           eq(agentOperations.id, operationId),
-          eq(agentOperations.status, 'running'),
+          inArray(agentOperations.status, fromStatuses),
           this.ownership(),
         ),
       )
@@ -392,6 +420,22 @@ export class AgentOperationModel {
           sql`NOT (coalesce(${agentOperations.metadata}, '{}'::jsonb) ? 'heteroIngestRejection')`,
         ),
       )
+      .returning({ id: agentOperations.id });
+    return Boolean(row);
+  }
+
+  /**
+   * Shallow-merge top-level keys into the run's durable `metadata`, leaving
+   * every other key intact. Not gated on status: diagnostic records may land on
+   * a run that has already settled.
+   */
+  async mergeMetadata(operationId: string, patch: Record<string, unknown>): Promise<boolean> {
+    const [row] = await this.db
+      .update(agentOperations)
+      .set({
+        metadata: sql`coalesce(${agentOperations.metadata}, '{}'::jsonb) || ${JSON.stringify(patch)}::jsonb`,
+      })
+      .where(and(eq(agentOperations.id, operationId), this.ownership()))
       .returning({ id: agentOperations.id });
     return Boolean(row);
   }
@@ -617,17 +661,16 @@ export class AgentOperationModel {
    * Raw ownership-scoped lookup. Agent-share visitor runs execute under the
    * CREATOR's identity, so this DOES return their operations — required by the
    * agent runtime (execution, intervention, completion, verify, abandon), which
-   * has to resolve the operation it is currently driving no matter who started
-   * it. Creator-facing read entry points must use
+   * resolves its current operation regardless of who started it. Creator-facing reads use
    * {@link AgentOperationModel.findOwnOperationById} instead.
    */
   async findById(operationId: string) {
-    const [row] = await this.db
-      .select()
-      .from(agentOperations)
-      .where(and(eq(agentOperations.id, operationId), this.ownership()))
-      .limit(1);
-    return row ?? null;
+    return findScopedOperation(this.db, this.ownership(), operationId);
+  }
+
+  /** All resumable operations in a proven topic, independent of its UI marker. */
+  async findLiveByTopic(topicId: string) {
+    return findLiveTopicOperations(this.db, this.ownership(), topicId);
   }
 
   /** Batch lookup for callers that would otherwise issue one query per id. */
@@ -838,6 +881,84 @@ export class AgentOperationModel {
       )
       .returning({ id: agentOperations.id });
     return rows.length === 1;
+  }
+
+  /**
+   * Atomically flip an op parked in `waiting_for_client` back to `running`.
+   * True only for the single winner, so a manual "continue" racing an
+   * automatic one resumes the run once.
+   */
+  async tryResumeFromClientWait(operationId: string): Promise<boolean> {
+    const rows = await this.db
+      .update(agentOperations)
+      .set({ status: 'running' })
+      .where(
+        and(
+          eq(agentOperations.id, operationId),
+          this.ownership(),
+          eq(agentOperations.status, 'waiting_for_client'),
+        ),
+      )
+      .returning({ id: agentOperations.id });
+    return rows.length === 1;
+  }
+
+  /**
+   * Undo a won `tryResumeFromClientWait` whose resume step never got enqueued,
+   * so the run stays parked (resumable, expirable, stoppable) instead of
+   * sitting in `running` with nothing scheduled.
+   */
+  async revertClientWaitResume(operationId: string): Promise<boolean> {
+    const rows = await this.db
+      .update(agentOperations)
+      .set({ status: 'waiting_for_client' })
+      .where(
+        and(
+          eq(agentOperations.id, operationId),
+          this.ownership(),
+          eq(agentOperations.status, 'running'),
+        ),
+      )
+      .returning({ id: agentOperations.id });
+    return rows.length === 1;
+  }
+
+  /**
+   * Retire an op still parked in `waiting_for_client` (its wait ran out or it
+   * was stopped while waiting). Only matches the parked row, so a run a client
+   * already resumed is never settled under it.
+   */
+  async settleClientWait(
+    operationId: string,
+    status: 'error' | 'interrupted' = 'error',
+  ): Promise<boolean> {
+    return this.settleFrom(operationId, status, ['waiting_for_client']);
+  }
+
+  /**
+   * Operations of this user parked in `waiting_for_client`, newest first.
+   * `providers` narrows to the ones the asking client can run before the
+   * limit applies, so waits for another device's providers cannot crowd out
+   * the ones it could take.
+   */
+  async listWaitingForClient(options: { limit?: number; providers?: string[] } = {}) {
+    const { limit = 20, providers } = options;
+    return this.db
+      .select({
+        id: agentOperations.id,
+        provider: agentOperations.provider,
+        topicId: agentOperations.topicId,
+      })
+      .from(agentOperations)
+      .where(
+        and(
+          eq(agentOperations.status, 'waiting_for_client'),
+          this.ownership(),
+          providers ? inArray(agentOperations.provider, providers) : undefined,
+        ),
+      )
+      .orderBy(desc(agentOperations.createdAt))
+      .limit(limit);
   }
 
   // ============================================

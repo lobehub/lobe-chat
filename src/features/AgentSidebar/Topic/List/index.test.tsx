@@ -23,6 +23,14 @@ const chatStoreStateMock = vi.hoisted(() => ({
   topicLength: 0,
   topics: [],
 }));
+const skeletonRenderCount = vi.hoisted(() => ({ value: 0 }));
+
+vi.mock('./TopicListSkeleton', () => ({
+  default: () => {
+    skeletonRenderCount.value += 1;
+    return <div data-testid="topic-list-skeleton" />;
+  },
+}));
 
 vi.mock('@/features/NavPanel/components/EmptyNavItem', () => ({
   default: ({
@@ -79,6 +87,7 @@ vi.mock('@/store/chat', () => ({
 }));
 
 vi.mock('@/store/chat/selectors', () => ({
+  operationSelectors: { visiblyRunningTopicIds: () => [] },
   topicSelectors: {
     currentTopicLength: (state: { topicLength: number }) => state.topicLength,
     displayTopicsForSidebar: () => (state: typeof chatStoreStateMock) => state.topics,
@@ -106,11 +115,13 @@ vi.mock('@/store/user', () => ({
 }));
 
 vi.mock('@/store/user/selectors', () => ({
+  authSelectors: { isLoaded: () => true },
   preferenceSelectors: {
     topicIncludeCompleted: (state: { topicIncludeCompleted: boolean }) =>
       state.topicIncludeCompleted,
     topicSortBy: (state: { topicSortBy: string }) => state.topicSortBy,
   },
+  userProfileSelectors: { userId: () => 'test-user-id' },
 }));
 
 vi.mock('../AllTopicsDrawer', () => ({
@@ -142,8 +153,28 @@ describe('Agent topic list', () => {
     permissionMock.create_content = true;
     chatStoreStateMock.hasMore = true;
     chatStoreStateMock.isExpandingPageSize = false;
+    chatStoreStateMock.isUndefinedTopics = false;
     chatStoreStateMock.topicLength = 0;
     chatStoreStateMock.topics = [];
+    skeletonRenderCount.value = 0;
+  });
+
+  // The route loader seeds the persisted page before this mounts
+  // (`agentChatTopicListLoader`), so a mount frame that shows the loading
+  // placeholder is exactly the flash this must not reintroduce.
+  it('renders the list on the mount commit when the session bucket already exists', () => {
+    render(<TopicList />);
+
+    expect(skeletonRenderCount.value).toBe(0);
+    expect(screen.getByTestId('all-topics-drawer')).toBeInTheDocument();
+  });
+
+  it('keeps the skeleton for a session whose bucket has not landed yet', () => {
+    chatStoreStateMock.isUndefinedTopics = true;
+
+    render(<TopicList />);
+
+    expect(screen.getByTestId('topic-list-skeleton')).toBeInTheDocument();
   });
 
   it('opens the agent chat route from the empty start topic entry', () => {

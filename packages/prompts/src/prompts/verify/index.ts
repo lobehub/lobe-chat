@@ -83,7 +83,7 @@ ${deliverable}`
 }
 
 ## Your task
-Investigate whether the deliverable satisfies this check, judging against the run goal and the judging instruction. Weight the captured evidence above as primary Data; gather more yourself only where it's missing or insufficient. When done, call \`submitVerifyResult\` exactly once with checkItemId="${checkItem.id}" and your verdict (passed / failed / uncertain) plus evidence and reasoning.`;
+Investigate whether the deliverable satisfies this check, judging against the run goal and the judging instruction. Weight the captured evidence above as primary Data; gather more yourself only where it's missing or insufficient. The deliverable may be a follow-up round's reply that only describes what that round changed: a statement that a round made no code change is not evidence that the work is missing, so check the work itself rather than reading it as an admission. When done, call \`submitVerifyResult\` exactly once with checkItemId="${checkItem.id}" and your verdict (passed / failed / uncertain) plus evidence and reasoning.`;
 
 /**
  * The send-back prompt for a rejected delivery. It points the agent at the CLI
@@ -99,4 +99,4 @@ export const buildAcceptanceRepairPrompt = (acceptanceId: string, rejectComment?
 
 lh acceptance feedback ${acceptanceId} --actionable
 
-Every entry it prints (per-check comments, circled-region annotations on the evidence screenshots, and attachments) is the full set of feedback to handle this round. Fix the code item by item; then re-run verification and ingest the new result back into the SAME acceptance (reuse the existing check ids, and use supersedes for any check whose meaning changed). Keep the final report in the same language the previous rounds used.`;
+Every entry it prints (per-check comments, circled-region annotations on the evidence screenshots, frames or spans marked on the evidence videos, and attachments) is the full set of feedback to handle this round. A video note names a timestamp such as \`frame at 0:07.20\`: open the recording at that moment (for example \`ffmpeg -ss 7.2 -i <video> -frames:v 1 frame.png\`) before acting on it, and where it disputes one of your own chapter claims, that claim was judged wrong. Fix the code item by item; then re-run verification and ingest the new result back into the SAME acceptance (reuse the existing check ids, and use supersedes for any check whose meaning changed). Keep the final report in the same language the previous rounds used.`;

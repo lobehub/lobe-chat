@@ -176,6 +176,41 @@ describe('tool executors', () => {
     expect(result.newState.usage.tools.totalCalls).toBe(1);
   });
 
+  it('deduplicates activatedTools persisted in one tool result (PR #20791 P2 regression)', async () => {
+    // persistActivatedTools updates its dedup set inside the filter: a result
+    // listing the same plugin twice (e.g. two wire names of one plugin both
+    // resolved to the same identifier) must be appended once.
+    runTool = vi.fn().mockResolvedValue({
+      attempts: 1,
+      result: {
+        content: 'Tool result',
+        executionTime: 100,
+        state: {
+          activatedTools: [
+            { identifier: 'lobe-web-browsing' },
+            { identifier: 'lobe-web-browsing' },
+          ],
+        },
+        success: true,
+      },
+    });
+    host.transports.tools!.run = runTool;
+
+    const instruction: Extract<AgentInstruction, { type: 'call_tool' }> = {
+      payload: {
+        parentMessageId: 'assistant-msg-1',
+        toolCalling: createToolCall(),
+      },
+      type: 'call_tool',
+    };
+
+    const result = await callTool(host)(instruction, createState());
+
+    const stepTools = result.newState.activatedStepTools ?? [];
+    expect(stepTools).toHaveLength(1);
+    expect(stepTools[0]).toMatchObject({ id: 'lobe-web-browsing', source: 'discovery' });
+  });
+
   it('parks single client-source tools without invoking the transport runner', async () => {
     const instruction: Extract<AgentInstruction, { type: 'call_tool' }> = {
       payload: {
@@ -609,6 +644,38 @@ describe('tool executors', () => {
     expect(result.events).toContainEqual(
       expect.objectContaining({ reason: 'async_tool', type: 'interrupted' }),
     );
+  });
+
+  // An approved async tool (group member task / sub-agent) resumes with the
+  // approve op's seeded "…" placeholder still on state. Parking keeps nothing in
+  // it: the server-side resume writes its own reply, and the empty seed left
+  // under the tool hid that reply.
+  it('retires the resume-seeded placeholder when an approved async tool parks', async () => {
+    runTool.mockResolvedValue({
+      attempts: 1,
+      result: {
+        content: '',
+        deferred: true,
+        state: { status: 'pending', toolMessageId: 'approved-tool' },
+        success: true,
+      },
+    });
+
+    const result = await callTool(host)(
+      {
+        payload: {
+          parentMessageId: 'approved-tool',
+          skipCreateToolMessage: true,
+          toolCalling: createToolCall('task-call', 'lobe-group-management'),
+        },
+        type: 'call_tool',
+      },
+      createState({ pendingAssistantMessageId: 'seeded-placeholder' } as any),
+    );
+
+    expect(result.newState.status).toBe('waiting_for_async_tool');
+    expect(host.transports.messages.deleteMessage).toHaveBeenCalledWith('seeded-placeholder');
+    expect(result.newState.pendingAssistantMessageId).toBeUndefined();
   });
 
   it('omits toolMessageIds when a deferred tool reports no placeholder', async () => {

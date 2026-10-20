@@ -1,13 +1,16 @@
-import { Block, Center, Empty, Flexbox } from '@lobehub/ui';
 import {
   AccordionHeader,
   AccordionItem,
   AccordionRoot,
   AccordionTrigger,
+  Block,
+  Center,
+  cssVar,
+  Divider,
+  Empty,
+  Flexbox,
   Text,
-} from '@lobehub/ui/base-ui';
-import { Divider } from 'antd';
-import { cssVar } from 'antd-style';
+} from '@lobehub/ui';
 import { ClipboardCheckIcon } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { memo, useCallback, useMemo, useState } from 'react';
@@ -40,12 +43,13 @@ import { useClosestScrollParent } from './useClosestScrollParent';
 
 interface TaskListProps {
   /**
-   * Settled signal — truthy once the current scope's list has loaded into the
-   * store, `undefined` while unsettled. Derived from the store's
-   * `isTaskListInit` (not raw SWR `data`) so it resets in lockstep with `tasks`
-   * on a scope/visibility switch and never disagrees with the empty signal.
+   * Settled signal — truthy once the list behind `queryKey` has a value in the
+   * store, `undefined` while unsettled. Derived from the same entry as the rows,
+   * so it never disagrees with the empty signal.
    */
   data?: unknown;
+  /** Call to action under the empty state, e.g. creating the collection's first task. */
+  emptyAction?: ReactNode;
   emptyDescription?: string;
   /** Thrown error from the list SWR — surfaced as a failure state, not a skeleton. */
   error?: unknown;
@@ -56,6 +60,8 @@ interface TaskListProps {
   onRetry?: () => void;
   onShowHiddenCompleted?: () => void;
   options: TaskListViewOptions;
+  /** Store entry of the list to render (`useFetchTaskList().queryKey`) when `items` is absent. */
+  queryKey?: string;
   routeScope?: TaskItemRouteScope;
 }
 
@@ -84,11 +90,7 @@ const renderGroupTitle = (group: TaskGroupMeta, count: number, sub?: boolean) =>
     <Text fontSize={12} type={'secondary'}>
       {count}
     </Text>
-    {sub ? (
-      <Divider style={{ margin: 0, borderColor: cssVar.colorBorder }} />
-    ) : (
-      <Flexbox flex={1} />
-    )}
+    {sub ? <Divider style={{ borderColor: cssVar.colorBorder, flex: 1 }} /> : <Flexbox flex={1} />}
   </Flexbox>
 );
 
@@ -135,11 +137,20 @@ const VIRTUAL_LIST_COMPONENTS: Components<TaskListVirtualItem, TaskListVirtualCo
 };
 
 const TaskList = memo<TaskListProps>((props) => {
-  const { data, error, isLoading, items, onRetry, onShowHiddenCompleted, options, routeScope } =
-    props;
+  const {
+    data,
+    error,
+    isLoading,
+    items,
+    onRetry,
+    onShowHiddenCompleted,
+    options,
+    queryKey,
+    routeScope,
+  } = props;
   const { t } = useTranslation('chat');
-  const storeTasks = useTaskStore(taskListSelectors.taskList);
-  const storeTasksTotal = useTaskStore(taskListSelectors.taskListTotal);
+  const storeTasks = useTaskStore(taskListSelectors.taskList(queryKey));
+  const storeTasksTotal = useTaskStore(taskListSelectors.taskListTotal(queryKey));
   const tasks = items ?? storeTasks;
   // The store list is fetched in full up to a ceiling; past it the server's
   // `total` still counts every task, so say the list is a subset rather than
@@ -259,6 +270,7 @@ const TaskList = memo<TaskListProps>((props) => {
   const emptyState = (
     <Center height={'80vh'} width={'100%'}>
       <Empty
+        action={props.emptyAction}
         description={props.emptyDescription ?? t('taskList.empty')}
         icon={ClipboardCheckIcon}
       />

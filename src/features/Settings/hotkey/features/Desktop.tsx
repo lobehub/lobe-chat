@@ -1,26 +1,23 @@
 'use client';
 
-import { type FormGroupItemType } from '@lobehub/ui';
-import { Form, HotkeyInput } from '@lobehub/ui';
-import { Skeleton, Spin, toast } from '@lobehub/ui/base-ui';
+import { HotkeyInput, Spin, toast } from '@lobehub/ui';
+import { Form, type FormGroupItem, useForm } from '@lobehub/ui/form';
 import isEqual from 'fast-deep-equal';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { SettingsSectionSkeleton } from '@/components/Skeleton';
 import { DESKTOP_HOTKEYS_REGISTRATION } from '@/const/desktopGlobalShortcuts';
 import { FORM_STYLE } from '@/const/layoutTokens';
 import { SettingsSearchAnchor } from '@/features/SettingsSearch/anchor';
 import { useElectronStore } from '@/store/electron';
 import { desktopHotkeysSelectors } from '@/store/electron/selectors';
-import { type DesktopHotkeyItem } from '@/types/hotkey';
-
-import { hotkeyFormStyles } from './styles';
+import { type DesktopHotkeyConfig, type DesktopHotkeyItem } from '@/types/hotkey';
 
 const HotkeySetting = memo(() => {
   const { t } = useTranslation(['setting', 'hotkey']);
-  const [form] = Form.useForm();
-
   const hotkeys = useElectronStore(desktopHotkeysSelectors.hotkeys, isEqual);
+  const form = useForm({ initialValues: hotkeys, values: hotkeys });
 
   const [isHotkeysInit, updateDesktopHotkey, useFetchDesktopHotkeys] = useElectronStore((s) => [
     desktopHotkeysSelectors.isHotkeysInit(s),
@@ -32,7 +29,20 @@ const HotkeySetting = memo(() => {
 
   const [loading, setLoading] = useState(false);
 
-  if (!isHotkeysInit) return <Skeleton.Text rows={5} />;
+  if (!isHotkeysInit)
+    return (
+      <SettingsSectionSkeleton
+        groups={[
+          {
+            // Hotkey recorder inputs settle at 335x36.
+            control: { height: 36, width: 335 },
+            rows: DESKTOP_HOTKEYS_REGISTRATION.length,
+            titleWidth: 96,
+            withDesc: false,
+          },
+        ]}
+      />
+    );
 
   const updateHotkey = async (id: DesktopHotkeyItem['id'], value: string) => {
     setLoading(true);
@@ -68,7 +78,7 @@ const HotkeySetting = memo(() => {
     name: item.id,
   });
 
-  const desktop: FormGroupItemType = {
+  const desktop: FormGroupItem<DesktopHotkeyConfig> = {
     children: DESKTOP_HOTKEYS_REGISTRATION.map((item) => mapHotkeyItem(item)),
     extra: loading && <Spin size="small" style={{ opacity: 0.5 }} />,
     title: (
@@ -78,10 +88,8 @@ const HotkeySetting = memo(() => {
 
   return (
     <Form
-      classNames={{ item: hotkeyFormStyles.item }}
       collapsible={false}
       form={form}
-      initialValues={hotkeys}
       items={[desktop]}
       itemsType={'group'}
       variant={'filled'}

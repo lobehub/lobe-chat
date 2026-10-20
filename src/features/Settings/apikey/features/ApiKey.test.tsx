@@ -29,7 +29,7 @@ const hoisted = vi.hoisted(() => ({
   toast: { error: vi.fn(), success: vi.fn(), warning: vi.fn() },
 }));
 
-vi.mock('@lobehub/ui/base-ui', async (importOriginal) => ({
+vi.mock('@lobehub/ui', async (importOriginal) => ({
   ...((await importOriginal()) as Record<string, unknown>),
   // Menu items surface as plain buttons so row actions are reachable in jsdom.
   DropdownMenu: ({
@@ -268,16 +268,15 @@ describe('ApiKey', () => {
     await waitFor(() => expect(hoisted.trpc.getApiKeys).toHaveBeenCalledTimes(2));
   });
 
-  it('deletes a key from the detail drawer after Popconfirm confirmation', async () => {
+  it('deletes a key from the detail drawer after modal confirmation', async () => {
     renderPage();
     await screen.findByText('My Key');
 
     const dialog = await openDetail('My Key');
     fireEvent.click(within(dialog).getByRole('button', { name: 'apikey.list.actions.delete' }));
 
-    await screen.findByText('apikey.list.actions.deleteConfirm.title');
-    fireEvent.click(
-      screen.getByRole('button', { name: 'apikey.list.actions.deleteConfirm.actions.ok' }),
+    expect(hoisted.confirmModal).toHaveBeenCalledWith(
+      expect.objectContaining({ title: 'apikey.list.actions.deleteConfirm.title' }),
     );
 
     await waitFor(() => expect(hoisted.trpc.deleteApiKey).toHaveBeenCalledWith({ id: 'key-1' }));
@@ -569,9 +568,8 @@ describe('ApiKey', () => {
     const dialog = await openDetail('My Key');
 
     fireEvent.click(within(dialog).getByRole('button', { name: 'apikey.list.actions.delete' }));
-    await screen.findByText('apikey.list.actions.deleteConfirm.title');
-    fireEvent.click(
-      screen.getByRole('button', { name: 'apikey.list.actions.deleteConfirm.actions.ok' }),
+    expect(hoisted.confirmModal).toHaveBeenCalledWith(
+      expect.objectContaining({ title: 'apikey.list.actions.deleteConfirm.title' }),
     );
 
     await waitFor(() => expect(hoisted.trpc.deleteApiKey).toHaveBeenCalledWith({ id: 'key-1' }));

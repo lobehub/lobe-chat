@@ -12,6 +12,7 @@ import {
   type WorkAccessScope,
   type WorkItem,
   type WorkSkillProvider,
+  type WorkVisibility,
 } from '@lobechat/types';
 
 import type { LobeChatDatabase } from '../../type';
@@ -20,6 +21,11 @@ import { registerDocumentWork } from './document';
 import { registerExternalWork } from './external';
 import { findFileWorkVersionByToolCall, registerFileWork } from './file';
 import { normalizeGithubShellToolResult, normalizeGithubToolResult } from './githubToolResult';
+import {
+  findLatestGoalReportVersion,
+  registerGoalReportWork,
+  type RegisterGoalReportWorkParams,
+} from './goalReport';
 import { normalizeLinearToolResult } from './linearToolResult';
 import * as queries from './queries';
 import { registerTaskWork } from './task';
@@ -76,6 +82,11 @@ export class WorkModel {
   registerFile = (params: RegisterFileWorkParams): Promise<WorkItem> =>
     registerFileWork(this.ctx, params);
 
+  registerGoalReport = (params: RegisterGoalReportWorkParams): Promise<WorkItem> =>
+    registerGoalReportWork(this.ctx, params);
+
+  findLatestGoalReport = (goalId: string) => findLatestGoalReportVersion(this.ctx, goalId);
+
   /**
    * Existence probe for a file Work's one-version-per-operation dedup key, so
    * the server consumer can skip a redundant export/upload on a retry. See
@@ -129,6 +140,10 @@ export class WorkModel {
     writes.deleteTaskWork(this.ctx, params);
 
   deleteWork = (params: DeleteWorkParams): Promise<void> => writes.deleteWork(this.ctx, params);
+
+  /** See {@link writes.setTaskWorksVisibility}. */
+  setTaskWorksVisibility = (taskIds: string[], visibility: WorkVisibility): Promise<void> =>
+    writes.setTaskWorksVisibility(this.ctx, taskIds, visibility);
 
   listByRootOperation = (params: {
     includeFileWorks?: boolean;

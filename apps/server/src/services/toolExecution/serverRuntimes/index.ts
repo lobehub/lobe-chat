@@ -24,7 +24,9 @@ import { browserRuntime } from './browser';
 import { calculatorRuntime } from './calculator';
 import { cloudSandboxRuntime } from './cloudSandbox';
 import { credsRuntime } from './creds';
+import { dashboardRuntime } from './dashboard';
 import { goalRuntime } from './goal';
+import { goalReportRuntime } from './goalReport';
 import { goalSupervisorRuntime } from './goalSupervisor';
 import { groupAgentBuilderRuntime } from './groupAgentBuilder';
 import { groupManagementRuntime } from './groupManagement';
@@ -42,7 +44,6 @@ import { skillManagementRuntime } from './skillManagement';
 import { skillsRuntime } from './skills';
 import { skillStoreRuntime } from './skillStore';
 import { taskRuntime } from './task';
-import { topicReferenceRuntime } from './topicReference';
 import type { ServerRuntimeFactory, ServerRuntimeRegistration } from './types';
 import { userInteractionRuntime } from './userInteraction';
 import { verifyResultRuntime } from './verifyResult';
@@ -86,12 +87,13 @@ registerRuntimes([
   remoteDeviceRuntime,
   briefRuntime,
   taskRuntime,
-  topicReferenceRuntime,
   userInteractionRuntime,
   credsRuntime,
+  dashboardRuntime,
   groupAgentBuilderRuntime,
   groupManagementRuntime,
   goalRuntime,
+  goalReportRuntime,
   goalSupervisorRuntime,
   imageGenerationRuntime,
   videoGenerationRuntime,

@@ -1,6 +1,10 @@
 import { describe, expect, it } from 'vitest';
 
-import { isCompressionSummaryGenerating, shouldShowCompressedGroupPanel } from './logic';
+import {
+  getCompressedTurnCount,
+  isCompressionSummaryGenerating,
+  shouldShowCompressedGroupPanel,
+} from './logic';
 
 describe('CompressedGroup logic', () => {
   it.each(['generateSummary', 'contextCompression'])(
@@ -33,5 +37,35 @@ describe('CompressedGroup logic', () => {
         isGeneratingSummary: false,
       }),
     ).toBe(false);
+  });
+});
+
+describe('getCompressedTurnCount', () => {
+  it('counts user messages as conversation turns', () => {
+    const compressedMessages = [
+      { id: 'u1', role: 'user' },
+      { id: 'a1', role: 'assistant' },
+      { id: 'u2', role: 'user' },
+      { id: 'a2', role: 'assistantGroup' },
+    ] as any;
+
+    expect(getCompressedTurnCount({ compressedMessages })).toBe(2);
+  });
+
+  it('falls back to the message count when no user message is present', () => {
+    const compressedMessages = [
+      { id: 'a1', role: 'assistant' },
+      { id: 'a2', role: 'assistant' },
+    ] as any;
+
+    expect(getCompressedTurnCount({ compressedMessages })).toBe(2);
+  });
+
+  it('uses the server-side original message count before the detail arrives', () => {
+    expect(getCompressedTurnCount({ originalMessageCount: 3 })).toBe(3);
+  });
+
+  it('returns zero when the group carries no count at all', () => {
+    expect(getCompressedTurnCount({})).toBe(0);
   });
 });

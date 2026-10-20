@@ -1,7 +1,4 @@
-import { Flexbox, Icon } from '@lobehub/ui';
-import { Accordion, Text } from '@lobehub/ui/base-ui';
-import { Divider } from 'antd';
-import { createStaticStyles } from 'antd-style';
+import { Accordion, createStaticStyles, Divider, Flexbox, Icon, Text } from '@lobehub/ui';
 import { ChevronRight } from 'lucide-react';
 import { memo, type ReactNode, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';

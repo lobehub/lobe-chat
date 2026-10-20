@@ -1,12 +1,9 @@
 'use client';
 
 import { type IconProps } from '@lobehub/ui';
-import { Block, Flexbox, Icon } from '@lobehub/ui';
+import { Block, Button, cssVar, Flexbox, Icon, Steps, Text } from '@lobehub/ui';
 import { TypewriterEffect } from '@lobehub/ui/awesome';
-import { Button, Text } from '@lobehub/ui/base-ui';
 import { LoadingDots } from '@lobehub/ui/chat';
-import { Steps } from 'antd';
-import { cssVar } from 'antd-style';
 import { BrainIcon, HeartHandshakeIcon, PencilRulerIcon } from 'lucide-react';
 import { memo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -70,8 +67,7 @@ const WelcomeStep = memo<WelcomeStepProps>(({ onNext }) => {
         <Text as={'p'}>{t('telemetry.desc')}</Text>
       </Flexbox>
       <Steps
-        current={null as any}
-        direction={'vertical'}
+        orientation={'vertical'}
         items={[
           {
             description: (

@@ -1,9 +1,18 @@
 'use client';
 
 import { agentDisplayName, type StoreApiWithSelector } from '@lobechat/types';
-import { Flexbox, SearchBar, TextArea } from '@lobehub/ui';
-import { Button, createModal, Text, useModalContext } from '@lobehub/ui/base-ui';
-import { createStaticStyles, cssVar, cx } from 'antd-style';
+import {
+  Button,
+  createModal,
+  createStaticStyles,
+  cssVar,
+  cx,
+  Flexbox,
+  SearchBar,
+  Text,
+  TextArea,
+  useModalContext,
+} from '@lobehub/ui';
 import isEqual from 'fast-deep-equal';
 import { t as translate } from 'i18next';
 import { memo, useMemo, useState } from 'react';

@@ -10,6 +10,7 @@ import { getHomeStoreState } from '@/store/home';
 import { type StoreSetter } from '@/store/types';
 import { setNamespace } from '@/utils/storeDebug';
 
+import { operationSelectors } from './selectors';
 import {
   type AfterCompletionCallback,
   AI_RUNTIME_OPERATION_TYPES,
@@ -46,6 +47,32 @@ export class OperationActionsImpl {
     this.#set = set;
     this.#get = get;
   }
+
+  /**
+   * Abandons unclaimed automatic recovery when a conversation changes branches.
+   *
+   * Use when:
+   * - Either conversation surface selects another persisted reply.
+   *
+   * Expects:
+   * - The full message context, including thread and share scopes.
+   *
+   * Returns:
+   * - No value; unrelated conversations and explicit Retry remain unchanged.
+   *
+   * Call stack:
+   *
+   * switchMessageBranch (conversation or chat store)
+   *   -> {@link OperationActionsImpl.revokeHeteroAutoRetry}
+   *     -> {@link OperationActionsImpl.updateOperationMetadata}
+   */
+  revokeHeteroAutoRetry = (context: MessageMapKeyInput): void => {
+    for (const operation of operationSelectors.getOperationsByContext(context)(this.#get())) {
+      if (operation.metadata.heteroAutoRetryAvailable) {
+        this.updateOperationMetadata(operation.id, { heteroAutoRetryAvailable: false });
+      }
+    }
+  };
 
   internal_getConversationContext = (reference?: {
     context?: MessageMapKeyInput;
@@ -128,14 +155,13 @@ export class OperationActionsImpl {
 
     // If parent operation exists and context is not fully provided, inherit from parent
     let context: OperationContext = partialContext || {};
+    const parentOp = parentOperationId ? this.#get().operations[parentOperationId] : undefined;
+    const inheritedTurnStartTime = parentOp?.metadata.turnStartTime;
 
-    if (parentOperationId) {
-      const parentOp = this.#get().operations[parentOperationId];
-      if (parentOp) {
-        // Inherit parent's context, allow partial override
-        context = { ...parentOp.context, ...partialContext };
-        log('[startOperation] inherit context from parent %s: %o', parentOperationId, context);
-      }
+    if (parentOp) {
+      // Inherit parent's context, allow partial override
+      context = { ...parentOp.context, ...partialContext };
+      log('[startOperation] inherit context from parent %s: %o', parentOperationId, context);
     }
 
     log('[startOperation] create operation %s (type=%s, context=%o)', operationId, type, context);
@@ -151,6 +177,7 @@ export class OperationActionsImpl {
       abortController,
       metadata: {
         startTime: now,
+        ...(inheritedTurnStartTime === undefined ? {} : { turnStartTime: inheritedTurnStartTime }),
         ...metadata,
       },
       parentOperationId,
@@ -281,6 +308,9 @@ export class OperationActionsImpl {
 
   completeOperation = (operationId: string, metadata?: Partial<OperationMetadata>): void => {
     const operation = this.#get().operations[operationId];
+    // Late stream/session callbacks cannot overwrite the persisted terminal
+    // outcome (or reset its duration) after snapshot reconciliation.
+    if (operation?.metadata.terminalReconciled) return;
     if (operation) {
       log(
         '[completeOperation] operation %s (type=%s) completed, duration=%dms',
@@ -315,6 +345,20 @@ export class OperationActionsImpl {
       false,
       n(`completeOperation/${operationId}`),
     );
+
+    if (
+      operation &&
+      AI_RUNTIME_OPERATION_TYPES.includes(operation.type) &&
+      operation.status !== 'completed'
+    ) {
+      const state = this.#get();
+      const { agentId, topicId } = operation.context;
+      if (!agentId || !topicId) return;
+      // A run that finishes after the user switched away must still persist to
+      // its own conversation, so rebuild the operation's context with a definite
+      // agent/topic: `OperationContext` exposes them as optional.
+      state.internal_settleTranscript({ ...operation.context, agentId, topicId });
+    }
   };
 
   getOperationAbortSignal = (operationId: string): AbortSignal => {
@@ -524,6 +568,7 @@ export class OperationActionsImpl {
     error: { code?: string; details?: any; message: string; type: string },
   ): void => {
     const operation = this.#get().operations[operationId];
+    if (operation?.metadata.terminalReconciled) return;
     if (operation) {
       log(
         '[failOperation] operation %s (type=%s) failed: %s',

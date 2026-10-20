@@ -7,10 +7,12 @@ import { deviceGateway } from '@/server/services/deviceGateway';
 import { getScopedOnlineDevices } from '@/server/services/deviceGateway/scopedDevices';
 
 import { ToolExecutionService } from '../index';
+import { localSystemRuntime } from '../serverRuntimes/localSystem';
 
 vi.mock('@/server/services/deviceGateway', () => ({
   deviceGateway: {
     executeMcpCall: vi.fn(),
+    executeToolCall: vi.fn(),
     isConfigured: false,
     queryDeviceList: vi.fn().mockResolvedValue([]),
   },
@@ -122,6 +124,77 @@ describe('ToolExecutionService', () => {
       expect(call).toHaveBeenCalledTimes(2);
     },
   );
+
+  it.each([
+    {
+      case: 'the device never answered',
+      failure: {
+        content:
+          'This tool call timed out before the device answered. The work may still be running on the device, so do NOT blindly repeat anything that writes or has side effects.',
+        error: 'DEVICE_RESPONSE_TIMEOUT: The operation was aborted due to timeout',
+        success: false,
+      },
+    },
+    {
+      // The executor classifies `errorData ?? error`, so a structured payload
+      // bypasses the string path entirely. Its 503 status alone would classify
+      // as `retry` and replay the call.
+      case: 'the device is offline with structured errorData',
+      failure: {
+        content:
+          'The device is not reachable right now, so this tool call never ran on it (gateway responded HTTP 503). Nothing was executed, so retrying the same call is safe.',
+        error: 'DEVICE_OFFLINE',
+        errorData: {
+          code: 'DEVICE_OFFLINE',
+          message: 'Device is offline',
+          retryable: true,
+          status: 503,
+        },
+        success: false,
+      },
+    },
+  ])('does not replay a device command when $case', async ({ failure }) => {
+    // The device may already be running the first copy: a woken laptop ran a
+    // single `echo >> file` three times after the transport replayed it.
+    vi.mocked(deviceGateway.executeToolCall).mockClear();
+    vi.mocked(deviceGateway.executeToolCall).mockResolvedValue(failure as any);
+    const runtime = localSystemRuntime.factory({
+      activeDeviceId: 'device-1',
+      operationId: 'op-1',
+      toolManifestMap: {},
+      userId: 'user-1',
+    }) as Record<string, (args: unknown) => Promise<any>>;
+    const service = new ToolExecutionService({
+      builtinToolsExecutor: {
+        execute: () => runtime.runCommand({ command: 'echo once >> /tmp/count.txt' }),
+      } as any,
+      mcpService: {} as any,
+    });
+
+    const { attempts, result } = await executeToolWithRetry(
+      () =>
+        service.executeTool(
+          {
+            apiName: 'runCommand',
+            arguments: '{}',
+            id: 'device-call',
+            identifier: 'lobe-local-system',
+            type: 'builtin',
+          },
+          { toolManifestMap: {} },
+        ),
+      { maxRetries: 2 },
+    );
+
+    expect(result.success).toBe(false);
+    expect(result.content).toBe(failure.content);
+    expect(result.error).toMatchObject({ kind: 'stop' });
+    expect(result.errorData).toEqual(
+      'errorData' in failure ? { ...failure.errorData, kind: 'stop' } : undefined,
+    );
+    expect(attempts).toBe(1);
+    expect(deviceGateway.executeToolCall).toHaveBeenCalledTimes(1);
+  });
 
   describe.each(['writeFile', 'runCommand', 'executeCode', 'exportFile'] as const)(
     'non-retryable sandbox %s failures',
@@ -697,6 +770,57 @@ describe('ToolExecutionService', () => {
       expect(deviceGateway.executeMcpCall).not.toHaveBeenCalled();
       expect(result.success).toBe(false);
       expect((result.error as any)?.code).toBe('MCP_DEVICE_UNAVAILABLE');
+    });
+
+    describe('Agent Share visitor runs', () => {
+      const visitor = { agentShareVisitor: { shareId: 'share-1' } };
+
+      it.each([
+        ['stdio', { args: [], command: 'npx', name: 'my-mcp', type: 'stdio' }],
+        ['local-network HTTP', { name: 'my-mcp', type: 'http', url: 'http://10.0.0.5:8000/mcp' }],
+      ])(
+        'refuses a %s MCP call instead of tunneling to the creator device',
+        async (_, mcpParams) => {
+          vi.mocked(getScopedOnlineDevices).mockResolvedValue([
+            { channels: [{ channel: 'desktop' }], deviceId: 'creator-desktop', online: true },
+          ] as any);
+          const callTool = vi.fn();
+          const service = makeService({ callTool });
+
+          const result = await service.executeTool(mcpPayload, contextWith(mcpParams, visitor));
+
+          expect(result.success).toBe(false);
+          expect((result.error as any)?.code).toBe('SHARE_GATE_BLOCKED');
+          expect(deviceGateway.executeMcpCall).not.toHaveBeenCalled();
+          expect(callTool).not.toHaveBeenCalled();
+        },
+      );
+
+      it('refuses a stdio MCP call when no gateway is configured', async () => {
+        (deviceGateway as any).isConfigured = false;
+        const callTool = vi.fn();
+        const service = makeService({ callTool });
+
+        const result = await service.executeTool(
+          mcpPayload,
+          contextWith({ args: [], command: 'npx', name: 'my-mcp', type: 'stdio' }, visitor),
+        );
+
+        expect((result.error as any)?.code).toBe('SHARE_GATE_BLOCKED');
+        expect(callTool).not.toHaveBeenCalled();
+      });
+
+      it('still calls a public HTTP MCP server', async () => {
+        const callTool = vi.fn().mockResolvedValue({ ok: true });
+        const service = makeService({ callTool });
+
+        await service.executeTool(
+          mcpPayload,
+          contextWith({ name: 'my-mcp', type: 'http', url: 'https://mcp.example.com' }, visitor),
+        );
+
+        expect(callTool).toHaveBeenCalledTimes(1);
+      });
     });
 
     it('runs stdio in-process when no gateway is configured (standalone Electron)', async () => {

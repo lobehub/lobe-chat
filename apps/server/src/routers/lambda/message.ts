@@ -1,5 +1,7 @@
+import { projectToolViewModels } from '@lobechat/tool-view-model';
 import {
   CreateNewMessageParamsSchema,
+  omitServerOwnedMessageMetadata,
   UpdateMessageParamsSchema,
   UpdateMessagePluginSchema,
   UpdateMessageRAGParamsSchema,
@@ -30,6 +32,7 @@ import {
   assertCanUseTopicTargets,
   assertCanViewMessageTargets,
 } from './_helpers/conversationResourceGuard';
+import { messagesByCursorInputSchema, readMessagesByCursor } from './_helpers/messagesByCursor';
 import { projectSharedTopicMessages } from './_helpers/projectSharedTopicMessages';
 import { resolveAgentIdFromSession, resolveContext } from './_helpers/resolveContext';
 import {
@@ -114,7 +117,7 @@ const messageBatchOperationSchema = z.discriminatedUnion('type', [
     value: z.object({
       content: z.string().optional(),
       heterogeneousToolState: heterogeneousToolStateSnapshotSchema.optional(),
-      metadata: z.record(z.string(), z.any()).optional(),
+      metadata: z.object({}).passthrough().optional(),
       pluginError: z.any().optional(),
       pluginState: z.record(z.string(), z.any()).optional(),
     }),
@@ -160,7 +163,18 @@ export const messageRouter = router({
     )
     .mutation(async ({ input, ctx }) => {
       const operations: MessageBatchOperation[] = await Promise.all(
-        input.operations.map(async (operation): Promise<MessageBatchOperation> => {
+        input.operations.map(async (rawOperation): Promise<MessageBatchOperation> => {
+          // Creates are passthrough, so a client could carry server-owned metadata.
+          const operation =
+            rawOperation.type === 'createMessage'
+              ? {
+                  ...rawOperation,
+                  message: {
+                    ...rawOperation.message,
+                    metadata: omitServerOwnedMessageMetadata(rawOperation.message.metadata),
+                  },
+                }
+              : rawOperation;
           if (
             operation.type !== 'createMessage' ||
             operation.message.agentId ||
@@ -344,8 +358,13 @@ export const messageRouter = router({
         await assertCreatorTopicTargets(guardCtx(ctx), [input.topicId]);
       }
 
-      // Create message with the resolved agentId
-      return ctx.messageService.createMessage({ ...input, agentId } as any);
+      // Create message with the resolved agentId. The input is passthrough, so
+      // server-owned metadata a client slipped in is dropped here.
+      return ctx.messageService.createMessage({
+        ...input,
+        agentId,
+        metadata: omitServerOwnedMessageMetadata(input.metadata),
+      } as any);
     }),
 
   /**
@@ -433,6 +452,10 @@ export const messageRouter = router({
     .input(
       z.object({
         agentId: z.string().nullish(),
+        // Round-cursor for loading older history: only rows strictly older than
+        // this (createdAt, id) tuple, round-aligned like page 0. See
+        // `QueryMessageParams.before`.
+        before: z.object({ createdAt: z.date(), id: z.string() }).optional(),
         current: z.number().optional(),
         groupId: z.string().nullish(),
         // Opt-in for `file` work summaries in the payload. Absent → the legacy
@@ -440,6 +463,12 @@ export const messageRouter = router({
         // a `file` summary that would crash their works UI. New clients set it.
         includeFileWorks: z.boolean().optional(),
         pageSize: z.number().optional(),
+        /**
+         * Hand back render-facing tool view models instead of the stored
+         * payloads (`@lobechat/tool-view-model`). Opt-in per read: see the
+         * note where it is applied.
+         */
+        projectToolPayloads: z.boolean().optional(),
         sessionId: z.string().nullish(),
         // Mid-stream refetches skip the Work-summary assembly — see
         // `QueryMessageParams.skipWorks`.
@@ -512,11 +541,26 @@ export const messageRouter = router({
         postProcessUrl: (path, file) => fileService.getFileAccessUrl({ id: file.id, url: path }),
       });
 
-      // This branch reads through its own `MessageModel` (different query
-      // options than `MessageService.queryMessages`), so it applies the tool
-      // view-model step explicitly rather than inheriting it.
-      return new MessageService(ctx.serverDB, ctx.userId, wsId).projectToolPayloads(messages);
+      // Only the caller knows whether this list is going to be rendered or fed
+      // to a model: a run that executes in the browser assembles its context
+      // from the very list this read returns, and a projected tool result would
+      // silently disappear from it. Absent ⇒ whole payloads, which is never the
+      // answer that loses data.
+      return input.projectToolPayloads ? projectToolViewModels(messages) : messages;
     }),
+
+  /**
+   * Round-boundary cursor pagination for a topic's mainline conversation. Used by
+   * callers that only DISPLAY history (server-runtime / hetero); legacy client
+   * mode keeps using `getMessages` (full fetch) because it resends the session.
+   * Omit `cursor` for the first page; pass a prior `nextCursor` to continue.
+   * `direction: 'forward'` pages from the first round (shared transcripts).
+   */
+  getMessagesByCursor: publicProcedure
+    .use(cloudWorkspaceAuth)
+    .use(serverDatabase)
+    .input(messagesByCursorInputSchema)
+    .query(({ ctx, input }) => readMessagesByCursor(ctx, input)),
 
   rankModels: messageProcedure.query(async ({ ctx }) => {
     return ctx.messageModel.rankModels();
@@ -570,11 +614,13 @@ export const messageRouter = router({
       z
         .object({
           ids: z.array(z.string()),
+          /** Skip the recycle bin: internal cleanup whose rows must never be restored. */
+          permanent: z.boolean().optional(),
         })
         .extend(basicContextSchema.shape),
     )
     .mutation(async ({ input, ctx }) => {
-      const { ids, agentId, ...options } = input;
+      const { ids, agentId, permanent, ...options } = input;
       await assertCanUseMessageTargets(guardCtx(ctx), ids);
       const resolved = await resolveContext(
         { agentId, ...options },
@@ -583,7 +629,7 @@ export const messageRouter = router({
         ctx.workspaceId ?? undefined,
       );
 
-      return ctx.messageService.removeMessages(ids, resolved);
+      return ctx.messageService.removeMessages(ids, resolved, { permanent });
     }),
 
   removeMessagesByAssistant: messageProcedure
@@ -786,7 +832,7 @@ export const messageRouter = router({
         ctx.workspaceId ?? undefined,
       );
 
-      return ctx.messageService.updateMetadata(id, value, resolved);
+      return ctx.messageService.updateMetadata(id, omitServerOwnedMessageMetadata(value), resolved);
     }),
 
   updatePluginError: messageProcedure

@@ -6,7 +6,13 @@ import type {
   TaskStatus,
 } from '@lobechat/types';
 
-import { lambdaClient } from '@/libs/trpc/client';
+import { lambdaClient, withLlmRelay } from '@/libs/trpc/client';
+import { buildLlmExecutorDeclaration, oneShotRelay } from '@/services/llmRelay';
+import { useUserStore } from '@/store/user';
+import { systemAgentSelectors } from '@/store/user/selectors';
+
+/** The `goal` system agent's provider: task intent runs on it server-side. */
+const goalModelProvider = () => systemAgentSelectors.goal(useUserStore.getState()).provider;
 
 class TaskService {
   // ── Queries ──
@@ -20,6 +26,8 @@ class TaskService {
     after?: { at: Date | string; seq: number };
     assigneeAgentId?: string;
     automated?: boolean;
+    /** Archived tasks are left out unless this is set. */
+    includeArchived?: boolean;
     orderBy?: 'createdAt' | 'updatedAt';
     limit?: number;
     offset?: number;
@@ -44,6 +52,7 @@ class TaskService {
       offset?: number;
       statuses: string[];
     }>;
+    includeArchived?: boolean;
     parentTaskId?: string | null;
     projectId?: string;
     /** "My tasks" narrowing: assigned to the caller, or created by them. */
@@ -78,23 +87,30 @@ class TaskService {
   /**
    * Read a composer draft and report what it means. A mutation on the wire
    * (it spends a model call), but it creates nothing — the caller decides
-   * whether to act on the reading.
+   * whether to act on the reading. A `goal` model only this device reaches is
+   * relayed back to this tab (one-shot relay).
    */
   analyzeIntent = async (params: {
     context?: string;
     instruction: string;
-  }): Promise<TaskIntentAnalysis> => lambdaClient.task.analyzeIntent.mutate(params);
+  }): Promise<TaskIntentAnalysis> =>
+    oneShotRelay.run(goalModelProvider(), (relay) =>
+      lambdaClient.task.analyzeIntent.mutate(params, withLlmRelay(relay)),
+    );
 
   /**
    * Rewrite the confirmed draft into the brief that gets executed, with the
    * user's answers folded in. Also a mutation on the wire, and also creates
-   * nothing.
+   * nothing. Relayed like `analyzeIntent`.
    */
   synthesizeInstruction = async (params: {
     answers: { answer: string; question: string }[];
     context?: string;
     instruction: string;
-  }): Promise<TaskInstructionSynthesis> => lambdaClient.task.synthesizeInstruction.mutate(params);
+  }): Promise<TaskInstructionSynthesis> =>
+    oneShotRelay.run(goalModelProvider(), (relay) =>
+      lambdaClient.task.synthesizeInstruction.mutate(params, withLlmRelay(relay)),
+    );
 
   create = async (params: {
     assigneeAgentId?: string;
@@ -104,8 +120,6 @@ class TaskService {
     createdByAgentId?: string;
     description?: string;
     editorData?: unknown;
-    /** Bind a goal entity (`goals` row) to the created task. */
-    identifierPrefix?: string;
     instruction: string;
     name?: string;
     parentTaskId?: string;
@@ -133,6 +147,8 @@ class TaskService {
       // Automation mode; null = no automation
       automationMode?: TaskAutomationMode | null;
       config?: Record<string, unknown>;
+      /** Deep-merged into `config` server-side under the row lock (vs. `config`, which replaces). */
+      configPatch?: Record<string, unknown>;
       context?: Record<string, unknown>;
       description?: string;
       editorData?: unknown;
@@ -152,6 +168,9 @@ class TaskService {
   ) => lambdaClient.task.update.mutate({ id, ...data });
 
   delete = async (id: string) => lambdaClient.task.delete.mutate({ id });
+
+  archive = async (id: string, archived: boolean) =>
+    lambdaClient.task.archive.mutate({ archived, id });
 
   clearAll = async () => lambdaClient.task.clearAll.mutate();
 
@@ -225,8 +244,16 @@ class TaskService {
     ...args: Parameters<typeof lambdaClient.task.updateVerifyConfig.mutate>
   ) => lambdaClient.task.updateVerifyConfig.mutate(...args);
 
+  /**
+   * Judge the task's output against its rubrics. The server picks the judge
+   * model (the task's own judge, else the topic model), so any device provider
+   * this tab runs is reason to stand by as its executor.
+   */
   runReview = async (id: string, params?: { content?: string; topicId?: string }) =>
-    lambdaClient.task.runReview.mutate({ id, ...params });
+    oneShotRelay.run(
+      () => buildLlmExecutorDeclaration()?.providers ?? [],
+      (relay) => lambdaClient.task.runReview.mutate({ id, ...params }, withLlmRelay(relay)),
+    );
 
   pinDocument = async (taskId: string, documentId: string, pinnedBy?: string) =>
     lambdaClient.task.pinDocument.mutate({ documentId, pinnedBy, taskId });

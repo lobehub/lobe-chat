@@ -117,6 +117,14 @@ describe('requiredApiKeyScopeForTrpc', () => {
     expect(requiredApiKeyScopeForTrpc('aiAgent.execAgent', 'mutation')).toEqual({
       scopes: ['agent:write', 'chat:write', 'model:invoke'],
     });
+    // listing the queue reads conversation content
+    expect(requiredApiKeyScopeForTrpc('agentSteerQueue.list', 'query')).toEqual({
+      scopes: ['agent:read', 'chat:read'],
+    });
+    // a queued follow-up is a deferred agent run
+    expect(requiredApiKeyScopeForTrpc('agentSteerQueue.append', 'mutation')).toEqual({
+      scopes: ['agent:write', 'chat:write', 'model:invoke'],
+    });
     // provider connectivity test sends a real model request
     expect(requiredApiKeyScopeForTrpc('aiProvider.checkProviderConnectivity', 'mutation')).toEqual({
       scopes: ['model:write', 'model:invoke'],
