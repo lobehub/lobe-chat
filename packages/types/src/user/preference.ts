@@ -162,6 +162,10 @@ export const UserLabSchema = z.object({
    */
   enableArtifactDeployment: z.boolean().optional(),
   /**
+   * enable Canvas: agent-built report pages from LobeHub components
+   */
+  enableCanvas: z.boolean().optional(),
+  /**
    * run Claude Code hetero sessions through the Claude Agent SDK instead of CLI spawn
    */
   enableClaudeCodeSdk: z.boolean().optional(),

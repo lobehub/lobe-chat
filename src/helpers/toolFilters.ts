@@ -5,9 +5,11 @@
 import { AuvManifest } from '@lobechat/builtin-tool-auv';
 import { LocalSystemManifest } from '@lobechat/builtin-tool-local-system';
 import { isToolEnabledByFeatureFlags } from '@lobechat/builtin-tools/featureGates';
+import { isToolEnabledByLab } from '@lobechat/builtin-tools/labGates';
 import { isDesktop } from '@lobechat/const';
 
 import { getServerConfigStoreState } from '@/store/serverConfig';
+import { useUserStore } from '@/store/user';
 
 /**
  * Check if a tool should be enabled based on platform-specific constraints
@@ -17,6 +19,7 @@ import { getServerConfigStoreState } from '@/store/serverConfig';
 export const shouldEnableTool = (toolId: string): boolean => {
   // Feature-flagged tools (e.g. lobe-dashboard) are not listed or offered while off.
   if (!isToolEnabledByFeatureFlags(toolId, getServerConfigStoreState()?.featureFlags)) return false;
+  if (!isToolEnabledByLab(toolId, useUserStore.getState().preference?.lab)) return false;
 
   // These executors call Electron IPC and cannot run in a plain web client.
   if (toolId === LocalSystemManifest.identifier || toolId === AuvManifest.identifier) {

@@ -10,6 +10,9 @@ export default {
   'features.artifactDeployment.desc':
     'Publish artifacts to a hosted URL and manage releases from the conversation sidebar',
   'features.artifactDeployment.title': 'Artifact Deployments',
+  'features.canvas.desc':
+    'Let agents build report pages from LobeHub components, shown as a versioned card you can open and publish',
+  'features.canvas.title': 'Canvas',
   'features.assistantMessageGroup.desc':
     'Group agent messages and their tool call results together for display',
   'features.assistantMessageGroup.title': 'Agent Message Grouping',

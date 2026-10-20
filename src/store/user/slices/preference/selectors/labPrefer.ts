@@ -9,6 +9,7 @@ export const labPreferSelectors = {
     false,
   enableArtifactDeployment: (s: UserState): boolean =>
     s.preference.lab?.enableArtifactDeployment ?? false,
+  enableCanvas: (s: UserState): boolean => s.preference.lab?.enableCanvas ?? false,
   enableClaudeCodeSdk: (s: UserState): boolean => s.preference.lab?.enableClaudeCodeSdk ?? false,
   enableCodexAppServer: (s: UserState): boolean => s.preference.lab?.enableCodexAppServer ?? false,
   enableDeviceTunnel: (s: UserState): boolean => s.preference.lab?.enableDeviceTunnel ?? false,

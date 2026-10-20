@@ -270,6 +270,7 @@ const taskResultId = (s: ChatStoreState): string | undefined => {
 };
 
 const dashboardWidgetView = (s: ChatStoreState) => getViewData(s, PortalViewType.DashboardWidget);
+const canvasView = (s: ChatStoreState) => getViewData(s, PortalViewType.Canvas);
 
 // Goal detail drill-down selectors
 const goalPortalId = (s: ChatStoreState): string | undefined =>
@@ -365,6 +366,7 @@ export const chatPortalSelectors = {
   // Goal drill-down data
   goalMetricView,
   goalNorthStarView,
+  canvasView,
   dashboardWidgetView,
   goalNodeView,
   goalPortalId,

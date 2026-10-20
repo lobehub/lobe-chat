@@ -14,6 +14,7 @@ export enum PortalViewType {
   AcceptanceCheck = 'acceptanceCheck',
   AgentDetail = 'agentDetail',
   Artifact = 'artifact',
+  Canvas = 'canvas',
   DashboardWidget = 'dashboardWidget',
   Document = 'document',
   FilePreview = 'filePreview',
@@ -102,6 +103,7 @@ export type PortalViewData =
   | { acceptanceId: string; checkId: string; type: PortalViewType.AcceptanceCheck }
   | { agentId: string; type: PortalViewType.AgentDetail }
   | { artifact: PortalArtifact; type: PortalViewType.Artifact }
+  | { canvasId: string; type: PortalViewType.Canvas; version?: number }
   | { runId?: string; type: PortalViewType.DashboardWidget; widgetId: string }
   | { agentDocumentId?: string; documentId: string; type: PortalViewType.Document }
   | { type: PortalViewType.Notebook }

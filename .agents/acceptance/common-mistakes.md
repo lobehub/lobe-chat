@@ -39,6 +39,7 @@ the next free number of that prefix.
 - **L-E20** Build fixtures through the same composition the product uses; compare an entity page against a canary-created sibling before publishing it as evidence.
 - **L-E21** Evidence for "A is unaffected by B" must be able to tell A from B: distinct content and the target echoed in the request line.
 - **L-E21** Publish against production even when the subject exists only locally; a local ingest may supplement, never replace.
+- **L-E22** `requiredEvidence: text` is satisfied only by `.txt`/`.json`-style files; an `.md` file ingests as `markdown` and leaves the check `uncertain`.
 
 **Product and interaction contracts**
 
@@ -605,3 +606,15 @@ dev.mjs 每次启动都会拉起 renderer Vite dev server，而后者启动即�
 **Rule:** 每次 `start`/`restart` 之后、驱动之前，先 `cd apps/desktop && pnpm build:renderer`
 （约 25s）并确认 `dist/renderer/apps/desktop/index.html` 存在。同一个 dev.mjs 生命周期内
 的后续重启不会再次清空；改用 `restart` 而不是 `start` 时也按同一规则处理。
+
+### L-E22 — 用 .md 文件充当 text 证据
+
+`since 2026-10-21` · `holds-while: lh acceptance run ingest 按扩展名推断证据类型，.md → markdown`
+
+**Trap:** 计划项声明 `requiredEvidence: ["text"]`，唯一的文本证据是 `assets/*.md`。`ingest --dry-run`
+不报错，正式发布却返回 `publicationStatus: partial`，这些检查被记成 `uncertain`。原因是 `.md`
+被存成 `markdown` 类型，不算 `text`。
+
+**Rule:** 文本类执行记录用 `.txt` 或 `.json` 保存；必须用 Markdown 排版时，另附一份同内容的
+`.txt`。发布后用 `lh acceptance run result list --run <id> --json` 核对每项 verdict。已发布的轮次
+用 `lh acceptance run result submit --type text --file <x>.txt --verdict ...` 补交，不要新开一轮。

@@ -8,6 +8,8 @@
   "features.artifactDeployment.title": "Artifact 部署",
   "features.assistantMessageGroup.desc": "将代理消息及其工具调用结果组合在一起显示",
   "features.assistantMessageGroup.title": "代理消息分组",
+  "features.canvas.desc": "让 Agent 用 LobeHub 组件生成报告页面，以带版本的卡片展示，可打开查看并公开发布",
+  "features.canvas.title": "画布",
   "features.claudeCodeSdk.desc": "通过 Claude Agent SDK 运行 Claude Code 会话，替代 CLI 进程方式，提供更丰富的流式输出与会话控制。",
   "features.claudeCodeSdk.title": "Claude Code SDK 运行时",
   "features.codexAppServer.desc": "通过本地 App Server 运行 Codex 会话，替代一次性的 CLI 进程，提供 Token 流式输出与原生 Turn 控制。",

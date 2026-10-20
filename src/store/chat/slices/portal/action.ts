@@ -703,6 +703,14 @@ export class ChatPortalActionImpl {
     });
   };
 
+  openCanvas = (canvasId: string, version?: number): void => {
+    this.#get().pushPortalView({
+      canvasId,
+      type: PortalViewType.Canvas,
+      ...(version ? { version } : {}),
+    });
+  };
+
   openNotebook = (): void => {
     this.#get().pushPortalView({ type: PortalViewType.Notebook });
   };

@@ -3515,6 +3515,8 @@
   "workingPanel.tabs.pinned": "已固定标签页",
   "workingPanel.tabs.unpin": "取消固定标签页",
   "workingPanel.title": "工作面板",
+  "workingPanel.works.canvasPublished": "已发布",
+  "workingPanel.works.canvasUntitled": "未命名画布",
   "workingPanel.works.changeType.created": "已创建",
   "workingPanel.works.changeType.updated": "已编辑",
   "workingPanel.works.documentDeleted": "文档已被删除",
