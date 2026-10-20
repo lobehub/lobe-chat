@@ -295,6 +295,33 @@ describe('TaskLifecycleService.onTopicComplete', () => {
       expect(cascadeOnCompletion).toHaveBeenCalledWith('task-1');
     });
 
+    it('does not complete when the request was withdrawn while the topic was settling', async () => {
+      // A rejected acceptance delivery clears the request after the task was first read.
+      const task = baseTask({
+        automationMode: null,
+        context: { completion: { requestedByOperationId: 'op-1' } },
+      });
+      findById
+        .mockResolvedValueOnce(task)
+        .mockResolvedValue({ ...task, context: { completion: { requestedByOperationId: null } } });
+
+      await service.onTopicComplete({
+        operationId: 'op-1',
+        reason: 'done',
+        taskId: 'task-1',
+        taskIdentifier: 'TASK-1',
+        topicId: 'topic-1',
+      });
+
+      expect(updateStatusIfCurrent).not.toHaveBeenCalledWith(
+        'task-1',
+        'running',
+        'completed',
+        expect.anything(),
+      );
+      expect(updateStatus).toHaveBeenCalledWith('task-1', 'paused', { error: null });
+    });
+
     it.each(['schedule', 'heartbeat'] as const)(
       '%s task whose own tick met the end condition → completed instead of re-armed',
       async (automationMode) => {
@@ -380,10 +407,10 @@ describe('TaskLifecycleService.onTopicComplete', () => {
         });
         const parentTask = baseTask({ id: 'parent-task', identifier: 'TASK-0' });
         updateStatusIfCurrent.mockResolvedValue(task);
-        findById
-          .mockResolvedValueOnce(task)
-          .mockResolvedValueOnce(parentTask)
-          .mockResolvedValue(task);
+        findById.mockResolvedValueOnce(task);
+        // A pending completion request is re-read before it is honored.
+        if (automationMode) findById.mockResolvedValueOnce(task);
+        findById.mockResolvedValueOnce(parentTask).mockResolvedValue(task);
         (service as any).taskModel.shouldPauseAfterComplete = vi.fn().mockReturnValue(true);
 
         await service.onTopicComplete({

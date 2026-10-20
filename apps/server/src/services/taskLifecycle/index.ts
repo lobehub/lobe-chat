@@ -255,12 +255,17 @@ export class TaskLifecycleService {
       }
 
       if (currentTask) {
-        const completionRequestedByCurrentOperation =
+        const requestedBy = (task: { context?: unknown } | undefined) =>
           (
-            currentTask.context as {
-              completion?: { requestedByOperationId?: string };
+            task?.context as {
+              completion?: { requestedByOperationId?: string | null };
             } | null
-          )?.completion?.requestedByOperationId === params.operationId;
+          )?.completion?.requestedByOperationId;
+        // Re-read before honoring the request: a rejected acceptance delivery
+        // withdraws it, and the handoff / brief above can take seconds.
+        const completionRequestedByCurrentOperation =
+          requestedBy(currentTask) === params.operationId &&
+          requestedBy(await this.taskModel.findById(taskId)) === params.operationId;
 
         if (currentTask.automationMode && completionRequestedByCurrentOperation) {
           log('automation task=%s retired by its own tick — end condition met', taskIdentifier);
