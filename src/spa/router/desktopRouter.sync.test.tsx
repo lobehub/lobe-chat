@@ -80,6 +80,7 @@ async function readRouterSources() {
       'desktopRouter.config.tsx',
       'desktopRouter.config.desktop.tsx',
       'taskWorkspaceRoutes.tsx',
+      'workspaceSettingsRoutes.tsx',
     ].map((filename) => readFile(path.join(process.cwd(), 'src/spa/router', filename), 'utf8')),
   );
 }

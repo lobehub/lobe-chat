@@ -44,6 +44,8 @@ export const WORKSPACE_SETTINGS_TABS: ReadonlySet<string> = new Set([
   'audit-log',
   'billing',
   'budget',
+  // Personal chat-assist preferences, reachable by every member.
+  'chat-preference',
   'connector',
   'credential',
   // Legacy alias for `credential` — the routers keep a redirect, so prefixed
