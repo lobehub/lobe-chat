@@ -16,9 +16,10 @@ import { normalizeAsyncError } from '@/libs/swr/normalizeError';
  *
  * - `page`   — full detail page / whole surface: centered hero + Reload.
  * - `block`  — a card / settings tab / widget: bordered block + Reload.
- * - `inline` — a list row / small slot: single line + retry link. Raw technical
- *              detail (provider message, error code) goes in `details`, folded
- *              behind a "Show details" toggle so the line stays readable.
+ * - `inline` — a list row / small slot: single line + retry link. An explicit
+ *              `description` (what to do next) follows the title on the same
+ *              line; raw technical detail (provider message, error code) goes
+ *              in `details`, folded behind a "Show details" toggle.
  * - `metric` — a stat / aggregate slot: a **failed** marker where a number
  *              would sit, so an errored fetch never reads as a confident `$0`.
  */
@@ -102,12 +103,13 @@ const RetryLink = ({ onRetry, retrying }: { onRetry?: () => void; retrying: bool
 
 interface InlineErrorProps {
   action?: ReactNode;
+  description?: ReactNode;
   details?: ReactNode;
   heading: ReactNode;
   justify: 'center' | 'start';
 }
 
-const InlineError = ({ action, details, heading, justify }: InlineErrorProps) => {
+const InlineError = ({ action, description, details, heading, justify }: InlineErrorProps) => {
   const { t } = useTranslation('error');
   const [expanded, setExpanded] = useState(false);
   const hasDetails = details !== undefined && details !== null && details !== '';
@@ -119,6 +121,11 @@ const InlineError = ({ action, details, heading, justify }: InlineErrorProps) =>
         <Text color={cssVar.colorTextSecondary} fontSize={13}>
           {heading}
         </Text>
+        {description && (
+          <Text color={cssVar.colorTextTertiary} fontSize={13}>
+            {description}
+          </Text>
+        )}
         {action}
         {hasDetails && (
           <Button
@@ -186,6 +193,7 @@ const AsyncError = memo<AsyncErrorProps>(
       return (
         <InlineError
           action={action ?? (showRetry && <RetryLink retrying={retrying} onRetry={onRetry} />)}
+          description={description}
           details={details}
           heading={heading}
           justify={justify}
