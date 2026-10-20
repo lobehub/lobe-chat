@@ -1,6 +1,8 @@
 'use client';
 
-import { CopyButton, createStaticStyles, Flexbox, Icon, Text } from '@lobehub/ui';
+import { CopyButton, Flexbox, Icon, Text } from '@lobehub/ui';
+import { cssVar } from '@lobehub/ui/stylex/cssVar.stylex';
+import * as stylex from '@stylexjs/stylex';
 import { ChevronDownIcon } from 'lucide-react';
 import { type FC, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -9,34 +11,23 @@ import { type IntegrationEndpointKey } from '../../integrationEndpoints';
 import { useIntegrationEndpoints } from './IntegrationCard';
 import SectionCard from './SectionCard';
 
-const styles = createStaticStyles(({ css, cssVar }) => ({
-  chevron: css`
-    color: ${cssVar.colorTextTertiary};
-    transition: transform 0.2s ease;
-  `,
-  chevronOpen: css`
-    transform: rotate(180deg);
-  `,
-  header: css`
-    cursor: pointer;
-    user-select: none;
-  `,
-  label: css`
-    font-size: 12px;
-    color: ${cssVar.colorTextSecondary};
-  `,
-  value: css`
-    padding-block: 2px;
-    padding-inline: 12px 2px;
-    border-radius: ${cssVar.borderRadius};
-
-    font-family: ${cssVar.fontFamilyCode};
-    font-size: 13px;
-    overflow-wrap: anywhere;
-
-    background: ${cssVar.colorFillQuaternary};
-  `,
-}));
+const styles = stylex.create({
+  chevron: { color: cssVar.colorTextTertiary, transition: 'transform 0.2s ease' },
+  chevronOpen: { transform: 'rotate(180deg)' },
+  header: { cursor: 'pointer', userSelect: 'none' },
+  label: { fontSize: '12px', color: cssVar.colorTextSecondary },
+  value: {
+    paddingBlock: '2px',
+    paddingInlineStart: '12px',
+    paddingInlineEnd: '2px',
+    borderRadius: cssVar.borderRadius,
+    fontFamily: cssVar.fontFamilyCode,
+    fontSize: '13px',
+    overflowWrap: 'anywhere',
+    backgroundColor: cssVar.colorFillQuaternary,
+    backgroundImage: 'none',
+  },
+});
 
 const LABEL_KEYS = {
   authorization: 'oauthApp.integration.authorization',
@@ -66,16 +57,20 @@ const ManualSetupCard: FC<ManualSetupCardProps> = ({ applicationType }) => {
     <SectionCard
       extra={
         <Icon
-          className={open ? `${styles.chevron} ${styles.chevronOpen}` : styles.chevron}
           icon={ChevronDownIcon}
           size={16}
+          className={
+            open
+              ? stylex.props(styles.chevron, styles.chevronOpen).className
+              : stylex.props(styles.chevron).className
+          }
           onClick={toggle}
         />
       }
       title={
         <span
           aria-expanded={open}
-          className={styles.header}
+          {...stylex.props(styles.header)}
           role={'button'}
           tabIndex={0}
           onClick={toggle}
@@ -97,8 +92,13 @@ const ManualSetupCard: FC<ManualSetupCardProps> = ({ applicationType }) => {
           </Text>
           {endpoints.map(({ key, url }) => (
             <Flexbox gap={6} key={key}>
-              <span className={styles.label}>{t(LABEL_KEYS[key])}</span>
-              <Flexbox horizontal align={'center'} className={styles.value} gap={8}>
+              <span {...stylex.props(styles.label)}>{t(LABEL_KEYS[key])}</span>
+              <Flexbox
+                horizontal
+                align={'center'}
+                className={stylex.props(styles.value).className}
+                gap={8}
+              >
                 <Flexbox flex={1}>{url}</Flexbox>
                 <CopyButton content={url} size={'small'} title={t('oauthApp.copy.tooltip')} />
               </Flexbox>

@@ -1,26 +1,22 @@
 'use client';
 
-import { Avatar, createStaticStyles, cx, Icon } from '@lobehub/ui';
+import { Avatar, Icon } from '@lobehub/ui';
+import { cssVar } from '@lobehub/ui/stylex/cssVar.stylex';
+import * as stylex from '@stylexjs/stylex';
 import { AppWindowIcon } from 'lucide-react';
 import { memo } from 'react';
 
-const styles = createStaticStyles(({ css, cssVar }) => ({
-  // An upload target reads as an empty slot: outline only, no fill.
-  dashed: css`
-    border: 1px dashed ${cssVar.colorBorder};
-  `,
-  filled: css`
-    background: ${cssVar.colorFillTertiary};
-  `,
-  placeholder: css`
-    display: flex;
-    flex: none;
-    align-items: center;
-    justify-content: center;
-
-    color: ${cssVar.colorTextTertiary};
-  `,
-}));
+const styles = stylex.create({
+  dashed: { borderWidth: '1px', borderStyle: 'dashed', borderColor: cssVar.colorBorder },
+  filled: { backgroundColor: cssVar.colorFillTertiary, backgroundImage: 'none' },
+  placeholder: {
+    display: 'flex',
+    flex: 'none',
+    alignItems: 'center',
+    justifyContent: 'center',
+    color: cssVar.colorTextTertiary,
+  },
+});
 
 interface AppLogoPlaceholderProps {
   /** Dashed outline, for slots where the placeholder is also an upload target. */
@@ -35,7 +31,7 @@ interface AppLogoPlaceholderProps {
  */
 export const AppLogoPlaceholder = memo<AppLogoPlaceholderProps>(({ dashed, size }) => (
   <span
-    className={cx(styles.placeholder, dashed ? styles.dashed : styles.filled)}
+    className={stylex.props(styles.placeholder, dashed ? styles.dashed : styles.filled).className}
     style={{ borderRadius: Math.max(size / 6, 2), height: size, width: size }}
   >
     <Icon icon={AppWindowIcon} size={Math.round(size * 0.45)} />
