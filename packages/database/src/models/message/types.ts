@@ -119,9 +119,10 @@ export interface TopicTranscriptResult {
 }
 
 /**
- * Round-boundary cursor for {@link MessageModel.queryTopicMessagesByCursor}. Points
- * at a mainline `user` message (a round start); paging older fetches the rounds
- * strictly before it.
+ * Cursor for {@link MessageModel.queryTopicMessagesByCursor}. Backward, it points
+ * at a mainline `user` message (a round start) and the next page holds the rounds
+ * strictly before it; forward, it points at the last row already loaded (any
+ * role, when a page split a round) and the next page starts strictly after it.
  */
 export interface MessageRoundCursor {
   createdAt: string;
@@ -137,8 +138,13 @@ export interface QueryTopicByCursorParams {
   agentId?: string | null;
   /** Hard cap on rows walked when resolving the round window (safety, ~rows). */
   countBudget?: number;
-  /** Omit for the initial (newest) page; pass a prior `nextCursor` to load older. */
+  /**
+   * Omit for the first page (the newest when backward, the oldest when forward);
+   * pass a prior `nextCursor` to continue in the same direction.
+   */
   cursor?: MessageRoundCursor | null;
+  /** `backward` (default) pages newest-first toward older rounds; `forward` from the first round. */
+  direction?: 'backward' | 'forward';
   /** Group chat topic: rows carry the group id, same filter as `query`. */
   groupId?: string | null;
   /** See {@link QueryMessageParams.includeFileWorks}. */
@@ -154,7 +160,7 @@ export interface QueryTopicByCursorParams {
 export interface TopicMessagesByCursorResult {
   hasMore: boolean;
   messages: UIChatMessage[];
-  /** Cursor to load the previous (older) page, or null when at the topic start. */
+  /** Cursor for the next page in the same direction, or null at the topic's start/end. */
   nextCursor: MessageRoundCursor | null;
 }
 

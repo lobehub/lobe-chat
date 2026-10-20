@@ -9,8 +9,8 @@ import {
   getScopedConnectionCount,
   getWorkspaceConnectionState,
 } from '@/features/DeviceManager/connectionCount';
-import { useDeviceList } from '@/features/DeviceManager/useDeviceList';
 import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwareNavigate';
+import { useDeviceList } from '@/store/device';
 import { useElectronStore } from '@/store/electron';
 import { electronSyncSelectors } from '@/store/electron/selectors';
 
@@ -67,7 +67,8 @@ const DeviceGateway = memo<DeviceGatewayProps>(({ workspaceScoped }) => {
   useFetchGatewayStatus();
   useElectronStore((s) => s.useFetchGatewayDeviceInfo)();
   const gatewayDeviceInfo = useElectronStore((s) => s.gatewayDeviceInfo);
-  const { data: devices, error: deviceListError, isLoading: isDeviceListLoading } = useDeviceList();
+  const deviceList = useDeviceList();
+  const devices = deviceList.data;
 
   useWatchBroadcast('gatewayConnectionStatusChanged', ({ status }) => {
     setGatewayConnectionStatus(status);
@@ -97,11 +98,7 @@ const DeviceGateway = memo<DeviceGatewayProps>(({ workspaceScoped }) => {
     workspaceScoped ? 'workspace' : 'personal',
     workspaceScoped ? undefined : gatewayDeviceInfo?.deviceId,
   );
-  const workspaceConnectionState = getWorkspaceConnectionState(
-    devices,
-    isDeviceListLoading,
-    deviceListError,
-  );
+  const workspaceConnectionState = getWorkspaceConnectionState(deviceList);
   const scopeConnected = workspaceScoped ? workspaceConnectionState === 'connected' : isConnected;
   const connectionHint = workspaceScoped
     ? workspaceConnectionState === 'unavailable'

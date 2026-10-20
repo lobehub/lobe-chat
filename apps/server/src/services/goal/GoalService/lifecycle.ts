@@ -1,18 +1,19 @@
-import type { GoalGraphSnapshot, GoalItem, GoalStatus } from '@lobechat/types';
+import type { GoalGraphSnapshot, GoalItem, GoalStatus, TaskItem } from '@lobechat/types';
 import { TRPCError } from '@trpc/server';
 
 import { GoalModel } from '@/database/models/goal';
 import { GoalGraphModel } from '@/database/models/goalGraph';
 import { TaskModel } from '@/database/models/task';
 import { TaskTopicModel } from '@/database/models/taskTopic';
-import { assertAgentUsableBy } from '@/database/utils/agent-access';
 
+import { GoalAssignmentService } from '../assignment';
 import { GOAL_ACCEPTANCE_TASK_TITLE, TERMINAL_NODE_STATUSES } from '../decideNextMove';
 import { GoalManagerService } from '../manager';
 import { resolveOperationLeaseTimeout } from '../recoveryPolicy';
 import { isGoalReportNode } from '../report';
 import { GoalSupervisorService } from '../supervisor';
 import type { GoalServiceContext } from './types';
+import { goalTaskAgentId } from './utils';
 
 const draftNotStarted = (goalId: string) =>
   new TRPCError({
@@ -180,13 +181,9 @@ export const restart = async (
   goalId: string,
   options?: { agentId?: string },
 ): Promise<{ goal: GoalItem; restartedTaskIds: string[] }> => {
-  if (options?.agentId) {
-    await assertAgentUsableBy(ctx.db, options.agentId, {
-      userId: ctx.userId,
-      workspaceId: ctx.workspaceId,
-    });
-  }
   const graph = await ctx.requireGraph(goalId);
+  const assignment = new GoalAssignmentService(ctx.db, ctx.userId, ctx.workspaceId);
+  if (options?.agentId) await assignment.assertUsableForGoal(graph.goal, options.agentId);
 
   const unfinishedNodes = graph.nodes.filter(
     (node) =>
@@ -219,6 +216,7 @@ export const restart = async (
   }
 
   const restartedTaskIds: string[] = [];
+  let candidates: TaskItem[] = [];
   if (unfinishedTaskIds.length > 0) {
     const runningTopics = await ctx.taskTopicModel.findRunningByTaskIds(unfinishedTaskIds);
     for (const topic of runningTopics) {
@@ -228,29 +226,43 @@ export const restart = async (
     // tick dispatching concurrently moves the row between our read and the
     // write, the CAS loses, and that task is skipped instead of yanked out
     // from under a freshly claimed run (which would double-dispatch it).
-    for (const task of await ctx.taskModel.findByIds(unfinishedTaskIds)) {
-      if (task.status === 'completed') continue;
-      const reset = await ctx.taskModel.updateStatusIfCurrent(task.id, task.status, 'backlog', {
-        error: null,
-      });
-      if (!reset) continue;
-      if (options?.agentId) {
-        await ctx.taskModel.update(task.id, { assigneeAgentId: options.agentId });
+    candidates = (await ctx.taskModel.findByIds(unfinishedTaskIds)).filter(
+      (task) => task.status !== 'completed',
+    );
+    if (!options?.agentId) {
+      for (const task of candidates) {
+        const reset = await ctx.taskModel.updateStatusIfCurrent(task.id, task.status, 'backlog', {
+          error: null,
+        });
+        if (reset) restartedTaskIds.push(task.id);
       }
-      restartedTaskIds.push(task.id);
     }
   }
 
   // The handoff lands only after the interrupts succeeded — a cancelTopic
   // failure above must not leave the goal pointing at the new agent while
-  // its tasks and live runs still belong to the old one.
+  // its tasks and live runs still belong to the old one. The Tasks restart
+  // onto the new agent inside the handoff's own transaction, so no tick can
+  // claim one with the new assignee but the previous executor's model.
   let goal = graph.goal;
   if (options?.agentId) {
-    const updated = goal.config?.taskAgentId
-      ? await ctx.goalModel.updateTaskAgentId(goalId, options.agentId)
-      : await ctx.goalModel.update(goalId, { agentId: options.agentId });
-    if (!updated) throw new TRPCError({ code: 'NOT_FOUND', message: 'Goal not found' });
-    goal = updated;
+    const agentId = options.agentId;
+    const handed = await assignment.handOver(
+      goalId,
+      (model, current) =>
+        current.config?.taskAgentId
+          ? model.updateTaskAgentId(goalId, agentId)
+          : model.update(goalId, { agentId }),
+      (scoped, handedGoal, previous) =>
+        scoped.restartTasks(
+          handedGoal,
+          candidates,
+          agentId,
+          goalTaskAgentId(previous) !== goalTaskAgentId(handedGoal),
+        ),
+    );
+    goal = handed.goal;
+    restartedTaskIds.push(...handed.movedTaskIds);
   }
 
   // A restart is an explicit "start over": a goal parked by a budget stop or

@@ -302,6 +302,8 @@
   "pageEditor.menu.importDocument": "Импорт страницы",
   "pageEditor.menu.move": "Переместить",
   "pageEditor.menu.pin": "Закрепить страницу",
+  "pageEditor.noAccess.description": "Эта страница является приватной или находится в библиотеке, к которой у вас нет доступа. Обратитесь к её создателю или менеджеру библиотеки для получения доступа.",
+  "pageEditor.noAccess.title": "У вас нет доступа к этой странице",
   "pageEditor.saveFailed": "Не удалось сохранить страницу, попробуйте позже",
   "pageEditor.saving": "Сохранение...",
   "pageEditor.titlePlaceholder": "Без названия",

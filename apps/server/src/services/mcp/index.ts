@@ -1,3 +1,4 @@
+import { isDesktop } from '@lobechat/const';
 import {
   type CheckMcpInstallResult,
   type CustomPluginMetadata,
@@ -244,6 +245,15 @@ export class MCPService {
 
   // Private method to get or initialize a client based on parameters
   private async getClient(params: MCPClientParams, skipCache = false): Promise<MCPClient> {
+    // Every server caller (including connector sync and agent tool execution)
+    // must enforce the same Desktop-only stdio boundary, even for cached clients.
+    if (params.type === 'stdio' && !isDesktop) {
+      throw new TRPCError({
+        code: 'BAD_REQUEST',
+        message: 'Stdio MCP type is not supported in web environment.',
+      });
+    }
+
     const key = this.serializeParams(params); // Use custom serialization
 
     if (!skipCache && this.clients.has(key)) {

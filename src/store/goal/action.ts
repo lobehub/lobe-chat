@@ -331,6 +331,42 @@ export class GoalActionImpl {
     await this.refreshGoalGraph(goalId);
   };
 
+  /**
+   * The goal moves to the new agent's goal list, so both agents' lists re-read
+   * along with the page.
+   */
+  setGoalAgent = async (goalId: string, agentId: string): Promise<void> => {
+    await goalService.setAgent(goalId, agentId);
+    await Promise.all([
+      this.refreshGoalGraph(goalId),
+      revalidateReplica(goalListResource),
+      revalidateReplica(homeGoalListResource),
+    ]);
+  };
+
+  /** Unfinished Tasks move with the executor, so their rows on the page re-read too. */
+  setGoalTaskAgent = async (goalId: string, agentId: string | null): Promise<void> => {
+    await goalService.setTaskAgent(goalId, agentId);
+    await this.refreshGoalGraph(goalId);
+  };
+
+  setGoalModel = async (
+    goalId: string,
+    modelConfig: { model: string; provider: string } | null,
+  ): Promise<void> => {
+    await goalService.setModel(goalId, modelConfig);
+    await this.refreshGoalGraph(goalId);
+  };
+
+  /** Unfinished Tasks switch model with it, so their rows re-read too. */
+  setGoalTaskModel = async (
+    goalId: string,
+    modelConfig: { model: string; provider: string } | null,
+  ): Promise<void> => {
+    await goalService.setTaskModel(goalId, modelConfig);
+    await this.refreshGoalGraph(goalId);
+  };
+
   updateGoalRequirement = async (goalId: string, requirement: string): Promise<void> => {
     await goalService.updateRequirement(goalId, requirement);
     await this.refreshGoalGraph(goalId);
@@ -341,15 +377,19 @@ export class GoalActionImpl {
    * own afterwards as its Work Tasks settle, so this is a nudge rather than the
    * loop the surface used to hold open.
    */
+  /** The goal's own planning-model provider, so the relay covers the model it plans on. */
+  #planningProvider = (goalId: string) =>
+    this.#get().goalGraphById[goalId]?.goal.config?.provider ?? undefined;
+
   advanceGoal = async (goalId: string): Promise<GoalTickResult> => {
-    const result = await goalService.advance(goalId);
+    const result = await goalService.advance(goalId, this.#planningProvider(goalId));
     await this.refreshGoalGraph(goalId);
     return result;
   };
 
   /** Exactly one coordinator step, for a caller that wants to inspect a single move. */
   tickGoal = async (goalId: string): Promise<GoalTickResult> => {
-    const result = await goalService.tick(goalId);
+    const result = await goalService.tick(goalId, this.#planningProvider(goalId));
     await this.refreshGoalGraph(goalId);
     return result;
   };
@@ -497,6 +537,14 @@ export class GoalActionImpl {
     await this.#homeGoalList.revalidate(scope);
   };
 
+  setGoalListAgentFilter = (agentId?: string): void => {
+    this.#set(
+      { goalListAgentFilter: agentId, goalListVisibleLimit: 10 },
+      false,
+      'setGoalListAgentFilter',
+    );
+  };
+
   setGoalListFilter = (filter: GoalListFilter): void => {
     this.#set({ goalListFilter: filter, goalListVisibleLimit: 10 }, false, 'setGoalListFilter');
   };
@@ -518,9 +566,15 @@ export class GoalActionImpl {
    * network answers, so the page never flashes its empty state over hydrated
    * data.
    */
-  useFetchGoals = (agentId?: string, projectId?: string, filter: GoalListFilter = 'all') => {
+  useFetchGoals = (
+    agentId?: string,
+    projectId?: string,
+    filter: GoalListFilter = 'all',
+    /** Cache scope of the cross-agent page, read when neither id is given. */
+    globalScope?: string,
+  ) => {
     const params: GoalListParams | undefined =
-      agentId || projectId ? { agentId, filter, projectId } : undefined;
+      agentId || projectId || globalScope ? { agentId, filter, globalScope, projectId } : undefined;
     const key = params ? goalListKey(params) : undefined;
     const sync = this.#goalList.useSync(params ?? null, { revalidateOnFocus: true });
 

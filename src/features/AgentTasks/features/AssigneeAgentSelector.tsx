@@ -20,9 +20,13 @@ import { homeAgentListSelectors } from '@/store/home/selectors';
 import { useTaskStore } from '@/store/task';
 
 interface AssigneeAgentSelectorProps {
+  /** Offer the "unassigned" option; off where an owner is required. */
+  allowUnassigned?: boolean;
   children: ReactNode;
   currentAgentId?: string | null;
   disabled?: boolean;
+  /** Why `disabled` holds; defaults to the running-Task explanation. */
+  disabledReason?: string;
   onChange?: (agentId: string | null) => void;
   taskIdentifier?: string;
   taskVisibility?: 'private' | 'public' | null;
@@ -81,7 +85,16 @@ const triggerStyle: CSSProperties = {
 const blockedContentStyle: CSSProperties = { display: 'contents', pointerEvents: 'none' };
 
 const AssigneeAgentSelector = memo<AssigneeAgentSelectorProps>(
-  ({ children, currentAgentId, disabled, onChange, taskIdentifier, taskVisibility }) => {
+  ({
+    allowUnassigned = true,
+    children,
+    currentAgentId,
+    disabled,
+    disabledReason,
+    onChange,
+    taskIdentifier,
+    taskVisibility,
+  }) => {
     const { t } = useTranslation(['chat', 'common', 'topic']);
     const { allowed: canEditTask, reason } = usePermission('create_content');
     const [key, setKey] = useState(0);
@@ -154,7 +167,8 @@ const AssigneeAgentSelector = memo<AssigneeAgentSelectorProps>(
     );
 
     const unassignedLabel = t('taskList.unassigned', { ns: 'chat' });
-    const showUnassigned = !query || unassignedLabel.toLowerCase().includes(query);
+    const showUnassigned =
+      allowUnassigned && (!query || unassignedLabel.toLowerCase().includes(query));
     const flatOptions = useMemo<AgentOption[]>(
       () => [
         ...(showUnassigned ? [{ key: 'unassigned', kind: 'unassigned' } as const] : []),
@@ -281,7 +295,11 @@ const AssigneeAgentSelector = memo<AssigneeAgentSelectorProps>(
 
     const blocked = disabled || !canEditTask;
     const trigger = blocked ? (
-      <Tooltip title={disabled ? t('taskDetail.reassignDisabled', { ns: 'chat' }) : reason}>
+      <Tooltip
+        title={
+          disabled ? (disabledReason ?? t('taskDetail.reassignDisabled', { ns: 'chat' })) : reason
+        }
+      >
         <div
           style={{ ...triggerStyle, cursor: 'not-allowed', opacity: 0.5 }}
           onClick={(event) => event.stopPropagation()}

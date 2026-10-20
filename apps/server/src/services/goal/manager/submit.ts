@@ -270,7 +270,8 @@ export const submitPlan = async (
       });
     } else if (plan.action === 'revise_plan' && state.problemKind === 'rollout_distill') {
       // The plan distilled from the settled probes lands with the plan; the next
-      // advance writes it as the plan skill's next version, then judges the gate.
+      // advance writes it as the plan skill's next version, then judges the gate
+      // — or first re-runs the probes the Agent found falling short of it.
       const rollout = goal.config?.rolloutState;
       if (rollout?.phase !== 'plan_distill')
         throw new TRPCError({
@@ -279,7 +280,11 @@ export const submitPlan = async (
         });
       await model.updateRolloutState(goalId, {
         ...rollout,
-        pendingDistill: { reason: plan.reason, recipe: plan.recipe },
+        pendingDistill: {
+          reason: plan.reason,
+          recipe: plan.recipe,
+          ...(plan.rerun?.length && { rerun: plan.rerun }),
+        },
       });
     } else if (plan.action === 'revise_plan') {
       // The rewrite lands with the plan; the next advance re-runs the units it names.

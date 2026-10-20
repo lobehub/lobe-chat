@@ -4,6 +4,7 @@ import type { DeviceAttachment } from '@lobechat/builtin-tool-remote-device';
 import { generateSystemPrompt, RemoteDeviceManifest } from '@lobechat/builtin-tool-remote-device';
 import {
   injectSelfFeedbackIntentTool,
+  SELF_FEEDBACK_INTENT_IDENTIFIER,
   shouldExposeSelfFeedbackIntentTool,
 } from '@lobechat/builtin-tool-self-iteration';
 import { manualModeExcludeToolIds } from '@lobechat/builtin-tools';
@@ -334,6 +335,9 @@ export const discoverTools = async (
         modelMediaCapabilities,
       })),
     ];
+    if (exclusivePluginIds) {
+      agentPlugins = agentPlugins.filter((id) => exclusivePluginIds.includes(id));
+    }
 
     // Share allowlist filters the full candidate set (pinned + mentioned +
     // internal additions) before manifest discovery. This only trims which
@@ -571,7 +575,11 @@ export const discoverTools = async (
     // not be conditional on it either.
     //
     // There is no per-agent switch: Labs → Self-evolving covers every agent.
-    if (!shareGate && !disableSelfFeedbackIntentTool) {
+    if (
+      !shareGate &&
+      !disableSelfFeedbackIntentTool &&
+      (!exclusivePluginIds || exclusivePluginIds.includes(SELF_FEEDBACK_INTENT_IDENTIFIER))
+    ) {
       // The run already reads `users.preference` for expertise injection; reuse that row.
       // A failed read leaves the tool off (fail closed).
       const featureUserEnabled = await isAgentSignalEnabledForUser(deps.db, deps.userId, {
@@ -600,8 +608,9 @@ export const discoverTools = async (
   // Inject client function tools from Response API
   const CLIENT_FN_IDENTIFIER = 'lobe-client-fn';
   if (functionTools?.length) {
+    tools ??= [];
     for (const ft of functionTools) {
-      tools?.push({
+      tools.push({
         function: {
           description: ft.description,
           name: `${CLIENT_FN_IDENTIFIER}____${ft.name}`,

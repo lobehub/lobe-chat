@@ -47,6 +47,7 @@ import { statusFromRound } from './statusRollup';
 import {
   type AcceptanceSubjectSummary,
   assertSubjectExists,
+  resolveCanonicalSubjectId,
   resolveRunTopicTaskId,
   resolveSubject,
   resolveSubjectProjectId,
@@ -135,9 +136,9 @@ export class AcceptanceService {
     subjectId: string,
     defaults?: { config?: AcceptanceConfig; requirement?: string; title?: string },
   ): Promise<AcceptanceItem> => {
-    await assertSubjectExists(this.deps, subjectType, subjectId);
-    const projectId = await resolveSubjectProjectId(this.deps, subjectType, subjectId);
-    return this.acceptanceModel.ensureForSubject(subjectType, subjectId, {
+    const canonicalId = await assertSubjectExists(this.deps, subjectType, subjectId);
+    const projectId = await resolveSubjectProjectId(this.deps, subjectType, canonicalId);
+    return this.acceptanceModel.ensureForSubject(subjectType, canonicalId, {
       config: defaults?.config,
       projectId,
       requirement: defaults?.requirement,
@@ -534,6 +535,9 @@ export class AcceptanceService {
   /** Best-effort subject header info for the bundle (title may be gone). */
   resolveSubject = (...args: WithoutDeps<typeof resolveSubject>) =>
     resolveSubject(this.deps, ...args);
+
+  resolveCanonicalSubjectId = (...args: WithoutDeps<typeof resolveCanonicalSubjectId>) =>
+    resolveCanonicalSubjectId(this.deps, ...args);
 
   private resolveSubjects = (...args: WithoutDeps<typeof resolveSubjects>) =>
     resolveSubjects(this.deps, ...args);

@@ -199,6 +199,7 @@
   "acceptance.gate.leadProbes": "{{count}} 個實驗已完成。一旦您開始，剩餘的 {{remaining}} 單元將按批次遵循此計劃。",
   "acceptance.gate.leadRework": "已重做：{{codes}}。",
   "acceptance.gate.nextWaveTitle": "波次 {{wave}}",
+  "acceptance.gate.planFiles": "{{count}} 個檔案",
   "acceptance.gate.planTitle": "執行計劃",
   "acceptance.gate.releaseWave": "批准並發布波次 {{wave}}（{{count}}）",
   "acceptance.gate.remaining": "之後還有 {{count}}，每波次由主代理人審核。根據實驗估算，總共約 {{estimate}} 個代幣。",

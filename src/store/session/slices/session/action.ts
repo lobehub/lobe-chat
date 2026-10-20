@@ -2,7 +2,6 @@ import { toast } from '@lobehub/ui';
 import isEqual from 'fast-deep-equal';
 import { t } from 'i18next';
 import { type SWRResponse } from 'swr';
-import useSWR from 'swr';
 import { type PartialDeep } from 'type-fest';
 
 import { DEFAULT_AGENT_LOBE_SESSION, INBOX_SESSION_ID } from '@/const/session';
@@ -264,18 +263,6 @@ export class SessionActionImpl {
           );
         },
       },
-    );
-  };
-
-  useSearchSessions = (keyword?: string): SWRResponse<any> => {
-    return useSWR<LobeSessions>(
-      sessionKeys.search(keyword),
-      async () => {
-        if (!keyword) return [];
-
-        return sessionService.searchSessions(keyword);
-      },
-      { revalidateOnFocus: false, revalidateOnMount: false },
     );
   };
 

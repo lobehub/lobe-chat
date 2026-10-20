@@ -37,6 +37,7 @@ export * from './generation';
 export * from './goal';
 export * from './goalReport';
 export * from './goalRetro';
+export * from './goalRollout';
 export * from './goalSubscription';
 export * from './heteroSessionImport';
 export * from './home';

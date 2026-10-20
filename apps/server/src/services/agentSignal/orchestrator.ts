@@ -28,7 +28,6 @@ import { createAgentSignalRuntime } from './runtime/AgentSignalRuntime';
 import { persistAgentSignalReceipts, projectAgentSignalReceipts } from './services/receiptService';
 import { createSelfIterationCompletionHandler } from './services/selfIteration/completion';
 import { createServerSelfReviewBriefWriter } from './services/selfIteration/review/brief';
-import { resolveSelfReviewBriefTextTranslator } from './services/selfIteration/review/briefTextTranslator';
 import { claimNightlyReviewTopics } from './services/selfIteration/review/topicQuota';
 import { emitSourceEvent } from './sources';
 import { redisPolicyStateStore } from './store/adapters/redis/policyStateStore';
@@ -113,8 +112,6 @@ const createPolicyOptions = (
           // Idea-only nightly reviews get their Daily Brief from the completion
           // path; proposal briefs are still written in-run by the review tool.
           ideasBrief: {
-            resolveTranslator: () =>
-              resolveSelfReviewBriefTextTranslator(context.db, context.userId),
             writer: createServerSelfReviewBriefWriter(
               context.db,
               context.userId,

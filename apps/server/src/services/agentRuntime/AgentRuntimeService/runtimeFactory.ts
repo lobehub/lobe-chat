@@ -220,6 +220,7 @@ export async function createAgentRuntime(
     execGroupMember: deps.delegate.execGroupMember,
     onGroupMemberResult: (params) => deps.completeGroupMemberBarrier(params),
     hookDispatcher,
+    isInterrupted: deps.coordinator.isInterrupted.bind(deps.coordinator),
     loadAgentState: deps.coordinator.loadAgentState.bind(deps.coordinator),
     messageModel: deps.messageModel,
     modelRuntimeConfig,

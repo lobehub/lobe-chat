@@ -199,6 +199,7 @@
   "acceptance.gate.leadProbes": "{{count}} thí nghiệm đã hoàn thành. Khi bạn bắt đầu, {{remaining}} đơn vị còn lại sẽ theo kế hoạch này theo từng đợt.",
   "acceptance.gate.leadRework": "Đã chỉnh sửa: {{codes}}.",
   "acceptance.gate.nextWaveTitle": "Làn sóng {{wave}}",
+  "acceptance.gate.planFiles": "{{count}} tệp",
   "acceptance.gate.planTitle": "Kế hoạch thực thi",
   "acceptance.gate.releaseWave": "Phê duyệt và phát hành làn sóng {{wave}} ({{count}})",
   "acceptance.gate.remaining": "Còn {{count}} nữa, mỗi làn sóng được đại lý chính xem xét. Khoảng {{estimate}} token tổng cộng, ước tính từ các thí nghiệm.",

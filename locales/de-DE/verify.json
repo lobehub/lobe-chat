@@ -199,6 +199,7 @@
   "acceptance.gate.leadProbes": "{{count}} Experimente sind abgeschlossen. Sobald Sie starten, folgen die verbleibenden {{remaining}} Einheiten diesem Plan in Chargen.",
   "acceptance.gate.leadRework": "Überarbeitet: {{codes}}.",
   "acceptance.gate.nextWaveTitle": "Welle {{wave}}",
+  "acceptance.gate.planFiles": "{{count}} Dateien",
   "acceptance.gate.planTitle": "Ausführungsplan",
   "acceptance.gate.releaseWave": "Genehmigen und Welle {{wave}} freigeben ({{count}})",
   "acceptance.gate.remaining": "{{count}} weitere danach, jede Welle wird vom Hauptagenten überprüft. Insgesamt etwa {{estimate}} Tokens, geschätzt aus den Experimenten.",

@@ -186,6 +186,7 @@ const EnvironmentDetailPanel = memo<EnvironmentDetailPanelProps>(({ environment,
             drops the rest. */}
       <Tabs
         activeKey={tab}
+        styles={{ list: { maxWidth: '100%', overflowX: 'auto' } }}
         items={[
           ...(copies.includes('overview')
             ? [

@@ -16,6 +16,7 @@ const resourcePermissionMock = vi.hoisted(() => ({
   workspaceId: undefined as string | undefined,
 }));
 const wsNavigateMock = vi.hoisted(() => vi.fn());
+const documentStoreMock = vi.hoisted(() => ({ state: {} as Record<string, unknown> }));
 const menuActionMocks = vi.hoisted(() => ({
   handleCopyLink: vi.fn(),
   handleDelete: vi.fn(),
@@ -35,6 +36,7 @@ vi.mock('react-i18next', () => ({
 
 vi.mock('@lobechat/const', () => ({
   CUSTOM_DOCUMENT_FILE_TYPE: 'custom/document',
+  HTML_DOCUMENT_FILE_TYPE: 'custom/html',
   isDesktop: false,
 }));
 
@@ -97,7 +99,8 @@ vi.mock('@/hooks/usePermission', () => ({
 }));
 
 vi.mock('@/store/document', () => ({
-  useDocumentStore: (selector: (state: Record<string, unknown>) => unknown) => selector({}),
+  useDocumentStore: (selector: (state: Record<string, unknown>) => unknown) =>
+    selector(documentStoreMock.state),
 }));
 
 vi.mock('@/store/page', () => ({
@@ -174,7 +177,28 @@ describe('PageEditor header menu', () => {
     permissionMock.edit_own_content = true;
     resourcePermissionMock.canManage = false;
     resourcePermissionMock.workspaceId = undefined;
+    documentStoreMock.state = { documentDetailMap: {} };
     vi.clearAllMocks();
+  });
+
+  it('exports an HTML page as HTML and offers no editor history', () => {
+    const exportChildren = (items: ReturnType<typeof useMenu>['menuItems']) =>
+      (getMenuItem(items, 'export') as { children: { key: string }[] }).children.map(
+        (child) => child.key,
+      );
+
+    const { result: page } = renderHook(() => useMenu());
+    expect(exportChildren(page.current.menuItems)).toEqual(['export-markdown']);
+    expect(getMenuItem(page.current.menuItems, 'version-history')).toBeDefined();
+
+    documentStoreMock.state = {
+      documentDetailMap: { 'doc-1': { document: { fileType: 'custom/html', id: 'doc-1' } } },
+    };
+    const { result: htmlPage } = renderHook(() => useMenu());
+
+    expect(exportChildren(htmlPage.current.menuItems)).toEqual(['export-html']);
+    expect(getMenuItem(htmlPage.current.menuItems, 'version-history')).toBeUndefined();
+    expect(getMenuItem(htmlPage.current.menuItems, 'duplicate')).toBeDefined();
   });
 
   it('places the member-permission page entry in the overflow menu for managers', () => {

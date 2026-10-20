@@ -199,6 +199,7 @@
   "acceptance.gate.leadProbes": "{{count}}件の実験が完了しました。「開始」を選択すると、残りの{{remaining}}ユニットがこの計画に従ってバッチで実行されます。",
   "acceptance.gate.leadRework": "再作業済み: {{codes}}。",
   "acceptance.gate.nextWaveTitle": "ウェーブ{{wave}}",
+  "acceptance.gate.planFiles": "{{count}} ファイル",
   "acceptance.gate.planTitle": "実行計画",
   "acceptance.gate.releaseWave": "ウェーブ{{wave}} ({{count}}) を承認してリリース",
   "acceptance.gate.remaining": "その後さらに{{count}}件、各ウェーブはメインエージェントによってレビューされます。実験から推定されるトークンの合計は約{{estimate}}です。",

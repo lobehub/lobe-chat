@@ -1,5 +1,6 @@
 import { agentSignal } from './agentSignal';
 import { deviceSystemInfo } from './deviceSystemInfo';
+import { linear } from './linear';
 import { skillTools } from './skillTools';
 import { steerQueue } from './steerQueue';
 import { threadStartFence } from './threadStartFence';
@@ -9,6 +10,7 @@ import { workspaceRescan } from './workspaceRescan';
 export const redisService = {
   agentSignal,
   deviceSystemInfo,
+  linear,
   skillTools,
   steerQueue,
   threadStartFence,

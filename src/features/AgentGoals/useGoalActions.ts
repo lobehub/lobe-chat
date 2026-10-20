@@ -59,7 +59,11 @@ export const useConfirmDeleteGoal = ({
           return;
         }
         navigate(
-          agentId ? `/agent/${agentId}/goals` : projectId ? `/project/${projectId}/goals` : '/',
+          agentId
+            ? `/agent/${agentId}/goals`
+            : projectId
+              ? `/project/${projectId}/goals`
+              : '/goals',
         );
       },
       title: t('goalDetail.deleteConfirm.title'),
