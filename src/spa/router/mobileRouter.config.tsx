@@ -83,7 +83,7 @@ export const sharedMainAreaChildren: RouteObject[] = [
         path: ':gid',
         loader: agentGroupAccessLoader,
         element: dynamicLayout(
-          () => import('@/routes/(main)/group/_layout'),
+          () => import('@/routes/(mobile)/group/_layout'),
           'Mobile > Group > Layout',
           { preloadId: 'mobile-group' },
         ),
@@ -93,14 +93,14 @@ export const sharedMainAreaChildren: RouteObject[] = [
           {
             index: true,
             element: dynamicElement(
-              () => loadRouteWithBuiltinToolSurfaces(() => import('@/routes/(main)/group')),
+              () => loadRouteWithBuiltinToolSurfaces(() => import('@/routes/(mobile)/group')),
               'Mobile > Group',
             ),
           },
           {
             path: ':topicId',
             element: dynamicElement(
-              () => loadRouteWithBuiltinToolSurfaces(() => import('@/routes/(main)/group')),
+              () => loadRouteWithBuiltinToolSurfaces(() => import('@/routes/(mobile)/group')),
               'Mobile > Group > Topic',
             ),
           },
