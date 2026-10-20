@@ -17,6 +17,7 @@ export * from './conversation';
 export * from './creds';
 export * from './dashboard';
 export * from './dbMigration';
+export * from './decision';
 export * from './device';
 export * from './deviceFilePreviewFailure';
 export * from './deviceMetric';

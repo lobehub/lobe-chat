@@ -1,5 +1,6 @@
 import type {
   ChatCompletionTool,
+  GenerateObjectOptions,
   GenerateObjectPayload,
   GenerateObjectSchema,
 } from '@lobechat/model-runtime';
@@ -27,6 +28,8 @@ export interface AiGenerationObjectOptions {
    * (e.g. `task`), not the prompt — the prompt goes in `tracing.scenario`.
    */
   metadata: Record<string, unknown> & { trigger: RequestTrigger };
+  /** Receives the token usage of the call, after billing and tracing hooks have seen it. */
+  onUsage?: GenerateObjectOptions['onUsage'];
   signal?: AbortSignal;
   /**
    * Structured tracing config (scenario / promptVersion / schemaName /
@@ -80,7 +83,12 @@ export class AiGenerationService {
         thinking: input.thinking,
         tools: input.tools,
       },
-      { metadata: options.metadata, signal: options.signal, tracing: options.tracing },
+      {
+        metadata: options.metadata,
+        onUsage: options.onUsage,
+        signal: options.signal,
+        tracing: options.tracing,
+      },
     )) as T;
   }
 }
