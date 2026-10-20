@@ -1,0 +1,63 @@
+/**
+ * @vitest-environment happy-dom
+ */
+import { act, render, screen } from '@testing-library/react';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+
+import { agentQuotaService } from '@/services/agentQuota';
+import { useAgentQuotaStore } from '@/store/agentQuota';
+import {
+  QUOTA_ACCOUNTS_KEY,
+  type QuotaAccount,
+  type QuotaBinding,
+} from '@/store/agentQuota/projection';
+
+import QuotaAccountManager from './QuotaAccountManagerModal';
+import { isolateQuotaReplica } from './testUtils';
+
+const account = (id: string) =>
+  ({
+    email: `${id}@example.com`,
+    externalAccountId: `ext-${id}`,
+    id,
+    label: null,
+    provider: 'claude-code',
+  }) as unknown as QuotaAccount;
+
+const binding = (id: string, accountId: string, role: string) =>
+  ({ accountId, agentId: 'agent-1', id, role }) as unknown as QuotaBinding;
+
+describe('QuotaAccountManager', () => {
+  beforeEach(() => {
+    isolateQuotaReplica();
+    vi.spyOn(agentQuotaService, 'listAccounts').mockResolvedValue([account('a1')]);
+    vi.spyOn(agentQuotaService, 'getLatestReadings').mockResolvedValue([]);
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it('shows no "no account" hint and keeps the controls disabled until the bindings load', async () => {
+    let answerBindings!: (rows: QuotaBinding[]) => void;
+    vi.spyOn(agentQuotaService, 'listBindings').mockImplementation(
+      () => new Promise((resolve) => (answerBindings = resolve)),
+    );
+    // The account pool painted from the replica; this agent's bindings did not.
+    act(() =>
+      useAgentQuotaStore.setState({ quotaAccountsMap: { [QUOTA_ACCOUNTS_KEY]: [account('a1')] } }),
+    );
+
+    render(<QuotaAccountManager agentId={'agent-1'} />);
+
+    expect(screen.getByText('a1@example.com')).toBeTruthy();
+    expect(screen.queryByText('heteroAgent.claudeQuota.manage.autoNoAccount')).toBeNull();
+    expect(screen.getByRole('switch').hasAttribute('disabled')).toBe(true);
+
+    await act(async () => answerBindings([binding('b1', 'a1', 'pool')]));
+
+    expect(screen.queryByText('heteroAgent.claudeQuota.manage.autoNoAccount')).toBeNull();
+    expect(screen.getByText(/heteroAgent\.claudeQuota\.manage\.autoRoutingTo/)).toBeTruthy();
+    expect(screen.getByRole('switch').hasAttribute('disabled')).toBe(false);
+  });
+});

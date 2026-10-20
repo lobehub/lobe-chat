@@ -142,8 +142,9 @@ const QuotaAccountManager = memo<{ agentId: string }>(({ agentId }) => {
   const accounts = useAgentQuotaStore(agentQuotaSelectors.accounts) ?? EMPTY_ACCOUNTS;
   const loadedBindings = useAgentQuotaStore(agentQuotaSelectors.bindings(agentId));
   const bindings = loadedBindings ?? EMPTY_BINDINGS;
-  // Until this agent's bindings are on screen, every row would read as "off":
-  // keep the per-account controls disabled instead of acting on that guess.
+  // Until this agent's bindings are on screen, every row would read as "off"
+  // and Auto as routing to nobody: keep the mode and per-account controls
+  // disabled and show no routing hint instead of acting on that guess.
   const bindingsLoaded = loadedBindings !== undefined;
   const readingsMap = useAgentQuotaStore((s) => s.quotaReadingsMap);
   const weeklyById = useMemo(
@@ -263,14 +264,15 @@ const QuotaAccountManager = memo<{ agentId: string }>(({ agentId }) => {
         className={styles.radioGroup}
         gap={2}
         horizontal={false}
-        value={selected}
+        // Which mode is active is unknown until the bindings are on screen.
+        value={bindingsLoaded ? selected : undefined}
         options={[
           {
-            disabled: busy,
+            disabled: busy || !bindingsLoaded,
             label: (
               <Flexbox className={styles.row} gap={4}>
                 <Text style={{ fontSize: 13 }}>{t('heteroAgent.claudeQuota.manage.modeAuto')}</Text>
-                {selected === AUTO && (
+                {bindingsLoaded && selected === AUTO && (
                   <Flexbox horizontal align={'center'} className={styles.routing} gap={6}>
                     <Icon icon={ZapIcon} size={14} />
                     {routeAccount
@@ -307,7 +309,7 @@ const QuotaAccountManager = memo<{ agentId: string }>(({ agentId }) => {
             ];
 
             return {
-              disabled: busy || !rotate || isEditing,
+              disabled: busy || !bindingsLoaded || !rotate || isEditing,
               label: (
                 <Flexbox
                   horizontal

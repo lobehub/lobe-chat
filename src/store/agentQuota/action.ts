@@ -171,28 +171,19 @@ export class ActionImpl {
   // ---- sync hooks (fetch orchestration only; data comes from selectors) ----
 
   useFetchQuotaAccounts = (enabled = true): ReplicaSyncResult =>
-    this.#accounts.useSync(enabled ? QUOTA_ACCOUNTS_KEY : null, {
-      dedupingInterval: QUOTA_READ_DEDUPE_MS,
-      revalidateOnFocus: false,
-    });
+    this.#accounts.useSync(
+      enabled ? QUOTA_ACCOUNTS_KEY : null,
+      this.#syncOptions('accounts', QUOTA_ACCOUNTS_KEY),
+    );
 
   useFetchQuotaBindings = (agentId?: string | null): ReplicaSyncResult =>
-    this.#bindings.useSync(agentId || null, {
-      dedupingInterval: QUOTA_READ_DEDUPE_MS,
-      revalidateOnFocus: false,
-    });
+    this.#bindings.useSync(agentId || null, this.#syncOptions('bindings', agentId));
 
   useFetchQuotaReadings = (accountId?: string | null): ReplicaSyncResult =>
-    this.#readings.useSync(accountId || null, {
-      dedupingInterval: QUOTA_READ_DEDUPE_MS,
-      revalidateOnFocus: false,
-    });
+    this.#readings.useSync(accountId || null, this.#syncOptions('readings', accountId));
 
   useFetchQuotaHistory = (accountId?: string | null): ReplicaSyncResult =>
-    this.#history.useSync(accountId || null, {
-      dedupingInterval: QUOTA_READ_DEDUPE_MS,
-      revalidateOnFocus: false,
-    });
+    this.#history.useSync(accountId || null, this.#syncOptions('history', accountId));
 
   /**
    * Hydrate the last snapshot a quota panel rendered for `sourceKey`. The panel
@@ -326,6 +317,25 @@ export class ActionImpl {
   };
 
   // ---- internals ----
+
+  /**
+   * A sampler read (`readQuota*`) seeds the sync cache, but SWR still
+   * revalidates a seeded entry on mount: a panel opened right after the menu
+   * sampled would send the same request again. Inside the dedupe window of a
+   * server answer, mount from the replica instead; explicit, post-write and
+   * later mounts refresh as usual.
+   */
+  #syncOptions = (resource: QuotaResourceName, key?: string | null) => {
+    const appliedAt = key
+      ? this.#appliedAt.get(quotaConfirmedKey(quotaAccountsResource.scope.get(), resource, key))
+      : undefined;
+    const recent = appliedAt !== undefined && Date.now() - appliedAt < QUOTA_READ_DEDUPE_MS;
+    return {
+      dedupingInterval: QUOTA_READ_DEDUPE_MS,
+      revalidateOnFocus: false,
+      ...(recent && { revalidateIfStale: false }),
+    };
+  };
 
   /**
    * An optimistic write (and its confirmation) only lands on a loaded view, so

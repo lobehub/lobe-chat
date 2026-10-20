@@ -293,6 +293,26 @@ describe('agent quota replicas', () => {
       expect(listAccounts).toHaveBeenCalledTimes(3);
     });
 
+    it('does not refetch on a panel mount right after a sampler read answered', async () => {
+      const listAccounts = vi
+        .spyOn(agentQuotaService, 'listAccounts')
+        .mockResolvedValue([account('a1')]);
+      const { rerender } = renderHook(
+        ({ enabled }) => useAgentQuotaStore.getState().useFetchQuotaAccounts(enabled),
+        { initialProps: { enabled: false }, wrapper },
+      );
+
+      // The menu's sampler reads first; the account manager opens a moment later.
+      await useAgentQuotaStore.getState().readQuotaAccounts();
+      rerender({ enabled: true });
+      await tick();
+
+      expect(listAccounts).toHaveBeenCalledTimes(1);
+      expect(agentQuotaSelectors.accounts(useAgentQuotaStore.getState())?.map((a) => a.id)).toEqual(
+        ['a1'],
+      );
+    });
+
     it('keeps answering with the last accounts when a refresh fails', async () => {
       vi.spyOn(agentQuotaService, 'listAccounts')
         .mockResolvedValueOnce([account('a1')])
