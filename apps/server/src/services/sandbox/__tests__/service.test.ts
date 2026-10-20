@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { FileService } from '@/server/services/file';
 import type { MarketService } from '@/server/services/market';
 
-import type { SandboxProvider } from '../types';
+import type { SandboxProvider, SandboxProviderKind } from '../types';
 
 describe('normalizeSandboxCommandResult', () => {
   it('preserves recreation when the command fails inside a successful response', async () => {
@@ -330,5 +330,237 @@ describe('SandboxMiddlewareService', () => {
     });
     expect(fileService.getFileMetadata).not.toHaveBeenCalled();
     expect(fileService.createFileRecord).not.toHaveBeenCalled();
+  });
+});
+
+describe('SandboxMiddlewareService readFile images', () => {
+  beforeEach(() => {
+    vi.resetModules();
+    vi.restoreAllMocks();
+  });
+
+  const createProvider = ({
+    callTool = vi.fn(),
+    exportFile = true,
+    exportFileToUploadUrl = vi.fn(async () => ({
+      result: { mime_type: 'image/png' },
+      success: true,
+    })),
+    kind = 'onlyboxes',
+  }: {
+    callTool?: SandboxProvider['callTool'];
+    exportFile?: boolean;
+    exportFileToUploadUrl?: SandboxProvider['exportFileToUploadUrl'];
+    kind?: SandboxProviderKind;
+  } = {}) =>
+    ({
+      capabilities: {
+        backgroundCommands: true,
+        exportFile,
+        files: true,
+        languages: ['python'],
+        persistentSession: true,
+        shell: true,
+        skillScripts: true,
+      },
+      callTool,
+      exportFileToUploadUrl,
+      kind,
+    }) satisfies SandboxProvider;
+
+  const createFileService = ({ contentLength = 1234, contentType = 'image/png' } = {}) =>
+    ({
+      createFileRecord: vi.fn(async () => ({ fileId: 'file-1', url: '/f/file-1' })),
+      createPreSignedUpload: vi.fn(async () => ({
+        headers: {},
+        url: 'https://uploads.example.com/put',
+      })),
+      getFileMetadata: vi.fn(async () => ({ contentLength, contentType })),
+    }) as unknown as FileService;
+
+  const createService = async (
+    provider: SandboxProvider,
+    { fileService }: { fileService?: FileService } = {},
+  ) => {
+    const { SandboxMiddlewareService } = await import('../service');
+
+    return new SandboxMiddlewareService(provider, {
+      fileService,
+      marketService: {} as MarketService,
+      topicId: 'topic-1',
+      userId: 'user-1',
+    });
+  };
+
+  it.each(['readFile', 'readLocalFile'])(
+    'intercepts %s for an image path and uploads it for preview',
+    async (toolName) => {
+      const provider = createProvider();
+      const fileService = createFileService();
+      const service = await createService(provider, { fileService });
+
+      const result = await service.callTool(toolName, { path: '/mnt/data/chart.png' });
+
+      expect(provider.callTool).not.toHaveBeenCalled();
+      expect(provider.exportFileToUploadUrl).toHaveBeenCalledWith(
+        expect.objectContaining({ filename: 'chart.png', path: '/mnt/data/chart.png' }),
+      );
+      expect(fileService.createPreSignedUpload).toHaveBeenCalledWith(
+        expect.stringMatching(/\/topic-1\/[0-9a-f-]{36}-chart\.png$/),
+      );
+      expect(result).toEqual({
+        result: {
+          content: '[Image: chart.png]',
+          fileType: 'image/png',
+          filename: 'chart.png',
+          imageFileId: 'file-1',
+          imageUrl: '/f/file-1',
+          isImage: true,
+        },
+        success: true,
+      });
+    },
+  );
+
+  it('intercepts image reads for market providers too', async () => {
+    const provider = createProvider({ kind: 'market' });
+    const fileService = createFileService();
+    const service = await createService(provider, { fileService });
+
+    const result = await service.callTool('readLocalFile', { path: '/mnt/data/chart.png' });
+
+    expect(provider.callTool).not.toHaveBeenCalled();
+    expect(result).toMatchObject({
+      result: {
+        content: '[Image: chart.png]',
+        fileType: 'image/png',
+        filename: 'chart.png',
+        imageFileId: 'file-1',
+        imageUrl: '/f/file-1',
+        isImage: true,
+      },
+      success: true,
+    });
+  });
+
+  it('passes non-image reads through to the provider', async () => {
+    const callTool = vi.fn(async () => ({
+      result: { content: 'hello' },
+      success: true,
+    }));
+    const provider = createProvider({ callTool });
+    const fileService = createFileService();
+    const service = await createService(provider, { fileService });
+
+    const params = { path: '/mnt/data/notes.txt' };
+    const result = await service.callTool('readLocalFile', params);
+
+    expect(provider.callTool).toHaveBeenCalledWith('readLocalFile', params);
+    expect(result).toEqual({ result: { content: 'hello' }, success: true });
+    expect(provider.exportFileToUploadUrl).not.toHaveBeenCalled();
+  });
+
+  it('passes svg reads through to the provider instead of treating them as images', async () => {
+    const callTool = vi.fn(async () => ({
+      result: { content: '<svg></svg>' },
+      success: true,
+    }));
+    const provider = createProvider({ callTool });
+    const fileService = createFileService();
+    const service = await createService(provider, { fileService });
+
+    const result = await service.callTool('readLocalFile', { path: '/mnt/data/icon.svg' });
+
+    expect(provider.callTool).toHaveBeenCalledWith('readLocalFile', {
+      path: '/mnt/data/icon.svg',
+    });
+    expect(result).toEqual({ result: { content: '<svg></svg>' }, success: true });
+    expect(provider.exportFileToUploadUrl).not.toHaveBeenCalled();
+  });
+
+  it('returns an upload-unavailable placeholder without a fileService', async () => {
+    const provider = createProvider();
+    const service = await createService(provider);
+
+    const result = await service.callTool('readLocalFile', { path: '/mnt/data/chart.png' });
+
+    expect(provider.callTool).not.toHaveBeenCalled();
+    expect(provider.exportFileToUploadUrl).not.toHaveBeenCalled();
+    expect(result).toMatchObject({
+      result: { filename: 'chart.png', fileType: 'image/png', isImage: true },
+      success: true,
+    });
+    expect(result.result?.content).toContain('upload unavailable');
+    expect(result.result?.imageUrl).toBeUndefined();
+  });
+
+  it('returns an upload-unavailable placeholder when the provider cannot export files', async () => {
+    const provider = createProvider({ exportFile: false });
+    const fileService = createFileService();
+    const service = await createService(provider, { fileService });
+
+    const result = await service.callTool('readLocalFile', { path: '/mnt/data/chart.png' });
+
+    expect(provider.callTool).not.toHaveBeenCalled();
+    expect(provider.exportFileToUploadUrl).not.toHaveBeenCalled();
+    expect(result).toMatchObject({
+      result: { filename: 'chart.png', isImage: true },
+      success: true,
+    });
+    expect(result.result?.content).toContain('upload unavailable');
+    expect(result.result?.imageUrl).toBeUndefined();
+  });
+
+  it('degrades to a placeholder when the export fails', async () => {
+    const provider = createProvider({
+      exportFileToUploadUrl: vi.fn(async () => ({
+        error: { message: 'no such file' },
+        success: false,
+      })),
+    });
+    const fileService = createFileService();
+    const service = await createService(provider, { fileService });
+
+    const result = await service.callTool('readLocalFile', { path: '/mnt/data/chart.png' });
+
+    expect(provider.callTool).not.toHaveBeenCalled();
+    expect(result.success).toBe(true);
+    expect(result.result?.content).toContain('no such file');
+    expect(result.result?.isImage).toBe(true);
+    expect(result.result?.imageUrl).toBeUndefined();
+  });
+
+  it('rejects images above the preview size limit', async () => {
+    const provider = createProvider();
+    const fileService = createFileService({ contentLength: 11 * 1024 * 1024 });
+    const service = await createService(provider, { fileService });
+
+    const result = await service.callTool('readLocalFile', { path: '/mnt/data/chart.png' });
+
+    expect(result.success).toBe(true);
+    expect(result.result?.content).toMatch(/^Error: Image file is too large/);
+    expect(result.result?.isImage).toBe(true);
+    expect(result.result?.imageUrl).toBeUndefined();
+  });
+
+  it('treats uppercase image extensions as images', async () => {
+    const provider = createProvider();
+    const fileService = createFileService();
+    const service = await createService(provider, { fileService });
+
+    const result = await service.callTool('readLocalFile', { path: '/mnt/data/PHOTO.PNG' });
+
+    expect(provider.callTool).not.toHaveBeenCalled();
+    expect(result).toMatchObject({
+      result: {
+        content: '[Image: PHOTO.PNG]',
+        fileType: 'image/png',
+        filename: 'PHOTO.PNG',
+        imageFileId: 'file-1',
+        imageUrl: '/f/file-1',
+        isImage: true,
+      },
+      success: true,
+    });
   });
 });
