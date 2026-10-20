@@ -308,6 +308,7 @@
   "pageEditor.saveFailed": "页面保存失败，请稍后重试",
   "pageEditor.saving": "正在保存…",
   "pageEditor.titlePlaceholder": "无标题",
+  "pageEditor.toc.title": "目录",
   "pageEditor.wordCount": "{{wordCount}} 字",
   "pageList.actions.openInNewTab": "在新标签页中打开",
   "pageList.copyConfirm": "复制",

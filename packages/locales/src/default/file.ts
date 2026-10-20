@@ -343,6 +343,7 @@ export default {
   'pageEditor.saveFailed': 'Failed to save the page, please try again later',
   'pageEditor.saving': 'Saving...',
   'pageEditor.titlePlaceholder': 'Untitled',
+  'pageEditor.toc.title': 'Contents',
   'pageEditor.wordCount': '{{wordCount}} words',
   'pageList.actions.openInNewTab': 'Open in New Tab',
   'pageList.copyConfirm': 'Copy',
