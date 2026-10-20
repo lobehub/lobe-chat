@@ -1,6 +1,7 @@
 import { discoverAuthorizationServerMetadata } from '@modelcontextprotocol/sdk/client/auth.js';
 import type { OAuthTokens } from '@modelcontextprotocol/sdk/shared/auth.js';
 import debug from 'debug';
+import pMap from 'p-map';
 
 import type { ConnectorModel, DecryptedConnector } from '@/database/models/connector';
 import type { ConnectorCredentials } from '@/database/schemas';
@@ -143,6 +144,12 @@ const reloadIfRotatedElsewhere = async (
 const RUN_TOKEN_REFRESH_TIMEOUT_MS = 5000;
 
 /**
+ * Concurrent authorization-server calls per run. Runs rarely hold more due
+ * OAuth connectors than this, so the common case still finishes in one wave.
+ */
+const RUN_TOKEN_REFRESH_CONCURRENCY = 5;
+
+/**
  * Refreshes in flight on this instance, keyed by connector id, so concurrent
  * runs of one shared agent spend the refresh token once instead of racing.
  */
@@ -179,8 +186,9 @@ export const refreshExpiredConnectorTokens = (
   connectorModel: ConnectorModel,
   options: { onTimeout?: () => void } = {},
 ): Promise<DecryptedConnector[]> =>
-  Promise.all(
-    connectors.map(async (connector) => {
+  pMap(
+    connectors,
+    async (connector) => {
       // Disabled connectors never reach the manifests, so refreshing them only
       // delays the run and rotates credentials nobody uses. A token without a
       // known expiry (the server omitted `expires_in`) is not known to be
@@ -208,5 +216,6 @@ export const refreshExpiredConnectorTokens = (
       } finally {
         clearTimeout(timer);
       }
-    }),
+    },
+    { concurrency: RUN_TOKEN_REFRESH_CONCURRENCY },
   );
