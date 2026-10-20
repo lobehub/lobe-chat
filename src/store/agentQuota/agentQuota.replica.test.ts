@@ -398,6 +398,20 @@ describe('agent quota replicas', () => {
         undefined,
       );
     });
+    it('does not answer a read that fails after the reset with the previous context', async () => {
+      let fail!: (error: Error) => void;
+      vi.spyOn(agentQuotaService, 'listAccounts')
+        .mockResolvedValueOnce([account('old')])
+        .mockImplementationOnce(() => new Promise((_, reject) => (fail = reject)));
+      await useAgentQuotaStore.getState().readQuotaAccounts();
+      const read = useAgentQuotaStore.getState().readQuotaAccounts({ fresh: true });
+
+      act(() => stores.reset());
+      fail(new Error('offline'));
+
+      await expect(read).rejects.toThrow('offline');
+      expect(agentQuotaSelectors.accounts(useAgentQuotaStore.getState())).toBeUndefined();
+    });
   });
 
   describe('bindings', () => {
@@ -497,6 +511,32 @@ describe('agent quota replicas', () => {
       answerFresh([binding('b1', 'a1', 'pool'), binding('b2', 'a2', 'pinned')]);
       await writeRefresh;
       answerStale([binding('b1', 'a1', 'pinned'), binding('b2', 'a2', 'pool')]);
+
+      expect((await samplerRead).map((b) => `${b.accountId}:${b.role}`)).toEqual([
+        'a1:pool',
+        'a2:pinned',
+      ]);
+    });
+
+    it('answers a failed read a fresh read overtook with the replica value, not its own snapshot', async () => {
+      let fail!: (error: Error) => void;
+      let answerFresh!: (rows: QuotaBinding[]) => void;
+      vi.spyOn(agentQuotaService, 'listBindings')
+        .mockResolvedValueOnce([binding('b1', 'a1', 'pinned'), binding('b2', 'a2', 'pool')])
+        .mockImplementationOnce(() => new Promise((_, reject) => (fail = reject)))
+        .mockImplementationOnce(() => new Promise((resolve) => (answerFresh = resolve)));
+      await useAgentQuotaStore.getState().readQuotaBindings('agent-1');
+
+      // A sampler re-read is out when a write's fresh refresh lands the switched pin.
+      const samplerRead = useAgentQuotaStore
+        .getState()
+        .readQuotaBindings('agent-1', { fresh: true });
+      const writeRefresh = useAgentQuotaStore
+        .getState()
+        .readQuotaBindings('agent-1', { fresh: true });
+      answerFresh([binding('b1', 'a1', 'pool'), binding('b2', 'a2', 'pinned')]);
+      await writeRefresh;
+      fail(new Error('offline'));
 
       expect((await samplerRead).map((b) => `${b.accountId}:${b.role}`)).toEqual([
         'a1:pool',

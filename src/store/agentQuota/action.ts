@@ -402,9 +402,11 @@ export class ActionImpl {
     try {
       result = await slice.fetch(key, fresh ? { fresh: true } : undefined);
     } catch (error) {
-      // A failed refresh keeps answering with the last confirmed value of this
-      // identity — never with one an identity switch left behind meanwhile.
-      if (cached !== undefined && quotaAccountsResource.scope.get() === scope) return cached;
+      // A failed refresh keeps answering with the last value the replica still
+      // holds for this identity. Re-read it rather than reuse `cached`: a reset
+      // may have cleared it, or a fresh read landed a newer value, meanwhile.
+      const current = (this.#get()[field] as Record<string, T>)[key];
+      if (current !== undefined && quotaAccountsResource.scope.get() === scope) return current;
       throw error;
     }
     if (result.applied) return result.data;
