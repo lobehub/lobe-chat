@@ -12,6 +12,10 @@ import type {
   ChatCompletionErrorPayload,
   ChatMethodOptions,
   ChatStreamPayload,
+  DecisionOptions,
+  DecisionPayload,
+  DecisionQuestions,
+  DecisionResponse,
   EmbeddingsOptions,
   EmbeddingsPayload,
   GenerateObjectOptions,
@@ -35,8 +39,10 @@ import type {
   VideoPollingRoute,
 } from '../types/video';
 import { AgentRuntimeError } from '../utils/createError';
+import { getModelType } from '../utils/getModelPricing';
 import { createVideoWithCompletionMode } from '../utils/videoCompletionMode';
 import type { LobeRuntimeAI } from './BaseAI';
+import { emulateDecision } from './decision/emulate';
 
 const { logger: timing } = createTimingHelpers('lobe-server:chat:lobehub:timing');
 
@@ -74,6 +80,9 @@ const getLobeHubTimingMetadata = (options?: {
 }): Record<string, unknown> | undefined =>
   options?.metadata?.provider === 'lobehub' ? options.metadata : undefined;
 
+const getRuntimeProviderId = (runtime: LobeRuntimeAI) =>
+  'id' in runtime && typeof runtime.id === 'string' ? runtime.id : 'unknown';
+
 const buildGenerateObjectSpeed = (startedAt: number, usage: ModelUsage): ModelPerformance => {
   const latency = Math.max(Date.now() - startedAt, 0);
   const totalOutputTokens = usage.totalOutputTokens ?? usage.outputTextTokens ?? 0;
@@ -107,6 +116,7 @@ export interface ModelRuntimeHooks {
     payload: CreateVideoPayload,
     options?: CreateVideoMethodOptions,
   ) => Promise<void>;
+  beforeDecide?: (payload: DecisionPayload, options?: DecisionOptions) => Promise<void>;
   beforeEmbeddings?: (payload: EmbeddingsPayload, options?: EmbeddingsOptions) => Promise<void>;
   beforeGenerateObject?: (
     payload: GenerateObjectPayload,
@@ -145,6 +155,21 @@ export interface ModelRuntimeHooks {
   onChatStreamError?: (
     error: unknown,
     context: { options?: ChatMethodOptions; payload: ChatStreamPayload },
+  ) => void | Promise<void>;
+
+  onDecideError?: (
+    error: ChatCompletionErrorPayload,
+    context: { options?: DecisionOptions; payload: DecisionPayload },
+  ) => void | Promise<void>;
+
+  /**
+   * Fires once after a successful decision, including when some answers are refusals.
+   * `usage` is undefined when the provider reports none, so consumers can still settle or
+   * release anything taken in `beforeDecide`.
+   */
+  onDecideFinal?: (
+    data: { latencyMs: number; response: DecisionResponse; usage?: ModelUsage },
+    context: { options?: DecisionOptions; payload: DecisionPayload },
   ) => void | Promise<void>;
 
   onEmbeddingsError?: (
@@ -587,6 +612,91 @@ export class ModelRuntime {
     } catch (error) {
       if (this._hooks?.onTranscribeError) {
         await this._hooks.onTranscribeError(error as ChatCompletionErrorPayload, {
+          options,
+          payload,
+        });
+      }
+      throw error;
+    }
+  }
+
+  /**
+   * Answer typed questions about one state. A model-bank `type: 'decision'` model on a provider
+   * with native `decide` answers natively; any other model is emulated through `generateObject`.
+   * `response.providerMetadata.lobehub.decisionMode` says which path served the call.
+   */
+  async decide<Q extends DecisionQuestions>(
+    payload: DecisionPayload<Q>,
+    options?: DecisionOptions,
+  ): Promise<DecisionResponse<Q>> {
+    const runtime = this._runtime;
+    const provider = getRuntimeProviderId(runtime);
+    // A failed model-bank lookup only loses the routing hint: treat the model as unlisted.
+    const isDecisionModel =
+      !!runtime.decide &&
+      (await getModelType(payload.model, provider, options?.pricingContext).catch(
+        () => undefined,
+      )) === 'decision';
+
+    // Unlike the optional-chained passthroughs above, an unsupported provider must not
+    // resolve to `undefined`: callers branch on the answers and would read it as a result.
+    // Thrown before the hooks run, so there is nothing for `onDecideError` to release.
+    if (!isDecisionModel && !runtime.generateObject) {
+      throw AgentRuntimeError.chat({
+        error: new Error('Decision models are not supported by this provider'),
+        errorType: AgentRuntimeErrorType.CapabilityNotSupported,
+        provider,
+      });
+    }
+    const decide = (decideOptions?: DecisionOptions) =>
+      isDecisionModel
+        ? runtime.decide!(payload, decideOptions)
+        : emulateDecision(payload, decideOptions, {
+            generateObject: (objectPayload, objectOptions) =>
+              runtime.generateObject!(objectPayload, objectOptions),
+            provider,
+          });
+
+    try {
+      const hookOptions = this._hooks?.beforeDecide && !options ? {} : options;
+      await this._hooks?.beforeDecide?.(payload, hookOptions);
+
+      const startTime = Date.now();
+      let usage: ModelUsage | undefined;
+      const raw = await decide({
+        ...hookOptions,
+        onUsage: async (reported: ModelUsage) => {
+          usage = reported;
+          await hookOptions?.onUsage?.(reported);
+        },
+      });
+      const response = {
+        ...raw,
+        providerMetadata: {
+          ...raw.providerMetadata,
+          lobehub: {
+            ...raw.providerMetadata?.lobehub,
+            decisionMode: isDecisionModel ? 'native' : 'emulated',
+          },
+        },
+        ...((raw.usage ?? usage) && { usage: raw.usage ?? usage }),
+      } as DecisionResponse<Q>;
+
+      if (this._hooks?.onDecideFinal) {
+        try {
+          await this._hooks.onDecideFinal(
+            { latencyMs: Date.now() - startTime, response, usage },
+            { options, payload },
+          );
+        } catch (e) {
+          console.error('[ModelRuntime] onDecideFinal hook error:', e);
+        }
+      }
+
+      return response;
+    } catch (error) {
+      if (this._hooks?.onDecideError) {
+        await this._hooks.onDecideError(error as ChatCompletionErrorPayload, {
           options,
           payload,
         });
