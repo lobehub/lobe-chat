@@ -1,6 +1,8 @@
 export default {
   'asyncState.desc': 'Something went wrong while loading. Please try again.',
+  'asyncState.hideDetails': 'Hide details',
   'asyncState.metricLabel': 'Failed to load',
+  'asyncState.showDetails': 'Show details',
   'asyncState.title': 'Failed to load',
   'chatRequestBlocked.contactSupport': 'Contact support',
   'chatRequestBlocked.description':
