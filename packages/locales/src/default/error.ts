@@ -2,6 +2,10 @@ export default {
   'asyncState.desc': 'Something went wrong while loading. Please try again.',
   'asyncState.metricLabel': 'Failed to load',
   'asyncState.title': 'Failed to load',
+  'otherScope.desc': 'It belongs to {{name}}, not the space you are in now.',
+  'otherScope.personal': 'your personal space',
+  'otherScope.switch': 'Switch to {{name}}',
+  'otherScope.title': 'This is in another space',
   'chatRequestBlocked.contactSupport': 'Contact support',
   'chatRequestBlocked.description':
     'This request was blocked by our security checks. If you think this is a mistake, contact support to restore access.',
