@@ -304,20 +304,18 @@ export class ActionImpl {
   /**
    * Drop every quota view and confirmation when the data context changes
    * (desktop `refreshUserData` / `disconnectRemoteServer`), even when the next
-   * context derives the same scope string; mounted syncs refetch from empty.
+   * context derives the same scope string.
    * `clear()` advances each replica's clear generation, so a read still in
    * flight from the previous context is discarded instead of repopulating (and
    * persisting) what was just dropped; it also deletes that context's rows.
+   * Mounted syncs then refetch from empty.
    */
   reset = (): void => {
-    for (const slice of [
-      this.#accounts,
-      this.#bindings,
-      this.#readings,
-      this.#history,
-      this.#panel,
-    ])
-      void slice.clear();
+    // A mounted manager / calendar keeps its sync key across the reset, so
+    // nothing would refetch until a focus or remount: revalidate once cleared.
+    for (const slice of [this.#accounts, this.#bindings, this.#readings, this.#history])
+      void slice.clear().then(() => slice.revalidate());
+    void this.#panel.clear();
     this.#appliedAt.clear();
     // Live panel samples are not replica fetches, so `clear()` cannot retire them.
     this.#resetGeneration += 1;

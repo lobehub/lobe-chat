@@ -393,6 +393,25 @@ describe('agent quota replicas', () => {
       expect(accounts.map((a) => a.id)).toEqual(['a2']);
     });
 
+    it('refetches a mounted query after the reset instead of leaving it empty', async () => {
+      const listAccounts = vi
+        .spyOn(agentQuotaService, 'listAccounts')
+        .mockResolvedValueOnce([account('a1')])
+        .mockResolvedValueOnce([account('a2')]);
+      renderHook(() => useAgentQuotaStore.getState().useFetchQuotaAccounts(), { wrapper });
+      await waitFor(() =>
+        expect(agentQuotaSelectors.accounts(useAgentQuotaStore.getState())?.[0]?.id).toBe('a1'),
+      );
+
+      // Same scope string, new data context; the manager stays mounted.
+      act(() => stores.reset());
+
+      await waitFor(() =>
+        expect(agentQuotaSelectors.accounts(useAgentQuotaStore.getState())?.[0]?.id).toBe('a2'),
+      );
+      expect(listAccounts).toHaveBeenCalledTimes(2);
+    });
+
     it('discards a read still in flight from the previous data context', async () => {
       let answer!: (rows: QuotaAccount[]) => void;
       vi.spyOn(agentQuotaService, 'listAccounts')
