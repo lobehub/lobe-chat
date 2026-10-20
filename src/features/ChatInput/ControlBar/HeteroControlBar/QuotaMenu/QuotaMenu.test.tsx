@@ -12,7 +12,16 @@ import { openQuotaCalendarModal } from '@/features/AgentQuotaCalendar';
 import ClaudeCodeQuotaMenu from './ClaudeCodeQuotaMenu';
 import CodexQuotaMenu from './CodexQuotaMenu';
 import KimiCodeQuotaMenu from './KimiCodeQuotaMenu';
-import { codexSnapshot, kimiCodeSnapshot } from './testUtils';
+import {
+  claudeSnapshot,
+  codexSnapshot,
+  isolateQuotaReplica,
+  kimiCodeSnapshot,
+  liveSessionReading,
+  persistedAccount,
+  persistedSessionReading,
+  waitForQuotaIdle,
+} from './testUtils';
 
 const mockService = vi.hoisted(() => ({
   consumeCodexRateLimitResetCredit: vi.fn(),
@@ -180,55 +189,8 @@ vi.mock('@lobehub/ui', async (importOriginal) => {
   return merged;
 });
 
-const claudeSnapshot = (
-  overrides: Partial<ElectronClientIpcModule.ClaudeCodeQuotaSnapshot> = {},
-): ElectronClientIpcModule.ClaudeCodeQuotaSnapshot => ({
-  error: null,
-  provider: 'claude-code',
-  scopedWeekly: null,
-  session: null,
-  status: 'ok',
-  updatedAt: Date.now(),
-  weekly: null,
-  ...overrides,
-});
-
-const persistedAccount = (updatedAt = Date.now()) => ({
-  externalAccountId: 'ext-1',
-  id: 'acc-1',
-  provider: 'claude-code',
-  updatedAt: new Date(updatedAt),
-});
-
-/** The account's newest persisted session reading, captured at `capturedAt`. */
-const persistedSessionReading = (capturedAt: number) => ({
-  capturedAt,
-  limitType: 'session',
-  resetsAt: null,
-  scopeKey: '',
-  utilization: 8,
-});
-
-/** A live session reading as fossilized by the desktop sampler at `capturedAt`. */
-const liveSessionReading = (capturedAt: number) => ({
-  capturedAt,
-  isActive: true,
-  limitType: 'session',
-  resetsAt: null,
-  scopeKey: '',
-  utilization: 8,
-});
-
-/** Persisted quota can render before the initial load finishes; focus is ignored while loading. */
-const waitForQuotaIdle = async () => {
-  await waitFor(() => expect(screen.getByTestId('refresh').hasAttribute('disabled')).toBe(false));
-  // Let the focus listener's effect observe loading=false before dispatching focus.
-  await act(async () => {
-    await Promise.resolve();
-  });
-};
-
 beforeEach(() => {
+  isolateQuotaReplica();
   confirmModalMock.mockReset();
   mockService.consumeCodexRateLimitResetCredit.mockReset();
   mockService.getClaudeCodeQuota.mockReset();
@@ -244,9 +206,33 @@ beforeEach(() => {
   mockQuotaService.getLatestReadings.mockResolvedValue([]);
   mockQuotaService.ingestClaudeSnapshot.mockClear();
   mockQuotaService.ingestKimiCodeSnapshot.mockClear();
-  mockQuotaService.listAccounts.mockResolvedValue([]);
-  mockQuotaService.listBindings.mockResolvedValue([]);
+  mockQuotaService.listAccounts.mockClear().mockResolvedValue([]);
+  mockQuotaService.listBindings.mockClear().mockResolvedValue([]);
   vi.mocked(openQuotaCalendarModal).mockClear();
+});
+
+describe('quota panels sharing the account pool', () => {
+  it('send one account / binding read when several panels mount together', async () => {
+    const live = { session: { resetsAt: null, usedPercent: 8, windowMinutes: 300 } };
+    mockService.getClaudeCodeQuota.mockResolvedValue(claudeSnapshot(live));
+    mockService.getCodexQuota.mockResolvedValue(codexSnapshot(live));
+    mockService.getKimiCodeQuota.mockResolvedValue(kimiCodeSnapshot(live));
+
+    render(
+      <>
+        <ClaudeCodeQuotaMenu />
+        <CodexQuotaMenu />
+        <KimiCodeQuotaMenu />
+      </>,
+    );
+
+    for (const name of ['claudeQuota', 'codexQuota', 'kimiCodeQuota']) {
+      const trigger = screen.getByRole('button', { name: `heteroAgent.${name}.tooltip` });
+      await waitFor(() => expect(trigger.textContent).toContain('compactLeft:92'));
+    }
+    expect(mockQuotaService.listAccounts).toHaveBeenCalledTimes(1);
+    expect(mockQuotaService.listBindings).toHaveBeenCalledTimes(1);
+  });
 });
 
 describe('KimiCodeQuotaMenu', () => {
@@ -284,6 +270,20 @@ describe('KimiCodeQuotaMenu', () => {
     const trigger = screen.getByRole('button', { name: 'heteroAgent.kimiCodeQuota.tooltip' });
     expect(trigger.textContent).toContain('heteroAgent.quota.compactLeft:39');
     expect(mockService.getKimiCodeQuota).toHaveBeenCalledWith({ env: undefined });
+  });
+
+  it('paints the last snapshot on a remount before the sampler answers', async () => {
+    const live = { session: { resetsAt: null, usedPercent: 8, windowMinutes: 300 } };
+    mockService.getKimiCodeQuota.mockResolvedValueOnce(kimiCodeSnapshot(live));
+    const badge = () => screen.getByRole('button', { name: 'heteroAgent.kimiCodeQuota.tooltip' });
+    const first = render(<KimiCodeQuotaMenu />);
+    await waitFor(() => expect(badge().textContent).toContain('compactLeft:92'));
+    first.unmount();
+
+    // The next sample never answers: the badge can only come from the replica.
+    mockService.getKimiCodeQuota.mockImplementation(() => new Promise(() => {}));
+    render(<KimiCodeQuotaMenu />);
+    await waitFor(() => expect(badge().textContent).toContain('compactLeft:92'));
   });
 
   it('omits the monthly cap line when the charge limit is disabled', async () => {
