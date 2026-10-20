@@ -5,8 +5,12 @@ import { createStaticStyles, cssVar, Flexbox, Text } from '@lobehub/ui';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { useOptionalAcceptanceScope } from '../AcceptanceScope';
 import type { AcceptanceEvidence } from '../Checks/types';
 import { AnnotatedImage } from '../Evidence/Annotation';
+import { VideoEvidencePlayer } from '../Evidence/Video/VideoEvidencePlayer';
+import { formatVideoTime } from '../Evidence/Video/videoTime';
+import { useEvidenceUrlRefresh } from '../useAcceptanceBundle';
 import { useAcceptanceAuthorColor } from './authorColor';
 
 const THUMBNAIL_WIDTH = 220;
@@ -63,10 +67,25 @@ interface ThreadEvidenceProps {
 const ThreadEvidence = memo<ThreadEvidenceProps>(({ comment, evidence, roundIndex, stale }) => {
   const { t } = useTranslation('verify');
   const authorColor = useAcceptanceAuthorColor();
+  const scope = useOptionalAcceptanceScope();
+  const refresh = useEvidenceUrlRefresh(scope?.acceptanceId);
   // Imported or older evidence may carry no stored size; the picture itself
   // knows it once loaded, and until then the crop stays at the top.
   const [loaded, setLoaded] = useState<{ height: number; width: number }>();
-  if (!evidence.fileUrl || !comment.rect) return null;
+  if (!evidence.fileUrl || !comment.rect)
+    return (
+      <Flexbox gap={4}>
+        {comment.time && <Text fontSize={12}>{formatVideoTime(comment.time.start)}</Text>}
+        <Text fontSize={12} type={'secondary'}>
+          {t('acceptance.comments.evidenceUnavailable')}
+        </Text>
+        {roundIndex !== undefined && (
+          <Text fontSize={12} type={'secondary'}>
+            {t('acceptance.comments.roundContext', { round: roundIndex })}
+          </Text>
+        )}
+      </Flexbox>
+    );
   const size =
     evidence.fileWidth && evidence.fileHeight
       ? { height: evidence.fileHeight, width: evidence.fileWidth }
@@ -74,25 +93,42 @@ const ThreadEvidence = memo<ThreadEvidenceProps>(({ comment, evidence, roundInde
 
   return (
     <Flexbox className={styles.wrapper} gap={4}>
-      <div className={styles.crop}>
-        <div
-          style={{
-            marginBlockStart: -thumbnailCropOffset(size ?? {}, comment.rect),
-          }}
-        >
-          <AnnotatedImage
-            annotations={[{ color: authorColor(comment.authorUserId), rect: comment.rect }]}
-            imageStyle={{ width: THUMBNAIL_WIDTH }}
-            showComments={false}
-            src={evidence.fileUrl}
-            onLoad={(event) => {
-              const { naturalHeight, naturalWidth } = event.currentTarget;
-              if (naturalWidth && naturalHeight)
-                setLoaded({ height: naturalHeight, width: naturalWidth });
+      {evidence.type === 'video' && comment.time ? (
+        <VideoEvidencePlayer
+          initialTime={comment.time.start}
+          src={evidence.fileUrl}
+          marks={[
+            {
+              color: authorColor(comment.authorUserId),
+              comment: comment.content,
+              key: comment.id,
+              rect: comment.rect,
+              time: comment.time,
+            },
+          ]}
+          onRefreshSource={refresh ? () => refresh(evidence.id) : undefined}
+        />
+      ) : (
+        <div className={styles.crop}>
+          <div
+            style={{
+              marginBlockStart: -thumbnailCropOffset(size ?? {}, comment.rect),
             }}
-          />
+          >
+            <AnnotatedImage
+              annotations={[{ color: authorColor(comment.authorUserId), rect: comment.rect }]}
+              imageStyle={{ width: THUMBNAIL_WIDTH }}
+              showComments={false}
+              src={evidence.fileUrl}
+              onLoad={(event) => {
+                const { naturalHeight, naturalWidth } = event.currentTarget;
+                if (naturalWidth && naturalHeight)
+                  setLoaded({ height: naturalHeight, width: naturalWidth });
+              }}
+            />
+          </div>
         </div>
-      </div>
+      )}
       <span className={styles.caption}>
         {stale && roundIndex !== undefined
           ? t('acceptance.comments.evidenceFromRound', { round: roundIndex })

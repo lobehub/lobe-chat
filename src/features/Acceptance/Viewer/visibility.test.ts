@@ -9,8 +9,8 @@ import {
 } from './visibility';
 
 describe('canCommentOnAcceptanceEvidence', () => {
-  it('hides standalone region comments from the acceptance author', () => {
-    expect(canCommentOnAcceptanceEvidence({ isOwner: true }, true)).toBe(false);
+  it('allows the acceptance author to comment without rejecting', () => {
+    expect(canCommentOnAcceptanceEvidence({ isOwner: true }, true)).toBe(true);
   });
 
   it('keeps region comments available to another viewer with comment access', () => {

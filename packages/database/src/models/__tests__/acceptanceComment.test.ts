@@ -68,6 +68,33 @@ const rect = { height: 0.2, width: 0.3, x: 0.1, y: 0.1 };
 
 describe('AcceptanceCommentModel', () => {
   describe('create', () => {
+    it('stores independent video times in metadata and preserves retry identity and other facts', async () => {
+      const input = {
+        acceptanceId,
+        anchor: { checkItemId: 'c2', evidenceId, rect, time: { start: 2.5 } },
+        authorUserId: reviewer,
+        clientId: 'video-frame',
+        content: 'first frame',
+        metadata: { origin: 'reviewer' },
+      };
+      const { comment } = await model.create(input);
+      expect(comment.metadata).toEqual({
+        origin: 'reviewer',
+        evidenceAnchor: { time: { start: 2.5 } },
+      });
+      const second = await model.create({
+        ...input,
+        anchor: { ...input.anchor, time: { start: 6 } },
+        clientId: 'another-video-frame',
+      });
+      const retry = await model.create(input);
+      expect(retry.isDuplicate).toBe(true);
+      expect(retry.comment.id).toBe(comment.id);
+      expect((await model.findById(comment.id))?.metadata).toEqual(comment.metadata);
+      expect(second.comment.metadata).toMatchObject({ evidenceAnchor: { time: { start: 6 } } });
+      expect(await model.listByAcceptance(acceptanceId)).toHaveLength(2);
+    });
+
     it('writes a global comment with the round it was written against', async () => {
       const { comment, isDuplicate } = await model.create({
         acceptanceId,

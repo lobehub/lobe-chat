@@ -6,7 +6,7 @@ import { memo, type ReactNode, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { FLOATING_ACTION_HOST } from './FloatingCommentAction';
-import type { EvidenceOverlay } from './overlay';
+import { type EvidenceOverlay, overlayColor } from './overlay';
 import {
   annotationInSlice,
   isPortraitScreenshot,
@@ -252,9 +252,7 @@ const OverlayRect = memo<OverlayRectProps>(
   ({ annotation, index, numbered, onToggle, opened, rect }) => {
     // A settled region keeps its place but drops its author's colour: an
     // answered note should not compete with an open one for attention.
-    const color = annotation.resolved
-      ? cssVar.colorTextQuaternary
-      : (annotation.color ?? cssVar.colorError);
+    const color = overlayColor(annotation);
     const label = annotation.label ?? index + 1;
     return (
       <div
@@ -412,9 +410,7 @@ export const ScreenshotTiles = memo<ScreenshotTilesProps>(
             title={annotation.authorName}
             type={'button'}
             style={{
-              background: annotation.resolved
-                ? cssVar.colorTextQuaternary
-                : (annotation.color ?? cssVar.colorError),
+              background: overlayColor(annotation),
               insetBlockStart: `${Math.min(Math.max(annotation.rect.y, 0), 0.86) * 100}%`,
             }}
             onClick={() => toggleNote(index)}
