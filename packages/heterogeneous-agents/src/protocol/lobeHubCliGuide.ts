@@ -19,29 +19,22 @@
  * every transport:
  *
  * - **Credentials.** The cloud sandbox is handed a user-scoped JWT, and a
- *   desktop client-mode run inherits the machine's own `lh login`. But the
- *   device-dispatch paths (desktop gateway, `lh connect`) put the run's narrow
- *   `hetero-operation` token in `LOBEHUB_JWT`, and `oidcAuth` rejects that
- *   token on every user-scoped endpoint — so `lh doc`/`lh kb`/… would 401
- *   while the CLI prefers it over the saved login. Until the nested CLI gets
- *   its own user credential there, the guide states the fallback the agent can
- *   apply itself rather than claiming it is signed in. That fallback is phrased
- *   as "clear the variable", not `env -u`: devices run Windows too, and
- *   `pickAuthSource` only tests `LOBEHUB_JWT` for truthiness, so an empty value
- *   falls through to the stored login in every shell. Codex runs may carry the
- *   token as `LOBEHUB_JWT_FILE` instead (see `codexShellEnv`); the CLI prefers
- *   it over an inherited token unless `LOBEHUB_JWT` is set empty, and
- *   PowerShell/cmd unset a variable assigned an empty value, so the guide clears both.
- *   On a shared device the stored login may belong to someone other than the
- *   run's user, so the CLI accepts the fallback only when it matches
- *   `LOBEHUB_RUN_USER_ID` (see `checkRunIdentity` in the CLI).
+ *   desktop client-mode run inherits the machine's own `lh login`. The
+ *   device-dispatch paths (desktop gateway, `lh connect`) put the run's
+ *   operation token in `LOBEHUB_JWT` (or `LOBEHUB_JWT_FILE` for Codex). A token
+ *   minted with `caller:act` acts as the user who started the run, but only in
+ *   the run's workspace and only while the run lasts; older tokens still reach
+ *   just ingest/finish. Either way the agent must not swap it for the device's
+ *   saved login, which on a shared device belongs to someone else — so the
+ *   guide offers no fallback, and the CLI refuses a mismatched one anyway
+ *   (`checkRunIdentity`, `LOBEHUB_RUN_USER_ID`).
  * - **`LOBEHUB_AGENT_ID`.** Desktop client mode sets it through
  *   `buildLobeHubSessionEnv`. CLI/Desktop dispatch launchers, including
  *   OpenClaw/Hermes, clear inherited identity and inject the current dispatch's
  *   agent id when supplied; a missing id must not retain the launcher's identity.
  *   Gateway-dispatched `lh hetero exec` runs preserve that id through
- *   `spawnAgent` to the external agent. Auth fallback (clearing `LOBEHUB_JWT`)
- *   does not change authorship. The id is still not guaranteed on every path:
+ *   `spawnAgent` to the external agent. The run token does not change
+ *   authorship. The id is still not guaranteed on every path:
  *   `lh task comment` refuses topic/operation contexts with a missing or blank
  *   agent id rather than attributing Agent output to the user.
  */
@@ -56,6 +49,6 @@ export const lobeHubCliGuide = [
   '- **What it reaches:** `lh kb` knowledge bases · `lh doc` documents · `lh file` files · `lh artifact` artifacts · `lh topic` / `lh message` past conversations · `lh agent` agents · `lh task` / `lh project` work · `lh widget` / `lh dashboard` monitoring widgets and dashboards · `lh search` local resources and the web · `lh gen` text/image/video/TTS/ASR generation · `lh memory` user memory · `lh notify` notifications to the user · `lh model` / `lh provider` / `lh plugin` / `lh skill` platform configuration · `lh bot` chat-platform bots.',
   "- **Widgets run code with the user's credentials.** Before `lh widget dry-run` of a draft that declares connector credentials (`manifest.env`) or network hosts (`manifest.network.allow`), show the user that version id, what the script does and which credentials and hosts it uses, and wait for their explicit approval of that exact version before passing `--version <id> --yes`. Never publish (`lh widget publish`) without the user's confirmation.",
   '- **When to use it:** whenever the user asks for something that lives in LobeHub rather than in this working directory — saving a document, recalling an earlier conversation, generating an image, or changing your own agent configuration. Say what you did and where it landed.',
-  "- **If a command comes back with an authentication or permission error**, clear `LOBEHUB_JWT` and `LOBEHUB_JWT_FILE` and retry it once — some runs carry a narrow token scoped to this conversation, which shadows the machine's own login. An empty value is enough, so use whichever form your shell takes: `LOBEHUB_JWT= LOBEHUB_JWT_FILE= lh …` (sh/bash/zsh), `$env:LOBEHUB_JWT=''; $env:LOBEHUB_JWT_FILE=''; lh …` (PowerShell), `set LOBEHUB_JWT=` and `set LOBEHUB_JWT_FILE=` then `lh …` (cmd). That retry acts as this machine's own login, so it works only when that login is the user who started this run; when it is someone else, or an API key, `lh` refuses it and writes nothing. If it still fails, tell the user what you were trying to do — do not work around it.",
+  "- **Your `lh` commands act as the user who started this conversation.** On a connected device they are limited to this conversation's workspace and to this run. If one comes back with an authentication or permission error, do not clear or replace `LOBEHUB_JWT` / `LOBEHUB_JWT_FILE` and do not switch to another login — tell the user what you were trying to do and what the error said.",
   '- **Leave these alone:** `lh hetero` and `lh connect` run the infrastructure that is executing you. And never change the persistent workspace scope with `lh workspace use` — it silently rewrites the target of every later command in this session.',
 ].join('\n');

@@ -7,11 +7,12 @@ import { parseJwtPayload } from './source';
 /**
  * Refuse to act for a dispatched run as anyone but the user who started it.
  *
- * A device run carries the initiator's narrow `hetero-operation` token in
- * `LOBEHUB_JWT`, which most endpoints reject, so the agent may clear it and
- * retry with this machine's credentials. On a shared device those belong to the
- * device owner, not the initiator: the write would land under the wrong
- * account, in the run's workspace, without any error. `lh hetero exec` records
+ * A device run authenticates its `lh` commands with the initiator's operation
+ * token in `LOBEHUB_JWT`. If the agent clears it anyway, or the server predates
+ * caller tokens and refuses it, the CLI would fall back to this machine's
+ * credentials. On a shared device those belong to the device owner, not the
+ * initiator: the write would land under the wrong account, in the run's
+ * workspace, without any error. `lh hetero exec` records
  * the initiator in `LOBEHUB_RUN_USER_ID`, and any credential other than
  * `LOBEHUB_JWT` must belong to that user.
  *
