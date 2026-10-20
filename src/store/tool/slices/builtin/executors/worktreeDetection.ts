@@ -916,18 +916,25 @@ export const parseWorktreeAddPath = (
 /**
  * The worktree a real `git worktree remove [--force] <path>` deleted, resolved the
  * same way as an `add` path so it compares against the recorded `activeWorktree`.
+ * Segments are read in shell order: a later `add` of the same path recreates it.
  */
-const parseWorktreeRemovePath = (command: string | string[], cwd?: string) =>
+const parseWorktreeRemovePath = (command: string | string[], cwd?: string) => {
+  let removed: string | undefined;
   findInCommand(command, (tokens, env) => {
+    if (removed && parseGitWorktreeAddTokens(tokens, cwd, env)?.path === removed)
+      removed = undefined;
     const git = parseGitSubcommand(tokens, cwd);
     if (git?.subcommand !== 'worktree' || stripQuotes(git.args[0] ?? '') !== 'remove') return;
     for (const token of git.args.slice(1)) {
       if (/^\d*[<>]/.test(token)) return; // redirection — git's args end here
       if (token.startsWith('-')) continue;
       const path = resolveToken(token, env);
-      return isLiteralPath(path) ? resolveWorktreePath(path, git.baseCwd) : undefined;
+      if (isLiteralPath(path)) removed = resolveWorktreePath(path, git.baseCwd);
+      return;
     }
   });
+  return removed;
+};
 
 /**
  * Ground truth for a worktree-add whose path token never survives static parsing

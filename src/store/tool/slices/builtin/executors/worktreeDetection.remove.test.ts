@@ -104,6 +104,22 @@ describe('recordGitCommandEffects — git worktree remove', () => {
     expect(chatMocks.updateTopicMetadata).not.toHaveBeenCalled();
   });
 
+  it('keeps a worktree that the same command removes and then recreates', async () => {
+    setTopicWorktree('/tmp/wt');
+
+    await recordGitCommandEffects({
+      command: 'git worktree remove /tmp/wt && git worktree add /tmp/wt -b fresh',
+      topicId: 't1',
+    });
+
+    expect(chatMocks.updateTopicMetadata).toHaveBeenCalledWith('t1', {
+      workingDirectoryConfig: {
+        git: { activeWorktree: '/tmp/wt', branch: 'fresh', isWorktree: true },
+        path: '/repo',
+      },
+    });
+  });
+
   it('ends on the source repo when one command adds and removes the same worktree', async () => {
     chatMocks.topics = { t1: { metadata: { workingDirectoryConfig: { path: '/repo' } } } };
 
