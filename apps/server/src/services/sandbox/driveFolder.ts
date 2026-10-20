@@ -18,7 +18,29 @@ const log = debug('lobe-server:sandbox:drive-folder');
  */
 const EXISTS_TTL_MS = 15_000;
 
+/**
+ * The most folders remembered at once. A long-lived server sees every
+ * workspace's drives, so the cache sheds the oldest entries rather than grow
+ * with them.
+ */
+const EXISTS_MAX_ENTRIES = 1000;
+
 const existsCache = new Map<string, number>();
+
+/** Drop what has expired, then the oldest beyond the cap — a Map iterates in insertion order. */
+const remember = (cacheKey: string) => {
+  const now = Date.now();
+  existsCache.delete(cacheKey);
+  for (const [key, at] of existsCache) {
+    if (now - at >= EXISTS_TTL_MS) existsCache.delete(key);
+  }
+  while (existsCache.size >= EXISTS_MAX_ENTRIES) {
+    const oldest = existsCache.keys().next().value;
+    if (oldest === undefined) break;
+    existsCache.delete(oldest);
+  }
+  existsCache.set(cacheKey, now);
+};
 
 interface DriveFolderInput {
   claim: SandboxStorageClaim;
@@ -45,6 +67,7 @@ export const driveFolderExists = async ({
   const cacheKey = `${claim.key}\0${path}`;
   const cachedAt = existsCache.get(cacheKey);
   if (cachedAt !== undefined && Date.now() - cachedAt < EXISTS_TTL_MS) return true;
+  if (cachedAt !== undefined) existsCache.delete(cacheKey);
 
   try {
     await new MarketService({
@@ -52,7 +75,7 @@ export const driveFolderExists = async ({
     })
       .getSandboxStorageClient()
       .listFiles({ path });
-    existsCache.set(cacheKey, Date.now());
+    remember(cacheKey);
 
     return true;
   } catch (error) {
@@ -63,6 +86,9 @@ export const driveFolderExists = async ({
     return undefined;
   }
 };
+
+/** For tests: how many folders are remembered. */
+export const driveFolderCacheSize = () => existsCache.size;
 
 /** Forget what is known about a drive's folders, after a write that may have moved them. */
 export const forgetDriveFolders = (storageKey: string) => {

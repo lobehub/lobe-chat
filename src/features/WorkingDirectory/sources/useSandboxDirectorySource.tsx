@@ -373,7 +373,11 @@ export const useSandboxDirectorySource = ({
             ? { parentPath: driveParentPath(listingPath), path: listingPath }
             : undefined,
           entries,
-          error: folders.error,
+          // At the root the instances say which folders are environment
+          // directories (and who holds them); without them a held folder would
+          // list as a plain one that can be picked, so their failure fails the
+          // listing too.
+          error: folders.error ?? (isRoot ? instances.error : undefined),
           hasMore: false,
           isLoading: folders.isLoading || (isRoot && instances.isLoading),
           isLoadingMore: false,
@@ -382,7 +386,7 @@ export const useSandboxDirectorySource = ({
           refresh: async () => {
             await Promise.all([folders.mutate(), instances.mutate()]);
           },
-          retry: () => void folders.mutate(),
+          retry: () => void Promise.all([folders.mutate(), isRoot && instances.mutate()]),
         };
       },
     } satisfies DirectorySource;

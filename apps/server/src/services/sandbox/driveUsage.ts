@@ -121,6 +121,8 @@ export const readDriveUsage = async ({
       usageCheckedAt: info?.usageCheckedAt ?? null,
     })),
     members,
+    /** Whether the plan lets writes go past the quota, billed as overage. */
+    overageAllowed: claim.overageAllowed === true,
     quotaBytes: claim.quotaBytes,
     /**
      * The pool's total as the execution plane judges it, or — when it has not

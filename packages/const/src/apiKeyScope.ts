@@ -456,6 +456,10 @@ export const TRPC_BLOCKED_PATH_PREFIXES: string[] = [
   'market.creds.',
   // marketplace OIDC auth flows carry tokens
   'market.oidc.',
+  // the GitHub picker reads the user's connected GitHub account (private
+  // repositories and branches) through their OAuth grant — connector data
+  // outside the agent domain the rest of `environment` belongs to
+  'environment.listGithub',
 ];
 
 export type TrpcScopeDecision = { scopes: ApiKeyScope[] } | { open: true } | { blocked: true };
