@@ -69,7 +69,7 @@ describe('captureStyles', () => {
     const root = mount('<div><p>a</p></div>');
     Object.defineProperty(root.firstElementChild, 'scrollTop', { value: 120 });
 
-    expect(() => captureStyles(root)).toThrow('scrolled');
+    expect(() => captureStyles(root)).toThrow('0 DIV:a is scrolled');
   });
 });
 

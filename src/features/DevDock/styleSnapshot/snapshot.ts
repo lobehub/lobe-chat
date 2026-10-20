@@ -100,17 +100,17 @@ export const captureStyles = (root: Element): StyleSnapshotEntry[] => {
   const origin = root.getBoundingClientRect();
   const entries: StyleSnapshotEntry[] = [];
 
-  const assertNotScrolled = (element: Element) => {
+  const assertNotScrolled = (element: Element, key: string) => {
     if (element.scrollTop || element.scrollLeft)
       throw new Error(
-        `[styleSnapshot] a ${element.tagName} under the root is scrolled; scroll it back to the start before capturing`,
+        `[styleSnapshot] ${key} ${element.tagName}:${(element.textContent ?? '').trim().slice(0, 24)} is scrolled; scroll it back to the start, or narrow the root selector`,
       );
   };
 
   const visit = (element: Element, key: string, insideAnimation: boolean) => {
     const computed = getComputedStyle(element);
     if (computed.display === 'none') return;
-    assertNotScrolled(element);
+    assertNotScrolled(element, key);
 
     const animated = insideAnimation || isAnimating(element);
     const rect = element.getBoundingClientRect();
@@ -129,7 +129,7 @@ export const captureStyles = (root: Element): StyleSnapshotEntry[] => {
       const pseudoStyle = getComputedStyle(element, pseudo);
       if (['', 'none', 'normal'].includes(pseudoStyle.content)) continue;
       entries.push({
-        box: ANIMATED,
+        box: 'pseudo',
         key: `${key}${pseudo}`,
         label: `${element.tagName}${pseudo}:${pseudoStyle.content.slice(0, 24)}`,
         style: pickStyle(pseudoStyle, animated),
@@ -139,7 +139,7 @@ export const captureStyles = (root: Element): StyleSnapshotEntry[] => {
     [...element.children].forEach((child, index) => visit(child, `${key}.${index}`, animated));
   };
 
-  assertNotScrolled(root);
+  assertNotScrolled(root, 'root');
   [...root.children].forEach((child, index) => visit(child, String(index), false));
   return entries;
 };
