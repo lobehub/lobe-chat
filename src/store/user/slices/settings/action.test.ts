@@ -12,6 +12,7 @@ import { merge } from '@/utils/merge';
 // Mock userService
 vi.mock('@/services/user', () => ({
   userService: {
+    updatePersonalSystemAgent: vi.fn(),
     updateToolChannels: vi.fn(),
     updateToolIntervention: vi.fn(),
     updateUserSettings: vi.fn(),
@@ -233,6 +234,28 @@ describe('SettingsAction', () => {
 
       // Optimistic local update
       expect(result.current.settings.tool?.humanIntervention?.approvalMode).toBe('auto-run');
+    });
+  });
+
+  describe('updatePersonalSystemAgent', () => {
+    beforeEach(() => {
+      vi.clearAllMocks();
+    });
+
+    it('should write through the per-entry endpoint instead of setSettings', async () => {
+      const { result } = renderHook(() => useUserStore());
+
+      await act(async () => {
+        await result.current.updatePersonalSystemAgent('followUpAction', { enabled: false });
+      });
+
+      expect(userService.updatePersonalSystemAgent).toHaveBeenCalledWith('followUpAction', {
+        enabled: false,
+      });
+      // The whole-settings write carries every systemAgent entry, which a
+      // workspace member is not allowed to change.
+      expect(userService.updateUserSettings).not.toHaveBeenCalled();
+      expect(result.current.settings.systemAgent?.followUpAction?.enabled).toBe(false);
     });
   });
 

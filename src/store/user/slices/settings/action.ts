@@ -8,6 +8,7 @@ import type { StoreSetter } from '@/store/types';
 import type { UserStore } from '@/store/user';
 import type { LobeAgentSettings } from '@/types/session';
 import type {
+  PersonalSystemAgentKey,
   SystemAgentItem,
   UserGeneralConfig,
   UserKeyVaults,
@@ -282,6 +283,26 @@ export class UserSettingsActionImpl {
     );
 
     await userService.updateToolIntervention(config);
+    await this.#get().refreshUserState();
+  };
+
+  /**
+   * Personal chat-assist entries (follow-up chips, input completion) go through
+   * a dedicated per-entry merge: inside a workspace the generic settings write
+   * would be rejected for members, since it carries the whole `systemAgent`
+   * column, and it would rewrite sibling entries from this tab's snapshot.
+   */
+  updatePersonalSystemAgent = async (
+    key: PersonalSystemAgentKey,
+    value: { enabled?: boolean; model?: string; provider?: string },
+  ): Promise<void> => {
+    this.#set(
+      { settings: merge(this.#get().settings, { systemAgent: { [key]: value } }) },
+      false,
+      'optimistic_updatePersonalSystemAgent',
+    );
+
+    await userService.updatePersonalSystemAgent(key, value);
     await this.#get().refreshUserState();
   };
 
