@@ -16,17 +16,17 @@ const page = (script: string) =>
     { headers: { 'cache-control': 'no-store', 'content-type': 'text/html; charset=utf-8' } },
   );
 
-const REPORTED_ERRORS = new Set(['access_denied', 'invalid_target']);
+const REPORTED_ERRORS = ['access_denied', 'invalid_target'];
+
+// Query values never enter the HTML: the page reads `code`, `state` and `error` from its own URL,
+// so nothing the requester controls is reflected into the response.
+const READ_QUERY = 'var q=new URLSearchParams(location.search)';
 
 // A refusal carries no secret and the provider's error redirect does not say which page asked,
 // so it goes to any opener; the SDK still matches it against its own state.
-const deniedPage = (error: string, state: string) =>
+const deniedPage = () =>
   page(
-    `window.opener&&window.opener.postMessage(${scriptJson({
-      error: REPORTED_ERRORS.has(error) ? error : 'error',
-      state,
-      type: 'lobehub-review:denied',
-    })},"*")`,
+    `${READ_QUERY};window.opener&&window.opener.postMessage({error:${scriptJson(REPORTED_ERRORS)}.indexOf(q.get("error"))<0?"error":q.get("error"),state:q.get("state"),type:"lobehub-review:denied"},"*")`,
   );
 
 export async function GET(request: NextRequest) {
@@ -34,7 +34,7 @@ export async function GET(request: NextRequest) {
   const code = searchParams.get('code');
   const state = searchParams.get('state');
   const error = searchParams.get('error');
-  if (error && state) return deniedPage(error, state);
+  if (error && state) return deniedPage();
   if (!code || !state) return page('');
 
   try {
@@ -43,8 +43,9 @@ export async function GET(request: NextRequest) {
     if (!site) return page('');
     // The target origin comes from the authorization code itself, never from
     // the query, so a copied tag on another origin cannot receive the code.
-    const message = scriptJson({ code, state, type: 'lobehub-review:authorized' });
-    return page(`window.opener&&window.opener.postMessage(${message},${scriptJson(site.origin)})`);
+    return page(
+      `${READ_QUERY};window.opener&&window.opener.postMessage({code:q.get("code"),state:q.get("state"),type:"lobehub-review:authorized"},${scriptJson(site.origin)})`,
+    );
   } catch (error) {
     log('review callback failed: %O', error);
     return page('');
