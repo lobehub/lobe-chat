@@ -40,7 +40,6 @@ const OtherScopeAsyncError = memo<OtherScopeAsyncErrorProps>(({ probe, resourceK
       action={
         <Button
           icon={<Icon icon={ArrowLeftRightIcon} />}
-          size={'small'}
           type={'primary'}
           onClick={() => navigate(targetPath, { escape: true })}
         >
