@@ -89,6 +89,27 @@ describe('sendMessage behind a running Gateway run', () => {
     expect(result.current.executeGatewayAgent).not.toHaveBeenCalled();
   });
 
+  it('carries the content attached from the conversation or a page with the queued request', async () => {
+    const { result } = renderHook(() => useChatStore());
+    const append = vi
+      .spyOn(aiAgentService, 'appendQueuedFollowUp')
+      .mockResolvedValue({ id: 'x', length: 1, queued: true, state: 'queued' } as any);
+    const contextSelections = [{ content: 'snippet', id: 'sel-1', type: 'text' }] as any;
+    const pageSelections = [{ content: 'para', id: 'pg-1', pageId: 'doc-1' }] as any;
+
+    await act(async () => {
+      await result.current.sendMessage({
+        context,
+        contextSelections,
+        message: 'about this',
+        pageSelections,
+      });
+    });
+
+    await vi.waitFor(() => expect(append).toHaveBeenCalled());
+    expect(append.mock.calls[0][0].request).toMatchObject({ contextSelections, pageSelections });
+  });
+
   it('keeps the follow-up in this client when the agent does not run on the Gateway', async () => {
     act(() => {
       useChatStore.setState({ isGatewayModeEnabled: () => false });

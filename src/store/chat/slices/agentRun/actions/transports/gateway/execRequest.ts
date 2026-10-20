@@ -2,8 +2,10 @@ import { isRemoteHeterogeneousType } from '@lobechat/heterogeneous-agents';
 import type {
   ChatTopic,
   ChatTopicMetadata,
+  ContextSelection,
   ConversationContext,
   ExecAgentAppContext,
+  PageSelection,
   RuntimeMentionedAgent,
 } from '@lobechat/types';
 import { resolveAgentAgencyConfig } from '@lobechat/types';
@@ -220,9 +222,12 @@ export const buildQueuedFollowUpRequest = async (
   get: () => ChatStore,
   params: {
     context: ConversationContext;
+    /** Content attached from the conversation, a page or code, kept on the user row. */
+    contextSelections?: ContextSelection[];
     fileIds?: string[];
     mentionedAgents?: RuntimeMentionedAgent[];
     message: string;
+    pageSelections?: PageSelection[];
     selectedSkillIds?: string[];
     selectedToolIds?: string[];
     trigger?: string;
@@ -238,8 +243,10 @@ export const buildQueuedFollowUpRequest = async (
     agentId: context.agentId,
     appContext: buildExecAppContext(get, { executionContext: context }),
     ...desktopDeviceHints,
+    contextSelections: params.contextSelections?.length ? params.contextSelections : undefined,
     fileIds: params.fileIds?.length ? params.fileIds : undefined,
     mentionedAgents: params.mentionedAgents,
+    pageSelections: params.pageSelections?.length ? params.pageSelections : undefined,
     prompt: params.message,
     selectedSkillIds: params.selectedSkillIds,
     selectedToolIds: params.selectedToolIds,

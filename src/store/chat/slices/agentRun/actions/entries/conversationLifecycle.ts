@@ -85,6 +85,7 @@ import type { RunScope } from '@/store/chat/slices/agentRun/actions/lifecycle/ty
 import { buildQueuedFollowUpRequest } from '@/store/chat/slices/agentRun/actions/transports/gateway/execRequest';
 import {
   canQueueOnServer,
+  findServerHeldQueueKey,
   handOffQueuedMessage,
   reclaimServerQueuedMessages,
 } from '@/store/chat/slices/agentRun/actions/transports/gateway/serverSteerQueue';
@@ -92,11 +93,7 @@ import {
   getNativeHeteroSessionBindingKey,
   resolveHeteroResume,
 } from '@/store/chat/slices/agentRun/actions/transports/hetero/heteroResume';
-import {
-  isClientHeldQueuedMessage,
-  isQueueBlockingOperation,
-  snapshotQueuedFiles,
-} from '@/store/chat/slices/operation/types';
+import { isQueueBlockingOperation, snapshotQueuedFiles } from '@/store/chat/slices/operation/types';
 import { PortalViewType } from '@/store/chat/slices/portal/initialState';
 import { chatPortalSelectors } from '@/store/chat/slices/portal/selectors';
 import { resolveTopicHeteroPin } from '@/store/chat/slices/topic/selectors';
@@ -767,10 +764,9 @@ export class ConversationLifecycleActionImpl {
       !runningQueueBlockingOp &&
       !onlyAddUserMessage &&
       operationSelectors.isQueueDrainPending(operationContext)(this.#get());
-    /** Queue this send behind what holds `key`, on the server when it can join. */
+    /** Queue this send behind what holds `key`; on the server when the run can join it there. */
     const queueThisSend = (key: string) => {
       const queuedId = nanoid();
-      // Behind a Gateway run the server keeps the follow-up, so the run can join it.
       const queueOnServer =
         !onlyAddUserMessage &&
         canQueueOnServer(this.#get, key, {
@@ -797,9 +793,11 @@ export class ConversationLifecycleActionImpl {
         void handOffQueuedMessage(this.#get, key, operationContext, queuedId, () =>
           buildQueuedFollowUpRequest(this.#get, {
             context: operationContext,
+            contextSelections,
             fileIds: fileIdList,
             mentionedAgents: hasMentionedAgents ? mentionedAgents : undefined,
             message,
+            pageSelections,
             selectedSkillIds: selectedSkills.map((skill) => skill.identifier),
             selectedToolIds: selectedTools.map((tool) => tool.identifier),
             trigger: requestTrigger,
@@ -811,9 +809,7 @@ export class ConversationLifecycleActionImpl {
 
     // Nothing runs: take server-queued follow-ups back; one still being delivered keeps its place.
     await Promise.all(queueCandidateKeys.map((key) => reclaimServerQueuedMessages(this.#get, key)));
-    const heldKey = queueCandidateKeys.find((key) =>
-      this.#get().queuedMessages[key]?.some((queued) => !isClientHeldQueuedMessage(queued)),
-    );
+    const heldKey = findServerHeldQueueKey(this.#get, queueCandidateKeys);
     if (heldKey && !onlyAddUserMessage) return void queueThisSend(heldKey);
 
     const orphanedQueueKey = findOrphanedQueueKey(

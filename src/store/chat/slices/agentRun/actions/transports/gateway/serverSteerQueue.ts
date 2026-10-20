@@ -108,6 +108,10 @@ export const canQueueOnServer = (
   return !queueOf(get, contextKey).some(isClientHeldQueuedMessage);
 };
 
+/** The conversation key holding a follow-up the server still has (one a run may be delivering). */
+export const findServerHeldQueueKey = (get: Get, keys: string[]): string | undefined =>
+  keys.find((key) => queueOf(get, key).some((message) => !isClientHeldQueuedMessage(message)));
+
 /** The follow-ups only this client holds are sent by it once nothing runs. */
 const sendIfIdle = (get: Get, contextKey: string, context: ConversationContext) => {
   const queue = queueOf(get, contextKey);
