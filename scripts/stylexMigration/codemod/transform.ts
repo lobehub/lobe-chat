@@ -201,6 +201,36 @@ export const transformSource = (source: string, fileName = 'file.tsx'): Transfor
     return { rest, styleArgs };
   };
 
+  const isEmptyString = (node: ts.Expression) =>
+    (ts.isStringLiteral(node) || ts.isNoSubstitutionTemplateLiteral(node)) && node.text === '';
+  const negate = (node: ts.Expression) =>
+    ts.isIdentifier(node) || ts.isPropertyAccessExpression(node)
+      ? `!${text(node)}`
+      : `!(${text(node)})`;
+
+  /**
+   * StyleX args of a `${styles.a} ${on ? styles.b : ''}` class list. Joined
+   * stylex.props class strings would resolve conflicts by CSS order, so the list
+   * must become one call; any other text in it cannot.
+   */
+  const templateStyleArgs = (tpl: ts.TemplateExpression) => {
+    const unsupported = () => new UnsupportedCssError(`class template ${text(tpl)}`);
+    const literals = [tpl.head.text, ...tpl.templateSpans.map((span) => span.literal.text)];
+    if (literals.some((literal) => literal.trim())) throw unsupported();
+    return tpl.templateSpans.map(({ expression: e }) => {
+      if (isStyleArg(e)) return text(e);
+      if (ts.isConditionalExpression(e) && !containsStyleRef(e.condition)) {
+        if (isStyleArg(e.whenTrue) && isEmptyString(e.whenFalse))
+          return `${text(e.condition)} && ${text(e.whenTrue)}`;
+        if (isEmptyString(e.whenTrue) && isStyleArg(e.whenFalse))
+          return `${negate(e.condition)} && ${text(e.whenFalse)}`;
+      }
+      throw unsupported();
+    });
+  };
+  const isStyleTemplate = (node: ts.Node): node is ts.TemplateExpression =>
+    ts.isTemplateExpression(node) && containsStyleRef(node);
+
   const visit = (node: ts.Node) => {
     if (ts.isJsxAttribute(node) && text(node.name) === 'className' && node.initializer) {
       const init = node.initializer;
@@ -223,14 +253,27 @@ export const transformSource = (source: string, fileName = 'file.tsx'): Transfor
             return;
           }
         }
+        if (isStyleTemplate(expr)) {
+          replace(node, `{...stylex.props(${templateStyleArgs(expr).join(', ')})}`);
+          return;
+        }
       }
+    }
+
+    if (isStyleTemplate(node)) {
+      replace(node, `stylex.props(${templateStyleArgs(node).join(', ')}).className`);
+      return;
     }
 
     if (isCx(node)) {
       const { rest, styleArgs } = splitCx(node);
       if (styleArgs.length > 0) {
-        if (rest.length > 0) mergesOutsideClassName++;
         const props = `stylex.props(${styleArgs.join(', ')}).className`;
+        if (rest.length === 0) {
+          replace(node, props);
+          return;
+        }
+        mergesOutsideClassName++;
         replace(node, `${text(node.expression)}(${[props, ...rest].join(', ')})`);
         return;
       }

@@ -225,6 +225,18 @@ export const expandShorthand = (prop: string, value: string): [string, string][]
     if (color.length === 1) result.push([`${prop}Color`, color[0]]);
     return result;
   }
+  // StyleX compiles `background` and `animation` to no class at all, without an error.
+  if (prop === 'background') {
+    if (value.trim() === 'none')
+      return [
+        ['backgroundColor', 'transparent'],
+        ['backgroundImage', 'none'],
+      ];
+    const isImage = /^(?:url|image-set|(?:repeating-)?(?:linear|radial|conic)-gradient)\(/;
+    if (parts.length === 1 && !isImage.test(parts[0])) return [['backgroundColor', value]];
+    throw new UnsupportedCssError(`background: ${value}`);
+  }
+  if (prop === 'animation') throw new UnsupportedCssError(`animation: ${value}`);
   return [[prop, value]];
 };
 
