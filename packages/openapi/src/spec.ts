@@ -49,6 +49,7 @@ const resourceSchemas: Record<string, SchemaObject> = {
       id: { type: 'string' },
       model: nullableString,
       params: nullableObject,
+      personal: { type: 'boolean' },
       plugins: {
         type: 'array',
         items: {

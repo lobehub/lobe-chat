@@ -108,6 +108,8 @@ components:
           type:
             - object
             - "null"
+        personal:
+          type: boolean
         plugins:
           type: array
           items:
@@ -1525,6 +1527,13 @@ paths:
           name: pageSize
           schema:
             type: string
+        - in: query
+          name: personal
+          schema:
+            type: string
+            enum:
+              - "true"
+              - "false"
       responses:
         "200":
           content:
@@ -1876,6 +1885,8 @@ paths:
                         type: string
                       additionalProperties: {}
                     - type: "null"
+                personal:
+                  type: boolean
                 provider:
                   type:
                     - string
@@ -2325,6 +2336,8 @@ paths:
                         type: string
                       additionalProperties: {}
                     - type: "null"
+                personal:
+                  type: boolean
                 provider:
                   type:
                     - string
