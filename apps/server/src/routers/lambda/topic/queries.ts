@@ -9,7 +9,6 @@ import { and, inArray } from 'drizzle-orm';
 import { z } from 'zod';
 
 import { withScopedPermission } from '@/business/server/trpc-middlewares/rbacPermission';
-import { MessageModel } from '@/database/models/message';
 import { chatGroups } from '@/database/schemas';
 import { notTrashed } from '@/database/utils/softDelete';
 import { router } from '@/libs/trpc/lambda';
@@ -22,6 +21,7 @@ import {
   resolveContext,
 } from '../_helpers/resolveContext';
 import { topicProcedure, topicSearchProcedure } from './procedures';
+import { readTopicTranscript, topicTranscriptInput } from './transcript';
 
 export const queryRouter = router({
   getTopicDetail: topicProcedure
@@ -32,45 +32,13 @@ export const queryRouter = router({
       return topic;
     }),
   getTopicTranscript: topicProcedure
-    .input(
-      z.object({
-        includeMessages: z.boolean().default(true),
-        limit: z.number().int().min(1).max(500).default(50),
-        offset: z.number().int().min(0).default(0),
-        topicId: z.string(),
-      }),
-    )
-    .query(async ({ input, ctx }) => {
-      // `lh topic view` from a workspace run may be given one of the user's personal topic ids.
-      const topic = await new TopicReferenceService(
-        ctx.serverDB,
-        ctx.userId,
-        ctx.workspaceId ?? undefined,
-      ).findTopic(input.topicId);
-
-      if (!topic) {
-        throw new TRPCError({
-          code: 'NOT_FOUND',
-          message: `Topic not found: ${input.topicId}`,
-        });
-      }
-
-      if (!input.includeMessages) {
-        return { items: [], topic, total: null };
-      }
-
-      const messageModel =
-        (topic.workspaceId ?? undefined) === (ctx.workspaceId ?? undefined)
-          ? ctx.messageModel
-          : new MessageModel(ctx.serverDB, ctx.userId, topic.workspaceId ?? undefined);
-      const transcript = await messageModel.queryTopicTranscript({
-        limit: input.limit,
-        offset: input.offset,
-        topicId: input.topicId,
-      });
-
-      return { ...transcript, topic };
-    }),
+    .input(topicTranscriptInput)
+    .query(async ({ input, ctx }) =>
+      readTopicTranscript(
+        { db: ctx.serverDB, userId: ctx.userId, workspaceId: ctx.workspaceId ?? undefined },
+        input,
+      ),
+    ),
   /**
    * @deprecated The `lobe-topic-reference` tool was removed; agents read topics with
    * `lh topic view`. Kept for released Desktop builds and cached web bundles whose

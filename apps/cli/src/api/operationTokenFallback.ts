@@ -26,6 +26,9 @@ import { log } from '../utils/logger';
  * (`LOBEHUB_WORKSPACE_ID` or personal) — which the manual fallback did not do,
  * since an empty `LOBEHUB_JWT` re-enables the terminal's persisted
  * `lh workspace use` scope.
+ *
+ * Reads with an operation-authenticated route need neither: `lh topic view`
+ * tries `topic.getTopicTranscriptOperation` first (`commands/topic/readTranscript`).
  */
 
 /** `oidcAuth`'s message when an operation token reaches a user-scoped route. */

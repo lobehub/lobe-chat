@@ -40,8 +40,12 @@ import type { AgentTextBlock } from './types';
  *   desktop client-mode run inherits the machine's own `lh login`. The
  *   device-dispatch paths (desktop gateway, `lh connect`) put the run's narrow
  *   `hetero-operation` token in `LOBEHUB_JWT`, which `oidcAuth` refuses on every
- *   user-scoped endpoint. `lh` retries those refusals with the machine's stored
- *   login itself when that login is the same account
+ *   user-scoped endpoint. `lh topic view` reads through an operation route
+ *   instead, as the run's own principal, limited to this conversation and the
+ *   ones the user names in it (`topic.getTopicTranscriptOperation`) — so the
+ *   most common request needs no other credential. For the rest, `lh` retries
+ *   those refusals with the machine's stored login itself when that login is
+ *   the same account
  *   (`apps/cli/src/api/operationTokenFallback.ts`), so the guide no longer
  *   teaches the agent to clear the variable — which also borrowed the login of
  *   whoever enrolled a shared workspace device, and was applied to errors it
@@ -73,6 +77,7 @@ const lobeHubCliGuideBody = [
   '',
   '- **When to use it:** only when the user asks for something that lives in LobeHub rather than in this working directory — saving a document, recalling an earlier conversation, generating an image, or changing your own agent configuration. A request about local files, code or another tool does not need `lh`. Say what you did and where it landed.',
   "- **You already know where you are.** `LOBEHUB_TOPIC_ID` (this conversation) and `LOBEHUB_OPERATION_ID` (this run) are in your environment, and `LOBEHUB_AGENT_ID` (you) and `LOBEHUB_WORKSPACE_ID` (the workspace this conversation belongs to, which scopes every `lh` call) are too whenever the run carries them. They are ordinary environment variables, so every sub-shell, script or tool you spawn inherits them. Pass them straight to commands rather than listing agents or topics to find yourself; if the one you need is empty, say so instead of guessing an id. LobeHub topic ids start with `tpc_` — an id in the user's message without that prefix belongs to something else.",
+  '- **Earlier conversations:** read one with `lh topic view <id>`. This run can always read its own conversation and the ones the user names in it (a `tpc_…` id or a `<refer_topic>` tag); for any other, ask the user to name it here.',
   '- **If `lh` is older than this app**, the shell may have found a stale global install first: `lh man` lacks a command you expect, or `lh` reports an unknown command. When `LOBEHUB_CLI` is set it is the path of the CLI this app ships — run that path instead of `lh` for the rest of the session.',
   '- **Look commands up, do not guess them.** `lh man` lists every command, and `lh man <command>` (e.g. `lh man doc create`) prints the manual for the CLI actually installed here, including exactly which flags that command takes. Many commands offer `--json` for structured output, but not all of them — the manual is what says so, and an invented flag just fails the call.',
   '- **What it reaches:** `lh kb` knowledge bases · `lh doc` documents · `lh file` files · `lh artifact` artifacts · `lh topic` / `lh message` past conversations · `lh agent` agents · `lh task` / `lh project` work · `lh widget` / `lh dashboard` monitoring widgets and dashboards · `lh search` local resources and the web · `lh gen` text/image/video/TTS/ASR generation · `lh memory` user memory · `lh notify` notifications to the user · `lh model` / `lh provider` / `lh plugin` / `lh skill` platform configuration · `lh bot` chat-platform bots.',
