@@ -172,6 +172,12 @@ export class AgentSliceActionImpl {
   #availableAgentsRefresh?: { promise: Promise<AvailableAgentItem[]>; scope: string };
   /** Bumped by every invalidation, so a read started before it cannot confirm the list. */
   #availableAgentsGeneration = 0;
+  /**
+   * Cache scopes whose list changed and is not confirmed yet, with the
+   * generation of their latest change. Per scope like the replica data: a fresh
+   * read in one identity never vouches for another identity's persisted copy.
+   */
+  readonly #staleAvailableAgentScopes = new Map<string, number>();
 
   constructor(set: Setter, get: () => AgentStore, _api?: unknown) {
     void _api;
@@ -753,6 +759,7 @@ export class AgentSliceActionImpl {
    */
   invalidateAvailableAgents = (): void => {
     this.#availableAgentsGeneration += 1;
+    this.#staleAvailableAgentScopes.set(cacheScope.get(), this.#availableAgentsGeneration);
     // A read already in flight may hold the pre-change list: later callers start anew.
     this.#availableAgentsRefresh = undefined;
     this.#set({ availableAgentsStale: true }, false, 'invalidateAvailableAgents');
@@ -765,27 +772,28 @@ export class AgentSliceActionImpl {
    * a request already in flight when there is no invalidation to honour.
    */
   getAvailableAgents = async (): Promise<AvailableAgentItem[]> => {
-    const { availableAgents: current, availableAgentsStale: stale } = this.#get();
+    const scope = cacheScope.get();
+    const current = this.#get().availableAgents;
+    const stale = this.#staleAvailableAgentScopes.has(scope);
     if (current && !stale) return current;
 
     // Concurrent sends of one identity share one refresh; the list stays stale
     // until it lands. A send of another identity never joins it: its raw answer
     // would hand that identity's agents to this one.
-    const scope = cacheScope.get();
     let refresh = this.#availableAgentsRefresh;
     if (refresh?.scope !== scope) {
       const generation = this.#availableAgentsGeneration;
       const promise = this.#available
         .fetch(EMPTY_PARAMS, { fresh: stale, scope })
         .then(({ data }) => {
-          // Only a read started after the latest change, in the identity still
-          // active, confirms the list.
-          if (
-            generation === this.#availableAgentsGeneration &&
-            scope === cacheScope.get() &&
-            this.#get().availableAgentsStale
-          )
-            this.#set({ availableAgentsStale: false }, false, 'getAvailableAgents');
+          // Only a read started after this identity's latest change confirms
+          // its list; the store flag mirrors the identity still active.
+          const changedAt = this.#staleAvailableAgentScopes.get(scope);
+          if (changedAt !== undefined && changedAt <= generation)
+            this.#staleAvailableAgentScopes.delete(scope);
+          const activeStale = this.#staleAvailableAgentScopes.has(cacheScope.get());
+          if (scope === cacheScope.get() && this.#get().availableAgentsStale !== activeStale)
+            this.#set({ availableAgentsStale: activeStale }, false, 'getAvailableAgents');
           return data;
         })
         .finally(() => {

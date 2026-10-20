@@ -462,6 +462,32 @@ describe('agent store replicas', () => {
       await inA.catch(() => undefined);
     });
 
+    // Codex P2: a fresh read in identity B must not vouch for identity A's persisted list.
+    it('keeps a change in one identity stale until that identity confirms it', async () => {
+      const scopeA = scope;
+      act(() => useAgentStore.setState({ availableAgents: [agentItem('agt_deleted')] }));
+      act(() => useAgentStore.getState().invalidateAvailableAgents());
+
+      useScope(`agent-store-user-${randomUUID()}:personal`);
+      vi.mocked(agentService.queryAgents).mockResolvedValueOnce([agentItem('agt_of_b')]);
+      act(() => useAgentStore.setState({ availableAgents: undefined }));
+      await act(async () => {
+        await useAgentStore.getState().getAvailableAgents();
+      });
+
+      // Back in A, its pre-change persisted copy is restored.
+      useScope(scopeA);
+      act(() => useAgentStore.setState({ availableAgents: [agentItem('agt_deleted')] }));
+      vi.mocked(agentService.queryAgents).mockResolvedValueOnce([agentItem('agt_kept')]);
+      let listed: unknown;
+      await act(async () => {
+        listed = await useAgentStore.getState().getAvailableAgents();
+      });
+
+      expect(listed).toEqual([agentItem('agt_kept')]);
+      expect(agentService.queryAgents).toHaveBeenCalledTimes(2);
+    });
+
     it('keeps the last list when a background refresh fails', async () => {
       vi.mocked(agentService.queryAgents).mockResolvedValueOnce([agentItem('agt_1')]);
       const sync = renderHook(() => useAgentStore.getState().useFetchAvailableAgents(true), {
