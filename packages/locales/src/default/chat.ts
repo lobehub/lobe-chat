@@ -312,6 +312,7 @@ export default {
   'builtinCopilot': 'Built-in Copilot',
   'chatList.earlierHistoryError': "Couldn't load earlier messages",
   'chatList.expandMessage': 'Expand Message',
+  'chatList.laterHistoryError': "Couldn't load later messages",
   'chatList.longMessageDetail': 'View Details',
   'chatList.refreshError': "Couldn't refresh messages",
   'chatList.refreshing': 'Fetching latest messages…',
@@ -332,16 +333,21 @@ export default {
     'You are about to delete this category. After deletion, its agents will be moved to the default list. Please confirm your action.',
   'confirmRemoveGroupSuccess': 'Group deleted successfully',
   'confirmRemoveSessionItemAlert':
-    'You are about to delete this agent and its conversations. They will be moved to the trash and can be restored within 30 days.',
+    'You are about to delete this agent and its topics. They will be moved to the trash and can be restored within 30 days.',
   'confirmRemoveSessionSuccess': 'Agent removed successfully',
   'defaultAgent': 'Default Agent',
   'defaultGroupChat': 'Group',
   'defaultList': 'Default List',
   'defaultSession': 'Default Agent',
+  'desktopNotification.agentFailed.body': 'Open the conversation for details',
+  'desktopNotification.agentFailed.title': '{{name}} ran into a problem',
   'desktopNotification.aiReplyCompleted.body': 'Agent reply is ready',
   'desktopNotification.aiReplyCompleted.title': 'Reply completed',
   'desktopNotification.humanApprovalRequired.body': 'An Agent needs your approval to continue',
   'desktopNotification.humanApprovalRequired.title': 'Approval required',
+  'desktopNotification.workingDirectoryUnavailable.body': 'Working directory unavailable: {{path}}',
+  'desktopNotification.workingDirectoryUnavailable.bodyWithoutPath':
+    'Working directory unavailable: the folder saved for this conversation no longer exists',
   'cliDetectionTimeoutGuide.actions.openSystemTools': 'Open System Tools',
   'cliDetectionTimeoutGuide.actions.retry': 'Detect again',
   'cliDetectionTimeoutGuide.desc':
@@ -502,6 +508,7 @@ export default {
   'editedFiles.title_one': 'Edited {{count}} file',
   'editedFiles.title_other': 'Edited {{count}} files',
   'editedFiles.hideChanges': 'Hide changes',
+  'editedFiles.previewUnavailable': 'Preview unavailable',
   'editedFiles.showLess': 'Show fewer files',
   'editedFiles.showMore_one': 'Show {{count}} more file',
   'editedFiles.showMore_other': 'Show {{count}} more files',
@@ -854,6 +861,7 @@ export default {
   'heteroAgent.executionTarget.gateway': 'Gateway',
   'heteroAgent.executionTarget.gatewayDesc':
     'Run through the device gateway so other clients can follow progress',
+  'heteroAgent.executionTarget.loadFailed': 'Couldn’t load devices.',
   'heteroAgent.executionTarget.loading': 'Loading devices…',
   'heteroAgent.executionTarget.local': 'Local device',
   'heteroAgent.executionTarget.localDesc': 'Run as a local process on this desktop app',
@@ -877,6 +885,7 @@ export default {
   'heteroAgent.executionTarget.online': 'Online',
   'heteroAgent.executionTarget.onlineConnections_one': 'Online · {{count}} connection',
   'heteroAgent.executionTarget.onlineConnections_other': 'Online · {{count}} connections',
+  'heteroAgent.executionTarget.presenceChecking': 'Checking status…',
   'heteroAgent.executionTarget.projectDevicesHint':
     "Only devices with this project's working directory are listed. Add a directory for another device in the project settings.",
   'heteroAgent.executionTarget.switchProjectTopic.content':
@@ -912,6 +921,10 @@ export default {
   'input.addUser': 'Add a user message',
   'input.agentModeUnsupportedModel':
     'The current model doesn’t support agentic tool calling. Switch to a model with agent capability for the best experience.',
+  'input.agentSlugMoved':
+    'This link now opens a different agent. Switching to it — try again once it opens. Your draft is kept.',
+  'input.agentSlugUnconfirmed':
+    'Couldn’t confirm which agent this link opens. Check your connection, then try again.',
   'input.costEstimate.creditsPerMillionTokens': '{{credits}} credits/M tokens',
   'input.costEstimate.hint': 'Estimated cost: ~{{credits}} credits',
   'input.costEstimate.inputLabel': 'Input',
@@ -962,6 +975,8 @@ export default {
   'inputQueue.queuedHint': 'Sends when the current step finishes',
   'inputQueue.queuedMergeHint': 'Merged and sent when the current step finishes',
   'inputQueue.sendNow': 'Send now (interrupts current run)',
+  'inputQueue.alreadyDelivered': 'Already sent to the agent',
+  'inputQueue.withdrawFailed': 'Couldn’t take the message back. Try again.',
   'intentUnderstanding.title': 'Understanding your intent...',
   'inviteMembers': 'Invite members',
   'knowledgeBase.all': 'All Content',
@@ -1767,7 +1782,7 @@ export default {
   'shareModal.popover.loadError': 'Failed to load sharing settings, please try again later',
   'shareModal.popover.privacyWarning.confirm': 'Share & copy link',
   'shareModal.popover.privacyWarning.content':
-    "Anyone with the link can open this whole conversation, so take a moment to make sure there's nothing here you'd rather keep private. A shared topic may include:",
+    "Anyone with the link can open this whole topic, so take a moment to make sure there's nothing here you'd rather keep private. A shared topic may include:",
   'shareModal.popover.privacyWarning.doNotShowAgain': "Don't show this again",
   'shareModal.popover.privacyWarning.items.credentials': 'Credentials',
   'shareModal.popover.privacyWarning.items.files': 'Uploaded files',
@@ -1809,7 +1824,7 @@ export default {
   'sharePage.menu.report': 'Report',
   'sharePage.meta.artifactDescription': 'An artifact shared from {{appName}}.',
   'sharePage.meta.pageDescription': 'A page shared from {{appName}}.',
-  'sharePage.meta.topicDescription': 'A conversation shared from {{appName}}.',
+  'sharePage.meta.topicDescription': 'A topic shared from {{appName}}.',
   'sharePage.pill.edit': 'Edit',
   'sharePage.pill.openInApp': 'Open in {{appName}}',
   'sharePage.pill.sharedVia': 'Shared via {{appName}}',
@@ -2308,8 +2323,8 @@ export default {
     '"{{title}}" will no longer gate this goal’s final acceptance.',
   'goalAcceptance.removeConfirm.title': 'Remove this criterion?',
   'goalAcceptance.title': 'Acceptance standard',
-  'goalChat.newTopic': 'New conversation',
-  'goalChat.noTopics': 'No conversations yet',
+  'goalChat.newTopic': 'New topic',
+  'goalChat.noTopics': 'No topics yet',
   'goalChat.openTopic': 'Go to original topic',
   'goalChat.title': 'Ask about progress',
   'goalChat.welcome':
@@ -2675,6 +2690,7 @@ export default {
   'goalProcess.result.nav.document': 'Final document',
   'goalProcess.result.nav.label': 'Jump to section',
   'goalProcess.result.nav.overview': 'Overview',
+  'goalProcess.result.nav.report': 'Report',
   'goalProcess.result.requirement': 'Original requirement',
   'goalProcess.result.scale.cost': 'Spent {{cost}}',
   'goalProcess.result.scale.criteria': '{{met}}/{{total}} criteria met',
@@ -2710,6 +2726,7 @@ export default {
   'goalProcess.result.unfinished.nextSteps': 'Suggested next steps',
   'goalProcess.result.unfinished.title': 'Not done / next steps',
   'goalProcess.result.unfinished.unmetCriteria': 'Unmet criteria',
+  'goalProcess.result.report.expand': 'View full screen',
   'goalProcess.result.story.chapterMissing':
     'This chapter is no longer in the report — it may have been rewritten.',
   'goalProcess.result.story.detourKind.dead_end': 'Dead end',
@@ -2800,7 +2817,6 @@ export default {
   'goalProcess.metricDetail.budget.perTaskEmpty': 'No run has been billed yet.',
   'goalProcess.metricDetail.budget.perTaskTitle': 'Where it went',
   'goalProcess.metricDetail.budget.runsValue': '{{count}} runs',
-  'goalProcess.metricDetail.budget.tokensValue': '{{value}} tokens',
   'goalProcess.metricDetail.budget.raiseNote':
     'Raising a cap is what restarts a goal the coordinator parked on its budget \u2014 it starts moving again on its own, no Resume needed. Leave a field empty to run uncapped.',
   'goalProcess.metricDetail.budget.rounds': 'Rounds',
@@ -2879,6 +2895,8 @@ export default {
   'goalProcess.start': 'Start',
   'goalPage.allGoals': 'All goals',
   'goalPage.activeGoals': 'Open goals',
+  'goalPage.agentFilter.all': 'All agents',
+  'goalPage.agentFilter.title': 'Filter by agent',
   'goalPage.description':
     'Track what this agent is pursuing and how close each goal is to acceptance.',
   'goalPage.create': 'Create goal',
@@ -2976,8 +2994,6 @@ export default {
     "Couldn't update the archive state. Refresh the task and try again.",
   'taskList.contextMenu.archiveDenied.noEditPermission':
     "You don't have permission to edit tasks in this workspace. Ask a workspace admin for access.",
-  'taskList.contextMenu.archiveDenied.notCreatorOrAdmin':
-    'Only the task creator, a workspace owner, or an admin can archive or restore this task. Ask one of them to do it.',
   'taskList.contextMenu.archiveBlocked':
     'Stop the running task or its schedule/heartbeat before archiving it',
   'taskList.contextMenu.archiveSuccess': 'Task archived',
@@ -2985,6 +3001,8 @@ export default {
   'taskList.contextMenu.copyDescription':
     'Clone this task (and all its subtasks) into another workspace. Status resets to backlog.',
   'taskList.contextMenu.copyFailed': 'Failed to copy task',
+  'taskList.contextMenu.copyContent': 'Copy Content',
+  'taskList.contextMenu.copyContentSuccess': 'Content copied',
   'taskList.contextMenu.copyId': 'Copy ID',
   'taskList.contextMenu.copyIdSuccess': 'ID copied',
   'taskList.contextMenu.copyLink': 'Copy Link',
@@ -3033,17 +3051,17 @@ export default {
   'thread.subagentMetrics.toolsShort_one': '{{count}} tool',
   'thread.subagentMetrics.toolsShort_other': '{{count}} tools',
   'transferMigration.agentBanner.desc':
-    'New conversations are unaffected; older ones light up one by one as they finish. Opening a pending conversation moves it to the front.',
+    'New topics are unaffected; older ones light up one by one as they finish. Opening a pending topic moves it to the front.',
   'transferMigration.agentBadge': 'Migrating history · {{completed}}/{{total}}',
   'transferMigration.agentBadgeCopy': 'Copying history · {{completed}}/{{total}}',
-  'transferMigration.topicPending.title': 'This conversation is migrating',
-  'transferMigration.topicPendingCopy.title': 'This conversation is copying',
+  'transferMigration.topicPending.title': 'This topic is migrating',
+  'transferMigration.topicPendingCopy.title': 'This topic is copying',
   'transferMigration.topicPending.desc':
     'We are prioritizing it — its history will appear here in a few seconds, no action needed.',
   'transferMigration.inputDisabledHint':
-    'You can continue this conversation once its history finishes migrating',
+    'You can continue chatting in this topic once its history finishes migrating',
   'transferMigration.inputDisabledHintCopy':
-    'You can continue this conversation once its history finishes copying',
+    'You can continue chatting in this topic once its history finishes copying',
   'thread.subagentReadOnlyHint':
     'SubAgent conversations are read-only — execution is driven by the parent agent.',
   'terminalPanel.close': 'Close terminal panel',
@@ -3444,6 +3462,7 @@ export default {
   'workingPanel.overview.ports.copy': 'Copy link',
   'workingPanel.overview.ports.createFailed': 'Could not expose the port',
   'workingPanel.overview.ports.detected.available': '{{count}} to open',
+  'workingPanel.overview.ports.detected.checking': 'Checking which ports are running…',
   'workingPanel.overview.ports.detected.expose': 'Open',
   'workingPanel.overview.ports.detected.heading': 'Detected',
   'workingPanel.overview.ports.detected.hideOthers': 'Hide other ports',

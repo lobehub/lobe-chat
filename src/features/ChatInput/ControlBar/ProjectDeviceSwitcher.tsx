@@ -6,10 +6,10 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useChatInputResourceAccess } from '@/features/ChatInput/hooks/useChatInputResourceAccess';
-import { useDeviceList } from '@/features/DeviceManager/useDeviceList';
 import { ExecutionTargetDeviceStatus, ExecutionTargetIcon } from '@/features/ExecutionTargetPicker';
 import { useAgentStore } from '@/store/agent';
 import { agentByIdSelectors } from '@/store/agent/selectors';
+import { useDeviceList } from '@/store/device';
 import { type ProjectDirectory } from '@/store/projectWorkingDirectory';
 
 import OptionRow from './OptionRow';
@@ -117,6 +117,8 @@ const ProjectDeviceSwitcher = ({
                       offlineLabel={t('heteroAgent.executionTarget.offline')}
                       online={target.online}
                       onlineLabel={t('heteroAgent.executionTarget.online')}
+                      unknown={target.onlineUnknown}
+                      unknownLabel={t('heteroAgent.executionTarget.presenceChecking')}
                     />
                   </span>
                 </>

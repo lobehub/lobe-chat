@@ -274,9 +274,19 @@ export interface GoalRolloutState {
   /**
    * The main Agent's plan rewritten from the settled probes, while the phase is
    * `plan_distill`. The next advance lands it as the plan skill's next version
-   * and judges the gate in the same step.
+   * and judges the gate in the same step — unless it sends probes back.
    */
-  pendingDistill?: { reason: string; recipe: string };
+  pendingDistill?: {
+    reason: string;
+    recipe: string;
+    /**
+     * Node ids (or titles) of the probes whose delivery falls short of the
+     * plan. They run again on it, continuing their delivery, and are distilled
+     * again once they settle, before the gate judges the round. Absent or
+     * empty, no probe runs again.
+     */
+    rerun?: string[];
+  };
   /**
    * The owner's correction a sent-back release waits on, while the phase is
    * `plan_revision`. The main Agent rewrites the plan from it (`revisedRecipe`)

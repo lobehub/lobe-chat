@@ -12,9 +12,10 @@ import { pickFinalDeliverable } from './goalAcceptanceReport';
 import { buildAcceptanceTree } from './goalAcceptanceTree';
 import GoalCriteriaResults from './GoalCriteriaResults';
 import type { GoalGraphView } from './goalGraphViewModel';
+import GoalReportPage from './GoalReportPage';
 import { GoalDecisionsMade, GoalUnfinished, useContinueFromResult } from './GoalResultFollowUps';
 import GoalResultHeader from './GoalResultHeader';
-import { findFinalAcceptanceView } from './goalResultState';
+import { findFinalAcceptanceView, goalReportPageId } from './goalResultState';
 import ResultAnchorRail from './ResultAnchorRail';
 import { anchorProps } from './resultAnchors';
 import ResultDeliverables from './ResultDeliverables';
@@ -25,7 +26,8 @@ import { useGoalResultData } from './useGoalResultData';
  * 结果交付 — what a finished Goal hands over, on its own tab.
  *
  * Layered for a reviewer who reads top-down: the first screen is the Goal's own
- * headline, the document the work wrote leads the page as the delivery itself,
+ * headline and the HTML report the wrap-up wrote (clipped, full screen on
+ * click); the document the work wrote follows as the delivery itself,
  * and the deliverables plus each acceptance criterion (against what the latest
  * acceptance round found) follow as the evidence behind it. Under them the trail
  * of how that result was reached. What the owner shaped along the way and what is
@@ -73,6 +75,7 @@ const GoalResult = ({ graph, onSelect }: GoalResultProps) => {
   const data = useGoalResultData(graph);
   const continueFromResult = useContinueFromResult(graph, data.outcomes);
   const acceptanceTree = useMemo(() => buildAcceptanceTree(graph), [graph]);
+  const reportPageId = goalReportPageId(graph);
 
   return (
     <div ref={rootRef}>
@@ -81,6 +84,14 @@ const GoalResult = ({ graph, onSelect }: GoalResultProps) => {
         <div {...anchorProps('overview', t('goalProcess.result.nav.overview'))}>
           <GoalResultHeader data={data} graph={graph} />
         </div>
+        {reportPageId && (
+          <div
+            {...anchorProps('report', t('goalProcess.result.nav.report'))}
+            style={{ paddingBlockStart: 16 }}
+          >
+            <GoalReportPage documentId={reportPageId} />
+          </div>
+        )}
         {deliverable && (
           <div
             {...anchorProps('document', t('goalProcess.result.nav.document'))}

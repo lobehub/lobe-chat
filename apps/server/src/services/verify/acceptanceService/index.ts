@@ -340,12 +340,20 @@ export class AcceptanceService {
     // transition: a completion that failed once is retried by the next round,
     // report or flow event instead of leaving the task open for good. An
     // already-completed task is a no-op.
+    //
+    // The round records the Agent Run that published it. When that run is the
+    // task's own (an agent ingesting acceptance for the task it executes), the
+    // completion waits for the run to end rather than interrupting it.
     if (
       status === 'delivered' &&
       (!current.status || current.status === 'delivered') &&
       acceptance.subjectType === 'task'
     )
-      await this.completeTaskForDelivery(acceptanceId, acceptance.subjectId);
+      await this.completeTaskForDelivery(
+        acceptanceId,
+        acceptance.subjectId,
+        current.metadata?.origin?.operationId,
+      );
     return status;
   };
 

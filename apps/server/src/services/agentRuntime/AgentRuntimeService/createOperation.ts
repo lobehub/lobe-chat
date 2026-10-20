@@ -117,6 +117,11 @@ export async function createOperation(
         defaultTaskAssigneeAgentId: appContext?.defaultTaskAssigneeAgentId,
         documentId: appContext?.documentId,
         editingAgentId: appContext?.editingAgentId,
+        // The Group Agent Builder target must survive on the durable row: an
+        // intervention continuation rebuilds its app context from this row
+        // (never from client input), and a topic whose metadata predates the
+        // `editingGroupId` stamp has nothing else to recover it from.
+        editingGroupId: appContext?.editingGroupId,
         groupId: appContext?.groupId,
         scope: appContext?.scope,
         sessionId: appContext?.sessionId,

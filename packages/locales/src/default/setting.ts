@@ -1,4 +1,7 @@
 export default {
+  'chatPreference.assist.desc':
+    'Personal preferences: they only apply to you, in your personal space and every workspace.',
+  'chatPreference.assist.title': 'Chat Assist',
   'devices.cliUpdate.restart': 'Restart CLI',
   'devices.cliUpdate.update': 'Update and restart',
   'devices.cliUpdate.confirmDesc':
@@ -74,7 +77,7 @@ export default {
     'Create an independent copy in a Workspace. The original Agent stays in your personal account.',
   'agentImport.failed': 'Failed to copy agent.',
   'agentImport.backgroundCopy':
-    'Chat history is large — it keeps copying in the background, and conversations light up one by one as they finish.',
+    'Chat history is large — it keeps copying in the background, and topics light up one by one as they finish.',
   'agentImport.modal.configIncluded': 'Agent configuration is copied by default.',
   'agentImport.modal.confirm': 'Copy',
   'agentImport.modal.includeHistory': 'Copy topics and messages',
@@ -828,6 +831,7 @@ export default {
   'devices.share.visibilityTag.private': 'Private',
   'devices.share.visibilityTag.public': 'Workspace',
   'devices.status.offline': 'Offline',
+  'devices.status.checking': 'Checking status…',
   'devices.status.online': 'Online',
   'devices.status.onlineConnections_one': 'Online · {{count}} connection',
   'devices.status.onlineConnections_other': 'Online · {{count}} connections',
@@ -1477,6 +1481,8 @@ export default {
   'settingsSearch.tabKeywords.appearance':
     'appearance, theme, dark mode, light mode, font, language, color, background',
   'settingsSearch.tabKeywords.billing': 'billing, payment, invoice, card, transaction',
+  'settingsSearch.tabKeywords.chatPreference':
+    'chat preferences, follow-up suggestions, input suggestions, autocomplete',
   'settingsSearch.tabKeywords.connector': 'connectors, integrations, mcp',
   'settingsSearch.tabKeywords.credits': 'credits, balance, top up, recharge, buy credits',
   'settingsSearch.tabKeywords.creds': 'credentials, secrets, oauth',
@@ -1856,6 +1862,7 @@ When I am ___, I need ___
   'tab.apikey': 'API Keys',
   'tab.appearance': 'Appearance',
   'tab.chatAppearance': 'Chat Appearance',
+  'tab.chatPreference': 'Chat Preferences',
   'tab.common': 'Appearance',
   'tab.connector': 'Connectors',
   'tab.creds': 'Credentials',
@@ -1913,7 +1920,7 @@ When I am ___, I need ___
   'trash.desc':
     'Deleted items stay here for {{days}} days and can be restored. After that they are removed permanently.',
   'trash.empty.desc':
-    'Conversations, agents and messages you delete land here for {{days}} days before they are removed for good.',
+    'Topics, agents and messages you delete land here for {{days}} days before they are removed for good.',
   'trash.empty.title': 'Trash is empty',
   'trash.emptyConfirm.content': 'Permanently delete {{count}} item(s)? This cannot be undone.',
   'trash.emptyConfirm.filteredTitle': 'Empty filtered items',
@@ -2832,7 +2839,7 @@ When I am ___, I need ___
     'You will lose access to "{{name}}" immediately. You can rejoin only if you are invited again.',
   'workspace.general.transferAgents.modal.back': 'Back',
   'workspace.general.transferAgents.modal.backgroundMigration':
-    'Chat history is large, so it keeps migrating in the background. The agents are ready to use now; older conversations light up one by one as they finish.',
+    'Chat history is large, so it keeps migrating in the background. The agents are ready to use now; older topics light up one by one as they finish.',
   'workspace.general.transferAgents.modal.continue': 'Continue',
   'workspace.general.transferAgents.modal.done': 'Done',
   'workspace.general.transferAgents.modal.failed': 'Failed to move agents',
@@ -2888,7 +2895,7 @@ When I am ___, I need ___
   'workspace.general.transferTargetLabel': 'Move to',
   'workspace.general.transferAgentGroups.modal.back': 'Back',
   'workspace.general.transferAgentGroups.modal.backgroundMigration':
-    'Chat history is large, so it keeps migrating in the background. The agent group is ready to use now; older conversations light up one by one as they finish.',
+    'Chat history is large, so it keeps migrating in the background. The agent group is ready to use now; older topics light up one by one as they finish.',
   'workspace.general.transferAgentGroups.modal.continue': 'Continue',
   'workspace.general.transferAgentGroups.modal.done': 'Done',
   'workspace.general.transferAgentGroups.modal.failed': 'Failed to transfer agent groups',
@@ -2951,12 +2958,12 @@ When I am ___, I need ___
     'You can copy to personal or workspaces that have permission to create an agent.',
   'workspace.general.copyLobeAI.modal.success': '{{count}} agent(s) copied',
   'workspace.general.copyLobeAI.modal.backgroundCopy':
-    'Chat history is large, so it keeps copying in the background. The agents are ready to use now; conversations light up one by one as they finish.',
+    'Chat history is large, so it keeps copying in the background. The agents are ready to use now; topics light up one by one as they finish.',
   'workspace.general.copyLobeAI.modal.title': 'Copy Agents',
   'workspace.general.copyLobeAI.modal.untitledAgent': 'Untitled Agent',
   'workspace.general.copyAgentGroups.modal.back': 'Back',
   'workspace.general.copyAgentGroups.modal.backgroundCopy':
-    'Chat history is large, so it keeps copying in the background. The agent group is ready to use now; conversations light up one by one as they finish.',
+    'Chat history is large, so it keeps copying in the background. The agent group is ready to use now; topics light up one by one as they finish.',
   'workspace.general.copyAgentGroups.modal.continue': 'Continue',
   'workspace.general.copyAgentGroups.modal.copyOptions.config.desc':
     'Required. Copies group metadata, members, member roles, and Agent profiles.',

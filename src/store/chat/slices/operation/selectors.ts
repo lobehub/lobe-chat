@@ -965,14 +965,17 @@ const getIdleQueueHost = (context: MessageMapKeyInput) => (s: ChatStoreState) =>
 
 // A successful top-level run always drains its queue into a steered send, so a
 // queue sitting behind a completed run is the hand-off window, not a stale queue.
+const isDrainingQueueHost = (host?: Operation): boolean =>
+  host?.status === 'completed' && !host.metadata.endedWithoutCompletion;
+
 const isQueueDrainPending = (context: MessageMapKeyInput) => (s: ChatStoreState) =>
-  getIdleQueueHost(context)(s)?.status === 'completed';
+  isDrainingQueueHost(getIdleQueueHost(context)(s));
 
 // Send now keeps its item queued until the interrupt is confirmed; that wait is
 // part of the hand-off too, but its own send must not be re-queued.
 const isSteerHandoffPending = (context: MessageMapKeyInput) => (s: ChatStoreState) => {
   const host = getIdleQueueHost(context)(s);
-  if (host?.status === 'completed') return true;
+  if (isDrainingQueueHost(host)) return true;
 
   return host?.status === 'cancelled' && host.metadata.cancelReason === SEND_NOW_CANCEL_REASON;
 };
@@ -1045,6 +1048,7 @@ export const operationSelectors = {
   visiblyRunningTopicIds,
 
   // Message Queue
+  getIdleQueueHost,
   getQueuedMessages,
   queuedMessageCount,
 };

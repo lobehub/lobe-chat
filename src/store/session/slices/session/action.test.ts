@@ -16,10 +16,8 @@ vi.mock('@/services/session', () => ({
     cloneSession: vi.fn(),
     updateSessionGroup: vi.fn(),
     removeSession: vi.fn(),
-    getAllSessions: vi.fn(),
     updateSession: vi.fn(),
     updateSessionGroupId: vi.fn(),
-    searchSessions: vi.fn(),
     updateSessionPinned: vi.fn(),
   },
 }));

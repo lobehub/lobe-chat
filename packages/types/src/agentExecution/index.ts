@@ -4,7 +4,7 @@ import type { LobeAgentChatConfig } from '../agent/chatConfig';
 import type { CreateThreadWithMessageParams } from '../aiChat';
 import type { DeviceUnavailableErrorData } from '../device';
 import { workingDirConfigSchema } from '../device';
-import type { TaskDetail, UIChatMessage } from '../message';
+import type { ContextSelection, PageSelection, TaskDetail, UIChatMessage } from '../message';
 import type { ChatTopic } from '../topic';
 
 export * from './credentialFacts';
@@ -325,6 +325,12 @@ export interface ExecAgentParams {
    * pushing whole `uiMessages` snapshots to it. Absent ⇒ 1.
    */
   clientProtocol?: 1 | 2;
+  /**
+   * Content the user attached to this message from the conversation, a page or
+   * code (the composer's "add to chat"). Persisted on the user message as
+   * `metadata.contextSelections` and injected into this turn's context.
+   */
+  contextSelections?: ContextSelection[];
   /** Explicit device ID to bind to the topic and activate for this run */
   deviceId?: string;
   /** Optional existing message IDs to include in context */
@@ -351,6 +357,11 @@ export interface ExecAgentParams {
   localDeviceId?: string;
   /** Override the agent's default model */
   model?: string;
+  /**
+   * Page-editor selections attached to this message, mirrored from
+   * `contextSelections` for compatibility. Persisted as `metadata.pageSelections`.
+   */
+  pageSelections?: PageSelection[];
   /**
    * Parent operation ID when this run is a sub-agent invocation. Forwarded
    * to `agent_operations.parent_operation_id` so analytics can join the

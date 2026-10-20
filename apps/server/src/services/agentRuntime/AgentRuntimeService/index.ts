@@ -69,6 +69,7 @@ import {
   acceptsFileWorks,
   acceptsMemberRuntimeEnd,
   controlCompletedToolResult,
+  getOperationEditingGroupId,
   getOperationStatus,
   injectQueuedFollowUp,
   interruptOperation,
@@ -379,6 +380,10 @@ export class AgentRuntimeService {
 
   acceptsMemberRuntimeEnd(...args: MethodArgs<typeof acceptsMemberRuntimeEnd>) {
     return acceptsMemberRuntimeEnd(this.context, ...args);
+  }
+
+  getOperationEditingGroupId(...args: MethodArgs<typeof getOperationEditingGroupId>) {
+    return getOperationEditingGroupId(this.context, ...args);
   }
 
   setQueuedMessages(...args: MethodArgs<typeof setQueuedMessages>) {

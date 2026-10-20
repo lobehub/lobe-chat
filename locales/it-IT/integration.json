@@ -62,6 +62,7 @@
   "linear.installResult.error.exchange_failed": "Linear non ha accettato l'autorizzazione. Riprova a connetterti.",
   "linear.installResult.error.invalid_state": "La richiesta di connessione è scaduta. Inizia di nuovo da Connetti spazio di lavoro.",
   "linear.installResult.error.missing_code": "Linear non ha restituito un codice di autorizzazione.",
+  "linear.installResult.error.save_failed": "Linear ha autorizzato la connessione, ma LobeHub non è riuscito a salvarla. Riprova a connetterti.",
   "linear.installResult.error.unknown": "Connessione a Linear fallita ({{code}}).",
   "linear.installResult.error.workspace_forbidden": "Solo i membri dello spazio di lavoro possono connettere Linear qui.",
   "linear.installResult.success": "Linear connesso: {{account}}",

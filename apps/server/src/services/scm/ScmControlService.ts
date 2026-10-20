@@ -21,6 +21,7 @@ import {
   postGitHubPullRequestComment,
   updateGitHubPullRequestComment,
 } from './github/app';
+import { SCM_MAX_WAKES } from './limits';
 import { canWriteScmScope } from './scope';
 import { buildTrackingComment } from './trackingComment';
 import type { ScmInboundEvent } from './types';
@@ -28,8 +29,8 @@ import { buildCiFailurePrompt, buildReviewPrompt, type ScmWakeReason } from './w
 
 const log = debug('lobe-server:scm:control');
 
-/** Wakes per change request before the loop hands over to a human. */
-export const SCM_MAX_WAKES = 3;
+export { SCM_MAX_WAKES };
+
 /** Window in which repeated events on one change request collapse into one wake. */
 const WAKE_DEBOUNCE_SECONDS = 60;
 /** How far back review feedback is collected for a wake. */

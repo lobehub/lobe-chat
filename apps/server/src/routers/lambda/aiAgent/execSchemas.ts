@@ -1,6 +1,8 @@
 import {
+  ContextSelectionSchema,
   CreateThreadWithMessageSchema,
   initialTopicMetadataSchema,
+  PageSelectionSchema,
   RequestTrigger,
   UserInterventionConfigSchema,
 } from '@lobechat/types';
@@ -201,6 +203,14 @@ export const ExecAgentFieldsSchema = z.object({
   existingMessageIds: z.array(z.string()).optional().default([]),
   /** File IDs of already-uploaded attachments to attach to the new user message */
   fileIds: z.array(z.string()).optional(),
+  /**
+   * Content the user attached from the conversation, a page or code. The gateway
+   * path never calls `aiChat.sendMessageInServer`, so this is the only way the
+   * selections reach the user message the server persists and the run's context.
+   */
+  contextSelections: z.array(ContextSelectionSchema).optional(),
+  /** Page-editor selections, mirrored from `contextSelections` for compatibility. */
+  pageSelections: z.array(PageSelectionSchema).optional(),
   /** Parent message ID for regeneration/continue (skip user message creation, branch from this message) */
   parentMessageId: z.string().optional(),
   /** Existing gateway operation this fresh turn atomically supersedes. */

@@ -86,6 +86,8 @@ export interface WorkVersionMetadata {
   fileUrl?: string;
   /** `goal_report` Work — the structured storyline; the full report is the version's `content`. */
   goalReport?: GoalReportMetadata;
+  /** `goal_report` Work — the report as an HTML page: a `custom/html` document id. */
+  goalReportPageId?: string;
   /** `file` Work — lines added by this version's edit (0 when the source tool reports none). */
   linesAdded?: number;
   /** `file` Work — lines deleted by this version's edit (0 when the source tool reports none). */

@@ -48,6 +48,12 @@ export interface ToolReadsContext {
   requestedDeviceId?: string;
   resolvedAgentId: string;
   shareGate: ExecRunContext['shareGate'];
+  /**
+   * The extension identifiers a share run may discover (connectors, Composio,
+   * LobeHub Skills); only these are resolved, so an ungranted one never has
+   * its credentials decrypted or its provider called. `undefined` = no gate.
+   */
+  shareGrantedExtensionIds?: Set<string>;
   topicId: string;
 }
 
@@ -147,10 +153,9 @@ const readConnectors = async (deps: ToolDiscoveryDeps, ctx: ToolReadsContext) =>
  * "Not found" and the model's direct call is rejected as an unknown name.
  * Like installed plugins they are discoverable but never enabled.
  *
- * Share runs skip it: the early allowlist in `discoverTools` exists so
- * ungranted creator connectors never get their credentials decrypted for a
- * visitor turn. Degrades to nothing on failure — widening discovery must not
- * fail the run.
+ * A share run resolves only the connectors the share grants, by identifier:
+ * `resolveAll` would decrypt every creator connector for a visitor turn.
+ * Degrades to nothing on failure — widening discovery must not fail the run.
  */
 const readDiscoverableConnectors = async (
   deps: ToolDiscoveryDeps,
@@ -162,12 +167,24 @@ const readDiscoverableConnectors = async (
   tools: UserConnectorToolItem[];
 }> => {
   const none = { connectorsMcp: [], manifests: [], tools: [] };
-  if (ctx.shareGate || ctx.exclusivePluginIds || ctx.isGoalTurn) return none;
+  if (ctx.exclusivePluginIds || ctx.isGoalTurn) return none;
   try {
     const candidates = new Set(ctx.candidateIds);
-    const connectorsMcp = (
-      await deps.connectorModel.resolveAll(ctx.resolvedAgentId, gateKeeper)
-    ).filter(
+    let resolved: DecryptedConnector[];
+    if (ctx.shareGrantedExtensionIds) {
+      const grantedUnpinnedIds = [...ctx.shareGrantedExtensionIds].filter(
+        (identifier) => !candidates.has(identifier),
+      );
+      if (grantedUnpinnedIds.length === 0) return none;
+      resolved = await deps.connectorModel.resolveByIdentifiers(
+        grantedUnpinnedIds,
+        ctx.resolvedAgentId,
+        gateKeeper,
+      );
+    } else {
+      resolved = await deps.connectorModel.resolveAll(ctx.resolvedAgentId, gateKeeper);
+    }
+    const connectorsMcp = resolved.filter(
       (c) => !candidates.has(c.identifier) && (c.mcpServerUrl || c.mcpConnectionType === 'stdio'),
     );
     if (connectorsMcp.length === 0) return none;
@@ -186,7 +203,14 @@ const readDiscoverableConnectors = async (
   }
 };
 
-const readLobehubSkillManifests = async (deps: ToolDiscoveryDeps): Promise<LobeToolManifest[]> => {
+const readLobehubSkillManifests = async (
+  deps: ToolDiscoveryDeps,
+  ctx: ToolReadsContext,
+): Promise<LobeToolManifest[]> => {
+  // A share run lists tools only for granted providers; with none granted
+  // the Market is not asked about the creator's connections at all.
+  const providerIds = ctx.shareGrantedExtensionIds ? [...ctx.shareGrantedExtensionIds] : undefined;
+  if (providerIds?.length === 0) return [];
   try {
     const marketService = await deps.getMarketService();
     return await traceDiscoveryStage('lobehub_skills', async (span) => {
@@ -198,6 +222,7 @@ const readLobehubSkillManifests = async (deps: ToolDiscoveryDeps): Promise<LobeT
         onError: () => {
           failureCount += 1;
         },
+        providerIds,
       });
       span.setAttribute('lobehub.tool_discovery.manifest_count', manifests.length);
       markDegradedStage(span, failureCount, 'skill discovery requests');
@@ -346,9 +371,17 @@ export const startToolReads = (deps: ToolDiscoveryDeps, ctx: ToolReadsContext) =
   ),
   attachedFileTypes: started(readAttachedFileTypes(deps, ctx)),
   oversizedFiles: started(readHasOversizedFiles(deps, ctx).catch(() => false)), // non-critical
+  // A share run reads only the granted Composio connections, and skips the
+  // read when nothing is granted.
   composioManifests: started(
-    traceDiscoveryStage('composio', () =>
-      deps.composioService.getComposioManifests(ctx.resolvedAgentId),
+    (ctx.shareGrantedExtensionIds?.size === 0
+      ? Promise.resolve<LobeToolManifest[]>([])
+      : traceDiscoveryStage('composio', () =>
+          deps.composioService.getComposioManifests(
+            ctx.resolvedAgentId,
+            ctx.shareGrantedExtensionIds && { identifiers: [...ctx.shareGrantedExtensionIds] },
+          ),
+        )
     ).catch((error) => {
       log('execAgent: failed to fetch composio manifests: %O', error);
       return [] as LobeToolManifest[];
@@ -359,7 +392,7 @@ export const startToolReads = (deps: ToolDiscoveryDeps, ctx: ToolReadsContext) =
   installedPlugins: started(
     traceDiscoveryStage('installed_plugins', () => deps.pluginModel.query()),
   ),
-  lobehubSkillManifests: started(readLobehubSkillManifests(deps)),
+  lobehubSkillManifests: started(readLobehubSkillManifests(deps, ctx)),
 });
 
 export type ToolReads = ReturnType<typeof startToolReads>;

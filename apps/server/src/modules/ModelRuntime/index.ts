@@ -3,6 +3,7 @@ import type { ServerDefaultHeterogeneousAgentType } from '@lobechat/heterogeneou
 import { SERVER_DEFAULT_HETEROGENEOUS_AGENT_TYPES } from '@lobechat/heterogeneous-agents';
 import {
   AgentRuntimeError,
+  AgentRuntimeErrorType,
   mergeModelRuntimeHooks,
   ModelRuntime,
   type ModelRuntimeHooks,
@@ -192,6 +193,14 @@ export const buildPayloadFromKeyVaults = (
   }
 };
 
+// Deployment credentials are only valid for the deployment-owned provider and endpoint.
+// A custom provider's SDK type does not grant access to that SDK provider's secrets.
+const canUseServerProviderConfig = (provider: string, payload: ClientSecretPayload) =>
+  Object.values(ModelProvider).includes(provider as ModelProvider) &&
+  (!payload.runtimeProvider || payload.runtimeProvider === provider) &&
+  !payload.baseURL &&
+  !payload.cloudflareBaseURLOrAccountID;
+
 /**
  * Retrieves the options object from environment and apikeymanager
  * based on the provider and payload.
@@ -201,9 +210,11 @@ export const buildPayloadFromKeyVaults = (
  * @returns The options object.
  */
 const getParamsFromPayload = (provider: string, payload: ClientSecretPayload) => {
-  const llmConfig = getLLMConfig() as Record<string, any>;
+  const useServerConfig = canUseServerProviderConfig(provider, payload);
+  const llmConfig = (useServerConfig ? getLLMConfig() : {}) as Record<string, any>;
+  const runtimeProvider = payload.runtimeProvider ?? provider;
 
-  switch (provider) {
+  switch (runtimeProvider) {
     case ModelProvider.LobeHub: {
       return { apikey: payload.apiKey, baseURL: payload.baseURL, ...payload };
     }
@@ -213,20 +224,19 @@ const getParamsFromPayload = (provider: string, payload: ClientSecretPayload) =>
     }
 
     default: {
-      let upperProvider = provider.toUpperCase();
-
-      if (!(`${upperProvider}_API_KEY` in llmConfig)) {
-        upperProvider = ModelProvider.OpenAI.toUpperCase(); // Use OpenAI options as default
-      }
+      const upperProvider = runtimeProvider.toUpperCase();
 
       const apiKey = apiKeyManager.pick(payload?.apiKey || llmConfig[`${upperProvider}_API_KEY`]);
-      const baseURL = payload?.baseURL || process.env[`${upperProvider}_PROXY_URL`];
+      const baseURL =
+        payload?.baseURL ||
+        (useServerConfig ? process.env[`${upperProvider}_PROXY_URL`] : undefined);
 
       return baseURL ? { apiKey, baseURL } : { apiKey };
     }
 
     case ModelProvider.Ollama: {
-      const baseURL = payload?.baseURL || process.env.OLLAMA_PROXY_URL;
+      const baseURL =
+        payload?.baseURL || (useServerConfig ? process.env.OLLAMA_PROXY_URL : undefined);
 
       return { baseURL };
     }
@@ -277,9 +287,7 @@ const getParamsFromPayload = (provider: string, payload: ClientSecretPayload) =>
 
       const apiKey = apiKeyManager.pick(payload?.apiKey || CLOUDFLARE_API_KEY);
       const baseURLOrAccountID =
-        payload.apiKey && payload.cloudflareBaseURLOrAccountID
-          ? payload.cloudflareBaseURLOrAccountID
-          : CLOUDFLARE_BASE_URL_OR_ACCOUNT_ID;
+        payload.cloudflareBaseURLOrAccountID || CLOUDFLARE_BASE_URL_OR_ACCOUNT_ID;
 
       return { apiKey, baseURLOrAccountID };
     }
@@ -377,23 +385,30 @@ const getParamsFromPayload = (provider: string, payload: ClientSecretPayload) =>
 
 const buildVertexOptions = (
   payload: ClientSecretPayload,
-  params: Partial<GoogleGenAIOptions> = {},
+  params: Partial<GoogleGenAIOptions>,
+  useServerConfig: boolean,
 ): GoogleGenAIOptions => {
-  const rawCredentials = payload.apiKey || process.env.VERTEXAI_CREDENTIALS || '';
+  const rawCredentials =
+    payload.apiKey || (useServerConfig ? process.env.VERTEXAI_CREDENTIALS : undefined) || '';
   const credentials = safeParseJSON<Record<string, string>>(rawCredentials);
 
   const projectFromParams = params.project as string | undefined;
   const projectFromCredentials = credentials?.project_id;
-  const projectFromEnv = process.env.VERTEXAI_PROJECT;
+  const projectFromEnv = useServerConfig ? process.env.VERTEXAI_PROJECT : undefined;
 
   const project = projectFromParams || projectFromCredentials || projectFromEnv;
   const location =
     (params.location as string | undefined) ||
     payload.vertexAIRegion ||
-    process.env.VERTEXAI_LOCATION ||
+    (useServerConfig ? process.env.VERTEXAI_LOCATION : undefined) ||
     undefined;
 
   const googleAuthOptions = params.googleAuthOptions || (credentials ? { credentials } : undefined);
+
+  // Without explicit user credentials Google auth would load the server's ambient credentials.
+  if (!useServerConfig && !googleAuthOptions && !params.apiKey) {
+    throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidProviderAPIKey);
+  }
 
   const options: GoogleGenAIOptions = {
     ...params,
@@ -434,7 +449,11 @@ export const initModelRuntimeWithUserPayload = (
   }
 
   if (runtimeProvider === ModelProvider.VertexAI) {
-    const vertexOptions = buildVertexOptions(payload, params);
+    const vertexOptions = buildVertexOptions(
+      payload,
+      params,
+      canUseServerProviderConfig(provider, payload),
+    );
     const runtime = LobeVertexAI.initFromVertexAI(vertexOptions);
 
     return new ModelRuntime(runtime, hooks);
@@ -443,7 +462,7 @@ export const initModelRuntimeWithUserPayload = (
   return ModelRuntime.initializeWithProvider(
     runtimeProvider,
     {
-      ...getParamsFromPayload(runtimeProvider, payload),
+      ...getParamsFromPayload(provider, payload),
       ...params,
     },
     hooks,

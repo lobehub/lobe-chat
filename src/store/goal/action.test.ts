@@ -256,6 +256,19 @@ describe('GoalAction', () => {
       );
     });
 
+    it('reads the cross-agent list without an assignee filter, keyed by cache scope', () => {
+      renderHook(() =>
+        useGoalStore.getState().useFetchGoals(undefined, undefined, 'all', 'user-1:workspace-1'),
+      );
+
+      expect(syncKeyFor('goalList')?.[4]).toBe('global:user-1:workspace-1');
+      void syncFetcherFor('goalList')?.();
+      const [query] = vi.mocked(goalService.list).mock.calls[0];
+      expect(query).toMatchObject({ limit: 100 });
+      expect(query?.agentId).toBeUndefined();
+      expect(query?.projectId).toBeUndefined();
+    });
+
     it('asks the server for the tab’s own statuses under the tab’s own entry', () => {
       // A page of the newest goals cannot answer "what is in review", so the tab
       // gets its own server read rather than a client-side filter.

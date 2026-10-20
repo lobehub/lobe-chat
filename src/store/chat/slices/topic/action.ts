@@ -29,13 +29,12 @@ import {
   recordLens,
   type ReplicaPageResult,
   type ReplicaSyncResult,
-  singleEntity,
 } from '@/libs/replica';
-import { mutate, useClientDataSWRWithSync } from '@/libs/swr';
-import { cronKeys, deviceKeys, topicKeys } from '@/libs/swr/keys';
+import { mutate } from '@/libs/swr';
+import { cronKeys, topicKeys } from '@/libs/swr/keys';
 import { getCacheScope } from '@/libs/swr/useCacheScope';
 import { aiChatService } from '@/services/aiChat';
-import { type GitLinkedPRSummary, gitService } from '@/services/git';
+import { type GitLinkedPRSummary } from '@/services/git';
 import { messageService } from '@/services/message';
 import type { TopicBatchDeleteScope } from '@/services/topic';
 import { topicService } from '@/services/topic';
@@ -75,12 +74,16 @@ import {
   normalizeTopicListParams,
   type TopicAgentViewParams,
   topicAgentViewResource,
-  topicDetailResource,
   type TopicListParams,
   topicListResource,
 } from './projection';
 import { type ChatTopicDispatch } from './reducer';
 import { topicSelectors } from './selectors';
+import { createTopicDetailSlice, RUN_WATCH_INTERVAL } from './topicDetail';
+import {
+  type TopicLinkedPullRequestRefreshParams,
+  useTopicLinkedPullRequestSync,
+} from './topicLinkedPullRequest';
 
 const n = setNamespace('t');
 
@@ -190,14 +193,6 @@ export interface RemoveUnstarredTopicOptions {
 
 type Setter = StoreSetter<ChatStore>;
 
-interface TopicLinkedPullRequestRefreshParams {
-  branch: string;
-  deviceId?: string;
-  path: string;
-  pullRequestNumber?: number;
-  topicId: string;
-}
-
 export const chatTopic = (set: Setter, get: () => ChatStore, _api?: unknown) =>
   new ChatTopicActionImpl(set, get, _api);
 
@@ -267,16 +262,14 @@ export class ChatTopicActionImpl {
       view: recordLens<ChatStore, TopicData>('agentTopicsViewMap'),
       viewFields: ({ withDetails }) => ({ withDetails }),
     });
-    this.#topicDetail = createReplicaSlice(topicDetailResource, {
-      actionPrefix: n('topicDetail'),
-      entity: singleEntity<ChatTopic>((topic) => topic.id),
-      fetcher: (topicId) => topicService.getTopicDetail(topicId),
+    this.#topicDetail = createTopicDetailSlice({
       get,
-      // A missing topic keeps whatever is cached (the list may still hold it).
-      merge: (topic, confirmed) => (!topic || isEqual(topic, confirmed) ? undefined : topic),
+      onRunningOperation: (fresh) =>
+        this.#topicEntity.update(fresh.id, (topic) => ({
+          ...topic,
+          metadata: { ...topic.metadata, runningOperation: fresh.metadata!.runningOperation },
+        })),
       set,
-      stateKey: 'topicDetailReplica',
-      view: recordLens<ChatStore, ChatTopic>('topicDetailMap'),
     });
     this.#topicEntity = linkReplicaEntity<ChatTopic>([
       this.#topicList,
@@ -1313,49 +1306,12 @@ export class ChatTopicActionImpl {
     return true;
   };
 
-  useFetchTopicLinkedPullRequest = (
-    topicId?: string,
-    metadata?: ChatTopicMetadata,
-  ): SWRResponse<GitLinkedPRSummary | undefined> => {
-    const params = topicId
-      ? this.#resolveTopicLinkedPullRequestRefreshParams(topicId, metadata)
-      : undefined;
-
-    return useClientDataSWRWithSync<GitLinkedPRSummary | undefined>(
-      params
-        ? deviceKeys.gitLinkedPR(
-            params.deviceId ?? 'local',
-            params.path,
-            params.branch,
-            params.pullRequestNumber,
-          )
-        : null,
-      params
-        ? () =>
-            gitService.getLinkedPullRequest({
-              branch: params.branch,
-              deviceId: params.deviceId,
-              path: params.path,
-              pullRequestNumber: params.pullRequestNumber,
-            })
-        : null,
-      {
-        dedupingInterval: 60 * 1000,
-        focusThrottleInterval: 60 * 1000,
-        onData: (prData) => {
-          if (!params) return;
-
-          void this.#get()
-            .internal_updateTopicLinkedPullRequest(params, prData)
-            .catch((error) => {
-              console.error('[useFetchTopicLinkedPullRequest] sync failed:', error);
-            });
-        },
-        revalidateOnFocus: true,
-        shouldRetryOnError: false,
-      },
+  /** Keep a topic's recorded PR state current (see `useTopicLinkedPullRequestSync`). */
+  useFetchTopicLinkedPullRequest = (topicId?: string, metadata?: ChatTopicMetadata) =>
+    useTopicLinkedPullRequestSync(
+      topicId ? this.#resolveTopicLinkedPullRequestRefreshParams(topicId, metadata) : undefined,
+      (params, pr) => this.#get().internal_updateTopicLinkedPullRequest(params, pr),
     );
-  };
 
   autoRenameTopicTitle = async (id: string, topicAgentId?: string): Promise<void> => {
     const { activeAgentId, summaryTopicTitle } = this.#get();
@@ -1455,16 +1411,15 @@ export class ChatTopicActionImpl {
     return this.#topicList.hydrate(normalized, scope);
   };
 
-  /**
-   * By-id topic detail fetch, used as a fallback when a topic the UI is
-   * anchored on is missing from the loaded list bucket — e.g. an archived
-   * (`completed`) topic that the sidebar fetch excludes via `excludeStatuses`,
-   * or a topic deep-linked from the Topics management page. The result lands
-   * in `topicDetailMap`, which `currentActiveTopic` / `getTopicById` read as
-   * a fallback. Pass `undefined` to disable the fetch.
-   */
-  useFetchTopicDetail = (topicId?: string | null): ReplicaSyncResult =>
-    this.#topicDetail.useSync(topicId || null);
+  /** By-id details and background run discovery. An absent id disables the read. */
+  useFetchTopicDetail = (topicId?: string | null, watchRuns = false): ReplicaSyncResult =>
+    this.#topicDetail.useSync(topicId || null, {
+      dedupingInterval: 1000,
+      focusThrottleInterval: 5000,
+      refreshInterval: watchRuns ? RUN_WATCH_INTERVAL : 0,
+      refreshWhenHidden: false,
+      refreshWhenOffline: false,
+    });
 
   /**
    * Topic fetch dedicated to the Agent Topics management page. Its own

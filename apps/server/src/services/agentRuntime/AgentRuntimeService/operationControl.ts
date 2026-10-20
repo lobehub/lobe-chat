@@ -224,6 +224,29 @@ export async function acceptsMemberRuntimeEnd(
 }
 
 /**
+ * The Group Agent Builder target frozen on the durable operation row.
+ *
+ * An intervention continuation rebuilds its app context from server-side
+ * evidence (never client input), and `state.origin` expires with the runtime
+ * snapshot. The row is the only durable copy — older topics may lack
+ * `topics.metadata.editingGroupId`, so without it the resumed member tools
+ * answer `NoGroupContext`.
+ */
+export async function getOperationEditingGroupId(
+  deps: OperationControlDeps,
+  operationId: string,
+): Promise<string | undefined> {
+  try {
+    const row = await deps.agentOperationModel.findById(operationId);
+    const value = row?.appContext?.editingGroupId;
+    return typeof value === 'string' && value ? value : undefined;
+  } catch (error) {
+    log('[%s] Failed to read the editing group target: %O', operationId, error);
+    return undefined;
+  }
+}
+
+/**
  * Record whether the client still holds user messages queued behind a run.
  * Only the run's owner may flag it; an unknown or foreign operation is a
  * no-op, so a caller cannot touch another user's run by guessing its id.

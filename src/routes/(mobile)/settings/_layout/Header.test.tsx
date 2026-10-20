@@ -37,6 +37,7 @@ describe('mobile settings Header', () => {
     ['credits', 'subscription:tab.credits'],
     ['devices', 'setting:tab.devices'],
     ['service-model', 'setting:tab.serviceModel'],
+    ['chat-preference', 'setting:tab.chatPreference'],
   ])('resolves the workspace %s title', (tab, title) => {
     renderHeader(tab);
 

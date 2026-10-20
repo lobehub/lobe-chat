@@ -7,8 +7,8 @@ import { Trans } from 'react-i18next';
 
 import Avatar from '@/components/Avatar';
 import { projectDirectoryDeviceName } from '@/features/ChatInput/ControlBar/projectDeviceTargets';
-import { useDeviceList } from '@/features/DeviceManager/useDeviceList';
 import { ExecutionTargetIcon } from '@/features/ExecutionTargetPicker';
+import { useDeviceList } from '@/store/device';
 
 import { useStagedNewTopicDirectory } from './useStagedNewTopicDirectory';
 

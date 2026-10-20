@@ -16,7 +16,6 @@ import { AcceptanceService } from '@/server/services/verify/acceptanceService';
 import { hasWorkspaceScopedPermission } from '@/server/services/workspacePermission';
 import { TransferErrorCode } from '@/types/transferError';
 
-import { assertWorkspaceRowManageable } from '../_helpers/assertWorkspaceRowManageable';
 import {
   idInput,
   resolveOrThrow,
@@ -192,8 +191,9 @@ export const lifecycleRouter = router({
   }),
   delete: taskProcedureWrite.input(idInput).mutation(async ({ input, ctx }) => {
     try {
+      // Any member who can edit tasks may delete one they can see, whoever
+      // created it; viewers are gated by `taskProcedureWrite`.
       const task = await resolveOrThrow(ctx.taskModel, input.id);
-      assertWorkspaceRowManageable(ctx, task.createdByUserId, 'task');
       await ctx.taskService.deleteTask(task.id);
       return { data: task, message: 'Task deleted', success: true };
     } catch (error) {
@@ -213,9 +213,7 @@ export const lifecycleRouter = router({
     .mutation(async ({ input, ctx }) => {
       try {
         const task = await resolveOrThrow(ctx.taskModel, input.id);
-        // Archiving hides a shared task from every member's lists. It is reversible,
-        // so admins may do it too, beyond delete's creator-or-owner scope.
-        assertWorkspaceRowManageable(ctx, task.createdByUserId, 'task', { allowAdmin: true });
+        // Same scope as delete: any member who can edit tasks, whoever created it.
         if (input.archived) {
           await assertNotInOpenGoal(
             ctx.serverDB,

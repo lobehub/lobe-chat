@@ -232,8 +232,6 @@ export const agentBuilderKeys = {
 
 // ---- group --------------------------------------------------------------
 export const groupKeys = {
-  /** Agent picker for the "add member" modal. */
-  queryAgents: def('group:queryAgents', () => ['group:queryAgents']),
   /** Agent picker for the "create group" modal. */
   queryAgentsForCreate: def('group:queryAgentsForCreate', () => ['group:queryAgentsForCreate']),
 };
@@ -245,7 +243,6 @@ export const sessionKeys = {
     groupId,
   ]),
   list: def('session:list', (isLogin: boolean | undefined) => ['session:list', isLogin]),
-  search: def('session:search', (keyword?: string) => ['session:search', keyword]),
 };
 
 // ---- thread -------------------------------------------------------------
@@ -269,13 +266,6 @@ export const recentKeys = {
   ]),
 };
 
-// ---- task ---------------------------------------------------------------
-export const isScheduledTaskListKey = (key: unknown): boolean =>
-  Array.isArray(key) && key[0] === 'task:scheduledList';
-
-export const isMyTaskListKey = (key: unknown): boolean =>
-  Array.isArray(key) && key[0] === 'task:myList';
-
 /**
  * Goal reads that have no local-first projection: the pending queues are live
  * "what needs you" feeds, and the topic link is a discovery poll.
@@ -291,51 +281,6 @@ export const goalKeys = {
   pendingForIsland: def('goal:pendingForIsland', () => ['goal:pendingForIsland']),
   /** Goals whose planning conversation is this topic (`subject_type = 'topic'`). */
   topicGoals: def('goal:topicGoals', (topicId: string) => ['goal:topicGoals', topicId]),
-};
-
-export const taskKeys = {
-  /**
-   * Home's automated-task roll-up: the tasks that fire on a schedule or a
-   * heartbeat. Kept off `list` because it is a different result set entirely —
-   * sharing the key would let one section's fetch overwrite the other's.
-   */
-  /**
-   * The Tasks page's "My tasks" tab: work assigned to, or created by, the
-   * caller. Its own root for the same reason as `scheduledList` — a different
-   * result set from `list`, so a shared entry would let one tab's fetch
-   * overwrite the other's.
-   */
-  myList: def(
-    'task:myList',
-    (scope: 'assigned' | 'created', statuses?: string[], limit?: number, offset?: number) => [
-      'task:myList',
-      scope,
-      // Status narrowing is part of the identity: "hide completed" and "show
-      // all" are different server pages, not a client-side view of one page.
-      statuses ? [...statuses].sort().join(',') : 'all',
-      ...(limit === undefined && offset === undefined ? [] : [{ limit, offset }]),
-    ],
-  ),
-  scheduledList: def(
-    'task:scheduledList',
-    (
-      agentKey: string | undefined,
-      visibility: 'all' | 'private' | 'workspace' = 'all',
-      limit?: number,
-      offset?: number,
-    ) => [
-      'task:scheduledList',
-      agentKey,
-      visibility,
-      ...(limit === undefined && offset === undefined ? [] : [{ limit, offset }]),
-    ],
-  ),
-  /**
-   * AgentSidebar task panel. Lives in the `task:` domain (not a `sidebar:`
-   * one) so the tiered cache provider persists it to IndexedDB and the second
-   * open renders from cache instead of a skeleton.
-   */
-  sidebarGroups: def('task:sidebarGroups', (agentId: string) => ['task:sidebarGroups', agentId]),
 };
 
 // ---- work ---------------------------------------------------------------
@@ -382,11 +327,7 @@ export const briefKeys = {
 
 // ---- agent config / available / search ----------------------------------
 export const agentConfigKeys = {
-  available: def('agent:available', () => ['agent:available']),
   search: def('agent:search', (keyword?: string) => ['agent:search', keyword]),
-  serverDefaultHeterogeneousCapability: def('agent:serverDefaultHeterogeneousCapability', () => [
-    'agent:serverDefaultHeterogeneousCapability',
-  ]),
 };
 
 // ---- aiModel ------------------------------------------------------------
@@ -513,21 +454,6 @@ export const deviceKeys = {
     (workspaceId: string | null, deviceId: string, path?: string, cursor?: string) =>
       ['device:browseDirectory', workspaceId, deviceId, path, cursor] as const,
   ),
-  listeningPorts: def(
-    'device:listeningPorts',
-    (workspaceId: string | null, deviceId: string, cwd?: string) =>
-      ['device:listeningPorts', workspaceId, deviceId, cwd] as const,
-  ),
-  tunnels: def('device:tunnels', (workspaceId: string | null, deviceId: string) => [
-    'device:tunnels',
-    workspaceId,
-    deviceId,
-  ]),
-  gitBranches: def('device:gitBranches', (deviceId: string, path: string) => [
-    'device:gitBranches',
-    deviceId,
-    path,
-  ]),
   gitLinkedPR: def(
     'device:gitLinkedPR',
     (deviceId: string, path: string, branch: string, pullRequestNumber?: number) => [
@@ -567,11 +493,6 @@ export const deviceKeys = {
       ...(baseRefName === undefined ? [] : [baseRefName]),
     ],
   ),
-  gitRemoteBranches: def('device:gitRemoteBranches', (deviceId: string, dirPath: string) => [
-    'device:gitRemoteBranches',
-    deviceId,
-    dirPath,
-  ]),
   gitReviewPatches: def(
     'device:gitReviewPatches',
     (deviceId: string, dirPath: string, mode: string, baseRef: string) => [
@@ -664,7 +585,6 @@ export const statsKeys = {
   agents: def('stats:agents', () => ['stats:agents']),
   countAgents: def('stats:countAgents', () => ['stats:countAgents']),
   countMessages: def('stats:countMessages', () => ['stats:countMessages']),
-  countSessions: def('stats:countSessions', () => ['stats:countSessions']),
   countTopics: def('stats:countTopics', () => ['stats:countTopics']),
   heatmaps: def('stats:heatmaps', (type: string) => ['stats:heatmaps', type]),
   maxTaskDuration: def('stats:maxTaskDuration', () => ['stats:maxTaskDuration']),
@@ -716,6 +636,7 @@ export const scmKeys = {
     'scm:installations',
     workspaceId ?? null,
   ]),
+  wakeTarget: def('scm:wakeTarget', (topicId: string) => ['scm:wakeTarget', topicId]),
 };
 
 // ---- verify (deliverable judging) ---------------------------------------
@@ -971,9 +892,6 @@ export const onboardingKeys = {
 export const agentHomeKeys = {
   topics: def('agentHome:topics', (agentId: string) => ['agentHome:topics', agentId]),
 };
-export const agentProfileKeys = {
-  detail: def('agentProfile:detail', (agentId: string) => ['agentProfile:detail', agentId]),
-};
 export const agentSignalKeys = {
   receipts: def('agentSignal:receipts', (agentId: string, topicId: string) => [
     'agentSignal:receipts',
@@ -1080,7 +998,6 @@ export const swrKeys = {
   agentBuilder: agentBuilderKeys,
   agentDocument: agentDocumentSWRKeys,
   agentHome: agentHomeKeys,
-  agentProfile: agentProfileKeys,
   agentSignal: agentSignalKeys,
   aiModel: aiModelKeys,
   auth: authKeys,
@@ -1117,7 +1034,6 @@ export const swrKeys = {
   session: sessionKeys,
   share: shareKeys,
   stats: statsKeys,
-  task: taskKeys,
   taskTemplate: taskTemplateKeys,
   thread: threadKeys,
   tool: toolKeys,

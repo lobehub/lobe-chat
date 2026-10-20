@@ -27,6 +27,12 @@ export interface ReplicaPagingConfig<TItem, TCursor = any> {
    */
   deriveCursor?: (item: TItem) => TCursor;
   direction: ReplicaPagingDirection;
+  /**
+   * Per-entry direction, for a resource whose entries read differently (a
+   * transcript read from its first round). Defaults to `direction`. Persisting
+   * an entry always uses `direction`, so keep such entries in memory.
+   */
+  directionOf?: (key: string) => ReplicaPagingDirection;
   getId: (item: TItem) => string;
   /**
    * Rows that may anchor a join or derive a cursor. Synthetic rows the query
@@ -129,8 +135,17 @@ const ordered = <TItem>(items: TItem[], config: ReplicaPagingConfig<TItem>) =>
   config.sort ? [...items].sort(config.sort) : items;
 
 /** Concatenate in view order: forward = head first, backward = head last. */
-const join = <TItem>(head: TItem[], rest: TItem[], direction: ReplicaPagingDirection) =>
-  direction === 'forward' ? [...head, ...rest] : [...rest, ...head];
+export const joinPages = <TItem>(
+  head: TItem[],
+  rest: TItem[],
+  direction: ReplicaPagingDirection,
+) => (direction === 'forward' ? [...head, ...rest] : [...rest, ...head]);
+
+/** The paging config one entry reads with: `directionOf` resolved for `key`. */
+export const pagingFor = <TItem, TCursor>(
+  config: ReplicaPagingConfig<TItem, TCursor>,
+  key: string,
+) => (config.directionOf ? { ...config, direction: config.directionOf(key) } : config);
 
 const deriveHasMore = <TItem, TCursor>(
   data: Pick<ReplicaPagedData<TItem, TCursor>, 'items' | 'nextCursor' | 'total'>,
@@ -306,7 +321,7 @@ export const applyHeadPage = <TItem, TCursor>(
     anchorId: anchorId ?? current.anchorId,
     currentPage: current.currentPage,
     headSyntheticIds: syntheticIds(fresh, config),
-    items: ordered(join(headItems, rest, direction), config),
+    items: ordered(joinPages(headItems, rest, direction), config),
     nextCursor: current.nextCursor,
     pageSize: options.pageSize,
     pages,
@@ -386,7 +401,7 @@ export const insertHeadItems = <TItem, TCursor>(
   const pages = current.pages?.length ? current.pages : [{ count: current.items.length }];
   return {
     ...current,
-    items: ordered(join(added, current.items, config.direction), config),
+    items: ordered(joinPages(added, current.items, config.direction), config),
     pages: [{ ...pages[0], count: pages[0].count + added.length }, ...pages.slice(1)],
     total: current.total === undefined ? undefined : current.total + added.length,
   };
