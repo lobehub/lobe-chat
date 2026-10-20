@@ -226,6 +226,17 @@ export const queryRouter = router({
 
       return { items: result.items, total: result.total };
     }),
+  /**
+   * @deprecated Topic deletion no longer offers an attachment choice: every delete
+   * requests file cleanup, and the trash purge keeps whatever is still used
+   * elsewhere. Kept for released Desktop builds and cached web bundles that still
+   * pre-check before opening the dialog. Answering "no files" hides their
+   * obsolete checkbox while their default still requests cleanup, so they follow
+   * the new behavior. Remove once those clients have aged out.
+   */
+  hasTopicFiles: topicProcedure
+    .input(z.object({ ids: z.array(z.string()).min(1) }))
+    .query(() => ({ data: { hasFiles: false }, success: true })),
   hasTopics: topicProcedure.query(async ({ ctx }) => {
     return (await ctx.topicModel.count()) === 0;
   }),
