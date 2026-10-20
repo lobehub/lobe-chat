@@ -351,20 +351,67 @@ const extractCodexOps = (record: FileEditToolCallRecord): EditOp[] => {
   });
 };
 
+const toPatchLines = (text: string) => {
+  const lines = text.split('\n');
+  if (lines.at(-1) === '') lines.pop();
+  return lines;
+};
+
+/**
+ * Build a display-only unified patch from Claude Code's own tool arguments
+ * (`Write.content`, `Edit.old_string/new_string`, `MultiEdit.edits[]`). CC
+ * reports no diff of its own, and the file usually lives on the agent's host
+ * (often outside the working directory, e.g. `/tmp/…`) where nothing can read
+ * it back — so this snapshot is the only preview the edited-files card has.
+ * Hunk positions are unknown for edits, so they are numbered from line 1.
+ */
+const buildClaudeCodePatch = (
+  apiName: FileEditToolCallRecord['apiName'],
+  path: string,
+  args: Record<string, unknown>,
+): string | undefined => {
+  const hunks: string[] = [];
+
+  if (apiName === 'Write') {
+    const content = typeof args.content === 'string' ? toPatchLines(args.content) : [];
+    if (content.length === 0) return undefined;
+    hunks.push(`@@ -0,0 +1,${content.length} @@`, ...content.map((line) => `+${line}`));
+  } else {
+    const edits = apiName === 'MultiEdit' && Array.isArray(args.edits) ? args.edits : [args];
+    for (const edit of edits) {
+      if (!isRecord(edit)) continue;
+      const oldLines = typeof edit.old_string === 'string' ? toPatchLines(edit.old_string) : [];
+      const newLines = typeof edit.new_string === 'string' ? toPatchLines(edit.new_string) : [];
+      if (oldLines.length === 0 && newLines.length === 0) continue;
+      hunks.push(
+        `@@ -1,${oldLines.length} +1,${newLines.length} @@`,
+        ...oldLines.map((line) => `-${line}`),
+        ...newLines.map((line) => `+${line}`),
+      );
+    }
+  }
+
+  if (hunks.length === 0) return undefined;
+  const headerPath = path.replace(/^\/+/, '');
+  return [`--- a/${headerPath}`, `+++ b/${headerPath}`, ...hunks].join('\n');
+};
+
 const extractClaudeCodeOps = (record: FileEditToolCallRecord): EditOp[] => {
   const args = parseArguments(record.arguments);
   const path = normalizePath(args?.file_path);
   if (!path) return [];
-  // CC edit tools surface no line/diff data — record the touch with 0 deltas.
+  const diffText = buildClaudeCodePatch(record.apiName, path, args!);
+  const deltas = diffText
+    ? { diffText, ...countPatchDeltas(diffText) }
+    : { linesAdded: 0, linesDeleted: 0 };
   // Write is create-or-overwrite (ambiguous), Edit/MultiEdit always modify.
   if (record.apiName === 'Write') {
-    return [{ linesAdded: 0, linesDeleted: 0, path, toolCallId: record.toolCallId, type: 'write' }];
+    return [{ ...deltas, path, toolCallId: record.toolCallId, type: 'write' }];
   }
   return [
     {
+      ...deltas,
       kind: 'modified',
-      linesAdded: 0,
-      linesDeleted: 0,
       path,
       toolCallId: record.toolCallId,
       type: 'change',
