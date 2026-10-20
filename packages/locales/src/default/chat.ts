@@ -3455,6 +3455,7 @@ export default {
   'workingPanel.overview.ports.copy': 'Copy link',
   'workingPanel.overview.ports.createFailed': 'Could not expose the port',
   'workingPanel.overview.ports.detected.available': '{{count}} to open',
+  'workingPanel.overview.ports.detected.checking': 'Checking which ports are running…',
   'workingPanel.overview.ports.detected.expose': 'Open',
   'workingPanel.overview.ports.detected.heading': 'Detected',
   'workingPanel.overview.ports.detected.hideOthers': 'Hide other ports',

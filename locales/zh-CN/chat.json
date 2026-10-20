@@ -3247,6 +3247,7 @@
   "workingPanel.overview.ports.copy": "复制链接",
   "workingPanel.overview.ports.createFailed": "开放端口失败",
   "workingPanel.overview.ports.detected.available": "{{count}} 个可开放",
+  "workingPanel.overview.ports.detected.checking": "正在确认端口状态…",
   "workingPanel.overview.ports.detected.expose": "开放",
   "workingPanel.overview.ports.detected.heading": "检测到的端口",
   "workingPanel.overview.ports.detected.hideOthers": "收起其它端口",
