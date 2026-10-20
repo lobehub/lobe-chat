@@ -33,6 +33,7 @@ export type Agent = {
     params?: {
         [key: string]: unknown;
     } | null;
+    personal?: boolean;
     plugins?: Array<{
         identifier: string;
         mode: 'pinned' | 'auto' | 'disabled';
@@ -701,6 +702,7 @@ export type GetApiV1AgentsData = {
         keyword?: string;
         page?: string;
         pageSize?: string;
+        personal?: 'true' | 'false';
     };
     url: '/api/v1/agents';
 };
@@ -838,6 +840,7 @@ export type PostApiV1AgentsData = {
         params?: {
             [key: string]: unknown;
         } | null;
+        personal?: boolean;
         provider?: string | null;
         systemRole?: string | null;
         title: string;
@@ -1098,6 +1101,7 @@ export type PatchApiV1AgentsByIdData = {
         params?: {
             [key: string]: unknown;
         } | null;
+        personal?: boolean;
         provider?: string | null;
         systemRole?: string | null;
         title?: string;

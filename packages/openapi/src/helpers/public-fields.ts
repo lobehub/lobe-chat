@@ -299,6 +299,7 @@ export const PUBLIC_EVAL_RUN_TOPIC_FIELDS = [
 ] as const satisfies readonly (keyof AgentEvalRunTopicItem)[];
 
 export type PublicAgent = Pick<AgentItem, (typeof PUBLIC_AGENT_FIELDS)[number]> & {
+  personal: boolean;
   plugins: ReturnType<typeof parsePluginEntry>[];
 };
 export type PublicUser = Pick<UserItem, (typeof PUBLIC_USER_FIELDS)[number]>;
@@ -338,6 +339,7 @@ export type PublicPermission = Pick<PermissionItem, (typeof PUBLIC_PERMISSION_FI
 
 export const projectPublicAgent = (value: AgentItem): PublicAgent => ({
   ...pickPublicFields(value, PUBLIC_AGENT_FIELDS),
+  personal: value.metadata?.personal === true,
   plugins: (value.plugins ?? []).map(parsePluginEntry),
 });
 

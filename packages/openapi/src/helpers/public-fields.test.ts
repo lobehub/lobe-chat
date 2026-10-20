@@ -41,7 +41,9 @@ describe('public response field projections', () => {
       workspaceId: 'workspace-1',
     } as unknown as AgentItem);
 
-    expect(Object.keys(projected).sort()).toEqual([...PUBLIC_AGENT_FIELDS, 'plugins'].sort());
+    expect(Object.keys(projected).sort()).toEqual(
+      [...PUBLIC_AGENT_FIELDS, 'personal', 'plugins'].sort(),
+    );
     expect(projected).not.toHaveProperty('clientId');
     expect(projected).not.toHaveProperty('marketIdentifier');
     expect(projected).not.toHaveProperty('userId');
