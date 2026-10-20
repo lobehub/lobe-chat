@@ -4,6 +4,18 @@ export const OFFICIAL_URL = 'https://app.lobehub.com';
 export const OFFICIAL_SITE = 'https://lobehub.com';
 export const OFFICIAL_DOMAIN = 'lobehub.com';
 
+export const OFFICIAL_CLOUD_URL = OFFICIAL_SITE;
+
+export const isOfficialCloudServer = (url?: string): boolean => {
+  if (!url) return false;
+  try {
+    const { hostname } = new URL(url);
+    return hostname === OFFICIAL_DOMAIN || hostname.endsWith(`.${OFFICIAL_DOMAIN}`);
+  } catch {
+    return false;
+  }
+};
+
 export const OFFICIAL_DEVICE_GATEWAY_URL = 'https://device-gateway.lobehub.com';
 export const OFFICIAL_AGENT_GATEWAY_URL = 'https://agent-gateway.lobehub.com';
 
@@ -76,7 +88,8 @@ export const GROUP_CHAT_TOPIC_URL = (groupId: string, topicId: string) =>
 
 export const LIBRARY_URL = (id: string) => urlJoin('/resource/library', id);
 
-export const imageUrl = (filename: string) => `/app-images/${filename}`;
+// Fixed product imagery is mirrored to the static origin; /app-images belongs to the App.
+export const imageUrl = (filename: string) => `/static/app-images/${filename}`;
 
 export const LOBE_URL_IMPORT_NAME = 'settings';
 

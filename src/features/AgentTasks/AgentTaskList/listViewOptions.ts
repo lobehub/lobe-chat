@@ -1,8 +1,10 @@
+import { TASK_STATUSES } from '@lobechat/builtin-tool-task';
+import type { TaskStatus } from '@lobechat/types';
 import { t } from 'i18next';
 
 import type { TaskListItem } from '@/store/task/slices/list/initialState';
 
-export type TaskGroupBy = 'assignee' | 'automationMode' | 'none' | 'priority' | 'status';
+export type TaskGroupBy = 'assignee' | 'automationMode' | 'member' | 'none' | 'priority' | 'status';
 export type TaskOrderBy = 'assignee' | 'createdAt' | 'priority' | 'status' | 'title' | 'updatedAt';
 export type TaskOrderDirection = 'asc' | 'desc';
 
@@ -14,6 +16,8 @@ export interface TaskListViewOptions {
   orderBy: TaskOrderBy;
   orderCompletedByRecency: boolean;
   orderDirection: TaskOrderDirection;
+  /** Bring back the tasks the user archived; they stay out of every list by default. */
+  showArchived: boolean;
   /** List sub-tasks whose parent is already on the list as rows of their own. */
   showSubTasks: boolean;
   subGroupBy: TaskGroupBy;
@@ -24,9 +28,23 @@ export const HIDDEN_WHEN_COMPLETED_STATUSES: ReadonlyArray<NonNullable<TaskGroup
   'canceled',
 ];
 
+/**
+ * Server-side counterpart of `hideCompleted`: the statuses a paginated list
+ * has to request so the cut happens before `limit` / `offset` instead of on
+ * the fetched page (which could otherwise come back empty while older
+ * unfinished tasks exist). `undefined` means no status narrowing.
+ */
+export const getVisibleTaskStatuses = (
+  options: Pick<TaskListViewOptions, 'hideCompleted'>,
+): TaskStatus[] | undefined =>
+  options.hideCompleted
+    ? TASK_STATUSES.filter((status) => !HIDDEN_COMPLETED_STATUS_SET.has(status))
+    : undefined;
+
+const HIDDEN_COMPLETED_STATUS_SET = new Set<string>(HIDDEN_WHEN_COMPLETED_STATUSES);
+
 export interface TaskGroupMeta {
   assigneeId?: string;
-  /** Human assignee (workspace member); mutually exclusive with `assigneeId`. */
   assigneeUserId?: string;
   automationMode?: 'heartbeat' | 'schedule';
   groupBy: TaskGroupBy;
@@ -46,6 +64,7 @@ export const DEFAULT_TASK_LIST_VIEW_OPTIONS: TaskListViewOptions = {
   orderBy: 'updatedAt',
   orderCompletedByRecency: true,
   orderDirection: 'asc',
+  showArchived: false,
   showSubTasks: false,
   subGroupBy: 'none',
 };
@@ -53,6 +72,7 @@ export const DEFAULT_TASK_LIST_VIEW_OPTIONS: TaskListViewOptions = {
 const TASK_GROUP_BY_SET = new Set<TaskGroupBy>([
   'assignee',
   'automationMode',
+  'member',
   'none',
   'priority',
   'status',
@@ -98,6 +118,10 @@ export const normalizeTaskListViewOptions = (
     orderDirection: TASK_ORDER_DIRECTION_SET.has(next.orderDirection as TaskOrderDirection)
       ? (next.orderDirection as TaskOrderDirection)
       : DEFAULT_TASK_LIST_VIEW_OPTIONS.orderDirection,
+    showArchived:
+      typeof next.showArchived === 'boolean'
+        ? next.showArchived
+        : DEFAULT_TASK_LIST_VIEW_OPTIONS.showArchived,
     showSubTasks:
       typeof next.showSubTasks === 'boolean'
         ? next.showSubTasks
@@ -141,25 +165,13 @@ const getPriorityValue = (task: TaskListItem) => task.priority ?? 0;
 const getTaskStatusGroup = (task: TaskListItem): NonNullable<TaskGroupMeta['status']> =>
   TASK_STATUS_TO_GROUP_MAP[task.status] ?? 'backlog';
 
-export const getTaskAssigneeGroupMeta = (
-  agentId: string | null | undefined,
-  userId?: string | null,
-): TaskGroupMeta => {
+export const getTaskAssigneeGroupMeta = (agentId: string | null | undefined): TaskGroupMeta => {
   if (agentId) {
     return {
       assigneeId: agentId,
       groupBy: 'assignee',
       key: `assignee:${agentId}`,
       label: agentId,
-    };
-  }
-
-  if (userId) {
-    return {
-      assigneeUserId: userId,
-      groupBy: 'assignee',
-      key: `assignee:user:${userId}`,
-      label: userId,
     };
   }
 
@@ -170,8 +182,24 @@ export const getTaskAssigneeGroupMeta = (
   };
 };
 
-const getTaskAssigneeSortValue = (task: TaskListItem) =>
-  task.assigneeAgentId ?? (task.assigneeUserId ? `user:${task.assigneeUserId}` : '');
+export const getTaskMemberGroupMeta = (userId: string | null | undefined): TaskGroupMeta => {
+  if (userId) {
+    return {
+      assigneeUserId: userId,
+      groupBy: 'member',
+      key: `member:${userId}`,
+      label: userId,
+    };
+  }
+
+  return {
+    groupBy: 'member',
+    key: 'member:unassigned',
+    label: t('taskList.unassigned', { ns: 'chat' }),
+  };
+};
+
+const getTaskAssigneeSortValue = (task: TaskListItem) => task.assigneeAgentId ?? '';
 
 export const getTaskPriorityGroupMeta = (
   priorityValue: number | null | undefined,
@@ -264,7 +292,10 @@ export const compareTaskItems = (
 export const getTaskGroupMeta = (task: TaskListItem, groupBy: TaskGroupBy): TaskGroupMeta => {
   switch (groupBy) {
     case 'assignee': {
-      return getTaskAssigneeGroupMeta(task.assigneeAgentId, task.assigneeUserId);
+      return getTaskAssigneeGroupMeta(task.assigneeAgentId);
+    }
+    case 'member': {
+      return getTaskMemberGroupMeta(task.assigneeUserId);
     }
     case 'automationMode': {
       // Automated tasks created before automationMode was introduced are schedules.

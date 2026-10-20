@@ -251,6 +251,7 @@ export default class RemoteServerConfigCtr extends ControllerModule {
         lastRefreshAt: this.lastRefreshAt,
         refreshToken: this.encryptedRefreshToken,
       });
+      this.syncGatewayAccessToken(accessToken);
       return;
     }
 
@@ -272,6 +273,22 @@ export default class RemoteServerConfigCtr extends ControllerModule {
       lastRefreshAt: this.lastRefreshAt,
       refreshToken: this.encryptedRefreshToken,
     });
+
+    this.syncGatewayAccessToken(accessToken);
+  }
+
+  /**
+   * Hand a freshly stored access token to the live device-gateway socket.
+   *
+   * The gateway client caches the token it was constructed with and replays it
+   * on every backoff / heartbeat reconnect, while the token itself is rotated
+   * here (AuthCtr's auto-refresh timer). Without this push the refresh only
+   * became visible after the connection had already been torn down and rejected
+   * — the socket dropped, the client replayed the stale token, and `auth_failed`
+   * left the device offline.
+   */
+  private syncGatewayAccessToken(accessToken: string) {
+    this.app.getService(GatewayConnectionService)?.updatePersonalToken(accessToken);
   }
 
   /**
@@ -480,9 +497,12 @@ export default class RemoteServerConfigCtr extends ControllerModule {
       if (!response.ok) {
         // Try to parse error response
         const errorData = await response.json().catch(() => ({}));
-        const errorMessage = `Token refresh failed: ${response.status} ${response.statusText} ${
-          errorData.error_description || errorData.error || ''
-        }`.trim();
+        // Keep the OIDC code so AuthCtr can distinguish revoked grants from transient failures.
+        const errorDetail = [errorData.error, errorData.error_description]
+          .filter(Boolean)
+          .join(' ');
+        const errorMessage =
+          `Token refresh failed: ${response.status} ${response.statusText} ${errorDetail}`.trim();
         logger.error(errorMessage, errorData);
         return { error: errorMessage, success: false };
       }
@@ -571,7 +591,7 @@ export default class RemoteServerConfigCtr extends ControllerModule {
     const session = electronSession.fromPartition(partition);
 
     session.webRequest.onBeforeSendHeaders(
-      { urls: [`https://*.lobehub.com/*`] },
+      { urls: [`https://lobehub.com/*`, `https://*.lobehub.com/*`] },
       async (details, callback) => {
         const requestHeaders = { ...details.requestHeaders };
 

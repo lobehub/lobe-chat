@@ -7,6 +7,7 @@ import type {
   HeterogeneousProviderBindingReference,
   HeterogeneousProviderBindingResolution,
 } from '@lobechat/heterogeneous-agents';
+import type { ServerDefaultHeterogeneousModelDescriptor } from '@lobechat/types';
 
 import { HETERO_AGENT_BINDINGS_DIR, HETERO_AGENT_RUNS_DIR } from '@/const/heteroAgent';
 
@@ -84,9 +85,28 @@ export interface HostedProviderBinding {
   cleanup: () => Promise<void>;
   cleanupSync: () => void;
   env: Record<string, string>;
+  model?: string;
+  operationTokenEnvKey?: string;
   profileDir: string;
   runDir: string;
 }
+
+/** Keep native resume state only when it belongs to the same hosted binding. */
+export const resolveHostedBindingSession = (params: {
+  agentType: string;
+  binding?: HostedProviderBinding;
+  initialModel?: string;
+  resumeBindingKey?: string;
+  resumeSessionId?: string;
+}) => ({
+  model:
+    params.binding?.model ??
+    (params.agentType === 'trae' && params.binding ? undefined : params.initialModel),
+  resumeSessionId:
+    !params.binding || params.resumeBindingKey === params.binding.bindingKey
+      ? params.resumeSessionId
+      : undefined,
+});
 
 export const prepareHostedProviderBinding = async (params: {
   agentType: string;
@@ -102,12 +122,13 @@ export const prepareHostedProviderBinding = async (params: {
     throw new Error(`${params.agentType} does not implement LobeHub Provider binding.`);
   }
 
-  // Pi and Grok persist a custom model definition in the reusable profile.
+  // Pi, Grok, and TRAE persist a custom model definition in the reusable profile.
   // Include the selected upstream model so concurrent sessions cannot
   // overwrite one another's model catalog or strand a resumable session
   // without its model. Other drivers retain their v1 identity and resume keys.
   const identityVersion = params.agentType === 'pi' ? 'v2' : 'v1';
-  const modelScopedProfile = params.agentType === 'pi' || params.agentType === 'grok-build';
+  const modelScopedProfile =
+    params.agentType === 'pi' || params.agentType === 'grok-build' || params.agentType === 'trae';
   const identity = [
     identityVersion,
     params.agentType,
@@ -155,6 +176,7 @@ export const prepareHostedProviderBinding = async (params: {
       cleanup: () => cleanupBindingRun(runDir, plan),
       cleanupSync: () => cleanupBindingRunSync(runDir, plan),
       env: plan.env,
+      operationTokenEnvKey: plan.operationTokenEnvKey,
       profileDir,
       runDir,
     };
@@ -172,6 +194,7 @@ export const prepareHostedServerDefaultBinding = async (params: {
   endpoint: string;
   env?: Record<string, string>;
   model: string;
+  modelDescriptor?: ServerDefaultHeterogeneousModelDescriptor;
   sessionId: string;
 }): Promise<HostedProviderBinding> => {
   if (!params.driver.prepareServerDefaultBinding) {
@@ -206,6 +229,7 @@ export const prepareHostedServerDefaultBinding = async (params: {
       endpoint: params.endpoint,
       env: params.env,
       model: params.model,
+      modelDescriptor: params.modelDescriptor,
       profileDir,
     });
     await writeManagedFiles(profileDir, runDir, plan.profileFiles);
@@ -213,9 +237,11 @@ export const prepareHostedServerDefaultBinding = async (params: {
     return {
       args: plan.args,
       bindingKey: `server-default:v2:${digest}`,
+      model: plan.model,
       cleanup: () => cleanupBindingRun(runDir, plan),
       cleanupSync: () => cleanupBindingRunSync(runDir, plan),
       env: plan.env,
+      operationTokenEnvKey: plan.operationTokenEnvKey,
       profileDir,
       runDir,
     };

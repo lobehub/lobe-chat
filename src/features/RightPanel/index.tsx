@@ -1,6 +1,5 @@
-import { type DraggablePanelProps } from '@lobehub/ui';
-import { DraggablePanel } from '@lobehub/ui';
-import { cssVar } from 'antd-style';
+import { DraggablePanel, type DraggablePanelProps } from '@lobehub/ui';
+import { cssVar } from '@lobehub/ui';
 import { memo, Suspense, useState } from 'react';
 
 import SurfaceSkeleton from '@/components/Skeleton/Surface';

@@ -1,4 +1,14 @@
 export default {
+  'reportProblem.attachments.uploadFailed':
+    "Couldn't upload the attachments. Your report is still here. Try again.",
+  'reportProblem.attachments.invalid': 'Choose a non-empty file with a name under 256 characters.',
+  'reportProblem.attachments.tooLarge': 'Attachments must be 4 MB or less in total.',
+  'reportProblem.attachments.tooMany': 'You can attach up to 5 files.',
+  'reportProblem.attachments.remove': 'Remove {{name}}',
+  'reportProblem.attachments.hint':
+    'Optional · Up to 5 files, 4 MB total. Attachments are sent to the support team.',
+  'reportProblem.attachments.add': 'Add attachments',
+  'reportProblem.attachments.trigger': 'Paste, drop, or click to add files',
   'actions.addNewTopic': 'Start New Topic',
   'actions.addNewTopicInProject': 'Start new topic in {{directory}}',
   'actions.autoRename': 'Smart Rename',
@@ -11,28 +21,33 @@ export default {
   'actions.archiveMergedPullRequestsSuccess_other': 'Archived {{count}} topics with merged PRs.',
   'actions.confirmArchiveMergedPullRequestsWorkspace':
     'Archive all Workspace topics with merged PRs, including topics created by other members?',
-  'actions.confirmRemoveAll': 'You are about to delete all topics. This action cannot be undone.',
+  'actions.confirmRemoveAll':
+    'You are about to delete all topics. They will be moved to the trash and can be restored within 30 days.',
   'actions.confirmRemoveAllOwn':
-    'You are about to delete all topics you created in the current list. Topics created by other Workspace members will remain. This action cannot be undone.',
+    'You are about to delete all topics you created in the current list. Topics created by other Workspace members will remain. Deleted topics move to the trash and can be restored within 30 days.',
   'actions.confirmRemoveAllWorkspace':
-    'You are about to delete all topics in the current Workspace list, including topics created by other members. This action cannot be undone.',
+    'You are about to delete all topics in the current Workspace list, including topics created by other members. They move to the trash and can be restored within 30 days.',
   'actions.confirmRemoveAllWorkspaceAcknowledge':
-    "I understand that this permanently deletes other members' topics.",
-  'actions.confirmRemoveTopic': 'You are about to delete this topic. This action cannot be undone.',
+    "I understand that this moves other members' topics to the trash.",
+  'actions.confirmRemoveTopic':
+    'You are about to delete this topic. It will be moved to the trash and can be restored within 30 days.',
   'actions.confirmRemoveTopicFiles': 'Also delete images and files uploaded in this topic',
   'actions.confirmRemoveTopicTitle': 'Delete this topic?',
   'actions.confirmRemoveUnstarred':
-    'You are about to delete unstarred topics. This action cannot be undone.',
+    'You are about to delete unstarred topics. They will be moved to the trash and can be restored within 30 days.',
   'actions.confirmRemoveUnstarredOwn':
-    'You are about to delete unstarred topics you created. Topics created by other Workspace members will remain. This action cannot be undone.',
+    'You are about to delete unstarred topics you created. Topics created by other Workspace members will remain. Deleted topics move to the trash and can be restored within 30 days.',
   'actions.confirmRemoveUnstarredWorkspace':
-    'You are about to delete all unstarred topics in the current Workspace list, including topics created by other members. Starred topics will remain. This action cannot be undone.',
+    'You are about to delete all unstarred topics in the current Workspace list, including topics created by other members. Starred topics will remain. Deleted topics move to the trash and can be restored within 30 days.',
   'actions.confirmRemoveUnstarredWorkspaceAcknowledge':
-    "I understand that this permanently deletes other members' unstarred topics.",
+    "I understand that this moves other members' unstarred topics to the trash.",
   'actions.copyLink': 'Copy Link',
   'actions.copyLinkSuccess': 'Link copied',
   'actions.copySessionId': 'Copy Topic ID',
   'actions.copySessionIdSuccess': 'Topic ID copied',
+  'actions.reportProblem': 'Report Bug',
+  'actions.copyTopicPrompt': 'Copy Topic Prompt',
+  'actions.copyTopicPromptSuccess': 'Topic prompt copied',
   'actions.copyWorkingDirectory': 'Copy Working Directory',
   'actions.copyWorkingDirectorySuccess': 'Working directory copied',
   'actions.duplicate': 'Duplicate',
@@ -80,6 +95,10 @@ export default {
   'duplicateSuccess': 'Topic Copied Successfully',
   'failedStatusTip': 'This run hit an error — open it to take a look.',
   'favorite': 'Favorite',
+  'forkFailed': 'Failed to fork the topic',
+  'forkLoading': 'Creating a new topic...',
+  'forkSuccess': 'Forked to a new topic',
+  'forkTitle': '{{title}} (Branch)',
   'metaCard.ci.failure': 'CI failed',
   'metaCard.ci.none': 'No CI checks',
   'metaCard.ci.pending': 'CI running',
@@ -89,6 +108,8 @@ export default {
   'metaCard.pr.merged': 'Merged',
   'metaCard.pr.open': 'Open',
   'filter.filter': 'Filter',
+  'filter.groupMode.byAgent': 'By agent',
+  'filter.groupMode.byDevice': 'By device',
   'filter.groupMode.byProject': 'By project',
   'filter.groupMode.byStatus': 'By status',
   'filter.groupMode.byTime': 'By time',
@@ -98,6 +119,8 @@ export default {
   'filter.sort': 'Sort by',
   'filter.sortBy.createdAt': 'Created time',
   'filter.sortBy.updatedAt': 'Updated time',
+  'groupTitle.byAgent.unknown': 'Unknown agent',
+  'groupTitle.byDevice.unknown': 'Unknown device',
   'groupTitle.byProject.noProject': 'No directory',
   'groupTitle.byStatus.active': 'Active',
   'groupTitle.byStatus.archived': 'Archived',
@@ -196,7 +219,7 @@ export default {
   'management.bulk.cancel': 'Cancel',
   'management.bulk.delete': 'Delete',
   'management.bulk.deleteConfirm':
-    'You are about to delete {{count}} topics. This action cannot be undone.',
+    'You are about to delete {{count}} topics. They will be moved to the trash and can be restored within 30 days.',
   'management.bulk.deleteTitle': 'Delete topics?',
   'management.bulk.favorite': 'Favorite',
   'management.bulk.move': 'Move to agent',
@@ -217,6 +240,8 @@ export default {
   'management.empty.noTopics.desc':
     'Start a conversation with this agent to create your first topic.',
   'management.empty.noTopics.title': 'No topics yet',
+  'management.filters.botChannel.empty': 'No channels',
+  'management.filters.botChannel.label': 'Channel',
   'management.filters.project.empty': 'No projects',
   'management.filters.project.label': 'Project',
   'management.filters.status.active': 'Active',
@@ -231,6 +256,7 @@ export default {
   'management.filters.time.today': 'Today',
   'management.filters.time.week': 'Past week',
   'management.filters.trigger.api': 'API',
+  'management.filters.trigger.bot': 'Channel',
   'management.filters.trigger.chat': 'Chat',
   'management.filters.trigger.eval': 'Eval',
   'management.filters.trigger.label': 'Trigger',
@@ -270,6 +296,17 @@ export default {
   'management.view.card': 'Card',
   'management.view.list': 'List',
   'newTopic': 'New Topic',
+  'reportProblem.desc':
+    "This topic's IDs and your app environment are sent to the LobeHub support team, who can then look into this topic's runs, errors and conversation.",
+  'reportProblem.recentDesc':
+    "Your most recent topic's IDs and your app environment are sent to the LobeHub support team, who can then look into that topic's runs, errors and conversation.",
+  'reportProblem.failed': "Couldn't submit the report. Try again.",
+  'reportProblem.rateLimited': "You've sent a lot of reports recently. Try again later.",
+  'reportProblem.placeholder': 'What went wrong? (optional)',
+  'reportProblem.submit': 'Report Bug',
+  'reportProblem.success': 'Report submitted',
+  'reportProblem.successDesc': 'Report ID: {{id}}',
+  'reportProblem.title': 'Report Bug',
   'renameModal.description': 'Keep it short and easy to recognize.',
   'renameModal.title': 'Rename Topic',
   'scheduledStatusTip': 'Scheduled to run at {{time}}.',

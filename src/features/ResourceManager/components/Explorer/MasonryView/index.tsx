@@ -1,9 +1,7 @@
 'use client';
 
-import { Center, Flexbox } from '@lobehub/ui';
-import { Button, Checkbox } from '@lobehub/ui/base-ui';
+import { Button, Center, Checkbox, createStaticStyles, cssVar, Flexbox } from '@lobehub/ui';
 import { VirtuosoMasonry } from '@virtuoso.dev/masonry';
-import { createStaticStyles, cssVar } from 'antd-style';
 import { type UIEvent } from 'react';
 import { memo, useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -20,7 +18,7 @@ import {
 } from '../hooks/useExplorerSelection';
 import { isQueryNavigation } from '../isQueryNavigation';
 import SourceFilter from '../ToolBar/SourceFilter';
-import { useMasonryColumnCount } from '../useMasonryColumnCount';
+import { useContainerMasonryColumnCount } from '../useMasonryColumnCount';
 import MasonryItemWrapper from './MasonryItem/MasonryItemWrapper';
 import MasonryViewSkeleton from './Skeleton';
 import { useMasonryViewState } from './useMasonryViewState';
@@ -73,7 +71,8 @@ const MasonryView = memo(function MasonryView({
   ]);
 
   const { t } = useTranslation(['components', 'file']);
-  const columnCount = useMasonryColumnCount();
+  const [container, setContainer] = useState<HTMLDivElement | null>(null);
+  const columnCount = useContainerMasonryColumnCount(container);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
 
   // NEW: Read from resource store instead of fetching independently
@@ -214,7 +213,10 @@ const MasonryView = memo(function MasonryView({
       }}
       onScroll={handleScroll}
     >
-      <div style={{ paddingBlockEnd: 24, paddingBlockStart: 12, paddingInline: 24 }}>
+      <div
+        ref={setContainer}
+        style={{ paddingBlockEnd: 24, paddingBlockStart: 12, paddingInline: 24 }}
+      >
         <Flexbox horizontal align={'center'} className={styles.toolbar} gap={8}>
           <Checkbox
             checked={allSelected}

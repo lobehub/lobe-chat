@@ -6,7 +6,10 @@
  * surfaces evolve independently and must not share enum members.
  */
 export enum WorkspaceSettingsTabs {
+  About = 'about',
+  Advanced = 'advanced',
   APIKey = 'apikey',
+  Appearance = 'appearance',
   AuditLog = 'audit-log',
   Billing = 'billing',
   Budget = 'budget',
@@ -14,17 +17,24 @@ export enum WorkspaceSettingsTabs {
   Credits = 'credits',
   Creds = 'credential',
   Devices = 'devices',
+  Environments = 'environments',
   General = 'general',
+  Hotkey = 'hotkey',
+  Integrations = 'integrations',
   Labels = 'labels',
+  Labs = 'labs',
   Members = 'members',
+  Messenger = 'messenger',
   Notification = 'notification',
   OAuthApps = 'oauth-apps',
   Plans = 'plans',
+  Profile = 'profile',
   Provider = 'provider',
   ServiceModel = 'service-model',
   Skill = 'skill',
   Stats = 'statistics',
   Storage = 'storage',
+  Teams = 'teams',
   Usage = 'usage',
 }
 

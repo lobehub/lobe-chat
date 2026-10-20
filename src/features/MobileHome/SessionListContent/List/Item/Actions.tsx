@@ -1,6 +1,5 @@
-import { DropdownMenu, Icon } from '@lobehub/ui';
-import { ActionIcon, confirmModal, toast } from '@lobehub/ui/base-ui';
-import { type ItemType } from 'antd/es/menu/interface';
+import type { ItemType } from '@lobehub/ui';
+import { ActionIcon, confirmModal, DropdownMenu, Icon, toast } from '@lobehub/ui';
 import isEqual from 'fast-deep-equal';
 import {
   Check,
@@ -184,10 +183,12 @@ const Actions = memo<ActionProps>(({ group, id, openCreateGroupModal, parentType
                     toast.error(t(getDeleteErrorMessageKey(error), { ns: 'common' }));
                   }
                 },
-                title:
+                content:
                   sessionType === 'group'
                     ? t('confirmRemoveChatGroupItemAlert')
                     : t('confirmRemoveSessionItemAlert'),
+                okText: t('delete', { ns: 'common' }),
+                title: t('delete', { ns: 'common' }),
               });
             },
           },

@@ -1,6 +1,4 @@
-import { Center, Flexbox, Icon, Skeleton } from '@lobehub/ui';
-import { Avatar, Text } from '@lobehub/ui/base-ui';
-import { cssVar } from 'antd-style';
+import { Avatar, Center, cssVar, Flexbox, Icon, Skeleton, Text } from '@lobehub/ui';
 import isEqual from 'fast-deep-equal';
 import { Origami } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
@@ -19,12 +17,7 @@ const ArtifactList = () => {
   return !isCurrentChatLoaded ? (
     <Flexbox gap={12} paddingInline={12}>
       {[1, 1, 1, 1, 1, 1].map((key, index) => (
-        <Skeleton.Button
-          active
-          block
-          key={`${key}-${index}`}
-          style={{ borderRadius: 8, height: 68 }}
-        />
+        <Skeleton height={68} key={`${key}-${index}`} radius={8} />
       ))}
     </Flexbox>
   ) : messages.length === 0 ? (

@@ -2,8 +2,8 @@
 
 import type { BuiltinInspectorProps } from '@lobechat/types';
 import { Icon } from '@lobehub/ui';
-import { Text } from '@lobehub/ui/base-ui';
-import { createStaticStyles, cssVar, cx } from 'antd-style';
+import { Text } from '@lobehub/ui';
+import { createStaticStyles, cssVar, cx } from '@lobehub/ui';
 import { CheckCircle, DiffIcon } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -29,15 +29,19 @@ export const UpdatePlanInspector = memo<BuiltinInspectorProps<UpdatePlanParams, 
 
     if (isArgumentsStreaming && !planId) {
       return (
-        <div className={cx(oneLineEllipsis, shinyTextStyles.shinyText)}>
-          <span>{t('builtins.lobe-agent.apiName.updatePlan')}</span>
+        <div className={oneLineEllipsis}>
+          <span className={shinyTextStyles.shinyText}>
+            {t('builtins.lobe-agent.apiName.updatePlan')}
+          </span>
         </div>
       );
     }
 
     return (
-      <div className={cx(oneLineEllipsis, isArgumentsStreaming && shinyTextStyles.shinyText)}>
-        <span className={styles.title}>{t('builtins.lobe-agent.apiName.updatePlan')}</span>
+      <div className={oneLineEllipsis}>
+        <span className={cx(styles.title, isArgumentsStreaming && shinyTextStyles.shinyText)}>
+          {t('builtins.lobe-agent.apiName.updatePlan')}
+        </span>
         {completed && (
           <Text code as={'span'} color={cssVar.colorSuccess} fontSize={12}>
             <Icon icon={CheckCircle} size={12} />

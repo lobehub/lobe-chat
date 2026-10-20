@@ -7,13 +7,14 @@ import {
   Avatar,
   Block,
   ContextMenuTrigger,
+  createStaticStyles,
+  type DropdownItem,
   Flexbox,
-  type MenuProps,
+  responsive,
   Tag,
   Text,
   Tooltip,
 } from '@lobehub/ui';
-import { createStaticStyles, responsive } from 'antd-style';
 import { memo, useCallback, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -25,7 +26,7 @@ import ItemActions from './ItemActions';
 import LabelTags from './LabelTags';
 
 // Card layout mirrors the agent channel platform cards
-// (src/routes/(main)/agent/channel/list.tsx): icon + title + trailing state on
+// (src/features/AgentChannel/PlatformGrid.tsx): icon + title + trailing state on
 // one row, a two-line description below, hover lift on the whole card.
 export const cardStyles = createStaticStyles(({ css, cssVar }) => ({
   card: css`
@@ -123,8 +124,8 @@ const AgentCard = memo<AgentCardProps>(
     // mounts on the card's pointer-enter and hands its items back via ref.
     const [menuActivated, setMenuActivated] = useState(false);
     const activateMenu = useCallback(() => setMenuActivated(true), []);
-    const menuItemsRef = useRef<(() => MenuProps['items']) | null>(null);
-    const handleMenuReady = useCallback((getItems: () => MenuProps['items']) => {
+    const menuItemsRef = useRef<(() => DropdownItem[]) | null>(null);
+    const handleMenuReady = useCallback((getItems: () => DropdownItem[]) => {
       menuItemsRef.current = getItems;
     }, []);
     const getContextMenuItems = useCallback(() => menuItemsRef.current?.() ?? [], []);

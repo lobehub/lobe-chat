@@ -16,14 +16,17 @@ export {
   buildCodexAppServerArgs,
   buildCodexAppServerInput,
   buildCodexAppServerThreadParams,
+  type CodexAgentHandleOptions,
   CodexAppServerClient,
   type CodexAppServerClientOptions,
   CodexAppServerConnectionError,
   CodexAppServerRpcError,
   CodexThreadSession,
   type CodexThreadSessionOptions,
+  createCodexAgentHandle,
   getCodexAppServerUnsupportedArgs,
   isCodexAppServerCompatibilityError,
+  pickCodexRunProvenance,
 } from '../codex';
 export type { UsageData } from '../types';
 export {
@@ -75,6 +78,16 @@ export {
   resolveCodexInitialModel,
 } from './codexModel';
 export {
+  buildCodexLobeHubContextArgs,
+  buildCodexShellEnvSetArgs,
+  CODEX_LOBEHUB_CONTEXT_ENV_KEYS,
+  type CodexJwtFile,
+  createCodexJwtFile,
+  LOBEHUB_JWT_FILE_ENV,
+  refreshCodexJwtFiles,
+  toTomlBasicString,
+} from './codexShellEnv';
+export {
   buildCursorAcpArgs,
   buildCursorAcpPrompt,
   CursorAcpSession,
@@ -83,6 +96,42 @@ export {
   isCursorAcpSessionNotFoundError,
   normalizeCursorQuestion,
 } from './cursorAcpSession';
+export {
+  buildDevinAcpArgs,
+  buildDevinAcpPrompt,
+  type DevinAcpImagePromptBlock,
+  type DevinAcpPromptBlock,
+  DevinAcpSession,
+  type DevinAcpSessionOptions,
+  type DevinAcpTextPromptBlock,
+  isDevinAcpSessionNotFoundError,
+} from './devinAcpSession';
+export {
+  buildDroidAcpArgs,
+  buildDroidAcpPrompt,
+  type DroidAcpImagePromptBlock,
+  type DroidAcpModelCatalog,
+  type DroidAcpPromptBlock,
+  DroidAcpSession,
+  type DroidAcpSessionOptions,
+  type DroidAcpTextPromptBlock,
+  isDroidAcpSessionNotFoundError,
+  listDroidAcpModels,
+  type ListDroidAcpModelsOptions,
+  parseDroidAcpModelCatalog,
+} from './droidAcpSession';
+export {
+  detectDshCommand,
+  DSH_ACP_PROFILE_ARGS,
+  DSH_COMMAND,
+  DSH_MIN_VERSION,
+  DSH_VERSION_PATTERN,
+  DshAcpSession,
+  type DshAcpSessionHandle,
+  type DshAcpSessionOptions,
+  spawnDshAcpSession,
+  type SpawnDshAcpSessionOptions,
+} from './dshAcpSession';
 export {
   createFileStoreImageUploader,
   type FileStoreCreateFileInput,
@@ -119,6 +168,15 @@ export { JsonlStreamProcessor } from './jsonlProcessor';
 // import time. Import it from the dedicated `@lobechat/heterogeneous-agents/
 // resolveCliCommand` subpath instead.
 export {
+  buildClaudeCodeDirectEnv,
+  type BuildClaudeCodeDirectEnvInput,
+  type BuildClaudeCodeDirectEnvResult,
+  normalizeAnthropicSdkBaseURL,
+  sanitizeClaudeCodeDirectArgs,
+  sanitizeClaudeCodeDirectEnv,
+} from './claudeCodeDirectEnv';
+export { readClaudeCodeSessionCost } from './claudeCodeSessionCost';
+export {
   ensureClaudeCodeResumeTranscript,
   type EnsureResumeTranscriptReason,
   type EnsureResumeTranscriptResult,
@@ -135,7 +193,6 @@ export {
   CODEX_REQUIRED_ARGS,
   KIMI_CODE_BASE_ARGS,
   OPENCODE_BASE_ARGS,
-  PI_BASE_ARGS,
   QODER_BASE_ARGS,
   type QoderSpawnArgsOptions,
   spawnAgent,

@@ -1,8 +1,13 @@
-import { ModelIcon } from '@lobehub/icons';
-import { Flexbox, Skeleton } from '@lobehub/ui';
-import { Avatar, Button, Text } from '@lobehub/ui/base-ui';
-import { App } from 'antd';
-import { createStaticStyles, cx } from 'antd-style';
+import {
+  Avatar,
+  Button,
+  createStaticStyles,
+  cx,
+  Flexbox,
+  Skeleton,
+  Text,
+  toast,
+} from '@lobehub/ui';
 import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -10,6 +15,7 @@ import type { BusinessModelModeConfig } from '@/business/client/hooks/useBusines
 import { useBusinessModelModeConfig } from '@/business/client/hooks/useBusinessAgentMode';
 import type { HomeNewModelItem } from '@/business/client/hooks/useHomeNewModels';
 import { useHomeNewModels } from '@/business/client/hooks/useHomeNewModels';
+import { ModelIcon } from '@/components/LobeIcons';
 import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwareNavigate';
 import { usePermission } from '@/hooks/usePermission';
 import { agentService } from '@/services/agent';
@@ -67,7 +73,6 @@ const skeletonWidths = [96, 120, 104, 112];
 export const NewModelShortcuts = () => {
   const { t } = useTranslation('home');
   const navigate = useWorkspaceAwareNavigate();
-  const { message } = App.useApp();
   const { agentId: activeAgentId } = useResolvedHomeAgentId();
   const { allowed: canCreateContent } = usePermission('create_content');
   const updateAgentConfigById = useAgentStore((state) => state.updateAgentConfigById);
@@ -124,13 +129,13 @@ export const NewModelShortcuts = () => {
           agentByIdSelectors.getAgentEnableModeById(activeAgentId)(agentState);
 
         if (currentModel === item.model && currentProvider === provider && !shouldUpdateAgentMode) {
-          message.info(t('starter.modelInUse', { name: item.title }));
+          toast.info(t('starter.modelInUse', { name: item.title }));
           return;
         }
 
         try {
           await updateAgentConfigById(activeAgentId, nextConfig, { rethrow: true });
-          message.success(t('starter.modelSwitched', { name: item.title }));
+          toast.success(t('starter.modelSwitched', { name: item.title }));
         } catch {
           // The agent store reports persistence failures at the action boundary.
         }
@@ -145,7 +150,6 @@ export const NewModelShortcuts = () => {
       currentModel,
       currentProvider,
       fallbackChatProvider,
-      message,
       navigate,
       switchingKey,
       t,
@@ -165,14 +169,11 @@ export const NewModelShortcuts = () => {
         <Text className={styles.label}>{t('starter.newLabel')}</Text>
         {isLoading
           ? defaultHomeNewModels.map((item, index) => (
-              <Skeleton.Button
-                active
+              <Skeleton
+                height={24}
                 key={getShortcutKey(item)}
-                style={{
-                  borderRadius: 8,
-                  height: 24,
-                  width: skeletonWidths[index] ?? 104,
-                }}
+                radius={8}
+                width={skeletonWidths[index] ?? 104}
               />
             ))
           : items.map((item) => {

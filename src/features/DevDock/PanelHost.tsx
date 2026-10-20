@@ -1,20 +1,19 @@
 'use client';
 
-import { Flexbox } from '@lobehub/ui';
-import { ActionIcon } from '@lobehub/ui/base-ui';
-import { createStaticStyles, cssVar } from 'antd-style';
+import { ActionIcon, createStaticStyles, cssVar, Flexbox } from '@lobehub/ui';
 import { Maximize2, Minimize2, XIcon } from 'lucide-react';
 import { memo, Suspense, useCallback, useEffect, useRef, useState } from 'react';
 
-import { BAR_HEIGHT } from './const';
+import { BAR_HEIGHT, BAR_OVERLAP } from './const';
 import PanelErrorBoundary from './PanelErrorBoundary';
 import { type DevDockPanelItem, getItemComponent, useDevDockItems } from './registry';
 import { MIN_PANEL_HEIGHT, useDevDockStore } from './store';
 
 const styles = createStaticStyles(({ css }) => ({
   content: css`
-    overflow: auto;
+    overflow: hidden;
     flex: 1;
+    min-width: 0;
     min-height: 0;
   `,
   header: css`
@@ -36,6 +35,7 @@ const styles = createStaticStyles(({ css }) => ({
     flex-shrink: 0;
 
     width: 100%;
+    margin-block-end: ${BAR_OVERLAP}px;
     border-block-start: 1px solid ${cssVar.colorBorderSecondary};
 
     background: ${cssVar.colorBgContainer};

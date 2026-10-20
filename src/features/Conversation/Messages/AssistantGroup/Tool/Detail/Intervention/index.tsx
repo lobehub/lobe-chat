@@ -5,6 +5,7 @@ import { memo, Suspense, useCallback, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 
 import { useSingleton } from '@/hooks/useSingleton';
+import { useChatStore } from '@/store/chat';
 import { useUserStore } from '@/store/user';
 import { toolInterventionSelectors } from '@/store/user/selectors';
 
@@ -14,10 +15,12 @@ import Arguments from '../Arguments';
 import ApprovalActions from './ApprovalActions';
 import {
   isAgentMarketplaceCall,
+  isApprovalBackedInteraction,
   isCustomInteractionIdentifier,
   isHeteroInteractionIdentifier,
   prepareCustomInteractionSubmit,
   recordCustomInteractionResolution,
+  toApprovalDecision,
 } from './customInteractionHandlers';
 import Fallback from './Fallback';
 import KeyValueEditor from './KeyValueEditor';
@@ -40,6 +43,9 @@ const Intervention = memo<InterventionProps>(
     const approvalMode = useUserStore(toolInterventionSelectors.approvalMode);
     const { canUseResource } = useConversationResourceAccess();
     const [isEditing, setIsEditing] = useState(false);
+    // Raised by an intervention that cannot show what is being approved yet
+    // (review data loading or failed); the approve action waits on it.
+    const [approvalBlocked, setApprovalBlocked] = useState(false);
     const updatePluginArguments = useConversationStore((s) => s.updatePluginArguments);
     const message = useConversationStore((s) => dataSelectors.getDbMessageById(id)(s));
     const usesDurableServerClaim = Boolean(
@@ -131,8 +137,10 @@ const Intervention = memo<InterventionProps>(
     // writes and topic-status flip fall back to the global `activeTopicId` and
     // land on whichever topic the user is currently viewing.
     const submitHeteroIntervention = useConversationStore((s) => s.submitHeteroIntervention);
+    const approveToolCall = useConversationStore((s) => s.approveToolCall);
+    const rejectAndContinueToolCall = useConversationStore((s) => s.rejectAndContinueToolCall);
 
-    const handleInteractionAction = useCallback(
+    const executeInteractionAction = useCallback(
       async (
         action:
           | { type: 'submit'; payload: Record<string, unknown> }
@@ -142,6 +150,14 @@ const Intervention = memo<InterventionProps>(
         if (!canUseResource || interventionResolving) return;
         if (isHeteroInteractionIdentifier(identifier)) {
           await submitHeteroIntervention(id, action.type, action.payload);
+          return;
+        }
+        // These forms already applied their input (e.g. a secret) outside the
+        // run, so only the decision goes on; the payload is dropped.
+        if (isApprovalBackedInteraction(identifier, apiName)) {
+          const decision = toApprovalDecision(action);
+          if (decision.type === 'approve') await approveToolCall(id, assistantGroupId ?? '');
+          else await rejectAndContinueToolCall(id, decision.reason);
           return;
         }
         switch (action.type) {
@@ -217,16 +233,44 @@ const Intervention = memo<InterventionProps>(
       },
       [
         apiName,
+        approveToolCall,
+        assistantGroupId,
         canUseResource,
         cancelToolInteraction,
         id,
         identifier,
         interventionResolving,
         parsedArgs,
+        rejectAndContinueToolCall,
         skipToolInteraction,
         submitHeteroIntervention,
         submitToolInteraction,
         topicId,
+        usesDurableServerClaim,
+      ],
+    );
+
+    const context = useConversationStore((s) => s.context);
+    const runQuestionSubmission = useChatStore((s) => s.runQuestionSubmission);
+    const handleInteractionAction = useCallback(
+      (action: Parameters<typeof executeInteractionAction>[0]) => {
+        if (
+          usesDurableServerClaim &&
+          apiName === 'askUserQuestion' &&
+          ['lobe-agent', 'lobe-user-interaction'].includes(identifier) &&
+          (action.type === 'submit' || action.type === 'skip')
+        ) {
+          return runQuestionSubmission(id, context, () => executeInteractionAction(action));
+        }
+        return executeInteractionAction(action);
+      },
+      [
+        apiName,
+        context,
+        executeInteractionAction,
+        id,
+        identifier,
+        runQuestionSubmission,
         usesDurableServerClaim,
       ],
     );
@@ -269,6 +313,7 @@ const Intervention = memo<InterventionProps>(
           <ApprovalActions
             apiName={apiName}
             approvalMode={approvalMode}
+            approveDisabled={approvalBlocked}
             assistantGroupId={assistantGroupId}
             identifier={identifier}
             messageId={id}
@@ -287,6 +332,7 @@ const Intervention = memo<InterventionProps>(
             identifier={identifier}
             messageId={id}
             registerBeforeApprove={registerBeforeApprove}
+            onApprovalBlockedChange={setApprovalBlocked}
             onArgsChange={handleArgsChange}
           />
           {actionsPortalTarget ? createPortal(actions, actionsPortalTarget) : actions}

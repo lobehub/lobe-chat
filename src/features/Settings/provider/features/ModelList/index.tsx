@@ -1,8 +1,6 @@
 'use client';
 
-import { Flexbox, Icon } from '@lobehub/ui';
-import { Tabs } from '@lobehub/ui/base-ui';
-import { cssVar } from 'antd-style';
+import { cssVar, Flexbox, Icon, Tabs } from '@lobehub/ui';
 import isEqual from 'fast-deep-equal';
 import {
   AudioLines,
@@ -128,7 +126,7 @@ const Content = memo<ContentProps>(({ id }) => {
   const availableTabKeys = tabs.map((tab) => tab.key);
   const currentActiveTab = availableTabKeys.includes(activeTab) ? activeTab : 'all';
 
-  if (isLoading) return <SkeletonList />;
+  if (isLoading && isEmpty) return <SkeletonList />;
 
   // Error before empty: a failed model-list fetch must not render as
   // "no models yet" (EmptyModels) — surface the reason + Retry (ux Read §1.1).

@@ -1,7 +1,14 @@
-import { Center, FileTypeIcon, Flexbox, Icon } from '@lobehub/ui';
-import { Button, Text } from '@lobehub/ui/base-ui';
-import { Upload } from 'antd';
-import { createStaticStyles, cssVar } from 'antd-style';
+import {
+  Button,
+  Center,
+  createStaticStyles,
+  cssVar,
+  FileTypeIcon,
+  Flexbox,
+  Icon,
+  Text,
+  Upload,
+} from '@lobehub/ui';
 import { ArrowUpIcon, PlusIcon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
@@ -133,14 +140,7 @@ const EmptyPlaceholder = () => {
             />
           </Flexbox>
         )}
-        <Upload
-          multiple={true}
-          showUploadList={false}
-          beforeUpload={async (file) => {
-            await uploadTopLevel([file]);
-            return false;
-          }}
-        >
+        <Upload multiple={true} onFiles={(files) => void uploadTopLevel(files)}>
           <Flexbox className={styles.card} padding={16}>
             <span className={styles.actionTitle}>{t('FileManager.emptyStatus.actions.file')}</span>
             <div className={styles.glow} style={{ background: cssVar.gold }} />
@@ -155,14 +155,11 @@ const EmptyPlaceholder = () => {
         <Upload
           directory
           multiple={true}
-          showUploadList={false}
-          beforeUpload={async (file) => {
+          onFiles={(files) => {
             // Directory upload keeps its own path — the whole tree inherits
             // its root's visibility, so we skip the mode-driven default and
             // let the server infer from the parent chain.
-            await pushDockFileList([file], libraryId, currentFolderId ?? undefined);
-
-            return false;
+            void pushDockFileList(files, libraryId, currentFolderId ?? undefined);
           }}
         >
           <Flexbox className={styles.card} padding={16}>

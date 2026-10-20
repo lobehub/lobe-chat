@@ -1,5 +1,4 @@
-import { Center, Icon } from '@lobehub/ui';
-import { cssVar } from 'antd-style';
+import { Center, cssVar, Icon, Tooltip } from '@lobehub/ui';
 import { CircleUser } from 'lucide-react';
 import { memo } from 'react';
 
@@ -9,11 +8,12 @@ import { useUserDisplayMeta } from '../shared/useUserDisplayMeta';
 
 interface AssigneeUserAvatarProps {
   size?: number;
+  tooltip?: boolean;
   userId?: string | null;
 }
 
 /** Human-assignee twin of `AssigneeAvatar` (which renders agent assignees). */
-const AssigneeUserAvatar = memo<AssigneeUserAvatarProps>(({ userId, size = 18 }) => {
+const AssigneeUserAvatar = memo<AssigneeUserAvatarProps>(({ userId, size = 18, tooltip }) => {
   const displayMeta = useUserDisplayMeta(userId);
 
   if (!displayMeta) {
@@ -32,7 +32,7 @@ const AssigneeUserAvatar = memo<AssigneeUserAvatarProps>(({ userId, size = 18 })
     );
   }
 
-  return (
+  const avatar = (
     <Avatar
       avatar={displayMeta.avatar || undefined}
       name={displayMeta.title || undefined}
@@ -42,6 +42,8 @@ const AssigneeUserAvatar = memo<AssigneeUserAvatarProps>(({ userId, size = 18 })
       variant={'outlined'}
     />
   );
+
+  return tooltip ? <Tooltip title={displayMeta.title}>{avatar}</Tooltip> : avatar;
 });
 
 export default AssigneeUserAvatar;

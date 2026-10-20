@@ -60,6 +60,25 @@ describe('createCacheProvider — tiering', () => {
     expect(getScopedCacheKey('anon:personal')).not.toBe(getScopedCacheKey('u1:personal'));
   });
 
+  it('restores an idb-tier entry from durable storage after a reload, isolated per scope', async () => {
+    const scope = { value: 's1' };
+    const options = { idbPatterns: [...CACHE_TIERS.idb], localPatterns: [...CACHE_TIERS.local] };
+    const { provider } = buildProvider(scope, options);
+    await provider.hydrateScope?.();
+    const key = JSON.stringify(['task:detail', 'T-1']);
+    const data = { data: [{ id: 'task-1', title: 'Keep me' }] };
+    provider().set(key, data);
+    await until(async () => (await localDataCache.entriesByScope('s1')).length > 0);
+
+    const { provider: restored } = buildProvider(scope, options);
+    await restored.hydrateScope?.();
+    expect(restored().get(key)).toEqual(data);
+
+    const { provider: otherUser } = buildProvider({ value: 's2' }, options);
+    await otherUser.hydrateScope?.();
+    expect(otherUser().get(key)).toBeUndefined();
+  });
+
   it('routes local-tier keys to scoped localStorage only', async () => {
     const scope = { value: 's1' };
     const { provider } = buildProvider(scope);
@@ -276,7 +295,7 @@ describe('createCacheProvider — tiering', () => {
   it('exposes the central tier config keyed by domain prefix', () => {
     expect(CACHE_TIERS.idb).toContain('message:');
     expect(CACHE_TIERS.idb).toContain('topic:');
-    expect(CACHE_TIERS.local).toContain('recent:list');
+    expect(CACHE_TIERS.local).toContain('recent:topicList');
     expect(CACHE_TIERS.local).toContain('taskTemplate:');
     expect(CACHE_TIERS.local).toContain('modelConfig:');
   });

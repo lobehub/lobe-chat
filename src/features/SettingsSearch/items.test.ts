@@ -15,7 +15,7 @@ const webContext: SettingsSearchContext = {
   enableBusinessFeatures: true,
   enableComposio: true,
   enableGatewayMode: true,
-  enableSTT: true,
+  enableWorkspace: false,
   hasEmail: true,
   hideDocs: false,
   isDesktop: false,
@@ -38,12 +38,32 @@ describe('settings search index', () => {
 
     for (const feature of LAB_FEATURES) {
       const item = labsItems.find(({ anchor }) => anchor === `labs-${feature.flag}`)!;
-      expect(item.visible?.(webContext) ?? true).toBe(!feature.desktopOnly);
+      expect(item.visible?.(webContext) ?? true).toBe(
+        !feature.desktopOnly && !feature.workspaceOnly,
+      );
+    }
+  });
+
+  it('shows workspace-only lab features only to users with workspace access', () => {
+    const labsItems = SETTINGS_SEARCH_ITEMS.filter((item) => item.tab === SettingsTabs.Labs);
+    const workspaceFeatures = LAB_FEATURES.filter((feature) => feature.workspaceOnly);
+    expect(workspaceFeatures.length).toBeGreaterThan(0);
+
+    for (const feature of workspaceFeatures) {
+      const item = labsItems.find(({ anchor }) => anchor === `labs-${feature.flag}`)!;
+      expect(item.visible?.({ ...webContext, enableWorkspace: true })).toBe(true);
+      expect(item.visible?.(webContext)).toBe(false);
     }
   });
 
   it('indexes the inbox notification channel', () => {
     expect(SETTINGS_SEARCH_ITEMS.some((item) => item.anchor === 'notification-inbox')).toBe(true);
+  });
+
+  it('does not offer the retired TTS setting in search', () => {
+    expect(SETTINGS_SEARCH_ITEMS.some((item) => item.anchor === 'service-model-tts')).toBe(false);
+    expect(TAB_SEARCH_EN_KEYWORDS[SettingsTabs.ServiceModel]).not.toContain('tts');
+    expect(TAB_SEARCH_EN_KEYWORDS[SettingsTabs.ServiceModel]).not.toContain('tts settings');
   });
 
   it('keeps an English floor for labs and oauth apps tabs', () => {
@@ -63,7 +83,7 @@ describe('settings search index', () => {
       expect.arrayContaining(['telegram', 'slack', 'discord', 'wechat']),
     );
     expect(TAB_SEARCH_EN_KEYWORDS[SettingsTabs.ServiceModel]).toEqual(
-      expect.arrayContaining(['search', 'tts settings']),
+      expect.arrayContaining(['search', 'model assignment']),
     );
     expect(TAB_SEARCH_EN_KEYWORDS[SettingsTabs.Storage]).toEqual(
       expect.arrayContaining(['knowledge base']),

@@ -14,7 +14,8 @@
  * Services must be injected via constructor for runtime-agnostic usage
  * (e.g., server-side services vs client-side services).
  */
-import { COMPOSIO_APP_TYPES, LOBEHUB_SKILL_PROVIDERS } from '@lobechat/const';
+import type { ComposioAppType, LobehubSkillProviderType } from '@lobechat/const';
+import { resolveConnectorCatalogItem } from '@lobechat/const';
 import {
   marketToolsResultsPrompt,
   modelsResultsPrompt,
@@ -22,6 +23,7 @@ import {
 } from '@lobechat/prompts';
 import {
   type BuiltinToolResult,
+  type DiscoverAssistantDetail,
   getPluginMode,
   type HeterogeneousProviderConfig,
   parsePluginEntry,
@@ -38,7 +40,9 @@ import {
   lobehubSkillStoreSelectors,
   pluginSelectors,
 } from '@/store/tool/selectors';
+import type { ComposioServer } from '@/store/tool/slices/composioStore/types';
 import { ComposioServerStatus } from '@/store/tool/slices/composioStore/types';
+import type { LobehubSkillServer } from '@/store/tool/slices/lobehubSkillStore/types';
 import { LobehubSkillStatus } from '@/store/tool/slices/lobehubSkillStore/types';
 import { getUserStoreState } from '@/store/user';
 import { userProfileSelectors } from '@/store/user/selectors';
@@ -310,6 +314,12 @@ export class AgentManagerRuntime {
       const config = await this.agentService.getAgentConfigById(agentId);
 
       if (!config) {
+        // searchAgents can surface marketplace agents (short-code ids) that
+        // have no local agents row; read their detail through the market
+        // fallback instead of reporting a false "not found".
+        const marketDetail = await this.getMarketAgentDetail(agentId);
+        if (marketDetail) return marketDetail;
+
         return {
           content: `Agent "${agentId}" not found.`,
           success: false,
@@ -427,11 +437,18 @@ export class AgentManagerRuntime {
       let userTotal = 0;
       let marketTotal = 0;
 
-      // Search user's agents
+      // This is the CRUD surface: every id it returns can be forwarded to
+      // `removeAgent`/`updateAgent`, and the inbox is product-owned. Opt it out
+      // explicitly so the reserved assistant is never offered as a target here.
       if (source === 'user' || source === 'all') {
         const [userAgents, total] = await Promise.all([
-          this.agentService.queryAgents({ keyword: params.keyword, limit, offset }),
-          this.agentService.countAgents({ keyword: params.keyword }),
+          this.agentService.queryAgents({
+            includeInbox: false,
+            keyword: params.keyword,
+            limit,
+            offset,
+          }),
+          this.agentService.countAgents({ includeInbox: false, keyword: params.keyword }),
         ]);
         userTotal = total;
 
@@ -609,6 +626,89 @@ export class AgentManagerRuntime {
    * Queue prompt mutations by agent so later invocations cannot finish first
    * and then be overwritten by an older, slower stream.
    */
+  /**
+   * Marketplace fallback for getAgentDetail. searchAgents surfaces agents
+   * from the external market index (short-code identifiers), but those rows
+   * do not exist in the local agents table — reading their detail through
+   * the local path alone reports "not found" even though search found them.
+   * Project the market detail into the same shape getAgentDetail returns so
+   * callers can read (not edit) market agents.
+   */
+  private async getMarketAgentDetail(agentId: string): Promise<BuiltinToolResult | null> {
+    if (!this.discoverService.getAssistantDetail) return null;
+
+    let detail: DiscoverAssistantDetail | undefined;
+    try {
+      detail = await this.discoverService.getAssistantDetail({
+        identifier: agentId,
+        source: 'new',
+      });
+    } catch {
+      // Market lookup is best-effort: fall through to the local "not found".
+      return null;
+    }
+
+    const config = detail?.config as Record<string, any> | undefined;
+    if (!detail || !config) return null;
+
+    const plugins = config.plugins?.map((entry: any) => {
+      const { identifier, mode } = parsePluginEntry(entry);
+      return mode === 'pinned' ? identifier : `${identifier} (${mode})`;
+    }) as string[] | undefined;
+
+    // Marketplace configs can carry the model as an object
+    // ({ model, provider, parameters }) — extract the nested model/provider so
+    // the LLM-facing summary and GetAgentDetailRender never see "[object
+    // Object]" (same normalization as src/services/agent.ts).
+    let provider = config.provider as string | undefined;
+    let model = config.model as string | undefined;
+    if (model !== null && typeof model === 'object') {
+      const { model: modelName, provider: modelProvider } = model as {
+        model?: string;
+        provider?: string;
+      };
+      model = modelName;
+      provider = provider ?? modelProvider;
+    }
+    const systemRole = config.systemRole as string | undefined;
+
+    const parts: string[] = [];
+    if (detail.title) parts.push(`**${detail.title}**`);
+    if (detail.description) parts.push(detail.description);
+    if (model) parts.push(`Model: ${provider ? `${provider}/` : ''}${model}`);
+    if (plugins?.length) parts.push(`Plugins: ${plugins.join(', ')}`);
+    if (systemRole) parts.push(`System Prompt: ${systemRole}`);
+    parts.push(
+      'ℹ️ This is a marketplace agent (read-only). Install it into a workspace before editing.',
+    );
+
+    return {
+      content: parts.join('\n'),
+      state: {
+        agentId,
+        config: {
+          model,
+          openingMessage: config.openingMessage as string | undefined,
+          openingQuestions: config.openingQuestions as string[] | undefined,
+          plugins,
+          provider,
+          ...(config.agencyConfig && { runtime: describeHeterogeneousAgent(config.agencyConfig) }),
+          systemRole,
+        },
+        isMarket: true,
+        meta: {
+          avatar: detail.avatar,
+          backgroundColor: detail.backgroundColor,
+          description: detail.description,
+          tags: detail.tags,
+          title: detail.title,
+        },
+        success: true,
+      },
+      success: true,
+    };
+  }
+
   private async enqueuePromptUpdate<T>(agentId: string, update: () => Promise<T>): Promise<T> {
     const previousUpdate = AgentManagerRuntime.promptUpdateQueues.get(agentId);
     const previousSettled = previousUpdate
@@ -729,41 +829,39 @@ export class AgentManagerRuntime {
       const toolState = getToolStoreState();
 
       if (source === 'official') {
-        // Check if it's a Composio tool
         const isComposioEnabled =
           typeof window !== 'undefined' &&
           window.global_serverConfigStore?.getState()?.serverConfig?.enableComposio;
-
-        if (isComposioEnabled) {
-          const composioServer = composioStoreSelectors
-            .getServers(toolState)
-            .find((s) => s.identifier === identifier);
-          const composioAppInfo = COMPOSIO_APP_TYPES.find((t) => t.identifier === identifier);
-
-          if (composioAppInfo) {
-            return this.handleComposioInstall(agentId, identifier, composioAppInfo, composioServer);
-          }
-        }
-
-        // Check if it's a LobehubSkill provider
         const isLobehubSkillEnabled =
           typeof window !== 'undefined' &&
           window.global_serverConfigStore?.getState()?.serverConfig?.enableLobehubSkill;
+        const connector = resolveConnectorCatalogItem(identifier, {
+          composio: Boolean(isComposioEnabled),
+          lobehub: Boolean(isLobehubSkillEnabled),
+        });
 
-        if (isLobehubSkillEnabled) {
+        if (connector?.type === 'composio') {
+          const composioServer = composioStoreSelectors
+            .getServers(toolState)
+            .find((s) => s.identifier === identifier);
+          return this.handleComposioInstall(
+            agentId,
+            identifier,
+            connector.serverType,
+            composioServer,
+          );
+        }
+
+        if (connector?.type === 'lobehub') {
           const lobehubSkillServer = lobehubSkillStoreSelectors
             .getServers(toolState)
             .find((s) => s.identifier === identifier);
-          const lobehubSkillProviderInfo = LOBEHUB_SKILL_PROVIDERS.find((p) => p.id === identifier);
-
-          if (lobehubSkillProviderInfo) {
-            return this.handleLobehubSkillInstall(
-              agentId,
-              identifier,
-              lobehubSkillProviderInfo,
-              lobehubSkillServer,
-            );
-          }
+          return this.handleLobehubSkillInstall(
+            agentId,
+            identifier,
+            connector.provider,
+            lobehubSkillServer,
+          );
         }
 
         // Check if it's a builtin tool
@@ -831,8 +929,8 @@ export class AgentManagerRuntime {
   private async handleComposioInstall(
     agentId: string,
     identifier: string,
-    composioAppInfo: (typeof COMPOSIO_APP_TYPES)[0],
-    composioServer: any,
+    composioAppInfo: ComposioAppType,
+    composioServer?: ComposioServer,
   ): Promise<BuiltinToolResult> {
     if (composioServer) {
       if (composioServer.status === ComposioServerStatus.ACTIVE) {
@@ -960,8 +1058,8 @@ export class AgentManagerRuntime {
   private async handleLobehubSkillInstall(
     agentId: string,
     identifier: string,
-    providerInfo: (typeof LOBEHUB_SKILL_PROVIDERS)[0],
-    server: any,
+    providerInfo: LobehubSkillProviderType,
+    server?: LobehubSkillServer,
   ): Promise<BuiltinToolResult> {
     if (server?.status === LobehubSkillStatus.CONNECTED) {
       await this.enablePluginForAgent(agentId, identifier);

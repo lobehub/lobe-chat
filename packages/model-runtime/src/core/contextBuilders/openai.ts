@@ -11,6 +11,7 @@ import type {
   UserMessageContentPart,
 } from '../../types';
 import { isDeepSeekThinkingEligibleModel } from '../../utils/modelParse';
+import { fetchReferenceImageBytes } from '../../utils/referenceImageCache';
 import { resolveScopedSignature, type SignatureScope } from '../../utils/signatureScope';
 import { parseDataUri } from '../../utils/uriParser';
 
@@ -32,8 +33,22 @@ type ConvertMessageContentOptions = {
   thoughtSignatureScope?: SignatureScope;
 };
 
-const isDeepSeekModel = (model: string | undefined) =>
-  typeof model === 'string' && model.toLowerCase().includes('deepseek');
+/**
+ * Model families whose thinking mode requires the historical `reasoning_content`
+ * to be echoed back when the assistant turn also carries `tool_calls`. Upstream
+ * rejects the request outright otherwise:
+ *
+ * > If thinking mode and tool_calls, `reasoning_content` must be passed back to the API.
+ *
+ * Matched on the model id rather than the provider because these models are
+ * mostly reached through OpenAI-compatible aggregators and user-configured
+ * proxies, where the provider key says nothing about the underlying family.
+ */
+const REASONING_PASSBACK_MODEL_KEYWORDS = ['deepseek', 'glm', 'kimi'] as const;
+
+const requiresReasoningPassback = (model: string | undefined) =>
+  typeof model === 'string' &&
+  REASONING_PASSBACK_MODEL_KEYWORDS.some((keyword) => model.toLowerCase().includes(keyword));
 
 type OpenAICompatibleContentPart =
   ExtendedChatCompletionContentPart | OpenAI.ChatCompletionContentPart | UserMessageContentPart;
@@ -253,15 +268,17 @@ export const convertOpenAIMessages = async (
       // MiniMax uses reasoning_details for historical thinking, so forward it unchanged
       if (msg.reasoning_details !== undefined) result.reasoning_details = msg.reasoning_details;
 
-      // For DeepSeek-family models routed via any OpenAI-compatible runtime
-      // (including custom user providers that bypass the dedicated DeepSeek
-      // handlePayload), derive reasoning_content from the structured reasoning
-      // field on assistant messages and force a placeholder when the model is
-      // thinking-mode eligible.
-      if (msg.role === 'assistant' && isDeepSeekModel(options?.model)) {
+      // For passback-requiring families routed via any OpenAI-compatible runtime
+      // (including custom user providers that bypass a dedicated handlePayload),
+      // derive reasoning_content from the structured reasoning field on assistant
+      // messages.
+      if (msg.role === 'assistant' && requiresReasoningPassback(options?.model)) {
         if (result.reasoning_content === undefined && typeof msg.reasoning?.content === 'string') {
           result.reasoning_content = msg.reasoning.content;
         }
+        // The empty placeholder stays DeepSeek-scoped. Echoing reasoning we
+        // actually have is what upstream asks for; fabricating an empty thinking
+        // block for a family we have not validated is a different, riskier change.
         if (
           result.reasoning_content === undefined &&
           isDeepSeekThinkingEligibleModel(options?.model)
@@ -287,11 +304,13 @@ export const convertOpenAIResponseInputs = async (
   // "No tool output found for function call call_w5odMFjtXEYBBVyBUAQNMOh5."
   const validToolCallIds = new Set<string>();
   const pairedToolOutputIds = new Set<string>();
+  const customToolCallIds = new Set<string>();
 
   for (const message of messages) {
     if (message.role === 'assistant' && message.tool_calls?.length) {
       message.tool_calls.forEach((tool) => {
         if (tool.id) validToolCallIds.add(tool.id);
+        if (tool.id && tool.type === 'custom') customToolCallIds.add(tool.id);
       });
     }
   }
@@ -310,6 +329,15 @@ export const convertOpenAIResponseInputs = async (
     messages.map(async (message) => {
       const items: OpenAI.Responses.ResponseInputItem[] = [];
       const reasoning = message.reasoning;
+      if (message.responsesTools) {
+        return [
+          {
+            type: 'additional_tools',
+            role: 'developer',
+            tools: message.responsesTools,
+          } satisfies OpenAI.Responses.ResponseInputItem,
+        ];
+      }
 
       /**
        * Resolve persisted Responses reasoning items for stateless replay. Encrypted
@@ -376,12 +404,24 @@ export const convertOpenAIResponseInputs = async (
           : message.tool_calls;
 
         toolCalls.forEach((tool) => {
-          items.push({
-            arguments: strictToolPairing ? tool.function.arguments : tool.function.name,
+          const identity = {
             call_id: tool.id,
             name: tool.function.name,
-            type: 'function_call',
-          });
+            ...(tool.namespace ? { namespace: tool.namespace } : {}),
+          };
+          items.push(
+            tool.type === 'custom'
+              ? {
+                  ...identity,
+                  input: tool.function.arguments,
+                  type: 'custom_tool_call',
+                }
+              : {
+                  ...identity,
+                  arguments: strictToolPairing ? tool.function.arguments : tool.function.name,
+                  type: 'function_call',
+                },
+          );
         });
 
         return items;
@@ -393,6 +433,17 @@ export const convertOpenAIResponseInputs = async (
           (!message.tool_call_id || !pairedToolOutputIds.has(message.tool_call_id))
         )
           return items;
+
+        if (message.responsesOutput !== undefined) {
+          items.push({
+            call_id: message.tool_call_id!,
+            output: message.responsesOutput,
+            type: customToolCallIds.has(message.tool_call_id!)
+              ? 'custom_tool_call_output'
+              : 'function_call_output',
+          });
+          return items;
+        }
 
         // `function_call_output.output` is text-only. When the tool result
         // carries images (e.g. builtin `readFile` on an image file), keep the
@@ -415,8 +466,10 @@ export const convertOpenAIResponseInputs = async (
         items.push({
           call_id: message.tool_call_id,
           output: outputText,
-          type: 'function_call_output',
-        } as OpenAI.Responses.ResponseFunctionToolCallOutputItem);
+          type: customToolCallIds.has(message.tool_call_id!)
+            ? 'custom_tool_call_output'
+            : 'function_call_output',
+        } as OpenAI.Responses.ResponseInputItem);
 
         if (imageParts.length > 0) {
           const imageContent = (
@@ -426,8 +479,13 @@ export const convertOpenAIResponseInputs = async (
                   c as OpenAI.ChatCompletionContentPart,
                   options,
                 );
-                const url = (image as OpenAI.ChatCompletionContentPartImage).image_url?.url;
-                return url ? { image_url: url, type: 'input_image' as const } : undefined;
+                const imageUrl = (image as OpenAI.ChatCompletionContentPartImage).image_url;
+                if (!imageUrl?.url) return undefined;
+                return {
+                  image_url: imageUrl.url,
+                  type: 'input_image' as const,
+                  ...(imageUrl.detail && { detail: imageUrl.detail }),
+                };
               }),
             )
           ).filter((c) => !!c);
@@ -499,12 +557,16 @@ export const convertOpenAIResponseInputs = async (
                   c as OpenAI.ChatCompletionContentPart,
                   options,
                 );
-                if (!(image as OpenAI.ChatCompletionContentPartImage).image_url?.url) {
+                const imageUrl = (image as OpenAI.ChatCompletionContentPartImage).image_url;
+                if (!imageUrl?.url) {
                   return undefined;
                 }
+                // Forward the requested detail level so callers that need full resolution
+                // (e.g. inspecting small annotations on screenshots) are not downgraded to auto.
                 return {
-                  image_url: (image as OpenAI.ChatCompletionContentPartImage).image_url?.url,
+                  image_url: imageUrl.url,
                   type: 'input_image',
+                  ...(imageUrl.detail && { detail: imageUrl.detail }),
                 };
               }),
             );
@@ -587,13 +649,17 @@ export const convertImageUrlToFile = async (imageUrl: string) => {
     mimeType = mimeTypePart.split(':')[1].split(';')[0];
     buffer = Buffer.from(base64Data, 'base64');
   } else {
-    // a http url
-    const response = await fetch(imageUrl);
-    if (!response.ok) {
-      throw new Error(`Failed to fetch image from ${imageUrl}: ${response.statusText}`);
-    }
-    buffer = Buffer.from(await response.arrayBuffer());
-    mimeType = response.headers.get('content-type') || 'image/png';
+    // a http url; generation retries and batch siblings reuse the same download
+    ({ buffer, mimeType } = await fetchReferenceImageBytes(imageUrl, async (url) => {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`Failed to fetch image from ${url}: ${response.statusText}`);
+      }
+      return {
+        buffer: Buffer.from(await response.arrayBuffer()),
+        mimeType: response.headers.get('content-type') || 'image/png',
+      };
+    }));
   }
 
   return toFile(buffer, `image.${mimeType.split('/')[1]}`, { type: mimeType });

@@ -1,18 +1,24 @@
 'use client';
 
 import {
-  ActionIcon,
   Center,
   ContextMenuTrigger,
+  createStaticStyles,
   Empty,
   Flexbox,
   Icon,
   SearchBar,
-  Text,
   Tooltip,
 } from '@lobehub/ui';
-import { Button, confirmModal, type DropdownItem, DropdownMenu, toast } from '@lobehub/ui/base-ui';
-import { createStaticStyles } from 'antd-style';
+import {
+  ActionIcon,
+  Button,
+  confirmModal,
+  type DropdownItem,
+  DropdownMenu,
+  Text,
+  toast,
+} from '@lobehub/ui';
 import dayjs from 'dayjs';
 import {
   FolderClosedIcon,
@@ -35,10 +41,12 @@ import TopicCreatorAvatar from '@/features/TopicCreatorAvatar';
 import UserAvatar from '@/features/User/UserAvatar';
 import WideScreenContainer from '@/features/WideScreenContainer';
 import WorkspaceLink from '@/features/Workspace/WorkspaceLink';
-import { useCurrentProjectList, useProjectStore } from '@/store/project';
+import { useLoadedProjectList, useProjectStore } from '@/store/project';
 import type { ProjectListItem } from '@/store/project/store';
 import { useUserStore } from '@/store/user';
 import { labPreferSelectors, userProfileSelectors } from '@/store/user/selectors';
+
+import { resolveProjectListState } from '../projectListState';
 
 const styles = createStaticStyles(({ css, cssVar }) => ({
   actions: css`
@@ -198,11 +206,15 @@ const ProjectListPage = memo(() => {
   const { t } = useTranslation('project');
   const [keyword, setKeyword] = useState('');
   const enabled = useUserStore(labPreferSelectors.enableProjects);
-  const projects = useCurrentProjectList();
-  const { error, isLoading, mutate } = useProjectStore((s) => s.useFetchProjectList)(enabled);
+  const projects = useLoadedProjectList();
+  const { error, isHydrated, isValidating, revalidate } = useProjectStore(
+    (s) => s.useFetchProjectList,
+  )(enabled);
+  const listState = resolveProjectListState({ error, isHydrated, isValidating, projects });
 
   const filteredProjects = useMemo(() => {
     const normalizedKeyword = keyword.trim().toLocaleLowerCase();
+    if (!projects) return [];
     return normalizedKeyword
       ? projects.filter((project) =>
           [project.name, project.identifier, project.description]
@@ -236,9 +248,9 @@ const ProjectListPage = memo(() => {
             {t('create.action')}
           </Button>
         </Flexbox>
-        {error ? (
-          <AsyncError error={error} onRetry={() => mutate()} />
-        ) : isLoading && projects.length === 0 ? (
+        {listState === 'error' ? (
+          <AsyncError error={error} onRetry={() => revalidate()} />
+        ) : listState === 'loading' ? (
           <SkeletonList rows={8} />
         ) : filteredProjects.length === 0 ? (
           <Center flex={1} padding={48}>

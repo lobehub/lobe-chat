@@ -5,6 +5,12 @@ export {
   planCheckIdRemap,
 } from './acceptanceMerge';
 export {
+  previewAcceptancePurge,
+  purgeAcceptance,
+  type PurgePreview,
+  purgeVerifyRun,
+} from './acceptancePurge';
+export {
   type AcceptanceCheckHistoryEntry,
   type AcceptanceCheckReviewEvent,
   type AcceptanceCheckReviewOverlay,
@@ -19,21 +25,15 @@ export { createVerifierAgentRunner } from './agentVerifier';
 export { mapWithConcurrency } from './concurrency';
 export { coverageGaps, readRequiredEvidence } from './evidenceCoverage';
 export { createEvidenceFileResolver, type EvidenceFileMeta } from './evidenceFiles';
+export { evidenceTypeForStoredFile } from './evidenceMedium';
 export {
   type ExecuteVerifyParams,
   type VerifierAgentRunner,
   VerifyExecutorService,
 } from './executor';
 export { computeFalseFlags, VerifyFeedbackService } from './feedbackService';
-export { DEFAULT_GOAL_MAX_ROUNDS, resolveGoalRoundBudget } from './goalBudget';
-export {
-  goalExhaustedBriefCopy,
-  type GoalLoopOutcome,
-  goalReadyForReviewBriefCopy,
-  maybeContinueGoalLoop,
-  syncGoalToolState,
-} from './goalLoop';
 export { runVerifyOnCompletion } from './lifecycle';
+export { resolveLiveRoundForItem } from './liveRound';
 export {
   isHeterogeneousVerifyProvider,
   resolveVerifyModelConfig,
@@ -47,6 +47,7 @@ export {
   type RepairSpawner,
   VerifyRepairService,
 } from './repairService';
+export { settleFailedRepair } from './repairTerminal';
 export { type GenerateReportParams, VerifyReporterService } from './reporter';
 export {
   isCurrentReviewPrediction,

@@ -1,18 +1,23 @@
 'use client';
 
 import {
+  Accordion,
   Avatar,
-  Collapse,
+  Button,
+  Checkbox,
+  createStaticStyles,
+  cssVar,
+  cx,
   Empty,
   Flexbox,
   List,
+  ModalFooter,
   SearchBar,
   stopPropagation,
+  Switch,
   Text,
   Tooltip,
 } from '@lobehub/ui';
-import { Button, Checkbox, Switch } from '@lobehub/ui/base-ui';
-import { createStaticStyles, cssVar, cx } from 'antd-style';
 import { omit } from 'es-toolkit/compat';
 import { Users } from 'lucide-react';
 import { type ChangeEvent } from 'react';
@@ -63,7 +68,7 @@ const TemplateItem = memo<{
             {template.description}
           </Text>
           <Flexbox horizontal align="center" gap={4}>
-            <Users size={11} style={{ color: '#999' }} />
+            <Users size={11} style={{ color: cssVar.colorTextTertiary }} />
             <Text style={{ fontSize: 11 }} type="secondary">
               {t('groupWizard.memberCount', {
                 count: template.members.filter((member) => member !== null && member !== undefined)
@@ -368,10 +373,8 @@ const ChatGroupWizard = memo<ChatGroupWizardProps>(
       );
     }, [visibleAgentSessions]);
 
-    const handlePanelChange = useCallback((key: string | string[]) => {
-      if (!key) return;
-
-      const nextKey = Array.isArray(key) ? key[0] : key;
+    const handlePanelChange = useCallback((keys: string[]) => {
+      const nextKey = keys[0];
 
       if (nextKey === 'templates' || nextKey === 'agents') {
         setActivePanel(nextKey);
@@ -466,8 +469,8 @@ const ChatGroupWizard = memo<ChatGroupWizardProps>(
               </Tooltip>
             ) : null,
             key: agentId,
+            label: title,
             showAction: true,
-            title,
           };
         })
 
@@ -542,7 +545,7 @@ const ChatGroupWizard = memo<ChatGroupWizardProps>(
         title={t('groupWizard.title')}
         width={900}
         footer={
-          <Flexbox horizontal gap={8} justify="end">
+          <ModalFooter>
             <Button onClick={handleCancel}>{t('cancel', { ns: 'common' })}</Button>
             <Button
               disabled={confirmDisabled}
@@ -552,7 +555,7 @@ const ChatGroupWizard = memo<ChatGroupWizardProps>(
             >
               {t('groupWizard.createGroup')}
             </Button>
-          </Flexbox>
+          </ModalFooter>
         }
         onCancel={handleCancel}
       >
@@ -567,13 +570,11 @@ const ChatGroupWizard = memo<ChatGroupWizardProps>(
               onChange={handleSearchChange}
             />
             <Flexbox flex={1} style={{ overflowY: 'auto', padding: `0 ${cssVar.paddingSM}` }}>
-              <Collapse
-                accordion
-                collapsible
-                activeKey={activePanel}
-                expandIconPlacement="end"
+              <Accordion
                 gap={12}
-                size="small"
+                indicatorPlacement="end"
+                multiple={false}
+                value={[activePanel]}
                 variant="borderless"
                 items={[
                   {
@@ -604,7 +605,7 @@ const ChatGroupWizard = memo<ChatGroupWizardProps>(
                         </Flexbox>
                       ),
                     key: 'templates',
-                    label: t('groupWizard.useTemplate'),
+                    title: t('groupWizard.useTemplate'),
                   },
                   {
                     children:
@@ -634,17 +635,13 @@ const ChatGroupWizard = memo<ChatGroupWizardProps>(
                         </Flexbox>
                       ),
                     key: 'agents',
-                    label: t('groupWizard.existingMembers'),
+                    title: t('groupWizard.existingMembers'),
                   },
                 ]}
                 styles={{
-                  header: {
-                    color: cssVar.colorTextDescription,
-                    fontSize: cssVar.fontSize,
-                    padding: 0,
-                  },
+                  header: { color: cssVar.colorTextDescription, fontSize: cssVar.fontSize },
                 }}
-                onChange={handlePanelChange}
+                onValueChange={handlePanelChange}
               />
             </Flexbox>
           </Flexbox>
@@ -660,7 +657,7 @@ const ChatGroupWizard = memo<ChatGroupWizardProps>(
                     {t('groupWizard.host.title')}
                   </Text>
                   <Text
-                    style={{ color: '#999', fontSize: 12 }}
+                    style={{ color: cssVar.colorTextTertiary, fontSize: 12 }}
                     type={isHostRemoved ? 'secondary' : undefined}
                   >
                     {t('groupWizard.host.description')}
@@ -691,6 +688,7 @@ const ChatGroupWizard = memo<ChatGroupWizardProps>(
                 {selectedTemplate ? (
                   templateMemberItems.length > 0 ? (
                     <List
+                      styles={{ item: { paddingInlineEnd: 56 } }}
                       items={templateMemberItems.map((member) => ({
                         actions: (
                           <Switch
@@ -720,12 +718,12 @@ const ChatGroupWizard = memo<ChatGroupWizardProps>(
                           </Tooltip>
                         ) : null,
                         key: member.key,
-                        showAction: true,
-                        title: (
+                        label: (
                           <Text type={member.isRemoved ? 'secondary' : undefined}>
                             {member.title}
                           </Text>
                         ),
+                        showAction: true,
                       }))}
                     />
                   ) : (
@@ -737,7 +735,10 @@ const ChatGroupWizard = memo<ChatGroupWizardProps>(
                     />
                   )
                 ) : selectedAgentListItems.length > 0 ? (
-                  <List items={selectedAgentListItems} />
+                  <List
+                    items={selectedAgentListItems}
+                    styles={{ item: { paddingInlineEnd: 56 } }}
+                  />
                 ) : (
                   <Empty
                     description={t('memberSelection.noSelectedAgents')}

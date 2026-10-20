@@ -1,19 +1,23 @@
 'use client';
 
-import { Flexbox, Icon } from '@lobehub/ui';
-import { Skeleton } from 'antd';
-import { createStaticStyles } from 'antd-style';
+import { createStaticStyles, Flexbox, Icon } from '@lobehub/ui';
 import { PlusIcon } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import AsyncError from '@/components/AsyncError';
 import LibraryStatusIcon from '@/components/LibIcon/StatusIcon';
+import {
+  RESOURCE_HOME_SECTIONS,
+  ResourceSectionSkeleton,
+} from '@/components/Skeleton/ResourceHome';
 import { useCreateNewModal } from '@/features/LibraryModal';
 import { useResourceManagerStore } from '@/features/ResourceManager/store';
 import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwareNavigate';
 import { usePermission } from '@/hooks/usePermission';
-import { useKnowledgeBaseStore } from '@/store/library';
+import { knowledgeBaseSelectors, useKnowledgeBaseStore } from '@/store/library';
 
+import { getLibraryListAsyncState } from '../Layout/Body/LibraryList/state';
 import SectionTitle from './SectionTitle';
 
 const styles = createStaticStyles(({ css, cssVar }) => ({
@@ -106,7 +110,16 @@ const Libraries = memo(() => {
   const visibility = listVisibility === 'private' ? ('private' as const) : ('public' as const);
 
   const useFetchKnowledgeBaseList = useKnowledgeBaseStore((s) => s.useFetchKnowledgeBaseList);
-  const { data, isLoading } = useFetchKnowledgeBaseList(visibility);
+  const { error, isHydrated, isValidating, revalidate } = useFetchKnowledgeBaseList(visibility);
+  // The rows are read from the replica view; the hook only orchestrates fetching.
+  const data = useKnowledgeBaseStore(knowledgeBaseSelectors.getKnowledgeBaseList(visibility));
+  // A fresh scope has no persisted row yet, so `!isHydrated` keeps the skeleton
+  // up until the first local read completes and the network sync lands.
+  const { isLoading: showSkeleton } = getLibraryListAsyncState({
+    data,
+    isLoading: !isHydrated,
+    isValidating,
+  });
 
   const setLibraryId = useResourceManagerStore((s) => s.setLibraryId);
   const { open: openCreateLibrary } = useCreateNewModal();
@@ -123,12 +136,10 @@ const Libraries = memo(() => {
   return (
     <Flexbox gap={12}>
       <SectionTitle title={t('home.libraries')} />
-      {isLoading ? (
-        <div className={styles.grid}>
-          {Array.from({ length: 4 }, (_, index) => (
-            <Skeleton.Node active key={index} style={{ height: 52, width: '100%' }} />
-          ))}
-        </div>
+      {error && !data?.length ? (
+        <AsyncError error={error} variant={'inline'} onRetry={() => void revalidate()} />
+      ) : showSkeleton ? (
+        <ResourceSectionSkeleton {...RESOURCE_HOME_SECTIONS.libraries} />
       ) : (
         <div className={styles.grid}>
           {data?.slice(0, MAX_LIBRARIES).map((item) => (

@@ -1,8 +1,6 @@
 'use client';
 
-import { Flexbox } from '@lobehub/ui';
-import { Skeleton } from 'antd';
-import { createStaticStyles } from 'antd-style';
+import { createStaticStyles, Flexbox } from '@lobehub/ui';
 import dayjs from 'dayjs';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -10,12 +8,15 @@ import { useTranslation } from 'react-i18next';
 import { useActiveWorkspaceId } from '@/business/client/hooks/useActiveWorkspaceId';
 import AsyncError from '@/components/AsyncError';
 import FileIcon from '@/components/FileIcon';
+import {
+  RESOURCE_HOME_SECTIONS,
+  ResourceSectionSkeleton,
+} from '@/components/Skeleton/ResourceHome';
 import { useResourceManagerStore } from '@/features/ResourceManager/store';
 import { getResourceQueryVisibility } from '@/features/ResourceManager/store/selectors';
 import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwareNavigate';
-import { useClientDataSWR } from '@/libs/swr';
-import { resourceKeys } from '@/libs/swr/keys';
-import { fileService } from '@/services/file';
+import { useHomeStore } from '@/store/home';
+import { homeRecentSelectors } from '@/store/home/selectors';
 import { FilesTabs } from '@/types/files';
 
 import SectionTitle from './SectionTitle';
@@ -91,24 +92,27 @@ const RecentFiles = memo(() => {
     ? getResourceQueryVisibility(undefined, listVisibility)
     : undefined;
 
-  const { data, error, isLoading, mutate } = useClientDataSWR(
-    resourceKeys.recentFiles(workspaceId ?? null, visibility),
-    () => fileService.getRecentFiles(8, visibility),
-  );
+  // A replica partitioned by user + workspace: a reload paints the last cards
+  // from the local copy while the server confirms them.
+  const { error, isValidating, revalidate } = useHomeStore((s) => s.useFetchResourceRecentFiles)({
+    visibility,
+  });
+  const data = useHomeStore(homeRecentSelectors.resourceFiles({ visibility }));
+  const isLoading = data === undefined && !error;
 
   if (!isLoading && !error && !data?.length) return null;
 
   return (
     <Flexbox gap={12}>
-      <SectionTitle title={t('home.recentFiles')} viewAllUrl={`/resource/${FilesTabs.All}`} />
+      <SectionTitle
+        loading={isValidating && !!data?.length}
+        title={t('home.recentFiles')}
+        viewAllUrl={`/resource/${FilesTabs.All}`}
+      />
       {error && !data?.length ? (
-        <AsyncError error={error} variant={'inline'} onRetry={() => void mutate()} />
+        <AsyncError error={error} variant={'inline'} onRetry={() => void revalidate()} />
       ) : isLoading ? (
-        <div className={styles.grid}>
-          {Array.from({ length: 4 }, (_, index) => (
-            <Skeleton.Node active key={index} style={{ height: 160, width: '100%' }} />
-          ))}
-        </div>
+        <ResourceSectionSkeleton {...RESOURCE_HOME_SECTIONS.files} />
       ) : (
         <div className={styles.grid}>
           {data?.map((item) => {

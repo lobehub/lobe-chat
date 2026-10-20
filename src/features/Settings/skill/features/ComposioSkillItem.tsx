@@ -1,12 +1,20 @@
 'use client';
 
 import { type ComposioAppType } from '@lobechat/const';
-import { Center, DropdownMenu, Flexbox, Icon, Tooltip } from '@lobehub/ui';
-import { Avatar, Button, Button as LobeButton, confirmModal } from '@lobehub/ui/base-ui';
-import { cssVar } from 'antd-style';
+import {
+  Avatar,
+  Button,
+  Button as LobeButton,
+  Center,
+  confirmModal,
+  cssVar,
+  DropdownMenu,
+  Flexbox,
+  Icon,
+  Tooltip,
+} from '@lobehub/ui';
 import {
   CircleCheck,
-  Loader2,
   MoreHorizontalIcon,
   RotateCcw,
   SquareArrowOutUpRight,
@@ -247,7 +255,7 @@ const ComposioSkillItem = memo<ComposioSkillItemProps>(
     const renderAction = () => {
       if (isConnecting || isWaitingAuth) {
         return (
-          <Button disabled icon={<Icon spin icon={Loader2} />} type="default">
+          <Button disabled loading type="default">
             {t('tools.composio.connect', { defaultValue: 'Connect' })}
           </Button>
         );
@@ -338,7 +346,7 @@ const ComposioSkillItem = memo<ComposioSkillItemProps>(
     // users can tell what is connected instead of hitting a blank detail panel.
     const renderNavExtra = () => {
       if (isConnecting || isWaitingAuth) {
-        return <Button disabled icon={<Icon spin icon={Loader2} />} size="small" type="text" />;
+        return <Button disabled loading size="small" type="text" />;
       }
       if (isConnected) {
         return (
@@ -409,7 +417,7 @@ const ComposioSkillItem = memo<ComposioSkillItemProps>(
         gap={8}
         justify="space-between"
         style={{
-          ...(isSelected ? { background: 'var(--ant-color-primary-bg)', borderRadius: 6 } : {}),
+          ...(isSelected ? { background: 'var(--lobe-color-primary-bg)', borderRadius: 6 } : {}),
           ...(onSelect ? { cursor: 'pointer' } : {}),
         }}
         onClick={onSelect}

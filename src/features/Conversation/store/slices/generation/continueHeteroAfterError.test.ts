@@ -93,8 +93,11 @@ vi.mock('@/store/agent/selectors', () => ({
 }));
 
 vi.mock('@/store/chat/selectors', () => ({
+  operationSelectors: { isAgentRuntimeRunningByContext: () => () => false },
   topicSelectors: {
     getTopicById: () => () => mockTopic,
+    getTopicHeteroPinById: () => () =>
+      mockTopic?.model ? { model: mockTopic.model, provider: mockTopic.provider || '' } : undefined,
     getTopicModelById: () => () =>
       mockTopic?.model ? { model: mockTopic.model, provider: mockTopic.provider || '' } : undefined,
   },
@@ -112,16 +115,13 @@ vi.mock('@/store/user', () => ({
   }),
 }));
 
-vi.mock('@/components/AntdStaticMethods', () => ({
-  message: { info: vi.fn() },
-}));
-
 const mockChatDeleteMessage = vi.fn(async () => {});
 const mockExecuteGatewayAgent = vi.fn(async () => {});
 const noop = vi.fn();
 vi.mock('@/store/chat', () => ({
   useChatStore: {
     getState: vi.fn(() => ({
+      dbMessagesMap: {},
       operations: {},
       operationsByMessage: {},
 
@@ -150,7 +150,8 @@ const USER_MESSAGE = { content: 'clean up worktrees', id: 'user-1', role: 'user'
  * and immediately died on the usage limit. `step-1` is also the group id.
  */
 const buildGroupStore = (children: any[], dbMessages?: any[]) => {
-  const store = createStore({ context: CONTEXT });
+  // A static transcript: the chat store is mocked, so rows are held locally.
+  const store = createStore({ context: CONTEXT, messages: [] });
   act(() => {
     store.setState({
       dbMessages: dbMessages ?? [
@@ -334,7 +335,10 @@ describe('continueHeteroAfterError', () => {
     expect(mockExecuteHeterogeneousAgent).not.toHaveBeenCalled();
   });
 
-  it('ignores a retained member device override while the Workspace Agent is private', async () => {
+  // The owner's own `local` pick lives in the per-user override even on a
+  // private Workspace Agent (the shared row must never reference a personal
+  // device — the server rejects it), so it must keep applying here.
+  it("applies the owner's own local override while the Workspace Agent is private", async () => {
     mockAgentVisibility = 'private';
     mockIsWorkspaceAgent = true;
     mockSharedExecutionTarget = 'device';
@@ -353,8 +357,8 @@ describe('continueHeteroAfterError', () => {
 
     expect(mockSelectRuntimeType).toHaveBeenCalledWith(
       expect.objectContaining({
-        boundDeviceId: 'workspace-device',
-        executionTarget: 'device',
+        boundDeviceId: 'personal-device',
+        executionTarget: 'local',
         isWorkspaceAgent: true,
         workspaceScoped: false,
       }),

@@ -1,7 +1,9 @@
 import { getFilePathDisplayInfo } from '@lobechat/shared-tool-ui/components';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { createElement } from 'react';
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
+
+import { useChatStore } from '@/store/chat';
 
 import EditedFilesCard, {
   AGGREGATE_EDITED_FILE_ICON_SIZE,
@@ -16,6 +18,17 @@ vi.mock('react-i18next', () => ({
       options?.path ? `${key}:${options.path}` : key,
   }),
 }));
+
+const conversationState = { context: { agentShareId: undefined as string | undefined } };
+
+vi.mock('../../store', () => ({
+  useConversationStore: (selector: (s: unknown) => unknown) => selector(conversationState),
+}));
+
+afterEach(() => {
+  conversationState.context.agentShareId = undefined;
+  useChatStore.setState({ activeTopicId: undefined });
+});
 
 const singleEntry = {
   diffTexts: [
@@ -64,13 +77,13 @@ describe('getFilePathDisplayInfo', () => {
 });
 
 describe('SINGLE_EDITED_FILE_ICON_SIZE', () => {
-  it('keeps the single-file icon container compact', () => {
+  it('matches the height of the two-line title block beside it', () => {
     expect(SINGLE_EDITED_FILE_ICON_SIZE).toBe(40);
   });
 });
 
 describe('AGGREGATE_EDITED_FILE_ICON_SIZE', () => {
-  it('keeps the multi-file summary as compact as the single-file card', () => {
+  it('matches the single-file card so stacked cards share one icon scale', () => {
     expect(AGGREGATE_EDITED_FILE_ICON_SIZE).toBe(40);
   });
 });
@@ -86,11 +99,38 @@ describe('SingleEditedFileCard', () => {
     expect(summary).toHaveTextContent('+7');
     expect(summary).toHaveTextContent('-2');
     expect(summary).not.toContainElement(action);
-    expect(action).toHaveAttribute('data-view-changes');
+    expect(action.closest('[data-view-changes]')).not.toBeNull();
     expect(action).toHaveAttribute('aria-expanded', 'false');
 
     fireEvent.click(action);
     expect(action).toHaveAttribute('aria-expanded', 'true');
     expect(screen.getByRole('button', { name: 'editedFiles.hideChanges' })).toBeInTheDocument();
+  });
+});
+
+describe('EditedFilesCard open action', () => {
+  const sandboxEntry = {
+    ...singleEntry,
+    path: '/home/user/price_history.html',
+    sandboxBacked: true,
+  };
+  const singleTitle = 'editedFiles.singleTitle:user/price_history.html';
+
+  it('opens a sandbox file preview from the header for the topic owner', () => {
+    useChatStore.setState({ activeTopicId: 'tpc_1' });
+    render(createElement(EditedFilesCard, { entries: [sandboxEntry] }));
+
+    expect(screen.getByText(singleTitle).closest('[role="button"]')).not.toBeNull();
+  });
+
+  // Regression: the share visitor page's portal hosts no LocalFile
+  // view, so the header click used to push an invisible view and do nothing.
+  it('keeps the header inert on the agent-share visitor page, leaving the diff action', () => {
+    conversationState.context.agentShareId = 'share_1';
+    useChatStore.setState({ activeTopicId: 'tpc_1' });
+    render(createElement(EditedFilesCard, { entries: [sandboxEntry] }));
+
+    expect(screen.getByText(singleTitle).closest('[role="button"]')).toBeNull();
+    expect(screen.getByRole('button', { name: 'editedFiles.viewChanges' })).toBeInTheDocument();
   });
 });

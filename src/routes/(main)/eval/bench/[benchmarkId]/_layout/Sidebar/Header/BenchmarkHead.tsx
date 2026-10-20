@@ -1,9 +1,17 @@
 'use client';
 
 import { type DropdownItem } from '@lobehub/ui';
-import { Block, Center, DropdownMenu, Skeleton, stopPropagation } from '@lobehub/ui';
-import { ActionIcon, Text } from '@lobehub/ui/base-ui';
-import { createStaticStyles, cssVar } from 'antd-style';
+import {
+  ActionIcon,
+  Block,
+  Center,
+  createStaticStyles,
+  cssVar,
+  DropdownMenu,
+  Skeleton,
+  stopPropagation,
+  Text,
+} from '@lobehub/ui';
 import {
   Activity,
   Award,
@@ -105,7 +113,7 @@ const BenchmarkHead = memo<{ id: string }>(({ id }) => {
         <Icon size={18} />
       </Center>
       {!name ? (
-        <Skeleton active paragraph={false} title={{ style: { marginBottom: 0 }, width: 80 }} />
+        <Skeleton.Text width={80} />
       ) : (
         <DropdownMenu items={menuItems} placement="bottomRight">
           <Center

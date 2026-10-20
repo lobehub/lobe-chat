@@ -1,13 +1,22 @@
-import { ModelIcon } from '@lobehub/icons';
-import { copyToClipboard, Flexbox } from '@lobehub/ui';
-import { ActionIcon, confirmModal, Switch, Tag, Text, toast } from '@lobehub/ui/base-ui';
-import { createStaticStyles, cssVar } from 'antd-style';
+import {
+  ActionIcon,
+  confirmModal,
+  copyToClipboard,
+  createStaticStyles,
+  cssVar,
+  Flexbox,
+  Switch,
+  Tag,
+  Text,
+  toast,
+} from '@lobehub/ui';
 import { LucidePencil, TrashIcon } from 'lucide-react';
 import { type AiProviderModelListItem } from 'model-bank';
-import { AiModelSourceEnum } from 'model-bank';
+import { AiModelSourceEnum } from 'model-bank/aiModel';
 import React, { memo, use, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { ModelIcon } from '@/components/LobeIcons';
 import { ModelInfoTags } from '@/components/ModelSelect';
 import NewModelBadge from '@/components/ModelSelect/NewModelBadge';
 import { useIsMobile } from '@/hooks/useIsMobile';

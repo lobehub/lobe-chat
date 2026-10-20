@@ -4,10 +4,19 @@ import {
   buildAgentSkillIdentifier,
   EMPTY_ARRAY,
 } from '@lobechat/const';
-import { Center, Empty, Flexbox } from '@lobehub/ui';
-import { ActionIcon, confirmModal, Text, toast } from '@lobehub/ui/base-ui';
+import {
+  ActionIcon,
+  Center,
+  confirmModal,
+  createStaticStyles,
+  cx,
+  Empty,
+  Flexbox,
+  Spin,
+  Text,
+  toast,
+} from '@lobehub/ui';
 import { SkillsIcon } from '@lobehub/ui/icons';
-import { createStaticStyles, cx } from 'antd-style';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import type { LucideIcon } from 'lucide-react';
@@ -19,9 +28,11 @@ import { useParams } from 'react-router';
 
 import AsyncError from '@/components/AsyncError';
 import { withErrorBoundary } from '@/components/ErrorBoundary';
-import NeuralNetworkLoading from '@/components/NeuralNetworkLoading';
 import { buildAgentDocumentPath } from '@/features/AgentDocumentPage/navigation';
-import { DocumentExplorerTree } from '@/features/AgentDocumentsExplorer';
+import {
+  type AgentDocumentListMutator,
+  DocumentExplorerTree,
+} from '@/features/AgentDocumentsExplorer';
 import { startSkillDrag } from '@/features/ChatInput/InputEditor/ActionTag/skillDragData';
 import {
   openRenameSkillModal,
@@ -32,10 +43,14 @@ import {
   useProjectSkills,
 } from '@/features/SkillsList';
 import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwareNavigate';
-import { useClientDataSWR } from '@/libs/swr';
-import { agentDocumentService, agentDocumentSWRKeys } from '@/services/agentDocument';
+import { agentDocumentService } from '@/services/agentDocument';
 import { useAgentStore } from '@/store/agent';
 import { chatConfigByIdSelectors } from '@/store/agent/selectors';
+import {
+  agentDocumentActions,
+  agentDocumentSelectors,
+  useAgentDocumentStore,
+} from '@/store/agentDocument';
 import { useChatStore } from '@/store/chat';
 import { standardizeIdentifier } from '@/utils/identifier';
 
@@ -177,6 +192,7 @@ const DocumentItem = memo<DocumentItemProps>(
               agentId,
               documentId: document.documentId,
               id: document.id,
+              withChildren: true,
             });
             await mutate();
             if (isActive) onCurrentDeleted?.();
@@ -330,13 +346,16 @@ const AgentDocumentsGroup = memo<AgentDocumentsGroupProps>(
     }, [controlledFilter, isDocumentMode]);
 
     // Local desktop reads skills over IPC; a bound device reads over RPC.
+    // `enabled` is false while the pane sits hidden behind `<Activity>`. Without it
+    // a closed panel still ran the filesystem skill scan and mounted a row subtree
+    // per skill — thousands of zero-box components the user never sees.
     const showProjectSkills =
-      (showLocalProjectSkills || isLocalEnabled || !!deviceId) && !!workingDirectory;
+      enabled && (showLocalProjectSkills || isLocalEnabled || !!deviceId) && !!workingDirectory;
 
     // Mirror what each child component reads so the parent can decide the
     // section layout (flat when a single source has items, sectioned otherwise).
     // Both hooks are SWR-deduped against their respective child fetches.
-    const userSkillItems = useUserSkills();
+    const userSkillItems = useUserSkills(enabled);
     const {
       deviceItems: deviceSkillItems,
       error: projectSkillsError,
@@ -344,14 +363,20 @@ const AgentDocumentsGroup = memo<AgentDocumentsGroupProps>(
       projectItems: projectSkillItems,
     } = useProjectSkills(showProjectSkills ? workingDirectory : undefined, deviceId);
 
-    const {
-      data = EMPTY_ARRAY,
-      error,
-      isLoading,
-      mutate,
-    } = useClientDataSWR(
-      enabled && agentId ? agentDocumentSWRKeys.documentsList(agentId) : null,
-      () => agentDocumentService.listDocuments({ agentId: agentId! }),
+    // The agent's document-list replica: on a reload the persisted list paints
+    // the panel at once and the network only confirms it.
+    const { error: listError } = agentDocumentActions.useFetchDocumentList(agentId, { enabled });
+    const list = useAgentDocumentStore(agentDocumentSelectors.getDocumentList(agentId));
+    const data = list ?? EMPTY_ARRAY;
+    // Loading / error take over the panel only while there is nothing to show.
+    const isLoading = !list && !listError;
+    const error = list ? undefined : listError;
+    const mutate = useCallback<AgentDocumentListMutator>(
+      (edit, options) =>
+        agentId
+          ? agentDocumentActions.mutateDocumentList(agentId, edit, options)
+          : Promise.resolve(),
+      [agentId],
     );
 
     const webData = useMemo(
@@ -490,7 +515,12 @@ const AgentDocumentsGroup = memo<AgentDocumentsGroupProps>(
                 okText: tCommon('delete'),
                 onOk: async () => {
                   try {
-                    await agentDocumentService.removeDocument({ agentId: agentId!, id: rowId });
+                    // A skill bundle always holds its SKILL.md and resources.
+                    await agentDocumentService.removeDocument({
+                      agentId: agentId!,
+                      id: rowId,
+                      withChildren: true,
+                    });
                     await mutate();
                     toast.success(t('workingPanel.skills.delete.success'));
                   } catch (error) {
@@ -516,7 +546,7 @@ const AgentDocumentsGroup = memo<AgentDocumentsGroupProps>(
     if (isLoading) {
       return (
         <Center flex={1} paddingBlock={24}>
-          <NeuralNetworkLoading size={32} />
+          <Spin size="large" />
         </Center>
       );
     }
@@ -578,7 +608,7 @@ const AgentDocumentsGroup = memo<AgentDocumentsGroupProps>(
         if (showProjectSkills && isProjectSkillsLoading) {
           return (
             <Center flex={1} paddingBlock={24}>
-              <NeuralNetworkLoading size={32} />
+              <Spin size="large" />
             </Center>
           );
         }

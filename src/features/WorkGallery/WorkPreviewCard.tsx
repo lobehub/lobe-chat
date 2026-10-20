@@ -2,16 +2,14 @@
 
 import type { WorkSummaryItem } from '@lobechat/types';
 import { formatTokenNumber } from '@lobechat/utils/format';
-import { Flexbox } from '@lobehub/ui';
-import { Avatar, Tag } from '@lobehub/ui/base-ui';
-import { createStaticStyles, cssVar, cx } from 'antd-style';
-import { Trash2Icon } from 'lucide-react';
+import { Avatar, createStaticStyles, cssVar, cx, Flexbox, Tag } from '@lobehub/ui';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { formatTaskItemDate } from '@/features/AgentTasks/features/formatTaskItemDate';
 import { useAgentDisplayMeta } from '@/features/AgentTasks/shared/useAgentDisplayMeta';
 import { getWorkTypeDescriptor } from '@/features/Work/descriptors';
+import { getWorkVersionTotalTokens } from '@/utils/workCumulativeUsage';
 import { formatWorkVersionCost } from '@/utils/workVersionCost';
 
 import WorkPreview from './WorkPreview';
@@ -120,17 +118,6 @@ const styles = createStaticStyles(({ css }) => ({
   `,
 }));
 
-const isRecord = (value: unknown): value is Record<string, unknown> =>
-  typeof value === 'object' && value !== null;
-
-const getTotalTokens = (item: WorkSummaryItem): number | null => {
-  const usage = item.event.cumulativeUsage?.usage;
-  if (!isRecord(usage) || !isRecord(usage.llm) || !isRecord(usage.llm.tokens)) return null;
-
-  const total = usage.llm.tokens.total;
-  return typeof total === 'number' && Number.isFinite(total) && total > 0 ? total : null;
-};
-
 interface WorkPreviewCardProps {
   item: WorkSummaryItem;
   onOpen: (item: WorkSummaryItem) => void;
@@ -162,6 +149,11 @@ const workTypeKey = (item: WorkSummaryItem) => {
   }
 };
 
+/**
+ * Gallery card for a live Work. Orphans (backing resource deleted or trashed)
+ * never reach it: `listByWorkspace` filters them out server-side, so the card
+ * has no "resource deleted" state.
+ */
 const WorkPreviewCard = memo<WorkPreviewCardProps>(({ item, onOpen }) => {
   const { t, i18n } = useTranslation(['chat', 'common', 'file']);
   const agent = useAgentDisplayMeta(item.originAgentId);
@@ -176,10 +168,8 @@ const WorkPreviewCard = memo<WorkPreviewCardProps>(({ item, onOpen }) => {
     item.resourceType.startsWith('github_') && identifier?.includes('#')
       ? `#${identifier.split('#').at(-1)}`
       : identifier;
-  const taskDeleted = item.resourceType === 'task' && item.taskDeleted;
   const openTarget = descriptor.getOpenTarget(item);
-  const actionable = !!openTarget && (openTarget.kind !== 'filePreview' || !!openTarget.url);
-  const clickable = actionable && !taskDeleted;
+  const clickable = !!openTarget && (openTarget.kind !== 'filePreview' || !!openTarget.url);
   const eventDate = item.event.changeType === 'created' ? item.createdAt : item.updatedAt;
   const eventAt = formatTaskItemDate(eventDate, {
     formatOtherYear: t('time.formatOtherYear', { ns: 'common' }),
@@ -190,12 +180,12 @@ const WorkPreviewCard = memo<WorkPreviewCardProps>(({ item, onOpen }) => {
     date: eventAt,
     ns: 'file',
   });
-  const totalTokens = getTotalTokens(item);
+  const totalTokens = getWorkVersionTotalTokens(item.event.cumulativeUsage);
   const cost = formatWorkVersionCost(item.totalCost);
 
   return (
     <Flexbox
-      className={cx(styles.card, clickable && styles.clickable)}
+      className={cx('work-preview-card', styles.card, clickable && styles.clickable)}
       onClick={clickable ? () => onOpen(item) : undefined}
     >
       <WorkPreview item={item} title={title} />
@@ -213,11 +203,6 @@ const WorkPreviewCard = memo<WorkPreviewCardProps>(({ item, onOpen }) => {
           {item.resourceType === 'github_issue' && item.status && (
             <Tag size={'small'} style={{ marginInlineStart: 'auto' }}>
               {item.status}
-            </Tag>
-          )}
-          {taskDeleted && (
-            <Tag color={'warning'} icon={<Trash2Icon size={12} />} size={'small'}>
-              {t('workingPanel.works.taskDeleted', { ns: 'chat' })}
             </Tag>
           )}
         </Flexbox>

@@ -1,3 +1,4 @@
+import { isDesktop } from '@lobechat/const';
 import type { GatewayConnectionStatus } from '@lobechat/electron-client-ipc';
 import { type SWRResponse } from 'swr';
 import useSWR from 'swr';
@@ -19,11 +20,12 @@ export interface GatewayDeviceInfo {
 }
 
 export class ElectronGatewayActionImpl {
+  readonly #get: () => ElectronStore;
   readonly #set: Setter;
 
-  constructor(set: Setter, _get: () => ElectronStore, _api?: unknown) {
-    void _get;
+  constructor(set: Setter, get: () => ElectronStore, _api?: unknown) {
     void _api;
+    this.#get = get;
     this.#set = set;
   }
 
@@ -53,9 +55,36 @@ export class ElectronGatewayActionImpl {
     this.#set({ gatewayConnectionStatus: status }, false, 'setGatewayConnectionStatus');
   };
 
+  /**
+   * This desktop's stable device id, for writes that pin a topic's cwd to it.
+   *
+   * Asked over IPC every time rather than read from `gatewayDeviceInfo`: before
+   * the gateway connects, that holds the install's fallback UUID, which stops
+   * naming this machine once the user-scoped identity is derived. The IPC
+   * derives that identity locally — no network on the send path — and returns
+   * nothing while signed out, so no pin is written rather than a stale one.
+   * A differing cached id is corrected too, so "this device" comparisons agree
+   * with the pins written here.
+   */
+  resolveGatewayDeviceId = async (): Promise<string | undefined> => {
+    if (!isDesktop) return;
+    try {
+      const deviceId = (await gatewayConnectionService.getStableDeviceId()) ?? undefined;
+      const cached = this.#get().gatewayDeviceInfo;
+      if (deviceId && cached && cached.deviceId !== deviceId) {
+        this.#set({ gatewayDeviceInfo: { ...cached, deviceId } }, false, 'setGatewayDeviceInfo');
+      }
+      return deviceId;
+    } catch (error) {
+      console.error('Gateway device id lookup failed:', error);
+      return;
+    }
+  };
+
   useFetchGatewayDeviceInfo = (): SWRResponse<GatewayDeviceInfo> => {
     return useSWR<GatewayDeviceInfo>(
-      electronKeys.gatewayDeviceInfo(),
+      // Desktop-only IPC: on web there is no electronAPI, so never fetch off-desktop.
+      isDesktop ? electronKeys.gatewayDeviceInfo() : null,
       async () => gatewayConnectionService.getDeviceInfo() as Promise<GatewayDeviceInfo>,
       {
         onSuccess: (data) => {
@@ -67,7 +96,7 @@ export class ElectronGatewayActionImpl {
 
   useFetchGatewayStatus = (): SWRResponse<{ status: GatewayConnectionStatus }> => {
     return useSWR<{ status: GatewayConnectionStatus }>(
-      'electron:getGatewayConnectionStatus',
+      isDesktop ? 'electron:getGatewayConnectionStatus' : null,
       async () => gatewayConnectionService.getConnectionStatus(),
       {
         onSuccess: (data) => {

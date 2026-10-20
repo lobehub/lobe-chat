@@ -5,7 +5,7 @@ import type {
   LobeAgentSession,
   LobeGroupSession,
 } from '@lobechat/types';
-import { and, asc, count, desc, eq, inArray, not, or, sql } from 'drizzle-orm';
+import { and, asc, desc, eq, exists, inArray, not, notExists, or } from 'drizzle-orm';
 import type { PartialDeep } from 'type-fest';
 
 import { merge } from '@/utils/merge';
@@ -13,11 +13,15 @@ import { merge } from '@/utils/merge';
 import type { AgentItem, NewAgent, NewSession, SessionItem } from '../schemas';
 import { agents, agentsToSessions, sessionGroups, sessions } from '../schemas';
 import type { LobeChatDatabase } from '../type';
-import { sanitizeBm25Query } from '../utils/bm25';
-import { genEndDateWhere, genRangeWhere, genStartDateWhere, genWhere } from '../utils/genWhere';
 import { idGenerator } from '../utils/idGenerator';
+import { isTrashed, notTrashed } from '../utils/softDelete';
 import { buildWorkspacePayload, buildWorkspaceWhere } from '../utils/workspace';
 
+/**
+ * @deprecated Sessions are the legacy shell of an agent — see the `sessions`
+ * schema note. Reads here still exist for the mobile session list and legacy
+ * data; write paths should go through `AgentModel` / `TopicModel`.
+ */
 export class SessionModel {
   private userId: string;
   private db: LobeChatDatabase;
@@ -29,8 +33,55 @@ export class SessionModel {
     this.workspaceId = workspaceId;
   }
 
-  private ownership = () =>
+  /** Compat scope only — used for the slug-uniqueness probe in {@link create}. */
+  private scope = () =>
     buildWorkspaceWhere({ userId: this.userId, workspaceId: this.workspaceId }, sessions);
+
+  /**
+   * Sessions carry no recycle-bin flag of their own (the agent is the
+   * restorable unit), so the gate goes through the linked agents' flags.
+   *
+   * Write gate: a shell with *any* trashed agent linked is not updatable in
+   * bulk, not hard-deletable through this model — deleting it would cascade
+   * away the topics the agent's restore needs — until the agent is restored
+   * (or the agent purge drops the shell with it).
+   */
+  private noTrashedAgent = () =>
+    notExists(
+      this.db
+        .select({ id: agentsToSessions.agentId })
+        .from(agentsToSessions)
+        .innerJoin(agents, eq(agentsToSessions.agentId, agents.id))
+        .where(and(eq(agentsToSessions.sessionId, sessions.id), isTrashed(agents.isDeleted))),
+    );
+
+  /**
+   * Read gate: a single-agent shell whose agent sits in the bin is invisible
+   * (not listed, not resolvable by id / slug, not updatable). A legacy
+   * `type === 'group'` shell stays reachable while any member is live; reads
+   * that join agents drop the trashed members via {@link liveAgentRow}.
+   */
+  private visible = () =>
+    or(
+      this.noTrashedAgent(),
+      and(
+        eq(sessions.type, 'group'),
+        exists(
+          this.db
+            .select({ id: agentsToSessions.agentId })
+            .from(agentsToSessions)
+            .innerJoin(agents, eq(agentsToSessions.agentId, agents.id))
+            .where(and(eq(agentsToSessions.sessionId, sessions.id), notTrashed(agents.isDeleted))),
+        ),
+      ),
+    );
+
+  /** For reads left-joining `agents`: drop rows of trashed members (null agent = no link, kept). */
+  private liveAgentRow = () => notTrashed(agents.isDeleted);
+
+  private ownership = () => and(this.scope(), this.visible());
+
+  private writeOwnership = () => and(this.scope(), this.noTrashedAgent());
 
   private agentsOwnership = () =>
     buildWorkspaceWhere({ userId: this.userId, workspaceId: this.workspaceId }, agents);
@@ -56,7 +107,7 @@ export class SessionModel {
       .leftJoin(agentsToSessions, eq(sessions.id, agentsToSessions.sessionId))
       .leftJoin(agents, eq(agentsToSessions.agentId, agents.id))
       .leftJoin(sessionGroups, eq(sessions.groupId, sessionGroups.id))
-      .where(and(this.ownership(), not(eq(sessions.slug, INBOX_SESSION_ID))))
+      .where(and(this.ownership(), this.liveAgentRow(), not(eq(sessions.slug, INBOX_SESSION_ID))))
       .orderBy(desc(sessions.updatedAt))
       .limit(pageSize)
       .offset(offset);
@@ -88,7 +139,10 @@ export class SessionModel {
 
     const groups = await this.db.query.sessionGroups.findMany({
       orderBy: [asc(sessionGroups.sort), desc(sessionGroups.createdAt)],
-      where: and(this.ownership()),
+      where: buildWorkspaceWhere(
+        { userId: this.userId, workspaceId: this.workspaceId },
+        sessionGroups,
+      ),
     });
 
     const mappedSessions = result.map((item) => this.mapSessionItem(item as any));
@@ -97,16 +151,6 @@ export class SessionModel {
       sessionGroups: groups as unknown as ChatSessionList['sessionGroups'],
       sessions: mappedSessions,
     };
-  };
-
-  queryByKeyword = async (keyword: string) => {
-    if (!keyword) return [];
-
-    const keywordLowerCase = keyword.toLowerCase();
-
-    const data = await this.findSessionsByKeywords({ keyword: keywordLowerCase });
-
-    return data.map((item) => this.mapSessionItem(item as any));
   };
 
   findByIdOrSlug = async (
@@ -120,7 +164,13 @@ export class SessionModel {
         session: sessions,
       })
       .from(sessions)
-      .where(and(or(eq(sessions.id, idOrSlug), eq(sessions.slug, idOrSlug)), this.ownership()))
+      .where(
+        and(
+          or(eq(sessions.id, idOrSlug), eq(sessions.slug, idOrSlug)),
+          this.ownership(),
+          this.liveAgentRow(),
+        ),
+      )
       .leftJoin(agentsToSessions, eq(sessions.id, agentsToSessions.sessionId))
       .leftJoin(agents, eq(agentsToSessions.agentId, agents.id))
       .leftJoin(sessionGroups, eq(sessions.groupId, sessionGroups.id))
@@ -129,34 +179,6 @@ export class SessionModel {
     if (!result || !result[0]) return;
 
     return { ...result[0].session, agent: result[0].agent, group: result[0].group } as any;
-  };
-
-  count = async (params?: {
-    endDate?: string;
-    range?: [string, string];
-    startDate?: string;
-  }): Promise<number> => {
-    const result = await this.db
-      .select({
-        count: count(sessions.id),
-      })
-      .from(sessions)
-      .where(
-        genWhere([
-          this.ownership(),
-          params?.range
-            ? genRangeWhere(params.range, sessions.createdAt, (date) => date.toDate())
-            : undefined,
-          params?.endDate
-            ? genEndDateWhere(params.endDate, sessions.createdAt, (date) => date.toDate())
-            : undefined,
-          params?.startDate
-            ? genStartDateWhere(params.startDate, sessions.createdAt, (date) => date.toDate())
-            : undefined,
-        ]),
-      );
-
-    return result[0].count;
   };
 
   hasMoreThanN = async (n: number): Promise<boolean> => {
@@ -190,8 +212,11 @@ export class SessionModel {
   }): Promise<SessionItem> => {
     return this.db.transaction(async (trx) => {
       if (slug) {
+        // Probe with the bare scope: a shell whose agent is in the bin still
+        // holds its slug (the unique index is not partial), so hiding it here
+        // would make the insert below collide.
         const existResult = await trx.query.sessions.findFirst({
-          where: and(eq(sessions.slug, slug), this.ownership()),
+          where: and(eq(sessions.slug, slug), this.scope()),
         });
 
         if (existResult) return existResult;
@@ -323,20 +348,6 @@ export class SessionModel {
     });
   };
 
-  batchCreate = async (newSessions: NewSession[]) => {
-    const sessionsToInsert = newSessions.map((s) =>
-      buildWorkspacePayload(
-        { userId: this.userId, workspaceId: this.workspaceId },
-        {
-          ...s,
-          id: this.genId(),
-        },
-      ),
-    );
-
-    return this.db.insert(sessions).values(sessionsToInsert);
-  };
-
   duplicate = async (id: string, newTitle?: string) => {
     const result = await this.findByIdOrSlug(id);
 
@@ -365,6 +376,16 @@ export class SessionModel {
    */
   delete = async (id: string) => {
     return this.db.transaction(async (trx) => {
+      // Resolve visibility BEFORE touching the links: the recycle-bin gate is
+      // evaluated through those links, so dropping them first would un-hide a
+      // shell whose agent is in the bin and let the cascade take its topics.
+      const [target] = await trx
+        .select({ id: sessions.id })
+        .from(sessions)
+        .where(and(eq(sessions.id, id), this.writeOwnership()))
+        .limit(1);
+      if (!target) return { orphanedAgentIds: [] as string[], result: { count: 0 } };
+
       // First get the agent IDs associated with this session
       const links = await trx
         .select({ agentId: agentsToSessions.agentId })
@@ -379,7 +400,9 @@ export class SessionModel {
         .where(and(eq(agentsToSessions.sessionId, id), this.agentsToSessionsOwnership()));
 
       // Delete the session (this will cascade delete messages, topics, etc.)
-      const result = await trx.delete(sessions).where(and(eq(sessions.id, id), this.ownership()));
+      const result = await trx
+        .delete(sessions)
+        .where(and(eq(sessions.id, id), this.writeOwnership()));
 
       // Delete orphaned agents
       const orphanedAgentIds = await this.clearOrphanAgent(agentIds, trx);
@@ -395,6 +418,15 @@ export class SessionModel {
     if (ids.length === 0) return { orphanedAgentIds: [] as string[], result: { count: 0 } };
 
     return this.db.transaction(async (trx) => {
+      // Same ordering rule as `delete`: settle which shells are visible before
+      // the links (that the visibility gate reads through) are removed.
+      const visible = await trx
+        .select({ id: sessions.id })
+        .from(sessions)
+        .where(and(inArray(sessions.id, ids), this.writeOwnership()));
+      ids = visible.map((row) => row.id);
+      if (ids.length === 0) return { orphanedAgentIds: [] as string[], result: { count: 0 } };
+
       // Get agent IDs associated with these sessions
       const links = await trx
         .select({ agentId: agentsToSessions.agentId })
@@ -411,7 +443,7 @@ export class SessionModel {
       // Delete the sessions
       const result = await trx
         .delete(sessions)
-        .where(and(inArray(sessions.id, ids), this.ownership()));
+        .where(and(inArray(sessions.id, ids), this.writeOwnership()));
 
       // Delete orphaned agents
       const orphanedAgentIds = await this.clearOrphanAgent(agentIds, trx);
@@ -425,10 +457,48 @@ export class SessionModel {
    */
   deleteAll = async () => {
     return this.db.transaction(async (trx) => {
-      await trx.delete(agentsToSessions).where(this.agentsToSessionsOwnership());
+      // Shells of trashed agents stay (their agent is still restorable); only
+      // visible shells and their links go.
+      const visible = await trx
+        .select({ id: sessions.id })
+        .from(sessions)
+        .where(this.writeOwnership());
+      const ids = visible.map((row) => row.id);
+      if (ids.length === 0) return { count: 0 };
+      await trx
+        .delete(agentsToSessions)
+        .where(and(inArray(agentsToSessions.sessionId, ids), this.agentsToSessionsOwnership()));
       await trx.delete(agents).where(this.agentsOwnership());
-      return trx.delete(sessions).where(this.ownership());
+      return trx.delete(sessions).where(and(inArray(sessions.id, ids), this.scope()));
     });
+  };
+
+  /** Agents linked to a session — lets `removeSession` route through the agent trash handler. */
+  findLinkedAgentIds = async (sessionId: string): Promise<string[]> => {
+    const links = await this.db
+      .select({ agentId: agentsToSessions.agentId })
+      .from(agentsToSessions)
+      .where(and(eq(agentsToSessions.sessionId, sessionId), this.agentsToSessionsOwnership()));
+    return links.map((link) => link.agentId);
+  };
+
+  /**
+   * Whether `sessionId` is the agent's one and only shell and carries no other
+   * agent — i.e. removing the session means removing the agent. The schema
+   * allows an agent to be linked to several sessions (and a group shell to
+   * several agents); in either case only the selected shell may go. Link
+   * counting mirrors {@link clearOrphanAgent}: every link counts, so an agent
+   * is never treated as orphaned while anything still points at it.
+   */
+  isSoleShellOfAgent = async (sessionId: string, agentId: string): Promise<boolean> => {
+    const links = await this.db
+      .select({ agentId: agentsToSessions.agentId, sessionId: agentsToSessions.sessionId })
+      .from(agentsToSessions)
+      .where(or(eq(agentsToSessions.agentId, agentId), eq(agentsToSessions.sessionId, sessionId)));
+    return (
+      links.length > 0 &&
+      links.every((link) => link.agentId === agentId && link.sessionId === sessionId)
+    );
   };
 
   clearOrphanAgent = async (agentIds: string[], trx: any): Promise<string[]> => {
@@ -456,6 +526,16 @@ export class SessionModel {
     return orphanedAgentIds;
   };
 
+  /**
+   * Drop the legacy session shells of an agent being purged from the recycle
+   * bin. Their links are already gone by then, so the trashed-agent gate no
+   * longer applies; the trash handler composes this with the agent purge.
+   */
+  deleteShellsByIds = async (ids: string[]) => {
+    if (ids.length === 0) return;
+    await this.db.delete(sessions).where(and(inArray(sessions.id, ids), this.scope()));
+  };
+
   // **************** Update *************** //
 
   update = async (id: string, data: Partial<SessionItem>) => {
@@ -464,65 +544,6 @@ export class SessionModel {
       .set(data)
       .where(and(eq(sessions.id, id), this.ownership()))
       .returning();
-  };
-
-  updateConfig = async (sessionId: string, data: PartialDeep<AgentItem> | undefined | null) => {
-    if (!data || Object.keys(data).length === 0) return;
-
-    const session = await this.findByIdOrSlug(sessionId);
-    if (!session) return;
-
-    if (!session.agent) {
-      throw new Error(
-        'this session is not assign with agent, please contact with admin to fix this issue.',
-      );
-    }
-
-    // First process the params field: undefined means delete, null means disable flag
-    const existingParams = session.agent.params ?? {};
-    const updatedParams: Record<string, any> = { ...existingParams };
-
-    if (data.params) {
-      const incomingParams = data.params as Record<string, any>;
-      Object.keys(incomingParams).forEach((key) => {
-        const incomingValue = incomingParams[key];
-
-        // undefined means explicitly delete this field
-        if (incomingValue === undefined) {
-          delete updatedParams[key];
-          return;
-        }
-
-        // All other values (including null) are directly overwritten, null means disable this param on the frontend
-        updatedParams[key] = incomingValue;
-      });
-    }
-
-    // Build data to be merged, excluding params (processed separately)
-
-    const { params: _params, ...restData } = data;
-    const mergedValue = merge(session.agent, restData);
-
-    // Apply the processed parameters
-    mergedValue.params = Object.keys(updatedParams).length > 0 ? updatedParams : undefined;
-
-    // Final cleanup: ensure no undefined or null values enter the database
-    if (mergedValue.params) {
-      const params = mergedValue.params as Record<string, any>;
-      Object.keys(params).forEach((key) => {
-        if (params[key] === undefined) {
-          delete params[key];
-        }
-      });
-      if (Object.keys(params).length === 0) {
-        mergedValue.params = undefined;
-      }
-    }
-
-    return this.db
-      .update(agents)
-      .set(mergedValue)
-      .where(and(eq(agents.id, session.agent.id), this.agentsOwnership()));
   };
 
   // **************** Helper *************** //
@@ -595,43 +616,5 @@ export class SessionModel {
       model: agent?.model || '',
       type: 'agent',
     } as LobeAgentSession;
-  };
-
-  findSessionsByKeywords = async (params: {
-    current?: number;
-    keyword: string;
-    pageSize?: number;
-  }) => {
-    const { keyword, pageSize = 9999, current = 0 } = params;
-    const offset = current * pageSize;
-
-    try {
-      const bm25Query = sanitizeBm25Query(keyword);
-
-      const results = await this.db.query.agents.findMany({
-        limit: pageSize,
-        offset,
-        // Keep deterministic ordering for keyword search results
-        orderBy: [asc(agents.id)],
-        where: and(
-          this.agentsOwnership(),
-          sql`(${agents.title} @@@ ${bm25Query} OR ${agents.description} @@@ ${bm25Query})`,
-        ),
-        with: { agentsToSessions: { columns: {}, with: { session: true } } },
-      });
-
-      // Filter and map results, ensuring valid session associations
-      return results
-        .filter((item) => item.agentsToSessions && item.agentsToSessions.length > 0)
-        .map(
-          (item) =>
-            (item.agentsToSessions as Array<{ session: SessionItem | null | undefined }>)[0]
-              ?.session,
-        )
-        .filter((session) => session !== null && session !== undefined);
-    } catch (e) {
-      console.error('findSessionsByKeywords error:', e, { keyword });
-      return [];
-    }
   };
 }

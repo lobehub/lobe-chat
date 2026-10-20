@@ -1,8 +1,7 @@
 'use client';
 
 import { agentDisplayName } from '@lobechat/types';
-import { Flexbox } from '@lobehub/ui';
-import { cx } from 'antd-style';
+import { cx, Flexbox } from '@lobehub/ui';
 import { memo } from 'react';
 
 import FollowUpChips from '../FollowUp/FollowUpChips';
@@ -39,6 +38,7 @@ const ChatItem = memo<ChatItemProps>(
     onDoubleClick,
     aboveMessage,
     belowMessage,
+    headerAddon,
     showAvatar = true,
     titleAddon,
     disabled = false,
@@ -83,9 +83,16 @@ const ChatItem = memo<ChatItemProps>(
           className={'message-header'}
           direction={isUser ? 'horizontal-reverse' : 'horizontal'}
           gap={8}
+          // The row wraps nothing, so without a cap it is sized by its content and
+          // simply overflows its lane — on a narrow viewport that is a header
+          // wider than the conversation pane (the source-topic link, a long agent
+          // name). Capped, the shrinkable addons yield to the space actually
+          // available and truncate instead.
+          style={{ maxInlineSize: '100%', minInlineSize: 0 }}
         >
           {showAvatar &&
             (customAvatarRender ? customAvatarRender(avatar, avatarContent) : avatarContent)}
+          {headerAddon}
           <Title avatar={avatar} showTitle={showTitle} time={time} titleAddon={titleAddon} />
         </Flexbox>
         <Flexbox

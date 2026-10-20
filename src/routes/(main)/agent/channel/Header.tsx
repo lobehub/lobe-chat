@@ -1,16 +1,17 @@
 'use client';
 
 import { exportJSONFile } from '@lobechat/utils/client';
-import { Flexbox, Icon } from '@lobehub/ui';
+import type { DropdownItem } from '@lobehub/ui';
 import {
   ActionIcon,
   confirmModal,
-  type DropdownItem,
   DropdownMenu,
+  Flexbox,
+  Icon,
   Switch,
   Tag,
   toast,
-} from '@lobehub/ui/base-ui';
+} from '@lobehub/ui';
 import {
   BookOpen,
   Download,
@@ -24,20 +25,27 @@ import { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router';
 
+import SkeletonBar from '@/components/Skeleton/Bar';
 import AgentBreadcrumb from '@/features/AgentBreadcrumb';
 import AgentProfileTabs, { AGENT_PROFILE_TABS_CENTER_STYLE } from '@/features/AgentProfileTabs';
 import NavHeader from '@/features/NavHeader';
 import type { SerializedPlatformDefinition } from '@/server/services/bot/platforms/types';
 import { useAgentStore } from '@/store/agent';
 import type { BotProviderItem } from '@/store/agent/slices/bot/action';
+import { BOT_RUNTIME_STATUSES, type BotRuntimeStatus } from '@/types/botRuntimeStatus';
 
-import { BOT_RUNTIME_STATUSES, type BotRuntimeStatus } from '../../../../types/botRuntimeStatus';
+import { resolveChannelHeaderView } from './headerView';
+import { isImportableChannel, planChannelImport } from './importPlan';
 
 interface HeaderProps {
   agentId: string;
   currentConfig?: BotProviderItem;
   disabled?: boolean;
   platformDef?: SerializedPlatformDefinition & { comingSoon?: boolean };
+  /** The `:platform` route param; set on a platform detail even before `platformDef` loads. */
+  platformId?: string;
+  /** Platform definitions are still loading. */
+  platformsLoading?: boolean;
   providers?: BotProviderItem[];
   runtimeStatus?: BotRuntimeStatus;
 }
@@ -51,8 +59,18 @@ const STATUS_TAG_COLORS: Partial<Record<BotRuntimeStatus, string>> = {
 };
 
 const Header = memo<HeaderProps>(
-  ({ agentId, currentConfig, disabled, platformDef, providers, runtimeStatus }) => {
+  ({
+    agentId,
+    currentConfig,
+    disabled,
+    platformDef,
+    platformId,
+    platformsLoading = false,
+    providers,
+    runtimeStatus,
+  }) => {
     const { t } = useTranslation(['agent', 'chat', 'common']);
+    const view = resolveChannelHeaderView(platformId, platformDef, platformsLoading);
 
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [pendingEnabled, setPendingEnabled] = useState<boolean>();
@@ -62,12 +80,14 @@ const Header = memo<HeaderProps>(
       connectBot,
       createBotProvider,
       deleteAllBotProviders,
+      exportBotProviders,
       refreshBotRuntimeStatus,
       updateBotProvider,
     ] = useAgentStore((s) => [
       s.connectBot,
       s.createBotProvider,
       s.deleteAllBotProviders,
+      s.exportBotProviders,
       s.refreshBotRuntimeStatus,
       s.updateBotProvider,
     ]);
@@ -78,16 +98,25 @@ const Header = memo<HeaderProps>(
     const toggleDisabled = disabled || (paidFeatureBlocked && !currentConfig?.enabled);
     const effectiveEnabled = pendingEnabled ?? currentConfig?.enabled;
     const hasProviders = !!providers?.length;
+    const setupGuideUrl = platformDef?.documentation?.setupGuideUrl;
 
     useEffect(() => {
       if (!currentConfig || pendingEnabled === currentConfig.enabled) setPendingEnabled(undefined);
     }, [currentConfig, pendingEnabled]);
 
-    const handleExport = useCallback(() => {
+    const handleExport = useCallback(async () => {
       if (!providers?.length) return;
-      const exportData = providers.map(({ id: _, ...rest }) => rest);
-      exportJSONFile(exportData, `lobehub-channels-${agentId}.json`);
-    }, [agentId, providers]);
+      try {
+        // The cached providers carry masked credentials, so the file has to be
+        // built from a fresh authorized read or it would export placeholders.
+        const exportData = await exportBotProviders(agentId);
+        exportJSONFile(exportData, `lobehub-channels-${agentId}.json`);
+        // The file holds real tokens — say so rather than let it look inert.
+        toast.warning(t('channel.exportContainsCredentials'));
+      } catch (error) {
+        toast.error(error instanceof Error ? error.message : String(error));
+      }
+    }, [agentId, exportBotProviders, providers, t]);
 
     const handleImport = useCallback(() => {
       if (disabled) return;
@@ -104,27 +133,25 @@ const Header = memo<HeaderProps>(
 
         try {
           const data = JSON.parse(await file.text());
-          if (
-            !Array.isArray(data) ||
-            data.some((item) => !item.platform || !item.applicationId || !item.credentials)
-          ) {
+          if (!Array.isArray(data) || !data.every(isImportableChannel)) {
             toast.error(t('channel.importInvalidFormat'));
             return;
           }
 
-          for (const item of data) {
+          for (const step of planChannelImport(data)) {
             await createBotProvider({
               agentId,
-              applicationId: item.applicationId,
-              credentials: item.credentials,
-              platform: item.platform,
-              settings: item.settings ?? undefined,
+              applicationId: step.applicationId,
+              credentials: step.credentials,
+              enabled: step.enabled,
+              platform: step.platform,
+              settings: step.settings,
             });
-            if (item.enabled) {
+            if (step.connect) {
               await connectBot({
                 agentId,
-                applicationId: item.applicationId,
-                platform: item.platform,
+                applicationId: step.applicationId,
+                platform: step.platform,
               });
             }
           }
@@ -153,7 +180,7 @@ const Header = memo<HeaderProps>(
             toast.error(t('channel.deleteAllFailed'));
           }
         },
-        title: t('channel.deleteAllConfirm'),
+        title: t('channel.deleteAllChannels'),
       });
     }, [agentId, deleteAllBotProviders, disabled, providers, t]);
 
@@ -224,15 +251,6 @@ const Header = memo<HeaderProps>(
     })();
     const menuItems: DropdownItem[] = [];
 
-    if (platformDef?.documentation?.setupGuideUrl) {
-      menuItems.push({
-        icon: <Icon icon={BookOpen} />,
-        key: 'docs',
-        label: t('channel.documentation'),
-        onClick: () =>
-          window.open(platformDef.documentation?.setupGuideUrl, '_blank', 'noopener,noreferrer'),
-      });
-    }
     if (platformDef?.documentation?.portalUrl) {
       menuItems.push({
         icon: <Icon icon={ExternalLink} />,
@@ -316,6 +334,14 @@ const Header = memo<HeaderProps>(
                   onChange={handleToggleEnable}
                 />
               )}
+              {setupGuideUrl && (
+                <ActionIcon
+                  aria-label={t('channel.documentation')}
+                  icon={BookOpen}
+                  title={t('channel.documentation')}
+                  onClick={() => window.open(setupGuideUrl, '_blank', 'noopener,noreferrer')}
+                />
+              )}
               <DropdownMenu items={menuItems} placement={'bottomRight'}>
                 <ActionIcon icon={MoreHorizontal} title={t('more', { ns: 'common' })} />
               </DropdownMenu>
@@ -329,9 +355,13 @@ const Header = memo<HeaderProps>(
             // is the only way back to the list.
             <AgentBreadcrumb
               agentId={agentId}
-              extraItems={platformDef ? [platformDef.name] : undefined}
+              extraItems={
+                view.detail
+                  ? [view.platformName ?? <SkeletonBar height={14} width={56} />]
+                  : undefined
+              }
               title={
-                platformDef ? (
+                view.detail ? (
                   <Link relative="path" to="..">
                     {t('tab.integration', { ns: 'chat' })}
                   </Link>
@@ -349,7 +379,7 @@ const Header = memo<HeaderProps>(
               On a platform detail (`/channel/:platform`) it is one level too
               deep, so drop it there and let the breadcrumb's Channels link be
               the way back. */}
-          {!platformDef && <AgentProfileTabs active={'channel'} agentId={agentId} />}
+          {!view.detail && <AgentProfileTabs active={'channel'} agentId={agentId} />}
         </NavHeader>
       </>
     );

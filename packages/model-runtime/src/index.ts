@@ -4,7 +4,9 @@ export { mergeModelRuntimeHooks } from './core/mergeHooks';
 export type { ModelRuntimeHooks } from './core/ModelRuntime';
 export { ModelRuntime } from './core/ModelRuntime';
 export { createOpenAICompatibleRuntime } from './core/openaiCompatibleFactory';
+export { StructuredOutputError } from './core/openaiCompatibleFactory/structuredOutput';
 export * from './core/RouterRuntime';
+export { createCallbacksTransformer } from './core/streams/protocol';
 export * from './core/usageConverters';
 export {
   CATEGORY_NUMERIC_PREFIX,
@@ -21,7 +23,9 @@ export {
   type ErrorSeverity,
   formatErrorRef,
   getErrorCodeSpec,
+  getRuntimeErrorI18nKey,
   isEmptyModelCompletion,
+  isModelRefusalFinishReason,
   isUserSideError,
   matchErrorPattern,
   type MatchInput,
@@ -31,6 +35,7 @@ export {
   parseErrorRef,
   refineErrorCode,
   type RefineErrorInput,
+  type RuntimeErrorI18nKey,
   type SpecErrorCode,
 } from './errors';
 export * from './helpers';
@@ -85,7 +90,7 @@ export * from './types/error';
 export { consumeStreamUntilDone } from './utils/consumeStream';
 export { AgentRuntimeError } from './utils/createError';
 export { getModelPropertyWithFallback } from './utils/getFallbackModelProperty';
-export { getModelPricing } from './utils/getModelPricing';
+export { getModelParameters, getModelPricing } from './utils/getModelPricing';
 export {
   applyModelExtendParams,
   type ApplyModelExtendParamsContext,

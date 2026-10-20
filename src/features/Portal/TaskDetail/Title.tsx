@@ -1,6 +1,4 @@
-import { Flexbox } from '@lobehub/ui';
-import { Text } from '@lobehub/ui/base-ui';
-import { createStaticStyles, cssVar } from 'antd-style';
+import { createStaticStyles, cssVar, Flexbox, Text } from '@lobehub/ui';
 import { memo } from 'react';
 
 import { useChatStore } from '@/store/chat';
@@ -31,12 +29,13 @@ const Title = memo(() => {
   const name = detail?.name;
 
   return (
-    <Flexbox horizontal align={'center'} flex={1} gap={8} style={{ minWidth: 0 }}>
+    // Hug the content so the shared `…` sits right after the name.
+    <Flexbox horizontal align={'center'} gap={8} style={{ minWidth: 0 }}>
       {identifier && <span className={styles.identifier}>{identifier}</span>}
       {name && (
         <Text
           className={oneLineEllipsis}
-          style={{ color: cssVar.colorText, flex: 1, fontSize: 14, minWidth: 0 }}
+          style={{ color: cssVar.colorText, flex: '0 1 auto', fontSize: 14, minWidth: 0 }}
         >
           {name}
         </Text>

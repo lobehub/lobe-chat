@@ -1,6 +1,9 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { getAgentStoreState } from '@/store/agent';
+import { composioStoreSelectors, lobehubSkillStoreSelectors } from '@/store/tool/selectors';
+import { ComposioServerStatus } from '@/store/tool/slices/composioStore/types';
+import { LobehubSkillStatus } from '@/store/tool/slices/lobehubSkillStore/types';
 
 import { AgentManagerRuntime } from '../AgentManagerRuntime';
 import type { IAgentService, IDiscoverService } from '../types';
@@ -44,6 +47,7 @@ const mockAgentService: IAgentService = {
 };
 
 const mockDiscoverService: IDiscoverService = {
+  getAssistantDetail: vi.fn(),
   getAssistantList: vi.fn(),
   getMcpList: vi.fn(),
 };
@@ -142,6 +146,9 @@ describe('AgentManagerRuntime', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
+    vi.mocked(composioStoreSelectors.getServers).mockReturnValue([]);
+    vi.mocked(lobehubSkillStoreSelectors.getServers).mockReturnValue([]);
+    Reflect.deleteProperty(window, 'global_serverConfigStore');
     runtime = new AgentManagerRuntime({
       agentService: mockAgentService,
       discoverService: mockDiscoverService,
@@ -447,6 +454,7 @@ describe('AgentManagerRuntime', () => {
       const result = await runtime.searchAgents({ limit: 20, offset: 20, source: 'user' });
 
       expect(mockAgentService.queryAgents).toHaveBeenCalledWith({
+        includeInbox: false,
         keyword: undefined,
         limit: 20,
         offset: 20,
@@ -471,6 +479,7 @@ describe('AgentManagerRuntime', () => {
       const result = await runtime.searchAgents({ limit: 50, source: 'user' });
 
       expect(mockAgentService.queryAgents).toHaveBeenCalledWith({
+        includeInbox: false,
         keyword: undefined,
         limit: 20,
         offset: 0,
@@ -740,6 +749,92 @@ describe('AgentManagerRuntime', () => {
       expect(result.success).toBe(true);
       expect((result.state as any).config.runtime).toBeUndefined();
     });
+
+    it('should fall back to marketplace detail for a market-only agent', async () => {
+      vi.mocked(mockAgentService.getAgentConfigById).mockResolvedValue(null);
+      vi.mocked(mockDiscoverService.getAssistantDetail!).mockResolvedValue({
+        avatar: '🌐',
+        backgroundColor: 'pink',
+        config: {
+          model: 'gpt-4o',
+          openingMessage: 'Hi!',
+          openingQuestions: ['Q1'],
+          plugins: ['web-browsing', 'search'],
+          provider: 'openai',
+          systemRole: 'Market prompt',
+        },
+        description: 'A market agent',
+        identifier: 'mkt12345',
+        related: [],
+        tags: ['ai'],
+        title: 'Market Agent',
+      } as any);
+
+      const result = await runtime.getAgentDetail('mkt12345');
+
+      expect(mockDiscoverService.getAssistantDetail).toHaveBeenCalledWith({
+        identifier: 'mkt12345',
+        source: 'new',
+      });
+      expect(result.success).toBe(true);
+      expect(result.content).toContain('Market Agent');
+      expect(result.content).toContain('Market prompt');
+      expect(result.content).toContain('marketplace agent (read-only)');
+      expect(result.state).toMatchObject({
+        agentId: 'mkt12345',
+        isMarket: true,
+        config: expect.objectContaining({ model: 'gpt-4o', systemRole: 'Market prompt' }),
+        meta: expect.objectContaining({ title: 'Market Agent' }),
+      });
+    });
+
+    it('should still return not found when market fallback misses', async () => {
+      vi.mocked(mockAgentService.getAgentConfigById).mockResolvedValue(null);
+      vi.mocked(mockDiscoverService.getAssistantDetail!).mockResolvedValue(undefined);
+
+      const result = await runtime.getAgentDetail('ghost-id');
+
+      expect(result.success).toBe(false);
+      expect(result.content).toContain('not found');
+    });
+
+    it('should normalize the object-shaped marketplace model before rendering', async () => {
+      vi.mocked(mockAgentService.getAgentConfigById).mockResolvedValue(null);
+      vi.mocked(mockDiscoverService.getAssistantDetail!).mockResolvedValue({
+        avatar: '🌐',
+        config: {
+          model: { model: 'gpt-4o', parameters: { temperature: 0.6 }, provider: 'openai' },
+          plugins: ['web-browsing'],
+          systemRole: 'Market prompt',
+        },
+        description: 'A market agent',
+        identifier: 'mktobj1',
+        related: [],
+        tags: ['ai'],
+        title: 'Object Model Agent',
+      } as any);
+
+      const result = await runtime.getAgentDetail('mktobj1');
+
+      expect(result.success).toBe(true);
+      expect(result.content).toContain('Model: openai/gpt-4o');
+      expect(result.content).not.toContain('[object Object]');
+      expect(result.state).toMatchObject({
+        config: expect.objectContaining({ model: 'gpt-4o', provider: 'openai' }),
+      });
+    });
+
+    it('should still return not found when discover service lacks getAssistantDetail', async () => {
+      vi.mocked(mockAgentService.getAgentConfigById).mockResolvedValue(null);
+      const originalGetAssistantDetail = mockDiscoverService.getAssistantDetail;
+      mockDiscoverService.getAssistantDetail = undefined;
+
+      const result = await runtime.getAgentDetail('no-fallback-id');
+
+      mockDiscoverService.getAssistantDetail = originalGetAssistantDetail;
+      expect(result.success).toBe(false);
+      expect(result.content).toContain('not found');
+    });
   });
 
   describe('duplicateAgent', () => {
@@ -780,6 +875,51 @@ describe('AgentManagerRuntime', () => {
   });
 
   describe('installPlugin', () => {
+    /** @example An unqualified GitHub install selects the canonical LobeHub owner. */
+    it('routes colliding official connector identifiers to LobeHub', async () => {
+      // ROOT CAUSE:
+      //
+      // Official connector installation used to check the Composio catalog first.
+      // Because GitHub existed in both catalogs, the agent builder opened Composio
+      // even though the generic connector catalog assigns GitHub to LobeHub.
+      //
+      // We fixed this by resolving the shared catalog owner before dispatching
+      // to either authorization runtime.
+      window.global_serverConfigStore = {
+        getState: () => ({
+          serverConfig: { enableComposio: true, enableLobehubSkill: true },
+        }),
+      } as unknown as NonNullable<typeof window.global_serverConfigStore>;
+      vi.mocked(composioStoreSelectors.getServers).mockReturnValue([
+        {
+          appSlug: 'GITHUB',
+          authConfigId: 'auth-config-id',
+          connectedAccountId: 'connected-account-id',
+          createdAt: 1,
+          identifier: 'github',
+          label: 'GitHub',
+          status: ComposioServerStatus.ACTIVE,
+        },
+      ]);
+      vi.mocked(lobehubSkillStoreSelectors.getServers).mockReturnValue([
+        {
+          identifier: 'github',
+          isConnected: true,
+          name: 'GitHub',
+          status: LobehubSkillStatus.CONNECTED,
+        },
+      ]);
+
+      const result = await runtime.installPlugin('agent-id', {
+        identifier: 'github',
+        source: 'official',
+      });
+
+      expect(result.success).toBe(true);
+      expect(result.content).toContain('Successfully enabled LobehubSkill provider');
+      expect(result.state).toMatchObject({ isLobehubSkill: true, pluginId: 'github' });
+    });
+
     it('should install builtin tool', async () => {
       const result = await runtime.installPlugin('agent-id', {
         identifier: 'lobe-web-browsing',

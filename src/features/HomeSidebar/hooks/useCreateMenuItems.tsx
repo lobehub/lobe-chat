@@ -1,8 +1,7 @@
 import type { SFSymbol } from '@lobechat/electron-client-ipc';
-import { Flexbox, Icon } from '@lobehub/ui';
-import { Text, toast } from '@lobehub/ui/base-ui';
+import type { ItemType } from '@lobehub/ui';
+import { Flexbox, Icon, Text, toast } from '@lobehub/ui';
 import { GroupBotSquareIcon } from '@lobehub/ui/icons';
-import type { ItemType } from 'antd/es/menu/interface';
 import {
   BotIcon,
   FileTextIcon,
@@ -16,7 +15,6 @@ import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import useSWRMutation from 'swr/mutation';
 
-import { useActiveWorkspaceId } from '@/business/client/hooks/useActiveWorkspaceId';
 import { useGroupTemplates } from '@/components/ChatGroupWizard/templates';
 import { DEFAULT_CHAT_GROUP_CHAT_CONFIG } from '@/const/settings';
 import { openConnectAgentModal } from '@/features/ConnectAgent';
@@ -29,7 +27,7 @@ import { chatGroupService } from '@/services/chatGroup';
 import { useAgentStore } from '@/store/agent';
 import { useAgentGroupStore } from '@/store/agentGroup';
 import { useHomeStore } from '@/store/home';
-import { usePageStore } from '@/store/page';
+import { pageActions } from '@/store/page';
 
 type MenuItem = NonNullable<ItemType> & { sfSymbol?: SFSymbol };
 
@@ -54,7 +52,6 @@ export const useCreateMenuItems = () => {
   const { t: tFile } = useTranslation('file');
 
   const navigate = useWorkspaceAwareNavigate();
-  const activeWorkspaceId = useActiveWorkspaceId();
   const groupTemplates = useGroupTemplates();
   const { allowed: canCreate } = usePermission('create_content');
 
@@ -65,7 +62,6 @@ export const useCreateMenuItems = () => {
     s.switchToGroup,
   ]);
   const [createGroup, loadGroups] = useAgentGroupStore((s) => [s.createGroup, s.loadGroups]);
-  const createNewPage = usePageStore((s) => s.createNewPage);
 
   const [isCreatingGroup, setIsCreatingGroup] = useState(false);
   const [isCreatingSessionGroup, setIsCreatingSessionGroup] = useState(false);
@@ -415,17 +411,13 @@ export const useCreateMenuItems = () => {
 
     const untitledTitle = tFile('pageList.untitled');
     try {
-      // In workspace mode the server auto-defaults top-level `sourceType: 'api'`
-      // rows to `'private'`; pass it explicitly so the optimistic row lands in
-      // 私人 too, instead of flashing in 工作区 and jumping when the server replies.
-      const defaultVisibility = activeWorkspaceId ? 'private' : undefined;
-      const newPageId = await createNewPage(untitledTitle, defaultVisibility);
+      const newPageId = await pageActions.createNewPage(untitledTitle);
       navigate(`/page/${newPageId}`);
     } catch (error) {
       console.error('Failed to create page:', error);
-      toast.error('Failed to create page');
+      toast.error(tFile('pageList.createFailed'));
     }
-  }, [canCreate, createNewPage, tFile, navigate, activeWorkspaceId]);
+  }, [canCreate, tFile, navigate]);
 
   /**
    * Create page menu item

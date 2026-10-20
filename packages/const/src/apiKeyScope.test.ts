@@ -117,6 +117,14 @@ describe('requiredApiKeyScopeForTrpc', () => {
     expect(requiredApiKeyScopeForTrpc('aiAgent.execAgent', 'mutation')).toEqual({
       scopes: ['agent:write', 'chat:write', 'model:invoke'],
     });
+    // listing the queue reads conversation content
+    expect(requiredApiKeyScopeForTrpc('agentSteerQueue.list', 'query')).toEqual({
+      scopes: ['agent:read', 'chat:read'],
+    });
+    // a queued follow-up is a deferred agent run
+    expect(requiredApiKeyScopeForTrpc('agentSteerQueue.append', 'mutation')).toEqual({
+      scopes: ['agent:write', 'chat:write', 'model:invoke'],
+    });
     // provider connectivity test sends a real model request
     expect(requiredApiKeyScopeForTrpc('aiProvider.checkProviderConnectivity', 'mutation')).toEqual({
       scopes: ['model:write', 'model:invoke'],
@@ -166,6 +174,14 @@ describe('requiredApiKeyScopeForTrpc', () => {
       blocked: true,
     });
     expect(requiredApiKeyScopeForTrpc('market.oidc.getToken', 'query')).toEqual({ blocked: true });
+    // gateway token minting: a restricted key must never obtain a user JWT
+    // that `oidcAuth` would accept as unscoped auth
+    expect(requiredApiKeyScopeForTrpc('aiAgent.refreshGatewayToken', 'query')).toEqual({
+      blocked: true,
+    });
+    expect(requiredApiKeyScopeForTrpc('aiAgent.issueGatewayUserToken', 'query')).toEqual({
+      blocked: true,
+    });
     // the rest of the market surface keeps its agent scopes
     expect(requiredApiKeyScopeForTrpc('market.getAgentsByPlugin', 'query')).toEqual({
       scopes: ['agent:read'],

@@ -1,13 +1,23 @@
 'use client';
 
-import { ActionIcon, Block, Center, Flexbox, Icon, Text, Tooltip } from '@lobehub/ui';
-import { DropdownMenu } from '@lobehub/ui/base-ui';
-import { createStaticStyles, cssVar, cx } from 'antd-style';
+import {
+  ActionIcon,
+  Block,
+  Center,
+  createStaticStyles,
+  cssVar,
+  cx,
+  DropdownMenu,
+  Flexbox,
+  Icon,
+  Spin,
+  Text,
+  Tooltip,
+} from '@lobehub/ui';
 import { ChevronDownIcon, PlusIcon } from 'lucide-react';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import NeuralNetworkLoading from '@/components/NeuralNetworkLoading';
 import { usePermission } from '@/hooks/usePermission';
 import { SessionDefaultGroup } from '@/types/session';
 
@@ -124,7 +134,7 @@ const CreateAgentButton = memo<CreateAgentButtonProps>(({ groupId, className, vi
     >
       <Center flex={'none'} height={28} width={28}>
         {isMutatingAgent ? (
-          <NeuralNetworkLoading size={14} />
+          <Spin size="small" variant="network" />
         ) : (
           <Icon icon={PlusIcon} size={'small'} />
         )}
@@ -144,7 +154,7 @@ const CreateAgentButton = memo<CreateAgentButtonProps>(({ groupId, className, vi
             e.stopPropagation();
           }}
         >
-          <DropdownMenu items={dropdownItems} nativeButton={false}>
+          <DropdownMenu items={dropdownItems}>
             <ActionIcon
               color={cssVar.colorTextQuaternary}
               icon={ChevronDownIcon}

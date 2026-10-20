@@ -79,10 +79,11 @@ export const useSettingsSearch = (
 } => {
   const { t } = useTranslation(['setting', 'labs', 'electron', 'subscription', 'spend', 'auth']);
   const categoryGroups = useCategory();
-  const { enableSTT, hideDocs, showAiImage } = useServerConfigStore(featureFlagsSelectors);
+  const { hideDocs, showAiImage } = useServerConfigStore(featureFlagsSelectors);
   const enableBusinessFeatures = useServerConfigStore(serverConfigSelectors.enableBusinessFeatures);
   const enableGatewayMode = useServerConfigStore(serverConfigSelectors.enableGatewayMode);
   const enableComposio = useServerConfigStore(serverConfigSelectors.enableComposio);
+  const enableWorkspace = useServerConfigStore(serverConfigSelectors.enableWorkspace);
   const disableEmailPassword = useServerConfigStore(serverConfigSelectors.disableEmailPassword);
   const isLogin = useUserStore(authSelectors.isLogin);
   const hasEmail = useUserStore((s) => !!userProfileSelectors.userProfile(s)?.email);
@@ -99,7 +100,7 @@ export const useSettingsSearch = (
       enableBusinessFeatures: !!enableBusinessFeatures,
       enableComposio: !!enableComposio,
       enableGatewayMode: !!enableGatewayMode,
-      enableSTT: !!enableSTT,
+      enableWorkspace: !!enableWorkspace,
       hasEmail,
       hideDocs: !!hideDocs,
       isDesktop,
@@ -180,8 +181,10 @@ export const useSettingsSearch = (
     // IM notification channels (Telegram / Slack / …) live on the notification
     // page with per-platform anchors. Index them from the same catalog the page
     // renders so a search for the platform name deep-links to that row.
+    // Those rows come from the business notification section, so they only
+    // exist with business features on.
     const notificationTab = visibleTabs.get(SettingsTabs.Notification);
-    if (notificationTab)
+    if (notificationTab && enableBusinessFeatures)
       for (const platform of SUPPORTED_MESSENGER_PLATFORMS) {
         entries.push({
           anchor: `notification-${platform.id}`,
@@ -242,7 +245,7 @@ export const useSettingsSearch = (
     enableBusinessFeatures,
     enableComposio,
     enableGatewayMode,
-    enableSTT,
+    enableWorkspace,
     hasEmail,
     hideDocs,
     isLogin,

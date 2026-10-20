@@ -21,33 +21,40 @@ describe('useModelCatalog', () => {
     vi.restoreAllMocks();
   });
 
-  it.each(['codebuddy', 'cursor', 'grok-build', 'opencode', 'pi', 'qoder', 'trae'] as const)(
-    'starts loading the %s catalog as soon as the selector mounts',
-    async (type) => {
-      const pendingCatalog = new Promise<
-        Awaited<ReturnType<typeof heterogeneousAgentCatalogService.listModels>>
-      >(() => {});
-      const listModels = vi
-        .spyOn(heterogeneousAgentCatalogService, 'listModels')
-        .mockReturnValue(pendingCatalog);
+  it.each([
+    'codebuddy',
+    'codex',
+    'cursor',
+    'droid',
+    'grok-build',
+    'opencode',
+    'pi',
+    'qoder',
+    'trae',
+  ] as const)('starts loading the %s catalog as soon as the selector mounts', async (type) => {
+    const pendingCatalog = new Promise<
+      Awaited<ReturnType<typeof heterogeneousAgentCatalogService.listModels>>
+    >(() => {});
+    const listModels = vi
+      .spyOn(heterogeneousAgentCatalogService, 'listModels')
+      .mockReturnValue(pendingCatalog);
 
-      const { result } = renderHook(
-        () =>
-          useModelCatalog({
-            isDeviceListLoading: false,
-            isPreferenceLoading: false,
-            open: false,
-            provider: { type },
-            targetReady: true,
-            type,
-          }),
-        { wrapper: createWrapper() },
-      );
+    const { result } = renderHook(
+      () =>
+        useModelCatalog({
+          isDeviceListLoading: false,
+          isPreferenceLoading: false,
+          open: false,
+          provider: { type },
+          targetReady: true,
+          type,
+        }),
+      { wrapper: createWrapper() },
+    );
 
-      await waitFor(() => expect(listModels).toHaveBeenCalledTimes(1));
-      expect(result.current.isLoading).toBe(true);
-    },
-  );
+    await waitFor(() => expect(listModels).toHaveBeenCalledTimes(1));
+    expect(result.current.isLoading).toBe(true);
+  });
 
   it('passes TRAE ACP provider arguments to model discovery', async () => {
     const listModels = vi.spyOn(heterogeneousAgentCatalogService, 'listModels').mockResolvedValue({
@@ -202,5 +209,38 @@ describe('useModelCatalog', () => {
     act(() => resolveRetry(loadedCatalog));
 
     await waitFor(() => expect(result.current.data).toEqual(loadedCatalog));
+  });
+
+  it('retains the Codex catalog when a refresh fails', async () => {
+    const loadedCatalog = {
+      models: [{ id: 'future-model', modelId: 'future-model', providerId: 'codex' }],
+      status: 'success' as const,
+      updatedAt: 1,
+    };
+    vi.spyOn(heterogeneousAgentCatalogService, 'listModels')
+      .mockResolvedValueOnce(loadedCatalog)
+      .mockResolvedValueOnce({
+        error: { code: 'timeout', message: 'Discovery timed out' },
+        status: 'error',
+        updatedAt: 2,
+      });
+    const { result } = renderHook(
+      () =>
+        useModelCatalog({
+          isDeviceListLoading: false,
+          isPreferenceLoading: false,
+          open: false,
+          provider: { type: 'codex' },
+          targetReady: true,
+          type: 'codex',
+        }),
+      { wrapper: createWrapper() },
+    );
+    await waitFor(() => expect(result.current.data).toEqual(loadedCatalog));
+    await act(async () => {
+      await result.current.mutate().catch(() => {});
+    });
+    expect(result.current.error?.name).toBe('timeout');
+    expect(result.current.data).toEqual(loadedCatalog);
   });
 });

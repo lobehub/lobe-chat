@@ -1,73 +1,24 @@
-import { copyToClipboard, Icon } from '@lobehub/ui';
-import {
-  ActionIcon,
-  confirmModal,
-  type DropdownItem,
-  DropdownMenu,
-  toast,
-} from '@lobehub/ui/base-ui';
-import { CopyIcon, LinkIcon, MoreHorizontalIcon, TrashIcon } from 'lucide-react';
-import { memo, useMemo } from 'react';
+import { ActionIcon, DropdownMenu } from '@lobehub/ui';
+import { MoreHorizontalIcon } from 'lucide-react';
+import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwareNavigate';
-import { usePermission } from '@/hooks/usePermission';
-import { useGoalStore } from '@/store/goal';
+import { goalSelectors, useGoalStore } from '@/store/goal';
+
+import { useGoalMenuItems } from './useGoalMenuItems';
 
 interface GoalDetailActionsProps {
-  agentId: string;
+  /** Absent for a goal with no responsible agent — e.g. one created from a project. */
+  agentId?: string;
   goalId: string;
+  projectId?: string | null;
 }
 
-const GoalDetailActions = memo<GoalDetailActionsProps>(({ agentId, goalId }) => {
-  const { t } = useTranslation(['chat', 'common']);
-  const navigate = useWorkspaceAwareNavigate();
-  const { allowed: canEditTask } = usePermission('create_content');
-  const deleteGoal = useGoalStore((s) => s.deleteGoal);
-
-  const items = useMemo<DropdownItem[]>(
-    () => [
-      {
-        icon: <Icon icon={CopyIcon} />,
-        key: 'copyId',
-        label: t('taskList.contextMenu.copyId'),
-        onClick: async () => {
-          await copyToClipboard(goalId);
-          toast.success(t('taskList.contextMenu.copyIdSuccess'));
-        },
-      },
-      {
-        icon: <Icon icon={LinkIcon} />,
-        key: 'copyLink',
-        label: t('taskList.contextMenu.copyLink'),
-        onClick: async () => {
-          await copyToClipboard(window.location.href);
-          toast.success(t('taskList.contextMenu.copyLinkSuccess'));
-        },
-      },
-      { type: 'divider' },
-      {
-        danger: true,
-        disabled: !canEditTask,
-        icon: <Icon icon={TrashIcon} />,
-        key: 'delete',
-        label: t('delete', { ns: 'common' }),
-        onClick: () => {
-          confirmModal({
-            content: t('goalDetail.deleteConfirm.content'),
-            okButtonProps: { danger: true },
-            okText: t('goalDetail.deleteConfirm.ok'),
-            onOk: async () => {
-              await deleteGoal(agentId, goalId);
-              navigate(`/agent/${agentId}/goals`);
-            },
-            title: t('goalDetail.deleteConfirm.title'),
-          });
-        },
-      },
-    ],
-    [agentId, canEditTask, deleteGoal, goalId, navigate, t],
-  );
+const GoalDetailActions = memo<GoalDetailActionsProps>(({ agentId, goalId, projectId }) => {
+  const { t } = useTranslation('chat');
+  const status = useGoalStore((s) => goalSelectors.goalGraph(goalId)(s)?.goal.status);
+  const creatorUserId = useGoalStore((s) => goalSelectors.goalGraph(goalId)(s)?.goal.userId);
+  const items = useGoalMenuItems({ agentId, creatorUserId, goalId, projectId, status });
 
   return (
     <DropdownMenu items={items} placement={'bottomRight'}>

@@ -1,8 +1,19 @@
 'use client';
 
-import { Block, Collapse, Flexbox, Icon, Markdown, ScrollShadow } from '@lobehub/ui';
-import { Button, Tag, Text } from '@lobehub/ui/base-ui';
-import { createStaticStyles, cssVar, responsive } from 'antd-style';
+import {
+  Accordion,
+  Block,
+  Button,
+  createStaticStyles,
+  cssVar,
+  Flexbox,
+  Icon,
+  Markdown,
+  responsive,
+  ScrollShadow,
+  Tag,
+  Text,
+} from '@lobehub/ui';
 import { ChevronRight } from 'lucide-react';
 import qs from 'query-string';
 import { memo, useCallback } from 'react';
@@ -11,6 +22,7 @@ import { useTranslation } from 'react-i18next';
 import PublishedTime from '@/components/PublishedTime';
 import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwareNavigate';
 import { useDiscoverStore } from '@/store/discover';
+import { skillSelectors } from '@/store/discover/selectors';
 
 import { useDetailActionContext, useDetailContext } from '../../DetailProvider';
 import RelatedSkillCard from './RelatedSkillCard';
@@ -83,7 +95,8 @@ const Overview = memo(() => {
   const navigate = useWorkspaceAwareNavigate();
 
   const useFetchRelatedSkills = useDiscoverStore((s) => s.useFetchRelatedSkills);
-  const { data: related } = useFetchRelatedSkills({ category, identifier });
+  const { queryKey } = useFetchRelatedSkills({ category, identifier });
+  const related = useDiscoverStore(skillSelectors.skillRelated(queryKey));
 
   // Honor the fetched (possibly deep-linked ?version=) version before falling
   // back to the latest entry
@@ -108,10 +121,9 @@ const Overview = memo(() => {
 
       {/* SKILL.md */}
       {content && (
-        <Collapse
-          defaultActiveKey={['skill']}
-          expandIconPlacement={'end'}
-          padding={{ body: 0 }}
+        <Accordion
+          defaultValue={['skill']}
+          indicatorPlacement={'end'}
           variant={'outlined'}
           items={[
             {
@@ -121,7 +133,7 @@ const Overview = memo(() => {
                 </ScrollShadow>
               ),
               key: 'skill',
-              label: t('skills.details.overview.instructions'),
+              title: t('skills.details.overview.instructions'),
             },
           ]}
         />

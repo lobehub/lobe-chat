@@ -13,11 +13,24 @@ import { VerifyRunModel } from '@/database/models/verifyRun';
 import type { LobeChatDatabase } from '@/database/type';
 import { extractFileIdsFromEditorData } from '@/server/services/file/extractFileIdsFromEditorData';
 import { resolveAttachmentMetadata } from '@/server/services/file/resolveAttachments';
-import { resolveWorkAttemptBudget } from '@/server/services/goal/recoveryPolicy';
-import { resolveTaskAcceptance } from '@/server/services/verify/taskAcceptance';
+import {
+  countChargedTaskAttempts,
+  countUnchargedRuns,
+  resolveTaskAttemptBudget,
+} from '@/server/services/goal/recoveryPolicy';
+import { resolveTaskAcceptance } from '@/server/services/verify/taskAcceptanceResolution';
 
 /** Cap on unresolved checks carried into the next round's prompt. */
 const MAX_GOAL_FAILED_CHECKS = 8;
+
+/**
+ * Whether the verifier actually judged this result. `pending` / `running` rows
+ * are planned checks, and `errored` means the verifier never ran — neither says
+ * anything about the delivery.
+ */
+const isJudgedResult = (result: { status: string; verdict: string | null }) =>
+  result.status !== 'errored' &&
+  (!!result.verdict || result.status === 'passed' || result.status === 'failed');
 
 /**
  * For a goal task that already ran at least one round, collect what the next
@@ -31,15 +44,19 @@ const resolveGoalLoopContext = async (
   deps: BuildTaskPromptDeps,
 ): Promise<TaskRunPromptGoalLoop | undefined> => {
   const { db, userId, workspaceId } = deps;
-  const goalModel = new GoalModel(db, userId, workspaceId);
-  const taskCarriedGoal = await goalModel.findBySubject('task', task.id);
-  const goal = taskCarriedGoal ?? (await goalModel.findByWorkTask(task.id));
+  const goal = await new GoalModel(db, userId, workspaceId).findByGraphTask(task.id);
   if (!goal || !task.totalTopics) return undefined;
 
-  const budget = resolveWorkAttemptBudget(goal, Boolean(taskCarriedGoal));
+  const budget = resolveTaskAttemptBudget(goal);
+  // Runs lost to a machine problem (offline device, usage limit, transport fault)
+  // are not rounds the budget counts, so the agent is not told it is on a later
+  // round than the coordinator thinks.
+  const unchargedRuns = countUnchargedRuns(
+    await deps.taskTopicModel.findByTaskId(task.id).catch(() => []),
+  );
   const context: TaskRunPromptGoalLoop = {
     maxRounds: Number.isFinite(budget) ? budget : null,
-    round: (task.totalTopics || 0) + 1,
+    round: countChargedTaskAttempts(task, unchargedRuns) + 1,
   };
 
   try {
@@ -53,27 +70,81 @@ const resolveGoalLoopContext = async (
     const last = runs.at(-1);
     if (!last) return context;
 
-    if (last.userDecision === 'reject') {
-      const comment = (last.decisionDetail as { comment?: string } | null)?.comment;
+    // The owner's latest verdict is the instruction until they give another.
+    // A rework's own rounds carry no decision, so a retry after its first
+    // attempt failed must still read the comment the owner sent it back with.
+    const decided = runs.findLast((run) => !!run.userDecision);
+    if (decided?.userDecision === 'reject') {
+      const comment = (decided.decisionDetail as { comment?: string } | null)?.comment;
       if (comment) context.rejectComment = comment;
     }
 
-    const plan = (last.plan ?? []) as Array<{ id: string; title: string }>;
-    const results = await new VerifyCheckResultModel(db, userId, workspaceId).listByRun(last.id);
-    const byItem = new Map(results.map((r) => [r.checkItemId, r]));
-    const failed = plan
-      .filter((item) => {
-        const r = byItem.get(item.id);
-        return (
-          !!r &&
-          r.status !== 'errored' &&
-          (r.status === 'failed' || r.verdict === 'failed' || r.verdict === 'uncertain')
-        );
-      })
-      .map((item) => {
-        const r = byItem.get(item.id);
-        return { title: item.title, why: r?.suggestion || r?.toulmin?.reasoning || undefined };
-      });
+    const automaticReview = [...runs].reverse().find((run) => run.metadata?.goalReview)
+      ?.metadata?.goalReview;
+    if (automaticReview && automaticReview.status !== 'passed') {
+      context.automaticReviewFeedback = automaticReview.feedback;
+    }
+
+    // A round is planned (every check `pending`) before its verifier runs, so
+    // the newest round is often still unjudged when the next attempt starts. Take
+    // each check's newest JUDGED result across the chain instead; reading only
+    // the newest round handed that attempt "close the gaps below" with no gaps.
+    // Keyed like the acceptance union: a flow node's check is its own occurrence
+    // even when several nodes reuse one criterion asset.
+    type PlanItem = {
+      id: string;
+      sourceCriterionId?: string | null;
+      sourceFlowNode?: unknown;
+      supersedes?: string[];
+      title: string;
+    };
+    const logicalId = (item: PlanItem) =>
+      item.sourceFlowNode ? item.id : (item.sourceCriterionId ?? item.id);
+    const logicalByCheckItem = new Map<string, string>();
+    for (const run of runs) {
+      for (const item of (run.plan ?? []) as PlanItem[]) {
+        logicalByCheckItem.set(item.id, logicalId(item));
+      }
+    }
+    const roundByRun = new Map(runs.map((run) => [run.id, run.roundIndex ?? 0]));
+    const results = await new VerifyCheckResultModel(db, userId, workspaceId).listByRuns(
+      runs.map((run) => run.id),
+    );
+    type JudgedEntry = { result: (typeof results)[number]; round: number };
+    const latestJudged = new Map<string, JudgedEntry>();
+    for (const result of results) {
+      if (!isJudgedResult(result)) continue;
+      const id = logicalByCheckItem.get(result.checkItemId) ?? result.checkItemId;
+      const round = roundByRun.get(result.verifyRunId ?? '') ?? 0;
+      const current = latestJudged.get(id);
+      if (!current || round >= current.round) latestJudged.set(id, { result, round });
+    }
+
+    // As in the acceptance union, a successor that never ran inherits the verdict
+    // of the checks it `supersedes` (and of what those superseded, in turn).
+    const supersedesById = new Map<string, string[]>();
+    for (const run of runs) {
+      for (const item of (run.plan ?? []) as PlanItem[]) {
+        if (item.supersedes?.length) supersedesById.set(logicalId(item), item.supersedes);
+      }
+    }
+    const judgedFor = (id: string, seen = new Set<string>()): JudgedEntry | undefined => {
+      if (seen.has(id)) return undefined;
+      seen.add(id);
+      const own = latestJudged.get(id);
+      if (own) return own;
+      const inherited = (supersedesById.get(id) ?? [])
+        .map((oldId) => judgedFor(logicalByCheckItem.get(oldId) ?? oldId, seen))
+        .filter((entry): entry is JudgedEntry => !!entry);
+      return inherited.sort((a, b) => b.round - a.round)[0];
+    };
+
+    const failed = ((last.plan ?? []) as PlanItem[]).flatMap((item) => {
+      const r = judgedFor(logicalId(item))?.result;
+      if (!r || (r.status !== 'failed' && r.verdict !== 'failed' && r.verdict !== 'uncertain'))
+        return [];
+      return [{ title: item.title, why: r.suggestion || r.toulmin?.reasoning || undefined }];
+    });
     if (failed.length > 0) context.failedChecks = failed.slice(0, MAX_GOAL_FAILED_CHECKS);
     return context;
   } catch {
@@ -91,6 +162,9 @@ export interface BuildTaskPromptDeps {
 }
 
 export interface BuiltTaskPrompt {
+  /** The Task carries an active Acceptance, so the builder needs the evidence
+   * tool mounted for the whole run — it submits while it works. */
+  acceptanceEnabled: boolean;
   /** Merged, deduplicated list of fileIds (task instruction + all comments)
    * to forward to execAgent so files arrive as multimodal inputs. */
   fileIds: string[];
@@ -230,9 +304,12 @@ export async function buildTaskPrompt(
   // what to self-evidence while it works. Run-time handles (verifyRunId /
   // checkItemId) don't exist yet at prompt-build time — the verify skill
   // resolves those at runtime from the builder's operationId.
-  const resolvedAcceptance = await resolveTaskAcceptance(db, userId, task.id, workspaceId).catch(
-    () => undefined,
-  );
+  // Recurring tasks (schedule / heartbeat) never get a verify plan (see
+  // instantiateVerifyPlanOnStart) — don't tell the builder to self-evidence
+  // acceptance criteria whose run-time plan will never exist.
+  const resolvedAcceptance = task.automationMode
+    ? undefined
+    : await resolveTaskAcceptance(db, userId, task.id, workspaceId).catch(() => undefined);
   const verifyConfig = resolvedAcceptance?.config;
   const verifyEnabled = !!resolvedAcceptance && verifyConfig?.enabled !== false;
   let verifyCriteria: Array<{
@@ -375,5 +452,5 @@ export async function buildTaskPrompt(
     }),
   });
 
-  return { fileIds: allFileIds, prompt };
+  return { acceptanceEnabled: verifyEnabled, fileIds: allFileIds, prompt };
 }

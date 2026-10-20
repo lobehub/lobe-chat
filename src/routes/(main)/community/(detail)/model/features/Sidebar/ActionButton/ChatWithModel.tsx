@@ -1,13 +1,11 @@
 'use client';
 
-import { ProviderIcon } from '@lobehub/icons';
-import { DropdownMenu } from '@lobehub/ui';
-import { Button, SplitButton } from '@lobehub/ui/base-ui';
-import { createStaticStyles } from 'antd-style';
+import { Button, createStaticStyles, DropdownMenu, SplitButton } from '@lobehub/ui';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import urlJoin from 'url-join';
 
+import { ProviderIcon } from '@/components/LobeIcons';
 import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwareNavigate';
 import WorkspaceLink from '@/features/Workspace/WorkspaceLink';
 
