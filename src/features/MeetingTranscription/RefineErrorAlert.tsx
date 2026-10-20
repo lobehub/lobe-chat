@@ -1,9 +1,10 @@
 'use client';
 
 import type { MeetingErrorCode } from '@lobechat/types';
-import { Alert, Button, Flexbox } from '@lobehub/ui';
+import { Button, Flexbox } from '@lobehub/ui';
 import { useTranslation } from 'react-i18next';
 
+import AsyncError from '@/components/AsyncError';
 import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwareNavigate';
 
 interface RefineErrorAlertProps {
@@ -19,26 +20,28 @@ const RefineErrorAlert = ({ code, loading, onRetry }: RefineErrorAlertProps) => 
   const retryable = code !== 'audio_missing' && code !== 'audio_unsupported';
 
   return (
-    <Alert
-      data-testid="meeting-refine-error"
-      description={t(`refine.error.${code}`)}
-      title={t('refine.error.title')}
-      type={'error'}
-      action={
-        <Flexbox horizontal gap={8}>
-          {(code === 'provider_not_configured' || code === 'quota_exceeded') && (
-            <Button size={'small'} onClick={() => navigate('/settings/service-model')}>
-              {t('live.openSettings')}
-            </Button>
-          )}
-          {retryable && (
-            <Button loading={loading} size={'small'} type={'primary'} onClick={onRetry}>
-              {t('refine.retry')}
-            </Button>
-          )}
-        </Flexbox>
-      }
-    />
+    <div data-testid="meeting-refine-error">
+      <AsyncError
+        description={t(`refine.error.${code}`)}
+        justify={'start'}
+        title={t('refine.error.title')}
+        variant={'inline'}
+        action={
+          <Flexbox horizontal gap={8}>
+            {(code === 'provider_not_configured' || code === 'quota_exceeded') && (
+              <Button size={'small'} onClick={() => navigate('/settings/service-model')}>
+                {t('live.openSettings')}
+              </Button>
+            )}
+            {retryable && (
+              <Button loading={loading} size={'small'} onClick={onRetry}>
+                {t('refine.retry')}
+              </Button>
+            )}
+          </Flexbox>
+        }
+      />
+    </div>
   );
 };
 
