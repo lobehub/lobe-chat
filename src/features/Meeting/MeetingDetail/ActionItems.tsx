@@ -84,7 +84,9 @@ const ActionItems = ({
   const updatePreference = useUserStore((s) => s.updatePreference);
 
   // New suggestions (a regeneration) get a draft; edits to existing ones are kept.
-  const itemKey = items.map((item) => `${item.id}:${item.status}`).join('|');
+  const itemKey = items
+    .map((item) => `${item.id}:${item.status}:${item.assignee?.id ?? ''}`)
+    .join('|');
   const [draftKey, setDraftKey] = useState(itemKey);
   if (draftKey !== itemKey) {
     setDraftKey(itemKey);

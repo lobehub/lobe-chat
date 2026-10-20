@@ -24,16 +24,44 @@ describe('buildActionItemDrafts', () => {
         assignee: { id: 'u_1', type: 'user' },
         checked: true,
         dueDate: '2026-10-28',
+        suggestedAssignee: { id: 'u_1', type: 'user' },
         text: 'Write release notes',
       },
-      b: { assignee: null, checked: true, dueDate: null, text: 'Book a room' },
+      b: {
+        assignee: null,
+        checked: true,
+        dueDate: null,
+        suggestedAssignee: null,
+        text: 'Book a room',
+      },
+    });
+  });
+
+  it('follows an assignee the server matched meanwhile, unless the user picked one', () => {
+    const before = buildActionItemDrafts([{ ...items[0], assignee: undefined }]);
+    expect(before.a.assignee).toBeNull();
+
+    const after = buildActionItemDrafts(items, { a: { ...before.a, text: 'Edited' } });
+    expect(after.a).toMatchObject({ assignee: { id: 'u_1', type: 'user' }, text: 'Edited' });
+
+    const picked = { ...before.a, assignee: { id: 'agt_1', type: 'agent' as const } };
+    expect(buildActionItemDrafts(items, { a: picked }).a.assignee).toEqual({
+      id: 'agt_1',
+      type: 'agent',
     });
   });
 
   it('keeps what the user already edited when the list refreshes', () => {
     const edited = {
-      a: { assignee: null, checked: false, dueDate: null, text: 'Edited' },
+      a: {
+        assignee: null,
+        checked: false,
+        dueDate: null,
+        suggestedAssignee: { id: 'u_1', type: 'user' as const },
+        text: 'Edited',
+      },
     };
+    // The user cleared the suggested assignee: a refresh does not bring it back.
     expect(buildActionItemDrafts(items, edited).a).toEqual(edited.a);
   });
 });
