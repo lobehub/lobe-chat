@@ -28,6 +28,12 @@ vi.mock('@/server/services/connector/refresh', () => ({
 vi.mock('@/server/services/deviceGateway', () => ({
   deviceGateway: { isConfigured: false, queryDeviceList: vi.fn().mockResolvedValue([]) },
 }));
+// Pin the gatekeeper so the share assertions do not depend on the developer's
+// encryption key: without it discovery falls back to resolving undecrypted.
+const gateKeeper = vi.hoisted(() => ({ decrypt: () => {} }));
+vi.mock('@/server/modules/KeyVaultsEncrypt', () => ({
+  KeyVaultsGateKeeper: { initWithEnvKey: vi.fn().mockResolvedValue(gateKeeper) },
+}));
 
 const YINGMI = 'yingmi';
 
@@ -61,19 +67,22 @@ interface RunOptions {
   shareGate?: unknown;
 }
 
+const connectorModel = {
+  resolveAll: vi.fn(),
+  resolveByIdentifiers: vi.fn(),
+};
+
 const run = (options: RunOptions = {}) => {
-  const candidates = new Set([...(options.plugins ?? []), ...(options.selectedToolIds ?? [])]);
+  connectorModel.resolveAll.mockReset().mockResolvedValue([customConnector]);
+  connectorModel.resolveByIdentifiers
+    .mockReset()
+    .mockImplementation(async (ids: string[]) => (ids.includes(YINGMI) ? [customConnector] : []));
 
   return discoverTools(
     {
       agentDocumentsService: { hasDocuments: vi.fn().mockResolvedValue(false) },
       composioService: { getComposioManifests: vi.fn().mockResolvedValue([]) },
-      connectorModel: {
-        resolveAll: vi.fn().mockResolvedValue([customConnector]),
-        resolveByIdentifiers: vi.fn(async (ids: string[]) =>
-          ids.includes(YINGMI) && candidates.has(YINGMI) ? [customConnector] : [],
-        ),
-      },
+      connectorModel,
       connectorToolModel: {
         queryAllByConnectorIds: vi.fn().mockResolvedValue(connectorTools),
         queryByConnector: vi.fn().mockResolvedValue([]),
@@ -190,16 +199,46 @@ describe('discoverTools — unpinned custom MCP connectors', () => {
     expect(connectors.map((c) => c.identifier)).toContain(YINGMI);
   });
 
-  it('does not decrypt unpinned connectors for a share visitor run', async () => {
-    const result = await run({
-      shareGate: {
-        agentId: 'agent-1',
-        shareConfig: { toolGrants: [] },
-        shareId: 'share-1',
-        visitorUserId: 'visitor-1',
-      },
+  describe('share visitor run', () => {
+    const shareGateFor = (toolGrants: { apis?: string[]; identifier: string }[]) => ({
+      agentId: 'agent-1',
+      shareConfig: { toolGrants },
+      shareId: 'share-1',
+      visitorUserId: 'visitor-1',
     });
 
-    expect(result.toolManifestMap[YINGMI]).toBeUndefined();
+    it('does not resolve or decrypt an ungranted unpinned connector', async () => {
+      vi.mocked(scheduleStaleConnectorToolsRefresh).mockClear();
+
+      const result = await run({
+        shareGate: shareGateFor([{ identifier: 'lobe-calculator' }, { identifier: 'other-mcp' }]),
+      });
+
+      expect(result.toolManifestMap[YINGMI]).toBeUndefined();
+      expect(connectorModel.resolveAll).not.toHaveBeenCalled();
+      for (const [ids] of connectorModel.resolveByIdentifiers.mock.calls) {
+        expect(ids).not.toContain(YINGMI);
+      }
+      const [connectors] = vi.mocked(scheduleStaleConnectorToolsRefresh).mock.calls[0];
+      expect(connectors.map((c) => c.identifier)).not.toContain(YINGMI);
+    });
+
+    it('makes a granted unpinned connector activatable without enabling it', async () => {
+      const result = await run({ shareGate: shareGateFor([{ identifier: YINGMI }]) });
+
+      // Resolved by identifier only — never the creator's whole connector list.
+      expect(connectorModel.resolveAll).not.toHaveBeenCalled();
+      expect(connectorModel.resolveByIdentifiers).toHaveBeenCalledWith(
+        [YINGMI],
+        'agent-1',
+        gateKeeper,
+      );
+      expect(result.toolManifestMap[YINGMI]).toBeDefined();
+      expect(result.toolSourceMap[YINGMI]).toBe('mcp');
+      expect(result.toolsResult.enabledToolIds).not.toContain(YINGMI);
+      expect(availableToolIds(result.toolManifestMap, result.toolsResult.enabledToolIds)).toContain(
+        YINGMI,
+      );
+    });
   });
 });
