@@ -15,6 +15,7 @@ import type { StoreSetter } from '@/store/types';
 import { composeSkillMarkdown, parseSkillMarkdownFrontmatter } from '@/utils/skillMarkdown';
 import { setNamespace } from '@/utils/storeDebug';
 
+import { PAGE_SYNC_WAIT_MS, waitForPageSynced } from '../../collabRegistry';
 import type { DocumentStore } from '../../store';
 import type { DocumentDispatch } from './reducer';
 import { documentReducer } from './reducer';
@@ -215,6 +216,84 @@ export class EditorActionImpl {
       { id: documentId, type: 'updateDocument', value: { collab, isDirty: false } },
       n('setDocumentCollab'),
     );
+  };
+
+  /**
+   * An agent command starts editing the stored page: save what the user typed
+   * so the agent reads it, and hold the page read-only until the command ends.
+   */
+  beginAgentEdit = (documentId: string): void => {
+    const doc = this.#get().documents[documentId];
+    if (!doc) return;
+
+    this.#get().internal_dispatchDocument(
+      {
+        id: documentId,
+        type: 'updateDocument',
+        value: { agentEditing: (doc.agentEditing ?? 0) + 1 },
+      },
+      n('beginAgentEdit'),
+    );
+    if (doc.isDirty) void this.#get().performSave(documentId);
+  };
+
+  /** One agent command ended; `all` releases the page when the whole run is over. */
+  endAgentEdit = (documentId: string, options?: { all?: boolean }): void => {
+    const doc = this.#get().documents[documentId];
+    if (!doc?.agentEditing) return;
+
+    this.#get().internal_dispatchDocument(
+      {
+        id: documentId,
+        type: 'updateDocument',
+        value: { agentEditing: options?.all ? 0 : doc.agentEditing - 1 },
+      },
+      n('endAgentEdit'),
+    );
+  };
+
+  /**
+   * Saves the page as a version the user asked for (the save hotkey, accepting
+   * AI suggestions). A room page persists through its room, which
+   * `performSave` skips, so the server records the room's state once this
+   * client's pending updates reached it.
+   */
+  saveVersion = async (documentId: string): Promise<void> => {
+    if (!this.#get().documents[documentId]?.collab) {
+      return this.#get().performSave(documentId, undefined, { saveSource: 'manual' });
+    }
+
+    await waitForPageSynced(documentId, PAGE_SYNC_WAIT_MS);
+    await documentService.snapshotPageVersion(documentId, 'manual');
+  };
+
+  /**
+   * Restores a history version into the page. A room page restores on the
+   * server, which merges it into the room for everyone; applying it here as
+   * well would insert it into the room a second time.
+   */
+  restoreVersion = async (
+    documentId: string,
+    version: { editorData: unknown; historyId: string },
+  ): Promise<void> => {
+    const { documents, editor, markDirty, performSave } = this.#get();
+
+    if (documents[documentId]?.collab) {
+      await documentService.updateDocument({
+        editorData: JSON.stringify(version.editorData),
+        id: documentId,
+        restoreFromHistoryId: version.historyId,
+        saveSource: 'restore',
+      });
+      return;
+    }
+
+    editor?.setDocument('json', JSON.stringify(version.editorData));
+    markDirty(documentId);
+    await performSave(documentId, undefined, {
+      restoreFromHistoryId: version.historyId,
+      saveSource: 'restore',
+    });
   };
 
   markDirty = (documentId: string): void => {

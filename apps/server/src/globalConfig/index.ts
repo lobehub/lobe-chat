@@ -13,6 +13,8 @@ import { langfuseEnv } from '@/envs/langfuse';
 import { toolsEnv } from '@/envs/tools';
 import { parseSSOProviders } from '@/libs/better-auth/utils/server';
 import { parseSystemAgent } from '@/server/globalConfig/parseSystemAgent';
+import { isPageCollabEnabled } from '@/server/services/pageCollab/config';
+import { getSandboxDeployment } from '@/server/services/sandbox/deployment';
 import { type GlobalServerConfig } from '@/types/serverConfig';
 import { cleanObject } from '@/utils/object';
 
@@ -118,6 +120,9 @@ export const getServerGlobalConfig = async () => {
     }
   }
 
+  const enableGatewayMode =
+    ENABLE_BUSINESS_FEATURES || (!!appEnv.ENABLE_AGENT_GATEWAY && !!appEnv.AGENT_GATEWAY_URL);
+
   const config: GlobalServerConfig = {
     aiProvider: await genServerAiProvidersConfig(aiProviderSpecificConfig),
     defaultAgent: {
@@ -127,13 +132,13 @@ export const getServerGlobalConfig = async () => {
     enableBusinessFeatures: ENABLE_BUSINESS_FEATURES,
     enableEmailVerification: authEnv.AUTH_EMAIL_VERIFICATION,
     enableComposio: !!composioEnv.COMPOSIO_API_KEY,
-    enableGatewayMode:
-      ENABLE_BUSINESS_FEATURES || (!!appEnv.ENABLE_AGENT_GATEWAY && !!appEnv.AGENT_GATEWAY_URL),
+    enableGatewayMode,
     enableLobehubSkill: !!(appEnv.MARKET_TRUSTED_CLIENT_SECRET && appEnv.MARKET_TRUSTED_CLIENT_ID),
     enableMagicLink: authEnv.AUTH_ENABLE_MAGIC_LINK,
     enableMarketTrustedClient: !!(
       appEnv.MARKET_TRUSTED_CLIENT_SECRET && appEnv.MARKET_TRUSTED_CLIENT_ID
     ),
+    enablePageCollab: enableGatewayMode && isPageCollabEnabled(),
     enableUploadFileToServer: !!fileEnv.S3_SECRET_ACCESS_KEY,
     enableMultimodalUnderstanding: !!(
       toolsEnv.MULTIMODAL_UNDERSTANDING_PROVIDER && toolsEnv.MULTIMODAL_UNDERSTANDING_MODEL
@@ -158,6 +163,7 @@ export const getServerGlobalConfig = async () => {
       userMemory: cleanObject(getPublicMemoryExtractionConfig()),
     },
     oAuthSSOProviders: getBetterAuthSSOProviders(),
+    sandbox: getSandboxDeployment(),
     systemAgent: parseSystemAgent(appEnv.SYSTEM_AGENT),
     telemetry: {
       langfuse: langfuseEnv.ENABLE_LANGFUSE,

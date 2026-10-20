@@ -38,7 +38,9 @@ export interface PublicState {
 export interface PageCollabState {
   access: 'edit' | 'view';
   pending: number;
-  status: 'connecting' | 'offline' | 'synced';
+  /** Joins the room again after it failed to sync. */
+  retry?: () => void;
+  status: 'connecting' | 'error' | 'offline' | 'synced';
 }
 
 export interface State extends PublicState {

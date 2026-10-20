@@ -11,11 +11,23 @@ type UserState = Record<string, unknown>;
 
 export type PageCollabAccess = 'edit' | 'view';
 
-export type PageCollabStatus = 'connecting' | 'offline' | 'synced';
+export type PageCollabStatus = 'connecting' | 'error' | 'offline' | 'synced';
+
+/** The room could not be joined: it answered with an error, or never synced in time. */
+export interface PageCollabFailure {
+  code: string;
+  /** Time since the subscription was sent. */
+  elapsedMs: number;
+  message?: string;
+}
+
+/** How long a subscription may wait for the room's first sync before it counts as failed. */
+export const PAGE_ROOM_SYNC_TIMEOUT_MS = 10_000;
 
 export interface PageCollabProviderEvents {
   onAccess?: (access: PageCollabAccess) => void;
   onBootstrap?: () => void;
+  onFailure?: (failure: PageCollabFailure) => void;
   onPendingChange?: (pending: number) => void;
   onReset?: () => void;
   onStatus?: (status: PageCollabStatus) => void;
@@ -102,6 +114,9 @@ export class PageCollabProvider extends Emitter {
   private waitingForBootstrap = false;
   private bootstrapPending = false;
   private synced = false;
+  private failed = false;
+  private subscribedAt = 0;
+  private syncTimer: ReturnType<typeof setTimeout> | undefined;
 
   constructor(
     private readonly documentId: string,
@@ -148,12 +163,34 @@ export class PageCollabProvider extends Emitter {
   }
 
   destroy() {
+    clearTimeout(this.syncTimer);
     this.disconnect();
     this.doc.off('update', this.handleLocalUpdate);
   }
 
+  /** Joins the room again after a failure. */
+  retry() {
+    this.failed = false;
+    this.events.onStatus?.('connecting');
+    if (this.channel) this.subscribe();
+    else this.connect();
+  }
+
+  private fail(code: string, message?: string) {
+    if (this.failed) return;
+    this.failed = true;
+    clearTimeout(this.syncTimer);
+    this.events.onStatus?.('error');
+    this.events.onFailure?.({ code, elapsedMs: Date.now() - this.subscribedAt, message });
+  }
+
   private subscribe = () => {
     this.synced = false;
+    this.subscribedAt = Date.now();
+    clearTimeout(this.syncTimer);
+    this.syncTimer = setTimeout(() => {
+      if (!this.synced) this.fail('sync_timeout');
+    }, PAGE_ROOM_SYNC_TIMEOUT_MS);
     this.channel?.send({
       documentId: this.documentId,
       ...(this.epoch ? { epoch: this.epoch } : {}),
@@ -185,6 +222,8 @@ export class PageCollabProvider extends Emitter {
 
   private markSynced() {
     if (this.synced) return;
+    clearTimeout(this.syncTimer);
+    this.failed = false;
     this.synced = true;
     this.waitingForBootstrap = false;
     this.emit('status', { status: 'connected' });
@@ -254,10 +293,13 @@ export class PageCollabProvider extends Emitter {
       }
 
       case 'doc_error': {
+        // A view-only member is still in the room; only their writes are refused.
         if (message.code === 'read_only' || message.code === 'forbidden') {
           this.events.onAccess?.('view');
+          return;
         }
         console.warn('[PageCollabProvider]', message.code, message.message);
+        if (!this.synced) this.fail(message.code, message.message);
       }
     }
   };

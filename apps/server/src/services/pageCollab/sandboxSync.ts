@@ -6,7 +6,8 @@ import {
   parseLiteXMLBlocks,
 } from '@lobechat/editor-runtime';
 
-import type { PageCollabService, PageSession } from './index';
+import { runPageExclusive } from './queue';
+import { PageChangedError, type PageSession, type PageSessions } from './session';
 
 export const PAGE_DIR = '/mnt/page';
 
@@ -129,7 +130,7 @@ const applyPageChanges = async (
       messages.push(`${PAGE_DIR}/doc.xml: no block changes detected.`);
     } else {
       const runtime = new EditorRuntime();
-      runtime.setEditor(session.fork.editor.kernel as any);
+      runtime.setEditor(session.draft.editor.kernel as any);
       runtime.setCurrentDocId(documentId);
       runtime.setTitleHandlers(
         () => {},
@@ -156,12 +157,23 @@ const applyPageChanges = async (
     }
   }
 
-  const changed = await session.commit();
+  let changed: boolean;
+  try {
+    changed = await session.commit();
+  } catch (error) {
+    if (!(error instanceof PageChangedError)) throw error;
+    messages.push(
+      error.reason === 'locked'
+        ? 'Nothing was written: another member is editing the page. Try again later.'
+        : `Nothing was written: the page changed after this command read it. Read ${PAGE_DIR}/doc.xml again and redo the edit.`,
+    );
+    return { changed: false, messages };
+  }
 
   if (changed && nextStableXml !== undefined) {
-    const keyToStable = session.fork.stableIds();
+    const keyToStable = session.draft.stableIds();
     const refreshed = swapIds(
-      session.fork.editor.export({ litexml: true }).litexml ?? '',
+      session.draft.editor.export({ litexml: true }).litexml ?? '',
       keyToStable,
     );
     messages.push(`${PAGE_DIR}/.meta/outline (ids after this edit):\n${buildOutline(refreshed)}`);
@@ -180,10 +192,10 @@ const withOutput = (result: SandboxCallToolResult, transform: (text: string) => 
 export const withPageSync = (
   service: ISandboxService,
   options: {
-    collab: Pick<PageCollabService, 'openSession'>;
     documentId: string;
     nonce?: () => string;
     pageDir?: string;
+    sessions: PageSessions;
   },
 ): ISandboxService => ({
   callTool: async (toolName, params) => {
@@ -198,46 +210,48 @@ export const withPageSync = (
       );
     }
 
-    const { collab, documentId } = options;
-    const session = await collab.openSession(documentId);
-    try {
-      const keyXml = session.fork.editor.export({ litexml: true }).litexml ?? '';
-      const keyToStable = session.fork.stableIds();
-      const stableXml = swapIds(keyXml, keyToStable);
-      const { title } = session;
-      const nonce = options.nonce?.() ?? crypto.randomUUID().replaceAll('-', '');
+    const { documentId, sessions } = options;
+    return runPageExclusive(documentId, async () => {
+      const session = await sessions.openSession(documentId);
+      try {
+        const keyXml = session.draft.editor.export({ litexml: true }).litexml ?? '';
+        const keyToStable = session.draft.stableIds();
+        const stableXml = swapIds(keyXml, keyToStable);
+        const { title } = session;
+        const nonce = options.nonce?.() ?? crypto.randomUUID().replaceAll('-', '');
 
-      const result = await service.callTool(toolName, {
-        ...params,
-        command: wrapPageCommand(
-          params.command,
-          { outline: buildOutline(stableXml), title, xml: stableXml },
-          nonce,
-          options.pageDir,
-        ),
-      });
-      if (!result.success) return result;
+        const result = await service.callTool(toolName, {
+          ...params,
+          command: wrapPageCommand(
+            params.command,
+            { outline: buildOutline(stableXml), title, xml: stableXml },
+            nonce,
+            options.pageDir,
+          ),
+        });
+        if (!result.success) return result;
 
-      const raw = (result.result ?? {}) as Record<string, unknown>;
-      const parsed = parsePageOutput(String(raw.stdout ?? raw.output ?? ''), nonce);
-      const applied = await applyPageChanges(
-        session,
-        documentId,
-        { keyXml, stableToKey: invert(keyToStable) },
-        parsed,
-      );
-      const notes = result.sessionExpiredAndRecreated
-        ? [
-            `note: the sandbox was recreated; files outside ${PAGE_DIR} from earlier calls are gone.`,
-          ]
-        : [];
+        const raw = (result.result ?? {}) as Record<string, unknown>;
+        const parsed = parsePageOutput(String(raw.stdout ?? raw.output ?? ''), nonce);
+        const applied = await applyPageChanges(
+          session,
+          documentId,
+          { keyXml, stableToKey: invert(keyToStable) },
+          parsed,
+        );
+        const notes = result.sessionExpiredAndRecreated
+          ? [
+              `note: the sandbox was recreated; files outside ${PAGE_DIR} from earlier calls are gone.`,
+            ]
+          : [];
 
-      return withOutput(result, () =>
-        [parsed.output.trimEnd(), ...applied.messages, ...notes].filter(Boolean).join('\n'),
-      );
-    } finally {
-      session.fork.destroy();
-    }
+        return withOutput(result, () =>
+          [parsed.output.trimEnd(), ...applied.messages, ...notes].filter(Boolean).join('\n'),
+        );
+      } finally {
+        session.draft.destroy();
+      }
+    });
   },
   exportAndUploadFile: (path, filename, exportOptions) =>
     service.exportAndUploadFile(path, filename, exportOptions),

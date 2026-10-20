@@ -43,6 +43,7 @@ import { userInteractionExecutor } from './lobe-user-interaction';
 import { webBrowsing } from './lobe-web-browsing';
 import { webOnboardingExecutor } from './lobe-web-onboarding';
 import { localSystemExecutorWithGitEffects } from './localSystem';
+import { pageAgentHookExecutor, withPageEditHooks } from './pageEdits';
 
 export const builtinToolExecutors = [
   // Hook-only executors for heterogeneous CLI agents —
@@ -66,7 +67,7 @@ export const builtinToolExecutors = [
   attachmentsExecutor,
   auvExecutor,
   calculatorExecutor,
-  cloudSandboxExecutor,
+  withPageEditHooks(cloudSandboxExecutor),
   credsExecutor,
   groupAgentBuilderExecutor,
   groupManagementExecutor,
@@ -78,8 +79,9 @@ export const builtinToolExecutors = [
   memoryExecutor,
   messageExecutor,
   notebookExecutor,
+  pageAgentHookExecutor,
   skillStoreExecutor,
-  skillsExecutor,
+  withPageEditHooks(skillsExecutor),
   taskExecutor,
   videoGenerationExecutor,
   activatorExecutor,

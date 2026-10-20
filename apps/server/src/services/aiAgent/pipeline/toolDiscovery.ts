@@ -2,6 +2,7 @@ import { CredsIdentifier } from '@lobechat/builtin-tool-creds';
 import { GoalIdentifier, isGoalPrompt } from '@lobechat/builtin-tool-goal';
 import { LobeAgentManifest } from '@lobechat/builtin-tool-lobe-agent';
 import { MessageToolIdentifier } from '@lobechat/builtin-tool-message';
+import { PageAgentIdentifier } from '@lobechat/builtin-tool-page-agent';
 import type { DeviceAttachment } from '@lobechat/builtin-tool-remote-device';
 import { generateSystemPrompt, RemoteDeviceManifest } from '@lobechat/builtin-tool-remote-device';
 import {
@@ -1183,6 +1184,7 @@ export const discoverTools = async (
       executionTarget: executionPlan.target,
       lobehubSkills: activeLobehubSkillManifests,
       manifestContext,
+      pageScope: manifestContext?.scope === 'page' && pluginIds.includes(PageAgentIdentifier),
     });
     Object.assign(toolManifestMap, discovery.manifestMap);
     Object.assign(toolSourceMap, discovery.sourceMap);

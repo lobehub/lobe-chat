@@ -43,7 +43,7 @@ const seedRoom = async (markdown: string) => {
 const createCollab = (room: Y.Doc) => {
   const state = { pushes: 0 };
   return {
-    collab: {
+    sessions: {
       openSession: async () => {
         const fork = await openPageFork(Y.encodeStateAsUpdate(room));
         const meta = fork.doc.getMap('meta');
@@ -54,7 +54,7 @@ const createCollab = (room: Y.Doc) => {
             state.pushes += 1;
             return true;
           },
-          fork,
+          draft: fork,
           setTitle: (next: string) => meta.set('title', next),
           title: (meta.get('title') as string) ?? 'Page',
         };
@@ -75,8 +75,8 @@ describe('withPageSync', () => {
 
   const setup = async (markdown: string) => {
     const room = await seedRoom(markdown);
-    const { collab, state } = createCollab(room);
-    const sandbox = withPageSync(shellSandbox, { collab, documentId: 'doc_1', pageDir });
+    const { sessions, state } = createCollab(room);
+    const sandbox = withPageSync(shellSandbox, { documentId: 'doc_1', pageDir, sessions });
     const exec = async (command: string) => {
       const res = await sandbox.callTool('runCommand', { command });
       return String((res.result as any).stdout);
@@ -164,9 +164,9 @@ describe('withPageSync', () => {
   it('passes background commands through with a note', async () => {
     const { state } = await setup('para one\n');
     const sandbox = withPageSync(shellSandbox, {
-      collab: createCollab(new Y.Doc()).collab,
       documentId: 'doc_1',
       pageDir,
+      sessions: createCollab(new Y.Doc()).sessions,
     });
 
     const res = await sandbox.callTool('runCommand', { background: true, command: 'true' });

@@ -62,6 +62,8 @@ allowBuilds:
 
 overrides:
   '@ant-design/icons': 6.3.2
+  # patches/@lobehub__editor.patch is keyed to this exact version.
+  '@lobehub/editor': 4.29.0
   '@react-pdf/image': 3.0.4
   '@types/react': 19.2.13
   '@vitest/coverage-v8': 5.0.0

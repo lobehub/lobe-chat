@@ -15,6 +15,7 @@ import {
 } from '../agentDocuments/contentFormat';
 import { createMarkdownEditorSnapshot } from '../agentDocuments/headlessEditor';
 import { FileService } from '../file';
+import { writePageBodyThroughRoom } from '../pageCollab/bodyWriter';
 import { AgentDocumentVfsError } from './errors';
 import { createSkillMount } from './mounts/skills/createSkillMount';
 import {
@@ -837,10 +838,19 @@ export class AgentDocumentVfsService {
         });
       } else {
         const snapshot = await createMarkdownEditorSnapshot(content);
-        await this.agentDocumentModel.update(existing.id, {
-          content: snapshot.content,
-          editorData: snapshot.editorData,
-        });
+        // A document open in a live room has the room projected over its row.
+        const inRoom = await writePageBodyThroughRoom(
+          this.db,
+          existing.documentId,
+          { editorData: snapshot.editorData, markdown: snapshot.content },
+          { saveSource: 'llm_call', userId: this.userId, workspaceId: this.workspaceId },
+        );
+        if (!inRoom) {
+          await this.agentDocumentModel.update(existing.id, {
+            content: snapshot.content,
+            editorData: snapshot.editorData,
+          });
+        }
       }
 
       const updated = await this.resolveOrdinaryPath(writablePath, ctx.agentId);

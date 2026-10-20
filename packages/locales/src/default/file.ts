@@ -104,6 +104,15 @@ export default {
   'notSupportGuide.features.libraries.title': 'Library',
   'notSupportGuide.title': 'The current deployment mode does not support file management',
   'pageEditor.addIcon': 'Add Icon',
+  'pageEditor.agentEditing': 'Agent is editing the page…',
+  'pageEditor.agentUnavailable.connectMarket': 'Connect Market',
+  'pageEditor.agentUnavailable.marketUnauthorized':
+    'The Agent edits pages in the cloud sandbox. Connect your Market account to let it edit this page.',
+  'pageEditor.agentUnavailable.noGateway':
+    "The Agent can't edit pages until Gateway Mode is on. Ask your admin to turn it on.",
+  'pageEditor.agentUnavailable.sandboxUnconfigured':
+    "The Agent can't edit pages until a sandbox is configured. Ask your admin to set one up.",
+  'pageEditor.agentUnavailable.viewDocs': 'View docs',
   'pageEditor.autoSaveMessage': 'Your page is saved automatically. No need to save manually.',
   'pageEditor.chooseIcon': 'Choose Icon',
   'pageEditor.collab.notSynced':
@@ -113,7 +122,9 @@ export default {
   'pageEditor.collab.offlineRestore.discard': 'Keep the current page',
   'pageEditor.collab.offlineRestore.restore': 'Restore my version',
   'pageEditor.collab.offlineRestore.title': 'Restore your offline edits?',
+  'pageEditor.collab.retry': 'Retry',
   'pageEditor.collab.status.connecting': 'Connecting…',
+  'pageEditor.collab.status.error': "Couldn't sync this page.",
   'pageEditor.collab.status.offline': 'Offline. Edits sync when you reconnect.',
   'pageEditor.comments.anchor.add': 'Comment',
   'pageEditor.comments.anchor.addToLine': 'Comment on this line',

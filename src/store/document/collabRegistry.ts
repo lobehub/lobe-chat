@@ -11,6 +11,9 @@ export const registerPageCollab = (documentId: string, provider: PendingSource) 
   };
 };
 
+/** How long a send or save waits for a room page's pending updates to reach the room. */
+export const PAGE_SYNC_WAIT_MS = 3000;
+
 export const waitForPageSynced = async (documentId: string, timeoutMs: number) => {
   const provider = providers.get(documentId);
   if (!provider) return true;

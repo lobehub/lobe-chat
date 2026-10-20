@@ -320,14 +320,13 @@ export class EditorRuntime {
    * Edit the page title
    * @returns Raw result with newTitle and previousTitle
    */
-  async editTitle(args: EditTitleArgs, beforeApply?: () => void): Promise<EditTitleRuntimeResult> {
+  async editTitle(args: EditTitleArgs): Promise<EditTitleRuntimeResult> {
     log('[EditorRuntime] editTitle:start', {
       snapshot: this.getDebugSnapshot(),
       titleLength: args.title.length,
     });
 
     await this.runBeforeMutate('editTitle');
-    beforeApply?.();
     const { setter, getter } = this.getTitleHandlers();
     const previousTitle = getter();
 
@@ -407,10 +406,7 @@ export class EditorRuntime {
    * Supports insert, modify, and remove operations in a single call.
    * @returns Raw result with results, successCount and totalCount
    */
-  async modifyNodes(
-    args: ModifyNodesArgs,
-    beforeApply?: () => void,
-  ): Promise<ModifyNodesRuntimeResult> {
+  async modifyNodes(args: ModifyNodesArgs): Promise<ModifyNodesRuntimeResult> {
     const rawOperations = Array.isArray(args.operations)
       ? args.operations
       : args.operations
@@ -424,7 +420,6 @@ export class EditorRuntime {
     });
 
     await this.runBeforeMutate('modifyNodes');
-    beforeApply?.();
     const editor = this.getEditor();
     let { operations } = args;
 

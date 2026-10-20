@@ -5,26 +5,24 @@ import {
 } from '@lobechat/builtin-tool-page-agent/executionRuntime';
 import { EditorRuntime } from '@lobechat/editor-runtime';
 
-import { type LobeChatDatabase } from '@/database/type';
-import { PageCollabService } from '@/server/services/pageCollab';
+import {
+  createPageSessions,
+  type PageSessions,
+  type PageWriter,
+} from '@/server/services/pageCollab';
+import { runPageExclusive } from '@/server/services/pageCollab/queue';
 
 import type { ServerRuntimeRegistration } from './types';
 
 type EditorRuntimeEditorParam = Parameters<EditorRuntime['setEditor']>[0];
 
-const buildService = (
-  db: LobeChatDatabase,
-  userId: string,
-  workspaceId?: string,
-): PageAgentRuntimeService => {
-  const collab = new PageCollabService(db, userId, workspaceId);
-
-  return {
-    initPage: async (args, ctx) => {
-      const session = await collab.openSession(ctx.documentId!);
+const buildService = (sessions: PageSessions): PageAgentRuntimeService => ({
+  initPage: async (args, ctx) =>
+    runPageExclusive(ctx.documentId!, async () => {
+      const session = await sessions.openSession(ctx.documentId!);
       try {
         const runtime = new EditorRuntime();
-        runtime.setEditor(session.fork.editor.kernel as unknown as EditorRuntimeEditorParam);
+        runtime.setEditor(session.draft.editor.kernel as unknown as EditorRuntimeEditorParam);
         runtime.setCurrentDocId(ctx.documentId!);
         runtime.setTitleHandlers(session.setTitle, () => session.title);
 
@@ -38,19 +36,25 @@ const buildService = (
           state: { changed: true, nodeCount, rootId: 'root' },
         };
       } finally {
-        session.fork.destroy();
+        session.draft.destroy();
       }
-    },
-  };
-};
+    }),
+});
 
 export const pageAgentRuntime: ServerRuntimeRegistration = {
   factory: (context) => {
     if (!context.userId || !context.serverDB) {
       throw new Error('userId and serverDB are required for Page Agent execution');
     }
+    const writer: PageWriter = {
+      agentId: context.agentId,
+      operationId: context.rootOperationId ?? context.operationId,
+      saveSource: 'llm_call',
+      userId: context.userId,
+      workspaceId: context.workspaceId,
+    };
     return new PageAgentExecutionRuntime(
-      buildService(context.serverDB, context.userId, context.workspaceId),
+      buildService(createPageSessions(context.serverDB, writer)),
     );
   },
   identifier: PageAgentIdentifier,

@@ -5,6 +5,7 @@ import { useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import * as Y from 'yjs';
 
+import { analyticsClient } from '@/libs/analytics/client';
 import { getGatewayMux } from '@/store/chat/slices/agentRun/actions/transports/gateway/muxRegistry';
 import { useDocumentStore } from '@/store/document';
 import { registerPageCollab } from '@/store/document/collabRegistry';
@@ -24,20 +25,32 @@ const offlineSnapshots = new Map<string, unknown>();
 // ponytail: fixed delay, push the projected title over resource events if it lags.
 const PAGE_LIST_REFRESH_DELAY_MS = 3000;
 
-// Deployment-static config, read once like the gateway transport does.
+// Deployment-static config, read once like the gateway transport does. Rooms
+// exist only where the server enables page collaboration (LobeHub Cloud).
 const readGatewayUrl = () => {
   const serverConfig = getServerConfigStoreState()?.serverConfig;
-  return serverConfig?.agentGatewayUrl && serverConfig.enableGatewayMode
+  return serverConfig?.agentGatewayUrl && serverConfig.enablePageCollab
     ? serverConfig.agentGatewayUrl
     : undefined;
 };
 
 export const usePageCollabEnabled = () => !!readGatewayUrl();
 
+/**
+ * Whether this document edits through a room. A SKILL.md saves its frontmatter
+ * alongside the body over HTTP, so it never joins one, which carries the body alone.
+ */
+export const usePageCollabEligible = (documentId: string | undefined) => {
+  const isSkillMarkdown = useDocumentStore((s) =>
+    documentId ? s.documents[documentId]?.contentFormat === 'skillMarkdown' : false,
+  );
+  return usePageCollabEnabled() && !!documentId && !isSkillMarkdown;
+};
+
 export const usePageCollab = (documentId: string | undefined, onReset?: () => void) => {
   const { t } = useTranslation('file');
   const storeApi = useStoreApi();
-  const enabled = usePageCollabEnabled() && !!documentId;
+  const enabled = usePageCollabEligible(documentId);
   const gatewayUrl = readGatewayUrl();
   const username = useUserStore(userProfileSelectors.displayUserName);
   const docLoaded = useDocumentStore((s) => (documentId ? !!s.documents[documentId] : false));
@@ -69,13 +82,27 @@ export const usePageCollab = (documentId: string | undefined, onReset?: () => vo
         }
         onReset?.();
       },
+      onFailure: ({ code, elapsedMs }) => {
+        void analyticsClient.track({
+          name: 'page_collab_sync_failed',
+          properties: { code, elapsed_ms: elapsedMs },
+        });
+      },
+      // Until the first sync the page reads "connecting"; a drop only shows
+      // once the page was live, while a failure always does.
       onStatus: (status) => {
-        if (status === 'synced' || storeApi.getState().collab?.status === 'synced') {
+        const current = storeApi.getState().collab?.status;
+        if (
+          status === 'synced' ||
+          status === 'error' ||
+          current === 'synced' ||
+          current === 'error'
+        ) {
           setCollab({ status });
         }
       },
     });
-    setCollab({ status: 'connecting' });
+    setCollab({ retry: () => provider.retry(), status: 'connecting' });
 
     return { doc, provider };
   }, [enabled, gatewayUrl, documentId, storeApi, onReset]);

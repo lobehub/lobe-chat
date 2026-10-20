@@ -9,6 +9,7 @@ import { type PublicState } from './store';
 import { usePageEditorStore, useStoreApi } from './store';
 import { useDocumentLock } from './useDocumentLock';
 import { usePageDraft } from './usePageDraft';
+import { useReleaseAgentEdit } from './useReleaseAgentEdit';
 import { useResourceEvents } from './useResourceEvents';
 
 export interface StoreUpdaterProps extends Partial<PublicState> {
@@ -68,6 +69,8 @@ const StoreUpdater = memo<StoreUpdaterProps>(
     // Snapshot unsaved content to sessionStorage while the lock is degraded so
     // an accidental refresh during a network blip doesn't blow away typing.
     usePageDraft();
+    // Release the page from an agent run that ended without closing its edit
+    useReleaseAgentEdit();
 
     // Update store with props
     // `useStoreUpdater` writes the raw field; `documentId` goes through its own

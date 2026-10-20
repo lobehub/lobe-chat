@@ -1,3 +1,4 @@
+export { isSandboxAvailableForUser } from './availability';
 export { createSandboxService, getSandboxProviderKind } from './factory';
 export { MarketSandboxProvider, ServerSandboxService } from './providers/market';
 export { OnlyboxesSandboxProvider } from './providers/onlyboxes';

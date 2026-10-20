@@ -776,7 +776,7 @@ export class DocumentService {
         (params.content !== undefined && params.content !== currentDocument.content);
       if (
         contentChanged &&
-        !params.bypassEditLock &&
+        params.origin !== 'room-projection' &&
         this.isCollaborativeDocument(currentDocument)
       ) {
         const canWrite = await this.editLockService.canWrite('document', id, params.lockOwnerId);
@@ -832,6 +832,7 @@ export class DocumentService {
       const savedAt = historyAppended ? updatedAt : undefined;
       if (historyAppended) {
         await documentHistoryService.createHistory({
+          ...params.history,
           breakAutosaveWindow: params.breakAutosaveWindow,
           documentId: id,
           editorData: currentEditorDataAccepted,

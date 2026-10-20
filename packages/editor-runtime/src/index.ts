@@ -1,3 +1,4 @@
+export { alignLiteXMLBlocks } from './alignLiteXMLBlocks';
 export { EditorRuntime, type LiteXMLBatchOperation } from './EditorRuntime';
 export { formatModifyNodesResult } from './formatModifyNodesResult';
 export * from './liteXMLBlockDiff';

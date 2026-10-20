@@ -102,7 +102,7 @@ import { snapshotAgentModel, snapshotAgentReasoning } from '@/store/chat/utils/s
 import { topicMapKey } from '@/store/chat/utils/topicMapKey';
 import { deviceSelectors, getDeviceStoreState } from '@/store/device';
 import { useDocumentStore } from '@/store/document';
-import { waitForPageSynced } from '@/store/document/collabRegistry';
+import { preparePageForAgent } from '@/store/document/preparePageForAgent';
 import { getElectronStoreState } from '@/store/electron';
 import { getFileStoreState } from '@/store/file/store';
 import { useGlobalStore } from '@/store/global';
@@ -193,8 +193,6 @@ interface OptimisticTopicPlaceholder {
 type Setter = StoreSetter<ChatStore>;
 export const conversationLifecycle = (set: Setter, get: () => ChatStore, _api?: unknown) =>
   new ConversationLifecycleActionImpl(set, get, _api);
-
-const PAGE_SYNC_WAIT_MS = 3000;
 
 const isAbortError = (error: unknown, abortController?: AbortController) =>
   !!abortController?.signal.aborted ||
@@ -584,12 +582,15 @@ export class ConversationLifecycleActionImpl {
         ? (useDocumentStore.getState().activeDocumentId ?? undefined)
         : undefined;
 
-    // Room edits merge either way; this only warns that the agent's first read
-    // may miss what the user typed while offline.
+    // The agent reads the page when it edits it; a room page that has not
+    // synced yet only gets a warning, since its edits merge either way.
     const pageDocumentId = context.documentId ?? activePageDocumentId;
-    if (context.scope === 'page' && pageDocumentId) {
-      const synced = await waitForPageSynced(pageDocumentId, PAGE_SYNC_WAIT_MS);
-      if (!synced) toast.warning(t('pageEditor.collab.notSynced', { ns: 'file' }));
+    if (
+      context.scope === 'page' &&
+      pageDocumentId &&
+      (await preparePageForAgent(pageDocumentId)) === 'notSynced'
+    ) {
+      toast.warning(t('pageEditor.collab.notSynced', { ns: 'file' }));
     }
 
     // Whether this send has to create the topic. From here on this flag — NOT

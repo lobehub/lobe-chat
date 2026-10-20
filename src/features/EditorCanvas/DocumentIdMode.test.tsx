@@ -10,6 +10,7 @@ import DocumentIdMode from './DocumentIdMode';
 
 const handleContentChangeStore = vi.fn();
 const performSave = vi.fn();
+const saveVersion = vi.fn();
 const flushSave = vi.fn();
 const onEditorInit = vi.fn().mockResolvedValue(undefined);
 const createFetchDocumentResult = (
@@ -29,6 +30,7 @@ const mockDocumentStore = {
   handleContentChange: handleContentChangeStore,
   onEditorInit,
   performSave,
+  saveVersion,
   useFetchDocument,
 };
 
@@ -79,6 +81,7 @@ describe('DocumentIdMode', () => {
   beforeEach(() => {
     handleContentChangeStore.mockClear();
     performSave.mockClear();
+    saveVersion.mockClear();
     flushSave.mockClear();
     onEditorInit.mockClear();
     useFetchDocument.mockClear();
@@ -106,7 +109,7 @@ describe('DocumentIdMode', () => {
     });
 
     expect(handleContentChangeStore).toHaveBeenCalledTimes(1);
-    expect(performSave).toHaveBeenCalledWith('doc-1', undefined, { saveSource: 'manual' });
+    expect(saveVersion).toHaveBeenCalledWith('doc-1');
     expect(flushSave).not.toHaveBeenCalled();
   });
 

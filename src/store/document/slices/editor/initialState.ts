@@ -15,6 +15,12 @@ export type DocumentContentFormat = 'markdown' | 'skillMarkdown';
  */
 export interface EditorContentState {
   /**
+   * Agent commands editing the stored page right now. Without a collaboration
+   * room the page is read-only meanwhile, so an edit typed in between can't be
+   * overwritten by, or overwrite, the agent's write.
+   */
+  agentEditing?: number;
+  /**
    * Whether auto-save is enabled for this document
    * Defaults to true. Set to false if the consumer handles saving themselves.
    */

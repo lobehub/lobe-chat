@@ -1,9 +1,9 @@
 'use client';
 
 import { Flexbox, Icon, Tooltip } from '@lobehub/ui';
-import { Spin, Text } from '@lobehub/ui/base-ui';
+import { Button, Spin, Text } from '@lobehub/ui/base-ui';
 import { cssVar } from 'antd-style';
-import { CloudOffIcon, PencilIcon } from 'lucide-react';
+import { CloudAlertIcon, CloudOffIcon, PencilIcon } from 'lucide-react';
 import { type CSSProperties, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -42,6 +42,37 @@ const EditingIndicator = memo(() => {
   );
   const holder = useAuthorInfo(lockHolderId ?? undefined);
   const collabStatus = usePageEditorStore((s) => s.collab?.status);
+  const retryCollab = usePageEditorStore((s) => s.collab?.retry);
+  const isAgentEditing = useDocumentStore((s) =>
+    documentId ? editorSelectors.isAgentEditing(documentId)(s) : false,
+  );
+
+  if (isAgentEditing) {
+    return (
+      <Flexbox horizontal align={'center'} gap={4} style={{ color: cssVar.colorTextTertiary }}>
+        <Spin size="small" />
+        <Text ellipsis style={labelStyle}>
+          {t('pageEditor.agentEditing')}
+        </Text>
+      </Flexbox>
+    );
+  }
+
+  if (collabStatus === 'error') {
+    return (
+      <Flexbox horizontal align={'center'} gap={4} style={{ color: cssVar.colorWarning }}>
+        <Icon icon={CloudAlertIcon} size={14} />
+        <Text ellipsis style={labelStyle}>
+          {t('pageEditor.collab.status.error')}
+        </Text>
+        {retryCollab && (
+          <Button size={'small'} type={'text'} onClick={retryCollab}>
+            {t('pageEditor.collab.retry')}
+          </Button>
+        )}
+      </Flexbox>
+    );
+  }
 
   if (collabStatus === 'connecting' || collabStatus === 'offline') {
     const offline = collabStatus === 'offline';

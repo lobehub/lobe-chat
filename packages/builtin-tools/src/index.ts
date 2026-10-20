@@ -58,7 +58,7 @@ import { WebOnboardingManifest } from '@lobechat/builtin-tool-web-onboarding';
 import { isDesktop, RECOMMENDED_SKILLS, RecommendedSkillType } from '@lobechat/const';
 import { type LobeBuiltinTool } from '@lobechat/types';
 
-import { autoApproveInPageScope } from './pageScope';
+import { resolveCloudSandboxInPageScope } from './pageScope';
 
 /**
  * Default tool IDs that will always be added to the tools list.
@@ -326,7 +326,7 @@ const builtinToolRegistry: LobeBuiltinTool[] = [
     // Context-aware: prefixes exec-class API descriptions with the run's
     // actual execution environment (cloud sandbox as fallback / offline
     // degradation), so the model never assumes they run on the user's machine.
-    resolveManifest: autoApproveInPageScope(resolveSkillsManifest, ['execScript', 'runCommand']),
+    resolveManifest: resolveSkillsManifest,
     // Agent Share projection: only `activateSkill` / `readReference` survive
     // the gate, so the full five-API systemRole is replaced with one that
     // describes just those two.
@@ -420,13 +420,7 @@ const builtinToolRegistry: LobeBuiltinTool[] = [
     hidden: true,
     identifier: CloudSandboxManifest.identifier,
     manifest: CloudSandboxManifest,
-    resolveManifest: autoApproveInPageScope(CloudSandboxManifest, [
-      'editFile',
-      'executeCode',
-      'moveFiles',
-      'runCommand',
-      'writeFile',
-    ]),
+    resolveManifest: resolveCloudSandboxInPageScope(CloudSandboxManifest),
     type: 'builtin',
   },
   {

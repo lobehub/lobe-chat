@@ -3,6 +3,7 @@ import type { SerializedEditorState, SerializedLexicalNode } from 'lexical';
 import * as Y from 'yjs';
 
 import { loadEditorYjs } from './editorYjs';
+import type { PageDraft } from './session';
 
 type SerializedEditor = SerializedEditorState<SerializedLexicalNode>;
 
@@ -43,13 +44,11 @@ const createForkProvider = () => {
 
 const settle = () => new Promise((resolve) => setTimeout(resolve, 0));
 
-export interface PageFork {
-  destroy: () => void;
+export interface PageFork extends PageDraft {
   diff: () => Uint8Array;
   doc: Y.Doc;
   editor: HeadlessEditor;
   hasChanges: () => boolean;
-  stableIds: () => Map<string, string>;
 }
 
 const sameBytes = (a: Uint8Array, b: Uint8Array) =>
@@ -122,11 +121,33 @@ const collectStableIds = (editor: HeadlessEditor, yjsService: any) => {
   return ids;
 };
 
+export const PAGE_META_KEY = 'meta';
+
+export const readPageTitle = (doc: Y.Doc) => {
+  const title = doc.getMap(PAGE_META_KEY).get('title');
+  return typeof title === 'string' ? title : undefined;
+};
+
+// Top-level blocks in the room itself (the @lexical/yjs root), independent of
+// whether the editor binding managed to read them back.
+const countRoomBlocks = (doc: Y.Doc) =>
+  doc
+    .get('root', Y.XmlText)
+    .toDelta()
+    .filter((op: { insert: unknown }) => typeof op.insert !== 'string').length;
+
 export const projectPageState = async (state: Uint8Array) => {
   const fork = await openPageFork(state);
   try {
-    const title = fork.doc.getMap('meta').get('title');
-    return { ...fork.editor.export(), title: typeof title === 'string' ? title : undefined };
+    const exported = fork.editor.export();
+    const exportedBlocks =
+      (exported.editorData as SerializedEditor | undefined)?.root?.children?.length ?? 0;
+    return {
+      ...exported,
+      /** The room holds blocks the binding did not export: projecting would erase them. */
+      lostBlocks: exportedBlocks === 0 && countRoomBlocks(fork.doc) > 0,
+      title: readPageTitle(fork.doc),
+    };
   } finally {
     fork.destroy();
   }

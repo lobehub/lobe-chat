@@ -54,18 +54,19 @@ const DocumentIdMode = memo<DocumentIdModeProps>(
     storeUpdater('editor', editor);
 
     // Get document store actions
-    const [onEditorInit, handleContentChangeStore, useFetchDocument, performSave] =
+    const [onEditorInit, handleContentChangeStore, useFetchDocument, performSave, saveVersion] =
       useDocumentStore((s) => [
         s.onEditorInit,
         s.handleContentChange,
         s.useFetchDocument,
         s.performSave,
+        s.saveVersion,
       ]);
 
     const handleManualSave = useCallback(async () => {
       handleContentChangeStore();
-      await performSave(documentId, undefined, { saveSource: 'manual' });
-    }, [documentId, handleContentChangeStore, performSave]);
+      await saveVersion(documentId);
+    }, [documentId, handleContentChangeStore, saveVersion]);
 
     useSaveDocumentHotkey(handleManualSave);
 

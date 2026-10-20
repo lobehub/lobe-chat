@@ -34,6 +34,7 @@ import { AgentDocumentVfsError } from '../agentDocumentVfs/errors';
 import { isManagedSkillDocument } from '../agentDocumentVfs/mounts/skills/providers/providerSkillsAgentDocumentUtils';
 import { DocumentService } from '../document';
 import { FileService } from '../file';
+import { type PageBody, writePageBodyThroughRoom } from '../pageCollab/bodyWriter';
 import { TOOL_RESULTS_DIR_NAME } from '../toolExecution/constants';
 import { isRawTextAgentDocument } from './contentFormat';
 import {
@@ -857,6 +858,19 @@ export class AgentDocumentsService {
     return this.projectDocumentContent(doc);
   }
 
+  /**
+   * A document open in a live collaboration room has the room projected over
+   * its row, so an edit written to the row would be lost; it goes into the room
+   * instead. False when there is no live room and the row is the place to write.
+   */
+  private writeThroughRoom(documentId: string, body: PageBody) {
+    return writePageBodyThroughRoom(this.db, documentId, body, {
+      saveSource: 'llm_call',
+      userId: this.userId,
+      workspaceId: this.workspaceId,
+    });
+  }
+
   async upsertDocumentByFilename({
     agentId,
     filename,
@@ -871,6 +885,10 @@ export class AgentDocumentsService {
     const snapshot = await createAgentMarkdownSnapshot(content);
 
     if (existing && projectedExisting?.content !== snapshot.content) {
+      const body = { editorData: snapshot.editorData, markdown: snapshot.content };
+      if (await this.writeThroughRoom(existing.documentId, body)) {
+        return (await this.agentDocumentModel.findById(existing.id)) ?? existing;
+      }
       await this.documentService.trySaveCurrentDocumentHistory(existing.documentId, 'llm_call');
     }
 
@@ -885,6 +903,10 @@ export class AgentDocumentsService {
     const snapshot = await createAgentMarkdownSnapshot(content);
 
     if (doc.content !== snapshot.content) {
+      const body = { editorData: snapshot.editorData, markdown: snapshot.content };
+      if (await this.writeThroughRoom(doc.documentId, body)) {
+        return this.getDocumentByIdInAgent(documentId, expectedAgentId);
+      }
       await this.documentService.trySaveCurrentDocumentHistory(doc.documentId, 'llm_call');
     }
 
@@ -908,6 +930,11 @@ export class AgentDocumentsService {
       fallbackContent: doc.content,
       operations,
     });
+
+    const body = { editorData: snapshot.editorData, markdown: snapshot.content };
+    if (await this.writeThroughRoom(doc.documentId, body)) {
+      return this.getDocumentByIdInAgent(documentId, expectedAgentId);
+    }
 
     // History must capture the successfully hydrated pre-edit state. Persisted
     // editorData may be the stale payload that forced Markdown recovery.

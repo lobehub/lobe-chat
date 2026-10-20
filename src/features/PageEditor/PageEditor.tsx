@@ -18,7 +18,7 @@ import { systemStatusSelectors } from '@/store/global/selectors';
 import { usePageStore } from '@/store/page';
 import { StyleSheet } from '@/utils/styles';
 
-import { usePageCollabEnabled } from './collab/usePageCollab';
+import { usePageCollabEligible, usePageCollabEnabled } from './collab/usePageCollab';
 import DocumentComments from './DocumentComments';
 import BlockCommentMarker from './DocumentComments/BlockCommentMarker';
 import { DocumentCommentsProvider } from './DocumentComments/context';
@@ -477,13 +477,18 @@ export const PageEditor: FC<PageEditorProps> = ({
   const { allowed: canEdit } = usePermission('edit_own_content');
   const deletePage = usePageStore((s) => s.deletePage);
   const collabEnabled = usePageCollabEnabled();
+  // Known once the document loads; a SKILL.md then leaves the room path.
+  const collabEligible = usePageCollabEligible(pageId);
   const [collabEpoch, setCollabEpoch] = useState(0);
   const handleCollabReset = useCallback(() => setCollabEpoch((epoch) => epoch + 1), []);
 
   return (
     <PageAgentProvider pageId={pageId} syncActiveAgent={syncPageAgentActiveState}>
-      {/* A collaboration binding lives for the editor kernel's lifetime, so each room gets a fresh kernel. */}
-      <EditorProvider key={collabEnabled ? `${pageId}:${collabEpoch}` : undefined}>
+      {/* A collaboration binding lives for the editor kernel's lifetime, so each room gets a
+          fresh kernel, and a document that leaves the room path drops the binding. */}
+      <EditorProvider
+        key={collabEnabled ? `${pageId}:${collabEligible ? collabEpoch : 'stored'}` : undefined}
+      >
         <PageEditorProvider
           emoji={emoji}
           knowledgeBaseId={knowledgeBaseId}
