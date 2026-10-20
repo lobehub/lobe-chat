@@ -17,7 +17,6 @@ import type {
   MessageMetadata,
   SendMessageParams,
   SendMessageServerResponse,
-  UIChatMessage,
 } from '@lobechat/types';
 import {
   applyTopicModelToHeterogeneousProvider,
@@ -133,6 +132,10 @@ import {
   parseSingleAgentMentionDirectRoute,
   processCommands,
 } from './commandBus';
+import {
+  attachSendTimeMetadataToUserMessage,
+  mergePartialPersistedMessages,
+} from './persistedMessages';
 import { resolveExistingTopicForRun } from './resolveExistingTopic';
 
 /**
@@ -216,46 +219,6 @@ const throwIfSendAborted = (signal?: AbortSignal) => {
   throw signal.reason instanceof Error
     ? signal.reason
     : new DOMException('Message send was cancelled', 'AbortError');
-};
-
-const attachSendTimeMetadataToUserMessage = (
-  messages: UIChatMessage[],
-  userMessageId: string,
-  metadata: MessageMetadata | undefined,
-): UIChatMessage[] => {
-  if (!metadata) return messages;
-
-  let changed = false;
-  const nextMessages = messages.map((message) => {
-    if (message.id !== userMessageId) return message;
-
-    changed = true;
-    return {
-      ...message,
-      metadata: {
-        ...(message.metadata ?? undefined),
-        ...metadata,
-      },
-    };
-  });
-
-  return changed ? nextMessages : messages;
-};
-
-const mergePartialPersistedMessages = (
-  currentMessages: UIChatMessage[],
-  persistedMessages: UIChatMessage[],
-  replacedMessageIds: string[],
-): UIChatMessage[] => {
-  const replacedIdSet = new Set(replacedMessageIds);
-  const persistedIdSet = new Set(persistedMessages.map((message) => message.id));
-
-  return [
-    ...currentMessages.filter(
-      (message) => !replacedIdSet.has(message.id) && !persistedIdSet.has(message.id),
-    ),
-    ...persistedMessages,
-  ];
 };
 
 export class ConversationLifecycleActionImpl {
@@ -1902,6 +1865,9 @@ export class ConversationLifecycleActionImpl {
             ? { ...operationContext, topicId: undefined }
             : operationContext,
           messageContext: operationContext,
+          // The server persists the user row on this path; without these it
+          // replaces the optimistic row and the attached quote disappears.
+          contextSelections: contextSelections?.length ? contextSelections : undefined,
           fileIds: fileIdList,
           message,
           // The server persists the user row on this path, so a queued
@@ -1915,6 +1881,7 @@ export class ConversationLifecycleActionImpl {
           clientOperations,
           replacesOperationId: replaceableGatewayOperationId,
           optimisticTopic,
+          pageSelections: pageSelections?.length ? pageSelections : undefined,
           projectWorkingDirectoryId: stagedDirectory?.id,
           // Forward @-mentioned tool ids so the server runtime enables them for
           // this run — the gateway/server path otherwise never sees the mention

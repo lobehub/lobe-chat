@@ -39,9 +39,13 @@ export interface ExecRunContext {
   /** Persisted assistant placeholder row id (spinner anchor / error sink). */
   assistantMessageId: string;
   canUseDevice: boolean;
+  /** Selections attached to this turn's user message; see `ExecAgentParams.contextSelections`. */
+  contextSelections?: ExecAgentParams['contextSelections'];
   deviceAccessReason: DeviceAccessReason;
   /** Effective model for this run (topic-pinned model already applied). */
   model: string;
+  /** Page-editor selections attached to this turn; see `ExecAgentParams.pageSelections`. */
+  pageSelections?: ExecAgentParams['pageSelections'];
   parentMessageId?: string;
   /** Persistence-attribution agent id (Agent Signal marker aware). */
   persistAgentId: string;

@@ -22,6 +22,7 @@ export type ComposerRunRequest = Pick<
   | 'autoStart'
   | 'clientIds'
   | 'clientProtocol'
+  | 'contextSelections'
   | 'deviceId'
   | 'existingMessageIds'
   | 'fileIds'
@@ -29,6 +30,7 @@ export type ComposerRunRequest = Pick<
   | 'llmExecutor'
   | 'localDeviceId'
   | 'mentionedAgents'
+  | 'pageSelections'
   | 'parentMessageId'
   | 'prompt'
   | 'replacesOperationId'
@@ -101,6 +103,7 @@ export const startComposerRun = async (ctx: ComposerRunContext, input: ComposerR
       replacesOperationId: input.replacesOperationId,
     },
     clientProtocol: input.clientProtocol,
+    contextSelections: input.contextSelections,
     includeFinalState: input.includeFinalState,
     llmExecutor: input.llmExecutor,
     // This path serves the composer (`aiAgentService.execAgentTask`).
@@ -140,6 +143,7 @@ export const startComposerRun = async (ctx: ComposerRunContext, input: ComposerR
     }),
     fileIds: input.fileIds,
     mentionedAgents: input.mentionedAgents,
+    pageSelections: input.pageSelections,
     parentMessageId,
     prompt: input.prompt,
     replacesOperationId: input.replacesOperationId,

@@ -18,10 +18,12 @@ import type {
   ChatTopic,
   ChatTopicMetadata,
   ChatTopicStatus,
+  ContextSelection,
   ConversationContext,
   ExecAgentClientIds,
   ExecAgentResult,
   MessageMetadata,
+  PageSelection,
   RuntimeMentionedAgent,
 } from '@lobechat/types';
 import { resolveAgentAgencyConfig } from '@lobechat/types';
@@ -88,6 +90,7 @@ import { createGatewayEventBuffer } from './gatewayEventBuffer';
 import { createGatewayEventHandler } from './gatewayEventHandler';
 import { createGatewayEventRouter } from './gatewayEventRouter';
 import { createGatewayMemberStreamHandler, mergeGroupSnapshot } from './gatewayMemberStreamHandler';
+import { awaitStartRequest, interruptGatewayTaskOrThrow } from './gatewayStartRequest';
 import {
   type GatewayMuxIdentity,
   getGatewayMux,
@@ -101,71 +104,6 @@ const getGatewayServerConfig = () =>
   (typeof window !== 'undefined'
     ? window.global_serverConfigStore?.getState()?.serverConfig
     : undefined) ?? getServerConfigStoreState()?.serverConfig;
-
-/**
- * Interrupts a gateway operation and rejects when its physical shutdown is unconfirmed.
- *
- * Device confirmation is authoritative for local heterogeneous agents because
- * their server runtime may already be absent while the native process still
- * needs to release its writer. Other runtimes fall back to the service result.
- */
-const interruptGatewayTaskOrThrow = async (
-  params: Parameters<typeof aiAgentService.interruptTask>[0],
-): Promise<void> => {
-  const result = await aiAgentService.interruptTask(params);
-  const cancellationConfirmed = result.deviceCancellationConfirmed ?? result.success;
-
-  if (!cancellationConfirmed) {
-    throw new Error(
-      `Gateway operation ${params.operationId ?? 'unknown'} cancellation unconfirmed`,
-    );
-  }
-};
-
-/**
- * Waits for a server start request while honoring a caller abort locally.
- *
- * Use when:
- * - The ChatInput Stop can fire while `execAgentTask` is still in flight.
- *
- * Expects:
- * - `request` was issued WITHOUT the abort signal. Aborting the fetch only
- *   drops the response: the server still persists the turn and dispatches the
- *   run (for a connected device, it spawns the native CLI), and the client
- *   would never learn the operation id needed to stop it.
- *
- * Returns:
- * - The server result, or rejects with an AbortError as soon as the caller
- *   aborts. After such an abort, `onAbandoned` receives the result the server
- *   eventually returns so the caller can interrupt that orphaned run.
- */
-const awaitStartRequest = <T>(
-  request: Promise<T>,
-  signal: AbortSignal | undefined,
-  onAbandoned: (result: T) => Promise<unknown>,
-): Promise<T> => {
-  if (!signal) return request;
-
-  return new Promise<T>((resolve, reject) => {
-    const onAbort = () => {
-      reject(new DOMException('Message send was cancelled', 'AbortError'));
-      request
-        .then(onAbandoned)
-        .catch((error) => console.error('[Gateway] interrupt after aborted start failed:', error));
-    };
-    signal.addEventListener('abort', onAbort, { once: true });
-    request.then(
-      (result) => {
-        signal.removeEventListener('abort', onAbort);
-        resolve(result);
-      },
-      (error) => {
-        signal.removeEventListener('abort', onAbort);
-        reject(error);
-      },
-    );
-  });
-};
 
 /**
  * When the agent runs against the local machine, resolve this desktop's
@@ -1039,6 +977,11 @@ export class GatewayActionImpl {
     clientIds?: ExecAgentClientIds;
     /** Agent/runtime context used to execute the server operation. */
     context: ConversationContext;
+    /**
+     * Content attached to the message from the conversation, a page or code.
+     * The server persists it on the user row that replaces the optimistic one.
+     */
+    contextSelections?: ContextSelection[];
     /** File IDs of already-uploaded attachments to attach to the new user message */
     fileIds?: string[];
     message: string;
@@ -1058,6 +1001,8 @@ export class GatewayActionImpl {
     onComplete?: () => void;
     /** Temporary sidebar topic inserted by sendMessage before the server creates the real topic. */
     optimisticTopic?: { id: string; metadata?: ChatTopicMetadata; title: string };
+    /** Page-editor selections, mirrored from `contextSelections` for compatibility. */
+    pageSelections?: PageSelection[];
     /** Parent message ID for regeneration/continue (skip user message creation, branch from this message) */
     parentMessageId?: string;
     /**
@@ -1136,6 +1081,7 @@ export class GatewayActionImpl {
       clientIds,
       clientOperations,
       context: executionContext,
+      contextSelections,
       fileIds,
       message,
       messageContext = executionContext,
@@ -1144,6 +1090,7 @@ export class GatewayActionImpl {
       onMessageAccepted,
       onTopicCreated,
       optimisticTopic,
+      pageSelections,
       parentMessageId,
       parentOperationId,
       precreatedResult,
@@ -1338,9 +1285,11 @@ export class GatewayActionImpl {
               },
               ...desktopDeviceHints,
               clientOperations,
+              contextSelections,
               fileIds,
               replacesOperationId,
               mentionedAgents,
+              pageSelections,
               parentMessageId,
               prompt: message,
               resumeApproval,

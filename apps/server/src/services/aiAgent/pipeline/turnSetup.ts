@@ -347,6 +347,8 @@ export interface TurnSetupInput {
   botContext?: InternalExecAgentParams['botContext'];
   botSender?: InternalExecAgentParams['botSender'];
   clientIds?: InternalExecAgentParams['clientIds'];
+  /** Attached selections; see `ExecAgentParams.contextSelections`. */
+  contextSelections?: InternalExecAgentParams['contextSelections'];
   /** Stable assistant id for a generic intervention continuation. */
   continuationAssistantId?: string;
   conversationAgentId: string;
@@ -356,6 +358,8 @@ export interface TurnSetupInput {
   files?: InternalExecAgentParams['files'];
   modelOverride?: string;
   operationTaskId?: string;
+  /** Page-editor selections; see `ExecAgentParams.pageSelections`. */
+  pageSelections?: InternalExecAgentParams['pageSelections'];
   parentMessageId?: string;
   prompt: string;
   providerOverride?: string;
@@ -447,6 +451,7 @@ export const setupTurn = async (
     botSender,
     clientIds,
     continuationAssistantId,
+    contextSelections,
     conversationAgentId,
     createdThreadId,
     externalOrigin,
@@ -454,6 +459,7 @@ export const setupTurn = async (
     files,
     modelOverride,
     operationTaskId,
+    pageSelections,
     parentMessageId,
     prompt,
     providerOverride,
@@ -870,7 +876,9 @@ export const setupTurn = async (
     agentSender,
     appContext,
     botSender,
+    contextSelections,
     externalOrigin,
+    pageSelections,
     selectedSkillIds,
     steer,
     trigger,
