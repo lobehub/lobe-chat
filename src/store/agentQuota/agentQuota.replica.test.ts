@@ -303,6 +303,18 @@ describe('agent quota replicas', () => {
       expect(agentQuotaSelectors.accounts(useAgentQuotaStore.getState())?.[0]?.id).toBe('a1');
     });
 
+    it('never answers a new identity with the previous identity its accounts', async () => {
+      vi.spyOn(agentQuotaService, 'listAccounts')
+        .mockResolvedValueOnce([account('theirs')])
+        .mockRejectedValue(new Error('offline'));
+      await useAgentQuotaStore.getState().readQuotaAccounts();
+
+      // Switch identity; the new identity's first read fails.
+      scope = `quota-user-${randomUUID()}:personal`;
+      await expect(useAgentQuotaStore.getState().readQuotaAccounts()).rejects.toThrow('offline');
+      expect(agentQuotaSelectors.accounts(useAgentQuotaStore.getState())).toBeUndefined();
+    });
+
     it('renames an account in the replica and its stored copy', async () => {
       vi.spyOn(agentQuotaService, 'listAccounts')
         .mockResolvedValueOnce([account('a1')])

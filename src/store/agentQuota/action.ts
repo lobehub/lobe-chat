@@ -317,12 +317,19 @@ export class ActionImpl {
 
   #read = async <T>(
     resource: QuotaResourceName,
-    slice: { fetch: (params: string, options?: ReadOptions) => Promise<{ data: T }> },
+    slice: {
+      ensureScope: (scope: string) => void;
+      fetch: (params: string, options?: ReadOptions) => Promise<{ data: T }>;
+    },
     key: string,
     field: 'quotaAccountsMap' | 'quotaBindingsMap' | 'quotaReadingsMap',
     { fresh = false }: ReadOptions = {},
   ): Promise<T> => {
     const scope = quotaAccountsResource.scope.get();
+    // The samplers read with no view mounted: drop a previous identity's
+    // entries first, so neither the dedupe nor the failure fallback below can
+    // answer with them.
+    slice.ensureScope(scope);
     const cached = (this.#get()[field] as Record<string, T>)[key];
     const appliedAt = this.#appliedAt.get(quotaConfirmedKey(scope, resource, key));
     if (
@@ -337,8 +344,9 @@ export class ActionImpl {
       const { data } = await slice.fetch(key, fresh ? { fresh: true } : undefined);
       return data;
     } catch (error) {
-      // A failed refresh keeps answering with the last confirmed value.
-      if (cached !== undefined) return cached;
+      // A failed refresh keeps answering with the last confirmed value of this
+      // identity — never with one an identity switch left behind meanwhile.
+      if (cached !== undefined && quotaAccountsResource.scope.get() === scope) return cached;
       throw error;
     }
   };
