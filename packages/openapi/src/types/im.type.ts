@@ -11,23 +11,33 @@ import { z } from 'zod';
  * read the user's messages.
  */
 
-export const ImSendRequestSchema = z.object({
-  /** The agent the user is talking to. */
-  agentId: z.string().min(1),
-  /**
-   * Client-minted id for the user message (`msg_…`). Makes the send idempotent:
-   * retrying with the same id returns the original receipt instead of starting
-   * a second run.
-   */
-  clientMessageId: z
-    .string()
-    .regex(/^msg_[\w-]{8,64}$/, 'clientMessageId must look like msg_<8-64 url-safe chars>')
-    .optional(),
-  /** The message text. */
-  content: z.string().trim().min(1).max(100_000),
-  /** The conversation to continue; omit to start a new one for the agent. */
-  topicId: z.string().min(1).nullish(),
-});
+export const ImSendRequestSchema = z
+  .object({
+    /**
+     * The agent the user is talking to. With `groupId` it must be a member of
+     * that group; the group's supervisor still runs the turn.
+     */
+    agentId: z.string().min(1).optional(),
+    /**
+     * Client-minted id for the user message (`msg_…`). Makes the send idempotent:
+     * retrying with the same id returns the original receipt instead of starting
+     * a second run.
+     */
+    clientMessageId: z
+      .string()
+      .regex(/^msg_[\w-]{8,64}$/, 'clientMessageId must look like msg_<8-64 url-safe chars>')
+      .optional(),
+    /** The message text. */
+    content: z.string().trim().min(1).max(100_000),
+    /** The group chat the user is talking to; its supervisor orchestrates the members. */
+    groupId: z.string().min(1).optional(),
+    /** The conversation to continue; omit to start a new one for the agent or group. */
+    topicId: z.string().min(1).nullish(),
+  })
+  .refine((value) => !!value.agentId || !!value.groupId, {
+    message: 'agentId or groupId is required',
+    path: ['agentId'],
+  });
 export type ImSendRequest = z.infer<typeof ImSendRequestSchema>;
 
 export const ImTopicParamSchema = z.object({
@@ -68,6 +78,8 @@ export const ImReadRequestSchema = z.object({
 export type ImReadRequest = z.infer<typeof ImReadRequestSchema>;
 
 export interface ImMessage {
+  /** The agent that wrote the message; null on user messages. */
+  agentId: string | null;
   content: string;
   createdAt: string;
   /** Set when the agent's turn failed; the client shows a retry affordance. */

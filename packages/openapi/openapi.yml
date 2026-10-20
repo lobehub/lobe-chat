@@ -12713,6 +12713,10 @@ paths:
                       userMessage:
                         additionalProperties: false
                         properties:
+                          agentId:
+                            type:
+                              - string
+                              - "null"
                           content:
                             type: string
                           createdAt:
@@ -12728,6 +12732,7 @@ paths:
                               - user
                             type: string
                         required:
+                          - agentId
                           - content
                           - createdAt
                           - error
@@ -12825,13 +12830,15 @@ paths:
                   type: string
                   minLength: 1
                   maxLength: 100000
+                groupId:
+                  type: string
+                  minLength: 1
                 topicId:
                   anyOf:
                     - type: string
                       minLength: 1
                     - type: "null"
               required:
-                - agentId
                 - content
   /api/v1/im/topics/{topicId}/sync:
     get:
@@ -12855,6 +12862,10 @@ paths:
                         items:
                           additionalProperties: false
                           properties:
+                            agentId:
+                              type:
+                                - string
+                                - "null"
                             content:
                               type: string
                             createdAt:
@@ -12870,6 +12881,7 @@ paths:
                                 - user
                               type: string
                           required:
+                            - agentId
                             - content
                             - createdAt
                             - error

@@ -5866,9 +5866,10 @@ export type PostApiV1GoalsByIdRestartResponse = PostApiV1GoalsByIdRestartRespons
 
 export type PostApiV1ImMessagesData = {
     body: {
-        agentId: string;
+        agentId?: string;
         clientMessageId?: string;
         content: string;
+        groupId?: string;
         topicId?: string | null;
     };
     path?: never;
@@ -5923,6 +5924,7 @@ export type PostApiV1ImMessagesResponses = {
             operationId: string | null;
             topicId: string;
             userMessage: {
+                agentId: string | null;
                 content: string;
                 createdAt: string;
                 error: boolean;
@@ -5997,6 +5999,7 @@ export type GetApiV1ImTopicsByTopicIdSyncResponses = {
         data?: {
             cursor: string;
             messages: Array<{
+                agentId: string | null;
                 content: string;
                 createdAt: string;
                 error: boolean;
