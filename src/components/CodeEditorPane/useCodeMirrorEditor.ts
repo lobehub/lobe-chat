@@ -88,12 +88,12 @@ export const useCodeMirrorEditor = ({
   // indentation through a ref to stay lint-clean.
   const indentRef = useRef(indent);
 
-  // `value`, `mode`, `readOnly` and `lineWrapping` may change while
+  // `value`, `mode`, `readOnly`, `lineWrapping` and `isDark` may change while
   // `loadCodeMirror()` is still pending. Their update effects run before the
   // instance exists and no-op, so the editor would initialize with mount-time
   // values; the init path reads the latest values through this ref.
-  const latestRef = useRef({ value, mode, readOnly, lineWrapping });
-  latestRef.current = { value, mode, readOnly, lineWrapping };
+  const latestRef = useRef({ value, mode, readOnly, lineWrapping, isDark });
+  latestRef.current = { value, mode, readOnly, lineWrapping, isDark };
 
   useEffect(() => {
     if (!textareaRef.current) return;
@@ -125,7 +125,7 @@ export const useCodeMirrorEditor = ({
 
       view.dispatch({
         effects: instance.optionHelper.theme.reconfigure(
-          view.constructor.theme(lobeTheme, { dark: isDark }),
+          view.constructor.theme(lobeTheme, { dark: latest.isDark }),
         ),
       });
 
@@ -148,7 +148,8 @@ export const useCodeMirrorEditor = ({
       syncCursor();
       const events = ['keyup', 'mouseup', 'focusin'] as const;
       // Removed by `detachCursorListeners` in this effect's cleanup, which the
-      // loader promise hides from static analysis.
+      // lint rule cannot follow across the loader promise.
+      // eslint-disable-next-line @eslint-react/web-api/no-leaked-event-listener
       for (const event of events) view.dom.addEventListener(event, syncCursor);
       detachCursorListeners = () => {
         for (const event of events) view.dom.removeEventListener(event, syncCursor);
@@ -165,6 +166,10 @@ export const useCodeMirrorEditor = ({
         instanceRef.current = null;
       }
     };
+    // Mount-only on purpose: the instance is created once from this textarea
+    // and torn down with it, and every later prop change is pushed through
+    // the update effects below.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {

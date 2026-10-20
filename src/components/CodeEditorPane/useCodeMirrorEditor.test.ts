@@ -107,15 +107,17 @@ describe('useCodeMirrorEditor', () => {
     });
   });
 
-  // Regression for the async initialization race: `value`, `mode` and
-  // `readOnly` changing while `loadCodeMirror()` is pending used to be dropped,
+  // Regression for the async initialization race: `value`, `mode`, `readOnly`
+  // and `isDark` changing while `loadCodeMirror()` is pending used to be dropped,
   // because the update effects run before the editor instance exists. The
-  // editor then initialized with the mount-time values.
+  // editor then initialized with the mount-time values — and a theme that
+  // toggled while the bundle loaded left the editor on the old theme until the
+  // user switched modes.
   it('initializes with the latest values when props change while the bundle is loading', async () => {
     const { resolve } = deferLoad();
     const { rerender } = setup();
 
-    rerender({ mode: 'python', readOnly: true, value: "print('hi')" });
+    rerender({ isDark: true, mode: 'python', readOnly: true, value: "print('hi')" });
 
     const fake = createFakeCodeMirror();
     await resolve({ fromTextArea: fake.fromTextArea });
@@ -127,6 +129,10 @@ describe('useCodeMirrorEditor', () => {
       readOnly: true,
       value: "print('hi')",
     });
+    // The init path themes the editor once, so it has to read the theme that is
+    // current when the bundle resolves rather than the one at mount.
+    expect(fake.instance.view.constructor.theme).toHaveBeenCalledWith({}, { dark: true });
+    expect(fake.instance.optionHelper.theme.reconfigure).toHaveBeenCalledTimes(1);
   });
 
   it('pushes prop changes that arrive after initialization', async () => {
