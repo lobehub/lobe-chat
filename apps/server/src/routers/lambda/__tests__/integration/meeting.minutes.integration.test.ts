@@ -258,6 +258,7 @@ describe('meeting minutes integration', () => {
       title: '2 tasks created from "周会"',
       type: 'meeting_tasks_created',
     });
+    expect(inbox[0].content.split('\n')[0]).toBe('2 tasks created from "周会":');
     expect(inbox[0].content).toContain(
       `${releaseTask.identifier} 写 beta 发布说明（含升级指南） → Bob Wang (due 2026-10-27)`,
     );

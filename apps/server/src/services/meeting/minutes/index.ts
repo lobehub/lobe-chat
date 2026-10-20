@@ -388,15 +388,17 @@ export class MeetingMinutesService {
       return `- ${update.taskIdentifier} ${update.text}${owner}${due}`;
     });
 
+    const title = `${count} ${count === 1 ? 'task' : 'tasks'} created from "${meeting.title}"`;
     try {
       await new NotificationModel(this.db, this.userId, {
         workspaceId: this.workspaceId ?? null,
       }).create({
         actionUrl: `/meeting/${meeting.id}`,
         category: 'meeting',
-        content: lines.join('\n'),
+        // The inbox row previews the content, so it opens with the summary line too.
+        content: [`${title}:`, ...lines].join('\n'),
         dedupeKey: `meeting_tasks:${meeting.id}:${[...updates.keys()].sort().join(',')}`,
-        title: `${count} ${count === 1 ? 'task' : 'tasks'} created from "${meeting.title}"`,
+        title,
         type: 'meeting_tasks_created',
         workspaceId: this.workspaceId ?? null,
       });
