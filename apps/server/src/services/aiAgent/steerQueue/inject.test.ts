@@ -66,6 +66,11 @@ describe('canJoinRunningTurn', () => {
 
   it.each([
     ['an attachment', { fileIds: ['f1'] }],
+    [
+      'an attached selection',
+      { contextSelections: [{ content: 'q', id: 'c1', source: 'text' as const }] },
+    ],
+    ['a page selection', { pageSelections: [{ content: 'p', id: 'p1', pageId: 'page-1' }] }],
     ['a selected tool', { selectedToolIds: ['t1'] }],
     ['a selected skill', { selectedSkillIds: ['s1'] }],
     ['an @-mention', { mentionedAgents: [{ id: 'a2', name: 'B' }] }],

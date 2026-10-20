@@ -1,4 +1,4 @@
-import type { AgentSenderMetadata } from '@lobechat/types';
+import type { AgentSenderMetadata, ContextSelection, PageSelection } from '@lobechat/types';
 import { RequestTrigger } from '@lobechat/types';
 
 import type { InternalExecAgentParams } from '../types';
@@ -7,7 +7,9 @@ export interface UserTurnMetadataInput {
   agentSender?: AgentSenderMetadata;
   appContext?: InternalExecAgentParams['appContext'];
   botSender?: InternalExecAgentParams['botSender'];
+  contextSelections?: ContextSelection[];
   externalOrigin?: InternalExecAgentParams['externalOrigin'];
+  pageSelections?: PageSelection[];
   selectedSkillIds?: string[];
   steer?: boolean;
   trigger?: string;
@@ -22,7 +24,9 @@ export const buildUserTurnMetadata = ({
   agentSender,
   appContext,
   botSender,
+  contextSelections,
   externalOrigin,
+  pageSelections,
   selectedSkillIds,
   steer,
   trigger,
@@ -48,4 +52,8 @@ export const buildUserTurnMetadata = ({
   // Later turns read the selection back from history, so the skills stay
   // injected for the rest of the topic (see `collectSelectedSkillIds`).
   ...(selectedSkillIds?.length ? { selectedSkillIds: [...new Set(selectedSkillIds)] } : undefined),
+  // Content attached from the conversation, a page or code. The bubble renders
+  // it as a quote and the context engine injects it for this and later turns.
+  ...(contextSelections?.length ? { contextSelections } : undefined),
+  ...(pageSelections?.length ? { pageSelections } : undefined),
 });

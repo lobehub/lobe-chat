@@ -54,6 +54,8 @@ export const mergeQueuedFollowUps = (entries: QueuedFollowUp[]): QueuedFollowUpR
   const latest = sorted.at(-1)!.request;
 
   const fileIds = uniq(sorted.flatMap((entry) => entry.request.fileIds ?? []));
+  const contextSelections = sorted.flatMap((entry) => entry.request.contextSelections ?? []);
+  const pageSelections = sorted.flatMap((entry) => entry.request.pageSelections ?? []);
   const selectedSkillIds = uniq(sorted.flatMap((entry) => entry.request.selectedSkillIds ?? []));
   const selectedToolIds = uniq(sorted.flatMap((entry) => entry.request.selectedToolIds ?? []));
   const mentionedAgents = [
@@ -67,8 +69,10 @@ export const mergeQueuedFollowUps = (entries: QueuedFollowUp[]): QueuedFollowUpR
     // Client-minted row ids belong to one optimistic send; a merged send
     // creates rows none of the queued sends announced.
     clientIds: sorted.length === 1 ? latest.clientIds : undefined,
+    contextSelections: contextSelections.length ? contextSelections : undefined,
     fileIds: fileIds.length ? fileIds : undefined,
     mentionedAgents: mentionedAgents.length ? mentionedAgents : undefined,
+    pageSelections: pageSelections.length ? pageSelections : undefined,
     prompt: sorted.map((entry) => entry.request.prompt).join('\n\n'),
     selectedSkillIds: selectedSkillIds.length ? selectedSkillIds : undefined,
     selectedToolIds: selectedToolIds.length ? selectedToolIds : undefined,
