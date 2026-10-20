@@ -12,6 +12,8 @@ import { useQuickNoteStore } from './store';
 const wrapper = ({ children }: PropsWithChildren) =>
   createElement(SWRConfig, { value: { dedupingInterval: 0, provider: () => new Map() } }, children);
 
+const page = (items: QuickNoteItem[]) => ({ items, nextCursor: null });
+
 const createNoteItem = (patch: Partial<QuickNoteItem>): QuickNoteItem => ({
   content: '',
   createdAt: 1000,
@@ -34,7 +36,7 @@ describe('useFetchNotes', () => {
   /** @example A mounted surface loads the list through SWR and projects it into the store. */
   it('hydrates the store from the list request', async () => {
     const seeded = [createNoteItem({ id: 'seeded' })];
-    vi.spyOn(quickNoteService, 'getNotes').mockResolvedValue(seeded);
+    vi.spyOn(quickNoteService, 'getNotes').mockResolvedValue(page(seeded));
 
     renderHook(() => useQuickNoteStore((s) => s.useFetchNotes)(), { wrapper });
 
@@ -47,7 +49,7 @@ describe('useFetchNotes', () => {
   it('keeps local edits when another surface mounts', async () => {
     const getNotes = vi
       .spyOn(quickNoteService, 'getNotes')
-      .mockResolvedValue([createNoteItem({ content: 'server', id: 'a' })]);
+      .mockResolvedValue(page([createNoteItem({ content: 'server', id: 'a' })]));
 
     renderHook(() => useQuickNoteStore((s) => s.useFetchNotes)(), { wrapper });
     await waitFor(() => expect(useQuickNoteStore.getState().notesInit).toBe(true));
@@ -73,8 +75,8 @@ describe('useFetchNotes', () => {
   it('reloads after a store reset', async () => {
     const getNotes = vi
       .spyOn(quickNoteService, 'getNotes')
-      .mockResolvedValueOnce([createNoteItem({ id: 'old-scope' })])
-      .mockResolvedValueOnce([createNoteItem({ id: 'new-scope' })]);
+      .mockResolvedValueOnce(page([createNoteItem({ id: 'old-scope' })]))
+      .mockResolvedValueOnce(page([createNoteItem({ id: 'new-scope' })]));
 
     const view = renderHook(() => useQuickNoteStore((s) => s.useFetchNotes)(), { wrapper });
     await waitFor(() => expect(useQuickNoteStore.getState().notes[0]?.id).toBe('old-scope'));
@@ -84,5 +86,22 @@ describe('useFetchNotes', () => {
 
     await waitFor(() => expect(useQuickNoteStore.getState().notes[0]?.id).toBe('new-scope'));
     expect(getNotes).toHaveBeenCalledTimes(2);
+  });
+});
+
+describe('useFetchNote', () => {
+  /** @example A link to a note outside the loaded pages still opens that note. */
+  it('adds a note that no loaded page contains', async () => {
+    useQuickNoteStore.setState({ notes: [createNoteItem({ id: 'recent' })], notesInit: true });
+    const getNote = vi
+      .spyOn(quickNoteService, 'getNote')
+      .mockResolvedValue(createNoteItem({ content: 'older', id: 'older' }));
+
+    renderHook(() => useQuickNoteStore((s) => s.useFetchNote)('older'), { wrapper });
+
+    await waitFor(() =>
+      expect(useQuickNoteStore.getState().notes.map(({ id }) => id)).toEqual(['recent', 'older']),
+    );
+    expect(getNote).toHaveBeenCalledWith('older');
   });
 });

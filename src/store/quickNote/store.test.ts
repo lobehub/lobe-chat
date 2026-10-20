@@ -22,6 +22,14 @@ const createNoteItem = (patch: Partial<QuickNoteItem>): QuickNoteItem => ({
   ...patch,
 });
 
+const page = (
+  items: QuickNoteItem[],
+  nextCursor: { createdAt: string; id: string } | null = null,
+) => ({
+  items,
+  nextCursor,
+});
+
 const resetStore = (patch?: Partial<QuickNoteState>) => {
   useQuickNoteStore.getState().reset();
   useQuickNoteStore.setState({ ...initialState, ...patch });
@@ -158,30 +166,89 @@ describe('quickNote actions', () => {
     expect(quickNoteService.analyze).toHaveBeenCalledWith('created', 'automatic');
   });
 
-  /** @example Outages progressively reduce full-list traffic. */
+  /** @example Outages progressively reduce status traffic. */
   it('backs off consecutive polling failures', async () => {
     const note = createNoteItem({ run: { kind: 'analyze', status: 'running' } });
-    const getNotes = vi.spyOn(quickNoteService, 'getNotes').mockResolvedValue([note]);
+    vi.spyOn(quickNoteService, 'getNotes').mockResolvedValue(page([note]));
+    const getNote = vi.spyOn(quickNoteService, 'getNote').mockRejectedValue(new Error('offline'));
     await useQuickNoteStore.getState().initNotes();
-    getNotes.mockRejectedValue(new Error('offline'));
     await vi.advanceTimersByTimeAsync(15000);
     /** @example Requests occur at 1, 3, 7 and 15 seconds, not every second. */
-    expect(getNotes).toHaveBeenCalledTimes(5);
+    expect(getNote).toHaveBeenCalledTimes(4);
+  });
+
+  // ROOT CAUSE:
+  // Each active Analyze observation re-read the whole note list (every note with its full body)
+  // once a second, so polling cost grew with the number of notes the user kept.
+  /** @example Polling an active run reads only that note, never the list. */
+  it('polls only the observed note', async () => {
+    const running = createNoteItem({ id: 'running', run: { kind: 'analyze', status: 'running' } });
+    const other = createNoteItem({ content: 'untouched', id: 'other' });
+    const getNotes = vi
+      .spyOn(quickNoteService, 'getNotes')
+      .mockResolvedValue(page([running, other]));
+    const getNote = vi
+      .spyOn(quickNoteService, 'getNote')
+      .mockResolvedValue({ ...running, run: { kind: 'analyze', status: 'completed' } });
+    vi.spyOn(quickNoteService, 'getAgenticDetails').mockResolvedValue({
+      comments: [],
+      proposals: [],
+      resources: [],
+    });
+    vi.spyOn(quickNoteService, 'listTasks').mockResolvedValue([]);
+    await useQuickNoteStore.getState().initNotes();
+
+    await vi.advanceTimersByTimeAsync(ANALYZE_POLL_INTERVAL);
+
+    expect(getNotes).toHaveBeenCalledTimes(1);
+    expect(getNote).toHaveBeenCalledWith('running');
+    expect(useQuickNoteStore.getState().notes.map(({ id, run }) => [id, run?.status])).toEqual([
+      ['running', 'completed'],
+      ['other', undefined],
+    ]);
+  });
+
+  /** @example The list loads in pages; later pages append without replacing local notes. */
+  it('appends the next list page and stops at the last one', async () => {
+    const cursor = { createdAt: '2026-01-01T00:00:00.000Z', id: 'b' };
+    const getNotes = vi
+      .spyOn(quickNoteService, 'getNotes')
+      .mockResolvedValueOnce(
+        page([createNoteItem({ id: 'a' }), createNoteItem({ id: 'b' })], cursor),
+      )
+      .mockResolvedValueOnce(
+        page([createNoteItem({ id: 'b', content: 'dup' }), createNoteItem({ id: 'c' })]),
+      );
+    await useQuickNoteStore.getState().initNotes();
+    expect(useQuickNoteStore.getState().notesHasMore).toBe(true);
+
+    await useQuickNoteStore.getState().loadMoreNotes();
+    await useQuickNoteStore.getState().loadMoreNotes();
+
+    expect(getNotes).toHaveBeenCalledTimes(2);
+    expect(getNotes).toHaveBeenLastCalledWith(cursor);
+    expect(useQuickNoteStore.getState().notes.map(({ id, content }) => [id, content])).toEqual([
+      ['a', ''],
+      ['b', ''],
+      ['c', ''],
+    ]);
+    expect(useQuickNoteStore.getState().notesHasMore).toBe(false);
   });
 
   /** @example Inactive surfaces suspend requests and resume their pending runs on return. */
   it('pauses polling and resumes without losing the active run', async () => {
     const note = createNoteItem({ run: { kind: 'analyze', status: 'running' } });
-    const getNotes = vi.spyOn(quickNoteService, 'getNotes').mockResolvedValue([note]);
+    vi.spyOn(quickNoteService, 'getNotes').mockResolvedValue(page([note]));
+    const getNote = vi.spyOn(quickNoteService, 'getNote').mockResolvedValue(note);
     await useQuickNoteStore.getState().initNotes();
     useQuickNoteStore.getState().setPollingActive(false);
     await vi.advanceTimersByTimeAsync(60000);
     /** @example No status requests are made while the surface is inactive. */
-    expect(getNotes).toHaveBeenCalledTimes(1);
+    expect(getNote).toHaveBeenCalledTimes(0);
     useQuickNoteStore.getState().setPollingActive(true);
     await vi.advanceTimersByTimeAsync(1000);
     /** @example Returning resumes the existing run. */
-    expect(getNotes).toHaveBeenCalledTimes(2);
+    expect(getNote).toHaveBeenCalledTimes(1);
   });
 
   /** @example Status polling preserves another note's unsaved editor projection. */
@@ -197,7 +264,8 @@ describe('quickNote actions', () => {
         content: 'old',
         editorData: { revision: 0 },
       });
-      vi.spyOn(quickNoteService, 'getNotes').mockResolvedValue([running, editing]);
+      vi.spyOn(quickNoteService, 'getNotes').mockResolvedValue(page([running, editing]));
+      vi.spyOn(quickNoteService, 'getNote').mockResolvedValue(running);
       await useQuickNoteStore.getState().initNotes();
       await vi.advanceTimersByTimeAsync(500);
       useQuickNoteStore.getState().updateNoteContent('editing', 'new', { revision: 1 });
@@ -222,20 +290,19 @@ describe('quickNote actions', () => {
       content: 'old',
       run: { kind: 'analyze', status: 'running' },
     });
-    let resolvePoll!: (notes: QuickNoteItem[]) => void;
-    vi.spyOn(quickNoteService, 'getNotes')
-      .mockResolvedValueOnce([note])
-      .mockImplementationOnce(
-        () =>
-          new Promise((resolve) => {
-            resolvePoll = resolve;
-          }),
-      );
+    let resolvePoll!: (note: QuickNoteItem) => void;
+    vi.spyOn(quickNoteService, 'getNotes').mockResolvedValueOnce(page([note]));
+    vi.spyOn(quickNoteService, 'getNote').mockImplementationOnce(
+      () =>
+        new Promise((resolve) => {
+          resolvePoll = resolve;
+        }),
+    );
     await useQuickNoteStore.getState().initNotes();
     await vi.advanceTimersByTimeAsync(ANALYZE_POLL_INTERVAL);
     useQuickNoteStore.getState().updateNoteContent(note.id, 'saved while polling', { revision: 2 });
     await useQuickNoteStore.getState().flushPendingWrites();
-    resolvePoll([note]);
+    resolvePoll(note);
     await vi.advanceTimersByTimeAsync(0);
     /** @example An acknowledged local revision still wins over a stale request. */
     expect(useQuickNoteStore.getState().notes[0]).toMatchObject({
@@ -252,8 +319,8 @@ describe('quickNote actions', () => {
       run: { kind: 'analyze', status: 'running' },
     });
     vi.spyOn(quickNoteService, 'getNotes')
-      .mockResolvedValueOnce([old])
-      .mockResolvedValueOnce([createNoteItem({ id: 'new-scope' })]);
+      .mockResolvedValueOnce(page([old]))
+      .mockResolvedValueOnce(page([createNoteItem({ id: 'new-scope' })]));
     await useQuickNoteStore.getState().initNotes();
     useQuickNoteStore.getState().updateNoteContent(old.id, 'unsaved', { revision: 1 });
     useQuickNoteStore.getState().reset();
@@ -269,7 +336,7 @@ describe('quickNote actions', () => {
 
   /** @example A slow response from an old scope cannot repopulate a reset store. */
   it('discards a note-list response arriving after scope reset', async () => {
-    let resolveOld!: (notes: QuickNoteItem[]) => void;
+    let resolveOld!: (notes: ReturnType<typeof page>) => void;
     vi.spyOn(quickNoteService, 'getNotes')
       .mockImplementationOnce(
         () =>
@@ -277,13 +344,13 @@ describe('quickNote actions', () => {
             resolveOld = resolve;
           }),
       )
-      .mockResolvedValueOnce([createNoteItem({ id: 'current-scope' })]);
+      .mockResolvedValueOnce(page([createNoteItem({ id: 'current-scope' })]));
     const oldRequest = useQuickNoteStore.getState().initNotes();
     useQuickNoteStore.getState().reset();
     await useQuickNoteStore.getState().initNotes();
-    resolveOld([
-      createNoteItem({ id: 'private-old', run: { kind: 'analyze', status: 'running' } }),
-    ]);
+    resolveOld(
+      page([createNoteItem({ id: 'private-old', run: { kind: 'analyze', status: 'running' } })]),
+    );
     await oldRequest;
     await vi.advanceTimersByTimeAsync(ANALYZE_POLL_INTERVAL);
     /** @example The old response neither replaces the new list nor restarts old polling. */
@@ -294,7 +361,7 @@ describe('quickNote actions', () => {
 
   it('initNotes loads from the service only once', async () => {
     const seeded = [createNoteItem({ id: 'seeded' })];
-    const getNotes = vi.spyOn(quickNoteService, 'getNotes').mockResolvedValue(seeded);
+    const getNotes = vi.spyOn(quickNoteService, 'getNotes').mockResolvedValue(page(seeded));
 
     await useQuickNoteStore.getState().initNotes();
     await useQuickNoteStore.getState().initNotes();
@@ -310,7 +377,7 @@ describe('quickNote actions', () => {
     const getNotes = vi
       .spyOn(quickNoteService, 'getNotes')
       .mockRejectedValueOnce(new Error('offline'))
-      .mockResolvedValueOnce(seeded);
+      .mockResolvedValueOnce(page(seeded));
 
     await useQuickNoteStore.getState().initNotes();
 
@@ -397,7 +464,7 @@ describe('quickNote actions', () => {
       id: 'a',
       run: { kind: 'analyze', operationId: 'op-1', status: 'completed' },
     });
-    vi.spyOn(quickNoteService, 'getNotes').mockResolvedValue([completed]);
+    vi.spyOn(quickNoteService, 'getNote').mockResolvedValue(completed);
 
     useQuickNoteStore.getState().updateNoteContent('a', 'hello');
     await vi.advanceTimersByTimeAsync(PERSIST_DEBOUNCE + ANALYZE_SETTLE_DELAY);
@@ -431,7 +498,7 @@ describe('quickNote actions', () => {
     );
     expect(useQuickNoteStore.getState().notes[0].run?.status).toBe('pending');
     expect(useQuickNoteStore.getState().notes[0].run?.trigger).toBe('manual');
-    vi.spyOn(quickNoteService, 'getNotes').mockResolvedValue([createNoteItem({ id: 'a' })]);
+    vi.spyOn(quickNoteService, 'getNote').mockResolvedValue(createNoteItem({ id: 'a' }));
     await vi.advanceTimersByTimeAsync(ANALYZE_SETTLE_DELAY + 1000);
     /** @example The post-flush automatic timer cannot launch a second run. */
     expect(quickNoteService.analyze).toHaveBeenCalledTimes(1);

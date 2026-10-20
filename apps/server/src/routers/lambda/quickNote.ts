@@ -37,6 +37,15 @@ const quickNoteWriteProcedure = quickNoteProcedure.use(withScopedPermission('age
 const idInput = z.object({ id: z.string() });
 const editorDataSchema = z.record(z.string(), z.unknown());
 
+const listInput = z
+  .object({
+    // `createdAt` is cast to `timestamptz` in SQL, so reject anything that is not the ISO
+    // timestamp `nextCursor` emits instead of surfacing a Postgres error.
+    cursor: z.object({ createdAt: z.string().datetime(), id: z.string().min(1) }).nullish(),
+    limit: z.number().int().min(1).max(100).optional(),
+  })
+  .optional();
+
 const analyzeInput = idInput.extend({
   trigger: z.enum(QUICK_NOTE_ANALYZE_TRIGGERS).default('manual'),
 });
@@ -252,6 +261,15 @@ export const quickNoteRouter = router({
     }),
 
   /** Creates a Task from the note and its Comments and starts it; returns before any model call. */
+  /**
+   * One note with the same projection as a list item. Polls an active Run, and opens a note that
+   * is not in the loaded list pages, without re-reading the whole list.
+   */
+  detail: quickNoteProcedure.input(idInput).query(async ({ ctx, input }) => {
+    const model = new QuickNoteModel(ctx.serverDB, ctx.userId, ctx.workspaceId ?? undefined);
+    return (await model.queryDetail(input.id)) ?? null;
+  }),
+
   dive: quickNoteWriteProcedure.input(idInput).mutation(async ({ ctx, input }) => {
     const service = new QuickNoteProcessingService(
       ctx.serverDB,
@@ -263,9 +281,10 @@ export const quickNoteRouter = router({
     return result;
   }),
 
-  list: quickNoteProcedure.query(async ({ ctx }) => {
+  /** One list page, newest first; pass the previous page's `nextCursor` to continue. */
+  list: quickNoteProcedure.input(listInput).query(async ({ ctx, input }) => {
     const model = new QuickNoteModel(ctx.serverDB, ctx.userId, ctx.workspaceId ?? undefined);
-    return model.queryDetails();
+    return model.queryDetails({ cursor: input?.cursor, limit: input?.limit });
   }),
 
   listComments: quickNoteProcedure.input(idInput).query(async ({ ctx, input }) => {

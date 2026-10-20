@@ -1,7 +1,12 @@
 import { debounce } from 'es-toolkit/compat';
 
 import { mutate, useClientDataSWR, useOnlyFetchOnceSWR } from '@/libs/swr';
-import { type QuickNoteItem, quickNoteService } from '@/services/quickNote';
+import {
+  type QuickNoteItem,
+  type QuickNoteListCursor,
+  type QuickNoteListPage,
+  quickNoteService,
+} from '@/services/quickNote';
 import type { StoreSetter } from '@/store/types';
 import { flattenActions } from '@/store/utils/flattenActions';
 
@@ -49,7 +54,10 @@ export class QuickNoteActionImpl {
   readonly #rawSet: Setter;
   #disposed = false;
   #notesHydrated = false;
-  readonly #listKey = ['QUICK_NOTE_LIST', ++quickNoteListGeneration] as const;
+  /** Where the next list page starts; `null` once the last page is loaded. */
+  #notesCursor: QuickNoteListCursor | null = null;
+  readonly #generation = ++quickNoteListGeneration;
+  readonly #listKey = ['QUICK_NOTE_LIST', this.#generation] as const;
   #pollingActive = true;
   readonly #observedAnalyze = new Set<string>();
   readonly #pollFailures = new Map<string, number>();
@@ -130,13 +138,14 @@ export class QuickNoteActionImpl {
   };
 
   /**
-   * Loads the note list once for a mounted Quick Note surface.
+   * Loads the first page of the note list once for a mounted Quick Note surface.
    *
    * Use when:
    * - A Home feed or Note route mounts and needs the list.
    *
    * Expects:
    * - Local edits made after the first load are authoritative, so later responses do not replace them.
+   * - Later pages are appended by {@link loadMoreNotes}.
    *
    * Returns:
    * - The SWR response; results are projected into the store.
@@ -144,8 +153,67 @@ export class QuickNoteActionImpl {
   useFetchNotes = (enabled = true) =>
     useOnlyFetchOnceSWR(enabled ? this.#listKey : null, () => quickNoteService.getNotes(), {
       onError: () => this.#markNotesLoadFailed(),
-      onSuccess: (notes: QuickNoteItem[]) => this.#hydrateNotes(notes),
+      onSuccess: (page: QuickNoteListPage) => this.#hydrateNotes(page),
     });
+
+  /**
+   * Loads one note that is not in the loaded list pages (a link to an older note).
+   *
+   * Use when:
+   * - A note route opens an id the loaded pages do not contain.
+   *
+   * Returns:
+   * - The SWR response; a found note is added to the store, `undefined` means it does not exist.
+   */
+  useFetchNote = (id?: string) =>
+    useOnlyFetchOnceSWR(
+      id ? ['QUICK_NOTE_ITEM', this.#generation, id] : null,
+      () => quickNoteService.getNote(id!),
+      {
+        onSuccess: (note: QuickNoteItem | undefined) => {
+          if (!note || this.#disposed || this.#get().notes.some((item) => item.id === note.id)) {
+            return;
+          }
+          this.#set({ notes: [...this.#get().notes, note] }, false, 'useFetchNote/success');
+          this.#observeLoadedNotes([note]);
+        },
+      },
+    );
+
+  /**
+   * Appends the next page of the note list.
+   *
+   * Use when:
+   * - The list or feed reaches its end and `notesHasMore` is set.
+   *
+   * Returns:
+   * - Nothing. Notes already in the store (created or opened locally) keep their local copy; a
+   *   failure sets `notesLoadMoreError` so the surface can offer a retry.
+   */
+  loadMoreNotes = async (): Promise<void> => {
+    const cursor = this.#notesCursor;
+    if (this.#disposed || !cursor || this.#get().notesLoadingMore) return;
+
+    this.#set({ notesLoadMoreError: false, notesLoadingMore: true }, false, 'loadMoreNotes/start');
+    try {
+      const page = await quickNoteService.getNotes(cursor);
+      if (this.#disposed || this.#notesCursor !== cursor) return;
+
+      const loadedIds = new Set(this.#get().notes.map((note) => note.id));
+      const added = page.items.filter((note) => !loadedIds.has(note.id));
+      this.#notesCursor = page.nextCursor;
+      this.#set(
+        { notes: [...this.#get().notes, ...added], notesHasMore: Boolean(page.nextCursor) },
+        false,
+        'loadMoreNotes/success',
+      );
+      this.#observeLoadedNotes(added);
+    } catch {
+      this.#set({ notesLoadMoreError: true }, false, 'loadMoreNotes/failed');
+    } finally {
+      this.#set({ notesLoadingMore: false }, false, 'loadMoreNotes/end');
+    }
+  };
 
   /** Loads the note list imperatively (retry, or before creating a note outside a mounted surface). */
   initNotes = async () => {
@@ -165,31 +233,36 @@ export class QuickNoteActionImpl {
     this.#set({ notesInit: true, notesLoadError: true }, false, 'initNotes/failed');
   };
 
-  #hydrateNotes = (notes: QuickNoteItem[]) => {
+  #hydrateNotes = ({ items: notes, nextCursor }: QuickNoteListPage) => {
     if (this.#disposed) return;
     // A later response must not overwrite edits made after the first successful load.
     if (this.#notesHydrated) return;
     this.#notesHydrated = true;
+    this.#notesCursor = nextCursor;
 
-    const analyzingActiveNoteIds = notes
-      .filter(
-        (note) => note.run?.kind === 'analyze' && ['pending', 'running'].includes(note.run.status),
-      )
-      .map((note) => note.id);
+    // A note opened by link before the first page arrived stays in the list.
+    const loadedIds = new Set(notes.map((note) => note.id));
+    const openedEarly = this.#get().notes.filter((note) => !loadedIds.has(note.id));
     this.#set(
       {
-        notes,
+        notes: [...notes, ...openedEarly],
+        notesHasMore: Boolean(nextCursor),
         notesInit: true,
         notesLoadError: false,
       },
       false,
       'initNotes/success',
     );
-    for (const id of analyzingActiveNoteIds) this.#scheduleAnalyzePoll(id);
+    this.#observeLoadedNotes(notes);
+  };
+
+  /** Resumes observing the Analyze work of notes that just entered the store. */
+  #observeLoadedNotes = (notes: QuickNoteItem[]) => {
     for (const note of notes) {
-      if (note.analyzeDueAt && !analyzingActiveNoteIds.includes(note.id)) {
-        this.#scheduleAnalyze(note.id, note.analyzeDueAt);
-      }
+      const analyzing =
+        note.run?.kind === 'analyze' && ['pending', 'running'].includes(note.run.status);
+      if (analyzing) this.#scheduleAnalyzePoll(note.id);
+      else if (note.analyzeDueAt) this.#scheduleAnalyze(note.id, note.analyzeDueAt);
     }
   };
 
@@ -567,30 +640,31 @@ export class QuickNoteActionImpl {
     );
   };
 
-  /** Fetches run metadata while preserving edits pending or made during the request. */
-  #getPolledNotes = async () => {
-    const before = new Map(this.#get().notes.map((note) => [note.id, note]));
-    const pending = new Set(this.#pendingEditorData.keys());
-    const notes = await quickNoteService.getNotes();
-    const current = new Map(this.#get().notes.map((note) => [note.id, note]));
-    return notes.map((note) => {
-      const local = current.get(note.id);
-      const original = before.get(note.id);
-      if (
-        !local ||
-        (!pending.has(note.id) &&
-          !this.#pendingEditorData.has(note.id) &&
-          local.content === original?.content &&
-          local.editorData === original?.editorData)
-      )
-        return note;
-      return {
-        ...note,
-        content: local.content,
-        editorData: local.editorData,
-        updatedAt: local.updatedAt,
-      };
-    });
+  /**
+   * Fetches one note's run metadata while preserving edits pending or made during the request.
+   *
+   * Only the observed note is read, so a poll costs the same however many notes the user has.
+   */
+  #getPolledNote = async (id: string) => {
+    const original = this.#get().notes.find((note) => note.id === id);
+    const pending = this.#pendingEditorData.has(id);
+    const note = await quickNoteService.getNote(id);
+    if (!note) return undefined;
+    const local = this.#get().notes.find((item) => item.id === id);
+    if (
+      !local ||
+      (!pending &&
+        !this.#pendingEditorData.has(id) &&
+        local.content === original?.content &&
+        local.editorData === original?.editorData)
+    )
+      return note;
+    return {
+      ...note,
+      content: local.content,
+      editorData: local.editorData,
+      updatedAt: local.updatedAt,
+    };
   };
 
   #scheduleAnalyzePoll = (id: string) => {
@@ -606,13 +680,18 @@ export class QuickNoteActionImpl {
         async () => {
           this.#analyzePollers.delete(id);
           try {
-            const notes = await this.#getPolledNotes();
-            const note = notes.find((item) => item.id === id);
+            const note = await this.#getPolledNote(id);
             this.#pollFailures.delete('analyze:' + id);
-            // The list exposes one active run; another kind can hide this run until it finishes.
+            // The note exposes one active run; another kind can hide this run until it finishes.
             const active = Boolean(note?.run && ['pending', 'running'].includes(note.run.status));
 
-            this.#set({ notes }, false, active ? 'analyze/poll' : 'analyze/done');
+            if (note) {
+              this.#set(
+                { notes: this.#get().notes.map((item) => (item.id === id ? note : item)) },
+                false,
+                active ? 'analyze/poll' : 'analyze/done',
+              );
+            }
             if (active) {
               this.#scheduleAnalyzePoll(id);
             } else {

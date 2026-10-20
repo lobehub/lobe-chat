@@ -23,9 +23,12 @@ const NoteDetail = memo<{ id: string }>(({ id }) => {
     s.toggleAiPanel,
   ]);
   const topicDrawerOpen = useTaskStore(taskDetailSelectors.activeTopicDrawerTopicId);
+  const useFetchNote = useQuickNoteStore((s) => s.useFetchNote);
+  // The list loads in pages, so a link can open a note that no loaded page contains.
+  const { isLoading: noteLoading } = useFetchNote(notesInit && !exists ? id : undefined);
 
   if (!notesInit) return <ContentLoading />;
-  if (!exists) return <NotePlaceholder />;
+  if (!exists) return noteLoading ? <ContentLoading /> : <NotePlaceholder />;
 
   return (
     <Flexbox horizontal height={'100%'} width={'100%'}>

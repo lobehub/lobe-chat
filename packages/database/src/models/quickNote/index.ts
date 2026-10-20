@@ -13,6 +13,15 @@ import type { CreateQuickNoteParams } from './types';
 
 export type * from './types';
 
+/** Default number of notes in one list page. */
+export const QUICK_NOTE_LIST_PAGE_SIZE = 50;
+
+/** Position after the last note of a list page: its creation time (ISO) and id. */
+export interface QuickNoteListCursor {
+  createdAt: string;
+  id: string;
+}
+
 /**
  * Persists private Quick Notes and claims immutable processing snapshots.
  *
@@ -433,19 +442,69 @@ export class QuickNoteModel {
   };
 
   /**
-   * Lists captures with editor projections, their latest summary, and their latest Run.
+   * Lists one page of captures with editor projections, their latest summary, and their latest Run.
    *
    * Use when:
-   * - Hydrating the Quick Note list and summary panel.
+   * - Hydrating the Quick Note list and Home feed, one page at a time.
    *
    * Expects:
+   * - `cursor` is the `nextCursor` of the previous page; omit it for the first page.
    * - Run selection is owner-scoped through the parent Quick Note.
    *
    * Returns:
-   * - Newest captures first; `summary` is omitted until a Run completes with one.
+   * - Newest captures first (by creation, so editing a note never moves it between pages), and the
+   *   cursor of the next page, or `null` on the last page. `summary` is omitted until a Run
+   *   completes with one.
    */
-  queryDetails = async () => {
-    const notes = await this.db
+  queryDetails = async ({
+    cursor,
+    limit = QUICK_NOTE_LIST_PAGE_SIZE,
+  }: { cursor?: QuickNoteListCursor | null; limit?: number } = {}) => {
+    // Compare and order at millisecond precision: the cursor round-trips through a JS Date, so a
+    // microsecond comparison would skip notes created within the same millisecond.
+    const createdAtMs = sql<Date>`date_trunc('milliseconds', ${quickNotes.createdAt})`;
+    const rows = await this.queryNoteRows(
+      and(
+        this.ownershipWhere(),
+        cursor
+          ? or(
+              sql`${createdAtMs} < ${new Date(cursor.createdAt).toISOString()}::timestamptz`,
+              and(
+                sql`${createdAtMs} = ${new Date(cursor.createdAt).toISOString()}::timestamptz`,
+                sql`${quickNotes.id} < ${cursor.id}`,
+              ),
+            )
+          : undefined,
+      ),
+    )
+      .orderBy(desc(createdAtMs), desc(quickNotes.id))
+      .limit(limit + 1);
+
+    const page = rows.slice(0, limit);
+    const last = page.at(-1);
+    const nextCursor: QuickNoteListCursor | null =
+      rows.length > limit && last ? { createdAt: last.createdAt.toISOString(), id: last.id } : null;
+
+    return { items: await this.withRunProjection(page), nextCursor };
+  };
+
+  /**
+   * Reads one capture with the same projection as a list item.
+   *
+   * Use when:
+   * - Observing one note's active Run, or opening a note that is not in the loaded list pages.
+   *
+   * Returns:
+   * - The list item, or `undefined` when the note is not accessible in this scope.
+   */
+  queryDetail = async (id: string) => {
+    const rows = await this.queryNoteRows(and(eq(quickNotes.id, id), this.ownershipWhere()));
+    const [detail] = await this.withRunProjection(rows);
+    return detail;
+  };
+
+  private queryNoteRows = (where: ReturnType<typeof and>) =>
+    this.db
       .select({
         analyzeDueAt: quickNotes.analyzeDueAt,
         collection: quickNotes.collection,
@@ -460,9 +519,11 @@ export class QuickNoteModel {
       })
       .from(quickNotes)
       .innerJoin(documents, eq(documents.id, quickNotes.documentId))
-      .where(this.ownershipWhere())
-      .orderBy(desc(quickNotes.updatedAt));
+      .where(where)
+      .$dynamic();
 
+  /** Attaches each note's latest summary and its latest (active first) Run. */
+  private withRunProjection = async <T extends { id: string }>(notes: T[]) => {
     if (notes.length === 0) return [];
     const noteIds = notes.map(({ id }) => id);
 

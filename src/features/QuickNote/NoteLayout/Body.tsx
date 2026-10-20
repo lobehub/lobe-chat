@@ -7,6 +7,7 @@ import SkeletonList from '@/features/NavPanel/components/SkeletonList';
 import { quickNoteSelectors, useQuickNoteStore } from '@/store/quickNote';
 
 import LoadError from '../LoadError';
+import LoadMoreNotes from '../LoadMoreNotes';
 import Item from '../NoteList/Item';
 import EmptyState from './EmptyState';
 
@@ -33,6 +34,7 @@ const Body = memo(() => {
           {noteIds.map((noteId) => (
             <Item key={noteId} noteId={noteId} />
           ))}
+          <LoadMoreNotes />
         </Flexbox>
       )}
     </Flexbox>

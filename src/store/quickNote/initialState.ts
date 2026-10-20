@@ -21,9 +21,15 @@ export interface QuickNoteState {
   /** Comment identifiers whose latest edit is being persisted. */
   editingCommentIds: string[];
   notes: QuickNoteItem[];
+  /** Whether the server holds notes after the loaded list pages. */
+  notesHasMore: boolean;
   notesInit: boolean;
   /** Whether the latest initial note-list request failed and can be retried. */
   notesLoadError: boolean;
+  /** Whether the next list page is being loaded. */
+  notesLoadingMore: boolean;
+  /** Whether loading the next list page failed and can be retried. */
+  notesLoadMoreError: boolean;
   /** Proposal identifiers currently being edited or decided. */
   processingProposalIds: string[];
   saveStatus: QuickNoteSaveStatus;
@@ -42,8 +48,11 @@ export const initialState: QuickNoteState = {
   divingNoteIds: [],
   editingCommentIds: [],
   notes: [],
+  notesHasMore: false,
   notesInit: false,
   notesLoadError: false,
+  notesLoadMoreError: false,
+  notesLoadingMore: false,
   processingProposalIds: [],
   saveStatus: 'idle',
   searchKeywords: '',

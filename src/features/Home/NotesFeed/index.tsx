@@ -8,6 +8,7 @@ import { useQuickNotePersistenceLifecycle } from '@/features/QuickNote/NoteLayou
 import { useQuickNoteStore } from '@/store/quickNote';
 
 import LoadError from '../../QuickNote/LoadError';
+import LoadMoreNotes from '../../QuickNote/LoadMoreNotes';
 import FeedItem from './FeedItem';
 
 const NotesFeed = memo(() => {
@@ -58,6 +59,7 @@ const NotesFeed = memo(() => {
           ))}
         </Flexbox>
       )}
+      <LoadMoreNotes />
     </Flexbox>
   );
 });

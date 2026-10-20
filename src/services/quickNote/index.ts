@@ -53,6 +53,18 @@ interface ServerQuickNoteItem {
   updatedAt: Date | string;
 }
 
+/** Position after the last note of a list page, as returned by the server. */
+export interface QuickNoteListCursor {
+  createdAt: string;
+  id: string;
+}
+
+/** One page of the note list; `nextCursor` is `null` on the last page. */
+export interface QuickNoteListPage {
+  items: QuickNoteItem[];
+  nextCursor: QuickNoteListCursor | null;
+}
+
 interface ServerQuickNoteAgenticDetails {
   comments: Array<
     Omit<QuickNoteComment, 'createdAt' | 'updatedAt'> & {
@@ -148,9 +160,19 @@ class QuickNoteService {
   createComment = async (quickNoteId: string, content: string) =>
     lambdaClient.quickNote.createComment.mutate({ content, quickNoteId });
 
-  getNotes = async (): Promise<QuickNoteItem[]> => {
-    const notes = await lambdaClient.quickNote.list.query();
-    return notes.map((note) => normalizeQuickNote(note as ServerQuickNoteItem));
+  /** Reads one page of notes, newest first; omit `cursor` for the first page. */
+  getNotes = async (cursor?: QuickNoteListCursor | null): Promise<QuickNoteListPage> => {
+    const page = await lambdaClient.quickNote.list.query(cursor ? { cursor } : undefined);
+    return {
+      items: page.items.map((note) => normalizeQuickNote(note as ServerQuickNoteItem)),
+      nextCursor: page.nextCursor,
+    };
+  };
+
+  /** Reads one note with its latest Run; `undefined` when it no longer exists in this scope. */
+  getNote = async (id: string): Promise<QuickNoteItem | undefined> => {
+    const note = await lambdaClient.quickNote.detail.query({ id });
+    return note ? normalizeQuickNote(note as ServerQuickNoteItem) : undefined;
   };
 
   createNote = async (

@@ -127,12 +127,56 @@ describe('QuickNoteModel', () => {
     const analyze = await claimAnalyze(note.id);
     await quickNoteRepo.completeRun(analyze!.id, { summary: 'Light summary' });
 
-    const [details] = await quickNoteModel.queryDetails();
+    const {
+      items: [details],
+    } = await quickNoteModel.queryDetails();
 
     /** @example The active Run remains recoverable rather than being hidden by Analyze. */
     expect(details.run).toMatchObject({ kind: enrichment!.kind, status: 'pending' });
     /** @example The completed Run's summary is still projected. */
     expect(details.summary).toMatchObject({ content: 'Light summary' });
+  });
+
+  // ROOT CAUSE:
+  // The list returned every owned note with its full Document body and had no limit, and each
+  // active Analyze poll re-read that whole list just to observe one Run.
+  /** @example The list is read one bounded page at a time, and one note can be read alone. */
+  it('pages the list by creation time and reads one note without the list', async () => {
+    const created = [];
+    for (const [index, content] of ['first', 'second', 'third'].entries()) {
+      const note = await quickNoteRepo.create({ content });
+      await serverDB
+        .update(quickNotes)
+        .set({ createdAt: new Date(Date.UTC(2026, 0, 1, 0, 0, index)) })
+        .where(eq(quickNotes.id, note.id));
+      created.push(note);
+    }
+    await otherRepo.create({ content: 'not mine' });
+    // Editing the oldest note must not move it to the first page.
+    await serverDB
+      .update(quickNotes)
+      .set({ updatedAt: new Date(Date.now() + 60_000) })
+      .where(eq(quickNotes.id, created[0].id));
+
+    const first = await quickNoteModel.queryDetails({ limit: 2 });
+    const second = await quickNoteModel.queryDetails({ cursor: first.nextCursor, limit: 2 });
+
+    /** @example Newest first, bounded by `limit`, with a cursor to the rest. */
+    expect(first.items.map(({ content }) => content)).toEqual(['third', 'second']);
+    expect(first.nextCursor).not.toBeNull();
+    /** @example The last page holds the remainder and ends the list. */
+    expect(second.items.map(({ content }) => content)).toEqual(['first']);
+    expect(second.nextCursor).toBeNull();
+    /** @example One note is read with the list projection, owner-scoped. */
+    expect(await quickNoteModel.queryDetail(created[1].id)).toMatchObject({
+      content: 'second',
+      id: created[1].id,
+    });
+    const [foreign] = await serverDB
+      .select({ id: quickNotes.id })
+      .from(quickNotes)
+      .where(eq(quickNotes.userId, otherUserId));
+    expect(await quickNoteModel.queryDetail(foreign.id)).toBeUndefined();
   });
 
   /** @example Analyze can accept typed owned resources but not another user's Document. */
@@ -491,7 +535,9 @@ describe('QuickNoteModel', () => {
 describe('QuickNoteModel run completion time', () => {
   it('lists the latest Run with its completion time', async () => {
     const { note } = await seedProposal();
-    const [details] = await quickNoteModel.queryDetails();
+    const {
+      items: [details],
+    } = await quickNoteModel.queryDetails();
 
     expect(details.id).toBe(note.id);
     expect(details.run).toMatchObject({ completedAt: expect.any(Date), status: 'completed' });

@@ -103,6 +103,8 @@
   "list.empty": "没有匹配的随手记",
   "list.emptyHint": "记下一闪而过的想法，都会收在这里。",
   "list.loadFailed": "随手记加载失败。",
+  "list.loadMore": "加载更多随手记",
+  "list.loadMoreFailed": "更多随手记加载失败。",
   "list.newNote": "新建随手记",
   "list.retryLoad": "重试",
   "list.searchPlaceholder": "搜索随手记",

@@ -105,6 +105,8 @@
   "list.empty": "No matching notes",
   "list.emptyHint": "Capture a fleeting thought — it lands here.",
   "list.loadFailed": "Notes could not be loaded.",
+  "list.loadMore": "Load more notes",
+  "list.loadMoreFailed": "More notes could not be loaded.",
   "list.newNote": "New note",
   "list.retryLoad": "Try again",
   "list.searchPlaceholder": "Search notes",
