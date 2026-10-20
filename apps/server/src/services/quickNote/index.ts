@@ -7,7 +7,8 @@ import {
   RequestTrigger,
 } from '@lobechat/types';
 import debug from 'debug';
-import { and, desc, eq, ilike, inArray, isNotNull, isNull, ne, notInArray, or } from 'drizzle-orm';
+import type { Column } from 'drizzle-orm';
+import { and, desc, eq, ilike, inArray, isNull, ne, notExists, or } from 'drizzle-orm';
 import pMap from 'p-map';
 
 import { AgentModel } from '@/database/models/agent';
@@ -761,43 +762,79 @@ export class QuickNoteProcessingService {
     );
   };
 
-  /**
-   * Lists the Documents and Topics that Quick Notes in this scope created, so context lookup
-   * never offers a Quick Note's own internal containers back as context: source Documents, Run
-   * Topics, and the conversations of Tasks a Quick Note started (applied Proposals and Dives).
-   */
-  private collectQuickNoteContainers = async () => {
-    const noteScope = this.workspaceId
+  /** Quick Notes of the active scope, the owner of every internal container below. */
+  private quickNoteScope = () =>
+    this.workspaceId
       ? eq(quickNotes.workspaceId, this.workspaceId)
       : and(eq(quickNotes.userId, this.userId), isNull(quickNotes.workspaceId));
+
+  /**
+   * Keeps a Topic that no Quick Note of this scope created, so context lookup never offers a
+   * Quick Note's own internal conversations back as context: Run Topics and the conversations of
+   * Tasks a Quick Note started (applied Proposals and Dives).
+   *
+   * Anti-joins against the source tables, so the query stays the same size however many notes,
+   * runs and tasks the scope accumulates.
+   */
+  private notQuickNoteContainerTopic = (topicId: Column) => {
     const taskScope = this.workspaceId
       ? eq(tasks.workspaceId, this.workspaceId)
       : and(eq(tasks.createdByUserId, this.userId), isNull(tasks.workspaceId));
-    const [notes, runTopics, taskRunTopics] = await Promise.all([
-      this.db.select({ documentId: quickNotes.documentId }).from(quickNotes).where(noteScope),
-      this.db
-        .select({ topicId: quickNoteRuns.topicId })
-        .from(quickNoteRuns)
-        .innerJoin(quickNotes, eq(quickNotes.id, quickNoteRuns.quickNoteId))
-        .where(and(noteScope, isNotNull(quickNoteRuns.topicId))),
-      this.db
-        .select({ topicId: taskTopics.topicId })
-        .from(taskTopics)
-        .innerJoin(tasks, eq(tasks.id, taskTopics.taskId))
-        .where(and(taskScope, QUICK_NOTE_TASK, isNotNull(taskTopics.topicId))),
-    ]);
 
-    return {
-      documentIds: notes.map(({ documentId }) => documentId),
-      topicIds: [
-        ...new Set(
-          [...runTopics, ...taskRunTopics]
-            .map(({ topicId }) => topicId)
-            .filter((topicId): topicId is string => Boolean(topicId)),
-        ),
-      ],
-    };
+    return and(
+      notExists(
+        this.db
+          .select({ id: quickNoteRuns.id })
+          .from(quickNoteRuns)
+          .innerJoin(quickNotes, eq(quickNotes.id, quickNoteRuns.quickNoteId))
+          .where(and(this.quickNoteScope(), eq(quickNoteRuns.topicId, topicId))),
+      ),
+      notExists(
+        this.db
+          .select({ id: taskTopics.taskId })
+          .from(taskTopics)
+          .innerJoin(tasks, eq(tasks.id, taskTopics.taskId))
+          .where(and(taskScope, QUICK_NOTE_TASK, eq(taskTopics.topicId, topicId))),
+      ),
+    );
   };
+
+  /** Keeps a Document that is not a Quick Note's source Document; the twin of the Topic check. */
+  private notQuickNoteSourceDocument = () =>
+    notExists(
+      this.db
+        .select({ id: quickNotes.id })
+        .from(quickNotes)
+        .where(and(this.quickNoteScope(), eq(quickNotes.documentId, documents.id))),
+    );
+
+  /**
+   * Of the given Topic ids, those a Quick Note of this scope created. For hits from the search
+   * provider, which cannot take the SQL anti-join; the lookup is bounded by the hit count.
+   */
+  private findQuickNoteContainerTopicIds = async (topicIds: string[]) => {
+    const ids = [...new Set(topicIds)];
+    if (ids.length === 0) return new Set<string>();
+
+    const kept = await this.db
+      .select({ id: topics.id })
+      .from(topics)
+      .where(and(inArray(topics.id, ids), this.notQuickNoteContainerTopic(topics.id)));
+    const keptIds = new Set(kept.map(({ id }) => id));
+
+    return new Set(ids.filter((id) => !keptIds.has(id)));
+  };
+
+  /**
+   * Keeps only the Document candidates the caller may view (workspace `DOCUMENT_READ` and the
+   * Document's access level), before their content enters the Analyze prompt or a link.
+   */
+  private filterViewableDocuments = <T extends { id: string }>(documentRows: T[]) =>
+    filterViewableResources(
+      { db: this.db, userId: this.userId, workspaceId: this.workspaceId },
+      documentRows,
+      ({ id }) => ({ id, type: 'document' }),
+    );
 
   /**
    * Topics Analyze may read or link as context: this scope's conversations, never an Agent Share
@@ -833,8 +870,6 @@ export class QuickNoteProcessingService {
         )
       : and(eq(documents.userId, this.userId), isNull(documents.workspaceId));
 
-    const { topicIds: quickNoteTopicIds } = await this.collectQuickNoteContainers();
-
     const [linkedDocuments, linkedTopics, topicCandidates, recentDocuments] = await Promise.all([
       this.db
         .select({ content: documents.content, id: documents.id, title: documents.title })
@@ -867,7 +902,7 @@ export class QuickNoteProcessingService {
         )
         .orderBy(desc(quickNoteResources.updatedAt))
         .limit(5),
-      this.collectTopicContextCandidates(quickNoteTopicIds, workspaceWhere),
+      this.collectTopicContextCandidates(workspaceWhere),
       this.db
         .select({ content: documents.content, id: documents.id, title: documents.title })
         .from(documents)
@@ -885,11 +920,12 @@ export class QuickNoteProcessingService {
 
     // Linked documents win over the same document found among recent ones, so the agent sees
     // which ones a write-document draft may append to.
+    const viewableDocuments = await this.filterViewableDocuments([
+      ...recentDocuments.map((document) => ({ ...document, linked: false })),
+      ...linkedDocuments.map((document) => ({ ...document, linked: true })),
+    ]);
     const documentCandidates = new Map(
-      [
-        ...recentDocuments.map((document) => ({ ...document, linked: false })),
-        ...linkedDocuments.map((document) => ({ ...document, linked: true })),
-      ].map(({ linked, ...document }) => [
+      viewableDocuments.map(({ linked, ...document }) => [
         document.id,
         {
           ...document,
@@ -910,7 +946,6 @@ export class QuickNoteProcessingService {
   };
 
   private collectTopicContextCandidates = async (
-    quickNoteTopicIds: string[],
     workspaceWhere: ReturnType<typeof and>,
   ): Promise<QuickNoteContextCandidate[]> => {
     const recentTopics = await this.db
@@ -922,12 +957,7 @@ export class QuickNoteProcessingService {
         title: topics.title,
       })
       .from(topics)
-      .where(
-        and(
-          workspaceWhere,
-          quickNoteTopicIds.length > 0 ? notInArray(topics.id, quickNoteTopicIds) : undefined,
-        ),
-      )
+      .where(and(workspaceWhere, this.notQuickNoteContainerTopic(topics.id)))
       .orderBy(desc(topics.updatedAt))
       .limit(5);
     if (recentTopics.length === 0) return [];
@@ -976,11 +1006,6 @@ export class QuickNoteProcessingService {
           or(eq(documents.visibility, 'public'), eq(documents.userId, this.userId)),
         )
       : and(eq(documents.userId, this.userId), isNull(documents.workspaceId));
-    const noteContainers = await this.collectQuickNoteContainers();
-    const excludedDocumentIds = Array.from(
-      new Set([sourceDocumentId, ...noteContainers.documentIds]),
-    );
-    const excludedTopicIds = noteContainers.topicIds;
     const searchTerms = expandQuickNoteContextSearchTerms(queries);
     const patterns = searchTerms.map((query) => `%${query}%`);
 
@@ -1019,7 +1044,7 @@ export class QuickNoteProcessingService {
           .where(
             and(
               workspaceWhere,
-              excludedTopicIds.length > 0 ? notInArray(topics.id, excludedTopicIds) : undefined,
+              this.notQuickNoteContainerTopic(topics.id),
               or(
                 ...patterns.flatMap((pattern) => [
                   ilike(topics.title, pattern),
@@ -1039,9 +1064,7 @@ export class QuickNoteProcessingService {
             and(
               messageWhere,
               isNull(messages.deletedAt),
-              excludedTopicIds.length > 0
-                ? notInArray(messages.topicId, excludedTopicIds)
-                : undefined,
+              this.notQuickNoteContainerTopic(messages.topicId),
               or(...patterns.map((pattern) => ilike(messages.content, pattern))),
             ),
           )
@@ -1057,9 +1080,8 @@ export class QuickNoteProcessingService {
           .where(
             and(
               documentWhere,
-              excludedDocumentIds.length > 0
-                ? notInArray(documents.id, excludedDocumentIds)
-                : undefined,
+              ne(documents.id, sourceDocumentId),
+              this.notQuickNoteSourceDocument(),
               or(
                 ...patterns.flatMap((pattern) => [
                   ilike(documents.title, pattern),
@@ -1072,20 +1094,24 @@ export class QuickNoteProcessingService {
           .limit(40),
       ]);
 
+    const indexedMessages = productSearchResults.flatMap((result) =>
+      result.type === 'message' && result.topicId
+        ? [{ content: result.content, topicId: result.topicId }]
+        : [],
+    );
+    const excludedTopicIds = await this.findQuickNoteContainerTopicIds([
+      ...productSearchResults.flatMap((result) => (result.type === 'topic' ? [result.id] : [])),
+      ...indexedMessages.map(({ topicId }) => topicId),
+    ]);
     const indexedTopics = productSearchResults
       .filter((result) => result.type === 'topic')
-      .filter((result) => !excludedTopicIds.includes(result.id))
+      .filter((result) => !excludedTopicIds.has(result.id))
       // Rank Topic search hits only by their canonical title. Search-provider
       // snippets can contain query text that does not belong to the Topic and
       // would otherwise turn an unrelated hit into a Resource Link.
       .map((result) => ({ id: result.id, title: result.title }));
-    const indexedMessages = productSearchResults.flatMap((result) =>
-      result.type === 'message' ? [{ content: result.content, topicId: result.topicId }] : [],
-    );
     const matchingMessages = [
-      ...indexedMessages.filter(
-        (result) => Boolean(result.topicId) && !excludedTopicIds.includes(result.topicId!),
-      ),
+      ...indexedMessages.filter((result) => !excludedTopicIds.has(result.topicId)),
       ...literalMessages,
     ];
 
@@ -1094,7 +1120,7 @@ export class QuickNoteProcessingService {
         matchingMessages
           .map(({ topicId }) => topicId)
           .filter((topicId): topicId is string => Boolean(topicId))
-          .filter((topicId) => !excludedTopicIds.includes(topicId)),
+          .filter((topicId) => !excludedTopicIds.has(topicId)),
       ),
     );
     const messageTopics =
@@ -1133,11 +1159,14 @@ export class QuickNoteProcessingService {
       searchTerms,
       3,
     );
-    const documentCandidates = rankQuickNoteContextCandidates(
+    // Rank first so the view check runs only on matching Documents, then keep the best two the
+    // caller may view.
+    const rankedDocuments = rankQuickNoteContextCandidates(
       matchingDocuments.map((document) => ({ ...document, type: 'document' as const })),
       searchTerms,
-      2,
+      matchingDocuments.length,
     );
+    const documentCandidates = (await this.filterViewableDocuments(rankedDocuments)).slice(0, 2);
 
     return [...topicCandidates, ...documentCandidates].map(({ id, type }) => ({ id, type }));
   };

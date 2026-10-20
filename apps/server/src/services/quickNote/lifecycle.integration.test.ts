@@ -275,4 +275,63 @@ describe('Quick Note context candidates', () => {
       expect(ids).not.toContain('share-visitor-topic');
     }
   });
+
+  // ROOT CAUSE:
+  // Context lookup loaded every Quick Note Document id and Run/Task Topic id of the scope and
+  // bound them into `NOT IN` lists, so each Analyze grew with the scope's history and could pass
+  // PostgreSQL's bind-parameter limit.
+  it('excludes Quick Note containers without binding their ids', async () => {
+    const other = await repo.create({ content: 'zzz', editorData: { markdown: 'zzz' } });
+    const otherRun = await repo.claimRun(other.id, {
+      kind: 'analyze',
+      renderSourceText,
+      trigger: 'manual',
+    });
+    await db.insert(topics).values({ content: 'zzz', id: 'qn-run-topic', title: 'zzz', userId });
+    await db
+      .update(quickNoteRuns)
+      .set({ topicId: 'qn-run-topic' })
+      .where(eq(quickNoteRuns.id, otherRun!.id));
+    const note = await repo.create({ content: 'moshi', editorData: { markdown: 'moshi' } });
+    const run = await repo.claimRun(note.id, {
+      kind: 'analyze',
+      renderSourceText,
+      trigger: 'manual',
+    });
+
+    const client = (db as unknown as { $client: { query: (...args: unknown[]) => unknown } })
+      .$client;
+    const boundValues: unknown[] = [];
+    const query = client.query.bind(client);
+    vi.spyOn(client, 'query').mockImplementation((...args: unknown[]) => {
+      const [text, values] = args as [unknown, unknown];
+      const params = Array.isArray(values)
+        ? values
+        : (text as { values?: unknown[] } | undefined)?.values;
+      boundValues.push(...(params ?? []));
+      return query(...args);
+    });
+
+    const found: { id: string }[] = await service['findContextResources'](
+      ['moshi'],
+      note.documentId,
+    );
+    const candidates: { id: string }[] = await service['collectContextCandidates'](
+      note.id,
+      run!.sourceHistoryId,
+    );
+    vi.mocked(client.query).mockRestore();
+
+    /** @example Containers stay excluded. */
+    for (const ids of [found.map(({ id }) => id), candidates.map(({ id }) => id)]) {
+      expect(ids).not.toContain('qn-task-topic');
+      expect(ids).not.toContain('qn-run-topic');
+      expect(ids).not.toContain(other.documentId);
+    }
+    /** @example Unrelated notes' container ids are never sent as query parameters. */
+    expect(boundValues).toContain(userId);
+    expect(boundValues).not.toContain(other.documentId);
+    expect(boundValues).not.toContain('qn-run-topic');
+    expect(boundValues).not.toContain('qn-task-topic');
+  });
 });

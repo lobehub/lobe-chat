@@ -3,6 +3,7 @@ import { eq, inArray } from 'drizzle-orm';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { getTestDB } from '@/database/core/getTestDB';
+import { QuickNoteRepository } from '@/database/repositories/quickNote';
 import {
   documents,
   quickNoteResources,
@@ -10,6 +11,9 @@ import {
   workspaceMembers,
   workspaces,
 } from '@/database/schemas';
+
+import { QuickNoteProcessingService } from '.';
+import { renderQuickNoteSourceText as renderSourceText } from './sourceText';
 
 // NOTICE:
 // Route tests reuse the isolated migration-backed database instead of an application connection.
@@ -24,6 +28,31 @@ const authorId = 'quick-note-resource-access-author';
 const workspaceId = 'quick-note-resource-access-ws';
 const { quickNoteRouter } = await import('@/server/routers/lambda/quickNote');
 const caller = quickNoteRouter.createCaller({ userId, workspaceId });
+const repo = new QuickNoteRepository(db, userId, workspaceId);
+const service = new QuickNoteProcessingService(db, userId, workspaceId);
+
+/** Document ids the Analyze context and the Agent-hint lookup would offer for a note. */
+const collectAnalyzeDocumentIds = async () => {
+  const note = await caller.create({ content: 'Author', editorData: { markdown: 'Author' } });
+  const run = await repo.claimRun(note.id, {
+    kind: 'analyze',
+    renderSourceText,
+    trigger: 'manual',
+  });
+  const candidates: { id: string; type: string }[] = await service['collectContextCandidates'](
+    note.id,
+    run!.sourceHistoryId,
+  );
+  const found: { id: string; type: string }[] = await service['findContextResources'](
+    ['Author'],
+    note.documentId,
+  );
+
+  return {
+    candidates: candidates.filter(({ type }) => type === 'document').map(({ id }) => id),
+    found: found.filter(({ type }) => type === 'document').map(({ id }) => id),
+  };
+};
 
 beforeEach(async () => {
   await db.insert(users).values([{ id: userId }, { id: authorId }]);
@@ -90,5 +119,30 @@ describe('Quick Note resource access', () => {
     expect((await caller.agenticDetails({ id: note.id })).resources).toMatchObject([
       { label: 'Author page', resourceId: 'qn-access-public-page' },
     ]);
+  });
+
+  /** @example Analyze never reads a public page the caller may not view into its prompt. */
+  it('keeps an unviewable workspace Document out of Analyze context', async () => {
+    // ROOT CAUSE:
+    // Analyze context admitted any workspace-public Document by visibility alone and read its
+    // content into the prompt; only the later link step applied the per-Document view check.
+    await db
+      .update(workspaceMembers)
+      .set({ role: 'restricted' })
+      .where(eq(workspaceMembers.userId, userId));
+
+    const { candidates, found } = await collectAnalyzeDocumentIds();
+
+    /** @example Neither the recent-context read nor the hint lookup offers the page. */
+    expect(candidates).not.toContain('qn-access-public-page');
+    expect(found).not.toContain('qn-access-public-page');
+  });
+
+  /** @example A member who may view the page still gets it as Analyze context. */
+  it('keeps a viewable workspace Document in Analyze context', async () => {
+    const { candidates, found } = await collectAnalyzeDocumentIds();
+
+    expect(candidates).toContain('qn-access-public-page');
+    expect(found).toContain('qn-access-public-page');
   });
 });
