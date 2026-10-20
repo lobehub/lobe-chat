@@ -24,6 +24,10 @@ const account = (id: string) =>
     provider: 'claude-code',
   }) as unknown as QuotaAccount;
 
+/** The label of the option the radio group shows as selected. */
+const checkedOption = () =>
+  screen.getByRole('radio', { checked: true }).closest('label')?.textContent;
+
 const binding = (id: string, accountId: string, role: string) =>
   ({ accountId, agentId: 'agent-1', id, role }) as unknown as QuotaBinding;
 
@@ -53,11 +57,29 @@ describe('QuotaAccountManager', () => {
     expect(screen.getByText('a1@example.com')).toBeTruthy();
     expect(screen.queryByText('heteroAgent.claudeQuota.manage.autoNoAccount')).toBeNull();
     expect(screen.getByRole('switch').hasAttribute('disabled')).toBe(true);
+    expect(screen.queryByRole('radio', { checked: true })).toBeNull();
 
     await act(async () => answerBindings([binding('b1', 'a1', 'pool')]));
 
     expect(screen.queryByText('heteroAgent.claudeQuota.manage.autoNoAccount')).toBeNull();
     expect(screen.getByText(/heteroAgent\.claudeQuota\.manage\.autoRoutingTo/)).toBeTruthy();
     expect(screen.getByRole('switch').hasAttribute('disabled')).toBe(false);
+    // Auto is the confirmed mode now, and the group shows it.
+    expect(checkedOption()).toContain('heteroAgent.claudeQuota.manage.modeAuto');
+  });
+
+  it('selects the pinned account once the bindings load', async () => {
+    let answerBindings!: (rows: QuotaBinding[]) => void;
+    vi.spyOn(agentQuotaService, 'listBindings').mockImplementation(
+      () => new Promise((resolve) => (answerBindings = resolve)),
+    );
+    act(() =>
+      useAgentQuotaStore.setState({ quotaAccountsMap: { [QUOTA_ACCOUNTS_KEY]: [account('a1')] } }),
+    );
+
+    render(<QuotaAccountManager agentId={'agent-1'} />);
+    await act(async () => answerBindings([binding('b1', 'a1', 'pinned')]));
+
+    expect(checkedOption()).toContain('a1@example.com');
   });
 });

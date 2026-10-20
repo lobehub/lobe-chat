@@ -265,7 +265,9 @@ const QuotaAccountManager = memo<{ agentId: string }>(({ agentId }) => {
         gap={2}
         horizontal={false}
         // Which mode is active is unknown until the bindings are on screen.
-        value={bindingsLoaded ? selected : undefined}
+        // `null`, not `undefined`: the group must stay controlled, or it keeps
+        // showing nothing selected once the bindings arrive.
+        value={bindingsLoaded ? selected : null}
         options={[
           {
             disabled: busy || !bindingsLoaded,
