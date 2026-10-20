@@ -18,7 +18,9 @@ const call = async (query: string) => {
 
 /** Runs the page's inline script as the popup would, and returns what it posted to the opener. */
 const runPage = (html: string, query: string) => {
-  const script = /<script>([\s\S]*)<\/script>/.exec(html)?.[1] ?? '';
+  const open = '<script>';
+  const start = html.indexOf(open);
+  const script = start < 0 ? '' : html.slice(start + open.length, html.lastIndexOf('</script>'));
   const postMessage = vi.fn();
   const window = { close: vi.fn(), opener: { postMessage } };
   new Function('window', 'location', script)(window, new URL(`${URL_BASE}?${query}`));
