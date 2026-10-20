@@ -46,7 +46,9 @@ const Page = () => {
   return (
     <>
       <SettingHeader title={t('tab.transcription')} />
-      <Flexbox gap={16}>{content}</Flexbox>
+      <Flexbox gap={16} style={{ maxWidth: 1024, width: '100%' }}>
+        {content}
+      </Flexbox>
     </>
   );
 };
