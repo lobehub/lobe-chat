@@ -18,6 +18,10 @@ const panel = (sourceKey: string) => (s: Store) => s.quotaPanelMap[hashQuotaSour
 const isAccountsConfirmed = (scope: string) => (s: Store) =>
   !!s.quotaConfirmed[quotaConfirmedKey(scope, 'accounts', QUOTA_ACCOUNTS_KEY)];
 
+/** The server answered for one agent's bindings in `scope` during this session. */
+const isBindingsConfirmed = (scope: string, agentId?: string | null) => (s: Store) =>
+  !!agentId && !!s.quotaConfirmed[quotaConfirmedKey(scope, 'bindings', agentId)];
+
 /** The server answered for one account's calendar history in `scope` during this session. */
 const isHistoryConfirmed = (scope: string, accountId?: string | null) => (s: Store) =>
   !!accountId && !!s.quotaConfirmed[quotaConfirmedKey(scope, 'history', accountId)];
@@ -27,6 +31,7 @@ export const agentQuotaSelectors = {
   bindings,
   history,
   isAccountsConfirmed,
+  isBindingsConfirmed,
   isHistoryConfirmed,
   panel,
   readings,

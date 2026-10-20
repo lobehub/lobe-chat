@@ -146,6 +146,13 @@ const QuotaAccountManager = memo<{ agentId: string }>(({ agentId }) => {
   // and Auto as routing to nobody: keep the mode and per-account controls
   // disabled and show no routing hint instead of acting on that guess.
   const bindingsLoaded = loadedBindings !== undefined;
+  // A hydrated row may be outdated (changed in another tab or on another
+  // device): show it, but take writes only once the server confirmed it, so a
+  // change is computed against the bindings the server actually holds.
+  const bindingsConfirmed = useAgentQuotaStore(
+    agentQuotaSelectors.isBindingsConfirmed(scope, agentId),
+  );
+  const canEditBindings = bindingsLoaded && bindingsConfirmed;
   const readingsMap = useAgentQuotaStore((s) => s.quotaReadingsMap);
   const weeklyById = useMemo(
     () =>
@@ -271,7 +278,7 @@ const QuotaAccountManager = memo<{ agentId: string }>(({ agentId }) => {
         value={bindingsLoaded ? selected : undefined}
         options={[
           {
-            disabled: busy || !bindingsLoaded,
+            disabled: busy || !canEditBindings,
             label: (
               <Flexbox className={styles.row} gap={4}>
                 <Text style={{ fontSize: 13 }}>{t('heteroAgent.claudeQuota.manage.modeAuto')}</Text>
@@ -312,7 +319,7 @@ const QuotaAccountManager = memo<{ agentId: string }>(({ agentId }) => {
             ];
 
             return {
-              disabled: busy || !bindingsLoaded || !rotate || isEditing,
+              disabled: busy || !canEditBindings || !rotate || isEditing,
               label: (
                 <Flexbox
                   horizontal
@@ -370,7 +377,7 @@ const QuotaAccountManager = memo<{ agentId: string }>(({ agentId }) => {
                       <span className={styles.interactive} onClick={preventRadioSelection}>
                         <Switch
                           checked={rotate}
-                          disabled={busy || !bindingsLoaded}
+                          disabled={busy || !canEditBindings}
                           size={'small'}
                           onChange={(v) => void setRotation(a.id, v)}
                         />

@@ -82,4 +82,35 @@ describe('QuotaAccountManager', () => {
 
     expect(checkedOption()).toContain('a1@example.com');
   });
+
+  it('shows hydrated bindings but takes writes only after the server confirms them', async () => {
+    let answerBindings!: (rows: QuotaBinding[]) => void;
+    vi.spyOn(agentQuotaService, 'listBindings').mockImplementation(
+      () => new Promise((resolve) => (answerBindings = resolve)),
+    );
+    // Restored from storage: a1 pinned, but another device has since moved it to the pool.
+    act(() =>
+      useAgentQuotaStore.setState({
+        quotaAccountsMap: { [QUOTA_ACCOUNTS_KEY]: [account('a1')] },
+        quotaBindingsMap: { 'agent-1': [binding('b1', 'a1', 'pinned')] },
+      }),
+    );
+
+    render(<QuotaAccountManager agentId={'agent-1'} />);
+
+    expect(checkedOption()).toContain('a1@example.com');
+    expect(screen.getByRole('switch').hasAttribute('disabled')).toBe(true);
+    for (const radio of screen.getAllByRole('radio'))
+      expect(radio.getAttribute('aria-disabled')).toBe('true');
+
+    await act(async () => answerBindings([binding('b1', 'a1', 'pool')]));
+
+    expect(checkedOption()).toContain('heteroAgent.claudeQuota.manage.modeAuto');
+    expect(screen.getByRole('switch').hasAttribute('disabled')).toBe(false);
+    expect(
+      screen
+        .getByRole('radio', { name: /heteroAgent\.claudeQuota\.manage\.modeAuto/ })
+        .getAttribute('aria-disabled'),
+    ).not.toBe('true');
+  });
 });
