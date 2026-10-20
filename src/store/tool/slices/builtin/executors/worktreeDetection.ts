@@ -914,6 +914,22 @@ export const parseWorktreeAddPath = (
 };
 
 /**
+ * The worktree a real `git worktree remove [--force] <path>` deleted, resolved the
+ * same way as an `add` path so it compares against the recorded `activeWorktree`.
+ */
+const parseWorktreeRemovePath = (command: string | string[], cwd?: string) =>
+  findInCommand(command, (tokens, env) => {
+    const git = parseGitSubcommand(tokens, cwd);
+    if (git?.subcommand !== 'worktree' || stripQuotes(git.args[0] ?? '') !== 'remove') return;
+    for (const token of git.args.slice(1)) {
+      if (/^\d*[<>]/.test(token)) return; // redirection — git's args end here
+      if (token.startsWith('-')) continue;
+      const path = resolveToken(token, env);
+      return isLiteralPath(path) ? resolveWorktreePath(path, git.baseCwd) : undefined;
+    }
+  });
+
+/**
  * Ground truth for a worktree-add whose path token never survives static parsing
  * (`git worktree add "$WT" …`, `$(mktemp -d)`, `~/wt`): ask the run's target
  * device which worktree actually holds the branch the command referenced. Fails
@@ -1015,6 +1031,7 @@ export const recordWorktreeAdd = async (params: {
 /**
  * Record successful heterogeneous CLI shell side effects onto the run topic:
  * - `git worktree add` selects the created worktree and explicit branch.
+ * - `git worktree remove` of that worktree returns the topic to its source repo.
  * - `git switch` / confirmed `git checkout` updates the branch snapshot.
  * - `git push` records the remote ref the branch publishes to.
  * - `gh pr create` binds the created PR URL to the topic.
@@ -1041,6 +1058,13 @@ export const recordGitCommandEffects = async (params: {
   );
   if (worktreeInfo && worktreeInfo.path !== source) {
     nextConfig = applyWorktreeAddToConfig(nextConfig, source, worktreeInfo);
+  }
+
+  // Removing the worktree the topic runs in leaves it pointing at a deleted
+  // directory, and every later run would fail to spawn there.
+  const removedWorktree = parseWorktreeRemovePath(command, source);
+  if (removedWorktree && removedWorktree === nextConfig?.git?.activeWorktree) {
+    nextConfig = applyWorktreeExitToConfig(nextConfig, source);
   }
 
   const branchSwitch = parseGitBranchSwitch(command, resultContent);
