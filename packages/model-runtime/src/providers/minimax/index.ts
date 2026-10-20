@@ -24,7 +24,11 @@ const MINIMAX_ANTHROPIC_BASE_URL_PATTERN = /\/anthropic\/?$/;
 const MINIMAX_ANTHROPIC_MODEL_BASE_URL_PATTERN = /\/anthropic(?:\/v1\/messages)?\/?$/;
 const MINIMAX_ANTHROPIC_MESSAGES_PATH_PATTERN = /\/v1\/messages\/?$/;
 
-const isMiniMaxM3Model = (model: string) => model.toLowerCase() === 'minimax-m3';
+const isMiniMaxFlashModel = (model: string) => model.toLowerCase() === 'minimax-m3.1-flash';
+const isMiniMaxM3Model = (model: string) =>
+  model.toLowerCase() === 'minimax-m3' || isMiniMaxFlashModel(model);
+const resolveFlashEffort = (effort?: string) =>
+  effort && ['low', 'medium', 'high', 'xhigh', 'max'].includes(effort) ? effort : 'max';
 
 type MiniMaxSDKType = 'anthropic' | 'openai';
 
@@ -163,7 +167,17 @@ export const buildMiniMaxAnthropicPayload = async (
     ...restPayload,
     ...(finalTemperature !== undefined ? { temperature: finalTemperature } : {}),
     ...(resolvedParams.top_p !== undefined ? { top_p: resolvedParams.top_p } : {}),
-  };
+    ...(isMiniMaxFlashModel(payload.model)
+      ? {
+          output_config: {
+            ...restPayload.output_config,
+            effort: resolveFlashEffort(payload.effort ?? payload.reasoning_effort),
+          },
+          service_tier: undefined,
+          thinking: { type: 'adaptive' as const },
+        }
+      : {}),
+  } as Anthropic.MessageCreateParams;
 };
 
 export const buildMiniMaxOpenAIPayload = (payload: ChatStreamPayload) => {
@@ -242,15 +256,21 @@ export const buildMiniMaxOpenAIPayload = (payload: ChatStreamPayload) => {
       ? undefined
       : resolvedParams.temperature;
 
-  const finalThinking = isM3
-    ? thinking?.type === 'disabled'
-      ? { thinking: { type: 'disabled' } }
-      : thinking?.type === 'enabled' || thinking?.type === 'adaptive'
-        ? { thinking: { type: 'adaptive' } }
-        : {}
-    : thinking
-      ? { thinking }
-      : {};
+  const finalThinking = isMiniMaxFlashModel(payload.model)
+    ? {
+        reasoning_effort: resolveFlashEffort(payload.reasoning_effort),
+        service_tier: undefined,
+        thinking: { type: 'adaptive' },
+      }
+    : isM3
+      ? thinking?.type === 'disabled'
+        ? { thinking: { type: 'disabled' } }
+        : thinking?.type === 'enabled' || thinking?.type === 'adaptive'
+          ? { thinking: { type: 'adaptive' } }
+          : {}
+      : thinking
+        ? { thinking }
+        : {};
 
   const outputLimitParam = isM3
     ? { max_completion_tokens: resolvedParams.max_tokens }

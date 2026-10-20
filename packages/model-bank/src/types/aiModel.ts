@@ -333,7 +333,25 @@ export interface AIBaseModelCard {
   visible?: boolean;
 }
 
-export const isAiModelVisible = (model: { visible?: boolean }) => model.visible !== false;
+export const isAiModelVisible = (model: {
+  id?: string;
+  providerId?: string;
+  source?: string;
+  type?: string;
+  visible?: boolean;
+}) => {
+  if (model.visible === false) return false;
+  // Keep explicit custom entries and non-chat products independent of the bundled chat catalog.
+  if (model.source === 'custom' || (model.type && model.type !== 'chat')) return true;
+
+  const id = model.id?.split('/').at(-1) ?? '';
+  // Hide superseded recommendations, including gateway-qualified IDs, without removing
+  // their metadata or rewriting IDs stored in agents, conversations, or model mappings.
+  const legacyMiniMax = /^minimax-(?:m[12](?:[.:-]|$)|text-01$|vl-01$)/i.test(id);
+  const legacyDirect =
+    (!model.providerId || model.providerId === 'minimax') && /^(?:abab|m2-her$)/i.test(id);
+  return !legacyMiniMax && !legacyDirect;
+};
 
 /**
  * User-level default reasoning params for a model instance (userId + providerId + modelId),

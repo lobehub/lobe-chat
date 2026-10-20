@@ -46,6 +46,15 @@ export const params = {
         }
       }
 
+      if (model === 'minimax/minimax-m3.1-flash:free') {
+        reasoning = {
+          effort:
+            reasoning_effort && ['low', 'medium', 'high', 'xhigh', 'max'].includes(reasoning_effort)
+              ? reasoning_effort
+              : 'max',
+        };
+      }
+
       // Add modalities and image_config for image generation models
       const isImageModel = model.includes('-image') || model.includes('flux');
       const modalities =

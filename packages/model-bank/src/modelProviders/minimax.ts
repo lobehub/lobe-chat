@@ -3,7 +3,7 @@ import { type ModelProviderCard } from '../types';
 // ref: https://platform.minimaxi.com/document/Models
 const Minimax: ModelProviderCard = {
   chatModels: [],
-  checkModel: 'MiniMax-M2.1',
+  checkModel: 'MiniMax-M3.1-Flash',
   description:
     'Founded in 2021, MiniMax builds general-purpose AI with multimodal foundation models, including trillion-parameter MoE text models, speech models, and vision models, along with apps like Hailuo AI.',
   id: 'minimax',
