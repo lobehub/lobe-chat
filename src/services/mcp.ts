@@ -8,6 +8,7 @@ import { isLocalOrPrivateUrl, safeParseJSON } from '@lobechat/utils';
 import { deserializeMcpIpcPayload, serializeMcpIpcPayload } from '@lobechat/utils/mcpIpcPayload';
 import { type PluginManifest } from '@lobehub/market-sdk';
 import { type CallReportRequest } from '@lobehub/market-types';
+import { type ReadResourceResult } from '@modelcontextprotocol/sdk/types.js';
 
 import { type MCPToolCallResult } from '@/libs/mcp';
 import { toolsClient } from '@/libs/trpc/client';
@@ -30,10 +31,64 @@ function calculateObjectSizeBytes(obj: any): number {
   }
 }
 
+/**
+ * Build the MCP client params for an installed/custom plugin: its stored
+ * connection plus the user's plugin settings as HTTP headers or stdio env.
+ */
+const buildPluginMcpParams = (
+  plugin: { customParams?: { mcp?: any } | null; settings?: unknown },
+  identifier: string,
+) => {
+  const connection = plugin.customParams?.mcp;
+  const settingsEntries = plugin.settings
+    ? Object.entries(plugin.settings as Record<string, any>).filter(
+        ([, value]) => value !== undefined && value !== null,
+      )
+    : [];
+  const pluginSettings =
+    settingsEntries.length > 0
+      ? settingsEntries.reduce<Record<string, unknown>>((acc, [key, value]) => {
+          acc[key] = value;
+
+          return acc;
+        }, {})
+      : undefined;
+
+  const params = {
+    ...connection,
+    name: identifier,
+  } as any;
+
+  if (connection?.type === 'http') {
+    params.headers = {
+      ...connection.headers,
+      ...pluginSettings,
+    };
+  }
+
+  if (connection?.type === 'stdio') {
+    params.env = {
+      ...connection?.env,
+      ...pluginSettings,
+    };
+  }
+
+  return { params, pluginSettings };
+};
+
 class MCPService {
   async invokeMcpToolCall(
     payload: ChatToolPayload,
-    { signal, topicId }: { signal?: AbortSignal; topicId?: string },
+    {
+      agentId,
+      signal,
+      topicId,
+    }: {
+      /** Resolve connectors the way this agent's conversation does (agent-owned first). */
+      agentId?: string;
+      signal?: AbortSignal;
+      topicId?: string;
+    },
   ) {
     await discoverService.safeInjectMPToken();
 
@@ -50,62 +105,35 @@ class MCPService {
     // skills synced into the connector store have no mcpServerUrl and keep their
     // original executor path.
     const { connectorSelectors } = await import('@/store/tool/slices/connector');
-    const connector = connectorSelectors.connectorByIdentifier(identifier)(s);
-    if (
-      connector &&
-      connector.isEnabled &&
-      (connector.mcpServerUrl || connector.mcpConnectionType === 'stdio')
-    ) {
-      const { lambdaClient } = await import('@/libs/trpc/client');
-      return (await lambdaClient.connector.callTool.mutate(
-        { args, identifier, toolName: apiName },
-        { signal },
-      )) as MCPToolCallResult;
-    }
-
+    const connector = connectorSelectors.connectorByIdentifierForAgent(identifier, agentId)(s);
     const installPlugin = pluginSelectors.getInstalledPluginById(identifier)(s);
     const customPlugin = pluginSelectors.getCustomPluginById(identifier)(s);
 
     const plugin = installPlugin || customPlugin;
 
+    // An agent's own connectors may not be loaded on the client yet; with no
+    // plugin to fall back to, let the server resolve the identifier for the agent.
+    const isConnector = connector
+      ? connector.isEnabled && (!!connector.mcpServerUrl || connector.mcpConnectionType === 'stdio')
+      : !!agentId && !plugin;
+    if (isConnector) {
+      const { lambdaClient } = await import('@/libs/trpc/client');
+      return (await lambdaClient.connector.callTool.mutate(
+        { agentId, args, identifier, toolName: apiName },
+        { signal },
+      )) as MCPToolCallResult;
+    }
+
     if (!plugin) return;
 
     const connection = plugin.customParams?.mcp;
-    const settingsEntries = plugin.settings
-      ? Object.entries(plugin.settings as Record<string, any>).filter(
-          ([, value]) => value !== undefined && value !== null,
-        )
-      : [];
-    const pluginSettings =
-      settingsEntries.length > 0
-        ? settingsEntries.reduce<Record<string, unknown>>((acc, [key, value]) => {
-            acc[key] = value;
-
-            return acc;
-          }, {})
-        : undefined;
-
-    const params = {
-      ...connection,
-      name: identifier,
-    } as any;
-
-    if (connection?.type === 'http') {
-      params.headers = {
-        ...connection.headers,
-        ...pluginSettings,
-      };
-    }
-
-    if (connection?.type === 'stdio') {
-      params.env = {
-        ...connection?.env,
-        ...pluginSettings,
-      };
-    }
+    const { params, pluginSettings } = buildPluginMcpParams(plugin, identifier);
 
     const isStdio = plugin?.customParams?.mcp?.type === 'stdio';
     const isCloud = plugin?.customParams?.mcp?.type === 'cloud';
+    // localhost / LAN endpoints are only reachable from this machine
+    const isLocalHttp =
+      isDesktop && plugin?.customParams?.mcp?.type === 'http' && isLocalOrPrivateUrl(params.url);
     const isCustomPlugin = !!customPlugin;
 
     // Build meta for server-side reporting
@@ -161,6 +189,15 @@ class MCPService {
         const serialized = serializeMcpIpcPayload(data);
         const serializedResult = await ensureElectronIpc().mcp.callTool(serialized as any);
         result = deserializeMcpIpcPayload(serializedResult) as any;
+      } else if (isLocalHttp) {
+        // Same routing as the manifest fetch: the server relay can't reach it
+        const serialized = serializeMcpIpcPayload({
+          args: safeParseJSON(args) ?? {},
+          http: { auth: params.auth, headers: params.headers, name: params.name, url: params.url },
+          toolName: apiName,
+        });
+        const serializedResult = await ensureElectronIpc().mcp.callTool(serialized as any);
+        result = deserializeMcpIpcPayload(serializedResult) as any;
       } else {
         // For other types, use the toolsClient
         result = await toolsClient.mcp.callTool.mutate(data, { signal });
@@ -178,8 +215,8 @@ class MCPService {
     } finally {
       // HTTP/SSE/streamable types: reporting is handled by server-side via mcp.callTool
       // Cloud type: reporting is handled by server-side via market.callCloudMcpEndpoint
-      // Only report from frontend for stdio types (desktop only)
-      if (isStdio) {
+      // Only report from frontend for calls that ran on this machine (desktop only)
+      if (isStdio || isLocalHttp) {
         const callEndTime = Date.now();
         const callDurationMs = callEndTime - callStartTime;
 
@@ -217,6 +254,71 @@ class MCPService {
         });
       }
     }
+  }
+
+  /**
+   * Read the MCP Apps `ui://` resource (HTML view) a tool result renders with,
+   * from the same server the tool ran on. Returns undefined when the tool's
+   * server can't serve views from here (cloud plugins, stdio off desktop).
+   */
+  async readMcpAppResource(
+    identifier: string,
+    uri: string,
+    agentId?: string,
+  ): Promise<ReadResourceResult | undefined> {
+    const { pluginSelectors } = await import('@/store/tool/selectors');
+    const { getToolStoreState } = await import('@/store/tool/store');
+    const s = getToolStoreState();
+
+    const { connectorSelectors } = await import('@/store/tool/slices/connector');
+    const connector = connectorSelectors.connectorByIdentifierForAgent(identifier, agentId)(s);
+    const plugin =
+      pluginSelectors.getInstalledPluginById(identifier)(s) ||
+      pluginSelectors.getCustomPluginById(identifier)(s);
+
+    // Same resolution as `invokeMcpToolCall`: the view must come from the
+    // connector the tool ran on, which the server resolves for the agent.
+    const isConnector = connector
+      ? connector.isEnabled && !!connector.mcpServerUrl
+      : !!agentId && !plugin;
+    if (isConnector) {
+      const { lambdaClient } = await import('@/libs/trpc/client');
+      return (await lambdaClient.connector.readUiResource.query({
+        agentId,
+        identifier,
+        uri,
+      })) as ReadResourceResult;
+    }
+
+    const type = plugin?.customParams?.mcp?.type;
+    if (!plugin || (type !== 'http' && type !== 'stdio')) return;
+
+    const { params } = buildPluginMcpParams(plugin, identifier);
+
+    // Stdio servers and localhost / LAN endpoints are only reachable from this
+    // machine, so the desktop reads them over IPC instead of the server relay.
+    const isLocalHttp = type === 'http' && isDesktop && isLocalOrPrivateUrl(params.url);
+    if (type === 'stdio' || isLocalHttp) {
+      if (!isDesktop) return;
+
+      const input = isLocalHttp
+        ? {
+            http: {
+              auth: params.auth,
+              headers: params.headers,
+              name: params.name,
+              url: params.url,
+            },
+            uri,
+          }
+        : { env: params.env, params, uri };
+      const result = await ensureElectronIpc().mcp.readUiResource(
+        serializeMcpIpcPayload(input) as any,
+      );
+      return deserializeMcpIpcPayload(result) as ReadResourceResult;
+    }
+
+    return (await toolsClient.mcp.readUiResource.query({ params, uri })) as ReadResourceResult;
   }
 
   async getStreamableMcpServerManifest(

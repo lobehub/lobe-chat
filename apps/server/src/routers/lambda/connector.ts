@@ -24,7 +24,11 @@ import { inferCrudType } from '@/libs/mcp/utils';
 import { router } from '@/libs/trpc/lambda';
 import { serverDatabase } from '@/libs/trpc/lambda/middleware';
 import { KeyVaultsGateKeeper } from '@/server/modules/KeyVaultsEncrypt';
-import { callConnectorToolById, ConnectorToolCallError } from '@/server/services/connector/exec';
+import {
+  callConnectorToolById,
+  ConnectorToolCallError,
+  readConnectorUiResourceById,
+} from '@/server/services/connector/exec';
 import {
   buildAuthorizationUrl,
   discoverConnectorOAuth,
@@ -761,6 +765,8 @@ export const connectorRouter = router({
   callTool: connectorWriteProcedure
     .input(
       z.object({
+        /** Resolve the identifier for this agent (agent-owned connector first). */
+        agentId: z.string().optional(),
         args: z.string().optional(),
         identifier: z.string().min(1),
         toolName: z.string().min(1),
@@ -778,6 +784,28 @@ export const connectorRouter = router({
           code: 'INTERNAL_SERVER_ERROR',
           message: `Connector tool call failed: ${err?.message ?? 'unknown error'}`,
         });
+      }
+    }),
+
+  /**
+   * Read the MCP Apps `ui://` resource a connector tool result renders with.
+   */
+  readUiResource: connectorProcedure
+    .input(
+      z.object({
+        agentId: z.string().optional(),
+        identifier: z.string().min(1),
+        uri: z.string().startsWith('ui://'),
+      }),
+    )
+    .query(async ({ input, ctx }) => {
+      try {
+        return await readConnectorUiResourceById(input, ctx);
+      } catch (err: any) {
+        if (err instanceof ConnectorToolCallError) {
+          throw new TRPCError({ cause: err, code: err.code, message: err.message });
+        }
+        throw err;
       }
     }),
 

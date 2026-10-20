@@ -10,6 +10,7 @@ import { type Transport } from '@modelcontextprotocol/sdk/shared/transport.js';
 import { type Progress } from '@modelcontextprotocol/sdk/types.js';
 import debug from 'debug';
 
+import { getToolUiResourceUri, MCP_APP_CLIENT_CAPABILITIES } from './mcpApp';
 import {
   type MCPClientParams,
   type MCPError,
@@ -165,10 +166,15 @@ export class MCPClient {
   private mcp: Client;
   private transport: Transport;
   private params: MCPClientParams;
+  /** tool name → `ui://` resource URI, filled from the last `listTools` */
+  private uiResourceUris?: Map<string, string>;
 
   constructor(params: MCPClientParams) {
     this.params = params;
-    this.mcp = new Client({ name: 'lobehub-mcp-client', version: '1.0.0' });
+    this.mcp = new Client(
+      { name: 'lobehub-mcp-client', version: '1.0.0' },
+      { capabilities: MCP_APP_CLIENT_CAPABILITIES },
+    );
 
     switch (params.type) {
       case 'http': {
@@ -335,6 +341,12 @@ export class MCPClient {
     try {
       log('Listing tools...');
       const { tools } = await this.mcp.listTools();
+      this.uiResourceUris = new Map(
+        tools.flatMap((tool) => {
+          const uri = getToolUiResourceUri(tool);
+          return uri ? [[tool.name, uri] as const] : [];
+        }),
+      );
       log('Listed tools: %O', tools);
       return tools as McpTool[];
     } catch (e) {
@@ -403,6 +415,28 @@ export class MCPClient {
     log('Listed Manifest: %O', manifest);
 
     return manifest;
+  }
+
+  /**
+   * The MCP Apps `ui://` resource a tool renders its result with, if any.
+   * Lists tools once per client to learn it.
+   */
+  async getToolUiResourceUri(toolName: string): Promise<string | undefined> {
+    if (!this.uiResourceUris) await this.listTools();
+
+    return this.uiResourceUris?.get(toolName);
+  }
+
+  async readResource(uri: string) {
+    log('Reading resource: %s', uri);
+    try {
+      return await this.mcp.readResource({ uri });
+    } catch (e) {
+      if (MCPClient.isNoValidSessionError(e)) {
+        throw new Error('NoValidSessionId', { cause: e });
+      }
+      throw e;
+    }
   }
 
   async callTool(toolName: string, args: any): Promise<ToolCallResult> {

@@ -92,6 +92,7 @@ describe('MCPService', () => {
     // 创建 mock 客户端
     mockClient = {
       callTool: vi.fn(),
+      getToolUiResourceUri: vi.fn().mockResolvedValue(undefined),
       listPrompts: vi.fn(),
       listResources: vi.fn(),
       listTools: vi.fn(),
@@ -259,6 +260,39 @@ describe('MCPService', () => {
       expect(result.state).toEqual(errorResult);
     });
 
+    it('should attach the MCP App resource for tools that declare a ui:// resource', async () => {
+      mockClient.getToolUiResourceUri.mockResolvedValue('ui://weather/view.html');
+      mockClient.callTool.mockResolvedValue({
+        content: [{ type: 'text', text: 'sunny' }],
+        isError: false,
+      });
+
+      const result = await mcpService.callTool({
+        clientParams: mockParams,
+        toolName: 'weather',
+        argsStr: '{}',
+      });
+
+      expect(mockClient.getToolUiResourceUri).toHaveBeenCalledWith('weather');
+      expect(result.state.mcpApp).toEqual({ resourceUri: 'ui://weather/view.html' });
+    });
+
+    it('should not attach the MCP App resource to error results', async () => {
+      mockClient.getToolUiResourceUri.mockResolvedValue('ui://weather/view.html');
+      mockClient.callTool.mockResolvedValue({
+        content: [{ type: 'text', text: 'boom' }],
+        isError: true,
+      });
+
+      const result = await mcpService.callTool({
+        clientParams: mockParams,
+        toolName: 'weather',
+        argsStr: '{}',
+      });
+
+      expect(result.state.mcpApp).toBeUndefined();
+    });
+
     it('should throw TRPCError when client throws error', async () => {
       const error = new Error('MCP client error');
       mockClient.callTool.mockRejectedValue(error);
@@ -359,6 +393,27 @@ describe('MCPService', () => {
       // Must NOT respawn/re-auth on init failure
       expect(getClientSpy).toHaveBeenCalledTimes(1);
       expect(mockClient.callTool).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('readUiResource', () => {
+    const mockParams = { name: 'test-mcp', type: 'http' as const, url: 'https://example.com/mcp' };
+
+    it('reads ui:// resources through the client', async () => {
+      const resource = { contents: [{ text: '<html></html>', uri: 'ui://app' }] };
+      mockClient.readResource = vi.fn().mockResolvedValue(resource);
+
+      await expect(mcpService.readUiResource(mockParams, 'ui://app')).resolves.toEqual(resource);
+      expect(mockClient.readResource).toHaveBeenCalledWith('ui://app');
+    });
+
+    it('rejects non-ui:// URIs without touching the server', async () => {
+      mockClient.readResource = vi.fn();
+
+      await expect(mcpService.readUiResource(mockParams, 'file:///etc/passwd')).rejects.toThrow(
+        TRPCError,
+      );
+      expect(mockClient.readResource).not.toHaveBeenCalled();
     });
   });
 
