@@ -18,6 +18,8 @@
 export type GoalAdvanceTrigger =
   | 'wake'
   | 'create'
+  /** A draft was started: the coordinator's first move on an arranged graph. */
+  | 'start'
   | 'decide'
   | 'settle'
   | 'sweep'

@@ -16,9 +16,23 @@
  */
 export const RedisKeyNamespace = {
   /**
+   * Agent Signal keys — the same `agent-signal` keyspace the Agent Signal runtime
+   * stores (receipts, dedupe, policy state) already use.
+   */
+  AGENT_SIGNAL: 'agent-signal',
+  /**
+   * Follow-ups a user queued behind a running agent turn ("steer"). The server
+   * drains them into the next turn itself when the running one hands back.
+   */
+  AGENT_STEER: 'agentSteer',
+  /**
    * AI generation related keys (agent welcome, placeholders, etc.)
    */
   AI_GENERATION: 'aiGeneration',
+  /**
+   * Third-party integrations (Linear, …): OAuth hand-off state.
+   */
+  INTEGRATIONS: 'integrations',
   /**
    * Core LOBEHUB application keys (sessions, cache, etc.)
    */
@@ -47,6 +61,68 @@ export const RedisKeyNamespace = {
  */
 export const RedisKeys = {
   /**
+   * Agent Signal spend bounds — see {@link RedisKeyNamespace.AGENT_SIGNAL}. Per-user
+   * counters and quotas that keep background self-iteration work within its limits.
+   */
+  agentSignal: {
+    /**
+     * Feedback-classifier calls one user made on one UTC day.
+     * Full key: agent-signal:classifier_calls:v1:{userId}:{utcDay}
+     */
+    classifierCalls: (userId: string, utcDay: string): string =>
+      `classifier_calls:v1:${userId}:${utcDay}`,
+    /**
+     * Self-feedback declarations accepted in one topic scope.
+     * Full key: agent-signal:declaration_slots:v1:{scopeKey}
+     */
+    declarationSlots: (scopeKey: string): string => `declaration_slots:v1:${scopeKey}`,
+    /**
+     * Manual Agent Signal triggers one user sent in the current hourly window.
+     * Full key: agent-signal:manual_triggers:v1:{userId}
+     */
+    manualTriggers: (userId: string): string => `manual_triggers:v1:${userId}`,
+    /**
+     * Distinct topics one user's nightly review covered on one local night.
+     * Full key: agent-signal:nightly_topics:v1:{userId}:{localDate}
+     */
+    nightlyTopics: (userId: string, localDate: string): string =>
+      `nightly_topics:v1:${userId}:${localDate}`,
+  },
+  /**
+   * Steer queue scope — see {@link RedisKeyNamespace.AGENT_STEER}.
+   */
+  agentSteer: {
+    /**
+     * Follow-ups one user queued behind their running turn on one conversation
+     * surface. Per user: workspace members can each have a run on the same topic.
+     * Full key: agentSteer:follow_ups:v1:{userId}:{topicId}:{threadId|main}
+     */
+    followUps: (userId: string, topicId: string, threadId?: string | null): string =>
+      `follow_ups:v1:${userId}:${topicId}:${threadId || 'main'}`,
+    /**
+     * Ids of follow-ups a drain already took from that queue, so a retried
+     * append of the same id is recognized instead of queued again.
+     * Full key: agentSteer:follow_ups_taken:v1:{userId}:{topicId}:{threadId|main}
+     */
+    takenFollowUps: (userId: string, topicId: string, threadId?: string | null): string =>
+      `follow_ups_taken:v1:${userId}:${topicId}:${threadId || 'main'}`,
+    /**
+     * Follow-ups a run drained from that queue but has not settled yet, one
+     * batch per drain (field = drain id). A batch whose lease lapses goes back
+     * to the queue, so an interrupted delivery never loses an entry.
+     * Full key: agentSteer:follow_ups_drained:v1:{userId}:{topicId}:{threadId|main}
+     */
+    drainedFollowUps: (userId: string, topicId: string, threadId?: string | null): string =>
+      `follow_ups_drained:v1:${userId}:${topicId}:${threadId || 'main'}`,
+    /**
+     * Short fence around starting a run on an existing thread. Thread starts
+     * skip the topic-start reservation, so this is what lets a queued
+     * follow-up check "no run is live here" and start as one step.
+     * Full key: agentSteer:thread_start:v1:{threadId}
+     */
+    threadStartFence: (threadId: string): string => `thread_start:v1:${threadId}`,
+  },
+  /**
    * AI generation scope - for AI-generated content like welcome messages
    */
   aiGeneration: {
@@ -60,6 +136,16 @@ export const RedisKeys = {
      * Full key: aiGeneration:home_brief:{userId}
      */
     homeBrief: (userId: string): string => `home_brief:${userId}`,
+  },
+  /**
+   * Integrations scope — see {@link RedisKeyNamespace.INTEGRATIONS}.
+   */
+  integrations: {
+    /**
+     * Single-use state of one "Connect Linear" OAuth hand-off.
+     * Full key: integrations:linear_oauth_state:v1:{state}
+     */
+    linearOAuthState: (state: string): string => `linear_oauth_state:v1:${state}`,
   },
   /**
    * Lobechat core scope - for application-level caching
@@ -93,3 +179,23 @@ export const RedisKeys = {
       `workspace_rescan_claim:v1:${userId}:${pool}:${deviceId}:${cwd}`,
   },
 } as const;
+
+/**
+ * The namespace (key prefix) each {@link RedisKeys} scope lives under. A scope's keys are
+ * only read and written through a client prefixed with its namespace, so a key can never
+ * land under another scope's prefix. Every scope must be mapped.
+ */
+export const RedisKeyScopeNamespace = {
+  agentSignal: RedisKeyNamespace.AGENT_SIGNAL,
+  agentSteer: RedisKeyNamespace.AGENT_STEER,
+  aiGeneration: RedisKeyNamespace.AI_GENERATION,
+  integrations: RedisKeyNamespace.INTEGRATIONS,
+  lobechat: RedisKeyNamespace.LOBEHUB,
+  sendPathCache: RedisKeyNamespace.SEND_PATH_CACHE,
+} as const satisfies Record<
+  keyof typeof RedisKeys,
+  (typeof RedisKeyNamespace)[keyof typeof RedisKeyNamespace]
+>;
+
+/** A {@link RedisKeys} scope, e.g. `sendPathCache` or `agentSignal`. */
+export type RedisKeyScope = keyof typeof RedisKeyScopeNamespace;

@@ -1983,7 +1983,7 @@ describe('StreamingExecutor actions', () => {
       });
     };
 
-    // Regression: LOBE-14165. The attachment budget can send any attachment longer than a
+    // Regression: The attachment budget can send any attachment longer than a
     // preview as one, so the client must offer `readAttachment` to page it, like the server.
     it('enables readAttachment when an attachment is longer than a preview', () => {
       const spy = vi.spyOn(toolEngineering, 'createAgentToolsEngine');

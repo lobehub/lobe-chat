@@ -18,6 +18,17 @@ describe('LocalStorageQueryProjectionStorage', () => {
     expect(storage.getSync({ ...key, scope: 'user-b' })).toBeUndefined();
   });
 
+  it('rejects a write that did not land (quota), so the replica retries it', async () => {
+    const storage = new LocalStorageQueryProjectionStorage<string[]>({ namespace: 'test' });
+    vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {
+      throw new Error('QuotaExceededError');
+    });
+
+    await expect(
+      storage.set({ queryKey: 'q', scope: 'user-a' }, { data: ['x'], updatedAt: 1 }),
+    ).rejects.toThrow('QuotaExceededError');
+  });
+
   it('reads and writes one scoped query through the async interface', async () => {
     const storage = new LocalStorageQueryProjectionStorage<string[]>({ namespace: 'test' });
     const key = { queryKey: 'limit:10', scope: 'user:workspace' };

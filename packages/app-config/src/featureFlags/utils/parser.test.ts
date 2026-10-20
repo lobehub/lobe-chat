@@ -57,6 +57,13 @@ describe('parseFeatureFlag', () => {
     expect(parseFeatureFlag(input)).toEqual({});
   });
 
+  it('ignores unknown flag names while keeping known ones', () => {
+    expect(parseFeatureFlag('-some_removed_flag')).toEqual({});
+    expect(parseFeatureFlag('+some_removed_flag,+api_key_manage')).toEqual({
+      api_key_manage: true,
+    });
+  });
+
   it('ignores +/- on array-only flags like dev_dock_workspaces', () => {
     expect(parseFeatureFlag('+dev_dock_workspaces')).toEqual({});
     expect(parseFeatureFlag('-dev_dock_workspaces,+api_key_manage')).toEqual({

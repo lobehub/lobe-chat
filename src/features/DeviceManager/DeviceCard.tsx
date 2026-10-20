@@ -1,11 +1,20 @@
 'use client';
 
 import type { DeviceListItem } from '@lobechat/types';
-import { DropdownMenu, Flexbox, Icon, Tooltip } from '@lobehub/ui';
-import { ActionIcon, Avatar, confirmModal, Tag, Text } from '@lobehub/ui/base-ui';
+import {
+  ActionIcon,
+  Avatar,
+  confirmModal,
+  createStaticStyles,
+  cssVar,
+  DropdownMenu,
+  Flexbox,
+  Icon,
+  Tag,
+  Text,
+  Tooltip,
+} from '@lobehub/ui';
 import { useInViewport } from 'ahooks';
-import { createStaticStyles, cssVar } from 'antd-style';
-import dayjs from 'dayjs';
 import {
   EyeOffIcon,
   GlobeIcon,
@@ -18,17 +27,18 @@ import { memo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import VisibilityConfirmContent from '@/features/VisibilityConfirmContent';
-import { lambdaQuery } from '@/libs/trpc/client';
 import { useUserStore } from '@/store/user';
 import { userProfileSelectors } from '@/store/user/selectors';
 
-import { refreshDeviceList } from './const';
-import { buildHealthTimeline } from './DeviceHealth/buildHealthTimeline';
+import { DeviceRunningSummaryValue } from './DeviceActivity/RunningUsers';
 import { useDeviceMetricSeries } from './DeviceHealth/shared';
-import UsageMeter, { UsageMeterGroup } from './DeviceHealth/UsageMeter';
+import UsageMeter, { UsageMeterGroup, UsageMeterSkeleton } from './DeviceHealth/UsageMeter';
+import { latestUsageView } from './DeviceHealth/viewState';
 import { getDeviceIcon, getPlatformLabel } from './getDeviceIcon';
 import { openShareDeviceModal } from './ShareDeviceModal';
 import { useCanEditDevice } from './useCanEditDevice';
+import { useDeviceActivityText } from './useDeviceActivityText';
+import { useDeviceCardMutations } from './useDeviceCardMutations';
 
 const styles = createStaticStyles(({ css }) => ({
   body: css`
@@ -121,23 +131,13 @@ const DeviceCard = memo<DeviceCardProps>(({ device, isCurrent, onOpen }) => {
   // Cards are not virtualized; only cards on screen keep their usage meters polling.
   const cardRef = useRef<HTMLDivElement>(null);
   const [inViewport] = useInViewport(cardRef);
-  const { data } = useDeviceMetricSeries(device.deviceId, !!inViewport);
+  const { data, error } = useDeviceMetricSeries(device.deviceId, device.scope, !!inViewport);
   const { t } = useTranslation('setting');
   const { t: tCommon } = useTranslation('common');
   const canEdit = useCanEditDevice()(device);
   const currentUserId = useUserStore(userProfileSelectors.userId);
 
-  // Workspace devices are self-or-owner-gated + workspace-scoped on the
-  // server; personal devices stay userId-scoped. Route by the device's own
-  // scope.
-  const onRemoveSuccess = () => refreshDeviceList();
-  const removePersonal = lambdaQuery.device.removeDevice.useMutation({
-    onSuccess: onRemoveSuccess,
-  });
-  const removeWorkspace = lambdaQuery.device.removeWorkspaceDevice.useMutation({
-    onSuccess: onRemoveSuccess,
-  });
-  const removeDevice = device.scope === 'workspace' ? removeWorkspace : removePersonal;
+  const { removeDevice, setVisibility } = useDeviceCardMutations(device.scope);
 
   const displayName = device.friendlyName || device.hostname || device.deviceId;
   const isFallback = device.identitySource === 'fallback';
@@ -147,38 +147,11 @@ const DeviceCard = memo<DeviceCardProps>(({ device, isCurrent, onOpen }) => {
   // Rendered inline (not as a dot tooltip): "when was this machine last
   // reachable" is the answer needed to pick between rows, and hover can't
   // answer it for a whole list at once — nor at all on touch.
-  //
-  // Online reads the gateway's live `connectedAt` from `channels[0]` — the
-  // newest connection, since the pool is sorted newest-first in
-  // `deviceGateway.queryDeviceList`. That is the same channel
-  // `sortDevicesByActivity` ranks this row by, so the label always explains
-  // the row's position.
-  //
-  // Offline can only report `lastSeen`, which is stamped on register — and
-  // every client registers right before opening its WS
-  // (`gatewayConnectionSrv`, CLI `registerDevice`) — so it means "last
-  // CONNECTED", not "last active". The copy says exactly that; it becomes a
-  // true last-active once a writer stamps liveness.
-  //
-  // A single connection drops the "1 connection" count — it is the common
-  // case and would truncate the footer on a three-up grid.
-  const activityText = online
-    ? `${
-        channels.length > 1
-          ? t('devices.status.onlineConnections', { count: channels.length })
-          : t('devices.status.online')
-      } · ${t('devices.channel.connected', {
-        time: dayjs(channels[0]?.connectedAt ?? device.lastSeen).fromNow(),
-      })}`
-    : t('devices.lastSeen', { time: dayjs(device.lastSeen).fromNow() });
+  const activityText = useDeviceActivityText(device);
 
   // Publish / make-private for workspace enrollments. Reuses the
   // shared visibility-confirm body so the consequences copy matches agents /
-  // files. Success feedback is the row itself moving to the other tab after
-  // the list refresh.
-  const setVisibility = lambdaQuery.device.setWorkspaceDeviceVisibility.useMutation({
-    onSuccess: () => refreshDeviceList(),
-  });
+  // files.
 
   const handlePublish = () =>
     confirmModal({
@@ -263,7 +236,7 @@ const DeviceCard = memo<DeviceCardProps>(({ device, isCurrent, onOpen }) => {
     device.enroller?.username ||
     t('workspaceSetting.devices.unknownEnroller');
   const platformLabel = getPlatformLabel(device.platform, device.architecture);
-  const latest = data && data.points.length > 0 ? buildHealthTimeline(data).latest : null;
+  const usage = latestUsageView({ data, error });
 
   return (
     <div
@@ -365,18 +338,23 @@ const DeviceCard = memo<DeviceCardProps>(({ device, isCurrent, onOpen }) => {
           </Flexbox>
           <Flexbox gap={4} style={{ minWidth: 0 }}>
             <Text fontSize={13} type={'secondary'}>
-              {t('devices.card.workingDir')}
+              {t('devices.card.runningTopics')}
             </Text>
-            <span className={styles.code} title={device.defaultCwd ?? undefined}>
-              {device.defaultCwd || '—'}
-            </span>
+            <DeviceRunningSummaryValue deviceId={device.deviceId} />
           </Flexbox>
         </div>
 
-        <UsageMeterGroup>
-          <UsageMeter label={t('devices.card.cpuUsage')} value={latest?.cpuPercent} />
-          <UsageMeter label={t('devices.card.memoryUsage')} value={latest?.memoryPercent} />
-        </UsageMeterGroup>
+        {usage.loading ? (
+          <UsageMeterGroup loading>
+            <UsageMeterSkeleton />
+            <UsageMeterSkeleton />
+          </UsageMeterGroup>
+        ) : (
+          <UsageMeterGroup>
+            <UsageMeter label={t('devices.card.cpuUsage')} value={usage.latest?.cpuPercent} />
+            <UsageMeter label={t('devices.card.memoryUsage')} value={usage.latest?.memoryPercent} />
+          </UsageMeterGroup>
+        )}
       </Flexbox>
 
       <Flexbox horizontal align={'center'} className={styles.footer} gap={8}>

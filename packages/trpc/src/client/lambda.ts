@@ -23,6 +23,9 @@ let last401Time = 0;
 let lastMarket401Time = 0;
 const MIN_401_INTERVAL = 5000; // 5 seconds
 
+const isPublicShareRoute = () =>
+  typeof location !== 'undefined' && location.pathname.startsWith('/share/');
+
 // `@trpc/client` throws `TransformResultError` when a response body parses as
 // JSON but is not a `TRPCResponse` — the desktop proxy's 502 network envelope
 // (`{ errorType, body }`), a gateway/WAF JSON error page, and so on. Its message
@@ -96,8 +99,10 @@ const errorHandlingLink: TRPCLink<LambdaRouter> = () => {
                   if (now - last401Time > MIN_401_INTERVAL) {
                     last401Time = now;
                     // Desktop app doesn't have the web auth routes like `/signin`,
-                    // so skip the login redirect/notification there.
-                    if (!isDesktop) {
+                    // so skip the login redirect/notification there. A public
+                    // share page renders without a session, so a 401 from a side
+                    // query there must not log the reader out or leave the page.
+                    if (!isDesktop && !isPublicShareRoute()) {
                       const { getUserStoreState } = await import('@/store/user/store');
                       const { isSignedIn, logout } = getUserStoreState();
                       // If user is still marked as signed in but got 401,
@@ -107,9 +112,11 @@ const errorHandlingLink: TRPCLink<LambdaRouter> = () => {
                         params.set('reason', 'sessionExpired');
                         await logout({ redirectTo: `/signin?${params.toString()}` });
                       } else {
+                        // No session to expire: ask to sign in without the
+                        // "session expired" notice.
                         const { loginRequired } =
                           await import('@/components/Error/loginRequiredNotification');
-                        loginRequired.redirect({ reason: 'sessionExpired' });
+                        loginRequired.redirect();
                       }
                     }
                   }
@@ -241,8 +248,22 @@ const LARGE_INPUT_QUERY_PROCEDURES = new Set([
   'message.getToolResultPayloads',
 ]);
 
+/**
+ * Operation context key for the one-shot LLM relay headers (`withLlmRelay`):
+ * the tab subscribed a gateway channel for this call's LLM requests, and the
+ * server must see which. Per call, so such a call never shares a batch.
+ */
+export const LLM_RELAY_HEADERS_CONTEXT_KEY = 'llmRelayHeaders';
+
+const getLlmRelayHeaders = (op: { context: Record<string, unknown> }) =>
+  op.context?.[LLM_RELAY_HEADERS_CONTEXT_KEY] as Record<string, string> | undefined;
+
+/** TRPC call options carrying a one-shot relay's headers; none without a relay. */
+export const withLlmRelay = (relay?: { headers: Record<string, string> }) =>
+  relay ? { context: { [LLM_RELAY_HEADERS_CONTEXT_KEY]: relay.headers } } : undefined;
+
 // 3. splitLink to conditionally disable batching
-const buildHttpLinks = (options: typeof linkOptions) =>
+const buildBatchedHttpLinks = (options: typeof linkOptions) =>
   splitLink({
     condition: (op) => LARGE_INPUT_QUERY_PROCEDURES.has(op.path),
     false: splitLink({
@@ -258,6 +279,20 @@ const buildHttpLinks = (options: typeof linkOptions) =>
       true: httpLink(options),
     }),
     true: httpLink({ ...options, methodOverride: 'POST' }),
+  });
+
+const buildHttpLinks = (options: typeof linkOptions) =>
+  splitLink({
+    condition: (op) => !!getLlmRelayHeaders(op),
+    false: buildBatchedHttpLinks(options),
+    true: httpLink({
+      ...options,
+      headers: async ({ op }) => ({
+        ...(await options.headers()),
+        ...getLlmRelayHeaders(op),
+      }),
+      methodOverride: 'POST',
+    }),
   });
 
 const customSplitLink = splitLink({

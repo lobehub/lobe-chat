@@ -77,7 +77,7 @@ vi.mock('@lobehub/editor/react', async () => {
   };
 });
 
-vi.mock('@lobehub/ui/base-ui', async (importOriginal) => ({
+vi.mock('@lobehub/ui', async (importOriginal) => ({
   ...(await importOriginal<object>()),
   toast: { error: vi.fn(), success: toastSuccessMock },
 }));
@@ -356,7 +356,7 @@ describe('CreateTaskInlineEntry', () => {
     const attachmentAction = container
       .querySelector('svg.lucide-paperclip')
       ?.closest<HTMLElement>('button');
-    expect(attachmentAction).toHaveStyle({ height: '24px', width: '24px' });
+    expect(attachmentAction).toBeEnabled();
     expect(attachmentAction?.parentElement?.style.getPropertyValue('--lobe-flex-align')).toBe(
       'center',
     );

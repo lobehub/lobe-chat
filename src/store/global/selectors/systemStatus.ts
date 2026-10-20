@@ -1,8 +1,10 @@
 import { type TopicGroupMode } from '@/types/topic';
 
 import type {
+  AgentDocumentSort,
   GlobalState,
   ModelDetailPanelExpandedKey,
+  ProjectTopicSubGroupMode,
   SystemStatus,
   WorkspaceOverridableField,
 } from '../initialState';
@@ -89,6 +91,11 @@ const collapsedTopicGroupKeys =
   (mode: TopicGroupMode) =>
   (s: GlobalState): string[] | undefined =>
     s.status.collapsedTopicGroupKeysByMode?.[mode];
+
+const projectTopicSubGroupMode =
+  (groupId: string) =>
+  (s: GlobalState): ProjectTopicSubGroupMode =>
+    s.status.projectTopicSubGroupModeByGroup?.[groupId] ?? 'none';
 
 const agentSidebarSections =
   (agentId: string | undefined) =>
@@ -187,6 +194,7 @@ export const SIDEBAR_SPACER_ID = '__spacer__';
 
 export const DEFAULT_SIDEBAR_ITEMS: string[] = [
   'tasks',
+  'goals',
   'dashboard',
   'resource',
   'recents',
@@ -433,6 +441,13 @@ const filePanelWidth = (s: GlobalState) => s.status.filePanelWidth;
 const groupAgentBuilderPanelWidth = (s: GlobalState) => s.status.groupAgentBuilderPanelWidth || 360;
 const imagePanelWidth = (s: GlobalState) => s.status.imagePanelWidth;
 const agentListViewMode = (s: GlobalState) => s.status.agentListViewMode || 'list';
+const DEFAULT_AGENT_DOCUMENT_SORT: AgentDocumentSort = {
+  by: 'name',
+  foldersFirst: true,
+  order: 'asc',
+};
+const agentDocumentSort = (s: GlobalState): AgentDocumentSort =>
+  s.status.agentDocumentSort ?? DEFAULT_AGENT_DOCUMENT_SORT;
 const agentListViewOptions = (s: GlobalState) => s.status.agentListViewOptions;
 const agentListExpandedGroupKeys = (s: GlobalState) => s.status.agentListExpandedGroupKeys ?? [];
 const agentListSidebarSectionCollapsed = (s: GlobalState) =>
@@ -481,6 +496,7 @@ const homeSelectedAgentId = (s: GlobalState) => s.status.homeSelectedAgentId;
 
 export const systemStatusSelectors = {
   agentBuilderPanelWidth,
+  agentDocumentSort,
   agentListExpandedGroupKeys,
   agentListSidebarSectionCollapsed,
   agentListViewMode,
@@ -550,6 +566,7 @@ export const systemStatusSelectors = {
   verifyReportPanelWidth,
   tokenDisplayFormatShort,
   collapsedTopicGroupKeys,
+  projectTopicSubGroupMode,
   topicPageSize,
   videoPanelWidth,
   videoTopicViewMode,

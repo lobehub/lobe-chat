@@ -7,7 +7,7 @@ import { getRedisServiceClient } from './client';
 export const workspaceRescan = {
   async claim(scope: { cwd: string; deviceId: string; userId: string; workspaceId?: string }) {
     return claimRedisOnce(
-      await getRedisServiceClient(),
+      await getRedisServiceClient('sendPathCache'),
       RedisKeys.sendPathCache.workspaceRescanClaim(
         scope.userId,
         scope.workspaceId ?? 'personal',

@@ -305,6 +305,38 @@ describe('redundant persist writes', () => {
     expect(storage.rows.get(`${SCOPE}|a?{}`)?.data).toEqual([item('1')]);
   });
 
+  it('does not count an unconfirmed write as stored: a dropped write is retried', async () => {
+    resetScope();
+    const storage = createStorage();
+    const { engine } = setupList(storage);
+    // The first write of the row is slow, then fails (an aborted transaction).
+    let failFirst!: () => void;
+    const { set } = storage.storage;
+    let held = true;
+    storage.storage.set = (key, row) =>
+      held && key.queryKey === 'a?{}'
+        ? ((held = false),
+          new Promise<void>((_, reject) => (failFirst = () => reject(new Error('aborted')))))
+        : set(key, row);
+
+    engine.replace({ id: 'a' }, [item('1')]);
+    await flush();
+    // A deep-equal revalidation while that write is still in flight.
+    engine.replace({ id: 'a' }, [item('1')]);
+    await flush();
+    failFirst();
+    await flush();
+
+    // The second persist was not skipped: the row holds the value.
+    expect(storage.rows.get(`${SCOPE}|a?{}`)?.data).toEqual([item('1')]);
+
+    // Once a write is confirmed, an equal revalidation is skipped again.
+    const writes = rowWrites(storage, 'a?{}');
+    engine.replace({ id: 'a' }, [item('1')]);
+    await flush();
+    expect(rowWrites(storage, 'a?{}')).toBe(writes);
+  });
+
   it('writes again after an entity patch rewrote the row behind it', async () => {
     resetScope();
     const storage = createStorage();
@@ -325,6 +357,173 @@ describe('redundant persist writes', () => {
     engine.replace({ id: 'a' }, [item('1'), item('2')]);
     await flush();
     expect(storage.rows.get(`${SCOPE}|a?{}`)?.data).toEqual([item('1'), item('2')]);
+  });
+});
+
+describe('clearScope purges an inactive scope behind its queued writes', () => {
+  it('purges a row and index entry whose writes were still queued, and leaves the active scope alone', async () => {
+    resetScope();
+    const storage = createStorage();
+    const { engine, host } = setupList(storage);
+    // The previous user's row write is still in flight when the purge starts.
+    let release!: () => void;
+    const held = new Promise<void>((resolve) => (release = resolve));
+    const { set } = storage.storage;
+    storage.storage.set = async (key, row) => {
+      if (key.scope === SCOPE && key.queryKey === 'a?{}') await held;
+      return set(key, row);
+    };
+    engine.replace({ id: 'a' }, [item('deleted')]);
+
+    // The account switches; the new user paints and persists its own row.
+    scopeState.current = 'u2';
+    engine.replace({ id: 'b' }, [item('active')]);
+    await flush();
+
+    const purging = engine.clearScope(SCOPE);
+    release();
+    await expect(purging).resolves.toBe(true);
+    await flush();
+
+    expect(storage.rows.has(`${SCOPE}|a?{}`)).toBe(false);
+    expect(storage.index()).not.toContain('a?{}');
+    // The active user's view and row are untouched.
+    expect(host.view().b).toEqual([item('active')]);
+    expect(storage.rows.get('u2|b?{}')?.data).toEqual([item('active')]);
+    resetScope();
+  });
+
+  it('is clear() for the active scope', async () => {
+    resetScope();
+    const storage = createStorage();
+    const { engine, host } = setupList(storage);
+    engine.replace({ id: 'a' }, [item('1')]);
+    await flush();
+
+    await expect(engine.clearScope(SCOPE)).resolves.toBe(true);
+
+    expect(host.view()).toEqual({});
+    expect(storage.dataKeys()).toEqual([]);
+  });
+});
+
+describe('entity changes confirmed for a captured scope', () => {
+  it('removeEntity({ scope }) patches only that scope’s rows, leaving the active view alone', async () => {
+    resetScope();
+    const storage = createStorage();
+    const { engine, host } = setupList(storage);
+    engine.replace({ id: 'a' }, [item('1'), item('2')]);
+    await flush();
+
+    // The account switches; the new one shows a list holding the same id.
+    scopeState.current = 'u2';
+    engine.replace({ id: 'b' }, [item('1')]);
+    await flush();
+
+    engine.removeEntity('1', { scope: SCOPE });
+    await flush();
+
+    expect(storage.rows.get(`${SCOPE}|a?{}`)?.data).toEqual([item('2')]);
+    // The active account's view and row are untouched.
+    expect(host.view().b).toEqual([item('1')]);
+    expect(storage.rows.get('u2|b?{}')?.data).toEqual([item('1')]);
+
+    // Back on the first account, its list hydrates without the entity.
+    scopeState.current = SCOPE;
+    engine.ensureScope(SCOPE);
+    await engine.hydrate({ id: 'a' });
+    expect(host.view().a).toEqual([item('2')]);
+    resetScope();
+  });
+
+  it('reconciles an entry hydrated while an off-scope update was still landing', async () => {
+    resetScope();
+    const storage = createStorage();
+    const { engine, host } = setupList(storage);
+    engine.replace({ id: 'a' }, [item('1'), item('2')]);
+    await flush();
+    scopeState.current = 'u2';
+    engine.ensureScope('u2');
+
+    // Hold the patch on its index read, so the switch back lands first.
+    let release!: () => void;
+    const held = new Promise<void>((resolve) => (release = resolve));
+    const { getStrict } = storage.storage;
+    storage.storage.getStrict = async (key) => {
+      if (key.scope === SCOPE && key.queryKey === REPLICA_INDEX_KEY) await held;
+      return getStrict!(key);
+    };
+    engine.updateEntity<Item>('1', () => ({ id: '1', renamed: true }) as Item, { scope: SCOPE });
+
+    // Back on the first account: its list hydrates the pre-patch row.
+    scopeState.current = SCOPE;
+    engine.ensureScope(SCOPE);
+    await engine.hydrate({ id: 'a' });
+    expect(host.view().a).toEqual([item('1'), item('2')]);
+
+    release();
+    await flush();
+    await flush();
+
+    // The patch landed in storage and in the view now on screen.
+    expect(storage.rows.get(`${SCOPE}|a?{}`)?.data).toEqual([
+      { id: '1', renamed: true },
+      item('2'),
+    ]);
+    expect(host.view().a).toEqual([{ id: '1', renamed: true }, item('2')]);
+    resetScope();
+  });
+
+  it('patches a captured scope’s rows whose writes were still queued at the switch', async () => {
+    resetScope();
+    const storage = createStorage();
+    const { engine, host } = setupList(storage);
+    // Every write of the first account is still queued when the account switches.
+    let release!: () => void;
+    const held = new Promise<void>((resolve) => (release = resolve));
+    const { set } = storage.storage;
+    storage.storage.set = async (key, row) => {
+      if (key.scope === SCOPE) await held;
+      return set(key, row);
+    };
+    engine.replace({ id: 'a' }, [item('1'), item('2')]);
+    engine.replace({ id: 'b' }, [item('1')]);
+
+    scopeState.current = 'u2';
+    engine.ensureScope('u2');
+    engine.replace({ id: 'c' }, [item('1')]);
+    engine.removeEntity('1', { scope: SCOPE });
+    engine.updateEntity<Item>('2', () => ({ id: '2', renamed: true }) as Item, { scope: SCOPE });
+
+    release();
+    for (let i = 0; i < 5; i++) await flush();
+
+    // Neither row was in the persisted index yet, yet both got the change.
+    expect(storage.rows.get(`${SCOPE}|a?{}`)?.data).toEqual([{ id: '2', renamed: true }]);
+    expect(storage.rows.get(`${SCOPE}|b?{}`)?.data).toEqual([]);
+    // The active account is untouched.
+    expect(host.view().c).toEqual([item('1')]);
+    expect(storage.rows.get('u2|c?{}')?.data).toEqual([item('1')]);
+    resetScope();
+  });
+
+  it('updateEntity({ scope }) patches only that scope’s rows', async () => {
+    resetScope();
+    const storage = createStorage();
+    const { engine, host } = setupList(storage);
+    engine.replace({ id: 'a' }, [item('1')]);
+    await flush();
+    scopeState.current = 'u2';
+    engine.replace({ id: 'b' }, [item('1')]);
+    await flush();
+
+    engine.updateEntity<Item>('1', () => ({ id: '1', renamed: true }) as Item, { scope: SCOPE });
+    await flush();
+
+    expect(storage.rows.get(`${SCOPE}|a?{}`)?.data).toEqual([{ id: '1', renamed: true }]);
+    expect(host.view().b).toEqual([item('1')]);
+    expect(storage.rows.get('u2|b?{}')?.data).toEqual([item('1')]);
+    resetScope();
   });
 });
 

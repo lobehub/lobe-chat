@@ -1,8 +1,6 @@
 'use client';
 
-import { Block, Flexbox, Grid } from '@lobehub/ui';
-import { Skeleton } from '@lobehub/ui/base-ui';
-import { createStaticStyles, cssVar } from 'antd-style';
+import { Block, createStaticStyles, cssVar, Flexbox, Grid, Skeleton } from '@lobehub/ui';
 
 import WideScreenContainer from '@/features/WideScreenContainer';
 import type { RouteSkeletonProps } from '@/spa/router/routeMeta';

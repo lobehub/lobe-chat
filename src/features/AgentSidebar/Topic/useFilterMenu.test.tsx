@@ -64,8 +64,8 @@ describe('useTopicFilterDropdownMenu group modes', () => {
     ]);
   });
 
-  /** @example The project sidebar keeps by agent because its topics span agents. */
-  it('offers by agent inside a project-scoped list', () => {
+  /** @example The project sidebar keeps by agent and by device because its topics span agents and machines. */
+  it('offers by agent and by device inside a project-scoped list', () => {
     scopeMock.scope = { projectId: 'prj-1' };
 
     const { result } = renderHook(() => useTopicFilterDropdownMenu());
@@ -75,6 +75,7 @@ describe('useTopicFilterDropdownMenu group modes', () => {
       'filter.groupMode.byTime',
       'filter.groupMode.byProject',
       'filter.groupMode.byAgent',
+      'filter.groupMode.byDevice',
       'filter.groupMode.flat',
     ]);
   });

@@ -1,6 +1,4 @@
-import { Center } from '@lobehub/ui';
-import { Spin } from '@lobehub/ui/base-ui';
-import { createStaticStyles } from 'antd-style';
+import { Center, createStaticStyles, Spin } from '@lobehub/ui';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router';
 

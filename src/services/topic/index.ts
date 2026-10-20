@@ -24,6 +24,8 @@ import {
  */
 export interface TopicListItem extends ChatTopic {
   agentId?: string | null;
+  /** Owning chat group, for a group conversation (which has no `agentId`). */
+  groupId?: string | null;
   lastAssistantMessage?: string | null;
   /**
    * Visibility of the owning agent/group. `'private'` conversations stay out of
@@ -181,7 +183,7 @@ export class TopicService {
   updateTopicModel = (
     id: string,
     value: {
-      metadata?: Pick<ChatTopicMetadata, 'heteroEffort' | 'reasoningConfig'>;
+      metadata?: Pick<ChatTopicMetadata, 'heteroEffort' | 'heteroSpeed' | 'reasoningConfig'>;
       model: string;
       provider: string;
     },

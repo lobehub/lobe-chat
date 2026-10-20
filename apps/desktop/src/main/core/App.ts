@@ -25,6 +25,7 @@ import {
   runtimeEnvironmentBinaries,
 } from '@/modules/binaries';
 import { generateCliWrapper, getCliWrapperDir } from '@/modules/cliEmbedding';
+import { PermissionGuide } from '@/modules/permissionGuide/PermissionGuide';
 import { ScreenCaptureManager } from '@/modules/screenCapture/ScreenCaptureManager';
 import { BUILD_CHANNEL, UPDATE_SERVER_URL } from '@/modules/updater/configs';
 import type { IServiceModule, ServiceLifecycle, ServiceModule } from '@/services';
@@ -77,6 +78,7 @@ export class App {
   localFileProtocolManager: LocalFileProtocolManager;
   binaryManager: BinaryManager;
   screenCaptureManager: ScreenCaptureManager;
+  permissionGuide: PermissionGuide;
   chromeFlags: string[] = ['OverlayScrollbar', 'FluentOverlayScrollbar', 'FluentScrollbar'];
 
   /**
@@ -172,6 +174,7 @@ export class App {
     this.protocolManager = new ProtocolManager(this);
     this.binaryManager = new BinaryManager(this);
     this.screenCaptureManager = new ScreenCaptureManager(this);
+    this.permissionGuide = new PermissionGuide(this);
 
     this.coreUpdateManager = new CoreUpdateManager(this);
     this.coreUpdateManager.initialize();
@@ -263,7 +266,14 @@ export class App {
     const isSingle = app.requestSingleInstanceLock();
     if (!isSingle) {
       logger.info('Another instance is already running, exiting');
+      // `app.exit(0)` only *initiates* shutdown — without returning, the rest
+      // of this async bootstrap kept running: the duplicate instance went on
+      // to start the IPC server, gateway connection and shell services, so a
+      // machine could briefly run two live device processes for one user and
+      // both answered gateway tool calls (observed as the same runCommand
+      // executing twice with two independent process trees). Stop here.
       app.exit(0);
+      return;
     }
 
     this.initDevBranding();

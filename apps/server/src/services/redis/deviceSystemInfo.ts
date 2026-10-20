@@ -12,7 +12,7 @@ export const deviceSystemInfo = {
     maxAgeMs = 3 * 60 * 1000,
   ) {
     return readThroughRedis(
-      await getRedisServiceClient(),
+      await getRedisServiceClient('sendPathCache'),
       RedisKeys.sendPathCache.deviceSystemInfo(
         scope.userId,
         scope.workspaceId ?? 'personal',

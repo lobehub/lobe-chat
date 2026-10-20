@@ -304,11 +304,13 @@ export const convertOpenAIResponseInputs = async (
   // "No tool output found for function call call_w5odMFjtXEYBBVyBUAQNMOh5."
   const validToolCallIds = new Set<string>();
   const pairedToolOutputIds = new Set<string>();
+  const customToolCallIds = new Set<string>();
 
   for (const message of messages) {
     if (message.role === 'assistant' && message.tool_calls?.length) {
       message.tool_calls.forEach((tool) => {
         if (tool.id) validToolCallIds.add(tool.id);
+        if (tool.id && tool.type === 'custom') customToolCallIds.add(tool.id);
       });
     }
   }
@@ -327,6 +329,15 @@ export const convertOpenAIResponseInputs = async (
     messages.map(async (message) => {
       const items: OpenAI.Responses.ResponseInputItem[] = [];
       const reasoning = message.reasoning;
+      if (message.responsesTools) {
+        return [
+          {
+            type: 'additional_tools',
+            role: 'developer',
+            tools: message.responsesTools,
+          } satisfies OpenAI.Responses.ResponseInputItem,
+        ];
+      }
 
       /**
        * Resolve persisted Responses reasoning items for stateless replay. Encrypted
@@ -393,12 +404,24 @@ export const convertOpenAIResponseInputs = async (
           : message.tool_calls;
 
         toolCalls.forEach((tool) => {
-          items.push({
-            arguments: strictToolPairing ? tool.function.arguments : tool.function.name,
+          const identity = {
             call_id: tool.id,
             name: tool.function.name,
-            type: 'function_call',
-          });
+            ...(tool.namespace ? { namespace: tool.namespace } : {}),
+          };
+          items.push(
+            tool.type === 'custom'
+              ? {
+                  ...identity,
+                  input: tool.function.arguments,
+                  type: 'custom_tool_call',
+                }
+              : {
+                  ...identity,
+                  arguments: strictToolPairing ? tool.function.arguments : tool.function.name,
+                  type: 'function_call',
+                },
+          );
         });
 
         return items;
@@ -410,6 +433,17 @@ export const convertOpenAIResponseInputs = async (
           (!message.tool_call_id || !pairedToolOutputIds.has(message.tool_call_id))
         )
           return items;
+
+        if (message.responsesOutput !== undefined) {
+          items.push({
+            call_id: message.tool_call_id!,
+            output: message.responsesOutput,
+            type: customToolCallIds.has(message.tool_call_id!)
+              ? 'custom_tool_call_output'
+              : 'function_call_output',
+          });
+          return items;
+        }
 
         // `function_call_output.output` is text-only. When the tool result
         // carries images (e.g. builtin `readFile` on an image file), keep the
@@ -432,8 +466,10 @@ export const convertOpenAIResponseInputs = async (
         items.push({
           call_id: message.tool_call_id,
           output: outputText,
-          type: 'function_call_output',
-        } as OpenAI.Responses.ResponseFunctionToolCallOutputItem);
+          type: customToolCallIds.has(message.tool_call_id!)
+            ? 'custom_tool_call_output'
+            : 'function_call_output',
+        } as OpenAI.Responses.ResponseInputItem);
 
         if (imageParts.length > 0) {
           const imageContent = (

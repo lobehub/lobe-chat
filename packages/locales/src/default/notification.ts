@@ -1,6 +1,8 @@
 export default {
   'agent_cron_job_completed': 'Your scheduled task "{{jobName}}" completed successfully.',
   'agent_cron_job_completed_title': 'Scheduled task completed',
+  'agent_cron_job_completed_with_summary':
+    'Your scheduled task "{{jobName}}" completed successfully.\n\n{{summary}}',
   'agent_cron_job_failed':
     'Your scheduled task "{{jobName}}" failed. Open the task to see the full error.',
   'agent_cron_job_failed_insufficient_budget':
@@ -14,6 +16,14 @@ export default {
   'agent_intervention_required_title': '{{agent}} needs your review',
   'agent_run_completed': '{{preview}}',
   'agent_run_completed_title': 'Agent task completed',
+  'agent_task_run_failed': 'Your task "{{jobName}}" failed. Open the task to see the full error.',
+  'agent_task_run_failed_heartbeat_timeout':
+    'Your task "{{jobName}}" stopped responding and was marked as failed. Open the task to run it again.',
+  'agent_task_run_failed_heartbeat_timeout_title': 'Task timed out',
+  'agent_task_run_failed_insufficient_budget':
+    'Your task "{{jobName}}" couldn\'t run because your account is out of credits. Top up or upgrade your plan to continue.',
+  'agent_task_run_failed_insufficient_budget_title': 'Task failed: insufficient credits',
+  'agent_task_run_failed_title': 'Task failed',
   'agent_transfer_reassigned':
     'A workspace owner transferred your agent "{{agentTitle}}" to {{recipientLabel}}.',
   'agent_transfer_reassigned_title': 'Agent reassigned',

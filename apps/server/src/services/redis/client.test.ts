@@ -37,7 +37,7 @@ describe('getRedisServiceClient', () => {
     mockGetRedisConfig.mockReturnValue({ enabled: false, prefix: 'lobe', tls: false, url: '' });
     const { getRedisServiceClient } = await loadClient();
 
-    await expect(getRedisServiceClient()).resolves.toBeNull();
+    await expect(getRedisServiceClient('sendPathCache')).resolves.toBeNull();
     expect(mockTryInitializeRedisWithPrefix).not.toHaveBeenCalled();
   });
 
@@ -47,7 +47,7 @@ describe('getRedisServiceClient', () => {
     mockTryInitializeRedisWithPrefix.mockResolvedValue(provider);
     const { getRedisServiceClient } = await loadClient();
 
-    const client = await getRedisServiceClient();
+    const client = await getRedisServiceClient('sendPathCache');
     expect(client).not.toBeNull();
     await expect(client!.get('k')).resolves.toBe('value');
 
@@ -61,9 +61,9 @@ describe('getRedisServiceClient', () => {
     mockTryInitializeRedisWithPrefix.mockResolvedValue({ get: vi.fn(), set: vi.fn() });
 
     mockGetRedisConfig.mockReturnValue({ ...enabledConfig, prefix: 'staging' });
-    await (await loadClient()).getRedisServiceClient();
+    await (await loadClient()).getRedisServiceClient('sendPathCache');
     mockGetRedisConfig.mockReturnValue({ ...enabledConfig, prefix: 'production' });
-    await (await loadClient()).getRedisServiceClient();
+    await (await loadClient()).getRedisServiceClient('sendPathCache');
 
     expect(mockTryInitializeRedisWithPrefix.mock.calls.map(([, prefix]) => prefix)).toEqual([
       'staging:sendPathCache',
@@ -76,8 +76,8 @@ describe('getRedisServiceClient', () => {
     mockTryInitializeRedisWithPrefix.mockResolvedValue(null);
     const { getRedisServiceClient } = await loadClient();
 
-    await expect(getRedisServiceClient()).resolves.toBeNull();
-    await expect(getRedisServiceClient()).resolves.toBeNull();
+    await expect(getRedisServiceClient('sendPathCache')).resolves.toBeNull();
+    await expect(getRedisServiceClient('sendPathCache')).resolves.toBeNull();
 
     expect(mockTryInitializeRedisWithPrefix).toHaveBeenCalledTimes(1);
   });
@@ -89,11 +89,11 @@ describe('getRedisServiceClient', () => {
       mockTryInitializeRedisWithPrefix.mockReturnValue(new Promise(() => {}));
       const { getRedisServiceClient } = await loadClient();
 
-      const pending = getRedisServiceClient();
+      const pending = getRedisServiceClient('sendPathCache');
       await vi.advanceTimersByTimeAsync(1500);
       await expect(pending).resolves.toBeNull();
 
-      await expect(getRedisServiceClient()).resolves.toBeNull();
+      await expect(getRedisServiceClient('sendPathCache')).resolves.toBeNull();
       expect(mockTryInitializeRedisWithPrefix).toHaveBeenCalledTimes(1);
     } finally {
       vi.useRealTimers();
@@ -111,11 +111,35 @@ describe('getRedisServiceClient', () => {
     mockTryInitializeRedisWithPrefix.mockResolvedValue(provider);
     const { getRedisServiceClient } = await loadClient();
 
-    const client = await getRedisServiceClient();
+    const client = await getRedisServiceClient('sendPathCache');
     expect(client).not.toBeNull();
     await expect(client!.get('k')).rejects.toThrow('redis down');
 
-    await expect(getRedisServiceClient()).resolves.toBeNull();
+    await expect(getRedisServiceClient('sendPathCache')).resolves.toBeNull();
     expect(mockTryInitializeRedisWithPrefix).toHaveBeenCalledTimes(1);
+  });
+
+  it('prefixes each key scope with its mapped namespace under REDIS_PREFIX', async () => {
+    mockGetRedisConfig.mockReturnValue(enabledConfig);
+    mockTryInitializeRedisWithPrefix.mockResolvedValue({ get: vi.fn(), set: vi.fn() });
+    const { getRedisServiceClient } = await loadClient();
+
+    await getRedisServiceClient('agentSignal');
+
+    expect(mockTryInitializeRedisWithPrefix).toHaveBeenCalledWith(
+      expect.anything(),
+      'lobe:agent-signal',
+    );
+  });
+
+  it('keeps one scope serving while another scope is cooling down', async () => {
+    mockGetRedisConfig.mockReturnValue(enabledConfig);
+    mockTryInitializeRedisWithPrefix.mockImplementation(async (_config, prefix: string) =>
+      prefix === 'lobe:sendPathCache' ? null : { get: vi.fn(), set: vi.fn() },
+    );
+    const { getRedisServiceClient } = await loadClient();
+
+    await expect(getRedisServiceClient('sendPathCache')).resolves.toBeNull();
+    await expect(getRedisServiceClient('agentSignal')).resolves.not.toBeNull();
   });
 });

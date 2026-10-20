@@ -1,5 +1,4 @@
-import { type DivProps } from '@lobehub/ui';
-import { Grid } from '@lobehub/ui';
+import { type DivProps, Grid } from '@lobehub/ui';
 import { type ReactNode } from 'react';
 import { memo } from 'react';
 import { VirtuosoGrid } from 'react-virtuoso';

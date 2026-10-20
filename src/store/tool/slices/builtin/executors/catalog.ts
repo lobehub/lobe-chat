@@ -40,7 +40,6 @@ import { notebookExecutor } from './lobe-notebook';
 import { pageAgentExecutor } from './lobe-page-agent';
 import { skillStoreExecutor } from './lobe-skill-store';
 import { skillsExecutor } from './lobe-skills';
-import { topicReferenceExecutor } from './lobe-topic-reference';
 import { userInteractionExecutor } from './lobe-user-interaction';
 import { webBrowsing } from './lobe-web-browsing';
 import { webOnboardingExecutor } from './lobe-web-onboarding';
@@ -87,7 +86,6 @@ export const builtinToolExecutors = [
   dashboardExecutor,
   videoGenerationExecutor,
   activatorExecutor,
-  topicReferenceExecutor,
   userInteractionExecutor,
   lobeAgentExecutor,
   webOnboardingExecutor,

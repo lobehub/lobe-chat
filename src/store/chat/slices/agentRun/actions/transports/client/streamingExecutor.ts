@@ -23,12 +23,7 @@ import {
   resolveSubAgentModel,
 } from '@lobechat/const';
 import { type ToolsEngine } from '@lobechat/context-engine';
-import {
-  buildTaskDetailPrompt,
-  buildTaskListPrompt,
-  FILE_PREVIEW_CHARS,
-  isOversizedFileContent,
-} from '@lobechat/prompts';
+import { FILE_PREVIEW_CHARS, isOversizedFileContent } from '@lobechat/prompts';
 import {
   buildGoalOverviewContext,
   type ConversationContext,
@@ -68,7 +63,6 @@ import { messageMapKey } from '@/store/chat/utils/messageMapKey';
 import { getElectronStoreState } from '@/store/electron';
 import { getGoalStoreState } from '@/store/goal';
 import { getServerConfigStoreState, serverConfigSelectors } from '@/store/serverConfig';
-import { getTaskStoreState } from '@/store/task';
 import { pageAgentRuntime } from '@/store/tool/slices/builtin/executors/pageAgentRuntime';
 import { type StoreSetter } from '@/store/types';
 import { toolInterventionSelectors } from '@/store/user/selectors';
@@ -76,6 +70,7 @@ import { getUserStoreState } from '@/store/user/store';
 
 import { buildRunLifecycle } from '../../lifecycle/buildRunLifecycle';
 import type { RunParkedReason, RunScope } from '../../lifecycle/types';
+import { buildViewedTaskPrompt } from '../viewedTaskPrompt';
 
 const log = debug('lobe-store:streaming-executor');
 
@@ -91,17 +86,6 @@ const dynamicInterventionAudits = {
       return result.allSafe;
     },
   }),
-};
-
-const hasReferTopicNode = (editorData: Record<string, any> | null | undefined): boolean => {
-  if (!editorData) return false;
-  const walk = (node: any): boolean => {
-    if (!node) return false;
-    if (node.type === 'refer-topic') return true;
-    if (Array.isArray(node.children)) return node.children.some(walk);
-    return false;
-  };
-  return walk(editorData.root);
 };
 
 const getMediaAvailability = (messages: UIChatMessage[]) => ({
@@ -257,7 +241,6 @@ export class StreamingExecutorActionImpl {
     }
 
     // Dynamically inject turn-scoped builtin tools.
-    const hasTopicReference = messages.some((m) => hasReferTopicNode(m.editorData));
     const mediaAvailability = getMediaAvailability(messages);
     const serverConfigState = getServerConfigStoreState();
     const multimodalUnderstandingConfigured =
@@ -273,7 +256,6 @@ export class StreamingExecutorActionImpl {
     const runtimePluginIds = [
       ...new Set([
         ...(pluginIds || []),
-        ...(hasTopicReference ? ['lobe-topic-reference'] : []),
         ...(shouldEnableMultimodalUnderstanding ? [LobeAgentManifest.identifier] : []),
       ]),
     ];
@@ -284,11 +266,10 @@ export class StreamingExecutorActionImpl {
         : effectivePluginIds;
 
     log(
-      '[internal_createAgentState] resolved plugins=%o, isSubAgent=%s, disableTools=%s, hasTopicReference=%s',
+      '[internal_createAgentState] resolved plugins=%o, isSubAgent=%s, disableTools=%s',
       effectivePluginIds,
       isSubAgent,
       disableTools,
-      hasTopicReference,
     );
 
     // Generate tools using ToolsEngine (centralized here, passed to chatService via agentConfig)
@@ -447,28 +428,7 @@ export class StreamingExecutorActionImpl {
     const viewedTask = operation?.context.viewedTask;
     if (viewedTask) {
       try {
-        const taskState = getTaskStoreState();
-        let contextPrompt: string | undefined;
-
-        if (viewedTask.type === 'list') {
-          const viewedList = taskState.activeTaskListKey
-            ? taskState.taskListMap[taskState.activeTaskListKey]
-            : undefined;
-          const tasks = viewedList?.items ?? [];
-          contextPrompt = buildTaskListPrompt({
-            defaultAssigneeAgentId: operation.context.defaultTaskAssigneeAgentId,
-            tasks,
-            total: viewedList?.total || tasks.length,
-          });
-        } else {
-          const detail = taskState.taskDetailMap[viewedTask.taskId];
-          if (detail)
-            contextPrompt = buildTaskDetailPrompt({
-              defaultAssigneeAgentId: operation.context.defaultTaskAssigneeAgentId,
-              task: detail,
-            });
-        }
-
+        const contextPrompt = buildViewedTaskPrompt(operation.context);
         if (contextPrompt) {
           runtimeInitialContext = {
             ...runtimeInitialContext,

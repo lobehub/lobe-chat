@@ -51,6 +51,13 @@ export const FeatureFlagsSchema = z.object({
   agent_gateway_mux: FeatureFlagValue.optional(),
 
   /**
+   * LobeHub Mobile rollout switch for the multiplexed gateway socket and
+   * protocol-v2 payloads. Independent from `agent_gateway_mux`: flipping one
+   * never changes the other client. Array values are user ids.
+   */
+  agent_gateway_mux_mobile: FeatureFlagValue.optional(),
+
+  /**
    * Rollout gate for relaying LLM calls to the user's device: a model provider
    * only that device can reach (a local Ollama / LM Studio, a private-network
    * endpoint) runs one attempt at a time on the client that started the run,
@@ -69,7 +76,6 @@ export const FeatureFlagsSchema = z.object({
   dashboard: FeatureFlagValue.optional(),
 
   // internal flag
-  agent_self_iteration: FeatureFlagValue.optional(),
   agent_onboarding: FeatureFlagValue.optional(),
   dev_dock: FeatureFlagValue.optional(),
   dev_dock_workspaces: z.array(z.string()).optional(),
@@ -134,6 +140,7 @@ export const DEFAULT_FEATURE_FLAGS: IFeatureFlags = {
   // Off until an admin publishes a user allowlist or flips it to true; the
   // v1 socket stays the default everywhere until then.
   agent_gateway_mux: false,
+  agent_gateway_mux_mobile: false,
 
   // Off until the client executor ships everywhere; allowlist first.
   agent_llm_relay: false,
@@ -141,7 +148,6 @@ export const DEFAULT_FEATURE_FLAGS: IFeatureFlags = {
   // Off until an admin publishes a user allowlist or flips it to true.
   dashboard: false,
 
-  agent_self_iteration: isDev,
   agent_onboarding: isDev,
   dev_dock: isDev,
   auth_captcha: true,
@@ -174,6 +180,7 @@ export const mapFeatureFlagsEnvToState = (
 
     enableAgentShare: evaluateFeatureFlag(config.agent_share, userId),
     enableGatewayMux: evaluateFeatureFlag(config.agent_gateway_mux, userId),
+    enableGatewayMuxMobile: evaluateFeatureFlag(config.agent_gateway_mux_mobile, userId),
     enableLlmRelay: evaluateFeatureFlag(config.agent_llm_relay, userId),
     enableDashboard: evaluateFeatureFlag(config.dashboard, userId),
     showProvider: evaluateFeatureFlag(config.provider_settings, userId),
@@ -191,7 +198,6 @@ export const mapFeatureFlagsEnvToState = (
 
     enableKnowledgeBase: evaluateFeatureFlag(config.knowledge_base, userId),
     enableRAGEval: evaluateFeatureFlag(config.rag_eval, userId),
-    enableAgentSelfIteration: evaluateFeatureFlag(config.agent_self_iteration, userId),
     enableAgentOnboarding: evaluateFeatureFlag(config.agent_onboarding, userId),
     enableDevDock: evaluateFeatureFlag(config.dev_dock, userId),
     enableAuthCaptcha: evaluateFeatureFlag(config.auth_captcha, userId),

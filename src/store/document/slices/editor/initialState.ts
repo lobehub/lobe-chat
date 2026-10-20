@@ -7,7 +7,11 @@ import type { EditorState as LobehubEditorState } from '@lobehub/editor/react';
  * Document source type - determines which service to use for persistence
  */
 export type DocumentSourceType = 'notebook' | 'page';
-export type DocumentContentFormat = 'markdown' | 'skillMarkdown';
+/**
+ * - `html`: a self-contained HTML page. It is rendered in a sandboxed frame and
+ *   never loaded into, read from or saved through the rich-text editor.
+ */
+export type DocumentContentFormat = 'html' | 'markdown' | 'skillMarkdown';
 
 /**
  * Editor content state for a single document
