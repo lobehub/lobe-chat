@@ -342,14 +342,21 @@ const DriveExplorer = memo<DriveExplorerProps>(({ drive, isWorkspace, toolbarExt
           </Flexbox>
         )}
 
-        {files.isLoading ? (
+        {files.isLoading || (!path && directories.isLoading) ? (
           <Flexbox align={'center'} flex={1} justify={'center'} padding={24}>
             <Text type={'secondary'}>{t('workingDirectory.foldersLoading', { ns: 'device' })}</Text>
           </Flexbox>
-        ) : files.error ? (
+        ) : files.error || (!path && directories.error) ? (
+          // At the root the instances say which folders are environment
+          // directories, which are read-only here; without them such a folder
+          // would offer rename and delete, so their failure fails the listing.
           <Flexbox align={'center'} flex={1} gap={12} justify={'center'} padding={24}>
             <Text type={'secondary'}>{t('drive.explorer.loadFailed')}</Text>
-            <Button onClick={() => void files.mutate()}>{t('retry', { ns: 'common' })}</Button>
+            <Button
+              onClick={() => void Promise.all([files.mutate(), !path && directories.mutate()])}
+            >
+              {t('retry', { ns: 'common' })}
+            </Button>
           </Flexbox>
         ) : entries.length === 0 && !creating ? (
           <Flexbox align={'center'} flex={1} gap={12} justify={'center'} padding={24}>
