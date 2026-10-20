@@ -1,3 +1,4 @@
+import { getAuthErrorResourceOverrides } from '@/business/client/authErrorResourceOverrides';
 import defaultAuth from '@/locales/default/auth';
 import defaultAuthError from '@/locales/default/authError';
 import defaultCommon from '@/locales/default/common';
@@ -23,14 +24,20 @@ for (const [file, module] of Object.entries(translated)) {
   if (!match) continue;
 
   const [, locale, namespace] = match;
-  (BUNDLES[locale!] ??= {})[namespace as AuthNamespace] = module.default;
+  (BUNDLES[locale!] ??= {})[namespace as AuthNamespace] =
+    namespace === 'authError'
+      ? { ...module.default, ...getAuthErrorResourceOverrides(locale!) }
+      : module.default;
 }
 
 // English comes from the typed source the other locales are generated from, so
 // a key added there is never missing here while the mirror catches up.
 BUNDLES[DEFAULT_PRERENDER_LOCALE] = {
   auth: defaultAuth,
-  authError: defaultAuthError,
+  authError: {
+    ...defaultAuthError,
+    ...getAuthErrorResourceOverrides(DEFAULT_PRERENDER_LOCALE),
+  },
   common: defaultCommon,
   error: defaultError,
   marketAuth: defaultMarketAuth,

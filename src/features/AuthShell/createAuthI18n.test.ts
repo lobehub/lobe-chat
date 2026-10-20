@@ -3,10 +3,9 @@ import { describe, expect, it, vi } from 'vitest';
 import { createAuthI18n } from './createAuthI18n';
 
 vi.mock('@/business/client/authErrorResourceOverrides', () => ({
-  authErrorResourceOverrides: {
-    'en-US': { 'codes.BUSINESS_ERROR': 'Business error' },
-    'zh-CN': { 'codes.BUSINESS_ERROR': '业务错误' },
-  },
+  getAuthErrorResourceOverrides: (locale: string) => ({
+    'codes.BUSINESS_ERROR': locale === 'zh-CN' ? '业务错误' : 'Business error',
+  }),
 }));
 
 describe('createAuthI18n', () => {

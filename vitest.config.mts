@@ -1,7 +1,9 @@
-import { dirname, join, resolve } from 'node:path';
+import path from 'node:path';
 
 import tsconfigPaths from 'vite-tsconfig-paths';
 import { defineConfig } from 'vitest/config';
+
+const { dirname, join, resolve } = path;
 
 if (process.env.NODE_ENV === 'production') {
   Reflect.set(process.env, 'NODE_ENV', 'test');
@@ -77,7 +79,7 @@ export default defineConfig({
     exclude: ['crypto', 'util', 'tty'],
   },
   plugins: [
-    tsconfigPaths({ projects: ['.', './apps/share', './apps/workbench'] }),
+    tsconfigPaths({ projects: ['.', './apps/auth', './apps/share', './apps/workbench'] }),
     // Let `.md` imports resolve to their raw text content so Rollup/Vitest
     // doesn't try to parse Markdown as JavaScript.
     {

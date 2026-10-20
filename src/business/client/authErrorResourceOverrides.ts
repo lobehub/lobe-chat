@@ -1,4 +1,1 @@
-export const authErrorResourceOverrides: Record<'en-US' | 'zh-CN', Record<string, string>> = {
-  'en-US': {},
-  'zh-CN': {},
-};
+export const getAuthErrorResourceOverrides = (_locale: string): Record<string, string> => ({});
