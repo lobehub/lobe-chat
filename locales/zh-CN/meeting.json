@@ -39,6 +39,7 @@
   "detail.transcript.unknownSpeaker": "发言人",
   "entry.notes": "会议纪要",
   "entry.record": "录制会议",
+  "entry.paused": "已暂停 {{time}}",
   "entry.recording": "录音中 {{time}}",
   "entry.tooltip": "录制会议，实时生成逐字稿",
   "error.capture_interrupted.desc": "录音已暂停。重新连接麦克风后点「继续」。",
