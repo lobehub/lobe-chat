@@ -263,9 +263,9 @@ const anthropicChatModels: AIChatModelCard[] = [
     id: 'claude-sonnet-5',
     knowledgeCutoff: '2026-01',
     maxOutput: 128_000,
-    // Introductory pricing, in effect through 2026-08-31. From 2026-09-01 standard rates apply:
-    // input 3 / output 15 / cacheRead 0.3 / cacheWrite 3.75 (per million tokens).
-    // See https://platform.claude.com/docs/en/about-claude/pricing
+    // The $2 / $10 launch pricing became the standard price; the increase to $3 / $15 that was
+    // scheduled for 2026-09-01 did not happen.
+    // https://platform.claude.com/docs/en/about-claude/pricing
     pricing: {
       units: [
         { name: 'textInput_cacheRead', rate: 0.2, strategy: 'fixed', unit: 'millionTokens' },

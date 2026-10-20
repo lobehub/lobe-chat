@@ -1,6 +1,6 @@
 import { DEFAULT_AGENT_CONFIG } from '@lobechat/const';
 import { CHAT_GROUP_SESSION_ID_PREFIX } from '@lobechat/types';
-import { toast } from '@lobehub/ui/base-ui';
+import { toast } from '@lobehub/ui';
 import { act, renderHook, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -10,7 +10,6 @@ import { setScopedMutate } from '@/libs/swr';
 import * as cacheScopeModule from '@/libs/swr/useCacheScope';
 import { getCacheScope } from '@/libs/swr/useCacheScope';
 import { agentService } from '@/services/agent';
-import { agentDocumentService } from '@/services/agentDocument';
 import { useGlobalStore } from '@/store/global';
 import { useUserStore } from '@/store/user';
 import { type LobeAgentConfig } from '@/types/agent';
@@ -34,17 +33,10 @@ vi.mock('@/services/agent', () => ({
 }));
 
 vi.mock('@/services/agentDocument', () => ({
-  agentDocumentService: {
-    listDocuments: vi.fn(),
-  },
-  agentDocumentSWRKeys: {
-    documents: (agentId: string) => ['agent:documents', agentId] as const,
-    documentsList: (agentId: string) => ['agent:documentsList', agentId] as const,
-  },
   resolveAgentDocumentsContext: vi.fn(),
 }));
 
-vi.mock('@lobehub/ui/base-ui', async (importOriginal) => ({
+vi.mock('@lobehub/ui', async (importOriginal) => ({
   ...(await importOriginal<object>()),
   ...(await import('~base-ui-stubs')).baseUiStubs,
 }));
@@ -332,31 +324,6 @@ describe('AgentSlice Actions', () => {
       });
 
       expect(vi.mocked(agentService.createAgent).mock.calls[0][0].config?.name).toBe('Ada');
-    });
-  });
-
-  describe('useFetchAgentDocuments', () => {
-    it('should fetch agent documents via listDocuments', async () => {
-      const docs = [
-        {
-          documentId: 'doc-1',
-          filename: 'setup.md',
-          id: 'doc-1',
-          title: 'Setup',
-        },
-      ];
-      vi.mocked(agentDocumentService.listDocuments).mockResolvedValue(docs as any);
-
-      const store = renderHook(() => useAgentStore(), { wrapper: withSWR });
-
-      const { result } = renderHook(() => store.result.current.useFetchAgentDocuments('agent-1'), {
-        wrapper: withSWR,
-      });
-
-      await waitFor(() => {
-        expect(result.current.data).toEqual(docs);
-      });
-      expect(agentDocumentService.listDocuments).toHaveBeenCalledWith({ agentId: 'agent-1' });
     });
   });
 
@@ -1568,6 +1535,39 @@ describe('AgentSlice Actions', () => {
         await useAgentStore.getState().prefetchAgentConfig('agent-1');
       });
       expect(agentService.getAgentConfigById).toHaveBeenCalledTimes(1);
+    });
+
+    it('settles a prefetched "not found" the way the page sync does', async () => {
+      vi.mocked(agentService.getAgentConfigById).mockResolvedValue(null as any);
+
+      await act(async () => {
+        await useAgentStore.getState().prefetchAgentConfig('agent-prefetch-gone');
+      });
+
+      expect(useAgentStore.getState().agentNotFoundMap['agent-prefetch-gone']).toBe(true);
+      expect(useAgentStore.getState().agentMap['agent-prefetch-gone']).toBeUndefined();
+    });
+
+    it('does not let a late prefetch resurrect an agent the page settled as not found', async () => {
+      const agentId = 'agent-prefetch-late';
+      let resolvePrefetch!: (value: unknown) => void;
+      vi.mocked(agentService.getAgentConfigById)
+        .mockImplementationOnce(() => new Promise((resolve) => (resolvePrefetch = resolve)) as any)
+        .mockResolvedValue(null as any);
+
+      const prefetch = useAgentStore.getState().prefetchAgentConfig(agentId);
+      // Navigation mounts the page's own sync, which learns the agent is gone.
+      renderHook(() => useAgentStore().useFetchAgentConfig(true, agentId), { wrapper: withSWR });
+      await waitFor(() => expect(useAgentStore.getState().agentNotFoundMap[agentId]).toBe(true));
+
+      // The hover prefetch started earlier and answers last, with the old config.
+      await act(async () => {
+        resolvePrefetch({ id: agentId, title: 'Stale' });
+        await prefetch;
+      });
+
+      expect(useAgentStore.getState().agentMap[agentId]).toBeUndefined();
+      expect(useAgentStore.getState().agentNotFoundMap[agentId]).toBe(true);
     });
   });
 

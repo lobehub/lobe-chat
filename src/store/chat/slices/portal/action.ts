@@ -1,4 +1,4 @@
-import type { TopicCommentItem } from '@lobechat/types';
+import type { LayersEnum, TopicCommentItem } from '@lobechat/types';
 
 import { projectFileService } from '@/services/projectFile';
 import { type ChatStore } from '@/store/chat/store';
@@ -511,6 +511,10 @@ export class ChatPortalActionImpl {
 
   openDocument = (documentId: string, agentDocumentId?: string): void => {
     this.#get().pushPortalView({ agentDocumentId, documentId, type: PortalViewType.Document });
+  };
+
+  openMemoryDetail = (params: { id: string; layer: LayersEnum }): void => {
+    this.#get().pushPortalView({ ...params, type: PortalViewType.MemoryDetail });
   };
 
   openFilePreview = (file: PortalFile): void => {

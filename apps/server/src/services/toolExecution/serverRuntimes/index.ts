@@ -44,7 +44,6 @@ import { skillManagementRuntime } from './skillManagement';
 import { skillsRuntime } from './skills';
 import { skillStoreRuntime } from './skillStore';
 import { taskRuntime } from './task';
-import { topicReferenceRuntime } from './topicReference';
 import type { ServerRuntimeFactory, ServerRuntimeRegistration } from './types';
 import { userInteractionRuntime } from './userInteraction';
 import { verifyResultRuntime } from './verifyResult';
@@ -88,7 +87,6 @@ registerRuntimes([
   remoteDeviceRuntime,
   briefRuntime,
   taskRuntime,
-  topicReferenceRuntime,
   userInteractionRuntime,
   credsRuntime,
   dashboardRuntime,

@@ -23,6 +23,7 @@ import { useSingleton } from '@/hooks/useSingleton';
 
 import { arrayEqual, normalizeTree, remapIdsToPaths, remapPathsToIds } from '../adapter';
 import { extractName, toCanonicalTreePath } from '../adapter/path';
+import { buildSortSignature, createPathComparator } from '../adapter/sort';
 import { cssString } from '../folderIconStyle';
 import type {
   ExplorerTreeHandle,
@@ -120,6 +121,10 @@ function ExplorerTreeInner<TData>(
   const suppressModelEventsRef = useRef(false);
   const renamingRef = useRef(false);
   const pendingCreateRef = useRef<PendingCreate | null>(null);
+  // The sibling order the model currently draws (see buildSortSignature).
+  const drawnSortSignatureRef = useSingleton(() => ({
+    current: buildSortSignature(adapterRef.current, props.sort),
+  }));
 
   const initialOptions = useMemo((): FileTreeOptions => {
     const initial = adapterRef.current;
@@ -224,6 +229,12 @@ function ExplorerTreeInner<TData>(
       },
       overscan: props.overscan,
       paths: initial.paths,
+      ...(props.sort && {
+        sort: createPathComparator(
+          () => adapterRef.current,
+          () => propsRef.current.sort,
+        ),
+      }),
       renaming: {
         canRename: (item) => {
           const path = toCanonicalTreePath(item.path, item.isFolder);
@@ -493,6 +504,7 @@ function ExplorerTreeInner<TData>(
       model.resetPaths(next.paths, {
         initialExpandedPaths,
       });
+      drawnSortSignatureRef.current = buildSortSignature(next, propsRef.current.sort);
       for (const path of nextSelectedPaths) {
         getItemSafely(model, path)?.select();
       }
@@ -510,7 +522,19 @@ function ExplorerTreeInner<TData>(
     } finally {
       suppressModelEventsRef.current = false;
     }
-  }, [adapterRef, props.nodes, model, requestTreeRebuild]);
+  }, [adapterRef, drawnSortSignatureRef, props.nodes, model, requestTreeRebuild]);
+
+  // Runs after the nodes effect above. The tree only sorts when it rebuilds its
+  // paths, so a new comparator, or data that reorders rows under unchanged
+  // paths (a document edited while sorting by update time), needs a re-apply.
+  useLayoutEffect(() => {
+    const signature = buildSortSignature(adapterRef.current, props.sort);
+    if (signature === drawnSortSignatureRef.current) return;
+    // Re-applying would drop an open name input; retry on the next change.
+    if (renamingRef.current || pendingCreateRef.current) return;
+    resyncRef.current();
+    drawnSortSignatureRef.current = signature;
+  }, [adapterRef, drawnSortSignatureRef, props.nodes, props.sort]);
 
   // Runs after the nodes effect above, so it reads the paths just applied. On
   // first mount the shadow root can attach a frame after this effect, so the

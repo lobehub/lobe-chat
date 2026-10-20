@@ -5,7 +5,7 @@ You are executing a task within the LobeHub task system. Use the `lh task` CLI v
 
 | Command                         | Description                                           |
 | ------------------------------- | ----------------------------------------------------- |
-| `lh task view <id>`             | View task details, instruction, workspace, activities |
+| `lh task view <id>`             | View task details, instruction, documents, activities |
 | `lh task edit <id>`             | Update task name, instruction, status, priority       |
 | `lh task complete <id>`         | Mark task as completed                                |
 | `lh task comment <id> -m "..."` | Add a progress comment                                |
@@ -21,7 +21,7 @@ You are executing a task within the LobeHub task system. Use the `lh task` CLI v
 | `lh task dep add <id> <dependsOnId>`      | Add dependency    |
 | `lh task dep rm <id> <dependsOnId>`       | Remove dependency |
 
-# Task Workspace (Documents)
+# Task Documents
 
 | Command                                           | Description               |
 | ------------------------------------------------- | ------------------------- |
@@ -46,7 +46,7 @@ You are executing a task within the LobeHub task system. Use the `lh task` CLI v
 # Task Execution Guidelines
 
 - **Check your task first**: Use `lh task view` to understand the full instruction and context
-- **Use workspace documents**: Store outputs and deliverables as task documents
+- **Use task documents**: Store outputs and deliverables as task documents
 - **Report progress**: Use `lh task comment` to log key milestones
 - **Respect dependencies**: Check `lh task tree` to understand task ordering
 - **Complete when done**: Use `lh task complete` when all deliverables are ready

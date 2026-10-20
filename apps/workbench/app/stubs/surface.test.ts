@@ -23,6 +23,7 @@ describe('workbench stub surface', () => {
       'lambdaClient',
       'lambdaQuery',
       'toolsClient',
+      'withLlmRelay',
     ]);
     expect(surface.open.has('lambdaClient')).toBe(true);
 
@@ -67,6 +68,19 @@ describe('workbench stub surface', () => {
        import { getElectronStoreState, useElectronStore } from '@/store/electron';
        const state = useElectronStore.getState();
        void getElectronStoreState();`,
+      '@/store/electron',
+    );
+
+    expect(stubUsageGaps(surface, usage!)).toEqual([]);
+  });
+
+  // Regression: the send path awaits this member on the electron store, so the
+  // SSR build rejected the module graph until the stub carried it.
+  it('covers the device-id resolver the chat send path calls', () => {
+    const surface = parseStubSurface(readFileSync(path.join(stubDir, 'electronStore.ts'), 'utf8'));
+    const usage = collectStubUsage(
+      `import { getElectronStoreState } from '@/store/electron';
+       void getElectronStoreState().resolveGatewayDeviceId();`,
       '@/store/electron',
     );
 

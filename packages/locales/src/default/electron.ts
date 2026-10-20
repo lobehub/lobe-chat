@@ -1,4 +1,13 @@
 export default {
+  'startupUpdate.requiredTitle': 'Update required',
+  'startupUpdate.requiredDescription': 'This version has a security issue. Update to continue.',
+  'startupUpdate.checking': 'Checking for updates…',
+  'startupUpdate.downloading': 'Downloading update',
+  'startupUpdate.applying': 'Restarting LobeHub…',
+  'startupUpdate.error': 'Couldn’t finish the update',
+  'startupUpdate.retry': 'Retry',
+  'startupUpdate.quit': 'Quit',
+
   'navigation.agentShare': 'Share',
   'navigation.agents': 'Agents',
   'navigation.channels': 'Channels',
@@ -53,7 +62,6 @@ export default {
   'navigation.goals': 'Goals',
   'navigation.topics': 'Topics',
   'navigation.unpin': 'Unpin',
-  'navigation.verifyReports': 'Verification Reports',
   'navigation.video': 'Video',
   'notification.finishChatGeneration': 'AI message generation completed',
   'tab.closeCurrentTab': 'Close Tab',

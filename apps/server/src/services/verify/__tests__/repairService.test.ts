@@ -7,6 +7,7 @@ const m = vi.hoisted(() => ({
   findVerifyMessage: vi.fn(),
   listResults: vi.fn(),
   markRepairing: vi.fn(),
+  recordAutoRepair: vi.fn(),
   rounds: vi.fn(),
   run: vi.fn(),
   settleFailedRepair: vi.fn(),
@@ -20,7 +21,11 @@ vi.mock('@/database/models/message', () => ({
 }));
 vi.mock('@/database/models/verifyRun', () => ({
   VerifyRunModel: vi.fn(function () {
-    return { findByOperation: m.run, listByAcceptance: m.rounds };
+    return {
+      findByOperation: m.run,
+      listByAcceptance: m.rounds,
+      recordAutoRepair: m.recordAutoRepair,
+    };
   }),
 }));
 vi.mock('@/database/models/verifyCheckResult', () => ({
@@ -133,5 +138,39 @@ describe('VerifyRepairService.triggerAutoRepair', () => {
     expect(
       await new VerifyRepairService({} as any, 'user').triggerAutoRepair('op-3', spawner),
     ).toEqual({ repairOperationId: 'repair-op' });
+  });
+
+  describe('records the auto-repair decision', () => {
+    const trigger = (spawner?: any) =>
+      new VerifyRepairService({} as any, 'user').triggerAutoRepair('op-3', spawner);
+
+    beforeEach(() => m.listResults.mockResolvedValue([gateFailure('gif-check')]));
+
+    it('marks a spawned repair', async () => {
+      await trigger(vi.fn().mockResolvedValue({ repairOperationId: 'repair-op' }));
+      expect(m.recordAutoRepair).toHaveBeenCalledWith('round-3', 'spawned');
+    });
+
+    it('declines when the spawner returns nothing (repair cap reached or spawn failed)', async () => {
+      expect(await trigger(vi.fn().mockResolvedValue(null))).toBeNull();
+      expect(m.recordAutoRepair).toHaveBeenCalledWith('round-3', 'declined');
+    });
+
+    it('declines without a spawner', async () => {
+      expect(await trigger()).toBeNull();
+      expect(m.recordAutoRepair).toHaveBeenCalledWith('round-3', 'declined');
+    });
+
+    it('declines a superseded round', async () => {
+      m.rounds.mockResolvedValue([round, { id: 'round-4', roundIndex: 4, status: 'verifying' }]);
+      expect(await trigger(vi.fn())).toBeNull();
+      expect(m.recordAutoRepair).toHaveBeenCalledWith('round-3', 'declined');
+    });
+
+    it('records nothing when no auto-repair check failed', async () => {
+      m.listResults.mockResolvedValue([{ checkItemId: 'gif-check', status: 'passed' }]);
+      await trigger(vi.fn());
+      expect(m.recordAutoRepair).not.toHaveBeenCalled();
+    });
   });
 });

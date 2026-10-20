@@ -19,7 +19,7 @@ import { router } from '@/libs/trpc/lambda';
 import { serverDatabase } from '@/libs/trpc/lambda/middleware';
 import { DocumentService } from '@/server/services/document';
 import { resolveDocumentEditorData } from '@/server/services/document/editorData';
-import { canViewDocumentContent } from '@/server/services/documentAccess';
+import { canViewDocumentContent, getDocumentForViewer } from '@/server/services/documentAccess';
 import { FileService } from '@/server/services/file';
 import {
   assertCanPerformResourceAction,
@@ -373,7 +373,7 @@ export const documentRouter = router({
       // KB-scoped documents inherit the KB's public visibility, so direct
       // reads must honor the restricted-KB (member No-access) policy too.
       await assertContentsNotInRestrictedKnowledgeBase(ctx, [input.id]);
-      const doc = await ctx.documentService.getDocumentById(input.id);
+      const doc = await getDocumentForViewer(ctx, input.id);
       // `source` is a storage key for file-backed documents; sign it so PDF viewers
       // and downloads receive a usable URL. Absolute URLs (web sources) pass through.
       if (
@@ -556,12 +556,22 @@ export const documentRouter = router({
     .mutation(async ({ ctx, input }) => {
       await assertContentsNotInRestrictedKnowledgeBase(ctx, [input.id]);
 
+      const { id, editorData: editorDataString, operationId, ...params } = input;
+      // A content-only write (the CLI) sends no editorData and names no fileType;
+      // the stored fileType decides whether to build editorData from Markdown.
+      // An HTML page never gets any (the service drops editorData sent for one).
+      const needsStoredFileType =
+        params.content !== undefined && params.fileType === undefined && !editorDataString;
+      const currentDocument =
+        input.parentId !== undefined || needsStoredFileType
+          ? await ctx.documentModel.findById(input.id)
+          : undefined;
+
       // A move mutates both the source and destination trees as well as the
       // document. Only check when the parent really changes: several editor
       // paths include the current parentId in ordinary metadata/autosave
       // updates. `null` is an explicit detach and still leaves the source.
       if (input.parentId !== undefined) {
-        const currentDocument = await ctx.documentModel.findById(input.id);
         const currentParentId = currentDocument?.parentId ?? null;
         const nextParentId = input.parentId ?? null;
         if (currentParentId !== nextParentId) {
@@ -570,11 +580,10 @@ export const documentRouter = router({
         }
       }
 
-      const { id, editorData: editorDataString, operationId, ...params } = input;
       const editorData = await resolveDocumentEditorData({
         content: params.content,
         editorData: editorDataString ? JSON.parse(editorDataString) : undefined,
-        fileType: params.fileType,
+        fileType: params.fileType ?? currentDocument?.fileType,
       });
       const result = await ctx.documentService.updateDocument(id, {
         ...params,

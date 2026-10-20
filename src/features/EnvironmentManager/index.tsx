@@ -1,9 +1,16 @@
 'use client';
 
 import type { EnvironmentVisibility } from '@lobechat/types';
-import { Center, Empty, Flexbox, Icon } from '@lobehub/ui';
-import { Button, Text } from '@lobehub/ui/base-ui';
-import { createStaticStyles, cssVar } from 'antd-style';
+import {
+  Button,
+  Center,
+  createStaticStyles,
+  cssVar,
+  Empty,
+  Flexbox,
+  Icon,
+  Text,
+} from '@lobehub/ui';
 import { ContainerIcon, PlusIcon, RefreshCwIcon } from 'lucide-react';
 import { memo, type ReactNode, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -13,9 +20,16 @@ import ListSkeleton from '@/components/ListSkeleton';
 
 import { openCreateEnvironmentModal } from './CreateEnvironmentModal';
 import { openCreateInstanceModal } from './CreateInstanceModal';
+import { openCreatedEnvironment } from './environmentCreated';
 import EnvironmentDetailPanel from './EnvironmentDetailPanel';
 import EnvironmentItem from './EnvironmentItem';
-import { useEnvironments, useInstances, useWorkspaceUsage } from './useEnvironmentData';
+import {
+  type CreatedEnvironment,
+  useEnvironmentActions,
+  useEnvironments,
+  useInstances,
+  useWorkspaceUsage,
+} from './useEnvironmentData';
 import WorkspaceUsageMeter from './WorkspaceUsageMeter';
 
 const styles = createStaticStyles(({ css }) => ({
@@ -56,7 +70,7 @@ const styles = createStaticStyles(({ css }) => ({
 const LIST_MIN_HEIGHT = 4 * 72;
 
 /**
- * Environments and the instances built from them.
+ * Environments and the copies built from them.
  *
  * An environment is a SPECIFICATION — the sources to check out, what makes them
  * usable, what they run with. What a sandbox builds from it is a cache, which is
@@ -87,6 +101,7 @@ const EnvironmentManager = memo<EnvironmentManagerProps>(({ tabs, visibility }) 
   const { data, error, isValidating, mutate } = useEnvironments(visibility);
   const { data: instanceData, mutate: refreshInstances } = useInstances();
   const { refresh: refreshUsage } = useWorkspaceUsage();
+  const { buildInstance } = useEnvironmentActions();
 
   const [selectedId, setSelectedId] = useState<string>();
   // Whether a refresh the user asked for is still running.
@@ -117,18 +132,17 @@ const EnvironmentManager = memo<EnvironmentManagerProps>(({ tabs, visibility }) 
     setSelectedId((current) => (current === id ? undefined : id));
   };
 
-  // Open the environment so the new instance is seen landing in its list, and
-  // ask for the instance in the same dialog the panel's own button opens.
-  //
-  // Both the row's shortcut and the step straight after creating an
-  // environment: a specification with no instance runs nothing, so stopping at
-  // the new row would hand back an environment that cannot be used and no hint
-  // that anything is missing. Dismissing the instance dialog still lands on
-  // that environment's panel, whose empty state asks for the same thing.
+  // The row's "new copy" shortcut: open the environment so the copy is seen
+  // landing in its list, and ask for it in the same dialog the panel's own
+  // button opens.
   const createInstance = (id: string) => {
     setSelectedId(id);
     openCreateInstanceModal({ environmentId: id });
   };
+
+  // No instance dialog after creating one: see `openCreatedEnvironment`.
+  const onEnvironmentCreated = (created: CreatedEnvironment) =>
+    openCreatedEnvironment(created, { buildInstance, select: setSelectedId });
 
   /**
    * Both lists, because the two halves of what this page shows are fetched
@@ -177,7 +191,7 @@ const EnvironmentManager = memo<EnvironmentManagerProps>(({ tabs, visibility }) 
       <Button
         icon={<Icon icon={PlusIcon} />}
         type={'primary'}
-        onClick={() => openCreateEnvironmentModal(visibility, createInstance)}
+        onClick={() => openCreateEnvironmentModal(visibility, onEnvironmentCreated)}
       >
         {t('environments.create')}
       </Button>
@@ -208,7 +222,7 @@ const EnvironmentManager = memo<EnvironmentManagerProps>(({ tabs, visibility }) 
               action={
                 <Button
                   icon={<Icon icon={PlusIcon} />}
-                  onClick={() => openCreateEnvironmentModal(visibility, createInstance)}
+                  onClick={() => openCreateEnvironmentModal(visibility, onEnvironmentCreated)}
                 >
                   {t('environments.create')}
                 </Button>
@@ -229,8 +243,8 @@ const EnvironmentManager = memo<EnvironmentManagerProps>(({ tabs, visibility }) 
       }
       onRetry={refresh}
     >
-      <Flexbox horizontal align={'flex-start'} gap={16}>
-        <Flexbox className={styles.listCol} flex={1}>
+      <Flexbox horizontal align={'flex-start'} gap={16} wrap={'wrap'}>
+        <Flexbox className={styles.listCol} flex={'1 1 320px'}>
           <Flexbox className={styles.listScroll} gap={2} padding={4}>
             {environments.map((environment) => (
               <EnvironmentItem
@@ -257,11 +271,10 @@ const EnvironmentManager = memo<EnvironmentManagerProps>(({ tabs, visibility }) 
             ))}
           </Flexbox>
         </Flexbox>
-        {/* Twice the list's share. A row carries a name and two facts; the panel
-            carries a form, so an even split starved the half doing the work and
-            left the other half mostly empty. */}
+        {/* Keep enough space to identify environments and read their details.
+            When both columns no longer fit, wrap the detail below the list. */}
         {selected && (
-          <Flexbox className={styles.detailCol} flex={2}>
+          <Flexbox className={styles.detailCol} flex={'2 1 480px'}>
             {/* Keyed on the environment so the form's draft state resets when
                   the selection changes — a description typed for one
                   environment must not survive into another. */}
@@ -283,7 +296,7 @@ const EnvironmentManager = memo<EnvironmentManagerProps>(({ tabs, visibility }) 
    */
   return (
     <Flexbox gap={16}>
-      <Flexbox horizontal align={'center'} gap={16} justify={'space-between'}>
+      <Flexbox horizontal align={'center'} gap={16} justify={'space-between'} wrap={'wrap'}>
         {tabs ?? (
           <Text fontSize={16} weight={600}>
             {t('environments.mine')}

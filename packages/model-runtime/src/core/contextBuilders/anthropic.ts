@@ -3,6 +3,7 @@ import { imageUrlToBase64, resolveImageMimeTypeFromBase64 } from '@lobechat/util
 import type OpenAI from 'openai';
 
 import type { OpenAIChatMessage, UserMessageContentPart } from '../../types';
+import { normalizeAnthropicToolSchema } from '../../utils/anthropicToolSchema';
 import { parseDataUri } from '../../utils/uriParser';
 
 export type AnthropicCacheTTL = NonNullable<Anthropic.Messages.CacheControlEphemeral['ttl']>;
@@ -481,7 +482,7 @@ export const buildAnthropicTools = (
           ? buildCacheControl(options.cacheTTL)
           : undefined,
       description: fn.description,
-      input_schema: fn.parameters as Anthropic.Tool.InputSchema,
+      input_schema: normalizeAnthropicToolSchema(fn.parameters) as Anthropic.Tool.InputSchema,
       name: fn.name,
     };
   });

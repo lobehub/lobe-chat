@@ -23,7 +23,14 @@ import { initialKnowledgeBaseState } from './initialState';
 import { knowledgeBaseItemResource, knowledgeBaseListResource } from './projection';
 import { knowledgeBaseSelectors } from './selectors';
 
-const mocks = vi.hoisted(() => ({ activeWorkspaceId: null as string | null }));
+const mocks = vi.hoisted(() => ({
+  activeWorkspaceId: null as string | null,
+  forgetLibrary: vi.fn(),
+}));
+
+vi.mock('@/store/tree', () => ({
+  useTreeStore: { getState: () => ({ forgetLibrary: mocks.forgetLibrary }) },
+}));
 
 vi.mock('@/business/client/hooks/useActiveWorkspaceId', () => ({
   getActiveWorkspaceId: () => mocks.activeWorkspaceId,
@@ -236,6 +243,17 @@ describe('knowledgeBase crud replicas', () => {
       await expect(operation).rejects.toThrow('boom');
 
       expect(list('private')?.map((kb) => kb.id)).toEqual(['p1', 'p2']);
+      // A failed delete keeps the library's persisted sidebar tree.
+      expect(mocks.forgetLibrary).not.toHaveBeenCalled();
+    });
+
+    it("forgets the deleted library's persisted sidebar tree", async () => {
+      await seedList();
+      vi.mocked(knowledgeBaseService.deleteKnowledgeBase).mockResolvedValue(undefined as any);
+
+      await useKnowledgeBaseStore.getState().removeKnowledgeBase('p1');
+
+      expect(mocks.forgetLibrary).toHaveBeenCalledWith('p1');
     });
 
     it('renames across the list and the by-id copy optimistically, then reconciles', async () => {

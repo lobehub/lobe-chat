@@ -10,6 +10,7 @@ packages:
   - '../../packages/electron-server-ipc'
   - '../../packages/electron-client-ipc'
   - '../../packages/electron-mac-notifications'
+  - '../../packages/electron-mac-permission-guide'
   - '../../packages/napi-loader'
   - '../../packages/file-loaders'
   - '../../packages/html-artifact'
@@ -74,3 +75,4 @@ minimumReleaseAgeExclude:
   - '@auv-js/cli@0.0.33'
   - '@auv-js/sdk@0.0.33'
   - electron-sparkle-updater@0.5.3
+  - '@lobehub/*'

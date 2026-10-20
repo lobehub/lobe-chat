@@ -149,21 +149,10 @@ export class DocumentModel {
   };
 
   create = async (params: Omit<NewDocument, 'userId'>): Promise<DocumentItem> => {
-    // Workspace-mode default for visibility:
-    //   - explicit visibility wins
-    //   - user-authored Pages (`sourceType: 'api'`) default to
-    //     `'private'` so workspace members start drafts in their own space and
-    //     publish when ready
-    //   - all other top-level rows (web crawls, file ingests, topic snapshots,
-    //     agent-signal artifacts, …): leave the schema default (`'public'`) so
-    //     existing behavior is preserved — these don't have a Pages-style
-    //     draft / publish lifecycle and were workspace-shared from day one
-    // Personal mode leaves it to the schema default; the filter ignores it.
-    let visibility = params.visibility;
-    if (!visibility && this.workspaceId && params.sourceType === 'api') {
-      visibility = 'private';
-    }
-
+    // Workspace documents default to the schema's `'public'`: a workspace is a
+    // collaborative space, so whatever a member (or an agent acting for them)
+    // writes there is shared unless the caller explicitly asks for `'private'`.
+    // Personal mode ignores the column.
     const result = (await this.db
       .insert(documents)
       .values(
@@ -172,7 +161,6 @@ export class DocumentModel {
           {
             ...params,
             metadata: this.scopeMetadata(params.metadata),
-            ...(visibility ? { visibility } : {}),
           },
         ),
       )

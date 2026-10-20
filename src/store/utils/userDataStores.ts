@@ -1,6 +1,7 @@
 import { unstable_batchedUpdates } from 'react-dom';
 
 import { useAgentStore } from '@/store/agent';
+import { agentDocumentActions } from '@/store/agentDocument';
 import { useAgentGroupStore } from '@/store/agentGroup';
 import { useChatStore } from '@/store/chat';
 import { resetGatewayMuxRegistry } from '@/store/chat/slices/agentRun/actions/transports/gateway/muxRegistry';
@@ -14,6 +15,9 @@ import { useKnowledgeBaseStore } from '@/store/library';
 import { useMentionStore } from '@/store/mention';
 import { useNotebookStore } from '@/store/notebook';
 import { pageActions } from '@/store/page';
+import { projectFileActions } from '@/store/projectFile';
+import { resourcePermissionActions } from '@/store/resourcePermission';
+import { sandboxActions } from '@/store/sandbox';
 import { useSessionStore } from '@/store/session';
 import { useTaskStore } from '@/store/task';
 import { useToolStore } from '@/store/tool';
@@ -21,6 +25,7 @@ import { useUserStore } from '@/store/user';
 import { useUserMemoryStore } from '@/store/userMemory';
 import type { ResetableStore } from '@/store/utils/resetableStore';
 import { useVideoStore } from '@/store/video';
+import { workActions } from '@/store/work';
 
 interface ResetableStoreApi {
   getState: () => ResetableStore;
@@ -47,7 +52,14 @@ const resetableStores: ResetableStoreApi[] = [
   useVideoStore,
 ];
 
-const resetableActions: ResetableStore[] = [pageActions];
+const resetableActions: ResetableStore[] = [
+  agentDocumentActions,
+  pageActions,
+  projectFileActions,
+  resourcePermissionActions,
+  sandboxActions,
+  workActions,
+];
 
 export interface StoreActions extends ResetableStore {}
 

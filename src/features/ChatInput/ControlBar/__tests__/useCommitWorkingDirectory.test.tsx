@@ -18,6 +18,7 @@ const testState = vi.hoisted(() => ({
     updateTopicMetadata: vi.fn(),
   },
   currentDeviceId: 'this-machine' as string | undefined,
+  resolveGatewayDeviceId: vi.fn(async (): Promise<string | undefined> => undefined),
   effective: {
     agencyConfig: undefined as Record<string, unknown> | undefined,
     isPreferenceLoading: false,
@@ -51,6 +52,7 @@ vi.mock('@/store/device', () => ({
 }));
 
 vi.mock('@/store/electron', () => ({
+  getElectronStoreState: () => ({ resolveGatewayDeviceId: testState.resolveGatewayDeviceId }),
   useElectronStore: (selector: (s: { gatewayDeviceInfo?: { deviceId?: string } }) => unknown) =>
     selector({ gatewayDeviceInfo: { deviceId: testState.currentDeviceId } }),
 }));
@@ -241,6 +243,32 @@ describe('useCommitWorkingDirectory — topic device provenance', () => {
     ]);
     expect(patch.boundDeviceId).toBeUndefined();
   });
+
+  // Regression: an unresolved target wrote the new path with no machine, which
+  // erased the topic's pin and left the picker on the agent default.
+  it('keeps the topic pin when the target machine cannot be resolved', async () => {
+    testState.effective.agencyConfig = { executionTarget: 'device' };
+    const { result } = renderHook(() => useCommitWorkingDirectory('agent-id'));
+    await result.current.commit({ path: '/Users/me/repo-c' });
+
+    expect(testState.chat.updateTopicMetadata).toHaveBeenCalledWith(
+      'topic-id',
+      expect.objectContaining({ boundDeviceId: 'device-a', workingDirectory: '/Users/me/repo-c' }),
+    );
+  });
+
+  it('pins an unbound topic to this desktop when the target cannot be resolved', async () => {
+    testState.effective.agencyConfig = { executionTarget: 'device' };
+    testState.chat.topic = { metadata: {} } as ChatTopic;
+    testState.resolveGatewayDeviceId.mockResolvedValueOnce('this-desktop');
+    const { result } = renderHook(() => useCommitWorkingDirectory('agent-id'));
+    await result.current.commit({ path: '/Users/me/repo-c' });
+
+    expect(testState.chat.updateTopicMetadata).toHaveBeenCalledWith(
+      'topic-id',
+      expect.objectContaining({ boundDeviceId: 'this-desktop' }),
+    );
+  });
 });
 
 describe('useCommitWorkingDirectory — commitAgentDefault', () => {
@@ -280,6 +308,23 @@ describe('useCommitWorkingDirectory — commitAgentDefault', () => {
       { agencyConfig: { workingDirByDevice: { 'this-machine': '/work' } } },
       { replaceWorkingDirDeviceIds: ['this-machine'], rethrow: true, showErrorMessage: false },
     );
+  });
+
+  it('rejects a failed folder pick before the caller starts a new topic', async () => {
+    testState.agent.updateAgentConfigById = vi.fn(
+      async (_id: string, _patch: unknown, options?: { rethrow?: boolean }) => {
+        if (options?.rethrow) throw new Error('save failed');
+      },
+    );
+    const { result } = renderHook(() => useCommitWorkingDirectory('agent-id', null));
+    const startTopic = vi.fn();
+
+    await expect(
+      result.current
+        .commit({ path: '/work' }, { rethrow: true, showErrorMessage: false })
+        .then(startTopic),
+    ).rejects.toThrow('save failed');
+    expect(startTopic).not.toHaveBeenCalled();
   });
 
   it('exposes the workspace preference loading state for writers to wait on', () => {

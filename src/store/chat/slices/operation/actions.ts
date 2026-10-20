@@ -2,7 +2,6 @@ import { nanoid } from '@lobechat/utils';
 import debug from 'debug';
 import { produce } from 'immer';
 
-import { persistSettledTranscript } from '@/services/message/replica';
 import { type ChatStore } from '@/store/chat/store';
 import { type MessageMapKeyInput } from '@/store/chat/utils/messageMapKey';
 import { messageMapKey } from '@/store/chat/utils/messageMapKey';
@@ -357,12 +356,8 @@ export class OperationActionsImpl {
       if (!agentId || !topicId) return;
       // A run that finishes after the user switched away must still persist to
       // its own conversation, so rebuild the operation's context with a definite
-      // agent/topic: `OperationContext` exposes them as optional, but the runtime
-      // check, the message key and the persist call all need a concrete agentId.
-      const context = { ...operation.context, agentId, topicId };
-      if (operationSelectors.isAgentRuntimeRunningByContext(context)(state)) return;
-      const messages = state.dbMessagesMap[messageMapKey(context)];
-      if (messages) persistSettledTranscript(context, messages);
+      // agent/topic: `OperationContext` exposes them as optional.
+      state.internal_settleTranscript({ ...operation.context, agentId, topicId });
     }
   };
 

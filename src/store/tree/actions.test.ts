@@ -3,6 +3,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { hierarchySearchResource } from '@/features/ResourceManager/store/projection';
 import type * as ReplicaModule from '@/libs/replica';
+import { createReplicaState } from '@/libs/replica';
 
 import { sortTreeItems, toTreeItem, toTreeItemFromResource, TreeActionImpl } from './actions';
 import type { TreeState } from './types';
@@ -94,8 +95,13 @@ const createState = (): TreeState => ({
   reconcile: vi.fn(),
   removeItems: vi.fn(),
   renameItem: vi.fn(),
+  forgetLibrary: vi.fn(),
+  forgetSnapshot: vi.fn(),
   reset: vi.fn(),
+  preHydrate: vi.fn(),
   revalidate: vi.fn(),
+  snapshotMap: {},
+  snapshotReplica: createReplicaState(),
   status: {},
   toggle: vi.fn(),
 });

@@ -5,11 +5,14 @@ import { useActiveRouteParams } from '@/hooks/useActiveRouteParams';
 import { useChatStore } from '@/store/chat';
 import { operationSelectors } from '@/store/chat/selectors';
 import { groupSidebarTopics, selectSidebarTopics } from '@/store/chat/slices/topic/selectors';
-import { useGlobalStore } from '@/store/global';
-import { useProjectDirectoryStore, useProjectTopics } from '@/store/projectWorkingDirectory';
+import {
+  useProjectDirectories,
+  useProjectDirectoryStore,
+  useProjectTopics,
+} from '@/store/projectWorkingDirectory';
 import type { ChatTopic, TopicGroupMode, TopicSortBy } from '@/types/topic';
 
-import { useTopicListScope } from './TopicListScope';
+import { useTopicListReveal, useTopicListScope } from './TopicListScope';
 
 export const useScopedTopics = () => {
   const scope = useTopicListScope();
@@ -41,36 +44,40 @@ export const useScopedSidebarTopics = (
 ) => {
   const { scope, topics } = useScopedTopics();
   const { topicId } = useActiveRouteParams<{ topicId?: string }>();
-  const updateSystemStatus = useGlobalStore((s) => s.updateSystemStatus);
+  // Project topics are already loaded in full, so "load more" only reveals more
+  // rows through host-owned state (see `TopicListRevealContext`).
+  const reveal = useTopicListReveal();
+  const visibleLimit = pageSize + (reveal?.extraRows ?? 0);
   const running = useChatStore(operationSelectors.visiblyRunningTopicIds);
+  const directories = useProjectDirectories(scope?.projectId);
   const visible = useMemo(() => {
     const list: ChatTopic[] = (topics ?? []).filter(
       (topic) => !topic.trigger || !MAIN_SIDEBAR_EXCLUDE_TRIGGERS.includes(topic.trigger),
     );
     return selectSidebarTopics(
       list,
-      pageSize,
+      visibleLimit,
       sortBy,
       includeCompleted,
       list.find((topic) => topic.id === topicId),
     );
-  }, [topics, topicId, pageSize, sortBy, includeCompleted]);
+  }, [topics, topicId, visibleLimit, sortBy, includeCompleted]);
   const groups = useMemo(
-    () => groupSidebarTopics(visible, groupMode, sortBy, running),
-    [visible, groupMode, sortBy, running],
+    () => groupSidebarTopics(visible, groupMode, sortBy, running, directories),
+    [visible, groupMode, sortBy, running, directories],
   );
   const hasMore =
     (topics ?? []).filter(
       (topic) =>
         (!topic.trigger || !MAIN_SIDEBAR_EXCLUDE_TRIGGERS.includes(topic.trigger)) &&
         (includeCompleted || topic.status !== 'completed'),
-    ).length > pageSize;
+    ).length > visibleLimit;
   return {
     scope,
     topics: visible,
     groups,
     activeTopicId: topicId,
     hasMore,
-    loadMore: () => updateSystemStatus({ topicPageSize: pageSize + 20 }),
+    loadMore: () => reveal?.revealMore(),
   };
 };

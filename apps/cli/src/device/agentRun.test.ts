@@ -67,6 +67,21 @@ describe('spawnHeteroAgentRun', () => {
     vi.unstubAllEnvs();
   });
 
+  it('does not hand the dispatched run an ancestor agent run identity or JWT file', () => {
+    // `lh connect` running inside a Codex shell: the CLI prefers LOBEHUB_JWT_FILE over
+    // LOBEHUB_JWT, so an inherited file would replace this dispatch's fresh token.
+    vi.stubEnv('LOBEHUB_JWT_FILE', '/tmp/ancestor/jwt');
+    vi.stubEnv('LOBEHUB_TASK_ID', 'ancestor-task');
+    spawnMock.mockReturnValue(makeFakeChild());
+
+    void spawnHeteroAgentRun({ ...baseParams, jwt: 'fresh-token' });
+
+    const { env } = spawnMock.mock.calls[0][2];
+    expect(env.LOBEHUB_JWT).toBe('fresh-token');
+    expect(env).not.toHaveProperty('LOBEHUB_JWT_FILE');
+    expect(env).not.toHaveProperty('LOBEHUB_TASK_ID');
+  });
+
   it('spawns `lh hetero exec` in server-ingest mode via the current CLI entry', async () => {
     const child = makeFakeChild();
     spawnMock.mockReturnValue(child);

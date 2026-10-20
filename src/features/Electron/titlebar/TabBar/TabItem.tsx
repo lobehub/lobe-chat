@@ -1,8 +1,7 @@
 'use client';
 
-import { ContextMenuTrigger, type GenericItemType, Icon, Tooltip } from '@lobehub/ui';
-import { ActionIcon } from '@lobehub/ui/base-ui';
-import { cx } from 'antd-style';
+import { ContextMenuTrigger, type DropdownItem, Icon, Tooltip } from '@lobehub/ui';
+import { ActionIcon, cx } from '@lobehub/ui';
 import { X } from 'lucide-react';
 import { type MotionValue, useMotionValue, useSpring, useTransform } from 'motion/react';
 import * as m from 'motion/react-m';
@@ -104,10 +103,9 @@ const TabItem = memo<TabItemProps>(
     const showUnreadDot = !isRunning && isUnread;
     const pinned = !!tab.pinned;
     // Which tiers actually show the button is settled in CSS so that it can fade rather
-    // than unmount; a lone tab is the one case with no button to fade at all. Staying
-    // mounted below the compact tier would otherwise leave an invisible button in the
-    // focus order, so those tiers are made inert rather than merely transparent.
-    const closable = totalCount > 1;
+    // than unmount. Staying mounted below the compact tier would otherwise leave an
+    // invisible button in the focus order, so those tiers are made inert rather than
+    // merely transparent.
     const closeInert = tier !== 'full' && tier !== 'compact';
 
     const isDragging = !!drag;
@@ -209,15 +207,15 @@ const TabItem = memo<TabItemProps>(
 
     const handleAuxClick = useCallback(
       (e: React.MouseEvent) => {
-        if (e.button !== 1 || totalCount === 1) return;
+        if (e.button !== 1) return;
         e.preventDefault();
         onClose(id);
       },
-      [onClose, id, totalCount],
+      [onClose, id],
     );
 
     const contextMenuItems = useCallback(
-      (): GenericItemType[] =>
+      (): DropdownItem[] =>
         buildTabContextMenuItems({
           id,
           index,
@@ -306,17 +304,15 @@ const TabItem = memo<TabItemProps>(
         <span data-tab-title className={styles.tabTitle}>
           {meta.title}
         </span>
-        {closable && (
-          <ActionIcon
-            data-tab-close
-            className={styles.closeIcon}
-            icon={X}
-            inert={closeInert}
-            size="small"
-            style={CLOSE_BUTTON_STYLE}
-            onClick={handleClose}
-          />
-        )}
+        <ActionIcon
+          data-tab-close
+          className={styles.closeIcon}
+          icon={X}
+          inert={closeInert}
+          size="small"
+          style={CLOSE_BUTTON_STYLE}
+          onClick={handleClose}
+        />
       </m.div>
     );
 
