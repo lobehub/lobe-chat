@@ -35,7 +35,8 @@ const STATE_BEARING_API_NAMES = new Set(['activateSkill', 'activateTools']);
  * an omitted member that carries runtime state is known without loading it.
  */
 export const compressedStateMarkerColumns = {
-  carriesTodos: sql<boolean>`jsonb_typeof(${messagePlugins.state} -> 'todos') is not null`,
+  // Key test, not `IS NOT NULL` on an extracted value — see jsonbNullTest.test.ts.
+  carriesTodos: sql<boolean>`coalesce(jsonb_exists(${messagePlugins.state}, 'todos'), false)`,
   pluginApiName: messagePlugins.apiName,
   pluginIdentifier: messagePlugins.identifier,
 };
