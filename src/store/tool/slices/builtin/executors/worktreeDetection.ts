@@ -751,26 +751,46 @@ export const parseWorktreeAddPath = (
 };
 
 /**
- * The worktree a real `git worktree remove [--force] <path>` deleted, resolved the
- * same way as an `add` path so it compares against the recorded `activeWorktree`.
- * Segments are read in shell order: a later `add` of the same path recreates it.
+ * Whether the command's last word on `target` is a real `git worktree remove` of it.
+ * Paths resolve like `add` paths; segments are read in shell order, so a later
+ * `add` of the same path recreates it. Text only — the caller confirms on the
+ * device, since `cond && git worktree remove …` may never have run.
  */
-const parseWorktreeRemovePath = (command: string | string[], cwd?: string) => {
-  let removed: string | undefined;
+const removesWorktree = (command: string | string[], target: string, cwd?: string) => {
+  let removed = false;
   findInCommand(command, (tokens, env) => {
-    if (removed && parseGitWorktreeAddTokens(tokens, cwd, env)?.path === removed)
-      removed = undefined;
+    if (parseGitWorktreeAddTokens(tokens, cwd, env)?.path === target) removed = false;
     const git = parseGitSubcommand(tokens, cwd);
     if (git?.subcommand !== 'worktree' || stripQuotes(git.args[0] ?? '') !== 'remove') return;
     for (const token of git.args.slice(1)) {
       if (/^\d*[<>]/.test(token)) return; // redirection — git's args end here
       if (token.startsWith('-')) continue;
       const path = resolveToken(token, env);
-      if (isLiteralPath(path)) removed = resolveWorktreePath(path, git.baseCwd);
+      if (isLiteralPath(path) && resolveWorktreePath(path, git.baseCwd) === target) removed = true;
       return;
     }
   });
   return removed;
+};
+
+/**
+ * The source repo's worktrees as the run's device reports them; undefined when the
+ * device cannot be asked. The topic's bound device (written at dispatch) or,
+ * unbound, this machine — the local device answers over IPC, a remote one over RPC.
+ */
+const listDeviceWorktrees = async (source: string, boundDeviceId?: string) => {
+  const currentDeviceId = getElectronStoreState().gatewayDeviceInfo?.deviceId;
+  const targetDeviceId = boundDeviceId ?? currentDeviceId;
+  const isLocalDevice = isDesktop && !!targetDeviceId && targetDeviceId === currentDeviceId;
+
+  try {
+    return await gitService.listGitWorktrees({
+      deviceId: isLocalDevice ? undefined : targetDeviceId,
+      path: source,
+    });
+  } catch {
+    return undefined;
+  }
 };
 
 /**
@@ -788,24 +808,11 @@ const resolveWorktreeAddFromDevice = async (
   const branchHint = normalizeBranch(parsed.branch ?? parsed.ref);
   if (!branchHint) return undefined;
 
-  // The topic's bound device (written at dispatch) or, unbound, this machine.
-  // Mirrors WorkingDirectorySection: the local device answers over IPC
-  // (deviceId omitted), a remote one over RPC.
-  const currentDeviceId = getElectronStoreState().gatewayDeviceInfo?.deviceId;
-  const targetDeviceId = boundDeviceId ?? currentDeviceId;
-  const isLocalDevice = isDesktop && !!targetDeviceId && targetDeviceId === currentDeviceId;
-
-  try {
-    const worktrees = await gitService.listGitWorktrees({
-      deviceId: isLocalDevice ? undefined : targetDeviceId,
-      path: source,
-    });
-    const match = worktrees.find((worktree) => worktree.branch === branchHint);
-    if (!match) return undefined;
-    return { ...(match.branch ? { branch: match.branch } : {}), path: match.path };
-  } catch {
-    return undefined;
-  }
+  const match = (await listDeviceWorktrees(source, boundDeviceId))?.find(
+    (worktree) => worktree.branch === branchHint,
+  );
+  if (!match) return undefined;
+  return { ...(match.branch ? { branch: match.branch } : {}), path: match.path };
 };
 
 const isWindowsPath = (p: string): boolean => /^[A-Z]:[\\/]/i.test(p) || p.startsWith('\\\\');
@@ -905,10 +912,14 @@ export const recordGitCommandEffects = async (params: {
   }
 
   // Removing the worktree the topic runs in leaves it pointing at a deleted
-  // directory, and every later run would fail to spawn there.
-  const removedWorktree = parseWorktreeRemovePath(command, source);
-  if (removedWorktree && removedWorktree === nextConfig?.git?.activeWorktree) {
-    nextConfig = applyWorktreeExitToConfig(nextConfig, source);
+  // directory, and every later run would fail to spawn there. The device has the
+  // last word: a skipped or failed removal still lists the worktree, and an
+  // unreachable device changes nothing.
+  const activeWorktree = nextConfig?.git?.activeWorktree;
+  if (activeWorktree && removesWorktree(command, activeWorktree, source)) {
+    const worktrees = await listDeviceWorktrees(source, topic?.metadata?.boundDeviceId);
+    if (worktrees && !worktrees.some((worktree) => worktree.path === activeWorktree))
+      nextConfig = applyWorktreeExitToConfig(nextConfig, source);
   }
 
   const branchSwitch = parseGitBranchSwitch(command, resultContent);

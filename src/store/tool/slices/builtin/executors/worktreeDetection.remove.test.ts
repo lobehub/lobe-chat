@@ -2,6 +2,8 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { recordGitCommandEffects } from './worktreeDetection';
 
+const listGitWorktrees = vi.hoisted(() => vi.fn());
+
 const chatMocks = vi.hoisted(() => ({
   topics: {} as Record<string, { metadata?: Record<string, any> }>,
   updateTopicMetadata: vi.fn(),
@@ -22,7 +24,7 @@ vi.mock('@/store/chat/selectors', () => ({
 }));
 
 vi.mock('@/services/git', () => ({
-  gitService: { listGitWorktrees: vi.fn() },
+  gitService: { listGitWorktrees },
 }));
 
 vi.mock('@/store/electron', () => ({
@@ -48,6 +50,9 @@ const setTopicWorktree = (activeWorktree: string) => {
 describe('recordGitCommandEffects — git worktree remove', () => {
   beforeEach(() => {
     chatMocks.updateTopicMetadata.mockReset();
+    // The device's view after the command: only the source checkout is left.
+    listGitWorktrees.mockReset();
+    listGitWorktrees.mockResolvedValue([{ branch: 'main', path: '/repo' }]);
   });
 
   it('returns the topic to its source repo when the active worktree is removed', async () => {
@@ -86,6 +91,43 @@ describe('recordGitCommandEffects — git worktree remove', () => {
     });
 
     expect(chatMocks.updateTopicMetadata).toHaveBeenCalledTimes(1);
+  });
+
+  it('still clears the active worktree when the command removes another one after it', async () => {
+    setTopicWorktree('/tmp/wt');
+
+    await recordGitCommandEffects({
+      command: 'git worktree remove /tmp/wt && git worktree remove /tmp/other',
+      topicId: 't1',
+    });
+
+    expect(chatMocks.updateTopicMetadata).toHaveBeenCalledWith('t1', {
+      workingDirectoryConfig: { git: { isWorktree: false }, path: '/repo' },
+    });
+  });
+
+  it('keeps the worktree when a conditional removal never ran on the device', async () => {
+    setTopicWorktree('/tmp/wt');
+    listGitWorktrees.mockResolvedValue([
+      { branch: 'main', path: '/repo' },
+      { branch: 'fix/tab-nav', path: '/tmp/wt' },
+    ]);
+
+    await recordGitCommandEffects({
+      command: 'test -f marker && git worktree remove /tmp/wt || true',
+      topicId: 't1',
+    });
+
+    expect(chatMocks.updateTopicMetadata).not.toHaveBeenCalled();
+  });
+
+  it('keeps the worktree when the device cannot confirm the removal', async () => {
+    setTopicWorktree('/tmp/wt');
+    listGitWorktrees.mockRejectedValue(new Error('device offline'));
+
+    await recordGitCommandEffects({ command: 'git worktree remove /tmp/wt', topicId: 't1' });
+
+    expect(chatMocks.updateTopicMetadata).not.toHaveBeenCalled();
   });
 
   it('keeps the active worktree when another worktree is removed', async () => {
