@@ -954,3 +954,29 @@ describe('Quick Note Dive', () => {
     ]);
   });
 });
+
+/** @example The configured analyzer is a user-global setting, read from any workspace scope. */
+describe('Quick Note Analyze agent resolution', () => {
+  /** @example An analyzer the current scope cannot see falls back to the builtin one. */
+  it('runs the builtin analyzer when the configured one is not visible in this scope', async () => {
+    // ROOT CAUSE:
+    // The analyzer picked in one workspace was passed as `agentId` everywhere, so in another
+    // scope `execAgent` could not resolve it and every Analyze failed until the setting reset.
+    const settings = await QuickNoteModel.getAnalyzeSettings(db, userId);
+    vi.spyOn(QuickNoteModel, 'getAnalyzeSettings').mockResolvedValue({
+      ...settings,
+      analyzeAgentId: 'agent-in-another-workspace',
+    });
+    execAgent.mockRejectedValue(new Error('stop after dispatch'));
+    const { run } = await seedJudgedRun('调研一下 gpt-live 和 moshi', researchDecision(3));
+
+    await expect(
+      new QuickNoteProcessingService(db, userId).dispatchGeneration(run.id),
+    ).rejects.toThrow('stop after dispatch');
+
+    const [params] = execAgent.mock.calls[0];
+    /** @example The builtin analyzer runs instead of the inaccessible agent. */
+    expect(params).toMatchObject({ slug: 'quick-note-analyze' });
+    expect(params).not.toHaveProperty('agentId');
+  });
+});

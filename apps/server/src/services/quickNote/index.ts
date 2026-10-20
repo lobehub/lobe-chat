@@ -329,11 +329,10 @@ export class QuickNoteProcessingService {
     const settings = await QuickNoteModel.getAnalyzeSettings(this.db, this.userId);
 
     return this.execute(runId, {
-      ...(settings.analyzeAgentId
-        ? { agentId: settings.analyzeAgentId }
-        : { slug: BUILTIN_AGENT_SLUGS.quickNoteAnalyze }),
+      agentId: settings.analyzeAgentId ?? undefined,
       instructions: buildQuickNoteGenerationInstructions(quickNoteAnalyzeProtocol, planForRun(run)),
       maxSteps: settings.maxAnalyzeSteps,
+      slug: BUILTIN_AGENT_SLUGS.quickNoteAnalyze,
     });
   };
 
@@ -631,10 +630,18 @@ export class QuickNoteProcessingService {
         context.quickNoteId,
         context.sourceHistoryId,
       );
-      const configuredAgentIdentifier = options.agentId ?? options.slug;
-      if (!configuredAgentIdentifier) throw new Error('Quick Note Agent run requires an Agent');
+      if (!options.agentId && !options.slug) {
+        throw new Error('Quick Note Agent run requires an Agent');
+      }
       const agentModel = new AgentModel(this.db, this.userId, this.workspaceId);
-      let configuredAgent = await agentModel.getAgentConfig(configuredAgentIdentifier);
+      // Quick Note settings are user-global, so the configured analyzer may belong to another
+      // workspace (or have been deleted) and be invisible in this note's scope. Fall back to the
+      // builtin analyzer rather than failing every Analyze until the setting is reset.
+      let configuredAgent = options.agentId
+        ? await agentModel.getAgentConfig(options.agentId)
+        : null;
+      const agentRef =
+        configuredAgent || !options.slug ? { agentId: options.agentId } : { slug: options.slug };
       if (!configuredAgent && options.slug) {
         await agentModel.getBuiltinAgent(options.slug);
         configuredAgent = await agentModel.getAgentConfig(options.slug);
@@ -687,7 +694,7 @@ export class QuickNoteProcessingService {
             },
           },
         ],
-        ...(options.agentId ? { agentId: options.agentId } : { slug: options.slug }),
+        ...agentRef,
         // The run's output is this tool call; `onRunComplete` reads it back.
         additionalPluginIds: [QuickNoteIdentifier],
         instructions: options.instructions,
