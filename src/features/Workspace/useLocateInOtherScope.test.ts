@@ -7,7 +7,12 @@ import { MemoryRouter } from 'react-router';
 import { SWRConfig } from 'swr';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { buildOtherScopePath, useOtherScopeRecovery } from './useLocateInOtherScope';
+import {
+  buildOtherScopePath,
+  probeScopes,
+  SCOPE_PROBE_CONCURRENCY,
+  useOtherScopeRecovery,
+} from './useLocateInOtherScope';
 
 const mocks = vi.hoisted(() => ({
   activeId: null as string | null,
@@ -36,7 +41,7 @@ const notFound = { data: { code: 'NOT_FOUND', httpStatus: 404 }, message: 'Goal 
 const TEAM = { id: 'ws_team', name: 'Project AIRI', slug: 'airi' };
 
 /** The probe succeeds only through the client of `home` (null = personal). */
-const probeLivingIn = (home: string | null) => async (client: any) => {
+const probeLivingIn = (home: string | null) => async (client: any, _signal: AbortSignal) => {
   if (client.scope !== home) throw notFound;
 };
 
@@ -117,5 +122,56 @@ describe('useOtherScopeRecovery', () => {
 
     expect(result.current).toEqual({ pending: false });
     expect(mocks.clients).toEqual([]);
+  });
+});
+
+describe('probeScopes', () => {
+  const scopes = [
+    { id: null },
+    ...Array.from({ length: 8 }, (_, i) => ({ id: `ws_${i}`, slug: `ws-${i}` })),
+  ];
+
+  /** A probe that settles only when the test says so, recording every call. */
+  const controlledProbe = () => {
+    const calls: Array<{ id: string | null; signal: AbortSignal; settle: (ok: boolean) => void }> =
+      [];
+    const probe = (client: any, signal: AbortSignal) =>
+      new Promise<void>((resolve, reject) => {
+        calls.push({
+          id: client.scope,
+          settle: (ok) => (ok ? resolve() : reject(notFound)),
+          signal,
+        });
+      });
+    return { calls, probe };
+  };
+
+  it('keeps at most SCOPE_PROBE_CONCURRENCY probes in flight, personal first', async () => {
+    const { calls, probe } = controlledProbe();
+    const result = probeScopes(scopes, probe);
+
+    await waitFor(() => expect(calls).toHaveLength(SCOPE_PROBE_CONCURRENCY));
+    expect(calls.map((c) => c.id)).toEqual([null, 'ws_0', 'ws_1']);
+
+    // A miss frees one slot for the next candidate, never more.
+    calls[0].settle(false);
+    await waitFor(() => expect(calls).toHaveLength(SCOPE_PROBE_CONCURRENCY + 1));
+    expect(calls[3].id).toBe('ws_2');
+
+    // The first hit aborts the probes still in flight and starts no more.
+    calls[2].settle(true);
+    await expect(result).resolves.toEqual(scopes[2]);
+    expect(calls).toHaveLength(SCOPE_PROBE_CONCURRENCY + 1);
+    expect(calls[1].signal.aborted).toBe(true);
+    expect(calls[3].signal.aborted).toBe(true);
+  });
+
+  it('resolves null after every candidate misses', async () => {
+    const probe = vi.fn(async () => {
+      throw notFound;
+    });
+
+    await expect(probeScopes(scopes, probe)).resolves.toBeNull();
+    expect(probe).toHaveBeenCalledTimes(scopes.length);
   });
 });

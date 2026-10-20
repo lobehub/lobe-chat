@@ -7,14 +7,14 @@ import { useTranslation } from 'react-i18next';
 
 import AsyncError, { type AsyncErrorProps } from '@/components/AsyncError';
 
-import { type ScopedLambdaClient, useOtherScopeRecovery } from './useLocateInOtherScope';
+import { type ScopeProbe, useOtherScopeRecovery } from './useLocateInOtherScope';
 import { useWorkspaceAwareNavigate } from './useWorkspaceAwareNavigate';
 
 export interface OtherScopeAsyncErrorProps extends AsyncErrorProps {
   /** Shown while the other scopes are probed, so the page never goes blank. */
   pendingFallback: ReactNode;
   /** Re-read the resource through a client pinned to another scope; reject when not visible. */
-  probe: (client: ScopedLambdaClient) => Promise<unknown>;
+  probe: ScopeProbe;
   /** Stable identity of the resource being probed, e.g. `goal:<id>`. */
   resourceKey: string;
 }

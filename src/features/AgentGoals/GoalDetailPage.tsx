@@ -58,8 +58,8 @@ const styles = createStaticStyles(({ css }) => ({
 }));
 
 /** A goal 404s outside its own scope; reading it through another scope tells where it lives. */
-const probeGoalGraph = (client: ScopedLambdaClient, id: string) =>
-  client.goal.graph.query({ id }, { context: { showNotification: false } });
+const probeGoalGraph = (client: ScopedLambdaClient, id: string, signal: AbortSignal) =>
+  client.goal.graph.query({ id }, { context: { showNotification: false }, signal });
 
 interface GoalDetailPageProps {
   /** Absent for a goal with no responsible agent — e.g. one created from a project. */
@@ -167,9 +167,11 @@ const GoalDetailPage = memo<GoalDetailPageProps>(({ agentId, goalId }) => {
       <OtherScopeAsyncError
         error={error}
         pendingFallback={<GoalDetailSkeleton />}
-        probe={(client: ScopedLambdaClient) => probeGoalGraph(client, goalId)}
         resourceKey={`goal:${goalId}`}
         variant={'page'}
+        probe={(client: ScopedLambdaClient, signal: AbortSignal) =>
+          probeGoalGraph(client, goalId, signal)
+        }
         onRetry={mutate}
       />
     );
