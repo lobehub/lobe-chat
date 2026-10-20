@@ -85,7 +85,7 @@ const PackActions = ({ pack, progress, onSettled }: PackRowProps) => {
   const resumable = pack.downloadedBytes > 0;
   return (
     <Flexbox horizontal gap={8}>
-      <Button size={'small'} type={'primary'} onClick={download}>
+      <Button size={'small'} onClick={download}>
         {status === 'corrupted'
           ? t('localAsr.models.redownload')
           : resumable
