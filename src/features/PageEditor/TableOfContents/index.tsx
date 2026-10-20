@@ -7,7 +7,7 @@ import { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import type { TocHeading } from './headings';
-import { collectHeadings, findActiveIndex, findBodyRoot } from './headings';
+import { collectHeadings, findActiveIndex, findBodyRoot, isSameOutline } from './headings';
 
 /** A heading counts as "being read" once it scrolls within this distance of the pane top. */
 const ACTIVE_THRESHOLD = 96;
@@ -149,7 +149,9 @@ const TableOfContents = memo<TableOfContentsProps>(({ contentRef, scrollRef }) =
       cancelAnimationFrame(frame);
       frame = requestAnimationFrame(() => {
         const next = collectHeadings(findBodyRoot(content));
-        setHeadings(next);
+        // Ordinary text edits leave the outline unchanged; keep the previous list
+        // so the TOC does not rerender or reinstall its scroll listeners.
+        setHeadings((prev) => (isSameOutline(prev, next) ? prev : next));
         updateActive(next);
       });
     };
@@ -185,15 +187,22 @@ const TableOfContents = memo<TableOfContentsProps>(({ contentRef, scrollRef }) =
     pane.addEventListener('touchstart', releasePin, { passive: true });
     pane.addEventListener('keydown', releasePin);
 
+    // Opening a side panel, resizing the window or late reflow moves headings
+    // without a scroll event.
+    const resizeObserver = new ResizeObserver(handleScroll);
+    resizeObserver.observe(pane);
+    if (contentRef.current) resizeObserver.observe(contentRef.current);
+
     return () => {
       cancelAnimationFrame(frame);
+      resizeObserver.disconnect();
       pane.removeEventListener('scroll', handleScroll);
       pane.removeEventListener('pointerdown', releasePin);
       pane.removeEventListener('wheel', releasePin);
       pane.removeEventListener('touchstart', releasePin);
       pane.removeEventListener('keydown', releasePin);
     };
-  }, [headings, scrollRef, updateActive]);
+  }, [contentRef, headings, scrollRef, updateActive]);
 
   const scrollToHeading = useCallback(
     (heading: TocHeading, index: number) => {

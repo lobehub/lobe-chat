@@ -48,3 +48,13 @@ export const findActiveIndex = (offsets: number[], threshold: number, atBottom =
 
   return active;
 };
+
+/** Same headings in the same order, so the rendered outline would not change. */
+export const isSameOutline = (a: TocHeading[], b: TocHeading[]): boolean =>
+  a.length === b.length &&
+  a.every(
+    (heading, index) =>
+      heading.element === b[index].element &&
+      heading.level === b[index].level &&
+      heading.text === b[index].text,
+  );

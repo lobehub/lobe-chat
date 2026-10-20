@@ -40,6 +40,13 @@ const activeText = () =>
 
 describe('TableOfContents', () => {
   beforeEach(() => {
+    vi.stubGlobal(
+      'ResizeObserver',
+      class {
+        disconnect() {}
+        observe() {}
+      },
+    );
     vi.spyOn(window, 'requestAnimationFrame').mockImplementation((cb) => {
       cb(0);
       return 0;
@@ -48,6 +55,7 @@ describe('TableOfContents', () => {
 
   afterEach(() => {
     vi.restoreAllMocks();
+    vi.unstubAllGlobals();
     document.body.innerHTML = '';
   });
 
@@ -93,5 +101,18 @@ describe('TableOfContents', () => {
     fireEvent.pointerDown(pane);
     fireEvent.scroll(pane);
     expect(activeText()).toBe('Intro');
+  });
+
+  it('jumps without animation when reduced motion is preferred', async () => {
+    vi.stubGlobal('matchMedia', (query: string) => ({
+      matches: query === '(prefers-reduced-motion: reduce)',
+    }));
+    const { pane } = setup();
+    await flush();
+
+    fireEvent.focus(screen.getByRole('button'));
+    fireEvent.click(screen.getByRole('link', { name: 'FAQ' }));
+
+    expect(pane.scrollTo).toHaveBeenCalledWith(expect.objectContaining({ behavior: 'auto' }));
   });
 });

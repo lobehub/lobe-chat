@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { collectHeadings, findActiveIndex, findBodyRoot } from './headings';
+import { collectHeadings, findActiveIndex, findBodyRoot, isSameOutline } from './headings';
 
 const render = (html: string) => {
   const container = document.createElement('div');
@@ -57,5 +57,18 @@ describe('findActiveIndex', () => {
   it('returns -1 without headings', () => {
     expect(findActiveIndex([], 80)).toBe(-1);
     expect(findActiveIndex([], 80, true)).toBe(-1);
+  });
+});
+
+describe('isSameOutline', () => {
+  it('treats an unchanged outline as the same and edits to headings as different', () => {
+    const root = render('<h1>A</h1><p>text</p><h2>B</h2>');
+    const before = collectHeadings(root);
+
+    root.querySelector('p')!.textContent = 'edited';
+    expect(isSameOutline(before, collectHeadings(root))).toBe(true);
+
+    root.querySelector('h2')!.textContent = 'B2';
+    expect(isSameOutline(before, collectHeadings(root))).toBe(false);
   });
 });
