@@ -16,6 +16,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { cacheScope, REPLICA_INDEX_KEY } from '@/libs/replica';
 import { setScopedMutate } from '@/libs/swr/mutate';
 import { agentQuotaService } from '@/services/agentQuota';
+import { stores } from '@/store/utils/userDataStores';
 
 import { QUOTA_READ_DEDUPE_MS } from './action';
 import { agentQuotaSelectors, useAgentQuotaStore } from './index';
@@ -333,6 +334,30 @@ describe('agent quota replicas', () => {
           (await storedRow<QuotaAccount[]>(quotaAccountsResource, QUOTA_ACCOUNTS_KEY))?.[0]?.label,
         ).toBe('Work'),
       );
+    });
+  });
+
+  describe('user-data reset', () => {
+    it('drops every quota view and the dedupe window, so the next read asks the server', async () => {
+      const listAccounts = vi
+        .spyOn(agentQuotaService, 'listAccounts')
+        .mockResolvedValueOnce([account('a1')])
+        .mockResolvedValueOnce([account('a2')]);
+      await useAgentQuotaStore.getState().readQuotaAccounts();
+      expect(agentQuotaSelectors.isAccountsConfirmed(scope)(useAgentQuotaStore.getState())).toBe(
+        true,
+      );
+
+      // Same scope string, new data context (desktop refreshUserData / disconnect).
+      act(() => stores.reset());
+
+      expect(agentQuotaSelectors.accounts(useAgentQuotaStore.getState())).toBeUndefined();
+      expect(agentQuotaSelectors.isAccountsConfirmed(scope)(useAgentQuotaStore.getState())).toBe(
+        false,
+      );
+      const accounts = await useAgentQuotaStore.getState().readQuotaAccounts();
+      expect(listAccounts).toHaveBeenCalledTimes(2);
+      expect(accounts.map((a) => a.id)).toEqual(['a2']);
     });
   });
 

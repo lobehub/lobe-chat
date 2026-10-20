@@ -304,6 +304,16 @@ export class ActionImpl {
     await this.#refresh(this.#accounts, QUOTA_ACCOUNTS_KEY);
   };
 
+  /**
+   * Drop every quota view and confirmation when the data context changes
+   * (desktop `refreshUserData` / `disconnectRemoteServer`), even when the next
+   * context derives the same scope string; mounted syncs refetch from empty.
+   */
+  reset = (): void => {
+    this.#appliedAt.clear();
+    this.#set({ ...initialState }, false, 'resetAgentQuotaStore');
+  };
+
   // ---- internals ----
 
   /**
