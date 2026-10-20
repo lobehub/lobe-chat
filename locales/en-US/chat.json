@@ -376,6 +376,7 @@
   "desktopNotification.humanApprovalRequired.body": "An Agent needs your approval to continue",
   "desktopNotification.humanApprovalRequired.title": "Approval required",
   "desktopNotification.workingDirectoryUnavailable.body": "Working directory unavailable: {{path}}",
+  "desktopNotification.workingDirectoryUnavailable.bodyWithoutPath": "Working directory unavailable: the folder saved for this conversation no longer exists",
   "devinInstallGuide.actions.openDocs": "Open Install Guide",
   "devinInstallGuide.actions.openSystemTools": "Open System Tools",
   "devinInstallGuide.afterInstall": "After installing, run `devin auth login`, then retry your message or click Re-detect in System Tools.",

@@ -1465,15 +1465,10 @@ export const createGatewayEventHandler = (
           get().internal_toggleToolCallingStreaming(currentAssistantMessageId, undefined);
           endReasoningIfNeeded();
 
-          // Failed run: no unread/drain, but notify here — this event ends the session,
-          // so a later `agent_runtime_end` is dropped. hetero never forwards `error`.
+          // Failed run: no unread badge or queue drain. hetero never forwards `error`.
+          const failedEvent = { ...lifecycleEventBase, status: 'failed' as const };
           if (runtimeType === 'gateway' && runLifecycle) {
-            const failedEvent = { ...lifecycleEventBase, status: 'failed' as const };
             await runLifecycle.completeRun(failedEvent);
-            await runLifecycle.afterRunComplete({
-              ...failedEvent,
-              notification: { error: messageError },
-            });
           } else {
             get().completeOperation(operationId);
           }
@@ -1516,6 +1511,11 @@ export const createGatewayEventHandler = (
             },
             dispatchContext,
           );
+
+          // Notify after the error shows; this event ends the session (end is dropped).
+          const notification = { error: messageError };
+          if (runtimeType === 'gateway')
+            await runLifecycle?.afterRunComplete({ ...failedEvent, notification });
         });
         break;
       }

@@ -376,6 +376,7 @@
   "desktopNotification.humanApprovalRequired.body": "Agent 需要你的批准后才能继续",
   "desktopNotification.humanApprovalRequired.title": "需要你的批准",
   "desktopNotification.workingDirectoryUnavailable.body": "工作目录不可用：{{path}}",
+  "desktopNotification.workingDirectoryUnavailable.bodyWithoutPath": "工作目录不可用：此会话保存的目录已不存在",
   "devinInstallGuide.actions.openDocs": "打开安装指南",
   "devinInstallGuide.actions.openSystemTools": "打开系统工具",
   "devinInstallGuide.afterInstall": "安装完成后，请运行 `devin auth login` 登录，然后重试刚才的消息，或在系统工具中点击“重新检测”。",

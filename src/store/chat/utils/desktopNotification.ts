@@ -239,11 +239,11 @@ export const buildFailureNotificationBody = (error: ChatMessageError | undefined
   const fallback = t('desktopNotification.agentFailed.body', { ns: 'chat' });
 
   if (error?.body?.code === HeterogeneousAgentSessionErrorCode.WorkingDirectoryNotFound) {
+    // Gateway/CLI-classified errors carry the path only inside their raw message.
     const path: string | undefined = error.body.workingDirectory;
-    return t('desktopNotification.workingDirectoryUnavailable.body', {
-      ns: 'chat',
-      path: path || t('workingDirectoryGuide.desc', { ns: 'chat' }),
-    });
+    return path
+      ? t('desktopNotification.workingDirectoryUnavailable.body', { ns: 'chat', path })
+      : t('desktopNotification.workingDirectoryUnavailable.bodyWithoutPath', { ns: 'chat' });
   }
 
   return buildNotificationBody(error?.message, fallback);

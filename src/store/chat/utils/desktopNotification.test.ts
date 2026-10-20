@@ -270,6 +270,18 @@ describe('failed run notification', () => {
     );
   });
 
+  it('does not pass fallback prose off as a path when the error has none', () => {
+    expect(
+      buildFailureNotificationBody({
+        body: { agentType: 'claude-code', code: 'working_directory_not_found' },
+        message: 'Working directory does not exist: /Users/me/gone',
+        type: 'AgentRuntimeError',
+      }),
+    ).toBe(
+      'Working directory unavailable: the folder saved for this conversation no longer exists',
+    );
+  });
+
   it('uses the error message, falling back to a generic line', () => {
     expect(buildFailureNotificationBody({ message: 'Quota exceeded', type: 'x' } as any)).toBe(
       'Quota exceeded',

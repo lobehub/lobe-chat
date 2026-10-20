@@ -95,9 +95,12 @@ describe('createGatewayEventHandler — failed run terminal', () => {
   });
 
   it('announces a run that fails with an `error` event, once, before the dropped end event', async () => {
-    vi.spyOn(messageService, 'updateMessageError').mockResolvedValue({ success: true } as any);
+    const updateMessageError = vi
+      .spyOn(messageService, 'updateMessageError')
+      .mockResolvedValue({ success: true } as any);
     const lifecycle = createLifecycle();
-    const handler = createGatewayEventHandler(createStore, {
+    const store = createStore();
+    const handler = createGatewayEventHandler(() => store, {
       assistantMessageId: 'answer-msg',
       context,
       operationId: 'op-1',
@@ -121,6 +124,11 @@ describe('createGatewayEventHandler — failed run terminal', () => {
         status: 'failed',
       }),
     );
+    // The error the banner points to is persisted and shown before it fires.
+    const notifiedAt = lifecycle.afterRunComplete.mock.invocationCallOrder[0];
+    expect(updateMessageError.mock.invocationCallOrder[0]).toBeLessThan(notifiedAt);
+    const overlayAt = vi.mocked(store.internal_dispatchMessage).mock.invocationCallOrder.at(-1)!;
+    expect(overlayAt).toBeLessThan(notifiedAt);
   });
 
   it('still announces a failed run whose snapshot carries no error', async () => {
