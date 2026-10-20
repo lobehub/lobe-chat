@@ -210,4 +210,36 @@ describe('useAgentScan', () => {
     await waitFor(() => expect(result.current.state).toEqual({ agents, status: 'success' }));
     expect(scanAgents).toHaveBeenCalledTimes(2);
   });
+
+  it('does not re-probe on its own when the connection comes back', async () => {
+    scanAgents.mockResolvedValue({ agents: {} } as any);
+    let reconnect: (() => void) | undefined;
+    const reconnectWrapper = ({ children }: PropsWithChildren) =>
+      createElement(
+        SWRConfig,
+        {
+          value: {
+            initReconnect: (callback: () => void) => {
+              reconnect = callback;
+            },
+            provider: () => new Map(),
+          },
+        },
+        children,
+      );
+
+    const { result } = renderHook(() => useAgentScan({ device, kind: 'device' }), {
+      wrapper: reconnectWrapper,
+    });
+    await waitFor(() => expect(result.current.state.status).toBe('success'));
+
+    expect(reconnect).toBeDefined();
+    await act(async () => {
+      reconnect!();
+      await new Promise((resolve) => setTimeout(resolve, 50));
+    });
+
+    expect(result.current.state.status).toBe('success');
+    expect(scanAgents).toHaveBeenCalledTimes(1);
+  });
 });

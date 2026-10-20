@@ -73,8 +73,9 @@ export const useAgentScan = (target: ScanTarget | null) => {
       target?.kind === 'device'
         ? deviceService.scanAgents({ deviceId: target.device.deviceId })
         : { agents: await scanLocal() },
-    // A failed probe is shown with its rescan button; no silent retries.
-    { revalidateOnFocus: false, shouldRetryOnError: false },
+    // Only an explicit rescan re-probes: it also clears the picked runtimes, which
+    // a silent refresh (focus, reconnect, retry) would leave pointing at stale rows.
+    { revalidateOnFocus: false, revalidateOnReconnect: false, shouldRetryOnError: false },
   );
 
   const state = useMemo<AgentScanState>(() => {
