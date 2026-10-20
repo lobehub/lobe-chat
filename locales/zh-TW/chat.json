@@ -963,7 +963,6 @@
   "goalProcess.metricDetail.budget.runsValue": "{{count}} 次執行",
   "goalProcess.metricDetail.budget.saveFailed": "無法更新預算",
   "goalProcess.metricDetail.budget.title": "預算",
-  "goalProcess.metricDetail.budget.tokensValue": "{{value}} 代幣",
   "goalProcess.metricDetail.budget.totalCost": "總成本上限",
   "goalProcess.metricDetail.budget.uncapped": "無上限",
   "goalProcess.metricDetail.duration.now": "現在",

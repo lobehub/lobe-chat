@@ -963,7 +963,6 @@
   "goalProcess.metricDetail.budget.runsValue": "{{count}} lần chạy",
   "goalProcess.metricDetail.budget.saveFailed": "Không thể cập nhật ngân sách",
   "goalProcess.metricDetail.budget.title": "Ngân sách",
-  "goalProcess.metricDetail.budget.tokensValue": "{{value}} token",
   "goalProcess.metricDetail.budget.totalCost": "Giới hạn tổng chi phí",
   "goalProcess.metricDetail.budget.uncapped": "Không giới hạn",
   "goalProcess.metricDetail.duration.now": "bây giờ",

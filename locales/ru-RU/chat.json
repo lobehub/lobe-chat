@@ -963,7 +963,6 @@
   "goalProcess.metricDetail.budget.runsValue": "{{count}} запусков",
   "goalProcess.metricDetail.budget.saveFailed": "Не удалось обновить бюджет",
   "goalProcess.metricDetail.budget.title": "Бюджет",
-  "goalProcess.metricDetail.budget.tokensValue": "{{value}} токенов",
   "goalProcess.metricDetail.budget.totalCost": "Общее ограничение затрат",
   "goalProcess.metricDetail.budget.uncapped": "Без ограничений",
   "goalProcess.metricDetail.duration.now": "сейчас",

@@ -963,7 +963,6 @@
   "goalProcess.metricDetail.budget.runsValue": "{{count}} 次运行",
   "goalProcess.metricDetail.budget.saveFailed": "预算更新失败",
   "goalProcess.metricDetail.budget.title": "成本统计",
-  "goalProcess.metricDetail.budget.tokensValue": "{{value}} tokens",
   "goalProcess.metricDetail.budget.totalCost": "开销",
   "goalProcess.metricDetail.budget.uncapped": "未设限",
   "goalProcess.metricDetail.duration.now": "现在",

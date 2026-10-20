@@ -963,7 +963,6 @@
   "goalProcess.metricDetail.budget.runsValue": "{{count}} execuções",
   "goalProcess.metricDetail.budget.saveFailed": "Não foi possível atualizar o orçamento",
   "goalProcess.metricDetail.budget.title": "Orçamento",
-  "goalProcess.metricDetail.budget.tokensValue": "{{value}} tokens",
   "goalProcess.metricDetail.budget.totalCost": "Limite de custo total",
   "goalProcess.metricDetail.budget.uncapped": "Sem limite",
   "goalProcess.metricDetail.duration.now": "agora",

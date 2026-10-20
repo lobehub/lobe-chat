@@ -963,7 +963,6 @@
   "goalProcess.metricDetail.budget.runsValue": "{{count}} تشغيلات",
   "goalProcess.metricDetail.budget.saveFailed": "تعذر تحديث الميزانية",
   "goalProcess.metricDetail.budget.title": "الميزانية",
-  "goalProcess.metricDetail.budget.tokensValue": "{{value}} رموز",
   "goalProcess.metricDetail.budget.totalCost": "حد التكلفة الإجمالية",
   "goalProcess.metricDetail.budget.uncapped": "غير محدد",
   "goalProcess.metricDetail.duration.now": "الآن",

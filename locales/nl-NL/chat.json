@@ -963,7 +963,6 @@
   "goalProcess.metricDetail.budget.runsValue": "{{count}} runs",
   "goalProcess.metricDetail.budget.saveFailed": "Kon het budget niet bijwerken",
   "goalProcess.metricDetail.budget.title": "Budget",
-  "goalProcess.metricDetail.budget.tokensValue": "{{value}} tokens",
   "goalProcess.metricDetail.budget.totalCost": "Totale kostenlimiet",
   "goalProcess.metricDetail.budget.uncapped": "Onbeperkt",
   "goalProcess.metricDetail.duration.now": "nu",

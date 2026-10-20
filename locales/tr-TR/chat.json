@@ -963,7 +963,6 @@
   "goalProcess.metricDetail.budget.runsValue": "{{count}} çalışma",
   "goalProcess.metricDetail.budget.saveFailed": "Bütçe güncellenemedi",
   "goalProcess.metricDetail.budget.title": "Bütçe",
-  "goalProcess.metricDetail.budget.tokensValue": "{{value}} jeton",
   "goalProcess.metricDetail.budget.totalCost": "Toplam maliyet sınırı",
   "goalProcess.metricDetail.budget.uncapped": "Sınırsız",
   "goalProcess.metricDetail.duration.now": "şimdi",

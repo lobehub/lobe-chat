@@ -963,7 +963,6 @@
   "goalProcess.metricDetail.budget.runsValue": "{{count}} 실행",
   "goalProcess.metricDetail.budget.saveFailed": "예산을 업데이트할 수 없습니다",
   "goalProcess.metricDetail.budget.title": "예산",
-  "goalProcess.metricDetail.budget.tokensValue": "{{value}} 토큰",
   "goalProcess.metricDetail.budget.totalCost": "총 비용 한도",
   "goalProcess.metricDetail.budget.uncapped": "제한 없음",
   "goalProcess.metricDetail.duration.now": "현재",

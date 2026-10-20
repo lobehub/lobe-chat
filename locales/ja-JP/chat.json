@@ -963,7 +963,6 @@
   "goalProcess.metricDetail.budget.runsValue": "{{count}} 実行",
   "goalProcess.metricDetail.budget.saveFailed": "予算を更新できませんでした",
   "goalProcess.metricDetail.budget.title": "予算",
-  "goalProcess.metricDetail.budget.tokensValue": "{{value}} トークン",
   "goalProcess.metricDetail.budget.totalCost": "総費用上限",
   "goalProcess.metricDetail.budget.uncapped": "上限なし",
   "goalProcess.metricDetail.duration.now": "現在",
