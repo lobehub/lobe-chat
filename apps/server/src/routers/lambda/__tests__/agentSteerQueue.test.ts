@@ -151,6 +151,25 @@ describe('agentSteerQueueRouter.append', () => {
     expect(mocks.append.mock.calls[1][1].composer).toBeUndefined();
   });
 
+  // ROOT CAUSE:
+  //
+  // One cap over the whole composer state dropped the attachment previews
+  // with a long editor document (and the reverse), so a reload lost both.
+  //
+  // Before: all or nothing.
+  // After: each part is kept or dropped on its own.
+  it('keeps the attachment previews when only the editor document is too large', async () => {
+    const filesPreview = [{ id: 'f1', name: 'a.png' }];
+    const huge = { root: { text: 'x'.repeat(40 * 1024) } };
+
+    await caller().append({ ...appendInput, composer: { editorData: huge, filesPreview } });
+
+    expect(mocks.append.mock.calls[0][1].composer).toEqual({
+      editorData: undefined,
+      filesPreview,
+    });
+  });
+
   it('tells the client to send directly when no run is live', async () => {
     mocks.isRunningOperationAlive.mockResolvedValue(false);
 

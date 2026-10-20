@@ -70,10 +70,24 @@ const AppendSchema = z.object({
   request: QueuedRequestSchema,
 });
 
-/** Composer state kept with an entry; larger editor documents are not stored. */
-const MAX_COMPOSER_BYTES = 32 * 1024;
-const storedComposer = (composer: z.infer<typeof AppendSchema>['composer']) =>
-  composer && JSON.stringify(composer).length <= MAX_COMPOSER_BYTES ? composer : undefined;
+/**
+ * Composer state kept with an entry. Each part has its own cap, so a long
+ * editor document never costs the attachment previews, nor the reverse.
+ */
+const MAX_EDITOR_DATA_BYTES = 32 * 1024;
+const MAX_FILES_PREVIEW_BYTES = 16 * 1024;
+const within = (value: unknown, bytes: number) =>
+  value !== undefined && JSON.stringify(value).length <= bytes;
+const storedComposer = (composer: z.infer<typeof AppendSchema>['composer']) => {
+  if (!composer) return;
+  const editorData = within(composer.editorData, MAX_EDITOR_DATA_BYTES)
+    ? composer.editorData
+    : undefined;
+  const filesPreview = within(composer.filesPreview, MAX_FILES_PREVIEW_BYTES)
+    ? composer.filesPreview
+    : undefined;
+  return editorData || filesPreview ? { editorData, filesPreview } : undefined;
+};
 
 const steerQueueProcedure = wsCompatProcedure.use(serverDatabase);
 const steerQueueWriteProcedure = steerQueueProcedure.use(withScopedPermission('message:create'));

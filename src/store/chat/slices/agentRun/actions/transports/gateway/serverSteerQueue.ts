@@ -42,6 +42,12 @@ const LOCAL_RUN_SETTLE_TIMEOUT_MS = 30 * 60 * 1000;
  * run that ended took nothing (it failed or was stopped), so they come back.
  */
 const ORPHANED_QUEUE_TICKS = 20;
+/**
+ * How long an unconfirmed append may be settled by retrying its id. The server
+ * remembers delivered ids for a day after their drain; past that a retry could
+ * no longer tell "delivered" from "never stored", so it must not be sent here.
+ */
+const UNCONFIRMED_SETTLE_MS = 23 * 60 * 60 * 1000;
 /** An append whose outcome is unknown is retried with the same id. */
 const APPEND_ATTEMPTS = 3;
 
@@ -283,6 +289,12 @@ const reconcileUnconfirmed = async (
   context: ConversationContext,
   message: QueuedMessage,
 ): Promise<'delivered' | 'held' | 'kept'> => {
+  // Too old to settle safely: drop it rather than risk running it twice.
+  if (Date.now() - message.createdAt > UNCONFIRMED_SETTLE_MS) {
+    console.warn('[serverSteerQueue] dropping %s: unconfirmed for too long to settle', message.id);
+    get().removeQueuedMessage(contextKey, message.id);
+    return 'delivered';
+  }
   try {
     const result = await appendWithRetry(message.id, message.serverRequest!, message);
     // Delivered already: the caller completes it like any delivered one.

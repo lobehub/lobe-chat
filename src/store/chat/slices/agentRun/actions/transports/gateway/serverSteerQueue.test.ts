@@ -28,7 +28,8 @@ const request: QueuedFollowUpRequest = {
 const get = () => useChatStore.getState();
 const queued = (id: string, patch: Partial<QueuedMessage> = {}): QueuedMessage => ({
   content: id,
-  createdAt: 1,
+  // Queued just now: an unconfirmed row past a day is dropped, not settled.
+  createdAt: Date.now(),
   id,
   interruptMode: 'soft',
   ...patch,
@@ -230,6 +231,39 @@ describe('handOffQueuedMessage', () => {
 
     expect(queue().map((m) => m.id)).not.toContain('q1');
     expect(sendMessage).toHaveBeenCalledWith(expect.objectContaining({ message: 'q2' }));
+  });
+
+  // ROOT CAUSE:
+  //
+  // The server remembers delivered ids for a day. A tab suspended longer
+  // retried its unconfirmed append, got `idle` (the marker had expired) and
+  // sent it again, though it may well have run.
+  //
+  // Before: an unconfirmed row could fall back here at any age.
+  // After: past that window it is dropped, never sent from here.
+  it('drops an unconfirmed follow-up too old to settle by its id, without sending it', async () => {
+    const sendMessage = vi.fn().mockResolvedValue(undefined);
+    useChatStore.setState({ sendMessage });
+    const append = vi
+      .spyOn(aiAgentService, 'appendQueuedFollowUp')
+      .mockResolvedValue({ queued: false, reason: 'idle' } as any);
+    get().enqueueMessage(
+      key,
+      queued('q1', {
+        createdAt: Date.now() - 25 * 60 * 60 * 1000,
+        serverDelivery: 'server',
+        serverRequest: request,
+        serverUnconfirmed: true,
+      }),
+    );
+    vi.spyOn(topicService, 'getTopicDetail').mockResolvedValue(null);
+    watchServerQueue(get, key, context);
+
+    await vi.advanceTimersByTimeAsync(SERVER_QUEUE_POLL_MS * 8);
+
+    expect(append).not.toHaveBeenCalled();
+    expect(queue()).toHaveLength(0);
+    expect(sendMessage).not.toHaveBeenCalled();
   });
 
   it('keeps an unconfirmed follow-up the server says is on its way, now confirmed', async () => {
