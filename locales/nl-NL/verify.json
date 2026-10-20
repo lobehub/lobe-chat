@@ -82,7 +82,6 @@
   "acceptance.comments.approvalCount": "{{count}} beoordelaar(s) hebben goedgekeurd",
   "acceptance.comments.approve": "Keur deze levering goed",
   "acceptance.comments.approveAgain": "Keur deze ronde opnieuw goed",
-  "acceptance.comments.approveDescription": "Uw beoordelingsmening. Dit verandert de acceptatiestatus niet — alleen de eigenaar accepteert de levering.",
   "acceptance.comments.approveSummaryPlaceholder": "Eén-regelige samenvatting (optioneel)",
   "acceptance.comments.approved": "Goedgekeurd",
   "acceptance.comments.approvedAtRound": "Goedgekeurd (ronde {{round}})",

@@ -82,7 +82,6 @@
   "acceptance.comments.approvalCount": "{{count}} مراجع وافق",
   "acceptance.comments.approve": "وافق على هذا التسليم",
   "acceptance.comments.approveAgain": "وافق على هذه الجولة",
-  "acceptance.comments.approveDescription": "رأيك في المراجعة. لا يغير حالة القبول - فقط المالك يقبل التسليم.",
   "acceptance.comments.approveSummaryPlaceholder": "ملخص من سطر واحد (اختياري)",
   "acceptance.comments.approved": "تمت الموافقة",
   "acceptance.comments.approvedAtRound": "تمت الموافقة (الجولة {{round}})",

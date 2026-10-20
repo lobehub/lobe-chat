@@ -82,7 +82,6 @@
   "acceptance.comments.approvalCount": "{{count}}명의 검토자가 승인함",
   "acceptance.comments.approve": "이 전달을 승인",
   "acceptance.comments.approveAgain": "이번 라운드를 다시 승인",
-  "acceptance.comments.approveDescription": "귀하의 검토 의견입니다. 이는 수락 상태를 변경하지 않습니다 — 소유자만이 전달을 수락합니다.",
   "acceptance.comments.approveSummaryPlaceholder": "한 줄 요약 (선택 사항)",
   "acceptance.comments.approved": "승인됨",
   "acceptance.comments.approvedAtRound": "승인됨 (라운드 {{round}})",
