@@ -151,6 +151,7 @@ export const getServerGlobalConfig = async () => {
     defaultAgent: {
       config: parseAgentConfig(DEFAULT_AGENT_CONFIG),
     },
+    deviceGatewayConfigured: !!gatewayEnv.DEVICE_GATEWAY_URL,
     // Never fall back to the server-internal DEVICE_GATEWAY_URL.
     ...(gatewayEnv.DEVICE_GATEWAY_PUBLIC_URL
       ? { deviceGatewayUrl: gatewayEnv.DEVICE_GATEWAY_PUBLIC_URL }
