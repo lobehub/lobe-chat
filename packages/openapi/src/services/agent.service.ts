@@ -43,6 +43,18 @@ export class AgentService extends BaseService {
       title,
     );
     if (!result) throw this.createNotFoundError('Agent not found');
+
+    // AgentModel.duplicate copies an explicit field list without metadata, and the
+    // rest of metadata is private, so only the public personal flag is carried over.
+    const source = await this.db.query.agents.findFirst({ where: eq(agents.id, id) });
+    if (source?.metadata?.personal === true) {
+      const copy = await this.db.query.agents.findFirst({ where: eq(agents.id, result.agentId) });
+      await this.db
+        .update(agents)
+        .set({ metadata: { ...copy?.metadata, personal: true } })
+        .where(eq(agents.id, result.agentId));
+    }
+
     return this.getAgentById(result.agentId);
   }
 
@@ -64,7 +76,7 @@ export class AgentService extends BaseService {
         or(eq(agents.virtual, false), isNull(agents.virtual)),
       );
 
-      const personalCondition = sql`coalesce((${agents.metadata} ->> 'personal')::boolean, false)`;
+      const personalCondition = sql`coalesce(${agents.metadata} -> 'personal' = 'true'::jsonb, false)`;
       const whereConditions = and(
         baseConditions,
         keyword ? ilike(agents.title, `%${keyword}%`) : undefined,

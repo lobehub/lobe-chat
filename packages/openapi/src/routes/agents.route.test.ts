@@ -79,6 +79,35 @@ describe('personal agents', () => {
     expect(all.total).toBe(2);
   });
 
+  it('treats a non-boolean metadata.personal as not personal instead of failing', async () => {
+    const agent = await json(await request('/', { body: { title: 'Legacy' }, method: 'POST' }));
+    await db
+      .update(agents)
+      .set({ metadata: { personal: 'yes' } })
+      .where(eq(agents.id, agent.id));
+
+    const personal = await request('/?personal=true');
+    const others = await request('/?personal=false');
+
+    expect(personal.status).toBe(200);
+    expect((await json(personal)).total).toBe(0);
+    expect((await json(others)).agents.map((row: any) => row.title)).toEqual(['Legacy']);
+  });
+
+  it('keeps the personal flag on a duplicate', async () => {
+    const agent = await json(
+      await request('/', { body: { personal: true, title: 'toby' }, method: 'POST' }),
+    );
+
+    const res = await request(`/${agent.id}/duplicate`, { body: {}, method: 'POST' });
+    expect(res.status).toBe(201);
+    const copy = await json(res);
+
+    expect(copy.id).not.toBe(agent.id);
+    expect(copy.personal).toBe(true);
+    expect((await json(await request('/?personal=true'))).total).toBe(2);
+  });
+
   it('rejects a personal filter that is not a boolean', async () => {
     const res = await request('/?personal=yes');
 
