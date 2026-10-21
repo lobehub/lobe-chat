@@ -1,9 +1,5 @@
 import { isDesktop } from '@lobechat/const';
-import type {
-  DeviceGitLinkedPullRequest,
-  DeviceGitUpstreamRef,
-  WorkingDirConfig,
-} from '@lobechat/types';
+import type { DeviceGitUpstreamRef } from '@lobechat/types';
 import { getWorkingDirSourcePath } from '@lobechat/types';
 import isEqual from 'fast-deep-equal';
 
@@ -12,6 +8,25 @@ import { topicSelectors } from '@/store/chat/selectors';
 import { getChatStoreState } from '@/store/chat/store';
 import { getGitStatusStoreState } from '@/store/device/gitStatus/store';
 import { getElectronStoreState } from '@/store/electron';
+
+import {
+  applyBranchToConfig,
+  applyDetachedToConfig,
+  applyPullRequestToConfig,
+  applyPushToConfig,
+  applyWorktreeAddToConfig,
+  applyWorktreeExitToConfig,
+  type PullRequestCreateInfo,
+  type WorktreeAddInfo,
+} from './configTransitions';
+import { normalizeBranch } from './utils';
+
+export {
+  isWorktreeExitContent,
+  parseWorktreeEnterInfo,
+  recordWorktreeEnter,
+  recordWorktreeExit,
+} from './claudeCodeWorktree';
 
 /**
  * Detect git / gh side effects in a heterogeneous CLI agent's successful shell
@@ -76,28 +91,6 @@ const BRANCH_OUTPUT_PATTERNS = [
   /branch ['"]([^'"\n]+)['"] set up to track/i,
 ] as const;
 
-/**
- * Claude Code's `EnterWorktree` / `ExitWorktree` move the session without ever
- * shelling out, so the `git worktree add` sniffing above cannot see them. Their
- * tool_result ships only CC's `message` string (the structured `worktreePath`
- * never leaves the tool), which makes these sentences the wire contract.
- */
-const CC_ENTER_PATTERN = /^(?:Created|Entered) worktree at (.+?)(?: on branch (\S+))?\. /;
-const CC_EXIT_PATTERN = /^Exited\b/;
-/**
- * Said only on the branch that `chdir`s the SESSION into the worktree. A subagent
- * pinned to its own cwd gets "This agent's working directory …" instead, because it
- * moved only itself — recording that would claim the whole run had relocated.
- * Requiring this sentence fails CLOSED: if CC rewords it we stop recording, rather
- * than record a worktree the session is not in.
- */
-const CC_SESSION_ENTER_MARKER = 'The session is now working in the worktree';
-
-interface WorktreeAddInfo {
-  branch?: string;
-  path: string;
-}
-
 interface WorktreeAddParseResult {
   branch?: string;
   /** Resolved absolute path, present only when the command yielded a trustworthy literal. */
@@ -107,11 +100,6 @@ interface WorktreeAddParseResult {
 }
 
 type BranchSwitchInfo = { branch: string } | { detached: true };
-
-interface PullRequestCreateInfo {
-  branch?: string;
-  pullRequest: DeviceGitLinkedPullRequest;
-}
 
 const stripQuotes = (token: string): string => {
   if (token.length >= 2) {
@@ -175,13 +163,6 @@ const isGhExecutable = (token: string): boolean => {
   return executable === 'gh' || executable === 'gh.exe';
 };
 
-const normalizeBranch = (branch?: string): string | undefined => {
-  const value = branch?.trim();
-  // A `$`/backtick here is an unexpanded shell construct, not a branch name.
-  if (!value || value === '-' || /[$`]/.test(value)) return undefined;
-  return value.includes(':') ? value.split(':').at(-1) : value;
-};
-
 const getInlineFlagValue = (token: string, flags: readonly string[]): string | undefined => {
   const stripped = stripQuotes(token);
   for (const flag of flags) {
@@ -229,6 +210,35 @@ const findInCommand = <T>(
     if (result) return result;
     collectSegmentAssignments(tokens, env);
   }
+};
+
+/**
+ * Shell-order position of the last command segment `matches` accepts, or -1. Walks
+ * segments exactly like {@link findInCommand}, so positions from two calls on the
+ * same command are comparable.
+ */
+const lastIndexInCommand = (
+  command: string | string[],
+  matches: (tokens: string[], env?: ShellEnv) => boolean,
+): number => {
+  if (Array.isArray(command)) {
+    if (!command.every((t) => typeof t === 'string')) return -1;
+    const wrapped = unwrapShellArgv(command);
+    if (wrapped !== undefined) return lastIndexInCommand(wrapped, matches);
+    return matches(command) ? 0 : -1;
+  }
+  if (typeof command !== 'string') return -1;
+
+  const env: ShellEnv = {};
+  let last = -1;
+  unwrapShellCommand(command)
+    .split(/[\n;|&]/)
+    .forEach((segment, index) => {
+      const tokens = tokenize(segment);
+      if (matches(tokens, env)) last = index;
+      collectSegmentAssignments(tokens, env);
+    });
+  return last;
 };
 
 const parseBranchFromGitOutput = (content?: string): string | undefined => {
@@ -287,6 +297,28 @@ const parseGitSubcommand = (
   if (!subcommand) return undefined;
 
   return { args: tokens.slice(i + 1), baseCwd, subcommand };
+};
+
+/**
+ * The resolved path of ONE `git … worktree remove [-f] <path>` command. Its flags
+ * take no value. A path that stays shell syntax after expansion yields nothing
+ * rather than a guess.
+ */
+const parseGitWorktreeRemoveTokens = (
+  tokens: string[],
+  cwd?: string,
+  env?: ShellEnv,
+): string | undefined => {
+  const git = parseGitSubcommand(tokens, cwd);
+  if (git?.subcommand !== 'worktree' || stripQuotes(git.args[0] ?? '') !== 'remove') return;
+
+  for (const token of git.args.slice(1)) {
+    if (/^\d*[<>]/.test(token)) return; // redirection — git's args end here
+    if (token.startsWith('-')) continue;
+    const value = resolveToken(token, env);
+    if (!value) continue;
+    return isLiteralPath(value) ? resolveWorktreePath(value, git.baseCwd) : undefined;
+  }
 };
 
 const parseGitBranchSwitchTokens = (
@@ -533,166 +565,6 @@ const parseGitPush = (
   if (!remoteBranch) return undefined;
 
   return { branch: remoteBranch, remote: push.remote ?? 'origin' };
-};
-
-const applyBranchToConfig = (
-  currentConfig: WorkingDirConfig | undefined,
-  source: string,
-  branch: string,
-): WorkingDirConfig => {
-  const branchChanged = currentConfig?.git?.branch !== branch;
-  const git: NonNullable<WorkingDirConfig['git']> = {
-    ...currentConfig?.git,
-    branch,
-  };
-
-  delete git.detached;
-  // The old branch's remote ref and PR describe a branch the topic has left. Held
-  // onto, `upstream` would aim the PR lookup at the wrong head — worse than none.
-  if (branchChanged) {
-    delete git.github;
-    delete git.upstream;
-  }
-
-  return {
-    ...currentConfig,
-    git,
-    path: source,
-    ...(currentConfig?.repoType ? { repoType: currentConfig.repoType } : {}),
-  };
-};
-
-const applyDetachedToConfig = (
-  currentConfig: WorkingDirConfig | undefined,
-  source: string,
-): WorkingDirConfig => {
-  const git: NonNullable<WorkingDirConfig['git']> = {
-    ...currentConfig?.git,
-    detached: true,
-  };
-
-  delete git.branch;
-  delete git.github;
-  delete git.upstream;
-
-  return {
-    ...currentConfig,
-    git,
-    path: source,
-    ...(currentConfig?.repoType ? { repoType: currentConfig.repoType } : {}),
-  };
-};
-
-const applyPullRequestToConfig = (
-  currentConfig: WorkingDirConfig | undefined,
-  source: string,
-  info: PullRequestCreateInfo,
-): WorkingDirConfig => {
-  const branch = info.branch ?? currentConfig?.git?.branch;
-  const git: NonNullable<WorkingDirConfig['git']> = {
-    ...currentConfig?.git,
-    ...(branch ? { branch } : {}),
-    github: {
-      pullRequest: info.pullRequest,
-      pullRequestStatus: 'ok',
-    },
-  };
-
-  delete git.detached;
-
-  return {
-    ...currentConfig,
-    git,
-    path: source,
-    repoType: 'github',
-  };
-};
-
-/**
- * Record where the branch now publishes to. This is what makes the PR lookup work at
- * all for a worktree: its local branch name (`worktree-feat+x`) never exists on the
- * remote, so only the ref the push actually created (`feat/y`) can find the PR.
- */
-const applyPushToConfig = (
-  currentConfig: WorkingDirConfig | undefined,
-  source: string,
-  upstream: DeviceGitUpstreamRef,
-): WorkingDirConfig => {
-  const previous = currentConfig?.git?.upstream?.branch;
-  const git: NonNullable<WorkingDirConfig['git']> = {
-    ...currentConfig?.git,
-    upstream,
-  };
-
-  // Re-pointing the branch at a DIFFERENT remote ref orphans the PR bound to the old
-  // one. Only a change invalidates it — a first push must not drop a PR that a
-  // preceding `gh pr create` in the same run just recorded.
-  if (previous && previous !== upstream.branch) delete git.github;
-
-  return {
-    ...currentConfig,
-    git,
-    path: source,
-    ...(currentConfig?.repoType ? { repoType: currentConfig.repoType } : {}),
-  };
-};
-
-const applyWorktreeAddToConfig = (
-  currentConfig: WorkingDirConfig | undefined,
-  source: string,
-  info: WorktreeAddInfo,
-): WorkingDirConfig => {
-  const branchChanged = !!info.branch && currentConfig?.git?.branch !== info.branch;
-  const git: NonNullable<WorkingDirConfig['git']> = {
-    ...currentConfig?.git,
-    activeWorktree: info.path,
-    ...(info.branch ? { branch: info.branch } : {}),
-    isWorktree: true,
-  };
-
-  if (info.branch) delete git.detached;
-  if (branchChanged) {
-    delete git.github;
-    delete git.upstream;
-  }
-
-  return {
-    ...currentConfig,
-    git,
-    path: source,
-    ...(currentConfig?.repoType ? { repoType: currentConfig.repoType } : {}),
-  };
-};
-
-/**
- * The session left the worktree and is back in the source repo. `branch`, its
- * `upstream` ref and the linked `github` PR described the worktree's branch, not the
- * source repo's, so they are dropped rather than left pointing at a branch the topic
- * is no longer on — the source branch is unknown until the next `git switch` /
- * `checkout` refreshes it.
- */
-const applyWorktreeExitToConfig = (
-  currentConfig: WorkingDirConfig | undefined,
-  source: string,
-): WorkingDirConfig => {
-  const git: NonNullable<WorkingDirConfig['git']> = {
-    ...currentConfig?.git,
-    isWorktree: false,
-  };
-
-  delete git.activeWorktree;
-  if (currentConfig?.git?.isWorktree) {
-    delete git.branch;
-    delete git.github;
-    delete git.upstream;
-  }
-
-  return {
-    ...currentConfig,
-    git,
-    path: source,
-    ...(currentConfig?.repoType ? { repoType: currentConfig.repoType } : {}),
-  };
 };
 
 /** Collapse `.`/`..` segments in a POSIX path without touching the filesystem. */
@@ -951,6 +823,19 @@ const resolveWorktreeAddFromDevice = async (
 const isWindowsPath = (p: string): boolean => /^[A-Z]:[\\/]/i.test(p) || p.startsWith('\\\\');
 
 /**
+ * Equality key for two spellings of one directory. A Windows path takes either
+ * separator and, on a drive, any casing (`C:\wt`, `c:/WT/`, `C:\repo/..\wt`);
+ * `resolveWorktreePath` leaves those untouched. UNC paths keep their case: a
+ * `\\wsl.localhost\…` share is a case-sensitive Linux filesystem.
+ */
+const toPathKey = (p: string): string => {
+  if (!isWindowsPath(p)) return p;
+  const slashed = p.replaceAll('\\', '/');
+  if (slashed.startsWith('//')) return `/${normalizePosix(slashed)}`;
+  return normalizePosix(slashed).toLowerCase();
+};
+
+/**
  * The recorded worktree becomes the cwd of every later command on the source's
  * device, so it must be an absolute path in the source's own filesystem namespace.
  * A Windows source (`C:\repo`, `\\wsl.localhost\…`) whose command ran a nested
@@ -1015,6 +900,7 @@ export const recordWorktreeAdd = async (params: {
 /**
  * Record successful heterogeneous CLI shell side effects onto the run topic:
  * - `git worktree add` selects the created worktree and explicit branch.
+ * - `git worktree remove` of the selected worktree returns the topic to the source.
  * - `git switch` / confirmed `git checkout` updates the branch snapshot.
  * - `git push` records the remote ref the branch publishes to.
  * - `gh pr create` binds the created PR URL to the topic.
@@ -1041,6 +927,25 @@ export const recordGitCommandEffects = async (params: {
   );
   if (worktreeInfo && worktreeInfo.path !== source) {
     nextConfig = applyWorktreeAddToConfig(nextConfig, source, worktreeInfo);
+  }
+
+  // Left recorded, a removed worktree is a directory that no longer exists. Shell
+  // order decides against an add in the same command: add-then-remove of a scratch
+  // worktree nets out, remove-then-recreate keeps it. Parsed rather than confirmed
+  // against the device: if a `;`-chained remove actually failed, dropping the
+  // selection is the cheap mistake to make.
+  const activeWorktree = nextConfig?.git?.activeWorktree;
+  if (activeWorktree) {
+    const activeKey = toPathKey(resolveWorktreePath(activeWorktree, source));
+    const lastRemove = lastIndexInCommand(command, (tokens, env) => {
+      const removed = parseGitWorktreeRemoveTokens(tokens, source, env);
+      return removed !== undefined && toPathKey(removed) === activeKey;
+    });
+    const lastAdd = lastIndexInCommand(
+      command,
+      (tokens, env) => !!parseGitWorktreeAddTokens(tokens, source, env),
+    );
+    if (lastRemove > lastAdd) nextConfig = applyWorktreeExitToConfig(nextConfig, source);
   }
 
   const branchSwitch = parseGitBranchSwitch(command, resultContent);
@@ -1080,88 +985,4 @@ export const recordGitCommandEffects = async (params: {
     const revalidateDeviceId = cacheDeviceId === 'local' ? undefined : cacheDeviceId;
     await getGitStatusStoreState().revalidateGitStatus(revalidateDeviceId, source, ['branch']);
   }
-};
-
-/**
- * Read the worktree CC entered out of `EnterWorktree`'s result message:
- *
- *   `${'Created' | 'Entered'} worktree at ${path}[ on branch ${branch}]. The session…`
- *
- * The path is delimited by ` on branch <ref>` or the `. ` before the next sentence,
- * so a path containing spaces survives; one containing `". "` would not. Returns
- * undefined unless the SESSION moved (see {@link CC_SESSION_ENTER_MARKER}).
- */
-export const parseWorktreeEnterInfo = (content?: string): WorktreeAddInfo | undefined => {
-  if (!content?.includes(CC_SESSION_ENTER_MARKER)) return undefined;
-
-  const match = CC_ENTER_PATTERN.exec(content);
-  const path = match?.[1]?.trim();
-  if (!path) return undefined;
-
-  const branch = normalizeBranch(match?.[2]);
-  return { ...(branch ? { branch } : {}), path };
-};
-
-/**
- * Every successful `ExitWorktree` outcome — kept, removed, or "could not remove it"
- * — opens with `Exited …`, and all three leave the session back in its original
- * directory. The no-op ("no active EnterWorktree session") and the refusals are
- * validation failures, so they arrive with `success: false` and never get here.
- */
-export const isWorktreeExitContent = (content?: string): boolean =>
-  !!content && CC_EXIT_PATTERN.test(content);
-
-/**
- * Record a successful `EnterWorktree` as the run topic's active worktree. Unlike
- * `git worktree add`, the path is never in the arguments — a bare call generates a
- * random name — so it is read back out of the result message.
- */
-export const recordWorktreeEnter = async (params: {
-  content?: string;
-  topicId: string;
-}): Promise<void> => {
-  const { content, topicId } = params;
-  const state = getChatStoreState();
-
-  const topic = topicSelectors.getTopicById(topicId)(state);
-  const currentConfig = topic?.metadata?.workingDirectoryConfig;
-  const source = getWorkingDirSourcePath(currentConfig) ?? topic?.metadata?.workingDirectory;
-
-  const worktreeInfo = parseWorktreeEnterInfo(content);
-  if (!worktreeInfo || !source || worktreeInfo.path === source) return;
-
-  const nextConfig = applyWorktreeAddToConfig(currentConfig, source, worktreeInfo);
-
-  if (isEqual(currentConfig, nextConfig)) return;
-  await state.updateTopicMetadata(topicId, { workingDirectoryConfig: nextConfig });
-};
-
-/**
- * Record a successful `ExitWorktree` — the session is back in its original directory,
- * so the topic drops its worktree whether it was kept on disk or removed. Keeping it
- * would leave the topic pointing at a directory the run has left (and, on `remove`,
- * one that no longer exists).
- */
-export const recordWorktreeExit = async (params: {
-  content?: string;
-  topicId: string;
-}): Promise<void> => {
-  const { content, topicId } = params;
-  if (!isWorktreeExitContent(content)) return;
-
-  const state = getChatStoreState();
-
-  const topic = topicSelectors.getTopicById(topicId)(state);
-  const currentConfig = topic?.metadata?.workingDirectoryConfig;
-  const source = getWorkingDirSourcePath(currentConfig) ?? topic?.metadata?.workingDirectory;
-  if (!source) return;
-
-  // Never in a worktree → nothing to clear, and don't materialize an empty `git`.
-  const currentGit = currentConfig?.git;
-  if (!currentGit?.activeWorktree && !currentGit?.isWorktree) return;
-
-  const nextConfig = applyWorktreeExitToConfig(currentConfig, source);
-
-  if (isEqual(currentConfig, nextConfig)) return;
-  await state.updateTopicMetadata(topicId, { workingDirectoryConfig: nextConfig });
 };
