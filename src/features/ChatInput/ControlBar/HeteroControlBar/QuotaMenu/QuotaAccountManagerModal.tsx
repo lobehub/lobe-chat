@@ -1,7 +1,7 @@
 'use client';
 
 import { currentUtilization, isWeeklyAllLimit } from '@lobechat/heterogeneous-agents/quota';
-import { createStaticStyles, cssVar, DropdownMenu, Flexbox, Icon } from '@lobehub/ui';
+import { DropdownMenu, Flexbox, Icon } from '@lobehub/ui';
 import {
   ActionIcon,
   Button,
@@ -12,6 +12,8 @@ import {
   Switch,
   Text,
 } from '@lobehub/ui';
+import { cssVar } from '@lobehub/ui/stylex/cssVar.stylex';
+import * as stylex from '@stylexjs/stylex';
 import { t as i18nT } from 'i18next';
 import {
   CheckIcon,
@@ -33,55 +35,37 @@ import {
   useAgentQuotaStore,
 } from '@/store/agentQuota';
 
-const styles = createStaticStyles(({ css }) => ({
-  footer: css`
-    margin-block-start: 4px;
-    padding-block-start: 10px;
-    border-block-start: 1px solid ${cssVar.colorBorderSecondary};
-  `,
-  hint: css`
-    font-size: 12px;
-    color: ${cssVar.colorTextTertiary};
-  `,
-  interactive: css`
-    display: contents;
-  `,
-  radioGroup: css`
-    width: 100%;
+import radioGroupStyles from './QuotaAccountManagerModal.module.css';
 
-    > label {
-      width: 100%;
-    }
-
-    > label > span:last-child {
-      flex: 1;
-      min-width: 0;
-    }
-  `,
-  routing: css`
-    padding-block: 6px;
-    padding-inline: 10px;
-    border-radius: ${cssVar.borderRadius};
-
-    font-size: 12px;
-    color: ${cssVar.colorTextSecondary};
-
-    background: ${cssVar.colorFillQuaternary};
-  `,
-  row: css`
-    padding-block: 6px;
-    padding-inline: 4px;
-    border-radius: ${cssVar.borderRadius};
-
-    &:hover {
-      background: ${cssVar.colorFillQuaternary};
-    }
-
-    &[data-off='true'] {
-      opacity: 0.5;
-    }
-  `,
-}));
+const styles = stylex.create({
+  footer: {
+    marginBlockStart: '4px',
+    paddingBlockStart: '10px',
+    borderBlockStartWidth: '1px',
+    borderBlockStartStyle: 'solid',
+    borderBlockStartColor: cssVar.colorBorderSecondary,
+  },
+  hint: { fontSize: '12px', color: cssVar.colorTextTertiary },
+  interactive: { display: 'contents' },
+  routing: {
+    paddingBlock: '6px',
+    paddingInline: '10px',
+    borderRadius: cssVar.borderRadius,
+    fontSize: '12px',
+    color: cssVar.colorTextSecondary,
+    backgroundColor: cssVar.colorFillQuaternary,
+    backgroundImage: 'none',
+  },
+  row: {
+    paddingBlock: '6px',
+    paddingInline: '4px',
+    borderRadius: cssVar.borderRadius,
+    backgroundColor: { 'default': null, ':hover': cssVar.colorFillQuaternary },
+    backgroundImage: { 'default': null, ':hover': 'none' },
+  },
+  // [data-off='true']
+  rowOff: { opacity: 0.5 },
+});
 
 type Account = QuotaAccount;
 type Binding = QuotaBinding;
@@ -269,7 +253,7 @@ const QuotaAccountManager = memo<{ agentId: string }>(({ agentId }) => {
         <AccountReadingsSync accountId={a.id} key={a.id} />
       ))}
       <RadioGroup
-        className={styles.radioGroup}
+        className={radioGroupStyles.radioGroup}
         gap={2}
         horizontal={false}
         // Which mode is active is unknown until the bindings are on screen. The
@@ -281,10 +265,15 @@ const QuotaAccountManager = memo<{ agentId: string }>(({ agentId }) => {
           {
             disabled: busy || !canEditBindings,
             label: (
-              <Flexbox className={styles.row} gap={4}>
+              <Flexbox className={stylex.props(styles.row).className} gap={4}>
                 <Text style={{ fontSize: 13 }}>{t('heteroAgent.claudeQuota.manage.modeAuto')}</Text>
                 {bindingsLoaded && selected === AUTO && (
-                  <Flexbox horizontal align={'center'} className={styles.routing} gap={6}>
+                  <Flexbox
+                    horizontal
+                    align={'center'}
+                    className={stylex.props(styles.routing).className}
+                    gap={6}
+                  >
                     <Icon icon={ZapIcon} size={14} />
                     {routeAccount
                       ? t('heteroAgent.claudeQuota.manage.autoRoutingTo', {
@@ -325,7 +314,7 @@ const QuotaAccountManager = memo<{ agentId: string }>(({ agentId }) => {
                 <Flexbox
                   horizontal
                   align={'center'}
-                  className={styles.row}
+                  className={stylex.props(styles.row, !rotate && styles.rowOff).className}
                   data-off={!rotate}
                   gap={8}
                 >
@@ -375,7 +364,7 @@ const QuotaAccountManager = memo<{ agentId: string }>(({ agentId }) => {
                           </Text>
                         )}
                       </Flexbox>
-                      <span className={styles.interactive} onClick={preventRadioSelection}>
+                      <span {...stylex.props(styles.interactive)} onClick={preventRadioSelection}>
                         <Switch
                           checked={rotate}
                           disabled={busy || !canEditBindings}
@@ -383,7 +372,7 @@ const QuotaAccountManager = memo<{ agentId: string }>(({ agentId }) => {
                           onChange={(v) => void setRotation(a.id, v)}
                         />
                       </span>
-                      <span className={styles.interactive} onClick={preventRadioSelection}>
+                      <span {...stylex.props(styles.interactive)} onClick={preventRadioSelection}>
                         <DropdownMenu items={menuItems} placement={'bottomRight'}>
                           <ActionIcon
                             icon={MoreHorizontalIcon}
@@ -404,11 +393,18 @@ const QuotaAccountManager = memo<{ agentId: string }>(({ agentId }) => {
       />
 
       {accounts.length === 0 && (accountsConfirmed || !!accountsError) && (
-        <Text className={styles.hint}>{t('heteroAgent.claudeQuota.manage.empty')}</Text>
+        <Text className={stylex.props(styles.hint).className}>
+          {t('heteroAgent.claudeQuota.manage.empty')}
+        </Text>
       )}
 
       {dirty ? (
-        <Flexbox horizontal className={styles.footer} gap={8} justify={'flex-end'}>
+        <Flexbox
+          horizontal
+          className={stylex.props(styles.footer).className}
+          gap={8}
+          justify={'flex-end'}
+        >
           <Button disabled={busy} onClick={() => setPending(null)}>
             {i18nT('cancel', { ns: 'common' })}
           </Button>
@@ -417,7 +413,7 @@ const QuotaAccountManager = memo<{ agentId: string }>(({ agentId }) => {
           </Button>
         </Flexbox>
       ) : (
-        <Text className={styles.hint} style={{ marginBlockStart: 4 }}>
+        <Text className={stylex.props(styles.hint).className} style={{ marginBlockStart: 4 }}>
           {t('heteroAgent.claudeQuota.manage.addHint')}
         </Text>
       )}
