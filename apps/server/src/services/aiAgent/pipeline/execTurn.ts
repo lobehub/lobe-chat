@@ -95,7 +95,6 @@ export const execAgentTurn = async (
     autoStart = true,
     botContext,
     botSender,
-    contextSelections,
     createdThreadId,
     externalOrigin,
     clientIp,
@@ -127,9 +126,9 @@ export const execAgentTurn = async (
     initialStepCount,
     signal,
     userInterventionConfig: requestedUserInterventionConfig = { approvalMode: 'headless' },
+    userMessage,
     queueRetries,
     queueRetryDelay,
-    pageSelections,
     parentMessageId,
     parentOperationId,
     resume,
@@ -399,7 +398,6 @@ export const execAgentTurn = async (
         botSender,
         clientIds,
         continuationAssistantId,
-        contextSelections,
         conversationAgentId,
         createdThreadId,
         externalOrigin,
@@ -407,7 +405,6 @@ export const execAgentTurn = async (
         files,
         modelOverride,
         operationTaskId,
-        pageSelections,
         parentMessageId,
         prompt,
         providerOverride,
@@ -421,6 +418,7 @@ export const execAgentTurn = async (
         throwIfExecutionAborted,
         title,
         trigger,
+        userMessage,
       },
     ),
   );
@@ -457,10 +455,8 @@ export const execAgentTurn = async (
         : appContext,
     assistantMessageId: turn.assistantMessageId,
     canUseDevice,
-    contextSelections,
     deviceAccessReason,
     model,
-    pageSelections,
     parentMessageId,
     persistAgentId,
     prompt,
@@ -472,6 +468,9 @@ export const execAgentTurn = async (
     topicId,
     trigger,
     userMessageId: turn.userMessageId,
+    // Exactly what the user row was persisted with, so every stage reads the
+    // message the way a later turn reads it back from history.
+    userMessageMetadata: turn.userMessageId ? turn.requestTriggerMetadata : undefined,
   };
 
   if (isHeteroAgent) {

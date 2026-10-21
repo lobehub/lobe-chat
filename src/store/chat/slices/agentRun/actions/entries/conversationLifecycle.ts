@@ -24,6 +24,7 @@ import {
   getWorkingDirSourcePath,
   RequestTrigger,
   resolveAgentAgencyConfig,
+  toComposerUserMessage,
 } from '@lobechat/types';
 import { generateEntityId, nanoid } from '@lobechat/utils';
 import { toast } from '@lobehub/ui';
@@ -1861,9 +1862,6 @@ export class ConversationLifecycleActionImpl {
             ? { ...operationContext, topicId: undefined }
             : operationContext,
           messageContext: operationContext,
-          // The server persists the user row on this path; without these it
-          // replaces the optimistic row and the attached quote disappears.
-          contextSelections: contextSelections?.length ? contextSelections : undefined,
           fileIds: fileIdList,
           message,
           // The server persists the user row on this path, so a queued
@@ -1877,7 +1875,6 @@ export class ConversationLifecycleActionImpl {
           clientOperations,
           replacesOperationId: replaceableGatewayOperationId,
           optimisticTopic,
-          pageSelections: pageSelections?.length ? pageSelections : undefined,
           projectWorkingDirectoryId: stagedDirectory?.id,
           // Forward @-mentioned tool ids so the server runtime enables them for
           // this run — the gateway/server path otherwise never sees the mention
@@ -1900,6 +1897,9 @@ export class ConversationLifecycleActionImpl {
           // state while waiting for the first step_start event to replace
           // messages with the server's real IDs.
           tempMessageIds: [tempAssistantId],
+          // The server persists the user row here: build it from the metadata the
+          // optimistic row shows, the same object `sendMessageInServer` persists.
+          userMessage: toComposerUserMessage({ editorData, metadata: userMessageMetadata }),
         });
         const cancelledAfterPersistence = abortController.signal.aborted;
 
