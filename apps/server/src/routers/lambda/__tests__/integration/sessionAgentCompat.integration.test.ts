@@ -466,6 +466,85 @@ describe('native Session to Agent compatibility', () => {
     },
   );
 
+  it.each(['inbox', 'ssn_inbox', 'agent', 'session'] as const)(
+    'clears %s Inbox topic history while checking the parent topic',
+    async (context) => {
+      const { agent: inbox, session } = await legacy();
+      await db.update(agents).set({ slug: 'inbox' }).where(eq(agents.id, inbox.id));
+      await db.update(sessions).set({ slug: 'inbox' }).where(eq(sessions.id, session.id));
+      const [other] = await db.insert(agents).values({ userId }).returning();
+      const [otherTopic] = await db
+        .insert(topics)
+        .values({ userId, agentId: other.id })
+        .returning();
+      const guards = await db
+        .insert(messages)
+        .values([
+          { userId, role: 'user', content: 'Default Inbox' },
+          { userId, topicId: otherTopic.id, role: 'user', content: 'Other Agent topic' },
+        ])
+        .returning();
+      const id = context === 'agent' ? inbox.id : context === 'session' ? session.id : context;
+      const caller = callers();
+      await caller.message.removeMessagesByAssistant({ sessionId: id, topicId: otherTopic.id });
+      for (const parent of ['unassigned', 'agent', 'session'] as const) {
+        const [topic] = await db
+          .insert(topics)
+          .values({
+            userId,
+            agentId: parent === 'agent' ? inbox.id : null,
+            sessionId: parent === 'session' ? session.id : null,
+          })
+          .returning();
+        const targets = await db
+          .insert(messages)
+          .values([
+            { userId, topicId: topic.id, role: 'user', content: 'Orphan topic history' },
+            {
+              userId,
+              agentId: inbox.id,
+              topicId: topic.id,
+              role: 'user',
+              content: 'Current topic',
+            },
+          ])
+          .returning();
+        const [foreign] = await db
+          .insert(messages)
+          .values({
+            userId: otherUserId,
+            topicId: topic.id,
+            role: 'user',
+            content: 'Foreign topic history',
+          })
+          .returning();
+        expect(
+          (await caller.message.getMessages({ sessionId: id, topicId: topic.id }))
+            .map((row) => row.id)
+            .sort(),
+        ).toEqual(targets.map((row) => row.id).sort());
+        await db.update(topics).set({ isDeleted: true }).where(eq(topics.id, topic.id));
+        await caller.message.removeMessagesByAssistant({ sessionId: id, topicId: topic.id });
+        for (const target of targets) {
+          expect(await db.query.messages.findFirst({ where: eq(messages.id, target.id) })).toEqual(
+            target,
+          );
+        }
+        await db.update(topics).set({ isDeleted: null }).where(eq(topics.id, topic.id));
+        await caller.message.removeMessagesByAssistant({ sessionId: id, topicId: topic.id });
+        expect(await caller.message.getMessages({ sessionId: id, topicId: topic.id })).toEqual([]);
+        expect(await db.query.messages.findFirst({ where: eq(messages.id, foreign.id) })).toEqual(
+          foreign,
+        );
+      }
+      for (const guard of guards) {
+        expect(await db.query.messages.findFirst({ where: eq(messages.id, guard.id) })).toEqual(
+          guard,
+        );
+      }
+    },
+  );
+
   it('passes the canonical id to config redaction and denies use-only operations at view access', async () => {
     const workspaceId = await workspace();
     const { agent, session } = await legacy(workspaceId);

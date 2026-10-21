@@ -152,7 +152,10 @@ export class MessageScope {
   protected genId = () => idGenerator('messages', 18);
 
   /** Read and clear the same orphan history, only for the actual scoped Inbox. */
-  protected matchLegacyInbox = (agentId: string) => {
+  protected matchLegacyInbox = (
+    agentId: string,
+    { topicId, legacySessionId }: { topicId?: string | null; legacySessionId?: string | null } = {},
+  ) => {
     const inbox = this.db
       .select({ id: agents.id })
       .from(agents)
@@ -163,11 +166,41 @@ export class MessageScope {
           buildWorkspaceWhere({ userId: this.userId, workspaceId: this.workspaceId }, agents),
         ),
       );
+    const topicCondition = topicId
+      ? and(
+          eq(messages.topicId, topicId),
+          exists(
+            this.db
+              .select({ id: topics.id })
+              .from(topics)
+              .where(
+                and(
+                  eq(topics.id, topicId),
+                  buildWorkspaceWhere(
+                    { userId: this.userId, workspaceId: this.workspaceId },
+                    topics,
+                  ),
+                  isNull(topics.groupId),
+                  or(
+                    eq(topics.agentId, agentId),
+                    and(
+                      isNull(topics.agentId),
+                      or(
+                        isNull(topics.sessionId),
+                        legacySessionId ? eq(topics.sessionId, legacySessionId) : undefined,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+          ),
+        )
+      : isNull(messages.topicId);
     return and(
       isNull(messages.agentId),
       isNull(messages.sessionId),
       isNull(messages.groupId),
-      isNull(messages.topicId),
+      topicCondition,
       exists(inbox),
     );
   };
