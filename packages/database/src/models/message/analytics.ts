@@ -92,7 +92,14 @@ const computeTopicMessageStats = (counts: number[]): TopicMessageStats => {
  */
 const MIME_TOKEN = '[^\\s()<>@,;:\\\\"/\\[\\]?=]';
 const DATA_URL_HEADER =
-  `(data:(?:audio|image|video)/${MIME_TOKEN}+(?:;(?!base64)${MIME_TOKEN}+(?:=${MIME_TOKEN}*)?)*)`;
+// The parameter loop refuses only the exact `;base64,` encoding sentinel
+// (`(?!base64(?=,))`). An earlier `(?!base64)` prefix lookahead also
+// rejected ordinary parameters whose name merely starts with `base64`
+// (e.g. `;base64url=x`) — ingestion accepts those via `new URL()`, and with
+// the parameter stuck outside the header none of the redaction passes could
+// reach the comma, so the full payload leaked through the export (Codex
+// round-9 P2).
+  `(data:(?:audio|image|video)/${MIME_TOKEN}+(?:;(?!base64(?=,))${MIME_TOKEN}+(?:=${MIME_TOKEN}*)?)*)`;
 // base64 form: the payload alphabet stops at the first character outside it,
 // so anything after the data URL (e.g. an escaped quote in an HTML
 // attribute) survives the rewrite. The alphabet covers standard base64 AND

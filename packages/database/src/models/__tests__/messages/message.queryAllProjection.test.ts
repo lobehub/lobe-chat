@@ -562,4 +562,39 @@ describe('MessageModel queryAll — tool-call plugin projection', () => {
     expect(() => JSON.stringify(state)).not.toThrow();
     expect(row.tool_call_id).toBe('call_redact_quote_payload');
   });
+
+  it('redacts payloads behind a base64-prefixed non-sentinel parameter', async () => {
+    // Codex round-9 P2: the mime-parameter lookahead once excluded any
+    // parameter whose name merely STARTED with `base64` (`;base64url=x`).
+    // Ingestion accepts such a URL, but with the parameter stuck outside the
+    // header none of the three redaction passes could reach the comma and
+    // the full payload leaked. Only the exact `;base64,` sentinel marks the
+    // encoding; `base64*` parameters are ordinary mime parameters.
+    const bigBody = 'x'.repeat(100_000);
+    await serverDB.insert(messages).values({
+      id: 'q-redact-base64-param',
+      userId,
+      role: 'tool',
+      content: 'base64-prefixed param payload',
+    });
+    await serverDB.insert(messagePlugins).values({
+      id: 'q-redact-base64-param',
+      apiName: 'analyzeMedia',
+      arguments: JSON.stringify({
+        urls: [`data:video/mp4;base64url=x,${bigBody}`],
+      }),
+      identifier: 'lobe-agent',
+      toolCallId: 'call_redact_base64_param',
+      userId,
+    });
+
+    const result = await messageModel.queryAll();
+    const row = result.find((m) => m.id === 'q-redact-base64-param') as any;
+    const args = JSON.parse(row.plugin.arguments);
+
+    expect(args.urls[0]).toBe('data:video/mp4;base64url=x,...redacted...');
+    expect(row.plugin.arguments.length).toBeLessThan(500);
+    expect(row.plugin.arguments).not.toContain(bigBody);
+    expect(row.tool_call_id).toBe('call_redact_base64_param');
+  });
 });
