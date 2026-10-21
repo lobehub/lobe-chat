@@ -88,6 +88,42 @@ describe('resolveQuotaAccountSpawnPlan', () => {
       runnableExternalAccountIds: ['ext-default', 'ext-1'],
     });
     expect(plan).toMatchObject({ accountId: 'acc-2', env: { CLAUDE_CONFIG_DIR: '/profiles/one' } });
+    // The re-pick is mapped from the listing, not from another scan of the logins.
+    expect(resolveClaudeCodeAccount).toHaveBeenCalledTimes(1);
+    expect(listClaudeCodeAccounts).toHaveBeenCalledTimes(1);
+  });
+
+  it('fails Auto mode when no account in the rotation is signed in here', async () => {
+    selectAccountForAgent
+      .mockResolvedValueOnce(selection({ externalAccountId: 'ext-away', reason: 'balanced' }))
+      .mockResolvedValueOnce(null);
+    resolveClaudeCodeAccount.mockResolvedValue({ kind: 'missing' });
+
+    // Never falls back to the default login, which is not in the rotation.
+    await expect(resolveQuotaAccountSpawnPlan('agt-1', 'claude-code')).rejects.toThrow(/rotation/);
+  });
+
+  it('keeps the old behavior for Auto when the desktop cannot list its logins', async () => {
+    selectAccountForAgent.mockResolvedValue(
+      selection({ externalAccountId: 'ext-away', reason: 'balanced' }),
+    );
+    resolveClaudeCodeAccount.mockResolvedValue({ kind: 'missing' });
+    listClaudeCodeAccounts.mockRejectedValue(new Error('no ipc'));
+
+    expect(await resolveQuotaAccountSpawnPlan('agt-1', 'claude-code')).toEqual({ env: {} });
+  });
+
+  it.each([
+    ['its own profile', { CLAUDE_CONFIG_DIR: '/agent/own-profile' }],
+    ['an API key', { ANTHROPIC_API_KEY: 'sk-ant-xxx' }],
+  ])('lets an agent env that picks %s win over a stale pin', async (_label, agentEnv) => {
+    selectAccountForAgent.mockResolvedValue(selection({ externalAccountId: 'ext-elsewhere' }));
+    resolveClaudeCodeAccount.mockResolvedValue({ kind: 'missing' });
+
+    expect(await resolveQuotaAccountSpawnPlan('agt-1', 'claude-code', agentEnv)).toEqual({
+      env: {},
+    });
+    expect(selectAccountForAgent).not.toHaveBeenCalled();
   });
 
   it('never lists local logins for an agent with no account bindings', async () => {

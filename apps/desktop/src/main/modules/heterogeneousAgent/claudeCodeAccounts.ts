@@ -133,12 +133,15 @@ export class ClaudeCodeAccountProfiles {
       accounts.push({ configDir, identity });
     };
 
-    add(null, await readSignedInIdentity(null));
-    for (const configDir of await this.#profileDirs()) {
-      // A sign-in still running has no account yet.
-      if (configDir !== this.#login?.configDir)
-        add(configDir, await readSignedInIdentity(configDir));
-    }
+    // A sign-in still running has no account yet.
+    const configDirs = [
+      null,
+      ...(await this.#profileDirs()).filter((dir) => dir !== this.#login?.configDir),
+    ];
+    // Each check may wait on a Keychain lookup with its own timeout: scan all
+    // logins at once, then keep the default-first order when deduping.
+    const identities = await Promise.all(configDirs.map((dir) => readSignedInIdentity(dir)));
+    configDirs.forEach((dir, index) => add(dir, identities[index]));
 
     return accounts;
   };

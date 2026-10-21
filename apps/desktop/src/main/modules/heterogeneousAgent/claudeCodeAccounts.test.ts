@@ -8,7 +8,13 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { ClaudeCodeAccountProfiles, type ClaudeCodeLoginSpawnParams } from './claudeCodeAccounts';
 
-const fakeFs = vi.hoisted(() => ({ home: '' }));
+const fakeFs = vi.hoisted(() => ({
+  home: '',
+  /** Simulated Keychain latency of each login check, and how many overlap. */
+  loginCheckDelayMs: 0,
+  inFlight: 0,
+  maxInFlight: 0,
+}));
 
 vi.mock('node:child_process', () => ({
   execFile: vi.fn((_cmd: string, _args: string[], _opts: unknown, callback: () => void) =>
@@ -27,8 +33,13 @@ vi.mock('@lobechat/heterogeneous-agents/quota-sampler', () => {
       : path.join(fakeFs.home, '.claude.json');
   return {
     claudeCodeKeychainService: (dir?: string | null) => `svc-${dir ?? 'default'}`,
-    hasClaudeCodeLogin: async (options: { claudeConfigDirPath?: string | null }) =>
-      existsSync(path.join(dirOf(options), '.credentials.json')),
+    hasClaudeCodeLogin: async (options: { claudeConfigDirPath?: string | null }) => {
+      fakeFs.inFlight += 1;
+      fakeFs.maxInFlight = Math.max(fakeFs.maxInFlight, fakeFs.inFlight);
+      await new Promise((resolve) => setTimeout(resolve, fakeFs.loginCheckDelayMs));
+      fakeFs.inFlight -= 1;
+      return existsSync(path.join(dirOf(options), '.credentials.json'));
+    },
     readClaudeCodeIdentity: async (options: { claudeConfigDirPath?: string | null }) => {
       try {
         const { oauthAccount } = JSON.parse(readFileSync(identityFile(options), 'utf8'));
@@ -68,6 +79,7 @@ describe('ClaudeCodeAccountProfiles', () => {
 
   beforeEach(async () => {
     fakeFs.home = await mkdtemp(path.join(tmpdir(), 'cc-accounts-home-'));
+    Object.assign(fakeFs, { inFlight: 0, loginCheckDelayMs: 0, maxInFlight: 0 });
     root = path.join(fakeFs.home, 'profiles');
     spawned = [];
     profiles = new ClaudeCodeAccountProfiles({
@@ -107,6 +119,23 @@ describe('ClaudeCodeAccountProfiles', () => {
     expect(accounts.map((a) => [a.configDir, a.identity.externalAccountId])).toEqual([
       [null, 'acc-default'],
       [path.join(root, 'a'), 'acc-a'],
+    ]);
+  });
+
+  it('checks every login at once instead of one Keychain lookup after another', async () => {
+    await writeLogin(null, 'acc-default');
+    for (const id of ['a', 'b', 'c']) await writeLogin(path.join(root, id), `acc-${id}`);
+    fakeFs.loginCheckDelayMs = 20;
+
+    const accounts = await profiles.list();
+
+    expect(fakeFs.maxInFlight).toBe(4);
+    // Concurrency does not change the default-first order.
+    expect(accounts.map((a) => a.identity.externalAccountId)).toEqual([
+      'acc-default',
+      'acc-a',
+      'acc-b',
+      'acc-c',
     ]);
   });
 

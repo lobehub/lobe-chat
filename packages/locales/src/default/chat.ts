@@ -27,6 +27,8 @@ export default {
   'heteroAgent.claudeQuota.manage.loginWaiting': 'Finish signing in in your browser…',
   'heteroAgent.claudeQuota.manage.notSignedIn': 'Not signed in on this device',
   'heteroAgent.claudeQuota.manage.signIn': 'Sign in',
+  'heteroAgent.claudeQuota.noRunnableAccount':
+    "None of the Claude Code accounts in this agent's rotation are signed in on this device. Sign one in from Manage accounts, or add a signed-in account to the rotation.",
   'processExplorer.copyPid': 'Copy PID',
   'processExplorer.filter': 'Filter',
   'processExplorer.live': 'Live · updates every 2 s',

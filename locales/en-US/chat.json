@@ -1380,6 +1380,7 @@
   "heteroAgent.claudeQuota.manage.title": "Claude Code accounts",
   "heteroAgent.claudeQuota.manage.use": "Use",
   "heteroAgent.claudeQuota.manage.weeklyLeft": "{{percent}}% weekly",
+  "heteroAgent.claudeQuota.noRunnableAccount": "None of the Claude Code accounts in this agent's rotation are signed in on this device. Sign one in from Manage accounts, or add a signed-in account to the rotation.",
   "heteroAgent.claudeQuota.refreshRateLimited": "Quota refresh is temporarily rate limited. Showing the last available data.",
   "heteroAgent.claudeQuota.scopedWeekly": "Weekly ({{model}})",
   "heteroAgent.claudeQuota.title": "Claude Code quota",

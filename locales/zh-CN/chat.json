@@ -1380,6 +1380,7 @@
   "heteroAgent.claudeQuota.manage.title": "Claude Code 账号",
   "heteroAgent.claudeQuota.manage.use": "使用",
   "heteroAgent.claudeQuota.manage.weeklyLeft": "本周剩余 {{percent}}%",
+  "heteroAgent.claudeQuota.noRunnableAccount": "该助手轮换中的 Claude Code 账号都未在本机登录。请在账号管理中登录其中一个，或把本机已登录的账号加入轮换。",
   "heteroAgent.claudeQuota.refreshRateLimited": "额度刷新暂时被限流，当前显示上次获取的数据。",
   "heteroAgent.claudeQuota.scopedWeekly": "每周（{{model}}）",
   "heteroAgent.claudeQuota.title": "Claude Code 额度",
