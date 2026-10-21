@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import { FilesTabs } from '@/types/files';
 
-import { driveCategoryPath, resolveDocsSection, resolveResourceRoute } from './paths';
+import { docsPagePath, driveCategoryPath, resolveDocsSection, resolveResourceRoute } from './paths';
 
 const route = (pathname: string, search = '') =>
   resolveResourceRoute(pathname, new URLSearchParams(search));
@@ -83,5 +83,11 @@ describe('resolveDocsSection', () => {
   it('treats business Works routes as part of Works', () => {
     expect(resolveDocsSection('/team/resource/extra', ['/resource/extra'])).toBe('works');
     expect(resolveDocsSection('/resource/extra')).toBeNull();
+  });
+});
+
+describe('docsPagePath', () => {
+  it('opens a page over the Docs home instead of the Pages module', () => {
+    expect(docsPagePath('docs_abc')).toBe('/resource?file=docs_abc');
   });
 });

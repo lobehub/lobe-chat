@@ -31,6 +31,13 @@ export const driveCategoryPath = (category: FilesTabs): string => {
   return segment ? `${DRIVE_PATH}/${segment}` : DRIVE_PATH;
 };
 
+/**
+ * Where a page opens from the Docs sidebar: the Docs home with the page editor
+ * overlaid (`?file=`), so writing a page never leaves Docs for the Pages module.
+ */
+export const docsPagePath = (pageId: string): string =>
+  `${RESOURCE_HOME_PATH}?file=${encodeURIComponent(pageId)}`;
+
 export type ResourceRouteView =
   | { kind: 'home' }
   | { category: FilesTabs; kind: 'drive' }

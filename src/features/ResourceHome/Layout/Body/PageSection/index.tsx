@@ -19,6 +19,7 @@ import {
 import { FileTextIcon, MoreHorizontal, SquarePenIcon } from 'lucide-react';
 import { memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useSearchParams } from 'react-router';
 
 import AsyncBoundary from '@/components/AsyncBoundary';
 import EmptyNavItem from '@/features/NavPanel/components/EmptyNavItem';
@@ -28,8 +29,8 @@ import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwar
 import { usePermission } from '@/hooks/usePermission';
 import { pageActions, pageSelectors, usePageStore } from '@/store/page';
 import type { PageSectionScope } from '@/store/page/projection';
-import { standardizeIdentifier } from '@/utils/identifier';
 
+import { docsPagePath } from '../../../paths';
 import { buildPageTree } from './tree';
 
 /** Rows a section shows; the rest open in the full page list. */
@@ -58,14 +59,19 @@ const PageSection = memo<PageSectionProps>(({ itemKey, scope }) => {
   const rows = useMemo(() => (docs ? buildPageTree(docs.slice(0, SECTION_LIMIT)) : docs), [docs]);
   const hasMore = (docs?.length ?? 0) > SECTION_LIMIT;
 
-  const openPage = (id: string) => navigate(`/page/${standardizeIdentifier(id)}`);
+  // Pages open over the Docs home, keeping the user in Docs.
+  const [searchParams] = useSearchParams();
+  const openFileId = searchParams.get('file');
+  const openPage = (id: string) => navigate(docsPagePath(id));
 
   const handleCreate = async () => {
     if (!canCreate || creating) return;
     setCreating(true);
     try {
-      const id = await pageActions.createNewPage(t('pageList.untitled'));
-      openPage(id);
+      // `createPage` (not `createNewPage`) so the Pages module's own navigation
+      // never takes the user out of Docs.
+      const page = await pageActions.createPage({ title: t('pageList.untitled') });
+      openPage(page.id);
       void pageActions.refreshDocuments();
     } catch (error) {
       console.error('[PageSection] failed to create a page:', error);
@@ -139,7 +145,8 @@ const PageSection = memo<PageSectionProps>(({ itemKey, scope }) => {
               const emoji = doc.metadata?.emoji;
               return (
                 <NavItem
-                  href={`/page/${standardizeIdentifier(doc.id)}`}
+                  active={openFileId === doc.id}
+                  href={docsPagePath(doc.id)}
                   key={doc.id}
                   style={depth ? { paddingInlineStart: 8 + depth * INDENT_PER_LEVEL } : undefined}
                   title={doc.title || t('pageList.untitled')}
