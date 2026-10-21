@@ -2,6 +2,7 @@
 
 import type { BuiltinInspectorProps } from '@lobechat/types';
 import { cx } from '@lobehub/ui';
+import * as stylex from '@stylexjs/stylex';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -35,7 +36,7 @@ export const SubmitAgentPickInspector = memo<
         {tPlugin('builtins.lobe-web-onboarding.apiName.submitAgentPick')}
       </span>
       {ids.length > 0 && (
-        <span className={styles.meta}>
+        <span {...stylex.props(styles.meta)}>
           {tTool('agentMarketplace.inspector.pickCount', { count: ids.length })}
         </span>
       )}

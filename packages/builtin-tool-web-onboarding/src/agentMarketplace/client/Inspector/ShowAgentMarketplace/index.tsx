@@ -2,6 +2,7 @@
 
 import type { BuiltinInspectorProps } from '@lobechat/types';
 import { cx } from '@lobehub/ui';
+import * as stylex from '@stylexjs/stylex';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -43,13 +44,13 @@ export const ShowAgentMarketplaceInspector = memo<
       {visibleHints.map((slug) => {
         const labelKey = CATEGORY_LABEL_I18N_KEYS[slug];
         return (
-          <span className={styles.chip} key={slug}>
+          <span {...stylex.props(styles.chip)} key={slug}>
             {labelKey ? tTool(labelKey) : slug}
           </span>
         );
       })}
       {overflowCount > 0 && (
-        <span className={styles.meta}>
+        <span {...stylex.props(styles.meta)}>
           {tTool('agentMarketplace.inspector.moreCategories', { count: overflowCount })}
         </span>
       )}

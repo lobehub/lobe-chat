@@ -2,6 +2,7 @@
 
 import type { BuiltinInspectorProps, SaveUserQuestionInput } from '@lobechat/types';
 import { cx } from '@lobehub/ui';
+import * as stylex from '@stylexjs/stylex';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -40,14 +41,14 @@ export const SaveUserQuestionInspector = memo<
         {t('builtins.lobe-web-onboarding.apiName.saveUserQuestion')}
       </span>
       {(agentName || agentEmoji) && (
-        <span className={styles.chip}>
-          {agentEmoji && <span className={styles.emoji}>{agentEmoji}</span>}
+        <span {...stylex.props(styles.chip)}>
+          {agentEmoji && <span {...stylex.props(styles.emoji)}>{agentEmoji}</span>}
           {agentName && <span>{agentName}</span>}
         </span>
       )}
-      {fullName && <span className={styles.chip}>{fullName}</span>}
+      {fullName && <span {...stylex.props(styles.chip)}>{fullName}</span>}
       {interestsCount > 0 && (
-        <span className={styles.meta}>
+        <span {...stylex.props(styles.meta)}>
           {t('builtins.lobe-web-onboarding.inspector.interests', { count: interestsCount })}
         </span>
       )}
