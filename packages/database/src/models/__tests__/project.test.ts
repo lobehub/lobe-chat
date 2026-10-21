@@ -1,7 +1,7 @@
 import { randomUUID } from 'node:crypto';
 
 import { INBOX_SESSION_ID } from '@lobechat/const';
-import { and, eq } from 'drizzle-orm';
+import { and, eq, inArray } from 'drizzle-orm';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { getTestDB } from '../../core/getTestDB';
@@ -217,6 +217,47 @@ describe('ProjectModel', () => {
     ]);
     expect(await model.list({ statuses: [] })).toHaveLength(2);
     expect(await model.list({ limit: 1, offset: 1 })).toHaveLength(1);
+  });
+
+  it('lists projects with their main agent display meta', async () => {
+    const project = await createProject(model, { name: 'Apollo' });
+    const styled = await createProject(model, { name: 'Gemini' });
+    const cleared = await createProject(model, { name: 'Cleared' });
+    await serverDB
+      .update(agents)
+      .set({ avatar: '🚀', backgroundColor: '#000', name: 'Ada' })
+      .where(eq(agents.id, styled.coordinatorAgentId));
+    await serverDB
+      .update(projects)
+      .set({ coordinatorAgentId: null })
+      .where(eq(projects.id, cleared.id));
+
+    const coordinators = await serverDB
+      .select({ avatar: agents.avatar, id: agents.id, title: agents.title })
+      .from(agents)
+      .where(inArray(agents.id, [project.coordinatorAgentId, styled.coordinatorAgentId]));
+    const titleOf = (id: string) => coordinators.find((agent) => agent.id === id)?.title;
+    const rows = await model.list();
+
+    // A freshly created coordinator has no avatar; its meta must still be listed.
+    expect(
+      coordinators.find((agent) => agent.id === project.coordinatorAgentId)?.avatar,
+    ).toBeNull();
+    expect(rows.find((row) => row.id === project.id)?.coordinatorAgent).toEqual({
+      avatar: null,
+      backgroundColor: null,
+      id: project.coordinatorAgentId,
+      name: null,
+      title: titleOf(project.coordinatorAgentId),
+    });
+    expect(rows.find((row) => row.id === styled.id)?.coordinatorAgent).toEqual({
+      avatar: '🚀',
+      backgroundColor: '#000',
+      id: styled.coordinatorAgentId,
+      name: 'Ada',
+      title: titleOf(styled.coordinatorAgentId),
+    });
+    expect(rows.find((row) => row.id === cleared.id)?.coordinatorAgent).toBeNull();
   });
 
   it('does not expose or mutate another user project in personal mode', async () => {
