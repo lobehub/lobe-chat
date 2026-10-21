@@ -142,6 +142,66 @@ describe('GoalModel coordinator config', () => {
       expect(closed?.manager).toBeUndefined();
       expect(closed).toMatchObject({ pausedBy: 'user' });
     });
+
+    it('patches one model slot at a time, and clears only that slot with null', async () => {
+      const goal = await goalModel.create({
+        config: { acceptance: { criteriaIds: ['c1'] } },
+        subjectType: 'standalone',
+        title: 'Model slots',
+      });
+
+      // No slot named: the planning turn is the default.
+      await goalModel.updateModelConfig(goal.id, { model: 'gpt-5', provider: 'openai' });
+      let config = (await goalModel.findById(goal.id))?.config;
+      expect(config).toMatchObject({ model: 'gpt-5', provider: 'openai' });
+      expect(config?.taskModel).toBeUndefined();
+
+      // The Task slot is written beside the planning one, not over it.
+      await goalModel.updateModelConfig(
+        goal.id,
+        { model: 'claude', provider: 'anthropic' },
+        'task',
+      );
+      config = (await goalModel.findById(goal.id))?.config;
+      expect(config).toMatchObject({
+        model: 'gpt-5',
+        provider: 'openai',
+        taskModel: 'claude',
+        taskProvider: 'anthropic',
+      });
+
+      // Clearing the planning slot leaves the Task slot and the budget alone.
+      await goalModel.updateModelConfig(goal.id, null);
+      config = (await goalModel.findById(goal.id))?.config;
+      expect(config?.model).toBeUndefined();
+      expect(config?.provider).toBeUndefined();
+      expect(config?.taskModel).toBe('claude');
+      expect(config).toMatchObject({ acceptance: { criteriaIds: ['c1'] } });
+
+      await goalModel.updateModelConfig(goal.id, null, 'task');
+      config = (await goalModel.findById(goal.id))?.config;
+      expect(config?.taskModel).toBeUndefined();
+      expect(config?.taskProvider).toBeUndefined();
+      expect(config).toMatchObject({ acceptance: { criteriaIds: ['c1'] } });
+
+      expect(
+        await new GoalModel(serverDB, otherUserId).updateModelConfig(goal.id, {
+          model: 'stolen',
+          provider: 'stolen',
+        }),
+      ).toBeUndefined();
+    });
+  });
+
+  describe('node lookups', () => {
+    it('resolves the goal that owns a graph node, inside the owner scope', async () => {
+      const goal = await goalModel.create({ subjectType: 'standalone', title: 'Node owner' });
+      const node = await graphModel.createNode(goal.id, { kind: 'task', title: 'W1' });
+
+      expect((await goalModel.findByNode(node!.id))?.id).toBe(goal.id);
+      expect(await new GoalModel(serverDB, otherUserId).findByNode(node!.id)).toBeUndefined();
+      expect(await goalModel.findByNode('00000000-0000-0000-0000-000000000000')).toBeUndefined();
+    });
   });
 
   describe('planning lease gating', () => {

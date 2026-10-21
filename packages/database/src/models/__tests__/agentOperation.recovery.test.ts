@@ -221,6 +221,27 @@ describe('AgentOperationModel recovery lookups', () => {
     });
   });
 
+  describe('findLiveByTopic', () => {
+    it('lists the resumable operations of a topic, independent of the UI marker', async () => {
+      await model().recordStart({ operationId: 'live-running', topicId });
+      await park('live-human', 'waiting_for_human');
+      // A finished run is not resumable, so it stays out.
+      await model().recordStart({ operationId: 'live-done', topicId });
+      await model().settleRunning('live-done', 'done');
+      // Other topics and other owners stay out as well.
+      await model().recordStart({ operationId: 'live-other-topic', topicId: otherTopicId });
+      await park('live-foreign', 'waiting_for_human', { owner: otherUserId });
+
+      const rows = await model().findLiveByTopic(topicId);
+      expect(rows.map((row) => row.id).sort()).toEqual(['live-human', 'live-running']);
+
+      // The other owner's parked run is in the same topic, and only they see it.
+      expect((await model(otherUserId).findLiveByTopic(topicId)).map((row) => row.id)).toEqual([
+        'live-foreign',
+      ]);
+    });
+  });
+
   describe('listWaitingForClient', () => {
     it('lists every parked wait when the caller names no providers', async () => {
       await park('wait-all-a', 'waiting_for_client');
