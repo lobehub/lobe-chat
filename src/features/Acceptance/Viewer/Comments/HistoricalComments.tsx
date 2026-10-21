@@ -5,9 +5,11 @@ import { Flexbox, Text } from '@lobehub/ui';
 import type { ComponentProps } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { useOptionalAcceptanceScope } from '../AcceptanceScope';
 import type { AcceptanceCheck, AcceptanceEvidence } from '../Checks/types';
 import { EvidenceList } from '../Evidence/EvidenceList';
 import type { EvidenceOverlayMap } from '../Evidence/overlay';
+import { commentAnchorId, useCommentAnchor } from './anchor';
 import CommentThread from './CommentThread';
 import { historicalCommentEntries } from './historicalThreads';
 import ThreadEvidence from './ThreadEvidence';
@@ -38,6 +40,8 @@ export const HistoricalComments = ({
   timeline,
 }: HistoricalCommentsProps) => {
   const { t } = useTranslation('verify');
+  const scope = useOptionalAcceptanceScope();
+  useCommentAnchor(threads, scope?.embedded);
   return historicalCommentEntries(threads, evidenceById).map((entry) => {
     const { evidence } = entry;
     const roundIndex = timeline.find((round) =>
@@ -60,7 +64,14 @@ export const HistoricalComments = ({
       );
     const { thread } = entry;
     return (
-      <Flexbox horizontal align={'flex-start'} gap={12} key={thread.root.id} wrap={'wrap'}>
+      <Flexbox
+        horizontal
+        align={'flex-start'}
+        gap={12}
+        id={commentAnchorId(thread.root.id)}
+        key={thread.root.id}
+        wrap={'wrap'}
+      >
         {evidence && (
           <ThreadEvidence stale comment={thread.root} evidence={evidence} roundIndex={roundIndex} />
         )}

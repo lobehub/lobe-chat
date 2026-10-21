@@ -22,7 +22,7 @@ export interface EvidenceOverlay {
   /** Author colour — border, badge and marker share it. Falls back to the error red. */
   color?: string;
   comment?: string;
-  /** Root and reply permalinks all locate the same video anchor. */
+  /** Root and reply permalinks all open the same evidence thread. */
   commentIds?: string[];
   /**
    * Overrides the badge number. Regions belonging to one review may be spread

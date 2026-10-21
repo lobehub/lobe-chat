@@ -179,7 +179,17 @@ export const EvidenceList = memo<{
               {caption}
             </Flexbox>
           );
-        if (!md && onReviewEvidence && item.fileUrl && IMAGE_EVIDENCE.has(item.type)) {
+        const overlay = overlays?.get(item.id);
+        // Posted screenshot threads must remain readable on touch screens too.
+        const hasImageThreads =
+          item.type === 'screenshot' && overlay?.some((note) => note.threadId);
+        if (
+          !md &&
+          onReviewEvidence &&
+          item.fileUrl &&
+          IMAGE_EVIDENCE.has(item.type) &&
+          !hasImageThreads
+        ) {
           const action = commentAction(item);
           // The tap reviews; the comment shortcut sits beside the button rather
           // than inside it, since a button cannot hold another one.
@@ -221,13 +231,14 @@ export const EvidenceList = memo<{
             </div>
           );
         }
-        const overlay = overlays?.get(item.id);
         if (item.fileUrl && item.type === 'screenshot') {
           const run = [item];
           const start = sorted.indexOf(item);
           for (let index = start + 1; index < sorted.length; index++) {
             const next = sorted[index]!;
             if (pairedIds.has(next.id) || !next.fileUrl || next.type !== 'screenshot') break;
+            if (!md && onReviewEvidence && !overlays?.get(next.id)?.some((note) => note.threadId))
+              break;
             run.push(next);
             consumedScreenshotIds.add(next.id);
           }
