@@ -369,6 +369,15 @@ export const projectRouter = router({
     )
     .mutation(async ({ ctx, input: { id, ...input } }) => {
       try {
+        if (input.visibility !== undefined) {
+          const project = requireResult(await ctx.projectModel.findById(id));
+          if (project.userId !== ctx.userId) {
+            throw new TRPCError({
+              code: 'FORBIDDEN',
+              message: 'Only the project creator can change its visibility',
+            });
+          }
+        }
         return {
           data: await withMainAgent(
             ctx.projectModel,

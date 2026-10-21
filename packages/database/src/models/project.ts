@@ -89,7 +89,17 @@ export class ProjectModel {
     return buildWorkspaceWhere({ userId: this.userId, workspaceId: this.workspaceId }, projects);
   }
 
+  /**
+   * Any member who can edit (the router's `agent:update` gate keeps viewers out)
+   * may manage a project they can see, whoever created it. Private projects stay
+   * creator-only because `readable()` hides them from everyone else.
+   */
   private manageable() {
+    return this.readable();
+  }
+
+  /** Visibility decides who sees the project at all, so only its creator may change it. */
+  private ownedByCaller() {
     return and(this.readable(), eq(projects.userId, this.userId));
   }
 
@@ -97,7 +107,7 @@ export class ProjectModel {
   private membersManageable() {
     return this.options.canManageAllMembers && this.workspaceId
       ? this.readable()
-      : this.manageable();
+      : this.ownedByCaller();
   }
 
   async create(input: CreateProjectInput) {
@@ -256,7 +266,12 @@ export class ProjectModel {
     const [project] = await this.db
       .update(projects)
       .set({ ...input, updatedAt: new Date() })
-      .where(and(eq(projects.id, id), this.manageable()))
+      .where(
+        and(
+          eq(projects.id, id),
+          input.visibility === undefined ? this.manageable() : this.ownedByCaller(),
+        ),
+      )
       .returning();
     return project ?? null;
   }
@@ -688,7 +703,7 @@ export class ProjectModel {
     }
     const isCreator = project.userId === this.userId;
     return {
-      canManage: isCreator,
+      canManage: true,
       canManageKnowledgeBases: true,
       canManageMembers: isCreator || (!!this.options.canManageAllMembers && !!project.workspaceId),
     };
