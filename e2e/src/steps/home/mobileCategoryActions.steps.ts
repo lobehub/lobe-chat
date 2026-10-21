@@ -77,6 +77,8 @@ Then('分类操作默认可见且有足够的触控区域', async function (this
   expect(textBounds.clientWidth).toBeGreaterThan(0);
   expect(textBounds.scrollWidth).toBeGreaterThan(textBounds.clientWidth);
   const button = action(this).getByRole('button');
+  await expect(button).toHaveCSS('background-color', 'rgba(0, 0, 0, 0)');
+  await expect(button).toHaveCSS('box-shadow', 'none');
   const bounds = await button.boundingBox();
   expect(bounds).not.toBeNull();
   expect(bounds!.width).toBeGreaterThanOrEqual(44);

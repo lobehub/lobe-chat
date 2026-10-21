@@ -181,7 +181,6 @@ const Actions = memo<ActionsProps>(
             size={{ blockSize: isMobile ? 44 : 22, size: 16 }}
             style={isMobile ? undefined : { marginRight: -8 }}
             title={t('more', { ns: 'common' })}
-            variant={isMobile ? 'filled' : 'borderless'}
             onClick={(e) => {
               e.stopPropagation();
             }}
