@@ -13,8 +13,8 @@ vi.mock('@/features/Workspace/useWorkspaceAwareNavigate', () => ({
 
 vi.mock('@/hooks/useShowMobileWorkspace', () => ({ useShowMobileWorkspace: () => false }));
 
-vi.mock('@/store/session', () => ({
-  useSessionStore: (selector: (state: { activeId?: string }) => unknown) => selector({}),
+vi.mock('@/store/agent', () => ({
+  useAgentStore: (selector: (state: { activeAgentId?: string }) => unknown) => selector({}),
 }));
 
 const renderHeader = (tab: string) =>

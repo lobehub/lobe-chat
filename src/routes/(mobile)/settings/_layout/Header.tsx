@@ -8,8 +8,8 @@ import { useMatch, useParams, useSearchParams } from 'react-router';
 
 import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwareNavigate';
 import { useShowMobileWorkspace } from '@/hooks/useShowMobileWorkspace';
+import { useAgentStore } from '@/store/agent';
 import { SettingsTabs } from '@/store/global/initialState';
-import { useSessionStore } from '@/store/session';
 import { mobileHeaderSticky } from '@/styles/mobileHeader';
 
 // Explicit tab → i18n key map. Covers:
@@ -44,7 +44,7 @@ const Header = memo(() => {
   const [searchParams] = useSearchParams();
   const workspaceSettingsMatch = useMatch('/:workspaceSlug/settings/:workspaceTab/*');
 
-  const isSessionActive = useSessionStore((s) => !!s.activeId);
+  const isAgentActive = useAgentStore((s) => !!s.activeAgentId);
   // Personal provider details carry the id in the path; the workspace provider
   // page canonicalizes it into the `provider` query param instead.
   const queryProvider = searchParams.get('provider');
@@ -53,7 +53,7 @@ const Header = memo(() => {
   const isProvider = providerId && providerId !== 'all';
 
   const handleBackClick = () => {
-    if (isSessionActive && showMobileWorkspace) {
+    if (isAgentActive && showMobileWorkspace) {
       navigate('/agent');
     } else if (params.providerId && params.providerId !== 'all') {
       navigate('/settings/provider/all', { escape: true });

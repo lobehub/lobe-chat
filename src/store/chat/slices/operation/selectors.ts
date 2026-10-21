@@ -490,6 +490,23 @@ const isAgentVisiblyRunning =
     return false;
   };
 
+/** Check visible runtime loading across all agents and topics in a chat group. */
+const isGroupVisiblyRunning =
+  (groupId: string) =>
+  (s: ChatStoreState): boolean => {
+    for (const type of AI_RUNTIME_OPERATION_TYPES) {
+      const operationIds = s.operationsByType[type] || [];
+      if (
+        operationIds.some((id) => {
+          const op = s.operations[id];
+          return op && isVisiblyRunningOperation(op) && op.context.groupId === groupId;
+        })
+      )
+        return true;
+    }
+    return false;
+  };
+
 /**
  * Whether a turn is visibly in progress for a topic on THIS client — the whole
  * send → run pipeline (see TOPIC_VISIBLY_RUNNING_OPERATION_TYPES), matched by
@@ -1017,6 +1034,7 @@ export const operationSelectors = {
 
   isAgentRunning,
   isAgentVisiblyRunning,
+  isGroupVisiblyRunning,
   isAgentRuntimeRunning,
   isAgentRuntimeVisiblyRunning,
   isAgentUnreadCompleted,
