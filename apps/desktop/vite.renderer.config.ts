@@ -260,7 +260,10 @@ export default defineConfig(async (env) => {
       reactDevtoolsPlugin(),
       excludeWebSpaBuildArtifactsPlugin(),
       vanillaExtractPlugin(),
-      ...(sharedRendererPlugins({ platform: 'desktop' }) as PluginOption[]),
+      ...(sharedRendererPlugins({
+        platform: 'desktop',
+        stylexOverlaySrcDirs: isCloudDesktop ? [path.resolve(CLOUD_ROOT_DIR, 'src')] : undefined,
+      }) as PluginOption[]),
     ],
     resolve: {
       dedupe: sharedRendererDedupe,

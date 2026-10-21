@@ -7,7 +7,9 @@ import { memo } from 'react';
 import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwareNavigate';
 import { useActiveRouteParams } from '@/hooks/useActiveRouteParams';
 
+import GoalAgentLabel from './GoalAgentLabel';
 import GoalItemMoreButton from './GoalItemMoreButton';
+import { goalItemPath } from './goalItemPath';
 import { GoalProgress } from './GoalProgress';
 import GoalStatusGlyph from './GoalStatusGlyph';
 import type { GoalItemProps } from './types';
@@ -29,7 +31,7 @@ const styles = createStaticStyles(({ css }) => ({
   `,
 }));
 
-export const GoalListItem = memo<GoalItemProps>(({ goal: item, projectId }) => {
+export const GoalListItem = memo<GoalItemProps>(({ globalScopeId, goal: item, projectId }) => {
   const navigate = useWorkspaceAwareNavigate();
   const { aid } = useActiveRouteParams<{ aid?: string }>();
   const { goal } = item;
@@ -38,9 +40,15 @@ export const GoalListItem = memo<GoalItemProps>(({ goal: item, projectId }) => {
   // to the bare detail route. Without this every card there is a dead link.
   const agentId = aid ?? goal.agentId;
   const handleClick = () => {
-    navigate(agentId ? `/agent/${agentId}/goal/${goal.id}` : `/goal/${goal.id}`);
+    navigate(goalItemPath({ agentId, crossAgent: !!globalScopeId, goalId: goal.id }));
   };
-  const menuItems = useGoalItemMenu({ agentId, goal, projectId, routeAgentId: aid });
+  const menuItems = useGoalItemMenu({
+    agentId,
+    globalScopeId,
+    goal,
+    projectId,
+    routeAgentId: aid,
+  });
   const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
     if (event.key !== 'Enter' && event.key !== ' ') return;
     event.preventDefault();
@@ -77,8 +85,8 @@ export const GoalListItem = memo<GoalItemProps>(({ goal: item, projectId }) => {
             </Text>
           )}
         </Flexbox>
+        {globalScopeId && <GoalAgentLabel agentId={goal.agentId} />}
         <GoalProgress
-          findingCount={item.findingCount}
           pendingDecisions={item.pendingDecisions}
           taskDone={item.taskDone}
           taskTotal={item.taskTotal}

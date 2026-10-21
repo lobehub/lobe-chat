@@ -15,6 +15,7 @@ export interface LobeChatGroupChatConfig {
   forkedFromIdentifier?: string;
   openingMessage?: string;
   openingQuestions?: string[];
+  personal?: boolean;
   revealDM?: boolean;
   systemPrompt?: string;
 }
@@ -28,6 +29,7 @@ export const ChatGroupConfigSchema = z.object({
   forkedFromIdentifier: z.string().optional(),
   openingMessage: z.string().optional(),
   openingQuestions: z.array(z.string()).optional(),
+  personal: z.boolean().optional(),
   revealDM: z.boolean().optional(),
   systemPrompt: z.string().optional(),
 });

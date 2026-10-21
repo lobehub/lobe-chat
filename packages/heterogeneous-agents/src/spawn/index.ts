@@ -182,6 +182,7 @@ export {
   type EnsureResumeTranscriptResult,
   resolveClaudeCodeTranscriptPath,
 } from './ensureResumeTranscript';
+export { getHeterogeneousAgentPresetEnv } from './presetEnv';
 export {
   AMP_BASE_ARGS,
   buildQoderArgs,

@@ -7,6 +7,7 @@ import { deriveAgentDocumentFields } from '@/database/models/agentDocuments';
 import { router } from '@/libs/trpc/lambda';
 import type { AgentDocumentsService } from '@/server/services/agentDocuments';
 import { getUnifiedSkillNamespaceRootPath } from '@/server/services/agentDocumentVfs/mounts/skills/path';
+import { safeMatterOptions } from '@/server/utils/safeMatterOptions';
 
 import { agentDocumentProcedureWrite, handleAgentDocumentVfsError } from './procedures';
 
@@ -37,7 +38,7 @@ const updateMountedSkillSchema = z.object({
  */
 const stripLeadingFrontmatter = (content: string): string => {
   try {
-    const parsed = matter(content);
+    const parsed = matter(content, safeMatterOptions);
     return parsed.matter ? parsed.content.trimStart() : content;
   } catch {
     return content;

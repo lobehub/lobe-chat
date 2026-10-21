@@ -12,7 +12,7 @@ import {
 } from '../../src/features/topic/sharedConversation';
 import SharedTopicView, { preloadSharedTopic } from '../../src/features/topic/SharedTopicView';
 import { buildTopicByline } from '../../src/features/topic/topicByline';
-import { loadShareResources } from '../../src/shell/createShareI18n';
+import { loadShareT } from '../../src/shell/createShareI18n';
 import { cloudflareContext } from '../lib/cloudflareContext';
 import { buildPageMeta, shareMetaDescription, truncateDescription } from '../lib/seo';
 import { createServerLambdaClient } from '../lib/serverTrpc';
@@ -38,7 +38,7 @@ export const loader = async ({ context, params, request }: LoaderFunctionArgs) =
     firstPage,
     messageReadMode,
     byline: topic ? buildTopicByline(topic) : undefined,
-    description: shareMetaDescription(await loadShareResources(locale), 'topicDescription'),
+    description: shareMetaDescription(await loadShareT(locale), 'topicDescription'),
     locale,
     shareId,
     topic,

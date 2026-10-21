@@ -1,4 +1,7 @@
 export default {
+  'chatPreference.assist.desc':
+    'Personal preferences: they only apply to you, in your personal space and every workspace.',
+  'chatPreference.assist.title': 'Chat Assist',
   'devices.cliUpdate.restart': 'Restart CLI',
   'devices.cliUpdate.update': 'Update and restart',
   'devices.cliUpdate.confirmDesc':
@@ -828,6 +831,7 @@ export default {
   'devices.share.visibilityTag.private': 'Private',
   'devices.share.visibilityTag.public': 'Workspace',
   'devices.status.offline': 'Offline',
+  'devices.status.checking': 'Checking status…',
   'devices.status.online': 'Online',
   'devices.status.onlineConnections_one': 'Online · {{count}} connection',
   'devices.status.onlineConnections_other': 'Online · {{count}} connections',
@@ -1477,6 +1481,8 @@ export default {
   'settingsSearch.tabKeywords.appearance':
     'appearance, theme, dark mode, light mode, font, language, color, background',
   'settingsSearch.tabKeywords.billing': 'billing, payment, invoice, card, transaction',
+  'settingsSearch.tabKeywords.chatPreference':
+    'chat preferences, follow-up suggestions, input suggestions, autocomplete',
   'settingsSearch.tabKeywords.connector': 'connectors, integrations, mcp',
   'settingsSearch.tabKeywords.credits': 'credits, balance, top up, recharge, buy credits',
   'settingsSearch.tabKeywords.creds': 'credentials, secrets, oauth',
@@ -1856,6 +1862,7 @@ When I am ___, I need ___
   'tab.apikey': 'API Keys',
   'tab.appearance': 'Appearance',
   'tab.chatAppearance': 'Chat Appearance',
+  'tab.chatPreference': 'Chat Preferences',
   'tab.common': 'Appearance',
   'tab.connector': 'Connectors',
   'tab.creds': 'Credentials',

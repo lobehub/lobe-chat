@@ -258,7 +258,7 @@ export class TaskLifecycleService {
         const completionRequestedByCurrentOperation =
           (
             currentTask.context as {
-              completion?: { requestedByOperationId?: string };
+              completion?: { requestedByOperationId?: string | null };
             } | null
           )?.completion?.requestedByOperationId === params.operationId;
 
@@ -280,7 +280,14 @@ export class TaskLifecycleService {
           await this.recordAutomationRecovery(currentTask);
           await this.taskModel.updateStatus(taskId, 'scheduled', { error: null });
         } else if (!verifyBound && completionRequestedByCurrentOperation) {
-          await this.completeTask(currentTask);
+          // The request is consumed with the status write: a rejected acceptance
+          // delivery can withdraw it while the handoff / brief above runs, and
+          // then the run ends as an undelivered one, paused for review.
+          const completed = await this.completeTask(currentTask, params.operationId);
+          if (!completed)
+            await this.taskModel.updateStatusIfCurrent(taskId, 'running', 'paused', {
+              error: null,
+            });
         } else if (!verifyBound && params.runTrigger === 'goal' && !currentTask.parentTaskId) {
           await this.taskModel.updateStatusIfCurrent(taskId, 'running', 'completed', {
             completedAt: new Date(),
@@ -496,19 +503,21 @@ export class TaskLifecycleService {
    * lifecycle service). The dynamic import keeps that module cycle out of
    * initialization while preserving the runner's single cascade implementation.
    */
-  private async completeTask(task: TaskItem): Promise<void> {
-    const completedTask = await this.taskModel.updateStatusIfCurrent(
-      task.id,
-      'running',
-      'completed',
-      {
-        completedAt: new Date(),
-        error: null,
-      },
-    );
+  /**
+   * @param requestedByOperationId completes only while this run's deferred
+   * completion request still holds, consuming it in the same write.
+   * @returns whether this call completed the task.
+   */
+  private async completeTask(task: TaskItem, requestedByOperationId?: string): Promise<boolean> {
+    const completedTask = requestedByOperationId
+      ? await this.taskModel.completeIfCompletionRequested(task.id, requestedByOperationId)
+      : await this.taskModel.updateStatusIfCurrent(task.id, 'running', 'completed', {
+          completedAt: new Date(),
+          error: null,
+        });
     if (!completedTask) {
-      log('task=%s no longer running — skipping completion cascade', task.identifier);
-      return;
+      log('task=%s not completed — no longer running or request withdrawn', task.identifier);
+      return false;
     }
 
     if (completedTask.parentTaskId) {
@@ -522,6 +531,7 @@ export class TaskLifecycleService {
     await new TaskRunnerService(this.db, this.userId, this.workspaceId).cascadeOnCompletion(
       task.id,
     );
+    return true;
   }
 
   /**

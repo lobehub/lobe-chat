@@ -5,6 +5,7 @@ import { useAgentIdentityForm } from './useAgentIdentityForm';
 
 const mocks = vi.hoisted(() => ({
   agentMap: {} as Record<string, { name?: string; slug?: string; title?: string }>,
+  confirmAgentSlug: vi.fn(),
   refreshAgentConfig: vi.fn(),
   updateAgentMeta: vi.fn(),
   updateAgentSlug: vi.fn(),
@@ -25,6 +26,7 @@ vi.mock('@/store/agent', () => ({
   useAgentStore: (selector: (state: unknown) => unknown) =>
     selector({
       agentMap: mocks.agentMap,
+      internal_confirmAgentSlug: mocks.confirmAgentSlug,
       internal_refreshAgentConfig: mocks.refreshAgentConfig,
     }),
 }));
@@ -108,6 +110,12 @@ describe('useAgentIdentityForm', () => {
     });
 
     expect(mocks.updateAgentSlug).toHaveBeenCalledExactlyOnceWith('agent-a', 'new-slug');
+    // The local `slug → id` copy follows the rename, so neither slug route paints a stale agent.
+    expect(mocks.confirmAgentSlug).toHaveBeenCalledExactlyOnceWith('agent-a', 'new-slug', {
+      // The old slug's row may only be persisted, and the rename keeps its scope.
+      previousSlug: 'old-slug',
+      scope: expect.any(String),
+    });
     expect(mocks.refreshAgentConfig).toHaveBeenCalledWith('agent-a');
     expect(onSaved).toHaveBeenCalled();
   });
@@ -124,6 +132,7 @@ describe('useAgentIdentityForm', () => {
     expect(result.current.error).toBe('settingAgent.slug.error.taken');
     // A rejected slug must not leave name/role persisted behind a closed form.
     expect(mocks.updateAgentMeta).not.toHaveBeenCalled();
+    expect(mocks.confirmAgentSlug).not.toHaveBeenCalled();
     expect(onSaved).not.toHaveBeenCalled();
   });
 

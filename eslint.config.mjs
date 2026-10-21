@@ -10,6 +10,7 @@ import {
   performanceRestrictedImportPaths,
   performanceRestrictedImportPatterns,
 } from './eslint.bundleBoundaries.mjs';
+import { stylexMigrationConfig } from './scripts/stylexMigration/eslint.mjs';
 
 const tsconfigRootDir = fileURLToPath(new URL('.', import.meta.url));
 
@@ -157,6 +158,29 @@ const redisAccessRestrictedSyntax = [
     selector: 'ImportExpression > Literal[value=/^@\\/server\\/modules\\/Redis(?:\\/|$)/]',
   },
 ];
+// Server output is source English. Translation catalogs and runtimes stay with the clients.
+const serverI18nMessage =
+  'Server code renders source English and must not load translation catalogs or i18n runtimes.';
+const serverI18nRestrictedImportPaths = [
+  { message: serverI18nMessage, name: 'i18next' },
+  { message: serverI18nMessage, name: 'react-i18next' },
+];
+const serverI18nRestrictedImportPatterns = [
+  {
+    group: [
+      '@/locales/*',
+      '!@/locales/resources',
+      '@lobechat/locales',
+      '@lobechat/locales/*',
+      '!@lobechat/locales/resources',
+      '@/libs/i18n',
+      '@/libs/i18n/*',
+      '**/locales/*/*.json',
+    ],
+    message: serverI18nMessage,
+  },
+];
+
 const legacyRawRedisClientConsumers = [
   'apps/server/src/services/home/index.ts',
   'apps/server/src/services/agent/index.ts',
@@ -668,6 +692,22 @@ export default eslint(
     },
   },
   {
+    files: ['apps/server/src/**/*.{ts,tsx}'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          ...baseRestrictedImportOptions,
+          paths: [...(baseRestrictedImportOptions.paths ?? []), ...serverI18nRestrictedImportPaths],
+          patterns: [
+            ...(baseRestrictedImportOptions.patterns ?? []),
+            ...serverI18nRestrictedImportPatterns,
+          ],
+        },
+      ],
+    },
+  },
+  {
     // Redis access boundary for server code (see `redisAccessRestrictedImportPaths`).
     files: ['apps/server/src/**/*.{ts,tsx}'],
     // Tests of the legacy consumers import the raw module to mock or seed it;
@@ -686,10 +726,12 @@ export default eslint(
           ...baseRestrictedImportOptions,
           paths: [
             ...(baseRestrictedImportOptions.paths ?? []),
+            ...serverI18nRestrictedImportPaths,
             ...redisAccessRestrictedImportPaths,
           ],
           patterns: [
             ...(baseRestrictedImportOptions.patterns ?? []),
+            ...serverI18nRestrictedImportPatterns,
             {
               group: ['@/server/modules/Redis/*'],
               message: 'Use domain methods in services/redis.',
@@ -774,23 +816,13 @@ export default eslint(
       'no-console': 0,
     },
   },
-  // agent-tracing CLI - console output is the primary interface
+  // CLIs and debug utilities - console output is the primary interface
   {
-    files: ['packages/agent-tracing/**/*'],
-    rules: {
-      'no-console': 0,
-    },
-  },
-  // lobehub-cli - console output is the primary interface
-  {
-    files: ['apps/cli/**/*'],
-    rules: {
-      'no-console': 0,
-    },
-  },
-  // model-runtime debug utilities - console output is the primary interface
-  {
-    files: ['packages/model-runtime/src/utils/debugStream.ts'],
+    files: [
+      'packages/agent-tracing/**/*',
+      'apps/cli/**/*',
+      'packages/model-runtime/src/utils/debugStream.ts',
+    ],
     rules: {
       'no-console': 0,
     },
@@ -810,6 +842,7 @@ export default eslint(
       '@eslint-react/no-unnecessary-use-prefix': 0,
     },
   },
+  ...stylexMigrationConfig,
   // CommonJS files rely on `require()` by design
   {
     files: ['**/*.cjs', 'apps/desktop/shell/**/*.js'],

@@ -8,6 +8,7 @@ import { lobeUiImports } from './lobeUiImports';
 import { viteMarkdownImport } from './markdownImport';
 import { viteNodeModuleStub } from './nodeModuleStub';
 import { vitePlatformResolve } from './platformResolve';
+import { stylexPlugin, stylexTokenModules } from './stylex';
 
 /**
  * Shared manual chunk naming — groups leaf-node modules to reduce chunk file count.
@@ -483,6 +484,7 @@ const isDev = process.env.NODE_ENV !== 'production';
 
 interface SharedRendererOptions {
   platform: Platform;
+  stylexOverlaySrcDirs?: string[];
   tsconfigPaths?: boolean;
 }
 
@@ -521,6 +523,7 @@ export function sharedRendererPlugins(options: SharedRendererOptions) {
         exclude: [/\.(css|json|html)$/],
         hotKeys: ['altKey', 'ctrlKey'],
       }),
+    stylexPlugin({ overlaySrcDirs: options.stylexOverlaySrcDirs }),
     react(),
     ...(options.platform === 'desktop' ? [] : [...lobeIconImports(), ...lobeUiImports()]),
   ];
@@ -547,6 +550,7 @@ export function sharedRendererDefine(options: { isElectron: boolean; isMobile: b
 }
 
 export const sharedOptimizeDeps = {
+  exclude: [...stylexTokenModules],
   include: [
     'react',
     'react-dom',

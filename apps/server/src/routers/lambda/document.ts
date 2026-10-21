@@ -556,12 +556,22 @@ export const documentRouter = router({
     .mutation(async ({ ctx, input }) => {
       await assertContentsNotInRestrictedKnowledgeBase(ctx, [input.id]);
 
+      const { id, editorData: editorDataString, operationId, ...params } = input;
+      // A content-only write (the CLI) sends no editorData and names no fileType;
+      // the stored fileType decides whether to build editorData from Markdown.
+      // An HTML page never gets any (the service drops editorData sent for one).
+      const needsStoredFileType =
+        params.content !== undefined && params.fileType === undefined && !editorDataString;
+      const currentDocument =
+        input.parentId !== undefined || needsStoredFileType
+          ? await ctx.documentModel.findById(input.id)
+          : undefined;
+
       // A move mutates both the source and destination trees as well as the
       // document. Only check when the parent really changes: several editor
       // paths include the current parentId in ordinary metadata/autosave
       // updates. `null` is an explicit detach and still leaves the source.
       if (input.parentId !== undefined) {
-        const currentDocument = await ctx.documentModel.findById(input.id);
         const currentParentId = currentDocument?.parentId ?? null;
         const nextParentId = input.parentId ?? null;
         if (currentParentId !== nextParentId) {
@@ -570,11 +580,10 @@ export const documentRouter = router({
         }
       }
 
-      const { id, editorData: editorDataString, operationId, ...params } = input;
       const editorData = await resolveDocumentEditorData({
         content: params.content,
         editorData: editorDataString ? JSON.parse(editorDataString) : undefined,
-        fileType: params.fileType,
+        fileType: params.fileType ?? currentDocument?.fileType,
       });
       const result = await ctx.documentService.updateDocument(id, {
         ...params,

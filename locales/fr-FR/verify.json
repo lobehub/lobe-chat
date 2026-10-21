@@ -82,7 +82,6 @@
   "acceptance.comments.approvalCount": "{{count}} réviseur(s) ont approuvé",
   "acceptance.comments.approve": "Approuver cette livraison",
   "acceptance.comments.approveAgain": "Approuver ce tour",
-  "acceptance.comments.approveDescription": "Votre avis de révision. Cela ne modifie pas le statut d'acceptation — seul le propriétaire accepte la livraison.",
   "acceptance.comments.approveSummaryPlaceholder": "Résumé en une ligne (facultatif)",
   "acceptance.comments.approved": "Approuvé",
   "acceptance.comments.approvedAtRound": "Approuvé (tour {{round}})",

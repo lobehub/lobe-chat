@@ -630,6 +630,8 @@ export const buildServerAgentMemberRunner = (
 export const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export const isOperationInterrupted = async (ctx: RuntimeExecutorContext) => {
+  // The sentinel survives stale in-flight state writes and is cheaper than loading the state blob.
+  if (ctx.isInterrupted) return ctx.isInterrupted(ctx.operationId);
   if (!ctx.loadAgentState) return false;
 
   try {

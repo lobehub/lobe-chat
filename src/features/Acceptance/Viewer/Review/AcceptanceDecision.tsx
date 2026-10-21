@@ -20,7 +20,7 @@ import { acceptanceCheckPath } from '../routes';
 import { useAcceptanceBundle } from '../useAcceptanceBundle';
 import { useAcceptanceTurn } from '../useAcceptanceTurn';
 import { formatAcceptanceCountsText, LIVE_ACCEPTANCE_STATUSES } from '../verdict';
-import { canReviewAcceptance } from '../visibility';
+import { canReviewAcceptance, isReadOnlyAcceptanceDecider } from '../visibility';
 import DecisionBar from './DecisionBar';
 import FeedbackDrawer, { type FeedbackListEntry } from './FeedbackDrawer';
 import { draftRepairPromptInMobile } from './mobileBridge';
@@ -40,8 +40,10 @@ const AcceptanceDecision = ({ onDraftToComposer }: AcceptanceDecisionProps) => {
   const { turn, setTurn } = useAcceptanceTurn(embedded);
   const [pending, setPending] = useState(false);
   const [feedbackOpen, setFeedbackOpen] = useState(false);
-  const { approvals } = useAcceptanceComments(acceptanceId);
-  if (!data || !canReviewAcceptance(data) || data.acceptance.status === 'closed') return null;
+  const { approvals, canApprove } = useAcceptanceComments(acceptanceId);
+  const readOnly = isReadOnlyAcceptanceDecider(data, canApprove);
+  if (!data || (!canReviewAcceptance(data) && !readOnly) || data.acceptance.status === 'closed')
+    return null;
 
   if (flowPlanPhase(data.rounds.at(-1))) return null;
 
@@ -194,6 +196,7 @@ const AcceptanceDecision = ({ onDraftToComposer }: AcceptanceDecisionProps) => {
         ignoredCount={ignoredCount}
         needsFixCount={needsFixCount}
         pending={pending}
+        readOnlyReason={readOnly ? t('acceptance.bar.readOnlyReason') : undefined}
         repairing={acceptance.status === 'repairing'}
         rerunAvailable={embedded}
         rerunPending={false}

@@ -232,8 +232,6 @@ export const agentBuilderKeys = {
 
 // ---- group --------------------------------------------------------------
 export const groupKeys = {
-  /** Agent picker for the "add member" modal. */
-  queryAgents: def('group:queryAgents', () => ['group:queryAgents']),
   /** Agent picker for the "create group" modal. */
   queryAgentsForCreate: def('group:queryAgentsForCreate', () => ['group:queryAgentsForCreate']),
 };
@@ -245,7 +243,6 @@ export const sessionKeys = {
     groupId,
   ]),
   list: def('session:list', (isLogin: boolean | undefined) => ['session:list', isLogin]),
-  search: def('session:search', (keyword?: string) => ['session:search', keyword]),
 };
 
 // ---- thread -------------------------------------------------------------
@@ -330,11 +327,7 @@ export const briefKeys = {
 
 // ---- agent config / available / search ----------------------------------
 export const agentConfigKeys = {
-  available: def('agent:available', () => ['agent:available']),
   search: def('agent:search', (keyword?: string) => ['agent:search', keyword]),
-  serverDefaultHeterogeneousCapability: def('agent:serverDefaultHeterogeneousCapability', () => [
-    'agent:serverDefaultHeterogeneousCapability',
-  ]),
 };
 
 // ---- aiModel ------------------------------------------------------------
@@ -461,21 +454,6 @@ export const deviceKeys = {
     (workspaceId: string | null, deviceId: string, path?: string, cursor?: string) =>
       ['device:browseDirectory', workspaceId, deviceId, path, cursor] as const,
   ),
-  listeningPorts: def(
-    'device:listeningPorts',
-    (workspaceId: string | null, deviceId: string, cwd?: string) =>
-      ['device:listeningPorts', workspaceId, deviceId, cwd] as const,
-  ),
-  tunnels: def('device:tunnels', (workspaceId: string | null, deviceId: string) => [
-    'device:tunnels',
-    workspaceId,
-    deviceId,
-  ]),
-  gitBranches: def('device:gitBranches', (deviceId: string, path: string) => [
-    'device:gitBranches',
-    deviceId,
-    path,
-  ]),
   gitLinkedPR: def(
     'device:gitLinkedPR',
     (deviceId: string, path: string, branch: string, pullRequestNumber?: number) => [
@@ -515,11 +493,6 @@ export const deviceKeys = {
       ...(baseRefName === undefined ? [] : [baseRefName]),
     ],
   ),
-  gitRemoteBranches: def('device:gitRemoteBranches', (deviceId: string, dirPath: string) => [
-    'device:gitRemoteBranches',
-    deviceId,
-    dirPath,
-  ]),
   gitReviewPatches: def(
     'device:gitReviewPatches',
     (deviceId: string, dirPath: string, mode: string, baseRef: string) => [
@@ -612,7 +585,6 @@ export const statsKeys = {
   agents: def('stats:agents', () => ['stats:agents']),
   countAgents: def('stats:countAgents', () => ['stats:countAgents']),
   countMessages: def('stats:countMessages', () => ['stats:countMessages']),
-  countSessions: def('stats:countSessions', () => ['stats:countSessions']),
   countTopics: def('stats:countTopics', () => ['stats:countTopics']),
   heatmaps: def('stats:heatmaps', (type: string) => ['stats:heatmaps', type]),
   maxTaskDuration: def('stats:maxTaskDuration', () => ['stats:maxTaskDuration']),
@@ -920,9 +892,6 @@ export const onboardingKeys = {
 export const agentHomeKeys = {
   topics: def('agentHome:topics', (agentId: string) => ['agentHome:topics', agentId]),
 };
-export const agentProfileKeys = {
-  detail: def('agentProfile:detail', (agentId: string) => ['agentProfile:detail', agentId]),
-};
 export const agentSignalKeys = {
   receipts: def('agentSignal:receipts', (agentId: string, topicId: string) => [
     'agentSignal:receipts',
@@ -1029,7 +998,6 @@ export const swrKeys = {
   agentBuilder: agentBuilderKeys,
   agentDocument: agentDocumentSWRKeys,
   agentHome: agentHomeKeys,
-  agentProfile: agentProfileKeys,
   agentSignal: agentSignalKeys,
   aiModel: aiModelKeys,
   auth: authKeys,

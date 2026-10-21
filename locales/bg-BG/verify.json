@@ -82,7 +82,6 @@
   "acceptance.comments.approvalCount": "{{count}} рецензент(и) одобриха",
   "acceptance.comments.approve": "Одобрете тази доставка",
   "acceptance.comments.approveAgain": "Одобрете този кръг",
-  "acceptance.comments.approveDescription": "Вашето мнение за прегледа. То не променя статуса на приемане — само собственикът приема доставката.",
   "acceptance.comments.approveSummaryPlaceholder": "Едноредово обобщение (по избор)",
   "acceptance.comments.approved": "Одобрено",
   "acceptance.comments.approvedAtRound": "Одобрено (кръг {{round}})",

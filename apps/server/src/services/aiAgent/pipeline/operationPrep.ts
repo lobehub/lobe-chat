@@ -414,7 +414,9 @@ export const prepareOperation = async (
     agentConfig,
     appContext,
     assistantMessageId,
+    contextSelections,
     model,
+    pageSelections,
     parentMessageId,
     prompt,
     provider,
@@ -566,12 +568,20 @@ export const prepareOperation = async (
   // - videoList: video-capable models render these as video parts
   // - audioList: audio-capable models render these as audio parts
   // - fileList: MessageContentProcessor injects content via filesPrompts() XML
+  // - metadata: the selection injectors read attached selections from here,
+  //   just as they read the persisted ones on history rows
   const userMessage = {
     audioList: runAttachments.audioList,
     content: ephemeralUserMessage ?? prompt,
     fileList: runAttachments.fileList,
     id: userMessageId,
     imageList: runAttachments.imageList,
+    ...((contextSelections?.length || pageSelections?.length) && {
+      metadata: {
+        ...(contextSelections?.length ? { contextSelections } : undefined),
+        ...(pageSelections?.length ? { pageSelections } : undefined),
+      },
+    }),
     role: 'user' as const,
     videoList: runAttachments.videoList,
   };

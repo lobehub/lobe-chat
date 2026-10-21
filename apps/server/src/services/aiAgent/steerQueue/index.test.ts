@@ -67,6 +67,22 @@ describe('mergeQueuedFollowUps', () => {
     expect(merged.mentionedAgents).toEqual([{ id: 'a1', name: 'A' }]);
   });
 
+  it('keeps the selections attached to every follow-up, in queue order', () => {
+    const quote = (id: string) => ({ content: id, id, source: 'text' as const });
+    const merged = mergeQueuedFollowUps([
+      followUp('second', 2, {
+        contextSelections: [quote('q2')],
+        pageSelections: [{ content: 'p2', id: 'p2', pageId: 'page-1' }],
+      }),
+      followUp('first', 1, { contextSelections: [quote('q1')] }),
+      followUp('third', 3, {}),
+    ]);
+
+    expect(merged.contextSelections).toEqual([quote('q1'), quote('q2')]);
+    expect(merged.pageSelections).toEqual([{ content: 'p2', id: 'p2', pageId: 'page-1' }]);
+    expect(mergeQueuedFollowUps([followUp('only', 1, {})]).contextSelections).toBeUndefined();
+  });
+
   it('runs with the newest settings and drops per-send client ids once merged', () => {
     const merged = mergeQueuedFollowUps([
       followUp('a', 1, { clientIds: { userMessageId: 'u-a' } as any, deviceId: 'old' }),

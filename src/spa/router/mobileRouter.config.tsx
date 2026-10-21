@@ -509,6 +509,13 @@ export const mobileRoutes: RouteObject[] = [
               },
               {
                 element: dynamicElement(
+                  () => import('@/routes/(main)/[workspaceSlug]/settings/chat-preference'),
+                  'Mobile > Workspace > Settings > Chat Preference',
+                ),
+                path: 'chat-preference',
+              },
+              {
+                element: dynamicElement(
                   () => import('@/routes/(main)/[workspaceSlug]/settings/messenger'),
                   'Mobile > Workspace > Settings > Messenger',
                 ),

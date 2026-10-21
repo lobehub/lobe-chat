@@ -5,6 +5,7 @@ import {
   collectHeteroAttachedFiles,
   isLocalHeterogeneousType,
 } from '@lobechat/heterogeneous-agents';
+import { formatContextSelections, formatPageSelections } from '@lobechat/prompts';
 import { applyTopicModelToHeterogeneousProvider, buildHeteroExecArgs } from '@lobechat/types';
 import debug from 'debug';
 
@@ -32,7 +33,14 @@ export const prepareHeteroRun = async (
   deps: HeteroDispatchDeps,
   ctx: Pick<
     ExecRunContext,
-    'agentConfig' | 'appContext' | 'assistantMessageId' | 'prompt' | 'shareGate' | 'topicId'
+    | 'agentConfig'
+    | 'appContext'
+    | 'assistantMessageId'
+    | 'contextSelections'
+    | 'pageSelections'
+    | 'prompt'
+    | 'shareGate'
+    | 'topicId'
   >,
   input: Pick<
     HeteroDispatchInput,
@@ -45,7 +53,15 @@ export const prepareHeteroRun = async (
   >,
   operationId: string,
 ) => {
-  const { agentConfig, appContext, assistantMessageId, prompt, topicId } = ctx;
+  const {
+    agentConfig,
+    appContext,
+    assistantMessageId,
+    contextSelections,
+    pageSelections,
+    prompt,
+    topicId,
+  } = ctx;
   const {
     heteroType,
     heterogeneousProvider,
@@ -159,11 +175,18 @@ export const prepareHeteroRun = async (
   const sandboxPlacement = sandbox && { cwd: sandbox.cwd, mode: sandbox.mode };
 
   // Primary context omits history (a failed native resume retries with the full
-  // fallback). `/goal` and the task viewed in a Tasks side chat ride along.
+  // fallback). `/goal`, the task viewed in a Tasks side chat and the content the
+  // user attached to this message ride along — the same selection context the
+  // desktop's in-process run hands its CLI.
   const providerContext = agentConfig.agencyConfig?.heterogeneousProvider?.systemContext;
   const viewedTaskContext = await buildViewedTaskContextPrompt(deps, appContext, operationTaskId);
+  const selectionContext = contextSelections?.length
+    ? formatContextSelections(contextSelections)
+    : pageSelections?.length
+      ? formatPageSelections(pageSelections)
+      : undefined;
   const agentSystemContext = withConversationGoalPrompt(
-    joinSystemContext(providerContext, viewedTaskContext),
+    joinSystemContext(providerContext, viewedTaskContext, selectionContext),
     prompt,
   );
   const systemContext = buildCloudHeteroContext({

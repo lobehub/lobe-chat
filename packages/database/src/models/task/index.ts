@@ -273,6 +273,14 @@ export class TaskModel {
     return rows.updateStatusIfCurrent(this.ctx, id, currentStatus, status, extra);
   }
 
+  async completeIfCompletionRequested(id: string, operationId: string): Promise<TaskItem | null> {
+    return rows.completeIfCompletionRequested(this.ctx, id, operationId);
+  }
+
+  async withdrawCompletionRequest(id: string, operationId: string): Promise<boolean> {
+    return rows.withdrawCompletionRequest(this.ctx, id, operationId);
+  }
+
   async batchUpdateStatus(ids: string[], status: string): Promise<number> {
     return rows.batchUpdateStatus(this.ctx, ids, status);
   }

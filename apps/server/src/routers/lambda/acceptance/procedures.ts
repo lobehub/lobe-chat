@@ -16,6 +16,9 @@ import { AcceptanceService } from '@/server/services/verify';
 
 import { canManageAcceptance } from '../_helpers/acceptanceWriteScope';
 
+export const ACCEPTANCE_DECISION_FORBIDDEN =
+  'Only the creator, a workspace owner or a workspace admin can change this acceptance';
+
 /** Reads addressed purely by acceptance id — visibility is checked in the handler. */
 export const publicAcceptanceProcedure = publicProcedure.use(serverDatabase);
 
@@ -61,10 +64,19 @@ export const resolveAcceptanceForWrite = async (
     ? await ctx.serverDB.query.acceptances.findFirst({ where: eq(acceptances.id, id) })
     : undefined;
 
-  // An unauthorized caller gets the same answer as a missing row: the existence
-  // of someone else's delivery is not ours to disclose.
-  if (!acceptance || !(await canManageAcceptance(ctx, acceptance))) {
+  if (!acceptance) {
     throw new TRPCError({ code: 'NOT_FOUND', message: 'Acceptance not found' });
+  }
+
+  if (!(await canManageAcceptance(ctx, acceptance))) {
+    // A caller who cannot even read it gets the same answer as a missing row:
+    // the existence of someone else's delivery is not ours to disclose. A
+    // teammate already looking at it, though, is told why — "not found" about
+    // a page they have open reads as a broken link, not as a missing right.
+    if (!(await canReadAcceptance(ctx, acceptance))) {
+      throw new TRPCError({ code: 'NOT_FOUND', message: 'Acceptance not found' });
+    }
+    throw new TRPCError({ code: 'FORBIDDEN', message: ACCEPTANCE_DECISION_FORBIDDEN });
   }
 
   return {

@@ -17,7 +17,6 @@ import type {
   MessageMetadata,
   SendMessageParams,
   SendMessageServerResponse,
-  UIChatMessage,
 } from '@lobechat/types';
 import {
   applyTopicModelToHeterogeneousProvider,
@@ -78,17 +77,23 @@ import { selectRuntimeType } from '@/store/chat/slices/agentRun/actions/dispatch
 import { executeDirectMention } from '@/store/chat/slices/agentRun/actions/dispatch/directMentionExecutor';
 import { resolveNewThreadIntent } from '@/store/chat/slices/agentRun/actions/dispatch/newThreadIntent';
 import { buildRunLifecycle } from '@/store/chat/slices/agentRun/actions/lifecycle/buildRunLifecycle';
+import {
+  findOrphanedQueueKey,
+  sendQueuedMessages,
+} from '@/store/chat/slices/agentRun/actions/lifecycle/queuedFollowUp';
 import type { RunScope } from '@/store/chat/slices/agentRun/actions/lifecycle/types';
+import { buildQueuedFollowUpRequest } from '@/store/chat/slices/agentRun/actions/transports/gateway/execRequest';
+import {
+  canQueueOnServer,
+  findServerHeldQueueKey,
+  handOffQueuedMessage,
+  reclaimServerQueuedMessages,
+} from '@/store/chat/slices/agentRun/actions/transports/gateway/serverSteerQueue';
 import {
   getNativeHeteroSessionBindingKey,
   resolveHeteroResume,
 } from '@/store/chat/slices/agentRun/actions/transports/hetero/heteroResume';
-import type { QueuedFile } from '@/store/chat/slices/operation/types';
-import {
-  isQueueBlockingOperation,
-  mergeQueuedMessages,
-  reconstructUploadFilesFromQueue,
-} from '@/store/chat/slices/operation/types';
+import { isQueueBlockingOperation, snapshotQueuedFiles } from '@/store/chat/slices/operation/types';
 import { PortalViewType } from '@/store/chat/slices/portal/initialState';
 import { chatPortalSelectors } from '@/store/chat/slices/portal/selectors';
 import { resolveTopicHeteroPin } from '@/store/chat/slices/topic/selectors';
@@ -133,6 +138,10 @@ import {
   parseSingleAgentMentionDirectRoute,
   processCommands,
 } from './commandBus';
+import {
+  attachSendTimeMetadataToUserMessage,
+  mergePartialPersistedMessages,
+} from './persistedMessages';
 import { resolveExistingTopicForRun } from './resolveExistingTopic';
 
 /**
@@ -216,46 +225,6 @@ const throwIfSendAborted = (signal?: AbortSignal) => {
   throw signal.reason instanceof Error
     ? signal.reason
     : new DOMException('Message send was cancelled', 'AbortError');
-};
-
-const attachSendTimeMetadataToUserMessage = (
-  messages: UIChatMessage[],
-  userMessageId: string,
-  metadata: MessageMetadata | undefined,
-): UIChatMessage[] => {
-  if (!metadata) return messages;
-
-  let changed = false;
-  const nextMessages = messages.map((message) => {
-    if (message.id !== userMessageId) return message;
-
-    changed = true;
-    return {
-      ...message,
-      metadata: {
-        ...(message.metadata ?? undefined),
-        ...metadata,
-      },
-    };
-  });
-
-  return changed ? nextMessages : messages;
-};
-
-const mergePartialPersistedMessages = (
-  currentMessages: UIChatMessage[],
-  persistedMessages: UIChatMessage[],
-  replacedMessageIds: string[],
-): UIChatMessage[] => {
-  const replacedIdSet = new Set(replacedMessageIds);
-  const persistedIdSet = new Set(persistedMessages.map((message) => message.id));
-
-  return [
-    ...currentMessages.filter(
-      (message) => !replacedIdSet.has(message.id) && !persistedIdSet.has(message.id),
-    ),
-    ...persistedMessages,
-  ];
 };
 
 export class ConversationLifecycleActionImpl {
@@ -795,88 +764,78 @@ export class ConversationLifecycleActionImpl {
       !runningQueueBlockingOp &&
       !onlyAddUserMessage &&
       operationSelectors.isQueueDrainPending(operationContext)(this.#get());
-    if (runningQueueBlockingOp || queueDrainPending) {
-      // Snapshot file previews so the tray can render thumbnails AND the
-      // resumed sendMessage can rebuild audioList/imageList/videoList — by the time
-      // we drain, chatUploadFileList has long been cleared.
-      const filesPreview: QueuedFile[] = (files ?? []).map((f) => ({
-        audioMetadata: f.audioMetadata,
-        id: f.id,
-        mimeType: f.file?.type ?? '',
-        name: f.file?.name ?? f.id,
-        url: f.fileUrl || f.base64Url || f.previewUrl || '',
-      }));
-
+    /** Queue this send behind what holds `key`; on the server when the run can join it there. */
+    const queueThisSend = (key: string) => {
+      const queuedId = nanoid();
+      const queueOnServer =
+        !onlyAddUserMessage &&
+        canQueueOnServer(this.#get, key, {
+          context: operationContext,
+          isGatewayRun: runtimeType === 'gateway' && !directMentionRoute && !willCreateNewTopic,
+        });
       this.#get().enqueueMessage(
-        queueTargetKey,
+        key,
         {
-          id: nanoid(),
+          id: queuedId,
           content: message,
           editorData: editorData ?? undefined,
           files: fileIdList,
-          filesPreview: filesPreview.length > 0 ? filesPreview : undefined,
+          filesPreview: snapshotQueuedFiles(files),
           ...(forceRuntime ? { forceRuntime } : {}),
           interruptMode: 'soft',
           metadata: userMessageMetadata,
           createdAt: Date.now(),
+          ...(queueOnServer && { serverDelivery: 'appending' as const }),
         },
         runningQueueBlockingOp?.id,
       );
+      if (queueOnServer)
+        void handOffQueuedMessage(this.#get, key, operationContext, queuedId, () =>
+          buildQueuedFollowUpRequest(this.#get, {
+            context: operationContext,
+            contextSelections,
+            fileIds: fileIdList,
+            mentionedAgents: hasMentionedAgents ? mentionedAgents : undefined,
+            message,
+            pageSelections,
+            selectedSkillIds: selectedSkills.map((skill) => skill.identifier),
+            selectedToolIds: selectedTools.map((tool) => tool.identifier),
+            trigger: requestTrigger,
+          }),
+        );
       notifyMessageAccepted();
-      return;
-    }
+    };
+    if (runningQueueBlockingOp || queueDrainPending) return void queueThisSend(queueTargetKey);
 
-    // Stop may already have moved the old operation to `cancelled`, so there is
-    // no live blocker left to drain follow-ups that were queued before Stop.
-    // Fold the new send into that FIFO and immediately restart the whole batch;
-    // otherwise the new message jumps ahead and the older queue drains after it.
-    const orphanedQueueKey = queueCandidateKeys.find((key) => {
-      if ((this.#get().queuedMessages[key]?.length ?? 0) === 0) return false;
-      return (this.#get().operationsByContext[key] || []).some((id) => {
-        const operation = this.#get().operations[id];
-        return operation?.status === 'cancelled' && operation.metadata.isAborting;
-      });
-    });
+    // Nothing runs: take server-queued follow-ups back; one still being delivered keeps its place.
+    await Promise.all(queueCandidateKeys.map((key) => reclaimServerQueuedMessages(this.#get, key)));
+    const heldKey = findServerHeldQueueKey(this.#get, queueCandidateKeys);
+    if (heldKey && !onlyAddUserMessage) return void queueThisSend(heldKey);
+
+    const orphanedQueueKey = findOrphanedQueueKey(
+      this.#get,
+      queueCandidateKeys,
+      willCreateNewTopic,
+    );
     if (orphanedQueueKey && !onlyAddUserMessage) {
-      const filesPreview: QueuedFile[] = (files ?? []).map((file) => ({
-        audioMetadata: file.audioMetadata,
-        id: file.id,
-        mimeType: file.file?.type ?? '',
-        name: file.file?.name ?? file.id,
-        url: file.fileUrl || file.base64Url || file.previewUrl || '',
-      }));
       this.#get().enqueueMessage(orphanedQueueKey, {
         content: message,
         createdAt: Date.now(),
         editorData: editorData ?? undefined,
         files: fileIdList,
-        filesPreview: filesPreview.length > 0 ? filesPreview : undefined,
+        filesPreview: snapshotQueuedFiles(files),
         ...(forceRuntime ? { forceRuntime } : {}),
         id: nanoid(),
         interruptMode: 'soft',
         metadata: userMessageMetadata,
       });
-      const merged = mergeQueuedMessages(this.#get().drainQueuedMessages(orphanedQueueKey));
+      const restarted = this.#get().drainQueuedMessages(orphanedQueueKey);
       notifyMessageAccepted();
 
       setTimeout(() => {
-        this.#get()
-          .sendMessage({
-            context: operationContext,
-            editorData: merged.editorData,
-            files:
-              merged.filesPreview.length > 0
-                ? reconstructUploadFilesFromQueue(merged.filesPreview)
-                : merged.files.length > 0
-                  ? (merged.files.map((id) => ({ id })) as any)
-                  : undefined,
-            ...(merged.forceRuntime ? { forceRuntime: merged.forceRuntime } : {}),
-            message: merged.content,
-            metadata: { ...merged.metadata, steer: true },
-          })
-          .catch((error: unknown) => {
-            console.error('[sendMessage] restarting queued content after Stop failed:', error);
-          });
+        sendQueuedMessages(this.#get, operationContext, restarted).catch((error: unknown) => {
+          console.error('[sendMessage] restarting queued content after Stop failed:', error);
+        });
       }, 0);
 
       return;
@@ -1902,6 +1861,9 @@ export class ConversationLifecycleActionImpl {
             ? { ...operationContext, topicId: undefined }
             : operationContext,
           messageContext: operationContext,
+          // The server persists the user row on this path; without these it
+          // replaces the optimistic row and the attached quote disappears.
+          contextSelections: contextSelections?.length ? contextSelections : undefined,
           fileIds: fileIdList,
           message,
           // The server persists the user row on this path, so a queued
@@ -1915,6 +1877,7 @@ export class ConversationLifecycleActionImpl {
           clientOperations,
           replacesOperationId: replaceableGatewayOperationId,
           optimisticTopic,
+          pageSelections: pageSelections?.length ? pageSelections : undefined,
           projectWorkingDirectoryId: stagedDirectory?.id,
           // Forward @-mentioned tool ids so the server runtime enables them for
           // this run — the gateway/server path otherwise never sees the mention

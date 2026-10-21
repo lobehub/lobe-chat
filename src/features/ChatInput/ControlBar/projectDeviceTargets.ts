@@ -9,6 +9,8 @@ export interface ProjectDeviceTarget {
   directory: ProjectDirectory;
   label: string;
   online: boolean;
+  /** The device row is a persisted copy the server has not confirmed: presence unknown. */
+  onlineUnknown: boolean;
 }
 
 export const projectDirectoryDeviceName = (
@@ -35,10 +37,14 @@ export const listProjectDeviceTargets = (
 ): ProjectDeviceTarget[] =>
   directories
     .filter((d) => d.instanceId && d.permission === 'readWrite')
-    .map((directory) => ({
-      active: directory.id === currentDirectoryId,
-      allowed: !fixedDeviceId || directory.deviceId === fixedDeviceId,
-      directory,
-      label: projectDirectoryDeviceName(directory, devices),
-      online: !!devices?.find((item) => item.deviceId === directory.deviceId)?.online,
-    }));
+    .map((directory) => {
+      const device = devices?.find((item) => item.deviceId === directory.deviceId);
+      return {
+        active: directory.id === currentDirectoryId,
+        allowed: !fixedDeviceId || directory.deviceId === fixedDeviceId,
+        directory,
+        label: projectDirectoryDeviceName(directory, devices),
+        online: !!device?.online,
+        onlineUnknown: !!device?.onlineUnknown,
+      };
+    });
