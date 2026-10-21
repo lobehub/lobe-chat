@@ -14,7 +14,10 @@
     -webkit-font-smoothing: antialiased;
   }
 
-  body > * + * {
+  /* Models wrap pages in <main>/<section> and stack blocks inside tabs, so block
+     spacing cannot rely on being a direct child of <body>. Flex and grid
+     components space their items with gap and are left out. */
+  :where(body, main, section, article, header, footer, aside, [data-lobe-canvas-flow]) > * + * {
     margin-block-start: 16px;
   }
 

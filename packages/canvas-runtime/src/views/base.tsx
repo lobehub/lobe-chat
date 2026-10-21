@@ -36,6 +36,7 @@ const Slot = ({ slot }: Pick<CanvasViewContext, 'slot'>) => (
 
 const NodesSlot = memo<{ nodes: Node[] }>(({ nodes }) => (
   <span
+    data-lobe-canvas-flow=""
     data-lobe-canvas-slot=""
     ref={(node) => {
       if (node && node.childNodes.length === 0) node.append(...nodes);
