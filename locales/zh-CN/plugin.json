@@ -859,6 +859,8 @@
   "mcpEmpty.prompts": "该技能暂无提示词",
   "mcpEmpty.resources": "该技能暂无资源",
   "mcpEmpty.tools": "该技能暂无工具能力",
+  "mcpInstall.AUTHORIZATION_REQUIRED": "安装前，请先登录并授权此 MCP 服务。",
+  "mcpInstall.AUTHORIZING": "正在等待授权…",
   "mcpInstall.CHECKING_INSTALLATION": "检查安装环境…",
   "mcpInstall.COMPLETED": "安装完成",
   "mcpInstall.CONFIGURATION_REQUIRED": "请完成相关配置后继续安装",

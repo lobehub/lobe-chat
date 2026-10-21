@@ -250,9 +250,9 @@ export class MCPClient {
       log('MCP connection failed:', e);
 
       if (this.params.type === 'http') {
-        const error = e as Error;
-        if (error.message.includes('401'))
-          throw createMCPError('AUTHORIZATION_ERROR', error.message);
+        // StreamableHTTPError carries the status in code, not necessarily in its message.
+        const error = e as Error & { code?: number };
+        if (error.code === 401) throw createMCPError('AUTHORIZATION_ERROR', error.message);
 
         throw e;
       }

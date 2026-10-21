@@ -19,14 +19,26 @@ export const waitForConnectorOAuth = async (
   popup: Window | null | undefined,
   connectorId: string,
   authorizationUrl: string,
+  signal?: AbortSignal,
 ): Promise<void> => {
+  signal?.throwIfAborted();
   if (isDesktop) {
     // Native ownership survives provider COOP headers that sever window.opener.
-    const result = await ensureElectronIpc().connectorOAuth.authorize({
-      authorizationUrl,
-      connectorId,
-    });
-    if (result !== 'success') throw new ConnectorOAuthError(result);
+    const oauth = ensureElectronIpc().connectorOAuth;
+    const requestId = crypto.randomUUID();
+    const onAbort = () => {
+      oauth.cancel({ requestId }).catch((error) => {
+        console.error('Failed to cancel native connector authorization', error);
+      });
+    };
+    signal?.addEventListener('abort', onAbort, { once: true });
+    try {
+      const result = await oauth.authorize({ authorizationUrl, connectorId, requestId });
+      if (signal?.aborted) throw new ConnectorOAuthError('dismissed');
+      if (result !== 'success') throw new ConnectorOAuthError(result);
+    } finally {
+      signal?.removeEventListener('abort', onAbort);
+    }
     return;
   }
   if (!popup) throw new ConnectorOAuthError('blocked');
@@ -37,6 +49,7 @@ export const waitForConnectorOAuth = async (
 
   return new Promise((resolve, reject) => {
     const finish = (error?: ConnectorOAuthError) => {
+      signal?.removeEventListener('abort', onAbort);
       window.removeEventListener('message', onMessage);
       clearInterval(timer);
       clearTimeout(timeout);
@@ -54,12 +67,14 @@ export const waitForConnectorOAuth = async (
       if (data.success === true && data.connectorId === connectorId) finish();
       else if (data.success === false) finish(new ConnectorOAuthError('failed'));
     };
+    const onAbort = () => finish(new ConnectorOAuthError('dismissed'));
 
     window.addEventListener('message', onMessage);
     const timer = setInterval(() => {
       if (popup.closed) finish(new ConnectorOAuthError('dismissed'));
     }, 800);
     const timeout = setTimeout(() => finish(new ConnectorOAuthError('timeout')), 5 * 60_000);
+    signal?.addEventListener('abort', onAbort, { once: true });
 
     if (popup.closed) {
       finish(new ConnectorOAuthError('dismissed'));

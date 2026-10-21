@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { ConnectorOAuthError } from '@/utils/connectorOAuth';
 
-import { executeOAuthCreate } from './oauthCreate';
+import { executeOAuthCreate } from './connectorOAuthCreate';
 
 const deps = {
   createConnector: vi.fn(),

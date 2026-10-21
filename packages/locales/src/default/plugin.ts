@@ -877,6 +877,8 @@ export default {
   'mcpEmpty.prompts': 'No prompts',
   'mcpEmpty.resources': 'No resources',
   'mcpEmpty.tools': 'No tools',
+  'mcpInstall.AUTHORIZATION_REQUIRED': 'Sign in to authorize this MCP server before installing.',
+  'mcpInstall.AUTHORIZING': 'Waiting for authorization…',
   'mcpInstall.CHECKING_INSTALLATION': 'Checking installation…',
   'mcpInstall.COMPLETED': 'Completed',
   'mcpInstall.CONFIGURATION_REQUIRED': 'Complete configuration to continue',
