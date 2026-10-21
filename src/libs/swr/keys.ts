@@ -922,6 +922,8 @@ export const imessageKeys = {
 };
 // Desktop/electron IPC fetches — roots keep their existing `electron:getXxx` value.
 export const electronKeys = {
+  /** Claude Code logins held on this machine (device-local, never persisted). */
+  claudeCodeAccounts: def('electron:claudeCodeAccounts', () => ['electron:claudeCodeAccounts']),
   appTrayVisible: def('electron:getAppTrayVisible', () => ['electron:getAppTrayVisible']),
   desktopHotkeys: def('electron:getDesktopHotkeys', () => ['electron:getDesktopHotkeys']),
   gatewayDeviceInfo: def('electron:getGatewayDeviceInfo', () => ['electron:getGatewayDeviceInfo']),

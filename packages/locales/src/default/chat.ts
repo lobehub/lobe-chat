@@ -17,6 +17,20 @@ export default {
   'backgroundActivity.topic': 'Conversation',
   'backgroundActivity.unavailable':
     'Resource data is unavailable. Displayed values may be out of date.',
+  'heteroAgent.claudeQuota.accountNotSignedIn':
+    "The Claude Code account {{account}} isn't signed in on this device. Sign in to it from Manage accounts, or switch to another account.",
+  'heteroAgent.claudeQuota.accountResolveFailed':
+    "Couldn't look up this Claude Code account's login on this device. Try again, or switch to another account.",
+  'heteroAgent.claudeQuota.manage.add': 'Add account',
+  'heteroAgent.claudeQuota.manage.addHintDesktop':
+    'Each account signs in on this device; runs use the account you pick.',
+  'heteroAgent.claudeQuota.manage.loginFailed': "Sign-in didn't finish. Try again.",
+  'heteroAgent.claudeQuota.manage.loginSuccess': 'Signed in as {{account}}',
+  'heteroAgent.claudeQuota.manage.loginWaiting': 'Finish signing in in your browser…',
+  'heteroAgent.claudeQuota.manage.notSignedIn': 'Not signed in on this device',
+  'heteroAgent.claudeQuota.manage.signIn': 'Sign in',
+  'heteroAgent.claudeQuota.noRunnableAccount':
+    "None of the Claude Code accounts in this agent's rotation are signed in on this device. Sign one in from Manage accounts, or add a signed-in account to the rotation.",
   'processExplorer.copyPid': 'Copy PID',
   'processExplorer.filter': 'Filter',
   'processExplorer.live': 'Live · updates every 2 s',
