@@ -133,7 +133,10 @@ When(
   'I close the category menu and move focus to the search field',
   async function (this: CustomWorld) {
     await this.page.keyboard.press('Escape');
-    await this.page.getByRole('textbox').first().focus();
+    const search = this.page.getByRole('textbox').first();
+    // A real touch clears Chromium's emulated hover; programmatic focus does not.
+    await search.tap();
+    await expect(search).toBeFocused();
   },
 );
 
