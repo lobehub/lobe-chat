@@ -351,10 +351,69 @@ describe('MessageModel queryAll — tool-call plugin projection', () => {
     const row = result.find((m) => m.id === 'q-redact-svg') as any;
     const args = JSON.parse(row.plugin.arguments);
 
-    // `;base64,` is optional for non-base64 forms, so the marker drops out
-    // and the capture is followed directly by `...redacted...`:
-    expect(args.urls[0]).toBe('data:image/svg+xml...redacted...');
+    expect(args.urls[0]).toBe('data:image/svg+xml,...redacted...');
     expect(row.plugin.arguments.length).toBeLessThan(500);
     expect(row.tool_call_id).toBe('call_redact_svg');
+  });
+
+  it('redacts raw SVG markup data URLs through the JSON-string boundary', async () => {
+    // Non-base64 forms also arrive as raw markup (`data:image/svg+xml,<svg
+    // ...>`); `<`/`>` are excluded from the base64/percent alphabet, so the
+    // raw branch must carry the redaction through the JSON-string boundary
+    // instead of stopping at the first angle bracket.
+    const bigBody = `<svg xmlns='http://www.w3.org/2000/svg'>${'<rect width=1 height=1 />'.repeat(11_000)}</svg>`;
+    await serverDB.insert(messages).values({
+      id: 'q-redact-raw-svg',
+      userId,
+      role: 'tool',
+      content: 'raw svg payload',
+    });
+    await serverDB.insert(messagePlugins).values({
+      id: 'q-redact-raw-svg',
+      apiName: 'analyzeMedia',
+      arguments: JSON.stringify({ urls: [`data:image/svg+xml,${bigBody}`] }),
+      identifier: 'lobe-agent',
+      toolCallId: 'call_redact_raw_svg',
+      userId,
+    });
+
+    const result = await messageModel.queryAll();
+    const row = result.find((m) => m.id === 'q-redact-raw-svg') as any;
+    const args = JSON.parse(row.plugin.arguments);
+
+    expect(args.urls[0]).toBe('data:image/svg+xml,...redacted...');
+    expect(row.plugin.arguments.length).toBeLessThan(500);
+    expect(row.tool_call_id).toBe('call_redact_raw_svg');
+  });
+
+  it('does not rewrite plain long strings that merely start with data:mime', async () => {
+    // `(?:;base64,)?` once made the comma optional, so documentation text
+    // after `data:image/png` matched the body alphabet and got rewritten
+    // even though it is not a data URL. The comma separator is required for
+    // both forms; a near-miss string must survive verbatim.
+    const nearMiss =
+      'data:image/png followed by documentation text that runs long enough to exceed the ' +
+      'sixty-four character body threshold of the redaction predicate...';
+    await serverDB.insert(messages).values({
+      id: 'q-near-miss',
+      userId,
+      role: 'tool',
+      content: 'near miss payload',
+    });
+    await serverDB.insert(messagePlugins).values({
+      id: 'q-near-miss',
+      apiName: 'docs',
+      arguments: JSON.stringify({ note: nearMiss }),
+      identifier: 'lobe-agent',
+      toolCallId: 'call_near_miss',
+      userId,
+    });
+
+    const result = await messageModel.queryAll();
+    const row = result.find((m) => m.id === 'q-near-miss') as any;
+    const args = JSON.parse(row.plugin.arguments);
+
+    expect(args.note).toBe(nearMiss);
+    expect(row.tool_call_id).toBe('call_near_miss');
   });
 });
