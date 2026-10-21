@@ -22,15 +22,20 @@ export const useDriveUsage = () => {
   );
 
   // Measuring walks each of the caller's own drives; the members' figures are
-  // whatever was last measured for them.
+  // whatever was last measured for them. Every drive is measured even when one
+  // fails, and the figures are reloaded either way; then a failure is thrown,
+  // so the caller can say the refresh did not fully work.
   const refresh = useCallback(async () => {
     const drives = swr.data?.drives.map((entry) => entry.drive) ?? [];
-    await Promise.all(
-      drives.map((drive) =>
-        sandboxStorageService.refreshStorageUsage({ drive }).catch(() => undefined),
-      ),
+    const results = await Promise.allSettled(
+      drives.map((drive) => sandboxStorageService.refreshStorageUsage({ drive })),
     );
     await swr.mutate();
+
+    const failed = results.find(
+      (result): result is PromiseRejectedResult => result.status === 'rejected',
+    );
+    if (failed) throw failed.reason;
   }, [swr.data, swr.mutate]);
 
   return { data: swr.data, error: swr.error, isLoading: swr.isLoading, refresh };

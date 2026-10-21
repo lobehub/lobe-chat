@@ -1,9 +1,9 @@
 import { mergeRouters } from '@/libs/trpc/lambda';
 
-import { environmentRouter } from '../environment';
 import { filesRouter } from './files';
 import { instanceBuildRouter } from './instanceBuild';
 import { instancesRouter } from './instances';
+import { legacyEnvironmentRouter } from './legacyEnvironment';
 import { storageRouter } from './storage';
 
 /**
@@ -19,14 +19,14 @@ import { storageRouter } from './storage';
  * `environment` router, which needs no drive. They are still answered here
  * under their released paths — the same procedures, not copies — so a desktop
  * build or a cached web client from before the move keeps working until it
- * updates.
+ * updates; `createEnvironment` there keeps its released `withDefaultInstance`.
  */
 export const sandboxStorageRouter = mergeRouters(
   filesRouter,
   storageRouter,
   instancesRouter,
   instanceBuildRouter,
-  environmentRouter,
+  legacyEnvironmentRouter,
 );
 
 export type SandboxStorageRouter = typeof sandboxStorageRouter;

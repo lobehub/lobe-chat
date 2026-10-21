@@ -32,7 +32,7 @@ function expected(): Array<
   return [
     ['copyInstance', 'mutation', 15],
     ['createDirectory', 'mutation', 15],
-    ['createEnvironment', 'mutation', 12],
+    ['createEnvironment', 'mutation', 15],
     ['createInstance', 'mutation', 15],
     ['createInstanceForEnvironment', 'mutation', 15],
     ['getDriveUsage', 'query', 12],

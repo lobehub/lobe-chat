@@ -157,6 +157,37 @@ const initializeFolder = async (
   return { environment, instance };
 };
 
+describe('sandboxStorage.createEnvironment, as released', () => {
+  // A client from before the environment router moved out sends
+  // `withDefaultInstance` and starts the build of the instance it gets back.
+  it('should create the default instance the old client asks for', async () => {
+    const created = await drive().createEnvironment({
+      name: 'Atlas',
+      visibility: 'public',
+      withDefaultInstance: true,
+    });
+
+    expect(created.defaultInstance).toMatchObject({ environmentId: created.id });
+    expect(await instancesOf(created.id)).toHaveLength(1);
+  });
+
+  it('should be the definition alone without the flag', async () => {
+    const created = await drive().createEnvironment({ name: 'Atlas', visibility: 'public' });
+
+    expect(created.defaultInstance).toBeUndefined();
+    expect(await instancesOf(created.id)).toHaveLength(0);
+  });
+
+  it('should take the environment back when the instance cannot be made', async () => {
+    entitlement.claim.mockResolvedValue(null);
+
+    await expect(
+      drive().createEnvironment({ name: 'Atlas', withDefaultInstance: true }),
+    ).rejects.toMatchObject({ code: 'FORBIDDEN' });
+    await expect(definitions().listEnvironments()).resolves.toEqual({ environments: [] });
+  });
+});
+
 describe('environment definitions', () => {
   it('are written and read without any drive', async () => {
     entitlement.claim.mockResolvedValue(null);

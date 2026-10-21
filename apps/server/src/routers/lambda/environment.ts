@@ -63,7 +63,8 @@ const githubProcedure = wsCompatProcedure.use(serverDatabase).use(async (opts) =
   });
 });
 
-export const environmentRouter = router({
+/** The environment procedures, also answered under `sandboxStorage` for older clients. */
+export const environmentProcedures = {
   /** A definition alone. Folders are initialized from it in the directory picker. */
   createEnvironment: environmentProcedure
     .input(
@@ -191,6 +192,8 @@ export const environmentRouter = router({
 
       return updated;
     }),
-});
+};
+
+export const environmentRouter = router(environmentProcedures);
 
 export type EnvironmentRouter = typeof environmentRouter;
