@@ -1,6 +1,6 @@
 import { type ChildProcess, execFile } from 'node:child_process';
 import { randomUUID } from 'node:crypto';
-import { lstat, mkdir, readdir, rm, symlink } from 'node:fs/promises';
+import { lstat, mkdir, readdir, rm, stat, symlink } from 'node:fs/promises';
 import { homedir } from 'node:os';
 import path from 'node:path';
 
@@ -91,6 +91,16 @@ const forgetProfile = async (configDir: string) => {
       () => resolve(),
     );
   });
+};
+
+/**
+ * Windows only creates file and directory symlinks with Developer Mode or
+ * elevation; a junction links a directory without either. Elsewhere the type
+ * is ignored.
+ */
+const linkTypeFor = async (source: string): Promise<'junction' | undefined> => {
+  if (process.platform !== 'win32') return undefined;
+  return (await stat(source)).isDirectory() ? 'junction' : undefined;
 };
 
 const exists = async (target: string) => {
@@ -239,10 +249,11 @@ export class ClaudeCodeAccountProfiles {
       const target = path.join(configDir, name);
       if (!(await exists(source)) || (await exists(target))) continue;
       try {
-        await symlink(source, target);
+        await symlink(source, target, await linkTypeFor(source));
       } catch {
         // A concurrent resolve made it first, or the filesystem refuses links:
-        // the profile still runs, just without that shared entry.
+        // the profile still runs without that entry, and a missing transcript
+        // is rebuilt into the profile on resume.
       }
     }
   };

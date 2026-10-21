@@ -1,6 +1,7 @@
 import { EventEmitter } from 'node:events';
 import { existsSync, readFileSync } from 'node:fs';
-import { lstat, mkdir, mkdtemp, readlink, rm, writeFile } from 'node:fs/promises';
+import type * as FsPromises from 'node:fs/promises';
+import { lstat, mkdir, mkdtemp, readlink, rm, symlink, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 
@@ -15,6 +16,11 @@ const fakeFs = vi.hoisted(() => ({
   inFlight: 0,
   maxInFlight: 0,
 }));
+
+vi.mock('node:fs/promises', async (importOriginal) => {
+  const actual = await importOriginal<typeof FsPromises>();
+  return { ...actual, symlink: vi.fn(actual.symlink) };
+});
 
 vi.mock('node:child_process', () => ({
   execFile: vi.fn((_cmd: string, _args: string[], _opts: unknown, callback: () => void) =>
@@ -159,6 +165,27 @@ describe('ClaudeCodeAccountProfiles', () => {
     const link = path.join(root, 'p1', 'projects');
     expect((await lstat(link)).isSymbolicLink()).toBe(true);
     expect(await readlink(link)).toBe(path.join(fakeFs.home, '.claude', 'projects'));
+  });
+
+  it('links shared directories as junctions on Windows, which need no elevation', async () => {
+    await writeLogin(path.join(root, 'p1'), 'acc-p1');
+    await mkdir(path.join(fakeFs.home, '.claude', 'skills'), { recursive: true });
+    await writeFile(path.join(fakeFs.home, '.claude', 'settings.json'), '{}');
+    const platform = process.platform;
+    Object.defineProperty(process, 'platform', { configurable: true, value: 'win32' });
+    try {
+      await profiles.resolve('acc-p1');
+    } finally {
+      Object.defineProperty(process, 'platform', { configurable: true, value: platform });
+    }
+
+    const typeOf = (name: string) =>
+      vi
+        .mocked(symlink)
+        .mock.calls.find(([, target]) => target === path.join(root, 'p1', name))?.[2];
+    expect(typeOf('projects')).toBe('junction');
+    expect(typeOf('skills')).toBe('junction');
+    expect(typeOf('settings.json')).toBeUndefined();
   });
 
   it('signs a new account in to its own profile through `claude auth login`', async () => {

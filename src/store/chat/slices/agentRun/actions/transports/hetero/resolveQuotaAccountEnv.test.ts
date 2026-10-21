@@ -116,6 +116,8 @@ describe('resolveQuotaAccountSpawnPlan', () => {
   it.each([
     ['its own profile', { CLAUDE_CONFIG_DIR: '/agent/own-profile' }],
     ['an API key', { ANTHROPIC_API_KEY: 'sk-ant-xxx' }],
+    ['Bedrock', { CLAUDE_CODE_USE_BEDROCK: '1' }],
+    ['Vertex', { CLAUDE_CODE_USE_VERTEX: 'true' }],
   ])('lets an agent env that picks %s win over a stale pin', async (_label, agentEnv) => {
     selectAccountForAgent.mockResolvedValue(selection({ externalAccountId: 'ext-elsewhere' }));
     resolveClaudeCodeAccount.mockResolvedValue({ kind: 'missing' });
@@ -142,6 +144,16 @@ describe('resolveQuotaAccountSpawnPlan', () => {
 
     expect(selectAccountForAgent).toHaveBeenCalledWith('agt-1', { provider: 'claude-code' });
     expect(plan.env).toEqual({});
+  });
+
+  it('keeps routing when an external-provider flag is set to off', async () => {
+    selectAccountForAgent.mockResolvedValue(selection({ externalAccountId: 'ext-elsewhere' }));
+    resolveClaudeCodeAccount.mockResolvedValue({ kind: 'missing' });
+
+    // `0` / `false` leave the subscription login in charge, so the stale pin still counts.
+    await expect(
+      resolveQuotaAccountSpawnPlan('agt-1', 'claude-code', { CLAUDE_CODE_USE_BEDROCK: '0' }),
+    ).rejects.toThrow(/isn't signed in on this device/);
   });
 
   it('attributes but never injects env for a managed account', async () => {

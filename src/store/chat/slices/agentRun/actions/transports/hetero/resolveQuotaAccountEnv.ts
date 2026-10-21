@@ -45,6 +45,26 @@ const AGENT_LOGIN_ENV_KEYS = [
 ] as const;
 
 /**
+ * Flags that route Claude Code to a third-party provider (Bedrock / Mantle /
+ * Vertex), billed there with no subscription login involved. The CLI reads
+ * them as booleans, so "0" / "false" leave subscription routing on — the same
+ * rule the quota sampler applies.
+ */
+const AGENT_EXTERNAL_ROUTING_ENV_KEYS = [
+  'CLAUDE_CODE_USE_BEDROCK',
+  'CLAUDE_CODE_USE_MANTLE',
+  'CLAUDE_CODE_USE_VERTEX',
+] as const;
+
+const isFlagEnabled = (value: string | undefined) =>
+  !!value?.trim() && !['0', 'false'].includes(value.trim().toLowerCase());
+
+/** The agent's own env decides the login, so subscription routing must stay out. */
+const agentEnvPicksLogin = (env?: Record<string, string>) =>
+  AGENT_LOGIN_ENV_KEYS.some((key) => env?.[key]?.trim()) ||
+  AGENT_EXTERNAL_ROUTING_ENV_KEYS.some((key) => isFlagEnabled(env?.[key]));
+
+/**
  * Resolve which provider account this agent should run on and turn the choice
  * into spawn env. Account rows are shared across devices, but a login is not:
  * the desktop maps the chosen account to the login it holds on THIS machine —
@@ -58,7 +78,7 @@ const AGENT_LOGIN_ENV_KEYS = [
  *
  * No bindings, or the quota service / desktop unreachable, → `{}` and the
  * spawn behaves as before. An agent env that picks its own login wins over
- * routing (see `AGENT_LOGIN_ENV_KEYS`); the result is also spread BEFORE
+ * routing (see `agentEnvPicksLogin`); the result is also spread BEFORE
  * `heterogeneousProvider.env` for the same reason.
  */
 export const resolveQuotaAccountSpawnPlan = async (
@@ -68,7 +88,7 @@ export const resolveQuotaAccountSpawnPlan = async (
 ): Promise<QuotaAccountSpawnPlan> => {
   // Codex accounts exist in the DB but have no runnable credential mapping yet.
   if (adapterType !== 'claude-code' || !agentId) return NO_ROUTING;
-  if (AGENT_LOGIN_ENV_KEYS.some((key) => agentEnv?.[key]?.trim())) return NO_ROUTING;
+  if (agentEnvPicksLogin(agentEnv)) return NO_ROUTING;
 
   const select = (runnableExternalAccountIds?: string[]) =>
     agentQuotaService

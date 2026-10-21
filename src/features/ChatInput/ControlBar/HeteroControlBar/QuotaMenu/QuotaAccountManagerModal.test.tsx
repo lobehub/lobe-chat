@@ -236,6 +236,20 @@ describe('QuotaAccountManager on the desktop', () => {
     );
   });
 
+  it('never previews Auto routing to an account this device cannot run', async () => {
+    // Only `away` (no login here) is in rotation: runtime has nothing to route to.
+    vi.mocked(agentQuotaService.listBindings).mockResolvedValue([
+      binding('b1', 'here', 'disabled'),
+      binding('b2', 'away', 'pool'),
+    ]);
+
+    renderWithFreshCache(<QuotaAccountManager agentId={'agent-1'} />);
+
+    await screen.findByText('heteroAgent.claudeQuota.manage.notSignedIn');
+    expect(screen.getByText('heteroAgent.claudeQuota.manage.autoNoAccount')).toBeTruthy();
+    expect(screen.queryByText(/heteroAgent\.claudeQuota\.manage\.autoRoutingTo/)).toBeNull();
+  });
+
   it('signs the account in on this device from its row', async () => {
     const login = vi
       .spyOn(heterogeneousAgentService, 'loginClaudeCodeAccount')

@@ -235,10 +235,11 @@ const QuotaAccountManager = memo<{ agentId: string }>(({ agentId }) => {
   // Preview which account Auto would route to (most weekly headroom in the pool).
   const routeId = useMemo(() => {
     if (selected !== AUTO) return null;
-    const pool = accounts.filter((a) => inRotation(a.id));
+    // Runtime routing only balances across logins this device holds.
+    const pool = accounts.filter((a) => inRotation(a.id) && signedInHere(a));
     if (pool.length === 0) return null;
     return [...pool].sort((a, b) => (weeklyById[b.id] ?? 100) - (weeklyById[a.id] ?? 100))[0].id;
-  }, [selected, accounts, inRotation, weeklyById]);
+  }, [selected, accounts, inRotation, signedInHere, weeklyById]);
   const routeAccount = accounts.find((a) => a.id === routeId);
 
   const applySelection = useCallback(
