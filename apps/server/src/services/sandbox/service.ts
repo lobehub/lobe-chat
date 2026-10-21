@@ -151,6 +151,12 @@ export class SandboxMiddlewareService implements SandboxService {
     }
 
     const exported = await this.exportAndUploadFile(filePath, filename, {
+      // A visitor's image preview gets the same share provenance the upload
+      // path stamps, so it never surfaces in the creator's library while
+      // `/f/:id` stays openable.
+      ...(this.options.agentShareVisitor
+        ? { metadata: { agentShare: this.options.agentShareVisitor } }
+        : {}),
       storageName: `${randomUUID()}-${filename}`,
     });
 

@@ -380,11 +380,18 @@ describe('SandboxMiddlewareService readFile images', () => {
 
   const createService = async (
     provider: SandboxProvider,
-    { fileService }: { fileService?: FileService } = {},
+    {
+      agentShareVisitor,
+      fileService,
+    }: {
+      agentShareVisitor?: { shareId: string; visitorUserId: string };
+      fileService?: FileService;
+    } = {},
   ) => {
     const { SandboxMiddlewareService } = await import('../service');
 
     return new SandboxMiddlewareService(provider, {
+      agentShareVisitor,
       fileService,
       marketService: {} as MarketService,
       topicId: 'topic-1',
@@ -419,8 +426,29 @@ describe('SandboxMiddlewareService readFile images', () => {
         },
         success: true,
       });
+      // Ordinary runs stamp no share provenance on the file record.
+      expect(fileService.createFileRecord.mock.calls[0][0]).not.toHaveProperty('metadata');
     },
   );
+
+  it('stamps agentShare provenance on the file record for visitor runs', async () => {
+    const provider = createProvider();
+    const fileService = createFileService();
+    const service = await createService(provider, {
+      agentShareVisitor: { shareId: 'share-1', visitorUserId: 'visitor-1' },
+      fileService,
+    });
+
+    const result = await service.callTool('readFile', { path: '/mnt/data/chart.png' });
+
+    expect(provider.callTool).not.toHaveBeenCalled();
+    expect(fileService.createFileRecord).toHaveBeenCalledWith(
+      expect.objectContaining({
+        metadata: { agentShare: { shareId: 'share-1', visitorUserId: 'visitor-1' } },
+      }),
+    );
+    expect(result.result?.imageUrl).toBe('/f/file-1');
+  });
 
   it('intercepts image reads for market providers too', async () => {
     const provider = createProvider({ kind: 'market' });
