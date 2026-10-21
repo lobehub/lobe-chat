@@ -264,4 +264,66 @@ describe('MessageModel queryAll — tool-call plugin projection', () => {
     expect(row.plugin.arguments.length).toBeLessThan(500);
     expect(row.tool_call_id).toBe('call_redact_wrapped');
   });
+
+  it('redacts data URLs inside JSON-escaped strings without corrupting the JSON', async () => {
+    // An embedded escaped quote after the payload (HTML `src=\"data:...\"`)
+    // must not be consumed by the body class: a bare-backslash class eats
+    // the `\` of `\"`, leaves the quote dangling, and the `::jsonb` cast of
+    // the redacted state text then fails the whole queryAll.
+    const bigBody = 'F'.repeat(200_000);
+    const html = `<img src=\\"data:image/png;base64,${bigBody}\\" alt=\\"shot\\">`;
+    await serverDB.insert(messages).values({
+      id: 'q-redact-escaped-quote',
+      userId,
+      role: 'tool',
+      content: 'escaped quote payload',
+    });
+    await serverDB.insert(messagePlugins).values({
+      id: 'q-redact-escaped-quote',
+      apiName: 'screenshot',
+      identifier: 'lobe-browser',
+      state: { html },
+      toolCallId: 'call_redact_quote',
+      userId,
+    });
+
+    const result = await messageModel.queryAll();
+    const row = result.find((m) => m.id === 'q-redact-escaped-quote') as any;
+    const state = row.pluginState as { html: string };
+
+    // payload redacted, escaped quotes preserved, state still valid JSON:
+    expect(state.html).toBe(
+      '<img src=\\"data:image/png;base64,...redacted...\\" alt=\\"shot\\">',
+    );
+    expect(row.tool_call_id).toBe('call_redact_quote');
+  });
+
+  it('redacts exotic MIME tokens and percent-encoded base64 bodies', async () => {
+    // RFC 2045 token grammar allows `~`/`_`/`'` in MIME types and the
+    // validator accepts the result; percent escapes inside the body
+    // (`%2B`) must not terminate the match either.
+    const bigBody = `%2B${'G'.repeat(199_990)}`;
+    await serverDB.insert(messages).values({
+      id: 'q-redact-exotic',
+      userId,
+      role: 'tool',
+      content: 'exotic mime payload',
+    });
+    await serverDB.insert(messagePlugins).values({
+      id: 'q-redact-exotic',
+      apiName: 'analyzeMedia',
+      arguments: JSON.stringify({ urls: [`data:audio/x.foo~bar;base64,${bigBody}`] }),
+      identifier: 'lobe-agent',
+      toolCallId: 'call_redact_exotic',
+      userId,
+    });
+
+    const result = await messageModel.queryAll();
+    const row = result.find((m) => m.id === 'q-redact-exotic') as any;
+    const args = JSON.parse(row.plugin.arguments);
+
+    expect(args.urls[0]).toBe('data:audio/x.foo~bar;base64,...redacted...');
+    expect(row.plugin.arguments.length).toBeLessThan(500);
+    expect(row.tool_call_id).toBe('call_redact_exotic');
+  });
 });

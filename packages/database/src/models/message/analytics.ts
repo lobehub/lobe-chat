@@ -76,16 +76,20 @@ const computeTopicMessageStats = (counts: number[]): TopicMessageStats => {
  * `arguments` (text) and `state` (jsonb) projections of {@link queryAll}.
  * The predicate must cover everything the ingestion side accepts —
  * builtin-tool-lobe-agent media.ts accepts `/^data:(?:audio|image|video)\//i`
- * URLs up to 2,000,000 chars, so the match is case-insensitive ('gi') and
- * parameter-aware (`;charset=utf-8`-style media-type parameters must not
- * bypass it). JSON-serialized rows escape line breaks as `\n` literals, so
- * the body class also matches backslashes — without it a line-wrapped
- * payload stops matching at the first escape and leaks its remainder. The
- * mime header is kept as the capture so the export stays
- * attribution-complete without dumping megabytes of base64.
+ * URLs up to 2,000,000 chars — so the match is case-insensitive ('gi'), the
+ * header uses the RFC 2045 token grammar (same as the file-loaders ipynb
+ * scrub: any bytes except tspecials/space/controls, making `~`/`_`/`'` and
+ * parameterized `;charset=utf-8` forms all match), and the body class covers
+ * JSON-escaped sequences (`\n`-style) and percent escapes (`%2B`) instead of
+ * a bare backslash — a bare backslash class would consume the `\` of a `\"`
+ * escape, leave the quote dangling, and corrupt the JSON text (the jsonb cast
+ * then fails the whole query). The mime header is kept as the capture so the
+ * export stays attribution-complete without dumping megabytes of base64.
  */
+const MIME_TOKEN = '[^\\s()<>@,;:\\\\"/\\[\\]?=]';
 const DATA_URL_REDACT_PATTERN =
-  '(data:[a-z]+/[a-z0-9.+-]+(?:;[a-z0-9.+-]+(?:=[^;,]*)?)*;base64,)[A-Za-z0-9+/=\\s\\\\]{64,}';
+  `(data:${MIME_TOKEN}+/${MIME_TOKEN}+(?:;${MIME_TOKEN}+(?:=${MIME_TOKEN}*)?)*;base64,)` +
+  '(?:[A-Za-z0-9+/=\\s]|\\\\[nrtbf]|%[0-9a-fA-F]{2}){64,}';
 const DATA_URL_REDACT_REPLACEMENT = '\\1...redacted...';
 
 export class MessageAnalyticsQueries extends MessageScope {
