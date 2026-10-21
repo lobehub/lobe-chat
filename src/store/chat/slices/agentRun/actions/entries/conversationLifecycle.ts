@@ -66,7 +66,10 @@ import {
   chatConfigByIdSelectors,
 } from '@/store/agent/selectors';
 import { agentGroupByIdSelectors, getChatGroupStoreState } from '@/store/agentGroup';
-import { getPendingSandboxSelection } from '@/store/chat/pendingSandboxSelection';
+import {
+  getPendingSandboxSelection,
+  toSandboxTopicMetadata,
+} from '@/store/chat/pendingSandboxSelection';
 import { consumePendingTopicRepos, getPendingTopicRepos } from '@/store/chat/pendingTopicRepos';
 import {
   dbMessageSelectors,
@@ -1307,14 +1310,7 @@ export class ConversationLifecycleActionImpl {
       willCreateNewTopic && operationContext.agentId
         ? getPendingSandboxSelection(operationContext.agentId)
         : undefined;
-    const sandboxInstanceMetadata: ChatTopicMetadata | undefined = pendingSandboxSelection
-      ? {
-          sandboxDrive: pendingSandboxSelection.drive,
-          sandboxEnvironmentId: pendingSandboxSelection.environmentId,
-          sandboxInstanceId: pendingSandboxSelection.instanceId,
-          sandboxWorkingDirectory: pendingSandboxSelection.workingDirectory,
-        }
-      : undefined;
+    const sandboxInstanceMetadata = toSandboxTopicMetadata(pendingSandboxSelection);
     /** First-send persistence bypasses turnSetup, so both runtime paths must carry the effort snapshot. */
     const optimisticTopicMetadata =
       newTopicReasoningSnapshot || sandboxInstanceMetadata

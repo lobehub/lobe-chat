@@ -1,3 +1,5 @@
+import type { ChatTopicMetadata } from '@lobechat/types';
+
 import type { SandboxSelection } from '@/features/ChatInput/ControlBar/useSandboxPlacement';
 
 /**
@@ -66,3 +68,14 @@ export const consumePendingSandboxSelection = (agentId: string): SandboxSelectio
   emit();
   return selection;
 };
+
+/** The topic metadata a pending selection becomes when the topic is created with it. */
+export const toSandboxTopicMetadata = (
+  selection: SandboxSelection | undefined,
+): ChatTopicMetadata | undefined =>
+  selection && {
+    sandboxDrive: selection.drive,
+    sandboxEnvironmentId: selection.environmentId,
+    sandboxInstanceId: selection.instanceId,
+    sandboxWorkingDirectory: selection.workingDirectory,
+  };
