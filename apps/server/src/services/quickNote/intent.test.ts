@@ -31,6 +31,14 @@ const score = (value: number, probabilities?: number[]) => ({
   ...(probabilities ? { probabilities } : {}),
 });
 
+/** One `score` answer per preset question; omitted presets are left unanswered. */
+const presets = (
+  levels: Partial<Record<'discuss' | 'goal' | 'research' | 'write_document', number>>,
+) =>
+  Object.fromEntries(
+    Object.entries(levels).map(([preset, value]) => [`preset_${preset}`, score(value)]),
+  );
+
 /** Native decision model: fractional means, probabilities, no evidence. */
 const native = (answers: Record<string, unknown>) =>
   ({
@@ -48,30 +56,31 @@ const emulated = (answers: Record<string, unknown>, evidence: Record<string, str
   }) as unknown as DecisionResponse<QuickNoteIntentQuestions>;
 
 describe('Quick Note intent questions', () => {
-  it('asks one score per label, a preset choice, and the goal predicate only with comments', () => {
+  it('asks one score per label and per preset, and the goal predicate only with comments', () => {
     const questions = buildQuickNoteIntentQuestions(false);
-    expect(Object.keys(questions)).toEqual(['delegate', 'enrich', 'keep', 'link', 'preset']);
+    const presetNames = [
+      'preset_research',
+      'preset_discuss',
+      'preset_goal',
+      'preset_write_document',
+    ];
+    expect(Object.keys(questions)).toEqual(['delegate', 'enrich', 'keep', 'link', ...presetNames]);
     expect(Object.keys(buildQuickNoteIntentQuestions(true))).toEqual([
       'delegate',
       'enrich',
       'keep',
       'link',
-      'preset',
+      ...presetNames,
       'explicitGoalRequest',
     ]);
 
-    for (const label of ['delegate', 'enrich', 'keep', 'link'] as const) {
-      expect(questions[label].type).toBe('score');
-      expect(questions[label].criteria).toHaveLength(5);
-      expect(questions[label].instructions).toBeTruthy();
+    for (const name of ['delegate', 'enrich', 'keep', 'link', ...presetNames] as const) {
+      const question = questions[name as keyof typeof questions]!;
+      expect(question.type).toBe('score');
+      expect(question.criteria).toHaveLength(5);
+      expect(question.instructions).toBeTruthy();
     }
-    expect(questions.preset.type).toBe('choice');
-    expect(Object.keys(questions.preset.criteria).sort()).toEqual([
-      'discuss',
-      'goal',
-      'research',
-      'write_document',
-    ]);
+    expect(questions.preset_goal.instructions).toContain('multi-step objective');
 
     const goal = buildQuickNoteIntentQuestions(true).explicitGoalRequest!;
     expect(goal.type).toBe('predicate');
@@ -119,11 +128,7 @@ describe('toQuickNoteRunDecision', () => {
         enrich: score(1.6),
         keep: score(0.4),
         link: score(0.1),
-        preset: {
-          choice: 'research',
-          probabilities: { discuss: 0.1, goal: 0.05, research: 0.8, write_document: 0.05 },
-          type: 'choice',
-        },
+        ...presets({ discuss: 1.2, goal: 0.4, research: 3.3, write_document: 0.2 }),
       }),
       { provider: 'openrouter' },
     );
@@ -134,7 +139,7 @@ describe('toQuickNoteRunDecision', () => {
       explicitGoalRequest: false,
       model: 'typesafe/jev-1.13',
       preset: 'research',
-      presetScores: { discuss: 0, goal: 0, research: 3, write_document: 0 },
+      presetScores: { discuss: 1, goal: 0, research: 3, write_document: 0 },
       primary: 'delegate',
       provider: 'openrouter',
       scores: { delegate: 4, enrich: 2, keep: 0, link: 0 },
@@ -149,9 +154,14 @@ describe('toQuickNoteRunDecision', () => {
           enrich: score(2),
           keep: score(1),
           link: score(0),
-          preset: { choice: 'discuss', type: 'choice' },
+          ...presets({ discuss: 4, goal: 0, research: 2, write_document: 0 }),
         },
-        { delegate: '"should look into"', keep: 'not a record', preset: 'talk it out' },
+        {
+          delegate: '"should look into"',
+          keep: 'not a record',
+          preset_discuss: 'talk it out',
+          preset_research: 'could research',
+        },
       ),
       { provider: 'openai' },
     );
@@ -161,7 +171,7 @@ describe('toQuickNoteRunDecision', () => {
       evidence: '"should look into" / talk it out',
       model: 'gpt-5-mini',
       preset: 'discuss',
-      presetScores: { discuss: 4, goal: 0, research: 0, write_document: 0 },
+      presetScores: { discuss: 4, goal: 0, research: 2, write_document: 0 },
       primary: 'delegate',
       provider: 'openai',
       scores: { delegate: 3, enrich: 2, keep: 1, link: 0 },
@@ -175,7 +185,7 @@ describe('toQuickNoteRunDecision', () => {
         enrich: score(0),
         keep: score(4),
         link: score(0),
-        preset: { choice: 'research', type: 'choice' },
+        ...presets({ discuss: 0, goal: 0, research: 4, write_document: 0 }),
       }),
       { provider: 'openai' },
     );
@@ -193,7 +203,10 @@ describe('toQuickNoteRunDecision', () => {
         explicitGoalRequest: { type: 'refusal' },
         keep: refused,
         link: refused,
-        preset: refused,
+        preset_discuss: refused,
+        preset_goal: refused,
+        preset_research: refused,
+        preset_write_document: refused,
       }),
       { provider: 'openai' },
     );
@@ -208,7 +221,10 @@ describe('toQuickNoteRunDecision', () => {
         explicitGoalRequest: 'refused',
         keep: 'unsafe content',
         link: 'unsafe content',
-        preset: 'unsafe content',
+        preset_discuss: 'unsafe content',
+        preset_goal: 'unsafe content',
+        preset_research: 'unsafe content',
+        preset_write_document: 'unsafe content',
       },
       scores: { delegate: 0, enrich: 0, keep: 0, link: 0 },
     });
@@ -222,7 +238,7 @@ describe('toQuickNoteRunDecision', () => {
         enrich: { type: 'refusal' },
         keep: score(0),
         link: score(0),
-        preset: { choice: 'research', type: 'choice' },
+        ...presets({ discuss: 1, goal: 0, research: 4, write_document: 0 }),
       }),
       { provider: 'openai' },
     );
@@ -237,11 +253,7 @@ describe('toQuickNoteRunDecision', () => {
       enrich: score(0),
       keep: score(0),
       link: score(0),
-      preset: {
-        choice: 'goal',
-        probabilities: { discuss: 0.3, goal: 0.6, research: 0.1, write_document: 0 },
-        type: 'choice',
-      },
+      ...presets({ discuss: 1.2, goal: 2.4, research: 0.4, write_document: 0 }),
     });
 
     expect(toQuickNoteRunDecision(native(answers(3.2)), { provider: 'x' }).preset).toBe('discuss');
@@ -264,6 +276,67 @@ describe('toQuickNoteRunDecision', () => {
         { provider: 'x' },
       ),
     ).toMatchObject({ explicitGoalRequest: false, preset: 'discuss' });
+  });
+
+  it('falls back to the next best preset when an emulated goal is blocked', () => {
+    // ROOT CAUSE:
+    // Emulated decisions returned only the chosen preset, so when the Goal gate blocked a `goal`
+    // pick (delegate 3, no comment) no other preset had a weight, the preset became null, and the
+    // delegate Proposal was silently dropped.
+    const result = toQuickNoteRunDecision(
+      emulated({
+        delegate: score(3),
+        enrich: score(0),
+        keep: score(0),
+        link: score(0),
+        ...presets({ discuss: 2, goal: 4, research: 3, write_document: 1 }),
+      }),
+      { provider: 'openai' },
+    );
+
+    expect(result).toMatchObject({
+      preset: 'research',
+      presetScores: { discuss: 2, goal: 4, research: 3, write_document: 1 },
+    });
+    expect(planQuickNoteActions(result).delegate).toEqual({
+      autoApply: false,
+      preset: 'research',
+      score: 3,
+    });
+  });
+
+  it('keeps an emulated goal when delegate is 4', () => {
+    const result = toQuickNoteRunDecision(
+      emulated({
+        delegate: score(4),
+        enrich: score(0),
+        keep: score(0),
+        link: score(0),
+        ...presets({ discuss: 2, goal: 4, research: 3, write_document: 1 }),
+      }),
+      { provider: 'openai' },
+    );
+
+    expect(planQuickNoteActions(result).delegate).toMatchObject({ preset: 'goal' });
+  });
+
+  it('breaks preset ties by research, discuss, write_document, then goal', () => {
+    const pick = (levels: Parameters<typeof presets>[0]) =>
+      toQuickNoteRunDecision(
+        emulated({
+          delegate: score(4),
+          enrich: score(0),
+          keep: score(0),
+          link: score(0),
+          ...presets(levels),
+        }),
+        { provider: 'openai' },
+      ).preset;
+
+    expect(pick({ discuss: 3, goal: 3, research: 3, write_document: 3 })).toBe('research');
+    expect(pick({ discuss: 3, goal: 3, research: 1, write_document: 3 })).toBe('discuss');
+    expect(pick({ discuss: 0, goal: 3, research: 0, write_document: 3 })).toBe('write_document');
+    expect(pick({ discuss: 0, goal: 0, research: 0, write_document: 0 })).toBe('research');
   });
 });
 
@@ -309,7 +382,7 @@ describe('planQuickNoteActions', () => {
         enrich: score(0),
         keep: score(0),
         link: score(0),
-        preset: { choice: 'research', probabilities: { research: 1 }, type: 'choice' },
+        ...presets({ research: 4 }),
       }),
       { provider: 'openrouter' },
     );

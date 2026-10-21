@@ -509,11 +509,17 @@ describe('Quick Note Analyze completion', () => {
         enrich: { score: 0, type: 'score' },
         keep: { score: 4, type: 'score' },
         link: { score: 0, type: 'score' },
-        preset: { choice: 'research', type: 'choice' },
+        preset_discuss: { score: 0, type: 'score' },
+        preset_goal: { score: 0, type: 'score' },
+        preset_research: { score: 1, type: 'score' },
+        preset_write_document: { score: 0, type: 'score' },
       },
       model: 'gpt-5-mini',
       providerMetadata: {
-        lobehub: { decisionMode: 'emulated', evidence: { keep: '"我好喜欢"', preset: 'n/a' } },
+        lobehub: {
+          decisionMode: 'emulated',
+          evidence: { keep: '"我好喜欢"', preset_research: 'n/a' },
+        },
       },
       usage: { totalInputTokens: 1, totalOutputTokens: 1 },
     } satisfies DecisionResponse);
@@ -536,7 +542,10 @@ describe('Quick Note Analyze completion', () => {
       'enrich',
       'keep',
       'link',
-      'preset',
+      'preset_research',
+      'preset_discuss',
+      'preset_goal',
+      'preset_write_document',
     ]);
     expect(options).toEqual({ metadata: { trigger: 'quick_note' } });
     expect(judged?.plan).toEqual({ enrich: false, link: false });
@@ -570,18 +579,17 @@ describe('Quick Note Analyze completion', () => {
         renderSourceText,
         trigger: 'manual',
       });
-      // Native decision model: probability-weighted means and a preset distribution.
+      // Native decision model: probability-weighted means, one per question.
       const decide = vi.fn().mockResolvedValue({
         answers: {
           delegate: { probabilities: [0, 0, 0.05, 0.28, 0.67], score: delegate, type: 'score' },
           enrich: { score: 1.2, type: 'score' },
           keep: { score: 0.3, type: 'score' },
           link: { score: 0.1, type: 'score' },
-          preset: {
-            choice: 'research',
-            probabilities: { discuss: 0.1, goal: 0.05, research: 0.8, write_document: 0.05 },
-            type: 'choice',
-          },
+          preset_discuss: { score: 0.9, type: 'score' },
+          preset_goal: { score: 0.3, type: 'score' },
+          preset_research: { score: 3.4, type: 'score' },
+          preset_write_document: { score: 0.2, type: 'score' },
         },
         model: 'typesafe/jev-1.13',
         providerMetadata: { lobehub: { decisionMode: 'native' } },
@@ -621,7 +629,10 @@ describe('Quick Note Analyze completion', () => {
         enrich: refusal,
         keep: refusal,
         link: refusal,
-        preset: refusal,
+        preset_discuss: refusal,
+        preset_goal: refusal,
+        preset_research: refusal,
+        preset_write_document: refusal,
       },
       model: 'gpt-5-mini',
       providerMetadata: { lobehub: { decisionMode: 'emulated', evidence: {} } },
@@ -641,7 +652,10 @@ describe('Quick Note Analyze completion', () => {
         enrich: 'policy',
         keep: 'policy',
         link: 'policy',
-        preset: 'policy',
+        preset_discuss: 'policy',
+        preset_goal: 'policy',
+        preset_research: 'policy',
+        preset_write_document: 'policy',
       },
     });
   });
