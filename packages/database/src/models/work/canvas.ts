@@ -49,14 +49,25 @@ export const registerCanvasWork = async (
       toolName: params.toolName,
       topicId: params.topicId,
     },
-    () => ({
-      display: {
-        description: params.description ?? null,
-        identifier: params.canvasId,
-        title: params.title,
-      },
-      metadata: { canvas: params.metadata },
-    }),
+    async (txCtx) => {
+      // The public link written by `recordCanvasPublish` lives on the Work, and
+      // each registration replaces every display column, so carry it over.
+      const [published] = await txCtx.db
+        .select({ url: works.url })
+        .from(works)
+        .where(canvasResource(txCtx, params.canvasId))
+        .limit(1);
+
+      return {
+        display: {
+          description: params.description ?? null,
+          identifier: params.canvasId,
+          title: params.title,
+          url: published?.url ?? null,
+        },
+        metadata: { canvas: params.metadata },
+      };
+    },
   );
 };
 

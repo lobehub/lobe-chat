@@ -134,6 +134,25 @@ describe('WorkModel · canvas', () => {
     expect((await model.findCanvas('cvs_cost'))?.work.url).toBe('https://cost.lobehub.sites');
   });
 
+  it('keeps the public link of a published canvas when a newer version is registered', async () => {
+    const model = new WorkModel(serverDB, userId);
+    await model.registerCanvas(params());
+    await model.recordCanvasPublish('cvs_cost', {
+      deploymentId: 'dep_1',
+      publishedVersion: 1,
+      url: 'https://cost.lobehub.sites',
+    });
+
+    await model.registerCanvas(params({ toolCallId: 'call-canvas-2', toolName: 'updateCanvas' }));
+
+    const current = await model.findCanvas('cvs_cost');
+    expect(current?.version.version).toBe(2);
+    expect(current?.work).toMatchObject({
+      metadata: { canvasPublish: { deploymentId: 'dep_1', publishedVersion: 1 } },
+      url: 'https://cost.lobehub.sites',
+    });
+  });
+
   it('only surfaces canvas works to clients that opted into newer work types', async () => {
     const model = new WorkModel(serverDB, userId);
     await model.registerCanvas(params());
