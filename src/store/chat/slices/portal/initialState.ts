@@ -14,7 +14,6 @@ export enum PortalViewType {
   AcceptanceCheck = 'acceptanceCheck',
   AgentDetail = 'agentDetail',
   Artifact = 'artifact',
-  Canvas = 'canvas',
   DashboardWidget = 'dashboardWidget',
   Document = 'document',
   FilePreview = 'filePreview',
@@ -103,7 +102,6 @@ export type PortalViewData =
   | { acceptanceId: string; checkId: string; type: PortalViewType.AcceptanceCheck }
   | { agentId: string; type: PortalViewType.AgentDetail }
   | { artifact: PortalArtifact; type: PortalViewType.Artifact }
-  | { canvasId: string; type: PortalViewType.Canvas; version?: number }
   | { runId?: string; type: PortalViewType.DashboardWidget; widgetId: string }
   | { agentDocumentId?: string; documentId: string; type: PortalViewType.Document }
   | { type: PortalViewType.Notebook }
@@ -147,6 +145,9 @@ export interface ChatPortalState {
   /** Path of the currently active tab; kept for legacy consumers that only need display/open path. */
   activeLocalFilePath?: string;
 
+  /** Version a canvas tab is held at; a canvas absent here follows its latest version. */
+  canvasTabVersions: Record<string, number>;
+
   /** Unsaved edit buffers keyed by file path. Presence implies the file is dirty. */
   dirtyLocalFileContents: Record<string, string>;
 
@@ -176,6 +177,7 @@ export interface ChatPortalState {
 
 export const initialChatPortalState: ChatPortalState = {
   activeLocalFileIdsByScope: {},
+  canvasTabVersions: {},
   dirtyLocalFileContents: {},
   openLocalFiles: [],
   portalArtifactDisplayMode: ArtifactDisplayMode.Preview,

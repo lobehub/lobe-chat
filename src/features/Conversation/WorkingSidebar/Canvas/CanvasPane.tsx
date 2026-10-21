@@ -1,12 +1,15 @@
-import { Empty, Flexbox, Skeleton, Text } from '@lobehub/ui';
+import { Empty, Flexbox, Skeleton, Tag, Text } from '@lobehub/ui';
 import { cssVar } from '@lobehub/ui/stylex/cssVar.stylex';
 import * as stylex from '@stylexjs/stylex';
 import { Loader2Icon, PanelsTopLeftIcon } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import PortalMoreMenu from '@/features/Portal/components/PortalMoreMenu';
+
 import CanvasFrame from './CanvasFrame';
-import { useAwaitingCanvasSave, useCanvasVersion, useCanvasView } from './useCanvasVersion';
+import { useCanvasMoreMenu } from './useCanvasMoreMenu';
+import { useAwaitingCanvasSave, useCanvasTabView, useCanvasVersion } from './useCanvasVersion';
 import { usePendingCanvasUpdate } from './usePendingCanvasUpdate';
 
 const spin = stylex.keyframes({
@@ -15,7 +18,6 @@ const spin = stylex.keyframes({
 
 const styles = stylex.create({
   body: {
-    height: '100%',
     minHeight: 0,
     position: 'relative',
   },
@@ -35,7 +37,7 @@ const styles = stylex.create({
     borderStyle: 'solid',
     borderWidth: 1,
     boxShadow: cssVar.boxShadowSecondary,
-    insetBlockStart: 16,
+    insetBlockStart: 52,
     insetInlineStart: '50%',
     paddingBlock: 6,
     paddingInline: 12,
@@ -49,16 +51,27 @@ const styles = stylex.create({
     animationName: spin,
     animationTimingFunction: 'linear',
   },
+  toolbar: {
+    borderBlockEndColor: cssVar.colorBorderSecondary,
+    borderBlockEndStyle: 'solid',
+    borderBlockEndWidth: 1,
+    minWidth: 0,
+  },
 });
 
-const Body = memo(() => {
+interface CanvasPaneProps {
+  canvasId: string;
+}
+
+const CanvasPane = memo<CanvasPaneProps>(({ canvasId }) => {
   const { t } = useTranslation('portal');
-  const view = useCanvasView();
-  const { data, isLoading } = useCanvasVersion();
-  const pending = usePendingCanvasUpdate(view?.canvasId);
-  const awaitingSave = useAwaitingCanvasSave(data?.metadata.manifestKey);
+  const view = useCanvasTabView(canvasId);
+  const { data, isLoading, mutate } = useCanvasVersion(view);
+  const moreMenu = useCanvasMoreMenu(view, data, () => mutate());
+  const pending = usePendingCanvasUpdate(canvasId);
+  const awaitingSave = useAwaitingCanvasSave(view, data?.metadata.manifestKey);
   const showPending =
-    (pending || awaitingSave) && (!view?.version || view.version === data?.latestVersion);
+    (pending || awaitingSave) && (!view.version || view.version === data?.latestVersion);
 
   if (isLoading && !data) {
     return (
@@ -76,7 +89,22 @@ const Body = memo(() => {
   }
 
   return (
-    <Flexbox {...stylex.props(styles.body)}>
+    <Flexbox flex={1} {...stylex.props(styles.body)}>
+      <Flexbox
+        horizontal
+        align={'center'}
+        flex={'none'}
+        gap={8}
+        height={36}
+        paddingInline={12}
+        {...stylex.props(styles.toolbar)}
+      >
+        <Tag size={'small'}>{`v${data.version}`}</Tag>
+        <Text ellipsis fontSize={12} style={{ flex: 1, minWidth: 0 }} type={'secondary'}>
+          {data.title}
+        </Text>
+        <PortalMoreMenu config={moreMenu} outdent={'end'} />
+      </Flexbox>
       {showPending && (
         <Flexbox horizontal align={'center'} gap={8} {...stylex.props(styles.pill)}>
           <Loader2Icon size={14} {...stylex.props(styles.spin)} />
@@ -90,6 +118,6 @@ const Body = memo(() => {
   );
 });
 
-Body.displayName = 'CanvasPortalBody';
+CanvasPane.displayName = 'WorkingSidebarCanvasPane';
 
-export default Body;
+export default CanvasPane;

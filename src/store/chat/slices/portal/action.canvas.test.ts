@@ -1,13 +1,15 @@
 import { act, renderHook } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
 
 import { useChatStore } from '@/store/chat';
-import { chatPortalSelectors } from '@/store/chat/selectors';
-
-import { PortalViewType } from './initialState';
+import { useGlobalStore } from '@/store/global';
 
 describe('openCanvas', () => {
-  it('opens an existing canvas even when the Canvas lab is off', () => {
+  beforeEach(() => {
+    useGlobalStore.setState({ isStatusInit: true });
+  });
+
+  it('opens an existing canvas as a working sidebar tab', () => {
     const { result } = renderHook(() => useChatStore());
 
     act(() => {
@@ -15,10 +17,22 @@ describe('openCanvas', () => {
       result.current.openCanvas('cvs_1', 2);
     });
 
-    expect(chatPortalSelectors.canvasView(result.current)).toEqual({
-      canvasId: 'cvs_1',
-      type: PortalViewType.Canvas,
-      version: 2,
+    expect(result.current.showPortal).toBe(false);
+    expect(result.current.canvasTabVersions).toEqual({ cvs_1: 2 });
+    expect(useGlobalStore.getState().status.showRightPanel).toBe(true);
+    expect(useGlobalStore.getState().status.workingSidebarTab).toBe('canvas:cvs_1');
+  });
+
+  it('follows the latest version again when reopened without one', () => {
+    const { result } = renderHook(() => useChatStore());
+
+    act(() => {
+      result.current.openCanvas('cvs_1', 2);
+      result.current.openCanvas('cvs_2', 1);
+      result.current.openCanvas('cvs_1');
     });
+
+    expect(result.current.canvasTabVersions).toEqual({ cvs_2: 1 });
+    expect(useGlobalStore.getState().status.workingSidebarTab).toBe('canvas:cvs_1');
   });
 });
