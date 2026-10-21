@@ -60,7 +60,12 @@ const MergeContent = memo<MergeContentProps>(({ fromId, intoId: initialInto }) =
   const candidates = entities.filter(
     (e) => e.id !== fromId && !isPerson(e.kind) && !deletedIds.includes(e.id),
   );
-  const moved = activitiesOf(activities, fromId).length;
+  // Entries that already link both pages stay where they are; only the rest are new here.
+  const fromEntries = activitiesOf(activities, fromId);
+  const moved = into
+    ? fromEntries.filter((a) => !a.links.some((link) => link.id === into.id)).length
+    : fromEntries.length;
+  const shared = fromEntries.length - moved;
 
   const handleMerge = () => {
     if (!into) return;
@@ -105,7 +110,8 @@ const MergeContent = memo<MergeContentProps>(({ fromId, intoId: initialInto }) =
             </div>
             <div {...stylex.props(styles.previewRow)}>
               <span {...stylex.props(styles.previewKey)}>经过</span>
-              {moved} 条经过移到这一页
+              {moved > 0 ? `${moved} 条经过移到这一页` : '没有新的经过需要移入'}
+              {shared > 0 && `，${shared} 条本来就在这一页`}
             </div>
           </div>
         )}
