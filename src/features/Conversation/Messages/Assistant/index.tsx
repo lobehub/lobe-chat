@@ -182,6 +182,7 @@ const AssistantMessage = memo<AssistantMessageProps>(
             {interrupted && <InterruptedHint />}
             <AssistantMessageNotice finishType={metadata?.finishType} />
             <AssistantMessageExtra
+              autoRouting={metadata?.autoRouting}
               content={content}
               extra={extra}
               id={id}

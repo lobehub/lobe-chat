@@ -48,6 +48,11 @@ export type ListItem =
 export type DropdownPlacement = DropdownMenuPlacement;
 
 export interface ModelSwitchPanelProps {
+  /**
+   * Offer the Lite / Pro / Ultra tiers above the list. Only for hosts whose
+   * selection drives a conversation turn, the one place a tier is resolved.
+   */
+  autoRouting?: boolean;
   children?: React.ReactNode;
   /**
    * When set (e.g. image/video generation), uses this list instead of enabled chat models.

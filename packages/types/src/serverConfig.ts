@@ -140,6 +140,11 @@ export interface GlobalServerConfig {
    */
   deviceGatewayUrl?: string;
   disableEmailPassword?: boolean;
+  /**
+   * Whether the Lite / Pro / Ultra auto-routed models are offered
+   * (`ENABLE_AUTO_MODEL_ROUTING=1`).
+   */
+  enableAutoModelRouting?: boolean;
   enableBusinessFeatures?: boolean;
   enableComposio?: boolean;
   /**

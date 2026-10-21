@@ -13,6 +13,7 @@ import { DEFAULT_WIDTH, ENABLE_RESIZING, MAX_WIDTH } from '../const';
 import { usePanelSize } from '../hooks/usePanelSize';
 import { usePanelState } from '../hooks/usePanelState';
 import { usePanelWidthConstraints } from '../hooks/usePanelWidthConstraints';
+import { AutoRoutingBar } from './AutoRoutingBar';
 import { List } from './List';
 import type { PricingMode } from './ModelDetailPanel';
 import { Toolbar } from './Toolbar';
@@ -20,6 +21,7 @@ import { Toolbar } from './Toolbar';
 interface PanelContentProps {
   /** Muted text shown after the active model's name, e.g. its reasoning effort */
   activeSecondaryText?: string;
+  autoRouting?: boolean;
   enabledList?: EnabledProviderWithModels[];
   model?: string;
   ModelItemComponent?: ComponentType<any>;
@@ -33,6 +35,7 @@ interface PanelContentProps {
 export const PanelContent: FC<PanelContentProps> = ({
   ModelItemComponent,
   activeSecondaryText,
+  autoRouting,
   enabledList: enabledListProp,
   model: modelProp,
   notice,
@@ -70,6 +73,16 @@ export const PanelContent: FC<PanelContentProps> = ({
         onGroupModeChange={handleGroupModeChange}
         onSearchKeywordChange={setSearchKeyword}
       />
+      {/* A host-restricted list (e.g. a shared agent) cannot be routed beyond. */}
+      {autoRouting && !enabledListProp && (
+        <AutoRoutingBar
+          enabledList={enabledList}
+          model={modelProp}
+          provider={providerProp}
+          onModelChange={onModelChangeProp}
+          onOpenChange={onOpenChange}
+        />
+      )}
       <List
         ModelItemComponent={ModelItemComponent}
         activeSecondaryText={activeSecondaryText}

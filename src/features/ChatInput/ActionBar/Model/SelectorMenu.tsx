@@ -183,6 +183,7 @@ const SelectorMenu = memo<SelectorMenuProps>(
                     </DropdownMenuItemContent>
                   </DropdownMenuSubmenuTrigger>
                   <ModelSwitchSubmenuPopup
+                    autoRouting
                     enabledList={enabledList}
                     model={model}
                     notice={modelNotice}

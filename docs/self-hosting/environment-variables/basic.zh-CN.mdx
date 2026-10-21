@@ -289,6 +289,65 @@ MULTIMODAL_UNDERSTANDING_IMAGE_FORMATS=png,jpeg,webp
 
 启用后，当当前模型没有对应的原生多模态能力但支持工具调用时，用户仍可上传音频、图片或视频，并由兜底多模态理解模型进行分析。文件上传本身仍需要部署中正常配置文件存储能力。
 
+## 自动模型路由
+
+自动模型路由会在模型选择面板顶部增加 **Lite / Pro / Ultra** 三个档位。用户只选档位；每一轮由服务端从该用户在模型面板中能看到的对话模型里（仅限已启用的服务商和已启用的模型）选出实际使用的模型。路由会考虑提示词缓存：当切换模型的代价高于收益时，话题会保留在当前主模型上。
+
+### `ENABLE_AUTO_MODEL_ROUTING`
+
+- 类型：可选
+- 描述：设为 `1` 以提供 Lite / Pro / Ultra 档位。未配置判定模型时，每一轮的难度由内置规则估算。
+- 默认值：-
+- 示例：`1`
+
+### `AUTO_ROUTING_JUDGE_MODEL`
+
+- 类型：可选
+- 描述：判定模型的模型 ID，用于给每一轮打分（难度、是否需要推理、是否换了话题）。只有同时配置了 `AUTO_ROUTING_JUDGE_PROVIDER` 或 `AUTO_ROUTING_JUDGE_BASE_URL` 时才会使用判定模型。
+- 默认值：-
+- 示例：`jev-latest` 或 `gpt-4.1-mini`
+
+### `AUTO_ROUTING_JUDGE_PROTOCOL`
+
+- 类型：可选
+- 描述：自定义判定端点使用的协议。`systemone` 会以带类型的问题调用 `POST {AUTO_ROUTING_JUDGE_BASE_URL}/systemone`，适用于 Jev 这类结构化决策模型；`chat` 会以 JSON Schema 结构化输出调用 OpenAI 兼容的 `/chat/completions` 端点。
+- 默认值：`systemone`
+- 示例：`systemone` 或 `chat`
+
+### `AUTO_ROUTING_JUDGE_PROVIDER`
+
+- 类型：可选
+- 描述：复用本服务器上已配置的服务商作为判定模型，走 chat 协议。优先级高于 `AUTO_ROUTING_JUDGE_BASE_URL`。
+- 默认值：-
+- 示例：`openai`
+
+### `AUTO_ROUTING_JUDGE_BASE_URL`
+
+- 类型：可选
+- 描述：自定义判定端点的 Base URL。
+- 默认值：-
+- 示例：`https://aihubmix.com/v1`
+
+### `AUTO_ROUTING_JUDGE_API_KEY`
+
+- 类型：可选
+- 描述：访问 `AUTO_ROUTING_JUDGE_BASE_URL` 使用的 Bearer Token。
+- 默认值：-
+
+### `AUTO_ROUTING_JUDGE_TIMEOUT_MS`
+
+- 类型：可选
+- 描述：单次判定调用的时间上限（毫秒）。判定超时或失败时，这一轮改用内置规则路由，不会阻塞回复。
+- 默认值：`800`
+
+```bash
+ENABLE_AUTO_MODEL_ROUTING=1
+AUTO_ROUTING_JUDGE_PROTOCOL=systemone
+AUTO_ROUTING_JUDGE_BASE_URL=https://aihubmix.com/v1
+AUTO_ROUTING_JUDGE_API_KEY=sk-xxx
+AUTO_ROUTING_JUDGE_MODEL=jev-latest
+```
+
 ## AI 图像
 
 ### `AI_IMAGE_DEFAULT_IMAGE_NUM`

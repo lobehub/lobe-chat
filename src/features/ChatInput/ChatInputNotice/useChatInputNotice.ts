@@ -1,4 +1,5 @@
 import { toast } from '@lobehub/ui';
+import { isAutoRoutingProvider } from 'model-bank/autoRouting';
 import { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -14,7 +15,7 @@ import { useEnabledChatModels } from '@/hooks/useEnabledChatModels';
 import { usePermission } from '@/hooks/usePermission';
 import { useAgentStore } from '@/store/agent';
 import { agentByIdSelectors } from '@/store/agent/selectors';
-import { aiProviderSelectors, useAiInfraStore } from '@/store/aiInfra';
+import { aiModelSelectors, aiProviderSelectors, useAiInfraStore } from '@/store/aiInfra';
 import { useChatStore } from '@/store/chat';
 import { topicSelectors } from '@/store/chat/slices/topic/selectors';
 import { type EnabledProviderWithModels } from '@/types/aiProvider';
@@ -215,7 +216,14 @@ export const useChatInputNotices = (): ChatInputNotice[] => {
   const isModelConfigReady = useAiInfraStore((s) =>
     aiProviderSelectors.isInitAiProviderRuntimeState(s),
   );
-  const currentChatModel = findEnabledChatModel(enabledChatModelList, model, provider);
+  // A Lite / Pro / Ultra tier is not a row of the chat list but is always routable.
+  const autoRoutingModel = useAiInfraStore((s) =>
+    isAutoRoutingProvider(provider)
+      ? aiModelSelectors.getEnabledModelById(model, provider)(s)
+      : undefined,
+  );
+  const currentChatModel =
+    autoRoutingModel ?? findEnabledChatModel(enabledChatModelList, model, provider);
   const staleModelState = useMemo(
     () =>
       isModelConfigReady

@@ -336,4 +336,26 @@ describe('aiModelSelectors', () => {
       expect(result).toBeUndefined();
     });
   });
+
+  describe('auto-routing tiers', () => {
+    it('resolves a tier with the abilities of the enabled chat models', () => {
+      const pro = aiModelSelectors.getEnabledModelById('auto-pro', 'lobehub-auto')(mockState);
+      expect(pro).toMatchObject({ displayName: 'Pro', providerId: 'lobehub-auto' });
+      expect(aiModelSelectors.isModelSupportToolUse('auto-pro', 'lobehub-auto')(mockState)).toBe(
+        true,
+      );
+      expect(aiModelSelectors.isModelSupportVision('auto-pro', 'lobehub-auto')(mockState)).toBe(
+        true,
+      );
+      // The tier itself decides how much a turn thinks; no effort control.
+      expect(
+        aiModelSelectors.isModelSupportReasoning('auto-pro', 'lobehub-auto')(mockState),
+      ).toBeFalsy();
+    });
+
+    it('returns the same reference for an unchanged store', () => {
+      const select = aiModelSelectors.getEnabledModelById('auto-lite', 'lobehub-auto');
+      expect(select(mockState)).toBe(select(mockState));
+    });
+  });
 });

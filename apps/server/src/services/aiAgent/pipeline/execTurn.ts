@@ -436,6 +436,9 @@ export const execAgentTurn = async (
     selfMessageIds,
     topicId,
   } = turn;
+  // The routed real model replaces the tier on the shared config, so the
+  // operation state, traces and sub-agent fallbacks never see the virtual id.
+  if (turn.autoRouting) Object.assign(agentConfig, { model, provider });
 
   // Shared context for the extracted execAgent pipeline stages
   // (`pipeline/*`). Built after the turn rows exist so every stage sees the

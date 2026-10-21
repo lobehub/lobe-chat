@@ -7,6 +7,7 @@
     ".": "./src/index.ts",
     "./knowledgeCutoff": "./src/const/knowledgeCutoff.ts",
     "./utils": "./src/utils.ts",
+    "./autoRouting": "./src/autoRouting/index.ts",
     "./aiModel": "./src/types/aiModel.ts",
     "./aiProvider": "./src/types/aiProvider.ts",
     "./modelProvider": "./src/const/modelProvider.ts",

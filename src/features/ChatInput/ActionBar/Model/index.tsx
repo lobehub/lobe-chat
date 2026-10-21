@@ -100,6 +100,7 @@ const ModelSwitch = memo(() => {
 
   return (
     <ModelSwitchPanel
+      autoRouting
       enabledList={enabledList}
       model={model}
       notice={modelNotice}

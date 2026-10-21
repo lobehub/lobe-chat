@@ -44,6 +44,8 @@ export enum RequestTrigger {
   /** Chat input inline completion suggestions while the user is typing. */
   InputCompletion = 'input_completion',
   Memory = 'memory',
+  /** Judge-model call that picks the real model behind a Lite / Pro / Ultra tier. */
+  ModelRouting = 'model_routing',
   MultimodalAnalysis = 'multimodal_analysis',
   Notify = 'notify',
   Onboarding = 'onboarding',

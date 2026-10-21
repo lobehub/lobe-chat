@@ -23,6 +23,7 @@ import {
 } from '@lobechat/types';
 import { TRPCError } from '@trpc/server';
 import debug from 'debug';
+import type { AutoRoutingMessageMetadata } from 'model-bank/autoRouting';
 
 import { AiModelModel } from '@/database/models/aiModel';
 import type { MessageModel } from '@/database/models/message';
@@ -32,6 +33,7 @@ import { resolveModelExtendParamsForUser } from '@/server/modules/AgentRuntime/a
 import type { AgentConfigWithId } from '@/server/services/agent';
 import { enqueueAgentSignalSourceEvent } from '@/server/services/agentSignal';
 import { shouldSuppressSignal } from '@/server/services/agentSignal/suppressSignal';
+import { AutoModelRoutingService, isAutoRoutedModel } from '@/server/services/autoModelRouting';
 import { getScopedOnlineDevices } from '@/server/services/deviceGateway/scopedDevices';
 import { DocumentService } from '@/server/services/document';
 import { FileService } from '@/server/services/file';
@@ -381,6 +383,8 @@ export interface TurnSetupInput {
 
 export interface TurnSetupResult {
   assistantMessageId: string;
+  /** Set when a Lite / Pro / Ultra tier was resolved; `model`/`provider` are then the real model. */
+  autoRouting?: AutoRoutingMessageMetadata;
   canUseDevice: boolean;
   deviceAccessReason: DeviceAccessReason;
   /** The agent a builder run edits — from the request, else recovered from the builder topic. */
@@ -900,6 +904,39 @@ export const setupTurn = async (
     return resolved;
   });
 
+  // A Lite / Pro / Ultra tier resolves to a real visible model for this turn;
+  // the topic keeps the virtual pin, so the next turn routes again.
+  const autoRoute =
+    !isHeteroAgent && isAutoRoutedModel(model, provider)
+      ? await traceTurnStage('auto_routing', async (span) => {
+          const routed = await new AutoModelRoutingService(
+            deps.db,
+            deps.userId,
+            deps.workspaceId,
+          ).resolveTurnModel({
+            attachments: {
+              audios: runAttachments.audioList?.length,
+              files: runAttachments.fileList?.length,
+              images: runAttachments.imageList?.length,
+              videos: runAttachments.videoList?.length,
+            },
+            continuation: !!continuationAssistantId || !!resume,
+            model,
+            prompt,
+            provider,
+            topicId,
+          });
+          span.setAttributes({
+            'lobehub.auto_routing.model': `${routed?.provider}/${routed?.model}`,
+            'lobehub.auto_routing.reason': routed?.metadata.reason ?? '',
+            'lobehub.auto_routing.signal_source': routed?.metadata.signalSource ?? '',
+            'lobehub.auto_routing.tier': routed?.metadata.tier ?? '',
+          });
+          return routed;
+        })
+      : undefined;
+  if (autoRoute) ({ model, provider } = autoRoute);
+
   await throwIfExecutionAborted('message creation');
 
   // Persist the user turn. `selfMessageIds` lets the normal-path history loader
@@ -1025,7 +1062,9 @@ export const setupTurn = async (
             // Stamp groupId so the assistant turn is visible in the group read path
             // (MessageModel.query filters group chats by messages.groupId).
             groupId: appContext?.groupId ?? undefined,
-            metadata: orchestrationMetadata,
+            metadata: autoRoute
+              ? { ...orchestrationMetadata, autoRouting: autoRoute.metadata }
+              : orchestrationMetadata,
             model: isHeteroAgent ? undefined : model,
             // Chain onto the user turn we just persisted; `parentMessageId` is the
             // anchor only on a resume, where no user message is created. A batch
@@ -1102,6 +1141,7 @@ export const setupTurn = async (
 
   return {
     assistantMessageId: assistantMessageRecord.id,
+    autoRouting: autoRoute?.metadata,
     canUseDevice,
     deviceAccessReason,
     editingAgentId,

@@ -280,6 +280,7 @@ const ProfileEditor = memo(() => {
               </Flexbox>
               <Flexbox horizontal align={'center'} gap={12} justify={'flex-start'} wrap={'wrap'}>
                 <ModelSwitchPanel
+                  autoRouting
                   enabledList={enabledList}
                   model={config?.model}
                   open={canEdit ? undefined : false}

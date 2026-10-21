@@ -71,6 +71,7 @@ import { getUserStoreState } from '@/store/user/store';
 import { buildRunLifecycle } from '../../lifecycle/buildRunLifecycle';
 import type { RunParkedReason, RunScope } from '../../lifecycle/types';
 import { buildViewedTaskPrompt } from '../viewedTaskPrompt';
+import { resolveClientAutoRoute } from './autoRoute';
 
 const log = debug('lobe-store:streaming-executor');
 
@@ -669,7 +670,12 @@ export class StreamingExecutorActionImpl {
       operationId,
       subAgentId, // Pass subAgentId for agent config retrieval (behavior depends on scope)
       isSubAgent, // Pass isSubAgent to filter out lobe-agent tool in sub-agent context
-      modelOverride: params.modelOverride,
+      modelOverride:
+        params.modelOverride ??
+        (await resolveClientAutoRoute(
+          { ...params, agentId: effectiveAgentId, operationId },
+          this.#get(),
+        )),
       chatConfigOverride: params.chatConfigOverride,
     });
 
