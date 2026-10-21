@@ -1,0 +1,32 @@
+/* Gutter drawn with a CSS counter on shiki's `.line` spans, so the numbers
+   never get copied along with the code. The doubled class outranks the
+   highlighter's own `.line` padding. Plain CSS: StyleX cannot reach the
+   highlighter's `pre code .line` DOM. */
+.lineNumbers.lineNumbers pre code {
+  counter-reset: read-file-line var(--read-file-line-offset);
+}
+
+.lineNumbers.lineNumbers pre code .line {
+  counter-increment: read-file-line;
+  position: relative;
+  padding-inline-start: calc(var(--read-file-gutter) + 16px + 12px);
+}
+
+.lineNumbers.lineNumbers pre code .line::before {
+  content: counter(read-file-line);
+  user-select: none;
+
+  position: absolute;
+  inset-inline-start: 16px;
+
+  width: var(--read-file-gutter);
+
+  color: var(--lobe-color-text-quaternary);
+  text-align: end;
+}
+
+/* Blank lines render as empty spans; give them a line box so they keep
+   their row and number. */
+.lineNumbers.lineNumbers pre code .line:empty::after {
+  content: ' ';
+}

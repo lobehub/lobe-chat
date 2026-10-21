@@ -1,8 +1,16 @@
 import { useToolRenderCapabilities } from '@lobechat/shared-tool-ui';
 import type { ReadFileState } from '@lobechat/tool-runtime';
-import { Flexbox, Image, Markdown, PreviewGroup, SyntaxHighlighter } from '@lobehub/ui';
-import { ActionIcon, Text } from '@lobehub/ui';
-import { createStaticStyles } from '@lobehub/ui';
+import {
+  ActionIcon,
+  Flexbox,
+  Image,
+  Markdown,
+  PreviewGroup,
+  SyntaxHighlighter,
+  Text,
+} from '@lobehub/ui';
+import { cssVar } from '@lobehub/ui/stylex/cssVar.stylex';
+import * as stylex from '@stylexjs/stylex';
 import { ExternalLink, FolderOpen, SquareArrowOutUpRight } from 'lucide-react';
 import type { CSSProperties } from 'react';
 import React, { memo, useMemo } from 'react';
@@ -12,86 +20,40 @@ import { InlineHtmlPreview, isHtmlFile } from '@/components/HtmlPreview';
 import { useOpenEditedFile } from '@/features/Conversation/Messages/EditedFilesCard/useOpenEditedFile';
 
 import { stripFinalLineTerminator } from './buildReadFileState';
+import lineNumbersStyles from './ReadFileView.module.css';
 
-const styles = createStaticStyles(({ css, cssVar }) => ({
-  actions: css`
-    cursor: pointer;
-    color: ${cssVar.colorTextTertiary};
-    opacity: 0;
-    transition: opacity 0.2s ${cssVar.motionEaseInOut};
-  `,
-  container: css`
-    justify-content: space-between;
-
-    .local-file-actions {
-      opacity: 0;
-    }
-
-    &:hover .local-file-actions {
-      opacity: 1;
-    }
-  `,
-  image: css`
-    border-radius: ${cssVar.borderRadiusLG};
-  `,
-  imageList: css`
-    flex-wrap: wrap;
-  `,
-  // Gutter drawn with a CSS counter on shiki's `.line` spans, so the numbers
-  // never get copied along with the code. `&&` outranks the highlighter's own
-  // `.line` padding.
-  lineNumbers: css`
-    && pre code {
-      counter-reset: read-file-line var(--read-file-line-offset);
-    }
-
-    && pre code .line {
-      counter-increment: read-file-line;
-      position: relative;
-      padding-inline-start: calc(var(--read-file-gutter) + 16px + 12px);
-    }
-
-    && pre code .line::before {
-      content: counter(read-file-line);
-      user-select: none;
-
-      position: absolute;
-      inset-inline-start: 16px;
-
-      width: var(--read-file-gutter);
-
-      color: ${cssVar.colorTextQuaternary};
-      text-align: end;
-    }
-
-    /* Blank lines render as empty spans; give them a line box so they keep
-       their row and number. */
-    && pre code .line:empty::after {
-      content: ' ';
-    }
-  `,
+const styles = stylex.create({
+  actions: {
+    cursor: 'pointer',
+    color: cssVar.colorTextTertiary,
+    opacity: { default: 0, [stylex.when.ancestor(':hover')]: 1 },
+    transitionProperty: 'opacity',
+    transitionDuration: '0.2s',
+    transitionTimingFunction: cssVar.motionEaseInOut,
+  },
+  container: { justifyContent: 'space-between' },
+  image: { borderRadius: cssVar.borderRadiusLG },
+  imageList: { flexWrap: 'wrap' },
   // Shrinks to its text so the hover actions sit right after the path.
-  path: css`
-    flex: 0 1 auto;
-
-    min-width: 0;
-    padding-inline: 4px;
-
-    font-size: 12px;
-    color: ${cssVar.colorTextSecondary};
-  `,
-  previewBox: css`
-    position: relative;
-
-    overflow: hidden;
-
-    padding-block: 0;
-    padding-inline: 8px;
-    border-radius: 8px;
-
-    background: ${cssVar.colorBgContainer};
-  `,
-}));
+  path: {
+    flexGrow: '0',
+    flexShrink: '1',
+    flexBasis: 'auto',
+    minWidth: '0',
+    paddingInline: '4px',
+    fontSize: '12px',
+    color: cssVar.colorTextSecondary,
+  },
+  previewBox: {
+    position: 'relative',
+    overflow: 'hidden',
+    paddingBlock: 0,
+    paddingInline: '8px',
+    borderRadius: '8px',
+    backgroundColor: cssVar.colorBgContainer,
+    backgroundImage: 'none',
+  },
+});
 
 interface ReadFileViewProps extends ReadFileState {
   /** 1-based number of the first line in `content`, seeds the gutter. */
@@ -129,11 +91,16 @@ const ReadFileView = memo<ReadFileViewProps>(
     if (images && images.length > 0) {
       return (
         <PreviewGroup>
-          <Flexbox horizontal align={'flex-start'} className={styles.imageList} gap={8}>
+          <Flexbox
+            horizontal
+            align={'flex-start'}
+            className={stylex.props(styles.imageList).className}
+            gap={8}
+          >
             {images.map((image, index) => (
               <Image
                 alt={filename || image.mediaType || ''}
-                className={styles.image}
+                className={stylex.props(styles.image).className}
                 key={image.url || index}
                 maxHeight={600}
                 objectFit={'contain'}
@@ -169,15 +136,20 @@ const ReadFileView = memo<ReadFileViewProps>(
 
     // The inspector header already names the file, so the card only carries its path.
     return (
-      <Flexbox className={styles.container} gap={8}>
+      <Flexbox className={stylex.props(styles.container, stylex.defaultMarker()).className} gap={8}>
         <Flexbox horizontal align={'center'} gap={4}>
-          <Text ellipsis className={styles.path} title={path} type={'secondary'}>
+          <Text
+            ellipsis
+            className={stylex.props(styles.path).className}
+            title={path}
+            type={'secondary'}
+          >
             {displayPath}
           </Text>
           {(openInPanel || handleOpenFile || handleOpenFolder) && (
             <Flexbox
               horizontal
-              className={`${styles.actions} local-file-actions`}
+              className={stylex.props(styles.actions).className}
               flex={'none'}
               gap={2}
             >
@@ -213,7 +185,7 @@ const ReadFileView = memo<ReadFileViewProps>(
         </Flexbox>
 
         <Flexbox
-          className={styles.previewBox}
+          className={stylex.props(styles.previewBox).className}
           style={{ height: isHtml ? 240 : undefined, maxHeight: 240 }}
         >
           {isHtml ? (
@@ -224,7 +196,7 @@ const ReadFileView = memo<ReadFileViewProps>(
             // The bare highlighter: `Highlighter` trims its input, which would
             // strip the first line's indentation and misalign the gutter.
             <SyntaxHighlighter
-              className={styles.lineNumbers}
+              className={lineNumbersStyles.lineNumbers}
               language={fileType || 'text'}
               style={{ ...lineNumberVars, overflow: 'auto' }}
               variant={'borderless'}
