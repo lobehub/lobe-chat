@@ -205,14 +205,28 @@ describe('agentSteerQueueRouter.append', () => {
     });
   });
 
-  it('refuses to guess between two live runs on the same surface', async () => {
-    mocks.liveCandidates.mockReturnValue([{ id: 'op-1' }, { id: 'op-2' }]);
+  // ROOT CAUSE:
+  //
+  // A run whose answer is done keeps its row `running` until its last step
+  // commits, which took minutes. A follow-up typed behind the next run then saw
+  // two live runs and was refused as ambiguous: the client kept it locally, the
+  // run handed its turn back without answering, and the follow-up waited for
+  // both runs to end.
+  //
+  // Before: two live runs refused the follow-up.
+  // After: it queues behind the newest run, the one the user is looking at.
+  it('queues behind the newest run while an older one still reads as live', async () => {
+    mocks.liveCandidates.mockReturnValue([{ id: 'op-new' }, { id: 'op-old' }]);
 
-    await expect(caller().append(appendInput)).resolves.toEqual({
-      queued: false,
-      reason: 'ambiguous',
+    await expect(caller().append(appendInput)).resolves.toMatchObject({
+      queued: true,
+      state: 'queued',
     });
-    expect(mocks.append).not.toHaveBeenCalled();
+    expect(mocks.append).toHaveBeenCalledWith(
+      { threadId: null, topicId: 'tpc-1', userId: 'user-1' },
+      expect.objectContaining({ id: 'q-1' }),
+      'op-new',
+    );
   });
 
   it('answers neither queued nor send-directly when the write outcome is unknown', async () => {
