@@ -2,6 +2,7 @@
 
 import type { BuiltinInspectorProps } from '@lobechat/types';
 import { cx } from '@lobehub/ui';
+import * as stylex from '@stylexjs/stylex';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -34,11 +35,11 @@ export const CreateDocumentInspector = memo<
       <span className={cx((isArgumentsStreaming || isLoading) && shinyTextStyles.shinyText)}>
         {t('builtins.lobe-agent-documents.apiName.createDocument')}
       </span>
-      {title && <span className={styles.chip}>{title}</span>}
+      {title && <span {...stylex.props(styles.chip)}>{title}</span>}
       {scope && (
         <>
-          <span className={styles.separator}>·</span>
-          <span className={styles.subdued}>
+          <span {...stylex.props(styles.separator)}>·</span>
+          <span {...stylex.props(styles.subdued)}>
             {t(`builtins.lobe-agent-documents.inspector.scope.${scope}` as const)}
           </span>
         </>

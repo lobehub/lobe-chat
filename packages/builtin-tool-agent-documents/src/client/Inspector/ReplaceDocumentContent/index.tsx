@@ -2,6 +2,7 @@
 
 import type { BuiltinInspectorProps } from '@lobechat/types';
 import { cx } from '@lobehub/ui';
+import * as stylex from '@stylexjs/stylex';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -34,11 +35,11 @@ export const ReplaceDocumentContentInspector = memo<
       <span className={cx((isArgumentsStreaming || isLoading) && shinyTextStyles.shinyText)}>
         {t('builtins.lobe-agent-documents.apiName.replaceDocumentContent')}
       </span>
-      {id && <span className={styles.idChip}>{formatDocumentId(id)}</span>}
+      {id && <span {...stylex.props(styles.idChip)}>{formatDocumentId(id)}</span>}
       {typeof content === 'string' && content.length > 0 && (
         <>
-          <span className={styles.separator}>·</span>
-          <span className={styles.subdued}>
+          <span {...stylex.props(styles.separator)}>·</span>
+          <span {...stylex.props(styles.subdued)}>
             {t('builtins.lobe-agent-documents.inspector.chars', { count: content.length })}
           </span>
         </>

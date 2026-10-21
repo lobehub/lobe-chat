@@ -2,6 +2,7 @@
 
 import type { BuiltinInspectorProps } from '@lobechat/types';
 import { cx } from '@lobehub/ui';
+import * as stylex from '@stylexjs/stylex';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -25,12 +26,12 @@ export const MoveDocumentsInspector = memo<
         {t('builtins.lobe-agent-documents.apiName.moveDocuments')}
       </span>
       {count !== undefined && (
-        <span className={styles.chip}>
+        <span {...stylex.props(styles.chip)}>
           {t('builtins.lobe-agent-documents.inspector.docCount', { count })}
         </span>
       )}
       {!!pluginState?.failedCount && (
-        <span className={styles.subdued}>
+        <span {...stylex.props(styles.subdued)}>
           {t('builtins.lobe-agent-documents.inspector.failedCount', {
             count: pluginState.failedCount,
           })}
