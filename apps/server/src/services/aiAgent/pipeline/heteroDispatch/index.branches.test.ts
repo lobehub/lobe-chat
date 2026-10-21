@@ -525,6 +525,38 @@ describe('dispatchHeteroAgent — local CLI agents', () => {
     );
   });
 
+  it('keeps the active worktree writable for a sandboxed Codex run in the source repo', async () => {
+    // `--full-auto` sandboxes Codex to its cwd, and the worktree sits beside the repo.
+    const { deps, topicModel } = createDeps();
+    topicModel.findById.mockResolvedValue({
+      metadata: {
+        boundDeviceId: 'dev-1',
+        workingDirectory: '/repo',
+        workingDirectoryConfig: { git: { activeWorktree: '/repo-wt-21058' }, path: '/repo' },
+      },
+    });
+
+    await dispatchHeteroAgent(
+      deps,
+      createCtx({
+        boundDeviceId: 'dev-1',
+        executionTarget: 'device',
+        heterogeneousProvider: { type: 'codex' },
+      }),
+      createInput('codex', {
+        heterogeneousProvider: { args: ['--full-auto'], type: 'codex' },
+      }),
+    );
+
+    const dispatched = mocks.dispatchAgentRun.mock.calls[0][0];
+    expect(dispatched.cwd).toBe('/repo');
+    expect(dispatched.args).toEqual([
+      '--agent-arg=--full-auto',
+      '--agent-arg=-c',
+      '--agent-arg=sandbox_workspace_write.writable_roots=["/repo-wt-21058"]',
+    ]);
+  });
+
   it('never routes a device-only provider to the cloud sandbox', async () => {
     const { deps } = createDeps();
 
