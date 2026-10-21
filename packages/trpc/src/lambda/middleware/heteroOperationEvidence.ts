@@ -1,11 +1,5 @@
 import { TRPCError } from '@trpc/server';
 
-import { getServerDB } from '@/database/core/db-adaptor';
-import {
-  HeteroOperationPrincipalError,
-  resolveActiveHeteroOperationPrincipal,
-} from '@/server/services/heterogeneousAgent/operationPrincipal';
-
 import { validateHeteroOperationClaims } from '../../utils/internalJwt';
 import type { OIDCAuth } from '../context';
 
@@ -61,6 +55,17 @@ export const authorizeHeteroOperationEvidence = async (params: {
   if (workspaceId && workspaceId !== claims.workspace_id) {
     throw reject('Operation token is bound to another workspace');
   }
+
+  // Loaded only once an operation token reaches an evidence route: `oidcAuth`
+  // sits in front of every authed router, and a static import would pull the
+  // workspace and RBAC models into each of them at module load.
+  const [
+    { getServerDB },
+    { HeteroOperationPrincipalError, resolveActiveHeteroOperationPrincipal },
+  ] = await Promise.all([
+    import('@/database/core/db-adaptor'),
+    import('@/server/services/heterogeneousAgent/operationPrincipal'),
+  ]);
 
   try {
     const principal = await resolveActiveHeteroOperationPrincipal({
