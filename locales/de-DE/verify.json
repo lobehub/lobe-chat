@@ -82,7 +82,6 @@
   "acceptance.comments.approvalCount": "{{count}} Prüfer haben zugestimmt",
   "acceptance.comments.approve": "Diese Lieferung genehmigen",
   "acceptance.comments.approveAgain": "Diese Runde erneut genehmigen",
-  "acceptance.comments.approveDescription": "Ihre Überprüfungsmeinung. Sie ändert nicht den Annahmestatus – nur der Eigentümer akzeptiert die Lieferung.",
   "acceptance.comments.approveSummaryPlaceholder": "Einzeilige Zusammenfassung (optional)",
   "acceptance.comments.approved": "Genehmigt",
   "acceptance.comments.approvedAtRound": "Genehmigt (Runde {{round}})",

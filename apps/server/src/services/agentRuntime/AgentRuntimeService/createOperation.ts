@@ -117,6 +117,11 @@ export async function createOperation(
         defaultTaskAssigneeAgentId: appContext?.defaultTaskAssigneeAgentId,
         documentId: appContext?.documentId,
         editingAgentId: appContext?.editingAgentId,
+        // The Group Agent Builder target must survive on the durable row: an
+        // intervention continuation rebuilds its app context from this row
+        // (never from client input), and a topic whose metadata predates the
+        // `editingGroupId` stamp has nothing else to recover it from.
+        editingGroupId: appContext?.editingGroupId,
         groupId: appContext?.groupId,
         scope: appContext?.scope,
         sessionId: appContext?.sessionId,
@@ -345,26 +350,38 @@ export async function createOperation(
     const mirrorToOperationId =
       appContext?.orchestrationRole === 'member' ? (parentOperationId ?? undefined) : undefined;
     await traceStartStage('runtime_meta', () =>
-      deps.coordinator.createAgentOperation(operationId, {
-        acceptsMemberRuntimeEnd,
-        agentConfig,
-        // Persisted so a queue worker that never ran this op's init still
-        // applies the owner-configured visitor redaction policy instead of the
-        // fail-closed full strip. See `gatewayVisitorRedaction.ts`.
-        visitorRedaction: agentShareVisitor
-          ? {
-              showErrorDetails: agentShareVisitor.showErrorDetails,
-              showModelInfo: agentShareVisitor.showModelInfo,
-            }
-          : undefined,
-        mirrorToOperationId,
-        modelRuntimeConfig: withoutFrozenModelFacts(modelRuntimeConfig),
-        // Share-visitor runs execute as the creator (`userId`) but stream only
-        // to the visitor — the gateway registers the WS channel under this id.
-        streamOwnerUserId: agentShareVisitor?.visitorUserId,
-        userId,
-        workspaceId: deps.workspaceId,
-      }),
+      deps.coordinator.createAgentOperation(
+        operationId,
+        {
+          acceptsMemberRuntimeEnd,
+          agentConfig,
+          // Persisted so a queue worker that never ran this op's init still
+          // applies the owner-configured visitor redaction policy instead of the
+          // fail-closed full strip. See `gatewayVisitorRedaction.ts`.
+          visitorRedaction: agentShareVisitor
+            ? {
+                showErrorDetails: agentShareVisitor.showErrorDetails,
+                showModelInfo: agentShareVisitor.showModelInfo,
+              }
+            : undefined,
+          mirrorToOperationId,
+          modelRuntimeConfig: withoutFrozenModelFacts(modelRuntimeConfig),
+          // Share-visitor runs execute as the creator (`userId`) but stream only
+          // to the visitor — the gateway registers the WS channel under this id.
+          streamOwnerUserId: agentShareVisitor?.visitorUserId,
+          userId,
+          workspaceId: deps.workspaceId,
+        },
+        {
+          agentId: appContext?.agentId ?? undefined,
+          groupId: appContext?.groupId ?? undefined,
+          parentOperationId: parentOperationId ?? undefined,
+          scope: appContext?.scope ?? undefined,
+          taskId: appContext?.taskId ?? undefined,
+          threadId: appContext?.threadId ?? undefined,
+          topicId: appContext?.topicId ?? undefined,
+        },
+      ),
     );
     operationCreated = true;
 

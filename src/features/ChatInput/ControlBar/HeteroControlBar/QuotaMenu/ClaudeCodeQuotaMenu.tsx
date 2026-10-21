@@ -8,6 +8,7 @@ import { useAgentId } from '@/features/ChatInput/hooks/useAgentId';
 import { useSingleton } from '@/hooks/useSingleton';
 import { agentQuotaService } from '@/services/agentQuota';
 import { fetchClaudeCodeQuotaSnapshot } from '@/services/heteroAgentQuota';
+import { getAgentQuotaStoreState } from '@/store/agentQuota';
 
 import QuotaAccountSwitcher from './QuotaAccountSwitcher';
 import type { FetchQuotaOptions, QuotaWindowItem } from './QuotaMenu';
@@ -57,6 +58,7 @@ const unavailableSnapshot = (
  */
 type ClaudeCodePanelSnapshot = ClaudeCodeQuotaSnapshot & {
   refreshUnavailableReason?: ClaudeCodeQuotaSnapshot['reason'];
+  sampleFailed?: boolean;
 };
 
 const isRateLimitError = (quota: ClaudeCodeQuotaSnapshot) => quota.error?.includes('429') ?? false;
@@ -70,7 +72,7 @@ interface ClaudeCodeQuotaMenuProps {
 const ClaudeCodeQuotaMenu = memo<ClaudeCodeQuotaMenuProps>(({ deviceId, env }) => {
   const { t } = useTranslation('chat');
   const agentId = useAgentId();
-  const sourceKey = createQuotaSourceKey('claude-code', deviceId ?? 'local', env);
+  const sourceKey = createQuotaSourceKey('claude-code', agentId, deviceId ?? 'local', env);
   // A persisted account becomes eligible for a device only after this mounted
   // menu has observed that device return the same external account identity.
   // This avoids painting another machine's pinned/first account on a device
@@ -90,11 +92,12 @@ const ClaudeCodeQuotaMenu = memo<ClaudeCodeQuotaMenuProps>(({ deviceId, env }) =
       options?: FetchQuotaOptions<ClaudeCodePanelSnapshot>,
     ): Promise<ClaudeCodePanelSnapshot> => {
       const force = !!options?.force;
+      const quotaStore = getAgentQuotaStoreState();
 
       // 1) Resolve the account to display — pinned for this agent, else the first.
       const [initialAccounts, bindings] = await Promise.all([
-        agentQuotaService.listAccounts().catch(() => []),
-        agentId ? agentQuotaService.listBindings(agentId).catch(() => []) : [],
+        quotaStore.readQuotaAccounts().catch(() => []),
+        agentId ? quotaStore.readQuotaBindings(agentId).catch(() => []) : [],
       ]);
       let accounts = initialAccounts;
       let claude = accounts.filter((a) => a.provider === 'claude-code');
@@ -103,13 +106,12 @@ const ClaudeCodeQuotaMenu = memo<ClaudeCodeQuotaMenuProps>(({ deviceId, env }) =
       let account = deviceId
         ? claude.find((a) => a.externalAccountId === trustedExternalAccountId)
         : (claude.find((a) => a.id === pinnedId) ?? claude[0]);
-      let readings = account
-        ? await agentQuotaService.getLatestReadings(account.id).catch(() => [])
-        : [];
+      let readings = account ? await quotaStore.readQuotaReadings(account.id).catch(() => []) : [];
 
       // 2) Throttled live refresh + ingest. Paint the persisted windows before
       // awaiting the live fetch so the panel never blocks on it.
       let live: ClaudeCodeQuotaSnapshot | null = null;
+      let liveFailed = false;
       if (
         force ||
         options?.revalidate ||
@@ -120,7 +122,10 @@ const ClaudeCodeQuotaMenu = memo<ClaudeCodeQuotaMenuProps>(({ deviceId, env }) =
           const interim = buildClaudePanelSnapshot(account, readings, null);
           if (hasRenderableWindow(interim)) options?.onInterim?.(interim);
         }
-        live = await fetchClaudeCodeQuotaSnapshot({ deviceId, env, force }).catch(() => null);
+        live = await fetchClaudeCodeQuotaSnapshot({ deviceId, env, force }).catch(() => {
+          liveFailed = true;
+          return null;
+        });
 
         const externalAccountId = live?.identity?.externalAccountId;
         if (live?.status === 'ok' && externalAccountId && live.readings?.length) {
@@ -135,7 +140,7 @@ const ClaudeCodeQuotaMenu = memo<ClaudeCodeQuotaMenuProps>(({ deviceId, env }) =
             (candidate) => candidate.externalAccountId === externalAccountId,
           );
           const matchingReadings = matchingAccount
-            ? await agentQuotaService.getLatestReadings(matchingAccount.id).catch(() => [])
+            ? await quotaStore.readQuotaReadings(matchingAccount.id).catch(() => [])
             : [];
           const isCachedEcho =
             !!matchingAccount && liveCapturedAt <= newestCapturedAt(matchingReadings);
@@ -144,14 +149,16 @@ const ClaudeCodeQuotaMenu = memo<ClaudeCodeQuotaMenuProps>(({ deviceId, env }) =
             await agentQuotaService
               .ingestClaudeSnapshot({ deviceId, identity: live.identity!, readings: live.readings })
               .catch(() => {});
-            accounts = await agentQuotaService.listAccounts().catch(() => accounts);
+            accounts = await quotaStore.readQuotaAccounts({ fresh: true }).catch(() => accounts);
             claude = accounts.filter((a) => a.provider === 'claude-code');
             account =
               claude.find((a) => a.externalAccountId === externalAccountId) ??
               claude.find((a) => a.id === pinnedId) ??
               claude[0];
             readings = account
-              ? await agentQuotaService.getLatestReadings(account.id).catch(() => readings)
+              ? await quotaStore
+                  .readQuotaReadings(account.id, { fresh: true })
+                  .catch(() => readings)
               : readings;
           } else {
             account = matchingAccount;
@@ -171,6 +178,9 @@ const ClaudeCodeQuotaMenu = memo<ClaudeCodeQuotaMenuProps>(({ deviceId, env }) =
           ? { ...merged, refreshUnavailableReason: live.reason }
           : merged;
       }
+      // A failed live fetch with nothing to show still reads as "unavailable",
+      // but flagged, so the panel keeps the last snapshot it already shows.
+      if (!live && liveFailed) return { ...unavailableSnapshot(), sampleFailed: true };
       return live ?? merged ?? unavailableSnapshot();
     },
     [agentId, deviceId, env, trustedDeviceAccounts],

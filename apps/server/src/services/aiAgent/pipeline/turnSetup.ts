@@ -11,7 +11,6 @@ import type {
   HeterogeneousProviderConfig,
   HeterogeneousRuntimePinSources,
   HeterogeneousTopicPin,
-  RequestTrigger,
 } from '@lobechat/types';
 import {
   agentShareFileAccessScope,
@@ -373,6 +372,8 @@ export interface TurnSetupInput {
   throwIfExecutionAborted: (stage: string) => Promise<void>;
   title?: string;
   trigger?: string;
+  /** The composer-authored part of the user message; see `ExecAgentParams.userMessage`. */
+  userMessage?: InternalExecAgentParams['userMessage'];
 }
 
 export interface TurnSetupResult {
@@ -401,12 +402,8 @@ export interface TurnSetupResult {
    * is bound to. Use this instead of the raw request value downstream.
    */
   requestedDeviceId?: string;
-  requestTriggerMetadata: {
-    agentDispatch?: { kind: 'callAgent'; visibility: 'internal' };
-    agentSender?: AgentSenderMetadata;
-    steer?: true;
-    trigger?: RequestTrigger;
-  };
+  /** Metadata persisted on this turn's user message; see `buildUserTurnMetadata`. */
+  requestTriggerMetadata: ReturnType<typeof buildUserTurnMetadata>;
   runAttachments: RunAttachments;
   /** Rows THIS turn persisted — the history loader must exclude them. */
   selfMessageIds: Set<string>;
@@ -467,6 +464,7 @@ export const setupTurn = async (
     throwIfExecutionAborted,
     title,
     trigger,
+    userMessage,
   } = input;
 
   let topicId = appContext?.topicId;
@@ -870,6 +868,7 @@ export const setupTurn = async (
     agentSender,
     appContext,
     botSender,
+    composerMetadata: userMessage?.metadata,
     externalOrigin,
     selectedSkillIds,
     steer,
@@ -927,6 +926,8 @@ export const setupTurn = async (
       const userMessageParams = {
         agentId: conversationAgentId,
         content: prompt,
+        // Rich text as the composer authored it, like a client-runtime send stores.
+        editorData: userMessage?.editorData,
         files: runAttachments.fileIds,
         // Group reads filter on messages.groupId (MessageModel.query group
         // branch), so a group turn must stamp groupId or the message never

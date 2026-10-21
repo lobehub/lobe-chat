@@ -1,7 +1,9 @@
 import type {
   AcceptanceCommentAttachmentRef,
   AcceptanceCommentKind,
+  AcceptanceCommentMetadata,
   AcceptanceCommentSource,
+  AcceptanceCommentTime,
   AcceptanceReviewAnnotation,
   DocumentCommentJson,
 } from '@lobechat/types';
@@ -32,6 +34,7 @@ export interface CreateAcceptanceCommentParams {
     checkItemId: string;
     evidenceId: string;
     rect: AcceptanceReviewAnnotation['rect'];
+    time?: AcceptanceCommentTime;
   };
   /** Files to hang on the remark, kept apart from the body. */
   attachments?: AcceptanceCommentAttachmentRef[];
@@ -45,7 +48,7 @@ export interface CreateAcceptanceCommentParams {
   editorData?: DocumentCommentJson;
   kind?: AcceptanceCommentKind;
   /** Open, server-written per-remark facts. */
-  metadata?: Record<string, unknown>;
+  metadata?: AcceptanceCommentMetadata;
   parentCommentId?: string;
   /**
    * Ceiling for this author on this acceptance, enforced inside the write's own
@@ -132,7 +135,9 @@ export class AcceptanceCommentModel {
           evidenceId: anchor?.evidenceId ?? null,
           kind: isReply ? 'comment' : (params.kind ?? 'comment'),
           parentCommentId: parentCommentId ?? null,
-          metadata: params.metadata ?? null,
+          metadata: anchor?.time
+            ? { ...params.metadata, evidenceAnchor: { time: anchor.time } }
+            : (params.metadata ?? null),
           // A page belongs to the thread it opened, never to a reply or reaction.
           source: parentCommentId ? null : (params.source ?? null),
           workspaceId: params.workspaceId ?? null,

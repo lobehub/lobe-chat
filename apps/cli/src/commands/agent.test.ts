@@ -336,6 +336,18 @@ describe('agent command', () => {
       });
     });
 
+    it('should accept update as an alias of edit', async () => {
+      mockTrpcClient.agent.updateAgentConfig.mutate.mockResolvedValue({});
+
+      const program = createProgram();
+      await program.parseAsync(['node', 'test', 'agent', 'update', 'a1', '--title', 'Updated']);
+
+      expect(mockTrpcClient.agent.updateAgentConfig.mutate).toHaveBeenCalledWith({
+        agentId: 'a1',
+        value: { title: 'Updated' },
+      });
+    });
+
     it('should exit when no changes specified', async () => {
       const program = createProgram();
       await program.parseAsync(['node', 'test', 'agent', 'edit', 'a1']);

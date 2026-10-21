@@ -82,7 +82,6 @@
   "acceptance.comments.approvalCount": "{{count}} inceleyici onayladı",
   "acceptance.comments.approve": "Bu teslimatı onayla",
   "acceptance.comments.approveAgain": "Bu turu tekrar onayla",
-  "acceptance.comments.approveDescription": "İnceleme görüşünüz. Kabul durumunu değiştirmez — yalnızca sahibi teslimatı kabul eder.",
   "acceptance.comments.approveSummaryPlaceholder": "Tek satırlık özet (isteğe bağlı)",
   "acceptance.comments.approved": "Onaylandı",
   "acceptance.comments.approvedAtRound": "Onaylandı (tur {{round}})",

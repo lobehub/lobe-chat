@@ -209,43 +209,10 @@ export const isDocumentCommentKeyForEvent = (
   return false;
 };
 
-// ---- agent builder (opening-suggestion chips) ---------------------------
-// Persisted to the localStorage tier (see `CACHE_TIERS.local`) so revisits skip
-// the LLM generation instead of paying a skeleton + a generateJSON call every
-// page load. `contextSummary` is intentionally NOT part of the key so config
-// autosaves for the same target don't refetch; manual refresh revalidates the
-// same key in place (see `useBuilderSuggestions`). `locale` IS part of the key:
-// chips are generated in the UI language, so a persisted entry must not be
-// served after a language switch.
-export const agentBuilderKeys = {
-  suggestions: def(
-    'agentBuilder:suggestions',
-    (mode: string, builderAgentId: string, targetId: string | undefined, locale?: string) => [
-      'agentBuilder:suggestions',
-      mode,
-      builderAgentId,
-      targetId,
-      locale ?? null,
-    ],
-  ),
-};
-
 // ---- group --------------------------------------------------------------
 export const groupKeys = {
-  /** Agent picker for the "add member" modal. */
-  queryAgents: def('group:queryAgents', () => ['group:queryAgents']),
   /** Agent picker for the "create group" modal. */
   queryAgentsForCreate: def('group:queryAgentsForCreate', () => ['group:queryAgentsForCreate']),
-};
-
-// ---- session ------------------------------------------------------------
-export const sessionKeys = {
-  createSession: def('session:createSession', (groupId: string | undefined) => [
-    'session:createSession',
-    groupId,
-  ]),
-  list: def('session:list', (isLogin: boolean | undefined) => ['session:list', isLogin]),
-  search: def('session:search', (keyword?: string) => ['session:search', keyword]),
 };
 
 // ---- thread -------------------------------------------------------------
@@ -330,11 +297,7 @@ export const briefKeys = {
 
 // ---- agent config / available / search ----------------------------------
 export const agentConfigKeys = {
-  available: def('agent:available', () => ['agent:available']),
   search: def('agent:search', (keyword?: string) => ['agent:search', keyword]),
-  serverDefaultHeterogeneousCapability: def('agent:serverDefaultHeterogeneousCapability', () => [
-    'agent:serverDefaultHeterogeneousCapability',
-  ]),
 };
 
 // ---- aiModel ------------------------------------------------------------
@@ -461,21 +424,6 @@ export const deviceKeys = {
     (workspaceId: string | null, deviceId: string, path?: string, cursor?: string) =>
       ['device:browseDirectory', workspaceId, deviceId, path, cursor] as const,
   ),
-  listeningPorts: def(
-    'device:listeningPorts',
-    (workspaceId: string | null, deviceId: string, cwd?: string) =>
-      ['device:listeningPorts', workspaceId, deviceId, cwd] as const,
-  ),
-  tunnels: def('device:tunnels', (workspaceId: string | null, deviceId: string) => [
-    'device:tunnels',
-    workspaceId,
-    deviceId,
-  ]),
-  gitBranches: def('device:gitBranches', (deviceId: string, path: string) => [
-    'device:gitBranches',
-    deviceId,
-    path,
-  ]),
   gitLinkedPR: def(
     'device:gitLinkedPR',
     (deviceId: string, path: string, branch: string, pullRequestNumber?: number) => [
@@ -515,11 +463,6 @@ export const deviceKeys = {
       ...(baseRefName === undefined ? [] : [baseRefName]),
     ],
   ),
-  gitRemoteBranches: def('device:gitRemoteBranches', (deviceId: string, dirPath: string) => [
-    'device:gitRemoteBranches',
-    deviceId,
-    dirPath,
-  ]),
   gitReviewPatches: def(
     'device:gitReviewPatches',
     (deviceId: string, dirPath: string, mode: string, baseRef: string) => [
@@ -612,7 +555,6 @@ export const statsKeys = {
   agents: def('stats:agents', () => ['stats:agents']),
   countAgents: def('stats:countAgents', () => ['stats:countAgents']),
   countMessages: def('stats:countMessages', () => ['stats:countMessages']),
-  countSessions: def('stats:countSessions', () => ['stats:countSessions']),
   countTopics: def('stats:countTopics', () => ['stats:countTopics']),
   heatmaps: def('stats:heatmaps', (type: string) => ['stats:heatmaps', type]),
   maxTaskDuration: def('stats:maxTaskDuration', () => ['stats:maxTaskDuration']),
@@ -920,9 +862,6 @@ export const onboardingKeys = {
 export const agentHomeKeys = {
   topics: def('agentHome:topics', (agentId: string) => ['agentHome:topics', agentId]),
 };
-export const agentProfileKeys = {
-  detail: def('agentProfile:detail', (agentId: string) => ['agentProfile:detail', agentId]),
-};
 export const agentSignalKeys = {
   receipts: def('agentSignal:receipts', (agentId: string, topicId: string) => [
     'agentSignal:receipts',
@@ -956,25 +895,6 @@ export const topicActionKeys = {
 };
 
 // ---- misc remaining domains ---------------------------------------------
-/**
- * Daily task-template recommendation cache schema version. Bump this when the
- * persisted recommendation row shape changes incompatibly so desktop clients
- * stop reading stale localStorage SWR entries.
- */
-export const TASK_TEMPLATE_RECOMMENDATION_CACHE_VERSION = 2;
-const TASK_TEMPLATE_DAILY_RECOMMEND_ROOT = `taskTemplate:listDailyRecommend:v${TASK_TEMPLATE_RECOMMENDATION_CACHE_VERSION}`;
-
-export const taskTemplateKeys = {
-  listDailyRecommend: def(
-    TASK_TEMPLATE_DAILY_RECOMMEND_ROOT,
-    (refreshSeed: unknown, recommendationCount: number, locale: string) => [
-      TASK_TEMPLATE_DAILY_RECOMMEND_ROOT,
-      refreshSeed,
-      recommendationCount,
-      locale,
-    ],
-  ),
-};
 export const resourceKeys = {
   list: def('resource:list', (params: unknown, workspaceId: string | null) => [
     'resource:list',
@@ -1026,10 +946,8 @@ export const matchDomain =
  */
 export const swrKeys = {
   agent: agentConfigKeys,
-  agentBuilder: agentBuilderKeys,
   agentDocument: agentDocumentSWRKeys,
   agentHome: agentHomeKeys,
-  agentProfile: agentProfileKeys,
   agentSignal: agentSignalKeys,
   aiModel: aiModelKeys,
   auth: authKeys,
@@ -1063,10 +981,8 @@ export const swrKeys = {
   recommendations: recommendationsKeys,
   resource: resourceKeys,
   serverConfig: serverConfigKeys,
-  session: sessionKeys,
   share: shareKeys,
   stats: statsKeys,
-  taskTemplate: taskTemplateKeys,
   thread: threadKeys,
   tool: toolKeys,
   topic: topicKeys,

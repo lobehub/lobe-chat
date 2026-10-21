@@ -82,7 +82,6 @@
   "acceptance.comments.approvalCount": "{{count}} người đánh giá đã phê duyệt",
   "acceptance.comments.approve": "Phê duyệt giao hàng này",
   "acceptance.comments.approveAgain": "Phê duyệt lại vòng này",
-  "acceptance.comments.approveDescription": "Ý kiến đánh giá của bạn. Nó không thay đổi trạng thái chấp nhận — chỉ chủ sở hữu mới có thể chấp nhận giao hàng.",
   "acceptance.comments.approveSummaryPlaceholder": "Tóm tắt một dòng (tùy chọn)",
   "acceptance.comments.approved": "Đã phê duyệt",
   "acceptance.comments.approvedAtRound": "Đã phê duyệt (vòng {{round}})",
