@@ -260,6 +260,21 @@ describe('ProjectModel', () => {
     ]);
   });
 
+  it('still lists members of a project whose main agent was cleared', async () => {
+    const project = await createProject(model, { name: 'Orphaned' });
+    const [agent] = await serverDB.insert(agents).values({ title: 'Stays', userId }).returning();
+    await model.addAgent(project.id, { agentId: agent.id });
+    // Deleting the main agent clears the column (ON DELETE SET NULL).
+    await serverDB
+      .update(projects)
+      .set({ coordinatorAgentId: null })
+      .where(eq(projects.id, project.id));
+
+    expect((await model.listAgents(project.id))?.map(({ agent }) => agent.id)).toEqual(
+      expect.arrayContaining([agent.id]),
+    );
+  });
+
   it('binds only accessible agents and knowledge bases', async () => {
     const project = await createProject(model, { name: 'Bindings' });
     const [agent] = await serverDB

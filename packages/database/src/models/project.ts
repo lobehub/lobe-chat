@@ -299,9 +299,11 @@ export class ProjectModel {
   async listAgents(projectId: string) {
     const project = await this.findById(projectId);
     if (!project) return null;
+    // A cleared main agent (LobeAI fallback) has no member row to lead with. A
+    // bare constant would not do instead: Postgres reads `ORDER BY 0` as a column position.
     const coordinatorFirst = project.coordinatorAgentId
-      ? sql`CASE WHEN ${projectAgents.agentId} = ${project.coordinatorAgentId} THEN 0 ELSE 1 END`
-      : sql`0`;
+      ? [sql`CASE WHEN ${projectAgents.agentId} = ${project.coordinatorAgentId} THEN 0 ELSE 1 END`]
+      : [];
     return this.db
       .select({ agent: agents, binding: projectAgents })
       .from(projectAgents)
@@ -312,7 +314,7 @@ export class ProjectModel {
           buildWorkspaceWhere({ userId: this.userId, workspaceId: this.workspaceId }, agents),
         ),
       )
-      .orderBy(coordinatorFirst, asc(projectAgents.sortOrder), asc(projectAgents.createdAt));
+      .orderBy(...coordinatorFirst, asc(projectAgents.sortOrder), asc(projectAgents.createdAt));
   }
 
   async addAgent(projectId: string, input: ProjectAgentInput) {
