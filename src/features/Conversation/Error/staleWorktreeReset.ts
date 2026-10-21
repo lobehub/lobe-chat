@@ -47,9 +47,8 @@ const MISSING_DIRECTORY_MESSAGE = /^Working directory (?:does not exist|is not a
  * The directory a working-directory failure names. Persisted errors may carry
  * only the message the desktop spawn guard wrote, so fall back to reading it.
  */
-export const getMissingWorkingDirectory = (error?: {
-  message?: string;
-  workingDirectory?: string;
-}): string | undefined =>
+export const getMissingWorkingDirectory = (
+  error?: { message?: string; workingDirectory?: string } | null,
+): string | undefined =>
   getWorkingDirectoryPathString(error?.workingDirectory) ??
   getWorkingDirectoryPathString(MISSING_DIRECTORY_MESSAGE.exec(error?.message ?? '')?.[1]);

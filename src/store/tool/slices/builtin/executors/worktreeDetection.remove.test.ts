@@ -143,6 +143,57 @@ describe('recordGitCommandEffects — git worktree remove', () => {
     expect(chatMocks.updateTopicMetadata).not.toHaveBeenCalled();
   });
 
+  it('keeps the worktree when the device returns an empty worktree list', async () => {
+    setTopicWorktree('/tmp/wt');
+    listGitWorktrees.mockResolvedValue([]);
+
+    await recordGitCommandEffects({
+      command: 'git worktree remove /tmp/wt || true',
+      topicId: 't1',
+    });
+
+    expect(chatMocks.updateTopicMetadata).not.toHaveBeenCalled();
+  });
+
+  it('keeps a worktree the device lists under its canonical path', async () => {
+    setTopicWorktree('/tmp/link/wt');
+    listGitWorktrees.mockResolvedValue([
+      { branch: 'main', path: '/repo' },
+      { branch: 'fix/tab-nav', path: '/private/tmp/real/wt' },
+    ]);
+
+    await recordGitCommandEffects({
+      command: 'test -f marker && git worktree remove /tmp/link/wt || true',
+      topicId: 't1',
+    });
+
+    expect(chatMocks.updateTopicMetadata).not.toHaveBeenCalled();
+  });
+
+  it('keeps a Windows worktree listed with different separators and case', async () => {
+    chatMocks.topics = {
+      t1: {
+        metadata: {
+          workingDirectoryConfig: {
+            git: { activeWorktree: 'C:\\Repo\\wt', isWorktree: true },
+            path: 'C:\\Repo',
+          },
+        },
+      },
+    };
+    listGitWorktrees.mockResolvedValue([
+      { branch: 'main', path: 'C:/Repo' },
+      { branch: 'wt', path: 'c:/repo/wt' },
+    ]);
+
+    await recordGitCommandEffects({
+      command: 'git worktree remove C:\\Repo\\wt || true',
+      topicId: 't1',
+    });
+
+    expect(chatMocks.updateTopicMetadata).not.toHaveBeenCalled();
+  });
+
   it('keeps the active worktree when another worktree is removed', async () => {
     setTopicWorktree('/tmp/wt');
 

@@ -818,6 +818,30 @@ const resolveWorktreeAddFromDevice = async (
 
 const isWindowsPath = (p: string): boolean => /^[A-Z]:[\\/]/i.test(p) || p.startsWith('\\\\');
 
+/** Path equality that ignores a trailing slash, and separators and case on Windows. */
+const isSamePath = (a: string, b: string): boolean => {
+  const normalize = (p: string) => {
+    const path = p.replace(/[\\/]+$/, '');
+    return isWindowsPath(p) ? path.replaceAll('\\', '/').toLowerCase() : path;
+  };
+  return normalize(a) === normalize(b);
+};
+
+/**
+ * Whether the device's worktree list proves `worktree` is gone. An empty list is a
+ * failed probe (a repository always lists its own checkout), not a confirmation.
+ * The recorded branch is matched too: git lists the canonical path, which differs
+ * from the recorded one when the worktree was added through a symlink, while a
+ * branch is checked out in at most one worktree.
+ */
+const isWorktreeGone = (
+  worktrees: { branch?: string; path: string }[] | undefined,
+  worktree: string,
+  branch?: string,
+): boolean =>
+  !!worktrees?.length &&
+  !worktrees.some((w) => isSamePath(w.path, worktree) || (!!branch && w.branch === branch));
+
 /**
  * The recorded worktree becomes the cwd of every later command on the source's
  * device, so it must be an absolute path in the source's own filesystem namespace.
@@ -919,7 +943,7 @@ export const recordGitCommandEffects = async (params: {
   const activeWorktree = nextConfig?.git?.activeWorktree;
   if (activeWorktree && removesWorktree(command, activeWorktree, source)) {
     const worktrees = await listDeviceWorktrees(source, topic?.metadata?.boundDeviceId);
-    if (worktrees && !worktrees.some((worktree) => worktree.path === activeWorktree))
+    if (isWorktreeGone(worktrees, activeWorktree, nextConfig?.git?.branch))
       nextConfig = applyWorktreeExitToConfig(nextConfig, source);
   }
 

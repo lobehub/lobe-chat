@@ -68,5 +68,6 @@ describe('getMissingWorkingDirectory', () => {
   it('returns undefined when no path is known', () => {
     expect(getMissingWorkingDirectory({ message: 'spawn failed' })).toBeUndefined();
     expect(getMissingWorkingDirectory(undefined)).toBeUndefined();
+    expect(getMissingWorkingDirectory(null)).toBeUndefined();
   });
 });
