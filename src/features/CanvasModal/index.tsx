@@ -1,7 +1,7 @@
 'use client';
 
 import { createModal, Empty } from '@lobehub/ui';
-import { t } from 'i18next';
+import { useTranslation } from 'react-i18next';
 
 import AsyncBoundary from '@/components/AsyncBoundary';
 import CanvasFrame from '@/features/Conversation/WorkingSidebar/Canvas/CanvasFrame';
@@ -14,6 +14,7 @@ interface CanvasModalProps {
 }
 
 const CanvasModalContent = ({ canvasId, version }: CanvasModalProps) => {
+  const { t } = useTranslation('portal');
   const { data, error, isLoading, mutate } = useClientDataSWR(
     ['canvas-modal-version', canvasId, version ?? 'latest'],
     () => canvasService.getVersion(canvasId, version),
@@ -22,7 +23,7 @@ const CanvasModalContent = ({ canvasId, version }: CanvasModalProps) => {
   return (
     <AsyncBoundary
       data={data}
-      empty={<Empty description={t('canvas.notFound', { ns: 'portal' })} />}
+      empty={<Empty description={t('canvas.notFound')} />}
       error={error}
       isEmpty={data === null}
       isLoading={isLoading}
@@ -35,12 +36,17 @@ const CanvasModalContent = ({ canvasId, version }: CanvasModalProps) => {
   );
 };
 
+const CanvasModalTitle = () => {
+  const { t } = useTranslation('portal');
+  return t('canvas.frameTitle');
+};
+
 export const createCanvasModal = (canvasId: string, version?: number) =>
   createModal({
     content: <CanvasModalContent canvasId={canvasId} version={version} />,
     footer: null,
     maskClosable: true,
     styles: { content: { display: 'flex', height: '75vh', minHeight: 0, padding: 0 } },
-    title: t('canvas.frameTitle', { ns: 'portal' }),
+    title: <CanvasModalTitle />,
     width: 'min(95vw, 1200px)',
   });
