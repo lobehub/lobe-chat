@@ -3070,6 +3070,7 @@
   "workspace.invitePage.declineSubtitle": "You can close this window.",
   "workspace.invitePage.declineTitle": "Invitation Declined",
   "workspace.invitePage.differentEmailNotice": "You are signed in as {{currentEmail}}, but this invitation was sent to {{inviteEmail}}.",
+  "workspace.invitePage.driveCleanupInProgress": "Your previous personal drive in this workspace is being cleaned up. Try again in a few minutes.",
   "workspace.invitePage.expiredSubtitle": "This invitation has expired. Ask the team owner to send a new one.",
   "workspace.invitePage.expiredTitle": "Invitation Expired",
   "workspace.invitePage.expiresLabel": "Expires",

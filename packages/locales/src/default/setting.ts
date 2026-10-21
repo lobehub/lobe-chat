@@ -3117,6 +3117,8 @@ When I am ___, I need ___
     'This invitation has expired. Ask the team owner to send a new one.',
   'workspace.invitePage.expiredTitle': 'Invitation Expired',
   'workspace.invitePage.expiresLabel': 'Expires',
+  'workspace.invitePage.driveCleanupInProgress':
+    'Your previous personal drive in this workspace is being cleaned up. Try again in a few minutes.',
   'workspace.invitePage.featureNotEnabledNotice':
     'Workspaces are in a limited beta and not open to new members right now. Please try again later, or ask the person who invited you to reach out to support.',
   'workspace.invitePage.goHome': 'Go Home',

@@ -3070,6 +3070,7 @@
   "workspace.invitePage.declineSubtitle": "您可以关闭此窗口。",
   "workspace.invitePage.declineTitle": "邀请已拒绝",
   "workspace.invitePage.differentEmailNotice": "您当前登录为 {{currentEmail}}，但此邀请是发送到 {{inviteEmail}}。",
+  "workspace.invitePage.driveCleanupInProgress": "你之前在这个工作区的个人网盘正在清理中，请几分钟后再试。",
   "workspace.invitePage.expiredSubtitle": "此邀请已过期。请团队所有者发送一个新的邀请。",
   "workspace.invitePage.expiredTitle": "邀请已过期",
   "workspace.invitePage.expiresLabel": "到期",
