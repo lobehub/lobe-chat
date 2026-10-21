@@ -194,6 +194,81 @@ describe('recordGitCommandEffects — git worktree remove', () => {
     expect(chatMocks.updateTopicMetadata).not.toHaveBeenCalled();
   });
 
+  it('matches a removal spelled differently from the recorded path', async () => {
+    setTopicWorktree('/tmp/wt');
+
+    await recordGitCommandEffects({ command: 'git worktree remove /tmp/wt/', topicId: 't1' });
+
+    expect(chatMocks.updateTopicMetadata).toHaveBeenCalledWith('t1', {
+      workingDirectoryConfig: { git: { isWorktree: false }, path: '/repo' },
+    });
+  });
+
+  it('matches a Windows removal with different separators and case', async () => {
+    chatMocks.topics = {
+      t1: {
+        metadata: {
+          workingDirectoryConfig: {
+            git: { activeWorktree: 'C:\\Repo\\wt', isWorktree: true },
+            path: 'C:\\Repo',
+          },
+        },
+      },
+    };
+    listGitWorktrees.mockResolvedValue([{ branch: 'main', path: 'C:/Repo' }]);
+
+    await recordGitCommandEffects({ command: 'git worktree remove c:/repo/wt', topicId: 't1' });
+
+    expect(chatMocks.updateTopicMetadata).toHaveBeenCalledWith('t1', {
+      workingDirectoryConfig: { git: { isWorktree: false }, path: 'C:\\Repo' },
+    });
+  });
+
+  it('drops the branch and PR of a hand-picked worktree when it is removed', async () => {
+    chatMocks.topics = {
+      t1: {
+        metadata: {
+          workingDirectoryConfig: {
+            git: {
+              activeWorktree: '/tmp/wt',
+              branch: 'feat/x',
+              github: { pullRequest: { number: 7, url: 'https://github.com/o/r/pull/7' } },
+            },
+            path: '/repo',
+            repoType: 'github',
+          },
+        },
+      },
+    };
+
+    await recordGitCommandEffects({ command: 'git worktree remove /tmp/wt', topicId: 't1' });
+
+    expect(chatMocks.updateTopicMetadata).toHaveBeenCalledWith('t1', {
+      workingDirectoryConfig: { git: { isWorktree: false }, path: '/repo', repoType: 'github' },
+    });
+  });
+
+  it('records the last worktree when a command adds, removes and adds again', async () => {
+    chatMocks.topics = { t1: { metadata: { workingDirectoryConfig: { path: '/repo' } } } };
+    listGitWorktrees.mockResolvedValue([
+      { branch: 'main', path: '/repo' },
+      { branch: 'b', path: '/tmp/b' },
+    ]);
+
+    await recordGitCommandEffects({
+      command:
+        'git worktree add /tmp/a -b a && git worktree remove /tmp/a && git worktree add /tmp/b -b b',
+      topicId: 't1',
+    });
+
+    expect(chatMocks.updateTopicMetadata).toHaveBeenCalledWith('t1', {
+      workingDirectoryConfig: {
+        git: { activeWorktree: '/tmp/b', branch: 'b', isWorktree: true },
+        path: '/repo',
+      },
+    });
+  });
+
   it('keeps the active worktree when another worktree is removed', async () => {
     setTopicWorktree('/tmp/wt');
 

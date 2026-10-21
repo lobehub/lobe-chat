@@ -165,8 +165,13 @@ export const applyWorktreeExitToConfig = (
     isWorktree: false,
   };
 
+  // A worktree picked by hand records no `isWorktree` flag — a distinct
+  // `activeWorktree` is evidence enough that branch / upstream / PR were its own.
+  const activeWorktree = currentConfig?.git?.activeWorktree;
+  const leftWorktree =
+    !!currentConfig?.git?.isWorktree || (!!activeWorktree && activeWorktree !== source);
   delete git.activeWorktree;
-  if (currentConfig?.git?.isWorktree) {
+  if (leftWorktree) {
     delete git.branch;
     delete git.github;
     delete git.upstream;

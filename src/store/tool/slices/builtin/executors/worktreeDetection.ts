@@ -723,14 +723,16 @@ const parseWorktreeAddInfo = (
   const unwrapped = unwrapShellCommand(command);
   if (!/\bworktree\s+add\b/.test(unwrapped)) return undefined;
 
+  // The LAST add wins: it is where the command left things, so an earlier scratch
+  // worktree that was removed again (`add a && remove a && add b`) never sticks.
   const env: ShellEnv = {};
+  let last: WorktreeAddParseResult | undefined;
   for (const segment of unwrapped.split(/[\n;|&]/)) {
     const tokens = tokenize(segment);
-    const info = parseGitWorktreeAddTokens(tokens, cwd, env);
-    if (info) return info;
+    last = parseGitWorktreeAddTokens(tokens, cwd, env) ?? last;
     collectSegmentAssignments(tokens, env);
   }
-  return undefined;
+  return last;
 };
 
 /**
@@ -751,6 +753,17 @@ export const parseWorktreeAddPath = (
   return parseWorktreeAddInfo(command, cwd)?.path;
 };
 
+const isWindowsPath = (p: string): boolean => /^[A-Z]:[\\/]/i.test(p) || p.startsWith('\\\\');
+
+/** Path equality that ignores a trailing slash, and separators and case on Windows. */
+const isSamePath = (a: string, b: string): boolean => {
+  const normalize = (p: string) => {
+    const path = p.replace(/[\\/]+$/, '');
+    return isWindowsPath(p) ? path.replaceAll('\\', '/').toLowerCase() : path;
+  };
+  return normalize(a) === normalize(b);
+};
+
 /**
  * Whether the command's last word on `target` is a real `git worktree remove` of it.
  * Paths resolve like `add` paths; segments are read in shell order, so a later
@@ -760,14 +773,16 @@ export const parseWorktreeAddPath = (
 const removesWorktree = (command: string | string[], target: string, cwd?: string) => {
   let removed = false;
   findInCommand(command, (tokens, env) => {
-    if (parseGitWorktreeAddTokens(tokens, cwd, env)?.path === target) removed = false;
+    const added = parseGitWorktreeAddTokens(tokens, cwd, env)?.path;
+    if (added && isSamePath(added, target)) removed = false;
     const git = parseGitSubcommand(tokens, cwd, env);
     if (git?.subcommand !== 'worktree' || stripQuotes(git.args[0] ?? '') !== 'remove') return;
     for (const token of git.args.slice(1)) {
       if (/^\d*[<>]/.test(token)) return; // redirection — git's args end here
       if (token.startsWith('-')) continue;
       const path = resolveToken(token, env);
-      if (isLiteralPath(path) && resolveWorktreePath(path, git.baseCwd) === target) removed = true;
+      if (isLiteralPath(path) && isSamePath(resolveWorktreePath(path, git.baseCwd), target))
+        removed = true;
       return;
     }
   });
@@ -814,17 +829,6 @@ const resolveWorktreeAddFromDevice = async (
   );
   if (!match) return undefined;
   return { ...(match.branch ? { branch: match.branch } : {}), path: match.path };
-};
-
-const isWindowsPath = (p: string): boolean => /^[A-Z]:[\\/]/i.test(p) || p.startsWith('\\\\');
-
-/** Path equality that ignores a trailing slash, and separators and case on Windows. */
-const isSamePath = (a: string, b: string): boolean => {
-  const normalize = (p: string) => {
-    const path = p.replace(/[\\/]+$/, '');
-    return isWindowsPath(p) ? path.replaceAll('\\', '/').toLowerCase() : path;
-  };
-  return normalize(a) === normalize(b);
 };
 
 /**
