@@ -12,6 +12,7 @@ import { expect } from '@playwright/test';
 
 import type { CustomWorld } from '../../support/world';
 import { WAIT_TIMEOUT } from '../../support/world';
+import { openDocsHome } from './docs-home';
 
 // ============================================
 // Helper Functions
@@ -176,8 +177,7 @@ async function clickNewPageButton(world: CustomWorld): Promise<void> {
 
 Given('用户在 Page 页面', { timeout: 30_000 }, async function (this: CustomWorld) {
   console.log('   📍 Step: 导航到 Page 页面...');
-  await this.page.goto('/resource');
-  await this.page.waitForLoadState('domcontentloaded', { timeout: 15_000 });
+  await openDocsHome(this);
   await waitForPageWorkspaceReady(this);
 
   console.log('   ✅ 已进入 Page 页面');
@@ -185,8 +185,7 @@ Given('用户在 Page 页面', { timeout: 30_000 }, async function (this: Custom
 
 Given('用户在 Page 页面有一个文稿', async function (this: CustomWorld) {
   console.log('   📍 Step: 导航到 Page 页面...');
-  await this.page.goto('/resource');
-  await this.page.waitForLoadState('domcontentloaded', { timeout: 15_000 });
+  await openDocsHome(this);
 
   console.log('   📍 Step: 通过 UI 创建新文稿...');
   await clickNewPageButton(this);
@@ -293,8 +292,7 @@ Given('用户在 Page 页面有一个文稿', async function (this: CustomWorld)
 
 Given('用户在 Page 页面有一个文稿 {string}', async function (this: CustomWorld, title: string) {
   console.log('   📍 Step: 导航到 Page 页面...');
-  await this.page.goto('/resource');
-  await this.page.waitForLoadState('domcontentloaded', { timeout: 15_000 });
+  await openDocsHome(this);
 
   console.log('   📍 Step: 通过 UI 创建新文稿...');
   await clickNewPageButton(this);

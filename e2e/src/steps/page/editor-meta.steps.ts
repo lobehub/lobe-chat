@@ -8,6 +8,7 @@ import { expect } from '@playwright/test';
 
 import type { CustomWorld } from '../../support/world';
 import { WAIT_TIMEOUT } from '../../support/world';
+import { openDocsHome } from './docs-home';
 
 async function waitForPageWorkspaceReady(world: CustomWorld): Promise<void> {
   const loadingSelectors = ['[aria-label="Loading"]', '.lobe-brand-loading'];
@@ -89,8 +90,7 @@ Given('用户打开一个文稿编辑器', async function (this: CustomWorld) {
   console.log('   📍 Step: 创建并打开一个文稿...');
 
   // Navigate to page module
-  await this.page.goto('/resource');
-  await this.page.waitForLoadState('domcontentloaded', { timeout: 15_000 });
+  await openDocsHome(this);
   await waitForPageWorkspaceReady(this);
 
   // Create a new page via UI
@@ -109,8 +109,7 @@ Given('用户打开一个带有 Emoji 的文稿', async function (this: CustomWo
   console.log('   📍 Step: 创建并打开一个带 Emoji 的文稿...');
 
   // First create and open a page
-  await this.page.goto('/resource');
-  await this.page.waitForLoadState('domcontentloaded', { timeout: 15_000 });
+  await openDocsHome(this);
   await waitForPageWorkspaceReady(this);
 
   await clickNewPageButton(this);
