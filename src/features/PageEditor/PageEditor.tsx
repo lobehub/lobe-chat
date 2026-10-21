@@ -3,7 +3,7 @@
 import { DEFAULT_BLOCK_ANCHOR_PADDING, EditorProvider } from '@lobehub/editor/react';
 import { createStaticStyles, cssVar, Flexbox } from '@lobehub/ui';
 import type { CSSProperties, FC, ReactNode, UIEvent } from 'react';
-import { memo, useCallback, useEffect, useLayoutEffect, useRef } from 'react';
+import { memo, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 
 import { CONVERSATION_MIN_WIDTH } from '@/const/layoutTokens';
 import type { ComposerTarget } from '@/features/Conversation/types';
@@ -17,6 +17,7 @@ import { systemStatusSelectors } from '@/store/global/selectors';
 import { pageActions } from '@/store/page';
 import { StyleSheet } from '@/utils/styles';
 
+import { usePageCollabEligible, usePageCollabEnabled } from './collab/usePageCollab';
 import DocumentComments from './DocumentComments';
 import BlockCommentMarker from './DocumentComments/BlockCommentMarker';
 import { DocumentCommentsProvider } from './DocumentComments/context';
@@ -481,10 +482,19 @@ export const PageEditor: FC<PageEditorProps> = ({
   syncPageAgentActiveState,
 }) => {
   const { allowed: canEdit } = usePermission('edit_own_content');
+  const collabEnabled = usePageCollabEnabled();
+  // Known once the document loads; a SKILL.md then leaves the room path.
+  const collabEligible = usePageCollabEligible(pageId);
+  const [collabEpoch, setCollabEpoch] = useState(0);
+  const handleCollabReset = useCallback(() => setCollabEpoch((epoch) => epoch + 1), []);
 
   return (
     <PageAgentProvider pageId={pageId} syncActiveAgent={syncPageAgentActiveState}>
-      <EditorProvider>
+      {/* A collaboration binding lives for the editor kernel's lifetime, so each room gets a
+          fresh kernel, and a document that leaves the room path drops the binding. */}
+      <EditorProvider
+        key={collabEnabled ? `${pageId}:${collabEligible ? collabEpoch : 'stored'}` : undefined}
+      >
         <PageEditorProvider
           emoji={emoji}
           knowledgeBaseId={knowledgeBaseId}
@@ -492,6 +502,7 @@ export const PageEditor: FC<PageEditorProps> = ({
           pageId={pageId}
           title={title}
           onBack={onBack}
+          onCollabReset={collabEnabled ? handleCollabReset : undefined}
           onDocumentIdChange={onDocumentIdChange}
           onDelete={() => {
             if (!canEdit) return;

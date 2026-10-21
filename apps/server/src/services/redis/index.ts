@@ -1,6 +1,7 @@
 import { agentSignal } from './agentSignal';
 import { deviceSystemInfo } from './deviceSystemInfo';
 import { linear } from './linear';
+import { pageCollab } from './pageCollab';
 import { skillTools } from './skillTools';
 import { steerQueue } from './steerQueue';
 import { threadStartFence } from './threadStartFence';
@@ -11,6 +12,7 @@ export const redisService = {
   agentSignal,
   deviceSystemInfo,
   linear,
+  pageCollab,
   skillTools,
   steerQueue,
   threadStartFence,
