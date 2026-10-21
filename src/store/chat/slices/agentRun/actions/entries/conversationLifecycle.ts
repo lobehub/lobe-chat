@@ -139,10 +139,7 @@ import {
   parseSingleAgentMentionDirectRoute,
   processCommands,
 } from './commandBus';
-import {
-  attachSendTimeMetadataToUserMessage,
-  mergePartialPersistedMessages,
-} from './persistedMessages';
+import { mergePartialPersistedMessages, resolveSendResponseMessages } from './persistedMessages';
 import { resolveExistingTopicForRun } from './resolveExistingTopic';
 
 /**
@@ -2153,25 +2150,23 @@ export class ConversationLifecycleActionImpl {
           finalMessageKey,
         );
       this.#get().moveVoiceMessages(operationContext, finalContext);
-      const persistedMessages = attachSendTimeMetadataToUserMessage(
-        data.messages,
-        data.userMessageId,
-        userMessageMetadata,
-      );
       data = {
         ...data,
-        messages: responseMeta.__isPartialMessages
-          ? mergePartialPersistedMessages(
-              this.#get().messagesMap[finalMessageKey] || [],
-              persistedMessages,
-              [tempId, tempAssistantId],
-            )
-          : persistedMessages,
+        messages: resolveSendResponseMessages({
+          currentMessages: this.#get().messagesMap[finalMessageKey] || [],
+          isPartial: !!responseMeta.__isPartialMessages,
+          messages: data.messages,
+          replacedMessageIds: [tempId, tempAssistantId],
+          userMessageId: data.userMessageId,
+          userMessageMetadata,
+        }),
       };
 
+      // The send response skips Work summaries; keep the ones earlier replies already carry.
       this.#get().replaceMessages(data.messages, {
         context: finalContext,
         action: 'sendMessage/serverResponse',
+        preserveWorks: true,
       });
 
       if (isCreateNewTopic && data.topicId) {

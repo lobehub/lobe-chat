@@ -3561,6 +3561,8 @@ export default {
   'workingPanel.works.emptyVersions': 'No versions yet',
   'workingPanel.works.error': 'Failed to load works',
   'workingPanel.works.documentLoadError': 'Failed to load document',
+  'workingPanel.works.canvasPublished': 'Published',
+  'workingPanel.works.canvasUntitled': 'Untitled canvas',
   'workingPanel.works.changeType.created': 'Created',
   'workingPanel.works.changeType.updated': 'Updated',
   'workingPanel.works.documentDeleted': 'This document has been deleted',
