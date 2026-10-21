@@ -56,7 +56,7 @@ const emulated = (answers: Record<string, unknown>, evidence: Record<string, str
   }) as unknown as DecisionResponse<QuickNoteIntentQuestions>;
 
 describe('Quick Note intent questions', () => {
-  it('asks one score per label and per preset, and the goal predicate only with comments', () => {
+  it('asks one score per label and per preset, and the goal boolean only with comments', () => {
     const questions = buildQuickNoteIntentQuestions(false);
     const presetNames = [
       'preset_research',
@@ -83,7 +83,7 @@ describe('Quick Note intent questions', () => {
     expect(questions.preset_goal.instructions).toContain('multi-step objective');
 
     const goal = buildQuickNoteIntentQuestions(true).explicitGoalRequest!;
-    expect(goal.type).toBe('predicate');
+    expect(goal.type).toBe('boolean');
     expect(goal.criteria.true).toBeTruthy();
     expect(goal.criteria.false).toBeTruthy();
   });
@@ -262,7 +262,7 @@ describe('toQuickNoteRunDecision', () => {
       toQuickNoteRunDecision(
         native({
           ...answers(3.2),
-          explicitGoalRequest: { probability: 0.5, type: 'predicate' },
+          explicitGoalRequest: { probability: 0.5, type: 'boolean' },
         }),
         { provider: 'x' },
       ),
@@ -271,7 +271,7 @@ describe('toQuickNoteRunDecision', () => {
       toQuickNoteRunDecision(
         native({
           ...answers(3.2),
-          explicitGoalRequest: { probability: 0.49, type: 'predicate' },
+          explicitGoalRequest: { probability: 0.49, type: 'boolean' },
         }),
         { provider: 'x' },
       ),

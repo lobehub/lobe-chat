@@ -1,7 +1,7 @@
 import type {
   DecisionAnswer,
+  DecisionBooleanQuestion,
   DecisionJsonValue,
-  DecisionPredicateQuestion,
   DecisionResponse,
   DecisionScoreQuestion,
 } from '@lobechat/model-runtime';
@@ -34,8 +34,8 @@ export const QUICK_NOTE_ACTION_THRESHOLDS = {
   link: 2,
 } as const;
 
-/** Probability at or above which a `predicate` answer counts as "yes". */
-export const QUICK_NOTE_PREDICATE_YES = 0.5;
+/** Probability at or above which a `boolean` answer counts as "yes". */
+export const QUICK_NOTE_BOOLEAN_YES = 0.5;
 
 /**
  * Lowest raw score that counts as level 4 (auto-apply, and the Goal gate).
@@ -134,8 +134,8 @@ type QuickNotePresetQuestionName = ReturnType<typeof quickNotePresetQuestionName
 /**
  * Builds the first-step decision questions for one Analyze Run: one `score` question per action
  * label, one `score` question per delegate preset (its fit, so every preset gets a level in both
- * native and emulated mode), and, only when the note has Comments, a `predicate` asking whether a
- * Comment explicitly requests a Goal. With no Comments that predicate could find nothing, so the
+ * native and emulated mode), and, only when the note has Comments, a `boolean` question asking whether a
+ * Comment explicitly requests a Goal. With no Comments that question could find nothing, so the
  * Goal gate falls back to the `delegate` level alone.
  */
 export const buildQuickNoteIntentQuestions = (hasComments: boolean) => {
@@ -161,14 +161,14 @@ export const buildQuickNoteIntentQuestions = (hasComments: boolean) => {
       ],
     ),
   ) as Record<QuickNotePresetQuestionName, DecisionScoreQuestion>;
-  const explicitGoalRequest: DecisionPredicateQuestion = {
+  const explicitGoalRequest = {
     criteria: {
       false: 'No comment asks for a goal, or a goal is only mentioned in passing.',
       true: 'A user comment explicitly asks to create or track a goal (e.g. "make this a goal", "设成目标").',
     },
     instructions: 'Does a user comment explicitly ask to turn this note into a Goal?',
-    type: 'predicate',
-  };
+    type: 'boolean',
+  } satisfies DecisionBooleanQuestion;
 
   return {
     delegate: score('delegate'),
@@ -292,7 +292,7 @@ export const toQuickNoteRunDecision = (
   recordRefusal('explicitGoalRequest');
   const goalAnswer = answers.explicitGoalRequest;
   const explicitGoalRequest =
-    goalAnswer?.type === 'predicate' && goalAnswer.probability >= QUICK_NOTE_PREDICATE_YES;
+    goalAnswer?.type === 'boolean' && goalAnswer.probability >= QUICK_NOTE_BOOLEAN_YES;
 
   const top = Math.max(...QUICK_NOTE_ACTION_LABELS.map((label) => scores[label]));
   const primary: QuickNoteActionLabel =

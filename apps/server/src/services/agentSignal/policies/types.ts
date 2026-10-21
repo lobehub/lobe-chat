@@ -286,7 +286,7 @@ export interface AgentSignalPolicySignalPayloadMap {
   };
   [AGENT_SIGNAL_POLICY_SIGNAL_TYPES.quickNoteContentMeaningChanged]: {
     baselineRunId: string;
-    /** `meaningChanged` predicate probability (0 when the model refused). */
+    /** `meaningChanged` boolean probability (0 when the model refused). */
     probability: number;
     quickNoteId: string;
   };

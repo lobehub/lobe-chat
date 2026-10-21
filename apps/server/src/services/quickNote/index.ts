@@ -357,7 +357,7 @@ export class QuickNoteProcessingService {
    *
    * Returns:
    * - `equivalent` when the texts only differ cosmetically, `changed` / `unchanged` from the
-   *   `meaningChanged` predicate (a refusal counts as `unchanged`), or `unavailable` when there are no current pending Proposals to
+   *   `meaningChanged` boolean (a refusal counts as `unchanged`), or `unavailable` when there are no current pending Proposals to
    *   protect, or the note or baseline Run is gone.
    */
   judgeContentChange = async (params: {
@@ -408,7 +408,7 @@ export class QuickNoteProcessingService {
     if (answer.type === 'refusal') {
       log('meaning-change check refused for note %s: %s', params.quickNoteId, answer.reason);
     }
-    const probability = answer.type === 'predicate' ? answer.probability : 0;
+    const probability = answer.type === 'boolean' ? answer.probability : 0;
 
     return {
       baselineRunId,

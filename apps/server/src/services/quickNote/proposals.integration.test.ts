@@ -784,7 +784,7 @@ describe('Quick Note source edits', () => {
     expect(await QuickNoteModel.claimContentCheck(db, note.id, last)).toBe(false);
 
     const decide = vi.fn().mockResolvedValue({
-      answers: { meaningChanged: { probability: 1, type: 'predicate' } },
+      answers: { meaningChanged: { probability: 1, type: 'boolean' } },
       id: 'dec-3',
       model: 'typesafe/jev-1.13',
       providerMetadata: { lobehub: { decisionMode: 'native' } },
@@ -846,14 +846,14 @@ describe('Quick Note source edits', () => {
     expect(await contentCheckDueAt(note.id)).toBeInstanceOf(Date);
   });
 
-  it('marks Proposals stale only when the meaningChanged predicate says so', async () => {
+  it('marks Proposals stale only when the meaningChanged boolean says so', async () => {
     const { note, run } = await seedTaskProposal('调研 moshi');
     await repo.updateContent(note.id, {
       content: '调研 gpt-live 的定价',
       editorData: { markdown: '调研 gpt-live 的定价' },
     });
     const decide = vi.fn().mockResolvedValue({
-      answers: { meaningChanged: { probability: 1, type: 'predicate' } },
+      answers: { meaningChanged: { probability: 1, type: 'boolean' } },
       id: 'dec-2',
       model: 'typesafe/jev-1.13',
       providerMetadata: { lobehub: { decisionMode: 'native' } },
@@ -875,8 +875,8 @@ describe('Quick Note source edits', () => {
   });
 
   it.each([
-    [{ probability: 0.5, type: 'predicate' }, 'changed', 0.5],
-    [{ probability: 0.49, type: 'predicate' }, 'unchanged', 0.49],
+    [{ probability: 0.5, type: 'boolean' }, 'changed', 0.5],
+    [{ probability: 0.49, type: 'boolean' }, 'unchanged', 0.49],
     // A refusal never stales Proposals: that needs a positive answer.
     [{ reason: 'cannot compare', type: 'refusal' }, 'unchanged', 0],
   ] as const)('maps a meaningChanged answer %o to %s', async (answer, status, probability) => {
@@ -899,7 +899,7 @@ describe('Quick Note source edits', () => {
     ).toEqual({ baselineRunId: run.id, probability, status });
     expect(decide.mock.calls[0][0].questions.meaningChanged).toMatchObject({
       criteria: { false: expect.any(String), true: expect.any(String) },
-      type: 'predicate',
+      type: 'boolean',
     });
   });
 

@@ -36,9 +36,9 @@ describe('isQuickNoteTextEquivalent', () => {
 });
 
 describe('buildQuickNoteMeaningChangeQuestions', () => {
-  it('asks one predicate with both criteria', () => {
+  it('asks one boolean question with both criteria', () => {
     const { meaningChanged } = buildQuickNoteMeaningChangeQuestions();
-    expect(meaningChanged.type).toBe('predicate');
+    expect(meaningChanged.type).toBe('boolean');
     expect(meaningChanged.instructions).toBeTruthy();
     expect(meaningChanged.criteria.true).toBeTruthy();
     expect(meaningChanged.criteria.false).toBeTruthy();

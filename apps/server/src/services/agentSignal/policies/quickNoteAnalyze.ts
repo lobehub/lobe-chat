@@ -237,7 +237,7 @@ const createQuickNoteActionHandlers = (options: QuickNotePolicyOptions) => [
 ];
 
 /**
- * `quick_note.content.changed` → `meaningChanged` predicate → stale marking.
+ * `quick_note.content.changed` → `meaningChanged` boolean → stale marking.
  *
  * Rate limit: the producer debounces. Every real edit pushes the note's
  * `content_check_due_at` back by the idle delay, and the minute sweep emits one source once the
