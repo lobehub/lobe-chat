@@ -1,15 +1,7 @@
 import type { SFSymbol } from '@lobechat/electron-client-ipc';
 import { getWorkingDirEffectivePath } from '@lobechat/types';
 import { nanoid } from '@lobechat/utils';
-import {
-  ActionIcon,
-  type DropdownItem,
-  DropdownMenu,
-  Flexbox,
-  Icon,
-  type IconProps,
-  Skeleton,
-} from '@lobehub/ui';
+import { ActionIcon, type DropdownItem, DropdownMenu, Flexbox, Icon, Skeleton } from '@lobehub/ui';
 import { createStaticStyles, cssVar } from '@lobehub/ui';
 import { SkillsIcon } from '@lobehub/ui/icons';
 import {
@@ -36,7 +28,6 @@ import {
   Activity,
   lazy,
   memo,
-  type ReactNode,
   Suspense,
   useCallback,
   useEffect,
@@ -82,10 +73,20 @@ import { sandboxActions, sandboxSelectors, useSandboxStore } from '@/store/sandb
 
 import { type ComposerTarget, createComposerTarget, resolveThreadComposerTarget } from '../types';
 import DeferredSkeleton from './DeferredSkeleton';
+import DynamicTabPanes, { dynamicTabDescriptor } from './DynamicTabPanes';
+import {
+  BROWSER_TAB_KEY,
+  BROWSER_TAB_PREFIX,
+  type BrowserTabMetadata,
+  isBrowserTab,
+  isCanvasTab,
+  isDynamicTab,
+  type SidebarTabDescriptor,
+} from './dynamicTabs';
 import FilesPane from './Files/FilesPane';
 import { useFilesPaneLocation } from './Files/useFilesPaneLocation';
 import { sidebarWidthBudget } from './fitsBesidePortal';
-import { MAX_PANEL_WIDTH, MIN_PANEL_WIDTH, OVERVIEW_PANEL_WIDTH } from './layout';
+import { CANVAS_MIN_WIDTH, MAX_PANEL_WIDTH, MIN_PANEL_WIDTH, OVERVIEW_PANEL_WIDTH } from './layout';
 import Overview from './Overview';
 import { getStatusDeviceId } from './Overview/overviewData';
 import OverviewSlot from './OverviewSlot';
@@ -97,7 +98,6 @@ import WorkspaceTab from './WorkspaceTab';
 import WorksSection from './WorksSection';
 
 const ParamsSection = lazy(() => import('./ParamsSection'));
-const BrowserPane = lazy(() => import('./Browser'));
 
 const styles = createStaticStyles(({ css }) => ({
   body: css`
@@ -126,12 +126,6 @@ const styles = createStaticStyles(({ css }) => ({
   `,
   add: css`
     flex-shrink: 0;
-  `,
-  favicon: css`
-    width: 14px;
-    height: 14px;
-    border-radius: 2px;
-    object-fit: contain;
   `,
   overviewBody: css`
     overflow-y: auto;
@@ -195,23 +189,6 @@ const PINNED_TABS_STORAGE_KEY = 'lobechat-working-sidebar-pinned-tabs-v1';
 const OVERVIEW_TRANSITION = { duration: 0.25, ease: [0.32, 0.72, 0, 1] } as const;
 // Two-pane Review (diff list + file-tree rail) is cramped below this.
 const TWO_PANE_MIN_WIDTH = 560;
-
-interface SidebarTabDescriptor {
-  icon: IconProps['icon'];
-  iconNode?: ReactNode;
-  key: string;
-  label: ReactNode;
-}
-
-interface BrowserTabMetadata {
-  faviconUrl?: string;
-  title: string;
-  url: string;
-}
-
-const BROWSER_TAB_KEY = 'browser';
-const BROWSER_TAB_PREFIX = 'browser:';
-const isBrowserTab = (tab: string) => tab === BROWSER_TAB_KEY || tab.startsWith(BROWSER_TAB_PREFIX);
 
 interface AgentWorkingSidebarProps {
   /**
@@ -537,7 +514,8 @@ const AgentWorkingSidebar = memo<AgentWorkingSidebarProps>(({ availableWidth }) 
   );
   const availableTabsSignature = JSON.stringify(tabDescriptors.map((tab) => tab.key));
   const isAvailableTab = useCallback(
-    (tab: string) => availableTabs.has(tab) || (browserAvailable && isBrowserTab(tab)),
+    (tab: string) =>
+      availableTabs.has(tab) || (browserAvailable && isBrowserTab(tab)) || isCanvasTab(tab),
     [availableTabs, browserAvailable],
   );
   const openTabsContextKey = topicId
@@ -570,7 +548,7 @@ const AgentWorkingSidebar = memo<AgentWorkingSidebarProps>(({ availableWidth }) 
   const pinnedTabs = useMemo(
     () =>
       (pinnedTabsByAgent[pinnedTabsAgentKey] ?? []).filter(
-        (tab) => !isBrowserTab(tab) && isAvailableTab(tab),
+        (tab) => !isDynamicTab(tab) && isAvailableTab(tab),
       ),
     [isAvailableTab, pinnedTabsAgentKey, pinnedTabsByAgent],
   );
@@ -702,7 +680,7 @@ const AgentWorkingSidebar = memo<AgentWorkingSidebarProps>(({ availableWidth }) 
 
   const pinTab = useCallback(
     (tab: string) => {
-      if (!availableTabs.has(tab) || isBrowserTab(tab)) return;
+      if (!availableTabs.has(tab) || isDynamicTab(tab)) return;
       updateOpenedTabs((current) => (current.includes(tab) ? current : [...current, tab]));
       updatePinnedTabs((current) => (current.includes(tab) ? current : [...current, tab]));
     },
@@ -749,20 +727,14 @@ const AgentWorkingSidebar = memo<AgentWorkingSidebarProps>(({ availableWidth }) 
   const closeTab = useCallback((tab: string) => closeTabs([tab]), [closeTabs]);
 
   const displayedTabs = openedTabs
-    .map((tab): SidebarTabDescriptor | undefined => {
-      if (!isBrowserTab(tab)) return availableTabs.get(tab);
-      const metadata = browserTabMetadata[`${openTabsContextKey}:${tab}`];
-      const fallbackLabel = t('workingPanel.browser.title');
-      const label = metadata?.title?.trim() || fallbackLabel;
-      return {
-        icon: Globe2Icon,
-        iconNode: metadata?.faviconUrl ? (
-          <img alt="" className={styles.favicon} src={metadata.faviconUrl} />
-        ) : undefined,
-        key: tab,
-        label,
-      };
-    })
+    .map(
+      (tab) =>
+        dynamicTabDescriptor(
+          tab,
+          browserTabMetadata[`${openTabsContextKey}:${tab}`],
+          t('workingPanel.browser.title'),
+        ) ?? availableTabs.get(tab),
+    )
     .filter((tab): tab is SidebarTabDescriptor => Boolean(tab));
   const createTabContextMenuItems = useCallback(
     (tab: string, index: number): NativeContextMenuItem[] => {
@@ -773,7 +745,7 @@ const AgentWorkingSidebar = memo<AgentWorkingSidebarProps>(({ availableWidth }) 
       const hasClosable = (tabs: string[]) => tabs.some((item) => !pinnedTabsSet.has(item));
 
       return [
-        ...(!isBrowserTab(tab)
+        ...(!isDynamicTab(tab)
           ? [
               {
                 icon: pinned ? PinOffIcon : PinIcon,
@@ -896,7 +868,12 @@ const AgentWorkingSidebar = memo<AgentWorkingSidebarProps>(({ availableWidth }) 
     false,
   );
   const reviewTwoPane = activeTab === 'review' && reviewAvailable && showReviewTree;
-  const displayWidth = reviewTwoPane ? Math.max(storedWidth, TWO_PANE_MIN_WIDTH) : storedWidth;
+  const preferredMinWidth = reviewTwoPane
+    ? TWO_PANE_MIN_WIDTH
+    : isCanvasTab(activeTab)
+      ? CANVAS_MIN_WIDTH
+      : 0;
+  const displayWidth = Math.max(storedWidth, preferredMinWidth);
   // Yield the row to conversation + portal when the three no longer fit. A
   // stored width that merely outgrew the current row (the user dragged the
   // panel out, or resized the window down) renders clamped instead of
@@ -1050,7 +1027,7 @@ const AgentWorkingSidebar = memo<AgentWorkingSidebarProps>(({ availableWidth }) 
         defaultWidth={renderWidth}
         expand={Boolean(showRightPanel) && fits}
         maxWidth={maxPanelWidth}
-        minWidth={MIN_PANEL_WIDTH}
+        minWidth={Math.min(Math.max(MIN_PANEL_WIDTH, preferredMinWidth), maxPanelWidth)}
         style={!showRightPanel ? { visibility: 'hidden' } : undefined}
         width={renderWidth}
         onSizeChange={(size) => {
@@ -1177,36 +1154,25 @@ const AgentWorkingSidebar = memo<AgentWorkingSidebarProps>(({ availableWidth }) 
                     </Flexbox>
                   </Activity>
                 )}
-                {browserAvailable &&
-                  openedTabs.filter(isBrowserTab).map((tab) => {
-                    const sessionId =
-                      tab === BROWSER_TAB_KEY
-                        ? browserSessionId
-                        : `${browserSessionId}:tab:${tab.slice(BROWSER_TAB_PREFIX.length)}`;
-
-                    return (
-                      <Flexbox
-                        className={activeTab === tab ? styles.pane : styles.paneHidden}
-                        key={sessionId}
-                      >
-                        <BrowserPane
-                          agentId={activeAgentId}
-                          composerTarget={composerTarget}
-                          sessionId={sessionId}
-                          onMetadataChange={(metadata) => {
-                            const metadataKey = `${openTabsContextKey}:${tab}`;
-                            setBrowserTabMetadata((current) =>
-                              current[metadataKey]?.faviconUrl === metadata.faviconUrl &&
-                              current[metadataKey]?.title === metadata.title &&
-                              current[metadataKey]?.url === metadata.url
-                                ? current
-                                : { ...current, [metadataKey]: metadata },
-                            );
-                          }}
-                        />
-                      </Flexbox>
+                <DynamicTabPanes
+                  activeTab={activeTab}
+                  agentId={activeAgentId}
+                  browserAvailable={browserAvailable}
+                  browserSessionId={browserSessionId}
+                  composerTarget={composerTarget}
+                  openedTabs={openedTabs}
+                  visible={!!showRightPanel}
+                  onBrowserMetadataChange={(tab, metadata) => {
+                    const metadataKey = `${openTabsContextKey}:${tab}`;
+                    setBrowserTabMetadata((current) =>
+                      current[metadataKey]?.faviconUrl === metadata.faviconUrl &&
+                      current[metadataKey]?.title === metadata.title &&
+                      current[metadataKey]?.url === metadata.url
+                        ? current
+                        : { ...current, [metadataKey]: metadata },
                     );
-                  })}
+                  }}
+                />
                 {businessTabs.map((tab) => (
                   <Flexbox
                     className={activeTab === tab.key ? styles.pane : styles.paneHidden}

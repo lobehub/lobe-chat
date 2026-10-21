@@ -3,16 +3,35 @@ import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
 import { withScopedPermission } from '@/business/server/trpc-middlewares/rbacPermission';
-import { wsCompatProcedure } from '@/business/server/trpc-middlewares/workspaceAuth';
+import {
+  type WorkspaceRole,
+  wsCompatProcedure,
+} from '@/business/server/trpc-middlewares/workspaceAuth';
 import { ProjectModel } from '@/database/models/project';
+import type { LobeChatDatabase } from '@/database/type';
 import { router } from '@/libs/trpc/lambda';
 import { serverDatabase } from '@/libs/trpc/lambda/middleware';
+import { assertCanPerformResourceAction } from '@/server/services/resourcePermission';
+
+/**
+ * Reads `workspaceRole` as an optional context field: the cloud workspace-auth
+ * override injects it, while the OSS stub leaves it absent.
+ */
+const isWorkspaceAdmin = (ctx: { userId: string; workspaceRole?: WorkspaceRole }) =>
+  ctx.workspaceRole === 'owner' || ctx.workspaceRole === 'admin';
+
+/** Viewers hold no `agent:update` grant, so `projectWriteProcedure` rejects them. */
+const isWorkspaceViewer = (ctx: { workspaceId?: string | null; workspaceRole?: WorkspaceRole }) =>
+  !!ctx.workspaceId && ctx.workspaceRole === 'viewer';
 
 const projectProcedure = wsCompatProcedure.use(serverDatabase).use(async (opts) => {
   const { ctx } = opts;
   return opts.next({
     ctx: {
-      projectModel: new ProjectModel(ctx.serverDB, ctx.userId, ctx.workspaceId ?? undefined),
+      projectModel: new ProjectModel(ctx.serverDB, ctx.userId, ctx.workspaceId ?? undefined, {
+        canManageAllMembers: isWorkspaceAdmin(ctx),
+        readOnly: isWorkspaceViewer(ctx),
+      }),
     },
   });
 });
@@ -31,6 +50,48 @@ function requireResult<T>(result: T | null, message = 'Project not found'): T {
   if (!result) throw new TRPCError({ code: 'NOT_FOUND', message });
   return result;
 }
+
+/** Project rows leave the API with their main agent resolved (LobeAI when cleared). */
+async function withMainAgent<T extends { coordinatorAgentId: string | null }>(
+  projectModel: ProjectModel,
+  project: T,
+) {
+  const [resolved] = await projectModel.resolveCoordinatorAgents([project]);
+  return resolved;
+}
+
+/**
+ * A project only references reusable resources, so binding one requires the
+ * same `use` access as mounting it on an agent. Personal mode is already
+ * scoped to the caller's own rows by the model.
+ */
+const assertResourceUsable = async (
+  ctx: { serverDB: LobeChatDatabase; userId: string; workspaceId?: string | null },
+  resourceType: 'agent' | 'knowledgeBase',
+  resourceId: string,
+) => {
+  if (!ctx.workspaceId) return;
+  await assertCanPerformResourceAction({
+    action: 'use',
+    db: ctx.serverDB,
+    resourceId,
+    resourceType,
+    userId: ctx.userId,
+    workspaceId: ctx.workspaceId,
+  });
+};
+
+const agentBindingPatch = z.object({
+  enabled: z.boolean().optional(),
+  responsibility: z.string().max(1000).nullish(),
+  role: z.string().max(100).nullish(),
+  sortOrder: z.number().int().optional(),
+});
+
+const knowledgeBaseBindingPatch = z.object({
+  enabled: z.boolean().optional(),
+  sortOrder: z.number().int().optional(),
+});
 
 function mapProjectError(error: unknown, operation: string): never {
   if (error instanceof TRPCError) throw error;
@@ -57,17 +118,10 @@ export const projectRouter = router({
     }),
 
   addAgent: projectWriteProcedure
-    .input(
-      idInput.extend({
-        agentId: z.string(),
-        enabled: z.boolean().optional(),
-        responsibility: z.string().nullish(),
-        role: z.string().nullish(),
-        sortOrder: z.number().int().optional(),
-      }),
-    )
+    .input(idInput.extend({ agentId: z.string() }).merge(agentBindingPatch))
     .mutation(async ({ ctx, input: { id, ...input } }) => {
       try {
+        await assertResourceUsable(ctx, 'agent', input.agentId);
         return {
           data: requireResult(await ctx.projectModel.addAgent(id, input)),
           message: 'Agent added to project',
@@ -79,15 +133,10 @@ export const projectRouter = router({
     }),
 
   addKnowledgeBase: projectWriteProcedure
-    .input(
-      idInput.extend({
-        enabled: z.boolean().optional(),
-        knowledgeBaseId: z.string(),
-        sortOrder: z.number().int().optional(),
-      }),
-    )
+    .input(idInput.extend({ knowledgeBaseId: z.string() }).merge(knowledgeBaseBindingPatch))
     .mutation(async ({ ctx, input: { id, ...input } }) => {
       try {
+        await assertResourceUsable(ctx, 'knowledgeBase', input.knowledgeBaseId);
         return {
           data: requireResult(await ctx.projectModel.addKnowledgeBase(id, input)),
           message: 'Knowledge base added to project',
@@ -126,7 +175,7 @@ export const projectRouter = router({
     .mutation(async ({ ctx, input }) => {
       try {
         return {
-          data: await ctx.projectModel.create(input),
+          data: await withMainAgent(ctx.projectModel, await ctx.projectModel.create(input)),
           message: 'Project created',
           success: true,
         };
@@ -149,7 +198,10 @@ export const projectRouter = router({
 
   detail: projectProcedure.input(idInput).query(async ({ ctx, input }) => {
     try {
-      const project = requireResult(await ctx.projectModel.findByIdOrSlug(input.id));
+      const project = await withMainAgent(
+        ctx.projectModel,
+        requireResult(await ctx.projectModel.findByIdOrSlug(input.id)),
+      );
       const [agents, completionReviews, knowledgeBases, tasks, works] = await Promise.all([
         ctx.projectModel.listAgents(project.id),
         ctx.projectModel.listCompletionReviews(project.id),
@@ -158,7 +210,15 @@ export const projectRouter = router({
         ctx.projectModel.listWorks(project.id),
       ]);
       return {
-        data: { agents, completionReviews, knowledgeBases, project, tasks, works },
+        data: {
+          agents,
+          completionReviews,
+          knowledgeBases,
+          permissions: ctx.projectModel.getPermissions(project),
+          project,
+          tasks,
+          works,
+        },
         success: true,
       };
     } catch (error) {
@@ -169,7 +229,10 @@ export const projectRouter = router({
   find: projectProcedure.input(idInput).query(async ({ ctx, input }) => {
     try {
       return {
-        data: requireResult(await ctx.projectModel.findByIdOrSlug(input.id)),
+        data: await withMainAgent(
+          ctx.projectModel,
+          requireResult(await ctx.projectModel.findByIdOrSlug(input.id)),
+        ),
         success: true,
       };
     } catch (error) {
@@ -187,7 +250,10 @@ export const projectRouter = router({
     )
     .query(async ({ ctx, input }) => {
       try {
-        return { data: await ctx.projectModel.list(input), success: true };
+        return {
+          data: await ctx.projectModel.resolveCoordinatorAgents(await ctx.projectModel.list(input)),
+          success: true,
+        };
       } catch (error) {
         mapProjectError(error, 'list');
       }
@@ -303,13 +369,59 @@ export const projectRouter = router({
     )
     .mutation(async ({ ctx, input: { id, ...input } }) => {
       try {
+        if (input.visibility !== undefined) {
+          const project = requireResult(await ctx.projectModel.findById(id));
+          if (project.userId !== ctx.userId) {
+            throw new TRPCError({
+              code: 'FORBIDDEN',
+              message: 'Only the project creator can change its visibility',
+            });
+          }
+        }
         return {
-          data: requireResult(await ctx.projectModel.update(id, input)),
+          data: await withMainAgent(
+            ctx.projectModel,
+            requireResult(await ctx.projectModel.update(id, input)),
+          ),
           message: 'Project updated',
           success: true,
         };
       } catch (error) {
         mapProjectError(error, 'update');
+      }
+    }),
+
+  updateAgent: projectWriteProcedure
+    .input(idInput.extend({ agentId: z.string() }).merge(agentBindingPatch))
+    .mutation(async ({ ctx, input: { agentId, id, ...patch } }) => {
+      try {
+        return {
+          data: requireResult(
+            await ctx.projectModel.updateAgent(id, agentId, patch),
+            'Binding not found',
+          ),
+          message: 'Project agent updated',
+          success: true,
+        };
+      } catch (error) {
+        mapProjectError(error, 'updateAgent');
+      }
+    }),
+
+  updateKnowledgeBase: projectWriteProcedure
+    .input(idInput.extend({ knowledgeBaseId: z.string() }).merge(knowledgeBaseBindingPatch))
+    .mutation(async ({ ctx, input: { id, knowledgeBaseId, ...patch } }) => {
+      try {
+        return {
+          data: requireResult(
+            await ctx.projectModel.updateKnowledgeBase(id, knowledgeBaseId, patch),
+            'Binding not found',
+          ),
+          message: 'Project knowledge base updated',
+          success: true,
+        };
+      } catch (error) {
+        mapProjectError(error, 'updateKnowledgeBase');
       }
     }),
 

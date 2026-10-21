@@ -33,6 +33,7 @@ import { PageAgentProvider } from './PageAgentProvider';
 import { PageEditorProvider } from './PageEditorProvider';
 import RightPanel from './RightPanel';
 import { usePageEditorStore } from './store';
+import TableOfContents from './TableOfContents';
 import TitleSection from './TitleSection';
 import { usePageEditable } from './usePageEditable';
 
@@ -414,6 +415,9 @@ const PageEditorCanvas = memo<PageEditorCanvasProps>((props) => {
           </Flexbox>
         </WideScreenContainer>
       </Flexbox>
+      {!isHtmlPage && (
+        <TableOfContents contentRef={editorContentRef} scrollRef={contentWrapperRef} />
+      )}
       {documentId && <DiffAllToolbar documentId={documentId} editor={editor} />}
     </Flexbox>
   );

@@ -414,9 +414,7 @@ export const prepareOperation = async (
     agentConfig,
     appContext,
     assistantMessageId,
-    contextSelections,
     model,
-    pageSelections,
     parentMessageId,
     prompt,
     provider,
@@ -424,6 +422,7 @@ export const prepareOperation = async (
     shareGate,
     topicId,
     userMessageId,
+    userMessageMetadata,
   } = ctx;
   const {
     botPlatformContext,
@@ -568,20 +567,16 @@ export const prepareOperation = async (
   // - videoList: video-capable models render these as video parts
   // - audioList: audio-capable models render these as audio parts
   // - fileList: MessageContentProcessor injects content via filesPrompts() XML
-  // - metadata: the selection injectors read attached selections from here,
-  //   just as they read the persisted ones on history rows
+  // - metadata: the row's persisted metadata, so injectors that read attached
+  //   content (selections, local file snapshots) see this turn as they will
+  //   see it in history
   const userMessage = {
     audioList: runAttachments.audioList,
     content: ephemeralUserMessage ?? prompt,
     fileList: runAttachments.fileList,
     id: userMessageId,
     imageList: runAttachments.imageList,
-    ...((contextSelections?.length || pageSelections?.length) && {
-      metadata: {
-        ...(contextSelections?.length ? { contextSelections } : undefined),
-        ...(pageSelections?.length ? { pageSelections } : undefined),
-      },
-    }),
+    ...(userMessageMetadata && { metadata: userMessageMetadata }),
     role: 'user' as const,
     videoList: runAttachments.videoList,
   };

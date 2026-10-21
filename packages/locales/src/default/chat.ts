@@ -17,6 +17,20 @@ export default {
   'backgroundActivity.topic': 'Conversation',
   'backgroundActivity.unavailable':
     'Resource data is unavailable. Displayed values may be out of date.',
+  'heteroAgent.claudeQuota.accountNotSignedIn':
+    "The Claude Code account {{account}} isn't signed in on this device. Sign in to it from Manage accounts, or switch to another account.",
+  'heteroAgent.claudeQuota.accountResolveFailed':
+    "Couldn't look up this Claude Code account's login on this device. Try again, or switch to another account.",
+  'heteroAgent.claudeQuota.manage.add': 'Add account',
+  'heteroAgent.claudeQuota.manage.addHintDesktop':
+    'Each account signs in on this device; runs use the account you pick.',
+  'heteroAgent.claudeQuota.manage.loginFailed': "Sign-in didn't finish. Try again.",
+  'heteroAgent.claudeQuota.manage.loginSuccess': 'Signed in as {{account}}',
+  'heteroAgent.claudeQuota.manage.loginWaiting': 'Finish signing in in your browser…',
+  'heteroAgent.claudeQuota.manage.notSignedIn': 'Not signed in on this device',
+  'heteroAgent.claudeQuota.manage.signIn': 'Sign in',
+  'heteroAgent.claudeQuota.noRunnableAccount':
+    "None of the Claude Code accounts in this agent's rotation are signed in on this device. Sign one in from Manage accounts, or add a signed-in account to the rotation.",
   'processExplorer.copyPid': 'Copy PID',
   'processExplorer.filter': 'Filter',
   'processExplorer.live': 'Live · updates every 2 s',
@@ -1311,12 +1325,17 @@ export default {
   'grokBuildInstallGuide.menuNotification.title': 'Grok Build CLI not found',
   'grokBuildInstallGuide.reason': 'LobeHub could not start Grok Build: {{message}}',
   'grokBuildInstallGuide.title': 'Install Grok Build CLI',
+  'workingDirectoryGuide.actions.resetToSource': 'Switch back to {{name}} and retry',
   'workingDirectoryGuide.actions.retry': 'Retry',
   'workingDirectoryGuide.desc':
     'The working directory saved for this conversation no longer exists.',
   'workingDirectoryGuide.hint':
     'Choose an existing folder from the working directory selector, then retry this message.',
+  'workingDirectoryGuide.resetFailed':
+    'Could not switch back to the main directory. Please try again.',
   'workingDirectoryGuide.title': 'Working directory unavailable',
+  'workingDirectoryGuide.worktreeHint':
+    'This conversation was still in a worktree that has since been removed. Switch back to the main directory to keep working.',
   'opencodeInstallGuide.actions.openDocs': 'Open Install Guide',
   'opencodeInstallGuide.actions.openSystemTools': 'Open System Tools',
   'opencodeInstallGuide.afterInstall':
@@ -1699,6 +1718,11 @@ export default {
   'sessionGroup.manageCategory': 'Manage Category',
   'sessionGroup.confirmRemoveGroupAlert':
     'This category is about to be deleted. After deletion, the agents in this category will be moved to the default list. Please confirm your operation.',
+  'sessionGroup.createAgentFailed': "Couldn't create the agent. Please try again.",
+  'sessionGroup.createAgentPinFailed':
+    'Agent created, but pinning failed. You can pin it from the list.',
+  'sessionGroup.createAgentRefreshFailed':
+    "Agent created, but the list couldn't refresh. Refresh the list to see it.",
   'sessionGroup.createAgentSuccess': 'Agent created successfully',
   'sessionGroup.createGroup': 'Add New Category',
   'sessionGroup.createGroupFailed': 'Failed to create category',
@@ -3551,6 +3575,8 @@ export default {
   'workingPanel.works.emptyVersions': 'No versions yet',
   'workingPanel.works.error': 'Failed to load works',
   'workingPanel.works.documentLoadError': 'Failed to load document',
+  'workingPanel.works.canvasPublished': 'Published',
+  'workingPanel.works.canvasUntitled': 'Untitled canvas',
   'workingPanel.works.changeType.created': 'Created',
   'workingPanel.works.changeType.updated': 'Updated',
   'workingPanel.works.documentDeleted': 'This document has been deleted',

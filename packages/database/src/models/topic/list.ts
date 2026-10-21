@@ -75,6 +75,7 @@ export const query = async (
     pageSize = 9999,
     groupId,
     isInbox,
+    legacySessionId,
     sortBy,
     timing,
     triggers,
@@ -270,12 +271,15 @@ export const query = async (
   // inbox agent additionally adopts very old orphan rows where every owner
   // column (session / group / agent) is null.
   if (agentId) {
-    const agentCondition = isInbox
-      ? or(
-          eq(topics.agentId, agentId),
-          and(isNull(topics.sessionId), isNull(topics.groupId), isNull(topics.agentId)),
-        )
-      : eq(topics.agentId, agentId);
+    const agentCondition = or(
+      eq(topics.agentId, agentId),
+      legacySessionId
+        ? and(isNull(topics.agentId), eq(topics.sessionId, legacySessionId))
+        : undefined,
+      isInbox
+        ? and(isNull(topics.sessionId), isNull(topics.groupId), isNull(topics.agentId))
+        : undefined,
+    );
 
     const agentWhere = and(
       ctx.ownership(),

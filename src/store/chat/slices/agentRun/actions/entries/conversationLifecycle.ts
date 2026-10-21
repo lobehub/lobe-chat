@@ -24,6 +24,7 @@ import {
   getWorkingDirSourcePath,
   RequestTrigger,
   resolveAgentAgencyConfig,
+  toComposerUserMessage,
 } from '@lobechat/types';
 import { generateEntityId, nanoid } from '@lobechat/utils';
 import { toast } from '@lobehub/ui';
@@ -138,10 +139,7 @@ import {
   parseSingleAgentMentionDirectRoute,
   processCommands,
 } from './commandBus';
-import {
-  attachSendTimeMetadataToUserMessage,
-  mergePartialPersistedMessages,
-} from './persistedMessages';
+import { mergePartialPersistedMessages, resolveSendResponseMessages } from './persistedMessages';
 import { resolveExistingTopicForRun } from './resolveExistingTopic';
 
 /**
@@ -1861,9 +1859,6 @@ export class ConversationLifecycleActionImpl {
             ? { ...operationContext, topicId: undefined }
             : operationContext,
           messageContext: operationContext,
-          // The server persists the user row on this path; without these it
-          // replaces the optimistic row and the attached quote disappears.
-          contextSelections: contextSelections?.length ? contextSelections : undefined,
           fileIds: fileIdList,
           message,
           // The server persists the user row on this path, so a queued
@@ -1877,7 +1872,6 @@ export class ConversationLifecycleActionImpl {
           clientOperations,
           replacesOperationId: replaceableGatewayOperationId,
           optimisticTopic,
-          pageSelections: pageSelections?.length ? pageSelections : undefined,
           projectWorkingDirectoryId: stagedDirectory?.id,
           // Forward @-mentioned tool ids so the server runtime enables them for
           // this run — the gateway/server path otherwise never sees the mention
@@ -1900,6 +1894,9 @@ export class ConversationLifecycleActionImpl {
           // state while waiting for the first step_start event to replace
           // messages with the server's real IDs.
           tempMessageIds: [tempAssistantId],
+          // The server persists the user row here: build it from the metadata the
+          // optimistic row shows, the same object `sendMessageInServer` persists.
+          userMessage: toComposerUserMessage({ editorData, metadata: userMessageMetadata }),
         });
         const cancelledAfterPersistence = abortController.signal.aborted;
 
@@ -2153,25 +2150,23 @@ export class ConversationLifecycleActionImpl {
           finalMessageKey,
         );
       this.#get().moveVoiceMessages(operationContext, finalContext);
-      const persistedMessages = attachSendTimeMetadataToUserMessage(
-        data.messages,
-        data.userMessageId,
-        userMessageMetadata,
-      );
       data = {
         ...data,
-        messages: responseMeta.__isPartialMessages
-          ? mergePartialPersistedMessages(
-              this.#get().messagesMap[finalMessageKey] || [],
-              persistedMessages,
-              [tempId, tempAssistantId],
-            )
-          : persistedMessages,
+        messages: resolveSendResponseMessages({
+          currentMessages: this.#get().messagesMap[finalMessageKey] || [],
+          isPartial: !!responseMeta.__isPartialMessages,
+          messages: data.messages,
+          replacedMessageIds: [tempId, tempAssistantId],
+          userMessageId: data.userMessageId,
+          userMessageMetadata,
+        }),
       };
 
+      // The send response skips Work summaries; keep the ones earlier replies already carry.
       this.#get().replaceMessages(data.messages, {
         context: finalContext,
         action: 'sendMessage/serverResponse',
+        preserveWorks: true,
       });
 
       if (isCreateNewTopic && data.topicId) {

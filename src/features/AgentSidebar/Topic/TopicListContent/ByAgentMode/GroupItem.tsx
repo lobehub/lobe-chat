@@ -12,6 +12,7 @@ import {
   cssVar,
   cx,
   Flexbox,
+  Tag,
   Text,
 } from '@lobehub/ui';
 import isEqual from 'fast-deep-equal';
@@ -82,6 +83,8 @@ const GroupItem = memo<GroupItemComponentProps>(({ group }) => {
     (isOwnBucket ? (activeMeta.title ?? activeMeta.name) : undefined) ??
     t('groupTitle.byAgent.unknown');
 
+  const isCoordinator = !!agentId && agentId === scope?.coordinatorAgentId;
+
   // Only an attributed bucket in a project-scoped list can start a topic with
   // its agent preselected; the `no-agent` bucket has no agent to preselect.
   const canAddTopic = !!scope && !!agentId;
@@ -107,6 +110,11 @@ const GroupItem = memo<GroupItemComponentProps>(({ group }) => {
             <Text ellipsis fontSize={14} style={{ flex: 1 }}>
               {name}
             </Text>
+            {isCoordinator && (
+              <Tag color={'primary'} size={'small'}>
+                {tProject('sidebar.coordinatorTag')}
+              </Tag>
+            )}
           </Flexbox>
         </AccordionTrigger>
         {canAddTopic && (

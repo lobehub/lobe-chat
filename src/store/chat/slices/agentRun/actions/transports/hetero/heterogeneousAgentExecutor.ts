@@ -2005,7 +2005,7 @@ export const executeHeterogeneousAgent = async (
     // before; a quota-service failure must never block the run.
     const quotaAccountPlan = providerBindingActive
       ? { env: {}, externalAccountId: undefined }
-      : await resolveQuotaAccountSpawnPlan(context.agentId, adapterType);
+      : await resolveQuotaAccountSpawnPlan(context.agentId, adapterType, heterogeneousProvider.env);
 
     const sessionEnv = {
       // Tell the CLI which LobeHub conversation and workspace it runs inside.

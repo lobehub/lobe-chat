@@ -1,4 +1,5 @@
-import { createProjectCoordinatorAgentConfig } from '@lobechat/builtin-agents';
+import { BUILTIN_AGENT_SLUGS, createProjectCoordinatorAgentConfig } from '@lobechat/builtin-agents';
+import { INBOX_SESSION_ID } from '@lobechat/const';
 import type { ProjectStatus, ProjectVisibility } from '@lobechat/types';
 import { and, asc, desc, eq, inArray, isNull, max, or, sql } from 'drizzle-orm';
 
@@ -30,6 +31,8 @@ export interface CreateProjectInput {
   visibility?: ProjectVisibility;
 }
 
+const BUILTIN_SLUGS: ReadonlySet<string> = new Set<string>(Object.values(BUILTIN_AGENT_SLUGS));
+
 export interface UpdateProjectInput {
   avatar?: string | null;
   description?: string | null;
@@ -46,10 +49,27 @@ export interface ProjectAgentInput {
   sortOrder?: number;
 }
 
+export type ProjectAgentPatch = Partial<Omit<ProjectAgentInput, 'agentId'>>;
+
 export interface ProjectKnowledgeBaseInput {
   enabled?: boolean;
   knowledgeBaseId: string;
   sortOrder?: number;
+}
+
+export type ProjectKnowledgeBasePatch = Partial<Omit<ProjectKnowledgeBaseInput, 'knowledgeBaseId'>>;
+
+export interface ProjectModelOptions {
+  /**
+   * Workspace owners and admins manage the agent members of every readable
+   * project, not only the projects they created.
+   */
+  canManageAllMembers?: boolean;
+  /**
+   * The caller only reads the workspace (a viewer): the write gate rejects
+   * every project mutation, whatever the caller created or curates.
+   */
+  readOnly?: boolean;
 }
 
 export interface ProjectWorkInput {
@@ -62,14 +82,32 @@ export class ProjectModel {
     private readonly db: LobeChatDatabase,
     private readonly userId: string,
     private readonly workspaceId?: string,
+    private readonly options: ProjectModelOptions = {},
   ) {}
 
   private readable() {
     return buildWorkspaceWhere({ userId: this.userId, workspaceId: this.workspaceId }, projects);
   }
 
+  /**
+   * Any member who can edit (the router's `agent:update` gate keeps viewers out)
+   * may manage a project they can see, whoever created it. Private projects stay
+   * creator-only because `readable()` hides them from everyone else.
+   */
   private manageable() {
+    return this.readable();
+  }
+
+  /** Visibility decides who sees the project at all, so only its creator may change it. */
+  private ownedByCaller() {
     return and(this.readable(), eq(projects.userId, this.userId));
+  }
+
+  /** Member management: the creator, or a workspace admin for any readable project. */
+  private membersManageable() {
+    return this.options.canManageAllMembers && this.workspaceId
+      ? this.readable()
+      : this.ownedByCaller();
   }
 
   async create(input: CreateProjectInput) {
@@ -131,11 +169,59 @@ export class ProjectModel {
         .delete(projects)
         .where(and(eq(projects.id, id), this.manageable()))
         .returning();
-      await new AgentModel(tx as LobeChatDatabase, this.userId, this.workspaceId).delete(
-        project.coordinatorAgentId,
-      );
+      if (project.coordinatorAgentId) {
+        await this.deleteDedicatedCoordinator(tx as LobeChatDatabase, project.coordinatorAgentId);
+      }
       return deleted ?? null;
     });
+  }
+
+  /**
+   * Remove a coordinator only when it was provisioned for this project: a
+   * virtual, non-builtin agent no other project still uses. Reusable agents
+   * (user agents, LobeAI) stay with their sessions intact.
+   */
+  private async deleteDedicatedCoordinator(db: LobeChatDatabase, agentId: string) {
+    const [agent] = await db
+      .select({ slug: agents.slug, virtual: agents.virtual })
+      .from(agents)
+      .where(
+        and(
+          eq(agents.id, agentId),
+          buildWorkspaceWhere({ userId: this.userId, workspaceId: this.workspaceId }, agents),
+        ),
+      )
+      .limit(1);
+    if (!agent?.virtual || (agent.slug && BUILTIN_SLUGS.has(agent.slug))) return;
+
+    const [stillUsed] = await db
+      .select({ id: projects.id })
+      .from(projects)
+      .where(eq(projects.coordinatorAgentId, agentId))
+      .limit(1);
+    if (stillUsed) return;
+
+    await new AgentModel(db, this.userId, this.workspaceId).delete(agentId);
+  }
+
+  /**
+   * Fill each project's main agent. The column is cleared when that agent is
+   * deleted (`ON DELETE SET NULL`); such projects fall back to LobeAI.
+   */
+  async resolveCoordinatorAgents<T extends { coordinatorAgentId: string | null }>(
+    items: T[],
+  ): Promise<(T & { coordinatorAgentId: string })[]> {
+    if (items.every((item) => item.coordinatorAgentId)) {
+      return items as (T & { coordinatorAgentId: string })[];
+    }
+    const inbox = await new AgentModel(this.db, this.userId, this.workspaceId).getBuiltinAgent(
+      INBOX_SESSION_ID,
+    );
+    if (!inbox) throw new Error('Project main agent not found');
+    return items.map((item) => ({
+      ...item,
+      coordinatorAgentId: item.coordinatorAgentId ?? inbox.id,
+    }));
   }
 
   async findById(id: string) {
@@ -180,7 +266,12 @@ export class ProjectModel {
     const [project] = await this.db
       .update(projects)
       .set({ ...input, updatedAt: new Date() })
-      .where(and(eq(projects.id, id), this.manageable()))
+      .where(
+        and(
+          eq(projects.id, id),
+          input.visibility === undefined ? this.manageable() : this.ownedByCaller(),
+        ),
+      )
       .returning();
     return project ?? null;
   }
@@ -219,8 +310,15 @@ export class ProjectModel {
     return project ?? null;
   }
 
+  /** Members in project order, the main agent always first. */
   async listAgents(projectId: string) {
-    if (!(await this.findById(projectId))) return null;
+    const project = await this.findById(projectId);
+    if (!project) return null;
+    // A cleared main agent (LobeAI fallback) has no member row to lead with. A
+    // bare constant would not do instead: Postgres reads `ORDER BY 0` as a column position.
+    const coordinatorFirst = project.coordinatorAgentId
+      ? [sql`CASE WHEN ${projectAgents.agentId} = ${project.coordinatorAgentId} THEN 0 ELSE 1 END`]
+      : [];
     return this.db
       .select({ agent: agents, binding: projectAgents })
       .from(projectAgents)
@@ -231,11 +329,15 @@ export class ProjectModel {
           buildWorkspaceWhere({ userId: this.userId, workspaceId: this.workspaceId }, agents),
         ),
       )
-      .orderBy(asc(projectAgents.sortOrder), asc(projectAgents.createdAt));
+      .orderBy(...coordinatorFirst, asc(projectAgents.sortOrder), asc(projectAgents.createdAt));
   }
 
   async addAgent(projectId: string, input: ProjectAgentInput) {
-    if (!(await this.findManageableById(projectId))) return null;
+    const project = await this.findMembersManageableById(projectId);
+    if (!project) return null;
+    if (project.coordinatorAgentId === input.agentId) {
+      throw new Error('The project coordinator is managed by the project');
+    }
     const [agent] = await this.db
       .select({ id: agents.id })
       .from(agents)
@@ -270,8 +372,22 @@ export class ProjectModel {
     return binding;
   }
 
+  async updateAgent(projectId: string, agentId: string, patch: ProjectAgentPatch) {
+    const project = await this.findMembersManageableById(projectId);
+    if (!project) return null;
+    if (project.coordinatorAgentId === agentId) {
+      throw new Error('The project coordinator is managed by the project');
+    }
+    const [binding] = await this.db
+      .update(projectAgents)
+      .set({ ...patch, updatedAt: new Date() })
+      .where(and(eq(projectAgents.projectId, projectId), eq(projectAgents.agentId, agentId)))
+      .returning();
+    return binding ?? null;
+  }
+
   async removeAgent(projectId: string, agentId: string) {
-    const project = await this.findManageableById(projectId);
+    const project = await this.findMembersManageableById(projectId);
     if (!project) return false;
     if (project.coordinatorAgentId === agentId) {
       throw new Error('The project coordinator cannot be removed');
@@ -302,7 +418,8 @@ export class ProjectModel {
   }
 
   async addKnowledgeBase(projectId: string, input: ProjectKnowledgeBaseInput) {
-    if (!(await this.findManageableById(projectId))) return null;
+    // Knowledge is curated by everyone who can read the project, not only its creator.
+    if (!(await this.findById(projectId))) return null;
     const [knowledgeBase] = await this.db
       .select({ id: knowledgeBases.id })
       .from(knowledgeBases)
@@ -334,8 +451,27 @@ export class ProjectModel {
     return binding;
   }
 
+  async updateKnowledgeBase(
+    projectId: string,
+    knowledgeBaseId: string,
+    patch: ProjectKnowledgeBasePatch,
+  ) {
+    if (!(await this.findById(projectId))) return null;
+    const [binding] = await this.db
+      .update(projectKnowledgeBases)
+      .set({ ...patch, updatedAt: new Date() })
+      .where(
+        and(
+          eq(projectKnowledgeBases.projectId, projectId),
+          eq(projectKnowledgeBases.knowledgeBaseId, knowledgeBaseId),
+        ),
+      )
+      .returning();
+    return binding ?? null;
+  }
+
   async removeKnowledgeBase(projectId: string, knowledgeBaseId: string) {
-    if (!(await this.findManageableById(projectId))) return false;
+    if (!(await this.findById(projectId))) return false;
     const deleted = await this.db
       .delete(projectKnowledgeBases)
       .where(
@@ -445,7 +581,13 @@ export class ProjectModel {
         ),
       )
       .limit(1);
-    if (!task?.projectId || !(await this.findById(task.projectId))) return [];
+    if (!task?.projectId) return [];
+    return this.getEnabledKnowledgeBaseIds(task.projectId);
+  }
+
+  /** Enabled project knowledge bases the caller can still reach. */
+  async getEnabledKnowledgeBaseIds(projectId: string) {
+    if (!(await this.findById(projectId))) return [];
 
     const rows = await this.db
       .select({ id: projectKnowledgeBases.knowledgeBaseId })
@@ -453,7 +595,7 @@ export class ProjectModel {
       .innerJoin(knowledgeBases, eq(projectKnowledgeBases.knowledgeBaseId, knowledgeBases.id))
       .where(
         and(
-          eq(projectKnowledgeBases.projectId, task.projectId),
+          eq(projectKnowledgeBases.projectId, projectId),
           eq(projectKnowledgeBases.enabled, true),
           buildWorkspaceWhere(
             { userId: this.userId, workspaceId: this.workspaceId },
@@ -550,6 +692,28 @@ export class ProjectModel {
       .where(and(eq(projects.id, id), this.manageable()))
       .limit(1);
     return project ?? null;
+  }
+
+  async findMembersManageableById(id: string) {
+    const [project] = await this.db
+      .select()
+      .from(projects)
+      .where(and(eq(projects.id, id), this.membersManageable()))
+      .limit(1);
+    return project ?? null;
+  }
+
+  /** What the caller may change on a readable project; drives both the API and the UI. */
+  getPermissions(project: { userId: string; workspaceId: string | null }) {
+    if (this.options.readOnly) {
+      return { canManage: false, canManageKnowledgeBases: false, canManageMembers: false };
+    }
+    const isCreator = project.userId === this.userId;
+    return {
+      canManage: true,
+      canManageKnowledgeBases: true,
+      canManageMembers: isCreator || (!!this.options.canManageAllMembers && !!project.workspaceId),
+    };
   }
 
   /** Link an existing environment to a project; re-attaching is a no-op. */

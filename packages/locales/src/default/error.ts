@@ -192,6 +192,8 @@ export default {
     'This generation was paused due to content safety restrictions. Its waiting period has ended. Revise your prompt and try again.',
   'response.DeviceGatewayNotConfigured':
     "Couldn't reach a run device for this agent. Connect a device, or configure the device gateway on the server, then try again.",
+  'response.DeviceResponseTimeout':
+    "The device didn't respond in time. It may be offline or asleep, or it may still be starting this run. Check that the device is connected and whether this run is already in progress, then try again.",
   'response.RemoteServerOffline':
     'You appear to be offline. This is a problem with your local network, not the app — please check your internet connection and try again.',
   'response.RemoteServerTimeout':
