@@ -43,7 +43,6 @@ export interface CreateProjectOptions {
 
 interface CreateProjectFormState {
   identifier: string;
-  identifierEdited: boolean;
   loading: boolean;
   /** Explicit pick in this modal; otherwise the remembered agent or LobeAI. */
   mainAgentId?: string;
@@ -65,7 +64,6 @@ const CreateProjectContent = memo<CreateProjectOptions>(({ onCreated }) => {
   const createProject = useProjectStore((s) => s.createProject);
   const [form, setForm] = useState<CreateProjectFormState>({
     identifier: '',
-    identifierEdited: false,
     loading: false,
     name: '',
     slug: '',
@@ -83,9 +81,8 @@ const CreateProjectContent = memo<CreateProjectOptions>(({ onCreated }) => {
   );
   const mainAgentId = form.mainAgentId ?? defaultMainAgentId;
   const createInput = getCreateProjectInput(form);
-  const identifierValid = isProjectIdentifierValid(form.identifier);
   const identifierInvalid =
-    (form.identifierEdited || Boolean(form.name.trim())) && !identifierValid;
+    Boolean(form.identifier.trim()) && !isProjectIdentifierValid(form.identifier);
   const slugValid = isProjectSlugValid(form.slug);
 
   const updateForm = (patch: Partial<CreateProjectFormState>) => {
@@ -96,7 +93,6 @@ const CreateProjectContent = memo<CreateProjectOptions>(({ onCreated }) => {
     const suggestions = getProjectFieldSuggestions(name);
     setForm((current) => ({
       ...current,
-      identifier: current.identifierEdited ? current.identifier : suggestions.identifier,
       name,
       slug: current.slugEdited ? current.slug : suggestions.slug,
     }));
@@ -145,10 +141,8 @@ const CreateProjectContent = memo<CreateProjectOptions>(({ onCreated }) => {
             placeholder={t('create.identifierPlaceholder')}
             style={identifierInvalid ? { borderColor: cssVar.colorError } : undefined}
             value={form.identifier}
+            onChange={(event) => updateForm({ identifier: event.target.value.toUpperCase() })}
             onPressEnter={handleCreate}
-            onChange={(event) =>
-              updateForm({ identifier: event.target.value.toUpperCase(), identifierEdited: true })
-            }
           />
           <Text fontSize={12} type={identifierInvalid ? 'danger' : 'secondary'}>
             {t(identifierInvalid ? 'create.identifierInvalid' : 'create.identifierDescription')}

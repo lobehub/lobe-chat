@@ -176,7 +176,7 @@ export const projectRouter = router({
         avatar: z.string().optional(),
         coordinatorAgentId: z.string().optional(),
         description: z.string().optional(),
-        identifier: projectIdentifierInput,
+        identifier: projectIdentifierInput.optional(),
         name: z.string().min(1).max(255),
         slug: projectSlugInput.optional(),
         visibility: z.enum(PROJECT_VISIBILITIES).optional(),

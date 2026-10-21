@@ -255,6 +255,20 @@ describe('ProjectModel', () => {
     expect(await serverDB.select().from(agents).where(eq(agents.id, picked.id))).toHaveLength(1);
   });
 
+  it('lets the identifier be omitted, keeping the default task prefix', async () => {
+    const named = await model.create({ identifier: 'ace', name: 'Named' });
+    const unnamed = await model.create({ name: 'Unnamed' });
+    const taskModel = new TaskModel(serverDB, userId);
+
+    const namedTask = await taskModel.create({ instruction: 'a', projectId: named.id });
+    const unnamedTask = await taskModel.create({ instruction: 'b', projectId: unnamed.id });
+
+    expect(named.identifier).toBe('ACE');
+    expect(unnamed.identifier).toBeNull();
+    expect(namedTask.identifier).toBe('ACE-1');
+    expect(unnamedTask.identifier).toBe('T-2');
+  });
+
   it('refuses to create a project led by an agent outside the scope', async () => {
     const foreign = await new AgentModel(serverDB, otherUserId).create({ title: 'Foreign' });
 

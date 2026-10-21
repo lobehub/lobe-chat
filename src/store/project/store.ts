@@ -48,7 +48,7 @@ interface ProjectStore extends ProjectStoreState {
   addProjectKnowledgeBases: (projectId: string, knowledgeBaseIds: string[]) => Promise<void>;
   createProject: (input: {
     coordinatorAgentId?: string;
-    identifier: string;
+    identifier?: string;
     name: string;
     slug?: string;
   }) => Promise<ProjectListItem>;

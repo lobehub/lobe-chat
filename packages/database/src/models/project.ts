@@ -30,7 +30,8 @@ export interface CreateProjectInput {
   /** Lead the project with an existing agent instead of provisioning a dedicated one. */
   coordinatorAgentId?: string;
   description?: string;
-  identifier: string;
+  /** Task prefix for this project; omit to keep the scope's default prefix. */
+  identifier?: string | null;
   name: string;
   slug?: string;
   visibility?: ProjectVisibility;
@@ -143,8 +144,8 @@ export class ProjectModel {
   }
 
   async create(input: CreateProjectInput) {
-    const identifier = input.identifier.trim().toUpperCase();
-    if (identifier.length < 3 || identifier.length > 6) {
+    const identifier = input.identifier?.trim().toUpperCase() || null;
+    if (identifier && (identifier.length < 3 || identifier.length > 6)) {
       throw new Error('Project identifier must be between 3 and 6 characters');
     }
 
