@@ -1,7 +1,7 @@
 // @vitest-environment node
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { buildRunProjectContextPrompt } from './projectContext';
+import { buildHeteroProjectContext, buildRunProjectContextPrompt } from './projectContext';
 
 const mocks = vi.hoisted(() => ({
   findById: vi.fn(),
@@ -91,5 +91,15 @@ describe('buildRunProjectContextPrompt', () => {
     await expect(buildRunProjectContextPrompt(deps, 'proj-1', 'agt-coord')).resolves.toBe(
       undefined,
     );
+  });
+
+  it('gives a CLI agent the wrapped context without tool-specific delegation rules', async () => {
+    const context = await buildHeteroProjectContext(deps, 'proj-1', 'agt-coord');
+
+    expect(context?.startsWith('<project_context>\n')).toBe(true);
+    expect(context?.endsWith('\n</project_context>')).toBe(true);
+    expect(context).toContain('Writer (agt-writer): copy');
+    expect(context).not.toContain('<coordination_rules>');
+    await expect(buildHeteroProjectContext(deps, undefined, 'agt-coord')).resolves.toBe(undefined);
   });
 });

@@ -19,6 +19,11 @@ export interface ProjectContextTask extends TaskSummary {
 }
 
 export interface ProjectContextPromptInput {
+  /**
+   * Whether the coordinator gets the delegation rules. They name LobeHub task
+   * tools, so a runtime without them (a CLI agent) leaves them out.
+   */
+  coordinationRules?: boolean;
   /** The agent this run executes as. */
   currentAgentId: string;
   knowledgeBases: ProjectContextKnowledgeBase[];
@@ -56,7 +61,15 @@ const COORDINATOR_RULES = [
  * context engine wraps it in `<project_context>`.
  */
 export const buildProjectContextPrompt = (input: ProjectContextPromptInput): string => {
-  const { currentAgentId, knowledgeBases, members, openTasks, project, totalOpenTasks } = input;
+  const {
+    coordinationRules = true,
+    currentAgentId,
+    knowledgeBases,
+    members,
+    openTasks,
+    project,
+    totalOpenTasks,
+  } = input;
   const isCoordinator = project.coordinatorAgentId === currentAgentId;
   const membersById = new Map(members.map((member) => [member.agentId, member]));
 
@@ -108,7 +121,7 @@ export const buildProjectContextPrompt = (input: ProjectContextPromptInput): str
   }
   lines.push('</open_tasks>');
 
-  if (isCoordinator) lines.push(...COORDINATOR_RULES);
+  if (isCoordinator && coordinationRules) lines.push(...COORDINATOR_RULES);
 
   return lines.join('\n');
 };

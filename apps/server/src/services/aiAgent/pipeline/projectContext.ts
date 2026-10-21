@@ -27,6 +27,7 @@ export const buildRunProjectContextPrompt = async (
   deps: ProjectContextDeps,
   projectId: string | undefined,
   agentId: string,
+  options: { coordinationRules?: boolean } = {},
 ): Promise<string | undefined> => {
   if (!projectId) return;
 
@@ -43,6 +44,7 @@ export const buildRunProjectContextPrompt = async (
 
     const openTasks = (tasks ?? []).filter((task) => !CLOSED_TASK_STATUSES.has(task.status));
     return buildProjectContextPrompt({
+      coordinationRules: options.coordinationRules,
       currentAgentId: agentId,
       knowledgeBases: (knowledgeBases ?? [])
         .filter(({ binding }) => binding.enabled)
@@ -73,4 +75,20 @@ export const buildRunProjectContextPrompt = async (
     log('execAgent: failed to build project context for %s: %O', projectId, error);
     return;
   }
+};
+
+/**
+ * The same project context for a heterogeneous (CLI) agent's system context,
+ * which has no context engine to wrap it and no LobeHub task tools to follow
+ * delegation rules with.
+ */
+export const buildHeteroProjectContext = async (
+  deps: ProjectContextDeps,
+  projectId: string | undefined,
+  agentId: string,
+): Promise<string | undefined> => {
+  const prompt = await buildRunProjectContextPrompt(deps, projectId, agentId, {
+    coordinationRules: false,
+  });
+  return prompt && `<project_context>\n${prompt}\n</project_context>`;
 };
