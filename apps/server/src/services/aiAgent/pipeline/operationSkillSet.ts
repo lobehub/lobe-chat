@@ -104,6 +104,7 @@ export const buildOperationSkillSet = async (
 
   try {
     const builtinMetas = builtinSkills.map((s) => ({
+      autoActivate: s.autoActivate,
       content: s.content,
       description: s.description,
       identifier: s.identifier,

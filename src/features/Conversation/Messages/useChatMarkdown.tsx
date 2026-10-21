@@ -62,6 +62,9 @@ export const useChatMarkdown = ({
         citations,
         componentProps: {
           html: {
+            // The preview's default height is also its minimum; keep it low so compact
+            // inline blocks (KPI cards, small charts) shrink to their content.
+            defaultHeight: 120,
             onExpand: (content: string) => setDrawerContent(content),
           },
         },

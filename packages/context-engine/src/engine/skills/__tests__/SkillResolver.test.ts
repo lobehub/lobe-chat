@@ -54,6 +54,33 @@ describe('SkillResolver', () => {
     expect(resolved.enabledSkills).toHaveLength(3);
   });
 
+  it('should activate autoActivate skills without pinning or a step activation', () => {
+    const operationSkillSet: OperationSkillSet = {
+      enabledPluginIds: [],
+      skills: [{ ...baseSkills[0], autoActivate: true }, baseSkills[1]],
+    };
+
+    const resolved = resolver.resolve(operationSkillSet, emptyDelta);
+
+    const artifacts = resolved.enabledSkills.find((s) => s.identifier === 'artifacts');
+    expect(artifacts?.activated).toBe(true);
+    expect(artifacts?.content).toBe('<artifacts_guide>...</artifacts_guide>');
+    expect(
+      resolved.enabledSkills.find((s) => s.identifier === 'agent-browser')?.activated,
+    ).toBeUndefined();
+  });
+
+  it('should keep an autoActivate skill without content listed as available', () => {
+    const operationSkillSet: OperationSkillSet = {
+      enabledPluginIds: [],
+      skills: [{ ...baseSkills[2], autoActivate: true }],
+    };
+
+    const resolved = resolver.resolve(operationSkillSet, emptyDelta);
+
+    expect(resolved.enabledSkills[0].activated).toBeUndefined();
+  });
+
   it('should activate skills from step delta', () => {
     const operationSkillSet: OperationSkillSet = {
       enabledPluginIds: [],

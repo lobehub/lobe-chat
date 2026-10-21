@@ -5,6 +5,7 @@ import Link from './Link';
 import LobeAgents from './LobeAgents';
 import LobeArtifact from './LobeArtifact';
 import LobeThinking from './LobeThinking';
+import LobeVisual from './LobeVisual';
 import LocalFile from './LocalFile';
 import LocalFileLink from './LocalFileLink';
 import Mention from './Mention';
@@ -23,6 +24,7 @@ export const markdownElements: MarkdownElement[] = [
   Thinking,
   LobeArtifact,
   LobeThinking,
+  LobeVisual,
   LocalFile,
   Mention,
   ReferTopic,

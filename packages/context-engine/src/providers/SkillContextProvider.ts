@@ -26,6 +26,11 @@ export interface SkillMeta {
    */
   activated?: boolean;
   /**
+   * Activate by default: the resolver injects `content` without requiring the
+   * skill to be pinned or activated through `activateSkill`.
+   */
+  autoActivate?: boolean;
+  /**
    * Full skill content to inject when activated.
    * Only used when `activated` is true.
    */
