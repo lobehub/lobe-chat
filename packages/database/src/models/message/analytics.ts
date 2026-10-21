@@ -1,7 +1,7 @@
 import type { DBMessageItem, ModelRankItem } from '@lobechat/types';
 import type { HeatmapsProps } from '@lobehub/charts';
 import dayjs from 'dayjs';
-import { and, asc, count, desc, eq, getTableColumns, gt, isNotNull, type SQL,sql } from 'drizzle-orm';
+import { and, asc, count, desc, eq, getTableColumns, gt, isNotNull, type SQL, type SQLWrapper, sql } from 'drizzle-orm';
 
 import { today } from '@/utils/time';
 
@@ -120,7 +120,7 @@ const DATA_URL_REDACT_REPLACEMENT = '\\1...redacted...';
  * branch's string-boundary semantics would otherwise swallow a base64
  * match's JSON suffix).
  */
-const redactInlineMedia = (column: SQL, isJsonb: boolean) => {
+const redactInlineMedia = (column: SQLWrapper, isJsonb: boolean) => {
   const base = isJsonb ? sql`${column}::text` : column;
   return DATA_URL_REDACT_PATTERNS.reduce(
     (acc, pattern) =>
