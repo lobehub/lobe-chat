@@ -1,6 +1,7 @@
 'use client';
 
-import { createStaticStyles, Empty, Flexbox } from '@lobehub/ui';
+import { Empty, Flexbox } from '@lobehub/ui';
+import * as stylex from '@stylexjs/stylex';
 import { type FC } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -11,12 +12,7 @@ import { lambdaQuery } from '@/libs/trpc/client';
 
 import ShareToggle from './ShareToggle';
 
-const styles = createStaticStyles(({ css }) => ({
-  empty: css`
-    padding-block: 32px;
-    padding-inline: 0;
-  `,
-}));
+const styles = stylex.create({ empty: { paddingBlock: '32px', paddingInline: '0' } });
 
 interface PersonalCredsSectionProps {
   /**
@@ -63,12 +59,14 @@ const PersonalCredsSection: FC<PersonalCredsSectionProps> = ({ onWorkspaceCredsC
   return (
     <AsyncBoundary
       data={data}
-      empty={<Empty className={styles.empty} description={t('creds.empty')} />}
       error={error}
       errorVariant={'block'}
       isEmpty={credentials.length === 0}
       isLoading={isLoading}
       loading={<ListSkeleton paddingInline={0} />}
+      empty={
+        <Empty className={stylex.props(styles.empty).className} description={t('creds.empty')} />
+      }
       onRetry={() => refetch()}
     >
       <Flexbox gap={0}>

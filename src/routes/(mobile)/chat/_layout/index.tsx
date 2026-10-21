@@ -1,5 +1,6 @@
 'use client';
 
+import * as stylex from '@stylexjs/stylex';
 import { type FC } from 'react';
 import { Outlet } from 'react-router';
 
@@ -16,7 +17,10 @@ const Layout: FC = () => {
 
   return (
     <>
-      <MobileContentLayout className={styles.mainContainer} header={<ChatHeader />}>
+      <MobileContentLayout
+        className={stylex.props(styles.mainContainer).className}
+        header={<ChatHeader />}
+      >
         {/* Same 404 fallback as the desktop agent layout: only the content
             area collapses when the routed agent is gone or turned private. */}
         <AgentNotFoundGuard>
