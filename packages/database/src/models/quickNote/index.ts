@@ -1,6 +1,6 @@
 import { DEFAULT_QUICK_NOTE_SETTINGS } from '@lobechat/const';
 import type { UserQuickNoteSettings } from '@lobechat/types';
-import { and, desc, eq, gt, inArray, isNotNull, isNull, lte, or, sql } from 'drizzle-orm';
+import { and, desc, eq, gt, inArray, isNotNull, isNull, lte, ne, or, sql } from 'drizzle-orm';
 
 import { documents, quickNoteRuns, quickNotes, userSettings } from '../../schemas';
 import type { LobeChatDatabase } from '../../type';
@@ -555,62 +555,71 @@ export class QuickNoteModel {
       .where(where)
       .$dynamic();
 
-  /** Attaches each note's latest summary and its latest (active first) Run. */
+  /**
+   * Attaches each note's latest summary and its latest (active first) Run.
+   *
+   * Both lookups pick one row per note in SQL (`DISTINCT ON`), so a note with a long Run history
+   * costs one row, not its whole history.
+   */
   private withRunProjection = async <T extends { id: string }>(notes: T[]) => {
     if (notes.length === 0) return [];
     const noteIds = notes.map(({ id }) => id);
+    const isActive = sql<boolean>`${quickNoteRuns.status} in ('pending', 'running')`;
 
-    const summaries = await this.db
-      .select({
-        completedAt: quickNoteRuns.completedAt,
-        content: quickNoteRuns.summary,
-        quickNoteId: quickNoteRuns.quickNoteId,
-      })
-      .from(quickNoteRuns)
-      .where(
-        and(
-          inArray(quickNoteRuns.quickNoteId, noteIds),
-          eq(quickNoteRuns.status, 'completed'),
-          isNotNull(quickNoteRuns.summary),
+    const [summaries, runs] = await Promise.all([
+      this.db
+        .selectDistinctOn([quickNoteRuns.quickNoteId], {
+          completedAt: quickNoteRuns.completedAt,
+          content: quickNoteRuns.summary,
+          quickNoteId: quickNoteRuns.quickNoteId,
+        })
+        .from(quickNoteRuns)
+        .where(
+          and(
+            inArray(quickNoteRuns.quickNoteId, noteIds),
+            eq(quickNoteRuns.status, 'completed'),
+            isNotNull(quickNoteRuns.summary),
+            ne(quickNoteRuns.summary, ''),
+          ),
+        )
+        .orderBy(
+          quickNoteRuns.quickNoteId,
+          desc(quickNoteRuns.completedAt),
+          desc(quickNoteRuns.id),
         ),
-      )
-      .orderBy(desc(quickNoteRuns.completedAt), desc(quickNoteRuns.id));
+      this.db
+        .selectDistinctOn([quickNoteRuns.quickNoteId], {
+          agentId: quickNoteRuns.agentId,
+          completedAt: quickNoteRuns.completedAt,
+          decision: quickNoteRuns.decision,
+          executionConfig: quickNoteRuns.executionConfig,
+          id: quickNoteRuns.id,
+          kind: quickNoteRuns.kind,
+          operationId: quickNoteRuns.operationId,
+          quickNoteId: quickNoteRuns.quickNoteId,
+          status: quickNoteRuns.status,
+          topicId: quickNoteRuns.topicId,
+          trigger: quickNoteRuns.trigger,
+          updatedAt: quickNoteRuns.updatedAt,
+        })
+        .from(quickNoteRuns)
+        .where(inArray(quickNoteRuns.quickNoteId, noteIds))
+        // The most recently updated active Run, else the most recently updated Run.
+        .orderBy(
+          quickNoteRuns.quickNoteId,
+          desc(isActive),
+          desc(quickNoteRuns.updatedAt),
+          desc(quickNoteRuns.id),
+        ),
+    ]);
 
-    const runs = await this.db
-      .select({
-        agentId: quickNoteRuns.agentId,
-        completedAt: quickNoteRuns.completedAt,
-        decision: quickNoteRuns.decision,
-        executionConfig: quickNoteRuns.executionConfig,
-        id: quickNoteRuns.id,
-        kind: quickNoteRuns.kind,
-        operationId: quickNoteRuns.operationId,
-        quickNoteId: quickNoteRuns.quickNoteId,
-        status: quickNoteRuns.status,
-        topicId: quickNoteRuns.topicId,
-        trigger: quickNoteRuns.trigger,
-        updatedAt: quickNoteRuns.updatedAt,
-      })
-      .from(quickNoteRuns)
-      .where(inArray(quickNoteRuns.quickNoteId, noteIds))
-      .orderBy(desc(quickNoteRuns.updatedAt));
-
-    const latestSummaries = new Map<string, { completedAt: Date; content: string }>();
-    for (const summary of summaries) {
-      if (latestSummaries.has(summary.quickNoteId) || !summary.content) continue;
-      latestSummaries.set(summary.quickNoteId, {
-        completedAt: summary.completedAt ?? new Date(0),
-        content: summary.content,
-      });
-    }
-
-    const latestRuns = new Map<string, (typeof runs)[number]>();
-    for (const run of runs) {
-      const selected = latestRuns.get(run.quickNoteId);
-      const isActive = ['pending', 'running'].includes(run.status);
-      const selectedIsActive = selected && ['pending', 'running'].includes(selected.status);
-      if (!selected || (isActive && !selectedIsActive)) latestRuns.set(run.quickNoteId, run);
-    }
+    const latestSummaries = new Map(
+      summaries.map((summary) => [
+        summary.quickNoteId,
+        { completedAt: summary.completedAt ?? new Date(0), content: summary.content! },
+      ]),
+    );
+    const latestRuns = new Map(runs.map((run) => [run.quickNoteId, run]));
 
     return notes.map((note) => ({
       ...note,

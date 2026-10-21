@@ -60,31 +60,37 @@ export class DocumentHistoryService {
    *
    * Expects:
    * - A query whose current row is documentHistories.
+   * - `isQuickNoteSource` is whether the Document is a Quick Note source (`sourceType =
+   *   'quick-note'`). Quick Note Runs, Proposals and resource links only pin revisions of their
+   *   note's own source Document, so other Documents skip the three correlated lookups.
    *
    * Returns:
-   * - A correlated predicate that preserves every referenced revision.
+   * - A correlated predicate that preserves every referenced revision, or `undefined` (no extra
+   *   condition) for a Document Quick Note evidence never references.
    */
-  private unreferencedHistory = () =>
-    and(
-      notExists(
-        this.db
-          .select({ id: quickNoteRuns.id })
-          .from(quickNoteRuns)
-          .where(eq(quickNoteRuns.sourceHistoryId, documentHistories.id)),
-      ),
-      notExists(
-        this.db
-          .select({ id: quickNoteProposals.id })
-          .from(quickNoteProposals)
-          .where(eq(quickNoteProposals.sourceHistoryId, documentHistories.id)),
-      ),
-      notExists(
-        this.db
-          .select({ id: quickNoteResources.id })
-          .from(quickNoteResources)
-          .where(eq(quickNoteResources.sourceHistoryId, documentHistories.id)),
-      ),
-    );
+  private unreferencedHistory = (isQuickNoteSource: boolean) =>
+    isQuickNoteSource
+      ? and(
+          notExists(
+            this.db
+              .select({ id: quickNoteRuns.id })
+              .from(quickNoteRuns)
+              .where(eq(quickNoteRuns.sourceHistoryId, documentHistories.id)),
+          ),
+          notExists(
+            this.db
+              .select({ id: quickNoteProposals.id })
+              .from(quickNoteProposals)
+              .where(eq(quickNoteProposals.sourceHistoryId, documentHistories.id)),
+          ),
+          notExists(
+            this.db
+              .select({ id: quickNoteResources.id })
+              .from(quickNoteResources)
+              .where(eq(quickNoteResources.sourceHistoryId, documentHistories.id)),
+          ),
+        )
+      : undefined;
 
   createHistory = async (params: {
     breakAutosaveWindow?: boolean;
@@ -94,7 +100,7 @@ export class DocumentHistoryService {
     savedAt: Date;
   }) => {
     const [document] = await this.db
-      .select({ id: documents.id })
+      .select({ id: documents.id, sourceType: documents.sourceType })
       .from(documents)
       .where(and(eq(documents.id, params.documentId), this.documentsOwnership()))
       .limit(1);
@@ -102,6 +108,7 @@ export class DocumentHistoryService {
     if (!document) {
       throw new Error('Document not found');
     }
+    const isQuickNoteSource = document.sourceType === 'quick-note';
 
     // Autosave versions coalesce into fixed 10-min windows (Notion-like),
     // bucketed on the clock grid so the anchor stays immutable even though the
@@ -127,7 +134,7 @@ export class DocumentHistoryService {
             and(
               eq(documentHistories.id, latest.id),
               this.historiesOwnership(),
-              this.unreferencedHistory(),
+              this.unreferencedHistory(isQuickNoteSource),
             ),
           )
           .returning({ id: documentHistories.id });
@@ -148,7 +155,7 @@ export class DocumentHistoryService {
       })
       .returning({ id: documentHistories.id });
 
-    await this.trimHistoryBySource(params.documentId, params.saveSource);
+    await this.trimHistoryBySource(params.documentId, params.saveSource, isQuickNoteSource);
 
     return { id: history!.id, savedAt: params.savedAt };
   };
@@ -311,6 +318,7 @@ export class DocumentHistoryService {
   private trimHistoryBySource = async (
     documentId: string,
     saveSource: DocumentHistorySaveSource,
+    isQuickNoteSource: boolean,
   ) => {
     const limit = DOCUMENT_HISTORY_SOURCE_LIMITS[saveSource];
     const BATCH_SIZE = 100;
@@ -323,7 +331,7 @@ export class DocumentHistoryService {
           eq(documentHistories.documentId, documentId),
           this.historiesOwnership(),
           eq(documentHistories.saveSource, saveSource),
-          this.unreferencedHistory(),
+          this.unreferencedHistory(isQuickNoteSource),
         ),
       )
       .orderBy(desc(documentHistories.savedAt), desc(documentHistories.id))
@@ -337,7 +345,7 @@ export class DocumentHistoryService {
         eq(documentHistories.documentId, documentId),
         this.historiesOwnership(),
         eq(documentHistories.saveSource, saveSource),
-        this.unreferencedHistory(),
+        this.unreferencedHistory(isQuickNoteSource),
         inArray(
           documentHistories.id,
           rowsToDelete.map((r) => r.id),

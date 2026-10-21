@@ -8,7 +8,7 @@ import {
 } from '@lobechat/types';
 import debug from 'debug';
 import type { Column } from 'drizzle-orm';
-import { and, desc, eq, ilike, inArray, isNull, ne, notExists, or } from 'drizzle-orm';
+import { and, desc, eq, gte, ilike, inArray, isNull, ne, notExists, or } from 'drizzle-orm';
 import pMap from 'p-map';
 
 import { AgentModel } from '@/database/models/agent';
@@ -68,6 +68,11 @@ import { resolveQuickNoteRunOutput } from './submission';
 export { renderQuickNoteSourceText } from './sourceText';
 
 const log = debug('lobe-server:quick-note');
+
+/** Topic hints Analyze keeps; fewer search hits than this trigger the literal fallback. */
+const QUICK_NOTE_CONTEXT_TOPIC_LIMIT = 3;
+/** How far back the literal (`ILIKE`) context fallback reads. */
+const QUICK_NOTE_LITERAL_CONTEXT_WINDOW_MS = 90 * 24 * 60 * 60 * 1000;
 
 /** Plan for Runs judged before intent decisions existed, and for Signal enrichment. */
 const LEGACY_PLAN: QuickNoteActionPlan = { enrich: true, link: true };
@@ -1003,107 +1008,131 @@ export class QuickNoteProcessingService {
     const searchTerms = expandQuickNoteContextSearchTerms(queries);
     const patterns = searchTerms.map((query) => `%${query}%`);
 
-    const [productSearchResults, literalTopics, literalMessages, matchingDocuments] =
-      await Promise.all([
-        createFtsSearchRepo({
-          db: this.db,
-          usage: 'quick_note_analyze',
-          userId: this.userId,
-          workspaceId: this.workspaceId,
-        })
-          .then((repository) =>
-            pMap(
-              searchTerms,
-              (query) =>
-                Promise.all([
-                  repository.search({ limitPerType: 6, query, type: 'topic' }),
-                  repository.search({ limitPerType: 6, query, type: 'message' }),
-                ]),
-              { concurrency: 4 },
-            ),
-          )
-          .then((results) => results.flat(2))
-          // Internal retrieval is optional bootstrap context. A deployment with
-          // no configured search provider must still complete Analyze.
-          .catch(() => []),
-        this.db
-          .select({
-            content: topics.content,
-            description: topics.description,
-            historySummary: topics.historySummary,
-            id: topics.id,
-            title: topics.title,
-          })
-          .from(topics)
-          .where(
-            and(
-              workspaceWhere,
-              this.notQuickNoteContainerTopic(topics.id),
-              or(
-                ...patterns.flatMap((pattern) => [
-                  ilike(topics.title, pattern),
-                  ilike(topics.description, pattern),
-                  ilike(topics.content, pattern),
-                  ilike(topics.historySummary, pattern),
-                ]),
-              ),
-            ),
-          )
-          .orderBy(desc(topics.updatedAt))
-          .limit(40),
-        this.db
-          .select({ content: messages.content, topicId: messages.topicId })
-          .from(messages)
-          .where(
-            and(
-              messageWhere,
-              isNull(messages.deletedAt),
-              this.notQuickNoteContainerTopic(messages.topicId),
-              or(...patterns.map((pattern) => ilike(messages.content, pattern))),
-            ),
-          )
-          .orderBy(desc(messages.updatedAt))
-          .limit(80),
-        this.db
-          .select({
-            content: documents.content,
-            id: documents.id,
-            title: documents.title,
-          })
-          .from(documents)
-          .where(
-            and(
-              documentWhere,
-              ne(documents.id, sourceDocumentId),
-              this.notQuickNoteSourceDocument(),
-              or(
-                ...patterns.flatMap((pattern) => [
-                  ilike(documents.title, pattern),
-                  ilike(documents.content, pattern),
-                ]),
-              ),
-            ),
-          )
-          .orderBy(desc(documents.updatedAt))
-          .limit(40),
-      ]);
+    const since = new Date(Date.now() - QUICK_NOTE_LITERAL_CONTEXT_WINDOW_MS);
 
-    const indexedMessages = productSearchResults.flatMap((result) =>
+    // Documents have no search provider here: their bounded literal lookup runs beside the search.
+    const matchingDocumentsPromise = this.db
+      .select({ content: documents.content, id: documents.id, title: documents.title })
+      .from(documents)
+      .where(
+        and(
+          documentWhere,
+          gte(documents.updatedAt, since),
+          ne(documents.id, sourceDocumentId),
+          this.notQuickNoteSourceDocument(),
+          or(
+            ...patterns.flatMap((pattern) => [
+              ilike(documents.title, pattern),
+              ilike(documents.content, pattern),
+            ]),
+          ),
+        ),
+      )
+      .orderBy(desc(documents.updatedAt))
+      .limit(40);
+
+    const productSearchResults = await createFtsSearchRepo({
+      db: this.db,
+      usage: 'quick_note_analyze',
+      userId: this.userId,
+      workspaceId: this.workspaceId,
+    })
+      .then((repository) =>
+        pMap(
+          searchTerms,
+          (query) =>
+            Promise.all([
+              repository.search({ limitPerType: 6, query, type: 'topic' }),
+              repository.search({ limitPerType: 6, query, type: 'message' }),
+            ]),
+          { concurrency: 4 },
+        ),
+      )
+      .then((results) => results.flat(2))
+      // Internal retrieval is optional bootstrap context. A deployment with no configured search
+      // provider must still complete Analyze, through the literal fallback below.
+      .catch((error) => {
+        log('product search unavailable for Quick Note context: %O', error);
+        return undefined;
+      });
+
+    const searchHits = productSearchResults ?? [];
+    const indexedMessages = searchHits.flatMap((result) =>
       result.type === 'message' && result.topicId
         ? [{ content: result.content, topicId: result.topicId }]
         : [],
     );
     const excludedTopicIds = await this.findQuickNoteContainerTopicIds([
-      ...productSearchResults.flatMap((result) => (result.type === 'topic' ? [result.id] : [])),
+      ...searchHits.flatMap((result) => (result.type === 'topic' ? [result.id] : [])),
       ...indexedMessages.map(({ topicId }) => topicId),
     ]);
-    const indexedTopics = productSearchResults
+    const indexedTopics = searchHits
       .filter((result) => result.type === 'topic')
       .filter((result) => !excludedTopicIds.has(result.id))
       // Rank Topic search hits only by their canonical title. Search-provider
       // snippets can contain query text that does not belong to the Topic and
       // would otherwise turn an unrelated hit into a Resource Link.
       .map((result) => ({ id: result.id, title: result.title }));
+    const indexedTopicIds = new Set([
+      ...indexedTopics.map(({ id }) => id),
+      ...indexedMessages
+        .map(({ topicId }) => topicId)
+        .filter((topicId) => !excludedTopicIds.has(topicId)),
+    ]);
+
+    // The literal scan is the fallback for a missing or thin search index, never a second pass
+    // over every row: it only reads the recent window of this scope.
+    const needsLiteralLookup =
+      !productSearchResults || indexedTopicIds.size < QUICK_NOTE_CONTEXT_TOPIC_LIMIT;
+    const [literalTopics, literalMessages, matchingDocuments] = await Promise.all([
+      needsLiteralLookup
+        ? this.db
+            .select({
+              content: topics.content,
+              description: topics.description,
+              historySummary: topics.historySummary,
+              id: topics.id,
+              title: topics.title,
+            })
+            .from(topics)
+            .where(
+              and(
+                workspaceWhere,
+                gte(topics.updatedAt, since),
+                this.notQuickNoteContainerTopic(topics.id),
+                or(
+                  ...patterns.flatMap((pattern) => [
+                    ilike(topics.title, pattern),
+                    ilike(topics.description, pattern),
+                    ilike(topics.content, pattern),
+                    ilike(topics.historySummary, pattern),
+                  ]),
+                ),
+              ),
+            )
+            .orderBy(desc(topics.updatedAt))
+            .limit(40)
+        : [],
+      needsLiteralLookup
+        ? this.db
+            .select({ content: messages.content, topicId: messages.topicId })
+            .from(messages)
+            .where(
+              and(
+                messageWhere,
+                // `created_at` is indexed; messages are rarely edited after creation.
+                gte(messages.createdAt, since),
+                isNull(messages.deletedAt),
+                this.notQuickNoteContainerTopic(messages.topicId),
+                or(...patterns.map((pattern) => ilike(messages.content, pattern))),
+              ),
+            )
+            .orderBy(desc(messages.createdAt))
+            .limit(80)
+        : [],
+      matchingDocumentsPromise,
+    ]);
+
     const matchingMessages = [
       ...indexedMessages.filter((result) => !excludedTopicIds.has(result.topicId)),
       ...literalMessages,
@@ -1151,7 +1180,7 @@ export class QuickNoteProcessingService {
         })),
       ],
       searchTerms,
-      3,
+      QUICK_NOTE_CONTEXT_TOPIC_LIMIT,
     );
     // Rank first so the view check runs only on matching Documents, then keep the best two the
     // caller may view.

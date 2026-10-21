@@ -7,6 +7,7 @@ import { QuickNoteModel } from '@/database/models/quickNote';
 import { QuickNoteRepository } from '@/database/repositories/quickNote';
 import { messages, quickNoteRuns, tasks, taskTopics, topics, users } from '@/database/schemas';
 import { enqueueAgentSignalSourceEvent } from '@/server/services/agentSignal';
+import { createFtsSearchRepo } from '@/server/services/ftsSearch';
 
 import { QuickNoteProcessingService } from '.';
 import { renderQuickNoteSourceText as renderSourceText } from './sourceText';
@@ -19,6 +20,11 @@ import { renderQuickNoteSourceText as renderSourceText } from './sourceText';
 vi.mock('@/database/core/db-adaptor', () => ({ getServerDB: () => getTestDB() }));
 vi.mock('@/server/services/agentSignal', () => ({ enqueueAgentSignalSourceEvent: vi.fn() }));
 vi.mock('@/server/services/quickNote/featureGate', () => ({ assertQuickNoteEnabled: vi.fn() }));
+// Passthrough by default; context-lookup tests swap in a fake search provider per call.
+vi.mock('@/server/services/ftsSearch', async (importOriginal) => {
+  const actual = await importOriginal<{ createFtsSearchRepo: (...args: never[]) => unknown }>();
+  return { ...actual, createFtsSearchRepo: vi.fn(actual.createFtsSearchRepo) };
+});
 
 const db = await getTestDB();
 const userId = 'quick-note-lifecycle-test';
@@ -333,5 +339,88 @@ describe('Quick Note context candidates', () => {
     expect(boundValues).not.toContain(other.documentId);
     expect(boundValues).not.toContain('qn-run-topic');
     expect(boundValues).not.toContain('qn-task-topic');
+  });
+});
+
+/** @example The literal `ILIKE` scan only backs up a missing or thin product-search index. */
+describe('Quick Note context lookup fallback', () => {
+  const topicIds = ['qn-fts-topic-a', 'qn-fts-topic-b', 'qn-fts-topic-c'];
+
+  beforeEach(async () => {
+    await db
+      .insert(topics)
+      .values(
+        topicIds.map((id) => ({ content: 'moshi latency', id, title: `moshi ${id}`, userId })),
+      );
+  });
+
+  /** Runs the lookup and returns the found ids plus the SQL text of every query it sent. */
+  const lookup = async (searchResults: () => Promise<unknown[]>) => {
+    vi.mocked(createFtsSearchRepo).mockImplementationOnce(
+      async () => ({ search: vi.fn(searchResults) }) as never,
+    );
+    const note = await repo.create({ content: 'moshi', editorData: { markdown: 'moshi' } });
+    const client = (db as unknown as { $client: { query: (...args: unknown[]) => unknown } })
+      .$client;
+    const statements: string[] = [];
+    const query = client.query.bind(client);
+    vi.spyOn(client, 'query').mockImplementation((...args: unknown[]) => {
+      const [text] = args as [unknown];
+      statements.push(typeof text === 'string' ? text : ((text as { text?: string })?.text ?? ''));
+      return query(...args);
+    });
+
+    const found: { id: string }[] = await service['findContextResources'](
+      ['moshi'],
+      note.documentId,
+    );
+    vi.mocked(client.query).mockRestore();
+
+    return {
+      ids: found.map(({ id }) => id),
+      literalTopicOrMessageScans: statements.filter((statement) =>
+        /"(?:topics|messages)"\."(?:title|content)" ilike/i.test(statement),
+      ),
+    };
+  };
+
+  // ROOT CAUSE:
+  // The literal `ILIKE '%term%'` scans over Topics and Messages ran on every Analyze alongside the
+  // product search, reading the whole scope's history even when the index already answered.
+  it('skips the literal Topic and Message scans when search finds enough Topics', async () => {
+    const { ids, literalTopicOrMessageScans } = await lookup(async () =>
+      topicIds.map((id) => ({ id, title: `moshi ${id}`, type: 'topic' })),
+    );
+
+    expect(literalTopicOrMessageScans).toEqual([]);
+    expect(ids).toEqual(expect.arrayContaining(topicIds));
+  });
+
+  it('falls back to the literal scan when search is unavailable', async () => {
+    const { ids, literalTopicOrMessageScans } = await lookup(async () => {
+      throw new Error('no search provider');
+    });
+
+    expect(literalTopicOrMessageScans.length).toBeGreaterThan(0);
+    expect(ids).toEqual(expect.arrayContaining(topicIds));
+  });
+
+  it('falls back to the literal scan when search finds too few Topics', async () => {
+    const { ids, literalTopicOrMessageScans } = await lookup(async () => []);
+
+    expect(literalTopicOrMessageScans.length).toBeGreaterThan(0);
+    expect(ids).toEqual(expect.arrayContaining(topicIds));
+  });
+
+  it('limits the literal scan to recently updated Topics', async () => {
+    await db
+      .update(topics)
+      .set({ updatedAt: new Date(Date.now() - 365 * 24 * 60 * 60 * 1000) })
+      .where(eq(topics.id, 'qn-fts-topic-a'));
+
+    const { ids } = await lookup(async () => []);
+
+    expect(ids).not.toContain('qn-fts-topic-a');
+    expect(ids).toEqual(expect.arrayContaining(['qn-fts-topic-b', 'qn-fts-topic-c']));
   });
 });

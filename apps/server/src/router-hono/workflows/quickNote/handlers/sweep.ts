@@ -9,6 +9,12 @@ import { enqueueAgentSignalSourceEvent } from '@/server/services/agentSignal';
 import { renderQuickNoteSourceText } from '@/server/services/quickNote/sourceText';
 
 const PAGE_SIZE = 100;
+/**
+ * Candidate pages each loop may read per invocation. Skipped candidates (claimed elsewhere, no
+ * pending Proposal) do not count toward `PAGE_SIZE`, so without a cap one tick could walk the whole
+ * backlog; the next one-minute tick resumes from the still-due rows.
+ */
+export const QUICK_NOTE_SWEEP_MAX_PAGES = 10;
 
 /**
  * Emits the debounced "did the meaning change?" checks whose edits have gone quiet.
@@ -27,7 +33,7 @@ const sweepContentChecks = async (
   let after: { contentCheckDueAt: Date; id: string } | undefined;
   let enqueued = 0;
 
-  while (enqueued < PAGE_SIZE) {
+  for (let page = 0; page < QUICK_NOTE_SWEEP_MAX_PAGES && enqueued < PAGE_SIZE; page++) {
     const candidates = await QuickNoteModel.findDueContentCheckCandidates(db, {
       after,
       limit: PAGE_SIZE,
@@ -130,7 +136,7 @@ export const sweepQuickNoteAnalyze = async (context: Context) => {
     let checked = 0;
     let enqueued = 0;
 
-    while (enqueued < pageSize) {
+    for (let page = 0; page < QUICK_NOTE_SWEEP_MAX_PAGES && enqueued < pageSize; page++) {
       const candidates = await QuickNoteModel.findDueAnalyzeCandidates(db, {
         after,
         limit: pageSize,

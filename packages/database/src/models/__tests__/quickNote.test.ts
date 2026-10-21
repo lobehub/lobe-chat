@@ -1,5 +1,5 @@
 // @vitest-environment node
-import { eq, inArray } from 'drizzle-orm';
+import { and, eq, inArray } from 'drizzle-orm';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { getTestDB } from '../../core/getTestDB';
@@ -9,6 +9,7 @@ import {
   quickNoteComments,
   quickNoteProposals,
   quickNoteResources,
+  quickNoteRuns,
   quickNotes,
   topics,
   users,
@@ -578,6 +579,71 @@ describe('QuickNoteModel run completion time', () => {
 
     expect(details.id).toBe(note.id);
     expect(details.run).toMatchObject({ completedAt: expect.any(Date), status: 'completed' });
+  });
+});
+
+/** @example The list projection picks one Run and one summary per note from a long history. */
+describe('QuickNoteModel run projection', () => {
+  const at = (minute: number) => new Date(Date.UTC(2026, 0, 1, 0, minute));
+
+  it('returns the latest active Run and the latest completed summary among many Runs', async () => {
+    const note = await quickNoteRepo.create({ content: 'Long history' });
+    // Claim once for a real source revision, then replace the Run with a seeded history.
+    const history = (await claimAnalyze(note.id))!;
+    await serverDB.delete(quickNoteRuns).where(eq(quickNoteRuns.id, history.id));
+    const base = {
+      kind: 'analyze' as const,
+      quickNoteId: note.id,
+      sourceHistoryId: history.sourceHistoryId,
+    };
+
+    await serverDB.insert(quickNoteRuns).values([
+      // Many older completed Runs with summaries.
+      ...Array.from({ length: 30 }, (_, index) => ({
+        ...base,
+        completedAt: at(index),
+        status: 'completed' as const,
+        summary: `Summary ${index}`,
+        updatedAt: at(index),
+      })),
+      // Newer completed Runs whose summary is missing or empty never replace the summary.
+      {
+        ...base,
+        completedAt: at(40),
+        status: 'completed' as const,
+        summary: null,
+        updatedAt: at(40),
+      },
+      {
+        ...base,
+        completedAt: at(41),
+        status: 'completed' as const,
+        summary: '',
+        updatedAt: at(41),
+      },
+      // The most recently updated Run is terminal; the older active one still wins.
+      { ...base, completedAt: at(50), status: 'failed' as const, updatedAt: at(50) },
+      {
+        ...base,
+        kind: 'signal_enrichment' as const,
+        status: 'running' as const,
+        updatedAt: at(45),
+      },
+    ]);
+
+    const detail = await quickNoteModel.queryDetail(note.id);
+
+    expect(detail?.summary).toEqual({ completedAt: at(29), content: 'Summary 29' });
+    expect(detail?.run).toMatchObject({ kind: 'signal_enrichment', status: 'running' });
+
+    await serverDB
+      .update(quickNoteRuns)
+      .set({ completedAt: at(51), status: 'canceled', updatedAt: at(44) })
+      .where(and(eq(quickNoteRuns.quickNoteId, note.id), eq(quickNoteRuns.status, 'running')));
+    const settled = await quickNoteModel.queryDetail(note.id);
+
+    /** @example Without an active Run, the most recently updated Run is shown. */
+    expect(settled?.run).toMatchObject({ status: 'failed', updatedAt: at(50) });
   });
 });
 

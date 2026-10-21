@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { mapFeatureFlagsEnvToState } from '@/config/featureFlags';
 
-import { sweepQuickNoteAnalyze } from './sweep';
+import { QUICK_NOTE_SWEEP_MAX_PAGES, sweepQuickNoteAnalyze } from './sweep';
 
 const mocks = vi.hoisted(() => ({
   candidates: vi.fn(),
@@ -223,5 +223,38 @@ describe('Quick Note sweep content checks', () => {
     /** @example The claimed due time is restored for that retry. */
     expect(mocks.releaseContentCheck).toHaveBeenCalledOnce();
     expect(mocks.releaseContentCheck.mock.calls[0].slice(1)).toEqual(['note-1', dueAt]);
+  });
+});
+
+/** @example One invocation reads a bounded number of pages; the next tick continues. */
+describe('Quick Note sweep page cap', () => {
+  // ROOT CAUSE:
+  // Both loops only stopped after enqueuing a full page, so a long run of skipped candidates
+  // (already claimed, or no pending Proposal) kept one invocation paging through the whole backlog.
+  it('stops each loop after the page cap even when nothing is enqueued', async () => {
+    let page = 0;
+    const fullPage = (key: 'analyzeDueAt' | 'contentCheckDueAt') => async () =>
+      Array.from({ length: 100 }, (_, index) => ({
+        [key]: new Date(page),
+        id: `note-${page++}-${index}`,
+        userId: 'tester',
+        workspaceId: null,
+      }));
+    mocks.candidates.mockImplementation(fullPage('analyzeDueAt'));
+    mocks.contentCheckCandidates.mockImplementation(fullPage('contentCheckDueAt'));
+    mocks.flags.mockImplementation(async (userId: string) =>
+      mapFeatureFlagsEnvToState({ quick_note: ['tester'] }, userId),
+    );
+    // Every candidate was claimed elsewhere, so nothing is ever enqueued.
+    mocks.claim.mockResolvedValue(undefined);
+    mocks.claimContentCheck.mockResolvedValue(false);
+
+    const response = await new Hono()
+      .post('/sweep', sweepQuickNoteAnalyze)
+      .request('/sweep', { method: 'POST' });
+
+    expect(await response.json()).toMatchObject({ contentChecks: 0, enqueued: 0, success: true });
+    expect(mocks.candidates).toHaveBeenCalledTimes(QUICK_NOTE_SWEEP_MAX_PAGES);
+    expect(mocks.contentCheckCandidates).toHaveBeenCalledTimes(QUICK_NOTE_SWEEP_MAX_PAGES);
   });
 });

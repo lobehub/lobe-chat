@@ -8,8 +8,9 @@ import {
   users,
 } from '@lobechat/database/schemas';
 import { eq } from 'drizzle-orm';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { DOCUMENT_HISTORY_SOURCE_LIMITS } from '@/const/documentHistory';
 import { getTestDB } from '@/database/core/getTestDB';
 
 import { DocumentHistoryService } from '../history';
@@ -32,7 +33,7 @@ beforeEach(async () => {
       fileType: 'text/plain',
       totalCharCount: 0,
       totalLineCount: 0,
-      sourceType: 'api',
+      sourceType: 'quick-note',
       source: 'api',
     },
     {
@@ -148,5 +149,57 @@ describe('Quick Note history retention', () => {
       .where(eq(documentHistories.id, source.id));
     /** @example The run still sees the exact version it started with. */
     expect(original.editorData).toEqual(editorData);
+  });
+});
+
+/** @example Documents Quick Note evidence never references skip the pin lookups entirely. */
+describe('ordinary Document history maintenance', () => {
+  // ROOT CAUSE:
+  // The Quick Note pin check (three correlated `NOT EXISTS` subqueries) ran in every Document's
+  // autosave coalesce and trim, although only Quick Note source Documents can be pinned.
+  it('coalesces and trims a non-Quick-Note Document without Quick Note subqueries', async () => {
+    const client = (db as unknown as { $client: { query: (...args: unknown[]) => unknown } })
+      .$client;
+    const statements: string[] = [];
+    const query = client.query.bind(client);
+    vi.spyOn(client, 'query').mockImplementation((...args: unknown[]) => {
+      const [text] = args as [unknown];
+      statements.push(typeof text === 'string' ? text : ((text as { text?: string })?.text ?? ''));
+      return query(...args);
+    });
+
+    const first = await service.createHistory({
+      documentId: contextId,
+      editorData,
+      savedAt,
+      saveSource: 'autosave',
+    });
+    const coalesced = await service.createHistory({
+      documentId: contextId,
+      editorData: { root: { children: ['edited'] } },
+      savedAt: new Date(savedAt.getTime() + 1000),
+      saveSource: 'autosave',
+    });
+    const manualLimit = DOCUMENT_HISTORY_SOURCE_LIMITS.manual;
+    for (let index = 0; index <= manualLimit; index++) {
+      await service.createHistory({
+        documentId: contextId,
+        editorData,
+        saveSource: 'manual',
+        savedAt: new Date(savedAt.getTime() + (index + 2) * 1000),
+      });
+    }
+    vi.mocked(client.query).mockRestore();
+
+    /** @example Autosave within one window still rewrites the same revision. */
+    expect(coalesced.id).toBe(first.id);
+    /** @example Manual revisions are still trimmed to the cap. */
+    const manual = await db
+      .select({ id: documentHistories.id, saveSource: documentHistories.saveSource })
+      .from(documentHistories)
+      .where(eq(documentHistories.documentId, contextId));
+    expect(manual.filter(({ saveSource }) => saveSource === 'manual')).toHaveLength(manualLimit);
+    /** @example No statement touched the Quick Note evidence tables. */
+    expect(statements.some((statement) => statement.includes('quick_note_'))).toBe(false);
   });
 });
