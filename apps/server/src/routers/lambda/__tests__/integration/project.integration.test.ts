@@ -1,6 +1,6 @@
 // @vitest-environment node
 import type { LobeChatDatabase } from '@lobechat/database';
-import { agents, knowledgeBases } from '@lobechat/database/schemas';
+import { agents, knowledgeBases, workspaces } from '@lobechat/database/schemas';
 import { getTestDB } from '@lobechat/database/test-utils';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -155,5 +155,29 @@ describe('Project Router Integration', () => {
 
     const updated = await caller.update({ id: project.data.id, slug: 'team_launch_v2' });
     expect(updated.data.slug).toBe('team_launch_v2');
+  });
+
+  it('reports no management permissions to a workspace viewer, even the creator', async () => {
+    const workspaceId = 'project-viewer-workspace';
+    await serverDB
+      .insert(workspaces)
+      .values({ id: workspaceId, name: 'Viewer', primaryOwnerId: userId, slug: workspaceId });
+    const workspaceContext = (workspaceRole: 'member' | 'viewer') => ({
+      ...createTestContext(userId),
+      workspaceId,
+      workspaceRole,
+    });
+    const project = await projectRouter
+      .createCaller(workspaceContext('member'))
+      .create({ identifier: 'VIEW', name: 'Viewed' });
+
+    const detail = await projectRouter
+      .createCaller(workspaceContext('viewer'))
+      .detail({ id: project.data.id });
+    expect(detail.data.permissions).toEqual({
+      canManage: false,
+      canManageKnowledgeBases: false,
+      canManageMembers: false,
+    });
   });
 });

@@ -377,6 +377,29 @@ describe('ProjectModel', () => {
     expect(await admin.removeAgent(project.id, agent.id)).toBe(true);
   });
 
+  it('reports no management permissions to a read-only caller, even the creator', async () => {
+    await serverDB.insert(workspaces).values({
+      id: 'project-viewer-workspace',
+      name: 'Project Viewer Workspace',
+      primaryOwnerId: userId,
+      slug: 'project-viewer-workspace',
+    });
+    const workspaceId = 'project-viewer-workspace';
+    const project = await createProject(new ProjectModel(serverDB, userId, workspaceId), {
+      name: 'Viewed',
+    });
+    const downgradedCreator = new ProjectModel(serverDB, userId, workspaceId, { readOnly: true });
+    const viewer = new ProjectModel(serverDB, otherUserId, workspaceId, { readOnly: true });
+
+    for (const model of [downgradedCreator, viewer]) {
+      expect(model.getPermissions(project)).toEqual({
+        canManage: false,
+        canManageKnowledgeBases: false,
+        canManageMembers: false,
+      });
+    }
+  });
+
   it('returns null or false for binding operations on inaccessible projects and resources', async () => {
     const foreignProject = await createProject(otherModel, { name: 'Foreign' });
     const [foreignKnowledgeBase] = await serverDB

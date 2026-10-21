@@ -65,6 +65,11 @@ export interface ProjectModelOptions {
    * project, not only the projects they created.
    */
   canManageAllMembers?: boolean;
+  /**
+   * The caller only reads the workspace (a viewer): the write gate rejects
+   * every project mutation, whatever the caller created or curates.
+   */
+  readOnly?: boolean;
 }
 
 export interface ProjectWorkInput {
@@ -678,6 +683,9 @@ export class ProjectModel {
 
   /** What the caller may change on a readable project; drives both the API and the UI. */
   getPermissions(project: { userId: string; workspaceId: string | null }) {
+    if (this.options.readOnly) {
+      return { canManage: false, canManageKnowledgeBases: false, canManageMembers: false };
+    }
     const isCreator = project.userId === this.userId;
     return {
       canManage: isCreator,

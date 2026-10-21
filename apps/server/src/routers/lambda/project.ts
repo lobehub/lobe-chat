@@ -20,12 +20,17 @@ import { assertCanPerformResourceAction } from '@/server/services/resourcePermis
 const isWorkspaceAdmin = (ctx: { userId: string; workspaceRole?: WorkspaceRole }) =>
   ctx.workspaceRole === 'owner' || ctx.workspaceRole === 'admin';
 
+/** Viewers hold no `agent:update` grant, so `projectWriteProcedure` rejects them. */
+const isWorkspaceViewer = (ctx: { workspaceId?: string | null; workspaceRole?: WorkspaceRole }) =>
+  !!ctx.workspaceId && ctx.workspaceRole === 'viewer';
+
 const projectProcedure = wsCompatProcedure.use(serverDatabase).use(async (opts) => {
   const { ctx } = opts;
   return opts.next({
     ctx: {
       projectModel: new ProjectModel(ctx.serverDB, ctx.userId, ctx.workspaceId ?? undefined, {
         canManageAllMembers: isWorkspaceAdmin(ctx),
+        readOnly: isWorkspaceViewer(ctx),
       }),
     },
   });
