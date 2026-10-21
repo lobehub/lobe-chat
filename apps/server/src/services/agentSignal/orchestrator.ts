@@ -11,7 +11,7 @@ import type { AgentSignalSourceType } from '@lobechat/agent-signal/source';
 import { createSourceEvent } from '@lobechat/agent-signal/source';
 
 import { ExpertiseIngestionService } from '@/server/services/expertise/ingestion';
-import type { QuickNoteProcessingService } from '@/server/services/quickNote';
+import { QuickNoteProcessingService } from '@/server/services/quickNote';
 
 import { acquireAgentSignalDailyBudget } from './budget';
 import type {
@@ -102,22 +102,16 @@ const createQuickNotePolicyOptions = (
   procedure: NonNullable<CreateDefaultAgentSignalPoliciesOptions['procedure']>,
 ): QuickNotePolicyOptions => {
   // One service per source execution, so the decisions backend is resolved at most once.
-  // The Quick Note module graph (decision backend, proposal executors, Agent runtime) is loaded
-  // only when a Quick Note handler actually runs, so every other source skips that import cost.
-  let service: Promise<QuickNoteProcessingService> | undefined;
+  let service: QuickNoteProcessingService | undefined;
   const quickNote = () =>
-    (service ??= import('@/server/services/quickNote').then(
-      ({ QuickNoteProcessingService }) =>
-        new QuickNoteProcessingService(context.db, context.userId, context.workspaceId),
-    ));
+    (service ??= new QuickNoteProcessingService(context.db, context.userId, context.workspaceId));
 
   return {
-    completeWithoutGeneration: async (runId) =>
-      (await quickNote()).completeWithoutGeneration(runId),
-    dispatchGeneration: async (runId) => (await quickNote()).dispatchGeneration(runId),
-    judgeContentChange: async (params) => (await quickNote()).judgeContentChange(params),
-    judgeRun: async (runId) => (await quickNote()).judgeRun(runId),
-    markProposalsStale: async (quickNoteId) => (await quickNote()).markProposalsStale(quickNoteId),
+    completeWithoutGeneration: async (runId) => quickNote().completeWithoutGeneration(runId),
+    dispatchGeneration: async (runId) => quickNote().dispatchGeneration(runId),
+    judgeContentChange: async (params) => quickNote().judgeContentChange(params),
+    judgeRun: async (runId) => quickNote().judgeRun(runId),
+    markProposalsStale: async (quickNoteId) => quickNote().markProposalsStale(quickNoteId),
     procedure: {
       now: procedure.now,
       receiptStore: procedure.receiptStore,

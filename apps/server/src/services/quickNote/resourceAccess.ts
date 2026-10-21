@@ -1,4 +1,5 @@
 import { and, inArray } from 'drizzle-orm';
+import pMap from 'p-map';
 
 import { quickNoteTopicAccessWhere } from '@/database/models/quickNote';
 import { topics } from '@/database/schemas';
@@ -8,6 +9,9 @@ import { resolveWorkspaceGrantedPermissions } from '@/server/services/workspaceP
 
 const isDocumentReference = (type: string) => type === 'document' || type === 'page';
 const isTopicReference = (type: string) => type === 'topic' || type === 'conversation';
+
+/** Caps the document permission checks run at once, since each one reads the database. */
+const VIEW_CHECK_CONCURRENCY = 10;
 
 /**
  * Drops Document, Page, Topic, and conversation references the caller may not view in the
@@ -55,8 +59,9 @@ export const filterViewableResources = async <T>(
           .then((rows) => new Set(rows.map(({ id }) => id))),
   ]);
 
-  const viewable = await Promise.all(
-    selected.map(async ({ id, type }) => {
+  const viewable = await pMap(
+    selected,
+    async ({ id, type }) => {
       if (isTopicReference(type)) return viewableTopicIds.has(id);
       if (!isDocumentReference(type)) return true;
 
@@ -73,7 +78,8 @@ export const filterViewableResources = async <T>(
         userId,
         workspaceId,
       });
-    }),
+    },
+    { concurrency: VIEW_CHECK_CONCURRENCY },
   );
 
   return references.filter((_, index) => viewable[index]);

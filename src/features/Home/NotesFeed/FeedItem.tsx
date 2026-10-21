@@ -24,6 +24,7 @@ const FeedItem = memo<{ note: QuickNoteItem }>(({ note }) => {
   const { t } = useTranslation(['note', 'common']);
   const navigate = useWorkspaceAwareNavigate();
   const removeNote = useQuickNoteStore((s) => s.removeNote);
+  const tags = note.tags ?? [];
 
   const menuItems = [
     {
@@ -76,9 +77,9 @@ const FeedItem = memo<{ note: QuickNoteItem }>(({ note }) => {
       <Text ellipsis={{ rows: 4 }} style={{ whiteSpace: 'pre-line' }}>
         {note.content}
       </Text>
-      {note.tags.length > 0 && (
+      {tags.length > 0 && (
         <Text fontSize={12} type={'secondary'}>
-          {[note.tags.join(' · '), note.location].filter(Boolean).join(' · ')}
+          {[tags.join(' · '), note.location].filter(Boolean).join(' · ')}
         </Text>
       )}
     </Block>

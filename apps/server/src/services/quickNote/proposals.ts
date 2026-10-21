@@ -5,6 +5,7 @@ import isEqual from 'fast-deep-equal';
 import { QuickNoteModel } from '@/database/models/quickNote';
 import type { QuickNoteProposalItem } from '@/database/schemas';
 import type { LobeChatDatabase } from '@/database/type';
+import { enqueueAgentSignalSourceEvent } from '@/server/services/agentSignal';
 import { after } from '@/server/utils/scheduleAfterResponse';
 
 import { resolveQuickNoteAgentId } from './agent';
@@ -40,7 +41,6 @@ export const emitQuickNoteProposalDecided = async (
   workspaceId?: string,
 ) => {
   try {
-    const { enqueueAgentSignalSourceEvent } = await import('@/server/services/agentSignal');
     await enqueueAgentSignalSourceEvent(
       {
         payload: event,

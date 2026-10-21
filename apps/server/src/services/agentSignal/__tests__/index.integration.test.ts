@@ -8,7 +8,7 @@ interface LoadIndexIntegrationModuleOptions {
   mockEmitSourceEvent?: Mock;
   mockInitModelRuntimeFromDB?: Mock;
   mockProjectObservability?: Mock;
-  /** Module factory for `@/server/services/quickNote`; it runs only if the module is imported. */
+  /** Module factory for `@/server/services/quickNote`. */
   mockQuickNoteModule?: () => Record<string, unknown>;
   mockRuntimeFactory?: Mock;
 }
@@ -381,10 +381,10 @@ describe('emitAgentSignalSourceEvent integration', () => {
 
   /**
    * @example
-   * An `agent.user.message` source runs without loading the Quick Note service graph.
+   * An `agent.user.message` source runs without creating a Quick Note service.
    */
   it(
-    'does not load or run Quick Note handlers for non-Quick-Note sources',
+    'does not run Quick Note handlers for non-Quick-Note sources',
     { timeout: 10_000 },
     async () => {
       (globalThis as { __agentSignalRedisClient?: typeof mockRedis }).__agentSignalRedisClient =
@@ -403,15 +403,11 @@ describe('emitAgentSignalSourceEvent integration', () => {
           result: 'neutral',
         }),
       });
-      const quickNoteModuleLoaded = vi.fn();
       const QuickNoteProcessingService = vi.fn();
 
       const { emitAgentSignalSourceEvent } = await loadIndexIntegrationModule({
         mockInitModelRuntimeFromDB: initModelRuntimeFromDB,
-        mockQuickNoteModule: () => {
-          quickNoteModuleLoaded();
-          return { QuickNoteProcessingService };
-        },
+        mockQuickNoteModule: () => ({ QuickNoteProcessingService }),
       });
 
       const result = await emitAgentSignalSourceEvent(
@@ -434,7 +430,6 @@ describe('emitAgentSignalSourceEvent integration', () => {
       ]);
 
       expect(trace).not.toMatch(/quick[-_]note/);
-      expect(quickNoteModuleLoaded).not.toHaveBeenCalled();
       expect(QuickNoteProcessingService).not.toHaveBeenCalled();
     },
   );
