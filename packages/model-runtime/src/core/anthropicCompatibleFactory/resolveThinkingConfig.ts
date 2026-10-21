@@ -2,6 +2,7 @@ import {
   isAdaptiveThinkingDefaultOnModel,
   isAlwaysThinkingClaudeModel,
   isThinkingDisplayOmittedByDefaultModel,
+  rejectsManualThinkingBudget,
 } from '../../providers/anthropic/modelId';
 import type { ChatStreamPayload } from '../../types';
 
@@ -53,6 +54,14 @@ export const resolveClaudeThinkingConfig = ({
 
   switch (thinking?.type) {
     case 'enabled': {
+      // Callers still send `enabled` to models that removed budgets (e.g. relayed Anthropic
+      // clients, or older agent configs). Upstream rejects it with a 400; some proxies retry
+      // internally first, so the failure also showed up as minutes-long TTFT on Haiku 5.5.
+      // Adaptive is the documented replacement and keeps thinking on as the caller asked.
+      if ([model, requestModel].some((id) => !!id && rejectsManualThinkingBudget(id))) {
+        return { type: 'adaptive', ...displayConfig };
+      }
+
       return {
         budget_tokens: Math.min(thinking.budget_tokens || 1024, maxTokens - 1),
         type: 'enabled',

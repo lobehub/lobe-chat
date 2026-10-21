@@ -166,6 +166,20 @@ export const isAlwaysThinkingClaudeModel = (model: string): boolean => {
 };
 
 /**
+ * Manual extended thinking (`thinking: {type: 'enabled', budget_tokens}`) is removed on Claude
+ * Opus 4.7 / 4.8 and every Claude 5 model, including Haiku 5.5: the request returns a 400 asking
+ * for `thinking.type: 'adaptive'` with `output_config.effort` instead.
+ * @see https://platform.claude.com/docs/en/build-with-claude/adaptive-thinking
+ */
+export const rejectsManualThinkingBudget = (model: string): boolean => {
+  const parsed = parseClaudeModelId(model);
+  if (!parsed) return false;
+  if (parsed.majorVersion >= 5) return true;
+
+  return parsed.majorVersion === 4 && parsed.family === 'opus' && hasMinorVersionAtLeast(parsed, 7);
+};
+
+/**
  * `thinking.display` defaults to `omitted` on these models, so reasoning comes back as thinking
  * blocks with an empty `thinking` field (streaming emits no `thinking_delta`). Anything that
  * surfaces reasoning to users has to opt into `display: 'summarized'` explicitly.

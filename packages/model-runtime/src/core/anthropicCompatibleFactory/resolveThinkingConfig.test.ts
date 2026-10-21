@@ -41,6 +41,37 @@ describe('resolveClaudeThinkingConfig', () => {
     });
   });
 
+  describe('models that removed manual thinking budgets', () => {
+    it.each(['claude-haiku-5-5', 'claude-opus-5', 'claude-sonnet-5-5', 'claude-opus-4-7'])(
+      'should send adaptive instead of an enabled budget for %s',
+      (model) => {
+        // Regression: Haiku 5.5 returned `"thinking.enabled" is not supported for this model`.
+        expect(resolve(model, { budget_tokens: 2048, type: 'enabled' })).toEqual({
+          display: 'summarized',
+          type: 'adaptive',
+        });
+      },
+    );
+
+    it('should send adaptive when only the mapped request model removed budgets', () => {
+      expect(
+        resolveClaudeThinkingConfig({
+          maxTokens: 4096,
+          model: 'custom-claude',
+          requestModel: 'global.anthropic.claude-haiku-5-5',
+          thinking: { budget_tokens: 2048, type: 'enabled' },
+        }),
+      ).toEqual({ type: 'adaptive' });
+    });
+
+    it('should keep the enabled budget on models that still accept it', () => {
+      expect(resolve('claude-haiku-4-5', { budget_tokens: 2048, type: 'enabled' })).toEqual({
+        budget_tokens: 2048,
+        type: 'enabled',
+      });
+    });
+  });
+
   describe('models that default thinking off but omit the display', () => {
     it.each(['claude-opus-4-8', 'claude-opus-4-7'])(
       'should not turn thinking on for %s when no config is given',
