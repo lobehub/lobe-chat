@@ -82,7 +82,6 @@
   "acceptance.comments.approvalCount": "{{count}} recenzent(ów) zatwierdziło",
   "acceptance.comments.approve": "Zatwierdź tę dostawę",
   "acceptance.comments.approveAgain": "Zatwierdź tę rundę",
-  "acceptance.comments.approveDescription": "Twoja opinia recenzenta. Nie zmienia statusu akceptacji — tylko właściciel akceptuje dostawę.",
   "acceptance.comments.approveSummaryPlaceholder": "Jednolinijkowe podsumowanie (opcjonalne)",
   "acceptance.comments.approved": "Zatwierdzono",
   "acceptance.comments.approvedAtRound": "Zatwierdzono (runda {{round}})",

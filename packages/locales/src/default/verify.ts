@@ -189,6 +189,8 @@ export default {
     '{{done}} of {{total}} checks confirmed — {{rest}} awaiting your review',
   'acceptance.bar.progressDone': 'All {{total}} checks confirmed — ready to accept',
   'acceptance.bar.progressZero': '{{total}} checks awaiting your review',
+  'acceptance.bar.readOnlyReason':
+    'Only the creator, a workspace owner or an admin can accept or reject this delivery. You can still approve it or comment in Discussion.',
   'acceptance.bar.rejectComment': 'Reject delivery',
   'acceptance.bar.rerun': 'Fix',
   'acceptance.bar.rerunDrafted': 'Added to your composer — review and send it.',
@@ -281,7 +283,7 @@ export default {
   'acceptance.comments.regionCount': '{{count}} region note(s)',
   'acceptance.comments.approve': 'Approve this delivery',
   'acceptance.comments.approveDescription':
-    'This records your approval. It doesn’t change the acceptance status — only the owner can accept the delivery.',
+    'This records your approval. It doesn’t change the acceptance status — only the creator, a workspace owner or an admin can accept the delivery.',
   'acceptance.comments.approveSummaryPlaceholder': 'One-line summary (optional)',
   'acceptance.comments.withdraw': 'Withdraw approval',
   'acceptance.comments.withdrawDescription':
