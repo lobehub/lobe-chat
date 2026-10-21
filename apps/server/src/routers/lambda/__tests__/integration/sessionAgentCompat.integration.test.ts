@@ -433,24 +433,38 @@ describe('native Session to Agent compatibility', () => {
     );
   });
 
-  it('includes orphan Inbox history for aliases and canonical ids without reading standalone Agent history', async () => {
-    const [inbox] = await db.insert(agents).values({ userId, slug: 'inbox' }).returning();
-    const [other] = await db.insert(agents).values({ userId }).returning();
-    await db.insert(messages).values([
-      { userId, role: 'user', content: 'Orphan Inbox' },
-      { userId, agentId: inbox.id, role: 'user', content: 'Current Inbox' },
-      { userId, agentId: other.id, role: 'user', content: 'Standalone' },
-      { userId: otherUserId, role: 'user', content: 'Foreign Inbox' },
-    ]);
-    for (const id of ['inbox', 'ssn_inbox', inbox.id]) {
+  it.each(['inbox', 'ssn_inbox', 'agent'] as const)(
+    'reads and clears %s Inbox history without touching standalone or foreign messages',
+    async (context) => {
+      const [inbox] = await db.insert(agents).values({ userId, slug: 'inbox' }).returning();
+      const [other] = await db.insert(agents).values({ userId }).returning();
+      await db.insert(messages).values([
+        { userId, role: 'user', content: 'Orphan Inbox' },
+        { userId, agentId: inbox.id, role: 'user', content: 'Current Inbox' },
+        { userId, agentId: other.id, role: 'user', content: 'Standalone' },
+        { userId: otherUserId, role: 'user', content: 'Foreign Inbox' },
+      ]);
+      const id = context === 'agent' ? inbox.id : context;
       expect(
         (await callers().message.getMessages({ sessionId: id })).map((row) => row.content).sort(),
       ).toEqual(['Current Inbox', 'Orphan Inbox']);
-    }
-    expect(
-      (await callers().message.getMessages({ agentId: other.id })).map((row) => row.content),
-    ).toEqual(['Standalone']);
-  });
+      expect(
+        (await callers().message.getMessages({ agentId: other.id })).map((row) => row.content),
+      ).toEqual(['Standalone']);
+      await callers().message.removeMessagesByAssistant({ sessionId: id });
+      expect(await callers().message.getMessages({ sessionId: id })).toEqual([]);
+      expect(
+        (await db.query.messages.findMany({ where: eq(messages.userId, userId) })).map(
+          (row) => row.content,
+        ),
+      ).toEqual(['Standalone']);
+      expect(
+        (await db.query.messages.findMany({ where: eq(messages.userId, otherUserId) })).map(
+          (row) => row.content,
+        ),
+      ).toEqual(['Foreign Inbox']);
+    },
+  );
 
   it('passes the canonical id to config redaction and denies use-only operations at view access', async () => {
     const workspaceId = await workspace();

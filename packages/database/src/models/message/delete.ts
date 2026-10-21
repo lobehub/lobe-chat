@@ -211,6 +211,7 @@ export class MessageDeleteMutations extends MessageScope {
                 sessionId
                   ? and(isNull(messages.agentId), eq(messages.sessionId, sessionId))
                   : undefined,
+                this.matchLegacyInbox(options.agentId),
               )
             : this.matchSession(sessionId),
           this.matchTopic(topicId),

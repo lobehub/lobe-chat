@@ -1,11 +1,9 @@
-import { INBOX_SESSION_ID } from '@lobechat/const';
 import type { DBMessageItem, IThreadType } from '@lobechat/types';
 import { ThreadType } from '@lobechat/types';
 import type { SQL } from 'drizzle-orm';
-import { and, asc, desc, eq, exists, inArray, isNull, lte, not, or, sql } from 'drizzle-orm';
+import { and, asc, desc, eq, inArray, isNull, lte, not, or, sql } from 'drizzle-orm';
 
 import {
-  agents,
   agentsToSessions,
   embeddings,
   messageQueries,
@@ -74,27 +72,7 @@ export class MessageLookupQueries extends MessageScope {
     const agentCondition = associatedSessionId
       ? or(eq(messages.agentId, agentId), eq(messages.sessionId, associatedSessionId))
       : eq(messages.agentId, agentId);
-    // Only the actual scoped Inbox may adopt pre-migration orphan messages.
-    const inbox = this.db
-      .select({ id: agents.id })
-      .from(agents)
-      .where(
-        and(
-          eq(agents.id, agentId),
-          eq(agents.slug, INBOX_SESSION_ID),
-          buildWorkspaceWhere({ userId: this.userId, workspaceId: this.workspaceId }, agents),
-        ),
-      );
-    return or(
-      agentCondition,
-      and(
-        isNull(messages.agentId),
-        isNull(messages.sessionId),
-        isNull(messages.groupId),
-        isNull(messages.topicId),
-        exists(inbox),
-      ),
-    );
+    return or(agentCondition, this.matchLegacyInbox(agentId));
   };
 
   findById = async (id: string) => {
