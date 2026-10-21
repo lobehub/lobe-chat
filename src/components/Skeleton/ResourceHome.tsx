@@ -1,6 +1,8 @@
 'use client';
 
-import { createStaticStyles, cssVar, Flexbox } from '@lobehub/ui';
+import { Flexbox } from '@lobehub/ui';
+import { cssVar } from '@lobehub/ui/stylex/cssVar.stylex';
+import * as stylex from '@stylexjs/stylex';
 
 import SkeletonBar from './Bar';
 
@@ -39,22 +41,22 @@ export const ResourceSectionSkeleton = ({
   </div>
 );
 
-const styles = createStaticStyles(({ css }) => ({
-  content: css`
-    width: 100%;
-    max-width: 1080px;
-    margin-inline: auto;
-    padding-block: 32px 64px;
-    padding-inline: 32px;
-  `,
-  header: css`
-    border-block-end: 1px solid ${cssVar.colorBorderSecondary};
-  `,
-  scroll: css`
-    overflow: hidden;
-    flex: 1;
-  `,
-}));
+const styles = stylex.create({
+  content: {
+    width: '100%',
+    maxWidth: '1080px',
+    marginInline: 'auto',
+    paddingBlockStart: '32px',
+    paddingBlockEnd: '64px',
+    paddingInline: '32px',
+  },
+  header: {
+    borderBlockEndWidth: '1px',
+    borderBlockEndStyle: 'solid',
+    borderBlockEndColor: cssVar.colorBorderSecondary,
+  },
+  scroll: { overflow: 'hidden', flex: '1' },
+});
 
 const Section = (props: SectionSkeletonProps) => (
   <Flexbox gap={12}>
@@ -68,7 +70,7 @@ const ResourceHomeSkeleton = () => (
     <Flexbox
       horizontal
       align={'center'}
-      className={styles.header}
+      className={stylex.props(styles.header).className}
       flex={'none'}
       height={44}
       justify={'space-between'}
@@ -77,8 +79,8 @@ const ResourceHomeSkeleton = () => (
       <SkeletonBar height={20} width={96} />
       <SkeletonBar height={28} width={88} />
     </Flexbox>
-    <div className={styles.scroll}>
-      <Flexbox className={styles.content} gap={40}>
+    <div {...stylex.props(styles.scroll)}>
+      <Flexbox className={stylex.props(styles.content).className} gap={40}>
         <Section {...RESOURCE_HOME_SECTIONS.libraries} />
         <Section {...RESOURCE_HOME_SECTIONS.works} />
         <Section {...RESOURCE_HOME_SECTIONS.pages} />
