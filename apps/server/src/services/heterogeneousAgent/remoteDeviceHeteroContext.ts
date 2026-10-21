@@ -1,4 +1,5 @@
 import type { ConversationHistoryEntry } from './cloudHeteroContext';
+import { formatUnansweredUserTurns } from './unansweredUserTurns';
 
 /**
  * Builds the system context injected before every user prompt for hetero runs
@@ -34,8 +35,10 @@ export function buildRemoteDeviceHeteroContext(params: {
    * context is unavailable (e.g. a fresh CLI process on the device).
    */
   conversationHistory?: ConversationHistoryEntry[];
+  /** User messages a resumed session may have missed (see `collectUnansweredUserTurns`). */
+  unansweredUserTurns?: string[];
 }): string | undefined {
-  const { activeWorktree, agentSystemContext, conversationHistory } = params;
+  const { activeWorktree, agentSystemContext, conversationHistory, unansweredUserTurns } = params;
 
   const parts: string[] = [];
 
@@ -70,6 +73,9 @@ export function buildRemoteDeviceHeteroContext(params: {
     });
     parts.push(`<previous_conversation>\n${entries.join('\n')}\n</previous_conversation>`);
   }
+
+  const unanswered = formatUnansweredUserTurns(unansweredUserTurns);
+  if (unanswered) parts.push(unanswered);
 
   return parts.length > 0 ? parts.join('\n\n') : undefined;
 }

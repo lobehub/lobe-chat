@@ -61,6 +61,7 @@ export const dispatchToCliDevice = async (
     resumeSessionId,
     topic,
     topicRepos,
+    unansweredUserTurns,
   } = prepared;
   const { agentId: resolvedAgentId, operationId, topicId } = run;
 
@@ -157,6 +158,7 @@ export const dispatchToCliDevice = async (
     ...worktreeContext,
     agentSystemContext,
     conversationHistory: resumeSessionId ? undefined : conversationHistory,
+    unansweredUserTurns,
   });
   const deviceResumeFallbackSystemContext =
     resumeSessionId && conversationHistory

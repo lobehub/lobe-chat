@@ -13,6 +13,7 @@ import { signHeteroOperationJWT } from '@/libs/trpc/utils/internalJwt';
 import { HeterogeneousAgentService } from '@/server/services/heterogeneousAgent';
 import type { ConversationHistoryEntry } from '@/server/services/heterogeneousAgent/cloudHeteroContext';
 import { buildCloudHeteroContext } from '@/server/services/heterogeneousAgent/cloudHeteroContext';
+import { collectUnansweredUserTurns } from '@/server/services/heterogeneousAgent/unansweredUserTurns';
 import { resolveSandboxSessionConfig } from '@/server/services/sandbox/session';
 
 import { supportsCloudHeterogeneousSandbox } from '../../helpers/heteroErrors';
@@ -119,6 +120,9 @@ export const prepareHeteroRun = async (
   // a serialized duplicate. Amp threads are server-backed, so they rely on
   // native continuation exclusively and never need this local-file fallback.
   let conversationHistory: ConversationHistoryEntry[] | undefined;
+  // A resumed session still needs the prompts of runs stopped before the CLI
+  // recorded them; the history above is withheld from it.
+  let unansweredUserTurns: string[] | undefined;
   if (heteroType !== 'amp') {
     try {
       // `allowShareVisitor`: this is the RUN's own topic, already resolved
@@ -129,12 +133,11 @@ export const prepareHeteroRun = async (
         { topicId, pageSize: 200 },
         { allowShareVisitor: true },
       );
-      const turns = recentMsgs
+      const topicMsgs = recentMsgs.filter((m) => !m.threadId && !selfMessageIds.has(m.id));
+      const turns = topicMsgs
         .filter(
           (m) =>
             (m.role === 'user' || m.role === 'assistant') &&
-            !m.threadId &&
-            !selfMessageIds.has(m.id) &&
             m.content &&
             m.content !== LOADING_FLAT,
         )
@@ -144,6 +147,10 @@ export const prepareHeteroRun = async (
           role: m.role as 'assistant' | 'user',
         }));
       if (turns.length > 0) conversationHistory = turns;
+      if (resumeSessionId) {
+        const unanswered = collectUnansweredUserTurns(topicMsgs, prompt);
+        if (unanswered.length > 0) unansweredUserTurns = unanswered;
+      }
     } catch (err) {
       log('execAgent: failed to load conversation history for hetero context: %O', err);
     }
@@ -188,6 +195,7 @@ export const prepareHeteroRun = async (
     githubToken,
     repos: topicRepos,
     sandbox: sandboxPlacement,
+    unansweredUserTurns,
   });
   const resumeFallbackSystemContext =
     resumeSessionId && conversationHistory
@@ -251,6 +259,7 @@ export const prepareHeteroRun = async (
     sandbox,
     topic,
     topicRepos,
+    unansweredUserTurns,
   };
 };
 
