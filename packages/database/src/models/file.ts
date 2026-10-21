@@ -38,6 +38,7 @@ import {
   globalFiles,
   knowledgeBaseFiles,
   knowledgeBases,
+  meetings,
   messages,
   messagesFiles,
   messageTTS,
@@ -344,6 +345,12 @@ export class FileModel {
             .select({ id: verifyEvidence.fileId })
             .from(verifyEvidence)
             .where(eq(verifyEvidence.fileId, id)),
+        )
+        .unionAll(
+          trx
+            .select({ id: meetings.audioFileId })
+            .from(meetings)
+            .where(eq(meetings.audioFileId, id)),
         )
         .limit(1);
       if (contentReference) return;
