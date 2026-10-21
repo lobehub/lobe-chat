@@ -239,9 +239,13 @@ describe('useDocumentReview', () => {
     expect(result.current.actionError).toBeNull();
   });
 
-  it('shows needs_recheck right after applying a fix and then re-checks it', async () => {
+  it('shows needs_recheck right after applying a fix, then the re-check verdict', async () => {
     const applied = checkResult('needs_recheck', { appliedAt: now });
     mocks.applySuggestion.mockResolvedValue(applied);
+    const passed = checkResult('passed', { appliedAt: now });
+    mocks.recheckChecks.mockResolvedValue([passed]);
+    let serverDetail = detailWith([checkResult('failed')]);
+    mocks.getSession.mockImplementation(async () => serverDetail);
 
     const { result } = renderReview();
     await waitFor(() => expect(result.current.checkResults).toHaveLength(1));
@@ -264,6 +268,7 @@ describe('useDocumentReview', () => {
       ),
     ).toBe('needs_recheck');
 
+    serverDetail = detailWith([passed]);
     await act(async () => {
       await result.current.recheck(['res-1']);
     });
@@ -272,6 +277,10 @@ describe('useDocumentReview', () => {
       checkResultIds: ['res-1'],
       sessionId: 'ses-1',
     });
+    // The optimistic needs_recheck paint is dropped, so the row no longer
+    // reports needs_recheck after a verdict came back.
+    expect(result.current.statusOverrides).toEqual({});
+    expect(result.current.statusOverrides['res-1']).toBeUndefined();
   });
 
   it('does not mark a fix as applied when the anchor is gone', async () => {

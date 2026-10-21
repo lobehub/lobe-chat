@@ -213,7 +213,19 @@ export const useDocumentReview = ({ documentId }: UseDocumentReviewOptions) => {
   const recheck = async (checkResultIds?: string[]) => {
     if (!activeSessionId || !canWrite) return;
     await runAction('recheck', async () => {
-      await documentReviewService.recheckChecks({ checkResultIds, sessionId: activeSessionId });
+      const rechecked = await documentReviewService.recheckChecks({
+        checkResultIds,
+        sessionId: activeSessionId,
+      });
+      // The optimistic `needs_recheck` paint only covers the gap between
+      // applying a fix and the re-check returning. Once the server has a new
+      // verdict, drop the override so the row shows that verdict instead of
+      // staying "needs re-check" forever.
+      setStatusOverrides((current) => {
+        const next = { ...current };
+        for (const item of rechecked) delete next[item.id];
+        return next;
+      });
       await refreshDetail();
     });
   };
