@@ -25,6 +25,7 @@ import { DiscoverService } from '../discover';
 import { type MCPService } from '../mcp';
 import { type BuiltinToolsExecutor } from './builtin';
 import { classifyToolError, getToolAccessDeniedError } from './errorClassification';
+import { buildMcpAuthorizationErrorContent, isMcpAuthorizationError } from './mcpAuthError';
 import { resolveRunWorkspaceId } from './serverRuntimes/resolveWorkspaceScope';
 import { withoutDeviceReplay } from './serverRuntimes/withoutDeviceReplay';
 import {
@@ -352,6 +353,16 @@ export class ToolExecutionService {
       };
     } catch (error) {
       log('MCP tool execution failed for %s:%s: %O', identifier, apiName, error);
+      if (isMcpAuthorizationError(error)) {
+        const content = buildMcpAuthorizationErrorContent(identifier, {
+          isShareVisitor: !!context.agentShareVisitor,
+        });
+        return {
+          content,
+          error: { code: 'UNAUTHORIZED', message: (error as Error).message },
+          success: false,
+        };
+      }
       return {
         content: (error as Error).message,
         error: {

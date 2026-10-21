@@ -1,6 +1,8 @@
 // @vitest-environment node
 import { executeToolWithRetry } from '@lobechat/agent-runtime';
 import { CloudSandboxExecutionRuntime } from '@lobechat/builtin-tool-cloud-sandbox/executionRuntime';
+import { StreamableHTTPError } from '@modelcontextprotocol/sdk/client/streamableHttp.js';
+import { TRPCError } from '@trpc/server';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { deviceGateway } from '@/server/services/deviceGateway';
@@ -843,6 +845,78 @@ describe('ToolExecutionService', () => {
       expect(result.content).toContain('device gateway is not configured');
       expect(result.content).toContain('Configure a device gateway');
       expect(callTool).not.toHaveBeenCalled();
+    });
+  });
+
+  // LOBE-14771: the SDK puts the 401 status only in `.code` and MCPService
+  // wraps it in a TRPCError, so the model used to see a bare "Invalid or
+  // expired token" and told Share visitors to reauthorize a connection that
+  // belongs to the creator.
+  describe('MCP authorization failures', () => {
+    const mcpPayload = {
+      apiName: 'xmind_whoami',
+      arguments: '{}',
+      id: 'tool-call-auth',
+      identifier: 'xmind-mcp',
+      type: 'mcp',
+    } as any;
+
+    const unauthorized = () =>
+      new TRPCError({
+        cause: new StreamableHTTPError(
+          401,
+          'Error POSTing to endpoint: {"error":"Unauthorized: Invalid or expired token"}',
+        ),
+        code: 'INTERNAL_SERVER_ERROR',
+        message:
+          'Streamable HTTP error: Error POSTing to endpoint: {"error":"Unauthorized: Invalid or expired token"}',
+      });
+
+    const run = (over: Record<string, unknown> = {}, error: unknown = unauthorized()) => {
+      const service = new ToolExecutionService({
+        builtinToolsExecutor: { execute: vi.fn() } as any,
+        mcpService: { callTool: vi.fn().mockRejectedValue(error) } as any,
+      });
+      return service.executeTool(mcpPayload, {
+        toolManifestMap: {
+          'xmind-mcp': {
+            mcpParams: { name: 'xmind-mcp', type: 'http', url: 'https://app.xmind.com/api/mcp' },
+          },
+        },
+        userId: 'creator-1',
+        ...over,
+      } as any);
+    };
+
+    it('tells the model a Share visitor cannot repair the creator connection', async () => {
+      const result = await run({ agentShareVisitor: { shareId: 'share-1' } });
+
+      expect(result.success).toBe(false);
+      expect(result.content).toContain("set up on this agent creator's side");
+      expect(result.content).toContain('do not ask them to sign in, authorize, or reconnect');
+      expect(result.error).toMatchObject({ code: 'UNAUTHORIZED', kind: 'stop' });
+    });
+
+    it('asks the owner to reconnect outside Share', async () => {
+      const result = await run();
+
+      expect(result.content).toContain('reconnect');
+      expect(result.content).not.toContain("agent's creator");
+      expect(result.error).toMatchObject({ code: 'UNAUTHORIZED', kind: 'stop' });
+    });
+
+    it('keeps other MCP failures as raw replannable errors', async () => {
+      const result = await run(
+        { agentShareVisitor: { shareId: 'share-1' } },
+        new TRPCError({
+          cause: new StreamableHTTPError(500, 'boom'),
+          code: 'INTERNAL_SERVER_ERROR',
+          message: 'Streamable HTTP error: boom',
+        }),
+      );
+
+      expect(result.content).toBe('Streamable HTTP error: boom');
+      expect(result.error).toMatchObject({ code: 'MCP_EXECUTION_ERROR', kind: 'replan' });
     });
   });
 });

@@ -5,12 +5,13 @@ import type { FrozenCredentialFacts } from '@lobechat/types';
 import { agentShareFileAccessScope, ordinaryFileAccessScope } from '@lobechat/types';
 import debug from 'debug';
 
-import type { DecryptedConnector } from '@/database/models/connector';
+import { ConnectorModel, type DecryptedConnector } from '@/database/models/connector';
 import { DocumentModel } from '@/database/models/document';
 import { FileModel } from '@/database/models/file';
 import type { UserConnectorToolItem } from '@/database/schemas';
 import { buildConnectorManifests } from '@/libs/mcp/buildConnectorManifests';
 import { KeyVaultsGateKeeper } from '@/server/modules/KeyVaultsEncrypt';
+import { refreshExpiredConnectorTokens } from '@/server/services/connector/tokens';
 import { deviceGateway } from '@/server/services/deviceGateway';
 import { getScopedOnlineDevices } from '@/server/services/deviceGateway/scopedDevices';
 
@@ -93,6 +94,25 @@ export const readCredentialFacts = async (
 };
 
 /**
+ * Manifests carry each connector's access token for the whole run, so refresh
+ * expired OAuth tokens first. Rotated credentials are persisted encrypted,
+ * which needs the gatekeeper; without one, keep the stored tokens.
+ */
+const refreshConnectorTokens = async (
+  deps: ToolDiscoveryDeps,
+  gateKeeper: KeyVaultsGateKeeper | undefined,
+  connectors: DecryptedConnector[],
+  onTimeout: () => void,
+): Promise<DecryptedConnector[]> => {
+  if (!gateKeeper || connectors.length === 0) return connectors;
+  return refreshExpiredConnectorTokens(
+    connectors,
+    new ConnectorModel(deps.db, deps.userId, deps.workspaceId, gateKeeper),
+    { onTimeout },
+  );
+};
+
+/**
  * Connector resolution: the gatekeeper decrypts the stored OAuth tokens, or
  * `buildConnectorManifests` gets no auth and every tool call 401s.
  */
@@ -105,7 +125,11 @@ const readConnectors = async (deps: ToolDiscoveryDeps, ctx: ToolReadsContext) =>
     log('execAgent: failed to init gatekeeper for connector credentials: %O', err);
   }
 
-  return traceDiscoveryStage('connectors', async () => {
+  return traceDiscoveryStage('connectors', async (span) => {
+    let refreshTimeouts = 0;
+    const onRefreshTimeout = () => {
+      refreshTimeouts += 1;
+    };
     const connectors =
       candidateIds.length > 0
         ? await deps.connectorModel.resolveByIdentifiers(
@@ -119,8 +143,11 @@ const readConnectors = async (deps: ToolDiscoveryDeps, ctx: ToolReadsContext) =>
     // manifest. Connectors WITHOUT an endpoint (e.g. Lobehub/Composio OAuth skills synced via
     // syncToolsFromClient) must continue using their original plugin executor path — otherwise
     // after humanIntervention approval the runtime tries to call mcpServerUrl='' and returns empty.
-    const connectorsMcp = connectors.filter(
-      (c) => c.mcpServerUrl || c.mcpConnectionType === 'stdio',
+    const connectorsMcp = await refreshConnectorTokens(
+      deps,
+      connectorGateKeeper,
+      connectors.filter((c) => c.mcpServerUrl || c.mcpConnectionType === 'stdio'),
+      onRefreshTimeout,
     );
 
     // Fetch ALL tools for all real-MCP connectors (including disabled tools) so that
@@ -131,7 +158,13 @@ const readConnectors = async (deps: ToolDiscoveryDeps, ctx: ToolReadsContext) =>
         ? await deps.connectorToolModel.queryAllByConnectorIds(connectorsMcp.map((c) => c.id))
         : [];
 
-    const discoverable = await readDiscoverableConnectors(deps, ctx, connectorGateKeeper);
+    const discoverable = await readDiscoverableConnectors(
+      deps,
+      ctx,
+      connectorGateKeeper,
+      onRefreshTimeout,
+    );
+    markDegradedStage(span, refreshTimeouts, 'connector token refreshes');
 
     return {
       connectorGateKeeper,
@@ -161,6 +194,7 @@ const readDiscoverableConnectors = async (
   deps: ToolDiscoveryDeps,
   ctx: ToolReadsContext,
   gateKeeper: KeyVaultsGateKeeper | undefined,
+  onRefreshTimeout: () => void,
 ): Promise<{
   connectorsMcp: DecryptedConnector[];
   manifests: LobeToolManifest[];
@@ -192,9 +226,15 @@ const readDiscoverableConnectors = async (
     const tools = await deps.connectorToolModel.queryAllByConnectorIds(
       connectorsMcp.map((c) => c.id),
     );
-    return {
+    const refreshed = await refreshConnectorTokens(
+      deps,
+      gateKeeper,
       connectorsMcp,
-      manifests: buildConnectorManifests(connectorsMcp, tools) as LobeToolManifest[],
+      onRefreshTimeout,
+    );
+    return {
+      connectorsMcp: refreshed,
+      manifests: buildConnectorManifests(refreshed, tools) as LobeToolManifest[],
       tools,
     };
   } catch (error) {
