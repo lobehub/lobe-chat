@@ -49,11 +49,11 @@ Given(
         name: categoryName,
       },
     );
-    this.testContext.mobileSessionId = await mutate(this.page.request, 'session.createSession', {
+    const { agentId } = await mutate(this.page.request, 'agent.createAgent', {
       config: { title: '分类边界助理' },
-      session: { groupId: this.testContext.mobileCategoryId },
-      type: 'agent',
+      groupId: this.testContext.mobileCategoryId,
     });
+    this.testContext.mobileAgentId = agentId;
     await this.page.goto('/');
     await expect(category(this)).toBeVisible({ timeout: 60_000 });
     const devDock = this.page.getByRole('button', { name: 'Collapse DevDock' });
@@ -133,7 +133,7 @@ When('触摸分类标题后选择助理', async function (this: CustomWorld) {
   await expect(this.page.getByRole('menu')).toBeHidden();
   const agentLink = this.page.getByRole('link', {
     exact: true,
-    name: this.testContext.mobileSessionId,
+    name: this.testContext.mobileAgentId,
   });
   const href = await agentLink.getAttribute('href');
   expect(href).toMatch(/\/agent\/agt_/);
@@ -154,8 +154,8 @@ After({ tags: '@mobile-category-actions' }, async function (this: CustomWorld) {
     storageState: { cookies: this.testContext.mobileCookies, origins: [] },
   });
   try {
-    if (this.testContext.mobileSessionId)
-      await mutate(api, 'session.removeSession', { id: this.testContext.mobileSessionId });
+    if (this.testContext.mobileAgentId)
+      await mutate(api, 'agent.removeAgent', { agentId: this.testContext.mobileAgentId });
     if (this.testContext.mobileCategoryId)
       await mutate(api, 'sessionGroup.removeSessionGroup', {
         id: this.testContext.mobileCategoryId,
