@@ -77,7 +77,7 @@ app.get(
 // POST /api/agent/gateway/start — non-Vercel ensureRunning (Bearer KEY_VAULTS_SECRET)
 app.post(
   '/gateway/start',
-  bearerSecretAuth(() => process.env.KEY_VAULTS_SECRET),
+  bearerSecretAuth(() => [process.env.KEY_VAULTS_SECRET, process.env.KEY_VAULTS_FALLBACK_SECRET]),
   gatewayStart,
 );
 
