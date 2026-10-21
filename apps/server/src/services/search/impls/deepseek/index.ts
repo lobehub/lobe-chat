@@ -51,6 +51,9 @@ export const buildDeepSeekQuery = (query: string, params: SearchParams = {}): st
  * @see https://api-docs.deepseek.com/zh-cn/guides/search
  */
 export class DeepSeekImpl implements SearchServiceImpl {
+  // DeepSeek picks its own sources, so retrying without `searchEngines` would repeat the same request
+  readonly useAutoSearchEngineSelection = true;
+
   private get apiKey(): string | undefined {
     // Fall back to the model provider key so a single DeepSeek key enables search too
     return process.env.DEEPSEEK_SEARCH_API_KEY || process.env.DEEPSEEK_API_KEY;
@@ -61,7 +64,11 @@ export class DeepSeekImpl implements SearchServiceImpl {
   }
 
   async query(query: string, params: SearchParams = {}): Promise<UniformSearchResponse> {
-    log('Starting DeepSeek query with query: "%s", params: %o', query, params);
+    log(
+      'Starting DeepSeek query (query length: %d, timeRange: %s)',
+      query.length,
+      params.searchTimeRange,
+    );
     const endpoint = urlJoin(this.baseUrl, '/v1/tools/search');
 
     const body: DeepSeekSearchParameters = {
@@ -69,8 +76,6 @@ export class DeepSeekImpl implements SearchServiceImpl {
       need_content: false,
       query: buildDeepSeekQuery(query, params),
     };
-
-    log('Constructed request body: %o', body);
 
     let response: Response;
     const startAt = Date.now();
@@ -111,8 +116,6 @@ export class DeepSeekImpl implements SearchServiceImpl {
 
     try {
       const deepseekResponse = (await response.json()) as DeepSeekSearchResponse;
-
-      log('Parsed DeepSeek response: %o', deepseekResponse);
 
       const mappedResults = (deepseekResponse.results || []).map((result): UniformSearchResult => ({
         category: 'general',

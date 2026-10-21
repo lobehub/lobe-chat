@@ -31,6 +31,10 @@ describe('DeepSeekImpl', () => {
     delete process.env.DEEPSEEK_API_KEY;
   });
 
+  it('should opt into automatic search engine selection', () => {
+    expect(new DeepSeekImpl().useAutoSearchEngineSelection).toBe(true);
+  });
+
   it('should call the search endpoint and map results', async () => {
     vi.mocked(fetch).mockResolvedValue(
       createMockResponse({
