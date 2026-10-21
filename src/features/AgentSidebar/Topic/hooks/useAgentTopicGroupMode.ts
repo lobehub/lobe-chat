@@ -7,7 +7,7 @@ import { preferenceSelectors } from '@/store/user/selectors';
 import type { TopicGroupMode } from '@/types/topic';
 
 import { useTopicListScope } from '../TopicListScope';
-import { resolveAgentTopicGroupMode } from '../utils/topicGroupMode';
+import { resolveAgentTopicGroupMode, resolveProjectTopicGroupMode } from '../utils/topicGroupMode';
 
 export const useAgentTopicGroupMode = () => {
   const scope = useTopicListScope();
@@ -20,7 +20,7 @@ export const useAgentTopicGroupMode = () => {
   const globalMode = useUserStore(preferenceSelectors.topicGroupMode);
 
   const topicGroupMode = scope
-    ? globalMode
+    ? resolveProjectTopicGroupMode(globalMode)
     : resolveAgentTopicGroupMode({
         agentTopicGroupMode,
         agentType,
