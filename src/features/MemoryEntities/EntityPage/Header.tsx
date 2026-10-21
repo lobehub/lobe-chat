@@ -63,6 +63,7 @@ const Header = memo<HeaderProps>(({ entity }) => {
   const backId = useEntityViewStore((s) => s.history.at(-1));
   const back = useEntityViewStore((s) => s.back);
   const select = useEntityViewStore((s) => s.select);
+  const ensureSelected = useEntityViewStore((s) => s.ensureSelected);
   const backTo = entities.find((e) => e.id === backId);
   const statusLabel = statusLabelOf(entity.statusValue);
   // The free-text type is shown when it says more than the kind it was folded into.
@@ -70,6 +71,7 @@ const Header = memo<HeaderProps>(({ entity }) => {
     entity.rawType && entity.rawType.toLowerCase() !== entity.kind ? entity.rawType : undefined;
 
   const handleStatus = async (value: string, status: MemoryEntity['status']) => {
+    ensureSelected(entity.id);
     try {
       await setStatus(entity.id, value, status);
     } catch {
@@ -80,6 +82,7 @@ const Header = memo<HeaderProps>(({ entity }) => {
   // The backend deletes for good, so this one asks first.
   const handleDelete = () =>
     confirmModal({
+      cancelText: '取消',
       content: '删除后无法恢复。之后的对话里再提到它，可能会重新生成一页。',
       okButtonProps: { danger: true },
       okText: '删除',
