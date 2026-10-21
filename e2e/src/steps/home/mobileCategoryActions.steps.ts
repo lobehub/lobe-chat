@@ -4,7 +4,7 @@ import { type APIRequestContext, expect, request } from '@playwright/test';
 import type { CustomWorld } from '../../support/world';
 
 const categoryName =
-  '移动端分类操作触控边界与超长标题省略验证：此分类名称必须在三百九十和三百二十像素视口下均超出可用文本区域';
+  'Mobile category action touch boundaries and long title truncation regression: this deliberately long category name must overflow the available title area at both 390-pixel and 320-pixel viewport widths while leaving the action button independently accessible';
 
 async function mutate(api: APIRequestContext, procedure: string, input: unknown) {
   const response = await api.post(`/trpc/lambda/${procedure}`, {
@@ -23,7 +23,7 @@ function action(world: CustomWorld) {
 }
 
 Given(
-  '触屏首页宽度为 {int} 且有分类和助理',
+  'the touch home page is {int} pixels wide with a category and an agent',
   { timeout: 90_000 },
   async function (this: CustomWorld, width: number) {
     const cookies = await this.browserContext.cookies();
@@ -50,7 +50,7 @@ Given(
       },
     );
     const { agentId } = await mutate(this.page.request, 'agent.createAgent', {
-      config: { title: '分类边界助理' },
+      config: { title: 'Category boundary test agent' },
       groupId: this.testContext.mobileCategoryId,
     });
     this.testContext.mobileAgentId = agentId;
@@ -63,66 +63,81 @@ Given(
   },
 );
 
-Then('分类操作默认可见且有足够的触控区域', async function (this: CustomWorld) {
-  await expect(action(this)).toHaveCSS('opacity', '1');
-  const title = category(this).getByText(categoryName, { exact: true });
-  await expect(title).toBeVisible();
-  await expect(title).toHaveCSS('text-overflow', 'ellipsis');
-  await expect(title).toHaveCSS('overflow-x', 'hidden');
-  const textBounds = await title.evaluate((element) => ({
-    clientWidth: element.clientWidth,
-    scrollWidth: element.scrollWidth,
-  }));
-  console.log('Category title truncation:', this.page.viewportSize()!.width, textBounds);
-  expect(textBounds.clientWidth).toBeGreaterThan(0);
-  expect(textBounds.scrollWidth).toBeGreaterThan(textBounds.clientWidth);
-  const button = action(this).getByRole('button');
-  await expect(button).toHaveCSS('background-color', 'rgba(0, 0, 0, 0)');
-  await expect(button).toHaveCSS('box-shadow', 'none');
-  const bounds = await button.boundingBox();
-  expect(bounds).not.toBeNull();
-  expect(bounds!.width).toBeGreaterThanOrEqual(44);
-  expect(bounds!.height).toBeGreaterThanOrEqual(44);
-  const titleBounds = await category(this).boundingBox();
-  expect(titleBounds!.x + titleBounds!.width).toBeLessThanOrEqual(bounds!.x);
-  expect(await this.page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(
-    this.page.viewportSize()!.width,
-  );
-});
+Then(
+  'category actions are visible by default with a sufficient touch target',
+  async function (this: CustomWorld) {
+    await expect(action(this)).toHaveCSS('opacity', '1');
+    const title = category(this).getByText(categoryName, { exact: true });
+    await expect(title).toBeVisible();
+    await expect(title).toHaveCSS('text-overflow', 'ellipsis');
+    await expect(title).toHaveCSS('overflow-x', 'hidden');
+    const textBounds = await title.evaluate((element) => ({
+      clientWidth: element.clientWidth,
+      scrollWidth: element.scrollWidth,
+    }));
+    console.log('Category title truncation:', this.page.viewportSize()!.width, textBounds);
+    expect(textBounds.clientWidth).toBeGreaterThan(0);
+    expect(textBounds.scrollWidth).toBeGreaterThan(textBounds.clientWidth);
+    const button = action(this).getByRole('button');
+    await expect(button).toHaveCSS('background-color', 'rgba(0, 0, 0, 0)');
+    await expect(button).toHaveCSS('box-shadow', 'none');
+    const bounds = await button.boundingBox();
+    expect(bounds).not.toBeNull();
+    expect(bounds!.width).toBeGreaterThanOrEqual(44);
+    expect(bounds!.height).toBeGreaterThanOrEqual(44);
+    const titleBounds = await category(this).boundingBox();
+    expect(titleBounds!.x + titleBounds!.width).toBeLessThanOrEqual(bounds!.x);
+    expect(
+      await this.page.evaluate(() => document.documentElement.scrollWidth),
+    ).toBeLessThanOrEqual(this.page.viewportSize()!.width);
+  },
+);
 
-When('直接触摸分类操作的中心和四侧内边界', async function (this: CustomWorld) {
-  const box = (await action(this).getByRole('button').boundingBox())!;
-  const points = [
-    [box.width / 2, box.height / 2],
-    [1, box.height / 2],
-    [box.width - 1, box.height / 2],
-    [box.width / 2, 1],
-    [box.width / 2, box.height - 1],
-  ];
-  for (const [x, y] of points) {
-    await this.page.touchscreen.tap(box.x + x, box.y + y);
-    await expect(this.page.getByRole('menu')).toBeVisible();
+When(
+  'I tap the category action at its center and four inner edges',
+  async function (this: CustomWorld) {
+    const box = (await action(this).getByRole('button').boundingBox())!;
+    const points = [
+      [box.width / 2, box.height / 2],
+      [1, box.height / 2],
+      [box.width - 1, box.height / 2],
+      [box.width / 2, 1],
+      [box.width / 2, box.height - 1],
+    ];
+    for (const [x, y] of points) {
+      await this.page.touchscreen.tap(box.x + x, box.y + y);
+      await expect(this.page.getByRole('menu')).toBeVisible();
+      await expect(category(this)).toHaveAttribute(
+        'aria-expanded',
+        this.testContext.categoryExpanded,
+      );
+      expect(this.page.url()).toBe(this.testContext.categoryUrl);
+      await this.page.keyboard.press('Escape');
+      await expect(this.page.getByRole('menu')).toBeHidden();
+    }
+  },
+);
+
+Then(
+  'the category expansion state and current page remain unchanged',
+  async function (this: CustomWorld) {
     await expect(category(this)).toHaveAttribute(
       'aria-expanded',
       this.testContext.categoryExpanded,
     );
     expect(this.page.url()).toBe(this.testContext.categoryUrl);
+  },
+);
+
+When(
+  'I close the category menu and move focus to the search field',
+  async function (this: CustomWorld) {
     await this.page.keyboard.press('Escape');
-    await expect(this.page.getByRole('menu')).toBeHidden();
-  }
-});
+    await this.page.getByRole('textbox').first().focus();
+  },
+);
 
-Then('分类折叠状态和当前页面没有改变', async function (this: CustomWorld) {
-  await expect(category(this)).toHaveAttribute('aria-expanded', this.testContext.categoryExpanded);
-  expect(this.page.url()).toBe(this.testContext.categoryUrl);
-});
-
-When('关闭分类菜单并将焦点移到搜索框', async function (this: CustomWorld) {
-  await this.page.keyboard.press('Escape');
-  await this.page.getByRole('textbox').first().focus();
-});
-
-When('触摸分类标题后选择助理', async function (this: CustomWorld) {
+When('I tap the category title and then select its agent', async function (this: CustomWorld) {
   const trigger = category(this);
   if ((await trigger.getAttribute('aria-expanded')) === 'true') await trigger.tap();
   await expect(trigger).toHaveAttribute('aria-expanded', 'false');
@@ -144,7 +159,7 @@ When('触摸分类标题后选择助理', async function (this: CustomWorld) {
   await this.page.touchscreen.tap(rowBounds.x + rowBounds.width / 2, rowBounds.y + 1);
 });
 
-Then('只进入该分类的助理', async function (this: CustomWorld) {
+Then('only the agent in that category is opened', async function (this: CustomWorld) {
   await expect(this.page).toHaveURL(this.testContext.mobileAgentURL);
   await expect(this.page.getByRole('menu')).toBeHidden();
 });
