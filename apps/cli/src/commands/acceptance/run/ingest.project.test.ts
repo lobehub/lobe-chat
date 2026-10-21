@@ -131,14 +131,14 @@ describe('lh acceptance run ingest — project filing', () => {
   });
 
   describe('with --acceptance', () => {
-    const existing = (projectId: string | null) =>
+    const existing = (projectId: string | null, subjectType = 'standalone') =>
       client.acceptance.getBundle.query.mockResolvedValue({
         acceptance: {
           id: 'acceptance-1',
           projectId,
           status: 'delivered',
-          subjectId: 'standalone-1',
-          subjectType: 'standalone',
+          subjectId: `${subjectType}-1`,
+          subjectType,
           workspaceId: null,
         },
       });
@@ -155,6 +155,31 @@ describe('lh acceptance run ingest — project filing', () => {
         projectId: 'prj_lobe',
       });
       expect(result().projectId).toBe('prj_lobe');
+    });
+
+    it("files an ungrouped standalone acceptance under the repository's project", async () => {
+      await writeReport();
+      await declareProject({ project: 'LOBE' });
+      existing(null);
+      client.project.find.query.mockResolvedValue({ data: { id: 'prj_lobe', name: 'LobeHub' } });
+
+      await run('ingest', h.dir, '--acceptance', 'acceptance-1', '--json');
+
+      expect(client.acceptance.setProject.mutate).toHaveBeenCalledWith({
+        id: 'acceptance-1',
+        projectId: 'prj_lobe',
+      });
+    });
+
+    it("leaves a topic's ungrouped acceptance to its own project instead of the repository's", async () => {
+      await writeReport();
+      await declareProject({ project: 'LOBE' });
+      existing(null, 'topic');
+      client.project.find.query.mockResolvedValue({ data: { id: 'prj_lobe', name: 'LobeHub' } });
+
+      await run('ingest', h.dir, '--acceptance', 'acceptance-1', '--json');
+
+      expect(client.acceptance.setProject.mutate).not.toHaveBeenCalled();
     });
 
     it('writes nothing when the round is identical to the last one', async () => {

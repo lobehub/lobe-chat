@@ -381,10 +381,17 @@ export async function ingestReportAction(
     );
     process.exit(1);
   }
-  // An existing acceptance named by id has no subject to defer to: a project
-  // the caller or the repository names files it when it has none. Placed after
-  // the duplicate check so a round that publishes nothing writes nothing.
-  if (requestedAcceptanceId && project && !acceptance.projectId) {
+  // An acceptance named by id skips `ensure`, so apply its precedence here: a
+  // `--project` files an ungrouped acceptance, while the repository's default
+  // only fills a standalone one — a task or conversation defers to its own
+  // project. Placed after the duplicate check so a round that publishes
+  // nothing writes nothing.
+  if (
+    requestedAcceptanceId &&
+    project &&
+    !acceptance.projectId &&
+    (project.source === 'flag' || acceptance.subjectType === 'standalone')
+  ) {
     await client.acceptance.setProject.mutate({ id: acceptance.id, projectId: project.id });
     acceptance = { ...acceptance, projectId: project.id };
   }
