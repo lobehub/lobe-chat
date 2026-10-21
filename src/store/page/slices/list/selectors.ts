@@ -63,12 +63,28 @@ const getFilteredDocumentsLimited = (s: PageState): LobeDocument[] =>
 /**
  * One page as the loaded list holds it, falling back to the by-id projection
  * for pages outside it (mobile mounts no sidebar; a deep link may land before
- * the list fetches). Returns the stored object, so a component subscribing to
- * this selector keeps a stable reference until the page actually changes.
+ * the list fetches), and finally to a Docs sidebar section.
+ *
+ * The sections load their own rows (`pageSectionMap`), so on a fresh Docs load
+ * a page can be on screen while the flat list has not fetched it yet. Rename,
+ * duplicate and delete all resolve the row through this selector, so leaving
+ * the sections out made those actions a silent no-op on exactly those rows.
+ *
+ * Returns the stored object, so a component subscribing to this selector keeps
+ * a stable reference until the page actually changes.
  */
 const getDocumentById = (docId: string | undefined) => (s: PageState) => {
   if (!docId) return undefined;
-  return pageList(s)?.items.find((doc) => doc.id === docId) ?? s.pageDetailMap[docId];
+
+  const listRow = pageList(s)?.items.find((doc) => doc.id === docId);
+  if (listRow) return listRow;
+
+  const detailRow = s.pageDetailMap[docId];
+  if (detailRow) return detailRow;
+
+  return Object.values(s.pageSectionMap)
+    .flat()
+    .find((doc) => doc.id === docId);
 };
 
 const hasMoreDocuments = (s: PageState): boolean => Boolean(pageList(s)?.hasMore);

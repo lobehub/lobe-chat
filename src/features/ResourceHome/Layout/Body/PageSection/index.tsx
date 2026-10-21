@@ -25,7 +25,6 @@ import EmptyNavItem from '@/features/NavPanel/components/EmptyNavItem';
 import NavItem from '@/features/NavPanel/components/NavItem';
 import SkeletonList from '@/features/NavPanel/components/SkeletonList';
 import Actions from '@/features/Pages/PageLayout/Body/List/Item/Actions';
-import Editing from '@/features/Pages/PageLayout/Body/List/Item/Editing';
 import { useDropdownMenu } from '@/features/Pages/PageLayout/Body/List/Item/useDropdownMenu';
 import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwareNavigate';
 import { useActiveLocation } from '@/hooks/useActiveLocation';
@@ -35,6 +34,7 @@ import type { PageSectionScope } from '@/store/page/projection';
 import type { LobeDocument } from '@/types/document';
 
 import { docsPagePath, resolveResourceRoute, RESOURCE_HOME_PATH } from '../../../paths';
+import RenameInput from './RenameInput';
 import { buildPageTree } from './tree';
 
 /** Rows a section shows; the rest are in the Docs home list. */
@@ -57,6 +57,7 @@ const PageRow = memo<PageRowProps>(({ depth, doc, isOpen, onOpen }) => {
   const { t } = useTranslation('file');
   const emoji = doc.metadata?.emoji;
   const title = doc.title || t('pageList.untitled');
+  const editing = usePageStore((s) => s.renamingPageId === doc.id);
 
   const toggleEditing = useCallback(
     (visible?: boolean) => pageActions.setRenamingPageId(visible ? doc.id : null),
@@ -65,30 +66,33 @@ const PageRow = memo<PageRowProps>(({ depth, doc, isOpen, onOpen }) => {
   const dropdownMenu = useDropdownMenu({ pageId: doc.id, toggleEditing });
 
   return (
-    <>
-      <NavItem
-        actions={<Actions dropdownMenu={dropdownMenu} />}
-        active={isOpen}
-        contextMenuItems={dropdownMenu}
-        href={docsPagePath(doc.id)}
-        style={depth ? { paddingInlineStart: 8 + depth * INDENT_PER_LEVEL } : undefined}
-        title={title}
-        icon={
-          emoji ? (
-            <Avatar avatar={emoji} size={20} />
-          ) : (
-            <Icon icon={FileTextIcon} size={{ size: 16, strokeWidth: 1.5 }} />
-          )
-        }
-        onClick={() => onOpen(doc.id)}
-      />
-      <Editing
-        currentEmoji={emoji}
-        documentId={doc.id}
-        title={title}
-        toggleEditing={toggleEditing}
-      />
-    </>
+    <NavItem
+      actions={<Actions dropdownMenu={dropdownMenu} />}
+      active={isOpen}
+      contextMenuItems={dropdownMenu}
+      disabled={editing}
+      href={docsPagePath(doc.id)}
+      style={depth ? { paddingInlineStart: 8 + depth * INDENT_PER_LEVEL } : undefined}
+      icon={
+        emoji ? (
+          <Avatar avatar={emoji} size={20} />
+        ) : (
+          <Icon icon={FileTextIcon} size={{ size: 16, strokeWidth: 1.5 }} />
+        )
+      }
+      title={
+        editing ? (
+          <RenameInput
+            id={doc.id}
+            title={title}
+            onDone={() => pageActions.setRenamingPageId(null)}
+          />
+        ) : (
+          title
+        )
+      }
+      onClick={() => onOpen(doc.id)}
+    />
   );
 });
 

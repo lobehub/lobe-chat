@@ -12,7 +12,7 @@ import { expect } from '@playwright/test';
 
 import type { CustomWorld } from '../../support/world';
 import { WAIT_TIMEOUT } from '../../support/world';
-import { openDocsHome } from './docs-home';
+import { dismissDocsMergeNotice, openDocsHome } from './docs-home';
 
 // ============================================
 // Helper Functions
@@ -140,6 +140,9 @@ async function waitForPageWorkspaceReady(world: CustomWorld): Promise<void> {
 }
 
 async function clickNewPageButton(world: CustomWorld): Promise<void> {
+  // The one-time "Pages and Resources are now Docs" notice is a modal: while it
+  // is up, the click lands on the mask and no page is created.
+  await dismissDocsMergeNotice(world, 1500);
   await waitForPageWorkspaceReady(world);
 
   const candidates = [
@@ -169,6 +172,44 @@ async function clickNewPageButton(world: CustomWorld): Promise<void> {
   }
 
   throw new Error('Could not find new page button');
+}
+
+/**
+ * Wait for whatever rename UI the row opened and return its input.
+ *
+ * Docs renames a page inline — the input takes the place of the row title — but
+ * older flows could still open a popover, so both shapes are accepted. Polling
+ * (instead of a single count) keeps the step from racing the render.
+ */
+async function findRenameInput(world: CustomWorld) {
+  const selectors = [
+    '.ant-popover input',
+    '.ant-popover-content input',
+    '[class*="popover"] input',
+    'input[placeholder]',
+  ];
+
+  for (let attempt = 0; attempt < 20; attempt++) {
+    for (const selector of selectors) {
+      const inputs = world.page.locator(selector);
+      const count = await inputs.count();
+
+      for (let i = 0; i < count; i++) {
+        const input = inputs.nth(i);
+        if (!(await input.isVisible().catch(() => false))) continue;
+
+        const placeholder = (await input.getAttribute('placeholder')) || '';
+        // The sidebar search box is an input too, and it is never the rename field.
+        if (placeholder.includes('Search') || placeholder.includes('搜索')) continue;
+
+        return input;
+      }
+    }
+
+    await world.page.waitForTimeout(300);
+  }
+
+  return null;
 }
 
 // ============================================
@@ -230,43 +271,12 @@ Given('用户在 Page 页面有一个文稿', async function (this: CustomWorld)
   console.log('   📍 Debug: Clicked rename option');
   await this.page.waitForTimeout(800);
 
-  // Wait for rename popover to appear and find the input
-  // Try multiple selectors for the input
-  const inputSelectors = [
-    '.ant-popover input',
-    '.ant-popover-content input',
-    '[class*="popover"] input',
-    'input[placeholder]',
-  ];
-
-  let popoverInput = null;
-  for (const selector of inputSelectors) {
-    const inputs = this.page.locator(selector);
-    const count = await inputs.count();
-    console.log(`   📍 Debug: Selector "${selector}" found ${count} inputs`);
-    if (count > 0) {
-      // Find the visible one
-      for (let i = 0; i < count; i++) {
-        const input = inputs.nth(i);
-        if (await input.isVisible()) {
-          const placeholder = await input.getAttribute('placeholder');
-          // Skip search input
-          if (placeholder && (placeholder.includes('Search') || placeholder.includes('搜索'))) {
-            continue;
-          }
-          popoverInput = input;
-          break;
-        }
-      }
-      if (popoverInput) break;
-    }
-  }
+  // Wait for the rename field to appear
+  const popoverInput = await findRenameInput(this);
 
   if (!popoverInput) {
-    throw new Error('Could not find popover input for renaming');
+    throw new Error('Could not find rename input');
   }
-
-  console.log('   📍 Debug: Popover input found');
   await expect(popoverInput).toBeVisible({ timeout: 5000 });
 
   // Clear and input the unique name
@@ -323,36 +333,11 @@ Given('用户在 Page 页面有一个文稿 {string}', async function (this: Cus
   await renameOption.click();
   await this.page.waitForTimeout(800);
 
-  // Wait for rename popover to appear and find the input
-  const inputSelectors = [
-    '.ant-popover input',
-    '.ant-popover-content input',
-    '[class*="popover"] input',
-    'input[placeholder]',
-  ];
-
-  let popoverInput = null;
-  for (const selector of inputSelectors) {
-    const inputs = this.page.locator(selector);
-    const count = await inputs.count();
-    if (count > 0) {
-      for (let i = 0; i < count; i++) {
-        const input = inputs.nth(i);
-        if (await input.isVisible()) {
-          const placeholder = await input.getAttribute('placeholder');
-          if (placeholder && (placeholder.includes('Search') || placeholder.includes('搜索'))) {
-            continue;
-          }
-          popoverInput = input;
-          break;
-        }
-      }
-      if (popoverInput) break;
-    }
-  }
+  // Wait for the rename field to appear
+  const popoverInput = await findRenameInput(this);
 
   if (!popoverInput) {
-    throw new Error('Could not find popover input for renaming');
+    throw new Error('Could not find rename input');
   }
 
   await expect(popoverInput).toBeVisible({ timeout: 5000 });
