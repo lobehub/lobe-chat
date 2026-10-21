@@ -1,59 +1,50 @@
 'use client';
 
 import type { BuiltinInspector, BuiltinInspectorProps } from '@lobechat/types';
-import { createStaticStyles, cx } from '@lobehub/ui';
+import { cssVar } from '@lobehub/ui/stylex/cssVar.stylex';
+import * as stylex from '@stylexjs/stylex';
 import { ImageIcon, ListTree, RefreshCw, SlidersHorizontal } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { highlightTextStyles, inspectorTextStyles, shinyTextStyles } from '@/styles';
+import { sx } from '@/styles/sx';
 
 import type { GenerateImageState } from '../../types';
 import { ImageGenerationApiName } from '../../types';
 import { getGenerateImageLabelTense } from './generateImageLabel';
 
-const styles = createStaticStyles(({ css, cssVar }) => ({
-  chip: css`
-    overflow: hidden;
-    display: inline-flex;
-    flex-shrink: 0;
-    align-items: center;
-
-    max-width: 132px;
-    padding-block: 2px;
-    padding-inline: 7px;
-    border-radius: 999px;
-
-    font-family: ${cssVar.fontFamilyCode};
-    font-size: 12px;
-    color: ${cssVar.colorTextSecondary};
-    text-overflow: ellipsis;
-    white-space: nowrap;
-
-    background: ${cssVar.colorFillTertiary};
-  `,
-  icon: css`
-    flex-shrink: 0;
-    color: ${cssVar.colorTextDescription};
-  `,
-  label: css`
-    flex-shrink: 0;
-    color: ${cssVar.colorText};
-  `,
-  prompt: css`
-    overflow: hidden;
-    display: inline-block;
-
-    max-width: 320px;
-
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  `,
-  root: css`
-    flex-wrap: wrap;
-    gap: 4px;
-  `,
-}));
+const styles = stylex.create({
+  chip: {
+    overflow: 'hidden',
+    display: 'inline-flex',
+    flexShrink: 0,
+    alignItems: 'center',
+    maxWidth: '132px',
+    paddingBlock: '2px',
+    paddingInline: '7px',
+    borderRadius: '999px',
+    fontFamily: cssVar.fontFamilyCode,
+    fontSize: '12px',
+    color: cssVar.colorTextSecondary,
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+    backgroundColor: cssVar.colorFillTertiary,
+    backgroundImage: 'none',
+  },
+  icon: { flexShrink: 0, color: cssVar.colorTextDescription },
+  label: { flexShrink: 0 },
+  // Dropped while shimmering so the shiny text keeps its own colour.
+  labelColor: { color: cssVar.colorText },
+  prompt: {
+    overflow: 'hidden',
+    display: 'inline-block',
+    maxWidth: '320px',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+  },
+  root: { flexWrap: 'wrap', gap: '4px' },
+});
 
 const stringValue = (value: unknown) => (typeof value === 'string' && value ? value : undefined);
 
@@ -110,16 +101,23 @@ const ImageGenerationInspector = memo<
   const Icon = meta.Icon;
 
   return (
-    <div className={cx(inspectorTextStyles.root, styles.root)}>
-      <Icon className={styles.icon} size={14} />
-      <span className={cx(styles.label, isRunning && shinyTextStyles.shinyText)}>{label}</span>
+    <div {...sx([styles.root], inspectorTextStyles.root)}>
+      <Icon className={stylex.props(styles.icon).className} size={14} />
+      <span
+        {...sx(
+          [styles.label, !isRunning && styles.labelColor],
+          isRunning ? shinyTextStyles.shinyText : undefined,
+        )}
+      >
+        {label}
+      </span>
       {isGenerateImage && prompt && (
-        <span className={cx(highlightTextStyles.primary, styles.prompt)}>{prompt}</span>
+        <span {...sx([styles.prompt], highlightTextStyles.primary)}>{prompt}</span>
       )}
-      {!isGenerateImage && provider && <span className={styles.chip}>{provider}</span>}
-      {!isGenerateImage && model && <span className={styles.chip}>{model}</span>}
+      {!isGenerateImage && provider && <span {...stylex.props(styles.chip)}>{provider}</span>}
+      {!isGenerateImage && model && <span {...stylex.props(styles.chip)}>{model}</span>}
       {apiName === ImageGenerationApiName.getImageGenerationStatus && generationId && (
-        <span className={styles.chip}>{compactId(generationId)}</span>
+        <span {...stylex.props(styles.chip)}>{compactId(generationId)}</span>
       )}
     </div>
   );
