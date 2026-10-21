@@ -3,8 +3,6 @@ import * as stylex from '@stylexjs/stylex';
 
 import { sx } from '@/styles/sx';
 
-const FOLLOWS_SECTION = stylex.when.siblingBefore(':is(*)');
-
 export const sectionStyles = stylex.create({
   count: {
     paddingBlock: '1px',
@@ -36,9 +34,12 @@ export const sectionStyles = stylex.create({
     flexShrink: 0,
     paddingBlock: '8px',
     paddingInline: '8px',
-    borderBlockStartWidth: { default: null, [FOLLOWS_SECTION]: '1px' },
-    borderBlockStartStyle: { default: null, [FOLLOWS_SECTION]: 'solid' },
-    borderBlockStartColor: { default: null, [FOLLOWS_SECTION]: cssVar.colorBorderSecondary },
+    borderBlockStartWidth: { default: null, [stylex.when.siblingBefore(':is(*)')]: '1px' },
+    borderBlockStartStyle: { default: null, [stylex.when.siblingBefore(':is(*)')]: 'solid' },
+    borderBlockStartColor: {
+      default: null,
+      [stylex.when.siblingBefore(':is(*)')]: cssVar.colorBorderSecondary,
+    },
   },
   sectionHeader: { paddingBlockStart: 0, paddingBlockEnd: '4px', paddingInline: '8px' },
   sectionTitle: { fontSize: '10.5px', fontWeight: 600, color: cssVar.colorTextTertiary },

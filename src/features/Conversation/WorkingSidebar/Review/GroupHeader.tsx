@@ -7,9 +7,6 @@ import { ChevronRightIcon, FoldVerticalIcon, UnfoldVerticalIcon } from 'lucide-r
 import { type KeyboardEvent, memo, type MouseEvent, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
-const GROUP_HOVERED = stylex.when.ancestor(':hover');
-const GROUP_FOCUSED = stylex.when.ancestor(':focus-within');
-
 const styles = stylex.create({
   // Sticky group header — appears once per repo (parent + each dirty submodule)
   // when the working tree spans multiple repositories. Mirrors WebStorm's
@@ -112,7 +109,11 @@ const styles = stylex.create({
   // via opacity bound to the parent header's hover/focus-within state.
   foldButton: {
     marginInlineStart: 'auto',
-    opacity: { default: 0, [GROUP_HOVERED]: 1, [GROUP_FOCUSED]: 1 },
+    opacity: {
+      default: 0,
+      [stylex.when.ancestor(':hover')]: 1,
+      [stylex.when.ancestor(':focus-within')]: 1,
+    },
     transition: 'opacity 0.15s',
   },
 });

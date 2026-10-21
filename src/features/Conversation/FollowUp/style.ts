@@ -2,7 +2,6 @@ import { cssVar } from '@lobehub/ui/stylex/cssVar.stylex';
 import * as stylex from '@stylexjs/stylex';
 
 const REDUCED_MOTION = '@media (prefers-reduced-motion: reduce)';
-const CHIP_HOVERED = stylex.when.ancestor(':hover');
 
 const slideUp = stylex.keyframes({
   from: { opacity: 0, transform: 'translateY(8px)' },
@@ -34,8 +33,8 @@ export const styles = stylex.create({
   },
   chipIcon: {
     flex: 'none',
-    color: { default: null, [CHIP_HOVERED]: cssVar.colorPrimary },
-    opacity: { default: 0.55, [CHIP_HOVERED]: 1 },
+    color: { default: null, [stylex.when.ancestor(':hover')]: cssVar.colorPrimary },
+    opacity: { default: 0.55, [stylex.when.ancestor(':hover')]: 1 },
     transition: 'opacity 0.15s, color 0.15s',
   },
   root: {

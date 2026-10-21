@@ -27,8 +27,6 @@ import type { ComposerTarget } from '../../types';
 import type { DiffSelectedLineRange } from './selection';
 import { buildCodeContextSelection } from './selection';
 
-const ROW_HOVERED = stylex.when.ancestor(':hover');
-
 const styles = stylex.create({
   additions: { color: cssVar.colorSuccess },
   // Hover-revealed row actions, anchored to the right edge with a gradient
@@ -36,14 +34,14 @@ const styles = stylex.create({
   // text behind the icons softly disappears instead of being abruptly
   // overlapped. The row (FileRow) is the hover marker.
   actions: {
-    pointerEvents: { default: 'none', [ROW_HOVERED]: 'auto' },
+    pointerEvents: { default: 'none', [stylex.when.ancestor(':hover')]: 'auto' },
     position: 'absolute',
     insetBlock: 0,
     insetInlineEnd: '-8px',
     alignItems: 'center',
     paddingInlineStart: '28px',
     paddingInlineEnd: 0,
-    opacity: { default: 0, [ROW_HOVERED]: 1 },
+    opacity: { default: 0, [stylex.when.ancestor(':hover')]: 1 },
     backgroundImage: `linear-gradient(to right, transparent 0, ${cssVar.colorFillTertiary} 28px), linear-gradient(to right, transparent 0, ${cssVar.colorBgContainer} 28px)`,
     transition: 'opacity 0.15s',
   },

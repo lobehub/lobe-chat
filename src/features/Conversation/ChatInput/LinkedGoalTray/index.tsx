@@ -18,8 +18,6 @@ import { labPreferSelectors } from '@/store/user/selectors';
 import { dataSelectors, messageStateSelectors, useConversationStore } from '../../store';
 import { isGoalRequestGenerating, selectLinkedGoals } from './linkedGoals';
 
-const FOLLOWS_ROW = stylex.when.siblingBefore(':is(*)');
-
 const styles = stylex.create({
   container: {
     borderWidth: '1px',
@@ -37,9 +35,12 @@ const styles = stylex.create({
     cursor: 'pointer',
     paddingBlock: '6px',
     paddingInline: '12px',
-    borderBlockStartWidth: { default: null, [FOLLOWS_ROW]: '1px' },
-    borderBlockStartStyle: { default: null, [FOLLOWS_ROW]: 'solid' },
-    borderBlockStartColor: { default: null, [FOLLOWS_ROW]: cssVar.colorFillTertiary },
+    borderBlockStartWidth: { default: null, [stylex.when.siblingBefore(':is(*)')]: '1px' },
+    borderBlockStartStyle: { default: null, [stylex.when.siblingBefore(':is(*)')]: 'solid' },
+    borderBlockStartColor: {
+      default: null,
+      [stylex.when.siblingBefore(':is(*)')]: cssVar.colorFillTertiary,
+    },
     backgroundColor: { 'default': null, ':hover': cssVar.colorFillQuaternary },
     backgroundImage: { 'default': null, ':hover': 'none' },
   },

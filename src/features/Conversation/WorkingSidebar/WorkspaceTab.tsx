@@ -4,9 +4,6 @@ import * as stylex from '@stylexjs/stylex';
 import { PinIcon, XIcon } from 'lucide-react';
 import { memo, type ReactNode } from 'react';
 
-const TAB_HOVERED = stylex.when.ancestor(':hover');
-const TAB_FOCUSED = stylex.when.ancestor(':focus-within');
-
 const styles = stylex.create({
   close: {
     cursor: 'pointer',
@@ -23,7 +20,11 @@ const styles = stylex.create({
     borderStyle: 'none',
     borderRadius: '4px',
     color: { 'default': cssVar.colorTextTertiary, ':hover': cssVar.colorText },
-    opacity: { default: 0, [TAB_HOVERED]: 1, [TAB_FOCUSED]: 1 },
+    opacity: {
+      default: 0,
+      [stylex.when.ancestor(':hover')]: 1,
+      [stylex.when.ancestor(':focus-within')]: 1,
+    },
     backgroundColor: { 'default': 'transparent', ':hover': cssVar.colorFillSecondary },
     backgroundImage: { 'default': 'none', ':hover': 'none' },
     transition: 'opacity 0.15s',
