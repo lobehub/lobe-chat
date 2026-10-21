@@ -1,23 +1,25 @@
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
 import { createAuthI18n } from './createAuthI18n';
 
-vi.mock('@/business/client/authErrorResourceOverrides', () => ({
-  getAuthErrorResourceOverrides: (locale: string) => ({
-    'codes.BUSINESS_ERROR': locale === 'zh-CN' ? '业务错误' : 'Business error',
-  }),
-}));
-
 describe('createAuthI18n', () => {
   it.each([
-    ['en-US', 'Business error'],
-    ['zh-CN', '业务错误'],
-  ])('merges auth error resource overrides for %s', async (locale, expected) => {
+    [
+      'en-US',
+      'This email is still in the account deletion cooldown period. You can sign up again in about 4 days.',
+    ],
+    ['zh-CN', '该邮箱仍在账号注销冷却期，预计 4 天后可重新注册。'],
+  ])('loads the deleted-account retry copy for %s', async (locale, expected) => {
     const { init, instance } = createAuthI18n(locale);
 
     await init({ initAsync: false });
     await instance.loadNamespaces('authError');
 
-    expect(instance.t('codes.BUSINESS_ERROR', { ns: 'authError' })).toBe(expected);
+    expect(
+      instance.t('codes.DELETED_ACCOUNT_EMAIL_WITH_RETRY_AFTER_DAYS', {
+        count: 4,
+        ns: 'authError',
+      }),
+    ).toBe(expected);
   });
 });

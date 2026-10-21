@@ -1,4 +1,3 @@
-import { getAuthErrorResourceOverrides } from '@/business/client/authErrorResourceOverrides';
 import { normalizeLocale } from '@/locales/resources';
 
 import { DEFAULT_PRERENDER_LOCALE } from '../lib/prerender';
@@ -24,9 +23,5 @@ export const loadAuthNamespace = async (lng: string, namespace: string) => {
       ? entry(defaults, `/default/${namespace}.ts`)
       : entry(translated, `/${locale}/${namespace}.json`);
 
-  const resource = (await load?.())?.default;
-
-  return namespace === 'authError'
-    ? { ...resource, ...getAuthErrorResourceOverrides(locale) }
-    : resource;
+  return (await load?.())?.default;
 };
