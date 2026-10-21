@@ -173,6 +173,7 @@ const SandboxDrivePicker = memo<SandboxDrivePickerProps>(
       setOpen(false);
       openSandboxDirectoryModal({
         agentIsPublic,
+        currentInstanceId: value.instanceId,
         // A folder that is gone cannot be listed; start from the top instead.
         defaultPath:
           value.workingDirectory &&

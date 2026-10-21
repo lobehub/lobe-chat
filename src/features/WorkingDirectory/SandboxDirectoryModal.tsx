@@ -29,6 +29,8 @@ export type SandboxDirectoryPick = { drive: SandboxDrive } & (
 
 interface SandboxDirectoryContentProps {
   agentIsPublic?: boolean;
+  /** The environment directory the conversation is bound to now, if any. */
+  currentInstanceId?: string;
   defaultPath?: string;
   /** The drive to open on; the conversation's own, or the public one in a workspace. */
   drive?: SandboxDrive;
@@ -40,6 +42,7 @@ interface SandboxDirectoryContentProps {
 
 const SandboxDirectoryContent = ({
   agentIsPublic,
+  currentInstanceId,
   defaultPath,
   drive: initialDrive,
   isWorkspace,
@@ -66,6 +69,7 @@ const SandboxDirectoryContent = ({
 
   const source = useSandboxDirectorySource({
     agentIsPublic,
+    currentInstanceId,
     drive,
     isWorkspace,
     onPickInstance,

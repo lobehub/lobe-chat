@@ -43,6 +43,7 @@
   "workingDirectory.diffLineStatTooltip": "Added lines {{added}} · Deleted lines {{deleted}} · Changed files {{files}}",
   "workingDirectory.diffStatTooltip": "Added {{added}} · Modified {{modified}} · Deleted {{deleted}}",
   "workingDirectory.drive.actionFailed": "That didn’t work. Try again.",
+  "workingDirectory.drive.buildingDesc": "This environment directory is still building. It can be picked once the build finishes",
   "workingDirectory.drive.createCopy": "Create copy",
   "workingDirectory.drive.delete": "Delete",
   "workingDirectory.drive.deleteConfirmContent": "Everything in this folder is deleted from the drive, for everyone who can see it. Conversations working in it fall back to a temporary sandbox.",

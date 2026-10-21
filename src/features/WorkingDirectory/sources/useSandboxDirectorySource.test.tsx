@@ -28,13 +28,17 @@ const wrapper = ({ children }: { children: ReactNode }) => (
   <SWRConfig value={{ dedupingInterval: 0, provider: () => new Map() }}>{children}</SWRConfig>
 );
 
-const renderListing = (path?: string) =>
+const renderListing = (
+  path?: string,
+  options: { currentInstanceId?: string; onPickInstance?: () => void } = {},
+) =>
   renderHook(
     () =>
       useSandboxDirectorySource({
+        currentInstanceId: options.currentInstanceId,
         drive: 'personal',
         isWorkspace: true,
-        onPickInstance: vi.fn(),
+        onPickInstance: options.onPickInstance ?? vi.fn(),
       }).useListing(path),
     { wrapper },
   );
@@ -97,6 +101,47 @@ describe('useSandboxDirectorySource listing', () => {
 
     await waitFor(() => expect(result.current.directory).toBeDefined());
     expect(result.current.isLoading).toBe(true);
+  });
+
+  describe('an environment directory still building', () => {
+    const building = {
+      environmentId: 'env-1',
+      id: 'inst-1',
+      inUse: true,
+      inUseByThisTopic: false,
+      name: 'held',
+      rebuildRequired: false,
+      status: 'pending',
+      workingDirectory: 'held',
+    };
+
+    beforeEach(() => {
+      vi.mocked(sandboxStorageService.listInstances).mockResolvedValue({
+        instances: [building],
+      } as any);
+    });
+
+    it("should not bind the conversation to another conversation's build", async () => {
+      // The build holds the directory; a run started on it would race it.
+      const onPickInstance = vi.fn();
+      const { result } = renderListing(undefined, { onPickInstance });
+      await waitFor(() => expect(result.current.entries[0]?.onActivate).toBeDefined());
+
+      result.current.entries[0].onActivate!();
+
+      expect(onPickInstance).not.toHaveBeenCalled();
+      expect(result.current.entries[0].description).toBe('workingDirectory.drive.buildingDesc');
+    });
+
+    it("should keep the conversation's own building directory pickable", async () => {
+      const onPickInstance = vi.fn();
+      const { result } = renderListing(undefined, { currentInstanceId: 'inst-1', onPickInstance });
+      await waitFor(() => expect(result.current.entries[0]?.onActivate).toBeDefined());
+
+      result.current.entries[0].onActivate!();
+
+      expect(onPickInstance).toHaveBeenCalledWith('inst-1', 'personal');
+    });
   });
 
   it('should not read the environment directories below the root', async () => {

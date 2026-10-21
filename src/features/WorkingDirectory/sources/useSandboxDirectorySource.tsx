@@ -46,6 +46,12 @@ export interface UseSandboxDirectorySourceOptions {
    * directory — those rows are offered disabled, with the reason.
    */
   agentIsPublic?: boolean;
+  /**
+   * The environment directory the conversation is bound to now. It stays
+   * pickable while it builds — it is this conversation's own — where another
+   * directory still building is not: its build holds it until it settles.
+   */
+  currentInstanceId?: string;
   /** Which of the caller's drives is browsed; a personal account's is `personal`. */
   drive: SandboxDrive;
   /**
@@ -85,6 +91,7 @@ export interface UseSandboxDirectorySourceOptions {
  */
 export const useSandboxDirectorySource = ({
   agentIsPublic,
+  currentInstanceId,
   drive,
   isWorkspace,
   onPickInstance,
@@ -308,6 +315,13 @@ export const useSandboxDirectorySource = ({
             const state = environmentDirectoryState(instance);
             const blocked =
               !!agentIsPublic && !!environment?.workspaceId && environment.visibility === 'private';
+            // A build holds the directory until it settles; a run started on
+            // it now would race the build or be refused as in use. Unless it
+            // is already this conversation's.
+            const buildingElsewhere =
+              state === 'building' &&
+              instance.id !== currentInstanceId &&
+              !instance.inUseByThisTopic;
 
             // The way out of "in use" sits on the row's second line rather
             // than among its tags: the right edge is where hover actions
@@ -334,6 +348,8 @@ export const useSandboxDirectorySource = ({
                     </Button>
                   )}
                 </Flexbox>
+              ) : buildingElsewhere ? (
+                t('workingDirectory.drive.buildingDesc')
               ) : undefined,
               disabled: blocked,
               icon: PackageIcon,
@@ -344,6 +360,10 @@ export const useSandboxDirectorySource = ({
               onActivate: () => {
                 if (state === 'inUse') {
                   toast.info(t('workingDirectory.drive.inUseDesc'));
+                  return;
+                }
+                if (buildingElsewhere) {
+                  toast.info(t('workingDirectory.drive.buildingDesc'));
                   return;
                 }
                 onPickInstance(instance.id, drive);
@@ -400,6 +420,7 @@ export const useSandboxDirectorySource = ({
   }, [
     agentIsPublic,
     canEdit,
+    currentInstanceId,
     drive,
     globalMutate,
     isWorkspace,

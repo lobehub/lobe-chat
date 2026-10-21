@@ -43,6 +43,7 @@
   "workingDirectory.diffLineStatTooltip": "新增行 {{added}} · 删除行 {{deleted}} · 变更文件 {{files}}",
   "workingDirectory.diffStatTooltip": "新增 {{added}} · 修改 {{modified}} · 删除 {{deleted}}",
   "workingDirectory.drive.actionFailed": "操作失败，请重试。",
+  "workingDirectory.drive.buildingDesc": "这个环境目录还在构建中，构建完成后才能选择",
   "workingDirectory.drive.createCopy": "创建副本",
   "workingDirectory.drive.delete": "删除",
   "workingDirectory.drive.deleteConfirmContent": "该文件夹及其中的所有文件将从网盘删除，对所有能看到它的成员生效；在其中工作的话题将回退到临时沙箱。",

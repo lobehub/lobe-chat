@@ -149,6 +149,8 @@ export default {
   'workingDirectory.drive.state.failed': 'Build failed',
   'workingDirectory.drive.state.inUse': 'In use',
   'workingDirectory.drive.inUseDesc': 'Another conversation is using this environment directory',
+  'workingDirectory.drive.buildingDesc':
+    'This environment directory is still building. It can be picked once the build finishes',
   'workingDirectory.drive.privateBlocked': 'Private environment — a shared agent can’t use it',
   'workingDirectory.drive.createCopy': 'Create copy',
   'workingDirectory.drive.initializeWith': 'Initialize with',
