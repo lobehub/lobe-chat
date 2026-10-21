@@ -1,11 +1,11 @@
-import { Block, cssVar, Flexbox, Text, Tooltip } from '@lobehub/ui';
+import { cssVar, cx, Flexbox, Icon, menuSharedStyles, Text } from '@lobehub/ui';
+import { LucideGem, type LucideIcon, LucideScale, LucideZap } from 'lucide-react';
 import type { AutoRoutingTier } from 'model-bank/autoRouting';
 import {
   AUTO_ROUTING_MODEL_IDS,
   AUTO_ROUTING_PROVIDER_ID,
   AUTO_ROUTING_TIER_NAMES,
   AUTO_ROUTING_TIERS,
-  buildAutoRoutingTable,
   filterRoutableCandidates,
   isAutoRoutingProvider,
 } from 'model-bank/autoRouting';
@@ -18,16 +18,21 @@ import type { EnabledProviderWithModels } from '@/types/aiProvider';
 
 import { useModelAndProvider } from '../hooks/useModelAndProvider';
 import { usePanelHandlers } from '../hooks/usePanelHandlers';
+import { styles } from '../styles';
+
+const TIER_ICONS: Record<AutoRoutingTier, LucideIcon> = {
+  lite: LucideZap,
+  pro: LucideScale,
+  ultra: LucideGem,
+};
 
 // Plain props and CSS variables only: this panel also mounts in the share app,
 // whose bundle carries no StyleX boot CSS.
-const BAR_STYLE = {
+const SECTION_STYLE = {
   borderBlockEnd: `1px solid ${cssVar.colorBorderSecondary}`,
   flexShrink: 0,
+  paddingBlock: 4,
 } as const;
-
-/** Fewer visible models than this and the tiers cannot differ much. */
-const FEW_MODELS = 3;
 
 interface AutoRoutingBarProps {
   enabledList: EnabledProviderWithModels[];
@@ -38,9 +43,9 @@ interface AutoRoutingBarProps {
 }
 
 /**
- * Lite / Pro / Ultra, pinned above the scrolling model list. Rendered only when
- * the server offers the tiers (`ENABLE_AUTO_MODEL_ROUTING`) and a chat model is
- * visible to route to.
+ * Lite / Pro / Ultra as the first rows of the panel, pinned above the scrolling
+ * model list and styled like its rows. Rendered only when the server offers the
+ * tiers (`ENABLE_AUTO_MODEL_ROUTING`) and a visible model can be routed to.
  */
 export const AutoRoutingBar: FC<AutoRoutingBarProps> = memo(
   ({ enabledList, model: modelProp, onModelChange, onOpenChange, provider: providerProp }) => {
@@ -50,20 +55,19 @@ export const AutoRoutingBar: FC<AutoRoutingBarProps> = memo(
     const { handleClose, handleModelChange } = usePanelHandlers({ onModelChange, onOpenChange });
 
     const enabled = useServerConfigStore(serverConfigSelectors.enableAutoModelRouting);
-    const candidates = useMemo(
+    // A tier can only land on a model with function calling (the run's default
+    // tools); with none visible the tiers are not offered at all.
+    const hasRoutableModel = useMemo(
       () =>
-        enabledList.flatMap((item) =>
-          item.children.map((child) => ({ ...child, providerId: item.id })),
-        ),
+        filterRoutableCandidates(
+          enabledList.flatMap((item) =>
+            item.children.map((child) => ({ ...child, providerId: item.id })),
+          ),
+        ).length > 0,
       [enabledList],
     );
-    // The server only routes to models with function calling; preview the same set.
-    const routable = useMemo(() => filterRoutableCandidates(candidates), [candidates]);
-    const table = useMemo(() => buildAutoRoutingTable(routable), [routable]);
 
-    // Without a function-calling model a tier could only land on a model that
-    // drops the run's default tools, so the tiers are not offered at all.
-    if (!enabled || routable.length === 0) return null;
+    if (!enabled || !hasRoutableModel) return null;
 
     const select = async (tier: AutoRoutingTier) => {
       const modelId = AUTO_ROUTING_MODEL_IDS[tier];
@@ -72,60 +76,45 @@ export const AutoRoutingBar: FC<AutoRoutingBarProps> = memo(
       handleModelChange(modelId, AUTO_ROUTING_PROVIDER_ID);
     };
 
-    const routesTo = (tier: AutoRoutingTier) => (
-      <Flexbox gap={2}>
-        <Text strong>{t('ModelSwitchPanel.autoRouting.routesTo')}</Text>
-        {table[tier].map((cell, difficulty) => (
-          <Text key={difficulty}>
-            {t(`ModelSwitchPanel.autoRouting.difficulty.${difficulty as 0 | 1 | 2}`)}:{' '}
-            {cell[0]?.candidate.displayName || cell[0]?.candidate.id}
-          </Text>
-        ))}
-        {routable.length < FEW_MODELS && (
-          <Text type={'secondary'}>{t('ModelSwitchPanel.autoRouting.fewModels')}</Text>
-        )}
-      </Flexbox>
-    );
-
     return (
-      <Flexbox gap={6} padding={8} style={BAR_STYLE}>
-        <Text fontSize={12} type={'secondary'}>
-          {t('ModelSwitchPanel.autoRouting.title')}
-        </Text>
-        <Flexbox horizontal gap={6}>
-          {AUTO_ROUTING_TIERS.map((tier) => {
-            const active =
-              isAutoRoutingProvider(provider) && model === AUTO_ROUTING_MODEL_IDS[tier];
-            return (
-              <Tooltip key={tier} placement={'right'} title={routesTo(tier)}>
-                <Block
-                  clickable
-                  aria-pressed={active}
-                  flex={1}
-                  gap={2}
-                  paddingBlock={6}
-                  paddingInline={8}
-                  role={'button'}
-                  style={{ minWidth: 0 }}
-                  tabIndex={0}
-                  variant={active ? 'filled' : 'outlined'}
-                  onClick={() => void select(tier)}
-                  onKeyDown={(event) => {
-                    if (event.key === 'Enter' || event.key === ' ') {
-                      event.preventDefault();
-                      void select(tier);
-                    }
-                  }}
+      <Flexbox style={SECTION_STYLE}>
+        {AUTO_ROUTING_TIERS.map((tier) => {
+          const active = isAutoRoutingProvider(provider) && model === AUTO_ROUTING_MODEL_IDS[tier];
+          return (
+            <Flexbox key={tier} style={{ marginBlock: 1, marginInline: 4 }}>
+              <Flexbox
+                horizontal
+                align={'center'}
+                aria-pressed={active}
+                className={cx(menuSharedStyles.item, active && styles.menuItemActive)}
+                gap={8}
+                role={'button'}
+                style={{ cursor: 'pointer', paddingBlock: 8, paddingInline: 8 }}
+                tabIndex={0}
+                onClick={() => void select(tier)}
+                onKeyDown={(event) => {
+                  if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault();
+                    void select(tier);
+                  }
+                }}
+              >
+                <Flexbox align={'center'} flex={'none'} justify={'center'} width={20}>
+                  <Icon icon={TIER_ICONS[tier]} size={16} />
+                </Flexbox>
+                <Text strong={active}>{AUTO_ROUTING_TIER_NAMES[tier]}</Text>
+                <Text
+                  ellipsis
+                  fontSize={12}
+                  style={{ marginInlineStart: 'auto' }}
+                  type={'secondary'}
                 >
-                  <Text strong>{AUTO_ROUTING_TIER_NAMES[tier]}</Text>
-                  <Text fontSize={12} type={'secondary'}>
-                    {t(`ModelSwitchPanel.autoRouting.${tier}.desc`)}
-                  </Text>
-                </Block>
-              </Tooltip>
-            );
-          })}
-        </Flexbox>
+                  {t(`ModelSwitchPanel.autoRouting.${tier}.desc`)}
+                </Text>
+              </Flexbox>
+            </Flexbox>
+          );
+        })}
       </Flexbox>
     );
   },
