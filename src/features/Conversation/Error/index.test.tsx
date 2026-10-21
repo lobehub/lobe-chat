@@ -746,6 +746,27 @@ describe('ErrorMessageExtra', () => {
     expect(details).not.toContain('"message"');
   });
 
+  it('keeps a truncated JSON gateway detail as the raw string', () => {
+    render(
+      <ErrorMessageExtra
+        error={{ message: 'response.DeviceResponseTimeout' }}
+        data={{
+          error: {
+            body: { detail: '{"error":"TIMEOUT"' },
+            message: 'The device did not answer in time.',
+            type: ChatErrorType.DeviceResponseTimeout,
+          } as any,
+          id: 'msg-device-timeout-truncated',
+        }}
+      />,
+    );
+
+    expect(screen.getByText(/"detail": "\{\\"error\\":\\"TIMEOUT\\""/)).toBeInTheDocument();
+    expect(
+      screen.getByText(/"message": "The device did not answer in time\."/),
+    ).toBeInTheDocument();
+  });
+
   it('shows the localized empty-completion message while retaining the raw error in details', () => {
     render(
       <ErrorMessageExtra
