@@ -171,8 +171,9 @@ export class VerifyCheckResultModel {
               )})
               and coalesce(${acceptances.status}, '') not in ('accepted', 'closed')
           )`,
-          sql`(${claimedAt} is null or ${claimedAt}::timestamptz < ${guard.staleBefore.toISOString()}::timestamptz${
-            guard.holder ? sql` or ${claimedAt} = ${guard.holder}` : sql``
+          // COALESCE, never `IS NULL`, on an extracted jsonb value: see jsonbNullTest.
+          sql`(case when coalesce(${claimedAt}, '') = '' then true else ${claimedAt}::timestamptz < ${guard.staleBefore.toISOString()}::timestamptz end${
+            guard.holder ? sql` or coalesce(${claimedAt}, '') = ${guard.holder}` : sql``
           })`,
         ),
       )

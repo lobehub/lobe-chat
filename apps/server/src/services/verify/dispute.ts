@@ -16,6 +16,7 @@ import type {
 } from '@lobechat/types';
 import { RequestTrigger } from '@lobechat/types';
 import debug from 'debug';
+import pMap from 'p-map';
 import { z } from 'zod';
 
 import { AcceptanceModel } from '@/database/models/acceptance';
@@ -146,7 +147,7 @@ const runArbitrationPanel = async (
     return { ...member, status: 'errored' };
   };
 
-  const votes = await Promise.all(panel.map(ask));
+  const votes = await pMap(panel, ask, { concurrency: DISPUTE_PANEL_SIZE });
   const majority = Math.floor(DISPUTE_PANEL_SIZE / 2) + 1;
   const upheld = votes.filter((vote) => vote.upheld === true).length;
   const overruled = votes.filter((vote) => vote.upheld === false).length;

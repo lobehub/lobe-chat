@@ -34,6 +34,8 @@ const DisputeNote = memo<{ dispute: VerifyCheckDispute }>(({ dispute }) => {
   const [votesOpen, setVotesOpen] = useState(false);
   const arbitration = dispute.kind === 'invalid_criterion' ? dispute.arbitration : undefined;
   const tally = arbitration ? tallyDisputeVotes(arbitration) : undefined;
+  // An older server may send a ruling without its votes.
+  const votes = arbitration?.votes ?? [];
 
   return (
     <Flexbox
@@ -64,7 +66,7 @@ const DisputeNote = memo<{ dispute: VerifyCheckDispute }>(({ dispute }) => {
         )}
       </Flexbox>
       <FoldedText text={dispute.reason} />
-      {arbitration && tally && arbitration.votes.length > 0 && (
+      {arbitration && tally && votes.length > 0 && (
         <>
           <Flexbox
             horizontal
@@ -96,7 +98,7 @@ const DisputeNote = memo<{ dispute: VerifyCheckDispute }>(({ dispute }) => {
           </Flexbox>
           {votesOpen && (
             <Flexbox gap={6} paddingInline={'14px 0'}>
-              {arbitration.votes.map((vote, index) => (
+              {votes.map((vote, index) => (
                 <Flexbox gap={2} key={`${vote.provider}/${vote.model}-${index}`}>
                   <Flexbox horizontal align={'center'} gap={4}>
                     <ModelIcon model={vote.model} size={14} />
