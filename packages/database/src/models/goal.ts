@@ -106,6 +106,26 @@ export class GoalModel {
     return row?.goal;
   };
 
+  /**
+   * Unfinished goals supervised from these conversations (`subject_type =
+   * 'topic'`). Finished goals are left out: nothing dispatches for them, so
+   * the agent they were run by stays part of their record.
+   */
+  findUnfinishedBySubjectTopics = async (topicIds: string[]): Promise<GoalItem[]> => {
+    if (topicIds.length === 0) return [];
+    return this.db
+      .select()
+      .from(goals)
+      .where(
+        and(
+          eq(goals.subjectType, 'topic'),
+          inArray(goals.subjectId, topicIds),
+          notInArray(goals.status, [...TERMINAL_GOAL_STATUSES]),
+          this.ownership(),
+        ),
+      );
+  };
+
   /** The Goal that owns a graph node, or undefined when the node is not in the caller's scope. */
   findByNode = async (nodeId: string): Promise<GoalItem | undefined> => {
     const [row] = await this.db

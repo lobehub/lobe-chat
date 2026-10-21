@@ -8,6 +8,7 @@ import { z } from 'zod';
 
 import { withScopedPermission } from '@/business/server/trpc-middlewares/rbacPermission';
 import { router } from '@/libs/trpc/lambda';
+import { GoalTopicHandoffService } from '@/server/services/goal/topicHandoff';
 
 import { assertWorkspaceRowManageable } from '../_helpers/assertWorkspaceRowManageable';
 import {
@@ -125,8 +126,18 @@ export const updateRouter = router({
       // `assertCreatorTopicTargets` for why this guard sits at the RPC
       // boundary rather than in the model defaults.
       await assertCreatorTopicTargets(guardCtx(ctx), input.topicIds);
+      // A goal supervised from a moved topic follows it to the target agent;
+      // left on the previous agent it would keep dispatching there.
+      const goalHandoff = new GoalTopicHandoffService(
+        ctx.serverDB,
+        ctx.userId,
+        ctx.workspaceId ?? undefined,
+      );
+      const goals = await goalHandoff.prepare(input.topicIds, input.targetAgentId);
+      for (const goal of goals) assertWorkspaceRowManageable(ctx, goal.userId, 'goal');
 
-      return ctx.topicRepo.batchMoveToAgent(input.topicIds, input.targetAgentId);
+      await ctx.topicRepo.batchMoveToAgent(input.topicIds, input.targetAgentId);
+      return { movedGoalIds: await goalHandoff.handOver(goals, input.targetAgentId) };
     }),
   cancelRateLimitContinuation: topicProcedure
     .use(withScopedPermission('topic:update'))
