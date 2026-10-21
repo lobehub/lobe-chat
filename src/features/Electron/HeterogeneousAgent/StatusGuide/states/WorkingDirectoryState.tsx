@@ -40,7 +40,6 @@ const WorkingDirectoryState = ({
             <Button
               icon={<Undo2 size={14} />}
               loading={resetting}
-              size="small"
               type="primary"
               onClick={handleReset}
             >

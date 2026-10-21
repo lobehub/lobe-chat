@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { resolveStaleWorktreeReset } from './staleWorktreeReset';
+import { getMissingWorkingDirectory, resolveStaleWorktreeReset } from './staleWorktreeReset';
 
 describe('resolveStaleWorktreeReset', () => {
   it('offers the source repo when the topic still records a deleted worktree', () => {
@@ -37,5 +37,36 @@ describe('resolveStaleWorktreeReset', () => {
     expect(
       resolveStaleWorktreeReset({ git: { activeWorktree: '/tmp/wt' }, path: '/repo' }, '/repo'),
     ).toBeUndefined();
+  });
+
+  it('offers nothing when the error names an older worktree the topic has left', () => {
+    expect(
+      resolveStaleWorktreeReset(
+        { git: { activeWorktree: '/tmp/wt-b' }, path: '/repo' },
+        '/tmp/wt-a',
+      ),
+    ).toBeUndefined();
+  });
+});
+
+describe('getMissingWorkingDirectory', () => {
+  it('prefers the structured field', () => {
+    expect(getMissingWorkingDirectory({ message: 'anything', workingDirectory: '/tmp/wt' })).toBe(
+      '/tmp/wt',
+    );
+  });
+
+  it('reads the path from the spawn guard message', () => {
+    expect(
+      getMissingWorkingDirectory({ message: 'Working directory does not exist: /tmp/wt' }),
+    ).toBe('/tmp/wt');
+    expect(
+      getMissingWorkingDirectory({ message: 'Working directory is not a directory: /tmp/f' }),
+    ).toBe('/tmp/f');
+  });
+
+  it('returns undefined when no path is known', () => {
+    expect(getMissingWorkingDirectory({ message: 'spawn failed' })).toBeUndefined();
+    expect(getMissingWorkingDirectory(undefined)).toBeUndefined();
   });
 });

@@ -11,7 +11,7 @@ import type {
 import { useChatStore } from '@/store/chat';
 import { topicSelectors } from '@/store/chat/selectors';
 
-import { resolveStaleWorktreeReset } from './staleWorktreeReset';
+import { getMissingWorkingDirectory, resolveStaleWorktreeReset } from './staleWorktreeReset';
 
 interface WorkingDirectoryStatusGuideProps extends HeterogeneousAgentStatusGuideProps {
   agentId: string;
@@ -33,7 +33,7 @@ const WorkingDirectoryStatusGuide = memo<WorkingDirectoryStatusGuideProps>(
     // dropdown, so the topic write (and its project-root guard) can't drift.
     const { commit } = useCommitWorkingDirectory(agentId, topicId);
 
-    const reset = resolveStaleWorktreeReset(config, props.error?.workingDirectory);
+    const reset = resolveStaleWorktreeReset(config, getMissingWorkingDirectory(props.error));
     const { onRetry } = props;
 
     const workingDirectoryReset: HeterogeneousAgentWorkingDirectoryResetState | undefined =

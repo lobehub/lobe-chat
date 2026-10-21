@@ -82,6 +82,19 @@ describe('recordGitCommandEffects — git worktree remove', () => {
     });
   });
 
+  it('expands a variable used as the git -C directory', async () => {
+    setTopicWorktree('/repo/.worktrees/wt');
+
+    await recordGitCommandEffects({
+      command: 'BASE=/repo; git -C "$BASE" worktree remove .worktrees/wt',
+      topicId: 't1',
+    });
+
+    expect(chatMocks.updateTopicMetadata).toHaveBeenCalledWith('t1', {
+      workingDirectoryConfig: { git: { isWorktree: false }, path: '/repo' },
+    });
+  });
+
   it('handles the shell-wrapped argv form', async () => {
     setTopicWorktree('/tmp/wt');
 

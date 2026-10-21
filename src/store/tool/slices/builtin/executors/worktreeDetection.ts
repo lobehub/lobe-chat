@@ -262,6 +262,7 @@ const getOptionValue = (
 const parseGitSubcommand = (
   tokens: string[],
   cwd?: string,
+  env?: ShellEnv,
 ): { args: string[]; baseCwd?: string; subcommand: string } | undefined => {
   let i = consumeCommandPreamble(tokens);
   if (!isGitExecutable(tokens[i] ?? '')) return undefined;
@@ -270,7 +271,7 @@ const parseGitSubcommand = (
   let baseCwd = cwd;
   while (i < tokens.length && tokens[i].startsWith('-')) {
     if (tokens[i] === '-C') {
-      const dir = stripQuotes(tokens[i + 1] ?? '');
+      const dir = resolveToken(tokens[i + 1] ?? '', env);
       if (dir) baseCwd = resolveWorktreePath(dir, baseCwd);
       i += 2;
     } else if (GIT_VALUE_OPTS.has(tokens[i])) {
@@ -760,7 +761,7 @@ const removesWorktree = (command: string | string[], target: string, cwd?: strin
   let removed = false;
   findInCommand(command, (tokens, env) => {
     if (parseGitWorktreeAddTokens(tokens, cwd, env)?.path === target) removed = false;
-    const git = parseGitSubcommand(tokens, cwd);
+    const git = parseGitSubcommand(tokens, cwd, env);
     if (git?.subcommand !== 'worktree' || stripQuotes(git.args[0] ?? '') !== 'remove') return;
     for (const token of git.args.slice(1)) {
       if (/^\d*[<>]/.test(token)) return; // redirection — git's args end here

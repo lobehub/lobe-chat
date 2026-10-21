@@ -19,8 +19,10 @@ export interface StaleWorktreeReset {
  * from is always safe — the CLI session is anchored there — and is the only
  * recovery a project conversation has, since its directory picker is hidden.
  *
- * Undefined when there is no worktree override to drop, or when the missing
- * directory is the source repo itself (resetting would land in the same place).
+ * Undefined when there is no worktree override to drop, or when the error names
+ * a directory other than the recorded worktree — the source repo itself, or an
+ * older worktree the topic has since moved on from. An error without a path
+ * keeps the offer.
  */
 export const resolveStaleWorktreeReset = (
   config: WorkingDirConfig | undefined,
@@ -29,7 +31,7 @@ export const resolveStaleWorktreeReset = (
   const sourcePath = getWorkingDirectoryPathString(config?.path);
   const worktreePath = getWorkingDirectoryPathString(config?.git?.activeWorktree);
   if (!sourcePath || !worktreePath || worktreePath === sourcePath) return undefined;
-  if (missingPath && missingPath === sourcePath) return undefined;
+  if (missingPath && missingPath !== worktreePath) return undefined;
 
   return {
     // The branch, upstream and PR described the worktree's branch, not the
@@ -38,3 +40,16 @@ export const resolveStaleWorktreeReset = (
     name: getWorkingDirectoryName(sourcePath),
   };
 };
+
+const MISSING_DIRECTORY_MESSAGE = /^Working directory (?:does not exist|is not a directory): (.+)$/;
+
+/**
+ * The directory a working-directory failure names. Persisted errors may carry
+ * only the message the desktop spawn guard wrote, so fall back to reading it.
+ */
+export const getMissingWorkingDirectory = (error?: {
+  message?: string;
+  workingDirectory?: string;
+}): string | undefined =>
+  getWorkingDirectoryPathString(error?.workingDirectory) ??
+  getWorkingDirectoryPathString(MISSING_DIRECTORY_MESSAGE.exec(error?.message ?? '')?.[1]);
