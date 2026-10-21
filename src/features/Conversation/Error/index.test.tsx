@@ -724,6 +724,28 @@ describe('ErrorMessageExtra', () => {
     expect(screen.getByText(/"detail": "raw detail"/)).toBeInTheDocument();
   });
 
+  it('shows a JSON gateway detail as an object instead of a twice-escaped string', () => {
+    const raw = '{"error":"TIMEOUT","success":false}';
+    render(
+      <ErrorMessageExtra
+        error={{ message: 'response.DeviceResponseTimeout' }}
+        data={{
+          error: {
+            body: { detail: raw },
+            message: raw,
+            type: ChatErrorType.DeviceResponseTimeout,
+          } as any,
+          id: 'msg-device-timeout',
+        }}
+      />,
+    );
+
+    expect(screen.getByText('response.DeviceResponseTimeout')).toBeInTheDocument();
+    const details = screen.getByText(/"error": "TIMEOUT"/).textContent ?? '';
+    expect(details).not.toContain('\\"');
+    expect(details).not.toContain('"message"');
+  });
+
   it('shows the localized empty-completion message while retaining the raw error in details', () => {
     render(
       <ErrorMessageExtra

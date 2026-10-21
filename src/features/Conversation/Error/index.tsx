@@ -73,12 +73,35 @@ const getRawErrorMessage = (error?: ChatMessageError | null) => {
   return;
 };
 
+/**
+ * Server dispatch errors keep the upstream response body verbatim in `detail`
+ * (e.g. the gateway's `{"error":"TIMEOUT","success":false}`). Stringified into
+ * the JSON details block it renders escaped twice, so show the parsed object.
+ */
+const parseJsonDetail = (detail: unknown) => {
+  if (typeof detail !== 'string' || !detail.trim().startsWith('{')) return detail;
+  try {
+    const parsed: unknown = JSON.parse(detail);
+    return isRecord(parsed) ? parsed : detail;
+  } catch {
+    return detail;
+  }
+};
+
 const getErrorDetails = (error?: ChatMessageError | null) => {
   if (!error) return;
 
   const rawErrorMessage = getRawErrorMessage(error);
   if (!rawErrorMessage) return error.body;
-  if (isRecord(error.body)) return { ...error.body, message: rawErrorMessage };
+  if (isRecord(error.body)) {
+    if (!('detail' in error.body)) return { ...error.body, message: rawErrorMessage };
+
+    const { detail, ...rest } = error.body;
+    // A message that only repeats the raw detail adds nothing to the block.
+    return detail === rawErrorMessage
+      ? { ...rest, detail: parseJsonDetail(detail) }
+      : { ...rest, detail: parseJsonDetail(detail), message: rawErrorMessage };
+  }
   if (error.body !== undefined) return { body: error.body, message: rawErrorMessage };
 
   return { message: rawErrorMessage };

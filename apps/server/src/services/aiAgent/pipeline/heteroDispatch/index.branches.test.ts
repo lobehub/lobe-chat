@@ -16,6 +16,7 @@ const mocks = vi.hoisted(() => ({
   executeToolCall: vi.fn(),
   finalizeHeteroDispatchError: vi.fn(),
   publishAgentRuntimeInit: vi.fn(),
+  readDeviceSystemInfo: vi.fn(),
   recordStart: vi.fn(),
   resolveDeviceDispatchAuthorizationFailure: vi.fn(),
   resolveSandboxSessionConfig: vi.fn(),
@@ -60,7 +61,7 @@ vi.mock('@/server/services/deviceGateway', () => ({
   deviceGateway: {
     dispatchAgentRun: mocks.dispatchAgentRun,
     executeToolCall: mocks.executeToolCall,
-    readDeviceSystemInfo: vi.fn(),
+    readDeviceSystemInfo: mocks.readDeviceSystemInfo,
   },
 }));
 
@@ -181,6 +182,8 @@ beforeEach(() => {
   mocks.selectCodexDeviceDispatch.mockResolvedValue({ kind: 'exec' });
   mocks.dispatchAgentRun.mockResolvedValue({ success: true });
   mocks.executeToolCall.mockResolvedValue({ success: true });
+  // Reset, not just clear: a case that never probes must not leave its queued answer behind.
+  mocks.readDeviceSystemInfo.mockReset().mockResolvedValue({ ok: true, systemInfo: {} });
   mocks.spawnHeteroSandbox.mockResolvedValue(undefined);
   mocks.publishAgentRuntimeInit.mockResolvedValue('init');
   mocks.createOperationMetadata.mockResolvedValue(undefined);
@@ -522,6 +525,61 @@ describe('dispatchHeteroAgent — local CLI agents', () => {
     // The worktree stays on the topic as the selected one; only the spawn cwd moved.
     expect(deps.bindTopicWorkingDirectory).toHaveBeenCalledWith(
       expect.objectContaining({ config: workingDirectoryConfig }),
+    );
+  });
+
+
+  it.each([
+    [
+      'reads a timeout on a dead socket as offline',
+      { timeSinceHeartbeatMs: 70_000 },
+      { ok: true, systemInfo: {} },
+      'DEVICE_OFFLINE',
+    ],
+    [
+      'keeps the unknown-start timeout when the device still answers',
+      { timeSinceHeartbeatMs: 5_000 },
+      { ok: true, systemInfo: {} },
+      'TIMEOUT',
+    ],
+    [
+      'reads a timeout as offline when the probe finds no connection',
+      { timeSinceHeartbeatMs: 5_000 },
+      { ok: false, reason: 'DEVICE_NOT_FOUND' },
+      'DEVICE_OFFLINE',
+    ],
+  ])('%s, keeping the raw gateway answer in detail', async (_case, extra, probe, describedAs) => {
+    const raw = JSON.stringify({ error: 'TIMEOUT', success: false, ...extra });
+    mocks.dispatchAgentRun.mockResolvedValueOnce({ error: raw, success: false });
+    mocks.readDeviceSystemInfo.mockResolvedValueOnce(probe);
+    const { deps } = createDeps();
+
+    const result = await dispatchHeteroAgent(
+      deps,
+      createCtx({
+        boundDeviceId: 'dev-1',
+        executionTarget: 'device',
+        heterogeneousProvider: { type: 'claude-code' },
+      }),
+      createInput('claude-code'),
+    );
+
+    expect(mocks.finalizeHeteroDispatchError).toHaveBeenCalledWith(
+      deps,
+      finalizeParams({
+        detail: raw,
+        deviceRoute: { deviceId: 'dev-1', userId: 'user-1' },
+        errorData: undefined,
+        errorType: resolveHeteroDispatchErrorType(describedAs),
+        message: humanizeHeteroDispatchError(describedAs),
+      }),
+    );
+    expect(result).toStrictEqual(
+      errorResult({
+        error: raw,
+        errorData: undefined,
+        message: 'Hetero agent device dispatch failed',
+      }),
     );
   });
 
