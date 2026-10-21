@@ -70,7 +70,6 @@ const PageRow = memo<PageRowProps>(({ depth, doc, isOpen, onOpen }) => {
       actions={<Actions dropdownMenu={dropdownMenu} />}
       active={isOpen}
       contextMenuItems={dropdownMenu}
-      disabled={editing}
       href={docsPagePath(doc.id)}
       style={depth ? { paddingInlineStart: 8 + depth * INDENT_PER_LEVEL } : undefined}
       icon={

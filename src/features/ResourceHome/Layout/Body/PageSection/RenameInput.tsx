@@ -62,6 +62,8 @@ const RenameInput = memo<RenameInputProps>(({ id, title, onDone }) => {
 
   return (
     <Input
+      autoFocus
+      data-testid={'page-rename-input'}
       maxLength={64}
       placeholder={t('pageEditor.titlePlaceholder')}
       ref={inputRef}

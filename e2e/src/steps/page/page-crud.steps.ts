@@ -177,36 +177,31 @@ async function clickNewPageButton(world: CustomWorld): Promise<void> {
 /**
  * Wait for whatever rename UI the row opened and return its input.
  *
- * Docs renames a page inline — the input takes the place of the row title — but
- * older flows could still open a popover, so both shapes are accepted. Polling
- * (instead of a single count) keeps the step from racing the render.
+ * Docs renames a page inline — the field takes the place of the row title — and
+ * it is tagged so the step never has to guess between the other inputs on the
+ * screen (sidebar search, home chat box, editor title). The legacy popover shape
+ * is still accepted for surfaces that have not moved to Docs yet.
+ *
+ * Each shape gets a bounded wait: scanning every `input` on the page and
+ * filtering by placeholder used to burn the whole 30s step budget without ever
+ * reaching the rename field.
  */
 async function findRenameInput(world: CustomWorld) {
-  const selectors = [
-    '.ant-popover input',
-    '.ant-popover-content input',
-    '[class*="popover"] input',
-    'input[placeholder]',
+  const shapes = [
+    '[data-testid="page-rename-input"]',
+    '.ant-popover-inner input, .ant-popover-content input, .ant-popover input',
   ];
 
-  for (let attempt = 0; attempt < 20; attempt++) {
-    for (const selector of selectors) {
-      const inputs = world.page.locator(selector);
-      const count = await inputs.count();
+  for (const selector of shapes) {
+    const input = world.page.locator(selector).first();
 
-      for (let i = 0; i < count; i++) {
-        const input = inputs.nth(i);
-        if (!(await input.isVisible().catch(() => false))) continue;
+    try {
+      await input.waitFor({ state: 'visible', timeout: 5000 });
 
-        const placeholder = (await input.getAttribute('placeholder')) || '';
-        // The sidebar search box is an input too, and it is never the rename field.
-        if (placeholder.includes('Search') || placeholder.includes('搜索')) continue;
-
-        return input;
-      }
+      return input;
+    } catch {
+      // Try the next rename shape.
     }
-
-    await world.page.waitForTimeout(300);
   }
 
   return null;
@@ -275,7 +270,9 @@ Given('用户在 Page 页面有一个文稿', async function (this: CustomWorld)
   const popoverInput = await findRenameInput(this);
 
   if (!popoverInput) {
-    throw new Error('Could not find rename input');
+    throw new Error(
+      'Could not find rename input: expected [data-testid="page-rename-input"] inline or a popover input',
+    );
   }
   await expect(popoverInput).toBeVisible({ timeout: 5000 });
 
@@ -337,7 +334,9 @@ Given('用户在 Page 页面有一个文稿 {string}', async function (this: Cus
   const popoverInput = await findRenameInput(this);
 
   if (!popoverInput) {
-    throw new Error('Could not find rename input');
+    throw new Error(
+      'Could not find rename input: expected [data-testid="page-rename-input"] inline or a popover input',
+    );
   }
 
   await expect(popoverInput).toBeVisible({ timeout: 5000 });
