@@ -41,6 +41,7 @@
   "canvas.menu.versions": "版本历史",
   "canvas.notFound": "这个画布不存在或你没有访问权限。",
   "canvas.publish.failed": "发布失败，请重试",
+  "canvas.publish.note": "之后的新版本在你更新公开链接前保持私密。",
   "canvas.publish.success": "已发布 v{{version}}",
   "canvas.runtimeErrors": "画布运行时报错（{{count}}）",
   "canvas.runtimeErrorsHint": "部分组件未能渲染。可以让助手修复画布，或展开查看详情。",

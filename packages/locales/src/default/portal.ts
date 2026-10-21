@@ -49,6 +49,7 @@ export default {
   'canvas.menu.updatePublic': 'Update public link to v{{version}}',
   'canvas.notFound': 'This canvas no longer exists or is not available to you.',
   'canvas.publish.failed': 'Couldn’t publish. Try again.',
+  'canvas.publish.note': 'Newer versions stay private until you update the public link.',
   'canvas.publish.success': 'Published v{{version}}',
   'canvas.runtimeErrors': 'This canvas reported errors ({{count}})',
   'canvas.runtimeErrorsHint':

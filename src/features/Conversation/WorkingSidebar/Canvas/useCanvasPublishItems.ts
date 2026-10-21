@@ -2,6 +2,7 @@ import { type DropdownItem, toast } from '@lobehub/ui';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { openPublishConfirm } from '@/components/PublishConfirmModal';
 import { canvasService, type CanvasVersionDetail } from '@/services/canvas';
 import { workService } from '@/services/work';
 
@@ -41,15 +42,20 @@ export const useCanvasPublishItems = (
       }
     };
 
+    const publishLabel = t(publishedUrl ? 'canvas.menu.updatePublic' : 'canvas.menu.publish', {
+      version: data.latestVersion,
+    });
+
     items.push({
       disabled: publishing,
       key: 'publish',
-      label: publishing
-        ? t('canvas.menu.publishing')
-        : t(publishedUrl ? 'canvas.menu.updatePublic' : 'canvas.menu.publish', {
-            version: data.latestVersion,
-          }),
-      onClick: () => void publish(),
+      label: publishing ? t('canvas.menu.publishing') : publishLabel,
+      onClick: () =>
+        openPublishConfirm({
+          note: t('canvas.publish.note'),
+          okText: publishLabel,
+          onOk: () => void publish(),
+        }),
     });
   }
 

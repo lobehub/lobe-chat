@@ -41,6 +41,7 @@
   "canvas.menu.versions": "Version history",
   "canvas.notFound": "This canvas no longer exists or is not available to you.",
   "canvas.publish.failed": "Couldn’t publish. Try again.",
+  "canvas.publish.note": "Newer versions stay private until you update the public link.",
   "canvas.publish.success": "Published v{{version}}",
   "canvas.runtimeErrors": "This canvas reported errors ({{count}})",
   "canvas.runtimeErrorsHint": "Some components could not render. Ask the agent to fix the canvas, or expand to see details.",
