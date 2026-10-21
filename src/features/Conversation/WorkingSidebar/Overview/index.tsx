@@ -1,19 +1,10 @@
 'use client';
 
 import type { DeviceGitLinkedPullRequest } from '@lobechat/types';
-import {
-  Button,
-  createStaticStyles,
-  cssVar,
-  cx,
-  Empty,
-  Flexbox,
-  Icon,
-  Skeleton,
-  toast,
-  Tooltip,
-} from '@lobehub/ui';
+import { Button, cx, Empty, Flexbox, Icon, Skeleton, toast, Tooltip } from '@lobehub/ui';
 import { SkillsIcon } from '@lobehub/ui/icons';
+import { cssVar } from '@lobehub/ui/stylex/cssVar.stylex';
+import * as stylex from '@stylexjs/stylex';
 import {
   ArrowDownIcon,
   ArrowUpIcon,
@@ -70,15 +61,10 @@ import { ChevronRight, OverviewRow, PickerGlyph, rowStyles } from './OverviewRow
 import PortSwitcher from './PortSwitcher';
 import { sectionStyles } from './sectionStyles';
 
-const styles = createStaticStyles(({ css }) => ({
-  body: css`
-    overflow-y: auto;
-  `,
-  emptyWorkspace: css`
-    padding-block: 28px 30px;
-    padding-inline: 20px;
-  `,
-}));
+const styles = stylex.create({
+  body: { overflowY: 'auto' },
+  emptyWorkspace: { paddingBlockStart: '28px', paddingBlockEnd: '30px', paddingInline: '20px' },
+});
 
 interface OverviewProps {
   active: boolean;
@@ -444,7 +430,7 @@ const Overview = memo<OverviewProps>(
     ) : null;
 
     return (
-      <Flexbox className={styles.body}>
+      <Flexbox className={stylex.props(styles.body).className}>
         {hasWorkspace && (
           <>
             <OverviewHeader
@@ -475,7 +461,7 @@ const Overview = memo<OverviewProps>(
         <TopicBackgroundActivity topicId={topicId} />
         {environmentAvailable && !workingDirectory && (
           <Empty
-            className={cx(sectionStyles.section, styles.emptyWorkspace)}
+            className={cx(stylex.props(styles.emptyWorkspace).className, sectionStyles.section)}
             description={t('workingPanel.overview.workspace.emptyDesc')}
             icon={LaptopIcon}
             title={t('workingPanel.overview.workspace.empty')}

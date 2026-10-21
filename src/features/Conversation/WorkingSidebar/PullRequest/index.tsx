@@ -1,5 +1,7 @@
 import type { DeviceGitLinkedPullRequest } from '@lobechat/types';
-import { Button, createStaticStyles, cssVar, Empty, Flexbox, Icon, ScrollArea } from '@lobehub/ui';
+import { Button, Empty, Flexbox, Icon, ScrollArea } from '@lobehub/ui';
+import { cssVar } from '@lobehub/ui/stylex/cssVar.stylex';
+import * as stylex from '@stylexjs/stylex';
 import { GlobeIcon, RefreshCwIcon, TriangleAlertIcon } from 'lucide-react';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -21,23 +23,12 @@ import Sections from './Sections';
 import PullRequestSkeleton from './Skeleton';
 import { usePullRequestActions } from './usePullRequestActions';
 
-const styles = createStaticStyles(({ css }) => ({
-  root: css`
-    flex: 1;
-    min-height: 0;
-  `,
-  scroll: css`
-    overflow: hidden;
-    flex: 1;
-    min-height: 0;
-  `,
-  scrollContent: css`
-    padding-block: 0 10px;
-  `,
-  viewport: css`
-    overflow-x: hidden;
-  `,
-}));
+const styles = stylex.create({
+  root: { flex: '1', minHeight: '0' },
+  scroll: { overflow: 'hidden', flex: '1', minHeight: '0' },
+  scrollContent: { paddingBlockStart: '0', paddingBlockEnd: '10px' },
+  viewport: { overflowX: 'hidden' },
+});
 
 interface PullRequestProps {
   active: boolean;
@@ -181,13 +172,16 @@ const PullRequest = memo<PullRequestProps>(
     const local = aheadBehind?.hasUpstream ? { ahead: aheadBehind.ahead } : undefined;
 
     return (
-      <Flexbox className={styles.root}>
+      <Flexbox className={stylex.props(styles.root).className}>
         <ScrollArea
           disableContentFit
           scrollFade
-          className={styles.scroll}
-          contentProps={{ className: styles.scrollContent }}
-          viewportProps={{ className: styles.viewport, style: { overflowX: 'hidden' } }}
+          className={stylex.props(styles.scroll).className}
+          contentProps={{ className: stylex.props(styles.scrollContent).className }}
+          viewportProps={{
+            className: stylex.props(styles.viewport).className,
+            style: { overflowX: 'hidden' },
+          }}
         >
           {/* The persisted PR still paints, but stays locked until a live read lands. */}
           {refreshFailed &&
