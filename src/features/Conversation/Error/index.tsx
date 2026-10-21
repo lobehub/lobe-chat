@@ -27,7 +27,10 @@ import {
   useConversationStore,
 } from '@/features/Conversation/store';
 import HeterogeneousAgentStatusGuide from '@/features/Electron/HeterogeneousAgent/StatusGuide';
-import type { HeterogeneousAgentScheduleState } from '@/features/Electron/HeterogeneousAgent/StatusGuide/types';
+import type {
+  HeterogeneousAgentScheduleState,
+  HeterogeneousAgentStatusGuideProps,
+} from '@/features/Electron/HeterogeneousAgent/StatusGuide/types';
 import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwareNavigate';
 import { usePermission } from '@/hooks/usePermission';
 import { useProviderName } from '@/hooks/useProviderName';
@@ -43,6 +46,7 @@ import { readClientLlmWait } from './clientLlmWait';
 import { type DedicatedErrorCardType, isDedicatedErrorCardType } from './dedicatedErrorCards';
 import { isHeterogeneousAgentStatusGuideError } from './heterogeneous';
 import { useHeterogeneousAutoRetry } from './useHeterogeneousAutoRetry';
+import WorkingDirectoryStatusGuide from './WorkingDirectoryStatusGuide';
 
 // Re-export so existing barrel consumers (ContentBlock, message action bar) can
 // keep importing the guard from '@/features/Conversation/Error'.
@@ -73,12 +77,35 @@ const getRawErrorMessage = (error?: ChatMessageError | null) => {
   return;
 };
 
+/**
+ * Server dispatch errors keep the upstream response body verbatim in `detail`
+ * (e.g. the gateway's `{"error":"TIMEOUT","success":false}`). Stringified into
+ * the JSON details block it renders escaped twice, so show the parsed object.
+ */
+const parseJsonDetail = (detail: unknown) => {
+  if (typeof detail !== 'string' || !detail.trim().startsWith('{')) return detail;
+  try {
+    const parsed: unknown = JSON.parse(detail);
+    return isRecord(parsed) ? parsed : detail;
+  } catch {
+    return detail;
+  }
+};
+
 const getErrorDetails = (error?: ChatMessageError | null) => {
   if (!error) return;
 
   const rawErrorMessage = getRawErrorMessage(error);
   if (!rawErrorMessage) return error.body;
-  if (isRecord(error.body)) return { ...error.body, message: rawErrorMessage };
+  if (isRecord(error.body)) {
+    if (!('detail' in error.body)) return { ...error.body, message: rawErrorMessage };
+
+    const { detail, ...rest } = error.body;
+    // A message that only repeats the raw detail adds nothing to the block.
+    return detail === rawErrorMessage
+      ? { ...rest, detail: parseJsonDetail(detail) }
+      : { ...rest, detail: parseJsonDetail(detail), message: rawErrorMessage };
+  }
   if (error.body !== undefined) return { body: error.body, message: rawErrorMessage };
 
   return { message: rawErrorMessage };
@@ -448,36 +475,50 @@ const ErrorMessageExtra = memo<ErrorExtraProps>(
       : undefined;
 
     if (isHeterogeneousAgentStatusGuideError(sessionErrorBody)) {
-      return (
-        <HeterogeneousAgentStatusGuide
-          agentType={sessionErrorBody.agentType}
-          autoRetry={autoRetry}
-          error={sessionErrorBody}
-          schedule={schedule}
-          onDismiss={() => void updateMessageError(data.id, null)}
-          onRetry={() => void handleHeterogeneousRetry()}
-          onOpenSystemTools={() =>
-            navigate(
-              isDesktop
-                ? '/settings/system-tools'
-                : activeAgentId
-                  ? `/agent/${activeAgentId}/profile`
-                  : '/settings/credential',
-            )
-          }
-          onTransfer={
-            isRateLimitError && conversationAgentId && conversationTopicId
-              ? () =>
-                  createTopicForwardModal({
-                    cancelSourceContinuation: true,
-                    sourceAgentId: conversationAgentId,
-                    topicId: conversationTopicId,
-                    topicTitle: conversationTopic?.title || '',
-                  })
-              : undefined
-          }
-        />
-      );
+      const guideProps: HeterogeneousAgentStatusGuideProps = {
+        agentType: sessionErrorBody.agentType,
+        autoRetry,
+        error: sessionErrorBody,
+        onDismiss: () => void updateMessageError(data.id, null),
+        onOpenSystemTools: () =>
+          navigate(
+            isDesktop
+              ? '/settings/system-tools'
+              : activeAgentId
+                ? `/agent/${activeAgentId}/profile`
+                : '/settings/credential',
+          ),
+        onRetry: () => void handleHeterogeneousRetry(),
+        onTransfer:
+          isRateLimitError && conversationAgentId && conversationTopicId
+            ? () =>
+                createTopicForwardModal({
+                  cancelSourceContinuation: true,
+                  sourceAgentId: conversationAgentId,
+                  topicId: conversationTopicId,
+                  topicTitle: conversationTopic?.title || '',
+                })
+            : undefined,
+        schedule,
+      };
+
+      // A deleted worktree is recoverable from the card itself (back to the
+      // source repo), which a retry-only card can't offer.
+      if (
+        canRetry &&
+        sessionErrorBody.code === HeterogeneousAgentSessionErrorCode.WorkingDirectoryNotFound &&
+        conversationAgentId &&
+        conversationTopicId
+      )
+        return (
+          <WorkingDirectoryStatusGuide
+            {...guideProps}
+            agentId={conversationAgentId}
+            topicId={conversationTopicId}
+          />
+        );
+
+      return <HeterogeneousAgentStatusGuide {...guideProps} />;
     }
 
     // A run parked in `waiting_for_client` is still alive: show what it waits

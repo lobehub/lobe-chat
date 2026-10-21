@@ -168,7 +168,13 @@ export interface ModelRuntimeHooks {
    * release anything taken in `beforeDecide`.
    */
   onDecideFinal?: (
-    data: { latencyMs: number; response: DecisionResponse; usage?: ModelUsage },
+    data: {
+      latencyMs: number;
+      /** USD charge reported by the upstream provider. Server-side only, like chat's. */
+      providerReportedCost?: number;
+      response: DecisionResponse;
+      usage?: ModelUsage;
+    },
     context: { options?: DecisionOptions; payload: DecisionPayload },
   ) => void | Promise<void>;
 
@@ -663,8 +669,13 @@ export class ModelRuntime {
 
       const startTime = Date.now();
       let usage: ModelUsage | undefined;
+      let providerReportedCost: number | undefined;
       const raw = await decide({
         ...hookOptions,
+        onProviderReportedCost: async (cost: number) => {
+          providerReportedCost = cost;
+          await hookOptions?.onProviderReportedCost?.(cost);
+        },
         onUsage: async (reported: ModelUsage) => {
           usage = reported;
           await hookOptions?.onUsage?.(reported);
@@ -685,7 +696,7 @@ export class ModelRuntime {
       if (this._hooks?.onDecideFinal) {
         try {
           await this._hooks.onDecideFinal(
-            { latencyMs: Date.now() - startTime, response, usage },
+            { latencyMs: Date.now() - startTime, providerReportedCost, response, usage },
             { options, payload },
           );
         } catch (e) {

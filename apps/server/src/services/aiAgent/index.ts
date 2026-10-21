@@ -530,8 +530,18 @@ export class AiAgentService {
    * 1. Create topic with groupId (if needed)
    * 2. Delegate to execAgent for the rest
    */
-  async execGroupAgent(params: ExecGroupAgentParams): Promise<ExecGroupAgentResult> {
-    const { agentId, groupId, message, topicId: inputTopicId, newTopic } = params;
+  async execGroupAgent(
+    params: ExecGroupAgentParams & Pick<InternalExecAgentParams, 'clientIds' | 'interactiveStart'>,
+  ): Promise<ExecGroupAgentResult> {
+    const {
+      agentId,
+      clientIds,
+      groupId,
+      interactiveStart,
+      message,
+      topicId: inputTopicId,
+      newTopic,
+    } = params;
 
     log(
       'execGroupAgent: agentId=%s, groupId=%s, message=%s',
@@ -567,6 +577,8 @@ export class AiAgentService {
       agentId,
       appContext: { groupId, orchestrationRole: 'supervisor', topicId },
       autoStart: true,
+      clientIds,
+      interactiveStart,
       prompt: message,
       trigger: RequestTrigger.Chat,
     });

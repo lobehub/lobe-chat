@@ -62,6 +62,7 @@
   "linear.installResult.error.exchange_failed": "Linear не принял авторизацию. Пожалуйста, попробуйте подключиться снова.",
   "linear.installResult.error.invalid_state": "Запрос на подключение истек. Пожалуйста, начните заново с Подключить рабочую область.",
   "linear.installResult.error.missing_code": "Linear не вернул код авторизации.",
+  "linear.installResult.error.save_failed": "Linear авторизовал подключение, но LobeHub не смог его сохранить. Пожалуйста, попробуйте подключиться снова.",
   "linear.installResult.error.unknown": "Не удалось подключить Linear ({{code}}).",
   "linear.installResult.error.workspace_forbidden": "Только участники рабочей области могут подключить Linear здесь.",
   "linear.installResult.success": "Linear подключен: {{account}}",

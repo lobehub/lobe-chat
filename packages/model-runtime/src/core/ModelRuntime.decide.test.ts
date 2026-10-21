@@ -25,14 +25,14 @@ const decidePayload = {
     refund: {
       criteria: { false: 'No refund requested.', true: 'Asks for money back.' },
       instructions: 'Is the customer asking for a refund?',
-      type: 'predicate' as const,
+      type: 'boolean' as const,
     },
   },
   state: 'I was charged twice and want my money back.',
 };
 
 const decision = {
-  answers: { refund: { probability: 0.99, type: 'predicate' } },
+  answers: { refund: { probability: 0.99, type: 'boolean' } },
   model: 'typesafe/jev-1.13-20260917',
 };
 
@@ -65,6 +65,26 @@ describe('ModelRuntime decide hooks', () => {
     expect(onDecideFinal).toHaveBeenCalledWith(
       { latencyMs: expect.any(Number), response: expected, usage },
       { options, payload: decidePayload },
+    );
+  });
+
+  it('passes the provider-reported charge to onDecideFinal and the caller callback', async () => {
+    const onDecideFinal = vi.fn();
+    const onProviderReportedCost = vi.fn();
+    const { runtime, mockRuntimeAI } = createMockRuntime({ onDecideFinal });
+    mockRuntimeAI.decide = vi.fn(async (_payload: any, options: any) => {
+      await options.onProviderReportedCost(0.000_018);
+      return decision;
+    });
+
+    const result = await runtime.decide(decidePayload, { onProviderReportedCost });
+
+    const expected = { ...decision, providerMetadata: { lobehub: { decisionMode: 'native' } } };
+    expect(result).toEqual(expected);
+    expect(onProviderReportedCost).toHaveBeenCalledWith(0.000_018);
+    expect(onDecideFinal).toHaveBeenCalledWith(
+      expect.objectContaining({ providerReportedCost: 0.000_018, response: expected }),
+      expect.anything(),
     );
   });
 
@@ -121,7 +141,7 @@ describe('ModelRuntime decide emulation fallback', () => {
     const result = await runtime.decide(payload, { onUsage });
 
     const expected = {
-      answers: { refund: { probability: 0.93, type: 'predicate' } },
+      answers: { refund: { probability: 0.93, type: 'boolean' } },
       model: 'gpt-5-mini',
       providerMetadata: {
         lobehub: { decisionMode: 'emulated', evidence: { refund: 'Asks for money back.' } },
@@ -136,6 +156,7 @@ describe('ModelRuntime decide emulation fallback', () => {
       { latencyMs: expect.any(Number), response: expected, usage },
       { options: { onUsage }, payload },
     );
+    expect(onDecideFinal.mock.calls[0][0].providerReportedCost).toBeUndefined();
     // The emulation is one decide call: generateObject hooks (billing) stay silent.
     expect(beforeGenerateObject).not.toHaveBeenCalled();
   });

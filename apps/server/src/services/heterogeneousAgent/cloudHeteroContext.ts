@@ -1,5 +1,8 @@
 import type { SandboxMode } from '@lobechat/builtin-tool-cloud-sandbox';
 
+import type { UnansweredUserTurn } from './unansweredUserTurns';
+import { formatUnansweredUserTurns } from './unansweredUserTurns';
+
 export interface ConversationHistoryEntry {
   content: string;
   role: 'assistant' | 'user';
@@ -44,8 +47,17 @@ export function buildCloudHeteroContext(params: {
   /** GitHub OAuth token injected as GITHUB_TOKEN env var in the sandbox. */
   githubToken?: string;
   sandbox?: CloudHeteroSandboxPlacement;
+  /** User messages a resumed session may have missed (see `collectUnansweredUserTurns`). */
+  unansweredUserTurns?: UnansweredUserTurn[];
 }): string {
-  const { repos, agentSystemContext, conversationHistory, githubToken, sandbox } = params;
+  const {
+    repos,
+    agentSystemContext,
+    conversationHistory,
+    githubToken,
+    sandbox,
+    unansweredUserTurns,
+  } = params;
   const persistent = sandbox?.mode === 'persistent';
 
   const parts: string[] = [];
@@ -205,6 +217,9 @@ export function buildCloudHeteroContext(params: {
     });
     parts.push(`<previous_conversation>\n${entries.join('\n')}\n</previous_conversation>`);
   }
+
+  const unanswered = formatUnansweredUserTurns(unansweredUserTurns);
+  if (unanswered) parts.push(unanswered);
 
   return parts.join('\n\n');
 }

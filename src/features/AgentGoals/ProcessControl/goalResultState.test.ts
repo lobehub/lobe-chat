@@ -16,6 +16,7 @@ import {
   findFinalAcceptanceView,
   findGoalAcceptanceGate,
   findOpenChangeRequest,
+  goalReportPageId,
   goalResultHeadline,
   hasGoalResult,
   isGoalReportOrganizing,
@@ -741,6 +742,15 @@ describe('resultTrailSource', () => {
   it('falls back when the stored storyline does not parse', () => {
     const broken = { ...latest, metadata: { headline: 'x' } as any };
     expect(resultTrailSource(report({ latest: broken, status: 'completed' })).kind).toBe('derived');
+  });
+
+  it('leads the result with the report HTML page, kept while a newer report is written', () => {
+    const withPage = { ...latest, pageDocumentId: 'docs-report' };
+    expect(goalReportPageId(report({ latest: withPage, status: 'completed' }))).toBe('docs-report');
+    expect(goalReportPageId(report({ latest: withPage, status: 'running' }))).toBe('docs-report');
+    // A markdown-only report, or none yet, has no page to lead with.
+    expect(goalReportPageId(report({ latest, status: 'completed' }))).toBeUndefined();
+    expect(goalReportPageId({})).toBeUndefined();
   });
 });
 

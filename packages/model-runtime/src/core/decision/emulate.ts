@@ -4,6 +4,7 @@ import { z } from 'zod';
 
 import type {
   DecisionAnswer,
+  DecisionContent,
   DecisionOptions,
   DecisionPayload,
   DecisionQuestion,
@@ -29,7 +30,7 @@ Rules:
 Answer formats:
 - choice: "value" is exactly one option code (c0, c1, ...) listed for that question.
 - score: "value" is the integer index of the rubric level that best matches the state.
-- predicate: "value" is your probability, from 0 to 1, that the proposition is true. Stay near 0 or 1 when the evidence is clear, and near 0.5 only when it is balanced.`;
+- boolean: "value" is your probability, from 0 to 1, that the proposition in the instructions is true. Stay near 0 or 1 when the evidence is clear, and near 0.5 only when it is balanced.`;
 
 /** How one question is described to the model, constrained, validated and mapped back. */
 interface QuestionSpec {
@@ -38,6 +39,10 @@ interface QuestionSpec {
   toAnswer: (value: any) => DecisionAnswer;
   value: z.ZodTypeAny;
 }
+
+/** Structured content (JSON) is shown to the model as indented JSON. */
+const toText = (content: DecisionContent): string =>
+  typeof content === 'string' ? content : JSON.stringify(content, null, 2);
 
 // Choice options become internal codes (`c0`…): caller keys may hold characters a strict JSON
 // schema rejects, and short codes keep the output small.
@@ -49,7 +54,7 @@ const specFor = (question: DecisionQuestion): QuestionSpec => {
       return {
         lines: options.map((option, i) => {
           const hint = question.criteria[option];
-          return `- ${codes[i]}: ${JSON.stringify(option)}${hint ? ` — ${hint}` : ''}`;
+          return `- ${codes[i]}: ${JSON.stringify(option)}${hint === null || hint === '' ? '' : ` — ${toText(hint)}`}`;
         }),
         schema: { enum: codes, type: 'string' },
         toAnswer: (code: string) => ({ choice: options[codes.indexOf(code)], type: 'choice' }),
@@ -58,7 +63,7 @@ const specFor = (question: DecisionQuestion): QuestionSpec => {
     }
     case 'score': {
       return {
-        lines: question.criteria.map((level, i) => `- ${i}: ${level}`),
+        lines: question.criteria.map((level, i) => `- ${i}: ${toText(level)}`),
         schema: { enum: question.criteria.map((_, i) => i), type: 'integer' },
         toAnswer: (score: number) => ({ score, type: 'score' }),
         value: z
@@ -68,11 +73,17 @@ const specFor = (question: DecisionQuestion): QuestionSpec => {
           .max(question.criteria.length - 1),
       };
     }
-    case 'predicate': {
+    case 'boolean': {
       return {
-        lines: [`True when: ${question.criteria.true}`, `False when: ${question.criteria.false}`],
+        // Without criteria, the instructions alone state the proposition.
+        lines: question.criteria
+          ? [
+              `True when: ${toText(question.criteria.true)}`,
+              `False when: ${toText(question.criteria.false)}`,
+            ]
+          : [],
         schema: { description: 'Probability from 0 to 1', type: 'number' },
-        toAnswer: (probability: number) => ({ probability, type: 'predicate' }),
+        toAnswer: (probability: number) => ({ probability, type: 'boolean' }),
         value: z.number().min(0).max(1),
       };
     }
@@ -123,13 +134,14 @@ export const emulateDecision = async (
 
   const described = questions
     .map(({ key, question, spec }) =>
-      [`${key} (${question.type})`, `Instructions: ${question.instructions}`, ...spec.lines].join(
-        '\n',
-      ),
+      [
+        `${key} (${question.type})`,
+        `Instructions: ${toText(question.instructions)}`,
+        ...spec.lines,
+      ].join('\n'),
     )
     .join('\n\n');
-  const state =
-    typeof payload.state === 'string' ? payload.state : JSON.stringify(payload.state, null, 2);
+  const state = toText(payload.state);
   const messages: GenerateObjectPayload['messages'] = [
     { content: SYSTEM_PROMPT, role: 'system' },
     {
@@ -169,7 +181,8 @@ export const emulateDecision = async (
   );
 
   let usage: ModelUsage | undefined;
-  const { onUsage, ...forwarded } = options ?? {};
+  // A chat model reports no decision charge of its own, so `onProviderReportedCost` stays unset.
+  const { onProviderReportedCost: _cost, onUsage, ...forwarded } = options ?? {};
   const generateOptions: GenerateObjectOptions = {
     ...forwarded,
     onUsage: (reported) => {

@@ -166,11 +166,11 @@ describe('AiGenerationService.decide', () => {
       meaningChanged: {
         criteria: { false: 'Same meaning', true: 'Meaning changed' },
         instructions: 'Did the meaning change?',
-        type: 'predicate' as const,
+        type: 'boolean' as const,
       },
     };
     const response = {
-      answers: { meaningChanged: { probability: 0.1, type: 'predicate' } },
+      answers: { meaningChanged: { probability: 0.1, type: 'boolean' } },
       model: 'gpt-5-mini',
     };
     decide.mockResolvedValue(response);

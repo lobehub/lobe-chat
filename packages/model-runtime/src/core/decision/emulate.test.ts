@@ -16,7 +16,7 @@ const payload = {
     meaningChanged: {
       criteria: { false: 'Same meaning as before.', true: 'The meaning changed.' },
       instructions: 'Did the edit change the meaning?',
-      type: 'predicate',
+      type: 'boolean',
     },
     preset: {
       criteria: { 'meeting notes': 'Notes from a meeting', 'todo/list': 'A list of tasks' },
@@ -64,7 +64,7 @@ describe('emulateDecision', () => {
     expect(result).toEqual({
       answers: {
         keep: { score: 3, type: 'score' },
-        meaningChanged: { probability: 0.1, type: 'predicate' },
+        meaningChanged: { probability: 0.1, type: 'boolean' },
         preset: { choice: 'todo/list', type: 'choice' },
       },
       model: 'gpt-5-mini',
@@ -78,6 +78,36 @@ describe('emulateDecision', () => {
           },
         },
       },
+    });
+  });
+
+  it('renders structured content and works without boolean criteria or choice hints', async () => {
+    const generateObject = vi.fn().mockResolvedValue({
+      q0: { evidence: 'Mentions a refund.', refused: false, value: 0.9 },
+      q1: { evidence: 'Billing topic.', refused: false, value: 'c0' },
+    });
+
+    const result = await emulateDecision(
+      {
+        model: 'gpt-5-mini',
+        questions: {
+          refund: { instructions: { ask: 'Is this a refund request?' }, type: 'boolean' },
+          topic: { criteria: { billing: null, other: '' }, instructions: 'Topic?', type: 'choice' },
+        },
+        state: [{ role: 'user', text: 'Refund me' }],
+      },
+      undefined,
+      { generateObject, provider: 'openai' },
+    );
+
+    const userPrompt: string = generateObject.mock.calls[0][0].messages[1].content;
+    expect(userPrompt).toContain('Instructions: {\n  "ask": "Is this a refund request?"\n}');
+    expect(userPrompt).not.toContain('True when');
+    expect(userPrompt).toContain('- c0: "billing"\n');
+    expect(userPrompt).toContain('"text": "Refund me"');
+    expect(result.answers).toEqual({
+      refund: { probability: 0.9, type: 'boolean' },
+      topic: { choice: 'billing', type: 'choice' },
     });
   });
 
@@ -160,13 +190,18 @@ describe('emulateDecision', () => {
     expect(generateObject).toHaveBeenCalledTimes(1);
   });
 
-  it('forwards signal, metadata and user to generateObject', async () => {
+  it('forwards signal, metadata and user to generateObject but not the provider cost', async () => {
     const generateObject = vi.fn().mockResolvedValue(validOutput);
     const signal = new AbortController().signal;
 
     await emulateDecision(
       payload,
-      { metadata: { trigger: 'quick_note' }, signal, user: 'u1' },
+      {
+        metadata: { trigger: 'quick_note' },
+        onProviderReportedCost: vi.fn(),
+        signal,
+        user: 'u1',
+      },
       { generateObject, provider: 'openai' },
     );
 
@@ -175,5 +210,6 @@ describe('emulateDecision', () => {
       signal,
       user: 'u1',
     });
+    expect(generateObject.mock.calls[0][1]).not.toHaveProperty('onProviderReportedCost');
   });
 });

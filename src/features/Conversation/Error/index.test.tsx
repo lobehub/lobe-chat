@@ -31,6 +31,7 @@ const conversationContextMock = vi.hoisted(
     },
 );
 const createTopicForwardModalMock = vi.hoisted(() => vi.fn());
+const commitWorkingDirectoryMock = vi.hoisted(() => vi.fn());
 // Stands in for whatever card a downstream build installs into the business slot.
 const businessSlot = vi.hoisted(() => ({ render: false }));
 const missingTranslationKeys = vi.hoisted(() => new Set<string>());
@@ -109,20 +110,31 @@ vi.mock('@/features/Electron/HeterogeneousAgent/StatusGuide', () => ({
     onDismiss,
     onRetry,
     onTransfer,
+    workingDirectoryReset,
   }: {
     agentType?: string;
     error?: { code?: string };
     onDismiss?: () => void;
     onRetry?: () => void;
     onTransfer?: () => void;
+    workingDirectoryReset?: { name?: string; onReset: () => Promise<void> };
   }) => (
     <div>
       {`guide:${agentType}:${error?.code}`}
       {onDismiss && <button onClick={onDismiss}>dismiss</button>}
       {onRetry && <button onClick={onRetry}>guide-retry</button>}
       {onTransfer && <button onClick={onTransfer}>transfer</button>}
+      {workingDirectoryReset && (
+        <button onClick={() => void workingDirectoryReset.onReset()}>
+          {`reset-to:${workingDirectoryReset.name}`}
+        </button>
+      )}
     </div>
   ),
+}));
+
+vi.mock('@/features/ChatInput/ControlBar/useCommitWorkingDirectory', () => ({
+  useCommitWorkingDirectory: () => ({ commit: commitWorkingDirectoryMock }),
 }));
 
 vi.mock('@/services/electron/binary', () => ({
@@ -211,6 +223,8 @@ describe('ErrorMessageExtra', () => {
     conversationContextMock.agentId = undefined;
     conversationContextMock.topicId = undefined;
     createTopicForwardModalMock.mockClear();
+    commitWorkingDirectoryMock.mockReset();
+    commitWorkingDirectoryMock.mockResolvedValue(undefined);
     useChatStore.setState({ activeTopicId: null as any, topicDetailMap: {} });
   });
 
@@ -653,6 +667,89 @@ describe('ErrorMessageExtra', () => {
     expect(screen.getByText('guide:codex:working_directory_not_found')).toBeInTheDocument();
   });
 
+  // Regression: a project conversation hides its directory picker, so when the
+  // run's `git worktree add` checkout was later removed, the topic kept spawning
+  // in the dead worktree and the card's only advice pointed at a hidden picker.
+  describe('deleted worktree recovery', () => {
+    const renderWorktreeError = () =>
+      render(
+        <ErrorMessageExtra
+          error={{ message: 'response.undefined' }}
+          data={{
+            error: {
+              body: {
+                agentType: 'claude-code',
+                code: HeterogeneousAgentSessionErrorCode.WorkingDirectoryNotFound,
+                message: 'Working directory does not exist: /tmp/ibench-push',
+              },
+            } as any,
+            id: 'msg-dead-worktree',
+          }}
+        />,
+      );
+
+    beforeEach(() => {
+      conversationContextMock.agentId = 'agent-1';
+      conversationContextMock.topicId = 'topic-1';
+      displayMessageMock.set('msg-dead-worktree', { parentId: 'user-1' });
+      useChatStore.setState({
+        topicDetailMap: {
+          'topic-1': {
+            id: 'topic-1',
+            metadata: {
+              workingDirectoryConfig: {
+                git: { activeWorktree: '/tmp/ibench-push', isWorktree: true },
+                path: '/Users/me/ibench/landing',
+              },
+            },
+            projectWorkingDirectoryId: 'dir-1',
+            title: 'Topic',
+          } as any,
+        },
+      });
+    });
+
+    it('switches back to the source repo, then retries', async () => {
+      renderWorktreeError();
+
+      fireEvent.click(screen.getByText('reset-to:landing'));
+
+      await waitFor(() =>
+        expect(delAndRegenerateMessageMock).toHaveBeenCalledWith('msg-dead-worktree'),
+      );
+      expect(commitWorkingDirectoryMock).toHaveBeenCalledWith({ path: '/Users/me/ibench/landing' });
+      expect(commitWorkingDirectoryMock.mock.invocationCallOrder[0]).toBeLessThan(
+        delAndRegenerateMessageMock.mock.invocationCallOrder[0],
+      );
+    });
+
+    it('does not retry into the dead worktree when the switch fails', async () => {
+      commitWorkingDirectoryMock.mockRejectedValue(new Error('offline'));
+      renderWorktreeError();
+
+      fireEvent.click(screen.getByText('reset-to:landing'));
+
+      await waitFor(() => expect(commitWorkingDirectoryMock).toHaveBeenCalled());
+      expect(delAndRegenerateMessageMock).not.toHaveBeenCalled();
+    });
+
+    it('offers no reset when the topic records no worktree', () => {
+      useChatStore.setState({
+        topicDetailMap: {
+          'topic-1': {
+            id: 'topic-1',
+            metadata: { workingDirectoryConfig: { path: '/Users/me/ibench/landing' } },
+            title: 'Topic',
+          } as any,
+        },
+      });
+      renderWorktreeError();
+
+      expect(screen.queryByText(/reset-to:/)).not.toBeInTheDocument();
+      expect(screen.getByText('guide-retry')).toBeInTheDocument();
+    });
+  });
+
   it('dismisses only the current heterogeneous error field', () => {
     render(
       <ErrorMessageExtra
@@ -722,6 +819,49 @@ describe('ErrorMessageExtra', () => {
 
     expect(screen.getByText('Raw runtime error')).toBeInTheDocument();
     expect(screen.getByText(/"detail": "raw detail"/)).toBeInTheDocument();
+  });
+
+  it('shows a JSON gateway detail as an object instead of a twice-escaped string', () => {
+    const raw = '{"error":"TIMEOUT","success":false}';
+    render(
+      <ErrorMessageExtra
+        error={{ message: 'response.DeviceResponseTimeout' }}
+        data={{
+          error: {
+            body: { detail: raw },
+            message: raw,
+            type: ChatErrorType.DeviceResponseTimeout,
+          } as any,
+          id: 'msg-device-timeout',
+        }}
+      />,
+    );
+
+    expect(screen.getByText('response.DeviceResponseTimeout')).toBeInTheDocument();
+    const details = screen.getByText(/"error": "TIMEOUT"/).textContent ?? '';
+    expect(details).not.toContain('\\"');
+    expect(details).not.toContain('"message"');
+  });
+
+  it('keeps a truncated JSON gateway detail as the raw string', () => {
+    render(
+      <ErrorMessageExtra
+        error={{ message: 'response.DeviceResponseTimeout' }}
+        data={{
+          error: {
+            body: { detail: '{"error":"TIMEOUT"' },
+            message: 'The device did not answer in time.',
+            type: ChatErrorType.DeviceResponseTimeout,
+          } as any,
+          id: 'msg-device-timeout-truncated',
+        }}
+      />,
+    );
+
+    expect(screen.getByText(/"detail": "\{\\"error\\":\\"TIMEOUT\\""/)).toBeInTheDocument();
+    expect(
+      screen.getByText(/"message": "The device did not answer in time\."/),
+    ).toBeInTheDocument();
   });
 
   it('shows the localized empty-completion message while retaining the raw error in details', () => {

@@ -62,6 +62,7 @@
   "linear.installResult.error.exchange_failed": "Linear accepteerde de autorisatie niet. Probeer opnieuw te verbinden.",
   "linear.installResult.error.invalid_state": "Het verbindingsverzoek is verlopen. Begin opnieuw vanaf Werkruimte verbinden.",
   "linear.installResult.error.missing_code": "Linear heeft geen autorisatiecode geretourneerd.",
+  "linear.installResult.error.save_failed": "Linear heeft de verbinding geautoriseerd, maar LobeHub kon deze niet opslaan. Probeer opnieuw verbinding te maken.",
   "linear.installResult.error.unknown": "Verbinding maken met Linear is mislukt ({{code}}).",
   "linear.installResult.error.workspace_forbidden": "Alleen werkruimteleden kunnen hier Linear verbinden.",
   "linear.installResult.success": "Linear verbonden: {{account}}",

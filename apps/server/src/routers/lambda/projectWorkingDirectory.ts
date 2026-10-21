@@ -90,7 +90,9 @@ export const projectWorkingDirectoryRouter = router({
         { db: ctx.serverDB, userId: ctx.userId, workspaceId: ctx.workspaceId },
         [{ agentId: input.agentId }],
       );
-      if (!(await ctx.projectModel.findManageableById(input.projectId)))
+      // Everyone who can read a project collaborates in it, so starting a
+      // project conversation needs read access, not ownership.
+      if (!(await ctx.projectModel.findById(input.projectId)))
         throw new Error('Project not found or access denied');
       const { snapshot } = await resolvePrecreatedTopicSnapshot(
         ctx.precreatedTopicDeps,

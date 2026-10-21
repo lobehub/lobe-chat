@@ -1,19 +1,15 @@
 'use client';
 
 import { createStaticStyles, Divider, Flexbox } from '@lobehub/ui';
-import { memo, useEffect, useMemo, useState } from 'react';
+import { memo, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import useSWR from 'swr';
 
 import ImperativeModal from '@/components/ImperativeModal';
-import { groupKeys } from '@/libs/swr/keys';
-import { agentService } from '@/services/agent';
 
-import { type AgentItemData } from './AgentItem';
 import AvailableAgentList from './AvailableAgentList';
-import { selectAddableAgents } from './selectAddableAgents';
 import SelectedAgentList from './SelectedAgentList';
 import { useAgentSelectionStore } from './store';
+import { useAddableGroupMembers } from './useAddableGroupMembers';
 
 const styles = createStaticStyles(({ css, cssVar }) => ({
   container: css`
@@ -47,17 +43,11 @@ const AddGroupMemberModal = memo<AddGroupMemberModalProps>(
     const selectedAgentIds = useAgentSelectionStore((s) => s.selectedAgentIds);
     const clearSelection = useAgentSelectionStore((s) => s.clearSelection);
 
-    // Fetch non-virtual agents; the inbox is excluded unless a caller opts in
-    const { data: allAgents = [], isLoading: isLoadingAgents } = useSWR(
-      open ? groupKeys.queryAgents() : null,
-      () => agentService.queryAgents(),
-    );
-
-    // Filter out existing members and the inbox, which cannot join a group
-    const availableAgents = useMemo<AgentItemData[]>(
-      () => selectAddableAgents(allAgents, existingMembers),
-      [allAgents, existingMembers],
-    );
+    const {
+      allAgents,
+      availableAgents,
+      isLoading: isLoadingAgents,
+    } = useAddableGroupMembers(existingMembers);
 
     // Clear selection when modal closes
     useEffect(() => {

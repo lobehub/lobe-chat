@@ -21,6 +21,7 @@ const setup = (sourceAccepts: boolean) => {
       calls.push('read-executor');
       return sourceExecutor;
     }),
+    getOperationEditingGroupId: vi.fn(async () => undefined),
   };
   const deps = {
     agentRuntimeService,

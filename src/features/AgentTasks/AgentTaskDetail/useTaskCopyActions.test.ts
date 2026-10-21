@@ -12,7 +12,10 @@ const mocks = vi.hoisted(() => ({
     activeTaskId: 'T-1' as string | undefined,
     taskDetailMap: {
       'T-1': { agentId: 'agt_1', name: 'Ship the thing' },
-    } as Record<string, { agentId?: string | null; name?: string | null }>,
+    } as Record<
+      string,
+      { agentId?: string | null; instruction?: string | null; name?: string | null }
+    >,
   },
   toastSuccess: vi.fn(),
   workspaceSlug: 'ws-slug' as string | undefined,
@@ -88,6 +91,31 @@ describe('useTaskCopyActions', () => {
 
     expect(mocks.copyToClipboard).toHaveBeenCalledWith('T-1');
     expect(mocks.toastSuccess).toHaveBeenCalledWith('taskList.contextMenu.copyIdSuccess');
+  });
+
+  it('copies the task instruction as markdown', async () => {
+    mocks.taskState.taskDetailMap = {
+      'T-1': { agentId: 'agt_1', instruction: '## Goal\n\nShip it', name: 'Ship the thing' },
+    };
+    const { result } = renderHook(() => useTaskCopyActions());
+
+    expect(result.current.hasContent).toBe(true);
+    await result.current.copyContent();
+
+    expect(mocks.copyToClipboard).toHaveBeenCalledWith('## Goal\n\nShip it');
+    expect(mocks.toastSuccess).toHaveBeenCalledWith('taskList.contextMenu.copyContentSuccess');
+  });
+
+  it('reports no content and skips copying when the instruction is blank', async () => {
+    mocks.taskState.taskDetailMap = {
+      'T-1': { agentId: 'agt_1', instruction: '  \n ', name: 'Ship the thing' },
+    };
+    const { result } = renderHook(() => useTaskCopyActions());
+
+    expect(result.current.hasContent).toBe(false);
+    await result.current.copyContent();
+
+    expect(mocks.copyToClipboard).not.toHaveBeenCalled();
   });
 
   it('no-ops while no task is active, so the header buttons cannot copy a stale id', async () => {

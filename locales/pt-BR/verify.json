@@ -82,7 +82,6 @@
   "acceptance.comments.approvalCount": "{{count}} revisor(es) aprovaram",
   "acceptance.comments.approve": "Aprovar esta entrega",
   "acceptance.comments.approveAgain": "Aprovar esta rodada",
-  "acceptance.comments.approveDescription": "Sua opinião de revisão. Isso não altera o status de aceitação — apenas o proprietário aceita a entrega.",
   "acceptance.comments.approveSummaryPlaceholder": "Resumo em uma linha (opcional)",
   "acceptance.comments.approved": "Aprovado",
   "acceptance.comments.approvedAtRound": "Aprovado (rodada {{round}})",

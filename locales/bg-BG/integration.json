@@ -62,6 +62,7 @@
   "linear.installResult.error.exchange_failed": "Linear не прие упълномощаването. Моля, опитайте да се свържете отново.",
   "linear.installResult.error.invalid_state": "Заявката за връзка изтече. Моля, започнете отново от Свържете работното пространство.",
   "linear.installResult.error.missing_code": "Linear не върна код за упълномощаване.",
+  "linear.installResult.error.save_failed": "Linear разреши връзката, но LobeHub не успя да я запази. Моля, опитайте да се свържете отново.",
   "linear.installResult.error.unknown": "Свързването с Linear неуспешно ({{code}}).",
   "linear.installResult.error.workspace_forbidden": "Само членове на работното пространство могат да свържат Linear тук.",
   "linear.installResult.success": "Linear свързан: {{account}}",

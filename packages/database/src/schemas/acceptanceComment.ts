@@ -2,6 +2,7 @@ import type {
   AcceptanceCommentAnchorType,
   AcceptanceCommentAttachmentRef,
   AcceptanceCommentKind,
+  AcceptanceCommentMetadata,
   AcceptanceCommentSource,
   AcceptanceReviewAnnotation,
   DocumentCommentJson,
@@ -107,11 +108,11 @@ export const acceptanceComments = pgTable(
      */
     source: jsonb('source').$type<AcceptanceCommentSource>(),
     /**
-     * Open bag for per-remark facts that do not warrant a column of their own
-     * yet, so a new kind of annotation does not need a migration. Server-written
-     * only; nothing reads it as a contract until a field earns a real column.
+     * Server-owned per-remark facts. Video comments store their time in
+     * evidenceAnchor.time, e.g. { evidenceAnchor: { time: { start: 2.5 } } }.
+     * Other producers' keys remain separate from this typed anchor.
      */
-    metadata: jsonb('metadata').$type<Record<string, unknown>>(),
+    metadata: jsonb('metadata').$type<AcceptanceCommentMetadata>(),
     /** Client-generated idempotency key for retried creates. */
     clientId: text('client_id').notNull(),
 
