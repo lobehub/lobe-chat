@@ -538,14 +538,18 @@ export class KnowledgeRepo {
         !knowledgeBaseId && excludeKnowledgeBaseIds?.length
           ? or(isNull(d.knowledgeBaseId), notInArray(d.knowledgeBaseId, excludeKnowledgeBaseIds))
           : undefined,
+        // The drive lists uploaded files plus the folders that hold them: a folder
+        // row is the only way into its children, so dropping it strands every
+        // nested file. Pages still live in their own sidebar sections, and this
+        // filter is what keeps them out of the drive.
+        filesOnly ? eq(d.fileType, CUSTOM_FOLDER_FILE_TYPE) : undefined,
       ],
       includeContent,
       includeContentPreview,
       Boolean(knowledgeBaseId),
     );
 
-    // The drive lists uploaded files only; pages live in their own sidebar sections.
-    const rows = await (filesOnly ? fileArm : unionAll(fileArm, documentArm))
+    const rows = await unionAll(fileArm, documentArm)
       .orderBy(this.orderBy(sortType, sorter))
       .limit(limit)
       .offset(offset);

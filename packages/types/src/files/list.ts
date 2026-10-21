@@ -89,7 +89,7 @@ const MAX_RESOURCE_LIST_PAGE_SIZE = 100;
 
 export const QueryFileListSchema = z.object({
   category: z.string().optional(),
-  /** Skip the documents arm (pages, folders): the drive lists uploaded files only. */
+  /** Keep pages out of the listing: the drive lists uploaded files and their folders. */
   filesOnly: z.boolean().optional(),
   /** Return a bounded server-generated plain-text preview for preview surfaces. */
   includeContentPreview: z.boolean().optional(),

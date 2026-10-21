@@ -76,7 +76,7 @@ export interface ResourceItem {
  */
 export interface ResourceQueryParams {
   category?: FilesTabs;
-  /** Drive listing: uploaded files only, no pages or folders. */
+  /** Drive listing: uploaded files and the folders that hold them, no pages. */
   filesOnly?: boolean;
   includeContentPreview?: boolean;
   libraryId?: string;

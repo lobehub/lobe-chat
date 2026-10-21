@@ -57,6 +57,18 @@ beforeEach(async () => {
       userId,
     },
     {
+      content: '',
+      fileType: 'custom/folder',
+      filename: 'nested-folder',
+      id: 'drive-folder',
+      source: 'document',
+      sourceType: 'document',
+      title: 'nested-folder',
+      totalCharCount: 0,
+      totalLineCount: 0,
+      userId,
+    },
+    {
       content: 'kb page',
       fileType: 'custom/document',
       filename: 'kb-page',
@@ -69,13 +81,46 @@ beforeEach(async () => {
       userId,
     },
   ]);
+  // The folder has to exist first: `files.parent_id` references `documents.id`.
+  await serverDB.insert(files).values([
+    {
+      fileType: 'application/pdf',
+      id: 'drive-nested-file',
+      name: 'nested.pdf',
+      parentId: 'drive-folder',
+      size: 100,
+      url: 'drive-nested-file-url',
+      userId,
+    },
+  ]);
 });
 
 describe('KnowledgeRepo.query — drive listing', () => {
-  it('lists only uploaded files, including those filed into knowledge bases, for filesOnly', async () => {
-    const results = await knowledgeRepo.query({ filesOnly: true, showFilesInKnowledgeBase: true });
+  it('lists uploaded files and the folders holding them, but never pages, for filesOnly', async () => {
+    const results = await knowledgeRepo.query({
+      filesOnly: true,
+      // The drive root, exactly as the explorer asks for it.
+      parentId: null,
+      showFilesInKnowledgeBase: true,
+    });
 
-    expect(results.map((item) => item.id).sort()).toEqual(['drive-kb-file', 'drive-loose-file']);
+    // The folder at the root is the only way into its children, so the drive has
+    // to keep it; pages belong to the sidebar's Docs sections.
+    expect(results.map((item) => item.id).sort()).toEqual([
+      'drive-folder',
+      'drive-kb-file',
+      'drive-loose-file',
+    ]);
+  });
+
+  it('keeps a nested file reachable from its folder', async () => {
+    const results = await knowledgeRepo.query({
+      filesOnly: true,
+      parentId: 'drive-folder',
+      showFilesInKnowledgeBase: true,
+    });
+
+    expect(results.map((item) => item.id)).toEqual(['drive-nested-file']);
   });
 
   it('reports every knowledge base a file belongs to', async () => {
