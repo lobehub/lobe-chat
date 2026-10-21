@@ -1,0 +1,197 @@
+import { EventEmitter } from 'node:events';
+import { existsSync, readFileSync } from 'node:fs';
+import { lstat, mkdir, mkdtemp, readlink, rm, writeFile } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import path from 'node:path';
+
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+
+import { ClaudeCodeAccountProfiles, type ClaudeCodeLoginSpawnParams } from './claudeCodeAccounts';
+
+const fakeFs = vi.hoisted(() => ({ home: '' }));
+
+vi.mock('node:child_process', () => ({
+  execFile: vi.fn((_cmd: string, _args: string[], _opts: unknown, callback: () => void) =>
+    callback(),
+  ),
+}));
+
+// The sampler reads `<profile>/.claude.json` for identity and the profile's
+// credentials for "signed in"; mirror both over the temp dirs used here.
+vi.mock('@lobechat/heterogeneous-agents/quota-sampler', () => {
+  const dirOf = (options: { claudeConfigDirPath?: string | null }) =>
+    options.claudeConfigDirPath ?? path.join(fakeFs.home, '.claude');
+  const identityFile = (options: { claudeConfigDirPath?: string | null }) =>
+    options.claudeConfigDirPath
+      ? path.join(options.claudeConfigDirPath, '.claude.json')
+      : path.join(fakeFs.home, '.claude.json');
+  return {
+    claudeCodeKeychainService: (dir?: string | null) => `svc-${dir ?? 'default'}`,
+    hasClaudeCodeLogin: async (options: { claudeConfigDirPath?: string | null }) =>
+      existsSync(path.join(dirOf(options), '.credentials.json')),
+    readClaudeCodeIdentity: async (options: { claudeConfigDirPath?: string | null }) => {
+      try {
+        const { oauthAccount } = JSON.parse(readFileSync(identityFile(options), 'utf8'));
+        return { email: oauthAccount.emailAddress, externalAccountId: oauthAccount.accountUuid };
+      } catch {
+        return null;
+      }
+    },
+  };
+});
+
+const writeLogin = async (configDir: string | null, accountUuid: string) => {
+  const dir = configDir ?? path.join(fakeFs.home, '.claude');
+  const identityFile = configDir
+    ? path.join(configDir, '.claude.json')
+    : path.join(fakeFs.home, '.claude.json');
+  await mkdir(dir, { recursive: true });
+  await writeFile(
+    identityFile,
+    JSON.stringify({ oauthAccount: { accountUuid, emailAddress: `${accountUuid}@x.com` } }),
+  );
+  await writeFile(path.join(dir, '.credentials.json'), '{}');
+};
+
+class FakeChild extends EventEmitter {
+  kill = vi.fn((signal: string) => {
+    this.emit('exit', null, signal);
+    return true;
+  });
+}
+
+describe('ClaudeCodeAccountProfiles', () => {
+  let root: string;
+  let spawned: ClaudeCodeLoginSpawnParams[];
+  let child: FakeChild;
+  let profiles: ClaudeCodeAccountProfiles;
+
+  beforeEach(async () => {
+    fakeFs.home = await mkdtemp(path.join(tmpdir(), 'cc-accounts-home-'));
+    root = path.join(fakeFs.home, 'profiles');
+    spawned = [];
+    profiles = new ClaudeCodeAccountProfiles({
+      home: fakeFs.home,
+      root,
+      spawnLogin: async (params) => {
+        spawned.push(params);
+        child = new FakeChild();
+        return child as never;
+      },
+    });
+  });
+
+  afterEach(async () => {
+    await rm(fakeFs.home, { force: true, recursive: true });
+  });
+
+  /** Start a login and let the fake CLI sign `accountUuid` in to the new profile. */
+  const loginAs = async (accountUuid: string, email?: string) => {
+    const before = spawned.length;
+    const pending = profiles.login({ email });
+    await vi.waitFor(() => expect(spawned.length).toBe(before + 1));
+    const { configDir } = spawned.at(-1)!;
+    await writeLogin(configDir, accountUuid);
+    child.emit('exit', 0, null);
+    return pending;
+  };
+
+  it('lists the default login and each signed-in profile once', async () => {
+    await writeLogin(null, 'acc-default');
+    await writeLogin(path.join(root, 'a'), 'acc-a');
+    await writeLogin(path.join(root, 'b'), 'acc-a');
+    await mkdir(path.join(root, 'signed-out'), { recursive: true });
+
+    const accounts = await profiles.list();
+
+    expect(accounts.map((a) => [a.configDir, a.identity.externalAccountId])).toEqual([
+      [null, 'acc-default'],
+      [path.join(root, 'a'), 'acc-a'],
+    ]);
+  });
+
+  it('resolves an account to the default login, its profile, or missing', async () => {
+    await writeLogin(null, 'acc-default');
+    await writeLogin(path.join(root, 'p1'), 'acc-p1');
+
+    expect(await profiles.resolve('acc-default')).toEqual({ kind: 'default' });
+    expect(await profiles.resolve('acc-p1')).toEqual({
+      configDir: path.join(root, 'p1'),
+      kind: 'profile',
+    });
+    expect(await profiles.resolve('acc-elsewhere')).toEqual({ kind: 'missing' });
+  });
+
+  it('shares transcripts with the default dir so a switched conversation can resume', async () => {
+    await writeLogin(path.join(root, 'p1'), 'acc-p1');
+
+    await profiles.resolve('acc-p1');
+
+    const link = path.join(root, 'p1', 'projects');
+    expect((await lstat(link)).isSymbolicLink()).toBe(true);
+    expect(await readlink(link)).toBe(path.join(fakeFs.home, '.claude', 'projects'));
+  });
+
+  it('signs a new account in to its own profile through `claude auth login`', async () => {
+    const account = await loginAs('acc-new', 'new@x.com');
+
+    expect(spawned).toHaveLength(1);
+    expect(spawned[0].args).toEqual(['auth', 'login', '--claudeai', '--email', 'new@x.com']);
+    expect(path.dirname(spawned[0].configDir)).toBe(root);
+    expect(account).toEqual({
+      configDir: spawned[0].configDir,
+      identity: expect.objectContaining({ externalAccountId: 'acc-new' }),
+    });
+    expect(await profiles.resolve('acc-new')).toEqual({
+      configDir: spawned[0].configDir,
+      kind: 'profile',
+    });
+  });
+
+  it('replaces the older profile when an account signs in again', async () => {
+    const first = await loginAs('acc-1');
+    const second = await loginAs('acc-1');
+
+    expect(second.configDir).not.toBe(first.configDir);
+    expect(existsSync(first.configDir!)).toBe(false);
+    expect((await profiles.list()).map((a) => a.configDir)).toEqual([second.configDir]);
+  });
+
+  it('drops the new profile when the account is already the default login', async () => {
+    await writeLogin(null, 'acc-default');
+
+    const account = await loginAs('acc-default');
+
+    expect(account.configDir).toBeNull();
+    expect(existsSync(spawned[0].configDir)).toBe(false);
+  });
+
+  it('cancels a sign-in in progress and removes its half-made profile', async () => {
+    const pending = profiles.login();
+    await vi.waitFor(() => expect(spawned).toHaveLength(1));
+
+    expect(profiles.cancelLogin()).toBe(true);
+
+    await expect(pending).rejects.toThrow('cancelled');
+    expect(child.kill).toHaveBeenCalledWith('SIGTERM');
+    expect(existsSync(spawned[0].configDir)).toBe(false);
+  });
+
+  it('rejects a second sign-in while one is running', async () => {
+    const pending = profiles.login();
+
+    await expect(profiles.login()).rejects.toThrow('already in progress');
+
+    profiles.cancelLogin();
+    await expect(pending).rejects.toThrow();
+  });
+
+  it('fails a sign-in that exits without a login', async () => {
+    const pending = profiles.login();
+    await vi.waitFor(() => expect(spawned).toHaveLength(1));
+    child.emit('exit', 0, null);
+
+    await expect(pending).rejects.toThrow('without a login');
+    expect(existsSync(spawned[0].configDir)).toBe(false);
+  });
+});

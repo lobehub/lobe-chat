@@ -3,9 +3,16 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { resolveQuotaAccountSpawnPlan } from './resolveQuotaAccountEnv';
 
 const selectAccountForAgent = vi.hoisted(() => vi.fn());
+const listAccounts = vi.hoisted(() => vi.fn());
+const listClaudeCodeAccounts = vi.hoisted(() => vi.fn());
+const resolveClaudeCodeAccount = vi.hoisted(() => vi.fn());
 
 vi.mock('@/services/agentQuota', () => ({
-  agentQuotaService: { selectAccountForAgent },
+  agentQuotaService: { listAccounts, selectAccountForAgent },
+}));
+
+vi.mock('@/services/electron/heterogeneousAgent', () => ({
+  heterogeneousAgentService: { listClaudeCodeAccounts, resolveClaudeCodeAccount },
 }));
 
 const selection = (over: Record<string, unknown> = {}) => ({
@@ -17,45 +24,98 @@ const selection = (over: Record<string, unknown> = {}) => ({
   ...over,
 });
 
+const localAccount = (externalAccountId: string, configDir: string | null) => ({
+  configDir,
+  identity: { externalAccountId },
+});
+
 beforeEach(() => {
   selectAccountForAgent.mockReset();
+  listAccounts.mockReset().mockResolvedValue([]);
+  listClaudeCodeAccounts
+    .mockReset()
+    .mockResolvedValue([localAccount('ext-default', null), localAccount('ext-1', '/profiles/one')]);
+  resolveClaudeCodeAccount.mockReset();
 });
 
 describe('resolveQuotaAccountSpawnPlan', () => {
-  it('routes a config-dir account via CLAUDE_CONFIG_DIR', async () => {
-    selectAccountForAgent.mockResolvedValue(
-      selection({ credentialRef: { configDir: '/profiles/work', origin: 'config-dir' } }),
-    );
+  it('runs a switched-to account on its own local profile', async () => {
+    selectAccountForAgent.mockResolvedValue(selection());
+    resolveClaudeCodeAccount.mockResolvedValue({ configDir: '/profiles/one', kind: 'profile' });
 
     const plan = await resolveQuotaAccountSpawnPlan('agt-1', 'claude-code');
 
-    expect(plan.env).toEqual({ CLAUDE_CONFIG_DIR: '/profiles/work' });
-    expect(plan.accountId).toBe('acc-1');
-    expect(plan.externalAccountId).toBe('ext-1');
-    expect(plan.reason).toBe('pinned');
+    expect(resolveClaudeCodeAccount).toHaveBeenCalledWith('ext-1');
+    expect(plan.env).toEqual({ CLAUDE_CONFIG_DIR: '/profiles/one' });
+    expect(plan).toMatchObject({
+      accountId: 'acc-1',
+      externalAccountId: 'ext-1',
+      reason: 'pinned',
+    });
   });
 
-  it('keeps the default login (no override) for a keychain account', async () => {
-    selectAccountForAgent.mockResolvedValue(selection());
+  it('keeps the default login (no override) when the account is the default login', async () => {
+    selectAccountForAgent.mockResolvedValue(selection({ externalAccountId: 'ext-default' }));
+    resolveClaudeCodeAccount.mockResolvedValue({ kind: 'default' });
 
     const plan = await resolveQuotaAccountSpawnPlan('agt-1', 'claude-code');
 
     expect(plan.env).toEqual({});
-    expect(plan.externalAccountId).toBe('ext-1');
+    expect(plan.externalAccountId).toBe('ext-default');
+  });
+
+  it('fails a pinned account that is not signed in here instead of running another one', async () => {
+    selectAccountForAgent.mockResolvedValue(selection({ externalAccountId: 'ext-elsewhere' }));
+    resolveClaudeCodeAccount.mockResolvedValue({ kind: 'missing' });
+    listAccounts.mockResolvedValue([{ email: 'max@x.com', id: 'acc-1', label: null }]);
+
+    // Names the account so the run error says which login is missing.
+    await expect(resolveQuotaAccountSpawnPlan('agt-1', 'claude-code')).rejects.toThrow('max@x.com');
+  });
+
+  it('re-balances Auto mode onto the accounts signed in here', async () => {
+    selectAccountForAgent
+      .mockResolvedValueOnce(selection({ externalAccountId: 'ext-away', reason: 'balanced' }))
+      .mockResolvedValueOnce(selection({ accountId: 'acc-2', reason: 'balanced' }));
+    resolveClaudeCodeAccount.mockImplementation(async (id: string) =>
+      id === 'ext-1' ? { configDir: '/profiles/one', kind: 'profile' } : { kind: 'missing' },
+    );
+
+    const plan = await resolveQuotaAccountSpawnPlan('agt-1', 'claude-code');
+
+    expect(selectAccountForAgent).toHaveBeenLastCalledWith('agt-1', {
+      provider: 'claude-code',
+      runnableExternalAccountIds: ['ext-default', 'ext-1'],
+    });
+    expect(plan).toMatchObject({ accountId: 'acc-2', env: { CLAUDE_CONFIG_DIR: '/profiles/one' } });
+  });
+
+  it('never lists local logins for an agent with no account bindings', async () => {
+    selectAccountForAgent.mockResolvedValue(null);
+
+    expect(await resolveQuotaAccountSpawnPlan('agt-1', 'claude-code')).toEqual({ env: {} });
+    expect(listClaudeCodeAccounts).not.toHaveBeenCalled();
+    expect(resolveClaudeCodeAccount).not.toHaveBeenCalled();
+  });
+
+  it('keeps the default login when the desktop cannot answer', async () => {
+    selectAccountForAgent.mockResolvedValue(selection({ reason: 'balanced' }));
+    resolveClaudeCodeAccount.mockRejectedValue(new Error('no ipc'));
+
+    const plan = await resolveQuotaAccountSpawnPlan('agt-1', 'claude-code');
+
+    expect(selectAccountForAgent).toHaveBeenCalledWith('agt-1', { provider: 'claude-code' });
+    expect(plan.env).toEqual({});
   });
 
   it('attributes but never injects env for a managed account', async () => {
-    selectAccountForAgent.mockResolvedValue(
-      selection({
-        credentialMode: 'managed',
-        credentialRef: { configDir: '/x', origin: 'config-dir' },
-      }),
-    );
+    selectAccountForAgent.mockResolvedValue(selection({ credentialMode: 'managed' }));
 
     const plan = await resolveQuotaAccountSpawnPlan('agt-1', 'claude-code');
 
     expect(plan.env).toEqual({});
     expect(plan.accountId).toBe('acc-1');
+    expect(resolveClaudeCodeAccount).not.toHaveBeenCalled();
   });
 
   it.each([

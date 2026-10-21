@@ -102,7 +102,7 @@ class AgentQuotaService {
   /** Who the load balancer would pick right now (Auto mode preview + reason). */
   selectAccountForAgent = async (
     agentId: string,
-    options?: { modelScope?: string; provider?: string },
+    options?: { modelScope?: string; provider?: string; runnableExternalAccountIds?: string[] },
   ) => lambdaClient.agentQuota.selectAccountForAgent.query({ agentId, ...options });
 
   /** One assistant turn's consumption → usage ledger (idempotent by message id). */

@@ -1,4 +1,5 @@
 import { execFile } from 'node:child_process';
+import { createHash } from 'node:crypto';
 import { readFile } from 'node:fs/promises';
 import { homedir } from 'node:os';
 import path from 'node:path';
@@ -26,6 +27,20 @@ const USAGE_TIMEOUT_MS = 10_000;
 
 const KEYCHAIN_SERVICE = 'Claude Code-credentials';
 const KEYCHAIN_TIMEOUT_MS = 3000;
+
+/**
+ * The macOS Keychain item the CLI stores a login under. The default profile
+ * uses the bare service name; a `CLAUDE_CONFIG_DIR` profile gets its own item,
+ * suffixed with the first 8 hex chars of the SHA-256 of the (NFC) dir path —
+ * so two profiles never share, or overwrite, one login.
+ */
+export const claudeCodeKeychainService = (configDir?: string | null): string =>
+  configDir
+    ? `${KEYCHAIN_SERVICE}-${createHash('sha256')
+        .update(configDir.normalize('NFC'))
+        .digest('hex')
+        .slice(0, 8)}`
+    : KEYCHAIN_SERVICE;
 
 // Same trio the session spawn strips from inherited env: when an agent
 // explicitly configures one of these, `claude` runs on API-key/base-url auth
@@ -140,13 +155,15 @@ const parseCredentialsJson = (raw: string): ClaudeOAuthCredentials | null => {
   }
 };
 
-const readKeychainCredentials = async (): Promise<ClaudeOAuthCredentials | null> => {
+const readKeychainCredentials = async (
+  configDir?: string | null,
+): Promise<ClaudeOAuthCredentials | null> => {
   if (process.platform !== 'darwin') return null;
 
   return new Promise((resolve) => {
     execFile(
       'security',
-      ['find-generic-password', '-s', KEYCHAIN_SERVICE, '-w'],
+      ['find-generic-password', '-s', claudeCodeKeychainService(configDir), '-w'],
       { timeout: KEYCHAIN_TIMEOUT_MS },
       (error, stdout) => {
         resolve(error ? null : parseCredentialsJson(stdout.trim()));
@@ -188,32 +205,35 @@ const isExpired = (credentials: ClaudeOAuthCredentials) =>
  * A custom `CLAUDE_CONFIG_DIR` is an isolated CLI profile: `claude` ignores
  * the default Keychain / `~/.claude` login there (with a fresh default login
  * and an empty custom dir, `claude auth status` reports logged out). So when
- * one is configured, only that profile's credentials file is consulted —
- * falling back to the default login would show another account's quota.
+ * one is configured, only that profile's own Keychain item and credentials
+ * file are consulted — falling back to the default login would show another
+ * account's quota.
  */
 const readClaudeOAuthCredentials = async (
   options: FetchClaudeCodeQuotaOptions,
 ): Promise<CredentialLookup> => {
   const explicitDir = resolveExplicitConfigDir(options);
-  if (explicitDir) {
-    const fromFile = await readFileCredentials(explicitDir);
-    if (!fromFile) return { state: 'not-found' };
-    return isExpired(fromFile) ? { state: 'expired' } : { credentials: fromFile, state: 'ok' };
-  }
-
   const candidates: ClaudeOAuthCredentials[] = [];
 
-  const fromKeychain = await readKeychainCredentials();
+  const fromKeychain = await readKeychainCredentials(explicitDir);
   if (fromKeychain) candidates.push(fromKeychain);
 
-  const fromDefaultFile = await readFileCredentials(path.join(homedir(), '.claude'));
-  if (fromDefaultFile) candidates.push(fromDefaultFile);
+  const fromFile = await readFileCredentials(explicitDir ?? path.join(homedir(), '.claude'));
+  if (fromFile) candidates.push(fromFile);
 
   if (candidates.length === 0) return { state: 'not-found' };
 
   const fresh = candidates.find((credentials) => !isExpired(credentials));
   return fresh ? { credentials: fresh, state: 'ok' } : { state: 'expired' };
 };
+
+/**
+ * Whether the profile a spawn with these options would use holds a login at
+ * all. An expired access token still counts: the CLI refreshes it on its own,
+ * so only a profile with no credential anywhere is signed out.
+ */
+export const hasClaudeCodeLogin = async (options: FetchClaudeCodeQuotaOptions): Promise<boolean> =>
+  (await readClaudeOAuthCredentials(options)).state !== 'not-found';
 
 /**
  * Read the account identity for DB persistence. `~/.claude.json` (or the

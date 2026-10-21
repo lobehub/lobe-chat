@@ -341,12 +341,14 @@ export const agentQuotaRouter = router({
         agentId: z.string(),
         modelScope: z.string().optional(),
         provider: z.string().optional(),
+        runnableExternalAccountIds: z.array(z.string()).optional(),
       }),
     )
     .query(async ({ ctx, input }) =>
       ctx.quotaService.selectForAgent(input.agentId, {
         modelScope: input.modelScope,
         provider: input.provider,
+        runnableExternalAccountIds: input.runnableExternalAccountIds,
       }),
     ),
 });

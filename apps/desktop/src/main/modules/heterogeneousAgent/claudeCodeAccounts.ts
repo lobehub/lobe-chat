@@ -1,0 +1,269 @@
+import { type ChildProcess, execFile } from 'node:child_process';
+import { randomUUID } from 'node:crypto';
+import { lstat, mkdir, readdir, rm, symlink } from 'node:fs/promises';
+import { homedir } from 'node:os';
+import path from 'node:path';
+
+import type {
+  ClaudeCodeAccountResolution,
+  ClaudeCodeLocalAccount,
+  QuotaAccountIdentity,
+} from '@lobechat/heterogeneous-agents/quota';
+import {
+  claudeCodeKeychainService,
+  hasClaudeCodeLogin,
+  readClaudeCodeIdentity,
+} from '@lobechat/heterogeneous-agents/quota-sampler';
+
+const DIRECTORY_MODE = 0o700;
+
+/** OAuth in the browser is human-paced; give up on an abandoned login eventually. */
+export const CLAUDE_CODE_LOGIN_TIMEOUT_MS = 10 * 60 * 1000;
+
+/**
+ * Entries of the default `~/.claude` a per-account profile links instead of
+ * owning. Transcripts (`projects`) are shared so a conversation can switch
+ * accounts and still `--resume` its native history; the rest is the user's own
+ * CLI setup, which should not change with the account. Credentials and the
+ * account identity (`.claude.json`) stay per profile — that is the point.
+ */
+const SHARED_ENTRIES = [
+  'projects',
+  'settings.json',
+  'CLAUDE.md',
+  'agents',
+  'commands',
+  'skills',
+  'plugins',
+  'output-styles',
+] as const;
+
+export type { ClaudeCodeAccountResolution, ClaudeCodeLocalAccount };
+
+export interface ClaudeCodeLoginSpawnParams {
+  args: string[];
+  configDir: string;
+}
+
+interface LoginInProgress {
+  cancelled?: boolean;
+  configDir: string;
+  process?: ChildProcess;
+}
+
+export interface ClaudeCodeAccountProfilesOptions {
+  /** `~` holding the default `.claude` dir the profiles share entries with. */
+  home?: string;
+  /** Root holding one directory per account profile. */
+  root: string;
+  /** Start `claude <args>` with `CLAUDE_CONFIG_DIR=<configDir>`. */
+  spawnLogin: (params: ClaudeCodeLoginSpawnParams) => Promise<ChildProcess>;
+  timeoutMs?: number;
+}
+
+/**
+ * The signed-in identity of one login. `null` configDir is whatever a spawn
+ * with no routing override uses — the default login, or a `CLAUDE_CONFIG_DIR`
+ * the desktop process itself inherited.
+ */
+const readSignedInIdentity = async (
+  configDir: string | null,
+): Promise<QuotaAccountIdentity | null> => {
+  const options = { claudeConfigDirPath: configDir };
+  const identity = await readClaudeCodeIdentity(options).catch(() => null);
+  if (!identity?.externalAccountId) return null;
+  return (await hasClaudeCodeLogin(options).catch(() => false)) ? identity : null;
+};
+
+/**
+ * Drop a profile and the macOS Keychain item its login lives in — removing
+ * only the directory would strand a live OAuth token in the Keychain. `rm`
+ * unlinks the shared-entry symlinks without following them into `~/.claude`.
+ */
+const forgetProfile = async (configDir: string) => {
+  await rm(configDir, { force: true, recursive: true });
+  if (process.platform !== 'darwin') return;
+  await new Promise<void>((resolve) => {
+    execFile(
+      'security',
+      ['delete-generic-password', '-s', claudeCodeKeychainService(configDir)],
+      { timeout: 3000 },
+      () => resolve(),
+    );
+  });
+};
+
+const exists = async (target: string) => {
+  try {
+    await lstat(target);
+    return true;
+  } catch {
+    return false;
+  }
+};
+
+/**
+ * The Claude Code logins this machine can run on: the default login plus one
+ * isolated `CLAUDE_CONFIG_DIR` profile per account the user signed in to from
+ * LobeHub. Account routing maps the account the server picked to one of these;
+ * an account with no local login here cannot run here.
+ */
+export class ClaudeCodeAccountProfiles {
+  readonly #home: string;
+  readonly #root: string;
+  readonly #spawnLogin: ClaudeCodeAccountProfilesOptions['spawnLogin'];
+  readonly #timeoutMs: number;
+  #login?: LoginInProgress;
+
+  constructor(options: ClaudeCodeAccountProfilesOptions) {
+    this.#home = options.home ?? homedir();
+    this.#root = options.root;
+    this.#spawnLogin = options.spawnLogin;
+    this.#timeoutMs = options.timeoutMs ?? CLAUDE_CODE_LOGIN_TIMEOUT_MS;
+  }
+
+  /** Every signed-in local login, default first; one entry per account. */
+  list = async (): Promise<ClaudeCodeLocalAccount[]> => {
+    const accounts: ClaudeCodeLocalAccount[] = [];
+    const seen = new Set<string>();
+    const add = (configDir: string | null, identity: QuotaAccountIdentity | null) => {
+      const id = identity?.externalAccountId;
+      if (!identity || !id || seen.has(id)) return;
+      seen.add(id);
+      accounts.push({ configDir, identity });
+    };
+
+    add(null, await readSignedInIdentity(null));
+    for (const configDir of await this.#profileDirs()) {
+      // A sign-in still running has no account yet.
+      if (configDir !== this.#login?.configDir)
+        add(configDir, await readSignedInIdentity(configDir));
+    }
+
+    return accounts;
+  };
+
+  /** Map a provider account to the local login a spawn should use for it. */
+  resolve = async (externalAccountId: string): Promise<ClaudeCodeAccountResolution> => {
+    const match = (await this.list()).find(
+      (account) => account.identity.externalAccountId === externalAccountId,
+    );
+    if (!match) return { kind: 'missing' };
+    if (!match.configDir) return { kind: 'default' };
+
+    await this.#linkSharedEntries(match.configDir);
+    return { configDir: match.configDir, kind: 'profile' };
+  };
+
+  /**
+   * Sign an account in to a fresh profile through `claude auth login`, which
+   * opens the browser and returns once the OAuth callback lands. A login that
+   * turns out to be an account this machine already has replaces that
+   * account's profile (or is dropped, for the default login), so each account
+   * keeps exactly one local login.
+   */
+  login = async (options: { email?: string } = {}): Promise<ClaudeCodeLocalAccount> => {
+    if (this.#login) throw new Error('A Claude Code sign-in is already in progress');
+
+    const configDir = path.join(this.#root, randomUUID());
+    const login: LoginInProgress = { configDir };
+    this.#login = login;
+
+    try {
+      await mkdir(configDir, { mode: DIRECTORY_MODE, recursive: true });
+      await this.#linkSharedEntries(configDir);
+      const args = ['auth', 'login', '--claudeai'];
+      if (options.email) args.push('--email', options.email);
+      if (login.cancelled) throw new Error('Claude Code sign-in was cancelled');
+      const child = await this.#spawnLogin({ args, configDir });
+      login.process = child;
+      if (login.cancelled) child.kill('SIGTERM');
+      await this.#waitForExit(child);
+
+      const identity = await readSignedInIdentity(configDir);
+      if (!identity) throw new Error('Claude Code sign-in finished without a login');
+
+      const existing = (await this.list()).find(
+        (account) => account.identity.externalAccountId === identity.externalAccountId,
+      );
+      if (existing && !existing.configDir) {
+        await forgetProfile(configDir);
+        return existing;
+      }
+      if (existing?.configDir) await forgetProfile(existing.configDir);
+
+      return { configDir, identity };
+    } catch (error) {
+      await forgetProfile(configDir);
+      throw error;
+    } finally {
+      this.#login = undefined;
+    }
+  };
+
+  /** Abort the sign-in in progress, if any; its half-made profile is removed. */
+  cancelLogin = (): boolean => {
+    const login = this.#login;
+    if (!login) return false;
+    login.cancelled = true;
+    login.process?.kill('SIGTERM');
+    return true;
+  };
+
+  #profileDirs = async (): Promise<string[]> => {
+    try {
+      const entries = await readdir(this.#root, { withFileTypes: true });
+      return entries
+        .filter((entry) => entry.isDirectory())
+        .map((entry) => path.join(this.#root, entry.name))
+        .sort();
+    } catch {
+      return [];
+    }
+  };
+
+  /**
+   * Link the shared entries that exist in `~/.claude` (always `projects`, so
+   * transcripts written from either side land in one place). Idempotent, and
+   * never replaces an entry the profile already has.
+   */
+  #linkSharedEntries = async (configDir: string) => {
+    const defaultDir = path.join(this.#home, '.claude');
+    await mkdir(path.join(defaultDir, 'projects'), { recursive: true });
+
+    for (const name of SHARED_ENTRIES) {
+      const source = path.join(defaultDir, name);
+      const target = path.join(configDir, name);
+      if (!(await exists(source)) || (await exists(target))) continue;
+      try {
+        await symlink(source, target);
+      } catch {
+        // A concurrent resolve made it first, or the filesystem refuses links:
+        // the profile still runs, just without that shared entry.
+      }
+    }
+  };
+
+  #waitForExit = (child: ChildProcess) =>
+    new Promise<void>((resolve, reject) => {
+      let stderr = '';
+      child.stderr?.on('data', (chunk) => {
+        stderr = `${stderr}${chunk}`.slice(-2000);
+      });
+      const timer = setTimeout(() => {
+        child.kill('SIGTERM');
+        reject(new Error('Claude Code sign-in timed out'));
+      }, this.#timeoutMs);
+
+      child.once('error', (error) => {
+        clearTimeout(timer);
+        reject(error);
+      });
+      child.once('exit', (code, signal) => {
+        clearTimeout(timer);
+        if (code === 0) resolve();
+        else if (signal) reject(new Error('Claude Code sign-in was cancelled'));
+        else reject(new Error(stderr.trim() || `claude auth login exited with code ${code}`));
+      });
+    });
+}

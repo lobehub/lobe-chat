@@ -68,6 +68,17 @@ export interface QuotaUsageTurn {
  * `@lobechat/heterogeneous-agents/quota` module; this class only wires it to
  * the database models.
  */
+interface SelectAccountOptions {
+  modelScope?: string;
+  now?: number;
+  provider?: string;
+  /**
+   * Provider account ids the caller holds a local login for. Auto mode only
+   * balances across these; omitted = every pooled account is runnable.
+   */
+  runnableExternalAccountIds?: string[];
+}
+
 export class AgentQuotaService {
   private accounts: AgentProviderAccountModel;
   private bindings: AgentAccountBindingModel;
@@ -416,7 +427,7 @@ export class AgentQuotaService {
    */
   selectForAgent = async (
     agentId: string,
-    options: { modelScope?: string; now?: number; provider?: string } = {},
+    options: SelectAccountOptions = {},
   ): Promise<{
     accountId: string;
     credentialMode: string;
@@ -441,7 +452,7 @@ export class AgentQuotaService {
 
   private selectAccountId = async (
     agentId: string,
-    options: { modelScope?: string; now?: number; provider?: string },
+    options: SelectAccountOptions,
   ): Promise<{ accountId: string; reason: 'pinned' | 'balanced' } | null> => {
     let bindings = (await this.bindings.listByAgent(agentId)).filter((b) => b.enabled);
     // Bindings are written provider-blind; a caller that names its provider
@@ -457,7 +468,18 @@ export class AgentQuotaService {
     const pinned = bindings.find((b) => b.role === QuotaBindingRole.pinned);
     if (pinned) return { accountId: pinned.accountId, reason: 'pinned' };
 
-    const pool = bindings.filter((b) => b.role === QuotaBindingRole.pool);
+    let pool = bindings.filter((b) => b.role === QuotaBindingRole.pool);
+    // Auto mode may only land on an account the caller can actually run. A
+    // pin is still returned as-is: the caller must say it cannot run it,
+    // rather than quietly run another account.
+    if (options.runnableExternalAccountIds) {
+      const runnable = new Set(options.runnableExternalAccountIds);
+      const accounts = await Promise.all(pool.map((b) => this.accounts.findById(b.accountId)));
+      pool = pool.filter((_, index) => {
+        const externalId = accounts[index]?.externalAccountId;
+        return !!externalId && runnable.has(externalId);
+      });
+    }
     if (pool.length === 0) return null;
 
     const now = options.now ?? Date.now();

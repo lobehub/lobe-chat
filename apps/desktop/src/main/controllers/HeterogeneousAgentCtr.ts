@@ -1,3 +1,4 @@
+import type { ClaudeCodeAccountProfiles } from '@/modules/heterogeneousAgent/claudeCodeAccounts';
 import type { RemoteServerAuth } from '@/modules/heterogeneousAgent/fileStorePort';
 
 import type HeterogeneousAgentImplementation from './HeterogeneousAgentImpl';
@@ -16,6 +17,7 @@ export default class HeterogeneousAgentCtr extends ControllerModule {
   static override readonly groupName = 'heterogeneousAgent';
 
   private implementationPromise?: Promise<Implementation>;
+  private claudeCodeAccountsPromise?: Promise<ClaudeCodeAccountProfiles>;
 
   /**
    * Resolved on this side of the lazy boundary and handed to the implementation.
@@ -47,6 +49,23 @@ export default class HeterogeneousAgentCtr extends ControllerModule {
       });
 
     return this.implementationPromise;
+  };
+
+  /** Local Claude Code logins (default + per-account profiles), loaded on first use. */
+  private getClaudeCodeAccounts = (): Promise<ClaudeCodeAccountProfiles> => {
+    this.claudeCodeAccountsPromise ??= Promise.all([
+      import('@/modules/heterogeneousAgent/claudeCodeAccountsHost'),
+      import('./HeterogeneousAgentImpl'),
+    ])
+      .then(([{ createClaudeCodeAccountProfiles }, { buildInheritedSpawnEnv }]) =>
+        createClaudeCodeAccountProfiles(this.app, () => buildInheritedSpawnEnv()),
+      )
+      .catch((error) => {
+        this.claudeCodeAccountsPromise = undefined;
+        throw error;
+      });
+
+    return this.claudeCodeAccountsPromise;
   };
 
   @IpcMethod()
@@ -104,6 +123,29 @@ export default class HeterogeneousAgentCtr extends ControllerModule {
   @IpcMethod()
   async getClaudeCodeQuota(...args: Parameters<Implementation['getClaudeCodeQuota']>) {
     return (await this.getImplementation()).getClaudeCodeQuota(...args);
+  }
+
+  /** Every Claude Code account signed in on this machine, and where its login lives. */
+  @IpcMethod()
+  async listClaudeCodeAccounts() {
+    return (await this.getClaudeCodeAccounts()).list();
+  }
+
+  /** The local login a run for this provider account must spawn with. */
+  @IpcMethod()
+  async resolveClaudeCodeAccount(params: { externalAccountId: string }) {
+    return (await this.getClaudeCodeAccounts()).resolve(params.externalAccountId);
+  }
+
+  /** Sign an account in to its own profile; resolves once the browser login lands. */
+  @IpcMethod()
+  async loginClaudeCodeAccount(params: { email?: string } = {}) {
+    return (await this.getClaudeCodeAccounts()).login(params);
+  }
+
+  @IpcMethod()
+  async cancelClaudeCodeAccountLogin() {
+    return (await this.getClaudeCodeAccounts()).cancelLogin();
   }
 
   @IpcMethod()
