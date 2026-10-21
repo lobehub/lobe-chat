@@ -106,7 +106,10 @@ export const DirectoryBrowser = ({
     refresh,
     retry,
   } = source.useListing(path);
-  const canUseDirectory = !isLoading && isPathConfirmed(directory?.path);
+  // A listing that failed — even one that brought its folders back — says
+  // nothing trustworthy about this folder, so it can be neither used nor
+  // browsed from until a retry succeeds.
+  const canUseDirectory = !isLoading && !error && isPathConfirmed(directory?.path);
   // A browsed source (the drive) reads its place as a breadcrumb and offers a
   // new folder as a row of the list; a typed one (a device) keeps the address
   // field and its toolbar.
@@ -236,7 +239,7 @@ export const DirectoryBrowser = ({
                 }}
               />
             )}
-            {entries.map((entry) => {
+            {(error ? [] : entries).map((entry) => {
               const disabled = loading || !!entry.disabled;
               const activate = () => (entry.onActivate ? entry.onActivate() : navigate(entry.path));
 

@@ -388,17 +388,22 @@ export const useSandboxDirectorySource = ({
             } satisfies DirectoryEntry;
           });
 
+        const rootError =
+          folders.error ?? (isRoot ? (instances.error ?? environments.error) : undefined);
+
         return {
           directory: folders.data
             ? { parentPath: driveParentPath(listingPath), path: listingPath }
             : undefined,
-          entries,
+          // Folders without what classifies them would list environment
+          // directories as plain folders, so a failed root lists nothing.
+          entries: rootError ? [] : entries,
           // At the root the instances say which folders are environment
           // directories (and who holds them), and the environments whether
           // one is private — which a public agent cannot run in. Without
           // either, a folder would list as pickable when it is not, so the
           // root waits for both and fails with either.
-          error: folders.error ?? (isRoot ? (instances.error ?? environments.error) : undefined),
+          error: rootError,
           hasMore: false,
           isLoading:
             folders.isLoading || (isRoot && (instances.isLoading || environments.isLoading)),

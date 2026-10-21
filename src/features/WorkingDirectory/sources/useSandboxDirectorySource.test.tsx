@@ -65,6 +65,9 @@ describe('useSandboxDirectorySource listing', () => {
     const { result } = renderListing();
 
     await waitFor(() => expect(result.current.error).toBe(failure));
+    // The folders came back, but listing them would offer the held one as
+    // a plain folder to browse into and use.
+    expect(result.current.entries).toEqual([]);
   });
 
   it('should retry the environment directories along with the folders', async () => {
