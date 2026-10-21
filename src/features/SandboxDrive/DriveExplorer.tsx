@@ -14,7 +14,6 @@ import {
 } from '@lobehub/ui';
 import { cssVar } from '@lobehub/ui/stylex/cssVar.stylex';
 import * as stylex from '@stylexjs/stylex';
-import dayjs from 'dayjs';
 import {
   FolderPlusIcon,
   HardDriveIcon,
@@ -38,8 +37,14 @@ import {
   openRenameFolderModal,
 } from '@/features/WorkingDirectory';
 import { sandboxStorageService } from '@/services/sandboxStorage';
-import { formatSize } from '@/utils/format';
 
+import {
+  entryKind,
+  entryModified,
+  entryModifiedRelative,
+  entrySize,
+  sortDriveEntries,
+} from './entryColumns';
 import { useDriveFiles, useRefreshDrive } from './useDriveData';
 
 /**
@@ -51,21 +56,6 @@ const MODIFIED_WIDTH = 136;
 const SIZE_WIDTH = 80;
 const KIND_WIDTH = 120;
 const ACTIONS_WIDTH = 28;
-
-/** What an entry is, the way a file manager's Kind column says it. */
-const entryKind = (
-  entry: { isDirectory: boolean; isGitRepository?: boolean; name: string },
-  t: (key: string, options?: Record<string, unknown>) => string,
-) => {
-  if (entry.isGitRepository) return t('drive.explorer.kind.gitRepository');
-  if (entry.isDirectory) return t('drive.explorer.kind.folder');
-  const dot = entry.name.lastIndexOf('.');
-  const extension = dot > 0 ? entry.name.slice(dot + 1) : '';
-
-  return extension
-    ? t('drive.explorer.kind.fileWithExtension', { extension: extension.toUpperCase() })
-    : t('drive.explorer.kind.file');
-};
 
 const styles = stylex.create({
   clickable: {
@@ -156,9 +146,7 @@ const DriveExplorer = memo<DriveExplorerProps>(({ drive, isWorkspace, toolbarExt
       ns: 'setting',
     });
 
-  const entries = [...(files.data?.entries ?? [])].sort(
-    (a, b) => Number(b.isDirectory) - Number(a.isDirectory) || a.name.localeCompare(b.name),
-  );
+  const entries = sortDriveEntries(files.data?.entries ?? []);
 
   const failed = (error: unknown, fallback: string) =>
     toast.error(describeError(error, tSetting, fallback));
@@ -401,14 +389,14 @@ const DriveExplorer = memo<DriveExplorerProps>(({ drive, isWorkspace, toolbarExt
                 <Text ellipsis fontSize={13} style={{ flex: 1, minWidth: 0 }}>
                   {entry.name}
                 </Text>
-                <Tooltip title={entry.modifiedAt ? dayjs(entry.modifiedAt).fromNow() : undefined}>
+                <Tooltip title={entryModifiedRelative(entry)}>
                   <Text
                     className={stylex.props(styles.nowrap).className}
                     fontSize={12}
                     style={{ flex: 'none', width: MODIFIED_WIDTH }}
                     type={'secondary'}
                   >
-                    {entry.modifiedAt ? dayjs(entry.modifiedAt).format('YYYY-MM-DD HH:mm') : ''}
+                    {entryModified(entry)}
                   </Text>
                 </Tooltip>
                 <Text
@@ -417,11 +405,7 @@ const DriveExplorer = memo<DriveExplorerProps>(({ drive, isWorkspace, toolbarExt
                   style={{ flex: 'none', textAlign: 'end', width: SIZE_WIDTH }}
                   type={'secondary'}
                 >
-                  {entry.isDirectory
-                    ? '--'
-                    : entry.size !== undefined
-                      ? formatSize(entry.size)
-                      : ''}
+                  {entrySize(entry)}
                 </Text>
                 <Text
                   ellipsis
