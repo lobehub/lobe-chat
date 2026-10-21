@@ -34,4 +34,21 @@ describe('buildRemoteDeviceHeteroContext', () => {
     expect(result.indexOf('AGENT_CTX')).toBeLessThan(result.indexOf('<previous_conversation>'));
     expect(result).not.toContain('## Workspace');
   });
+
+  it('names the active worktree and the source repo to fall back to', () => {
+    const result = buildRemoteDeviceHeteroContext({
+      activeWorktree: { path: '/repo-wt', sourceDirectory: '/repo' },
+    })!;
+    expect(result).toContain('<active_worktree>');
+    expect(result).toContain('selected git worktree is /repo-wt');
+    expect(result).toContain('If it no longer exists, work in /repo.');
+  });
+
+  it('says nothing about a worktree that is the source repo itself', () => {
+    expect(
+      buildRemoteDeviceHeteroContext({
+        activeWorktree: { path: '/repo', sourceDirectory: '/repo' },
+      }),
+    ).toBeUndefined();
+  });
 });

@@ -11,7 +11,8 @@ import type { ConversationHistoryEntry } from './cloudHeteroContext';
  * applies to a device run, so injecting it would actively mislead the agent.
  *
  * What remains is only what's genuinely useful on a device:
- * - the agent-level static context (workspace conventions / rules), and
+ * - the agent-level static context (workspace conventions / rules),
+ * - the selected git worktree, which is not the process cwd, and
  * - prior conversation turns when a session is resumed without a native session
  *   file.
  *
@@ -19,6 +20,13 @@ import type { ConversationHistoryEntry } from './cloudHeteroContext';
  * can omit the extra content block entirely.
  */
 export function buildRemoteDeviceHeteroContext(params: {
+  /**
+   * The topic's selected worktree (`workingDirectoryConfig.git.activeWorktree`)
+   * and the source repo the CLI is spawned in. The spawn cwd stays on the source
+   * so the CLI's per-cwd session survives, which leaves this as the only way the
+   * agent learns where the conversation's work lives.
+   */
+  activeWorktree?: { path: string; sourceDirectory?: string };
   /** Static systemContext from HeterogeneousProviderConfig.systemContext (agent-level). */
   agentSystemContext?: string;
   /**
@@ -27,13 +35,24 @@ export function buildRemoteDeviceHeteroContext(params: {
    */
   conversationHistory?: ConversationHistoryEntry[];
 }): string | undefined {
-  const { agentSystemContext, conversationHistory } = params;
+  const { activeWorktree, agentSystemContext, conversationHistory } = params;
 
   const parts: string[] = [];
 
   // --- Agent-level static context (highest priority, goes first) ---
   if (agentSystemContext?.trim()) {
     parts.push(agentSystemContext.trim());
+  }
+
+  // --- Selected worktree ---
+  // The server cannot see the device's filesystem, so the agent is the one to
+  // check that the worktree still exists (it may have removed it last turn).
+  if (activeWorktree && activeWorktree.path !== activeWorktree.sourceDirectory) {
+    const { path, sourceDirectory } = activeWorktree;
+    const fallback = sourceDirectory ? ` If it no longer exists, work in ${sourceDirectory}.` : '';
+    parts.push(
+      `<active_worktree>\nThis conversation's selected git worktree is ${path}. Your process starts in the source repository, so read, edit and run git commands in the worktree.${fallback}\n</active_worktree>`,
+    );
   }
 
   // --- Previous conversation context (injected when session was reset) ---
