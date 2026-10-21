@@ -1,7 +1,7 @@
 /**
  * @vitest-environment happy-dom
  */
-import { cleanup, render } from '@testing-library/react';
+import { act, cleanup, fireEvent, render } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 vi.mock('@lobehub/ui', () => ({
@@ -71,5 +71,52 @@ describe('SecretInputView blocked submit', () => {
 
     const save = getByRole('button', { name: 'Save' }) as HTMLButtonElement;
     expect(save.disabled).toBe(true);
+  });
+
+  it('disables the prose-confirm button when the form becomes blocked', async () => {
+    // Codex round-2 P2 (#4330386329): a prose-looking value held for
+    // confirmation must not reach the sink once the form revalidates to a
+    // blocked state — the confirm button bypasses isSecretSubmitDisabled,
+    // so it needs its own blockedReason gate.
+    const onSubmit = vi.fn().mockResolvedValue(undefined);
+    const { container, getByRole, rerender } = render(
+      <SecretInputView
+        fields={['OPENAI_API_KEY']}
+        labels={labels}
+        onCancel={vi.fn()}
+        onSubmit={onSubmit}
+      />,
+    );
+
+    const input = container.querySelector('input[type="password"]') as HTMLInputElement;
+    await act(async () => {
+      fireEvent.change(input, { target: { value: 'please verify my credentials now' } });
+    });
+
+    // First Save press holds the submit with a prose warning.
+    await act(async () => {
+      fireEvent.click(getByRole('button', { name: 'Save' }));
+    });
+    const confirm = getByRole('button', { name: 'Save anyway' }) as HTMLButtonElement;
+    expect(confirm.disabled).toBe(false);
+
+    // The form then revalidates to a blocked state.
+    rerender(
+      <SecretInputView
+        blockedReason={'A credential with this key already exists with a different type'}
+        fields={['OPENAI_API_KEY']}
+        labels={labels}
+        onCancel={vi.fn()}
+        onSubmit={onSubmit}
+      />,
+    );
+
+    const blockedConfirm = getByRole('button', { name: 'Save anyway' }) as HTMLButtonElement;
+    expect(blockedConfirm.disabled).toBe(true);
+
+    await act(async () => {
+      fireEvent.click(blockedConfirm);
+    });
+    expect(onSubmit).not.toHaveBeenCalled();
   });
 });

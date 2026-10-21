@@ -93,7 +93,12 @@ const SecretInputView = memo<SecretInputViewProps>(
             {labels.proseWarning(proseWarning)}
           </Text>
         </Flexbox>
-        <Button disabled={inert} loading={submitting} onClick={() => void confirmProseSubmit()} size={'small'}>
+        <Button
+          disabled={inert || !!blockedReason}
+          loading={submitting}
+          onClick={() => void confirmProseSubmit()}
+          size={'small'}
+        >
           {labels.confirmProse}
         </Button>
       </Flexbox>
