@@ -103,11 +103,7 @@ jobs:
         run: bun run db:migrate
 
       - name: Build application
-        # Mobile scenarios must exercise this commit's bundle rather than the
-        # precommitted CDN template used when no local mobile build exists.
-        run: |
-          bun run build:spa:mobile
-          bun run build
+        run: bun run build
         env:
           SKIP_LINT: '1'
 

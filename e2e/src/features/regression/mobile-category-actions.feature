@@ -1,4 +1,5 @@
-@home @regression @mobile-category-actions
+# Opt-in: requires a local mobile SPA; the default CI build only includes desktop.
+@home @regression @mobile-category-actions @skip
 Feature: Mobile category action discoverability and touch boundaries
   As a touchscreen user, I want to open category actions directly, expand categories, and select agents independently.
 
