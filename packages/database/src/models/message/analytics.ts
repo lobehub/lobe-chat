@@ -78,11 +78,14 @@ const computeTopicMessageStats = (counts: number[]): TopicMessageStats => {
  * builtin-tool-lobe-agent media.ts accepts `/^data:(?:audio|image|video)\//i`
  * URLs up to 2,000,000 chars, so the match is case-insensitive ('gi') and
  * parameter-aware (`;charset=utf-8`-style media-type parameters must not
- * bypass it). The mime header is kept as the capture so the export stays
+ * bypass it). JSON-serialized rows escape line breaks as `\n` literals, so
+ * the body class also matches backslashes — without it a line-wrapped
+ * payload stops matching at the first escape and leaks its remainder. The
+ * mime header is kept as the capture so the export stays
  * attribution-complete without dumping megabytes of base64.
  */
 const DATA_URL_REDACT_PATTERN =
-  '(data:[a-z]+/[a-z0-9.+-]+(?:;[a-z0-9.+-]+(?:=[^;,]*)?)*;base64,)[A-Za-z0-9+/=\\s]{64,}';
+  '(data:[a-z]+/[a-z0-9.+-]+(?:;[a-z0-9.+-]+(?:=[^;,]*)?)*;base64,)[A-Za-z0-9+/=\\s\\\\]{64,}';
 const DATA_URL_REDACT_REPLACEMENT = '\\1...redacted...';
 
 export class MessageAnalyticsQueries extends MessageScope {

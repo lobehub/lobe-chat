@@ -235,4 +235,33 @@ describe('MessageModel queryAll — tool-call plugin projection', () => {
     expect(row.plugin.identifier).toBe('lobe-agent');
     expect(row.tool_call_id).toBe('call_partial');
   });
+
+  it('redacts JSON-escaped line-wrapped data URL bodies', async () => {
+    // JSON serialization represents line breaks as literal `\n` two-char
+    // sequences; without matching backslashes the body class stops at the
+    // first escape and leaks the wrapped remainder through the CLI dump.
+    const wrappedBody = ('E'.repeat(70) + '\n').repeat(3000); // ~210KB with breaks
+    await serverDB.insert(messages).values({
+      id: 'q-redact-wrapped',
+      userId,
+      role: 'tool',
+      content: 'wrapped payload',
+    });
+    await serverDB.insert(messagePlugins).values({
+      id: 'q-redact-wrapped',
+      apiName: 'analyzeMedia',
+      arguments: JSON.stringify({ urls: [`data:image/png;base64,${wrappedBody}`] }),
+      identifier: 'lobe-agent',
+      toolCallId: 'call_redact_wrapped',
+      userId,
+    });
+
+    const result = await messageModel.queryAll();
+    const row = result.find((m) => m.id === 'q-redact-wrapped') as any;
+    const args = JSON.parse(row.plugin.arguments);
+
+    expect(args.urls[0]).toBe('data:image/png;base64,...redacted...');
+    expect(row.plugin.arguments.length).toBeLessThan(500);
+    expect(row.tool_call_id).toBe('call_redact_wrapped');
+  });
 });
