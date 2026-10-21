@@ -1,8 +1,8 @@
 import { useMemo } from 'react';
 
-import { useActiveWorkspaceId } from '@/business/client/hooks/useActiveWorkspaceId';
 import { MAIN_SIDEBAR_EXCLUDE_TRIGGERS } from '@/const/topic';
 import { useActiveRouteParams } from '@/hooks/useActiveRouteParams';
+import { useTopicOnlyMine } from '@/hooks/useTopicOnlyMine';
 import { useChatStore } from '@/store/chat';
 import { operationSelectors } from '@/store/chat/selectors';
 import { groupSidebarTopics, selectSidebarTopics } from '@/store/chat/slices/topic/selectors';
@@ -12,7 +12,7 @@ import {
   useProjectTopics,
 } from '@/store/projectWorkingDirectory';
 import { useUserStore } from '@/store/user';
-import { userProfileSelectors, workspaceUserSettingsSelectors } from '@/store/user/selectors';
+import { userProfileSelectors } from '@/store/user/selectors';
 import type { ChatTopic, GroupedTopic, TopicGroupMode, TopicSortBy } from '@/types/topic';
 import { filterTopics } from '@/utils/client/topic';
 
@@ -66,8 +66,7 @@ export const useScopedSidebarTopics = (
   const visibleLimit = pageSize + (reveal?.extraRows ?? 0);
   const running = useChatStore(operationSelectors.visiblyRunningTopicIds);
   const directories = useProjectDirectories(scope?.projectId);
-  const activeWorkspaceId = useActiveWorkspaceId();
-  const onlyMine = useUserStore(workspaceUserSettingsSelectors.topicOnlyMine(activeWorkspaceId));
+  const onlyMine = useTopicOnlyMine();
   const userId = useUserStore(userProfileSelectors.userId);
   const filter = useTopicListFilter()?.filter;
   const filtering = !!(filter?.status || filter?.device);

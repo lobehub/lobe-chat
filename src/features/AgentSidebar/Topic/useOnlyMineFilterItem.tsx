@@ -4,10 +4,9 @@ import { LucideCheck } from 'lucide-react';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { useActiveWorkspaceId } from '@/business/client/hooks/useActiveWorkspaceId';
 import { useHasActiveWorkspace } from '@/business/client/hooks/useHasActiveWorkspace';
+import { useTopicOnlyMine } from '@/hooks/useTopicOnlyMine';
 import { useUserStore } from '@/store/user';
-import { workspaceUserSettingsSelectors } from '@/store/user/selectors';
 
 /**
  * "Only my topics" toggle for the topic filter menus. A workspace lists every
@@ -17,11 +16,8 @@ import { workspaceUserSettingsSelectors } from '@/store/user/selectors';
 export const useOnlyMineFilterItem = (): DropdownItem | null => {
   const { t } = useTranslation('topic');
   const hasActiveWorkspace = useHasActiveWorkspace();
-  const activeWorkspaceId = useActiveWorkspaceId();
-  const [onlyMine, updateWorkspaceUserPreference] = useUserStore((s) => [
-    workspaceUserSettingsSelectors.topicOnlyMine(activeWorkspaceId)(s),
-    s.updateWorkspaceUserPreference,
-  ]);
+  const onlyMine = useTopicOnlyMine();
+  const updateWorkspaceUserPreference = useUserStore((s) => s.updateWorkspaceUserPreference);
 
   return useMemo(() => {
     if (!hasActiveWorkspace) return null;

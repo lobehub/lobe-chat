@@ -1486,15 +1486,16 @@ export class ChatTopicActionImpl {
     {
       agentId,
       groupId,
+      onlyMine,
     }: {
       agentId?: string;
       groupId?: string;
+      onlyMine?: boolean;
     } = {},
   ): SWRResponse<ChatTopic[]> => {
     return useSWR<ChatTopic[]>(
-      keywords ? topicKeys.search(keywords, agentId, groupId) : null,
-      ([, keywords, agentId, groupId]: [string, string, string | undefined, string | undefined]) =>
-        topicService.searchTopics(keywords, agentId, groupId),
+      keywords ? topicKeys.search(keywords, agentId, groupId, onlyMine || undefined) : null,
+      () => topicService.searchTopics(keywords ?? '', agentId, groupId, onlyMine),
       {
         onSuccess: (data) => {
           // Search rows render the same status icon as the sidebar — pin

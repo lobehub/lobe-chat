@@ -1,17 +1,18 @@
-import { useActiveWorkspaceId } from '@/business/client/hooks/useActiveWorkspaceId';
 import { useAgentTopicGroupMode } from '@/features/AgentSidebar/Topic/hooks/useAgentTopicGroupMode';
 import {
   deriveSidebarTopicListQuery,
   type SidebarTopicListQuery,
 } from '@/hooks/chatTopicListQuery';
 import { useFetchTopics } from '@/hooks/useFetchTopics';
+import { useTopicOnlyMine } from '@/hooks/useTopicOnlyMine';
+import { useWorkspacePreferenceReady } from '@/hooks/useWorkspacePreferenceReady';
 import { useAgentStore } from '@/store/agent';
 import { builtinAgentSelectors } from '@/store/agent/selectors';
 import { useChatStore } from '@/store/chat';
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
 import { useUserStore } from '@/store/user';
-import { preferenceSelectors, workspaceUserSettingsSelectors } from '@/store/user/selectors';
+import { preferenceSelectors } from '@/store/user/selectors';
 
 /**
  * The one query shape a `topicDataMap` bucket is allowed to hold. The bucket is
@@ -26,15 +27,12 @@ import { preferenceSelectors, workspaceUserSettingsSelectors } from '@/store/use
  */
 const useChatTopicListQuery = (): { query: SidebarTopicListQuery; ready: boolean } => {
   const includeCompleted = useUserStore(preferenceSelectors.topicIncludeCompleted);
-  const activeWorkspaceId = useActiveWorkspaceId();
-  const onlyMine = useUserStore(workspaceUserSettingsSelectors.topicOnlyMine(activeWorkspaceId));
+  const onlyMine = useTopicOnlyMine();
   // The workspace "only mine" filter is part of the list identity. On a cold
   // load the workspace resolves after the route loader, so hold the fetch until
   // this member's preference is known (local copy or network, success or
   // failure) — otherwise the unfiltered list paints first.
-  const { isLoading: isPreferenceLoading } = useUserStore(
-    (s) => s.useFetchWorkspaceUserPreference,
-  )();
+  const ready = useWorkspacePreferenceReady();
   const activeGroupId = useChatStore((s) => s.activeGroupId);
   const { topicGroupMode } = useAgentTopicGroupMode();
 
@@ -45,7 +43,7 @@ const useChatTopicListQuery = (): { query: SidebarTopicListQuery; ready: boolean
       onlyMine,
       topicGroupMode,
     }),
-    ready: !isPreferenceLoading,
+    ready,
   };
 };
 

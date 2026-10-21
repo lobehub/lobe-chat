@@ -169,11 +169,17 @@ export class TopicService {
     return result.data.hasFiles;
   };
 
-  searchTopics = (keywords: string, agentId?: string, groupId?: string): Promise<ChatTopic[]> => {
+  searchTopics = (
+    keywords: string,
+    agentId?: string,
+    groupId?: string,
+    onlyMine?: boolean,
+  ): Promise<ChatTopic[]> => {
     return lambdaClient.topic.searchTopics.query({
       agentId,
       groupId,
       keywords,
+      onlyMine: onlyMine || undefined,
     }) as any;
   };
 
