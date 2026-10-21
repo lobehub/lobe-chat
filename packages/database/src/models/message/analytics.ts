@@ -71,6 +71,20 @@ const computeTopicMessageStats = (counts: number[]): TopicMessageStats => {
   };
 };
 
+/**
+ * SQL-layer redaction of inline base64 media bodies, shared by the
+ * `arguments` (text) and `state` (jsonb) projections of {@link queryAll}.
+ * The predicate must cover everything the ingestion side accepts —
+ * builtin-tool-lobe-agent media.ts accepts `/^data:(?:audio|image|video)\//i`
+ * URLs up to 2,000,000 chars, so the match is case-insensitive ('gi') and
+ * parameter-aware (`;charset=utf-8`-style media-type parameters must not
+ * bypass it). The mime header is kept as the capture so the export stays
+ * attribution-complete without dumping megabytes of base64.
+ */
+const DATA_URL_REDACT_PATTERN =
+  '(data:[a-z]+/[a-z0-9.+-]+(?:;[a-z0-9.+-]+(?:=[^;,]*)?)*;base64,)[A-Za-z0-9+/=\\s]{64,}';
+const DATA_URL_REDACT_REPLACEMENT = '\\1...redacted...';
+
 export class MessageAnalyticsQueries extends MessageScope {
   /**
    * Full creator-facing message dump (`getAllMessages` / CLI export), so
@@ -94,6 +108,14 @@ export class MessageAnalyticsQueries extends MessageScope {
         // tool result to its originating call — same shape as queryByIds.
         tool_call_id: messagePlugins.toolCallId,
         plugin: {
+          // `id` MUST be the first selected field: drizzle decides whether a
+          // left-joined nested selection is null from its first column (see
+          // queryWithWhere sender note), and every other plugin column is
+          // nullable while partial rows without `api_name` are a supported
+          // shape (write.ts persists `plugin?.apiName`). Anchoring on the
+          // non-null PK keeps partial rows projected; it equals the message
+          // id, so no sentinel stripping is needed.
+          id: messagePlugins.id,
           apiName: messagePlugins.apiName,
           // `arguments` can carry inline-media payloads (data: URLs of up to
           // ~2MB each — see builtin-tool-lobe-agent media limits), and this
@@ -103,7 +125,7 @@ export class MessageAnalyticsQueries extends MessageScope {
           // attribution-complete without dumping megabytes of base64.
           arguments: sql<
             string | null
-          >`regexp_replace(${messagePlugins.arguments}, '(data:[a-z]+/[a-z0-9.+-]+;base64,)[A-Za-z0-9+/=\\s]{64,}', '\\1...redacted...', 'g')`,
+          >`regexp_replace(${messagePlugins.arguments}, ${DATA_URL_REDACT_PATTERN}, ${DATA_URL_REDACT_REPLACEMENT}, 'gi')`,
           identifier: messagePlugins.identifier,
           type: messagePlugins.type,
         },
@@ -116,7 +138,7 @@ export class MessageAnalyticsQueries extends MessageScope {
         // cast back to jsonb so consumers keep the object shape.
         pluginState: sql<
           Record<string, unknown> | null
-        >`regexp_replace(${messagePlugins.state}::text, '(data:[a-z]+/[a-z0-9.+-]+;base64,)[A-Za-z0-9+/=\\s]{64,}', '\\1...redacted...', 'g')::jsonb`,
+        >`regexp_replace(${messagePlugins.state}::text, ${DATA_URL_REDACT_PATTERN}, ${DATA_URL_REDACT_REPLACEMENT}, 'gi')::jsonb`,
       })
       .from(messages)
       .leftJoin(agents, eq(messages.agentId, agents.id))

@@ -164,4 +164,75 @@ describe('MessageModel queryAll — tool-call plugin projection', () => {
     expect(state.success).toBe(true);
     expect(row.tool_call_id).toBe('call_redact_state');
   });
+
+  it('redacts parameterized and case-varied data URLs from arguments and state', async () => {
+    // The ingestion side (builtin-tool-lobe-agent media.ts) accepts
+    // /^data:(?:audio|image|video)\//i URLs up to 2,000,000 chars, so the
+    // redaction predicate must be case-insensitive and parameter-aware —
+    // `;charset=utf-8`-style media-type parameters must not bypass it.
+    const bigBody = 'C'.repeat(200_000);
+    await serverDB.insert(messages).values({
+      id: 'q-redact-variants',
+      userId,
+      role: 'tool',
+      content: 'variant media result',
+    });
+    await serverDB.insert(messagePlugins).values({
+      id: 'q-redact-variants',
+      apiName: 'analyzeMedia',
+      arguments: JSON.stringify({
+        refs: [`DATA:IMAGE/PNG;charset=utf-8;base64,${bigBody}`],
+        urls: [`data:Video/MP4;charset=utf-8;base64,${bigBody}`],
+      }),
+      identifier: 'lobe-agent',
+      state: { dataUrl: `data:image/jpeg;charset=utf-8;base64,${bigBody}` },
+      toolCallId: 'call_redact_variants',
+      userId,
+    });
+
+    const result = await messageModel.queryAll();
+    const row = result.find((m) => m.id === 'q-redact-variants') as any;
+    const args = JSON.parse(row.plugin.arguments);
+    const state = row.pluginState as { dataUrl: string };
+
+    expect(args.refs[0]).toBe('DATA:IMAGE/PNG;charset=utf-8;base64,...redacted...');
+    expect(args.urls[0]).toBe('data:Video/MP4;charset=utf-8;base64,...redacted...');
+    expect(row.plugin.arguments.length).toBeLessThan(600);
+    expect(state.dataUrl).toBe('data:image/jpeg;charset=utf-8;base64,...redacted...');
+    expect(row.tool_call_id).toBe('call_redact_variants');
+  });
+
+  it('projects partial plugin rows that have no apiName', async () => {
+    // Drizzle nullifies a left-joined nested selection from its first
+    // selected column (see queryWithWhere sender note). Partial plugin rows
+    // without api_name are a supported shape (write.ts persists
+    // `plugin?.apiName`), so the projection anchors presence on the non-null
+    // PK `id` instead of the nullable `apiName`.
+    await serverDB.insert(messages).values({
+      id: 'q-partial-plugin',
+      userId,
+      role: 'tool',
+      content: 'partial plugin row',
+    });
+    await serverDB.insert(messagePlugins).values({
+      id: 'q-partial-plugin',
+      arguments: JSON.stringify({ ok: true }),
+      identifier: 'lobe-agent',
+      toolCallId: 'call_partial',
+      userId,
+      // no apiName, no type (defaulted server-side? type defaults to
+      // 'default' at the column level, so pass type: null is not possible —
+      // omit instead)
+    });
+
+    const result = await messageModel.queryAll();
+    const row = result.find((m) => m.id === 'q-partial-plugin') as any;
+
+    expect(row.plugin).not.toBeNull();
+    expect(row.plugin.id).toBe('q-partial-plugin');
+    expect(row.plugin.apiName).toBeNull();
+    expect(JSON.parse(row.plugin.arguments).ok).toBe(true);
+    expect(row.plugin.identifier).toBe('lobe-agent');
+    expect(row.tool_call_id).toBe('call_partial');
+  });
 });
