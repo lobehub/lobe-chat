@@ -4,6 +4,8 @@
   "addAgent": "添加助理",
   "addAgentFromList": "从助理列表添加",
   "addAgentFromMarket": "从市场添加助理",
+  "agent.copyId": "复制 Agent ID",
+  "agent.copyIdSuccess": "Agent ID 已复制",
   "agent.publishToWorkspace": "发布到工作区",
   "agent.publishToWorkspaceErrorFixedPrivateDevice": "将修复的设备发布到工作区，或者让成员选择设备后再发布此代理。",
   "agent.publishToWorkspaceSuccess": "已发布到工作区",

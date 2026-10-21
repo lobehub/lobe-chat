@@ -4,6 +4,8 @@
   "addAgent": "Add Agent",
   "addAgentFromList": "Add from Agent list",
   "addAgentFromMarket": "Add from Market",
+  "agent.copyId": "Copy Agent ID",
+  "agent.copyIdSuccess": "Agent ID copied",
   "agent.publishToWorkspace": "Publish to Workspace",
   "agent.publishToWorkspaceErrorFixedPrivateDevice": "Publish the fixed device to the workspace, or let members choose a device, before publishing this Agent.",
   "agent.publishToWorkspaceSuccess": "Published to workspace",
