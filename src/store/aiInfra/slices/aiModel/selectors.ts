@@ -1,14 +1,17 @@
-import type { AiProviderModelListItem } from 'model-bank';
+import type { AiProviderModelListItem, EnabledAiModel } from 'model-bank';
 import {
   AiModelSourceEnum,
   type ExtendParamsType,
   MODEL_REASONING_EXTEND_PARAMS,
 } from 'model-bank/aiModel';
+import { findAutoRoutingEnabledModel, isAutoRoutingProvider } from 'model-bank/autoRouting';
 
 import { type AIProviderStoreState } from '@/store/aiInfra/initialState';
 import { ModelSearchImplement } from '@/types/search';
 
 import { modelReasoningConfigKey } from './initialState';
+
+const EMPTY_ENABLED_MODELS: EnabledAiModel[] = [];
 
 /**
  * The models of the provider whose settings page is open. The list is a
@@ -65,7 +68,9 @@ const getAiModelById = (id: string) => (s: AIProviderStoreState) =>
   activeProviderModelList(s).find((i) => i.id === id);
 
 const getEnabledModelById = (id: string, provider: string) => (s: AIProviderStoreState) =>
-  s.enabledAiModels?.find((i) => i.id === id && (provider ? provider === i.providerId : true));
+  isAutoRoutingProvider(provider)
+    ? findAutoRoutingEnabledModel(id, s.enabledAiModels ?? EMPTY_ENABLED_MODELS)
+    : s.enabledAiModels?.find((i) => i.id === id && (provider ? provider === i.providerId : true));
 
 const isModelSupportToolUse = (id: string, provider: string) => (s: AIProviderStoreState) => {
   const model = getEnabledModelById(id, provider)(s);

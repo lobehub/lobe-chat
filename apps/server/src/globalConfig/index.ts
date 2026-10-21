@@ -8,6 +8,7 @@ import { composioEnv } from '@/config/composio';
 import { isDesktop } from '@/const/version';
 import { appEnv, getAppConfig } from '@/envs/app';
 import { authEnv } from '@/envs/auth';
+import { autoRoutingEnv } from '@/envs/autoRouting';
 import { fileEnv } from '@/envs/file';
 import { gatewayEnv } from '@/envs/gateway';
 import { imageEnv } from '@/envs/image';
@@ -158,6 +159,7 @@ export const getServerGlobalConfig = async () => {
       : undefined),
     disableEmailPassword: authEnv.AUTH_DISABLE_EMAIL_PASSWORD,
     enableBusinessFeatures: ENABLE_BUSINESS_FEATURES,
+    enableAutoModelRouting: !!autoRoutingEnv.ENABLE_AUTO_MODEL_ROUTING,
     enableEmailVerification: authEnv.AUTH_EMAIL_VERIFICATION,
     enableComposio: !!composioEnv.COMPOSIO_API_KEY,
     enableGatewayMode:

@@ -1,5 +1,6 @@
 import type { AiModelReasoningConfig } from 'model-bank';
 import { AiModelReasoningConfigSchema } from 'model-bank/aiModel';
+import type { TopicAutoRoutingState } from 'model-bank/autoRouting';
 import { z } from 'zod';
 
 import type { HeterogeneousRuntimeConfigField } from '../agent/heterogeneousRuntimeConfig';
@@ -116,6 +117,12 @@ export interface OnboardingSessionSnapshot {
 }
 
 export interface ChatTopicMetadata {
+  /**
+   * Routing memory of a topic pinned to a Lite / Pro / Ultra tier: the primary
+   * model whose prompt cache the topic builds, and recent per-model call times.
+   * Server-written each turn; see `resolveAutoRoute`.
+   */
+  autoRouting?: TopicAutoRoutingState;
   /** Watermark written by the background topic-summary workflow. */
   autoSummary?: {
     lastMessageId: string;

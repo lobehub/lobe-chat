@@ -1,3 +1,5 @@
+import type { AutoRoutingMessageMetadata } from 'model-bank/autoRouting';
+import { AUTO_ROUTING_REASONS, AUTO_ROUTING_TIERS } from 'model-bank/autoRouting';
 import { z } from 'zod';
 
 import { RequestTrigger } from '../../agentRuntime';
@@ -320,7 +322,18 @@ export interface BotSenderMetadata {
   username?: string;
 }
 
+const AutoRoutingMessageMetadataSchema = z.object({
+  confidence: z.number().optional(),
+  difficulty: z.union([z.literal(0), z.literal(1), z.literal(2)]),
+  model: z.string(),
+  provider: z.string(),
+  reason: z.enum(AUTO_ROUTING_REASONS),
+  signalSource: z.enum(['heuristic', 'judge']),
+  tier: z.enum(AUTO_ROUTING_TIERS),
+});
+
 export const MessageMetadataSchema = ModelUsageSchema.merge(ModelPerformanceSchema).extend({
+  autoRouting: AutoRoutingMessageMetadataSchema.optional(),
   botSender: BotSenderMetadataSchema.optional(),
   externalOrigin: ExternalOriginMetadataSchema.optional(),
   agentDispatch: AgentDispatchMetadataSchema.optional(),
@@ -445,6 +458,8 @@ export interface MessageMetadata {
    * Sending agent of an agent → agent turn; see `AgentSenderMetadata`.
    */
   agentSender?: AgentSenderMetadata;
+  /** Set when the turn ran on a Lite / Pro / Ultra tier: the real model and why. */
+  autoRouting?: AutoRoutingMessageMetadata;
   /**
    * Real platform author of a bot-channel user message; see `BotSenderMetadata`.
    */

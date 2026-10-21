@@ -296,6 +296,65 @@ For migration compatibility, `VISUAL_UNDERSTANDING_PROVIDER` and `VISUAL_UNDERST
 
 When this feature is enabled, users can upload audio, images, or videos while using a model that does not have the corresponding native multimodal capability, as long as the active model supports tool use. File upload still requires the normal file storage configuration for your deployment.
 
+## Auto Model Routing
+
+Auto model routing adds **Lite / Pro / Ultra** to the top of the model picker. Users pick a tier; each turn the server picks the real model from the chat models that user can see in the picker (enabled providers and enabled models only). Prompt caching is taken into account: a topic stays on its main model while switching would cost more than it saves.
+
+### `ENABLE_AUTO_MODEL_ROUTING`
+
+- Type: Optional
+- Description: Set to `1` to offer the Lite / Pro / Ultra tiers. Without a judge model, the difficulty of each turn is estimated by built-in rules.
+- Default: -
+- Example: `1`
+
+### `AUTO_ROUTING_JUDGE_MODEL`
+
+- Type: Optional
+- Description: Model ID of the judge model that rates each turn (difficulty, need for reasoning, topic shift). The judge is used only when this is set together with `AUTO_ROUTING_JUDGE_PROVIDER` or `AUTO_ROUTING_JUDGE_BASE_URL`.
+- Default: -
+- Example: `jev-latest` or `gpt-4.1-mini`
+
+### `AUTO_ROUTING_JUDGE_PROTOCOL`
+
+- Type: Optional
+- Description: Protocol of a custom judge endpoint. `systemone` calls `POST {AUTO_ROUTING_JUDGE_BASE_URL}/systemone` with typed questions, as served by structured-decision models such as Jev. `chat` calls an OpenAI-compatible `/chat/completions` endpoint with JSON-schema output.
+- Default: `systemone`
+- Example: `systemone` or `chat`
+
+### `AUTO_ROUTING_JUDGE_PROVIDER`
+
+- Type: Optional
+- Description: Reuse a provider already configured on this server for the judge model, through the chat protocol. Takes precedence over `AUTO_ROUTING_JUDGE_BASE_URL`.
+- Default: -
+- Example: `openai`
+
+### `AUTO_ROUTING_JUDGE_BASE_URL`
+
+- Type: Optional
+- Description: Base URL of a custom judge endpoint.
+- Default: -
+- Example: `https://aihubmix.com/v1`
+
+### `AUTO_ROUTING_JUDGE_API_KEY`
+
+- Type: Optional
+- Description: Bearer token for `AUTO_ROUTING_JUDGE_BASE_URL`.
+- Default: -
+
+### `AUTO_ROUTING_JUDGE_TIMEOUT_MS`
+
+- Type: Optional
+- Description: Time budget of one judge call in milliseconds. When the judge is slower or fails, the turn is routed by the built-in rules instead, so it never blocks the reply.
+- Default: `800`
+
+```bash
+ENABLE_AUTO_MODEL_ROUTING=1
+AUTO_ROUTING_JUDGE_PROTOCOL=systemone
+AUTO_ROUTING_JUDGE_BASE_URL=https://aihubmix.com/v1
+AUTO_ROUTING_JUDGE_API_KEY=sk-xxx
+AUTO_ROUTING_JUDGE_MODEL=jev-latest
+```
+
 ## AI Image
 
 ### `AI_IMAGE_DEFAULT_IMAGE_NUM`

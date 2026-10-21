@@ -22,6 +22,7 @@ import { serverDatabase } from '@/libs/trpc/lambda/middleware';
 import { getServerGlobalConfig } from '@/server/globalConfig';
 import { KeyVaultsGateKeeper } from '@/server/modules/KeyVaultsEncrypt';
 import { getUserScopedAiProviderModelList } from '@/server/services/aiProviderAccess';
+import { AutoModelRoutingService } from '@/server/services/autoModelRouting';
 import { type ProviderConfig } from '@/types/user/settings';
 
 const AI_MODEL_UNIQUE_CONSTRAINT = 'ai_models_id_provider_id_user_id_pk';
@@ -249,6 +250,37 @@ export const aiModelRouter = router({
     )
     .mutation(async ({ input, ctx }) => {
       return ctx.aiModelModel.updateModelsOrder(input.providerId, input.sortMap);
+    }),
+
+  /**
+   * Resolve a Lite / Pro / Ultra tier to a real model for one client-runtime
+   * turn (Gateway mode resolves on the server inside the turn setup instead).
+   */
+  resolveAutoRoute: aiModelProcedure
+    .input(
+      z.object({
+        attachments: z
+          .object({
+            audios: z.number().int().nonnegative().optional(),
+            files: z.number().int().nonnegative().optional(),
+            images: z.number().int().nonnegative().optional(),
+            videos: z.number().int().nonnegative().optional(),
+          })
+          .optional(),
+        continuation: z.boolean().optional(),
+        model: z.string(),
+        prompt: z.string().max(20_000),
+        provider: z.string(),
+        topicId: z.string().optional(),
+      }),
+    )
+    .mutation(async ({ input, ctx }) => {
+      const service = new AutoModelRoutingService(
+        ctx.serverDB,
+        ctx.userId,
+        ctx.workspaceId ?? undefined,
+      );
+      return (await service.resolveTurnModel(input)) ?? null;
     }),
 });
 

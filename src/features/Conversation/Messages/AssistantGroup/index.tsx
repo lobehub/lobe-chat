@@ -33,6 +33,7 @@ import {
 import type { SteerContinuation } from '../../store/slices/data/steerChains';
 import { getOperationFinalRootId } from '../../store/slices/data/workSummaries';
 import InterruptedHint from '../Assistant/components/InterruptedHint';
+import AutoRouting from '../components/Extras/AutoRouting';
 import Usage from '../components/Extras/Usage';
 import MessageBranch from '../components/MessageBranch';
 import RefreshingIndicator from '../components/RefreshingIndicator';
@@ -338,6 +339,11 @@ const GroupMessage = memo<GroupMessageProps>(
             {isDevMode && model && (
               <Flexbox horizontal align={'center'} paddingInline={8}>
                 <Usage model={model} performance={performance} provider={provider!} usage={usage} />
+              </Flexbox>
+            )}
+            {!isDevMode && metadata?.autoRouting && (
+              <Flexbox horizontal align={'center'} paddingInline={8}>
+                <AutoRouting routing={metadata.autoRouting} />
               </Flexbox>
             )}
           </>

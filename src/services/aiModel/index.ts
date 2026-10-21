@@ -35,6 +35,17 @@ export class AiModelService {
     return lambdaClient.aiModel.getAiModelById.query({ id });
   };
 
+  resolveAutoRoute = async (params: {
+    attachments?: { audios?: number; files?: number; images?: number; videos?: number };
+    continuation?: boolean;
+    model: string;
+    prompt: string;
+    provider: string;
+    topicId?: string;
+  }) => {
+    return lambdaClient.aiModel.resolveAutoRoute.mutate(params);
+  };
+
   toggleModelEnabled = async (params: ToggleAiModelEnableParams) => {
     return lambdaClient.aiModel.toggleModelEnabled.mutate(params);
   };
