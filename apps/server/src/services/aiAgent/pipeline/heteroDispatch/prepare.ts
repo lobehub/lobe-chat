@@ -10,9 +10,11 @@ import { applyTopicModelToHeterogeneousProvider, buildHeteroExecArgs } from '@lo
 import debug from 'debug';
 
 import { signHeteroOperationJWT } from '@/libs/trpc/utils/internalJwt';
+import { FileService } from '@/server/services/file';
 import { HeterogeneousAgentService } from '@/server/services/heterogeneousAgent';
 import type { ConversationHistoryEntry } from '@/server/services/heterogeneousAgent/cloudHeteroContext';
 import { buildCloudHeteroContext } from '@/server/services/heterogeneousAgent/cloudHeteroContext';
+import type { UnansweredUserTurn } from '@/server/services/heterogeneousAgent/unansweredUserTurns';
 import { collectUnansweredUserTurns } from '@/server/services/heterogeneousAgent/unansweredUserTurns';
 import { resolveSandboxSessionConfig } from '@/server/services/sandbox/session';
 
@@ -122,7 +124,7 @@ export const prepareHeteroRun = async (
   let conversationHistory: ConversationHistoryEntry[] | undefined;
   // A resumed session still needs the prompts of runs stopped before the CLI
   // recorded them; the history above is withheld from it.
-  let unansweredUserTurns: string[] | undefined;
+  let unansweredUserTurns: UnansweredUserTurn[] | undefined;
   if (heteroType !== 'amp') {
     try {
       // `allowShareVisitor`: this is the RUN's own topic, already resolved
@@ -149,7 +151,23 @@ export const prepareHeteroRun = async (
       if (turns.length > 0) conversationHistory = turns;
       if (resumeSessionId) {
         const unanswered = collectUnansweredUserTurns(topicMsgs, prompt);
-        if (unanswered.length > 0) unansweredUserTurns = unanswered;
+        if (unanswered.length > 0) {
+          // The query returns stored file keys; sign them like the current turn's attachments.
+          const fileService = unanswered.some((turn) => turn.files.length > 0)
+            ? new FileService(deps.db, deps.userId, deps.workspaceId)
+            : undefined;
+          unansweredUserTurns = await Promise.all(
+            unanswered.map(async (turn) => ({
+              ...turn,
+              files: await Promise.all(
+                turn.files.map(async (file) => ({
+                  ...file,
+                  url: (await fileService?.getFullFileUrl(file.url)) || file.url,
+                })),
+              ),
+            })),
+          );
+        }
       }
     } catch (err) {
       log('execAgent: failed to load conversation history for hetero context: %O', err);

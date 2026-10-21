@@ -1,4 +1,5 @@
 import type { ConversationHistoryEntry } from './cloudHeteroContext';
+import type { UnansweredUserTurn } from './unansweredUserTurns';
 import { formatUnansweredUserTurns } from './unansweredUserTurns';
 
 /**
@@ -36,7 +37,7 @@ export function buildRemoteDeviceHeteroContext(params: {
    */
   conversationHistory?: ConversationHistoryEntry[];
   /** User messages a resumed session may have missed (see `collectUnansweredUserTurns`). */
-  unansweredUserTurns?: string[];
+  unansweredUserTurns?: UnansweredUserTurn[];
 }): string | undefined {
   const { activeWorktree, agentSystemContext, conversationHistory, unansweredUserTurns } = params;
 

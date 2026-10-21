@@ -55,7 +55,7 @@ describe('buildRemoteDeviceHeteroContext', () => {
   it('appends unanswered user messages after the agent context', () => {
     const result = buildRemoteDeviceHeteroContext({
       agentSystemContext: 'AGENT_CTX',
-      unansweredUserTurns: ['Clone the repo'],
+      unansweredUserTurns: [{ content: 'Clone the repo', files: [] }],
     })!;
     expect(result.indexOf('AGENT_CTX')).toBeLessThan(result.indexOf('<unanswered_user_messages>'));
     expect(result).toContain('Clone the repo');

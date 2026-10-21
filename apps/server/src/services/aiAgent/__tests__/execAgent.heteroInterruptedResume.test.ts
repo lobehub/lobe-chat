@@ -8,6 +8,7 @@ import { AiAgentService } from '../index';
 const {
   mockDeviceFindByDeviceId,
   mockDeviceFindWorkspaceDeviceById,
+  mockGetFullFileUrl,
   mockBuildRemoteDeviceHeteroContext,
   mockCreateOperationMetadata,
   mockDispatchAgentRun,
@@ -27,6 +28,7 @@ const {
   mockCreateOperationMetadata: vi.fn().mockResolvedValue(undefined),
   mockDeviceFindByDeviceId: vi.fn(),
   mockDeviceFindWorkspaceDeviceById: vi.fn(),
+  mockGetFullFileUrl: vi.fn(async (url: string) => `https://signed.example/${url}`),
   mockDispatchAgentRun: vi.fn().mockResolvedValue({ success: true }),
   mockExecuteToolCall: vi.fn().mockResolvedValue({ success: true }),
   mockInterruptOperation: vi.fn().mockResolvedValue(true),
@@ -71,7 +73,7 @@ const emptyResolvedAttachments = {
 
 vi.mock('@/server/services/file', () => ({
   FileService: vi.fn().mockImplementation(function () {
-    return {};
+    return { getFullFileUrl: mockGetFullFileUrl };
   }),
 }));
 
@@ -304,7 +306,7 @@ describe('AiAgentService.execAgent - hetero resume after a stopped run', () => {
     );
     expect(mockBuildRemoteDeviceHeteroContext).toHaveBeenNthCalledWith(1, {
       agentSystemContext: undefined,
-      unansweredUserTurns: ['Clone the mobile repo into this project'],
+      unansweredUserTurns: [{ content: 'Clone the mobile repo into this project', files: [] }],
     });
   });
 
@@ -326,6 +328,42 @@ describe('AiAgentService.execAgent - hetero resume after a stopped run', () => {
     // The fresh-session fallback already carries the full history.
     expect(resumeFallbackSystemContext).toContain('Clone the mobile repo into this project');
     expect(resumeFallbackSystemContext).not.toContain('<unanswered_user_messages>');
+  });
+
+  it('re-delivers the attachments of the stopped turn with signed links', async () => {
+    heteroAgentConfig.agencyConfig = {
+      boundDeviceId: 'device-1',
+      executionTarget: 'device',
+      heterogeneousProvider: { type: 'claude-code' },
+    } as any;
+    mockMessageQuery.mockResolvedValue([
+      {
+        content: 'Summarize this spec',
+        fileList: [
+          { fileType: 'application/pdf', name: 'spec.pdf', size: 2048, url: 'files/spec.pdf' },
+        ],
+        id: 'stopped-user',
+        role: 'user',
+      },
+      { content: '', id: 'stopped-assistant', role: 'assistant' },
+      { content: 'Only the first section', id: 'msg-1', role: 'user' },
+    ]);
+
+    await service.execAgent({ agentId: 'agent-1', prompt: 'Only the first section' });
+
+    expect(mockBuildRemoteDeviceHeteroContext.mock.calls[0][0].unansweredUserTurns).toEqual([
+      {
+        content: 'Summarize this spec',
+        files: [
+          {
+            fileType: 'application/pdf',
+            name: 'spec.pdf',
+            size: 2048,
+            url: 'https://signed.example/files/spec.pdf',
+          },
+        ],
+      },
+    ]);
   });
 
   it('adds nothing once the previous run answered', async () => {

@@ -1,16 +1,31 @@
 import { LOADING_FLAT } from '@lobechat/const';
+import type { HeteroAttachedFileRef } from '@lobechat/heterogeneous-agents';
+import { appendAttachedFilesToPrompt } from '@lobechat/heterogeneous-agents';
 
 interface TopicMessageLike {
   content?: string | null;
+  fileList?: { fileType?: string; name: string; size?: number; url: string }[] | null;
+  imageList?: { alt?: string; url: string }[] | null;
   reasoning?: { content?: string | null } | null;
   role: string;
   tools?: unknown[] | null;
+}
+
+/** A user message no reply followed; `files` URLs are as stored until resolved. */
+export interface UnansweredUserTurn {
+  content: string;
+  files: HeteroAttachedFileRef[];
 }
 
 const USER_MAX = 1024;
 
 const hasText = (content?: string | null): content is string =>
   !!content?.trim() && content !== LOADING_FLAT;
+
+const attachedFiles = (m: TopicMessageLike): HeteroAttachedFileRef[] => [
+  ...(m.imageList ?? []).map(({ alt, url }) => ({ name: alt || 'image', url })),
+  ...(m.fileList ?? []).map(({ fileType, name, size, url }) => ({ fileType, name, size, url })),
+];
 
 /**
  * User messages at the end of a topic that no reply followed.
@@ -21,6 +36,7 @@ const hasText = (content?: string | null): content is string =>
  * exists only in LobeHub, and the next turn resumes a session that never saw
  * it. Any output from the stopped run (text, reasoning, a tool call) proves the
  * CLI read the prompt, so only messages with nothing after them are returned.
+ * Their attachments come along: the current turn carries only its own.
  *
  * A stop that lands before the server accepts the message restores the draft,
  * so the user often re-sends the same text: copies of `currentPrompt` and
@@ -31,12 +47,14 @@ const hasText = (content?: string | null): content is string =>
 export const collectUnansweredUserTurns = (
   messages: TopicMessageLike[],
   currentPrompt?: string,
-): string[] => {
-  let pending: string[] = [];
+): UnansweredUserTurn[] => {
+  let pending: UnansweredUserTurn[] = [];
 
   for (const m of messages) {
     if (m.role === 'user') {
-      if (hasText(m.content)) pending.push(m.content);
+      const content = hasText(m.content) ? m.content : '';
+      const files = attachedFiles(m);
+      if (content || files.length > 0) pending.push({ content, files });
       continue;
     }
 
@@ -47,9 +65,12 @@ export const collectUnansweredUserTurns = (
     if (answered) pending = [];
   }
 
-  const seen = new Set([currentPrompt?.trim()]);
-  return pending.filter((content) => {
-    const key = content.trim();
+  const current = currentPrompt?.trim();
+  const seen = new Set<string>();
+  return pending.filter(({ content, files }) => {
+    const text = content.trim();
+    if (text && text === current) return false;
+    const key = JSON.stringify([text, files.map((file) => file.url)]);
     if (seen.has(key)) return false;
     seen.add(key);
     return true;
@@ -60,12 +81,12 @@ export const collectUnansweredUserTurns = (
  * System-context section that re-delivers unanswered user messages to a
  * resumed session. Returns `undefined` when there is nothing to deliver.
  */
-export const formatUnansweredUserTurns = (turns?: string[]): string | undefined => {
+export const formatUnansweredUserTurns = (turns?: UnansweredUserTurn[]): string | undefined => {
   if (!turns || turns.length === 0) return;
 
-  const entries = turns.map((content) => {
-    const body = content.length > USER_MAX ? `${content.slice(0, USER_MAX)}… [truncated]` : content;
-    return `<user>\n${body}\n</user>`;
+  const entries = turns.map(({ content, files }) => {
+    const text = content.length > USER_MAX ? `${content.slice(0, USER_MAX)}… [truncated]` : content;
+    return `<user>\n${appendAttachedFilesToPrompt(text, files)}\n</user>`;
   });
 
   return [

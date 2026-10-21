@@ -1,5 +1,6 @@
 import type { SandboxMode } from '@lobechat/builtin-tool-cloud-sandbox';
 
+import type { UnansweredUserTurn } from './unansweredUserTurns';
 import { formatUnansweredUserTurns } from './unansweredUserTurns';
 
 export interface ConversationHistoryEntry {
@@ -47,7 +48,7 @@ export function buildCloudHeteroContext(params: {
   githubToken?: string;
   sandbox?: CloudHeteroSandboxPlacement;
   /** User messages a resumed session may have missed (see `collectUnansweredUserTurns`). */
-  unansweredUserTurns?: string[];
+  unansweredUserTurns?: UnansweredUserTurn[];
 }): string {
   const {
     repos,
