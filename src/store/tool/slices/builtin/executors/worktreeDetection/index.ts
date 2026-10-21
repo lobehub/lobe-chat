@@ -823,6 +823,19 @@ const resolveWorktreeAddFromDevice = async (
 const isWindowsPath = (p: string): boolean => /^[A-Z]:[\\/]/i.test(p) || p.startsWith('\\\\');
 
 /**
+ * Equality key for two spellings of one directory. A Windows path takes either
+ * separator and, on a drive, any casing (`C:\wt`, `c:/WT/`, `C:\repo/..\wt`);
+ * `resolveWorktreePath` leaves those untouched. UNC paths keep their case: a
+ * `\\wsl.localhost\…` share is a case-sensitive Linux filesystem.
+ */
+const toPathKey = (p: string): string => {
+  if (!isWindowsPath(p)) return p;
+  const slashed = p.replaceAll('\\', '/');
+  if (slashed.startsWith('//')) return `/${normalizePosix(slashed)}`;
+  return normalizePosix(slashed).toLowerCase();
+};
+
+/**
  * The recorded worktree becomes the cwd of every later command on the source's
  * device, so it must be an absolute path in the source's own filesystem namespace.
  * A Windows source (`C:\repo`, `\\wsl.localhost\…`) whose command ran a nested
@@ -923,11 +936,11 @@ export const recordGitCommandEffects = async (params: {
   // selection is the cheap mistake to make.
   const activeWorktree = nextConfig?.git?.activeWorktree;
   if (activeWorktree) {
-    const removedPath = resolveWorktreePath(activeWorktree, source);
-    const lastRemove = lastIndexInCommand(
-      command,
-      (tokens, env) => parseGitWorktreeRemoveTokens(tokens, source, env) === removedPath,
-    );
+    const activeKey = toPathKey(resolveWorktreePath(activeWorktree, source));
+    const lastRemove = lastIndexInCommand(command, (tokens, env) => {
+      const removed = parseGitWorktreeRemoveTokens(tokens, source, env);
+      return removed !== undefined && toPathKey(removed) === activeKey;
+    });
     const lastAdd = lastIndexInCommand(
       command,
       (tokens, env) => !!parseGitWorktreeAddTokens(tokens, source, env),

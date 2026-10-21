@@ -152,4 +152,55 @@ describe('recordGitCommandEffects — git worktree remove', () => {
     await recordGitCommandEffects({ command: 'git worktree remove "$UNSET"', topicId: 't1' });
     expect(chatMocks.updateTopicMetadata).not.toHaveBeenCalled();
   });
+
+  it('keeps the active worktree when a POSIX path differs only in case', async () => {
+    chatMocks.topics = { t1: inWorktree() };
+    await recordGitCommandEffects({
+      command: 'git worktree remove /home/u/LOBEHUB-WT-21058',
+      topicId: 't1',
+    });
+    expect(chatMocks.updateTopicMetadata).not.toHaveBeenCalled();
+  });
+});
+
+describe('recordGitCommandEffects — git worktree remove on Windows', () => {
+  const WIN_SOURCE = 'C:\\repo';
+
+  const inWinWorktree = (activeWorktree: string) => ({
+    metadata: {
+      workingDirectoryConfig: {
+        git: { activeWorktree, branch: 'fix/x', isWorktree: true },
+        path: WIN_SOURCE,
+        repoType: 'github',
+      },
+    },
+  });
+
+  it.each([
+    ['C:\\wt', 'git worktree remove C:/wt'],
+    // `git worktree list --porcelain` spells it with `/`; the agent types `\`.
+    ['C:/Users/u/wt', 'git worktree remove C:\\Users\\u\\wt\\'],
+    ['C:\\wt', 'git worktree remove c:\\WT'],
+    ['C:\\wt', 'git worktree remove --force ..\\wt'],
+    ['\\\\server\\share\\wt', 'git worktree remove \\\\server\\share\\wt\\'],
+  ])('clears %s removed by `%s`', async (activeWorktree, command) => {
+    chatMocks.topics = { t1: inWinWorktree(activeWorktree) };
+    await recordGitCommandEffects({ command, topicId: 't1' });
+    expect(chatMocks.updateTopicMetadata).toHaveBeenCalledWith('t1', {
+      workingDirectoryConfig: { git: { isWorktree: false }, path: WIN_SOURCE, repoType: 'github' },
+    });
+  });
+
+  it.each([
+    ['C:\\wt', 'git worktree remove C:\\wt2'],
+    // A WSL share is a case-sensitive Linux filesystem.
+    [
+      '\\\\wsl.localhost\\Ubuntu\\home\\u\\wt',
+      'git worktree remove \\\\wsl.localhost\\Ubuntu\\home\\u\\WT',
+    ],
+  ])('keeps %s when `%s` removes another directory', async (activeWorktree, command) => {
+    chatMocks.topics = { t1: inWinWorktree(activeWorktree) };
+    await recordGitCommandEffects({ command, topicId: 't1' });
+    expect(chatMocks.updateTopicMetadata).not.toHaveBeenCalled();
+  });
 });
