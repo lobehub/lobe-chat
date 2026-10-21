@@ -59,7 +59,7 @@ describe('useSecretInputForm', () => {
     expect(result.current.complete).toBe(false);
   });
 
-  it('holds a prose-looking submit and requires a second confirm', async () => {
+  it('holds a prose-looking submit and only the confirm control can proceed', async () => {
     const onSubmit = vi.fn().mockResolvedValue(undefined);
     const { result } = renderHook(() => useSecretInputForm({ fields, onSubmit }));
 
@@ -67,13 +67,19 @@ describe('useSecretInputForm', () => {
       result.current.handleChange('OPENAI_API_KEY', '绑定到某个第三方服务去做 API 调用'),
     );
 
-    // First submit is held: the sink never sees the values.
+    // First Save is held: the sink never sees the values.
     await act(() => result.current.handleSubmit());
     expect(onSubmit).not.toHaveBeenCalled();
     expect(result.current.proseWarning).toEqual(['OPENAI_API_KEY']);
 
-    // Second submit confirms and goes through.
+    // A second ordinary Save / Enter is still held — the explicit confirm
+    // control is the only way through.
     await act(() => result.current.handleSubmit());
+    expect(onSubmit).not.toHaveBeenCalled();
+    expect(result.current.proseWarning).toEqual(['OPENAI_API_KEY']);
+
+    // The confirm control submits.
+    await act(() => result.current.confirmProseSubmit());
     expect(onSubmit).toHaveBeenCalledWith({
       OPENAI_API_KEY: '绑定到某个第三方服务去做 API 调用',
     });
@@ -105,12 +111,11 @@ describe('useSecretInputForm', () => {
 
     act(() => result.current.handleChange('OPENAI_API_KEY', '一段被误粘贴的中文句子'));
 
-    // Confirm the held prose submit; the save fails.
-    await act(() => result.current.handleSubmit());
-    await act(() => result.current.handleSubmit());
+    // Confirm via the explicit control; the save fails.
+    await act(() => result.current.confirmProseSubmit());
     expect(onSubmit).toHaveBeenCalledTimes(1);
 
-    // Retry goes straight to the sink without asking again.
+    // Retry via ordinary Save goes straight to the sink without asking again.
     await act(() => result.current.handleSubmit());
     expect(onSubmit).toHaveBeenCalledTimes(2);
     expect(onSubmit).toHaveBeenNthCalledWith(2, {
@@ -124,8 +129,7 @@ describe('useSecretInputForm', () => {
     const { result } = renderHook(() => useSecretInputForm({ fields, onSubmit }));
 
     act(() => result.current.handleChange('OPENAI_API_KEY', '一段被误粘贴的中文句子'));
-    await act(() => result.current.handleSubmit());
-    await act(() => result.current.handleSubmit());
+    await act(() => result.current.confirmProseSubmit());
     expect(onSubmit).toHaveBeenCalledTimes(1);
     expect(result.current.proseWarning).toBeUndefined();
   });

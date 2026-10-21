@@ -22,15 +22,21 @@ export interface UseSecretInputFormParams {
  * Prose guard: a submit whose values look like prose (a pasted sentence or
  * chat text, the exact T-967 failure) is held instead of handed to the sink;
  * the view shows a warning and calls `confirmProseSubmit` to let it through.
- * The acknowledged state survives failed submissions (the retry must not ask
- * the user to confirm the same values again) and is cleared by a successful
- * submit or by editing any field.
+ * Ordinary Save / Enter stays held while the guard is active — only the
+ * explicit confirm control can submit a prose-looking value. The
+ * acknowledgment survives failed submissions (the retry must not ask the user
+ * to confirm the same values again) and resets on a successful submit or when
+ * any field is edited.
  */
 export const useSecretInputForm = ({ fields, onSubmit }: UseSecretInputFormParams) => {
   const valuesRef = useRef<Record<string, string>>({});
   const [filled, setFilled] = useState<Set<string>>(() => new Set());
   const [submitting, setSubmitting] = useState(false);
   const [proseWarning, setProseWarning] = useState<string[] | undefined>();
+  // Set only by confirmProseSubmit. Ordinary Save / Enter stays held until
+  // this is set, so the explicit "Save anyway" control is the only way a
+  // prose-looking value reaches the sink.
+  const [proseAcknowledged, setProseAcknowledged] = useState(false);
   // Bumping the key remounts the uncontrolled inputs, clearing their DOM values.
   const [formKey, setFormKey] = useState(0);
 
@@ -43,8 +49,9 @@ export const useSecretInputForm = ({ fields, onSubmit }: UseSecretInputFormParam
 
   const handleChange = useCallback((field: string, value: string) => {
     valuesRef.current[field] = value;
-    // Editing a field clears any stale prose warning from a previous submit.
+    // Editing a field resets the prose guard: the user must re-confirm.
     setProseWarning(undefined);
+    setProseAcknowledged(false);
     setFilled((prev) => {
       const hasValue = value.length > 0;
       if (prev.has(field) === hasValue) return prev;
@@ -60,11 +67,12 @@ export const useSecretInputForm = ({ fields, onSubmit }: UseSecretInputFormParam
     setSubmitting(true);
     try {
       await onSubmit(values);
-      // Success: values are consumed and the acknowledged prose warning is
-      // cleared with them. Failure keeps both for the retry.
+      // Success: values are consumed and the prose guard resets with them.
+      // Failure keeps both for the retry (no re-confirm needed).
       valuesRef.current = {};
       setFilled(new Set());
       setProseWarning(undefined);
+      setProseAcknowledged(false);
       setFormKey((key) => key + 1);
     } catch {
       // The caller surfaces the failure; the values stay for the retry.
@@ -77,22 +85,21 @@ export const useSecretInputForm = ({ fields, onSubmit }: UseSecretInputFormParam
     if (submitting) return;
 
     const proseFields = fields.filter((field) => detectProseValue(valuesRef.current[field] ?? ''));
-    if (proseFields.length > 0 && !proseWarning) {
-      // First press on prose-looking values holds the submit; the view shows
-      // a warning and a second press lets the user confirm it is really the
-      // intended value.
+    if (proseFields.length > 0 && !proseAcknowledged) {
+      // Ordinary Save / Enter always holds prose-looking values until the
+      // user activates the explicit "Save anyway" confirm control.
       setProseWarning(proseFields);
       return;
     }
 
-    // Keep the acknowledged warning through a failed submit so the retry does
-    // not make the user confirm the same values again; only a successful
-    // submit or editing a field clears it.
+    // Acknowledged (a confirmed submit failed before): retry without asking
+    // again; only a successful submit or editing a field resets the guard.
     await runSubmit();
-  }, [fields, proseWarning, runSubmit, submitting]);
+  }, [fields, proseAcknowledged, runSubmit, submitting]);
 
   const confirmProseSubmit = useCallback(async () => {
     if (submitting) return;
+    setProseAcknowledged(true);
     await runSubmit();
   }, [runSubmit, submitting]);
 
