@@ -326,4 +326,35 @@ describe('MessageModel queryAll — tool-call plugin projection', () => {
     expect(row.plugin.arguments.length).toBeLessThan(500);
     expect(row.tool_call_id).toBe('call_redact_exotic');
   });
+
+  it('redacts non-base64 percent-encoded media data URLs', async () => {
+    // The ingestion validator accepts /^data:(?:audio|image|video)\//i URLs
+    // without requiring ;base64, — an SVG payload rides in raw
+    // percent-encoded form and would serialize verbatim into the CLI dump.
+    const bigBody = '%3Csvg%20'.repeat(25_000) + '%3C/svg%3E'; // ~200KB encoded
+    await serverDB.insert(messages).values({
+      id: 'q-redact-svg',
+      userId,
+      role: 'tool',
+      content: 'svg payload',
+    });
+    await serverDB.insert(messagePlugins).values({
+      id: 'q-redact-svg',
+      apiName: 'analyzeMedia',
+      arguments: JSON.stringify({ urls: [`data:image/svg+xml,${bigBody}`] }),
+      identifier: 'lobe-agent',
+      toolCallId: 'call_redact_svg',
+      userId,
+    });
+
+    const result = await messageModel.queryAll();
+    const row = result.find((m) => m.id === 'q-redact-svg') as any;
+    const args = JSON.parse(row.plugin.arguments);
+
+    // `;base64,` is optional for non-base64 forms, so the marker drops out
+    // and the capture is followed directly by `...redacted...`:
+    expect(args.urls[0]).toBe('data:image/svg+xml...redacted...');
+    expect(row.plugin.arguments.length).toBeLessThan(500);
+    expect(row.tool_call_id).toBe('call_redact_svg');
+  });
 });

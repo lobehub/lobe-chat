@@ -72,24 +72,25 @@ const computeTopicMessageStats = (counts: number[]): TopicMessageStats => {
 };
 
 /**
- * SQL-layer redaction of inline base64 media bodies, shared by the
- * `arguments` (text) and `state` (jsonb) projections of {@link queryAll}.
- * The predicate must cover everything the ingestion side accepts —
- * builtin-tool-lobe-agent media.ts accepts `/^data:(?:audio|image|video)\//i`
- * URLs up to 2,000,000 chars — so the match is case-insensitive ('gi'), the
- * header uses the RFC 2045 token grammar (same as the file-loaders ipynb
- * scrub: any bytes except tspecials/space/controls, making `~`/`_`/`'` and
- * parameterized `;charset=utf-8` forms all match), and the body class covers
- * JSON-escaped sequences (`\n`-style) and percent escapes (`%2B`) instead of
- * a bare backslash — a bare backslash class would consume the `\` of a `\"`
- * escape, leave the quote dangling, and corrupt the JSON text (the jsonb cast
- * then fails the whole query). The mime header is kept as the capture so the
- * export stays attribution-complete without dumping megabytes of base64.
+ * SQL-layer redaction of inline media bodies, shared by the `arguments`
+ * (text) and `state` (jsonb) projections of {@link queryAll}. The predicate
+ * must cover everything the ingestion side accepts — builtin-tool-lobe-agent
+ * media.ts accepts `/^data:(?:audio|image|video)\//i` URLs up to 2,000,000
+ * chars, both `;base64,` and plain percent-encoded forms (`data:image/svg+xml,
+ * %3Csvg...`) — so the match is case-insensitive ('gi'), the header uses the
+ * RFC 2045 token grammar (same as the file-loaders ipynb scrub: any bytes
+ * except tspecials/space/controls, making `~`/`_`/`'` and `;charset=utf-8`
+ * parameter chains all match), `;base64,` is optional, and the body class
+ * covers base64, raw URL text, `%XX` percent escapes, and JSON-escaped
+ * sequences (`\n`-style) — a bare backslash class would consume the `\` of a
+ * `\"` escape, leave the quote dangling, and corrupt the JSON text (the jsonb
+ * cast then fails the whole query). The mime header is kept as the capture so
+ * the export stays attribution-complete without dumping megabytes of body.
  */
 const MIME_TOKEN = '[^\\s()<>@,;:\\\\"/\\[\\]?=]';
 const DATA_URL_REDACT_PATTERN =
-  `(data:${MIME_TOKEN}+/${MIME_TOKEN}+(?:;${MIME_TOKEN}+(?:=${MIME_TOKEN}*)?)*;base64,)` +
-  '(?:[A-Za-z0-9+/=\\s]|\\\\[nrtbf]|%[0-9a-fA-F]{2}){64,}';
+  `(data:(?:audio|image|video)/${MIME_TOKEN}+(?:;${MIME_TOKEN}+(?:=${MIME_TOKEN}*)?)*(?:;base64,)?)` +
+  "(?:[A-Za-z0-9+/=#?&:@!$'()*+,;\\-._~\\s]|\\\\[nrtbf]|%[0-9a-fA-F]{2}){64,}";
 const DATA_URL_REDACT_REPLACEMENT = '\\1...redacted...';
 
 export class MessageAnalyticsQueries extends MessageScope {
