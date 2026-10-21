@@ -73,6 +73,7 @@ export const RegionNoteRow = memo<RegionNoteRowProps>(
             autoSize={{ maxRows: 5, minRows: 1 }}
             placeholder={placeholder}
             style={{ flex: 1, fontSize }}
+            styles={fontSize ? { input: { fontSize } } : undefined}
             value={value}
             onChange={(event) => onChange(event.target.value)}
           />

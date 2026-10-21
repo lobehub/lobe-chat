@@ -7,3 +7,5 @@ import * as stylex from '@stylexjs/stylex';
 export const groupHeaderMarker = stylex.defineMarker();
 export const rowHeaderMarker = stylex.defineMarker();
 export const timelineEntryMarker = stylex.defineMarker();
+export const roundHeaderMarker = stylex.defineMarker();
+export const floatingActionHostMarker = stylex.defineMarker();

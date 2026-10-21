@@ -2,7 +2,7 @@
 
 import { isFullFrameRect } from '@lobechat/const/verify';
 import type { AcceptanceReviewAnnotation, VerifyEvidenceChapter } from '@lobechat/types';
-import { cx, useVideo, useVideoPlayer, useVideoState, Video, type VideoPlayer } from '@lobehub/ui';
+import { useVideo, useVideoPlayer, useVideoState, Video, type VideoPlayer } from '@lobehub/ui';
 import { cssVar } from '@lobehub/ui/stylex/cssVar.stylex';
 import * as stylex from '@stylexjs/stylex';
 import type { PointerEvent as ReactPointerEvent, RefObject } from 'react';
@@ -114,7 +114,7 @@ const Hint = ({ drafting, flash }: { drafting: boolean; flash: string | null }) 
       : paused
         ? t('acceptance.video.hintPaused', { frame })
         : t('acceptance.video.hintPlaying'));
-  return hint ? <div className={styles.hint}>{hint}</div> : null;
+  return hint ? <div {...stylex.props(styles.hint)}>{hint}</div> : null;
 };
 
 /**
@@ -301,7 +301,7 @@ export const VideoReviewStage = memo<VideoReviewStageProps>(
       const disputed = notes.some((note) => disputesClaim(note.disputes, claim));
       return (
         <button
-          className={styles.dispute}
+          {...stylex.props(styles.dispute)}
           disabled={disputed}
           type={'button'}
           onClick={() => {
@@ -361,7 +361,7 @@ export const VideoReviewStage = memo<VideoReviewStageProps>(
             }}
           >
             {ready && (
-              <div className={cx(styles.overlay, styles.drawable)} onPointerDown={onStageDown}>
+              <div {...stylex.props(styles.overlay, styles.drawable)} onPointerDown={onStageDown}>
                 <FrameRegions regions={regions} />
                 {draft && <DraftRegion rect={draft} />}
                 <Hint drafting={Boolean(draft)} flash={flash} />

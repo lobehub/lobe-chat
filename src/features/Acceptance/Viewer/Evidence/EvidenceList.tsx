@@ -23,8 +23,9 @@ import {
 import type { AcceptanceEvidence } from '../Checks/types';
 import { AnnotatedImage } from '../Evidence/Annotation';
 import { ScreenshotTiles } from '../Evidence/ScreenshotTiles';
+import { floatingActionHostMarker } from '../markers.stylex';
 import { IMAGE_EVIDENCE, imageRatio, isAnnotatable, isVisual } from './evidence';
-import FloatingCommentAction, { FLOATING_ACTION_HOST } from './FloatingCommentAction';
+import FloatingCommentAction from './FloatingCommentAction';
 import type { EvidenceOverlayMap } from './overlay';
 import { styles } from './styles';
 import { VideoEvidenceDiscussion } from './Video/VideoEvidenceDiscussion';
@@ -64,7 +65,7 @@ const comparisonContent = (item: AcceptanceEvidence, action?: ReactNode, video?:
   );
   if (!action) return image;
   return (
-    <div style={{ position: 'relative' }} {...{ [FLOATING_ACTION_HOST]: '' }}>
+    <div {...sx([floatingActionHostMarker], undefined, { position: 'relative' })}>
       {image}
       {action}
     </div>
@@ -198,8 +199,10 @@ export const EvidenceList = memo<{
           return (
             <div
               key={item.id}
-              style={{ position: 'relative', width: '100%' }}
-              {...(action ? { [FLOATING_ACTION_HOST]: '' } : {})}
+              {...sx([action && floatingActionHostMarker], undefined, {
+                position: 'relative',
+                width: '100%',
+              })}
             >
               <button
                 type={'button'}
@@ -281,8 +284,11 @@ export const EvidenceList = memo<{
             <Flexbox
               gap={4}
               key={item.id}
-              style={{ maxWidth: '100%', position: 'relative', width: 'fit-content' }}
-              {...(action ? { [FLOATING_ACTION_HOST]: '' } : {})}
+              {...sx([action && floatingActionHostMarker], undefined, {
+                maxWidth: '100%',
+                position: 'relative',
+                width: 'fit-content',
+              })}
             >
               {action}
               {overlay?.length ? (
