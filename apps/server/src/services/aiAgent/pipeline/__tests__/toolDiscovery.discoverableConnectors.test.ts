@@ -60,6 +60,7 @@ const connectorTools = [
 ];
 
 interface RunOptions {
+  agentId?: string;
   installed?: boolean;
   /** The agent's own `plugins` config — i.e. what the user pinned. */
   plugins?: string[];
@@ -77,6 +78,7 @@ const connectorModel = {
 const run = (options: RunOptions = {}) => {
   const connector = {
     ...customConnector,
+    agentId: options.agentId ?? null,
     sourceType: options.sourceType ?? 'custom',
     status: 'connected',
   };
@@ -171,6 +173,38 @@ describe('discoverTools — unpinned custom MCP connectors', () => {
       expect(restored.enabledToolIds).not.toContain(YINGMI);
     },
   );
+
+  it.each([
+    { label: 'auto', options: {} },
+    { label: 'pinned', options: { plugins: [YINGMI] } },
+    { label: 'mentioned', options: { selectedToolIds: [YINGMI] } },
+    {
+      label: 'share granted',
+      options: {
+        shareGate: {
+          agentId: 'agent-1',
+          shareConfig: { toolGrants: [{ identifier: YINGMI }] },
+          shareId: 'share-1',
+          visitorUserId: 'visitor-1',
+        },
+      },
+    },
+  ])('preserves an independent agent copy after global uninstall: $label', async ({ options }) => {
+    const result = await run({
+      ...options,
+      agentId: 'agent-1',
+      sourceType: 'marketplace',
+    });
+    expect(result.toolManifestMap[YINGMI]).toBeDefined();
+    const activated = result.toolsEngine!.generateToolsDetailed({
+      context: { isExplicitActivation: true },
+      model: 'test-model',
+      provider: 'test-provider',
+      skipDefaultTools: true,
+      toolIds: [YINGMI],
+    });
+    expect(activated.enabledToolIds).toContain(YINGMI);
+  });
 
   it('keeps a completed marketplace install discoverable and explicitly activatable', async () => {
     const result = await run({ installed: true, sourceType: 'marketplace' });

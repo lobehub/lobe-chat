@@ -112,13 +112,14 @@ const refreshConnectorTokens = async (
   );
 };
 
-/** Marketplace OAuth may create a connected row before installation completes. */
+/** Base marketplace OAuth rows require installation; agent-owned copies are independent. */
 const filterInstalledMarketplaceConnectors = (
   connectors: DecryptedConnector[],
   installedIds: Set<string>,
 ) =>
   connectors.filter(
     (connector) =>
+      !!connector.agentId ||
       connector.sourceType !== 'marketplace' ||
       !connector.mcpServerUrl ||
       installedIds.has(connector.identifier),
