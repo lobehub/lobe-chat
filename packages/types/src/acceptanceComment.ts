@@ -1,3 +1,5 @@
+import { z } from 'zod';
+
 import type { ReviewAnchor } from './acceptanceReview';
 import type { DocumentCommentJson } from './documentComment';
 import type { AcceptanceAttachment, AcceptanceReviewAnnotation } from './verify';
@@ -6,7 +8,7 @@ import type { AcceptanceAttachment, AcceptanceReviewAnnotation } from './verify'
  * Where a discussion thread hangs on the acceptance page.
  *
  * - `acceptance`: the delivery as a whole (the global discussion under the checklist).
- * - `evidence`: a region circled on one evidence image of one check.
+ * - `evidence`: a region on one image or video frame of one check.
  */
 export type AcceptanceCommentAnchorType = 'acceptance' | 'evidence';
 
@@ -35,6 +37,22 @@ export interface AcceptanceCommentAttachmentRef {
 }
 
 export type AcceptanceCommentSource = ReviewAnchor;
+
+/** A video comment is anchored to a single frame. */
+export const acceptanceCommentTimeSchema = z
+  .object({
+    start: z.number().finite().nonnegative(),
+  })
+  .strict();
+
+export type AcceptanceCommentTime = z.infer<typeof acceptanceCommentTimeSchema>;
+
+/** Server-owned facts; other comment producers may retain their own keys. */
+export interface AcceptanceCommentMetadata extends Record<string, unknown> {
+  evidenceAnchor?: {
+    time: AcceptanceCommentTime;
+  };
+}
 
 /** One emoji on one comment, already tallied for display. */
 export interface AcceptanceCommentReaction {
@@ -72,6 +90,8 @@ export interface AcceptanceCommentAnchor {
   evidenceId?: string | null;
   /** Normalized (0–1) region on the evidence image. */
   rect?: AcceptanceReviewAnnotation['rect'] | null;
+  /** Video time in seconds, pinned to this evidence version. */
+  time?: AcceptanceCommentTime | null;
 }
 
 export interface AcceptanceCommentItem extends AcceptanceCommentAnchor {
@@ -143,6 +163,7 @@ export interface CreateAcceptanceCommentInput {
     checkItemId: string;
     evidenceId: string;
     rect: AcceptanceReviewAnnotation['rect'];
+    time?: AcceptanceCommentTime;
   };
   /** Files to hang on the remark, already uploaded. */
   attachments?: AcceptanceCommentAttachmentRef[];

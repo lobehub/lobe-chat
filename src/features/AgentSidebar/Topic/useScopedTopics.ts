@@ -10,7 +10,7 @@ import {
   useProjectDirectoryStore,
   useProjectTopics,
 } from '@/store/projectWorkingDirectory';
-import type { ChatTopic, TopicGroupMode, TopicSortBy } from '@/types/topic';
+import type { ChatTopic, GroupedTopic, TopicGroupMode, TopicSortBy } from '@/types/topic';
 
 import { useTopicListReveal, useTopicListScope } from './TopicListScope';
 
@@ -31,6 +31,18 @@ export const useScopedTopics = () => {
     [rows],
   );
   return { scope, topics, refresh: request.revalidate };
+};
+
+/**
+ * A project's main agent leads the agent buckets, wherever its latest topic
+ * falls; favorites keep the very top, as in every other mode.
+ */
+export const pinCoordinatorGroup = (groups: GroupedTopic[], coordinatorAgentId?: string) => {
+  const index = groups.findIndex((group) => group.id === `agent:${coordinatorAgentId}`);
+  const leadIndex = groups[0]?.id === 'favorite' ? 1 : 0;
+  if (!coordinatorAgentId || index <= leadIndex) return groups;
+  const rest = groups.filter((_, i) => i !== index);
+  return [...rest.slice(0, leadIndex), groups[index], ...rest.slice(leadIndex)];
 };
 
 export const useScopedTopic = (id?: string) =>
@@ -62,10 +74,11 @@ export const useScopedSidebarTopics = (
       list.find((topic) => topic.id === topicId),
     );
   }, [topics, topicId, visibleLimit, sortBy, includeCompleted]);
-  const groups = useMemo(
-    () => groupSidebarTopics(visible, groupMode, sortBy, running, directories),
-    [visible, groupMode, sortBy, running, directories],
-  );
+  const coordinatorAgentId = scope?.coordinatorAgentId;
+  const groups = useMemo(() => {
+    const grouped = groupSidebarTopics(visible, groupMode, sortBy, running, directories);
+    return groupMode === 'byAgent' ? pinCoordinatorGroup(grouped, coordinatorAgentId) : grouped;
+  }, [visible, groupMode, sortBy, running, directories, coordinatorAgentId]);
   const hasMore =
     (topics ?? []).filter(
       (topic) =>

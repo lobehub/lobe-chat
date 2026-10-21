@@ -2,6 +2,7 @@ import react from '@vitejs/plugin-react';
 import { codeInspectorPlugin } from 'code-inspector-plugin';
 import type { ModulePreloadOptions, Plugin } from 'vite';
 
+import { canvasRuntime } from './canvasRuntime';
 import { viteCompletionSounds } from './completionSounds';
 import { lobeIconImports } from './lobeIconImports';
 import { lobeUiImports } from './lobeUiImports';
@@ -490,6 +491,7 @@ interface SharedRendererOptions {
 
 export function sharedRendererPlugins(options: SharedRendererOptions) {
   return [
+    canvasRuntime(),
     viteCompletionSounds(),
     viteMarkdownImport(),
     viteNodeModuleStub(),

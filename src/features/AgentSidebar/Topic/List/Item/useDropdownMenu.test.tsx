@@ -35,7 +35,10 @@ const permissionMock = vi.hoisted(() => ({
   edit_own_content: true,
 }));
 const versionMock = vi.hoisted(() => ({ isDesktop: false }));
-const workspaceMock = vi.hoisted(() => ({ id: null as string | null }));
+const workspaceMock = vi.hoisted(() => ({
+  id: null as string | null,
+  slug: null as string | null,
+}));
 
 vi.mock('antd', async (importOriginal) => ({
   ...(await importOriginal<object>()),
@@ -53,6 +56,10 @@ vi.mock('antd', async (importOriginal) => ({
 
 vi.mock('@/business/client/hooks/useActiveWorkspaceId', () => ({
   useActiveWorkspaceId: () => workspaceMock.id,
+}));
+
+vi.mock('@/business/client/hooks/useActiveWorkspaceSlug', () => ({
+  useActiveWorkspaceSlug: () => workspaceMock.slug,
 }));
 
 const labState = vi.hoisted(() => ({ enableTopicBugReport: false }));
@@ -148,6 +155,7 @@ describe('useTopicItemDropdownMenu', () => {
     permissionMock.edit_own_content = true;
     versionMock.isDesktop = false;
     workspaceMock.id = null;
+    workspaceMock.slug = null;
     labState.enableTopicBugReport = false;
   });
 
@@ -233,6 +241,19 @@ describe('useTopicItemDropdownMenu', () => {
     if (!item || !('onClick' in item)) throw new Error('Missing copy link');
     await item.onClick?.({} as never);
     expect(writeText).toHaveBeenCalledWith('https://example.com/agent/agent-other/topic-1');
+  });
+
+  it('keeps the active workspace prefix in the copied link', async () => {
+    workspaceMock.slug = 'lobehub';
+    const writeText = vi.fn();
+    vi.spyOn(navigator, 'clipboard', 'get').mockReturnValue({ writeText } as unknown as Clipboard);
+    const { result } = renderHook(() =>
+      useTopicItemDropdownMenu({ id: 'topic-1', title: 'Topic 1' }),
+    );
+    const item = getMenuItem(result.current.dropdownMenu(), 'copyLink');
+    if (!item || !('onClick' in item)) throw new Error('Missing copy link');
+    await item.onClick?.({} as never);
+    expect(writeText).toHaveBeenCalledWith('https://example.com/lobehub/agent/agent-1/topic-1');
   });
 
   it.each(['favorite', 'markCompleted'])(

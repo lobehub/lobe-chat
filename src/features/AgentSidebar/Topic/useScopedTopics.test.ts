@@ -4,7 +4,7 @@ import { createElement, type PropsWithChildren, useState } from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { TopicListRevealContext, TopicListScopeContext } from './TopicListScope';
-import { useScopedSidebarTopics } from './useScopedTopics';
+import { pinCoordinatorGroup, useScopedSidebarTopics } from './useScopedTopics';
 
 const fixture = vi.hoisted(() => ({ topicId: undefined as string | undefined }));
 const updateSystemStatus = vi.hoisted(() => vi.fn());
@@ -153,5 +153,42 @@ describe('Project topics use the canonical Agent sidebar rules', () => {
     expect(result.current.list.hasMore).toBe(false);
     expect(result.current.toggle.groups).toEqual(result.current.list.groups);
     expect(updateSystemStatus).not.toHaveBeenCalled();
+  });
+
+  it("puts the project's main agent first among the agent groups, below favorites", () => {
+    const coordinatorWrapper = ({ children }: PropsWithChildren) =>
+      createElement(
+        TopicListScopeContext,
+        { value: { coordinatorAgentId: 'agent-b', projectId: 'project-a' } },
+        createElement(RevealHost, null, children),
+      );
+    const { result } = renderHook(() => useScopedSidebarTopics(20, 'updatedAt', 'byAgent', false), {
+      wrapper: coordinatorWrapper,
+    });
+    // agent-a holds the most recently updated topic, so recency alone would lead with it.
+    expect(result.current.groups.map((group) => group.id)).toEqual([
+      'favorite',
+      'agent:agent-b',
+      'agent:agent-a',
+    ]);
+  });
+});
+
+describe('pinCoordinatorGroup', () => {
+  const group = (id: string) => ({ children: [], id, title: id });
+
+  it('leads with the main agent when there are no favorites', () => {
+    expect(
+      pinCoordinatorGroup([group('agent:a'), group('agent:b'), group('no-agent')], 'b').map(
+        (g) => g.id,
+      ),
+    ).toEqual(['agent:b', 'agent:a', 'no-agent']);
+  });
+
+  it('keeps the order when the main agent already leads or has no topics', () => {
+    const groups = [group('favorite'), group('agent:b'), group('agent:a')];
+    expect(pinCoordinatorGroup(groups, 'b')).toBe(groups);
+    expect(pinCoordinatorGroup(groups, 'missing')).toBe(groups);
+    expect(pinCoordinatorGroup(groups, undefined)).toBe(groups);
   });
 });

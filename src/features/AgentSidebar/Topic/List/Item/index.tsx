@@ -47,6 +47,7 @@ import { useChatStore } from '@/store/chat';
 import { operationSelectors } from '@/store/chat/selectors';
 import { messageMapKey } from '@/store/chat/utils/messageMapKey';
 
+import { markSidebarTopicActivation } from '../../hooks/useScrollActiveTopicIntoView';
 import { useTopicNavigation } from '../../hooks/useTopicNavigation';
 import ThreadList from '../../TopicListContent/ThreadList';
 import { useTopicListScope } from '../../TopicListScope';
@@ -327,6 +328,7 @@ const TopicItemRow = memo<TopicItemRowProps>(
     const handleClick = useCallback(
       (event?: MouseEvent) => {
         if (event && event.detail > 1) return;
+        if (id) markSidebarTopicActivation(id);
         if (isDesktop && id) recordTopicClickOrigin(id);
         void navRef.current.navigateToTopic(id);
       },
@@ -335,6 +337,7 @@ const TopicItemRow = memo<TopicItemRowProps>(
 
     const handleDoubleClick = useCallback(async () => {
       if (!id || !activeAgentId || !isDesktop) return;
+      markSidebarTopicActivation(id);
       if (scope && href) {
         openTopicInNewTab(id, href);
         void navRef.current.navigateToTopic(id);

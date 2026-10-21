@@ -1,5 +1,6 @@
 'use client';
 
+import { isDesktop } from '@lobechat/const';
 import { currentUtilization, isWeeklyAllLimit } from '@lobechat/heterogeneous-agents/quota';
 import { createStaticStyles, cssVar, DropdownMenu, Flexbox, Icon } from '@lobehub/ui';
 import {
@@ -11,17 +12,19 @@ import {
   RadioGroup,
   Switch,
   Text,
+  toast,
 } from '@lobehub/ui';
 import { t as i18nT } from 'i18next';
 import {
   CheckIcon,
   MoreHorizontalIcon,
   PencilIcon,
+  PlusIcon,
   Trash2Icon,
   XIcon,
   ZapIcon,
 } from 'lucide-react';
-import { memo, type MouseEvent, useCallback, useMemo, useState } from 'react';
+import { memo, type MouseEvent, useCallback, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { cacheScope } from '@/libs/replica';
@@ -124,6 +127,9 @@ const QuotaAccountManager = memo<{ agentId: string }>(({ agentId }) => {
     renameQuotaAccount,
     switchQuotaAccount,
     unbindQuotaAccount,
+    useFetchClaudeLocalAccounts,
+    loginClaudeAccount,
+    cancelClaudeAccountLogin,
   ] = useAgentQuotaStore((s) => [
     s.useFetchQuotaAccounts,
     s.useFetchQuotaBindings,
@@ -131,17 +137,36 @@ const QuotaAccountManager = memo<{ agentId: string }>(({ agentId }) => {
     s.renameQuotaAccount,
     s.switchQuotaAccount,
     s.unbindQuotaAccount,
+    s.useFetchClaudeLocalAccounts,
+    s.loginClaudeAccount,
+    s.cancelClaudeAccountLogin,
   ]);
   const scope = cacheScope.use();
   const { error: accountsError } = useFetchQuotaAccounts();
   useFetchQuotaBindings(agentId);
+  // Only the desktop runs Claude Code locally, so only it has logins to show.
+  useFetchClaudeLocalAccounts(isDesktop);
+  const localAccounts = useAgentQuotaStore((s) => s.claudeLocalAccounts);
+  const loginPending = useAgentQuotaStore((s) => s.claudeLoginPending);
   // A hydrated empty list may be an outdated snapshot: only the server's answer
   // (or a failed first read) settles "no accounts yet".
   const accountsConfirmed = useAgentQuotaStore(agentQuotaSelectors.isAccountsConfirmed(scope));
   // The replica paints the last-known pool on open; the server confirms behind it.
-  const accounts = useAgentQuotaStore(agentQuotaSelectors.accounts) ?? EMPTY_ACCOUNTS;
+  const allAccounts = useAgentQuotaStore(agentQuotaSelectors.accounts) ?? EMPTY_ACCOUNTS;
+  // The pool holds every coding agent's accounts; this manager (and the run
+  // routing behind it) only speaks for Claude Code.
+  const accounts = useMemo(
+    () => allAccounts.filter((a) => a.provider === 'claude-code'),
+    [allAccounts],
+  );
   const loadedBindings = useAgentQuotaStore(agentQuotaSelectors.bindings(agentId));
-  const bindings = loadedBindings ?? EMPTY_BINDINGS;
+  // Bindings are provider-blind; another coding agent's pin is not a Claude
+  // choice (Claude routing skips it), so this manager neither shows nor
+  // touches bindings of accounts it does not list.
+  const bindings = useMemo(() => {
+    const claudeIds = new Set(accounts.map((a) => a.id));
+    return (loadedBindings ?? EMPTY_BINDINGS).filter((b) => claudeIds.has(b.accountId));
+  }, [accounts, loadedBindings]);
   // Until this agent's bindings are on screen, every row would read as "off"
   // and Auto as routing to nobody: keep the mode and per-account controls
   // disabled and show no routing hint instead of acting on that guess.
@@ -187,6 +212,17 @@ const QuotaAccountManager = memo<{ agentId: string }>(({ agentId }) => {
     [roleOf],
   );
 
+  /**
+   * Whether a run on this desktop can use the account. Unknown (web, or the
+   * logins not listed yet) counts as yes, so nothing is gated on a guess.
+   */
+  const signedInHere = useCallback(
+    (account: Account) =>
+      !localAccounts ||
+      localAccounts.some((l) => l.identity.externalAccountId === account.externalAccountId),
+    [localAccounts],
+  );
+
   const pinnedId = bindings.find((b) => b.role === 'pinned')?.accountId;
   const current = pinnedId ?? AUTO;
   const selected = pending ?? current;
@@ -205,10 +241,11 @@ const QuotaAccountManager = memo<{ agentId: string }>(({ agentId }) => {
   // Preview which account Auto would route to (most weekly headroom in the pool).
   const routeId = useMemo(() => {
     if (selected !== AUTO) return null;
-    const pool = accounts.filter((a) => inRotation(a.id));
+    // Runtime routing only balances across logins this device holds.
+    const pool = accounts.filter((a) => inRotation(a.id) && signedInHere(a));
     if (pool.length === 0) return null;
     return [...pool].sort((a, b) => (weeklyById[b.id] ?? 100) - (weeklyById[a.id] ?? 100))[0].id;
-  }, [selected, accounts, inRotation, weeklyById]);
+  }, [selected, accounts, inRotation, signedInHere, weeklyById]);
   const routeAccount = accounts.find((a) => a.id === routeId);
 
   const applySelection = useCallback(
@@ -258,6 +295,35 @@ const QuotaAccountManager = memo<{ agentId: string }>(({ agentId }) => {
     [editLabel, renameQuotaAccount, run],
   );
 
+  // A cancelled sign-in rejects too, but is not a failure worth a toast.
+  const loginCancelled = useRef(false);
+  const signIn = useCallback(
+    async (email?: string) => {
+      loginCancelled.current = false;
+      try {
+        const local = await loginClaudeAccount(email);
+        const account = agentQuotaSelectors
+          .accounts(useAgentQuotaStore.getState())
+          ?.find((a) => a.externalAccountId === local.identity.externalAccountId);
+        // A new login joins this agent's rotation, ready to be picked.
+        if (account && !bindingOf(account.id))
+          await bindQuotaAccount(agentId, account.id, 'pool').catch(() => {});
+        toast.success(
+          t('heteroAgent.claudeQuota.manage.loginSuccess', {
+            account: local.identity.email || local.identity.externalAccountId,
+          }),
+        );
+      } catch {
+        if (!loginCancelled.current) toast.error(t('heteroAgent.claudeQuota.manage.loginFailed'));
+      }
+    },
+    [agentId, bindQuotaAccount, bindingOf, loginClaudeAccount, t],
+  );
+  const cancelSignIn = useCallback(() => {
+    loginCancelled.current = true;
+    void cancelClaudeAccountLogin();
+  }, [cancelClaudeAccountLogin]);
+
   const preventRadioSelection = useCallback((event: MouseEvent) => {
     event.preventDefault();
     event.stopPropagation();
@@ -299,6 +365,7 @@ const QuotaAccountManager = memo<{ agentId: string }>(({ agentId }) => {
           },
           ...accounts.map((a) => {
             const rotate = inRotation(a.id);
+            const runnable = signedInHere(a);
             const weekly = weeklyById[a.id];
             const isEditing = editingId === a.id;
             const menuItems = [
@@ -320,7 +387,7 @@ const QuotaAccountManager = memo<{ agentId: string }>(({ agentId }) => {
             ];
 
             return {
-              disabled: busy || !canEditBindings || !rotate || isEditing,
+              disabled: busy || !canEditBindings || !rotate || !runnable || isEditing,
               label: (
                 <Flexbox
                   horizontal
@@ -365,7 +432,12 @@ const QuotaAccountManager = memo<{ agentId: string }>(({ agentId }) => {
                         </Flexbox>
                         {/* Only a real quota reading gets a subline; a disabled row is
                             conveyed by the dimmed state, and no-data shows nothing. */}
-                        {rotate && weekly != null && (
+                        {!runnable && (
+                          <Text style={{ fontSize: 12 }} type={'secondary'}>
+                            {t('heteroAgent.claudeQuota.manage.notSignedIn')}
+                          </Text>
+                        )}
+                        {runnable && rotate && weekly != null && (
                           <Text style={{ fontSize: 12 }} type={'secondary'}>
                             {weekly === 0
                               ? t('heteroAgent.claudeQuota.manage.exhausted')
@@ -375,6 +447,18 @@ const QuotaAccountManager = memo<{ agentId: string }>(({ agentId }) => {
                           </Text>
                         )}
                       </Flexbox>
+                      {!runnable && (
+                        <span className={styles.interactive} onClick={preventRadioSelection}>
+                          <Button
+                            disabled={loginPending}
+                            size={'small'}
+                            style={{ flex: 'none' }}
+                            onClick={() => void signIn(a.email ?? undefined)}
+                          >
+                            {t('heteroAgent.claudeQuota.manage.signIn')}
+                          </Button>
+                        </span>
+                      )}
                       <span className={styles.interactive} onClick={preventRadioSelection}>
                         <Switch
                           checked={rotate}
@@ -415,6 +499,34 @@ const QuotaAccountManager = memo<{ agentId: string }>(({ agentId }) => {
           <Button loading={busy} type={'primary'} onClick={() => void applySelection()}>
             {t('heteroAgent.claudeQuota.manage.confirmSwitch')}
           </Button>
+        </Flexbox>
+      ) : isDesktop ? (
+        <Flexbox
+          horizontal
+          align={'center'}
+          className={styles.footer}
+          gap={8}
+          justify={'space-between'}
+        >
+          <Text className={styles.hint}>
+            {loginPending
+              ? t('heteroAgent.claudeQuota.manage.loginWaiting')
+              : t('heteroAgent.claudeQuota.manage.addHintDesktop')}
+          </Text>
+          {loginPending ? (
+            <Button size={'small'} style={{ flex: 'none' }} onClick={cancelSignIn}>
+              {i18nT('cancel', { ns: 'common' })}
+            </Button>
+          ) : (
+            <Button
+              icon={PlusIcon}
+              size={'small'}
+              style={{ flex: 'none' }}
+              onClick={() => void signIn()}
+            >
+              {t('heteroAgent.claudeQuota.manage.add')}
+            </Button>
+          )}
         </Flexbox>
       ) : (
         <Text className={styles.hint} style={{ marginBlockStart: 4 }}>
