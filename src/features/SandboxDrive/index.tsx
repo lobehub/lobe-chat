@@ -1,7 +1,7 @@
 'use client';
 
 import type { SandboxDrive } from '@lobechat/builtin-tool-cloud-sandbox';
-import { Center, Flexbox, Icon, Spin, Tabs } from '@lobehub/ui';
+import { Button, Center, Flexbox, Icon, Spin, Tabs, Text } from '@lobehub/ui';
 import { LockIcon, UsersIcon } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -26,12 +26,23 @@ import { useDriveTab } from './useDriveTab';
  * drive lives in `?drive=public|personal`, so it survives a reload and links.
  */
 const DriveSettings = memo(() => {
-  const { t } = useTranslation('setting');
+  const { t } = useTranslation(['setting', 'common']);
   const workspaceId = useActiveWorkspaceId();
   const isWorkspace = !!workspaceId;
-  const { entitled } = useSandboxDriveEntitlement();
+  const { entitled, error, retry } = useSandboxDriveEntitlement();
   const drives: SandboxDrive[] = isWorkspace ? ['public', 'personal'] : ['personal'];
   const [active, setActive] = useDriveTab(drives);
+
+  // Whether the plan has a drive could not be read: say so and offer it
+  // again, rather than a spinner that never resolves.
+  if (entitled === undefined && error) {
+    return (
+      <Center gap={12} style={{ minHeight: 320 }}>
+        <Text type={'secondary'}>{t('drive.loadFailed')}</Text>
+        <Button onClick={retry}>{t('retry', { ns: 'common' })}</Button>
+      </Center>
+    );
+  }
 
   if (entitled === undefined) {
     return (

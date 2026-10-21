@@ -5,9 +5,12 @@ import { driveFolderCacheSize, driveFolderExists, forgetDriveFolders } from '../
 const listFiles = vi.fn();
 
 vi.mock('@/server/services/market', () => ({
-  MarketService: vi.fn().mockImplementation(() => ({
-    getSandboxStorageClient: () => ({ listFiles }),
-  })),
+  // `function`, not an arrow: the service is constructed with `new`.
+  MarketService: vi.fn().mockImplementation(function () {
+    return {
+      getSandboxStorageClient: () => ({ listFiles }),
+    };
+  }),
 }));
 
 const claim = { key: 'ws-public-ws1', quotaBytes: 1024 };

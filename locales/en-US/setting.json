@@ -578,6 +578,7 @@
   "drive.explorer.readOnly": "Environment directories are read-only",
   "drive.explorer.readOnlyHint": "Only its own sandbox sessions write to an environment directory, so you can browse it here but not change it.",
   "drive.explorer.rename": "Rename",
+  "drive.loadFailed": "Could not load storage. Check your connection and try again.",
   "drive.retained.delete": "Delete",
   "drive.retained.deleteConfirm.desc": "Everything on it is deleted and cannot be recovered.",
   "drive.retained.deleteConfirm.title": "Delete {{name}}'s personal drive?",

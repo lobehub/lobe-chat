@@ -6,9 +6,12 @@ import { readDriveUsage } from '../driveUsage';
 const memberGetStorage = vi.fn();
 
 vi.mock('@/server/services/market', () => ({
-  MarketService: vi.fn().mockImplementation(() => ({
-    getSandboxStorageClient: () => ({ getStorage: memberGetStorage }),
-  })),
+  // `function`, not an arrow: the service is constructed with `new`.
+  MarketService: vi.fn().mockImplementation(function () {
+    return {
+      getSandboxStorageClient: () => ({ getStorage: memberGetStorage }),
+    };
+  }),
 }));
 
 const WORKSPACE = 'ws1';

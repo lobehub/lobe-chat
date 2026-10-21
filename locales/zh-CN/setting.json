@@ -578,6 +578,7 @@
   "drive.explorer.readOnly": "环境目录只读",
   "drive.explorer.readOnlyHint": "环境目录只由它自己的沙箱会话写入，这里可以浏览，但不能修改。",
   "drive.explorer.rename": "重命名",
+  "drive.loadFailed": "无法加载存储，请检查网络后重试。",
   "drive.retained.delete": "删除",
   "drive.retained.deleteConfirm.desc": "网盘里的所有内容都会被删除，无法恢复。",
   "drive.retained.deleteConfirm.title": "删除 {{name}} 的个人网盘？",

@@ -4554,6 +4554,7 @@ When I am ___, I need ___
   'drive.explorer.emptyRoot.personal':
     'Your drive is empty. Create a folder, then pick it as a conversation’s working folder.',
   'drive.explorer.loadFailed': 'Could not load this folder.',
+  'drive.loadFailed': 'Could not load storage. Check your connection and try again.',
   'environments.instances.needsDrive':
     'Copies are folders on a drive, and this account has no drive yet.',
   'environments.instances.openDriveSettings': 'Go to Storage settings',
