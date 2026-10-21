@@ -460,6 +460,11 @@ export const TRPC_BLOCKED_PATH_PREFIXES: string[] = [
   // repositories and branches) through their OAuth grant — connector data
   // outside the agent domain the rest of `environment` belongs to
   'environment.listGithub',
+  // publishing decides who else can reach what an environment's directories
+  // captured on the drive (a private one's left on the public drive stops
+  // being hidden); that is drive state, which stays behind `sandboxStorage`
+  // and so out of a restricted key's reach
+  'environment.setEnvironmentVisibility',
 ];
 
 export type TrpcScopeDecision = { scopes: ApiKeyScope[] } | { open: true } | { blocked: true };

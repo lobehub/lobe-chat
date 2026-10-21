@@ -189,6 +189,13 @@ describe('requiredApiKeyScopeForTrpc', () => {
     expect(requiredApiKeyScopeForTrpc('environment.listGithubBranches', 'query')).toEqual({
       blocked: true,
     });
+    // publishing exposes what an environment's directories captured on the drive
+    expect(requiredApiKeyScopeForTrpc('environment.setEnvironmentVisibility', 'mutation')).toEqual({
+      blocked: true,
+    });
+    expect(requiredApiKeyScopeForTrpc('environment.updateEnvironment', 'mutation')).toEqual({
+      scopes: ['agent:write'],
+    });
     expect(requiredApiKeyScopeForTrpc('environment.listEnvironments', 'query')).toEqual({
       scopes: ['agent:read'],
     });

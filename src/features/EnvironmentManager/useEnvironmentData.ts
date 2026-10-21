@@ -419,7 +419,9 @@ export const useEnvironmentActions = () => {
 
     setEnvironmentVisibility: async (params: { id: string; visibility: EnvironmentVisibility }) => {
       await environmentService.setEnvironmentVisibility(params);
-      await refreshEnvironments();
+      // Which drive a directory belongs on follows the visibility, so the
+      // instance rows' `rebuildRequired` (and the notices built on it) change too.
+      await Promise.all([refreshEnvironments(), refreshInstances()]);
     },
 
     removeEnvironment: async (id: string) => {
