@@ -57,6 +57,7 @@ class ProjectService {
   create = async (
     params: {
       avatar?: string;
+      coordinatorAgentId?: string;
       description?: string;
       identifier: string;
       name: string;

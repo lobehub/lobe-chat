@@ -11,7 +11,12 @@ import {
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { getActiveWorkspaceId } from '@/business/client/hooks/useActiveWorkspaceId';
 import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwareNavigate';
+import { useAgentStore } from '@/store/agent';
+import { builtinAgentSelectors } from '@/store/agent/selectors';
+import { useHomeStore } from '@/store/home';
+import { homeAgentListSelectors } from '@/store/home/selectors';
 import { type ProjectListItem, useProjectStore } from '@/store/project';
 
 import {
@@ -20,6 +25,12 @@ import {
   isProjectIdentifierValid,
   isProjectSlugValid,
 } from './createProjectForm';
+import MainAgentField from './MainAgentField';
+import {
+  readRememberedMainAgent,
+  resolveDefaultMainAgent,
+  writeRememberedMainAgent,
+} from './mainAgentStorage';
 
 export interface CreateProjectOptions {
   /**
@@ -34,6 +45,8 @@ interface CreateProjectFormState {
   identifier: string;
   identifierEdited: boolean;
   loading: boolean;
+  /** Explicit pick in this modal; otherwise the remembered agent or LobeAI. */
+  mainAgentId?: string;
   name: string;
   slug: string;
   slugEdited: boolean;
@@ -58,6 +71,17 @@ const CreateProjectContent = memo<CreateProjectOptions>(({ onCreated }) => {
     slug: '',
     slugEdited: false,
   });
+  const inboxAgentId = useAgentStore(builtinAgentSelectors.inboxAgentId);
+  const [remembered] = useState(() => readRememberedMainAgent(getActiveWorkspaceId()));
+  const defaultMainAgentId = useHomeStore((s) =>
+    resolveDefaultMainAgent({
+      agentExists: (id) => !!homeAgentListSelectors.getAgentById(id)(s),
+      inboxAgentId,
+      listLoaded: homeAgentListSelectors.isAgentListInit(s),
+      remembered,
+    }),
+  );
+  const mainAgentId = form.mainAgentId ?? defaultMainAgentId;
   const createInput = getCreateProjectInput(form);
   const identifierValid = isProjectIdentifierValid(form.identifier);
   const identifierInvalid =
@@ -82,7 +106,8 @@ const CreateProjectContent = memo<CreateProjectOptions>(({ onCreated }) => {
     if (!createInput || form.loading) return;
     updateForm({ loading: true });
     try {
-      const project = await createProject(createInput);
+      const project = await createProject({ ...createInput, coordinatorAgentId: mainAgentId });
+      if (mainAgentId) writeRememberedMainAgent(mainAgentId, getActiveWorkspaceId());
       close();
       if (onCreated) onCreated(project);
       else navigate(`/project/${project.slug ?? project.id}`);
@@ -146,6 +171,19 @@ const CreateProjectContent = memo<CreateProjectOptions>(({ onCreated }) => {
           />
           <Text fontSize={12} type={slugValid ? 'secondary' : 'danger'}>
             {t(slugValid ? 'create.slugDescription' : 'create.slugInvalid')}
+          </Text>
+        </Flexbox>
+        <Flexbox gap={6}>
+          <Text fontSize={13} weight={500}>
+            {t('create.mainAgentLabel')}
+          </Text>
+          <MainAgentField
+            agentId={mainAgentId}
+            disabled={form.loading}
+            onChange={(id) => updateForm({ mainAgentId: id })}
+          />
+          <Text fontSize={12} type="secondary">
+            {t('create.mainAgentDescription')}
           </Text>
         </Flexbox>
       </Flexbox>

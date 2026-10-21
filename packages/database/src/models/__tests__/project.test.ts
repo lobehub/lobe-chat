@@ -9,6 +9,7 @@ import {
   agents,
   environments,
   knowledgeBases,
+  projectAgents,
   projectCompletionReviews,
   projectEnvironments,
   projects,
@@ -230,6 +231,37 @@ describe('ProjectModel', () => {
     expect(await model.isDedicatedCoordinator(user.id, { exceptProjectId: project.id })).toBe(
       false,
     );
+  });
+
+  it('creates a project led by a picked agent without provisioning a coordinator', async () => {
+    const picked = await new AgentModel(serverDB, userId).create({ title: 'Planner' });
+    const agentCount = (await serverDB.select().from(agents).where(eq(agents.userId, userId)))
+      .length;
+
+    const project = await createProject(model, { coordinatorAgentId: picked.id, name: 'Picked' });
+
+    expect(project.coordinatorAgentId).toBe(picked.id);
+    expect(await serverDB.select().from(agents).where(eq(agents.userId, userId))).toHaveLength(
+      agentCount,
+    );
+    expect(
+      await serverDB
+        .select({ role: projectAgents.role })
+        .from(projectAgents)
+        .where(eq(projectAgents.projectId, project.id)),
+    ).toEqual([{ role: 'coordinator' }]);
+
+    await model.delete(project.id);
+    expect(await serverDB.select().from(agents).where(eq(agents.id, picked.id))).toHaveLength(1);
+  });
+
+  it('refuses to create a project led by an agent outside the scope', async () => {
+    const foreign = await new AgentModel(serverDB, otherUserId).create({ title: 'Foreign' });
+
+    await expect(
+      createProject(model, { coordinatorAgentId: foreign.id, name: 'Foreign-led' }),
+    ).rejects.toThrow('Agent not found');
+    expect(await serverDB.select().from(projects).where(eq(projects.userId, userId))).toEqual([]);
   });
 
   it('creates, lists, updates, and deletes a project in the owner scope', async () => {
@@ -537,6 +569,32 @@ describe('ProjectModel', () => {
     expect(await model.removeKnowledgeBase(project.id, knowledgeBase.id)).toBe(true);
     expect(await model.removeAgent(project.id, agent.id)).toBe(false);
     expect(await model.removeKnowledgeBase(project.id, knowledgeBase.id)).toBe(false);
+  });
+
+  it('refuses to lead a shared workspace project with a private agent', async () => {
+    const workspaceId = 'project-shared-lead-workspace';
+    await serverDB.insert(workspaces).values({
+      id: workspaceId,
+      name: 'Shared Lead Workspace',
+      primaryOwnerId: userId,
+      slug: workspaceId,
+    });
+    const creator = new ProjectModel(serverDB, userId, workspaceId);
+    const [privateAgent] = await serverDB
+      .insert(agents)
+      .values({ title: 'Private lead', userId, visibility: 'private', workspaceId })
+      .returning();
+
+    await expect(
+      createProject(creator, {
+        coordinatorAgentId: privateAgent.id,
+        name: 'Shared-led',
+        visibility: 'public',
+      }),
+    ).rejects.toThrow('A shared project only takes shared agents');
+    expect(
+      await serverDB.select().from(projects).where(eq(projects.workspaceId, workspaceId)),
+    ).toEqual([]);
   });
 
   // A private binding on a shared project would be filtered out for every reader but its creator.

@@ -174,6 +174,7 @@ export const projectRouter = router({
     .input(
       z.object({
         avatar: z.string().optional(),
+        coordinatorAgentId: z.string().optional(),
         description: z.string().optional(),
         identifier: projectIdentifierInput,
         name: z.string().min(1).max(255),
