@@ -13,7 +13,7 @@ import pMap from 'p-map';
 
 import { AgentModel } from '@/database/models/agent';
 import type { CreateQuickNoteParams } from '@/database/models/quickNote';
-import { QuickNoteModel } from '@/database/models/quickNote';
+import { QuickNoteModel, quickNoteTopicAccessWhere } from '@/database/models/quickNote';
 import { QUICK_NOTE_TASK } from '@/database/models/taskListFilters';
 import { QuickNoteRepository } from '@/database/repositories/quickNote';
 import {
@@ -28,7 +28,7 @@ import {
   topics,
 } from '@/database/schemas';
 import type { LobeChatDatabase } from '@/database/type';
-import { notShareVisitorMessage, notShareVisitorTopic } from '@/database/utils/shareVisitor';
+import { notShareVisitorMessage } from '@/database/utils/shareVisitor';
 import { AiAgentService } from '@/server/services/aiAgent';
 import { AiGenerationService } from '@/server/services/aiGeneration';
 import { createFtsSearchRepo } from '@/server/services/ftsSearch';
@@ -837,17 +837,11 @@ export class QuickNoteProcessingService {
     );
 
   /**
-   * Topics Analyze may read or link as context: this scope's conversations, never an Agent Share
-   * visitor's. Visitor Topics carry the creator's user and workspace ids, so the ownership
-   * predicate alone would surface them (see `notShareVisitorTopic`).
+   * Topics Analyze may read or link as context: the caller's own conversations in this scope,
+   * never another member's or an Agent Share visitor's (see `quickNoteTopicAccessWhere`).
    */
   private contextTopicScope = () =>
-    and(
-      this.workspaceId
-        ? eq(topics.workspaceId, this.workspaceId)
-        : and(eq(topics.userId, this.userId), isNull(topics.workspaceId)),
-      notShareVisitorTopic(),
-    );
+    quickNoteTopicAccessWhere({ userId: this.userId, workspaceId: this.workspaceId });
 
   /** Messages Analyze may read as context; the twin of {@link contextTopicScope}. */
   private contextMessageScope = () =>

@@ -7,6 +7,7 @@ import { QuickNoteRepository } from '@/database/repositories/quickNote';
 import {
   documents,
   quickNoteResources,
+  topics,
   users,
   workspaceMembers,
   workspaces,
@@ -144,5 +145,100 @@ describe('Quick Note resource access', () => {
 
     expect(candidates).toContain('qn-access-public-page');
     expect(found).toContain('qn-access-public-page');
+  });
+
+  /** @example Another member's Topic is never linked, listed, or read as Analyze context. */
+  describe('workspace Topics', () => {
+    const foreignTopicId = 'qn-access-author-topic';
+    const ownTopicId = 'qn-access-member-topic';
+
+    beforeEach(async () => {
+      await db.insert(topics).values([
+        {
+          content: 'Author roadmap draft',
+          id: foreignTopicId,
+          title: 'Author roadmap',
+          userId: authorId,
+          workspaceId,
+        },
+        {
+          content: 'Author notes draft',
+          id: ownTopicId,
+          title: 'Author notes of mine',
+          userId,
+          workspaceId,
+        },
+      ]);
+    });
+
+    it('does not link another member’s Topic sent with a new note', async () => {
+      // ROOT CAUSE:
+      // Topic links were authorized by workspace id alone, so any member could attach (and read
+      // back the title of) a teammate's conversation.
+      const note = await caller.create({
+        content: 'Sent from topics',
+        resources: [
+          { id: foreignTopicId, type: 'topic' },
+          { id: ownTopicId, type: 'conversation' },
+        ],
+      });
+
+      expect(
+        (await caller.agenticDetails({ id: note.id })).resources.map(
+          ({ resourceId }) => resourceId,
+        ),
+      ).toEqual([ownTopicId]);
+    });
+
+    it('hides a stored link to another member’s Topic', async () => {
+      const note = await caller.create({ content: 'Old link', editorData: { markdown: 'Old' } });
+      const run = await repo.claimRun(note.id, { kind: 'analyze', renderSourceText });
+      // A link stored before the Topic rule tightened.
+      await db.insert(quickNoteResources).values({
+        quickNoteId: note.id,
+        resourceId: foreignTopicId,
+        resourceType: 'topic',
+        role: 'context',
+        sourceHistoryId: run!.sourceHistoryId,
+        userId,
+        workspaceId,
+      });
+
+      expect((await caller.agenticDetails({ id: note.id })).resources).toEqual([]);
+    });
+
+    it('drops another member’s Topic from the viewable resources', async () => {
+      const { filterViewableResources } = await import('./resourceAccess');
+
+      const viewable = await filterViewableResources(
+        { db, userId, workspaceId },
+        [
+          { id: foreignTopicId, type: 'topic' },
+          { id: foreignTopicId, type: 'conversation' },
+          { id: ownTopicId, type: 'topic' },
+        ],
+        (reference) => reference,
+      );
+
+      expect(viewable).toEqual([{ id: ownTopicId, type: 'topic' }]);
+    });
+
+    it('keeps another member’s Topic out of Analyze context', async () => {
+      const note = await caller.create({ content: 'Author', editorData: { markdown: 'Author' } });
+      const run = await repo.claimRun(note.id, { kind: 'analyze', renderSourceText });
+      const candidates: { id: string }[] = await service['collectContextCandidates'](
+        note.id,
+        run!.sourceHistoryId,
+      );
+      const found: { id: string }[] = await service['findContextResources'](
+        ['Author'],
+        note.documentId,
+      );
+
+      expect(candidates.map(({ id }) => id)).not.toContain(foreignTopicId);
+      expect(candidates.map(({ id }) => id)).toContain(ownTopicId);
+      expect(found.map(({ id }) => id)).not.toContain(foreignTopicId);
+      expect(found.map(({ id }) => id)).toContain(ownTopicId);
+    });
   });
 });

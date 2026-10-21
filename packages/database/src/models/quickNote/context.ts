@@ -1,7 +1,9 @@
 import { and, eq, isNull } from 'drizzle-orm';
 
-import { quickNotes } from '../../schemas';
+import { quickNotes, topics } from '../../schemas';
 import type { LobeChatDatabase } from '../../type';
+import { notShareVisitorTopic } from '../../utils/shareVisitor';
+import { buildWorkspaceWhere } from '../../utils/workspace';
 
 /** The caller identity every `QuickNoteModel` query is scoped by. */
 export interface QuickNoteContext {
@@ -24,4 +26,23 @@ export const quickNoteOwnershipWhere = (ctx: QuickNoteContext) =>
   and(
     eq(quickNotes.userId, ctx.userId),
     ctx.workspaceId ? eq(quickNotes.workspaceId, ctx.workspaceId) : isNull(quickNotes.workspaceId),
+  )!;
+
+/**
+ * Topics a Quick Note may read or link as context: the caller's own conversations in the active
+ * scope, never another workspace member's and never an Agent Share visitor's.
+ *
+ * Use when:
+ * - Authorizing a Topic/conversation resource link, or choosing Topics for Analyze context.
+ *
+ * Expects:
+ * - `topics` carries no per-row visibility; a workspace Topic's privacy follows its Agent/Group,
+ *   so a member's Topic is pinned to its creator rather than shared with every member.
+ */
+export const quickNoteTopicAccessWhere = (ctx: { userId: string; workspaceId?: string }) =>
+  and(
+    buildWorkspaceWhere({ userId: ctx.userId, workspaceId: ctx.workspaceId }, topics),
+    eq(topics.userId, ctx.userId),
+    // Visitor Topics carry the creator's user and workspace ids but are not the creator's context.
+    notShareVisitorTopic(),
   )!;

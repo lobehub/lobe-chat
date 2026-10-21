@@ -13,6 +13,8 @@ import {
   topics,
   users,
   userSettings,
+  workspaceMembers,
+  workspaces,
 } from '../../schemas';
 import type { LobeChatDatabase } from '../../type';
 import { QuickNoteModel } from '../quickNote';
@@ -657,5 +659,87 @@ describe('QuickNoteModel failed Run scheduling', () => {
     await quickNoteModel.failRun(run!.id, error, { retryable: false });
 
     expect(await dueAtOf(note.id)).toBe(newerDueAt.getTime());
+  });
+});
+
+// ROOT CAUSE:
+// Workspace-mode Topic authorization matched `topics.workspace_id` only, so any member could link
+// another member's Topic, including one under a private Agent (via `create.resources` or an
+// Analyze `linkResource`), and then read its title through the Quick Note resource list.
+/** @example A workspace member links only the Topics they may see. */
+describe('QuickNoteModel workspace Topic resources', () => {
+  const workspaceId = 'quick-note-model-topic-ws';
+  const ownTopicId = 'quick-note-ws-own-topic';
+  const foreignTopicId = 'quick-note-ws-foreign-topic';
+  const wsRepo = new QuickNoteRepository(serverDB, userId, workspaceId);
+  const wsModel = new QuickNoteModel(serverDB, userId, workspaceId);
+
+  beforeEach(async () => {
+    await serverDB
+      .insert(workspaces)
+      .values({ id: workspaceId, name: 'ws', primaryOwnerId: otherUserId, slug: workspaceId });
+    await serverDB.insert(workspaceMembers).values([
+      { userId, workspaceId },
+      { userId: otherUserId, workspaceId },
+    ]);
+    await serverDB.insert(topics).values([
+      { id: ownTopicId, title: 'My workspace topic', userId, workspaceId },
+      { id: foreignTopicId, title: 'Teammate topic', userId: otherUserId, workspaceId },
+    ]);
+  });
+
+  afterEach(async () => {
+    await serverDB.delete(workspaces).where(eq(workspaces.id, workspaceId));
+  });
+
+  it('skips another member’s Topic sent with a new note', async () => {
+    const note = await wsRepo.create({
+      content: 'Sent from topics',
+      resources: [
+        { id: foreignTopicId, type: 'topic' },
+        { id: ownTopicId, type: 'topic' },
+      ],
+    });
+
+    const details = await wsModel.queryAgenticDetails(note.id);
+
+    /** @example Only the caller's own Topic is linked and listed. */
+    expect(details.resources.map(({ resourceId }) => resourceId)).toEqual([ownTopicId]);
+  });
+
+  it('rejects another member’s Topic reported by an Analyze Run', async () => {
+    const note = await wsRepo.create({ content: 'Analyze me', editorData: { markdown: 'x' } });
+    const run = await wsRepo.claimRun(note.id, { kind: 'analyze', renderSourceText });
+
+    const rejected = await wsModel.linkResource(run!.id, { id: foreignTopicId, type: 'topic' });
+    const rejectedConversation = await wsModel.linkResource(run!.id, {
+      id: foreignTopicId,
+      type: 'conversation',
+    });
+    const accepted = await wsModel.linkResource(run!.id, { id: ownTopicId, type: 'topic' });
+
+    expect(rejected).toBeUndefined();
+    expect(rejectedConversation).toBeUndefined();
+    expect(accepted).toMatchObject({ resourceId: ownTopicId, resourceType: 'topic' });
+  });
+
+  it('keeps personal mode limited to the caller’s personal Topics', async () => {
+    await serverDB
+      .insert(topics)
+      .values({ id: 'quick-note-personal-topic', title: 'Personal topic', userId });
+    const note = await quickNoteRepo.create({
+      content: 'Personal capture',
+      resources: [
+        { id: 'quick-note-personal-topic', type: 'topic' },
+        { id: ownTopicId, type: 'topic' },
+      ],
+    });
+
+    const details = await quickNoteModel.queryAgenticDetails(note.id);
+
+    /** @example A workspace Topic is not personal context, even for its creator. */
+    expect(details.resources.map(({ resourceId }) => resourceId)).toEqual([
+      'quick-note-personal-topic',
+    ]);
   });
 });

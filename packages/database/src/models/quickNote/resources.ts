@@ -13,8 +13,11 @@ import {
   topics,
 } from '../../schemas';
 import type { LobeChatDatabase } from '../../type';
-import { notShareVisitorTopic } from '../../utils/shareVisitor';
-import { type QuickNoteContext, quickNoteOwnershipWhere } from './context';
+import {
+  type QuickNoteContext,
+  quickNoteOwnershipWhere,
+  quickNoteTopicAccessWhere,
+} from './context';
 import type { LinkQuickNoteResourceParams } from './types';
 
 /** Resource-side Document alias used beside the Quick Note source Document. */
@@ -127,14 +130,10 @@ const authorizeResource = async (
   }
 
   if (reference.type === 'topic' || reference.type === 'conversation') {
-    const topicOwnership = ctx.workspaceId
-      ? eq(topics.workspaceId, ctx.workspaceId)
-      : and(eq(topics.userId, ctx.userId), isNull(topics.workspaceId));
     const [topic] = await db
       .select({ id: topics.id })
       .from(topics)
-      // Agent Share visitor Topics carry the creator's ids but are not the creator's context.
-      .where(and(eq(topics.id, reference.id), topicOwnership, notShareVisitorTopic()));
+      .where(and(eq(topics.id, reference.id), quickNoteTopicAccessWhere(ctx)));
 
     return topic ? {} : undefined;
   }

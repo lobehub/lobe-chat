@@ -11,6 +11,7 @@ import * as resources from './resources';
 import * as runs from './runs';
 import type { CreateQuickNoteParams } from './types';
 
+export { quickNoteTopicAccessWhere } from './context';
 export type * from './types';
 
 /** Default number of notes in one list page. */
