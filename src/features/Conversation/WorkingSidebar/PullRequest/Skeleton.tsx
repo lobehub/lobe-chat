@@ -4,7 +4,7 @@ import { cssVar } from '@lobehub/ui/stylex/cssVar.stylex';
 import * as stylex from '@stylexjs/stylex';
 import { memo } from 'react';
 
-import { sectionStyles } from '../Overview/sectionStyles';
+import { sectionProps, sectionStyles } from '../Overview/sectionStyles';
 import PrHead, { PrStatePill, PrTitle } from './Head';
 
 const styles = stylex.create({
@@ -31,7 +31,7 @@ const Row = ({ trailing = 48 }: { trailing?: number }) => (
 );
 
 const SectionTitle = ({ width = 64 }: { width?: number }) => (
-  <div className={sectionStyles.sectionHeader}>
+  <div {...stylex.props(sectionStyles.sectionHeader)}>
     <Skeleton height={10} radius={4} width={width} />
   </div>
 );
@@ -60,20 +60,20 @@ const PullRequestSkeleton = memo(({ summary }: { summary?: DeviceGitLinkedPullRe
             )
           }
         />
-        <Flexbox className={sectionStyles.section}>
+        <Flexbox {...sectionProps()}>
           <SectionTitle width={72} />
           <div {...stylex.props(styles.sectionBody)}>
             <Skeleton.Text fontSize={13} rows={3} width={['100%', '88%', '46%']} />
           </div>
         </Flexbox>
-        <Flexbox className={sectionStyles.section}>
+        <Flexbox {...sectionProps()}>
           <SectionTitle width={40} />
           <Row trailing={72} />
         </Flexbox>
-        <Flexbox className={sectionStyles.section}>
+        <Flexbox {...sectionProps()}>
           <SectionTitle width={56} />
         </Flexbox>
-        <Flexbox className={sectionStyles.section}>
+        <Flexbox {...sectionProps()}>
           <SectionTitle width={52} />
           <Row />
           <Row />

@@ -15,7 +15,7 @@ import {
 } from '@/store/device';
 
 import { OverviewRow } from '../Overview/OverviewRow';
-import { sectionStyles } from '../Overview/sectionStyles';
+import { sectionProps } from '../Overview/sectionStyles';
 import { resolvePullRequestActionLock } from './actionLock';
 import Header from './Header';
 import MergeDock from './MergeDock';
@@ -123,7 +123,7 @@ const PullRequest = memo<PullRequestProps>(
     }, [data?.detail, context, activity.data]);
     const externalUrl = detail?.url ?? url;
     const loadError = (error: unknown, onRetry: () => void) => (
-      <Flexbox className={sectionStyles.section}>
+      <Flexbox {...sectionProps()}>
         <OverviewRow
           danger
           icon={TriangleAlertIcon}

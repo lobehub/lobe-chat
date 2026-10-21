@@ -19,7 +19,7 @@ import { getDeviceIcon, getPlatformLabel } from '@/features/DeviceManager/getDev
 import { useDeviceActivityText } from '@/features/DeviceManager/useDeviceActivityText';
 
 import { OverviewRow } from './OverviewRow';
-import { sectionStyles } from './sectionStyles';
+import { sectionProps, sectionStyles } from './sectionStyles';
 import { useBoundDevice } from './useBoundDevice';
 
 const styles = stylex.create({
@@ -85,8 +85,8 @@ const DeviceStatusSection = memo<DeviceStatusSectionProps>(({ active, deviceId }
 
   if (bound.status === 'loading')
     return (
-      <Flexbox className={sectionStyles.section}>
-        <div className={sectionStyles.skeleton}>
+      <Flexbox {...sectionProps()}>
+        <div {...stylex.props(sectionStyles.skeleton)}>
           <Skeleton.Text rows={2} />
         </div>
       </Flexbox>
@@ -95,7 +95,7 @@ const DeviceStatusSection = memo<DeviceStatusSectionProps>(({ active, deviceId }
   // A failed read is not a removed device: say so and offer a retry.
   if (bound.status === 'error')
     return (
-      <Flexbox className={sectionStyles.section}>
+      <Flexbox {...sectionProps()}>
         <OverviewRow
           danger
           icon={TriangleAlertIcon}
@@ -137,7 +137,7 @@ const DeviceStatusContent = ({ data, device, error }: DeviceStatusContentProps) 
   const displayName = device.friendlyName || device.hostname || device.deviceId;
 
   return (
-    <Flexbox className={sectionStyles.section} data-testid={'overview-device-status'}>
+    <Flexbox {...sectionProps()} data-testid={'overview-device-status'}>
       <Flexbox className={stylex.props(styles.body).className} gap={14}>
         <Flexbox horizontal align={'center'} gap={10}>
           <span {...stylex.props(styles.tile)}>{getDeviceIcon(device.platform, 16)}</span>
