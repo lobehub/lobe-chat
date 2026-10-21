@@ -6,6 +6,7 @@ import {
   BubblesIcon,
   CalendarClockIcon,
   HeartPulseIcon,
+  LayersIcon,
   ScaleIcon,
   SearchIcon,
   SignatureIcon,
@@ -33,6 +34,7 @@ interface Item {
 enum MemoryTabKey {
   Activities = 'activities',
   Contexts = 'contexts',
+  Entities = 'entities',
   Home = 'home',
   Identities = 'identities',
   Preferences = 'preferences',
@@ -112,6 +114,12 @@ const Nav = memo(() => {
           key: MemoryTabKey.Contexts,
           title: t('tab.contexts'),
           url: '/memory/contexts',
+        },
+        {
+          icon: LayersIcon,
+          key: MemoryTabKey.Entities,
+          title: '情境（新）',
+          url: '/memory/entities',
         },
         {
           icon: CalendarClockIcon,
