@@ -46,6 +46,7 @@ import { reviewChecks } from './reviewChecks';
 import { statusFromRound } from './statusRollup';
 import {
   type AcceptanceSubjectSummary,
+  assertProjectExists,
   assertSubjectExists,
   resolveCanonicalSubjectId,
   resolveRunTopicTaskId,
@@ -130,14 +131,34 @@ export class AcceptanceService {
     };
   }
 
-  /** Get (or create) the aggregate for a subject, validating the subject first. */
+  /**
+   * Get (or create) the aggregate for a subject, validating the subject first.
+   *
+   * Project precedence: a `projectId` the caller names (a CLI `--project`),
+   * then the one the subject implies, then `fallbackProjectId` — the project
+   * the delivery's repository declares, a default too broad to override a
+   * task's or conversation's own project. Either way it only files an
+   * aggregate that has no project yet: a delivery already grouped is moved by
+   * hand, never by the next round.
+   */
   ensureForSubject = async (
     subjectType: AcceptanceSubjectType,
     subjectId: string,
-    defaults?: { config?: AcceptanceConfig; requirement?: string; title?: string },
+    defaults?: {
+      config?: AcceptanceConfig;
+      fallbackProjectId?: string;
+      projectId?: string;
+      requirement?: string;
+      title?: string;
+    },
   ): Promise<AcceptanceItem> => {
     const canonicalId = await assertSubjectExists(this.deps, subjectType, subjectId);
-    const projectId = await resolveSubjectProjectId(this.deps, subjectType, canonicalId);
+    const projectId = defaults?.projectId
+      ? await assertProjectExists(this.deps, defaults.projectId)
+      : ((await resolveSubjectProjectId(this.deps, subjectType, canonicalId)) ??
+        (defaults?.fallbackProjectId
+          ? await assertProjectExists(this.deps, defaults.fallbackProjectId)
+          : null));
     return this.acceptanceModel.ensureForSubject(subjectType, canonicalId, {
       config: defaults?.config,
       projectId,
@@ -160,7 +181,12 @@ export class AcceptanceService {
   ensureForIngest = async (
     subjectType: AcceptanceSubjectType,
     subjectId: string,
-    defaults?: { requirement?: string; title?: string },
+    defaults?: {
+      fallbackProjectId?: string;
+      projectId?: string;
+      requirement?: string;
+      title?: string;
+    },
   ): Promise<AcceptanceItem> => {
     const taskId =
       subjectType === 'topic' ? await resolveRunTopicTaskId(this.deps, subjectId) : undefined;

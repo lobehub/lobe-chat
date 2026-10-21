@@ -268,11 +268,30 @@ export class ProjectModel {
       .where(and(inArray(projects.id, ids), this.readable()));
   }
 
-  async findByIdOrSlug(reference: string) {
+  /**
+   * Resolve what a person or a repository config would write to name a
+   * project: its id, its slug, or its task identifier (`LOBE`, matched
+   * case-insensitively). An exact id beats a slug, and a slug beats an
+   * identifier, so one project's identifier never shadows another's slug.
+   */
+  async findByReference(reference: string) {
+    const identifier = reference.trim().toUpperCase();
     const [project] = await this.db
       .select()
       .from(projects)
-      .where(and(or(eq(projects.id, reference), eq(projects.slug, reference)), this.readable()))
+      .where(
+        and(
+          or(
+            eq(projects.id, reference),
+            eq(projects.slug, reference),
+            eq(projects.identifier, identifier),
+          ),
+          this.readable(),
+        ),
+      )
+      .orderBy(
+        sql`CASE WHEN ${projects.id} = ${reference} THEN 0 WHEN ${projects.slug} = ${reference} THEN 1 ELSE 2 END`,
+      )
       .limit(1);
     return project ?? null;
   }

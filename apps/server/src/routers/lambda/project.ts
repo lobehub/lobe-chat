@@ -200,7 +200,7 @@ export const projectRouter = router({
     try {
       const project = await withMainAgent(
         ctx.projectModel,
-        requireResult(await ctx.projectModel.findByIdOrSlug(input.id)),
+        requireResult(await ctx.projectModel.findByReference(input.id)),
       );
       const [agents, completionReviews, knowledgeBases, tasks, works] = await Promise.all([
         ctx.projectModel.listAgents(project.id),
@@ -231,7 +231,7 @@ export const projectRouter = router({
       return {
         data: await withMainAgent(
           ctx.projectModel,
-          requireResult(await ctx.projectModel.findByIdOrSlug(input.id)),
+          requireResult(await ctx.projectModel.findByReference(input.id)),
         ),
         success: true,
       };
@@ -272,6 +272,9 @@ export const projectRouter = router({
 
   // Keep the released API contract so old clients receive a clear business error.
   // Project moves are paused while project-scoped task numbering is redesigned.
+  // Re-enabling them must also move the task's acceptances (and those of its
+  // run topics): `acceptances.project_id` is copied from the task when filed,
+  // unless the publisher named another project explicitly.
   moveTask: projectWriteProcedure
     .input(idInput.extend({ taskId: z.string() }))
     .mutation(async () => {
