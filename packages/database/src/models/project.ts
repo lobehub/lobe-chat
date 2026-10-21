@@ -103,6 +103,20 @@ export class ProjectModel {
     return and(this.readable(), eq(projects.userId, this.userId));
   }
 
+  /**
+   * A public workspace project is seen by every member, while a private agent
+   * or library is visible to its creator alone, so such a project binds only
+   * public resources. Anything else would show each reader a different project.
+   */
+  private assertSharedResource(
+    project: { visibility: string; workspaceId: string | null },
+    resourceVisibility: string,
+    message: string,
+  ) {
+    if (project.workspaceId && project.visibility === 'public' && resourceVisibility !== 'public')
+      throw new Error(message);
+  }
+
   /** Member management: the creator, or a workspace admin for any readable project. */
   private membersManageable() {
     return this.options.canManageAllMembers && this.workspaceId
@@ -339,7 +353,7 @@ export class ProjectModel {
       throw new Error('The project coordinator is managed by the project');
     }
     const [agent] = await this.db
-      .select({ id: agents.id })
+      .select({ id: agents.id, visibility: agents.visibility })
       .from(agents)
       .where(
         and(
@@ -349,6 +363,11 @@ export class ProjectModel {
       )
       .limit(1);
     if (!agent) throw new Error('Agent not found');
+    this.assertSharedResource(
+      project,
+      agent.visibility,
+      'A shared project only takes shared agents',
+    );
 
     const [binding] = await this.db
       .insert(projectAgents)
@@ -419,9 +438,10 @@ export class ProjectModel {
 
   async addKnowledgeBase(projectId: string, input: ProjectKnowledgeBaseInput) {
     // Knowledge is curated by everyone who can read the project, not only its creator.
-    if (!(await this.findById(projectId))) return null;
+    const project = await this.findById(projectId);
+    if (!project) return null;
     const [knowledgeBase] = await this.db
-      .select({ id: knowledgeBases.id })
+      .select({ id: knowledgeBases.id, visibility: knowledgeBases.visibility })
       .from(knowledgeBases)
       .where(
         and(
@@ -434,6 +454,11 @@ export class ProjectModel {
       )
       .limit(1);
     if (!knowledgeBase) throw new Error('Knowledge base not found');
+    this.assertSharedResource(
+      project,
+      knowledgeBase.visibility,
+      'A shared project only takes shared knowledge bases',
+    );
 
     const [binding] = await this.db
       .insert(projectKnowledgeBases)
