@@ -558,6 +558,54 @@ describe('SandboxMiddlewareService readFile images', () => {
     expect(result.result?.imageUrl).toBeUndefined();
   });
 
+  // The execInSandbox route turns an auth error into the Market re-auth
+  // prompt; a placeholder would swallow it.
+  it('keeps export auth failures as failed tool results', async () => {
+    const provider = createProvider({
+      exportFileToUploadUrl: vi.fn(async () => ({
+        error: { message: 'token expired', name: 'token_expired' },
+        success: false,
+      })),
+    });
+    const fileService = createFileService();
+    const service = await createService(provider, { fileService });
+
+    const result = await service.callTool('readLocalFile', { path: '/mnt/data/chart.png' });
+
+    expect(result).toMatchObject({
+      error: { name: 'token_expired' },
+      success: false,
+    });
+    expect(result.result?.imageUrl).toBeUndefined();
+  });
+
+  // `getToolAccessDeniedError` refusals carry `kind: 'stop'` — degrading them
+  // to a placeholder would let the model retry a call that must halt the run.
+  it('keeps access-denied export failures as failed tool results', async () => {
+    const accessDeniedError = {
+      code: 'FORBIDDEN',
+      hint: 'Stop the affected operation and report this error.',
+      kind: 'stop' as const,
+      message: 'Tool access was denied',
+    };
+    const provider = createProvider({
+      exportFileToUploadUrl: vi.fn(async () => ({
+        error: accessDeniedError,
+        success: false,
+      })),
+    });
+    const fileService = createFileService();
+    const service = await createService(provider, { fileService });
+
+    const result = await service.callTool('readLocalFile', { path: '/mnt/data/chart.png' });
+
+    expect(result).toMatchObject({
+      error: { kind: 'stop' },
+      success: false,
+    });
+    expect(result.result?.imageUrl).toBeUndefined();
+  });
+
   it('rejects images above the preview size limit', async () => {
     const provider = createProvider();
     const fileService = createFileService({ contentLength: 11 * 1024 * 1024 });

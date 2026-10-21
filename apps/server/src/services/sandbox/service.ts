@@ -23,6 +23,7 @@ import {
   environmentInitReport,
   SANDBOX_ENVIRONMENT_INIT_TIMEOUT_MS,
 } from './environmentInit';
+import { isSandboxAccessDeniedError, isSandboxAuthError } from './errors';
 import type {
   SandboxCommandResult,
   SandboxProvider,
@@ -160,9 +161,22 @@ export class SandboxMiddlewareService implements SandboxService {
       storageName: `${randomUUID()}-${filename}`,
     });
 
-    if (!exported.success || !exported.url) {
+    if (!exported.success) {
+      // Auth failures must stay failed so the execInSandbox route re-prompts
+      // for Market auth; access-denied refusals must stop the run. Neither may
+      // be softened into the upload-unavailable placeholder.
+      if (isSandboxAuthError(exported.error) || isSandboxAccessDeniedError(exported.error)) {
+        return { error: exported.error, result: null, success: false };
+      }
+
       return buildResult(
         `[Image: ${filename}] (upload unavailable — ${exported.error?.message || 'export failed'}; the model cannot view this image)`,
+      );
+    }
+
+    if (!exported.url) {
+      return buildResult(
+        `[Image: ${filename}] (upload unavailable — export failed; the model cannot view this image)`,
       );
     }
 
