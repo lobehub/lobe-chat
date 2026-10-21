@@ -57,6 +57,7 @@ import { deviceMetricRouter } from './deviceMetric';
 import { documentRouter } from './document';
 import { documentCommentRouter } from './documentComment';
 import { documentLikeRouter } from './documentLike';
+import { documentReviewRouter } from './documentReview';
 import { expertiseRouter } from './expertise';
 import { exporterRouter } from './exporter';
 import { fileRouter } from './file';
@@ -152,6 +153,7 @@ export const lambdaRouter = router({
   deviceMetric: deviceMetricRouter,
   document: documentRouter,
   documentComment: documentCommentRouter,
+  documentReview: documentReviewRouter,
   documentLike: documentLikeRouter,
   exporter: exporterRouter,
   file: fileRouter,
