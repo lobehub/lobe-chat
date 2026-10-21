@@ -1,4 +1,9 @@
-import { PageAgentIdentifier } from '@lobechat/builtin-tool-page-agent';
+import {
+  applyHtmlEdit,
+  HTML_PAGE_TOOL_HINT,
+  PageAgentIdentifier,
+  RICH_TEXT_PAGE_TOOL_HINT,
+} from '@lobechat/builtin-tool-page-agent';
 import {
   PageAgentExecutionRuntime,
   type PageAgentInvocationContext,
@@ -26,11 +31,8 @@ interface DocumentSnapshot {
   editorData: Record<string, unknown> | null;
   fileType: string;
   title: string;
+  updatedAt?: Date;
 }
-
-const HTML_PAGE_UNSUPPORTED =
-  'This page is an HTML page: its body is one self-contained HTML document, not a node tree, ' +
-  'so the page tools cannot read or edit it.';
 
 interface InvocationEnv {
   getTitle: () => string;
@@ -131,6 +133,7 @@ const loadSnapshot = async (
     editorData: (doc.editorData ?? null) as Record<string, unknown> | null,
     fileType: doc.fileType,
     title: doc.title ?? 'Untitled',
+    updatedAt: doc.updatedAt ?? undefined,
   };
 };
 
@@ -216,7 +219,7 @@ const withEditor = async (
     const snapshot = await loadSnapshot(documentModel, documentId);
     // Hydrating an HTML page as Markdown and writing the export back would
     // replace the page with Markdown; node APIs never run on one.
-    if (snapshot.fileType === HTML_DOCUMENT_FILE_TYPE) throw new Error(HTML_PAGE_UNSUPPORTED);
+    if (snapshot.fileType === HTML_DOCUMENT_FILE_TYPE) throw new Error(HTML_PAGE_TOOL_HINT);
     const env = buildEnv(snapshot, documentId);
 
     try {
@@ -283,6 +286,67 @@ const withEditor = async (
       };
     } finally {
       env.headless.destroy();
+    }
+  };
+
+  return persist ? documentService.runWithDocumentLock(documentId, run) : run();
+};
+
+interface HtmlHandlerOutput extends HandlerOutput {
+  /** The new HTML to persist; omitted for a read. */
+  html?: string;
+}
+
+/**
+ * Raw-text read-modify-write of an HTML page under the same document lock as
+ * the node APIs. Refuses rich-text pages, whose body is not an HTML document.
+ */
+const HTML_WRITE_ATTEMPTS = 3;
+
+const isVersionMismatch = (error: unknown) =>
+  (error as { cause?: { data?: { code?: string } } })?.cause?.data?.code ===
+  'DocumentVersionMismatch';
+
+const withHtmlPage = async (
+  { documentModel, documentService }: PageAgentServiceContext,
+  ctx: PageAgentInvocationContext,
+  handler: (html: string) => HtmlHandlerOutput,
+  { persist }: { persist: boolean },
+): Promise<HandlerOutput> => {
+  const documentId = ctx.documentId;
+  if (!documentId) throw new Error('documentId is required');
+
+  // The document lock is workspace-only, and one step's tool calls run at once:
+  // write against the version that was read, and re-apply the edit to the newer
+  // HTML when another write landed in between, so no edit is silently dropped.
+  const run = async (lockOwnerId?: string): Promise<HandlerOutput> => {
+    for (let attempt = 1; ; attempt++) {
+      const snapshot = await loadSnapshot(documentModel, documentId);
+      if (snapshot.fileType !== HTML_DOCUMENT_FILE_TYPE) throw new Error(RICH_TEXT_PAGE_TOOL_HINT);
+
+      const { content, html, state } = handler(snapshot.content);
+      if (persist && html !== undefined) {
+        try {
+          await documentService.updateDocument(documentId, {
+            content: html,
+            ...(snapshot.updatedAt ? { expectedUpdatedAt: snapshot.updatedAt } : {}),
+            ...(lockOwnerId ? { lockOwnerId } : {}),
+            saveSource: 'llm_call',
+          });
+        } catch (error) {
+          if (isVersionMismatch(error) && attempt < HTML_WRITE_ATTEMPTS) continue;
+          throw error;
+        }
+      }
+
+      return {
+        content,
+        state: {
+          ...state,
+          documentContent: html ?? snapshot.content,
+          documentTitle: snapshot.title,
+        },
+      };
     }
   };
 
@@ -365,6 +429,41 @@ const buildService = (
           },
         };
       }),
+
+    readHtml: (_args, ctx) =>
+      withHtmlPage(
+        serviceCtx,
+        ctx,
+        (html) => ({ content: html, state: { charCount: html.length, html } }),
+        { persist: false },
+      ),
+
+    editHtml: (args, ctx) =>
+      withHtmlPage(
+        serviceCtx,
+        ctx,
+        (current) => {
+          const { html, replacementCount } = applyHtmlEdit(current, args);
+          return {
+            content: `Replaced ${replacementCount} occurrence(s) in the page HTML.`,
+            html,
+            state: { charCount: html.length, replacementCount },
+          };
+        },
+        { persist: true },
+      ),
+
+    writeHtml: (args, ctx) =>
+      withHtmlPage(
+        serviceCtx,
+        ctx,
+        () => ({
+          content: `Page HTML replaced (${args.html.length} characters).`,
+          html: args.html,
+          state: { charCount: args.html.length },
+        }),
+        { persist: true },
+      ),
 
     replaceText: (args, ctx) =>
       withEditor(serviceCtx, 'replaceText', ctx, async ({ runtime }) => {

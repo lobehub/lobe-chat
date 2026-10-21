@@ -4,12 +4,14 @@ import { ChevronsUpDownIcon } from 'lucide-react';
 import { memo, Suspense, useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { DEFAULT_INBOX_AVATAR } from '@/const/index';
 import { conversationSelectors, useConversationStore } from '@/features/Conversation';
 import AgentAvatar from '@/features/HomeSidebar/Body/Agent/List/AgentItem/Avatar';
 import { AgentModalProvider } from '@/features/HomeSidebar/Body/Agent/ModalProvider';
 import SkeletonList from '@/features/NavPanel/components/SkeletonList';
 import { useFetchAgentList } from '@/hooks/useFetchAgentList';
 import { useAgentStore } from '@/store/agent';
+import { builtinAgentSelectors } from '@/store/agent/selectors';
 import { useHomeStore } from '@/store/home';
 import { homeAgentListSelectors } from '@/store/home/selectors';
 
@@ -45,24 +47,25 @@ const AgentSelectorAction = memo<AgentSelectorActionProps>(({ onAgentChange }) =
 
   const agents = useHomeStore(homeAgentListSelectors.allAgents);
   const isAgentListInit = useHomeStore(homeAgentListSelectors.isAgentListInit);
-  const pageAgentId = useAgentStore((s) => s.builtinAgentIdMap['page-agent']);
-  const pageAgentData = useAgentStore((s) => s.agentMap[pageAgentId || '']);
+  // Lobe AI is the default page copilot; it is not part of the sidebar list.
+  const inboxAgentId = useAgentStore(builtinAgentSelectors.inboxAgentId);
+  const inboxAgentData = useAgentStore((s) => s.agentMap[inboxAgentId || '']);
 
   useFetchAgentList();
 
   const agentsWithBuiltin = useMemo(() => {
     // Page Copilot only supports selecting agent sessions, not group sessions.
     const availableAgents = agents.filter((agent) => agent.type === 'agent');
-    const hasPageAgent = availableAgents.some((agent) => agent.id === pageAgentId);
+    const hasInboxAgent = availableAgents.some((agent) => agent.id === inboxAgentId);
 
-    if (pageAgentId && !hasPageAgent) {
+    if (inboxAgentId && !hasInboxAgent) {
       return [
         {
-          avatar: pageAgentData?.avatar || null,
-          description: pageAgentData?.description || null,
-          id: pageAgentId,
+          avatar: inboxAgentData?.avatar || DEFAULT_INBOX_AVATAR,
+          description: inboxAgentData?.description || null,
+          id: inboxAgentId,
           pinned: false,
-          title: t('builtinCopilot'),
+          title: t('inbox.title'),
           type: 'agent' as const,
           updatedAt: new Date(),
         },
@@ -71,7 +74,7 @@ const AgentSelectorAction = memo<AgentSelectorActionProps>(({ onAgentChange }) =
     }
 
     return availableAgents;
-  }, [agents, pageAgentId, pageAgentData, t]);
+  }, [agents, inboxAgentId, inboxAgentData, t]);
 
   const activeAgent = useMemo(
     () => agentsWithBuiltin.find((agent) => agent.id === agentId),

@@ -7,6 +7,8 @@ import type {
 } from '@lobechat/editor-runtime';
 import type { BuiltinServerRuntimeOutput } from '@lobechat/types';
 
+import type { EditHtmlArgs, ReadHtmlArgs, WriteHtmlArgs } from '../html';
+
 /**
  * Context passed to every page-agent server invocation.
  *
@@ -50,6 +52,8 @@ export interface PageAgentApiOutput {
  * package's static import graph.
  */
 export interface PageAgentRuntimeService {
+  /** HTML pages only: raw-text reads and writes of the page's HTML document. */
+  editHtml: (args: EditHtmlArgs, ctx: PageAgentInvocationContext) => Promise<PageAgentApiOutput>;
   editTitle: (args: EditTitleArgs, ctx: PageAgentInvocationContext) => Promise<PageAgentApiOutput>;
   getPageContent: (
     args: GetPageContentArgs,
@@ -63,10 +67,12 @@ export interface PageAgentRuntimeService {
     args: ModifyNodesArgs,
     ctx: PageAgentInvocationContext,
   ) => Promise<PageAgentApiOutput>;
+  readHtml: (args: ReadHtmlArgs, ctx: PageAgentInvocationContext) => Promise<PageAgentApiOutput>;
   replaceText: (
     args: ReplaceTextArgs,
     ctx: PageAgentInvocationContext,
   ) => Promise<PageAgentApiOutput>;
+  writeHtml: (args: WriteHtmlArgs, ctx: PageAgentInvocationContext) => Promise<PageAgentApiOutput>;
 }
 
 const MISSING_DOCUMENT_ID =
@@ -112,6 +118,15 @@ export class PageAgentExecutionRuntime {
 
   replaceText = (args: ReplaceTextArgs, ctx: PageAgentInvocationContext) =>
     this.dispatch('replaceText', ctx, () => this.service.replaceText(args, ctx));
+
+  readHtml = (args: ReadHtmlArgs, ctx: PageAgentInvocationContext) =>
+    this.dispatch('readHtml', ctx, () => this.service.readHtml(args, ctx));
+
+  editHtml = (args: EditHtmlArgs, ctx: PageAgentInvocationContext) =>
+    this.dispatch('editHtml', ctx, () => this.service.editHtml(args, ctx));
+
+  writeHtml = (args: WriteHtmlArgs, ctx: PageAgentInvocationContext) =>
+    this.dispatch('writeHtml', ctx, () => this.service.writeHtml(args, ctx));
 
   private async dispatch(
     apiName: string,

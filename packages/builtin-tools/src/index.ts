@@ -39,7 +39,7 @@ import {
 } from '@lobechat/builtin-tool-local-system';
 import { MemoryManifest, resolveMemoryRestrictedManifest } from '@lobechat/builtin-tool-memory';
 import { MessageManifest, resolveMessageManifest } from '@lobechat/builtin-tool-message';
-import { PageAgentManifest } from '@lobechat/builtin-tool-page-agent';
+import { PageAgentManifest, resolvePageAgentManifest } from '@lobechat/builtin-tool-page-agent';
 import { RemoteDeviceManifest } from '@lobechat/builtin-tool-remote-device';
 import { selfFeedbackIntentManifest } from '@lobechat/builtin-tool-self-iteration';
 import { SkillMaintainerManifest } from '@lobechat/builtin-tool-skill-maintainer';
@@ -467,6 +467,7 @@ const builtinToolRegistry: LobeBuiltinTool[] = [
     hidden: true,
     identifier: PageAgentManifest.identifier,
     manifest: PageAgentManifest,
+    resolveManifest: resolvePageAgentManifest,
     type: 'builtin',
   },
   {

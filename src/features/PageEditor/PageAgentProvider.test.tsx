@@ -10,7 +10,7 @@ import { PageAgentProvider } from './PageAgentProvider';
 interface AgentState {
   activeAgentId?: string;
   heterogeneousAgentIds?: string[];
-  pageAgentId: string;
+  inboxAgentId: string;
   setActiveAgentId: (agentId: string) => void;
   useInitBuiltinAgent: (slug: string) => void;
 }
@@ -62,7 +62,7 @@ vi.mock('@/store/agent/selectors', () => ({
       !!state.heterogeneousAgentIds?.includes(agentId),
   },
   builtinAgentSelectors: {
-    pageAgentId: (state: AgentState) => state.pageAgentId,
+    inboxAgentId: (state: AgentState) => state.inboxAgentId,
   },
 }));
 
@@ -88,8 +88,8 @@ beforeEach(() => {
   conversationProviderSpy.mockClear();
 
   agentState = {
-    activeAgentId: 'page-agent',
-    pageAgentId: 'page-agent',
+    activeAgentId: 'lobe-ai',
+    inboxAgentId: 'lobe-ai',
     setActiveAgentId: vi.fn((agentId: string) => {
       agentState.activeAgentId = agentId;
     }),
@@ -106,9 +106,9 @@ beforeEach(() => {
 });
 
 describe('PageAgentProvider', () => {
-  it('keeps the editor skeleton while the page agent is initializing', () => {
+  it('keeps the editor skeleton while Lobe AI is initializing', () => {
     agentState.activeAgentId = undefined;
-    agentState.pageAgentId = '';
+    agentState.inboxAgentId = '';
 
     const { queryByTestId, getByTestId } = render(
       <PageAgentProvider pageId="doc-1">
@@ -187,7 +187,7 @@ describe('PageAgentProvider', () => {
     });
   });
 
-  it('falls back to the page agent when the active agent is heterogeneous', async () => {
+  it('falls back to Lobe AI when the active agent is heterogeneous', async () => {
     agentState.activeAgentId = 'claude-code';
     agentState.heterogeneousAgentIds = ['claude-code'];
 
@@ -202,10 +202,10 @@ describe('PageAgentProvider', () => {
     });
 
     const { context } = conversationProviderSpy.mock.calls.at(-1)![0];
-    expect(context.agentId).toBe('page-agent');
+    expect(context.agentId).toBe('lobe-ai');
   });
 
-  it('can avoid syncing the page agent into global agent state', async () => {
+  it('can avoid syncing the copilot agent into global agent state', async () => {
     agentState.activeAgentId = 'claude-code';
     agentState.heterogeneousAgentIds = ['claude-code'];
     chatState.activeAgentId = 'claude-code';
@@ -222,7 +222,7 @@ describe('PageAgentProvider', () => {
     });
 
     const { context } = conversationProviderSpy.mock.calls.at(-1)![0];
-    expect(context.agentId).toBe('page-agent');
+    expect(context.agentId).toBe('lobe-ai');
     expect(context.documentId).toBe('doc-1');
     expect(context.topicId).toBeNull();
     expect(agentState.activeAgentId).toBe('claude-code');

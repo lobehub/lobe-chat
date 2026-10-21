@@ -32,7 +32,7 @@ interface PageAgentProviderProps {
 export const PageAgentProvider = memo<PageAgentProviderProps>(
   ({ children, pageId, syncActiveAgent = true }) => {
     const useInitBuiltinAgent = useAgentStore((s) => s.useInitBuiltinAgent);
-    const pageAgentId = useAgentStore(builtinAgentSelectors.pageAgentId);
+    const inboxAgentId = useAgentStore(builtinAgentSelectors.inboxAgentId);
     const activeTopicId = useChatStore((s) => s.activeTopicId);
     const activeAgentId = useAgentStore((s) => s.activeAgentId);
     const isActiveAgentHeterogeneous = useAgentStore((s) =>
@@ -41,16 +41,19 @@ export const PageAgentProvider = memo<PageAgentProviderProps>(
     const setActiveAgentId = useAgentStore((s) => s.setActiveAgentId);
     const syncedAgentIdRef = useRef<string | undefined>(undefined);
 
-    useInitBuiltinAgent(BUILTIN_AGENT_SLUGS.pageAgent);
+    useInitBuiltinAgent(BUILTIN_AGENT_SLUGS.inbox);
 
-    // Build conversation context for page agent.
-    // Fall back to the page agent when the global active agent cannot drive a page
-    // copilot: empty, a chat-group id, or a heterogeneous agent (e.g. Claude Code
-    // / Codex). Heterogeneous agents run on external runtimes and must not leak
-    // into the page-scoped conversation when navigating from their tab.
+    // Build conversation context for the page copilot.
+    // Fall back to Lobe AI (the main agent) when the global active agent cannot
+    // drive a page copilot: empty, a chat-group id, or a heterogeneous agent
+    // (e.g. Claude Code / Codex). Heterogeneous agents run on external runtimes
+    // and must not leak into the page-scoped conversation when navigating from
+    // their tab. Whichever agent runs here, page scope force-enables the page
+    // tool (`resolveAgentConfig`), so editing the page never depends on the
+    // agent's own plugin list.
     const selectedAgentId =
       !activeAgentId || isChatGroupSessionId(activeAgentId) || isActiveAgentHeterogeneous
-        ? pageAgentId
+        ? inboxAgentId
         : activeAgentId;
 
     useEffect(() => {
@@ -98,7 +101,7 @@ export const PageAgentProvider = memo<PageAgentProviderProps>(
 
     // This provider wraps the whole editor, so its wait has to keep the editor's
     // shape; a conversation skeleton here replaces the page with a chat layout.
-    if (!pageAgentId) return <SurfaceSkeleton variant={'editor'} />;
+    if (!inboxAgentId) return <SurfaceSkeleton variant={'editor'} />;
 
     return (
       <ConversationProvider context={context} operationState={operationState}>

@@ -12,7 +12,7 @@
 import { builtinTools } from '@lobechat/builtin-tools';
 import { createEnableChecker, type LobeToolManifest } from '@lobechat/context-engine';
 import { ToolsEngine } from '@lobechat/context-engine';
-import { assembleManifestPool, resolveToolRules } from '@lobechat/mecha';
+import { assembleManifestPool, resolveToolRules, scopeRequiredToolIds } from '@lobechat/mecha';
 import { type RuntimePlatform } from '@lobechat/types';
 import debug from 'debug';
 
@@ -171,6 +171,7 @@ export const createServerAgentToolsEngine = (
       canUseFC: context.isModelSupportToolUse(model, provider),
       hasImageOutput: !!modelAbilities?.imageOutput,
     },
+    requiredToolIds: scopeRequiredToolIds(manifestContext?.scope),
     useApplicationBuiltinSearchTool,
   });
 

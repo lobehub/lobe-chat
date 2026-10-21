@@ -9,6 +9,8 @@ type UniformTool = UniformToolArray[number];
 const log = debug('lobe-mecha:tool-set-composer');
 
 export interface ToolSetComposerContext {
+  /** The open page is an HTML page: no editor mounts, only the HTML APIs apply. */
+  isHtmlPage?: boolean;
   isPageEditorReady?: boolean;
   scope?: string;
 }
@@ -52,13 +54,16 @@ const mergeInjectedManifests = (
 // `scope` is bound to the topic, not the route: navigating away from the page
 // editor keeps `scope === 'page'` on the same topic. Without this drop the LLM
 // still sees page-agent tools and can call them against a stale editor ref.
+// An HTML page mounts no editor; it keeps the tool (its HTML APIs need none).
 const dropPageAgentIfEditorNotMounted = (
   set: ComposedToolSet,
   context: ToolSetComposerContext,
 ): ComposedToolSet => {
   if (context.scope !== 'page') return set;
   if (!set.enabledToolIds.includes(PageAgentIdentifier)) return set;
-  if (context.isPageEditorReady) return set;
+
+  // The manifest is already narrowed to the page's kind (`resolvePageAgentManifest`).
+  if (context.isHtmlPage || context.isPageEditorReady) return set;
 
   log('dropping %s: editor not mounted', PageAgentIdentifier);
 

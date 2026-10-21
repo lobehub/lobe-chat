@@ -154,4 +154,17 @@ describe('composeEnabledTools', () => {
       expect(result.tools).toEqual(toolsDetailed.tools);
     });
   });
+
+  describe('page agent on an HTML page', () => {
+    it('keeps the page tool though no editor is mounted', () => {
+      // The manifest arrives already narrowed to the HTML APIs (`resolvePageAgentManifest`).
+      const result = composeEnabledTools({
+        context: { isHtmlPage: true, isPageEditorReady: false, scope: 'page' },
+        toolsDetailed: makeToolsDetailed([PAGE_AGENT_MANIFEST, OTHER_MANIFEST]),
+      });
+
+      expect(result.enabledToolIds).toEqual([PageAgentIdentifier, 'lobe-agent-documents']);
+      expect(result.tools).toHaveLength(2);
+    });
+  });
 });

@@ -73,6 +73,11 @@ export interface ToolRuleRequest {
     hasImageOutput?: boolean;
   };
   /**
+   * Tools the conversation scope requires (the page tool in page scope): on in
+   * every tool mode, still subject to the walls. See `scopeRequiredToolIds`.
+   */
+  requiredToolIds?: readonly string[];
+  /**
    * Plugin identifiers the runtime resolved beyond the agent's own (sub-agent,
    * group or page scope); enabled like pinned plugins in agent mode.
    */

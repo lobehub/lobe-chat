@@ -71,6 +71,7 @@ import { getUserStoreState } from '@/store/user/store';
 import { buildRunLifecycle } from '../../lifecycle/buildRunLifecycle';
 import type { RunParkedReason, RunScope } from '../../lifecycle/types';
 import { buildViewedTaskPrompt } from '../viewedTaskPrompt';
+import { resolveClientPageDocumentType } from './pageDocumentType';
 
 const log = debug('lobe-store:streaming-executor');
 
@@ -184,6 +185,8 @@ export class StreamingExecutorActionImpl {
     const operation = operationId ? this.#get().operations[operationId] : undefined;
     const scope = operation?.context.scope;
     const groupId = operation?.context.groupId;
+    const pageDocumentType = resolveClientPageDocumentType(scope, operation?.context.documentId);
+    const isHtmlPage = pageDocumentType === 'html';
 
     // Resolve agent config with builtin agent runtime config merged
     // This ensures runtime plugins (e.g., 'lobe-agent-builder' for Agent Builder) are included
@@ -286,7 +289,7 @@ export class StreamingExecutorActionImpl {
       // Context-aware builtin manifests: lobe-agent hides callSubAgent in group /
       // sub-agent runs. Desktop client runs also need the local environment so
       // local-system can advertise IPC-only capabilities such as direct image reads.
-      { executionEnv: isDesktop ? 'local' : undefined, isSubAgent, scope },
+      { executionEnv: isDesktop ? 'local' : undefined, isSubAgent, pageDocumentType, scope },
       { hasOversizedFiles: hasPreviewableFiles(messages) },
     );
     // When skillActivateMode is 'manual':
@@ -304,6 +307,7 @@ export class StreamingExecutorActionImpl {
 
     const { enabledToolIds, enabledManifests, tools } = composeEnabledTools({
       context: {
+        isHtmlPage,
         isPageEditorReady: pageAgentRuntime.isReady(),
         scope,
       },
@@ -398,7 +402,7 @@ export class StreamingExecutorActionImpl {
     // Build initialContext for page editor if lobe-page-agent is enabled
     let runtimeInitialContext: RuntimeInitialContext | undefined;
 
-    if (scope === 'page' && enabledToolIds.includes(PageAgentIdentifier)) {
+    if (scope === 'page' && !isHtmlPage && enabledToolIds.includes(PageAgentIdentifier)) {
       try {
         // Get page content context from page agent runtime
         const pageContentContext = pageAgentRuntime.getPageContentContext('both');

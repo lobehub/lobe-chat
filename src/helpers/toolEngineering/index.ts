@@ -9,7 +9,7 @@ import {
   type PluginEnableChecker,
 } from '@lobechat/context-engine';
 import { ToolsEngine } from '@lobechat/context-engine';
-import { assembleManifestPool, resolveToolRules } from '@lobechat/mecha';
+import { assembleManifestPool, resolveToolRules, scopeRequiredToolIds } from '@lobechat/mecha';
 import {
   type BuiltinToolResolveContext,
   type ChatCompletionTool,
@@ -189,6 +189,7 @@ export const createAgentToolsEngine = (
         workingModel.provider,
       )(getAiInfraStoreState()),
     },
+    requiredToolIds: scopeRequiredToolIds(manifestContext?.scope),
     runtimePluginIds: pluginIds,
     useApplicationBuiltinSearchTool: searchConfig.useApplicationBuiltinSearchTool,
   });
