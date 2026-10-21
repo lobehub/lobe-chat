@@ -7,6 +7,7 @@ import type {
   ExecAgentClientIds,
   ExecAgentLlmExecutor,
   ExecAgentResult,
+  InterruptStopSnapshot,
   PageSelection,
   ResumeClientLlmWaitResult,
   RuntimeMentionedAgent,
@@ -245,6 +246,8 @@ export interface GetSubAgentTaskStatusParams {
 
 export interface InterruptTaskParams {
   operationId?: string;
+  /** What the user saw when pressing Stop; the server trims the stored reply to it. */
+  stopSnapshot?: InterruptStopSnapshot;
   threadId?: string;
   topicId?: string;
 }

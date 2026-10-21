@@ -4,7 +4,7 @@ import type {
   ToolExecuteData,
 } from '@lobechat/agent-gateway-client';
 import { type AgentState } from '@lobechat/agent-runtime';
-import { type UIChatMessage } from '@lobechat/types';
+import { type InterruptStopSnapshot, type UIChatMessage } from '@lobechat/types';
 
 import { type AgentOperationMetadata, type StepResult } from './AgentStateManager';
 import { type StreamChunkData, type StreamEvent } from './StreamEventManager';
@@ -85,6 +85,12 @@ export interface IAgentStateManager {
   getExecutionHistory: (operationId: string, limit?: number) => Promise<any[]>;
 
   /**
+   * Read the Stop snapshot stored with the interrupt sentinel, if the stop
+   * request carried one. See `InterruptStopSnapshot`.
+   */
+  getInterruptStopSnapshot: (operationId: string) => Promise<InterruptStopSnapshot | undefined>;
+
+  /**
    * Get operation metadata
    */
   getOperationMetadata: (operationId: string) => Promise<AgentOperationMetadata | null>;
@@ -121,9 +127,10 @@ export interface IAgentStateManager {
 
   /**
    * Set the interrupt sentinel for the operation, alongside the
-   * authoritative `status: 'interrupted'` in the persisted state.
+   * authoritative `status: 'interrupted'` in the persisted state. The
+   * optional snapshot records what the client showed when Stop was pressed.
    */
-  markInterrupted: (operationId: string) => Promise<void>;
+  markInterrupted: (operationId: string, stopSnapshot?: InterruptStopSnapshot) => Promise<void>;
 
   /**
    * Extend the step execution lock if it is still owned by the caller.
