@@ -77,8 +77,9 @@ export const prepareHeteroRun = async (
     operationJwt = await signHeteroOperationJWT({
       // A `/goal` run also gets `goal:manage` so it can create the goal the agent
       // supervises; the server still derives the agent and topic from this
-      // operation, never from the CLI.
-      capabilities: heteroOperationCapabilities(prompt),
+      // operation, never from the CLI. A Task run also gets `acceptance:evidence`
+      // for its own verification round.
+      capabilities: heteroOperationCapabilities(prompt, { taskId: operationTaskId }),
       operationId,
       userId: deps.userId,
       workspaceId: deps.workspaceId,
