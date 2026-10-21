@@ -132,7 +132,7 @@ function ProjectTopicList({
       {!request.hasData || isPreferenceLoading ? (
         <SkeletonList />
       ) : !topics.length && !request.error ? (
-        <Text style={{ paddingInline: 8 }} type="secondary">
+        <Text fontSize={12} style={{ paddingInline: 8 }} type="secondary">
           {t('directories.noConversations')}
         </Text>
       ) : filteredEmpty ? (
