@@ -30,7 +30,7 @@ export const RETIRED_PROFILE_GRACE_MS = 7 * 24 * 60 * 60 * 1000;
 export const CLAUDE_CODE_LOGIN_TIMEOUT_MS = 10 * 60 * 1000;
 
 /**
- * Entries of the default `~/.claude` a per-account profile links instead of
+ * Entries of the default login's config dir a per-account profile links instead of
  * owning. Transcripts (`projects`) are shared so a conversation can switch
  * accounts and still `--resume` its native history; the rest is the user's own
  * CLI setup, which should not change with the account. Credentials and the
@@ -60,9 +60,24 @@ interface LoginInProgress {
   process?: ChildProcess;
 }
 
+/**
+ * The config dir of the default login — the one a spawn with no routing
+ * override uses, and the profiles share entries with: a `CLAUDE_CONFIG_DIR`
+ * the desktop process inherited, else `~/.claude`. Same resolution as the
+ * login lookup (`readSignedInIdentity(null)`), so both sides of an account
+ * switch see one transcript tree.
+ */
+export const resolveDefaultClaudeConfigDir = (
+  inheritedEnv: Record<string, string | undefined>,
+  home: string = homedir(),
+): string => {
+  const inherited = inheritedEnv.CLAUDE_CONFIG_DIR;
+  return inherited?.trim() ? inherited : path.join(home, '.claude');
+};
+
 export interface ClaudeCodeAccountProfilesOptions {
-  /** `~` holding the default `.claude` dir the profiles share entries with. */
-  home?: string;
+  /** The default login's config dir, which profiles share entries with. */
+  defaultConfigDir: string;
   /** Root holding one directory per account profile. */
   root: string;
   /** Start `claude <args>` with `CLAUDE_CONFIG_DIR=<configDir>`. */
@@ -87,7 +102,7 @@ const readSignedInIdentity = async (
 /**
  * Drop a profile and the macOS Keychain item its login lives in — removing
  * only the directory would strand a live OAuth token in the Keychain. `rm`
- * unlinks the shared-entry symlinks without following them into `~/.claude`.
+ * unlinks the shared-entry symlinks without following them into the default dir.
  */
 const forgetProfile = async (configDir: string) => {
   await rm(configDir, { force: true, recursive: true });
@@ -132,14 +147,14 @@ const exists = async (target: string) => {
  * an account with no local login here cannot run here.
  */
 export class ClaudeCodeAccountProfiles {
-  readonly #home: string;
+  readonly #defaultConfigDir: string;
   readonly #root: string;
   readonly #spawnLogin: ClaudeCodeAccountProfilesOptions['spawnLogin'];
   readonly #timeoutMs: number;
   #login?: LoginInProgress;
 
   constructor(options: ClaudeCodeAccountProfilesOptions) {
-    this.#home = options.home ?? homedir();
+    this.#defaultConfigDir = options.defaultConfigDir;
     this.#root = options.root;
     this.#spawnLogin = options.spawnLogin;
     this.#timeoutMs = options.timeoutMs ?? CLAUDE_CODE_LOGIN_TIMEOUT_MS;
@@ -280,12 +295,12 @@ export class ClaudeCodeAccountProfiles {
   };
 
   /**
-   * Link the shared entries that exist in `~/.claude` (always `projects`, so
-   * transcripts written from either side land in one place). Idempotent, and
-   * never replaces an entry the profile already has.
+   * Link the shared entries that exist in the default login's config dir
+   * (always `projects`, so transcripts written from either side land in one
+   * place). Idempotent, and never replaces an entry the profile already has.
    */
   #linkSharedEntries = async (configDir: string) => {
-    const defaultDir = path.join(this.#home, '.claude');
+    const defaultDir = this.#defaultConfigDir;
     await mkdir(path.join(defaultDir, 'projects'), { recursive: true });
 
     for (const name of SHARED_ENTRIES) {

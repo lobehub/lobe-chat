@@ -7,7 +7,7 @@ import { HETERO_AGENT_CLAUDE_ACCOUNTS_DIR } from '@/const/heteroAgent';
 import type { App } from '@/core/App';
 import { buildProxyEnv } from '@/modules/networkProxy/envBuilder';
 
-import { ClaudeCodeAccountProfiles } from './claudeCodeAccounts';
+import { ClaudeCodeAccountProfiles, resolveDefaultClaudeConfigDir } from './claudeCodeAccounts';
 
 /**
  * Bind the account profiles to this desktop: profiles live under the app's
@@ -20,6 +20,7 @@ export const createClaudeCodeAccountProfiles = (
   inheritedEnv: () => NodeJS.ProcessEnv,
 ): ClaudeCodeAccountProfiles =>
   new ClaudeCodeAccountProfiles({
+    defaultConfigDir: resolveDefaultClaudeConfigDir(inheritedEnv()),
     root: path.join(app.appStoragePath, HETERO_AGENT_CLAUDE_ACCOUNTS_DIR),
     spawnLogin: async ({ args, configDir }) => {
       const status = await detectHeterogeneousCliCommand('claude-code', 'claude');

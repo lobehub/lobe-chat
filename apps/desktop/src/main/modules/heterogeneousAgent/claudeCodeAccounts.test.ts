@@ -10,6 +10,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import {
   ClaudeCodeAccountProfiles,
   type ClaudeCodeLoginSpawnParams,
+  resolveDefaultClaudeConfigDir,
   RETIRED_PROFILE_GRACE_MS,
 } from './claudeCodeAccounts';
 
@@ -93,7 +94,7 @@ describe('ClaudeCodeAccountProfiles', () => {
     root = path.join(fakeFs.home, 'profiles');
     spawned = [];
     profiles = new ClaudeCodeAccountProfiles({
-      home: fakeFs.home,
+      defaultConfigDir: path.join(fakeFs.home, '.claude'),
       root,
       spawnLogin: async (params) => {
         spawned.push(params);
@@ -169,6 +170,32 @@ describe('ClaudeCodeAccountProfiles', () => {
     const link = path.join(root, 'p1', 'projects');
     expect((await lstat(link)).isSymbolicLink()).toBe(true);
     expect(await readlink(link)).toBe(path.join(fakeFs.home, '.claude', 'projects'));
+  });
+
+  it('shares with an inherited CLAUDE_CONFIG_DIR, the dir the default login runs on', async () => {
+    const inheritedDir = path.join(fakeFs.home, 'custom-claude');
+    profiles = new ClaudeCodeAccountProfiles({
+      defaultConfigDir: resolveDefaultClaudeConfigDir(
+        { CLAUDE_CONFIG_DIR: inheritedDir },
+        fakeFs.home,
+      ),
+      root,
+      spawnLogin: async () => new FakeChild() as never,
+    });
+    await writeLogin(path.join(root, 'p1'), 'acc-p1');
+
+    await profiles.resolve('acc-p1');
+
+    expect(await readlink(path.join(root, 'p1', 'projects'))).toBe(
+      path.join(inheritedDir, 'projects'),
+    );
+  });
+
+  it('falls back to ~/.claude when no CLAUDE_CONFIG_DIR is inherited', () => {
+    expect(resolveDefaultClaudeConfigDir({}, '/home/me')).toBe(path.join('/home/me', '.claude'));
+    expect(resolveDefaultClaudeConfigDir({ CLAUDE_CONFIG_DIR: '  ' }, '/home/me')).toBe(
+      path.join('/home/me', '.claude'),
+    );
   });
 
   it('still resolves a profile when its shared entries cannot be linked', async () => {
