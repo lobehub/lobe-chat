@@ -19,9 +19,10 @@ import type { OIDCAuth } from '../context';
  * these routes the run can produce evidence but never hand it in.
  *
  * The `verify.*` routes bind every read and write to `heteroOperationScope`.
- * The upload routes only store files under the operation's principal, and
- * `user.getUserState` (the report-language check) withholds credentials from
- * this token. Every other route keeps rejecting the token.
+ * `file.createFile` files what this token uploads as private acceptance
+ * evidence, kept out of the creator's library, folders and knowledge bases, and
+ * `user.getUserState` (the report-language check) returns only the response
+ * language to it. Every other route keeps rejecting the token.
  */
 export const HETERO_OPERATION_EVIDENCE_PATHS: ReadonlySet<string> = new Set([
   'file.checkFileHash',
