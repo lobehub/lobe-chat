@@ -109,7 +109,14 @@ export class MessageAnalyticsQueries extends MessageScope {
         },
         pluginError: messagePlugins.error,
         pluginIntervention: messagePlugins.intervention,
-        pluginState: messagePlugins.state,
+        // `state` is jsonb and can carry inline media too — browser-tool
+        // screenshots persist as `state.dataUrl` (builtin-tool-browser client
+        // executor) and would otherwise serialize multi-MB base64 into the
+        // verbatim CLI dump. Redact inside the JSON text at the SQL layer and
+        // cast back to jsonb so consumers keep the object shape.
+        pluginState: sql<
+          Record<string, unknown> | null
+        >`regexp_replace(${messagePlugins.state}::text, '(data:[a-z]+/[a-z0-9.+-]+;base64,)[A-Za-z0-9+/=\\s]{64,}', '\\1...redacted...', 'g')::jsonb`,
       })
       .from(messages)
       .leftJoin(agents, eq(messages.agentId, agents.id))
