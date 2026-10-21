@@ -395,6 +395,7 @@ const assertReferencesBelongToAcceptance = async (
         checkItemId: verifyCheckResults.checkItemId,
         sourceCriterionId: verifyCheckResults.sourceCriterionId,
         runId: verifyRuns.id,
+        plan: verifyRuns.plan,
       })
       .from(verifyEvidence)
       .innerJoin(verifyCheckResults, eq(verifyCheckResults.id, verifyEvidence.checkResultId))
@@ -407,7 +408,13 @@ const assertReferencesBelongToAcceptance = async (
       )
       .limit(1);
     if (!evidence) throw new TRPCError({ code: 'NOT_FOUND', message: 'Evidence not found' });
-    if ((evidence.sourceCriterionId ?? evidence.checkItemId) !== refs.anchor.checkItemId)
+    // Use the producing round's snapshot, even when the viewer is in a later round.
+    // Flow occurrences may share a criterion but remain distinct checks in the union.
+    const item = evidence.plan?.find((item) => item.id === evidence.checkItemId);
+    const checkId = item?.sourceFlowNode
+      ? item.id
+      : (item?.sourceCriterionId ?? evidence.sourceCriterionId ?? evidence.checkItemId);
+    if (checkId !== refs.anchor.checkItemId)
       throw new TRPCError({ code: 'BAD_REQUEST', message: 'Evidence belongs to another check' });
     if (!['screenshot', 'gif', 'video'].includes(evidence.type))
       throw new TRPCError({
