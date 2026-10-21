@@ -13,6 +13,7 @@ import {
   sessionGroups,
   sessions,
   topics,
+  trashItems,
   workspaceMembers,
   workspaces,
 } from '@/database/schemas';
@@ -407,6 +408,138 @@ describe('native Session to Agent compatibility', () => {
     });
   });
 
+  it.each(['agent', 'session'] as const)(
+    'clears delegated replies inside an authorized concrete topic through %s',
+    async (context) => {
+      const { agent: parent, session } = await legacy();
+      const [callee] = await db.insert(agents).values({ userId }).returning();
+      const [topic, otherTopic, visitorTopic] = await db
+        .insert(topics)
+        .values([
+          { userId, agentId: parent.id },
+          { userId, agentId: parent.id },
+          { userId, agentId: parent.id, senderId: 'visitor' },
+        ])
+        .returning();
+      const target = await db
+        .insert(messages)
+        .values([
+          { userId, agentId: parent.id, topicId: topic.id, role: 'user', content: 'Parent turn' },
+          {
+            userId,
+            agentId: callee.id,
+            topicId: topic.id,
+            role: 'assistant',
+            content: 'Delegated reply',
+          },
+          {
+            userId,
+            sessionId: session.id,
+            topicId: topic.id,
+            role: 'user',
+            content: 'Legacy turn',
+          },
+        ])
+        .returning();
+      const protectedRows = await db
+        .insert(messages)
+        .values([
+          {
+            userId,
+            agentId: callee.id,
+            topicId: otherTopic.id,
+            role: 'assistant',
+            content: 'Other topic',
+          },
+          { userId, agentId: callee.id, role: 'assistant', content: 'Default callee' },
+          { userId: otherUserId, topicId: topic.id, role: 'user', content: 'Foreign' },
+          {
+            userId,
+            agentId: parent.id,
+            topicId: visitorTopic.id,
+            role: 'assistant',
+            content: 'Visitor',
+          },
+        ])
+        .returning();
+      const id = context === 'agent' ? parent.id : session.id;
+      const input = { agentId: id, topicId: topic.id };
+      expect((await callers().message.getMessages(input)).map((row) => row.id).sort()).toEqual(
+        target.map((row) => row.id).sort(),
+      );
+      await callers().message.removeMessagesByAssistant(input);
+      expect(await callers().message.getMessages(input)).toEqual([]);
+      for (const row of target)
+        expect(
+          await db.query.messages.findFirst({ where: eq(messages.id, row.id) }),
+        ).toBeUndefined();
+      await expect(
+        callers().message.removeMessagesByAssistant({ agentId: id, topicId: visitorTopic.id }),
+      ).rejects.toMatchObject({ code: 'NOT_FOUND' });
+      await callers().message.removeMessagesByAssistant({ agentId: id });
+      for (const row of protectedRows)
+        expect(await db.query.messages.findFirst({ where: eq(messages.id, row.id) })).toEqual(row);
+    },
+  );
+
+  it.each(['inbox', 'ssn_inbox', 'agent', 'session'] as const)(
+    'trashes unmigrated Inbox orphan topics through %s before background migration',
+    async (context) => {
+      const [inbox, other] = await db
+        .insert(agents)
+        .values([{ userId, slug: 'inbox' }, { userId }])
+        .returning();
+      let sessionId: string | undefined;
+      if (context === 'session') {
+        const [session] = await db
+          .insert(sessions)
+          .values({ userId, slug: 'inbox', type: 'agent' })
+          .returning();
+        sessionId = session.id;
+        await db.insert(agentsToSessions).values({ userId, agentId: inbox.id, sessionId });
+      }
+      const workspaceId = await workspace();
+      const targets = await db
+        .insert(topics)
+        .values([
+          { userId, agentId: inbox.id },
+          { userId },
+          ...(sessionId ? [{ userId, sessionId }] : []),
+        ])
+        .returning();
+      const protectedRows = await db
+        .insert(topics)
+        .values([
+          { userId, agentId: other.id },
+          { userId: otherUserId },
+          { userId, workspaceId },
+          { userId, senderId: 'visitor' },
+          { userId, isDeleted: true },
+        ])
+        .returning();
+      const [message] = await db
+        .insert(messages)
+        .values({ userId, topicId: targets[1].id, role: 'user', content: 'Keep until purge' })
+        .returning();
+      const id = context === 'agent' ? inbox.id : context === 'session' ? sessionId! : context;
+      // No listing/migration is needed for an effective bulk delete.
+      await callers().topic.batchDeleteBySessionId(context === 'agent' ? { agentId: id } : { id });
+      for (const row of targets)
+        expect(await db.query.topics.findFirst({ where: eq(topics.id, row.id) })).toMatchObject({
+          isDeleted: true,
+        });
+      for (const row of protectedRows)
+        expect(await db.query.topics.findFirst({ where: eq(topics.id, row.id) })).toEqual(row);
+      expect(await db.query.messages.findFirst({ where: eq(messages.id, message.id) })).toEqual(
+        message,
+      );
+      const registry = await db.query.trashItems.findMany({ where: eq(trashItems.userId, userId) });
+      expect(registry.map((row) => row.resourceId).sort()).toEqual(
+        targets.map((row) => row.id).sort(),
+      );
+    },
+  );
+
   it('trashes unmigrated Session topics together with Agent topics without adopting another Agent', async () => {
     const { agent, session } = await legacy();
     const [other] = await db.insert(agents).values({ userId }).returning();
@@ -585,7 +718,6 @@ describe('native Session to Agent compatibility', () => {
         .returning();
       const id = context === 'agent' ? inbox.id : context === 'session' ? session.id : context;
       const caller = callers();
-      await caller.message.removeMessagesByAssistant({ sessionId: id, topicId: otherTopic.id });
       for (const parent of ['unassigned', 'agent', 'session'] as const) {
         const [topic] = await db
           .insert(topics)
@@ -657,7 +789,18 @@ describe('native Session to Agent compatibility', () => {
       'view',
       userId,
     );
+    const [topic] = await db
+      .insert(topics)
+      .values({ userId, workspaceId, agentId: agent.id })
+      .returning();
+    const [allowed] = await db
+      .insert(agents)
+      .values({ userId: otherUserId, workspaceId })
+      .returning();
     const member = callers(workspaceId, otherUserId);
+    await expect(
+      member.message.removeMessagesByAssistant({ agentId: allowed.id, topicId: topic.id }),
+    ).rejects.toMatchObject({ code: 'FORBIDDEN' });
     const config = await member.agent.getAgentConfigById({ agentId: session.id });
     expect(config).toMatchObject({ id: agent.id, title: 'Profile' });
     expect(config).not.toHaveProperty('systemRole');

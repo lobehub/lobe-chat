@@ -200,24 +200,26 @@ export class MessageDeleteMutations extends MessageScope {
     const includeVisitor = options?.includeShareVisitor || this.includeShareVisitor;
     const scope = includeVisitor ? this.workspaceScope() : this.ownership();
 
-    return this.db
-      .delete(messages)
-      .where(
-        and(
-          scope,
-          options?.agentId
+    return this.db.delete(messages).where(
+      and(
+        scope,
+        // Concrete topics are authorized by the caller and may contain
+        // delegated replies from several Agents, just like topic reads.
+        topicId
+          ? undefined
+          : options?.agentId
             ? or(
                 eq(messages.agentId, options.agentId),
                 sessionId
                   ? and(isNull(messages.agentId), eq(messages.sessionId, sessionId))
                   : undefined,
-                this.matchLegacyInbox(options.agentId, { topicId, legacySessionId: sessionId }),
+                this.matchLegacyInbox(options.agentId),
               )
             : this.matchSession(sessionId),
-          this.matchTopic(topicId),
-          this.matchGroup(groupId),
-        ),
-      );
+        this.matchTopic(topicId),
+        this.matchGroup(groupId),
+      ),
+    );
   };
 
   /**
