@@ -84,12 +84,7 @@ beforeEach(async () => {
   committed.calls = 0;
   publishing.publish.mockClear();
   await serverDB.delete(users);
-  await serverDB
-    .insert(users)
-    .values([
-      { id: userId, preference: { lab: { enableCanvas: true } } as any },
-      { id: 'stranger' },
-    ]);
+  await serverDB.insert(users).values([{ id: userId }, { id: 'stranger' }]);
   const model = new WorkModel(serverDB, userId);
   for (const [index, key] of ['a', 'b'].entries()) {
     await model.registerCanvas({
@@ -235,10 +230,13 @@ describe('canvasRouter.runAgentTool', () => {
     });
   });
 
-  it('refuses when the Canvas lab is off', async () => {
-    await expect(
-      caller('stranger').runAgentTool({ apiName: 'readCanvasGuide', args: {} }),
-    ).rejects.toThrow();
+  it('runs for any account, with no lab to turn on first', async () => {
+    const result = await caller('stranger').runAgentTool({
+      apiName: 'readCanvasGuide',
+      args: {},
+    });
+
+    expect(result.output.success).toBe(true);
   });
 });
 

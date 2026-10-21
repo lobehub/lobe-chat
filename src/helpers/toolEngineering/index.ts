@@ -3,7 +3,6 @@
  */
 import { AuvManifest } from '@lobechat/builtin-tool-auv';
 import { getFeatureDisabledToolIds } from '@lobechat/builtin-tools/featureGates';
-import { getLabDisabledToolIds } from '@lobechat/builtin-tools/labGates';
 import {
   createEnableChecker,
   type LobeToolManifest,
@@ -174,7 +173,6 @@ export const createAgentToolsEngine = (
     disabledPluginIds: [
       ...agentSelectors.currentAgentDisabledPlugins(agentState),
       ...getFeatureDisabledToolIds(getServerConfigStoreState()?.featureFlags),
-      ...getLabDisabledToolIds(useUserStore.getState().preference?.lab),
     ],
     executionTarget: chatConfigByIdSelectors.getExecutionTargetById(activeAgentId)(agentState),
     hasEnabledKnowledgeBases: agentSelectors.hasEnabledKnowledgeBases(agentState),

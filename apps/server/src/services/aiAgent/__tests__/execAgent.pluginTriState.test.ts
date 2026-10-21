@@ -1,4 +1,3 @@
-import { getLabDisabledToolIds } from '@lobechat/builtin-tools/labGates';
 import type * as ModelBankModule from 'model-bank';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -254,7 +253,7 @@ describe('AiAgentService.execAgent - three-state plugin config (pinned/auto/disa
     await service.execAgent({ agentId: 'agent-1', prompt: 'Hello' } as any);
 
     expect(agentConfigPluginsArg()).toEqual(['plugin-a']);
-    expect(disabledPluginIdsArg()).toEqual(['plugin-b', ...getLabDisabledToolIds(undefined)]);
+    expect(disabledPluginIdsArg()).toEqual(['plugin-b']);
   });
 
   it('behaves identically to a pure string array when no entry is disabled', async () => {

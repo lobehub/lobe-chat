@@ -16,7 +16,6 @@ export type LabStage = 'alpha' | 'beta';
 type LabFeatureI18nKey =
   | 'agentGraphConfig'
   | 'artifactDeployment'
-  | 'canvas'
   | 'claudeCodeSdk'
   | 'codexAppServer'
   | 'desktopSplitView'
@@ -141,12 +140,6 @@ const ALL_LAB_FEATURES: LabFeatureItem[] = [
     i18nKey: 'artifactDeployment',
     searchKeywords: ['artifact', 'deploy', 'publish'],
     stage: 'beta',
-  },
-  {
-    flag: 'enableCanvas',
-    i18nKey: 'canvas',
-    searchKeywords: ['canvas', 'report', 'artifact', 'generative ui'],
-    stage: 'alpha',
   },
   {
     flag: 'enableWorkspaceOnboardingV2',

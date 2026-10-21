@@ -13,10 +13,7 @@ import { appEnv } from '@/envs/app';
 import { router } from '@/libs/trpc/lambda';
 import { serverDatabase } from '@/libs/trpc/lambda/middleware';
 import { createCanvasStorageService } from '@/server/services/canvas';
-import {
-  createCanvasAgentRuntime,
-  isCanvasEnabledForUser,
-} from '@/server/services/canvas/agentRuntime';
+import { createCanvasAgentRuntime } from '@/server/services/canvas/agentRuntime';
 import {
   buildCanvasPublishBundle,
   resolveCanvasPublicRuntimeUrl,
@@ -141,13 +138,6 @@ export const canvasRouter = router({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      if (!(await isCanvasEnabledForUser(ctx.serverDB, ctx.userId))) {
-        throw new TRPCError({
-          code: 'FORBIDDEN',
-          message: 'Canvas is not enabled for this account',
-        });
-      }
-
       const context = input.context ?? {};
       const runtime = createCanvasAgentRuntime(ctx.serverDB, {
         agentId: context.agentId,

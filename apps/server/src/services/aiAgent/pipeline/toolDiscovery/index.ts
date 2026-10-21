@@ -9,7 +9,6 @@ import {
 } from '@lobechat/builtin-tool-self-iteration';
 import { manualModeExcludeToolIds } from '@lobechat/builtin-tools';
 import { getFeatureDisabledToolIds } from '@lobechat/builtin-tools/featureGates';
-import { getLabDisabledToolIds } from '@lobechat/builtin-tools/labGates';
 import type {
   AgentGroupConfig,
   LobeToolManifest,
@@ -121,7 +120,6 @@ export const discoverTools = async (
   const disabledPluginIds = [
     ...requestedDisabledPluginIds,
     ...getFeatureDisabledToolIds(featureFlags),
-    ...getLabDisabledToolIds((await ctx.runFacts.userPreference().catch(() => undefined))?.lab),
   ];
 
   let tools: any[] | undefined;

@@ -4,7 +4,6 @@ import { createMediaFileItemsFromMessage } from '@lobechat/builtin-tool-lobe-age
 
 import { FileModel } from '@/database/models/file';
 import { MessageModel } from '@/database/models/message';
-import { UserModel } from '@/database/models/user';
 import { WorkModel } from '@/database/models/work';
 import type { LobeChatDatabase } from '@/database/type';
 import { FileService } from '@/server/services/file';
@@ -20,11 +19,6 @@ export interface CanvasAgentRuntimeScope {
   userId: string;
   workspaceId?: string;
 }
-
-export const isCanvasEnabledForUser = async (db: LobeChatDatabase, userId: string) => {
-  const preference = await new UserModel(db, userId).getUserPreference();
-  return preference?.lab?.enableCanvas === true;
-};
 
 export const createCanvasFileRefResolverFor = (
   db: LobeChatDatabase,
