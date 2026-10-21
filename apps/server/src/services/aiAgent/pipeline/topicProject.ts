@@ -48,6 +48,7 @@ export const resolveTurnProjectId = async (
   }
 
   if (!input.taskId) return;
-  const task = await new TaskModel(deps.db, deps.userId, deps.workspaceId).findById(input.taskId);
+  // `resolve`, like the operation's own task lookup, so both read the task the same way.
+  const task = await new TaskModel(deps.db, deps.userId, deps.workspaceId).resolve(input.taskId);
   return task?.projectId ?? undefined;
 };

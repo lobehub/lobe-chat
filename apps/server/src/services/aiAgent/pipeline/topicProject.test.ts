@@ -5,7 +5,7 @@ import { resolveTurnProjectId } from './topicProject';
 
 const mocks = vi.hoisted(() => ({
   findById: vi.fn(),
-  findTaskById: vi.fn(),
+  resolveTask: vi.fn(),
 }));
 
 vi.mock('@/database/models/project', () => ({
@@ -16,7 +16,7 @@ vi.mock('@/database/models/project', () => ({
 
 vi.mock('@/database/models/task', () => ({
   TaskModel: vi.fn().mockImplementation(function () {
-    return { findById: mocks.findTaskById };
+    return { resolve: mocks.resolveTask };
   }),
 }));
 
@@ -26,7 +26,7 @@ describe('resolveTurnProjectId', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     mocks.findById.mockImplementation(async (id: string) => ({ id }));
-    mocks.findTaskById.mockResolvedValue(null);
+    mocks.resolveTask.mockResolvedValue(null);
   });
 
   it('starts a new topic in the project the home page opened', async () => {
@@ -68,7 +68,7 @@ describe('resolveTurnProjectId', () => {
   });
 
   it("runs a task's turns inside the task's project", async () => {
-    mocks.findTaskById.mockResolvedValue({ id: 'task-1', projectId: 'proj-task' });
+    mocks.resolveTask.mockResolvedValue({ id: 'task-1', projectId: 'proj-task' });
 
     await expect(
       resolveTurnProjectId(deps, { agentId: 'agt-1', taskId: 'task-1', topicProjectId: null }),
