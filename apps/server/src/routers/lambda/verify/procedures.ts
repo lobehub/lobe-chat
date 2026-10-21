@@ -77,3 +77,20 @@ export const resolveCheckResult = async (
 
   return result;
 };
+
+/**
+ * A run's operation token (`heteroOperationScope`, let through by
+ * `authorizeHeteroOperationEvidence`) reaches only the round of the operation
+ * it was minted for. A user session passes through.
+ */
+export const assertOperationInScope = (
+  ctx: { heteroOperationScope?: string },
+  operationId: string | null | undefined,
+) => {
+  if (ctx.heteroOperationScope && operationId !== ctx.heteroOperationScope) {
+    throw new TRPCError({
+      code: 'FORBIDDEN',
+      message: "This run's token can only reach its own verification round",
+    });
+  }
+};

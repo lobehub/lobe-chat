@@ -123,10 +123,11 @@ export const profileRouter = router({
       lastName: state.lastName,
       onboarding: state.onboarding,
       preference: state.preference as UserPreference,
-      // restricted API keys must not read decrypted provider/tool credentials
-      // or Marketplace OAuth tokens
+      // restricted API keys and a run's operation token must not read decrypted
+      // provider/tool credentials or Marketplace OAuth tokens
       settings:
-        ctx.apiKeyScopes !== undefined && !isFullAccessApiKey(ctx.apiKeyScopes)
+        (ctx.apiKeyScopes !== undefined && !isFullAccessApiKey(ctx.apiKeyScopes)) ||
+        ctx.heteroOperationScope
           ? { ...state.settings, keyVaults: undefined, market: undefined }
           : state.settings,
       userId: ctx.userId,

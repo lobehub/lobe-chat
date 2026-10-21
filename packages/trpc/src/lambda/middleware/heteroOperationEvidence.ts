@@ -1,0 +1,84 @@
+import { TRPCError } from '@trpc/server';
+
+import { getServerDB } from '@/database/core/db-adaptor';
+import {
+  HeteroOperationPrincipalError,
+  resolveActiveHeteroOperationPrincipal,
+} from '@/server/services/heterogeneousAgent/operationPrincipal';
+
+import { validateHeteroOperationClaims } from '../../utils/internalJwt';
+import type { OIDCAuth } from '../context';
+
+/**
+ * Routes a Task run's operation token may call to file evidence into its own
+ * verification round: what `lh acceptance run result submit --operation` and
+ * `lh acceptance run ingest --operation` reach on the plan-round path.
+ *
+ * The round is owned by the operation's creator. On a device logged in as
+ * another member the token is the only identity that can reach it, so without
+ * these routes the run can produce evidence but never hand it in.
+ *
+ * The `verify.*` routes bind every read and write to `heteroOperationScope`.
+ * The upload routes only store files under the operation's principal, and
+ * `user.getUserState` (the report-language check) withholds credentials from
+ * this token. Every other route keeps rejecting the token.
+ */
+export const HETERO_OPERATION_EVIDENCE_PATHS: ReadonlySet<string> = new Set([
+  'file.checkFileHash',
+  'file.createFile',
+  'upload.abortS3Upload',
+  'upload.createS3PreSignedUrl',
+  'user.getUserState',
+  'verify.getRun',
+  'verify.getVerifyState',
+  'verify.listResults',
+  'verify.submitCheckEvidence',
+  'verify.uploadEvidence',
+]);
+
+const reject = (message = 'hetero-operation tokens are not accepted on this endpoint') =>
+  new TRPCError({ code: 'UNAUTHORIZED', message });
+
+/**
+ * Let a `hetero-operation` token through to an evidence route, or throw.
+ *
+ * The token must carry `acceptance:evidence`, stay in the workspace it was
+ * minted for, and belong to a run that is still going under a principal that
+ * is still authorized — the same re-check every other operation endpoint makes.
+ */
+export const authorizeHeteroOperationEvidence = async (params: {
+  oidcAuth: OIDCAuth;
+  path: string;
+  workspaceId?: string | null;
+}) => {
+  const { oidcAuth, path, workspaceId } = params;
+  if (!HETERO_OPERATION_EVIDENCE_PATHS.has(path)) throw reject();
+
+  const claims = validateHeteroOperationClaims(oidcAuth as Record<string, unknown>);
+  if (!claims?.capabilities.includes('acceptance:evidence')) throw reject();
+  // A header naming another workspace must not move the token out of its own.
+  if (workspaceId && workspaceId !== claims.workspace_id) {
+    throw reject('Operation token is bound to another workspace');
+  }
+
+  try {
+    const principal = await resolveActiveHeteroOperationPrincipal({
+      capability: 'acceptance:evidence',
+      claims,
+      db: await getServerDB(),
+      operationId: claims.operation_id,
+    });
+    return {
+      heteroOperationScope: principal.operationId,
+      userId: principal.userId,
+      workspaceId: principal.workspaceId,
+    };
+  } catch (error) {
+    if (!(error instanceof HeteroOperationPrincipalError)) throw error;
+    throw new TRPCError({
+      cause: error,
+      code: error.status === 401 ? 'UNAUTHORIZED' : error.status === 409 ? 'CONFLICT' : 'FORBIDDEN',
+      message: error.message,
+    });
+  }
+};
