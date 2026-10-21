@@ -1313,6 +1313,7 @@
   "heteroAgent.apiMode.providerUnavailable": "服务商「{{providerId}}」已禁用或不再可用。",
   "heteroAgent.claudeQuota.accountActive": "使用中",
   "heteroAgent.claudeQuota.accountNotSignedIn": "Claude Code 账号 {{account}} 未在本机登录。请在账号管理中登录该账号，或切换到其他账号。",
+  "heteroAgent.claudeQuota.accountResolveFailed": "无法在本机查找该 Claude Code 账号的登录。请重试，或切换到其他账号。",
   "heteroAgent.claudeQuota.accountSwitch": "切换",
   "heteroAgent.claudeQuota.accounts": "账号",
   "heteroAgent.claudeQuota.calendar.accountUnavailable": "当前快照对应的额度账号不可用",

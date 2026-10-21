@@ -171,6 +171,17 @@ describe('ClaudeCodeAccountProfiles', () => {
     expect(await readlink(link)).toBe(path.join(fakeFs.home, '.claude', 'projects'));
   });
 
+  it('still resolves a profile when its shared entries cannot be linked', async () => {
+    await writeLogin(path.join(root, 'p1'), 'acc-p1');
+    // `~/.claude` is not a directory, so even creating `projects` fails.
+    await writeFile(path.join(fakeFs.home, '.claude'), 'not a dir');
+
+    expect(await profiles.resolve('acc-p1')).toEqual({
+      configDir: path.join(root, 'p1'),
+      kind: 'profile',
+    });
+  });
+
   it('links shared directories as junctions on Windows, which need no elevation', async () => {
     await writeLogin(path.join(root, 'p1'), 'acc-p1');
     await mkdir(path.join(fakeFs.home, '.claude', 'skills'), { recursive: true });

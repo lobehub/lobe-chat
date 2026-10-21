@@ -1313,6 +1313,7 @@
   "heteroAgent.apiMode.providerUnavailable": "The provider \"{{providerId}}\" is disabled or no longer available.",
   "heteroAgent.claudeQuota.accountActive": "In use",
   "heteroAgent.claudeQuota.accountNotSignedIn": "The Claude Code account {{account}} isn't signed in on this device. Sign in to it from Manage accounts, or switch to another account.",
+  "heteroAgent.claudeQuota.accountResolveFailed": "Couldn't look up this Claude Code account's login on this device. Try again, or switch to another account.",
   "heteroAgent.claudeQuota.accountSwitch": "Switch",
   "heteroAgent.claudeQuota.accounts": "Accounts",
   "heteroAgent.claudeQuota.calendar.accountUnavailable": "The quota account for this snapshot is unavailable",

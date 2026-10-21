@@ -160,7 +160,13 @@ const QuotaAccountManager = memo<{ agentId: string }>(({ agentId }) => {
     [allAccounts],
   );
   const loadedBindings = useAgentQuotaStore(agentQuotaSelectors.bindings(agentId));
-  const bindings = loadedBindings ?? EMPTY_BINDINGS;
+  // Bindings are provider-blind; another coding agent's pin is not a Claude
+  // choice (Claude routing skips it), so this manager neither shows nor
+  // touches bindings of accounts it does not list.
+  const bindings = useMemo(() => {
+    const claudeIds = new Set(accounts.map((a) => a.id));
+    return (loadedBindings ?? EMPTY_BINDINGS).filter((b) => claudeIds.has(b.accountId));
+  }, [accounts, loadedBindings]);
   // Until this agent's bindings are on screen, every row would read as "off"
   // and Auto as routing to nobody: keep the mode and per-account controls
   // disabled and show no routing hint instead of acting on that guess.

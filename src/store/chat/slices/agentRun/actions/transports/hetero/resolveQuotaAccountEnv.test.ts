@@ -136,15 +136,17 @@ describe('resolveQuotaAccountSpawnPlan', () => {
     expect(resolveClaudeCodeAccount).not.toHaveBeenCalled();
   });
 
-  it('keeps the default login when the desktop cannot answer', async () => {
-    selectAccountForAgent.mockResolvedValue(selection({ reason: 'balanced' }));
-    resolveClaudeCodeAccount.mockRejectedValue(new Error('no ipc'));
+  it.each(['pinned', 'balanced'])(
+    'fails a %s run whose local login lookup fails, never starting on the default login',
+    async (reason) => {
+      selectAccountForAgent.mockResolvedValue(selection({ reason }));
+      resolveClaudeCodeAccount.mockRejectedValue(new Error('EACCES'));
 
-    const plan = await resolveQuotaAccountSpawnPlan('agt-1', 'claude-code');
-
-    expect(selectAccountForAgent).toHaveBeenCalledWith('agt-1', { provider: 'claude-code' });
-    expect(plan.env).toEqual({});
-  });
+      await expect(resolveQuotaAccountSpawnPlan('agt-1', 'claude-code')).rejects.toThrow(
+        /Couldn't look up/,
+      );
+    },
+  );
 
   it('keeps routing when an external-provider flag is set to off', async () => {
     selectAccountForAgent.mockResolvedValue(selection({ externalAccountId: 'ext-elsewhere' }));

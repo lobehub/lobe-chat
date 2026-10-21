@@ -21,15 +21,21 @@ type AccountSelection = NonNullable<
 
 /**
  * Where this desktop holds the chosen account's login. `null` = nothing to
- * map (a managed account, no external id, or the desktop could not answer):
- * the spawn keeps the default login, as before routing existed.
+ * map (a managed account, or no external id): the spawn keeps the default
+ * login, as before routing existed. A failed lookup is NOT that — the run
+ * fails instead of starting on a login nobody selected.
  */
-const resolveLocalLogin = async (selection: AccountSelection) =>
-  selection.credentialMode === 'referenced' && selection.externalAccountId
-    ? heterogeneousAgentService
-        .resolveClaudeCodeAccount(selection.externalAccountId)
-        .catch(() => null)
-    : null;
+const resolveLocalLogin = async (selection: AccountSelection) => {
+  if (selection.credentialMode !== 'referenced' || !selection.externalAccountId) return null;
+  try {
+    return await heterogeneousAgentService.resolveClaudeCodeAccount(selection.externalAccountId);
+  } catch (error) {
+    console.error('[HeterogeneousAgent] Claude Code account resolution failed:', error);
+    throw new Error(t('heteroAgent.claudeQuota.accountResolveFailed', { ns: 'chat' }), {
+      cause: error,
+    });
+  }
+};
 
 /**
  * Agent env keys that already choose which login (or credential) the CLI

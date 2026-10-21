@@ -177,7 +177,10 @@ export class ClaudeCodeAccountProfiles {
     if (!match) return { kind: 'missing' };
     if (!match.configDir) return { kind: 'default' };
 
-    await this.#linkSharedEntries(match.configDir);
+    // Sharing is best-effort: the profile runs without it (a missing
+    // transcript is rebuilt into the profile on resume), so a link problem
+    // must not fail the lookup and with it the run.
+    await this.#linkSharedEntries(match.configDir).catch(() => {});
     return { configDir: match.configDir, kind: 'profile' };
   };
 

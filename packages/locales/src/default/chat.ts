@@ -19,6 +19,8 @@ export default {
     'Resource data is unavailable. Displayed values may be out of date.',
   'heteroAgent.claudeQuota.accountNotSignedIn':
     "The Claude Code account {{account}} isn't signed in on this device. Sign in to it from Manage accounts, or switch to another account.",
+  'heteroAgent.claudeQuota.accountResolveFailed':
+    "Couldn't look up this Claude Code account's login on this device. Try again, or switch to another account.",
   'heteroAgent.claudeQuota.manage.add': 'Add account',
   'heteroAgent.claudeQuota.manage.addHintDesktop':
     'Each account signs in on this device; runs use the account you pick.',

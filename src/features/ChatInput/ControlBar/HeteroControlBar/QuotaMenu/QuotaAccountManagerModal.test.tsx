@@ -83,6 +83,25 @@ describe('QuotaAccountManager', () => {
     expect(checkedOption()).toContain('heteroAgent.claudeQuota.manage.modeAuto');
   });
 
+  it('treats another coding agent’s pin as Auto for Claude and leaves it alone', async () => {
+    vi.spyOn(agentQuotaService, 'listAccounts').mockResolvedValue([
+      account('a1'),
+      { ...account('kimi'), provider: 'kimi-code' } as QuotaAccount,
+    ]);
+    vi.spyOn(agentQuotaService, 'listBindings').mockResolvedValue([
+      binding('b1', 'a1', 'pool'),
+      binding('b2', 'kimi', 'pinned'),
+    ]);
+
+    render(<QuotaAccountManager agentId={'agent-1'} />);
+
+    // Claude routing skips the Kimi pin, so for Claude this agent is on Auto.
+    await vi.waitFor(() =>
+      expect(checkedOption()).toContain('heteroAgent.claudeQuota.manage.modeAuto'),
+    );
+    expect(screen.getByText(/heteroAgent\.claudeQuota\.manage\.autoRoutingTo/)).toBeTruthy();
+  });
+
   it('selects the pinned account once the bindings load', async () => {
     let answerBindings!: (rows: QuotaBinding[]) => void;
     vi.spyOn(agentQuotaService, 'listBindings').mockImplementation(
