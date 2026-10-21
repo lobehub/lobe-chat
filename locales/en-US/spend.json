@@ -35,6 +35,7 @@
   "table.columns.trigger.enums.history_summary": "History Summary",
   "table.columns.trigger.enums.image": "Image Generation",
   "table.columns.trigger.enums.input_completion": "Input Completion",
+  "table.columns.trigger.enums.meeting_minutes": "Meeting Minutes",
   "table.columns.trigger.enums.memory": "Memory Extraction",
   "table.columns.trigger.enums.multimodal_analysis": "Multimodal Analysis",
   "table.columns.trigger.enums.notify": "Notification",

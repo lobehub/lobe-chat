@@ -24,8 +24,10 @@ import {
 
 type ModelAssignmentItemKey = Exclude<
   UserServiceModelConfigKey,
-  'asr' | 'onboardingTaskRecommender' | 'onboardingUnderstanding'
+  SpeechModelKey | 'onboardingTaskRecommender' | 'onboardingUnderstanding'
 >;
+
+type SpeechModelKey = 'asr' | 'meetingTranscription';
 
 interface SystemAgentModelItem {
   contextLimit?: boolean;
@@ -40,6 +42,7 @@ type SavingGroup = 'assignments' | 'memory' | 'optional';
 const SYSTEM_AGENT_MODEL_ITEMS: SystemAgentModelItem[] = [
   { key: 'expertise' },
   { key: 'goal' },
+  { key: 'meetingMinutes' },
   { key: 'topic' },
   { key: 'generationTopic' },
   { key: 'translation' },
@@ -101,7 +104,12 @@ const ModelAssignmentsForm = memo<ModelAssignmentsFormProps>(({ hidePersonalPref
 
   const groupOfKey = (key: UserServiceModelConfigKey): SavingGroup => {
     if (MEMORY_MODEL_ITEMS.some((item) => item.key === key)) return 'memory';
-    if (key === 'asr' || OPTIONAL_FEATURE_ITEMS.some((item) => item.key === key)) return 'optional';
+    if (
+      key === 'asr' ||
+      key === 'meetingTranscription' ||
+      OPTIONAL_FEATURE_ITEMS.some((item) => item.key === key)
+    )
+      return 'optional';
     return 'assignments';
   };
 
@@ -305,33 +313,35 @@ const ModelAssignmentsForm = memo<ModelAssignmentsFormProps>(({ hidePersonalPref
     } satisfies FormFieldProps;
   });
 
-  const asrValue = systemAgentSettings.asr;
-  const asrItem: FormFieldProps = {
-    children: (
-      <Tooltip title={reason}>
-        <Flexbox
-          align="center"
-          direction="horizontal"
-          gap={12}
-          style={{ width: 'min(100%, 448px)' }}
-        >
-          <ModelSelect
-            allowClear
-            disabled={!canManageServiceModel}
-            modelType={'asr'}
-            placeholder={t('systemAgent.asr.placeholder')}
-            showAbility={false}
-            style={{ minWidth: 0, width: '100%' }}
-            // Empty means unconfigured: render the placeholder rather than a blank selection.
-            value={asrValue.model && asrValue.provider ? asrValue : undefined}
-            onChange={(props) => updateSystemAgentModel('asr', props)}
-            onClear={() => updateSystemAgentModel('asr', { model: '', provider: '' })}
-          />
-        </Flexbox>
-      </Tooltip>
-    ),
-    desc: t('systemAgent.asr.modelDesc'),
-    label: t('systemAgent.asr.title'),
+  const renderSpeechModelItem = (key: SpeechModelKey): FormFieldProps => {
+    const value = systemAgentSettings[key];
+    return {
+      children: (
+        <Tooltip title={reason}>
+          <Flexbox
+            align="center"
+            direction="horizontal"
+            gap={12}
+            style={{ width: 'min(100%, 448px)' }}
+          >
+            <ModelSelect
+              allowClear
+              disabled={!canManageServiceModel}
+              modelType={'asr'}
+              placeholder={t(`systemAgent.${key}.placeholder`)}
+              showAbility={false}
+              style={{ minWidth: 0, width: '100%' }}
+              // Empty means unconfigured: render the placeholder rather than a blank selection.
+              value={value.model && value.provider ? value : undefined}
+              onChange={(props) => updateSystemAgentModel(key, props)}
+              onClear={() => updateSystemAgentModel(key, { model: '', provider: '' })}
+            />
+          </Flexbox>
+        </Tooltip>
+      ),
+      desc: t(`systemAgent.${key}.modelDesc`),
+      label: t(`systemAgent.${key}.title`),
+    };
   };
 
   const renderSaveHint = (group: SavingGroup) =>
@@ -350,7 +360,11 @@ const ModelAssignmentsForm = memo<ModelAssignmentsFormProps>(({ hidePersonalPref
   };
 
   const optionalFeatures: FormGroupItem = {
-    children: [...optionalFeatureItems, asrItem],
+    children: [
+      ...optionalFeatureItems,
+      renderSpeechModelItem('asr'),
+      renderSpeechModelItem('meetingTranscription'),
+    ],
     extra: renderSaveHint('optional'),
     title: (
       <SettingsSearchAnchor id={'service-model-optional-features'}>
