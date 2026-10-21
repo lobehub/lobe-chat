@@ -88,7 +88,7 @@ export const LibraryCard = memo<LibraryCardProps>(({ library, onOpen }) => {
   return (
     <button type={'button'} {...stylex.props(styles.card)} onClick={() => onOpen(library.id)}>
       <LibraryCover cover={libraryCoverOf(library.settings)} height={88} seed={library.id} />
-      <Flexbox gap={6} padding={'12px 14px 14px'} width={'100%'}>
+      <Flexbox gap={6} paddingBlock={12} paddingInline={14} width={'100%'}>
         <Flexbox horizontal align={'center'} gap={6}>
           <LibraryStatusIcon
             memberRestricted={(library as { memberRestricted?: boolean }).memberRestricted}
