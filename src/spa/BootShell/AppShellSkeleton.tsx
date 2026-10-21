@@ -1,8 +1,10 @@
 'use client';
 
 import { TITLE_BAR_HEIGHT } from '@lobechat/desktop-bridge';
-import { createStaticStyles, Flexbox, keyframes } from '@lobehub/ui';
+import { Flexbox } from '@lobehub/ui';
 import { LobeHub } from '@lobehub/ui/brand';
+import { cssVar } from '@lobehub/ui/stylex/cssVar.stylex';
+import * as stylex from '@stylexjs/stylex';
 import { memo, useEffect, useLayoutEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -14,7 +16,9 @@ import {
 } from '@/features/DesktopLayoutContainer/cssVariables';
 import { styles as containerStyles } from '@/features/DesktopLayoutContainer/style';
 import { electronStylish } from '@/styles/electron';
+import { sx } from '@/styles/sx';
 
+import moduleStyles from './AppShellSkeleton.module.css';
 import { readBootShellGeometry } from './geometry';
 
 // antd emits its design tokens as `.lobe-vars{--ant-*: …}` — a plain global
@@ -30,72 +34,54 @@ const HINT_DELAY = 1000;
 // The X half of the transform is the centering, not the motion — it has to be
 // restated in both frames or the keyframe overwrites it and the caption jumps
 // to the anchor's left edge.
-const slideUp = keyframes`
-  from {
-    opacity: 0;
-    transform: translate(-50%, 10px);
-  }
+const slideUp = stylex.keyframes({
+  from: { opacity: 0, transform: 'translate(-50%, 10px)' },
+  to: { opacity: 1, transform: 'translate(-50%, 0)' },
+});
 
-  to {
-    opacity: 1;
-    transform: translate(-50%, 0);
-  }
-`;
-
-const styles = createStaticStyles(({ css, cssVar }) => ({
-  contentBrand: css`
-    pointer-events: none;
-
-    position: absolute;
-    inset: 0;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    color: ${cssVar.colorTextQuaternary};
-  `,
+const styles = stylex.create({
+  contentBrand: {
+    pointerEvents: 'none',
+    position: 'absolute',
+    inset: 0,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    color: cssVar.colorTextQuaternary,
+  },
   // Floated rather than stacked in flow: a caption that joins the column would
   // push the brand mark off the center it shares with the app that replaces it.
-  hint: css`
-    position: absolute;
-    inset-block-start: calc(100% + 8px);
-    inset-inline-start: 50%;
-
-    font-size: 13px;
-    white-space: nowrap;
-
-    animation: ${slideUp} 0.42s ${cssVar.motionEaseOut} both;
-  `,
-  brand: css`
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  `,
-  dragRegion: css`
-    pointer-events: auto;
-    flex-shrink: 0;
-    width: 100%;
-    height: ${TITLE_BAR_HEIGHT}px;
-  `,
-  root: css`
-    pointer-events: none;
-
-    position: fixed;
-    z-index: 99999;
-    inset: 0;
-
-    display: flex;
-    flex-direction: column;
-
-    /* Dialogs live inside the theme's isolated stacking context, so lowering
-       this z-index alone cannot reveal them. Yield without releasing the boot gate. */
-    body:has([role='dialog'][data-open]) & {
-      visibility: hidden;
-    }
-  `,
-}));
+  hint: {
+    position: 'absolute',
+    insetBlockStart: 'calc(100% + 8px)',
+    insetInlineStart: '50%',
+    fontSize: '13px',
+    whiteSpace: 'nowrap',
+    animationName: slideUp,
+    animationDuration: '0.42s',
+    animationTimingFunction: cssVar.motionEaseOut,
+    animationFillMode: 'both',
+  },
+  brand: {
+    position: 'relative',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  dragRegion: {
+    pointerEvents: 'auto',
+    flexShrink: 0,
+    width: '100%',
+  },
+  root: {
+    pointerEvents: 'none',
+    position: 'fixed',
+    zIndex: 99_999,
+    inset: 0,
+    display: 'flex',
+    flexDirection: 'column',
+  },
+});
 
 /**
  * Split out so `useTranslation` runs only once the hint is due. The boot shell
@@ -106,7 +92,7 @@ const styles = createStaticStyles(({ css, cssVar }) => ({
 const LoadingHint = memo(() => {
   const { t } = useTranslation('common');
 
-  return <div className={styles.hint}>{t('stillLoading')}</div>;
+  return <div {...stylex.props(styles.hint)}>{t('stillLoading')}</div>;
 });
 
 LoadingHint.displayName = 'AppShellLoadingHint';
@@ -127,8 +113,12 @@ const AppShellSkeleton = memo<AppShellSkeletonProps>(({ id }) => {
   }, []);
 
   return (
-    <div aria-hidden className={`${CSS_VAR_CLASS} ${styles.root}`} id={id}>
-      {isDesktop && <div className={`${styles.dragRegion} ${electronStylish.draggable}`} />}
+    <div aria-hidden id={id} {...sx([styles.root], `${CSS_VAR_CLASS} ${moduleStyles.yield}`)}>
+      {isDesktop && (
+        <div
+          {...sx([styles.dragRegion], electronStylish.draggable, { height: TITLE_BAR_HEIGHT })}
+        />
+      )}
       <Flexbox
         horizontal
         height={isDesktop ? `calc(100% - ${TITLE_BAR_HEIGHT}px)` : '100%'}
@@ -157,8 +147,8 @@ const AppShellSkeleton = memo<AppShellSkeletonProps>(({ id }) => {
             style={getInnerCssVariables({ isDark })}
             width={'100%'}
           >
-            <div className={styles.contentBrand}>
-              <div className={styles.brand}>
+            <div {...stylex.props(styles.contentBrand)}>
+              <div {...stylex.props(styles.brand)}>
                 <LobeHub size={40} type={'text'} />
                 {waiting && <LoadingHint />}
               </div>
