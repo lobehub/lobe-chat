@@ -92,24 +92,50 @@ const computeTopicMessageStats = (counts: number[]): TopicMessageStats => {
  */
 const MIME_TOKEN = '[^\\s()<>@,;:\\\\"/\\[\\]?=]';
 const DATA_URL_HEADER =
-  `(data:(?:audio|image|video)/${MIME_TOKEN}+(?:;${MIME_TOKEN}+(?:=${MIME_TOKEN}*)?)*)`;
+  `(data:(?:audio|image|video)/${MIME_TOKEN}+(?:;(?!base64)${MIME_TOKEN}+(?:=${MIME_TOKEN}*)?)*)`;
 // base64 form: the payload alphabet stops at the first character outside it,
 // so anything after the data URL (e.g. an escaped quote in an HTML
 // attribute) survives the rewrite.
 const DATA_URL_BASE64_PATTERN =
   `(${DATA_URL_HEADER};base64,)` +
   '(?:[A-Za-z0-9+/=\\s]|\\\\[nrtbf]|%[0-9a-fA-F]{2}){64,}';
-// raw (non-base64) form: markup/percent-encoded payloads run to the
-// JSON-string boundary in complete units (`[^"\\]` or an escaped pair) — a
-// bare-backslash class would consume the `\\` of a `\\"` escape, leave the
-// quote dangling, and corrupt the JSON text (the jsonb cast then fails the
-// whole query). The lookahead keeps base64 URLs out of this branch, and the
-// comma separator is REQUIRED so plain long strings (`data:image/png
-// followed by docs...`) never match.
+// raw (non-base64) form, primary pass: markup/percent-encoded payloads stop
+// at an escaped quote in complete units (`[^"\\]`, or an escaped pair whose
+// second character is neither a quote nor a backslash `\\[^"\\]`). `\"`
+// closes the embedded JSON string, so treating it as payload would run
+// through the surrounding text (attribute suffix, markup tail) to the outer
+// JSON boundary and silently truncate the exported content beyond the URL —
+// the defect Codex flagged. `\\` pairs are refused here too: in DB text a
+// post-URL escaped quote reads `\\\"` (escaped backslash + escaped quote),
+// and consuming the `\\` pair would eat the value-level backslash that
+// belongs to the suffix after the URL — refusing it keeps that backslash in
+// the export and hands payloads that contain real backslashes to the
+// fallback pass below. A bare-backslash class would also eat the `\` of a
+// `\"` escape, leaving the quote dangling and corrupting the JSON text (the
+// jsonb cast then fails the whole query) — both are excluded by the
+// second-character guard. The lookahead keeps base64 URLs out of this
+// branch, and the comma separator is REQUIRED so plain long strings
+// (`data:image/png followed by docs...`) never match.
 const DATA_URL_RAW_PATTERN =
   `(${DATA_URL_HEADER}(?!;base64),)` +
+  '(?:(?:[^"\\\\]|\\\\[^"\\\\])){64,}';
+// raw form, fallback pass: the primary pass above cannot match a payload
+// that itself contains `\"` (double-quoted SVG attributes are the common
+// case) — the match dies on the first embedded escaped quote and the whole
+// URL leaks. This pass restores full-payload redaction for those (matching
+// through to the outer JSON boundary, accepting the suffix truncation the
+// primary pass avoids). The `(?!...redacted...)` lookahead after the comma
+// keeps this pass off the primary pass's own output: the placeholder is a
+// fixed 15-character quote-free literal, so a redacted URL can never
+// re-match here and its preserved suffix is safe.
+const DATA_URL_RAW_FALLBACK_PATTERN =
+  `(${DATA_URL_HEADER}(?!;base64),(?!\\.\\.\\.redacted\\.\\.\\.))` +
   '(?:[^"\\\\]|\\\\.){64,}';
-const DATA_URL_REDACT_PATTERNS = [DATA_URL_BASE64_PATTERN, DATA_URL_RAW_PATTERN];
+const DATA_URL_REDACT_PATTERNS = [
+  DATA_URL_BASE64_PATTERN,
+  DATA_URL_RAW_PATTERN,
+  DATA_URL_RAW_FALLBACK_PATTERN,
+];
 const DATA_URL_REDACT_REPLACEMENT = '\\1...redacted...';
 
 

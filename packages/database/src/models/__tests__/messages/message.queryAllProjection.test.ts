@@ -416,4 +416,73 @@ describe('MessageModel queryAll — tool-call plugin projection', () => {
     expect(args.note).toBe(nearMiss);
     expect(row.tool_call_id).toBe('call_near_miss');
   });
+
+  it('preserves the string suffix after a base64 URL with a long non-base64 tail', async () => {
+    // The generic-parameter loop once absorbed a bare `;base64` (no comma)
+    // as a media-type parameter, so the raw pass re-matched an
+    // already-redacted base64 URL: its `(?!;base64)` was evaluated at the
+    // comma after the absorbed parameter and succeeded, and the raw body
+    // then consumed the escaped closing quote plus the whole suffix through
+    // the outer JSON boundary — silently truncating exported content. The
+    // parameter loop now refuses `;base64,` so the raw pass cannot
+    // re-match base64 URLs and the suffix survives verbatim.
+    const suffix = `<svg xmlns='x'>${'Z'.repeat(300)}</svg>`;
+    const note = `data:image/png;base64,${'B'.repeat(200_000)}${suffix}`;
+    await serverDB.insert(messages).values({
+      id: 'q-redact-base64-suffix',
+      userId,
+      role: 'tool',
+      content: 'base64 suffix payload',
+    });
+    await serverDB.insert(messagePlugins).values({
+      id: 'q-redact-base64-suffix',
+      apiName: 'analyzeMedia',
+      arguments: JSON.stringify({ note }),
+      identifier: 'lobe-agent',
+      toolCallId: 'call_redact_base64_suffix',
+      userId,
+    });
+
+    const result = await messageModel.queryAll();
+    const row = result.find((m) => m.id === 'q-redact-base64-suffix') as any;
+    const args = JSON.parse(row.plugin.arguments);
+
+    expect(args.note).toBe(`data:image/png;base64,...redacted...${suffix}`);
+    expect(row.plugin.arguments.length).toBeLessThan(500);
+    expect(row.tool_call_id).toBe('call_redact_base64_suffix');
+  });
+
+  it('preserves the HTML suffix after a raw SVG data URL embedded in an attribute', async () => {
+    // The raw body class once treated the attribute-closing escaped quote
+    // as payload (`\\.` consumed `\"`) and kept matching through
+    // ` alt=\"shot\" width=\"2\">}` to the outer JSON boundary — the JSONB
+    // cast still succeeded but the export silently lost everything after
+    // the URL. The raw body now stops at escaped-quote delimiters: `\"`
+    // ends the embedded string instead of riding along as payload.
+    const bigSvg = `<svg xmlns='http://www.w3.org/2000/svg'>${'<rect width=1 height=1 />'.repeat(11_000)}</svg>`;
+    const html = `<img src=\\"data:image/svg+xml,${bigSvg}\\" alt=\\"shot\\" width=\\"2\\">`;
+    await serverDB.insert(messages).values({
+      id: 'q-redact-raw-html-suffix',
+      userId,
+      role: 'tool',
+      content: 'raw html suffix payload',
+    });
+    await serverDB.insert(messagePlugins).values({
+      id: 'q-redact-raw-html-suffix',
+      apiName: 'screenshot',
+      identifier: 'lobe-browser',
+      state: { html },
+      toolCallId: 'call_redact_raw_html_suffix',
+      userId,
+    });
+
+    const result = await messageModel.queryAll();
+    const row = result.find((m) => m.id === 'q-redact-raw-html-suffix') as any;
+    const state = row.pluginState as { html: string };
+
+    expect(state.html).toBe(
+      `<img src=\\"data:image/svg+xml,...redacted...\\" alt=\\"shot\\" width=\\"2\\">`,
+    );
+    expect(row.tool_call_id).toBe('call_redact_raw_html_suffix');
+  });
 });
