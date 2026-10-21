@@ -114,6 +114,63 @@ describe("verifyRouter with a run's operation token", () => {
     expect(modelMocks.upsertByCheckItem).not.toHaveBeenCalled();
   });
 
+  it('keeps the observation a plan-round ingest sends', async () => {
+    modelMocks.findRunByOperation.mockResolvedValueOnce(ownRun);
+    modelMocks.upsertByCheckItem.mockResolvedValueOnce({ id: 'result-1', verifyRunId: 'run-own' });
+
+    await createOperationCaller().submitCheckEvidence({
+      checkItemId: 'item-1',
+      operationId: OWN_OPERATION,
+      toulmin: { evidence: 'Ports are closed and git is clean after cleanup.' },
+    });
+
+    expect(modelMocks.upsertByCheckItem).toHaveBeenCalledWith(
+      expect.objectContaining({
+        toulmin: { evidence: 'Ports are closed and git is clean after cleanup.' },
+        verdict: undefined,
+      }),
+    );
+  });
+
+  it.each([
+    ['a verdict', { verdict: 'passed' as const }],
+    ['a terminal status', { status: 'passed' as const }],
+    ['a confidence', { confidence: 1 }],
+    ['required-ness', { required: false }],
+    ['a verifier type', { verifierType: 'agent' as const }],
+    ['a title', { checkItemTitle: 'Renamed check' }],
+    ['a suggestion', { suggestion: 'Ship it' }],
+    ['Toulmin reasoning', { toulmin: { evidence: 'seen', reasoning: 'so it passes' } }],
+  ])('refuses %s, which only the verifier sets', async (_label, authored) => {
+    // A prompt-injected Task must not settle its own check before the
+    // independent verifier judges the evidence.
+    modelMocks.findRunByOperation.mockResolvedValue(ownRun);
+
+    await expect(
+      createOperationCaller().submitCheckEvidence({
+        checkItemId: 'item-1',
+        operationId: OWN_OPERATION,
+        ...authored,
+      }),
+    ).rejects.toMatchObject({ code: 'FORBIDDEN' });
+    expect(modelMocks.upsertByCheckItem).not.toHaveBeenCalled();
+  });
+
+  it('lets a user session submit a verdict', async () => {
+    modelMocks.findRunByOperation.mockResolvedValueOnce(ownRun);
+    modelMocks.upsertByCheckItem.mockResolvedValueOnce({ id: 'result-1', verifyRunId: 'run-own' });
+
+    await verifyRouter.createCaller({ userId: USER_ID } as any).submitCheckEvidence({
+      checkItemId: 'item-1',
+      operationId: OWN_OPERATION,
+      verdict: 'passed',
+    });
+
+    expect(modelMocks.upsertByCheckItem).toHaveBeenCalledWith(
+      expect.objectContaining({ status: 'passed', verdict: 'passed' }),
+    );
+  });
+
   it("refuses evidence on a check result from another operation's round", async () => {
     modelMocks.findResultById.mockResolvedValueOnce({
       id: 'result-other',

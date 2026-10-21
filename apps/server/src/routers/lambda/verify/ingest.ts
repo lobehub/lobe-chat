@@ -17,6 +17,7 @@ import { evidenceTypeForStoredFile, resolveLiveRoundForItem } from '@/server/ser
 
 import { assertWorkspaceRowManageable } from '../_helpers/assertWorkspaceRowManageable';
 import {
+  assertEvidenceOnlySubmission,
   assertOperationInScope,
   resolveCheckResult,
   resolveVerifyRun,
@@ -256,6 +257,7 @@ export const ingestRouter = router({
         }),
     )
     .mutation(async ({ ctx, input }) => {
+      assertEvidenceOnlySubmission(ctx, input);
       const namedRun = input.verifyRunId
         ? await resolveVerifyRun(ctx, input.verifyRunId)
         : await resolveRunByOperation(ctx, input.operationId!);

@@ -12,7 +12,10 @@ import type { OIDCAuth } from '../context';
  * another member the token is the only identity that can reach it, so without
  * these routes the run can produce evidence but never hand it in.
  *
- * The `verify.*` routes bind every read and write to `heteroOperationScope`.
+ * The `verify.*` routes bind every read and write to `heteroOperationScope`,
+ * and `submitCheckEvidence` takes evidence only: the verdict and the rest of
+ * the result belong to the round's verifier. `upload.createS3PreSignedUrl`
+ * signs only a sized, reserved PUT under a content-addressed key.
  * `file.createFile` files what this token uploads as private acceptance
  * evidence, kept out of the creator's library, folders and knowledge bases, and
  * `user.getUserState` (the report-language check) returns only the response
