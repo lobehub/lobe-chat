@@ -1,13 +1,6 @@
-import {
-  ActionIcon,
-  createStaticStyles,
-  cssVar,
-  Flexbox,
-  Icon,
-  Progress,
-  Tag,
-  Tooltip,
-} from '@lobehub/ui';
+import { ActionIcon, Flexbox, Icon, Progress, Tag, Tooltip } from '@lobehub/ui';
+import { cssVar } from '@lobehub/ui/stylex/cssVar.stylex';
+import * as stylex from '@stylexjs/stylex';
 import { CircleAlertIcon, CircleCheckIcon, Loader2Icon, RotateCwIcon } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -23,55 +16,35 @@ import { openFilePreviewModal } from './FilePreviewModal.loader';
 import { useUploadCompletion } from './useUploadCompletion';
 import { getFileBasename, getUploadChipSize, getUploadChipState } from './utils';
 
-const styles = createStaticStyles(({ css }) => ({
-  chip: css`
-    max-width: 100%;
-    height: 28px;
-  `,
-  content: css`
-    display: flex;
-    gap: 4px;
-    align-items: center;
-
-    min-width: 0;
-    max-width: 380px;
-  `,
-  size: css`
-    flex-shrink: 0;
-
-    font-variant-numeric: tabular-nums;
-    line-height: 18px;
-    color: ${cssVar.colorTextTertiary};
-    white-space: nowrap;
-  `,
-  thumbnail: css`
-    flex-shrink: 0;
-    width: 20px;
-    height: 20px;
-    line-height: 0;
-  `,
-  statusIcon: css`
-    display: flex;
-    flex-shrink: 0;
-    align-items: center;
-    justify-content: center;
-
-    width: 12px;
-    height: 12px;
-
-    line-height: 0;
-  `,
-  name: css`
-    overflow: hidden;
-    flex: 1;
-
-    min-width: 0;
-
-    line-height: 18px;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  `,
-}));
+const styles = stylex.create({
+  chip: { maxWidth: '100%', height: '28px' },
+  content: { display: 'flex', gap: '4px', alignItems: 'center', minWidth: '0', maxWidth: '380px' },
+  size: {
+    flexShrink: 0,
+    fontVariantNumeric: 'tabular-nums',
+    lineHeight: '18px',
+    color: cssVar.colorTextTertiary,
+    whiteSpace: 'nowrap',
+  },
+  thumbnail: { flexShrink: 0, width: '20px', height: '20px', lineHeight: 0 },
+  statusIcon: {
+    display: 'flex',
+    flexShrink: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '12px',
+    height: '12px',
+    lineHeight: 0,
+  },
+  name: {
+    overflow: 'hidden',
+    flex: '1',
+    minWidth: '0',
+    lineHeight: '18px',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+  },
+});
 
 type FileItemProps = UploadFileItem;
 
@@ -112,19 +85,19 @@ const ContextItem = memo<FileItemProps>((props) => {
     <Tag
       closable
       aria-busy={busy}
-      className={styles.chip}
+      className={stylex.props(styles.chip).className}
       size={'large'}
       onClick={canPreview ? handleClick : undefined}
       onClose={handleClose}
     >
       <Tooltip title={detail}>
-        <Flexbox horizontal align={'center'} className={styles.content}>
-          <Flexbox className={styles.thumbnail}>
+        <Flexbox horizontal align={'center'} className={stylex.props(styles.content).className}>
+          <Flexbox className={stylex.props(styles.thumbnail).className}>
             <Content {...props} />
           </Flexbox>
-          <span className={styles.name}>{basename}</span>
+          <span {...stylex.props(styles.name)}>{basename}</span>
           {(indicator !== 'file' || showCompletion) && (
-            <Flexbox className={styles.statusIcon}>
+            <Flexbox className={stylex.props(styles.statusIcon).className}>
               {showCompletion ? (
                 <Icon
                   aria-label={t('upload.preview.status.success')}
@@ -151,7 +124,7 @@ const ContextItem = memo<FileItemProps>((props) => {
                   aria-valuemax={100}
                   aria-valuemin={0}
                   aria-valuenow={progress}
-                  className={styles.statusIcon}
+                  {...stylex.props(styles.statusIcon)}
                   role={'progressbar'}
                 >
                   <Progress
@@ -167,7 +140,7 @@ const ContextItem = memo<FileItemProps>((props) => {
               )}
             </Flexbox>
           )}
-          {sizeLabel && <span className={styles.size}>{sizeLabel}</span>}
+          {sizeLabel && <span {...stylex.props(styles.size)}>{sizeLabel}</span>}
         </Flexbox>
       </Tooltip>
       {canRetry && (

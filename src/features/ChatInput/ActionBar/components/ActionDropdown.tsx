@@ -10,8 +10,6 @@ import {
 } from '@lobehub/ui';
 import {
   createGlobalStyle,
-  createStaticStyles,
-  cssVar,
   cx,
   DropdownMenuPopup,
   DropdownMenuPortal,
@@ -20,6 +18,8 @@ import {
   DropdownMenuTrigger,
   renderDropdownMenuItems,
 } from '@lobehub/ui';
+import { cssVar } from '@lobehub/ui/stylex/cssVar.stylex';
+import * as stylex from '@stylexjs/stylex';
 import { type CSSProperties, type ReactNode } from 'react';
 import {
   isValidElement,
@@ -37,18 +37,16 @@ import { useIsMobile } from '@/hooks/useIsMobile';
 
 import { type MenuOpenChangeDetails, shouldVetoMenuClose } from './menuCloseVeto';
 
-const styles = createStaticStyles(({ css, cssVar }) => ({
-  trigger: css`
-    outline: none;
-
-    /* Keyboard users still need a landmark for where Enter will land. */
-    &:focus-visible {
-      border-radius: ${cssVar.borderRadius};
-      outline: 2px solid ${cssVar.colorPrimary};
-      outline-offset: 2px;
-    }
-  `,
-}));
+const styles = stylex.create({
+  trigger: {
+    // Keyboard users still need a landmark for where Enter will land.
+    outlineStyle: { 'default': 'none', ':focus-visible': 'solid' },
+    borderRadius: { 'default': null, ':focus-visible': cssVar.borderRadius },
+    outlineWidth: { 'default': null, ':focus-visible': '2px' },
+    outlineColor: { 'default': null, ':focus-visible': cssVar.colorPrimary },
+    outlineOffset: { 'default': null, ':focus-visible': '2px' },
+  },
+});
 
 const SubmenuScrollStyle = createGlobalStyle`
   /* base-ui DropdownMenu.Item reserves an indicator slot (empty aria-hidden
@@ -444,7 +442,10 @@ const ActionDropdown = memo<ActionDropdownProps>(
           onOpenChange={handleOpenChange}
           onOpenChangeComplete={handleOpenChangeComplete}
         >
-          <DropdownMenuTrigger className={styles.trigger} {...resolvedTriggerProps}>
+          <DropdownMenuTrigger
+            className={stylex.props(styles.trigger).className}
+            {...resolvedTriggerProps}
+          >
             {children}
           </DropdownMenuTrigger>
           <DropdownMenuPortal container={resolvedPortalContainer} {...restPortalProps}>
