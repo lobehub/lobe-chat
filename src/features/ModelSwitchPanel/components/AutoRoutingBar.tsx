@@ -6,6 +6,7 @@ import {
   AUTO_ROUTING_TIER_NAMES,
   AUTO_ROUTING_TIERS,
   buildAutoRoutingTable,
+  filterRoutableCandidates,
   isAutoRoutingProvider,
 } from 'model-bank/autoRouting';
 import { type FC, memo, useMemo } from 'react';
@@ -57,12 +58,12 @@ export const AutoRoutingBar: FC<AutoRoutingBarProps> = memo(
       [enabledList],
     );
     // The server only routes to models with function calling; preview the same set.
-    const table = useMemo(
-      () => buildAutoRoutingTable(candidates.filter((item) => item.abilities?.functionCall)),
-      [candidates],
-    );
+    const routable = useMemo(() => filterRoutableCandidates(candidates), [candidates]);
+    const table = useMemo(() => buildAutoRoutingTable(routable), [routable]);
 
-    if (!enabled || candidates.length === 0) return null;
+    // Without a function-calling model a tier could only land on a model that
+    // drops the run's default tools, so the tiers are not offered at all.
+    if (!enabled || routable.length === 0) return null;
 
     const select = async (tier: AutoRoutingTier) => {
       const modelId = AUTO_ROUTING_MODEL_IDS[tier];
@@ -80,7 +81,7 @@ export const AutoRoutingBar: FC<AutoRoutingBarProps> = memo(
             {cell[0]?.candidate.displayName || cell[0]?.candidate.id}
           </Text>
         ))}
-        {candidates.length < FEW_MODELS && (
+        {routable.length < FEW_MODELS && (
           <Text type={'secondary'}>{t('ModelSwitchPanel.autoRouting.fewModels')}</Text>
         )}
       </Flexbox>

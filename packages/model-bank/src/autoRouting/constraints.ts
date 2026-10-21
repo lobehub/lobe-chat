@@ -20,6 +20,13 @@ export const meetsRequirements = (
 };
 
 /**
+ * Models a tier may route to at all: a run carries default builtin tools, so a
+ * model without function calling would drop them. With none, tiers are not offered.
+ */
+export const filterRoutableCandidates = <T extends AutoRoutingCandidate>(candidates: T[]): T[] =>
+  candidates.filter((candidate) => candidate.abilities?.functionCall);
+
+/**
  * Keep the candidates that satisfy every hard constraint. When none does, fall
  * back to the unfiltered order: the runtime still has its own multimodal
  * fallback, which beats refusing the turn.

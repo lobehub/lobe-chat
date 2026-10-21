@@ -98,4 +98,29 @@ describe('resolveClientAutoRoute', () => {
 
     await expect(resolveClientAutoRoute(run(), chatState)).rejects.toThrow('network');
   });
+
+  it('passes an ordinary model override through untouched', async () => {
+    const override = { model: 'gpt-x', provider: 'openai' };
+
+    expect(await resolveClientAutoRoute(run({ modelOverride: override }), chatState)).toBe(
+      override,
+    );
+    expect(resolveAutoRoute).not.toHaveBeenCalled();
+  });
+
+  it('routes a tier a sub-agent inherits as its override, outside the parent topic state', async () => {
+    agentModel.model = 'gpt-x';
+    agentModel.provider = 'openai';
+    resolveAutoRoute.mockResolvedValue({ metadata: {}, model: 'real', provider: 'openai' });
+
+    const result = await resolveClientAutoRoute(
+      run({ isSubAgent: true, modelOverride: { model: 'auto-ultra', provider: 'lobehub-auto' } }),
+      chatState,
+    );
+
+    expect(result).toEqual({ model: 'real', provider: 'openai' });
+    expect(resolveAutoRoute).toHaveBeenCalledWith(
+      expect.objectContaining({ model: 'auto-ultra', topicId: undefined }),
+    );
+  });
 });

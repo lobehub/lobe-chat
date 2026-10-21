@@ -15,14 +15,18 @@ const log = debug('lobe-store:auto-model-routing');
 /**
  * Client-runtime counterpart of the server turn-setup routing: when the run's
  * model is a Lite / Pro / Ultra tier, ask the server for the real model of this
- * turn and force it as the run's model override. Returns `undefined` for an
- * ordinary model and throws when a tier cannot be routed.
+ * turn and force it as the run's model override. Returns the explicit override
+ * (or `undefined`) for an ordinary model and throws when a tier cannot be routed.
  */
 export const resolveClientAutoRoute = async (
   params: {
     agentId: string;
     context: { topicId?: string | null };
+    /** A sub-agent shares its parent's topic; it must not move the parent's routing memory. */
+    isSubAgent?: boolean;
     messages: UIChatMessage[];
+    /** The run's forced model; a tier here is routed like the agent's own. */
+    modelOverride?: { model: string; provider: string };
     operationId?: string;
     parentMessageId: string;
     parentMessageType: 'user' | 'assistant' | 'tool';
@@ -35,10 +39,18 @@ export const resolveClientAutoRoute = async (
   const topicId = params.context.topicId;
   const assistantMessageId = params.skipCreateFirstMessage ? parentMessageId : undefined;
   const agentState = getAgentStoreState();
+  const { modelOverride } = params;
+  if (modelOverride && !isAutoRoutingProvider(modelOverride.provider)) return modelOverride;
+
   const pinned = topicId ? topicSelectors.getTopicModelById(topicId)(chatState) : undefined;
-  const model = pinned?.model ?? agentByIdSelectors.getAgentModelById(agentId)(agentState);
+  const model =
+    modelOverride?.model ??
+    pinned?.model ??
+    agentByIdSelectors.getAgentModelById(agentId)(agentState);
   const provider =
-    pinned?.provider ?? agentByIdSelectors.getAgentModelProviderById(agentId)(agentState);
+    modelOverride?.provider ??
+    pinned?.provider ??
+    agentByIdSelectors.getAgentModelProviderById(agentId)(agentState);
   if (!isAutoRoutingProvider(provider)) return;
 
   const lastUser = messages.findLast((message) => message.role === 'user');
@@ -55,7 +67,7 @@ export const resolveClientAutoRoute = async (
       model,
       prompt: lastUser?.content ?? '',
       provider,
-      topicId: topicId ?? undefined,
+      topicId: params.isSubAgent ? undefined : (topicId ?? undefined),
     });
     if (!routed) throw new Error('Auto routing found no model for this turn');
 

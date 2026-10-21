@@ -670,12 +670,11 @@ export class StreamingExecutorActionImpl {
       operationId,
       subAgentId, // Pass subAgentId for agent config retrieval (behavior depends on scope)
       isSubAgent, // Pass isSubAgent to filter out lobe-agent tool in sub-agent context
-      modelOverride:
-        params.modelOverride ??
-        (await resolveClientAutoRoute(
-          { ...params, agentId: effectiveAgentId, operationId },
-          this.#get(),
-        )),
+      // Also routes a tier forced as the override (a sub-agent inheriting it).
+      modelOverride: await resolveClientAutoRoute(
+        { ...params, agentId: effectiveAgentId, operationId },
+        this.#get(),
+      ),
       chatConfigOverride: params.chatConfigOverride,
     });
 
