@@ -3,7 +3,7 @@ import * as stylex from '@stylexjs/stylex';
 import { memo } from 'react';
 
 import { KIND_META, kindTint } from '../kinds';
-import { type EntityKind } from '../types';
+import { type ContextKind } from '../types';
 
 const styles = stylex.create({
   root: {
@@ -18,7 +18,7 @@ const styles = stylex.create({
 });
 
 interface KindIconProps {
-  kind: EntityKind;
+  kind: ContextKind;
   size?: 'sm' | 'lg';
 }
 

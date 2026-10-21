@@ -84,7 +84,7 @@ const ListItem = memo<ListItemProps>(({ active, entity, lastTouchedAt, muted, on
         <span {...stylex.props(styles.title)}>{entity.title}</span>
         <span {...stylex.props(styles.meta)}>{formatAgo(lastTouchedAt)}</span>
       </span>
-      <span {...stylex.props(styles.now)}>{entity.now}</span>
+      <span {...stylex.props(styles.now)}>{entity.summary || entity.description}</span>
     </span>
   </button>
 ));

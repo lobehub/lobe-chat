@@ -1,53 +1,53 @@
 /**
- * Entity pages: every context is a page for one thing in the user's life, and activities are
- * the timeline entries that link pages together. People live in the identity layer but render
- * with the same page, so `person` is a kind here too.
+ * Entity pages over the existing memory layers: every context is a page, and activities are the
+ * timeline. The backend stores no link between the two, so the timeline is inferred from names
+ * both sides mention (see `link.ts`).
  */
-export type ContextKind = 'project' | 'event' | 'thing' | 'place' | 'org';
-export type EntityKind = ContextKind | 'person';
+export type ContextKind = 'project' | 'goal' | 'relationship' | 'event' | 'other';
 
+/** Collapsed from the backend `currentStatus` enum, which `statusLabel` keeps verbatim. */
 export type EntityStatus = 'active' | 'dormant' | 'closed';
 
-export interface EntityRef {
-  id: string;
-  kind: EntityKind;
+export interface AssociatedName {
+  name: string;
+  type?: string;
 }
 
 export interface MemoryEntity {
-  aliases: string[];
-  /** Short profile. For a person this is the identity description. */
+  capturedAt: string;
+  /** Rich narrative of where things stand; the page's 「现在」. */
   description: string;
-  firstMentionedAt: string;
   id: string;
-  kind: EntityKind;
-  /** Overwritten as the user's situation changes; older wording stays in the timeline. */
-  now: string;
-  nowEditedBy: 'conversation' | 'user';
-  nowUpdatedAt: string;
-  /** Person only: how they relate to the user. */
-  relationship?: string;
+  kind: ContextKind;
+  /** Names of the people, things and places the context mentions. */
+  names: AssociatedName[];
+  /** The free-text type the extractor wrote, e.g. `creative_project`. */
+  rawType?: string;
   status: EntityStatus;
+  /** Backend status as written: `ongoing`, `on_hold`, … */
+  statusValue?: string;
+  /** Concise overview from the parent memory row. */
+  summary: string;
+  tags: string[];
   title: string;
+  updatedAt: string;
 }
 
 export interface MemoryActivity {
   id: string;
-  /** Every page this entry shows up on. One entry, many pages: that is the backlink. */
-  links: EntityRef[];
+  names: AssociatedName[];
   narrative: string;
-  /** Conversation the entry was learned from. */
-  source?: { id: string; title: string };
-  /** When it happened (or will happen). */
-  startsAt: string;
-  status: 'done' | 'planned';
+  planned: boolean;
+  statusValue?: string;
+  title: string;
+  /** When it happened, or when it was recorded if the extractor left no date. */
+  when: string;
+  /** False when `when` is only the capture time. */
+  whenIsExact: boolean;
 }
 
-export interface MergeSuggestion {
-  /** The page folded into it. */
-  fromId: string;
-  /** The page that keeps its name. */
-  intoId: string;
-  reason: string;
+/** A context ↔ activity or context ↔ context pair, and the names that tie them. */
+export interface NameLink {
+  names: string[];
+  targetId: string;
 }
-
-export type DemoState = 'ready' | 'empty' | 'loading' | 'error';

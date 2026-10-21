@@ -1,4 +1,5 @@
-import { type EntityKind, type MemoryActivity, type MemoryEntity } from './types';
+import { type EntityLinks } from './link';
+import { type MemoryActivity, type MemoryEntity } from './types';
 
 const DAY = 24 * 60 * 60 * 1000;
 const WEEKDAYS = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
@@ -35,30 +36,10 @@ export const formatAgo = (iso: string) => {
   return `${Math.floor(days / 365)} 年前`;
 };
 
-export const formatUntil = (iso: string) => {
-  const days = daysFromToday(iso);
-  if (days === 0) return '今天';
-  if (days === 1) return '明天';
-  return `${days} 天后`;
-};
-
-export const activitiesOf = (activities: MemoryActivity[], id: string) =>
-  activities.filter((activity) => activity.links.some((link) => link.id === id));
-
-/** Planned entries, soonest first; done entries, newest first. */
-export const splitTimeline = (entries: MemoryActivity[]) => ({
-  past: entries
-    .filter((entry) => entry.status === 'done')
-    .sort((a, b) => b.startsAt.localeCompare(a.startsAt)),
-  upcoming: entries
-    .filter((entry) => entry.status === 'planned')
-    .sort((a, b) => a.startsAt.localeCompare(b.startsAt)),
-});
-
-export const groupByMonth = (entries: MemoryActivity[]) => {
-  const groups: { label: string; entries: MemoryActivity[] }[] = [];
+export const groupByMonth = <T extends { activity: MemoryActivity }>(entries: T[]) => {
+  const groups: { entries: T[]; label: string }[] = [];
   for (const entry of entries) {
-    const label = formatMonth(entry.startsAt);
+    const label = formatMonth(entry.activity.when);
     const last = groups.at(-1);
     if (last?.label === label) last.entries.push(entry);
     else groups.push({ entries: [entry], label });
@@ -66,37 +47,8 @@ export const groupByMonth = (entries: MemoryActivity[]) => {
   return groups;
 };
 
-export interface RelatedEntity {
-  count: number;
-  entity: MemoryEntity;
-}
-
-/**
- * Related pages are not stored: they are whatever shares a timeline entry with this page,
- * ranked by how often.
- */
-export const relatedOf = (
-  entities: MemoryEntity[],
-  activities: MemoryActivity[],
-  id: string,
-): RelatedEntity[] => {
-  const counts = new Map<string, number>();
-  for (const activity of activitiesOf(activities, id)) {
-    for (const link of activity.links) {
-      if (link.id === id) continue;
-      counts.set(link.id, (counts.get(link.id) ?? 0) + 1);
-    }
-  }
-  return [...counts]
-    .map(([relatedId, count]) => ({ count, entity: entities.find((e) => e.id === relatedId) }))
-    .filter((item): item is RelatedEntity => !!item.entity)
-    .sort((a, b) => b.count - a.count);
+/** When the page last moved: its newest linked activity, or its own last update. */
+export const lastTouchedOf = (entity: MemoryEntity, links?: EntityLinks) => {
+  const latest = links?.activities.get(entity.id)?.find((e) => !e.activity.planned)?.activity.when;
+  return latest && latest > entity.updatedAt ? latest : entity.updatedAt;
 };
-
-/** When the page last moved: its newest done entry, or the last time "now" was rewritten. */
-export const lastTouchedOf = (entity: MemoryEntity, activities: MemoryActivity[]) => {
-  const latest = splitTimeline(activitiesOf(activities, entity.id)).past[0]?.startsAt;
-  return latest && latest > entity.nowUpdatedAt ? latest : entity.nowUpdatedAt;
-};
-
-export const isPerson = (kind: EntityKind) => kind === 'person';

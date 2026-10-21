@@ -1,8 +1,10 @@
 import { Button, Empty, Skeleton, SkeletonAvatar, SkeletonText } from '@lobehub/ui';
 import { cssVar } from '@lobehub/ui/stylex/cssVar.stylex';
 import * as stylex from '@stylexjs/stylex';
-import { CloudOffIcon, SparklesIcon } from 'lucide-react';
+import { CloudOffIcon } from 'lucide-react';
 import { memo } from 'react';
+
+import MemoryAnalysis from '@/routes/(main)/memory/features/MemoryAnalysis';
 
 import KindIcon from './components/KindIcon';
 import { CONTEXT_KINDS, KIND_META } from './kinds';
@@ -21,6 +23,7 @@ const styles = stylex.create({
   intro: { display: 'flex', flexDirection: 'column', gap: '8px', maxWidth: '440px', textAlign: 'center' },
   title: { fontSize: '20px', fontWeight: 600, margin: 0 },
   desc: { color: cssVar.colorTextSecondary, fontSize: '14px', lineHeight: '22px', margin: 0 },
+  analysis: { maxWidth: '320px', width: '100%' },
   kinds: {
     display: 'grid',
     gap: '8px',
@@ -68,12 +71,12 @@ const styles = stylex.create({
 });
 
 /** First run: say what this page will hold, with one example per kind, and how to fill it. */
-export const FirstRunState = memo<{ onAnalyze: () => void }>(({ onAnalyze }) => (
+export const FirstRunState = memo(() => (
   <div {...stylex.props(styles.center)}>
     <div {...stylex.props(styles.intro)}>
       <h2 {...stylex.props(styles.title)}>还没有情境</h2>
       <p {...stylex.props(styles.desc)}>
-        你在对话里提到的项目、事情、物品、地点和组织，会各自整理成一页：现在怎样、接下来做什么、一路发生了什么。
+        你在对话里提到的项目、目标、关系和事件，会各自整理成一页：现在怎样、接下来做什么、一路发生了什么。
       </p>
     </div>
     <div {...stylex.props(styles.kinds)}>
@@ -87,9 +90,9 @@ export const FirstRunState = memo<{ onAnalyze: () => void }>(({ onAnalyze }) => 
         </div>
       ))}
     </div>
-    <Button icon={SparklesIcon} type={'primary'} onClick={onAnalyze}>
-      从历史对话中整理
-    </Button>
+    <div {...stylex.props(styles.analysis)}>
+      <MemoryAnalysis />
+    </div>
   </div>
 ));
 

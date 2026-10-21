@@ -5,9 +5,10 @@ import { memo } from 'react';
 import Avatar from '@/components/Avatar';
 
 import KindIcon from '../components/KindIcon';
-import { isPerson, type RelatedEntity } from '../derive';
+import { useEntityDataContext } from '../context';
 import { KIND_META } from '../kinds';
-import { useEntityDemoStore } from '../store';
+import { useEntityViewStore } from '../store';
+import { type MemoryEntity } from '../types';
 import Section from './Section';
 
 const styles = stylex.create({
@@ -42,43 +43,91 @@ const styles = stylex.create({
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
   },
-  sub: { color: cssVar.colorTextTertiary, fontSize: '12px', lineHeight: '18px' },
+  sub: {
+    color: cssVar.colorTextTertiary,
+    fontSize: '12px',
+    lineHeight: '18px',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+  },
+  names: { display: 'flex', flexWrap: 'wrap', gap: '8px' },
+  chip: {
+    alignItems: 'center',
+    backgroundColor: cssVar.colorFillQuaternary,
+    borderRadius: '999px',
+    color: cssVar.colorTextSecondary,
+    display: 'inline-flex',
+    fontSize: '13px',
+    gap: '6px',
+    paddingBlock: '4px',
+    paddingInlineEnd: '12px',
+    paddingInlineStart: '4px',
+  },
+  chipPlain: { paddingInlineStart: '12px' },
+  chipType: { color: cssVar.colorTextQuaternary, fontSize: '12px' },
 });
 
+/** Subject types the extractor uses for people. */
+const PERSON_TYPES = new Set(['person', 'people', 'user', 'family', 'friend', 'colleague']);
+
 interface RelatedProps {
-  items: RelatedEntity[];
+  entity: MemoryEntity;
 }
 
-/** Not stored anywhere: whatever shares a timeline entry with this page, most frequent first. */
-const Related = memo<RelatedProps>(({ items }) => {
-  const open = useEntityDemoStore((s) => s.open);
-  if (items.length === 0) return null;
+const Related = memo<RelatedProps>(({ entity }) => {
+  const { entities, links } = useEntityDataContext();
+  const open = useEntityViewStore((s) => s.open);
+  const typeOf = new Map(entity.names.map((n) => [n.name.toLowerCase(), n.type]));
+  const mentioned = (links?.mentions.get(entity.id) ?? [])
+    .filter((name) => name !== entity.title)
+    .map((name) => ({ name, type: typeOf.get(name.toLowerCase()) }));
+  const related = (links?.contexts.get(entity.id) ?? [])
+    .map((link) => ({ ...link, target: entities.find((e) => e.id === link.targetId) }))
+    .filter((item): item is typeof item & { target: MemoryEntity } => !!item.target)
+    .slice(0, 8);
 
   return (
-    <Section extra={'从经过里归纳'} title={'相关'}>
-      <div {...stylex.props(styles.grid)}>
-        {items.map(({ count, entity }) => (
-          <button
-            key={entity.id}
-            type={'button'}
-            {...stylex.props(styles.item)}
-            onClick={() => open(entity.id)}
-          >
-            {isPerson(entity.kind) ? (
-              <Avatar avatar={undefined} name={entity.title} shape={'circle'} size={24} title={entity.title} />
-            ) : (
-              <KindIcon kind={entity.kind} />
-            )}
-            <span {...stylex.props(styles.text)}>
-              <span {...stylex.props(styles.name)}>{entity.title}</span>
-              <span {...stylex.props(styles.sub)}>
-                {entity.relationship ?? KIND_META[entity.kind].label} · 一起出现 {count} 次
-              </span>
-            </span>
-          </button>
-        ))}
-      </div>
-    </Section>
+    <>
+      {mentioned.length > 0 && (
+        <Section title={'提到的人和事物'}>
+          <div {...stylex.props(styles.names)}>
+            {mentioned.map(({ name, type }) => {
+              const person = !!type && PERSON_TYPES.has(type.toLowerCase());
+              return (
+                <span key={name} {...stylex.props(styles.chip, !person && styles.chipPlain)}>
+                  {person && <Avatar avatar={undefined} name={name} shape={'circle'} size={20} title={name} />}
+                  {name}
+                  {type && !person && <span {...stylex.props(styles.chipType)}>{type}</span>}
+                </span>
+              );
+            })}
+          </div>
+        </Section>
+      )}
+      {related.length > 0 && (
+        <Section extra={'提到了相同的人或事物'} title={'相关情境'}>
+          <div {...stylex.props(styles.grid)}>
+            {related.map(({ names, target }) => (
+              <button
+                key={target.id}
+                type={'button'}
+                {...stylex.props(styles.item)}
+                onClick={() => open(target.id)}
+              >
+                <KindIcon kind={target.kind} />
+                <span {...stylex.props(styles.text)}>
+                  <span {...stylex.props(styles.name)}>{target.title}</span>
+                  <span {...stylex.props(styles.sub)}>
+                    {KIND_META[target.kind].label} · 都提到 {names.join('、')}
+                  </span>
+                </span>
+              </button>
+            ))}
+          </div>
+        </Section>
+      )}
+    </>
   );
 });
 
