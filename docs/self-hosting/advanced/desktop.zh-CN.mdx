@@ -67,31 +67,26 @@ LobeHub 桌面端可以与您自托管的 LobeHub 实例连接，以便您可以
 
 ### 连接设备网关
 
-设备网关让助理可以在这台电脑上运行工具。桌面端和 CLI 会使用当前登录实例签发的令牌连接 `<网关地址>/ws`，因此必须使用该实例的网关。在 Docker Compose 中，它是 `gateway` 服务的 `8788` 端口。不要把服务端内部使用的 `DEVICE_GATEWAY_URL`（`http://gateway:8788`）提供给客户端。
+设备网关让助理在这台电脑上运行本地工具。
 
-1. 通过 HTTPS 公开 `8788` 端口，并允许 WebSocket 升级。Nginx 示例：
+1. 按 [Docker Compose 部署说明](/zh/docs/self-hosting/platform/docker-compose) 启动网关。通过域名访问时，反向代理到 `8788` 端口，并开启 HTTPS 和 WebSocket 支持。
 
-   ```nginx
-   location / {
-       proxy_pass http://127.0.0.1:8788;
-       proxy_http_version 1.1;
-       proxy_set_header Upgrade $http_upgrade;
-       proxy_set_header Connection 'upgrade';
-       proxy_set_header Host $host;
-   }
+2. 如需让客户端自动获取地址，在 LobeHub 服务端设置以下环境变量，然后重新部署：
+
+   ```env
+   DEVICE_GATEWAY_PUBLIC_URL=https://device-gateway.example.com
    ```
 
-   在客户端电脑上运行 `curl https://device-gateway.example.com/health`，应输出 `OK`。
+3. 在桌面端登录该实例，打开标题栏中的 **设备网关** 开关。CLI 用户运行：
 
-2. 可选：将 [`DEVICE_GATEWAY_PUBLIC_URL`](/zh/docs/self-hosting/environment-variables/basic#device_gateway_public_url) 设置为该地址，支持自动发现的客户端即可从您的实例获取它。也可以不配置，为每个客户端自行提供地址。
+   ```sh
+   lh login --server https://lobe.example.com
+   lh connect
+   ```
 
-3. 在桌面端点击标题栏中的 **设备网关** 图标并打开开关。桌面端按以下顺序使用找到的第一个地址：桌面端自己的 `DEVICE_GATEWAY_URL` 环境变量、已有且不是 `https://device-gateway.lobehub.com` 的保存地址、您的实例下发的地址，最后是 `https://device-gateway.lobehub.com`。
+连接后，可在设备列表中查看这台电脑的在线状态。
 
-   桌面端只读取已有的网关地址，不提供地址编辑入口，也不会把下发的地址写入设置。请在服务端配置 `DEVICE_GATEWAY_PUBLIC_URL`，或在启动桌面端时设置 `DEVICE_GATEWAY_URL`。
-
-4. 使用 CLI 时，先运行 `lh login --server https://lobe.example.com`，再运行 `lh connect`。`lh` 依次使用 `--gateway <url>`（会保存供之后使用）、为当前实例保存的地址、您的实例下发的地址；都没有时会提示提供 `--gateway <url>`。
-
-<Callout>不支持自动发现的客户端会忽略实例下发的地址，请通过桌面端的 `DEVICE_GATEWAY_URL` 或 `lh connect --gateway <url>` 提供地址。</Callout>
+<Callout>已有的自定义网关地址仍会优先使用。也可通过桌面端的 `DEVICE_GATEWAY_URL` 环境变量或 `lh connect --gateway <url>` 手动指定地址，无需配置服务端环境变量。</Callout>
 
 ## 常见问题
 
@@ -123,12 +118,8 @@ proxy_busy_buffers_size 32k;
 
 ### 设备网关无法连接
 
-**问题：** 打开设备网关开关后立即恢复关闭，或连接一直在重试。
-
-**解决方案：**
-
-- 如果 `lh status` 输出 `FAILED - Authentication failed: crypto/rsa: verification error`，说明网关不信任签发令牌的实例。请使用客户端所登录实例的网关，并确认网关的 `JWKS_PUBLIC_KEY` 与当前 `JWKS_KEY` 匹配。没有下发或配置地址时，桌面端会使用 LobeHub Cloud 网关，它会拒绝自托管实例的令牌。
-- 如果连接超时，请在客户端电脑上运行上文的 `/health` 检查，再检查反向代理的 WebSocket 设置和证书。
+- **打开后立即断开**：确认网关地址属于当前登录的实例，并检查客户端已有的自定义地址。
+- **连接超时**：在客户端电脑运行 `curl https://device-gateway.example.com/health`，应返回 `OK`；否则检查网关地址、网络和反向代理设置。
 
 ### macOS 启动卡住或闪退
 
