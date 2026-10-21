@@ -96,6 +96,40 @@ describe('useSecretInputForm', () => {
     expect(result.current.proseWarning).toBeUndefined();
   });
 
+  it('keeps the prose confirmation across a failed submission', async () => {
+    const onSubmit = vi
+      .fn()
+      .mockRejectedValueOnce(new Error('store unavailable'))
+      .mockResolvedValueOnce(undefined);
+    const { result } = renderHook(() => useSecretInputForm({ fields, onSubmit }));
+
+    act(() => result.current.handleChange('OPENAI_API_KEY', '一段被误粘贴的中文句子'));
+
+    // Confirm the held prose submit; the save fails.
+    await act(() => result.current.handleSubmit());
+    await act(() => result.current.handleSubmit());
+    expect(onSubmit).toHaveBeenCalledTimes(1);
+
+    // Retry goes straight to the sink without asking again.
+    await act(() => result.current.handleSubmit());
+    expect(onSubmit).toHaveBeenCalledTimes(2);
+    expect(onSubmit).toHaveBeenNthCalledWith(2, {
+      OPENAI_API_KEY: '一段被误粘贴的中文句子',
+    });
+    expect(result.current.proseWarning).toBeUndefined();
+  });
+
+  it('clears the prose warning after a successful confirmed submit', async () => {
+    const onSubmit = vi.fn().mockResolvedValue(undefined);
+    const { result } = renderHook(() => useSecretInputForm({ fields, onSubmit }));
+
+    act(() => result.current.handleChange('OPENAI_API_KEY', '一段被误粘贴的中文句子'));
+    await act(() => result.current.handleSubmit());
+    await act(() => result.current.handleSubmit());
+    expect(onSubmit).toHaveBeenCalledTimes(1);
+    expect(result.current.proseWarning).toBeUndefined();
+  });
+
   it('clears the prose warning when the user edits the field', async () => {
     const onSubmit = vi.fn().mockResolvedValue(undefined);
     const { result } = renderHook(() => useSecretInputForm({ fields, onSubmit }));

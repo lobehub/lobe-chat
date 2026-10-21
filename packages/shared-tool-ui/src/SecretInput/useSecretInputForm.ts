@@ -22,6 +22,9 @@ export interface UseSecretInputFormParams {
  * Prose guard: a submit whose values look like prose (a pasted sentence or
  * chat text, the exact T-967 failure) is held instead of handed to the sink;
  * the view shows a warning and calls `confirmProseSubmit` to let it through.
+ * The acknowledged state survives failed submissions (the retry must not ask
+ * the user to confirm the same values again) and is cleared by a successful
+ * submit or by editing any field.
  */
 export const useSecretInputForm = ({ fields, onSubmit }: UseSecretInputFormParams) => {
   const valuesRef = useRef<Record<string, string>>({});
@@ -57,8 +60,11 @@ export const useSecretInputForm = ({ fields, onSubmit }: UseSecretInputFormParam
     setSubmitting(true);
     try {
       await onSubmit(values);
+      // Success: values are consumed and the acknowledged prose warning is
+      // cleared with them. Failure keeps both for the retry.
       valuesRef.current = {};
       setFilled(new Set());
+      setProseWarning(undefined);
       setFormKey((key) => key + 1);
     } catch {
       // The caller surfaces the failure; the values stay for the retry.
@@ -79,13 +85,14 @@ export const useSecretInputForm = ({ fields, onSubmit }: UseSecretInputFormParam
       return;
     }
 
-    setProseWarning(undefined);
+    // Keep the acknowledged warning through a failed submit so the retry does
+    // not make the user confirm the same values again; only a successful
+    // submit or editing a field clears it.
     await runSubmit();
   }, [fields, proseWarning, runSubmit, submitting]);
 
   const confirmProseSubmit = useCallback(async () => {
     if (submitting) return;
-    setProseWarning(undefined);
     await runSubmit();
   }, [runSubmit, submitting]);
 
