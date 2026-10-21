@@ -6,13 +6,18 @@ const selectAccountForAgent = vi.hoisted(() => vi.fn());
 const listAccounts = vi.hoisted(() => vi.fn());
 const listClaudeCodeAccounts = vi.hoisted(() => vi.fn());
 const resolveClaudeCodeAccount = vi.hoisted(() => vi.fn());
+const getClaudeCodeInheritedRoutingEnv = vi.hoisted(() => vi.fn());
 
 vi.mock('@/services/agentQuota', () => ({
   agentQuotaService: { listAccounts, selectAccountForAgent },
 }));
 
 vi.mock('@/services/electron/heterogeneousAgent', () => ({
-  heterogeneousAgentService: { listClaudeCodeAccounts, resolveClaudeCodeAccount },
+  heterogeneousAgentService: {
+    getClaudeCodeInheritedRoutingEnv,
+    listClaudeCodeAccounts,
+    resolveClaudeCodeAccount,
+  },
 }));
 
 const selection = (over: Record<string, unknown> = {}) => ({
@@ -36,6 +41,7 @@ beforeEach(() => {
     .mockReset()
     .mockResolvedValue([localAccount('ext-default', null), localAccount('ext-1', '/profiles/one')]);
   resolveClaudeCodeAccount.mockReset();
+  getClaudeCodeInheritedRoutingEnv.mockReset().mockResolvedValue({});
 });
 
 describe('resolveQuotaAccountSpawnPlan', () => {
@@ -103,14 +109,17 @@ describe('resolveQuotaAccountSpawnPlan', () => {
     await expect(resolveQuotaAccountSpawnPlan('agt-1', 'claude-code')).rejects.toThrow(/rotation/);
   });
 
-  it('keeps the old behavior for Auto when the desktop cannot list its logins', async () => {
+  it('fails Auto mode when the desktop cannot list its logins for a re-pick', async () => {
     selectAccountForAgent.mockResolvedValue(
       selection({ externalAccountId: 'ext-away', reason: 'balanced' }),
     );
     resolveClaudeCodeAccount.mockResolvedValue({ kind: 'missing' });
     listClaudeCodeAccounts.mockRejectedValue(new Error('no ipc'));
 
-    expect(await resolveQuotaAccountSpawnPlan('agt-1', 'claude-code')).toEqual({ env: {} });
+    // The selected login is absent, so the default login must not run in its place.
+    await expect(resolveQuotaAccountSpawnPlan('agt-1', 'claude-code')).rejects.toThrow(
+      /Couldn't look up/,
+    );
   });
 
   it.each([
@@ -134,6 +143,7 @@ describe('resolveQuotaAccountSpawnPlan', () => {
     expect(await resolveQuotaAccountSpawnPlan('agt-1', 'claude-code')).toEqual({ env: {} });
     expect(listClaudeCodeAccounts).not.toHaveBeenCalled();
     expect(resolveClaudeCodeAccount).not.toHaveBeenCalled();
+    expect(getClaudeCodeInheritedRoutingEnv).not.toHaveBeenCalled();
   });
 
   it.each(['pinned', 'balanced'])(
@@ -147,6 +157,44 @@ describe('resolveQuotaAccountSpawnPlan', () => {
       );
     },
   );
+
+  it.each([
+    ['Bedrock', { CLAUDE_CODE_USE_BEDROCK: '1' }],
+    ['Vertex', { CLAUDE_CODE_USE_VERTEX: 'true' }],
+  ])(
+    'lets a %s flag inherited from the desktop win over a stale pin',
+    async (_label, inherited) => {
+      selectAccountForAgent.mockResolvedValue(selection({ externalAccountId: 'ext-elsewhere' }));
+      resolveClaudeCodeAccount.mockResolvedValue({ kind: 'missing' });
+      getClaudeCodeInheritedRoutingEnv.mockResolvedValue(inherited);
+
+      // No subscription login runs, so neither the pin nor its attribution applies.
+      expect(await resolveQuotaAccountSpawnPlan('agt-1', 'claude-code')).toEqual({ env: {} });
+      expect(resolveClaudeCodeAccount).not.toHaveBeenCalled();
+    },
+  );
+
+  it('keeps routing when the agent env switches an inherited flag off', async () => {
+    selectAccountForAgent.mockResolvedValue(selection());
+    resolveClaudeCodeAccount.mockResolvedValue({ configDir: '/profiles/one', kind: 'profile' });
+    getClaudeCodeInheritedRoutingEnv.mockResolvedValue({ CLAUDE_CODE_USE_BEDROCK: '1' });
+
+    const plan = await resolveQuotaAccountSpawnPlan('agt-1', 'claude-code', {
+      CLAUDE_CODE_USE_BEDROCK: '0',
+    });
+
+    expect(plan).toMatchObject({ accountId: 'acc-1', env: { CLAUDE_CONFIG_DIR: '/profiles/one' } });
+  });
+
+  it('keeps routing when the desktop cannot report its inherited flags', async () => {
+    selectAccountForAgent.mockResolvedValue(selection());
+    resolveClaudeCodeAccount.mockResolvedValue({ configDir: '/profiles/one', kind: 'profile' });
+    getClaudeCodeInheritedRoutingEnv.mockRejectedValue(new Error('no such ipc'));
+
+    const plan = await resolveQuotaAccountSpawnPlan('agt-1', 'claude-code');
+
+    expect(plan.env).toEqual({ CLAUDE_CONFIG_DIR: '/profiles/one' });
+  });
 
   it('keeps routing when an external-provider flag is set to off', async () => {
     selectAccountForAgent.mockResolvedValue(selection({ externalAccountId: 'ext-elsewhere' }));

@@ -137,6 +137,20 @@ export default class HeterogeneousAgentCtr extends ControllerModule {
     return (await this.getClaudeCodeAccounts()).resolve(params.externalAccountId);
   }
 
+  /**
+   * External-provider routing flags (`CLAUDE_CODE_USE_BEDROCK` …) a session
+   * spawn inherits from this desktop's process env. The renderer cannot see
+   * that env, yet those flags take the run off the subscription login.
+   */
+  @IpcMethod()
+  async getClaudeCodeInheritedRoutingEnv() {
+    const [{ buildInheritedSpawnEnv }, { pickClaudeCodeRoutingEnv }] = await Promise.all([
+      import('./HeterogeneousAgentImpl'),
+      import('@lobechat/heterogeneous-agents/quota'),
+    ]);
+    return pickClaudeCodeRoutingEnv(buildInheritedSpawnEnv());
+  }
+
   /** Sign an account in to its own profile; resolves once the browser login lands. */
   @IpcMethod()
   async loginClaudeCodeAccount(params: { email?: string } = {}) {

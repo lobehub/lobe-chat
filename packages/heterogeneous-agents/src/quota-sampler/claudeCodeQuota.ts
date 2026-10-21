@@ -4,6 +4,11 @@ import { readFile } from 'node:fs/promises';
 import { homedir } from 'node:os';
 import path from 'node:path';
 
+import type { ClaudeCodeExternalRoutingEnvKey } from '../quota/claudeCodeRouting';
+import {
+  CLAUDE_CODE_EXTERNAL_ROUTING_ENV_KEYS,
+  isClaudeCodeRoutingFlagEnabled,
+} from '../quota/claudeCodeRouting';
 import { buildClaudeQuotaWindows } from '../quota/readings';
 import type { ClaudeCodeQuotaSnapshot, ClaudeCodeQuotaUnavailableReason } from '../quota/snapshot';
 import { parseClaudeAccountIdentity } from './identity';
@@ -51,19 +56,6 @@ const EXTERNAL_AUTH_ENV_KEYS = [
   'ANTHROPIC_BASE_URL',
 ] as const;
 
-// Boolean-ish flags that route Claude Code to a third-party provider
-// (AWS Bedrock / Google Vertex / Mantle), whose quotas are billed there —
-// the Anthropic subscription quota does not apply to those runs either.
-const EXTERNAL_ROUTING_FLAG_ENV_KEYS = [
-  'CLAUDE_CODE_USE_BEDROCK',
-  'CLAUDE_CODE_USE_MANTLE',
-  'CLAUDE_CODE_USE_VERTEX',
-] as const;
-
-// The CLI treats these as booleans, so "0"/"false" must not count as enabled.
-const isRoutingFlagEnabled = (value: string | undefined) =>
-  !!value && !['0', 'false'].includes(value.trim().toLowerCase());
-
 /**
  * Unlike the API-key trio (stripped from the inherited spawn env, so only the
  * agent's own env matters), routing flags inherited from the desktop process
@@ -73,7 +65,7 @@ const isRoutingFlagEnabled = (value: string | undefined) =>
  */
 const effectiveRoutingFlag = (
   options: FetchClaudeCodeQuotaOptions,
-  key: (typeof EXTERNAL_ROUTING_FLAG_ENV_KEYS)[number],
+  key: ClaudeCodeExternalRoutingEnvKey,
 ): string | undefined => (options.env && key in options.env ? options.env[key] : process.env[key]);
 
 export interface FetchClaudeCodeQuotaOptions {
@@ -269,8 +261,8 @@ export const fetchClaudeCodeQuota = async (
 ): Promise<ClaudeCodeQuotaSnapshot> => {
   const externalAuthKey =
     EXTERNAL_AUTH_ENV_KEYS.find((key) => asNonEmpty(options.env?.[key])) ??
-    EXTERNAL_ROUTING_FLAG_ENV_KEYS.find((key) =>
-      isRoutingFlagEnabled(effectiveRoutingFlag(options, key)),
+    CLAUDE_CODE_EXTERNAL_ROUTING_ENV_KEYS.find((key) =>
+      isClaudeCodeRoutingFlagEnabled(effectiveRoutingFlag(options, key)),
     );
   if (externalAuthKey) {
     return unavailableSnapshot(

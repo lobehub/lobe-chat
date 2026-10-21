@@ -175,6 +175,11 @@ class HeterogeneousAgentService {
     return this.ipc.heterogeneousAgent.resolveClaudeCodeAccount({ externalAccountId });
   }
 
+  /** External-provider routing flags a session spawn inherits from the desktop's env. */
+  async getClaudeCodeInheritedRoutingEnv(): Promise<Record<string, string>> {
+    return this.ipc.heterogeneousAgent.getClaudeCodeInheritedRoutingEnv();
+  }
+
   /** Sign an account in to its own profile; resolves once the browser login completes. */
   async loginClaudeCodeAccount(params?: { email?: string }): Promise<ClaudeCodeLocalAccount> {
     return this.ipc.heterogeneousAgent.loginClaudeCodeAccount(params);

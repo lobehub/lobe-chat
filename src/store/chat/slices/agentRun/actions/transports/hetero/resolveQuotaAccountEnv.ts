@@ -1,3 +1,4 @@
+import { claudeCodeRoutesExternally } from '@lobechat/heterogeneous-agents/quota';
 import { t } from 'i18next';
 
 import { agentQuotaService } from '@/services/agentQuota';
@@ -50,25 +51,22 @@ const AGENT_LOGIN_ENV_KEYS = [
   'ANTHROPIC_BASE_URL',
 ] as const;
 
-/**
- * Flags that route Claude Code to a third-party provider (Bedrock / Mantle /
- * Vertex), billed there with no subscription login involved. The CLI reads
- * them as booleans, so "0" / "false" leave subscription routing on — the same
- * rule the quota sampler applies.
- */
-const AGENT_EXTERNAL_ROUTING_ENV_KEYS = [
-  'CLAUDE_CODE_USE_BEDROCK',
-  'CLAUDE_CODE_USE_MANTLE',
-  'CLAUDE_CODE_USE_VERTEX',
-] as const;
-
-const isFlagEnabled = (value: string | undefined) =>
-  !!value?.trim() && !['0', 'false'].includes(value.trim().toLowerCase());
-
 /** The agent's own env decides the login, so subscription routing must stay out. */
 const agentEnvPicksLogin = (env?: Record<string, string>) =>
-  AGENT_LOGIN_ENV_KEYS.some((key) => env?.[key]?.trim()) ||
-  AGENT_EXTERNAL_ROUTING_ENV_KEYS.some((key) => isFlagEnabled(env?.[key]));
+  AGENT_LOGIN_ENV_KEYS.some((key) => env?.[key]?.trim()) || claudeCodeRoutesExternally(env);
+
+/**
+ * Bedrock / Mantle / Vertex flags the desktop process exports reach the CLI
+ * too, unless the agent env overrides them — a run on an external provider
+ * involves no subscription login at all. An older desktop without the IPC
+ * reports none, so routing still applies there.
+ */
+const inheritedEnvRoutesExternally = async (agentEnv?: Record<string, string>) => {
+  const inherited = await heterogeneousAgentService
+    .getClaudeCodeInheritedRoutingEnv()
+    .catch(() => ({}));
+  return claudeCodeRoutesExternally(agentEnv, inherited);
+};
 
 /**
  * Resolve which provider account this agent should run on and turn the choice
@@ -82,10 +80,12 @@ const agentEnvPicksLogin = (env?: Record<string, string>) =>
  *   re-selects among the accounts this device can run, failing when the
  *   rotation holds none of them.
  *
- * No bindings, or the quota service / desktop unreachable, → `{}` and the
- * spawn behaves as before. An agent env that picks its own login wins over
- * routing (see `agentEnvPicksLogin`); the result is also spread BEFORE
- * `heterogeneousProvider.env` for the same reason.
+ * No bindings, or the quota service unreachable, → `{}` and the spawn behaves
+ * as before; a desktop that fails to look up its logins fails the run. An env
+ * that picks its own login or an external provider — the agent's
+ * (`agentEnvPicksLogin`) or one inherited from the desktop — wins over
+ * routing; the result is also spread BEFORE `heterogeneousProvider.env` for
+ * the same reason.
  */
 export const resolveQuotaAccountSpawnPlan = async (
   agentId: string | undefined,
@@ -107,6 +107,7 @@ export const resolveQuotaAccountSpawnPlan = async (
   // Unbound agents (the common case) stop here without touching local logins.
   let selection = await select();
   if (!selection) return NO_ROUTING;
+  if (await inheritedEnvRoutesExternally(agentEnv)) return NO_ROUTING;
 
   let resolution = await resolveLocalLogin(selection);
 
@@ -114,9 +115,14 @@ export const resolveQuotaAccountSpawnPlan = async (
   // the ones it has. (Listing first on every run would cost unbound agents
   // a Keychain read per profile for nothing.)
   if (resolution?.kind === 'missing' && selection.reason === 'balanced') {
-    const local = await heterogeneousAgentService.listClaudeCodeAccounts().catch(() => null);
-    // The desktop could not answer: no basis to judge, keep the old behavior.
-    if (!local) return NO_ROUTING;
+    // The selected login is known to be absent here, so a failed listing must
+    // stop the run — falling back would start it on a login nobody selected.
+    const local = await heterogeneousAgentService.listClaudeCodeAccounts().catch((error) => {
+      console.error('[HeterogeneousAgent] Claude Code account listing failed:', error);
+      throw new Error(t('heteroAgent.claudeQuota.accountResolveFailed', { ns: 'chat' }), {
+        cause: error,
+      });
+    });
 
     const runnable = local.flatMap((account) => account.identity.externalAccountId ?? []);
     const rebalanced = await select(runnable);
