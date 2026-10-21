@@ -158,7 +158,8 @@ export class RecentActionImpl {
   };
 
   /** The Docs home list for one tab. Read it with `homeRecentSelectors.docsHome`. */
-  useFetchDocsHome = (tab: DocsHomeTab): ReplicaSyncResult => this.#docsHome.useSync({ tab });
+  useFetchDocsHome = (tab: DocsHomeTab, enabled: boolean = true): ReplicaSyncResult =>
+    this.#docsHome.useSync({ tab }, { enabled });
 
   /**
    * Sidebar recents. Asks for `limit + 1` rows to know whether "view all" is
