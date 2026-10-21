@@ -28,6 +28,7 @@ import { router } from '@/libs/trpc/lambda';
 import { serverDatabase } from '@/libs/trpc/lambda/middleware';
 import { assertContentsNotInRestrictedKnowledgeBase } from '@/server/services/knowledgeBaseAccess';
 import { assertCanPerformResourceAction } from '@/server/services/resourcePermission';
+import { isReviewServiceError, ReviewPlaybookService } from '@/server/services/review';
 
 const idSchema = z.string().trim().min(1).max(255);
 const shortText = z.string().trim().min(1).max(500);
@@ -164,6 +165,20 @@ const documentReviewProcedure = wsProcedure.use(serverDatabase).use(async ({ ctx
 
 /** Map model / transition errors to tRPC errors. Illegal transitions are 409. */
 const mapError = (error: unknown): never => {
+  if (isReviewServiceError(error)) {
+    const code =
+      error.code === 'LLM_FAILED' || error.code === 'SCHEMA_INVALID'
+        ? 'INTERNAL_SERVER_ERROR'
+        : error.code === 'CHECK_RESULT_NOT_FOUND' || error.code === 'DOCUMENT_NOT_FOUND'
+          ? 'NOT_FOUND'
+          : error.code === 'ILLEGAL_TRANSITION' ||
+              error.code === 'ANCHOR_LOST' ||
+              error.code === 'ANCHOR_AMBIGUOUS'
+            ? 'CONFLICT'
+            : 'BAD_REQUEST';
+
+    throw new TRPCError({ cause: { code: error.code }, code, message: error.message });
+  }
   if (error instanceof DocumentReviewTransitionError) {
     throw new TRPCError({
       cause: { code: error.code, event: error.event, from: error.from },
@@ -418,5 +433,111 @@ export const documentReviewRouter = router({
     .mutation(async ({ ctx, input }) => {
       await ctx.assertDocumentAccess(input.documentId, 'edit');
       return { invalidated: await ctx.reviewModel.invalidateDocumentChecks(input.documentId) };
+    }),
+
+  // ---------------------------------------------------------------------------
+  // Rule checks (Playbook)
+  // ---------------------------------------------------------------------------
+
+  /**
+   * Agent-proposed rules from a document body or a description. Returns drafts
+   * only — nothing is written until the user confirms them into a rule set.
+   */
+  proposeRules: documentReviewProcedure
+    .input(
+      z.object({
+        description: z.string().trim().min(10).max(1000).optional(),
+        documentId: idSchema,
+        limit: z.number().int().min(1).max(8).optional(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      await ctx.assertDocumentAccess(input.documentId, 'view');
+      return run(() =>
+        new ReviewPlaybookService({
+          db: ctx.serverDB,
+          userId: ctx.userId,
+          workspaceId: ctx.workspaceId,
+        }).proposeRules(input),
+      );
+    }),
+
+  /** Check the checklist's `unchecked` items (all, or exactly the given ones). */
+  runChecks: documentReviewProcedure
+    .input(
+      z.object({
+        checkResultIds: z.array(idSchema).max(100).optional(),
+        sessionId: idSchema,
+        userContext: z.string().max(2000).optional(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      await ctx.authorizeSession(input.sessionId, 'edit');
+      return run(() =>
+        new ReviewPlaybookService({
+          db: ctx.serverDB,
+          userId: ctx.userId,
+          workspaceId: ctx.workspaceId,
+        }).runChecks(input),
+      );
+    }),
+
+  /**
+   * Re-check only `needs_recheck` items — the only path from `needs_recheck`
+   * back to `passed` / `failed` / `uncertain`. Omit ids to re-check all of them.
+   */
+  recheckChecks: documentReviewProcedure
+    .input(
+      z.object({
+        checkResultIds: z.array(idSchema).max(100).optional(),
+        sessionId: idSchema,
+        userContext: z.string().max(2000).optional(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      await ctx.authorizeSession(input.sessionId, 'edit');
+      return run(() =>
+        new ReviewPlaybookService({
+          db: ctx.serverDB,
+          userId: ctx.userId,
+          workspaceId: ctx.workspaceId,
+        }).recheckChecks(input),
+      );
+    }),
+
+  /** Generate a fix suggestion for a failed / uncertain item. Status is untouched. */
+  suggestFix: documentReviewProcedure
+    .input(
+      z.object({
+        checkResultId: idSchema,
+        userInstruction: z.string().max(2000).optional(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      await ctx.authorizeCheckResult(input.checkResultId, 'edit');
+      return run(() =>
+        new ReviewPlaybookService({
+          db: ctx.serverDB,
+          userId: ctx.userId,
+          workspaceId: ctx.workspaceId,
+        }).suggestFix(input),
+      );
+    }),
+
+  /**
+   * Apply a user-edited suggestion through the editor pipeline and mark the item
+   * `needs_recheck`. Applying a fix never verifies it.
+   */
+  applySuggestion: documentReviewProcedure
+    .input(z.object({ appliedText: z.string().trim().min(1).max(10_000), checkResultId: idSchema }))
+    .mutation(async ({ ctx, input }) => {
+      await ctx.authorizeCheckResult(input.checkResultId, 'edit');
+      return run(() =>
+        new ReviewPlaybookService({
+          db: ctx.serverDB,
+          userId: ctx.userId,
+          workspaceId: ctx.workspaceId,
+        }).applySuggestion(input),
+      );
     }),
 });
