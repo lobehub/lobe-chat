@@ -1,8 +1,8 @@
 'use client';
 
-import { Flexbox, Icon, SortableList } from '@lobehub/ui';
-import { ActionIcon, Checkbox, Input } from '@lobehub/ui';
-import { createStaticStyles, cssVar, cx } from '@lobehub/ui';
+import { ActionIcon, Checkbox, Flexbox, Icon, Input, SortableList } from '@lobehub/ui';
+import { cssVar } from '@lobehub/ui/stylex/cssVar.stylex';
+import * as stylex from '@stylexjs/stylex';
 import { CircleArrowRight, Trash2 } from 'lucide-react';
 import type { ChangeEvent, KeyboardEvent } from 'react';
 import { memo, useCallback, useEffect, useRef } from 'react';
@@ -10,32 +10,31 @@ import { useTranslation } from 'react-i18next';
 
 import { useTodoListStore } from './store';
 
-const styles = createStaticStyles(({ css, cssVar }) => ({
-  deleteIcon: css`
-    flex-shrink: 0;
-    opacity: 0;
-    transition: opacity 0.2s;
-  `,
-  dragHandle: css`
-    flex-shrink: 0;
-    width: 16px !important;
-    opacity: 0;
-    transition: opacity 0.2s;
-  `,
-  itemRow: css`
-    width: 100%;
-    padding-block: 10px;
-    padding-inline: 4px 12px;
-    border-block-end: 1px dashed ${cssVar.colorBorderSecondary};
-
-    &:hover {
-      .drag-handle,
-      .delete-icon {
-        opacity: 1;
-      }
-    }
-  `,
-}));
+// `width` / `opacity` here outrank the ActionIcon slot styles without `!important`.
+const styles = stylex.create({
+  deleteIcon: {
+    flexShrink: 0,
+    opacity: { default: 0, [stylex.when.ancestor(':hover')]: 1 },
+    transitionProperty: 'opacity',
+    transitionDuration: '0.2s',
+  },
+  dragHandle: {
+    flexShrink: 0,
+    width: '16px',
+    opacity: { default: 0, [stylex.when.ancestor(':hover')]: 1 },
+    transitionProperty: 'opacity',
+    transitionDuration: '0.2s',
+  },
+  itemRow: {
+    width: '100%',
+    paddingBlock: '10px',
+    paddingInlineStart: '4px',
+    paddingInlineEnd: '12px',
+    borderBlockEndWidth: '1px',
+    borderBlockEndStyle: 'dashed',
+    borderBlockEndColor: cssVar.colorBorderSecondary,
+  },
+});
 
 interface TodoItemRowProps {
   id: string;
@@ -120,8 +119,14 @@ const TodoItemRow = memo<TodoItemRowProps>(({ id, placeholder }) => {
   }, [id, toggleItem]);
 
   return (
-    <Flexbox horizontal align="center" className={styles.itemRow} gap={4} width="100%">
-      <SortableList.DragHandle className={cx(styles.dragHandle, 'drag-handle')} size="small" />
+    <Flexbox
+      horizontal
+      align="center"
+      className={stylex.props(styles.itemRow, stylex.defaultMarker()).className}
+      gap={4}
+      width="100%"
+    >
+      <SortableList.DragHandle className={stylex.props(styles.dragHandle).className} size="small" />
       {isProcessing ? (
         <Icon
           icon={CircleArrowRight}
@@ -157,7 +162,7 @@ const TodoItemRow = memo<TodoItemRowProps>(({ id, placeholder }) => {
         onKeyDown={handleKeyDown}
       />
       <ActionIcon
-        className={cx(styles.deleteIcon, 'delete-icon')}
+        className={stylex.props(styles.deleteIcon).className}
         icon={Trash2}
         size="small"
         tabIndex={-1}
