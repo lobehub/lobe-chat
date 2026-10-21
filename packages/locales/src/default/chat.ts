@@ -1311,12 +1311,17 @@ export default {
   'grokBuildInstallGuide.menuNotification.title': 'Grok Build CLI not found',
   'grokBuildInstallGuide.reason': 'LobeHub could not start Grok Build: {{message}}',
   'grokBuildInstallGuide.title': 'Install Grok Build CLI',
+  'workingDirectoryGuide.actions.resetToSource': 'Switch back to {{name}} and retry',
   'workingDirectoryGuide.actions.retry': 'Retry',
   'workingDirectoryGuide.desc':
     'The working directory saved for this conversation no longer exists.',
   'workingDirectoryGuide.hint':
     'Choose an existing folder from the working directory selector, then retry this message.',
+  'workingDirectoryGuide.resetFailed':
+    'Could not switch back to the main directory. Please try again.',
   'workingDirectoryGuide.title': 'Working directory unavailable',
+  'workingDirectoryGuide.worktreeHint':
+    'This conversation was still in a worktree that has since been removed. Switch back to the main directory to keep working.',
   'opencodeInstallGuide.actions.openDocs': 'Open Install Guide',
   'opencodeInstallGuide.actions.openSystemTools': 'Open System Tools',
   'opencodeInstallGuide.afterInstall':
