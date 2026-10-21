@@ -41,6 +41,21 @@ describe('connector OAuth popup', () => {
     );
   });
 
+  it('closes the authorization popup and removes listeners when installation is canceled', async () => {
+    const controller = new AbortController();
+    const result = waitForConnectorOAuth(popup, 'connector-1', authorizationUrl, controller.signal);
+    controller.abort();
+    await expect(result).rejects.toMatchObject({ reason: 'dismissed' });
+    expect(popup.close).toHaveBeenCalledOnce();
+    expect(vi.getTimerCount()).toBe(0);
+    send(popup, 'https://server.example', {
+      connectorId: 'connector-1',
+      success: true,
+      type: 'lobe-connector-oauth',
+    });
+    expect(popup.close).toHaveBeenCalledOnce();
+  });
+
   it('uses native authorization on desktop without opening a renderer popup', async () => {
     platform.isDesktop = true;
     const open = vi.spyOn(window, 'open');
