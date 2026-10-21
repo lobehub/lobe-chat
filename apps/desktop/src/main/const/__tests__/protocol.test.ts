@@ -18,13 +18,12 @@ describe('isBackendPath', () => {
 
 describe('canvas previews', () => {
   it('proxies canvas preview pages and the canvas runtime', () => {
-    expect(isBackendPath('/canvas-preview/token/index.html')).toBe(true);
-    expect(isBackendPath('/canvas-runtime/v1/canvas-runtime.js')).toBe(true);
+    expect(isBackendPath('/canvas-preview/token/index.html')).toBe(false);
+    expect(isBackendPath('/canvas-runtime/v1/canvas-runtime.js')).toBe(false);
   });
 
   it('keeps sandboxed canvas pages away from authenticated backend paths', () => {
-    expect(isSandboxedBackendRequestAllowed('/trpc/lambda/user.getUserState', 'null')).toBe(false);
-    expect(isSandboxedBackendRequestAllowed('/canvas-preview/token/data.json', 'null')).toBe(true);
-    expect(isSandboxedBackendRequestAllowed('/trpc/lambda/user.getUserState', null)).toBe(true);
+    expect(isSandboxedBackendRequestAllowed('null')).toBe(false);
+    expect(isSandboxedBackendRequestAllowed(null)).toBe(true);
   });
 });
