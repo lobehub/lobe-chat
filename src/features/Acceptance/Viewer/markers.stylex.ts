@@ -6,3 +6,4 @@ import * as stylex from '@stylexjs/stylex';
  */
 export const groupHeaderMarker = stylex.defineMarker();
 export const rowHeaderMarker = stylex.defineMarker();
+export const timelineEntryMarker = stylex.defineMarker();
