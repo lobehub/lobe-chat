@@ -29,13 +29,13 @@ const SystemOneAnswerSchema = z.discriminatedUnion('type', [
   z.object({
     choice: z.string(),
     confidence: z.number().optional(),
-    probabilities: z.record(z.string(), z.number().min(0).max(1)),
+    probabilities: z.record(z.string(), z.number().min(0).max(1)).optional(),
     type: z.literal('choice'),
   }),
   z.object({
     confidence: z.number().optional(),
     /** Level index (as a string key) → probability. */
-    probabilities: z.record(z.string(), z.number().min(0).max(1)),
+    probabilities: z.record(z.string(), z.number().min(0).max(1)).optional(),
     score: z.number(),
     type: z.literal('score'),
   }),
@@ -59,7 +59,7 @@ const SystemOneResponseSchema = z.object({
 type SystemOneAnswer = z.infer<typeof SystemOneAnswerSchema>;
 
 const toSystemOneQuestion = (question: DecisionQuestion) =>
-  question.type === 'predicate' ? { ...question, type: 'noul' as const } : question;
+  question.type === 'boolean' ? { ...question, type: 'noul' as const } : question;
 
 class InvalidDecisionResponseError extends Error {}
 
@@ -71,8 +71,8 @@ const toDecisionAnswer = (
   if (!answer) throw new InvalidDecisionResponseError(`Missing answer for question "${name}"`);
   if (answer.type === 'refusal') return { reason: answer.reason, type: 'refusal' };
 
-  if (question.type === 'predicate' && answer.type === 'noul') {
-    return { probability: answer.noul, type: 'predicate' };
+  if (question.type === 'boolean' && answer.type === 'noul') {
+    return { probability: answer.noul, type: 'boolean' };
   }
 
   if (question.type === 'choice' && answer.type === 'choice') {
@@ -81,32 +81,38 @@ const toDecisionAnswer = (
         `Question "${name}" chose "${answer.choice}", which is not a requested option`,
       );
     }
-    // Like score levels below: callers threshold on every option, so a gap is not a zero.
-    const probabilities = Object.fromEntries(
-      Object.keys(question.criteria).map((option) => {
-        // Own keys only: option names such as `toString` would otherwise hit the prototype.
-        if (!Object.hasOwn(answer.probabilities, option)) {
-          throw new InvalidDecisionResponseError(
-            `Question "${name}" has no probability for option "${option}"`,
-          );
-        }
-        return [option, answer.probabilities[option]];
-      }),
-    );
+    const reported = answer.probabilities;
+    // The distribution is optional upstream, but a partial one would read a gap as zero.
+    const probabilities =
+      reported &&
+      Object.fromEntries(
+        Object.keys(question.criteria).map((option) => {
+          // Own keys only: option names such as `toString` would otherwise hit the prototype.
+          if (!Object.hasOwn(reported, option)) {
+            throw new InvalidDecisionResponseError(
+              `Question "${name}" has no probability for option "${option}"`,
+            );
+          }
+          return [option, reported[option]];
+        }),
+      );
     return { choice: answer.choice, confidence: answer.confidence, probabilities, type: 'choice' };
   }
 
   if (question.type === 'score' && answer.type === 'score') {
+    const reported = answer.probabilities;
     // A missing level probability is not evidence of zero, so reject rather than fill it.
-    const probabilities = question.criteria.map((_, level) => {
-      const probability = answer.probabilities[String(level)];
-      if (probability === undefined) {
-        throw new InvalidDecisionResponseError(
-          `Question "${name}" has no probability for score level ${level}`,
-        );
-      }
-      return probability;
-    });
+    const probabilities =
+      reported &&
+      question.criteria.map((_, level) => {
+        const probability = reported[String(level)];
+        if (probability === undefined) {
+          throw new InvalidDecisionResponseError(
+            `Question "${name}" has no probability for score level ${level}`,
+          );
+        }
+        return probability;
+      });
     return { confidence: answer.confidence, probabilities, score: answer.score, type: 'score' };
   }
 
@@ -189,7 +195,7 @@ const requestSystemOneDecision = async (
   }
 
   const usage = parsed.data.usage;
-  if (options?.onUsage && usage) {
+  if (usage) {
     const outputTokens = usage.output_tokens ?? 0;
     const tokens = {
       inputTextTokens: usage.input_tokens,
@@ -200,8 +206,9 @@ const requestSystemOneDecision = async (
       totalOutputTokens: outputTokens,
       totalTokens: usage.input_tokens + outputTokens,
     } satisfies ModelUsage;
-    const pricing = await getModelPricing(payload.model, provider, options.pricingContext);
-    await options.onUsage(withUsageCost(tokens, pricing));
+    const pricing = await getModelPricing(payload.model, provider, options?.pricingContext);
+    response.usage = withUsageCost(tokens, pricing);
+    await options?.onUsage?.(response.usage);
   }
 
   return response;

@@ -33,7 +33,7 @@ const payload = {
     refund: {
       criteria: { false: 'No refund requested.', true: 'Asks for money back.' },
       instructions: 'Is the customer asking for a refund?',
-      type: 'predicate',
+      type: 'boolean',
     },
     urgency: {
       criteria: ['Low', 'Medium', 'High'],
@@ -111,23 +111,24 @@ describe('decide via System One', () => {
           probabilities: { billing: 0.97, other: 0.03 },
           type: 'choice',
         },
-        refund: { probability: 0.99, type: 'predicate' },
+        refund: { probability: 0.99, type: 'boolean' },
         urgency: { confidence: 0.5, probabilities: [0.05, 0.25, 0.7], score: 1.65, type: 'score' },
       },
       id: 'gen-1',
       model: 'typesafe/jev-1.13-20260917',
       provider: 'TypeSafe',
+      usage: expect.objectContaining({ totalTokens: 507 }),
     });
   });
 
-  it('reports usage priced on input tokens only', async () => {
+  it('returns usage priced on input tokens only and passes the same usage to onUsage', async () => {
     const instance = createInstance();
     vi.spyOn(instance['client'], 'post').mockResolvedValue(systemOneResponse as never);
     const onUsage = vi.fn();
 
-    await instance.decide!(payload, { onUsage });
+    const { usage } = await instance.decide!(payload, { onUsage });
 
-    const usage = onUsage.mock.calls[0][0];
+    expect(onUsage).toHaveBeenCalledWith(usage);
     expect(usage).toMatchObject({
       inputTextTokens: 436,
       outputTextTokens: 71,
@@ -135,7 +136,57 @@ describe('decide via System One', () => {
       totalTokens: 507,
     });
     // 436 input tokens × $0.042/M = 18.3 credits, ceiled to whole credits; the 71 output tokens are free.
-    expect(usage.cost).toBe(0.000_019);
+    expect(usage?.cost).toBe(0.000_019);
+  });
+
+  it('returns usage without an onUsage callback', async () => {
+    const instance = createInstance();
+    vi.spyOn(instance['client'], 'post').mockResolvedValue(systemOneResponse as never);
+
+    const result = await instance.decide!(payload);
+
+    expect(result.usage).toMatchObject({ cost: 0.000_019, totalTokens: 507 });
+  });
+
+  it('omits probabilities when the provider does not report a distribution', async () => {
+    const instance = createInstance();
+    const { probabilities: _, ...intent } = systemOneResponse.answers.intent;
+    const { probabilities: __, ...urgency } = systemOneResponse.answers.urgency;
+    vi.spyOn(instance['client'], 'post').mockResolvedValue({
+      ...systemOneResponse,
+      answers: { ...systemOneResponse.answers, intent, urgency },
+    } as never);
+
+    const result = await instance.decide!(payload);
+
+    expect(result.answers.intent).toEqual({ choice: 'billing', confidence: 0.93, type: 'choice' });
+    expect(result.answers.urgency).toEqual({ confidence: 0.5, score: 1.65, type: 'score' });
+  });
+
+  it('forwards boolean questions without criteria and structured guidance as-is', async () => {
+    const instance = createInstance();
+    const post = vi.spyOn(instance['client'], 'post').mockResolvedValue({
+      answers: {
+        intent: { choice: 'billing', type: 'choice' },
+        refund: { noul: 0.8, type: 'noul' },
+      },
+      model: 'typesafe/jev-1.13',
+    } as never);
+    const questions = {
+      intent: {
+        criteria: { billing: { examples: ['charged twice'] }, other: null },
+        instructions: { task: 'Classify the ticket', tone: 'strict' },
+        type: 'choice',
+      },
+      refund: { instructions: 'Is the customer asking for a refund?', type: 'boolean' },
+    } satisfies DecisionPayload['questions'];
+
+    const result = await instance.decide!({ model: 'typesafe/jev-1.13', questions, state: 'x' });
+
+    expect(post.mock.calls[0][1]).toMatchObject({
+      body: { questions: { ...questions, refund: { ...questions.refund, type: 'noul' } } },
+    });
+    expect(result.answers.refund).toEqual({ probability: 0.8, type: 'boolean' });
   });
 
   it('returns a refusal as an answer instead of failing the whole call', async () => {
@@ -148,7 +199,7 @@ describe('decide via System One', () => {
     const result = await instance.decide!(payload);
 
     expect(result.answers.intent).toEqual({ reason: 'unsafe', type: 'refusal' });
-    expect(result.answers.refund).toEqual({ probability: 0.99, type: 'predicate' });
+    expect(result.answers.refund).toEqual({ probability: 0.99, type: 'boolean' });
   });
 
   it.each([

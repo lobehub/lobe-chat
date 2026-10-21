@@ -13,7 +13,7 @@ describe('createRouterRuntime decide', () => {
   it('should route decide calls and record the lobehub route attempt', async () => {
     vi.stubEnv('NODE_ENV', 'development');
     const decision = {
-      answers: { refund: { probability: 0.9, type: 'predicate' } },
+      answers: { refund: { probability: 0.9, type: 'boolean' } },
       model: 'jev',
     };
     const mockDecide = vi.fn().mockResolvedValue(decision);
@@ -45,7 +45,7 @@ describe('createRouterRuntime decide', () => {
             refund: {
               criteria: { false: 'no', true: 'yes' },
               instructions: 'Refund request?',
-              type: 'predicate',
+              type: 'boolean',
             },
           },
           state: 'Give me my money back',

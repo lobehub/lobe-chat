@@ -5,7 +5,7 @@ export const openrouterDecisionModels: AIDecisionModelCard[] = [
   {
     contextWindowTokens: 64_000,
     description:
-      'TypeSafe Jev is a System One decision model: it answers predicate, choice, and score questions with calibrated probabilities instead of generating text.',
+      'TypeSafe Jev is a System One decision model: it answers yes/no, choice, and score questions with calibrated probabilities instead of generating text.',
     displayName: 'Jev 1.13',
     id: 'typesafe/jev-1.13',
     pricing: {

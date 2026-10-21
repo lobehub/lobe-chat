@@ -19,14 +19,14 @@ const decidePayload = {
     refund: {
       criteria: { false: 'No refund requested.', true: 'Asks for money back.' },
       instructions: 'Is the customer asking for a refund?',
-      type: 'predicate' as const,
+      type: 'boolean' as const,
     },
   },
   state: 'I was charged twice and want my money back.',
 };
 
 const decision = {
-  answers: { refund: { probability: 0.99, type: 'predicate' } },
+  answers: { refund: { probability: 0.99, type: 'boolean' } },
   model: 'typesafe/jev-1.13-20260917',
 };
 
