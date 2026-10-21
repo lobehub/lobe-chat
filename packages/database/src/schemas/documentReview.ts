@@ -10,7 +10,7 @@ import type {
   DocumentReviewSessionStatus,
   DocumentReviewTextAnchor,
 } from '@lobechat/types';
-import { index, integer, jsonb, pgTable, text, uniqueIndex, uuid } from 'drizzle-orm/pg-core';
+import { index, integer, jsonb, pgTable, real, text, uniqueIndex, uuid } from 'drizzle-orm/pg-core';
 
 import { idGenerator } from '../utils/idGenerator';
 import { timestamps, timestamptz } from './_helpers';
@@ -75,8 +75,12 @@ export const documentReviewImpacts = pgTable(
     severity: text('severity').$type<DocumentReviewImpactSeverity>().default('medium').notNull(),
     status: text('status').$type<DocumentReviewImpactStatus>().default('open').notNull(),
     title: text('title').notNull(),
+    /** The change that triggers this impact, in the reviewer's words. */
+    trigger: text('trigger'),
     /** Judgement basis shown to the reviewer. */
     reason: text('reason').notNull(),
+    /** Model confidence (0..1) that the element is affected. */
+    confidence: real('confidence'),
     sourceAnchor: jsonb('source_anchor').$type<DocumentReviewTextAnchor>(),
     relatedAnchor: jsonb('related_anchor').$type<DocumentReviewTextAnchor>(),
     sortOrder: integer('sort_order').default(0).notNull(),

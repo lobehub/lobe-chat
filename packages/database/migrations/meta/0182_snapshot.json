@@ -6,7 +6,7 @@
   },
   "dialect": "postgresql",
   "enums": {},
-  "id": "6b812139-bafc-4482-81bf-d3df3956e65e",
+  "id": "39a03ed5-f561-441a-9019-ca3e09a47909",
   "policies": {},
   "prevId": "99e50879-4239-4179-94cb-d4a391b46df4",
   "roles": {},
@@ -12254,11 +12254,23 @@
           "primaryKey": false,
           "notNull": true
         },
+        "trigger": {
+          "name": "trigger",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
         "reason": {
           "name": "reason",
           "type": "text",
           "primaryKey": false,
           "notNull": true
+        },
+        "confidence": {
+          "name": "confidence",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false
         },
         "source_anchor": {
           "name": "source_anchor",

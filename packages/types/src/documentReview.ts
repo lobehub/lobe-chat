@@ -22,6 +22,12 @@ export type DocumentReviewSessionStatus = (typeof DOCUMENT_REVIEW_SESSION_STATUS
 export interface DocumentReviewTextAnchor {
   /** Offset just past the quote at capture time; a re-location hint only. */
   end?: number;
+  /**
+   * The quote could not be found in the current body when the analysis was
+   * persisted. The anchor is kept (not dropped) so the excerpt the model quoted
+   * stays visible; the UI must not offer a jump for it.
+   */
+  invalid?: boolean;
   /** Optional human label of the location, e.g. "§4.2 Acceptance". */
   label?: string;
   prefix?: string;
@@ -65,6 +71,11 @@ export type DocumentReviewImpactStatus = (typeof DOCUMENT_REVIEW_IMPACT_STATUSES
 
 export interface DocumentReviewImpactInput {
   category: DocumentReviewImpactCategory;
+  /**
+   * Model confidence (0..1) that this element is affected. Null for items
+   * written by hand before the analysis produced a score.
+   */
+  confidence?: number | null;
   kind: DocumentReviewImpactKind;
   /** The judgement basis: why this element may be affected. */
   reason: string;
@@ -74,6 +85,8 @@ export interface DocumentReviewImpactInput {
   /** The changed clause that triggers this impact. */
   sourceAnchor?: DocumentReviewTextAnchor | null;
   title: string;
+  /** Human description of the change that triggers this impact. */
+  trigger?: string | null;
 }
 
 // ---------------------------------------------------------------------------

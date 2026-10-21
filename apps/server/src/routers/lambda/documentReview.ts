@@ -26,6 +26,10 @@ import { RbacModel } from '@/database/models/rbac';
 import { workspaceMembers } from '@/database/schemas';
 import { router } from '@/libs/trpc/lambda';
 import { serverDatabase } from '@/libs/trpc/lambda/middleware';
+import {
+  createDocumentReviewImpactService,
+  isDocumentImpactError,
+} from '@/server/services/documentReviewImpact';
 import { assertContentsNotInRestrictedKnowledgeBase } from '@/server/services/knowledgeBaseAccess';
 import { assertCanPerformResourceAction } from '@/server/services/resourcePermission';
 import { isReviewServiceError, ReviewPlaybookService } from '@/server/services/review';
@@ -36,6 +40,7 @@ const longText = z.string().trim().min(1).max(10_000);
 
 const anchorSchema = z.object({
   end: z.number().int().min(0).optional(),
+  invalid: z.boolean().optional(),
   label: z.string().max(200).optional(),
   prefix: z.string().max(200).optional(),
   quote: z.string().min(1).max(4000),
@@ -50,12 +55,14 @@ const suggestionSchema = z.object({
 
 const impactSchema = z.object({
   category: z.enum(DOCUMENT_REVIEW_IMPACT_CATEGORIES),
+  confidence: z.number().min(0).max(1).nullish(),
   kind: z.enum(DOCUMENT_REVIEW_IMPACT_KINDS),
   reason: longText,
   relatedAnchor: anchorSchema.nullish(),
   severity: z.enum(DOCUMENT_REVIEW_IMPACT_SEVERITIES).optional(),
   sourceAnchor: anchorSchema.nullish(),
   title: shortText,
+  trigger: z.string().max(1000).nullish(),
 });
 
 const ruleSchema = z.object({
@@ -165,6 +172,27 @@ const documentReviewProcedure = wsProcedure.use(serverDatabase).use(async ({ ctx
 
 /** Map model / transition errors to tRPC errors. Illegal transitions are 409. */
 const mapError = (error: unknown): never => {
+  if (isDocumentImpactError(error)) {
+    const code =
+      error.code === 'LLM_FAILED'
+        ? 'BAD_GATEWAY'
+        : error.code === 'SCHEMA_INVALID'
+          ? 'INTERNAL_SERVER_ERROR'
+          : [
+                'DOCUMENT_NOT_FOUND',
+                'SESSION_NOT_FOUND',
+                'BASELINE_NOT_FOUND',
+                'IMPACT_NOT_FOUND',
+              ].includes(error.code)
+            ? 'NOT_FOUND'
+            : 'PRECONDITION_FAILED';
+
+    throw new TRPCError({
+      cause: { code: error.code, details: error.details },
+      code,
+      message: error.message,
+    });
+  }
   if (isReviewServiceError(error)) {
     const code =
       error.code === 'LLM_FAILED' || error.code === 'SCHEMA_INVALID'
@@ -252,6 +280,7 @@ export const documentReviewRouter = router({
   updateSession: documentReviewProcedure
     .input(
       z.object({
+        baseHistoryId: idSchema.nullish(),
         ruleSetId: idSchema.nullish(),
         sessionId: idSchema,
         status: z.enum(DOCUMENT_REVIEW_SESSION_STATUSES).optional(),
@@ -294,6 +323,38 @@ export const documentReviewRouter = router({
     .mutation(async ({ ctx, input }) => {
       await ctx.authorizeImpact(input.impactId, 'edit');
       return ctx.reviewModel.updateImpactStatus(input.impactId, input.status);
+    }),
+
+  /**
+   * Analyse the session's baseline against the current body and persist the
+   * resulting impact items (replacing any previous run). `baseHistoryId`
+   * selects another baseline for this run and pins it on the session.
+   */
+  analyzeImpacts: documentReviewProcedure
+    .input(z.object({ baseHistoryId: idSchema.nullish(), sessionId: idSchema }))
+    .mutation(async ({ ctx, input }) => {
+      await ctx.authorizeSession(input.sessionId, 'edit');
+      return run(() =>
+        createDocumentReviewImpactService({
+          db: ctx.serverDB,
+          userId: ctx.userId,
+          workspaceId: ctx.workspaceId,
+        }).analyze(input),
+      );
+    }),
+
+  /** Impact item plus both original excerpts, assembled for a follow-up turn. */
+  getImpactFollowUpContext: documentReviewProcedure
+    .input(z.object({ impactId: idSchema, question: z.string().max(2000).optional() }))
+    .query(async ({ ctx, input }) => {
+      await ctx.authorizeImpact(input.impactId, 'view');
+      return run(() =>
+        createDocumentReviewImpactService({
+          db: ctx.serverDB,
+          userId: ctx.userId,
+          workspaceId: ctx.workspaceId,
+        }).buildFollowUpContext(input),
+      );
     }),
 
   // ---------------------------------------------------------------------------

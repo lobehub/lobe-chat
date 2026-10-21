@@ -1440,7 +1440,9 @@ table document_review_impacts {
   severity text [not null, default: 'medium']
   status text [not null, default: 'open']
   title text [not null]
+  trigger text
   reason text [not null]
+  confidence real
   source_anchor jsonb
   related_anchor jsonb
   sort_order integer [not null, default: 0]

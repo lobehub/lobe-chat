@@ -156,6 +156,7 @@ export class DocumentReviewModel {
   updateSession = async (
     id: string,
     value: {
+      baseHistoryId?: string | null;
       ruleSetId?: string | null;
       status?: DocumentReviewSessionStatus;
       title?: string | null;
@@ -236,6 +237,7 @@ export class DocumentReviewModel {
         .values(
           items.map((item, index) => ({
             category: item.category,
+            confidence: item.confidence ?? null,
             kind: item.kind,
             reason: item.reason,
             relatedAnchor: item.relatedAnchor ?? null,
@@ -244,6 +246,7 @@ export class DocumentReviewModel {
             sortOrder: index,
             sourceAnchor: item.sourceAnchor ?? null,
             title: item.title,
+            trigger: item.trigger ?? null,
             workspaceId,
           })),
         )
