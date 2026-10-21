@@ -59,11 +59,11 @@ export const resolveCanvasHref = (fromFile: string, rawHref: string): ResolvedCa
   if (/^data:/i.test(href)) return { kind: 'data' };
   if (/^[a-z][\d+.a-z-]*:/i.test(href) || href.startsWith('//')) return { kind: 'remote' };
 
-  const target = decode(stripQueryAndHash(href));
+  const target = decode(stripQueryAndHash(href)).replaceAll('\\', '/');
   if (!target) return { kind: 'anchor' };
+  if (target.startsWith('/')) return { kind: 'local' };
 
   const baseDir = fromFile.includes('/') ? fromFile.slice(0, fromFile.lastIndexOf('/')) : '';
-  const joined = target.startsWith('/') ? target : `${baseDir}/${target}`;
 
-  return { kind: 'local', path: normalizeCanvasPath(joined) };
+  return { kind: 'local', path: normalizeCanvasPath(`${baseDir}/${target}`) };
 };

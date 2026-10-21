@@ -143,14 +143,26 @@ describe('CanvasStorageService', () => {
     ).rejects.toThrow();
   });
 
-  it('deletes a canvas’s file rows and its unshared blobs', async () => {
+  it('deletes every version manifest and unshared blob while preserving other canvases', async () => {
     const { objects, store } = createMemoryStore();
     const service = new CanvasStorageService({ db: serverDB, store, userId });
-    await service.commit('cvs_a', [{ content: page('only a'), path: 'index.html' }]);
+    const manifests: string[] = [];
+    for (const content of ['first', 'second']) {
+      const result = await service.commit('cvs_a', [
+        { content: page(content), path: 'index.html' },
+      ]);
+      if (!result.ok) throw new Error('commit failed');
+      manifests.push(result.metadata.manifestKey);
+    }
+    const otherKeys = [
+      `canvas/${userId}/cvs_b/manifests/other.json`,
+      'canvas/another-user/cvs_a/manifests/other.json',
+    ];
+    for (const key of otherKeys) objects.set(key, new Uint8Array([1]));
 
-    await service.removeCanvas('cvs_a');
+    await service.removeCanvas('cvs_a', [...manifests, ...otherKeys]);
 
     expect(await new FileModel(serverDB, userId).countUsage()).toBe(0);
-    expect([...objects.keys()].some((key) => key.includes('/blobs/'))).toBe(false);
+    expect([...objects.keys()].sort()).toEqual(otherKeys.sort());
   });
 });

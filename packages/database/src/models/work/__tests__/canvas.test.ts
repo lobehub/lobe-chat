@@ -103,11 +103,22 @@ describe('WorkModel · canvas', () => {
   it('reports a deleted canvas work so its stored files can be purged', async () => {
     const model = new WorkModel(serverDB, userId);
     const work = await model.registerCanvas(params());
+    const secondManifest = 'canvas/u/cvs_cost/manifests/b.json';
+    await model.registerCanvas(
+      params({
+        metadata: { ...params().metadata, manifestKey: secondManifest },
+        toolCallId: 'call-canvas-delete-2',
+      }),
+    );
 
-    expect(await model.deleteWork({ id: work.id })).toEqual([
-      { resourceId: 'cvs_cost', resourceType: 'canvas' },
-    ]);
+    const [removed] = await model.deleteWork({ id: work.id });
+    expect(removed).toMatchObject({ resourceId: 'cvs_cost', resourceType: 'canvas' });
+    expect(removed.canvasManifestKeys).toEqual(
+      expect.arrayContaining([params().metadata.manifestKey, secondManifest]),
+    );
+    expect(removed.canvasManifestKeys).toHaveLength(2);
     expect(await model.findCanvas('cvs_cost')).toBeNull();
+    expect(await model.listVersions(work.id)).toEqual([]);
   });
 
   it('records where a canvas is published, owner only, keeping other metadata', async () => {

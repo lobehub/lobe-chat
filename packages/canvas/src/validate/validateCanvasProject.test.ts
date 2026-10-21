@@ -183,6 +183,28 @@ describe('validateCanvasProject', () => {
     ).toEqual(['broken-reference']);
   });
 
+  it.each(['/image.png', '/image.png?v=1#preview', '\\image.png'])(
+    'rejects root-relative HTML resources even when the project has the file: %s',
+    (href) => {
+      expect(
+        rules({
+          'image.png': new Uint8Array([1, 2, 3]),
+          'index.html': page(`<img src="${href}">`),
+        }),
+      ).toEqual(['broken-reference']);
+    },
+  );
+
+  it('rejects root-relative references in CSS assets', () => {
+    expect(
+      rules({
+        'app.css': 'body{background-image:url(/image.png)}',
+        'image.png': new Uint8Array([1, 2, 3]),
+        'index.html': page('<link rel="stylesheet" href="app.css">'),
+      }),
+    ).toEqual(['broken-reference']);
+  });
+
   it('rejects unsafe paths and disallowed file types', () => {
     expect(rules({ '../x.html': '', 'index.html': page('') })).toEqual(['invalid-path']);
     expect(rules({ 'index.html': page(''), 'run.exe': new Uint8Array([0]) })).toEqual([

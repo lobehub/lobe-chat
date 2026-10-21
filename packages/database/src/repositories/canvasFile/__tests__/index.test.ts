@@ -82,4 +82,31 @@ describe('CanvasFileRepository', () => {
       'cvs_b',
     ]);
   });
+
+  it.each([
+    [undefined, 'canvas-ws-a'],
+    ['canvas-ws-a', undefined],
+    ['canvas-ws-a', 'canvas-ws-b'],
+  ])('preserves shared blobs when deleting from %s while %s still uses them', async (from, to) => {
+    await serverDB.insert(workspaces).values(
+      ['canvas-ws-a', 'canvas-ws-b'].map((id) => ({
+        id,
+        name: id,
+        primaryOwnerId: userId,
+        slug: id,
+      })),
+    );
+    await new CanvasFileRepository(serverDB, userId, from).register('cvs_a', [
+      blob('shared'),
+      blob('only-a'),
+    ]);
+    await new CanvasFileRepository(serverDB, userId, to).register('cvs_b', [blob('shared')]);
+
+    expect(await new CanvasFileModel(serverDB, userId, from).deleteByCanvas('cvs_a')).toEqual([
+      `canvas/${userId}/blobs/only-a`,
+    ]);
+    const remaining = new CanvasFileModel(serverDB, userId, to);
+    expect(await remaining.listByHashes(['shared'])).toHaveLength(1);
+    expect(await remaining.deleteByCanvas('cvs_b')).toEqual([`canvas/${userId}/blobs/shared`]);
+  });
 });

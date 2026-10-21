@@ -75,7 +75,13 @@ export class CanvasFileModel {
     const stillUsed = await this.db
       .select({ url: files.url })
       .from(files)
-      .where(and(this.ownership(), inArray(files.url, urls)));
+      .where(
+        and(
+          eq(files.userId, this.userId),
+          eq(files.source, FileSource.Canvas),
+          inArray(files.url, urls),
+        ),
+      );
     const used = new Set(stillUsed.map((row) => row.url));
 
     return urls.filter((url) => !used.has(url));

@@ -209,17 +209,19 @@ export const workRouter = router({
     .input(z.object({ id: z.string().min(1) }))
     .mutation(async ({ ctx, input }) => {
       const removed = await ctx.workModel.deleteWork(input);
-      const canvasIds = removed.flatMap((row) =>
-        row.resourceType === 'canvas' && row.resourceId ? [row.resourceId] : [],
+      const canvases = removed.flatMap((row) =>
+        row.resourceType === 'canvas' && row.resourceId
+          ? [{ id: row.resourceId, manifestKeys: row.canvasManifestKeys }]
+          : [],
       );
-      if (canvasIds.length === 0) return;
+      if (canvases.length === 0) return;
 
       const storage = createCanvasStorageService(
         ctx.serverDB,
         ctx.userId,
         ctx.workspaceId ?? undefined,
       );
-      for (const canvasId of canvasIds) await storage.removeCanvas(canvasId);
+      for (const canvas of canvases) await storage.removeCanvas(canvas.id, canvas.manifestKeys);
     }),
 
   registerTask: taskWorkProcedureWrite

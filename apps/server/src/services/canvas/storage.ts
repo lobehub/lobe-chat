@@ -17,6 +17,7 @@ import pMap from 'p-map';
 
 import type { CanvasStorageQuotaResult } from '@/business/server/canvasStorage';
 import { CanvasFileModel } from '@/database/models/canvasFile';
+import { WorkModel } from '@/database/models/work';
 import { CanvasFileRepository } from '@/database/repositories/canvasFile';
 import type { LobeChatDatabase } from '@/database/type';
 
@@ -210,8 +211,22 @@ export class CanvasStorageService {
     };
   }
 
-  async removeCanvas(canvasId: string) {
+  async removeCanvas(canvasId: string, manifestKeys: string[]) {
     const orphaned = await this.files.deleteByCanvas(canvasId);
-    if (orphaned.length > 0) await this.deps.store.delete(orphaned);
+    const referenced = new Set(
+      await new WorkModel(this.deps.db, this.deps.userId).findReferencedCanvasManifestKeys(
+        manifestKeys,
+      ),
+    );
+    const keys = [
+      ...orphaned,
+      ...manifestKeys.filter(
+        (key) =>
+          this.ownsKey(key) &&
+          key.startsWith(`${this.prefix}${canvasId}/manifests/`) &&
+          !referenced.has(key),
+      ),
+    ];
+    if (keys.length > 0) await this.deps.store.delete(keys);
   }
 }

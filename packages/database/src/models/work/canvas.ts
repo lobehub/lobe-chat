@@ -5,7 +5,7 @@ import type {
   WorkMetadata,
   WorkVersionItem,
 } from '@lobechat/types';
-import { and, desc, eq, sql } from 'drizzle-orm';
+import { and, desc, eq, inArray, sql } from 'drizzle-orm';
 
 import { works, workVersions } from '../../schemas/work';
 import { type WorkContext, workOwnership } from './context';
@@ -103,6 +103,24 @@ export const findCanvasWorkVersion = async (
     .limit(1);
 
   return row?.version ?? null;
+};
+
+export const findReferencedCanvasManifestKeys = async (ctx: WorkContext, keys: string[]) => {
+  if (keys.length === 0) return [];
+  const manifestKey = sql<string>`${workVersions.metadata} -> 'canvas' ->> 'manifestKey'`;
+  const rows = await ctx.db
+    .selectDistinct({ manifestKey })
+    .from(workVersions)
+    .innerJoin(works, eq(workVersions.workId, works.id))
+    .where(
+      and(
+        // Object keys are shared by the user's canvases across all workspaces.
+        eq(works.userId, ctx.userId),
+        eq(works.resourceType, 'canvas'),
+        inArray(manifestKey, keys),
+      ),
+    );
+  return rows.map((row) => row.manifestKey);
 };
 
 export const listCanvasWorks = async (
