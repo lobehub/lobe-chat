@@ -139,6 +139,38 @@ describe('decide via System One', () => {
     expect(usage?.cost).toBe(0.000_019);
   });
 
+  it('passes the provider-reported charge separately without touching usage or the response', async () => {
+    const instance = createInstance();
+    vi.spyOn(instance['client'], 'post').mockResolvedValue(systemOneResponse as never);
+    const onProviderReportedCost = vi.fn();
+
+    const result = await instance.decide!(payload, { onProviderReportedCost });
+
+    expect(onProviderReportedCost).toHaveBeenCalledWith(0.000_018);
+    // `usage.cost` stays the model-bank price (19 credits), not OpenRouter's 0.000018.
+    expect(result.usage?.cost).toBe(0.000_019);
+    expect(JSON.stringify(result)).not.toContain('0.000018');
+    expect(Object.keys(result).sort()).toEqual(['answers', 'id', 'model', 'provider', 'usage']);
+  });
+
+  it.each([
+    ['missing', undefined],
+    ['negative', -1],
+    ['non-numeric', 'free'],
+  ])('ignores a %s provider-reported charge without failing the decision', async (_, cost) => {
+    const instance = createInstance();
+    vi.spyOn(instance['client'], 'post').mockResolvedValue({
+      ...systemOneResponse,
+      usage: { ...systemOneResponse.usage, cost },
+    } as never);
+    const onProviderReportedCost = vi.fn();
+
+    const result = await instance.decide!(payload, { onProviderReportedCost });
+
+    expect(onProviderReportedCost).not.toHaveBeenCalled();
+    expect(result.usage?.cost).toBe(0.000_019);
+  });
+
   it('returns usage without an onUsage callback', async () => {
     const instance = createInstance();
     vi.spyOn(instance['client'], 'post').mockResolvedValue(systemOneResponse as never);

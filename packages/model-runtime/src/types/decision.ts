@@ -125,6 +125,12 @@ export interface DecisionOptions {
   /** Metadata passed to hooks (billing, tracing, route attempts), e.g. `trigger`. */
   metadata?: Record<string, unknown>;
   /**
+   * Receives the USD charge the upstream provider reported for this call (OpenRouter
+   * `usage.cost`). Server-side only: it is kept out of `DecisionResponse` and never replaces the
+   * model-bank `usage.cost`, matching chat's `OnFinishData.providerReportedCost`.
+   */
+  onProviderReportedCost?: (cost: number) => void | Promise<void>;
+  /**
    * Receives the provider-reported token usage (with `cost` when the model has pricing)
    * after a successful decision.
    */

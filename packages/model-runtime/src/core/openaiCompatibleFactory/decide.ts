@@ -50,6 +50,11 @@ const SystemOneResponseSchema = z.object({
   provider: z.string().optional(),
   usage: z
     .object({
+      /**
+       * USD charge OpenRouter reports for the call. Kept loose so an unusable value is dropped
+       * like chat's provider-reported cost instead of failing an otherwise valid decision.
+       */
+      cost: z.unknown().optional(),
       input_tokens: z.number().int().nonnegative(),
       output_tokens: z.number().int().nonnegative().optional(),
     })
@@ -57,6 +62,9 @@ const SystemOneResponseSchema = z.object({
 });
 
 type SystemOneAnswer = z.infer<typeof SystemOneAnswerSchema>;
+
+const toProviderReportedCost = (value: unknown): number | undefined =>
+  typeof value === 'number' && Number.isFinite(value) && value >= 0 ? value : undefined;
 
 const toSystemOneQuestion = (question: DecisionQuestion) =>
   question.type === 'boolean' ? { ...question, type: 'noul' as const } : question;
@@ -209,6 +217,11 @@ const requestSystemOneDecision = async (
     const pricing = await getModelPricing(payload.model, provider, options?.pricingContext);
     response.usage = withUsageCost(tokens, pricing);
     await options?.onUsage?.(response.usage);
+
+    const providerReportedCost = toProviderReportedCost(usage.cost);
+    if (providerReportedCost !== undefined) {
+      await options?.onProviderReportedCost?.(providerReportedCost);
+    }
   }
 
   return response;

@@ -52,6 +52,25 @@ describe('ModelRuntime decide hooks', () => {
     );
   });
 
+  it('passes the provider-reported charge to onDecideFinal and the caller callback', async () => {
+    const onDecideFinal = vi.fn();
+    const onProviderReportedCost = vi.fn();
+    const { runtime, mockRuntimeAI } = createMockRuntime({ onDecideFinal });
+    mockRuntimeAI.decide = vi.fn(async (_payload: any, options: any) => {
+      await options.onProviderReportedCost(0.000_018);
+      return decision;
+    });
+
+    const result = await runtime.decide(decidePayload, { onProviderReportedCost });
+
+    expect(result).toEqual(decision);
+    expect(onProviderReportedCost).toHaveBeenCalledWith(0.000_018);
+    expect(onDecideFinal).toHaveBeenCalledWith(
+      expect.objectContaining({ providerReportedCost: 0.000_018, response: decision }),
+      expect.anything(),
+    );
+  });
+
   it('calls onDecideError and re-throws when the provider fails', async () => {
     const providerError = { errorType: 'ProviderBizError', error: { message: 'boom' } };
     const onDecideError = vi.fn();
