@@ -943,7 +943,7 @@ describe('ClaudeCodeQuotaMenu', () => {
 
     await waitFor(() => expect(mockLambdaClaudeQuota).toHaveBeenCalled());
     await waitForQuotaIdle();
-    expect(screen.getAllByText('92%').length).toBeGreaterThan(0);
+    await waitFor(() => expect(screen.getAllByText('92%').length).toBeGreaterThan(0));
     expect(screen.queryByText('heteroAgent.quota.unavailable')).toBeNull();
     expect(await storage.get(row)).toMatchObject({ data: { status: 'ok' } });
   });
