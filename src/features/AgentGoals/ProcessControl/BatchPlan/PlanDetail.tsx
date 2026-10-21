@@ -14,7 +14,7 @@ import { parseSkillMarkdownFrontmatter } from '@/utils/skillMarkdown';
 import type { GoalGraphView } from '../goalGraphViewModel';
 import type { BatchModel, BatchRound } from '../Graph/batchModel';
 import { usePlanVersions, usePlanVersionSelection } from './planVersion';
-import { skillFileTree } from './skillVersions';
+import { shownSkillFile, skillFileTree, useSkillVersion } from './skillVersions';
 
 /**
  * A batch's plan, opened from its node, read the way the product reads a
@@ -61,19 +61,28 @@ const PlanDetail = memo<PlanDetailProps>(({ graph, model, round }) => {
   const [selectedFile, setSelectedFile] = useState(SKILL_INDEX);
   const [filesOpen, setFilesOpen] = useState(true);
   const { selected } = usePlanVersionSelection();
-  const { files, isLoading, versions } = usePlanVersions(graph, model);
+  const { files: latestFiles, isLoading, skillId, versions } = usePlanVersions(graph, model);
+  const revision = selected ?? round.planVersion;
+  const current = versions.find((version) => version.revision === revision);
+  const { data: shipped, isLoading: isVersionLoading } = useSkillVersion(
+    current && skillId,
+    revision,
+  );
+  // The package as this version shipped it, when it kept its own files.
+  const files = shipped?.files ?? latestFiles;
   const resourceTree = useMemo(() => skillFileTree(files), [files]);
   const contentMap = useMemo(
     () => Object.fromEntries(files.map((file) => [file.path, file.content])),
     [files],
   );
 
-  if (isLoading) return <Loading />;
+  if (isLoading || isVersionLoading) return <Loading />;
 
-  const revision = selected ?? round.planVersion;
-  const current = versions.find((version) => version.revision === revision);
+  // A file picked in another version may not be in this one.
+  const shown = shownSkillFile(selectedFile, files, SKILL_INDEX);
+
   const forked = model.rounds.find((item) => item.planVersion === revision)?.forked;
-  const { body, frontmatter } = parseSkillMarkdownFrontmatter(current?.content);
+  const { body, frontmatter } = parseSkillMarkdownFrontmatter(shipped?.content ?? current?.content);
 
   return (
     <Flexbox data-plan-detail flex={1} style={{ minHeight: 0 }}>
@@ -89,7 +98,7 @@ const PlanDetail = memo<PlanDetailProps>(({ graph, model, round }) => {
       )}
       <Flexbox horizontal flex={1} style={{ minHeight: 0 }}>
         <div style={{ flex: 1, minWidth: 0, overflowY: 'auto', paddingBlockEnd: 24 }}>
-          {selectedFile === SKILL_INDEX ? (
+          {shown === SKILL_INDEX ? (
             <div style={{ paddingInline: 16 }}>
               <EditorCanvas
                 editable={false}
@@ -100,7 +109,7 @@ const PlanDetail = memo<PlanDetailProps>(({ graph, model, round }) => {
               />
             </div>
           ) : (
-            <ContentViewer contentMap={contentMap} key={selectedFile} selectedFile={selectedFile} />
+            <ContentViewer contentMap={contentMap} key={shown} selectedFile={shown} />
           )}
         </div>
         {/* The skill's files: folds to a rail so the document can take the width. */}
@@ -128,7 +137,7 @@ const PlanDetail = memo<PlanDetailProps>(({ graph, model, round }) => {
               </Flexbox>
               <FileTree
                 resourceTree={resourceTree}
-                selectedFile={selectedFile}
+                selectedFile={shown}
                 onSelectFile={setSelectedFile}
               />
             </>
