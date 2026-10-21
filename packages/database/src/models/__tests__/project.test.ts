@@ -243,7 +243,42 @@ describe('ProjectModel', () => {
       expect.objectContaining({ id: publicProject.id }),
     );
     expect(await member.findById(privateProject.id)).toBeNull();
-    expect(await member.update(publicProject.id, { name: 'Nope' })).toBeNull();
+    expect(await member.update(privateProject.id, { name: 'Nope' })).toBeNull();
+    expect(await member.delete(privateProject.id)).toBeNull();
+  });
+
+  it('lets any workspace member manage a public project another member created', async () => {
+    await serverDB.insert(workspaces).values({
+      id: 'project-manage-workspace',
+      name: 'Project Manage Workspace',
+      primaryOwnerId: userId,
+      slug: 'project-manage-workspace',
+    });
+    const owner = new ProjectModel(serverDB, userId, 'project-manage-workspace');
+    const member = new ProjectModel(serverDB, otherUserId, 'project-manage-workspace');
+    const project = await createProject(owner, { name: 'Shared' });
+
+    expect(await member.findManageableById(project.id)).toEqual(
+      expect.objectContaining({ id: project.id }),
+    );
+    expect(await member.update(project.id, { name: 'Renamed' })).toEqual(
+      expect.objectContaining({ name: 'Renamed', userId }),
+    );
+    expect(await member.updateStatus(project.id, 'active')).toEqual(
+      expect.objectContaining({ status: 'active' }),
+    );
+    // Visibility decides who can see the project, so it stays with the creator.
+    expect(await member.update(project.id, { visibility: 'private' })).toBeNull();
+    expect(await owner.update(project.id, { visibility: 'private' })).toEqual(
+      expect.objectContaining({ visibility: 'private' }),
+    );
+    await owner.update(project.id, { visibility: 'public' });
+
+    expect(await member.delete(project.id)).toEqual(expect.objectContaining({ id: project.id }));
+    expect(await owner.findById(project.id)).toBeNull();
+    expect(
+      await serverDB.select().from(agents).where(eq(agents.id, project.coordinatorAgentId)),
+    ).toHaveLength(0);
   });
 
   it('binds only accessible agents and knowledge bases', async () => {
@@ -349,12 +384,12 @@ describe('ProjectModel', () => {
       .returning();
 
     expect(member.getPermissions(project)).toEqual({
-      canManage: false,
+      canManage: true,
       canManageKnowledgeBases: true,
       canManageMembers: false,
     });
     expect(admin.getPermissions(project)).toEqual(
-      expect.objectContaining({ canManage: false, canManageMembers: true }),
+      expect.objectContaining({ canManage: true, canManageMembers: true }),
     );
     expect(creator.getPermissions(project)).toEqual(
       expect.objectContaining({ canManage: true, canManageMembers: true }),
@@ -368,7 +403,14 @@ describe('ProjectModel', () => {
     expect(await admin.updateAgent(project.id, agent.id, { role: 'reviewer' })).toEqual(
       expect.objectContaining({ role: 'reviewer' }),
     );
-    expect(await admin.update(project.id, { name: 'Renamed by admin' })).toBeNull();
+    expect(await admin.update(project.id, { name: 'Renamed by admin' })).toEqual(
+      expect.objectContaining({ name: 'Renamed by admin' }),
+    );
+    // Member management stays with the creator and workspace admins.
+    expect(await member.findMembersManageableById(project.id)).toBeNull();
+    expect(await admin.findMembersManageableById(project.id)).toEqual(
+      expect.objectContaining({ id: project.id }),
+    );
 
     expect(
       await member.addKnowledgeBase(project.id, { knowledgeBaseId: knowledgeBase.id }),
