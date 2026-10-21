@@ -243,6 +243,7 @@ export default {
   'sidebar.emptyAction': 'Create your first project',
   'sidebar.agentsEmpty': 'No agents are connected yet',
   'sidebar.conversationsEmpty': 'No project topics yet',
+  'sidebar.coordinatorTag': 'Lead',
   'sidebar.librariesEmpty': 'No libraries are connected yet',
   'sidebar.newConversation': 'New topic',
   'sidebar.title': 'Projects',

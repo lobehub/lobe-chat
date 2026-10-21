@@ -295,8 +295,13 @@ export class ProjectModel {
     return project ?? null;
   }
 
+  /** Members in project order, the main agent always first. */
   async listAgents(projectId: string) {
-    if (!(await this.findById(projectId))) return null;
+    const project = await this.findById(projectId);
+    if (!project) return null;
+    const coordinatorFirst = project.coordinatorAgentId
+      ? sql`CASE WHEN ${projectAgents.agentId} = ${project.coordinatorAgentId} THEN 0 ELSE 1 END`
+      : sql`0`;
     return this.db
       .select({ agent: agents, binding: projectAgents })
       .from(projectAgents)
@@ -307,7 +312,7 @@ export class ProjectModel {
           buildWorkspaceWhere({ userId: this.userId, workspaceId: this.workspaceId }, agents),
         ),
       )
-      .orderBy(asc(projectAgents.sortOrder), asc(projectAgents.createdAt));
+      .orderBy(coordinatorFirst, asc(projectAgents.sortOrder), asc(projectAgents.createdAt));
   }
 
   async addAgent(projectId: string, input: ProjectAgentInput) {

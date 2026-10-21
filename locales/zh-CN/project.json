@@ -185,6 +185,7 @@
   "settings.workLocations": "工作目录",
   "sidebar.agentsEmpty": "还没有关联智能体",
   "sidebar.conversationsEmpty": "还没有项目话题",
+  "sidebar.coordinatorTag": "主管",
   "sidebar.emptyAction": "创建第一个项目",
   "sidebar.librariesEmpty": "还没有关联资料库",
   "sidebar.newConversation": "新话题",

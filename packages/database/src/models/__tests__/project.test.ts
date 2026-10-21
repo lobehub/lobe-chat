@@ -246,6 +246,20 @@ describe('ProjectModel', () => {
     expect(await member.update(publicProject.id, { name: 'Nope' })).toBeNull();
   });
 
+  it('lists the main agent first whatever order the other members carry', async () => {
+    const project = await createProject(model, { name: 'Ordering' });
+    const [agent] = await serverDB
+      .insert(agents)
+      .values({ title: 'Early bird', userId })
+      .returning();
+    await model.addAgent(project.id, { agentId: agent.id, sortOrder: -10 });
+
+    expect((await model.listAgents(project.id))?.map(({ agent }) => agent.id)).toEqual([
+      project.coordinatorAgentId,
+      agent.id,
+    ]);
+  });
+
   it('binds only accessible agents and knowledge bases', async () => {
     const project = await createProject(model, { name: 'Bindings' });
     const [agent] = await serverDB
