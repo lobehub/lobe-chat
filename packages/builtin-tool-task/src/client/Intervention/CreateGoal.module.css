@@ -1,0 +1,13 @@
+/* The editor sets its own font size on nested nodes, so the instruction field
+ * has to reach every descendant to match the criteria rows. */
+.instructionEditor,
+.instructionEditor * {
+  font-size: 13px;
+  line-height: 1.65;
+}
+
+/* The secondary border is too faint to read on the dark elevated surface
+ * the intervention card sits on. */
+html[data-theme='dark'] .list > * + * {
+  border-block-start-color: var(--lobe-color-border);
+}
