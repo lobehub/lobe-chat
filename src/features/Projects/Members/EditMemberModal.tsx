@@ -1,17 +1,9 @@
-import {
-  Alert,
-  Button,
-  createModal,
-  Flexbox,
-  Input,
-  Text,
-  TextArea,
-  useModalContext,
-} from '@lobehub/ui';
+import { Button, createModal, Flexbox, Input, Text, TextArea, useModalContext } from '@lobehub/ui';
 import { t } from 'i18next';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import AsyncError from '@/components/AsyncError';
 import { useProjectStore } from '@/store/project';
 
 interface EditMemberParams {
@@ -75,12 +67,7 @@ function EditMemberContent({ agentId, projectId, responsibility, role }: EditMem
         />
       </Flexbox>
       {error ? (
-        <Alert
-          showIcon
-          description={error instanceof Error ? error.message : undefined}
-          title={t('members.updateFailed')}
-          type="error"
-        />
+        <AsyncError error={error} title={t('members.updateFailed')} variant="inline" />
       ) : null}
       <Flexbox horizontal gap={8} justify="flex-end">
         <Button disabled={pending} onClick={close}>

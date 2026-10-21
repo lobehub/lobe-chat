@@ -40,6 +40,8 @@ export function ProjectMemberSettings({ detail }: { detail: ProjectDetail }) {
   const projectId = detail.project.id;
   const canManage = detail.permissions?.canManageMembers ?? false;
   const members = detail.agents ?? [];
+  // Other members cannot see a private agent, so a shared project only takes shared ones.
+  const isShared = Boolean(detail.project.workspaceId) && detail.project.visibility === 'public';
 
   const invite = async (agentIds: string[]) => {
     try {
@@ -192,6 +194,7 @@ export function ProjectMemberSettings({ detail }: { detail: ProjectDetail }) {
       <AddAgentMemberModal
         existingMembers={members.map((member) => member.agent.id)}
         open={inviteOpen}
+        sharedOnly={isShared}
         onCancel={() => setInviteOpen(false)}
         onConfirm={invite}
       />

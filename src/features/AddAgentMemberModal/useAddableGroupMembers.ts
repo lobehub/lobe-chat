@@ -12,10 +12,19 @@ import { selectAddableAgents, toPickableAgents } from './selectAddableAgents';
  * Candidates for the "add member" picker, read from the sidebar agent list
  * replica: it already holds every non-virtual agent, so the local copy paints
  * the picker at once and the sync only confirms it.
+ *
+ * `sharedOnly` leaves the caller's private agents out, for containers every
+ * workspace member sees (a shared project would hide them from everyone else).
  */
-export const useAddableGroupMembers = (existingMembers: string[]) => {
+export const useAddableGroupMembers = (
+  existingMembers: string[],
+  { sharedOnly = false }: { sharedOnly?: boolean } = {},
+) => {
   const { error } = useFetchAgentList();
-  const sidebarAgents = useHomeStore(homeAgentListSelectors.allAgents, isEqual);
+  const sidebarAgents = useHomeStore(
+    sharedOnly ? homeAgentListSelectors.sharedAgents : homeAgentListSelectors.allAgents,
+    isEqual,
+  );
   const isAgentListInit = useHomeStore(homeAgentListSelectors.isAgentListInit);
   const isAgentListConfirmed = useHomeStore(homeAgentListSelectors.isAgentListConfirmed);
 
