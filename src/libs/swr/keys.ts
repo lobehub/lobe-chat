@@ -236,15 +236,6 @@ export const groupKeys = {
   queryAgentsForCreate: def('group:queryAgentsForCreate', () => ['group:queryAgentsForCreate']),
 };
 
-// ---- session ------------------------------------------------------------
-export const sessionKeys = {
-  createSession: def('session:createSession', (groupId: string | undefined) => [
-    'session:createSession',
-    groupId,
-  ]),
-  list: def('session:list', (isLogin: boolean | undefined) => ['session:list', isLogin]),
-};
-
 // ---- thread -------------------------------------------------------------
 export const threadKeys = {
   list: def('thread:list', (topicId: string) => ['thread:list', topicId]),
@@ -1031,7 +1022,6 @@ export const swrKeys = {
   recommendations: recommendationsKeys,
   resource: resourceKeys,
   serverConfig: serverConfigKeys,
-  session: sessionKeys,
   share: shareKeys,
   stats: statsKeys,
   taskTemplate: taskTemplateKeys,
