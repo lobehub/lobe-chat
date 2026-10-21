@@ -38,11 +38,17 @@ const setup = () => {
 const activeText = () =>
   screen.getAllByRole('link').find((el) => el.getAttribute('aria-current'))?.textContent;
 
+let resizeCallbacks: Array<() => void> = [];
+
 describe('TableOfContents', () => {
   beforeEach(() => {
+    resizeCallbacks = [];
     vi.stubGlobal(
       'ResizeObserver',
       class {
+        constructor(callback: () => void) {
+          resizeCallbacks.push(callback);
+        }
         disconnect() {}
         observe() {}
       },
@@ -124,5 +130,23 @@ describe('TableOfContents', () => {
 
     fireEvent.focus(screen.getByRole('button'));
     expect(activeText()).toBe('Intro');
+  });
+
+  it('recomputes the active heading when layout changes without scrolling', async () => {
+    const { pane } = setup();
+    await flush();
+    fireEvent.focus(screen.getByRole('button'));
+    expect(activeText()).toBe('Intro');
+
+    // A side panel opens and reflows the body: "Usage" moves above the threshold.
+    for (const heading of pane.querySelectorAll('h1, h2')) {
+      const top = heading.textContent === 'FAQ' ? 500 : 0;
+      heading.getBoundingClientRect = () => ({ top }) as DOMRect;
+    }
+    act(() => {
+      for (const callback of resizeCallbacks) callback();
+    });
+
+    expect(activeText()).toBe('Usage');
   });
 });

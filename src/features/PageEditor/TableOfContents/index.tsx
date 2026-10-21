@@ -22,9 +22,11 @@ const styles = stylex.create({
     alignItems: 'flex-end',
     display: { 'default': 'flex', '@media (max-width: 1024px)': 'none' },
     flexDirection: 'column',
-    insetBlockStart: 96,
+    // Vertically centered on the right edge, like Notion's outline rail.
+    insetBlockStart: '50%',
     insetInlineEnd: 12,
     position: 'absolute',
+    transform: 'translateY(-50%)',
     zIndex: 10,
   },
   item: {
@@ -73,12 +75,13 @@ const styles = stylex.create({
     borderStyle: 'solid',
     borderWidth: 1,
     boxShadow: cssVar.boxShadowSecondary,
-    insetBlockStart: 0,
+    insetBlockStart: '50%',
     insetInlineEnd: 0,
     maxHeight: 'min(480px, 60vh)',
     overflowY: 'auto',
     padding: 6,
     position: 'absolute',
+    transform: 'translateY(-50%)',
     width: 240,
   },
   title: {
