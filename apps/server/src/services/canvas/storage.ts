@@ -11,6 +11,7 @@ import {
   normalizeCanvasPath,
   validateCanvasProject,
 } from '@lobechat/canvas';
+import { checkCanvasMermaid } from '@lobechat/canvas/mermaid';
 import type { CanvasWorkVersionMetadata } from '@lobechat/types';
 import pMap from 'p-map';
 
@@ -117,7 +118,7 @@ export class CanvasStorageService {
   }
 
   async commit(canvasId: string, input: CanvasCommitFile[]): Promise<CanvasCommitResult> {
-    const validation = validateCanvasProject(input);
+    const validation = validateCanvasProject(input, { checkMermaid: checkCanvasMermaid });
     if (!validation.ok) return { issues: validation.issues, ok: false };
 
     const files = input.map((file) => {

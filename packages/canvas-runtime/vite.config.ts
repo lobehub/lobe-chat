@@ -3,23 +3,32 @@ import { defineConfig } from 'vite';
 
 import { lobeUiImports } from '../../plugins/vite/lobeUiImports';
 
-export default defineConfig({
-  build: {
-    assetsInlineLimit: 100_000_000,
-    cssCodeSplit: false,
-    emptyOutDir: true,
-    minify: true,
-    lib: {
-      entry: 'src/index.tsx',
-      fileName: () => 'canvas-runtime.js',
-      formats: ['iife'],
-      name: 'LobeCanvasRuntime',
+const ADDONS = new Set(['highlight', 'mermaid']);
+
+// Each add-on is its own classic script: sandboxed canvas pages have an opaque origin,
+// so ES module chunks would need CORS headers from wherever the runtime is hosted.
+export default defineConfig(({ mode }) => {
+  const addon = ADDONS.has(mode) ? mode : undefined;
+  const file = addon ? `canvas-runtime-${addon}` : 'canvas-runtime';
+
+  return {
+    build: {
+      assetsInlineLimit: 100_000_000,
+      cssCodeSplit: false,
+      emptyOutDir: !addon,
+      minify: true,
+      lib: {
+        entry: addon ? `src/addons/${addon}.ts` : 'src/index.tsx',
+        fileName: () => `${file}.js`,
+        formats: ['iife'],
+        name: addon ? `LobeCanvasAddon_${addon}` : 'LobeCanvasRuntime',
+      },
+      outDir: 'dist',
+      rolldownOptions: {
+        output: { assetFileNames: `${file}.css` },
+      },
     },
-    outDir: 'dist',
-    rolldownOptions: {
-      output: { assetFileNames: 'canvas-runtime.css' },
-    },
-  },
-  define: { 'process.env.NODE_ENV': '"production"' },
-  plugins: [react(), ...lobeUiImports()],
+    define: { 'process.env.NODE_ENV': '"production"' },
+    plugins: [react(), ...lobeUiImports()],
+  };
 });

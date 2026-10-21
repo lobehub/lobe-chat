@@ -10,8 +10,10 @@ import { wrapCanvasTree } from './providers';
 import { startThemeSync } from './theme';
 import { baseViews } from './views/base';
 import { chartViews } from './views/charts';
+import { codeViews } from './views/code';
+import { mermaidViews } from './views/mermaid';
 
-const views = { ...baseViews, ...chartViews };
+const views = { ...baseViews, ...chartViews, ...codeViews, ...mermaidViews };
 
 const reportError = (error: unknown, host: HTMLElement) => {
   console.error('[lobe-canvas]', error);

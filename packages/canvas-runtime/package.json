@@ -4,10 +4,12 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "vite build && node scripts/finalize.mjs",
+    "build": "vite build && vite build --mode highlight && vite build --mode mermaid && node scripts/finalize.mjs",
     "test": "vitest"
   },
   "dependencies": {
-    "@lobechat/canvas": "workspace:*"
+    "@lobechat/canvas": "workspace:*",
+    "pele": "^1.6.0",
+    "shiki": "^4.4.3"
   }
 }

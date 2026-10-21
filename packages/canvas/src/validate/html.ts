@@ -10,7 +10,7 @@ import {
 } from '../schema/components';
 import type { CanvasAttributeSpec, CanvasComponentSpec } from '../schema/types';
 import { checkScriptText, collectCssRefs, findHardCodedColor, lineAt } from './text';
-import type { CanvasIssue } from './types';
+import type { CanvasIssue, CanvasValidationOptions } from './types';
 
 export interface CanvasProjectIndex {
   has: (path: string) => boolean;
@@ -22,6 +22,7 @@ interface ComponentFrame {
   line: number;
   provided: Set<string>;
   spec: CanvasComponentSpec;
+  text: string;
 }
 
 interface ElementFrame {
@@ -119,6 +120,7 @@ export const validateHtmlFile = (
   file: string,
   html: string,
   project: CanvasProjectIndex,
+  options: CanvasValidationOptions = {},
 ): CanvasIssue[] => {
   const issues: CanvasIssue[] = [];
   const stack: ElementFrame[] = [];
@@ -194,7 +196,7 @@ export const validateHtmlFile = (
       );
     }
 
-    const frame: ComponentFrame = { attrs, line, provided: new Set(), spec };
+    const frame: ComponentFrame = { attrs, line, provided: new Set(), spec, text: '' };
 
     for (const [name, value] of Object.entries(attrs)) {
       const attrSpec = spec.attributes[name];
@@ -255,6 +257,16 @@ export const validateHtmlFile = (
           'missing-attribute',
           `<${frame.spec.tag}> requires "${name}" (${attrSpec.description})`,
         );
+      }
+    }
+    if (frame.spec.tag === 'lobe-mermaid' && options.checkMermaid) {
+      const problem = options.checkMermaid(frame.text);
+      if (problem) {
+        const line = problem.line ? frame.line + problem.line - 1 : frame.line;
+        const message = problem.line
+          ? problem.message.replace(`line ${problem.line}`, `line ${line}`)
+          : problem.message;
+        report(line, 'invalid-diagram', `<lobe-mermaid> is not valid Mermaid. ${message}`);
       }
     }
   };
@@ -320,6 +332,15 @@ export const validateHtmlFile = (
         }
         if (attrs.style) checkCss(attrs.style, line);
 
+        const textOwner = stack.at(-1)?.component;
+        if (textOwner?.spec.children === 'text') {
+          report(
+            line,
+            'markup-in-text',
+            `<${tag}> inside <${textOwner.spec.tag}> is parsed as an element and its text is lost. <${textOwner.spec.tag}> holds plain text: write < as &lt; and & as &amp;.`,
+          );
+        }
+
         const component = tag.startsWith(CANVAS_TAG_PREFIX)
           ? openComponent(tag, attrs, line)
           : undefined;
@@ -329,6 +350,8 @@ export const validateHtmlFile = (
         if (tag === 'style') pendingStyle = { line, text: '' };
       },
       ontext(text) {
+        const textOwner = stack.at(-1)?.component;
+        if (textOwner?.spec.children === 'text') textOwner.text += text;
         if (pendingScript) pendingScript.text += text;
         if (pendingStyle) pendingStyle.text += text;
       },

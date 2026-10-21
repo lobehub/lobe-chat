@@ -151,11 +151,6 @@ export const baseViews: Record<string, CanvasView> = {
       <Slot slot={context.slot} />
     </Checkbox>
   ),
-  'lobe-code': ({ props, text }) => (
-    <pre data-language={props.language}>
-      <code>{text.trim()}</code>
-    </pre>
-  ),
   'lobe-descriptions': ({ props }) => (
     <Descriptions
       column={props.columns ?? 2}

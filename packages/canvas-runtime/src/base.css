@@ -102,6 +102,7 @@
   lobe-steps,
   lobe-descriptions,
   lobe-code,
+  lobe-mermaid,
   lobe-area-chart,
   lobe-bar-chart,
   lobe-line-chart,
@@ -142,5 +143,48 @@
   pre code {
     font-size: 13px;
     line-height: 1.6;
+  }
+}
+
+@layer lobe-canvas-base {
+  [data-lobe-canvas-code] {
+    overflow: hidden;
+    border: 1px solid var(--lobe-color-border-secondary);
+    border-radius: var(--lobe-border-radius);
+    background: var(--lobe-color-fill-quaternary);
+  }
+
+  [data-lobe-canvas-code-header] {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-block: 4px;
+    padding-inline: 12px 4px;
+    border-block-end: 1px solid var(--lobe-color-border-secondary);
+    font-family: var(--lobe-font-family-code);
+    font-size: 12px;
+    color: var(--lobe-color-text-description);
+  }
+
+  /* shiki writes the theme background on the <pre> as an inline style */
+  [data-lobe-canvas-code] pre {
+    border: 0;
+    border-radius: 0;
+    background: transparent !important;
+  }
+
+  [data-lobe-canvas-mermaid] {
+    overflow-x: auto;
+    padding: 16px;
+    border: 1px solid var(--lobe-color-border-secondary);
+    border-radius: var(--lobe-border-radius);
+  }
+
+  /* pele caps the SVG at max-width:100% inline; a wide diagram shrunk to the pane leaves
+     unreadable text, so keep its natural size and scroll instead */
+  [data-lobe-canvas-mermaid] svg {
+    display: block;
+    max-width: none !important;
+    margin-inline: auto;
   }
 }

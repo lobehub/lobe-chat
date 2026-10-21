@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest';
 
+import { checkCanvasMermaid } from '../mermaid';
 import { CANVAS_LIMITS } from '../project/limits';
+import { CANVAS_COMPONENTS } from '../schema/components';
 import { validateCanvasProject } from './validateCanvasProject';
 
 const page = (body: string) =>
@@ -208,5 +210,53 @@ describe('validateCanvasProject', () => {
         'index.html': page(''),
       }),
     ).toContain('file-too-large');
+  });
+});
+
+describe('validateCanvasProject · text components', () => {
+  const runWithMermaid = (html: string) =>
+    validateCanvasProject([{ content: html, path: 'index.html' }], {
+      checkMermaid: checkCanvasMermaid,
+    });
+
+  it('accepts the documented code and diagram examples', () => {
+    const examples = CANVAS_COMPONENTS.filter((spec) => spec.children === 'text')
+      .map((spec) => spec.example)
+      .join('\n');
+
+    expect(runWithMermaid(page(examples)).issues).toEqual([]);
+  });
+
+  it('rejects markup inside code, which the browser would swallow as an element', () => {
+    const { issues } = run({
+      'index.html':
+        '<html>\n<body>\n<lobe-code language="ts">\nconst x: Array<string> = [];\n</lobe-code></body></html>',
+    });
+
+    expect(issues).toHaveLength(1);
+    expect(issues[0]).toMatchObject({ line: 4, rule: 'markup-in-text' });
+    expect(issues[0].message).toContain('&lt;');
+  });
+
+  it('rejects invalid Mermaid at the line the parser points at', () => {
+    const { issues } = runWithMermaid(
+      '<html>\n<body>\n<lobe-mermaid>\nflowchart TD\n  A[Login --&gt; B\n</lobe-mermaid></body></html>',
+    );
+
+    expect(issues).toHaveLength(1);
+    expect(issues[0]).toMatchObject({ file: 'index.html', line: 6, rule: 'invalid-diagram' });
+    expect(issues[0].message).toContain('Parse error on line 6');
+  });
+
+  it('rejects text that is not a diagram', () => {
+    expect(
+      runWithMermaid(page('<lobe-mermaid>just some words</lobe-mermaid>')).issues.map(
+        (issue) => issue.rule,
+      ),
+    ).toEqual(['invalid-diagram']);
+  });
+
+  it('skips the Mermaid check when no checker is supplied', () => {
+    expect(rules({ 'index.html': page('<lobe-mermaid>not a diagram</lobe-mermaid>') })).toEqual([]);
   });
 });

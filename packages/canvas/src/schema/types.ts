@@ -9,7 +9,7 @@ export interface CanvasAttributeSpec {
 
 export type CanvasComponentCategory = 'chart' | 'control' | 'data' | 'layout' | 'text';
 
-export type CanvasChildren = 'content' | 'none' | 'options';
+export type CanvasChildren = 'content' | 'none' | 'options' | 'text';
 
 export interface CanvasComponentSpec {
   attributes: Record<string, CanvasAttributeSpec>;

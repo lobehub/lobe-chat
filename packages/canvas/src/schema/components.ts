@@ -20,6 +20,32 @@ export const CANVAS_PALETTE = [
 
 export const CANVAS_VALUE_FORMATS = ['number', 'compact', 'percent', 'currency'] as const;
 
+export const CANVAS_CODE_LANGUAGES = [
+  'bash',
+  'c',
+  'cpp',
+  'csharp',
+  'css',
+  'diff',
+  'dockerfile',
+  'go',
+  'html',
+  'java',
+  'javascript',
+  'json',
+  'jsx',
+  'kotlin',
+  'python',
+  'ruby',
+  'rust',
+  'sql',
+  'swift',
+  'toml',
+  'tsx',
+  'typescript',
+  'yaml',
+] as const;
+
 const size: CanvasAttributeSpec = {
   description: 'Control size.',
   type: 'enum',
@@ -225,13 +251,28 @@ export const CANVAS_COMPONENTS: readonly CanvasComponentSpec[] = [
   },
   {
     attributes: {
-      language: { description: 'Code language, e.g. "ts", "sql".', type: 'string' },
+      language: {
+        description: `Code language or a common alias (ts, js, py, sh). Highlighted: ${CANVAS_CODE_LANGUAGES.join(', ')}; any other shows as plain text.`,
+        type: 'string',
+      },
     },
     category: 'text',
-    children: 'content',
-    description: 'Highlighted code block. Put the code as text content.',
-    example: '<lobe-code language="sql">select 1;</lobe-code>',
+    children: 'text',
+    description:
+      'Code block with syntax highlighting and a copy button. The code is the text content: write < as &lt; and & as &amp;.',
+    example:
+      '<lobe-code language="ts">const ids: Array&lt;string&gt; = rows.map((row) =&gt; row.id);</lobe-code>',
     tag: 'lobe-code',
+  },
+  {
+    attributes: {},
+    category: 'chart',
+    children: 'text',
+    description:
+      'Diagram drawn from Mermaid text: flowchart, sequenceDiagram, classDiagram, stateDiagram-v2, erDiagram, gantt, timeline, mindmap and the other Mermaid types. Use it for every flowchart, sequence or architecture diagram instead of drawing SVG by hand. The diagram is the text content: write < as &lt; and & as &amp;. Invalid Mermaid is rejected with the parser error.',
+    example:
+      '<lobe-mermaid>\nflowchart TD\n  A[Request] --&gt; B{Token valid?}\n  B -- yes --&gt; C[Response]\n  B -- no --&gt; D[Refresh]\n</lobe-mermaid>',
+    tag: 'lobe-mermaid',
   },
   {
     attributes: {

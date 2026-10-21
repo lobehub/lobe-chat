@@ -8,7 +8,12 @@ import {
 } from '../project/path';
 import { type CanvasProjectIndex, validateHtmlFile } from './html';
 import { checkScriptText, collectCssRefs, lineAt } from './text';
-import type { CanvasIssue, CanvasProjectFile, CanvasValidationResult } from './types';
+import type {
+  CanvasIssue,
+  CanvasProjectFile,
+  CanvasValidationOptions,
+  CanvasValidationResult,
+} from './types';
 
 const decoder = new TextDecoder();
 
@@ -18,7 +23,10 @@ const byteLength = (content: string | Uint8Array) =>
 const toText = (content: string | Uint8Array) =>
   typeof content === 'string' ? content : decoder.decode(content);
 
-export const validateCanvasProject = (files: CanvasProjectFile[]): CanvasValidationResult => {
+export const validateCanvasProject = (
+  files: CanvasProjectFile[],
+  options: CanvasValidationOptions = {},
+): CanvasValidationResult => {
   const issues: CanvasIssue[] = [];
   const entries = new Map<string, CanvasProjectFile>();
   let totalBytes = 0;
@@ -89,7 +97,7 @@ export const validateCanvasProject = (files: CanvasProjectFile[]): CanvasValidat
   for (const [path, entry] of entries) {
     const extension = getCanvasFileExtension(path);
     if (extension === 'html') {
-      issues.push(...validateHtmlFile(path, toText(entry.content), project));
+      issues.push(...validateHtmlFile(path, toText(entry.content), project, options));
     } else if (extension === 'js' || extension === 'mjs') {
       issues.push(...checkScriptText(path, toText(entry.content)));
     } else if (extension === 'css') {

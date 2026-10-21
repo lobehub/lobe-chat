@@ -20,6 +20,8 @@ A Canvas is a small web project (HTML, CSS, JS, JSON data and assets) that rende
 - Write every component with a closing tag: \`<lobe-divider></lobe-divider>\`, never \`<lobe-divider />\`.
 - Boolean attributes are written bare (\`<lobe-switch checked>\`). JSON attributes take single-quoted JSON: \`data='[{"a":1}]'\`.
 - JSON props can come from a child \`<script type="application/json" data-prop="data">…</script>\` or from a project file: \`data-src="./data/cost.json"\`.
+- Diagrams — flowcharts, sequences, state machines, architecture — are \`<lobe-mermaid>\` with Mermaid text. Do not draw them by hand with SVG.
+- \`<lobe-code>\` and \`<lobe-mermaid>\` hold plain text: write \`<\` as \`&lt;\` and \`&\` as \`&amp;\`. A tag inside them is rejected.
 - Colors follow the user's theme. Never hard-code colors on components (no \`style="color:#..."\`, no \`rgb()\`); use \`type\`, \`status\` or \`color\` attributes. Chart and tag colors are palette names: ${CANVAS_PALETTE.join(', ')}.
 
 ## Report structure

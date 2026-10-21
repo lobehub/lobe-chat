@@ -6,10 +6,12 @@ export type CanvasIssueRule =
   | 'file-type-mismatch'
   | 'hard-coded-color'
   | 'invalid-attribute'
+  | 'invalid-diagram'
   | 'invalid-path'
   | 'misplaced-component'
   | 'missing-attribute'
   | 'network-api'
+  | 'markup-in-text'
   | 'project-too-large'
   | 'quota-exceeded'
   | 'remote-resource'
@@ -29,6 +31,15 @@ export interface CanvasIssue {
 export interface CanvasValidationResult {
   issues: CanvasIssue[];
   ok: boolean;
+}
+
+export interface CanvasMermaidProblem {
+  line?: number;
+  message: string;
+}
+
+export interface CanvasValidationOptions {
+  checkMermaid?: (source: string) => CanvasMermaidProblem | undefined;
 }
 
 export interface CanvasProjectFile {
