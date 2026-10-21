@@ -1,6 +1,4 @@
-import { Flexbox, Text, Tooltip } from '@lobehub/ui';
-import { cssVar } from '@lobehub/ui/stylex/cssVar.stylex';
-import * as stylex from '@stylexjs/stylex';
+import { Block, cssVar, Flexbox, Text, Tooltip } from '@lobehub/ui';
 import type { AutoRoutingTier } from 'model-bank/autoRouting';
 import {
   AUTO_ROUTING_MODEL_IDS,
@@ -20,37 +18,12 @@ import type { EnabledProviderWithModels } from '@/types/aiProvider';
 import { useModelAndProvider } from '../hooks/useModelAndProvider';
 import { usePanelHandlers } from '../hooks/usePanelHandlers';
 
-const styles = stylex.create({
-  bar: {
-    flexShrink: 0,
-    paddingBlock: '8px',
-    paddingInline: '8px',
-    borderBlockEndWidth: '1px',
-    borderBlockEndStyle: 'solid',
-    borderBlockEndColor: cssVar.colorBorderSecondary,
-  },
-  card: {
-    cursor: 'pointer',
-    flex: '1',
-    minWidth: 0,
-    paddingBlock: '6px',
-    paddingInline: '8px',
-    borderWidth: '1px',
-    borderStyle: 'solid',
-    borderColor: cssVar.colorBorderSecondary,
-    borderRadius: cssVar.borderRadius,
-    backgroundColor: {
-      'default': 'transparent',
-      ':hover': cssVar.colorFillQuaternary,
-    },
-    transitionProperty: 'background-color',
-    transitionDuration: '0.15s',
-  },
-  cardActive: {
-    borderColor: cssVar.colorPrimaryBorder,
-    backgroundColor: cssVar.colorFillTertiary,
-  },
-});
+// Plain props and CSS variables only: this panel also mounts in the share app,
+// whose bundle carries no StyleX boot CSS.
+const BAR_STYLE = {
+  borderBlockEnd: `1px solid ${cssVar.colorBorderSecondary}`,
+  flexShrink: 0,
+} as const;
 
 /** Fewer visible models than this and the tiers cannot differ much. */
 const FEW_MODELS = 3;
@@ -114,7 +87,7 @@ export const AutoRoutingBar: FC<AutoRoutingBarProps> = memo(
     );
 
     return (
-      <Flexbox gap={6} {...stylex.props(styles.bar)}>
+      <Flexbox gap={6} padding={8} style={BAR_STYLE}>
         <Text fontSize={12} type={'secondary'}>
           {t('ModelSwitchPanel.autoRouting.title')}
         </Text>
@@ -124,12 +97,17 @@ export const AutoRoutingBar: FC<AutoRoutingBarProps> = memo(
               isAutoRoutingProvider(provider) && model === AUTO_ROUTING_MODEL_IDS[tier];
             return (
               <Tooltip key={tier} placement={'right'} title={routesTo(tier)}>
-                <Flexbox
+                <Block
+                  clickable
                   aria-pressed={active}
+                  flex={1}
                   gap={2}
-                  {...stylex.props(styles.card, active && styles.cardActive)}
+                  paddingBlock={6}
+                  paddingInline={8}
                   role={'button'}
+                  style={{ minWidth: 0 }}
                   tabIndex={0}
+                  variant={active ? 'filled' : 'outlined'}
                   onClick={() => void select(tier)}
                   onKeyDown={(event) => {
                     if (event.key === 'Enter' || event.key === ' ') {
@@ -142,7 +120,7 @@ export const AutoRoutingBar: FC<AutoRoutingBarProps> = memo(
                   <Text fontSize={12} type={'secondary'}>
                     {t(`ModelSwitchPanel.autoRouting.${tier}.desc`)}
                   </Text>
-                </Flexbox>
+                </Block>
               </Tooltip>
             );
           })}
