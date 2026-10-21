@@ -5,9 +5,10 @@ import { getAllScopePermissions } from '@/utils/rbac';
 import { zValidator } from '../common/validator';
 import { TaskController } from '../controllers/task.controller';
 import { requireAuth } from '../middleware/auth';
-import { requireAnyPermission } from '../middleware/permission-check';
+import { requireAnyPermission, requireApiKeyScope } from '../middleware/permission-check';
 import {
   CreateTaskRequestSchema,
+  RunTaskRequestSchema,
   TaskIdParamSchema,
   TaskListQuerySchema,
   UpdateTaskRequestSchema,
@@ -69,6 +70,20 @@ TaskRoutes.patch(
   zValidator('param', TaskIdParamSchema),
   zValidator('json', UpdateTaskStatusRequestSchema),
   async (c) => new TaskController().updateTaskStatus(c),
+);
+
+/**
+ * POST /api/v1/tasks/:id/run — start a run now, as the in-app "Run" does. The
+ * run executes the assignee agent, so restricted API keys also need `model:invoke`.
+ */
+TaskRoutes.post(
+  '/:id/run',
+  requireAuth,
+  taskWrite,
+  requireApiKeyScope('model:invoke'),
+  zValidator('param', TaskIdParamSchema),
+  zValidator('json', RunTaskRequestSchema),
+  async (c) => new TaskController().runTask(c),
 );
 
 /** DELETE /api/v1/tasks/:id */

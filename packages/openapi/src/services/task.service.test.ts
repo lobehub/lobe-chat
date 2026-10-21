@@ -13,6 +13,8 @@ const {
   notifyAssignedMock,
   resolveMock,
   resolveTaskPatchInvariantsMock,
+  runTaskMock,
+  runnerScopeMock,
   updateTaskMock,
 } = vi.hoisted(() => ({
   createTaskMock: vi.fn(),
@@ -21,6 +23,8 @@ const {
   notifyAssignedMock: vi.fn(),
   resolveMock: vi.fn(),
   resolveTaskPatchInvariantsMock: vi.fn(),
+  runTaskMock: vi.fn(),
+  runnerScopeMock: vi.fn(),
   updateTaskMock: vi.fn(),
 }));
 
@@ -78,6 +82,14 @@ vi.mock('@/server/services/task/patchValidation', () => ({
 vi.mock('@/server/services/task/assignmentNotification', () => ({
   notifyAssignedBestEffort: notifyAssignedMock,
 }));
+vi.mock('@/server/services/taskRunner', () => ({
+  TaskRunnerService: class {
+    constructor(_db: unknown, userId: string, workspaceId?: string) {
+      runnerScopeMock(userId, workspaceId);
+    }
+    runTask = runTaskMock;
+  },
+}));
 
 const CALLER = 'me';
 const WORKSPACE = 'ws-1';
@@ -112,6 +124,36 @@ describe('TaskRestService delete scope', () => {
 
     await expect(service(WORKSPACE).deleteTask('task-1')).resolves.toEqual({ id: 'task-1' });
     expect(deleteTaskMock).toHaveBeenCalledWith('task-1');
+  });
+});
+
+describe('TaskRestService run', () => {
+  const service = () => new TaskRestService({} as LobeChatDatabase, CALLER, WORKSPACE);
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it('starts the run through the runner, as the caller in their workspace', async () => {
+    runTaskMock.mockResolvedValue({ operationId: 'op-1', taskId: 'task-1' });
+
+    await expect(
+      service().runTask('T-1', { continueTopicId: 'topic-1', prompt: 'look again' }),
+    ).resolves.toEqual({ operationId: 'op-1', taskId: 'task-1' });
+    expect(runnerScopeMock).toHaveBeenCalledWith(CALLER, WORKSPACE);
+    expect(runTaskMock).toHaveBeenCalledWith({
+      continueTopicId: 'topic-1',
+      extraPrompt: 'look again',
+      taskId: 'T-1',
+    });
+  });
+
+  it("passes the runner's refusal through for the controller to map", async () => {
+    runTaskMock.mockRejectedValue(
+      new TRPCError({ code: 'CONFLICT', message: 'Task already has a running topic' }),
+    );
+
+    await expect(service().runTask('task-1', {})).rejects.toMatchObject({ code: 'CONFLICT' });
   });
 });
 

@@ -77,3 +77,11 @@ export const UpdateTaskStatusRequestSchema = z.object({
   status: z.enum(TASK_STATUSES),
 });
 export type UpdateTaskStatusRequest = z.infer<typeof UpdateTaskStatusRequestSchema>;
+
+export const RunTaskRequestSchema = z.object({
+  /** Continue this earlier run's topic instead of starting a new one. */
+  continueTopicId: z.string().min(1).optional(),
+  /** Extra instruction for this run only, given priority over the task's own. */
+  prompt: z.string().min(1).optional(),
+});
+export type RunTaskRequest = z.infer<typeof RunTaskRequestSchema>;

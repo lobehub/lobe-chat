@@ -6,11 +6,13 @@ import { TaskService } from '@/server/services/task';
 import { notifyAssignedBestEffort } from '@/server/services/task/assignmentNotification';
 import { resolveTaskPatchInvariants } from '@/server/services/task/patchValidation';
 import { assertResultingScheduleValid } from '@/server/services/task/scheduleValidation';
+import { TaskRunnerService } from '@/server/services/taskRunner';
 
 import { BaseService } from '../common/base.service';
 import type { ServiceResult } from '../types';
 import type {
   CreateTaskRequest,
+  RunTaskRequest,
   TaskListQuery,
   UpdateTaskRequest,
   UpdateTaskStatusRequest,
@@ -107,6 +109,18 @@ export class TaskRestService extends BaseService {
       { error: input.error, id, status: input.status },
       { userId: this.userId },
     );
+  }
+
+  async runTask(id: string, input: RunTaskRequest): ServiceResult<unknown> {
+    // The runner behind the in-app "Run" (tRPC `task.run`): it resolves the task
+    // through the visibility-aware model and refuses an archived task or a second
+    // concurrent run with errors the controller maps to 404 / 412 / 409.
+    const runner = new TaskRunnerService(this.db, this.userId, this.workspaceId);
+    return runner.runTask({
+      continueTopicId: input.continueTopicId,
+      extraPrompt: input.prompt,
+      taskId: id,
+    });
   }
 
   async deleteTask(id: string): ServiceResult<unknown> {

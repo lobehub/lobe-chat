@@ -11326,6 +11326,71 @@ export type PatchApiV1TasksByIdStatusResponses = {
 
 export type PatchApiV1TasksByIdStatusResponse = PatchApiV1TasksByIdStatusResponses[keyof PatchApiV1TasksByIdStatusResponses];
 
+export type PostApiV1TasksByIdRunData = {
+    body: {
+        continueTopicId?: string;
+        prompt?: string;
+    };
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/api/v1/tasks/{id}/run';
+};
+
+export type PostApiV1TasksByIdRunErrors = {
+    /**
+     * Validation Error
+     */
+    400: {
+        success: false;
+        error: Array<unknown>;
+        data: unknown;
+    };
+    /**
+     * Authentication required
+     */
+    401: ApiError;
+    /**
+     * Insufficient permission
+     */
+    403: ApiError;
+    /**
+     * Resource not found
+     */
+    404: ApiError;
+    /**
+     * Resource conflict
+     */
+    409: ApiError;
+    /**
+     * Rate limit exceeded
+     */
+    429: ApiError;
+    /**
+     * Internal server error
+     */
+    500: ApiError;
+};
+
+export type PostApiV1TasksByIdRunError = PostApiV1TasksByIdRunErrors[keyof PostApiV1TasksByIdRunErrors];
+
+export type PostApiV1TasksByIdRunResponses = {
+    /**
+     * Successful response
+     */
+    200: {
+        data?: Array<unknown> | {
+            [key: string]: unknown;
+        } | null;
+        message?: string;
+        success: true;
+        timestamp: string;
+    };
+};
+
+export type PostApiV1TasksByIdRunResponse = PostApiV1TasksByIdRunResponses[keyof PostApiV1TasksByIdRunResponses];
+
 export type GetApiV1TopicsData = {
     body?: never;
     path?: never;

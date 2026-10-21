@@ -4,13 +4,14 @@ import { BaseController } from '../common/base.controller';
 import { TaskRestService } from '../services/task.service';
 import type {
   CreateTaskRequest,
+  RunTaskRequest,
   TaskIdParam,
   TaskListQuery,
   UpdateTaskRequest,
   UpdateTaskStatusRequest,
 } from '../types/task.type';
 
-/** Tasks controller — list, inspect, create, patch, transition and delete tasks. */
+/** Tasks controller — list, inspect, create, patch, transition, run and delete tasks. */
 export class TaskController extends BaseController {
   private async service(c: Context): Promise<TaskRestService> {
     return new TaskRestService(await this.getDatabase(), this.getUserId(c), this.getWorkspaceId(c));
@@ -68,6 +69,18 @@ export class TaskController extends BaseController {
       const body = await this.getBody<UpdateTaskStatusRequest>(c);
       const service = await this.service(c);
       return this.success(c, await service.updateTaskStatus(id, body), 'Task status updated');
+    } catch (error) {
+      return this.handleError(c, error);
+    }
+  }
+
+  /** POST /api/v1/tasks/:id/run */
+  async runTask(c: Context): Promise<Response> {
+    try {
+      const { id } = this.getParams<TaskIdParam>(c);
+      const body = await this.getBody<RunTaskRequest>(c);
+      const service = await this.service(c);
+      return this.success(c, await service.runTask(id, body), 'Task run started');
     } catch (error) {
       return this.handleError(c, error);
     }
