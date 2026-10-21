@@ -153,10 +153,16 @@ describe('workspace user preference replica', () => {
     expect(workspaceUserSettingsService.getPreference).not.toHaveBeenCalled();
   });
 
+  it('reports the preference as unknown when no local copy exists', async () => {
+    await expect(state().preHydrateWorkspaceUserPreference()).resolves.toBe(false);
+    expect(workspaceUserSettingsService.getPreference).not.toHaveBeenCalled();
+  });
+
   it('skips the pre-paint seed in personal mode', async () => {
     active.id = null;
 
-    await expect(state().preHydrateWorkspaceUserPreference()).resolves.toBe(false);
+    // Personal mode has no row: nothing to wait for.
+    await expect(state().preHydrateWorkspaceUserPreference()).resolves.toBe(true);
     expect(state().workspaceUserPreferenceWorkspaceId).toBeNull();
   });
 

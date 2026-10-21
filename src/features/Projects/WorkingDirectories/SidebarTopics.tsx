@@ -18,7 +18,7 @@ import {
   TopicListScopeContext,
   useTopicListFilter,
 } from '@/features/AgentSidebar/Topic/TopicListScope';
-import { useScopedTopics } from '@/features/AgentSidebar/Topic/useScopedTopics';
+import { useOnlyMineTopics, useScopedTopics } from '@/features/AgentSidebar/Topic/useScopedTopics';
 import SkeletonList from '@/features/NavPanel/components/SkeletonList';
 import { useWorkspacePreferenceReady } from '@/hooks/useWorkspacePreferenceReady';
 import {
@@ -63,7 +63,8 @@ function ProjectTopicList({
   const filterState = useTopicListFilter();
   const request = useProjectDirectoryStore((s) => s.useFetchProjectTopics)(projectId);
   const directoriesRequest = useProjectDirectoryStore((s) => s.useFetchDirectories)(projectId);
-  const topics = useProjectTopics(projectId);
+  // The empty state must follow what the list shows, "only mine" included.
+  const topics = useOnlyMineTopics(useProjectTopics(projectId));
   const directories = useProjectDirectories(projectId);
   const { topics: scopedTopics } = useScopedTopics();
   const filter = filterState?.filter;

@@ -25,6 +25,7 @@ const preHydrateAgentSlugMock = vi.hoisted(() =>
 const preHydrateDeviceListMock = vi.hoisted(() => vi.fn(async () => true));
 const preHydrateVerifyRunsMock = vi.hoisted(() => vi.fn(async (_ids: string[]) => {}));
 const preHydrateWorkspacePreferenceMock = vi.hoisted(() => vi.fn(async () => true));
+
 const chatState = vi.hoisted(() => ({ dbMessagesMap: {} as Record<string, unknown[]> }));
 
 vi.mock('@lobechat/builtin-agents', () => ({
@@ -98,6 +99,21 @@ describe('agent chat topic list loader', () => {
     getSidebarTopicListParamsMock.mockReturnValue({ agentId: 'agt_1', pageSize: 20 });
     preHydrateWorkspacePreferenceMock.mockReset();
     preHydrateWorkspacePreferenceMock.mockResolvedValue(true);
+  });
+
+  /** @example "Only mine" set on another device: no local copy, so the cached page may be unfiltered. */
+  it('skips the topic seed in a workspace whose preference is still unknown', async () => {
+    preHydrateWorkspacePreferenceMock.mockResolvedValue(false);
+
+    await agentChatTopicListLoader(loaderArgs('agt_1'));
+
+    expect(preHydrateTopicListMock).not.toHaveBeenCalled();
+  });
+
+  it('seeds the topic page once the workspace preference is known', async () => {
+    await agentChatTopicListLoader(loaderArgs('agt_1'));
+
+    expect(preHydrateTopicListMock).toHaveBeenCalledWith({ agentId: 'agt_1', pageSize: 20 });
   });
 
   /** @example The "only mine" filter lives there; deriving params first seeds the unfiltered page. */

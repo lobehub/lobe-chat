@@ -42,10 +42,20 @@ export const preHydrateTopicListForRoute = async (routeAgentId?: string): Promis
 
   // The workspace "only mine" filter is part of the list identity; read it
   // before deriving the params, or the seeded page is the unfiltered one.
+  let preferenceKnown = false;
   await settleWithin(
-    useUserStore.getState().preHydrateWorkspaceUserPreference(),
+    useUserStore
+      .getState()
+      .preHydrateWorkspaceUserPreference()
+      .then((known) => {
+        preferenceKnown = known;
+      }),
     PRE_PAINT_HYDRATE_TIMEOUT,
   );
+  // Still unknown (no local copy yet, e.g. set on another device): any page
+  // seeded now could be the unfiltered one, so leave the list to the mounted,
+  // preference-gated fetch.
+  if (!preferenceKnown) return;
 
   const params = getSidebarTopicListParams({ agentId });
   if (!params) return;

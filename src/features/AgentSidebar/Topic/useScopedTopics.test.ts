@@ -8,7 +8,7 @@ import {
   TopicListRevealContext,
   TopicListScopeContext,
 } from './TopicListScope';
-import { pinCoordinatorGroup, useScopedSidebarTopics } from './useScopedTopics';
+import { pinCoordinatorGroup, useOnlyMineTopics, useScopedSidebarTopics } from './useScopedTopics';
 
 const fixture = vi.hoisted(() => ({ topicId: undefined as string | undefined }));
 const userFixture = vi.hoisted(() => ({ topicOnlyMine: false, userId: 'me' }));
@@ -264,5 +264,27 @@ describe('pinCoordinatorGroup', () => {
     expect(pinCoordinatorGroup(groups, 'b')).toBe(groups);
     expect(pinCoordinatorGroup(groups, 'missing')).toBe(groups);
     expect(pinCoordinatorGroup(groups, undefined)).toBe(groups);
+  });
+});
+
+describe('useOnlyMineTopics', () => {
+  beforeEach(() => {
+    userFixture.topicOnlyMine = false;
+  });
+
+  /** @example A project holding only teammates' topics must show its empty state, not a blank list. */
+  it('leaves nothing when every topic belongs to a teammate', () => {
+    userFixture.topicOnlyMine = true;
+    const teammates = rows.filter((topic) => topic.userId === 'teammate');
+
+    const { result } = renderHook(() => useOnlyMineTopics(teammates));
+
+    expect(result.current).toEqual([]);
+  });
+
+  it('keeps every topic when the filter is off', () => {
+    const { result } = renderHook(() => useOnlyMineTopics(rows));
+
+    expect(result.current).toHaveLength(rows.length);
   });
 });
