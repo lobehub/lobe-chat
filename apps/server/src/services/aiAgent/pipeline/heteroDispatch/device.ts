@@ -16,7 +16,6 @@ import {
 import { resolveDeviceWorkingDirectoryConfig } from '../../resolveDeviceWorkingDirectory';
 import type { ExecRunContext } from '../../types';
 import { selectCodexDeviceDispatch } from '../codexDeviceRuntime';
-import { resolveDispatchTimeout } from './deviceTimeout';
 import type { PreparedHeteroRun } from './prepare';
 import type { HeteroDispatchDeps, HeteroDispatchInput, HeteroRun } from './types';
 import { failHeteroDispatch } from './utils';
@@ -198,12 +197,6 @@ export const dispatchToCliDevice = async (
       });
   if (!result.success) {
     log('execAgent: hetero device dispatch failed: %s', result.error);
-    // `detail` keeps the gateway's answer; only the user-facing reading changes.
-    const failure = await resolveDispatchTimeout(result.error, {
-      deviceId: dispatchDeviceId,
-      userId: deps.userId,
-      workspaceId: dispatchWorkspaceId,
-    });
     return failHeteroDispatch(
       deps,
       run,
@@ -215,8 +208,8 @@ export const dispatchToCliDevice = async (
           ...(dispatchWorkspaceId ? { workspaceId: dispatchWorkspaceId } : {}),
         },
         errorData: result.errorData,
-        errorType: resolveHeteroDispatchErrorType(failure),
-        message: humanizeHeteroDispatchError(failure),
+        errorType: resolveHeteroDispatchErrorType(result.error),
+        message: humanizeHeteroDispatchError(result.error),
       },
       {
         error: result.error,

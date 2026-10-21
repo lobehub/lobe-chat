@@ -42,6 +42,9 @@ export const HETERO_DISPATCH_ERROR_HEADLINES: Record<string, string> = {
  * `DEVICE_RESPONSE_TIMEOUT`. Most often the socket was already dead (the
  * gateway only drops it after a missed heartbeat) and nothing ran, but a slow
  * spawn or a lost ack means the run may have started; the copy covers both.
+ * Do not reclassify it from a later look at the device: a device that is
+ * offline now may still have received the run before dropping (or run it when
+ * it wakes), so only a gateway refusal *before* sending proves nothing ran.
  * Keeping the body verbatim (so `detail` stays diagnostic) meant the code
  * missed every lookup and the raw JSON became the headline.
  */
@@ -57,7 +60,7 @@ const GATEWAY_CODE_ALIASES: Record<string, string> = {
  * responses can also carry a JSON envelope whose `error` field holds the code.
  * `detail` keeps the full raw string for diagnostics in either format.
  */
-export const toDispatchErrorCode = (raw?: string): string | undefined => {
+const toDispatchErrorCode = (raw?: string): string | undefined => {
   let text = raw?.trim();
 
   if (text?.startsWith('{')) {

@@ -1,4 +1,5 @@
 import { HETEROGENEOUS_PROVIDER_BINDING_LOCAL_ONLY_ERROR } from '@lobechat/heterogeneous-agents';
+import { ChatErrorType } from '@lobechat/types';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import {
@@ -182,8 +183,6 @@ beforeEach(() => {
   mocks.selectCodexDeviceDispatch.mockResolvedValue({ kind: 'exec' });
   mocks.dispatchAgentRun.mockResolvedValue({ success: true });
   mocks.executeToolCall.mockResolvedValue({ success: true });
-  // Reset, not just clear: a case that never probes must not leave its queued answer behind.
-  mocks.readDeviceSystemInfo.mockReset().mockResolvedValue({ ok: true, systemInfo: {} });
   mocks.spawnHeteroSandbox.mockResolvedValue(undefined);
   mocks.publishAgentRuntimeInit.mockResolvedValue('init');
   mocks.createOperationMetadata.mockResolvedValue(undefined);
@@ -528,33 +527,16 @@ describe('dispatchHeteroAgent — local CLI agents', () => {
     );
   });
 
-
-  it.each([
-    [
-      'reads a timeout on a dead socket as offline',
-      { timeSinceHeartbeatMs: 70_000 },
-      { ok: true, systemInfo: {} },
-      'DEVICE_OFFLINE',
-    ],
-    [
-      'keeps the unknown-start timeout when the device still answers',
-      { timeSinceHeartbeatMs: 5_000 },
-      { ok: true, systemInfo: {} },
-      'TIMEOUT',
-    ],
-    [
-      'reads a timeout as offline when the probe finds no connection',
-      { timeSinceHeartbeatMs: 5_000 },
-      { ok: false, reason: 'DEVICE_NOT_FOUND' },
-      'DEVICE_OFFLINE',
-    ],
-  ])('%s, keeping the raw gateway answer in detail', async (_case, extra, probe, describedAs) => {
-    const raw = JSON.stringify({ error: 'TIMEOUT', success: false, ...extra });
+  it('settles a dispatch timeout as a device timeout, even when the device is now offline', async () => {
+    // Whether the run started is unknowable after a timeout: the device may
+    // have received it before dropping. Asking the device now must not turn
+    // "may still be starting" into "never started".
+    const raw = JSON.stringify({ error: 'TIMEOUT', success: false, timeSinceHeartbeatMs: 70_000 });
     mocks.dispatchAgentRun.mockResolvedValueOnce({ error: raw, success: false });
-    mocks.readDeviceSystemInfo.mockResolvedValueOnce(probe);
+    mocks.readDeviceSystemInfo.mockResolvedValue({ ok: false, reason: 'DEVICE_OFFLINE' });
     const { deps } = createDeps();
 
-    const result = await dispatchHeteroAgent(
+    await dispatchHeteroAgent(
       deps,
       createCtx({
         boundDeviceId: 'dev-1',
@@ -566,21 +548,13 @@ describe('dispatchHeteroAgent — local CLI agents', () => {
 
     expect(mocks.finalizeHeteroDispatchError).toHaveBeenCalledWith(
       deps,
-      finalizeParams({
+      expect.objectContaining({
         detail: raw,
-        deviceRoute: { deviceId: 'dev-1', userId: 'user-1' },
-        errorData: undefined,
-        errorType: resolveHeteroDispatchErrorType(describedAs),
-        message: humanizeHeteroDispatchError(describedAs),
+        errorType: ChatErrorType.DeviceResponseTimeout,
+        message: humanizeHeteroDispatchError('DEVICE_RESPONSE_TIMEOUT'),
       }),
     );
-    expect(result).toStrictEqual(
-      errorResult({
-        error: raw,
-        errorData: undefined,
-        message: 'Hetero agent device dispatch failed',
-      }),
-    );
+    expect(mocks.readDeviceSystemInfo).not.toHaveBeenCalled();
   });
 
   it('never routes a device-only provider to the cloud sandbox', async () => {
