@@ -927,7 +927,6 @@
   "src/features/MobileHome/Layout/MobileLayout/style.ts",
   "src/features/MobileHome/Layout/SessionHeader/style.ts",
   "src/features/MobileHome/SessionListContent/AgentSearchList.tsx",
-  "src/features/MobileHome/SessionListContent/CollapseGroup/Actions.tsx",
   "src/features/MobileHome/SessionListContent/CollapseGroup/index.tsx",
   "src/features/MobileHome/SessionListContent/List/index.tsx",
   "src/features/MobileHome/SessionListContent/ListItem/index.tsx",
