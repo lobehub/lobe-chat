@@ -38,10 +38,13 @@ export interface SecretInputViewProps {
 }
 
 /**
- * Whether Save must stay disabled: blocked (lookup failed / permission lost /
- * type mismatch — the fields are replaced by the reason, so a completed form
- * must not submit over it), inert (disabled or a write in flight), or
- * incomplete without a prose confirmation pending.
+ * Whether the primary Save button must stay disabled: blocked (lookup failed /
+ * permission lost / type mismatch — the fields are replaced by the reason, so
+ * a completed form must not submit over it), inert (disabled or a write in
+ * flight), a prose confirmation pending (handleSubmit rejects ordinary saves
+ * until `confirmProseSubmit` runs, so a clickable Save would only look stuck),
+ * or incomplete without a prose confirmation pending. The secondary "Save
+ * anyway" control has its own gates and is unaffected by this predicate.
  */
 export const isSecretSubmitDisabled = ({
   blockedReason,
@@ -53,7 +56,7 @@ export const isSecretSubmitDisabled = ({
   complete: boolean;
   inert: boolean;
   proseWarning?: string[] | undefined;
-}) => inert || !!blockedReason || (!complete && !proseWarning);
+}) => inert || !!blockedReason || !!proseWarning || (!complete && !proseWarning);
 
 /**
  * Password-style form for secrets that must not enter the agent context. See
