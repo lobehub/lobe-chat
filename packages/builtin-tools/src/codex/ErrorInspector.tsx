@@ -3,10 +3,13 @@
 import { inspectorTextStyles, shinyTextStyles } from '@lobechat/shared-tool-ui/styles';
 import type { BuiltinInspectorProps } from '@lobechat/types';
 import { Icon } from '@lobehub/ui';
-import { createStaticStyles, cx } from '@lobehub/ui';
+import { cssVar } from '@lobehub/ui/stylex/cssVar.stylex';
+import * as stylex from '@stylexjs/stylex';
 import { AlertTriangle } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
+
+import { sx } from '@/styles/sx';
 
 export interface CodexErrorArgs {
   id?: string;
@@ -14,25 +17,18 @@ export interface CodexErrorArgs {
   type?: string;
 }
 
-const styles = createStaticStyles(({ css, cssVar }) => ({
-  icon: css`
-    flex: none;
-    color: ${cssVar.colorWarning};
-  `,
-  message: css`
-    overflow: hidden;
-
-    min-width: 0;
-
-    color: ${cssVar.colorWarningText};
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  `,
-  root: css`
-    gap: 6px;
-    align-items: center;
-  `,
-}));
+const styles = stylex.create({
+  icon: { flex: 'none', color: cssVar.colorWarning },
+  message: {
+    overflow: 'hidden',
+    minWidth: '0',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+  },
+  // Dropped while shimmering so the shiny text keeps its own colour.
+  messageColor: { color: cssVar.colorWarningText },
+  root: { gap: '6px', alignItems: 'center' },
+});
 
 const ErrorInspector = memo<BuiltinInspectorProps<CodexErrorArgs>>(
   ({ args, partialArgs, isArgumentsStreaming, isLoading }) => {
@@ -43,15 +39,12 @@ const ErrorInspector = memo<BuiltinInspectorProps<CodexErrorArgs>>(
     });
 
     return (
-      <div
-        className={cx(inspectorTextStyles.root, styles.root)}
-        data-testid="codex-error-inspector"
-      >
-        <Icon className={styles.icon} icon={AlertTriangle} size={14} />
+      <div {...sx([styles.root], inspectorTextStyles.root)} data-testid="codex-error-inspector">
+        <Icon className={stylex.props(styles.icon).className} icon={AlertTriangle} size={14} />
         <span
-          className={cx(
-            styles.message,
-            (isArgumentsStreaming || isLoading) && shinyTextStyles.shinyText,
+          {...sx(
+            [styles.message, !(isArgumentsStreaming || isLoading) && styles.messageColor],
+            isArgumentsStreaming || isLoading ? shinyTextStyles.shinyText : undefined,
           )}
         >
           {message || fallback}
