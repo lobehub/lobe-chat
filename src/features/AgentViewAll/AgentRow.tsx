@@ -23,6 +23,12 @@ export const ACTION_COL_WIDTH = 64;
 const AUTHOR_COL_WIDTH = 20;
 
 const styles = createStaticStyles(({ css, cssVar }) => ({
+  // Shrinks before the title does, so a long description never truncates the
+  // name it describes.
+  description: css`
+    flex: 1 1 0;
+    min-width: 0;
+  `,
   // The link spans the name column (not the whole row) — a management list
   // is for scanning and acting, and a full-row link turns clicks on the
   // author / timestamp / action columns into a navigation. The name column
@@ -100,7 +106,7 @@ interface AgentRowProps {
 const AgentRow = memo<AgentRowProps>(
   ({ author, item, onToggleSidebar, showAuthor, sidebarHidden }) => {
     const { t } = useTranslation('common');
-    const { id, type, updatedAt } = item;
+    const { description, id, type, updatedAt } = item;
     // Groups have no personal name, so this resolves to their title.
     const displayTitle = agentDisplayName(item, t('agentViewAll.untitled'));
     const roleTag = agentSecondaryDisplayName(item);
@@ -142,8 +148,8 @@ const AgentRow = memo<AgentRowProps>(
           >
             <AgentAvatar item={item} size={28} />
             <Flexbox flex={1} style={{ minWidth: 0 }}>
-              {/* Single-line row (Linear-style density) — the description only
-                renders in card mode, where there is room to browse. */}
+              {/* Single-line row (Linear-style density): the description trails
+                the name and gives way first when the row runs out of room. */}
               <Flexbox horizontal align={'center'} gap={6} style={{ minWidth: 0 }}>
                 <Text ellipsis className={'agent-row-title'} weight={500}>
                   {displayTitle}
@@ -152,6 +158,17 @@ const AgentRow = memo<AgentRowProps>(
                   <Tag size={'small'} style={{ flex: 'none' }}>
                     {roleTag}
                   </Tag>
+                ) : null}
+                {description ? (
+                  <Text
+                    ellipsis
+                    className={styles.description}
+                    fontSize={12}
+                    title={description}
+                    type={'secondary'}
+                  >
+                    {description}
+                  </Text>
                 ) : null}
               </Flexbox>
             </Flexbox>
