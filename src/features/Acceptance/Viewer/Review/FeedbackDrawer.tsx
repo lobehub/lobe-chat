@@ -84,7 +84,7 @@ const EntryRow = memo<{
 
   return (
     <Flexbox
-      className={stylex.props(styles.row, entry.checkId && styles.clickable).className}
+      className={stylex.props(styles.row, entry.checkId ? styles.clickable : null).className}
       gap={8}
       role={entry.checkId ? 'button' : undefined}
       style={entry.stale ? { opacity: 0.55 } : undefined}

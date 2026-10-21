@@ -55,7 +55,7 @@ const styles = stylex.create({
  * screenshots the reviewer scrolled past everything they were looking at to
  * reach them — and then had to pick the picture again in the modal.
  *
- * Render inside a positioned box carrying {@link FLOATING_ACTION_HOST}.
+ * Render inside a positioned box carrying {@link floatingActionHostMarker}.
  */
 const FloatingCommentAction = memo<{ onClick: () => void; title: string }>(({ onClick, title }) => {
   return (

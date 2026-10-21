@@ -9,7 +9,7 @@ import { useTranslation } from 'react-i18next';
 
 import { useOptionalAcceptanceScope } from '../AcceptanceScope';
 import { commentAnchorId } from '../Comments/anchor';
-import { FLOATING_ACTION_HOST } from './FloatingCommentAction';
+import { floatingActionHostMarker } from '../markers.stylex';
 import { type EvidenceOverlay, overlayColor } from './overlay';
 import {
   annotationInSlice,
@@ -337,7 +337,7 @@ export const ScreenshotTiles = memo<ScreenshotTilesProps>(
 
     const shell = (width: string | number, body: ReactNode) => (
       <Flexbox gap={4} style={{ maxWidth: '100%', width }}>
-        <div {...stylex.props(styles.stage)} {...(action ? { [FLOATING_ACTION_HOST]: '' } : {})}>
+        <div {...stylex.props(styles.stage, action ? floatingActionHostMarker : null)}>
           {body}
           {pins}
           {note}
