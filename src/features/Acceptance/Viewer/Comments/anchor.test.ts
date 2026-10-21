@@ -16,6 +16,14 @@ describe('comment anchors', () => {
     // A bare prefix names no comment.
     expect(commentIdFromHash('#comment-')).toBeUndefined();
   });
+
+  it('links to this page under the app origin, not the renderer shell', () => {
+    window.history.replaceState(null, '', '/lobehub/project/p1/acceptance/a1?round=2');
+
+    expect(commentAnchorUrl('c1', 'https://app.lobehub.com')).toBe(
+      'https://app.lobehub.com/lobehub/project/p1/acceptance/a1?round=2#comment-c1',
+    );
+  });
 });
 
 describe('comment links', () => {
