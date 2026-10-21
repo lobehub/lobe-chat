@@ -27,6 +27,7 @@ const mockService = vi.hoisted(() => ({
   getClaudeCodeQuota: vi.fn(),
   getCodexQuota: vi.fn(),
   getKimiCodeQuota: vi.fn(),
+  listClaudeCodeAccounts: vi.fn(async () => [] as unknown[]),
 }));
 
 vi.mock('@lobechat/const', async (importOriginal) => ({
@@ -316,6 +317,23 @@ describe('ClaudeCodeQuotaMenu', () => {
 
     expect(await screen.findByText('heteroAgent.claudeQuota.unavailableExternalAuth')).toBeTruthy();
     expect(screen.queryByText('raw main-process message')).toBeNull();
+  });
+
+  it('samples every local login on refresh, so Auto balances on fresh readings', async () => {
+    // Auto may route to a profile login the panel is not showing.
+    mockService.listClaudeCodeAccounts.mockResolvedValueOnce([
+      { configDir: null, identity: { externalAccountId: 'ext-default' } },
+      { configDir: '/profiles/work', identity: { externalAccountId: 'ext-work' } },
+    ]);
+    mockService.getClaudeCodeQuota.mockResolvedValue(claudeSnapshot({ status: 'unavailable' }));
+
+    render(<ClaudeCodeQuotaMenu />);
+
+    await waitFor(() =>
+      expect(mockService.getClaudeCodeQuota).toHaveBeenCalledWith(
+        expect.objectContaining({ env: { CLAUDE_CONFIG_DIR: '/profiles/work' } }),
+      ),
+    );
   });
 
   it('keeps the account manager reachable when the sample is unavailable', async () => {

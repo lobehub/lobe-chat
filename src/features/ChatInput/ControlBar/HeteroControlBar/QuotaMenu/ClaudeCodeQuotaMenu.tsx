@@ -143,6 +143,10 @@ const ClaudeCodeQuotaMenu = memo<ClaudeCodeQuotaMenuProps>(({ deviceId, env }) =
           const interim = buildClaudePanelSnapshot(account, readings, null);
           if (hasRenderableWindow(interim)) options?.onInterim?.(interim);
         }
+        // Auto mode may route a run to any local login, and it balances on
+        // their readings: keep every local login sampled, not just this one.
+        // Never awaited — the panel must not wait on the other logins.
+        if (isDesktop && !deviceId) void quotaStore.refreshClaudeLocalAccounts().catch(() => {});
         // A local pin runs on that account's own login: sample that login, not
         // the default one, or the panel would show another account's quota.
         const sampleEnv =

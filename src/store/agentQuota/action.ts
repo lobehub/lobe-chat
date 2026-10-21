@@ -327,6 +327,17 @@ export class ActionImpl {
     );
 
   /**
+   * Sample every local login into the pool now, without a view mounted. The
+   * quota panel calls this on its refresh: in Auto mode runs may land on any
+   * local profile, and balancing reads these readings, so they must not go
+   * stale while the account manager is closed.
+   */
+  refreshClaudeLocalAccounts = async (): Promise<void> => {
+    const claudeLocalAccounts = await this.#syncClaudeLocalAccounts();
+    this.#set({ claudeLocalAccounts }, false, 'claudeLocalAccounts');
+  };
+
+  /**
    * Sign an account in to this desktop through the browser (`claude auth
    * login` in a profile of its own), then add it to the pool.
    */
