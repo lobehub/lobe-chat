@@ -28,16 +28,28 @@ const reportError = (error: unknown, host: HTMLElement) => {
 };
 
 if (typeof window !== 'undefined' && !customElements.get('lobe-flex')) {
-  startThemeSync();
+  const stopThemeSync = startThemeSync();
 
   let hosts: CanvasHostRoot | undefined;
+  let disposed = false;
   const getHosts = () => {
     hosts ??= createHostRoot({
       onError: reportError,
       wrap: wrapCanvasTree,
     });
+    if (disposed) hosts.destroy();
     return hosts;
   };
+
+  window.addEventListener(
+    'lobe-canvas-dispose',
+    () => {
+      disposed = true;
+      stopThemeSync();
+      hosts?.destroy();
+    },
+    { once: true },
+  );
 
   for (const spec of CANVAS_COMPONENTS) {
     customElements.define(

@@ -37,7 +37,7 @@ export const buildCanvasPublishBundle = async (
     if (!file) throw new Error(`Canvas file ${path} is missing`);
 
     if (getCanvasFileExtension(path) === 'html') {
-      const page = injectCanvasRuntime(decoder.decode(file.bytes), { bridge: false, runtimeUrl });
+      const page = injectCanvasRuntime(decoder.decode(file.bytes), { runtimeUrl });
       if (path === entry) html = page;
       else
         files.push({

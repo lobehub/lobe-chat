@@ -82,7 +82,7 @@ describe('canvas preview tokens', () => {
 });
 
 describe('injectCanvasRuntime', () => {
-  it('adds the runtime and bridge right after <head>', () => {
+  it('adds the publication runtime right after <head>', () => {
     const html = injectCanvasRuntime(
       '<!doctype html><html><head><title>x</title></head><body></body></html>',
       {
@@ -90,7 +90,7 @@ describe('injectCanvasRuntime', () => {
       },
     );
 
-    expect(html).toMatch(/<head>\s*<script data-lobe-canvas-bridge>/);
+    expect(html).toContain('<head><script defer');
     expect(html).toContain('<script defer src="/canvas-runtime/v1/canvas-runtime.js"></script>');
     expect(html.indexOf('canvas-runtime.js')).toBeLessThan(html.indexOf('<title>'));
   });
@@ -122,7 +122,12 @@ describe('serveCanvasFile', () => {
     expect(response.headers.get('content-type')).toContain('text/html');
     expect(response.headers.get('content-security-policy')).toContain("connect-src 'self'");
     expect(response.headers.get('content-security-policy')).toContain("default-src 'none'");
-    expect(await response.text()).toContain('canvas-runtime.js');
+    const html = await response.text();
+    expect(html).toContain('data-lobe-canvas-bridge');
+    expect(html).not.toContain('<script defer src=');
+    expect(response.headers.get('content-security-policy')).toContain(
+      "script-src 'self' 'unsafe-inline' blob:",
+    );
   });
 
   it('sandboxes every response into an opaque origin even when opened top-level', async () => {

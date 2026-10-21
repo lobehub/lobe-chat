@@ -48,6 +48,7 @@ const View = memo(function View({ view }: { revision: number; view: HostView }) 
 });
 
 export interface CanvasHostRoot {
+  destroy: () => void;
   register: (host: HTMLElement, view: HostView) => void;
   unregister: (host: HTMLElement) => void;
   update: (host: HTMLElement) => void;
@@ -61,6 +62,7 @@ export const createHostRoot = (options: {
   const listeners = new Set<() => void>();
   let snapshot: [HTMLElement, Entry][] = [];
   let nextKey = 0;
+  let destroyed = false;
 
   const publish = () => {
     snapshot = [...entries];
@@ -90,17 +92,30 @@ export const createHostRoot = (options: {
   const container = document.createElement('div');
   container.dataset.lobeCanvasRoot = '';
   (document.body ?? document.documentElement).append(container);
-  createRoot(container).render(<Hosts />);
+  const root = createRoot(container);
+  root.render(<Hosts />);
 
   return {
+    destroy: () => {
+      if (destroyed) return;
+      destroyed = true;
+      entries.clear();
+      listeners.clear();
+      snapshot = [];
+      root.unmount();
+      container.remove();
+    },
     register: (host, view) => {
+      if (destroyed) return;
       entries.set(host, { key: `h${nextKey++}`, revision: 0, view });
       publish();
     },
     unregister: (host) => {
+      if (destroyed) return;
       if (entries.delete(host)) publish();
     },
     update: (host) => {
+      if (destroyed) return;
       const entry = entries.get(host);
       if (!entry) return;
       entries.set(host, { ...entry, revision: entry.revision + 1 });

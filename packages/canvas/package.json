@@ -5,7 +5,8 @@
   "sideEffects": false,
   "exports": {
     ".": "./src/index.ts",
-    "./mermaid": "./src/mermaid.ts"
+    "./mermaid": "./src/mermaid.ts",
+    "./runtime": "./src/runtime/index.ts"
   },
   "main": "./src/index.ts",
   "types": "./src/index.ts",

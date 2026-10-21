@@ -18,13 +18,20 @@ export const startThemeSync = () => {
     document.documentElement.style.colorScheme = appearance;
   };
 
-  window.addEventListener('lobe-canvas-theme', (event) => {
+  const onTheme = (event: Event) => {
     hostTheme = (event as CustomEvent<Partial<LobeThemeState>>).detail;
     apply();
-  });
-  matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+  };
+  const onSystemTheme = () => {
     if (!hostTheme?.appearance) apply();
-  });
+  };
+  const media = matchMedia('(prefers-color-scheme: dark)');
+  window.addEventListener('lobe-canvas-theme', onTheme);
+  media.addEventListener('change', onSystemTheme);
 
   apply();
+  return () => {
+    window.removeEventListener('lobe-canvas-theme', onTheme);
+    media.removeEventListener('change', onSystemTheme);
+  };
 };

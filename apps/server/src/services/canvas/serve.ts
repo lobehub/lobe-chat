@@ -1,6 +1,7 @@
 import { createHmac, timingSafeEqual } from 'node:crypto';
 
 import { CANVAS_ENTRY, getCanvasFileExtension, normalizeCanvasPath } from '@lobechat/canvas';
+import { installCanvasBridge } from '@lobechat/canvas/runtime';
 
 import type { CanvasStorageService } from './storage';
 
@@ -61,14 +62,7 @@ export const verifyCanvasPreviewToken = (token: string): CanvasPreviewTokenPaylo
   }
 };
 
-const BRIDGE_SCRIPT = `<script data-lobe-canvas-bridge>(function(){var p=window.parent;function post(m){try{p.postMessage(Object.assign({source:'lobe-canvas'},m),'*')}catch(e){}}window.addEventListener('error',function(e){post({type:'error',message:String(e.message||e.error||'Script error'),file:e.filename,line:e.lineno})});window.addEventListener('unhandledrejection',function(e){post({type:'error',message:String((e.reason&&e.reason.message)||e.reason)})});window.addEventListener('lobe-canvas-component-error',function(e){post({type:'error',message:e.detail&&e.detail.message,component:e.detail&&e.detail.tag})});window.addEventListener('message',function(e){if(e.source!==p||!e.data||e.data.source!=='lobe-canvas-host')return;if(e.data.type==='theme'){window.__LOBE_CANVAS_THEME__=e.data.theme;window.dispatchEvent(new CustomEvent('lobe-canvas-theme',{detail:e.data.theme}))}});function size(){post({type:'height',height:document.documentElement.scrollHeight})}window.addEventListener('load',function(){post({type:'ready'});size();if(window.ResizeObserver)new ResizeObserver(size).observe(document.documentElement)})})();</script>`;
-
-export const injectCanvasRuntime = (
-  html: string,
-  options: { bridge?: boolean; runtimeUrl: string },
-) => {
-  const bridge = options.bridge === false ? '' : BRIDGE_SCRIPT;
-  const injection = `${bridge}<script defer src="${options.runtimeUrl}"></script>`;
+const injectHead = (html: string, injection: string) => {
   const head = /<head(?:\s[^>]*)?>/i.exec(html);
   if (head) {
     const at = head.index + head[0].length;
@@ -77,12 +71,23 @@ export const injectCanvasRuntime = (
   return `<!doctype html><html><head><meta charset="utf-8">${injection}</head><body>${html}</body></html>`;
 };
 
+export const injectCanvasRuntime = (html: string, options: { runtimeUrl: string }) =>
+  injectHead(html, `<script defer src="${options.runtimeUrl}"></script>`);
+
+const injectCanvasPreview = (html: string, runtimeUrl: string) => {
+  const fallback = JSON.stringify(runtimeUrl).replaceAll('<', String.raw`\u003c`);
+  return injectHead(
+    html,
+    `<script data-lobe-canvas-bridge>(${installCanvasBridge.toString()})(${fallback});</script>`,
+  );
+};
+
 const contentSecurityPolicy = (runtimeUrl: string) => {
   const runtimeOrigin = /^https?:\/\//.test(runtimeUrl) ? ` ${new URL(runtimeUrl).origin}` : '';
   return [
     'sandbox allow-scripts allow-popups allow-forms allow-downloads',
     "default-src 'none'",
-    `script-src 'self' 'unsafe-inline'${runtimeOrigin}`,
+    `script-src 'self' 'unsafe-inline' blob:${runtimeOrigin}`,
     "style-src 'self' 'unsafe-inline'",
     "img-src 'self' data: blob:",
     "font-src 'self' data:",
@@ -129,7 +134,7 @@ export const serveCanvasFile = async ({
   });
 
   if (getCanvasFileExtension(target) === 'html') {
-    const html = injectCanvasRuntime(new TextDecoder().decode(file.bytes), { runtimeUrl });
+    const html = injectCanvasPreview(new TextDecoder().decode(file.bytes), runtimeUrl);
     return new Response(html, { headers, status: 200 });
   }
 

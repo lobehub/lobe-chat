@@ -7,6 +7,8 @@ import { useTranslation } from 'react-i18next';
 import { useUserStore } from '@/store/user';
 import { userGeneralSettingsSelectors } from '@/store/user/selectors';
 
+import { attachCanvasRuntime } from './runtime/host';
+
 const styles = stylex.create({
   details: {
     color: cssVar.colorTextSecondary,
@@ -55,6 +57,15 @@ const CanvasFrame = memo<{ src: string }>(({ src }) => {
   useEffect(postTheme, [postTheme]);
 
   useEffect(() => setErrors([]), [src]);
+
+  useEffect(() => {
+    const frame = ref.current;
+    if (!frame) return;
+    return attachCanvasRuntime(frame, (error) => {
+      console.error('[lobe-canvas]', error);
+      setErrors((current) => [...current, { message: String(error) }].slice(-MAX_ERRORS));
+    });
+  }, [src]);
 
   useEffect(() => {
     const onMessage = (event: MessageEvent) => {
