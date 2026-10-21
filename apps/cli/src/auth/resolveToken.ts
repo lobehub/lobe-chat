@@ -4,6 +4,7 @@ import { resolveServerUrl } from '../settings';
 import { log } from '../utils/logger';
 import { ApiKeyValidationError, getUserIdFromApiKey } from './apiKey';
 import { describeTokenLookup, getValidToken } from './refresh';
+import { assertRunIdentity } from './runIdentity';
 import { pickAuthSource } from './source';
 
 interface ResolveTokenOptions {
@@ -42,6 +43,7 @@ export function parseJwtSub(token: string): string | undefined {
  */
 export async function resolveToken(options: ResolveTokenOptions): Promise<ResolvedAuth> {
   const source = pickAuthSource(options);
+  assertRunIdentity(source);
 
   switch (source.kind) {
     // Used by server-side sandbox execution.

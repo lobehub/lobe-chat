@@ -19,8 +19,8 @@ export const JWT_FILE_ENV = 'LOBEHUB_JWT_FILE';
  *   file is rewritten when the operation token renews, so the env copy goes
  *   stale.
  * - A `LOBEHUB_JWT` that is defined but empty (`LOBEHUB_JWT= lh …`) is an
- *   explicit opt-out: the file is ignored, so the agent's "clear LOBEHUB_JWT
- *   and retry with the machine's login" fallback keeps working.
+ *   explicit opt-out: the file is ignored and the stored login is used, which
+ *   `checkRunIdentity` refuses inside a run unless it is the run's own user.
  * - A missing, unreadable or empty file behaves as if no file were configured.
  */
 export const hydrateJwtFromFile = (env: NodeJS.ProcessEnv = process.env): void => {

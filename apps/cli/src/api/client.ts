@@ -5,6 +5,7 @@ import type { LambdaRouter } from '@/server/routers/lambda';
 import type { ToolsRouter } from '@/server/routers/tools';
 
 import { describeTokenLookup, getValidToken } from '../auth/refresh';
+import { assertRunIdentity } from '../auth/runIdentity';
 import { pickAuthSource } from '../auth/source';
 import { CLI_API_KEY_ENV } from '../constants/auth';
 import { CLI_PRIMARY_BIN } from '../constants/identity';
@@ -27,6 +28,7 @@ async function getAuthAndServer(): Promise<{
   // Precedence lives in `pickAuthSource`, shared with `resolveToken` and
   // `lh doctor` so all three agree on which credential wins.
   const source = pickAuthSource();
+  assertRunIdentity(source);
 
   // LOBEHUB_JWT + LOBEHUB_SERVER env vars (used by server-side sandbox execution)
   if (source.kind === 'env-jwt') {

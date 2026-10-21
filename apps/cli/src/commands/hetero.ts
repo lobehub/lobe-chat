@@ -47,6 +47,7 @@ import { createOperationHeartbeat } from '../utils/OperationHeartbeat';
 import { createOperationTokenRenewal } from '../utils/OperationTokenRenewal';
 import { createLocalTraceStore } from '../utils/traceStore';
 import { TrpcIngestSink } from '../utils/TrpcIngestSink';
+import { buildAgentProcessEnv, resolveRunUserId } from './heteroAgentEnv';
 
 const DSH_AGENT_TYPE = 'deepseek-harness';
 export const SUPPORTED_AGENT_TYPES = new Set<string>([
@@ -54,32 +55,6 @@ export const SUPPORTED_AGENT_TYPES = new Set<string>([
   DSH_AGENT_TYPE,
 ]);
 
-/**
- * Extra env for the spawned agent process.
- *
- * In server-ingest mode the run's operation and conversation arrive as CLI
- * arguments, not env, so the agent's own shell could not name them. Commands it
- * runs on behalf of this conversation — `lh goal create --conversation` for
- * `/goal`, evidence ingests — read `LOBEHUB_OPERATION_ID` / `LOBEHUB_TOPIC_ID`,
- * so they are echoed into the child. A standalone run has no server identity
- * and passes none.
- */
-export const buildAgentProcessEnv = ({
-  operationId,
-  pathEnv,
-  topicId,
-}: {
-  operationId?: string;
-  pathEnv?: string;
-  topicId?: string;
-}): Record<string, string> | undefined => {
-  const env: Record<string, string> = {
-    ...(pathEnv ? { PATH: pathEnv } : {}),
-    ...(operationId ? { LOBEHUB_OPERATION_ID: operationId } : {}),
-    ...(topicId ? { LOBEHUB_TOPIC_ID: topicId } : {}),
-  };
-  return Object.keys(env).length > 0 ? env : undefined;
-};
 const SUPPORTED_AGENT_TITLES = [
   ...HETEROGENEOUS_AGENT_CONFIGS.map(({ title }) => title),
   'DeepSeek Harness',
@@ -666,6 +641,7 @@ const exec = async (options: ExecOptions): Promise<void> => {
         // runs for this conversation can name its operation and topic.
         env: buildAgentProcessEnv({
           operationId: serverIngest ? operationId : undefined,
+          runUserId: serverIngest ? resolveRunUserId() : undefined,
           topicId: options.topic,
         }),
         model: options.model,
@@ -1250,6 +1226,7 @@ const exec = async (options: ExecOptions): Promise<void> => {
   const commandEnv = buildAgentProcessEnv({
     operationId: serverIngest ? operationId : undefined,
     pathEnv: resolvedCommand.pathEnv,
+    runUserId: serverIngest ? resolveRunUserId() : undefined,
     topicId: options.topic,
   });
   // Devin ACP's `--permission-mode` is a global flag; default to bypass so

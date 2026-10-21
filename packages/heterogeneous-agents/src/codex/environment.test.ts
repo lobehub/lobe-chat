@@ -56,6 +56,7 @@ describe('Codex thread environment', () => {
           ANOTHER: 'kept',
           LOBEHUB_AGENT_ID: '',
           LOBEHUB_OPERATION_ID: 'current',
+          LOBEHUB_RUN_USER_ID: '',
           LOBEHUB_TOPIC_ID: '',
           LOBEHUB_WORKSPACE_ID: '',
         },

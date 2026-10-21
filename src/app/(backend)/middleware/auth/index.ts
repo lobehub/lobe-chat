@@ -11,6 +11,15 @@ import { LOBE_CHAT_OIDC_AUTH_HEADER } from '@/envs/auth';
 import { extractTraceContext, injectActiveTraceHeaders } from '@/libs/observability/traceparent';
 import { assertOIDCUserActive } from '@/libs/oidc-provider/access-control';
 import { validateOIDCJWT } from '@/libs/oidc-provider/jwt';
+import {
+  HETERO_OPERATION_JWT_PURPOSE,
+  validateHeteroOperationClaims,
+} from '@/libs/trpc/utils/internalJwt';
+import {
+  authorizeHeteroCallerToken,
+  hasHeteroCallerCapability,
+  HeteroCallerTokenError,
+} from '@/server/services/heterogeneousAgent/callerToken';
 import { createErrorResponse } from '@/utils/errorResponse';
 
 type RequestOptions = { params: Promise<{ provider?: string }> };
@@ -46,8 +55,7 @@ const getOIDCClientDebugInfo = (token?: string | null): OIDCClientDebugInfo => {
   try {
     const normalizedPayload = payload.replaceAll('-', '+').replaceAll('_', '/');
     const decodedPayload = JSON.parse(Buffer.from(normalizedPayload, 'base64').toString('utf8')) as
-      | Record<string, unknown>
-      | undefined;
+      Record<string, unknown> | undefined;
 
     const clientId =
       typeof decodedPayload?.client_id === 'string' ? decodedPayload.client_id : undefined;
@@ -90,6 +98,24 @@ export const checkAuth =
         const oidc = await validateOIDCJWT(oidcAuthorization);
         userId = oidc.userId;
         await assertOIDCUserActive(serverDB, userId);
+        // A device run's caller token works here only in the run's workspace
+        // while the run lasts, the same as on the tRPC routes.
+        if (oidc.tokenData?.purpose === HETERO_OPERATION_JWT_PURPOSE) {
+          const claims = validateHeteroOperationClaims(oidc.payload);
+          if (claims && hasHeteroCallerCapability(claims)) {
+            await authorizeHeteroCallerToken({
+              claims,
+              db: serverDB,
+              requestedWorkspaceId: req.headers.get('X-Workspace-Id'),
+            }).catch((error) => {
+              if (!(error instanceof HeteroCallerTokenError)) throw error;
+              throw AgentRuntimeError.createError(
+                error.status === 401 ? ChatErrorType.Unauthorized : ChatErrorType.Forbidden,
+                { message: error.message },
+              );
+            });
+          }
+        }
       } else {
         // Better Auth session authentication (web)
         const session = await auth.api.getSession({

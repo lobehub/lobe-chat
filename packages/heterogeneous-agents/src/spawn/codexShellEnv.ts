@@ -21,6 +21,7 @@ export const CODEX_LOBEHUB_CONTEXT_ENV_KEYS = [
   // The desktop's bundled `lh`, for shells that resolve an older global one first.
   'LOBEHUB_CLI',
   'LOBEHUB_OPERATION_ID',
+  'LOBEHUB_RUN_USER_ID',
   'LOBEHUB_SERVER',
   'LOBEHUB_TASK_ID',
   'LOBEHUB_TOPIC_ID',
