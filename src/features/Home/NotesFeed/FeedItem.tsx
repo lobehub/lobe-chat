@@ -14,6 +14,7 @@ import { MoreHorizontalIcon, NotebookPenIcon, Trash } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { removeNoteWithFeedback } from '@/features/QuickNote/removeNoteWithFeedback';
 import { formatNoteTime } from '@/features/QuickNote/utils';
 import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwareNavigate';
 import type { QuickNoteItem } from '@/services/quickNote';
@@ -43,7 +44,12 @@ const FeedItem = memo<{ note: QuickNoteItem }>(({ note }) => {
           content: t('feed.deleteConfirm'),
           okButtonProps: { danger: true },
           okText: t('delete', { ns: 'common' }),
-          onOk: () => removeNote(note.id),
+          onOk: () =>
+            removeNoteWithFeedback({
+              failedMessage: t('agentic.actionFailed'),
+              id: note.id,
+              removeNote,
+            }),
         }),
     },
   ];

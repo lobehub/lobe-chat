@@ -3,6 +3,7 @@
 import { cssVar, Flexbox, Icon, Text, Tooltip } from '@lobehub/ui';
 import type { LucideIcon } from 'lucide-react';
 import { FileText, ListTodo, MessagesSquare, Target } from 'lucide-react';
+import type { KeyboardEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import type { QuickNoteProposal } from '@/services/quickNote';
@@ -42,7 +43,19 @@ const ExecutedRow = ({ item }: { item: QuickNoteExecutedItem }) => {
       height={28}
       role={target ? 'button' : undefined}
       style={{ cursor: target ? 'pointer' : 'default' }}
+      // `role="button"` alone leaves the row unreachable: it has to take focus and answer
+      // Enter / Space the way a real button does.
+      tabIndex={target ? 0 : undefined}
       onClick={target ? () => openTarget(target, item.title) : undefined}
+      onKeyDown={
+        target
+          ? (event: KeyboardEvent<HTMLDivElement>) => {
+              if (event.key !== 'Enter' && event.key !== ' ') return;
+              event.preventDefault();
+              openTarget(target, item.title);
+            }
+          : undefined
+      }
     >
       <Icon icon={TYPE_ICONS[item.type]} size={14} style={{ color: cssVar.colorTextSecondary }} />
       <Text ellipsis fontSize={13} style={{ flex: 1 }}>

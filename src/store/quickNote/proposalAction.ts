@@ -125,7 +125,13 @@ export class QuickNoteProposalActionImpl {
     reason?: QuickNoteDismissReason,
   ): Promise<void> => {
     await this.#whileProcessing(proposalId, 'dismissProposal', async () => {
-      await quickNoteService.dismissProposal(proposalId, reason);
+      try {
+        await quickNoteService.dismissProposal(proposalId, reason);
+      } catch (error) {
+        // A conflict or missing Proposal means the sidebar is out of date.
+        void this.#get().refreshAgenticDetails(quickNoteId);
+        throw error;
+      }
       await this.#get().refreshAgenticDetails(quickNoteId);
     });
   };
@@ -137,7 +143,13 @@ export class QuickNoteProposalActionImpl {
     payload: QuickNoteProposalPayload,
   ): Promise<void> => {
     await this.#whileProcessing(proposalId, 'updateProposal', async () => {
-      await quickNoteService.updateProposal(proposalId, payload);
+      try {
+        await quickNoteService.updateProposal(proposalId, payload);
+      } catch (error) {
+        // A conflict or missing Proposal means the sidebar is out of date.
+        void this.#get().refreshAgenticDetails(quickNoteId);
+        throw error;
+      }
       await this.#get().refreshAgenticDetails(quickNoteId);
     });
   };

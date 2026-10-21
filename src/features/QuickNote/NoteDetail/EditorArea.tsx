@@ -2,16 +2,7 @@
 
 import { HotkeyEnum } from '@lobechat/const/hotkeys';
 import { useEditor } from '@lobehub/editor/react';
-import {
-  ActionIcon,
-  confirmModal,
-  cssVar,
-  DropdownMenu,
-  Flexbox,
-  Icon,
-  Text,
-  toast,
-} from '@lobehub/ui';
+import { ActionIcon, confirmModal, cssVar, DropdownMenu, Flexbox, Icon, Text } from '@lobehub/ui';
 import { EllipsisIcon, PanelRightOpen, Trash } from 'lucide-react';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -25,6 +16,7 @@ import { getQuickNoteStoreState, quickNoteSelectors, useQuickNoteStore } from '@
 import { useUserStore } from '@/store/user';
 import { settingsSelectors } from '@/store/user/selectors';
 
+import { removeNoteWithFeedback } from '../removeNoteWithFeedback';
 import { formatNoteMeta } from '../utils';
 import { styles } from './style';
 import { useNoteContentSync } from './useNoteContentSync';
@@ -87,14 +79,13 @@ const EditorArea = memo<{ noteId: string }>(({ noteId }) => {
           content: t('feed.deleteConfirm'),
           okButtonProps: { danger: true },
           okText: t('delete', { ns: 'common' }),
-          onOk: async () => {
-            try {
-              await removeNote(noteId);
-              navigate('/note');
-            } catch {
-              toast.error(t('agentic.actionFailed'));
-            }
-          },
+          onOk: () =>
+            removeNoteWithFeedback({
+              failedMessage: t('agentic.actionFailed'),
+              id: noteId,
+              onRemoved: () => navigate('/note'),
+              removeNote,
+            }),
         }),
     },
   ];

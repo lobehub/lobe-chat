@@ -4,7 +4,7 @@ import { cssVar, Flexbox, Icon, Text, Tooltip } from '@lobehub/ui';
 import type { TFunction } from 'i18next';
 import type { LucideIcon } from 'lucide-react';
 import { FileText, Link2, ListTodo, MessageSquareText, MessagesSquare } from 'lucide-react';
-import { memo } from 'react';
+import { type KeyboardEvent, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import type { QuickNoteResource } from '@/services/quickNote';
@@ -78,7 +78,19 @@ const ResourceRow = memo<{ resource: QuickNoteResource }>(({ resource }) => {
       height={28}
       role={openTarget ? 'button' : undefined}
       style={{ cursor: openTarget ? 'pointer' : 'default' }}
+      // `role="button"` alone leaves the row unreachable: it has to take focus and answer
+      // Enter / Space the way a real button does.
+      tabIndex={openTarget ? 0 : undefined}
       onClick={openTarget ? handleOpen : undefined}
+      onKeyDown={
+        openTarget
+          ? (event: KeyboardEvent<HTMLDivElement>) => {
+              if (event.key !== 'Enter' && event.key !== ' ') return;
+              event.preventDefault();
+              handleOpen();
+            }
+          : undefined
+      }
     >
       <Icon icon={ResourceIcon} size={14} style={{ color: cssVar.colorTextSecondary }} />
       <Text ellipsis fontSize={13} style={{ flex: 1 }}>

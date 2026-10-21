@@ -801,6 +801,25 @@ describe('quickNote actions', () => {
       expect(useQuickNoteStore.getState().processingProposalIds).toEqual([]);
     });
 
+    // ROOT CAUSE:
+    // Only apply refreshed the sidebar on failure; a dismiss or edit of a Proposal that another
+    // Run had already replaced left the stale card on screen after the error toast.
+    /** @example A failed dismiss or edit refreshes the stale sidebar and rethrows for the toast. */
+    it.each([
+      ['dismissProposal', () => useQuickNoteStore.getState().dismissProposal('a', 'p1')],
+      [
+        'updateProposal',
+        () => useQuickNoteStore.getState().updateProposal('a', 'p1', { instruction: 'x' }),
+      ],
+    ] as const)('refreshes details and rethrows when %s fails', async (method, run) => {
+      const conflict = Object.assign(new Error('superseded'), { data: { code: 'CONFLICT' } });
+      vi.spyOn(quickNoteService, method).mockRejectedValue(conflict);
+
+      await expect(run()).rejects.toBe(conflict);
+      expect(refreshAgenticDetails).toHaveBeenCalledWith('a');
+      expect(useQuickNoteStore.getState().processingProposalIds).toEqual([]);
+    });
+
     /** @example Every dismiss reason code reaches the server unchanged. */
     it.each(['not_now', 'not_wanted', 'duplicate', 'other', undefined] as const)(
       'dismisses with reason %s',
