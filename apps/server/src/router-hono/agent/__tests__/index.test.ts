@@ -38,4 +38,18 @@ describe('agent gateway start authentication', () => {
     await expect(response.json()).resolves.toEqual({ error: 'Service not configured' });
     expect(mockGatewayStart).not.toHaveBeenCalled();
   });
+
+  it('rejects a fallback bearer token when the active secret is blank', async () => {
+    process.env.KEY_VAULTS_SECRET = '   ';
+    process.env.KEY_VAULTS_FALLBACK_SECRET = 'fallback-secret';
+
+    const response = await app.request('/api/agent/gateway/start', {
+      headers: { authorization: 'Bearer fallback-secret' },
+      method: 'POST',
+    });
+
+    expect(response.status).toBe(503);
+    await expect(response.json()).resolves.toEqual({ error: 'Service not configured' });
+    expect(mockGatewayStart).not.toHaveBeenCalled();
+  });
 });

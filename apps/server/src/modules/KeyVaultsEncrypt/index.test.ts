@@ -70,6 +70,14 @@ describe('KeyVaultsGateKeeper', () => {
     expect(isKeyVaultsSecretBearerToken(`Bearer ${fallbackSecret}`)).toBe(false);
   });
 
+  it('rejects fallback bearer tokens when the active secret is blank', () => {
+    const fallbackSecret = process.env.KEY_VAULTS_SECRET!;
+    process.env.KEY_VAULTS_FALLBACK_SECRET = fallbackSecret;
+    process.env.KEY_VAULTS_SECRET = '   ';
+
+    expect(isKeyVaultsSecretBearerToken(`Bearer ${fallbackSecret}`)).toBe(false);
+  });
+
   it('should return empty plaintext and false authenticity for invalid encrypted data', async () => {
     const invalidEncryptedData = 'invalid:encrypted:data';
     const decryptionResult = await gateKeeper.decrypt(invalidEncryptedData);

@@ -23,11 +23,13 @@ const importAesKey = async (secret: string, envName: string) => {
 
 export const getKeyVaultsSecrets = () => {
   const { KEY_VAULTS_FALLBACK_SECRET, KEY_VAULTS_SECRET } = getServerDBConfig();
-  const fallback = KEY_VAULTS_FALLBACK_SECRET?.trim() ? KEY_VAULTS_FALLBACK_SECRET : undefined;
+  const active = KEY_VAULTS_SECRET?.trim() ? KEY_VAULTS_SECRET : undefined;
+  const fallback =
+    active && KEY_VAULTS_FALLBACK_SECRET?.trim() ? KEY_VAULTS_FALLBACK_SECRET : undefined;
 
   return {
-    active: KEY_VAULTS_SECRET,
-    fallback: fallback === KEY_VAULTS_SECRET ? undefined : fallback,
+    active,
+    fallback: fallback === active ? undefined : fallback,
   };
 };
 

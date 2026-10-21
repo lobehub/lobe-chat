@@ -79,7 +79,9 @@ app.post(
   '/gateway/start',
   bearerSecretAuth(() => {
     const activeSecret = process.env.KEY_VAULTS_SECRET;
-    return activeSecret ? [activeSecret, process.env.KEY_VAULTS_FALLBACK_SECRET] : undefined;
+    return activeSecret?.trim()
+      ? [activeSecret, process.env.KEY_VAULTS_FALLBACK_SECRET]
+      : undefined;
   }),
   gatewayStart,
 );
