@@ -62,7 +62,10 @@ export const removeRouter = router({
       await assertCanUseConversationTargets(guardCtx(ctx), [resolved]);
       const restrictToCreator = shouldRestrictBulkDeleteToCreator(ctx, input.scope);
       if (resolved.agentId) {
-        await ctx.trashService.trashTopicsByAgent(resolved.agentId, { restrictToCreator });
+        await ctx.trashService.trashTopicsByAgent(resolved.agentId, {
+          legacySessionId: resolved.sessionId,
+          restrictToCreator,
+        });
       } else {
         await ctx.trashService.trashTopicsBySession(resolved.sessionId, { restrictToCreator });
       }

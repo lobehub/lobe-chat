@@ -22,18 +22,21 @@ export const resolveAgentReference = async (
   workspaceId?: string,
 ): Promise<AgentReference> => {
   const scope = { userId, workspaceId };
-  if (id.startsWith('agt_')) {
+  const inbox = id === INBOX_SESSION_ID || id === 'ssn_inbox';
+  // Prefixes route known identities; imported/custom Agent ids still require
+  // the same scoped database lookup, never authorization by their spelling.
+  if (id.startsWith('agt_') || (!id.startsWith('ssn_') && !inbox)) {
     const agent = await db.query.agents.findFirst({
       columns: { id: true },
       where: and(eq(agents.id, id), buildWorkspaceWhere(scope, agents)),
     });
-    if (!agent) throw new TRPCError({ code: 'NOT_FOUND', message: 'Agent not found' });
-    return { agentId: agent.id, sessionId: null };
+    if (agent) return { agentId: agent.id, sessionId: null };
+    if (id.startsWith('agt_'))
+      throw new TRPCError({ code: 'NOT_FOUND', message: 'Agent not found' });
   }
 
   // ssn_inbox is a historical alias, not a prefix substitution. Prefer its
   // real relationship when present; otherwise resolve the scoped inbox slug.
-  const inbox = id === INBOX_SESSION_ID || id === 'ssn_inbox';
   const session =
     (await db.query.sessions.findFirst({
       columns: { id: true, type: true },

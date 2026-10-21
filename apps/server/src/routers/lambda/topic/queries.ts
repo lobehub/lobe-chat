@@ -184,7 +184,7 @@ export const queryRouter = router({
       const result = await ctx.topicModel.query({
         ...rest,
         agentId: effectiveAgentId,
-        containerId: resolvedContext.sessionId,
+        legacySessionId: resolvedContext.sessionId,
         excludeStatuses,
         excludeTriggers,
         includeTriggers,

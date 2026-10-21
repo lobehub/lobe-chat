@@ -75,6 +75,7 @@ export const query = async (
     pageSize = 9999,
     groupId,
     isInbox,
+    legacySessionId,
     sortBy,
     timing,
     triggers,
@@ -277,7 +278,9 @@ export const query = async (
         )
       : or(
           eq(topics.agentId, agentId),
-          containerId ? and(isNull(topics.agentId), eq(topics.sessionId, containerId)) : undefined,
+          legacySessionId
+            ? and(isNull(topics.agentId), eq(topics.sessionId, legacySessionId))
+            : undefined,
         );
 
     const agentWhere = and(

@@ -382,6 +382,76 @@ describe('native Session to Agent compatibility', () => {
     }
   });
 
+  it('keeps persisted nonstandard Agent ids usable without treating unknown ids as authorized', async () => {
+    const [agent] = await db
+      .insert(agents)
+      .values({ id: `agent_imported_${userId}`, userId, title: 'Imported' })
+      .returning();
+    expect(await callers().agent.getAgentConfigById({ agentId: agent.id })).toMatchObject({
+      id: agent.id,
+    });
+    await callers().agent.updateAgentConfig({ agentId: agent.id, value: { title: 'Renamed' } });
+    expect(await db.query.agents.findFirst({ where: eq(agents.id, agent.id) })).toMatchObject({
+      title: 'Renamed',
+    });
+    await expect(
+      callers(undefined, otherUserId).agent.getAgentConfigById({ agentId: agent.id }),
+    ).rejects.toMatchObject({ code: 'NOT_FOUND' });
+    await expect(resolveAgentReference('agent_missing', db, userId)).rejects.toMatchObject({
+      code: 'NOT_FOUND',
+    });
+    await db.update(agents).set({ isDeleted: true }).where(eq(agents.id, agent.id));
+    await expect(callers().agent.getAgentConfigById({ agentId: agent.id })).rejects.toMatchObject({
+      code: 'NOT_FOUND',
+    });
+  });
+
+  it('trashes unmigrated Session topics together with Agent topics without adopting another Agent', async () => {
+    const { agent, session } = await legacy();
+    const [other] = await db.insert(agents).values({ userId }).returning();
+    const rows = await db
+      .insert(topics)
+      .values([
+        { userId, sessionId: session.id, title: 'Unmigrated' },
+        { userId, agentId: agent.id, title: 'Canonical' },
+        { userId, agentId: other.id, sessionId: session.id, title: 'Another Agent' },
+        { userId, title: 'Inbox' },
+      ])
+      .returning();
+    await callers().topic.batchDeleteBySessionId({ id: session.id });
+    const actual = await db.query.topics.findMany({ where: eq(topics.userId, userId) });
+    expect(
+      actual
+        .filter((row) => row.isDeleted)
+        .map((row) => row.id)
+        .sort(),
+    ).toEqual(
+      rows
+        .slice(0, 2)
+        .map((row) => row.id)
+        .sort(),
+    );
+  });
+
+  it('includes orphan Inbox history for aliases and canonical ids without reading standalone Agent history', async () => {
+    const [inbox] = await db.insert(agents).values({ userId, slug: 'inbox' }).returning();
+    const [other] = await db.insert(agents).values({ userId }).returning();
+    await db.insert(messages).values([
+      { userId, role: 'user', content: 'Orphan Inbox' },
+      { userId, agentId: inbox.id, role: 'user', content: 'Current Inbox' },
+      { userId, agentId: other.id, role: 'user', content: 'Standalone' },
+      { userId: otherUserId, role: 'user', content: 'Foreign Inbox' },
+    ]);
+    for (const id of ['inbox', 'ssn_inbox', inbox.id]) {
+      expect(
+        (await callers().message.getMessages({ sessionId: id })).map((row) => row.content).sort(),
+      ).toEqual(['Current Inbox', 'Orphan Inbox']);
+    }
+    expect(
+      (await callers().message.getMessages({ agentId: other.id })).map((row) => row.content),
+    ).toEqual(['Standalone']);
+  });
+
   it('passes the canonical id to config redaction and denies use-only operations at view access', async () => {
     const workspaceId = await workspace();
     const { agent, session } = await legacy(workspaceId);

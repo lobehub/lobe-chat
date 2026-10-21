@@ -161,6 +161,8 @@ export interface QueryTopicParams {
    * When true, also includes legacy inbox topics (sessionId IS NULL AND groupId IS NULL AND agentId IS NULL)
    */
   isInbox?: boolean;
+  /** Include unassigned legacy topics only after the caller resolves this Session to the Agent. */
+  legacySessionId?: string | null;
   pageSize?: number;
   /**
    * Server-side ordering. Defaults to `updatedAt`. `status` orders by status

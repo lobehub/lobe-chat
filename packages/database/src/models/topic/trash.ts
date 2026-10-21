@@ -1,4 +1,4 @@
-import { and, eq, inArray, or, type SQL } from 'drizzle-orm';
+import { and, eq, inArray, isNull, or, type SQL } from 'drizzle-orm';
 
 import { type TopicItem, topics } from '../../schemas';
 import {
@@ -74,14 +74,19 @@ export const softDeleteByGroupId = async (
 export const softDeleteByAgentId = async (
   ctx: TopicModelContext,
   agentId: string,
-  options: SoftDeleteOptions,
+  options: SoftDeleteOptions & { legacySessionId?: string | null },
 ): Promise<TopicItem[]> => {
   return ctx.db
     .update(topics)
     .set(trashStamp(options.deletedAt))
     .where(
       and(
-        eq(topics.agentId, agentId),
+        or(
+          eq(topics.agentId, agentId),
+          options.legacySessionId
+            ? and(isNull(topics.agentId), eq(topics.sessionId, options.legacySessionId))
+            : undefined,
+        ),
         options.restrictToCreator ? ctx.mine() : ctx.ownership(),
         ctx.notShareVisitor(),
       ),
