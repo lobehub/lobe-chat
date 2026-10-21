@@ -12,11 +12,12 @@ import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwareNavigate';
-import { type ProjectListItem, useProjectStore } from '@/store/project';
+import { type ProjectListItem, useLoadedProjectList, useProjectStore } from '@/store/project';
 
 import {
+  applyProjectName,
   getCreateProjectInput,
-  getProjectFieldSuggestions,
+  isProjectIdentifierTaken,
   isProjectIdentifierValid,
   isProjectSlugValid,
 } from './createProjectForm';
@@ -32,6 +33,8 @@ export interface CreateProjectOptions {
 
 interface CreateProjectFormState {
   identifier: string;
+  /** Set when the server rejects the identifier as already taken. */
+  identifierConflict: boolean;
   identifierEdited: boolean;
   loading: boolean;
   name: string;
@@ -50,8 +53,10 @@ const CreateProjectContent = memo<CreateProjectOptions>(({ onCreated }) => {
   const { close } = useModalContext();
   const navigate = useWorkspaceAwareNavigate();
   const createProject = useProjectStore((s) => s.createProject);
+  const loadedProjects = useLoadedProjectList();
   const [form, setForm] = useState<CreateProjectFormState>({
     identifier: '',
+    identifierConflict: false,
     identifierEdited: false,
     loading: false,
     name: '',
@@ -62,6 +67,13 @@ const CreateProjectContent = memo<CreateProjectOptions>(({ onCreated }) => {
   const identifierValid = isProjectIdentifierValid(form.identifier);
   const identifierInvalid =
     (form.identifierEdited || Boolean(form.name.trim())) && !identifierValid;
+  // Identifiers are unique per scope, so a name whose derived prefix is already
+  // taken (two projects starting with "lobe…") would otherwise only fail after
+  // submit, as an opaque "operation failed".
+  const identifierTaken =
+    form.identifierConflict ||
+    (loadedProjects ? isProjectIdentifierTaken(form.identifier, loadedProjects) : false);
+  const identifierError = identifierInvalid || identifierTaken;
   const slugValid = isProjectSlugValid(form.slug);
 
   const updateForm = (patch: Partial<CreateProjectFormState>) => {
@@ -69,17 +81,11 @@ const CreateProjectContent = memo<CreateProjectOptions>(({ onCreated }) => {
   };
 
   const updateName = (name: string) => {
-    const suggestions = getProjectFieldSuggestions(name);
-    setForm((current) => ({
-      ...current,
-      identifier: current.identifierEdited ? current.identifier : suggestions.identifier,
-      name,
-      slug: current.slugEdited ? current.slug : suggestions.slug,
-    }));
+    setForm((current) => applyProjectName(current, name));
   };
 
   const handleCreate = async () => {
-    if (!createInput || form.loading) return;
+    if (!createInput || identifierTaken || form.loading) return;
     updateForm({ loading: true });
     try {
       const project = await createProject(createInput);
@@ -88,6 +94,14 @@ const CreateProjectContent = memo<CreateProjectOptions>(({ onCreated }) => {
       else navigate(`/project/${project.slug ?? project.id}`);
     } catch (error) {
       console.error('Failed to create project', error);
+      // The unique index stays the final authority: a concurrent create, or a
+      // private project by another member that the loaded list cannot see, can
+      // still collide after the inline check. Report it on the field, not as a
+      // generic failure.
+      if ((error as { data?: { code?: string } } | undefined)?.data?.code === 'CONFLICT') {
+        updateForm({ identifierConflict: true });
+        return;
+      }
       toast.error(t('operationFailed', { ns: 'common' }));
     } finally {
       updateForm({ loading: false });
@@ -115,18 +129,28 @@ const CreateProjectContent = memo<CreateProjectOptions>(({ onCreated }) => {
             {t('create.identifierLabel')}
           </Text>
           <Input
-            aria-invalid={identifierInvalid}
+            aria-invalid={identifierError}
             maxLength={6}
             placeholder={t('create.identifierPlaceholder')}
-            style={identifierInvalid ? { borderColor: cssVar.colorError } : undefined}
+            style={identifierError ? { borderColor: cssVar.colorError } : undefined}
             value={form.identifier}
             onPressEnter={handleCreate}
             onChange={(event) =>
-              updateForm({ identifier: event.target.value.toUpperCase(), identifierEdited: true })
+              updateForm({
+                identifier: event.target.value.toUpperCase(),
+                identifierConflict: false,
+                identifierEdited: true,
+              })
             }
           />
-          <Text fontSize={12} type={identifierInvalid ? 'danger' : 'secondary'}>
-            {t(identifierInvalid ? 'create.identifierInvalid' : 'create.identifierDescription')}
+          <Text fontSize={12} type={identifierError ? 'danger' : 'secondary'}>
+            {t(
+              identifierInvalid
+                ? 'create.identifierInvalid'
+                : identifierTaken
+                  ? 'create.identifierTaken'
+                  : 'create.identifierDescription',
+            )}
           </Text>
         </Flexbox>
         <Flexbox gap={6}>
@@ -152,7 +176,7 @@ const CreateProjectContent = memo<CreateProjectOptions>(({ onCreated }) => {
       <ModalFooter>
         <Button onClick={close}>{t('cancel', { ns: 'common' })}</Button>
         <Button
-          disabled={!createInput}
+          disabled={!createInput || identifierTaken}
           loading={form.loading}
           type="primary"
           onClick={handleCreate}

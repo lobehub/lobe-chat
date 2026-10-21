@@ -35,6 +35,7 @@
   "create.identifierInvalid": "请输入 3–6 位大写字母或数字，并以字母开头。",
   "create.identifierLabel": "项目标识",
   "create.identifierPlaceholder": "LOBE",
+  "create.identifierTaken": "当前空间已有项目使用该标识，请换一个。",
   "create.nameLabel": "项目名称",
   "create.namePlaceholder": "你正在推进什么事情？",
   "create.slugDescription": "用于项目 URL，将根据项目名称自动生成。",

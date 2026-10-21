@@ -158,6 +158,7 @@ export default {
   'create.identifierInvalid': 'Use 3–6 uppercase letters or numbers, starting with a letter.',
   'create.identifierLabel': 'Identifier',
   'create.identifierPlaceholder': 'LOBE',
+  'create.identifierTaken': 'Another project in this workspace already uses this identifier.',
   'create.nameLabel': 'Project name',
   'create.namePlaceholder': 'What are you working on?',
   'create.slugDescription': 'Used for the project URL and generated from the project name.',

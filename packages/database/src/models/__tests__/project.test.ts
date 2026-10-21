@@ -4,6 +4,7 @@ import { and, eq } from 'drizzle-orm';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { getTestDB } from '../../core/getTestDB';
+import { ProjectRepository } from '../../repositories/project';
 import {
   agents,
   environments,
@@ -21,7 +22,7 @@ import type { LobeChatDatabase } from '../../type';
 import { AgentModel } from '../agent';
 import { EnvironmentModel } from '../environment';
 import type { CreateProjectInput } from '../project';
-import { ProjectModel } from '../project';
+import { ProjectIdentifierTakenError, ProjectModel } from '../project';
 import { TaskModel } from '../task';
 import { TopicModel } from '../topic';
 
@@ -30,15 +31,17 @@ const userId = 'project-model-user';
 const otherUserId = 'project-model-other-user';
 let projectIdentifierSequence = 0;
 
-const createProject = (projectModel: ProjectModel, input: Omit<CreateProjectInput, 'identifier'>) =>
-  projectModel.create({
+const createProject = (repo: ProjectRepository, input: Omit<CreateProjectInput, 'identifier'>) =>
+  repo.create({
     ...input,
     identifier: `P${String(++projectIdentifierSequence).padStart(5, '0')}`,
   });
 
 describe('ProjectModel', () => {
   const model = new ProjectModel(serverDB, userId);
+  const repo = new ProjectRepository(serverDB, userId);
   const otherModel = new ProjectModel(serverDB, otherUserId);
+  const otherRepo = new ProjectRepository(serverDB, otherUserId);
 
   beforeEach(async () => {
     await serverDB.delete(users);
@@ -53,7 +56,7 @@ describe('ProjectModel', () => {
   });
 
   it('creates, lists, updates, and deletes a project in the owner scope', async () => {
-    const project = await createProject(model, { description: 'A large effort', name: 'Apollo' });
+    const project = await createProject(repo, { description: 'A large effort', name: 'Apollo' });
     expect(project.status).toBe('backlog');
     expect(project.coordinatorAgentId).toBeTruthy();
     expect(
@@ -80,8 +83,8 @@ describe('ProjectModel', () => {
   });
 
   it('resolves a project by slug without escaping the current scope', async () => {
-    const project = await createProject(model, { name: 'Apollo', slug: 'apollo' });
-    await createProject(otherModel, { name: 'Other Apollo', slug: 'other-apollo' });
+    const project = await createProject(repo, { name: 'Apollo', slug: 'apollo' });
+    await createProject(otherRepo, { name: 'Other Apollo', slug: 'other-apollo' });
 
     expect(await model.findByIdOrSlug('apollo')).toEqual(
       expect.objectContaining({ id: project.id }),
@@ -93,9 +96,9 @@ describe('ProjectModel', () => {
   });
 
   it('finds a bounded set of readable projects', async () => {
-    const first = await createProject(model, { name: 'First' });
-    const second = await createProject(model, { name: 'Second' });
-    const hidden = await createProject(otherModel, { name: 'Hidden', visibility: 'private' });
+    const first = await createProject(repo, { name: 'First' });
+    const second = await createProject(repo, { name: 'Second' });
+    const hidden = await createProject(otherRepo, { name: 'Hidden', visibility: 'private' });
 
     expect(await model.findByIds([])).toEqual([]);
     expect(await model.findByIds([first.id, second.id, hidden.id])).toEqual(
@@ -108,11 +111,11 @@ describe('ProjectModel', () => {
   });
 
   it('normalizes identifiers and enforces uniqueness within their ownership scope', async () => {
-    const first = await model.create({ identifier: ' lobe ', name: 'First' });
+    const first = await repo.create({ identifier: ' lobe ', name: 'First' });
     expect(first.identifier).toBe('LOBE');
 
-    await expect(model.create({ identifier: 'LOBE', name: 'Duplicate' })).rejects.toThrow();
-    await expect(otherModel.create({ identifier: 'LOBE', name: 'Other user' })).resolves.toEqual(
+    await expect(repo.create({ identifier: 'LOBE', name: 'Duplicate' })).rejects.toThrow();
+    await expect(otherRepo.create({ identifier: 'LOBE', name: 'Other user' })).resolves.toEqual(
       expect.objectContaining({ identifier: 'LOBE' }),
     );
 
@@ -122,32 +125,76 @@ describe('ProjectModel', () => {
       primaryOwnerId: userId,
       slug: 'identifier-workspace',
     });
-    const owner = new ProjectModel(serverDB, userId, 'identifier-workspace');
-    const member = new ProjectModel(serverDB, otherUserId, 'identifier-workspace');
-    await owner.create({ identifier: 'TEAM', name: 'Workspace project' });
+    const ownerRepo = new ProjectRepository(serverDB, userId, 'identifier-workspace');
+    const memberRepo = new ProjectRepository(serverDB, otherUserId, 'identifier-workspace');
+    await ownerRepo.create({ identifier: 'TEAM', name: 'Workspace project' });
     await expect(
-      member.create({ identifier: 'TEAM', name: 'Workspace duplicate' }),
+      memberRepo.create({ identifier: 'TEAM', name: 'Workspace duplicate' }),
     ).rejects.toThrow();
   });
 
+  it('reports a taken identifier as a field error and leaves no orphan coordinator', async () => {
+    await repo.create({ identifier: 'LOBE', name: 'First' });
+
+    expect(await model.isIdentifierTaken('lobe')).toBe(true);
+    expect(await model.isIdentifierTaken('MOBILE')).toBe(false);
+
+    const agentsBefore = await serverDB.select().from(agents).where(eq(agents.userId, userId));
+
+    await expect(repo.create({ identifier: 'LOBE', name: 'Second' })).rejects.toThrow(
+      ProjectIdentifierTakenError,
+    );
+    // The check runs before the coordinator is inserted, so a collision must not
+    // leak an agent the failed transaction created.
+    expect(await serverDB.select().from(agents).where(eq(agents.userId, userId))).toHaveLength(
+      agentsBefore.length,
+    );
+  });
+
+  it('treats another member private project as occupying the identifier', async () => {
+    await serverDB.insert(workspaces).values({
+      id: 'private-identifier-workspace',
+      name: 'Private Identifier Workspace',
+      primaryOwnerId: userId,
+      slug: 'private-identifier-workspace',
+    });
+    const ownerRepo = new ProjectRepository(serverDB, userId, 'private-identifier-workspace');
+    const member = new ProjectModel(serverDB, otherUserId, 'private-identifier-workspace');
+    const memberRepo = new ProjectRepository(serverDB, otherUserId, 'private-identifier-workspace');
+    const hidden = await ownerRepo.create({
+      identifier: 'PRIV',
+      name: 'Private',
+      visibility: 'private',
+    });
+
+    // The member cannot see the project — which is exactly why a visibility-aware
+    // check would wrongly report the identifier as free.
+    expect(await member.findById(hidden.id)).toBeNull();
+    // The unique index is scope-wide regardless of visibility, so it is taken.
+    expect(await member.isIdentifierTaken('PRIV')).toBe(true);
+    await expect(memberRepo.create({ identifier: 'PRIV', name: 'Clash' })).rejects.toThrow(
+      ProjectIdentifierTakenError,
+    );
+  });
+
   it('requires identifiers to contain between 3 and 6 characters', async () => {
-    await expect(model.create({ identifier: 'AB', name: 'Too short' })).rejects.toThrow(
+    await expect(repo.create({ identifier: 'AB', name: 'Too short' })).rejects.toThrow(
       'Project identifier must be between 3 and 6 characters',
     );
-    await expect(model.create({ identifier: 'ABCDEFG', name: 'Too long' })).rejects.toThrow(
+    await expect(repo.create({ identifier: 'ABCDEFG', name: 'Too long' })).rejects.toThrow(
       'Project identifier must be between 3 and 6 characters',
     );
-    await expect(model.create({ identifier: 'ABC', name: 'Minimum' })).resolves.toEqual(
+    await expect(repo.create({ identifier: 'ABC', name: 'Minimum' })).resolves.toEqual(
       expect.objectContaining({ identifier: 'ABC' }),
     );
-    await expect(model.create({ identifier: 'ABCDEF', name: 'Maximum' })).resolves.toEqual(
+    await expect(repo.create({ identifier: 'ABCDEF', name: 'Maximum' })).resolves.toEqual(
       expect.objectContaining({ identifier: 'ABCDEF' }),
     );
   });
 
   it('filters and paginates projects', async () => {
-    await createProject(model, { name: 'Backlog' });
-    const active = await createProject(model, { name: 'Active' });
+    await createProject(repo, { name: 'Backlog' });
+    const active = await createProject(repo, { name: 'Active' });
     await model.updateStatus(active.id, 'active');
 
     expect(await model.list({ limit: 1, offset: 0, statuses: ['active'] })).toEqual([
@@ -158,7 +205,7 @@ describe('ProjectModel', () => {
   });
 
   it('does not expose or mutate another user project in personal mode', async () => {
-    const project = await createProject(otherModel, { name: 'Private effort' });
+    const project = await createProject(otherRepo, { name: 'Private effort' });
     expect(await model.findById(project.id)).toBeNull();
     expect(await model.update(project.id, { name: 'Hacked' })).toBeNull();
     expect(await model.delete(project.id)).toBeNull();
@@ -172,10 +219,13 @@ describe('ProjectModel', () => {
       primaryOwnerId: userId,
       slug: 'project-workspace',
     });
-    const owner = new ProjectModel(serverDB, userId, 'project-workspace');
+    const ownerRepo = new ProjectRepository(serverDB, userId, 'project-workspace');
     const member = new ProjectModel(serverDB, otherUserId, 'project-workspace');
-    const publicProject = await createProject(owner, { name: 'Public' });
-    const privateProject = await createProject(owner, { name: 'Private', visibility: 'private' });
+    const publicProject = await createProject(ownerRepo, { name: 'Public' });
+    const privateProject = await createProject(ownerRepo, {
+      name: 'Private',
+      visibility: 'private',
+    });
 
     expect(await member.findById(publicProject.id)).toEqual(
       expect.objectContaining({ id: publicProject.id }),
@@ -185,7 +235,7 @@ describe('ProjectModel', () => {
   });
 
   it('binds only accessible agents and knowledge bases', async () => {
-    const project = await createProject(model, { name: 'Bindings' });
+    const project = await createProject(repo, { name: 'Bindings' });
     const [agent] = await serverDB
       .insert(agents)
       .values({ title: 'Researcher', userId })
@@ -235,7 +285,7 @@ describe('ProjectModel', () => {
   });
 
   it('returns null or false for binding operations on inaccessible projects and resources', async () => {
-    const foreignProject = await createProject(otherModel, { name: 'Foreign' });
+    const foreignProject = await createProject(otherRepo, { name: 'Foreign' });
     const [foreignKnowledgeBase] = await serverDB
       .insert(knowledgeBases)
       .values({ name: 'Foreign KB', userId: otherUserId })
@@ -267,7 +317,7 @@ describe('ProjectModel', () => {
     expect(await model.addWork(foreignProject.id, { workId: 'missing' })).toBeNull();
     expect(await model.removeWork(foreignProject.id, 'missing')).toBe(false);
 
-    const project = await createProject(model, { name: 'Local' });
+    const project = await createProject(repo, { name: 'Local' });
     await expect(
       model.addKnowledgeBase(project.id, { knowledgeBaseId: foreignKnowledgeBase.id }),
     ).rejects.toThrow('Knowledge base not found');
@@ -277,8 +327,8 @@ describe('ProjectModel', () => {
   });
 
   it('associates one durable Work with multiple projects without changing Work ownership', async () => {
-    const firstProject = await createProject(model, { name: 'First Work Project' });
-    const secondProject = await createProject(model, { name: 'Second Work Project' });
+    const firstProject = await createProject(repo, { name: 'First Work Project' });
+    const secondProject = await createProject(repo, { name: 'Second Work Project' });
     const [work] = await serverDB
       .insert(works)
       .values({
@@ -313,8 +363,8 @@ describe('ProjectModel', () => {
   });
 
   it('enforces project boundaries in the shared dependency model path', async () => {
-    const firstProject = await createProject(model, { name: 'First' });
-    const secondProject = await createProject(model, { name: 'Second' });
+    const firstProject = await createProject(repo, { name: 'First' });
+    const secondProject = await createProject(repo, { name: 'Second' });
     const taskModel = new TaskModel(serverDB, userId);
     const first = await taskModel.create({ instruction: 'First', projectId: firstProject.id });
     const second = await taskModel.create({ instruction: 'Second', projectId: secondProject.id });
@@ -326,7 +376,7 @@ describe('ProjectModel', () => {
   });
 
   it('requires review state and records immutable human completion decisions', async () => {
-    const project = await createProject(model, { name: 'Reviewed' });
+    const project = await createProject(repo, { name: 'Reviewed' });
     await model.updateStatus(project.id, 'active');
     await model.requestCompletion(project.id);
 
@@ -361,7 +411,7 @@ describe('ProjectModel', () => {
   });
 
   it('requires reopen for completed projects even after archival', async () => {
-    const project = await createProject(model, { name: 'Archived completion' });
+    const project = await createProject(repo, { name: 'Archived completion' });
     await model.updateStatus(project.id, 'active');
     await model.requestCompletion(project.id);
     await model.reviewCompletion(project.id, 'accepted');
@@ -376,7 +426,7 @@ describe('ProjectModel', () => {
   });
 
   it('covers lifecycle guards and missing review targets', async () => {
-    const project = await createProject(model, { name: 'Lifecycle' });
+    const project = await createProject(repo, { name: 'Lifecycle' });
     expect(await model.updateStatus('missing', 'active')).toBeNull();
     await expect(model.updateStatus(project.id, 'completed')).rejects.toThrow(
       'Completion states must be changed through the review workflow',
@@ -404,7 +454,7 @@ describe('ProjectModel', () => {
   });
 
   it('handles completed transitions and a concurrent deletion during status update', async () => {
-    const completed = await createProject(model, { name: 'Completed' });
+    const completed = await createProject(repo, { name: 'Completed' });
     await model.updateStatus(completed.id, 'active');
     await model.requestCompletion(completed.id);
     await model.reviewCompletion(completed.id, 'accepted');
@@ -412,7 +462,7 @@ describe('ProjectModel', () => {
       'A completed project must be reopened',
     );
 
-    const disappearing = await createProject(model, { name: 'Disappearing' });
+    const disappearing = await createProject(repo, { name: 'Disappearing' });
     const snapshot = await model.findManageableById(disappearing.id);
     await serverDB.delete(projects).where(eq(projects.id, disappearing.id));
     vi.spyOn(model, 'findManageableById').mockResolvedValueOnce(snapshot);
@@ -420,7 +470,7 @@ describe('ProjectModel', () => {
   });
 
   it('rejects completion requests from invalid states', async () => {
-    const project = await createProject(model, { name: 'Backlog' });
+    const project = await createProject(repo, { name: 'Backlog' });
     await expect(model.requestCompletion(project.id)).rejects.toThrow(
       'Only active or paused projects can request completion',
     );
@@ -434,7 +484,7 @@ describe('ProjectModel', () => {
   });
 
   it('attaches environments and lists them per project in the owner scope', async () => {
-    const project = await createProject(model, { name: 'Env host' });
+    const project = await createProject(repo, { name: 'Env host' });
     const environmentModel = new EnvironmentModel(serverDB, userId);
     const env = await environmentModel.save({
       name: 'Shared GitHub',
@@ -454,7 +504,7 @@ describe('ProjectModel', () => {
   });
 
   it('lists project conversations with or without directories, retaining each agent', async () => {
-    const project = await createProject(model, { name: 'Topics host' });
+    const project = await createProject(repo, { name: 'Topics host' });
     const topicModel = new TopicModel(serverDB, userId);
     const plain = await topicModel.create({
       agentId: project.coordinatorAgentId,
@@ -485,7 +535,7 @@ describe('ProjectModel', () => {
   });
 
   it('keeps agentless conversations visible in project listings', async () => {
-    const project = await createProject(model, { name: 'Agentless host' });
+    const project = await createProject(repo, { name: 'Agentless host' });
     const topic = await new TopicModel(serverDB, userId).create({
       projectId: project.id,
       title: 'Agentless',

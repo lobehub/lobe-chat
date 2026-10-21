@@ -1,4 +1,3 @@
-import { createProjectCoordinatorAgentConfig } from '@lobechat/builtin-agents';
 import type { ProjectStatus, ProjectVisibility } from '@lobechat/types';
 import { and, asc, desc, eq, inArray, isNull, max, or, sql } from 'drizzle-orm';
 
@@ -17,9 +16,65 @@ import { tasks } from '../schemas/task';
 import { topics } from '../schemas/topic';
 import { works } from '../schemas/work';
 import type { LobeChatDatabase } from '../type';
-import { buildWorkspacePayload, buildWorkspaceWhere } from '../utils/workspace';
+import {
+  buildWorkspacePayload,
+  buildWorkspaceWhere,
+  normalizeWorkspaceId,
+} from '../utils/workspace';
 import { AgentModel } from './agent';
 import { EnvironmentModel } from './environment';
+
+/**
+ * Raised when the identifier a caller picked for a project is already claimed
+ * in the same ownership scope.
+ *
+ * `(workspace_id, identifier)` / `(identifier, user_id)` are backed by unique
+ * indexes, so a duplicate used to surface as a raw `insert into "projects"`
+ * query failure that rolled the whole transaction back (taking the freshly
+ * created coordinator agent with it). Raising this instead lets the API and the
+ * create form treat it as a field-level validation problem.
+ */
+export class ProjectIdentifierTakenError extends Error {
+  readonly identifier: string;
+
+  constructor(identifier: string) {
+    super(`Project identifier "${identifier}" is already in use in this scope`);
+    this.name = 'ProjectIdentifierTakenError';
+    this.identifier = identifier;
+  }
+}
+
+/**
+ * Walk the `cause` chain for the Postgres error that actually failed the
+ * statement and decide whether it is the project identifier unique index.
+ *
+ * Drizzle wraps driver errors, so the `code` / `constraint` fields live on a
+ * nested cause rather than the error we catch. The identifier indexes are
+ * matched by name because the same insert can also trip `projects_slug_*` or
+ * `projects_coordinator_agent_id_unique` — reporting those as "identifier
+ * taken" would point the caller at the wrong field.
+ */
+const isProjectIdentifierConflict = (error: unknown): boolean => {
+  let current: unknown = error;
+  for (let depth = 0; current && typeof current === 'object' && depth < 5; depth++) {
+    const candidate = current as {
+      cause?: unknown;
+      code?: unknown;
+      constraint?: unknown;
+      message?: unknown;
+    };
+    const code = typeof candidate.code === 'string' ? candidate.code : '';
+    const constraint = typeof candidate.constraint === 'string' ? candidate.constraint : '';
+    const message = typeof candidate.message === 'string' ? candidate.message : '';
+
+    if (constraint.startsWith('projects_identifier_')) return true;
+    if (code === '23505' && /projects_identifier_|identifier/i.test(message)) return true;
+
+    current = candidate.cause;
+  }
+
+  return false;
+};
 
 export interface CreateProjectInput {
   avatar?: string;
@@ -28,6 +83,15 @@ export interface CreateProjectInput {
   name: string;
   slug?: string;
   visibility?: ProjectVisibility;
+}
+
+/**
+ * Input for the single-aggregate insert. The coordinator agent belongs to
+ * AgentModel's aggregate, so it is created by `ProjectRepository.create` first
+ * and only its id reaches this model.
+ */
+export interface InsertProjectInput extends CreateProjectInput {
+  coordinatorAgentId: string;
 }
 
 export interface UpdateProjectInput {
@@ -72,50 +136,89 @@ export class ProjectModel {
     return and(this.readable(), eq(projects.userId, this.userId));
   }
 
-  async create(input: CreateProjectInput) {
+  /**
+   * Ownership predicate for `identifier` allocation — **visibility-blind**,
+   * unlike {@link readable}.
+   *
+   * The unique index that guards the column (`projects_identifier_workspace_id_unique`)
+   * is scope-wide, so a private project created by another member still occupies
+   * its identifier. Filtering by visibility here would let a member compute a
+   * "free" identifier that the index then rejects. The index also carries no
+   * recycle-bin predicate, so a stamped-but-present row keeps its identifier —
+   * this must not add `is_deleted` filtering either.
+   */
+  private identifierScope() {
+    const workspaceId = normalizeWorkspaceId(this.workspaceId);
+
+    return workspaceId
+      ? eq(projects.workspaceId, workspaceId)
+      : and(eq(projects.userId, this.userId), isNull(projects.workspaceId));
+  }
+
+  /**
+   * Whether another project already claims `identifier` in this scope.
+   * Mirrors the unique index exactly — see {@link identifierScope}.
+   */
+  async isIdentifierTaken(identifier: string): Promise<boolean> {
+    const normalized = identifier.trim().toUpperCase();
+    if (!normalized) return false;
+
+    const [existing] = await this.db
+      .select({ id: projects.id })
+      .from(projects)
+      .where(and(this.identifierScope(), eq(projects.identifier, normalized)))
+      .limit(1);
+
+    return Boolean(existing);
+  }
+
+  async create(input: InsertProjectInput) {
     const identifier = input.identifier.trim().toUpperCase();
     if (identifier.length < 3 || identifier.length > 6) {
       throw new Error('Project identifier must be between 3 and 6 characters');
     }
 
-    return this.db.transaction(async (tx) => {
-      const coordinatorConfig = createProjectCoordinatorAgentConfig({
-        avatar: input.avatar,
-        description: input.description,
-        identifier,
-        name: input.name,
-      });
-      const coordinator = await new AgentModel(
-        tx as LobeChatDatabase,
-        this.userId,
-        this.workspaceId,
-      ).create({
-        ...coordinatorConfig,
-        visibility: input.visibility,
-        virtual: true,
-      });
+    try {
+      return await this.db.transaction(async (tx) => {
+        // Check the identifier inline, in the same scope the unique index
+        // enforces, so a collision fails as a field error instead of a
+        // mid-transaction query failure.
+        const [existing] = await tx
+          .select({ id: projects.id })
+          .from(projects)
+          .where(and(this.identifierScope(), eq(projects.identifier, identifier)))
+          .limit(1);
+        if (existing) throw new ProjectIdentifierTakenError(identifier);
 
-      const [project] = await tx
-        .insert(projects)
-        .values(
-          buildWorkspacePayload(
-            { userId: this.userId, workspaceId: this.workspaceId },
-            { ...input, coordinatorAgentId: coordinator.id, identifier },
-          ),
-        )
-        .returning();
+        const [project] = await tx
+          .insert(projects)
+          .values(
+            buildWorkspacePayload(
+              { userId: this.userId, workspaceId: this.workspaceId },
+              { ...input, identifier },
+            ),
+          )
+          .returning();
 
-      await tx.insert(projectAgents).values({
-        addedByUserId: this.userId,
-        agentId: coordinator.id,
-        projectId: project.id,
-        responsibility: 'Coordinates project conversations, work, and resources',
-        role: 'coordinator',
-        workspaceId: this.workspaceId ?? null,
+        await tx.insert(projectAgents).values({
+          addedByUserId: this.userId,
+          agentId: input.coordinatorAgentId,
+          projectId: project.id,
+          responsibility: 'Coordinates project conversations, work, and resources',
+          role: 'coordinator',
+          workspaceId: this.workspaceId ?? null,
+        });
+
+        return project;
       });
-
-      return project;
-    });
+    } catch (error) {
+      // The check above is a plain read, so a concurrent create can still slip
+      // through it. Translate the index violation into the same field error
+      // instead of leaking the raw `insert into "projects"` failure.
+      if (error instanceof ProjectIdentifierTakenError) throw error;
+      if (isProjectIdentifierConflict(error)) throw new ProjectIdentifierTakenError(identifier);
+      throw error;
+    }
   }
 
   async delete(id: string) {

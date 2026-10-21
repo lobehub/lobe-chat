@@ -41,6 +41,54 @@ export const getProjectFieldSuggestions = (name: string): ProjectFieldSuggestion
 export const isProjectIdentifierValid = (identifier: string) =>
   PROJECT_IDENTIFIER_REGEX.test(identifier.trim().toUpperCase());
 
+interface ProjectNameFormState {
+  identifier: string;
+  identifierConflict: boolean;
+  identifierEdited: boolean;
+  name: string;
+  slug: string;
+  slugEdited: boolean;
+}
+
+/**
+ * Merge a new project name into the form state.
+ *
+ * Renaming can leave the identifier untouched — a manually chosen one is kept
+ * as-is, and a derived one can resolve to the same prefix — so a
+ * server-confirmed conflict must survive until the identifier itself changes.
+ * Clearing it on every keystroke would re-enable submit for the same doomed
+ * request.
+ */
+export const applyProjectName = <T extends ProjectNameFormState>(current: T, name: string): T => {
+  const suggestions = getProjectFieldSuggestions(name);
+  const identifier = current.identifierEdited ? current.identifier : suggestions.identifier;
+
+  return {
+    ...current,
+    identifier,
+    identifierConflict: current.identifierConflict && identifier === current.identifier,
+    name,
+    slug: current.slugEdited ? current.slug : suggestions.slug,
+  };
+};
+
+/**
+ * Whether an already-loaded project in the active scope claims `identifier`.
+ *
+ * Identifiers are unique per scope (`projects_identifier_workspace_id_unique`),
+ * so the form checks this inline and shows the conflict next to the field. The
+ * list is visibility-filtered, so another member's private project can slip
+ * past here — the server re-checks and answers `CONFLICT` for that case.
+ */
+export const isProjectIdentifierTaken = (
+  identifier: string,
+  projects: readonly { identifier: string }[],
+) => {
+  const normalized = identifier.trim().toUpperCase();
+
+  return Boolean(normalized) && projects.some((project) => project.identifier === normalized);
+};
+
 export const isProjectSlugValid = (slug: string) => {
   const normalizedSlug = slug.trim().toLowerCase();
   return !normalizedSlug || PROJECT_SLUG_REGEX.test(normalizedSlug);
