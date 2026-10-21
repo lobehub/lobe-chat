@@ -24,11 +24,21 @@ export const waitForConnectorOAuth = async (
   signal?.throwIfAborted();
   if (isDesktop) {
     // Native ownership survives provider COOP headers that sever window.opener.
-    const result = await ensureElectronIpc().connectorOAuth.authorize({
-      authorizationUrl,
-      connectorId,
-    });
-    if (result !== 'success') throw new ConnectorOAuthError(result);
+    const oauth = ensureElectronIpc().connectorOAuth;
+    const requestId = crypto.randomUUID();
+    const onAbort = () => {
+      oauth.cancel({ requestId }).catch((error) => {
+        console.error('Failed to cancel native connector authorization', error);
+      });
+    };
+    signal?.addEventListener('abort', onAbort, { once: true });
+    try {
+      const result = await oauth.authorize({ authorizationUrl, connectorId, requestId });
+      if (signal?.aborted) throw new ConnectorOAuthError('dismissed');
+      if (result !== 'success') throw new ConnectorOAuthError(result);
+    } finally {
+      signal?.removeEventListener('abort', onAbort);
+    }
     return;
   }
   if (!popup) throw new ConnectorOAuthError('blocked');
