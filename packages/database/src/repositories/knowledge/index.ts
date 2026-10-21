@@ -599,6 +599,62 @@ export class KnowledgeRepo {
   }
 
   /**
+   * The Docs home list: pages and uploaded files together, newest update first,
+   * wherever they live (a knowledge base or not; rows carry `knowledgeBaseIds`
+   * for the location column). `creator` narrows to the caller's own rows
+   * (`self`) or to what other workspace members shared (`others`); private rows
+   * of other members never pass the ownership scope in the first place.
+   * Folders, page-backing file rows and rows of restricted knowledge bases are
+   * excluded in SQL, so `limit` is never eaten by rows filtered out later.
+   */
+  async queryHomeItems({
+    creator,
+    excludeKnowledgeBaseIds,
+    limit = 50,
+  }: {
+    creator?: 'others' | 'self';
+    excludeKnowledgeBaseIds?: string[];
+    limit?: number;
+  } = {}): Promise<KnowledgeItem[]> {
+    const creatorFilter = (column: AnyPgColumn) =>
+      creator === 'self'
+        ? eq(column, this.userId)
+        : creator === 'others'
+          ? ne(column, this.userId)
+          : undefined;
+
+    const fileArm = this.fileArm(
+      [
+        creatorFilter(f.userId),
+        ne(f.fileType, CUSTOM_DOCUMENT_FILE_TYPE),
+        excludeKnowledgeBaseIds?.length
+          ? this.notInKnowledgeBases(excludeKnowledgeBaseIds)
+          : undefined,
+      ],
+      undefined,
+      undefined,
+      false,
+    );
+
+    const documentArm = this.documentArm(
+      [
+        creatorFilter(d.userId),
+        eq(d.fileType, CUSTOM_DOCUMENT_FILE_TYPE),
+        excludeKnowledgeBaseIds?.length
+          ? or(isNull(d.knowledgeBaseId), notInArray(d.knowledgeBaseId, excludeKnowledgeBaseIds))
+          : undefined,
+      ],
+      false,
+    );
+
+    const rows = await unionAll(fileArm, documentArm)
+      .orderBy(this.orderBy(SortType.Desc, 'updatedAt'))
+      .limit(limit);
+
+    return rows.map(toKnowledgeItem);
+  }
+
+  /**
    * Delete item by id - routes to appropriate model based on sourceType
    */
   async deleteItem(id: string, sourceType: 'file' | 'document'): Promise<void> {

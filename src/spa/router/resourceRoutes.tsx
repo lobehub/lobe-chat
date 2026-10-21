@@ -65,7 +65,6 @@ export const resourceRoute: RouteObject = {
             }),
           },
           index: true,
-          loader: worksLoader,
         },
         ...BusinessResourceRoutes,
         ...resourceDriveRoutes,
