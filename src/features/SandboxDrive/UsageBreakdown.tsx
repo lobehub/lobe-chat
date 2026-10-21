@@ -9,6 +9,7 @@ import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import RetainedMemberDrives from '@/business/client/features/RetainedMemberDrives';
+import SandboxStorageOverQuotaAction from '@/business/client/features/SandboxStorageOverQuotaAction';
 import { formatSize } from '@/utils/format';
 
 import type { useDriveUsage } from './useDriveData';
@@ -378,6 +379,8 @@ export const UsageBreakdown = memo<{
           {t(refused ? 'drive.usage.over' : 'drive.usage.overBilled')}
         </Text>
       )}
+      {/* While writes are refused, the way to keep saving — not only the fact. */}
+      {refused && <SandboxStorageOverQuotaAction />}
     </Flexbox>
   );
 });

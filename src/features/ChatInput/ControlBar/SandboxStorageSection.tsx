@@ -3,10 +3,10 @@
 import { memo } from 'react';
 
 import SafeBoundary from '@/components/ErrorBoundary';
-import { useAgentStore } from '@/store/agent';
 
 import { useTopicId } from '../hooks/useTopicId';
 import SandboxDrivePicker from './SandboxDrivePicker';
+import SandboxEnvironmentPicker from './SandboxEnvironmentPicker';
 import { useSandboxPlacement } from './useSandboxPlacement';
 import { useSandboxStorageAccess } from './useSandboxStorageAccess';
 
@@ -20,9 +20,10 @@ interface SandboxStorageSectionProps {
  * same way: one chip that always names the slot, whose menu holds every place
  * the run could work.
  *
- * Nothing chosen means a temporary sandbox, cleaned up with the session. A
- * folder on the drive keeps its files; an environment directory keeps what its
- * setup installed as well.
+ * Nothing chosen means a temporary sandbox, cleaned up with the session; a
+ * folder on the drive keeps its files. Beside it, the environment the working
+ * directory is initialized from — a separate choice, so a temporary sandbox
+ * can start from a checkout too.
  *
  * A plan without a drive still gets the chip: the temporary sandbox is
  * everyone's, and the way to a plan is a row in the same menu rather than a
@@ -31,18 +32,19 @@ interface SandboxStorageSectionProps {
 const SandboxStorageSectionInner = memo<SandboxStorageSectionProps>(({ agentId }) => {
   const { status } = useSandboxStorageAccess(agentId);
   const { selection, setSelection, topicId } = useSandboxPlacement(agentId, useTopicId());
-  const agentIsPublic = useAgentStore((s) => s.agentMap[agentId]?.visibility === 'public');
 
   if (status === 'hidden') return null;
 
   return (
-    <SandboxDrivePicker
-      agentIsPublic={agentIsPublic}
-      entitled={status === 'ready'}
-      topicId={topicId}
-      value={selection}
-      onChange={setSelection}
-    />
+    <>
+      <SandboxDrivePicker
+        entitled={status === 'ready'}
+        topicId={topicId}
+        value={selection}
+        onChange={setSelection}
+      />
+      <SandboxEnvironmentPicker value={selection} onChange={setSelection} />
+    </>
   );
 });
 

@@ -32,6 +32,8 @@ export const initialTopicMetadataSchema = z.object({
    */
   /** Which workspace drive the placement is on; see `ChatTopicMetadata.sandboxDrive`. */
   sandboxDrive: z.enum(['personal', 'public']).optional(),
+  /** The environment to initialize the sandbox from; see `ChatTopicMetadata.sandboxEnvironmentId`. */
+  sandboxEnvironmentId: z.string().max(255).optional(),
   sandboxInstanceId: z.string().optional(),
   sandboxWorkingDirectory: z.string().max(1024).optional(),
   workingDirectory: z.string().optional(),

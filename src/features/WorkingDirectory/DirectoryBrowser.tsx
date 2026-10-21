@@ -5,7 +5,6 @@ import {
   ArrowUpIcon,
   CircleAlertIcon,
   FolderPlusIcon,
-  HardDriveIcon,
   HouseIcon,
   RefreshCwIcon,
 } from 'lucide-react';
@@ -16,7 +15,6 @@ import { useTranslation } from 'react-i18next';
 import NavItem from '@/features/NavPanel/components/NavItem';
 
 import type { DirectorySource } from './directorySource';
-import { DriveBreadcrumb } from './DriveBreadcrumb';
 import { getFolderIcon } from './folderIcons';
 import { NewFolderInput } from './NewFolderInput';
 import { useDirectoryBrowserState } from './useDirectoryBrowserState';
@@ -110,10 +108,6 @@ export const DirectoryBrowser = ({
   // nothing trustworthy about this folder, so it can be neither used nor
   // browsed from until a retry succeeds.
   const canUseDirectory = !isLoading && !error && isPathConfirmed(directory?.path);
-  // A browsed source (the drive) reads its place as a breadcrumb and offers a
-  // new folder as a row of the list; a typed one (a device) keeps the address
-  // field and its toolbar.
-  const browsed = !!source.rootLabel;
   const blockedReason = directory ? source.selectBlockedReason?.(directory.path) : undefined;
   const displayedPath =
     draft ??
@@ -131,78 +125,57 @@ export const DirectoryBrowser = ({
       {description !== null && (
         <Text type={'secondary'}>{description ?? t('workingDirectory.browseDescription')}</Text>
       )}
-      {browsed ? (
-        <Flexbox horizontal align={'center'} gap={8} justify={'space-between'}>
-          <DriveBreadcrumb
-            rootIconOnly
-            icon={HardDriveIcon}
-            path={directory?.path ?? path ?? ''}
-            rootLabel={source.rootLabel!}
-            onNavigate={(next) => navigate(next || undefined)}
+      <Flexbox horizontal align={'center'} gap={8}>
+        <Flexbox horizontal flex={'none'} gap={2}>
+          <ActionIcon
+            aria-label={t('workingDirectory.home')}
+            disabled={loading}
+            icon={HouseIcon}
+            title={t('workingDirectory.home')}
+            onClick={() => navigate()}
+          />
+          <ActionIcon
+            aria-label={t('workingDirectory.parentFolder')}
+            disabled={loading || typeof directory?.parentPath !== 'string'}
+            icon={ArrowUpIcon}
+            title={t('workingDirectory.parentFolder')}
+            onClick={() =>
+              typeof directory?.parentPath === 'string' &&
+              navigate(directory.parentPath || undefined)
+            }
+          />
+          <ActionIcon
+            aria-label={t('workingDirectory.newFolder')}
+            disabled={loading || !canUseDirectory || !!error}
+            icon={FolderPlusIcon}
+            title={t('workingDirectory.newFolder')}
+            onClick={() => setCreatingFolder(true)}
           />
           <ActionIcon
             aria-label={t('workingDirectory.refreshFolders')}
             disabled={loading || !directory}
             icon={RefreshCwIcon}
             loading={isRefreshing}
-            size={'small'}
             title={t('workingDirectory.refreshFolders')}
             onClick={() => void refresh()}
           />
         </Flexbox>
-      ) : (
-        <Flexbox horizontal align={'center'} gap={8}>
-          <Flexbox horizontal flex={'none'} gap={2}>
-            <ActionIcon
-              aria-label={t('workingDirectory.home')}
-              disabled={loading}
-              icon={HouseIcon}
-              title={t('workingDirectory.home')}
-              onClick={() => navigate()}
-            />
-            <ActionIcon
-              aria-label={t('workingDirectory.parentFolder')}
-              disabled={loading || typeof directory?.parentPath !== 'string'}
-              icon={ArrowUpIcon}
-              title={t('workingDirectory.parentFolder')}
-              onClick={() =>
-                typeof directory?.parentPath === 'string' &&
-                navigate(directory.parentPath || undefined)
-              }
-            />
-            <ActionIcon
-              aria-label={t('workingDirectory.newFolder')}
-              disabled={loading || !canUseDirectory || !!error}
-              icon={FolderPlusIcon}
-              title={t('workingDirectory.newFolder')}
-              onClick={() => setCreatingFolder(true)}
-            />
-            <ActionIcon
-              aria-label={t('workingDirectory.refreshFolders')}
-              disabled={loading || !directory}
-              icon={RefreshCwIcon}
-              loading={isRefreshing}
-              title={t('workingDirectory.refreshFolders')}
-              onClick={() => void refresh()}
-            />
-          </Flexbox>
-          <Input
-            aria-label={t('workingDirectory.current')}
-            disabled={loading}
-            placeholder={t('workingDirectory.placeholder')}
-            readOnly={!source.editablePath}
-            style={{ flex: 1, minWidth: 0 }}
-            value={displayedPath}
-            onChange={(event) => editPath(event.target.value)}
-            onPressEnter={() => navigate(displayedPath.trim() || undefined)}
-          />
-          {source.editablePath && (
-            <Button disabled={loading} onClick={() => navigate(displayedPath.trim() || undefined)}>
-              {t('workingDirectory.openPath')}
-            </Button>
-          )}
-        </Flexbox>
-      )}
+        <Input
+          aria-label={t('workingDirectory.current')}
+          disabled={loading}
+          placeholder={t('workingDirectory.placeholder')}
+          readOnly={!source.editablePath}
+          style={{ flex: 1, minWidth: 0 }}
+          value={displayedPath}
+          onChange={(event) => editPath(event.target.value)}
+          onPressEnter={() => navigate(displayedPath.trim() || undefined)}
+        />
+        {source.editablePath && (
+          <Button disabled={loading} onClick={() => navigate(displayedPath.trim() || undefined)}>
+            {t('workingDirectory.openPath')}
+          </Button>
+        )}
+      </Flexbox>
       {directory?.roots && directory.roots.length > 1 && (
         <Flexbox horizontal gap={8} wrap={'wrap'}>
           {directory.roots.map((root) => (
@@ -226,7 +199,7 @@ export const DirectoryBrowser = ({
         ) : (
           <>
             {notice}
-            {!browsed && creatingFolder && canUseDirectory && directory && (
+            {creatingFolder && canUseDirectory && directory && (
               <NewFolderInput
                 parentPath={directory.path}
                 source={source}
@@ -241,7 +214,7 @@ export const DirectoryBrowser = ({
             )}
             {(error ? [] : entries).map((entry) => {
               const disabled = loading || !!entry.disabled;
-              const activate = () => (entry.onActivate ? entry.onActivate() : navigate(entry.path));
+              const activate = () => navigate(entry.path);
 
               return (
                 <NavItem
@@ -277,47 +250,10 @@ export const DirectoryBrowser = ({
                 </Button>
               </Flexbox>
             ) : directory && entries.length === 0 && !creatingFolder ? (
-              <Flexbox
-                align={'center'}
-                flex={browsed ? 'none' : 1}
-                justify={'center'}
-                padding={browsed ? 12 : 0}
-              >
+              <Flexbox align={'center'} flex={1} justify={'center'}>
                 <Text type={'secondary'}>{t('workingDirectory.foldersEmpty')}</Text>
               </Flexbox>
             ) : null}
-            {browsed &&
-              !error &&
-              canUseDirectory &&
-              directory &&
-              (creatingFolder ? (
-                <NewFolderInput
-                  parentPath={directory.path}
-                  source={source}
-                  onCancel={() => setCreatingFolder(false)}
-                  onCreated={(createdPath) => {
-                    void retry();
-                    navigate(createdPath);
-                  }}
-                />
-              ) : (
-                <NavItem
-                  disabled={loading}
-                  flex={'none'}
-                  icon={FolderPlusIcon}
-                  role={'button'}
-                  tabIndex={loading ? -1 : 0}
-                  title={t('workingDirectory.newFolder')}
-                  titleColor={cssVar.colorTextSecondary}
-                  onClick={() => setCreatingFolder(true)}
-                  onKeyDown={(event) => {
-                    if (!loading && (event.key === 'Enter' || event.key === ' ')) {
-                      event.preventDefault();
-                      setCreatingFolder(true);
-                    }
-                  }}
-                />
-              ))}
             {hasMore && !error && (
               <Button disabled={loading} loading={isLoadingMore} onClick={() => void loadMore()}>
                 {t('workingDirectory.loadMoreFolders')}
@@ -327,18 +263,13 @@ export const DirectoryBrowser = ({
         )}
       </Flexbox>
       {submitError && <SubmitError detail={submitError} />}
-      {!browsed && blockedReason && canUseDirectory && (
+      {blockedReason && canUseDirectory && (
         <Text fontSize={12} type={'warning'}>
           {blockedReason}
         </Text>
       )}
       <Flexbox horizontal align={'center'} gap={8} justify={'space-between'} wrap={'wrap'}>
-        {browsed ? (
-          // Why the folder cannot be used, beside the button it disables.
-          <Text fontSize={12} style={{ flex: 1, minWidth: 0 }} type={'secondary'}>
-            {blockedReason && canUseDirectory ? blockedReason : null}
-          </Text>
-        ) : onManual ? (
+        {onManual ? (
           <Button disabled={loading} onClick={() => onManual(displayedPath)}>
             {t('workingDirectory.enterPathManually')}
           </Button>
@@ -356,9 +287,7 @@ export const DirectoryBrowser = ({
             type={'primary'}
             onClick={() => directory && onSelect(directory.path)}
           >
-            {browsed && blockedReason && canUseDirectory
-              ? t('workingDirectory.drive.pickFolderFirst')
-              : t('workingDirectory.useFolder')}
+            {t('workingDirectory.useFolder')}
           </Button>
         </Flexbox>
       </Flexbox>

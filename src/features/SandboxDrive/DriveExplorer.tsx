@@ -3,13 +3,11 @@
 import type { SandboxDrive } from '@lobechat/builtin-tool-cloud-sandbox';
 import {
   ActionIcon,
-  Alert,
   Button,
   confirmModal,
   DropdownMenu,
   Flexbox,
   Icon,
-  Tag,
   Text,
   toast,
   Tooltip,
@@ -18,21 +16,19 @@ import { cssVar } from '@lobehub/ui/stylex/cssVar.stylex';
 import * as stylex from '@stylexjs/stylex';
 import dayjs from 'dayjs';
 import {
-  FileIcon,
-  FolderIcon,
   FolderPlusIcon,
   HardDriveIcon,
   LockIcon,
   MoreHorizontalIcon,
-  PackageIcon,
   PencilIcon,
   RefreshCwIcon,
   Trash2Icon,
   UsersIcon,
 } from 'lucide-react';
-import { memo, type ReactNode, useMemo, useState } from 'react';
+import { memo, type ReactNode, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import FileIcon from '@/components/FileIcon';
 import { describeError } from '@/features/EnvironmentManager/errorMessage';
 import {
   DriveBreadcrumb,
@@ -44,12 +40,32 @@ import {
 import { sandboxStorageService } from '@/services/sandboxStorage';
 import { formatSize } from '@/utils/format';
 
-import { useDriveDirectories, useDriveFiles, useRefreshDrive } from './useDriveData';
+import { useDriveFiles, useRefreshDrive } from './useDriveData';
 
-/** The row's trailing columns, fixed so names, times and menus line up row to row. */
-const SIZE_WIDTH = 72;
-const TIME_WIDTH = 88;
+/**
+ * The columns after the name, fixed so every row lines up under the header —
+ * the shape of a desktop file manager's list view. The date is absolute and
+ * never wraps; its relative form is the tooltip.
+ */
+const MODIFIED_WIDTH = 136;
+const SIZE_WIDTH = 80;
+const KIND_WIDTH = 120;
 const ACTIONS_WIDTH = 28;
+
+/** What an entry is, the way a file manager's Kind column says it. */
+const entryKind = (
+  entry: { isDirectory: boolean; isGitRepository?: boolean; name: string },
+  t: (key: string, options?: Record<string, unknown>) => string,
+) => {
+  if (entry.isGitRepository) return t('drive.explorer.kind.gitRepository');
+  if (entry.isDirectory) return t('drive.explorer.kind.folder');
+  const dot = entry.name.lastIndexOf('.');
+  const extension = dot > 0 ? entry.name.slice(dot + 1) : '';
+
+  return extension
+    ? t('drive.explorer.kind.fileWithExtension', { extension: extension.toUpperCase() })
+    : t('drive.explorer.kind.file');
+};
 
 const styles = stylex.create({
   clickable: {
@@ -60,6 +76,11 @@ const styles = stylex.create({
   entryIcon: {
     color: cssVar.colorTextSecondary,
     flex: 'none',
+  },
+  columnLabel: {
+    color: cssVar.colorTextTertiary,
+    fontSize: 12,
+    whiteSpace: 'nowrap',
   },
   frame: {
     backgroundColor: cssVar.colorBgContainer,
@@ -75,8 +96,18 @@ const styles = stylex.create({
     overflowY: 'auto',
     padding: 4,
   },
+  header: {
+    borderBlockEndColor: cssVar.colorBorderSecondary,
+    borderBlockEndStyle: 'solid',
+    borderBlockEndWidth: 1,
+    paddingBlock: 6,
+    paddingInline: 16,
+  },
   muted: {
     color: cssVar.colorTextTertiary,
+  },
+  nowrap: {
+    whiteSpace: 'nowrap',
   },
   row: {
     backgroundColor: { 'default': null, ':hover': cssVar.colorFillQuaternary },
@@ -97,30 +128,26 @@ const styles = stylex.create({
 
 interface DriveExplorerProps {
   drive: SandboxDrive;
-  /** In a workspace, where the public drive's root holds a reminder for legacy directories. */
+  /** In a workspace, where the drives are the public one and the member's own. */
   isWorkspace: boolean;
   /** Before the toolbar's actions — a personal account's usage, which is this drive's alone. */
   toolbarExtra?: ReactNode;
 }
 
 /**
- * One drive, browsed like a file manager: folders and files, a new folder,
- * rename and delete for ordinary entries.
+ * One drive, browsed like a desktop file manager's list view: a header, then
+ * each folder and file with its icon, when it changed, its size and its kind;
+ * a new folder, rename and delete.
  *
- * Environment directories sit at the drive's root with a badge. They are the
- * saved copy of a sandbox's work tree and written by its own sessions alone,
- * so they can be opened and looked through here but never changed: no rename,
- * no delete, no new folder inside — the server refuses all three anyway. A
- * private environment's directory left on the public drive from before
- * personal drives is hidden by the server; its owner is told to rebuild it.
+ * Every folder is an ordinary one. A folder a code environment initialized is
+ * a checkout like any other — environments are one-time initializers — so
+ * the only thing said about it is that it is a git repository.
  */
 const DriveExplorer = memo<DriveExplorerProps>(({ drive, isWorkspace, toolbarExtra }) => {
   const { t } = useTranslation(['setting', 'device', 'common']);
   const [path, setPath] = useState('');
   const [creating, setCreating] = useState(false);
-  const [rebuildDismissed, setRebuildDismissed] = useState(false);
   const files = useDriveFiles(drive, path);
-  const directories = useDriveDirectories(drive);
   const refreshDrive = useRefreshDrive();
 
   const tSetting = (key: string, options?: Record<string, unknown>) =>
@@ -128,24 +155,6 @@ const DriveExplorer = memo<DriveExplorerProps>(({ drive, isWorkspace, toolbarExt
       ...options,
       ns: 'setting',
     });
-
-  const environmentDirectories = useMemo(
-    () =>
-      new Map(
-        (directories.data?.instances ?? [])
-          .filter((instance) => !instance.rebuildRequired)
-          .map((instance) => [instance.workingDirectory, instance]),
-      ),
-    [directories.data],
-  );
-  const toRebuild = (directories.data?.instances ?? []).filter(
-    (instance) => instance.rebuildRequired,
-  );
-
-  // Inside an environment directory everything is read-only, however deep.
-  const insideEnvironment = [...environmentDirectories.keys()].find(
-    (directory) => path === directory || path.startsWith(`${directory}/`),
-  );
 
   const entries = [...(files.data?.entries ?? [])].sort(
     (a, b) => Number(b.isDirectory) - Number(a.isDirectory) || a.name.localeCompare(b.name),
@@ -200,10 +209,7 @@ const DriveExplorer = memo<DriveExplorerProps>(({ drive, isWorkspace, toolbarExt
       title: t('drive.explorer.deleteTitle', { name: entry.name }),
     });
 
-  const readOnlyHere = !!insideEnvironment;
   const scope = drive === 'public' && isWorkspace ? 'public' : 'personal';
-  const showRebuild =
-    isWorkspace && drive === 'public' && !path && toRebuild.length > 0 && !rebuildDismissed;
 
   const menuFor = (entry: { isDirectory: boolean; name: string; path: string }) => (
     <span
@@ -277,47 +283,50 @@ const DriveExplorer = memo<DriveExplorerProps>(({ drive, isWorkspace, toolbarExt
           title={t('workingDirectory.refreshFolders', { ns: 'device' })}
           onClick={() => void refreshDrive()}
         />
-        <Tooltip title={readOnlyHere ? t('drive.explorer.readOnly') : undefined}>
-          <Button
-            disabled={readOnlyHere || !!files.error}
-            icon={<Icon icon={FolderPlusIcon} />}
-            type={'primary'}
-            onClick={() => setCreating(true)}
-          >
-            {t('drive.explorer.newFolder')}
-          </Button>
-        </Tooltip>
+        <Button
+          disabled={!!files.error}
+          icon={<Icon icon={FolderPlusIcon} />}
+          type={'primary'}
+          onClick={() => setCreating(true)}
+        >
+          {t('drive.explorer.newFolder')}
+        </Button>
       </Flexbox>
 
-      {showRebuild && (
-        <Alert
-          showIcon
-          closable={{ onClose: () => setRebuildDismissed(true) }}
-          style={{ borderRadius: 0 }}
-          type={'warning'}
-          variant={'soft'}
-          title={
-            <Text fontSize={13} weight={400}>
-              {t('workingDirectory.drive.rebuildInPersonal', {
-                count: toRebuild.length,
-                names: toRebuild.map((instance) => instance.name).join(', '),
-                ns: 'device',
-              })}
-            </Text>
-          }
-        />
-      )}
+      <Flexbox
+        horizontal
+        align={'center'}
+        className={stylex.props(styles.header).className}
+        gap={10}
+      >
+        <Text
+          className={stylex.props(styles.columnLabel).className}
+          style={{ flex: 1, paddingInlineStart: 26 }}
+        >
+          {t('drive.explorer.columns.name')}
+        </Text>
+        <Text
+          className={stylex.props(styles.columnLabel).className}
+          style={{ flex: 'none', width: MODIFIED_WIDTH }}
+        >
+          {t('drive.explorer.columns.modified')}
+        </Text>
+        <Text
+          className={stylex.props(styles.columnLabel).className}
+          style={{ flex: 'none', textAlign: 'end', width: SIZE_WIDTH }}
+        >
+          {t('drive.explorer.columns.size')}
+        </Text>
+        <Text
+          className={stylex.props(styles.columnLabel).className}
+          style={{ flex: 'none', width: KIND_WIDTH }}
+        >
+          {t('drive.explorer.columns.kind')}
+        </Text>
+        <span style={{ flex: 'none', width: ACTIONS_WIDTH }} />
+      </Flexbox>
 
       <Flexbox className={stylex.props(styles.list).className} gap={2}>
-        {readOnlyHere && (
-          <Flexbox horizontal align={'center'} gap={6} paddingBlock={6} paddingInline={12}>
-            <Icon className={stylex.props(styles.muted).className} icon={LockIcon} size={12} />
-            <Text fontSize={12} type={'secondary'}>
-              {t('drive.explorer.readOnlyHint')}
-            </Text>
-          </Flexbox>
-        )}
-
         {creating && (
           <Flexbox paddingInline={6}>
             <NewFolderInput
@@ -328,10 +337,6 @@ const DriveExplorer = memo<DriveExplorerProps>(({ drive, isWorkspace, toolbarExt
                   await sandboxStorageService.createDirectory({ drive, path: created });
                   return { path: created };
                 },
-                folderErrorKey: (error) =>
-                  (error as { message?: string })?.message === 'INSTANCE_READ_ONLY'
-                    ? 'workingDirectory.drive.readOnly'
-                    : undefined,
               }}
               onCancel={() => setCreating(false)}
               onCreated={() => {
@@ -342,37 +347,26 @@ const DriveExplorer = memo<DriveExplorerProps>(({ drive, isWorkspace, toolbarExt
           </Flexbox>
         )}
 
-        {files.isLoading || (!path && directories.isLoading) ? (
+        {files.isLoading ? (
           <Flexbox align={'center'} flex={1} justify={'center'} padding={24}>
             <Text type={'secondary'}>{t('workingDirectory.foldersLoading', { ns: 'device' })}</Text>
           </Flexbox>
-        ) : files.error || (!path && directories.error) ? (
-          // At the root the instances say which folders are environment
-          // directories, which are read-only here; without them such a folder
-          // would offer rename and delete, so their failure fails the listing.
+        ) : files.error ? (
           <Flexbox align={'center'} flex={1} gap={12} justify={'center'} padding={24}>
             <Text type={'secondary'}>{t('drive.explorer.loadFailed')}</Text>
-            <Button
-              onClick={() => void Promise.all([files.mutate(), !path && directories.mutate()])}
-            >
-              {t('retry', { ns: 'common' })}
-            </Button>
+            <Button onClick={() => void files.mutate()}>{t('retry', { ns: 'common' })}</Button>
           </Flexbox>
         ) : entries.length === 0 && !creating ? (
           <Flexbox align={'center'} flex={1} gap={12} justify={'center'} padding={24}>
             <Text type={'secondary'}>
               {t(path ? 'drive.explorer.empty' : `drive.explorer.emptyRoot.${scope}`)}
             </Text>
-            {!readOnlyHere && (
-              <Button icon={<Icon icon={FolderPlusIcon} />} onClick={() => setCreating(true)}>
-                {t('drive.explorer.newFolder')}
-              </Button>
-            )}
+            <Button icon={<Icon icon={FolderPlusIcon} />} onClick={() => setCreating(true)}>
+              {t('drive.explorer.newFolder')}
+            </Button>
           </Flexbox>
         ) : (
           entries.map((entry) => {
-            const environment = !path ? environmentDirectories.get(entry.path) : undefined;
-            const readOnly = !!environment || readOnlyHere;
             const open = entry.isDirectory ? () => setPath(entry.path) : undefined;
 
             return (
@@ -397,43 +391,48 @@ const DriveExplorer = memo<DriveExplorerProps>(({ drive, isWorkspace, toolbarExt
                     : undefined
                 }
               >
-                <Icon
-                  className={stylex.props(styles.entryIcon).className}
-                  icon={environment ? PackageIcon : entry.isDirectory ? FolderIcon : FileIcon}
-                  size={16}
-                />
-                <Flexbox horizontal align={'center'} flex={1} gap={8} style={{ minWidth: 0 }}>
-                  <Text ellipsis fontSize={13}>
-                    {entry.name}
+                <span {...stylex.props(styles.entryIcon)}>
+                  <FileIcon
+                    fileName={entry.isGitRepository ? '.git' : entry.name}
+                    isDirectory={entry.isDirectory}
+                    size={16}
+                  />
+                </span>
+                <Text ellipsis fontSize={13} style={{ flex: 1, minWidth: 0 }}>
+                  {entry.name}
+                </Text>
+                <Tooltip title={entry.modifiedAt ? dayjs(entry.modifiedAt).fromNow() : undefined}>
+                  <Text
+                    className={stylex.props(styles.nowrap).className}
+                    fontSize={12}
+                    style={{ flex: 'none', width: MODIFIED_WIDTH }}
+                    type={'secondary'}
+                  >
+                    {entry.modifiedAt ? dayjs(entry.modifiedAt).format('YYYY-MM-DD HH:mm') : ''}
                   </Text>
-                  {/* Which environment built it; read-only follows from that and is
-                      said once inside, not as a second badge on every row. */}
-                  {environment && (
-                    <Tooltip title={t('drive.explorer.readOnlyHint')}>
-                      <Tag icon={<Icon icon={PackageIcon} size={12} />} size={'small'}>
-                        {environment.name === entry.name
-                          ? t('workingDirectory.drive.environmentBadge', { ns: 'device' })
-                          : environment.name}
-                      </Tag>
-                    </Tooltip>
-                  )}
-                </Flexbox>
+                </Tooltip>
                 <Text
+                  className={stylex.props(styles.nowrap).className}
                   fontSize={12}
                   style={{ flex: 'none', textAlign: 'end', width: SIZE_WIDTH }}
                   type={'secondary'}
                 >
-                  {!entry.isDirectory && entry.size !== undefined ? formatSize(entry.size) : ''}
+                  {entry.isDirectory
+                    ? '--'
+                    : entry.size !== undefined
+                      ? formatSize(entry.size)
+                      : ''}
                 </Text>
                 <Text
+                  ellipsis
                   fontSize={12}
-                  style={{ flex: 'none', textAlign: 'end', width: TIME_WIDTH }}
+                  style={{ flex: 'none', width: KIND_WIDTH }}
                   type={'secondary'}
                 >
-                  {entry.modifiedAt ? dayjs(entry.modifiedAt).fromNow() : ''}
+                  {entryKind(entry, tSetting)}
                 </Text>
                 <Flexbox flex={'none'} style={{ width: ACTIONS_WIDTH }}>
-                  {!readOnly && menuFor(entry)}
+                  {menuFor(entry)}
                 </Flexbox>
               </Flexbox>
             );

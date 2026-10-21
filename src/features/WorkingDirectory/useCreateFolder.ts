@@ -21,11 +21,7 @@ const getErrorMessageKey = (error: unknown) => {
 
 interface UseCreateFolderOptions {
   /** Makes the folder wherever the picker is browsing — a device, or the drive. */
-  create: (
-    parentPath: string,
-    name: string,
-    options?: Record<string, unknown>,
-  ) => Promise<{ path: string }>;
+  create: (parentPath: string, name: string) => Promise<{ path: string }>;
   /** A source's own reading of an error it threw; the generic one otherwise. */
   errorMessageKey?: (error: unknown) => string | undefined;
   onCreated: (path: string) => void;
@@ -50,7 +46,6 @@ export const useCreateFolder = ({
   const [name, setNameState] = useState('');
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string>();
-  const [options, setOptions] = useState<Record<string, unknown>>({});
 
   const setName = (value: string) => {
     setNameState(value);
@@ -75,7 +70,7 @@ export const useCreateFolder = ({
     setError(undefined);
     setPending(true);
     try {
-      const result = await create(parentPath, next, options);
+      const result = await create(parentPath, next);
       if (mounted.current) onCreated(result.path);
       else toast.success(t('workingDirectory.newFolderCreated', { path: result.path }));
     } catch (cause) {
@@ -88,5 +83,5 @@ export const useCreateFolder = ({
     }
   };
 
-  return { error, name, options, pending, setName, setOptions, submit };
+  return { error, name, pending, setName, submit };
 };

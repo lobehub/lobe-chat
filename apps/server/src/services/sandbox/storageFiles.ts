@@ -17,6 +17,8 @@ const log = debug('lobe-server:sandbox:workspace-files');
  */
 export interface SandboxStorageFileEntry {
   isDirectory: boolean;
+  /** A directory that is the top of a git checkout; absent where it is not. */
+  isGitRepository?: boolean;
   modifiedAt?: string;
   name: string;
   /** Relative to the workspace root. */

@@ -22,6 +22,11 @@ export interface SandboxEnvironmentSpecification {
   sources?: Extract<EnvironmentSource, { kind: 'git' }>[];
 }
 
+/** A new environment's specification: `code` only — `files` survives on old rows and is never created. */
+export type NewEnvironmentSpecification = Omit<SandboxEnvironmentSpecification, 'kind'> & {
+  kind?: 'code';
+};
+
 /**
  * Renderer-side data layer for code environments: the definitions a folder
  * can be initialized from. Answered from the database alone and available
@@ -32,17 +37,17 @@ class EnvironmentService {
   listEnvironments = async (params?: { visibility?: EnvironmentVisibility }) =>
     lambdaClient.environment.listEnvironments.query(params);
 
-  /** The definition alone; folders are initialized from it in the directory picker. */
+  /** The definition alone; a conversation applies it to its working directory. */
   createEnvironment = async (params: {
-    configuration?: SandboxEnvironmentSpecification;
+    configuration?: NewEnvironmentSpecification;
     description?: string;
     name: string;
     visibility?: EnvironmentVisibility;
   }) => lambdaClient.environment.createEnvironment.mutate(params);
 
   /**
-   * Edits the specification. Existing instances keep the one they were created
-   * with; the change shapes what the next instance is built from.
+   * Edits the specification. A folder it was already applied to keeps what it
+   * has; the change shapes the next working directory it initializes.
    */
   updateEnvironment = async (params: {
     configuration?: SandboxEnvironmentSpecification;

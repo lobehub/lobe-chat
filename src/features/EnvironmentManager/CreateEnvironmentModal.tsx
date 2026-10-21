@@ -122,7 +122,7 @@ const CreateEnvironmentContent = memo<CreateEnvironmentContentProps>(
       if (visibility !== 'public') return void create();
 
       confirmModal({
-        content: <VisibilityConfirmContent capturedState variant={'publish'} />,
+        content: <VisibilityConfirmContent variant={'publish'} />,
         okText: t('environments.create'),
         onOk: create,
         title: t('environments.visibility.createPublishedConfirmTitle'),

@@ -53,7 +53,7 @@ export interface SandboxRunParams {
    */
   sandbox?: Pick<
     SandboxSessionConfig,
-    'cwd' | 'environment' | 'mode' | 'specification' | 'workingDir'
+    'cwd' | 'environment' | 'initialization' | 'mode' | 'specification' | 'workingDir'
   >;
   /**
    * Optional context injected as a text block BEFORE the user's prompt.
@@ -249,6 +249,7 @@ export async function spawnHeteroSandbox(params: SandboxRunParams): Promise<void
   const sandboxService = createSandboxService({
     marketService,
     sandboxCwd: sandbox?.cwd,
+    sandboxInitialization: sandbox?.initialization,
     sandboxInstanceId: sandbox?.environment,
     sandboxMode: sandbox?.mode,
     sandboxSpecification: sandbox?.specification,

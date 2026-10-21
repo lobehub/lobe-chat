@@ -11,14 +11,9 @@ export interface DirectoryEntry {
   /** Under the name: why it cannot be opened, or what it is. */
   description?: ReactNode;
   disabled?: boolean;
-  /** In place of the folder glyph — an environment directory's mark, say. */
+  /** In place of the folder glyph. */
   icon?: LucideIcon;
   name: string;
-  /**
-   * Picks the entry instead of opening it. An environment directory on the
-   * drive is chosen as a whole, not browsed into.
-   */
-  onActivate?: () => void;
   path: string;
   /** Always shown on the right of the row: what it is, whether it is in use. */
   tags?: ReactNode;
@@ -52,14 +47,9 @@ export interface DirectoryListing {
  */
 export interface DirectorySource {
   /**
-   * Make a folder inside `parentPath`. `options` carries whatever the source's
-   * {@link renderNewFolderOptions} collected alongside the name.
+   * Make a folder inside `parentPath`.
    */
-  createFolder: (
-    parentPath: string,
-    name: string,
-    options?: Record<string, unknown>,
-  ) => Promise<{ path: string }>;
+  createFolder: (parentPath: string, name: string) => Promise<{ path: string }>;
   /** How the path is shown in the address field; the raw path when absent. */
   displayPath?: (path: string) => string;
   /** Whether a path can be typed in by hand. A device's can; the drive is browsed. */
@@ -71,21 +61,6 @@ export interface DirectorySource {
    * speaks of a device connection and a typed path — does not fit the source.
    */
   listErrorKey?: 'workingDirectory.drive.foldersLoadFailed';
-  /**
-   * Extra fields in the new-folder row, beside the name — the drive offers a
-   * code environment to initialize the folder from there.
-   */
-  renderNewFolderOptions?: (props: {
-    onChange: (options: Record<string, unknown>) => void;
-    value: Record<string, unknown>;
-  }) => ReactNode;
-  /**
-   * The name of the place being browsed — the drive's — for a source whose
-   * path is browsed rather than typed. Its presence lays the picker out as a
-   * breadcrumb with an inline "new folder" row instead of an address field
-   * with a toolbar.
-   */
-  rootLabel?: string;
   /**
    * Why the folder being browsed cannot be chosen, or `undefined` when it
    * can. A shared drive's root is the one such folder today.

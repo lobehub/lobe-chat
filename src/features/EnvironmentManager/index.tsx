@@ -19,10 +19,9 @@ import AsyncBoundary from '@/components/AsyncBoundary';
 import ListSkeleton from '@/components/ListSkeleton';
 
 import { openCreateEnvironmentModal } from './CreateEnvironmentModal';
-import { openCreateInstanceModal } from './CreateInstanceModal';
 import EnvironmentDetailPanel from './EnvironmentDetailPanel';
 import EnvironmentItem from './EnvironmentItem';
-import { type CreatedEnvironment, useEnvironments, useInstances } from './useEnvironmentData';
+import { type CreatedEnvironment, useEnvironments } from './useEnvironmentData';
 
 const styles = createStaticStyles(({ css }) => ({
   detailCol: css`
@@ -94,7 +93,6 @@ interface EnvironmentManagerProps {
 const EnvironmentManager = memo<EnvironmentManagerProps>(({ tabs, visibility }) => {
   const { t } = useTranslation('setting');
   const { data, error, isValidating, mutate } = useEnvironments(visibility);
-  const { data: instanceData, entitled, mutate: refreshInstances } = useInstances();
 
   const [selectedId, setSelectedId] = useState<string>();
   // Whether a refresh the user asked for is still running.
@@ -116,7 +114,6 @@ const EnvironmentManager = memo<EnvironmentManagerProps>(({ tabs, visibility }) 
   }, [isValidating]);
 
   const environments = data?.environments ?? [];
-  const instances = instanceData?.instances ?? [];
   const selected = selectedId
     ? environments.find((environment) => environment.id === selectedId)
     : undefined;
@@ -125,32 +122,19 @@ const EnvironmentManager = memo<EnvironmentManagerProps>(({ tabs, visibility }) 
     setSelectedId((current) => (current === id ? undefined : id));
   };
 
-  // The row's "new copy" shortcut: open the environment so the copy is seen
-  // landing in its list, and ask for it in the same dialog the panel's own
-  // button opens.
-  const createInstance = (id: string) => {
-    setSelectedId(id);
-    openCreateInstanceModal({ environmentId: id });
-  };
-
-  // Open what was just made. Nothing is built: an environment brings no
-  // folder with it until one is initialized from it in the directory picker.
+  // Open what was just made. Nothing is built: an environment is applied to
+  // a working directory when a conversation picks it.
   const onEnvironmentCreated = (created: CreatedEnvironment) => setSelectedId(created.id);
 
   /**
-   * Both lists, because the two halves of what this page shows are fetched
-   * separately and the slow one — instance state, which needs the execution
-   * plane — is the one worth a manual refresh.
-   *
    * The spinner is driven by this call rather than by SWR's `isValidating`,
-   * which is true of every fetch the page makes. Read off that flag the button
-   * span on a tab switch and on any background revalidation, reporting work
-   * nobody asked it to do and, worse, implying the click had already happened.
+   * which is true of every fetch the page makes — read off that flag the button
+   * would spin on a tab switch and on any background revalidation.
    */
   const refresh = async () => {
     setRefreshing(true);
     try {
-      await Promise.all([mutate(), refreshInstances()]);
+      await mutate();
     } finally {
       setRefreshing(false);
     }
@@ -236,23 +220,6 @@ const EnvironmentManager = memo<EnvironmentManagerProps>(({ tabs, visibility }) 
                 environment={environment}
                 key={environment.id}
                 selected={environment.id === selectedId}
-                instanceCount={
-                  instances.filter((instance) => instance.environmentId === environment.id).length
-                }
-                // What the environment's instances keep, summed. A brand-new
-                // instance has no snapshot and counts as nothing; when the
-                // snapshot store could not be reached the sizes are unknown,
-                // not zero, so the row says nothing rather than "0 B".
-                storageBytes={
-                  instanceData?.snapshotsUnavailable
-                    ? null
-                    : instances
-                        .filter((instance) => instance.environmentId === environment.id)
-                        .reduce((sum, instance) => sum + (instance.snapshot?.bytes ?? 0), 0)
-                }
-                // A folder lives on the drive; without one there is nowhere to
-                // initialize it, and the panel says how to get one.
-                onCreateInstance={entitled ? () => createInstance(environment.id) : undefined}
                 onSelect={() => select(environment.id)}
               />
             ))}

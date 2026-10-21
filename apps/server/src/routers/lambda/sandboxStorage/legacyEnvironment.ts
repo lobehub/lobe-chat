@@ -3,7 +3,7 @@ import { z } from 'zod';
 
 import { router } from '@/libs/trpc/lambda';
 
-import { configurationSchema } from '../_schema/environment';
+import { newConfigurationSchema } from '../_schema/environment';
 import { environmentProcedures } from '../environment';
 import { rethrowDuplicateEnvironmentName } from './constraintErrors';
 import { driveForEnvironment } from './driveScope';
@@ -24,7 +24,7 @@ import { nameSchema, visibilitySchema } from './schemas';
 const legacyCreateEnvironment = instanceProcedure
   .input(
     z.object({
-      configuration: configurationSchema.optional(),
+      configuration: newConfigurationSchema.optional(),
       description: z.string().max(2000).optional(),
       name: nameSchema,
       visibility: visibilitySchema.optional(),

@@ -143,6 +143,8 @@ export default {
   'workingDirectory.environment.none': 'No environment',
   'workingDirectory.drive.title': 'Choose a folder on your drive',
   'workingDirectory.drive.rootNotAllowed': 'The drive’s root can’t be a working folder',
+  'workingDirectory.drive.browseDescription': 'Choose a folder on your drive.',
+  'workingDirectory.drive.gitRepository': 'Git',
   'workingDirectory.drive.pickFolderFirst': 'Choose a folder first',
   'workingDirectory.drive.environmentBadge': 'Environment',
   'workingDirectory.drive.state.building': 'Building',

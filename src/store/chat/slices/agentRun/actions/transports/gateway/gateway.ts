@@ -1030,6 +1030,7 @@ export class GatewayActionImpl {
     const sandboxTopicMetadata = pendingSandboxSelection
       ? {
           sandboxDrive: pendingSandboxSelection.drive,
+          sandboxEnvironmentId: pendingSandboxSelection.environmentId,
           sandboxInstanceId: pendingSandboxSelection.instanceId,
           sandboxWorkingDirectory: pendingSandboxSelection.workingDirectory,
         }

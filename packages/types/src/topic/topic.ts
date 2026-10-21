@@ -362,6 +362,15 @@ export interface ChatTopicMetadata {
    */
   sandboxDrive?: 'personal' | 'public';
   /**
+   * The code environment this topic's sandbox is initialized from: its
+   * repository is cloned and its setup command run once in the working
+   * directory, whichever that is. In a temporary sandbox that is once per
+   * sandbox; in a drive folder, once for the folder — a marker the script
+   * leaves behind keeps it from running again. Nothing is tracked beyond that:
+   * the folder is an ordinary folder afterwards.
+   */
+  sandboxEnvironmentId?: string;
+  /**
    * Which CLOUD-SANDBOX INSTANCE this topic runs in — an **environment
    * directory**: a folder on the drive together with the packages its build
    * installed, restored into every session. Takes precedence over
@@ -657,6 +666,7 @@ export const chatTopicMetadataUpdateSchema = z.object({
   // the interface and this schema are two declarations the type checker never
   // compares.
   sandboxDrive: z.enum(['personal', 'public']).optional(),
+  sandboxEnvironmentId: z.string().max(255).optional(),
   sandboxInstanceId: z.string().optional(),
   sandboxWorkingDirectory: z.string().max(1024).optional(),
   scheduledRun: topicScheduledRunSchema.nullish(),

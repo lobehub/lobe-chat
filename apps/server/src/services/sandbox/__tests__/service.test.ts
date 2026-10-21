@@ -56,6 +56,70 @@ describe('SandboxMiddlewareService', () => {
     vi.restoreAllMocks();
   });
 
+  describe('initializing from an environment', () => {
+    const capabilities = {
+      backgroundCommands: true,
+      exportFile: true,
+      files: true,
+      languages: ['python'],
+      persistentSession: true,
+      shell: true,
+      skillScripts: true,
+    };
+    const init = {
+      environmentId: 'env-1',
+      name: 'Hello',
+      sources: [{ url: 'https://github.com/octocat/Hello-World' }],
+    };
+
+    const serviceWith = async (stdout: string) => {
+      const { SandboxMiddlewareService: TestSandboxMiddlewareService } = await import('../service');
+      const callTool = vi.fn(async (name: string, params: Record<string, unknown>) =>
+        String(params.command).includes('.lobe-environment')
+          ? { result: { exitCode: 0, stderr: '', stdout }, success: true }
+          : { result: { exitCode: 0, stderr: '', stdout: `ran ${name}` }, success: true },
+      );
+      const provider = {
+        callTool,
+        capabilities,
+        exportFileToUploadUrl: vi.fn(),
+        kind: 'market',
+      } satisfies SandboxProvider;
+      const service = new TestSandboxMiddlewareService(provider, {
+        marketService: {} as MarketService,
+        sandboxInitialization: init,
+        topicId: 'topic-1',
+        userId: 'user-1',
+      });
+
+      return { callTool, service };
+    };
+
+    it('applies the environment once, before the first tool, and says so in the first shell result', async () => {
+      const { callTool, service } = await serviceWith(
+        '__lobe_environment_ran\nInitialized from the environment Hello.\n',
+      );
+
+      const first = await service.callTool('runCommand', { command: 'ls' });
+      await service.callTool('runCommand', { command: 'pwd' });
+
+      const commands = callTool.mock.calls.map(([, params]) => String(params.command));
+      expect(commands.filter((command) => command.includes('.lobe-environment'))).toHaveLength(1);
+      expect(commands[0]).toContain('git clone');
+      expect((first.result as { stdout: string }).stdout).toBe(
+        '[environment] Initialized from the environment Hello.\n\nran runCommand',
+      );
+    });
+
+    it('adds nothing to the result when the directory was already initialized', async () => {
+      const { service } = await serviceWith('');
+
+      const result = await service.callTool('runCommand', { command: 'ls' });
+
+      expect((result.result as { stdout: string }).stdout).toBe('ran runCommand');
+    });
+  });
+
   it('uploads provider exports through the shared file record flow', async () => {
     const { SandboxMiddlewareService: TestSandboxMiddlewareService } = await import('../service');
     const exportFileToUploadUrl = vi.fn(async () => ({

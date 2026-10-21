@@ -19,13 +19,14 @@ export interface EnvironmentResourceRequirements {
 }
 
 /**
- * What an environment is for. Only `code` — checking out a repository and
- * running setup — since a folder someone hands files to is a folder on the
- * drive, not an environment. Kept as a field so a later kind (a cluster
- * image, say) has somewhere to go. Presentation only: it never reaches the
- * execution plane.
+ * What an environment is for. New environments are `code` — checking out a
+ * repository and running setup — since a folder someone hands files to is a
+ * folder on the drive, not an environment. `files` is what the previous
+ * release stored for such an environment; rows keep it and an edit sends it
+ * back, so it stays a value the type admits. Presentation only: it never
+ * reaches the execution plane.
  */
-export type EnvironmentKind = 'code';
+export type EnvironmentKind = 'code' | 'files';
 
 /** Portable definition, shared by device, sandbox and cluster instances. No credentials. */
 export interface EnvironmentConfiguration {

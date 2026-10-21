@@ -9,7 +9,7 @@ import { router } from '@/libs/trpc/lambda';
 import { serverDatabase } from '@/libs/trpc/lambda/middleware';
 import { ConnectorDataService } from '@/server/services/connectorData';
 
-import { configurationSchema } from './_schema/environment';
+import { configurationSchema, newConfigurationSchema } from './_schema/environment';
 import {
   rethrowDuplicateEnvironmentName,
   rethrowEnvironmentInUse,
@@ -69,7 +69,7 @@ export const environmentProcedures = {
   createEnvironment: environmentProcedure
     .input(
       z.object({
-        configuration: configurationSchema.optional(),
+        configuration: newConfigurationSchema.optional(),
         description: z.string().max(2000).optional(),
         name: nameSchema,
         visibility: visibilitySchema.optional(),

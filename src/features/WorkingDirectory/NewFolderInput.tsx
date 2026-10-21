@@ -12,13 +12,10 @@ interface NewFolderInputProps {
   onCreated: (path: string) => void;
   parentPath: string;
   /** Only how a folder is made — what a picker and a file manager have in common. */
-  source: Pick<DirectorySource, 'createFolder' | 'folderErrorKey' | 'renderNewFolderOptions'>;
+  source: Pick<DirectorySource, 'createFolder' | 'folderErrorKey'>;
 }
 
-/**
- * Inline row that names and creates a folder inside the folder being browsed,
- * with whatever else the source asks alongside the name.
- */
+/** Inline row that names and creates a folder inside the folder being browsed. */
 export const NewFolderInput = ({
   onCancel,
   onCreated,
@@ -27,7 +24,7 @@ export const NewFolderInput = ({
 }: NewFolderInputProps) => {
   const { t } = useTranslation('device');
   const { t: tCommon } = useTranslation('common');
-  const { error, name, options, pending, setName, setOptions, submit } = useCreateFolder({
+  const { error, name, pending, setName, submit } = useCreateFolder({
     create: source.createFolder,
     errorMessageKey: source.folderErrorKey,
     onCreated,
@@ -65,7 +62,6 @@ export const NewFolderInput = ({
           {t('workingDirectory.newFolderCreate')}
         </Button>
       </Flexbox>
-      {source.renderNewFolderOptions?.({ onChange: setOptions, value: options })}
       {error && (
         <Text fontSize={12} role={'alert'} type={'danger'}>
           {error}

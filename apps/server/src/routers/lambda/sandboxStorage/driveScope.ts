@@ -56,8 +56,6 @@ export interface DriveScope {
   client: SandboxStorageClient;
   /** Legacy private environment directories nobody may see; see above. */
   hidden: string[];
-  /** Every environment directory on the drive. */
-  instanceDirectories: string[];
   /** Where a route is confined; `''` is the whole drive. */
   root: string;
 }
@@ -124,7 +122,6 @@ export const resolveDriveScope = async (
     return {
       client,
       hidden: [],
-      instanceDirectories: [instance.workingDirectory],
       root: instance.workingDirectory,
     };
   }
@@ -138,7 +135,6 @@ export const resolveDriveScope = async (
     hidden: isPublicDrive(ctx)
       ? directories.filter((entry) => entry.isPrivate).map((entry) => entry.workingDirectory)
       : [],
-    instanceDirectories: directories.map((entry) => entry.workingDirectory),
     root: '',
   };
 };
@@ -160,9 +156,11 @@ export const assertReadable = (path: string, scope: DriveScope) => {
 };
 
 /**
- * Refuses a write into an environment directory, and a move or delete of a
- * folder holding one. Refused before anything is looked up when an instance
- * is named: the answer is the same whether or not the instance exists.
+ * The scope a write on the drive runs in. A folder initialized from an
+ * environment is an ordinary folder — environments are one-time initializers
+ * — so it is written, renamed and deleted like any other. Only a write that
+ * names a legacy instance is refused: that is the route an older client takes
+ * into an environment directory's own state, which belongs to its builds.
  */
 export const resolveWritableScope = async (
   ctx: DriveContext,
@@ -172,13 +170,6 @@ export const resolveWritableScope = async (
 
   const scope = await resolveDriveScope(ctx);
   assertReadable(path, scope);
-  if (
-    scope.instanceDirectories.some(
-      (directory) => isPathWithin(path, directory) || isPathWithin(directory, path),
-    )
-  ) {
-    throw new TRPCError({ code: 'FORBIDDEN', message: 'INSTANCE_READ_ONLY' });
-  }
 
   return scope;
 };

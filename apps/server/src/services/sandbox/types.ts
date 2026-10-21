@@ -8,6 +8,8 @@ import type { LobeChatDatabase } from '@lobechat/database';
 import type { FileService } from '@/server/services/file';
 import type { MarketService } from '@/server/services/market';
 
+import type { SandboxInitialization } from './environmentInit';
+
 export type SandboxProviderKind = 'market' | 'onlyboxes';
 
 /**
@@ -44,6 +46,13 @@ export interface SandboxSessionContext {
    * directory; a drive without one works at the drive's root.
    */
   sandboxCwd?: string;
+  /**
+   * The environment to initialize the working directory from before the first
+   * call — clone and setup, guarded by a marker the run leaves behind. Absent
+   * when the topic picked none, and on a legacy instance run, whose build
+   * already did this.
+   */
+  sandboxInitialization?: SandboxInitialization;
   /**
    * Named environment to restore for this run; absent means the caller's
    * default. Like `sandboxMode`, every call for a topic must carry the same

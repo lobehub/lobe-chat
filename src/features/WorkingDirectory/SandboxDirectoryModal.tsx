@@ -13,7 +13,7 @@ import {
 } from '@lobehub/ui';
 import { t } from 'i18next';
 import { LockIcon, UsersIcon } from 'lucide-react';
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { SandboxStorageUpgradeGuide } from '@/business/client/features/SandboxStorageUpsell';
@@ -22,32 +22,26 @@ import { useSandboxDriveEntitlement } from '@/hooks/useSandboxDriveEntitlement';
 import { DirectoryBrowser } from './DirectoryBrowser';
 import { useSandboxDirectorySource } from './sources/useSandboxDirectorySource';
 
-/** What a pick on the drive binds the conversation to, and which drive it is on. */
-export type SandboxDirectoryPick = { drive: SandboxDrive } & (
-  { instanceId: string } | { workingDirectory: string }
-);
+/** The folder a pick on the drive binds the conversation to, and which drive it is on. */
+export interface SandboxDirectoryPick {
+  drive: SandboxDrive;
+  workingDirectory: string;
+}
 
 interface SandboxDirectoryContentProps {
-  agentIsPublic?: boolean;
-  /** The environment directory the conversation is bound to now, if any. */
-  currentInstanceId?: string;
   defaultPath?: string;
   /** The drive to open on; the conversation's own, or the public one in a workspace. */
   drive?: SandboxDrive;
   /** In a workspace: a public drive beside the member's personal one. */
   isWorkspace: boolean;
   onPick: (pick: SandboxDirectoryPick) => void | Promise<void>;
-  topicId?: string;
 }
 
 const SandboxDirectoryContent = ({
-  agentIsPublic,
-  currentInstanceId,
   defaultPath,
   drive: initialDrive,
   isWorkspace,
   onPick,
-  topicId,
 }: SandboxDirectoryContentProps) => {
   const { t: tDevice } = useTranslation('device');
   const { close } = useModalContext();
@@ -59,22 +53,7 @@ const SandboxDirectoryContent = ({
   const startPath =
     drive === (initialDrive ?? (isWorkspace ? 'public' : 'personal')) ? defaultPath : undefined;
 
-  const onPickInstance = useCallback(
-    (instanceId: string, instanceDrive: SandboxDrive) => {
-      close();
-      void onPick({ drive: instanceDrive, instanceId });
-    },
-    [close, onPick],
-  );
-
-  const source = useSandboxDirectorySource({
-    agentIsPublic,
-    currentInstanceId,
-    drive,
-    isWorkspace,
-    onPickInstance,
-    topicId,
-  });
+  const source = useSandboxDirectorySource({ drive, isWorkspace });
 
   // Without a drive there is nothing to browse: the way to one stands where
   // the folders would be.
@@ -109,11 +88,10 @@ const SandboxDirectoryContent = ({
         />
       )}
       {/* Keyed on the drive, so its navigation starts over: a folder on one
-          drive means nothing on the other. No description: the drive switch
-          and the breadcrumb already say where this is. */}
+          drive means nothing on the other. */}
       <DirectoryBrowser
         defaultPath={startPath}
-        description={null}
+        description={tDevice('workingDirectory.drive.browseDescription')}
         key={drive}
         loading={false}
         source={source}
@@ -130,10 +108,10 @@ const SandboxDirectoryContent = ({
 };
 
 /**
- * Pick where a cloud-sandbox conversation works on the drive: a folder, the
- * root (personal drives only), or an environment directory — or initialize a
- * new folder from a code environment. In a workspace the public and personal
- * drives are switched between at the top.
+ * Pick the folder on the drive a cloud-sandbox conversation works in — any
+ * folder, or the root of a personal drive — laid out like a device's folder
+ * picker: a toolbar and the path, the folders below. In a workspace the public
+ * and personal drives are switched between at the top.
  */
 export const openSandboxDirectoryModal = (props: SandboxDirectoryContentProps): ModalInstance =>
   createModal({

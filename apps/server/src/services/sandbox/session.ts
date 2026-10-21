@@ -15,12 +15,14 @@ import type { EnvironmentConfiguration } from '@lobechat/types';
 import debug from 'debug';
 
 import { AgentModel } from '@/database/models/agent';
+import { EnvironmentModel } from '@/database/models/environment';
 import { EnvironmentInstanceModel } from '@/database/models/environmentInstance';
 import { TopicModel } from '@/database/models/topic';
 
-import { isPathWithin, sandboxStorageBinding } from './binding';
+import { sandboxStorageBinding } from './binding';
 import { driveFolderExists } from './driveFolder';
 import { resolveSandboxStorageClaim } from './entitlement';
+import { type SandboxInitialization, toSandboxInitialization } from './environmentInit';
 import type { SandboxSessionSpecification } from './types';
 
 const log = debug('lobe-server:sandbox:session');
@@ -75,6 +77,12 @@ export interface SandboxSessionConfig {
    *   folders live under, is not a folder anyone may work in.
    */
   fallback?: SandboxPlacementFallback;
+  /**
+   * The environment to initialize the working directory from, when the topic
+   * picked one: applied once to a folder on the drive, and once per sandbox in
+   * a temporary one. Never set on a legacy instance run — its build did this.
+   */
+  initialization?: SandboxInitialization;
   mode: SandboxMode;
   /**
    * What the instance was built from, for the execution plane to act on while
@@ -183,7 +191,7 @@ interface SandboxSessionConfigInput {
  * Never throws; a failed lookup degrades to the ephemeral sandbox every session
  * uses today.
  */
-export const resolveSandboxSessionConfig = async ({
+const resolvePlacement = async ({
   isShareVisitorRun,
   serverDB,
   topicId,
@@ -354,18 +362,6 @@ export const resolveSandboxSessionConfig = async ({
 
     if (!isSafeSandboxCwd(folder)) return fallBack('directoryMissing');
 
-    // An environment directory is written by its own sessions alone: a folder
-    // inside one is not a drive folder, whatever the path says.
-    const instanceDirectories = await new EnvironmentInstanceModel(
-      serverDB,
-      userId,
-      workspaceId ?? undefined,
-    ).listStorageDirectories(sandboxStorageBinding(claim.key));
-    if (instanceDirectories.some((entry) => isPathWithin(folder, entry.workingDirectory))) {
-      log('Ignoring a folder inside an instance directory on topic %s: %o', topicId, folder);
-      return fallBack('instanceUnavailable');
-    }
-
     // Deleted since it was picked — by this member in another tab, or by a
     // colleague on the public drive. Recreating it silently would bring back
     // an empty folder under a name someone chose to remove.
@@ -380,4 +376,64 @@ export const resolveSandboxSessionConfig = async ({
     log('Failed to read sandbox preferences for topic %s: %O', topicId, error);
     return { claim: claim ?? (await claimFor(drive)), drive, mode: DEFAULT_SANDBOX_MODE };
   }
+};
+
+/**
+ * The topic's environment as an initialization, or `undefined` when it picked
+ * none, picked one the caller cannot read (deleted, or another member's
+ * private one), or one that asks for nothing.
+ */
+const resolveInitialization = async ({
+  serverDB,
+  topicId,
+  userId,
+  workspaceId,
+}: Required<Pick<SandboxSessionConfigInput, 'serverDB' | 'topicId'>> &
+  Pick<SandboxSessionConfigInput, 'userId' | 'workspaceId'>): Promise<
+  SandboxInitialization | undefined
+> => {
+  try {
+    const topic = await new TopicModel(serverDB, userId, workspaceId ?? undefined).findById(
+      topicId,
+    );
+    const environmentId = topic?.metadata?.sandboxEnvironmentId;
+    if (!environmentId) return undefined;
+
+    const environment = await new EnvironmentModel(
+      serverDB,
+      userId,
+      workspaceId ?? undefined,
+    ).findById(environmentId);
+    if (!environment) {
+      log('Ignoring unreadable sandboxEnvironmentId on topic %s: %s', topicId, environmentId);
+      return undefined;
+    }
+
+    return toSandboxInitialization(environment);
+  } catch (error) {
+    log('Failed to read the environment for topic %s: %O', topicId, error);
+    return undefined;
+  }
+};
+
+/**
+ * Everything the sandbox layer needs to know about one run: where it works
+ * ({@link resolvePlacement}) and, when the topic picked an environment, what
+ * that working directory is initialized from. The environment is independent
+ * of the placement — a temporary sandbox is initialized as readily as a folder
+ * — except on a legacy instance run, which already has what its build made.
+ *
+ * Never throws; a failed lookup degrades to the ephemeral sandbox every session
+ * uses today, without an environment.
+ */
+export const resolveSandboxSessionConfig = async (
+  input: SandboxSessionConfigInput,
+): Promise<SandboxSessionConfig> => {
+  const config = await resolvePlacement(input);
+  const { serverDB, topicId } = input;
+  if (!serverDB || !topicId || config.mode === 'persistent') return config;
+
+  const initialization = await resolveInitialization({ ...input, serverDB, topicId });
+
+  return initialization ? { ...config, initialization } : config;
 };

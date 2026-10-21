@@ -11,7 +11,6 @@ import {
   HardDriveIcon,
   InfoIcon,
   PackageIcon,
-  SettingsIcon,
   TimerIcon,
   TriangleAlertIcon,
 } from 'lucide-react';
@@ -22,7 +21,6 @@ import useSWR from 'swr';
 import { openSandboxStorageUpsell } from '@/business/client/features/SandboxStorageUpsell';
 import { useActiveWorkspaceId } from '@/business/client/hooks/useActiveWorkspaceId';
 import { openSandboxDirectoryModal } from '@/features/WorkingDirectory';
-import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwareNavigate';
 import { refreshProjectFiles } from '@/services/projectFile';
 import { sandboxStorageService } from '@/services/sandboxStorage';
 
@@ -47,18 +45,6 @@ const styles = stylex.create({
     fontSize: 12,
     fontWeight: 500,
   },
-  manageButton: {
-    alignItems: 'center',
-    backgroundColor: 'transparent',
-    borderStyle: 'none',
-    color: { 'default': cssVar.colorTextQuaternary, ':hover': cssVar.colorPrimary },
-    cursor: 'pointer',
-    display: 'flex',
-    fontSize: 11,
-    gap: 3,
-    padding: 0,
-    transition: 'color 0.2s',
-  },
   notice: {
     backgroundColor: cssVar.colorWarningBg,
     borderRadius: cssVar.borderRadius,
@@ -78,12 +64,7 @@ const styles = stylex.create({
 
 const optionClassName = stylex.props(styles.option).className;
 
-/** How often a building environment directory is re-read while the chip names it. */
-const BUILD_REFRESH_MS = 4000;
-
 interface SandboxDrivePickerProps {
-  /** The conversation's agent is shared with the workspace; see `useSandboxDirectorySource`. */
-  agentIsPublic?: boolean;
   /** Whether this plan includes a drive. Without one the menu offers the way to a plan. */
   entitled: boolean;
   onChange: (selection: SandboxSelection) => Promise<void>;
@@ -99,38 +80,29 @@ const folderName = (path: string) => path.split('/').pop() || path;
  * folders: the chip names the place, the menu holds the temporary sandbox and
  * the way into the drive's directory browser.
  *
- * Nothing picked is the temporary sandbox. Picking a folder on the drive is
- * the choice to keep files; picking an environment directory also keeps what
- * its setup installed. A pick that can no longer be honoured — the folder was
- * deleted, the environment directory is gone — is said on the chip itself,
- * before the next message runs somewhere the person did not choose.
+ * Nothing picked is the temporary sandbox; picking a folder on the drive is
+ * the choice to keep files. A pick that can no longer be honoured — the
+ * folder was deleted — is said on the chip itself, before the next message
+ * runs somewhere the person did not choose. The environment the directory is
+ * initialized from is a separate choice, beside this one, and every pick here
+ * carries it along unchanged.
+ *
+ * A conversation from before environments became initializers may still be
+ * bound to an environment directory; it is shown by name until another pick
+ * replaces it.
  */
 const SandboxDrivePicker = memo<SandboxDrivePickerProps>(
-  ({ agentIsPublic, entitled, onChange, topicId, value }) => {
+  ({ entitled, onChange, topicId, value }) => {
     const { t } = useTranslation(['chat', 'device']);
     const [open, setOpen] = useState(false);
-    const navigate = useWorkspaceAwareNavigate();
     const workspaceId = useActiveWorkspaceId();
     const persistent = isPersistentSelection(value);
 
-    // The environment directory's own row, for its name and build state —
-    // from the database, so the chip never waits on a sandbox. While a build
-    // is running the poll also asks for its status: nothing calls back when a
-    // build ends, and that call is what settles the row, so a chip left to
-    // re-read the row alone would say "building" for good.
+    // A legacy environment directory's own row, for its name — from the
+    // database, so the chip never waits on a sandbox.
     const { data: instance, isLoading: instanceLoading } = useSWR(
       entitled && value.instanceId ? ['sandbox-drive-chip-instance', value.instanceId] : null,
-      async () => {
-        const id = value.instanceId!;
-        const row = await sandboxStorageService.getInstance({ id });
-        if (row?.status !== 'pending' || !row.buildId) return row;
-
-        await sandboxStorageService.instanceBuildStatus({ id, topicId }).catch(() => undefined);
-        return sandboxStorageService.getInstance({ id });
-      },
-      {
-        refreshInterval: (latest) => (latest?.status === 'pending' ? BUILD_REFRESH_MS : 0),
-      },
+      () => sandboxStorageService.getInstance({ id: value.instanceId! }),
     );
 
     // Whether the pick still holds, asked of the same resolver the run uses:
@@ -155,7 +127,9 @@ const SandboxDrivePicker = memo<SandboxDrivePickerProps>(
     // go on showing the old answers — "no longer exists" on the chip and an
     // unreadable tree in the working panel, for a folder just re-created and
     // picked again. Ask once more after every pick.
-    const pick = async (selection: SandboxSelection) => {
+    const pick = async (placement: Omit<SandboxSelection, 'environmentId'>) => {
+      // The environment is chosen beside the folder, not with it.
+      const selection = { ...placement, environmentId: value.environmentId };
       await onChange(selection);
       void revalidatePlacement();
       if (topicId && !selection.instanceId && selection.workingDirectory !== undefined) {
@@ -164,7 +138,7 @@ const SandboxDrivePicker = memo<SandboxDrivePickerProps>(
       }
     };
 
-    const select = async (selection: SandboxSelection) => {
+    const select = async (selection: Omit<SandboxSelection, 'environmentId'>) => {
       setOpen(false);
       await pick(selection);
     };
@@ -172,8 +146,6 @@ const SandboxDrivePicker = memo<SandboxDrivePickerProps>(
     const openBrowser = () => {
       setOpen(false);
       openSandboxDirectoryModal({
-        agentIsPublic,
-        currentInstanceId: value.instanceId,
         // A folder that is gone cannot be listed; start from the top instead.
         defaultPath:
           value.workingDirectory &&
@@ -184,7 +156,6 @@ const SandboxDrivePicker = memo<SandboxDrivePickerProps>(
         drive: value.drive,
         isWorkspace: !!workspaceId,
         onPick: pick,
-        topicId,
       });
     };
 
@@ -196,7 +167,6 @@ const SandboxDrivePicker = memo<SandboxDrivePickerProps>(
           ? folderName(value.workingDirectory)
           : undefined;
     const currentIcon = value.instanceId ? PackageIcon : FolderIcon;
-    const building = instance?.status === 'pending';
 
     const fallbackMessage = fallback ? t(`sandboxDrive.fallback.${fallback}`) : undefined;
     // In a workspace a folder path means nothing without its drive.
@@ -214,9 +184,7 @@ const SandboxDrivePicker = memo<SandboxDrivePickerProps>(
     const chipLabel = persistent
       ? fallback
         ? t(`sandboxDrive.fallbackChip.${fallback}`)
-        : building
-          ? t('sandboxDrive.building', { name: currentLabel })
-          : currentLabel
+        : currentLabel
       : t('sandboxStorage.ephemeral');
 
     const content = (
@@ -230,17 +198,6 @@ const SandboxDrivePicker = memo<SandboxDrivePickerProps>(
               </span>
             </Tooltip>
           </Flexbox>
-          <button
-            {...stylex.props(styles.manageButton)}
-            type={'button'}
-            onClick={() => {
-              setOpen(false);
-              navigate('/settings/environments');
-            }}
-          >
-            <Icon icon={SettingsIcon} size={11} />
-            <span>{t('sandboxDrive.manageEnvironments')}</span>
-          </button>
         </div>
 
         {fallbackMessage && (
@@ -264,11 +221,7 @@ const SandboxDrivePicker = memo<SandboxDrivePickerProps>(
             label={currentLabel}
             desc={
               value.instanceId
-                ? t(
-                    building
-                      ? 'sandboxDrive.environmentBuildingDesc'
-                      : 'sandboxDrive.environmentDesc',
-                  )
+                ? t('sandboxDrive.environmentDesc')
                 : driveName
                   ? t('sandboxDrive.folderOnDriveDesc', {
                       drive: driveName,

@@ -3,6 +3,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 const mocks = vi.hoisted(() => ({
   driveFolderExists: vi.fn(),
+  findEnvironmentById: vi.fn(),
   EnvironmentInstanceModel: vi.fn(),
   listStorageDirectories: vi.fn(),
   TopicModel: vi.fn(),
@@ -25,6 +26,12 @@ vi.mock('@/database/models/topic', () => ({
 vi.mock('@/database/models/agent', () => ({
   AgentModel: vi.fn(function () {
     return { getAgentVisibility: mocks.getAgentVisibility };
+  }),
+}));
+
+vi.mock('@/database/models/environment', () => ({
+  EnvironmentModel: vi.fn(function () {
+    return { findById: mocks.findEnvironmentById };
   }),
 }));
 
@@ -403,7 +410,9 @@ describe('resolveSandboxSessionConfig', () => {
       await expect(resolve()).resolves.toMatchObject({ cwd: 'projA', mode: 'drive' });
     });
 
-    it('refuses a folder inside an environment directory', async () => {
+    it('works in a folder inside an environment directory like any other folder', async () => {
+      // Environments are one-time initializers now: what one initialized is
+      // an ordinary folder, and so is everything inside it.
       findById.mockResolvedValue({ metadata: { sandboxWorkingDirectory: 'atlas/src' } });
       mocks.listStorageDirectories.mockResolvedValue([
         { id: INSTANCE_ID, visible: false, workingDirectory: 'atlas' },
@@ -411,13 +420,10 @@ describe('resolveSandboxSessionConfig', () => {
 
       await expect(resolve({ workspaceId: 'ws-1' })).resolves.toEqual({
         claim: CLAIM,
+        cwd: 'atlas/src',
         drive: 'public',
-        fallback: 'instanceUnavailable',
-        mode: 'ephemeral',
+        mode: 'drive',
       });
-      expect(mocks.listStorageDirectories).toHaveBeenCalledWith(
-        expect.objectContaining({ provider: 'market', providerScope: CLAIM.key }),
-      );
     });
 
     it('refuses a path that would not survive the fence', async () => {
@@ -563,5 +569,73 @@ describe('resolveSandboxSessionConfig', () => {
       mode: 'ephemeral',
     });
     expect(findById).not.toHaveBeenCalled();
+  });
+
+  describe('initializing from an environment', () => {
+    const environment = {
+      configuration: {
+        bootstrapCommand: 'pnpm install',
+        sources: [{ kind: 'git', url: 'https://github.com/octocat/Hello-World' }],
+      },
+      id: 'env-1',
+      name: 'Hello',
+    };
+
+    beforeEach(() => {
+      mocks.findEnvironmentById.mockReset().mockResolvedValue(environment);
+    });
+
+    it('initializes a folder on the drive from the environment the topic picked', async () => {
+      resolveSandboxStorageClaim.mockResolvedValue(CLAIM);
+      mocks.driveFolderExists.mockResolvedValue(true);
+      findById.mockResolvedValue({
+        metadata: { sandboxEnvironmentId: 'env-1', sandboxWorkingDirectory: 'app' },
+      });
+
+      await expect(resolve()).resolves.toMatchObject({
+        cwd: 'app',
+        initialization: {
+          bootstrapCommand: 'pnpm install',
+          environmentId: 'env-1',
+          sources: [{ url: 'https://github.com/octocat/Hello-World' }],
+        },
+        mode: 'drive',
+      });
+    });
+
+    it('initializes a temporary sandbox too, which has no drive at all', async () => {
+      resolveSandboxStorageClaim.mockResolvedValue(null);
+      findById.mockResolvedValue({ metadata: { sandboxEnvironmentId: 'env-1' } });
+
+      await expect(resolve()).resolves.toMatchObject({
+        initialization: { environmentId: 'env-1' },
+        mode: 'ephemeral',
+      });
+    });
+
+    it('runs without one when the environment is no longer readable', async () => {
+      resolveSandboxStorageClaim.mockResolvedValue(null);
+      mocks.findEnvironmentById.mockResolvedValue(undefined);
+      findById.mockResolvedValue({ metadata: { sandboxEnvironmentId: 'env-gone' } });
+
+      const config = await resolve();
+
+      expect(config.mode).toBe('ephemeral');
+      expect(config).not.toHaveProperty('initialization');
+    });
+
+    it('never initializes a legacy instance run, which its build already set up', async () => {
+      resolveSandboxStorageClaim.mockResolvedValue(CLAIM);
+      findInstanceById.mockResolvedValue({ id: INSTANCE_ID, workingDirectory: 'atlas' });
+      findById.mockResolvedValue({
+        metadata: { sandboxEnvironmentId: 'env-1', sandboxInstanceId: INSTANCE_ID },
+      });
+
+      const config = await resolve();
+
+      expect(config.mode).toBe('persistent');
+      expect(config).not.toHaveProperty('initialization');
+      expect(mocks.findEnvironmentById).not.toHaveBeenCalled();
+    });
   });
 });

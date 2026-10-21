@@ -4031,6 +4031,13 @@ export default {
   'sandboxDrive.pickerInfoTooltip':
     'Pick a folder on your drive and its files are kept across conversations. Without one, the sandbox is temporary.',
   'sandboxDrive.manageEnvironments': 'Environments',
+  'sandboxEnvironment.title': 'Environment',
+  'sandboxEnvironment.hint':
+    'Cloned and set up once in the working directory before the first command. A folder that already has files is left as it is.',
+  'sandboxEnvironment.none': 'No environment',
+  'sandboxEnvironment.noneDesc': 'Start from an empty working directory',
+  'sandboxEnvironment.empty': 'No environments yet. Create one in Environments.',
+  'sandboxEnvironment.missing': 'Environment unavailable',
   'sandboxDrive.root': 'Drive root',
   'sandboxDrive.building': '{{name}} · building',
   'sandboxDrive.browse': 'Choose a folder on your drive…',

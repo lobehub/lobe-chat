@@ -7,7 +7,6 @@ import { sandboxStorageService } from '@/services/sandboxStorage';
 
 const USAGE_KEY = 'sandbox-drive-usage';
 const FILES_KEY = 'sandbox-drive-files';
-const DIRECTORIES_KEY = 'sandbox-drive-directories';
 
 /**
  * Every drive's usage against the pool, and each member's for an admin.
@@ -49,28 +48,12 @@ export const useDriveFiles = (drive: SandboxDrive, path: string) =>
     { revalidateOnFocus: false, shouldRetryOnError: false },
   );
 
-/**
- * The environment directories on one drive — from the database, so the root
- * listing can badge them without waiting on a sandbox for sizes.
- */
-export const useDriveDirectories = (drive: SandboxDrive) =>
-  useClientDataSWR<Awaited<ReturnType<typeof sandboxStorageService.listInstances>>>(
-    [DIRECTORIES_KEY, drive],
-    () => sandboxStorageService.listInstances({ drive, withSizes: false }),
-    { revalidateOnFocus: false },
-  );
-
 /** Refetch every listing of every drive, and the usage, after a write. */
 export const useRefreshDrive = () => {
   const { mutate } = useSWRConfig();
 
   return useCallback(
-    () =>
-      mutate(
-        (key) =>
-          Array.isArray(key) &&
-          (key[0] === FILES_KEY || key[0] === DIRECTORIES_KEY || key[0] === USAGE_KEY),
-      ),
+    () => mutate((key) => Array.isArray(key) && (key[0] === FILES_KEY || key[0] === USAGE_KEY)),
     [mutate],
   );
 };

@@ -9,26 +9,30 @@ import {
 import { topicSelectors } from '@/store/chat/selectors';
 
 /**
- * Where a conversation's cloud sandbox works. Nothing chosen is a temporary
- * sandbox; choosing a folder IS the choice to keep files:
+ * Where a conversation's cloud sandbox works, and what it starts from. Nothing
+ * chosen is a temporary sandbox; choosing a folder IS the choice to keep files:
  *
  * - `workingDirectory` — a folder on the drive, relative to its root (`.` is
  *   the root itself);
- * - `instanceId` — an environment directory: a folder initialized from a code
- *   environment, with the packages its build installed.
+ * - `environmentId` — a code environment to initialize the working directory
+ *   from: its repository cloned and its setup run once there, whether that is
+ *   a temporary sandbox or a folder on the drive. Independent of the folder;
+ *   either can be set without the other.
+ * - `instanceId` — an environment directory from before environments became
+ *   one-time initializers. Read so an old conversation still shows where it
+ *   runs; never written, and any new pick clears it.
  *
- * At most one is set; writing one clears the other. In a workspace, `drive`
- * says which drive the folder is on — the public one every member shares, or
- * the member's personal one — and absent means public. An environment
- * directory's drive is the one it was made on, recorded alongside it.
+ * In a workspace, `drive` says which drive the folder is on — the public one
+ * every member shares, or the member's personal one — and absent means public.
  */
 export interface SandboxSelection {
   drive?: 'personal' | 'public';
+  environmentId?: string;
   instanceId?: string;
   workingDirectory?: string;
 }
 
-/** Whether a selection keeps anything — a folder or an environment directory. */
+/** Whether a selection keeps anything — a folder, or a legacy environment directory. */
 export const isPersistentSelection = (selection: SandboxSelection) =>
   !!selection.instanceId || selection.workingDirectory !== undefined;
 
@@ -52,6 +56,7 @@ export const useSandboxPlacement = (agentId: string, scopeTopicId?: string | nul
   const topicInstanceId = topicMetadata?.sandboxInstanceId;
   const topicWorkingDirectory = topicMetadata?.sandboxWorkingDirectory;
   const topicDrive = topicMetadata?.sandboxDrive;
+  const topicEnvironmentId = topicMetadata?.sandboxEnvironmentId;
   const updateTopicMetadata = useChatStore((s) => s.updateTopicMetadata);
   // The pending value lives outside React, so this subscribes to it the way a
   // store would be subscribed to. Every component using this hook re-renders
@@ -61,7 +66,12 @@ export const useSandboxPlacement = (agentId: string, scopeTopicId?: string | nul
   );
 
   const selection: SandboxSelection = topicId
-    ? { drive: topicDrive, instanceId: topicInstanceId, workingDirectory: topicWorkingDirectory }
+    ? {
+        drive: topicDrive,
+        environmentId: topicEnvironmentId,
+        instanceId: topicInstanceId,
+        workingDirectory: topicWorkingDirectory,
+      }
     : (pending ?? {});
 
   const setSelection = useCallback(
@@ -71,11 +81,12 @@ export const useSandboxPlacement = (agentId: string, scopeTopicId?: string | nul
         return;
       }
 
-      // Written whole, both fields every time: a folder and an environment
-      // directory are alternatives, and a stale half left behind would come
-      // back the moment the other was cleared.
+      // Written whole, every field every time: a stale half left behind would
+      // come back the moment the other was cleared. A legacy environment
+      // directory is only ever carried forward as it was, never chosen anew.
       await updateTopicMetadata(topicId, {
         sandboxDrive: isPersistentSelection(next) ? next.drive : undefined,
+        sandboxEnvironmentId: next.environmentId,
         sandboxInstanceId: next.instanceId,
         sandboxWorkingDirectory: next.instanceId ? undefined : next.workingDirectory,
       });

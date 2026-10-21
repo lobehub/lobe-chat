@@ -68,14 +68,25 @@ export const configurationSchema = z.object({
   excludePaths: z.array(relativePathSchema).max(64).optional(),
   internetAccess: z.boolean().optional(),
   // Which form the product shows. Accepted here so it is stored rather than
-  // stripped by the parse; it never travels on to the execution plane. Only
-  // `code` now: a folder of files is a folder on the drive, not an
-  // environment.
-  kind: z.literal('code').optional(),
+  // stripped by the parse; it never travels on to the execution plane. New
+  // environments are `code`: a folder of files is a folder on the drive, not
+  // an environment. `files` is still accepted because the previous release
+  // stored it, and an edit sends the stored configuration back whole — refusing
+  // it would leave those environments impossible to change.
+  kind: z.enum(['code', 'files']).optional(),
   maintenanceCommand: z.string().max(8000).optional(),
   // One repository per environment. The wire format stays a list because the
   // execution plane checks out an array of sources, but an environment that
   // builds from two repositories has no single working directory to hand a
   // conversation — and the picker that fills this offers exactly one.
   sources: z.array(environmentSourceSchema).max(1).optional(),
+});
+
+/**
+ * A new environment's configuration: `code` only. {@link configurationSchema}
+ * accepts the legacy `files` kind so a stored row can still be edited; nothing
+ * creates one any more.
+ */
+export const newConfigurationSchema = configurationSchema.extend({
+  kind: z.literal('code').optional(),
 });

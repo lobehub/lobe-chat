@@ -84,6 +84,21 @@ describe('environmentRouter', () => {
       }
     });
 
+    it('still saves an edit to an environment the previous release stored as files', async () => {
+      mockFindOwnedById.mockResolvedValue({ id: environmentId });
+      mockUpdate.mockResolvedValue({ id: environmentId, name: 'Legacy' });
+
+      await caller().updateEnvironment({
+        configuration: { bootstrapCommand: 'make', kind: 'files' },
+        id: environmentId,
+      });
+
+      expect(mockUpdate).toHaveBeenCalledWith(
+        environmentId,
+        expect.objectContaining({ configuration: { bootstrapCommand: 'make', kind: 'files' } }),
+      );
+    });
+
     it('creates the definition alone, with no folder on any drive', async () => {
       mockCreate.mockResolvedValue({ id: 'env-code', name: 'Atlas' });
 

@@ -4297,7 +4297,7 @@ When I am ___, I need ___
     'Runs once in the checkout, with network access, before the conversation starts.',
   'environments.form.env': 'Environment variables',
   'environments.form.envHint':
-    'Non-secret values only — these are stored as plain text and copied into every copy of this environment.',
+    'Non-secret values only — stored as plain text and exported while the repository is cloned and the setup command runs.',
   'environments.form.addEnv': 'New variable',
   'environments.form.envCount_one': '{{count}} variable',
   'environments.form.envCount_other': '{{count}} variables',
@@ -4323,6 +4323,10 @@ When I am ___, I need ___
   'environments.form.changeRepository': 'Change repository',
   'environments.form.disconnect': 'Disconnect',
   'environments.detail.tabs.overview': 'Overview',
+  'environments.detail.initializerDesc':
+    'Applied once to a working directory picked for a conversation: the repository is cloned there and the setup command runs.',
+  'environments.detail.noRepository': 'No repository',
+  'environments.detail.noSetup': 'No setup command',
   'environments.instances.copy': 'Duplicate copy',
   'environments.instances.copyTitle': 'Duplicate {{name}}',
   'environments.instances.copyFailed': 'Could not duplicate this copy',
@@ -4412,6 +4416,8 @@ When I am ___, I need ___
     'What a copy is built from — where the code comes from and what makes it usable.',
   'environments.form.appliesOnBuild':
     'Applied when a copy is created. Existing copies keep the definition they were made with — a rebuild replays that one, so use a new copy to pick this up.',
+  'environments.form.appliesOnInit':
+    'Takes effect the next time the environment is applied to a working directory. Folders it was already applied to keep what they have.',
   'environments.refresh': 'Refresh',
   'environments.emptyPublished': 'Nothing published to this workspace yet',
   'environments.visibility.tabs.workspace': 'Workspace',
@@ -4521,6 +4527,9 @@ When I am ___, I need ___
   'drive.usage.showFewerMembers': 'Show fewer',
   'drive.usage.over':
     'Storage is over quota. Free up space or upgrade before more files can be saved.',
+  'drive.usage.enableOverage': 'Turn on pay-as-you-go',
+  'drive.usage.overageModalTitle': 'Keep saving past the quota',
+  'drive.usage.overageAskAdmin': 'Ask a workspace admin to turn on pay-as-you-go to keep saving.',
   'drive.usage.overBilled':
     'Over the quota. Files keep saving, and the extra is billed as pay-as-you-go overage.',
   'drive.retained.title': "Departed members' personal drives",
@@ -4540,6 +4549,14 @@ When I am ___, I need ___
   'drive.retained.deleted': 'Drive deleted',
   'drive.usage.manage': 'Manage in Storage',
   'drive.explorer.newFolder': 'New folder',
+  'drive.explorer.columns.name': 'Name',
+  'drive.explorer.columns.modified': 'Date modified',
+  'drive.explorer.columns.size': 'Size',
+  'drive.explorer.columns.kind': 'Kind',
+  'drive.explorer.kind.folder': 'Folder',
+  'drive.explorer.kind.gitRepository': 'Git repository',
+  'drive.explorer.kind.file': 'File',
+  'drive.explorer.kind.fileWithExtension': '{{extension}} file',
   'drive.explorer.rename': 'Rename',
   'drive.explorer.delete': 'Delete',
   'drive.explorer.moreActions': 'More actions',

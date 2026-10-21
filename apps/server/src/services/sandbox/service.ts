@@ -13,6 +13,12 @@ import {
   SANDBOX_INIT_TIMEOUT_MS,
   type SandboxInitDownload,
 } from './bootstrap';
+import {
+  buildSandboxEnvironmentInitCommand,
+  environmentInitRan,
+  environmentInitReport,
+  SANDBOX_ENVIRONMENT_INIT_TIMEOUT_MS,
+} from './environmentInit';
 import type {
   SandboxCommandResult,
   SandboxProvider,
@@ -28,6 +34,7 @@ export class SandboxMiddlewareService implements SandboxService {
   readonly capabilities: SandboxProviderCapabilities;
   readonly kind: SandboxProviderKind;
 
+  private environmentInitialized = false;
   private filesInitialized = false;
 
   constructor(
@@ -42,8 +49,53 @@ export class SandboxMiddlewareService implements SandboxService {
     toolName: string,
     params: Record<string, unknown>,
   ): Promise<SandboxCallToolResult> {
+    const environmentReport = await this.ensureEnvironmentInitialized();
     await this.ensureFilesInitialized();
-    return this.provider.callTool(toolName, params);
+    const result = await this.provider.callTool(toolName, params);
+
+    return environmentReport ? withEnvironmentReport(toolName, result, environmentReport) : result;
+  }
+
+  /**
+   * Apply the topic's environment to the working directory the first time this
+   * service instance is used: clone its repository and run its setup there.
+   *
+   * Guarded by a marker the command leaves in the directory, like the file
+   * sync below, and for the same reason — it is the single source of truth.
+   * A temporary sandbox loses it with the sandbox, so the next one is
+   * initialized again; a folder on the drive keeps it, so the folder is
+   * initialized once. Best-effort: a failure is reported, never thrown, and
+   * the tool call it precedes still runs.
+   *
+   * Returns what the run printed when it did something, for the first shell
+   * result to carry; nothing when the directory was already initialized.
+   */
+  private async ensureEnvironmentInitialized(): Promise<string | undefined> {
+    if (this.environmentInitialized) return;
+    this.environmentInitialized = true;
+
+    const init = this.options.sandboxInitialization;
+    if (!init || !this.provider.capabilities.shell) return;
+
+    try {
+      const result = await this.provider.callTool('runCommand', {
+        command: buildSandboxEnvironmentInitCommand(init),
+        timeout: SANDBOX_ENVIRONMENT_INIT_TIMEOUT_MS,
+      });
+      const stdout = (result.result as { stdout?: string } | null | undefined)?.stdout;
+      if (!environmentInitRan(stdout)) return;
+
+      log(
+        'Environment %s applied for topic %s: success=%s',
+        init.environmentId,
+        this.options.topicId,
+        result.success,
+      );
+
+      return environmentInitReport(stdout) || undefined;
+    } catch (error) {
+      log('Environment init failed for topic %s: %O', this.options.topicId, error);
+    }
   }
 
   /**
@@ -228,5 +280,27 @@ export const normalizeSandboxCommandResult = (
     output,
     stderr,
     success,
+  };
+};
+
+const SHELL_TOOLS = new Set(['execScript', 'runCommand']);
+
+/**
+ * The first shell result after an environment was applied, with what applying
+ * it said in front — so the conversation sees why its directory now holds a
+ * checkout, or why it does not. Other tools' results are left as they are:
+ * they have no output to put it in.
+ */
+const withEnvironmentReport = (
+  toolName: string,
+  result: SandboxCallToolResult,
+  report: string,
+): SandboxCallToolResult => {
+  const payload = result.result as { stdout?: string } | null | undefined;
+  if (!SHELL_TOOLS.has(toolName) || !payload || typeof payload !== 'object') return result;
+
+  return {
+    ...result,
+    result: { ...payload, stdout: `[environment] ${report}\n\n${payload.stdout ?? ''}` },
   };
 };
