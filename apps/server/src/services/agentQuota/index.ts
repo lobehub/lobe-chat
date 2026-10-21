@@ -474,9 +474,12 @@ export class AgentQuotaService {
     // rather than quietly run another account.
     if (options.runnableExternalAccountIds) {
       const runnable = new Set(options.runnableExternalAccountIds);
-      const accounts = await Promise.all(pool.map((b) => this.accounts.findById(b.accountId)));
-      pool = pool.filter((_, index) => {
-        const externalId = accounts[index]?.externalAccountId;
+      // One read of the caller's accounts rather than a lookup per binding.
+      const externalIdById = new Map(
+        (await this.accounts.list()).map((account) => [account.id, account.externalAccountId]),
+      );
+      pool = pool.filter((b) => {
+        const externalId = externalIdById.get(b.accountId);
         return !!externalId && runnable.has(externalId);
       });
     }

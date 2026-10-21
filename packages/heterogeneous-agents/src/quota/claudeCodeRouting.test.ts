@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { claudeCodeRoutesExternally, pickClaudeCodeRoutingEnv } from './claudeCodeRouting';
+import { claudeCodeRoutesExternally } from './claudeCodeRouting';
 
 describe('claudeCodeRoutesExternally', () => {
   it.each([
@@ -16,13 +16,5 @@ describe('claudeCodeRoutesExternally', () => {
     ['no flags', undefined, {}, false],
   ])('treats %s per the spawn-env merge', (_label, agentEnv, inherited, expected) => {
     expect(claudeCodeRoutesExternally(agentEnv, inherited)).toBe(expected);
-  });
-});
-
-describe('pickClaudeCodeRoutingEnv', () => {
-  it('keeps only the routing flags present in the env', () => {
-    expect(
-      pickClaudeCodeRoutingEnv({ CLAUDE_CODE_USE_BEDROCK: '1', HOME: '/home/me', PATH: '/bin' }),
-    ).toEqual({ CLAUDE_CODE_USE_BEDROCK: '1' });
   });
 });

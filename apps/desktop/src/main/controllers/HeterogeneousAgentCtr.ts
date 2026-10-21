@@ -144,11 +144,18 @@ export default class HeterogeneousAgentCtr extends ControllerModule {
    */
   @IpcMethod()
   async getClaudeCodeInheritedRoutingEnv() {
-    const [{ buildInheritedSpawnEnv }, { pickClaudeCodeRoutingEnv }] = await Promise.all([
-      import('./HeterogeneousAgentImpl'),
-      import('@lobechat/heterogeneous-agents/quota'),
-    ]);
-    return pickClaudeCodeRoutingEnv(buildInheritedSpawnEnv());
+    const [{ buildInheritedSpawnEnv }, { CLAUDE_CODE_EXTERNAL_ROUTING_ENV_KEYS }] =
+      await Promise.all([
+        import('./HeterogeneousAgentImpl'),
+        import('@lobechat/heterogeneous-agents/quota'),
+      ]);
+    const inherited = buildInheritedSpawnEnv();
+    const flags: Record<string, string> = {};
+    for (const key of CLAUDE_CODE_EXTERNAL_ROUTING_ENV_KEYS) {
+      const value = inherited[key];
+      if (value !== undefined) flags[key] = value;
+    }
+    return flags;
   }
 
   /** Sign an account in to its own profile; resolves once the browser login lands. */
