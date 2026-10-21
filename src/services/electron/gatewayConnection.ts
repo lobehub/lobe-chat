@@ -28,7 +28,6 @@ class GatewayConnectionService {
   getStableDeviceId = async () => {
     return ensureElectronIpc().gatewayConnection.getStableDeviceId();
   };
-
 }
 
 export const gatewayConnectionService = new GatewayConnectionService();

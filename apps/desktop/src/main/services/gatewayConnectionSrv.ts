@@ -42,8 +42,8 @@ import { createLogger } from '@/utils/logger';
 import { getDesktopUserAgent } from '@/utils/user-agent';
 import { safeGetPath } from '@/utils/user-path';
 
-import { collectBundledCliAgentRuntimes, collectGatewaySystemInfo } from './gatewaySystemInfo';
 import { discoverDeviceGateway } from './gatewayDiscovery';
+import { collectBundledCliAgentRuntimes, collectGatewaySystemInfo } from './gatewaySystemInfo';
 import { ServiceModule } from './index';
 
 const logger = createLogger('services:GatewayConnectionSrv');

@@ -2,10 +2,15 @@ import { act } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { gatewayConnectionService } from '@/services/electron/gatewayConnection';
-
 import { useElectronStore } from '@/store/electron';
 
-const service = vi.hoisted(() => ({ getDeviceInfo: vi.fn(), getStableDeviceId: vi.fn(), connect: vi.fn(), disconnect: vi.fn(), getConnectionStatus: vi.fn() }));
+const service = vi.hoisted(() => ({
+  getDeviceInfo: vi.fn(),
+  getStableDeviceId: vi.fn(),
+  connect: vi.fn(),
+  disconnect: vi.fn(),
+  getConnectionStatus: vi.fn(),
+}));
 
 vi.mock('@lobechat/const', async (importOriginal) => ({
   ...(await importOriginal<object>()),
