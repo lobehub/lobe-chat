@@ -36,6 +36,7 @@ vi.mock('@/store/resourcePermission', () => ({
   resourcePermissionActions: { reset: resourcePermissionReset },
 }));
 vi.mock('@/store/sandbox', () => ({ sandboxActions: { reset: sandboxReset } }));
+vi.mock('@/store/quickNote', () => ({ useQuickNoteStore: fakeStore() }));
 vi.mock('@/store/session', () => ({ useSessionStore: fakeStore() }));
 vi.mock('@/store/task', () => ({ useTaskStore: fakeStore() }));
 vi.mock('@/store/tool', () => ({ useToolStore: fakeStore() }));

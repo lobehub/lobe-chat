@@ -266,6 +266,7 @@ describe('systemStatusSelectors', () => {
         'agent',
         'recents',
         'pages',
+        'note',
         'tasks',
         'image',
         'community',
@@ -286,6 +287,7 @@ describe('systemStatusSelectors', () => {
         'project',
         SIDEBAR_SPACER_ID,
         'pages',
+        'note',
         'tasks',
         'image',
         'community',
@@ -297,6 +299,7 @@ describe('systemStatusSelectors', () => {
     it('should preserve a canonically-positioned spacer', () => {
       const stored = [
         'pages',
+        'note',
         'goals',
         'dashboard',
         'project',
@@ -322,6 +325,7 @@ describe('systemStatusSelectors', () => {
       const stored = [
         'tasks',
         'pages',
+        'note',
         SIDEBAR_SPACER_ID,
         'recents',
         'private',
@@ -337,6 +341,7 @@ describe('systemStatusSelectors', () => {
       expect(systemStatusSelectors.sidebarItems(null)(s)).toEqual([
         'tasks',
         'pages',
+        'note',
         'goals',
         'dashboard',
         'recents',
@@ -359,6 +364,7 @@ describe('systemStatusSelectors', () => {
       const spacerIdx = items.indexOf(SIDEBAR_SPACER_ID);
       // every known key is present
       expect(items).toContain('pages');
+      expect(items).toContain('note');
       expect(items).toContain('tasks');
       expect(items).toContain('community');
       expect(items).toContain('resource');
@@ -373,6 +379,7 @@ describe('systemStatusSelectors', () => {
       // missing bottom-group defaults sit after the spacer
       expect(items.indexOf('image')).toBeGreaterThan(spacerIdx);
       expect(items.indexOf('pages')).toBeGreaterThan(spacerIdx);
+      expect(items.indexOf('note')).toBeGreaterThan(items.indexOf('pages'));
     });
 
     it('should migrate legacy `sidebarSectionOrder` accordion order into the default layout', () => {
@@ -395,6 +402,7 @@ describe('systemStatusSelectors', () => {
         'image',
         'community',
         'pages',
+        'note',
         'memory',
       ]);
     });
@@ -419,6 +427,7 @@ describe('systemStatusSelectors', () => {
         'image',
         'community',
         'pages',
+        'note',
         'memory',
       ]);
     });

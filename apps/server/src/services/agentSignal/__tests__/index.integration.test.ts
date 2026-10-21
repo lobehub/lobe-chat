@@ -1,6 +1,6 @@
 // @vitest-environment node
 import type { Mock } from 'vitest';
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 
 interface LoadIndexIntegrationModuleOptions {
   featureGateEnabled?: boolean;
@@ -8,6 +8,8 @@ interface LoadIndexIntegrationModuleOptions {
   mockEmitSourceEvent?: Mock;
   mockInitModelRuntimeFromDB?: Mock;
   mockProjectObservability?: Mock;
+  /** Module factory for `@/server/services/quickNote`. */
+  mockQuickNoteModule?: () => Record<string, unknown>;
   mockRuntimeFactory?: Mock;
 }
 
@@ -50,6 +52,7 @@ const loadIndexIntegrationModule = async (options: LoadIndexIntegrationModuleOpt
   vi.doUnmock('../sources');
   vi.doUnmock('@/server/services/agentDocuments');
   vi.doUnmock('@/server/modules/ModelRuntime');
+  vi.doUnmock('@/server/services/quickNote');
 
   const persistAgentSignalObservability = vi.fn().mockResolvedValue(undefined);
   const isAgentSignalEnabledForUser = vi.fn().mockResolvedValue(options.featureGateEnabled ?? true);
@@ -65,6 +68,10 @@ const loadIndexIntegrationModule = async (options: LoadIndexIntegrationModuleOpt
     vi.doMock('@/server/modules/ModelRuntime', () => ({
       initModelRuntimeFromDB: options.mockInitModelRuntimeFromDB,
     }));
+  }
+
+  if (options.mockQuickNoteModule) {
+    vi.doMock('@/server/services/quickNote', options.mockQuickNoteModule);
   }
 
   if (options.mockEmitSourceEvent) {
@@ -101,6 +108,19 @@ const loadIndexIntegrationModule = async (options: LoadIndexIntegrationModuleOpt
     },
   };
 };
+
+/**
+ * Transforms the real entrypoint and orchestrator graph once per file.
+ *
+ * Why: `emitAgentSignalSourceEvent` imports the orchestrator lazily, so whichever test first
+ * reaches it would otherwise pay the cold transform of the whole server runtime graph inside its
+ * own timeout. `vi.resetModules()` keeps transformed code, so later per-test loads stay cheap.
+ */
+beforeAll(async () => {
+  await import('../index');
+  await import('../orchestrator');
+  vi.resetModules();
+}, 120_000);
 
 afterEach(() => {
   vi.clearAllMocks();
@@ -358,6 +378,62 @@ describe('emitAgentSignalSourceEvent integration', () => {
       );
     },
   );
+
+  /**
+   * @example
+   * An `agent.user.message` source runs without creating a Quick Note service.
+   */
+  it(
+    'does not run Quick Note handlers for non-Quick-Note sources',
+    { timeout: 10_000 },
+    async () => {
+      (globalThis as { __agentSignalRedisClient?: typeof mockRedis }).__agentSignalRedisClient =
+        mockRedis;
+      mockRedis.set.mockResolvedValue('OK');
+      mockRedis.del.mockResolvedValue(1);
+      mockRedis.hgetall.mockResolvedValue({});
+      mockRedis.hset.mockResolvedValue(1);
+      mockRedis.expire.mockResolvedValue(1);
+      mockCountClassifierCall.mockResolvedValue(1);
+      const initModelRuntimeFromDB = vi.fn().mockResolvedValue({
+        generateObject: vi.fn().mockResolvedValue({
+          confidence: 0.91,
+          evidence: [{ cue: 'no durable request', excerpt: 'remember this' }],
+          reason: 'the message does not express satisfaction feedback',
+          result: 'neutral',
+        }),
+      });
+      const QuickNoteProcessingService = vi.fn();
+
+      const { emitAgentSignalSourceEvent } = await loadIndexIntegrationModule({
+        mockInitModelRuntimeFromDB: initModelRuntimeFromDB,
+        mockQuickNoteModule: () => ({ QuickNoteProcessingService }),
+      });
+
+      const result = await emitAgentSignalSourceEvent(
+        {
+          payload: { intents: ['memory'], message: 'remember this', messageId: 'msg_qn' },
+          sourceId: 'source_qn',
+          sourceType: 'agent.user.message',
+        },
+        { agentId: 'agent_1', db: {} as never, userId: 'user_1' },
+      );
+
+      if (!result || result.deduped) throw new Error('unexpected dedupe');
+
+      const { envelope } = result.orchestration.observability;
+      const trace = JSON.stringify([
+        envelope.handlerRuns,
+        envelope.signals,
+        envelope.actions,
+        envelope.results,
+      ]);
+
+      expect(trace).not.toMatch(/quick[-_]note/);
+      expect(QuickNoteProcessingService).not.toHaveBeenCalled();
+    },
+  );
+
   /**
    * @example
    * The 201st feedback message of the UTC day concludes without a classifier call.

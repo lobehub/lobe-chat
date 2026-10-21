@@ -9,6 +9,7 @@ import { ModelItemRender, ProviderItemRender, TAG_CLASSNAME } from '@/components
 import { aiProviderSelectors, useAiInfraStore } from '@/store/aiInfra';
 import { type EnabledProviderWithModels } from '@/types/aiProvider';
 
+import { mergeProviderModelLists } from './mergeProviderModelLists';
 import { resolveEnableTargetProviderId, resolveStaleModelState } from './resolveStaleModelState';
 
 const prefixCls = 'ant';
@@ -92,6 +93,12 @@ interface ModelSelectProps extends Pick<
   | 'variant'
 > {
   defaultValue?: { model: string; provider?: string };
+  /**
+   * Also offer decision models (`type: 'decision'`) next to chat models. Only for slots whose
+   * server path answers through `decide`, which runs decision models natively and emulates
+   * decisions on chat models.
+   */
+  includeDecisionModels?: boolean;
   initialWidth?: boolean;
   modelType?: 'asr' | 'chat' | 'embedding';
   onChange?: (props: { model: string; provider: string }) => void;
@@ -124,16 +131,28 @@ const ModelSelect = memo<ModelSelectProps>(
     initialWidth = false,
     popupWidth,
     modelType = 'chat',
+    includeDecisionModels = false,
     providerIds,
   }) => {
     const { t } = useTranslation('components');
     const [enabling, setEnabling] = useState(false);
-    const fullEnabledList = useAiInfraStore((s) =>
+    const typedEnabledList = useAiInfraStore((s) =>
       modelType === 'embedding'
         ? aiProviderSelectors.enabledEmbeddingModelList(s)
         : modelType === 'asr'
           ? aiProviderSelectors.enabledAsrModelList(s)
           : s.enabledChatModelList || [],
+    );
+    const withDecisionModels = includeDecisionModels && modelType === 'chat';
+    const decisionModelList = useAiInfraStore((s) =>
+      withDecisionModels ? aiProviderSelectors.enabledDecisionModelList(s) : undefined,
+    );
+    const fullEnabledList = useMemo(
+      () =>
+        decisionModelList
+          ? mergeProviderModelLists(typedEnabledList, decisionModelList)
+          : typedEnabledList,
+      [decisionModelList, typedEnabledList],
     );
     const enabledList = useMemo(() => {
       if (!providerIds) return fullEnabledList;
@@ -200,6 +219,7 @@ const ModelSelect = memo<ModelSelectProps>(
       return resolveStaleModelState(value, {
         builtinAiModelList,
         enabledList,
+        extraModelTypes: withDecisionModels ? ['decision'] : undefined,
         modelRedirects,
         modelType,
       });
@@ -210,6 +230,7 @@ const ModelSelect = memo<ModelSelectProps>(
       modelRedirects,
       modelType,
       value,
+      withDecisionModels,
     ]);
 
     const handleEnable = useCallback(async () => {
@@ -236,7 +257,8 @@ const ModelSelect = memo<ModelSelectProps>(
           enabled: true,
           id: value.model,
           providerId,
-          type: modelType,
+          // A decision model offered in a chat picker is enabled under its own type.
+          type: staleState?.meta?.type ?? modelType,
         });
         // Realign the selection when it pointed at a different provider, so the now
         // enabled model resolves as a valid option instead of staying stale.

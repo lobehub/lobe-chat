@@ -1,5 +1,10 @@
 import type {
   ChatCompletionTool,
+  DecisionOptions,
+  DecisionPayload,
+  DecisionQuestions,
+  DecisionResponse,
+  GenerateObjectOptions,
   GenerateObjectPayload,
   GenerateObjectSchema,
 } from '@lobechat/model-runtime';
@@ -7,6 +12,7 @@ import type { OpenAIChatMessage, RequestTrigger } from '@lobechat/types';
 
 import type { LobeChatDatabase } from '@/database/type';
 import { initModelRuntimeForRequest } from '@/server/modules/AgentRuntime/llmRelay/oneShot';
+import { initModelRuntimeFromDB } from '@/server/modules/ModelRuntime';
 
 export interface AiGenerationObjectInput {
   messages: OpenAIChatMessage[] | GenerateObjectPayload['messages'];
@@ -27,6 +33,8 @@ export interface AiGenerationObjectOptions {
    * (e.g. `task`), not the prompt — the prompt goes in `tracing.scenario`.
    */
   metadata: Record<string, unknown> & { trigger: RequestTrigger };
+  /** Receives the token usage of the call, after billing and tracing hooks have seen it. */
+  onUsage?: GenerateObjectOptions['onUsage'];
   signal?: AbortSignal;
   /**
    * Structured tracing config (scenario / promptVersion / schemaName /
@@ -80,7 +88,30 @@ export class AiGenerationService {
         thinking: input.thinking,
         tools: input.tools,
       },
-      { metadata: options.metadata, signal: options.signal, tracing: options.tracing },
+      {
+        metadata: options.metadata,
+        onUsage: options.onUsage,
+        signal: options.signal,
+        tracing: options.tracing,
+      },
     )) as T;
+  }
+
+  /**
+   * Answer typed questions about one state (`ModelRuntime.decide`): natively for decision
+   * models, emulated through `generateObject` for chat models. Runs on the server runtime
+   * only; device-relayed providers are not supported here.
+   */
+  async decide<Q extends DecisionQuestions>(
+    { provider, ...payload }: DecisionPayload<Q> & { provider: string },
+    options: Pick<AiGenerationObjectOptions, 'metadata' | 'signal'> &
+      Pick<DecisionOptions, 'onUsage'>,
+  ): Promise<DecisionResponse<Q>> {
+    const runtime = await initModelRuntimeFromDB(this.db, this.userId, provider, this.workspaceId);
+    return runtime.decide(payload as DecisionPayload<Q>, {
+      metadata: options.metadata,
+      onUsage: options.onUsage,
+      signal: options.signal,
+    });
   }
 }

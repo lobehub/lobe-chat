@@ -45,6 +45,8 @@ export const config = {
     '/project/(.*)',
     '/page',
     '/page(.*)',
+    '/note',
+    '/note(.*)',
     '/tasks',
     '/tasks(.*)',
     '/task',
