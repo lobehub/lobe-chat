@@ -29,6 +29,9 @@ async function waitForPageWorkspaceReady(world: CustomWorld): Promise<void> {
     }
 
     const readyCandidates = [
+      // Pages live inside Docs now: the Docs home quick action renders a FilePlus2
+      // icon, while the sidebar section keeps the SquarePen one.
+      world.page.locator(':is(button, [role="button"]):has(svg.lucide-file-plus-2)').first(),
       world.page.locator(':is(button, [role="button"]):has(svg.lucide-square-pen)').first(),
       world.page.locator('input[placeholder*="Search"], input[placeholder*="搜索"]').first(),
       world.page.locator('a[href*="/resource/page/"]').first(),
@@ -50,6 +53,9 @@ async function clickNewPageButton(world: CustomWorld): Promise<void> {
   await waitForPageWorkspaceReady(world);
 
   const candidates = [
+    // Pages live inside Docs now: the home quick action renders a FilePlus2 icon,
+    // while the sidebar section keeps the SquarePen one.
+    world.page.locator(':is(button, [role="button"]):has(svg.lucide-file-plus-2)').first(),
     world.page.locator(':is(button, [role="button"]):has(svg.lucide-square-pen)').first(),
     world.page
       .locator('svg.lucide-square-pen')
@@ -83,7 +89,7 @@ Given('用户打开一个文稿编辑器', async function (this: CustomWorld) {
   console.log('   📍 Step: 创建并打开一个文稿...');
 
   // Navigate to page module
-  await this.page.goto('/page');
+  await this.page.goto('/resource');
   await this.page.waitForLoadState('domcontentloaded', { timeout: 15_000 });
   await waitForPageWorkspaceReady(this);
 
@@ -92,7 +98,7 @@ Given('用户打开一个文稿编辑器', async function (this: CustomWorld) {
   await this.page.waitForTimeout(1500);
 
   // Wait for navigation to page editor
-  await this.page.waitForURL(/\/page\/.+/, { timeout: WAIT_TIMEOUT });
+  await this.page.waitForURL(/\/resource\/page\/.+/, { timeout: WAIT_TIMEOUT });
   await this.page.waitForLoadState('domcontentloaded');
   await this.page.waitForTimeout(500);
 
@@ -103,14 +109,14 @@ Given('用户打开一个带有 Emoji 的文稿', async function (this: CustomWo
   console.log('   📍 Step: 创建并打开一个带 Emoji 的文稿...');
 
   // First create and open a page
-  await this.page.goto('/page');
+  await this.page.goto('/resource');
   await this.page.waitForLoadState('domcontentloaded', { timeout: 15_000 });
   await waitForPageWorkspaceReady(this);
 
   await clickNewPageButton(this);
   await this.page.waitForTimeout(1500);
 
-  await this.page.waitForURL(/\/page\/.+/, { timeout: WAIT_TIMEOUT });
+  await this.page.waitForURL(/\/resource\/page\/.+/, { timeout: WAIT_TIMEOUT });
   await this.page.waitForLoadState('domcontentloaded');
   await this.page.waitForTimeout(500);
 
