@@ -33,6 +33,8 @@ export const getKeyVaultsSecrets = () => {
 
 export const isKeyVaultsSecretBearerToken = (authorization: string | null) => {
   const { active, fallback } = getKeyVaultsSecrets();
+  if (!active) return false;
+
   return [active, fallback].some(
     (secret) => secret !== undefined && authorization === `Bearer ${secret}`,
   );

@@ -1,7 +1,7 @@
 // @vitest-environment node
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { KeyVaultsGateKeeper } from './index';
+import { isKeyVaultsSecretBearerToken, KeyVaultsGateKeeper } from './index';
 
 describe('KeyVaultsGateKeeper', () => {
   let gateKeeper: KeyVaultsGateKeeper;
@@ -60,6 +60,14 @@ describe('KeyVaultsGateKeeper', () => {
     await expect(KeyVaultsGateKeeper.initWithEnvKey()).rejects.toThrow(
       '`KEY_VAULTS_FALLBACK_SECRET` must be 16, 24, or 32 bytes',
     );
+  });
+
+  it('rejects fallback bearer tokens when the active secret is missing', () => {
+    const fallbackSecret = process.env.KEY_VAULTS_SECRET!;
+    process.env.KEY_VAULTS_FALLBACK_SECRET = fallbackSecret;
+    delete process.env.KEY_VAULTS_SECRET;
+
+    expect(isKeyVaultsSecretBearerToken(`Bearer ${fallbackSecret}`)).toBe(false);
   });
 
   it('should return empty plaintext and false authenticity for invalid encrypted data', async () => {
