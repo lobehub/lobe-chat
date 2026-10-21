@@ -760,6 +760,33 @@ describe('LobeBedrockAI', () => {
           });
         });
 
+        it('should send adaptive thinking with effort when Claude Haiku 5.5 gets an enabled budget', async () => {
+          const mockStream = new ReadableStream({
+            start(controller) {
+              controller.enqueue('Hello, world!');
+              controller.close();
+            },
+          });
+          (instance['client'].send as Mock).mockResolvedValue(Promise.resolve(mockStream));
+
+          await instance.chat({
+            effort: 'low',
+            max_tokens: 64_000,
+            messages: [{ content: 'Hello', role: 'user' }],
+            model: 'global.anthropic.claude-haiku-5-5',
+            thinking: { budget_tokens: 2048, type: 'enabled' },
+          });
+
+          const commandInput = (
+            InvokeModelWithResponseStreamCommand as unknown as Mock
+          ).mock.calls.at(-1)?.[0];
+          const body = JSON.parse(commandInput.body);
+
+          // Haiku 5.5 rejects `enabled` budgets with a 400; adaptive plus effort replaces them.
+          expect(body.thinking).toEqual({ display: 'summarized', type: 'adaptive' });
+          expect(body.output_config).toEqual({ effort: 'low' });
+        });
+
         it('should forward disabled thinking without effort for Claude Opus 5', async () => {
           const mockStream = new ReadableStream({
             start(controller) {

@@ -54,10 +54,8 @@ export const resolveClaudeThinkingConfig = ({
 
   switch (thinking?.type) {
     case 'enabled': {
-      // Callers still send `enabled` to models that removed budgets (e.g. relayed Anthropic
-      // clients, or older agent configs). Upstream rejects it with a 400; some proxies retry
-      // internally first, so the failure also showed up as minutes-long TTFT on Haiku 5.5.
-      // Adaptive is the documented replacement and keeps thinking on as the caller asked.
+      // Callers can still send `enabled` to models that removed budgets, which upstream rejects
+      // with a 400. Adaptive is the documented replacement and keeps thinking on as asked.
       if ([model, requestModel].some((id) => !!id && rejectsManualThinkingBudget(id))) {
         return { type: 'adaptive', ...displayConfig };
       }
