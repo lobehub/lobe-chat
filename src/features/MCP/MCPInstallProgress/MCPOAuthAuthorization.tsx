@@ -1,9 +1,12 @@
-import { Alert, Button, Flexbox, Text } from '@lobehub/ui';
+import { Button, Flexbox, Text } from '@lobehub/ui';
 import { useTranslation } from 'react-i18next';
 
+import { ErrorLine } from '@/features/Dashboard/ErrorLine';
 import { usePermission } from '@/hooks/usePermission';
 import { useAgentStore } from '@/store/agent';
 import { useToolStore } from '@/store/tool';
+
+import { getOAuthErrorPresentation } from './oauthErrorPresentation';
 
 interface MCPOAuthAuthorizationProps {
   error?: string;
@@ -16,17 +19,18 @@ export const MCPOAuthAuthorization = ({ error, identifier }: MCPOAuthAuthorizati
   const { allowed: canEdit } = usePermission('edit_own_content');
   const authorizeMCPPlugin = useToolStore((s) => s.authorizeMCPPlugin);
   const togglePlugin = useAgentStore((s) => s.togglePlugin);
-  const oauthErrors: Record<string, string> = {
+  const oauthErrors = {
     blocked: t('dev.oauthError.blocked'),
     dismissed: t('dev.oauthError.dismissed'),
     failed: t('dev.oauthError.failed'),
     timeout: t('dev.oauthError.timeout'),
   };
+  const errorPresentation = error ? getOAuthErrorPresentation(error, oauthErrors) : undefined;
 
   return (
     <Flexbox gap={8} paddingBlock={8}>
       <Text>{t('mcpInstall.AUTHORIZATION_REQUIRED')}</Text>
-      {error && <Alert title={oauthErrors[error] ?? error} type={'error'} />}
+      {errorPresentation && <ErrorLine key={error} {...errorPresentation} />}
       <Button
         disabled={!canCreate || !canEdit}
         type={'primary'}
