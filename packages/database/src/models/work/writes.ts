@@ -413,7 +413,7 @@ export const deleteWork = async (
         select distinct ${workVersions.metadata} -> 'canvas' ->> 'manifestKey'
         from ${workVersions}
         where ${workVersions.workId} = ${params.id}
-          and ${workVersions.metadata} -> 'canvas' ->> 'manifestKey' is not null
+          and coalesce(${workVersions.metadata} -> 'canvas' ->> 'manifestKey', '') <> ''
       )`,
       resourceId: works.resourceId,
       resourceType: works.resourceType,
