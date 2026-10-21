@@ -127,7 +127,8 @@ export const CanvasManifest: BuiltinToolManifest = {
   identifier: CanvasIdentifier,
   meta: {
     avatar: '🖼️',
-    description: 'Build report pages from LobeHub components, versioned and publishable',
+    description:
+      'Default for reports, analyses, comparisons and data dashboards: a versioned page built from LobeHub components that the user can revisit and publish. Prefer it over inline HTML or Artifacts for these',
     title: 'Canvas',
   },
   systemRole: systemPrompt,
