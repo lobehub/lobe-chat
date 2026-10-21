@@ -1,6 +1,8 @@
 import { DEFAULT_INBOX_AVATAR } from '@lobechat/const';
 import { agentDisplayName } from '@lobechat/types';
-import { createStaticStyles, cssVar, Flexbox, Icon, Popover, Text, Tooltip } from '@lobehub/ui';
+import { Flexbox, Icon, Popover, Text, Tooltip } from '@lobehub/ui';
+import { cssVar } from '@lobehub/ui/stylex/cssVar.stylex';
+import * as stylex from '@stylexjs/stylex';
 import isEqual from 'fast-deep-equal';
 import { UserRoundX } from 'lucide-react';
 import type { CSSProperties, KeyboardEvent, ReactNode } from 'react';
@@ -36,34 +38,31 @@ type AgentOption =
   | { key: 'unassigned'; kind: 'unassigned' }
   | { agent: SidebarAgentItem; key: string; kind: 'agent' };
 
-const styles = createStaticStyles(({ css, cssVar }) => ({
-  searchInput: css`
-    width: 100%;
-    padding-block: 6px;
-    padding-inline: 10px;
-    border: none;
-    border-block-end: 1px solid ${cssVar.colorBorderSecondary};
-
-    font-family: inherit;
-    font-size: 13px;
-    color: ${cssVar.colorText};
-
-    background: transparent;
-    outline: none;
-
-    &::placeholder {
-      color: ${cssVar.colorTextPlaceholder};
-    }
-  `,
-  sectionHeader: css`
-    padding-block: 4px;
-    padding-inline: 8px;
-
-    font-size: 12px;
-    line-height: 1.4;
-    color: ${cssVar.colorTextTertiary};
-  `,
-}));
+const styles = stylex.create({
+  searchInput: {
+    'width': '100%',
+    'paddingBlock': '6px',
+    'paddingInline': '10px',
+    'borderStyle': 'none',
+    'borderBlockEndWidth': '1px',
+    'borderBlockEndStyle': 'solid',
+    'borderBlockEndColor': cssVar.colorBorderSecondary,
+    'fontFamily': 'inherit',
+    'fontSize': '13px',
+    'color': cssVar.colorText,
+    'backgroundColor': 'transparent',
+    'backgroundImage': 'none',
+    'outlineStyle': 'none',
+    '::placeholder': { color: cssVar.colorTextPlaceholder },
+  },
+  sectionHeader: {
+    paddingBlock: '4px',
+    paddingInline: '8px',
+    fontSize: '12px',
+    lineHeight: 1.4,
+    color: cssVar.colorTextTertiary,
+  },
+});
 
 const matchesSearch = (agent: SidebarAgentItem, query: string) =>
   [agentDisplayName(agent), agent.title].some((label) =>
@@ -326,7 +325,7 @@ const AssigneeAgentSelector = memo<AssigneeAgentSelectorProps>(
               <Flexbox onClick={(event) => event.stopPropagation()}>
                 <input
                   autoFocus
-                  className={styles.searchInput}
+                  {...stylex.props(styles.searchInput)}
                   placeholder={t('taskList.assigneeSearch.agentPlaceholder', { ns: 'chat' })}
                   value={search}
                   onChange={(event) => setSearch(event.target.value)}
@@ -348,7 +347,7 @@ const AssigneeAgentSelector = memo<AssigneeAgentSelectorProps>(
                     {showUnassigned && renderOption({ key: 'unassigned', kind: 'unassigned' })}
                     {filteredPrivate.length > 0 && (
                       <>
-                        <div className={styles.sectionHeader}>
+                        <div {...stylex.props(styles.sectionHeader)}>
                           {t('taskManager.agentSelector.privateGroup', { ns: 'topic' })}
                         </div>
                         {filteredPrivate.map((agent) =>
@@ -359,7 +358,7 @@ const AssigneeAgentSelector = memo<AssigneeAgentSelectorProps>(
                     {filteredWorkspace.length > 0 && (
                       <>
                         {hasPrivateAgents && (
-                          <div className={styles.sectionHeader}>
+                          <div {...stylex.props(styles.sectionHeader)}>
                             {t('taskManager.agentSelector.workspaceGroup', { ns: 'topic' })}
                           </div>
                         )}

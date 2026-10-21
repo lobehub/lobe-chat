@@ -1,5 +1,7 @@
 import { useEditor } from '@lobehub/editor/react';
-import { ActionIcon, createStaticStyles, cssVar, cx, Flexbox, Text } from '@lobehub/ui';
+import { ActionIcon, Flexbox, Text } from '@lobehub/ui';
+import { cssVar } from '@lobehub/ui/stylex/cssVar.stylex';
+import * as stylex from '@stylexjs/stylex';
 import { PanelRightCloseIcon, PanelRightOpenIcon } from 'lucide-react';
 import { memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -28,26 +30,26 @@ import { skillFileTree } from './skillVersions';
 
 const SKILL_INDEX = 'SKILL.md';
 
-const styles = createStaticStyles(({ css }) => ({
-  files: css`
-    overflow-y: auto;
-    display: flex;
-    flex: none;
-    flex-direction: column;
-
-    width: 180px;
-    padding: 8px;
-    border-inline-start: 1px solid ${cssVar.colorBorderSecondary};
-  `,
-  filesFolded: css`
-    width: auto;
-    padding-inline: 4px;
-  `,
-  filesHead: css`
-    padding-block: 2px 6px;
-    padding-inline: 8px 0;
-  `,
-}));
+const styles = stylex.create({
+  files: {
+    overflowY: 'auto',
+    display: 'flex',
+    flex: 'none',
+    flexDirection: 'column',
+    width: '180px',
+    padding: '8px',
+    borderInlineStartWidth: '1px',
+    borderInlineStartStyle: 'solid',
+    borderInlineStartColor: cssVar.colorBorderSecondary,
+  },
+  filesFolded: { width: 'auto', paddingInline: '4px' },
+  filesHead: {
+    paddingBlockStart: '2px',
+    paddingBlockEnd: '6px',
+    paddingInlineStart: '8px',
+    paddingInlineEnd: '0',
+  },
+});
 
 interface PlanDetailProps {
   graph: GoalGraphView;
@@ -105,7 +107,7 @@ const PlanDetail = memo<PlanDetailProps>(({ graph, model, round }) => {
         </div>
         {/* The skill's files: folds to a rail so the document can take the width. */}
         <div
-          className={cx(styles.files, !filesOpen && styles.filesFolded)}
+          {...stylex.props(styles.files, !filesOpen && styles.filesFolded)}
           data-plan-files={filesOpen ? 'open' : 'folded'}
         >
           {filesOpen ? (
@@ -113,7 +115,7 @@ const PlanDetail = memo<PlanDetailProps>(({ graph, model, round }) => {
               <Flexbox
                 horizontal
                 align={'center'}
-                className={styles.filesHead}
+                className={stylex.props(styles.filesHead).className}
                 justify={'space-between'}
               >
                 <Text fontSize={12} type={'secondary'} weight={500}>
