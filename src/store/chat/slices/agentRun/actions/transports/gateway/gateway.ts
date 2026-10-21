@@ -75,7 +75,11 @@ import { createGatewayEventBuffer } from './gatewayEventBuffer';
 import { createGatewayEventHandler } from './gatewayEventHandler';
 import { createGatewayEventRouter } from './gatewayEventRouter';
 import { createGatewayMemberStreamHandler, mergeGroupSnapshot } from './gatewayMemberStreamHandler';
-import { awaitStartRequest, interruptGatewayTaskOrThrow } from './gatewayStartRequest';
+import {
+  awaitStartRequest,
+  interruptGatewayRunOnStop,
+  interruptGatewayTaskOrThrow,
+} from './gatewayStartRequest';
 import {
   type GatewayMuxIdentity,
   getGatewayMux,
@@ -85,7 +89,6 @@ import {
 import { flagQueuedMessagesOnRunStart, syncQueuedMessagesFlag } from './queuedMessagesFlag';
 import { isCompletedRuntimeEnd } from './runtimeEndReason';
 import * as serverSteerQueue from './serverSteerQueue';
-import { freezeGatewayRunForStop, unfreezeGatewayRunForStop } from './stopFreeze';
 
 const getGatewayServerConfig = () =>
   (typeof window !== 'undefined'
@@ -1478,28 +1481,13 @@ export class GatewayActionImpl {
     // depend on any metadata lookup. The returned promise preserves an
     // unconfirmed device shutdown so Send now can keep its queued message.
     this.#get().onOperationCancel(gatewayOpId, async () => {
-      // Synchronously, before any await: the reply freezes at what is on
-      // screen now, and that exact text goes with the interrupt.
-      const stopSnapshot = freezeGatewayRunForStop(gatewayOpId);
-
-      if (agentShareId) {
-        await shareChatService
-          .interruptTask(agentShareId, result.topicId, result.operationId, stopSnapshot)
-          .catch((err) => console.error('[Gateway] share interruptTask failed:', err));
-        return;
-      }
-
-      try {
-        await interruptGatewayTaskOrThrow({
-          operationId: result.operationId,
-          stopSnapshot,
-          topicId: result.topicId,
-        });
-      } catch (error) {
-        // `cancelOperation` restores the run as live; keep rendering it.
-        unfreezeGatewayRunForStop(gatewayOpId);
-        throw error;
-      }
+      const isOwnerRun = await interruptGatewayRunOnStop({
+        agentShareId,
+        gatewayOpId,
+        interrupt: { operationId: result.operationId, topicId: result.topicId },
+        shareTopicId: result.topicId,
+      });
+      if (!isOwnerRun) return;
       await serverSteerQueue.reclaimServerQueuedMessages(
         this.#get,
         messageMapKey(resolvedMessageContext),
@@ -1820,24 +1808,13 @@ export class GatewayActionImpl {
     // Forward local-op cancellation to the server-side agent loop via tRPC.
     // See note in executeGatewayAgent for details.
     this.#get().onOperationCancel(gatewayOpId, async () => {
-      const stopSnapshot = freezeGatewayRunForStop(gatewayOpId);
-
-      // Share visitors have no access to the owner-scoped interrupt (and no
-      // device runtimes to confirm), so they go through the share mirror —
-      // same split as executeGatewayAgent's cancel path.
-      if (agentShareId) {
-        await shareChatService
-          .interruptTask(agentShareId, topicId, operationId, stopSnapshot)
-          .catch((err) => console.error('[Gateway] share interruptTask failed:', err));
-        return;
-      }
-
-      try {
-        await interruptGatewayTaskOrThrow({ operationId, stopSnapshot });
-      } catch (error) {
-        unfreezeGatewayRunForStop(gatewayOpId);
-        throw error;
-      }
+      const isOwnerRun = await interruptGatewayRunOnStop({
+        agentShareId,
+        gatewayOpId,
+        interrupt: { operationId },
+        shareTopicId: topicId,
+      });
+      if (!isOwnerRun) return;
       await serverSteerQueue.reclaimServerQueuedMessages(this.#get, messageMapKey(context));
 
       this.#settleLocalTopicAfterConfirmedStop({
