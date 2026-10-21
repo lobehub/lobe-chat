@@ -17,8 +17,8 @@ import { getResourceQueryVisibility } from '@/features/ResourceManager/store/sel
 import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwareNavigate';
 import { useHomeStore } from '@/store/home';
 import { homeRecentSelectors } from '@/store/home/selectors';
-import { FilesTabs } from '@/types/files';
 
+import { DRIVE_PATH } from '../paths';
 import SectionTitle from './SectionTitle';
 
 const styles = createStaticStyles(({ css, cssVar }) => ({
@@ -107,7 +107,7 @@ const RecentFiles = memo(() => {
       <SectionTitle
         loading={isValidating && !!data?.length}
         title={t('home.recentFiles')}
-        viewAllUrl={`/resource/${FilesTabs.All}`}
+        viewAllUrl={DRIVE_PATH}
       />
       {error && !data?.length ? (
         <AsyncError error={error} variant={'inline'} onRetry={() => void revalidate()} />

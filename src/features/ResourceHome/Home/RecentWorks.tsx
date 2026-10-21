@@ -13,6 +13,7 @@ import { useWorkspaceWorksInfinite } from '@/features/WorkGallery/hooks';
 import { useOpenWork } from '@/features/WorkGallery/useOpenWork';
 import WorkPreviewCard from '@/features/WorkGallery/WorkPreviewCard';
 
+import { WORKS_PATH } from '../paths';
 import SectionTitle from './SectionTitle';
 
 const styles = createStaticStyles(({ css }) => ({
@@ -37,7 +38,7 @@ const RecentWorks = memo(() => {
 
   return (
     <Flexbox gap={12}>
-      <SectionTitle title={t('work.group')} viewAllUrl={'/resource/works'} />
+      <SectionTitle title={t('work.group')} viewAllUrl={WORKS_PATH} />
       {error && recent.length === 0 ? (
         <AsyncError error={error} variant={'inline'} onRetry={reload} />
       ) : isLoadingInitial ? (

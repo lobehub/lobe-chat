@@ -95,7 +95,7 @@ const RecentPages = memo(() => {
       <SectionTitle
         loading={isValidating && !!data?.length}
         title={t('home.recentPages')}
-        viewAllUrl={'/resource/page'}
+        viewAllUrl={'/page'}
       />
       {error && !data?.length ? (
         <AsyncError error={error} variant={'inline'} onRetry={() => void revalidate()} />

@@ -1,16 +1,20 @@
 'use client';
 
-import { createStaticStyles, Flexbox, Icon } from '@lobehub/ui';
-import { PlusIcon } from 'lucide-react';
-import { memo } from 'react';
+import { Flexbox } from '@lobehub/ui';
+import * as stylex from '@stylexjs/stylex';
+import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import AsyncError from '@/components/AsyncError';
-import LibraryStatusIcon from '@/components/LibIcon/StatusIcon';
 import {
   RESOURCE_HOME_SECTIONS,
   ResourceSectionSkeleton,
 } from '@/components/Skeleton/ResourceHome';
+import {
+  CreateLibraryCard,
+  LibraryCard,
+  libraryCardStyles,
+} from '@/features/LibraryGallery/LibraryCard';
 import { useCreateNewModal } from '@/features/LibraryModal';
 import { useResourceManagerStore } from '@/features/ResourceManager/store';
 import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwareNavigate';
@@ -18,88 +22,16 @@ import { usePermission } from '@/hooks/usePermission';
 import { knowledgeBaseSelectors, useKnowledgeBaseStore } from '@/store/library';
 
 import { getLibraryListAsyncState } from '../Layout/Body/LibraryList/state';
+import { LIBRARY_INDEX_PATH } from '../paths';
+import { pickRecentLibraries, useLibraryVisits } from '../recentLibraries';
 import SectionTitle from './SectionTitle';
 
-const styles = createStaticStyles(({ css, cssVar }) => ({
-  chip: css`
-    cursor: pointer;
-
-    display: flex;
-    gap: 10px;
-    align-items: center;
-
-    min-width: 0;
-    padding-block: 14px;
-    padding-inline: 16px;
-    border: 1px solid ${cssVar.colorBorderSecondary};
-    border-radius: ${cssVar.borderRadiusLG};
-
-    text-align: start;
-
-    background: ${cssVar.colorFillQuaternary};
-
-    transition: all 0.2s ${cssVar.motionEaseInOut};
-
-    &:hover {
-      border-color: ${cssVar.colorBorder};
-      background: ${cssVar.colorFillTertiary};
-    }
-  `,
-  createChip: css`
-    cursor: pointer;
-
-    display: flex;
-    gap: 8px;
-    align-items: center;
-    justify-content: center;
-
-    padding-block: 14px;
-    padding-inline: 16px;
-    border: 1px dashed ${cssVar.colorBorder};
-    border-radius: ${cssVar.borderRadiusLG};
-
-    color: ${cssVar.colorTextSecondary};
-
-    background: transparent;
-
-    transition: all 0.2s ${cssVar.motionEaseInOut};
-
-    &:hover {
-      border-color: ${cssVar.colorTextQuaternary};
-      color: ${cssVar.colorText};
-    }
-
-    &:disabled {
-      cursor: not-allowed;
-      opacity: 0.5;
-    }
-  `,
-  grid: css`
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 12px;
-  `,
-  name: css`
-    overflow: hidden;
-
-    font-size: 13px;
-    font-weight: 500;
-    color: ${cssVar.colorText};
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  `,
-}));
+/** How many libraries the home page shows: the ones opened most recently. */
+const MAX_LIBRARIES = 4;
 
 /**
- * How many libraries the quick-access row shows. The list is ordered by last
- * update, so this is "the ones you are working in"; the sidebar stays the full
- * index, which is why the home page must not repeat every library here.
- */
-const MAX_LIBRARIES = 9;
-
-/**
- * Quick access to the user's libraries — the everyday entry point of the
- * library home, and the page's only library list.
+ * Recently opened libraries as cover cards. The full index is the library
+ * gallery, reached through "View all".
  */
 const Libraries = memo(() => {
   const { t } = useTranslation('file');
@@ -113,6 +45,11 @@ const Libraries = memo(() => {
   const { error, isHydrated, isValidating, revalidate } = useFetchKnowledgeBaseList(visibility);
   // The rows are read from the replica view; the hook only orchestrates fetching.
   const data = useKnowledgeBaseStore(knowledgeBaseSelectors.getKnowledgeBaseList(visibility));
+  const visits = useLibraryVisits();
+  const recent = useMemo(
+    () => (data ? pickRecentLibraries(data, visits, MAX_LIBRARIES) : data),
+    [data, visits],
+  );
   // A fresh scope has no persisted row yet, so `!isHydrated` keeps the skeleton
   // up until the first local read completes and the network sync lands.
   const { isLoading: showSkeleton } = getLibraryListAsyncState({
@@ -124,51 +61,31 @@ const Libraries = memo(() => {
   const setLibraryId = useResourceManagerStore((s) => s.setLibraryId);
   const { open: openCreateLibrary } = useCreateNewModal();
 
+  const openLibrary = (id: string) => {
+    setLibraryId(id);
+    navigate(`/resource/library/${id}`);
+  };
+
   const handleCreate = () => {
     if (!canCreate) return;
-    openCreateLibrary({
-      onSuccess: (id) => {
-        navigate(`/resource/library/${id}`);
-      },
-    });
+    openCreateLibrary({ onSuccess: openLibrary });
   };
 
   return (
     <Flexbox gap={12}>
-      <SectionTitle title={t('home.libraries')} />
+      <SectionTitle title={t('docs.home.recentLibraries')} viewAllUrl={LIBRARY_INDEX_PATH} />
       {error && !data?.length ? (
         <AsyncError error={error} variant={'inline'} onRetry={() => void revalidate()} />
       ) : showSkeleton ? (
         <ResourceSectionSkeleton {...RESOURCE_HOME_SECTIONS.libraries} />
       ) : (
-        <div className={styles.grid}>
-          {data?.slice(0, MAX_LIBRARIES).map((item) => (
-            <button
-              className={styles.chip}
-              key={item.id}
-              type={'button'}
-              onClick={() => {
-                setLibraryId(item.id);
-                navigate(`/resource/library/${item.id}`);
-              }}
-            >
-              <LibraryStatusIcon
-                memberRestricted={(item as { memberRestricted?: boolean }).memberRestricted}
-                size={18}
-                visibility={item.visibility}
-              />
-              <span className={styles.name}>{item.name}</span>
-            </button>
+        <div {...stylex.props(libraryCardStyles.grid)}>
+          {recent?.map((library) => (
+            <LibraryCard key={library.id} library={library} onOpen={openLibrary} />
           ))}
-          <button
-            className={styles.createChip}
-            disabled={!canCreate}
-            type={'button'}
-            onClick={handleCreate}
-          >
-            <Icon icon={PlusIcon} size={16} />
-            {t('home.uploadEntries.library.title')}
-          </button>
+          {(recent?.length ?? 0) < MAX_LIBRARIES && (
+            <CreateLibraryCard disabled={!canCreate} onCreate={handleCreate} />
+          )}
         </div>
       )}
     </Flexbox>

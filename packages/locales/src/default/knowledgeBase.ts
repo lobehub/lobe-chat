@@ -8,6 +8,7 @@ export default {
   'addToKnowledgeBase.id.title': 'Target Library',
   'addToKnowledgeBase.title': 'Add to Library',
   'addToKnowledgeBase.totalFiles': '{{count}} files selected',
+  'createNew.cover.label': 'Cover',
   'moveToKnowledgeBase.error': 'Failed to move file to Library',
   'moveToKnowledgeBase.success': 'File moved successfully',
   'createNew.confirm': 'Create New',

@@ -121,6 +121,7 @@ export const listsMovedRowUnfiltered = (
   if (!params.libraryId && !params.showFilesInKnowledgeBase && resource.knowledgeBaseId) {
     return false;
   }
+  if (params.filesOnly && resource.sourceType === 'document') return false;
   return true;
 };
 

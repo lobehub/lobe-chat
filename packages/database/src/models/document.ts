@@ -47,6 +47,11 @@ import { documentOriginalCharCount } from '../utils/originalCharCount';
 import { buildWorkspacePayload, buildWorkspaceWhere } from '../utils/workspace';
 
 export interface QueryDocumentParams {
+  /**
+   * Narrow by creator: `self` keeps the caller's own documents, `others` keeps
+   * documents other workspace members created (still subject to visibility).
+   */
+  creator?: 'others' | 'self';
   current?: number;
   /**
    * Knowledge-base ids whose documents must be dropped from the listing —
@@ -57,6 +62,8 @@ export interface QueryDocumentParams {
   fileTypes?: string[];
   pageSize?: number;
   sourceTypes?: string[];
+  /** Keep only documents that live outside every knowledge base. */
+  standaloneOnly?: boolean;
 }
 
 export const DOCUMENT_TRANSFER_FOREIGN_ROWS =
@@ -178,11 +185,13 @@ export class DocumentModel {
   };
 
   query = async ({
+    creator,
     current = 0,
     pageSize = 9999,
     excludeKnowledgeBaseIds,
     fileTypes,
     sourceTypes,
+    standaloneOnly,
   }: QueryDocumentParams = {}): Promise<{
     items: DocumentItem[];
     total: number;
@@ -193,6 +202,11 @@ export class DocumentModel {
     if (fileTypes?.length) {
       conditions.push(inArray(documents.fileType, fileTypes));
     }
+
+    if (creator === 'self') conditions.push(eq(documents.userId, this.userId));
+    if (creator === 'others') conditions.push(ne(documents.userId, this.userId));
+
+    if (standaloneOnly) conditions.push(isNull(documents.knowledgeBaseId));
 
     if (excludeKnowledgeBaseIds?.length) {
       conditions.push(

@@ -37,7 +37,7 @@ const ResourceHomeDashboard = memo(() => {
   return (
     <Flexbox height={'100%'}>
       <NavHeader
-        left={<Flexbox style={{ marginLeft: 8 }}>{t('resource')}</Flexbox>}
+        left={<Flexbox style={{ marginLeft: 8 }}>{t('docs.section.home')}</Flexbox>}
         right={<AddButton />}
         style={{ borderBottom: `1px solid ${cssVar.colorBorderSecondary}` }}
       />

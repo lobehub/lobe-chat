@@ -12,7 +12,12 @@ import { setNamespace } from '@/utils/storeDebug';
 
 import { initialState, type PageState } from './initialState';
 import { currentPageSize, PagePrivateAction } from './privateAction';
-import { documentItemToLobeDocument, PAGE_LIST_KEY, TEMP_PAGE_ID_PREFIX } from './projection';
+import {
+  documentItemToLobeDocument,
+  PAGE_LIST_KEY,
+  type PageSectionScope,
+  TEMP_PAGE_ID_PREFIX,
+} from './projection';
 import { listSelectors } from './slices/list/selectors';
 import { usePageStore } from './store';
 
@@ -48,6 +53,10 @@ export class PageActionImpl {
     const pageSize = useGlobalStore(systemStatusSelectors.pagePageSize);
     return this.#private.list.useSync({ pageSize });
   };
+
+  /** The Docs sidebar's My docs / Shared sections; rows via `pageSelectors.pageSection`. */
+  useFetchPageSection = (scope: PageSectionScope, limit: number): ReplicaSyncResult =>
+    this.#private.section.useSync({ limit, scope });
 
   useFetchPageDetail = (pageId?: string | null): ReplicaSyncResult =>
     this.#private.detail.useSync(pageId || null);

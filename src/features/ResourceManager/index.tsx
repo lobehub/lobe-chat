@@ -61,9 +61,11 @@ interface ResourceManagerProps {
    * dashboard) while keeping the editor overlays, upload dock and drag zone.
    */
   content?: ReactNode;
+  /** Shown above the Explorer list, e.g. the library cover at a library's root. */
+  explorerHero?: ReactNode;
 }
 
-const ResourceManager = memo<ResourceManagerProps>(({ content }) => {
+const ResourceManager = memo<ResourceManagerProps>(({ content, explorerHero }) => {
   const theme = useTheme();
   const [, setSearchParams] = useSearchParams();
   const [mode, currentViewItemId, libraryId, setMode, setCurrentViewItemId] =
@@ -132,7 +134,7 @@ const ResourceManager = memo<ResourceManagerProps>(({ content }) => {
         <Flexbox className={styles.container} height={'100%'} style={cssVariables}>
           {/* Explorer stays mounted to preserve its state, unless the caller
               swaps in its own base content (resource home dashboard) */}
-          {content ?? <Explorer />}
+          {content ?? <Explorer hero={explorerHero} />}
 
           {/* Editor overlay */}
           {mode === 'editor' && (

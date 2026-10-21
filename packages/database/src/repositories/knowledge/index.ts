@@ -92,6 +92,11 @@ const fileArmColumns = {
   fileType: f.fileType,
   // A file that backs a derived page is addressed by the page id.
   id: sql<string>`COALESCE(${d.id}, ${f.id})`.as('id'),
+  knowledgeBaseIds: sql<
+    string[]
+  >`ARRAY(SELECT ${knowledgeBaseFiles.knowledgeBaseId} FROM ${knowledgeBaseFiles} WHERE ${knowledgeBaseFiles.fileId} = ${f.id})`.as(
+    'knowledge_base_ids',
+  ),
   metadata: sql<Record<string, any> | null>`COALESCE(${d.metadata}, ${f.metadata})`.as('metadata'),
   name: f.name,
   size: f.size,
@@ -131,6 +136,11 @@ const documentArmColumns = {
   fileId: d.fileId,
   fileType: d.fileType,
   id: d.id,
+  knowledgeBaseIds: sql<
+    string[]
+  >`CASE WHEN ${d.knowledgeBaseId} IS NULL THEN ARRAY[]::text[] ELSE ARRAY[${d.knowledgeBaseId}] END`.as(
+    'knowledge_base_ids',
+  ),
   metadata: d.metadata,
   name: sql<string>`COALESCE(${d.title}, ${d.filename}, 'Untitled')`.as('name'),
   size: sql<number>`${d.totalCharCount}`.as('size'),
@@ -171,6 +181,7 @@ interface KnowledgeRow {
   fileId: string | null;
   fileType: string;
   id: string;
+  knowledgeBaseIds: string[] | null;
   metadata: Record<string, any> | null;
   name: string;
   size: number;
@@ -206,6 +217,8 @@ export interface KnowledgeItem {
   fileId?: string | null;
   fileType: string;
   id: string;
+  /** Knowledge bases the row is filed into (empty when it lives outside every base). */
+  knowledgeBaseIds?: string[];
   metadata?: Record<string, any> | null;
   name: string;
   size: number;
@@ -283,6 +296,7 @@ const toKnowledgeItem = (row: KnowledgeRow): KnowledgeItem => ({
   fileId: row.fileId,
   fileType: row.fileType,
   id: row.id,
+  knowledgeBaseIds: row.knowledgeBaseIds ?? [],
   metadata: toJson(row.metadata),
   name: row.name,
   size: Number(row.size),
@@ -454,6 +468,7 @@ export class KnowledgeRepo {
     excludeKnowledgeBaseIds,
     includeContent = true,
     includeContentPreview = false,
+    filesOnly,
     knowledgeBaseId,
     showFilesInKnowledgeBase,
     parentId,
@@ -529,7 +544,8 @@ export class KnowledgeRepo {
       Boolean(knowledgeBaseId),
     );
 
-    const rows = await unionAll(fileArm, documentArm)
+    // The drive lists uploaded files only; pages live in their own sidebar sections.
+    const rows = await (filesOnly ? fileArm : unionAll(fileArm, documentArm))
       .orderBy(this.orderBy(sortType, sorter))
       .limit(limit)
       .offset(offset);

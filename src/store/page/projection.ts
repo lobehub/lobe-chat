@@ -135,3 +135,36 @@ export const pageDetailResource = defineReplica<string, LobeDocument, LobeDocume
   storage: 'indexedDB',
   version: 1,
 });
+
+/**
+ * The Docs sidebar's page sections: `mine` lists the caller's own pages outside
+ * every library, `shared` the workspace pages other members created and shared
+ * (private ones never reach another member). Both narrow inside the query, so a
+ * section shows a full head page instead of whatever survives a client filter.
+ */
+export type PageSectionScope = 'mine' | 'shared';
+
+export interface PageSectionParams {
+  /** Rows shown; one more is fetched so the section knows whether to offer "View all". */
+  limit: number;
+  scope: PageSectionScope;
+}
+
+export const pageSectionResource = defineReplica<PageSectionParams, LobeDocument[]>({
+  fetcher: async ({ limit, scope }) => {
+    const result = await documentService.queryDocuments({
+      creator: scope === 'mine' ? 'self' : 'others',
+      current: 0,
+      fileTypes: PAGE_DOCUMENT_FILE_TYPES,
+      pageSize: limit + 1,
+      sourceTypes: PAGE_DOCUMENT_SOURCE_TYPES,
+      standaloneOnly: true,
+    });
+
+    return result.items.filter(isAllowedPageDocument).map(documentItemToLobeDocument);
+  },
+  key: ({ scope }) => scope,
+  name: 'pageSection',
+  storage: 'localStorage',
+  version: 1,
+});
