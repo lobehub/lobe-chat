@@ -103,6 +103,7 @@ const LibraryGallery = memo(() => {
                   <Button
                     disabled={!canCreate}
                     icon={PlusIcon}
+                    size={'middle'}
                     type={'primary'}
                     onClick={handleCreate}
                   >

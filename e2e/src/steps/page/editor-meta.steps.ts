@@ -31,7 +31,7 @@ async function waitForPageWorkspaceReady(world: CustomWorld): Promise<void> {
     const readyCandidates = [
       world.page.locator(':is(button, [role="button"]):has(svg.lucide-square-pen)').first(),
       world.page.locator('input[placeholder*="Search"], input[placeholder*="搜索"]').first(),
-      world.page.locator('a[href^="/page/"]').first(),
+      world.page.locator('a[href*="/resource/page/"]').first(),
     ];
 
     for (const candidate of readyCandidates) {

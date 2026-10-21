@@ -120,7 +120,7 @@ async function waitForPageWorkspaceReady(world: CustomWorld): Promise<void> {
     const readyCandidates = [
       world.page.locator(':is(button, [role="button"]):has(svg.lucide-square-pen)').first(),
       world.page.locator('input[placeholder*="Search"], input[placeholder*="搜索"]').first(),
-      world.page.locator('a[href^="/page/"]').first(),
+      world.page.locator('a[href*="/resource/page/"]').first(),
     ];
 
     for (const candidate of readyCandidates) {
@@ -194,10 +194,10 @@ Given('用户在 Page 页面有一个文稿', async function (this: CustomWorld)
 
   console.log(`   📍 Step: 重命名为唯一标题 "${uniqueTitle}"...`);
   // Find the new page in sidebar (use link selector to avoid matching editor title)
-  // Sidebar page items are rendered as <a href="/page/xxx"> links
+  // Sidebar page items are rendered as <a href="/resource/page/xxx"> links
 
   // Debug: check how many links exist
-  const allPageLinks = this.page.locator('a[href^="/page/"]');
+  const allPageLinks = this.page.locator('a[href*="/resource/page/"]');
   const linkCount = await allPageLinks.count();
   console.log(`   📍 Debug: Found ${linkCount} page links in sidebar`);
 
@@ -302,9 +302,9 @@ Given('用户在 Page 页面有一个文稿 {string}', async function (this: Cus
 
   console.log(`   📍 Step: 通过右键菜单重命名文稿为 "${title}"...`);
   // Find the new page in sidebar (use link selector to avoid matching editor title)
-  // Sidebar page items are rendered as <a href="/page/xxx"> links
+  // Sidebar page items are rendered as <a href="/resource/page/xxx"> links
   const pageItem = this.page
-    .locator('a[href^="/page/"]')
+    .locator('a[href*="/resource/page/"]')
     .filter({ hasText: defaultTitleRegex })
     .first();
   await expect(pageItem).toBeVisible({ timeout: 5000 });
