@@ -2,31 +2,25 @@
 
 import type { ReplaceTextArgs } from '@lobechat/editor-runtime';
 import type { BuiltinInspectorProps } from '@lobechat/types';
-import { Icon } from '@lobehub/ui';
-import { Text } from '@lobehub/ui';
-import { createStaticStyles, cx } from '@lobehub/ui';
+import { Icon, Text } from '@lobehub/ui';
+import { cssVar } from '@lobehub/ui/stylex/cssVar.stylex';
+import * as stylex from '@stylexjs/stylex';
 import { ArrowRight } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { highlightTextStyles, inspectorTextStyles, shinyTextStyles } from '@/styles';
+import { sx } from '@/styles/sx';
 
 import type { ReplaceTextState } from '../../../types';
 
-const styles = createStaticStyles(({ css, cssVar }) => ({
-  arrow: css`
-    margin-inline: 4px;
-    color: ${cssVar.colorTextQuaternary};
-  `,
-  from: css`
-    color: ${cssVar.colorTextSecondary};
-    text-decoration: line-through;
-  `,
-  title: css`
-    margin-inline-end: 8px;
-    color: ${cssVar.colorText};
-  `,
-}));
+const styles = stylex.create({
+  arrow: { marginInline: '4px', color: cssVar.colorTextQuaternary },
+  from: { color: cssVar.colorTextSecondary, textDecoration: 'line-through' },
+  title: { marginInlineEnd: '8px' },
+  // Dropped while shimmering so the shiny text keeps its own colour.
+  titleColor: { color: cssVar.colorText },
+});
 
 export const ReplaceTextInspector = memo<BuiltinInspectorProps<ReplaceTextArgs, ReplaceTextState>>(
   ({ args, partialArgs, isArgumentsStreaming, pluginState }) => {
@@ -51,13 +45,18 @@ export const ReplaceTextInspector = memo<BuiltinInspectorProps<ReplaceTextArgs, 
 
     return (
       <div className={inspectorTextStyles.root}>
-        <span className={cx(styles.title, isArgumentsStreaming && shinyTextStyles.shinyText)}>
+        <span
+          {...sx(
+            [styles.title, !isArgumentsStreaming && styles.titleColor],
+            isArgumentsStreaming ? shinyTextStyles.shinyText : undefined,
+          )}
+        >
           {t('builtins.lobe-page-agent.apiName.replaceText')}
         </span>
         {hasResult && (
           <>
-            <span className={styles.from}>{from}</span>
-            <Icon className={styles.arrow} icon={ArrowRight} size={12} />
+            <span {...stylex.props(styles.from)}>{from}</span>
+            <Icon className={stylex.props(styles.arrow).className} icon={ArrowRight} size={12} />
             <span className={highlightTextStyles.gold}>
               {to || t('builtins.lobe-page-agent.apiName.replaceText.empty')}
             </span>

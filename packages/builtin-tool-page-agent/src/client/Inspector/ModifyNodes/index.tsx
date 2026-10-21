@@ -2,28 +2,25 @@
 
 import type { ModifyNodesArgs } from '@lobechat/editor-runtime';
 import type { BuiltinInspectorProps } from '@lobechat/types';
-import { Icon } from '@lobehub/ui';
-import { Text } from '@lobehub/ui';
-import { createStaticStyles, cssVar, cx } from '@lobehub/ui';
+import { Icon, Text } from '@lobehub/ui';
+import { cssVar } from '@lobehub/ui/stylex/cssVar.stylex';
+import * as stylex from '@stylexjs/stylex';
 import { DiffIcon, Minus, Plus } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { oneLineEllipsis, shinyTextStyles } from '@/styles';
+import { sx } from '@/styles/sx';
 
 import type { ModifyNodesState } from '../../../types';
 
-const styles = createStaticStyles(({ css, cssVar }) => ({
-  separator: css`
-    margin-inline: 2px;
-    color: ${cssVar.colorTextQuaternary};
-  `,
-  title: css`
-    margin-inline-end: 8px;
-    color: ${cssVar.colorText};
-  `,
-}));
+const styles = stylex.create({
+  separator: { marginInline: '2px', color: cssVar.colorTextQuaternary },
+  title: { marginInlineEnd: '8px' },
+  // Dropped while shimmering so the shiny text keeps its own colour.
+  titleColor: { color: cssVar.colorText },
+});
 
 export const ModifyNodesInspector = memo<BuiltinInspectorProps<ModifyNodesArgs, ModifyNodesState>>(
   ({ args, partialArgs, isArgumentsStreaming }) => {
@@ -102,7 +99,12 @@ export const ModifyNodesInspector = memo<BuiltinInspectorProps<ModifyNodesArgs, 
 
     return (
       <div className={oneLineEllipsis}>
-        <span className={cx(styles.title, isArgumentsStreaming && shinyTextStyles.shinyText)}>
+        <span
+          {...sx(
+            [styles.title, !isArgumentsStreaming && styles.titleColor],
+            isArgumentsStreaming ? shinyTextStyles.shinyText : undefined,
+          )}
+        >
           {t('builtins.lobe-page-agent.apiName.modifyNodes')}
         </span>
         {statsParts.length > 0 && (
@@ -110,7 +112,7 @@ export const ModifyNodesInspector = memo<BuiltinInspectorProps<ModifyNodesArgs, 
             {' '}
             {statsParts.map((part, index) => (
               <span key={index}>
-                {index > 0 && <span className={styles.separator}> / </span>}
+                {index > 0 && <span {...stylex.props(styles.separator)}> / </span>}
                 {part}
               </span>
             ))}
