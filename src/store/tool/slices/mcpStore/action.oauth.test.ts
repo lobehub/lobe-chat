@@ -1,6 +1,7 @@
 import type { ToolManifest } from '@lobechat/types';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
+import type * as ReplicaModule from '@/libs/replica';
 import { discoverService } from '@/services/discover';
 import { mcpService } from '@/services/mcp';
 import { pluginService } from '@/services/plugin';
@@ -12,7 +13,10 @@ import { ConnectorOAuthError, waitForConnectorOAuth } from '@/utils/connectorOAu
 import { createMCPPluginStoreSlice } from './action';
 import { mcpStoreSelectors } from './selectors';
 
-vi.mock('@/libs/replica', () => ({ createReplicaSlice: () => ({}) }));
+vi.mock('@/libs/replica', async (original) => ({
+  ...(await original<typeof ReplicaModule>()),
+  createReplicaSlice: () => ({}),
+}));
 vi.mock('./projection', () => ({ MCP_PLUGIN_LIST_KEY: 'all', mcpPluginListResource: {} }));
 vi.mock('@/store/tool/selectors', () => ({
   mcpStoreSelectors: {
@@ -83,6 +87,7 @@ beforeEach(() => {
     mcpInstallProgress: {},
     mcpInstallAbortControllers: {},
     connectors: [],
+    installedPlugins: [],
     createConnector: vi.fn().mockResolvedValue({ id: 'connector-1', isNew: true }),
     deleteConnector: vi.fn().mockResolvedValue(undefined),
     startConnectorOAuth: vi.fn().mockResolvedValue('https://oauth.example/authorize'),
@@ -262,6 +267,14 @@ describe('marketplace OAuth MCP installation', () => {
   });
 
   it('removes the server-held marketplace credential when uninstalling', async () => {
+    state.installedPlugins = [
+      {
+        identifier: 'market-mcp',
+        customParams: {
+          mcp: { type: 'http', url: 'https://oauth.example/mcp', auth: { type: 'oauth2' } },
+        },
+      } as never,
+    ];
     state.connectors = [connected() as never];
     await actions.uninstallMCPPlugin('market-mcp');
     expect(state.deleteConnector).toHaveBeenCalledWith('connector-1');
@@ -269,9 +282,32 @@ describe('marketplace OAuth MCP installation', () => {
   });
 
   it('uninstalls a regular MCP without removing any connector', async () => {
-    vi.mocked(state.fetchConnectors).mockResolvedValueOnce(undefined);
+    vi.mocked(state.fetchConnectors).mockRejectedValueOnce(new Error('Connector API unavailable'));
     await actions.uninstallMCPPlugin('market-mcp');
+    expect(state.fetchConnectors).not.toHaveBeenCalled();
     expect(state.deleteConnector).not.toHaveBeenCalled();
+    expect(state.uninstallPlugin).toHaveBeenCalledWith('market-mcp');
+  });
+
+  it('confirms cached plugin records before deciding whether to remove OAuth credentials', async () => {
+    state.installedPlugins = [
+      { identifier: 'market-mcp', customParams: { mcp: { type: 'http' } } } as never,
+    ];
+    state.installedPluginsReplica = { entries: { installed: { source: 'storage' } } } as never;
+    vi.mocked(state.refreshPlugins).mockImplementationOnce(async () => {
+      state.installedPluginsReplica = { entries: { installed: { source: 'server' } } } as never;
+      state.installedPlugins = [
+        {
+          identifier: 'market-mcp',
+          customParams: {
+            mcp: { type: 'http', url: 'https://oauth.example/mcp', auth: { type: 'oauth2' } },
+          },
+        } as never,
+      ];
+    });
+    await actions.uninstallMCPPlugin('market-mcp');
+    expect(state.refreshPlugins).toHaveBeenCalledOnce();
+    expect(state.deleteConnector).toHaveBeenCalledWith('connector-1');
     expect(state.uninstallPlugin).toHaveBeenCalledWith('market-mcp');
   });
 });

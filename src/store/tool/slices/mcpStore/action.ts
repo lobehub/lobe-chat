@@ -34,6 +34,7 @@ import { sleep } from '@/utils/sleep';
 import { setNamespace } from '@/utils/storeDebug';
 
 import { type ToolStore } from '../../store';
+import { pluginSelectors } from '../plugin/selectors';
 import { type MCPPluginListData, type MCPStoreState } from './initialState';
 import { installOAuthPlugin } from './installOAuthPlugin';
 import { MCP_PLUGIN_LIST_KEY, type MCPPluginListParams, mcpPluginListResource } from './projection';
@@ -962,12 +963,21 @@ export class PluginMCPStoreActionImpl {
   };
 
   uninstallMCPPlugin = async (identifier: string): Promise<void> => {
-    await this.#get().fetchConnectors();
-    const connector = this.#get().connectors.find(
-      (item) =>
-        item.identifier === identifier && item.sourceType === 'marketplace' && item.mcpServerUrl,
-    );
-    if (connector) await this.#get().deleteConnector(connector.id);
+    // Persisted display projections omit OAuth configuration. Confirm them
+    // before deciding whether this installation owns server-held credentials.
+    if (pluginSelectors.isInstalledPluginsCacheOnly(this.#get())) {
+      await this.#get().refreshPlugins();
+    }
+    const connection = pluginSelectors.getInstalledPluginById(identifier)(this.#get())?.customParams
+      ?.mcp;
+    if (connection?.type === 'http' && connection.auth?.type === 'oauth2') {
+      await this.#get().fetchConnectors();
+      const connector = this.#get().connectors.find(
+        (item) =>
+          item.identifier === identifier && item.sourceType === 'marketplace' && item.mcpServerUrl,
+      );
+      if (connector) await this.#get().deleteConnector(connector.id);
+    }
     await this.#get().uninstallPlugin(identifier);
 
     discoverService.reportMcpEvent({
