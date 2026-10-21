@@ -3,9 +3,11 @@
 import { readEvidenceChapters } from '@lobechat/const/verify';
 import type { AcceptanceReviewAnnotation } from '@lobechat/types';
 import { Flexbox, Image, useResponsive } from '@lobehub/ui';
+import * as stylex from '@stylexjs/stylex';
 import { memo, type ReactNode } from 'react';
 
 import AudioPlayer from '@/features/AudioPlayer';
+import { sx } from '@/styles/sx';
 
 import {
   EvidenceComparisonCard,
@@ -162,7 +164,7 @@ export const EvidenceList = memo<{
         }
 
         const description = meaningfulEvidenceCaption(item.description);
-        const caption = description && <span className={styles.caption}>{description}</span>;
+        const caption = description && <span {...stylex.props(styles.caption)}>{description}</span>;
         if (item.fileUrl && item.type === 'video')
           return <div key={item.id}>{videoContent(item, caption)}</div>;
         if (item.fileUrl && item.type === 'audio')
@@ -264,7 +266,7 @@ export const EvidenceList = memo<{
                     src={shot.fileUrl!}
                     caption={
                       shotCaption ? (
-                        <span className={styles.caption}>{shotCaption}</span>
+                        <span {...stylex.props(styles.caption)}>{shotCaption}</span>
                       ) : undefined
                     }
                   />
@@ -296,12 +298,13 @@ export const EvidenceList = memo<{
                 />
               ) : (
                 <Flexbox
-                  className={styles.evidenceImage}
-                  style={
+                  {...sx(
+                    [styles.evidenceImage],
+                    undefined,
                     item.fileWidth && item.fileHeight
                       ? { aspectRatio: imageRatio(item), maxWidth: '100%', width: item.fileWidth }
-                      : undefined
-                  }
+                      : undefined,
+                  )}
                 >
                   <Image
                     alt={item.description ?? item.fileName ?? item.type}
@@ -336,7 +339,7 @@ export const EvidenceList = memo<{
         if (item.content)
           return (
             <Flexbox gap={4} key={item.id}>
-              <div className={styles.evidenceText}>{item.content}</div>
+              <div {...stylex.props(styles.evidenceText)}>{item.content}</div>
               {caption}
             </Flexbox>
           );
