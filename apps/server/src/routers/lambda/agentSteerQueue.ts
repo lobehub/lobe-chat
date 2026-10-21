@@ -110,8 +110,7 @@ export const agentSteerQueueRouter = router({
    *
    * `queued: false` means nothing was stored and the client should send the
    * message itself: no own run is live (`idle`), the queue is at its bound
-   * (`full`), more than one own run is live on the surface (`ambiguous`), or
-   * the follow-up could not be stored (`unavailable`). A `SERVICE_UNAVAILABLE`
+   * (`full`), or the follow-up could not be stored (`unavailable`). A `SERVICE_UNAVAILABLE`
    * error means the outcome is unknown: retry with the same `id`.
    */
   append: steerQueueWriteProcedure.input(AppendSchema).mutation(async ({ input, ctx }) => {
@@ -154,9 +153,10 @@ export const agentSteerQueueRouter = router({
       scope,
     );
     if (liveRuns.length === 0) return { queued: false as const, reason: 'idle' as const };
-    // Two runs on one surface (thread starts are not serialized): there is no
-    // telling which one the user is typing behind, so do not guess.
-    if (liveRuns.length > 1) return { queued: false as const, reason: 'ambiguous' as const };
+    // More than one run can look live: a finished run keeps its row `running`
+    // until its last step commits, and thread starts are not serialized. The
+    // user types behind the newest one (the list is newest first); an older
+    // run that ends later leaves entries bound to a live run alone.
     const [behindOperationId] = liveRuns;
 
     const entry: QueuedFollowUp = {
