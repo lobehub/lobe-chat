@@ -2,7 +2,13 @@ import { describe, expect, it } from 'vitest';
 
 import { FilesTabs } from '@/types/files';
 
-import { docsPagePath, driveCategoryPath, resolveDocsSection, resolveResourceRoute } from './paths';
+import {
+  docsFilePath,
+  docsPagePath,
+  driveCategoryPath,
+  resolveDocsSection,
+  resolveResourceRoute,
+} from './paths';
 
 const route = (pathname: string, search = '') =>
   resolveResourceRoute(pathname, new URLSearchParams(search));
@@ -86,8 +92,34 @@ describe('resolveDocsSection', () => {
   });
 });
 
-describe('docsPagePath', () => {
-  it('opens a page over the Docs home instead of the Pages module', () => {
-    expect(docsPagePath('docs_abc')).toBe('/resource?file=docs_abc');
+describe('docsPagePath / docsFilePath', () => {
+  it('opens a page at /resource/page/<short id> instead of the Pages module', () => {
+    expect(docsPagePath('docs_abc')).toBe('/resource/page/abc');
+  });
+
+  it('opens a file at /resource/file/<id>', () => {
+    expect(docsFilePath('file_1')).toBe('/resource/file/file_1');
+  });
+});
+
+describe('resolveResourceRoute — opened items', () => {
+  it('resolves a page path back to the full document id', () => {
+    expect(route('/team/resource/page/abc')).toEqual({ id: 'docs_abc', kind: 'page' });
+    expect(route('/resource/page/docs_abc')).toEqual({ id: 'docs_abc', kind: 'page' });
+  });
+
+  it('resolves a file path', () => {
+    expect(route('/resource/file/file_1')).toEqual({ id: 'file_1', kind: 'file' });
+  });
+
+  it('moves the legacy ?file= home link to the file path', () => {
+    expect(route('/resource', 'file=docs_abc')).toEqual({
+      kind: 'redirect',
+      to: '/resource/file/docs_abc',
+    });
+  });
+
+  it('keeps the bare legacy /resource/page going home', () => {
+    expect(route('/resource/page')).toEqual({ kind: 'redirect', to: '/resource' });
   });
 });

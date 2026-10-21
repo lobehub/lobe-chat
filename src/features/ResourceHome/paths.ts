@@ -1,5 +1,6 @@
 import { parseWorkGalleryKey, type WorkGalleryKey } from '@/features/WorkGallery/const';
 import { FilesTabs } from '@/types/files';
+import { getIdFromIdentifier, standardizeIdentifier } from '@/utils/identifier';
 
 /**
  * Docs (`/resource`) has four sections: the home dashboard, the drive (every
@@ -32,16 +33,22 @@ export const driveCategoryPath = (category: FilesTabs): string => {
 };
 
 /**
- * Where a page opens from the Docs sidebar: the Docs home with the page editor
- * overlaid (`?file=`), so writing a page never leaves Docs for the Pages module.
+ * Where a page opens inside Docs: `/resource/page/<id>`, with the short id the
+ * Pages module used (`docs_` prefix dropped), so writing a page never leaves Docs.
  */
 export const docsPagePath = (pageId: string): string =>
-  `${RESOURCE_HOME_PATH}?file=${encodeURIComponent(pageId)}`;
+  `${RESOURCE_HOME_PATH}/page/${encodeURIComponent(standardizeIdentifier(pageId))}`;
+
+/** Where an uploaded file opens inside Docs: `/resource/file/<id>`. */
+export const docsFilePath = (fileId: string): string =>
+  `${RESOURCE_HOME_PATH}/file/${encodeURIComponent(fileId)}`;
 
 export type ResourceRouteView =
   | { kind: 'home' }
   | { category: FilesTabs; kind: 'drive' }
   | { galleryKey: WorkGalleryKey; kind: 'works' }
+  /** A page or file opened over the Docs home; `id` is the full row id. */
+  | { id: string; kind: 'file' | 'page' }
   | { kind: 'redirect'; to: string };
 
 /** The segments after `/resource`, ignoring a workspace prefix and trailing slash. */
@@ -57,6 +64,10 @@ const legacyRedirect = (segments: string[], searchParams: URLSearchParams): stri
   if (legacyWorksKey && segments[0] !== 'works') {
     return legacyWorksKey === 'all' ? WORKS_PATH : `${WORKS_PATH}?works=${legacyWorksKey}`;
   }
+
+  // The Docs home opened items as `/resource?file=<id>` before they had paths.
+  const legacyFile = searchParams.get('file');
+  if (legacyFile && segments.length === 0) return docsFilePath(legacyFile);
 
   const legacyCategory = searchParams.get('category');
   if (legacyCategory && segments.length === 0) {
@@ -89,6 +100,11 @@ export const resolveResourceRoute = (
 
   if (section === 'works' && !sub) {
     return { galleryKey: parseWorkGalleryKey(searchParams.get('works')) ?? 'all', kind: 'works' };
+  }
+
+  if ((section === 'page' || section === 'file') && sub && rest.length === 0) {
+    const id = decodeURIComponent(sub);
+    return { id: section === 'page' ? getIdFromIdentifier(id, 'docs') : id, kind: section };
   }
 
   if (section === 'drive' && rest.length === 0) {

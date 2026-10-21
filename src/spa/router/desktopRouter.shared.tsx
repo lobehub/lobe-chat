@@ -3,7 +3,6 @@
 import {
   BrainCircuit,
   Download,
-  FilePenIcon,
   HomeIcon,
   Image,
   Scale,
@@ -930,30 +929,18 @@ export const sharedMainAreaChildren: RouteObject[] = [
     ),
   },
 
-  // Pages routes
+  // Pages live in Docs: /page → /resource, /page/:id → /resource/page/:id.
+  ...(['page', 'page/:id'] as const).map((path) => ({
+    element: dynamicElement(
+      () => import('@/routes/(main)/page/redirect'),
+      `Desktop > Page > Redirect (${path})`,
+    ),
+    handle: { meta: pageRouteMeta },
+    path,
+  })),
+  // The page permission screen keeps the Pages layout.
   {
     children: [
-      {
-        element: dynamicElement(() => import('@/routes/(main)/page'), 'Desktop > Page', {
-          preloadId: 'page',
-        }),
-        handle: {
-          meta: routeMeta({
-            icon: FilePenIcon,
-            Skeleton: createSurfaceSkeleton('list'),
-            titleKey: 'navigation.pages',
-          }),
-        },
-        index: true,
-      },
-      {
-        element: dynamicElement(
-          () => import('@/routes/(main)/page/[id]'),
-          'Desktop > Page > Detail',
-        ),
-        handle: { meta: pageRouteMeta },
-        path: ':id',
-      },
       {
         element: dynamicElement(
           () => import('@/routes/(main)/page/[id]/permission'),

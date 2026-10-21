@@ -2,11 +2,13 @@
 
 import { createStaticStyles, Flexbox, useTheme } from '@lobehub/ui';
 import { memo, type ReactNode, useCallback, useMemo } from 'react';
-import { useSearchParams } from 'react-router';
+import { useLocation, useSearchParams } from 'react-router';
 
 import DragUploadZone from '@/components/DragUploadZone';
 import { PageEditor } from '@/features/PageEditor';
+import { RESOURCE_HOME_PATH } from '@/features/ResourceHome/paths';
 import { useResourceManagerStore } from '@/features/ResourceManager/store';
+import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwareNavigate';
 import { usePermission } from '@/hooks/usePermission';
 import dynamic from '@/libs/next/dynamic';
 import { invalidateDocumentMutation } from '@/services/document/invalidation';
@@ -48,6 +50,9 @@ const styles = createStaticStyles(({ css, cssVar }) => {
   };
 });
 
+/** A page or file opened over the Docs home by path. */
+const OPENED_ITEM_PATH = /\/resource\/(?:file|page)\/[^/]+\/?$/;
+
 export type ResourceManagerMode = 'editor' | 'explorer' | 'page';
 
 /**
@@ -68,6 +73,8 @@ interface ResourceManagerProps {
 const ResourceManager = memo<ResourceManagerProps>(({ content, explorerHero }) => {
   const theme = useTheme();
   const [, setSearchParams] = useSearchParams();
+  const location = useLocation();
+  const navigate = useWorkspaceAwareNavigate();
   const [mode, currentViewItemId, libraryId, setMode, setCurrentViewItemId] =
     useResourceManagerStore((s) => [
       s.mode,
@@ -107,6 +114,11 @@ const ResourceManager = memo<ResourceManagerProps>(({ content, explorerHero }) =
   const handleBack = () => {
     setMode('explorer');
     setCurrentViewItemId(undefined);
+    // An item opened by path (`/resource/{file,page}/:id`) goes back to the Docs home.
+    if (OPENED_ITEM_PATH.test(location.pathname)) {
+      navigate(RESOURCE_HOME_PATH);
+      return;
+    }
     // Remove the file query parameter from URL
     setSearchParams((prev) => {
       prev.delete('file');

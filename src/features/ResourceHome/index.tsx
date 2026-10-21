@@ -24,8 +24,8 @@ const ResourceHomePage = memo(() => {
 
   const view = resolveResourceRoute(location.pathname, searchParams);
   const redirectTo = view.kind === 'redirect' ? view.to : null;
-  // The bare /resource route is the home dashboard; the drive lists files by
-  // category under /resource/drive.
+  // The bare /resource route is the home dashboard (an opened page or file is
+  // overlaid on it); the drive lists files by category under /resource/drive.
   const categoryParam = view.kind === 'drive' ? view.category : FilesTabs.Home;
 
   useLayoutEffect(() => {
@@ -56,8 +56,9 @@ const ResourceHomePage = memo(() => {
     }
   }, [categoryParam, setCategory, location.pathname]);
 
-  // Sync file view mode from URL
-  useInitFileCheck();
+  // Sync the open item from the URL: `/resource/{file,page}/:id` paths, or
+  // the drive explorer's own `?file=` preview.
+  useInitFileCheck(view.kind === 'file' || view.kind === 'page' ? view.id : null);
 
   if (view.kind === 'works') return <WorkGallery galleryKey={view.galleryKey} />;
 

@@ -21,7 +21,7 @@ import { knowledgeBaseSelectors, useKnowledgeBaseStore } from '@/store/library';
 import { useUserStore } from '@/store/user';
 import { userProfileSelectors } from '@/store/user/slices/auth/selectors';
 
-import { docsPagePath, DRIVE_PATH } from '../paths';
+import { docsFilePath, docsPagePath } from '../paths';
 
 /** Title, location, owner, created, updated — the time columns stay fixed-width. */
 const COLUMNS = 'minmax(0, 3fr) minmax(0, 1.4fr) minmax(0, 1.1fr) 132px 132px';
@@ -142,8 +142,8 @@ interface HomeListProps {
 
 /**
  * The Docs home list: pages and files together, newest update first, with
- * where each one lives and who owns it. Pages open over Docs; files open in
- * the drive.
+ * where each one lives and who owns it. Pages and files both open inside Docs
+ * (`/resource/page/:id`, `/resource/file/:id`).
  */
 const HomeList = memo<HomeListProps>(({ onTabChange, tab }) => {
   const { t } = useTranslation('file');
@@ -166,11 +166,7 @@ const HomeList = memo<HomeListProps>(({ onTabChange, tab }) => {
   const tabs = workspaceId ? TABS : TABS.filter((key) => key !== 'shared');
 
   const open = (row: DocsHomeRow) =>
-    navigate(
-      row.kind === 'page'
-        ? docsPagePath(row.id)
-        : `${DRIVE_PATH}?file=${encodeURIComponent(row.id)}`,
-    );
+    navigate(row.kind === 'page' ? docsPagePath(row.id) : docsFilePath(row.id));
 
   return (
     <Flexbox gap={12}>

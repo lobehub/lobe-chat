@@ -19,21 +19,21 @@ import {
 import { FileTextIcon, MoreHorizontal, SquarePenIcon } from 'lucide-react';
 import { memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useSearchParams } from 'react-router';
 
 import AsyncBoundary from '@/components/AsyncBoundary';
 import EmptyNavItem from '@/features/NavPanel/components/EmptyNavItem';
 import NavItem from '@/features/NavPanel/components/NavItem';
 import SkeletonList from '@/features/NavPanel/components/SkeletonList';
 import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwareNavigate';
+import { useActiveLocation } from '@/hooks/useActiveLocation';
 import { usePermission } from '@/hooks/usePermission';
 import { pageActions, pageSelectors, usePageStore } from '@/store/page';
 import type { PageSectionScope } from '@/store/page/projection';
 
-import { docsPagePath } from '../../../paths';
+import { docsPagePath, resolveResourceRoute, RESOURCE_HOME_PATH } from '../../../paths';
 import { buildPageTree } from './tree';
 
-/** Rows a section shows; the rest open in the full page list. */
+/** Rows a section shows; the rest are in the Docs home list. */
 const SECTION_LIMIT = 20;
 const INDENT_PER_LEVEL = 12;
 
@@ -60,8 +60,9 @@ const PageSection = memo<PageSectionProps>(({ itemKey, scope }) => {
   const hasMore = (docs?.length ?? 0) > SECTION_LIMIT;
 
   // Pages open over the Docs home, keeping the user in Docs.
-  const [searchParams] = useSearchParams();
-  const openFileId = searchParams.get('file');
+  const location = useActiveLocation();
+  const openedView = resolveResourceRoute(location.pathname, new URLSearchParams(location.search));
+  const openFileId = openedView.kind === 'page' ? openedView.id : null;
   const openPage = (id: string) => navigate(docsPagePath(id));
 
   const handleCreate = async () => {
@@ -165,7 +166,7 @@ const PageSection = memo<PageSectionProps>(({ itemKey, scope }) => {
               <NavItem
                 icon={MoreHorizontal}
                 title={t('docs.viewAllPages')}
-                onClick={() => navigate('/page')}
+                onClick={() => navigate(RESOURCE_HOME_PATH)}
               />
             )}
           </Flexbox>

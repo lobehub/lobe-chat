@@ -108,6 +108,21 @@ export const resourceRoute: RouteObject = {
           },
           path: 'page',
         },
+        // A page or file opened inside Docs, over the home dashboard.
+        ...(
+          [
+            { icon: FilePenIcon, path: 'page/:id', titleKey: 'navigation.resourcePages' },
+            { icon: FilesIcon, path: 'file/:id', titleKey: 'navigation.resourceFiles' },
+          ] as const
+        ).map(({ icon, path, titleKey }) => ({
+          element: dynamicElement(
+            () => import('@/routes/(main)/resource/(home)'),
+            `Desktop > Resource > Home > ${path}`,
+            { preloadId: 'resource' },
+          ),
+          handle: { meta: routeMeta({ icon, titleKey }) },
+          path,
+        })),
         // Legacy category paths (/resource/documents, /resource/all, …)
         // redirect into the drive.
         {
