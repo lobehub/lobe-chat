@@ -263,9 +263,9 @@ export const CollapsibleMarkdownEvidence = memo<{
         onClick={() => setExpanded(!expanded)}
       >
         <Icon
+          className={stylex.props(styles.foldChevron, expanded && styles.foldChevronOpen).className}
           icon={ChevronRight}
           size={14}
-          className={stylex.props(styles.foldChevron, expanded && styles.foldChevronOpen).className}
         />
         <span {...stylex.props(styles.fileCardIcon)}>
           <Icon icon={FileText} size={13} />
