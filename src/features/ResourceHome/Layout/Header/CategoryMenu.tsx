@@ -44,7 +44,7 @@ const CategoryMenu = memo(() => {
   const setMode = useResourceManagerStore((s) => s.setMode);
   const navigate = useWorkspaceAwareNavigate();
   const location = useActiveLocation();
-  // Business Works types (Cloud artifacts) keep their own routes but belong to Works.
+  // Business Works types keep their own routes but belong to Works.
   const businessCategories = useBusinessResourceCategories();
   const activeSection = resolveDocsSection(
     location.pathname,

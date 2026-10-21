@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { useBusinessResourceCategories } from '@/business/client/features/ResourceCategories';
 import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwareNavigate';
 
-/** Works types every deployment has; business types (Cloud artifacts) append after them. */
+/** Works types every deployment has; business types append after them. */
 const WORK_TYPES = [
   { key: 'all', titleKey: 'docs.works.all', url: '/resource/works' },
   { key: 'task', titleKey: 'docs.works.task', url: '/resource/works?works=task' },

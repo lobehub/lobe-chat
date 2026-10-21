@@ -97,7 +97,7 @@ export type DocsSection = 'drive' | 'home' | 'library' | 'works';
 
 /**
  * Which top-level Docs section a pathname belongs to. Business routes under
- * Works (`/resource/artifacts`) are listed by the caller.
+ * Works are listed by the caller.
  */
 export const resolveDocsSection = (
   pathname: string,

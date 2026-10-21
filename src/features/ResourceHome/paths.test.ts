@@ -81,7 +81,7 @@ describe('resolveDocsSection', () => {
   });
 
   it('treats business Works routes as part of Works', () => {
-    expect(resolveDocsSection('/team/resource/artifacts', ['/resource/artifacts'])).toBe('works');
-    expect(resolveDocsSection('/resource/artifacts')).toBeNull();
+    expect(resolveDocsSection('/team/resource/extra', ['/resource/extra'])).toBe('works');
+    expect(resolveDocsSection('/resource/extra')).toBeNull();
   });
 });
