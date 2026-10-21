@@ -1,6 +1,6 @@
 import { type ChildProcess, execFile } from 'node:child_process';
 import { randomUUID } from 'node:crypto';
-import { lstat, mkdir, readdir, rm, stat, symlink } from 'node:fs/promises';
+import { lstat, mkdir, readdir, rm, stat, symlink, writeFile } from 'node:fs/promises';
 import { homedir } from 'node:os';
 import path from 'node:path';
 
@@ -16,6 +16,15 @@ import {
 } from '@lobechat/heterogeneous-agents/quota-sampler';
 
 const DIRECTORY_MODE = 0o700;
+
+/**
+ * A profile replaced by a newer sign-in of the same account is retired, not
+ * deleted: an in-flight run may have recorded its path, and recovery after a
+ * restart replays the transcript from there. It is forgotten once the grace
+ * period has passed.
+ */
+const RETIRED_MARKER = '.lobehub-retired';
+export const RETIRED_PROFILE_GRACE_MS = 7 * 24 * 60 * 60 * 1000;
 
 /** OAuth in the browser is human-paced; give up on an abandoned login eventually. */
 export const CLAUDE_CODE_LOGIN_TIMEOUT_MS = 10 * 60 * 1000;
@@ -103,6 +112,10 @@ const linkTypeFor = async (source: string): Promise<'junction' | undefined> => {
   return (await stat(source)).isDirectory() ? 'junction' : undefined;
 };
 
+const retireProfile = async (configDir: string) => {
+  await writeFile(path.join(configDir, RETIRED_MARKER), new Date().toISOString());
+};
+
 const exists = async (target: string) => {
   try {
     await lstat(target);
@@ -181,17 +194,23 @@ export class ClaudeCodeAccountProfiles {
     const configDir = path.join(this.#root, randomUUID());
     const login: LoginInProgress = { configDir };
     this.#login = login;
+    // Cancel can land at any await, including after the CLI already exited:
+    // nothing may be committed once it has.
+    const assertNotCancelled = () => {
+      if (login.cancelled) throw new Error('Claude Code sign-in was cancelled');
+    };
 
     try {
       await mkdir(configDir, { mode: DIRECTORY_MODE, recursive: true });
       await this.#linkSharedEntries(configDir);
       const args = ['auth', 'login', '--claudeai'];
       if (options.email) args.push('--email', options.email);
-      if (login.cancelled) throw new Error('Claude Code sign-in was cancelled');
+      assertNotCancelled();
       const child = await this.#spawnLogin({ args, configDir });
       login.process = child;
       if (login.cancelled) child.kill('SIGTERM');
       await this.#waitForExit(child);
+      assertNotCancelled();
 
       const identity = await readSignedInIdentity(configDir);
       if (!identity) throw new Error('Claude Code sign-in finished without a login');
@@ -199,11 +218,12 @@ export class ClaudeCodeAccountProfiles {
       const existing = (await this.list()).find(
         (account) => account.identity.externalAccountId === identity.externalAccountId,
       );
+      assertNotCancelled();
       if (existing && !existing.configDir) {
         await forgetProfile(configDir);
         return existing;
       }
-      if (existing?.configDir) await forgetProfile(existing.configDir);
+      if (existing?.configDir) await retireProfile(existing.configDir);
 
       return { configDir, identity };
     } catch (error) {
@@ -223,16 +243,37 @@ export class ClaudeCodeAccountProfiles {
     return true;
   };
 
+  /** Live profile dirs; retired ones are skipped, and forgotten after the grace period. */
   #profileDirs = async (): Promise<string[]> => {
+    let dirs: string[];
     try {
       const entries = await readdir(this.#root, { withFileTypes: true });
-      return entries
+      dirs = entries
         .filter((entry) => entry.isDirectory())
         .map((entry) => path.join(this.#root, entry.name))
         .sort();
     } catch {
       return [];
     }
+
+    const retiredAt = await Promise.all(
+      dirs.map((dir) =>
+        stat(path.join(dir, RETIRED_MARKER)).then(
+          (marker) => marker.mtimeMs,
+          () => undefined,
+        ),
+      ),
+    );
+    const now = Date.now();
+    await Promise.all(
+      dirs.map((dir, index) => {
+        const at = retiredAt[index];
+        return at !== undefined && now - at > RETIRED_PROFILE_GRACE_MS
+          ? forgetProfile(dir).catch(() => {})
+          : undefined;
+      }),
+    );
+    return dirs.filter((_, index) => retiredAt[index] === undefined);
   };
 
   /**

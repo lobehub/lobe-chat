@@ -1,13 +1,17 @@
 import { EventEmitter } from 'node:events';
 import { existsSync, readFileSync } from 'node:fs';
 import type * as FsPromises from 'node:fs/promises';
-import { lstat, mkdir, mkdtemp, readlink, rm, symlink, writeFile } from 'node:fs/promises';
+import { lstat, mkdir, mkdtemp, readlink, rm, symlink, utimes, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { ClaudeCodeAccountProfiles, type ClaudeCodeLoginSpawnParams } from './claudeCodeAccounts';
+import {
+  ClaudeCodeAccountProfiles,
+  type ClaudeCodeLoginSpawnParams,
+  RETIRED_PROFILE_GRACE_MS,
+} from './claudeCodeAccounts';
 
 const fakeFs = vi.hoisted(() => ({
   home: '',
@@ -209,8 +213,43 @@ describe('ClaudeCodeAccountProfiles', () => {
     const second = await loginAs('acc-1');
 
     expect(second.configDir).not.toBe(first.configDir);
-    expect(existsSync(first.configDir!)).toBe(false);
     expect((await profiles.list()).map((a) => a.configDir)).toEqual([second.configDir]);
+    expect(await profiles.resolve('acc-1')).toEqual({
+      configDir: second.configDir,
+      kind: 'profile',
+    });
+  });
+
+  it('keeps a replaced profile for in-flight runs, then forgets it after the grace period', async () => {
+    const first = await loginAs('acc-1');
+    await loginAs('acc-1');
+
+    // A run that recorded the old path can still recover its transcript there.
+    expect(existsSync(first.configDir!)).toBe(true);
+
+    const expired = (Date.now() - RETIRED_PROFILE_GRACE_MS - 60_000) / 1000;
+    await utimes(path.join(first.configDir!, '.lobehub-retired'), expired, expired);
+    await profiles.list();
+
+    expect(existsSync(first.configDir!)).toBe(false);
+  });
+
+  it('honors a cancel that lands after the CLI already exited', async () => {
+    await writeLogin(path.join(root, 'old'), 'acc-1');
+    const pending = profiles.login();
+    await vi.waitFor(() => expect(spawned).toHaveLength(1));
+    await writeLogin(spawned[0].configDir, 'acc-1');
+
+    child.emit('exit', 0, null);
+    profiles.cancelLogin();
+
+    await expect(pending).rejects.toThrow('cancelled');
+    // Nothing committed: the new login is gone and the existing profile untouched.
+    expect(existsSync(spawned[0].configDir)).toBe(false);
+    expect(await profiles.resolve('acc-1')).toEqual({
+      configDir: path.join(root, 'old'),
+      kind: 'profile',
+    });
   });
 
   it('drops the new profile when the account is already the default login', async () => {
