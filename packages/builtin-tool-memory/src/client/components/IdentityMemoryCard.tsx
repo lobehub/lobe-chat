@@ -1,8 +1,8 @@
 'use client';
 
-import { Flexbox } from '@lobehub/ui';
-import { Progress, Spin, Tag, Text } from '@lobehub/ui';
-import { createStaticStyles } from '@lobehub/ui';
+import { Flexbox, Progress, Spin, Tag, Text } from '@lobehub/ui';
+import { cssVar } from '@lobehub/ui/stylex/cssVar.stylex';
+import * as stylex from '@stylexjs/stylex';
 import { memo } from 'react';
 
 import BubblesLoading from '@/components/BubblesLoading';
@@ -11,18 +11,19 @@ import StreamingMarkdown from '@/components/StreamingMarkdown';
 import type { IdentityMemoryViewModel } from './identityMemoryViewModel';
 import { memoryCardStyles as styles, MemorySection, SummaryAccordion } from './MemoryCardParts';
 
-const localStyles = createStaticStyles(({ css, cssVar }) => ({
-  evidence: css`
-    padding-block: 8px;
-    padding-inline: 12px;
-    border-inline-start: 2px solid ${cssVar.colorBorder};
-
-    font-size: 13px;
-    font-style: italic;
-    line-height: 1.6;
-    color: ${cssVar.colorTextSecondary};
-  `,
-}));
+const localStyles = stylex.create({
+  evidence: {
+    paddingBlock: '8px',
+    paddingInline: '12px',
+    borderInlineStartWidth: '2px',
+    borderInlineStartStyle: 'solid',
+    borderInlineStartColor: cssVar.colorBorder,
+    fontSize: '13px',
+    fontStyle: 'italic',
+    lineHeight: 1.6,
+    color: cssVar.colorTextSecondary,
+  },
+});
 
 export interface IdentityMemoryCardProps {
   data: IdentityMemoryViewModel;
@@ -57,10 +58,15 @@ export const IdentityMemoryCard = memo<IdentityMemoryCardProps>(
     if (isEmpty) return null;
 
     return (
-      <Flexbox className={styles.container}>
-        <Flexbox horizontal align={'center'} className={styles.header} gap={8}>
+      <Flexbox className={stylex.props(styles.container).className}>
+        <Flexbox
+          horizontal
+          align={'center'}
+          className={stylex.props(styles.header).className}
+          gap={8}
+        >
           <Flexbox flex={1}>
-            <div className={styles.title}>{title || fallbackTitle}</div>
+            <div className={stylex.props(styles.title).className}>{title || fallbackTitle}</div>
           </Flexbox>
           {identityType && <Tag>{identityType}</Tag>}
           {relationship && <Tag color={'info'}>{relationship}</Tag>}
@@ -73,7 +79,7 @@ export const IdentityMemoryCard = memo<IdentityMemoryCardProps>(
 
             {description && (
               <MemorySection title={'Description'}>
-                <div className={styles.sectionBody}>
+                <div className={stylex.props(styles.sectionBody).className}>
                   <StreamingMarkdown>{description}</StreamingMarkdown>
                 </div>
               </MemorySection>
@@ -83,13 +89,18 @@ export const IdentityMemoryCard = memo<IdentityMemoryCardProps>(
               <Flexbox
                 horizontal
                 align={'center'}
-                className={styles.section}
+                className={stylex.props(styles.section).className}
                 gap={16}
                 style={{ paddingBlock: 12, paddingInline: 12 }}
                 wrap={'wrap'}
               >
                 {role && (
-                  <Flexbox horizontal align={'center'} className={styles.chip} gap={6}>
+                  <Flexbox
+                    horizontal
+                    align={'center'}
+                    className={stylex.props(styles.chip).className}
+                    gap={6}
+                  >
                     <span>🎓</span>
                     <span>{role}</span>
                   </Flexbox>
@@ -125,14 +136,14 @@ export const IdentityMemoryCard = memo<IdentityMemoryCardProps>(
 
             {sourceEvidence && (
               <MemorySection title={'Evidence'} tone={'gold'}>
-                <div className={localStyles.evidence}>{sourceEvidence}</div>
+                <div {...stylex.props(localStyles.evidence)}>{sourceEvidence}</div>
               </MemorySection>
             )}
 
             {labels.length > 0 && (
               <Flexbox
                 horizontal
-                className={styles.section}
+                className={stylex.props(styles.section).className}
                 gap={8}
                 style={{ paddingBlock: 12, paddingInline: 12 }}
                 wrap={'wrap'}
@@ -144,15 +155,20 @@ export const IdentityMemoryCard = memo<IdentityMemoryCardProps>(
             )}
           </>
         ) : (
-          <Flexbox className={styles.content} gap={8}>
+          <Flexbox className={stylex.props(styles.content).className} gap={8}>
             {!summary && loading ? (
               <BubblesLoading />
             ) : (
               <>
-                {summary && <div className={styles.summary}>{summary}</div>}
+                {summary && <div className={stylex.props(styles.summary).className}>{summary}</div>}
                 {details && <StreamingMarkdown>{details}</StreamingMarkdown>}
                 {tags.length > 0 && (
-                  <Flexbox horizontal className={styles.tags} gap={8} wrap={'wrap'}>
+                  <Flexbox
+                    horizontal
+                    className={stylex.props(styles.tags).className}
+                    gap={8}
+                    wrap={'wrap'}
+                  >
                     {tags.map((tag, index) => (
                       <Tag key={index}>{tag}</Tag>
                     ))}
