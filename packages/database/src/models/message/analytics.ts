@@ -95,10 +95,14 @@ const DATA_URL_HEADER =
   `(data:(?:audio|image|video)/${MIME_TOKEN}+(?:;(?!base64)${MIME_TOKEN}+(?:=${MIME_TOKEN}*)?)*)`;
 // base64 form: the payload alphabet stops at the first character outside it,
 // so anything after the data URL (e.g. an escaped quote in an HTML
-// attribute) survives the rewrite.
+// attribute) survives the rewrite. The alphabet covers standard base64 AND
+// the URL-safe variant (`-`/`_`): ingestion (builtin-tool-lobe-agent
+// media.ts) accepts any parseable data:audio|image|video URL without
+// validating the body encoding, so base64url bodies are a supported
+// persisted form that must not leak through the export.
 const DATA_URL_BASE64_PATTERN =
   `(${DATA_URL_HEADER};base64,)` +
-  '(?:[A-Za-z0-9+/=\\s]|\\\\[nrtbf]|%[0-9a-fA-F]{2}){64,}';
+  '(?:[A-Za-z0-9+/=_\\s-]|\\\\[nrtbf]|%[0-9a-fA-F]{2}){64,}';
 // raw (non-base64) form, primary pass: markup/percent-encoded payloads stop
 // at an escaped quote in complete units (`[^"\\]`, or an escaped pair whose
 // second character is neither a quote nor a backslash `\\[^"\\]`). `\"`

@@ -485,4 +485,81 @@ describe('MessageModel queryAll — tool-call plugin projection', () => {
     );
     expect(row.tool_call_id).toBe('call_redact_raw_html_suffix');
   });
+
+  it('redacts base64url data-URL bodies (URL-safe alphabet)', async () => {
+    // Ingestion (builtin-tool-lobe-agent media.ts) accepts any parseable
+    // `data:audio|image|video` URL without validating the body encoding, so
+    // URL-safe base64 (`-`/`_`) bodies are a supported persisted form. The
+    // body alphabet once lacked `-`/`_`, so a base64url body (or any mixed
+    // payload with an unsupported character) leaked entirely — or leaked
+    // everything after the first unsupported character — through the CLI
+    // dump (Codex round-8 P2).
+    const bigBody = `${'-_'.repeat(100_000)}-_`;
+    await serverDB.insert(messages).values({
+      id: 'q-redact-base64url',
+      userId,
+      role: 'tool',
+      content: 'base64url payload',
+    });
+    await serverDB.insert(messagePlugins).values({
+      id: 'q-redact-base64url',
+      apiName: 'analyzeMedia',
+      arguments: JSON.stringify({ urls: [`data:video/mp4;base64,${bigBody}`] }),
+      identifier: 'lobe-agent',
+      toolCallId: 'call_redact_base64url',
+      userId,
+    });
+
+    const result = await messageModel.queryAll();
+    const row = result.find((m) => m.id === 'q-redact-base64url') as any;
+    const args = JSON.parse(row.plugin.arguments);
+
+    expect(args.urls[0]).toBe('data:video/mp4;base64,...redacted...');
+    expect(row.plugin.arguments.length).toBeLessThan(500);
+    expect(row.tool_call_id).toBe('call_redact_base64url');
+  });
+
+  it('fails closed on quote-containing raw payloads: redacts through the JSON boundary', async () => {
+    // When a raw payload itself contains escaped quotes (double-quoted SVG
+    // attributes are the common case), the primary raw pass dies on the
+    // first embedded `\"` and the fallback pass deliberately redacts through
+    // the outer JSON boundary, truncating the string's suffix beyond the
+    // URL. That is an accepted fail-closed trade-off: a distinguishing
+    // heuristic (first quote, space-following quote, attribute-following
+    // quote...) would be a leak vector for megabyte payloads — the storage
+    // rows keep the full data, only this creator-facing export projection
+    // truncates, and the attribution header survives. Codex round-8 P2:
+    // documented with this regression so the truncation cannot regress to a
+    // leak.
+    const bigSvg = `<svg xmlns=\\"http://www.w3.org/2000/svg\\">${'<rect width=1 height=1 />'.repeat(11_000)}</svg>`;
+    const html = `<img src=\\"data:image/svg+xml,${bigSvg}\\" alt=\\"shot\\">`;
+    await serverDB.insert(messages).values({
+      id: 'q-redact-quote-payload',
+      userId,
+      role: 'tool',
+      content: 'quote payload',
+    });
+    await serverDB.insert(messagePlugins).values({
+      id: 'q-redact-quote-payload',
+      apiName: 'screenshot',
+      identifier: 'lobe-browser',
+      state: { html },
+      toolCallId: 'call_redact_quote_payload',
+      userId,
+    });
+
+    const result = await messageModel.queryAll();
+    const row = result.find((m) => m.id === 'q-redact-quote-payload') as any;
+    const state = row.pluginState as { html: string };
+
+    // The data-URL header is redacted; because the payload contains escaped
+    // quotes the fallback pass redacts through the JSON-string boundary and
+    // the suffix beyond the URL is dropped (fail-closed). The critical
+    // guarantees: NO payload bytes leak and the column stays valid JSONB.
+    expect(state.html.startsWith('<img src=\\"data:image/svg+xml,...redacted...')).toBe(true);
+    expect(state.html).not.toContain('<rect');
+    expect(state.html.length).toBeLessThan(500);
+    expect(() => JSON.stringify(state)).not.toThrow();
+    expect(row.tool_call_id).toBe('call_redact_quote_payload');
+  });
 });
