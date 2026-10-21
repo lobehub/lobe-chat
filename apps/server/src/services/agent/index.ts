@@ -3,7 +3,12 @@ import { BUILTIN_AGENTS } from '@lobechat/builtin-agents';
 import { DEFAULT_PROVIDER } from '@lobechat/business-const';
 import { DEFAULT_AGENT_CONFIG, DEFAULT_MODEL } from '@lobechat/const';
 import { type LobeChatDatabase } from '@lobechat/database';
-import { type AgentItem, type LobeAgentChatConfig, type LobeAgentConfig } from '@lobechat/types';
+import {
+  type AgentItem,
+  type CreateAgentConfig,
+  type LobeAgentChatConfig,
+  type LobeAgentConfig,
+} from '@lobechat/types';
 import { cleanObject, merge } from '@lobechat/utils';
 import { TRPCError } from '@trpc/server';
 import debug from 'debug';
@@ -12,8 +17,10 @@ import { type PartialDeep } from 'type-fest';
 import { AGENT_SHARE_ALLOWED_PROVIDERS } from '@/business/agent-share';
 import { AgentModel } from '@/database/models/agent';
 import { AgentShareModel } from '@/database/models/agentShare';
+import { ResourcePermissionModel } from '@/database/models/resourcePermission';
 import { SessionModel } from '@/database/models/session';
 import { UserModel } from '@/database/models/user';
+import { DEFAULT_RESOURCE_ACCESS_LEVELS } from '@/database/schemas';
 import { normalizeInboxAgentAvatar, normalizeInboxAgentTitle } from '@/database/utils/inboxAgent';
 import { getRedisConfig } from '@/envs/redis';
 import { getServerDefaultAgentConfig } from '@/server/globalConfig';
@@ -68,6 +75,41 @@ export class AgentService {
     this.workspaceId = workspaceId;
     this.agentModel = new AgentModel(db, userId, workspaceId);
     this.userModel = new UserModel(db, userId);
+  }
+
+  /** Shared creation policy for Agent clients and the native Session adapter. */
+  async createAgent(input: {
+    config?: CreateAgentConfig & { pinned?: boolean };
+    groupId?: string;
+    visibility?: 'private' | 'public';
+  }) {
+    const folderVisibility = input.groupId
+      ? await this.agentModel.getAssignableSessionGroupVisibility(input.groupId)
+      : undefined;
+    const visibility = input.visibility;
+    if (folderVisibility && visibility && visibility !== folderVisibility) {
+      throw new TRPCError({
+        code: 'BAD_REQUEST',
+        message: `A ${visibility} agent cannot be created in a ${folderVisibility} folder`,
+      });
+    }
+
+    const agent = await this.agentModel.create({
+      ...input.config,
+      plugins: input.config?.plugins as unknown as string[] | undefined,
+      sessionGroupId: input.groupId,
+      ...(visibility || folderVisibility ? { visibility: visibility ?? folderVisibility } : {}),
+    });
+
+    if (this.workspaceId && agent.visibility !== 'private') {
+      await new ResourcePermissionModel(this.db, this.workspaceId).setAccessLevel(
+        'agent',
+        agent.id,
+        DEFAULT_RESOURCE_ACCESS_LEVELS.agent,
+        this.userId,
+      );
+    }
+    return { agentId: agent.id };
   }
 
   /** Validate the effective selection at configuration boundaries, including inherited defaults. */
