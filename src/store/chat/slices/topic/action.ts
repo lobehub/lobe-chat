@@ -76,6 +76,7 @@ import {
   topicAgentViewResource,
   type TopicListParams,
   topicListResource,
+  topicListViewFields,
 } from './projection';
 import { type ChatTopicDispatch } from './reducer';
 import { topicSelectors } from './selectors';
@@ -243,13 +244,7 @@ export class ChatTopicActionImpl {
       stateKey: 'topicListReplica',
       toPersisted,
       view: recordLens<ChatStore, TopicData>('topicDataMap'),
-      viewFields: ({ excludeStatuses, excludeTriggers, isInbox, sortBy, withDetails }) => ({
-        excludeStatuses,
-        excludeTriggers,
-        isInbox: Boolean(isInbox),
-        sortBy,
-        withDetails,
-      }),
+      viewFields: topicListViewFields,
     });
     this.#topicAgentView = createReplicaSlice(topicAgentViewResource, {
       actionPrefix: n('topicAgentView'),
@@ -1479,6 +1474,7 @@ export class ChatTopicActionImpl {
       excludeTriggers: currentData?.excludeTriggers,
       groupId: activeGroupId,
       isInbox: currentData?.isInbox,
+      onlyMine: currentData?.onlyMine,
       pageSize: currentData?.pageSize || useGlobalStore.getState().status.topicPageSize || 20,
       sortBy: currentData?.sortBy,
       withDetails: currentData?.withDetails,
@@ -2027,6 +2023,7 @@ export class ChatTopicActionImpl {
           isExpandingPageSize: false,
           isLoadingMore: false,
           items: nextItems,
+          onlyMine: currentData?.onlyMine,
           pageSize,
           sortBy: currentData?.sortBy,
           total,

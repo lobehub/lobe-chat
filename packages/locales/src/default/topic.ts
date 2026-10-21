@@ -120,6 +120,7 @@ export default {
   'filter.groupMode.byTime': 'By time',
   'filter.groupMode.flat': 'Flat',
   'filter.noDevice': 'No device',
+  'filter.onlyMine': 'Only my topics',
   'filter.organize': 'Organize',
   'filter.showCompleted': 'Include Archived',
   'filter.sort': 'Sort by',

@@ -9,6 +9,7 @@ import { agentSelectors, builtinAgentSelectors } from '@/store/agent/selectors';
 import { useChatStore } from '@/store/chat';
 import { messageMapKey } from '@/store/chat/utils/messageMapKey';
 import { useDeviceStore } from '@/store/device';
+import { useUserStore } from '@/store/user';
 import { useVerifyStore } from '@/store/verify';
 
 const builtinAgentSlugs = new Set<string>(Object.values(BUILTIN_AGENT_SLUGS));
@@ -38,6 +39,13 @@ const resolveRouteAgentId = (routeAgentId?: string): string | undefined => {
 export const preHydrateTopicListForRoute = async (routeAgentId?: string): Promise<void> => {
   const agentId = resolveRouteAgentId(routeAgentId);
   if (!agentId) return;
+
+  // The workspace "only mine" filter is part of the list identity; read it
+  // before deriving the params, or the seeded page is the unfiltered one.
+  await settleWithin(
+    useUserStore.getState().preHydrateWorkspaceUserPreference(),
+    PRE_PAINT_HYDRATE_TIMEOUT,
+  );
 
   const params = getSidebarTopicListParams({ agentId });
   if (!params) return;

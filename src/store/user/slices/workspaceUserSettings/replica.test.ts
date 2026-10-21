@@ -138,6 +138,28 @@ describe('workspace user preference replica', () => {
     expect(entry('ws-1').source).toBe('server');
   });
 
+  // A route loader derives the topic list identity ("only mine") from this
+  // bucket before the route commits — nothing has mounted the sync yet.
+  it('seeds the persisted bucket before paint without a mounted sync', async () => {
+    await resource.storage!.set(
+      { queryKey: storageKey, scope },
+      { data: { topicOnlyMine: true }, updatedAt: 1 },
+    );
+
+    await expect(state().preHydrateWorkspaceUserPreference()).resolves.toBe(true);
+
+    expect(state().workspaceUserPreferenceWorkspaceId).toBe('ws-1');
+    expect(state().workspaceUserPreference).toEqual({ topicOnlyMine: true });
+    expect(workspaceUserSettingsService.getPreference).not.toHaveBeenCalled();
+  });
+
+  it('skips the pre-paint seed in personal mode', async () => {
+    active.id = null;
+
+    await expect(state().preHydrateWorkspaceUserPreference()).resolves.toBe(false);
+    expect(state().workspaceUserPreferenceWorkspaceId).toBeNull();
+  });
+
   it('never hits the network in personal mode (no active workspace)', async () => {
     active.id = null;
 

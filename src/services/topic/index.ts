@@ -116,6 +116,7 @@ export class TopicService {
       groupId: params.groupId,
       includeTriggers: params.includeTriggers,
       isInbox: params.isInbox,
+      onlyMine: params.onlyMine,
       pageSize: params.pageSize,
       sortBy: params.sortBy,
       triggers: params.triggers,

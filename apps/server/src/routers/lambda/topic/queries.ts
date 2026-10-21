@@ -133,6 +133,8 @@ export const queryRouter = router({
         groupId: z.string().nullish(),
         includeTriggers: z.array(z.string()).optional(),
         isInbox: z.boolean().optional(),
+        /** Only topics the caller created — the workspace "only mine" filter. */
+        onlyMine: z.boolean().optional(),
         pageSize: z.number().max(100).optional(),
         sessionId: z.string().nullish(),
         /**

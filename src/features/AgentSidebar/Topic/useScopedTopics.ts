@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 
+import { useActiveWorkspaceId } from '@/business/client/hooks/useActiveWorkspaceId';
 import { MAIN_SIDEBAR_EXCLUDE_TRIGGERS } from '@/const/topic';
 import { useActiveRouteParams } from '@/hooks/useActiveRouteParams';
 import { useChatStore } from '@/store/chat';
@@ -10,6 +11,8 @@ import {
   useProjectDirectoryStore,
   useProjectTopics,
 } from '@/store/projectWorkingDirectory';
+import { useUserStore } from '@/store/user';
+import { userProfileSelectors, workspaceUserSettingsSelectors } from '@/store/user/selectors';
 import type { ChatTopic, GroupedTopic, TopicGroupMode, TopicSortBy } from '@/types/topic';
 import { filterTopics } from '@/utils/client/topic';
 
@@ -63,22 +66,28 @@ export const useScopedSidebarTopics = (
   const visibleLimit = pageSize + (reveal?.extraRows ?? 0);
   const running = useChatStore(operationSelectors.visiblyRunningTopicIds);
   const directories = useProjectDirectories(scope?.projectId);
+  const activeWorkspaceId = useActiveWorkspaceId();
+  const onlyMine = useUserStore(workspaceUserSettingsSelectors.topicOnlyMine(activeWorkspaceId));
+  const userId = useUserStore(userProfileSelectors.userId);
   const filter = useTopicListFilter()?.filter;
   const filtering = !!(filter?.status || filter?.device);
-  // The status / device filter is an explicit ask, so it narrows the list
-  // strictly — unlike the archived toggle, which keeps the open topic in view.
+  // Project topics arrive in full, so the "only mine" filter applies here
+  // instead of on the server. The status / device filter is an explicit ask,
+  // so it narrows the list strictly — unlike "only mine" and the archived
+  // toggle, which keep the open topic in view.
   const candidates = useMemo(() => {
     const list: ChatTopic[] = (topics ?? []).filter(
       (topic) => !topic.trigger || !MAIN_SIDEBAR_EXCLUDE_TRIGGERS.includes(topic.trigger),
     );
+    const listed = onlyMine ? list.filter((topic) => topic.userId === userId) : list;
     return {
       active: filtering ? undefined : list.find((topic) => topic.id === topicId),
       filtered:
         filter && filtering
-          ? filterTopics(list, filter, { directories, loadingTopicIds: running })
-          : list,
+          ? filterTopics(listed, filter, { directories, loadingTopicIds: running })
+          : listed,
     };
-  }, [topics, topicId, filter, filtering, directories, running]);
+  }, [topics, topicId, filter, filtering, directories, running, onlyMine, userId]);
   const visible = useMemo(
     () =>
       selectSidebarTopics(
