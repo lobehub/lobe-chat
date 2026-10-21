@@ -17,6 +17,7 @@ import {
   workspaces,
 } from '@/database/schemas';
 import { resolveAgentReference } from '@/server/services/agent/resolveReference';
+import { after } from '@/server/utils/scheduleAfterResponse';
 
 import { batchResolveAgentIdFromSessions, resolveContext } from '../../_helpers/resolveContext';
 import { agentRouter } from '../../agent';
@@ -431,6 +432,104 @@ describe('native Session to Agent compatibility', () => {
         .map((row) => row.id)
         .sort(),
     );
+  });
+
+  it.each(['inbox', 'ssn_inbox', 'agent', 'session'] as const)(
+    'lists all three Inbox topic shapes through %s without trusting the client flag',
+    async (context) => {
+      const { agent: inbox, session } = await legacy();
+      await db.update(agents).set({ slug: 'inbox' }).where(eq(agents.id, inbox.id));
+      await db.update(sessions).set({ slug: 'inbox' }).where(eq(sessions.id, session.id));
+      const { agent: other } = await legacy();
+      const workspaceId = await workspace();
+      const visible = await db
+        .insert(topics)
+        .values([
+          { userId, agentId: inbox.id, title: 'Current Inbox' },
+          { userId, sessionId: session.id, title: 'Session Inbox' },
+          { userId, title: 'Orphan Inbox' },
+        ])
+        .returning();
+      const excluded = await db
+        .insert(topics)
+        .values([
+          { userId, agentId: other.id, title: 'Other Agent' },
+          { userId: otherUserId, title: 'Foreign orphan' },
+          { userId, workspaceId, title: 'Workspace orphan' },
+          { userId, isDeleted: true, title: 'Trashed orphan' },
+        ])
+        .returning();
+      const caller = callers().topic;
+      const id = context === 'agent' ? inbox.id : context === 'session' ? session.id : context;
+      for (const isInbox of [undefined, false, true]) {
+        vi.mocked(after).mockClear();
+        const input = { sessionId: id, ...(isInbox === undefined ? {} : { isInbox }) };
+        const result = await caller.getTopics(input);
+        expect(result.total).toBe(3);
+        expect(result.items.map((row) => row.id).sort()).toEqual(
+          visible.map((row) => row.id).sort(),
+        );
+        // The immediate response must include history before deferred migration runs.
+        expect(
+          (await db.query.topics.findFirst({ where: eq(topics.id, visible[2].id) }))?.agentId,
+        ).toBeNull();
+      }
+      vi.mocked(after).mockClear();
+      await caller.getTopics({ sessionId: id });
+      const migration = vi.mocked(after).mock.calls.at(-1)?.[0];
+      if (typeof migration !== 'function') throw new Error('Missing deferred migration');
+      await migration();
+      expect(
+        (await db.query.topics.findFirst({ where: eq(topics.id, visible[2].id) }))?.agentId,
+      ).toBe(inbox.id);
+      expect(
+        (await db.query.topics.findFirst({ where: eq(topics.id, visible[1].id) }))?.agentId,
+      ).toBe(inbox.id);
+      const protectedRows = await db.query.topics.findMany({
+        where: eq(topics.userId, otherUserId),
+      });
+      expect(protectedRows.map((row) => row.agentId)).toEqual([null]);
+      expect(
+        (await db.query.topics.findFirst({ where: eq(topics.id, excluded[2].id) }))?.agentId,
+      ).toBeNull();
+    },
+  );
+
+  it('lists and migrates orphan Inbox topics when no Session relationship exists', async () => {
+    const [inbox] = await db.insert(agents).values({ userId, slug: 'inbox' }).returning();
+    const [orphan] = await db
+      .insert(topics)
+      .values({ userId, title: 'Inbox without Session' })
+      .returning();
+    vi.mocked(after).mockClear();
+    const result = await callers().topic.getTopics({ agentId: inbox.id, isInbox: false });
+    expect(result.items.map((row) => row.id)).toEqual([orphan.id]);
+    const migration = vi.mocked(after).mock.calls.at(-1)?.[0];
+    if (typeof migration !== 'function') throw new Error('Missing deferred migration');
+    await migration();
+    expect((await db.query.topics.findFirst({ where: eq(topics.id, orphan.id) }))?.agentId).toBe(
+      inbox.id,
+    );
+  });
+
+  it('does not let a normal Agent adopt Inbox orphans with a forged isInbox flag', async () => {
+    const { agent, session } = await legacy();
+    await db.insert(agents).values({ userId, slug: 'inbox' });
+    const [orphan] = await db.insert(topics).values({ userId, title: 'Inbox only' }).returning();
+    const [own] = await db
+      .insert(topics)
+      .values({ userId, sessionId: session.id, title: 'Own' })
+      .returning();
+    vi.mocked(after).mockClear();
+    const result = await callers().topic.getTopics({ agentId: agent.id, isInbox: true });
+    expect(result.items.map((row) => row.id)).toEqual([own.id]);
+    expect(result.total).toBe(1);
+    const migration = vi.mocked(after).mock.calls.at(-1)?.[0];
+    if (typeof migration !== 'function') throw new Error('Missing deferred migration');
+    await migration();
+    expect(
+      (await db.query.topics.findFirst({ where: eq(topics.id, orphan.id) }))?.agentId,
+    ).toBeNull();
   });
 
   it.each(['inbox', 'ssn_inbox', 'agent'] as const)(

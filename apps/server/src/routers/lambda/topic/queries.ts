@@ -1,3 +1,4 @@
+import { INBOX_SESSION_ID } from '@lobechat/const';
 import {
   type RecentTopic,
   type RecentTopicGroup,
@@ -5,13 +6,14 @@ import {
 } from '@lobechat/types';
 import { cleanObject } from '@lobechat/utils';
 import { TRPCError } from '@trpc/server';
-import { and, inArray } from 'drizzle-orm';
+import { and, eq, inArray } from 'drizzle-orm';
 import { z } from 'zod';
 
 import { withScopedPermission } from '@/business/server/trpc-middlewares/rbacPermission';
 import { MessageModel } from '@/database/models/message';
-import { chatGroups } from '@/database/schemas';
+import { agents, chatGroups } from '@/database/schemas';
 import { notTrashed } from '@/database/utils/softDelete';
+import { buildWorkspaceWhere } from '@/database/utils/workspace';
 import { router } from '@/libs/trpc/lambda';
 import { TopicReferenceService } from '@/server/services/topicReference';
 import { after } from '@/server/utils/scheduleAfterResponse';
@@ -150,7 +152,7 @@ export const queryRouter = router({
     .query(async ({ input, ctx }) => {
       const {
         sessionId,
-        isInbox,
+        isInbox: _isInbox,
         groupId,
         excludeStatuses,
         excludeTriggers,
@@ -180,6 +182,23 @@ export const queryRouter = router({
       );
       const effectiveAgentId = resolvedContext.agentId ?? undefined;
       await assertCanUseConversationTargets(guardCtx(ctx), [resolvedContext]);
+
+      // Inbox semantics come from the authorized canonical Agent, never an
+      // optional client flag (released native clients may omit or cache it).
+      const inboxAgent = effectiveAgentId
+        ? await ctx.serverDB.query.agents.findFirst({
+            columns: { id: true },
+            where: and(
+              eq(agents.id, effectiveAgentId),
+              eq(agents.slug, INBOX_SESSION_ID),
+              buildWorkspaceWhere(
+                { userId: ctx.userId, workspaceId: ctx.workspaceId ?? undefined },
+                agents,
+              ),
+            ),
+          })
+        : undefined;
+      const isInbox = !!inboxAgent;
 
       const result = await ctx.topicModel.query({
         ...rest,
