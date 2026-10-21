@@ -86,7 +86,7 @@ const CanvasDocumentFrame = memo<{ project: CanvasPreviewProject }>(({ project }
       if (
         event.data.type === 'navigate' &&
         typeof event.data.path === 'string' &&
-        event.data.path.endsWith('.html') &&
+        event.data.path.toLowerCase().endsWith('.html') &&
         project.files[event.data.path]
       )
         setLocation({

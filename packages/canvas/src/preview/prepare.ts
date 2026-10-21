@@ -43,7 +43,13 @@ export const prepareCanvasProject = (snapshot: CanvasProjectSnapshot): CanvasPre
   const script = (from: string, source: string) => {
     const edits: { start: number; end: number; text: string }[] = [];
     const special: { start: number; end: number }[] = [];
-    const ast = parse(source, { ecmaVersion: 'latest', sourceType: 'module' });
+    let ast: ReturnType<typeof parse>;
+    try {
+      ast = parse(source, { ecmaVersion: 'latest', sourceType: 'module' });
+    } catch {
+      // Classic scripts permit non-strict syntax that module parsing rejects.
+      ast = parse(source, { ecmaVersion: 'latest', sourceType: 'script' });
+    }
     const moduleRef = (node: { start: number; end: number; value?: unknown }) => {
       if (typeof node.value !== 'string') return;
       const path = resolve(from, node.value);

@@ -13,6 +13,22 @@ const project = (files: Record<string, string>) => ({
 });
 
 describe('prepareCanvasProject', () => {
+  it.each([
+    ['with', 'var result; with ({value: 7}) { result=value; }', 7],
+    ['legacy octal', 'var result=010;', 8],
+    ['await binding', 'var await=42; var result=await;', 42],
+  ])('preserves classic %s scripts inline and in files', (_name, source, expected) => {
+    const result = prepareCanvasProject(
+      project({
+        'index.html': `<script>${source}</script><script src="classic.js"></script>`,
+        'classic.js': String(source),
+      }),
+    );
+
+    expect(result.files['index.html'].content).toContain(source);
+    expect(new Function(`${result.files['classic.js'].content}; return result;`)()).toBe(expected);
+  });
+
   it('resolves resources against their own file, including CSS imports and component JSON', () => {
     const result = prepareCanvasProject(
       project({

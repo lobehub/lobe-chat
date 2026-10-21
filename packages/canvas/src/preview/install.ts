@@ -109,7 +109,7 @@ export function installCanvasProject(
     let content: BlobPart = file.content;
     if (file.encoding === 'base64')
       content = Uint8Array.from(atob(file.content), (char) => char.charCodeAt(0));
-    else if (path.endsWith('.css')) content = replace(file.content);
+    else if (path.toLowerCase().endsWith('.css')) content = replace(file.content);
     const url = create(content, file.contentType);
     urls[path] = url;
     visiting.delete(path);
@@ -120,9 +120,11 @@ export function installCanvasProject(
       fileUrl(decodeURIComponent(path)),
     );
   try {
-    for (const path of Object.keys(project.files)) if (!path.endsWith('.html')) fileUrl(path);
+    for (const path of Object.keys(project.files))
+      if (!path.toLowerCase().endsWith('.html')) fileUrl(path);
     const entry = project.files[page];
-    if (!entry || !page.endsWith('.html')) throw new Error(`Missing Canvas page: ${page}`);
+    if (!entry || !page.toLowerCase().endsWith('.html'))
+      throw new Error(`Missing Canvas page: ${page}`);
     const imports = Object.fromEntries(
       Object.entries(urls).map(([path, url]) => [`lobe-canvas-project/${path}`, url]),
     );
