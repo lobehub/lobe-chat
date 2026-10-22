@@ -1,15 +1,6 @@
 'use client';
 
-import {
-  Center,
-  ContextMenuTrigger,
-  createStaticStyles,
-  Empty,
-  Flexbox,
-  Icon,
-  SearchBar,
-  Tooltip,
-} from '@lobehub/ui';
+import { Center, ContextMenuTrigger, Empty, Flexbox, Icon, SearchBar, Tooltip } from '@lobehub/ui';
 import {
   ActionIcon,
   Button,
@@ -19,6 +10,8 @@ import {
   Text,
   toast,
 } from '@lobehub/ui';
+import { cssVar } from '@lobehub/ui/stylex/cssVar.stylex';
+import * as stylex from '@stylexjs/stylex';
 import dayjs from 'dayjs';
 import {
   FolderClosedIcon,
@@ -48,66 +41,51 @@ import { labPreferSelectors, userProfileSelectors } from '@/store/user/selectors
 
 import { resolveProjectListState } from '../projectListState';
 
-const styles = createStaticStyles(({ css, cssVar }) => ({
-  actions: css`
-    flex: none;
-    opacity: 0;
-    transition: opacity ${cssVar.motionDurationFast};
-
-    @media (hover: none) {
-      opacity: 1;
-    }
-  `,
-  identifier: css`
-    flex: none;
-    min-width: 72px;
-    color: ${cssVar.colorTextTertiary};
-  `,
-  link: css`
-    display: flex;
-    flex: 1;
-    gap: 8px;
-    align-items: center;
-
-    min-width: 0;
-
-    color: inherit;
-  `,
-  owner: css`
-    flex: none;
-    width: 20px;
-  `,
-  row: css`
-    padding-block: 7px;
-    padding-inline: 4px 12px;
-    border-radius: ${cssVar.borderRadiusLG};
-    color: inherit;
-
-    &:hover {
-      background: ${cssVar.colorFillTertiary};
-    }
-
-    &:hover .project-row-actions,
-    &:focus-within .project-row-actions {
-      opacity: 1;
-    }
-  `,
-  updatedAt: css`
-    flex: none;
-
-    min-width: 88px;
-
-    color: ${cssVar.colorTextQuaternary};
-    text-align: end;
-    white-space: nowrap;
-  `,
-}));
+const styles = stylex.create({
+  actions: {
+    flex: 'none',
+    opacity: {
+      'default': 0,
+      '@media (hover: none)': 1,
+      [stylex.when.ancestor(':hover')]: 1,
+      [stylex.when.ancestor(':focus-within')]: 1,
+    },
+    transition: `opacity ${cssVar.motionDurationFast}`,
+  },
+  identifier: { flex: 'none', minWidth: '72px', color: cssVar.colorTextTertiary },
+  link: {
+    display: 'flex',
+    flex: '1',
+    gap: '8px',
+    alignItems: 'center',
+    minWidth: '0',
+    color: 'inherit',
+  },
+  owner: { flex: 'none', width: '20px' },
+  row: {
+    paddingBlockStart: '7px',
+    paddingBlockEnd: '7px',
+    paddingInlineStart: '4px',
+    paddingInlineEnd: '12px',
+    borderRadius: cssVar.borderRadiusLG,
+    color: 'inherit',
+    backgroundColor: { 'default': null, ':hover': cssVar.colorFillTertiary },
+    backgroundImage: { 'default': null, ':hover': 'none' },
+  },
+  updatedAt: {
+    flex: 'none',
+    minWidth: '88px',
+    color: cssVar.colorTextQuaternary,
+    textAlign: 'end',
+    whiteSpace: 'nowrap',
+  },
+});
 
 const ProjectOwnerAvatar = memo<{ userId: string }>(({ userId }) => {
   const activeWorkspaceId = useActiveWorkspaceId();
 
   return (
-    <span className={styles.owner}>
+    <span {...stylex.props(styles.owner)}>
       {activeWorkspaceId ? (
         <TopicCreatorAvatar size={20} userId={userId} />
       ) : (
@@ -160,8 +138,16 @@ const ProjectRow = memo<{ project: ProjectListItem }>(({ project }) => {
   ];
 
   const row = (
-    <Flexbox horizontal align={'center'} className={styles.row} gap={8}>
-      <WorkspaceLink className={styles.link} to={`/project/${project.slug ?? project.id}`}>
+    <Flexbox
+      horizontal
+      align={'center'}
+      className={stylex.props(styles.row, stylex.defaultMarker()).className}
+      gap={8}
+    >
+      <WorkspaceLink
+        className={stylex.props(styles.link).className}
+        to={`/project/${project.slug ?? project.id}`}
+      >
         <Tooltip title={t(`acceptance.status.${status}`)}>
           <Icon color={statusVisual.color} icon={statusVisual.icon} size={16} />
         </Tooltip>
@@ -170,12 +156,12 @@ const ProjectRow = memo<{ project: ProjectListItem }>(({ project }) => {
             {project.name}
           </Text>
         </Flexbox>
-        <Text className={styles.identifier} fontSize={12}>
+        <Text className={stylex.props(styles.identifier).className} fontSize={12}>
           {project.identifier}
         </Text>
         <ProjectOwnerAvatar userId={project.userId} />
         <Text
-          className={styles.updatedAt}
+          className={stylex.props(styles.updatedAt).className}
           fontSize={12}
           title={dayjs(project.updatedAt).format('YYYY-MM-DD HH:mm')}
         >
@@ -183,7 +169,7 @@ const ProjectRow = memo<{ project: ProjectListItem }>(({ project }) => {
         </Text>
       </WorkspaceLink>
       {canDelete && (
-        <span className={`${styles.actions} project-row-actions`}>
+        <span {...stylex.props(styles.actions)}>
           <DropdownMenu items={menuItems} placement={'bottomRight'}>
             <ActionIcon
               icon={MoreHorizontalIcon}

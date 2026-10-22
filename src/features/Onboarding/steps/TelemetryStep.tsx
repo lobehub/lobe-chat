@@ -2,17 +2,7 @@
 
 import { BRANDING_NAME } from '@lobechat/business-const';
 import { type IconProps } from '@lobehub/ui';
-import {
-  Block,
-  Button,
-  createStaticStyles,
-  cssVar,
-  Flexbox,
-  Icon,
-  Steps,
-  Switch,
-  Text,
-} from '@lobehub/ui';
+import { Block, Button, cssVar, Flexbox, Icon, Steps, Switch, Text } from '@lobehub/ui';
 import { TypewriterEffect } from '@lobehub/ui/awesome';
 import { LoadingDots } from '@lobehub/ui/chat';
 import { BrainIcon, HeartHandshakeIcon, PencilRulerIcon, ShieldCheck } from 'lucide-react';
@@ -23,15 +13,7 @@ import { ProductLogo } from '@/components/Branding';
 import { PRIVACY_URL, TERMS_URL } from '@/const/url';
 import { useUserStore } from '@/store/user';
 
-// `&&` outranks base-ui's own vertical connector rule so the rail centres under the 32px icons.
-const styles = createStaticStyles(({ css }) => ({
-  steps: css`
-    && > li > span[aria-hidden] {
-      inset-block-start: 36px;
-      inset-inline-start: 16px;
-    }
-  `,
-}));
+import styles from './TelemetryStep.module.css';
 
 interface TelemetryStepProps {
   onNext: () => void;

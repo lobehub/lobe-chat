@@ -5,7 +5,6 @@ import {
   Block,
   Center,
   ContextMenuTrigger,
-  createStaticStyles,
   cssVar,
   cx,
   Flexbox,
@@ -18,52 +17,8 @@ import { memo } from 'react';
 
 import { isModifierClick } from '@/utils/navigation';
 
+import styles from './NavItem.module.css';
 import { type LazyActions, useLazyActions } from './useLazyActions';
-
-const ACTION_CLASS_NAME = 'nav-item-actions';
-const CONTENT_CLASS_NAME = 'nav-item-content';
-
-const styles = createStaticStyles(({ css }) => ({
-  container: css`
-    user-select: none;
-    overflow: hidden;
-    min-width: 32px;
-
-    /* focus-visible, not focus-within: closing a dropdown hands focus back to its
-       trigger, which would pin the actions open after the pointer has left. */
-    &:hover,
-    &:has(.${ACTION_CLASS_NAME} :focus-visible),
-    &:has([data-popup-open]) {
-      .${ACTION_CLASS_NAME} {
-        pointer-events: auto;
-        opacity: 1;
-      }
-
-      /* Fade the covered text itself instead of painting a row-colored plate over it,
-         so the overlay matches any row background (hover / active / none). */
-      .${CONTENT_CLASS_NAME} {
-        mask-image: linear-gradient(
-          to right,
-          #000 calc(100% - 56px),
-          transparent calc(100% - 28px)
-        );
-      }
-    }
-
-    /* Overlay instead of in-flow so revealing the actions never re-truncates the title. */
-    .${ACTION_CLASS_NAME} {
-      pointer-events: none;
-
-      position: absolute;
-      inset-block: 0;
-      inset-inline-end: 0;
-
-      padding-inline-end: 6px;
-
-      opacity: 0;
-    }
-  `,
-}));
 
 export interface NavItemSlots {
   iconPostfix?: ReactNode;
@@ -216,7 +171,7 @@ const NavItem = memo<NavItemProps>(
         <Flexbox
           horizontal
           align={'center'}
-          className={CONTENT_CLASS_NAME}
+          className={styles.content}
           flex={1}
           gap={8}
           style={{ overflow: 'hidden' }}
@@ -259,7 +214,7 @@ const NavItem = memo<NavItemProps>(
           <Flexbox
             horizontal
             align={'center'}
-            className={ACTION_CLASS_NAME}
+            className={styles.actions}
             gap={2}
             justify={'flex-end'}
             onClick={(e) => {

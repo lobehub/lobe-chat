@@ -1,16 +1,8 @@
 'use client';
 
-import {
-  Button,
-  Center,
-  createStaticStyles,
-  cssVar,
-  Flexbox,
-  Spin,
-  Tag,
-  Text,
-  TextArea,
-} from '@lobehub/ui';
+import { Button, Center, Flexbox, Spin, Tag, Text, TextArea } from '@lobehub/ui';
+import { cssVar } from '@lobehub/ui/stylex/cssVar.stylex';
+import * as stylex from '@stylexjs/stylex';
 import { SendHorizontalIcon, SparklesIcon } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -24,74 +16,56 @@ import { useCurrentProjectDetail, useProjectStore } from '@/store/project';
 import { useUserStore } from '@/store/user';
 import { labPreferSelectors } from '@/store/user/selectors';
 
+import moduleStyles from './index.module.css';
 import ProjectDashboard from './ProjectDashboard';
 
-const styles = createStaticStyles(({ css }) => ({
-  composer: css`
-    overflow: hidden;
-
-    border: 1px solid ${cssVar.colorBorder};
-    border-radius: 18px;
-
-    background: ${cssVar.colorBgContainer};
-    box-shadow: ${cssVar.boxShadowSecondary};
-  `,
-  composerFooter: css`
-    padding-block: 6px 8px;
-    padding-inline: 14px 8px;
-  `,
-  content: css`
-    overflow: auto;
-    width: 100%;
-  `,
-  intro: css`
-    width: 100%;
-    max-width: 760px;
-  `,
-  page: css`
-    box-sizing: border-box;
-    width: min(1060px, calc(100% - 64px));
-    margin-inline: auto;
-    padding-block: 42px 72px;
-
-    @media (width <= 720px) {
-      width: calc(100% - 40px);
-      padding-block: 32px 48px;
-    }
-  `,
-  prompt: css`
-    cursor: pointer;
-
-    padding-block: 5px;
-    padding-inline: 10px;
-    border: 0;
-    border-radius: 999px;
-
-    color: ${cssVar.colorTextSecondary};
-
-    background: ${cssVar.colorFillQuaternary};
-
-    &:hover {
-      color: ${cssVar.colorText};
-      background: ${cssVar.colorFillTertiary};
-    }
-  `,
-  shell: css`
-    overflow: hidden;
-    height: 100%;
-    background: ${cssVar.colorBgContainer};
-  `,
-  textarea: css`
-    padding-block: 15px 8px !important;
-    padding-inline: 16px !important;
-    border: 0 !important;
-
-    font-size: 15px !important;
-
-    background: transparent !important;
-    box-shadow: none !important;
-  `,
-}));
+const styles = stylex.create({
+  composer: {
+    overflow: 'hidden',
+    borderWidth: '1px',
+    borderStyle: 'solid',
+    borderColor: cssVar.colorBorder,
+    borderRadius: '18px',
+    backgroundColor: cssVar.colorBgContainer,
+    backgroundImage: 'none',
+    boxShadow: cssVar.boxShadowSecondary,
+  },
+  composerFooter: {
+    paddingBlockStart: '6px',
+    paddingBlockEnd: '8px',
+    paddingInlineStart: '14px',
+    paddingInlineEnd: '8px',
+  },
+  content: { overflow: 'auto', width: '100%' },
+  intro: { width: '100%', maxWidth: '760px' },
+  page: {
+    boxSizing: 'border-box',
+    width: {
+      'default': 'min(1060px, calc(100% - 64px))',
+      '@media (width <= 720px)': 'calc(100% - 40px)',
+    },
+    marginInline: 'auto',
+    paddingBlockStart: { 'default': '42px', '@media (width <= 720px)': '32px' },
+    paddingBlockEnd: { 'default': '72px', '@media (width <= 720px)': '48px' },
+  },
+  prompt: {
+    cursor: 'pointer',
+    paddingBlock: '5px',
+    paddingInline: '10px',
+    borderWidth: 0,
+    borderStyle: 'none',
+    borderRadius: '999px',
+    color: { 'default': cssVar.colorTextSecondary, ':hover': cssVar.colorText },
+    backgroundColor: { 'default': cssVar.colorFillQuaternary, ':hover': cssVar.colorFillTertiary },
+    backgroundImage: 'none',
+  },
+  shell: {
+    overflow: 'hidden',
+    height: '100%',
+    backgroundColor: cssVar.colorBgContainer,
+    backgroundImage: 'none',
+  },
+});
 
 const ProjectWorkspace = memo(() => {
   const { t } = useTranslation('project');
@@ -124,10 +98,10 @@ const ProjectWorkspace = memo(() => {
   ];
 
   return (
-    <Flexbox className={styles.shell} flex={1}>
-      <div className={styles.content}>
-        <Flexbox className={styles.page} gap={0}>
-          <Flexbox className={styles.intro} gap={18}>
+    <Flexbox className={stylex.props(styles.shell).className} flex={1}>
+      <div {...stylex.props(styles.content)}>
+        <Flexbox className={stylex.props(styles.page).className} gap={0}>
+          <Flexbox className={stylex.props(styles.intro).className} gap={18}>
             <Flexbox gap={5}>
               <Text fontSize={26} weight={650}>
                 {t('overview.title')}
@@ -135,11 +109,11 @@ const ProjectWorkspace = memo(() => {
               <Text type={'secondary'}>{t('overview.description')}</Text>
             </Flexbox>
             <Flexbox gap={10}>
-              <Flexbox className={styles.composer}>
+              <Flexbox className={stylex.props(styles.composer).className}>
                 <TextArea
                   autoFocus
                   autoSize={{ maxRows: 7, minRows: 3 }}
-                  className={styles.textarea}
+                  className={moduleStyles.textarea}
                   placeholder={t('overview.composerPlaceholder')}
                   value={message}
                   onChange={(event) => setMessage(event.target.value)}
@@ -151,7 +125,7 @@ const ProjectWorkspace = memo(() => {
                 <Flexbox
                   horizontal
                   align={'center'}
-                  className={styles.composerFooter}
+                  className={stylex.props(styles.composerFooter).className}
                   justify={'space-between'}
                 >
                   <Flexbox horizontal align={'center'} gap={7}>
@@ -171,7 +145,7 @@ const ProjectWorkspace = memo(() => {
               <Flexbox horizontal gap={8} wrap={'wrap'}>
                 {prompts.map((prompt) => (
                   <button
-                    className={styles.prompt}
+                    {...stylex.props(styles.prompt)}
                     key={prompt}
                     type={'button'}
                     onClick={() => setMessage(prompt)}
