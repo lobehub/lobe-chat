@@ -391,17 +391,16 @@ describe('ImageGenerationExecutionRuntime', () => {
         }),
       });
 
-    it('merges imageUrl and imageUrls into the declared imageUrls field in order', async () => {
+    it('sends imageUrls within the declared maxCount unchanged', async () => {
       const service = createServiceWithParameters({
         ...modelParameters,
-        imageUrls: { default: [], maxCount: 3 },
+        imageUrls: { default: [], maxCount: 2 },
       });
       const runtime = new ImageGenerationExecutionRuntime(service);
 
       const result = await runtime.generateImage({
-        imageUrl: 'https://example.com/a.png',
-        imageUrls: ['https://example.com/b.png', ' https://example.com/a.png '],
-        parameters: { imageUrls: ['https://example.com/c.png'], size: '1024x1024' },
+        imageUrls: ['https://example.com/a.png', 'https://example.com/b.png'],
+        parameters: { size: '1024x1024' },
         prompt: 'Blend the references',
         waitUntilComplete: false,
       });
@@ -410,11 +409,7 @@ describe('ImageGenerationExecutionRuntime', () => {
       expect(service.createImage).toHaveBeenCalledWith(
         expect.objectContaining({
           params: {
-            imageUrls: [
-              'https://example.com/a.png',
-              'https://example.com/b.png',
-              'https://example.com/c.png',
-            ],
+            imageUrls: ['https://example.com/a.png', 'https://example.com/b.png'],
             prompt: 'Blend the references',
             size: '1024x1024',
           },
@@ -422,34 +417,51 @@ describe('ImageGenerationExecutionRuntime', () => {
       );
     });
 
+    const multiReferenceCard = { ...modelParameters, imageUrls: { default: [], maxCount: 2 } };
+    const singleReferenceCard = { ...modelParameters, imageUrl: { default: null } };
+
     it.each([
       {
+        args: { imageUrl: 'https://example.com/a.png', imageUrls: ['https://example.com/b.png'] },
+        error: 'either imageUrl or imageUrls, not both',
+        name: 'imageUrl and imageUrls together',
+        parameters: multiReferenceCard,
+      },
+      {
+        args: { imageUrl: 'https://example.com/a.png' },
+        error: 'takes reference images in imageUrls, not imageUrl',
+        name: 'imageUrl for a model that declares imageUrls',
+        parameters: multiReferenceCard,
+      },
+      {
+        args: { imageUrls: ['https://example.com/a.png'] },
+        error: 'takes a single reference image in imageUrl, not imageUrls',
+        name: 'imageUrls for a model that declares imageUrl',
+        parameters: singleReferenceCard,
+      },
+      {
+        args: {
+          imageUrls: [
+            'https://example.com/a.png',
+            'https://example.com/b.png',
+            'https://example.com/c.png',
+          ],
+        },
         error: 'at most 2 reference images, but 3 were provided',
         name: 'more references than imageUrls.maxCount',
-        parameters: { ...modelParameters, imageUrls: { default: [], maxCount: 2 } },
+        parameters: multiReferenceCard,
       },
       {
-        error: 'a single reference image, but 2 were provided',
-        name: 'multiple references for a single imageUrl model',
-        parameters: { ...modelParameters, imageUrl: { default: null } },
-      },
-      {
+        args: { imageUrl: 'https://example.com/a.png' },
         error: 'does not accept reference images',
         name: 'references for a model without reference parameters',
         parameters: modelParameters,
       },
-    ])('rejects $name before creating a generation', async ({ error, parameters }) => {
+    ])('rejects $name before creating a generation', async ({ args, error, parameters }) => {
       const service = createServiceWithParameters(parameters);
       const runtime = new ImageGenerationExecutionRuntime(service);
 
-      const result = await runtime.generateImage({
-        imageUrl: 'https://example.com/a.png',
-        imageUrls:
-          'imageUrls' in parameters
-            ? ['https://example.com/b.png', 'https://example.com/c.png']
-            : ['https://example.com/b.png'],
-        prompt: 'Blend the references',
-      });
+      const result = await runtime.generateImage({ ...args, prompt: 'Blend the references' });
 
       expect(result.success).toBe(false);
       expect(result.error).toMatchObject({ type: 'InvalidReferenceImages' });

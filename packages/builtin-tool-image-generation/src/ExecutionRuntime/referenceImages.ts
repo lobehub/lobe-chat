@@ -7,69 +7,87 @@ export type ReferenceImageParams = { imageUrl?: null | string; imageUrls?: strin
 export type ResolvedReferenceImages =
   { error: string; success: false } | { params: ReferenceImageParams; success: true };
 
-const collectReferenceUrls = (values: unknown[]) => {
-  const urls = values
-    .flatMap((value) => (Array.isArray(value) ? value : [value]))
-    .filter((url): url is string => typeof url === 'string' && !!url.trim())
-    .map((url) => url.trim());
+const normalizeReferenceUrls = ({
+  imageUrl,
+  imageUrls,
+  parameters,
+}: GenerateImageParams): ReferenceImageParams => {
+  const normalized: ReferenceImageParams = {};
 
-  return [...new Set(urls)];
-};
-
-/**
- * Collects every reference image from `imageUrl` / `imageUrls` (top-level or inside `parameters`)
- * and places them in the field the model card declares.
- *
- * References are never dropped: when the model cannot take all of them, generation is rejected
- * before any task is created, because a generation without the references is still billed but
- * does not match the request. Other parameters are intentionally left untouched.
- */
-export const resolveReferenceImages = (
-  { imageUrl, imageUrls, parameters }: GenerateImageParams,
-  schema: ModelParamsSchema | undefined,
-): ResolvedReferenceImages => {
-  const urls = collectReferenceUrls([
-    imageUrl,
-    parameters?.imageUrl,
-    imageUrls,
-    parameters?.imageUrls,
-  ]);
-
-  if (urls.length === 0) {
-    // Preserve an explicit "no reference" value for models whose schema declares `imageUrl`.
-    return { params: imageUrl === null ? { imageUrl: null } : {}, success: true };
+  if (imageUrl === null || (typeof imageUrl === 'string' && imageUrl.trim())) {
+    normalized.imageUrl = typeof imageUrl === 'string' ? imageUrl.trim() : imageUrl;
+  } else if (typeof parameters?.imageUrl === 'string' && parameters.imageUrl.trim()) {
+    normalized.imageUrl = parameters.imageUrl.trim();
   }
 
-  // Without a schema the model's capability is unknown; keep every reference in a single field.
-  if (!schema) {
-    const singleFieldOnly =
-      urls.length === 1 && !imageUrls?.length && !Array.isArray(parameters?.imageUrls);
+  const urlList =
+    imageUrls && imageUrls.length > 0
+      ? imageUrls
+      : Array.isArray(parameters?.imageUrls)
+        ? parameters.imageUrls
+        : [];
+
+  const normalizedUrls = urlList
+    .filter((url): url is string => typeof url === 'string' && !!url.trim())
+    .map((url) => url.trim());
+  if (normalizedUrls.length > 0) normalized.imageUrls = normalizedUrls;
+
+  return normalized;
+};
+
+const NO_REFERENCE_SUPPORT = 'This model does not accept reference images.';
+
+/**
+ * Checks reference images against the fields the model card declares.
+ *
+ * Invalid input is rejected before any task is created rather than merged, remapped, or dropped:
+ * a generation that ignores some references is still billed but does not match the request.
+ * Models without a parameter schema are passed through, since their capability is unknown.
+ */
+export const resolveReferenceImages = (
+  args: GenerateImageParams,
+  schema: ModelParamsSchema | undefined,
+): ResolvedReferenceImages => {
+  const params = normalizeReferenceUrls(args);
+  const hasSingle = typeof params.imageUrl === 'string';
+  const urlCount = params.imageUrls?.length ?? 0;
+
+  if (hasSingle && urlCount > 0) {
     return {
-      params: singleFieldOnly ? { imageUrl: urls[0] } : { imageUrls: urls },
-      success: true,
+      error: 'Pass reference images in either imageUrl or imageUrls, not both.',
+      success: false,
     };
   }
 
-  if (schema.imageUrls) {
+  if (!schema || (!hasSingle && urlCount === 0)) return { params, success: true };
+
+  if (hasSingle && !schema.imageUrl) {
+    return {
+      error: schema.imageUrls
+        ? 'This model takes reference images in imageUrls, not imageUrl.'
+        : NO_REFERENCE_SUPPORT,
+      success: false,
+    };
+  }
+
+  if (urlCount > 0) {
+    if (!schema.imageUrls) {
+      return {
+        error: schema.imageUrl
+          ? 'This model takes a single reference image in imageUrl, not imageUrls.'
+          : NO_REFERENCE_SUPPORT,
+        success: false,
+      };
+    }
+
     const maxCount = schema.imageUrls.maxCount;
-    if (maxCount && urls.length > maxCount) {
+    if (maxCount && urlCount > maxCount) {
       return {
-        error: `This model accepts at most ${maxCount} reference image${maxCount === 1 ? '' : 's'}, but ${urls.length} were provided.`,
+        error: `This model accepts at most ${maxCount} reference image${maxCount === 1 ? '' : 's'}, but ${urlCount} were provided.`,
         success: false,
       };
     }
-    return { params: { imageUrls: urls }, success: true };
   }
 
-  if (schema.imageUrl) {
-    if (urls.length > 1) {
-      return {
-        error: `This model accepts a single reference image, but ${urls.length} were provided.`,
-        success: false,
-      };
-    }
-    return { params: { imageUrl: urls[0] }, success: true };
-  }
-
-  return { error: 'This model does not accept reference images.', success: false };
+  return { params, success: true };
 };

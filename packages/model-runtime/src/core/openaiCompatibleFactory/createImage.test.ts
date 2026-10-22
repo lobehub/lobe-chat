@@ -688,45 +688,23 @@ describe('createOpenAICompatibleImage', () => {
   });
 
   describe('reference images', () => {
-    const mockReferenceFetch = () => {
-      const mockArrayBuffer = new Uint8Array([0xff, 0xd8, 0xff, 0xe0]).buffer;
-      global.fetch = vi.fn().mockResolvedValue({
-        arrayBuffer: async () => mockArrayBuffer,
-        headers: {
-          get: (name: string) => (name === 'content-type' ? 'image/jpeg' : null),
-        },
-        ok: true,
-      } as any);
-    };
-
-    it('sends both imageUrl and imageUrls to the images edit API in order without duplicates', async () => {
-      mockReferenceFetch();
-      vi.mocked(mockClient.images.edit).mockResolvedValue({
-        data: [{ b64_json: 'mergedReferences' }],
-      } as any);
-
-      const result = await createOpenAICompatibleImage(
-        mockClient,
-        {
-          model: 'gpt-image-2',
-          params: {
-            imageUrl: 'https://example.com/a.jpg',
-            imageUrls: ['https://example.com/b.jpg', 'https://example.com/a.jpg'],
-            prompt: 'Merge these images',
+    it('rejects imageUrl and imageUrls together instead of letting one overwrite the other', async () => {
+      await expect(
+        createOpenAICompatibleImage(
+          mockClient,
+          {
+            model: 'gpt-image-2',
+            params: {
+              imageUrl: 'https://example.com/a.jpg',
+              imageUrls: ['https://example.com/b.jpg'],
+              prompt: 'Merge these images',
+            },
           },
-        },
-        'openai',
-      );
-
-      expect(result.imageUrl).toBe('data:image/png;base64,mergedReferences');
-      expect(vi.mocked(global.fetch).mock.calls.map(([url]) => url)).toEqual([
-        'https://example.com/a.jpg',
-        'https://example.com/b.jpg',
-      ]);
-      const options = vi.mocked(mockClient.images.edit).mock.calls[0][0] as any;
-      expect(options.image).toHaveLength(2);
-      expect(options).not.toHaveProperty('imageUrl');
-      expect(options).not.toHaveProperty('imageUrls');
+          'openai',
+        ),
+      ).rejects.toThrow('Pass reference images in either imageUrl or imageUrls, not both.');
+      expect(mockClient.images.edit).not.toHaveBeenCalled();
+      expect(mockClient.images.generate).not.toHaveBeenCalled();
     });
 
     it('sends imageUrls references to :image chat models in order', async () => {

@@ -23,21 +23,22 @@ interface CreateOpenAICompatibleImageOptions {
 }
 
 /**
- * Merge `imageUrl` and `imageUrls` into one ordered, de-duplicated reference list.
+ * Returns the reference images from whichever of `imageUrl` / `imageUrls` the caller set.
  *
- * Callers such as the generateImage tool can send both fields; reading only one of them would
- * silently generate without the other references while still billing the generation.
+ * Both fields feed the same upstream input, so a payload carrying both is rejected instead of
+ * letting one silently win while the generation is still billed.
  */
-const collectReferenceUrls = ({
+const getReferenceUrls = ({
   imageUrl,
   imageUrls,
-}: Pick<CreateImagePayload['params'], 'imageUrl' | 'imageUrls'>): string[] => [
-  ...new Set(
-    [imageUrl, ...(imageUrls ?? [])].filter(
-      (url): url is string => typeof url === 'string' && url.trim() !== '',
-    ),
-  ),
-];
+}: Pick<CreateImagePayload['params'], 'imageUrl' | 'imageUrls'>): string[] => {
+  const single = typeof imageUrl === 'string' && imageUrl.trim() ? [imageUrl] : [];
+  const list = imageUrls ?? [];
+  if (single.length > 0 && list.length > 0) {
+    throw new Error('Pass reference images in either imageUrl or imageUrls, not both.');
+  }
+  return list.length > 0 ? list : single;
+};
 
 /**
  * Generate images using traditional OpenAI images API (DALL-E, etc.)
@@ -54,11 +55,8 @@ async function generateByImageMode(
 
   log('Creating image with model: %s and params: %O', requestModel, params);
 
-  // Both reference fields map to the API's `image` input, so merge them instead of letting one win.
-  const userInput: Record<string, any> = { ...params };
-  delete userInput.imageUrl;
-  delete userInput.imageUrls;
-  const referenceUrls = collectReferenceUrls(params);
+  const referenceUrls = getReferenceUrls(params);
+  const { imageUrl: _imageUrl, imageUrls: _imageUrls, ...userInput }: Record<string, any> = params;
   if (referenceUrls.length > 0) userInput.image = referenceUrls;
 
   // https://platform.openai.com/docs/api-reference/images/createEdit
@@ -202,9 +200,8 @@ async function generateByChatModel(
     },
   ];
 
-  // `:image` models declare only `imageUrls` (CHAT_MODEL_IMAGE_GENERATION_PARAMS); `imageUrl` is
-  // still read for callers that send a single reference.
-  const referenceUrls = collectReferenceUrls(params);
+  // `:image` model cards declare `imageUrls` (CHAT_MODEL_IMAGE_GENERATION_PARAMS).
+  const referenceUrls = getReferenceUrls(params);
   // Download references concurrently; Promise.all keeps their order for the message content.
   const processedImageUrls = await Promise.all(
     referenceUrls.map(async (imageUrl) => {
