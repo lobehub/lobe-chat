@@ -129,6 +129,26 @@ describe('SandboxMiddlewareService', () => {
       expect((later.result as { stdout: string }).stdout).toBe('ran runCommand');
     });
 
+    it('says so when the initializer could not reach the sandbox, rather than nothing', async () => {
+      const { callTool, service } = await serviceWith('');
+      callTool.mockRejectedValueOnce(new Error('gateway down'));
+
+      const result = await service.callTool('runCommand', { command: 'ls' });
+
+      expect((result.result as { stdout: string }).stdout).toBe(
+        '[environment] The environment "Hello" could not be applied: the sandbox did not respond. It will be tried again on the next command.\n\nran runCommand',
+      );
+    });
+
+    it('treats a failed call that printed nothing as unreachable, not as initialized', async () => {
+      const { callTool, service } = await serviceWith('');
+      callTool.mockResolvedValueOnce({ result: null, success: false } as any);
+
+      const result = await service.callTool('runCommand', { command: 'ls' });
+
+      expect((result.result as { stdout: string }).stdout).toContain('could not be applied');
+    });
+
     it('adds nothing to the result when the directory was already initialized', async () => {
       const { service } = await serviceWith('');
 

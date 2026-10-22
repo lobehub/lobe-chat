@@ -91,7 +91,12 @@ export class SandboxMiddlewareService implements SandboxService {
         timeout: SANDBOX_ENVIRONMENT_INIT_TIMEOUT_MS,
       });
       const stdout = (result.result as { stdout?: string } | null | undefined)?.stdout;
-      if (!environmentInitRan(stdout)) return;
+      // The command always exits cleanly, so a failed call that printed
+      // nothing never reached the sandbox: said so, not passed off as a
+      // folder that was already initialized.
+      if (!environmentInitRan(stdout)) {
+        return result.success ? undefined : environmentInitUnreachable(init.name);
+      }
 
       log(
         'Environment %s applied for topic %s: success=%s',
@@ -103,6 +108,8 @@ export class SandboxMiddlewareService implements SandboxService {
       return environmentInitReport(stdout) || undefined;
     } catch (error) {
       log('Environment init failed for topic %s: %O', this.options.topicId, error);
+
+      return environmentInitUnreachable(init.name);
     }
   }
 
@@ -292,6 +299,15 @@ export const normalizeSandboxCommandResult = (
 };
 
 const SHELL_TOOLS = new Set(['execScript', 'runCommand']);
+
+/**
+ * What the conversation is told when the initializer could not be run at all
+ * — the sandbox did not answer — so a command that follows in an empty folder
+ * is not mistaken for one in the checkout. Nothing was recorded, so the next
+ * call tries again.
+ */
+const environmentInitUnreachable = (name: string) =>
+  `The environment "${name}" could not be applied: the sandbox did not respond. It will be tried again on the next command.`;
 
 /**
  * The first shell result after an environment was applied, with what applying
