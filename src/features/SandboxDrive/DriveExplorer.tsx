@@ -48,10 +48,13 @@ import {
 import { useDriveFiles, useRefreshDrive } from './useDriveData';
 
 /**
- * The columns after the name, fixed so every row lines up under the header —
- * the shape of a desktop file manager's list view. The date is absolute and
- * never wraps; its relative form is the tooltip.
+ * The columns after the name — size, kind, then date modified — fixed so
+ * every row lines up under the header, the shape of a desktop file manager's
+ * list view, and set apart by a wider gap than the icon and name so each
+ * reads as its own column. The date is absolute and never wraps; its relative
+ * form is the tooltip.
  */
+const COLUMN_GAP = 24;
 const MODIFIED_WIDTH = 136;
 const SIZE_WIDTH = 80;
 const KIND_WIDTH = 120;
@@ -293,24 +296,26 @@ const DriveExplorer = memo<DriveExplorerProps>(({ drive, isWorkspace, toolbarExt
         >
           {t('drive.explorer.columns.name')}
         </Text>
-        <Text
-          className={stylex.props(styles.columnLabel).className}
-          style={{ flex: 'none', width: MODIFIED_WIDTH }}
-        >
-          {t('drive.explorer.columns.modified')}
-        </Text>
-        <Text
-          className={stylex.props(styles.columnLabel).className}
-          style={{ flex: 'none', textAlign: 'end', width: SIZE_WIDTH }}
-        >
-          {t('drive.explorer.columns.size')}
-        </Text>
-        <Text
-          className={stylex.props(styles.columnLabel).className}
-          style={{ flex: 'none', width: KIND_WIDTH }}
-        >
-          {t('drive.explorer.columns.kind')}
-        </Text>
+        <Flexbox horizontal align={'center'} flex={'none'} gap={COLUMN_GAP}>
+          <Text
+            className={stylex.props(styles.columnLabel).className}
+            style={{ flex: 'none', textAlign: 'end', width: SIZE_WIDTH }}
+          >
+            {t('drive.explorer.columns.size')}
+          </Text>
+          <Text
+            className={stylex.props(styles.columnLabel).className}
+            style={{ flex: 'none', width: KIND_WIDTH }}
+          >
+            {t('drive.explorer.columns.kind')}
+          </Text>
+          <Text
+            className={stylex.props(styles.columnLabel).className}
+            style={{ flex: 'none', width: MODIFIED_WIDTH }}
+          >
+            {t('drive.explorer.columns.modified')}
+          </Text>
+        </Flexbox>
         <span style={{ flex: 'none', width: ACTIONS_WIDTH }} />
       </Flexbox>
 
@@ -389,32 +394,34 @@ const DriveExplorer = memo<DriveExplorerProps>(({ drive, isWorkspace, toolbarExt
                 <Text ellipsis fontSize={13} style={{ flex: 1, minWidth: 0 }}>
                   {entry.name}
                 </Text>
-                <Tooltip title={entryModifiedRelative(entry)}>
+                <Flexbox horizontal align={'center'} flex={'none'} gap={COLUMN_GAP}>
                   <Text
                     className={stylex.props(styles.nowrap).className}
                     fontSize={12}
-                    style={{ flex: 'none', width: MODIFIED_WIDTH }}
+                    style={{ flex: 'none', textAlign: 'end', width: SIZE_WIDTH }}
                     type={'secondary'}
                   >
-                    {entryModified(entry)}
+                    {entrySize(entry)}
                   </Text>
-                </Tooltip>
-                <Text
-                  className={stylex.props(styles.nowrap).className}
-                  fontSize={12}
-                  style={{ flex: 'none', textAlign: 'end', width: SIZE_WIDTH }}
-                  type={'secondary'}
-                >
-                  {entrySize(entry)}
-                </Text>
-                <Text
-                  ellipsis
-                  fontSize={12}
-                  style={{ flex: 'none', width: KIND_WIDTH }}
-                  type={'secondary'}
-                >
-                  {entryKind(entry, tSetting)}
-                </Text>
+                  <Text
+                    ellipsis
+                    fontSize={12}
+                    style={{ flex: 'none', width: KIND_WIDTH }}
+                    type={'secondary'}
+                  >
+                    {entryKind(entry, tSetting)}
+                  </Text>
+                  <Tooltip title={entryModifiedRelative(entry)}>
+                    <Text
+                      className={stylex.props(styles.nowrap).className}
+                      fontSize={12}
+                      style={{ flex: 'none', width: MODIFIED_WIDTH }}
+                      type={'secondary'}
+                    >
+                      {entryModified(entry)}
+                    </Text>
+                  </Tooltip>
+                </Flexbox>
                 <Flexbox flex={'none'} style={{ width: ACTIONS_WIDTH }}>
                   {menuFor(entry)}
                 </Flexbox>
