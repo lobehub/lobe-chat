@@ -20,7 +20,8 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { getDeviceIcon } from '@/features/DeviceManager/getDeviceIcon';
-import { openProjectTopicModal } from '@/features/Projects/WorkingDirectories/StartDirectoryModal';
+import { startProjectTopicDraft } from '@/features/Projects/WorkingDirectories/startProjectTopicDraft';
+import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwareNavigate';
 import { useAgentStore } from '@/store/agent';
 import { useDeviceStore } from '@/store/device';
 import { deviceSelectors } from '@/store/device/selectors';
@@ -61,20 +62,20 @@ const GroupItem = memo<GroupItemComponentProps>(({ group }) => {
     unknownLabel: t('groupTitle.byDevice.unknown'),
   });
 
-  // Preselect a directory on this device so the new topic starts where the
-  // group points; the modal's picker only lists instance-bound directories, so
-  // without one on this device the + would silently start work on another.
+  // Stage a directory on this device so the blank conversation runs where the
+  // group points; only an instance-bound directory can run work, so without
+  // one on this device the + would silently start work on another.
+  const navigate = useWorkspaceAwareNavigate();
   const fallbackAgentId = scope?.coordinatorAgentId ?? activeAgentId;
   const targetDirectory = findDeviceTopicDirectory(directories, deviceId);
   const canAddTopic = !!scope && !!deviceId && !!fallbackAgentId && !!targetDirectory;
   const handleAddTopic = () => {
     if (!scope || !deviceId || !fallbackAgentId || !targetDirectory) return;
-    openProjectTopicModal({
-      coordinatorAgentId: fallbackAgentId,
-      directories,
-      initialDirectoryId: targetDirectory.id,
+    startProjectTopicDraft({
+      agentId: fallbackAgentId,
+      directoryId: targetDirectory.id,
+      navigate,
       projectId: scope.projectId,
-      title: tProject('sidebar.newConversation'),
     });
   };
 

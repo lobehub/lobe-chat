@@ -2,7 +2,7 @@
  * @vitest-environment happy-dom
  */
 import { AccordionRoot } from '@lobehub/ui';
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { TopicListScopeContext } from '../../TopicListScope';
@@ -39,8 +39,20 @@ vi.mock('@/store/projectWorkingDirectory', () => ({
   useProjectDirectories: () => directories,
 }));
 
-vi.mock('@/features/Projects/WorkingDirectories/StartDirectoryModal', () => ({
+const { navigate, openProjectTopicModal, startProjectTopicDraft } = vi.hoisted(() => ({
+  navigate: vi.fn(),
   openProjectTopicModal: vi.fn(),
+  startProjectTopicDraft: vi.fn(),
+}));
+
+vi.mock('@/features/Projects/WorkingDirectories/StartDirectoryModal', () => ({
+  openProjectTopicModal,
+}));
+vi.mock('@/features/Projects/WorkingDirectories/startProjectTopicDraft', () => ({
+  startProjectTopicDraft,
+}));
+vi.mock('@/features/Workspace/useWorkspaceAwareNavigate', () => ({
+  useWorkspaceAwareNavigate: () => navigate,
 }));
 
 vi.mock('@/store/device', () => ({
@@ -135,6 +147,7 @@ const renderGroup = () =>
 
 describe('TopicByAgentGroupItem', () => {
   beforeEach(() => {
+    vi.clearAllMocks();
     for (const key of Object.keys(subGroupModes)) delete subGroupModes[key];
     registeredMeta = {};
     directories.splice(
@@ -183,6 +196,35 @@ describe('TopicByAgentGroupItem', () => {
     renderGroup();
 
     expect(screen.getAllByRole('button', { name: 'directories.start' })).toHaveLength(1);
+  });
+
+  /** @example User report: the device "+" popped a "new topic" modal instead of opening the composer. */
+  it('starts a blank conversation on the device directory from the section "+" without a modal', () => {
+    // ROOT CAUSE: the project sidebar "+" always opened the work-location
+    // modal and created the topic row up front, unlike an agent's "+", which
+    // only opens the composer and lets the first message create the topic.
+    subGroupModes[GROUP_ID] = 'byDevice';
+    directories[1] = { ...directories[1], instanceId: 'ins-linux' };
+    renderGroup();
+
+    fireEvent.click(screen.getByRole('button', { name: 'directories.start' }));
+
+    expect(startProjectTopicDraft).toHaveBeenCalledWith({
+      agentId: 'agt_acc_merge_alpha',
+      directoryId: 'binding-linux',
+      navigate,
+      projectId: 'project-1',
+    });
+    expect(openProjectTopicModal).not.toHaveBeenCalled();
+  });
+
+  it('keeps the modal for a project with no runnable directory, so one can be added', () => {
+    renderGroup();
+
+    fireEvent.click(screen.getByRole('button', { name: 'sidebar.newConversation' }));
+
+    expect(startProjectTopicDraft).not.toHaveBeenCalled();
+    expect(openProjectTopicModal).toHaveBeenCalledTimes(1);
   });
 
   const renderInProject = (agentId: string) =>

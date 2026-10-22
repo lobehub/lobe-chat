@@ -1,7 +1,7 @@
 'use client';
 
 import { Center, Flexbox, Spin, Text } from '@lobehub/ui';
-import { memo, useCallback, useLayoutEffect } from 'react';
+import { memo, useCallback, useEffect, useLayoutEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Navigate, useParams } from 'react-router';
 
@@ -18,7 +18,11 @@ import { useAgentStore } from '@/store/agent';
 import { useChatStore } from '@/store/chat';
 import { topicSelectors } from '@/store/chat/selectors';
 import { useCurrentProjectDetail, useProjectStore } from '@/store/project';
-import { useProjectDirectoryStore, useProjectTopics } from '@/store/projectWorkingDirectory';
+import {
+  useProjectDirectories,
+  useProjectDirectoryStore,
+  useProjectTopics,
+} from '@/store/projectWorkingDirectory';
 
 import { getProjectConversationPath } from '../Layout/navigation';
 
@@ -32,18 +36,40 @@ const ProjectConversation = memo(() => {
   );
   const topics = useProjectTopics(detail?.project.id);
   const selectedTopic = topics.find((topic) => topic.id === topicId);
-  const conversationAgentId = topicId
-    ? (selectedTopic?.agentId ?? undefined)
-    : detail?.project.coordinatorAgentId;
   const projectSlug = detail?.project.slug ?? projectId;
   const storedTopic = useChatStore((s) =>
     topicId ? topicSelectors.getTopicById(topicId)(s) : undefined,
   );
+  // A sidebar "+" stages a directory of this project instead of creating a
+  // row (see `startProjectTopicDraft`): the blank conversation belongs to the
+  // staged agent until its first message creates the topic.
+  const pendingDirectory = useChatStore((s) => s.pendingNewTopicDirectory);
+  const directoriesRequest = useProjectDirectoryStore((s) => s.useFetchDirectories)(
+    detail?.project.id,
+  );
+  const directories = useProjectDirectories(detail?.project.id);
+  const draftAgentId =
+    !topicId &&
+    pendingDirectory &&
+    directories.some((d) => d.id === pendingDirectory.projectWorkingDirectoryId)
+      ? pendingDirectory.agentId
+      : undefined;
+  const chatAgentId = useChatStore((s) => s.activeAgentId);
+  // The first send moves the route to the new topic before the project list has
+  // it; the chat store already does, so the conversation stays on its agent
+  // instead of flashing "not found" while the list catches up.
+  const isFreshTopic = !!topicId && !selectedTopic && !!storedTopic;
+  const conversationAgentId = topicId
+    ? (selectedTopic?.agentId ?? (isFreshTopic ? chatAgentId : undefined))
+    : draftAgentId;
+  const revalidateTopics = topicsRequest.revalidate;
+  useEffect(() => {
+    if (isFreshTopic) void revalidateTopics();
+  }, [isFreshTopic, topicId, revalidateTopics]);
   const topicTitle = storedTopic?.title;
 
   const agent = useInitAgentConfig(conversationAgentId);
   const topicDetail = useChatStore((s) => s.useFetchTopicDetail)(selectedTopic?.id);
-  const activeAgentId = useChatStore((s) => s.activeAgentId);
 
   useLayoutEffect(() => {
     if (!conversationAgentId) return;
@@ -76,9 +102,19 @@ const ProjectConversation = memo(() => {
     return (
       <AsyncError error={topicsRequest.error} variant="page" onRetry={topicsRequest.revalidate} />
     );
-  // New project conversations start from the project home composer.
-  if (!topicId) return <Navigate replace relative="path" to=".." />;
-  if (topicsRequest.hasData && !selectedTopic)
+  if (!topicId && !draftAgentId) {
+    // A "+" may have staged a draft whose directory list is still loading;
+    // wait for it rather than sending the draft away.
+    if (pendingDirectory && !directoriesRequest.hasData)
+      return (
+        <Center height="100%" width="100%">
+          <Spin size="small" />
+        </Center>
+      );
+    // Other new project conversations start from the project home composer.
+    return <Navigate replace relative="path" to=".." />;
+  }
+  if (topicId && topicsRequest.hasData && !selectedTopic && !isFreshTopic)
     return (
       <Center height="100%">
         <Text>{t('topics.notFound')}</Text>
@@ -92,7 +128,7 @@ const ProjectConversation = memo(() => {
     !conversationAgentId ||
     agent.isLoading ||
     (!storedTopic && topicDetail.isValidating) ||
-    activeAgentId !== conversationAgentId
+    chatAgentId !== conversationAgentId
   ) {
     return (
       <Center height="100%" width="100%">
@@ -114,14 +150,16 @@ const ProjectConversation = memo(() => {
             <Flexbox horizontal align="center" gap={4}>
               <TerminalPanelToggle />
               <WorkingPanelToggle />
-              <TopicActions
-                id={topicId}
-                status={selectedTopic?.status}
-                title={topicTitle || selectedTopic?.title || t('directories.untitled')}
-                completionLabel={t(
-                  selectedTopic?.status === 'completed' ? 'topics.resume' : 'topics.complete',
-                )}
-              />
+              {topicId && (
+                <TopicActions
+                  id={topicId}
+                  status={selectedTopic?.status}
+                  title={topicTitle || selectedTopic?.title || t('directories.untitled')}
+                  completionLabel={t(
+                    selectedTopic?.status === 'completed' ? 'topics.resume' : 'topics.complete',
+                  )}
+                />
+              )}
             </Flexbox>
           }
         />
