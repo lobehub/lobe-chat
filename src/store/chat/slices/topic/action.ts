@@ -30,6 +30,7 @@ import {
   type ReplicaPageResult,
   type ReplicaSyncResult,
 } from '@/libs/replica';
+import { subscribeCacheScope } from '@/libs/replica/cacheScopeEvents';
 import { mutate } from '@/libs/swr';
 import { cronKeys, topicKeys } from '@/libs/swr/keys';
 import { getCacheScope } from '@/libs/swr/useCacheScope';
@@ -76,6 +77,7 @@ import {
   topicAgentViewResource,
   type TopicListParams,
   topicListResource,
+  topicListViewFields,
 } from './projection';
 import { type ChatTopicDispatch } from './reducer';
 import { topicSelectors } from './selectors';
@@ -243,13 +245,7 @@ export class ChatTopicActionImpl {
       stateKey: 'topicListReplica',
       toPersisted,
       view: recordLens<ChatStore, TopicData>('topicDataMap'),
-      viewFields: ({ excludeStatuses, excludeTriggers, isInbox, sortBy, withDetails }) => ({
-        excludeStatuses,
-        excludeTriggers,
-        isInbox: Boolean(isInbox),
-        sortBy,
-        withDetails,
-      }),
+      viewFields: topicListViewFields,
     });
     this.#topicAgentView = createReplicaSlice(topicAgentViewResource, {
       actionPrefix: n('topicAgentView'),
@@ -276,6 +272,7 @@ export class ChatTopicActionImpl {
       this.#topicAgentView,
       this.#topicDetail,
     ]);
+    subscribeCacheScope((scope) => this.#topicList.ensureScope(scope));
   }
 
   #resolveTopicLinkedPullRequestRefreshParams = (
@@ -1387,9 +1384,8 @@ export class ChatTopicActionImpl {
    * projection, then revalidates; results land in `topicDataMap` — read them
    * through `topicSelectors`, never from this hook.
    */
-  useFetchTopics = (enable: boolean, params: Partial<TopicListParams> = {}): ReplicaSyncResult => {
-    return this.#topicList.useSync(normalizeTopicListParams(params), { enabled: enable });
-  };
+  useFetchTopics = (enable: boolean, params: Partial<TopicListParams> = {}): ReplicaSyncResult =>
+    this.#topicList.useSync(normalizeTopicListParams(params), { enabled: enable });
 
   /**
    * Seed the sidebar's persisted page for a session before its first paint.
@@ -1479,6 +1475,7 @@ export class ChatTopicActionImpl {
       excludeTriggers: currentData?.excludeTriggers,
       groupId: activeGroupId,
       isInbox: currentData?.isInbox,
+      onlyMine: currentData?.onlyMine,
       pageSize: currentData?.pageSize || useGlobalStore.getState().status.topicPageSize || 20,
       sortBy: currentData?.sortBy,
       withDetails: currentData?.withDetails,
@@ -1490,15 +1487,16 @@ export class ChatTopicActionImpl {
     {
       agentId,
       groupId,
+      onlyMine,
     }: {
       agentId?: string;
       groupId?: string;
+      onlyMine?: boolean;
     } = {},
-  ): SWRResponse<ChatTopic[]> => {
-    return useSWR<ChatTopic[]>(
-      keywords ? topicKeys.search(keywords, agentId, groupId) : null,
-      ([, keywords, agentId, groupId]: [string, string, string | undefined, string | undefined]) =>
-        topicService.searchTopics(keywords, agentId, groupId),
+  ): SWRResponse<ChatTopic[]> =>
+    useSWR<ChatTopic[]>(
+      keywords ? topicKeys.search(keywords, agentId, groupId, onlyMine || undefined) : null,
+      () => topicService.searchTopics(keywords ?? '', agentId, groupId, onlyMine),
       {
         onSuccess: (data) => {
           // Search rows render the same status icon as the sidebar — pin
@@ -1515,7 +1513,6 @@ export class ChatTopicActionImpl {
         },
       },
     );
-  };
 
   switchTopic = async (id?: string | null, options?: SwitchTopicOptions): Promise<void> => {
     const opts = options ?? {};
@@ -2027,6 +2024,7 @@ export class ChatTopicActionImpl {
           isExpandingPageSize: false,
           isLoadingMore: false,
           items: nextItems,
+          onlyMine: currentData?.onlyMine,
           pageSize,
           sortBy: currentData?.sortBy,
           total,

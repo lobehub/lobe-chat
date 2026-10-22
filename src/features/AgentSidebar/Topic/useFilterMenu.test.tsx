@@ -14,6 +14,15 @@ const preferenceMock = vi.hoisted(() => ({
   updatePreference: vi.fn(),
 }));
 const updateAgentModeMock = vi.hoisted(() => vi.fn());
+const workspaceMock = vi.hoisted(() => ({
+  hasActiveWorkspace: false,
+  topicOnlyMine: false,
+  updateWorkspaceUserPreference: vi.fn(),
+}));
+
+vi.mock('@/business/client/hooks/useHasActiveWorkspace', () => ({
+  useHasActiveWorkspace: () => workspaceMock.hasActiveWorkspace,
+}));
 
 vi.mock('./TopicListScope', () => ({
   useTopicListScope: () => scopeMock.scope,
@@ -40,6 +49,7 @@ vi.mock('@/store/user', () => ({
   useUserStore: (selector: (state: unknown) => unknown) =>
     selector({
       updatePreference: preferenceMock.updatePreference,
+      updateWorkspaceUserPreference: workspaceMock.updateWorkspaceUserPreference,
     }),
 }));
 
@@ -48,12 +58,17 @@ vi.mock('@/store/user/selectors', () => ({
     topicSortBy: () => preferenceMock.topicSortBy,
     topicIncludeCompleted: () => preferenceMock.topicIncludeCompleted,
   },
+  workspaceUserSettingsSelectors: {
+    topicOnlyMine: () => () => workspaceMock.topicOnlyMine,
+  },
 }));
 
 const organizeLabels = (items: any[]): string[] => {
   const organize = items.find((item) => item.key === 'organize');
   return organize.children.map((child: any) => child.label);
 };
+
+const filterGroup = (items: any[]) => items.find((item) => item.key === 'filter');
 
 describe('useTopicFilterDropdownMenu group modes', () => {
   beforeEach(() => {
@@ -107,5 +122,37 @@ describe('useTopicFilterDropdownMenu group modes', () => {
     const filter = result.current().find((item: any) => item.key === 'filter') as any;
 
     expect(filter.children.map((child: any) => child.key)).toEqual(['showCompleted']);
+  });
+});
+
+describe('useTopicFilterDropdownMenu only-mine filter', () => {
+  beforeEach(() => {
+    scopeMock.scope = null;
+    workspaceMock.hasActiveWorkspace = false;
+    workspaceMock.topicOnlyMine = false;
+    vi.clearAllMocks();
+  });
+
+  /** @example Every personal topic is the caller's, so the filter would do nothing there. */
+  it('hides the only-mine filter outside a workspace', () => {
+    const { result } = renderHook(() => useTopicFilterDropdownMenu());
+
+    const keys = filterGroup(result.current()).children.map((child: any) => child.key);
+    expect(keys).toEqual(['showCompleted']);
+  });
+
+  it('toggles the per-workspace only-mine preference inside a workspace', () => {
+    workspaceMock.hasActiveWorkspace = true;
+
+    const { result } = renderHook(() => useTopicFilterDropdownMenu());
+    const item = filterGroup(result.current()).children.find(
+      (child: any) => child.key === 'onlyMine',
+    );
+
+    expect(item.label).toBe('filter.onlyMine');
+    item.onClick();
+    expect(workspaceMock.updateWorkspaceUserPreference).toHaveBeenCalledWith({
+      topicOnlyMine: true,
+    });
   });
 });

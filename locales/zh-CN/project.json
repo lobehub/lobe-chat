@@ -77,6 +77,7 @@
   "directories.start": "在此开始工作",
   "directories.startInProject": "在 {{name}} 中开始工作",
   "directories.title": "工作目录",
+  "directories.topicsSkipped": "目录已关联。有 {{count}} 个话题未归入项目：它们在其他目录或设备上运行、已属于其他项目、仍在运行，或已不存在。",
   "directories.unavailable": "设备离线或目录不可用，请重新连接后重试。",
   "directories.untitled": "未命名话题",
   "disabled.action": "前往实验室开启",

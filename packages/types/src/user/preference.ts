@@ -120,6 +120,11 @@ export interface WorkspaceUserPreference {
    *   ignored; nothing reads or writes this map.
    */
   sidebarPinnedOverrides?: Record<string /* itemId */, boolean>;
+  /**
+   * Topic sidebars list only the topics this member created, hiding the other
+   * members' topics under the same agent / group.
+   */
+  topicOnlyMine?: boolean;
 }
 
 export interface LobeUser {

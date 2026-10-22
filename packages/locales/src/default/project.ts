@@ -67,6 +67,8 @@ export default {
     'The device is disconnected or the directory is unavailable. Connect the device and check the path, then retry.',
 
   'directories.autoFileTopics': 'All {{count}} existing topics will be linked to this project.',
+  'directories.topicsSkipped':
+    'Directory linked. {{count}} topics were left out because they run in another directory or on another device, belong to another project, are still running, or no longer exist.',
   'settings.general': 'General',
   'settings.logo': 'Logo',
   'settings.logoDescription': 'Shown in the project header, sidebar and switcher.',
