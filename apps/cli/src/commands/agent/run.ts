@@ -14,6 +14,32 @@ import { log, setVerbose } from '../../utils/logger';
 import { followAgentRun } from './followRun';
 import { pollAgentRunStatus, probeRunOutcome, RUN_POLL_INTERVAL_MS } from './runStatus';
 
+/**
+ * Start a run, retrying without `streamFeatures` on a server old enough to
+ * validate its input strictly: the CLI ships independently of the server, and
+ * `streamFeatures` is an optional key that such a server rejects outright.
+ */
+const startAgentRun = async (
+  client: Awaited<ReturnType<typeof getTrpcClient>>,
+  input: Record<string, any>,
+) => {
+  try {
+    return await client.aiAgent.execAgent.mutate(input as any);
+  } catch (error) {
+    const { data, message } = (error ?? {}) as { data?: { code?: string }; message?: unknown };
+    if (
+      data?.code !== 'BAD_REQUEST' ||
+      typeof message !== 'string' ||
+      !message.includes('unrecognized_keys') ||
+      !message.includes('streamFeatures')
+    ) {
+      throw error;
+    }
+    const { streamFeatures: _rejected, ...legacyInput } = input;
+    return await client.aiAgent.execAgent.mutate(legacyInput as any);
+  }
+};
+
 export function registerAgentRunCommand(agent: Command) {
   agent
     .command('run')
@@ -141,7 +167,17 @@ Exit codes:
         }
 
         // 1. Exec agent to get operationId
-        const input: Record<string, any> = { prompt: options.prompt, trigger: 'cli' };
+        const input: Record<string, any> = {
+          prompt: options.prompt,
+          trigger: 'cli',
+          // A group/supervisor run mirrors each member's events onto this
+          // operation's socket. Declaring the feature is what makes the server
+          // forward a member's terminal as the non-terminal `member_runtime_end`
+          // instead of `agent_runtime_end` — the Gateway closes the session on
+          // the latter, which would drop every later member and supervisor event
+          // before this CLI could render it.
+          streamFeatures: ['member_runtime_end'],
+        };
         if (options.agentId) input.agentId = options.agentId;
         if (deviceId) input.deviceId = deviceId;
         if (options.slug) input.slug = options.slug;
@@ -199,7 +235,7 @@ Exit codes:
           };
         }
 
-        const result = await client.aiAgent.execAgent.mutate(input as any);
+        const result = await startAgentRun(client, input);
         const r = result as any;
 
         if (!r.success) {
