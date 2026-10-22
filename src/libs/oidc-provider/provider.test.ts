@@ -84,7 +84,7 @@ describe('OIDC Provider - Market Client Integration', () => {
       vi.doUnmock('@/envs/app');
     });
 
-    it('should register toby as a public native client with its own callback scheme', async () => {
+    it('should register toby as a public native client with an https callback only', async () => {
       vi.doMock('@/envs/app', () => ({
         appEnv: {
           APP_URL: 'https://app.lobehub.com',
@@ -100,8 +100,12 @@ describe('OIDC Provider - Market Client Integration', () => {
       expect(tobyClient?.applicationType).toBe('native');
       expect(tobyClient?.tokenEndpointAuthMethod).toBe('none');
       expect(tobyClient?.grantTypes).toEqual(['authorization_code', 'refresh_token']);
-      expect(tobyClient?.redirectUriAllowed('com.lobehub.toby://auth/callback')).toBe(true);
-      expect(tobyClient?.redirectUriAllowed('com.lobehub.app://auth/callback')).toBe(false);
+      expect(tobyClient?.redirectUriAllowed('https://app.lobehub.com/oidc/callback/toby')).toBe(
+        true,
+      );
+      expect(tobyClient?.redirectUriAllowed('https://lobehub.com/oidc/callback/toby')).toBe(true);
+      expect(tobyClient?.redirectUriAllowed('com.lobehub.toby://auth/callback')).toBe(false);
+      expect(tobyClient?.redirectUriAllowed('https://example.com/oidc/callback/toby')).toBe(false);
 
       vi.doUnmock('@/envs/app');
     });
