@@ -14,13 +14,15 @@ import {
   menuSharedStyles,
   Tag,
 } from '@lobehub/ui';
+import * as stylex from '@stylexjs/stylex';
 import { Check } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { ProviderItemRender } from '@/components/ModelSelect';
+import { sx } from '@/styles/sx';
 
-import { styles } from '../../styles';
+import { descendantStyles, styles } from '../../styles';
 import { type ModelWithProviders } from '../../types';
 import { menuKey } from '../../utils';
 import ModelDetailPanel from '../ModelDetailPanel';
@@ -86,7 +88,10 @@ export const MultipleProvidersModelItem = memo<MultipleProvidersModelItemProps>(
         }}
       >
         <DropdownMenuSubmenuTrigger
-          className={cx(menuSharedStyles.item, isActive && styles.menuItemActive)}
+          className={cx(
+            menuSharedStyles.item,
+            isActive && stylex.props(styles.menuItemActive).className,
+          )}
           style={{ paddingBlock: 8, paddingInline: 8 }}
           onClick={() => {
             if (defaultProviderRestricted) {
@@ -112,7 +117,12 @@ export const MultipleProvidersModelItem = memo<MultipleProvidersModelItemProps>(
         </DropdownMenuSubmenuTrigger>
         <DropdownMenuPortal>
           <DropdownMenuPositioner anchor={null} placement="right" sideOffset={12}>
-            <DropdownMenuPopup className={cx(styles.detailPopup, styles.dropdownMenu)}>
+            <DropdownMenuPopup
+              className={
+                sx([styles.detailPopup, styles.dropdownMenu], descendantStyles.dropdownMenu)
+                  .className
+              }
+            >
               <ModelDetailPanel
                 model={data.model.id}
                 provider={(activeProvider ?? data.providers[0]).id}

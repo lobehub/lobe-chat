@@ -11,16 +11,6 @@ import ModelDetailPanel from './ModelDetailPanel';
 
 vi.mock('@lobehub/ui', async (importOriginal) => ({
   ...(await importOriginal<object>()),
-  createStaticStyles: () => ({
-    actionText: 'actionText',
-    container: 'container',
-    description: 'description',
-    originalPriceText: 'originalPriceText',
-    priceValue: 'priceValue',
-    radarClickable: 'radarClickable',
-    row: 'row',
-    titleText: 'titleText',
-  }),
   cssVar: new Proxy({}, { get: (_, token) => `var(--${String(token)})` }),
 }));
 

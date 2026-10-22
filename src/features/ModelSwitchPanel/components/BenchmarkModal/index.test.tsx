@@ -13,8 +13,6 @@ vi.mock('@lobehub/ui', async (importOriginal) => {
   const factories: ((original: typeof importOriginal) => unknown)[] = [
     async (importOriginal) => ({
       ...(await importOriginal<object>()),
-      createStaticStyles: () =>
-        new Proxy({}, { get: (_target, prop: string) => prop }) as Record<string, string>,
       cssVar: new Proxy({}, { get: (_target, token) => `var(--${String(token)})` }),
     }),
     async (importOriginal) => ({
