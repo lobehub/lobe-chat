@@ -54,13 +54,21 @@ export const useKnowledgeMenuItems = ({
 
   if (!enabled || !canConfigureResource) return [];
 
+  // A mount whose file or library the viewer can no longer see comes back from
+  // the server as a bare `{ enabled }` row: the join nulls the referenced
+  // entity. It has no id/name/type, so it cannot be labelled or toggled here —
+  // skip it instead of rendering an empty item (and handing `undefined` to
+  // FileIcon, which used to crash the composer's menu).
+  const availableFiles = files.filter((item) => !!item.id);
+  const availableKnowledgeBases = knowledgeBases.filter((item) => !!item.id);
+
   const items: ItemType[] = [];
 
-  if (files.length > 0 || knowledgeBases.length > 0) {
+  if (availableFiles.length > 0 || availableKnowledgeBases.length > 0) {
     items.push({
       children: [
         // first the files
-        ...files.map((item) => ({
+        ...availableFiles.map((item) => ({
           icon: <FileIcon fileName={item.name} fileType={item.type} size={MENU_ICON_SIZE} />,
           key: item.id,
           label: (
@@ -78,7 +86,7 @@ export const useKnowledgeMenuItems = ({
         })),
 
         // then the knowledge bases
-        ...knowledgeBases.map((item) => ({
+        ...availableKnowledgeBases.map((item) => ({
           icon: <RepoIcon size={MENU_ICON_SIZE} />,
           key: item.id,
           label: (

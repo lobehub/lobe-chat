@@ -4,10 +4,11 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { useKnowledgeMenuItems } from './useKnowledgeMenuItems';
 
 const mockFiles = vi.hoisted(() => ({
-  current: [] as { enabled: boolean; id: string; name: string; type: string }[],
+  // A mount whose joined file is no longer visible reaches the hook as `{ enabled }`.
+  current: [] as { enabled: boolean; id?: string; name?: string; type?: string }[],
 }));
 const mockKnowledgeBases = vi.hoisted(() => ({
-  current: [] as { enabled: boolean; id: string; name: string }[],
+  current: [] as { enabled: boolean; id?: string; name?: string }[],
 }));
 const mockCanConfigureResource = vi.hoisted(() => ({ current: true }));
 
@@ -28,8 +29,14 @@ vi.mock('../../hooks/useChatInputResourceAccess', () => ({
   useChatInputResourceAccess: () => ({ canConfigureResource: mockCanConfigureResource.current }),
 }));
 
-const keysOf = (items: unknown[]) =>
-  items.map((item) => (item as { key?: string }).key).filter(Boolean);
+const keyOf = (item: unknown) => {
+  if (item && typeof item === 'object' && 'key' in item && typeof item.key === 'string') {
+    return item.key;
+  }
+  return undefined;
+};
+
+const keysOf = (items: unknown[]) => items.map(keyOf).filter(Boolean);
 
 describe('useKnowledgeMenuItems', () => {
   beforeEach(() => {
@@ -74,5 +81,36 @@ describe('useKnowledgeMenuItems', () => {
     const { result } = renderHook(() => useKnowledgeMenuItems({ onUpdatingChange: vi.fn() }));
 
     expect(keysOf(result.current)).toEqual(['relativeFilesOrLibraries', 'knowledge-base-store']);
+  });
+
+  // Regression: the server keeps a mount row but nulls the joined entity when
+  // the viewer loses access to the file/library, so the store yields `{ enabled }`.
+  // Passing its missing name to FileIcon crashed the composer while rendering
+  // the menu.
+  it('skips mounts whose file or library is no longer visible', () => {
+    mockFiles.current = [
+      { enabled: true },
+      { enabled: true, id: 'file-1', name: 'Brief', type: 'text/plain' },
+    ];
+    mockKnowledgeBases.current = [{ enabled: true }];
+
+    const { result } = renderHook(() => useKnowledgeMenuItems({ onUpdatingChange: vi.fn() }));
+
+    expect(keysOf(result.current)).toEqual(['relativeFilesOrLibraries', 'knowledge-base-store']);
+    const group = result.current[0];
+    const childKeys =
+      group && typeof group === 'object' && 'children' in group && Array.isArray(group.children)
+        ? group.children.map(keyOf)
+        : [];
+    expect(childKeys).toEqual(['file-1']);
+  });
+
+  it('keeps the empty hint when every mount is unavailable', () => {
+    mockFiles.current = [{ enabled: true }];
+    mockKnowledgeBases.current = [{ enabled: true }];
+
+    const { result } = renderHook(() => useKnowledgeMenuItems({ onUpdatingChange: vi.fn() }));
+
+    expect(keysOf(result.current)).toEqual(['knowledge-empty', 'knowledge-base-store']);
   });
 });

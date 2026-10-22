@@ -81,11 +81,20 @@ export const useControls = ({
     s.toggleFile,
     s.toggleKnowledgeBase,
   ]);
-  const enabledCount =
-    files.filter((item) => item.enabled).length +
-    knowledgeBases.filter((item) => item.enabled).length;
 
-  const libraryItems = knowledgeBases.map((item) => ({
+  // A mount whose file or library the viewer can no longer see comes back from
+  // the server as a bare `{ enabled }` row: the join nulls the referenced
+  // entity. It has no id/name/type, so it cannot be labelled or toggled here —
+  // skip it instead of rendering an empty item (and handing `undefined` to
+  // FileIcon, which used to crash the composer's menu).
+  const availableFiles = files.filter((item) => !!item.id);
+  const availableKnowledgeBases = knowledgeBases.filter((item) => !!item.id);
+
+  const enabledCount =
+    availableFiles.filter((item) => item.enabled).length +
+    availableKnowledgeBases.filter((item) => item.enabled).length;
+
+  const libraryItems = availableKnowledgeBases.map((item) => ({
     icon: <RepoIcon />,
     key: item.id,
     label: (
@@ -102,7 +111,7 @@ export const useControls = ({
     ),
   }));
 
-  const fileItems = files.map((item) => ({
+  const fileItems = availableFiles.map((item) => ({
     icon: <FileIcon fileName={item.name} fileType={item.type} size={20} />,
     key: item.id,
     label: (

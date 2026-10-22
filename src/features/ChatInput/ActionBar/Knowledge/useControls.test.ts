@@ -5,10 +5,11 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { useControls } from './useControls';
 
 const mockFiles = vi.hoisted(() => ({
-  current: [] as { enabled: boolean; id: string; name: string; type: string }[],
+  // A mount whose joined file is no longer visible reaches the hook as `{ enabled }`.
+  current: [] as { enabled: boolean; id?: string; name?: string; type?: string }[],
 }));
 const mockKnowledgeBases = vi.hoisted(() => ({
-  current: [] as { enabled: boolean; id: string; name: string }[],
+  current: [] as { enabled: boolean; id?: string; name?: string }[],
 }));
 
 vi.mock('@/store/agent', () => ({
@@ -24,6 +25,15 @@ vi.mock('@/store/agent/selectors', () => ({
 }));
 
 vi.mock('../../hooks/useAgentId', () => ({ useAgentId: () => 'agent-1' }));
+
+const keyOf = (item: unknown) => {
+  if (item && typeof item === 'object' && 'key' in item && typeof item.key === 'string') {
+    return item.key;
+  }
+  return undefined;
+};
+
+const keysOf = (items: unknown[]) => items.map(keyOf).filter(Boolean);
 
 describe('useControls', () => {
   beforeEach(() => {
@@ -61,5 +71,25 @@ describe('useControls', () => {
     fireEvent.click(screen.getByRole('button', { name: 'knowledgeBase.viewMore' }));
 
     expect(openAttachKnowledgeModal).toHaveBeenCalledTimes(1);
+  });
+
+  // Regression: the server keeps a mount row but nulls the joined entity when
+  // the viewer loses access to the file/library, so the store yields `{ enabled }`.
+  // Passing its missing name to FileIcon crashed the composer while rendering
+  // the menu.
+  it('skips mounts whose file or library is no longer visible', () => {
+    mockFiles.current = [
+      { enabled: true },
+      { enabled: true, id: 'file-1', name: 'Brief', type: 'text/plain' },
+    ];
+    mockKnowledgeBases.current = [
+      { enabled: true },
+      { enabled: true, id: 'kb-1', name: 'Handbook' },
+    ];
+
+    const { result } = renderHook(() => useControls({ openAttachKnowledgeModal: vi.fn() }));
+
+    expect(keysOf(result.current.items)).toEqual(['kb-1', 'file-1']);
+    expect(result.current.enabledCount).toBe(2);
   });
 });

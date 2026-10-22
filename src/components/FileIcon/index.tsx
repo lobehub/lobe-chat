@@ -12,19 +12,25 @@ interface FileListProps {
 }
 
 const FileIcon = memo<FileListProps>(({ fileName, size, variant = 'raw', isDirectory }) => {
+  // `fileName` is typed as required, but it also reaches this component from
+  // persisted data (editor JSON, tool results, message attachments) that can
+  // omit it or carry an older shape. MaterialFileTypeIcon splits the name, so
+  // normalize here: a missing name must render the generic icon, not throw.
+  const name = typeof fileName === 'string' ? fileName : '';
+
   if (isDirectory)
     return (
       <MaterialFileTypeIcon
         fallbackUnknownType={false}
-        filename={fileName}
+        filename={name}
         size={size}
         type={'folder'}
         variant={variant}
       />
     );
 
-  if (Object.keys(mimeTypeMap).some((key) => fileName?.toLowerCase().endsWith(`.${key}`))) {
-    const ext = fileName.split('.').pop()?.toLowerCase() as string;
+  if (Object.keys(mimeTypeMap).some((key) => name.toLowerCase().endsWith(`.${key}`))) {
+    const ext = name.split('.').pop()?.toLowerCase() as string;
 
     return (
       <FileTypeIcon
@@ -36,7 +42,7 @@ const FileIcon = memo<FileListProps>(({ fileName, size, variant = 'raw', isDirec
     );
   }
 
-  return <MaterialFileTypeIcon filename={fileName} size={size} type={'file'} variant={variant} />;
+  return <MaterialFileTypeIcon filename={name} size={size} type={'file'} variant={variant} />;
 });
 
 export default FileIcon;
