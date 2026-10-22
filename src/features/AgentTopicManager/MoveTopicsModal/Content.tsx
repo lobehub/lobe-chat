@@ -2,17 +2,9 @@
 
 import { AGENT_CHAT_URL, DEFAULT_INBOX_AVATAR } from '@lobechat/const';
 import { agentDisplayName } from '@lobechat/types';
-import {
-  Button,
-  createStaticStyles,
-  cssVar,
-  Flexbox,
-  Icon,
-  Spin,
-  Text,
-  toast,
-  useModalContext,
-} from '@lobehub/ui';
+import { Button, Flexbox, Icon, Spin, Text, toast, useModalContext } from '@lobehub/ui';
+import { cssVar } from '@lobehub/ui/stylex/cssVar.stylex';
+import * as stylex from '@stylexjs/stylex';
 import { CircleCheck } from 'lucide-react';
 import { memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -37,26 +29,24 @@ export interface MoveTopicsContentProps {
   topicIds: string[];
 }
 
-const styles = createStaticStyles(({ css }) => ({
-  searchInput: css`
-    width: 100%;
-    padding-block: 6px;
-    padding-inline: 10px;
-    border: none;
-    border-block-end: 1px solid ${cssVar.colorBorderSecondary};
-
-    font-family: inherit;
-    font-size: 13px;
-    color: ${cssVar.colorText};
-
-    background: transparent;
-    outline: none;
-
-    &::placeholder {
-      color: ${cssVar.colorTextPlaceholder};
-    }
-  `,
-}));
+const styles = stylex.create({
+  searchInput: {
+    'width': '100%',
+    'paddingBlock': '6px',
+    'paddingInline': '10px',
+    'borderStyle': 'none',
+    'borderBlockEndWidth': '1px',
+    'borderBlockEndStyle': 'solid',
+    'borderBlockEndColor': cssVar.colorBorderSecondary,
+    'fontFamily': 'inherit',
+    'fontSize': '13px',
+    'color': cssVar.colorText,
+    'backgroundColor': 'transparent',
+    'backgroundImage': 'none',
+    'outlineStyle': 'none',
+    '::placeholder': { color: cssVar.colorTextPlaceholder },
+  },
+});
 
 const MoveTopicsContent = memo<MoveTopicsContentProps>(({ onMoved, sourceAgentId, topicIds }) => {
   const { t } = useTranslation(['topic', 'chat', 'common']);
@@ -133,7 +123,7 @@ const MoveTopicsContent = memo<MoveTopicsContentProps>(({ onMoved, sourceAgentId
       <Flexbox>
         <input
           autoFocus
-          className={styles.searchInput}
+          {...stylex.props(styles.searchInput)}
           placeholder={t('management.bulk.moveSearchPlaceholder')}
           value={search}
           onChange={(e) => setSearch(e.target.value)}

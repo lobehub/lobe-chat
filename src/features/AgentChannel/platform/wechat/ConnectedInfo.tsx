@@ -1,7 +1,9 @@
 'use client';
 
-import { createStaticStyles, Flexbox, Icon } from '@lobehub/ui';
+import { Flexbox, Icon } from '@lobehub/ui';
 import { Form } from '@lobehub/ui/form';
+import { cssVar } from '@lobehub/ui/stylex/cssVar.stylex';
+import * as stylex from '@stylexjs/stylex';
 import type { LucideIcon } from 'lucide-react';
 import { Fingerprint, KeyRound, UserRound } from 'lucide-react';
 import { memo } from 'react';
@@ -11,17 +13,10 @@ import { FormInput, FormPassword } from '@/components/FormInput';
 
 import QrCodeAuth from './QrCodeAuth';
 
-const styles = createStaticStyles(({ css, cssVar }) => ({
-  fieldIcon: css`
-    flex: none;
-    color: ${cssVar.colorTextSecondary};
-  `,
-  header: css`
-    display: flex;
-    align-items: center;
-    margin-block-end: 16px;
-  `,
-}));
+const styles = stylex.create({
+  fieldIcon: { flex: 'none', color: cssVar.colorTextSecondary },
+  header: { display: 'flex', alignItems: 'center', marginBlockEnd: '16px' },
+});
 
 const ReadOnlyField = memo<{
   divider?: boolean;
@@ -34,7 +29,7 @@ const ReadOnlyField = memo<{
 
   return (
     <Form.Field
-      avatar={<Icon className={styles.fieldIcon} icon={icon} size={20} />}
+      avatar={<Icon className={stylex.props(styles.fieldIcon).className} icon={icon} size={20} />}
       divider={divider}
       label={label}
       minWidth={'max(50%, 400px)'}
@@ -65,7 +60,7 @@ const WechatConnectedInfo = memo<WechatConnectedInfoProps>(
 
     return (
       <>
-        <div className={styles.header}>
+        <div {...stylex.props(styles.header)}>
           <Flexbox gap={4}>
             <div style={{ fontSize: 16, fontWeight: 600 }}>{t('channel.wechatConnectedInfo')}</div>
             <div style={{ color: 'var(--lobe-color-text-secondary)', fontSize: 13 }}>

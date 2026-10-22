@@ -4,7 +4,10 @@ import { AGENT_CHAT_URL, GROUP_CHAT_URL } from '@lobechat/const';
 import type { SidebarAgentItem } from '@lobechat/types';
 import { agentDisplayName, agentSecondaryDisplayName } from '@lobechat/types';
 import { Block, ContextMenuTrigger, type DropdownItem, Flexbox, Icon } from '@lobehub/ui';
-import { createStaticStyles, cssVar, responsive, Tag, Text } from '@lobehub/ui';
+import { Tag, Text } from '@lobehub/ui';
+import { cssVar } from '@lobehub/ui/stylex/cssVar.stylex';
+import { media } from '@lobehub/ui/stylex/media.stylex';
+import * as stylex from '@stylexjs/stylex';
 import { ChevronDownIcon, ChevronUpIcon } from 'lucide-react';
 import { memo, useCallback, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -19,78 +22,49 @@ import ItemActions from './ItemActions';
 // "In sidebar" overview: a collapsible card grid pinned above the main list
 // so the user can see at a glance which agents currently show in the sidebar
 // (mirrors the enabled-providers block on the provider settings page).
-const styles = createStaticStyles(({ css, cssVar }) => ({
-  /* The headless ItemActions still renders an empty span; keeping it out of
-     the flex flow stops it from claiming a `gap` and shifting the centering. */
-  actions: css`
-    position: absolute;
-    inset-block-start: 0;
-    inset-inline-end: 0;
-  `,
-  card: css`
-    position: relative;
-
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    align-items: stretch;
-    justify-content: center;
-
-    /* Uniform height across the grid; a card without a description centers its
-       title instead of leaving a hole where the description would be. */
-    min-height: 72px;
-    padding-block: 10px;
-    padding-inline: 12px;
-
-    transition:
-      transform 0.18s,
-      box-shadow 0.18s,
-      border-color 0.18s;
-
-    &:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 4px 12px rgb(0 0 0 / 6%);
-    }
-  `,
-  container: css`
-    padding: 12px;
-    border-radius: ${cssVar.borderRadiusLG};
-    background: ${cssVar.colorFillQuaternary};
-  `,
-  description: css`
-    overflow: hidden;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 1;
-
-    line-height: 1.5;
-  `,
-  grid: css`
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 12px;
-
-    width: 100%;
-    min-width: 0;
-
-    ${responsive.md} {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    ${responsive.sm} {
-      grid-template-columns: minmax(0, 1fr);
-    }
-  `,
-  header: css`
-    cursor: pointer;
-    user-select: none;
-  `,
-  link: css`
-    display: block;
-    min-width: 0;
-    color: inherit;
-  `,
-}));
+const styles = stylex.create({
+  actions: { position: 'absolute', insetBlockStart: '0', insetInlineEnd: '0' },
+  card: {
+    position: 'relative',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '6px',
+    alignItems: 'stretch',
+    justifyContent: 'center',
+    minHeight: '72px',
+    paddingBlock: '10px',
+    paddingInline: '12px',
+    transition: 'transform 0.18s,\n      box-shadow 0.18s,\n      border-color 0.18s',
+    transform: { 'default': null, ':hover': 'translateY(-1px)' },
+    boxShadow: { 'default': null, ':hover': '0 4px 12px rgb(0 0 0 / 6%)' },
+  },
+  container: {
+    padding: '12px',
+    borderRadius: cssVar.borderRadiusLG,
+    backgroundColor: cssVar.colorFillQuaternary,
+    backgroundImage: 'none',
+  },
+  description: {
+    overflow: 'hidden',
+    display: '-webkit-box',
+    WebkitBoxOrient: 'vertical',
+    WebkitLineClamp: '1',
+    lineHeight: 1.5,
+  },
+  grid: {
+    display: 'grid',
+    gridTemplateColumns: {
+      default: 'repeat(3, minmax(0, 1fr))',
+      [media.md]: 'repeat(2, minmax(0, 1fr))',
+      [media.sm]: 'minmax(0, 1fr)',
+    },
+    gap: '12px',
+    width: '100%',
+    minWidth: '0',
+  },
+  header: { cursor: 'pointer', userSelect: 'none' },
+  link: { display: 'block', minWidth: '0', color: 'inherit' },
+});
 
 interface SidebarMiniCardProps {
   item: SidebarAgentItem;
@@ -123,12 +97,17 @@ const SidebarMiniCard = memo<SidebarMiniCardProps>(({ item, onToggleSidebar }) =
           rendering it as a sibling would add a phantom grid item. */}
       <WorkspaceLink
         aria-label={displayTitle}
-        className={styles.link}
+        className={stylex.props(styles.link).className}
         ref={setAnchor}
         to={type === 'group' ? GROUP_CHAT_URL(id) : AGENT_CHAT_URL(id, false)}
         onPointerEnter={activateMenu}
       >
-        <Block clickable className={styles.card} height={'100%'} variant={'outlined'}>
+        <Block
+          clickable
+          className={stylex.props(styles.card).className}
+          height={'100%'}
+          variant={'outlined'}
+        >
           <Flexbox horizontal align={'center'} gap={8} style={{ minWidth: 0 }}>
             <AgentAvatar item={item} size={24} />
             <Text ellipsis style={{ minWidth: 0 }} weight={600}>
@@ -141,11 +120,15 @@ const SidebarMiniCard = memo<SidebarMiniCardProps>(({ item, onToggleSidebar }) =
             ) : null}
           </Flexbox>
           {description ? (
-            <Text className={styles.description} fontSize={12} type={'secondary'}>
+            <Text
+              className={stylex.props(styles.description).className}
+              fontSize={12}
+              type={'secondary'}
+            >
               {description}
             </Text>
           ) : null}
-          <span className={styles.actions}>
+          <span {...stylex.props(styles.actions)}>
             <ItemActions
               hideTrigger
               includeSidebarToggle
@@ -184,11 +167,11 @@ const SidebarAgentsSection = memo<SidebarAgentsSectionProps>(({ items, onToggleS
   );
 
   return (
-    <Flexbox className={styles.container} gap={12}>
+    <Flexbox className={stylex.props(styles.container).className} gap={12}>
       <Flexbox
         horizontal
         align={'center'}
-        className={styles.header}
+        className={stylex.props(styles.header).className}
         gap={8}
         justify={'space-between'}
         onClick={toggle}
@@ -215,7 +198,7 @@ const SidebarAgentsSection = memo<SidebarAgentsSectionProps>(({ items, onToggleS
         </Flexbox>
       </Flexbox>
       {!collapsed && (
-        <div className={styles.grid}>
+        <div {...stylex.props(styles.grid)}>
           {items.map((item) => (
             <SidebarMiniCard item={item} key={item.id} onToggleSidebar={onToggleSidebar} />
           ))}

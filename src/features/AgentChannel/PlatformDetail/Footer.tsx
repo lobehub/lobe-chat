@@ -1,7 +1,9 @@
 'use client';
 
-import { Alert, Button, createStaticStyles, Flexbox, Tag } from '@lobehub/ui';
+import { Alert, Button, Flexbox, Tag } from '@lobehub/ui';
 import { type FormInstance, useWatch } from '@lobehub/ui/form';
+import { cssVar } from '@lobehub/ui/stylex/cssVar.stylex';
+import * as stylex from '@stylexjs/stylex';
 import { RefreshCw, Trash2 } from 'lucide-react';
 import { memo, useEffect, useMemo, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
@@ -11,46 +13,45 @@ import type { SerializedPlatformDefinition } from '@/server/services/bot/platfor
 
 import type { ChannelFormValues, CurrentConfig, TestResult } from './index';
 
-const styles = createStaticStyles(({ css, cssVar }) => ({
-  actionBar: css`
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding-block-start: 16px;
-  `,
-  bottom: css`
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-
-    width: 100%;
-    max-width: 1024px;
-  `,
-  resultDetail: css`
-    font-family: monospace;
-    font-size: 12px;
-    color: ${cssVar.colorTextTertiary};
-    word-break: break-all;
-  `,
-  webhookBox: css`
-    overflow: hidden;
-    flex: 1;
-
-    height: ${cssVar.controlHeight};
-    padding-inline: 12px;
-    border: 1px solid ${cssVar.colorBorder};
-    border-radius: ${cssVar.borderRadius};
-
-    font-family: monospace;
-    font-size: 13px;
-    line-height: ${cssVar.controlHeight};
-    color: ${cssVar.colorTextSecondary};
-    text-overflow: ellipsis;
-    white-space: nowrap;
-
-    background: ${cssVar.colorFillQuaternary};
-  `,
-}));
+const styles = stylex.create({
+  actionBar: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingBlockStart: '16px',
+  },
+  bottom: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '16px',
+    width: '100%',
+    maxWidth: '1024px',
+  },
+  resultDetail: {
+    fontFamily: 'monospace',
+    fontSize: '12px',
+    color: cssVar.colorTextTertiary,
+    wordBreak: 'break-all',
+  },
+  webhookBox: {
+    overflow: 'hidden',
+    flex: '1',
+    height: cssVar.controlHeight,
+    paddingInline: '12px',
+    borderWidth: '1px',
+    borderStyle: 'solid',
+    borderColor: cssVar.colorBorder,
+    borderRadius: cssVar.borderRadius,
+    fontFamily: 'monospace',
+    fontSize: '13px',
+    lineHeight: cssVar.controlHeight,
+    color: cssVar.colorTextSecondary,
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+    backgroundColor: cssVar.colorFillQuaternary,
+    backgroundImage: 'none',
+  },
+});
 
 /**
  * Error body of a result banner: one readable sentence, with the raw platform
@@ -67,7 +68,7 @@ const ResultDetail = memo<{ detail?: string; hint: string }>(({ detail, hint }) 
       <Button size={'small'} type={'text'} onClick={() => setOpen((value) => !value)}>
         {open ? t('channel.resultDetail.hide') : t('channel.resultDetail.show')}
       </Button>
-      {open && <span className={styles.resultDetail}>{detail}</span>}
+      {open && <span {...stylex.props(styles.resultDetail)}>{detail}</span>}
     </Flexbox>
   );
 });
@@ -157,8 +158,8 @@ const Footer = memo<FooterProps>(
       : `${origin}/api/agent/webhooks/${platformId}`;
 
     return (
-      <div className={styles.bottom}>
-        <div className={styles.actionBar}>
+      <div {...stylex.props(styles.bottom)}>
+        <div {...stylex.props(styles.actionBar)}>
           {hasConfig ? (
             <Button
               danger
@@ -303,7 +304,7 @@ const Footer = memo<FooterProps>(
               <Tag>{'Event Subscription URL'}</Tag>
             </Flexbox>
             <Flexbox horizontal gap={8}>
-              <div className={styles.webhookBox}>{webhookUrl}</div>
+              <div {...stylex.props(styles.webhookBox)}>{webhookUrl}</div>
               <Button
                 onClick={() => {
                   navigator.clipboard.writeText(webhookUrl);
