@@ -3,6 +3,7 @@ import {
   ProviderCombine as LobeProviderCombine,
   ProviderIcon as LobeProviderIcon,
   providerMappings,
+  TypeSafeAI,
   Unsloth,
 } from '@lobehub/icons';
 /* eslint-enable no-restricted-imports */
@@ -17,6 +18,16 @@ if (
   !providerMappings.some(({ keywords }) => keywords.some((key) => key.toLowerCase() === 'unsloth'))
 ) {
   providerMappings.push({ Icon: Unsloth, keywords: ['unsloth'] });
+}
+
+/**
+ * @lobehub/icons 6.6 exports TypeSafeAI but omits it from the provider mapping.
+ * Map the product provider ID to the official artwork instead of the fallback plug avatar.
+ */
+if (
+  !providerMappings.some(({ keywords }) => keywords.some((key) => key.toLowerCase() === 'typesafe'))
+) {
+  providerMappings.push({ Icon: TypeSafeAI, keywords: ['typesafe'] });
 }
 
 // Do not turn these back into `export { ... }` re-exports: with rolldown's
