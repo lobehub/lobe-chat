@@ -1,7 +1,9 @@
 'use client';
 
 import type { AcceptanceCommentThread } from '@lobechat/types';
-import { Button, createStaticStyles, cssVar, Flexbox, Text } from '@lobehub/ui';
+import { Button, Flexbox, Text } from '@lobehub/ui';
+import { cssVar } from '@lobehub/ui/stylex/cssVar.stylex';
+import * as stylex from '@stylexjs/stylex';
 import { BadgeCheck, Undo2 } from 'lucide-react';
 import { nanoid } from 'nanoid';
 import { memo, useCallback, useMemo, useState } from 'react';
@@ -44,7 +46,7 @@ const COMPOSER_MIN_HEIGHT = 80;
 const SignInPrompt = memo(() => {
   const { t } = useTranslation('verify');
   return (
-    <Flexbox className={local.signInPrompt} gap={10}>
+    <Flexbox gap={10} {...stylex.props(local.signInPrompt)}>
       <Text weight={600}>{t('acceptance.comments.signInTitle')}</Text>
       <Text fontSize={13} type={'secondary'}>
         {t('acceptance.comments.signInDescription')}
@@ -63,39 +65,42 @@ const SignInPrompt = memo(() => {
 
 SignInPrompt.displayName = 'AcceptanceDiscussionSignInPrompt';
 
-const local = createStaticStyles(({ css }) => ({
-  composer: css`
-    margin-block: 12px 4px;
-  `,
-  empty: css`
-    padding-block: 16px;
-    font-size: 13px;
-    color: ${cssVar.colorTextTertiary};
-  `,
-  feed: css`
-    flex: 999 1 480px;
-    min-width: 0;
-  `,
-  round: css`
-    & + & {
-      margin-block-start: 28px;
-    }
-  `,
-  layout: css`
-    display: flex;
-    flex-wrap: wrap;
-    gap: 32px;
-    align-items: flex-start;
-  `,
-  signInPrompt: css`
-    padding-block: 16px;
-    padding-inline: 16px;
-    border: 1px solid ${cssVar.colorBorderSecondary};
-    border-radius: ${cssVar.borderRadiusLG};
-
-    background: ${cssVar.colorFillQuaternary};
-  `,
-}));
+const local = stylex.create({
+  composer: {
+    marginBlockStart: '12px',
+    marginBlockEnd: '4px',
+  },
+  empty: {
+    paddingBlock: '16px',
+    fontSize: '13px',
+    color: cssVar.colorTextTertiary,
+  },
+  feed: {
+    flexGrow: 999,
+    flexShrink: 1,
+    flexBasis: '480px',
+    minWidth: 0,
+  },
+  // Every round after the first (the old `& + &`).
+  roundSpaced: {
+    marginBlockStart: '28px',
+  },
+  layout: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    gap: '32px',
+    alignItems: 'flex-start',
+  },
+  signInPrompt: {
+    paddingBlock: '16px',
+    paddingInline: '16px',
+    borderWidth: '1px',
+    borderStyle: 'solid',
+    borderColor: cssVar.colorBorderSecondary,
+    borderRadius: cssVar.borderRadiusLG,
+    backgroundColor: cssVar.colorFillQuaternary,
+  },
+});
 
 const entryCommentIds = (entry: DiscussionEntry): string[] => {
   if (entry.kind === 'message') return [entry.comment.id];
@@ -232,7 +237,7 @@ const AcceptanceDiscussion = memo<{ onOpenChecks?: () => void }>(({ onOpenChecks
             </>
           }
         >
-          {entry.comment && <div className={entryStyles.quote}>{entry.comment}</div>}
+          {entry.comment && <div {...stylex.props(entryStyles.quote)}>{entry.comment}</div>}
         </TimelineEvent>
       );
     }
@@ -244,7 +249,7 @@ const AcceptanceDiscussion = memo<{ onOpenChecks?: () => void }>(({ onOpenChecks
           key={`round-reject-${entry.roundIndex}`}
           text={t('acceptance.comments.roundRejected', { round: entry.roundIndex })}
         >
-          {entry.comment && <div className={entryStyles.quote}>{entry.comment}</div>}
+          {entry.comment && <div {...stylex.props(entryStyles.quote)}>{entry.comment}</div>}
         </TimelineEvent>
       );
     if (entry.kind === 'approval') {
@@ -282,8 +287,8 @@ const AcceptanceDiscussion = memo<{ onOpenChecks?: () => void }>(({ onOpenChecks
   };
 
   const reply = canComment ? (
-    <Flexbox className={local.composer}>
-      <Flexbox className={styles.composerBlock}>
+    <Flexbox {...stylex.props(local.composer)}>
+      <Flexbox {...stylex.props(styles.composerBlock)}>
         <CommentComposer
           borderless
           minHeight={COMPOSER_MIN_HEIGHT}
@@ -315,10 +320,10 @@ const AcceptanceDiscussion = memo<{ onOpenChecks?: () => void }>(({ onOpenChecks
   const ungrouped = sections.length <= 1 && (sections[0]?.roundIndex ?? null) === null;
 
   return (
-    <div className={local.layout}>
-      <Flexbox className={local.feed}>
+    <div {...stylex.props(local.layout)}>
+      <Flexbox {...stylex.props(local.feed)}>
         {timeline.length === 0 && (
-          <span className={local.empty}>{t('acceptance.comments.empty')}</span>
+          <span {...stylex.props(local.empty)}>{t('acceptance.comments.empty')}</span>
         )}
         {ungrouped ? (
           <>
@@ -330,7 +335,7 @@ const AcceptanceDiscussion = memo<{ onOpenChecks?: () => void }>(({ onOpenChecks
             const key = sectionKey(section);
             const open = toggled[key] ?? (index === 0 || section === anchoredSection);
             return (
-              <div className={local.round} key={key}>
+              <div key={key} {...stylex.props(index > 0 && local.roundSpaced)}>
                 <RoundSection
                   open={open}
                   section={section}

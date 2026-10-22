@@ -1,6 +1,7 @@
 'use client';
 
-import { Button, createStaticStyles, Icon } from '@lobehub/ui';
+import { Button, Icon } from '@lobehub/ui';
+import * as stylex from '@stylexjs/stylex';
 import { ChevronRight } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useSearchParams } from 'react-router';
@@ -11,13 +12,9 @@ import { checksForTurn } from '../turnChecks';
 import { useAcceptanceBundle } from '../useAcceptanceBundle';
 import { readAcceptanceTurn } from '../useAcceptanceTurn';
 
-const styles = createStaticStyles(({ css }) => ({
-  button: css`
-    @media (width <= 767px) {
-      display: none;
-    }
-  `,
-}));
+const styles = stylex.create({
+  button: { display: { 'default': null, '@media (width <= 767px)': 'none' } },
+});
 
 const AcceptanceEnterFocus = () => {
   const { t } = useTranslation('verify');
@@ -30,7 +27,7 @@ const AcceptanceEnterFocus = () => {
 
   return (
     <Button
-      className={styles.button}
+      className={stylex.props(styles.button).className}
       icon={<Icon icon={ChevronRight} size={14} />}
       size={'small'}
       style={{ alignSelf: 'center' }}
