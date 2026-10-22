@@ -59,7 +59,7 @@ const ProjectSidebarContent = memo(() => {
     <SideBarLayout
       header={header}
       body={
-        <Flexbox gap={8} paddingInline={4}>
+        <Flexbox gap={1} paddingInline={4}>
           <NavItem
             active={pathname === projectTasksPath}
             icon={ListTodoIcon}
