@@ -65,9 +65,21 @@ class EnvironmentService {
   setEnvironmentVisibility = async (params: { id: string; visibility: EnvironmentVisibility }) =>
     lambdaClient.environment.setEnvironmentVisibility.mutate(params);
 
-  /** Refused while folders are still initialized from it — those go first. */
-  removeEnvironment = async (params: { id: string }) =>
-    lambdaClient.environment.removeEnvironment.mutate(params);
+  /**
+   * The definition alone, when nothing was ever built from it. One that still
+   * has copies from before environments became initializers is removed with
+   * them through the drive route, which can reach their snapshots — the page
+   * has no other way to delete a copy.
+   */
+  removeEnvironment = async (params: { id: string }) => {
+    try {
+      return await lambdaClient.environment.removeEnvironment.mutate(params);
+    } catch (error) {
+      if ((error as { message?: string })?.message !== 'ENVIRONMENT_HAS_INSTANCES') throw error;
+
+      return lambdaClient.sandboxStorage.removeEnvironment.mutate(params);
+    }
+  };
 
   /**
    * Repositories this account can build an environment from. Answers

@@ -235,6 +235,28 @@ describe('environment definitions', () => {
     expect(await environmentExists(environment.id)).toBe(false);
   });
 
+  it('removes an environment with its copies through the released route', async () => {
+    // Released clients delete an environment with its only copy in one call,
+    // and the current page has no way to delete a copy at all.
+    const { environment, instance } = await initializeFolder(ownerId, 'atlas');
+
+    await drive().removeEnvironment({ id: environment.id });
+
+    expect(plane.deleteInstance).toHaveBeenCalledWith({ name: instance.id, topicId: undefined });
+    expect(await instancesOf(environment.id)).toHaveLength(0);
+    expect(await environmentExists(environment.id)).toBe(false);
+  });
+
+  it('keeps the environment and its copy when the snapshot cannot be dropped', async () => {
+    const { environment } = await initializeFolder(ownerId, 'atlas');
+    plane.deleteInstance.mockRejectedValue(new Error('a run still holds it'));
+
+    await expect(drive().removeEnvironment({ id: environment.id })).rejects.toBeTruthy();
+
+    expect(await instancesOf(environment.id)).toHaveLength(1);
+    expect(await environmentExists(environment.id)).toBe(true);
+  });
+
   it('refuses an environment a project still uses', async () => {
     const created = await definitions().createEnvironment({ name: 'Bound' });
     const [agent] = await serverDB.insert(agents).values({ userId: ownerId }).returning();

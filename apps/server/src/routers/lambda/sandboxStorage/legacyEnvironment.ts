@@ -2,14 +2,15 @@ import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
 import { router } from '@/libs/trpc/lambda';
+import { forgetDriveFolders } from '@/server/services/sandbox';
 
 import { configurationSchema } from '../_schema/environment';
 import { environmentProcedures } from '../environment';
-import { rethrowDuplicateEnvironmentName } from './constraintErrors';
-import { driveForEnvironment } from './driveScope';
-import { createDerivedInstance } from './instanceOperations';
+import { rethrowDuplicateEnvironmentName, rethrowEnvironmentInUse } from './constraintErrors';
+import { driveForEnvironment, resolveInstanceDrive } from './driveScope';
+import { createDerivedInstance, deleteInstanceSnapshot } from './instanceOperations';
 import { instanceProcedure } from './procedures';
-import { nameSchema, visibilitySchema } from './schemas';
+import { idSchema, nameSchema, visibilitySchema } from './schemas';
 
 /**
  * `sandboxStorage.createEnvironment` as released, for clients from before the
@@ -62,11 +63,46 @@ const legacyCreateEnvironment = instanceProcedure
   });
 
 /**
+ * `sandboxStorage.removeEnvironment` as released: the environment goes with the
+ * copies built from it, their snapshots and what their builds left on the
+ * drive — a file someone put in such a folder themselves stays. Released
+ * clients offer no other way to delete a copy, and the current page shows
+ * none, so this is how an environment that still has one is removed.
+ *
+ * Each copy as `removeInstance` removes it: snapshot first, row after, so a
+ * snapshot the execution plane refuses to drop (a run still holds it) stops
+ * the delete with nothing lost.
+ */
+const legacyRemoveEnvironment = instanceProcedure
+  .input(z.object({ id: idSchema }))
+  .mutation(async ({ ctx, input }) => {
+    // Ownership before anything reaches the execution plane: a member who can
+    // see a published environment must not get its snapshots deleted on the
+    // way to being refused the row.
+    const environment = await ctx.environmentModel.findOwnedById(input.id);
+    if (!environment) throw new TRPCError({ code: 'NOT_FOUND', message: 'Environment not found' });
+
+    const instances = await ctx.instanceModel.query({ environmentId: environment.id });
+    for (const instance of instances.filter((entry) => entry.kind === 'sandbox')) {
+      const { claim, client } = await resolveInstanceDrive(ctx, instance);
+      await deleteInstanceSnapshot(client, instance.id);
+      forgetDriveFolders(claim.key);
+      await ctx.instanceModel.delete(instance.id);
+    }
+
+    const removed = await ctx.environmentModel.delete(input.id).catch(rethrowEnvironmentInUse);
+    if (!removed) throw new TRPCError({ code: 'NOT_FOUND', message: 'Environment not found' });
+
+    return removed;
+  });
+
+/**
  * The environment procedures under their released `sandboxStorage` paths —
- * the same procedures, not copies — with `createEnvironment` keeping its
- * released input and answer.
+ * the same procedures, not copies — with `createEnvironment` and
+ * `removeEnvironment` keeping their released input and behavior.
  */
 export const legacyEnvironmentRouter = router({
   ...environmentProcedures,
   createEnvironment: legacyCreateEnvironment,
+  removeEnvironment: legacyRemoveEnvironment,
 });

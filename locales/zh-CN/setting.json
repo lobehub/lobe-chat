@@ -803,7 +803,7 @@
   "environments.namePlaceholder": "环境名称",
   "environments.refresh": "刷新",
   "environments.remove": "删除环境",
-  "environments.removeConfirmContent": "它的配置和环境变量会被删除，无法恢复。已经用它初始化过的文件夹会保留其中的文件。",
+  "environments.removeConfirmContent": "它的配置和环境变量会被删除，无法恢复。用它初始化过的文件夹会保留其中的文件；旧版本构建的副本会一并删除。",
   "environments.removeConfirmTitle": "删除环境 {{name}}？",
   "environments.removeFailed": "删除环境失败",
   "environments.saveFailed": "无法保存这次修改",

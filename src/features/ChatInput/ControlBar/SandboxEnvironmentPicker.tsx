@@ -96,7 +96,9 @@ const SandboxEnvironmentPicker = memo<SandboxEnvironmentPickerProps>(({ onChange
 
   const select = async (environmentId: string | undefined) => {
     setOpen(false);
-    await onChange({ ...value, environmentId });
+    // A legacy copy runs what its build made and is never initialized, so
+    // picking an environment leaves it for the folder it lives in.
+    await onChange({ ...value, environmentId, instanceId: undefined });
   };
 
   const content = (

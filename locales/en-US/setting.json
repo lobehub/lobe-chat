@@ -803,7 +803,7 @@
   "environments.namePlaceholder": "Environment name",
   "environments.refresh": "Refresh",
   "environments.remove": "Delete environment",
-  "environments.removeConfirmContent": "Its specification and variables are deleted and cannot be recovered. Folders it already initialized keep their files.",
+  "environments.removeConfirmContent": "Its specification and variables are deleted and cannot be recovered. Folders it initialized keep their files; copies built by an earlier version are removed with it.",
   "environments.removeConfirmTitle": "Delete environment {{name}}?",
   "environments.removeFailed": "Could not delete this environment",
   "environments.saveFailed": "Could not save this change",
