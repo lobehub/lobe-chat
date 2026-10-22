@@ -1,6 +1,8 @@
 import { acceptanceIdFromReviewResource } from '@lobechat/const';
 import { TRPCError } from '@trpc/server';
 import debug from 'debug';
+import type { JSONWebKeySet, JWK, JWK_RSA_Public } from 'jose';
+import { calculateJwkThumbprint } from 'jose';
 
 import { authEnv } from '@/envs/auth';
 
@@ -51,7 +53,22 @@ export const getJWKS = (): object => {
   }
 };
 
-const getVerificationKey = async () => {
+const isRsaSigningKey = (key: JWK): key is JWK_RSA_Public =>
+  key.alg === 'RS256' &&
+  key.kty === 'RSA' &&
+  typeof key.e === 'string' &&
+  typeof key.n === 'string';
+
+const toPublicRsaKey = async (key: JWK_RSA_Public): Promise<JWK_RSA_Public> => ({
+  alg: 'RS256',
+  e: key.e,
+  kid: key.kid ?? (await calculateJwkThumbprint(key)),
+  kty: 'RSA',
+  n: key.n,
+  ...(key.use ? { use: key.use } : {}),
+});
+
+const getVerificationKeySet = async () => {
   try {
     const jwksString = getJwksKeyString();
 
@@ -59,37 +76,25 @@ const getVerificationKey = async () => {
       throw new Error('JWKS_KEY environment variable is not set');
     }
 
-    const jwks = JSON.parse(jwksString);
+    const jwks = JSON.parse(jwksString) as JSONWebKeySet;
 
     if (!jwks.keys || !Array.isArray(jwks.keys) || jwks.keys.length === 0) {
       throw new Error('Invalid JWKS format: missing or empty keys array');
     }
 
-    const privateRsaKey = jwks.keys.find((key: any) => key.alg === 'RS256' && key.kty === 'RSA');
-    if (!privateRsaKey) {
+    const publicKeys = await Promise.all(jwks.keys.filter(isRsaSigningKey).map(toPublicRsaKey));
+    if (publicKeys.length === 0) {
       throw new Error('No RSA key with RS256 algorithm found in JWKS');
     }
 
-    // Create a “clean” JWK object containing only public key components.
-    // The key fields of an RSA public key are kty, n, e. Others like kid, alg, use are also public.
-    const publicKeyJwk = {
-      alg: privateRsaKey.alg,
-      e: privateRsaKey.e,
-      kid: privateRsaKey.kid,
-      kty: privateRsaKey.kty,
-      n: privateRsaKey.n,
-      use: privateRsaKey.use,
-    };
+    const publicJwks = { keys: publicKeys };
+    const { createLocalJWKSet, importJWK } = await import('jose');
 
-    // Remove any undefined fields to keep the object clean
-    Object.keys(publicKeyJwk).forEach(
-      (key) => (publicKeyJwk as any)[key] === undefined && delete (publicKeyJwk as any)[key],
-    );
+    // Validate configuration before token verification so a malformed JWK remains an
+    // infrastructure error (500) instead of being misreported as invalid user auth (401).
+    await Promise.all(publicKeys.map((key) => importJWK(key, 'RS256')));
 
-    const { importJWK } = await import('jose');
-
-    // Now, in any environment, `importJWK` will correctly identify this object as a public key.
-    return await importJWK(publicKeyJwk, 'RS256');
+    return createLocalJWKSet(publicJwks);
   } catch (error) {
     log('Failed to get JWKS public key: %O', error);
     throw new Error(`JWKS_KEY public key retrieval failed: ${(error as Error).message}`, {
@@ -111,11 +116,11 @@ export const validateOIDCJWT = async (token: string) => {
   // plain Error so upstream middleware maps them to 500 and triggers ops
   // alerts — treating them as 401 would incorrectly ask clients to re-auth
   // while the real problem is server-side.
-  const publicKey = await getVerificationKey();
+  const publicKeySet = await getVerificationKeySet();
 
   try {
     const { jwtVerify } = await import('jose');
-    const { payload } = await jwtVerify(token, publicKey, {
+    const { payload } = await jwtVerify(token, publicKeySet, {
       algorithms: ['RS256'],
     });
 
@@ -173,9 +178,9 @@ export const validateOIDCJWT = async (token: string) => {
 };
 
 export const verifyAcceptanceReviewJWT = async (token: string) => {
-  const publicKey = await getVerificationKey();
+  const publicKeySet = await getVerificationKeySet();
   const { jwtVerify } = await import('jose');
-  const { payload } = await jwtVerify(token, publicKey, { algorithms: ['RS256'] });
+  const { payload } = await jwtVerify(token, publicKeySet, { algorithms: ['RS256'] });
   const acceptanceId = acceptanceIdFromReviewResource(payload.aud);
   if (!isAcceptanceReviewClient(payload.client_id as string) || !acceptanceId || !payload.sub)
     throw new Error('Not an acceptance review token');
