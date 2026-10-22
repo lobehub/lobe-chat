@@ -687,6 +687,80 @@ describe('createOpenAICompatibleImage', () => {
     });
   });
 
+  describe('reference images', () => {
+    const mockReferenceFetch = () => {
+      const mockArrayBuffer = new Uint8Array([0xff, 0xd8, 0xff, 0xe0]).buffer;
+      global.fetch = vi.fn().mockResolvedValue({
+        arrayBuffer: async () => mockArrayBuffer,
+        headers: {
+          get: (name: string) => (name === 'content-type' ? 'image/jpeg' : null),
+        },
+        ok: true,
+      } as any);
+    };
+
+    it('sends both imageUrl and imageUrls to the images edit API in order without duplicates', async () => {
+      mockReferenceFetch();
+      vi.mocked(mockClient.images.edit).mockResolvedValue({
+        data: [{ b64_json: 'mergedReferences' }],
+      } as any);
+
+      const result = await createOpenAICompatibleImage(
+        mockClient,
+        {
+          model: 'gpt-image-2',
+          params: {
+            imageUrl: 'https://example.com/a.jpg',
+            imageUrls: ['https://example.com/b.jpg', 'https://example.com/a.jpg'],
+            prompt: 'Merge these images',
+          },
+        },
+        'openai',
+      );
+
+      expect(result.imageUrl).toBe('data:image/png;base64,mergedReferences');
+      expect(vi.mocked(global.fetch).mock.calls.map(([url]) => url)).toEqual([
+        'https://example.com/a.jpg',
+        'https://example.com/b.jpg',
+      ]);
+      const options = vi.mocked(mockClient.images.edit).mock.calls[0][0] as any;
+      expect(options.image).toHaveLength(2);
+      expect(options).not.toHaveProperty('imageUrl');
+      expect(options).not.toHaveProperty('imageUrls');
+    });
+
+    it('sends imageUrls references to :image chat models in order', async () => {
+      const first = 'data:image/png;base64,Zmlyc3Q=';
+      const second = 'data:image/jpeg;base64,c2Vjb25k';
+      vi.spyOn(uriParserModule, 'parseDataUri').mockImplementation((url: string) => {
+        const [, mimeType, base64] = url.match(/^data:([^;]+);base64,(.+)$/)!;
+        return { base64, mimeType, type: 'base64' } as any;
+      });
+      vi.mocked(mockClient.chat.completions.create).mockResolvedValue({
+        choices: [
+          { message: { images: [{ image_url: { url: 'data:image/png;base64,chatResult' } }] } },
+        ],
+      } as any);
+
+      const result = await createOpenAICompatibleImage(
+        mockClient,
+        {
+          model: 'google/gemini-2.5-flash-image:image',
+          params: { imageUrls: [first, second], prompt: 'Merge these images' },
+        },
+        'openrouter',
+      );
+
+      expect(result.imageUrl).toBe('data:image/png;base64,chatResult');
+      const request = vi.mocked(mockClient.chat.completions.create).mock.calls[0][0] as any;
+      expect(request.messages[0].content).toEqual([
+        { text: 'Merge these images', type: 'text' },
+        { image_url: { url: first }, type: 'image_url' },
+        { image_url: { url: second }, type: 'image_url' },
+      ]);
+    });
+  });
+
   describe('image mode - response format handling', () => {
     it('should handle URL format response instead of base64', async () => {
       const mockImageUrl = 'https://oaidalleapiprodscus.blob.core.windows.net/generated/image.png';

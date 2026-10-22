@@ -1,6 +1,5 @@
 import { cleanObject } from '@lobechat/utils/object';
 import createDebug from 'debug';
-import type { RuntimeImageGenParamsValue } from 'model-bank';
 import type OpenAI from 'openai';
 
 import type {
@@ -24,6 +23,23 @@ interface CreateOpenAICompatibleImageOptions {
 }
 
 /**
+ * Merge `imageUrl` and `imageUrls` into one ordered, de-duplicated reference list.
+ *
+ * Callers such as the generateImage tool can send both fields; reading only one of them would
+ * silently generate without the other references while still billing the generation.
+ */
+const collectReferenceUrls = ({
+  imageUrl,
+  imageUrls,
+}: Pick<CreateImagePayload['params'], 'imageUrl' | 'imageUrls'>): string[] => [
+  ...new Set(
+    [imageUrl, ...(imageUrls ?? [])].filter(
+      (url): url is string => typeof url === 'string' && url.trim() !== '',
+    ),
+  ),
+];
+
+/**
  * Generate images using traditional OpenAI images API (DALL-E, etc.)
  */
 async function generateByImageMode(
@@ -38,21 +54,12 @@ async function generateByImageMode(
 
   log('Creating image with model: %s and params: %O', requestModel, params);
 
-  // Map parameter names, mapping imageUrls to image
-  const paramsMap = new Map<RuntimeImageGenParamsValue, string>([
-    ['imageUrls', 'image'],
-    ['imageUrl', 'image'],
-  ]);
-  const userInput: Record<string, any> = Object.fromEntries(
-    Object.entries(params).map(([key, value]) => [
-      paramsMap.get(key as RuntimeImageGenParamsValue) ?? key,
-      value,
-    ]),
-  );
-  // unify image input to array
-  if (typeof userInput.image === 'string' && userInput.image.trim() !== '') {
-    userInput.image = [userInput.image];
-  }
+  // Both reference fields map to the API's `image` input, so merge them instead of letting one win.
+  const userInput: Record<string, any> = { ...params };
+  delete userInput.imageUrl;
+  delete userInput.imageUrls;
+  const referenceUrls = collectReferenceUrls(params);
+  if (referenceUrls.length > 0) userInput.image = referenceUrls;
 
   // https://platform.openai.com/docs/api-reference/images/createEdit
   const isImageEdit = Array.isArray(userInput.image) && userInput.image.length > 0;
@@ -195,21 +202,22 @@ async function generateByChatModel(
     },
   ];
 
-  // Add image for editing mode if provided
-  if (params.imageUrl && params.imageUrl !== null) {
-    log('Processing image URL for editing mode: %s', params.imageUrl);
-    try {
-      const processedImageUrl = await processImageUrlForChat(params.imageUrl);
-      content.push({
-        image_url: {
-          url: processedImageUrl,
-        },
-        type: 'image_url',
-      });
-      log('Successfully processed image URL for chat input');
-    } catch (error) {
-      throw new Error(`Failed to process image URL: ${error}`, { cause: error });
-    }
+  // `:image` models declare only `imageUrls` (CHAT_MODEL_IMAGE_GENERATION_PARAMS); `imageUrl` is
+  // still read for callers that send a single reference.
+  const referenceUrls = collectReferenceUrls(params);
+  // Download references concurrently; Promise.all keeps their order for the message content.
+  const processedImageUrls = await Promise.all(
+    referenceUrls.map(async (imageUrl) => {
+      log('Processing image URL for editing mode: %s', imageUrl);
+      try {
+        return await processImageUrlForChat(imageUrl);
+      } catch (error) {
+        throw new Error(`Failed to process image URL: ${error}`, { cause: error });
+      }
+    }),
+  );
+  for (const url of processedImageUrls) {
+    content.push({ image_url: { url }, type: 'image_url' });
   }
 
   // Call chat completion API
