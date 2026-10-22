@@ -27,7 +27,7 @@ export const waitForConnectorOAuth = async (
     const oauth = ensureElectronIpc().connectorOAuth;
     const requestId = crypto.randomUUID();
     const onAbort = () => {
-      oauth.cancel({ requestId }).catch((error) => {
+      oauth.cancel({ requestId }).catch((error: unknown) => {
         console.error('Failed to cancel native connector authorization', error);
       });
     };
