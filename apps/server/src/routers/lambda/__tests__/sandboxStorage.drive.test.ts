@@ -257,6 +257,26 @@ describe('environment definitions', () => {
     expect(await environmentExists(environment.id)).toBe(true);
   });
 
+  it('leaves every copy whole when a later snapshot cannot be dropped', async () => {
+    // Copy by copy: the first is gone with its snapshot, the second keeps both.
+    const { environment, instance: first } = await initializeFolder(ownerId, 'atlas');
+    const second = await drive(ownerId).createInstance({
+      environmentId: environment.id,
+      name: 'atlas-2',
+      workingDirectory: 'atlas-2',
+    });
+    plane.deleteInstance.mockImplementation(async ({ name }: { name: string }) => {
+      if (name === second.id) throw new Error('a run still holds it');
+    });
+
+    await expect(drive().removeEnvironment({ id: environment.id })).rejects.toBeTruthy();
+
+    const left = await instancesOf(environment.id);
+    expect(left.map((entry) => entry.id)).toEqual([second.id]);
+    expect(left.map((entry) => entry.id)).not.toContain(first.id);
+    expect(await environmentExists(environment.id)).toBe(true);
+  });
+
   it('loses no copy when a project still uses the environment', async () => {
     // The project's reference refuses the delete; the copy's row and its
     // snapshot must both still be there afterwards.

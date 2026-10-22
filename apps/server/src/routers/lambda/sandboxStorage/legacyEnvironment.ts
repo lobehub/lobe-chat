@@ -1,9 +1,8 @@
 import { TRPCError } from '@trpc/server';
-import pMap from 'p-map';
+import { eq } from 'drizzle-orm';
 import { z } from 'zod';
 
-import { EnvironmentModel } from '@/database/models/environment';
-import { EnvironmentInstanceModel } from '@/database/models/environmentInstance';
+import { projectEnvironments } from '@/database/schemas';
 import { router } from '@/libs/trpc/lambda';
 import { forgetDriveFolders } from '@/server/services/sandbox';
 
@@ -72,7 +71,12 @@ const legacyCreateEnvironment = instanceProcedure
  * clients offer no other way to delete a copy, and the current page shows
  * none, so this is how an environment that still has one is removed.
  *
- * All or nothing: see the transaction below.
+ * Copy by copy, each as `removeInstance` removes one: its snapshot, then its
+ * row. A snapshot the execution plane will not drop — a run still holds it —
+ * stops there: the copies before it are gone whole, the rest are untouched,
+ * and deleting again finishes the job. No copy is ever left as a row whose
+ * snapshot is gone. A project still using the environment is refused first,
+ * before anything is touched, since it would refuse the last step anyway.
  */
 const legacyRemoveEnvironment = instanceProcedure
   .input(z.object({ id: idSchema }))
@@ -83,39 +87,27 @@ const legacyRemoveEnvironment = instanceProcedure
     const environment = await ctx.environmentModel.findOwnedById(input.id);
     if (!environment) throw new TRPCError({ code: 'NOT_FOUND', message: 'Environment not found' });
 
+    const [projectLink] = await ctx.serverDB
+      .select({ projectId: projectEnvironments.projectId })
+      .from(projectEnvironments)
+      .where(eq(projectEnvironments.environmentId, environment.id))
+      .limit(1);
+    if (projectLink) {
+      throw new TRPCError({ code: 'CONFLICT', message: 'ENVIRONMENT_IN_PROJECT' });
+    }
+
     const instances = (await ctx.instanceModel.query({ environmentId: environment.id })).filter(
       (entry) => entry.kind === 'sandbox',
     );
-    const drives = await pMap(
-      instances,
-      async (instance) => ({ instance, ...(await resolveInstanceDrive(ctx, instance)) }),
-      { concurrency: 5 },
-    );
+    for (const instance of instances) {
+      const { claim, client } = await resolveInstanceDrive(ctx, instance);
+      await deleteInstanceSnapshot(client, instance.id);
+      forgetDriveFolders(claim.key);
+      await ctx.instanceModel.delete(instance.id).catch(rethrowEnvironmentInUse);
+    }
 
-    // As released: the rows in one transaction, the snapshots dropped last
-    // and inside it. Anything that refuses — a project still using the
-    // environment, a run still holding a snapshot — rolls the rows back with
-    // nothing lost; only a commit failing after the snapshots are gone leaves
-    // rows with nothing behind them, and deleting again finishes the job.
-    const removed = await ctx.serverDB.transaction(async (tx) => {
-      const workspaceId = ctx.workspaceId ?? undefined;
-      const instanceModel = new EnvironmentInstanceModel(tx, ctx.userId, workspaceId);
-      for (const { instance } of drives) {
-        await instanceModel.delete(instance.id).catch(rethrowEnvironmentInUse);
-      }
-
-      const row = await new EnvironmentModel(tx, ctx.userId, workspaceId)
-        .delete(input.id)
-        .catch(rethrowEnvironmentInUse);
-      if (!row) throw new TRPCError({ code: 'NOT_FOUND', message: 'Environment not found' });
-
-      for (const { client, instance } of drives) {
-        await deleteInstanceSnapshot(client, instance.id);
-      }
-
-      return row;
-    });
-    for (const { claim } of drives) forgetDriveFolders(claim.key);
+    const removed = await ctx.environmentModel.delete(input.id).catch(rethrowEnvironmentInUse);
+    if (!removed) throw new TRPCError({ code: 'NOT_FOUND', message: 'Environment not found' });
 
     return removed;
   });
