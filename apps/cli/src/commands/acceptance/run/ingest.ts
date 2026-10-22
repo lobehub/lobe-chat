@@ -381,20 +381,6 @@ export async function ingestReportAction(
     );
     process.exit(1);
   }
-  // An acceptance named by id skips `ensure`, so apply its precedence here: a
-  // `--project` files an ungrouped acceptance, while the repository's default
-  // only fills a standalone one — a task or conversation defers to its own
-  // project. Placed after the duplicate check so a round that publishes
-  // nothing writes nothing.
-  if (
-    requestedAcceptanceId &&
-    project &&
-    !acceptance.projectId &&
-    (project.source === 'flag' || acceptance.subjectType === 'standalone')
-  ) {
-    await client.acceptance.setProject.mutate({ id: acceptance.id, projectId: project.id });
-    acceptance = { ...acceptance, projectId: project.id };
-  }
   warnIfFiledElsewhere(project, acceptance);
   // The in-app conversation that ran this harness, if any (env-supplied).
   // Strictly the authoring conversation. `--operation` names the Agent Run
@@ -424,6 +410,20 @@ export async function ingestReportAction(
       '  Retry only failed evidence with its retryArgs, or publish a new round without --operation.',
     );
     process.exit(1);
+  }
+  // An acceptance named by id skips `ensure`, so apply its precedence here: a
+  // `--project` files an ungrouped acceptance, while the repository's default
+  // only fills a standalone one — a task or conversation defers to its own
+  // project, which the server files when the round attaches. Placed after
+  // every rejection guard so a round that publishes nothing writes nothing.
+  if (
+    requestedAcceptanceId &&
+    project &&
+    !acceptance.projectId &&
+    (project.source === 'flag' || acceptance.subjectType === 'standalone')
+  ) {
+    await client.acceptance.setProject.mutate({ id: acceptance.id, projectId: project.id });
+    acceptance = { ...acceptance, projectId: project.id };
   }
   const run = await client.verify.createRun.mutate({
     context,
@@ -654,7 +654,6 @@ export async function ingestReportAction(
         missingEvidence,
         origin,
         planItems: plan?.length ?? 0,
-        projectId: acceptance.projectId ?? null,
         proposalPosted,
         publicationStatus: partial ? 'partial' : 'complete',
         pullRequest,

@@ -213,6 +213,26 @@ export class AcceptanceService {
     return this.attachResolvedRun(runId, acceptance);
   };
 
+  /**
+   * File an ungrouped acceptance under the project its subject implies when a
+   * round lands. Appending by acceptance id skips `ensureForSubject`, so an
+   * aggregate created before its subject carried a project would otherwise
+   * stay ungrouped on every re-verification. Best effort: filing never blocks
+   * a round.
+   */
+  private fileUnderSubjectProject = async (acceptance: AcceptanceItem) => {
+    try {
+      const projectId = await resolveSubjectProjectId(
+        this.deps,
+        acceptance.subjectType,
+        acceptance.subjectId,
+      );
+      if (projectId) await this.acceptanceModel.fillProject(acceptance.id, projectId);
+    } catch (error) {
+      log('could not file acceptance %s under its subject project: %O', acceptance.id, error);
+    }
+  };
+
   private attachResolvedRun = async (
     runId: string,
     acceptance: AcceptanceItem,
@@ -237,6 +257,7 @@ export class AcceptanceService {
     }
 
     await assertPlanLeavesAcceptedChecksAlone(this.deps, existing, acceptanceId);
+    if (!acceptance.projectId) await this.fileUnderSubjectProject(acceptance);
 
     // A round that is still only planned has nothing to preserve: the incoming
     // run folds into it instead of pushing the ledger to yet another number.

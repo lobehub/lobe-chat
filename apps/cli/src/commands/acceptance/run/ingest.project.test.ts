@@ -24,7 +24,7 @@ const notFound = () =>
 
 describe('lh acceptance run ingest — project filing', () => {
   const h = usePublicationHarness();
-  const { client, result, run } = h;
+  const { client, run } = h;
 
   /** The report directory doubles as the repository root its adapter lives in. */
   const declareProject = async (config: unknown) => {
@@ -59,7 +59,6 @@ describe('lh acceptance run ingest — project filing', () => {
     expect(client.acceptance.ensure.mutate).toHaveBeenCalledWith(
       expect.objectContaining({ fallbackProjectId: 'prj_lobe' }),
     );
-    expect(result().projectId).toBe('prj_lobe');
   });
 
   it("stays quiet when the subject's own project outranks the declared one", async () => {
@@ -76,7 +75,6 @@ describe('lh acceptance run ingest — project filing', () => {
     expect(vi.mocked(log.warn)).not.toHaveBeenCalledWith(
       expect.stringContaining('already filed under another project'),
     );
-    expect(result().projectId).toBe('prj_task');
   });
 
   it('lets --project override the repository declaration', async () => {
@@ -131,12 +129,12 @@ describe('lh acceptance run ingest — project filing', () => {
   });
 
   describe('with --acceptance', () => {
-    const existing = (projectId: string | null, subjectType = 'standalone') =>
+    const existing = (projectId: string | null, subjectType = 'standalone', status = 'delivered') =>
       client.acceptance.getBundle.query.mockResolvedValue({
         acceptance: {
           id: 'acceptance-1',
           projectId,
-          status: 'delivered',
+          status,
           subjectId: `${subjectType}-1`,
           subjectType,
           workspaceId: null,
@@ -154,7 +152,6 @@ describe('lh acceptance run ingest — project filing', () => {
         id: 'acceptance-1',
         projectId: 'prj_lobe',
       });
-      expect(result().projectId).toBe('prj_lobe');
     });
 
     it("files an ungrouped standalone acceptance under the repository's project", async () => {
@@ -178,6 +175,21 @@ describe('lh acceptance run ingest — project filing', () => {
       client.project.find.query.mockResolvedValue({ data: { id: 'prj_lobe', name: 'LobeHub' } });
 
       await run('ingest', h.dir, '--acceptance', 'acceptance-1', '--json');
+
+      expect(client.acceptance.setProject.mutate).not.toHaveBeenCalled();
+    });
+
+    it('writes nothing when the acceptance is already accepted', async () => {
+      await writeReport();
+      existing(null, 'standalone', 'accepted');
+      client.project.find.query.mockResolvedValue({ data: { id: 'prj_lobe', name: 'LobeHub' } });
+      vi.spyOn(process, 'exit').mockImplementation((() => {
+        throw new Error('exit');
+      }) as never);
+
+      await expect(
+        run('ingest', h.dir, '--acceptance', 'acceptance-1', '--project', 'LOBE', '--json'),
+      ).rejects.toThrow('exit');
 
       expect(client.acceptance.setProject.mutate).not.toHaveBeenCalled();
     });
@@ -213,7 +225,6 @@ describe('lh acceptance run ingest — project filing', () => {
       expect(vi.mocked(log.warn)).toHaveBeenCalledWith(
         expect.stringContaining('already filed under another project'),
       );
-      expect(result().projectId).toBe('prj_elsewhere');
     });
   });
 });
