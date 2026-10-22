@@ -160,7 +160,8 @@ export interface OperationMetadata {
   /**
    * External heterogeneous producer (e.g. `claude-code`) the server dispatched
    * this Gateway run to. `null` denotes the native AgentRuntime; `undefined`
-   * means an older server or topic marker did not report it.
+   * means an older server or topic marker did not report it, so it may still
+   * be an external producer.
    * @default undefined
    */
   heteroType?: string | null;

@@ -339,18 +339,25 @@ const getRunningQueueBlockingOperationIds =
  * (`heteroType`) drains it in `heteroFinish`. Read from the running operation,
  * not the conversation's agent config, which can differ from what actually
  * runs (an `@Agent` route, a legacy CLI agent recovered from its model id).
+ *
+ * A Gateway run whose producer went unreported (`heteroType` undefined: an
+ * older server or topic marker) may be a CLI run, so it promises the later
+ * timing, as the Gateway lifecycle treats it (`heteroType !== null`). A group
+ * member's run is skipped: its supervisor's run owns the queue.
  */
 const isQueueDrainedAtRunEnd =
   (context: MessageMapKeyInput) =>
   (s: ChatStoreState): boolean => {
     if (!context.agentId) return false;
     const hasQueuedMessages = getQueuedMessages(context)(s).length > 0;
-    return getOperationsByContext(context)(s).some(
-      (op) =>
-        isQueueBlockingOperation(op, { hasQueuedMessages }) &&
-        (op.type === 'execHeterogeneousAgent' ||
-          (op.type === 'execServerAgentRuntime' && !!op.metadata.heteroType)),
-    );
+    return getOperationsByContext(context)(s).some((op) => {
+      if (!isQueueBlockingOperation(op, { hasQueuedMessages })) return false;
+      if (op.type === 'execHeterogeneousAgent') return true;
+      if (op.type !== 'execServerAgentRuntime') return false;
+
+      const parent = op.parentOperationId ? s.operations[op.parentOperationId] : undefined;
+      return parent?.type !== 'execServerAgentRuntime' && op.metadata.heteroType !== null;
+    });
   };
 
 const getOperationTurnStartTime = (op: Operation) =>

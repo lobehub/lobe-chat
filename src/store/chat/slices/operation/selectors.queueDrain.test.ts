@@ -53,8 +53,41 @@ describe('isQueueDrainedAtRunEnd', () => {
     expect(startQueuedRun('execAgentRuntime')).toBe(false);
   });
 
-  it('treats an unreported producer as the native runtime', () => {
-    expect(startQueuedRun('execServerAgentRuntime')).toBe(false);
+  // ROOT CAUSE:
+  //
+  // During a rolling deploy an older server returns no `heteroType` for either
+  // runtime. Reading that as native promised "current step" behind a CLI run
+  // that only drains its queue at run end.
+  //
+  // Before: an unreported producer counted as the native runtime.
+  // After: it may be a CLI run, so the caption promises the later timing.
+  it('treats an unreported producer as a possible CLI run', () => {
+    expect(startQueuedRun('execServerAgentRuntime')).toBe(true);
+  });
+
+  it('follows the supervisor, not a group member run under it', () => {
+    const { result } = renderHook(() => useChatStore());
+
+    act(() => {
+      const { operationId: supervisorId } = result.current.startOperation({
+        context,
+        metadata: { heteroType: null },
+        type: 'execServerAgentRuntime',
+      });
+      result.current.startOperation({
+        context,
+        parentOperationId: supervisorId,
+        type: 'execServerAgentRuntime',
+      });
+      result.current.enqueueMessage(messageMapKey(context), {
+        content: 'follow up',
+        createdAt: Date.now(),
+        id: 'q1',
+        interruptMode: 'soft',
+      });
+    });
+
+    expect(operationSelectors.isQueueDrainedAtRunEnd(context)(result.current)).toBe(false);
   });
 
   it('ignores a CLI run that no longer holds the queue', () => {
