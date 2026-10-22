@@ -39,9 +39,9 @@ const styles = stylex.create({
 });
 
 const TaskDetailBodySkeleton = () => (
-  <Flexbox aria-busy className={layout.root} flex={1}>
-    <div className={layout.header}>
-      <Flexbox className={layout.main} gap={12}>
+  <Flexbox aria-busy className={stylex.props(layout.root).className} flex={1}>
+    <div className={stylex.props(layout.header).className}>
+      <Flexbox className={stylex.props(layout.main).className} gap={12}>
         <Flexbox style={{ paddingBottom: 5, paddingTop: 5 }}>
           <SkeletonBar height={24} width={'min(520px, 56%)'} />
         </Flexbox>
@@ -78,13 +78,13 @@ const TaskDetailBodySkeleton = () => (
           </Flexbox>
         </Flexbox>
       </Flexbox>
-      <div className={layout.side}>
-        <div className={layout.properties}>
+      <div className={stylex.props(layout.side).className}>
+        <div className={stylex.props(layout.properties).className}>
           {Array.from({ length: 3 }).map((_, index) => (
             <Flexbox
               horizontal
               align={'center'}
-              className={layout.propertyItem}
+              className={stylex.props(layout.propertyItem).className}
               gap={8}
               key={index}
             >

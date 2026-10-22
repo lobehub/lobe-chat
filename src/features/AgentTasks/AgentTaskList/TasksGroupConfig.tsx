@@ -1,13 +1,4 @@
-import {
-  ActionIcon,
-  createStaticStyles,
-  Flexbox,
-  Icon,
-  Popover,
-  Select,
-  Switch,
-  Tabs,
-} from '@lobehub/ui';
+import { ActionIcon, Flexbox, Icon, Popover, Select, Switch, Tabs } from '@lobehub/ui';
 import { Form, type FormFieldProps, useForm } from '@lobehub/ui/form';
 import {
   ArrowDownWideNarrow,
@@ -25,6 +16,7 @@ import type { TaskViewMode } from '@/store/global/initialState';
 import { systemStatusSelectors } from '@/store/global/selectors';
 
 import type { TaskGroupBy, TaskListViewOptions, TaskOrderBy } from './listViewOptions';
+import styles from './TasksGroupConfig.module.css';
 
 /** A display control the active collection fixes, so it has nothing to change. */
 export type TaskListPinnedOption = 'ordering' | 'showSubTasks';
@@ -39,18 +31,6 @@ interface TasksHeaderProps {
   pinnedOptions?: readonly TaskListPinnedOption[];
   setOptions: (updater: (prev: TaskListViewOptions) => TaskListViewOptions) => void;
 }
-
-const styles = createStaticStyles(({ css, cssVar }) => {
-  return {
-    form: css`
-      label,
-      label * {
-        font-size: 13px !important;
-        color: ${cssVar.colorTextSecondary} !important;
-      }
-    `,
-  };
-});
 
 const TasksGroupConfig = memo<TasksHeaderProps>(({ options, pinnedOptions, setOptions }) => {
   const [isViewConfigOpen, setIsViewConfigOpen] = useState(false);

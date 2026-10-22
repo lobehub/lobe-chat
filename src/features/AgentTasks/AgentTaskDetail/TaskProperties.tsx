@@ -1,5 +1,6 @@
 import type { TaskPriority, TaskStatus } from '@lobechat/types';
 import { Block, cssVar, Icon, Text } from '@lobehub/ui';
+import * as stylex from '@stylexjs/stylex';
 import { ArchiveIcon } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -69,13 +70,13 @@ const TaskProperties = memo(() => {
   const priorityMeta = PRIORITY_META[priority as TaskPriority] ?? PRIORITY_META[0];
 
   return (
-    <div className={styles.properties}>
+    <div className={stylex.props(styles.properties).className}>
       <TaskStatusTag status={status} taskIdentifier={taskId}>
         <Block
           clickable
           horizontal
           align="center"
-          className={styles.propertyItem}
+          className={stylex.props(styles.propertyItem).className}
           gap={8}
           variant={'borderless'}
         >
@@ -90,7 +91,7 @@ const TaskProperties = memo(() => {
         <Block
           horizontal
           align="center"
-          className={styles.propertyItem}
+          className={stylex.props(styles.propertyItem).className}
           gap={8}
           variant={'borderless'}
         >
@@ -111,7 +112,7 @@ const TaskProperties = memo(() => {
           clickable
           horizontal
           align="center"
-          className={styles.propertyItem}
+          className={stylex.props(styles.propertyItem).className}
           gap={8}
           variant={'borderless'}
         >
@@ -132,7 +133,7 @@ const TaskProperties = memo(() => {
             clickable
             horizontal
             align="center"
-            className={styles.propertyItem}
+            className={stylex.props(styles.propertyItem).className}
             gap={8}
             variant={'borderless'}
           >
@@ -164,7 +165,7 @@ const TaskProperties = memo(() => {
           clickable
           horizontal
           align="center"
-          className={styles.propertyItem}
+          className={stylex.props(styles.propertyItem).className}
           gap={8}
           variant={'borderless'}
         >

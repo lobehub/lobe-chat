@@ -1,13 +1,15 @@
 'use client';
 
 import type { DeviceListItem } from '@lobechat/types';
-import { Block, cx, Flexbox, Icon, Popover, Text, Tooltip } from '@lobehub/ui';
+import { Block, Flexbox, Icon, Popover, Text, Tooltip } from '@lobehub/ui';
+import * as stylex from '@stylexjs/stylex';
 import { CheckIcon, ChevronDownIcon, FolderIcon } from 'lucide-react';
 import { memo, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { formatLockedControlTooltip } from '@/features/ChatInput/utils/lockedControlTooltip';
 import { ExecutionTargetDeviceStatus, ExecutionTargetIcon } from '@/features/ExecutionTargetPicker';
+import { sx } from '@/styles/sx';
 
 import { taskExecutionStyles as styles } from './taskExecutionStyles';
 import TaskPickerOption from './TaskPickerOption';
@@ -111,8 +113,10 @@ const TaskDeviceChip = memo<TaskDeviceChipProps>(
         >
           <ExecutionTargetIcon devicePlatform={device.platform} target={'device'} />
           <Flexbox flex={1} style={{ minWidth: 0 }}>
-            <div className={styles.rowTitle}>{deviceLabel(device, unknownLabel)}</div>
-            <div className={styles.rowDesc}>
+            <div className={stylex.props(styles.rowTitle).className}>
+              {deviceLabel(device, unknownLabel)}
+            </div>
+            <div className={stylex.props(styles.rowDesc).className}>
               <ExecutionTargetDeviceStatus
                 offlineLabel={t('heteroAgent.executionTarget.offline')}
                 online={device.online}
@@ -122,7 +126,9 @@ const TaskDeviceChip = memo<TaskDeviceChipProps>(
               />
             </div>
           </Flexbox>
-          {isActive && <Icon className={styles.check} icon={CheckIcon} size={14} />}
+          {isActive && (
+            <Icon className={stylex.props(styles.check).className} icon={CheckIcon} size={14} />
+          )}
         </TaskPickerOption>
       );
     };
@@ -134,7 +140,9 @@ const TaskDeviceChip = memo<TaskDeviceChipProps>(
         role={'group'}
         style={{ minWidth: 280 }}
       >
-        <div className={styles.sectionTitle}>{t('taskExecution.runLocation')}</div>
+        <div className={stylex.props(styles.sectionTitle).className}>
+          {t('taskExecution.runLocation')}
+        </div>
         <TaskPickerOption
           checked={isInheriting}
           disabled={isLocked}
@@ -142,19 +150,25 @@ const TaskDeviceChip = memo<TaskDeviceChipProps>(
         >
           <ExecutionTargetIcon target={inheritedTarget} />
           <Flexbox flex={1} style={{ minWidth: 0 }}>
-            <div className={styles.rowTitle}>{t('taskExecution.followAgent')}</div>
-            <div className={styles.rowDesc}>
+            <div className={stylex.props(styles.rowTitle).className}>
+              {t('taskExecution.followAgent')}
+            </div>
+            <div className={stylex.props(styles.rowDesc).className}>
               {`${t('taskExecution.followAgentDesc')} · ${inheritedLabel}`}
             </div>
           </Flexbox>
-          {isInheriting && <Icon className={styles.check} icon={CheckIcon} size={14} />}
+          {isInheriting && (
+            <Icon className={stylex.props(styles.check).className} icon={CheckIcon} size={14} />
+          )}
         </TaskPickerOption>
 
         {isPending && (
-          <div className={styles.sectionTitle}>{t('heteroAgent.executionTarget.loading')}</div>
+          <div className={stylex.props(styles.sectionTitle).className}>
+            {t('heteroAgent.executionTarget.loading')}
+          </div>
         )}
         {devicesFailed && (
-          <div className={styles.emptyHint}>
+          <div className={stylex.props(styles.emptyHint).className}>
             {t('heteroAgent.executionTarget.loadFailed')}{' '}
             <a role="button" onClick={retryDevices}>
               {t('retry', { ns: 'common' })}
@@ -162,23 +176,27 @@ const TaskDeviceChip = memo<TaskDeviceChipProps>(
           </div>
         )}
         {!isPending && !devicesFailed && devices && devices.length > 0 && (
-          <div className={styles.scroll}>{devices.map(renderDeviceRow)}</div>
+          <div className={stylex.props(styles.scroll).className}>
+            {devices.map(renderDeviceRow)}
+          </div>
         )}
         {!isPending && !devicesFailed && devices?.length === 0 && (
-          <div className={styles.emptyHint}>{t('heteroAgent.executionTarget.noDevices')}</div>
+          <div className={stylex.props(styles.emptyHint).className}>
+            {t('heteroAgent.executionTarget.noDevices')}
+          </div>
         )}
 
         {directoryHint && (
           <Flexbox
             horizontal
             align={'center'}
-            className={styles.hint}
+            className={stylex.props(styles.hint).className}
             gap={4}
             style={{ paddingBlock: 6 }}
           >
             <Icon icon={FolderIcon} size={12} />
             <span>{t('taskExecution.workingDirectory')}</span>
-            <span className={styles.hintValue}>· {directoryHint}</span>
+            <span className={stylex.props(styles.hintValue).className}>· {directoryHint}</span>
           </Flexbox>
         )}
       </Flexbox>
@@ -189,16 +207,19 @@ const TaskDeviceChip = memo<TaskDeviceChipProps>(
         clickable
         horizontal
         align="center"
-        className={cx(className ?? styles.chip, isLocked && styles.triggerDisabled)}
         gap={6}
         variant={'borderless'}
+        className={
+          sx([className ? null : styles.chip, isLocked && styles.triggerDisabled], className)
+            .className
+        }
       >
         {pinnedDeviceId ? (
           <ExecutionTargetIcon devicePlatform={pinned?.platform} target={'device'} />
         ) : (
           <ExecutionTargetIcon target={inheritedTarget} />
         )}
-        <Text ellipsis className={styles.chipLabel} fontSize={12}>
+        <Text ellipsis className={stylex.props(styles.chipLabel).className} fontSize={12}>
           {pinnedDeviceId ? pinnedLabel : inheritedLabel}
         </Text>
         <Icon icon={ChevronDownIcon} size={12} />

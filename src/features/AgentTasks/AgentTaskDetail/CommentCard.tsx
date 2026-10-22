@@ -3,6 +3,7 @@ import { useEditor } from '@lobehub/editor/react';
 import { LexicalRenderer } from '@lobehub/editor/renderer';
 import { Block, type DropdownItem, DropdownMenu, Flexbox, Icon, Markdown } from '@lobehub/ui';
 import { ActionIcon, Avatar, Button, confirmModal, cssVar, Text } from '@lobehub/ui';
+import * as stylex from '@stylexjs/stylex';
 import { MessageCircle, MoreHorizontal, Pencil, Trash } from 'lucide-react';
 import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -132,7 +133,7 @@ const CommentCard = memo<CommentCardProps>(({ activity }) => {
 
   return (
     <Block
-      className={styles.commentCard}
+      className={stylex.props(styles.commentCard, stylex.defaultMarker()).className}
       gap={8}
       paddingBlock={12}
       paddingInline={8}
@@ -143,7 +144,7 @@ const CommentCard = memo<CommentCardProps>(({ activity }) => {
         {activity.author?.avatar ? (
           <Avatar avatar={activity.author.avatar} size={24} />
         ) : (
-          <div className={styles.activityAvatar}>
+          <div className={stylex.props(styles.activityAvatar).className}>
             <MessageCircle size={12} />
           </div>
         )}
@@ -197,7 +198,7 @@ const CommentCard = memo<CommentCardProps>(({ activity }) => {
       )}
 
       {!isEditing && commentId && !isOptimisticActivityId(commentId) && (
-        <div className={`${styles.commentActions} comment-actions`}>
+        <div className={stylex.props(styles.commentActions).className}>
           <DropdownMenu items={menuItems}>
             <ActionIcon icon={MoreHorizontal} size={'small'} />
           </DropdownMenu>
