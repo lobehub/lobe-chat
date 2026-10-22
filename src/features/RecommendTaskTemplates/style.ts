@@ -47,7 +47,15 @@ export const styles = stylex.create({
     transition: 'opacity 0.15s',
   },
   dismissBtnCompact: {
-    pointerEvents: { default: 'none', [stylex.when.ancestor(':hover')]: 'auto', [stylex.when.ancestor(':focus-within')]: 'auto' },
-    opacity: { default: 0, [stylex.when.ancestor(':hover')]: 1, [stylex.when.ancestor(':focus-within')]: 1 },
+    pointerEvents: {
+      default: 'none',
+      [stylex.when.ancestor(':hover')]: 'auto',
+      [stylex.when.ancestor(':focus-within')]: 'auto',
+    },
+    opacity: {
+      default: 0,
+      [stylex.when.ancestor(':hover')]: 1,
+      [stylex.when.ancestor(':focus-within')]: 1,
+    },
   },
 });
