@@ -3,6 +3,12 @@ import type { EnvironmentConfiguration } from '@lobechat/types';
 /** Long enough for a shallow clone and a dependency install. */
 export const SANDBOX_ENVIRONMENT_INIT_TIMEOUT_MS = 600_000;
 
+/**
+ * Where a sandbox records the folders it initialized: under its home, never in
+ * the folder — the folder holds only what the repository and setup put there.
+ */
+export const SANDBOX_ENVIRONMENT_STATE_DIR = '.lobe/environments';
+
 /** Printed first by a run that did something, so a no-op is told apart without parsing. */
 export const SANDBOX_ENVIRONMENT_RAN_LINE = '__lobe_environment_ran';
 
@@ -73,12 +79,17 @@ const safeDestination = (path: string | undefined): string | undefined => {
  * One idempotent shell command that applies an environment to the current
  * directory: clone each repository, then run setup.
  *
- * Nothing is written to say a folder was initialized — the folder's own
- * contents say it. An empty folder is initialized; a folder that holds
- * anything is left alone, silently: either an earlier run filled it, or it
- * holds someone's work that a clone would mix with and setup does not expect.
- * The one case that runs again is a failed run that left the folder empty,
- * which is the case where trying again is right.
+ * Nothing is written into the folder to say it was initialized. An empty
+ * folder is initialized; a folder that holds anything is left alone, silently:
+ * either an earlier run filled it, or it holds someone's work that a clone
+ * would mix with and setup does not expect.
+ *
+ * Each run is also recorded in the sandbox itself, outside the folder, keyed
+ * by the folder and the environment: a setup that installs globally writes
+ * nothing into the folder, and without the record it would rerun on every
+ * tool call, as each one starts a fresh service. A failed run is recorded too,
+ * so it is not retried on every call either. The record goes with the
+ * sandbox — and so do global installs — so a new sandbox initializes again.
  *
  * The variables are exported in a subshell, so they reach clone and setup and
  * not the commands the conversation runs afterwards.
@@ -109,9 +120,15 @@ export const buildSandboxEnvironmentInitCommand = (init: SandboxInitialization):
     ].join(' && ');
   });
 
+  // Only when there is something to clone, and removed however the subshell
+  // ends: a second copy of every repository would otherwise stay in the
+  // sandbox, one more for each failed attempt.
+  const staging =
+    clones.length > 0 ? [`__lobe_tmp="$(mktemp -d)"`, `trap 'rm -rf "$__lobe_tmp"' EXIT`] : [];
+
   const steps = [
     ...exports,
-    `__lobe_tmp="$(mktemp -d)"`,
+    ...staging,
     ...clones,
     ...(init.bootstrapCommand ? [init.bootstrapCommand] : []),
   ];
@@ -120,13 +137,21 @@ export const buildSandboxEnvironmentInitCommand = (init: SandboxInitialization):
   // follows and its status is the subshell's.
   const body = `( set -e; ${steps.join(' && ')} )`;
 
+  const record = `"\${HOME:-/tmp}/${SANDBOX_ENVIRONMENT_STATE_DIR}"`;
+  const key = `"$(printf '%s|%s' "$PWD" ${shellQuote(init.environmentId)} | cksum | cut -d ' ' -f 1)"`;
+
   return [
-    `if [ -z "$(ls -A . 2>/dev/null)" ]; then`,
+    `__lobe_state=${record}/${key}`,
+    `if [ ! -e "$__lobe_state" ] && [ -z "$(ls -A . 2>/dev/null)" ]; then`,
     `  echo ${SANDBOX_ENVIRONMENT_RAN_LINE}`,
+    `  mkdir -p ${record}`,
     `  if ${body}; then`,
+    `    echo done > "$__lobe_state"`,
     `    echo "Initialized from the environment "${label}"."`,
     `  else`,
-    `    echo "Initializing from the environment "${label}" failed (exit $?)."`,
+    `    __lobe_status=$?`,
+    `    echo failed > "$__lobe_state"`,
+    `    echo "Initializing from the environment "${label}" failed (exit $__lobe_status)."`,
     `  fi`,
     `fi`,
   ].join('\n');

@@ -21,9 +21,15 @@ import {
   toSandboxInitialization,
 } from '../environmentInit';
 
+const sandbox = { home: '', tmp: '' };
+
 const run = (command: string, cwd: string) => {
+  const env = { ...process.env, HOME: sandbox.home, TMPDIR: sandbox.tmp };
   try {
-    return { status: 0, stdout: execFileSync('bash', ['-c', command], { cwd, encoding: 'utf8' }) };
+    return {
+      status: 0,
+      stdout: execFileSync('bash', ['-c', command], { cwd, encoding: 'utf8', env }),
+    };
   } catch (error) {
     const failure = error as { status: number; stdout: string };
     return { status: failure.status, stdout: failure.stdout };
@@ -76,6 +82,10 @@ describe('buildSandboxEnvironmentInitCommand', () => {
     work = join(root, 'work');
     mkdirSync(repo);
     mkdirSync(work);
+    sandbox.home = join(root, 'home');
+    sandbox.tmp = join(root, 'tmp');
+    mkdirSync(sandbox.home);
+    mkdirSync(sandbox.tmp);
     const git = (...args: string[]) =>
       execFileSync('git', args, {
         cwd: repo,
@@ -142,19 +152,46 @@ describe('buildSandboxEnvironmentInitCommand', () => {
     expect(existsSync(join(work, 'README.md'))).toBe(false);
   });
 
-  it('reports a failed setup, and tries again only while the folder is still empty', () => {
-    const failing = buildSandboxEnvironmentInitCommand(
+  it('runs a setup that writes nothing into the folder once, not on every call', () => {
+    // A global install leaves the folder empty, and each tool call starts a
+    // fresh service: the record in the sandbox is what stops a rerun.
+    const command = buildSandboxEnvironmentInitCommand(
+      init({ bootstrapCommand: 'echo ran >> "$HOME/setup-runs"', sources: [] }),
+    );
+
+    expect(environmentInitRan(run(command, work).stdout)).toBe(true);
+    expect(run(command, work).stdout).toBe('');
+    expect(readFileSync(join(sandbox.home, 'setup-runs'), 'utf8')).toBe('ran\n');
+    expect(readdirSync(work)).toEqual([]);
+  });
+
+  it('reports a failed setup once rather than retrying it on every call', () => {
+    const command = buildSandboxEnvironmentInitCommand(
       init({ bootstrapCommand: 'exit 7', sources: [] }),
     );
 
-    expect(environmentInitReport(run(failing, work).stdout)).toContain('failed (exit 7)');
-    expect(readdirSync(work)).toEqual([]);
-    expect(environmentInitRan(run(failing, work).stdout)).toBe(true);
+    expect(environmentInitReport(run(command, work).stdout)).toContain('failed (exit 7)');
+    expect(run(command, work).stdout).toBe('');
+  });
 
-    // A failure after the clone leaves the checkout, which counts as initialized.
-    const afterClone = buildSandboxEnvironmentInitCommand(init({ bootstrapCommand: 'exit 3' }));
-    expect(environmentInitReport(run(afterClone, work).stdout)).toContain('failed (exit 3)');
-    expect(run(afterClone, work).stdout).toBe('');
+  it('initializes another empty folder with the same environment on its own', () => {
+    const command = buildSandboxEnvironmentInitCommand(init());
+    const other = join(root, 'other');
+    mkdirSync(other);
+
+    run(command, work);
+
+    expect(environmentInitRan(run(command, other).stdout)).toBe(true);
+    expect(existsSync(join(other, 'README.md'))).toBe(true);
+  });
+
+  it('leaves no staging copy of the repository behind, whether setup succeeds or fails', () => {
+    run(buildSandboxEnvironmentInitCommand(init()), work);
+    const failing = join(root, 'failing');
+    mkdirSync(failing);
+    run(buildSandboxEnvironmentInitCommand(init({ bootstrapCommand: 'exit 3' })), failing);
+
+    expect(readdirSync(sandbox.tmp)).toEqual([]);
   });
 
   it('keeps the variables out of the shell that runs afterwards', () => {
