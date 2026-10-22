@@ -1,6 +1,7 @@
 import { DEFAULT_AVATAR, DEFAULT_INBOX_AVATAR } from '@lobechat/const';
 import { agentDisplayName } from '@lobechat/types';
 import { preventDefault } from '@lobehub/ui';
+import * as stylex from '@stylexjs/stylex';
 import { Command } from 'cmdk';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -69,8 +70,8 @@ const AskAgentCommands = memo(() => {
           onSelect={() => handleAgentSelect(inboxAgentId, 'Lobe AI', DEFAULT_INBOX_AVATAR)}
         >
           <Avatar emojiScaleWithBackground avatar={DEFAULT_INBOX_AVATAR} shape="square" size={18} />
-          <div className={styles.itemContent}>
-            <div className={styles.itemLabel}>@Lobe AI</div>
+          <div {...stylex.props(styles.itemContent)}>
+            <div {...stylex.props(styles.itemLabel)}>@Lobe AI</div>
           </div>
         </Command.Item>
       )}
@@ -96,8 +97,10 @@ const AskAgentCommands = memo(() => {
             shape="square"
             size={18}
           />
-          <div className={styles.itemContent}>
-            <div className={styles.itemLabel}>@{agentDisplayName(agent, t('defaultAgent'))}</div>
+          <div {...stylex.props(styles.itemContent)}>
+            <div {...stylex.props(styles.itemLabel)}>
+              @{agentDisplayName(agent, t('defaultAgent'))}
+            </div>
           </div>
         </Command.Item>
       ))}

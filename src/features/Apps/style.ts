@@ -2,6 +2,7 @@ import { cssVar } from '@lobehub/ui/stylex/cssVar.stylex';
 import * as stylex from '@stylexjs/stylex';
 
 const NARROW = '@media (width <= 860px)';
+const DARK = ":is(html[data-theme='dark'] *)";
 
 export const styles = stylex.create({
   actionSlot: {
@@ -202,8 +203,15 @@ export const styles = stylex.create({
     height: '40px',
     width: '40px',
   },
-  // Background is theme-dependent: see style.module.css
+  darkOnly: {
+    display: { default: 'none', [DARK]: 'block' },
+  },
+  lightOnly: {
+    display: { default: null, [DARK]: 'none' },
+  },
   mobileStage: {
+    backgroundColor: { default: '#f3f0ea', [DARK]: cssVar.colorFillQuaternary },
+    backgroundImage: 'none',
     height: '200px',
     marginBlockStart: 'auto',
     position: 'relative',
@@ -215,11 +223,11 @@ export const styles = stylex.create({
     minHeight: '100%',
     overflowY: 'auto',
   },
-  // Border colour is theme-dependent: see style.module.css
   phone: {
     backgroundColor: cssVar.colorBgElevated,
     backgroundImage: 'none',
     borderBlockEndStyle: 'none',
+    borderColor: { default: '#1c1c1e', [DARK]: '#3a3a40' },
     borderStartEndRadius: '32px',
     borderStartStartRadius: '32px',
     borderStyle: 'solid',
@@ -241,8 +249,9 @@ export const styles = stylex.create({
     gridColumnEnd: '-1',
     gridColumnStart: '1',
   },
-  // Background is theme-dependent: see style.module.css
   stage: {
+    backgroundColor: { default: '#f3f0ea', [DARK]: cssVar.colorFillQuaternary },
+    backgroundImage: 'none',
     minHeight: '300px',
     overflow: 'hidden',
     position: 'relative',

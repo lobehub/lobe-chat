@@ -1,29 +1,32 @@
 'use client';
 
 import type { WidgetManifest } from '@lobechat/types';
-import { createStaticStyles, cssVar, Flexbox, Tag, Text } from '@lobehub/ui';
+import { Flexbox, Tag, Text } from '@lobehub/ui';
+import { cssVar } from '@lobehub/ui/stylex/cssVar.stylex';
+import * as stylex from '@stylexjs/stylex';
 import { memo, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import AsyncError from '@/components/AsyncError';
 import { serverConfigSelectors, useServerConfigStore } from '@/store/serverConfig';
 
-export const reviewStyles = createStaticStyles(({ css }) => ({
-  label: css`
-    flex: none;
-    width: 88px;
-    color: ${cssVar.colorTextTertiary};
-  `,
-  section: css`
-    padding: 10px;
-    border-radius: ${cssVar.borderRadius};
-    background: ${cssVar.colorFillQuaternary};
-  `,
-}));
+export const reviewStyles = stylex.create({
+  label: {
+    color: cssVar.colorTextTertiary,
+    flex: 'none',
+    width: '88px',
+  },
+  section: {
+    backgroundColor: cssVar.colorFillQuaternary,
+    backgroundImage: 'none',
+    borderRadius: cssVar.borderRadius,
+    padding: '10px',
+  },
+});
 
 export const Fact = ({ label, children }: { children: ReactNode; label: string }) => (
   <Flexbox horizontal align={'baseline'} gap={8}>
-    <Text className={reviewStyles.label} fontSize={12}>
+    <Text className={stylex.props(reviewStyles.label).className} fontSize={12}>
       {label}
     </Text>
     <Flexbox horizontal flex={1} gap={4} style={{ minWidth: 0 }} wrap={'wrap'}>

@@ -1,5 +1,6 @@
 import { Block, type DropdownItem, DropdownMenu, Flexbox, Icon } from '@lobehub/ui';
 import { ActionIcon, confirmModal, cssVar, Text, toast } from '@lobehub/ui';
+import * as stylex from '@stylexjs/stylex';
 import { Check, ChevronDownIcon, ChevronUpIcon, MoreHorizontal, Trash } from 'lucide-react';
 import { memo, useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -71,12 +72,12 @@ const TaskBriefCard = memo<TaskBriefCardProps>(
 
     return (
       <Block
-        className={briefStyles.card}
         gap={12}
         paddingBlock={12}
         paddingInline={8}
         style={{ borderRadius: cssVar.borderRadiusLG }}
         variant={'outlined'}
+        className={stylex.props(briefStyles.card, stylex.defaultMarker()).className}
       >
         <Flexbox horizontal align={'center'} gap={8} style={{ overflow: 'hidden' }}>
           <BriefIcon muted={isResolved} size={24} type={brief.type} />
@@ -86,7 +87,9 @@ const TaskBriefCard = memo<TaskBriefCardProps>(
           {isResolved && !expanded && (
             <Flexbox horizontal align={'center'} gap={4}>
               <Icon color={cssVar.colorTextQuaternary} icon={Check} size={14} />
-              <Text className={briefStyles.resolvedTag}>{t('brief.resolved')}</Text>
+              <Text className={stylex.props(briefStyles.resolvedTag).className}>
+                {t('brief.resolved')}
+              </Text>
             </Flexbox>
           )}
           <Time date={brief.createdAt} />

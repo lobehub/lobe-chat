@@ -1,6 +1,7 @@
 'use client';
 
 import { Alert, Flexbox, Skeleton, Text } from '@lobehub/ui';
+import * as stylex from '@stylexjs/stylex';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -83,7 +84,7 @@ const PublishReview = memo<PublishReviewProps>(
           <Alert showIcon title={t('publish.noSuccessfulRun')} type={'warning'} />
         )}
 
-        <Flexbox className={reviewStyles.section} gap={6}>
+        <Flexbox className={stylex.props(reviewStyles.section).className} gap={6}>
           <Fact label={t('chat.definition')}>
             <Text fontSize={12}>{widget.description || t('chat.noDefinition')}</Text>
           </Fact>

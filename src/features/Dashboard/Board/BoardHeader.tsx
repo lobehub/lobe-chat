@@ -66,13 +66,15 @@ const BoardHeader = memo<BoardHeaderProps>(
         data-dashboard-header
         horizontal
         align={'flex-end'}
-        className={pageStyles.heading}
+        className={stylex.props(pageStyles.heading).className}
         gap={16}
         justify={'space-between'}
       >
         <Flexbox gap={6} style={{ minWidth: 0 }}>
-          {title && <h1 className={pageStyles.title}>{title}</h1>}
-          {description && <Text className={pageStyles.description}>{description}</Text>}
+          {title && <h1 {...stylex.props(pageStyles.title)}>{title}</h1>}
+          {description && (
+            <Text className={stylex.props(pageStyles.description).className}>{description}</Text>
+          )}
           <Flexbox
             horizontal
             align={'center'}
