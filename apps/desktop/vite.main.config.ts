@@ -36,7 +36,12 @@ export default defineConfig(async (env) => {
       copyPublicDir: false,
       emptyOutDir: true,
       lib: {
-        entry: path.resolve(__dirname, 'src/main/index.ts'),
+        entry: {
+          index: path.resolve(__dirname, 'src/main/index.ts'),
+          // Forked as an Electron utility process by modules/localAsr/EngineHost.
+          localAsrWorker: path.resolve(__dirname, 'src/main/modules/localAsr/worker/index.ts'),
+        },
+        fileName: (_format, entryName) => `${entryName}.js`,
         formats: ['cjs'],
       },
       minify: !isDev,
