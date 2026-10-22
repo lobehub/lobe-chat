@@ -319,6 +319,28 @@ describe('TopicByAgentGroupItem', () => {
     expect(openProjectTopicModal).toHaveBeenCalledTimes(1);
   });
 
+  /** @example User report: the project sidebar hid devices that had no topics yet. */
+  it('lists every startable device and offers a new topic inside an empty device section', () => {
+    // ROOT CAUSE: device sections were built from topics only, so a bound
+    // device without topics never showed up and could not start one in place.
+    subGroupModes[GROUP_ID] = 'byDevice';
+    directories.splice(
+      0,
+      directories.length,
+      { deviceId: 'device-1', id: 'binding-mac', ...runnable('ins-mac') },
+      { deviceId: 'device-2', id: 'binding-linux-new', ...runnable('ins-linux') },
+    );
+    renderGroup();
+    // Topics now only run on the MacBook; the Linux box has none.
+    expect(screen.getByRole('button', { name: 'Studio Linux' })).toBeTruthy();
+
+    fireEvent.click(screen.getByText('actions.addNewTopic'));
+
+    expect(startProjectTopicDraft).toHaveBeenCalledWith(
+      expect.objectContaining({ directoryId: 'binding-linux-new' }),
+    );
+  });
+
   const renderInProject = (agentId: string) =>
     render(
       <TopicListScopeContext value={{ coordinatorAgentId: 'agt_lead', projectId: 'prj_1' }}>

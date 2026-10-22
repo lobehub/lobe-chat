@@ -24,6 +24,7 @@ import {
   TOPIC_STATUS_VISUALS,
 } from '@/components/ExecutionStatus';
 import { projectDirectoryDeviceName } from '@/features/ChatInput/ControlBar/projectDeviceTargets';
+import EmptyNavItem from '@/features/NavPanel/components/EmptyNavItem';
 import { useChatStore } from '@/store/chat';
 import { operationSelectors } from '@/store/chat/selectors';
 import { deviceSelectors, useDeviceStore } from '@/store/device';
@@ -73,6 +74,7 @@ interface SubGroupItemProps {
 
 const SubGroupItem = memo<SubGroupItemProps>(
   ({ expanded, group, icon, onStartInDirectory, startDirectoryId, suppressAgentAvatar, title }) => {
+    const { t } = useTranslation('topic');
     const { t: tProject } = useTranslation('project');
     // A folded section keeps the project row's running / awaiting / failed
     // counts and unread dot, so a device section still says how much it does.
@@ -123,7 +125,15 @@ const SubGroupItem = memo<SubGroupItemProps>(
         </AccordionHeader>
         <AccordionPanel contentStyle={{ padding: 0 }}>
           <Flexbox gap={1} paddingBlock={1}>
-            {group.children.map((topic) => renderTopic(topic, suppressAgentAvatar))}
+            {group.children.length === 0 && startDirectoryId ? (
+              // A device listed before any topic ran on it starts one in place.
+              <EmptyNavItem
+                title={t('actions.addNewTopic')}
+                onClick={() => onStartInDirectory?.(startDirectoryId)}
+              />
+            ) : (
+              group.children.map((topic) => renderTopic(topic, suppressAgentAvatar))
+            )}
           </Flexbox>
         </AccordionPanel>
       </AccordionItem>
@@ -171,6 +181,14 @@ const ProjectTopicList = memo<ProjectTopicListProps>((props) => {
       .join(',');
   });
 
+  // Every device the group can start a topic on gets a section, topics or not.
+  const availableDeviceIds = useMemo(() => {
+    if (mode !== 'byDevice' || !onStartInDirectory || !startDirectories?.length) return;
+    return [
+      ...new Set(startDirectories.map((item) => item.deviceId).filter((id): id is string => !!id)),
+    ];
+  }, [mode, onStartInDirectory, startDirectories]);
+
   const resolveDeviceId = useCallback(
     (topic: ChatTopic) =>
       (topic.projectWorkingDirectoryId &&
@@ -183,11 +201,12 @@ const ProjectTopicList = memo<ProjectTopicListProps>((props) => {
   const groups = useMemo(
     () =>
       groupProjectTopics(topics, mode, {
+        availableDeviceIds,
         field,
         loadingTopicIds: runningIdsKey ? new Set(runningIdsKey.split(',')) : undefined,
         resolveDeviceId,
       }),
-    [topics, mode, field, runningIdsKey, resolveDeviceId],
+    [topics, mode, availableDeviceIds, field, runningIdsKey, resolveDeviceId],
   );
 
   const getTitle = useCallback(
