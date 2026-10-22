@@ -1,6 +1,6 @@
 import type { AiModelReasoningConfig, AiProviderModelListItem } from 'model-bank';
 
-import { arrayEntity, defineReplica, type ReplicaEntityAdapter } from '@/libs/replica';
+import { arrayEntity, defineReplica, identityOnlyScope, type ReplicaEntityAdapter } from '@/libs/replica';
 
 import { modelReasoningConfigKey } from './initialState';
 
@@ -44,6 +44,12 @@ export interface AiModelReasoningConfigEntry {
  * effort picker paints the saved level on the first frame after a reload; the
  * payload is a handful of enum fields, but a user may touch many models, so the
  * stored rows are capped.
+ *
+ * Partitioned by identity only: the server keys these rows by userId +
+ * providerId + modelId and shares them across workspaces (see
+ * `AiModelModel.getModelReasoningConfig`). A workspace-partitioned replica would
+ * hydrate another workspace's older copy after a switch and keep using it while
+ * confirmation is offline or fails.
  */
 export const aiModelReasoningConfigResource = defineReplica<
   AiModelReasoningConfigParams,
@@ -52,6 +58,7 @@ export const aiModelReasoningConfigResource = defineReplica<
   key: ({ model, provider }) => modelReasoningConfigKey(provider, model),
   name: 'aiModelReasoningConfig',
   persist: { maxEntries: 200 },
+  scope: identityOnlyScope,
   storage: 'indexedDB',
   version: 1,
 });

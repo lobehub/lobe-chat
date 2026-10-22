@@ -9,7 +9,7 @@ import { createElement } from 'react';
 import { SWRConfig } from 'swr';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { cacheScope } from '@/libs/replica';
+import { cacheScope, identityScopeOf } from '@/libs/replica';
 import type * as SwrModule from '@/libs/swr';
 import { aiModelService } from '@/services/aiModel';
 import { withSWR } from '~test-utils';
@@ -66,6 +66,9 @@ describe('AiModelAction reasoning config', () => {
     vi.spyOn(cacheScope, 'canPersist').mockReturnValue(true);
   };
 
+  /** Reasoning configs are personal, so their rows land in the identity partition. */
+  const rowScope = (value = scope) => identityScopeOf(value);
+
   beforeEach(() => {
     vi.clearAllMocks();
     useScope(`ai-model-user-${randomUUID()}:personal`);
@@ -85,7 +88,7 @@ describe('AiModelAction reasoning config', () => {
       [...scopes].map((value) =>
         aiModelReasoningConfigResource.storage!.remove({
           queryKey: REASONING_STORAGE_KEY,
-          scope: value,
+          scope: identityScopeOf(value),
         }),
       ),
     );
@@ -165,7 +168,7 @@ describe('AiModelAction reasoning config', () => {
           (
             await aiModelReasoningConfigResource.storage!.get({
               queryKey: REASONING_STORAGE_KEY,
-              scope,
+              scope: rowScope(),
             })
           )?.data,
         ).toEqual({ value: { gpt5_2ReasoningEffort: 'high' } }),
@@ -216,7 +219,7 @@ describe('AiModelAction reasoning config', () => {
       expect(
         await aiModelReasoningConfigResource.storage!.get({
           queryKey: REASONING_STORAGE_KEY,
-          scope,
+          scope: rowScope(),
         }),
       ).toBeUndefined();
     });
@@ -372,7 +375,7 @@ describe('AiModelAction reasoning config', () => {
 
     it('confirms a value only restored from the local replica before the send path uses it', async () => {
       await aiModelReasoningConfigResource.storage!.set(
-        { queryKey: REASONING_STORAGE_KEY, scope },
+        { queryKey: REASONING_STORAGE_KEY, scope: rowScope() },
         { data: { value: { reasoningEffort: 'low' } }, updatedAt: 1 },
       );
       let resolve!: (value: { reasoningEffort: 'high' }) => void;
@@ -427,7 +430,7 @@ describe('AiModelAction reasoning config', () => {
   describe('useFetchAiModelReasoningConfig', () => {
     it('paints the persisted config before the network answers, then adopts the server value', async () => {
       await aiModelReasoningConfigResource.storage!.set(
-        { queryKey: REASONING_STORAGE_KEY, scope },
+        { queryKey: REASONING_STORAGE_KEY, scope: rowScope() },
         { data: { value: { gpt5_2ReasoningEffort: 'low' } }, updatedAt: 1 },
       );
       let resolve!: (value: { gpt5_2ReasoningEffort: 'high' }) => void;
@@ -463,7 +466,7 @@ describe('AiModelAction reasoning config', () => {
           (
             await aiModelReasoningConfigResource.storage!.get({
               queryKey: REASONING_STORAGE_KEY,
-              scope,
+              scope: rowScope(),
             })
           )?.data,
         ).toEqual({ value: { gpt5_2ReasoningEffort: 'high' } }),
@@ -538,7 +541,7 @@ describe('AiModelAction reasoning config', () => {
 
     it('keeps the last saved value when the refresh fails', async () => {
       await aiModelReasoningConfigResource.storage!.set(
-        { queryKey: REASONING_STORAGE_KEY, scope },
+        { queryKey: REASONING_STORAGE_KEY, scope: rowScope() },
         { data: { value: { reasoningEffort: 'low' } }, updatedAt: 1 },
       );
       const serviceSpy = vi
@@ -560,7 +563,7 @@ describe('AiModelAction reasoning config', () => {
     it("never shows the previous identity's saved config after a scope switch", async () => {
       const scopeA = scope;
       await aiModelReasoningConfigResource.storage!.set(
-        { queryKey: REASONING_STORAGE_KEY, scope: scopeA },
+        { queryKey: REASONING_STORAGE_KEY, scope: rowScope(scopeA) },
         { data: { value: { reasoningEffort: 'low' } }, updatedAt: 1 },
       );
       vi.spyOn(aiModelService, 'getAiModelReasoningConfig').mockImplementation(pending);
