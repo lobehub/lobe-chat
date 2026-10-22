@@ -59,6 +59,19 @@ export interface ProjectKnowledgeBaseInput {
 
 export type ProjectKnowledgeBasePatch = Partial<Omit<ProjectKnowledgeBaseInput, 'knowledgeBaseId'>>;
 
+/** Display meta of a project's main agent, joined into list rows only. */
+export interface ProjectCoordinatorAgentMeta {
+  avatar: string | null;
+  backgroundColor: string | null;
+  id: string;
+  name: string | null;
+  title: string | null;
+}
+
+export type ProjectListRow = typeof projects.$inferSelect & {
+  coordinatorAgent: ProjectCoordinatorAgentMeta | null;
+};
+
 export interface ProjectModelOptions {
   /**
    * Workspace owners and admins manage the agent members of every readable
@@ -264,16 +277,33 @@ export class ProjectModel {
     return project ?? null;
   }
 
-  async list(options: { limit?: number; offset?: number; statuses?: ProjectStatus[] } = {}) {
+  async list(
+    options: { limit?: number; offset?: number; statuses?: ProjectStatus[] } = {},
+  ): Promise<ProjectListRow[]> {
     const { limit = 50, offset = 0, statuses } = options;
     const statusWhere = statuses?.length ? inArray(projects.status, statuses) : undefined;
-    return this.db
-      .select()
+    const rows = await this.db
+      .select({
+        // Drizzle nulls a left-joined object when its first column is null, so the
+        // non-null id leads; coordinators usually have no avatar.
+        coordinatorAgent: {
+          id: agents.id,
+          avatar: agents.avatar,
+          backgroundColor: agents.backgroundColor,
+          name: agents.name,
+          title: agents.title,
+        },
+        project: projects,
+      })
       .from(projects)
+      .leftJoin(agents, eq(agents.id, projects.coordinatorAgentId))
       .where(and(this.readable(), statusWhere))
       .orderBy(desc(projects.updatedAt))
       .limit(limit)
       .offset(offset);
+    // Coordinators are virtual agents the client agent list never loads, so the
+    // list carries their display meta for the owner column.
+    return rows.map(({ coordinatorAgent, project }) => ({ ...project, coordinatorAgent }));
   }
 
   async update(id: string, input: UpdateProjectInput) {
