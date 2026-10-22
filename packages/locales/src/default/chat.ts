@@ -57,13 +57,10 @@ export default {
   'goalBatch.enter': 'Open',
   'goalBatch.planPanel.compare': 'Compare versions',
   'goalBatch.planPanel.compareTitle': 'Compare plan versions',
-  'goalBatch.planPanel.files': 'Files',
-  'goalBatch.planPanel.foldFiles': 'Hide files',
   'goalBatch.planPanel.forked':
     'A forked plan: it starts again from the batch’s original outline instead of revising the previous version',
   'goalBatch.planPanel.latest': 'v{{revision}} · latest',
   'goalBatch.planPanel.same': 'Same as v{{base}}',
-  'goalBatch.planPanel.unfoldFiles': 'Show files',
   'goalBatch.probes.attemptNext': 'Next run',
   'goalBatch.probes.attemptOf': 'Run {{current}} / {{total}}',
   'goalBatch.probes.attemptPrevious': 'Previous run',
@@ -279,6 +276,9 @@ export default {
   'permission.configAccess.groupRoleRestricted':
     'Your workspace role cannot configure Agent Groups. You were returned to chat.',
   'agentNotFound.title': 'Agent Unavailable',
+  'agentSkillModal.loadFailed': "Couldn't load this skill",
+  'agentSkillModal.notFound': 'This skill no longer exists. It may have been deleted.',
+  'agentSkillModal.openDocument': 'Open in documents',
   'groupNotFound.desc':
     'This group does not exist or is no longer accessible — it may have been deleted or set to private by its owner.',
   'groupNotFound.title': 'Group Unavailable',
@@ -1858,6 +1858,9 @@ export default {
   'signalCallbacks.empty': 'No callback messages',
   'signalCallbacks.expand': 'Show details',
   'signalCallbacks.title': '{{tool}} · {{count}} callback updates',
+  'skillViewer.files': 'Files',
+  'skillViewer.foldFiles': 'Hide files',
+  'skillViewer.unfoldFiles': 'Show files',
   'stt.action': 'Voice Input',
   'stt.loading': 'Recognizing...',
   'stt.prettifying': 'Polishing...',

@@ -412,7 +412,6 @@
   "src/features/AgentGoals/ProcessControl/BatchGate/GateChecksHint.tsx",
   "src/features/AgentGoals/ProcessControl/BatchGate/GateDetail.tsx",
   "src/features/AgentGoals/ProcessControl/BatchPlan/PlanCompareModal.tsx",
-  "src/features/AgentGoals/ProcessControl/BatchPlan/PlanDetail.tsx",
   "src/features/AgentGoals/ProcessControl/DeliverableReader.tsx",
   "src/features/AgentGoals/ProcessControl/Deliverables.tsx",
   "src/features/AgentGoals/ProcessControl/Findings.tsx",
