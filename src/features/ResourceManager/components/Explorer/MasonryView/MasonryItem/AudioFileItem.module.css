@@ -1,0 +1,3 @@
+.player::-webkit-media-controls-panel {
+  background: var(--lobe-color-fill-quaternary);
+}

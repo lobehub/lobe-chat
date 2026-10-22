@@ -1,22 +1,18 @@
-import { Accordion, createStaticStyles, responsive } from '@lobehub/ui';
+import { Accordion } from '@lobehub/ui';
+import { cssVar } from '@lobehub/ui/stylex/cssVar.stylex';
+import { media } from '@lobehub/ui/stylex/media.stylex';
+import * as stylex from '@stylexjs/stylex';
 import { type ReactNode } from 'react';
 import { memo } from 'react';
 
-const styles = createStaticStyles(({ css, cssVar }) => ({
-  header: css`
-    border-radius: ${cssVar.borderRadius};
-    color: ${cssVar.colorTextDescription};
-
-    ${responsive.sm} {
-      border-radius: 0;
-    }
-
-    &:hover {
-      color: ${cssVar.colorText};
-      background: ${cssVar.colorFillTertiary};
-    }
-  `,
-}));
+const styles = stylex.create({
+  header: {
+    borderRadius: { default: cssVar.borderRadius, [media.sm]: '0' },
+    color: { 'default': cssVar.colorTextDescription, ':hover': cssVar.colorText },
+    backgroundColor: { 'default': null, ':hover': cssVar.colorFillTertiary },
+    backgroundImage: { 'default': null, ':hover': 'none' },
+  },
+});
 
 export interface CollapseGroupItem {
   children: ReactNode;
@@ -34,7 +30,7 @@ interface CollapseGroupProps {
 const CollapseGroup = memo<CollapseGroupProps>(({ activeKey, items, onChange }) => {
   return (
     <Accordion
-      classNames={{ header: styles.header }}
+      classNames={{ header: stylex.props(styles.header).className }}
       indicatorPlacement={'end'}
       styles={{ trigger: { paddingInline: '16px 10px' } }}
       value={activeKey}

@@ -1,4 +1,5 @@
 import { Center, Checkbox, cssVar, Flexbox } from '@lobehub/ui';
+import * as stylex from '@stylexjs/stylex';
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -74,7 +75,7 @@ const ListViewHeader = ({
       <Flexbox
         horizontal
         align={'center'}
-        className={styles.header}
+        className={stylex.props(styles.header).className}
         paddingInline={8}
         style={{
           borderBlockEnd: `1px solid ${cssVar.colorBorderSecondary}`,
@@ -91,7 +92,7 @@ const ListViewHeader = ({
           />
         </Center>
         <Flexbox
-          className={styles.headerItem}
+          className={stylex.props(styles.headerItem).className}
           justify={'center'}
           style={{
             flexShrink: 0,
@@ -118,7 +119,7 @@ const ListViewHeader = ({
           />
         </Flexbox>
         <Flexbox
-          className={styles.headerItem}
+          className={stylex.props(styles.headerItem).className}
           justify={'center'}
           style={{ flexShrink: 0, paddingInlineEnd: 16, position: 'relative' }}
           width={columnWidths.date}
@@ -134,7 +135,7 @@ const ListViewHeader = ({
         </Flexbox>
         {showUploader && (
           <Flexbox
-            className={styles.headerItem}
+            className={stylex.props(styles.headerItem).className}
             justify={'center'}
             style={{ flexShrink: 0, paddingInlineEnd: 16, position: 'relative' }}
             width={columnWidths.uploader}
@@ -150,7 +151,7 @@ const ListViewHeader = ({
           </Flexbox>
         )}
         <Flexbox
-          className={styles.headerItem}
+          className={stylex.props(styles.headerItem).className}
           justify={'center'}
           style={{ flexShrink: 0, paddingInlineEnd: 16, position: 'relative' }}
           width={columnWidths.size}

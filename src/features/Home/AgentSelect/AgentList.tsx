@@ -1,6 +1,8 @@
 'use client';
 
-import { ActionIcon, Block, createStaticStyles, cssVar, Flexbox, Text } from '@lobehub/ui';
+import { ActionIcon, Block, Flexbox, Text } from '@lobehub/ui';
+import { cssVar } from '@lobehub/ui/stylex/cssVar.stylex';
+import * as stylex from '@stylexjs/stylex';
 import { PinIcon } from 'lucide-react';
 import { memo, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -14,29 +16,19 @@ import { homeAgentListSelectors } from '@/store/home/selectors';
 
 import { type AgentRow, useHomeAgentRows } from './useHomeAgentRows';
 
-const styles = createStaticStyles(({ css, cssVar }) => ({
-  active: css`
-    background: ${cssVar.colorFillTertiary};
-  `,
-  item: css`
-    cursor: pointer;
-    padding-block: 6px;
-    padding-inline: 8px;
-    border-radius: ${cssVar.borderRadius};
-
-    &:hover {
-      background: ${cssVar.colorFillSecondary};
-    }
-  `,
-  list: css`
-    padding: 8px;
-  `,
-  sectionHeader: css`
-    padding-block: 4px;
-    padding-inline: 8px;
-    line-height: 20px;
-  `,
-}));
+const styles = stylex.create({
+  active: { backgroundColor: cssVar.colorFillTertiary, backgroundImage: 'none' },
+  item: {
+    cursor: 'pointer',
+    paddingBlock: '6px',
+    paddingInline: '8px',
+    borderRadius: cssVar.borderRadius,
+    backgroundColor: { 'default': null, ':hover': cssVar.colorFillSecondary },
+    backgroundImage: { 'default': null, ':hover': 'none' },
+  },
+  list: { padding: '8px' },
+  sectionHeader: { paddingBlock: '4px', paddingInline: '8px', lineHeight: '20px' },
+});
 
 interface AgentListProps {
   activeAgentId: string;
@@ -48,7 +40,7 @@ interface AgentListProps {
 
 // Same spec as the agent-detail SwitchPanel's section header.
 const SectionHeader = memo<{ children: ReactNode }>(({ children }) => (
-  <Flexbox className={styles.sectionHeader}>
+  <Flexbox className={stylex.props(styles.sectionHeader).className}>
     <Text fontSize={12} type={'secondary'} weight={500}>
       {children}
     </Text>
@@ -69,7 +61,7 @@ const AgentList = memo<AgentListProps>(({ activeAgentId, error, onRetry, onSelec
         clickable
         horizontal
         align={'center'}
-        className={`${styles.item} ${isActive ? styles.active : ''}`}
+        className={stylex.props(styles.item, isActive && styles.active).className}
         gap={8}
         key={row.id}
         variant={'borderless'}
@@ -109,7 +101,7 @@ const AgentList = memo<AgentListProps>(({ activeAgentId, error, onRetry, onSelec
       onRetry={onRetry}
     >
       <Flexbox
-        className={styles.list}
+        className={stylex.props(styles.list).className}
         gap={2}
         style={{ maxHeight: 360, overflowY: 'auto', width: '100%' }}
       >
