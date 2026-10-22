@@ -1,7 +1,9 @@
 'use client';
 
 import { agentDisplayName } from '@lobechat/types';
-import { ActionIcon, createStaticStyles, Flexbox } from '@lobehub/ui';
+import { ActionIcon, Flexbox } from '@lobehub/ui';
+import { cssVar } from '@lobehub/ui/stylex/cssVar.stylex';
+import * as stylex from '@stylexjs/stylex';
 import { UserMinus } from 'lucide-react';
 import { memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -18,21 +20,19 @@ import { useAgentGroupStore } from '@/store/agentGroup';
 import { agentGroupSelectors } from '@/store/agentGroup/selectors';
 import { useUserStore } from '@/store/user';
 import { userProfileSelectors } from '@/store/user/slices/auth/selectors';
+import { sx } from '@/styles/sx';
 
 import AddGroupMemberModal from '../AddGroupMemberModal';
+import moduleStyles from './GroupMember.module.css';
 import GroupMemberItem from './GroupMemberItem';
 
-const styles = createStaticStyles(({ css, cssVar }) => ({
-  memberTrigger: css`
-    border-radius: ${cssVar.borderRadius};
-    transition: background 0.2s ${cssVar.motionEaseOut};
-
-    &[data-popup-open],
-    &[data-active='true'] {
-      background: ${cssVar.colorFillTertiary};
-    }
-  `,
-}));
+const styles = stylex.create({
+  memberTrigger: {
+    borderRadius: cssVar.borderRadius,
+    transition: `background 0.2s ${cssVar.motionEaseOut}`,
+  },
+  memberTriggerActive: { backgroundColor: cssVar.colorFillTertiary, backgroundImage: 'none' },
+});
 
 interface GroupMemberProps {
   addModalOpen: boolean;
@@ -114,8 +114,13 @@ const GroupMember = memo<GroupMemberProps>(({ addModalOpen, onAddModalOpenChange
           groupMembers.map((item) => (
             <AgentProfilePopup agent={item} agentId={item.id} groupId={groupId} key={item.id}>
               <div
-                className={styles.memberTrigger}
-                data-active={isProfileRoute && activeTab === item.id ? 'true' : undefined}
+                {...sx(
+                  [
+                    styles.memberTrigger,
+                    isProfileRoute && activeTab === item.id && styles.memberTriggerActive,
+                  ],
+                  moduleStyles.memberTrigger,
+                )}
                 onDoubleClick={() => handleMemberDoubleClick(item.id)}
               >
                 <GroupMemberItem

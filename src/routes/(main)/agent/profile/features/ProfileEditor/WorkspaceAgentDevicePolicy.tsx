@@ -3,7 +3,9 @@
 import { HETEROGENEOUS_TYPE_LABELS } from '@lobechat/heterogeneous-agents';
 import type { DeviceExecutionTarget, DeviceListItem, LobeAgentAgencyConfig } from '@lobechat/types';
 import type { SelectOptions } from '@lobehub/ui';
-import { createStaticStyles, cssVar, Flexbox, Select } from '@lobehub/ui';
+import { Flexbox, Select } from '@lobehub/ui';
+import { cssVar } from '@lobehub/ui/stylex/cssVar.stylex';
+import * as stylex from '@stylexjs/stylex';
 import { MonitorSmartphone } from 'lucide-react';
 import { memo, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -21,88 +23,56 @@ import { isHeterogeneousSandboxExecutionAvailable } from '@/helpers/executionTar
 import { useAgentStore } from '@/store/agent';
 import { useDeviceList } from '@/store/device';
 
+import moduleStyles from './WorkspaceAgentDevicePolicy.module.css';
 import { WorkspaceAgentPolicyCard } from './WorkspaceAgentPolicyCard';
 
-const styles = createStaticStyles(({ css }) => ({
-  option: css`
-    display: flex;
-    flex: 1;
-    gap: 8px;
-    align-items: center;
-
-    min-width: 0;
-  `,
-  optionDescription: css`
-    font-size: 12px;
-    line-height: 16px;
-    color: ${cssVar.colorTextDescription};
-  `,
-  optionIcon: css`
-    display: flex;
-    flex: none;
-    align-items: center;
-    justify-content: center;
-
-    width: 24px;
-    height: 24px;
-    border: 1px solid ${cssVar.colorBorderSecondary};
-    border-radius: ${cssVar.borderRadius};
-
-    color: ${cssVar.colorText};
-
-    background: ${cssVar.colorBgElevated};
-  `,
-  optionName: css`
-    overflow: hidden;
-
-    font-size: 14px;
-    font-weight: 500;
-    line-height: 20px;
-    color: ${cssVar.colorText};
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  `,
-  selectItem: css`
-    min-height: 40px;
-  `,
-  selectPopup: css`
-    max-width: calc(100vw - 24px);
-  `,
-  selectValue: css`
-    > span {
-      display: flex;
-      flex: 1;
-      min-width: 0;
-    }
-  `,
-  triggerIcon: css`
-    display: flex;
-    flex: none;
-    align-items: center;
-    justify-content: center;
-
-    width: 20px;
-    height: 20px;
-
-    color: ${cssVar.colorTextSecondary};
-  `,
-  triggerLabel: css`
-    display: flex;
-    flex: 1;
-    gap: 8px;
-    align-items: center;
-
-    min-width: 0;
-  `,
-  triggerName: css`
-    overflow: hidden;
-    flex: 1;
-
-    text-align: start;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  `,
-}));
+const styles = stylex.create({
+  option: { display: 'flex', flex: '1', gap: '8px', alignItems: 'center', minWidth: '0' },
+  optionDescription: { fontSize: '12px', lineHeight: '16px', color: cssVar.colorTextDescription },
+  optionIcon: {
+    display: 'flex',
+    flex: 'none',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '24px',
+    height: '24px',
+    borderWidth: '1px',
+    borderStyle: 'solid',
+    borderColor: cssVar.colorBorderSecondary,
+    borderRadius: cssVar.borderRadius,
+    color: cssVar.colorText,
+    backgroundColor: cssVar.colorBgElevated,
+    backgroundImage: 'none',
+  },
+  optionName: {
+    overflow: 'hidden',
+    fontSize: '14px',
+    fontWeight: 500,
+    lineHeight: '20px',
+    color: cssVar.colorText,
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+  },
+  selectItem: { minHeight: '40px' },
+  selectPopup: { maxWidth: 'calc(100vw - 24px)' },
+  triggerIcon: {
+    display: 'flex',
+    flex: 'none',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '20px',
+    height: '20px',
+    color: cssVar.colorTextSecondary,
+  },
+  triggerLabel: { display: 'flex', flex: '1', gap: '8px', alignItems: 'center', minWidth: '0' },
+  triggerName: {
+    overflow: 'hidden',
+    flex: '1',
+    textAlign: 'start',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+  },
+});
 
 interface ExecutionTargetLabelProps {
   compact?: boolean;
@@ -132,24 +102,24 @@ const ExecutionTargetLabel = memo<ExecutionTargetLabelProps>(
 
     if (compact) {
       return (
-        <span className={styles.triggerLabel}>
-          <span aria-hidden className={styles.triggerIcon}>
+        <span {...stylex.props(styles.triggerLabel)}>
+          <span aria-hidden {...stylex.props(styles.triggerIcon)}>
             {icon}
           </span>
-          <span className={styles.triggerName}>{label}</span>
-          {device ? <span className={styles.optionDescription}>{secondary}</span> : null}
+          <span {...stylex.props(styles.triggerName)}>{label}</span>
+          {device ? <span {...stylex.props(styles.optionDescription)}>{secondary}</span> : null}
         </span>
       );
     }
 
     return (
-      <span className={styles.option}>
-        <span aria-hidden className={styles.optionIcon}>
+      <span {...stylex.props(styles.option)}>
+        <span aria-hidden {...stylex.props(styles.optionIcon)}>
           {icon}
         </span>
         <Flexbox flex={1} style={{ minWidth: 0 }}>
-          <span className={styles.optionName}>{label}</span>
-          <span className={styles.optionDescription}>{secondary}</span>
+          <span {...stylex.props(styles.optionName)}>{label}</span>
+          <span {...stylex.props(styles.optionDescription)}>{secondary}</span>
         </Flexbox>
       </span>
     );
@@ -344,9 +314,9 @@ const WorkspaceAgentDevicePolicy = memo<WorkspaceAgentDevicePolicyProps>(
             popupMatchSelectWidth={true}
             value={selectedValue}
             classNames={{
-              item: styles.selectItem,
-              popup: styles.selectPopup,
-              value: styles.selectValue,
+              item: stylex.props(styles.selectItem).className,
+              popup: stylex.props(styles.selectPopup).className,
+              value: moduleStyles.selectValue,
             }}
             labelRender={(option) => {
               if (typeof option.value !== 'string') return option.label;
