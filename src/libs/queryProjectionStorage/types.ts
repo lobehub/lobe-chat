@@ -1,28 +1,10 @@
-export interface QueryProjectionKey {
-  queryKey: string;
-  scope: string;
-}
+import type { ReplicaRow, ReplicaRowCodec, ReplicaRowKey, ReplicaStorage } from '@lobechat/replica';
 
-export interface QueryProjection<T> {
-  data: T;
-  updatedAt: number;
-}
+export type QueryProjectionKey = ReplicaRowKey;
 
-export interface QueryProjectionStorage<T> {
-  get: (key: QueryProjectionKey) => Promise<QueryProjection<T> | undefined>;
-  /**
-   * Like `get`, but rejects when the row could not be read. Required: a replica
-   * refuses destructive passes (remove / clear / entity patch / eviction) on a
-   * storage without it.
-   */
-  getStrict: (key: QueryProjectionKey) => Promise<QueryProjection<T> | undefined>;
-  /** Rejects when the delete did not land (reads and writes stay best-effort). */
-  remove: (key: QueryProjectionKey) => Promise<void>;
-  /** Rejects when the write did not land (see `ReplicaStorage.set`). */
-  set: (key: QueryProjectionKey, projection: QueryProjection<T>) => Promise<void>;
-}
+export type QueryProjection<T> = ReplicaRow<T>;
 
-export interface QueryProjectionCodec<T> {
-  parse: (value: string) => QueryProjection<T>;
-  stringify: (projection: QueryProjection<T>) => string;
-}
+/** A replica storage whose strict read is required: replicas refuse destructive passes without it. */
+export type QueryProjectionStorage<T> = Required<ReplicaStorage<T>>;
+
+export type QueryProjectionCodec<T> = ReplicaRowCodec<T>;
