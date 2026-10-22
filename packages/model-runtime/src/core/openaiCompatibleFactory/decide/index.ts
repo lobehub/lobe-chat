@@ -28,6 +28,8 @@ const adapters = {
  * `decide`, so callers can tell decision support apart from plain chat compatibility.
  */
 export interface DecideConfig {
+  /** Whether the provider accepts the optional request user identifier. Defaults to true. */
+  includeUser?: boolean;
   /** Endpoint path relative to the client base URL, e.g. `/systemone` or `/decisions`. */
   path: string;
   /**
@@ -57,7 +59,7 @@ const requestDecision = async (
   client: OpenAI,
   payload: DecisionPayload,
   options: DecisionOptions | undefined,
-  { path, protocol, provider, requestModel }: RequestDecisionParams,
+  { includeUser = true, path, protocol, provider, requestModel }: RequestDecisionParams,
 ): Promise<DecisionResponse> => {
   const adapter = adapters[protocol];
   const questionEntries = Object.entries(payload.questions);
@@ -72,7 +74,12 @@ const requestDecision = async (
   log('decide protocol=%s model=%s questions=%d', protocol, requestModel, questionEntries.length);
 
   const raw = await client.post(path, {
-    body: adapter.buildBody({ payload, questionEntries, requestModel, user: options?.user }),
+    body: adapter.buildBody({
+      payload,
+      questionEntries,
+      requestModel,
+      user: includeUser ? options?.user : undefined,
+    }),
     headers: options?.headers,
     // Callers own retry policy: a decision is often one arm of a timed experiment, and hidden
     // SDK retries would multiply latency and spend without the caller seeing the attempts.
