@@ -1281,6 +1281,13 @@
       "when": 1792246871224,
       "tag": "0182_project_coordinator_nullable",
       "breakpoints": true
+    },
+    {
+      "idx": 183,
+      "version": "7",
+      "when": 1792649752327,
+      "tag": "0183_channel_tables",
+      "breakpoints": true
     }
   ],
   "version": "6"
