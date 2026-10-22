@@ -4,10 +4,11 @@ import { ActionIcon, createStaticStyles, cssVar, Drawer, Flexbox, Icon } from '@
 import { Menu, PanelLeftOpen, Pin } from 'lucide-react';
 import { memo, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Outlet, useNavigate, useParams, useSearchParams } from 'react-router';
+import { Outlet, useParams, useSearchParams } from 'react-router';
 
 import { ShellTopBar } from '@/features/PageShell';
 import { RouteMetaBridge } from '@/features/RouteMeta';
+import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwareNavigate';
 import { useUserStore } from '@/store/user';
 import { authSelectors } from '@/store/user/selectors';
 
@@ -80,7 +81,7 @@ interface AcceptanceWorkspaceProps {
 
 const AcceptanceWorkspace = memo<AcceptanceWorkspaceProps>(({ projectId }) => {
   const { t } = useTranslation('verify');
-  const navigate = useNavigate();
+  const navigate = useWorkspaceAwareNavigate();
   const isSignedIn = useUserStore(authSelectors.isLogin);
   const panel = useReportPanelExpand();
   const projectActionItems = useAcceptanceProjectActionItems();
