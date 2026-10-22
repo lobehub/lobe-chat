@@ -3,7 +3,7 @@
 import { Center, Flexbox, Spin, Text } from '@lobehub/ui';
 import { memo, useCallback, useLayoutEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useParams } from 'react-router';
+import { Navigate, useParams } from 'react-router';
 
 import AsyncError from '@/components/AsyncError';
 import TopicActions from '@/features/AgentSidebar/Topic/List/Item/Actions';
@@ -76,12 +76,8 @@ const ProjectConversation = memo(() => {
     return (
       <AsyncError error={topicsRequest.error} variant="page" onRetry={topicsRequest.revalidate} />
     );
-  if (!topicId)
-    return (
-      <Center height="100%">
-        <Text>{t('topics.chooseTopic')}</Text>
-      </Center>
-    );
+  // New project conversations start from the project home composer.
+  if (!topicId) return <Navigate replace relative="path" to=".." />;
   if (topicsRequest.hasData && !selectedTopic)
     return (
       <Center height="100%">

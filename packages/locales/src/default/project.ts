@@ -295,4 +295,11 @@ export default {
   'members.updateFailed': 'Could not update the agent',
   'settings.knowledgeBases': 'Libraries',
   'settings.members': 'Members',
+  'overview.createTask': 'Create task',
+  'overview.createTaskFailed': 'Could not create the task',
+  'overview.mode.chat': 'Ask coordinator',
+  'overview.mode.task': 'New task',
+  'overview.sendFailed': 'Could not create the topic',
+  'overview.taskModeHint': "Added to the project's task list",
+  'overview.taskPlaceholder': 'Describe the task to add to this project…',
 };
