@@ -1281,6 +1281,13 @@
       "when": 1792246871224,
       "tag": "0182_project_coordinator_nullable",
       "breakpoints": true
+    },
+    {
+      "idx": 183,
+      "version": "7",
+      "when": 1792603315267,
+      "tag": "0183_quick_note_persistence",
+      "breakpoints": true
     }
   ],
   "version": "6"
