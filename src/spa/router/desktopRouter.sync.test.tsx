@@ -79,6 +79,7 @@ async function readRouterSources() {
       'desktopRouter.shared.tsx',
       'desktopRouter.config.tsx',
       'desktopRouter.config.desktop.tsx',
+      'projectWorkspaceRoutes.tsx',
       'taskWorkspaceRoutes.tsx',
       'workspaceSettingsRoutes.tsx',
     ].map((filename) => readFile(path.join(process.cwd(), 'src/spa/router', filename), 'utf8')),
@@ -213,16 +214,35 @@ describe('desktop router shared definition', () => {
         'dashboard',
         'acceptance',
       ]);
-      for (const section of ['general', 'environments', 'directories']) {
+      for (const section of ['general', 'members', 'knowledge', 'environments', 'directories']) {
         const matches = matchRoutes(
           createMainAreaRoutes(factory),
           `/project/project-1/settings/${section}`,
         );
         expect(matches?.at(-1)?.params.section).toBe(section);
       }
+      // The project root is its home page (composer + overview), not a redirect.
       expect(
-        (projectIndexRoute?.element as ReactElement<{ to: string }> | undefined)?.props.to,
-      ).toBe('conversation');
+        (projectIndexRoute?.element as ReactElement<{ to?: string }> | undefined)?.props.to,
+      ).toBeUndefined();
+      expect(projectIndexRoute?.handle?.meta?.titleKey).toBe('project:sections.home');
+    },
+  );
+
+  it.each(mainAreaVariants)(
+    '%s opens a project acceptance record inside the project section',
+    (_, factory) => {
+      const list = matchRoutes(createMainAreaRoutes(factory), '/project/prj_1/acceptance');
+      const record = matchRoutes(createMainAreaRoutes(factory), '/project/prj_1/acceptance/acc_1');
+      const check = matchRoutes(
+        createMainAreaRoutes(factory),
+        '/project/prj_1/acceptance/acc_1/check/chk_1',
+      );
+
+      expect(list?.at(-1)?.route.index).toBe(true);
+      expect(record?.at(-1)?.route.path).toBe(':acceptanceId');
+      expect(record?.at(-1)?.params.acceptanceId).toBe('acc_1');
+      expect(check?.at(-1)?.params.checkId).toBe('chk_1');
     },
   );
 

@@ -40,7 +40,6 @@ export default {
   'artifacts.svg.download.svg': 'Download as SVG',
   'canvas.frameTitle': 'Canvas preview',
   'canvas.generating': 'Generating v{{version}}…',
-  'canvas.menu.openInTab': 'Open in new tab',
   'canvas.menu.versionItem': 'v{{version}} · {{date}}',
   'canvas.menu.versions': 'Version history',
   'canvas.menu.openPublic': 'Open public link',

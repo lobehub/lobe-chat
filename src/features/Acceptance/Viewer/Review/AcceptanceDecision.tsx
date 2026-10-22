@@ -16,7 +16,7 @@ import { useAcceptanceScope } from '../AcceptanceScope';
 import { checkFilterState, isException } from '../Checks/checkState';
 import { useAcceptanceComments } from '../Comments/hooks';
 import { flowPlanPhase } from '../Plan/planReview';
-import { acceptanceCheckPath } from '../routes';
+import { acceptanceCheckPath, useAcceptanceRouteBase } from '../routes';
 import { useAcceptanceBundle } from '../useAcceptanceBundle';
 import { useAcceptanceTurn } from '../useAcceptanceTurn';
 import { formatAcceptanceCountsText, LIVE_ACCEPTANCE_STATUSES } from '../verdict';
@@ -36,6 +36,7 @@ const AcceptanceDecision = ({ onDraftToComposer }: AcceptanceDecisionProps) => {
   const navigate = useNavigate();
   const hydrated = useIsHydrated();
   const { acceptanceId, embedded } = useAcceptanceScope();
+  const routeBase = useAcceptanceRouteBase();
   const { data, mutate } = useAcceptanceBundle(acceptanceId);
   const { turn, setTurn } = useAcceptanceTurn(embedded);
   const [pending, setPending] = useState(false);
@@ -305,7 +306,7 @@ const AcceptanceDecision = ({ onDraftToComposer }: AcceptanceDecisionProps) => {
         onJumpToCheck={(checkId) => {
           setFeedbackOpen(false);
           if (!embedded) {
-            navigate(acceptanceCheckPath(acceptanceId, checkId));
+            navigate(acceptanceCheckPath(acceptanceId, checkId, routeBase));
             return;
           }
           setTimeout(() => {

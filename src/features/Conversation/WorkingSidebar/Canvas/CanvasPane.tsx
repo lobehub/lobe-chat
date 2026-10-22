@@ -112,7 +112,11 @@ const CanvasPane = memo<CanvasPaneProps>(({ canvasId }) => {
         </Flexbox>
       )}
       <Flexbox flex={1} {...stylex.props(styles.content, showPending && styles.dimmed)}>
-        <CanvasFrame src={data.previewUrl} />
+        <CanvasFrame
+          canvasId={data.canvasId}
+          key={data.metadata.manifestKey}
+          version={data.version}
+        />
       </Flexbox>
     </Flexbox>
   );

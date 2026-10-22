@@ -9,6 +9,8 @@ import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwar
 import { useActiveRouteParams } from '@/hooks/useActiveRouteParams';
 import { useCurrentProjectDetail, useProjectStore } from '@/store/project';
 
+import { ProjectKnowledgeBaseSettings } from '../KnowledgeBases';
+import { ProjectMemberSettings } from '../Members';
 import { useCanManageProject } from '../useCanManageProject';
 import { AdvancedSettings } from './AdvancedSettings';
 import { GeneralSettings } from './GeneralSettings';
@@ -37,6 +39,16 @@ export function ProjectDirectoriesPage() {
       key: 'general',
       label: t('settings.general'),
       render: () => <GeneralSettings key={detail.project.id} project={detail.project} />,
+    },
+    {
+      key: 'members',
+      label: t('settings.members'),
+      render: () => <ProjectMemberSettings detail={detail} />,
+    },
+    {
+      key: 'knowledge',
+      label: t('settings.knowledgeBases'),
+      render: () => <ProjectKnowledgeBaseSettings detail={detail} />,
     },
     {
       key: 'environments',

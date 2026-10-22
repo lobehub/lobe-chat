@@ -59,6 +59,19 @@ export interface ProjectKnowledgeBaseInput {
 
 export type ProjectKnowledgeBasePatch = Partial<Omit<ProjectKnowledgeBaseInput, 'knowledgeBaseId'>>;
 
+/** Display meta of a project's main agent, joined into list rows only. */
+export interface ProjectCoordinatorAgentMeta {
+  avatar: string | null;
+  backgroundColor: string | null;
+  id: string;
+  name: string | null;
+  title: string | null;
+}
+
+export type ProjectListRow = typeof projects.$inferSelect & {
+  coordinatorAgent: ProjectCoordinatorAgentMeta | null;
+};
+
 export interface ProjectModelOptions {
   /**
    * Workspace owners and admins manage the agent members of every readable
@@ -101,6 +114,20 @@ export class ProjectModel {
   /** Visibility decides who sees the project at all, so only its creator may change it. */
   private ownedByCaller() {
     return and(this.readable(), eq(projects.userId, this.userId));
+  }
+
+  /**
+   * A public workspace project is seen by every member, while a private agent
+   * or library is visible to its creator alone, so such a project binds only
+   * public resources. Anything else would show each reader a different project.
+   */
+  private assertSharedResource(
+    project: { visibility: string; workspaceId: string | null },
+    resourceVisibility: string,
+    message: string,
+  ) {
+    if (project.workspaceId && project.visibility === 'public' && resourceVisibility !== 'public')
+      throw new Error(message);
   }
 
   /** Member management: the creator, or a workspace admin for any readable project. */
@@ -241,25 +268,61 @@ export class ProjectModel {
       .where(and(inArray(projects.id, ids), this.readable()));
   }
 
-  async findByIdOrSlug(reference: string) {
+  /**
+   * Resolve what a person or a repository config would write to name a
+   * project: its id, its slug, or its task identifier (`LOBE`, matched
+   * case-insensitively). An exact id beats a slug, and a slug beats an
+   * identifier, so one project's identifier never shadows another's slug.
+   */
+  async findByReference(reference: string) {
+    const identifier = reference.trim().toUpperCase();
     const [project] = await this.db
       .select()
       .from(projects)
-      .where(and(or(eq(projects.id, reference), eq(projects.slug, reference)), this.readable()))
+      .where(
+        and(
+          or(
+            eq(projects.id, reference),
+            eq(projects.slug, reference),
+            eq(projects.identifier, identifier),
+          ),
+          this.readable(),
+        ),
+      )
+      .orderBy(
+        sql`CASE WHEN ${projects.id} = ${reference} THEN 0 WHEN ${projects.slug} = ${reference} THEN 1 ELSE 2 END`,
+      )
       .limit(1);
     return project ?? null;
   }
 
-  async list(options: { limit?: number; offset?: number; statuses?: ProjectStatus[] } = {}) {
+  async list(
+    options: { limit?: number; offset?: number; statuses?: ProjectStatus[] } = {},
+  ): Promise<ProjectListRow[]> {
     const { limit = 50, offset = 0, statuses } = options;
     const statusWhere = statuses?.length ? inArray(projects.status, statuses) : undefined;
-    return this.db
-      .select()
+    const rows = await this.db
+      .select({
+        // Drizzle nulls a left-joined object when its first column is null, so the
+        // non-null id leads; coordinators usually have no avatar.
+        coordinatorAgent: {
+          id: agents.id,
+          avatar: agents.avatar,
+          backgroundColor: agents.backgroundColor,
+          name: agents.name,
+          title: agents.title,
+        },
+        project: projects,
+      })
       .from(projects)
+      .leftJoin(agents, eq(agents.id, projects.coordinatorAgentId))
       .where(and(this.readable(), statusWhere))
       .orderBy(desc(projects.updatedAt))
       .limit(limit)
       .offset(offset);
+    // Coordinators are virtual agents the client agent list never loads, so the
+    // list carries their display meta for the owner column.
+    return rows.map(({ coordinatorAgent, project }) => ({ ...project, coordinatorAgent }));
   }
 
   async update(id: string, input: UpdateProjectInput) {
@@ -339,7 +402,7 @@ export class ProjectModel {
       throw new Error('The project coordinator is managed by the project');
     }
     const [agent] = await this.db
-      .select({ id: agents.id })
+      .select({ id: agents.id, visibility: agents.visibility })
       .from(agents)
       .where(
         and(
@@ -349,6 +412,11 @@ export class ProjectModel {
       )
       .limit(1);
     if (!agent) throw new Error('Agent not found');
+    this.assertSharedResource(
+      project,
+      agent.visibility,
+      'A shared project only takes shared agents',
+    );
 
     const [binding] = await this.db
       .insert(projectAgents)
@@ -419,9 +487,10 @@ export class ProjectModel {
 
   async addKnowledgeBase(projectId: string, input: ProjectKnowledgeBaseInput) {
     // Knowledge is curated by everyone who can read the project, not only its creator.
-    if (!(await this.findById(projectId))) return null;
+    const project = await this.findById(projectId);
+    if (!project) return null;
     const [knowledgeBase] = await this.db
-      .select({ id: knowledgeBases.id })
+      .select({ id: knowledgeBases.id, visibility: knowledgeBases.visibility })
       .from(knowledgeBases)
       .where(
         and(
@@ -434,6 +503,11 @@ export class ProjectModel {
       )
       .limit(1);
     if (!knowledgeBase) throw new Error('Knowledge base not found');
+    this.assertSharedResource(
+      project,
+      knowledgeBase.visibility,
+      'A shared project only takes shared knowledge bases',
+    );
 
     const [binding] = await this.db
       .insert(projectKnowledgeBases)

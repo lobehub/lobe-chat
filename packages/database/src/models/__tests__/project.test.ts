@@ -1,7 +1,7 @@
 import { randomUUID } from 'node:crypto';
 
 import { INBOX_SESSION_ID } from '@lobechat/const';
-import { and, eq } from 'drizzle-orm';
+import { and, eq, inArray } from 'drizzle-orm';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { getTestDB } from '../../core/getTestDB';
@@ -145,13 +145,33 @@ describe('ProjectModel', () => {
     const project = await createProject(model, { name: 'Apollo', slug: 'apollo' });
     await createProject(otherModel, { name: 'Other Apollo', slug: 'other-apollo' });
 
-    expect(await model.findByIdOrSlug('apollo')).toEqual(
+    expect(await model.findByReference('apollo')).toEqual(
       expect.objectContaining({ id: project.id }),
     );
-    expect(await model.findByIdOrSlug(project.id)).toEqual(
+    expect(await model.findByReference(project.id)).toEqual(
       expect.objectContaining({ slug: 'apollo' }),
     );
-    expect(await model.findByIdOrSlug('other-apollo')).toBeNull();
+    expect(await model.findByReference('other-apollo')).toBeNull();
+  });
+
+  it('resolves a project by its identifier, case-insensitively, within the current scope', async () => {
+    const project = await model.create({ identifier: 'APLO', name: 'Apollo' });
+    await otherModel.create({ identifier: 'OTHR', name: 'Other' });
+
+    expect(await model.findByReference('APLO')).toEqual(
+      expect.objectContaining({ id: project.id }),
+    );
+    expect(await model.findByReference('aplo')).toEqual(
+      expect.objectContaining({ id: project.id }),
+    );
+    expect(await model.findByReference('OTHR')).toBeNull();
+  });
+
+  it('prefers an exact id or slug over another project whose identifier matches', async () => {
+    const bySlug = await createProject(model, { name: 'By slug', slug: 'crux' });
+    await model.create({ identifier: 'CRUX', name: 'By identifier' });
+
+    expect(await model.findByReference('crux')).toEqual(expect.objectContaining({ id: bySlug.id }));
   });
 
   it('finds a bounded set of readable projects', async () => {
@@ -217,6 +237,47 @@ describe('ProjectModel', () => {
     ]);
     expect(await model.list({ statuses: [] })).toHaveLength(2);
     expect(await model.list({ limit: 1, offset: 1 })).toHaveLength(1);
+  });
+
+  it('lists projects with their main agent display meta', async () => {
+    const project = await createProject(model, { name: 'Apollo' });
+    const styled = await createProject(model, { name: 'Gemini' });
+    const cleared = await createProject(model, { name: 'Cleared' });
+    await serverDB
+      .update(agents)
+      .set({ avatar: '🚀', backgroundColor: '#000', name: 'Ada' })
+      .where(eq(agents.id, styled.coordinatorAgentId));
+    await serverDB
+      .update(projects)
+      .set({ coordinatorAgentId: null })
+      .where(eq(projects.id, cleared.id));
+
+    const coordinators = await serverDB
+      .select({ avatar: agents.avatar, id: agents.id, title: agents.title })
+      .from(agents)
+      .where(inArray(agents.id, [project.coordinatorAgentId, styled.coordinatorAgentId]));
+    const titleOf = (id: string) => coordinators.find((agent) => agent.id === id)?.title;
+    const rows = await model.list();
+
+    // A freshly created coordinator has no avatar; its meta must still be listed.
+    expect(
+      coordinators.find((agent) => agent.id === project.coordinatorAgentId)?.avatar,
+    ).toBeNull();
+    expect(rows.find((row) => row.id === project.id)?.coordinatorAgent).toEqual({
+      avatar: null,
+      backgroundColor: null,
+      id: project.coordinatorAgentId,
+      name: null,
+      title: titleOf(project.coordinatorAgentId),
+    });
+    expect(rows.find((row) => row.id === styled.id)?.coordinatorAgent).toEqual({
+      avatar: '🚀',
+      backgroundColor: '#000',
+      id: styled.coordinatorAgentId,
+      name: 'Ada',
+      title: titleOf(styled.coordinatorAgentId),
+    });
+    expect(rows.find((row) => row.id === cleared.id)?.coordinatorAgent).toBeNull();
   });
 
   it('does not expose or mutate another user project in personal mode', async () => {
@@ -360,6 +421,44 @@ describe('ProjectModel', () => {
     expect(await model.removeKnowledgeBase(project.id, knowledgeBase.id)).toBe(false);
   });
 
+  // A private binding on a shared project would be filtered out for every reader but its creator.
+  it('binds only shared agents and knowledge bases to a shared workspace project', async () => {
+    const workspaceId = 'project-shared-binding-workspace';
+    await serverDB.insert(workspaces).values({
+      id: workspaceId,
+      name: 'Shared Binding Workspace',
+      primaryOwnerId: userId,
+      slug: workspaceId,
+    });
+    const creator = new ProjectModel(serverDB, userId, workspaceId);
+    const sharedProject = await createProject(creator, { name: 'Shared' });
+    const privateProject = await createProject(creator, { name: 'Mine', visibility: 'private' });
+    const [privateAgent] = await serverDB
+      .insert(agents)
+      .values({ title: 'Private agent', userId, visibility: 'private', workspaceId })
+      .returning();
+    const [privateKnowledgeBase] = await serverDB
+      .insert(knowledgeBases)
+      .values({ name: 'Private KB', userId, visibility: 'private', workspaceId })
+      .returning();
+
+    await expect(creator.addAgent(sharedProject.id, { agentId: privateAgent.id })).rejects.toThrow(
+      'A shared project only takes shared agents',
+    );
+    await expect(
+      creator.addKnowledgeBase(sharedProject.id, { knowledgeBaseId: privateKnowledgeBase.id }),
+    ).rejects.toThrow('A shared project only takes shared knowledge bases');
+
+    expect(await creator.addAgent(privateProject.id, { agentId: privateAgent.id })).toEqual(
+      expect.objectContaining({ agentId: privateAgent.id }),
+    );
+    expect(
+      await creator.addKnowledgeBase(privateProject.id, {
+        knowledgeBaseId: privateKnowledgeBase.id,
+      }),
+    ).toEqual(expect.objectContaining({ knowledgeBaseId: privateKnowledgeBase.id }));
+  });
+
   it('updates member and knowledge bindings without touching the coordinator', async () => {
     const project = await createProject(model, { name: 'Patch bindings' });
     const [agent] = await serverDB.insert(agents).values({ title: 'Writer', userId }).returning();
@@ -469,6 +568,27 @@ describe('ProjectModel', () => {
         canManageMembers: false,
       });
     }
+  });
+
+  it('lets every member who can see a project file work in it', async () => {
+    const workspaceId = 'project-task-workspace';
+    await serverDB.insert(workspaces).values({
+      id: workspaceId,
+      name: 'Task Workspace',
+      primaryOwnerId: userId,
+      slug: workspaceId,
+    });
+    const creator = new ProjectModel(serverDB, userId, workspaceId);
+    const project = await createProject(creator, { name: 'Shared work' });
+    const privateProject = await createProject(creator, { name: 'Solo', visibility: 'private' });
+    const memberTasks = new TaskModel(serverDB, otherUserId, workspaceId);
+
+    expect(await memberTasks.create({ instruction: 'Pitch in', projectId: project.id })).toEqual(
+      expect.objectContaining({ identifier: `${project.identifier}-1` }),
+    );
+    await expect(
+      memberTasks.create({ instruction: 'Sneak in', projectId: privateProject.id }),
+    ).rejects.toThrow('Project not found');
   });
 
   it('returns null or false for binding operations on inaccessible projects and resources', async () => {

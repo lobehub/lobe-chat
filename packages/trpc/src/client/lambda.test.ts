@@ -1,3 +1,5 @@
+import { initTRPC } from '@trpc/server';
+import { fetchRequestHandler } from '@trpc/server/adapters/fetch';
 import superjson from 'superjson';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -104,6 +106,44 @@ describe('lambdaClient transport lanes', () => {
   afterEach(() => {
     vi.unstubAllGlobals();
     fetchMock.mockReset();
+  });
+
+  it('streams a large Canvas snapshot without buffering it with ordinary reads', async () => {
+    const t = initTRPC.create({ transformer: superjson });
+    const snapshot = { entry: 'index.html', files: [{ content: 'a'.repeat(6 * 1024 * 1024) }] };
+    const router = t.router({
+      agent: t.router({ getAgentConfigById: t.procedure.query(() => null) }),
+      canvas: t.router({ getProject: t.procedure.query(() => snapshot) }),
+    });
+    const transports: { streaming: boolean; url: string }[] = [];
+    fetchMock.mockImplementation(async (input: RequestInfo | URL, init: RequestInit) => {
+      const req = new Request(new URL(String(input), 'http://localhost'), init);
+      const streaming = req.headers.get('trpc-accept') === 'application/jsonl';
+      transports.push({ streaming, url: req.url });
+      const response = await fetchRequestHandler({
+        createContext: () => ({}),
+        endpoint: '/trpc/lambda',
+        req,
+        router,
+      });
+      if (streaming) return response;
+      const text = await response.text();
+      return text.length > 4_500_000
+        ? new Response('Response payload too large', { status: 500 })
+        : new Response(text, { headers: response.headers });
+    });
+
+    const [result] = await Promise.all([
+      lambdaClient.canvas.getProject.query({ canvasId: 'cvs_large', version: 1 }),
+      lambdaClient.agent.getAgentConfigById.query({ agentId: 'agt_test' }),
+    ]);
+
+    expect(result).toEqual(snapshot);
+    expect(transports).toHaveLength(2);
+    expect(transports.find((item) => item.streaming)?.url).toContain('/canvas.getProject?');
+    expect(transports.find((item) => item.streaming)?.url).not.toContain(
+      'agent.getAgentConfigById',
+    );
   });
 
   // Regression: every `device.*` read hops from the server to one of the user's

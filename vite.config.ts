@@ -125,7 +125,8 @@ export default defineConfig({
             __dirname,
             isAuth ? 'index.auth.html' : isMobile ? 'index.mobile.html' : 'index.html',
           ),
-          ...(!isAuth && canvasRuntimeEntries),
+          // Mobile/auth have no Canvas consumer, so the plugin emits no runtime entries.
+          ...(!isAuth && !isMobile && canvasRuntimeEntries),
         },
         strictExecutionOrder: true,
       }),

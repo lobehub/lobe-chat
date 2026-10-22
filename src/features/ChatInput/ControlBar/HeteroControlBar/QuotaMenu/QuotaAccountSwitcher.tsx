@@ -29,17 +29,19 @@ const styles = createStaticStyles(({ css }) => ({
  * per-account controls). The heavy lifting lives in QuotaAccountManagerModal.
  */
 const QuotaAccountSwitcher = memo<{
+  /** Bound execution device the panel samples; the manager checks logins there, not here. */
+  deviceId?: string;
   placement?: 'top' | 'bottom';
   provider: QuotaCalendarProvider;
   snapshot: { identity?: QuotaAccountIdentity | null };
-}>(({ snapshot, provider, placement = 'top' }) => {
+}>(({ deviceId, snapshot, provider, placement = 'top' }) => {
   const { t } = useTranslation('chat');
   const agentId = useAgentId();
   const identity = snapshot.identity;
 
   const openManager = useCallback(() => {
-    if (agentId) openQuotaAccountManagerModal(agentId);
-  }, [agentId]);
+    if (agentId) openQuotaAccountManagerModal(agentId, { deviceId });
+  }, [agentId, deviceId]);
 
   if (!agentId) return null;
 

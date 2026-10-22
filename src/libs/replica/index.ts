@@ -4,7 +4,6 @@ import {
   defineReplica as defineCoreReplica,
   type DefineReplicaOptions,
   isReplicaSyncKey,
-  REPLICA_INDEX_KEY,
   type ReplicaPagedData,
   type ReplicaResource,
   type ReplicaScope,
@@ -16,14 +15,11 @@ import {
   createSWRDriver,
 } from '@lobechat/replica/zustand';
 
-import {
-  IndexedDBQueryProjectionStorage,
-  LocalStorageQueryProjectionStorage,
-} from '@/libs/queryProjectionStorage';
 import { mutate, useClientDataSWR } from '@/libs/swr';
 import { getCacheScope, isScopeTrusted, useCacheScope } from '@/libs/swr/useCacheScope';
 
 import { notifyReplicaDevtools, registerReplicaDevtools } from './devtools';
+import { AppIndexedDBStorage, AppLocalStorage } from './storage';
 
 /**
  * LobeHub wiring of `@lobechat/replica`: replicas are partitioned like the SWR
@@ -97,9 +93,8 @@ const resolveStorage =
   (namespace: string): ReplicaStorage<TData> | undefined => {
     if (typeof storage === 'function') return storage(namespace);
     if (typeof storage === 'object') return storage;
-    if (storage === 'indexedDB') return new IndexedDBQueryProjectionStorage<TData>({ namespace });
-    if (storage === 'localStorage')
-      return new LocalStorageQueryProjectionStorage<TData>({ namespace });
+    if (storage === 'indexedDB') return new AppIndexedDBStorage<TData>({ namespace });
+    if (storage === 'localStorage') return new AppLocalStorage<TData>({ namespace });
     return undefined;
   };
 
@@ -153,30 +148,6 @@ export const revalidateReplica = (
     isReplicaSyncKey(queryKey, resource.name, { key, scope: resource.scope.get() }),
   );
 
-/**
- * The entry storage keys this resource has a persisted row for in the active
- * scope, oldest first.
- *
- * Storage has no key listing of its own; the engine keeps one index row per
- * scope (`REPLICA_INDEX_KEY`) as it persists and drops entries, and this reads
- * it. That is how code outside the owning store reaches rows an *earlier
- * session* wrote — bounding how many survive a reload, or invalidating a row
- * whose entry is not loaded in memory.
- *
- * The keys are storage keys (`key`, plus `?query` when the resource sets one),
- * so a caller only matches them against entry keys when the resource leaves
- * `query` unset.
- */
-export const readReplicaStoredKeys = async (
-  resource: Pick<ReplicaResource<any, any, any>, 'scope' | 'storage'>,
-): Promise<string[]> => {
-  const row = await resource.storage?.get({
-    queryKey: REPLICA_INDEX_KEY,
-    scope: resource.scope.get(),
-  });
-  return (row?.data as unknown as string[] | undefined) ?? [];
-};
-
 /** `createReplicaSlice` bound to the app's SWR driver. */
 export const createReplicaSlice = <TStore, TParams, TData, TFetched = TData>(
   resource: ReplicaResource<TParams, TData, TFetched>,
@@ -196,6 +167,7 @@ export const createReplicaSlice = <TStore, TParams, TData, TFetched = TData>(
   return slice;
 };
 
+export { AppIndexedDBStorage, AppLocalStorage } from './storage';
 export * from '@lobechat/replica';
 export {
   recordLens,
