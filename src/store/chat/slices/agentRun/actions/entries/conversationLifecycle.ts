@@ -97,6 +97,7 @@ import {
 import { isQueueBlockingOperation, snapshotQueuedFiles } from '@/store/chat/slices/operation/types';
 import { PortalViewType } from '@/store/chat/slices/portal/initialState';
 import { chatPortalSelectors } from '@/store/chat/slices/portal/selectors';
+import { topicListFilterOf } from '@/store/chat/slices/topic/projection';
 import { resolveTopicHeteroPin } from '@/store/chat/slices/topic/selectors';
 import { type ChatStore } from '@/store/chat/store';
 import {
@@ -234,29 +235,11 @@ export class ConversationLifecycleActionImpl {
     this.#get = get;
   }
 
-  /**
-   * Read the active topic-list filter from `topicDataMap` so it can be
-   * forwarded to `sendMessageInServer`. Without this, the server returns
-   * an unfiltered list which `internal_updateTopics` then writes back over
-   * the filtered sidebar — completed/cron topics reappear until the next
-   * SWR revalidation.
-   */
-  #getTopicFilter = (
-    agentId?: string,
-    groupId?: string,
-  ):
-    | { excludeStatuses?: string[]; excludeTriggers?: string[]; includeTriggers?: string[] }
-    | undefined => {
-    if (!agentId && !groupId) return undefined;
-    const data = this.#get().topicDataMap[topicMapKey({ agentId, groupId })];
-    if (!data) return undefined;
-    const { excludeStatuses, excludeTriggers } = data;
-    if (!excludeStatuses?.length && !excludeTriggers?.length) return undefined;
-    return {
-      ...(excludeStatuses?.length ? { excludeStatuses } : {}),
-      ...(excludeTriggers?.length ? { excludeTriggers } : {}),
-    };
-  };
+  /** The active topic-list filter, forwarded to `sendMessageInServer` (see `topicListFilterOf`). */
+  #getTopicFilter = (agentId?: string, groupId?: string) =>
+    agentId || groupId
+      ? topicListFilterOf(this.#get().topicDataMap[topicMapKey({ agentId, groupId })])
+      : undefined;
 
   /**
    * Land a thread the server created for this send: record it on the operation,

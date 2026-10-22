@@ -10,6 +10,7 @@ import type { TopicGroupMode, TopicSortBy } from '@/types/topic';
 
 import { useAgentTopicGroupMode } from './hooks/useAgentTopicGroupMode';
 import { useTopicListScope } from './TopicListScope';
+import { useOnlyMineFilterItem } from './useOnlyMineFilterItem';
 import { useProjectTopicFilterItems } from './useProjectTopicFilterItems';
 
 export const useTopicFilterDropdownMenu = (): (() => DropdownItem[]) => {
@@ -17,6 +18,7 @@ export const useTopicFilterDropdownMenu = (): (() => DropdownItem[]) => {
   const { topicGroupMode, updateTopicGroupMode } = useAgentTopicGroupMode();
   const scope = useTopicListScope();
   const projectFilterItems = useProjectTopicFilterItems();
+  const onlyMineItem = useOnlyMineFilterItem();
 
   const [topicSortBy, topicIncludeCompleted, updatePreference] = useUserStore((s) => [
     preferenceSelectors.topicSortBy(s),
@@ -75,6 +77,7 @@ export const useTopicFilterDropdownMenu = (): (() => DropdownItem[]) => {
               updatePreference({ topicIncludeCompleted: !topicIncludeCompleted });
             },
           },
+          ...(onlyMineItem ? [onlyMineItem] : []),
         ],
         key: 'filter',
         label: t('filter.filter'),
@@ -85,6 +88,7 @@ export const useTopicFilterDropdownMenu = (): (() => DropdownItem[]) => {
     topicGroupMode,
     topicSortBy,
     topicIncludeCompleted,
+    onlyMineItem,
     updatePreference,
     updateTopicGroupMode,
     projectFilterItems,

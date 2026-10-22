@@ -1,7 +1,7 @@
 import { act, renderHook } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { IndexedDBQueryProjectionStorage } from '@/libs/queryProjectionStorage';
+import { AppIndexedDBStorage } from '@/libs/replica';
 import { aiProviderSelectors, useAiInfraStore as useStore } from '@/store/aiInfra';
 import { initialAIModelState } from '@/store/aiInfra/slices/aiModel/initialState';
 import type {
@@ -80,7 +80,7 @@ const RUNTIME_STATE_ROW = {
   queryKey: aiProviderRuntimeStateResource.storageKey({ isLogin: true }),
   scope: SCOPE,
 };
-const rawRuntimeStateStorage = new IndexedDBQueryProjectionStorage<any>({
+const rawRuntimeStateStorage = new AppIndexedDBStorage<any>({
   namespace: 'replica:aiProviderRuntimeState:v2',
 });
 

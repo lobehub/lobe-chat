@@ -39,6 +39,7 @@ import { createVideoWithCompletionMode } from '../../utils/videoCompletionMode';
 import type { LobeRuntimeAI } from '../BaseAI';
 import type { ApiType } from './apiTypes';
 import { getChatAttemptObservation, observeChatAttempt } from './chatAttempt';
+import { createChatAttemptFallbackCheck, resolveHoldReasoning } from './chatFallbackHooks';
 import type { ChatStreamFallbackAttempt } from './chatStreamFallback';
 import { createChatStreamFallbackResponse } from './chatStreamFallback';
 import type { RouteAttemptResult, RouteAttemptStart } from './routeAttempt';
@@ -534,6 +535,8 @@ export const createRouterRuntime = ({
         }
       };
 
+      const holdReasoning = await resolveHoldReasoning(params.isImageOutputModel, payload.model);
+
       const startAttempt = async (optionIndex: number): Promise<ChatStreamFallbackAttempt> => {
         const optionItem = routerOptions[optionIndex];
         const {
@@ -579,7 +582,7 @@ export const createRouterRuntime = ({
               if (routeTasks) routeTasks.track(Promise.resolve(task));
               else return task;
             },
-            { deferCallbacks: true },
+            { deferCallbacks: true, holdReasoning },
           );
           const durationMs = Date.now() - attempt.startedAt;
           reportReturnedAttempt(attempt, {
@@ -665,14 +668,7 @@ export const createRouterRuntime = ({
       try {
         return await createChatStreamFallbackResponse({
           onSettled: routeTasks?.settle,
-          shouldFallback: async (result) => {
-            try {
-              return Boolean(await params.shouldFallbackChatAttempt?.(result));
-            } catch (error) {
-              log('shouldFallbackChatAttempt callback error: %O', error);
-              return false;
-            }
-          },
+          shouldFallback: createChatAttemptFallbackCheck(params.shouldFallbackChatAttempt),
           startAttempt,
           totalAttempts: routerOptions.length,
         });

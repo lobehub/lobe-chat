@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 
 import { MAIN_SIDEBAR_EXCLUDE_TRIGGERS } from '@/const/topic';
 import { useActiveRouteParams } from '@/hooks/useActiveRouteParams';
+import { useTopicOnlyMine } from '@/hooks/useTopicOnlyMine';
 import { useChatStore } from '@/store/chat';
 import { operationSelectors } from '@/store/chat/selectors';
 import { groupSidebarTopics, selectSidebarTopics } from '@/store/chat/slices/topic/selectors';
@@ -10,6 +11,8 @@ import {
   useProjectDirectoryStore,
   useProjectTopics,
 } from '@/store/projectWorkingDirectory';
+import { useUserStore } from '@/store/user';
+import { userProfileSelectors } from '@/store/user/selectors';
 import type { ChatTopic, GroupedTopic, TopicGroupMode, TopicSortBy } from '@/types/topic';
 import { filterTopics } from '@/utils/client/topic';
 
@@ -49,6 +52,19 @@ export const pinCoordinatorGroup = (groups: GroupedTopic[], coordinatorAgentId?:
 export const useScopedTopic = (id?: string) =>
   useScopedTopics().topics?.find((topic) => topic.id === id);
 
+/**
+ * Project topics arrive in full, so the workspace "only mine" filter applies on
+ * the client: keep only the caller's rows when it is on.
+ */
+export const useOnlyMineTopics = <T extends { userId?: string | null }>(topics: T[]): T[] => {
+  const onlyMine = useTopicOnlyMine();
+  const userId = useUserStore(userProfileSelectors.userId);
+  return useMemo(
+    () => (onlyMine ? topics.filter((topic) => topic.userId === userId) : topics),
+    [topics, onlyMine, userId],
+  );
+};
+
 export const useScopedSidebarTopics = (
   pageSize: number,
   sortBy: TopicSortBy,
@@ -65,20 +81,28 @@ export const useScopedSidebarTopics = (
   const directories = useProjectDirectories(scope?.projectId);
   const filter = useTopicListFilter()?.filter;
   const filtering = !!(filter?.status || filter?.device);
+  const sidebarTopics = useMemo(
+    () =>
+      (topics ?? []).filter(
+        (topic: ChatTopic) =>
+          !topic.trigger || !MAIN_SIDEBAR_EXCLUDE_TRIGGERS.includes(topic.trigger),
+      ),
+    [topics],
+  );
+  const listed = useOnlyMineTopics(sidebarTopics);
   // The status / device filter is an explicit ask, so it narrows the list
-  // strictly — unlike the archived toggle, which keeps the open topic in view.
-  const candidates = useMemo(() => {
-    const list: ChatTopic[] = (topics ?? []).filter(
-      (topic) => !topic.trigger || !MAIN_SIDEBAR_EXCLUDE_TRIGGERS.includes(topic.trigger),
-    );
-    return {
-      active: filtering ? undefined : list.find((topic) => topic.id === topicId),
+  // strictly — unlike "only mine" and the archived toggle, which keep the open
+  // topic in view.
+  const candidates = useMemo(
+    () => ({
+      active: filtering ? undefined : sidebarTopics.find((topic) => topic.id === topicId),
       filtered:
         filter && filtering
-          ? filterTopics(list, filter, { directories, loadingTopicIds: running })
-          : list,
-    };
-  }, [topics, topicId, filter, filtering, directories, running]);
+          ? filterTopics(listed, filter, { directories, loadingTopicIds: running })
+          : listed,
+    }),
+    [sidebarTopics, listed, topicId, filter, filtering, directories, running],
+  );
   const visible = useMemo(
     () =>
       selectSidebarTopics(
