@@ -253,3 +253,10 @@ export const styles = stylex.create({
 export const HIGHLIGHTED_CLASS_NAMES = (stylex.props(styles.highlighted).className ?? '')
   .split(' ')
   .filter(Boolean);
+
+/** Composer host classes, resolved once for components that take a plain `className`. */
+export const composerClassNames = {
+  avatar: stylex.props(styles.composerAvatar).className,
+  input: stylex.props(styles.composer).className,
+  plain: stylex.props(styles.composerPlain).className,
+};
