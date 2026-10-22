@@ -48,7 +48,7 @@ function expected(): Array<
     ['listInstances', 'query', 15],
     ['readFile', 'query', 15],
     ['refreshStorageUsage', 'mutation', 13],
-    ['removeEnvironment', 'mutation', 12],
+    ['removeEnvironment', 'mutation', 15],
     ['removeFile', 'mutation', 15],
     ['removeInstance', 'mutation', 15],
     ['renameFile', 'mutation', 15],
