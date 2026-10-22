@@ -376,6 +376,89 @@ describe('ImageGenerationExecutionRuntime', () => {
     expect(result.content).toContain('Insufficient budget to perform this operation');
   });
 
+  describe('reference images', () => {
+    const createServiceWithParameters = (parameters: Record<string, unknown>) =>
+      createService({
+        listImageModels: vi.fn().mockResolvedValue({
+          providers: [
+            {
+              id: DEFAULT_IMAGE_GENERATION_PROVIDER,
+              models: [{ id: DEFAULT_IMAGE_GENERATION_MODEL, parameters }],
+              name: 'Provider 1',
+            },
+          ],
+          totalModels: 1,
+        }),
+      });
+
+    it('merges imageUrl and imageUrls into the declared imageUrls field in order', async () => {
+      const service = createServiceWithParameters({
+        ...modelParameters,
+        imageUrls: { default: [], maxCount: 3 },
+      });
+      const runtime = new ImageGenerationExecutionRuntime(service);
+
+      const result = await runtime.generateImage({
+        imageUrl: 'https://example.com/a.png',
+        imageUrls: ['https://example.com/b.png', ' https://example.com/a.png '],
+        parameters: { imageUrls: ['https://example.com/c.png'], size: '1024x1024' },
+        prompt: 'Blend the references',
+        waitUntilComplete: false,
+      });
+
+      expect(result.success).toBe(true);
+      expect(service.createImage).toHaveBeenCalledWith(
+        expect.objectContaining({
+          params: {
+            imageUrls: [
+              'https://example.com/a.png',
+              'https://example.com/b.png',
+              'https://example.com/c.png',
+            ],
+            prompt: 'Blend the references',
+            size: '1024x1024',
+          },
+        }),
+      );
+    });
+
+    it.each([
+      {
+        error: 'at most 2 reference images, but 3 were provided',
+        name: 'more references than imageUrls.maxCount',
+        parameters: { ...modelParameters, imageUrls: { default: [], maxCount: 2 } },
+      },
+      {
+        error: 'a single reference image, but 2 were provided',
+        name: 'multiple references for a single imageUrl model',
+        parameters: { ...modelParameters, imageUrl: { default: null } },
+      },
+      {
+        error: 'does not accept reference images',
+        name: 'references for a model without reference parameters',
+        parameters: modelParameters,
+      },
+    ])('rejects $name before creating a generation', async ({ error, parameters }) => {
+      const service = createServiceWithParameters(parameters);
+      const runtime = new ImageGenerationExecutionRuntime(service);
+
+      const result = await runtime.generateImage({
+        imageUrl: 'https://example.com/a.png',
+        imageUrls:
+          'imageUrls' in parameters
+            ? ['https://example.com/b.png', 'https://example.com/c.png']
+            : ['https://example.com/b.png'],
+        prompt: 'Blend the references',
+      });
+
+      expect(result.success).toBe(false);
+      expect(result.error).toMatchObject({ type: 'InvalidReferenceImages' });
+      expect(result.content).toContain(error);
+      expect(service.createGenerationTopic).not.toHaveBeenCalled();
+      expect(service.createImage).not.toHaveBeenCalled();
+    });
+  });
+
   it('rejects invalid image counts before creating tasks', async () => {
     const service = createService();
     const runtime = new ImageGenerationExecutionRuntime(service);
