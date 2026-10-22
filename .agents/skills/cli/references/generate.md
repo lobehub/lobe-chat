@@ -60,6 +60,36 @@ cat README.md | lh gen text "summarize this" --pipe
 
 ---
 
+## `lh generate json <prompt>` / `lh gen json <prompt>`
+
+Generate a JSON object with structured output.
+
+**Source**: `apps/cli/src/commands/generate/json.ts`
+
+```bash
+lh gen json <prompt> [-m <model>] [-p <provider>] [-s <prompt>] [--schema <json|path>] [--schema-name <name>] [--strict] [--pipe]
+```
+
+| Option                      | Description                                        | Default              |
+| --------------------------- | -------------------------------------------------- | -------------------- |
+| `-m, --model <model>`       | Model ID                                           | `openai/gpt-4o-mini` |
+| `-p, --provider <provider>` | Provider name                                      | -                    |
+| `-s, --system <prompt>`     | System prompt                                      | -                    |
+| `--schema <json\|path>`     | JSON Schema, inline or from a file (required)      | -                    |
+| `--schema-name <name>`      | Schema name sent to the model                      | `response`           |
+| `--strict`                  | Require the model to adhere strictly to the schema | `false`              |
+| `--pipe`                    | Read additional context from stdin                 | `false`              |
+
+The command calls the `aiChat.outputJSON` mutation rather than `/webapi/chat`, so the server owns
+provider-specific handling (`json_schema` support, the tool-calling fallback, Responses API routing), and
+prints the parsed object pretty-printed. It is a single request: `--stream`, `--temperature` and
+`--max-tokens` are not accepted options, and passing them fails as an unknown option. A reply the server
+cannot parse into the schema exits with code 1. The server keeps only `type`, `properties`, `required`,
+`additionalProperties` and `$defs`; schemas using other root keywords (`allOf`, `minProperties`, ...) are
+rejected up front.
+
+---
+
 ## `lh generate image <prompt>` / `lh gen image <prompt>`
 
 Generate images from text prompt. This is an async operation — the command submits the task and returns a generation ID + async task ID for tracking.
