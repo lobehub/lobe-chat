@@ -13,7 +13,7 @@ import { sx } from '@/styles/sx';
 
 import { styles } from './styles';
 import type { GoalClarificationGroup } from './usePendingGoalClarifications';
-import userRequest from './userRequest.module.css';
+import requestModule from './userRequest.module.css';
 
 interface GoalClarificationCardProps {
   group: GoalClarificationGroup;
@@ -67,7 +67,7 @@ const GoalClarificationCard = memo<GoalClarificationCardProps>(
 
         {group.requirement && (
           <div {...stylex.props(styles.requestContext)}>
-            <div {...sx([styles.userRequestBody], userRequest.body)}>
+            <div {...sx([styles.userRequestBody], requestModule.body)}>
               <MarkdownMessage>{group.requirement}</MarkdownMessage>
             </div>
           </div>

@@ -25,6 +25,7 @@ import { sx } from '@/styles/sx';
 
 import { styles } from './styles';
 import { type GlobalApprovalGroup } from './useGlobalPendingApprovals';
+import requestModule from './userRequest.module.css';
 
 interface ApprovalCardProps {
   group: GlobalApprovalGroup;
@@ -172,7 +173,7 @@ const ApprovalCard = memo<ApprovalCardProps>(({ group, onCollapse }) => {
         <div {...stylex.props(styles.requestContext)}>
           <div {...stylex.props(styles.headerTitle)}>{topicTitle || t('globalApproval.title')}</div>
           {userRequest && (
-            <div {...sx([styles.userRequestBody], userRequest.body)}>
+            <div {...sx([styles.userRequestBody], requestModule.body)}>
               <MarkdownMessage>{userRequest}</MarkdownMessage>
             </div>
           )}
