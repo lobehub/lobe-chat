@@ -1,14 +1,8 @@
 'use client';
 
-import {
-  ActionIcon,
-  Avatar,
-  createStaticStyles,
-  cssVar,
-  DropdownMenu,
-  Flexbox,
-  Text,
-} from '@lobehub/ui';
+import { ActionIcon, Avatar, DropdownMenu, Flexbox, Text } from '@lobehub/ui';
+import { cssVar } from '@lobehub/ui/stylex/cssVar.stylex';
+import * as stylex from '@stylexjs/stylex';
 import { ArrowLeftIcon, MessageSquareTextIcon, MoreHorizontal, SparklesIcon } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -27,14 +21,15 @@ import { selectors, usePageEditorStore } from '../store';
 import Breadcrumb from './Breadcrumb';
 import { useMenu } from './useMenu';
 
-const styles = createStaticStyles(({ css }) => ({
-  /** The two sidebars share one segmented switch; the lit segment is the open one. */
-  panelSwitch: css`
-    padding: 2px;
-    border: 1px solid ${cssVar.colorBorderSecondary};
-    border-radius: ${cssVar.borderRadius};
-  `,
-}));
+const styles = stylex.create({
+  panelSwitch: {
+    padding: '2px',
+    borderWidth: '1px',
+    borderStyle: 'solid',
+    borderColor: cssVar.colorBorderSecondary,
+    borderRadius: cssVar.borderRadius,
+  },
+});
 
 const Header = memo(() => {
   const { t } = useTranslation('file');
@@ -108,7 +103,9 @@ const Header = memo(() => {
               horizontal
               gap={2}
               className={
-                comments?.panelAvailable && canExpandRightPanel ? styles.panelSwitch : undefined
+                stylex.props(
+                  comments?.panelAvailable && canExpandRightPanel ? styles.panelSwitch : undefined,
+                ).className
               }
             >
               {comments?.panelAvailable && (
