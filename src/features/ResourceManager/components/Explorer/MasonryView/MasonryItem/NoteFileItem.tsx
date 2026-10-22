@@ -1,4 +1,4 @@
-import { Button, cx, stopPropagation, Tooltip } from '@lobehub/ui';
+import { Button, stopPropagation, Tooltip } from '@lobehub/ui';
 import { cssVar } from '@lobehub/ui/stylex/cssVar.stylex';
 import * as stylex from '@stylexjs/stylex';
 import { isNull } from 'es-toolkit/compat';
@@ -19,7 +19,8 @@ const styles = stylex.create({
     insetBlockEnd: '8px',
     insetInlineEnd: '8px',
     borderRadius: cssVar.borderRadius,
-    opacity: 0,
+    // Revealed by the card's hover (the card carries `stylex.defaultMarker()`).
+    opacity: { default: 0, [stylex.when.ancestor(':hover')]: 1 },
     backgroundColor: cssVar.colorBgContainer,
     backgroundImage: 'none',
     boxShadow: cssVar.boxShadow,
@@ -117,7 +118,7 @@ const NoteFileItem = memo<NoteFileItemProps>(
         {/* Floating chunk badge or action button */}
         {!isNull(chunkingStatus) && chunkingStatus ? (
           <div
-            className={cx(stylex.props(styles.floatingChunkBadge).className, 'floatingChunkBadge')}
+            className={stylex.props(styles.floatingChunkBadge).className}
             onClick={stopPropagation}
           >
             <ChunksBadge
@@ -134,11 +135,8 @@ const NoteFileItem = memo<NoteFileItemProps>(
           isSupportedForChunking && (
             <Tooltip title={t('components:FileManager.actions.chunkingTooltip')}>
               <div
+                className={stylex.props(styles.floatingChunkBadge).className}
                 style={{ cursor: 'pointer' }}
-                className={cx(
-                  stylex.props(styles.floatingChunkBadge).className,
-                  'floatingChunkBadge',
-                )}
                 onClick={(e) => {
                   e.stopPropagation();
                   if (!isCreatingFileParseTask) {

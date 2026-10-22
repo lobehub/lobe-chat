@@ -11,7 +11,7 @@ import { getChunkTargetId } from '@/store/file';
 
 import DropdownMenu from '../../ItemDropdown/DropdownMenu';
 import ChunksBadge from './ChunkTag';
-import { styles } from './styles';
+import styles from './styles.module.css';
 
 interface FileListItemActionsProps {
   chunkCount?: number | null;
