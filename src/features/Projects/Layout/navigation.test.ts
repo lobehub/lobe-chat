@@ -12,6 +12,7 @@ import {
   getProjectSettingsPath,
   getProjectTasksPath,
   isProjectSectionActive,
+  toProjectPathname,
 } from './navigation';
 
 describe('project workspace navigation', () => {
@@ -53,5 +54,13 @@ describe('isProjectSectionActive', () => {
     expect(
       isProjectSectionActive('/project/prj_1/acceptance-old', '/project/prj_1/acceptance'),
     ).toBe(false);
+  });
+});
+
+describe('toProjectPathname', () => {
+  it('drops the workspace slug so section paths compare equal', () => {
+    expect(toProjectPathname('/acme/project/prj_1')).toBe('/project/prj_1');
+    expect(toProjectPathname('/acme/project/prj_1/tasks')).toBe('/project/prj_1/tasks');
+    expect(toProjectPathname('/project/prj_1/goals')).toBe('/project/prj_1/goals');
   });
 });

@@ -43,12 +43,14 @@ describe('useProjectComposer', () => {
     mocks.createProjectTopic.mockResolvedValue({ id: 'tpc_1' });
     const { result } = renderHook(() => useProjectComposer(project));
 
+    act(() => result.current.setDraft('  Plan the next milestone\nwith details  '));
     let sent = false;
     await act(async () => {
-      sent = await result.current.send('chat', '  Plan the next milestone\nwith details  ');
+      sent = await result.current.send('chat');
     });
 
     expect(sent).toBe(true);
+    expect(result.current.draft).toBe('');
     expect(mocks.createProjectTopic).toHaveBeenCalledWith({
       agentId: 'coordinator',
       projectId: 'prj_1',
@@ -64,8 +66,9 @@ describe('useProjectComposer', () => {
     mocks.createTask.mockResolvedValue({ id: 'task_1', name: 'Ship it' });
     const { result } = renderHook(() => useProjectComposer(project));
 
+    act(() => result.current.setDraft('Ship it'));
     await act(async () => {
-      await result.current.send('task', 'Ship it');
+      await result.current.send('task');
     });
 
     expect(mocks.createTask).toHaveBeenCalledWith({
@@ -81,15 +84,39 @@ describe('useProjectComposer', () => {
     mocks.createProjectTopic.mockRejectedValue(new Error('denied'));
     const { result } = renderHook(() => useProjectComposer(project));
 
+    act(() => result.current.setDraft('   '));
     await act(async () => {
-      expect(await result.current.send('chat', '   ')).toBe(false);
+      expect(await result.current.send('chat')).toBe(false);
     });
+    act(() => result.current.setDraft('Hello'));
     await act(async () => {
-      await expect(result.current.send('chat', 'Hello')).rejects.toThrow('denied');
+      await expect(result.current.send('chat')).rejects.toThrow('denied');
     });
 
     expect(mocks.navigate).not.toHaveBeenCalled();
+    expect(result.current.draft).toBe('Hello');
     expect(result.current.sending).toBe(false);
+  });
+
+  it('keeps a draft picked while the previous send was still pending', async () => {
+    let resolveTopic!: (topic: { id: string }) => void;
+    mocks.createProjectTopic.mockImplementation(
+      () => new Promise((resolve) => (resolveTopic = resolve)),
+    );
+    const { result } = renderHook(() => useProjectComposer(project));
+
+    act(() => result.current.setDraft('First'));
+    let pending!: Promise<boolean>;
+    act(() => {
+      pending = result.current.send('chat');
+    });
+    act(() => result.current.setDraft('Find the current blockers'));
+    await act(async () => {
+      resolveTopic({ id: 'tpc_1' });
+      await pending;
+    });
+
+    expect(result.current.draft).toBe('Find the current blockers');
   });
 
   it('titles a conversation by its first line', () => {

@@ -31,6 +31,15 @@ export const getProjectSettingsPath = (projectId: string, section: ProjectSettin
 
 export const getProjectAcceptancePath = (projectId: string) => `/project/${projectId}/acceptance`;
 
+/**
+ * A workspace-scoped location carries the workspace slug (`/acme/project/…`)
+ * while section paths are built without it. Drop the prefix before comparing.
+ */
+export const toProjectPathname = (pathname: string) => {
+  const index = pathname.indexOf('/project/');
+  return index > 0 ? pathname.slice(index) : pathname;
+};
+
 /** A section stays active on its own pages too — a board, an acceptance record. */
 export const isProjectSectionActive = (pathname: string, sectionPath: string) =>
   pathname === sectionPath || pathname.startsWith(`${sectionPath}/`);

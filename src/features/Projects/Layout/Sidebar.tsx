@@ -30,6 +30,7 @@ import {
   getProjectHomePath,
   getProjectTasksPath,
   isProjectSectionActive,
+  toProjectPathname,
 } from './navigation';
 import ProjectHeader from './ProjectHeader';
 
@@ -37,7 +38,7 @@ const ProjectSidebarContent = memo(() => {
   const { t } = useTranslation('project');
   const { projectId } = useActiveRouteParams<{ projectId: string }>();
   const navigate = useWorkspaceAwareNavigate();
-  const { pathname } = useLocation();
+  const pathname = toProjectPathname(useLocation().pathname);
   const detail = useCurrentProjectDetail(projectId);
   const detailSWR = useProjectStore((s) => s.useFetchProjectDetail)(projectId);
   const { enabled: dashboardEnabled } = useDashboardFeature();

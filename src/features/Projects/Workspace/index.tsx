@@ -72,7 +72,12 @@ const styles = createStaticStyles(({ css }) => ({
 
     background: ${cssVar.colorFillQuaternary};
 
-    &:hover {
+    &:disabled {
+      cursor: not-allowed;
+      opacity: 0.5;
+    }
+
+    &:hover:not(:disabled) {
       color: ${cssVar.colorText};
       background: ${cssVar.colorFillTertiary};
     }
@@ -96,13 +101,12 @@ const styles = createStaticStyles(({ css }) => ({
 
 const ProjectComposer = ({ project }: { project: ProjectDetail['project'] }) => {
   const { t } = useTranslation('project');
-  const [message, setMessage] = useState('');
   const [mode, setMode] = useState<ProjectComposerMode>('chat');
-  const { send, sending } = useProjectComposer(project);
+  const { draft: message, send, sending, setDraft: setMessage } = useProjectComposer(project);
 
   const submit = async () => {
     try {
-      if (await send(mode, message)) setMessage('');
+      await send(mode);
     } catch (error) {
       console.error('Failed to send from the project home', error);
       toast.error(t(mode === 'task' ? 'overview.createTaskFailed' : 'overview.sendFailed'));
@@ -166,6 +170,7 @@ const ProjectComposer = ({ project }: { project: ProjectDetail['project'] }) => 
         {prompts.map((prompt) => (
           <button
             className={styles.prompt}
+            disabled={sending}
             key={prompt}
             type={'button'}
             onClick={() => setMessage(prompt)}

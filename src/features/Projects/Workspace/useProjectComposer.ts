@@ -26,12 +26,18 @@ export const useProjectComposer = (project: ProjectDetail['project']) => {
   const navigate = useWorkspaceAwareNavigate();
   const createProjectTopic = useProjectDirectoryStore((s) => s.createProjectTopic);
   const createTask = useTaskStore((s) => s.createTask);
+  const [draft, setDraft] = useState('');
   const [sending, setSending] = useState(false);
 
-  /** Resolves `true` once the message has left the composer. */
-  const send = async (mode: ProjectComposerMode, content: string) => {
-    const message = content.trim();
+  /** Resolves `true` once the draft has left the composer. */
+  const send = async (mode: ProjectComposerMode) => {
+    const submitted = draft;
+    const message = submitted.trim();
     if (!message || sending) return false;
+
+    // Clear the draft only if it still holds what was sent: the user may have
+    // picked a prompt or typed again while the topic or task was being created.
+    const clearSubmitted = () => setDraft((current) => (current === submitted ? '' : current));
 
     setSending(true);
     try {
@@ -41,6 +47,7 @@ export const useProjectComposer = (project: ProjectDetail['project']) => {
           instruction: message,
           projectId: project.id,
         });
+        clearSubmitted();
         if (task) navigate(taskDetailPath(task.id, undefined, task.name));
         return true;
       }
@@ -52,6 +59,7 @@ export const useProjectComposer = (project: ProjectDetail['project']) => {
         projectId: project.id,
         title: toConversationTitle(message),
       });
+      clearSubmitted();
       navigate(getProjectConversationStartPath(project.slug ?? project.id, topic.id, message));
       return true;
     } finally {
@@ -59,5 +67,5 @@ export const useProjectComposer = (project: ProjectDetail['project']) => {
     }
   };
 
-  return { send, sending };
+  return { draft, send, sending, setDraft };
 };
