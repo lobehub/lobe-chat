@@ -291,7 +291,15 @@ class GatewayWakeChannel {
       if (this.stopped || socket !== this.ws) return;
       socket.send(JSON.stringify({ serverUrl, token, tokenType, type: 'auth' }));
     } catch (error) {
-      this.onFatal(new Error(`Agent gateway credentials unavailable: ${toError(error).message}`));
+      // A credential that cannot be resolved right now is a Gateway problem,
+      // not an unconfirmable history: the stored access token may still work
+      // for the journal and the status endpoint, so the caller keeps its
+      // polling fallback instead of reporting an `unknown` outcome.
+      this.onFatal(
+        new AgentGatewayUnavailableError(
+          `Agent gateway credentials unavailable: ${toError(error).message}`,
+        ),
+      );
     }
   }
 

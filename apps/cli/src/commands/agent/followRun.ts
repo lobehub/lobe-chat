@@ -1,5 +1,5 @@
 import { getTrpcClient } from '../../api/client';
-import { getAgentStreamAuthInfo } from '../../api/http';
+import { resolveAgentStreamAuthInfo } from '../../api/http';
 import { resolveAgentGatewayUrl } from '../../settings';
 import type { AgentRunOutcome } from '../../utils/agentRunOutcome';
 import { streamAgentEvents } from '../../utils/agentStream';
@@ -45,7 +45,7 @@ export const followAgentRun = async (
     const outcome = await streamAgentEvents({
       ...options,
       gatewayUrl,
-      getAuth: () => getAgentStreamAuthInfo(),
+      getAuth: () => resolveAgentStreamAuthInfo(),
       operationId,
       // The cached client resolves stored credentials per request, so pages
       // read after a token refresh still authenticate.
