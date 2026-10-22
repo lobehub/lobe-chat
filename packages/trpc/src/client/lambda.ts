@@ -219,6 +219,10 @@ const latencyCriticalProcedures = new Set([
   'aiAgent.refreshGatewayToken',
   // The share-visitor mirror of the same reconnect handshake.
   'shareChat.refreshGatewayToken',
+  // Decides whether entering a workspace opens its onboarding page. Entering a
+  // workspace revalidates every SWR key at once; batched, this read waited for
+  // the slowest home read and the admin stayed on the home page.
+  'workspace.getSettings',
 ]);
 const SKIP_BATCH_PROCEDURES = new Set([
   ...initialLoadProcedures,
