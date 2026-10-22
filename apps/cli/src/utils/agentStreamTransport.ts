@@ -43,6 +43,13 @@ const CONNECT_TIMEOUT_MS = 10_000;
 const HEARTBEAT_INTERVAL_MS = 30_000;
 const HISTORY_POLL_INTERVAL_MS = 5000;
 const HISTORY_REQUEST_TIMEOUT_MS = 10_000;
+/**
+ * Chunk notifications are buffered server-side every ~300ms, so one CLI run can
+ * publish roughly three `agent_event` frames per second. Each wake costs an
+ * authenticated round trip (visibility query + Redis XRANGE), so chunk wakes are
+ * coalesced into at most one read per window. Terminal-ish wakes bypass it.
+ */
+const WAKE_COALESCE_WINDOW_MS = 500;
 const FATAL_TRPC_CODES = new Set(['UNAUTHORIZED', 'FORBIDDEN', 'NOT_FOUND']);
 const REDIS_ID = /^\d+-\d+$/;
 
@@ -181,7 +188,8 @@ class GatewayWakeChannel {
 
   constructor(
     private readonly options: AgentStreamTransportOptions & { maxRetries: number },
-    private readonly onWake: () => void,
+    /** `immediate` skips the coalescing window (terminal / reconnect wakes). */
+    private readonly onWake: (immediate?: boolean) => void,
     private readonly onFatal: (error: Error) => void,
   ) {}
 
@@ -257,7 +265,7 @@ class GatewayWakeChannel {
         clearTimeout(this.connectTimer);
         socket.send(JSON.stringify({ lastEventId: this.gatewayCursor, type: 'resume' }));
         this.startHeartbeat(socket);
-        this.onWake();
+        this.onWake(true);
         return;
       }
       case 'heartbeat_ack': {
@@ -271,8 +279,9 @@ class GatewayWakeChannel {
         return;
       }
       // Not a success signal: only a terminal event in the journal ends the run.
+      // The terminal is imminent, so this wake skips the coalescing window.
       case 'session_complete': {
-        this.onWake();
+        this.onWake(true);
         return;
       }
     }
@@ -296,7 +305,7 @@ class GatewayWakeChannel {
     if (this.stopped || this.reconnectTimer) return;
     this.closeSocket();
     // Recover the terminal from the server even when the Gateway is down.
-    this.onWake();
+    this.onWake(true);
     if (++this.retries > this.options.maxRetries) {
       this.onFatal(
         new Error(`Reconnect attempts exhausted; complete history not confirmed: ${error.message}`),
@@ -336,7 +345,13 @@ class GatewayWakeChannel {
 export const consumeAgentStream = (
   options: AgentStreamTransportOptions,
   onEvent: (event: AgentStreamEvent) => boolean,
-): { abort: (error: Error) => void; close: () => void; done: Promise<void> } => {
+): {
+  abort: (error: Error) => void;
+  /** Reads the journal now; resolves `true` once a terminal event was delivered. */
+  catchUp: () => Promise<boolean>;
+  close: () => void;
+  done: Promise<void>;
+} => {
   const resolved = { ...options, maxRetries: options.maxRetries ?? DEFAULT_MAX_RETRIES };
   let stopped = false;
   let resolveDone: () => void;
@@ -350,16 +365,51 @@ export const consumeAgentStream = (
     gateway.resetRetries();
     return onEvent(event);
   });
-  const catchUp = () => {
-    journal.catchUp().then((terminal) => terminal && finish(), fail);
+  const runCatchUp = async (): Promise<boolean> => {
+    try {
+      const terminal = await journal.catchUp();
+      if (terminal) finish();
+      return terminal;
+    } catch (error) {
+      fail(error as Error);
+      return false;
+    }
   };
-  const gateway = new GatewayWakeChannel(resolved, catchUp, (error) => fail(error));
-  const poll = setInterval(catchUp, HISTORY_POLL_INTERVAL_MS);
+  // Chunk wakes are coalesced: the first one reads immediately and opens a
+  // window, further chunks inside it collapse into a single trailing read.
+  // Terminal and reconnect wakes read immediately and reset the window.
+  let wakePending = false;
+  let wakeWindow: ReturnType<typeof setTimeout> | undefined;
+  const wake = (immediate = false) => {
+    if (stopped) return;
+    if (immediate) {
+      clearTimeout(wakeWindow);
+      wakeWindow = undefined;
+      wakePending = false;
+      void runCatchUp();
+      return;
+    }
+    if (wakeWindow) {
+      wakePending = true;
+      return;
+    }
+    void runCatchUp();
+    wakeWindow = setTimeout(() => {
+      wakeWindow = undefined;
+      if (!wakePending) return;
+      wakePending = false;
+      wake();
+    }, WAKE_COALESCE_WINDOW_MS);
+  };
+  const gateway = new GatewayWakeChannel(resolved, wake, (error) => fail(error));
+  const poll = setInterval(() => void runCatchUp(), HISTORY_POLL_INTERVAL_MS);
 
   const close = () => {
     if (stopped) return;
     stopped = true;
     clearInterval(poll);
+    clearTimeout(wakeWindow);
+    wakeWindow = undefined;
     journal.close();
     gateway.close();
   };
@@ -376,5 +426,5 @@ export const consumeAgentStream = (
   };
 
   gateway.connect();
-  return { abort: fail, close, done };
+  return { abort: fail, catchUp: runCatchUp, close, done };
 };

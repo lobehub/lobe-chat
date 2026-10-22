@@ -20,8 +20,9 @@ interface FollowStreamOptions extends StreamOptions, AgentStreamTransportOptions
    * gateway can keep a connection alive with heartbeats while never
    * delivering the terminal event, so silence alone must not be read as either
    * "finished" or "failed". Return `undefined` while the run is still active
-   * (keep streaming). A terminal outcome means the journal is missing its
-   * terminal event, so the stream fails as incomplete; throwing does too.
+   * (keep streaming). A terminal outcome gets a bounded final catch-up for the
+   * terminal journal event first, then the stream fails as incomplete; throwing
+   * does too.
    */
   onStall?: () => Promise<AgentRunOutcome | undefined>;
   /** Progress window before `onStall` is consulted. Defaults to 60s. */
@@ -96,13 +97,22 @@ export function replayAgentEvents(
 
 /**
  * Consult `onStall` whenever `timeoutMs` passes without progress. Re-arms while
- * the run is still active; a terminal status (or a failed check) means the
- * journal will never deliver the terminal event, so the stream is incomplete.
+ * the run is still active; a terminal status means the journal should hold the
+ * terminal event too, so `onFinalCatchUp` gets a bounded grace to read it before
+ * the history is declared incomplete. (The coordinator persists the terminal
+ * state *before* publishing it, so a status probe can win that race — and with
+ * it the simultaneous periodic catch-up.)
  */
+const TERMINAL_HISTORY_GRACE_ATTEMPTS = 3;
+const TERMINAL_HISTORY_GRACE_DELAY_MS = 500;
+
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
 const watchForStall = (
   timeoutMs: number,
   onStall: () => Promise<AgentRunOutcome | undefined>,
   onIncomplete: (error: AgentStreamHistoryError) => void,
+  onFinalCatchUp?: () => Promise<boolean>,
 ) => {
   let stopped = false;
   let timer: ReturnType<typeof setTimeout> | undefined;
@@ -115,6 +125,19 @@ const watchForStall = (
         if (!(await onStall())) return arm();
       } catch (error) {
         message = error instanceof Error ? error.message : String(error);
+      }
+      // A terminal status does not guarantee the terminal journal event already
+      // landed; read once more, then retry over a short bounded window.
+      if (onFinalCatchUp) {
+        const readTerminal = onFinalCatchUp;
+        for (let attempt = 0; attempt < TERMINAL_HISTORY_GRACE_ATTEMPTS; attempt++) {
+          if (attempt > 0) {
+            await sleep(TERMINAL_HISTORY_GRACE_DELAY_MS);
+            if (stopped) return;
+          }
+          if (await readTerminal()) return;
+          if (stopped) return;
+        }
       }
       if (!stopped) onIncomplete(new AgentStreamHistoryError(message));
     }, timeoutMs);
@@ -158,7 +181,12 @@ export async function streamAgentEvents(
   });
   const stall =
     options.onStall &&
-    watchForStall(options.stallTimeoutMs ?? STALL_TIMEOUT, options.onStall, transport.abort);
+    watchForStall(
+      options.stallTimeoutMs ?? STALL_TIMEOUT,
+      options.onStall,
+      transport.abort,
+      transport.catchUp,
+    );
 
   try {
     await transport.done;

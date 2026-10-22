@@ -130,6 +130,41 @@ describe('recoverable WebSocket transport', () => {
     expect(vi.getTimerCount()).toBe(0);
   });
 
+  it('coalesces a burst of chunk notifications into a bounded number of history reads', async () => {
+    const delivered: string[] = [];
+    const readAll = vi.fn(async (cursor: string) => {
+      const events = journal.filter(
+        (item) => Number(item.id.split('-')[0]) > Number(cursor.split('-')[0]),
+      );
+      return {
+        available: true,
+        events,
+        hasMore: false,
+        nextCursor: events.at(-1)?.id ?? cursor,
+      } as AgentHistoryPage;
+    });
+    const stream = consumeAgentStream({ ...options(), readHistory: readAll }, (streamEvent) => {
+      if (streamEvent.type === 'stream_chunk')
+        delivered.push(String(streamEvent.data?.content ?? ''));
+      return false;
+    });
+    await flush();
+    readAll.mockClear();
+
+    // The server buffers chunks in ~300ms windows, so a long reply arrives as a
+    // steady stream of `agent_event` frames rather than a single one.
+    for (let index = 0; index < 12; index++) {
+      journal.push(event(index + 2, 'stream_chunk', String(index)));
+      sockets[0].message({ id: `${index}-gateway`, type: 'agent_event' });
+      await vi.advanceTimersByTimeAsync(20);
+    }
+    await vi.advanceTimersByTimeAsync(600);
+
+    expect(delivered).toEqual(Array.from({ length: 12 }, (_, index) => String(index)));
+    expect(readAll.mock.calls.length).toBeLessThanOrEqual(3);
+    stream.close();
+  });
+
   it('recovers a lost terminal notification from the journal without treating session_complete as success', async () => {
     const done = streamAgentEvents({ ...options(), json: true });
     const settled = vi.fn();

@@ -527,9 +527,38 @@ describe('run outcome of the live stream (#19543 #19613 #19615)', () => {
     expect(settled).not.toHaveBeenCalled();
 
     await vi.advanceTimersByTimeAsync(1000);
+    // A terminal status now gets a bounded final catch-up before the failure.
+    await vi.advanceTimersByTimeAsync(1500);
     await failure;
     expect(onStall).toHaveBeenCalledTimes(2);
     expect(printed()).not.toContain('Agent finished');
+  });
+
+  it('gives the journal a bounded grace after a terminal status before calling the history incomplete', async () => {
+    vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout', 'setInterval', 'clearInterval'] });
+    const onStall = vi.fn().mockResolvedValue({ kind: 'completed', status: 'done' });
+
+    const promise = streamAgentEvents({
+      gatewayUrl: 'https://gw.test.com',
+      onStall,
+      operationId: 'op-1',
+      stallTimeoutMs: 1000,
+    });
+    await vi.advanceTimersByTimeAsync(1000);
+    expect(onStall).toHaveBeenCalledTimes(1);
+    await vi.advanceTimersByTimeAsync(0);
+
+    // `saveAgentState` persists the terminal state before publishing it, so the
+    // status probe wins the race and the journal event lands a beat later.
+    const { operationId: _ignored, ...end } = endEvent('done');
+    journal.push({
+      ...end,
+      id: `${journal.length + 1}-0`,
+      operationId: 'op-1',
+    } as any);
+    await vi.advanceTimersByTimeAsync(600);
+
+    await expect(promise).resolves.toEqual(expect.objectContaining({ kind: 'completed' }));
   });
 
   it('real stream progress restarts the quiet window, so a slow healthy run is not probed', async () => {
@@ -550,6 +579,9 @@ describe('run outcome of the live stream (#19543 #19613 #19615)', () => {
     expect(onStall).not.toHaveBeenCalled();
 
     emitEnd('done');
+    // The chunk that carried the terminal opened a coalescing window; the
+    // trailing read delivers it within that window.
+    await vi.advanceTimersByTimeAsync(600);
     await expect(promise).resolves.toEqual(expect.objectContaining({ kind: 'completed' }));
   });
 
