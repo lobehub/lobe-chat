@@ -1,16 +1,8 @@
 'use client';
 
-import {
-  Block,
-  Button,
-  createStaticStyles,
-  Empty,
-  Flexbox,
-  Icon,
-  Tabs,
-  Text,
-  Tooltip,
-} from '@lobehub/ui';
+import { Block, Button, Empty, Flexbox, Icon, Tabs, Text, Tooltip } from '@lobehub/ui';
+import { cssVar } from '@lobehub/ui/stylex/cssVar.stylex';
+import * as stylex from '@stylexjs/stylex';
 import { Plus, UserRoundIcon, UsersIcon } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -31,18 +23,10 @@ const personalCredsApi: CredsApi = {
   query: lambdaQuery.market.creds,
 };
 
-const styles = createStaticStyles(({ css, cssVar }) => ({
-  container: css`
-    overflow: hidden;
-    width: 100%;
-    padding-block: 4px;
-    padding-inline: 16px;
-  `,
-  desc: css`
-    font-size: 13px;
-    color: ${cssVar.colorTextSecondary};
-  `,
-}));
+const styles = stylex.create({
+  container: { overflow: 'hidden', width: '100%', paddingBlock: '4px', paddingInline: '16px' },
+  desc: { fontSize: '13px', color: cssVar.colorTextSecondary },
+});
 
 type CredsScope = 'personal' | 'workspace';
 
@@ -194,12 +178,12 @@ const WorkspaceCredsSetting = () => {
           ))}
       </Flexbox>
       <Flexbox gap={12}>
-        <Text className={styles.desc}>
+        <Text className={stylex.props(styles.desc).className}>
           {scope === 'workspace'
             ? t('creds.workspaceSection.desc')
             : t('creds.personalSection.desc')}
         </Text>
-        <Block className={styles.container} variant={'outlined'}>
+        <Block className={stylex.props(styles.container).className} variant={'outlined'}>
           {scope === 'workspace' ? (
             orgMissing ? (
               <Flexbox align={'center'} justify={'center'} style={{ padding: 48 }}>

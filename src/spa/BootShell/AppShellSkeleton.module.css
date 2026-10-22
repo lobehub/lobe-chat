@@ -1,0 +1,5 @@
+/* Dialogs live inside the theme's isolated stacking context, so lowering the
+   shell's z-index alone cannot reveal them. Yield without releasing the boot gate. */
+body:has([role='dialog'][data-open]) .yield {
+  visibility: hidden;
+}
