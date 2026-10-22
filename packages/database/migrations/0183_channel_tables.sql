@@ -61,6 +61,14 @@ CREATE TABLE IF NOT EXISTS "channel_members" (
         OR ("channel_members"."actor_type" = 'agent' AND "channel_members"."user_id" IS NULL AND "channel_members"."role" IS NULL AND "channel_members"."name" IS NOT NULL AND "channel_members"."config" IS NOT NULL))
 );
 --> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "channel_message_files" (
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"channel_id" text NOT NULL,
+	"message_id" text NOT NULL,
+	"file_id" text NOT NULL,
+	"sort_order" integer NOT NULL
+);
+--> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "channel_messages" (
 	"id" text PRIMARY KEY NOT NULL,
 	"channel_id" text NOT NULL,
@@ -68,7 +76,6 @@ CREATE TABLE IF NOT EXISTS "channel_messages" (
 	"sequence" integer NOT NULL,
 	"author_member_id" text NOT NULL,
 	"content" text NOT NULL,
-	"file_ids" jsonb DEFAULT '[]'::jsonb NOT NULL,
 	"mentions" jsonb DEFAULT '[]'::jsonb NOT NULL,
 	"request_key" text NOT NULL,
 	"reply_to_id" text,
@@ -193,6 +200,12 @@ ALTER TABLE "channel_members" DROP CONSTRAINT IF EXISTS "channel_members_channel
 ALTER TABLE "channel_members" ADD CONSTRAINT "channel_members_channel_id_channels_id_fk" FOREIGN KEY ("channel_id") REFERENCES "public"."channels"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "channel_members" DROP CONSTRAINT IF EXISTS "channel_members_user_id_users_id_fk";--> statement-breakpoint
 ALTER TABLE "channel_members" ADD CONSTRAINT "channel_members_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "channel_message_files" DROP CONSTRAINT IF EXISTS "channel_message_files_channel_id_channels_id_fk";--> statement-breakpoint
+ALTER TABLE "channel_message_files" ADD CONSTRAINT "channel_message_files_channel_id_channels_id_fk" FOREIGN KEY ("channel_id") REFERENCES "public"."channels"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "channel_message_files" DROP CONSTRAINT IF EXISTS "channel_message_files_file_id_files_id_fk";--> statement-breakpoint
+ALTER TABLE "channel_message_files" ADD CONSTRAINT "channel_message_files_file_id_files_id_fk" FOREIGN KEY ("file_id") REFERENCES "public"."files"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "channel_message_files" DROP CONSTRAINT IF EXISTS "channel_message_files_message_fk";--> statement-breakpoint
+ALTER TABLE "channel_message_files" ADD CONSTRAINT "channel_message_files_message_fk" FOREIGN KEY ("channel_id","message_id") REFERENCES "public"."channel_messages"("channel_id","id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "channel_messages" DROP CONSTRAINT IF EXISTS "channel_messages_channel_id_channels_id_fk";--> statement-breakpoint
 ALTER TABLE "channel_messages" ADD CONSTRAINT "channel_messages_channel_id_channels_id_fk" FOREIGN KEY ("channel_id") REFERENCES "public"."channels"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "channel_messages" DROP CONSTRAINT IF EXISTS "channel_messages_thread_fk";--> statement-breakpoint
@@ -238,6 +251,8 @@ CREATE UNIQUE INDEX IF NOT EXISTS "channel_member_grants_member_revision_unique"
 CREATE INDEX IF NOT EXISTS "channel_member_grants_owner_status_idx" ON "channel_member_grants" USING btree ("device_owner_id","status");--> statement-breakpoint
 CREATE UNIQUE INDEX IF NOT EXISTS "channel_members_channel_user_unique" ON "channel_members" USING btree ("channel_id","user_id") WHERE "channel_members"."user_id" IS NOT NULL;--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "channel_members_user_id_idx" ON "channel_members" USING btree ("user_id");--> statement-breakpoint
+CREATE UNIQUE INDEX IF NOT EXISTS "channel_message_files_message_file_unique" ON "channel_message_files" USING btree ("message_id","file_id");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "channel_message_files_file_id_idx" ON "channel_message_files" USING btree ("file_id");--> statement-breakpoint
 CREATE UNIQUE INDEX IF NOT EXISTS "channel_messages_sequence_unique" ON "channel_messages" USING btree ("channel_id","sequence");--> statement-breakpoint
 CREATE UNIQUE INDEX IF NOT EXISTS "channel_messages_request_key_unique" ON "channel_messages" USING btree ("channel_id","request_key");--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "channel_messages_thread_sequence_idx" ON "channel_messages" USING btree ("channel_id","thread_id","sequence");--> statement-breakpoint

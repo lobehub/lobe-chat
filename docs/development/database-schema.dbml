@@ -1216,6 +1216,20 @@ table channel_members {
   }
 }
 
+table channel_message_files {
+  id uuid [pk, not null, default: `gen_random_uuid()`]
+  channel_id text [not null]
+  message_id text [not null]
+  file_id text [not null]
+  sort_order integer [not null]
+
+  indexes {
+    (message_id, file_id) [name: 'channel_message_files_message_file_unique', unique]
+    file_id [name: 'channel_message_files_file_id_idx']
+    
+  }
+}
+
 table channel_messages {
   id text [pk, not null]
   channel_id text [not null]
@@ -1223,7 +1237,6 @@ table channel_messages {
   sequence integer [not null]
   author_member_id text [not null]
   content text [not null]
-  file_ids jsonb [not null, default: `[]`]
   mentions jsonb [not null, default: `[]`]
   request_key text [not null]
   reply_to_id text

@@ -8,10 +8,12 @@ import {
   channelJobs,
   channelMemberGrants,
   channelMembers,
+  channelMessageFiles,
   channelMessages,
   channelRuns,
   channels,
   channelSessions,
+  files,
   users,
   workspaces,
 } from '..';
@@ -207,6 +209,37 @@ describe('channel schema', () => {
 
       await expect(createMessage(first.channel.id, first.owner.id, 1)).rejects.toThrow();
       await expect(createMessage(first.channel.id, second.owner.id, 2)).rejects.toThrow();
+    });
+
+    it('keeps attachments inside their channel and drops them with the file', async () => {
+      const first = await createChannel('First');
+      const second = await createChannel('Second');
+      const message = await createMessage(first.channel.id, first.owner.id, 1);
+      const [file] = await serverDB
+        .insert(files)
+        .values({ fileType: 'text/plain', name: 'a.txt', size: 1, url: 'a.txt', userId: ownerId })
+        .returning();
+      const attach = (channelId: string) =>
+        serverDB
+          .insert(channelMessageFiles)
+          .values({ channelId, fileId: file.id, messageId: message.id, sortOrder: 0 });
+
+      await expect(attach(second.channel.id)).rejects.toThrow();
+      await attach(first.channel.id);
+      await expect(attach(first.channel.id)).rejects.toThrow();
+
+      await serverDB.delete(files).where(eq(files.id, file.id));
+
+      const remaining = await serverDB
+        .select()
+        .from(channelMessageFiles)
+        .where(eq(channelMessageFiles.messageId, message.id));
+      expect(remaining).toHaveLength(0);
+      const [kept] = await serverDB
+        .select()
+        .from(channelMessages)
+        .where(eq(channelMessages.id, message.id));
+      expect(kept).toBeDefined();
     });
   });
 

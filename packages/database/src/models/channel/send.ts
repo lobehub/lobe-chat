@@ -6,6 +6,7 @@ import type { ChannelMessageItem } from '../../schemas';
 import { channelMessages, channelThreads, files } from '../../schemas';
 import type { Transaction } from '../../type';
 import { buildWorkspaceWhere } from '../../utils/workspace';
+import { attachFiles, fileIdsByMessage } from './attachments';
 import { activeMembers, appendMessage, candidateAgents, deliver, findThread } from './delivery';
 import { ChannelError } from './error';
 import { audit } from './transaction';
@@ -65,11 +66,12 @@ export const sendMessage = async (
       ),
     );
   if (existing) {
+    const existingFileIds = (await fileIdsByMessage(tx, [existing.id])).get(existing.id) ?? [];
     if (
       existing.authorMemberId !== member.id ||
       existing.content !== input.content ||
       existing.threadId !== threadId ||
-      !sameList(existing.fileIds, fileIds) ||
+      !sameList(existingFileIds, fileIds) ||
       !sameList(existing.mentions, mentions)
     )
       throw new ChannelError('CONFLICT', 'Retry key was already used for a different message');
@@ -128,7 +130,6 @@ export const sendMessage = async (
     authorMemberId: member.id,
     channelId: channel.id,
     content: input.content,
-    fileIds,
     mentions,
     requestKey: input.requestKey,
     routingAttempt: routed.status === 'pending' ? 1 : 0,
@@ -137,6 +138,7 @@ export const sendMessage = async (
     routingStatus: routed.status,
     threadId,
   });
+  await attachFiles(tx, { channelId: channel.id, fileIds, messageId: message.id });
   const delivered = await deliver(tx, message, recipients, member.id);
   if (delivered.length) {
     await tx

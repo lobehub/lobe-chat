@@ -11,6 +11,7 @@ import type {
 } from '../../schemas';
 import { channelMembers, channelMessages, users } from '../../schemas';
 import type { Transaction } from '../../type';
+import { fileIdsByMessage } from './attachments';
 
 /** Display names for every member, including people who left or deleted their account. */
 const rosterNames = async (tx: Transaction, channelId: string) => {
@@ -84,6 +85,10 @@ export const buildManifest = async (
   // The cutoff is the request's own sequence, so it always sorts last.
   if (!visible.some((message) => message.id === request.id)) visible.push(request);
   const names = await rosterNames(tx, job.channelId);
+  const attachments = await fileIdsByMessage(
+    tx,
+    visible.map((message) => message.id),
+  );
 
   return {
     cutoffSequence,
@@ -96,7 +101,7 @@ export const buildManifest = async (
           type: author?.type ?? 'user',
         },
         content: message.content,
-        ...(message.fileIds.length && { fileIds: message.fileIds }),
+        ...(attachments.has(message.id) && { fileIds: attachments.get(message.id) }),
         id: message.id,
         sequence: message.sequence,
         threadId: message.threadId,

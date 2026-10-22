@@ -36,6 +36,7 @@ import {
 
 import { idGenerator } from '../utils/idGenerator';
 import { createdAt, timestamptz, updatedAt } from './_helpers';
+import { files } from './file';
 import { users } from './user';
 import { workspaces } from './workspace';
 
@@ -188,7 +189,6 @@ export const channelMessages = pgTable(
     sequence: integer('sequence').notNull(),
     authorMemberId: text('author_member_id').notNull(),
     content: text('content').notNull(),
-    fileIds: jsonb('file_ids').$type<string[]>().notNull().default([]),
     /** Mentioned member ids. Mentioned Agents run; mentioned people are only notified. */
     mentions: jsonb('mentions').$type<string[]>().notNull().default([]),
     /** Client retry key for a human message; run identity for a published reply. */
@@ -232,6 +232,35 @@ export const channelMessages = pgTable(
       columns: [t.channelId, t.authorMemberId],
       foreignColumns: [channelMembers.channelId, channelMembers.id],
       name: 'channel_messages_author_fk',
+    }),
+  ],
+);
+
+/**
+ * Files attached to a public message, in attachment order. A join table rather than a list
+ * on the message, so file cleanup (`FileModel.deleteUnreferenced`) sees the reference through
+ * the foreign key, as it does for `messages_files`. Deleting the file removes the attachment.
+ */
+export const channelMessageFiles = pgTable(
+  'channel_message_files',
+  {
+    id: uuid('id').defaultRandom().primaryKey().notNull(),
+    channelId: text('channel_id')
+      .references(() => channels.id, { onDelete: 'cascade' })
+      .notNull(),
+    messageId: text('message_id').notNull(),
+    fileId: text('file_id')
+      .references(() => files.id, { onDelete: 'cascade' })
+      .notNull(),
+    sortOrder: integer('sort_order').notNull(),
+  },
+  (t) => [
+    uniqueIndex('channel_message_files_message_file_unique').on(t.messageId, t.fileId),
+    index('channel_message_files_file_id_idx').on(t.fileId),
+    foreignKey({
+      columns: [t.channelId, t.messageId],
+      foreignColumns: [channelMessages.channelId, channelMessages.id],
+      name: 'channel_message_files_message_fk',
     }),
   ],
 );
