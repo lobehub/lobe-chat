@@ -1,14 +1,12 @@
 'use client';
 
-import { Button, Center, Empty, ModalFooter, useModalContext } from '@lobehub/ui';
+import { Button, Center, Empty } from '@lobehub/ui';
 import { SkillsIcon } from '@lobehub/ui/icons';
 import { FileWarningIcon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 import Loading from '@/components/Loading/CircleLoading';
-import { buildAgentDocumentPath } from '@/features/AgentDocumentPage/navigation';
 import SkillViewer from '@/features/SkillViewer';
-import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwareNavigate';
 
 import { useAgentSkill } from './useAgentSkill';
 
@@ -18,14 +16,16 @@ export interface AgentSkillModalContentProps {
   agentId: string;
 }
 
+// Managed skills keep `SKILL.md` alone, so the tree lists just that file.
+const NO_OTHER_FILES: { content: string; path: string }[] = [];
+
 /**
- * One of an agent's managed skills, read-only. Editing happens on the skill's
- * own document page, which the footer opens.
+ * One of an agent's managed skills, read-only: its file tree beside the
+ * selected file. Editing happens on the skill's own document page, which the
+ * modal title opens.
  */
 const AgentSkillModalContent = ({ agentDocumentId, agentId }: AgentSkillModalContentProps) => {
   const { t } = useTranslation(['chat', 'common']);
-  const { close } = useModalContext();
-  const navigate = useWorkspaceAwareNavigate();
   const { data: skill, error, isLoading, mutate } = useAgentSkill(agentId, agentDocumentId);
 
   if (isLoading) return <Loading />;
@@ -42,18 +42,13 @@ const AgentSkillModalContent = ({ agentDocumentId, agentId }: AgentSkillModalCon
     );
   }
 
-  const openDocument = () => {
-    close();
-    navigate(buildAgentDocumentPath(agentId, skill.index.documentId));
-  };
-
   return (
-    <>
-      <SkillViewer content={skill.content} entityId={`agent-skill:${skill.index.documentId}`} />
-      <ModalFooter>
-        <Button onClick={openDocument}>{t('agentSkillModal.openDocument')}</Button>
-      </ModalFooter>
-    </>
+    <SkillViewer
+      content={skill.content}
+      entityId={`agent-skill:${skill.index.documentId}`}
+      files={NO_OTHER_FILES}
+      filesPosition={'start'}
+    />
   );
 };
 
