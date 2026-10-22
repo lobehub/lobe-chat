@@ -243,6 +243,43 @@ describe('ChannelExecutionModel', () => {
     expect((await jobById(job.id)).status).toBe('failed');
   });
 
+  it('ignores a late failure once the run published or settled', async () => {
+    const { channel, job } = await mentionAgent();
+    const run = (await execution.claim(channel.id, job.id, lease))!.run;
+    await execution.accepted(channel.id, run.id, run.fence, { nativeSessionId: 's' });
+    await execution.saveDraft(channel.id, run.id, run.fence, 'Done');
+    const replyId = await execution.publish(channel.id, run.id, run.fence);
+
+    await execution.fail(channel.id, run.id, run.fence, { message: 'late error' });
+    expect(await runById(db, run.id)).toMatchObject({
+      error: null,
+      publicationRevoked: false,
+      publishedMessageId: replyId,
+      status: 'running',
+    });
+    expect((await jobById(job.id)).status).toBe('completed');
+
+    await execution.releaseWriter(channel.id, run.id, run.fence);
+    await execution.fail(channel.id, run.id, run.fence, { message: 'later error' });
+    expect(await runById(db, run.id)).toMatchObject({ error: null, status: 'completed' });
+    expect((await jobById(job.id)).status).toBe('completed');
+  });
+
+  it('keeps the first outcome of a released run', async () => {
+    const { channel, job } = await mentionAgent();
+    const run = (await execution.claim(channel.id, job.id, lease))!.run;
+    await execution.executionUnknown(channel.id, run.id, run.fence, 'receipt lost');
+    await execution.releaseWriter(channel.id, run.id, run.fence);
+
+    await execution.fail(channel.id, run.id, run.fence, { message: 'late error' });
+
+    expect(await runById(db, run.id)).toMatchObject({
+      error: 'receipt lost',
+      status: 'execution_unknown',
+    });
+    expect((await jobById(job.id)).status).toBe('failed');
+  });
+
   it('keeps an accepted draft publishable after the writer is released', async () => {
     const { channel, job } = await mentionAgent();
     const run = (await execution.claim(channel.id, job.id, lease))!.run;

@@ -15,6 +15,14 @@ import { stopScope } from './stop';
 import { audit, withChannelLock } from './transaction';
 import { isolateWriter, OPEN_JOB_STATUSES } from './writer';
 
+/** Final statuses a released writer settles into; see {@link releaseOutcome}. */
+const SETTLED_RUN_STATUSES: ChannelRunStatus[] = [
+  'completed',
+  'execution_unknown',
+  'failed',
+  'stopped',
+];
+
 /**
  * Run fence check under the channel lock. `fence` is publication authority; a revoked run
  * may still record its termination (`allowRevoked`) but never publish.
@@ -231,7 +239,8 @@ export class ChannelExecutionModel {
   /**
    * The run failed. Revokes its publication and fails its job unless it was already being
    * stopped. `notSubmitted` marks a trusted pre-dispatch failure: nothing ran, so the writer
-   * is released in the same transaction.
+   * is released in the same transaction. A late failure after the reply was published or the
+   * release settled the run changes nothing.
    */
   fail = async (
     channelId: string,
@@ -241,6 +250,12 @@ export class ChannelExecutionModel {
   ) =>
     withChannelLock(this.db, channelId, async (tx) => {
       const run = await fenced(tx, channelId, runId, fence, true);
+      if (
+        run.publishedMessageId ||
+        (run.writerReleased && SETTLED_RUN_STATUSES.includes(run.status))
+      )
+        return;
+
       const [job] = await tx
         .select({ status: channelJobs.status })
         .from(channelJobs)
@@ -265,7 +280,12 @@ export class ChannelExecutionModel {
         })
         .where(eq(channelRuns.id, run.id));
       if (!stopping)
-        await tx.update(channelJobs).set({ status: 'failed' }).where(eq(channelJobs.id, run.jobId));
+        await tx
+          .update(channelJobs)
+          .set({ status: 'failed' })
+          .where(
+            and(eq(channelJobs.id, run.jobId), inArray(channelJobs.status, OPEN_JOB_STATUSES)),
+          );
       await audit(tx, channelId, 'execution_failed', run.id, {
         message: failure.message,
         notSubmitted: Boolean(failure.notSubmitted),
