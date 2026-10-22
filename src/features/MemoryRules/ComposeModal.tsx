@@ -220,7 +220,7 @@ const ComposeContent = ({
         }
       }}
     >
-      <Flexbox className={composeStyles.head} gap={6}>
+      <Flexbox className={stylex.props(composeStyles.head).className} gap={6}>
         {step === 'review' && (
           <Flexbox horizontal align={'center'} gap={8}>
             <ActionIcon
@@ -237,32 +237,36 @@ const ComposeContent = ({
         {step === 'review' ? (
           <input
             autoFocus
-            className={composeStyles.title}
+            {...stylex.props(composeStyles.title)}
             placeholder={t('rules.compose.titlePlaceholder')}
             value={title}
             onChange={(e) => setTitle(e.target.value)}
           />
         ) : (
-          <div className={composeStyles.titleStatic}>{t('rules.compose.describeTitle')}</div>
+          <div {...stylex.props(composeStyles.titleStatic)}>{t('rules.compose.describeTitle')}</div>
         )}
         {step !== 'review' && (
           <>
             <GeneratingBorder
-              className={composeStyles.inputShell}
+              className={stylex.props(composeStyles.inputShell).className}
               generating={step === 'preparing'}
             >
               <textarea
                 autoFocus
-                className={composeStyles.describe}
+                {...sx([composeStyles.describe], undefined, { minHeight: 190 })}
                 disabled={step === 'preparing'}
                 placeholder={t('rules.compose.describePlaceholder')}
-                style={{ minHeight: 190 }}
                 value={brief}
                 onChange={(e) => setBrief(e.target.value)}
               />
             </GeneratingBorder>
             {step === 'preparing' ? (
-              <Flexbox horizontal align={'center'} className={composeStyles.status} gap={8}>
+              <Flexbox
+                horizontal
+                align={'center'}
+                className={stylex.props(composeStyles.status).className}
+                gap={8}
+              >
                 <Spin size={'small'} variant={'network'} />
                 <span className={shinyTextStyles.shinyText}>
                   {generating[tick % generating.length]}
@@ -273,13 +277,17 @@ const ComposeContent = ({
             )}
           </>
         )}
-        <ActionIcon className={composeStyles.close} icon={XIcon} onClick={() => close()} />
+        <ActionIcon
+          className={stylex.props(composeStyles.close).className}
+          icon={XIcon}
+          onClick={() => close()}
+        />
       </Flexbox>
 
       {step === 'review' && (
-        <Flexbox className={composeStyles.body} gap={14}>
+        <Flexbox className={stylex.props(composeStyles.body).className} gap={14}>
           <Flexbox gap={4}>
-            <span className={composeStyles.label}>{t('rules.compose.why')}</span>
+            <span {...stylex.props(composeStyles.label)}>{t('rules.compose.why')}</span>
             <TextArea
               autoSize={{ maxRows: 6, minRows: 1 }}
               className={stylex.props(styles.field).className}
@@ -288,7 +296,7 @@ const ComposeContent = ({
             />
           </Flexbox>
           <Flexbox gap={4}>
-            <span className={composeStyles.label}>{t('rules.compose.how')}</span>
+            <span {...stylex.props(composeStyles.label)}>{t('rules.compose.how')}</span>
             <TextArea
               autoSize={{ maxRows: 6, minRows: 1 }}
               className={stylex.props(styles.field).className}
@@ -297,7 +305,7 @@ const ComposeContent = ({
             />
           </Flexbox>
           <Flexbox gap={4}>
-            <span className={composeStyles.label}>{t('rules.compose.limits')}</span>
+            <span {...stylex.props(composeStyles.label)}>{t('rules.compose.limits')}</span>
             <TextArea
               autoSize={{ maxRows: 6, minRows: 1 }}
               className={stylex.props(styles.field).className}
@@ -311,7 +319,7 @@ const ComposeContent = ({
       <Flexbox
         horizontal
         align={'center'}
-        className={composeStyles.footer}
+        className={stylex.props(composeStyles.footer).className}
         gap={8}
         justify={'space-between'}
       >
