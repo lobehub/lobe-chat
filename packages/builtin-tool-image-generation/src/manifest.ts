@@ -82,7 +82,7 @@ export const ImageGenerationManifest: BuiltinToolManifest = {
           parameters: {
             additionalProperties: true,
             description:
-              "Model-specific generation parameters. Call getImageModelParameters first and only pass keys present in that model's parameter schema (for example, use size when the schema has size but no aspectRatio). Unsupported keys are dropped.",
+              "Model-specific generation parameters. Call getImageModelParameters first and only pass keys present in that model's parameter schema (for example, use size when the schema has size but no aspectRatio). Unsupported keys are rejected before generation.",
             type: 'object',
           },
           prompt: {

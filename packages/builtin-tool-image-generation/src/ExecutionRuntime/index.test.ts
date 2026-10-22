@@ -394,47 +394,84 @@ describe('ImageGenerationExecutionRuntime', () => {
     const getCreateImageParams = (service: ImageGenerationRuntimeService) =>
       vi.mocked(service.createImage).mock.calls[0]![0].params;
 
-    it('maps aspectRatio to the closest size when the model only supports size', async () => {
+    const expectRejectedBeforeGeneration = (
+      service: ImageGenerationRuntimeService,
+      result: Awaited<ReturnType<ImageGenerationExecutionRuntime['generateImage']>>,
+    ) => {
+      expect(result.success).toBe(false);
+      expect(result.error).toMatchObject({ type: 'InvalidImageParameters' });
+      expect(result.content).toContain('No image was generated.');
+      expect(service.createGenerationTopic).not.toHaveBeenCalled();
+      expect(service.createImage).not.toHaveBeenCalled();
+    };
+
+    it('rejects parameters missing from the model schema instead of dropping them', async () => {
       const service = createServiceWithParameters({
         imageUrls: { default: [] },
         prompt: { default: '' },
-        quality: { default: 'auto', enum: ['auto', 'high'] },
         size: { default: 'auto', enum: ['auto', '1024x1024', '1536x1024', '1024x1536'] },
       });
       const runtime = new ImageGenerationExecutionRuntime(service);
 
       const result = await runtime.generateImage({
-        parameters: { aspectRatio: '16:9' },
+        parameters: { aspectRatio: '16:9', style: 'vivid' },
         prompt: 'A wide landscape',
       });
 
-      expect(result.success).toBe(true);
-      expect(getCreateImageParams(service)).toEqual({
-        prompt: 'A wide landscape',
-        size: '1536x1024',
-      });
-      expect(result.content).toContain('Mapped aspectRatio 16:9 to size 1536x1024');
-      expect(result.state).toMatchObject({
-        parameterAdjustments: [expect.stringContaining('aspectRatio')],
-      });
+      expectRejectedBeforeGeneration(service, result);
+      expect(result.content).toContain(
+        'Unsupported parameters: aspectRatio, style. Supported parameters: prompt, imageUrls, size.',
+      );
     });
 
-    it('drops parameters missing from the model schema and reports them', async () => {
+    it('rejects more references than the schema imageUrls maxCount', async () => {
       const service = createServiceWithParameters({
+        imageUrls: { default: [], maxCount: 1 },
         prompt: { default: '' },
-        size: { default: '1024x1024', enum: ['1024x1024'] },
       });
       const runtime = new ImageGenerationExecutionRuntime(service);
 
       const result = await runtime.generateImage({
-        parameters: { aspectRatio: '1:1', size: '1024x1024', style: 'vivid' },
+        imageUrl: 'https://cdn.example.com/a.png',
+        imageUrls: ['https://cdn.example.com/b.png'],
+        prompt: 'Edit the image',
+      });
+
+      expectRejectedBeforeGeneration(service, result);
+      expect(result.content).toContain(
+        'This model accepts at most 1 reference image, but 2 were provided.',
+      );
+    });
+
+    it('rejects multiple references when the model only accepts imageUrl', async () => {
+      const service = createServiceWithParameters({
+        imageUrl: { default: null },
+        prompt: { default: '' },
+      });
+      const runtime = new ImageGenerationExecutionRuntime(service);
+
+      const result = await runtime.generateImage({
+        imageUrls: ['https://cdn.example.com/a.png', 'https://cdn.example.com/b.png'],
+        prompt: 'Edit the image',
+      });
+
+      expectRejectedBeforeGeneration(service, result);
+      expect(result.content).toContain(
+        'This model accepts a single reference image, but 2 were provided.',
+      );
+    });
+
+    it('rejects reference images when the model accepts none', async () => {
+      const service = createServiceWithParameters({ prompt: { default: '' } });
+      const runtime = new ImageGenerationExecutionRuntime(service);
+
+      const result = await runtime.generateImage({
+        imageUrl: 'https://cdn.example.com/a.png',
         prompt: 'A cat',
       });
 
-      expect(getCreateImageParams(service)).toEqual({ prompt: 'A cat', size: '1024x1024' });
-      expect(result.content).toContain(
-        'Ignored parameters not supported by this model: aspectRatio, style.',
-      );
+      expectRejectedBeforeGeneration(service, result);
+      expect(result.content).toContain('This model does not accept reference images.');
     });
 
     it('merges imageUrl into imageUrls when the model only accepts imageUrls', async () => {
@@ -450,36 +487,14 @@ describe('ImageGenerationExecutionRuntime', () => {
         prompt: 'Blend both images',
       });
 
+      expect(result.success).toBe(true);
       expect(getCreateImageParams(service)).toEqual({
         imageUrls: ['https://cdn.example.com/a.png', 'https://cdn.example.com/b.png'],
         prompt: 'Blend both images',
       });
-      expect(result.content).toContain('Merged imageUrl into imageUrls');
     });
 
-    it('caps merged references at the schema imageUrls maxCount', async () => {
-      const service = createServiceWithParameters({
-        imageUrls: { default: [], maxCount: 1 },
-        prompt: { default: '' },
-      });
-      const runtime = new ImageGenerationExecutionRuntime(service);
-
-      const result = await runtime.generateImage({
-        imageUrl: 'https://cdn.example.com/a.png',
-        imageUrls: ['https://cdn.example.com/b.png'],
-        prompt: 'Edit the image',
-      });
-
-      expect(getCreateImageParams(service)).toEqual({
-        imageUrls: ['https://cdn.example.com/a.png'],
-        prompt: 'Edit the image',
-      });
-      expect(result.content).toContain(
-        'This model accepts at most 1 reference image; ignored https://cdn.example.com/b.png.',
-      );
-    });
-
-    it('uses the first reference image when the model only accepts imageUrl', async () => {
+    it('passes a single imageUrls reference as imageUrl when the model only accepts imageUrl', async () => {
       const service = createServiceWithParameters({
         imageUrl: { default: null },
         prompt: { default: '' },
@@ -487,28 +502,31 @@ describe('ImageGenerationExecutionRuntime', () => {
       const runtime = new ImageGenerationExecutionRuntime(service);
 
       const result = await runtime.generateImage({
-        imageUrls: ['https://cdn.example.com/a.png', 'https://cdn.example.com/b.png'],
+        imageUrls: ['https://cdn.example.com/a.png'],
         prompt: 'Edit the image',
       });
 
+      expect(result.success).toBe(true);
       expect(getCreateImageParams(service)).toEqual({
         imageUrl: 'https://cdn.example.com/a.png',
         prompt: 'Edit the image',
       });
-      expect(result.content).toContain('https://cdn.example.com/b.png');
     });
 
-    it('drops reference images when the model accepts none', async () => {
-      const service = createServiceWithParameters({ prompt: { default: '' } });
+    it('forwards supported parameters unchanged', async () => {
+      const service = createServiceWithParameters({
+        prompt: { default: '' },
+        size: { default: '1024x1024', enum: ['1024x1024', '1536x1024'] },
+      });
       const runtime = new ImageGenerationExecutionRuntime(service);
 
       const result = await runtime.generateImage({
-        imageUrl: 'https://cdn.example.com/a.png',
+        parameters: { size: '1536x1024' },
         prompt: 'A cat',
       });
 
-      expect(getCreateImageParams(service)).toEqual({ prompt: 'A cat' });
-      expect(result.content).toContain('Ignored parameters not supported by this model: imageUrl.');
+      expect(result.success).toBe(true);
+      expect(getCreateImageParams(service)).toEqual({ prompt: 'A cat', size: '1536x1024' });
     });
 
     it('forwards parameters unchanged when the model has no parameter schema', async () => {
@@ -520,8 +538,8 @@ describe('ImageGenerationExecutionRuntime', () => {
         prompt: 'A cat',
       });
 
+      expect(result.success).toBe(true);
       expect(getCreateImageParams(service)).toEqual({ aspectRatio: '16:9', prompt: 'A cat' });
-      expect(result.content).not.toContain('Parameter adjustments');
     });
   });
 

@@ -3,7 +3,7 @@ export const systemPrompt = `You can generate images through LobeHub's built-in 
 Choose APIs based on the request:
 - For a straightforward image request with no model-specific requirements, call generateImage directly and omit provider/model so the runtime can select an available model.
 - Use listImageModels only when the user asks for model choices or the request requires a specific provider, model capability, quality, speed, or price tradeoff.
-- Use getImageModelParameters before setting provider-specific parameters such as size, aspectRatio, resolution, quality, steps, cfg, seed, or reference-image fields, and only pass keys present in the returned schema. Unsupported keys are dropped and reported under "Parameter adjustments".
+- Use getImageModelParameters before setting provider-specific parameters such as size, aspectRatio, resolution, quality, steps, cfg, seed, or reference-image fields, and only pass keys present in the returned schema. Unsupported keys or too many reference images are rejected before generation.
 - Use generateImage to generate the image. It waits by default until final image URLs are available.
 - Do not call getImageGenerationStatus after generateImage returns completed image URLs.
 - Use getImageGenerationStatus only when generateImage says the image is still pending/processing, or when you intentionally set waitUntilComplete to false.
